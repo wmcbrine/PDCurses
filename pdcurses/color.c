@@ -36,7 +36,6 @@
 #undef	can_change_color
 #undef	color_content
 #undef	pair_content
-#undef	PDC_set_line_color
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
@@ -49,7 +48,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.2 2001/01/10 08:26:56 mark Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.1 2001/01/10 08:26:55 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -64,7 +63,6 @@ char *rcsid_color  = "$Id: color.c,v 1.2 2001/01/10 08:26:56 mark Exp $";
   	bool can_change_color(void);
   ***	int color_content(short color, short *redp, short *greenp, short *bluep);
   	int pair_content(short pair, short *fgp, short *bgp);
-  	int PDC_set_line_color(short color);
 
   X/Open Description:
  	To use these routines, start_color() must be called, usually
@@ -101,10 +99,6 @@ char *rcsid_color  = "$Id: color.c,v 1.2 2001/01/10 08:26:56 mark Exp $";
  	pair_content() is used to determine what the colors of a given 
  	color-pair consist of.
 
- 	PDC_set_line_color() is used to set the color, globally, for the
- 	color of the lines drawn for the attributes: A_UNDERLINE, A_OVERLINE, 
- 	A_LEFTLINE and A_RIGHTLINE.  PDCurses only feature.
-
  	NOTE: has_colors() is implemented as a macro.
 
   X/Open Return Value:
@@ -114,7 +108,7 @@ char *rcsid_color  = "$Id: color.c,v 1.2 2001/01/10 08:26:56 mark Exp $";
   X/Open Errors:
  	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V   PDCurses
+  Portability                             X/Open    BSD    SYS V
                                           Dec '88
       start_color                           -        -      3.2
       init_pair                             -        -      3.2
@@ -123,7 +117,6 @@ char *rcsid_color  = "$Id: color.c,v 1.2 2001/01/10 08:26:56 mark Exp $";
       can_change_color                      -        -      3.2
       color_content                         -        -      3.2
       pair_content                          -        -      3.2
-      PDC_set_line_color                    -        -       -       Y
 
 **man-end**********************************************************************/
 
@@ -354,21 +347,6 @@ short *background;
   * William McBrine <wmcbrine@clark.net> 30-Dec-1998
   */
 
- return(OK);
-}
-/***********************************************************************/
-#ifdef HAVE_PROTO
-int	PDC_CDECL	PDC_set_line_color(short color)
-#else
-int	PDC_CDECL	PDC_set_line_color(color)
-short color;
-#endif
-/***********************************************************************/
-{
-
- if (color >= COLORS || color < 0)
-    return(ERR);
- SP->line_color = color;
  return(OK);
 }
 

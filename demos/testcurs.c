@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.2 2001/01/10 08:27:43 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.1 2001/01/10 08:27:41 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -199,7 +199,7 @@ char *argv[];
 #ifdef PDCDEBUG
 	PDC_debug("initTest called\n");
 #endif
-/*  traceon(); */
+  /* traceon(); */
 #ifdef XCURSES
     Xinitscr(argc, argv);
 #else
@@ -823,13 +823,8 @@ int old_option,new_option;
 {
  register int i;
 
-#ifdef XCURSES
- attrset(A_PROTECT);
-#else
- attrset(A_BOLD);
-#endif
- mvaddstr(3,20,"PDCurses Test Program");
  attrset(A_NORMAL);
+ mvaddstr(3,20,"PDCurses Test Program");
 
  for (i=0;i<MAX_OPTIONS;i++)
     mvaddstr(5+i,25,command[i].text);

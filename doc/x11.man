@@ -67,6 +67,7 @@ XCurses recognises the following resources:
     lines
     cols
     normalFont
+    boldFont
     pointer
     pointerForeColor
     pointerBackColor
@@ -79,14 +80,6 @@ XCurses recognises the following resources:
     colorMagenta
     colorCyan
     colorWhite
-    colorBoldBlack
-    colorBoldRed
-    colorBoldGreen
-    colorBoldYellow
-    colorBoldBlue
-    colorBoldMagenta
-    colorBoldCyan
-    colorBoldWhite
     bitmap
     translations
     shmmin
@@ -108,8 +101,13 @@ cols:              specifies the number of columns the "screen" will have
                    The minimum value must be 2.
                    Default:        80
 
-normalFont:        the name of a fixed width font
+normalFont:        the name of a fixed width font, used for A_NORMAL attribute
                    Default:        7x13
+
+boldFont:          the name of a fixed width font, used for A_BOLD attribute
+                   Default:        7x13bold
+
+                   NB. The dimensions of font and boldFont MUST be the same.
 
 pointer:           the name of a valid pointer cursor
                    Default:        xterm
@@ -125,37 +123,14 @@ cursorColor:       the colour of the text cursor
                    *** This resource is now obsolete and is ignored ***
 
 colorBlack:        the color of the COLOR_BLACK attribute
-                   Default: Black
 colorRed           the color of the COLOR_RED attribute
-                   Default: red3
 colorGreen         the color of the COLOR_GREEN attribute
-                   Default: green3
 colorYellow        the color of the COLOR_YELLOW attribute
-                   Default: yellow3
 colorBlue          the color of the COLOR_BLUE attribute
-                   Default: blue3
 colorMagenta       the color of the COLOR_MAGENTA attribute
-                   Default: magenta3
 colorCyan          the color of the COLOR_CYAN attribute
-                   Default: cyan3
 colorWhite         the color of the COLOR_WHITE attribute
-                   Default: Grey
-colorBoldBlack:    the color of the COLOR_BLACK attribute combined with A_BOLD
-                   Default: grey40
-colorBoldRed       the color of the COLOR_RED attribute combined with A_BOLD
-                   Default: red1
-colorBoldGreen     the color of the COLOR_GREEN attribute combined with A_BOLD
-                   Default: green1
-colorBoldYellow    the color of the COLOR_YELLOW attribute combined with A_BOLD
-                   Default: yellow1
-colorBoldBlue      the color of the COLOR_BLUE attribute combined with A_BOLD
-                   Default: blue1
-colorBoldMagenta   the color of the COLOR_MAGENTA attribute combined with A_BOLD
-                   Default: magenta1
-colorBoldCyan      the color of the COLOR_CYAN attribute combined with A_BOLD
-                   Default: cyan1
-colorBoldWhite     the color of the COLOR_WHITE attribute combined with A_BOLD
-                   Default: White
+                   Defaults are obvious :)
 
 bitmap:            the name of a valid pixmap file of depth 1 used for
                    the application's icon
@@ -258,25 +233,13 @@ testcurs.lines: 25
 !
 ! resources for THE - XCurses
 !
-! resources with the * wildcard can be overridden by a parameter passed
-! to initscr()
-!
-the*normalFont: 9x15
-the*lines:      40
-the*cols:       86
-the*pointer:    xterm
-the*pointerForeColor: white
-the*pointerBackColor: black
-!
-! resources with the . format can not be overridden by a parameter passed
-! to initscr()
-!
+the.normalFont: 9x15
+the.boldFont:   9x15bold
+the.lines:      40
+the.cols:       86
+the.pointer:    xterm
+the.pointerForeColor: black
+the.pointerBackColor: black
 the.bitmap:     /home/mark/the/the64.xbm
-
-Resources may also be passed as a parameter to the initscr() function.
-The parameter is a string in the form of switches. eg. to set the color
-"red" to "indianred", and the number of lines to 30, the string passed to 
-initscr would be:
-"-colorRed indianred -lines 30"
 
 **man-end**********************************************************************/

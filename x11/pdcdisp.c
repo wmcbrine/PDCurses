@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.2 2001/01/10 08:30:06 mark Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.1 2001/01/10 08:30:05 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -198,7 +198,7 @@ int col;
 	if (trace_on) PDC_debug("PDC_gotoxy() - called: row %d col %d\n",row,col);
 #endif
 
-	XCurses_display_cursor(SP->cursrow,SP->curscol,row,col,SP->visibility);
+	XCurses_display_cursor(SP->cursrow,SP->curscol,row,col);
 	return(OK);
 }
 

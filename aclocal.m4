@@ -326,12 +326,7 @@ case "$target" in
 		RXLIBPST=".so"
 		;;
 	*linux*)
-		LD_RXLIB1="${CC} -shared"
-		RXLIBPRE="lib"
-		RXLIBPST=".so"
-		;;
-	*nto-qnx*)
-		LD_RXLIB1="${CC} -shared"
+		LD_RXLIB1="${CC} -Wl,-shared"
 		RXLIBPRE="lib"
 		RXLIBPST=".so"
 		;;

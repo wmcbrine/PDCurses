@@ -9,7 +9,7 @@
  Distribution Status
  -------------------
 
- The files in this directory are copyright Mark Hessling 1995-2000.
+ The files in this directory are copyright Mark Hessling 1995-1999.
  This source code made be used without restriction when used with
  the PDCurses library.  Any other use of this source code requires
  written permission of the author, Mark Hessling (M.Hessling@qut.edu.au)
@@ -24,16 +24,3 @@
    to the calling procedure.
 
  - add proper 'flash' behaviour
-
-Structure
----------
-
-x11.c           - contains functions that are X11 specific functions that are
-                  used by both the process and thread implementations
-x11.h           - #defines and includes for the X11 process/thread
-x11_proc.c      - contains functions that are used by the X11 (child) process
-                  in the process implementation
-curses_proc.c   - contains functions that are used by the curses (parent)
-                  process in the process implementation
-x11_thread.c    -
-curses_thread.c -

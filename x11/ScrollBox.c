@@ -121,17 +121,15 @@ Widget w;
 Boolean doit;
 {
 	ScrollBoxWidget sbw = (ScrollBoxWidget) w;
-	Widget wmain, vscroll, hscroll;
+	Widget main, vscroll, hscroll;
 	Widget child;
 	Dimension mw, mh;   /* main window */
 	Dimension vh;   /* vertical scrollbar length (height) */
 	Dimension hw;   /* horizontal scrollbar length (width) */
 	Position vx;
 	Position hy;
-#if 0
 	Dimension th;
 	Dimension tw;
-#endif
 	int i;
 
 	if (sbw->composite.num_children != 3)
@@ -150,7 +148,7 @@ Boolean doit;
 	 * Child one is the main window, two is the vertical scrollbar,
 	 * and three is the horizontal scrollbar.
 	 */
-	wmain = sbw->composite.children[0];
+	main = sbw->composite.children[0];
 	vscroll = sbw->composite.children[1];
 	hscroll = sbw->composite.children[2];
 
@@ -160,36 +158,36 @@ Boolean doit;
 #if 1
 	mw = sbw->core.width - (2 * sbw->scrollBox.h_space) - 
 		vscroll->core.width - (2 * vscroll->core.border_width) -
-		(2 * wmain->core.border_width);
+		(2 * main->core.border_width);
 
 	mh = sbw->core.height - (2 * sbw->scrollBox.v_space) - 
 		hscroll->core.height - (2 * hscroll->core.border_width) -
-		(2 * wmain->core.border_width);
+		(2 * main->core.border_width);
 
-	vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
+	vx = main->core.x + mw + sbw->scrollBox.h_space + main->core.border_width + vscroll->core.border_width; 
 
-	hy = wmain->core.y + mh + sbw->scrollBox.v_space + wmain->core.border_width + hscroll->core.border_width; 
+	hy = main->core.y + mh + sbw->scrollBox.v_space + main->core.border_width + hscroll->core.border_width; 
 
 	vh = mh;   /* scrollbars are always same length as main window */
 	hw = mw;
 
 	if (doit) {
-		XtResizeWidget(wmain, mw, mh, 1);
+		XtResizeWidget(main, mw, mh, 1);
 #else
-	tw = wmain->core.width + (2 * sbw->scrollBox.h_space) +
+	tw = main->core.width + (2 * sbw->scrollBox.h_space) +
 		vscroll->core.width + (2 * vscroll->core.border_width) +
-		(2 * wmain->core.border_width);
+		(2 * main->core.border_width);
 
-	th = wmain->core.height + (2 * sbw->scrollBox.v_space) +
+	th = main->core.height + (2 * sbw->scrollBox.v_space) +
 		hscroll->core.height - (2 * hscroll->core.border_width) +
-		(2 * wmain->core.border_width);
+		(2 * main->core.border_width);
 
-	hw = mw = wmain->core.width;
-	vh = mh = wmain->core.height;
+	hw = mw = main->core.width;
+	vh = mh = main->core.height;
 
-	vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
+	vx = main->core.x + mw + sbw->scrollBox.h_space + main->core.border_width + vscroll->core.border_width; 
 
-	hy = wmain->core.y + mh + sbw->scrollBox.v_space + wmain->core.border_width + hscroll->core.border_width; 
+	hy = main->core.y + mh + sbw->scrollBox.v_space + main->core.border_width + hscroll->core.border_width; 
 
 	if (doit) {
 		XtResizeWidget(w, tw, th, 1);

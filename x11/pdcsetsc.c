@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.2 2001/01/10 08:30:16 mark Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.1 2001/01/10 08:30:14 mark Exp $";
 #endif
 
 
@@ -120,18 +120,17 @@ int visibility;
 #endif
 /***********************************************************************/
 {
-   int ret_vis = SP->visibility;
+ int ret_vis;
 
 #ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_curs_set() - called: visibility=%d\n",visibility);
+	if (trace_on) PDC_debug("PDC_curs_set() - called: visibility=%d\n",visibility);
 #endif
 
-   if ( visibility != -1 )
-   {
-      SP->visibility = visibility;
-   }
-   XCurses_display_cursor(SP->cursrow,SP->curscol,SP->cursrow,SP->curscol,visibility);
-   return(ret_vis);
+	ret_vis = SP->visibility;
+	SP->visibility = visibility;
+
+	XCurses_display_cursor(SP->cursrow,SP->curscol,SP->cursrow,SP->curscol);
+	return(ret_vis);
 }
 
 /*man-start*********************************************************************

@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.2 2001/01/10 08:30:13 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.1 2001/01/10 08:30:12 mark Exp $";
 #endif
 
 bool GLOBAL_sb_on=FALSE;
@@ -177,7 +177,6 @@ extern bool sb_started;
 	internal->sb_total_x = 0;
 	internal->sb_viewport_x = 0;
 	internal->sb_cur_x = 0;
-	internal->line_color = COLOR_WHITE;
 
 	return( OK );
 }

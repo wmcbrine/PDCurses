@@ -125,9 +125,3 @@
 /* Define if you want to include LATIN1 key support */
 #undef INCLUDE_LATIN1
 
-/* Define if you want to build XCurses with threads */
-#undef USE_THREADS
-
-/* Define if you want to build XCurses with processes */
-#undef USE_PROCESSES
-

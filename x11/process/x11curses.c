@@ -219,17 +219,6 @@ int delaytenths;
                break;
             }
          }
-         else
-         {
-            if ( key == KEY_RESIZE)
-            {
-#if 000
-               LINES = XCursesLINES = SP->lines - SP->linesrippedoff - SP->slklines;
-               XCursesCOLS = COLS = SP->cols;
-fprintf(stderr,"%s %d: LINES %d COLS %d\n",__FILE__,__LINE__,LINES,COLS);
-#endif
-            }
-         }
          break;
 
 #ifdef MOUSE_DEBUG

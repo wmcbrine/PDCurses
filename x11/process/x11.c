@@ -1009,6 +1009,7 @@ printf("Notify: %d\n",event->type);
           */
          resizeXCursesWindowWidth = (event->xconfigure.width);
          resizeXCursesWindowHeight = (event->xconfigure.height);
+               
          after_first_curses_request = False;
 #ifdef SIGWINCH
 # ifdef BEFORE_CHANGE_BY_G_FUCHS
@@ -1020,12 +1021,6 @@ printf("Notify: %d\n",event->type);
          SP->resized = 1;
 # endif
          kill(otherpid,SIGWINCH);
-#endif
-#if 000
-         SP->lines = XCursesLINES = ((resizeXCursesWindowHeight-(2*XCURSESBORDERWIDTH)) / XCursesFontHeight);
-         LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
-         SP->cols =  COLS  = XCursesCOLS = ((resizeXCursesWindowWidth-(2*XCURSESBORDERWIDTH)) / XCursesFontWidth);
-fprintf(stderr,"%s %d: X11:LINES %d COLS %d\n",__FILE__,__LINE__,SP->lines, SP->cols);
 #endif
          XCursesSendKeyToCurses( (unsigned long)KEY_RESIZE, NULL );
          break;

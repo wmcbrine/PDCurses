@@ -157,9 +157,12 @@ dnl look for REXX header and library, exit if not found
 	    ${REXXINCDIR}             \
 	    ${orexx_incdirs}          \
 	    ${HOME}/include           \
+	    ${HOME}/{MACHTYPE}/include     \
 	    /usr/local/include        \
 	    /usr/contrib/include      \
 	    /opt/include              \
+	    /opt/sfw/include          \
+	    /sw/include               \
 	    /usr/include              \
 	    /usr/unsupported/include"
 dnl
@@ -193,10 +196,12 @@ if test "xx$rexx_h" != "xx" -a "x$REXX_LIBS" = "x"; then
 	    ${REXXLIBDIR}             \
 	    ${orexx_libdirs}          \
 	    ${HOME}/lib               \
+	    ${HOME}/{MACHTYPE}/lib    \
 	    /usr/local/lib            \
 	    /usr/contrib/lib          \
 	    /opt/lib                  \
 	    /opt/sfw/lib              \
+	    /sw/lib                   \
 	    /usr/lib                  \
 	    /usr/unsupported/lib"
 dnl

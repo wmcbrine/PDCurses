@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.6 2002/06/23 04:10:42 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.7 2002/11/27 11:18:58 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -484,7 +484,7 @@ int   PDC_get_bios_key(void)
    int idx=0,key=0;
    bool enhanced=FALSE;
    unsigned long local_key_modifiers=0L;
-
+   int ignore_key;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_get_bios_key() - called\n");
@@ -513,26 +513,40 @@ int   PDC_get_bios_key(void)
 #endif
 
             local_key_modifiers = pdc_key_modifiers = 0L;
+            ignore_key = 0;
             switch(save_ip.Event.KeyEvent.wVirtualKeyCode)
             {
                case 16: /* shift */
-                  return KEY_SHIFT_R;
+                  if ( SP->return_key_modifiers ) return KEY_SHIFT_R;
+                  ignore_key = 1;
                   break;
                case 17: /* control */
                   if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED)
-                     return KEY_CONTROL_L;
+                  {
+                     if ( SP->return_key_modifiers ) return KEY_CONTROL_L;
+                  }
                   else
-                     return KEY_CONTROL_R;
+                  {
+                     if ( SP->return_key_modifiers ) return KEY_CONTROL_R;
+                  }
+                  ignore_key = 1;
                   break;
                case 18: /* alt */
                   if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
-                     return KEY_ALT_L;
+                  {
+                     if ( SP->return_key_modifiers ) return KEY_ALT_L;
+                  }
                   else
-                     return KEY_ALT_R;
+                  {
+                     if ( SP->return_key_modifiers ) return KEY_ALT_R;
+                  }
+                  ignore_key = 1;
                   break;
                default:
                   break;
             }
+            if ( ignore_key )
+               break;
             /*
              * Must calculate the key modifiers so that Alt keys work!
              */

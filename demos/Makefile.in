@@ -3,7 +3,7 @@
 SHELL		= /bin/sh
 
 srcdir		= @srcdir@
-VPATH		= @srcdir@
+#VPATH		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= $(exec_prefix)

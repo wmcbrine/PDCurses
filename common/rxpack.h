@@ -237,6 +237,7 @@ RxPackageGlobalDataDef *InitRxPackage Args(( RxPackageGlobalDataDef *, PackageIn
 int TermRxPackage Args(( RxPackageGlobalDataDef **, PackageTerminator *, RexxFunction *, char *, int ));
 int RegisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction *, char * ));
 int RegisterRxSubcom Args(( RxPackageGlobalDataDef *, RexxSubcomHandler ));
+int RegisterRxInit Args(( RxPackageGlobalDataDef *, RexxExitHandler, char *));
 int QueryRxFunction Args(( RxPackageGlobalDataDef *, char * ));
 int DeregisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction *, int ));
 int SetPackageConstants Args(( RxPackageGlobalDataDef *, RxPackageConstantDef *, char * ));

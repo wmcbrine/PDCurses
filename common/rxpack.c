@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.25 2003/02/19 11:10:15 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.26 2003/02/20 07:59:41 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1313,6 +1313,34 @@ int RegisterRxSubcom
                                (RRSE_ARG2_TYPE)NULL );
 #endif
    if ( rc != RXSUBCOM_OK )
+      return 1;
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
+ * This function registers the package's RXINI exit handler...
+ *----------------------------------------------------------------------------*/
+int RegisterRxInit
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxExitHandler ptr, char *name)
+#else
+   ( RxPackageGlobalData, ptr, name )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RexxExitHandler ptr;
+   char *name;
+#endif
+
+{
+   ULONG rc=0L;
+
+   InternalTrace( RxPackageGlobalData, "RegisterRxInit", "Name: %s Addr: %ld", name, ptr );
+
+   rc = RexxRegisterExitExe( (RREE_ARG0_TYPE)name,
+                             (RREE_ARG1_TYPE)(ptr),
+                             (RREE_ARG2_TYPE)NULL );
+   InternalTrace( RxPackageGlobalData, "RegisterRxInit", "returning %d", rc );
+   if ( rc != RXEXIT_OK )
       return 1;
    return 0;
 }

@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.15 2003/02/19 11:10:14 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.16 2003/02/20 07:59:39 mark Exp $";
 
 #include "rxpack.h"
 
@@ -43,6 +43,7 @@ extern int  optind;
 extern PackageInitialiser *GETPACKAGEINITIALISER();
 extern PackageTerminator *GETPACKAGETERMINATOR();
 extern RexxSubcomHandler *GETPACKAGESUBCOMHANDLER();
+extern RexxExitHandler *GETPACKAGEINITHANDLER();
 extern RexxFunction *GETPACKAGEFUNCTIONS();
 extern RxPackageConstantDef *GETPACKAGECONSTANTS();
 extern void PACKAGEUSAGE();
@@ -87,9 +88,14 @@ int main
    int rc=0;
    RXSTRING retstr;
    CHAR retbuf[RETBUFLEN];
+   CHAR initexitname[100];
    RXSTRING ArgList;
-#if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
+#if !defined(DYNAMIC_LIBRARY)
+# if defined(USE_WINREXX) || defined(USE_QUERCUS)
+   RXSYSEXIT ExitList[3];
+# else
    RXSYSEXIT ExitList[2];
+# endif
 #endif
    RxPackageGlobalDataDef MyGlob, *RxPackageGlobalData;
 
@@ -222,22 +228,28 @@ int main
     */
    if ( ( rc = RegisterRxSubcom( RxPackageGlobalData, GETPACKAGESUBCOMHANDLER() ) ) != 0 )
       return( rc );
-#if 0
    /* 
     * Register a RXINI handler to set the package constants
     */
-   if ( ( rc = RegisterRxIni( RxPackageGlobalData, GETPACKAGECONSTANTSDLER() ) ) != 0 )
+   sprintf( initexitname, "%s%s", RXPACKAGENAME, "INIT" );
+   if ( ( rc = RegisterRxInit( RxPackageGlobalData, GETPACKAGEINITHANDLER(), initexitname ) ) != 0 )
       return( rc );
-   SetPackageConstants( RxPackageGlobalData, GETPACKAGECONSTANTS(), RXPACKAGENAME );
-#endif
    FunctionPrologue( RxPackageGlobalData, GETPACKAGEINITIALISER(), RXPACKAGENAME, 0L, NULL );
    /*
-    * Set up the system exit for the Say and Trace redirection
+    * Set up the system exit for the Say and Trace redirection and RxIni
     */
-#if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
+#if !defined(DYNAMIC_LIBRARY)
+# if defined(USE_WINREXX) || defined(USE_QUERCUS)
    ExitList[0].sysexit_name = RXPACKAGENAME;
    ExitList[0].sysexit_code = RXSIO;
+   ExitList[1].sysexit_name = initexitname;
+   ExitList[1].sysexit_code = RXINI;
+   ExitList[2].sysexit_code = RXENDLST;
+# else
+   ExitList[0].sysexit_name = initexitname;
+   ExitList[0].sysexit_code = RXINI;
    ExitList[1].sysexit_code = RXENDLST;
+# endif
 #endif
 
    MAKERXSTRING( retstr, retbuf, sizeof( retbuf ) );
@@ -252,7 +264,7 @@ int main
               ( RS_ARG3_TYPE )NULL,
               ( RS_ARG4_TYPE )RXPACKAGENAME,
               ( RS_ARG5_TYPE )RXCOMMAND,
-#if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
+#if !defined(DYNAMIC_LIBRARY)
               ( RS_ARG6_TYPE )ExitList,
 #else
               ( RS_ARG6_TYPE )NULL,

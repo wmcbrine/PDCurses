@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.4 2002/05/11 09:54:10 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.5 2002/11/27 11:16:13 mark Exp $";
 #endif
 
 #include <string.h>
@@ -161,5 +161,36 @@ int	PDC_CDECL	PDC_freeclipboard(char *contents)
 		free(contents);
 	}
 
+	return PDC_CLIP_SUCCESS;
+}
+
+/*man-start*********************************************************************
+
+  PDC_clearclipboard()	- Clears the contents of the clipboard
+
+  PDCurses Description:
+ 	This is a PDCurses only routine.
+
+ 	Clears the internal clipboard.
+
+  PDCurses Return Value:
+ 	Always returns PDC_CLIP_SUCCESS
+
+  Portability:
+ 	PDCurses	int PDC_clearclipboard( void );
+
+**man-end**********************************************************************/
+
+int	PDC_CDECL	PDC_clearclipboard( void )
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("PDC_clearclipboard() - called\n");
+#endif
+
+	if (pdc_DOS_clipboard != NULL) 
+	{
+		free(pdc_DOS_clipboard);
+		pdc_DOS_clipboard = NULL;
+	}
 	return PDC_CLIP_SUCCESS;
 }

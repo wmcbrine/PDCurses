@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.11 2003/01/01 05:08:35 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.12 2003/02/16 23:36:18 mark Exp $";
 
 #include "rxpack.h"
 
@@ -95,6 +95,7 @@ int main
    memset( (char *)&MyGlob, 0, sizeof( RxPackageGlobalDataDef ) );
 
    strcpy( MyGlob.RxTraceFileName, "stderr" );
+   strcpy( MyGlob.ConstantPrefix, "!" );
    MyGlob.RxTraceFilePointer = stderr;
    /* 
     * Get any program options. 

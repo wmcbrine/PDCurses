@@ -65,7 +65,6 @@ LIBPANEL	= panel.lib
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL) $(CURSESDLL)
 DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
 DLL_DEMOS	=testcurs_dll.exe newdemo_dll.exe xmas_dll.exe tuidemo_dll.exe firework_dll.exe
-DLL_DIR = dll-obj
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS) $(DLL_DEMOS)
@@ -77,9 +76,6 @@ clean:
 	-del *.exe
 
 demos:	$(DEMOS)
-
-dll-obj:
-	mkdir dll-obj
 #------------------------------------------------------------------------
 
 LIBOBJS =     \
@@ -137,58 +133,58 @@ PANOBJS =     \
 panel.obj
 
 LIBDLLS =     \
-dll-obj\addch.obj     \
-dll-obj\addchstr.obj  \
-dll-obj\addstr.obj    \
-dll-obj\attr.obj      \
-dll-obj\beep.obj      \
-dll-obj\bkgd.obj      \
-dll-obj\border.obj    \
-dll-obj\clear.obj     \
-dll-obj\color.obj     \
-dll-obj\delch.obj     \
-dll-obj\deleteln.obj  \
-dll-obj\getch.obj     \
-dll-obj\getstr.obj    \
-dll-obj\getyx.obj     \
-dll-obj\inch.obj      \
-dll-obj\inchstr.obj   \
-dll-obj\initscr.obj   \
-dll-obj\inopts.obj    \
-dll-obj\insch.obj     \
-dll-obj\insstr.obj    \
-dll-obj\instr.obj     \
-dll-obj\kernel.obj    \
-dll-obj\mouse.obj     \
-dll-obj\move.obj      \
-dll-obj\outopts.obj   \
-dll-obj\overlay.obj   \
-dll-obj\pad.obj       \
-dll-obj\printw.obj    \
-dll-obj\refresh.obj   \
-dll-obj\scanw.obj     \
-dll-obj\scroll.obj    \
-dll-obj\slk.obj       \
-dll-obj\termattr.obj  \
-dll-obj\terminfo.obj  \
-dll-obj\touch.obj     \
-dll-obj\util.obj      \
-dll-obj\window.obj
+addch.dll.obj     \
+addchstr.dll.obj  \
+addstr.dll.obj    \
+attr.dll.obj      \
+beep.dll.obj      \
+bkgd.dll.obj      \
+border.dll.obj    \
+clear.dll.obj     \
+color.dll.obj     \
+delch.dll.obj     \
+deleteln.dll.obj  \
+getch.dll.obj     \
+getstr.dll.obj    \
+getyx.dll.obj     \
+inch.dll.obj      \
+inchstr.dll.obj   \
+initscr.dll.obj   \
+inopts.dll.obj    \
+insch.dll.obj     \
+insstr.dll.obj    \
+instr.dll.obj     \
+kernel.dll.obj    \
+mouse.dll.obj     \
+move.dll.obj      \
+outopts.dll.obj   \
+overlay.dll.obj   \
+pad.dll.obj       \
+printw.dll.obj    \
+refresh.dll.obj   \
+scanw.dll.obj     \
+scroll.dll.obj    \
+slk.dll.obj       \
+termattr.dll.obj  \
+terminfo.dll.obj  \
+touch.dll.obj     \
+util.dll.obj      \
+window.dll.obj
 
 PDCDLLS =     \
-dll-obj\pdcclip.obj   \
-dll-obj\pdcdebug.obj  \
-dll-obj\pdcdisp.obj   \
-dll-obj\pdcgetsc.obj  \
-dll-obj\pdckbd.obj    \
-dll-obj\pdcprint.obj  \
-dll-obj\pdcscrn.obj   \
-dll-obj\pdcsetsc.obj  \
-dll-obj\pdcutil.obj   \
-dll-obj\pdcwin.obj
+pdcclip.dll.obj   \
+pdcdebug.dll.obj  \
+pdcdisp.dll.obj   \
+pdcgetsc.dll.obj  \
+pdckbd.dll.obj    \
+pdcprint.dll.obj  \
+pdcscrn.dll.obj   \
+pdcsetsc.dll.obj  \
+pdcutil.dll.obj   \
+pdcwin.dll.obj
 
 PANDLLS =     \
-dll-obj\panel.obj
+panel.dll.obj
 
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
@@ -354,146 +350,146 @@ pdcwin.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)
 
 
 
-dll-obj\addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS) $(DLL_DIR)
+addch.dll.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\addch.c
 
-dll-obj\addchstr.obj: $(srcdir)\addchstr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+addchstr.dll.obj: $(srcdir)\addchstr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\addchstr.c
 
-dll-obj\addstr.obj: $(srcdir)\addstr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+addstr.dll.obj: $(srcdir)\addstr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\addstr.c
 
-dll-obj\attr.obj: $(srcdir)\attr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+attr.dll.obj: $(srcdir)\attr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\attr.c
 
-dll-obj\beep.obj: $(srcdir)\beep.c $(PDCURSES_HEADERS) $(DLL_DIR)
+beep.dll.obj: $(srcdir)\beep.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\beep.c
 
-dll-obj\bkgd.obj: $(srcdir)\bkgd.c $(PDCURSES_HEADERS) $(DLL_DIR)
+bkgd.dll.obj: $(srcdir)\bkgd.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\bkgd.c
 
-dll-obj\border.obj: $(srcdir)\border.c $(PDCURSES_HEADERS) $(DLL_DIR)
+border.dll.obj: $(srcdir)\border.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\border.c
 
-dll-obj\clear.obj: $(srcdir)\clear.c $(PDCURSES_HEADERS) $(DLL_DIR)
+clear.dll.obj: $(srcdir)\clear.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\clear.c
 
-dll-obj\color.obj: $(srcdir)\color.c $(PDCURSES_HEADERS) $(DLL_DIR)
+color.dll.obj: $(srcdir)\color.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\color.c
 
-dll-obj\delch.obj: $(srcdir)\delch.c $(PDCURSES_HEADERS) $(DLL_DIR)
+delch.dll.obj: $(srcdir)\delch.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\delch.c
 
-dll-obj\deleteln.obj: $(srcdir)\deleteln.c $(PDCURSES_HEADERS) $(DLL_DIR)
+deleteln.dll.obj: $(srcdir)\deleteln.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\deleteln.c
 
-dll-obj\getch.obj: $(srcdir)\getch.c $(PDCURSES_HEADERS) $(DLL_DIR)
+getch.dll.obj: $(srcdir)\getch.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\getch.c
 
-dll-obj\getstr.obj: $(srcdir)\getstr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+getstr.dll.obj: $(srcdir)\getstr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\getstr.c
 
-dll-obj\getyx.obj: $(srcdir)\getyx.c $(PDCURSES_HEADERS) $(DLL_DIR)
+getyx.dll.obj: $(srcdir)\getyx.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\getyx.c
 
-dll-obj\inch.obj: $(srcdir)\inch.c $(PDCURSES_HEADERS) $(DLL_DIR)
+inch.dll.obj: $(srcdir)\inch.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\inch.c
 
-dll-obj\inchstr.obj: $(srcdir)\inchstr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+inchstr.dll.obj: $(srcdir)\inchstr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\inchstr.c
 
-dll-obj\initscr.obj: $(srcdir)\initscr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+initscr.dll.obj: $(srcdir)\initscr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\initscr.c
 
-dll-obj\inopts.obj: $(srcdir)\inopts.c $(PDCURSES_HEADERS) $(DLL_DIR)
+inopts.dll.obj: $(srcdir)\inopts.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\inopts.c
 
-dll-obj\insch.obj: $(srcdir)\insch.c $(PDCURSES_HEADERS) $(DLL_DIR)
+insch.dll.obj: $(srcdir)\insch.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\insch.c
 
-dll-obj\insstr.obj: $(srcdir)\insstr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+insstr.dll.obj: $(srcdir)\insstr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\insstr.c
 
-dll-obj\instr.obj: $(srcdir)\instr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+instr.dll.obj: $(srcdir)\instr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\instr.c
 
-dll-obj\kernel.obj: $(srcdir)\kernel.c $(PDCURSES_HEADERS) $(DLL_DIR)
+kernel.dll.obj: $(srcdir)\kernel.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\kernel.c
 
-dll-obj\mouse.obj: $(srcdir)\mouse.c $(PDCURSES_HEADERS) $(DLL_DIR)
+mouse.dll.obj: $(srcdir)\mouse.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\mouse.c
 
-dll-obj\move.obj: $(srcdir)\move.c $(PDCURSES_HEADERS) $(DLL_DIR)
+move.dll.obj: $(srcdir)\move.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\move.c
 
-dll-obj\outopts.obj: $(srcdir)\outopts.c $(PDCURSES_HEADERS) $(DLL_DIR)
+outopts.dll.obj: $(srcdir)\outopts.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\outopts.c
 
-dll-obj\overlay.obj: $(srcdir)\overlay.c $(PDCURSES_HEADERS) $(DLL_DIR)
+overlay.dll.obj: $(srcdir)\overlay.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\overlay.c
 
-dll-obj\pad.obj: $(srcdir)\pad.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pad.dll.obj: $(srcdir)\pad.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\pad.c
 
-dll-obj\printw.obj: $(srcdir)\printw.c $(PDCURSES_HEADERS) $(DLL_DIR)
+printw.dll.obj: $(srcdir)\printw.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\printw.c
 
-dll-obj\refresh.obj: $(srcdir)\refresh.c $(PDCURSES_HEADERS) $(DLL_DIR)
+refresh.dll.obj: $(srcdir)\refresh.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\refresh.c
 
-dll-obj\scanw.obj: $(srcdir)\scanw.c $(PDCURSES_HEADERS) $(DLL_DIR)
+scanw.dll.obj: $(srcdir)\scanw.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\scanw.c
 
-dll-obj\scroll.obj: $(srcdir)\scroll.c $(PDCURSES_HEADERS) $(DLL_DIR)
+scroll.dll.obj: $(srcdir)\scroll.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\scroll.c
 
-dll-obj\slk.obj: $(srcdir)\slk.c $(PDCURSES_HEADERS) $(DLL_DIR)
+slk.dll.obj: $(srcdir)\slk.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\slk.c
 
-dll-obj\termattr.obj: $(srcdir)\termattr.c $(PDCURSES_HEADERS) $(DLL_DIR)
+termattr.dll.obj: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\termattr.c
 
-dll-obj\terminfo.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(DLL_DIR)
+terminfo.dll.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\terminfo.c
 
-dll-obj\touch.obj: $(srcdir)\touch.c $(PDCURSES_HEADERS) $(DLL_DIR)
+touch.dll.obj: $(srcdir)\touch.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\touch.c
 
-dll-obj\util.obj: $(srcdir)\util.c $(PDCURSES_HEADERS) $(DLL_DIR)
+util.dll.obj: $(srcdir)\util.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\util.c
 
-dll-obj\window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS) $(DLL_DIR)
+window.dll.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\window.c
 
 
-dll-obj\pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcclip.dll.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdcclip.c
 
-dll-obj\pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcdebug.dll.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\pdcdebug.c
 
-dll-obj\pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcdisp.dll.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdcdisp.c
 
-dll-obj\pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcgetsc.dll.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdcgetsc.c
 
-dll-obj\pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdckbd.dll.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdckbd.c
 
-dll-obj\pdcprint.obj: $(osdir)\pdcprint.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcprint.dll.obj: $(osdir)\pdcprint.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdcprint.c
 
-dll-obj\pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcscrn.dll.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdcscrn.c
 
-dll-obj\pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcsetsc.dll.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdcsetsc.c
 
-dll-obj\pdcutil.obj: $(srcdir)\pdcutil.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcutil.dll.obj: $(srcdir)\pdcutil.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\pdcutil.c
 
-dll-obj\pdcwin.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS) $(DLL_DIR)
+pdcwin.dll.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\pdcwin.c
 
 #------------------------------------------------------------------------
@@ -501,7 +497,7 @@ dll-obj\pdcwin.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS) $(DLL_DIR)
 panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 	$(CC) $(CCFLAGS) -Fo$@ $(pandir)\panel.c
 
-dll-obj\panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER) $(DLL_DIR)
+panel.dll.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(pandir)\panel.c
 
 #--- Targets for statically linked demo programs ------------------------
@@ -555,51 +551,51 @@ test.obj: test.c $(PDCURSES_CURSES_H)
 
 #--- Targets for dynamically linked demo programs -----------------------
 
-firework_dll.exe:	dll-obj\firework.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ dll-obj\firework.obj $(DLLCURSES) $(CCLIBS)
+firework_dll.exe:	firework.dll.obj $(CURSESDLL)
+	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ firework.dll.obj $(DLLCURSES) $(CCLIBS)
 
-newdemo_dll.exe:	dll-obj\newdemo.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ dll-obj\newdemo.obj $(DLLCURSES) $(CCLIBS)
+newdemo_dll.exe:	newdemo.dll.obj $(CURSESDLL)
+	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ newdemo.dll.obj $(DLLCURSES) $(CCLIBS)
 
-ptest_dll.exe:	dll-obj\ptest.obj $(CURSESDLL) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ dll-obj\ptest.obj $(LIBPANEL) $(DLLCURSES) $(CCLIBS)
+ptest_dll.exe:	ptest.dll.obj $(CURSESDLL) $(LIBPANEL)
+	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ ptest.dll.obj $(LIBPANEL) $(DLLCURSES) $(CCLIBS)
 
-testcurs_dll.exe:	dll-obj\testcurs.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ dll-obj\testcurs.obj $(DLLCURSES) $(CCLIBS)
+testcurs_dll.exe:	testcurs.dll.obj $(CURSESDLL)
+	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ testcurs.dll.obj $(DLLCURSES) $(CCLIBS)
 
-tuidemo_dll.exe:	dll-obj\tuidemo.obj dll-obj\tui.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ dll-obj\tui.obj dll-obj\tuidemo.obj $(DLLCURSES) $(CCLIBS)
+tuidemo_dll.exe:	tuidemo.dll.obj tui.dll.obj $(CURSESDLL)
+	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ tui.dll.obj tuidemo.dll.obj $(DLLCURSES) $(CCLIBS)
 
-xmas_dll.exe:	dll-obj\xmas.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ dll-obj\xmas.obj $(DLLCURSES) $(CCLIBS)
+xmas_dll.exe:	xmas.dll.obj $(CURSESDLL)
+	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ xmas.dll.obj $(DLLCURSES) $(CCLIBS)
 
-test_dll.exe:	dll-obj\test.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ dll-obj\test.obj $(DLLCURSES) $(CCLIBS)
+test_dll.exe:	test.dll.obj $(CURSESDLL)
+	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ test.dll.obj $(DLLCURSES) $(CCLIBS)
 
 #--- Targets for dynamically linked demo objects ------------------------
 
-dll-obj\firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
+firework.dll.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(demodir)\firework.c
 
-dll-obj\newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
+newdemo.dll.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(demodir)\newdemo.c
 
-dll-obj\ptest.obj: $(demodir)\ptest.c $(PDCURSES_HOME)\panel.h $(PDCURSES_CURSES_H)
+ptest.dll.obj: $(demodir)\ptest.c $(PDCURSES_HOME)\panel.h $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(demodir)\ptest.c
 
-dll-obj\testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
+testcurs.dll.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(demodir)\testcurs.c
 
-dll-obj\tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
+tui.dll.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -I$(demodir) -Fo$@ $(demodir)\tui.c
 
-dll-obj\tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
+tuidemo.dll.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -I$(demodir) -Fo$@ $(demodir)\tuidemo.c
 
-dll-obj\xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
+xmas.dll.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(demodir)\xmas.c
 
-dll-obj\test.obj: test.c $(PDCURSES_CURSES_H)
+test.dll.obj: test.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ test.c
 
 dist: curses.dll pdcurses.lib panel.lib

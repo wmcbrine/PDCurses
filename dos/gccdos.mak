@@ -16,7 +16,7 @@
 # CC_HOME should be set automatically if you are running DJGPP make
 #
 ################################################################################
-PDCURSES_HOME	= c:/curses
+PDCURSES_HOME	= c:/projects/pdcurses
 PDC_HOME	= $(subst /,\,$(PDCURSES_HOME))
 
 ifdef DJDIR

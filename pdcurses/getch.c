@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.2 2001/01/10 08:27:01 mark Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.3 2002/03/22 22:36:08 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -170,7 +170,7 @@ extern  WINDOW*	_getch_win_;
 		return( ERR );
 
 	if ( SP->delaytenths )
-		waitingtenths = 10*SP->delaytenths;
+		waitingtenths = 2*SP->delaytenths; /* changed from 10 to 2 - William McBrine */
 
 /* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
 /*                  if there have been changes to it and it is not a pad */
@@ -259,31 +259,34 @@ extern  WINDOW*	_getch_win_;
 			key = (-1);
 #endif
 
-		if (w->_nodelay)
+/*
+ * Order of test for delaytenths and _nodelay reversed - William McBrine
+ */
+		if (SP->delaytenths)
 		{
-			/*
-			 * if nodelay and no char, return ERR
-			 */
-			if (key == -1)
-				return( ERR );
-			else if ( ! SP->echo ) {
-				if ( ! (w->_flags & _PAD) ) {
-					if ( is_wintouched(w) )
-						wrefresh(w);
-				}
+			if (waitingtenths == 0 && key == (-1))
+				return(ERR);
+			if (key == (-1))
+			{
+				waitingtenths--;
+					napms(50); /* changed from 10 to 50 - William McBrine */
+				continue;
 			}
 		}
 		else
 		{
-			if (SP->delaytenths)
+			if (w->_nodelay)
 			{
-				if (waitingtenths == 0 && key == (-1))
-					return(ERR);
-				if (key == (-1))
-				{
-					waitingtenths--;
-					napms(10);
-					continue;
+				/*
+				 * if nodelay and no char, return ERR
+				 */
+				if (key == -1)
+					return( ERR );
+				else if ( ! SP->echo ) {
+					if ( ! (w->_flags & _PAD) ) {
+						if ( is_wintouched(w) )
+							wrefresh(w);
+					}
 				}
 			}
 		}

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.11 2002/07/29 07:12:03 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.12 2002/07/29 07:15:08 mark Exp $";
 
 #include "rxpack.h"
 
@@ -724,7 +724,6 @@ int RegisterRxFunctions
    for ( func = RxPackageFunctions; func->InternalName; func++ )
    {
 #if defined(DYNAMIC_LIBRARY)
-fprintf(stderr,"%s %d %d %d %s\n",__FILE__,__LINE__,rc,func->DllLoad,func->InternalName);
 # if !defined(USE_REXX6000)
       if (func->DllLoad)
       {

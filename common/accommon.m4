@@ -177,6 +177,7 @@ dnl
 	    /usr/local/lib            \
 	    /usr/contrib/lib          \
 	    /opt/lib                  \
+	    /opt/sfw/lib              \
 	    /usr/lib                  \
 	    /usr/unsupported/lib"
 dnl

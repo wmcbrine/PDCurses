@@ -208,6 +208,31 @@
 /* # define HAVE_GETTIMEOFDAY    1 */
 #endif
 
+#if defined(WIN32) && defined(__LCC__)
+# define HAVE_ASSERT_H        1
+# define HAVE_CTYPE_H         1
+# define HAVE_IO_H            1
+# define HAVE_LIMITS_H        1
+# define HAVE_MALLOC_H        1
+# define HAVE_PROCESS_H       1
+# define HAVE_SETJMP_H        1
+# define HAVE_SIGNAL_H        1
+# define HAVE_STDLIB_H        1
+# define HAVE_STRING_H        1
+# define HAVE_SYS_STAT_H      1
+# define HAVE_SYS_TYPES_H     1
+/* # define HAVE_UNISTD_H        1 */
+# define HAVE_MEMCPY          1
+# define HAVE_MEMMOVE         1
+# define HAVE_PUTENV          1
+# define HAVE_STRERROR        1
+# define HAVE_VFPRINTF        1
+# define TIME_WITH_SYS_TIME   1
+/* # define HAVE_FTRUNCATE       1 */
+/* # define HAVE_FULLPATH        1 */
+/* # define HAVE_GETTIMEOFDAY    1 */
+#endif
+
 #if (defined(DOS) || defined(MSDOS)) && defined(DJGPP)
 # define HAVE_ASSERT_H        1
 # define HAVE_CTYPE_H         1

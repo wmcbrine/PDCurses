@@ -47,7 +47,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window  = "$Id: window.c,v 1.1 2001/01/10 08:27:36 mark Exp $";
+char *rcsid_window  = "$Id: window.c,v 1.2 2002/12/16 06:59:12 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -626,6 +626,7 @@ extern	void	(*fre)();
 			(*fre)(new);
 			return( (WINDOW *)NULL );
 		}
+		new->_firstch[i] = new->_lastch[i] = _NO_CHANGE;
 	}
 
 	if (win != curscr

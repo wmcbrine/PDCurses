@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.8 2002/07/30 03:39:56 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.9 2002/07/30 03:41:50 mark Exp $";
 
 #include "rxpack.h"
 
@@ -30,12 +30,10 @@ static char RCSid[] = "$Id: loader.c,v 1.8 2002/07/30 03:39:56 mark Exp $";
 # if !defined(HAVE_GETOPT)
 int getopt( int argc, char *argv[], char *optstring );
 # endif
-void usage( void );
 #else
 # if !defined(HAVE_GETOPT)
 int getopt( );
 # endif
-void usage( );
 #endif
 
 /* These are required by the getopt() function */
@@ -46,6 +44,7 @@ extern PackageInitialiser *GETPACKAGEINITIALISER();
 extern PackageTerminator *GETPACKAGETERMINATOR();
 extern RexxSubcomHandler *GETPACKAGESUBCOMHANDLER();
 extern RexxFunction *GETPACKAGEFUNCTIONS();
+extern void PACKAGEUSAGE();
 
 /*-----------------------------------------------------------------------------
  * Checks to see if supplied filename is readable.
@@ -150,7 +149,7 @@ int main
          (void)fclose(fp);
       }
       else
-         usage();
+         PACKAGEUSAGE();
    }
    else
    {

@@ -841,10 +841,10 @@ BASE_BINARY="binarybase"
 SHLPRE="lib"
 LD_RXLIB1=""
 CAN_USE_ABI="no"
-BUNDLE=""
-# If the build OS can handle version numbers in the shared library name,
-# and the user requests it, then set SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
-SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
+LIBEXE="ar"
+LIBFLAGS="cr"
+LIBPRE="lib"
+LIBPST=".a"
 # OTHER_INSTALLS is set to install a non-version numbered shared library
 # by default; ie. no .\$(ABI) suffix. If the regina executable is not built,
 # then there is no shared library. Set OTHER_INSTALLS="installabilib" if you
@@ -907,7 +907,6 @@ case "$target" in
 		CAN_USE_ABI="yes"
 		if test "$USE_ABI" = "yes"; then
 			OTHER_INSTALLS="installabilib"
-			SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
 		fi
 		;;
 	*atheos*)
@@ -915,9 +914,6 @@ case "$target" in
 		;;
 	*freebsd*)
 		LD_RXLIB1="ld -Bdynamic -Bshareable"
-		;;
-	*nto-qnx*)
-		LD_RXLIB1="${CC} -shared"
 		;;
 	*pc-sco*)
 		LD_RXLIB1="ld -dy -G"
@@ -929,9 +925,8 @@ case "$target" in
 		BASE_BINARY="beosbinary"
 		OTHER_INSTALLS=""
 		;;
-	*apple-darwin*)
-		LD_RXLIB1="${CC} -dynamiclib -install_name=\$(prefix)/lib/\$(@)"
-		DYN_COMP="-fno-common"
+	*nto-qnx*)
+		LD_RXLIB1="${CC} -shared"
 		;;
 	*qnx*)
 		LIBPRE=""
@@ -953,10 +948,7 @@ case "$target" in
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
-		BUNDLE=".so"
-		LD_RXLIB1="${CC} -shared"
-		EXTRATARGET="librexxtrans$BUNDLE"
-		OTHER_INSTALLS="installmacosx"
+		LD_RXLIB1="${CC} -dynamiclib -install_name=\$(@)"
 		;;
 	*)
 		;;
@@ -1041,6 +1033,8 @@ AC_SUBST(SHLPRE)
 AC_SUBST(SHLPST)
 AC_SUBST(LIBPST)
 AC_SUBST(LIBPRE)
+AC_SUBST(LIBEXE)
+AC_SUBST(LIBFLAGS)
 AC_SUBST(DYNAMIC_LDFLAGS)
 AC_SUBST(STATIC_LDFLAGS)
 AC_SUBST(SHL_TARGETS)
@@ -1162,7 +1156,7 @@ case "$target" in
                 ;;
         *darwin*)
                 SHLPST=".dylib"
-                MODPST=".so"
+                MODPST=".dylib"
                 ;;
 esac
 AC_SUBST(SHLPST)

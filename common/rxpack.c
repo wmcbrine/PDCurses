@@ -16,23 +16,20 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.7 2002/07/28 02:27:06 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.8 2002/07/29 06:19:40 mark Exp $";
 
 #include "rxpack.h"
 
-RxPackageGlobalDataDef *RxPackageGlobalData=NULL;
 
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
-RexxExitHandler RxExitHandlerForSayTraceRedirection;
+static RexxExitHandler RxExitHandlerForSayTraceRedirection;
 #endif
 
 #if defined(USE_REXX6000)
-LONG RxSubcomHandler( RSH_ARG0_TYPE, RSH_ARG1_TYPE, RSH_ARG2_TYPE );
+static LONG RxSubcomHandler( RSH_ARG0_TYPE, RSH_ARG1_TYPE, RSH_ARG2_TYPE );
 #else
-RexxSubcomHandler RxSubcomHandler;
+static RexxSubcomHandler RxSubcomHandler;
 #endif
-
-extern RexxFunction RxPackageFunctions[];
 
 #if !defined(HAVE_STRERROR)
 /*
@@ -165,21 +162,23 @@ char *MkAsciz
 /*-----------------------------------------------------------------------------
  * Check number of parameters
  *----------------------------------------------------------------------------*/
-int my_checkparam(const char *name, int argc, int mini, int maxi)
+int my_checkparam(RxPackageGlobalDataDef *RxPackageGlobalData, const char *name, int argc, int mini, int maxi)
 {
    if ( argc < mini )
    {
-      RxDisplayError(name, 
-                     "*ERROR* Not enough parameters in call to \"%s\". Minimum %d\n",
-                     name, mini);
+      RxDisplayError( RxPackageGlobalData,
+                      name,
+                      "*ERROR* Not enough parameters in call to \"%s\". Minimum %d\n",
+                      name, mini);
       return 1;
    }
    if ( argc > maxi
    &&   maxi != 0 )
    {
-      RxDisplayError(name, 
-                     "*ERROR* Too many parameters in call to \"%s\". Maximum %d\n",
-                     name, maxi);
+      RxDisplayError( RxPackageGlobalData,
+                      name, 
+                      "*ERROR* Too many parameters in call to \"%s\". Maximum %d\n",
+                      name, maxi);
       return 1;
    }
    return 0;
@@ -191,9 +190,10 @@ int my_checkparam(const char *name, int argc, int mini, int maxi)
 int SetRexxVariable
 
 #ifdef HAVE_PROTO
-   (char *name, int namelen, char *value, int valuelen)
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, int namelen, char *value, int valuelen )
 #else
-   (name, namelen, value, valuelen)
+   ( RxPackageGlobalData, name, namelen, value, valuelen )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    char    *name;
    int     namelen;
    char    *value;
@@ -204,7 +204,7 @@ int SetRexxVariable
    ULONG  rc=0L;
    SHVBLOCK       shv;
 
-   InternalTrace( "SetRexxVariable", "\"%s\",%d,\"%s\",%d", name, namelen, value, valuelen );
+   InternalTrace( RxPackageGlobalData, "SetRexxVariable", "\"%s\",%d,\"%s\",%d", name, namelen, value, valuelen );
 
    if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
    {
@@ -238,9 +238,10 @@ int SetRexxVariable
 RXSTRING *GetRexxVariable
 
 #ifdef HAVE_PROTO
-   ( char *name, RXSTRING *value, int suffix )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, RXSTRING *value, int suffix )
 #else
-   ( name, value, suffix )
+   ( RxPackageGlobalData, name, value, suffix )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    char *name;
    RXSTRING *value;
    int suffix;
@@ -250,7 +251,7 @@ RXSTRING *GetRexxVariable
    char variable_name[350];
    ULONG rc = 0L;
 
-   InternalTrace( "GetRexxVariable", "%s,%x,%d", name, value, suffix );
+   InternalTrace( RxPackageGlobalData, "GetRexxVariable", "%s,%x,%d", name, value, suffix );
 
    shv.shvnext=NULL;                                /* only one block */
    shv.shvcode = RXSHV_FETCH;
@@ -310,9 +311,10 @@ RXSTRING *GetRexxVariable
 int *GetRexxVariableInteger
 
 #ifdef HAVE_PROTO
-   ( char *name, int *value, int suffix )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, int *value, int suffix )
 #else
-   ( name, value, suffix )
+   ( RxPackageGlobalData, name, value, suffix )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    char *name;
    int *value;
    int suffix;
@@ -322,7 +324,7 @@ int *GetRexxVariableInteger
    char variable_name[350];
    ULONG rc = 0L;
 
-   InternalTrace( "GetRexxVariableNumber", "%s,%x,%d", name, value, suffix );
+   InternalTrace( RxPackageGlobalData, "GetRexxVariableNumber", "%s,%x,%d", name, value, suffix );
 
    shv.shvnext=NULL;                                /* only one block */
    shv.shvcode = RXSHV_FETCH;
@@ -487,12 +489,13 @@ int StrToBool
 /*-----------------------------------------------------------------------------
  * This is called when in VERBOSE mode. It prints function name & arg values.
  *----------------------------------------------------------------------------*/
-void FunctionPrologue
+RxPackageGlobalDataDef *FunctionPrologue
 
 #ifdef HAVE_PROTO
-   ( char *name, ULONG argc, RXSTRING *argv )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageInitialiser *RxPackageInitialiser, char *name, ULONG argc, RXSTRING *argv )
 #else
-   ( name, argc, argv )
+   ( RxPackageGlobalData, name, argc, argv )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    char *name;
    ULONG argc;
    RXSTRING *argv;
@@ -501,31 +504,38 @@ void FunctionPrologue
 {
    ULONG i = 0L;
    char buf[61];
+   RxPackageGlobalDataDef *GlobalData;
+   int rc;
 
-   if ( RxPackageGlobalData == NULL
-   ||   RxPackageGlobalData->RxPackageInitialised != RXPACKAGE_MAGIC_NUMBER )
+   if ( RxPackageGlobalData == NULL )
    {
-      (void)InitRxPackage( NULL );
+      GlobalData = InitRxPackage( RxPackageGlobalData, RxPackageInitialiser, &rc );
+   }
+   else
+   {
+      GlobalData = RxPackageGlobalData;
    }
 
-   if ( RxPackageGlobalData->RxRunFlags & MODE_VERBOSE )
+   if ( GlobalData->RxRunFlags & MODE_VERBOSE )
    {
-      (void)fprintf( RxPackageGlobalData->RxTraceFilePointer, "++\n" );
-      (void)fprintf( RxPackageGlobalData->RxTraceFilePointer, "++ Call %s%s\n", name, argc ? "" : "()" );
+      (void)fprintf( GlobalData->RxTraceFilePointer, "++\n" );
+      (void)fprintf( GlobalData->RxTraceFilePointer, "++ Call %s%s\n", name, argc ? "" : "()" );
       for (i = 0; i < argc; i++) 
       {
-         (void)fprintf( RxPackageGlobalData->RxTraceFilePointer, "++ %3ld: \"%s\"\n",
+         (void)fprintf( GlobalData->RxTraceFilePointer, "++ %3ld: \"%s\"\n",
             i+1,
             MkAsciz( buf, sizeof(buf), (char *)RXSTRPTR( argv[i] ), (int)RXSTRLEN( argv[i] ) ) );
       }
-      fflush( RxPackageGlobalData->RxTraceFilePointer );
+      fflush( GlobalData->RxTraceFilePointer );
    }
    /*
     * This should be replaced with an integer to make things
     * run faster!!
     */
-   if ( strcmp( name, RxPackageGlobalData->FName ) != 0 )
-      strcpy( RxPackageGlobalData->FName, name );
+   if ( strcmp( name, GlobalData->FName ) != 0 )
+      strcpy( GlobalData->FName, name );
+
+   return GlobalData;
 }
 
 /*-----------------------------------------------------------------------------
@@ -534,16 +544,16 @@ void FunctionPrologue
 long FunctionEpilogue
 
 #ifdef HAVE_PROTO
-   ( char *name, long rc )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, long rc )
 #else
-   ( name, rc )
+   ( RxPackageGlobalData, name, rc )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    char *name;
    long rc;
 #endif
 
 {
-   if ( RxPackageGlobalData == NULL
-   ||   RxPackageGlobalData->RxPackageInitialised != RXPACKAGE_MAGIC_NUMBER )
+   if ( RxPackageGlobalData == NULL )
    {
       return rc;
    }
@@ -563,16 +573,17 @@ long FunctionEpilogue
 void FunctionTrace
 
 #ifdef HAVE_PROTO
-   ( char *name, ... )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, ... )
 #else
-   ( name )
+   ( RxPackageGlobalData, name )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   char *name;
 #endif
 {
    va_list argptr;
    char *fmt=NULL;
 
-   if ( RxPackageGlobalData == NULL
-   ||   RxPackageGlobalData->RxPackageInitialised != RXPACKAGE_MAGIC_NUMBER )
+   if ( RxPackageGlobalData == NULL )
    {
       return;
    }
@@ -600,9 +611,10 @@ void FunctionTrace
 void InternalTrace
 
 #ifdef HAVE_PROTO
-    (char *name, ...)
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, ...)
 #else
-    (name)
+   ( RxPackageGlobalData, name )
+    RxPackageGlobalDataDef *RxPackageGlobalData;
     char *name;
 #endif
 
@@ -611,7 +623,6 @@ void InternalTrace
    char *fmt=NULL;
 
    if ( RxPackageGlobalData != NULL
-   &&   RxPackageGlobalData->RxPackageInitialised == RXPACKAGE_MAGIC_NUMBER 
    &&   RxPackageGlobalData->RxRunFlags & MODE_INTERNAL )
    {
       (void) fprintf( RxPackageGlobalData->RxTraceFilePointer, ">>>> Call %s(", name );
@@ -630,9 +641,10 @@ void InternalTrace
 void RxDisplayError
 
 #ifdef HAVE_PROTO
-    (RFH_ARG0_TYPE name, ...)
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RFH_ARG0_TYPE name, ...)
 #else
-    (name)
+   ( RxPackageGlobalData, name )
+    RxPackageGlobalDataDef *RxPackageGlobalData;
     char *name;
 #endif
 
@@ -640,8 +652,7 @@ void RxDisplayError
    va_list argptr;
    char *fmt=NULL;
 
-   if ( RxPackageGlobalData != NULL
-   &&   RxPackageGlobalData->RxPackageInitialised == RXPACKAGE_MAGIC_NUMBER )
+   if ( RxPackageGlobalData != NULL )
    {
       (void) fprintf( RxPackageGlobalData->RxTraceFilePointer, ">>>> Calling %s(", name );
       va_start( argptr, name );
@@ -664,23 +675,25 @@ void RxDisplayError
 int RegisterRxSubcom
 
 #ifdef HAVE_PROTO
-   ( void )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxSubcomHandler ptr)
 #else
-   ( )
+   ( RxPackageGlobalData, ptr )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RexxSubcomHandler ptr;
 #endif
 
 {
    ULONG rc=0L;
 
-   InternalTrace( "RegisterRxSubcom", NULL );
+   InternalTrace( RxPackageGlobalData, "RegisterRxSubcom", NULL );
 
 #if defined(USE_REXX6000)
-   rc = RexxRegisterSubcom( (RRSE_ARG0_TYPE)RxPackageName,
-                            (RRSE_ARG1_TYPE)RxSubcomHandler,
+   rc = RexxRegisterSubcom( (RRSE_ARG0_TYPE)RXPACKAGENAME,
+                            (RRSE_ARG1_TYPE)(ptr) ? ptr : RxSubcomHandler,
                             (RRSE_ARG2_TYPE)NULL );
 #else
-   rc = RexxRegisterSubcomExe( (RRSE_ARG0_TYPE)RxPackageName,
-                               (RRSE_ARG1_TYPE)RxSubcomHandler,
+   rc = RexxRegisterSubcomExe( (RRSE_ARG0_TYPE)RXPACKAGENAME,
+                               (RRSE_ARG1_TYPE)(ptr) ? ptr : RxSubcomHandler,
                                (RRSE_ARG2_TYPE)NULL );
 #endif
    if ( rc != RXSUBCOM_OK )
@@ -694,16 +707,18 @@ int RegisterRxSubcom
 int RegisterRxFunctions
 
 #ifdef HAVE_PROTO
-   ( void )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions )
 #else
-   ( )
+   ( RxPackageGlobalData,  RxPackageFunctions )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RexxFunction *RxPackageFunctions;
 #endif
 
 {
    RexxFunction *func=NULL;
    ULONG rc=0L;
 
-   InternalTrace( "RegisterRxFunctions", NULL );
+   InternalTrace( RxPackageGlobalData, "RegisterRxFunctions", NULL );
 
    for ( func = RxPackageFunctions; func->InternalName; func++ )
    {
@@ -712,9 +727,9 @@ int RegisterRxFunctions
       if (func->DllLoad)
       {
          rc = RexxRegisterFunctionDll( func->ExternalName,
-              RxPackageName,
+              RXPACKAGENAME,
               func->InternalName );
-         InternalTrace("RegisterRxFunctions","%s-%d: Registered (DLL) %s with rc = %ld\n",__FILE__,__LINE__,func->ExternalName,rc);
+         InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (DLL) %s with rc = %ld\n",__FILE__,__LINE__,func->ExternalName,rc);
       }
 # endif
 #else
@@ -723,10 +738,10 @@ int RegisterRxFunctions
 # endif
 # if defined(USE_REXX6000)
       rc = RexxRegisterFunction( func->ExternalName, func->EntryPoint, NULL );
-      InternalTrace("RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d\n",__FILE__,__LINE__,func->ExternalName,rc);
+      InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d\n",__FILE__,__LINE__,func->ExternalName,rc);
 # else
       rc = RexxRegisterFunctionExe( func->ExternalName, func->EntryPoint );
-      InternalTrace("RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d\n",__FILE__,__LINE__,func->ExternalName,rc);
+      InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d\n",__FILE__,__LINE__,func->ExternalName,rc);
 # endif
 #endif
       if (rc != RXFUNC_OK
@@ -739,7 +754,7 @@ int RegisterRxFunctions
          return 1;
    }
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
-   if ( RexxRegisterExitExe( ( RREE_ARG0_TYPE )RxPackageName,
+   if ( RexxRegisterExitExe( ( RREE_ARG0_TYPE )RXPACKAGENAME,
                              ( RREE_ARG1_TYPE )RxExitHandlerForSayTraceRedirection,
                              ( RREE_ARG2_TYPE )NULL) != RXEXIT_OK )
       return 1;
@@ -753,14 +768,15 @@ int RegisterRxFunctions
 int QueryRxFunction
 
 #ifdef HAVE_PROTO
-   ( char *funcname )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *funcname )
 #else
-   ( funcname )
+   ( RxPackageGlobalData, funcname )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    char *funcname;
 #endif
 
 {
-   InternalTrace( "QueryRxFunction", "%s", funcname );
+   InternalTrace( RxPackageGlobalData, "QueryRxFunction", "%s", funcname );
 
 #if defined(USE_REXX6000)
    if ( RexxQueryFunction( funcname, NULL ) == RXFUNC_OK )
@@ -781,9 +797,11 @@ int QueryRxFunction
 int DeregisterRxFunctions
 
 #ifdef HAVE_PROTO
-   ( int verbose )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions, int verbose )
 #else
-   ( verbose )
+   ( RxPackageGlobalData, RxPackageFunctions, verbose )
+   RexxFunction *RxPackageFunctions;
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    int verbose;
 #endif
 
@@ -791,7 +809,7 @@ int DeregisterRxFunctions
    RexxFunction *func=NULL;
    int rc=0;
 
-   InternalTrace( "DeregisterRxFunctions", "%d", verbose );
+   InternalTrace( RxPackageGlobalData, "DeregisterRxFunctions", "%d", verbose );
 
    for ( func = RxPackageFunctions; func->InternalName; func++ )
    {
@@ -802,7 +820,7 @@ int DeregisterRxFunctions
       DEBUGDUMP(fprintf(stderr,"%s-%d: Deregistered %s with rc %d\n",__FILE__,__LINE__,func->ExternalName,rc);)
    }
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
-   RexxDeregisterExit( RxPackageName, NULL );
+   RexxDeregisterExit( RXPACKAGENAME, NULL );
 #endif
    return 0 ;
 }
@@ -810,46 +828,50 @@ int DeregisterRxFunctions
 /*-----------------------------------------------------------------------------
  * This function is called to initialise the package
  *----------------------------------------------------------------------------*/
-int InitRxPackage
+RxPackageGlobalDataDef *InitRxPackage
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *MyGlob )
+   ( RxPackageGlobalDataDef *MyGlob, PackageInitialiser *ptr, int *rc )
 #else
-   ( MyGlob )
+   ( MyGlob, ptr, rc )
    RxPackageGlobalDataDef *MyGlob;
+   PackageInitialiser *ptr;
+   int *rc;
 #endif
 
 {
-   ULONG rc=0L;
    char *env;
+   RxPackageGlobalDataDef *RxPackageGlobalData;
 
    DEBUGDUMP(fprintf(stderr,"%s-%d: Start of InitRxPackage\n",__FILE__,__LINE__);)
-   RxPackageGlobalData = NULL;
-   if ( ( RxPackageGlobalData = ( RxPackageGlobalDataDef *)malloc( sizeof( RxPackageGlobalDataDef ) ) ) == NULL )
+   if ( MyGlob )
    {
-      fprintf( stderr, "Unable to allocate memory for Global Data\n" );
-      return 1;
-   }
-   if ( MyGlob == NULL )
-   {
-      memset( RxPackageGlobalData, 0, sizeof( RxPackageGlobalDataDef ) );
-      (void)RxSetTraceFile( "stderr" );
+      RxPackageGlobalData = MyGlob;
    }
    else
    {
-      memcpy( RxPackageGlobalData, MyGlob, sizeof( RxPackageGlobalDataDef ) );
-      (void)RxSetTraceFile( MyGlob->RxTraceFileName );
+      if ( ( RxPackageGlobalData = ( RxPackageGlobalDataDef *)malloc( sizeof( RxPackageGlobalDataDef ) ) ) == NULL )
+      {
+         fprintf( stderr, "Unable to allocate memory for Global Data\n" );
+         *rc = 1;
+         return NULL;
+      }
+      memset( RxPackageGlobalData, 0, sizeof( RxPackageGlobalDataDef ) );
+      (void)RxSetTraceFile( RxPackageGlobalData, "stderr" );
    }
-   RxPackageGlobalData->RxPackageInitialised = RXPACKAGE_MAGIC_NUMBER;
    if ( (env = getenv(RXPACKAGE_DEBUG_VAR)) != NULL )
+   {
       RxPackageGlobalData->RxRunFlags |= atoi(env);
-
+   }
    /* 
     * Call any package-specific startup code here
     */
-   rc = InitialisePackage( );
+   if ( ptr )
+   {
+      *rc = (*ptr)( );
+   }
    DEBUGDUMP(fprintf(stderr,"%s-%d: End of InitRxPackage with rc = %ld\n",__FILE__,__LINE__,rc);)
-   return rc;
+   return RxPackageGlobalData;
 }
 
 
@@ -859,17 +881,19 @@ int InitRxPackage
 int TermRxPackage
 
 #ifdef HAVE_PROTO
-   ( char *progname, int deregfunc )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageTerminator *ptr, RexxFunction *RxPackageFunctions, char *progname, int deregfunc )
 #else
-   ( progname, deregfunc )
+   ( RxPackageGlobalData, ptr, RxPackageFunctions, progname, deregfunc )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   PackageTerminator *ptr;
+   RexxFunction *RxPackageFunctions;
    char *progname;
    int deregfunc;
 #endif
-
 {
    int rc=0;
 
-   InternalTrace( "TermRxPackage", "\"%s\",%d", progname, deregfunc );
+   InternalTrace( RxPackageGlobalData, "TermRxPackage", "\"%s\",%d", progname, deregfunc );
 
    DEBUGDUMP(fprintf(stderr,"%s-%d: Start of TermRxPackage\n",__FILE__,__LINE__);)
    /* 
@@ -881,33 +905,35 @@ int TermRxPackage
     */
    if (deregfunc)
    {
-      if ( ( rc = DeregisterRxFunctions( 0 ) ) != 0 )
-         return (int)FunctionEpilogue( "TermRxPackage", (long)rc );
+      if ( ( rc = DeregisterRxFunctions( RxPackageGlobalData, RxPackageFunctions, 0 ) ) != 0 )
+         return (int)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)rc );
    }
    /* 
     * Call any package-specific termination code here
     */
-   if ( ( rc = TerminatePackage( ) ) != 0 )
-      return (int)FunctionEpilogue( "TermRxPackage", (long)rc );
+   if ( ptr )
+   {
+      if ( ( rc = (*ptr)( ) ) != 0 )
+         return (int)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)rc );
+   }
 #if defined(USE_REXX6000)
-   rc = RexxDeregisterSubcom( RDS_ARG0_TYPE)RxPackageName );
+   rc = RexxDeregisterSubcom( RDS_ARG0_TYPE)RXPACKAGENAME );
 #else
-   rc = RexxDeregisterSubcom( (RDS_ARG0_TYPE)RxPackageName,
+   rc = RexxDeregisterSubcom( (RDS_ARG0_TYPE)RXPACKAGENAME,
                               (RDS_ARG1_TYPE)NULL );
 #endif
 
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
-   RexxDeregisterExit( ( RDE_ARG0_TYPE )RxPackageName,
+   RexxDeregisterExit( ( RDE_ARG0_TYPE )RXPACKAGENAME,
                        ( RDE_ARG1_TYPE )NULL );
 #endif
    if ( RxPackageGlobalData->RxTraceFilePointer != stdin
    &&   RxPackageGlobalData->RxTraceFilePointer != stderr )
       fclose( RxPackageGlobalData->RxTraceFilePointer );
 
-   free( RxPackageGlobalData );
-   RxPackageGlobalData = NULL;
+   free( RxPackageGlobalData ); /* TODO - only free if requested */
    DEBUGDUMP(fprintf(stderr,"%s-%d: End of TermRxPackage with rc = 0\n",__FILE__,__LINE__);)
-   return (int)FunctionEpilogue( "TermRxPackage", (long)0 );
+   return (int)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)0 );
 }
 
 
@@ -917,16 +943,17 @@ int TermRxPackage
 int RxSetTraceFile
 
 #ifdef HAVE_PROTO
-   ( char *name )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name )
 #else
-   ( name )
+   ( RxPackageGlobalData, name )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    char *name;
 #endif
 
 {
    FILE *fp = NULL;
 
-   InternalTrace( "RxSetTraceFile", "%s", name );
+   InternalTrace( RxPackageGlobalData, "RxSetTraceFile", "%s", name );
 
    if ( strcmp( "stdin", name ) == 0 )
    {
@@ -963,13 +990,14 @@ int RxSetTraceFile
 char *RxGetTraceFile
 
 #ifdef HAVE_PROTO
-   ( void )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData )
 #else
-   ( )
+   ( RxPackageGlobalData )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
 #endif
 
 {
-   InternalTrace( "RxGetTraceFile", NULL );
+   InternalTrace( RxPackageGlobalData, "RxGetTraceFile", NULL );
    return ( RxPackageGlobalData->RxTraceFileName );
 }
 
@@ -979,14 +1007,15 @@ char *RxGetTraceFile
 void RxSetRunFlags
 
 #ifdef HAVE_PROTO
-   ( int flags )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, int flags )
 #else
-   ( flags )
+   ( RxPackageGlobalData, flags )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    int flags;
 #endif
 
 {
-   InternalTrace( "RxSetRunFlags", "%d", flags );
+   InternalTrace( RxPackageGlobalData, "RxSetRunFlags", "%d", flags );
    RxPackageGlobalData->RxRunFlags = flags;
 }
 
@@ -996,13 +1025,14 @@ void RxSetRunFlags
 int RxGetRunFlags
 
 #ifdef HAVE_PROTO
-   ( void )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData )
 #else
-   ( )
+   ( RxPackageGlobalData )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
 #endif
 
 {  
-   InternalTrace( "RxGetRunFlags", NULL );
+   InternalTrace( RxPackageGlobalData, "RxGetRunFlags", NULL );
    return ( RxPackageGlobalData->RxRunFlags );
 }
 
@@ -1012,13 +1042,14 @@ int RxGetRunFlags
 int RxReturn
 
 #ifdef HAVE_PROTO
-   ( RXSTRING *retstr )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *retstr )
 #else
-   ( retstr )
+   ( RxPackageGlobalData, retstr )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    RXSTRING *retstr;
 #endif
 {
-   InternalTrace( "RxReturn" );
+   InternalTrace( RxPackageGlobalData, "RxReturn" );
 
    if ( RxPackageGlobalData
    &&   RxPackageGlobalData->RxRunFlags & MODE_VERBOSE )
@@ -1038,14 +1069,15 @@ int RxReturn
 int RxReturnNumber
 
 #ifdef HAVE_PROTO
-   ( RXSTRING *retstr, long num )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *retstr, long num )
 #else
-   ( retstr, num )
+   ( RxPackageGlobalData, retstr, num )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    RXSTRING *retstr;
    long num;
 #endif
 {
-   InternalTrace( "RxReturnNumber", "%x,%d", retstr, num );
+   InternalTrace( RxPackageGlobalData, "RxReturnNumber", "%x,%d", retstr, num );
 
    sprintf( (char *)retstr->strptr, "%ld", num );
    retstr->strlength = strlen( (char *)retstr->strptr );
@@ -1067,14 +1099,15 @@ int RxReturnNumber
 int RxReturnDouble
 
 #ifdef HAVE_PROTO
-   ( RXSTRING *retstr, double num )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *retstr, double num )
 #else
-   ( retstr, num )
+   ( RxPackageGlobalData, retstr, num )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    RXSTRING *retstr;
    long num;
 #endif
 {
-   InternalTrace( "RxReturnDouble", "%x,%f", retstr, num );
+   InternalTrace( RxPackageGlobalData, "RxReturnDouble", "%x,%f", retstr, num );
 
    sprintf( (char *)retstr->strptr, "%f", num );
    retstr->strlength = strlen( (char *)retstr->strptr );
@@ -1098,14 +1131,15 @@ int RxReturnDouble
 int RxReturnPointer
 
 #ifdef HAVE_PROTO
-   ( RXSTRING *retstr, void *ptr )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *retstr, void *ptr )
 #else
-   ( retstr, ptr )
+   ( RxPackageGlobalData, retstr, ptr )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    RXSTRING *retstr;
    void *ptr;
 #endif
 {
-   InternalTrace( "RxReturnPointer", "%x,%x", retstr, ptr );
+   InternalTrace( RxPackageGlobalData, "RxReturnPointer", "%x,%x", retstr, ptr );
 
    if ( ptr )
    {
@@ -1135,14 +1169,15 @@ int RxReturnPointer
 int RxReturnString
 
 #ifdef HAVE_PROTO
-   ( RXSTRING *retstr, char *str )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *retstr, char *str )
 #else
-   ( retstr, str )
+   ( RxPackageGlobalData, retstr, str )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    RXSTRING *retstr;
    char *str;
 #endif
 {
-   return( RxReturnStringAndFree( retstr, str, 0 ) );
+   return( RxReturnStringAndFree( RxPackageGlobalData, retstr, str, 0 ) );
 }
 
 /*-----------------------------------------------------------------------------
@@ -1151,9 +1186,10 @@ int RxReturnString
 int RxReturnStringAndFree
 
 #ifdef HAVE_PROTO
-   ( RXSTRING *retstr, char *str, int freeit )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *retstr, char *str, int freeit )
 #else
-   ( retstr, str )
+   ( RxPackageGlobalData, retstr, str )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
    RXSTRING *retstr;
    char *str;
 #endif
@@ -1161,7 +1197,7 @@ int RxReturnStringAndFree
    int len = strlen( str );
    char *ret = NULL;
 
-   InternalTrace( "RxReturnStringAndFree", "%x,\"%s\" Length: %d Free: %d", retstr, str, len, freeit );
+   InternalTrace( RxPackageGlobalData, "RxReturnStringAndFree", "%x,\"%s\" Length: %d Free: %d", retstr, str, len, freeit );
 
    if ( len > RXAUTOBUFLEN )
    {
@@ -1197,10 +1233,11 @@ int RxReturnStringAndFree
    return( 0 );
 }
 
+#if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
 /*-----------------------------------------------------------------------------
  * This function
  *----------------------------------------------------------------------------*/
-REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
+static REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
 
 #if defined(HAVE_PROTO)
    ( REH_ARG0_TYPE ExitNumber, REH_ARG1_TYPE Subfunction, REH_ARG2_TYPE ParmBlock )
@@ -1223,9 +1260,9 @@ REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
          {
             for( i = 0; i < (long)say_parm->rxsio_string.strlength; i++ )
                fputc( ( char )say_parm->rxsio_string.strptr[i], 
-                  RxPackageGlobalData->RxTraceFilePointer );
+                  stdout );
          }
-         fputc( '\n', RxPackageGlobalData->RxTraceFilePointer );
+         fputc( '\n', stdout );
          rc = RXEXIT_HANDLED;
          break;
       }
@@ -1236,9 +1273,9 @@ REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
          {
             for( i = 0; i < (long)trc_parm->rxsio_string.strlength; i++ )
                fputc( ( char )trc_parm->rxsio_string.strptr[i], 
-                  RxPackageGlobalData->RxTraceFilePointer );
+                  stderr );
          }
-         fputc( '\n', RxPackageGlobalData->RxTraceFilePointer );
+         fputc( '\n', stderr );
          rc = RXEXIT_HANDLED;
          break;
       }
@@ -1274,9 +1311,10 @@ REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
    }
    return rc;
 }
+#endif
 
 /***********************************************************************/
-RSH_RETURN_TYPE RxSubcomHandler
+static RSH_RETURN_TYPE RxSubcomHandler
 
 #if defined(HAVE_PROTO)
    (
@@ -1292,40 +1330,31 @@ RSH_RETURN_TYPE RxSubcomHandler
 /***********************************************************************/
 {
    RSH_RETURN_TYPE rcode=0;
-   int rc=0;
+   int rc;
    char *buf;
-   /*
-    * Set the Flags variable to RXSUBCOM_DUP. If this value is still
-    * this after we call the user-supplied subcom handler, we use
-    * our default.
-    */
-   *Flags = RXSUBCOM_DUP;
-   rcode = PackageSubcomHandler( Command, Flags, Retstr );
-   if ( *Flags == RXSUBCOM_DUP  )
+
+   buf = malloc( Command->strlength + 1 );
+   if ( buf == NULL )
    {
-      buf = malloc( Command->strlength + 1 );
-      if ( buf == NULL )
-      {
+      *Flags = RXSUBCOM_ERROR;             /* raise an error condition   */
+      sprintf(Retstr->strptr, "%d", rc);   /* format return code string  */
+                                           /* and set the correct length */
+      Retstr->strlength = strlen(Retstr->strptr);
+   }
+   else
+   {
+      memcpy( buf, Command->strptr, Command->strlength );
+      buf[Command->strlength] = '\0';
+      rc = system( buf );
+      free( buf );
+      if (rc < 0)
          *Flags = RXSUBCOM_ERROR;             /* raise an error condition   */
-         sprintf(Retstr->strptr, "%d", rc);   /* format return code string  */
-                                              /* and set the correct length */
-         Retstr->strlength = strlen(Retstr->strptr);
-      }
       else
-      {
-         memcpy( buf, Command->strptr, Command->strlength );
-         buf[Command->strlength] = '\0';
-         rc = system( buf );
-         free( buf );
-         if (rc < 0)
-            *Flags = RXSUBCOM_ERROR;             /* raise an error condition   */
-         else
-            *Flags = RXSUBCOM_OK;                /* not found is not an error  */
-      
-         sprintf(Retstr->strptr, "%d", rc); /* format return code string  */
-                                                 /* and set the correct length */
-         Retstr->strlength = strlen(Retstr->strptr);
-      }
+         *Flags = RXSUBCOM_OK;                /* not found is not an error  */
+   
+      sprintf(Retstr->strptr, "%d", rc); /* format return code string  */
+                                              /* and set the correct length */
+      Retstr->strlength = strlen(Retstr->strptr);
    }
    return rcode;                              /* processing completed       */
 }
@@ -1345,10 +1374,10 @@ BOOL WINAPI DllMain( HINSTANCE hDLL, DWORD dwReason, LPVOID pReserved)
    switch( dwReason)
    {
       case DLL_PROCESS_ATTACH:
-         LoadLibrary( RxPackageName );
+         LoadLibrary( RXPACKAGENAME );
          break;
       case DLL_PROCESS_DETACH:
-         FreeLibrary( GetModuleHandle( RxPackageName ) );
+         FreeLibrary( GetModuleHandle( RXPACKAGENAME ) );
          break;
       case DLL_THREAD_ATTACH:
          break;

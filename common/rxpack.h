@@ -164,6 +164,9 @@
 typedef USHORT RexxFunctionHandler(PSZ, ULONG, PRXSTRING, PSZ, PRXSTRING) ;
 #endif
 
+typedef int PackageInitialiser( void );
+typedef int PackageTerminator( void );
+
 /*-----------------------------------------------------------------------------
  * Definition of an external function
  *----------------------------------------------------------------------------*/
@@ -173,8 +176,6 @@ typedef struct {
    RRFD_ARG2_TYPE      InternalName;
    int                 DllLoad;
 } RexxFunction;
-
-extern char *RxPackageName;
 
 /*
  * The following structure contains all "global" data common to all
@@ -187,81 +188,46 @@ typedef struct
    char FName[100];                   /* current function name */
    FILE *RxTraceFilePointer;          /* file pointer for all output */
    char RxTraceFileName[MAX_PATH];    /* filename of output file */
-   ULONG RxPackageInitialised;        /* needed ?? */
 } RxPackageGlobalDataDef;
 
 #ifdef HAVE_PROTO
-void FunctionPrologue( char *, ULONG, RXSTRING * );
-void FunctionTrace( char *, ... );
-long FunctionEpilogue( char *, long );
-void InternalTrace( char *, ... );
-void RxDisplayError( RFH_ARG0_TYPE, ... );
-int InitRxPackage( RxPackageGlobalDataDef * );
-int TermRxPackage( char *, int );
-int InitialisePackage( void );
-int TerminatePackage( void );
-int RegisterRxFunctions( void );
-int RegisterRxSubcom( void );
-int QueryRxFunction( char * );
-int DeregisterRxFunctions( int );
-char *make_upper( char * );
-char *AllocString( char *, int );
-char *MkAsciz( char *, int, char *, int );
-int SetRexxVariable( char *, int, char *, int );
-RXSTRING *GetRexxVariable(char *, RXSTRING *, int );
-int *GetRexxVariableInteger( char *name, int *value, int suffix );
-int StrToInt( RXSTRING *, ULONG * );
-int StrToNumber( RXSTRING *, LONG * );
-int StrToBool( RXSTRING *, ULONG * );
-int RxSetTraceFile( char * );
-char *RxGetTraceFile( void );
-void RxSetRunFlags( int );
-int RxGetRunFlags( void );
-int RxReturn( RXSTRING * );
-int RxReturnString( RXSTRING *, char * );
-int RxReturnStringAndFree( RXSTRING *, char *, int );
-int RxReturnNumber( RXSTRING *, long );
-int RxReturnDouble( RXSTRING *, double );
-int RxReturnPointer( RXSTRING *, void * );
-int memcmpi( char *, char *, int );
-int my_checkparam(const char *, int, int, int);
-RSH_RETURN_TYPE PackageSubcomHandler( RSH_ARG0_TYPE, RSH_ARG1_TYPE, RSH_ARG2_TYPE );
+# define Args(a) a
 #else
-void FunctionPrologue( );
-void FunctionTrace( );
-long FunctionEpilogue( );
-void InternalTrace( );
-void RxDisplayError( );
-int InitRxPackage( );
-int TermRxPackage( );
-int InitialisePackage( );
-int TerminatePackage( );
-int RegisterRxFunctions( );
-int RegisterRxSubcom( );
-int QueryRxFunction( );
-int DeregisterRxFunctions( );
-char *make_upper ( );
-char *AllocString( );
-char *MkAsciz( );
-int SetRexxVariable( );
-RXSTRING *GetRexxVariable( );
-int *GetRexxVariableInteger( );
-int StrToInt( );
-int StrToNumber( );
-int StrToBool( );
-int RxSetTraceFile( );
-char *RxGetTraceFile( );
-void RxSetRunFlags( );
-int RxGetRunFlags( );
-int RxReturn( );
-int RxReturnString( );
-int RxReturnStringAndFree( );
-int RxReturnNumber( );
-int RxReturnDouble( );
-int memcmpi( );
-int my_checkparam( );
-RSH_RETURN_TYPE PackageSubcomHandler( );
+# define Args(a) ()
 #endif
+
+RxPackageGlobalDataDef *FunctionPrologue Args(( RxPackageGlobalDataDef *, PackageInitialiser *, char *, ULONG, RXSTRING * ));
+void FunctionTrace Args(( RxPackageGlobalDataDef *, char *, ... ));
+long FunctionEpilogue Args(( RxPackageGlobalDataDef *, char *, long ));
+void InternalTrace Args(( RxPackageGlobalDataDef *, char *, ... ));
+void RxDisplayError Args(( RxPackageGlobalDataDef *, RFH_ARG0_TYPE, ... ));
+RxPackageGlobalDataDef *InitRxPackage Args(( RxPackageGlobalDataDef *, PackageInitialiser, int * ));
+int TermRxPackage Args(( RxPackageGlobalDataDef *, PackageTerminator, RexxFunction *, char *, int ));
+int RegisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction * ));
+int RegisterRxSubcom Args(( RxPackageGlobalDataDef *, RexxSubcomHandler * ));
+int QueryRxFunction Args(( RxPackageGlobalDataDef *, char * ));
+int DeregisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction *, int ));
+char *make_upper Args(( char * ));
+char *AllocString Args(( char *, int ));
+char *MkAsciz Args(( char *, int, char *, int ));
+int SetRexxVariable Args(( RxPackageGlobalDataDef *,char *, int, char *, int ));
+RXSTRING *GetRexxVariable Args(( RxPackageGlobalDataDef *, char *, RXSTRING *, int ));
+int *GetRexxVariableInteger Args(( RxPackageGlobalDataDef *, char *name, int *value, int suffix ));
+int StrToInt Args(( RXSTRING *, ULONG * ));
+int StrToNumber Args(( RXSTRING *, LONG * ));
+int StrToBool Args(( RXSTRING *, ULONG * ));
+int RxSetTraceFile Args(( RxPackageGlobalDataDef *, char * ));
+char *RxGetTraceFile Args(( RxPackageGlobalDataDef * ));
+void RxSetRunFlags Args(( RxPackageGlobalDataDef *, int ));
+int RxGetRunFlags Args(( RxPackageGlobalDataDef * ));
+int RxReturn Args(( RxPackageGlobalDataDef *, RXSTRING * ));
+int RxReturnString Args(( RxPackageGlobalDataDef *, RXSTRING *, char * ));
+int RxReturnStringAndFree Args(( RxPackageGlobalDataDef *, RXSTRING *, char *, int ));
+int RxReturnNumber Args(( RxPackageGlobalDataDef *, RXSTRING *, long ));
+int RxReturnDouble Args(( RxPackageGlobalDataDef *, RXSTRING *, double ));
+int RxReturnPointer Args(( RxPackageGlobalDataDef *, RXSTRING *, void * ));
+int memcmpi Args(( char *, char *, int ));
+int my_checkparam Args(( RxPackageGlobalDataDef *, const char *, int, int, int ));
 
 #ifdef DEBUG
 # define DEBUGDUMP(x) {x;}

@@ -18,18 +18,13 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.4 2002/07/06 10:58:06 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.5 2002/07/29 06:19:40 mark Exp $";
 
 #include "rxpack.h"
 
 #ifndef R_OK
 # define R_OK 4
 #endif
-
-/* Debugging flags - owned by rxpackage.c */
-extern int RxRunFlags;
-extern FILE *RxTraceFilePointer;
-extern RxPackageGlobalDataDef *RxPackageGlobalData;
 
 #ifdef HAVE_PROTO
 # if !defined(HAVE_GETOPT)
@@ -46,6 +41,11 @@ void usage( );
 /* These are required by the getopt() function */
 extern char *optarg;
 extern int  optind;
+
+extern PackageInitialiser *GETPACKAGEINITIALISER();
+extern PackageTerminator *GETPACKAGETERMINATOR();
+extern RexxSubcomHandler *GETPACKAGESUBCOMHANDLER();
+extern RexxFunction *GETPACKAGEFUNCTIONS();
 
 /*-----------------------------------------------------------------------------
  * Checks to see if supplied filename is readable.
@@ -84,18 +84,19 @@ int main
    FILE *fp;
    long i=0, ArgCount=0;
    int interactive = FALSE;
-   short rc=0;
+   int rc=0;
    RXSTRING retstr;
    CHAR retbuf[RETBUFLEN];
    RXSTRING ArgList;
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
    RXSYSEXIT ExitList[2];
 #endif
-   RxPackageGlobalDataDef MyGlob;
+   RxPackageGlobalDataDef MyGlob, *RxPackageGlobalData;
 
    memset( (char *)&MyGlob, 0, sizeof( RxPackageGlobalDataDef ) );
 
    strcpy( MyGlob.RxTraceFileName, "stderr" );
+   MyGlob.RxTraceFilePointer = stderr;
    /* 
     * Get any program options. 
     */
@@ -119,7 +120,7 @@ int main
             interactive = TRUE; 
             break;
          case 'u':
-            DeregisterRxFunctions( 1 );
+            DeregisterRxFunctions( &MyGlob, GETPACKAGEFUNCTIONS(), 1 );
             return(0);
             break;
          case 'h':
@@ -207,24 +208,31 @@ int main
    /* 
     * Initialise the package interface, but don't set the trace file
     */
-   if ( ( rc = InitRxPackage( &MyGlob ) ) != 0 )
+   RxPackageGlobalData = InitRxPackage( NULL, GETPACKAGEINITIALISER(), &rc );
+   if ( rc != 0 )
       return( rc );
+   /*
+    * Transfer stuff from MyGlob to RxPackageGlobalData
+    */
+   RxPackageGlobalData->RxRunFlags = MyGlob.RxRunFlags;
+   RxPackageGlobalData->RxTraceFilePointer = MyGlob.RxTraceFilePointer;
+   strcpy( RxPackageGlobalData->RxTraceFileName, MyGlob.RxTraceFileName );
    /* 
     * Register all external functions
     */
-   if ( ( rc = RegisterRxFunctions( ) ) != 0 )
+   if ( ( rc = RegisterRxFunctions( RxPackageGlobalData, GETPACKAGEFUNCTIONS() ) ) != 0 )
       return( rc );
    /* 
     * Register a default subcommand handler to pass commands to the OS
     */
-   if ( ( rc = RegisterRxSubcom( ) ) != 0 )
+   if ( ( rc = RegisterRxSubcom( RxPackageGlobalData, GETPACKAGESUBCOMHANDLER() ) ) != 0 )
       return( rc );
-   FunctionPrologue( RxPackageName, 0L, NULL );
+   FunctionPrologue( RxPackageGlobalData, GETPACKAGEINITIALISER(), RXPACKAGENAME, 0L, NULL );
    /*
     * Set up the system exit for the Say and Trace redirection
     */
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
-   ExitList[0].sysexit_name = RxPackageName;
+   ExitList[0].sysexit_name = RXPACKAGENAME;
    ExitList[0].sysexit_code = RXSIO;
    ExitList[1].sysexit_code = RXENDLST;
 #endif
@@ -241,7 +249,7 @@ int main
               ( RS_ARG1_TYPE )&ArgList,
               ( RS_ARG2_TYPE )ProgramName,
               ( RS_ARG3_TYPE )NULL,
-              ( RS_ARG4_TYPE )RxPackageName,
+              ( RS_ARG4_TYPE )RXPACKAGENAME,
               ( RS_ARG5_TYPE )RXCOMMAND,
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
               ( RS_ARG6_TYPE )ExitList,
@@ -251,11 +259,11 @@ int main
               ( RS_ARG7_TYPE )&rc,
               ( RS_ARG8_TYPE )&retstr);
 
+   rc = FunctionEpilogue( RxPackageGlobalData, RXPACKAGENAME, (ULONG)rc );
    /* 
     * Terminate the package interface.
     */
-   if (RxPackageGlobalData != NULL)
-      (void)TermRxPackage( RxPackageName, 0 );
+   (void)TermRxPackage( RxPackageGlobalData, GETPACKAGEINITIALISER(), GETPACKAGEFUNCTIONS(), RXPACKAGENAME, 0 );
 
    if ( ArgList.strptr )
       free(ArgList.strptr);
@@ -267,5 +275,5 @@ int main
    if ( interactive )
       unlink( ProgramName );
 
-   return (int)FunctionEpilogue( RxPackageName, (ULONG)rc );
+   return rc;
 }

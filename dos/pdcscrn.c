@@ -31,12 +31,12 @@
 #  define memmove PDC_memmove
 #endif
 
-#ifdef GO32
+#ifdef __DJGPP__
 # include <sys/movedata.h>
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.2 2001/01/10 08:28:48 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.3 2003/06/23 07:54:35 mark Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;
@@ -89,7 +89,7 @@ int ds=0;
 	{
 		if (saved_screen == NULL)
 			return( OK );
-#ifdef GO32
+#ifdef __DJGPP__
 		dosmemput(saved_screen,
 			saved_lines * saved_cols * sizeof(unsigned short),
 		(unsigned long)_FAR_POINTER(SP->video_seg,SP->video_ofs));
@@ -250,7 +250,7 @@ int ds=0;
 		if ((saved_screen = (unsigned short*)malloc(saved_lines*saved_cols*sizeof(unsigned short))) == NULL)
 			return(ERR);
 
-#ifdef GO32
+#ifdef __DJGPP__
 		dosmemget ((unsigned long)_FAR_POINTER(SP->video_seg,SP->video_ofs),
 			saved_lines * saved_cols * sizeof(unsigned short),saved_screen);
 #else
@@ -331,3 +331,5 @@ int nlines,ncols;
 
 	return ( rc );
 }
+
+

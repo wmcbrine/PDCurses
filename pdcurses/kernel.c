@@ -51,7 +51,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.3 2002/11/27 11:24:31 mark Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.4 2003/06/23 07:53:52 mark Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -159,6 +159,7 @@ char linesrippedoff=0;
       ripoffline                            -        -      3.0
       curs_set                              -        -      3.0
       napms                                 Y        Y       Y
+      draino                                ?        ?       N
 
 **man-end**********************************************************************/
 

@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.5 2002/11/27 11:23:43 mark Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.6 2003/06/23 07:53:54 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -89,7 +89,7 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.5 2002/11/27 11:23:43 mark Exp $";
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
       getstr                                Y        Y       Y
-      wgtdch                                Y        Y       Y
+      wgetstr                               Y        Y       Y
       mvgetstr                              Y        Y       Y
       mvwgetstr                             Y        Y       Y
       getnstr                               -        -      4.0

@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.5 2002/11/27 11:16:13 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.6 2003/06/23 07:54:31 mark Exp $";
 #endif
 
 #include <string.h>
@@ -96,7 +96,7 @@ int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
  	PDC_CLIP_ACCESS_ERROR	no clipboard support
 
   Portability:
- 	PDCurses	int PDC_getclipboard( char *contents, long length );
+ 	PDCurses	int PDC_setclipboard( char *contents, long length );
 
 **man-end**********************************************************************/
 
@@ -194,3 +194,5 @@ int	PDC_CDECL	PDC_clearclipboard( void )
 	}
 	return PDC_CLIP_SUCCESS;
 }
+
+

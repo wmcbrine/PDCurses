@@ -65,7 +65,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.3 2001/04/22 05:53:22 mark Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.4 2003/06/23 07:53:56 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -125,8 +125,8 @@ char *rcsid_util  = "$Id: util.c,v 1.3 2001/04/22 05:53:22 mark Exp $";
       keyname                               Y        -      3.0
       filter                                Y        -      3.0
       use_env                               -        -      4.0
-      put_win                               -        -      4.0
-      get_win                               -        -      4.0
+      putwin                                -        -      4.0
+      getwin                                -        -      4.0
       delay_output                          Y        Y       Y
       flushinp                              Y        Y       Y
 

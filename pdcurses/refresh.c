@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh  = "$Id: refresh.c,v 1.2 2002/12/16 06:58:28 mark Exp $";
+char *rcsid_refresh  = "$Id: refresh.c,v 1.3 2003/06/23 07:53:55 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -61,7 +61,7 @@ char *rcsid_refresh  = "$Id: refresh.c,v 1.2 2002/12/16 06:58:28 mark Exp $";
    int   wnoutrefresh(register WINDOW *win);
    int   doupdate(void);
    int   redrawwin(WINDOW *win);
-   int   redrawln(WINDOW *win, int beg_line, int num_lines);
+   int   wredrawln(WINDOW *win, int beg_line, int num_lines);
 
   X/Open Description:
    The routine wrefresh() copies the named window to the physical

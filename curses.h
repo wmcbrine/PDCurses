@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.15 2002/11/27 11:22:46 mark Exp $
+$Id: curses.h,v 1.16 2003/06/23 07:56:18 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -443,10 +443,11 @@ PDCurses portable platform definitions list:
 *       GNU compilers     djgpp
 *
 *		djgpp definitions:
-*				GO32
+*				__DJGPP__
+*				GO32 (deprecated)
 *				DOS
 */
-#ifdef GO32 				  /* You may have to define in makefile */
+#ifdef __DJGPP__ 			  /* You may have to define in makefile */
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1         /* DJGPP supports ANSI C prototypes   */
 #  endif
@@ -2138,3 +2139,5 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 # undef bool
    }
 #endif
+
+

@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.2 2001/01/10 08:28:36 mark Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.3 2003/06/23 07:54:32 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -118,7 +118,7 @@ int ds=0;
 		if (SP->direct_video)
 		{
 
-#ifdef GO32
+#ifdef __DJGPP__
 			dosmemput (ch, COLS * sizeof(unsigned short),
 				(unsigned long)_FAR_POINTER(SP->video_seg,
 				SP->video_ofs + (i * COLS * sizeof(unsigned short))));
@@ -677,7 +677,7 @@ int ds=0;
 		memcpy(dstp, srcp, len * sizeof(chtype));
 #endif
 
-#ifdef GO32
+#ifdef __DJGPP__
 		dosmemput (ch, len * sizeof(unsigned short),
 			(unsigned long)_FAR_POINTER(SP->video_seg,
 			SP->video_ofs + (((lineno * curscr->_maxx) + x) * sizeof(unsigned short))));
@@ -719,3 +719,5 @@ int ds=0;
 	}
 	return(FALSE);
 }
+
+

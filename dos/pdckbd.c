@@ -18,7 +18,7 @@
 ***************************************************************************
 */
                           
-#ifdef GO32
+#ifdef __DJGPP__
 # include <signal.h>
 #else
 # include <conio.h>
@@ -32,7 +32,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.4 2002/09/01 08:13:29 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.5 2003/06/23 07:54:34 mark Exp $";
 #endif
 
 /*******************************************************************************
@@ -521,7 +521,7 @@ bool setting;
 	else
 		_watch_breaks();
 #else
-# ifdef GO32
+# ifdef __DJGPP__
 	(void*)signal(SIGINT,(setting ? SIG_DFL : SIG_IGN));
 /*	__djgpp_set_ctrl_c(setting);*/
 	setcbrk(setting);
@@ -709,3 +709,5 @@ unsigned long	PDC_get_key_modifiers()
 #endif
 	return(pdc_key_modifiers);
 }
+
+

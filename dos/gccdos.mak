@@ -1,29 +1,38 @@
 ################################################################################
 #
-# GNU MAKE (3.7.3) Makefile for PDCurses library - DOS DJGPP V2.0
+# GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0
 #
 # Usage: make -f [path\]gccdos.mak [-DDEBUG] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.a|panel.a|testcurs.exe...]
+# [all|libs|demos|dist|pdcurses.a|panel.a|testcurs.exe...]
 #
 ################################################################################
 #
 # Change these for your environment...
 #
+# PDCURSES_HOME = .. works in the 'dos' directory except for 'dist' rule
+# PDC_HOME is the backslashed version of PDCURSES_HOME, generated automatically
+# CC_HOME should be set automatically if you are running DJGPP make
+#
 ################################################################################
-PDCURSES_HOME		=c:/curses
-PDC_HOME		=c:\curses
-CC_HOME		=c:/djgpp
+PDCURSES_HOME	= c:/curses
+PDC_HOME	= $(subst /,\,$(PDCURSES_HOME))
+
+ifdef DJDIR
+CC_HOME		= $(DJDIR)
+else
+CC_HOME		= c:/djgpp
+endif
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################
 VER=26
 VERDOT=2.6
 
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
-PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
-PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
+PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
+PDCURSES_HEADERS	=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)/panel.h
 
 CCLIBDIR		=$(CC_HOME)/lib
@@ -40,7 +49,7 @@ ifeq ($(DEBUG),Y)
 	CFLAGS  = -c -g -Wall -DPDCDEBUG
 	LDFLAGS = -g
 else
-	CFLAGS  = -c -O -Wall
+	CFLAGS  = -c -O2 -Wall
 	LDFLAGS =
 endif
 
@@ -49,24 +58,28 @@ CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR) -D_NAIVE_DOS_REGS
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 
 LINK		= gcc
-COFF2EXE	=coff2exe
+# COFF2EXE	= coff2exe	# deprecated, not required
 
 LIBEXE		= ar
-LIBFLAGS		=rcv
+LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
+DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
 
 ################################################################################
+.PHONY: all libs clean demos dist
+
 all:	$(PDCLIBS) $(DEMOS)
+
+libs:	$(PDCLIBS)
 
 clean:
 	-del *.o
-	-del curses.lib
-	-del panel.lib
+	-del $(LIBCURSES)
+	-del $(LIBPANEL)
 	-del *.exe
 
 demos:	$(DEMOS)
@@ -127,6 +140,8 @@ pdcwin.o
 
 PANOBJS =     \
 panel.o
+
+#------------------------------------------------------------------------
 
 pdcurses.a : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
@@ -287,33 +302,27 @@ panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o firework firework.o $(LIBCURSES)
-	$(COFF2EXE) firework
+	$(LINK) $(LDFLAGS) -o$@ firework.o $(LIBCURSES)
 	strip $@
 
 newdemo.exe:	newdemo.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o newdemo newdemo.o $(LIBCURSES)
-	$(COFF2EXE) newdemo
+	$(LINK) $(LDFLAGS) -o$@ newdemo.o $(LIBCURSES)
 	strip $@
 
 ptest.exe:	ptest.o $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) -o ptest ptest.o $(LIBCURSES) $(LIBPANEL)
-	$(COFF2EXE) ptest
+	$(LINK) $(LDFLAGS) -o$@ ptest.o $(LIBCURSES) $(LIBPANEL)
 	strip $@
 
 testcurs.exe:	testcurs.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o testcurs testcurs.o $(LIBCURSES)
-	$(COFF2EXE) testcurs
+	$(LINK) $(LDFLAGS) -o$@ testcurs.o $(LIBCURSES)
 	strip $@
 
 tuidemo.exe:	tuidemo.o tui.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES)
-	$(COFF2EXE) tuidemo
+	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
 	strip $@
 
 xmas.exe:	xmas.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o xmas xmas.o $(LIBCURSES)
-	$(COFF2EXE) xmas
+	$(LINK) $(LDFLAGS) -o$@ xmas.o $(LIBCURSES)
 	strip $@
 
 
@@ -330,15 +339,17 @@ testcurs.o: $(demodir)/testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/testcurs.c
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $(demodir)/tui.c
+	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)/tui.c
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $(demodir)/tuidemo.c
+	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)/tuidemo.c
 
 xmas.o: $(demodir)/xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/xmas.c
 
-dist: pdcurses.a panel.a
+#------------------------------------------------------------------------
+
+dist: $(PDCLIBS)
 	-mkdir tmp
 	cd tmp
 	copy $(PDC_HOME)\README README
@@ -346,8 +357,12 @@ dist: pdcurses.a panel.a
 	copy $(PDC_HOME)\curses.h .
 	copy $(PDC_HOME)\curspriv.h .
 	copy $(PDC_HOME)\maintain.er .
-	copy ..\pdcurses.a .
-	copy ..\panel.a .
+	copy $(PDC_HOME)\INSTALL INSTALL
+	copy $(PDC_HOME)\TODO TODO
+	copy $(PDC_HOME)\panel.h panel.h
+	copy $(PDC_HOME)\pdc64.gif pdc64.gif
+	copy ..\$(LIBCURSES) .
+	copy ..\$(LIBPANEL) .
 	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > file_id.diz
 	echo      PDCurses - Public Domain Curses >> file_id.diz
 	echo  Version $(VERDOT) for DJGPP 2.0 PDC$(VER)DJG.ZIP >> file_id.diz
@@ -359,3 +374,5 @@ dist: pdcurses.a panel.a
 	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> file_id.diz
 	zip pdc$(VER)djg *.*
 	cd ..
+
+

@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.2 2001/01/10 08:28:39 mark Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.3 2003/06/23 07:54:33 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -555,7 +555,7 @@ int	PDC_query_adapter_type()
 	int	retval = _NONE;
 
 		/* thanks to paganini@ax.apc.org for the GO32 fix */
-#  if defined(GO32) && defined(NOW_WORKS)
+#  if defined(__DJGPP__) && defined(NOW_WORKS)
 #    include <dpmi.h>
 	_go32_dpmi_registers dpmi_regs;
 #  endif
@@ -714,7 +714,7 @@ int	PDC_query_adapter_type()
 
 		/* Check for DESQview shadow buffer */
 		/* thanks to paganini@ax.apc.org for the GO32 fix */
-#if defined(GO32) && defined(NOW_WORKS)
+#if defined(__DJGPP__) && defined(NOW_WORKS)
 	dpmi_regs.h.ah = 0xfe;
 	dpmi_regs.h.al = 0;
 	dpmi_regs.x.di = SP->video_ofs;
@@ -724,7 +724,7 @@ int	PDC_query_adapter_type()
 	SP->video_seg = dpmi_regs.x.es;
 #endif
 
-#if !defined(GO32) && !defined(WATCOMC)
+#if !defined(__DJGPP__) && !defined(WATCOMC)
 	regs.h.ah = 0xfe;
 	regs.h.al = 0;
 	regs.x.di = SP->video_ofs;
@@ -853,3 +853,5 @@ int adapter;
 	}
 	return (adapter);
 }
+
+

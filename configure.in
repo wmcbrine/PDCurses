@@ -196,6 +196,8 @@ if test "$with_xaw3d" = yes; then
 	AC_DEFINE(USE_XAW3D)
 fi
 dnl --------------- Check how to make shared libraries -------------------
+dnl Force the ability of shared library usage
+with_rexx="rexxtrans"
 MH_SHARED_LIBRARY(XCurses)
 
 AC_OUTPUT(Makefile pdcurses/$mymakefile demos/Makefile panel/Makefile tools/Makefile saa/Makefile)

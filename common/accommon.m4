@@ -300,7 +300,19 @@ done
 
 if test "x$mh_x11_dir" != "x" ; then
 	mh_x11_dir_no_x11=`echo $mh_x11_dir | sed 's/\/X11$//'`
-	if test "$mh_x11_dir_no_x11" != "$mh_x11_dir" ; then
+dnl
+dnl Test to see if $mh_x11_dir_no_x11 is /usr/include and we are using gcc
+dnl under Solaris. If so, ignore it.
+	AC_REQUIRE([AC_CANONICAL_SYSTEM])
+	mh_solaris_gcc_usr_include="no"
+	case "$target" in
+		*solaris*)
+			if test "$ac_cv_prog_CC" = "gcc" -a "$mh_x11_dir_no_x11" = "/usr/include" ; then
+				mh_solaris_gcc_usr_include="yes"
+			fi
+			;;
+	esac
+	if test "$mh_x11_dir_no_x11" != "$mh_x11_dir" -a "$mh_solaris_gcc_usr_include" = "no" ; then
 		MH_XINC_DIR="-I$mh_x11_dir -I$mh_x11_dir_no_x11"
 	else
 		MH_XINC_DIR="-I$mh_x11_dir"

@@ -31,8 +31,8 @@ INSTALL_DATA	= @INSTALL_DATA@
 
 SHL_TARGETS =      @SHL_TARGETS@
 DYN_COMP =         @DYN_COMP@
-RXLIBPRE =         @RXLIBPRE@
-RXLIBPST =         @RXLIBPST@
+SHLPRE =           @SHLPRE@
+SHLPST =           @SHLPST@
 LD_RXLIB1  =       @LD_RXLIB1@
 LD_RXLIB2  =       # @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
 MH_XLIBS =         @MH_XLIBS@

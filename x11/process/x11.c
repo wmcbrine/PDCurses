@@ -476,9 +476,14 @@ char *argv[];
    key_sock = key_sockets[1];
    /*
     * Trap all signals when XCurses is the child process... 
+    * ...but only if they haven't already been ignored by the
+    * application.
     */
-   for (i=0;i<PDC_MAX_SIGNALS;i++)
-      XCursesSetSignal(i,XCursesSignalHandler);
+   for ( i = 0; i < PDC_MAX_SIGNALS; i++ )
+   {
+      if ( XCursesSetSignal( i, XCursesSignalHandler) == SIG_IGN )
+         XCursesSetSignal( i, SIG_IGN );
+   }
    /*
     * Start defining X Toolkit things...
     */

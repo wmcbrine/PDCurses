@@ -21,6 +21,8 @@ BUGS FIXED:
 - Add support for all libXaw replacement libraries with Scrollbar bug. Note
   that for this to work, you still have to change the libXaw replacement
   libraries to fix the bug :-(
+- Don't trap signals in XCurses if calling application has ignored them. Change
+  by Frank Heckenbach.
 
 NEW FEATURES:
 - Clipboard support now available on DOS platform, but handled internally to the

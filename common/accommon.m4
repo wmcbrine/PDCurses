@@ -6,7 +6,9 @@ dnl MH_IPC
 dnl MH_CHECK_X_INC
 dnl MH_CHECK_X_LIB
 dnl MH_HAVE_PROTO
+dnl MH_HAVE_BROKEN_CXX_WITH_STRING_H
 dnl MH_PROG_CC
+dnl MH_PROG_CXX
 dnl MH_CHECK_X_HEADERS
 dnl MH_CHECK_X_KEYDEFS
 dnl MH_CHECK_X_TYPEDEF
@@ -566,6 +568,23 @@ AC_TRY_COMPILE([#include <stdio.h>],
 [extern int xxx(int, char *);],
   mh_have_proto=yes; AC_DEFINE(HAVE_PROTO), mh_have_proto=no )
 AC_MSG_RESULT($mh_have_proto)
+])dnl
+
+dnl -----------------------------------------------------
+dnl Determine if compiling <string.h> breaks g++ compiler
+dnl -----------------------------------------------------
+AC_DEFUN([MH_HAVE_BROKEN_CXX_WITH_STRING_H],
+[
+AC_MSG_CHECKING(if g++ compiler cannot compile <string.h>)
+dnl
+dnl override existing value of $ac_compile so we use the correct compiler
+dnl SHOULD NOT NEED THIS
+dnl
+ac_compile='$ac_cv_prog_CC conftest.$ac_ext $CFLAGS $CPPFLAGS -c 1>&5 2>&5'
+AC_TRY_COMPILE([#include <string.h>],
+[extern int xxx(int, char *);],
+  mh_have_broken_cxx_with_string_h=yes; AC_DEFINE(HAVE_BROKEN_CXX_WITH_STRING_H), mh_have_broken_cxx_with_string_h=no )
+AC_MSG_RESULT($mh_have_broken_cxx_with_string_h)
 ])dnl
 
 dnl ---------------------------------------------------------------------------

@@ -2342,6 +2342,42 @@ done
 CPPFLAGS="$save_CPPFLAGS"
 
 
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $SYS_DEFS $MH_XINC_DIR"
+for td in XPointer ; do
+echo $ac_n "checking if $td is typedefed:""... $ac_c" 1>&6
+echo "configure:2350: checking if $td is typedefed:" >&5
+cat > conftest.$ac_ext <<EOF
+#line 2352 "configure"
+#include "confdefs.h"
+#include "X11/Xlib.h"
+int main() {
+$td fred
+; return 0; }
+EOF
+if { (eval echo configure:2359: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  mh_td=yes
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  mh_td=no
+
+fi
+rm -f conftest*
+if test "$mh_td" = yes ; then
+	TD_upper=`echo $td | tr a-z A-Z`
+	cat >> confdefs.h <<EOF
+#define ${TD_upper}_TYPEDEFED 1
+EOF
+
+fi
+echo "$ac_t""$mh_td" 1>&6
+done
+CPPFLAGS="$save_CPPFLAGS"
+
+
 # Check whether --enable-debug or --disable-debug was given.
 if test "${enable_debug+set}" = set; then
   enableval="$enable_debug"
@@ -2502,10 +2538,10 @@ esac
 
 if test "$DYN_COMP" = ""; then
 echo $ac_n "checking compiler flags for a dynamic object""... $ac_c" 1>&6
-echo "configure:2506: checking compiler flags for a dynamic object" >&5
+echo "configure:2542: checking compiler flags for a dynamic object" >&5
 
 cat > conftest.$ac_ext <<EOF
-#line 2509 "configure"
+#line 2545 "configure"
 int a=0
 EOF
 
@@ -2517,7 +2553,7 @@ EOF
 		CFLAGS="-c $a"
 
 		mh_compile='${CC-cc} -c $CFLAGS conftest.$ac_ext > conftest.tmp 2>&1'
-		if { (eval echo configure:2521: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
+		if { (eval echo configure:2557: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
 			DYN_COMP=""
 		else
 			slash="\\"
@@ -2634,21 +2670,21 @@ case "$target" in
 		
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 2638 "configure"
+#line 2674 "configure"
 int foo()
 {
 return(0);
 }
 EOF
-if { (eval echo configure:2644: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
+if { (eval echo configure:2680: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
 	mh_dyn_link='ld -shared -o conftest.rxlib conftest.o -lc 1>&5'
-	if { (eval echo configure:2646: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+	if { (eval echo configure:2682: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 		LD_RXLIB1="ld -shared"
 		RXLIBPRE="lib"
 		RXLIBPST=".so"
 	else
 		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&5'
-		if { (eval echo configure:2652: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+		if { (eval echo configure:2688: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 			LD_RXLIB1="ld -G"
 			RXLIBPRE="lib"
 			RXLIBPST=".so"

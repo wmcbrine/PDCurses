@@ -51,6 +51,10 @@
 # include <sys/shm.h>
 #endif
 
+#if !defined(XPOINTER_TYPEDEFED)
+ typedef char * XPointer;
+#endif
+
 /*
  * #includes specific to running XCurses with threads
  */

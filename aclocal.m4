@@ -401,3 +401,27 @@ else
 	AC_MSG_RESULT($mh_cv_max_signals)
 fi
 ])dnl
+
+dnl ---------------------------------------------------------------------------
+dnl Determine if supplied types have been typedefed
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([MH_CHECK_X_TYPEDEF],
+[
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $SYS_DEFS $MH_XINC_DIR"
+for td in $1 ; do
+AC_MSG_CHECKING(if $td is typedefed:)
+AC_TRY_COMPILE(
+[#include "X11/Xlib.h"],
+[$td fred],
+	[mh_td=yes],
+	[mh_td=no]
+)
+if test "$mh_td" = yes ; then
+	TD_upper=`echo $td | tr a-z A-Z`
+	AC_DEFINE_UNQUOTED(${TD_upper}_TYPEDEFED, 1)
+fi
+AC_MSG_RESULT($mh_td)
+done
+CPPFLAGS="$save_CPPFLAGS"
+])dnl

@@ -131,3 +131,5 @@
 /* Define if you want to build XCurses with processes */
 #undef USE_PROCESSES
 
+/* Define XPointer is typedefed in X11/Xlib.h */
+#undef XPOINTER_TYPEDEFED

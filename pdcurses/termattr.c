@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr  = "$Id: termattr.c,v 1.2 2002/11/27 11:25:18 mark Exp $";
+char *rcsid_termattr  = "$Id: termattr.c,v 1.3 2003/12/13 06:03:14 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -297,6 +297,9 @@ char*	PDC_CDECL	longname()
 	case DISPLAY_EGA:	sprintf(_display, "EGA-%dx%d", LINES, COLS); break;
 	case DISPLAY_VGA:	sprintf(_display, "VGA-%dx%d", LINES, COLS); break;
 	case DISPLAY_8514A:     sprintf(_display, "8514-%dx%d", LINES, COLS);  break;
+#  ifdef DISPLAY_XGA
+	case DISPLAY_XGA:	sprintf(_display, "XGA-%dx%d", LINES, COLS); break;
+#  endif
 # endif
 	default:	sprintf(_display, "Unknown-%dx%d", LINES, COLS);  break;
 	}

@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window  = "$Id: window.c,v 1.3 2004/08/07 07:18:46 rexx Exp $";
+char *rcsid_window  = "$Id: window.c,v 1.4 2004/09/10 07:44:25 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -73,14 +73,14 @@ char *rcsid_window  = "$Id: window.c,v 1.3 2004/08/07 07:18:46 rexx Exp $";
   	WINDOW *resize_window(WINDOW *w, int lins, int cols);
 
   X/Open Description:
- 	newwin() creates a new window with the given number of lines, 
- 	nlines and columns, ncols. The upper left corner of the window is 
+ 	newwin() creates a new window with the given number of lines,
+ 	nlines and columns, ncols. The upper left corner of the window is
  	at line begy, column begx. If either nlines or ncols is zero,
  	they will be defaulted to LINES - begy and COLS - begx. A
  	new full-screen window is created by calling newwin(0, 0, 0, 0).
 
- 	delwin() deletes the named window, freeing all memory associated 
- 	with it. In the case of overlapping windows, subwindows should be 
+ 	delwin() deletes the named window, freeing all memory associated
+ 	with it. In the case of overlapping windows, subwindows should be
  	deleted before the main window.
 
  	mvwin() moves the window so that the upper left-hand corner is at
@@ -112,13 +112,13 @@ char *rcsid_window  = "$Id: window.c,v 1.3 2004/08/07 07:18:46 rexx Exp $";
 
  	wsyncup() causes a touchwin() of all of the window's parents.
 
- 	If wsyncok() is called with a second argument of TRUE, this causes 
+ 	If wsyncok() is called with a second argument of TRUE, this causes
  	a wsyncup() to be called every time the window is changed.
 
  	wcursyncup() causes the current cursor position of all of a window's
  	ancestors to reflect the current cursor position of the current window.
 
- 	wsyncdown() causes a touchwin() of the current window if any of 
+ 	wsyncdown() causes a touchwin() of the current window if any of
  	its parent's windows have been touched.
 
   PDCurses Description:
@@ -388,7 +388,7 @@ int begin_x;
 /***********************************************************************/
 {
 	if (orig == (WINDOW *)NULL)
-		return( ERR );
+		return( (WINDOW *)ERR );
 
 	return subwin(orig, nlines, ncols, begin_y+orig->_begy, begin_x+orig->_begx);
 }
@@ -689,7 +689,7 @@ WINDOW *win;
 	if (trace_on) PDC_debug("wsyncup() - called\n");
 #endif
 
-	for (tmp = win; tmp != (WINDOW *)NULL; tmp = tmp->_parent) 
+	for (tmp = win; tmp != (WINDOW *)NULL; tmp = tmp->_parent)
 	{
 		touchwin(tmp);
 	}
@@ -750,9 +750,9 @@ WINDOW *win;
 	if (trace_on) PDC_debug("wsyncdown() - called\n");
 #endif
 
-	for (tmp = win; tmp != (WINDOW *)NULL; tmp = tmp->_parent) 
+	for (tmp = win; tmp != (WINDOW *)NULL; tmp = tmp->_parent)
 	{
-		if (is_wintouched(tmp)) 
+		if (is_wintouched(tmp))
 		{
 			touchwin(win);
 			break;

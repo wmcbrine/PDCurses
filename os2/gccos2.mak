@@ -15,7 +15,7 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=c:\curses
+PDCURSES_HOME		=e:\curses
 CC_HOME		=c:/emx
 ################################################################################
 # Nothing below here should required changing.
@@ -47,7 +47,7 @@ else
 	EMXVID =
 	VIDLIB =
 	BINDFLAGS = 
-	DLLTARGET = pdcurses.dll
+	DLLTARGET = curses.dll
 endif
 
 ifeq ($(DEBUG),Y)
@@ -59,7 +59,7 @@ else
 endif
 
 DLLFLAGS = -Zdll -Zcrtdll -Zomf
-DLLCURSES = pdcurses_dll.lib
+DLLCURSES = curses.lib
 
 CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR) $(EMXVID)
 
@@ -203,10 +203,10 @@ pdcurses.a : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) d $@ $(PANOBJS) firework.o newdemo.o ptest.o testcurs.o tui.o tuidemo.o xmas.o
 	$(EMXOMF) -o pdcurses.lib pdcurses.a
 
-pdcurses.dll : $(DLLOBJS) $(PDCDLOS)
-	$(LINK) $(DLLFLAGS) -o pdcurses.dll $(DLLOBJS) $(PDCDLOS) $(osdir)\pdcurses.def
-	emximp -o pdcurses_dll.lib $(osdir)\pdcurses.def
-	emximp -o pdcurses_dll.a pdcurses_dll.lib
+curses.dll : $(DLLOBJS) $(PDCDLOS)
+	$(LINK) $(DLLFLAGS) -o curses.dll $(DLLOBJS) $(PDCDLOS) $(osdir)\pdcurses.def
+	emximp -o curses.lib $(osdir)\pdcurses.def
+	emximp -o curses.a curses.lib
 
 panel.a : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)

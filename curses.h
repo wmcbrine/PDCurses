@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.6 2001/05/24 09:01:45 mark Exp $
+$Id: curses.h,v 1.7 2001/10/16 10:33:06 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -169,7 +169,7 @@ PDCurses portable platform definitions list:
 	                See notes in wclrtoeol() and wclrtoeof().
 **man-end**********************************************************************/
 
-#define PDC_BUILD	2502
+#define PDC_BUILD	2503
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1716,6 +1716,7 @@ void    PDC_CDECL	PDC_set_title( char * );
 
 int     PDC_CDECL	PDC_getclipboard( char **, long * );
 int     PDC_CDECL	PDC_setclipboard( char *, long );
+int     PDC_CDECL	PDC_freeclipboard( char * );
 
 int     PDC_CDECL	PDC_get_input_fd( void );
 int     PDC_CDECL	PDC_curs_set( int );

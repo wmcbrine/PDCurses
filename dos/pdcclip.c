@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.2 2001/01/10 08:28:32 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2001/10/16 10:33:06 mark Exp $";
 #endif
 
 
@@ -39,7 +39,7 @@ char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.2 2001/01/10 08:28:32 mark Exp $";
  	Gets the textual contents of the system's clipboard. This
  	function returns the contents of the clipboard in the contents
  	argument. It is the responsibilitiy of the caller to free the
- 	memory returned with the free() system call.  The length of the
+ 	memory returned with the PDC_freeclipboard() call.  The length of the
  	clipboard contents is returned in the length argument.
 
   PDCurses Return Value:
@@ -82,6 +82,31 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 {
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_setclipboard() - called\n");
+#endif
+ return PDC_CLIP_ACCESS_ERROR;
+}
+
+/*man-start*********************************************************************
+
+  PDC_freeclipboard()	- Frees the memory associated with the contents of the clipboard
+
+  PDCurses Description:
+ 	This is a PDCurses only routine.
+
+ 	Frees the memory allocated by PDC_getclipboard().
+
+  PDCurses Return Value:
+ 	Always returns PDC_CLIP_ACCESS_ERROR	no clipboard support
+
+  Portability:
+ 	PDCurses	int PDC_freeclipboard( char *contents );
+
+**man-end**********************************************************************/
+
+int	PDC_CDECL	PDC_freeclipboard(char *contents)
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("PDC_freeclipboard() - called\n");
 #endif
  return PDC_CLIP_ACCESS_ERROR;
 }

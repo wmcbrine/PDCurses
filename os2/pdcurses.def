@@ -16,6 +16,7 @@ EXPORTS
             COLOR_PAIRS
             PDC_chadd
             PDC_chins
+            PDC_freeclipboard
             PDC_getclipboard
             PDC_setclipboard
             PDC_set_title

@@ -15,13 +15,13 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=e:\curses
+PDCURSES_HOME		=$(PDCURSES_SRCDIR)
 CC_HOME		=c:/emx
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################
-VER=24
-VERDOT=2.4
+VER=25
+VERDOT=2.5
 
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
@@ -556,15 +556,20 @@ tuidemo.o: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 xmas.o: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
-dist: pdcurses.a panel.a
+dist: curses.a curses.dll curses.lib pdcurses.a pdcurses.lib panel.a panel.lib
 	-mkdir tmp
 	copy $(PDCURSES_HOME)\README tmp\README
 	copy $(PDCURSES_HOME)\readme.?? tmp
 	copy $(PDCURSES_HOME)\curses.h tmp
 	copy $(PDCURSES_HOME)\curspriv.h tmp
 	copy $(PDCURSES_HOME)\maintain.er tmp
+	copy curses.dll tmp
+	copy curses.lib tmp
+	copy curses.a tmp
 	copy pdcurses.a tmp
+	copy pdcurses.lib tmp
 	copy panel.a tmp
+	copy panel.lib tmp
 	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > tmp\file_id.diz
 	echo      PDCurses - Public Domain Curses >> tmp\file_id.diz
 	echo  Version $(VERDOT)   for EMX OS/2   PDC$(VER)_EMX_OS2.ZIP >> tmp\file_id.diz

@@ -4,8 +4,8 @@ Parse Upper Arg target plat verdot .
 If Wordpos(target,'DJG VCP EMX VC LCC MING CYGNUS 16W 32W WCC ICC MSC BCC') = 0 Then Call Usage
 If Wordpos(plat,'DOS OS2 W32') = 0 Then Call Usage
 If Countstr('.',verdot) = 0 Then Call Usage
-curses_home = Value('PDCURSES_SRCDIR',,'ENVIRONMENT')
-If curses_home = '' Then Abort('PDCURSES_SRCDIR is not set!' )
+curses_home = Value('PDCURSES_SRCDIRN',,'ENVIRONMENT')
+If curses_home = '' Then Abort('PDCURSES_SRCDIRN is not set!' )
 Parse Value 'dos\go32 dos\emx os2\emx vc' With src.djg src.vcp src.emx src.w32
 Parse Value 'libregna.a regina.a regina.a regina.lib' With lib.djg lib.vcp lib.emx lib.w32
 Parse Value 'rexx.exe rexx.exe rexx.exe regina.exe' With exe.djg exe.vcp exe.emx exe.w32
@@ -79,9 +79,10 @@ Select
                   'copy  ..\pdcurses.lib .'
                   'copy  ..\pdcurses.a .'
                   'copy  ..\panel.lib .'
-                  'copy  ..\pdcurses_dll.lib .'
-                  'copy  ..\pdcurses_dll.a .'
-                  'copy  ..\pdcurses.dll .'
+                  'copy  ..\panel.a .'
+                  'copy  ..\curses.lib .'
+                  'copy  ..\curses.a .'
+                  'copy  ..\curses.dll .'
                   zipfile = 'pdc'version'_emx_os2.zip'
                   Call makefileid zipfile verdot version 'OS/2 EMX 09d+'
                End
@@ -174,7 +175,7 @@ makefileid: Procedure
 fn = 'file_id.diz'
 Parse Arg zipfile verdot version desc
 Call Stream fn,'C','OPEN WRITE REPLACE'
-Call Lineout fn,'‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘'
+Call Lineout fn,'ææææææææææææææææææææææææææææææææææææææææææ'
 Call Lineout fn,'     PDCurses - Public Domain Curses'
 Call Lineout fn,Left(' Version:' verdot, 15) Right(zipfile,25)
 Call Lineout fn,'------------------------------------------'
@@ -182,6 +183,6 @@ Call Lineout fn,' Public Domain Curses library for'
 Call Lineout fn,' '|| desc
 Call Lineout fn,' Source available in pdcurs'version'.zip'
 Call Lineout fn,' Public Domain.'
-Call Lineout fn,'‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘‘'
+Call Lineout fn,'ææææææææææææææææææææææææææææææææææææææææææ'
 Call Stream fn,'C','CLOSE'
 Return 0

@@ -23,6 +23,10 @@
 #endif
 #include <curses.h>
 
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
+
 #ifdef UNIX
 #include <defs.h>
 #include <term.h>
@@ -49,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.2 2001/01/10 08:26:56 mark Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.3 2002/03/22 22:36:50 mark Exp $";
 #endif
 
 /*man-start*********************************************************************

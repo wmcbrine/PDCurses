@@ -41,13 +41,12 @@ CFLAGS  =  -Ox
 LDFLAGS = 
 !endif
 
-DLL_CFLAGS  = $(CFLAGS)
 SHL_LD=link $(LDFLAGS) /NOLOGO /DLL /OUT:curses.dll /DEF:$(osdir)\curses.def
 
 CPPFLAGS	= -I$(PDCURSES_HOME) -I.
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -DPDC_STATIC_BUILD
-DLL_CCFLAGS		= -c $(DLL_CFLAGS) $(CPPFLAGS)
+DLL_CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -MT -DPDC_THREAD_BUILD
 
 LINK		= link.exe -nologo
 

@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.5 2002/05/28 11:36:09 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.6 2002/06/23 04:10:42 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -58,6 +58,12 @@ INPUT_RECORD save_ip;
 static unsigned long pdc_key_modifiers=0L;
 
 extern HANDLE hConIn;
+
+#if defined(PDC_THREAD_BUILD)
+extern HANDLE hPipeRead;
+extern HANDLE hPipeWrite;
+extern HANDLE hSemKeyCount;
+#endif
 
 static void win32_getch(void);
 static int win32_kbhit(int);
@@ -360,19 +366,24 @@ bool PDC_breakout( void )
    extern   int   c_pindex;         /* putter index */
    extern   int   c_gindex;         /* getter index */
    extern   int   c_ungind;         /* wungetch() push index */
+   bool rc;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_breakout() - called\n");
 #endif
 
    if (c_ungind)
-      return (TRUE);       /* ungotten char */
-   if (c_pindex > c_gindex)
-      return (TRUE);       /* buffered char */
-   if (SP->raw_inp)
-      return((bool)PDC_check_bios_key());/* raw mode test */
-
-   return((bool)PDC_check_bios_key()); /* normal mode test */
+      rc = TRUE;       /* ungotten char */
+   else if (c_pindex > c_gindex)
+      rc = TRUE;       /* buffered char */
+   else if (SP->raw_inp)
+      rc= (bool)PDC_check_bios_key();  /* raw mode test */
+   else
+      rc = (bool)PDC_check_bios_key(); /* normal mode test */
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("PDC_breakout() - returned: %d c_ungind %d c_pindex %d c_gindex %d\n",rc,c_ungind,c_pindex,c_gindex);
+#endif
+   return(rc);
 }
 
 /*man-start*********************************************************************
@@ -408,7 +419,11 @@ unsigned long PDC_get_input_fd()
    if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
 #endif
 
-   return (unsigned long)hConIn;
+#if defined(PDC_THREAD_BUILD)
+   return (unsigned long)hSemKeyCount;
+#else
+   return 0L;
+#endif
 }
 
 /*man-start*********************************************************************
@@ -1011,25 +1026,232 @@ int   PDC_sysgetch(void)
 int   PDC_validchar(int c)
 {
    extern   WINDOW*  _getch_win_;
+   int ch=c;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_validchar() - called\n");
 #endif
 
    if (_getch_win_ == (WINDOW *)NULL)
-      return (-1);   /* bad window pointer     */
-
-   if ((unsigned int)c < 256) return (c);  /* normal character */
-   if (!(_getch_win_->_use_keypad)) return (-1); /* skip if keys if !keypad mode */
-
-   return(c);
+      ch = (-1);   /* bad window pointer     */
+   else if ((unsigned int)c < 256) 
+      ch = c;      /* normal character */
+   else if (!(_getch_win_->_use_keypad)) 
+      ch = (-1);   /* skip if keys if !keypad mode */
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("PDC_validchar() - returned: %x\n",ch);
+#endif
+   return(ch);
 }
 
+/***********************************************************************/
+static int GetInterestingEvent( INPUT_RECORD *ip )
+/***********************************************************************/
+{
+   int numKeys = 0;
+   static int save_press;
+#ifdef PDCDEBUG
+#if defined(PDC_THREAD_BUILD)
+#  define PDC_DEBUG_THREADING1 "-->"
+#  define PDC_DEBUG_THREADING2 "THREADING"
+# else
+#  define PDC_DEBUG_THREADING1 ""
+#  define PDC_DEBUG_THREADING2 ""
+# endif
+   char *ptr="";
+   if (trace_on) PDC_debug("%sGetInterestingEvent(%s) - called\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2);
+#endif
+
+   switch(ip->EventType)
+   {
+      case KEY_EVENT:
+         if (ip->Event.KeyEvent.wVirtualKeyCode == 20
+          ||  ip->Event.KeyEvent.wVirtualKeyCode == 144
+          ||  ip->Event.KeyEvent.wVirtualKeyCode == 145)
+         {
+#ifdef PDCDEBUG
+            ptr = "KEY MODIFIERS";
+#endif
+            break;  /* throw away some modifiers */
+         }
+         if (ip->Event.KeyEvent.bKeyDown == FALSE)
+         {
+            /* key up */
+            if ((ip->Event.KeyEvent.wVirtualKeyCode == 16
+            ||  ip->Event.KeyEvent.wVirtualKeyCode == 17
+            ||  ip->Event.KeyEvent.wVirtualKeyCode == 18)
+            &&  ip->Event.KeyEvent.wVirtualKeyCode == save_press
+            &&  SP->return_key_modifiers)
+#ifdef PDCDEBUG
+               ptr = "KEYUP WANTED";
+#else
+               ;
+#endif
+            else
+            {
+#ifdef PDCDEBUG
+               ptr = "KEYUP IGNORED";
+#endif
+               break;                    /* throw away KeyUp events */
+            }
+         }
+         else
+         {
+            if ((ip->Event.KeyEvent.wVirtualKeyCode == 16
+            ||  ip->Event.KeyEvent.wVirtualKeyCode == 17
+            ||  ip->Event.KeyEvent.wVirtualKeyCode == 18)
+            &&  SP->return_key_modifiers)
+            {
+               save_press = ip->Event.KeyEvent.wVirtualKeyCode;
+#ifdef PDCDEBUG
+               ptr = "KEYDOWN SAVED";
+#endif
+               break; /* throw away key press */
+            }
+         }
+         save_press = 0;
+         if (ip->Event.KeyEvent.uChar.AsciiChar == 0 &&
+             (MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode,2) & 0x80000000))
+         {
+#ifdef PDCDEBUG
+            ptr = "DIACRITIC IGNORED";
+#endif
+            break;              /* Diacritic characters, ignore them */
+         }
+#ifdef PDCDEBUG
+         ptr = "KEY WANTED";
+#endif
+         numKeys = ip->Event.KeyEvent.wRepeatCount;
+         break;
+      case MOUSE_EVENT:
+         /*
+          * If we aren't trapping mouse events, then the "keyboard" hasn't
+          * been hit. Fix from stepheng@clearspeed.com
+          */
+         if (!SP->_trap_mbe)
+         {
+#ifdef PDCDEBUG
+            ptr = "MOUSE - NOT TRAPPED";
+#endif
+            break;
+         }
+         if (ip->Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED
+         &&  ip->Event.MouseEvent.dwButtonState == 0)
+         {
+#ifdef PDCDEBUG
+            ptr = "MOUSE MOVE IGNORED";
+#endif
+            break;               /* throw away plain MOUSE_MOVE events */
+         }
+#ifdef PDCDEBUG
+         ptr = "MOUSE MOVE WANTED";
+#endif
+         numKeys = 1;
+         break;
+      case WINDOW_BUFFER_SIZE_EVENT:
+  /*
+         PDC_resize_screen( PDC_get_rows(), PDC_get_columns() );
+  */
+         SP->resized = TRUE;
+#ifdef PDCDEBUG
+         ptr = "BUFFER SIZE";
+#endif
+         numKeys = 0; /* was 1 */
+         break;
+      default:
+#ifdef PDCDEBUG
+         ptr = "UNKNOWN";
+#endif
+         numKeys = 0;
+         break;
+   }
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("%sGetInterestingEvent(%s) - returning: numKeys %d type %d: %s\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2,numKeys,ip->EventType,ptr);
+#endif
+   return numKeys;
+}
+
+#if defined(PDC_THREAD_BUILD)
+/***********************************************************************/
 static int win32_kbhit(int timeout)
+/***********************************************************************/
+{
+   DWORD read=0,avail=0,unread=0;
+   INPUT_RECORD ip;
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("win32_kbhit(THREADING) - called: timeout %d keyCount %d\n", timeout, keyCount);
+#endif
+
+
+#if 0
+   if ( timeout == INFINITE )
+   {
+      ReadFile( hPipeRead, &save_ip, sizeof(INPUT_RECORD), &read, NULL );
+      return TRUE;
+   }
+   else
+   {
+      if ( WaitForSingleObject( hSemKeyCount, timeout ) != WAIT_OBJECT_0 )
+      {
+         return FALSE;
+      }
+      if ( PeekNamedPipe( hPipeRead, &ip, sizeof(INPUT_RECORD), &read, &avail, &unread ) )
+      {
+#ifdef PDCDEBUG
+         if (trace_on) PDC_debug("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread);
+#endif
+         if ( read == sizeof(INPUT_RECORD) )
+            return TRUE;
+      }
+   }
+#else
+   if ( WaitForSingleObject( hSemKeyCount, timeout ) != WAIT_OBJECT_0 )
+   {
+      return FALSE;
+   }
+   if ( timeout == INFINITE )
+   {
+      ReadFile( hPipeRead, &save_ip, sizeof(INPUT_RECORD), &read, NULL );
+      return TRUE;
+   }
+   else
+   {
+      if ( PeekNamedPipe( hPipeRead, &ip, sizeof(INPUT_RECORD), &read, &avail, &unread ) )
+      {
+#ifdef PDCDEBUG
+         if (trace_on) PDC_debug("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread);
+#endif
+         if ( read == sizeof(INPUT_RECORD) )
+            return TRUE;
+      }
+   }
+#endif
+   return FALSE;
+}
+
+
+/***********************************************************************/
+static void win32_getch(void)
+/***********************************************************************/
+{
+   while (win32_kbhit(INFINITE) == FALSE)
+      ;
+
+   return;
+}
+#else
+
+/***********************************************************************/
+static int win32_kbhit(int timeout)
+/***********************************************************************/
 {
    INPUT_RECORD ip;
-   DWORD read;
-   static int save_press;
+   DWORD read, avail;
+   int rc=FALSE;
+
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("win32_kbhit() - called: timeout %d keyCount %d\n", timeout, keyCount);
+#endif
   
    if (keyCount > 0)
       return TRUE;
@@ -1043,76 +1265,22 @@ static int win32_kbhit(int timeout)
    if (read == 0)
       return(FALSE);
    ReadConsoleInput(hConIn, &ip, 1, &read);
-   switch(ip.EventType)
+
+   keyCount = GetInterestingEvent( &ip );
+   if ( keyCount )
    {
-      case KEY_EVENT:
-         if (ip.Event.KeyEvent.wVirtualKeyCode == 20
-          ||  ip.Event.KeyEvent.wVirtualKeyCode == 144
-          ||  ip.Event.KeyEvent.wVirtualKeyCode == 145)
-          {
-             return(FALSE);  /* throw away some modifiers */
-          }
-          if (ip.Event.KeyEvent.bKeyDown == FALSE)
-          {
-             /* key up */
-             if ((ip.Event.KeyEvent.wVirtualKeyCode == 16
-             ||  ip.Event.KeyEvent.wVirtualKeyCode == 17
-             ||  ip.Event.KeyEvent.wVirtualKeyCode == 18)
-             &&  ip.Event.KeyEvent.wVirtualKeyCode == save_press
-             &&  SP->return_key_modifiers)
-                ;
-             else
-                return(FALSE);                    /* throw away KeyUp events */
-          }
-          else
-          {
-             if ((ip.Event.KeyEvent.wVirtualKeyCode == 16
-             ||  ip.Event.KeyEvent.wVirtualKeyCode == 17
-             ||  ip.Event.KeyEvent.wVirtualKeyCode == 18)
-             &&  SP->return_key_modifiers)
-             {
-                save_press = ip.Event.KeyEvent.wVirtualKeyCode;
-                return(FALSE);
-             }
-          }
-          save_press = 0;
-          if (ip.Event.KeyEvent.uChar.AsciiChar == 0 &&
-              (MapVirtualKey(ip.Event.KeyEvent.wVirtualKeyCode,2) & 0x80000000))
-             return(FALSE);              /* Diacritic characters, ignore them */
-          keyCount = ip.Event.KeyEvent.wRepeatCount;
-          break;
-      case MOUSE_EVENT:
-          /*
-           * If we aren't trapping mouse events, then the "keyboard" hasn't
-           * been hit. Fix from stepheng@clearspeed.com
-           */
-          if (!SP->_trap_mbe)
-             return(FALSE);
-          if (ip.Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED
-          &&  ip.Event.MouseEvent.dwButtonState == 0)
-             return(FALSE);               /* throw away plain MOUSE_MOVE events */
-          keyCount = 1;
-          break;
-      case WINDOW_BUFFER_SIZE_EVENT:
-  /*
-         PDC_resize_screen( PDC_get_rows(), PDC_get_columns() );
-  */
-         SP->resized = TRUE;
-         keyCount = 1;
-         break;
-      default:
-         keyCount = 0;
-         return(FALSE);
-         break;
+      /*
+       * To get here a recognised event has occurred; save it and return TRUE
+       */
+      memcpy( (char*)&save_ip, (char*)&ip, sizeof(INPUT_RECORD) );
+      rc = TRUE;
    }
-   /*
-    * To get here a recognised event has occurred; save it and return TRUE
-    */
-   memcpy((char*)&save_ip,(char*)&ip,sizeof(INPUT_RECORD));
-   return(TRUE);
+   return(rc);
 }
 
+/***********************************************************************/
 static void win32_getch(void)
+/***********************************************************************/
 {
    while (win32_kbhit(INFINITE) == FALSE)
       ;
@@ -1121,6 +1289,7 @@ static void win32_getch(void)
 
    return;
 }
+#endif
 
 /*man-start*********************************************************************
 
@@ -1159,3 +1328,67 @@ unsigned long  PDC_get_key_modifiers()
 #endif
    return(pdc_key_modifiers);
 }
+
+
+#if defined(PDC_THREAD_BUILD)
+/***********************************************************************/
+LONG InputThread( LPVOID lpThreadData )
+/***********************************************************************/
+{
+   INPUT_RECORD ip;
+   DWORD read;
+   LONG prev;
+   int num_keys,i;
+
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("-->InputThread() - called\n");
+#endif
+   /*
+    * Create a semaphore on which the parent thread will wait...
+    */
+   hSemKeyCount = CreateSemaphore( NULL, 0, 1024, NULL );
+   if ( hSemKeyCount != NULL )
+   {
+      for ( ; ; )
+      {
+         ReadConsoleInput(hConIn, &ip, 1, &read);
+         /*
+          * Now that this thread has woken up we need to check if the
+          * key/mouse event is relevant to us. If so, write it to the
+          * anonymous pipe.
+          */
+#ifdef PDCDEBUG
+         if (trace_on) PDC_debug("-->InputThread() - read %d character(s)\n",read);
+#endif
+         num_keys = GetInterestingEvent( &ip );
+#ifdef PDCDEBUG
+         if (trace_on) PDC_debug("-->InputThread() - got %d interesting keys\n",num_keys);
+#endif
+         for ( i = 0; i < num_keys; i++ )
+         {
+            /*
+             * For each key written to the pipe, increment the semaphore...
+             */
+            if ( ReleaseSemaphore( hSemKeyCount, 1, &prev ) )
+            {
+#ifdef PDCDEBUG
+               if (trace_on) PDC_debug("-->InputThread() - writing to pipe; sem incremented from %d\n",prev);
+#endif
+               if ( !WriteFile( hPipeWrite, &ip, sizeof(INPUT_RECORD), &read, NULL ) )
+               {
+                  /*
+                   * An error occured, we assume it is because the pipe broke;
+                   * therefore the parent thread is shutting down; so will we.
+                   */
+                  break;
+               }
+            }
+         }
+      }
+   }
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("-->InputThread() - finished\n");
+#endif
+   return 0;
+}
+#endif

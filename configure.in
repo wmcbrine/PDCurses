@@ -1,5 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(curspriv.h)
+AC_PREFIX_DEFAULT(/usr)
 
 dnl ---------------------- check for C compiler -----------------
 dnl Checks for one of the C compilers below - change if yours not there.

@@ -166,6 +166,10 @@
 #ifdef USE_REXX6000
 typedef USHORT RexxFunctionHandler(PSZ, ULONG, PRXSTRING, PSZ, PRXSTRING) ;
 #endif
+/*
+ * Standard REXX API function - idea borrowed from Patrick McPhee's Regutil
+ */
+#define rxfunc(x) APIRET APIENTRY x( RFH_ARG0_TYPE name, RFH_ARG1_TYPE argc, RFH_ARG2_TYPE argv, RFH_ARG3_TYPE stck, RFH_ARG4_TYPE retstr )
 
 /*-----------------------------------------------------------------------------
  * Definition of an external function

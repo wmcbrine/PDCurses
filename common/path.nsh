@@ -90,6 +90,7 @@ Function un.RemoveFromPath
       Goto unRemoveFromPath_done
 
   unRemoveFromPath_NT:
+    StrCpy $0 ";$0"
     StrLen $2 $0
     ReadRegStr $1 HKCU "Environment" "PATH"
     Push $1
@@ -100,7 +101,7 @@ Function un.RemoveFromPath
       ; else, it is in path
       StrCpy $3 $1 $0 ; $3 now has the part of the path before our dir
       IntOp $2 $2 + $0 ; $2 now contains the pos after our dir in the path (';')
-      IntOp $2 $2 + 1 ; $2 now containts the pos after our dir and the semicolon.
+;      IntOp $2 $2 + 1 ; $2 now containts the pos after our dir and the semicolon.
       StrLen $0 $1
       StrCpy $1 $1 $0 $2
       StrCpy $3 "$3$1"

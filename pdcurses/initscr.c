@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.1 2001/01/10 08:27:06 mark Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.2 2001/01/10 08:27:08 mark Exp $";
 #else
 char*	_curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -321,8 +321,8 @@ ACS_BSSB = (chtype)13|A_ALTCHARSET;
 ACS_SSBB = (chtype)14|A_ALTCHARSET;
 ACS_BBSS = (chtype)12|A_ALTCHARSET;
 ACS_SBBS = (chtype)11|A_ALTCHARSET;
-ACS_SBSS = (chtype)21|A_ALTCHARSET;
-ACS_SSSB = (chtype)22|A_ALTCHARSET;
+ACS_SBSS = (chtype)22|A_ALTCHARSET;
+ACS_SSSB = (chtype)21|A_ALTCHARSET;
 ACS_SSBS = (chtype)23|A_ALTCHARSET;
 ACS_BSSS = (chtype)24|A_ALTCHARSET;
 ACS_BSBS = (chtype)18|A_ALTCHARSET;

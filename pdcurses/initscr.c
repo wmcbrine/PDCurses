@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.4 2002/12/16 06:58:09 mark Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.5 2004/07/01 07:28:05 rexx Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -111,7 +111,7 @@ char *c_strbeg;
 void* emalloc( size_t );
 void* ecalloc( size_t, size_t );
 void  efree( void* );
-   
+
 extern   void* emalloc();  /* user's emalloc(size)    */
 extern   void* ecalloc();  /* user's ecalloc(num,size)   */
 extern   void  efree(); /* user's efree(ptr)    */
@@ -179,7 +179,7 @@ extern void (*PDC_initial_slk)();
 
    A program which outputs to more than one terminal should use
    newterm() for each terminal instead of initscr().  The newterm()
-   function should be called once for each terminal.  It returns a 
+   function should be called once for each terminal.  It returns a
    value of type SCREEN* which should be saved as a reference to that
    terminal. The arguments are the type of of terminal to be used
    in place of TERM (environment variable), a file pointer for output
@@ -381,14 +381,14 @@ register int i=0;
 
    wclrtobot(stdscr);
 
-/*
- * If preserving the existing screen don't allow a screen clear...
- */
-if (SP->_preserve)
+   /*
+    * If preserving the existing screen don't allow a screen clear...
+    */
+   if (SP->_preserve)
    {
-   untouchwin(curscr);
-   untouchwin(stdscr);
-   stdscr->_clear = FALSE;
+      untouchwin(curscr);
+      untouchwin(stdscr);
+      stdscr->_clear = FALSE;
    }
 
    curscr->_clear = FALSE;

@@ -7,18 +7,18 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.7 2004/01/02 21:02:13 mark Exp $
+$Id: curspriv.h,v 1.8 2004/07/01 07:25:34 rexx Exp $
 */
 /*
 *
@@ -224,7 +224,7 @@ extern VIRCON vir;
 #define _GOCHAR         0x11    /* ^Q character                  */
 #define _PRINTCHAR      0x10    /* ^P character                  */
 #define _STOPCHAR       0x13    /* ^S character                  */
-#define  NUNGETCH       20      /* max # chars to ungetch()      */
+#define  NUNGETCH       256     /* max # chars to ungetch()      */
 
 
 
@@ -278,7 +278,7 @@ extern WINDOW*  twin;                   /* used by many routines */
 
 /*----------------------------------------------------------------------
 *       ANSI C prototypes.  Be sure that your compiler conditional
-*       compilation definitions above define HAVE_PROTO if your compiler 
+*       compilation definitions above define HAVE_PROTO if your compiler
 *       supports prototypes.
 */
 #ifdef HAVE_PROTO

@@ -7,18 +7,18 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-/* 
-$Id: curses.h,v 1.19 2004/01/02 05:50:05 mark Exp $
+/*
+$Id: curses.h,v 1.20 2004/07/01 07:25:27 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -27,7 +27,7 @@ $Id: curses.h,v 1.19 2004/01/02 05:50:05 mark Exp $
 * MH
 *	991212	2.4
 *		Key modifiers pressed by themselves are now returned as keys
-*			KEY_SHIFT_L KEY_SHIFT_R 
+*			KEY_SHIFT_L KEY_SHIFT_R
 *			KEY_CONTROL_L KEY_CONTROL_R
 *			KEY_ALT_L KEY_ALT_R
 *			This works on Win32 and X11 ports only
@@ -126,7 +126,7 @@ $Id: curses.h,v 1.19 2004/01/02 05:50:05 mark Exp $
 *----------------------------------------------------------------------
 */
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
- extern "C" 
+ extern "C"
    {
 # define bool _bool
 #endif
@@ -187,7 +187,7 @@ PDCurses portable platform definitions list:
 *               OS2
 *               CPLUSPLUS
 *
-*               __TURBOC__, __MSDOS__, 
+*               __TURBOC__, __MSDOS__,
 *               __OS2__ and __WIN32__
 *               are predefined by compiler.
 */
@@ -294,7 +294,7 @@ PDCurses portable platform definitions list:
 #  else                            /* no __OS2__ define, so assume DOS */
 #    ifdef _WIN32	
 #      ifndef WIN32
-#        define WIN32 
+#        define WIN32
 #      endif
 #      ifdef INCLUDE_WINDOWS_H         /* only include for WIN32 files */
 #        include <windows.h>
@@ -1006,6 +1006,7 @@ typedef struct
 	int	scrnmode;	/* default screen mode		    */
 	unsigned video_seg;	/* video base segment		    */
 	unsigned video_ofs;	/* video base offset		    */
+	unsigned long os_version; /* Win32 Version */
 #endif
 
 #if defined(OS2) || defined(WIN32)
@@ -1034,7 +1035,7 @@ typedef struct
 
 
 /* external variables */
-#if !defined(PDC_STATIC_BUILD) && defined(_MSC_VER) && defined(WIN32) && !defined(CURSES_LIBRARY)
+#if !defined(PDC_STATIC_BUILD) && (defined(_MSC_VER) || defined(__MINGW32__)) && defined(WIN32) && !defined(CURSES_LIBRARY)
 __declspec(dllimport)	int	LINES;		/* terminal height		*/
 __declspec(dllimport)	int	COLS;		/* terminal width		*/
 __declspec(dllimport)	WINDOW*	stdscr;		/* the default screen window	*/
@@ -1045,7 +1046,7 @@ __declspec(dllimport)	MOUSE_STATUS Mouse_status;
 __declspec(dllimport)	int COLORS;
 __declspec(dllimport)	int COLOR_PAIRS;
 #else
-# if !defined(PDC_STATIC_BUILD) && defined(_MSC_VER) && defined(WIN32)
+# if !defined(PDC_STATIC_BUILD) && (defined(_MSC_VER) || defined(__MINGW32__)) && defined(WIN32)
 __declspec(dllexport) extern	int	LINES;		/* terminal height		*/
 __declspec(dllexport) extern	int	COLS;		/* terminal width		*/
 __declspec(dllexport) extern	WINDOW*	stdscr;		/* the default screen window	*/
@@ -1095,7 +1096,7 @@ The following is the structure of a win->_attrs chtype:
 -------------------------------------------------------------------------------------------------
      colour number      |     modifiers         |      character eg 'a' (potential for DBCS)
 
-The available attribute modifiers are bold, underline, invisible, protect, reverse 
+The available attribute modifiers are bold, underline, invisible, protect, reverse
 and blink.
 
 **man-end**********************************************************************/
@@ -1930,7 +1931,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 
 #if !defined(UNIX) && !defined(XCURSES)
 /* set delaytenths = 0 added - William McBrine */
-# define nocbreak()             (SP->cbreak = FALSE, SP->delaytenths = 0) 
+# define nocbreak()             (SP->cbreak = FALSE, SP->delaytenths = 0)
 # define cbreak()               (SP->cbreak = TRUE)
 # define nocrmode()             (SP->cbreak = FALSE)
 # define crmode()               (SP->cbreak = TRUE)

@@ -12,8 +12,8 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=f:/curses
-CC_HOME		=f:/mingw32
+PDCURSES_HOME		=d:/pdcurses/pdcurses
+CC_HOME		=c:/mingw32
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################

@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.3 2004/04/02 02:25:17 rexx Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.4 2004/07/01 07:21:22 rexx Exp $";
 #endif
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
@@ -36,7 +36,7 @@ extern LONG InputThread( LPVOID lpThreadData );
 
 CONSOLE_SCREEN_BUFFER_INFO scr;
 CONSOLE_SCREEN_BUFFER_INFO orig_scr;
- 
+
 static CHAR_INFO *ciSaveBuffer=NULL;
 static CHAR_INFO *save_ci=NULL;
 static DWORD dwConsoleMode=0;
@@ -305,6 +305,8 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
    internal->linesrippedoff = 0;
    internal->linesrippedoffontop = 0;
    internal->delaytenths = 0;
+
+   internal->os_version = GetVersion();
 #if defined(PDC_THREAD_BUILD)
    /*
     * Create the anonymous pipe and thread for handling input
@@ -415,8 +417,8 @@ int nlines,ncols;
    if (trace_on) PDC_debug("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols);
 #endif
    SP->resized = FALSE; /* prevent endless loops in case of errors */
-   
-   if (nlines == 0 
+
+   if (nlines == 0
    && ncols == 0)
       return(OK); /* undocumented feature: let assign LINES and COLS
                           to current values by the calling
@@ -428,10 +430,10 @@ int nlines,ncols;
    if (!GetConsoleScreenBufferInfo(hConOut,&csbi)) /*needed for recovery*/
       return(ERR);
    max = GetLargestConsoleWindowSize(hConOut);
-   
+
    size.X = ncols;
    size.Y = nlines;
-   
+
    /* Fit window into allowed values */
    rect.Left = rect.Top = 0;
    rect.Right = ncols - 1;
@@ -451,7 +453,7 @@ int nlines,ncols;
       SetConsoleWindowInfo(hConOut, TRUE, &csbi.srWindow);
       return( (external_resized) ? OK : ERR );
    }
-   
+
    SetConsoleActiveScreenBuffer(hConOut);
    return ( OK );
 #elif defined(FGC)

@@ -7,17 +7,17 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-/* 
+/*
 $Id
 */
 /*
@@ -27,6 +27,11 @@ $Id
 */
 
 #include <curses.h>
+
+#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+extern "C"
+{
+#endif
 
 typedef struct panelobs
 {
@@ -82,3 +87,7 @@ int replace_panel( /* PANEL *pan,WINDOW *win */ );
 #endif
 
 /* end of panel.h */
+
+#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+}
+#endif

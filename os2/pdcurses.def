@@ -93,9 +93,15 @@ EXPORTS
             scrollok                       
             setscrreg                      
             set_term                       
+            slk_attroff
+            slk_attron
+            slk_attrset
             slk_clear
             slk_init
+            slk_label
             slk_noutrefresh
+            slk_refresh
+            slk_restore
             slk_set
             slk_touch
             standend                       

@@ -1010,6 +1010,9 @@ case "$target" in
 		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
 		BASE_INSTALL="cygwininstall"
 		BASE_BINARY="cygwinbinary"
+# cygwininstall target MUST install the shared library itself because
+# it puts it into $(bindir) not $(libdir) as all other platforms
+		OTHER_INSTALLS=""
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"

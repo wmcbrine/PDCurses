@@ -589,6 +589,33 @@ long length;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
+int XCurses_clearclipboard( void )
+#else
+int XCurses_clearclipboard( )
+#endif
+/***********************************************************************/
+{
+   int rc=0;
+   char buf[12]; /* big enough for 2 integers */
+   long len;
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("%s:XCurses_clearclipboard() - called\n",(XCursesProcess)?"     X":"CURSES");
+#endif
+   XCursesInstruct(CURSES_CLEAR_SELECTION);
+   memcpy(buf,(char *)&len,sizeof(long));
+   if (write_socket(display_sock,buf,sizeof(long)) < 0)
+      XCursesExitCursesProcess(5,"exiting from XCurses_setclipboard");
+   /*
+    * Wait for X to do its stuff. Now expect return code...
+    */
+   if (read_socket(display_sock,buf,sizeof(int)) < 0)
+      XCursesExitCursesProcess(5,"exiting from XCurses_clearclipboard");
+   memcpy((char *)&rc,buf,sizeof(int));
+   return rc;
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
 void XCursesCleanupCursesProcess(int rc)
 #else
 void XCursesCleanupCursesProcess(rc)

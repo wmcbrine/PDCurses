@@ -404,6 +404,14 @@ XtInputId *id;
             if (write_socket(display_sock,buf,sizeof(int)) < 0) 
                XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
             break; 
+         case CURSES_CLEAR_SELECTION: /* request clear of selection */
+            say("CURSES_CLEAR_SELECTION received from child\n");
+            old_x = CURSES_CONTINUE; 
+            memcpy(buf,(char *)&old_x,sizeof(int)); 
+            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+            SelectionOff(); 
+            break; 
          default: 
 #ifdef PDCDEBUG 
             if (trace_on) PDC_debug("%s:Unknown request %d\n",(XCursesProcess)?"     X":"CURSES",num_cols); 

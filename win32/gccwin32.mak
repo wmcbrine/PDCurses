@@ -12,7 +12,7 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		= $(HOME)/PDCurses
+PDCURSES_HOME		= $(PDCURSES_SRCDIR)
 #CC_HOME		=/cygnus/cygwin-b20/H-i586-cygwin32/i586-cygwin32
 ################################################################################
 # Nothing below here should required changing.
@@ -65,10 +65,10 @@ SHELL = /bin/bash
 all:	$(PDCLIBS) $(DEMOS)
 
 clean:
-	-del *.o
-	-del curses.lib
-	-del panel.lib
-	-del *.exe
+	-rm -f *.o
+	-rm -f curses.lib
+	-rm -f panel.lib
+	-rm -f *.exe
 
 demos:	$(DEMOS)
 

@@ -1,0 +1,17 @@
+COLS
+LINES
+SP
+stdscr
+COLORS
+sb_get_vert
+PDC_curs_set
+sb_get_horz
+Mouse_status
+sb_set_vert
+sb_set_horz
+sb_refresh
+PDC_set_line_color
+sb_init
+Xinitscr
+XCursesExit
+COLOR_PAIRS

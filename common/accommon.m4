@@ -9,6 +9,7 @@ dnl MH_HAVE_PROTO
 dnl MH_PROG_CC
 dnl MH_CHECK_X_HEADERS
 dnl MH_CHECK_X_KEYDEFS
+dnl MH_CHECK_X_TYPEDEF
 dnl MH_TRY_LINK
 dnl MH_CHECK_LIB
 dnl MH_HOWTO_SHARED_LIBRARY
@@ -569,6 +570,30 @@ for mh_keydef in $1; do
 [int i = $mh_keydef;],
   mh_have_key=yes; AC_DEFINE_UNQUOTED($mh_upper_name,1), mh_have_key=no )
 	AC_MSG_RESULT($mh_have_key)
+done
+CPPFLAGS="$save_CPPFLAGS"
+])dnl
+
+dnl ---------------------------------------------------------------------------
+dnl Determine if supplied types have been typedefed
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([MH_CHECK_X_TYPEDEF],
+[
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $SYS_DEFS $MH_XINC_DIR"
+for td in $1 ; do
+AC_MSG_CHECKING(if $td is typedefed:)
+AC_TRY_COMPILE(
+[#include "X11/Xlib.h"],
+[$td fred],
+	[mh_td=yes],
+	[mh_td=no]
+)
+if test "$mh_td" = yes ; then
+	TD_upper=`echo $td | tr a-z A-Z`
+	AC_DEFINE_UNQUOTED(${TD_upper}_TYPEDEFED, 1)
+fi
+AC_MSG_RESULT($mh_td)
 done
 CPPFLAGS="$save_CPPFLAGS"
 ])dnl

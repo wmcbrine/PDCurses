@@ -79,15 +79,16 @@ case "$with_rexx" in
 			AC_SEARCH_LIBS(dlopen,dl)
 		fi
 	;;
-	objrexx)              dnl -------- Object Rexx
+	objrexx | orexx | objectrexx)              dnl -------- Object Rexx
+	with_rexx="objrexx"
 		AC_DEFINE(USE_OREXX)
 		rexx_h="rexx.h"
 		rexx_l="rexxapi"
 		REXX_INT="Object Rexx"
 		REXX_TARGET="ObjectRexx"
 		extra_rexx_libs="-lrexx"
-		orexx_incdirs="/opt/orexx /usr/local/orexx"
-		orexx_libdirs="/opt/orexx/lib /usr/local/orexx/lib"
+		orexx_incdirs="/opt/orexx /usr/local/orexx /usr/lpp/orexx/include"
+		orexx_libdirs="/opt/orexx/lib /usr/local/orexx/lib /usr/lpp/orexx/lib"
 		case "$target" in
 			*linux*)
 			extra_rexx_defines="-DLINUX"
@@ -1001,8 +1002,12 @@ EOF
 	rm -f conftest.*
 fi
 
+
+aix_exports="config.exports.aix"
+echo "" > $aix_exports
 if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes" -o "$DLFCNINCDIR" != "" -o "$DLFCNLIBDIR" != ""; then
 	if test "$with_rexx" = "rexxtrans" -o "$with_rexx" = "regina" -o  "$with_rexx" = "objrexx" -o "$with_rexx" = "rexx6000"; then
+		EXPS="1,2,3,4,5,6,7,8,9"
 		SHL_TARGETS=""
 		for a in $SHLFILES
 		do
@@ -1010,6 +1015,15 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
 			else
 				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
+			fi
+			this=`echo $EXPS | cut -d, -f1`
+			EXPS=`echo $EXPS | cut -d, -f2-`
+			if test "$AIX_DYN" = "yes"; then
+				echo "RXPACKEXP$this=$a.exp" >> $aix_exports
+				echo "RXPACKEXPORTS$this=-bE:$a.exp" >> $aix_exports
+			else
+				echo "RXPACKEXP$this=" >> $aix_exports
+				echo "RXPACKEXPORTS$this=" >> $aix_exports
 			fi
 		done
 	else
@@ -1019,6 +1033,7 @@ else
 	SHL_TARGETS=""
 fi
 
+AC_SUBST_FILE(aix_exports)
 AC_SUBST(EEXTRA)
 AC_SUBST(CEXTRA)
 AC_SUBST(OSAVE)

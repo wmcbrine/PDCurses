@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.3 2002/06/23 10:52:48 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.4 2003/12/28 08:39:21 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -229,6 +229,7 @@ int	PDC_rawgetch()
 extern	WINDOW*	_getch_win_;
 
 	int	c=0;
+	int	delay;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
@@ -240,7 +241,12 @@ extern	WINDOW*	_getch_win_;
 	if (_getch_win_->_nodelay && !PDC_breakout()) /* @@ */
 		return( -1 );
 
-	c = XCurses_rawgetch( SP->delaytenths );
+	if ( SP->delaytenths || _getch_win_->_delayms > 0 )
+		delay = 1;
+	else
+		delay = 0;
+
+	c = XCurses_rawgetch( delay );
 	return(c);
 }
 

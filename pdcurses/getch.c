@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.3 2002/03/22 22:36:08 mark Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.4 2003/12/28 08:38:43 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -170,7 +170,20 @@ extern  WINDOW*	_getch_win_;
 		return( ERR );
 
 	if ( SP->delaytenths )
-		waitingtenths = 2*SP->delaytenths; /* changed from 10 to 2 - William McBrine */
+		waitingtenths = 2*SP->delaytenths; /* set the number of 1/20th second napms() calls */
+	else if ( win->_delayms )
+	{
+		/*
+		 * As granularity of clocks is not ideal for waiting for individual periods
+		 * of 1 millisecond, we need to determine a reasonably accurate mechanism
+		 * based on the specified delay period. As delaying by 1/20th of a second
+		 * is reasonable, then determine how many 1/20th seconds are in the specified
+		 * delay time, and pause that many times.
+		 */
+		waitingtenths = win->_delayms / 50;
+		if (waitingtenths == 0)
+			waitingtenths = 1;
+	}
 
 /* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
 /*                  if there have been changes to it and it is not a pad */
@@ -262,14 +275,14 @@ extern  WINDOW*	_getch_win_;
 /*
  * Order of test for delaytenths and _nodelay reversed - William McBrine
  */
-		if (SP->delaytenths)
+		if (SP->delaytenths || w->_delayms)
 		{
 			if (waitingtenths == 0 && key == (-1))
 				return(ERR);
 			if (key == (-1))
 			{
 				waitingtenths--;
-					napms(50); /* changed from 10 to 50 - William McBrine */
+					napms(50); /* sleep for 1/20th second */
 				continue;
 			}
 		}

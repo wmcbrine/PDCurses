@@ -55,7 +55,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.1 2001/01/10 08:27:09 mark Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.2 2003/12/28 08:38:59 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -77,8 +77,8 @@ char *rcsid_inopts  = "$Id: inopts.c,v 1.1 2001/01/10 08:27:09 mark Exp $";
   	int noraw(void);
   ***	void noqiflush(void);
   ***	void qiflush(void);
-  ***	int timeout(int delay);
-  ***	int wtimeout(WINDOW *win, int delay);
+  	int timeout(int delay);
+  	int wtimeout(WINDOW *win, int delay);
   	int typeahead(int fildes);
 
   X/Open Description:
@@ -144,6 +144,13 @@ char *rcsid_inopts  = "$Id: inopts.c,v 1.1 2001/01/10 08:27:09 mark Exp $";
  	passed through without being interpreted, and without generating a
  	signal.  The behaviour of the BREAK key depends on other
  	parameters of the terminal drive that are not set by curses.
+
+ 	The timeout() and wtimeout() functions set blocking or non-blocking
+ 	reads for the specified window. "delay" is measured in milliseconds.
+ 	If "delay" is negative a blocking read is used. If "delay" is zero
+ 	then non-blocking reads are done. If no input is waiting, ERR is
+ 	returned immediately. If "delay" is positive, the read blocks for
+ 	the "delay" period. If the period expires, ERR is returned.
 
  	The curses package does the "line-breakout optimisation" by
  	looking for type-ahead periodically while updating the screen.
@@ -306,7 +313,7 @@ int tenths;
 /***********************************************************************/
 {
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("nodelay() - called\n");
+	if (trace_on) PDC_debug("halfdelay() - called\n");
 #endif
 	if (tenths < 1 || tenths > 255)
 		return (ERR);
@@ -545,21 +552,6 @@ int fildes;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	timeout( int delay )
-#else
-int	PDC_CDECL	timeout(delay)
-int delay;
-#endif
-/***********************************************************************/
-{
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("timeout() - called\n");
-#endif
-/*************** this does nothing at the moment *************/
-	return(OK);
-}
-/***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wtimeout( WINDOW *win, int delay )
 #else
 int	PDC_CDECL	wtimeout(win,delay)
@@ -571,6 +563,51 @@ int delay;
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("wtimeout() - called\n");
 #endif
-/*************** this does nothing at the moment *************/
+
+	if (win == NULL)
+		return ERR;
+
+	if (delay < 0)
+	{
+		/*
+		 * This causes a blocking read on the window
+		 * so turn on delay mode
+		 */
+		win->_nodelay = FALSE;
+		win->_delayms = 0;
+	}
+	else if (delay == 0)
+	{
+		/*
+		 * This causes a non-blocking read on the window
+		 * so turn off delay mode
+		 */
+		win->_nodelay = TRUE;
+		win->_delayms = 0;
+	}
+	else
+	{
+		/*
+		 * This causes the read on the window
+		 * to delay for the number of milliseconds.
+		 * Also forces the window into non-blocking read mode
+		 */
+		/*win->_nodelay = TRUE;*/
+		win->_delayms = delay;
+	}
 	return(OK);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	timeout( int delay )
+#else
+int	PDC_CDECL	timeout(delay)
+int delay;
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("timeout() - called\n");
+#endif
+	return(wtimeout(stdscr,delay));
 }

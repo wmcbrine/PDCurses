@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.24 2003/02/19 07:38:22 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.25 2003/02/19 11:10:15 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1538,7 +1538,7 @@ RxPackageGlobalDataDef *InitRxPackage
       }
       memset( RxPackageGlobalData, 0, sizeof( RxPackageGlobalDataDef ) );
       (void)RxSetTraceFile( RxPackageGlobalData, "stderr" );
-      (void)RxSetConstantPrefix( RxPackageGlobalData, "!" );
+      (void)RxSetConstantPrefix( RxPackageGlobalData, "!", 0 );
       RxPackageGlobalData->deallocate = 1;
    }
 
@@ -1733,8 +1733,10 @@ int RxSetConstantPrefix
    /*
     * Set the packages constants now, if allowed...
     */
+#if 0
    if ( setvars )
-      SetPackageConstants( RxPackageGlobalData, RxPackageConstantDef *RxConstants, char *pname )
+      SetPackageConstants( RxPackageGlobalData, RxConstants, char *pname );
+#endif
    return( 0 );
 }
 

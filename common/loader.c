@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.14 2003/02/19 07:38:21 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.15 2003/02/19 11:10:14 mark Exp $";
 
 #include "rxpack.h"
 
@@ -222,10 +222,14 @@ int main
     */
    if ( ( rc = RegisterRxSubcom( RxPackageGlobalData, GETPACKAGESUBCOMHANDLER() ) ) != 0 )
       return( rc );
+#if 0
    /* 
-    * Set the constants for the package
+    * Register a RXINI handler to set the package constants
     */
+   if ( ( rc = RegisterRxIni( RxPackageGlobalData, GETPACKAGECONSTANTSDLER() ) ) != 0 )
+      return( rc );
    SetPackageConstants( RxPackageGlobalData, GETPACKAGECONSTANTS(), RXPACKAGENAME );
+#endif
    FunctionPrologue( RxPackageGlobalData, GETPACKAGEINITIALISER(), RXPACKAGENAME, 0L, NULL );
    /*
     * Set up the system exit for the Say and Trace redirection

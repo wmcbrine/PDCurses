@@ -16,6 +16,9 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifndef _RXPACK_H
+#define _RXPACK_H
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #else
@@ -234,3 +237,5 @@ int my_checkparam Args(( RxPackageGlobalDataDef *, const char *, int, int, int )
 #else
 # define DEBUGDUMP(x) {}
 #endif
+
+#endif /* !_RXPACK_H */

@@ -2496,6 +2496,39 @@ EOF
 fi
 with_rexx="rexxtrans"
 
+echo $ac_n "checking shared library/external function extensions""... $ac_c" 1>&6
+echo "configure:2501: checking shared library/external function extensions" >&5
+SHLPST=".so"
+MODPST=".so"
+
+case "$target" in
+        *hp-hpux*)
+                SHLPST=".sl"
+                MODPST=".sl"
+                ;;
+        *ibm-aix*)
+                SHLPST=".a"
+                MODPST=".a"
+                ;;
+        *qnx*)
+                SHLPST=""
+                MODPST=""
+                ;;
+        *cygwin*)
+                SHLPST=".dll"
+                MODPST=".dll"
+                ;;
+        *darwin*)
+                SHLPST=".dylib"
+                MODPST=".so"
+                ;;
+esac
+
+
+echo "$ac_t""$SHLPST/$MODPST" 1>&6
+
+
+
 OSAVE=".o.save"
 OBJ="o"
 EXE=""
@@ -2510,9 +2543,9 @@ RXPACKEXPORTS=""
 BASE_INSTALL="installbase"
 BASE_BINARY="binarybase"
 SHLPRE="lib"
-SHLPST=".so"
 LD_RXLIB1=""
 CAN_USE_ABI="no"
+BUNDLE=""
 # If the build OS can handle version numbers in the shared library name,
 # and the user requests it, then set SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
 SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
@@ -2521,6 +2554,7 @@ SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
 # then there is no shared library. Set OTHER_INSTALLS="installabilib" if you
 # are building a version numbered shared library.
 OTHER_INSTALLS="installlib"
+EXTRATARGET=""
 
 
 case "$target" in
@@ -2528,7 +2562,6 @@ case "$target" in
 		SYS_DEFS="-D_HPUX_SOURCE"
 		EEXTRA="-Wl,-E"
 		LD_RXLIB1="ld -b -q -n"
-		SHLPST=".sl"
 		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
@@ -2542,7 +2575,6 @@ case "$target" in
 		DYN_COMP="-DDYNAMIC"
 		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
 		LD_RXLIB1="ld $mh_entry -bM:SRE"
-		SHLPST=".a"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
 		RXPACKEXP="$SHLFILE.exp"
 		;;
@@ -2601,24 +2633,31 @@ case "$target" in
 	*apple-darwin*)
 		LD_RXLIB1="${CC} -dynamiclib -install_name=\$(prefix)/lib/\$(@)"
 		DYN_COMP="-fno-common"
-		SHLPST=".dylib"
 		;;
 	*qnx*)
 		LIBPRE=""
 		LIBPST=".lib"
 		SHLPRE=""
-		SHLPST=".lib"
 		DYN_COMP="-Q"   # force no check for dynamic loading
 		SHLFILE=""
 		EEXTRA="-mf -N0x20000 -Q"
 		;;
 	*cygwin)
-		LIBPRE=""
+		LIBPRE="lib"
 		SHLPRE=""
 		DYN_COMP="-DDYNAMIC"
 		LIBPST=".a"
-		SHLPST=".dll"
 		EXE=".exe"
+		LD_RXLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
+		BASE_INSTALL="cygwininstall"
+		BASE_BINARY="cygwinbinary"
+		;;
+	*darwin*)
+		DYN_COMP="-fno-common"
+		BUNDLE=".so"
+		LD_RXLIB1="${CC} -shared"
+		EXTRATARGET="librexxtrans$BUNDLE"
+		OTHER_INSTALLS="installmacosx"
 		;;
 	*)
 		;;
@@ -2626,10 +2665,10 @@ esac
 
 if test "$DYN_COMP" = ""; then
 echo $ac_n "checking compiler flags for a dynamic object""... $ac_c" 1>&6
-echo "configure:2630: checking compiler flags for a dynamic object" >&5
+echo "configure:2669: checking compiler flags for a dynamic object" >&5
 
 cat > conftest.$ac_ext <<EOF
-#line 2633 "configure"
+#line 2672 "configure"
 int a=0
 EOF
 
@@ -2641,7 +2680,7 @@ EOF
 		CFLAGS="-c $a"
 
 		mh_compile='${CC-cc} -c $CFLAGS conftest.$ac_ext > conftest.tmp 2>&1'
-		if { (eval echo configure:2645: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
+		if { (eval echo configure:2684: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
 			DYN_COMP=""
 		else
 			slash="\\"
@@ -2662,16 +2701,16 @@ EOF
 		
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 2666 "configure"
+#line 2705 "configure"
 int foo()
 {
 return(0);
 }
 EOF
-if { (eval echo configure:2672: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
+if { (eval echo configure:2711: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
 	mh_dyn_link='ld -shared -o conftest.rxlib conftest.o -lc 1>&5'
 #	mh_dyn_link='${CC} -Wl,-shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
-	if { (eval echo configure:2675: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+	if { (eval echo configure:2714: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 		LD_RXLIB1="ld -shared"
 #		LD_RXLIB1="${CC} -Wl,-shared"
 		LD_RXLIB2="${REXX_LIBS}"
@@ -2681,7 +2720,7 @@ if { (eval echo configure:2672: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; 
 	else
 		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&5'
 #		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
-		if { (eval echo configure:2685: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+		if { (eval echo configure:2724: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 			LD_RXLIB1="ld -G"
 #			LD_RXLIB1="${CC} -Wl,-G"
 			LD_RXLIB2="${REXX_LIBS}"
@@ -2721,6 +2760,8 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 else
 	SHL_TARGETS=""
 fi
+
+
 
 
 
@@ -2911,6 +2952,8 @@ s%@MH_XINC_DIR@%$MH_XINC_DIR%g
 s%@MH_XLIBS@%$MH_XLIBS%g
 s%@x11type@%$x11type%g
 s%@PURIFY@%$PURIFY%g
+s%@SHLPST@%$SHLPST%g
+s%@MODPST@%$MODPST%g
 s%@EEXTRA@%$EEXTRA%g
 s%@CEXTRA@%$CEXTRA%g
 s%@OSAVE@%$OSAVE%g
@@ -2921,7 +2964,8 @@ s%@DYN_COMP@%$DYN_COMP%g
 s%@SHLIBS@%$SHLIBS%g
 s%@LD_RXLIB1@%$LD_RXLIB1%g
 s%@SHLPRE@%$SHLPRE%g
-s%@SHLPST@%$SHLPST%g
+s%@LIBPST@%$LIBPST%g
+s%@LIBPRE@%$LIBPRE%g
 s%@DYNAMIC_LDFLAGS@%$DYNAMIC_LDFLAGS%g
 s%@STATIC_LDFLAGS@%$STATIC_LDFLAGS%g
 s%@SHL_TARGETS@%$SHL_TARGETS%g
@@ -2934,7 +2978,7 @@ s%@BASE_BINARY@%$BASE_BINARY%g
 s%@SAVE2O@%$SAVE2O%g
 s%@RXPACKEXPORTS@%$RXPACKEXPORTS%g
 s%@RXPACKEXP@%$RXPACKEXP%g
-s%@USE_ABI@%$USE_ABI%g
+s%@CAN_USE_ABI@%$CAN_USE_ABI%g
 
 CEOF
 EOF

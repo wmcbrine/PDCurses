@@ -919,6 +919,9 @@ case "$target" in
 	*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
 		;;
+	*pc-sco*)
+		LD_RXLIB1="ld -dy -G"
+		;;
 	*beos*)
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
 		BEOS_DYN="yes"

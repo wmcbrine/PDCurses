@@ -2679,6 +2679,9 @@ case "$target" in
 	*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
 		;;
+	*pc-sco*)
+		LD_RXLIB1="ld -dy -G"
+		;;
 	*beos*)
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
 		BEOS_DYN="yes"
@@ -2721,10 +2724,10 @@ esac
 
 if test "$DYN_COMP" = ""; then
 echo $ac_n "checking compiler flags for a dynamic object""... $ac_c" 1>&6
-echo "configure:2725: checking compiler flags for a dynamic object" >&5
+echo "configure:2728: checking compiler flags for a dynamic object" >&5
 
 cat > conftest.$ac_ext <<EOF
-#line 2728 "configure"
+#line 2731 "configure"
 int a=0
 EOF
 
@@ -2736,7 +2739,7 @@ EOF
 		CFLAGS="-c $a"
 
 		mh_compile='${CC-cc} -c $CFLAGS conftest.$ac_ext > conftest.tmp 2>&1'
-		if { (eval echo configure:2740: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
+		if { (eval echo configure:2743: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
 			DYN_COMP=""
 		else
 			slash="\\"
@@ -2757,16 +2760,16 @@ EOF
 		
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 2761 "configure"
+#line 2764 "configure"
 int foo()
 {
 return(0);
 }
 EOF
-if { (eval echo configure:2767: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
+if { (eval echo configure:2770: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
 	mh_dyn_link='ld -shared -o conftest.rxlib conftest.o -lc 1>&5'
 #	mh_dyn_link='${CC} -Wl,-shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
-	if { (eval echo configure:2770: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+	if { (eval echo configure:2773: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 		LD_RXLIB1="ld -shared"
 #		LD_RXLIB1="${CC} -Wl,-shared"
 		LD_RXLIB2="${REXX_LIBS}"
@@ -2776,7 +2779,7 @@ if { (eval echo configure:2767: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; 
 	else
 		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&5'
 #		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
-		if { (eval echo configure:2780: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+		if { (eval echo configure:2783: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 			LD_RXLIB1="ld -G"
 #			LD_RXLIB1="${CC} -Wl,-G"
 			LD_RXLIB2="${REXX_LIBS}"

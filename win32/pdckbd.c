@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.12 2004/07/01 07:21:13 rexx Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.13 2004/08/07 04:36:05 rexx Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -581,6 +581,8 @@ int   PDC_get_bios_key(void)
                   return kptab[idx].control;
                if ( local_key_modifiers & PDC_KEY_MODIFIER_ALT )
                   return kptab[idx].alt;
+               if ( local_key_modifiers & PDC_KEY_MODIFIER_SHIFT )
+                  return kptab[idx].shift;
                return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
             }
 

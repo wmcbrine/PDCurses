@@ -14,12 +14,14 @@ BUGS FIXED:
   - 695842: nl() and nonl() now return OK - fix by Warren Gay
   - 695847: termattrs() now also return A_UNDERLINE, A_REVERSE
 - Changes for cursor size under DOS.
+- Lots of code cleanup courtesey of Ron Thibodeau
 
 NEW FEATURES:
-- Implemented timeout() and wtimeout() Bug 695827 (Only on XCurses!!)
+- Implemented timeout() and wtimeout() Bug 695827
 
 NEW COMPILER SUPPORT:
 - OpenWatcom 1.1 supported on OS/2 and Win32. Bug 808864
+- DOS Pacfic Compiler - Ron Thibodeau
 
 
 Cheers, Mark

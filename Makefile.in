@@ -48,8 +48,8 @@ install:
 	$(INSTALL) -c -m 644 $(pdcursesdir)/libXCurses.a $(libdir)/libXCurses.a
 	-$(RANLIB) $(libdir)/libXCurses.a
 	$(INSTALL) -c -m 555 $(pdcursesdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) $(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST)
-	$(INSTALL) -c -m 644 $(paneldir)/libpanel.a $(libdir)/libpanel.a
-	-$(RANLIB) $(libdir)/libpanel.a
+	$(INSTALL) -c -m 644 $(paneldir)/libpanel.a $(libdir)/libXpanel.a
+	-$(RANLIB) $(libdir)/libXpanel.a
 	$(INSTALL) -c -m 755 ./xcurses-config $(bindir)/xcurses-config
 
 clean ::
@@ -116,3 +116,10 @@ tar:
 	$(PDC_DIR)/pdcurses/Makefile.in $(PDC_DIR)/pdcurses/Makefile.aix.in $(PDC_DIR)/demos/Makefile.in $(PDC_DIR)/tools/Makefile.in \
 	$(PDC_DIR)/panel/Makefile.in | compress > PDCurses-$(VER_DOT).tar.Z)
 #	$(PDC_DIR)/x11/thread/*.c $(PDC_DIR)/x11/thread/*.h \
+
+rpm: dist
+	cp $(srcdir)/../PDCurses-$(VER_DOT).tar.gz /usr/src/redhat/SOURCES
+	rpm -ba $(srcdir)/PDCurses-$(VER_DOT).spec
+#
+# End of makefile
+#

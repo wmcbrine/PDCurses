@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.34 2003/03/13 11:11:39 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.35 2003/04/04 12:03:38 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1613,15 +1613,15 @@ int SetPackageConstants
             value = buf;
             break;
          case 1:
-            varlen = strlen( con->text_value );
+            vallen = strlen( con->text_value );
             value = con->text_value;
             break;
          case 2:
-            varlen = sprintf( buf, "%f", con->double_value );
+            vallen = sprintf( buf, "%f", con->double_value );
             value = buf;
             break;
          case 3:
-            varlen = sprintf( buf, "%c", con->char_value );
+            vallen = sprintf( buf, "%c", con->char_value );
             value = buf;
             break;
          default:

@@ -745,10 +745,10 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
     * Handle trapping of the WM_DELETE_WINDOW property...
     */
    wm_atom[0] = XInternAtom(XtDisplay(topLevel),"WM_DELETE_WINDOW",False);
-   wm_atom[1] = XInternAtom(XtDisplay(topLevel),"WM_SAVE_YOURSELF",False);
+/*   wm_atom[1] = XInternAtom(XtDisplay(topLevel),"WM_SAVE_YOURSELF",False); */
    /* (void)XSetWMProtocols(XtDisplay(topLevel),RootWindowOfScreen(XtScreen(topLevel)),&wm_delete_window_atom,1);*/
    /* (void)XSetWMProtocols(XtDisplay(topLevel),XCURSESWIN,&wm_delete_window_atom,1);*/
-   (void)XSetWMProtocols(XtDisplay(topLevel),XtWindow(topLevel),wm_atom,2);
+   (void)XSetWMProtocols(XtDisplay(topLevel),XtWindow(topLevel),wm_atom,1); /* was 2 with WM_SAVE_YOURSELF included */
    /*
     * Create the Graphics Context for drawing. This MUST be done AFTER the
     * associated widget has been realized...

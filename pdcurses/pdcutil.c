@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -21,7 +21,9 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
-#define	INCLUDE_WINDOWS_H
+#if !defined(XCURSES)
+# define	INCLUDE_WINDOWS_H
+#endif
 #include <curses.h>
 
 #undef PDC_usleep
@@ -61,7 +63,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.2 2004/01/02 05:50:05 mark Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.3 2004/09/10 07:43:05 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -136,7 +138,7 @@ void PDC_beep ()
 	XCursesInstruct(CURSES_BELL);
 #endif
 
-#if defined(DOS) 
+#if defined(DOS)
 	PDC_putctty( (chtype)'\007', 0 );
 #endif
 

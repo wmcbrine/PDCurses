@@ -34,7 +34,7 @@ DYN_COMP =         @DYN_COMP@
 SHLPRE =           @SHLPRE@
 SHLPST =           @SHLPST@
 LD_RXLIB1  =       @LD_RXLIB1@
-LD_RXLIB2  =       # @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
+LD_RXLIB2  =       @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
 O2SAVE  =          @O2SAVE@
 O2SHO  =           @O2SHO@
 CC2O   =           @CC2O@
@@ -50,7 +50,7 @@ CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@ -I$(x11ba
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
 LINK		= $(CC)
-LDFLAGS		= 
+LDFLAGS		=
 
 RANLIB		= @RANLIB@
 
@@ -61,7 +61,7 @@ SHLFILE = XCurses
 ################################################################################
 all :	$(LIBRARIES) $(SHL_TARGETS)
 
-install : 
+install :
 	echo Does nothing at the moment
 
 clean :
@@ -201,6 +201,7 @@ libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS)
 	-$(RANLIB) $@
 
 $(SHLPRE)$(SHLFILE)$(SHLPST) : $(SHOFILES)
+	cp $(srcdir)/../win32/curses.def ./XCursesw32.def
 	$(LD_RXLIB1) $(RXPACKEXPORTS) -o $@ $(SHOFILES) $(LD_RXLIB2)
 
 addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)

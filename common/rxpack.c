@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.8 2002/07/29 06:19:40 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.9 2002/07/29 06:52:39 mark Exp $";
 
 #include "rxpack.h"
 
@@ -707,11 +707,11 @@ int RegisterRxSubcom
 int RegisterRxFunctions
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction **RxPackageFunctions )
 #else
    ( RxPackageGlobalData,  RxPackageFunctions )
    RxPackageGlobalDataDef *RxPackageGlobalData;
-   RexxFunction *RxPackageFunctions;
+   RexxFunction **RxPackageFunctions;
 #endif
 
 {
@@ -720,9 +720,10 @@ int RegisterRxFunctions
 
    InternalTrace( RxPackageGlobalData, "RegisterRxFunctions", NULL );
 
-   for ( func = RxPackageFunctions; func->InternalName; func++ )
+   for ( func = *RxPackageFunctions; func->InternalName; func++ )
    {
 #if defined(DYNAMIC_LIBRARY)
+fprintf(stderr,"%s %d %d %d %s\n",__FILE__,__LINE__,rc,func->DllLoad,func->InternalName);
 # if !defined(USE_REXX6000)
       if (func->DllLoad)
       {
@@ -797,10 +798,10 @@ int QueryRxFunction
 int DeregisterRxFunctions
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions, int verbose )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction **RxPackageFunctions, int verbose )
 #else
    ( RxPackageGlobalData, RxPackageFunctions, verbose )
-   RexxFunction *RxPackageFunctions;
+   RexxFunction **RxPackageFunctions;
    RxPackageGlobalDataDef *RxPackageGlobalData;
    int verbose;
 #endif
@@ -811,7 +812,7 @@ int DeregisterRxFunctions
 
    InternalTrace( RxPackageGlobalData, "DeregisterRxFunctions", "%d", verbose );
 
-   for ( func = RxPackageFunctions; func->InternalName; func++ )
+   for ( func = *RxPackageFunctions; func->InternalName; func++ )
    {
       assert( func->ExternalName );
       rc = RexxDeregisterFunction( func->ExternalName );
@@ -881,12 +882,12 @@ RxPackageGlobalDataDef *InitRxPackage
 int TermRxPackage
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageTerminator *ptr, RexxFunction *RxPackageFunctions, char *progname, int deregfunc )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageTerminator *ptr, RexxFunction **RxPackageFunctions, char *progname, int deregfunc )
 #else
    ( RxPackageGlobalData, ptr, RxPackageFunctions, progname, deregfunc )
    RxPackageGlobalDataDef *RxPackageGlobalData;
    PackageTerminator *ptr;
-   RexxFunction *RxPackageFunctions;
+   RexxFunction **RxPackageFunctions;
    char *progname;
    int deregfunc;
 #endif
@@ -1330,14 +1331,14 @@ static RSH_RETURN_TYPE RxSubcomHandler
 /***********************************************************************/
 {
    RSH_RETURN_TYPE rcode=0;
-   int rc;
+   int rc=0;
    char *buf;
 
    buf = malloc( Command->strlength + 1 );
    if ( buf == NULL )
    {
       *Flags = RXSUBCOM_ERROR;             /* raise an error condition   */
-      sprintf(Retstr->strptr, "%d", rc);   /* format return code string  */
+      sprintf(Retstr->strptr, "%d", RXSUBCOM_NOEMEM);   /* format return code string  */
                                            /* and set the correct length */
       Retstr->strlength = strlen(Retstr->strptr);
    }

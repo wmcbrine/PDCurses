@@ -14,8 +14,10 @@ BUGS FIXED:
 - pechochar() should now work correctly.
 - redrawwin() macro in curses.h was incorrect - fixed by Alberto Ornaghi
 - Don't include "special" characters like KEY_SHIFT_L to be returned in getnstr()
-  family.
+  family. Bug 542913
 - Entering TAB in wgetnstr() no longer exceeds requested buffer size.
+  Bug 489233
+- Fixed bug 550066, scrollok() and pads.
   Also beep() called when buffer exceeded. Bug 562041.
 - Reverse video of X11 selection reinstated. Pablo Garcia Abio??
 - Right Alt modifier now works like left Alt modifier under Win32
@@ -41,7 +43,7 @@ NEW FEATURES:
   suggestion.
 
 NEW COMPILER SUPPORT:
-None
+- lcc-win32 now works correctly
 
 Cheers, Mark
 ------------------------------------------------------------------------

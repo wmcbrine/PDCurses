@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.23 2004/09/14 07:53:01 rexx Exp $
+$Id: curses.h,v 1.24 2004/12/16 00:56:10 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -984,7 +984,7 @@ typedef struct
 	bool	shell;		/* TRUE if reset_prog_mode() needs  */
 				/*	to be called.		    */
 	chtype	blank;		/* Background character		    */
-	attr_t	orig_attr;	/* Original screen attributes	    */
+	attr_t	orig_attr;	/* Original screen attributes - top 16 bits background, bottom 16 bits foreground */
 	int	cursrow;	/* position of physical cursor	    */
 	int	curscol;	/* position of physical cursor	    */
 	int	cursor;		/* Current Cursor definition	    */
@@ -1293,6 +1293,8 @@ extern chtype *acs_map;
 # ifndef FOREGROUND_INTENSITY
 #  define FOREGROUND_INTENSITY	0x0008		/* BOLD */
 # endif
+#define  FOREGROUND_MASK 0x000F
+
 # ifndef BACKGROUND_BLUE
 #  define BACKGROUND_BLUE	0x0010
 # endif
@@ -1305,15 +1307,16 @@ extern chtype *acs_map;
 # ifndef BACKGROUND_INTENSITY
 #  define BACKGROUND_INTENSITY	0x0080		/* BLINK */
 # endif
+#define  BACKGROUND_MASK 0x00F0
 
-# define COLOR_BLACK		0
-# define COLOR_BLUE		FOREGROUND_BLUE
-# define COLOR_RED		FOREGROUND_RED
-# define COLOR_GREEN		FOREGROUND_GREEN
-# define COLOR_CYAN		FOREGROUND_BLUE | FOREGROUND_GREEN
-# define COLOR_MAGENTA		FOREGROUND_RED | FOREGROUND_BLUE
-# define COLOR_YELLOW		FOREGROUND_RED | FOREGROUND_GREEN
-# define COLOR_WHITE		FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE
+# define COLOR_BLACK     0
+# define COLOR_BLUE      FOREGROUND_BLUE
+# define COLOR_RED       FOREGROUND_RED
+# define COLOR_GREEN     FOREGROUND_GREEN
+# define COLOR_CYAN      FOREGROUND_BLUE | FOREGROUND_GREEN
+# define COLOR_MAGENTA   FOREGROUND_RED | FOREGROUND_BLUE
+# define COLOR_YELLOW    FOREGROUND_RED | FOREGROUND_GREEN
+# define COLOR_WHITE     FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE
 #endif
 
 #ifdef CHTYPE_LONG

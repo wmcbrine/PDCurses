@@ -133,10 +133,10 @@ char *title;
    idx += sizeof(int);
 
    if (write_socket(display_sock,buf,idx) < 0)
-      XCursesExitCursesProcess(1,"exitting from XCurses_set_title");
+      XCursesExitCursesProcess(1,"exiting from XCurses_set_title");
 
    if (write_socket(display_sock,title,len) < 0)
-      XCursesExitCursesProcess(1,"exitting from XCurses_set_title");
+      XCursesExitCursesProcess(1,"exiting from XCurses_set_title");
 
    return;
 }
@@ -161,7 +161,7 @@ int XCurses_refresh_scrollbar()
    idx = sizeof(int);
 
    if (write_socket(display_sock,buf,idx) < 0)
-      XCursesExitCursesProcess(1,"exitting from XCurses_refresh_scrollbar");
+      XCursesExitCursesProcess(1,"exiting from XCurses_refresh_scrollbar");
 
    return(OK);
 }

@@ -544,7 +544,7 @@ char *argv[];
 */
                               NULL);
    }
-#ifdef PDCDEBUG1
+#if 0
       for (i=0;i<argc;i++)
          printf("Arg: %d -> %s\n",i,argv[i]);
 #endif
@@ -600,46 +600,49 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
     * Create a BOX widget in which to draw...
     */
 #if 0
-   fprintf(stderr,"Width: %d Height: %d sb_started: %d\n",XCursesWindowWidth+XCURSESSCROLLBARWIDTH,
-                                   XCursesWindowHeight+XCURSESSCROLLBARWIDTH,sb_started);
+   fprintf(stderr,"SB Width: %d Width: %d Height: %d sb_started: %d\n",
+                   XCURSESSCROLLBARWIDTH,
+                   XCursesWindowWidth+XCURSESSCROLLBARWIDTH,
+                   XCursesWindowHeight+XCURSESSCROLLBARWIDTH,
+                   sb_started);
 #endif
    if (XCURSESSCROLLBARWIDTH != 0
    && sb_started)
    {
       scrollBox = XtVaCreateManagedWidget(XCursesProgramName,scrollBoxWidgetClass,topLevel,
-                                      XtNwidth,XCursesWindowWidth+XCURSESSCROLLBARWIDTH+8+2,
-                                      XtNheight,XCursesWindowHeight+XCURSESSCROLLBARWIDTH+8+2,
-                                      NULL);
+                                          XtNwidth,XCursesWindowWidth+XCURSESSCROLLBARWIDTH,
+                                          XtNheight,XCursesWindowHeight+XCURSESSCROLLBARWIDTH,
+                                          NULL);
       drawing = XtVaCreateManagedWidget(XCursesProgramName,boxWidgetClass,
-                                      scrollBox,
-                                      XtNwidth,XCursesWindowWidth,
-                                      XtNheight,XCursesWindowHeight,
-                           XtNwidthInc,XCursesFontWidth,
-                           XtNheightInc,XCursesFontHeight,
-                                      NULL);
+                                        scrollBox,
+                                        XtNwidth,XCursesWindowWidth,
+                                        XtNheight,XCursesWindowHeight,
+                                        XtNwidthInc,XCursesFontWidth,
+                                        XtNheightInc,XCursesFontHeight,
+                                        NULL);
       scrollVert = XtVaCreateManagedWidget("scrollVert", scrollbarWidgetClass,
-                                         scrollBox,
-                                         XtNorientation, XtorientVertical,
-                                         XtNheight, XCursesWindowHeight,
-                                         XtNwidth, XCURSESSCROLLBARWIDTH,
-                                         NULL);
+                                           scrollBox,
+                                           XtNorientation, XtorientVertical,
+                                           XtNheight, XCursesWindowHeight,
+                                           XtNwidth, XCURSESSCROLLBARWIDTH,
+                                           NULL);
       XtAddCallback(scrollVert, XtNscrollProc, Scroll_up_down, drawing);
       XtAddCallback(scrollVert, XtNjumpProc, Thumb_up_down, drawing);
       scrollHoriz = XtVaCreateManagedWidget("scrollHoriz", scrollbarWidgetClass, 
-                                         scrollBox,
-                                          XtNorientation, XtorientHorizontal,
-                                          XtNwidth, XCursesWindowWidth,
-                                          XtNheight, XCURSESSCROLLBARWIDTH,
-                                          NULL);
+                                            scrollBox,
+                                            XtNorientation, XtorientHorizontal,
+                                            XtNwidth, XCursesWindowWidth,
+                                            XtNheight, XCURSESSCROLLBARWIDTH,
+                                            NULL);
       XtAddCallback(scrollHoriz, XtNscrollProc, Scroll_left_right, drawing);
       XtAddCallback(scrollHoriz, XtNjumpProc, Thumb_left_right, drawing);
    }
    else
    {
       drawing = XtVaCreateManagedWidget(XCursesProgramName,boxWidgetClass,topLevel,
-                                      XtNwidth,XCursesWindowWidth,
-                                      XtNheight,XCursesWindowHeight,
-                                      NULL);
+                                        XtNwidth,XCursesWindowWidth,
+                                        XtNheight,XCursesWindowHeight,
+                                        NULL);
    }
 
 #if 0

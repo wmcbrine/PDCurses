@@ -17,12 +17,12 @@
  * ScrollBox.c - scrollBox composite widget
  */
 
-#include	<X11/IntrinsicP.h>
-#include	<X11/StringDefs.h>
+#include <X11/IntrinsicP.h>
+#include <X11/StringDefs.h>
 
-#include	"x11/ScrollBoxP.h"
+#include "x11/ScrollBoxP.h"
 
-#include	<stdio.h>
+#include <stdio.h>
 
 #define INITIAL_WIDTH 300
 #define INITIAL_HEIGHT 300
@@ -35,9 +35,9 @@
 
 static XtResource resources[] = {
     {XtNhSpace, XtCHSpace, XtRDimension, sizeof(Dimension),
-	 XtOffset(ScrollBoxWidget, scrollBox.h_space), XtRImmediate, (XtPointer)4},
+    XtOffset(ScrollBoxWidget, scrollBox.h_space), XtRImmediate, (XtPointer)4},
     {XtNvSpace, XtCVSpace, XtRDimension, sizeof(Dimension),
-	 XtOffset(ScrollBoxWidget, scrollBox.v_space), XtRImmediate, (XtPointer)4},
+    XtOffset(ScrollBoxWidget, scrollBox.v_space), XtRImmediate, (XtPointer)4},
 };
 
 /****************************************************************
@@ -60,44 +60,44 @@ ScrollBoxClassRec scrollBoxClassRec = {
     /* class_name         */    "scrollBox",
     /* widget_size        */    sizeof(ScrollBoxRec),
     /* class_initialize   */    NULL,
-    /* class_part_init    */	NULL,
-    /* class_inited       */	FALSE,
+    /* class_part_init    */  NULL,
+    /* class_inited       */  FALSE,
     /* initialize         */    Initialize,
-    /* initialize_hook    */	NULL,
+    /* initialize_hook    */  NULL,
     /* realize            */    XtInheritRealize,
     /* actions            */    NULL,
-    /* num_actions	  */	0,
+    /* num_actions     */  0,
     /* resources          */    resources,
     /* num_resources      */    XtNumber(resources),
     /* xrm_class          */    NULLQUARK,
-    /* compress_motion	  */	TRUE,
-    /* compress_exposure  */	TRUE,
-    /* compress_enterleave*/	TRUE,
+    /* compress_motion    */  TRUE,
+    /* compress_exposure  */  TRUE,
+    /* compress_enterleave*/  TRUE,
     /* visible_interest   */    FALSE,
     /* destroy            */    NULL,
     /* resize             */    Resize,
     /* expose             */    NULL,
     /* set_values         */    SetValues,
-    /* set_values_hook    */	NULL,
+    /* set_values_hook    */  NULL,
     /* set_values_almost  */    XtInheritSetValuesAlmost,
-    /* get_values_hook    */	NULL,
+    /* get_values_hook    */  NULL,
     /* accept_focus       */    NULL,
-    /* version            */	XtVersion,
+    /* version            */  XtVersion,
     /* callback_private   */    NULL,
     /* tm_table           */    NULL,
-    /* query_geometry     */	QueryGeometry,
-    /* display_accelerator*/	XtInheritDisplayAccelerator,
-    /* extension          */	NULL
+    /* query_geometry     */  QueryGeometry,
+    /* display_accelerator*/  XtInheritDisplayAccelerator,
+    /* extension          */  NULL
   },{
 /* composite_class fields */
     /* geometry_manager   */    GeometryManager,
     /* change_managed     */    ChangeManaged,
-    /* insert_child	  */	XtInheritInsertChild,
-    /* delete_child	  */	XtInheritDeleteChild,
-    /* extension          */	NULL
+    /* insert_child    */  XtInheritInsertChild,
+    /* delete_child    */  XtInheritDeleteChild,
+    /* extension          */  NULL
   },{
 /* scrollBox class fields */
-    /* empty		  */	0,
+    /* empty        */  0,
   }
 };
 
@@ -120,87 +120,89 @@ static void DoLayout(w, doit)
 Widget w;
 Boolean doit;
 {
-	ScrollBoxWidget sbw = (ScrollBoxWidget) w;
-	Widget wmain, vscroll, hscroll;
-	Widget child;
-	Dimension mw, mh;   /* main window */
-	Dimension vh;   /* vertical scrollbar length (height) */
-	Dimension hw;   /* horizontal scrollbar length (width) */
-	Position vx;
-	Position hy;
+   ScrollBoxWidget sbw = (ScrollBoxWidget) w;
+   Widget wmain, vscroll, hscroll;
+   Widget child;
+   Dimension mw, mh;   /* main window */
+   Dimension vh;   /* vertical scrollbar length (height) */
+   Dimension hw;   /* horizontal scrollbar length (width) */
+   Position vx;
+   Position hy;
 #if 0
-	Dimension th;
-	Dimension tw;
+   Dimension th;
+   Dimension tw;
 #endif
-	int i;
+   int i;
 
-	if (sbw->composite.num_children != 3)
-		XtAppError(XtWidgetToApplicationContext((Widget)sbw),
-				"ScrollBox: must manage exactly three widgets.");
+   if (sbw->composite.num_children != 3)
+      XtAppError(XtWidgetToApplicationContext((Widget)sbw),
+            "ScrollBox: must manage exactly three widgets.");
 
-	for (i = 0; i < sbw->composite.num_children; i++) {
-		child = sbw->composite.children[i];
-		if (!XtIsManaged(child)) {
-			XtAppError(XtWidgetToApplicationContext((Widget)sbw),
-				"ScrollBox: all three widgets must be managed.");
-		}
-	}
+   for (i = 0; i < sbw->composite.num_children; i++) 
+   {
+      child = sbw->composite.children[i];
+      if (!XtIsManaged(child)) 
+      {
+         XtAppError(XtWidgetToApplicationContext((Widget)sbw),
+            "ScrollBox: all three widgets must be managed.");
+      }
+   }
 
-	/*
-	 * Child one is the main window, two is the vertical scrollbar,
-	 * and three is the horizontal scrollbar.
-	 */
-	wmain = sbw->composite.children[0];
-	vscroll = sbw->composite.children[1];
-	hscroll = sbw->composite.children[2];
+   /*
+    * Child one is the main window, two is the vertical scrollbar,
+    * and three is the horizontal scrollbar.
+    */
+   wmain = sbw->composite.children[0];
+   vscroll = sbw->composite.children[1];
+   hscroll = sbw->composite.children[2];
 
-	/* 
-	 * Size all three widgets so that space is fully utilized.
-	 */
+   /* 
+    * Size all three widgets so that space is fully utilized.
+    */
 #if 1
-	mw = sbw->core.width - (2 * sbw->scrollBox.h_space) - 
-		vscroll->core.width - (2 * vscroll->core.border_width) -
-		(2 * wmain->core.border_width);
+   mw = sbw->core.width - (2 * sbw->scrollBox.h_space) - 
+        vscroll->core.width - (2 * vscroll->core.border_width) -
+        (2 * wmain->core.border_width);
 
-	mh = sbw->core.height - (2 * sbw->scrollBox.v_space) - 
-		hscroll->core.height - (2 * hscroll->core.border_width) -
-		(2 * wmain->core.border_width);
+   mh = sbw->core.height - (2 * sbw->scrollBox.v_space) - 
+        hscroll->core.height - (2 * hscroll->core.border_width) -
+        (2 * wmain->core.border_width);
 
-	vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
+   vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
 
-	hy = wmain->core.y + mh + sbw->scrollBox.v_space + wmain->core.border_width + hscroll->core.border_width; 
+   hy = wmain->core.y + mh + sbw->scrollBox.v_space + wmain->core.border_width + hscroll->core.border_width; 
 
-	vh = mh;   /* scrollbars are always same length as main window */
-	hw = mw;
+   vh = mh;   /* scrollbars are always same length as main window */
+   hw = mw;
 
-	if (doit) {
-		XtResizeWidget(wmain, mw, mh, 1);
+   if (doit) {
+      XtResizeWidget(wmain, mw, mh, 1);
 #else
-	tw = wmain->core.width + (2 * sbw->scrollBox.h_space) +
-		vscroll->core.width + (2 * vscroll->core.border_width) +
-		(2 * wmain->core.border_width);
+   tw = wmain->core.width + (2 * sbw->scrollBox.h_space) +
+        vscroll->core.width + (2 * vscroll->core.border_width) +
+        (2 * wmain->core.border_width);
 
-	th = wmain->core.height + (2 * sbw->scrollBox.v_space) +
-		hscroll->core.height - (2 * hscroll->core.border_width) +
-		(2 * wmain->core.border_width);
+   th = wmain->core.height + (2 * sbw->scrollBox.v_space) +
+        hscroll->core.height - (2 * hscroll->core.border_width) +
+        (2 * wmain->core.border_width);
 
-	hw = mw = wmain->core.width;
-	vh = mh = wmain->core.height;
+   hw = mw = wmain->core.width;
+   vh = mh = wmain->core.height;
 
-	vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
+   vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
 
-	hy = wmain->core.y + mh + sbw->scrollBox.v_space + wmain->core.border_width + hscroll->core.border_width; 
+   hy = wmain->core.y + mh + sbw->scrollBox.v_space + wmain->core.border_width + hscroll->core.border_width; 
 
-	if (doit) {
-		XtResizeWidget(w, tw, th, 1);
+   if (doit) {
+      XtResizeWidget(w, tw, th, 1);
 #endif
 
-		XtResizeWidget(vscroll, vscroll->core.width, vh, 1);
-		XtMoveWidget(vscroll, vx, vscroll->core.y);
+      XtResizeWidget(vscroll, vscroll->core.width, vh, 1);
+      XtMoveWidget(vscroll, vx, vscroll->core.y);
 
-		XtResizeWidget(hscroll, hw, hscroll->core.height, 1);
-		XtMoveWidget(hscroll, hscroll->core.x, hy);
-	}
+      XtResizeWidget(hscroll, hw, hscroll->core.height, 1);
+      XtMoveWidget(hscroll, hscroll->core.x, hy);
+   }
 }
 
 /* ARGSUSED */
@@ -209,26 +211,26 @@ static XtGeometryResult GeometryManager(w, request, reply)
     XtWidgetGeometry *request;
     XtWidgetGeometry *reply;    /* RETURN */
 {
-    XtWidgetGeometry allowed;
+   XtWidgetGeometry allowed;
 
-    if (request->request_mode & ~(XtCWQueryOnly | CWWidth | CWHeight))
-    	return XtGeometryNo;
+   if (request->request_mode & ~(XtCWQueryOnly | CWWidth | CWHeight))
+      return XtGeometryNo;
 
-    if (request->request_mode & CWWidth)
-    	allowed.width = request->width;
-    else
-    	allowed.width = w->core.width;
+   if (request->request_mode & CWWidth)
+      allowed.width = request->width;
+   else
+      allowed.width = w->core.width;
 
-    if (request->request_mode & CWHeight)
-    	allowed.height = request->height;
-    else
-    	allowed.height = w->core.height;
+   if (request->request_mode & CWHeight)
+      allowed.height = request->height;
+   else
+      allowed.height = w->core.height;
 
-    if (allowed.width == w->core.width && allowed.height == w->core.height)
-    	return XtGeometryNo;
+   if (allowed.width == w->core.width && allowed.height == w->core.height)
+      return XtGeometryNo;
 
     if (!(request->request_mode & XtCWQueryOnly)) {
-    	RefigureLocations(w);
+      RefigureLocations(w);
     }
     return XtGeometryYes;
 }
@@ -236,7 +238,7 @@ static XtGeometryResult GeometryManager(w, request, reply)
 static void RefigureLocations(sbw)
     ScrollBoxWidget sbw;
 {
-	DoLayout(sbw, False);
+   DoLayout(sbw, False);
 }
 
 
@@ -256,38 +258,42 @@ static XtGeometryResult QueryGeometry(w, request, reply_return)
 Widget w;
 XtWidgetGeometry *request, *reply_return;
 {
-    XtGeometryResult result=XtGeometryNo;
+   XtGeometryResult result=XtGeometryNo;
 
-    request->request_mode &= CWWidth | CWHeight;
+   request->request_mode &= CWWidth | CWHeight;
 
-    if (request->request_mode == 0)
-	/* parent isn't going to change w or h, so nothing to re-compute */
-		return XtGeometryYes;
+   if (request->request_mode == 0)
+   /* parent isn't going to change w or h, so nothing to re-compute */
+      return XtGeometryYes;
 
     /* if proposed size is large enough, accept it.  Otherwise,
      * suggest our arbitrary initial size. */
 
-    if (request->request_mode & CWHeight) {
-		if (request->height < INITIAL_HEIGHT) {
-            result = XtGeometryAlmost;
-            reply_return->height = INITIAL_HEIGHT;
-            reply_return->request_mode &= CWHeight;
-        }
-        else
-            result = XtGeometryYes;
-	}
+   if (request->request_mode & CWHeight) 
+   {
+      if (request->height < INITIAL_HEIGHT) 
+      {
+         result = XtGeometryAlmost;
+         reply_return->height = INITIAL_HEIGHT;
+         reply_return->request_mode &= CWHeight;
+      }
+      else
+         result = XtGeometryYes;
+   }
 
-    if (request->request_mode & CWWidth) {
-		if (request->width < INITIAL_WIDTH) {
-            result = XtGeometryAlmost;
-            reply_return->width = INITIAL_WIDTH;
-            reply_return->request_mode &= CWWidth;
-        }
-        else
-            result = XtGeometryYes;
-	}
+   if (request->request_mode & CWWidth) 
+   {
+      if (request->width < INITIAL_WIDTH) 
+      {
+         result = XtGeometryAlmost;
+         reply_return->width = INITIAL_WIDTH;
+         reply_return->request_mode &= CWWidth;
+      }
+      else
+         result = XtGeometryYes;
+   }
 
-    return(result);
+   return(result);
 }
 
 /*
@@ -297,28 +303,28 @@ XtWidgetGeometry *request, *reply_return;
 static void Resize(w)
 Widget w;
 {
-	ScrollBoxWidget sbw = (ScrollBoxWidget) w;
-    DoLayout(sbw, True);
+   ScrollBoxWidget sbw = (ScrollBoxWidget) w;
+   DoLayout(sbw, True);
 }
 
 static void ChangeManaged(w)
 ScrollBoxWidget w;
 {
-	ScrollBoxWidget sbw = (ScrollBoxWidget) w;
-    DoLayout(sbw, True);
+   ScrollBoxWidget sbw = (ScrollBoxWidget) w;
+   DoLayout(sbw, True);
 }
 
 /* ARGSUSED */
 static void Initialize(request, new)
     Widget request, new;
 {
-    ScrollBoxWidget newsbw = (ScrollBoxWidget)new;
+   ScrollBoxWidget newsbw = (ScrollBoxWidget)new;
 
-    if (newsbw->core.width == 0)
-        newsbw->core.width = INITIAL_WIDTH;
+   if (newsbw->core.width == 0)
+      newsbw->core.width = INITIAL_WIDTH;
 
-    if (newsbw->core.height == 0)
-	newsbw->core.height = INITIAL_HEIGHT;
+   if (newsbw->core.height == 0)
+      newsbw->core.height = INITIAL_HEIGHT;
 
 } /* Initialize */
 
@@ -328,12 +334,12 @@ Widget current, request, new;
 ArgList args;
 Cardinal *num_args;
 {
-    ScrollBoxWidget sbwcurrent = (ScrollBoxWidget) current;
-    ScrollBoxWidget sbwnew = (ScrollBoxWidget) new;
+   ScrollBoxWidget sbwcurrent = (ScrollBoxWidget) current;
+   ScrollBoxWidget sbwnew = (ScrollBoxWidget) new;
    /* need to relayout if h_space or v_space change */
-    if ((sbwnew->scrollBox.h_space != sbwcurrent->scrollBox.h_space) ||
+   if ((sbwnew->scrollBox.h_space != sbwcurrent->scrollBox.h_space) ||
                    (sbwnew->scrollBox.v_space != sbwcurrent->scrollBox.v_space))
-        DoLayout(sbwnew, True);
+      DoLayout(sbwnew, True);
 
-    return False;
+   return False;
 }

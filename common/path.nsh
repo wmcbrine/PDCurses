@@ -19,12 +19,35 @@ Function AddToPath
   Pop $1
   StrCmp $1 1 AddToPath_NT
     ; Not on NT
-    StrCpy $1 $WINDIR 2
-    FileOpen $1 "$1\autoexec.bat" a
+    ; $0 has the directory to add
+    StrCpy $1 $WINDIR 2 ;get the drive letter and colon into $1
+    GetFullPathName /SHORT $6 $0
+    StrCpy $6 "SET PATH=%PATH%;$6" ; $6 has the string we would have written when installing (except for leading CRLF)
+    ; Determine if the dir entry is already there (and written by us)
+    FileOpen $5 "$1\autoexec.bat" r ; $5 has autoexec.bat handle
+    
+    InPath_dosLoop:
+      FileRead $5 $3 ; $3 has 1 line from autoexec.bat
+      StrCmp $3 "$6$\r$\n" InPath_dosLoopFound ; get out if we found our string
+      StrCmp $3 "$6$\n" InPath_dosLoopFound    ; get out if we found our string
+      StrCmp $3 "$6" InPath_dosLoopFound       ; get out if we found our string
+      StrCmp $3 "" InPath_dosLoopEnd
+      Goto InPath_dosLoop
+
+    ; we found our string, so dir is already in PATH, don't do any more
+    InPath_dosLoopFound:
+      FileClose $5
+      Goto AddToPath_done
+    
+    InPath_dosLoopEnd:
+      FileClose $5
+
+    FileOpen $1 "$1\autoexec.bat" a ; $1 now has autoexec.bat handle
     FileSeek $1 0 END
     GetFullPathName /SHORT $0 $0
     FileWrite $1 "$\r$\nSET PATH=%PATH%;$0$\r$\n"
     FileClose $1
+    SetRebootFlag true
     Goto AddToPath_done
 
   AddToPath_NT:
@@ -34,7 +57,7 @@ Function AddToPath
     Push $0 ; push the new PATH item onto the stack
     Call StrStr ; Find $0 in $1
     Pop $2 ; pos of the new PATH item in current PATH (-1 if not found)
-    IntCmp $2 -1 AddToPath_NTdoit
+    IntCmp $2 -1 AddToPath_NTdoIt
     Goto AddToPath_done
 
     AddToPath_NTdoIt:

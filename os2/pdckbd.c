@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.4 2002/01/12 04:04:18 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.5 2002/09/01 08:13:48 mark Exp $";
 #endif
 
 /*******************************************************************************
@@ -203,13 +203,13 @@ extern   int   c_ungind;         /* wungetch() push index */
 **man-end**********************************************************************/
 
 /***********************************************************************/
-int PDC_get_input_fd(void)
+unsigned long PDC_get_input_fd(void)
 /***********************************************************************/
 {
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
 #endif
-   return fileno(stdin);
+   return (unsigned long)fileno(stdin);
 }
 
 #ifndef EMXVIDEO

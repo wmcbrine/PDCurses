@@ -32,7 +32,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.3 2001/04/22 05:53:45 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.4 2002/09/01 08:13:29 mark Exp $";
 #endif
 
 /*******************************************************************************
@@ -210,9 +210,9 @@ extern	int	c_ungind;			/* wungetch() push index */
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int PDC_get_input_fd(void)
+unsigned long PDC_get_input_fd(void)
 #else
-int PDC_get_input_fd()
+unsigned long PDC_get_input_fd()
 #endif
 /***********************************************************************/
 {
@@ -221,7 +221,7 @@ int PDC_get_input_fd()
 	if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
 #endif
 
-	return fileno (stdin);
+	return (unsigned long)fileno (stdin);
 }
 
 /*man-start*********************************************************************

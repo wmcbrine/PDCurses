@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.13 2004/08/07 04:36:05 rexx Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.14 2004/09/10 07:51:40 rexx Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -36,6 +36,10 @@ char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.13 2004/08/07 04:36:05 rexx Exp $";
  */
 #ifndef DOUBLE_CLICK
 # define DOUBLE_CLICK 0x0002
+#endif
+
+#ifndef MOUSE_WHEELED
+# define MOUSE_WHEELED 0x0004
 #endif
 
 #ifndef FROM_LEFT_1ST_BUTTON_PRESSED
@@ -514,6 +518,9 @@ int   PDC_get_bios_key(void)
 #endif
             local_key_modifiers = pdc_key_modifiers = 0L;
             ignore_key = 0;
+            /*
+             * Handle modifier keys hit by themselves
+             */
             switch(save_ip.Event.KeyEvent.wVirtualKeyCode)
             {
                case 16: /* shift */
@@ -571,6 +578,7 @@ int   PDC_get_bios_key(void)
              * If the Unicode character is not zero; its a displayable character.
              * Check for Ctrl-Alt sequences; they are diatric characters
              */
+#if 0
             if ( ( SP->os_version < 0x80000000 ) && ( save_ip.Event.KeyEvent.uChar.UnicodeChar != 0 ) ) /* NT only ! */
             {
                idx = save_ip.Event.KeyEvent.wVirtualKeyCode;
@@ -585,7 +593,7 @@ int   PDC_get_bios_key(void)
                   return kptab[idx].shift;
                return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
             }
-
+#endif
             if (save_ip.Event.KeyEvent.uChar.AsciiChar == 0
             ||  save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
             ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED
@@ -654,10 +662,21 @@ int   PDC_get_bios_key(void)
          case MOUSE_EVENT:
             memset((char*)&Temp_Mouse_status,0,sizeof(MOUSE_STATUS));
             /*
+             * Wheel has been scrolled
+             */
+/*fprintf(stderr,"%s %d: %x\n",__FILE__,__LINE__,save_ip.Event.MouseEvent.dwButtonState);*/
+            if ( save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED )
+            {
+               if (save_ip.Event.MouseEvent.dwButtonState & 0xFF000000)
+                  Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+               else
+                  Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+            }
+            /*
              * button press, release or double click ...
              */
-            if (save_ip.Event.MouseEvent.dwEventFlags == 0
-            ||  save_ip.Event.MouseEvent.dwEventFlags == DOUBLE_CLICK)
+            else if (save_ip.Event.MouseEvent.dwEventFlags == 0
+                 ||  save_ip.Event.MouseEvent.dwEventFlags == DOUBLE_CLICK)
             {
                /*
                 * Check for Left-most button - always button 1
@@ -724,36 +743,33 @@ int   PDC_get_bios_key(void)
                      trap_mouse = TRUE;
                   break;
                }
-               if (SP->num_mouse_buttons == 3)
+               /*
+                * Check for Middle button - button 2 only for 3 button mice
+                */
+               if (save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED
+               && !(ACTUAL_BUTTON_STATUS(2) & BUTTON_RELEASED))
                {
-                  /*
-                   * Check for Middle button - button 2 only for 3 button mice
-                   */
-                  if (save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED
-                  && !(ACTUAL_BUTTON_STATUS(2) & BUTTON_RELEASED))
-                  {
-                     button_no = 2;
-                     TEMP_BUTTON_STATUS(button_no) = (save_ip.Event.MouseEvent.dwEventFlags)?BUTTON_DOUBLE_CLICKED:BUTTON_PRESSED;
-                     if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
-                     && (SP->_trap_mbe) & BUTTON2_PRESSED)
-                        trap_mouse = TRUE;
-                     if (TEMP_BUTTON_STATUS(button_no) == BUTTON_DOUBLE_CLICKED
-                     && (SP->_trap_mbe) & BUTTON2_DOUBLE_CLICKED)
-                        trap_mouse = TRUE;
-                     break;
-                  }
-                  if (last_button_no == 2
-                  && (ACTUAL_BUTTON_STATUS(2) & BUTTON_PRESSED
-                     || ACTUAL_BUTTON_STATUS(2) & BUTTON_DOUBLE_CLICKED
-                     || ACTUAL_MOUSE_MOVED)
-                  && !(save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED))
-                  {
-                     button_no = 2;
-                     TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-                     if ((SP->_trap_mbe) & BUTTON2_RELEASED)
-                        trap_mouse = TRUE;
-                     break;
-                    }
+                  button_no = 2;
+                  TEMP_BUTTON_STATUS(button_no) = (save_ip.Event.MouseEvent.dwEventFlags)?BUTTON_DOUBLE_CLICKED:BUTTON_PRESSED;
+                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
+                  && (SP->_trap_mbe) & BUTTON2_PRESSED)
+                     trap_mouse = TRUE;
+                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_DOUBLE_CLICKED
+                  && (SP->_trap_mbe) & BUTTON2_DOUBLE_CLICKED)
+                     trap_mouse = TRUE;
+                  break;
+               }
+               if (last_button_no == 2
+               && (ACTUAL_BUTTON_STATUS(2) & BUTTON_PRESSED
+                  || ACTUAL_BUTTON_STATUS(2) & BUTTON_DOUBLE_CLICKED
+                  || ACTUAL_MOUSE_MOVED)
+               && !(save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED))
+               {
+                  button_no = 2;
+                  TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+                  if ((SP->_trap_mbe) & BUTTON2_RELEASED)
+                     trap_mouse = TRUE;
+                  break;
                }
                /*
                 * If we get here, then we don't know how to handle the event, so
@@ -763,7 +779,7 @@ int   PDC_get_bios_key(void)
             }
             else /* button motion event */
             {
-               Temp_Mouse_status.changes |= 8;
+               Temp_Mouse_status.changes |= PDC_MOUSE_MOVED;
                button_no = last_button_no;
                if (button_no == 1
                &&  (SP->_trap_mbe) & BUTTON1_MOVED)
@@ -785,6 +801,9 @@ int   PDC_get_bios_key(void)
       }
       if (button_no != 0)
       {
+         /*
+          * We have a button action, rather than a mouse movement or wheel action
+          */
          TEMP_MOUSE_X_POS = save_ip.Event.MouseEvent.dwMousePosition.X;
          TEMP_MOUSE_Y_POS = save_ip.Event.MouseEvent.dwMousePosition.Y;
          /*
@@ -819,6 +838,14 @@ int   PDC_get_bios_key(void)
          memcpy((char*)&Actual_Mouse_status,(char*)&Temp_Mouse_status,sizeof(MOUSE_STATUS));
          if (trap_mouse)
             break;
+      }
+      if ( ( Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN
+        ||   Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_UP )
+      &&  SP->_trap_mbe & MOUSE_WHEEL_SCROLL )
+      {
+         TEMP_MOUSE_X_POS = -1;
+         TEMP_MOUSE_Y_POS = -1;
+         break;
       }
    }
    /*

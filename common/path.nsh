@@ -4,6 +4,10 @@
 
 ;====================================================
 ; AddToPath - Adds the given dir to the search path.
+;             Only adds dir if not already in PATH
+;             NOTE: Not robust; if c:\bindir;c:\winnt are
+;                   PATH, and you specify c:\bin, then
+;                   it WILL be found!
 ;        Input - head of the stack
 ;        Note - Win9x systems requires reboot
 ;====================================================
@@ -26,9 +30,15 @@ Function AddToPath
   AddToPath_NT:
     ReadRegStr $1 HKCU "Environment" "PATH"
     StrCmp $1 "" AddToPath_NTdoIt
-      StrCpy $0 "$1;$0"
-      Goto AddToPath_NTdoIt
+    Push $1 ; push the current PATH value onto the stack
+    Push $0 ; push the new PATH item onto the stack
+    Call StrStr ; Find $0 in $1
+    Pop $2 ; pos of the new PATH item in current PATH (-1 if not found)
+    IntCmp $2 -1 AddToPath_NTdoit
+    Goto AddToPath_done
+
     AddToPath_NTdoIt:
+      StrCpy $0 "$1;$0"
       WriteRegStr HKCU "Environment" "PATH" $0
       SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
   

@@ -1543,9 +1543,16 @@ Boolean *continue_to_dispatch;
 #ifdef PDCDEBUG
          say("ClientMessage received\n");
 #endif
+#if 0
+         /*
+          * This code used to be included, but it resulted in continual
+          * failure of THE on my Toshiba laptop. Removed 3-2-2001 to see
+          * what effect it has.
+          */
          if ((Atom)client_event->data.s[0] == wm_atom[0]
          ||  (Atom)client_event->data.s[0] == wm_atom[1])
             XCursesExitXCursesProcess(0,SIGKILL,"");
+#endif
          break;
     default:
 #ifdef PDCDEBUG

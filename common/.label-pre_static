@@ -1,0 +1,8 @@
+; QOCCA Label File: .label-pre_static for RexxCurses/common
+1.17 RexxCurses/common/accommon.m4
+1.1 RexxCurses/common/getopt.c
+1.4 RexxCurses/common/loader.c
+1.2 RexxCurses/common/rxdef.h
+1.7 RexxCurses/common/rxpack.c
+1.4 RexxCurses/common/rxpack.h
+1.1 RexxCurses/common/.label-pre_static

@@ -63,6 +63,10 @@
 # include <malloc.h>
 #endif
 
+#ifdef HAVE_MATH_H
+# include <math.h>
+#endif
+
 #ifdef HAVE_STDARG_H
 # include <stdarg.h>
 #endif
@@ -244,15 +248,23 @@ int RxReturnNumber Args(( RxPackageGlobalDataDef *, RXSTRING *, long ));
 int RxReturnDouble Args(( RxPackageGlobalDataDef *, RXSTRING *, double ));
 int RxReturnPointer Args(( RxPackageGlobalDataDef *, RXSTRING *, void * ));
 int memcmpi Args(( char *, char *, int ));
-int my_checkparam Args(( RxPackageGlobalDataDef *, const char *, int, int, int ));
+int my_checkparam Args(( RxPackageGlobalDataDef *, char *, int, int, int ));
 int RxStrToInt Args(( RxPackageGlobalDataDef *, RXSTRING *, int * ));
 int RxStrToUInt Args(( RxPackageGlobalDataDef *, RXSTRING *, unsigned int * ));
 int RxStrToLong Args(( RxPackageGlobalDataDef *, RXSTRING *, long * ));
 int RxStrToULong Args(( RxPackageGlobalDataDef *, RXSTRING *, unsigned long * ));
-int RxStemToCharArray Args(( RxPackageGlobalDataDef *, RXSTRING *, char ** ));
+int RxStrToDouble Args(( RxPackageGlobalDataDef *, RXSTRING *, double * ));
+int RxStemToCharArray Args(( RxPackageGlobalDataDef *, RXSTRING *, char *** ));
 void RxFreeCharArray Args(( char **, int ));
-int RxStemToNumberArray Args(( RxPackageGlobalDataDef *, RXSTRING *, ULONG ** ));
-void RxFreeNumberArray Args(( ULONG * ));
+int RxStemToIntArray Args(( RxPackageGlobalDataDef *, RXSTRING *, int ** ));
+void RxFreeIntArray Args(( int * ));
+int RxStemToUIntArray Args(( RxPackageGlobalDataDef *, RXSTRING *, unsigned int ** ));
+void RxFreeUIntArray Args(( unsigned int * ));
+int RxStemToLongArray Args(( RxPackageGlobalDataDef *, RXSTRING *, long ** ));
+void RxFreeLongArray Args(( long * ));
+int RxStemToULongArray Args(( RxPackageGlobalDataDef *, RXSTRING *, unsigned long ** ));
+void RxFreeULongArray Args(( unsigned long * ));
+int RxNumberToVariable Args(( RxPackageGlobalDataDef *, RXSTRING *, ULONG ));
 
 #ifdef DEBUG
 # define DEBUGDUMP(x) {x;}

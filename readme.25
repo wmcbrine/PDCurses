@@ -1,0 +1,54 @@
+
+                             PDCurses 2.5
+            (Public Domain Curses for DOS, OS/2, X11 and Win32)
+
+
+INTRODUCTION:
+
+This release of PDCurses includes the following changes:
+
+Set BASE address for Win32 DLL
+Add KEY_SUP and KEY_SDOWN.
+Add PDC_set_line_color()
+Add blink support as bold background
+Add bold colors
+Add getbkgd() macro
+Add new PDC functions for adding underline, overline, leftline and rightline
+Add support for shifted keypad keys.
+Allow more keypad keys to work under Win32
+Change Win32 and OS/2 DLL name to curses.dll
+Change example resources to allow overriding from the cpmmand line
+Changes for building cleanly on OS/2
+Changes to handle building XCurses under AIX
+Check if prefresh() and pnoutrefresh() parameters are valid.
+Ensure build/install works from any directory
+Handle platforms where X11 headers do not typedef XPointer.
+Mention that Flexos is likely out-of-date.
+Pass delaytenths to XCurses_rawgetch()
+Remove boldFont
+Updates for cursor blinking and italic.
+
+BUGS FIXED:
+
+Fix bug with getting Win32 clipboard contents. Added new PDC_freeclipboard() function.
+Fix bug with halfdelay()
+Fix bug with mouse interrupting programs that are not trapping mouse events under Win32.
+Fix return value from curs_set()
+Reverse the left and right pointing bars in ALT_CHARSET
+
+
+NEW COMPILER SUPPORT:
+
+Add QNX-RTP port
+
+Makefiles for each platform/compiler option reside in the platform
+directory.  These all have an extension of .mak.
+
+Cheers, Mark
+------------------------------------------------------------------------
+ Mark Hessling,  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
+ Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL
+ Maintainer of PDCurses: Public Domain Curses and, Regina Rexx interpreter
+ Use Rexx ? join the Rexx Language Association: http://www.rexxla.org
+------------------------------------------------------------------------
+

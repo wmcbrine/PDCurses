@@ -2451,9 +2451,9 @@ void SelectionSet()
  if (length > tmpsel_length)
  {
     if (tmpsel_length == 0)
-       tmpsel = (char *)malloc(length+1);
+       tmpsel = (char *)malloc(length+1+end_y-start_y+1);
     else
-       tmpsel = (char *)realloc(tmpsel,length+1);
+       tmpsel = (char *)realloc(tmpsel,length+1+end_y-start_y+1);
  }
  if (!tmpsel)
  {
@@ -2731,7 +2731,7 @@ XtIntervalId *id;
       if ( visible_cursor ) 
       { 
          /* 
-          * Cursor currently ON, turn it off 
+          * Cursor currently ON, turn it off
           */ 
          int save_visibility = SP->visibility; 
          SP->visibility = 0; 

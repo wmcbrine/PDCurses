@@ -32,28 +32,52 @@ extra_rexx_libs=""
 extra_rexx_defines=""
 orexx_incdirs=""
 orexx_libdirs=""
+REXX_LIBS=""
+REXX_INCLUDES=""
 case "$with_rexx" in
 	regina)               dnl -------- Regina
 		AC_DEFINE(USE_REGINA)
+		AC_CHECK_PROG(regina_config, [regina-config], yes, no)
 		rexx_h="rexxsaa.h"
 		rexx_l="regina"
 		REXX_INT="Regina"
 		REXX_TARGET="Regina"
-		case "$target" in
-			*nto-qnx*)
+		if test "$ac_cv_prog_regina_config" = yes; then
+			REXX_INCLUDES=`regina-config --cflags`
+			REXX_LIBS=`regina-config --libs`
+			REXX_INT="Regina (using regina-config)"
+		else
+			case "$target" in
+				*nto-qnx*)
+				AC_SEARCH_LIBS(dlopen,dl)
+				;;
+				*qnx*)
+				;;
+				*hp-hpux*)
+				AC_SEARCH_LIBS(shl_load,dld)
+				;;
+				*)
 			AC_SEARCH_LIBS(dlopen,dl)
-			;;
-			*qnx*)
-			;;
-			*hp-hpux*)
-			AC_SEARCH_LIBS(shl_load,dld)
-			;;
-			*)
-		AC_SEARCH_LIBS(dlopen,dl)
-			;;
-		esac
-		AC_SEARCH_LIBS(crypt,crypt)
-		AC_PROG_LEX
+				;;
+			esac
+			AC_SEARCH_LIBS(crypt,crypt)
+			AC_PROG_LEX
+		fi
+	;;
+	rexxtrans)            dnl -------- Rexx/Trans
+		AC_DEFINE(USE_REXXTRANS)
+		AC_CHECK_PROG(rexxtrans_config, [rexxtrans-config], yes, no)
+		rexx_h="rexxtrans.h"
+		rexx_l="rexxtrans"
+		REXX_INT="Rexx/Trans"
+		REXX_TARGET="RexxTrans"
+		if test "$ac_cv_prog_rexxtrans_config" = yes; then
+			REXX_INCLUDES=`rexxtrans-config --cflags`
+			REXX_LIBS=`rexxtrans-config --libs`
+			REXX_INT="Rexx/Trans (using rexxtrans-config)"
+		else
+			AC_SEARCH_LIBS(dlopen,dl)
+		fi
 	;;
 	objrexx)              dnl -------- Object Rexx
 		AC_DEFINE(USE_OREXX)
@@ -109,14 +133,6 @@ dnl
 		REXX_TARGET="uni-REXX"
 		AC_SEARCH_LIBS(dlopen,dl)
 	;;
-	rexxtrans)            dnl -------- Rexx/Trans
-		AC_DEFINE(USE_REXXTRANS)
-		rexx_h="rexxtrans.h"
-		rexx_l="rexxtrans"
-		REXX_INT="Rexx/Trans"
-		REXX_TARGET="RexxTrans"
-		AC_SEARCH_LIBS(dlopen,dl)
-	;;
 	none)                 dnl -------- No Rexx interpreter
 		AC_DEFINE(NOREXX)
 		rexx_h=""
@@ -128,15 +144,11 @@ dnl
 		AC_MSG_ERROR(No Rexx interpreter specified with --with-rexx=int : must be one of: regina rexximc objrexx unirexx rexx6000 rexxtrans none)
 	;;
 esac
+AC_SUBST(REXX_TARGET)
 
 dnl look for REXX header and library, exit if not found
 
-if test "xx$rexx_h" = "xx" ; then
-	REXX_LIBS=""
-	REXX_INCLUDES=""
-	AC_SUBST(REXX_INCLUDES)
-	AC_SUBST(REXX_LIBS)
-else
+if test "xx$rexx_h" != "xx" -a "x$REXX_INCLUDES" = "x"; then
 dnl look for REXX header and library, exit if not found
 	AC_MSG_CHECKING(for location of Rexx header file: $rexx_h)
 	mh_rexx_inc_dir=""
@@ -167,10 +179,13 @@ dnl
 	if test "x$mh_rexx_inc_dir" != "x" ; then
 		REXX_INCLUDES="-I$mh_rexx_inc_dir $extra_rexx_defines"
 		AC_MSG_RESULT(found in $mh_rexx_inc_dir)
-		AC_SUBST(REXX_INCLUDES)
 	else
 		AC_MSG_ERROR(Cannot find Rexx header file: $rexx_h; cannot configure)
 	fi
+fi
+AC_SUBST(REXX_INCLUDES)
+
+if test "xx$rexx_h" != "xx" -a "x$REXX_LIBS" = "x"; then
 	AC_MSG_CHECKING(for location of Rexx library file: $rexx_l)
 	mh_rexx_lib_dir=""
 	mh_lib_dirs="\
@@ -196,25 +211,24 @@ dnl
 		for mh_ext in lib${rexx_l}.a lib${rexx_l}.so lib${rexx_l}.sl ${rexx_l}.lib lib${rexx_l}.dylib; do
 		  if test -r $ac_dir/$mh_ext; then
 		     mh_rexx_lib_dir=$ac_dir
-		  if test "$with_rexxtrans" = yes; then
-		     rexxtrans_lib_name="$ac_dir/$mh_ext"
-		  else
-		     rexxtrans_lib_name="."
-		  fi
-		     break 2
+			  if test "$with_rexxtrans" = yes; then
+			     rexxtrans_lib_name="$ac_dir/$mh_ext"
+			  else
+			     rexxtrans_lib_name="."
+			  fi
+		   break 2
 		  fi
 		done
 	done
 	if test "x$mh_rexx_lib_dir" != "x" ; then
 		REXX_LIBS="-L$mh_rexx_lib_dir -l$rexx_l $extra_rexx_libs"
 		AC_MSG_RESULT(found in $mh_rexx_lib_dir)
-		AC_SUBST(REXX_LIBS)
 		AC_SUBST(rexxtrans_lib_name)
 	else
 		AC_MSG_ERROR(Cannot find Rexx library file: $rexx_l; cannot configure)
 	fi
 fi
-AC_SUBST(REXX_TARGET)
+AC_SUBST(REXX_LIBS)
 ])dnl
 
 dnl ---------------------------------------------------------------------------

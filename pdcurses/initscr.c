@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.5 2004/07/01 07:28:05 rexx Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.6 2004/12/16 01:00:22 rexx Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -202,6 +202,11 @@ extern void (*PDC_initial_slk)();
 
    Due to the fact that newterm() does not yet exist in PDCurses,
    there is no way to recover from an error in initscr().
+
+   By default, curses will set default attributes to white on black. If
+   you want to use the attributes of the current terminal to be the
+   defaults, set the environment variable: PDC_ORIGINAL_COLORS to any
+   value before calling initscr(). (Currently only effective under Win32)
 
   X/Open Return Value:
    All functions return NULL on error, except endwin(), which

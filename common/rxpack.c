@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.32 2003/03/02 08:53:46 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.33 2003/03/12 10:43:50 mark Exp $";
 
 #include "rxpack.h"
 
@@ -732,7 +732,7 @@ int RxStrToDouble
    char *endptr;
    double sum;
 
-   sum = strtod( ptr->strptr, &endptr );
+   sum = (double)strtod( ptr->strptr, &endptr );
    if ( sum == 0
    &&   errno != 0 )
       return -1;

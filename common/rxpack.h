@@ -91,17 +91,20 @@
 #  define INCL_RXSHV      /* Shared variable support */
 #  define INCL_RXFUNC     /* External functions support */
 #  define INCL_RXSYSEXIT  /* System exit routines */
+#  define INCL_RXSUBCOM   /* Subcommand routines */
 #  include <os2.h>
 # else
 #  include <os2.h>
 #  define INCL_RXSHV      /* Shared variable support */
 #  define INCL_RXFUNC     /* External functions support */
 #  define INCL_RXSYSEXIT  /* System exit routines */
+#  define INCL_RXSUBCOM   /* Subcommand routines */
 # endif
 #else
 # define INCL_RXSHV      /* Shared variable support */
 # define INCL_RXFUNC     /* External functions support */
 # define INCL_RXSYSEXIT  /* System exit routines */
+# define INCL_RXSUBCOM   /* Subcommand routines */
 #endif
 
 /*
@@ -221,6 +224,7 @@ int RxReturnDouble( RXSTRING *, double );
 int RxReturnPointer( RXSTRING *, void * );
 int memcmpi( char *, char *, int );
 int my_checkparam(const char *, int, int, int);
+RSH_RETURN_TYPE PackageSubcomHandler( RSH_ARG0_TYPE, RSH_ARG1_TYPE, RSH_ARG2_TYPE );
 #else
 void FunctionPrologue( );
 void FunctionTrace( );
@@ -254,6 +258,7 @@ int RxReturnNumber( );
 int RxReturnDouble( );
 int memcmpi( );
 int my_checkparam( );
+RSH_RETURN_TYPE PackageSubcomHandler( );
 #endif
 
 #ifdef DEBUG

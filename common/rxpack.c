@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.5 2002/03/24 09:55:23 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.6 2002/07/06 10:58:06 mark Exp $";
 
 #include "rxpack.h"
 
@@ -24,6 +24,12 @@ RxPackageGlobalDataDef *RxPackageGlobalData=NULL;
 
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
 RexxExitHandler RxExitHandlerForSayTraceRedirection;
+#endif
+
+#if defined(USE_REXX6000)
+LONG RxSubcomHandler( RSH_ARG0_TYPE, RSH_ARG1_TYPE, RSH_ARG2_TYPE );
+#else
+RexxSubcomHandler RxSubcomHandler;
 #endif
 
 extern RexxFunction RxPackageFunctions[];
@@ -653,6 +659,36 @@ void RxDisplayError
 
 
 /*-----------------------------------------------------------------------------
+ * This function registers the default subcommand handler...
+ *----------------------------------------------------------------------------*/
+int RegisterRxSubcom
+
+#ifdef HAVE_PROTO
+   ( void )
+#else
+   ( )
+#endif
+
+{
+   ULONG rc=0L;
+
+   InternalTrace( "RegisterRxSubcom", NULL );
+
+#if defined(USE_REXX6000)
+   rc = RexxRegisterSubcom( (RRSE_ARG0_TYPE)RxPackageName,
+                            (RRSE_ARG1_TYPE)RxSubcomHandler,
+                            (RRSE_ARG2_TYPE)NULL );
+#else
+   rc = RexxRegisterSubcomExe( (RRSE_ARG0_TYPE)RxPackageName,
+                               (RRSE_ARG1_TYPE)RxSubcomHandler,
+                               (RRSE_ARG2_TYPE)NULL );
+#endif
+   if ( rc != RXSUBCOM_OK )
+      return 1;
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
  * This function registers the external functions...
  *----------------------------------------------------------------------------*/
 int RegisterRxFunctions
@@ -853,6 +889,13 @@ int TermRxPackage
     */
    if ( ( rc = TerminatePackage( ) ) != 0 )
       return (int)FunctionEpilogue( "TermRxPackage", (long)rc );
+#if defined(USE_REXX6000)
+   rc = RexxDeregisterSubcom( RDS_ARG0_TYPE)RxPackageName );
+#else
+   rc = RexxDeregisterSubcom( (RDS_ARG0_TYPE)RxPackageName,
+                              (RDS_ARG1_TYPE)NULL );
+#endif
+
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
    RexxDeregisterExit( ( RDE_ARG0_TYPE )RxPackageName,
                        ( RDE_ARG1_TYPE )NULL );
@@ -1230,6 +1273,61 @@ REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
          break;
    }
    return rc;
+}
+
+/***********************************************************************/
+RSH_RETURN_TYPE RxSubcomHandler
+
+#if defined(HAVE_PROTO)
+   (
+   RSH_ARG0_TYPE Command,    /* Command string passed from the caller    */
+   RSH_ARG1_TYPE Flags,      /* pointer to short for return of flags     */
+   RSH_ARG2_TYPE Retstr)     /* pointer to RXSTRING for RC return        */
+#else
+   ( Command, Flags, Retstr )
+   RSH_ARG0_TYPE Command;    /* Command string passed from the caller    */
+   RSH_ARG1_TYPE Flags;      /* pointer to short for return of flags     */
+   RSH_ARG2_TYPE Retstr;     /* pointer to RXSTRING for RC return        */
+#endif
+/***********************************************************************/
+{
+   RSH_RETURN_TYPE rcode=0;
+   int rc;
+   char *buf;
+   /*
+    * Set the Flags variable to RXSUBCOM_DUP. If this value is still
+    * this after we call the user-supplied subcom handler, we use
+    * our default.
+    */
+   *Flags = RXSUBCOM_DUP;
+   rcode = PackageSubcomHandler( Command, Flags, Retstr );
+   if ( *Flags == RXSUBCOM_DUP  )
+   {
+      buf = malloc( Command->strlength + 1 );
+      if ( buf == NULL )
+      {
+         *Flags = RXSUBCOM_ERROR;             /* raise an error condition   */
+         sprintf(Retstr->strptr, "%d", rc);   /* format return code string  */
+                                              /* and set the correct length */
+         Retstr->strlength = strlen(Retstr->strptr);
+      }
+      else
+      {
+         memcpy( buf, Command->strptr, Command->strlength );
+         buf[Command->strlength] = '\0';
+         rc = system( buf );
+         free( buf );
+         if (rc < 0)
+            *Flags = RXSUBCOM_ERROR;             /* raise an error condition   */
+         else
+            *Flags = RXSUBCOM_OK;                /* not found is not an error  */
+      
+         sprintf(Retstr->strptr, "%d", rc); /* format return code string  */
+                                                 /* and set the correct length */
+         Retstr->strlength = strlen(Retstr->strptr);
+      }
+   }
+   return rcode;                              /* processing completed       */
 }
 
 /*

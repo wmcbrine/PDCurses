@@ -752,7 +752,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   sizeof(int),
   XtOffsetOf(AppData,scrollbarWidth),
   XtRImmediate,
-  (XtPointer)0,
+  (XtPointer)15,
  },
  {
   XtNcursorBlinkRate,
@@ -1353,31 +1353,33 @@ int XCursesRefreshScrollbar()
 #endif
 /***********************************************************************/
 {
- float total_y=(float)(SP->sb_total_y);
- float viewport_y=(float)(SP->sb_viewport_y);
- float cur_y=(float)(SP->sb_cur_y);
- float total_x=(float)(SP->sb_total_x*XCursesFontWidth);
- float viewport_x=(float)(SP->sb_viewport_x*XCursesFontWidth);
- float cur_x=(float)(SP->sb_cur_x*XCursesFontWidth);
+ double total_y=(double)(SP->sb_total_y);
+ double viewport_y=(double)(SP->sb_viewport_y);
+ double cur_y=(double)(SP->sb_cur_y);
+ double total_x=(double)(SP->sb_total_x*XCursesFontWidth);
+ double viewport_x=(double)(SP->sb_viewport_x*XCursesFontWidth);
+ double cur_x=(double)(SP->sb_cur_x*XCursesFontWidth);
+ double vtop=(double)(cur_y/total_y);
+ double vlength=(double)(viewport_y/total_y);
+ double htop=(double)(cur_x/total_x);
+ double hlength=(double)(viewport_x/total_x);
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("%s:XCursesRefreshScrollbar() - called: \n",(XCursesProcess)?"     X":"CURSES");
 #endif
  if (!SP->sb_on)
     return(ERR);
 #if 0
-fprintf(stderr,"%s:XCursesRefreshScrollbar() - vert: %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
-                        total_y,viewport_y,cur_y,
-                        cur_y/total_y,viewport_y/total_y);
-fprintf(stderr,"%s:XCursesRefreshScrollbar() - horz: %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
-                        total_x,viewport_x,cur_x,
-                        cur_x/total_x,viewport_x/total_x);
+fprintf(stderr,"%s:XCursesRefreshScrollbar() - vert: %d %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
+                        SP->sb_total_y,total_y,viewport_y,cur_y,
+                        vtop,vlength);
+fprintf(stderr,"%s:XCursesRefreshScrollbar() - horz: %d %d %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
+                        SP->sb_total_x,XCursesFontWidth,total_x,viewport_x,cur_x,
+                        htop,hlength);
 #endif
  if (SP->sb_total_y != 0)
-    XawScrollbarSetThumb(scrollVert,(float)(cur_y/total_y),
-                                 (float)(viewport_y/total_y));
+    XawScrollbarSetThumb( scrollVert, vtop, vlength );
  if (SP->sb_total_x != 0)
-    XawScrollbarSetThumb(scrollHoriz,(float)(cur_x/total_x),
-                                 (float)(viewport_x/total_x));
+    XawScrollbarSetThumb( scrollHoriz, htop, hlength );
  return(OK);
 }
 /***********************************************************************/

@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.4 2002/05/11 04:29:54 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.5 2002/11/27 11:15:40 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -356,6 +356,7 @@ WINDOW *win;
           wprintw(win,"Key Pressed: %c", c);
        else
           wprintw(win,"Key Pressed: %s", unctrl(c));
+#if defined(PDCURSES)
        if (PDC_get_key_modifiers())
        {
           waddstr(win, " Modifier(s):");
@@ -371,9 +372,7 @@ WINDOW *win;
        if (c == KEY_MOUSE)
        {
           int button=0;
-#if defined(PDCURSES)
           request_mouse_pos();
-#endif
           if (BUTTON_CHANGED(1))
              button = 1;
           else
@@ -408,6 +407,7 @@ WINDOW *win;
              wprintw(win,"released: ");
           wprintw(win," Position: Y: %d X: %d",MOUSE_Y_POS,MOUSE_X_POS);
        }
+#endif
        wrefresh(win);
        if (c == ' ')
           break;

@@ -156,19 +156,20 @@ if test "$with_latin1" = yes; then
 fi
 
 dnl ----------------- check for thread support -----------------------
+dnl ----------------- REMOVE TEMPORARILY -----------------------------
 dnl allow --with-threads to build with threads
-AC_ARG_WITH(threads,
-	[  --with-threads          build XCurses with threads],
-	[with_threads=$withval],
-	[with_threads=no],
-)
-if test "$with_threads" = yes; then
-	AC_DEFINE(USE_THREADS)
-	x11type="thread"
-else
+dnl AC_ARG_WITH(threads,
+dnl 	[  --with-threads          build XCurses with threads],
+dnl 	[with_threads=$withval],
+dnl 	[with_threads=no],
+dnl )
+dnl if test "$with_threads" = yes; then
+dnl 	AC_DEFINE(USE_THREADS)
+dnl 	x11type="thread"
+dnl else
 	AC_DEFINE(USE_PROCESSES)
 	x11type="process"
-fi
+dnl fi
 AC_SUBST(x11type)
 
 dnl ----------------- check for Purify support -----------------------

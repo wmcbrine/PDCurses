@@ -390,7 +390,7 @@ FUNCTIONS
 	***	tigetflag                 terminfo
 	***	tigetnum                  terminfo
 	***	tigetstr                  terminfo
-	***	timeout                   inopts
+		timeout                   inopts
 		touchline                touch
 		touchwin                 touch
 	***	tparm                     terminfo
@@ -453,7 +453,7 @@ FUNCTIONS
 		wstandout                attr
 		wsyncdown                window
 		wsyncup                  window
-	***	wtimeout                 inopts
+		wtimeout                 inopts
 		wtouchln                 touch
 		wvline                   border
 

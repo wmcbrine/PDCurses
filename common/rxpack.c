@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.2 2002/01/07 07:53:06 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.3 2002/01/12 11:53:09 mark Exp $";
 
 #include "rxpack.h"
 
@@ -149,8 +149,8 @@ char *MkAsciz
 
 {
    bufsize--;     /* Make room for terminating byte */
-   if (len >= bufsize)
-      len = bufsize-1;
+   if (len > bufsize)
+      len = bufsize;
    (void)memcpy(buf, str, len);
    buf[len] = '\0';
    return buf;
@@ -755,7 +755,7 @@ int DeregisterRxFunctions
    RexxFunction *func=NULL;
    int rc=0;
 
-   InternalTrace( "DeregisterRxFunctions", NULL );
+   InternalTrace( "DeregisterRxFunctions", "%d", verbose );
 
    for ( func = RxPackageFunctions; func->InternalName; func++ )
    {
@@ -833,7 +833,7 @@ int TermRxPackage
 {
    int rc=0;
 
-   FunctionPrologue( "TermRxPackage", 0L, NULL );
+   InternalTrace( "TermRxPackage", "\"%s\",%d", progname, deregfunc );
 
    DEBUGDUMP(fprintf(stderr,"%s-%d: Start of TermRxPackage\n",__FILE__,__LINE__);)
    /* 

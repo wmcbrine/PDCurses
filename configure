@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Guess values for system-dependent variables and create Makefiles.
-# Generated automatically using autoconf version 2.13 
+# Generated automatically using autoconf version 2.13
 # Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 #
 # This configure script is free software; the Free Software Foundation
@@ -550,7 +550,7 @@ echo "configure:550: checking for one of the following C compilers: $all_words" 
 if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
-  
+
 if test -n "$CC"; then
   ac_cv_prog_CC="$CC" # Let the user override the test.
 else
@@ -939,7 +939,7 @@ test "$host_alias" != "$target_alias" &&
 mymakefile="Makefile"
 on_qnx=no
 case "$target" in
-	*hp-hpux*) 
+	*hp-hpux*)
 		SYS_DEFS="-D_HPUX_SOURCE"
 		;;
 	*ibm-aix*)
@@ -988,7 +988,7 @@ return $mh_sigs;
 EOF
 if { (eval echo configure:990: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
-  mh_found="yes"; mh_cv_max_signals="$mh_sigs" 
+  mh_found="yes"; mh_cv_max_signals="$mh_sigs"
 else
   echo "configure: failed program was:" >&5
   cat conftest.$ac_ext >&5
@@ -1465,7 +1465,7 @@ if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
   cat >> confdefs.h <<EOF
 #define $ac_tr_hdr 1
 EOF
- 
+
 else
   echo "$ac_t""no" 1>&6
 fi
@@ -1493,7 +1493,7 @@ else
   echo "configure: failed program was:" >&5
   cat conftest.$ac_ext >&5
   rm -rf conftest*
-  mh_have_proto=no 
+  mh_have_proto=no
 fi
 rm -f conftest*
 echo "$ac_t""$mh_have_proto" 1>&6
@@ -1570,7 +1570,7 @@ fi
 echo "$ac_t""$ac_cv_c_const" 1>&6
 if test $ac_cv_c_const = no; then
   cat >> confdefs.h <<\EOF
-#define const 
+#define const
 EOF
 
 fi
@@ -2051,7 +2051,7 @@ if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
   cat >> confdefs.h <<EOF
 #define $ac_tr_func 1
 EOF
- 
+
 else
   echo "$ac_t""no" 1>&6
 fi
@@ -2267,7 +2267,7 @@ mh_solaris_path=""
 for mh_lib in $mh_libs; do
   mh_lib_found=no
   for ac_dir in $mh_lib_dirs ; do
-    for mh_ext in a so sl; do
+    for mh_ext in a so sl dll.a; do
       if test -r $ac_dir/lib$mh_lib.$mh_ext; then
         if test "x$mh_prev_dir" != "x$ac_dir" ; then
           if test "x$mh_prev_dir" = "x" ; then
@@ -2362,7 +2362,7 @@ if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
   cat >> confdefs.h <<EOF
 #define $ac_tr_hdr 1
 EOF
- 
+
 else
   echo "$ac_t""no" 1>&6
 fi
@@ -2397,7 +2397,7 @@ else
   echo "configure: failed program was:" >&5
   cat conftest.$ac_ext >&5
   rm -rf conftest*
-  mh_have_key=no 
+  mh_have_key=no
 fi
 rm -f conftest*
 	echo "$ac_t""$mh_have_key" 1>&6

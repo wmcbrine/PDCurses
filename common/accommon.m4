@@ -505,7 +505,7 @@ mh_solaris_path=""
 for mh_lib in $mh_libs; do
   mh_lib_found=no
   for ac_dir in $mh_lib_dirs ; do
-    for mh_ext in a so sl; do
+    for mh_ext in a so sl dll.a; do
       if test -r $ac_dir/lib$mh_lib.$mh_ext; then
         if test "x$mh_prev_dir" != "x$ac_dir" ; then
           if test "x$mh_prev_dir" = "x" ; then

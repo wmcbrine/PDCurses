@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_clear  = "$Id: clear.c,v 1.1 2001/01/10 08:26:54 mark Exp $";
+char *rcsid_clear  = "$Id: clear.c,v 1.2 2004/09/14 07:57:32 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -256,7 +256,7 @@ WINDOW *win;
 	blank	= win->_bkgd;
 #endif
 
-	for (minx=x,ptr=&win->_y[y][x];minx<win->_maxx;minx++,*ptr++)
+	for (minx=x,ptr=&win->_y[y][x];minx<win->_maxx;minx++,ptr++)
 		*ptr = blank;
 
 	win->_firstch[y] = (win->_firstch[y]==_NO_CHANGE)?x:min(x,win->_firstch[y]);

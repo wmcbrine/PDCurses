@@ -31,13 +31,17 @@
 #undef	whline
 #undef	vline
 #undef	wvline
+#undef	PDC_wunderline
+#undef	PDC_woverline
+#undef	PDC_leftline
+#undef	PDC_rightline
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.1 2001/01/10 08:26:51 mark Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.2 2001/01/10 08:26:52 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,6 +58,10 @@ char *rcsid_border  = "$Id: border.c,v 1.1 2001/01/10 08:26:51 mark Exp $";
   	int vline(chtype ch, int n);
   	int whline(WINDOW *win, chtype ch, int n);
   	int wvline(WINDOW *win, chtype ch, int n);
+  	int PDC_wunderline(WINDOW *win, int n, bool state);
+  	int PDC_woverline(WINDOW *win, int n, bool state);
+  	int PDC_wleftline(WINDOW *win, int n, bool state);
+  	int PDC_wrightline(WINDOW *win, int n, bool state);
 
   X/Open Description:
  	The border(), wborder(), and box() routines, a border is drawn
@@ -87,15 +95,19 @@ char *rcsid_border  = "$Id: border.c,v 1.1 2001/01/10 08:26:51 mark Exp $";
   X/Open Errors:
  	No errors are defined for these functions.
 
-  Portability                             X/Open    BSD    SYS V
+  Portability                             X/Open    BSD    SYS V  PDCurses
                                           Dec '88
-      border                                -        -      4.0
-      wborder                               -        -      4.0
-      box                                   Y        Y       Y
-      hline                                 -        -      4.0
-      whline                                -        -      4.0
-      vline                                 -        -      4.0
-      wvline                                -        -      4.0
+      border                                -        -      4.0      Y
+      wborder                               -        -      4.0      Y
+      box                                   Y        Y       Y       Y
+      hline                                 -        -      4.0      Y
+      whline                                -        -      4.0      Y
+      vline                                 -        -      4.0      Y
+      wvline                                -        -      4.0      Y
+      PDC_wunderline                        -        -       -       Y
+      PDC_woverline                         -        -       -       Y
+      PDC_wleftline                         -        -       -       Y
+      PDC_wrightline                        -        -       -       Y
 
 **man-end**********************************************************************/
 
@@ -413,6 +425,194 @@ int n;
 	for (n = win->_cury; n <= endpos; n++)
 	{
 		win->_y[n][win->_curx] = ch;
+
+		if (win->_firstch[n] == _NO_CHANGE)
+		{
+			win->_firstch[n] = win->_curx;
+			win->_lastch[n] = win->_curx;
+		}
+		else
+		{
+			win->_firstch[n] = min(win->_firstch[n], win->_curx);
+			win->_lastch[n] = max(win->_lastch[n], win->_curx);
+		}
+	}
+
+	PDC_sync(win);
+	return (OK);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	PDC_wunderline(WINDOW *win, int n, bool state)
+#else
+int	PDC_CDECL	PDC_wunderline(win,n,state)
+WINDOW *win;
+int n;
+bool state;
+#endif
+/***********************************************************************/
+{
+	int	endpos;
+
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("PDC_wunderline() - called\n");
+#endif
+
+	if (win == (WINDOW *)NULL)
+		return( ERR );
+
+	if (n < 1)
+		return( ERR );
+
+	endpos = min(win->_cury + n -1, win->_maxy);
+
+	for (n = win->_cury; n <= endpos; n++)
+	{
+		if ( state ) 
+			win->_y[n][win->_curx] |= A_UNDERLINE; /* Turn ON A_UNDERLINE */
+		else
+			win->_y[n][win->_curx] |= ~A_UNDERLINE; /* Turn OFF A_UNDERLINE */
+
+		if (win->_firstch[n] == _NO_CHANGE)
+		{
+			win->_firstch[n] = win->_curx;
+			win->_lastch[n] = win->_curx;
+		}
+		else
+		{
+			win->_firstch[n] = min(win->_firstch[n], win->_curx);
+			win->_lastch[n] = max(win->_lastch[n], win->_curx);
+		}
+	}
+
+	PDC_sync(win);
+	return (OK);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	PDC_woverline(WINDOW *win, int n, bool state)
+#else
+int	PDC_CDECL	PDC_woverline(win,n,state)
+WINDOW *win;
+int n;
+bool state;
+#endif
+/***********************************************************************/
+{
+	int	endpos;
+
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("PDC_woverline() - called\n");
+#endif
+
+	if (win == (WINDOW *)NULL)
+		return( ERR );
+
+	if (n < 1)
+		return( ERR );
+
+	endpos = min(win->_cury + n -1, win->_maxy);
+
+	for (n = win->_cury; n <= endpos; n++)
+	{
+		if ( state ) 
+			win->_y[n][win->_curx] |= A_OVERLINE; /* Turn ON A_OVERLINE */
+		else
+			win->_y[n][win->_curx] |= ~A_OVERLINE; /* Turn OFF A_OVERLINE */
+
+		if (win->_firstch[n] == _NO_CHANGE)
+		{
+			win->_firstch[n] = win->_curx;
+			win->_lastch[n] = win->_curx;
+		}
+		else
+		{
+			win->_firstch[n] = min(win->_firstch[n], win->_curx);
+			win->_lastch[n] = max(win->_lastch[n], win->_curx);
+		}
+	}
+
+	PDC_sync(win);
+	return (OK);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	PDC_wleftline(WINDOW *win, int n, bool state)
+#else
+int	PDC_CDECL	PDC_wleftline(win,n,state)
+WINDOW *win;
+int n;
+bool state;
+#endif
+/***********************************************************************/
+{
+	int	endpos;
+
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("PDC_wleftline() - called\n");
+#endif
+
+	if (win == (WINDOW *)NULL)
+		return( ERR );
+
+	if (n < 1)
+		return( ERR );
+
+	endpos = min(win->_cury + n -1, win->_maxy);
+
+	for (n = win->_cury; n <= endpos; n++)
+	{
+		if ( state ) 
+			win->_y[n][win->_curx] |= A_LEFTLINE; /* Turn ON A_LEFTLINE */
+		else
+			win->_y[n][win->_curx] |= ~A_LEFTLINE; /* Turn OFF A_LEFTLINE */
+
+		if (win->_firstch[n] == _NO_CHANGE)
+		{
+			win->_firstch[n] = win->_curx;
+			win->_lastch[n] = win->_curx;
+		}
+		else
+		{
+			win->_firstch[n] = min(win->_firstch[n], win->_curx);
+			win->_lastch[n] = max(win->_lastch[n], win->_curx);
+		}
+	}
+
+	PDC_sync(win);
+	return (OK);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	PDC_wrightline(WINDOW *win, int n, bool state)
+#else
+int	PDC_CDECL	PDC_wrightline(win,n,state)
+WINDOW *win;
+int n;
+bool state;
+#endif
+/***********************************************************************/
+{
+	int	endpos;
+
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("PDC_wrightline() - called\n");
+#endif
+
+	if (win == (WINDOW *)NULL)
+		return( ERR );
+
+	if (n < 1)
+		return( ERR );
+
+	endpos = min(win->_cury + n -1, win->_maxy);
+
+	for (n = win->_cury; n <= endpos; n++)
+	{
+		if ( state ) 
+			win->_y[n][win->_curx] |= A_RIGHTLINE; /* Turn ON A_RIGHTLINE */
+		else
+			win->_y[n][win->_curx] |= ~A_RIGHTLINE; /* Turn OFF A_RIGHTLINE */
 
 		if (win->_firstch[n] == _NO_CHANGE)
 		{

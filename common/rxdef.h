@@ -675,6 +675,4 @@ typedef CHAR *PCH;
 
 #endif
 
-#define rxfunc(x) RFH_RETURN_TYPE x(RFH_ARG0_TYPE name, RFH_ARG1_TYPE argc, RFH_ARG2_TYPE argv, RFH_ARG3_TYPE stck, RFH_ARG4_TYPE retstr)
-
 #endif /* !_RXDEF_H */

@@ -10,7 +10,8 @@ THIS		= Makefile
 @SET_MAKE@
 
 srcdir		= @srcdir@
-x11dir		= $(srcdir)/../x11
+x11basedir		= $(srcdir)/../x11
+x11dir		= $(x11basedir)/@x11type@
 
 VPATH		= @srcdir@
 prefix		= @prefix@
@@ -23,7 +24,7 @@ PDCURSES_CONFIG_H		=../config.h
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
-PDCURSES_X11_H		=$(PDCURSES_HOME)/x11.h
+PDCURSES_X11_H		=$(x11basedir)/pdcx11.h
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -44,7 +45,7 @@ CC		= @CC@
 CFLAGS		= @CFLAGS@
 
 INCDIR		= $(srcdir)
-CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@
+CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@ -I$(x11basedir) -I$(x11dir)
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
@@ -127,6 +128,9 @@ pdcutil.o   \
 pdcwin.o
 
 X11OBJS =   \
+pdcx11.o    \
+x11curses.o \
+x11common.o \
 x11.o       \
 sb.o        \
 ScrollBox.o
@@ -183,6 +187,9 @@ pdcutil.sho   \
 pdcwin.sho
 
 X11SHOBJS =   \
+pdcx11.sho    \
+x11curses.sho \
+x11common.sho \
 x11.sho       \
 sb.sho        \
 ScrollBox.sho
@@ -308,29 +315,29 @@ window.o: $(srcdir)/window.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/window.c
 
 
-pdcclip.o: $(x11dir)/pdcclip.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcclip.c
+pdcclip.o: $(x11basedir)/pdcclip.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcclip.c
 
 pdcdebug.o: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcdebug.c
 
-pdcdisp.o: $(x11dir)/pdcdisp.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcdisp.c
+pdcdisp.o: $(x11basedir)/pdcdisp.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcdisp.c
 
-pdcgetsc.o: $(x11dir)/pdcgetsc.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcgetsc.c
+pdcgetsc.o: $(x11basedir)/pdcgetsc.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcgetsc.c
 
-pdckbd.o: $(x11dir)/pdckbd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdckbd.c
+pdckbd.o: $(x11basedir)/pdckbd.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdckbd.c
 
-pdcprint.o: $(x11dir)/pdcprint.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcprint.c
+pdcprint.o: $(x11basedir)/pdcprint.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcprint.c
 
-pdcscrn.o: $(x11dir)/pdcscrn.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcscrn.c
+pdcscrn.o: $(x11basedir)/pdcscrn.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcscrn.c
 
-pdcsetsc.o: $(x11dir)/pdcsetsc.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcsetsc.c
+pdcsetsc.o: $(x11basedir)/pdcsetsc.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcsetsc.c
 
 pdcutil.o: $(srcdir)/pdcutil.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcutil.c
@@ -338,14 +345,23 @@ pdcutil.o: $(srcdir)/pdcutil.c $(PDCURSES_HEADERS)
 pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcwin.c
 
-x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdcx11.o: $(x11basedir)/pdcx11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcx11.c
+
+ScrollBox.o: $(x11basedir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/ScrollBox.c
+
+sb.o: $(x11basedir)/sb.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/sb.c
+
+x11common.o: $(x11dir)/x11common.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11common.c
+
+x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11.c
 
-ScrollBox.o: $(x11dir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/ScrollBox.c
-
-sb.o: $(x11dir)/sb.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/sb.c
+x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
 
 
 addch.sho: $(srcdir)/addch.c $(PDCURSES_HEADERS)
@@ -571,9 +587,9 @@ window.sho: $(srcdir)/window.c $(PDCURSES_HEADERS)
 	$(SAVE2O)
 
 
-pdcclip.sho: $(x11dir)/pdcclip.c $(PDCURSES_HEADERS)
+pdcclip.sho: $(x11basedir)/pdcclip.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcclip.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcclip.c
 	$(O2SHO)
 	$(SAVE2O)
 
@@ -583,39 +599,39 @@ pdcdebug.sho: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
 	$(O2SHO)
 	$(SAVE2O)
 
-pdcdisp.sho: $(x11dir)/pdcdisp.c $(PDCURSES_HEADERS)
+pdcdisp.sho: $(x11basedir)/pdcdisp.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcdisp.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcdisp.c
 	$(O2SHO)
 	$(SAVE2O)
 
-pdcgetsc.sho: $(x11dir)/pdcgetsc.c $(PDCURSES_HEADERS)
+pdcgetsc.sho: $(x11basedir)/pdcgetsc.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcgetsc.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcgetsc.c
 	$(O2SHO)
 	$(SAVE2O)
 
-pdckbd.sho: $(x11dir)/pdckbd.c $(PDCURSES_HEADERS)
+pdckbd.sho: $(x11basedir)/pdckbd.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdckbd.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdckbd.c
 	$(O2SHO)
 	$(SAVE2O)
 
-pdcprint.sho: $(x11dir)/pdcprint.c $(PDCURSES_HEADERS)
+pdcprint.sho: $(x11basedir)/pdcprint.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcprint.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcprint.c
 	$(O2SHO)
 	$(SAVE2O)
 
-pdcscrn.sho: $(x11dir)/pdcscrn.c $(PDCURSES_HEADERS)
+pdcscrn.sho: $(x11basedir)/pdcscrn.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcscrn.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcscrn.c
 	$(O2SHO)
 	$(SAVE2O)
 
-pdcsetsc.sho: $(x11dir)/pdcsetsc.c $(PDCURSES_HEADERS)
+pdcsetsc.sho: $(x11basedir)/pdcsetsc.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcsetsc.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcsetsc.c
 	$(O2SHO)
 	$(SAVE2O)
 
@@ -631,20 +647,38 @@ pdcwin.sho: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
 	$(O2SHO)
 	$(SAVE2O)
 
-x11.sho: $(x11dir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdcx11.sho: $(x11basedir)/pdcx11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcx11.c
+	$(O2SHO)
+	$(SAVE2O)
+
+ScrollBox.sho: $(x11basedir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/ScrollBox.c
+	$(O2SHO)
+	$(SAVE2O)
+
+sb.sho: $(x11basedir)/sb.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/sb.c
+	$(O2SHO)
+	$(SAVE2O)
+
+x11common.sho: $(x11dir)/x11common.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11common.c
+	$(O2SHO)
+	$(SAVE2O)
+
+x11.sho: $(x11dir)/x11.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11.c
 	$(O2SHO)
 	$(SAVE2O)
 
-ScrollBox.sho: $(x11dir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+x11curses.sho: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/ScrollBox.c
-	$(O2SHO)
-	$(SAVE2O)
-
-sb.sho: $(x11dir)/sb.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/sb.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11curses.c
 	$(O2SHO)
 	$(SAVE2O)

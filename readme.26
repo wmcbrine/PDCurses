@@ -16,6 +16,7 @@ BUGS FIXED:
 - Don't include "special" characters like KEY_SHIFT_L to be returned in getnstr()
   family.
 - Entering TAB in wgetnstr() no longer exceeds requested buffer size.
+  Also beep() called when buffer exceeded. Bug 562041.
 - Reverse video of X11 selection reinstated. Pablo Garcia Abio??
 - Right Alt modifier now works like left Alt modifier under Win32
 - Add support for all libXaw replacement libraries with Scrollbar bug. Note
@@ -23,6 +24,14 @@ BUGS FIXED:
   libraries to fix the bug :-(
 - Don't trap signals in XCurses if calling application has ignored them. Change
   by Frank Heckenbach.
+- Bug reports from Warren W. Gay:
+  - Fix termattrs() to return A_REVERSE and A_BLINK on all platforms.
+  - Fix definition of getsyx() and setsyx() to be consistent with ncurses. Bug 624424.
+  - Fix definition of echo() and noecho(). Bug 625001.
+  - Fix definition of keypad() and leaveok(). Bug 632653.
+  - Missing panel_hidden() prottype. Bug 649320.
+- Fixed bug with calling def_prog_mode(), resize_term(), reset_prog_mode(); the resize
+  details were being lost.
 
 NEW FEATURES:
 - Clipboard support now available on DOS platform, but handled internally to the

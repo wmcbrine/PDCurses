@@ -432,8 +432,9 @@ int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
  */
 MOUSE_STATUS Trapped_Mouse_status;
 unsigned long pdc_key_modifier=0L;
-GC normal_gc,bold_gc,block_cursor_gc,rect_cursor_gc,normal_highlight_gc,bold_highlight_gc,border_gc;
+GC normal_gc,block_cursor_gc,rect_cursor_gc,normal_highlight_gc,bold_highlight_gc,border_gc;
 int XCursesFontHeight,XCursesFontWidth;
+int XCursesFontAscent,XCursesFontDescent;
 int XCursesWindowWidth,XCursesWindowHeight;
 int resizeXCursesWindowWidth=0,resizeXCursesWindowHeight=0;
 char *bitmap_file=NULL;
@@ -508,7 +509,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   sizeof(Pixel),
   XtOffsetOf(AppData,colorRed),
   XtRString,
-  (XtPointer)"Red",
+  (XtPointer)"red3",
  },
  {
   XtNcolorGreen,
@@ -517,7 +518,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   sizeof(Pixel),
   XtOffsetOf(AppData,colorGreen),
   XtRString,
-  (XtPointer)"Green",
+  (XtPointer)"green3",
  },
  {
   XtNcolorYellow,
@@ -526,7 +527,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   sizeof(Pixel),
   XtOffsetOf(AppData,colorYellow),
   XtRString,
-  (XtPointer)"Yellow",
+  (XtPointer)"yellow3",
  },
  {
   XtNcolorBlue,
@@ -535,7 +536,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   sizeof(Pixel),
   XtOffsetOf(AppData,colorBlue),
   XtRString,
-  (XtPointer)"Blue",
+  (XtPointer)"blue3",
  },
  {
   XtNcolorMagenta,
@@ -544,7 +545,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   sizeof(Pixel),
   XtOffsetOf(AppData,colorMagenta),
   XtRString,
-  (XtPointer)"Magenta",
+  (XtPointer)"magenta3",
  },
  {
   XtNcolorCyan,
@@ -553,7 +554,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   sizeof(Pixel),
   XtOffsetOf(AppData,colorCyan),
   XtRString,
-  (XtPointer)"Cyan",
+  (XtPointer)"cyan3",
  },
  {
   XtNcolorWhite,
@@ -561,6 +562,78 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   XtRPixel,
   sizeof(Pixel),
   XtOffsetOf(AppData,colorWhite),
+  XtRString,
+  (XtPointer)"Grey",
+ },
+ {
+  XtNcolorBoldBlack,
+  XtCColorBoldBlack,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldBlack),
+  XtRString,
+  (XtPointer)"grey40",
+ },
+ {
+  XtNcolorBoldRed,
+  XtCColorBoldRed,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldRed),
+  XtRString,
+  (XtPointer)"red1",
+ },
+ {
+  XtNcolorBoldGreen,
+  XtCColorBoldGreen,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldGreen),
+  XtRString,
+  (XtPointer)"green1",
+ },
+ {
+  XtNcolorBoldYellow,
+  XtCColorBoldYellow,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldYellow),
+  XtRString,
+  (XtPointer)"yellow1",
+ },
+ {
+  XtNcolorBoldBlue,
+  XtCColorBoldBlue,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldBlue),
+  XtRString,
+  (XtPointer)"blue1",
+ },
+ {
+  XtNcolorBoldMagenta,
+  XtCColorBoldMagenta,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldMagenta),
+  XtRString,
+  (XtPointer)"magenta1",
+ },
+ {
+  XtNcolorBoldCyan,
+  XtCColorBoldCyan,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldCyan),
+  XtRString,
+  (XtPointer)"cyan1",
+ },
+ {
+  XtNcolorBoldWhite,
+  XtCColorBoldWhite,
+  XtRPixel,
+  sizeof(Pixel),
+  XtOffsetOf(AppData,colorBoldWhite),
   XtRString,
   (XtPointer)"White",
  },
@@ -573,6 +646,9 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   XtRString,
   (XtPointer)"7x13",
  },
+/*
+ * boldFont used for backwards compatibility, but now ignored
+ */
  {
   XtNboldFont,
   XtCBoldFont,
@@ -699,7 +775,6 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-cols",                "*cols",              XrmoptionSepArg,   NULL },
    {"-normalFont",          "*normalFont",        XrmoptionSepArg,   NULL },
    {"-bitmap",              "*bitmap",            XrmoptionSepArg,   NULL },
-   {"-boldFont",            "*boldFont",          XrmoptionSepArg,   NULL },
    {"-pointer",             "*pointer",           XrmoptionSepArg,   NULL },
    {"-shmmin",              "*shmmin",            XrmoptionSepArg,   NULL },
    {"-composeKey",          "*composeKey",        XrmoptionSepArg,   NULL },
@@ -717,6 +792,14 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-colorMagenta",        "*colorMagenta",      XrmoptionSepArg,   NULL },
    {"-colorCyan",           "*colorCyan",         XrmoptionSepArg,   NULL },
    {"-colorWhite",          "*colorWhite",        XrmoptionSepArg,   NULL },
+   {"-colorBoldBlack",      "*colorBoldBlack",    XrmoptionSepArg,   NULL },
+   {"-colorBoldRed",        "*colorBoldRed",      XrmoptionSepArg,   NULL },
+   {"-colorBoldGreen",      "*colorBoldGreen",    XrmoptionSepArg,   NULL },
+   {"-colorBoldYellow",     "*colorBoldYellow",   XrmoptionSepArg,   NULL },
+   {"-colorBoldBlue",       "*colorBoldBlue",     XrmoptionSepArg,   NULL },
+   {"-colorBoldMagenta",    "*colorBoldMagenta",  XrmoptionSepArg,   NULL },
+   {"-colorBoldCyan",       "*colorBoldCyan",     XrmoptionSepArg,   NULL },
+   {"-colorBoldWhite",      "*colorBoldWhite",    XrmoptionSepArg,   NULL },
 };
 XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS] =
 {
@@ -728,7 +811,7 @@ XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS] =
 };
 char global_display_name[100]; /* large enough for DISPLAY=machine */
 Bool after_first_curses_request = False;
-int colors[MAX_COLORS+2];
+int colors[(2*MAX_COLORS)+2];
 /*
  * End X11 Variables common to both process and thread ports
  */
@@ -798,6 +881,10 @@ char *defaultTranslations =
 
 static int opposite[8]={7,6,5,4,3,2,1,0};
 
+#ifdef USE_THREADS
+pthread_mutex_t key_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
+
 int xerror();
 
 #ifdef HAVE_PROTO
@@ -821,7 +908,6 @@ void dummy_function()
    return;
 }
 
-typedef RETSIGTYPE (*signal_handler)();
 /***********************************************************************/
 #ifdef HAVE_PROTO
 signal_handler XCursesSetSignal(int signo,signal_handler action)
@@ -915,10 +1001,10 @@ bool highlight;
  char text[300];
  bool new_packet=FALSE;
  short fore,back;
- int original_x,pair_num,i,j;
+ int original_x,pair_num,i,j,k,asc=XCursesFontAscent,desc=XCursesFontDescent;  /* 11 and 1 */
  chtype old_attr,save_ch,attr;
  int xpos,ypos;
- GC gc;
+ int offset=0;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("%s:XCursesDisplayText() - called: Row: %d X: %d NumCols: %d\n",(XCursesProcess)?"     X":"CURSES", row,x,num_cols);
@@ -960,42 +1046,65 @@ bool highlight;
          }
        text[i] = '\0';
        if (old_attr & A_BOLD)
-          gc = bold_gc;
+          offset = 8;
        else
-          gc = normal_gc;
+          offset = 0;
 
        if (highlight)
        {
           if (old_attr & A_REVERSE)
           {
-             XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-             XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+             XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK]);
+             XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE+offset]);
           }
           else
           {
-             XSetBackground(XCURSESDISPLAY, gc, colors[fore]);
-             XSetForeground(XCURSESDISPLAY, gc, colors[back]);
+             XSetBackground(XCURSESDISPLAY, normal_gc, colors[fore]);
+             XSetForeground(XCURSESDISPLAY, normal_gc, colors[back+offset]);
           }
        }
        else
        {
           if (old_attr & A_REVERSE)
           {
-             XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-             XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+             XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK+offset]);
+             XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE]);
           }
           else
           {
-             XSetForeground(XCURSESDISPLAY, gc, colors[fore]);
-             XSetBackground(XCURSESDISPLAY, gc, colors[back]);
+             XSetForeground(XCURSESDISPLAY, normal_gc, colors[fore+offset]);
+             XSetBackground(XCURSESDISPLAY, normal_gc, colors[back]);
           }
        }
 
        makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
-       XDrawImageString(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos,text,i);
+       XDrawImageString(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos,text,i);
 
-       if (old_attr & A_UNDERLINE)
-          XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
+       for (k=0;k<i;k++)
+       {
+          if ( old_attr & A_LEFTLINE ) /* LEFT */
+          {
+             XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+             XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k))-1,ypos-asc,xpos+(XCursesFontWidth*(k))-1,ypos+desc);
+          }
+          if ( old_attr & A_RIGHTLINE ) /* RIGHT */
+          {
+             XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+             XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k+1))-1,ypos-asc,xpos+(XCursesFontWidth*(k+1))-1,ypos+desc);
+          }
+       }
+       if ( old_attr & A_OVERLINE ) /* ABOVE */
+       {
+          XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+          XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos-asc,xpos+(XCursesFontWidth*i),ypos-asc);
+       }
+
+       if (old_attr & A_UNDERLINE)  /* UNDER */
+       {
+          XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+          XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
+       }
+
 #ifdef PDCDEBUG
        if (trace_on)
           PDC_debug("%s:XCursesDisplayText() - row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
@@ -1022,41 +1131,64 @@ bool highlight;
  }
  text[i] = '\0';
  if (old_attr & A_BOLD)
-    gc = bold_gc;
+    offset = 8;
  else
-    gc = normal_gc;
+    offset = 0;
 
  if (highlight)
  {
     if (old_attr & A_REVERSE)
     {
-       XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-       XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+       XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK]);
+       XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE+offset]);
     }
     else
     {
-       XSetBackground(XCURSESDISPLAY, gc, colors[fore]);
-       XSetForeground(XCURSESDISPLAY, gc, colors[back]);
+       XSetBackground(XCURSESDISPLAY, normal_gc, colors[fore]);
+       XSetForeground(XCURSESDISPLAY, normal_gc, colors[back+offset]);
     }
  }
  else
  {
     if (old_attr & A_REVERSE)
     {
-       XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-       XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+       XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK+offset]);
+       XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE]);
     }
     else
     {
-       XSetForeground(XCURSESDISPLAY, gc, colors[fore]);
-       XSetBackground(XCURSESDISPLAY, gc, colors[back]);
+       XSetForeground(XCURSESDISPLAY, normal_gc, colors[fore+offset]);
+       XSetBackground(XCURSESDISPLAY, normal_gc, colors[back]);
     }
  }
 
  makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
- XDrawImageString(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos,text,i);
- if (old_attr & A_UNDERLINE)
-    XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
+ XDrawImageString(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos,text,i);
+
+ for (k=0;k<i;k++)
+ {
+    if ( old_attr & A_LEFTLINE ) /* LEFT */
+    {
+       XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+       XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k))-1,ypos-asc,xpos+(XCursesFontWidth*(k))-1,ypos+desc);
+    }
+    if ( old_attr & A_RIGHTLINE ) /* RIGHT */
+    {
+       XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+       XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k+1))-1,ypos-asc,xpos+(XCursesFontWidth*(k+1))-1,ypos+desc);
+    }
+ }
+ if ( old_attr & A_OVERLINE ) /* ABOVE */
+ {
+    XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+    XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos-asc,xpos+(XCursesFontWidth*i),ypos-asc);
+ }
+ if (old_attr & A_UNDERLINE)  /* UNDER */
+ {
+    XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
+    XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
+ }
+
 #ifdef PDCDEBUG
  if (trace_on)
     PDC_debug("%s:XCursesDisplayText() (end) row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
@@ -1119,14 +1251,22 @@ int get_colors()
  say("in get_colors\n");
 #endif
 
- colors[0] = app_data.colorBlack;
- colors[1] = app_data.colorRed;
- colors[2] = app_data.colorGreen;
- colors[3] = app_data.colorYellow;
- colors[4] = app_data.colorBlue;
- colors[5] = app_data.colorMagenta;
- colors[6] = app_data.colorCyan;
- colors[7] = app_data.colorWhite;
+ colors[0]  = app_data.colorBlack;
+ colors[1]  = app_data.colorRed;
+ colors[2]  =app_data.colorGreen;
+ colors[3]  = app_data.colorYellow;
+ colors[4]  = app_data.colorBlue;
+ colors[5]  = app_data.colorMagenta;
+ colors[6]  = app_data.colorCyan;
+ colors[7]  = app_data.colorWhite;
+ colors[8]  = app_data.colorBoldBlack;
+ colors[9]  = app_data.colorBoldRed;
+ colors[10] = app_data.colorBoldGreen;
+ colors[11] = app_data.colorBoldYellow;
+ colors[12] = app_data.colorBoldBlue;
+ colors[13] = app_data.colorBoldMagenta;
+ colors[14] = app_data.colorBoldCyan;
+ colors[15] = app_data.colorBoldWhite;
  colors[COLOR_CURSOR] = XCURSESCURSORCOLOR;
  colors[COLOR_BORDER] = XCURSESBORDERCOLOR;
 #ifdef PDCDEBUG
@@ -1153,7 +1293,6 @@ int XCursesEndwin()
     free(bitmap_file);
    }
  XFreeGC(XCURSESDISPLAY, normal_gc);
- XFreeGC(XCURSESDISPLAY, bold_gc);
  XFreeGC(XCURSESDISPLAY, normal_highlight_gc);
  XFreeGC(XCURSESDISPLAY, bold_highlight_gc);
  XFreeGC(XCURSESDISPLAY, block_cursor_gc);
@@ -1476,7 +1615,7 @@ Cardinal *nparams;
       else if (keysym == XK_Alt_L) { key = KEY_ALT_L; }
       else if (keysym == XK_Alt_R) { key = KEY_ALT_R; }
       if (key)
-         XCursesSendKeyToCurses((unsigned long)key);
+         XCursesSendKeyToCurses( (unsigned long)key, NULL );
       return;
    }
    return;
@@ -1590,7 +1729,7 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
     else if (keysym == XK_Alt_L) { key = KEY_ALT_L; }
     else if (keysym == XK_Alt_R) { key = KEY_ALT_R; }
     if (key)
-       XCursesSendKeyToCurses((unsigned long)key);
+       XCursesSendKeyToCurses( (unsigned long)key, NULL );
     return;
  }
 
@@ -1706,7 +1845,7 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
             break;
            }
 /*         fprintf(stderr,"STATE_CHAR: %d %c - key\n",compose_keys[compose_index][char_idx],compose_keys[compose_index][char_idx]);*/
-         XCursesSendKeyToCurses((unsigned long)compose_keys[compose_index][char_idx]);
+         XCursesSendKeyToCurses( (unsigned long)compose_keys[compose_index][char_idx], NULL );
          compose_state = STATE_NORMAL;
          compose_index = 0;
          XCursesDisplayCursor(SP->cursrow,SP->curscol,
@@ -1807,7 +1946,7 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
  if (key)
  {
     key = key | modifier << 24; /* (sizeof(unsigned long) - sizeof(unsigned char)); */
-    XCursesSendKeyToCurses((unsigned long)key);
+    XCursesSendKeyToCurses( (unsigned long)key, NULL );
  }
  return;
 }
@@ -1823,43 +1962,45 @@ Cardinal *nparams;
 #endif
 /***********************************************************************/
 {
- register int i=0;
- unsigned char *ptr=NULL;
+   register int i=0;
+   unsigned char *ptr=NULL;
 
- if (*nparams != 1) 
-    return;
+   if (*nparams != 1) 
+      return;
 
- if ((*params)[0] == '0' 
- && (*params)[1] == 'x' 
- && (*params)[2] != '\0') 
+   if ((*params)[0] == '0' 
+   && (*params)[1] == 'x' 
+   && (*params)[2] != '\0') 
    {
-    unsigned char c;
-    int total=0;
-    char *p;
-    for (p = *params+2; (c = *p); p++) 
+      unsigned char c;
+      int total=0;
+      char *p;
+      for (p = *params+2; (c = *p); p++) 
       {
-       total *= 16;
-       if (isupper(c)) c = tolower(c);
-       if (c >= '0' && c <= '9')
-          total += c - '0';
-       else 
-          if (c >= 'a' && c <= 'f')
-             total += c - 'a' + 10;
-          else 
-             break;
+         total *= 16;
+         if (isupper(c)) c = tolower(c);
+         if (c >= '0' && c <= '9')
+            total += c - '0';
+         else 
+         {
+            if (c >= 'a' && c <= 'f')
+               total += c - 'a' + 10;
+            else 
+               break;
+         }
       }
-    if (c == '\0')
-       XCursesSendKeyToCurses((unsigned long)total);
+      if (c == '\0')
+         XCursesSendKeyToCurses( (unsigned long)total, NULL );
    }
- else
+   else
    {
-    ptr = (unsigned char *)*params;
-    for (i=0;i<(int)strlen((char *)ptr);i++)
+      ptr = (unsigned char *)*params;
+      for (i=0;i<(int)strlen((char *)ptr);i++)
       {
-       XCursesSendKeyToCurses((unsigned long)*(ptr+i));
+         XCursesSendKeyToCurses( (unsigned long)*(ptr+i), NULL );
       }
    }
- return;
+   return;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -1895,24 +2036,24 @@ int *format;
 #endif
 /***********************************************************************/
 {
-int i=0,key=0;
-char *string=(char *)value;
+   int i=0,key=0;
+   char *string=(char *)value;
 
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesRequestorCallbackForPaste() - called\n",(XCursesProcess)?"     X":"CURSES");
+   if (trace_on) PDC_debug("%s:XCursesRequestorCallbackForPaste() - called\n",(XCursesProcess)?"     X":"CURSES");
 #endif
 
- if ((value == NULL) && (*length == 0))
-    return;
+   if ((value == NULL) && (*length == 0))
+      return;
 
- for (i=0;i<(*length);i++)
+   for (i=0;i<(*length);i++)
    {
-    key = (int)(*(string+i));
-    if (key == 10) /* new line - convert to ^M */
-       key = 13;
-    XCursesSendKeyToCurses((unsigned long)key);
+      key = (int)(*(string+i));
+      if (key == 10) /* new line - convert to ^M */
+         key = 13;
+      XCursesSendKeyToCurses( (unsigned long)key, NULL );
    }
- return;
+   return;
 }
 
 /***********************************************************************/
@@ -2429,5 +2570,589 @@ unsigned long XCurses_get_key_modifiers()
 /***********************************************************************/
 {
    return(pdc_key_modifier);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
+#else
+int XCursesSendKeyToCurses(key, ms)
+unsigned long key;
+MOUSE_STATUS *ms;
+#endif
+/***********************************************************************/
+{
+   char buf[100]; /* enough for MOUSE_STATUS */
+
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("%s:XCursesSendKeyToCurses() - called: sending %d\n",(XCursesProcess)?"     X":"CURSES",key);
+#endif
+   memcpy(buf,(char *)&key,sizeof(unsigned long));
+   if (write_socket(key_sock,buf,sizeof(int)) < 0)
+      XCursesExitXCursesProcess(1,SIGKILL,"exiting from XCursesSendKeyToCurses");
+   if ( ms != NULL )
+   {
+      memcpy(buf,(char *)&Mouse_status,sizeof(MOUSE_STATUS));
+# ifdef MOUSE_DEBUG1
+   printf("%s:writing mouse stuff\n",(XCursesProcess)?"     X":"CURSES");
+# endif
+      if ( write_socket(key_sock,buf,sizeof(MOUSE_STATUS) ) < 0 )
+         XCursesExitXCursesProcess(1,SIGKILL,"exiting from XCursesSendKeyToCurses");
+   }
+   return(0);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void XCursesButton(Widget w,XEvent *event, String *params, Cardinal *nparams)
+#else
+void XCursesButton(w,event,params,nparams)
+Widget w;
+XEvent *event;
+String *params;
+Cardinal *nparams;
+#endif
+/***********************************************************************/
+{
+   int button_no=0;
+   static int last_button_no;
+   static Time last_button_press_time=0;
+   MOUSE_STATUS save_mouse_status;
+   bool send_key=TRUE;
+   static bool remove_release;
+   static bool handle_real_release;
+
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("%s:XCursesButton called\n",(XCursesProcess)?"     X":"CURSES");
+#endif
+
+   save_mouse_status=Mouse_status;
+   button_no = event->xbutton.button;
+   /*---------------------------------------------------------------------*/
+   /* It appears that under X11R6 (at least on Linux), that an event_type */
+   /* of ButtonMotion does not include the mouse button in the event. The */
+   /* following code is designed to cater for this situation.             */
+   /*---------------------------------------------------------------------*/
+   if (button_no == 0)
+      button_no = last_button_no;
+   last_button_no = button_no;
+
+   Mouse_status.changes = 0;
+   switch(event->type)
+   {
+      /*
+       * ButtonPress
+       */
+      case ButtonPress:
+         remove_release = False;
+         handle_real_release = False;
+#ifdef MOUSE_DEBUG
+         printf("\nButtonPress\n");
+#endif
+         if ((event->xbutton.time - last_button_press_time) < XCURSESDOUBLECLICKPERIOD)
+         {
+            MOUSE_X_POS = save_mouse_status.x;
+            MOUSE_Y_POS = save_mouse_status.y;
+            BUTTON_STATUS(button_no) = BUTTON_DOUBLE_CLICKED;
+            SelectionOff();
+            if (!(SP->_trap_mbe & BUTTON1_DOUBLE_CLICKED)
+            &&  button_no == 1)
+               send_key = FALSE;
+            if (!(SP->_trap_mbe & BUTTON2_DOUBLE_CLICKED)
+            &&  button_no == 2)
+               send_key = FALSE;
+            if (!(SP->_trap_mbe & BUTTON3_DOUBLE_CLICKED)
+            &&  button_no == 3)
+               send_key = FALSE;
+            if (send_key)
+               remove_release = True;
+         }
+         else
+         {
+#if 0
+            MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+            MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+            BUTTON_STATUS(button_no) = BUTTON_PRESSED;
+            if (!(SP->_trap_mbe & BUTTON1_PRESSED)
+            &&  button_no == 1)
+               send_key = FALSE;
+            if (!(SP->_trap_mbe & BUTTON2_PRESSED)
+            &&  button_no == 2)
+               send_key = FALSE;
+            if (!(SP->_trap_mbe & BUTTON3_PRESSED)
+            &&  button_no == 3)
+               send_key = FALSE;
+            if (button_no == 1
+            &&  !(event->xbutton.state & ShiftMask)
+            &&  !(event->xbutton.state & ControlMask)
+            &&  !(event->xbutton.state & Mod1Mask))
+            {
+               SelectionOff();
+               SelectionOn(MOUSE_X_POS,MOUSE_Y_POS);
+            }
+#else
+            PDC_usleep( XCURSESCLICKPERIOD * 1000 ); /* microseconds to milliseconds */
+            event->type = ButtonRelease;
+            XSendEvent(event->xbutton.display, event->xbutton.window, True,
+                       0, event);
+            last_button_press_time = event->xbutton.time;
+#ifdef PDCDEBUG
+printf("Pressed at: %ld\n",last_button_press_time);
+#endif
+            return;
+#endif
+         }
+         last_button_press_time = event->xbutton.time;
+#ifdef PDCDEBUG
+printf("Pressed at: %ld\n",last_button_press_time);
+#endif
+         break;
+      /*
+       * MotionNotify
+       */
+      case MotionNotify:
+#ifdef MOUSE_DEBUG
+         printf("\nMotionNotify: y: %d x: %d Width: %d Height: %d\n",event->xbutton.y,
+                event->xbutton.x,
+                XCursesFontWidth,
+                XCursesFontHeight);
+#endif
+         if (button_no == 1
+         &&  !(event->xbutton.state & ShiftMask)
+         &&  !(event->xbutton.state & ControlMask)
+         &&  !(event->xbutton.state & Mod1Mask))
+         {
+            MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+            MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+            SelectionExtend(MOUSE_X_POS,MOUSE_Y_POS);
+            send_key = FALSE;
+         }
+         else
+            SelectionOff();
+         /*
+          * Throw away mouse movements if they are in the same character position
+          * as the last mouse event, or if we are currently in the middle of
+          * a double click event.
+          */
+         MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+         MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+         if ((MOUSE_X_POS == save_mouse_status.x
+           &&  MOUSE_Y_POS == save_mouse_status.y)
+         ||  save_mouse_status.button[button_no-1] == BUTTON_DOUBLE_CLICKED)
+         {
+            send_key = FALSE;
+            break;
+         }
+         MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+         MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+         Mouse_status.changes |= 8;
+         if (!(SP->_trap_mbe & BUTTON1_MOVED)
+         &&  button_no == 1)
+            send_key = FALSE;
+         if (!(SP->_trap_mbe & BUTTON2_MOVED)
+         &&  button_no == 2)
+            send_key = FALSE;
+         if (!(SP->_trap_mbe & BUTTON3_MOVED)
+         &&  button_no == 3)
+            send_key = FALSE;
+#if 0
+         if (button_no == 1
+         &&  !(event->xbutton.state & ShiftMask)
+         &&  !(event->xbutton.state & ControlMask)
+         &&  !(event->xbutton.state & Mod1Mask))
+         {
+            SelectionExtend(MOUSE_X_POS,MOUSE_Y_POS);
+            send_key = FALSE;
+         }
+         else
+            SelectionOff();
+#endif
+         break;
+      /*
+       * ButtonRelease
+       */
+      case ButtonRelease:
+#if 0
+         MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+         MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+         BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+         if (!(SP->_trap_mbe & BUTTON1_RELEASED)
+         &&  button_no == 1)
+            send_key = FALSE;
+         if (!(SP->_trap_mbe & BUTTON2_RELEASED)
+         &&  button_no == 2)
+            send_key = FALSE;
+         if (!(SP->_trap_mbe & BUTTON3_RELEASED)
+         &&  button_no == 3)
+            send_key = FALSE;
+         if (button_no == 1
+         &&  !(event->xbutton.state & ShiftMask)
+         &&  !(event->xbutton.state & ControlMask)
+         &&  !(event->xbutton.state & Mod1Mask)
+         &&  mouse_selection)
+         {
+            send_key = FALSE;
+            if (XtOwnSelection(topLevel,
+                               XA_PRIMARY,
+                               event->xbutton.time,
+                               XCursesConvertProc,
+                               XCursesLoseOwnership,
+                               NULL) == False)
+            {
+               SelectionOff();
+            }
+            SelectionSet();
+         }
+         else
+            SelectionOff();
+         break;
+#else
+         if (remove_release)
+         {
+#ifdef PDCDEBUG
+   printf("Release at: %ld - removed\n",event->xbutton.time);
+#endif
+            return;
+         }
+         else
+         {
+            if (!handle_real_release)
+            {
+               if ((event->xbutton.time - last_button_press_time) < 100
+               && (event->xbutton.time != last_button_press_time))
+               {
+                  /*
+                   * The "real" release was shorter than usleep() time
+                   * therefore generate a click event
+                   */
+#ifdef PDCDEBUG
+   printf("Release at: %ld - click\n",event->xbutton.time);
+#endif
+                  MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+                  MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+                  BUTTON_STATUS(button_no) = BUTTON_CLICKED;
+                  if (!(SP->_trap_mbe & BUTTON1_RELEASED)
+                  &&  button_no == 1)
+                     send_key = FALSE;
+                  if (!(SP->_trap_mbe & BUTTON2_RELEASED)
+                  &&  button_no == 2)
+                     send_key = FALSE;
+                  if (!(SP->_trap_mbe & BUTTON3_RELEASED)
+                  &&  button_no == 3)
+                     send_key = FALSE;
+                  if (button_no == 1
+                  &&  !(event->xbutton.state & ShiftMask)
+                  &&  !(event->xbutton.state & ControlMask)
+                  &&  !(event->xbutton.state & Mod1Mask)
+                  &&  mouse_selection)
+                  {
+                     send_key = FALSE;
+                     if (XtOwnSelection(topLevel,
+                                  XA_PRIMARY,
+                                  event->xbutton.time,
+                                  XCursesConvertProc,
+                                  XCursesLoseOwnership,
+                                  NULL) == False)
+                     {
+                        SelectionOff();
+                     }
+                  }
+                  else
+                     SelectionOff();
+                  /*
+                   * Ensure the "pseudo" release event is ignored
+                   */
+                  remove_release = True;
+                  handle_real_release = False;
+                  break;
+               }
+               else
+               {
+                  /*
+                   * Button release longer than usleep() time
+                   * therefore generate a press and wait for the
+                   * real release to occur later.
+                   */
+#ifdef PDCDEBUG
+   printf("Generated Release at: %ld - press & release\n",event->xbutton.time);
+#endif
+                  MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+                  MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+                  BUTTON_STATUS(button_no) = BUTTON_PRESSED;
+                  if (!(SP->_trap_mbe & BUTTON1_PRESSED)
+                  &&  button_no == 1)
+                     send_key = FALSE;
+                  if (!(SP->_trap_mbe & BUTTON2_PRESSED)
+                  &&  button_no == 2)
+                     send_key = FALSE;
+                  if (!(SP->_trap_mbe & BUTTON3_PRESSED)
+                  &&  button_no == 3)
+                     send_key = FALSE;
+                  if (button_no == 1
+                  &&  !(event->xbutton.state & ShiftMask)
+                  &&  !(event->xbutton.state & ControlMask)
+                  &&  !(event->xbutton.state & Mod1Mask))
+                  {
+                     SelectionOff();
+                     SelectionOn(MOUSE_X_POS,MOUSE_Y_POS);
+                  }
+                  handle_real_release = True;
+                  break;
+               }
+            }
+            else
+            {
+#ifdef PDCDEBUG
+   printf("Release at: %ld - released\n",event->xbutton.time);
+#endif
+            }
+         }
+#ifdef PDCDEBUG
+printf("\nButtonRelease\n");
+#endif
+         MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / XCursesFontWidth;
+         MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / XCursesFontHeight;
+         BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+         if (!(SP->_trap_mbe & BUTTON1_RELEASED)
+         &&  button_no == 1)
+            send_key = FALSE;
+         if (!(SP->_trap_mbe & BUTTON2_RELEASED)
+         &&  button_no == 2)
+            send_key = FALSE;
+         if (!(SP->_trap_mbe & BUTTON3_RELEASED)
+         &&  button_no == 3)
+            send_key = FALSE;
+         if (button_no == 1
+         &&  !(event->xbutton.state & ShiftMask)
+         &&  !(event->xbutton.state & ControlMask)
+         &&  !(event->xbutton.state & Mod1Mask)
+         &&  mouse_selection)
+         {
+            send_key = FALSE;
+            if (XtOwnSelection(topLevel,
+                               XA_PRIMARY,
+                               event->xbutton.time,
+                               XCursesConvertProc,
+                               XCursesLoseOwnership,
+                               NULL) == False)
+            {
+               SelectionOff();
+            }
+            SelectionSet();
+         }
+         else
+            SelectionOff();
+         break;
+#endif
+   }
+   /*
+    * Set up the mouse status fields in preparation for sending...
+    */
+   Mouse_status.changes |= (1 << (button_no-1));
+   if (event->xbutton.state & ShiftMask)
+      BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
+   if (event->xbutton.state & ControlMask)
+      BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
+   if (event->xbutton.state & Mod1Mask)
+      BUTTON_STATUS(button_no) |= BUTTON_ALT;
+   /*
+    * If we are ignoring the event, or the mouse position is outside the
+    * bounds of the screen (because of the border), return here...
+    */
+#ifdef PDCDEBUG
+   printf("Button: %d x: %d y: %d Button status: %x Mouse status: %x\n",button_no,
+                                    MOUSE_X_POS,
+                                    MOUSE_Y_POS,
+                                    BUTTON_STATUS(button_no),
+                                    Mouse_status.changes);
+   printf("Send: %d Button1: %x Button2: %x Button3: %x %d %d\n",
+                                    send_key,
+                                    BUTTON_STATUS(1),
+                                    BUTTON_STATUS(2),
+                                    BUTTON_STATUS(3),
+                                    XCursesLINES,XCursesCOLS);
+#endif
+
+   if (!send_key
+   ||  MOUSE_X_POS < 0
+   ||  MOUSE_X_POS >= XCursesCOLS
+   ||  MOUSE_Y_POS < 0
+   ||  MOUSE_Y_POS >= XCursesLINES)
+      return;
+
+#ifdef MOUSE_DEBUG
+   printf("Button: %d x: %d y: %d Button status: %x Mouse status: %x\n",button_no,
+                                    MOUSE_X_POS,
+                                    MOUSE_Y_POS,
+                                    BUTTON_STATUS(button_no),
+                                    Mouse_status.changes);
+   printf("Send: %d Button1: %x Button2: %x Button3: %x\n",send_key,
+                                    BUTTON_STATUS(1),
+                                    BUTTON_STATUS(2),
+                                    BUTTON_STATUS(3));
+#endif
+   /*
+    * Send the KEY_MOUSE to curses program...
+    */
+   XCursesSendKeyToCurses( (unsigned long)KEY_MOUSE, &Mouse_status );
+   return;
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+#else
+void Scroll_up_down(w, client_data, call_data)
+Widget w;
+XtPointer client_data;
+XtPointer call_data;
+#endif
+/***********************************************************************/
+{
+   int pixels = (int) call_data;
+   int total_y=(SP->sb_total_y*XCursesFontHeight);
+   int viewport_y=(SP->sb_viewport_y*XCursesFontHeight);
+   int cur_y=(SP->sb_cur_y*XCursesFontHeight);
+
+   /* 
+    * When pixels is negative, right button pressed, move data down,
+    * thumb moves up.  Otherwise, left button pressed, pixels 
+    * positive, move data up, thumb down. 
+    */
+   cur_y += pixels;
+
+   /* limit panning to size of overall */
+   if (cur_y < 0)
+      cur_y = 0;
+   else 
+   {
+      if (cur_y > (total_y - viewport_y))
+         cur_y = (total_y - viewport_y);
+   }
+   SP->sb_cur_y = cur_y / XCursesFontHeight;
+   XawScrollbarSetThumb(w,(float)((float)cur_y/(float)total_y),(float)((float)viewport_y/(float)total_y));
+   /*
+    * Send a key: if pixels negative, send KEY_SCROLL_DOWN
+    */
+   XCursesSendKeyToCurses( (unsigned long)KEY_SF, NULL );
+#if 0
+fprintf(stderr,"Scroll_up_down: pixels %d cur_y %d\n",pixels,SP->sb_cur_y);
+#endif
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+#else
+void Scroll_left_right(w, client_data, call_data)
+Widget w;
+XtPointer client_data;
+XtPointer call_data;
+#endif
+/***********************************************************************/
+{
+   int pixels = (int) call_data;
+   int total_x=(SP->sb_total_x*XCursesFontWidth);
+   int viewport_x=(SP->sb_viewport_x*XCursesFontWidth);
+   int cur_x=(SP->sb_cur_x*XCursesFontWidth);
+
+   /* 
+    * When pixels is negative, right button pressed, move data down,
+    * thumb moves up.  Otherwise, left button pressed, pixels 
+    * positive, move data up, thumb down. 
+    */
+   cur_x += pixels;
+
+   /* limit panning to size of overall */
+   if (cur_x < 0)
+      cur_x = 0;
+   else 
+   {
+      if (cur_x > (total_x - viewport_x))
+         cur_x = (total_x - viewport_x);
+   }
+   SP->sb_cur_x = cur_x / XCursesFontWidth;
+   XawScrollbarSetThumb(w,(float)((float)cur_x/(float)total_x),(float)((float)viewport_x/(float)total_x));
+   /*
+    * Send a key: if pixels negative, send KEY_SCROLL_DOWN
+    */
+   XCursesSendKeyToCurses( (unsigned long)KEY_SR, NULL );
+#if 0
+fprintf(stderr,"Scroll_left_right: pixels %d cur_x %d\n",pixels,SP->sb_cur_x);
+#endif
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+#else
+void Thumb_up_down(w, client_data, call_data)
+Widget w;
+XtPointer client_data;
+XtPointer call_data;
+#endif
+/***********************************************************************/
+{
+   float percent = *(float *) call_data;
+   float total_y=(float)(SP->sb_total_y);
+   float viewport_y=(float)(SP->sb_viewport_y);
+   int cur_y=SP->sb_cur_y;
+
+#if 0
+fprintf(stderr,"Thumb_up_down: percent %f\n",percent);
+#endif
+   /*
+    * If the size of the viewport is > overall area
+    * simply return, as no scrolling is permitted.
+    */
+   if (SP->sb_viewport_y >= SP->sb_total_y)
+      return;
+   if ((SP->sb_cur_y = (int)((float)total_y * percent)) >= (total_y - viewport_y))
+      SP->sb_cur_y = total_y - viewport_y;
+
+   /* SP->sb_cur_y = cur_y;*/
+   XawScrollbarSetThumb(w,(float)(cur_y/total_y),(float)(viewport_y/total_y));
+   /*
+    * Send a key: if pixels negative, send KEY_SCROLL_DOWN
+    */
+#if 0
+fprintf(stderr,"Thumb_up_down: percent %f cur_y %d\n",percent,SP->sb_cur_y);
+#endif
+   XCursesSendKeyToCurses( (unsigned long)KEY_SF, NULL );
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+#else
+void Thumb_left_right(w, client_data, call_data)
+Widget w;
+XtPointer client_data;
+XtPointer call_data;
+#endif
+/***********************************************************************/
+{
+   float percent = *(float *) call_data;
+   float total_x=(float)(SP->sb_total_x);
+   float viewport_x=(float)(SP->sb_viewport_x);
+   int cur_x=SP->sb_cur_x;
+
+#if 0
+fprintf(stderr,"Thumb_up_down: percent %f\n",percent);
+#endif
+   /*
+    * If the size of the viewport is > overall area
+    * simply return, as no scrolling is permitted.
+    */
+   if (SP->sb_viewport_x >= SP->sb_total_x)
+      return;
+   if ((SP->sb_cur_x = (int)((float)total_x * percent)) >= (total_x - viewport_x))
+      SP->sb_cur_x = total_x - viewport_x;
+
+   /* SP->sb_cur_x = cur_x;*/
+   XawScrollbarSetThumb(w,(float)(cur_x/total_x),(float)(viewport_x/total_x));
+   /*
+    * Send a key: if pixels negative, send KEY_SCROLL_DOWN
+    */
+#if 0
+fprintf(stderr,"Thumb_up_down: percent %f cur_x %d\n",percent,SP->sb_cur_x);
+#endif
+   XCursesSendKeyToCurses( (unsigned long)KEY_SR, NULL );
 }
 #endif

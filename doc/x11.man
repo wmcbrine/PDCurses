@@ -88,6 +88,7 @@ XCurses recognises the following resources:
     colorBoldCyan
     colorBoldWhite
     bitmap
+    pixmap
     translations
     shmmin
     borderWidth
@@ -165,10 +166,17 @@ colorBoldCyan      the color of the COLOR_CYAN attribute combined with A_BOLD
 colorBoldWhite     the color of the COLOR_WHITE attribute combined with A_BOLD
                    Default: White
 
-bitmap:            the name of a valid pixmap file of depth 1 used for
-                   the application's icon
+bitmap:            the name of a valid bitmap file of depth 1 (black and white)
+                   used for the application's icon. The file is an X bitmap
                    Default:        a 32x32 or 64x64 pixmap depending on the 
                                    window manager
+
+pixmap:            the name of a valid pixmap file of any depth supported by the
+                   window manager 9color) for the application's icon, The file
+                   is an X11 pixmap. This resource is only available if the
+                   libXpm package has been installed (most systems have this by
+                   default). This resource overrides the "bitmap" resource
+                   Default:        none, uses default bitmap above
 
 translations:      Translations enable the user to customise the
                    action that occurs when a key, combination of keys, or a
@@ -279,6 +287,7 @@ the*pointerBackColor: black
 ! to Xinitscr()
 !
 the.bitmap:     /home/mark/the/the64.xbm
+the.pixmap:     /home/mark/the/the64.xpm
 
 Resources may also be passed as a parameter to the Xinitscr() function.
 The parameter is a string in the form of switches. eg. to set the color

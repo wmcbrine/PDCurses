@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.1 2001/11/11 05:10:33 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.2 2002/03/02 11:51:28 mark Exp $";
 
 #include "rxpack.h"
 
@@ -152,7 +152,7 @@ int main
          usage();
    }
    else
-      {
+   {
       /* 
        * Next argument is the name of the Rexx program...
        */

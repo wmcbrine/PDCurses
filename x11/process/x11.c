@@ -40,7 +40,7 @@ char *msg;
 #ifdef PDCDEBUG
 #endif
    if ( rc | sig )
-      fprintf( stderr, "%s:XCursesExitXCursesProcess() - called: rc:%d sig:%d %s\n",(XCursesProcess)?"     X":"CURSES",rc,sig,msg);
+      fprintf( stderr, "%s:XCursesExitXCursesProcess() - called: rc:%d sig:%d <%s>\n",(XCursesProcess)?"     X":"CURSES",rc,sig,msg);
    shmdt((char *)SP);
    shmdt((char *)Xcurscr);
    shmctl(shmidSP,IPC_RMID,0);

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.4 2002/01/12 04:04:18 mark Exp $
+$Id: curspriv.h,v 1.5 2002/11/27 11:14:27 mark Exp $
 */
 /*
 *
@@ -391,6 +391,7 @@ int             XCurses_refresh_scrollbar(void);
 void            XCurses_set_title(char *);
 int             XCurses_getclipboard( char **, long * );
 int             XCurses_setclipboard( char *, long );
+int             XCurses_clearclipboard( void );
 unsigned long   XCurses_get_key_modifiers( void );
 # endif
 
@@ -512,6 +513,7 @@ int             XCurses_refresh_scrollbar( /* void */ );
 void            XCurses_set_title(/* char * */ );
 int             XCurses_getclipboard( /* char **, long * */ );
 int             XCurses_setclipboard( /* char *, long */ );
+int             XCurses_clearclipboard( /* void */ );
 unsigned long   XCurses_get_key_modifiers( /* void */ );
 # endif
 
@@ -584,6 +586,7 @@ WINDS*          PDC_findwin( /* WINDOW* */ );
 #define CURSES_GET_SELECTION       999988
 #define CURSES_SET_SELECTION       999987
 #define CURSES_DISPLAY_CURSOR      999986
+#define CURSES_CLEAR_SELECTION     999985
 
 #define XCURSCR_Y_SIZE      (XCursesLINES*XCursesCOLS*sizeof(chtype))
 #define XCURSCR_FLAG_SIZE   (XCursesLINES*sizeof(int))

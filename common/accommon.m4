@@ -211,11 +211,6 @@ dnl
 		for mh_ext in lib${rexx_l}.a lib${rexx_l}.so lib${rexx_l}.sl ${rexx_l}.lib lib${rexx_l}.dylib; do
 		  if test -r $ac_dir/$mh_ext; then
 		     mh_rexx_lib_dir=$ac_dir
-			  if test "$with_rexxtrans" = yes; then
-			     rexxtrans_lib_name="$ac_dir/$mh_ext"
-			  else
-			     rexxtrans_lib_name="."
-			  fi
 		   break 2
 		  fi
 		done

@@ -161,6 +161,7 @@ subwin
 syncok
 termattrs
 termname
+timeout
 touchline
 touchwin
 traceon
@@ -215,9 +216,9 @@ wstandend
 wstandout
 wsyncdown
 wsyncup
+wtimeout
 wtouchln
 wvline
-
 mouse_set
 mouse_on
 mouse_off
@@ -226,9 +227,7 @@ map_button
 wmouse_position
 getmouse
 getbmap
-
 resize_term
-
 PDC_chadd
 PDC_check_bios_key
 PDC_chg_attrs

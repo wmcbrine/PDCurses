@@ -168,6 +168,7 @@ EXPORTS subwin
 EXPORTS syncok
 EXPORTS termattrs
 EXPORTS termname
+EXPORTS timeout
 EXPORTS touchline
 EXPORTS touchwin
 EXPORTS traceon
@@ -222,9 +223,9 @@ EXPORTS wstandend
 EXPORTS wstandout
 EXPORTS wsyncdown
 EXPORTS wsyncup
+EXPORTS wtimeout
 EXPORTS wtouchln
 EXPORTS wvline
-
 EXPORTS mouse_set
 EXPORTS mouse_on
 EXPORTS mouse_off
@@ -233,9 +234,7 @@ EXPORTS map_button
 EXPORTS wmouse_position
 EXPORTS getmouse
 EXPORTS getbmap
-
 EXPORTS resize_term
-
 EXPORTS PDC_chadd
 EXPORTS PDC_check_bios_key
 EXPORTS PDC_chg_attrs

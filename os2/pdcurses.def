@@ -110,6 +110,7 @@ EXPORTS
             standout                       
             start_color                    
             subwin                         
+            timeout
             touchline                      
             touchwin                       
             traceoff                       
@@ -145,5 +146,6 @@ EXPORTS
             wsetscrreg                     
             wstandend                      
             wstandout                      
+            wtimeout
             wtouchln
             wvline

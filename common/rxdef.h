@@ -22,6 +22,8 @@
 #if defined(__OS2__)
 # if defined(USE_REGINA)
 #  include <rexxsaa.h>
+# elif defined(USE_REXXTRANS)
+#  include "rexxtrans.h"
 # else
 #  if !defined(__EMX__)
 #   include <rexxsaa.h>

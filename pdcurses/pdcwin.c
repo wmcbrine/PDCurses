@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.2 2002/05/26 01:13:31 mark Exp $";
+char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.3 2004/01/01 01:13:00 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -208,6 +208,10 @@ extern   void  (*fre)();
    {
       return( win );
    }
+   /*
+    * Set all fields to zero
+    */
+   memset( win, 0, sizeof(WINDOW) );
 
    /*
    * allocate the line pointer array
@@ -238,25 +242,16 @@ extern   void  (*fre)();
    /*
    * initialize window variables
    */
+#if 0 /* these set to zero/NULL by memset() above */
    win->_curx = 0;
    win->_cury = 0;
-   win->_maxy = num_lines;    /* real max screen size */
-   win->_maxx = num_columns;  /* real max screen size */
-   win->_pmaxy = num_lines;   /* real max window size */
-   win->_pmaxx = num_columns; /* real max window size */
-   win->_begy = begy;
-   win->_begx = begx;
    win->_lastpy = 0;
    win->_lastpx = 0;
    win->_lastsy1 = 0;
    win->_lastsx1 = 0;
-   win->_lastsy2 = LINES-1;
-   win->_lastsx2 = COLS-1;
    win->_flags = 0;
    win->_attrs = 0;     /* No attributes */
-   win->_bkgd = ' '; /* wrs 4/10/93 -- initialize background to blank */
-   win->_tabsize = 8;
-   win->_clear = (bool) ((num_lines == LINES) && (num_columns == COLS));
+   win->_delayms = 0;
    win->_leaveit = FALSE;
    win->_scroll = FALSE;
    win->_nodelay = FALSE;
@@ -264,15 +259,27 @@ extern   void  (*fre)();
    win->_sync = FALSE;
    win->_use_keypad = FALSE;
    win->_use_idl = FALSE;
-   win->_use_idc = TRUE;
    win->_tmarg = 0;
-   win->_bmarg = num_lines - 1;
    win->_title = NULL;
+   win->_parent = NULL;
+#endif
+   win->_maxy = num_lines;    /* real max screen size */
+   win->_maxx = num_columns;  /* real max screen size */
+   win->_pmaxy = num_lines;   /* real max window size */
+   win->_pmaxx = num_columns; /* real max window size */
+   win->_begy = begy;
+   win->_begx = begx;
+   win->_lastsy2 = LINES-1;
+   win->_lastsx2 = COLS-1;
+   win->_bkgd = ' '; /* wrs 4/10/93 -- initialize background to blank */
+   win->_tabsize = 8;
+   win->_clear = (bool) ((num_lines == LINES) && (num_columns == COLS));
+   win->_use_idc = TRUE;
+   win->_bmarg = num_lines - 1;
    win->_title_ofs = 1;
    win->_title_attr = win->_attrs;
    win->_blank = ' ';
    win->_parx = win->_pary = -1;
-   win->_parent = NULL;
    /*
    * init to say window unchanged
    */

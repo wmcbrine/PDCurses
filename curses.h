@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.14 2002/11/27 11:14:24 mark Exp $
+$Id: curses.h,v 1.15 2002/11/27 11:22:46 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1573,6 +1573,7 @@ int     PDC_CDECL	notimeout( WINDOW *, bool );
 int     PDC_CDECL	overlay( WINDOW*, WINDOW* );
 int     PDC_CDECL	overwrite( WINDOW*, WINDOW* );
 int     PDC_CDECL	pair_content( int, short*, short* );
+int     PDC_CDECL	pechochar( WINDOW *, chtype );
 int     PDC_CDECL	pnoutrefresh( WINDOW*, int, int, int, int, int, int );
 int     PDC_CDECL	prefresh( WINDOW*, int, int, int, int, int, int );
 #ifdef HAVE_STDARG_H
@@ -1788,6 +1789,7 @@ int     PDC_CDECL	notimeout( /* WINDOW *, bool */ );
 int     PDC_CDECL	overlay( /* WINDOW*, WINDOW* */ );
 int     PDC_CDECL	overwrite( /* WINDOW*, WINDOW* */ );
 int     PDC_CDECL	pair_content( /* int, short*, short* */ );
+int     PDC_CDECL	pechochar( /* WINDOW *pad, chtype ch */ );
 int     PDC_CDECL	pnoutrefresh( /* WINDOW*, int, int, int, int, int, int */ );
 int     PDC_CDECL	prefresh( /* WINDOW*, int, int, int, int, int, int */ );
 int     PDC_CDECL	printw( /* char*,... */ );
@@ -1986,6 +1988,7 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 #define getparyx(w,y,x)         ( y = (w)->_pary, x = (w)->_parx )
 #define getstr(str)             wgetstr( stdscr, str )
 #define getnstr(str,num)        wgetnstr( stdscr, str, num )
+#define getsyx(y,x)             { if( curscr->_leaveit) (y)=(x)=-1; else getyx(curscr,(y),(x)); }
 #define getyx(w,y,x)            ( y = (w)->_cury, x = (w)->_curx )
 #define has_colors()            ((SP->mono) ? FALSE : TRUE)
 #define idcok(w,flag)           OK
@@ -2001,8 +2004,8 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 #define instr(str)              winnstr(stdscr,(str),stdscr->_maxx)
 #define isendwin()              ((SP->alive) ? FALSE : TRUE)
 #define is_termresized()        (SP->resized)
-#define keypad(w,flag)          (w->_use_keypad  = flag)
-#define leaveok(w,flag)         (w->_leaveit = flag)
+#define keypad(w,flag)          (w->_use_keypad  = flag, OK)
+#define leaveok(w,flag)         (w->_leaveit = flag, OK)
 #define move(y,x)               wmove( stdscr, y, x )
 #define mvaddch(y,x,c)          (move( y, x )==ERR?ERR:addch( c ))
 #define mvaddchstr(y,x,c)       (move( y, x )==ERR?ERR:addchnstr( c, -1 ))
@@ -2048,6 +2051,7 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 #define scroll(w)               wscrl((w),1)
 #define scrollok(w,flag)        ((w)->_scroll  = flag)
 #define setscrreg(top, bot)     wsetscrreg( stdscr, top, bot )
+#define setsyx(y,x)             { if( (y)==-1 && (x)==-1) curscr->_leaveit=TRUE; else { curscr->_leaveit=FALSE;wmove(curscr,(y),(x));} }
 #define standend()              wattrset(stdscr, A_NORMAL)
 #define standout()              wattrset(stdscr, A_STANDOUT)
 #define timeout(n)              wtimeout( stdscr, n )
@@ -2077,8 +2081,8 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 # define cbreak()               (SP->cbreak = TRUE)
 # define nocrmode()             (SP->cbreak = FALSE)
 # define crmode()               (SP->cbreak = TRUE)
-# define noecho()               (SP->echo = FALSE)
-# define echo()                 (SP->echo = TRUE)
+# define noecho()               (SP->echo = FALSE,OK)
+# define echo()                 (SP->echo = TRUE,OK)
 # define nodelay(w,flag)        (w->_nodelay = flag)
 #endif
 

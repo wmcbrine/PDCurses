@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr  = "$Id: termattr.c,v 1.3 2003/12/13 06:03:14 mark Exp $";
+char *rcsid_termattr  = "$Id: termattr.c,v 1.4 2003/12/28 08:39:48 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -343,7 +343,7 @@ attr_t	PDC_CDECL	termattrs()
 #endif
 /***********************************************************************/
 {
-	attr_t temp =   (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE); /* blink is bold background on some platforms */
+	attr_t temp =   (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | A_UNDERLINE | A_ITALIC); /* blink is bold background on some platforms */
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("termattrs() - called\n");

@@ -392,7 +392,7 @@ int row,start_col,num_cols;
 
    *(Xcurscr+XCURSCR_FLAG_OFF+row) = 1;
    memcpy(Xcurscr+XCURSCR_Y_OFF(row)+(start_col*sizeof(chtype)),ch,num_cols*sizeof(chtype));
-#if 1
+#if 0
    *((int*)(Xcurscr+XCURSCR_START_OFF+row)) = start_col;
    *((int*)(Xcurscr+XCURSCR_LENGTH_OFF+row)) = num_cols;
    if ( (int)*(Xcurscr+XCURSCR_START_OFF+row) != start_col )

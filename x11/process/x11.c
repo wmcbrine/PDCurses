@@ -25,6 +25,7 @@
 
 static int visible_cursor=0;
 int windowEntered = 1;
+static char *XCursesProgramName;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -446,7 +447,8 @@ char *argv[];
     */
    if (argv)
    {
-      argv[0] = XCursesProgramName;
+/*      argv[0] = XCursesProgramName; */
+      XCursesProgramName = argv[0];
 #ifdef PDCDEBUG1
       for (i=0;i<argc;i++)
          printf("Arg: %d -> %s\n",i,argv[i]);
@@ -457,7 +459,7 @@ char *argv[];
       /*
        * initscr() called rather than initscrX()
        */
-      myargv[0] = XCursesProgramName;
+      XCursesProgramName = myargv[0] = "main";
       myargv[1] = NULL;
       myargc=1;
    }

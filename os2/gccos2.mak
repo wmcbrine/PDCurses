@@ -12,8 +12,7 @@
 #
 ################################################################################
 #
-# This makefile requires the following environment variables with values like:
-# PDCURSES_SRCDIR=c:\pdcurses
+# Change these for your environment...
 #
 ################################################################################
 PDCURSES_HOME		=$(PDCURSES_SRCDIR)
@@ -44,11 +43,13 @@ ifeq ($(EMXVIDEO),Y)
 	VIDLIB = -lvideo
 	BINDFLAGS = -acm
 	DLLTARGET = 
+	DISTTARGETS = pdcurses.a pdcurses.lib panel.a panel.lib
 else
 	EMXVID =
 	VIDLIB =
 	BINDFLAGS = 
 	DLLTARGET = curses.dll
+	DISTTARGETS = curses.a curses.dll curses.lib pdcurses.a pdcurses.lib panel.a panel.lib
 endif
 
 ifeq ($(DEBUG),Y)
@@ -206,6 +207,7 @@ pdcurses.a : $(LIBOBJS) $(PDCOBJS)
 
 curses.dll : $(DLLOBJS) $(PDCDLOS)
 	$(LINK) $(DLLFLAGS) -o curses.dll $(DLLOBJS) $(PDCDLOS) $(osdir)\pdcurses.def
+	lxlite curses.dll
 	emximp -o curses.lib $(osdir)\pdcurses.def
 	emximp -o curses.a curses.lib
 
@@ -529,7 +531,7 @@ xmas.exe:	xmas.o $(LIBCURSES)
 	$(EMXBIND) xmas $(BINDFLAGS)
 
 
-testcurs_dyn.exe:	testcurs.obj pdcurses.dll
+testcurs_dyn.exe:	testcurs.obj curses.dll
 	$(LINK) $(LDFLAGS) $(DLLFLAGS) -o testcurs_dyn testcurs.obj $(DLLCURSES) -L$(CCLIBDIR) $(CCLIBS)
 	$(EMXBIND) testcurs_dyn $(BINDFLAGS)
 
@@ -550,23 +552,23 @@ testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
 
 tui.o: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $(demodir)\tui.c
-
+                               
 tuidemo.o: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $(demodir)\tuidemo.c
 
 xmas.o: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
-dist: curses.a curses.dll curses.lib pdcurses.a pdcurses.lib panel.a panel.lib
+dist: $(DISTTARGETS)
 	-mkdir tmp
 	copy $(PDCURSES_HOME)\README tmp\README
 	copy $(PDCURSES_HOME)\readme.?? tmp
 	copy $(PDCURSES_HOME)\curses.h tmp
 	copy $(PDCURSES_HOME)\curspriv.h tmp
 	copy $(PDCURSES_HOME)\maintain.er tmp
-	copy curses.dll tmp
-	copy curses.lib tmp
-	copy curses.a tmp
+	-copy curses.dll tmp
+	-copy curses.lib tmp
+	-copy curses.a tmp
 	copy pdcurses.a tmp
 	copy pdcurses.lib tmp
 	copy panel.a tmp

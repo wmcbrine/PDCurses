@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.3 2001/01/10 08:31:37 mark Exp $
+$Id: curspriv.h,v 1.4 2002/01/12 04:04:18 mark Exp $
 */
 /*
 *
@@ -337,17 +337,24 @@ void            PDC_usleep( long );
 int             PDC_validchar( int );
 int             PDC_vsscanf( char *, const char *, va_list);
 
-int             PDC_query_adapter_type( void );
-int             PDC_get_scrn_mode( void );
 void            PDC_slk_calc( void );
 
 
 # if defined( OS2 ) && !defined( EMXVIDEO )
 int             PDC_set_scrn_mode( VIOMODEINFO);
 bool            PDC_scrn_modes_equal (VIOMODEINFO, VIOMODEINFO);
+int             PDC_get_scrn_mode( VIOMODEINFO *);
+int             PDC_query_adapter_type( VIOCONFIGINFO * );
+int             PDC_get_keyboard_info( KBDINFO * );
+int             PDC_set_keyboard_binary( void );
+int             PDC_set_keyboard_default( void );
+int             PDC_reset_shell_mode( void );
+int             PDC_reset_prog_mode( void );
 # else
 int             PDC_set_scrn_mode( int );
 bool            PDC_scrn_modes_equal (int, int);
+int             PDC_get_scrn_mode( void );
+int             PDC_query_adapter_type( void );
 # endif
 
 # ifdef  FLEXOS
@@ -456,17 +463,19 @@ void            PDC_usleep( /* long */ );
 int             PDC_validchar( /* int */ );
 int             PDC_vsscanf( /* char *, const char *, ... */);
 
-int             PDC_query_adapter_type( /* void */ );
-int             PDC_get_scrn_mode( /* void */ );
 void            PDC_slk_calc( /* void */ );
 
 
 # if defined( OS2 ) && !defined( EMXVIDEO )
 int             PDC_set_scrn_mode( /* VIOMODEINFO*/ );
 bool            PDC_scrn_modes_equal ( /*VIOMODEINFO, VIOMODEINFO*/ );
+int             PDC_get_scrn_mode( /* VIOMODEINFO * */ );
+int             PDC_query_adapter_type( /* VIOCONFIGINFO * */ );
 # else
 int             PDC_set_scrn_mode( /* int */ );
 bool            PDC_scrn_modes_equal ( /*int, int*/ );
+int             PDC_get_scrn_mode( /* void */ );
+int             PDC_query_adapter_type( /* void */ );
 # endif
 
 # ifdef  FLEXOS

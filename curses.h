@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.8 2002/01/12 03:37:57 mark Exp $
+$Id: curses.h,v 1.9 2002/01/12 04:04:18 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -937,6 +937,7 @@ typedef struct
 # else
 	VIOMODEINFO scrnmode;	/* default screen mode			*/
 	VIOCONFIGINFO adapter;	/* Screen type				*/
+	KBDINFO kbdinfo;	/* keyboard info */
 # endif
 #else
 	int adapter;			/* Screen type	*/

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.23 2003/02/17 10:05:45 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.24 2003/02/19 07:38:22 mark Exp $";
 
 #include "rxpack.h"
 
@@ -204,6 +204,12 @@ int SetRexxVariable
    ULONG  rc=0L;
    SHVBLOCK       shv;
 
+   /*
+    * Uppercase the variable before we do anything. That way all debugging
+    * output reflects the "real" name we are setting.
+    */
+   ( void )make_upper( name );
+
    InternalTrace( RxPackageGlobalData, "SetRexxVariable", "\"%s\",%d,\"%s\",%d", name, namelen, value, valuelen );
 
    if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
@@ -215,7 +221,6 @@ int SetRexxVariable
          MkAsciz( buf1, sizeof( buf1 ), name, namelen ),
          MkAsciz( buf2, sizeof( buf2 ), value, valuelen ) );
    }
-   ( void )make_upper( name );
    shv.shvnext = ( SHVBLOCK* )NULL;
    shv.shvcode = RXSHV_SET;
    MAKERXSTRING( shv.shvname, name, ( ULONG )namelen );
@@ -1437,6 +1442,69 @@ int DeregisterRxFunctions
 }
 
 /*-----------------------------------------------------------------------------
+ * This function sets all package constants...
+ *----------------------------------------------------------------------------*/
+int SetPackageConstants
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RxPackageConstantDef *RxConstants, char *pname )
+#else
+   ( RxPackageGlobalData, RxConstants, pname )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RxPackageConstantDef *RxConstants;
+   char *pname;
+#endif
+
+{
+   int i,varlen,vallen,rc;
+   char varname[250];
+   char *value;
+   char buf[100];
+   RxPackageConstantDef *con=NULL;
+
+   InternalTrace( RxPackageGlobalData, "SetPackageConstants" );
+
+   /*
+    * Before we set the new constants, drop the previous stem.
+    * This may fail because we don't have a stem yet.
+    */
+   for ( con=RxConstants; con->name; con++ )
+   {
+      varlen = sprintf( varname, "%s%s.%s%s",
+                        RxPackageGlobalData->ConstantPrefix,
+                        pname,
+                        RxPackageGlobalData->ConstantPrefix,
+                        con->name );
+      switch( con->type )
+      {
+         case 0:
+            vallen = sprintf( buf, "%ld", con->numeric_value );
+            value = buf;
+            break;
+         case 1:
+            varlen = strlen( con->text_value );
+            value = con->text_value;
+            break;
+         case 2:
+            varlen = sprintf( buf, "%f", con->double_value );
+            value = buf;
+            break;
+         case 3:
+            varlen = sprintf( buf, "%c", con->char_value );
+            value = buf;
+            break;
+         default:
+            break;
+      }
+      /*
+       * Now set the Rexx variable
+       */
+      rc = SetRexxVariable( RxPackageGlobalData, varname, varlen, value, vallen );
+   }
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
  * This function is called to initialise the package
  *----------------------------------------------------------------------------*/
 RxPackageGlobalDataDef *InitRxPackage
@@ -1643,11 +1711,12 @@ char *RxGetTraceFile
 int RxSetConstantPrefix
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, int setvars )
 #else
-   ( RxPackageGlobalData, name )
+   ( RxPackageGlobalData, name, setvars )
    RxPackageGlobalDataDef *RxPackageGlobalData;
    char *name;
+   int setvars;
 #endif
 
 {
@@ -1661,6 +1730,11 @@ int RxSetConstantPrefix
       return( 1 );
    }
    strcpy( RxPackageGlobalData->ConstantPrefix, name );
+   /*
+    * Set the packages constants now, if allowed...
+    */
+   if ( setvars )
+      SetPackageConstants( RxPackageGlobalData, RxPackageConstantDef *RxConstants, char *pname )
    return( 0 );
 }
 

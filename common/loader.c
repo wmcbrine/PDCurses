@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.13 2003/02/17 06:36:38 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.14 2003/02/19 07:38:21 mark Exp $";
 
 #include "rxpack.h"
 
@@ -44,6 +44,7 @@ extern PackageInitialiser *GETPACKAGEINITIALISER();
 extern PackageTerminator *GETPACKAGETERMINATOR();
 extern RexxSubcomHandler *GETPACKAGESUBCOMHANDLER();
 extern RexxFunction *GETPACKAGEFUNCTIONS();
+extern RxPackageConstantDef *GETPACKAGECONSTANTS();
 extern void PACKAGEUSAGE();
 
 /*-----------------------------------------------------------------------------
@@ -221,6 +222,10 @@ int main
     */
    if ( ( rc = RegisterRxSubcom( RxPackageGlobalData, GETPACKAGESUBCOMHANDLER() ) ) != 0 )
       return( rc );
+   /* 
+    * Set the constants for the package
+    */
+   SetPackageConstants( RxPackageGlobalData, GETPACKAGECONSTANTS(), RXPACKAGENAME );
    FunctionPrologue( RxPackageGlobalData, GETPACKAGEINITIALISER(), RXPACKAGENAME, 0L, NULL );
    /*
     * Set up the system exit for the Say and Trace redirection

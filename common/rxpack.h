@@ -206,6 +206,19 @@ typedef struct
    int terminated;                    /* indicates if rxpack has called RxTermPackage() for this structure */
 } RxPackageGlobalDataDef;
 
+/*
+ * The following structure contains details of a package's constants
+ */
+typedef struct 
+{
+   char *name;          /* base name of constant */
+   int type;            /* 0 (numeric), 1 (text), 2 (float), 3 (char) */
+   long numeric_value;  /* numeric value of constant */
+   char *text_value;    /* text value of constant */
+   double double_value; /* double value of constant */
+   char char_value;     /* char value of constant */
+} RxPackageConstantDef;
+
 typedef int PackageInitialiser( RxPackageGlobalDataDef * );
 typedef int PackageTerminator( RxPackageGlobalDataDef * );
 
@@ -226,6 +239,7 @@ int RegisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction *, char * 
 int RegisterRxSubcom Args(( RxPackageGlobalDataDef *, RexxSubcomHandler ));
 int QueryRxFunction Args(( RxPackageGlobalDataDef *, char * ));
 int DeregisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction *, int ));
+int SetPackageConstants Args(( RxPackageGlobalDataDef *, RxPackageConstantDef *, char * ));
 char *make_upper Args(( char * ));
 char *AllocString Args(( char *, int ));
 char *MkAsciz Args(( char *, int, char *, int ));
@@ -237,7 +251,7 @@ int StrToNumber Args(( RXSTRING *, LONG * ));
 int StrToBool Args(( RXSTRING *, ULONG * ));
 int RxSetTraceFile Args(( RxPackageGlobalDataDef *, char * ));
 char *RxGetTraceFile Args(( RxPackageGlobalDataDef * ));
-int RxSetConstantPrefix Args(( RxPackageGlobalDataDef *, char * ));
+int RxSetConstantPrefix Args(( RxPackageGlobalDataDef *, char *, int ));
 char *RxGetConstantPrefix Args(( RxPackageGlobalDataDef * ));
 void RxSetRunFlags Args(( RxPackageGlobalDataDef *, int ));
 int RxGetRunFlags Args(( RxPackageGlobalDataDef * ));

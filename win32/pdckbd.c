@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.7 2002/11/27 11:18:58 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.8 2002/11/28 08:45:06 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -53,7 +53,6 @@ char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.7 2002/11/27 11:18:58 mark Exp $";
  * These variables are used to store information about the next 
  * Input Event.
  */
-static int keyCount = 0;
 INPUT_RECORD save_ip;
 static unsigned long pdc_key_modifiers=0L;
 
@@ -63,6 +62,8 @@ extern HANDLE hConIn;
 extern HANDLE hPipeRead;
 extern HANDLE hPipeWrite;
 extern HANDLE hSemKeyCount;
+#else
+static int keyCount = 0;
 #endif
 
 static void win32_getch(void);
@@ -917,6 +918,7 @@ int   PDC_rawgetch(void)
       if (_getch_win_->_use_keypad)
          return( oldc );
    }
+   return( -1 );
 }
 
 /*man-start*********************************************************************
@@ -1004,6 +1006,7 @@ int   PDC_sysgetch(void)
          return (c);      /* get & check next char */
       }
    }
+   return( -1 );
 }
 
 

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.17 2003/12/13 06:02:12 mark Exp $
+$Id: curses.h,v 1.18 2003/12/28 08:33:13 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -861,6 +861,7 @@ typedef struct _win		/* definition of a window.	   */
 	int*	_lastch;	/* last changed character in line  */
 	int	_tmarg;	/* top of scrolling region	   */
 	int	_bmarg;	/* bottom of scrolling region	   */
+	int	_delayms;	/* milliseconds of delay for getch()	*/
 	char*	_title;		/* window title			   */
 	char	_title_ofs;	/* window title offset from left   */
 	attr_t	_title_attr;	/* window title attributes	   */
@@ -2060,8 +2061,8 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 #define mvwinsnstr(w,y,x,s,n)   (wmove( w, y, x )==ERR?ERR:winsnstr(w,s,n))
 #define mvwinsstr(w,y,x,s)      (wmove( w, y, x )==ERR?ERR:winsnstr(w,s,(-1)))
 #define napms(ms)               delay_output(ms)
-#define nl()                    (SP->autocr = TRUE)
-#define nonl()                  (SP->autocr = FALSE)
+#define nl()                    (SP->autocr = TRUE, OK)
+#define nonl()                  (SP->autocr = FALSE, OK)
 #define redrawwin(w)            wredrawln((w),0,(w)->_maxy)
 #define refresh()               wrefresh( stdscr )
 #define resetterm()             reset_shell_mode()

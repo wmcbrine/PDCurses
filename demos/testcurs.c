@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.7 2003/12/28 08:33:54 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.8 2004/01/01 01:11:30 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -355,6 +355,7 @@ WINDOW *win;
     PDC_save_key_modifiers(TRUE);
     PDC_return_key_modifiers(TRUE);
 #endif
+    curs_set(0); /* turn cursor off */
     while(1)
     {
        while(1)
@@ -441,6 +442,7 @@ WINDOW *win;
 #else
     nocbreak(); /* turn off halfdelay() mode */
 #endif
+    curs_set(1); /* turn cursor back on */
 
 #if 0
     nodelay(win, TRUE);

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.9 2002/01/12 04:04:18 mark Exp $
+$Id: curses.h,v 1.10 2002/03/22 22:37:17 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -2071,7 +2071,8 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 #define wstandout(w)            wattrset(w, A_STANDOUT)
 
 #if !defined(UNIX) && !defined(XCURSES)
-# define nocbreak()             (SP->cbreak = FALSE)
+/* set delaytenths = 0 added - William McBrine */
+# define nocbreak()             (SP->cbreak = FALSE, SP->delaytenths = 0) 
 # define cbreak()               (SP->cbreak = TRUE)
 # define nocrmode()             (SP->cbreak = FALSE)
 # define crmode()               (SP->cbreak = TRUE)

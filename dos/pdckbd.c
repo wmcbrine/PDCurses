@@ -32,7 +32,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.5 2003/06/23 07:54:34 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.6 2003/12/28 08:37:57 mark Exp $";
 #endif
 
 /*******************************************************************************
@@ -362,7 +362,7 @@ int	PDC_get_bios_key()
 		return ((int) (0xb8 << 8));
 	if (ascii == 0xe0 && scan == 0x53 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Del */
 		return ((int) (0xb9 << 8));
-	if (ascii == 0x00 || ascii == 0xe0)
+	if (ascii == 0x00 || (ascii == 0xe0 && scan > 53 && scan != 86)) /* some NLS use 0xe0 as real character - Ruslan Fedyarov */
 		return ((int) (scan << 8));
 	return ((int) (ascii));
 }

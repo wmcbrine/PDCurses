@@ -16,6 +16,8 @@ dnl MH_HOWTO_SHARED_LIBRARY
 dnl MH_SHARED_LIBRARY
 dnl MH_HOWTO_DYN_LINK
 dnl MH_CHECK_CC_O
+dnl MH_CHECK_LEADING_USCORE
+dnl MH_SHLPST
 
 dnl ---------------------------------------------------------------------------
 dnl Check REXX library and header files
@@ -772,6 +774,7 @@ dnl Determine how to build shared libraries etc..
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_SHARED_LIBRARY],
 [
+AC_REQUIRE([MH_SHLPST])
 dnl
 dnl If compiler is gcc, then flags should be the same for all platforms
 dnl (just guessing on this)
@@ -790,9 +793,9 @@ RXPACKEXPORTS=""
 BASE_INSTALL="installbase"
 BASE_BINARY="binarybase"
 SHLPRE="lib"
-SHLPST=".so"
 LD_RXLIB1=""
 CAN_USE_ABI="no"
+BUNDLE=""
 # If the build OS can handle version numbers in the shared library name,
 # and the user requests it, then set SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
 SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
@@ -801,6 +804,7 @@ SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
 # then there is no shared library. Set OTHER_INSTALLS="installabilib" if you
 # are building a version numbered shared library.
 OTHER_INSTALLS="installlib"
+EXTRATARGET=""
 
 AC_REQUIRE([AC_CANONICAL_SYSTEM])
 case "$target" in
@@ -808,7 +812,6 @@ case "$target" in
 		SYS_DEFS="-D_HPUX_SOURCE"
 		EEXTRA="-Wl,-E"
 		LD_RXLIB1="ld -b -q -n"
-		SHLPST=".sl"
 		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
@@ -822,7 +825,6 @@ case "$target" in
 		DYN_COMP="-DDYNAMIC"
 		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
 		LD_RXLIB1="ld $mh_entry -bM:SRE"
-		SHLPST=".a"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
 		RXPACKEXP="$SHLFILE.exp"
 		;;
@@ -881,13 +883,11 @@ case "$target" in
 	*apple-darwin*)
 		LD_RXLIB1="${CC} -dynamiclib -install_name=\$(prefix)/lib/\$(@)"
 		DYN_COMP="-fno-common"
-		SHLPST=".dylib"
 		;;
 	*qnx*)
 		LIBPRE=""
 		LIBPST=".lib"
 		SHLPRE=""
-		SHLPST=".lib"
 		DYN_COMP="-Q"   # force no check for dynamic loading
 		SHLFILE=""
 		EEXTRA="-mf -N0x20000 -Q"
@@ -897,11 +897,17 @@ case "$target" in
 		SHLPRE=""
 		DYN_COMP="-DDYNAMIC"
 		LIBPST=".a"
-		SHLPST=".dll"
 		EXE=".exe"
 		LD_RXLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
 		BASE_INSTALL="cygwininstall"
 		BASE_BINARY="cygwinbinary"
+		;;
+	*darwin*)
+		DYN_COMP="-fno-common"
+		BUNDLE=".so"
+		LD_RXLIB1="${CC} -shared"
+		EXTRATARGET="librexxtrans$BUNDLE"
+		OTHER_INSTALLS="installmacosx"
 		;;
 	*)
 		;;
@@ -911,7 +917,7 @@ dnl
 dnl determine what switches our compiler uses for building objects
 dnl suitable for inclusion in shared libraries
 dnl Only call this if DYN_COMP is not set. If we have set DYN_COMP
-dnl above, then we know how to compile AND link for synamic libraries
+dnl above, then we know how to compile AND link for dynamic libraries
 dnl
 if test "$DYN_COMP" = ""; then
 AC_MSG_CHECKING(compiler flags for a dynamic object)
@@ -984,6 +990,8 @@ AC_SUBST(SHLIBS)
 AC_SUBST(LD_RXLIB1)
 AC_SUBST(SHLPRE)
 AC_SUBST(SHLPST)
+AC_SUBST(LIBPST)
+AC_SUBST(LIBPRE)
 AC_SUBST(DYNAMIC_LDFLAGS)
 AC_SUBST(STATIC_LDFLAGS)
 AC_SUBST(SHL_TARGETS)
@@ -996,7 +1004,7 @@ AC_SUBST(BASE_BINARY)
 AC_SUBST(SAVE2O)
 AC_SUBST(RXPACKEXPORTS)
 AC_SUBST(RXPACKEXP)
-AC_SUBST(USE_ABI)
+AC_SUBST(CAN_USE_ABI)
 ])dnl
 
 dnl ---------------------------------------------------------------------------
@@ -1038,4 +1046,77 @@ else
 	CC2O=""
 	AC_MSG_RESULT(no)
 fi
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Work out if functions in dynamically loadable libraries need leading _
+dnl Tests based on glib code and only valid for dlopen() mechanism
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([MH_CHECK_LEADING_USCORE],
+[
+if test "$ac_cv_header_dlfcn_h" = "yes" -o "$HAVE_DLFCN_H" = "1"; then
+   AC_MSG_CHECKING(if symbols need underscore prepended in loadable modules)
+   tmpLIBS="$LIBS"
+   save_cflags="$CFLAGS"
+   LIBS="$LIBS $DLFCNLIBDIR"
+   CFLAGS="$CFLAGS $DLFCNINCDIR"
+   AC_CACHE_VAL(mh_cv_uscore,[
+   AC_TRY_RUN_NATIVE([
+   #include <dlfcn.h>
+   int mh_underscore_test (void) { return 42; }
+   int main() {
+     void *f1 = (void*)0, *f2 = (void*)0, *handle;
+     handle = dlopen ((void*)0, 0);
+     if (handle) {
+       f1 = dlsym (handle, "mh_underscore_test");
+       f2 = dlsym (handle, "_mh_underscore_test");
+     } return (!f2 || f1);
+   }],
+   mh_cv_uscore=yes,
+   mh_cv_uscore=no
+   )
+   ])
+   AC_MSG_RESULT($mh_cv_uscore)
+   if test "x$mh_cv_uscore" = "xyes"; then
+     AC_DEFINE(MODULES_NEED_USCORE)
+   fi
+   LIBS="$tmpLIBS"
+   CFLAGS="$save_cflags"
+fi
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Determines the file extension for shared libraries
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([MH_SHLPST],
+[
+AC_MSG_CHECKING(shared library/external function extensions)
+SHLPST=".so"
+MODPST=".so"
+AC_REQUIRE([AC_CANONICAL_SYSTEM])
+case "$target" in
+        *hp-hpux*)
+                SHLPST=".sl"
+                MODPST=".sl"
+                ;;
+        *ibm-aix*)
+                SHLPST=".a"
+                MODPST=".a"
+                ;;
+        *qnx*)
+                SHLPST=""
+                MODPST=""
+                ;;
+        *cygwin*)
+                SHLPST=".dll"
+                MODPST=".dll"
+                ;;
+        *darwin*)
+                SHLPST=".dylib"
+                MODPST=".so"
+                ;;
+esac
+AC_SUBST(SHLPST)
+AC_SUBST(MODPST)
+AC_MSG_RESULT($SHLPST/$MODPST)
 ])

@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.5 2004/01/01 01:12:28 mark Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.6 2004/01/01 03:17:49 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -185,6 +185,10 @@ extern  WINDOW*	_getch_win_;
 			waitingtenths = 1;
 	}
 
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("initial: %d delaytenths %d delayms %d\n", waitingtenths,SP->delaytenths, win->_delayms);
+#endif
+
 /* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
 /*                  if there have been changes to it and it is not a pad */
 	if( (! (win->_flags & _PAD)) && (! win->_nodelay) ) 
@@ -278,6 +282,9 @@ extern  WINDOW*	_getch_win_;
  */
 		if (SP->delaytenths || w->_delayms)
 		{
+#ifdef PDCDEBUG
+			if (trace_on) PDC_debug("waiting: %d delaytenths %d delayms %d\n", waitingtenths,SP->delaytenths, w->_delayms);
+#endif
 			if (waitingtenths == 0 && key == (-1))
 				return(ERR);
 			if (key == (-1))

@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.7 2002/07/30 03:38:31 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.8 2002/07/30 03:39:56 mark Exp $";
 
 #include "rxpack.h"
 
@@ -124,7 +124,7 @@ int main
             return(0);
             break;
          case 'h':
-         default : PACKAGEUSEAGE();
+         default : PACKAGEUSAGE();
       }
    }
 

@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.3 2001/10/16 11:12:12 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.4 2002/01/12 03:39:07 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -189,7 +189,7 @@ static KPTAB kptab[] =
    {0,          0,          0,           0,          0           }, /* 108 */
    {PADMINUS,   SHF_PADMINUS,CTL_PADMINUS,ALT_PADMINUS,999       }, /* 109 */
    {0x2E,       0,          CTL_PADSTOP, ALT_PADSTOP,0           }, /* 110 */
-   {0,          0,          0,           0,          2           }, /* 111 */
+   {PADSLASH,   SHF_PADSLASH,CTL_PADSLASH,ALT_PADSLASH,2         }, /* 111 */
    {KEY_F(1),   KEY_F(13),  KEY_F(25),   KEY_F(37),  0           }, /* 112 */
    {KEY_F(2),   KEY_F(14),  KEY_F(26),   KEY_F(38),  0           }, /* 113 */
    {KEY_F(3),   KEY_F(15),  KEY_F(27),   KEY_F(39),  0           }, /* 114 */
@@ -300,7 +300,7 @@ static KPTAB kptab[] =
    {0x5B,       0x7B,       0x1B,        ALT_LBRACKET,0          }, /* 219 */
    {0x5C,       0x7C,       0x1C,        ALT_BSLASH, 0           }, /* 220 */
    {0x5D,       0x7D,       0x1D,        ALT_RBRACKET,0          }, /* 221 */
-   {0x27,       0x22,       0x27,        ALT_FQUOTE, 0           }, /* 222 */
+   {0,          0,          0x27,        ALT_FQUOTE, 0           }, /* 222 */
    {0,          0,          0,           0,          0           }, /* 223 */
    {0,          0,          0,           0,          0           }, /* 224 */
    {0,          0,          0,           0,          0           }  /* 225 */
@@ -481,11 +481,18 @@ int   PDC_get_bios_key(void)
       {
          case KEY_EVENT:
 #if 0
-            fprintf(stderr,"uChar: %d KeyCode: %d ScanCode: %d State: %x\n",
+         {
+            char buf[KL_NAMELENGTH];
+            GetKeyboardLayoutName( buf );
+            fprintf(stderr,"AsciiChar: %d Unicode: %d KeyCode: %d ScanCode: %d State: %x Name: %s\n",
                     save_ip.Event.KeyEvent.uChar.AsciiChar,
+                    save_ip.Event.KeyEvent.uChar.UnicodeChar,
                     save_ip.Event.KeyEvent.wVirtualKeyCode,
                     save_ip.Event.KeyEvent.wVirtualScanCode,
-                    save_ip.Event.KeyEvent.dwControlKeyState);
+                    save_ip.Event.KeyEvent.dwControlKeyState,
+                    buf
+                    );
+         }
 #endif
 
             pdc_key_modifiers = 0L;
@@ -522,6 +529,23 @@ int   PDC_get_bios_key(void)
                if (save_ip.Event.KeyEvent.dwControlKeyState & NUMLOCK_ON)
                   pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
             }
+            /*
+             * If the Unicode character is not zero; its a displayable character.
+             * Check for Ctrl-Alt sequences; they are diatric characters
+             */
+            if ( save_ip.Event.KeyEvent.uChar.UnicodeChar != 0 )
+            {
+               idx = save_ip.Event.KeyEvent.wVirtualKeyCode;
+               if ( pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL
+               &&   pdc_key_modifiers & PDC_KEY_MODIFIER_ALT )
+                  return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
+               if ( pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL )
+                  return kptab[idx].control;
+               if ( pdc_key_modifiers & PDC_KEY_MODIFIER_ALT )
+                  return kptab[idx].alt;
+               return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
+            }
+
             if (save_ip.Event.KeyEvent.uChar.AsciiChar == 0
             ||  save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
             ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED
@@ -529,7 +553,8 @@ int   PDC_get_bios_key(void)
             {
                if (save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED
                &&  save_ip.Event.KeyEvent.uChar.AsciiChar != 0)
-                  return((int)(unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar);
+/*                  return((int)(unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar); */
+                  return((int)save_ip.Event.KeyEvent.uChar.UnicodeChar);
                if (save_ip.Event.KeyEvent.dwControlKeyState & ENHANCED_KEY)
                {
                   enhanced = TRUE;
@@ -579,7 +604,8 @@ int   PDC_get_bios_key(void)
                   ||   save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
                   &&  kptab[idx].alt)
                      return(kptab[idx].alt);
-                  return((int)(unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar);
+/*                  return((int)(unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar); */
+                  return((int)save_ip.Event.KeyEvent.uChar.UnicodeChar);
                }
             }
             break;

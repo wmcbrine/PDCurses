@@ -605,6 +605,43 @@ fi
 ])dnl
 
 dnl ---------------------------------------------------------------------------
+dnl Determine the best C++ compiler to use given a list
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([MH_PROG_CXX],
+[
+mh_sysv_incdir=""
+mh_sysv_libdir=""
+all_words="$CC_LIST"
+ac_dir=""
+AC_MSG_CHECKING(for one of the following C++ compilers: $all_words)
+AC_CACHE_VAL(ac_cv_prog_CXX,[
+if test -n "$CXX"; then
+  ac_cv_prog_CXX="$CC" # Let the user override the test.
+else
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
+  for mh_cc in $all_words; do
+    for ac_dir in $PATH; do
+      test -z "$ac_dir" && ac_dir=.
+      if test -f $ac_dir/$mh_cc; then
+        ac_cv_prog_CXX="$mh_cc"
+        break 2
+      fi
+    done
+  done
+  IFS="$ac_save_ifs"
+  test -z "$ac_cv_prog_CXX" && ac_cv_prog_CXX="c++"
+fi
+CXX="$ac_cv_prog_CXX"
+])
+AC_SUBST(CXX)
+if test "$ac_dir" = ""; then
+   AC_MSG_RESULT(using $ac_cv_prog_CXX specified in CXX env variable)
+else
+   AC_MSG_RESULT(using $ac_dir/$ac_cv_prog_CXX)
+fi
+])dnl
+
+dnl ---------------------------------------------------------------------------
 dnl Determine if the supplied X headers exist.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_CHECK_X_HEADERS],

@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.4 2003/12/28 08:38:43 mark Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.5 2004/01/01 01:12:28 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -274,6 +274,7 @@ extern  WINDOW*	_getch_win_;
 
 /*
  * Order of test for delaytenths and _nodelay reversed - William McBrine
+ * Handle timeout() and halfdelay().
  */
 		if (SP->delaytenths || w->_delayms)
 		{

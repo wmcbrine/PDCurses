@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.38 2003/08/20 09:43:31 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.39 2003/12/27 04:37:29 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1429,9 +1429,12 @@ int RegisterRxInit
 
    InternalTrace( RxPackageGlobalData, "RegisterRxInit", "Name: %s Addr: %ld", name, ptr );
 
-   rc = RexxRegisterExitExe( (RREE_ARG0_TYPE)name,
-                             (RREE_ARG1_TYPE)(ptr),
-                             (RREE_ARG2_TYPE)NULL );
+   if ( ptr )
+   {
+      rc = RexxRegisterExitExe( (RREE_ARG0_TYPE)name,
+                                (RREE_ARG1_TYPE)(ptr),
+                                (RREE_ARG2_TYPE)NULL );
+   }
    InternalTrace( RxPackageGlobalData, "RegisterRxInit", "returning %d", rc );
    if ( rc != RXEXIT_OK )
       return 1;

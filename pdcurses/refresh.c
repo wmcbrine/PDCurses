@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh  = "$Id: refresh.c,v 1.1 2001/01/10 08:27:25 mark Exp $";
+char *rcsid_refresh  = "$Id: refresh.c,v 1.2 2002/12/16 06:58:28 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -312,6 +312,9 @@ bool rc;
       {
          for (i = 0; i < SP->lines; i++)
          {
+# ifdef PDCDEBUG
+   if (trace_on) PDC_debug("doupdate() - Transforming line %d of %d: %s\n",i,SP->lines,(curscr->_firstch[i] != _NO_CHANGE)?"Yes" : "No");
+#endif
             if (curscr->_firstch[i] != _NO_CHANGE)
                if (PDC_transform_line(i))  /* if test new */
                   break;

@@ -443,6 +443,7 @@ char *argv[];
    int minwidth=0,minheight=0;
    int myargc;
    char *myargv[2];
+
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("%s:XCursesSetupX called\n",(XCursesProcess)?"     X":"CURSES");
 #endif
@@ -596,11 +597,31 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
     */
    XCursesGetIcon();
    
-   XtVaSetValues(topLevel,
-                           XtNminWidth,minwidth,
-                           XtNminHeight,minheight,
-                           XtNiconPixmap,icon_pixmap,
-                           NULL);
+#ifdef HAVE_XPM_H
+   if (XCURSESPIXMAPFILE != NULL)
+   {
+      XtVaSetValues( topLevel,
+                     XtNminWidth,minwidth,
+                     XtNminHeight,minheight,
+                     XtNiconPixmap,icon_pixmap,
+                     XtNiconMask,icon_pixmap_mask,
+                     NULL);
+   }
+   else
+   {
+      XtVaSetValues( topLevel,
+                     XtNminWidth,minwidth,
+                     XtNminHeight,minheight,
+                     XtNiconPixmap,icon_bitmap,
+                     NULL);
+   }
+#else
+   XtVaSetValues( topLevel,
+                  XtNminWidth,minwidth,
+                  XtNminHeight,minheight,
+                  XtNiconPixmap,icon_bitmap,
+                  NULL);
+#endif
    /*
     * Create a BOX widget in which to draw...
     */

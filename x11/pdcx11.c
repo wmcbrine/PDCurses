@@ -443,6 +443,9 @@ int XCursesFontAscent,XCursesFontDescent;
 int XCursesWindowWidth,XCursesWindowHeight;
 int resizeXCursesWindowWidth=0,resizeXCursesWindowHeight=0;
 char *bitmap_file=NULL;
+#ifdef HAVE_XPM_H
+char *pixmap_file=NULL;
+#endif
 KeySym compose_key=0;
 int compose_mask=0;
 int state_mask[8] = 
@@ -468,7 +471,11 @@ int selection_start_x=0;
 int selection_start_y=0;
 int selection_end_x=0;
 int selection_end_y=0;
+Pixmap icon_bitmap;
+#ifdef HAVE_XPM_H
 Pixmap icon_pixmap;
+Pixmap icon_pixmap_mask;
+#endif
 XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 {
  {
@@ -669,6 +676,17 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   XtRString,
   (XtPointer)"",
  },
+#ifdef HAVE_XPM_H
+ {
+  XtNpixmap,
+  XtCPixmap,
+  XtRString,
+  MAX_PATH,
+  XtOffsetOf(AppData,pixmapFile),
+  XtRString,
+  (XtPointer)"",
+ },
+#endif
  {
   XtNcomposeKey,
   XtCComposeKey,
@@ -796,6 +814,9 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-normalFont",          "*normalFont",        XrmoptionSepArg,   NULL },
    {"-italicFont",          "*italicFont",        XrmoptionSepArg,   NULL },
    {"-bitmap",              "*bitmap",            XrmoptionSepArg,   NULL },
+#ifdef HAVE_XPM_H
+   {"-pixmap",              "*pixmap",            XrmoptionSepArg,   NULL },
+#endif
    {"-pointer",             "*pointer",           XrmoptionSepArg,   NULL },
    {"-shmmin",              "*shmmin",            XrmoptionSepArg,   NULL },
    {"-composeKey",          "*composeKey",        XrmoptionSepArg,   NULL },
@@ -1334,27 +1355,34 @@ int XCursesEndwin()
 #endif
 /***********************************************************************/
 {
-
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesEndwin() - called\n",(XCursesProcess)?"     X":"CURSES");
+   if (trace_on) PDC_debug("%s:XCursesEndwin() - called\n",(XCursesProcess)?"     X":"CURSES");
 #endif
- if (bitmap_file != NULL)
+   if (bitmap_file != NULL)
    {
-    XFreePixmap(XCURSESDISPLAY,icon_pixmap);
-    free(bitmap_file);
+      XFreePixmap(XCURSESDISPLAY,icon_bitmap);
+      free(bitmap_file);
    }
- XFreeGC(XCURSESDISPLAY, normal_gc);
- XFreeGC(XCURSESDISPLAY, italic_gc);
- XFreeGC(XCURSESDISPLAY, block_cursor_gc);
- XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
- XFreeGC(XCURSESDISPLAY, border_gc);
+#ifdef HAVE_XPM_H
+   if (pixmap_file != NULL)
+   {
+      XFreePixmap(XCURSESDISPLAY,icon_pixmap);
+      XFreePixmap(XCURSESDISPLAY,icon_pixmap_mask);
+      free(pixmap_file);
+   }
+#endif
+   XFreeGC(XCURSESDISPLAY, normal_gc);
+   XFreeGC(XCURSESDISPLAY, italic_gc);
+   XFreeGC(XCURSESDISPLAY, block_cursor_gc);
+   XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
+   XFreeGC(XCURSESDISPLAY, border_gc);
 #ifdef FOREIGN
- XDestroyIC(Xic);
+   XDestroyIC(Xic);
 #endif
 #if 0
- XCloseDisplay(XCURSESDISPLAY);
+   XCloseDisplay(XCURSESDISPLAY);
 #endif
- return(0);
+   return(0);
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -1496,6 +1524,18 @@ void XCursesGetIcon()
    }
    XFree((char *)icon_size);
 
+#ifdef HAVE_XPM_H
+   if (strcmp(XCURSESPIXMAPFILE,"") != 0) /* supplied pixmap */
+   {
+      rc = XpmReadFileToPixmap( XtDisplay(topLevel),
+                                RootWindowOfScreen(XtScreen(topLevel)),
+                                (char *)XCURSESPIXMAPFILE,
+                                &icon_pixmap,
+                                &icon_pixmap_mask,
+                                NULL );
+      return;
+   }
+#endif
    if (strcmp(XCURSESBITMAPFILE,"") != 0) /* supplied bitmap */
    {
       rc = XReadBitmapFile(XtDisplay(topLevel),
@@ -1503,7 +1543,7 @@ void XCursesGetIcon()
                          (char *)XCURSESBITMAPFILE,
                          &file_bitmap_width,
                          &file_bitmap_height,
-                         &icon_pixmap,
+                         &icon_bitmap,
                          &x_hot,
                          &y_hot);
       switch(rc)
@@ -1519,7 +1559,7 @@ void XCursesGetIcon()
             break;
       }
    }
-   icon_pixmap = XCreateBitmapFromData(XtDisplay(topLevel),
+   icon_bitmap = XCreateBitmapFromData(XtDisplay(topLevel),
                                      RootWindowOfScreen(XtScreen(topLevel)),
                                      (char *)bitmap_bits,
                                      icon_bitmap_width, 

@@ -110,6 +110,10 @@
 #include <Sunkeysym.h>
 #endif
 
+#ifdef HAVE_XPM_H
+# include <xpm.h>
+#endif
+
 #include <curses.h>
 
 #define XtNlines         "lines"
@@ -218,6 +222,9 @@ typedef struct
  XFontStruct *normalfont;
  XFontStruct *italicfont;
  char *bitmapFile;
+#ifdef HAVE_XPM_H
+ char *pixmapFile;
+#endif
  char *composeKey;
  Cursor pointer;
  int shmmin;
@@ -239,6 +246,9 @@ AppData app_data;
 #define XCURSESLINES            app_data.lines
 #define XCURSESCOLS             app_data.cols
 #define XCURSESBITMAPFILE       app_data.bitmapFile
+#ifdef HAVE_XPM_H
+# define XCURSESPIXMAPFILE      app_data.pixmapFile
+#endif
 #define XCURSESCOMPOSEKEY       app_data.composeKey
 #define XCURSESPOINTER          app_data.pointer
 #define XCURSESPOINTERFORECOLOR app_data.pointerForeColor
@@ -260,8 +270,13 @@ AppData app_data;
 #define MAX_COLORS   8  /* maximum of "normal" colours */
 #define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2*MAX_COLORS */
 #define COLOR_BORDER 17 /* colour of border - 2 more than 2*MAX_COLORS */
+#ifdef HAVE_XPM_H
+# define PDC_NUMBER_OPTIONS 33
+#define PDC_NUMBER_APP_RESOURCES 35
+#else
+# define PDC_NUMBER_OPTIONS 32
 #define PDC_NUMBER_APP_RESOURCES 34
-#define PDC_NUMBER_OPTIONS 32
+#endif
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
 #include "x11.h"
@@ -272,6 +287,9 @@ extern int XCursesFontAscent,XCursesFontDescent;
 extern int XCursesWindowWidth,XCursesWindowHeight;
 extern int resizeXCursesWindowWidth,resizeXCursesWindowHeight;
 extern char *bitmap_file;
+#ifdef HAVE_XPM_H
+extern char *pixmap_file;
+#endif
 extern MOUSE_STATUS Trapped_Mouse_status;
 extern unsigned long pdc_key_modifier;
 extern KeySym compose_key;
@@ -292,7 +310,11 @@ extern int selection_start_x;
 extern int selection_start_y;
 extern int selection_end_x;
 extern int selection_end_y;
+extern Pixmap icon_bitmap;
+#ifdef HAVE_XPM_H
 extern Pixmap icon_pixmap;
+extern Pixmap icon_pixmap_mask;
+#endif
 extern XtResource app_resources[PDC_NUMBER_APP_RESOURCES];
 extern XrmOptionDescRec options[PDC_NUMBER_OPTIONS];
 extern char global_display_name[100];

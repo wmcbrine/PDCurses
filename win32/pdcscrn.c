@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.4 2004/07/01 07:21:22 rexx Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.5 2004/09/10 07:47:44 rexx Exp $";
 #endif
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
@@ -269,9 +269,6 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
    SetConsoleActiveScreenBuffer(hConOut);
 
    PDC_reset_prog_mode();
-
-   GetNumberOfConsoleMouseButtons((LPDWORD)&numbuttons);
-   internal->num_mouse_buttons = (int)numbuttons;
 
    PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
    internal->direct_video  = TRUE; /* Assume that we can      */

@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.5 2002/07/29 06:19:40 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.6 2002/07/29 07:13:28 mark Exp $";
 
 #include "rxpack.h"
 
@@ -220,7 +220,7 @@ int main
    /* 
     * Register all external functions
     */
-   if ( ( rc = RegisterRxFunctions( RxPackageGlobalData, GETPACKAGEFUNCTIONS() ) ) != 0 )
+   if ( ( rc = RegisterRxFunctions( RxPackageGlobalData, GETPACKAGEFUNCTIONS(), RXPACKAGENAME ) ) != 0 )
       return( rc );
    /* 
     * Register a default subcommand handler to pass commands to the OS

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.10 2002/07/29 06:57:33 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.11 2002/07/29 07:12:03 mark Exp $";
 
 #include "rxpack.h"
 
@@ -707,11 +707,12 @@ int RegisterRxSubcom
 int RegisterRxFunctions
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions, char *name )
 #else
-   ( RxPackageGlobalData,  RxPackageFunctions )
+   ( RxPackageGlobalData,  RxPackageFunctions, name )
    RxPackageGlobalDataDef *RxPackageGlobalData;
    RexxFunction *RxPackageFunctions;
+   char *name;
 #endif
 
 {
@@ -728,7 +729,7 @@ fprintf(stderr,"%s %d %d %d %s\n",__FILE__,__LINE__,rc,func->DllLoad,func->Inter
       if (func->DllLoad)
       {
          rc = RexxRegisterFunctionDll( func->ExternalName,
-              RXPACKAGENAME,
+              name,
               func->InternalName );
          InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (DLL) %s with rc = %ld\n",__FILE__,__LINE__,func->ExternalName,rc);
       }
@@ -871,7 +872,7 @@ RxPackageGlobalDataDef *InitRxPackage
    {
       *rc = (*ptr)( );
    }
-   DEBUGDUMP(fprintf(stderr,"%s-%d: End of InitRxPackage with rc = %ld\n",__FILE__,__LINE__,rc);)
+   DEBUGDUMP(fprintf(stderr,"%s-%d: End of InitRxPackage with rc = %ld\n",__FILE__,__LINE__,*rc);)
    return RxPackageGlobalData;
 }
 

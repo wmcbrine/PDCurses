@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.21 2003/02/17 06:38:23 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.22 2003/02/17 08:22:59 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1657,7 +1657,7 @@ int RxSetConstantPrefix
 
    if ( ( strlen( name ) + 1 ) > sizeof( RxPackageGlobalData->ConstantPrefix ) )
    {
-      (void)fprintf( stderr, "ERROR: Could not open trace file: %s for writing\n", name );
+      (void)fprintf( stderr, "ERROR: Constant prefix is too long. It must be <= %d\n", sizeof( RxPackageGlobalData->ConstantPrefix ) - 1 );
       return( 1 );
    }
    strcpy( RxPackageGlobalData->ConstantPrefix, name );

@@ -28,7 +28,6 @@ void SelectionSet( void );
 
 int write_socket(int,char *,int);
 int read_socket(int,char *,int);
-int XCursesSendKeyToCurses(unsigned long);
 int XCursesSetupX(char *display_name,int argc, char *argv[]);
 RETSIGTYPE XCursesSigwinchHandler(int signo);
 #else    
@@ -61,7 +60,6 @@ void SelectionSet();
 
 int write_socket();
 int read_socket();
-int XCursesSendKeyToCurses();
 int XCursesSetupX();
 RETSIGTYPE XCursesSigwinchHandler();
 #endif

@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.10 2003/09/11 10:22:03 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.11 2004/01/01 01:13:34 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -892,6 +892,7 @@ int   PDC_rawgetch(void)
 
    int   c=0;
    int   oldc=0;
+   bool  return_immediately;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
@@ -900,7 +901,12 @@ int   PDC_rawgetch(void)
    if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
       return( -1 );
 
-   if (_getch_win_->_nodelay && !PDC_breakout()) /* @@ */
+   if (SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
+      return_immediately = TRUE;
+   else
+      return_immediately = FALSE;
+
+   if (return_immediately && !PDC_breakout())
       return( -1 );
 
    while (1)      /* loop to get valid char */
@@ -981,7 +987,8 @@ int   PDC_sysgetch(void)
 {
    extern   WINDOW*  _getch_win_;
 
-   int c=0;
+   int  c=0;
+   bool return_immediately;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_sysgetch() - called\n");
@@ -990,7 +997,12 @@ int   PDC_sysgetch(void)
    if (_getch_win_ == (WINDOW *)NULL)  /* @@ */
       return (-1);
 
-   if (_getch_win_->_nodelay && !PDC_breakout())
+   if (SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
+      return_immediately = TRUE;
+   else
+      return_immediately = FALSE;
+
+   if (return_immediately && !PDC_breakout())
       return (-1);
 
    while (1)

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.31 2003/03/01 12:33:32 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.32 2003/03/02 08:53:46 mark Exp $";
 
 #include "rxpack.h"
 
@@ -435,7 +435,7 @@ int DropRexxVariable
    {
       if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
       {
-         char buf1[50], buf2[50];
+         char buf1[50];
          char *err;
          switch( rc )
          {

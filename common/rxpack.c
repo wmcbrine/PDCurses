@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.39 2003/12/27 04:37:29 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.40 2004/01/02 21:01:01 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1581,7 +1581,7 @@ int SetPackageConstants
 #endif
 
 {
-   int varlen=0,vallen,rc;
+   int varlen=0,vallen=0,rc;
    char varname[250];
    char *value=NULL;
    char buf[100];

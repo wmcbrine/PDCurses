@@ -893,12 +893,15 @@ case "$target" in
 		EEXTRA="-mf -N0x20000 -Q"
 		;;
 	*cygwin)
-		LIBPRE=""
+		LIBPRE="lib"
 		SHLPRE=""
 		DYN_COMP="-DDYNAMIC"
 		LIBPST=".a"
 		SHLPST=".dll"
 		EXE=".exe"
+		LD_RXLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
+		BASE_INSTALL="cygwininstall"
+		BASE_BINARY="cygwinbinary"
 		;;
 	*)
 		;;

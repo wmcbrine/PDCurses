@@ -639,6 +639,10 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
                                         XtNwidthInc,XCursesFontWidth,
                                         XtNheightInc,XCursesFontHeight,
                                         NULL);
+      XtVaSetValues( topLevel,
+                     XtNwidthInc,XCursesFontWidth,
+                     XtNheightInc,XCursesFontHeight,
+                     NULL);
    }
 
 #if 0

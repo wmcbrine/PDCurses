@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.9 2002/07/29 06:52:39 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.10 2002/07/29 06:57:33 mark Exp $";
 
 #include "rxpack.h"
 
@@ -707,11 +707,11 @@ int RegisterRxSubcom
 int RegisterRxFunctions
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction **RxPackageFunctions )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions )
 #else
    ( RxPackageGlobalData,  RxPackageFunctions )
    RxPackageGlobalDataDef *RxPackageGlobalData;
-   RexxFunction **RxPackageFunctions;
+   RexxFunction *RxPackageFunctions;
 #endif
 
 {
@@ -720,7 +720,7 @@ int RegisterRxFunctions
 
    InternalTrace( RxPackageGlobalData, "RegisterRxFunctions", NULL );
 
-   for ( func = *RxPackageFunctions; func->InternalName; func++ )
+   for ( func = RxPackageFunctions; func->InternalName; func++ )
    {
 #if defined(DYNAMIC_LIBRARY)
 fprintf(stderr,"%s %d %d %d %s\n",__FILE__,__LINE__,rc,func->DllLoad,func->InternalName);
@@ -798,10 +798,10 @@ int QueryRxFunction
 int DeregisterRxFunctions
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction **RxPackageFunctions, int verbose )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RexxFunction *RxPackageFunctions, int verbose )
 #else
    ( RxPackageGlobalData, RxPackageFunctions, verbose )
-   RexxFunction **RxPackageFunctions;
+   RexxFunction *RxPackageFunctions;
    RxPackageGlobalDataDef *RxPackageGlobalData;
    int verbose;
 #endif
@@ -812,7 +812,7 @@ int DeregisterRxFunctions
 
    InternalTrace( RxPackageGlobalData, "DeregisterRxFunctions", "%d", verbose );
 
-   for ( func = *RxPackageFunctions; func->InternalName; func++ )
+   for ( func = RxPackageFunctions; func->InternalName; func++ )
    {
       assert( func->ExternalName );
       rc = RexxDeregisterFunction( func->ExternalName );
@@ -882,10 +882,10 @@ RxPackageGlobalDataDef *InitRxPackage
 int TermRxPackage
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageTerminator *ptr, RexxFunction **RxPackageFunctions, char *progname, int deregfunc )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageTerminator *ptr, RexxFunction *RxPackageFunctions, char *progname, int deregfunc )
 #else
    ( RxPackageGlobalData, ptr, RxPackageFunctions, progname, deregfunc )
-   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RxPackageGlobalDataDef RxPackageGlobalData;
    PackageTerminator *ptr;
    RexxFunction **RxPackageFunctions;
    char *progname;

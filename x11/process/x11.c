@@ -1020,7 +1020,7 @@ printf("Notify: %d\n",event->type);
          SP->lines = XCursesLINES = ((resizeXCursesWindowHeight-(2*XCURSESBORDERWIDTH)) / XCursesFontHeight);
          LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
          SP->cols =  COLS  = XCursesCOLS = ((resizeXCursesWindowWidth-(2*XCURSESBORDERWIDTH)) / XCursesFontWidth);
-printf("X11:LINES %d COLS %d\n",SP->lines, SP->cols);
+fprintf(stderr,"%s %d: X11:LINES %d COLS %d\n",__FILE__,__LINE__,SP->lines, SP->cols);
 #endif
          XCursesSendKeyToCurses( (unsigned long)KEY_RESIZE, NULL );
          break;

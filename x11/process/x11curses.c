@@ -226,7 +226,7 @@ int delaytenths;
 #if 000
                LINES = XCursesLINES = SP->lines - SP->linesrippedoff - SP->slklines;
                XCursesCOLS = COLS = SP->cols;
-printf("LINES %d COLS %d\n",LINES,COLS);
+fprintf(stderr,"%s %d: LINES %d COLS %d\n",__FILE__,__LINE__,LINES,COLS);
 #endif
             }
          }

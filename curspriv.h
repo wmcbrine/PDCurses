@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.2 2001/01/10 08:31:36 mark Exp $
+$Id: curspriv.h,v 1.3 2001/01/10 08:31:37 mark Exp $
 */
 /*
 *
@@ -367,8 +367,8 @@ void            PDC_doupdate(void);
 
 # if defined (XCURSES)
 int             XCurses_redraw_curscr(void);
-int             XCurses_display_cursor(int,int,int,int);
-int             XCurses_rawgetch(void);
+int             XCurses_display_cursor(int,int,int,int,int);
+int             XCurses_rawgetch(int);
 bool            XCurses_kbhit(void);
 int             XCurses_get_input_fd(void);
 int             XCursesInstruct(int);
@@ -381,7 +381,6 @@ int             XCursesResizeScreen( int, int );
 int             XCurses_get_cols(void);
 int             XCurses_get_rows(void);
 int             XCurses_refresh_scrollbar(void);
-void            XCurses_set_title(char *);
 void            XCurses_set_title(char *);
 int             XCurses_getclipboard( char **, long * );
 int             XCurses_setclipboard( char *, long );
@@ -487,8 +486,8 @@ void            PDC_doupdate( /*void*/ );
 
 # if defined ( XCURSES )
 int             XCurses_redraw_curscr( /*void*/ );
-int             XCurses_display_cursor( /*int,int,int,int*/ );
-int             XCurses_rawgetch( /*void*/ );
+int             XCurses_display_cursor( /*int,int,int,int,int*/ );
+int             XCurses_rawgetch( /*int*/ );
 bool            XCurses_kbhit( /*void*/ );
 int             XCurses_get_input_fd( /*void*/ );
 int             XCursesInstruct( /*int*/ );
@@ -575,6 +574,7 @@ WINDS*          PDC_findwin( /* WINDOW* */ );
 #define CURSES_TITLE               999989
 #define CURSES_GET_SELECTION       999988
 #define CURSES_SET_SELECTION       999987
+#define CURSES_DISPLAY_CURSOR      999986
 
 #define XCURSCR_Y_SIZE      (XCursesLINES*XCursesCOLS*sizeof(chtype))
 #define XCURSCR_FLAG_SIZE   (XCursesLINES*sizeof(int))

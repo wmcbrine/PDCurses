@@ -754,9 +754,9 @@ BASE_BINARY="binarybase"
 SHLPRE="lib"
 SHLPST=".so"
 LD_RXLIB1=""
-USE_ABI="no"
+CAN_USE_ABI="no"
 # If the build OS can handle version numbers in the shared library name,
-# then set SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
+# and the user requests it, then set SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
 SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
 # OTHER_INSTALLS is set to install a non-version numbered shared library
 # by default; ie. no .\$(ABI) suffix. If the regina executable is not built,
@@ -814,13 +814,15 @@ case "$target" in
 		;;
 	*linux*)
 		LD_RXLIB1="${CC} -shared"
-		USE_ABI="yes"
-		OTHER_INSTALLS="installabilib"
-		SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
+		CAN_USE_ABI="yes"
+		if test "$USE_ABI" = "yes"; then
+			OTHER_INSTALLS="installabilib"
+			SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
+		fi
 		;;
-        *atheos*)
-                LD_RXLIB1="${CC} -shared"
-                ;;
+	*atheos*)
+		LD_RXLIB1="${CC} -shared"
+		;;
 	*freebsd*)
 		LD_RXLIB1="ld -Bdynamic -Bshareable"
 		;;
@@ -907,7 +909,7 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 		SHL_TARGETS=""
 		for a in $SHLFILES
 		do
-			if test "$USE_ABI" = "yes"; then
+			if test "$USE_ABI" = "yes" -a "$CAN_USE_ABI" = "yes"; then
 				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
 			else
 				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"

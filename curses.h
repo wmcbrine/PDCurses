@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.16 2003/06/23 07:56:18 mark Exp $
+$Id: curses.h,v 1.17 2003/12/13 06:02:12 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -625,6 +625,24 @@ PDCurses portable platform definitions list:
 #    define INCL_VIO
 #    define INCL_KBD
 #    include <os2.h>
+#    ifndef  DISPLAY_MONOCHROME
+#     define DISPLAY_MONOCHROME 0
+#    endif
+#    ifndef  DISPLAY_CGA
+#     define DISPLAY_CGA        1
+#    endif
+#    ifndef  DISPLAY_EGA
+#     define DISPLAY_EGA        2
+#    endif
+#    ifndef  DISPLAY_VGA
+#     define DISPLAY_VGA        3
+#    endif
+#    ifndef  DISPLAY_8514A
+#     define DISPLAY_8514A      7
+#    endif
+#    ifndef  DISPLAY_XGA
+#     define DISPLAY_XGA        9
+#    endif
 #  endif
 #  ifdef __NT__                         /* This specifies WIN32 target */
 #    ifdef INCLUDE_WINDOWS_H

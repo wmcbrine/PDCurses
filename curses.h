@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.5 2001/04/22 05:52:54 mark Exp $
+$Id: curses.h,v 1.6 2001/05/24 09:01:45 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -169,7 +169,7 @@ PDCurses portable platform definitions list:
 	                See notes in wclrtoeol() and wclrtoeof().
 **man-end**********************************************************************/
 
-#define PDC_BUILD	2501
+#define PDC_BUILD	2502
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1981,7 +1981,7 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 #define getpary(w)              (w)->_pary
 #define getparyx(w,y,x)         ( y = (w)->_pary, x = (w)->_parx )
 #define getstr(str)             wgetstr( stdscr, str )
-#define getnstr(str)            wgetnstr( stdscr, str, num )
+#define getnstr(str,num)        wgetnstr( stdscr, str, num )
 #define getyx(w,y,x)            ( y = (w)->_cury, x = (w)->_curx )
 #define has_colors()            ((SP->mono) ? FALSE : TRUE)
 #define idcok(w,flag)           OK

@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.12 2003/02/16 23:36:18 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.13 2003/02/17 06:36:38 mark Exp $";
 
 #include "rxpack.h"
 
@@ -237,8 +237,6 @@ int main
     * expects the same parameter list if called directly via the Rexx
     * interpreter.
     */
-   assert(retstr.strptr);
-   assert(ProgramName);
    RexxStart( ( RS_ARG0_TYPE )(ArgCount) ? 1 : 0,
               ( RS_ARG1_TYPE )&ArgList,
               ( RS_ARG2_TYPE )ProgramName,

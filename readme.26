@@ -18,11 +18,16 @@ BUGS FIXED:
 - Entering TAB in wgetnstr() no longer exceeds requested buffer size.
 - Reverse video of X11 selection reinstated. Pablo Garcia Abio??
 - Right Alt modifier now works like left Alt modifier under Win32
-- Add workaround for all libXaw replacement libraries with Scrollbar bug
+- Add support for all libXaw replacement libraries with Scrollbar bug. Note
+  that for this to work, you still have to change the libXaw replacement
+  libraries to fix the bug :-(
 
 NEW FEATURES:
-Clipboard support now available on DOS platform, but handled internally to the
-currently running process.
+- Clipboard support now available on DOS platform, but handled internally to the
+  currently running process.
+- new X11 resource; textCursor, allows the text cursor to be specified as a vertical
+  bar, or in the standard horizontal bar. Thanks to Frank Heckenbach for the
+  suggestion.
 
 NEW COMPILER SUPPORT:
 None

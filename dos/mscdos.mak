@@ -19,9 +19,8 @@ SIZE		=LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################
-VER=25
-VERDOT=2.5
-
+VER=26
+VERDOT=2.6
 
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h

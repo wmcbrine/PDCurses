@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.1 2001/01/10 08:30:49 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.2 2001/04/22 05:54:02 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -186,7 +186,7 @@ static KPTAB kptab[] =
  {PADSTAR,    SHF_PADSTAR,CTL_PADSTAR, ALT_PADSTAR,999         }, /* 106 */
  {PADPLUS,    SHF_PADPLUS,CTL_PADPLUS, ALT_PADPLUS,999         }, /* 107 */
  {0,          0,          0,           0,          0           }, /* 108 */
- {PADMINUS,   SHF_PADMINUS,CTL_PADMINUS,ALT_PADMINUS,999        }, /* 109 */
+ {PADMINUS,   SHF_PADMINUS,CTL_PADMINUS,ALT_PADMINUS,999       }, /* 109 */
  {0x2E,       0,          CTL_PADSTOP, ALT_PADSTOP,0           }, /* 110 */
  {0,          0,          0,           0,          2           }, /* 111 */
  {KEY_F(1),   KEY_F(13),  KEY_F(25),   KEY_F(37),  0           }, /* 112 */
@@ -315,11 +315,11 @@ static KPTAB ext_kptab[] =
  {KEY_END,    KEY_SEND,       CTL_END,     ALT_END     }, /* 35 */
  {KEY_HOME,   KEY_SHOME,      CTL_HOME,    ALT_HOME    }, /* 36 */
  {KEY_LEFT,   KEY_SLEFT,      CTL_LEFT,    ALT_LEFT    }, /* 37 */
- {KEY_UP,     SHF_UP,         CTL_UP,      ALT_UP      }, /* 38 */
+ {KEY_UP,     KEY_SUP,        CTL_UP,      ALT_UP      }, /* 38 */
  {KEY_RIGHT,  KEY_SRIGHT,     CTL_RIGHT,   ALT_RIGHT   }, /* 39 */
- {KEY_DOWN,   SHF_DOWN,       CTL_DOWN,    ALT_DOWN    }, /* 40 */
- {KEY_IC,     SHF_IC,         CTL_INS,     ALT_INS     }, /* 45 */
- {KEY_DC,     SHF_DC,         CTL_DEL,     ALT_DEL     }, /* 46 */
+ {KEY_DOWN,   KEY_SDOWN,      CTL_DOWN,    ALT_DOWN    }, /* 40 */
+ {KEY_IC,     KEY_SIC,        CTL_INS,     ALT_INS     }, /* 45 */
+ {KEY_DC,     KEY_SDC,        CTL_DEL,     ALT_DEL     }, /* 46 */
  {PADSLASH,   SHF_PADSLASH,   CTL_PADSLASH,ALT_PADSLASH}, /* 191 */
 };
  /* End of kptab[]		 */

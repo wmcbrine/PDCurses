@@ -32,7 +32,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.2 2001/01/10 08:28:43 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.3 2001/04/22 05:53:45 mark Exp $";
 #endif
 
 /*******************************************************************************
@@ -53,6 +53,12 @@ static int kptab[] =
  0x4b, KEY_LEFT, 0x4c, KEY_B2,   0x4d, KEY_RIGHT,
  0x4f, KEY_END,  0x50, KEY_DOWN, 0x51, KEY_NPAGE,
  0x52, KEY_IC,   0x53, KEY_DC,
+
+ /* Shifted Keypad		 */
+ 0xb0, KEY_SHOME, 0xb1, KEY_SUP,   0xb2, KEY_SPREVIOUS,
+ 0xb3, KEY_SLEFT, 0xb4, KEY_SRIGHT,
+ 0xb5, KEY_SEND,  0xb6, KEY_SDOWN, 0xb7, KEY_SNEXT,
+ 0xb8, KEY_SIC,   0xb9, KEY_SDC,
 
  /* Shft-Function Keys	 */
  0x54, KEY_F(13), 0x55, KEY_F(14), 0x56, KEY_F(15), 0x57, KEY_F(16),
@@ -336,6 +342,26 @@ int	PDC_get_bios_key()
 	||  (scan == 0x4e && ascii == 0x2b)  /* Plus */
 	||  (scan == 0xe0 && ascii == 0x2f)) /* Slash */
 		return ((int) ((ascii & 0x0f) | 0xf0) << 8);
+	if (ascii == 0xe0 && scan == 0x47 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Home */
+		return ((int) (0xb0 << 8));
+	if (ascii == 0xe0 && scan == 0x48 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Up */
+		return ((int) (0xb1 << 8));
+	if (ascii == 0xe0 && scan == 0x49 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift PgUp */
+		return ((int) (0xb2 << 8));
+	if (ascii == 0xe0 && scan == 0x4b && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Left */
+		return ((int) (0xb3 << 8));
+	if (ascii == 0xe0 && scan == 0x4d && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Right */
+		return ((int) (0xb4 << 8));
+	if (ascii == 0xe0 && scan == 0x4f && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift End */
+		return ((int) (0xb5 << 8));
+	if (ascii == 0xe0 && scan == 0x50 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Down */
+		return ((int) (0xb6 << 8));
+	if (ascii == 0xe0 && scan == 0x51 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift PgDn */
+		return ((int) (0xb7 << 8));
+	if (ascii == 0xe0 && scan == 0x52 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Ins */
+		return ((int) (0xb8 << 8));
+	if (ascii == 0xe0 && scan == 0x53 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Del */
+		return ((int) (0xb9 << 8));
 	if (ascii == 0x00 || ascii == 0xe0)
 		return ((int) (scan << 8));
 	return ((int) (ascii));

@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.3 2002/01/12 02:44:03 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.4 2002/05/11 04:29:54 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -449,7 +449,11 @@ WINDOW *win;
     wmove(win, 9, 10);
     wrefresh(win);
     echo();
+/*
     noraw();
+*/
+    keypad(win, TRUE);
+    raw();
     wgetnstr(win, buffer, 3);
     flushinp();
 
@@ -468,6 +472,14 @@ WINDOW *win;
     wrefresh(win);
     mvwscanw(win, 7, 6, "%d %s", &num,buffer);
     mvwprintw(win, 8, 6, "String: %s Number: %d", buffer,num);
+    Continue(win);
+
+    refresh();
+    wclear (win);
+    echo();
+    mvwaddstr(win, 3, 2, "Enter a 5 character string: ");
+    wgetnstr(win,buffer,5);
+    mvwprintw(win, 4, 2, "String: %s", buffer);
     Continue(win);
 }
 #ifdef __STDC__

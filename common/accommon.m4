@@ -801,7 +801,11 @@ case "$target" in
 		LD_RXLIB1="ld -G"
 		;;
 	*solaris*)
-		LD_RXLIB1="ld -G"
+		if test "$ac_cv_prog_CC" = "gcc"; then
+			LD_RXLIB1="gcc -shared"
+		else
+			LD_RXLIB1="ld -G"
+		fi
 		;;
 	*esix*)
 		LD_RXLIB1="ld -G"

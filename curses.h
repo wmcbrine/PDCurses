@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.10 2002/03/22 22:37:17 mark Exp $
+$Id: curses.h,v 1.11 2002/05/11 09:44:32 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -2038,8 +2038,7 @@ int     PDC_CDECL	PDC_set_line_color( /* short */ );
 #define napms(ms)               delay_output(ms)
 #define nl()                    (SP->autocr = TRUE)
 #define nonl()                  (SP->autocr = FALSE)
-#define pechochar(w,c)          (waddch(w,(chtype)c)==ERR?ERR:prefresh(w))
-#define redrawwin(w)            wredrawln((w),0,(win)->_maxy)
+#define redrawwin(w)            wredrawln((w),0,(w)->_maxy)
 #define refresh()               wrefresh( stdscr )
 #define resetterm()             reset_shell_mode()
 #define saveterm()              def_prog_mode()

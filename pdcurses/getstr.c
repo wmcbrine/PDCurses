@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.4 2002/05/11 09:53:37 mark Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.5 2002/11/27 11:23:43 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -270,12 +270,15 @@ int n;
             num = t - (win->_curx - x)%t;
             for (i=0; i<num; i++)
             {
-               if (oldecho) 
-                  waddch (win, ch);
-               *p++ = ch;
-               chars ++;
-               if ( chars >= n )
-                  break;
+               if (chars < n)
+               {
+                  if (oldecho) 
+                     waddch (win, ch);
+                  *p++ = ch;
+                  ++chars;
+               }
+               else
+                  beep();
             }
             break;
 
@@ -330,15 +333,18 @@ int n;
             break;
 
          default:
-            *p++ = ch;
-            if (oldecho) 
-               waddch (win, ch);
-            chars ++;
+            if (chars < n)
+            {
+               *p++ = ch;
+               if (oldecho) 
+                  waddch (win, ch);
+               chars ++;
+            }
+            else
+               beep();
             break;
       }
       wrefresh (win);
-      if (chars >= n)
-         break;
    }
    *p = '\0';
 

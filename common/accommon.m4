@@ -1,3 +1,20 @@
+dnl ---------------------------------------------------------------------------
+dnl This file offers the following common macros...
+dnl ---------------------------------------------------------------------------
+CHECK_REXX
+MH_IPC
+MH_CHECK_X_INC
+MH_CHECK_X_LIB
+MH_HAVE_PROTO
+MH_PROG_CC
+MH_CHECK_X_HEADERS
+MH_CHECK_X_KEYDEFS
+MH_TRY_LINK
+MH_CHECK_LIB
+MH_HOWTO_SHARED_LIBRARY
+MH_SHARED_LIBRARY
+MH_HOWTO_DYN_LINK
+MH_CHECK_CC_O
 
 dnl ---------------------------------------------------------------------------
 dnl Check REXX library and header files
@@ -9,13 +26,16 @@ dnl
 dnl Setup various things for different interpreters
 dnl
 extra_rexx_libs=""
+extra_rexx_defines=""
+orexx_incdirs=""
+orexx_libdirs=""
 case "$with_rexx" in
 	regina)               dnl -------- Regina
-	AC_DEFINE(USE_REGINA)
-	rexx_h="rexxsaa.h"
-	rexx_l="regina"
-	REXX_INT="Regina"
-	REXX_TARGET="Regina"
+		AC_DEFINE(USE_REGINA)
+		rexx_h="rexxsaa.h"
+		rexx_l="regina"
+		REXX_INT="Regina"
+		REXX_TARGET="Regina"
 		case "$target" in
 			*nto-qnx*)
 			AC_SEARCH_LIBS(dlopen,dl)
@@ -39,6 +59,15 @@ case "$with_rexx" in
 		REXX_INT="Object Rexx"
 		REXX_TARGET="ObjectRexx"
 		extra_rexx_libs="-lrexx"
+		orexx_incdirs="/opt/orexx /usr/local/orexx"
+		orexx_libdirs="/opt/orexx/lib /usr/local/orexx/lib"
+		case "$target" in
+			*linux*)
+			extra_rexx_defines="-DLINUX"
+			;;
+			*)
+			;;
+		esac
 	AC_SEARCH_LIBS(pthread_create,pthread pthreads thread)
 	;;
 	rexximc)              dnl -------- Rexx/imc
@@ -110,12 +139,12 @@ dnl look for REXX header and library, exit if not found
 	mh_rexx_inc_dir=""
 	mh_inc_dirs="\
 	    ${REXXINCDIR}             \
+	    ${orexx_incdirs}          \
 	    ${HOME}/include           \
 	    /usr/local/include        \
 	    /usr/contrib/include      \
 	    /opt/include              \
 	    /usr/include              \
-	    /usr/local/orexx          \
 	    /usr/unsupported/include"
 dnl
 dnl Provide for user supplying directory
@@ -133,7 +162,7 @@ dnl
 	  fi
 	done
 	if test "x$mh_rexx_inc_dir" != "x" ; then
-		REXX_INCLUDES="-I$mh_rexx_inc_dir"
+		REXX_INCLUDES="-I$mh_rexx_inc_dir $extra_rexx_defines"
 		AC_MSG_RESULT(found in $mh_rexx_inc_dir)
 		AC_SUBST(REXX_INCLUDES)
 	else
@@ -143,12 +172,12 @@ dnl
 	mh_rexx_lib_dir=""
 	mh_lib_dirs="\
 	    ${REXXLIBDIR}             \
+	    ${orexx_libdirs}          \
 	    ${HOME}/lib               \
 	    /usr/local/lib            \
 	    /usr/contrib/lib          \
 	    /opt/lib                  \
 	    /usr/lib                  \
-	    /usr/local/orexx/lib      \
 	    /usr/unsupported/lib"
 dnl
 dnl Provide for user supplying directory
@@ -196,6 +225,7 @@ if test $ac_cv_header_sys_ipc_h = no; then
 	AC_MSG_ERROR(Cannot find required header file sys/ipc.h; XCurses cannot be configured)
 fi
 ])dnl
+
 dnl ---------------------------------------------------------------------------
 dnl Set up the correct X header file location
 dnl ---------------------------------------------------------------------------
@@ -279,6 +309,7 @@ else
 	AC_MSG_ERROR(Cannot find required header file Intrinsic.h; XCurses cannot be configured)
 fi
 ])dnl
+
 dnl ---------------------------------------------------------------------------
 dnl Set up the correct X library file location
 dnl ---------------------------------------------------------------------------
@@ -451,6 +482,7 @@ if test "$mh_hpux9_flag" = yes ; then
 fi
 	AC_SUBST(MH_XLIBS)
 ])dnl
+
 dnl ---------------------------------------------------------------------------
 dnl Determine if C compiler handles ANSI prototypes
 dnl ---------------------------------------------------------------------------
@@ -467,6 +499,7 @@ AC_TRY_COMPILE([#include <stdio.h>],
   mh_have_proto=yes; AC_DEFINE(HAVE_PROTO), mh_have_proto=no )
 AC_MSG_RESULT($mh_have_proto)
 ])dnl
+
 dnl ---------------------------------------------------------------------------
 dnl Determine the best C compiler to use given a list
 dnl ---------------------------------------------------------------------------
@@ -585,7 +618,7 @@ done
 dnl ---------------------------------------------------------------------------
 dnl Work out how to create a shared library
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(MH_HOWTO_SHARED_LIBRARY,
+AC_DEFUN([MH_HOWTO_SHARED_LIBRARY],
 [
 AC_MSG_CHECKING(how to create a shared library)
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&AC_FD_CC'
@@ -651,6 +684,52 @@ rm -f conftest*
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Work out how to create a dynamically loaded module
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([MH_HOWTO_DYN_LINK],
+[
+mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&AC_FD_CC'
+cat > conftest.$ac_ext <<EOF
+dnl [#]line __oline__ "[$]0"
+[#]line __oline__ "configure"
+int foo()
+{
+return(0);
+}
+EOF
+if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
+	mh_dyn_link='ld -shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
+#	mh_dyn_link='${CC} -Wl,-shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
+	if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
+		LD_RXLIB1="ld -shared"
+#		LD_RXLIB1="${CC} -Wl,-shared"
+		LD_RXLIB2="${REXX_LIBS}"
+		SHLPRE="lib"
+		SHLPST=".so"
+		RXLIBLEN="6"
+	else
+		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
+#		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
+		if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
+			LD_RXLIB1="ld -G"
+#			LD_RXLIB1="${CC} -Wl,-G"
+			LD_RXLIB2="${REXX_LIBS}"
+			SHLPRE="lib"
+			SHLPST=".so"
+			RXLIBLEN="6"
+		else
+			LD_RXLIB1=""
+			LD_RXLIB2=""
+			SHLPRE=""
+			SHLPST=""
+			RXLIBLEN="0"
+		fi
+	fi
+fi
+rm -f conftest*
+])dnl
+
+dnl ---------------------------------------------------------------------------
 dnl Determine how to build shared libraries etc..
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_SHARED_LIBRARY],
@@ -659,40 +738,46 @@ dnl
 dnl If compiler is gcc, then flags should be the same for all platforms
 dnl (just guessing on this)
 dnl
-SHLPST=".so"
-SHLPRE="lib"
-LIBFILE="regina"
-SHLFILE="regina"
 OSAVE=".o.save"
 OBJ="o"
 EXE=""
-LIBPST=".a"
-LIBPRE="lib"
-LIBEXE="ar"
 GETOPT=""
-OBJECTS='$('OFILES')'
 STATIC_LDFLAGS=""
+DYNAMIC_LDFLAGS=""
 AIX_DYN="no"
 BEOS_DYN="no"
+SHLFILE="$1"
+SHLFILES="$*"
+RXPACKEXPORTS=""
+BASE_INSTALL="installbase"
+BASE_BINARY="binarybase"
+SHLPRE="lib"
+SHLPST=".so"
+LD_RXLIB1=""
 
 AC_REQUIRE([AC_CANONICAL_SYSTEM])
 case "$target" in
-	*hp-hpux10*)
-		SYS_DEFS="-D_HPUX_SOURCE"
-		SHL="sl"
-		;;
 	*hp-hpux*)
 		SYS_DEFS="-D_HPUX_SOURCE"
-		SHL="sl"
-		;;
-	*ibm-aix4.2*)
-		SYS_DEFS="-D_ALL_SOURCE -DAIX"
-		DYN_COMP="-DDYNAMIC"
-		SHL="a"
+		EEXTRA="-Wl,-E"
+		LD_RXLIB1="ld -b -q -n"
+		SHLPST=".sl"
+		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
+		if test "$with_rexx6000" = yes; then
+			mh_entry="-eInitFunc"
+		else
+			mh_entry="-bnoentry"
+		fi
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
-		SHL="a"
+		AIX_DYN="yes"
+		DYN_COMP="-DDYNAMIC"
+		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
+		LD_RXLIB1="ld $mh_entry -bM:SRE"
+		SHLPST=".a"
+		RXPACKEXPORTS="-bE:$SHLFILE.exp"
+		RXPACKEXP="$SHLFILE.exp"
 		;;
 	*dec-osf*)
 		if test "$ac_cv_prog_CC" = "gcc"; then
@@ -700,26 +785,47 @@ case "$target" in
 		else
 			SYS_DEFS="-D_POSIX_SOURCE -D_XOPEN_SOURCE -Olimit 800"
 		fi
+		LD_RXLIB1="ld -shared"
 		;;
 	*sequent-dynix*)
+		LD_RXLIB1="ld -G"
 		;;
 	*solaris*)
+		LD_RXLIB1="ld -G"
 		;;
 	*esix*)
+		LD_RXLIB1="ld -G"
+		;;
+	*dgux*)
+		LD_RXLIB1="ld -G"
 		;;
 	sparc*sunos*)
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
+		LD_RXLIB1="ld"
 		;;
 	*linux*)
+		LD_RXLIB1="${CC} -shared"
+		;;
+	*freebsd*)
+		LD_RXLIB1="ld -Bdynamic -Bshareable"
 		;;
 	*nto-qnx*)
+		LD_RXLIB1="${CC} -shared"
+		;;
+	*beos*)
+		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
+		BEOS_DYN="yes"
+		BASE_INSTALL="beosinstall"
+		BASE_BINARY="beosbinary"
 		;;
 	*qnx*)
 		LIBPRE=""
 		LIBPST=".lib"
 		SHLPRE=""
 		SHLPST=""
+		DYN_COMP="-Q"   # force no check for dynamic loading
 		SHLFILE=""
+		EEXTRA="-mf -N0x20000 -Q"
 		;;
 	*cygwin)
 		LIBPRE=""
@@ -729,10 +835,15 @@ case "$target" in
 		SHLPST=".dll"
 		EXE=".exe"
 		;;
+	*)
+		;;
 esac
 
 dnl
-dnl set variables for compiling if we don't already have it
+dnl determine what switches our compiler uses for building objects
+dnl suitable for inclusion in shared libraries
+dnl Only call this if DYN_COMP is not set. If we have set DYN_COMP
+dnl above, then we know how to compile AND link for synamic libraries
 dnl
 if test "$DYN_COMP" = ""; then
 AC_MSG_CHECKING(compiler flags for a dynamic object)
@@ -768,387 +879,89 @@ EOF
 	if test "$DYN_COMP" = ""; then
 		AC_MSG_RESULT(none of $mh_cv_flags supported)
 	fi
+	if test "$LD_RXLIB1" = ""; then
+		MH_HOWTO_DYN_LINK()
+	fi
 	CFLAGS=$save_cflags
 	rm -f conftest.*
 fi
 
-dnl
-dnl set variables for linking
-dnl
-SHL_LD=""
-TEST1EXPORTS=""
-TEST2EXPORTS=""
-TEST1EXP=""
-TEST2EXP=""
-REGINAEXP=""
-
-# If the build OS can handle version numbers in the shared library name,
-# then set SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
-SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
-
-# OTHER_INSTALLS is set to install a non-version numbered shared library
-# by default; ie. no .\$(ABI) suffix. If the regina executable is not built, 
-# then there is no shared library. Set OTHER_INSTALLS="installabilib" if you
-# are building a version numbered shared library.
-OTHER_INSTALLS="installlib"
-BASE_INSTALL="installbase"
-BASE_BINARY="binarybase"
-USE_ABI="no"
-case "$target" in
-	*hp-hpux*)
-		EEXTRA="-Wl,-E"
-		LD_RXLIB_A1="ld -b -q -n"
-		LD_RXLIB_A2="ld -b -q -n"
-#		LD_RXLIB1="${CC} -Wl,-b,-q,-n"
-		LD_RXLIB_B1=""
-		LD_RXLIB_B2=""
-		DYNAMIC_LDFLAGS="-Wl,+s"
-		SHLPRE="lib"
-		SHLPST=".sl"
-		RXLIBLEN="6"
-		SHL_LD="ld -b -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-#		SHL_LD="${CC} -Wl,-b -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		;;
-#	*ibm-aix4.2*)
-#		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
-#		LD_RXLIB1="ld -G"
-#		LD_RXLIB2=""
-#		SHLPRE="lib"
-#		SHLPST=".so"
-#		RXLIBLEN="6"
-#		SHL_LD="ld -o ${SHLPRE}${SHLFILE}${SHLPST} -shared -no_archive "'$('SHOFILES')'" -lc"
-#		;;
-	*ibm-aix3*)
-		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
-		LD_RXLIB_A1="ld -bnoentry -bM:SRE -bT:512 -bH:512 -bI:regina.exp"
-		LD_RXLIB_A2="ld -bnoentry -bM:SRE -bT:512 -bH:512 -bI:regina.exp"
-		LD_RXLIB_B1="${SHLPRE}${SHLFILE}${SHLPST} -lc"
-		LD_RXLIB_B2="${SHLPRE}${SHLFILE}${SHLPST} -lc"
-		SHLPRE="lib"
-		SHLPST=".a"
-		RXLIBLEN="5"
-		TEST1EXPORTS="-bE:test1.exp"
-		TEST2EXPORTS="-bE:test2.exp"
-		TEST1EXP="test1.exp"
-		TEST2EXP="test2.exp"
-		REGINAEXP="regina.exp"
-		if test "$ac_cv_header_dlfcn_h" = "yes" -o "$HAVE_DLFCN_H" = "1"; then
-			AIX_DYN="yes"
-			DYN_COMP="-DDYNAMIC"
-			SHL_LD="ld -o ${SHLPRE}${SHLFILE}${SHLPST} -bnoentry -bE:regina.exp -bM:SRE -bT:512 -bH:512 "'$('SHOFILES')'" -lc"
-		else
-			SHL_LD=" "'$('LIBEXE')'" "'$('LIBFLAGS')'" "'$('SHOFILES')'
-			DYN_COMP=""
-		fi
-		;;
-	*ibm-aix4*)
-		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
-		LD_RXLIB_A1="ld -bnoentry -bM:SRE"
-		LD_RXLIB_A2="ld -bnoentry -bM:SRE"
-		LD_RXLIB_B1="${SHLPRE}${SHLFILE}${SHLPST} -lc"
-		LD_RXLIB_B2="${SHLPRE}${SHLFILE}${SHLPST} -lc"
-		SHLPRE="lib"
-		SHLPST=".a"
-		RXLIBLEN="5"
-		TEST1EXPORTS="-bE:test1.exp"
-		TEST2EXPORTS="-bE:test2.exp"
-		TEST1EXP="test1.exp"
-		TEST2EXP="test2.exp"
-		REGINAEXP="regina.exp"
-		if test "$ac_cv_header_dlfcn_h" = "yes" -o "$HAVE_DLFCN_H" = "1"; then
-			AIX_DYN="yes"
-			DYN_COMP="-DDYNAMIC"
-			SHL_LD="ld -o ${SHLPRE}${SHLFILE}${SHLPST} -bnoentry -bE:regina.exp -bM:SRE "'$('SHOFILES')'" -lc "'$('SHLIBS')'
-		else
-			SHL_LD=" "'$('LIBEXE')'" "'$('LIBFLAGS')'" "'$('SHOFILES')'
-			DYN_COMP=""
-		fi
-		;;
-	*dec-osf*)
-		LD_RXLIB_A1="ld -shared"
-		LD_RXLIB_A2="ld -shared"
-		LD_RXLIB_B1="-lc -L. -l${LIBFILE}"
-		LD_RXLIB_B2="-lc -L. -l${LIBFILE}"
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="ld -o ${SHLPRE}${SHLFILE}${SHLPST} -shared -no_archive "'$('SHOFILES')'" -lc"
-		;;
-	*esix*)
-		LD_RXLIB_A1="ld -G"
-		LD_RXLIB_A2="ld -G"
-		LD_RXLIB_B1=""
-		LD_RXLIB_B2=""
-		DYNAMIC_LDFLAGS=""
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="ld -G -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		;;
-	*dgux*)
-		LD_RXLIB_A1="ld -G"
-		LD_RXLIB_A2="ld -G"
-		LD_RXLIB_B1=""
-		LD_RXLIB_B2=""
-		DYNAMIC_LDFLAGS=""
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="ld -G -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		;;
-	*pc-sco*)
-		LD_RXLIB_A1="ld -dy -G"
-		LD_RXLIB_A2="ld -dy -G"
-		LD_RXLIB_B1=""
-		LD_RXLIB_B2=""
-		DYNAMIC_LDFLAGS=""
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="ld -dy -G -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		;;
-	*solaris*)
-		LD_RXLIB_A1="ld -G"
-		LD_RXLIB_A2="ld -G"
-		LD_RXLIB_B1=""
-		LD_RXLIB_B2=""
-		DYNAMIC_LDFLAGS=""
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="ld -G -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		;;
-	sparc*sunos*)
-		LD_RXLIB_A1="ld"
-		LD_RXLIB_A2="ld"
-		LD_RXLIB_B1=""
-		LD_RXLIB_B2=""
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="ld -assert pure-text -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		;;
-	*freebsd*)
-		LD_RXLIB_A1="ld -Bdynamic -Bshareable"
-		LD_RXLIB_A2="ld -Bdynamic -Bshareable"
-		LD_RXLIB_B1="-lc -L. -l${SHLFILE}"
-		LD_RXLIB_B2="-lc -L. -l${SHLFILE}"
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="ld -Bdynamic -Bshareable -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		;;
-	*linux*)
-		LD_RXLIB_A1="${CC} -shared"
-		LD_RXLIB_A2="${CC} -shared"
-		LD_RXLIB_B1="-L. -l${SHLFILE}"
-		LD_RXLIB_B2="-L. -l${SHLFILE}"
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="${CC} -o ${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI) -shared ${SHL_SCRIPT} -Wl,-soname=${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI) \$(SHOFILES) -lc"
-		SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}.\$(ABI)"
-		OTHER_INSTALLS="installabilib"
-		USE_ABI="yes"
-		;;
-	*atheos*)
-		LD_RXLIB_A1="${CC} -shared"
-		LD_RXLIB_A2="${CC} -shared"
-		LD_RXLIB_B1="-L. -l${LIBFILE} "'$('BOTHLIBS')'
-		LD_RXLIB_B2="-L. -l${LIBFILE} "'$('BOTHLIBS')'
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="${CC} -o ${SHLPRE}${SHLFILE}${SHLPST} -shared -Wl,-soname=${SHLPRE}${SHLFILE}${SHLPST} \$(SHOFILES) "'$('BOTHLIBS')'
-		SHL_BASE="${LIBPRE}${LIBFILE}.${SHL}"
-		;;
-	*beos*)
-		LD_RXLIB_A1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
-		LD_RXLIB_A2="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
-		LD_RXLIB_B1="-L. -l${SHLFILE}"
-		LD_RXLIB_B2="-L. -l${LIBFILE}"
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="${CC} -o ${SHLPRE}${SHLFILE}${SHLPST} -Wl,-shared -nostart -Xlinker -soname=${SHLPRE}${SHLFILE}${SHLPST} \$(SHOFILES)"
-		SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
-		BEOS_DYN="yes"
-		BASE_INSTALL="beosinstall"
-		BASE_BINARY="beosbinary"
-		OTHER_INSTALLS=""
-		;;
-	*nto-qnx*)
-		LD_RXLIB_A1="${CC} -shared"
-		LD_RXLIB_A2="${CC} -shared"
-		LD_RXLIB_B1="-L. -l${SHLFILE}"
-		LD_RXLIB_B2="-L. -l${SHLFILE}"
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-		SHL_LD="${CC} -o ${SHLPRE}${SHLFILE}${SHLPST} -shared -Wl,-soname=${SHLPRE}${SHLFILE}${SHLPST} \$(SHOFILES)"
-		SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
-		;;
-	*qnx*)
-		LD_RXLIB_A1=""
-		LD_RXLIB_A2=""
-		LD_RXLIB_B1=""
-		LD_RXLIB_B2=""
-		SHLPRE=""
-		SHLPST=".lib"
-		SHL_LD=""
-		EEXTRA="-mf -N0x20000 -Q"
-		LIBPRE=""
-		LIBPST=".lib"
-		;;
-	*cygwin)
-		LD_RXLIB_A1="dllwrap --target i386-cygwin32 --def test1.def --dllname test1.dll"
-		LD_RXLIB_A2="dllwrap --target i386-cygwin32 --def test2.def --dllname test2.dll"
-		LD_RXLIB_B1="-L. -lregina"
-		LD_RXLIB_B2="-L. -lregina"
-		SHLPRE=""
-		SHLPST=".dll"
-		SHL_LD="dllwrap --def regina.def --output-lib libregina.a --target i386-cygwin32 --dllname regina.dll -o regina.dll \$(SHOFILES) -lcrypt"
-		EEXTRA=""
-		LIBPRE="lib"
-		LIBPST=".a"
-		LIBFILE="rexx"
-		SHL_BASE="${SHLPRE}${SHLFILE}${SHLPST}"
-		TEST1EXPORTS="test1.def"
-		TEST2EXPORTS="test2.def"
-		TEST1EXP="test1.def"
-		TEST2EXP="test2.def"
-		REGINAEXP="regina.def"
-		;;
-	*)
-		MH_HOWTO_SHARED_LIBRARY()
-		MH_HOWTO_DYN_LINK()
-		;;
-esac
-
-if test "$AIX_DYN" = "yes"; then
-	STATICLIB=""
-else
-	STATICLIB="${LIBPRE}${LIBFILE}${LIBPST}"
-fi
-
-LIBFLAGS="cr ${LIBPRE}${LIBFILE}${LIBPST}"
-LIBLINK="-L. -l${LIBFILE}"
-
-#
-# For HPUX, we must link the "regina" executable with -lregina
-# otherwise you can't move the shared library anywhere other
-# than where it was built. Fix by PJM
-#
-if test "$SHLPST" = ".sl"; then
-	LINKSHL="$LIBLINK"
-else
-	LINKSHL="${SHLPRE}${SHLFILE}${SHLPST}"
-fi
-
 if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes"; then
-	SHL_TARGETS="regina${EXE} ${SHL_BASE} ${SHLPRE}test1${SHLPST} ${SHLPRE}test2${SHLPST}"
-	EXECISER_DEP="${SHL_BASE}"
-	OTHER_INSTALLS="regina $OTHER_INSTALLS"
+	if test "$with_rexx" = "rexxtrans" -o "$with_rexx" = "regina" -o  "$with_rexx" = "objrexx" -o "$with_rexx" = "rexx6000"; then
+		SHL_TARGETS=""
+		for a in $SHLFILES
+		do
+			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
+		done
+	else
+		SHL_TARGETS=""
+	fi
 else
 	SHL_TARGETS=""
-	EXECISER_DEP="${STATICLIB}"
-	OTHER_INSTALLS=""
 fi
 
-AC_SUBST(BASE_BINARY)
-AC_SUBST(BASE_INSTALL)
-AC_SUBST(BOTHLIBS)
-AC_SUBST(CC2O)
-AC_SUBST(CEXTRA)
-AC_SUBST(DYNAMIC_LDFLAGS)
-AC_SUBST(DYN_COMP)
 AC_SUBST(EEXTRA)
-AC_SUBST(EXE)
-AC_SUBST(EXECISER_DEP)
-AC_SUBST(GETOPT)
-AC_SUBST(LD_RXLIB_A1)
-AC_SUBST(LD_RXLIB_A2)
-AC_SUBST(LD_RXLIB_B1)
-AC_SUBST(LD_RXLIB_B2)
-AC_SUBST(LIBEXE)
-AC_SUBST(LIBFILE)
-AC_SUBST(LIBFLAGS)
-AC_SUBST(LIBLINK)
-AC_SUBST(LIBPRE)
-AC_SUBST(LIBPST)
-AC_SUBST(LINKSHL)
-AC_SUBST(O2SAVE)
-AC_SUBST(O2SHO)
-AC_SUBST(OBJ)
-AC_SUBST(OBJECTS)
+AC_SUBST(CEXTRA)
 AC_SUBST(OSAVE)
-AC_SUBST(OTHER_INSTALLS)
-AC_SUBST(REGINAEXP)
-AC_SUBST(RXLIBLEN)
-AC_SUBST(SAVE2O)
-AC_SUBST(SHLFILE)
+AC_SUBST(OBJ)
+AC_SUBST(EXE)
+AC_SUBST(GETOPT)
+AC_SUBST(DYN_COMP)
+AC_SUBST(LIBS)
 AC_SUBST(SHLIBS)
+AC_SUBST(LD_RXLIB1)
 AC_SUBST(SHLPRE)
 AC_SUBST(SHLPST)
-AC_SUBST(SHL_LD)
-AC_SUBST(SHL_TARGETS)
-AC_SUBST(STATICLIB)
+AC_SUBST(DYNAMIC_LDFLAGS)
 AC_SUBST(STATIC_LDFLAGS)
-AC_SUBST(TEST1EXP)
-AC_SUBST(TEST1EXPORTS)
-AC_SUBST(TEST2EXP)
-AC_SUBST(TEST2EXPORTS)
-AC_SUBST(USE_ABI)
+AC_SUBST(SHL_TARGETS)
+AC_SUBST(O2SAVE)
+AC_SUBST(O2SHO)
+AC_SUBST(CC2O)
+AC_SUBST(BASE_INSTALL)
+AC_SUBST(BASE_BINARY)
+AC_SUBST(SAVE2O)
+AC_SUBST(RXPACKEXPORTS)
+AC_SUBST(RXPACKEXP)
 ])dnl
 
 dnl ---------------------------------------------------------------------------
-dnl Work out how to create a dynamically loaded module
+dnl Check if C compiler supports -c -o file.ooo
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([MH_HOWTO_DYN_LINK],
+AC_DEFUN([MH_CHECK_CC_O],
 [
-mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&AC_FD_CC'
-cat > conftest.$ac_ext <<EOF
-dnl [#]line __oline__ "[$]0"
-[#]line __oline__ "configure"
-int foo()
-{
-return(0);
-}
-EOF
-if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
-	mh_dyn_link='ld -shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
-#	mh_dyn_link='${CC} -Wl,-shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
-	if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
-		LD_RXLIB_A1="ld -shared"
-		LD_RXLIB_A2="ld -shared"
-#		LD_RXLIB1="${CC} -Wl,-shared"
-		LD_RXLIB_B1="-L. -l${LIBFILE}"
-		LD_RXLIB_B2="-L. -l${LIBFILE}"
-		SHLPRE="lib"
-		SHLPST=".so"
-		RXLIBLEN="6"
-	else
-		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
-#		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
-		if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
-			LD_RXLIB_A1="ld -G"
-			LD_RXLIB_A2="ld -G"
-#			LD_RXLIB1="${CC} -Wl,-G"
-			LD_RXLIB_B1="-L. -l${LIBFILE}"
-			LD_RXLIB_B2="-L. -l${LIBFILE}"
-			SHLPRE="lib"
-			SHLPST=".so"
-			RXLIBLEN="6"
-		else
-			LD_RXLIB_A1=""
-			LD_RXLIB_A2=""
-			LD_RXLIB_B1=""
-			LD_RXLIB_B2=""
-			SHLPRE=""
-			SHLPST=""
-			RXLIBLEN="0"
-		fi
-	fi
+AC_MSG_CHECKING(whether $CC understand -c and -o together)
+set dummy $CC; ac_cc="`echo [$]2 |
+changequote(, )dnl
+		       sed -e 's/[^a-zA-Z0-9_]/_/g' -e 's/^[0-9]/_/'`"
+changequote([, ])dnl
+AC_CACHE_VAL(ac_cv_prog_cc_${ac_cc}_c_o,
+[echo 'foo(){}' > conftest.c
+# We do the test twice because some compilers refuse to overwrite an
+# existing .o file with -o, though they will create one.
+eval ac_cv_prog_cc_${ac_cc}_c_o=no
+ac_try='${CC-cc} -c conftest.c -o conftest.ooo 1>&AC_FD_CC'
+if AC_TRY_EVAL(ac_try) && test -f conftest.ooo && AC_TRY_EVAL(ac_try);
+then
+  ac_try='${CC-cc} -c conftest.c -o conftest.ooo 1>&AC_FD_CC'
+  if AC_TRY_EVAL(ac_try) && test -f conftest.ooo && AC_TRY_EVAL(ac_try);
+  then
+    eval ac_cv_prog_cc_${ac_cc}_c_o=yes
+  fi
 fi
 rm -f conftest*
 ])dnl
+if eval "test \"`echo '$ac_cv_prog_cc_'${ac_cc}_c_o`\" = yes"; then
+	O2SHO=""
+	O2SAVE=""
+	SAVE2O=""
+	CC2O="-o $"'@'
+	AC_MSG_RESULT(yes)
+else
+	O2SHO="-mv \`basename "$'@'" .sho\`.o "$'@'
+	O2SAVE="-mv \`basename "$'@'" .sho\`.o \`basename "$'@'" .sho\`.o.save"
+	SAVE2O="-mv \`basename "$'@'" .sho\`.o.save \`basename "$'@'" .sho\`.o"
+	CC2O=""
+	AC_MSG_RESULT(no)
+fi
+])

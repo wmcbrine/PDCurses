@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad  = "$Id: pad.c,v 1.1 2001/01/10 08:27:19 mark Exp $";
+char *rcsid_pad  = "$Id: pad.c,v 1.2 2001/11/01 08:36:18 mark Exp $";
 #endif
 
 	/*
@@ -337,6 +337,8 @@ int sx2;
 
 	if (w == (WINDOW *)NULL)
 		return( ERR );
+
+	if (sy2 < sy1 || sx2 < sx1) return(ERR);
 
 	if (!(w->_flags == _PAD)
 	&&  !(w->_flags == _SUBPAD))

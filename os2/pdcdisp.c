@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.1 2001/01/10 08:29:30 mark Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.2 2001/01/10 08:29:31 mark Exp $";
 #endif
 
 /*man-start*********************************************************************

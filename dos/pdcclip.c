@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.1 2001/01/10 08:28:31 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.2 2001/01/10 08:28:32 mark Exp $";
 #endif
 
 

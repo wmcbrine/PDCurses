@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.1 2001/01/10 08:28:44 mark Exp $";
+char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.2 2001/01/10 08:28:45 mark Exp $";
 #endif
 
 /*man-start*********************************************************************

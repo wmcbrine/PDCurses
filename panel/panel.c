@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.1 2001/01/10 08:28:00 mark Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.2 2001/01/10 08:28:01 mark Exp $";
 #endif
 
 

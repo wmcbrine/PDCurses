@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgo32  = "$Id: pdcgo32.c,v 1.1 2001/01/10 08:28:40 mark Exp $";
+char *rcsid_PDCgo32  = "$Id: pdcgo32.c,v 1.2 2001/01/10 08:28:41 mark Exp $";
 #endif
 
 

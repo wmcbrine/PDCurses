@@ -32,7 +32,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.1 2001/01/10 08:29:28 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.2 2001/01/10 08:29:29 mark Exp $";
 #endif
 
 

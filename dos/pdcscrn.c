@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.1 2001/01/10 08:28:47 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.2 2001/01/10 08:28:48 mark Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;

@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.1 2001/01/10 08:29:39 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.2 2001/01/10 08:29:40 mark Exp $";
 #endif
 
 #ifdef EMXVIDEO

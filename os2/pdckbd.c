@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.1 2001/01/10 08:29:34 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.2 2001/01/10 08:29:36 mark Exp $";
 #endif
 
 /*******************************************************************************

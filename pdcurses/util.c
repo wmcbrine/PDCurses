@@ -65,7 +65,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.5 2004/01/02 05:50:05 mark Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.6 2004/08/07 07:18:46 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -173,17 +173,10 @@ chtype c;
 	}
 	return( strbuf );
 }
+
 /***********************************************************************/
-#ifdef HAVE_PROTO
-char *	PDC_CDECL	keyname(int key)
-#else
-char *	PDC_CDECL	keyname(key)
-int key;
-#endif
-/***********************************************************************/
-{
-	static char *key_name[] =
-	{
+
+static char *key_name[] = {
  "KEY_BREAK","KEY_DOWN","KEY_UP","KEY_LEFT","KEY_RIGHT","KEY_HOME","KEY_BACKSPACE",
  "KEY_F0","KEY_F(1)","KEY_F(2)","KEY_F(3)","KEY_F(4)","KEY_F(5)",
  "KEY_F(6)","KEY_F(7)","KEY_F(8)","KEY_F(9)","KEY_F(10)",
@@ -235,19 +228,40 @@ int key;
  "KEY_CONTROL_L","KEY_CONTROL_R",
  "KEY_ALT_L","KEY_ALT_R",
  "KEY_RESIZE", "KEY_SUP", "KEY_SDOWN"
-	};
-
+};
+/***********************************************************************/
+#ifdef HAVE_PROTO
+char *	PDC_CDECL	keyname(int key)
+#else
+char *	PDC_CDECL	keyname(key)
+int key;
+#endif
+/***********************************************************************/
+{
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("keyname() - called: key %d\n",key);
 #endif
-
-
 	key -= KEY_MIN;
 	if (key >= 0
 	&& key <= sizeof(key_name) / sizeof(key_name[0]))
 		return( key_name[key] );
 	else
 		return("NO KEY NAME");
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+bool 	PDC_CDECL 	has_key(int key)
+#else
+bool	PDC_CDECL	has_key(key)
+int key;
+#endif
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("has_key() - called: key %d\n",key);
+#endif
+	key -= KEY_MIN;
+	return key >= 0
+	    && key <= sizeof(key_name) / sizeof(key_name[0]);
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

@@ -240,6 +240,7 @@ FUNCTIONS
 		flash                    beep
 		flushinp                 util
 		getbegyx                 getyx
+		getattrs                 attr
 		getch                    getch
 		getmaxyx                 getyx
 		getparyx                 getyx
@@ -251,6 +252,7 @@ FUNCTIONS
 		has_colors               color
 		has_ic                   termattr
 		has_il                   termattr
+		has_key                  util
 		hline                    border
 		idcok                    outopts
 		idlok                    outopts
@@ -306,7 +308,8 @@ FUNCTIONS
 		mvwaddstr                addstr
 		mvwdelch                 delch
 		mvwgetch                 getch
-		mvwgetstr                getstr
+		mvwgetnstr               getstr
+		wgetnstr                 getstr
 		mvwin                    window
 		mvwinch                  inch
 		mvwinchnstr              inchstr
@@ -446,6 +449,7 @@ FUNCTIONS
 		wprintw                  printw
 		wredrawln                refresh
 		wrefresh                 refresh
+		wresize                  window
 		wscanw                   scanw
 		wscrl                    scroll
 		wsetscrreg               outopts

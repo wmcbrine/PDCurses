@@ -34,13 +34,14 @@
 #undef	standout
 #undef	wstandend
 #undef	wstandout
+#undef	getattrs
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.1 2001/01/10 08:26:48 mark Exp $";
+char *rcsid_attr  = "$Id: attr.c,v 1.2 2004/08/07 07:18:46 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -230,6 +231,17 @@ attr_t attrs;
 		return( ERR );
 	win->_attrs = attrs & A_ATTRIBUTES;
 	return( OK );
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+attr_t  PDC_CDECL	getattrs(WINDOW* win)
+#else
+attr_t  PDC_CDECL	getattrs(win)
+WINDOW *win;
+#endif
+/***********************************************************************/
+{
+  return win ? win->_attrs : 0;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

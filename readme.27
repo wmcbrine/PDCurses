@@ -14,15 +14,23 @@ BUGS FIXED:
   - 695842: nl() and nonl() now return OK - fix by Warren Gay
   - 695847: termattrs() now also return A_UNDERLINE, A_REVERSE
 - Changes for cursor size under DOS.
-- Lots of code cleanup courtesey of Ron Thibodeau
+- Lots of code cleanup courtesy of Ron Thibodeau
+- Removed idcok() and idlok() macros - Alexandr Zamaraev (Feature 1004399)
+- Macros for nocbreak(), cbreak(), nocrmode(), crmode() and nodelay()
+  now return OK - Alexandr Zamaraev (Feature 1004399)
+- ERR is now defined as (-1) NOT 0 to be compatible with ncurses - Alexandr 
+  Zamaraev (Feature 1004399)
+  **** NOTE This change is NOT binary compatible. You will need to rebuild
+  **** programs that use shared/dynamic libraries!!!!!
 
 NEW FEATURES:
 - Implemented timeout() and wtimeout() Bug 695827
+- Implemented getattrs(), has_key(), wresize(), mvwgetnstr() 
+  Alexandr Zamaraev (Feature 1004399)
 
 NEW COMPILER SUPPORT:
-- OpenWatcom 1.1 supported on OS/2 and Win32. Bug 808864
+- OpenWatcom 1.1 supported on OS/2, Win32 and DOS4G. Bug 808864
 - DOS Pacfic Compiler - Ron Thibodeau
-
 
 Cheers, Mark
 ------------------------------------------------------------------------

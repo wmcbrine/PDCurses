@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.20 2004/07/01 07:25:27 rexx Exp $
+$Id: curses.h,v 1.21 2004/08/07 07:18:46 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -547,6 +547,9 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
+#  ifndef HAVE_STRING_H                             /* have <string.h> */
+#    define HAVE_STRING_H
+#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
 #  endif
@@ -770,10 +773,10 @@ PDCurses portable platform definitions list:
 #  define	TRUE	!FALSE
 #endif
 #ifndef	NULL
-#  define NULL	0	/* Null pointer		 */
+#  define NULL	(void*)0	/* Null pointer		 */
 #endif
 #ifndef	ERR
-#  define	 ERR	0		/* general error flag	 */
+#  define	 ERR	-1		/* general error flag	 */
 #endif
 #ifndef	OK
 #  define	 OK	1		/* general OK flag	 */
@@ -1598,10 +1601,16 @@ int     PDC_CDECL erase Args(( void ));
 char    PDC_CDECL erasechar Args(( void ));
 int     PDC_CDECL flash Args(( void ));
 int     PDC_CDECL flushinp Args(( void ));
+attr_t  PDC_CDECL getattrs Args(( WINDOW* ));
 int     PDC_CDECL getsyx Args(( int*, int* ));
 int     PDC_CDECL halfdelay Args(( int ));
 bool    PDC_CDECL has_colors Args(( void ));
+bool 	PDC_CDECL has_ic Args((void));
+bool 	PDC_CDECL has_il Args((void));
+bool 	PDC_CDECL has_key Args((  int  ));
 int     PDC_CDECL hline Args(( chtype, int ));
+int     PDC_CDECL idlok Args(( WINDOW *win, bool bf ));
+int     PDC_CDECL idcok Args(( WINDOW *win, bool bf ));
 int     PDC_CDECL immedok Args(( WINDOW*, bool ));
 int     PDC_CDECL inchnstr Args(( chtype *, int ));
 int     PDC_CDECL init_color Args(( short, short, short, short ));
@@ -1722,6 +1731,7 @@ int     PDC_CDECL wscanw Args(( WINDOW*, char*,... ));
 #endif
 int     PDC_CDECL wredrawln Args(( WINDOW*, int ,int ));
 int     PDC_CDECL wrefresh Args(( WINDOW* ));
+int     PDC_CDECL wresize Args((WINDOW **win, int lins, int cols));
 int     PDC_CDECL wscrl Args(( WINDOW*, int ));
 int     PDC_CDECL wsetscrreg Args(( WINDOW*, int, int ));
 int     PDC_CDECL wtimeout Args(( WINDOW *, int ));
@@ -1845,8 +1855,8 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define getsyx(y,x)             { if( curscr->_leaveit) (y)=(x)=-1; else getyx(curscr,(y),(x)); }
 #define getyx(w,y,x)            ( y = (w)->_cury, x = (w)->_curx )
 #define has_colors()            ((SP->mono) ? FALSE : TRUE)
-#define idcok(w,flag)           OK
-#define idlok(w,flag)           OK
+/*#define idcok(w,flag)           OK*/
+/*#define idlok(w,flag)           OK*/
 #define inch()                  (stdscr->_y[stdscr->_cury][stdscr->_curx])
 #define inchstr( c )            inchnstr( c, stdscr->_maxx-stdscr->_curx )
 #define innstr(str,n)           winnstr(stdscr,(str),(n))
@@ -1886,6 +1896,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvwdelch(w,y,x)         (wmove( w, y, x )==ERR?ERR:wdelch( w ))
 #define mvwgetch(w,y,x)         (wmove( w, y, x )==ERR?ERR:wgetch( w ))
 #define mvwgetstr(w,y,x,str)    (wmove( w, y, x )==ERR?ERR:wgetstr( w, str ))
+#define mvwgetnstr(w,y,x,str,n) (wmove( w, y, x )==ERR?ERR:wgetnstr( w, str , n ))
 #define mvwinch(w,y,x)          (wmove( w, y, x )==ERR?ERR:((w)->_y[y][x]))
 #define mvwinchstr(w,y,x,c)     (wmove( w, y, x )==ERR?ERR:winchnstr( w, c, (w)->_maxx-(w)->_curx ))
 #define mvwinchnstr(w,y,x,c,n)  (wmove( w, y, x )==ERR?ERR:winchnstr( w, c, n ))
@@ -1931,13 +1942,13 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 
 #if !defined(UNIX) && !defined(XCURSES)
 /* set delaytenths = 0 added - William McBrine */
-# define nocbreak()             (SP->cbreak = FALSE, SP->delaytenths = 0)
-# define cbreak()               (SP->cbreak = TRUE)
-# define nocrmode()             (SP->cbreak = FALSE)
-# define crmode()               (SP->cbreak = TRUE)
-# define noecho()               (SP->echo = FALSE,OK)
-# define echo()                 (SP->echo = TRUE,OK)
-# define nodelay(w,flag)        (w->_nodelay = flag)
+# define nocbreak()             (SP->cbreak = FALSE, SP->delaytenths = 0, OK)
+# define cbreak()               (SP->cbreak = TRUE, OK)
+# define nocrmode()             (SP->cbreak = FALSE, OK)
+# define crmode()               (SP->cbreak = TRUE, OK)
+# define noecho()               (SP->echo = FALSE, OK)
+# define echo()                 (SP->echo = TRUE, OK)
+# define nodelay(w,flag)        (w->_nodelay = flag, OK)
 #endif
 
 #if defined(PDCURSES)

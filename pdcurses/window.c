@@ -35,6 +35,7 @@
 #undef	syncok
 #undef	wcursyncup
 #undef	wsyncdown
+#undef	wresize
 #undef	resize_window
 
 /* undefine any macros for functions called by this module if in debug mode */
@@ -47,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window  = "$Id: window.c,v 1.2 2002/12/16 06:59:12 mark Exp $";
+char *rcsid_window  = "$Id: window.c,v 1.3 2004/08/07 07:18:46 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -540,6 +541,24 @@ extern	void	(*fre)();
 
 	return( new );
 
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int PDC_CDECL wresize(WINDOW **win, int lins, int cols)
+#else
+int PDC_CDECL wresize(win, lins, cols)
+WINDOW **win;
+int lins;
+int cols;
+#endif
+/***********************************************************************/
+{
+  WINDOW* new;
+  new = resize_window(*win, lins ,cols);
+  if (!new)
+    return ERR;
+  *win = new;
+  return OK;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

@@ -34,10 +34,10 @@ demodir		= $(PDCURSES_HOME)/demos
 CC		= gcc
 
 ifeq ($(DEBUG),Y)
-	CFLAGS  = -c -g -Wall -DPDCDEBUG -D_NO_OLDNAMES
+	CFLAGS  = -c -g -Wall -DPDCDEBUG -D_NO_OLDNAMES -DPDC_STATIC_BUILD
 	LDFLAGS = -g
 else
-	CFLAGS  = -c -O -Wall -D_NO_OLDNAMES
+	CFLAGS  = -c -O -Wall -D_NO_OLDNAMES -DPDC_STATIC_BUILD
 	LDFLAGS =
 endif
 
@@ -64,8 +64,8 @@ all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.o
-	-del curses.lib
-	-del panel.lib
+	-del pdcurses.a
+	-del panel.a
 	-del *.exe
 
 demos:	$(DEMOS)

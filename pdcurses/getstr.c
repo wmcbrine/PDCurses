@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.7 2003/10/18 11:32:10 mark Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.8 2004/08/07 07:18:46 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -57,6 +57,7 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.7 2003/10/18 11:32:10 mark Exp $";
     int mvwgetstr(WINDOW *win, int y, int x, char *str);
     int getnstr(char *str, int ch);
     int wgetnstr(WINDOW *win, char *str, int ch);
+    int mvwgetnstr(WINDOW *win, int y, int x, char *str, int ch);
 
   X/Open Description:
     The effect of getstr() is as though a series of calls to getch()
@@ -72,7 +73,7 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.7 2003/10/18 11:32:10 mark Exp $";
     wgetstr() in that the number of characters read is limited by a passed
     argument.
 
-    NOTE: getstr(), getnstr(), mvgetstr() and mvwgetstr() are
+    NOTE: getstr(), getnstr(), mvgetstr(), mvwgetstr(), mwwgetnstr() are
     implemented as macros.
 
     WARNING:  There is no way to know how long the buffer passed to
@@ -94,6 +95,7 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.7 2003/10/18 11:32:10 mark Exp $";
       mvwgetstr                             Y        Y       Y
       getnstr                               -        -      4.0
       wgetnstr                              -        -      4.0
+      mvwgetnstr                            -        -     ncurses
 
 **man-end**********************************************************************/
 

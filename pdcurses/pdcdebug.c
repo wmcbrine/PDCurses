@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdebug  = "$Id: pdcdebug.c,v 1.2 2002/06/23 04:13:02 mark Exp $";
+char *rcsid_PDCdebug  = "$Id: pdcdebug.c,v 1.3 2004/08/07 07:18:46 rexx Exp $";
 #endif
 
    bool trace_on = FALSE;
@@ -92,7 +92,7 @@ va_dcl
    va_start(args);
 #endif
 
-   fprintf( dbfp, "At: %8.8d - %d secs ", clock(), clock() / CLOCKS_PER_SEC );
+   fprintf( dbfp, "At: %8.8ld - %ld secs ", (long int)clock(), clock() / CLOCKS_PER_SEC );
    vsprintf(buffer,fmt,args);
    fputs(buffer,dbfp);
    va_end(args);

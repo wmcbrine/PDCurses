@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.2 2001/01/10 08:31:32 mark Exp $
+$Id: curses.h,v 1.3 2001/01/10 08:31:33 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -169,7 +169,7 @@ PDCurses portable platform definitions list:
 	                See notes in wclrtoeol() and wclrtoeof().
 **man-end**********************************************************************/
 
-#define PDC_BUILD	2401
+#define PDC_BUILD	2501
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -968,6 +968,8 @@ typedef struct
 	bool	refreshall;	/* Refresh all registered windows?  */
 #endif
 
+	short	line_color;	/* Color of line attributes - default white */
+
 }	SCREEN;
 
 
@@ -1048,11 +1050,15 @@ and blink.
 #define A_BLINK		     0x00400000L
 #define A_DIM		       0x00020000L
 #define A_INVIS		     0x00080000L
-#define A_PROTECT		   0x00010000L
 #define A_ALTCHARSET		0x00040000L
 #define A_ATTRIBUTES		0xFFFF0000L
 #define A_CHARTEXT		  0x0000FFFFL
 #define A_COLOR		     0xFF000000L
+
+#define A_OVERLINE    A_BLINK
+#define A_LEFTLINE    A_DIM
+#define A_RIGHTLINE   0x00010000L
+#define A_PROTECT     A_OVERLINE|A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE
 
 #else
 
@@ -1710,7 +1716,14 @@ int     PDC_CDECL	PDC_getclipboard( char **, long * );
 int     PDC_CDECL	PDC_setclipboard( char *, long );
 
 int     PDC_CDECL	PDC_get_input_fd( void );
+int     PDC_CDECL	PDC_curs_set( int );
 unsigned long PDC_CDECL	PDC_get_key_modifiers( void );
+
+int     PDC_CDECL	PDC_wunderline( WINDOW*, int, bool );
+int     PDC_CDECL	PDC_woverline( WINDOW*, int, bool );
+int     PDC_CDECL	PDC_wleftline( WINDOW*, int, bool );
+int     PDC_CDECL	PDC_wrightline( WINDOW*, int, bool );
+int     PDC_CDECL	PDC_set_line_color( short );
 
 #else
 
@@ -1912,7 +1925,14 @@ int     PDC_CDECL	PDC_getclipboard( /* char **, long * */ );
 int     PDC_CDECL	PDC_setclipboard( /* char *, long */ );
 
 int     PDC_CDECL	PDC_get_input_fd( /* void */ );
+int     PDC_CDECL	PDC_curs_set( /* int */ );
 unsigned long PDC_CDECL	PDC_get_key_modifiers( /* void */ );
+
+int     PDC_CDECL	PDC_wunderline( /* WINDOW*, int, bool */ );
+int     PDC_CDECL	PDC_woverline( /* WINDOW*, int, bool */ );
+int     PDC_CDECL	PDC_wleftline( /* WINDOW*, int, bool */ );
+int     PDC_CDECL	PDC_wrightline( /* WINDOW*, int, bool */ );
+int     PDC_CDECL	PDC_set_line_color( /* short */ );
 
 #endif
 
@@ -1952,6 +1972,7 @@ unsigned long PDC_CDECL	PDC_get_key_modifiers( /* void */ );
 #define getbegx(w)              (w)->_begx
 #define getbegy(w)              (w)->_begy
 #define getbegyx(w,y,x)         ( y = (w)->_begy, x = (w)->_begx )
+#define getbkgd(w)              ((w)->_bkgd)
 #define getch()                 wgetch(stdscr)
 #define getmaxx(w)              (w)->_maxx
 #define getmaxy(w)              (w)->_maxy

@@ -133,6 +133,9 @@
 #define XtCScrollbarWidth   "ScrollbarWidth"
 #define XtNscrollbarWidth   "scrollbarWidth"
 
+#define XtCCursorBlinkRate   "CursorBlinkRate"
+#define XtNcursorBlinkRate   "cursorBlinkRate"
+
 #define XtCPointerForeColor "PointerForeColor"
 #define XtNpointerForeColor "pointerForeColor"
 #define XtCPointerBackColor "PointerBackColor"
@@ -213,6 +216,7 @@ typedef struct
  int clickPeriod;
  int doubleClickPeriod;
  int scrollbarWidth;
+ int cursorBlinkRate;
 #if 0
  XtWidgetGeometry geometry;
 #endif
@@ -235,6 +239,7 @@ AppData app_data;
 #define XCURSESDOUBLECLICKPERIOD app_data.doubleClickPeriod
 #define XCURSESCLICKPERIOD      app_data.clickPeriod
 #define XCURSESSCROLLBARWIDTH   app_data.scrollbarWidth
+#define XCURSESCURSORBLINKRATE  app_data.cursorBlinkRate
 #define XCURSESGEOMETRY         app_data.geometry
 
 #define XCURSESDISPLAY      (XtDisplay(drawing))
@@ -243,8 +248,8 @@ AppData app_data;
 #define MAX_COLORS   8  /* maximum of "normal" colours */
 #define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2*MAX_COLORS */
 #define COLOR_BORDER 17 /* colour of border - 2 more than 2*MAX_COLORS */
-#define PDC_NUMBER_APP_RESOURCES 32
-#define PDC_NUMBER_OPTIONS 30
+#define PDC_NUMBER_APP_RESOURCES 33
+#define PDC_NUMBER_OPTIONS 31
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
 #include "x11.h"
@@ -283,9 +288,11 @@ extern Bool after_first_curses_request;
 /* extern char *XCursesProgramName; */
 extern int colors[(2*MAX_COLORS)+2];
 extern int windowEntered;
+extern int visible_cursor;
 
 typedef RETSIGTYPE (*signal_handler)();
-#ifdef PROTO
+
+#ifdef HAVE_PROTO
 void XCursesNonmaskable(Widget w,XtPointer client_data,XEvent *event,Boolean *continue_to_dispatch);
 void XCursesExpose(Widget w,XtPointer client_data,XEvent *event,Boolean *continue_to_dispatch);
 signal_handler XCursesSetSignal(int,signal_handler);
@@ -293,6 +300,7 @@ void XCursesGetIcon(void);
 int XCursesRefreshScrollbar(void);
 int XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
 void XCursesButton(Widget,XEvent *,String *,Cardinal *);
+void XCursesCursorBlink(Widget w, XtIntervalId *id);
 void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data);
 void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data);
@@ -305,6 +313,7 @@ void XCursesGetIcon();
 int XCursesRefreshScrollbar();
 int XCursesSendKeyToCurses();
 void XCursesButton();
+void XCursesCursorBlink();
 void Scroll_up_down();
 void Scroll_left_right();
 void Thumb_up_down();

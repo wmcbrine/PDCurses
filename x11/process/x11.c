@@ -23,7 +23,7 @@
 
 #include "pdcx11.h"
 
-static int visible_cursor=0;
+int visible_cursor=0;
 int windowEntered = 1;
 static char *XCursesProgramName;
 
@@ -722,6 +722,13 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
     * Add input handler from display_sock (requests from curses program)
     */
    XtAppAddInput( app_context, display_sock, (XtPointer)XtInputReadMask, XCursesProcessRequestsFromCurses, NULL );
+   /*
+    * If there is a cursorBlink resource, start the Timeout event...
+    */
+   if ( XCURSESCURSORBLINKRATE )
+   {
+      XtAppAddTimeOut( app_context, XCURSESCURSORBLINKRATE, XCursesCursorBlink, NULL );
+   }
    /*
     * Leave telling the curses process that it can start to here so that
     * when the curses process makes a request, the Xcurses process can

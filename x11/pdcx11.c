@@ -754,6 +754,15 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   XtRImmediate,
   (XtPointer)0,
  },
+ {
+  XtNcursorBlinkRate,
+  XtCCursorBlinkRate,
+  XtRInt,
+  sizeof(int),
+  XtOffsetOf(AppData,cursorBlinkRate),
+  XtRImmediate,
+  (XtPointer)0,
+ },
 #if 0
  {
   XtNgeometry,
@@ -781,6 +790,7 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-scrollbarWidth",      "*scrollbarWidth",    XrmoptionSepArg,   NULL },
    {"-pointerForeColor",    "*pointerForeColor",  XrmoptionSepArg,   NULL },
    {"-pointerBackColor",    "*pointerBackColor",  XrmoptionSepArg,   NULL },
+   {"-cursorBlinkRate",     "*cursorBlinkRate",   XrmoptionSepArg,   NULL },
    {"-cursorColor",         "*cursorColor",       XrmoptionSepArg,   NULL },
    {"-colorBlack",          "*colorBlack",        XrmoptionSepArg,   NULL },
    {"-colorRed",            "*colorRed",          XrmoptionSepArg,   NULL },
@@ -1532,7 +1542,9 @@ Boolean *continue_to_dispatch;
 #endif
 /***********************************************************************/
 {
+#if 0
  XClientMessageEvent *client_event=(XClientMessageEvent *)event;
+#endif
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("%s:XCursesNonmaskable called: otherpid %d\n",(XCursesProcess)?"     X":"CURSES",otherpid);
@@ -2603,6 +2615,47 @@ MOUSE_STATUS *ms;
          XCursesExitXCursesProcess(1,SIGKILL,"exiting from XCursesSendKeyToCurses");
    }
    return(0);
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void XCursesCursorBlink(Widget w, XtIntervalId *id)
+#else
+void XCursesCursorBlink(w, id)
+Widget w;
+XtIntervalId *id;
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("%s:XCursesCursorBlink() - called:\n",(XCursesProcess)?"     X":"CURSES");
+#endif
+   if ( windowEntered ) 
+   { 
+      if ( visible_cursor ) 
+      { 
+         /* 
+          * Cursor currently ON, turn it off 
+          */ 
+         int save_visibility = SP->visibility; 
+         SP->visibility = 0; 
+         XCursesDisplayCursor(SP->cursrow,SP->curscol, 
+                              SP->cursrow,SP->curscol); 
+         SP->visibility = save_visibility; 
+         visible_cursor = 0; 
+      } 
+      else 
+      { 
+         /* 
+          * Cursor currently OFF, turn it on 
+          */ 
+         XCursesDisplayCursor(SP->cursrow,SP->curscol, 
+                              SP->cursrow,SP->curscol); 
+         visible_cursor = 1; 
+      } 
+   } 
+
+   XtAppAddTimeOut( app_context, XCURSESCURSORBLINKRATE, XCursesCursorBlink, NULL );
+   return;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

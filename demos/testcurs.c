@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.2 2001/01/10 08:27:43 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.3 2002/01/12 02:44:03 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -331,39 +331,6 @@ WINDOW *win;
     wrefresh(win);
 
     nocbreak();
-    mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
-    mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");
-    wrefresh(win);
-
-    werase (subWin);
-    box(subWin, ACS_VLINE, ACS_HLINE);
-    for (i = 0; i < 5; i++) 
-      {
-       mvwprintw (subWin, 1, 1, "Time = %d", i);
-       wrefresh(subWin);
-       napms(1000);
-       flushinp();
-      }
-
-    delwin (subWin);
-    werase(win);
-    flash();
-    wrefresh(win);
-    napms(500);
-    flushinp();
-
-    mvwaddstr(win, 2, 1, "Press a key, followed by ENTER");
-    wmove(win, 9, 10);
-    wrefresh(win);
-    echo();
-    noraw();
-    wgetnstr(win, buffer, 3);
-    flushinp();
-
-    wmove(win, 9, 10);
-    wdelch(win);
-    mvwaddstr(win, 4, 1, "The character should now have been deleted");
-    Continue(win);
 
     wclear (win);
     mvwaddstr(win, 1, 1, "Press keys (or mouse buttons) to show their names");
@@ -455,6 +422,42 @@ WINDOW *win;
     PDC_save_key_modifiers(FALSE);
     PDC_return_key_modifiers(FALSE);
 #endif
+
+    wclear (win);
+    mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
+    mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");
+    wrefresh(win);
+
+    werase (subWin);
+    box(subWin, ACS_VLINE, ACS_HLINE);
+    for (i = 0; i < 5; i++) 
+      {
+       mvwprintw (subWin, 1, 1, "Time = %d", i);
+       wrefresh(subWin);
+       napms(1000);
+       flushinp();
+      }
+
+    delwin (subWin);
+    werase(win);
+    flash();
+    wrefresh(win);
+    napms(500);
+    flushinp();
+
+    mvwaddstr(win, 2, 1, "Press a key, followed by ENTER");
+    wmove(win, 9, 10);
+    wrefresh(win);
+    echo();
+    noraw();
+    wgetnstr(win, buffer, 3);
+    flushinp();
+
+    wmove(win, 9, 10);
+    wdelch(win);
+    mvwaddstr(win, 4, 1, "The character should now have been deleted");
+    Continue(win);
+
     refresh();
     wclear (win);
     echo();

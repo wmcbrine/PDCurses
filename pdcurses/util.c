@@ -65,7 +65,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.1 2001/01/10 08:27:33 mark Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.2 2001/01/10 08:27:34 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -349,7 +349,7 @@ extern int	c_ungind;		/* wungetch() push index */
 
 #ifdef XCURSES
 	while(XCurses_kbhit())
-		(void)XCurses_rawgetch();
+		(void)XCurses_rawgetch(0);
 #endif
 
 	c_gindex = 1;			/* set indices to kill buffer	 */

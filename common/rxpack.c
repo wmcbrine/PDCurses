@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.15 2002/07/30 07:07:05 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.16 2002/08/25 09:02:28 mark Exp $";
 
 #include "rxpack.h"
 
@@ -494,8 +494,9 @@ RxPackageGlobalDataDef *FunctionPrologue
 #ifdef HAVE_PROTO
    ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageInitialiser *RxPackageInitialiser, char *name, ULONG argc, RXSTRING *argv )
 #else
-   ( RxPackageGlobalData, name, argc, argv )
+   ( RxPackageGlobalData, RxPackageInitialiser, name, argc, argv )
    RxPackageGlobalDataDef *RxPackageGlobalData;
+   PackageInitialiser *RxPackageInitialiser;
    char *name;
    ULONG argc;
    RXSTRING *argv;
@@ -848,6 +849,7 @@ RxPackageGlobalDataDef *InitRxPackage
    if ( MyGlob )
    {
       RxPackageGlobalData = MyGlob;
+      RxPackageGlobalData->deallocate = 0;
    }
    else
    {
@@ -859,7 +861,11 @@ RxPackageGlobalDataDef *InitRxPackage
       }
       memset( RxPackageGlobalData, 0, sizeof( RxPackageGlobalDataDef ) );
       (void)RxSetTraceFile( RxPackageGlobalData, "stderr" );
+      RxPackageGlobalData->deallocate = 1;
    }
+
+   RxPackageGlobalData->terminated = 0;
+
    if ( (env = getenv(RXPACKAGE_DEBUG_VAR)) != NULL )
    {
       RxPackageGlobalData->RxRunFlags |= atoi(env);
@@ -929,15 +935,24 @@ int TermRxPackage
                        ( RDE_ARG1_TYPE )NULL );
 #endif
    if ( RxPackageGlobalData
+   &&   RxPackageGlobalData->RxTraceFilePointer
    &&   RxPackageGlobalData->RxTraceFilePointer != stdin
    &&   RxPackageGlobalData->RxTraceFilePointer != stderr )
+   {
       fclose( RxPackageGlobalData->RxTraceFilePointer );
+      RxPackageGlobalData->RxTraceFilePointer = NULL;
+   }
 
+   RxPackageGlobalData->terminated = 1;
    DEBUGDUMP(fprintf(stderr,"%s-%d: End of TermRxPackage with rc = 0\n",__FILE__,__LINE__);)
    (void)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)0 );
 
-   if ( RxPackageGlobalData )
+   if ( RxPackageGlobalData
+   &&   RxPackageGlobalData->deallocate )
+   {
       free( RxPackageGlobalData );
+      *(&RxPackageGlobalData) = NULL;
+   }
    return 0;
 }
 

@@ -188,6 +188,8 @@ typedef struct
    char FName[100];                   /* current function name */
    FILE *RxTraceFilePointer;          /* file pointer for all output */
    char RxTraceFileName[MAX_PATH];    /* filename of output file */
+   int deallocate;                    /* indicates if rxpack should deallocate this structure */
+   int terminated;                    /* indicates if rxpack has called RxTermPackage() for this structure */
 } RxPackageGlobalDataDef;
 
 typedef int PackageInitialiser( RxPackageGlobalDataDef * );

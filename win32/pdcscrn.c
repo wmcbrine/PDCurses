@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.2 2002/06/23 04:10:03 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.3 2004/04/02 02:25:17 rexx Exp $";
 #endif
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
@@ -405,9 +405,9 @@ int nlines,ncols;
 #endif
 /***********************************************************************/
 {
-#ifdef FGC0
+#ifdef MHES
    COORD size, max;
-   SMALL_RECT rect;
+   SMALL_RECT rect,displayarea = {0,0,0,0};
    CONSOLE_SCREEN_BUFFER_INFO csbi;
    int external_resized = SP->resized;
 
@@ -441,8 +441,11 @@ int nlines,ncols;
    if (rect.Bottom >= max.Y)
       rect.Bottom = max.Y;
    FitConsoleWindow(hConOut, &rect); /* helps to allow the BufferSize */
+   displayarea.Right = rect.Right;
+   displayarea.Bottom = rect.Bottom;
    if (!SetConsoleScreenBufferSize(hConOut, size) ||
-       !FitConsoleWindow(hConOut, &rect))
+       !FitConsoleWindow(hConOut, &rect) ||
+       !SetConsoleWindowInfo(hConOut, TRUE, &displayarea))
    {
       SetConsoleScreenBufferSize(hConOut, csbi.dwSize);
       SetConsoleWindowInfo(hConOut, TRUE, &csbi.srWindow);
@@ -451,7 +454,7 @@ int nlines,ncols;
    
    SetConsoleActiveScreenBuffer(hConOut);
    return ( OK );
-#else
+#elif defined(FGC)
    int rc=OK;
    COORD size;
    SMALL_RECT rect;
@@ -477,6 +480,33 @@ int nlines,ncols;
    SetConsoleWindowInfo(hConOut,TRUE,&rect);
    SetConsoleScreenBufferSize(hConOut, size);
    SetConsoleWindowInfo(hConOut,TRUE,&rect);
+   SetConsoleActiveScreenBuffer(hConOut);
+   SP->resized = FALSE;
+   return ( rc );
+#else
+   int rc=OK;
+   SMALL_RECT rect;
+   COORD size, max;
+
+   if (nlines < 2 || ncols < 2)
+      return(ERR);
+   max = GetLargestConsoleWindowSize(hConOut);
+
+   rect.Left = rect.Top = 0;
+   rect.Right = ncols - 1;
+   if (rect.Right >= max.X)
+      rect.Right = max.X;
+   rect.Bottom = nlines - 1;
+   if (rect.Bottom >= max.Y)
+      rect.Bottom = max.Y;
+   size.X = rect.Right + 1;
+   size.Y = rect.Bottom + 1;
+   FitConsoleWindow(hConOut, &rect);
+   SetConsoleScreenBufferSize(hConOut, size);
+   FitConsoleWindow(hConOut, &rect);
+   SetConsoleScreenBufferSize(hConOut, size);
+
+
    SetConsoleActiveScreenBuffer(hConOut);
    SP->resized = FALSE;
    return ( rc );

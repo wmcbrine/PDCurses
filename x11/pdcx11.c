@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 *
 * This file is NOT public domain software.  It is Copyright, Mark Hessling
@@ -450,7 +450,7 @@ char *pixmap_file=NULL;
 #endif
 KeySym compose_key=0;
 int compose_mask=0;
-int state_mask[8] = 
+int state_mask[8] =
 {
  ShiftMask,
  LockMask,
@@ -962,7 +962,7 @@ signal_handler action;
 {
 #if defined(SA_INTERRUPT) || defined(SA_RESTART)
    struct sigaction sigact,osigact;
- 
+
    sigact.sa_handler = action;
 # ifdef SA_INTERRUPT
 #  ifdef SA_RESTART
@@ -1307,7 +1307,7 @@ void makeXY(x,y,fontwidth,fontheight,xpos,ypos)
 int x,y,fontwidth,fontheight,*xpos,*ypos;
 #endif
 /***********************************************************************/
-{   
+{
  *xpos = (x * fontwidth)+XCURSESBORDERWIDTH;
  *ypos = XCURSESNORMALFONTINFO->ascent + (y * fontheight) + XCURSESBORDERWIDTH;
  return;
@@ -1564,7 +1564,7 @@ void XCursesGetIcon()
    icon_bitmap = XCreateBitmapFromData(XtDisplay(topLevel),
                                      RootWindowOfScreen(XtScreen(topLevel)),
                                      (char *)bitmap_bits,
-                                     icon_bitmap_width, 
+                                     icon_bitmap_width,
                                      icon_bitmap_height);
    return;
 }
@@ -1641,8 +1641,8 @@ Boolean *continue_to_dispatch;
          say("ClientMessage received\n");
 #endif
          /*
-          * This code used to include handling of WM_SAVE_YOURSELF, but 
-          * it resulted in continual failure of THE on my Toshiba laptop. 
+          * This code used to include handling of WM_SAVE_YOURSELF, but
+          * it resulted in continual failure of THE on my Toshiba laptop.
           * Removed on 3-3-2001. Now only exits on WM_DELETE_WINDOW
           */
          if ( (Atom)client_event->data.s[0] == wm_atom[0] )
@@ -1758,7 +1758,7 @@ Cardinal *nparams;
 	if (trace_on) PDC_debug("%s:XCursesKeyPress called\n",(XCursesProcess)?"     X":"CURSES");
 #endif
 
- if (event->type == KeyRelease) 
+ if (event->type == KeyRelease)
     return; /* ignore KeyReleases */
 
  buffer[0] = '\0';
@@ -1798,7 +1798,7 @@ printf("%d: %ld %d %d %d %d\n",__LINE__,keysym,
 
  if (event->type == KeyPress
  &&  keysym != compose_key
- &&  IsModifierKey(keysym) 
+ &&  IsModifierKey(keysym)
  &&  SP->return_key_modifiers)
  {
     save_keysym = keysym;
@@ -1816,7 +1816,7 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
 
  if (event->type == KeyPress
  &&  keysym != compose_key
- &&  IsModifierKey(keysym) 
+ &&  IsModifierKey(keysym)
  &&  SP->return_key_modifiers)
  {
     key = 0;
@@ -2063,27 +2063,27 @@ Cardinal *nparams;
    register int i=0;
    unsigned char *ptr=NULL;
 
-   if (*nparams != 1) 
+   if (*nparams != 1)
       return;
 
-   if ((*params)[0] == '0' 
-   && (*params)[1] == 'x' 
-   && (*params)[2] != '\0') 
+   if ((*params)[0] == '0'
+   && (*params)[1] == 'x'
+   && (*params)[2] != '\0')
    {
       unsigned char c;
       int total=0;
       char *p;
-      for (p = *params+2; (c = *p); p++) 
+      for (p = *params+2; (c = *p); p++)
       {
          total *= 16;
          if (isupper(c)) c = tolower(c);
          if (c >= '0' && c <= '9')
             total += c - '0';
-         else 
+         else
          {
             if (c >= 'a' && c <= 'f')
                total += c - 'a' + 10;
-            else 
+            else
                break;
          }
       }
@@ -2120,7 +2120,7 @@ XButtonEvent *button_event;
 /***********************************************************************/
 #ifdef HAVE_PROTO
 void XCursesRequestorCallbackForPaste(Widget w,XtPointer data, Atom *selection,
-                                     Atom *type, XtPointer value, 
+                                     Atom *type, XtPointer value,
                                      unsigned long *length, int *format)
 #else
 void XCursesRequestorCallbackForPaste(w,data,selection,type,value,length,format)
@@ -2167,7 +2167,7 @@ Atom *selection;
 Atom *target;
 Atom *type_return;
 XtPointer *value_return;
-unsigned long *length_return; 
+unsigned long *length_return;
 int *format_return;
 #endif
 /***********************************************************************/
@@ -2182,7 +2182,7 @@ int *format_return;
       Atom *targetP;
       Atom *std_targets;
       unsigned long std_length;
-      XmuConvertStandardSelection(topLevel, req->time, selection, 
+      XmuConvertStandardSelection(topLevel, req->time, selection,
           target, type_return, (XPointer*)&std_targets, &std_length,
           format_return);
       *value_return = XtMalloc(sizeof(Atom)*(std_length + 1));
@@ -2726,30 +2726,30 @@ XtIntervalId *id;
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("%s:XCursesCursorBlink() - called:\n",(XCursesProcess)?"     X":"CURSES");
 #endif
-   if ( windowEntered ) 
-   { 
-      if ( visible_cursor ) 
-      { 
-         /* 
+   if ( windowEntered )
+   {
+      if ( visible_cursor )
+      {
+         /*
           * Cursor currently ON, turn it off
-          */ 
-         int save_visibility = SP->visibility; 
-         SP->visibility = 0; 
-         XCursesDisplayCursor(SP->cursrow,SP->curscol, 
-                              SP->cursrow,SP->curscol); 
-         SP->visibility = save_visibility; 
-         visible_cursor = 0; 
-      } 
-      else 
-      { 
-         /* 
-          * Cursor currently OFF, turn it on 
-          */ 
-         XCursesDisplayCursor(SP->cursrow,SP->curscol, 
-                              SP->cursrow,SP->curscol); 
-         visible_cursor = 1; 
-      } 
-   } 
+          */
+         int save_visibility = SP->visibility;
+         SP->visibility = 0;
+         XCursesDisplayCursor(SP->cursrow,SP->curscol,
+                              SP->cursrow,SP->curscol);
+         SP->visibility = save_visibility;
+         visible_cursor = 0;
+      }
+      else
+      {
+         /*
+          * Cursor currently OFF, turn it on
+          */
+         XCursesDisplayCursor(SP->cursrow,SP->curscol,
+                              SP->cursrow,SP->curscol);
+         visible_cursor = 1;
+      }
+   }
 
    XtAppAddTimeOut( app_context, XCURSESCURSORBLINKRATE, XCursesCursorBlink, NULL );
    return;
@@ -2796,6 +2796,22 @@ Cardinal *nparams;
        * ButtonPress
        */
       case ButtonPress:
+         /*
+          * Handle button 4 and 5, which are normally mapped to the wheel mouse
+          * scroll up and down
+          */
+         if ( (SP->_trap_mbe & MOUSE_WHEEL_SCROLL )
+         && ( button_no == 4 || button_no == 5 ) )
+         {
+            /*
+             * Send the KEY_MOUSE to curses program...
+             */
+            memset( &Mouse_status, 0, sizeof(Mouse_status) );
+            Mouse_status.changes = (button_no == 5) ? PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP ;
+            MOUSE_X_POS = MOUSE_Y_POS = -1;
+            XCursesSendKeyToCurses( (unsigned long)KEY_MOUSE, &Mouse_status );
+            return;
+         }
          remove_release = False;
          handle_real_release = False;
 #ifdef MOUSE_DEBUG
@@ -3166,17 +3182,17 @@ XtPointer call_data;
    int viewport_y=(SP->sb_viewport_y*XCursesFontHeight);
    int cur_y=(SP->sb_cur_y*XCursesFontHeight);
 
-   /* 
+   /*
     * When pixels is negative, right button pressed, move data down,
-    * thumb moves up.  Otherwise, left button pressed, pixels 
-    * positive, move data up, thumb down. 
+    * thumb moves up.  Otherwise, left button pressed, pixels
+    * positive, move data up, thumb down.
     */
    cur_y += pixels;
 
    /* limit panning to size of overall */
    if (cur_y < 0)
       cur_y = 0;
-   else 
+   else
    {
       if (cur_y > (total_y - viewport_y))
          cur_y = (total_y - viewport_y);
@@ -3208,17 +3224,17 @@ XtPointer call_data;
    int viewport_x=(SP->sb_viewport_x*XCursesFontWidth);
    int cur_x=(SP->sb_cur_x*XCursesFontWidth);
 
-   /* 
+   /*
     * When pixels is negative, right button pressed, move data down,
-    * thumb moves up.  Otherwise, left button pressed, pixels 
-    * positive, move data up, thumb down. 
+    * thumb moves up.  Otherwise, left button pressed, pixels
+    * positive, move data up, thumb down.
     */
    cur_x += pixels;
 
    /* limit panning to size of overall */
    if (cur_x < 0)
       cur_x = 0;
-   else 
+   else
    {
       if (cur_x > (total_x - viewport_x))
          cur_x = (total_x - viewport_x);

@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.10 2004/01/01 22:08:01 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.11 2004/09/10 08:00:09 rexx Exp $";
 #endif
 
 #include <stdio.h>
@@ -277,7 +277,7 @@ WINDOW *win;
     wsetscrreg (win, 0, 4);
     box(win, ACS_VLINE, ACS_HLINE);
     wrefresh (win);
-    for (i = 1; i <= 5; i++) 
+    for (i = 1; i <= 5; i++)
       {
        napms (500);
        scroll(win);
@@ -289,7 +289,7 @@ WINDOW *win;
     wsetscrreg (win, 5, --OldY);
     box(win, ACS_VLINE, ACS_HLINE);
     wrefresh (win);
-    for (i = 5; i <= OldY; i++) 
+    for (i = 5; i <= OldY; i++)
       {
        napms (300);
        wscrl(win,-1);
@@ -400,14 +400,12 @@ WINDOW *win;
           request_mouse_pos();
           if (BUTTON_CHANGED(1))
              button = 1;
+          else if (BUTTON_CHANGED(2))
+             button = 2;
+          else if (BUTTON_CHANGED(3))
+             button = 3;
           else
-             if (BUTTON_CHANGED(2))
-                button = 2;
-             else
-                if (BUTTON_CHANGED(3))
-                   button = 3;
-                else
-                   button = 0;
+             button = 0;
           if (BUTTON_STATUS(button) & BUTTON_MODIFIER_MASK)
           {
              waddstr(win, " Modifier(s):");
@@ -422,6 +420,10 @@ WINDOW *win;
           wprintw(win,"Button %d: ",button);
           if (MOUSE_MOVED)
              wprintw(win,"moved: ");
+          else if (MOUSE_WHEEL_UP)
+             wprintw(win,"wheel up: ");
+          else if (MOUSE_WHEEL_DOWN)
+             wprintw(win,"wheel down: ");
           else if ((BUTTON_STATUS(button) & BUTTON_ACTION_MASK) == BUTTON_PRESSED)
              wprintw(win,"pressed: ");
           else if ((BUTTON_STATUS(button) & BUTTON_ACTION_MASK) == BUTTON_CLICKED)
@@ -462,7 +464,7 @@ WINDOW *win;
 
     werase (subWin);
     box(subWin, ACS_VLINE, ACS_HLINE);
-    for (i = 0; i < 5; i++) 
+    for (i = 0; i < 5; i++)
       {
        mvwprintw (subWin, 1, 1, "Time = %d", i);
        wrefresh(subWin);
@@ -552,7 +554,7 @@ WINDOW *win;
       {
        win1 = newwin(10, 50, 14, 25);
        if (win1 == NULL)
-         {   
+         {
           endwin();
           return;
          }

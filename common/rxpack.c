@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.35 2003/04/04 12:03:38 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.36 2003/04/13 01:48:59 mark Exp $";
 
 #include "rxpack.h"
 
@@ -2098,9 +2098,11 @@ int RxReturnStringAndFree
    char *str;
 #endif
 {
-   int len = strlen( str );
+   int len = 0;
    char *ret = NULL;
 
+   if ( str )
+      len = strlen( str );
    InternalTrace( RxPackageGlobalData, "RxReturnStringAndFree", "%x,\"%s\" Length: %d Free: %d", retstr, str, len, freeit );
 
    if ( len > RXAUTOBUFLEN )

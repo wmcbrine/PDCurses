@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -51,7 +51,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.5 2004/04/02 02:24:04 rexx Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.6 2004/07/01 07:28:44 rexx Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -76,21 +76,21 @@ char linesrippedoff=0;
    int draino(int ms);
 
   X/Open Description:
-   The def_prog_mode() and def_shell_mode() functions save the 
+   The def_prog_mode() and def_shell_mode() functions save the
    current terminal modes as the "program" (in curses) or
    "shell" (not in curses) state for use by the reset_prog_mode()
    and reset_shell_mode() functions.  This is done automatically by
    initscr().
 
-   The reset_prog_mode() and reset_shell_mode() functions restore 
+   The reset_prog_mode() and reset_shell_mode() functions restore
    the terminal to "program" (in curses) or "shell" (not in curses)
    state.  These are done automatically by endwin()
    and doupdate() after an endwin(), so they would normally not
    be called before these functions.
 
-   The savetty() and resetty() routines save and restore the state of 
-   the terminal modes. The savetty() function saves the current state 
-   in a buffer and resetty() restores the state to what it was at the 
+   The savetty() and resetty() routines save and restore the state of
+   the terminal modes. The savetty() function saves the current state
+   in a buffer and resetty() restores the state to what it was at the
    last call to savetty().
 
    The getsyx() routine obtains the coordinates of the virtual screen
@@ -114,7 +114,7 @@ char linesrippedoff=0;
    an underline) and 2 makes the cursor "highly visible"; a block.
 
    The ripoffline() function allows the user to reduce the size of
-   stdscr by 1 line.  If the value of line is positive, the line is 
+   stdscr by 1 line.  If the value of line is positive, the line is
    removed from the top of the screen; negative from the bottom. Up to
    5 lines can be ripped off stdscr by calling ripoffline()
    consecutively.
@@ -129,9 +129,9 @@ char linesrippedoff=0;
 
   PDCurses Description:
    FYI: It is very unclear whether savetty() and resetty() functions
-   are a duplication of the reset_prog_mode() and reset_shell_mode() 
-   functions or whether this is a backing store type of operation.  
-   At this time, they are implemented similar to the reset_*_mode() 
+   are a duplication of the reset_prog_mode() and reset_shell_mode()
+   functions or whether this is a backing store type of operation.
+   At this time, they are implemented similar to the reset_*_mode()
    routines.
 
    The curs_set() routine is used to set the visibility of the cursor.
@@ -227,6 +227,7 @@ int PDC_CDECL reset_prog_mode()
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("reset_prog_mode() - called\n");
 #endif
+
    if (c_pr_tty.been_set == TRUE)
    {
       memcpy(SP, &c_pr_tty.saved, sizeof(SCREEN));
@@ -296,23 +297,23 @@ int PDC_CDECL reset_shell_mode()
          PDC_cursor_on();
       SP->font = PDC_get_font();
       PDC_set_font(c_sh_tty.saved.font);
-#if !defined (XCURSES)
-# if !defined(EMXVIDEO)
-#  if defined(OS2)
+# if !defined (XCURSES)
+#  if !defined(EMXVIDEO)
+#   if defined(OS2)
       (void)PDC_get_scrn_mode( &modeInfo );
       if ( !PDC_scrn_modes_equal( modeInfo, c_sh_tty.saved.scrnmode ) )
          PDC_set_scrn_mode( c_sh_tty.saved.scrnmode );
-#  else
+#   else
       if ( !PDC_scrn_modes_equal( PDC_get_scrn_mode(), c_sh_tty.saved.scrnmode ) )
          PDC_set_scrn_mode( c_sh_tty.saved.scrnmode );
+#   endif
 #  endif
 # endif
-#endif
-#if defined(OS2) || defined(WIN32)
+# if defined(OS2)
       PDC_resize_screen(c_sh_tty.saved.lines,c_sh_tty.saved.cols);
-#else
+# else
       PDC_set_rows(c_sh_tty.saved.lines);
-#endif
+# endif
    }
 #endif
 

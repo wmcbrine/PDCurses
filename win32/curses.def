@@ -291,3 +291,4 @@ EXPORTS PDC_usleep
 EXPORTS PDC_validchar
 EXPORTS PDC_vsscanf
 EXPORTS PDC_freeclipboard
+EXPORTS PDC_clearclipboard

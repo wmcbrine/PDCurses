@@ -1,0 +1,74 @@
+# Makefile for XCurses manext program.
+
+SHELL		= /bin/sh
+
+srcdir		= @srcdir@
+pdcdir		= $(srcdir)/../x11
+
+VPATH		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= $(exec_prefix)
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+
+INCDIR		= $(srcdir)
+CPPFLAGS	= @DEFS@ @SYS_DEFS@
+
+CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) 
+
+LINK		= $(CC)
+LDFLAGS		= @LDFLAGS@ @LIBS@ 
+
+DOC_DIR=$(srcdir)/../doc
+INC_DIR=$(srcdir)/..
+PDCURSES_DIR=$(srcdir)/../pdcurses
+PANEL_DIR=$(srcdir)/../panel
+
+all: manual
+
+manual: manext PDCurses.man
+
+PDCurses.man:
+	./manext $(DOC_DIR)/intro.man 			> PDCurses.man
+	./manext $(DOC_DIR)/overview.man 			>> PDCurses.man
+	echo .......=================================== >> PDCurses.man
+	echo .......PDCurses Definitions and Variables:	>> PDCurses.man
+	echo .......=================================== >> PDCurses.man
+	./manext $(INC_DIR)/curses.h 	>> PDCurses.man
+	echo .......============================ >> PDCurses.man
+	echo .......PDCurses Functions:		>> PDCurses.man
+	echo .......============================ >> PDCurses.man
+	./manext $(PDCURSES_DIR)/*.c >> PDCurses.man
+	echo .......============================ >> PDCurses.man
+	echo .......PDCurses Private Functions:		>> PDCurses.man
+	echo .......============================ >> PDCurses.man
+	./manext $(pdcdir)/*.c >> PDCurses.man
+	echo .......========================== >> PDCurses.man
+	echo .......PDCurses Panel Functions:		>> PDCurses.man
+	echo .......========================== >> PDCurses.man
+	./manext $(PANEL_DIR)/*.c >> PDCurses.man
+	echo .......======================== >> PDCurses.man
+	echo .......X11 considerations:		>> PDCurses.man
+	echo .......======================== >> PDCurses.man
+	./manext $(DOC_DIR)/x11.man 			>> PDCurses.man
+
+manext: manext.o 
+	$(LINK) manext.o -o $@ $(LDFLAGS)
+
+manext.o: $(srcdir)/manext.c
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/manext.c
+
+install:
+	echo Does nothing at the moment
+
+clean:
+	-rm -rf *.o manext PDCurses.man
+
+distclean: clean
+	-rm -f Makefile
+
+mostlyclean: clean
+
+realclean: distclean

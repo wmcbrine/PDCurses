@@ -1,0 +1,127 @@
+                    Welcome to PDCurses !
+
+ This file provides information on installing PDCurses on DOS, OS/2,
+ Win95/NT or for X11 and building the PDCurses library.
+
+ The first step is to unpack the archive. (You've already done that!)
+
+ Next, go to the section below for the platform you intend to build
+ the software on, and follow the steps there.
+
+ OS2
+ ---
+ . cd to the OS2 directory in the directory in which PDCurses was
+   unpacked.
+ . You will find a number of .mak files in this directory, one for
+   each supported compiler.  These following lists the make file
+   and compiler:
+
+         gccos2.mak - emx 0.9b+
+         iccos2.mak - C Set/2
+         bccos2.mak - Borland C++ 2.0
+         wccos2.mak - Watcom 10.6
+         mscos2.mak - Microsoft C 6.0
+
+ . Create a directory somewhere in which you want the object, library
+   and demo executables to be built.
+ . cd to that directory.
+ . Copy the appropriate makefile to this directory.
+ . Edit this makefile, and make a few changes to paths that point to
+   the location of the PDCurses code and your compiler. The lines
+   you need to change are:
+
+        PDCURSES_HOME=
+        CC_HOME=
+
+ . Make the required targets using the options specified at the top
+   of the makefile.
+
+ . Thats it!
+
+
+ DOS
+ ---
+ . cd to the DOS directory in the directory in which PDCurses was
+   unpacked.
+ . You will find a number of .mak files in this directory, one for
+   each supported compiler.  These following lists the make file
+   and compiler:
+
+         gccdos.mak   - DJGPP V2
+         bccdos.mak   - Borland C++ 3.0+
+         wccdos16.mak - Watcom 10.6 (16bit)
+         wccdos4g.mak - Watcom 10.6 (32bit)
+         mscdos.mak   - Microsoft C 6.0
+
+ . Create a directory somewhere in which you want the object, library
+   and demo executables to be built.
+ . cd to that directory.
+ . Copy the appropriate makefile to this directory.
+ . Edit this makefile, and make a few changes to paths that point to
+   the location of the PDCurses code and your compiler. The lines
+   you need to change are:
+
+        PDCURSES_HOME=
+        CC_HOME=
+        MODEL=   (if your compiler supports memory models)
+
+ . Make the required targets using the options specified at the top
+   of the makefile.
+
+ . Thats it!
+
+
+ Win95/NT
+ --------
+ . cd to the WIN32 directory in the directory in which PDCurses was
+   unpacked.
+ . You will find a number of .mak files in this directory, one for
+   each supported compiler.  These following lists the make file
+   and compiler:
+
+         gccwin32.mak   - Cygnus GNU Compiler
+         bccwin32.mak   - Borland C++ 4.0.2+
+         vcwin32.mak    - Visual C++ 2.0+
+         wccwin32.mak   - Watcom 10.6
+
+ . Create a directory somewhere in which you want the object, library
+   and demo executables to be built.
+ . cd to that directory.
+ . Copy the appropriate makefile to this directory.
+ . Edit this makefile, and make a few changes to paths that point to
+   the location of the PDCurses code and your compiler. The lines
+   you need to change are:
+
+        PDCURSES_HOME=
+        CC_HOME=
+
+ . Make the required targets using the options specified at the top
+   of the makefile.
+
+ . Thats it!
+
+
+ X11
+ ---
+
+ To install PDCurses for X (aka XCurses), follow these instructions.
+
+ Run the configure script that is in the PDCurses-x.x directory. This
+ will interrogate your system and check that you have the necessary 
+ support XCurses requires.
+
+ If configure cannot find your X include files or X libraries, you can
+ specify the paths with --x-includes=inc_path or --x-libraries=lib_path
+ as arguments to the configure script.
+
+ configure also recognises the --with-debug[=yes|no] switch. By default
+ the library and demo programs are built with the optimiser switch; -O.
+ You can turn this off and debugging (-g) on by adding --with-debug to the
+ configure command.
+
+ Once configure has run, run "make". This should make the XCurses library,
+ the panels library and all demo programs in the demos directory.
+
+ Alternately, you can cd to "pdcurses" directory, and run "make" from
+ here.  This will build libpdcurses.a only.
+

@@ -1,0 +1,82 @@
+
+                             PDCurses 2.2
+            (Public Domain Curses for DOS, OS/2 and Xwindows)
+
+
+INTRODUCTION:
+
+	This release of PDCurses has includes a number of major changes:
+		- the portable library functions are now grouped together into
+		  single files with the same arrangement as System V R4 curses.
+		- a panels library has been included. This panels library was
+		  written by Warren Tucker.
+		- quite a few more functions have been supplied by Wade Schauer
+		  and incorporated into release 2.2. Wade also supplied the
+		  support for the Microway NDP C/C++ 32 bit DOS compiler.
+		- the curses datatype has been changed from an unsigned in to
+		  a long. This allows more attributes to be stored as well as
+		  increasing the number of color-pairs from 32 to 64.
+
+BUGS FIXED:
+
+	mvwin() checked the wrong coordinates
+	removed DESQview shadow memory buffer checking
+	bug in curses.h in #define for wstandout()
+	lots of others I can't remember
+
+NEW FUNCTIONS:
+
+	Too many to mention. See intro.man for a complete list of the
+	functions PDCurses now supports.
+
+COMPILER SUPPORT:
+
+	DJGPP 1.12 is now supported. The run-time error that caused
+	programs to crash has been removed.
+
+	emx 0.9a is supported. A program compiled for OS/2 should also
+	work under DOS if you use the VID=EMX switch when compiling. See
+	the makefile for details.
+
+	The Microway NDP C/C++ DOS compiler is now supported. Thanks to 
+	Wade Schauer for this port.
+
+	The Watcom C++ 10.0 DOS compiler is now supported. Thanks to
+	Pieter Kunst for this port.
+
+	The library now has many functions grouped together to reduce the
+	size of the library and to improve the speed of compilation.
+
+	The "names" of a couple of the compilers in the makefile has 
+	changed; CSET2 is now ICC and GO32 is now GCC.
+
+	The Xwindows port is experimental at the moment.
+
+EXTRA OPTIONS:
+
+	One difference between the behaviour of PDCurses and Unix curses
+	is the attributes that are displayed when a character is cleared.
+	Under Unix curses, no attributes are displayed, so 
+	the result is always black. Under PDCurses, these functions clear
+	with the current attributes in effect at the time. With the
+	introduction of the bkgd functions, by default, PDCurses clears
+	using the value set by (w)bkgd(). To have PDCurses behave the
+	same way as it did before release 2.2, compile with -DPDCURSES_WCLR
+
+ACKNOWLEGEMENTS: (for this release)
+
+	Pieter Kunst,David Nugent,Warren Tucker,Darin Haugen,Stefan Strack,
+	Wade Schauer and others who either allerted me to bugs or supplied
+	fixes.
+
+
+Cheers, Mark
+
+------------------------------------------------------------------------
+Mark Hessling                         Email: M.Hessling@qut.edu.au
+36 David Road                         Phone: +617 849 7731
+Holland Park                          Fax:   
+Brisbane                              ***** PDCurses Maintainer *****
+QLD 4121                              ******** Author of THE ********
+Australia                             ******** Member RexxLA ********
+------------------------------------------------------------------------

@@ -1,0 +1,19 @@
+
+                        Welcome to PDCurses
+
+ Contents
+ --------
+ This directory contains core PDCurses source code files specific to
+ the OS/2 platform.
+
+
+ Distribution Status
+ -------------------
+
+ The files in this directory are released to the Public Domain.
+
+
+ Acknowlegements
+ ---------------
+
+ Generic OS/2 port was provided by ????

@@ -1,0 +1,75 @@
+
+                             PDCurses 2.3
+            (Public Domain Curses for DOS, OS/2, X11 and Win32)
+
+
+INTRODUCTION:
+
+This release of PDCurses includes the following changes:
+
+- the X11 port is now fully functional
+- the MS Visual C++ Win32 port now includes a DLL
+- both the X11 and Win32 ports support the mouse
+- the slk..() functions are now functional
+- support for scrollbars under X11 are experimental at this stage
+
+The name of the statically built library is pdcurses.lib (or pdcurses.a).  
+The name of the DLL import library (where applicable) is curses.lib.
+
+BUGS FIXED:
+
+some minor bugs were corrected in this release
+
+NEW FUNCTIONS:
+
+slk..() functions
+
+
+NEW COMPILER SUPPORT:
+
+- MS Visual C++ under Win95/NT
+- Watcom C++ under OS/2, Win32 and DOS
+- two EMX ports have been provided:
+  - OS/2 only using OS/2 APIs
+  - OS/2 and DOS using EMX video support routines
+
+Makefiles for each platform/compiler option reside in the platform
+directory.  These all have an extension of .mak.
+
+
+EXTRA OPTIONS:
+
+PDCurses recognises two environment variables which determines the
+initialisation and finalisation behaviour.  These environment variables
+do not apply to the X11 port.
+
+ PDC_PRESERVE_SCREEN
+If this environment variable is set, PDCurses will not clear the screen
+to the default white on black on startup.  This allows you to overlay
+a window over the top of the existing screen background.
+
+ PDC_RESTORE_SCREEN
+If this environment variable is set, PDCurses will take a copy of the
+contents of the screen at the time that PDCurses is started; initscr(),
+and when endwin() is called, the screen will be restored.
+
+
+ACKNOWLEGEMENTS: (for this release)
+
+Chris Szurgot for original Win32 port.
+Gurusamy Sarathy for some updates to the Win32 port.
+Kim Huron for the slk..() functions.
+Florian Grosse Coosmann for some bug fixes.
+Esa Peuha for reducing compiler warnings.
+Augustin Martin Domingo for patches to X11 port to enable accented 
+ characters.
+
+Cheers, Mark
+------------------------------------------------------------------------
+ Mark Hessling                       Email:       M.Hessling@qut.edu.au
+ PO Box 203                          http://www.lightlink.com/hessling/
+ Bellara                                AUTHOR of  |  MAINTAINER of
+ QLD 4507                                 THE      |    PDCurses
+ Australia                              Rexx/SQL   |     Regina
+                Member of RexxLA: http://www.rexxla.org/
+------------------------------------------------------------------------

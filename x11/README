@@ -1,0 +1,26 @@
+
+              Welcome to PDCurses for X11 (aka XCurses)
+
+ This is a port of PDCurses for X11.  It is designed to allow existing
+ curses programs to be re-compiled with PDCurses resulting in native
+ X11 programs.
+
+
+ Distribution Status
+ -------------------
+
+ The files in this directory are copyright Mark Hessling 1995-1999.
+ This source code made be used without restriction when used with
+ the PDCurses library.  Any other use of this source code requires
+ written permission of the author, Mark Hessling (M.Hessling@qut.edu.au)
+
+ To be Done
+ ----------
+
+ - add newterm() function and have it create a new X window
+
+ - provide a command line parsing function to enable X command line
+   arguments to be parsed and stripped from the arguments passed back
+   to the calling procedure.
+
+ - add proper 'flash' behaviour

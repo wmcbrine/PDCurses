@@ -1,0 +1,109 @@
+
+                             PDCurses 2.1
+                  (Public Domain Curses for DOS, OS/2 and UNIX)
+
+
+INTRODUCTION:
+
+	The first thing that obviously needs mentioning is the title above.
+	The current code contains bug fixes for the DOS and OS/2 releases
+	and also includes an alpha release for Unix. The Unix release uses
+	another public domain package (mytinfo) to handle the low-level
+	screen writes. mytinfo was posted to comp.sources.unix (or misc) in
+	December 1992 or January 1993. Unless you are a glutton for punishment
+	I would recommend you avoid the Unix port at this stage.
+	
+	The other major addition to PDCurses is the support for DJGPP (the
+	DOS port of GNU C++). Thanks to David Nugent (davidn@csource.oz.au).
+	
+	Other additions are copywin() function, function debugging support
+	and getting the small and medium memory models to work.
+	The testcurs.c demo program has also been changed significantly and
+	a new demo program, tuidemo, has been added.
+	
+	Some people have suggested including information on where to get
+	dmake from. oak.oakland.edu in /pub/msdos/c
+	
+OTHER NOTES:
+	
+	Under DOS, by default, screen writes to a CGA monitor are done via
+	the video BIOS rather than by direct video memory writes. This is
+	due to the CGA "snow" problem. If you have a CGA monitor and do not
+	suffer from snow, you can compile private\_queryad.c with CGA_DIRECT
+	defined. This will then use cause PDCurses to write directly to the
+	CGA video memory.
+
+	Function debugging: Firstly to get function debugging, you have to
+	compile the library with OPT=N in the makefile. This also turns on
+	compiler debugging. You can control when you want PDCurses to write
+	to the debug file (called trace in the current directory) by using
+	the functions traceon() and traceoff() in your program.
+
+	Microsoft C 6.00 Users note:
+	----------------------------
+	With the addition of several new functions, using dmake to compile 
+	PDCurses now causes the compiler to run "out of heap space in pass 2".
+	Using the 6.00AX version (DOS-Extended) to compile PDCurses fixes
+	this problem; hence the -EM switch.
+
+	Functional changes
+	------------------
+	A few curses functions have been fixed to exhibit their correct 
+	behaviour and make them more functionally portable with System V
+	curses.
+	The functions that have changed are overlay(), overwrite() and
+	typeahead.
+
+	overlay() and overwrite()
+	Both of theses functions in PDCurses 2.0 allowed for one window to
+	be effectively placed on top of another, and the characters in the
+	first window were overlayed or overwritten starting at 0,0 in both
+	windows. This behaviour of these functions was not correct. These
+	functions only operate on windows that physically overlap with
+	respect to the displayed screen. To achieve the same functionality
+	as before, use the new function copywin(). See the manual page for
+	further details.
+
+	typeahead()
+	This function in PDCurses 2.0 effectively checked to see if there
+	were any characters remaining in the keyboard buffer. This is not
+	the behaviour exhibited by System V curses. This function is intended
+	purely to set a flag so that curses can check while updating the
+	physical screen if any keyboard input is pending. To achieve the
+	same effect with typeahead() under PDCurses 2.1 the following code 
+	should be used.
+
+	In place of...
+
+		while(!typeahead(stdin))
+		 {
+			/* do something until any key is pressed... */
+		 }
+
+	use...
+
+		nodelay(stdscr,TRUE); /* getch() to return ERR if no key pending */
+		while(getch() == (ERR))
+		 {
+			/* do something until any key is pressed... */
+		 }
+
+
+ACKNOWLEGEMENTS: (in no particlar order)
+
+	Jason Shumate,Pieter Kunst,David Nugent,Andreas Otte,
+	Pasi Hamalainen,James McLennan,Duane Paulson,Ib Hojme
+	
+	Apologies to anyone I may have left out.
+
+
+Cheers, Mark
+
+------------------------------------------------------------------------
+Mark Hessling                         Email: M.Hessling@qut.edu.au
+36 David Road                         Phone: +617 849 7731
+Holland Park                          Fax:   
+Brisbane                              ***** PDCurses Maintainer *****
+QLD 4121                              ******** Author of THE ********
+Australia                             ******** Member RexxLA ********
+------------------------------------------------------------------------

@@ -1,0 +1,3 @@
+#NOTE:  startup.mk file is called dmake.ini for OS/2
+#       and is found in os2/mscdos/dmake.ini
+.INCLUDE : "os2/mscdos/dmake.ini"

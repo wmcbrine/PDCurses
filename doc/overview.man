@@ -1,0 +1,60 @@
+/*man-start*********************************************************************
+
+			Curses Overview
+
+The X/Open Curses Interface Definition describes a set of C-Language
+functions that provide screen-handling and updating, which are
+collectively known as the curses library.
+
+The curses library permits manipulation of data structures called
+windows which may be thought of as two-dimensional arrays of
+characters representing all or part of a terminal's screen.  The
+windows are manipulated using a procedural interface described
+elsewhere.  The curses package maintains a record of what characters
+are on the screen.  At the most basic level, manipulation is done with
+the routines move() and addch() which are used to "move" the curses
+around and add characters to the default window, stdscr, which
+represents the whole screen.
+
+An application may use these routines to add data to the window in any
+convenient order.  Once all data have been added, the routine
+refresh() is called.  The package then determines what changes have
+been made which affect the screen.  The screen contents are then
+changed to reflect those characters now in the window. using a
+sequence of operations optimised for the type of terminal in use. 
+
+At a higher level routines combining the actions of move() and addch()
+are defined, as are routines to add whole strings and to perform
+format conversions in the manner of printf(). 
+
+Interfaces are alse defined to erase the entire window and to specify
+the attributes of individual characters in the winodw.  Attributes
+such as inverse video, underline and blink can be used on a
+per-character basis. 
+
+New windows can be created by allowing the application to build
+several images of the screen and display the appropriate one very
+quickly.  New windows are created using the routine newwin().  For
+each routine that manipulates the default window, stdscr, there is a
+corresponding routine prefixed with w to manipulate the contents of a
+specified window; for example, move() and wmove().  In fact, move(...)
+is functionally equivalent to wmove( stdscr, ...).  This is similar to
+the interface offered by printf(...) and fprintf(stdout, ...). 
+
+Windows do not have to correspond to the entire screen.  It is
+possible to create smaller windows, and also to indicate that the
+window is only partially visible on the screen.  Furthermore, large
+windows or pads, which are bigger than the actual screen size, may be
+created. 
+
+The routine newterm() may be called to "open" additional terminals by
+large applications wishing to manipulate several terminals at once.
+The set_term() function is used to select the terminal whose screen is
+to be updated by the next refresh(). 
+
+Interfaces are also defined to allow input character manipulation and
+to disable and enable many input attributes: character echo, single
+character input with or without signal processing (cbreak or raw
+modes), carriage returns mapping to newlines, screen scrolling, etc. 
+
+**man-end**********************************************************************/

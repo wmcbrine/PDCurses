@@ -1,0 +1,245 @@
+/*man-start*********************************************************************
+
+Introduction:
+------------
+
+ XCurses uses the System V IPC shared memory facility for sharing data
+ between the curses program and the child process created to manage the
+ X stuff. XCurses also uses sockets for communication between the
+ processes.
+
+ To use XCurses with an existing curses program, you need to make two
+ changes to your code.
+
+ The first is the addition of a definition of the program name as a
+ global char pointer. eg.
+
+#ifdef XCURSES
+ char *XCursesProgramName="sample";
+#endif
+
+ This name is used as the title of the X window, and for defining X
+ resources specific to your program.
+
+ The second is a call to XCursesExit() just before exiting from your
+ program. eg.
+
+#ifdef XCURSES
+ XCursesExit();
+#endif
+ exit(0);
+
+ This call is required to enable the child X process to shut down cleanly
+ and free up the shared memory it used.
+
+ When compiling your curses application, you need to add -DXCURSES.
+
+ XCurses programs use the X Toolkit Intrinsics libraries.  You will need
+ to link your code with the following libraries under X11R5:
+    Xaw Xmu Xt X11
+
+ and under X11R6:
+    Xaw Xmu Xt X11 SM ICE Xext
+
+ The best method of determining which libraries you need, is to
+ compile one of the demo programs and take note of the libraries
+ it uses.
+
+Here be Dragons!
+----------------
+
+ Be aware that curses programs that expect to have a normal tty underneath
+ them will be very disappointed! Output directed to stdout after a call
+ to system() (maybe even exec()) will go to the xterm that invoked the
+ XCurses application, or to the console if not invoked directly from an
+ xterm. Similarly, stdin will expect its input from the same place as
+ stdout.
+
+ This situation is not desirable, but I know of no simple way to get
+ around this.
+
+
+X Resources:
+-----------
+
+XCurses recognises the following resources:
+
+    lines
+    cols
+    normalFont
+    boldFont
+    pointer
+    pointerForeColor
+    pointerBackColor
+    cursorColor
+    colorBlack
+    colorRed
+    colorGreen
+    colorYellow
+    colorBlue
+    colorMagenta
+    colorCyan
+    colorWhite
+    bitmap
+    translations
+    shmmin
+    borderWidth
+    borderColor
+    clickPeriod
+    doubleClickPeriod
+    composeKey
+
+lines:             specifies the number of lines the "screen" will have
+                   Directly equates to LINES
+                   There is no theoretical maximum.
+                   The minimum value must be 2.
+                   Default:        24
+
+cols:              specifies the number of columns the "screen" will have
+                   Directly equates to COLS
+                   There is no theoretical maximum.
+                   The minimum value must be 2.
+                   Default:        80
+
+normalFont:        the name of a fixed width font, used for A_NORMAL attribute
+                   Default:        7x13
+
+boldFont:          the name of a fixed width font, used for A_BOLD attribute
+                   Default:        7x13bold
+
+                   NB. The dimensions of font and boldFont MUST be the same.
+
+pointer:           the name of a valid pointer cursor
+                   Default:        xterm
+
+pointerForeColor:  the foreground colour of the pointer
+                   Default:        black
+
+pointerBackColor:  the background colour of the pointer
+                   Default:        white
+
+cursorColor:       the colour of the text cursor
+                   Default:        Red
+                   *** This resource is now obsolete and is ignored ***
+
+colorBlack:        the color of the COLOR_BLACK attribute
+colorRed           the color of the COLOR_RED attribute
+colorGreen         the color of the COLOR_GREEN attribute
+colorYellow        the color of the COLOR_YELLOW attribute
+colorBlue          the color of the COLOR_BLUE attribute
+colorMagenta       the color of the COLOR_MAGENTA attribute
+colorCyan          the color of the COLOR_CYAN attribute
+colorWhite         the color of the COLOR_WHITE attribute
+                   Defaults are obvious :)
+
+bitmap:            the name of a valid pixmap file of depth 1 used for
+                   the application's icon
+                   Default:        a 32x32 or 64x64 pixmap depending on the 
+                                   window manager
+
+translations:      Translations enable the user to customise the
+                   action that occurs when a key, combination of keys, or a
+                   button is pressed.  The translations in XCurses are similar
+                   in function and definition to translations used by xterm.
+                   Defaults:
+                        <Key>:                    XCursesKeyPress()
+                        <Btn1Down>:               XCursesButton()
+                        !Ctrl <Btn2Down>:         XCursesButton()
+                        <Btn2Down>,<Btn2Up>:      XCursesPasteSelection()
+                        <Btn3Down>:               XCursesButton()
+                        <Btn1Up>:                 XCursesButton()
+                        <Btn3Up>:                 XCursesButton()
+                        <BtnMotion>:              XCursesButton()
+
+                   The most useful action for KeyPress translations is string().
+                   The argument to the string() action can be either a string or
+                   a hex representation of a character. eg. string(0x1b) will
+                   result in the ASCII escape character to be sent to the 
+                   XCurses application. string("[11~") will result in [ 1 1 ~ 
+                   being sent, as seperate keystokes to the XCurses application.
+
+shmmin:            On most systems, there are two Unix kernel parameters that 
+                   determine the allowable size of a shared memory segment. These
+                   parameters are usually something like SHMMIN and SHMMAX. To use
+                   shared memory, a program must allocate a segment of shared memory
+                   that is between these two values.  Usually these values are
+                   like 1 for SHMMIN and some large number for SHMMAX. Sometimes
+                   the Unix kernel is configured to have a value of SHMMIN that is
+                   bigger than the size of one of the shared memory segments that
+                   XCurses uses. On these systems an error message like:
+
+                     Cannot allocate shared memory for SCREEN: Invalid argument
+
+                   will result. To overcome this problem, this XCurses resource
+                   should be set to the kernel value for SHMMIN. This ensures that
+                   a shared memory segment will always be bigger than the kernel
+                   value for SHMMIN (and hopefully less than SHMMAX!)
+
+                   Default:        0
+
+borderColor:       the colour of the border around the screen
+                   Default:        Black
+
+borderWidth:       the width in pixels of the border around the screen
+                   Default:        0
+
+clickPeriod:       the period (in milliseconds) between a button press
+                   and a button release that determines if a click
+                   of a button has occurred.
+                   Default:        100
+
+doubleClickPeriod: the period (in milliseconds) between two button
+                   press events that determines if a double click
+                   of a button has occurred.
+                   Default:        200
+
+composeKey:        the name of the X key that defines the "compose key" which
+                   is used to enter characters in the Latin-1 character set above
+                   0xA0.
+                   Generally this key will be one of the X "modifier" keys, like
+                   Alt_L, Meta_R etc. but can be a "normal" key like F1.  Try to 
+                   While in "compose key" mode, the text cursor will appear as
+                   a hollow rectangle.
+                   See the file latin-1.man for details on compose key usage.
+                   Default:        No key is defined
+
+Using Resources:
+---------------
+
+ All XCurses applications have a top-level class name of "XCurses".
+ The top-level widget name for each XCurses application is the
+ same as that defined by the XCursesProgram name in the application's
+ main source module.
+
+ An example of an XCurses app-defaults or .Xdefaults file might be:
+
+!
+! resources for XCurses class of programs
+!
+XCurses*lines:  30
+XCurses*cols:   80
+XCurses*normalFont:     9x13
+XCurses*boldFont:       9x13bold
+XCurses*bitmap: /tmp/xcurses.xbm
+XCurses*pointer: top_left_arrow
+!
+! resources for testcurs - XCurses
+!
+testcurs.colorRed:      orange
+testcurs.colorBlack:    midnightblue
+testcurs.lines: 25
+*testcurs.Translations: #override \n \
+  <Key>F12:  string(0x1b) string("[11~") \n
+!
+! resources for THE - XCurses
+!
+the.normalFont: 9x15
+the.boldFont:   9x15bold
+the.lines:      40
+the.cols:       86
+the.pointer:    xterm
+the.pointerForeColor: black
+the.pointerBackColor: black
+the.bitmap:     /home/mark/the/the64.xbm
+
+**man-end**********************************************************************/

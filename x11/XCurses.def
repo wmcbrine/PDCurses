@@ -1,0 +1,27 @@
+!
+! resources for Xcurses class of programs
+!
+XCurses*lines:	25
+XCurses*cols:	80
+XCurses*normalFont:	9x13
+XCurses*boldFont:	9x13bold
+!XCurses*bitmap:	/tmp/xcurses.xbm
+XCurses*cursor:	clock
+!
+! resources for testcurs
+!
+testcurs.colorRed:	orange
+testcurs.colorBlack:	midnightblue
+testcurs.lines:	30
+testcurs.normalFont:	7x13
+testcurs.boldFont:	7x13bold
+testcurs.cursorColor:	orange
+!
+! resources for THE - Xcurses 
+!
+the.normalFont:	7x13
+the.boldFont:	7x13bold
+the.lines:	40
+the.cols:	86
+the.cursor:	xterm
+the.bitmap:	/home/mark/the/the64.xbm

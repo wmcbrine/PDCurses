@@ -1,0 +1,650 @@
+# Makefile for XCurses library
+#
+# The variable 'srcdir' refers to the source-distribution, and can be set with
+# the configure script by "--srcdir=DIR".
+#
+
+SHELL		= /bin/sh
+THIS		= Makefile
+
+@SET_MAKE@
+
+srcdir		= @srcdir@
+x11dir		= $(srcdir)/../x11
+
+VPATH		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= $(exec_prefix)
+includedir	= @includedir@
+
+PDCURSES_HOME		=$(srcdir)/..
+PDCURSES_CONFIG_H		=../config.h
+PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
+PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
+PDCURSES_HEADERS		=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PDCURSES_X11_H		=$(PDCURSES_HOME)/x11.h
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+SHL_TARGETS =      @SHL_TARGETS@
+DYN_COMP =         @DYN_COMP@
+RXLIBPRE =         @RXLIBPRE@
+RXLIBPST =         @RXLIBPST@
+LD_RXLIB1  =       @LD_RXLIB1@
+LD_RXLIB2  =       # @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
+O2SAVE  =          @O2SAVE@
+O2SHO  =           @O2SHO@
+CC2O   =           @CC2O@
+SAVE2O  =          @SAVE2O@
+DYNAMIC_LDFLAGS  = @DYNAMIC_LDFLAGS@ $(EEXTRA)
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+
+INCDIR		= $(srcdir)
+CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@
+
+CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
+
+LINK		= $(CC)
+LDFLAGS		= 
+
+RANLIB		= @RANLIB@
+
+LIBRARIES	= libXCurses.a
+
+SHLFILE = XCurses
+
+################################################################################
+all :	$(LIBRARIES) $(SHL_TARGETS)
+
+install : 
+	echo Does nothing at the moment
+
+clean :
+	-rm -rf *.o *.sho trace $(LIBRARIES) $(SHL_TARGETS)
+
+distclean: clean
+	-rm -f Makefile
+
+mostlyclean: clean
+
+realclean: distclean
+
+#------------------------------------------------------------------------
+
+LIBOBJS =   \
+addch.o     \
+addchstr.o  \
+addstr.o    \
+attr.o      \
+beep.o      \
+bkgd.o      \
+border.o    \
+clear.o     \
+color.o     \
+delch.o     \
+deleteln.o  \
+getch.o     \
+getstr.o    \
+getyx.o     \
+inch.o      \
+inchstr.o   \
+initscr.o   \
+inopts.o    \
+insch.o     \
+insstr.o    \
+instr.o     \
+kernel.o    \
+mouse.o     \
+move.o      \
+outopts.o   \
+overlay.o   \
+pad.o       \
+printw.o    \
+refresh.o   \
+scanw.o     \
+scroll.o    \
+slk.o       \
+termattr.o  \
+terminfo.o  \
+touch.o     \
+util.o      \
+window.o
+
+PDCOBJS =   \
+pdcclip.o   \
+pdcdebug.o  \
+pdcdisp.o   \
+pdcgetsc.o  \
+pdckbd.o    \
+pdcprint.o  \
+pdcscrn.o   \
+pdcsetsc.o   \
+pdcutil.o   \
+pdcwin.o
+
+X11OBJS =   \
+x11.o       \
+sb.o        \
+ScrollBox.o
+
+LIBSHOBJS =   \
+addch.sho     \
+addchstr.sho  \
+addstr.sho    \
+attr.sho      \
+beep.sho      \
+bkgd.sho      \
+border.sho    \
+clear.sho     \
+color.sho     \
+delch.sho     \
+deleteln.sho  \
+getch.sho     \
+getstr.sho    \
+getyx.sho     \
+inch.sho      \
+inchstr.sho   \
+initscr.sho   \
+inopts.sho    \
+insch.sho     \
+insstr.sho    \
+instr.sho     \
+kernel.sho    \
+mouse.sho     \
+move.sho      \
+outopts.sho   \
+overlay.sho   \
+pad.sho       \
+printw.sho    \
+refresh.sho   \
+scanw.sho     \
+scroll.sho    \
+slk.sho       \
+termattr.sho  \
+terminfo.sho  \
+touch.sho     \
+util.sho      \
+window.sho
+
+PDCSHOBJS =   \
+pdcclip.sho   \
+pdcdebug.sho  \
+pdcdisp.sho   \
+pdcgetsc.sho  \
+pdckbd.sho    \
+pdcprint.sho  \
+pdcscrn.sho   \
+pdcsetsc.sho   \
+pdcutil.sho   \
+pdcwin.sho
+
+X11SHOBJS =   \
+x11.sho       \
+sb.sho        \
+ScrollBox.sho
+
+SHOFILES = $(LIBSHOBJS) $(PDCSHOBJS) $(X11SHOBJS)
+
+libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS)
+	ar rv $@ $?
+	$(RANLIB) $@
+
+$(RXLIBPRE)$(SHLFILE)$(RXLIBPST) : $(SHOFILES)
+	$(LD_RXLIB1) $(RXPACKEXPORTS) -o $@ $(SHOFILES) $(LD_RXLIB2)
+
+addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/addch.c
+
+addchstr.o: $(srcdir)/addchstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/addchstr.c
+
+addstr.o: $(srcdir)/addstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/addstr.c
+
+attr.o: $(srcdir)/attr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/attr.c
+
+beep.o: $(srcdir)/beep.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/beep.c
+
+bkgd.o: $(srcdir)/bkgd.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/bkgd.c
+
+border.o: $(srcdir)/border.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/border.c
+
+clear.o: $(srcdir)/clear.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/clear.c
+
+color.o: $(srcdir)/color.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/color.c
+
+delch.o: $(srcdir)/delch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/delch.c
+
+deleteln.o: $(srcdir)/deleteln.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/deleteln.c
+
+getch.o: $(srcdir)/getch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/getch.c
+
+getstr.o: $(srcdir)/getstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/getstr.c
+
+getyx.o: $(srcdir)/getyx.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/getyx.c
+
+inch.o: $(srcdir)/inch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/inch.c
+
+inchstr.o: $(srcdir)/inchstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/inchstr.c
+
+initscr.o: $(srcdir)/initscr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/initscr.c
+
+inopts.o: $(srcdir)/inopts.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/inopts.c
+
+insch.o: $(srcdir)/insch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/insch.c
+
+insstr.o: $(srcdir)/insstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/insstr.c
+
+instr.o: $(srcdir)/instr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/instr.c
+
+kernel.o: $(srcdir)/kernel.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/kernel.c
+
+mouse.o: $(srcdir)/mouse.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/mouse.c
+
+move.o: $(srcdir)/move.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/move.c
+
+outopts.o: $(srcdir)/outopts.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/outopts.c
+
+overlay.o: $(srcdir)/overlay.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/overlay.c
+
+pad.o: $(srcdir)/pad.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pad.c
+
+printw.o: $(srcdir)/printw.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/printw.c
+
+refresh.o: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/refresh.c
+
+scanw.o: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scanw.c
+
+scroll.o: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scroll.c
+
+slk.o: $(srcdir)/slk.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/slk.c
+
+termattr.o: $(srcdir)/termattr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/termattr.c
+
+terminfo.o: $(srcdir)/terminfo.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/terminfo.c
+
+touch.o: $(srcdir)/touch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/touch.c
+
+util.o: $(srcdir)/util.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/util.c
+
+window.o: $(srcdir)/window.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/window.c
+
+
+pdcclip.o: $(x11dir)/pdcclip.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcclip.c
+
+pdcdebug.o: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcdebug.c
+
+pdcdisp.o: $(x11dir)/pdcdisp.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcdisp.c
+
+pdcgetsc.o: $(x11dir)/pdcgetsc.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcgetsc.c
+
+pdckbd.o: $(x11dir)/pdckbd.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdckbd.c
+
+pdcprint.o: $(x11dir)/pdcprint.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcprint.c
+
+pdcscrn.o: $(x11dir)/pdcscrn.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcscrn.c
+
+pdcsetsc.o: $(x11dir)/pdcsetsc.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/pdcsetsc.c
+
+pdcutil.o: $(srcdir)/pdcutil.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcutil.c
+
+pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcwin.c
+
+x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11.c
+
+ScrollBox.o: $(x11dir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/ScrollBox.c
+
+sb.o: $(x11dir)/sb.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/sb.c
+
+
+addch.sho: $(srcdir)/addch.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addch.c
+	$(O2SHO)
+	$(SAVE2O)
+
+addchstr.sho: $(srcdir)/addchstr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addchstr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+addstr.sho: $(srcdir)/addstr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addstr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+attr.sho: $(srcdir)/attr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/attr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+beep.sho: $(srcdir)/beep.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/beep.c
+	$(O2SHO)
+	$(SAVE2O)
+
+bkgd.sho: $(srcdir)/bkgd.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/bkgd.c
+	$(O2SHO)
+	$(SAVE2O)
+
+border.sho: $(srcdir)/border.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/border.c
+	$(O2SHO)
+	$(SAVE2O)
+
+clear.sho: $(srcdir)/clear.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/clear.c
+	$(O2SHO)
+	$(SAVE2O)
+
+color.sho: $(srcdir)/color.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/color.c
+	$(O2SHO)
+	$(SAVE2O)
+
+delch.sho: $(srcdir)/delch.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/delch.c
+	$(O2SHO)
+	$(SAVE2O)
+
+deleteln.sho: $(srcdir)/deleteln.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/deleteln.c
+	$(O2SHO)
+	$(SAVE2O)
+
+getch.sho: $(srcdir)/getch.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getch.c
+	$(O2SHO)
+	$(SAVE2O)
+
+getstr.sho: $(srcdir)/getstr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getstr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+getyx.sho: $(srcdir)/getyx.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getyx.c
+	$(O2SHO)
+	$(SAVE2O)
+
+inch.sho: $(srcdir)/inch.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inch.c
+	$(O2SHO)
+	$(SAVE2O)
+
+inchstr.sho: $(srcdir)/inchstr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inchstr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+initscr.sho: $(srcdir)/initscr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/initscr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+inopts.sho: $(srcdir)/inopts.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inopts.c
+	$(O2SHO)
+	$(SAVE2O)
+
+insch.sho: $(srcdir)/insch.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/insch.c
+	$(O2SHO)
+	$(SAVE2O)
+
+insstr.sho: $(srcdir)/insstr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/insstr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+instr.sho: $(srcdir)/instr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/instr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+kernel.sho: $(srcdir)/kernel.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/kernel.c
+	$(O2SHO)
+	$(SAVE2O)
+
+mouse.sho: $(srcdir)/mouse.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/mouse.c
+	$(O2SHO)
+	$(SAVE2O)
+
+move.sho: $(srcdir)/move.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/move.c
+	$(O2SHO)
+	$(SAVE2O)
+
+outopts.sho: $(srcdir)/outopts.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/outopts.c
+	$(O2SHO)
+	$(SAVE2O)
+
+overlay.sho: $(srcdir)/overlay.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/overlay.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pad.sho: $(srcdir)/pad.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pad.c
+	$(O2SHO)
+	$(SAVE2O)
+
+printw.sho: $(srcdir)/printw.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/printw.c
+	$(O2SHO)
+	$(SAVE2O)
+
+refresh.sho: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/refresh.c
+	$(O2SHO)
+	$(SAVE2O)
+
+scanw.sho: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scanw.c
+	$(O2SHO)
+	$(SAVE2O)
+
+scroll.sho: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scroll.c
+	$(O2SHO)
+	$(SAVE2O)
+
+slk.sho: $(srcdir)/slk.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/slk.c
+	$(O2SHO)
+	$(SAVE2O)
+
+termattr.sho: $(srcdir)/termattr.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/termattr.c
+	$(O2SHO)
+	$(SAVE2O)
+
+terminfo.sho: $(srcdir)/terminfo.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/terminfo.c
+	$(O2SHO)
+	$(SAVE2O)
+
+touch.sho: $(srcdir)/touch.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/touch.c
+	$(O2SHO)
+	$(SAVE2O)
+
+util.sho: $(srcdir)/util.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/util.c
+	$(O2SHO)
+	$(SAVE2O)
+
+window.sho: $(srcdir)/window.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/window.c
+	$(O2SHO)
+	$(SAVE2O)
+
+
+pdcclip.sho: $(x11dir)/pdcclip.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcclip.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcdebug.sho: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pdcdebug.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcdisp.sho: $(x11dir)/pdcdisp.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcdisp.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcgetsc.sho: $(x11dir)/pdcgetsc.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcgetsc.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdckbd.sho: $(x11dir)/pdckbd.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdckbd.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcprint.sho: $(x11dir)/pdcprint.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcprint.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcscrn.sho: $(x11dir)/pdcscrn.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcscrn.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcsetsc.sho: $(x11dir)/pdcsetsc.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/pdcsetsc.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcutil.sho: $(srcdir)/pdcutil.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pdcutil.c
+	$(O2SHO)
+	$(SAVE2O)
+
+pdcwin.sho: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pdcwin.c
+	$(O2SHO)
+	$(SAVE2O)
+
+x11.sho: $(x11dir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11.c
+	$(O2SHO)
+	$(SAVE2O)
+
+ScrollBox.sho: $(x11dir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/ScrollBox.c
+	$(O2SHO)
+	$(SAVE2O)
+
+sb.sho: $(x11dir)/sb.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/sb.c
+	$(O2SHO)
+	$(SAVE2O)

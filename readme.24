@@ -1,0 +1,71 @@
+
+                             PDCurses 2.4
+            (Public Domain Curses for DOS, OS/2, X11 and Win32)
+
+
+INTRODUCTION:
+
+This release of PDCurses includes the following changes:
+
+- full support of X11 selection handling
+- removed the need for the cursos2.h file
+- enabled the "shifted" key on the numeric keypad
+- added native clipboard support for X11, Win32 and OS/2
+- added extra functions for obtaining internal PDCUrses status
+- added clipboard and key modifier tests in testcurs.c
+- fixes for panel library
+- key modifiers pressed by themselves are now returned as keys
+- Added X11 shared library support
+- Added extra slk formats supported by ncurses
+- Fixed bug with resizing the terminal when slk were on.
+- Changed behaviour of slk_attrset(), slk_attron() alk_attroff()
+  functions to work more like ncurses.
+
+BUGS FIXED:
+
+some minor bug and portability fixes were included in this release
+
+NEW FUNCTIONS:
+
+PDC_getclipboard() and PDC_setclipboard() for accessing the native
+clipboard.
+PDC_set_title() for setting the title of the window (X11 and Win32 only)
+PDC_get_input_fd() for getting the file handle of the PDCurses input
+PDC_get_key_modifiers() for getting the keyboard modifier settings at the
+time of the last (w)getch()
+initscrX() (only for X11 port) which allows standard X11 switches to 
+be passed to the application
+
+
+NEW COMPILER SUPPORT:
+
+- MingW32 GNU compiler under Win95/NT
+- Cygnus Win32 GNU compiler under Win95/NT
+- Borland C++ for OS/2 1.0+
+- lcc-win32 compiler under Win95/NT
+
+Makefiles for each platform/compiler option reside in the platform
+directory.  These all have an extension of .mak.
+
+
+ACKNOWLEGEMENTS: (for this release)
+
+Georg Fuchs for various changes.
+Juan David Palomar for pointing out getnstr() was not implemented.
+William McBrine for fix to allow black/black as valid color pair.
+Peter Preus for pointing out the missing bccos2.mak file.
+Laura Michaels for a couple of bug fixes and changes required to support
+   Mingw32 compiler.
+Frank Heckenbach for PDC_get_input_fd() and some portability fixes and
+   the fixes for panel library.
+Matthias Burian for the lcc-win32 compiler support.
+
+Cheers, Mark
+------------------------------------------------------------------------
+ Mark Hessling                       Email:       M.Hessling@qut.edu.au
+ PO Box 203                          http://www.lightlink.com/hessling/
+ Bellara                                AUTHOR of  |  MAINTAINER of
+ QLD 4507                                 THE      |    PDCurses
+ Australia                              Rexx/SQL   |     Regina
+                Member of RexxLA: http://www.rexxla.org/
+------------------------------------------------------------------------

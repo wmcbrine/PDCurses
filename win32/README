@@ -1,0 +1,19 @@
+
+                        Welcome to PDCurses
+
+ Contents
+ --------
+ This directory contains core PDCurses source code files specific to
+ the Win32 platform - console mode (NT and Window 95).
+
+
+ Distribution Status
+ -------------------
+
+ The files in this directory are released to the Public Domain.
+
+
+ Acknowlegements
+ ---------------
+
+ Generic Win32 port was provided by Chris Szurgot (szurgot@itribe.net)

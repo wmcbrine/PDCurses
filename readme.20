@@ -1,0 +1,148 @@
+
+                             PDCurses 2.0
+                  (Public Domain Curses for DOS and OS/2)
+
+
+INTRODUCTION:
+
+	Well, here it finally is; PDCurses v2.0.
+	
+	PDCurses v2.0 is an almost total rewrite of PCCurses 1.4 done by John
+	'Frotz' Fa'atuai, the previous maintainer.
+	
+	This version has been tested with Microsoft C v6.0, QuickC v2.0 and
+	Borland C++ 2.0 under DOS and Microsoft C v6.0 and TopSpeed c v3.02
+	under OS/2 2.0. Also the library has been compiled successfully with
+	emx 0.8e, C Set/2 and Watcom 9.
+	Most testing was done with the large memory model where applicable.
+	The large memory model is probably the best model to use.
+	
+	The amount of testing has not been as extensive as I would have
+	liked, but demands on releasing a product have outweighed the
+	product's quality. Nothing new with that !!
+	Hopefully with wider circulation, more bugs will be fixed more quickly.
+	
+	I have included just 1 makefile which is suitable for dmake 3.8 for
+	both DOS and OS/2. The makefile does not rely on customisation of the
+	dmake.ini file.
+	
+	If you discover bugs, and especially if you have fixes, please let me
+	know ASAP.
+	
+	The source to the library is distributed as a zip file made with zip
+	1.9. You will need Info-ZIP unzip 5.0 to unzip.
+	Follow the directions below to compile the library.
+
+DIRECTIONS:
+
+	1.Create a new directory in which to unzip pdcurs20.zip. This will
+	  create a curses directory and a number of subdirectories containing
+	  source code for the library and utilities and the documentation.
+
+	2.Make changes to the makefile where necessary:
+	  Change the MODEL or model macro to the appropriate value (if it
+	  applies to your compiler). Use model for Borland compilers.
+
+	  Change any paths in the defined macros to be suitable for your
+	  compiler.
+
+	3.Invoke DMAKE [-e environment_options] [target]
+	
+	  where environment_options are:
+
+		OS (host operating system)
+		COMP (compiler)
+		OPT (optimised version or debug version) - optional. default Y
+		TOS (target operating system) - optional. default OS
+
+		see the makefile for valid combinations
+
+		targets: all, demos, lcursesd.lib, manual...
+		
+		NB. dmake is case sensitive with targets, so those environments
+		that use an upper case model value (eg MSC) MUST specify the
+		library target as for eg. Lcursesd.lib
+
+		The makefile is by default set up for Borland C++. The use of
+		-e environment_options override these defaults. Of you prefer
+		you can just change the defaults in the makefile and invoke it
+		without the -e switch.
+
+OTHER NOTES:
+
+	The documentation for the library is built into each source file,
+	a couple of specific doc files and the header files. A program is
+	supplied (manext) to build the manual. This program gets compiled
+	when you build the documentation.
+	
+	To generate the library response file correctly, I had to write a
+	quick and dirty program (buildlrf) to achive this. Originally the
+	makefiles just had statements like: "echo -+$(OBJ)\$* & >> $(LRF)"
+	which appended a suitable line to the response file. Unfortunately
+	under some combinations of makefiles and command processors (eg.
+	nmake and 4DOS) the & would get treated as stderr and the echo
+	command would fail.
+	
+	The original source for PDCurses that I received from the previous
+	maintainer contained support for the FLEXOS operating system. Not
+	having access to it, I could not test the changes I made so its
+	support has fallen by the wayside. If you really need to have PDCurses
+	running under FLEXOS, contact me and I will see what can be arranged.
+	
+	Under DOS, by default, screen writes to a CGA monitor are done via
+	the video BIOS rather than by direct video memory writes. This is
+	due to the CGA "snow" problem. If you have a CGA monitor and do not
+	suffer from snow, you can compile private\_queryad.c with CGA_DIRECT
+	defined. This will then use cause PDCurses to write directly to the
+	CGA video memory.
+
+COMPILER-SPECIFIC NOTES:
+
+	Microsoft C
+	-----------
+	It is possible with MSC 6.0 to build the OS/2 libraries and demo
+	programs from within DOS. This is the only case where it is possible
+	to specifiy the value of TOS on the command line to be OS2 and the
+	value of OS be DOS.
+
+	C Set/2
+	-------
+	I have only tested the library using the migration libraries. I doubt
+	that the demo programs will work without them.
+
+	emx
+	---
+	Testing has been done with 0.8e of emx together with the 16_to_32
+	libraries.
+	The emx\lib directory should include the vio32.lib and kbd32.lib
+	libraries from the 16_to_32 package.
+
+BUGS and UNFINISHED BUSINESS:
+
+	PDC_set_ctrl_break() function does not work under OS/2.
+	win_print() and PDC_print() do not work under OS/2.
+	The file todo.man in the doc directory also lists those functions of
+	System V 3.2 curses not yet implemented. Any volunteers ?
+
+ACKNOWLEGEMENTS:
+
+	John 'Frotz' Fa'atuai, the previous maintainer for providing an
+	excellent base for further development.
+	John Burnell (johnb@kea.am.dsir.govt.nz), for the OS/2 port.
+	John Steele, Jason (finally NOT a John) Shumate....
+	for various fixes and suggestions.
+	Eberhardt Mattes (author of emx) for allowing code based on his
+	C library to be included with PDCurses.
+	Several others for their support, moral and actual.
+
+
+Good luck, Mark
+
+------------------------------------------------------------------------
+Mark Hessling                         Email: M.Hessling@qut.edu.au
+36 David Road                         Phone: +617 849 7731
+Holland Park                          Fax:   
+Brisbane                              ***** PDCurses Maintainer *****
+QLD 4121                              ******** Author of THE ********
+Australia                             ******** Member RexxLA ********
+------------------------------------------------------------------------

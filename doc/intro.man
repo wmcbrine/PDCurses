@@ -1,0 +1,530 @@
+/*man-start*********************************************************************
+
+		Introduction to XSI Curses Interface
+
+The X/Open Group has identified a strong need for a generic terminal
+interface for applications that wish to be independent of terminal
+hardware and connection method.
+
+This interface should allow the attachment of character and
+block-oriented terminals.  Furthermore, it should not put any
+constraints on how the terminals are attached (e.g., Local Area
+Networks, PADs on X.25, etc.). 
+
+The curses library interfaces provides the user with a method of
+updating screens with reasonable optimisation. 
+
+The X/Open group has found it impossible to define a totally portable
+set of curses interface routines that cover asynchronous, networked,
+and synchronous terminals.  The functions are oriented towards locally
+connected asynchronous terminals.  For such terminals, applications
+conforming to this interface are portable.  The interface routines
+curses may, however, also be used with synchronous and networked
+terminals, provided the restrictions below are considered. 
+
+These functions have been included been included in the X/Open
+definition in the "optional" category.  This means that although they
+are likely to appear on many X/Open compliant systems, they are not
+guaranteed to be on all systems.  Where they are supported, they will
+conform to the given definition. 
+
+
+----------------------------------------------------------------------
+
+	    Synchronous and Networked Asynchronous Terminals
+
+These notes indicate to the application writer some considerations to
+be borne in mind when driving synchronous, networked asynchronous
+(NWA) or non-standard directly connected asynchronous terminals.
+
+Such terminals are often used in a mainframe environment and
+communicatie to the host in block mode.  That is, the user types
+characters at the terminal then presses a special key to initiate
+transmission of the characters to the host. 
+
+Frequently, although it may be possible to send arbitrary sized blocks
+to the host, it may not be possible or desireable to cause a character
+to be transmitted with only a single keystroke. 
+
+This can cause severe problems to an application wishing to make use
+of single character input. 
+
+
+
+OUTPUT
+
+The curses package can be used in the normal way for all operations
+pertaining to output to the terminal, with the possible exception that
+on some terminals the refresh() routine may have to redraw the entire
+screen contents in order to perform any update.
+
+If it is additionally necessary to clear the screen before each such
+operation, the result could be unacceptable. 
+
+
+INPUT
+
+Because of the nature of operation of synchronous (block-mode) and NWA
+terminals, it may not be possible to support all or any of the curses
+input functions.  In particular, the following points should be noted:
+
+* Single-character input may not be possible.  It may be necessary to
+  press a special key to cause all characters typed at the terminal to
+  be transmitted to the host. 
+
+* It may not be possibel to disable echo.  Character echo may be performed
+  directly by the terminal.  On terminals that behave this way, any curses
+  application that performs input should be aware that any characters
+  type will appear on the screen wherever the cursor is positioned.
+  This may not necessarily correspond to the position of the cursor in
+  the window.
+
+
+----------------------------------------------------------------------
+
+		Data Types and the <curses.h> Header
+
+The data types supported by curses are described in this section.
+
+As the library supports a procedural interface to the data types,
+actual structure contents are not described.  All curses data are
+manipulated using the routines provided. 
+
+
+THE <curses.h> HEADER
+
+The <curses.h> header defines various constants and declares the data types
+that are available to the application.
+
+
+DATA TYPES
+
+The following data types are declared:
+
+	WINDOW*		pointer to screen representation
+	SCREEN*		pointer to terminal descriptor
+	bool		boolean data type
+	chtype		representation of a character in a window
+
+The actual WINDOW and SCREEN objects used to store information are
+created by the corresponding routines and a pointer to them is
+provided.  All manipulation is through that pointer. 
+
+
+CONSTANTS
+
+The following constants are defined. 
+
+
+GENERAL
+
+	COLS		number of columns on terminal screen
+	ERR		value returned on error condition
+	FALSE		boolean false value
+	LINES		number of lines on terminal screen
+	OK		value returned on successful completion
+	NULL		zero pointer value
+	TRUE		boolean true value
+
+VIDEO ATTRIBUTES
+
+	A_BLINK		blinking
+	A_BOLD		extra bright or bold
+	A_DIM		half bright
+	A_REVERSE	reverse video
+	A_STANDOUT	terminal's best highlighting mode
+	A_UNDERLINE	underlining
+	A_ATTRIBUTES	bit-mask to extract attributes
+	A_CHARTEXT	bit-mask to extract a character
+
+Normally, attributres are a property of the character. 
+
+
+INPUT VALUES
+
+The following constants might be returned by getch() if keypad() has
+been enabled.  Note that not all of these may be supported on a
+particular terminal if the terminal does not transmit a unique code
+when the key is pressed or the definition for the key is not present
+in the underlying table of terminal capabilities. 
+
+	KEY_BREAK	break key
+	KEY_DOWN	the four arrow keys
+	KEY_UP
+	KEY_LEFT
+	KEY_RIGHT
+	KEY_HOME	home key (upward+left arrow)
+	KEY_BACKSPACE	backspace
+	KEY_F0		function keys; space for 64 keys is reserved
+	KEY_F(n)	(KEY_F0+(n))
+	KEY_DL		delete line
+	KEY_IL		insert line
+	KEY_DC		delete character
+	KEY_IC		insert character
+	KEY_EIC		exit insert character mode
+	KEY_CLEAR	clear screen
+	KEY_EOS		clear to end of screen
+	KEY_EOL		clear to end of line
+	KEY_SF		scroll 1 line forwards
+	KEY_SR		scroll 1 line backwards (reverse)
+	KEY_NPAGE	next page
+	KEY_PPAGE	previous page
+	KEY_STAB	set tab
+	KEY_CTAB	clear tab
+	KEY_CATAB	clear all tabs
+	KEY_ENTER	enter or send
+	KEY_SRESET	soft (partial) reset
+	KEY_RESET	reset or hard reset
+	KEY_PRINT	print or copy
+	KEY_LL		home down or bottom (lower left)
+	KEY_A1		upper left of virtual keypad
+	KEY_A3		upper right of virtual keypad
+	KEY_B2		centre of virtual keypad
+	KEY_C1		lower left of virtual keypad
+	KEY_C3		lower right of virtual keypad
+
+The virtual keypad is arranged like this:
+
+	A1	up	A3
+	left	B2	right
+	C1	down	C3
+
+FUNCTIONS
+
+	The following table lists each curses routine and the name of the 
+	manual page on which it is described. This list is based on
+	System V R4 curses:
+
+	   Curses Function        Manual Page Name
+
+		addch                    addch
+		addchnstr                addchstr
+		addchstr                 addchstr
+		addnstr                  addstr
+		addstr                   addstr
+		attroff                  attr
+		attron                   attr
+		baudrate                 termattr
+		beep                     beep
+		bkgd                     bkgd
+		bkgdset                  bkgd
+		border                   border
+		box                      border
+		can_change_color         color
+		cbreak                   inopts
+		clear                    clear
+		clearok                  outopts
+		clrtobot                 clear
+		clrtoeol                 clear
+	***	color_content             color
+		copywin                  overlay
+		curs_set                 kernel
+		def_prog_mode            kernel
+		def_shell_mode           kernel
+	***	del_curterm               terminfo
+		delay_output             util
+		delch                    delch
+		deleteln                 deleteln
+		delscreen                *** initscr
+		delwin                   window
+		derwin                   window
+		doupdate                 refresh
+		draino                   kernel
+		dupwin                   window
+		echo                     inopts
+		echochar                 addch
+		endwin                   initscr
+		erase                    clear
+		erasechar                termattr
+	***	filter                    util
+		flash                    beep
+		flushinp                 util
+		getbegyx                 getyx
+		getch                    getch
+		getmaxyx                 getyx
+		getparyx                 getyx
+		getstr                   getstr
+		getsyx                   kernel
+	***	getwin                    util
+		getyx                    getyx
+		halfdelay                inopts
+		has_colors               color
+		has_ic                   termattr
+		has_il                   termattr
+		hline                    border
+		idcok                    outopts
+		idlok                    outopts
+		immedok                  outopts
+		inch                     inch
+		inchnstr                 inchstr
+		inchstr                  inchstr
+		init_color               color
+		init_pair                color
+		initscr                  initscr
+		innstr                   instr
+		insch                    insch
+		insdelln                 deleteln
+		insertln                 deleteln
+		insnstr                  innstr
+		insstr                   innstr
+		instr                    instr
+		intrflush                inopts
+		is_linetouched           touch
+		is_wintouched            touch
+		isendwin                 initscr
+		keyname                  util
+		keypad                   inopts
+		killchar                 termattr
+		leaveok                  outopts
+		longname                 termattr
+		meta                     inopts
+		move                     move
+		mvaddch                  addch
+		mvaddchnstr              addchstr
+		mvaddchstr               addchstr
+		mvaddnstr                addstr
+		mvaddstr                 addstr
+		mvcur                    terminfo
+		mvdelch                  delch
+		mvderwin                 window
+		mvgetch                  getch
+		mvgetstr                 getstr
+		mvinch                   inch
+		mvinchnstr               inchstr
+		mvinchstr                inchstr
+		mvinnstr                 instr
+		mvinsch                  insch
+		mvinsnstr                insstr
+		mvinsstr                 insstr
+		mvinstr                  instr
+		mvprintw                 printw
+		mvscanw                  scanw
+		mvwaddch                 addch
+		mvwaddchnstr             addchstr
+		mvwaddchstr              addchstr
+		mvwaddnstr               addstr
+		mvwaddstr                addstr
+		mvwdelch                 delch
+		mvwgetch                 getch
+		mvwgetstr                getstr
+		mvwin                    window
+		mvwinch                  inch
+		mvwinchnstr              inchstr
+		mvwinchstr               inchstr
+		mvwinnstr                instr
+		mvwinsch                 insch
+		mvwinsnstr               insstr
+		mvwinsstr                insstr
+		mvwinstr                 instr
+		mvwprintw                printw
+		mvwscanw                 scanw
+		napms                    kernel
+		newpad                   pad
+	***	newterm                   initscr
+		newwin                   window
+		nl                       outopts
+		nocbreak                 inopts
+		nodelay                  inopts
+		noecho                   inopts
+		nonl                     outopts
+	***	noqiflush                 inopts
+		noraw                    inopts
+		notimeout                inopts
+		overlay                  overlay
+		overwrite                overlay
+		pair_content             color
+		pechochar                pad
+		pnoutrefresh             pad
+		prefresh                 pad
+		printw                   printw
+	***	putp                      terminfo
+	***	putwin                    util
+	***	qiflush                   inopts
+		raw                      inopts
+		raw_output               outopts
+		redrawwin                refresh
+		refresh                  refresh
+		reset_prog_mode          kernel
+		reset_shell_mode         kernel
+		resetty                  kernel
+	***	restartterm               terminfo
+		ripoffline               kernel
+		savetty                  kernel
+		scanw                    scanw
+	***	scr_dump                  scr_dump
+	***	scr_init                  scr_dump
+	***	scr_restore               scr_dump
+	***	scr_set                   scr_dump
+		scrl                     scroll
+		scroll                   scroll
+		scrollok                 outopts
+		set_term                 initscr
+		setscrreg                outopts
+		setsyx                   kernel
+	***	setterm                   terminfo
+	***	setupterm                 terminfo
+	***	slk_attroff               slk
+	***	slk_attron                slk
+	***	slk_attrset               slk
+	***	slk_clear                 slk
+	***	slk_init                  slk
+	***	slk_label                 slk
+	***	slk_noutrefresh           slk
+	***	slk_refresh               slk
+	***	slk_restore               slk
+	***	slk_set                   slk
+	***	slk_touch                 slk
+		standend                 attr
+		standout                 attr
+		start_color              color
+		subpad                   pad
+		subwin                   window
+		syncok                   window
+		termattrs                termattrs
+		termname                 termattrs
+	***	tgetent                   termcap
+	***	tgetflag                  termcap
+	***	tgetnum                   termcap
+	***	tgetstr                   termcap
+	***	tgoto                     termcap
+	***	tigetflag                 terminfo
+	***	tigetnum                  terminfo
+	***	tigetstr                  terminfo
+	***	timeout                   inopts
+		touchline                touch
+		touchwin                 touch
+	***	tparm                     terminfo
+	***	tputs                     terminfo
+	***	tputs                     termcap
+		trace_on                 pdcdebug
+		typeahead                inopts
+		unctrl                   util
+		ungetch                  getch
+		untouchwin               touch
+	***	use_env                   util
+	***	vidattr                   terminfo
+	***	vidputs                   terminfo
+		vline                    border
+	***	vwprintw                  printw
+	***	vwscanw                   scanw
+		waddch                   addch
+		waddchnstr               addchstr
+		waddchstr                addchstr
+		waddnstr                 addstr
+		waddstr                  addstr
+		wattroff                 attr
+		wattron                  attr
+		wattrset                 attr
+		wbkgd                    bkgd
+		wbkgdset                 bkgd
+		wborder                  border
+		wclear                   clear
+		wclrtobot                clear
+		wclrtoeol                clear
+		wcursyncup               window
+		wdelch                   delch
+		wdeleteln                deleteln
+		wechochar                addch
+		werase                   clear
+		wgetch                   getch
+		wgetnstr                 getstr
+		wgetstr                  getstr
+		whline                   border
+		winch                    inch
+		winchnstr                inchstr
+		winchstr                 inchstr
+		winnstr                  instr
+		winsch                   insch
+		winsdelln                deleteln
+		winsertln                deleteln
+		winsnstr                 insstr
+		winsstr                  insstr
+		winstr                   instr
+		wmove                    move
+		wnoutrefresh             refresh
+		wordchar                 termattr
+		wprintw                  printw
+		wredrawln                refresh
+		wrefresh                 refresh
+		wscanw                   scanw
+		wscrl                    scroll
+		wsetscrreg               outopts
+		wstandend                attr
+		wstandout                attr
+		wsyncdown                window
+		wsyncup                  window
+	***	wtimeout                 inopts
+		wtouchln                 touch
+		wvline                   border
+
+		mouse_set                mouse
+		mouse_on                 mouse
+		mouse_off                mouse
+		request_mouse_pos        mouse
+		map_button               mouse
+		wmouse_position          mouse
+		getmouse                 mouse
+		getbmap                  mouse
+                           
+		resize_term              initscr
+
+	The following table lists each private curses routine and the name 
+	of the manual page on which it is described. These routines should
+	not be used directly if portability is to be considered.
+
+	   Curses Function        Manual Page Name
+
+		PDC_chadd                pdcdisp
+		PDC_check_bios_key       pdckbd
+		PDC_chg_attrs            pdcdisp
+		PDC_chins                pdcdisp
+		PDC_clr_scrn             pdcdisp
+		PDC_clr_update           pdcdisp
+		PDC_copy_win             pdcwin
+		PDC_cursor_off           pdcdisp
+		PDC_cursor_on            pdcdisp
+		PDC_debug                pdcdebug
+		PDC_fix_cursor           pdcdisp
+		PDC_getch                getch
+		PDC_get_attribute        pdcgetsc
+		PDC_get_bios_key         pdckbd
+		PDC_get_columns          pdcgetsc
+		PDC_get_ctrl_break       pdckbd
+		PDC_get_cursor_mode      pdcgetsc
+		PDC_get_cursor_pos       pdcgetsc
+		PDC_get_cur_col          pdcgetsc
+		PDC_get_cur_row          pdcgetsc
+		PDC_get_font             pdcgetsc
+		PDC_get_rows             pdcgetsc
+		PDC_get_scrn_mode        pdcgetsc
+		PDC_gotoxy               pdcdisp
+		PDC_makenew              pdcwin
+		PDC_memmove              pdcutil
+		PDC_newline              pdcdisp
+		PDC_print                pdcprint
+		PDC_putc                 pdcdisp
+		PDC_putctty              pdcdisp
+		PDC_query_adapter_type   pdcgetsc
+		PDC_rawgetch             pdckbd
+		PDC_sanity_check         pdcgetsc
+		PDC_scrn_modes_equal     pdcscrn
+		PDC_scroll               pdcdisp
+		PDC_scr_close            pdcscrn
+		PDC_scr_open             pdcscrn
+		PDC_set_80x25            pdcsetsc
+		PDC_set_ctrl_break       pdckbd
+		PDC_set_cursor_mode      pdcsetsc
+		PDC_set_font             pdcsetsc
+		PDC_set_rows             pdcsetsc
+		PDC_set_scrn_mode        pdcsetsc
+		PDC_sysgetch             pdckbd
+		PDC_transform_line       pdcdisp
+		PDC_ungetch              getch
+		PDC_usleep               pdcutil
+		PDC_validchar            pdckbd
+		PDC_vsscanf              pdcutil
+
+	NOTE: Functions prefixed with '***' above and on each manual page are 
+		functions that have not been implemented.
+
+**man-end**********************************************************************/

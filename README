@@ -1,0 +1,38 @@
+
+                        Welcome to PDCurses
+
+ PDCurses is a port of System VR4 curses for multiple platforms. 
+
+ Legal Stuff
+ -----------
+ The core curses package is Public Domain, but small portions of this 
+ package are subject to various copyright conditions.  Each directory 
+ in this package contains a README file. In each of these README files 
+ is a section titled "Distribution Status" which describes the 
+ distribution status of the files within that directory.
+
+ Although the core PDCurses package is Public Domain, mention of PDCurses
+ in the documentation of packages linked with it is greatly appreciated.
+
+
+ Ports
+ -----
+
+ PDCurses has been ported to DOS, OS/2, X11, WIN32 and Flexos. A
+ directory containing the port-specific source files exists for each
+ of these platforms.
+
+
+ Distribution Status
+ -------------------
+
+ The files in this directory contain core PDCurses functionality;
+ therefore all files are released to the Public Domain.
+
+
+ Maintainer
+ ----------
+
+ The PDCurses package (and its predecessors) have had various 
+ maintainers over the years.  The contact details of the current 
+ maintainer of the package are listed in the file; maintain.er

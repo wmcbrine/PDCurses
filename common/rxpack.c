@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.20 2003/02/16 23:36:42 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.21 2003/02/17 06:38:23 mark Exp $";
 
 #include "rxpack.h"
 
@@ -162,7 +162,7 @@ char *MkAsciz
 /*-----------------------------------------------------------------------------
  * Check number of parameters
  *----------------------------------------------------------------------------*/
-int my_checkparam(RxPackageGlobalDataDef *RxPackageGlobalData, const char *name, int argc, int mini, int maxi)
+int my_checkparam(RxPackageGlobalDataDef *RxPackageGlobalData, char *name, int argc, int mini, int maxi)
 {
    if ( argc < mini )
    {
@@ -222,8 +222,6 @@ int SetRexxVariable
    MAKERXSTRING( shv.shvvalue, value, ( ULONG )valuelen );
    shv.shvnamelen = shv.shvname.strlength;
    shv.shvvaluelen = shv.shvvalue.strlength;
-   assert( shv.shvname.strptr );
-   assert( shv.shvvalue.strptr );
    rc = RexxVariablePool( &shv );
    if ( rc == RXSHV_OK
    ||   rc == RXSHV_NEWV )
@@ -290,9 +288,7 @@ RXSTRING *GetRexxVariable
  * Now (attempt to) get the REXX variable
  * Set shv.shvvalue to NULL to force interpreter to allocate memory.
  */
-   assert( variable_name );
    MAKERXSTRING( shv.shvname, variable_name, strlen( variable_name ) );
-   assert( shv.shvname.strptr );
    shv.shvvalue.strptr = NULL;
    shv.shvvalue.strlength = 0;
 /*
@@ -303,7 +299,6 @@ RXSTRING *GetRexxVariable
    rc = RexxVariablePool( &shv );              /* Set the REXX variable */
    if ( rc == RXSHV_OK )
    {
-      assert( value );
       value->strptr = ( RXSTRING_STRPTR_TYPE )malloc( ( sizeof( char )*shv.shvvalue.strlength ) + 1 );
       if ( value->strptr != NULL )
       {
@@ -363,9 +358,7 @@ int *GetRexxVariableInteger
  * Now (attempt to) get the REXX variable
  * Set shv.shvvalue to NULL to force interpreter to allocate memory.
  */
-   assert( variable_name );
    MAKERXSTRING( shv.shvname, variable_name, strlen( variable_name ) );
-   assert( shv.shvname.strptr );
    shv.shvvalue.strptr = NULL;
    shv.shvvalue.strlength = 0;
 /*
@@ -376,8 +369,7 @@ int *GetRexxVariableInteger
    rc = RexxVariablePool( &shv );              /* Get the REXX variable */
    if ( rc == RXSHV_OK )
    {
-      assert( value );
-      if ( StrToInt( &shv.shvvalue, (ULONG *)value ) == -1 )
+      if ( RxStrToInt( RxPackageGlobalData, &shv.shvvalue, value ) == -1 )
          value = NULL;
 #if defined(REXXFREEMEMORY)
       RexxFreeMemory( shv.shvvalue.strptr );
@@ -544,6 +536,7 @@ int RxStrToInt
    if ( neg )
       sum *= -1;
    *result = sum;
+   DEBUGDUMP(fprintf(stderr,"%s-%d: In RxStrToInt() Input string is \"%s\" Result is %d\n",__FILE__,__LINE__,ptr->strptr, sum);)
    return 0;
 }
 
@@ -652,6 +645,36 @@ int RxStrToULong
 }
 
 /*-----------------------------------------------------------------------------
+ * Converts a RXSTRING to double. Return 0 if OK and -1 if error.
+ * Assumes a string of decimal digits with or without signs and does not check for overflow!
+ *----------------------------------------------------------------------------*/
+int RxStrToDouble
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, double *result )
+#else
+   ( RxPackageGlobalData, ptr, result )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   double   *result;
+#endif
+
+{
+   char *endptr;
+   double sum;
+
+   sum = strtod( ptr->strptr, &endptr );
+   if ( sum == 0 
+   &&   endptr == ptr->strptr )
+      return -1;
+   if ( sum == HUGE_VAL
+   ||   sum == -HUGE_VAL )
+      return -1;
+   *result = sum;
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
  * Converts a RXSTRING containing a stem name to an array of char pointers
  * Allocates memory for each char string which needs to be freed by the caller
  * using RxFreeCharArray()
@@ -660,17 +683,17 @@ int RxStrToULong
 int RxStemToCharArray
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, char **retval )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, char ***retval )
 #else
    ( RxPackageGlobalData, ptr, retval )
    RxPackageGlobalDataDef *RxPackageGlobalData;
    RXSTRING *ptr;
-   char     **retval;
+   char     ***retval;
 #endif
 
 {
    int      len=ptr->strlength;
-   int      *intptr,num_items;
+   int      *intptr,num_items,i;
    RXSTRING value;
 
    /*
@@ -686,7 +709,7 @@ int RxStemToCharArray
    /*
     * Allocate num_items char *
     */
-   if ( ( *retval = (char *)malloc( sizeof(char *) ) ) == NULL )
+   if ( ( **retval = (char *)malloc( sizeof(char *) ) ) == NULL )
       return -1;
    /*
     * Get each stem value, and set the equivalent entry in the allocated
@@ -694,10 +717,10 @@ int RxStemToCharArray
     */
    for ( i = 0; i < num_items; i++ )
    {
-      sprintf( buf, "%s.%d", ptr->strptr, i+1 );
+/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
       if ( GetRexxVariable( RxPackageGlobalData, ptr->strptr, &value, i+1 ) == NULL )
          return -1;
-      *(retval+i) = value.strptr;
+      **(retval+i) = value.strptr;
    }
    return num_items;
 }
@@ -740,24 +763,24 @@ void RxFreeCharArray
 /*-----------------------------------------------------------------------------
  * Converts a RXSTRING containing a stem name to an array of ULONGs
  * Allocates memory for ULONGs which needs to be freed by the caller
- * using RxFreeNumberArray()
+ * using RxFreeULongArray()
  * Returns the number of items in the array
  *----------------------------------------------------------------------------*/
-int RxStemToNumberArray
+int RxStemToULongArray
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, ULONG **retval )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, unsigned long **retval )
 #else
    ( RxPackageGlobalData, ptr, retval )
    RxPackageGlobalDataDef *RxPackageGlobalData;
-   RXSTRING *ptr;
-   ULONG    **retval;
+   RXSTRING      *ptr;
+   unsigned long **retval;
 #endif
 
 {
    int      len=ptr->strlength;
-   int      *intptr,num_items;
-   ULONG    value;
+   int      *intptr,num_items,i;
+   unsigned long value;
 
    /*
     * Validate that 'ptr' is a stem name.
@@ -770,9 +793,9 @@ int RxStemToNumberArray
    if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
       return -1;
    /*
-    * Allocate num_items ULONGs
+    * Allocate num_items unsigned longs
     */
-   if ( ( *retval = (ULONG *)malloc( sizeof(ULONG) ) ) == NULL )
+   if ( ( *retval = (unsigned long *)malloc( sizeof(unsigned long) ) ) == NULL )
       return -1;
    /*
     * Get each stem value, and set the equivalent entry in the allocated
@@ -780,23 +803,24 @@ int RxStemToNumberArray
     */
    for ( i = 0; i < num_items; i++ )
    {
-      sprintf( buf, "%s.%d", ptr->strptr, i+1 );
-      if ( GetRexxVariableInteger( NULL, ptr->strptr, &value, i+1 ) == NULL )
+/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
+      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
          return -1;
-      *(retval+i) = value;
+      **(retval+i) = (unsigned long)value;
    }
    return num_items;
 }
 
 /*-----------------------------------------------------------------------------
- * Frees memory allocated by RxStemToNumberArray()
+ * Frees memory allocated by RxStemToULongArray()
  *----------------------------------------------------------------------------*/
-void RxFreeNumberArray
+void RxFreeULongArray
 
 #ifdef HAVE_PROTO
-   (ULONG *ptr)
+   (unsigned long *ptr)
 #else
    (ptr)
+   unsigned long *ptr;
 #endif
 
 {
@@ -810,6 +834,264 @@ void RxFreeNumberArray
     */
    free( ptr );
    return;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING containing a stem name to an array of LONGs
+ * Allocates memory for LONGs which needs to be freed by the caller
+ * using RxFreeLongArray()
+ * Returns the number of items in the array
+ *----------------------------------------------------------------------------*/
+int RxStemToLongArray
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, long **retval )
+#else
+   ( RxPackageGlobalData, ptr, retval )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   long     **retval;
+#endif
+
+{
+   int      len=ptr->strlength;
+   int      *intptr,num_items,i;
+   long     value;
+
+   /*
+    * Validate that 'ptr' is a stem name.
+    */
+   if ( ptr->strptr[len-1] != '.' )
+      return -1;
+   /*
+    * Get the number of items in the array
+    */
+   if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
+      return -1;
+   /*
+    * Allocate num_items longs
+    */
+   if ( ( *retval = (long *)malloc( sizeof(long) ) ) == NULL )
+      return -1;
+   /*
+    * Get each stem value, and set the equivalent entry in the allocated
+    * ULONG *
+    */
+   for ( i = 0; i < num_items; i++ )
+   {
+/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
+      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+         return -1;
+      **(retval+i) = (long)value;
+   }
+   return num_items;
+}
+
+/*-----------------------------------------------------------------------------
+ * Frees memory allocated by RxStemToLongArray()
+ *----------------------------------------------------------------------------*/
+void RxFreeLongArray
+
+#ifdef HAVE_PROTO
+   (long *ptr)
+#else
+   (ptr)
+   long *ptr;
+#endif
+
+{
+   /*
+    * Validate that 'ptr' is valid.
+    */
+   if ( ptr == NULL )
+      return;
+   /*
+    * Free the ptr
+    */
+   free( ptr );
+   return;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING containing a stem name to an array of INTs
+ * Allocates memory for INTs which needs to be freed by the caller
+ * using RxFreeIntArray()
+ * Returns the number of items in the array
+ *----------------------------------------------------------------------------*/
+int RxStemToIntArray
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, int **retval )
+#else
+   ( RxPackageGlobalData, ptr, retval )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   int      **retval;
+#endif
+
+{
+   int      len=ptr->strlength;
+   int      *intptr,num_items,i;
+   int     value;
+
+   /*
+    * Validate that 'ptr' is a stem name.
+    */
+   if ( ptr->strptr[len-1] != '.' )
+      return -1;
+   /*
+    * Get the number of items in the array
+    */
+   if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
+      return -1;
+   /*
+    * Allocate num_items ints
+    */
+   if ( ( *retval = (int *)malloc( sizeof(int) ) ) == NULL )
+      return -1;
+   /*
+    * Get each stem value, and set the equivalent entry in the allocated
+    * ULONG *
+    */
+   for ( i = 0; i < num_items; i++ )
+   {
+/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
+      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+         return -1;
+      **(retval+i) = (int)value;
+   }
+   return num_items;
+}
+
+/*-----------------------------------------------------------------------------
+ * Frees memory allocated by RxStemToIntArray()
+ *----------------------------------------------------------------------------*/
+void RxFreeIntArray
+
+#ifdef HAVE_PROTO
+   (int *ptr)
+#else
+   (ptr)
+   int *ptr;
+#endif
+
+{
+   /*
+    * Validate that 'ptr' is valid.
+    */
+   if ( ptr == NULL )
+      return;
+   /*
+    * Free the ptr
+    */
+   free( ptr );
+   return;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING containing a stem name to an array of UINTs
+ * Allocates memory for UINTs which needs to be freed by the caller
+ * using RxFreeUIntArray()
+ * Returns the number of items in the array
+ *----------------------------------------------------------------------------*/
+int RxStemToUIntArray
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, unsigned int **retval )
+#else
+   ( RxPackageGlobalData, ptr, retval )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   unsigned int **retval;
+#endif
+
+{
+   int      len=ptr->strlength;
+   int      *intptr,num_items,i;
+   unsigned int     value;
+
+   /*
+    * Validate that 'ptr' is a stem name.
+    */
+   if ( ptr->strptr[len-1] != '.' )
+      return -1;
+   /*
+    * Get the number of items in the array
+    */
+   if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
+      return -1;
+   /*
+    * Allocate num_items ints
+    */
+   if ( ( *retval = (unsigned int *)malloc( sizeof(unsigned int) ) ) == NULL )
+      return -1;
+   /*
+    * Get each stem value, and set the equivalent entry in the allocated
+    * unsigned int *
+    */
+   for ( i = 0; i < num_items; i++ )
+   {
+/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
+      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+         return -1;
+      **(retval+i) = (unsigned int)value;
+   }
+   return num_items;
+}
+
+/*-----------------------------------------------------------------------------
+ * Frees memory allocated by RxStemToUIntArray()
+ *----------------------------------------------------------------------------*/
+void RxFreeUIntArray
+
+#ifdef HAVE_PROTO
+   (unsigned int *ptr)
+#else
+   (ptr)
+   unsigned int *ptr;
+#endif
+
+{
+   /*
+    * Validate that 'ptr' is valid.
+    */
+   if ( ptr == NULL )
+      return;
+   /*
+    * Free the ptr
+    */
+   free( ptr );
+   return;
+}
+
+/*-----------------------------------------------------------------------------
+ * Sets the variable specified to the number value supplied.
+ *----------------------------------------------------------------------------*/
+int RxNumberToVariable
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, ULONG number )
+#else
+   ( RxPackageGlobalData, ptr, number )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   ULONG number;
+#endif
+
+{
+   int  len;
+   char buf[50];
+
+   /*
+    * Convert the number to a string...
+    */
+   len = sprintf( buf, "%ld", number );
+   /*
+    * Set the Rexx variable
+    */
+   if ( SetRexxVariable( RxPackageGlobalData, ptr->strptr, ptr->strlength, buf, len ) == 1 )
+      return -1;
+   return 0;
 }
 
 
@@ -1143,7 +1425,6 @@ int DeregisterRxFunctions
 
    for ( func = RxPackageFunctions; func->InternalName; func++ )
    {
-      assert( func->ExternalName );
       rc = RexxDeregisterFunction( func->ExternalName );
       if ( verbose )
          fprintf(stderr,"Deregistering...%s - %d\n",func->ExternalName,rc);
@@ -1448,7 +1729,7 @@ int RxReturn
    RXSTRING *retstr;
 #endif
 {
-   InternalTrace( RxPackageGlobalData, "RxReturn" );
+   InternalTrace( RxPackageGlobalData, "RxReturn", "%x,%s", retstr, retstr->strptr );
 
    if ( RxPackageGlobalData
    &&   RxPackageGlobalData->RxRunFlags & MODE_VERBOSE )
@@ -1478,8 +1759,7 @@ int RxReturnNumber
 {
    InternalTrace( RxPackageGlobalData, "RxReturnNumber", "%x,%d", retstr, num );
 
-   sprintf( (char *)retstr->strptr, "%ld", num );
-   retstr->strlength = strlen( (char *)retstr->strptr );
+   retstr->strlength = sprintf( (char *)retstr->strptr, "%ld", num );
    if ( RxPackageGlobalData
    &&   RxPackageGlobalData->RxRunFlags & MODE_VERBOSE )
    {
@@ -1508,8 +1788,7 @@ int RxReturnDouble
 {
    InternalTrace( RxPackageGlobalData, "RxReturnDouble", "%x,%f", retstr, num );
 
-   sprintf( (char *)retstr->strptr, "%f", num );
-   retstr->strlength = strlen( (char *)retstr->strptr );
+   retstr->strlength = sprintf( (char *)retstr->strptr, "%f", num );
    if ( RxPackageGlobalData
    &&   RxPackageGlobalData->RxRunFlags & MODE_VERBOSE )
    {
@@ -1542,8 +1821,7 @@ int RxReturnPointer
 
    if ( ptr )
    {
-      sprintf( (char *)retstr->strptr, "%ld", (long)ptr );
-      retstr->strlength = strlen( (char *)retstr->strptr );
+      retstr->strlength = sprintf( (char *)retstr->strptr, "%ld", (long)ptr );
    }
    else
    {

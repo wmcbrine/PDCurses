@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.21 2004/08/07 07:18:46 rexx Exp $
+$Id: curses.h,v 1.22 2004/09/10 07:28:44 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -497,7 +497,7 @@ PDCurses portable platform definitions list:
 #      undef MOUSE_MOVED
 #    endif
 #  endif
-#  ifndef WIN32
+#  if !defined( WIN32 ) && !defined(XCURSES)
 #    define WIN32
 #  endif
 #  ifndef INT_MAX
@@ -821,6 +821,7 @@ typedef struct
 #define BUTTON_DOUBLE_CLICKED  0003
 #define BUTTON_TRIPLE_CLICKED  0004
 #define BUTTON_MOVED           0005  /* PDCurses enhancement */
+#define WHEEL_SCROLLED         0006  /* PDCurses enhancement */
 #define BUTTON_ACTION_MASK     0007  /* PDCurses enhancement */
 #define BUTTON_SHIFT           0010  /* PDCurses enhancement */
 #define BUTTON_CONTROL         0020  /* PDCurses enhancement */
@@ -829,11 +830,29 @@ typedef struct
 
 #define MOUSE_X_POS            (Mouse_status.x)
 #define MOUSE_Y_POS            (Mouse_status.y)
+/*
+ * Bits associated with the .changes field:
+ *   3         2         1         0
+ * 210987654321098765432109876543210
+ *                                 1 <- button 1 has changed
+ *                                10 <- button 2 has changed
+ *                               100 <- button 3 has changed
+ *                              1000 <- mouse has moved
+ *                             10000 <- mouse position report
+ *                            100000 <- mouse wheel up
+ *                           1000000 <- mouse wheel down
+ */
+#define PDC_MOUSE_MOVED         8
+#define PDC_MOUSE_POSITION     16
+#define PDC_MOUSE_WHEEL_UP     32
+#define PDC_MOUSE_WHEEL_DOWN   64
 #define A_BUTTON_CHANGED       (Mouse_status.changes & 7)
-#define MOUSE_MOVED            (Mouse_status.changes & 8)
-#define MOUSE_POS_REPORT       (Mouse_status.changes & 16)
+#define MOUSE_MOVED            (Mouse_status.changes & PDC_MOUSE_MOVED)
+#define MOUSE_POS_REPORT       (Mouse_status.changes & PDC_MOUSE_POSITION)
 #define BUTTON_CHANGED(x)      (Mouse_status.changes & (1 << ((x) - 1)))
 #define BUTTON_STATUS(x)       (Mouse_status.button[(x)-1])
+#define MOUSE_WHEEL_UP         (Mouse_status.changes & PDC_MOUSE_WHEEL_UP)
+#define MOUSE_WHEEL_DOWN       (Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN)
 
 /* mouse bit-masks */
 #define BUTTON1_RELEASED        000000000001L
@@ -854,11 +873,12 @@ typedef struct
 #define BUTTON3_DOUBLE_CLICKED  000000020000L
 #define BUTTON3_TRIPLE_CLICKED  000000040000L
 #define BUTTON3_MOVED           000000040000L /* PDCurses enhancement */
-#define BUTTON_MODIFIER_SHIFT   000000100000L /* PDCurses enhancement */
-#define BUTTON_MODIFIER_CONTROL 000000200000L /* PDCurses enhancement */
-#define BUTTON_MODIFIER_ALT     000000400000L /* PDCurses enhancement */
+#define MOUSE_WHEEL_SCROLL      000000100000L /* PDCurses enhancement */
 #define ALL_MOUSE_EVENTS        000000777777L
-#define REPORT_MOUSE_POSITION   000001000000L
+#define BUTTON_MODIFIER_SHIFT   000001000000L /* PDCurses enhancement */
+#define BUTTON_MODIFIER_CONTROL 000002000000L /* PDCurses enhancement */
+#define BUTTON_MODIFIER_ALT     000004000000L /* PDCurses enhancement */
+#define REPORT_MOUSE_POSITION   000010000000L
 
 /*----------------------------------------------------------------------
  *
@@ -1010,10 +1030,6 @@ typedef struct
 	unsigned video_seg;	/* video base segment		    */
 	unsigned video_ofs;	/* video base offset		    */
 	unsigned long os_version; /* Win32 Version */
-#endif
-
-#if defined(OS2) || defined(WIN32)
-	int	num_mouse_buttons;	/* number of mouse buttons */
 #endif
 
 #if defined (XCURSES)

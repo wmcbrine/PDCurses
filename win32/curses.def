@@ -45,9 +45,7 @@ EXPORTS erase
 EXPORTS erasechar
 EXPORTS flash
 EXPORTS flushinp
-EXPORTS getch
 EXPORTS getstr
-EXPORTS getsyx
 EXPORTS halfdelay
 EXPORTS has_colors
 EXPORTS has_ic
@@ -151,7 +149,6 @@ EXPORTS scroll
 EXPORTS scrollok
 EXPORTS set_term
 EXPORTS setscrreg
-EXPORTS setsyx
 EXPORTS slk_attroff
 EXPORTS slk_attron
 EXPORTS slk_attrset
@@ -177,7 +174,6 @@ EXPORTS traceon
 EXPORTS traceoff
 EXPORTS typeahead
 EXPORTS unctrl
-EXPORTS ungetch
 EXPORTS untouchwin
 EXPORTS vline
 EXPORTS waddch

@@ -38,9 +38,7 @@ erase
 erasechar
 flash
 flushinp
-getch
 getstr
-getsyx
 halfdelay
 has_colors
 has_ic
@@ -144,7 +142,6 @@ scroll
 scrollok
 set_term
 setscrreg
-setsyx
 slk_attroff
 slk_attron
 slk_attrset
@@ -170,7 +167,6 @@ traceon
 traceoff
 typeahead
 unctrl
-ungetch
 untouchwin
 vline
 waddch
@@ -288,5 +284,10 @@ PDC_usleep
 PDC_validchar
 PDC_vsscanf
 PDC_freeclipboard
+SP
+stdscr
+COLS
+LINES
+Mouse_status
 SECTION
 DATA SHARED

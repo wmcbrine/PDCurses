@@ -4,8 +4,8 @@ SHELL = /bin/sh
 
 @SET_MAKE@
 
-VER=25
-VER_DOT=2.5
+VER=26
+VER_DOT=2.6
 PDC_DIR=PDCurses-$(VER_DOT)
 
 srcdir		=@srcdir@

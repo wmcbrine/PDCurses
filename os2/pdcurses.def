@@ -19,6 +19,7 @@ EXPORTS
             PDC_freeclipboard
             PDC_getclipboard
             PDC_setclipboard
+            PDC_clearclipboard
             PDC_set_title
             stdscr
             curscr

@@ -189,7 +189,7 @@ dnl
 dnl Try to determine the directory containing Rexx library
 dnl
 	for ac_dir in $mh_lib_dirs ; do
-		for mh_ext in lib${rexx_l}.a lib${rexx_l}.so lib${rexx_l}.sl ${rexx_l}.lib; do
+		for mh_ext in lib${rexx_l}.a lib${rexx_l}.so lib${rexx_l}.sl ${rexx_l}.lib lib${rexx_l}.dylib; do
 		  if test -r $ac_dir/$mh_ext; then
 		     mh_rexx_lib_dir=$ac_dir
 		  if test "$with_rexxtrans" = yes; then
@@ -398,10 +398,10 @@ if test "x$x_libraries" != xNONE ; then
 fi
 
 dnl
-dnl try to find libSM.[a,sl,so]. If we find it we are using X11R6
+dnl try to find libSM.[a,sl,so,dylib]. If we find it we are using X11R6
 dnl
 for ac_dir in $mh_lib_dirs ; do
-	for mh_xsm in libSM.a libSM.so libSM.sl; do
+	for mh_xsm in libSM.a libSM.so libSM.sl libSM.dylib; do
 	  if test -r $ac_dir/$mh_xsm; then
 	    mh_x11r6=yes
 	    break 2
@@ -839,7 +839,6 @@ case "$target" in
 	*apple-darwin*)
 		LD_RXLIB1="${CC} -dynamiclib -install_name=\$(prefix)/lib/\$(@)"
 		DYN_COMP="-fno-common"
-		OTHER_INSTALLS=""
 		SHLPST=".dylib"
 		;;
 	*qnx*)
@@ -910,7 +909,7 @@ EOF
 	rm -f conftest.*
 fi
 
-if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes"; then
+if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes" -o "$DLFCNINCDIR" != "" -o "$DLFCNLIBDIR" != ""; then
 	if test "$with_rexx" = "rexxtrans" -o "$with_rexx" = "regina" -o  "$with_rexx" = "objrexx" -o "$with_rexx" = "rexx6000"; then
 		SHL_TARGETS=""
 		for a in $SHLFILES

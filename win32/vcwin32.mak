@@ -38,7 +38,7 @@ CFLAGS  = -Z7 -DPDCDEBUG
 LDFLAGS = -debug -pdb:none
 !else
 CFLAGS  =  -Ox
-LDFLAGS = 
+LDFLAGS =
 !endif
 
 SHL_LD=link $(LDFLAGS) /NOLOGO /DLL /OUT:curses.dll /DEF:$(osdir)\curses.def

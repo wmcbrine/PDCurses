@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.17 2003/01/01 04:34:42 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.18 2003/01/01 05:08:37 mark Exp $";
 
 #include "rxpack.h"
 
@@ -904,7 +904,7 @@ int TermRxPackage
 
    InternalTrace( GlobalData, "TermRxPackage", "\"%s\",%d", progname, deregfunc );
 
-   DEBUGDUMP(fprintf(stderr,"%s-%d: Start of TermRxPackage\n",__FILE__,__LINE__);)
+   DEBUGDUMP(fprintf(stderr,"%s-%d: Start of TermRxPackage RxPackageGlobalData is %x\n",__FILE__,__LINE__,(long)GlobalData);)
    /* 
     * De-register all REXX/SQL functions only 
     * if DEBUG value = 99
@@ -922,6 +922,7 @@ int TermRxPackage
     */
    if ( ptr )
    {
+      DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: Calling package terminator function\n",__FILE__,__LINE__);)
       if ( ( rc = (*ptr)( GlobalData ) ) != 0 )
          return (int)FunctionEpilogue( GlobalData, "TermRxPackage", (long)rc );
    }
@@ -936,7 +937,7 @@ int TermRxPackage
    RexxDeregisterExit( ( RDE_ARG0_TYPE )RXPACKAGENAME,
                        ( RDE_ARG1_TYPE )NULL );
 #endif
-   DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: RxPackageGlobalData is %x\n",__FILE__,__LINE__,(long)RxPackageGlobalData);)
+   DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: RxPackageGlobalData is %x\n",__FILE__,__LINE__,(long)GlobalData);)
    if ( GlobalData )
    {
       DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: deallocate is %d, RxTraceFilePointer is %x stdin is %x stderr is %x\n",__FILE__,__LINE__,GlobalData->deallocate,(long)GlobalData->RxTraceFilePointer,(long)stdin,(long)stderr);)

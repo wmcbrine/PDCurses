@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.10 2002/08/25 09:01:06 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.11 2003/01/01 05:08:35 mark Exp $";
 
 #include "rxpack.h"
 
@@ -252,13 +252,14 @@ int main
               ( RS_ARG7_TYPE )&rc,
               ( RS_ARG8_TYPE )&retstr);
 
-   if ( !RxPackageGlobalData->terminated )
+   if ( RxPackageGlobalData
+   &&   !RxPackageGlobalData->terminated )
    {
       rc = FunctionEpilogue( RxPackageGlobalData, RXPACKAGENAME, (ULONG)rc );
       /* 
        * Terminate the package interface.
        */
-      (void)TermRxPackage( RxPackageGlobalData, GETPACKAGETERMINATOR(), GETPACKAGEFUNCTIONS(), RXPACKAGENAME, 0 );
+      (void)TermRxPackage( &RxPackageGlobalData, GETPACKAGETERMINATOR(), GETPACKAGEFUNCTIONS(), RXPACKAGENAME, 0 );
       RxPackageGlobalData = NULL;
    }
 

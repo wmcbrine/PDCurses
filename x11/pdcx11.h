@@ -280,7 +280,7 @@ extern XtResource app_resources[PDC_NUMBER_APP_RESOURCES];
 extern XrmOptionDescRec options[PDC_NUMBER_OPTIONS];
 extern char global_display_name[100];
 extern Bool after_first_curses_request;
-extern char *XCursesProgramName;
+/* extern char *XCursesProgramName; */
 extern int colors[(2*MAX_COLORS)+2];
 extern int windowEntered;
 

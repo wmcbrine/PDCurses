@@ -129,9 +129,10 @@
 /* 
  * Run time modes 
  */
-#define MODE_DEBUG      1
-#define MODE_VERBOSE    2
-#define MODE_INTERNAL   4
+#define MODE_DEBUG        1
+#define MODE_VERBOSE      2
+#define MODE_INTERNAL     4
+#define MODE_HALTONERROR  8
 
 #define REXX_FAIL      1
 

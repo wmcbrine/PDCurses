@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.1 2001/01/10 08:30:09 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.2 2001/01/10 08:30:10 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -240,7 +240,7 @@ extern	WINDOW*	_getch_win_;
 	if (_getch_win_->_nodelay && !PDC_breakout()) /* @@ */
 		return( -1 );
 
-	c = XCurses_rawgetch();
+	c = XCurses_rawgetch( SP->delaytenths );
 	return(c);
 }
 

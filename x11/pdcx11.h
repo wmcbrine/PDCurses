@@ -55,6 +55,7 @@
  * #includes specific to running XCurses with threads
  */
 #ifdef USE_THREADS
+# include <pthreads.h>
 #endif
 
 #ifdef TIME_WITH_SYS_TIME
@@ -157,6 +158,23 @@
 #define XtNcolorWhite    "colorWhite"
 #define XtCColorWhite    "ColorWhite"
 
+#define XtNcolorBoldBlack    "colorBoldBlack"
+#define XtCColorBoldBlack    "ColorBoldBlack"
+#define XtNcolorBoldRed      "colorBoldRed"
+#define XtCColorBoldRed      "ColorBoldRed"
+#define XtNcolorBoldGreen    "colorBoldGreen"
+#define XtCColorBoldGreen    "ColorBoldGreen"
+#define XtNcolorBoldYellow   "colorBoldYellow"
+#define XtCColorBoldYellow   "ColorBoldYellow"
+#define XtNcolorBoldBlue     "colorBoldBlue"
+#define XtCColorBoldBlue     "ColorBoldBlue"
+#define XtNcolorBoldMagenta  "colorBoldMagenta"
+#define XtCColorBoldMagenta  "ColorBoldMagenta"
+#define XtNcolorBoldCyan     "colorBoldCyan"
+#define XtCColorBoldCyan     "ColorBoldCyan"
+#define XtNcolorBoldWhite    "colorBoldWhite"
+#define XtCColorBoldWhite    "ColorBoldWhite"
+
 #ifndef MAX_PATH
 #  define MAX_PATH 256
 #endif
@@ -174,6 +192,14 @@ typedef struct
  Pixel colorMagenta;
  Pixel colorCyan;
  Pixel colorWhite;
+ Pixel colorBoldBlack;
+ Pixel colorBoldRed;
+ Pixel colorBoldGreen;
+ Pixel colorBoldYellow;
+ Pixel colorBoldBlue;
+ Pixel colorBoldMagenta;
+ Pixel colorBoldCyan;
+ Pixel colorBoldWhite;
  Pixel pointerForeColor;
  Pixel pointerBackColor;
  XFontStruct *normalfont;
@@ -215,16 +241,17 @@ AppData app_data;
 #define XCURSESWIN          (XtWindow(drawing))
 
 #define MAX_COLORS   8  /* maximum of "normal" colours */
-#define COLOR_CURSOR 8  /* colour of cursor - 1 more than MAX_COLORS */
-#define COLOR_BORDER 9  /* colour of border - 2 more than MAX_COLORS */
-#define PDC_NUMBER_APP_RESOURCES 24
-#define PDC_NUMBER_OPTIONS 22
+#define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2*MAX_COLORS */
+#define COLOR_BORDER 17 /* colour of border - 2 more than 2*MAX_COLORS */
+#define PDC_NUMBER_APP_RESOURCES 32
+#define PDC_NUMBER_OPTIONS 29
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
 #include "x11.h"
 
-extern GC normal_gc,bold_gc,block_cursor_gc,rect_cursor_gc,normal_highlight_gc,bold_highlight_gc,border_gc;
+extern GC normal_gc,block_cursor_gc,rect_cursor_gc,normal_highlight_gc,bold_highlight_gc,border_gc;
 extern int XCursesFontHeight,XCursesFontWidth;
+extern int XCursesFontAscent,XCursesFontDescent;
 extern int XCursesWindowWidth,XCursesWindowHeight;
 extern int resizeXCursesWindowWidth,resizeXCursesWindowHeight;
 extern char *bitmap_file;
@@ -254,13 +281,32 @@ extern XrmOptionDescRec options[PDC_NUMBER_OPTIONS];
 extern char global_display_name[100];
 extern Bool after_first_curses_request;
 extern char *XCursesProgramName;
-extern int colors[MAX_COLORS+2];
+extern int colors[(2*MAX_COLORS)+2];
 extern int windowEntered;
 
+typedef RETSIGTYPE (*signal_handler)();
 #ifdef PROTO
 void XCursesNonmaskable(Widget w,XtPointer client_data,XEvent *event,Boolean *continue_to_dispatch);
 void XCursesExpose(Widget w,XtPointer client_data,XEvent *event,Boolean *continue_to_dispatch);
+signal_handler XCursesSetSignal(int,signal_handler);
+void XCursesGetIcon(void);
+int XCursesRefreshScrollbar(void);
+int XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
+void XCursesButton(Widget,XEvent *,String *,Cardinal *);
+void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);
+void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data);
+void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data);
+void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data);
 #else
 void XCursesNonmaskable();
 void XCursesExpose();
+signal_handler XCursesSetSignal();
+void XCursesGetIcon();
+int XCursesRefreshScrollbar();
+int XCursesSendKeyToCurses();
+void XCursesButton();
+void Scroll_up_down();
+void Scroll_left_right();
+void Thumb_up_down();
+void Thumb_left_right();
 #endif

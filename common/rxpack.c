@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.27 2003/02/22 00:21:41 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.28 2003/02/23 10:04:58 mark Exp $";
 
 #include "rxpack.h"
 
@@ -673,7 +673,7 @@ int RxStrToDouble
    &&   errno != 0 )
       return -1;
    if ( sum == 0 
-   &&   endptr == ptr->strptr )
+   &&   (char *)endptr == (char *)ptr->strptr )
       return -1;
    *result = sum;
    return 0;
@@ -1379,7 +1379,7 @@ int RegisterRxFunctions
          rc = RexxRegisterFunctionDll( func->ExternalName,
               name,
               func->InternalName );
-         InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (DLL) %s with rc = %ld\n",__FILE__,__LINE__,func->ExternalName,rc);
+         InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (DLL) %s with rc = %ld",__FILE__,__LINE__,func->ExternalName,rc);
       }
 # endif
 #else
@@ -1388,10 +1388,10 @@ int RegisterRxFunctions
 # endif
 # if defined(USE_REXX6000)
       rc = RexxRegisterFunction( func->ExternalName, func->EntryPoint, NULL );
-      InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d\n",__FILE__,__LINE__,func->ExternalName,rc);
+      InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d",__FILE__,__LINE__,func->ExternalName,rc);
 # else
       rc = RexxRegisterFunctionExe( func->ExternalName, func->EntryPoint );
-      InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d\n",__FILE__,__LINE__,func->ExternalName,rc);
+      InternalTrace( RxPackageGlobalData, "RegisterRxFunctions","%s-%d: Registered (EXE) %s with rc = %d",__FILE__,__LINE__,func->ExternalName,rc);
 # endif
 #endif
       if (rc != RXFUNC_OK
@@ -1555,7 +1555,7 @@ RxPackageGlobalDataDef *InitRxPackage
    char *env;
    RxPackageGlobalDataDef *RxPackageGlobalData;
 
-   DEBUGDUMP(fprintf(stderr,"%s-%d: Start of InitRxPackage\n",__FILE__,__LINE__);)
+   DEBUGDUMP(fprintf(stderr,"%s-%d: Start of InitRxPackage. MyGlob: %lx\n",__FILE__,__LINE__,(ULONG *)MyGlob);)
    if ( MyGlob )
    {
       RxPackageGlobalData = MyGlob;
@@ -1614,7 +1614,7 @@ int TermRxPackage
 
    InternalTrace( GlobalData, "TermRxPackage", "\"%s\",%d", progname, deregfunc );
 
-   DEBUGDUMP(fprintf(stderr,"%s-%d: Start of TermRxPackage RxPackageGlobalData is %x\n",__FILE__,__LINE__,(long)GlobalData);)
+   DEBUGDUMP(fprintf(stderr,"%s-%d: Start of TermRxPackage RxPackageGlobalData is %lx\n",__FILE__,__LINE__,(long)GlobalData);)
    /* 
     * De-register all REXX/SQL functions only 
     * if DEBUG value = 99
@@ -1647,10 +1647,10 @@ int TermRxPackage
    RexxDeregisterExit( ( RDE_ARG0_TYPE )RXPACKAGENAME,
                        ( RDE_ARG1_TYPE )NULL );
 #endif
-   DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: RxPackageGlobalData is %x\n",__FILE__,__LINE__,(long)GlobalData);)
+   DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: RxPackageGlobalData is %lx\n",__FILE__,__LINE__,(long)GlobalData);)
    if ( GlobalData )
    {
-      DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: deallocate is %d, RxTraceFilePointer is %x stdin is %x stderr is %x\n",__FILE__,__LINE__,GlobalData->deallocate,(long)GlobalData->RxTraceFilePointer,(long)stdin,(long)stderr);)
+      DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: deallocate is %d, RxTraceFilePointer is %lx stdin is %lx stderr is %lx\n",__FILE__,__LINE__,GlobalData->deallocate,(long)GlobalData->RxTraceFilePointer,(long)stdin,(long)stderr);)
       if ( GlobalData->RxTraceFilePointer
       &&   GlobalData->RxTraceFilePointer != stdin
       &&   GlobalData->RxTraceFilePointer != stderr )
@@ -1753,13 +1753,11 @@ int RxSetConstantPrefix
 #endif
 
 {
-   FILE *fp = NULL;
-
    InternalTrace( RxPackageGlobalData, "RxSetConstantPrefix", "%s", name );
 
    if ( ( strlen( name ) + 1 ) > sizeof( RxPackageGlobalData->ConstantPrefix ) )
    {
-      (void)fprintf( stderr, "ERROR: Constant prefix is too long. It must be <= %d\n", sizeof( RxPackageGlobalData->ConstantPrefix ) - 1 );
+      (void)fprintf( stderr, "ERROR: Constant prefix is too long. It must be <= %ld\n", sizeof( RxPackageGlobalData->ConstantPrefix ) - 1 );
       return( 1 );
    }
    strcpy( RxPackageGlobalData->ConstantPrefix, name );

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.11 2002/05/11 09:44:32 mark Exp $
+$Id: curses.h,v 1.12 2002/05/28 11:35:10 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1719,7 +1719,7 @@ int     PDC_CDECL	PDC_getclipboard( char **, long * );
 int     PDC_CDECL	PDC_setclipboard( char *, long );
 int     PDC_CDECL	PDC_freeclipboard( char * );
 
-int     PDC_CDECL	PDC_get_input_fd( void );
+unsigned long PDC_CDECL	PDC_get_input_fd( void );
 int     PDC_CDECL	PDC_curs_set( int );
 unsigned long PDC_CDECL	PDC_get_key_modifiers( void );
 
@@ -1927,7 +1927,7 @@ void    PDC_CDECL	PDC_set_title( /* char * */ );
 int     PDC_CDECL	PDC_getclipboard( /* char **, long * */ );
 int     PDC_CDECL	PDC_setclipboard( /* char *, long */ );
 
-int     PDC_CDECL	PDC_get_input_fd( /* void */ );
+unsigned long PDC_CDECL	PDC_get_input_fd( /* void */ );
 int     PDC_CDECL	PDC_curs_set( /* int */ );
 unsigned long PDC_CDECL	PDC_get_key_modifiers( /* void */ );
 

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.3 2001/01/10 08:31:33 mark Exp $
+$Id: curses.h,v 1.4 2001/03/02 13:39:58 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1042,39 +1042,39 @@ and blink.
 
 /* Video attribute definitions. */
 #ifdef CHTYPE_LONG
-#define A_NORMAL		    0x00000000L
-#define A_STANDOUT		  0x00A00000L
-#define A_BOLD		      0x00800000L
-#define A_UNDERLINE		 0x00100000L
-#define A_REVERSE		   0x00200000L
-#define A_BLINK		     0x00400000L
-#define A_DIM		       0x00020000L
-#define A_INVIS		     0x00080000L
-#define A_ALTCHARSET		0x00040000L
-#define A_ATTRIBUTES		0xFFFF0000L
-#define A_CHARTEXT		  0x0000FFFFL
-#define A_COLOR		     0xFF000000L
+# define A_NORMAL        0x00000000L
+# define A_UNDERLINE     0x00100000L
+# define A_REVERSE       0x00200000L
+# define A_BLINK         0x00400000L
+# define A_BOLD          0x00800000L
+# define A_RIGHTLINE     0x00010000L
+# define A_DIM           0x00020000L
+# define A_ALTCHARSET    0x00040000L
+# define A_INVIS         0x00080000L
+# define A_ATTRIBUTES    0xFFFF0000L
+# define A_CHARTEXT      0x0000FFFFL
+# define A_COLOR         0xFF000000L
 
-#define A_OVERLINE    A_BLINK
-#define A_LEFTLINE    A_DIM
-#define A_RIGHTLINE   0x00010000L
-#define A_PROTECT     A_OVERLINE|A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE
+# define A_LEFTLINE      A_DIM
+# define A_ITALIC        A_INVIS
+# define A_STANDOUT      ( A_BOLD | A_REVERSE )
+# define A_PROTECT       ( A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE )
 
 #else
 
-#define A_NORMAL	(chtype)0x0000		/* SysV */
-#define A_ALTCHARSET	(chtype)0x0000		/* X/Open	*/
-#define A_BLINK		(chtype)0x0400		/* X/Open	*/
-#define A_BLANK		(chtype)0x0000		/* X/Open	*/
-#define A_BOLD		(chtype)0x0100		/* X/Open	*/
-#define A_DIM		(chtype)0x0000		/* X/Open	*/
-#define A_PROTECT	(chtype)0x0000		/* X/Open	*/
-#define A_REVERSE	(chtype)0x0200		/* X/Open	*/
-#define A_STANDOUT	((chtype)(A_REVERSE | A_BOLD))		/* X/Open	*/
-#define A_UNDERLINE	(chtype)0x0000		/* X/Open	*/
-#define A_COLOR	(chtype)0xF800		/*System V	*/
-#define A_CHARTEXT	(chtype)(0xFF)			/* X/Open	*/
-#define A_ATTRIBUTES	(chtype)(~A_CHARTEXT)			/* X/Open	*/
+# define A_NORMAL      (chtype)0x0000                  /* System V */
+# define A_ALTCHARSET  (chtype)0x0000                  /* X/Open   */
+# define A_BLINK       (chtype)0x0400                  /* X/Open   */
+# define A_BLANK       (chtype)0x0000                  /* X/Open   */
+# define A_BOLD        (chtype)0x0100                  /* X/Open   */
+# define A_DIM         (chtype)0x0000                  /* X/Open   */
+# define A_PROTECT     (chtype)0x0000                  /* X/Open   */
+# define A_REVERSE     (chtype)0x0200                  /* X/Open   */
+# define A_STANDOUT    ((chtype)(A_REVERSE | A_BOLD))  /* X/Open   */
+# define A_UNDERLINE   (chtype)0x0000                  /* X/Open   */
+# define A_COLOR       (chtype)0xF800                  /* System V  */
+# define A_CHARTEXT    (chtype)(0xFF)                  /* X/Open   */
+# define A_ATTRIBUTES  (chtype)(~A_CHARTEXT)           /* X/Open   */
 #endif
 
 #define CHR_MSK		A_CHARTEXT		/* Obsolete	*/
@@ -1720,7 +1720,6 @@ int     PDC_CDECL	PDC_curs_set( int );
 unsigned long PDC_CDECL	PDC_get_key_modifiers( void );
 
 int     PDC_CDECL	PDC_wunderline( WINDOW*, int, bool );
-int     PDC_CDECL	PDC_woverline( WINDOW*, int, bool );
 int     PDC_CDECL	PDC_wleftline( WINDOW*, int, bool );
 int     PDC_CDECL	PDC_wrightline( WINDOW*, int, bool );
 int     PDC_CDECL	PDC_set_line_color( short );
@@ -1929,7 +1928,6 @@ int     PDC_CDECL	PDC_curs_set( /* int */ );
 unsigned long PDC_CDECL	PDC_get_key_modifiers( /* void */ );
 
 int     PDC_CDECL	PDC_wunderline( /* WINDOW*, int, bool */ );
-int     PDC_CDECL	PDC_woverline( /* WINDOW*, int, bool */ );
 int     PDC_CDECL	PDC_wleftline( /* WINDOW*, int, bool */ );
 int     PDC_CDECL	PDC_wrightline( /* WINDOW*, int, bool */ );
 int     PDC_CDECL	PDC_set_line_color( /* short */ );

@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.9 2002/12/16 09:40:36 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.10 2003/09/11 10:22:03 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -732,10 +732,10 @@ int   PDC_get_bios_key(void)
                      button_no = 2;
                      TEMP_BUTTON_STATUS(button_no) = (save_ip.Event.MouseEvent.dwEventFlags)?BUTTON_DOUBLE_CLICKED:BUTTON_PRESSED;
                      if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
-                     && (SP->_trap_mbe) & BUTTON3_PRESSED)
+                     && (SP->_trap_mbe) & BUTTON2_PRESSED)
                         trap_mouse = TRUE;
                      if (TEMP_BUTTON_STATUS(button_no) == BUTTON_DOUBLE_CLICKED
-                     && (SP->_trap_mbe) & BUTTON3_DOUBLE_CLICKED)
+                     && (SP->_trap_mbe) & BUTTON2_DOUBLE_CLICKED)
                         trap_mouse = TRUE;
                      break;
                   }

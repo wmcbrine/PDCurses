@@ -39,8 +39,6 @@
 #undef   reset_shell_mode
 #undef   resetty
 #undef   savetty
-#undef   getsyx
-#undef   setsyx
 #undef   ripoffline
 #undef   curs_set
 #undef   napms
@@ -53,7 +51,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.2 2002/01/12 04:04:18 mark Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.3 2002/11/27 11:24:31 mark Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -70,8 +68,8 @@ char linesrippedoff=0;
    int reset_shell_mode(void);
    int resetty(void);
    int savetty(void);
-   int getsyx(int *y, int *x);
-   int setsyx(int y, int x);
+   void getsyx(int y, int x);
+   void setsyx(int y, int x);
    int ripoffline(int line, int (*init)(WINDOW *,int));
    int curs_set(int visibility);
    int napms(int ms);
@@ -105,6 +103,10 @@ char linesrippedoff=0;
    The getsyx() and setsyx() routines are designed to be used by a
    library routine that manipulates curses windows, but does not want
    to change the position of the cursor.
+
+   Note that getsyx() and setsyx() are defined as macros only. System VR4
+   defines these as having a return type of int, but that is misleading as
+   there is no documented sematics for the return value.
 
    The curs_set() function enables the appearance of the text cursor
    to be altered. A value of 0 for visibility makes the cursor
@@ -391,6 +393,7 @@ int   PDC_CDECL   savetty()
    memcpy(&c_save_tty.saved, SP, sizeof(SCREEN));
    return( OK );
 }
+#if 0
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   getsyx(int *y, int *x)
@@ -436,6 +439,7 @@ int y,x;
    }
    return( OK );
 }
+#endif
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   curs_set(int visibility)

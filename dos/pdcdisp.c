@@ -34,8 +34,19 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.3 2003/06/23 07:54:32 mark Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.4 2004/01/02 05:50:05 mark Exp $";
 #endif
+
+#ifdef PC
+void movedata(unsigned sseg, unsigned soff, unsigned dseg, unsigned doff, unsigned n)
+{
+	far char *src = MK_FP(sseg, soff);
+	far char *dst = MK_FP(dseg, doff);
+
+	while (n--) {
+		*dst++ = *src++;
+	}
+}
 
 /*man-start*********************************************************************
 
@@ -60,6 +71,8 @@ char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.3 2003/06/23 07:54:32 mark Exp $";
 
 **man-end**********************************************************************/
 
+	extern unsigned	char atrtab[MAX_ATRTAB];
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_clr_update(WINDOW *s)
@@ -75,15 +88,15 @@ register int	i=0,j=0;
 	bool rc=FALSE;
 
 #if SMALL || MEDIUM
+# if !PC
 struct SREGS segregs;
+# endif
 int ds=0;
 #endif
 
 #if defined(NDP)
 	int *VIDPOINT;
 #endif
-
-	extern unsigned	char atrtab[MAX_ATRTAB];
 
 /* the next two variables have been changed from chtype to unsigned short */
 /* as this is the correct datatype for a physical character/attribute */
@@ -97,8 +110,10 @@ int ds=0;
 	w = curscr;
 	if (w == (WINDOW *)NULL)
 		return( ERR );
-/*	if (SP->full_redraw)
-		PDC_clr_scrn(s); *//* clear physical screen */
+#if 0
+	if (SP->full_redraw)
+		PDC_clr_scrn(s); /* clear physical screen */
+#endif
 
 	s->_clear = FALSE;
 	for (i = 0; i < LINES; i++)	/* update physical screen */
@@ -124,8 +139,12 @@ int ds=0;
 				SP->video_ofs + (i * COLS * sizeof(unsigned short))));
 #else
 #  if	(SMALL || MEDIUM)
+#    if PC
+			ds = FP_SEG((void far *) ch);
+#    else
 		segread(&segregs);
 		ds = segregs.ds;
+#    endif
 		movedata(ds, (int)ch,
 				SP->video_seg,
 				SP->video_ofs + (i*COLS*sizeof(unsigned short)),
@@ -555,7 +574,6 @@ chtype attr;
 #endif
 /***********************************************************************/
 {
-	extern unsigned	char atrtab[MAX_ATRTAB];
 	int	phys_attr=chtype_attr(attr);
 
 #ifdef PDCDEBUG
@@ -623,7 +641,9 @@ register chtype*	srcp=NULL;
 #endif
 
 #if SMALL || MEDIUM
+# if !PC
 struct SREGS segregs;
+# endif
 int ds=0;
 #endif
 
@@ -634,8 +654,6 @@ int ds=0;
 #if defined(NDP)
 	int *VIDPOINT;
 #endif
-
-	extern unsigned	char atrtab[MAX_ATRTAB];
 
 	unsigned short temp_line[256]; /* this should be enough for the maximum width of a screen. MH-920715 */
 	unsigned short chr=0;
@@ -683,8 +701,12 @@ int ds=0;
 			SP->video_ofs + (((lineno * curscr->_maxx) + x) * sizeof(unsigned short))));
 #else
 #  if	SMALL || MEDIUM
+#    if PC
+		ds = FP_SEG((void far *) ch);
+#    else
 		segread(&segregs);
 		ds = segregs.ds;
+#    endif
 		movedata(ds,(int)ch,
 			SP->video_seg,
 			SP->video_ofs+(((lineno*curscr->_maxx)+x)*sizeof(unsigned short)),

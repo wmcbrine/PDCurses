@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.3 2003/06/23 07:54:35 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.4 2004/01/02 05:50:05 mark Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;
@@ -78,7 +78,9 @@ int	PDC_scr_close()
 /***********************************************************************/
 {
 #if SMALL || MEDIUM
+# if !PC
 struct SREGS segregs;
+# endif
 int ds=0;
 #endif
 
@@ -95,8 +97,12 @@ int ds=0;
 		(unsigned long)_FAR_POINTER(SP->video_seg,SP->video_ofs));
 #else
 #  if	(SMALL || MEDIUM)
+#    if PC
+		ds = FP_SEG((void far *) saved_screen);
+#    else
 	segread(&segregs);
 	ds = segregs.ds;
+#    endif
 	movedata(ds, (int)saved_screen,
 		SP->video_seg,SP->video_ofs,
 		(saved_lines * saved_cols * sizeof(unsigned short)));
@@ -186,7 +192,9 @@ bool echo;
 /***********************************************************************/
 {
 #if SMALL || MEDIUM
+# if !PC
 struct SREGS segregs;
+# endif
 int ds=0;
 #endif
 
@@ -255,8 +263,12 @@ int ds=0;
 			saved_lines * saved_cols * sizeof(unsigned short),saved_screen);
 #else
 #  if	(SMALL || MEDIUM)
+#    if PC
+		ds = FP_SEG((void far *) saved_screen);
+#    else
 	segread(&segregs);
 	ds = segregs.ds;
+#    endif
 	movedata(SP->video_seg,SP->video_ofs,
 		ds, (int)saved_screen,
 		(saved_lines * saved_cols * sizeof(unsigned short)));

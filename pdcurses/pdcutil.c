@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.1 2001/01/10 08:27:22 mark Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.2 2004/01/02 05:50:05 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -208,6 +208,41 @@ long wait;
 #endif
 	poll(&fd,0L,min(1L,wait/1000));
 	return;
+}
+/***********************************************************************/
+#elif defined(PC)
+#  ifdef HAVE_PROTO
+void PDC_usleep(long wait)
+#  else
+void PDC_usleep(wait)
+long wait;
+#  endif
+/***********************************************************************/
+{
+	far long *ticks = MK_FP(0x0040, 0x006c);
+	long t1, t2;
+
+	wait /= 50;
+
+	if (!wait) {
+		wait++;
+	}
+
+	/*
+	 * get number of ticks,
+	 * since startup from
+	 * address 0040:006ch
+	 *
+	 * 1 sec. = 18.2065
+	 */
+
+	while (wait--) {
+		t1 = *ticks;
+
+		do {
+			t2 = *ticks;
+		} while (t1 == t2);
+	}
 }
 /***********************************************************************/
 # else

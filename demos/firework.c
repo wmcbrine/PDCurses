@@ -35,12 +35,20 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.2 2003/06/23 07:55:00 mark Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.3 2004/01/02 05:50:05 mark Exp $";
 #endif
 
-void myrefresh();
-int get_colour();
-void explode();
+#if __STDC__
+# define Args(x) x
+#else
+# define Args(x) ()
+#endif
+
+int myrefresh Args((void));
+chtype get_colour Args((void));
+void explode Args((int,int));
+
+#undef Args
 
 int main()
 {
@@ -55,38 +63,38 @@ int main()
        srand(seed);
        flag = 0;
        while(getch() == ERR)  /* loop until a key is hit */
+       {
+               do {
+                      start = rand() % (COLS -3);
+                      end = rand() % (COLS - 3);
+                      start = (start < 2) ? 2 : start;
+                      end = (end < 2) ? 2 : end;
+                      direction = (start > end) ? -1 : 1;
+                      diff = abs(start-end);
+                  } while (diff<2 || diff>=LINES-2);
+               attrset(A_NORMAL);
+               for (row=0;row<diff;row++)
                {
-                do {
-                       start = rand() % (COLS -3);
-                       end = rand() % (COLS - 3);
-                       start = (start < 2) ? 2 : start;
-                       end = (end < 2) ? 2 : end;
-                       direction = (start > end) ? -1 : 1;
-                       diff = abs(start-end);
-                   } while (diff<2 || diff>=LINES-2);
-                attrset(A_NORMAL);
-                for (row=0;row<diff;row++)
+                       mvprintw(LINES - row,start + (row * direction),
+                              (direction < 0) ? "\\" : "/");
+                       if (flag++)
                        {
-                        mvprintw(LINES - row,start + (row * direction),
-                               (direction < 0) ? "\\" : "/");
-                        if (flag++)
-                               {
-                                myrefresh();
-                                clear();
-                                flag = 0;
-                               }
+                               myrefresh();
+                               clear();
+                               flag = 0;
                        }
+               }
                if (flag++)
-                       {
+               {
                         myrefresh();
                         flag = 0;
-                       }
+               }
                seed = time((time_t *)0);
                srand(seed);
                explode(LINES-row,start+(diff*direction));
                clear();
                myrefresh();
-              }
+       }
        endwin();
 #ifdef XCURSES
        XCursesExit();
@@ -145,38 +153,31 @@ int row,col;
        myrefresh();
 }
 
-void myrefresh()
+int myrefresh()
 {
        napms(DELAYSIZE);
        move(LINES-1,COLS-1);
        refresh();
 }
 
-int get_colour()
+chtype get_colour()
 {
- int attr, tmp;
+       static chtype tbl[] = 
+       {
+               COLOR_RED,
+               COLOR_BLUE,
+               COLOR_GREEN,
+               COLOR_CYAN,
+               COLOR_RED,
+               COLOR_MAGENTA,
+               COLOR_YELLOW,
+               COLOR_WHITE,
+       };
+       chtype attr;
 
-       attr = (rand() % 8)+1;
+       attr = tbl[rand() % 8];
 
-       if (attr == 1)
-          attr = COLOR_RED;  /* use red twice */
-       else if (attr == 2)
-          attr = COLOR_BLUE;
-       else if (attr == 3)
-          attr = COLOR_GREEN;
-       else if (attr == 4)
-          attr = COLOR_CYAN;
-       else if (attr == 5)
-          attr = COLOR_RED;
-       else if (attr == 6)
-          attr = COLOR_MAGENTA;
-       else if (attr == 7)
-          attr = COLOR_YELLOW;
-       else if (attr == 8)
-          attr = COLOR_WHITE;
-
-       tmp = (rand() % 2)+1;
-       if (tmp > 1)
+       if (rand() % 2)
           attr |= A_BOLD;
        return(attr);
 }

@@ -65,7 +65,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.4 2003/06/23 07:53:56 mark Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.5 2004/01/02 05:50:05 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -267,7 +267,7 @@ int ms;
 	return( OK );
 #endif
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(PC)
 	PDC_usleep( ms );
 	return( OK );
 #endif
@@ -294,7 +294,7 @@ int ms;
 	return( OK );
 #endif
 
-#if defined(UNIX) || defined(GO32)
+#if defined(UNIX) || defined(__DJGPP__)
 	usleep(1000*ms);
 	return( OK );
 #endif

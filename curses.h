@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.18 2003/12/28 08:33:13 mark Exp $
+$Id: curses.h,v 1.19 2004/01/02 05:50:05 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -721,6 +721,41 @@ PDCurses portable platform definitions list:
 #  endif
 #endif
 
+/*
+* HI-TECH COMPILERS Pacific C
+*
+* Hi-Tech definitions:
+*  PC
+*
+*  __PACIFIC__, DOS
+*  are predefined by compiler.
+*/
+#ifdef __PACIFIC__
+#  define PC    __PACIFIC__
+#  ifndef HAVE_PROTO
+#    define HAVE_PROTO 1
+#  endif
+#  include <dos.h>
+#  include <ctype.h>
+#  include <string.h>
+#  include <stdlib.h>
+#  ifndef __SMALL__
+#    define __SMALL__
+#  endif
+#  ifndef HAVE_LIMITS_H
+#    define HAVE_LIMITS_H
+#  endif
+#  ifndef HAVE_STDARG_H
+#    define HAVE_STDARG_H
+#  endif
+#  ifndef HAVE_MEMMOVE
+#    define HAVE_MEMMOVE
+#  endif
+#  ifndef HAVE_VSSCANF
+#    define HAVE_VSSCANF
+#  endif
+#endif
+
 /*---------------------------------------------------------------------*/
 #include <stdio.h>		/* Required by X/Open usage below	*/
 /*----------------------------------------------------------------------
@@ -901,7 +936,11 @@ typedef struct _wins
 typedef struct		/* structure for ripped off lines */
 {
 	int line;
+#ifdef HAVE_PROTO
+	int (*init)(WINDOW *, int);
+#else
 	int (*init)();
+#endif
 } RIPPEDOFFLINE;
 
 
@@ -1532,436 +1571,230 @@ extern chtype *acs_map;
 *       PDCurses function declarations
 */
 #ifdef HAVE_PROTO
-int     PDC_CDECL	addchnstr( chtype *, int );
-int     PDC_CDECL	baudrate( void );
-int     PDC_CDECL	beep( void );
-int     PDC_CDECL	border( chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype );
-int     PDC_CDECL	can_change_color ( void );
-int     PDC_CDECL	clearok( WINDOW*, bool );
-int     PDC_CDECL	color_content( short, short*, short*, short* );
-int     PDC_CDECL	copywin( WINDOW*, WINDOW*, int, int, int, int, int, int, int );
-int     PDC_CDECL	curs_set( int );
-int     PDC_CDECL	def_prog_mode( void );
-int     PDC_CDECL	def_shell_mode( void );
-int     PDC_CDECL	delay_output(  int  );
-int     PDC_CDECL	delwin( WINDOW* );
-WINDOW* PDC_CDECL	derwin( WINDOW*, int, int, int, int );
-int     PDC_CDECL	doupdate( void );
-WINDOW* PDC_CDECL	dupwin( WINDOW* );
-int     PDC_CDECL	endwin( void );
-int     PDC_CDECL	erase( void );
-char    PDC_CDECL	erasechar( void );
-int     PDC_CDECL	flash( void );
-int     PDC_CDECL	flushinp( void );
-int     PDC_CDECL	getsyx( int*, int* );
-int     PDC_CDECL	halfdelay( int );
-bool    PDC_CDECL	has_colors( void );
-int     PDC_CDECL	hline( chtype, int );
-int     PDC_CDECL	immedok( WINDOW*, bool );
-int     PDC_CDECL	inchnstr( chtype *, int );
-int     PDC_CDECL	init_color( short, short, short, short );
-int     PDC_CDECL	init_pair( short, short, short );
-WINDOW* PDC_CDECL	initscr( void );
-#ifdef XCURSES
-WINDOW* PDC_CDECL	Xinitscr( int, char ** );
-#endif
-int     PDC_CDECL	intrflush(  WINDOW*, bool  );
-int     PDC_CDECL	is_linetouched(WINDOW *,int);
-int     PDC_CDECL	is_wintouched(WINDOW *);
-char*   PDC_CDECL	keyname(  int  );
-char    PDC_CDECL	killchar( void );
-char*   PDC_CDECL	longname( void );
-int     PDC_CDECL	meta( WINDOW*, bool );
-int     PDC_CDECL	mvcur( int, int, int, int );
-int     PDC_CDECL	mvderwin( WINDOW*, int, int );
-#ifdef HAVE_STDARG_H
-int     PDC_CDECL	mvprintw( int, int, char*,... );
-int     PDC_CDECL	mvscanw( int, int, char*,... );
-#endif
-int     PDC_CDECL	mvwaddnstr( WINDOW*,int,int,char*,int );
-int     PDC_CDECL	mvwin( WINDOW*, int, int );
-int     PDC_CDECL	mvwinsertln( WINDOW*, int, int );
-#ifdef HAVE_STDARG_H
-int     PDC_CDECL	mvwprintw( WINDOW*, int, int, char*,... );
-int     PDC_CDECL	mvwscanw( WINDOW*, int, int, char*,... );
-#endif
-WINDOW* PDC_CDECL	newpad( int, int );
-SCREEN* PDC_CDECL	newterm( char*, FILE*, FILE* );
-WINDOW* PDC_CDECL	newwin( int, int, int, int );
-int     PDC_CDECL	noraw( void );
-int     PDC_CDECL	notimeout( WINDOW *, bool );
-int     PDC_CDECL	overlay( WINDOW*, WINDOW* );
-int     PDC_CDECL	overwrite( WINDOW*, WINDOW* );
-int     PDC_CDECL	pair_content( int, short*, short* );
-int     PDC_CDECL	pechochar( WINDOW *, chtype );
-int     PDC_CDECL	pnoutrefresh( WINDOW*, int, int, int, int, int, int );
-int     PDC_CDECL	prefresh( WINDOW*, int, int, int, int, int, int );
-#ifdef HAVE_STDARG_H
-int     PDC_CDECL	printw( char*,... );
-int     PDC_CDECL	scanw( char*,... );
-#endif
-int     PDC_CDECL	raw( void );
-int     PDC_CDECL	refresh( void );
-int     PDC_CDECL	reset_prog_mode( void );
-int     PDC_CDECL	reset_shell_mode( void );
-int     PDC_CDECL	resetty( void );
-int     PDC_CDECL	ripoffline(int, int (*)(WINDOW *, int));
-int     PDC_CDECL	savetty( void );
-int     PDC_CDECL	sb_init(void);
-int     PDC_CDECL	sb_set_horz(int, int, int);
-int     PDC_CDECL	sb_set_vert(int, int, int);
-int     PDC_CDECL	sb_get_horz(int *, int *, int *);
-int     PDC_CDECL	sb_get_vert(int *, int *, int *);
-int     PDC_CDECL	sb_refresh(void);
-int     PDC_CDECL	scroll( WINDOW* );
-SCREEN* PDC_CDECL	set_term( SCREEN* );
-int     PDC_CDECL	setsyx( int, int );
-int     PDC_CDECL	start_color( void );
-int     PDC_CDECL	slk_init(int);
-int     PDC_CDECL	slk_set(int, char *, int);
-int     PDC_CDECL	slk_refresh(void);
-int     PDC_CDECL	slk_noutrefresh(void);
-char*   PDC_CDECL	slk_label(int);
-int     PDC_CDECL	slk_clear(void);
-int     PDC_CDECL	slk_restore(void);
-int     PDC_CDECL	slk_touch(void);
-int     PDC_CDECL	slk_attron(attr_t);
-int     PDC_CDECL	slk_attrset(attr_t);
-int     PDC_CDECL	slk_attroff(attr_t);
-WINDOW* PDC_CDECL	subpad( WINDOW*, int, int, int, int );
-WINDOW* PDC_CDECL	subwin( WINDOW*, int, int, int, int );
-int     PDC_CDECL	syncok(WINDOW*, bool);
-attr_t  PDC_CDECL	termattrs( void );
-char*   PDC_CDECL	termname( void );
-int     PDC_CDECL	touchline( WINDOW*, int ,int );
-int     PDC_CDECL	touchwin( WINDOW* );
-#if !defined (CURSES_LIBRARY)
-void    PDC_CDECL	traceoff( void );
-void    PDC_CDECL	traceon( void );
-#endif
-int     PDC_CDECL	typeahead( int );
-char*   PDC_CDECL	unctrl( chtype );
-int     PDC_CDECL	vline( chtype, int );
-int     PDC_CDECL	waddchnstr( WINDOW*, chtype*, int );
-int     PDC_CDECL	waddnstr( WINDOW*, char*, int );
-int     PDC_CDECL	waddstr( WINDOW*, char* );
-int     PDC_CDECL	wattroff( WINDOW*, attr_t );
-int     PDC_CDECL	wattron( WINDOW*, attr_t );
-int     PDC_CDECL	wattrset( WINDOW*, attr_t );
-int     PDC_CDECL	wbkgd(WINDOW*, chtype);
-void    PDC_CDECL	wbkgdset(WINDOW*, chtype);
-int     PDC_CDECL	wborder( WINDOW*, chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype );
-int     PDC_CDECL	wclear( WINDOW* );
-int     PDC_CDECL	wclrtobot( WINDOW* );
-int     PDC_CDECL	wclrtoeol( WINDOW* );
-void    PDC_CDECL	wcursyncup(WINDOW*);
-int     PDC_CDECL	wdelch( WINDOW* );
-int     PDC_CDECL	wdeleteln( WINDOW* );
-int     PDC_CDECL	werase( WINDOW* );
-int     PDC_CDECL	wgetch( WINDOW* );
-int     PDC_CDECL	wgetnstr( WINDOW*, char*, int );
-int     PDC_CDECL	wgetstr( WINDOW*, char* );
-int     PDC_CDECL	whline( WINDOW*, chtype, int );
-int     PDC_CDECL	winchnstr( WINDOW*, chtype*, int );
-int     PDC_CDECL	winnstr( WINDOW*, char*, int );
-int     PDC_CDECL	winsch( WINDOW*, chtype );
-int     PDC_CDECL	winsdelln( WINDOW*, int );
-int     PDC_CDECL	winsertln( WINDOW* );
-int     PDC_CDECL	winsnstr( WINDOW*, char*, int );
-int     PDC_CDECL	wmove( WINDOW*, int, int );
-int     PDC_CDECL	wnoutrefresh( WINDOW* );
-char    PDC_CDECL	wordchar( void );
-#ifdef HAVE_STDARG_H
-int     PDC_CDECL	wprintw( WINDOW*, char*,... );
-int     PDC_CDECL	wscanw( WINDOW*, char*,... );
-#endif
-int     PDC_CDECL	wredrawln( WINDOW*, int ,int );
-int     PDC_CDECL	wrefresh( WINDOW* );
-int     PDC_CDECL	wscrl( WINDOW*, int );
-int     PDC_CDECL	wsetscrreg( WINDOW*, int, int );
-int     PDC_CDECL	wtimeout( WINDOW *, int );
-int     PDC_CDECL	wtouchln(WINDOW *, int, int, int);
-void    PDC_CDECL	wsyncdown(WINDOW*);
-void    PDC_CDECL	wsyncup(WINDOW*);
-int     PDC_CDECL	wvline( WINDOW*, chtype, int );
-
-#ifdef  PDCURSES
-int     PDC_CDECL	raw_output( bool );
-int     PDC_CDECL	resize_term( int, int );
-WINDOW* PDC_CDECL	resize_window( WINDOW*, int, int );
-#endif
-
-#ifdef OBSOLETE_OR_TBD
-char    PDC_CDECL	breakchar( /* void */ );
-int     PDC_CDECL	cursoff( /* void */ );
-int     PDC_CDECL	curson( /* void */ );
-int     PDC_CDECL	gettmode( /* void */ );
-int     PDC_CDECL	mvaddrawch( /* int, int, chtype */ );
-int     PDC_CDECL	mvaddrawstr( /* int, int, char* */ );
-int     PDC_CDECL	mvwinsrawch( /* WINDOW*, int, int, chtype */ );
-int     PDC_CDECL	mvinsrawch( /* int, int, chtype */ );
-int     PDC_CDECL	saveoldterm( /* void */ );
-int     PDC_CDECL	tabsize( /* int */ );
-int     PDC_CDECL	waddrawstr( /* WINDOW*, char* */ );
-int     PDC_CDECL	wtabsize( /* WINDOW*, int */ );
-int     PDC_CDECL	win_print( /* WINDOW*, int */ );
-#endif
-
-#ifdef  XCURSES
-void    XCursesExit( void );
-int     nocbreak( void );
-int     cbreak( void );
-int     nocrmode( void );
-int     crmode( void );
-int     noecho( void );
-int     echo( void );
-int     nodelay( WINDOW *,bool );
-#endif
-
-int     PDC_CDECL	mouse_set( unsigned long );
-int     PDC_CDECL	mouse_on( unsigned long );
-int     PDC_CDECL	mouse_off( unsigned long );
-int     PDC_CDECL	request_mouse_pos( void );
-int     PDC_CDECL	map_button( unsigned long );
-void    PDC_CDECL	wmouse_position( WINDOW *, int *, int * );
-unsigned long PDC_CDECL	getmouse( void );
-unsigned long PDC_CDECL	getbmap( void );
-
-/*
-*       Keep the compiler happy with our macros below...
-*/
-int     PDC_CDECL	PDC_chadd( WINDOW*, chtype, bool, bool );
-int     PDC_CDECL	PDC_chins( WINDOW*, chtype, bool );
-int     PDC_CDECL	PDC_ungetch( int );
-
-void    PDC_CDECL	PDC_set_title( char * );
-
-int     PDC_CDECL	PDC_getclipboard( char **, long * );
-int     PDC_CDECL	PDC_setclipboard( char *, long );
-int     PDC_CDECL	PDC_freeclipboard( char * );
-int     PDC_CDECL	PDC_clearclipboard( void );
-
-unsigned long PDC_CDECL	PDC_get_input_fd( void );
-int     PDC_CDECL	PDC_curs_set( int );
-unsigned long PDC_CDECL	PDC_get_key_modifiers( void );
-
-int     PDC_CDECL	PDC_wunderline( WINDOW*, int, bool );
-int     PDC_CDECL	PDC_wleftline( WINDOW*, int, bool );
-int     PDC_CDECL	PDC_wrightline( WINDOW*, int, bool );
-int     PDC_CDECL	PDC_set_line_color( short );
-
+# define Args(x) x
 #else
+# define Args(x) ()
+#endif
 
-int     PDC_CDECL	addchnstr( /* chtype *, int */ );
-int     PDC_CDECL	baudrate( /* void */ );
-int     PDC_CDECL	beep( /* void */ );
-int     PDC_CDECL	border( /* chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype */ );
-int     PDC_CDECL	can_change_color ( /* void */ );
-int     PDC_CDECL	clearok( /* WINDOW*, bool */ );
-int     PDC_CDECL	color_content( /* int, short*, short*, short* */ );
-int     PDC_CDECL	copywin( /* WINDOW*, WINDOW*, int, int, int, int, int, int, int */ );
-int     PDC_CDECL	curs_set( /* int */ );
-int     PDC_CDECL	def_prog_mode( /* void */ );
-int     PDC_CDECL	def_shell_mode( /* void */ );
-int     PDC_CDECL	delay_output( /*  int  */ );
-int     PDC_CDECL	delwin( /* WINDOW* */ );
-WINDOW* PDC_CDECL	derwin( /* WINDOW*, int, int, int, int */ );
-int     PDC_CDECL	doupdate( /* void */ );
-WINDOW* PDC_CDECL	dupwin( /* WINDOW* */ );
-int     PDC_CDECL	endwin( /* void */ );
-int     PDC_CDECL	erase( /* void */ );
-char    PDC_CDECL	erasechar( /* void */ );
-int     PDC_CDECL	flash( /* void */ );
-int     PDC_CDECL	flushinp( /* void */ );
-int     PDC_CDECL	getsyx( /* int*, int* */ );
-int     PDC_CDECL	halfdelay( /* int */ );
-bool    PDC_CDECL	has_colors( /* void */ );
-int     PDC_CDECL	hline( /* chtype, int */ );
-int     PDC_CDECL	immedok( /* WINDOW*, bool */ );
-int     PDC_CDECL	inchnstr( /* chtype *, int */ );
-int     PDC_CDECL	init_color( /* short, short, short, short */ );
-int     PDC_CDECL	init_pair( /* short, short, short */ );
-WINDOW* PDC_CDECL	initscr( /* void */ );
+int     PDC_CDECL addchnstr Args(( chtype *, int ));
+int     PDC_CDECL baudrate Args(( void ));
+int     PDC_CDECL beep Args(( void ));
+int     PDC_CDECL border Args(( chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype ));
+int     PDC_CDECL can_change_color  Args(( void ));
+int     PDC_CDECL clearok Args(( WINDOW*, bool ));
+int     PDC_CDECL color_content Args(( short, short*, short*, short* ));
+int     PDC_CDECL copywin Args(( WINDOW*, WINDOW*, int, int, int, int, int, int, int ));
+int     PDC_CDECL curs_set Args(( int ));
+int     PDC_CDECL def_prog_mode Args(( void ));
+int     PDC_CDECL def_shell_mode Args(( void ));
+int     PDC_CDECL delay_output Args((  int  ));
+int     PDC_CDECL delwin Args(( WINDOW* ));
+WINDOW* PDC_CDECL derwin Args(( WINDOW*, int, int, int, int ));
+int     PDC_CDECL doupdate Args(( void ));
+WINDOW* PDC_CDECL dupwin Args(( WINDOW* ));
+int     PDC_CDECL endwin Args(( void ));
+int     PDC_CDECL erase Args(( void ));
+char    PDC_CDECL erasechar Args(( void ));
+int     PDC_CDECL flash Args(( void ));
+int     PDC_CDECL flushinp Args(( void ));
+int     PDC_CDECL getsyx Args(( int*, int* ));
+int     PDC_CDECL halfdelay Args(( int ));
+bool    PDC_CDECL has_colors Args(( void ));
+int     PDC_CDECL hline Args(( chtype, int ));
+int     PDC_CDECL immedok Args(( WINDOW*, bool ));
+int     PDC_CDECL inchnstr Args(( chtype *, int ));
+int     PDC_CDECL init_color Args(( short, short, short, short ));
+int     PDC_CDECL init_pair Args(( short, short, short ));
+WINDOW* PDC_CDECL initscr Args(( void ));
 #ifdef XCURSES
-WINDOW* PDC_CDECL	Xinitscr( /* int, char ** */ );
+WINDOW* PDC_CDECL Xinitscr Args(( int, char ** ));
 #endif
-int     PDC_CDECL	intrflush( /*  WINDOW*, bool  */ );
-int     PDC_CDECL	is_linetouched( /*WINDOW *,int*/ );
-int     PDC_CDECL	is_wintouched( /*WINDOW **/ );
-char*   PDC_CDECL	keyname( /*  int  */ );
-char    PDC_CDECL	killchar( /* void */ );
-char*   PDC_CDECL	longname( /* void */ );
-int     PDC_CDECL	meta( /* WINDOW*, bool */ );
-int     PDC_CDECL	mvcur( /* int, int, int, int */ );
-int     PDC_CDECL	mvderwin( /* WINDOW*, int, int */ );
-int     PDC_CDECL	mvprintw( /* int, int, char*,... */ );
-int     PDC_CDECL	mvscanw( /* int, int, char*,... */ );
-int     PDC_CDECL	mvwaddnstr(/* WINDOW*,int,int,char*,int */ );
-int     PDC_CDECL	mvwin( /* WINDOW*, int, int */ );
-int     PDC_CDECL	mvwinsertln( /* WINDOW*, int, int */ );
-int     PDC_CDECL	mvwprintw( /* WINDOW*, int, int, char*,... */ );
-int     PDC_CDECL	mvwscanw( /* WINDOW*, int, int, char*,... */ );
-WINDOW* PDC_CDECL	newpad( /* int, int */ );
-SCREEN* PDC_CDECL	newterm( /* char*, FILE*, FILE* */ );
-WINDOW* PDC_CDECL	newwin( /* int, int, int, int */ );
-int     PDC_CDECL	noraw( /* void */ );
-int     PDC_CDECL	notimeout( /* WINDOW *, bool */ );
-int     PDC_CDECL	overlay( /* WINDOW*, WINDOW* */ );
-int     PDC_CDECL	overwrite( /* WINDOW*, WINDOW* */ );
-int     PDC_CDECL	pair_content( /* int, short*, short* */ );
-int     PDC_CDECL	pechochar( /* WINDOW *pad, chtype ch */ );
-int     PDC_CDECL	pnoutrefresh( /* WINDOW*, int, int, int, int, int, int */ );
-int     PDC_CDECL	prefresh( /* WINDOW*, int, int, int, int, int, int */ );
-int     PDC_CDECL	printw( /* char*,... */ );
-int     PDC_CDECL	raw( /* void */ );
-int     PDC_CDECL	refresh( /* void */ );
-int     PDC_CDECL	reset_prog_mode( /* void */ );
-int     PDC_CDECL	reset_shell_mode( /* void */ );
-int     PDC_CDECL	resetty( /* void */ );
-int     PDC_CDECL	ripoffline( /* int, int (*)(WINDOW *, int) */);
-int     PDC_CDECL	savetty( /* void */ );
-int     PDC_CDECL	sb_init( /* void */ );
-int     PDC_CDECL	sb_set_horz( /* int, int, int */ );
-int     PDC_CDECL	sb_set_vert( /* int, int, int */ );
-int     PDC_CDECL	sb_get_horz( /* int *, int *, int * */ );
-int     PDC_CDECL	sb_get_vert( /* int *, int *, int * */ );
-int     PDC_CDECL	sb_refresh( /* void */ );
-int     PDC_CDECL	scanw( /* char*,... */ );
-int     PDC_CDECL	scroll( /* WINDOW* */ );
-int     PDC_CDECL	setsyx( /* int, int */ );
-SCREEN* PDC_CDECL	set_term( /* SCREEN* */ );
-int     PDC_CDECL	slk_init(/* int */);
-int     PDC_CDECL	slk_set(/* int, char *, int */);
-int     PDC_CDECL	slk_refresh(/* void */);
-int     PDC_CDECL	slk_noutrefresh(/* void */);
-char*   PDC_CDECL	slk_label(/* int */);
-int     PDC_CDECL	slk_clear(/* void */);
-int     PDC_CDECL	slk_restore(/* void */);
-int     PDC_CDECL	slk_touch(/* void */);
-int     PDC_CDECL	slk_attron(/* attr_t */);
-int     PDC_CDECL	slk_attrset(/* attr_t */);
-int     PDC_CDECL	slk_attroff(/* attr_t */);
-int     PDC_CDECL	start_color( /* void */ );
-WINDOW* PDC_CDECL	subpad( /* WINDOW*, int, int, int, int */ );
-WINDOW* PDC_CDECL	subwin( /* WINDOW*, int, int, int, int */ );
-int     PDC_CDECL	syncok(/* WINDOW*, bool */);
-attr_t  PDC_CDECL	termattrs( /* void */ );
-char*   PDC_CDECL	termname( /* void */ );
-int     PDC_CDECL	touchline( /* WINDOW*, int ,int */ );
-int     PDC_CDECL	touchwin( /* WINDOW* */ );
+int     PDC_CDECL intrflush Args((  WINDOW*, bool  ));
+int     PDC_CDECL is_linetouched Args((WINDOW *,int));
+int     PDC_CDECL is_wintouched Args((WINDOW *));
+char*   PDC_CDECL keyname Args((  int  ));
+char    PDC_CDECL killchar Args(( void ));
+char*   PDC_CDECL longname Args(( void ));
+int     PDC_CDECL meta Args(( WINDOW*, bool ));
+int     PDC_CDECL mvcur Args(( int, int, int, int ));
+int     PDC_CDECL mvderwin Args(( WINDOW*, int, int ));
+#ifdef HAVE_STDARG_H
+int     PDC_CDECL mvprintw Args(( int, int, char*,... ));
+int     PDC_CDECL mvscanw Args(( int, int, char*,... ));
+#endif
+int     PDC_CDECL mvwaddnstr Args(( WINDOW*,int,int,char*,int ));
+int     PDC_CDECL mvwin Args(( WINDOW*, int, int ));
+int     PDC_CDECL mvwinsertln Args(( WINDOW*, int, int ));
+#ifdef HAVE_STDARG_H
+int     PDC_CDECL mvwprintw Args(( WINDOW*, int, int, char*,... ));
+int     PDC_CDECL mvwscanw Args(( WINDOW*, int, int, char*,... ));
+#endif
+WINDOW* PDC_CDECL newpad Args(( int, int ));
+SCREEN* PDC_CDECL newterm Args(( char*, FILE*, FILE* ));
+WINDOW* PDC_CDECL newwin Args(( int, int, int, int ));
+int     PDC_CDECL noraw Args(( void ));
+int     PDC_CDECL notimeout Args(( WINDOW *, bool ));
+int     PDC_CDECL overlay Args(( WINDOW*, WINDOW* ));
+int     PDC_CDECL overwrite Args(( WINDOW*, WINDOW* ));
+int     PDC_CDECL pair_content Args(( int, short*, short* ));
+int     PDC_CDECL pechochar Args(( WINDOW *, chtype ));
+int     PDC_CDECL pnoutrefresh Args(( WINDOW*, int, int, int, int, int, int ));
+int     PDC_CDECL prefresh Args(( WINDOW*, int, int, int, int, int, int ));
+#ifdef HAVE_STDARG_H
+int     PDC_CDECL printw Args(( char*,... ));
+int     PDC_CDECL scanw Args(( char*,... ));
+#endif
+int     PDC_CDECL raw Args(( void ));
+int     PDC_CDECL refresh Args(( void ));
+int     PDC_CDECL reset_prog_mode Args(( void ));
+int     PDC_CDECL reset_shell_mode Args(( void ));
+int     PDC_CDECL resetty Args(( void ));
+int     PDC_CDECL ripoffline Args((int, int (*)(WINDOW *, int)));
+int     PDC_CDECL savetty Args(( void ));
+int     PDC_CDECL sb_init Args((void));
+int     PDC_CDECL sb_set_horz Args((int, int, int));
+int     PDC_CDECL sb_set_vert Args((int, int, int));
+int     PDC_CDECL sb_get_horz Args((int *, int *, int *));
+int     PDC_CDECL sb_get_vert Args((int *, int *, int *));
+int     PDC_CDECL sb_refresh Args((void));
+int     PDC_CDECL scroll Args(( WINDOW* ));
+SCREEN* PDC_CDECL set_term Args(( SCREEN* ));
+int     PDC_CDECL setsyx Args(( int, int ));
+int     PDC_CDECL start_color Args(( void ));
+int     PDC_CDECL slk_init Args((int));
+int     PDC_CDECL slk_set Args((int, char *, int));
+int     PDC_CDECL slk_refresh Args((void));
+int     PDC_CDECL slk_noutrefresh Args((void));
+char*   PDC_CDECL slk_label Args((int));
+int     PDC_CDECL slk_clear Args((void));
+int     PDC_CDECL slk_restore Args((void));
+int     PDC_CDECL slk_touch Args((void));
+int     PDC_CDECL slk_attron Args((attr_t));
+int     PDC_CDECL slk_attrset Args((attr_t));
+int     PDC_CDECL slk_attroff Args((attr_t));
+WINDOW* PDC_CDECL subpad Args(( WINDOW*, int, int, int, int ));
+WINDOW* PDC_CDECL subwin Args(( WINDOW*, int, int, int, int ));
+int     PDC_CDECL syncok Args((WINDOW*, bool));
+attr_t  PDC_CDECL termattrs Args(( void ));
+char*   PDC_CDECL termname Args(( void ));
+int     PDC_CDECL touchline Args(( WINDOW*, int ,int ));
+int     PDC_CDECL touchwin Args(( WINDOW* ));
 #if !defined (CURSES_LIBRARY)
-void    PDC_CDECL	traceoff(/* void */);
-void    PDC_CDECL	traceon(/* void */);
+void    PDC_CDECL traceoff Args(( void ));
+void    PDC_CDECL traceon Args(( void ));
 #endif
-int     PDC_CDECL	typeahead( /* int */ );
-char*   PDC_CDECL	unctrl( /* chtype */ );
-int     PDC_CDECL	vline( /* chtype, int */ );
-int     PDC_CDECL	waddchnstr( /* WINDOW*, chtype*, int */ );
-int     PDC_CDECL	waddnstr( /* WINDOW*, char*, int */ );
-int     PDC_CDECL	waddstr( /* WINDOW*, char* */ );
-int     PDC_CDECL	wattroff( /* WINDOW*, attr_t */ );
-int     PDC_CDECL	wattron( /* WINDOW*, attr_t */ );
-int     PDC_CDECL	wattrset( /* WINDOW*, attr_t */ );
-int     PDC_CDECL	wbkgd( /*WINDOW*, chtype*/ );
-void    PDC_CDECL	wbkgdset( /*WINDOW*, chtype*/ );
-int     PDC_CDECL	wborder( /* WINDOW*, chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype */ );
-int     PDC_CDECL	wclear( /* WINDOW* */ );
-int     PDC_CDECL	wclrtobot( /* WINDOW* */ );
-int     PDC_CDECL	wclrtoeol( /* WINDOW* */ );
-void    PDC_CDECL	wcursyncup(/* WINDOW* */);
-int     PDC_CDECL	wdelch( /* WINDOW* */ );
-int     PDC_CDECL	wdeleteln( /* WINDOW* */ );
-int     PDC_CDECL	werase( /* WINDOW* */ );
-int     PDC_CDECL	wgetch( /* WINDOW* */ );
-int     PDC_CDECL	wgetnstr( /* WINDOW*, char*, int */ );
-int     PDC_CDECL	wgetstr( /* WINDOW*, char* */ );
-int     PDC_CDECL	whline( /* WINDOW*, chtype, int */ );
-int     PDC_CDECL	winchnstr( /* WINDOW*, chtype*, int */ );
-int     PDC_CDECL	winnstr( /* WINDOW*, char*, int */ );
-int     PDC_CDECL	winsch( /* WINDOW*, chtype */ );
-int     PDC_CDECL	winsdelln( /* WINDOW*, int */ );
-int     PDC_CDECL	winsertln( /* WINDOW* */ );
-int     PDC_CDECL	winsnstr( /* WINDOW*, char*, int */ );
-int     PDC_CDECL	wmove( /* WINDOW*, int, int */ );
-int     PDC_CDECL	wnoutrefresh( /* WINDOW* */ );
-char    PDC_CDECL	wordchar( /* void */ );
-int     PDC_CDECL	wprintw( /* WINDOW*, char*,... */ );
-int     PDC_CDECL	wredrawln( /* WINDOW*, int ,int */ );
-int     PDC_CDECL	wrefresh( /* WINDOW* */ );
-int     PDC_CDECL	wscanw( /* WINDOW*, char*,... */ );
-int     PDC_CDECL	wscrl( /* WINDOW*, int */ );
-int     PDC_CDECL	wsetscrreg( /* WINDOW*, int, int */ );
-int     PDC_CDECL	wtimeout( /* WINDOW *, int */ );
-int     PDC_CDECL	wtouchln( /*WINDOW *, int, int, int*/ );
-void    PDC_CDECL	wsyncdown(/* WINDOW* */);
-void    PDC_CDECL	wsyncup(/* WINDOW* */);
-int     PDC_CDECL	wvline( /* WINDOW*, chtype, int */ );
+int     PDC_CDECL typeahead Args(( int ));
+char*   PDC_CDECL unctrl Args(( chtype ));
+int     PDC_CDECL vline Args(( chtype, int ));
+int     PDC_CDECL waddchnstr Args(( WINDOW*, chtype*, int ));
+int     PDC_CDECL waddnstr Args(( WINDOW*, char*, int ));
+int     PDC_CDECL waddstr Args(( WINDOW*, char* ));
+int     PDC_CDECL wattroff Args(( WINDOW*, attr_t ));
+int     PDC_CDECL wattron Args(( WINDOW*, attr_t ));
+int     PDC_CDECL wattrset Args(( WINDOW*, attr_t ));
+int     PDC_CDECL wbkgd Args((WINDOW*, chtype));
+void    PDC_CDECL wbkgdset Args((WINDOW*, chtype));
+int     PDC_CDECL wborder Args(( WINDOW*, chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype ));
+int     PDC_CDECL wclear Args(( WINDOW* ));
+int     PDC_CDECL wclrtobot Args(( WINDOW* ));
+int     PDC_CDECL wclrtoeol Args(( WINDOW* ));
+void    PDC_CDECL wcursyncup Args((WINDOW*));
+int     PDC_CDECL wdelch Args(( WINDOW* ));
+int     PDC_CDECL wdeleteln Args(( WINDOW* ));
+int     PDC_CDECL werase Args(( WINDOW* ));
+int     PDC_CDECL wgetch Args(( WINDOW* ));
+int     PDC_CDECL wgetnstr Args(( WINDOW*, char*, int ));
+int     PDC_CDECL wgetstr Args(( WINDOW*, char* ));
+int     PDC_CDECL whline Args(( WINDOW*, chtype, int ));
+int     PDC_CDECL winchnstr Args(( WINDOW*, chtype*, int ));
+int     PDC_CDECL winnstr Args(( WINDOW*, char*, int ));
+int     PDC_CDECL winsch Args(( WINDOW*, chtype ));
+int     PDC_CDECL winsdelln Args(( WINDOW*, int ));
+int     PDC_CDECL winsertln Args(( WINDOW* ));
+int     PDC_CDECL winsnstr Args(( WINDOW*, char*, int ));
+int     PDC_CDECL wmove Args(( WINDOW*, int, int ));
+int     PDC_CDECL wnoutrefresh Args(( WINDOW* ));
+char    PDC_CDECL wordchar Args(( void ));
+#ifdef HAVE_STDARG_H
+int     PDC_CDECL wprintw Args(( WINDOW*, char*,... ));
+int     PDC_CDECL wscanw Args(( WINDOW*, char*,... ));
+#endif
+int     PDC_CDECL wredrawln Args(( WINDOW*, int ,int ));
+int     PDC_CDECL wrefresh Args(( WINDOW* ));
+int     PDC_CDECL wscrl Args(( WINDOW*, int ));
+int     PDC_CDECL wsetscrreg Args(( WINDOW*, int, int ));
+int     PDC_CDECL wtimeout Args(( WINDOW *, int ));
+int     PDC_CDECL wtouchln Args((WINDOW *, int, int, int));
+void    PDC_CDECL wsyncdown Args((WINDOW*));
+void    PDC_CDECL wsyncup Args((WINDOW*));
+int     PDC_CDECL wvline Args(( WINDOW*, chtype, int ));
 
 #ifdef  PDCURSES
-int     PDC_CDECL	raw_output( /* bool */ );
-int     PDC_CDECL	resize_term( /* int, int */ );
-WINDOW* PDC_CDECL	resize_window( /* WINDOW*, int, int */ );
+int     PDC_CDECL raw_output Args(( bool ));
+int     PDC_CDECL resize_term Args(( int, int ));
+WINDOW* PDC_CDECL resize_window Args(( WINDOW*, int, int ));
 #endif
 
 #ifdef OBSOLETE_OR_TBD
-char    PDC_CDECL	breakchar( /* void */ );
-int     PDC_CDECL	cursoff( /* void */ );
-int     PDC_CDECL	curson( /* void */ );
-int     PDC_CDECL	gettmode( /* void */ );
-int     PDC_CDECL	mvaddrawch( /* int, int, chtype */ );
-int     PDC_CDECL	mvaddrawstr( /* int, int, char* */ );
-int     PDC_CDECL	mvwinsrawch( /* WINDOW*, int, int, chtype */ );
-int     PDC_CDECL	mvinsrawch( /* int, int, chtype */ );
-int     PDC_CDECL	saveoldterm( /* void */ );
-int     PDC_CDECL	tabsize( /* int */ );
-int     PDC_CDECL	waddrawstr( /* WINDOW*, char* */ );
-int     PDC_CDECL	wtabsize( /* WINDOW*, int */ );
-int     PDC_CDECL	win_print( /* WINDOW*, int */ );
+char    PDC_CDECL breakchar Args(( /* void */ ));
+int     PDC_CDECL cursoff Args(( /* void */ ));
+int     PDC_CDECL curson Args(( /* void */ ));
+int     PDC_CDECL gettmode Args(( /* void */ ));
+int     PDC_CDECL mvaddrawch Args(( /* int, int, chtype */ ));
+int     PDC_CDECL mvaddrawstr Args(( /* int, int, char* */ ));
+int     PDC_CDECL mvwinsrawch Args(( /* WINDOW*, int, int, chtype */ ));
+int     PDC_CDECL mvinsrawch Args(( /* int, int, chtype */ ));
+int     PDC_CDECL saveoldterm Args(( /* void */ ));
+int     PDC_CDECL tabsize Args(( /* int */ ));
+int     PDC_CDECL waddrawstr Args(( /* WINDOW*, char* */ ));
+int     PDC_CDECL wtabsize Args(( /* WINDOW*, int */ ));
+int     PDC_CDECL win_print Args(( /* WINDOW*, int */ ));
 #endif
 
 #ifdef  XCURSES
-void    XCursesExit(/* void */);
-int     nocbreak( /* void */ );
-int     cbreak( /* void */ );
-int     nocrmode( /* void */ );
-int     crmode( /* void */ );
-int     noecho( /* void */ );
-int     echo( /* void */ );
-int     nodelay( /* WINDOW *,bool */ );
+void    PDC_CDECL XCursesExit Args(( void ));
+int     PDC_CDECL nocbreak Args(( void ));
+int     PDC_CDECL cbreak Args(( void ));
+int     PDC_CDECL nocrmode Args(( void ));
+int     PDC_CDECL crmode Args(( void ));
+int     PDC_CDECL noecho Args(( void ));
+int     PDC_CDECL echo Args(( void ));
+int     PDC_CDECL nodelay Args(( WINDOW *,bool ));
 #endif
 
-int     PDC_CDECL	mouse_set( /* long */ );
-int     PDC_CDECL	mouse_on( /* long */ );
-int     PDC_CDECL	mouse_off( /* long */ );
-int     PDC_CDECL	request_mouse_pos( /* void */ );
-int     PDC_CDECL	map_button( /* unsigned long */ );
-void    PDC_CDECL	wmouse_position( /* WINDOW *, int *, int * */ );
-unsigned long PDC_CDECL	getmouse( /* void */ );
-unsigned long PDC_CDECL	getbmap( /* void */ );
+int     PDC_CDECL mouse_set Args(( unsigned long ));
+int     PDC_CDECL mouse_on Args(( unsigned long ));
+int     PDC_CDECL mouse_off Args(( unsigned long ));
+int     PDC_CDECL request_mouse_pos Args(( void ));
+int     PDC_CDECL map_button Args(( unsigned long ));
+void    PDC_CDECL wmouse_position Args(( WINDOW *, int *, int * ));
+unsigned long PDC_CDECL getmouse Args(( void ));
+unsigned long PDC_CDECL getbmap Args(( void ));
 
 /*
 *       Keep the compiler happy with our macros below...
 */
-int     PDC_CDECL	PDC_chadd( /* WINDOW*, chtype, bool, bool */ );
-int     PDC_CDECL	PDC_chins( /* WINDOW*, chtype, bool */ );
-int     PDC_CDECL	PDC_ungetch( /* int */ );
+int     PDC_CDECL PDC_chadd Args(( WINDOW*, chtype, bool, bool ));
+int     PDC_CDECL PDC_chins Args(( WINDOW*, chtype, bool ));
+int     PDC_CDECL PDC_ungetch Args(( int ));
 
-void    PDC_CDECL	PDC_set_title( /* char * */ );
-int     PDC_CDECL	PDC_getclipboard( /* char **, long * */ );
-int     PDC_CDECL	PDC_setclipboard( /* char *, long */ );
-int     PDC_CDECL	PDC_clearclipboard( /* void */ );
+void    PDC_CDECL PDC_set_title Args(( char * ));
 
-unsigned long PDC_CDECL	PDC_get_input_fd( /* void */ );
-int     PDC_CDECL	PDC_curs_set( /* int */ );
-unsigned long PDC_CDECL	PDC_get_key_modifiers( /* void */ );
+int     PDC_CDECL PDC_getclipboard Args(( char **, long * ));
+int     PDC_CDECL PDC_setclipboard Args(( char *, long ));
+int     PDC_CDECL PDC_freeclipboard Args(( char * ));
+int     PDC_CDECL PDC_clearclipboard Args(( void ));
 
-int     PDC_CDECL	PDC_wunderline( /* WINDOW*, int, bool */ );
-int     PDC_CDECL	PDC_wleftline( /* WINDOW*, int, bool */ );
-int     PDC_CDECL	PDC_wrightline( /* WINDOW*, int, bool */ );
-int     PDC_CDECL	PDC_set_line_color( /* short */ );
+unsigned long PDC_CDECL PDC_get_input_fd Args(( void ));
+int     PDC_CDECL PDC_curs_set Args(( int ));
+unsigned long PDC_CDECL PDC_get_key_modifiers Args(( void ));
 
-#endif
+int     PDC_CDECL PDC_wunderline Args(( WINDOW*, int, bool ));
+int     PDC_CDECL PDC_wleftline Args(( WINDOW*, int, bool ));
+int     PDC_CDECL PDC_wrightline Args(( WINDOW*, int, bool ));
+int     PDC_CDECL PDC_set_line_color Args(( short ));
 
+#undef Args
 
 #ifndef max
 # define max(a,b) (((a) > (b)) ? (a) : (b))

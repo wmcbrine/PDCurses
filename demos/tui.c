@@ -38,10 +38,10 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.1 2001/01/10 08:27:44 mark Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.2 2004/01/02 05:50:05 mark Exp $";
 #endif
 
-#if defined(__unix) && !defined(GO32)
+#if defined(__unix) && !defined(__DJGPP__)
 #define CPUACCOUNT                /* necessary if CPU cycles are to be paid! */
 #endif
 

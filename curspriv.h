@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.5 2002/11/27 11:14:27 mark Exp $
+$Id: curspriv.h,v 1.6 2004/01/02 05:50:05 mark Exp $
 */
 /*
 *
@@ -118,14 +118,14 @@ $Id: curspriv.h,v 1.5 2002/11/27 11:14:27 mark Exp $
      typedef union REGS Regs;
 #  endif
    extern Regs regs;
-#  ifdef GO32                           /* Note: works only in plain DOS... */
+#  ifdef __DJGPP__                           /* Note: works only in plain DOS... */
 #    if DJGPP == 2
 #      define _FAR_POINTER(s,o)		((((int)(s))<<4) + ((int)(o)))
 #    else
 #      define _FAR_POINTER(s,o)		(0xe0000000 + (((int)(s))<<4) + ((int)(o)))
 #    endif
-#    define _FP_SEGMENT(p)		(unsigned short)((((long)fp) >> 4) & 0xffff)
-#    define _FP_OFFSET(p)		((unsigned short)fp & 0x000f)
+#    define _FP_SEGMENT(p)		(unsigned short)((((long)p) >> 4) & 0xffff)
+#    define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
 #  else
 #    ifdef __TURBOC__
 #      define _FAR_POINTER(s,o)	MK_FP(s,o)
@@ -140,27 +140,26 @@ $Id: curspriv.h,v 1.5 2002/11/27 11:14:27 mark Exp $
 #        endif
 #      endif
 #    endif
-#    define _FP_SEGMENT(p)		(unsigned short)(((long)fp) >> 4)
-#    define _FP_OFFSET(p)		((unsigned short)fp & 0x000f)
+#    define _FP_SEGMENT(p)		(unsigned short)(((long)p) >> 4)
+#    define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
 #  endif
 
-#  ifdef GO32
+#  ifdef __DJGPP__
      unsigned char getdosmembyte (int offs);    /* see: private\_dosmem.c */
      unsigned short getdosmemword (int offs);
      void setdosmembyte (int offs, unsigned char b);
      void setdosmemword (int offs, unsigned short w);
 #  else
-#    if SMALL || MEDIUM || MSC
-#      define getdosmembyte(offs)    (*((unsigned char far *) _FAR_POINTER(0,offs)))
-#      define getdosmemword(offs)    (*((unsigned short far *) _FAR_POINTER(0,offs)))
-#      define setdosmembyte(offs,x)  (*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))
-#      define setdosmemword(offs,x)  (*((unsigned short far *) _FAR_POINTER(0,offs)) = (x))
+#    if SMALL || MEDIUM || MSC || PC
+#      define PDC_FAR far
 #    else
-#      define getdosmembyte(offs)    (*((unsigned char *) _FAR_POINTER(0,offs)))
-#      define getdosmemword(offs)    (*((unsigned short *) _FAR_POINTER(0,offs)))
-#      define setdosmembyte(offs,x)  (*((unsigned char *) _FAR_POINTER(0,offs)) = (x))
-#      define setdosmemword(offs,x)  (*((unsigned short *) _FAR_POINTER(0,offs)) = (x))
+#      define PDC_FAR
 #    endif
+#    define getdosmembyte(offs)    (*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)))
+#    define getdosmemword(offs)    (*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)))
+#    define setdosmembyte(offs,x)  (*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+#    define setdosmemword(offs,x)  (*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+#    under PDC_FAR
 #  endif
 #endif
 
@@ -281,254 +280,142 @@ extern WINDOW*  twin;                   /* used by many routines */
 *       compilation definitions above define HAVE_PROTO if your compiler 
 *       supports prototypes.
 */
-#ifdef     HAVE_PROTO
-void            PDC_beep( void );
-int             PDC_backchar( WINDOW*, char*, int* );
-bool            PDC_breakout( void );
-int             PDC_chadd( WINDOW*, chtype, bool, bool );
-bool            PDC_check_bios_key( void );
-int             PDC_chg_attr( WINDOW*, chtype, int, int, int, int );
-int             PDC_chins( WINDOW*, chtype, bool );
-int             PDC_clr_scrn( WINDOW* );
-int             PDC_clr_update( WINDOW* );
-int             PDC_copy_win( WINDOW *,WINDOW *,int,int,int,int,int,int,int,int,bool );
-int             PDC_cursor_off( void );
-int             PDC_cursor_on( void );
-int             PDC_curs_set( int );
-int             PDC_fix_cursor( int );
-int             PDC_gattr( void );
-int             PDC_get_bios_key( void );
-int             PDC_get_columns( void );
-bool            PDC_get_ctrl_break( void );
-int             PDC_get_cur_col( void );
-int             PDC_get_cur_row( void );
-int             PDC_get_cursor_pos( int*, int* );
-int             PDC_get_cursor_mode( void );
-int             PDC_get_font( void );
-int             PDC_get_rows( void );
-int             PDC_get_buffer_rows( void );
-int             PDC_gotoxy( int, int );
-int             PDC_init_atrtab(void);
-WINDOW*         PDC_makenew( int, int, int, int );
-int             PDC_mouse_in_slk( int, int );
-int             PDC_newline( WINDOW*, int );
-int             PDC_print( int, int, int );
-int             PDC_putc( chtype, chtype );
-int             PDC_putchar( chtype );
-int             PDC_putctty( chtype, chtype );
-int             PDC_rawgetch( void );
-int             PDC_reset_prog_mode( void );
-int             PDC_reset_shell_mode( void );
-int             PDC_resize_screen( int, int );
-int             PDC_sanity_check( int );
-int             PDC_scr_close( void );
-int             PDC_scr_open( SCREEN*, bool );
-int             PDC_scroll( int, int, int, int, int, chtype );
-int             PDC_set_80x25( void );
-int             PDC_set_ctrl_break( bool );
-int             PDC_set_cursor_mode( int, int );
-int             PDC_set_font( int );
-int             PDC_set_rows( int );
-int             PDC_split_plane( WINDOW*, char*, char*, int, int, int, int );
-void            PDC_sync( WINDOW * );
-int             PDC_sysgetch( void );
-bool            PDC_transform_line( int );
-void            PDC_usleep( long );
-int             PDC_validchar( int );
-int             PDC_vsscanf( char *, const char *, va_list);
+#ifdef HAVE_PROTO
+# define Args(x) x
+#else
+# define Args(x) ()
+#endif
 
-void            PDC_slk_calc( void );
+void            PDC_beep Args(( void ));
+int             PDC_backchar Args(( WINDOW*, char*, int* ));
+bool            PDC_breakout Args(( void ));
+int             PDC_chadd Args(( WINDOW*, chtype, bool, bool ));
+bool            PDC_check_bios_key Args(( void ));
+int             PDC_chg_attr Args(( WINDOW*, chtype, int, int, int, int ));
+int             PDC_chins Args(( WINDOW*, chtype, bool ));
+int             PDC_clr_scrn Args(( WINDOW* ));
+int             PDC_clr_update Args(( WINDOW* ));
+int             PDC_copy_win Args(( WINDOW *,WINDOW *,int,int,int,int,int,int,int,int,bool ));
+int             PDC_cursor_off Args(( void ));
+int             PDC_cursor_on Args(( void ));
+int             PDC_curs_set Args(( int ));
+int             PDC_fix_cursor Args(( int ));
+int             PDC_gattr Args(( void ));
+int             PDC_get_bios_key Args(( void ));
+int             PDC_get_columns Args(( void ));
+bool            PDC_get_ctrl_break Args(( void ));
+int             PDC_get_cur_col Args(( void ));
+int             PDC_get_cur_row Args(( void ));
+int             PDC_get_cursor_pos Args(( int*, int* ));
+int             PDC_get_cursor_mode Args(( void ));
+int             PDC_get_font Args(( void ));
+int             PDC_get_rows Args(( void ));
+int             PDC_get_buffer_rows Args(( void ));
+int             PDC_gotoxy Args(( int, int ));
+int             PDC_init_atrtab Args((void));
+WINDOW*         PDC_makenew Args(( int, int, int, int ));
+int             PDC_mouse_in_slk Args(( int, int ));
+int             PDC_newline Args(( WINDOW*, int ));
+int             PDC_print Args(( int, int, int ));
+int             PDC_putc Args(( chtype, chtype ));
+int             PDC_putchar Args(( chtype ));
+int             PDC_putctty Args(( chtype, chtype ));
+int             PDC_rawgetch Args(( void ));
+int             PDC_reset_prog_mode Args(( void ));
+int             PDC_reset_shell_mode Args(( void ));
+int             PDC_resize_screen Args(( int, int ));
+int             PDC_sanity_check Args(( int ));
+int             PDC_scr_close Args(( void ));
+int             PDC_scr_open Args(( SCREEN*, bool ));
+int             PDC_scroll Args(( int, int, int, int, int, chtype ));
+int             PDC_set_80x25 Args(( void ));
+int             PDC_set_ctrl_break Args(( bool ));
+int             PDC_set_cursor_mode Args(( int, int ));
+int             PDC_set_font Args(( int ));
+int             PDC_set_rows Args(( int ));
+int             PDC_split_plane Args(( WINDOW*, char*, char*, int, int, int, int ));
+void            PDC_sync Args(( WINDOW * ));
+int             PDC_sysgetch Args(( void ));
+bool            PDC_transform_line Args(( int ));
+void            PDC_usleep Args(( long ));
+int             PDC_validchar Args(( int ));
+int             PDC_vsscanf Args(( char *, const char *, va_list));
+
+void            PDC_slk_calc Args(( void ));
 
 
 # if defined( OS2 ) && !defined( EMXVIDEO )
-int             PDC_set_scrn_mode( VIOMODEINFO);
-bool            PDC_scrn_modes_equal (VIOMODEINFO, VIOMODEINFO);
-int             PDC_get_scrn_mode( VIOMODEINFO *);
-int             PDC_query_adapter_type( VIOCONFIGINFO * );
-int             PDC_get_keyboard_info( KBDINFO * );
-int             PDC_set_keyboard_binary( void );
-int             PDC_set_keyboard_default( void );
-int             PDC_reset_shell_mode( void );
-int             PDC_reset_prog_mode( void );
+int             PDC_set_scrn_mode Args(( VIOMODEINFO));
+bool            PDC_scrn_modes_equal  Args((VIOMODEINFO, VIOMODEINFO));
+int             PDC_get_scrn_mode Args(( VIOMODEINFO *));
+int             PDC_query_adapter_type Args(( VIOCONFIGINFO * ));
+int             PDC_get_keyboard_info Args(( KBDINFO * ));
+int             PDC_set_keyboard_binary Args(( void ));
+int             PDC_set_keyboard_default Args(( void ));
+int             PDC_reset_shell_mode Args(( void ));
+int             PDC_reset_prog_mode Args(( void ));
 # else
-int             PDC_set_scrn_mode( int );
-bool            PDC_scrn_modes_equal (int, int);
-int             PDC_get_scrn_mode( void );
-int             PDC_query_adapter_type( void );
+int             PDC_set_scrn_mode Args(( int ));
+bool            PDC_scrn_modes_equal  Args((int, int));
+int             PDC_get_scrn_mode Args(( void ));
+int             PDC_query_adapter_type Args(( void ));
 # endif
 
 # ifdef  FLEXOS
-int             PDC_flexos_8bitmode( void );
-int             PDC_flexos_16bitmode( void );
-char*           PDC_flexos_gname( void );
+int             PDC_flexos_8bitmode Args(( void ));
+int             PDC_flexos_16bitmode Args(( void ));
+char*           PDC_flexos_gname Args(( void ));
 # endif
 
 # ifdef UNIX
-int             PDC_kbhit(void);
-int             PDC_setup_keys(void);
+int             PDC_kbhit Args((void));
+int             PDC_setup_keys Args((void));
 # endif
 
 # ifdef WIN32
-void            PDC_doupdate(void);
+void            PDC_doupdate Args((void));
 # endif
 
 # if defined (XCURSES)
-int             XCurses_redraw_curscr(void);
-int             XCurses_display_cursor(int,int,int,int,int);
-int             XCurses_rawgetch(int);
-bool            XCurses_kbhit(void);
-int             XCurses_get_input_fd(void);
-int             XCursesInstruct(int);
-int             XCursesInstructAndWait(int);
-int             XCurses_transform_line(chtype*, int , int , int );
-int             XCursesInitscr(char *,int, char **);
-int             XCursesEndwin(void);
-void            XCursesCleanupCursesProcess(int);
-int             XCursesResizeScreen( int, int );
-int             XCurses_get_cols(void);
-int             XCurses_get_rows(void);
-int             XCurses_refresh_scrollbar(void);
-void            XCurses_set_title(char *);
-int             XCurses_getclipboard( char **, long * );
-int             XCurses_setclipboard( char *, long );
-int             XCurses_clearclipboard( void );
-unsigned long   XCurses_get_key_modifiers( void );
+int             XCurses_redraw_curscr Args((void));
+int             XCurses_display_cursor Args((int,int,int,int,int));
+int             XCurses_rawgetch Args((int));
+bool            XCurses_kbhit Args((void));
+int             XCurses_get_input_fd Args((void));
+int             XCursesInstruct Args((int));
+int             XCursesInstructAndWait Args((int));
+int             XCurses_transform_line Args((chtype*, int , int , int ));
+int             XCursesInitscr Args((char *,int, char **));
+int             XCursesEndwin Args((void));
+void            XCursesCleanupCursesProcess Args((int));
+int             XCursesResizeScreen Args(( int, int ));
+int             XCurses_get_cols Args((void));
+int             XCurses_get_rows Args((void));
+int             XCurses_refresh_scrollbar Args((void));
+void            XCurses_set_title Args((char *));
+int             XCurses_getclipboard Args(( char **, long * ));
+int             XCurses_setclipboard Args(( char *, long ));
+int             XCurses_clearclipboard Args(( void ));
+unsigned long   XCurses_get_key_modifiers Args(( void ));
 # endif
 
-# ifdef PDCDEBUG
-void            PDC_debug( char*,... );
-# endif
-
-# ifdef  REGISTERWINDOWS
-bool            PDC_inswin( WINDOW*, WINDOW* );
-int             PDC_addtail( WINDOW* );
-int             PDC_addwin( WINDOW*, WINDOW* );
-int             PDC_rmwin( WINDOW* );
-WINDS*          PDC_findwin( WINDOW* );
-# endif
-
-#else
-
-void            PDC_beep( /* void */ );
-int             PDC_backchar( /* WINDOW*, char*, int* */ );
-bool            PDC_breakout( /* void */ );
-int             PDC_chadd( /* WINDOW*, chtype, bool, bool */ );
-bool            PDC_check_bios_key( /* void */ );
-int             PDC_chg_attr( /* WINDOW*, chtype, int, int, int, int */ );
-int             PDC_chins( /* WINDOW*, chtype, bool */ );
-int             PDC_clr_scrn( /* WINDOW* */ );
-int             PDC_clr_update( /* WINDOW* */ );
-int             PDC_copy_win( /* WINDOW *,WINDOW *,int,int,int,int,int,int,int,int,bool */ );
-int             PDC_cursor_off( /* void */ );
-int             PDC_cursor_on( /* void */ );
-int             PDC_curs_set( /* int */ );
-int             PDC_fix_cursor( /* int */ );
-int             PDC_gattr( /* void */ );
-int             PDC_get_bios_key( /* void */ );
-int             PDC_get_columns( /* void */ );
-bool            PDC_get_ctrl_break( /* void */ );
-int             PDC_get_cur_col( /* void */ );
-int             PDC_get_cur_row( /* void */ );
-int             PDC_get_cursor_pos( /* int*, int* */ );
-int             PDC_get_cursor_mode( /* void */ );
-int             PDC_get_font( /* void */ );
-int             PDC_get_rows( /* void */ );
-int             PDC_get_buffer_rows( /* void */ );
-int             PDC_gotoxy( /* int, int */ );
-int             PDC_init_atrtab( /*void*/ );
-WINDOW*         PDC_makenew( /* int, int, int, int */ );
-int             PDC_mouse_in_slk(/* int, int */ );
-int             PDC_newline( /* WINDOW*, int */ );
-int             PDC_print( /* int, int, int */ );
-int             PDC_putc( /* chtype, chtype */ );
-int             PDC_putchar( /* chtype */ );
-int             PDC_putctty( /* chtype, chtype */ );
-int             PDC_rawgetch( /* void */ );
-int             PDC_reset_prog_mode( /* void */ );
-int             PDC_reset_shell_mode( /* void */ );
-int             PDC_resize_screen( /* int, int */ );
-int             PDC_sanity_check( /* int */ );
-int             PDC_scr_close( /* void */ );
-int             PDC_scr_open( /* SCREEN*, bool */ );
-int             PDC_scroll( /* int, int, int, int, int, chtype */ );
-int             PDC_set_80x25( /* void */ );
-int             PDC_set_ctrl_break( /* bool */ );
-int             PDC_set_cursor_mode( /* int, int */ );
-int             PDC_set_font( /* int */ );
-int             PDC_set_rows( /* int */ );
-int             PDC_split_plane( /* WINDOW*, char*, char*, int, int, int, int */ );
-void            PDC_sync( /* WINDOW * */ );
-int             PDC_sysgetch( /* void */ );
-bool            PDC_transform_line( /* int */ );
-void            PDC_usleep( /* long */ );
-int             PDC_validchar( /* int */ );
-int             PDC_vsscanf( /* char *, const char *, ... */);
-
-void            PDC_slk_calc( /* void */ );
-
-
-# if defined( OS2 ) && !defined( EMXVIDEO )
-int             PDC_set_scrn_mode( /* VIOMODEINFO*/ );
-bool            PDC_scrn_modes_equal ( /*VIOMODEINFO, VIOMODEINFO*/ );
-int             PDC_get_scrn_mode( /* VIOMODEINFO * */ );
-int             PDC_query_adapter_type( /* VIOCONFIGINFO * */ );
-# else
-int             PDC_set_scrn_mode( /* int */ );
-bool            PDC_scrn_modes_equal ( /*int, int*/ );
-int             PDC_get_scrn_mode( /* void */ );
-int             PDC_query_adapter_type( /* void */ );
-# endif
-
-# ifdef  FLEXOS
-int             PDC_flexos_8bitmode( /* void */ );
-int             PDC_flexos_16bitmode( /* void */ );
-char*           PDC_flexos_gname( /* void */ );
-# endif
-
-# ifdef UNIX
-int             PDC_kbhit( /*void*/ );
-int             PDC_setup_keys( /*void*/ );
-# endif
-
-# ifdef WIN32
-void            PDC_doupdate( /*void*/ );
-# endif
-
-# if defined ( XCURSES )
-int             XCurses_redraw_curscr( /*void*/ );
-int             XCurses_display_cursor( /*int,int,int,int,int*/ );
-int             XCurses_rawgetch( /*int*/ );
-bool            XCurses_kbhit( /*void*/ );
-int             XCurses_get_input_fd( /*void*/ );
-int             XCursesInstruct( /*int*/ );
-int             XCursesInstructAndWait( /*void*/ );
-int             XCurses_transform_line( /*chtype*, int , int , int */ );
-int             XCursesInitscr( /* char *, int, char ** */ );
-int             XCursesEndwin( /*void*/ );
-void            XCursesCleanupCursesProcess(/* int */);
-int             XCursesResizeScreen( /* int, int */ );
-int             XCurses_get_cols(/* void */);
-int             XCurses_get_rows(/* void */);
-int             XCurses_refresh_scrollbar( /* void */ );
-void            XCurses_set_title(/* char * */ );
-int             XCurses_getclipboard( /* char **, long * */ );
-int             XCurses_setclipboard( /* char *, long */ );
-int             XCurses_clearclipboard( /* void */ );
-unsigned long   XCurses_get_key_modifiers( /* void */ );
-# endif
-
-# ifdef PDCDEBUG
-void            PDC_debug( /* char*,... */ );
-# endif
-
-# ifdef  REGISTERWINDOWS
-bool            PDC_inswin( /* WINDOW*, WINDOW* */ );
-int             PDC_addtail( /* WINDOW* */ );
-int             PDC_addwin( /* WINDOW*, WINDOW* */ );
-int             PDC_rmwin( /* WINDOW* */ );
-WINDS*          PDC_findwin( /* WINDOW* */ );
-# endif
+#ifdef PC
+void            movedata Args(((unsigned, unsigned, unsigned, unsigned, unsigned));
 #endif
+
+# ifdef PDCDEBUG
+void            PDC_debug Args(( char*,... ));
+# endif
+
+# ifdef  REGISTERWINDOWS
+bool            PDC_inswin Args(( WINDOW*, WINDOW* ));
+int             PDC_addtail Args(( WINDOW* ));
+int             PDC_addwin Args(( WINDOW*, WINDOW* ));
+int             PDC_rmwin Args(( WINDOW* ));
+WINDS*          PDC_findwin Args(( WINDOW* ));
+# endif
+
+#undef Args
 
 #define PDC_COLORS           8
 #define PDC_COLOR_PAIRS     64

@@ -115,7 +115,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas  = "$Id: xmas.c,v 1.1 2001/01/10 08:27:47 mark Exp $";
+char *rcsid_xmas  = "$Id: xmas.c,v 1.2 2003/06/23 07:55:04 mark Exp $";
 #endif
 
 #include <curses.h>
@@ -124,6 +124,23 @@ char *rcsid_xmas  = "$Id: xmas.c,v 1.1 2001/01/10 08:27:47 mark Exp $";
 #if defined(XCURSES)
 	char *XCursesProgramName = "xmas";
 #endif
+
+int boxit();
+int seas();
+int greet();
+int fromwho();
+int del_msg();
+int tree();
+int balls();
+int star();
+int strng1();
+int strng2();
+int strng3();
+int strng4();
+int strng5();
+int blinkit();
+int reindeer();
+void done();
 
 #define FROMWHO "Mark Hessling - (M.Hessling@qut.edu.au)"
 
@@ -141,7 +158,7 @@ WINDOW
        *w_holiday,
        *w_del_msg;
 
-void main()
+int main()
 {
  void done();
  int loopy;
@@ -654,7 +671,9 @@ void main()
   while(getch() == (ERR));
 /*  while(!typeahead(stdin));*/
 #endif
+      return 0;
 }
+
 int
 boxit()
 {

@@ -35,14 +35,16 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.1 2001/01/10 08:27:38 mark Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.2 2003/06/23 07:55:00 mark Exp $";
 #endif
+
+void myrefresh();
+int get_colour();
+void explode();
 
 int main()
 {
        int start,end,row,diff,flag,direction,seed;
-       int myrefresh();
-       void explode();
 
        initscr();
        nodelay( stdscr, TRUE );
@@ -51,6 +53,7 @@ int main()
           start_color();
        seed = time((time_t *)0);
        srand(seed);
+       flag = 0;
        while(getch() == ERR)  /* loop until a key is hit */
                {
                 do {
@@ -90,6 +93,7 @@ int main()
 #endif
        return(0);
 }
+
 void explode(row,col)
 int row,col;
 {
@@ -139,9 +143,9 @@ int row,col;
        mvprintw(row+1,col-2,"#   #");
        mvprintw(row+2,col-2," # # ");
        myrefresh();
-       return;
 }
-int myrefresh()
+
+void myrefresh()
 {
        napms(DELAYSIZE);
        move(LINES-1,COLS-1);

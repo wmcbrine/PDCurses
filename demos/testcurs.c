@@ -33,10 +33,12 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.5 2002/11/27 11:15:40 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.6 2003/06/23 07:55:02 mark Exp $";
 #endif
 
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 #include <curses.h>
 
 #if defined(XCURSES)

@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.3 2002/01/12 04:04:18 mark Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.4 2002/12/16 06:58:09 mark Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -670,6 +670,15 @@ int nlines,ncols;
    SP->lines = PDC_get_rows();
    LINES = SP->lines - SP->linesrippedoff - SP->slklines;
    SP->cols  = COLS  = PDC_get_columns();
+
+   /*
+    * We need to change the saved prog_mode details...
+    */
+   if ( c_pr_tty.been_set )
+   {
+      c_pr_tty.saved.lines = SP->lines;
+      c_pr_tty.saved.cols = SP->cols;
+   }
 
    if ((curscr = resize_window(curscr, SP->lines, SP->cols)) == NULL)
       return (ERR);

@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.2 2001/01/10 08:28:50 mark Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2003/12/28 08:38:16 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -385,7 +385,7 @@ int visibility;
 #endif
 /***********************************************************************/
 {
- int start=0,end=0;
+ int start=6,end=7;
  int ret_vis=0;
 
 #ifdef PDCDEBUG
@@ -399,16 +399,22 @@ int visibility;
 	{
 		case 0:  /* invisible */
 			start = 32;
-			end = 32;  /* was 33 */
+			end = 0;  /* was 32 */
 			break;
 		case 2:  /* highly visible */
+#if 0
 			start = 2;   /* almost full-height block */
 			end = SP->font-1;
+#else
+			start = 0;   /* full-height block */
+#endif
 			break;
 		default:  /* normal visibility */
+/* start = 6, end = 7 */
+#if 0
 			start = SP->font - 2;
-/*			start = SP->font - (SP->font / 4); */
 			end = SP->font-1;
+#endif
 			break;
 	}
 

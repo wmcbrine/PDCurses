@@ -12,8 +12,8 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=c:\curses
-CC_HOME		=f:\apps\bc4
+PDCURSES_HOME		=$(PDCURSES_SRCDIR)
+CC_HOME		=c:\bcc55
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################
@@ -41,16 +41,21 @@ CFLAGS  = -N -v -y -DPDCDEBUG
 LDFLAGS = /c /v /s /l /e
 !else
 CFLAGS  =  -O
-LDFLAGS = 
+LDFLAGS =
 !endif
 
+!if $(__MAKE__) < 0x0520
+CPPFLAGS	= -I$(PDCURSES_HOME)
+LINK		= tlink32 -L$(CCLIBDIR)
+CCLIBS = bidsf+import32+cw32
+!else
 CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR)
+LINK		= ilink32 -L$(CCLIBDIR)
+CCLIBS = import32.lib+cw32.lib
+!endif
 
 CCFLAGS		= -c -Tpe -w32 $(CFLAGS) $(CPPFLAGS)
 
-LINK		= tlink32
-
-CCLIBS		=$(CCLIBDIR)\bidsf.lib+$(CCLIBDIR)\import32.lib+$(CCLIBDIR)\cw32.lib
 STARTUP	=$(CCLIBDIR)\c0x32.obj
 
 LIBEXE		= tlib /C /E
@@ -127,6 +132,9 @@ pdcwin.obj
 
 PANOBJS =     \
 panel.obj
+
+first:
+	@echo $(srcdir)\addch.c
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\bccwin32.lrf
@@ -246,8 +254,8 @@ window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\window.c
 
 
-pdcclip.obj: $(srcdir)\pdcclip.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcclip.c
+pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcclip.c
 
 pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcdebug.c
@@ -284,22 +292,22 @@ panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS)
 
 newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS)
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBPANEL)+$(LIBCURSES)+$(CCLIBS);
+	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBPANEL)+$(LIBCURSES)+$(CCLIBS)
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS)
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*+tui,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(LINK) $(LDFLAGS) $(STARTUP)+$*+tui,$*,,$(LIBCURSES)+$(CCLIBS)
 
 xmas.exe:	xmas.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(LINK) $(LDFLAGS) $(STARTUP)+$*,$*,,$(LIBCURSES)+$(CCLIBS)
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)

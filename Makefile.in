@@ -64,11 +64,11 @@ zip:
 	saa/README saa/Makefile.in \
 	dos/README dos/*.c dos/*.ini dos/*.rsp dos/*.lnk dos/*.mak dos/*.lrf \
 	os2/README os2/*.c os2/*.ini os2/*.rsp os2/*.lnk os2/*.mak os2/*.lrf os2/*.def \
-	x11/README x11/*.c x11/*.xbm x11/*.def x11/*.h x11/process/*.c \
+	x11/README x11/*.c x11/*.xbm x11/*.def x11/*.h x11/process/*.c x11/*.exp \
 	x11/process/*.c x11/process/*.h x11/thread/*.c x11/thread/*.h \
 	win32/README win32/*.c win32/*.rsp win32/*.lnk win32/*.ini win32/*.mak win32/*.lrf win32/*.def win32/*.ico win32/*.rc \
 	flexos/README flexos/*.c doc/*.man tools/manext.c \
-	pdcurses/Makefile.in demos/Makefile.in panel/Makefile.in tools/Makefile.in
+	pdcurses/Makefile.in pdcurses/Makefile.aix.in demos/Makefile.in panel/Makefile.in tools/Makefile.in
 
 dist:
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/Makefile.in \
@@ -81,11 +81,11 @@ dist:
 	$(PDC_DIR)/saa/README $(PDC_DIR)/saa/Makefile.in \
 	$(PDC_DIR)/dos/README $(PDC_DIR)/dos/*.c $(PDC_DIR)/dos/*.rsp $(PDC_DIR)/dos/*.lnk $(PDC_DIR)/dos/*.ini $(PDC_DIR)/dos/*.mak $(PDC_DIR)/dos/*.lrf \
 	$(PDC_DIR)/os2/README $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.rsp $(PDC_DIR)/os2/*.lnk $(PDC_DIR)/os2/*.ini $(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf $(PDC_DIR)/os2/*.def \
-	$(PDC_DIR)/x11/README $(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.def $(PDC_DIR)/x11/*.h \
+	$(PDC_DIR)/x11/README $(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.def $(PDC_DIR)/x11/*.h $(PDC_DIR)/x11/*.exp \
 	$(PDC_DIR)/x11/process/*.c $(PDC_DIR)/x11/process/*.h $(PDC_DIR)/x11/thread/*.c $(PDC_DIR)/x11/thread/*.h \
 	$(PDC_DIR)/win32/README $(PDC_DIR)/win32/*.c $(PDC_DIR)/win32/*.rsp $(PDC_DIR)/win32/*.lnk $(PDC_DIR)/win32/*.ini $(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.lrf $(PDC_DIR)/win32/*.def $(PDC_DIR)/win32/*.ico $(PDC_DIR)/win32/*.rc \
 	$(PDC_DIR)/flexos/README $(PDC_DIR)/flexos/*.c $(PDC_DIR)/tools/manext.c \
-	$(PDC_DIR)/pdcurses/Makefile.in $(PDC_DIR)/demos/Makefile.in $(PDC_DIR)/tools/Makefile.in \
+	$(PDC_DIR)/pdcurses/Makefile.in $(PDC_DIR)/pdcurses/Makefile.aix.in $(PDC_DIR)/demos/Makefile.in $(PDC_DIR)/tools/Makefile.in \
 	$(PDC_DIR)/panel/Makefile.in | gzip > PDCurses-$(VER_DOT).tar.gz)
 
 tar:
@@ -99,9 +99,9 @@ tar:
 	$(PDC_DIR)/saa/README $(PDC_DIR)/saa/Makefile.in \
 	$(PDC_DIR)/dos/README $(PDC_DIR)/dos/*.c $(PDC_DIR)/dos/*.rsp $(PDC_DIR)/dos/*.lnk $(PDC_DIR)/dos/*.ini $(PDC_DIR)/dos/*.mak $(PDC_DIR)/dos/*.lrf \
 	$(PDC_DIR)/os2/README $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.rsp $(PDC_DIR)/os2/*.lnk $(PDC_DIR)/os2/*.ini $(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf $(PDC_DIR)/os2/*.def \
-	$(PDC_DIR)/x11/README $(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.def $(PDC_DIR)/x11/*.h \
+	$(PDC_DIR)/x11/README $(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.def $(PDC_DIR)/x11/*.h $(PDC_DIR)/x11/*.exp \
 	$(PDC_DIR)/x11/process/*.c $(PDC_DIR)/x11/process/*.h $(PDC_DIR)/x11/thread/*.c $(PDC_DIR)/x11/thread/*.h \
 	$(PDC_DIR)/win32/README $(PDC_DIR)/win32/*.c $(PDC_DIR)/win32/*.rsp $(PDC_DIR)/win32/*.lnk $(PDC_DIR)/win32/*.ini $(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.lrf $(PDC_DIR)/win32/*.def $(PDC_DIR)/win32/*.ico $(PDC_DIR)/win32/*.rc \
 	$(PDC_DIR)/flexos/README $(PDC_DIR)/flexos/*.c $(PDC_DIR)/tools/manext.c \
-	$(PDC_DIR)/pdcurses/Makefile.in $(PDC_DIR)/demos/Makefile.in $(PDC_DIR)/tools/Makefile.in \
+	$(PDC_DIR)/pdcurses/Makefile.in $(PDC_DIR)/pdcurses/Makefile.aix.in $(PDC_DIR)/demos/Makefile.in $(PDC_DIR)/tools/Makefile.in \
 	$(PDC_DIR)/panel/Makefile.in | compress > PDCurses-$(VER_DOT).tar.Z)

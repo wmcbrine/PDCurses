@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.22 2003/02/17 08:22:59 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.23 2003/02/17 10:05:45 mark Exp $";
 
 #include "rxpack.h"
 
@@ -664,11 +664,11 @@ int RxStrToDouble
    double sum;
 
    sum = strtod( ptr->strptr, &endptr );
+   if ( sum == 0
+   &&   errno != 0 )
+      return -1;
    if ( sum == 0 
    &&   endptr == ptr->strptr )
-      return -1;
-   if ( sum == HUGE_VAL
-   ||   sum == -HUGE_VAL )
       return -1;
    *result = sum;
    return 0;
@@ -693,7 +693,7 @@ int RxStemToCharArray
 
 {
    int      len=ptr->strlength;
-   int      *intptr,num_items,i;
+   int      num_items,i;
    RXSTRING value;
 
    /*
@@ -779,7 +779,7 @@ int RxStemToULongArray
 
 {
    int      len=ptr->strlength;
-   int      *intptr,num_items,i;
+   int      num_items,i;
    unsigned long value;
 
    /*
@@ -855,7 +855,7 @@ int RxStemToLongArray
 
 {
    int      len=ptr->strlength;
-   int      *intptr,num_items,i;
+   int      num_items,i;
    long     value;
 
    /*
@@ -931,8 +931,8 @@ int RxStemToIntArray
 
 {
    int      len=ptr->strlength;
-   int      *intptr,num_items,i;
-   int     value;
+   int      num_items,i;
+   int      value;
 
    /*
     * Validate that 'ptr' is a stem name.
@@ -1007,7 +1007,7 @@ int RxStemToUIntArray
 
 {
    int      len=ptr->strlength;
-   int      *intptr,num_items,i;
+   int      num_items,i;
    unsigned int     value;
 
    /*

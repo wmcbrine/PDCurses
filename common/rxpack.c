@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.19 2003/02/01 10:26:39 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.20 2003/02/16 23:36:42 mark Exp $";
 
 #include "rxpack.h"
 
@@ -507,6 +507,311 @@ int StrToBool
    return (-1);
 }
 
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING to signed integer. Return 0 if OK and -1 if error.
+ * Assumes a string of decimal digits with or without signs and does not check for overflow!
+ *----------------------------------------------------------------------------*/
+int RxStrToInt
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, int *result )
+#else
+   ( RxPackageGlobalData, ptr, result )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   int      *result;
+#endif
+
+{
+   int    i=0;
+   char   *p=NULL;
+   int    sum=0;
+   int    neg=0;
+
+   p = (char *)ptr->strptr;
+   for (i = ptr->strlength; i; i--)
+   {
+      if (isdigit(*p))
+         sum = sum * 10 + (*p - '0');
+      else if ( i == ptr->strlength && *p == '-' )
+         neg = 1;
+      else if ( i == ptr->strlength && *p == '+' )
+         ;
+      else
+         return -1;
+      p++;
+   }
+   if ( neg )
+      sum *= -1;
+   *result = sum;
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING to unsigned integer. Return 0 if OK and -1 if error.
+ * Assumes a string of decimal digits and no signs and does not check for overflow!
+ *----------------------------------------------------------------------------*/
+int RxStrToUInt
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, unsigned int *result )
+#else
+   ( RxPackageGlobalData, ptr, result )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING     *ptr;
+   unsigned int *result;
+#endif
+
+{
+   int    i=0;
+   char   *p=NULL;
+   unsigned int sum=0;
+
+   p = (char *)ptr->strptr;
+   for (i = ptr->strlength; i; i--)
+   {
+      if (isdigit(*p))
+         sum = sum * 10 + (*p++ - '0');
+      else
+         return -1;
+   }
+   *result = sum;
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING to signed long. Return 0 if OK and -1 if error.
+ * Assumes a string of decimal digits with or without signs and does not check for overflow!
+ *----------------------------------------------------------------------------*/
+int RxStrToLong
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, long *result )
+#else
+   ( RxPackageGlobalData, ptr, result )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   long     *result;
+#endif
+
+{
+   int    i=0;
+   char   *p=NULL;
+   long   sum=0L;
+   int    neg=0;
+
+   p = (char *)ptr->strptr;
+   for (i = ptr->strlength; i; i--)
+   {
+      if (isdigit(*p))
+         sum = sum * 10 + (*p - '0');
+      else if ( i == ptr->strlength && *p == '-' )
+         neg = 1;
+      else if ( i == ptr->strlength && *p == '+' )
+         ;
+      else
+         return -1;
+      p++;
+   }
+   if ( neg )
+      sum *= -1;
+   *result = sum;
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING to unsigned long. Return 0 if OK and -1 if error.
+ * Assumes a string of decimal digits and no signs and does not check for overflow!
+ *----------------------------------------------------------------------------*/
+int RxStrToULong
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, unsigned long *result )
+#else
+   ( RxPackageGlobalData, ptr, result )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING      *ptr;
+   unsigned long *result;
+#endif
+
+{
+   int    i=0;
+   char   *p=NULL;
+   unsigned long sum=0L;
+
+   p = (char *)ptr->strptr;
+   for (i = ptr->strlength; i; i--)
+   {
+      if (isdigit(*p))
+         sum = sum * 10 + (*p++ - '0');
+      else
+         return -1;
+   }
+   *result = sum;
+   return 0;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING containing a stem name to an array of char pointers
+ * Allocates memory for each char string which needs to be freed by the caller
+ * using RxFreeCharArray()
+ * Returns the number of items in the array
+ *----------------------------------------------------------------------------*/
+int RxStemToCharArray
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, char **retval )
+#else
+   ( RxPackageGlobalData, ptr, retval )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   char     **retval;
+#endif
+
+{
+   int      len=ptr->strlength;
+   int      *intptr,num_items;
+   RXSTRING value;
+
+   /*
+    * Validate that 'ptr' is a stem name.
+    */
+   if ( ptr->strptr[len-1] != '.' )
+      return -1;
+   /*
+    * Get the number of items in the array
+    */
+   if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
+      return -1;
+   /*
+    * Allocate num_items char *
+    */
+   if ( ( *retval = (char *)malloc( sizeof(char *) ) ) == NULL )
+      return -1;
+   /*
+    * Get each stem value, and set the equivalent entry in the allocated
+    * char **
+    */
+   for ( i = 0; i < num_items; i++ )
+   {
+      sprintf( buf, "%s.%d", ptr->strptr, i+1 );
+      if ( GetRexxVariable( RxPackageGlobalData, ptr->strptr, &value, i+1 ) == NULL )
+         return -1;
+      *(retval+i) = value.strptr;
+   }
+   return num_items;
+}
+
+/*-----------------------------------------------------------------------------
+ * Frees memory allocated by RxStemToCharArray()
+ *----------------------------------------------------------------------------*/
+void RxFreeCharArray
+
+#ifdef HAVE_PROTO
+   (char **ptr, int num_args)
+#else
+   (ptr, num_args)
+   char     **ptr;
+   int      num_args;
+#endif
+
+{
+   int      i;
+
+   /*
+    * Validate that 'ptr' is valid.
+    */
+   if ( ptr == NULL )
+      return;
+   /*
+    * Free each item...
+    */
+   for ( i = 0; i < num_args; i++ )
+   {
+      free( *ptr );
+   }
+   /*
+    * Free the ptr
+    */
+   free( ptr );
+   return;
+}
+
+/*-----------------------------------------------------------------------------
+ * Converts a RXSTRING containing a stem name to an array of ULONGs
+ * Allocates memory for ULONGs which needs to be freed by the caller
+ * using RxFreeNumberArray()
+ * Returns the number of items in the array
+ *----------------------------------------------------------------------------*/
+int RxStemToNumberArray
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *ptr, ULONG **retval )
+#else
+   ( RxPackageGlobalData, ptr, retval )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *ptr;
+   ULONG    **retval;
+#endif
+
+{
+   int      len=ptr->strlength;
+   int      *intptr,num_items;
+   ULONG    value;
+
+   /*
+    * Validate that 'ptr' is a stem name.
+    */
+   if ( ptr->strptr[len-1] != '.' )
+      return -1;
+   /*
+    * Get the number of items in the array
+    */
+   if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
+      return -1;
+   /*
+    * Allocate num_items ULONGs
+    */
+   if ( ( *retval = (ULONG *)malloc( sizeof(ULONG) ) ) == NULL )
+      return -1;
+   /*
+    * Get each stem value, and set the equivalent entry in the allocated
+    * ULONG *
+    */
+   for ( i = 0; i < num_items; i++ )
+   {
+      sprintf( buf, "%s.%d", ptr->strptr, i+1 );
+      if ( GetRexxVariableInteger( NULL, ptr->strptr, &value, i+1 ) == NULL )
+         return -1;
+      *(retval+i) = value;
+   }
+   return num_items;
+}
+
+/*-----------------------------------------------------------------------------
+ * Frees memory allocated by RxStemToNumberArray()
+ *----------------------------------------------------------------------------*/
+void RxFreeNumberArray
+
+#ifdef HAVE_PROTO
+   (ULONG *ptr)
+#else
+   (ptr)
+#endif
+
+{
+   /*
+    * Validate that 'ptr' is valid.
+    */
+   if ( ptr == NULL )
+      return;
+   /*
+    * Free the ptr
+    */
+   free( ptr );
+   return;
+}
+
 
 /*-----------------------------------------------------------------------------
  * This is called when in VERBOSE mode. It prints function name & arg values.
@@ -884,6 +1189,7 @@ RxPackageGlobalDataDef *InitRxPackage
       }
       memset( RxPackageGlobalData, 0, sizeof( RxPackageGlobalDataDef ) );
       (void)RxSetTraceFile( RxPackageGlobalData, "stderr" );
+      (void)RxSetConstantPrefix( RxPackageGlobalData, "!" );
       RxPackageGlobalData->deallocate = 1;
    }
 
@@ -1048,6 +1354,50 @@ char *RxGetTraceFile
 {
    InternalTrace( RxPackageGlobalData, "RxGetTraceFile", NULL );
    return ( RxPackageGlobalData->RxTraceFileName );
+}
+
+/*-----------------------------------------------------------------------------
+ * This function 
+ *----------------------------------------------------------------------------*/
+int RxSetConstantPrefix
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name )
+#else
+   ( RxPackageGlobalData, name )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   char *name;
+#endif
+
+{
+   FILE *fp = NULL;
+
+   InternalTrace( RxPackageGlobalData, "RxSetConstantPrefix", "%s", name );
+
+   if ( ( strlen( name ) + 1 ) > sizeof( RxPackageGlobalData->ConstantPrefix ) )
+   {
+      (void)fprintf( stderr, "ERROR: Could not open trace file: %s for writing\n", name );
+      return( 1 );
+   }
+   strcpy( RxPackageGlobalData->ConstantPrefix, name );
+   return( 0 );
+}
+
+/*-----------------------------------------------------------------------------
+ * This function 
+ *----------------------------------------------------------------------------*/
+char *RxGetConstantPrefix
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData )
+#else
+   ( RxPackageGlobalData )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+#endif
+
+{
+   InternalTrace( RxPackageGlobalData, "RxGetConstantPrefix", NULL );
+   return ( RxPackageGlobalData->ConstantPrefix );
 }
 
 /*-----------------------------------------------------------------------------

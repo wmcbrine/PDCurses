@@ -163,6 +163,11 @@
 # endif
 #endif
 
+typedef int RX_INT;
+typedef unsigned int RX_UINT;
+typedef long RX_LONG;
+typedef unsigned long RX_ULONG;
+
 #ifdef USE_REXX6000
 typedef USHORT RexxFunctionHandler(PSZ, ULONG, PRXSTRING, PSZ, PRXSTRING) ;
 #endif
@@ -190,6 +195,7 @@ typedef struct
 {
    int RxRunFlags;                    /* debug/verbose flags */
    char FName[100];                   /* current function name */
+   char ConstantPrefix[11];           /* constant variables prefix */
    FILE *RxTraceFilePointer;          /* file pointer for all output */
    char RxTraceFileName[MAX_PATH];    /* filename of output file */
    int deallocate;                    /* indicates if rxpack should deallocate this structure */
@@ -227,6 +233,8 @@ int StrToNumber Args(( RXSTRING *, LONG * ));
 int StrToBool Args(( RXSTRING *, ULONG * ));
 int RxSetTraceFile Args(( RxPackageGlobalDataDef *, char * ));
 char *RxGetTraceFile Args(( RxPackageGlobalDataDef * ));
+int RxSetConstantPrefix Args(( RxPackageGlobalDataDef *, char * ));
+char *RxGetConstantPrefix Args(( RxPackageGlobalDataDef * ));
 void RxSetRunFlags Args(( RxPackageGlobalDataDef *, int ));
 int RxGetRunFlags Args(( RxPackageGlobalDataDef * ));
 int RxReturn Args(( RxPackageGlobalDataDef *, RXSTRING * ));
@@ -237,6 +245,14 @@ int RxReturnDouble Args(( RxPackageGlobalDataDef *, RXSTRING *, double ));
 int RxReturnPointer Args(( RxPackageGlobalDataDef *, RXSTRING *, void * ));
 int memcmpi Args(( char *, char *, int ));
 int my_checkparam Args(( RxPackageGlobalDataDef *, const char *, int, int, int ));
+int RxStrToInt Args(( RxPackageGlobalDataDef *, RXSTRING *, int * ));
+int RxStrToUInt Args(( RxPackageGlobalDataDef *, RXSTRING *, unsigned int * ));
+int RxStrToLong Args(( RxPackageGlobalDataDef *, RXSTRING *, long * ));
+int RxStrToULong Args(( RxPackageGlobalDataDef *, RXSTRING *, unsigned long * ));
+int RxStemToCharArray Args(( RxPackageGlobalDataDef *, RXSTRING *, char ** ));
+void RxFreeCharArray Args(( char **, int ));
+int RxStemToNumberArray Args(( RxPackageGlobalDataDef *, RXSTRING *, ULONG ** ));
+void RxFreeNumberArray Args(( ULONG * ));
 
 #ifdef DEBUG
 # define DEBUGDUMP(x) {x;}

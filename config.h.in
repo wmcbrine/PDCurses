@@ -86,6 +86,9 @@
 /* Define if you have the <Sunkeysym.h> header file.  */
 #undef HAVE_SUNKEYSYM_H
 
+/* Define if you have the <xpm.h> header file.  */
+#undef HAVE_XPM_H
+
 /* Define if you have this defined in <keysym.h>.  */
 #undef HAVE_XK_KP_DELETE
 

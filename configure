@@ -2327,7 +2327,7 @@ fi
 
 save_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $MH_XINC_DIR"
-for mh_header in DECkeysym.h Sunkeysym.h; do
+for mh_header in DECkeysym.h Sunkeysym.h xpm.h; do
 	for ac_hdr in $mh_header
 do
 ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
@@ -2440,7 +2440,9 @@ echo "$ac_t""$mh_td" 1>&6
 done
 CPPFLAGS="$save_CPPFLAGS"
 
-
+if test $ac_cv_header_DECkeysym_h = yes; then
+	MH_XLIBS="$MH_XLIBS -lXpm"
+fi
 # Check whether --enable-debug or --disable-debug was given.
 if test "${enable_debug+set}" = set; then
   enableval="$enable_debug"
@@ -2553,7 +2555,7 @@ fi
 with_rexx="rexxtrans"
 
 echo $ac_n "checking shared library/external function extensions""... $ac_c" 1>&6
-echo "configure:2557: checking shared library/external function extensions" >&5
+echo "configure:2559: checking shared library/external function extensions" >&5
 SHLPST=".so"
 MODPST=".so"
 
@@ -2739,10 +2741,10 @@ esac
 
 if test "$DYN_COMP" = ""; then
 echo $ac_n "checking compiler flags for a dynamic object""... $ac_c" 1>&6
-echo "configure:2743: checking compiler flags for a dynamic object" >&5
+echo "configure:2745: checking compiler flags for a dynamic object" >&5
 
 cat > conftest.$ac_ext <<EOF
-#line 2746 "configure"
+#line 2748 "configure"
 int a=0
 EOF
 
@@ -2754,7 +2756,7 @@ EOF
 		CFLAGS="-c $a"
 
 		mh_compile='${CC-cc} -c $CFLAGS conftest.$ac_ext > conftest.tmp 2>&1'
-		if { (eval echo configure:2758: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
+		if { (eval echo configure:2760: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; }; then
 			DYN_COMP=""
 		else
 			slash="\\"
@@ -2775,16 +2777,16 @@ EOF
 		
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 2779 "configure"
+#line 2781 "configure"
 int foo()
 {
 return(0);
 }
 EOF
-if { (eval echo configure:2785: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
+if { (eval echo configure:2787: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; } && test -s conftest.o; then
 	mh_dyn_link='ld -shared -o conftest.rxlib conftest.o -lc 1>&5'
 #	mh_dyn_link='${CC} -Wl,-shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
-	if { (eval echo configure:2788: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+	if { (eval echo configure:2790: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 		LD_RXLIB1="ld -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
@@ -2795,7 +2797,7 @@ if { (eval echo configure:2785: \"$mh_compile\") 1>&5; (eval $mh_compile) 2>&5; 
 	else
 		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&5'
 #		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
-		if { (eval echo configure:2799: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
+		if { (eval echo configure:2801: \"$mh_dyn_link\") 1>&5; (eval $mh_dyn_link) 2>&5; } && test -s conftest.rxlib; then
 			LD_RXLIB1="ld -G"
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"

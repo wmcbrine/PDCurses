@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.26 2003/02/20 07:59:41 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.27 2003/02/22 00:21:41 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1092,10 +1092,15 @@ int RxNumberToVariable
     */
    len = sprintf( buf, "%ld", number );
    /*
-    * Set the Rexx variable
+    * Set the Rexx variable if valid
     */
-   if ( SetRexxVariable( RxPackageGlobalData, ptr->strptr, ptr->strlength, buf, len ) == 1 )
-      return -1;
+   if ( ptr
+   &&   ptr->strlength
+   &&   ptr->strptr )
+   {
+      if ( SetRexxVariable( RxPackageGlobalData, ptr->strptr, ptr->strlength, buf, len ) == 1 )
+         return -1;
+   }
    return 0;
 }
 
@@ -1484,7 +1489,7 @@ int SetPackageConstants
 #endif
 
 {
-   int i,varlen,vallen,rc;
+   int varlen,vallen,rc;
    char varname[250];
    char *value;
    char buf[100];

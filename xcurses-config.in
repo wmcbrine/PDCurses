@@ -3,7 +3,7 @@
 # The idea to this kind of setup info script was stolen from numerous
 # other packages, such as neon, libxml and gnome.
 #
-# $Id: xcurses-config.in,v 1.1 2002/06/24 08:14:49 mark Exp $
+# $Id: xcurses-config.in,v 1.2 2002/11/27 11:14:53 mark Exp $
 #
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -11,22 +11,19 @@ includedir=@includedir@
 
 usage()
 {
-    cat <<EOF
-Usage: pdcurses-config [OPTION]
-
-Available values for OPTION include:
-
-  --help         display this help and exit
-  --cflags       pre-processor and compiler flags
-                 [-I$includedir]
-  --libs         library linking information
-                 [-L$prefix/lib -lXCurses @LDFLAGS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
-  --prefix       PDCurses install prefix
-                 [$prefix]
-  --version      output version information
-                 [@VER_DOT@]
-EOF
-
+    echo "Usage: xcurses-config [OPTION]"
+    echo ""
+    echo "Available values for OPTION include:"
+    echo ""
+    echo "  --help         display this help and exit"
+    echo "  --cflags       pre-processor and compiler flags"
+    echo "                 [-I$includedir]"
+    echo "  --libs         library linking information"
+    echo "                 [-L$prefix/lib -lXCurses @LDFLAGS@ @MH_XLIBS@ @MH_EXTRA_LIBS@"
+    echo "  --prefix       PDCurses install prefix"
+    echo "                 [$prefix]"
+    echo "  --version      output version information"
+    echo "                 [@VER_DOT@]"
     exit $1
 }
 

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.18 2003/01/01 05:08:37 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.19 2003/02/01 10:26:39 mark Exp $";
 
 #include "rxpack.h"
 
@@ -229,7 +229,29 @@ int SetRexxVariable
    ||   rc == RXSHV_NEWV )
       return( 0 );
    else
+   {
+      if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
+      {
+         char buf1[50], buf2[50];
+         char *err;
+         switch( rc )
+         {
+            case RXSHV_TRUNC: err = "Name of Value truncated"; break;
+            case RXSHV_BADN : err = "Invalid variable name"; break;
+            case RXSHV_MEMFL: err = "Memory problem; probably none"; break;
+            case RXSHV_BADF : err = "Invalid function code"; break;
+            case RXSHV_NOAVL: err = "Interface not available"; break;
+            default:     err = "Unknown error with RexxVariablePool()"; break;
+         }
+
+         (void)fprintf( RxPackageGlobalData->RxTraceFilePointer,
+            "*DEBUG* Error Setting variable \"%s\" to \"%s\". %s.\n",
+            MkAsciz( buf1, sizeof( buf1 ), name, namelen ),
+            MkAsciz( buf2, sizeof( buf2 ), value, valuelen ),
+            err );
+      }
       return( 1 );
+   }
 }
 
 /*-----------------------------------------------------------------------------

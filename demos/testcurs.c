@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.9 2004/01/01 03:17:26 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.10 2004/01/01 22:08:01 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -346,9 +346,9 @@ WINDOW *win;
     noecho();
     typeahead(-1);
 #if 1
-    wtimeout(win,500); /* we have a timeout of 1/2 second */
+    wtimeout(win,200); /* we have a timeout of 2/10ths second */
 #else
-    halfdelay(5); /* half a second */
+    halfdelay(2); /* 2 tenths of a second */
 #endif
 #if defined(PDCURSES)
     mouse_set(ALL_MOUSE_EVENTS);

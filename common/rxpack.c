@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.28 2003/02/23 10:04:58 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.29 2003/02/28 08:16:13 mark Exp $";
 
 #include "rxpack.h"
 
@@ -389,6 +389,72 @@ int *GetRexxVariableInteger
    else
       value = NULL;
    return( value );
+}
+
+/*-----------------------------------------------------------------------------
+ * Drop a REXX variable of the specified name
+ *----------------------------------------------------------------------------*/
+int DropRexxVariable
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, int namelen )
+#else
+   ( RxPackageGlobalData, name, namelen )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   char    *name;
+   int     namelen;
+#endif
+
+{
+   ULONG  rc=0L;
+   SHVBLOCK       shv;
+
+   /*
+    * Uppercase the variable before we do anything. That way all debugging
+    * output reflects the "real" name we are setting.
+    */
+   ( void )make_upper( name );
+
+   InternalTrace( RxPackageGlobalData, "DropRexxVariable", "\"%s\",%d", name, namelen );
+
+   if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
+   {
+      char buf1[50], buf2[50];
+
+      (void)fprintf( RxPackageGlobalData->RxTraceFilePointer,
+         "*DEBUG* Dropping variable \"%s\".\n",
+         MkAsciz( buf1, sizeof( buf1 ), name, namelen ) );
+   }
+   shv.shvnext = ( SHVBLOCK* )NULL;
+   shv.shvcode = RXSHV_DROPV;
+   MAKERXSTRING( shv.shvname, name, ( ULONG )namelen );
+   shv.shvnamelen = shv.shvname.strlength;
+   rc = RexxVariablePool( &shv );
+   if ( rc == RXSHV_OK )
+      return( 0 );
+   else
+   {
+      if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
+      {
+         char buf1[50], buf2[50];
+         char *err;
+         switch( rc )
+         {
+            case RXSHV_TRUNC: err = "Name of Value truncated"; break;
+            case RXSHV_BADN : err = "Invalid variable name"; break;
+            case RXSHV_MEMFL: err = "Memory problem; probably none"; break;
+            case RXSHV_BADF : err = "Invalid function code"; break;
+            case RXSHV_NOAVL: err = "Interface not available"; break;
+            default:     err = "Unknown error with RexxVariablePool()"; break;
+         }
+
+         (void)fprintf( RxPackageGlobalData->RxTraceFilePointer,
+            "*DEBUG* Error Dropping variable \"%s\". %s.\n",
+            MkAsciz( buf1, sizeof( buf1 ), name, namelen ),
+            err );
+      }
+      return( 1 );
+   }
 }
 
 /*-----------------------------------------------------------------------------
@@ -1480,12 +1546,13 @@ int DeregisterRxFunctions
 int SetPackageConstants
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, RxPackageConstantDef *RxConstants, char *pname )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RxPackageConstantDef *RxConstants, char *pname, int drop )
 #else
-   ( RxPackageGlobalData, RxConstants, pname )
+   ( RxPackageGlobalData, RxConstants, pname, drop )
    RxPackageGlobalDataDef *RxPackageGlobalData;
    RxPackageConstantDef *RxConstants;
    char *pname;
+   int drop;
 #endif
 
 {
@@ -1495,7 +1562,7 @@ int SetPackageConstants
    char buf[100];
    RxPackageConstantDef *con=NULL;
 
-   InternalTrace( RxPackageGlobalData, "SetPackageConstants" );
+   InternalTrace( RxPackageGlobalData, "SetPackageConstants", "Name: %s Drop: %d", pname, drop  );
 
    /*
     * Before we set the new constants, drop the previous stem.
@@ -1503,6 +1570,15 @@ int SetPackageConstants
     */
    for ( con=RxConstants; con->name; con++ )
    {
+      if ( drop )
+      {
+         varlen = sprintf( varname, "%s%s.%s%s",
+                           RxPackageGlobalData->PreviousConstantPrefix,
+                           pname,
+                           RxPackageGlobalData->PreviousConstantPrefix,
+                           con->name );
+         DropRexxVariable( RxPackageGlobalData, varname, varlen );
+      }
       varlen = sprintf( varname, "%s%s.%s%s",
                         RxPackageGlobalData->ConstantPrefix,
                         pname,
@@ -1571,7 +1647,7 @@ RxPackageGlobalDataDef *InitRxPackage
       }
       memset( RxPackageGlobalData, 0, sizeof( RxPackageGlobalDataDef ) );
       (void)RxSetTraceFile( RxPackageGlobalData, "stderr" );
-      (void)RxSetConstantPrefix( RxPackageGlobalData, "!", 0 );
+      (void)RxSetConstantPrefix( RxPackageGlobalData, "!" );
       RxPackageGlobalData->deallocate = 1;
    }
 
@@ -1744,12 +1820,11 @@ char *RxGetTraceFile
 int RxSetConstantPrefix
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name, int setvars )
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, char *name )
 #else
    ( RxPackageGlobalData, name, setvars )
    RxPackageGlobalDataDef *RxPackageGlobalData;
    char *name;
-   int setvars;
 #endif
 
 {
@@ -1760,14 +1835,8 @@ int RxSetConstantPrefix
       (void)fprintf( stderr, "ERROR: Constant prefix is too long. It must be <= %ld\n", sizeof( RxPackageGlobalData->ConstantPrefix ) - 1 );
       return( 1 );
    }
+   strcpy( RxPackageGlobalData->PreviousConstantPrefix, RxPackageGlobalData->ConstantPrefix );
    strcpy( RxPackageGlobalData->ConstantPrefix, name );
-   /*
-    * Set the packages constants now, if allowed...
-    */
-#if 0
-   if ( setvars )
-      SetPackageConstants( RxPackageGlobalData, RxConstants, char *pname );
-#endif
    return( 0 );
 }
 

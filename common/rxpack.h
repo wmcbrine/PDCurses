@@ -199,6 +199,7 @@ typedef struct
 {
    int RxRunFlags;                    /* debug/verbose flags */
    char FName[100];                   /* current function name */
+   char PreviousConstantPrefix[11];   /* previous constant variables prefix */
    char ConstantPrefix[11];           /* constant variables prefix */
    FILE *RxTraceFilePointer;          /* file pointer for all output */
    char RxTraceFileName[MAX_PATH];    /* filename of output file */
@@ -240,19 +241,20 @@ int RegisterRxSubcom Args(( RxPackageGlobalDataDef *, RexxSubcomHandler ));
 int RegisterRxInit Args(( RxPackageGlobalDataDef *, RexxExitHandler, char *));
 int QueryRxFunction Args(( RxPackageGlobalDataDef *, char * ));
 int DeregisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction *, int ));
-int SetPackageConstants Args(( RxPackageGlobalDataDef *, RxPackageConstantDef *, char * ));
+int SetPackageConstants Args(( RxPackageGlobalDataDef *, RxPackageConstantDef *, char *, int ));
 char *make_upper Args(( char * ));
 char *AllocString Args(( char *, int ));
 char *MkAsciz Args(( char *, int, char *, int ));
 int SetRexxVariable Args(( RxPackageGlobalDataDef *,char *, int, char *, int ));
 RXSTRING *GetRexxVariable Args(( RxPackageGlobalDataDef *, char *, RXSTRING *, int ));
-int *GetRexxVariableInteger Args(( RxPackageGlobalDataDef *, char *name, int *value, int suffix ));
+int *GetRexxVariableInteger Args(( RxPackageGlobalDataDef *, char *, int *, int ));
+int DropRexxVariable Args(( RxPackageGlobalDataDef *,char *, int ));
 int StrToInt Args(( RXSTRING *, ULONG * ));
 int StrToNumber Args(( RXSTRING *, LONG * ));
 int StrToBool Args(( RXSTRING *, ULONG * ));
 int RxSetTraceFile Args(( RxPackageGlobalDataDef *, char * ));
 char *RxGetTraceFile Args(( RxPackageGlobalDataDef * ));
-int RxSetConstantPrefix Args(( RxPackageGlobalDataDef *, char *, int ));
+int RxSetConstantPrefix Args(( RxPackageGlobalDataDef *, char * ));
 char *RxGetConstantPrefix Args(( RxPackageGlobalDataDef * ));
 void RxSetRunFlags Args(( RxPackageGlobalDataDef *, int ));
 int RxGetRunFlags Args(( RxPackageGlobalDataDef * ));

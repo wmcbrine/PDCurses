@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.13 2002/07/29 07:16:30 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.14 2002/07/30 03:46:24 mark Exp $";
 
 #include "rxpack.h"
 
@@ -928,13 +928,17 @@ int TermRxPackage
    RexxDeregisterExit( ( RDE_ARG0_TYPE )RXPACKAGENAME,
                        ( RDE_ARG1_TYPE )NULL );
 #endif
-   if ( RxPackageGlobalData->RxTraceFilePointer != stdin
+   if ( RxPackageGlobalData
+   &&   RxPackageGlobalData->RxTraceFilePointer != stdin
    &&   RxPackageGlobalData->RxTraceFilePointer != stderr )
       fclose( RxPackageGlobalData->RxTraceFilePointer );
 
-   free( RxPackageGlobalData ); /* TODO - only free if requested */
    DEBUGDUMP(fprintf(stderr,"%s-%d: End of TermRxPackage with rc = 0\n",__FILE__,__LINE__);)
-   return (int)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)0 );
+   (void)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)0 );
+
+   if ( RxPackageGlobalData )
+      free( RxPackageGlobalData );
+   return 0;
 }
 
 

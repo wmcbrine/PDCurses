@@ -27,6 +27,7 @@
  */
 
 #include "pdcx11.h"
+extern AppData app_data;
 
 #ifdef PROTO
 static void XCursesExitCursesProcess(int, char *);

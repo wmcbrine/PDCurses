@@ -22,6 +22,7 @@
 */
 
 #include "pdcx11.h"
+extern AppData app_data;
 
 int visible_cursor=0;
 int windowEntered = 1;

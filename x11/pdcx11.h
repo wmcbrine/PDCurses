@@ -239,7 +239,6 @@ typedef struct
  XtWidgetGeometry geometry;
 #endif
 } AppData;
-AppData app_data;
 
 #define XCURSESNORMALFONTINFO   app_data.normalfont
 #define XCURSESITALICFONTINFO   app_data.italicfont

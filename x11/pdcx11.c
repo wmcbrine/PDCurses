@@ -24,6 +24,8 @@
 #if defined(XCURSES)
 #include "pdcx11.h"
 
+AppData app_data;
+
 #if NeedWidePrototypes
 # define PDC_SCROLLBAR_TYPE double
 #else

@@ -12,7 +12,8 @@
 #
 ################################################################################
 #
-# Change these for your environment...
+# This makefile requires the following environment variables with values like:
+# PDCURSES_SRCDIR=c:\pdcurses
 #
 ################################################################################
 PDCURSES_HOME		=$(PDCURSES_SRCDIR)

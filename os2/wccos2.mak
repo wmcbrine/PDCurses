@@ -17,8 +17,8 @@ CCINCDIR		=k:\h
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################
-VER=24
-VERDOT=2.4
+VER=25
+VERDOT=2.5
 
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h

@@ -9,7 +9,8 @@
 #
 ################################################################################
 #
-# Change these for your environment...
+# This makefile requires the following environment variables with values like:
+# PDCURSES_SRCDIR=c:\pdcurses
 #
 ################################################################################
 PDCURSES_HOME		=$(%PDCURSES_SRCDIR)
@@ -17,8 +18,8 @@ CCINCDIR		=d:\h
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################
-VER=23
-VERDOT=2.3
+VER=25
+VERDOT=2.5
 
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h

@@ -31,6 +31,8 @@ case "$target" in
 	*pc-sco*)
 		SYS_DEFS="-UM_XENIX -b elf"
 		;;
+	*nto-qnx*)
+		;;
 	*qnx*)
 		on_qnx=yes
 		SYS_DEFS="-Q"

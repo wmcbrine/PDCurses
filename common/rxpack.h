@@ -207,7 +207,7 @@ long FunctionEpilogue Args(( RxPackageGlobalDataDef *, char *, long ));
 void InternalTrace Args(( RxPackageGlobalDataDef *, char *, ... ));
 void RxDisplayError Args(( RxPackageGlobalDataDef *, RFH_ARG0_TYPE, ... ));
 RxPackageGlobalDataDef *InitRxPackage Args(( RxPackageGlobalDataDef *, PackageInitialiser *, int * ));
-int TermRxPackage Args(( RxPackageGlobalDataDef *, PackageTerminator *, RexxFunction *, char *, int ));
+int TermRxPackage Args(( RxPackageGlobalDataDef **, PackageTerminator *, RexxFunction *, char *, int ));
 int RegisterRxFunctions Args(( RxPackageGlobalDataDef *, RexxFunction *, char * ));
 int RegisterRxSubcom Args(( RxPackageGlobalDataDef *, RexxSubcomHandler ));
 int QueryRxFunction Args(( RxPackageGlobalDataDef *, char * ));

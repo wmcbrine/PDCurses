@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.16 2002/08/25 09:02:28 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.17 2003/01/01 04:34:42 mark Exp $";
 
 #include "rxpack.h"
 
@@ -510,6 +510,7 @@ RxPackageGlobalDataDef *FunctionPrologue
 
    if ( RxPackageGlobalData == NULL )
    {
+      DEBUGDUMP(fprintf(stderr,"%s-%d: In FunctionPrologue() for %s RxPackageGlobalData is NULL\n",__FILE__,__LINE__,name);)
       GlobalData = InitRxPackage( RxPackageGlobalData, RxPackageInitialiser, &rc );
    }
    else
@@ -888,10 +889,10 @@ RxPackageGlobalDataDef *InitRxPackage
 int TermRxPackage
 
 #ifdef HAVE_PROTO
-   ( RxPackageGlobalDataDef *RxPackageGlobalData, PackageTerminator *ptr, RexxFunction *RxPackageFunctions, char *progname, int deregfunc )
+   ( RxPackageGlobalDataDef **RxPackageGlobalData, PackageTerminator *ptr, RexxFunction *RxPackageFunctions, char *progname, int deregfunc )
 #else
    ( RxPackageGlobalData, ptr, RxPackageFunctions, progname, deregfunc )
-   RxPackageGlobalDataDef RxPackageGlobalData;
+   RxPackageGlobalDataDef **RxPackageGlobalData;
    PackageTerminator *ptr;
    RexxFunction **RxPackageFunctions;
    char *progname;
@@ -899,8 +900,9 @@ int TermRxPackage
 #endif
 {
    int rc=0;
+   RxPackageGlobalDataDef *GlobalData = *RxPackageGlobalData;
 
-   InternalTrace( RxPackageGlobalData, "TermRxPackage", "\"%s\",%d", progname, deregfunc );
+   InternalTrace( GlobalData, "TermRxPackage", "\"%s\",%d", progname, deregfunc );
 
    DEBUGDUMP(fprintf(stderr,"%s-%d: Start of TermRxPackage\n",__FILE__,__LINE__);)
    /* 
@@ -912,16 +914,16 @@ int TermRxPackage
     */
    if (deregfunc)
    {
-      if ( ( rc = DeregisterRxFunctions( RxPackageGlobalData, RxPackageFunctions, 0 ) ) != 0 )
-         return (int)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)rc );
+      if ( ( rc = DeregisterRxFunctions( GlobalData, RxPackageFunctions, 0 ) ) != 0 )
+         return (int)FunctionEpilogue( GlobalData, "TermRxPackage", (long)rc );
    }
    /* 
     * Call any package-specific termination code here
     */
    if ( ptr )
    {
-      if ( ( rc = (*ptr)( RxPackageGlobalData ) ) != 0 )
-         return (int)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)rc );
+      if ( ( rc = (*ptr)( GlobalData ) ) != 0 )
+         return (int)FunctionEpilogue( GlobalData, "TermRxPackage", (long)rc );
    }
 #if defined(USE_REXX6000)
    rc = RexxDeregisterSubcom( RDS_ARG0_TYPE)RXPACKAGENAME );
@@ -934,25 +936,29 @@ int TermRxPackage
    RexxDeregisterExit( ( RDE_ARG0_TYPE )RXPACKAGENAME,
                        ( RDE_ARG1_TYPE )NULL );
 #endif
-   if ( RxPackageGlobalData
-   &&   RxPackageGlobalData->RxTraceFilePointer
-   &&   RxPackageGlobalData->RxTraceFilePointer != stdin
-   &&   RxPackageGlobalData->RxTraceFilePointer != stderr )
+   DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: RxPackageGlobalData is %x\n",__FILE__,__LINE__,(long)RxPackageGlobalData);)
+   if ( GlobalData )
    {
-      fclose( RxPackageGlobalData->RxTraceFilePointer );
-      RxPackageGlobalData->RxTraceFilePointer = NULL;
+      DEBUGDUMP(fprintf(stderr,"%s-%d: In TermRxPackage: deallocate is %d, RxTraceFilePointer is %x stdin is %x stderr is %x\n",__FILE__,__LINE__,GlobalData->deallocate,(long)GlobalData->RxTraceFilePointer,(long)stdin,(long)stderr);)
+      if ( GlobalData->RxTraceFilePointer
+      &&   GlobalData->RxTraceFilePointer != stdin
+      &&   GlobalData->RxTraceFilePointer != stderr )
+      {
+         fclose( GlobalData->RxTraceFilePointer );
+         GlobalData->RxTraceFilePointer = NULL;
+      }
    }
 
-   RxPackageGlobalData->terminated = 1;
+   GlobalData->terminated = 1;
+   (void)FunctionEpilogue( GlobalData, "TermRxPackage", (long)0 );
+
+   if ( GlobalData
+   &&   GlobalData->deallocate )
+   {
+      free( GlobalData );
+      *RxPackageGlobalData = NULL;
+   }
    DEBUGDUMP(fprintf(stderr,"%s-%d: End of TermRxPackage with rc = 0\n",__FILE__,__LINE__);)
-   (void)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)0 );
-
-   if ( RxPackageGlobalData
-   &&   RxPackageGlobalData->deallocate )
-   {
-      free( RxPackageGlobalData );
-      *(&RxPackageGlobalData) = NULL;
-   }
    return 0;
 }
 

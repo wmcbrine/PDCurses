@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.2 2001/01/10 08:30:10 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.3 2002/06/23 10:52:48 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -103,9 +103,9 @@ extern	int	c_ungind;			/* wungetch() push index */
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int PDC_get_input_fd(void)
+unsigned long PDC_get_input_fd(void)
 #else
-int PDC_get_input_fd()
+unsigned long PDC_get_input_fd()
 #endif
 /***********************************************************************/
 {

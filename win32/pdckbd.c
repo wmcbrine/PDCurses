@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.4 2002/01/12 03:39:07 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.5 2002/05/28 11:36:09 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -383,10 +383,10 @@ bool PDC_breakout( void )
    This is a private PDCurses routine.
 
    This routine will return the file descriptor that PDCurses reads
-   its input from. It can be used for select().
+   its input from. It can be used for WaitForMulitpleObjects()
 
   PDCurses Return Value:
-   Returns a file descriptor.
+   Returns a HANDLE.
 
   PDCurses Errors:
    No errors are defined for this function.
@@ -398,9 +398,9 @@ bool PDC_breakout( void )
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int PDC_get_input_fd(void)
+unsigned long PDC_get_input_fd(void)
 #else
-int PDC_get_input_fd()
+unsigned long PDC_get_input_fd()
 #endif
 /***********************************************************************/
 {
@@ -408,7 +408,7 @@ int PDC_get_input_fd()
    if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
 #endif
 
-   return fileno (stdin);
+   return (unsigned long)hConIn;
 }
 
 /*man-start*********************************************************************
@@ -468,6 +468,8 @@ int   PDC_get_bios_key(void)
    bool trap_mouse=FALSE;
    int idx=0,key=0;
    bool enhanced=FALSE;
+   unsigned long local_key_modifiers=0L;
+
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_get_bios_key() - called\n");
@@ -495,7 +497,7 @@ int   PDC_get_bios_key(void)
          }
 #endif
 
-            pdc_key_modifiers = 0L;
+            local_key_modifiers = pdc_key_modifiers = 0L;
             switch(save_ip.Event.KeyEvent.wVirtualKeyCode)
             {
                case 16: /* shift */
@@ -516,18 +518,25 @@ int   PDC_get_bios_key(void)
                default:
                   break;
             }
+            /*
+             * Must calculate the key modifiers so that Alt keys work!
+             */
+            if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
+            ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
+               local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            if (save_ip.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED)
+               local_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED
+            ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED)
+               local_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+            if (save_ip.Event.KeyEvent.dwControlKeyState & NUMLOCK_ON)
+               local_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+            /*
+             * Save the key modifiers if required
+             */
             if (SP->save_key_modifiers)
             {
-               if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
-               ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
-                  pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
-               if (save_ip.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED)
-                  pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
-               if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED
-               ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED)
-                  pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
-               if (save_ip.Event.KeyEvent.dwControlKeyState & NUMLOCK_ON)
-                  pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+               pdc_key_modifiers = local_key_modifiers;
             }
             /*
              * If the Unicode character is not zero; its a displayable character.
@@ -536,12 +545,12 @@ int   PDC_get_bios_key(void)
             if ( save_ip.Event.KeyEvent.uChar.UnicodeChar != 0 )
             {
                idx = save_ip.Event.KeyEvent.wVirtualKeyCode;
-               if ( pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL
-               &&   pdc_key_modifiers & PDC_KEY_MODIFIER_ALT )
+               if ( local_key_modifiers & PDC_KEY_MODIFIER_CONTROL
+               &&   local_key_modifiers & PDC_KEY_MODIFIER_ALT )
                   return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
-               if ( pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL )
+               if ( local_key_modifiers & PDC_KEY_MODIFIER_CONTROL )
                   return kptab[idx].control;
-               if ( pdc_key_modifiers & PDC_KEY_MODIFIER_ALT )
+               if ( local_key_modifiers & PDC_KEY_MODIFIER_ALT )
                   return kptab[idx].alt;
                return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
             }

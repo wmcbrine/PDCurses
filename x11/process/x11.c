@@ -677,6 +677,11 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
       return(ERR);
    }
    /*
+    * Determine text cursor alignment from resources
+    */
+   if ( strcmp( XCURSESTEXTCURSOR, "vertical" ) == 0 )
+      vertical_cursor = True;
+   /*
     * Now have LINES and COLS. Set these in the shared SP so the
     * curses program can find them...
     */

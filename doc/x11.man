@@ -70,6 +70,7 @@ XCurses recognises the following resources:
     pointerForeColor
     pointerBackColor
     cursorColor
+    textCursor
     colorBlack
     colorRed
     colorGreen
@@ -127,6 +128,9 @@ pointerBackColor:  the background colour of the pointer
 cursorColor:       the colour of the text cursor
                    Default:        Red
                    *** This resource is now obsolete and is ignored ***
+
+textCursor:        the alignment of the text cursor; horizontal or vertical
+                   Default:        horizontal
 
 colorBlack:        the color of the COLOR_BLACK attribute
                    Default: Black

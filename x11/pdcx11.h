@@ -151,6 +151,9 @@
 #define XtNcursorColor   "cursorColor"
 #define XtCCursorColor   "CursorColor"
 
+#define XtNtextCursor   "textCursor"
+#define XtCTextCursor   "TextCursor"
+
 #define XtNcolorBlack    "colorBlack"
 #define XtCColorBlack    "ColorBlack"
 #define XtNcolorRed      "colorRed"
@@ -224,6 +227,7 @@ typedef struct
  int doubleClickPeriod;
  int scrollbarWidth;
  int cursorBlinkRate;
+ char *textCursor;
 #if 0
  XtWidgetGeometry geometry;
 #endif
@@ -248,6 +252,7 @@ AppData app_data;
 #define XCURSESSCROLLBARWIDTH   app_data.scrollbarWidth
 #define XCURSESCURSORBLINKRATE  app_data.cursorBlinkRate
 #define XCURSESGEOMETRY         app_data.geometry
+#define XCURSESTEXTCURSOR       app_data.textCursor
 
 #define XCURSESDISPLAY      (XtDisplay(drawing))
 #define XCURSESWIN          (XtWindow(drawing))
@@ -255,8 +260,8 @@ AppData app_data;
 #define MAX_COLORS   8  /* maximum of "normal" colours */
 #define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2*MAX_COLORS */
 #define COLOR_BORDER 17 /* colour of border - 2 more than 2*MAX_COLORS */
-#define PDC_NUMBER_APP_RESOURCES 33
-#define PDC_NUMBER_OPTIONS 31
+#define PDC_NUMBER_APP_RESOURCES 34
+#define PDC_NUMBER_OPTIONS 32
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
 #include "x11.h"
@@ -296,6 +301,7 @@ extern Bool after_first_curses_request;
 extern int colors[(2*MAX_COLORS)+2];
 extern int windowEntered;
 extern int visible_cursor;
+extern Bool vertical_cursor;
 
 typedef RETSIGTYPE (*signal_handler)();
 

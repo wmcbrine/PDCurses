@@ -768,6 +768,15 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   XtRImmediate,
   (XtPointer)0,
  },
+ {
+  XtNtextCursor,
+  XtCTextCursor,
+  XtRString,
+  MAX_PATH,
+  XtOffsetOf(AppData,textCursor),
+  XtRString,
+  (XtPointer)"",
+ },
 #if 0
  {
   XtNgeometry,
@@ -797,6 +806,7 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-pointerBackColor",    "*pointerBackColor",  XrmoptionSepArg,   NULL },
    {"-cursorBlinkRate",     "*cursorBlinkRate",   XrmoptionSepArg,   NULL },
    {"-cursorColor",         "*cursorColor",       XrmoptionSepArg,   NULL },
+   {"-textCursor",          "*textCursor",        XrmoptionSepArg,   NULL },
    {"-colorBlack",          "*colorBlack",        XrmoptionSepArg,   NULL },
    {"-colorRed",            "*colorRed",          XrmoptionSepArg,   NULL },
    {"-colorGreen",          "*colorGreen",        XrmoptionSepArg,   NULL },
@@ -816,20 +826,19 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
 };
 XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS] =
 {
- {"XCursesButton",                  (XtActionProc)XCursesButton},
- {"XCursesKeyPress",                (XtActionProc)XCursesKeyPress},
- {"XCursesModifierPress",           (XtActionProc)XCursesModifierPress},
- {"XCursesPasteSelection",          (XtActionProc)XCursesPasteSelection},
- {"string",                         (XtActionProc)XCursesHandleString},
+   {"XCursesButton",                  (XtActionProc)XCursesButton},
+   {"XCursesKeyPress",                (XtActionProc)XCursesKeyPress},
+   {"XCursesModifierPress",           (XtActionProc)XCursesModifierPress},
+   {"XCursesPasteSelection",          (XtActionProc)XCursesPasteSelection},
+   {"string",                         (XtActionProc)XCursesHandleString},
 };
 char global_display_name[100]; /* large enough for DISPLAY=machine */
 Bool after_first_curses_request = False;
 int colors[(2*MAX_COLORS)+2];
+Bool vertical_cursor = False;
 /*
  * End X11 Variables common to both process and thread ports
  */
-
-
 
 #if NOT_USED
 #define SHM_CURSVAR         0
@@ -846,9 +855,6 @@ SCREEN *XSP;
  * Used by base curses calls
  */
 MOUSE_STATUS Mouse_status;
-
-
-
 
 #ifdef FOREIGN
  XIM Xim;
@@ -1432,67 +1438,67 @@ void XCursesGetIcon()
 #endif
 /***********************************************************************/
 {
- XIconSize *icon_size;
- int size_count=0;
- Status rc=0;
- unsigned char *bitmap_bits=NULL;
- unsigned int icon_bitmap_width=0,icon_bitmap_height=0;
- unsigned int file_bitmap_width=0,file_bitmap_height=0;
- int max_height=0,max_width=0;
- int x_hot=0,y_hot=0;
- int i;
+   XIconSize *icon_size;
+   int size_count=0;
+   Status rc=0;
+   unsigned char *bitmap_bits=NULL;
+   unsigned int icon_bitmap_width=0,icon_bitmap_height=0;
+   unsigned int file_bitmap_width=0,file_bitmap_height=0;
+   int max_height=0,max_width=0;
+   int x_hot=0,y_hot=0;
+   int i;
 
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesGetIcon\n",(XCursesProcess)?"     X":"CURSES");
+   if (trace_on) PDC_debug("%s:XCursesGetIcon\n",(XCursesProcess)?"     X":"CURSES");
 #endif
- icon_size = XAllocIconSize();
- rc = XGetIconSizes(XtDisplay(topLevel),
+   icon_size = XAllocIconSize();
+   rc = XGetIconSizes(XtDisplay(topLevel),
                     RootWindowOfScreen(XtScreen(topLevel)),
                     &icon_size,
                     &size_count);
- if (rc  /* if the WM can advise on icon sizes... */
- &&  size_count)
+   if (rc  /* if the WM can advise on icon sizes... */
+   &&  size_count)
    {
 #ifdef PDCDEBUG
-    if (trace_on) PDC_debug("%s:size_count: %d rc: %d\n",(XCursesProcess)?"     X":"CURSES",size_count,rc);
+      if (trace_on) PDC_debug("%s:size_count: %d rc: %d\n",(XCursesProcess)?"     X":"CURSES",size_count,rc);
 #endif
-    for (i=0;i<size_count;i++)
-       {
-        if (icon_size[i].max_width > max_width)
-           max_width = icon_size[i].max_width;
-        if (icon_size[i].max_height > max_height)
-           max_height = icon_size[i].max_height;
+      for (i=0;i<size_count;i++)
+      {
+         if (icon_size[i].max_width > max_width)
+            max_width = icon_size[i].max_width;
+         if (icon_size[i].max_height > max_height)
+            max_height = icon_size[i].max_height;
 #ifdef PDCDEBUG
-        if (trace_on) PDC_debug("%s:min: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].min_width,icon_size[i].min_height);
-        if (trace_on) PDC_debug("%s:max: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].max_width,icon_size[i].max_height);
-        if (trace_on) PDC_debug("%s:inc: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].width_inc,icon_size[i].height_inc);
+         if (trace_on) PDC_debug("%s:min: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].min_width,icon_size[i].min_height);
+         if (trace_on) PDC_debug("%s:max: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].max_width,icon_size[i].max_height);
+         if (trace_on) PDC_debug("%s:inc: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].width_inc,icon_size[i].height_inc);
 #endif
-       }
-    if (max_width >= BIG_ICON_WIDTH
-    &&  max_height >= BIG_ICON_HEIGHT)
-      {
-       icon_bitmap_width = BIG_ICON_WIDTH;
-       icon_bitmap_height = BIG_ICON_HEIGHT;
-       bitmap_bits = (unsigned char *)big_icon_bitmap_bits;
       }
-    else
+      if (max_width >= BIG_ICON_WIDTH
+      &&  max_height >= BIG_ICON_HEIGHT)
       {
-       icon_bitmap_width = LITTLE_ICON_WIDTH;
-       icon_bitmap_height = LITTLE_ICON_HEIGHT;
-       bitmap_bits = (unsigned char *)little_icon_bitmap_bits;
+         icon_bitmap_width = BIG_ICON_WIDTH;
+         icon_bitmap_height = BIG_ICON_HEIGHT;
+         bitmap_bits = (unsigned char *)big_icon_bitmap_bits;
+      }
+      else
+      {
+         icon_bitmap_width = LITTLE_ICON_WIDTH;
+         icon_bitmap_height = LITTLE_ICON_HEIGHT;
+         bitmap_bits = (unsigned char *)little_icon_bitmap_bits;
       }
    }
- else  /* WM won't tell us what icon size to use, so use small icon :-( */
+   else  /* WM won't tell us what icon size to use, so use small icon :-( */
    {
-    icon_bitmap_width = LITTLE_ICON_WIDTH;
-    icon_bitmap_height = LITTLE_ICON_HEIGHT;
-    bitmap_bits = (unsigned char *)little_icon_bitmap_bits;
+      icon_bitmap_width = LITTLE_ICON_WIDTH;
+      icon_bitmap_height = LITTLE_ICON_HEIGHT;
+      bitmap_bits = (unsigned char *)little_icon_bitmap_bits;
    }
- XFree((char *)icon_size);
+   XFree((char *)icon_size);
 
- if (strcmp(XCURSESBITMAPFILE,"") != 0) /* supplied bitmap */
+   if (strcmp(XCURSESBITMAPFILE,"") != 0) /* supplied bitmap */
    {
-    rc = XReadBitmapFile(XtDisplay(topLevel),
+      rc = XReadBitmapFile(XtDisplay(topLevel),
                          RootWindowOfScreen(XtScreen(topLevel)),
                          (char *)XCURSESBITMAPFILE,
                          &file_bitmap_width,
@@ -1500,25 +1506,25 @@ void XCursesGetIcon()
                          &icon_pixmap,
                          &x_hot,
                          &y_hot);
-    switch(rc)
+      switch(rc)
       {
-       case BitmapOpenFailed:
+         case BitmapOpenFailed:
             fprintf(stderr,"bitmap file %s: not found\n",XCURSESBITMAPFILE);
             break;
-       case BitmapFileInvalid:
+         case BitmapFileInvalid:
             fprintf(stderr,"bitmap file %s: contents invalid\n",XCURSESBITMAPFILE);
             break;
-       default:
+         default:
             return;
             break;
       }
    }
- icon_pixmap = XCreateBitmapFromData(XtDisplay(topLevel),
+   icon_pixmap = XCreateBitmapFromData(XtDisplay(topLevel),
                                      RootWindowOfScreen(XtScreen(topLevel)),
                                      (char *)bitmap_bits,
                                      icon_bitmap_width, 
                                      icon_bitmap_height);
- return;
+   return;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -2485,71 +2491,81 @@ int old_row,old_x,new_row,new_x;
 #endif
 /***********************************************************************/
 {
- int xpos,ypos,i;
- char buf[2];
- chtype *ch;
- short fore=0,back=0;
+   int xpos,ypos,i;
+   char buf[2];
+   chtype *ch;
+   short fore=0,back=0;
 
 #ifdef PDCDEBUG
- if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x);
+   if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x);
 #endif
 
-/*
- * If the cursor position is outside the boundary of the screen, ignore
- * request.
- */
- if (old_row >= XCursesLINES
- ||  old_x >= COLS
- ||  new_row >= XCursesLINES
- ||  new_x >= COLS)
-    return;
+   /*
+    * If the cursor position is outside the boundary of the screen, ignore
+    * request.
+    */
+   if (old_row >= XCursesLINES
+   ||  old_x >= COLS
+   ||  new_row >= XCursesLINES
+   ||  new_x >= COLS)
+      return;
 
- /* display the character at the current cursor position */
+   /* display the character at the current cursor position */
 #ifdef PDCDEBUG
- if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x);
+   if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x);
 #endif
- XCursesDisplayText((chtype *)(Xcurscr+(XCURSCR_Y_OFF(old_row)+(old_x*sizeof(chtype)))),old_row,old_x,1,FALSE);
- /* display the cursor at the new cursor position */
+   XCursesDisplayText( (chtype *)(Xcurscr+(XCURSCR_Y_OFF(old_row)+(old_x*sizeof(chtype)))), old_row, old_x, 1, FALSE );
+   /* display the cursor at the new cursor position */
 
- switch(SP->visibility)
+   switch( SP->visibility )
    {
-    case 0: /* cursor not displayed, no more to do */
+      case 0: /* cursor not displayed, no more to do */
          break;
-    case 1:
-         makeXY(new_x,new_row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
+      case 1: /* cursor visibility normal */
+         makeXY( new_x, new_row, XCursesFontWidth, XCursesFontHeight, &xpos, &ypos );
          ch = (chtype *)(Xcurscr+XCURSCR_Y_OFF(new_row)+(new_x*sizeof(chtype)));
-         SetCursorColor(ch,&fore,&back);
-         XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
-         for (i=0;i<XCURSESNORMALFONTINFO->descent+2;i++)
-            XDrawLine(XCURSESDISPLAY,XCURSESWIN,rect_cursor_gc,(xpos),(ypos-2+i),(xpos+XCursesFontWidth),(ypos-2+i));
+         SetCursorColor( ch, &fore, &back );
+         XSetForeground( XCURSESDISPLAY, rect_cursor_gc, colors[back] );
+         if ( vertical_cursor )
+         {
+            XDrawLine( XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+                      xpos+1, ypos-XCURSESNORMALFONTINFO->ascent, xpos+1, ypos-XCURSESNORMALFONTINFO->ascent+XCursesFontHeight-1 );
+         }
+         else
+         {
+            for ( i = 0; i < XCURSESNORMALFONTINFO->descent + 2; i++ )
+               XDrawLine( XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc, (xpos), (ypos-2+i), (xpos+XCursesFontWidth), (ypos-2+i) );
+         }
 #ifdef PDCDEBUG
          if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw line at row %d col %d\n",(XCursesProcess)?"     X":"CURSES",new_row,new_x);
 #endif
          break;
-    default:
-#if 0
-         makeXY(new_x,new_row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
+      default: /* cursor visibility high */
+         makeXY( new_x, new_row, XCursesFontWidth, XCursesFontHeight, &xpos, &ypos );
          ch = (chtype *)(Xcurscr+XCURSCR_Y_OFF(new_row)+(new_x*sizeof(chtype)));
-         buf[0] =  (char)(*ch & A_CHARTEXT);
-         buf[1] = '\0';
-         XSetForeground(XCURSESDISPLAY, block_cursor_gc, colors[COLOR_BLACK]); /* use original foreground colour ? */
-         XDrawImageString(XCURSESDISPLAY,XCURSESWIN,block_cursor_gc,xpos,ypos,buf,1);
-#else
-         makeXY(new_x,new_row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
-         ch = (chtype *)(Xcurscr+XCURSCR_Y_OFF(new_row)+(new_x*sizeof(chtype)));
-         SetCursorColor(ch,&fore,&back);
-         buf[0] =  (char)(*ch & A_CHARTEXT);
-         buf[1] = '\0';
-         XSetForeground(XCURSESDISPLAY, block_cursor_gc, colors[fore]);
-         XSetBackground(XCURSESDISPLAY, block_cursor_gc, colors[back]);
-         XDrawImageString(XCURSESDISPLAY,XCURSESWIN,block_cursor_gc,xpos,ypos,buf,1);
-#endif
+         SetCursorColor( ch, &fore, &back );
+         if ( vertical_cursor )
+         {
+            XSetForeground( XCURSESDISPLAY, rect_cursor_gc, colors[back] );
+            XDrawLine( XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+                      xpos+1, ypos-XCURSESNORMALFONTINFO->ascent, xpos+1, ypos-XCURSESNORMALFONTINFO->ascent+XCursesFontHeight-1 );
+            XDrawLine( XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+                      xpos+2, ypos-XCURSESNORMALFONTINFO->ascent, xpos+2, ypos-XCURSESNORMALFONTINFO->ascent+XCursesFontHeight-1 );
+         }
+         else
+         {
+            buf[0] =  (char)(*ch & A_CHARTEXT);
+            buf[1] = '\0';
+            XSetForeground( XCURSESDISPLAY, block_cursor_gc, colors[fore] );
+            XSetBackground( XCURSESDISPLAY, block_cursor_gc, colors[back] );
+            XDrawImageString( XCURSESDISPLAY, XCURSESWIN, block_cursor_gc, xpos, ypos, buf, 1 );
+         }
 #ifdef PDCDEBUG
          if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw cursor at row: %d col %d char <%s>\n",(XCursesProcess)?"     X":"CURSES",new_row,new_x,buf);
 #endif
          break;
    }
- return;
+   return;
 }
 
 /***********************************************************************/

@@ -363,17 +363,17 @@ FUNCTIONS
 		setsyx                   kernel
 	***	setterm                   terminfo
 	***	setupterm                 terminfo
-	***	slk_attroff               slk
-	***	slk_attron                slk
-	***	slk_attrset               slk
-	***	slk_clear                 slk
-	***	slk_init                  slk
-	***	slk_label                 slk
-	***	slk_noutrefresh           slk
-	***	slk_refresh               slk
-	***	slk_restore               slk
-	***	slk_set                   slk
-	***	slk_touch                 slk
+		slk_attroff              slk
+		slk_attron               slk
+		slk_attrset              slk
+		slk_clear                slk
+		slk_init                 slk
+		slk_label                slk
+		slk_noutrefresh          slk
+		slk_refresh              slk
+		slk_restore              slk
+		slk_set                  slk
+		slk_touch                slk
 		standend                 attr
 		standout                 attr
 		start_color              color
@@ -495,8 +495,11 @@ FUNCTIONS
 		PDC_get_cur_col          pdcgetsc
 		PDC_get_cur_row          pdcgetsc
 		PDC_get_font             pdcgetsc
+		PDC_get_input_fd         pdckbd
+		PDC_get_key_modifiers    pdckbd
 		PDC_get_rows             pdcgetsc
 		PDC_get_scrn_mode        pdcgetsc
+		PDC_getclipboard         pdcclip
 		PDC_gotoxy               pdcdisp
 		PDC_makenew              pdcwin
 		PDC_memmove              pdcutil
@@ -517,6 +520,8 @@ FUNCTIONS
 		PDC_set_font             pdcsetsc
 		PDC_set_rows             pdcsetsc
 		PDC_set_scrn_mode        pdcsetsc
+		PDC_set_title            pdcsetsc
+		PDC_setclipboard         pdcclip
 		PDC_sysgetch             pdckbd
 		PDC_transform_line       pdcdisp
 		PDC_ungetch              getch

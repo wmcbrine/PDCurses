@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 *
 * This file is NOT public domain software.  It is Copyright, Mark Hessling
-* 1994,1995.
+* 1994-2000.
 ***************************************************************************
 */
 
@@ -55,22 +55,22 @@ int len;
 #endif
 /***********************************************************************/
 {
- int start=0,length=len,rc;
+   int start=0,length=len,rc;
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:write_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len);
+   if (trace_on) PDC_debug("%s:write_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len);
 #endif
 #ifdef MOUSE_DEBUG1
- if (sock_num == key_sock)
+if (sock_num == key_sock)
     printf("%s:write_socket(key) len: %d\n",(XCursesProcess)?"     X":"CURSES",len);
 #endif
- while(1)
+   while(1)
    {
-    rc = write(sock_num,buf+start,length);
-    if (rc < 0
-    ||  rc == length)
-       return(rc);
-    length -= rc;
-    start = rc;
+      rc = write(sock_num,buf+start,length);
+      if (rc < 0
+      ||  rc == length)
+         return(rc);
+      length -= rc;
+      start = rc;
    }
 }
 /***********************************************************************/
@@ -84,47 +84,46 @@ int len;
 #endif
 /***********************************************************************/
 {
- int start=0,length=len,rc;
+   int start=0,length=len,rc;
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:read_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len);
+   if (trace_on) PDC_debug("%s:read_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len);
 #endif
- while(1)
+   while(1)
    {
-    rc = read(sock_num,buf+start,length);
+      rc = read(sock_num,buf+start,length);
 #ifdef MOUSE_DEBUG1
-    if (sock_num == key_sock)
+     if (sock_num == key_sock)
        printf("%s:read_socket(key) rc %d errno %d resized: %d\n",(XCursesProcess)?"     X":"CURSES",
                                                         rc,errno,SP->resized);
 #endif
-    if (rc < 0
-    && sock_num == key_sock
-    && errno == EINTR
+      if (rc < 0
+      && sock_num == key_sock
+      && errno == EINTR
 #ifdef BEFORE_CHANGE_BY_G_FUCHS
 /*
  * Patch by:
  * Georg Fuchs, georg.fuchs@rz.uni-regensburg.de 02-Feb-1999
  */
-    && SP->resized == TRUE)
+      && SP->resized == TRUE)
       {
 #ifdef MOUSE_DEBUG1
        printf("%s:continuing\n",(XCursesProcess)?"     X":"CURSES");
 #endif
-       rc = 0;
+         rc = 0;
 #else
-    && SP->resized != FALSE)
+      && SP->resized != FALSE)
       {
 #ifdef MOUSE_DEBUG1
        printf("%s:continuing\n",(XCursesProcess)?"     X":"CURSES");
 #endif
-       rc = 0;
-       if (SP->resized > 1)
-          SP->resized = TRUE;
-       else
-          SP->resized = FALSE;
-
+         rc = 0;
+         if (SP->resized > 1)
+            SP->resized = TRUE;
+         else
+            SP->resized = FALSE;
 #endif
-       memcpy(buf,(char *)&rc,sizeof(int));
-       return(0); /* must be >= 0 to avoid error */
+         memcpy(buf,(char *)&rc,sizeof(int));
+         return(0); /* must be >= 0 to avoid error */
       }
 
 #ifdef BEFORE_CHANGE_BY_G_FUCHS
@@ -132,13 +131,13 @@ int len;
  * Patch by:
  * Georg Fuchs, georg.fuchs@rz.uni-regensburg.de 02-Feb-1999
  */
-    if (rc < 0
+      if (rc < 0
 #else
-    if (rc <= 0
+      if (rc <= 0
 #endif
-    ||  rc == length)
-       return(rc);
-    length -= rc;
-    start = rc;
+      ||  rc == length)
+         return(rc);
+      length -= rc;
+      start = rc;
    }
 }

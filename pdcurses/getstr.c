@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.2 2002/05/11 08:45:42 mark Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.3 2002/05/11 08:53:19 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -253,11 +253,17 @@ int n;
 
 	while (!stop)
 	{
-	ch = wgetch(win);
-	if ( ch == KEY_SHIFT_L || ch == KEY_SHIFT_R || ch == KEY_CONTROL_L || ch == KEY_CONTROL_R )
-		continue;
-	ch = ch & A_CHARTEXT;
-	switch (ch)
+		ch = wgetch (win);
+		/* ignore modifier keys on their own */
+		if ( ch == KEY_SHIFT_L
+		||   ch == KEY_SHIFT_R
+		||   ch == KEY_CONTROL_L
+		||   ch == KEY_CONTROL_R
+		||   ch == KEY_ALT_L
+		||   ch == KEY_ALT_R )
+			continue;
+		ch = ch & A_CHARTEXT;
+		switch( ch )
 		{
 		case '\t':
 			ch = ' ';

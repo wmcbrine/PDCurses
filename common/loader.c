@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.9 2002/07/30 03:41:50 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.10 2002/08/25 09:01:06 mark Exp $";
 
 #include "rxpack.h"
 
@@ -207,15 +207,9 @@ int main
    /* 
     * Initialise the package interface, but don't set the trace file
     */
-   RxPackageGlobalData = InitRxPackage( NULL, GETPACKAGEINITIALISER(), &rc );
+   RxPackageGlobalData = InitRxPackage( &MyGlob, GETPACKAGEINITIALISER(), &rc );
    if ( rc != 0 )
       return( rc );
-   /*
-    * Transfer stuff from MyGlob to RxPackageGlobalData
-    */
-   RxPackageGlobalData->RxRunFlags = MyGlob.RxRunFlags;
-   RxPackageGlobalData->RxTraceFilePointer = MyGlob.RxTraceFilePointer;
-   strcpy( RxPackageGlobalData->RxTraceFileName, MyGlob.RxTraceFileName );
    /* 
     * Register all external functions
     */
@@ -258,11 +252,15 @@ int main
               ( RS_ARG7_TYPE )&rc,
               ( RS_ARG8_TYPE )&retstr);
 
-   rc = FunctionEpilogue( RxPackageGlobalData, RXPACKAGENAME, (ULONG)rc );
-   /* 
-    * Terminate the package interface.
-    */
-   (void)TermRxPackage( RxPackageGlobalData, GETPACKAGEINITIALISER(), GETPACKAGEFUNCTIONS(), RXPACKAGENAME, 0 );
+   if ( !RxPackageGlobalData->terminated )
+   {
+      rc = FunctionEpilogue( RxPackageGlobalData, RXPACKAGENAME, (ULONG)rc );
+      /* 
+       * Terminate the package interface.
+       */
+      (void)TermRxPackage( RxPackageGlobalData, GETPACKAGETERMINATOR(), GETPACKAGEFUNCTIONS(), RXPACKAGENAME, 0 );
+      RxPackageGlobalData = NULL;
+   }
 
    if ( ArgList.strptr )
       free(ArgList.strptr);

@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.3 2004/01/02 05:50:05 mark Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.4 2004/01/04 08:51:31 mark Exp $";
 #endif
 
 #if __STDC__
@@ -106,21 +106,21 @@ int WaitForUser()
    nodelay(stdscr,TRUE);
    t = time((time_t *)0);
    while(1)
-   {   
+   {
       if ((ch = getch()) != ERR)
-      {   
-         if (ch == '\033') 
+      {
+         if (ch == '\033')
          {
             nodelay(stdscr, FALSE);
             return  ch;
          }
-         else 
+         else
          {
             nodelay(stdscr, FALSE);
             return  0;
          }
       }
-      if (time((time_t *)0) - t > 5) 
+      if (time((time_t *)0) - t > 5)
       {
          nodelay(stdscr, FALSE);
          return  0;
@@ -211,23 +211,23 @@ WINDOW *win;
    yd3 = 1;
    nodelay(stdscr,TRUE);
    while((c = getch()) == ERR)
-   {   
-      x1 = xd1 > 0 ? ++x1 : --x1;
+   {
+      x1 = (xd1 > 0) ? ++x1 : --x1;
       if (x1 <= 1 || x1 >= w - 2)
          xd1 = xd1 ? 0 : 1;
-      y1 = yd1 > 0 ? ++y1 : --y1;
+      y1 = (yd1 > 0) ? ++y1 : --y1;
       if (y1 <= 1 || y1 >= h - 2)
          yd1 = yd1 ? 0 : 1;
-      x2 = xd2 > 0 ? ++x2 : --x2;
+      x2 = (xd2 > 0) ? ++x2 : --x2;
       if (x2 <= 1 || x2 >= w - 2)
          xd2 = xd2 ? 0 : 1;
-      y2 = yd2 > 0 ? ++y2 : --y2;
+      y2 = (yd2 > 0) ? ++y2 : --y2;
       if (y2 <= 1 || y2 >= h - 2)
          yd2 = yd2 ? 0 : 1;
-      x3 = xd3 > 0 ? ++x3 : --x3;
+      x3 = (xd3 > 0) ? ++x3 : --x3;
       if (x3 <= 1 || x3 >= w - 2)
          xd3 = xd3 ? 0 : 1;
-      y3 = yd3 > 0 ? ++y3 : --y3;
+      y3 = (yd3 > 0) ? ++y3 : --y3;
       if (y3 <= 1 || y3 >= h - 2)
          yd3 = yd3 ? 0 : 1;
 
@@ -304,7 +304,7 @@ void    trap();
    height = 15;                /* Create a drawing window */
    win = newwin(height, width, (LINES-height)/2, (COLS-width)/2);
    if (win == NULL)
-   {   
+   {
       endwin();
 #ifdef XCURSES
       XCursesExit();
@@ -313,7 +313,7 @@ void    trap();
    }
 
    for( ;; )
-   {   
+   {
       init_pair(1,COLOR_WHITE,COLOR_BLUE);
 /*        wattrset(win, COLOR_PAIR(1));*/
       wbkgd(win, COLOR_PAIR(1));
@@ -329,7 +329,7 @@ void    trap();
       ch = 'a';
       nodelay(stdscr,TRUE);
       for(i=0; i < 5000; ++i)
-      {   
+      {
          x = rand() % (width-2)  + 1;
          y = rand() % (height-2) + 1;
          mvwaddch(win, y, x, ch);
@@ -337,7 +337,7 @@ void    trap();
          if (getch() != ERR)
              break;
          if(i == 2000)
-         {   
+         {
             ch = 'b';
             init_pair(3,COLOR_CYAN,COLOR_YELLOW);
             wattron(win, COLOR_PAIR(3));
@@ -361,7 +361,7 @@ void    trap();
       wattrset(win, A_BOLD);
       i = 0;
       while(*AusMap[i])
-      {   
+      {
          mvwaddstr(win, i+1, 8, AusMap[i]);
          wrefresh(win);
          napms(100);
@@ -418,7 +418,7 @@ void    trap();
       init_pair(7,COLOR_RED,COLOR_GREEN);
       wattron(win, COLOR_PAIR(7));
       for(i=2; i < width - 4; ++i)
-      {   
+      {
          ch = mvwinch(win, 5, i);
          save[j++] = ch;
          ch = ch & 0x7f;
@@ -442,7 +442,7 @@ void    trap();
       wrefresh(win);
 
       BouncingBalls(win); /* leaves a keystroke in the queue */
-                                
+
       if (WaitForUser() == '\033')
          break;
    }

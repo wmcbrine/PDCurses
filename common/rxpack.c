@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.33 2003/03/12 10:43:50 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.34 2003/03/13 11:11:39 mark Exp $";
 
 #include "rxpack.h"
 
@@ -502,7 +502,7 @@ int StrToNumber
 #endif
 
 {
-   int    i=0;
+   unsigned int i=0;
    char   *p=NULL;
    LONG   sum=0L;
    int    neg=0;
@@ -584,7 +584,7 @@ int RxStrToInt
 #endif
 
 {
-   int    i=0;
+   unsigned int i=0;
    char   *p=NULL;
    int    sum=0;
    int    neg=0;
@@ -657,7 +657,7 @@ int RxStrToLong
 #endif
 
 {
-   int    i=0;
+   unsigned int i=0;
    char   *p=NULL;
    long   sum=0L;
    int    neg=0;
@@ -745,8 +745,8 @@ int RxStrToDouble
 
 /*-----------------------------------------------------------------------------
  * Converts a RXSTRING containing a stem name to an array of char pointers
- * Allocates memory for each char string which needs to be freed by the caller
- * using RxFreeCharArray()
+ * Allocates memory for the char pointers, NOT the strings. The pointers
+ * need to be freed using RxFreeCharArray()
  * Returns the number of items in the array
  *----------------------------------------------------------------------------*/
 int RxStemToCharArray
@@ -764,6 +764,7 @@ int RxStemToCharArray
    int      len=ptr->strlength;
    int      num_items,i;
    RXSTRING value;
+   char **ret, **tmp;
 
    /*
     * Validate that 'ptr' is a stem name.
@@ -778,18 +779,21 @@ int RxStemToCharArray
    /*
     * Allocate num_items char *
     */
-   if ( ( **retval = (char *)malloc( sizeof(char *) ) ) == NULL )
-      return -1;
-   /*
-    * Get each stem value, and set the equivalent entry in the allocated
-    * char **
-    */
-   for ( i = 0; i < num_items; i++ )
+   if ( num_items )
    {
-/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
-      if ( GetRexxVariable( RxPackageGlobalData, ptr->strptr, &value, i+1 ) == NULL )
+      if ( ( ret = tmp = (char **)malloc( num_items * sizeof(char *) ) ) == NULL )
          return -1;
-      **(retval+i) = value.strptr;
+      /*
+       * Get each stem value, and set the equivalent entry in the allocated
+       * char **
+       */
+      for ( i = 0; i < num_items; i++, tmp++ )
+      {
+         if ( GetRexxVariable( RxPackageGlobalData, ptr->strptr, &value, i+1 ) == NULL )
+            return -1;
+         *tmp = value.strptr;
+      }
+      *retval = ret;
    }
    return num_items;
 }
@@ -815,13 +819,17 @@ void RxFreeCharArray
     */
    if ( ptr == NULL )
       return;
+#if 0
    /*
     * Free each item...
+    * NO WAY. These are passed as arguments from the Rexx interpreter
+    * and cannot be freed by us.
     */
    for ( i = 0; i < num_args; i++ )
    {
       free( *ptr );
    }
+#endif
    /*
     * Free the ptr
     */
@@ -850,6 +858,7 @@ int RxStemToULongArray
    int      len=ptr->strlength;
    int      num_items,i;
    unsigned long value;
+   unsigned long *ret,*tmp;
 
    /*
     * Validate that 'ptr' is a stem name.
@@ -864,18 +873,21 @@ int RxStemToULongArray
    /*
     * Allocate num_items unsigned longs
     */
-   if ( ( *retval = (unsigned long *)malloc( sizeof(unsigned long) ) ) == NULL )
-      return -1;
-   /*
-    * Get each stem value, and set the equivalent entry in the allocated
-    * ULONG *
-    */
-   for ( i = 0; i < num_items; i++ )
+   if ( num_items )
    {
-/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
-      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+      if ( ( ret = tmp = (unsigned long *)malloc( num_items * sizeof(unsigned long) ) ) == NULL )
          return -1;
-      **(retval+i) = (unsigned long)value;
+      /*
+       * Get each stem value, and set the equivalent entry in the allocated
+       * ULONG *
+       */
+      for ( i = 0; i < num_items; i++, tmp++ )
+      {
+         if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+            return -1;
+         *tmp = (unsigned long)value;
+      }
+      *retval = ret;
    }
    return num_items;
 }
@@ -926,6 +938,7 @@ int RxStemToLongArray
    int      len=ptr->strlength;
    int      num_items,i;
    long     value;
+   long     *ret,*tmp;
 
    /*
     * Validate that 'ptr' is a stem name.
@@ -938,20 +951,23 @@ int RxStemToLongArray
    if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
       return -1;
    /*
-    * Allocate num_items longs
+    * Allocate num_items unsigned longs
     */
-   if ( ( *retval = (long *)malloc( sizeof(long) ) ) == NULL )
-      return -1;
-   /*
-    * Get each stem value, and set the equivalent entry in the allocated
-    * ULONG *
-    */
-   for ( i = 0; i < num_items; i++ )
+   if ( num_items )
    {
-/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
-      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+      if ( ( ret = tmp = (long *)malloc( num_items * sizeof(long) ) ) == NULL )
          return -1;
-      **(retval+i) = (long)value;
+      /*
+       * Get each stem value, and set the equivalent entry in the allocated
+       * LONG *
+       */
+      for ( i = 0; i < num_items; i++, tmp++ )
+      {
+         if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+            return -1;
+         *tmp = (long)value;
+      }
+      *retval = ret;
    }
    return num_items;
 }
@@ -1002,6 +1018,7 @@ int RxStemToIntArray
    int      len=ptr->strlength;
    int      num_items,i;
    int      value;
+   int      *ret,*tmp;
 
    /*
     * Validate that 'ptr' is a stem name.
@@ -1014,20 +1031,23 @@ int RxStemToIntArray
    if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
       return -1;
    /*
-    * Allocate num_items ints
+    * Allocate num_items unsigned longs
     */
-   if ( ( *retval = (int *)malloc( sizeof(int) ) ) == NULL )
-      return -1;
-   /*
-    * Get each stem value, and set the equivalent entry in the allocated
-    * ULONG *
-    */
-   for ( i = 0; i < num_items; i++ )
+   if ( num_items )
    {
-/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
-      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+      if ( ( ret = tmp = (int *)malloc( num_items * sizeof(int) ) ) == NULL )
          return -1;
-      **(retval+i) = (int)value;
+      /*
+       * Get each stem value, and set the equivalent entry in the allocated
+       * INT *
+       */
+      for ( i = 0; i < num_items; i++, tmp++ )
+      {
+         if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+            return -1;
+         *tmp = (int)value;
+      }
+      *retval = ret;
    }
    return num_items;
 }
@@ -1077,7 +1097,8 @@ int RxStemToUIntArray
 {
    int      len=ptr->strlength;
    int      num_items,i;
-   unsigned int     value;
+   unsigned int value;
+   unsigned int *ret,*tmp;
 
    /*
     * Validate that 'ptr' is a stem name.
@@ -1090,20 +1111,23 @@ int RxStemToUIntArray
    if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, &num_items, 0 ) == NULL )
       return -1;
    /*
-    * Allocate num_items ints
+    * Allocate num_items unsigned longs
     */
-   if ( ( *retval = (unsigned int *)malloc( sizeof(unsigned int) ) ) == NULL )
-      return -1;
-   /*
-    * Get each stem value, and set the equivalent entry in the allocated
-    * unsigned int *
-    */
-   for ( i = 0; i < num_items; i++ )
+   if ( num_items )
    {
-/*      sprintf( buf, "%s.%d", ptr->strptr, i+1 ); */
-      if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+      if ( ( ret = tmp = (unsigned int *)malloc( num_items * sizeof(unsigned int) ) ) == NULL )
          return -1;
-      **(retval+i) = (unsigned int)value;
+      /*
+       * Get each stem value, and set the equivalent entry in the allocated
+       * UNSIGNED INT *
+       */
+      for ( i = 0; i < num_items; i++, tmp++ )
+      {
+         if ( GetRexxVariableInteger( RxPackageGlobalData, ptr->strptr, (int *)&value, i+1 ) == NULL )
+            return -1;
+         *tmp = (unsigned int)value;
+      }
+      *retval = ret;
    }
    return num_items;
 }

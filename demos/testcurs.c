@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.8 2004/01/01 01:11:30 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.9 2004/01/01 03:17:26 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -198,10 +198,10 @@ int argc;
 char *argv[];
 #endif
 {
+/*  traceon();*/
 #ifdef PDCDEBUG
 	PDC_debug("initTest called\n");
 #endif
-/*  traceon(); */
 #ifdef XCURSES
     Xinitscr(argc, argv);
 #else

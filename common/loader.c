@@ -18,7 +18,7 @@
  * Mark Hessling  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
  */
 
-static char RCSid[] = "$Id: loader.c,v 1.2 2002/03/02 11:51:28 mark Exp $";
+static char RCSid[] = "$Id: loader.c,v 1.3 2002/03/24 09:55:22 mark Exp $";
 
 #include "rxpack.h"
 
@@ -140,7 +140,7 @@ int main
             (void)fprintf(stderr, "Could not create temporary file for stdin\n");
             exit(REXX_FAIL);
          }
-         while(1)
+         for ( ; ; )
          {
             if ((i = getc(stdin)) == EOF)
                break;
@@ -207,12 +207,12 @@ int main
    /* 
     * Initialise the package interface, but don't set the trace file
     */
-   if ( ( rc = InitRxPackage( &MyGlob ) ) )
+   if ( ( rc = InitRxPackage( &MyGlob ) ) != 0 )
       return( rc );
    /* 
     * Register all external functions
     */
-   if ( ( rc = RegisterRxFunctions( ) ) )
+   if ( ( rc = RegisterRxFunctions( ) ) != 0 )
       return( rc );
    FunctionPrologue( RxPackageName, 0L, NULL );
    /*

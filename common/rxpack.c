@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.4 2002/03/02 11:52:05 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.5 2002/03/24 09:55:23 mark Exp $";
 
 #include "rxpack.h"
 
@@ -805,7 +805,7 @@ int InitRxPackage
       (void)RxSetTraceFile( MyGlob->RxTraceFileName );
    }
    RxPackageGlobalData->RxPackageInitialised = RXPACKAGE_MAGIC_NUMBER;
-   if ((env = getenv(RXPACKAGE_DEBUG_VAR)))
+   if ( (env = getenv(RXPACKAGE_DEBUG_VAR)) != NULL )
       RxPackageGlobalData->RxRunFlags |= atoi(env);
 
    /* 
@@ -845,13 +845,13 @@ int TermRxPackage
     */
    if (deregfunc)
    {
-      if ( ( rc = DeregisterRxFunctions( 0 ) ) )
+      if ( ( rc = DeregisterRxFunctions( 0 ) ) != 0 )
          return (int)FunctionEpilogue( "TermRxPackage", (long)rc );
    }
    /* 
     * Call any package-specific termination code here
     */
-   if ( ( rc = TerminatePackage( ) ) )
+   if ( ( rc = TerminatePackage( ) ) != 0 )
       return (int)FunctionEpilogue( "TermRxPackage", (long)rc );
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
    RexxDeregisterExit( ( RDE_ARG0_TYPE )RxPackageName,

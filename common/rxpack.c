@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.37 2003/07/18 08:43:02 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.38 2003/08/20 09:43:31 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1398,11 +1398,11 @@ int RegisterRxSubcom
 
 #if defined(USE_REXX6000)
    rc = RexxRegisterSubcom( (RRSE_ARG0_TYPE)RXPACKAGENAME,
-                            (RRSE_ARG1_TYPE)(ptr) ? ptr : RxSubcomHandler,
+                            (RRSE_ARG1_TYPE)( (ptr) ? ptr : RxSubcomHandler ),
                             (RRSE_ARG2_TYPE)NULL );
 #else
    rc = RexxRegisterSubcomExe( (RRSE_ARG0_TYPE)RXPACKAGENAME,
-                               (RRSE_ARG1_TYPE)(ptr) ? ptr : RxSubcomHandler,
+                               (RRSE_ARG1_TYPE)( (ptr) ? ptr : RxSubcomHandler ),
                                (RRSE_ARG2_TYPE)NULL );
 #endif
    if ( rc != RXSUBCOM_OK )

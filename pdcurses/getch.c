@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.1 2001/01/10 08:26:59 mark Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.2 2001/01/10 08:27:01 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -160,7 +160,7 @@ extern  WINDOW*	_getch_win_;
 #else
 	short display_key = 0x100;
 #endif
-	int waitingtenths = SP->delaytenths;
+	int waitingtenths = 0;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("wgetch() - called\n");
@@ -168,6 +168,9 @@ extern  WINDOW*	_getch_win_;
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
+
+	if ( SP->delaytenths )
+		waitingtenths = 10*SP->delaytenths;
 
 /* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
 /*                  if there have been changes to it and it is not a pad */
@@ -279,7 +282,8 @@ extern  WINDOW*	_getch_win_;
 				if (key == (-1))
 				{
 					waitingtenths--;
-					napms(100);
+					napms(10);
+					continue;
 				}
 			}
 		}
@@ -293,7 +297,7 @@ extern  WINDOW*	_getch_win_;
 			 */
 			key = '\n';
 		}
-		if (SP->echo && (key < display_key))
+		if ( SP->echo && (key < display_key) )
 		{
 			/*
 			 * if echo is enabled
@@ -301,7 +305,7 @@ extern  WINDOW*	_getch_win_;
 			waddch(w, key);
 			wrefresh(w);
 		}
-		if (SP->raw_inp || SP->cbreak)
+		if ( (SP->raw_inp || SP->cbreak) )
 		{
 			/*
 			 * if no buffering

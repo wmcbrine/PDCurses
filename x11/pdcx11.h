@@ -112,8 +112,8 @@
 
 #define XtCNormalFont    "NormalFont"
 #define XtNnormalFont    "normalFont"
-#define XtCBoldFont      "BoldFont"
-#define XtNboldFont      "boldFont"
+#define XtCItalicFont      "ItalicFont"
+#define XtNitalicFont      "italicFont"
 
 #define XtCPointer       "Pointer"
 #define XtNpointer       "pointer"
@@ -203,7 +203,7 @@ typedef struct
  Pixel pointerForeColor;
  Pixel pointerBackColor;
  XFontStruct *normalfont;
- XFontStruct *boldfont;
+ XFontStruct *italicfont;
  char *bitmapFile;
  char *composeKey;
  Cursor pointer;
@@ -220,7 +220,7 @@ typedef struct
 AppData app_data;
 
 #define XCURSESNORMALFONTINFO   app_data.normalfont
-#define XCURSESBOLDFONTINFO     app_data.boldfont
+#define XCURSESITALICFONTINFO   app_data.italicfont
 #define XCURSESLINES            app_data.lines
 #define XCURSESCOLS             app_data.cols
 #define XCURSESBITMAPFILE       app_data.bitmapFile
@@ -244,12 +244,12 @@ AppData app_data;
 #define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2*MAX_COLORS */
 #define COLOR_BORDER 17 /* colour of border - 2 more than 2*MAX_COLORS */
 #define PDC_NUMBER_APP_RESOURCES 32
-#define PDC_NUMBER_OPTIONS 29
+#define PDC_NUMBER_OPTIONS 30
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
 #include "x11.h"
 
-extern GC normal_gc,block_cursor_gc,rect_cursor_gc,normal_highlight_gc,bold_highlight_gc,border_gc;
+extern GC normal_gc,block_cursor_gc,rect_cursor_gc,italic_gc,border_gc;
 extern int XCursesFontHeight,XCursesFontWidth;
 extern int XCursesFontAscent,XCursesFontDescent;
 extern int XCursesWindowWidth,XCursesWindowHeight;

@@ -432,7 +432,7 @@ int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
  */
 MOUSE_STATUS Trapped_Mouse_status;
 unsigned long pdc_key_modifier=0L;
-GC normal_gc,block_cursor_gc,rect_cursor_gc,normal_highlight_gc,bold_highlight_gc,border_gc;
+GC normal_gc,block_cursor_gc,rect_cursor_gc,italic_gc,border_gc;
 int XCursesFontHeight,XCursesFontWidth;
 int XCursesFontAscent,XCursesFontDescent;
 int XCursesWindowWidth,XCursesWindowHeight;
@@ -646,17 +646,14 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
   XtRString,
   (XtPointer)"7x13",
  },
-/*
- * boldFont used for backwards compatibility, but now ignored
- */
  {
-  XtNboldFont,
-  XtCBoldFont,
+  XtNitalicFont,
+  XtCItalicFont,
   XtRFontStruct,
   sizeof(XFontStruct),
-  XtOffsetOf(AppData,boldfont),
+  XtOffsetOf(AppData,italicfont),
   XtRString,
-  (XtPointer)"7x13bold",
+  (XtPointer)"7x13",
  },
  {
   XtNbitmap,
@@ -774,6 +771,7 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-lines",               "*lines",             XrmoptionSepArg,   NULL },
    {"-cols",                "*cols",              XrmoptionSepArg,   NULL },
    {"-normalFont",          "*normalFont",        XrmoptionSepArg,   NULL },
+   {"-italicFont",          "*italicFont",        XrmoptionSepArg,   NULL },
    {"-bitmap",              "*bitmap",            XrmoptionSepArg,   NULL },
    {"-pointer",             "*pointer",           XrmoptionSepArg,   NULL },
    {"-shmmin",              "*shmmin",            XrmoptionSepArg,   NULL },
@@ -998,19 +996,20 @@ bool highlight;
 #endif
 /***********************************************************************/
 {
- char text[300];
- bool new_packet=FALSE;
- short fore,back;
- int original_x,pair_num,i,j,k,asc=XCursesFontAscent,desc=XCursesFontDescent;  /* 11 and 1 */
- chtype old_attr,save_ch,attr;
- int xpos,ypos;
- int offset=0;
+   char text[300];
+   bool new_packet=FALSE;
+   short fore,back;
+   int original_x,pair_num,i,j,k,asc=XCursesFontAscent,desc=XCursesFontDescent;  /* 11 and 1 */
+   chtype old_attr,save_ch,attr;
+   int xpos,ypos;
+   int fore_offset=0, back_offset=0;
+   GC gc;
 
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesDisplayText() - called: Row: %d X: %d NumCols: %d\n",(XCursesProcess)?"     X":"CURSES", row,x,num_cols);
+   if (trace_on) PDC_debug("%s:XCursesDisplayText() - called: Row: %d X: %d NumCols: %d\n",(XCursesProcess)?"     X":"CURSES", row,x,num_cols);
 #endif
- if (num_cols == 0)
-    return(OK);
+   if (num_cols == 0)
+      return(OK);
 
 #if 0
  fprintf(stderr,"%2.2d ",x);
@@ -1024,177 +1023,176 @@ bool highlight;
  fprintf(stderr,"\n");
 #endif
 
- old_attr = *ch & A_ATTRIBUTES;
- save_ch = *ch;
- original_x = x;
- for (i=0,j=0; j<num_cols; x++,j++)
- {
-    attr = *(ch+j) & A_ATTRIBUTES;
-    if (attr != old_attr)
-       new_packet = TRUE;
-    if (new_packet)
+   old_attr = *ch & A_ATTRIBUTES;
+   save_ch = *ch;
+   original_x = x;
+   for (i=0,j=0; j<num_cols; x++,j++)
+   {
+      attr = *(ch+j) & A_ATTRIBUTES;
+      if (attr != old_attr)
+         new_packet = TRUE;
+      if (new_packet)
       {
-       if ((pair_num = PAIR_NUMBER(save_ch)) != 0)
+         if ((pair_num = PAIR_NUMBER(save_ch)) != 0)
          {
-          if (pair_content(pair_num,&fore,&back) == ERR)
-             return(ERR);
+            if (pair_content(pair_num,&fore,&back) == ERR)
+               return(ERR);
          }
-       else
+         else
          {
-          fore = COLOR_WHITE;
-          back = COLOR_BLACK;
+            fore = COLOR_WHITE;
+            back = COLOR_BLACK;
          }
-       text[i] = '\0';
-       if (old_attr & A_BOLD)
-          offset = 8;
-       else
-          offset = 0;
+         text[i] = '\0';
+         /*
+          * Specify the colour table offsets
+          */
+         if ( old_attr & A_BOLD )
+            fore_offset = 8;
+         else
+            fore_offset = 0;
+         if ( old_attr & A_BLINK )
+            back_offset = 8;
+         else
+            back_offset = 0;
+         /*
+          * Determine which GC to use - normal or italic
+          */
+         if ( old_attr & A_ITALIC )
+            gc = italic_gc;
+         else
+            gc = normal_gc;
 
-       if (highlight)
-       {
-          if (old_attr & A_REVERSE)
-          {
-             XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK]);
-             XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE+offset]);
-          }
-          else
-          {
-             XSetBackground(XCURSESDISPLAY, normal_gc, colors[fore]);
-             XSetForeground(XCURSESDISPLAY, normal_gc, colors[back+offset]);
-          }
-       }
-       else
-       {
-          if (old_attr & A_REVERSE)
-          {
-             XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK+offset]);
-             XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE]);
-          }
-          else
-          {
-             XSetForeground(XCURSESDISPLAY, normal_gc, colors[fore+offset]);
-             XSetBackground(XCURSESDISPLAY, normal_gc, colors[back]);
-          }
-       }
+         if (old_attr & A_REVERSE)
+         {
+            XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
+            XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+         }
+         else
+         {
+            XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+            XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+         }
 
-       makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
-       XDrawImageString(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos,text,i);
+         makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
+         XDrawImageString(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos,text,i);
 
-       for (k=0;k<i;k++)
-       {
-          if ( old_attr & A_LEFTLINE ) /* LEFT */
-          {
-             XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-             XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k))-1,ypos-asc,xpos+(XCursesFontWidth*(k))-1,ypos+desc);
-          }
-          if ( old_attr & A_RIGHTLINE ) /* RIGHT */
-          {
-             XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-             XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k+1))-1,ypos-asc,xpos+(XCursesFontWidth*(k+1))-1,ypos+desc);
-          }
-       }
-       if ( old_attr & A_OVERLINE ) /* ABOVE */
-       {
-          XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-          XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos-asc,xpos+(XCursesFontWidth*i),ypos-asc);
-       }
-
-       if (old_attr & A_UNDERLINE)  /* UNDER */
-       {
-          XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-          XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
-       }
+         for (k=0;k<i;k++)
+         {
+            if ( old_attr & A_LEFTLINE ) /* LEFT */
+            {
+               XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+               XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos+(XCursesFontWidth*(k))-1,ypos-asc,xpos+(XCursesFontWidth*(k))-1,ypos+desc);
+            }
+            if ( old_attr & A_RIGHTLINE ) /* RIGHT */
+            {
+               XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+               XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos+(XCursesFontWidth*(k+1))-1,ypos-asc,xpos+(XCursesFontWidth*(k+1))-1,ypos+desc);
+            }
+         }
+#if 0
+         if ( old_attr & A_OVERLINE ) /* ABOVE */
+         {
+            XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+            XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos-asc,xpos+(XCursesFontWidth*i),ypos-asc);
+         }
+#endif
+         if (old_attr & A_UNDERLINE)  /* UNDER */
+         {
+            XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+            XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
+         }
 
 #ifdef PDCDEBUG
-       if (trace_on)
-          PDC_debug("%s:XCursesDisplayText() - row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
+         if (trace_on)
+            PDC_debug("%s:XCursesDisplayText() - row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
 #endif
 
-       new_packet = FALSE;
-       old_attr = attr;
-       original_x = x;
-       i = 0;
+         new_packet = FALSE;
+         old_attr = attr;
+         original_x = x;
+         i = 0;
       }
-    text[i++] = *(ch+j) & A_CHARTEXT;
-    save_ch = *(ch+j);
- }
+      text[i++] = *(ch+j) & A_CHARTEXT;
+      save_ch = *(ch+j);
+   }
 
- if ((pair_num = PAIR_NUMBER(save_ch)) != 0)
- {
-    if (pair_content(pair_num,&fore,&back) == ERR)
-       return(ERR);
- }
- else
- {
-    fore = COLOR_WHITE;
-    back = COLOR_BLACK;
- }
- text[i] = '\0';
- if (old_attr & A_BOLD)
-    offset = 8;
- else
-    offset = 0;
+   if ((pair_num = PAIR_NUMBER(save_ch)) != 0)
+   {
+      if (pair_content(pair_num,&fore,&back) == ERR)
+         return(ERR);
+   }
+   else
+   {
+      fore = COLOR_WHITE;
+      back = COLOR_BLACK;
+   }
+   /*
+    * Specify the colour table offsets
+    */
+   text[i] = '\0';
+   if ( old_attr & A_BOLD )
+      fore_offset = 8;
+   else
+      fore_offset = 0;
+   if ( old_attr & A_BLINK )
+      back_offset = 8;
+   else
+      back_offset = 0;
+   /*
+    * Determine which GC to use - normal or italic
+    */
+   if ( old_attr & A_ITALIC )
+      gc = italic_gc;
+   else
+      gc = normal_gc;
 
- if (highlight)
- {
-    if (old_attr & A_REVERSE)
-    {
-       XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK]);
-       XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE+offset]);
-    }
-    else
-    {
-       XSetBackground(XCURSESDISPLAY, normal_gc, colors[fore]);
-       XSetForeground(XCURSESDISPLAY, normal_gc, colors[back+offset]);
-    }
- }
- else
- {
-    if (old_attr & A_REVERSE)
-    {
-       XSetForeground(XCURSESDISPLAY, normal_gc, colors[COLOR_BLACK+offset]);
-       XSetBackground(XCURSESDISPLAY, normal_gc, colors[COLOR_WHITE]);
-    }
-    else
-    {
-       XSetForeground(XCURSESDISPLAY, normal_gc, colors[fore+offset]);
-       XSetBackground(XCURSESDISPLAY, normal_gc, colors[back]);
-    }
- }
+   if (old_attr & A_REVERSE)
+   {
+      XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
+      XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+   }
+   else
+   {
+      XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+      XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+   }
 
- makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
- XDrawImageString(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos,text,i);
+   makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
+   XDrawImageString(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos,text,i);
 
- for (k=0;k<i;k++)
- {
-    if ( old_attr & A_LEFTLINE ) /* LEFT */
-    {
-       XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-       XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k))-1,ypos-asc,xpos+(XCursesFontWidth*(k))-1,ypos+desc);
+   for (k=0;k<i;k++)
+   {
+      if ( old_attr & A_LEFTLINE ) /* LEFT */
+      {
+         XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+         XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos+(XCursesFontWidth*(k))-1,ypos-asc,xpos+(XCursesFontWidth*(k))-1,ypos+desc);
+      }
+      if ( old_attr & A_RIGHTLINE ) /* RIGHT */
+      {
+         XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+         XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos+(XCursesFontWidth*(k+1))-1,ypos-asc,xpos+(XCursesFontWidth*(k+1))-1,ypos+desc);
+      }
     }
-    if ( old_attr & A_RIGHTLINE ) /* RIGHT */
-    {
-       XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-       XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos+(XCursesFontWidth*(k+1))-1,ypos-asc,xpos+(XCursesFontWidth*(k+1))-1,ypos+desc);
-    }
- }
- if ( old_attr & A_OVERLINE ) /* ABOVE */
- {
-    XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-    XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos-asc,xpos+(XCursesFontWidth*i),ypos-asc);
- }
- if (old_attr & A_UNDERLINE)  /* UNDER */
- {
-    XSetForeground(XCURSESDISPLAY, normal_gc, colors[(SP->line_color)+offset]);
-    XDrawLine(XCURSESDISPLAY,XCURSESWIN,normal_gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
- }
+#if 0
+   if ( old_attr & A_OVERLINE ) /* ABOVE */
+   {
+      XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+      XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos-asc,xpos+(XCursesFontWidth*i),ypos-asc);
+   }
+#endif
+   if (old_attr & A_UNDERLINE)  /* UNDER */
+   {
+      XSetForeground(XCURSESDISPLAY, gc, colors[(SP->line_color)]);
+      XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
+   }
 
 #ifdef PDCDEBUG
- if (trace_on)
-    PDC_debug("%s:XCursesDisplayText() (end) row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
+   if (trace_on)
+      PDC_debug("%s:XCursesDisplayText() (end) row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
 #endif
 
- return(OK);
+   return(OK);
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -1253,7 +1251,7 @@ int get_colors()
 
  colors[0]  = app_data.colorBlack;
  colors[1]  = app_data.colorRed;
- colors[2]  =app_data.colorGreen;
+ colors[2]  = app_data.colorGreen;
  colors[3]  = app_data.colorYellow;
  colors[4]  = app_data.colorBlue;
  colors[5]  = app_data.colorMagenta;
@@ -1293,8 +1291,7 @@ int XCursesEndwin()
     free(bitmap_file);
    }
  XFreeGC(XCURSESDISPLAY, normal_gc);
- XFreeGC(XCURSESDISPLAY, normal_highlight_gc);
- XFreeGC(XCURSESDISPLAY, bold_highlight_gc);
+ XFreeGC(XCURSESDISPLAY, italic_gc);
  XFreeGC(XCURSESDISPLAY, block_cursor_gc);
  XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
  XFreeGC(XCURSESDISPLAY, border_gc);

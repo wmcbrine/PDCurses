@@ -16,10 +16,9 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.29 2003/02/28 08:16:13 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.30 2003/02/28 11:44:51 mark Exp $";
 
 #include "rxpack.h"
-
 
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
 static RexxExitHandler RxExitHandlerForSayTraceRedirection;
@@ -280,25 +279,25 @@ RXSTRING *GetRexxVariable
 
    shv.shvnext=NULL;                                /* only one block */
    shv.shvcode = RXSHV_FETCH;
-/*
- * This calls the RexxVariablePool() function for each value. This is
- * not the most efficient way of doing this.
- */
+   /*
+    * This calls the RexxVariablePool() function for each value. This is
+    * not the most efficient way of doing this.
+    */
    if ( suffix == -1)
       strcpy( variable_name, name );
    else
       sprintf( variable_name, "%s%-d", name, suffix );
    ( void )make_upper( variable_name );
-/*
- * Now (attempt to) get the REXX variable
- * Set shv.shvvalue to NULL to force interpreter to allocate memory.
- */
+   /*
+    * Now (attempt to) get the REXX variable
+    * Set shv.shvvalue to NULL to force interpreter to allocate memory.
+    */
    MAKERXSTRING( shv.shvname, variable_name, strlen( variable_name ) );
    shv.shvvalue.strptr = NULL;
    shv.shvvalue.strlength = 0;
-/*
- * One or both of these is needed, too <sigh>
- */
+   /*
+    * One or both of these is needed, too <sigh>
+    */
    shv.shvnamelen = strlen( variable_name );
    shv.shvvaluelen = 0;
    rc = RexxVariablePool( &shv );              /* Set the REXX variable */
@@ -350,25 +349,25 @@ int *GetRexxVariableInteger
 
    shv.shvnext=NULL;                                /* only one block */
    shv.shvcode = RXSHV_FETCH;
-/*
- * This calls the RexxVariablePool() function for each value. This is
- * not the most efficient way of doing this.
- */
+   /*
+    * This calls the RexxVariablePool() function for each value. This is
+    * not the most efficient way of doing this.
+    */
    if ( suffix == -1)
       strcpy( variable_name, name );
    else
       sprintf( variable_name, "%s%-d", name, suffix );
    ( void )make_upper( variable_name );
-/*
- * Now (attempt to) get the REXX variable
- * Set shv.shvvalue to NULL to force interpreter to allocate memory.
- */
+   /*
+    * Now (attempt to) get the REXX variable
+    * Set shv.shvvalue to NULL to force interpreter to allocate memory.
+    */
    MAKERXSTRING( shv.shvname, variable_name, strlen( variable_name ) );
    shv.shvvalue.strptr = NULL;
    shv.shvvalue.strlength = 0;
-/*
- * One or both of these is needed, too <sigh>
- */
+   /*
+    * One or both of these is needed, too <sigh>
+    */
    shv.shvnamelen = strlen( variable_name );
    shv.shvvaluelen = 0;
    rc = RexxVariablePool( &shv );              /* Get the REXX variable */
@@ -526,7 +525,6 @@ int StrToNumber
    *result = sum;
    return 0;
 }
-
 
 /*-----------------------------------------------------------------------------
  * Converts a RXSTRING to a boolean. Input can be ON, Yes, 1 or OFF No, 0
@@ -1751,7 +1749,7 @@ int TermRxPackage
 
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function sets the name of thepackage trace file
  *----------------------------------------------------------------------------*/
 int RxSetTraceFile
 
@@ -1798,7 +1796,7 @@ int RxSetTraceFile
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function obtains the name of thepackage trace file and returns it
  *----------------------------------------------------------------------------*/
 char *RxGetTraceFile
 
@@ -1815,7 +1813,7 @@ char *RxGetTraceFile
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function sets the constants prefix for the package
  *----------------------------------------------------------------------------*/
 int RxSetConstantPrefix
 
@@ -1841,7 +1839,7 @@ int RxSetConstantPrefix
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function obtains the constants prefix for the package and returns it
  *----------------------------------------------------------------------------*/
 char *RxGetConstantPrefix
 
@@ -1858,7 +1856,7 @@ char *RxGetConstantPrefix
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function sets the run-time flags for the package
  *----------------------------------------------------------------------------*/
 void RxSetRunFlags
 
@@ -1876,7 +1874,7 @@ void RxSetRunFlags
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function obtains the run-time flags for the package and returns them
  *----------------------------------------------------------------------------*/
 int RxGetRunFlags
 
@@ -1893,7 +1891,7 @@ int RxGetRunFlags
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function returns the contents of retstr to the Rexx interpreter
  *----------------------------------------------------------------------------*/
 int RxReturn
 
@@ -1920,7 +1918,7 @@ int RxReturn
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function takes a signed integer and returns it to the Rexx interpreter
  *----------------------------------------------------------------------------*/
 int RxReturnNumber
 
@@ -1933,7 +1931,7 @@ int RxReturnNumber
    long num;
 #endif
 {
-   InternalTrace( RxPackageGlobalData, "RxReturnNumber", "%x,%d", retstr, num );
+   InternalTrace( RxPackageGlobalData, "RxReturnNumber", "%x,%ld", retstr, num );
 
    retstr->strlength = sprintf( (char *)retstr->strptr, "%ld", num );
    if ( RxPackageGlobalData
@@ -1949,7 +1947,36 @@ int RxReturnNumber
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function takes an unsigned integer and returns it to the Rexx interpreter
+ *----------------------------------------------------------------------------*/
+int RxReturnUnsignedNumber
+
+#ifdef HAVE_PROTO
+   ( RxPackageGlobalDataDef *RxPackageGlobalData, RXSTRING *retstr, ULONG num )
+#else
+   ( RxPackageGlobalData, retstr, num )
+   RxPackageGlobalDataDef *RxPackageGlobalData;
+   RXSTRING *retstr;
+   ULONG num;
+#endif
+{
+   InternalTrace( RxPackageGlobalData, "RxReturnUnsignedNumber", "%x,%lu", retstr, num );
+
+   retstr->strlength = sprintf( (char *)retstr->strptr, "%lu", num );
+   if ( RxPackageGlobalData
+   &&   RxPackageGlobalData->RxRunFlags & MODE_VERBOSE )
+   {
+      (void)fprintf( RxPackageGlobalData->RxTraceFilePointer,
+         "++ Exit %s with value \"%lu\"\n",
+         RxPackageGlobalData->FName,
+         num );
+      fflush( RxPackageGlobalData->RxTraceFilePointer );
+   }
+   return( 0 );
+}
+
+/*-----------------------------------------------------------------------------
+ * This function takes a double number and returns it to the Rexx interpreter
  *----------------------------------------------------------------------------*/
 int RxReturnDouble
 
@@ -2017,7 +2044,7 @@ int RxReturnPointer
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function takes a string and returns it to the Rexx interpreter
  *----------------------------------------------------------------------------*/
 int RxReturnString
 
@@ -2034,7 +2061,7 @@ int RxReturnString
 }
 
 /*-----------------------------------------------------------------------------
- * This function 
+ * This function takes a copy of a string, frees it, and returns the copy to the Rexx interpreter
  *----------------------------------------------------------------------------*/
 int RxReturnStringAndFree
 
@@ -2087,9 +2114,6 @@ int RxReturnStringAndFree
 }
 
 #if !defined(DYNAMIC_LIBRARY) && (defined(USE_WINREXX) || defined(USE_QUERCUS))
-/*-----------------------------------------------------------------------------
- * This function
- *----------------------------------------------------------------------------*/
 static REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
 
 #if defined(HAVE_PROTO)
@@ -2166,7 +2190,10 @@ static REH_RETURN_TYPE RxExitHandlerForSayTraceRedirection
 }
 #endif
 
-/***********************************************************************/
+/*-----------------------------------------------------------------------------
+ * This is the default subcommand handler for the package. It passes all
+ * subcommands to the shell for execution.
+ *----------------------------------------------------------------------------*/
 static RSH_RETURN_TYPE RxSubcomHandler
 
 #if defined(HAVE_PROTO)
@@ -2180,7 +2207,6 @@ static RSH_RETURN_TYPE RxSubcomHandler
    RSH_ARG1_TYPE Flags;      /* pointer to short for return of flags     */
    RSH_ARG2_TYPE Retstr;     /* pointer to RXSTRING for RC return        */
 #endif
-/***********************************************************************/
 {
    RSH_RETURN_TYPE rcode=0;
    int rc=0;

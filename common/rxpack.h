@@ -262,6 +262,7 @@ int RxReturn Args(( RxPackageGlobalDataDef *, RXSTRING * ));
 int RxReturnString Args(( RxPackageGlobalDataDef *, RXSTRING *, char * ));
 int RxReturnStringAndFree Args(( RxPackageGlobalDataDef *, RXSTRING *, char *, int ));
 int RxReturnNumber Args(( RxPackageGlobalDataDef *, RXSTRING *, long ));
+int RxReturnUnsignedNumber Args(( RxPackageGlobalDataDef *, RXSTRING *, ULONG ));
 int RxReturnDouble Args(( RxPackageGlobalDataDef *, RXSTRING *, double ));
 int RxReturnPointer Args(( RxPackageGlobalDataDef *, RXSTRING *, void * ));
 int memcmpi Args(( char *, char *, int ));

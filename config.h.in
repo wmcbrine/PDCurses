@@ -122,6 +122,9 @@
 /* Define if you want to use Xaw3d library  */
 #undef USE_XAW3D
 
+/* Define if you want to use neXtaw library  */
+#undef USE_NEXTAW
+
 /* Define if you want to include LATIN1 key support */
 #undef INCLUDE_LATIN1
 

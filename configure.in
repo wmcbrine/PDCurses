@@ -196,6 +196,18 @@ AC_ARG_WITH(xaw3d,
 if test "$with_xaw3d" = yes; then
 	AC_DEFINE(USE_XAW3D)
 fi
+
+dnl ---------------------- check for neXtaw library -------------------
+dnl allow --with-nextaw to link with XCurses
+AC_ARG_WITH(nextaw,
+	[  --with-nextaw           link with neXtaw],
+	[with_nextaw=$withval],
+	[with_nextaw=no],
+)
+if test "$with_nextaw" = yes; then
+	AC_DEFINE(USE_NEXTAW)
+fi
+
 dnl --------------- Check how to make shared libraries -------------------
 dnl Force the ability of shared library usage
 with_rexx="rexxtrans"

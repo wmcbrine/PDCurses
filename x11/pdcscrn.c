@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.2 2001/01/10 08:30:13 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.3 2004/12/16 01:03:18 rexx Exp $";
 #endif
 
 bool GLOBAL_sb_on=FALSE;
@@ -161,6 +161,7 @@ extern bool sb_started;
 	internal->audible	= TRUE;
 	internal->visibility	= 1;
 	internal->orig_cursor = internal->cursor;
+	internal->orig_attr = 0;
 	internal->orgcbr = 0;
 	internal->blank = ' ';
 	internal->resized = FALSE;

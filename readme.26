@@ -1,0 +1,24 @@
+
+                             PDCurses 2.6
+            (Public Domain Curses for DOS, OS/2, X11 and Win32)
+
+
+INTRODUCTION:
+
+This release of PDCurses includes the following changes:
+
+BUGS FIXED:
+Allow accented characters on Win32 platformwhen run on non-English keyboards.
+Allow "special" characters like Ctrl-S, Ctrl-Q under OS/2 to be returned.
+
+NEW COMPILER SUPPORT:
+None
+
+Cheers, Mark
+------------------------------------------------------------------------
+ Mark Hessling,  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
+ Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL
+ Maintainer of PDCurses: Public Domain Curses and, Regina Rexx interpreter
+ Use Rexx ? join the Rexx Language Association: http://www.rexxla.org
+------------------------------------------------------------------------
+

@@ -32,7 +32,6 @@
 #undef	vline
 #undef	wvline
 #undef	PDC_wunderline
-#undef	PDC_woverline
 #undef	PDC_leftline
 #undef	PDC_rightline
 
@@ -41,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.2 2001/01/10 08:26:52 mark Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.3 2001/03/02 13:40:26 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -59,7 +58,6 @@ char *rcsid_border  = "$Id: border.c,v 1.2 2001/01/10 08:26:52 mark Exp $";
   	int whline(WINDOW *win, chtype ch, int n);
   	int wvline(WINDOW *win, chtype ch, int n);
   	int PDC_wunderline(WINDOW *win, int n, bool state);
-  	int PDC_woverline(WINDOW *win, int n, bool state);
   	int PDC_wleftline(WINDOW *win, int n, bool state);
   	int PDC_wrightline(WINDOW *win, int n, bool state);
 
@@ -105,7 +103,6 @@ char *rcsid_border  = "$Id: border.c,v 1.2 2001/01/10 08:26:52 mark Exp $";
       vline                                 -        -      4.0      Y
       wvline                                -        -      4.0      Y
       PDC_wunderline                        -        -       -       Y
-      PDC_woverline                         -        -       -       Y
       PDC_wleftline                         -        -       -       Y
       PDC_wrightline                        -        -       -       Y
 
@@ -472,53 +469,6 @@ bool state;
 			win->_y[n][win->_curx] |= A_UNDERLINE; /* Turn ON A_UNDERLINE */
 		else
 			win->_y[n][win->_curx] |= ~A_UNDERLINE; /* Turn OFF A_UNDERLINE */
-
-		if (win->_firstch[n] == _NO_CHANGE)
-		{
-			win->_firstch[n] = win->_curx;
-			win->_lastch[n] = win->_curx;
-		}
-		else
-		{
-			win->_firstch[n] = min(win->_firstch[n], win->_curx);
-			win->_lastch[n] = max(win->_lastch[n], win->_curx);
-		}
-	}
-
-	PDC_sync(win);
-	return (OK);
-}
-/***********************************************************************/
-#ifdef HAVE_PROTO
-int	PDC_CDECL	PDC_woverline(WINDOW *win, int n, bool state)
-#else
-int	PDC_CDECL	PDC_woverline(win,n,state)
-WINDOW *win;
-int n;
-bool state;
-#endif
-/***********************************************************************/
-{
-	int	endpos;
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_woverline() - called\n");
-#endif
-
-	if (win == (WINDOW *)NULL)
-		return( ERR );
-
-	if (n < 1)
-		return( ERR );
-
-	endpos = min(win->_cury + n -1, win->_maxy);
-
-	for (n = win->_cury; n <= endpos; n++)
-	{
-		if ( state ) 
-			win->_y[n][win->_curx] |= A_OVERLINE; /* Turn ON A_OVERLINE */
-		else
-			win->_y[n][win->_curx] |= ~A_OVERLINE; /* Turn OFF A_OVERLINE */
 
 		if (win->_firstch[n] == _NO_CHANGE)
 		{

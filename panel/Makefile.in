@@ -62,7 +62,7 @@ panel.o
 
 libpanel.a : $(OBJS)
 	ar rv $@ $?
-	$(RANLIB) $@
+	-$(RANLIB) $@
 
 panel.o: $(srcdir)/panel.c $(PDCURSES_HOME)/panel.h $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/panel.c

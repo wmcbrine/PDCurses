@@ -12,8 +12,8 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=//e/curses
-CC_HOME		=/cygnus/cygwin-b20/H-i586-cygwin32/i586-cygwin32
+PDCURSES_HOME		= $(HOME)/PDCurses
+#CC_HOME		=/cygnus/cygwin-b20/H-i586-cygwin32/i586-cygwin32
 ################################################################################
 # Nothing below here should required changing.
 ################################################################################
@@ -23,8 +23,8 @@ PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)/panel.h
 
-CCLIBDIR		=$(CC_HOME)/lib
-CCINCDIR		=$(CC_HOME)/include
+#CCLIBDIR		=$(CC_HOME)/lib
+#CCINCDIR		=$(CC_HOME)/include
 
 srcdir		= $(PDCURSES_HOME)/pdcurses
 osdir		= $(PDCURSES_HOME)/win32
@@ -58,6 +58,8 @@ LIBPANEL	= panel.a
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
 DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
+
+SHELL = /bin/bash
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)

@@ -1,0 +1,32 @@
+
+                             PDCurses 2.7
+            (Public Domain Curses for DOS, OS/2, X11 and Win32)
+
+
+INTRODUCTION:
+
+This release of PDCurses includes the following changes:
+
+BUGS FIXED:
+- Allow Russian 'r' character ASCII 0xe0 to be returned. Fix courtesy
+  of Ruslan Fedyarov.
+- SF bugs:
+  - 695842: nl() and nonl() now return OK - fix by Warren Gay
+  - 695847: termattrs() now also return A_UNDERLINE, A_REVERSE
+- Changes for cursor size under DOS.
+
+NEW FEATURES:
+- Implemented timeout() and wtimeout() Bug 695827 (Only on XCurses!!)
+
+NEW COMPILER SUPPORT:
+- OpenWatcom 1.1 supported on OS/2 and Win32. Bug 808864
+
+
+Cheers, Mark
+------------------------------------------------------------------------
+ Mark Hessling,  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
+ Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL
+ Maintainer of PDCurses: Public Domain Curses and, Regina Rexx interpreter
+ Use Rexx ? join the Rexx Language Association: http://www.rexxla.org
+------------------------------------------------------------------------
+

@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.6 2004/09/14 07:54:26 rexx Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.7 2004/12/16 01:06:26 rexx Exp $";
 #endif
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
@@ -207,6 +207,17 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
             csbi.dwMaximumWindowSize.X,
             internal->cols);
       return(ERR);
+   }
+   if ( getenv( "PDC_ORIGINAL_COLORS" ) != NULL )
+   {
+      chtype orig_back, orig_fore;
+      orig_fore = csbi.wAttributes & FOREGROUND_MASK;
+      orig_back = (csbi.wAttributes & BACKGROUND_MASK) >> 4;
+      internal->orig_attr = (orig_back << 16) | orig_fore;
+   }
+   else
+   {
+      internal->orig_attr = 0;
    }
 
    if (getenv("PDC_RESTORE_SCREEN") != NULL)

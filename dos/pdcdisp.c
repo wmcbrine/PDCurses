@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.4 2004/01/02 05:50:05 mark Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.5 2004/01/02 21:02:50 mark Exp $";
 #endif
 
 #ifdef PC
@@ -47,6 +47,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg, unsigned doff, unsign
 		*dst++ = *src++;
 	}
 }
+#endif
 
 /*man-start*********************************************************************
 

@@ -109,8 +109,8 @@ XCURSESKEY XCursesKeys[] =
 /* keycode        keypad ?       normal         shifted         control         alt*/
  {XK_Left,        FALSE,         KEY_LEFT,      KEY_SLEFT,      CTL_LEFT,       ALT_LEFT},
  {XK_Right,       FALSE,         KEY_RIGHT,     KEY_SRIGHT,     CTL_RIGHT,      ALT_RIGHT},
- {XK_Up,          FALSE,         KEY_UP,        KEY_UP,         CTL_UP,         ALT_UP},
- {XK_Down,        FALSE,         KEY_DOWN,      KEY_DOWN,       CTL_DOWN,       ALT_DOWN},
+ {XK_Up,          FALSE,         KEY_UP,        KEY_SUP,        CTL_UP,         ALT_UP},
+ {XK_Down,        FALSE,         KEY_DOWN,      KEY_SDOWN,      CTL_DOWN,       ALT_DOWN},
  {XK_Home,        FALSE,         KEY_HOME,      KEY_SHOME,      CTL_HOME,       ALT_HOME},
  {XK_R7,          FALSE,         KEY_HOME,      KEY_SHOME,      CTL_HOME,       ALT_HOME}, /* Sun Type 4 keyboard */
  {XK_End,         FALSE,         KEY_END,       KEY_SEND,       CTL_END,        ALT_END},

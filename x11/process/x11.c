@@ -439,6 +439,7 @@ char *argv[];
    int italic_font_valid;
    XColor pointerforecolor,pointerbackcolor;
    XrmValue rmfrom,rmto;
+   XWMHints wmhints;
    char wait_buf[5];
    int wait_value=0,i=0;
    int minwidth=0,minheight=0;
@@ -911,6 +912,18 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
    XtAddEventHandler(drawing,im_event_mask,False,NULL,NULL);
    XSetICFocus(Xic);
 #endif
+   /*
+    * Keep focus on Click-to-front window managers
+    * Change courtesy of Jean-Pierre Demailly
+    */
+   wmhints.flags = InputHint;
+   wmhints.input = True;
+   XSetWMHints(XtDisplay(topLevel), XtWindow(topLevel), &wmhints);
+   XSetInputFocus(XtDisplay(topLevel), XtWindow(topLevel),
+                  RevertToNone, CurrentTime);
+
+   XSetInputFocus(XtDisplay(drawing), XtWindow(drawing),
+                  RevertToNone, CurrentTime);
    /*
     * Wait for events...
     */

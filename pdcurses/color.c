@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.3 2002/03/22 22:36:50 mark Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.4 2004/12/16 01:01:24 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -98,15 +98,15 @@ char *rcsid_color  = "$Id: color.c,v 1.3 2002/03/22 22:36:50 mark Exp $";
  	has_colors() indicates if the terminal supports, and can maniplulate
  	color. It returns TRUE or FALSE.
 
- 	can_change_color() indicates if the terminal has the capability 
+ 	can_change_color() indicates if the terminal has the capability
  	to change the definition of its colors. Although this is possible,
  	at least with VGA monitors, this function always returns FALSE.
 
- 	pair_content() is used to determine what the colors of a given 
+ 	pair_content() is used to determine what the colors of a given
  	color-pair consist of.
 
  	PDC_set_line_color() is used to set the color, globally, for the
- 	color of the lines drawn for the attributes: A_UNDERLINE, A_OVERLINE, 
+ 	color of the lines drawn for the attributes: A_UNDERLINE, A_OVERLINE,
  	A_LEFTLINE and A_RIGHTLINE.  PDCurses only feature.
 
  	NOTE: has_colors() is implemented as a macro.
@@ -369,11 +369,10 @@ short color;
 #endif
 /***********************************************************************/
 {
-
- if (color >= COLORS || color < 0)
-    return(ERR);
- SP->line_color = color;
- return(OK);
+   if (color >= COLORS || color < 0)
+      return(ERR);
+   SP->line_color = color;
+   return(OK);
 }
 
 #if defined(CHTYPE_LONG)
@@ -385,12 +384,24 @@ int	PDC_init_atrtab()
 #endif
 /***********************************************************************/
 {
- register int i=0;
+   int orig_fore, orig_back;
+   register int i=0;
 
- for (i=0;i<PDC_COLOR_PAIRS;i++)
-    PDC_init_pair(i,COLOR_WHITE,COLOR_BLACK);
- PDC_init_pair(PDC_COLOR_PAIRS,COLOR_BLACK,COLOR_WHITE);
- return(0);
+   if ( SP->orig_attr == 0 )
+   {
+      orig_fore = COLOR_WHITE;
+      orig_back = COLOR_BLACK;
+   }
+   else
+   {
+      orig_fore = SP->orig_attr & A_CHARTEXT;
+      orig_back = (SP->orig_attr & A_ATTRIBUTES) >> 16;
+   }
+
+   for ( i = 0; i <PDC_COLOR_PAIRS; i++ )
+      PDC_init_pair( i, orig_fore, orig_back );
+   PDC_init_pair( PDC_COLOR_PAIRS, orig_back, orig_fore );
+   return(0);
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -403,37 +414,37 @@ short bg;
 #endif
 /***********************************************************************/
 {
- register int i=0;
- unsigned char temp_bg=0;
- int ttt,uuu;
+   register int i=0;
+   unsigned char temp_bg=0;
+   int ttt,uuu;
 
- for (i=0;i<PDC_OFFSET;i++)
+   for (i=0;i<PDC_OFFSET;i++)
    {
-    atrtab[(pairnum*PDC_OFFSET)+i] = fg | (bg << 4);
-    ttt = A_REVERSE >> 19;
-    uuu = i&ttt;
-    if (uuu == ttt)
-       atrtab[(pairnum*PDC_OFFSET)+i] = 0x70;
-    ttt = A_UNDERLINE >> 19;
-    uuu = i&ttt;
-    if (uuu == ttt)
-       atrtab[(pairnum*PDC_OFFSET)+i] = 1;
-    ttt = A_INVIS >> 19;
-    uuu = i&ttt;
-    if (uuu == ttt)
+      atrtab[(pairnum*PDC_OFFSET)+i] = fg | (bg << 4);
+      ttt = A_REVERSE >> 19;
+      uuu = i&ttt;
+      if (uuu == ttt)
+         atrtab[(pairnum*PDC_OFFSET)+i] = 0x70;
+      ttt = A_UNDERLINE >> 19;
+      uuu = i&ttt;
+      if (uuu == ttt)
+         atrtab[(pairnum*PDC_OFFSET)+i] = 1;
+      ttt = A_INVIS >> 19;
+      uuu = i&ttt;
+      if (uuu == ttt)
       {
-       temp_bg = (atrtab[(pairnum*PDC_OFFSET)+i])>>4;
-       atrtab[(pairnum*PDC_OFFSET)+i] = temp_bg<<4|temp_bg;
+         temp_bg = (atrtab[(pairnum*PDC_OFFSET)+i])>>4;
+         atrtab[(pairnum*PDC_OFFSET)+i] = temp_bg<<4|temp_bg;
       }
-    ttt = A_BOLD >> 19;
-    uuu = i&ttt;
-    if (uuu == ttt)
-       atrtab[(pairnum*PDC_OFFSET)+i] |= 8;
-    ttt = A_BLINK >> 19;
-    uuu = i&ttt;
-    if (uuu == ttt)
-       atrtab[(pairnum*PDC_OFFSET)+i] |= 128;
+      ttt = A_BOLD >> 19;
+      uuu = i&ttt;
+      if (uuu == ttt)
+         atrtab[(pairnum*PDC_OFFSET)+i] |= 8;
+      ttt = A_BLINK >> 19;
+      uuu = i&ttt;
+      if (uuu == ttt)
+         atrtab[(pairnum*PDC_OFFSET)+i] |= 128;
    }
- return(0);
+   return(0);
 }
 #endif

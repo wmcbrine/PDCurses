@@ -51,7 +51,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.4 2003/06/23 07:53:52 mark Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.5 2004/04/02 02:24:04 rexx Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -369,7 +369,7 @@ int PDC_CDECL resetty()
 #   endif
 #  endif
 # endif
-# if defined(OS2)
+# if defined(OS2) || defined(WIN32)
       PDC_resize_screen(c_save_tty.saved.lines,c_save_tty.saved.cols);
 # else
       PDC_set_rows(c_save_tty.saved.lines);

@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.8 2002/11/28 08:45:06 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.9 2002/12/16 09:40:36 mark Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -1196,7 +1196,7 @@ static int win32_kbhit(int timeout)
    DWORD read=0,avail=0,unread=0;
    INPUT_RECORD ip;
 #ifdef PDCDEBUG
-   if (trace_on) PDC_debug("win32_kbhit(THREADING) - called: timeout %d keyCount %d\n", timeout, keyCount);
+   if (trace_on) PDC_debug("win32_kbhit(THREADING) - called: timeout %d\n", timeout);
 #endif
 
 

@@ -645,9 +645,11 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
                                         NULL);
    }
 
-#if 0
-   fprintf(stderr,"Width: %d Height: %d\n",XCursesWindowWidth+XCURSESSCROLLBARWIDTH,
-                                   XCursesWindowHeight+XCURSESSCROLLBARWIDTH);
+#if 1
+   fprintf(stderr,"Width: %d Height: %d FontWidth: %d FontHeight: %d\n",XCursesWindowWidth+XCURSESSCROLLBARWIDTH,
+                                   XCursesWindowHeight+XCURSESSCROLLBARWIDTH,
+                                        XCursesFontWidth,
+                                        XCursesFontHeight);
 #endif
 /*
  XtVaSetValues(drawing,

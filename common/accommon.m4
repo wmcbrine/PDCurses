@@ -246,6 +246,7 @@ AC_DEFUN([MH_CHECK_X_INC],
 [
 AC_MSG_CHECKING(for location of X headers)
 mh_x11_dir=""
+mh_x11_xaw_dir=""
 dnl
 dnl specify latest release of X directories first
 dnl
@@ -309,6 +310,30 @@ for ac_dir in $mh_inc_dirs ; do
   fi
 done
 
+dnl
+dnl Try to determine the directory containing Xaw headers
+dnl We will append X11 to all the paths above as an extra check
+dnl
+if test "$with_xaw3d" = yes; then
+	mh_xaw_dir="Xaw3d"
+else
+	if test "$with_nextaw" = yes; then
+		mh_xaw_dir="neXtaw"
+	else
+		mh_xaw_dir="Xaw"
+	fi
+fi
+for ac_dir in $mh_inc_dirs ; do
+  if test -r $ac_dir/$mh_xaw_dir/Box.h; then
+    mh_x11_xaw_dir=$ac_dir
+    break
+  fi
+  if test -r $ac_dir/X11/$mh_xaw_dir/Box.h; then
+    mh_x11_xaw_dir="$ac_dir/X11"
+    break
+  fi
+done
+
 if test "x$mh_x11_dir" != "x" ; then
 	mh_x11_dir_no_x11=`echo $mh_x11_dir | sed 's/\/X11$//'`
 dnl
@@ -328,11 +353,19 @@ dnl under Solaris. If so, ignore it.
 	else
 		MH_XINC_DIR="-I$mh_x11_dir"
 	fi
-	AC_MSG_RESULT(found in $mh_x11_dir)
-	AC_SUBST(MH_XINC_DIR)
 else
 	AC_MSG_ERROR(Cannot find required header file Intrinsic.h; XCurses cannot be configured)
 fi
+
+if test "x$mh_x11_xaw_dir" != "x" ; then
+	MH_XINC_DIR="-I$mh_x11_xaw_dir $MH_XINC_DIR"
+else
+	AC_MSG_ERROR(Cannot find required Xaw header file Box.h; XCurses cannot be configured)
+fi
+
+	AC_MSG_RESULT(found in $mh_x11_dir $mh_x11_xaw_dir)
+	AC_SUBST(MH_XINC_DIR)
+
 ])dnl
 
 dnl ---------------------------------------------------------------------------

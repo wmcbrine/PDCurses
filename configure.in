@@ -1,6 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(curspriv.h)
 AC_PREFIX_DEFAULT(/usr)
+VER=26
+VER_DOT=2.6
+AC_SUBST(VER)
+AC_SUBST(VER_DOT)
+AC_SUBST(prefix)
 
 dnl ---------------------- check for C compiler -----------------
 dnl Checks for one of the C compilers below - change if yours not there.
@@ -213,7 +218,7 @@ dnl Force the ability of shared library usage
 with_rexx="rexxtrans"
 MH_SHARED_LIBRARY(XCurses)
 
-AC_OUTPUT(Makefile pdcurses/$mymakefile demos/Makefile panel/Makefile tools/Makefile saa/Makefile)
+AC_OUTPUT(Makefile pdcurses/$mymakefile demos/Makefile panel/Makefile tools/Makefile saa/Makefile xcurses-config)
 
 case "$target" in
         *ibm-aix*)

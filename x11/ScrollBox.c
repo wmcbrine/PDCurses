@@ -128,10 +128,12 @@ Boolean doit;
    Dimension hw;   /* horizontal scrollbar length (width) */
    Position vx;
    Position hy;
-#if 0
+#if 1
    Dimension th;
    Dimension tw;
 #endif
+   long supp=0;
+   XSizeHints hints;
    int i;
 
    if (sbw->composite.num_children != 3)
@@ -156,17 +158,43 @@ Boolean doit;
    vscroll = sbw->composite.children[1];
    hscroll = sbw->composite.children[2];
 
+#if 1
+fprintf(stderr,"%s %d:\n",__FILE__,__LINE__);
+   if ( XtIsRealized(wmain) )
+   {
+      if ( !XGetWMNormalHints( XtDisplay(wmain), XtWindow(wmain), &hints, &supp ) )
+      {
+         hints.height_inc = 13;
+         hints.width_inc = 7;
+fprintf(stderr,"%s %d:\n",__FILE__,__LINE__);
+      }
+   }
+   else
+   {
+      hints.height_inc = 13;
+      hints.width_inc = 7;
+   }
+fprintf(stderr,"%s %d: height: %d width: %d\n",__FILE__,__LINE__,hints.height_inc,hints.width_inc);
+#endif
+
    /* 
     * Size all three widgets so that space is fully utilized.
     */
 #if 1
-   mw = sbw->core.width - (2 * sbw->scrollBox.h_space) - 
+   mw = sbw->core.width - (2 * sbw->scrollBox.h_space) -
         vscroll->core.width - (2 * vscroll->core.border_width) -
         (2 * wmain->core.border_width);
 
-   mh = sbw->core.height - (2 * sbw->scrollBox.v_space) - 
+
+   mh = sbw->core.height - (2 * sbw->scrollBox.v_space) -
         hscroll->core.height - (2 * hscroll->core.border_width) -
         (2 * wmain->core.border_width);
+
+   /*
+    * Force the main window to be sized to the appropriate increments
+    */
+   mw = (mw/hints.width_inc)*hints.width_inc;
+   mh = ((mh/hints.height_inc)*hints.height_inc)+hints.height_inc;
 
    vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
 
@@ -174,6 +202,7 @@ Boolean doit;
 
    vh = mh;   /* scrollbars are always same length as main window */
    hw = mw;
+fprintf(stderr,"%s %d: mw %d mh %d vx %d hy %d hinc %d winc %d\n",__FILE__,__LINE__,mw,mh,vx,hy,hints.height_inc,hints.width_inc);
 
    if (doit) {
       XtResizeWidget(wmain, mw, mh, 1);

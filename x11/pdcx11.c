@@ -1368,7 +1368,7 @@ int XCursesRefreshScrollbar()
 #endif
  if (!SP->sb_on)
     return(ERR);
-#if 0
+#if 1
 fprintf(stderr,"%s:XCursesRefreshScrollbar() - vert: %d %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
                         SP->sb_total_y,total_y,viewport_y,cur_y,
                         vtop,vlength);
@@ -1376,10 +1376,10 @@ fprintf(stderr,"%s:XCursesRefreshScrollbar() - horz: %d %d %f %f %f %f %f\n",(XC
                         SP->sb_total_x,XCursesFontWidth,total_x,viewport_x,cur_x,
                         htop,hlength);
 #endif
- if (SP->sb_total_y != 0)
-    XawScrollbarSetThumb( scrollVert, vtop, vlength );
- if (SP->sb_total_x != 0)
-    XawScrollbarSetThumb( scrollHoriz, htop, hlength );
+ if (SP->sb_total_y != (double)0)
+    XawScrollbarSetThumb( scrollVert, (double)vtop, (double)vlength );
+ if (SP->sb_total_x != (double)0)
+    XawScrollbarSetThumb( scrollHoriz, (double)htop, (double)hlength );
  return(OK);
 }
 /***********************************************************************/
@@ -3119,7 +3119,7 @@ XtPointer call_data;
          cur_y = (total_y - viewport_y);
    }
    SP->sb_cur_y = cur_y / XCursesFontHeight;
-   XawScrollbarSetThumb(w,(float)((float)cur_y/(float)total_y),(float)((float)viewport_y/(float)total_y));
+   XawScrollbarSetThumb(w,(double)((double)cur_y/(double)total_y),(double)((double)viewport_y/(double)total_y));
    /*
     * Send a key: if pixels negative, send KEY_SCROLL_DOWN
     */
@@ -3161,7 +3161,7 @@ XtPointer call_data;
          cur_x = (total_x - viewport_x);
    }
    SP->sb_cur_x = cur_x / XCursesFontWidth;
-   XawScrollbarSetThumb(w,(float)((float)cur_x/(float)total_x),(float)((float)viewport_x/(float)total_x));
+   XawScrollbarSetThumb(w,(double)((double)cur_x/(double)total_x),(double)((double)viewport_x/(double)total_x));
    /*
     * Send a key: if pixels negative, send KEY_SCROLL_DOWN
     */
@@ -3181,9 +3181,9 @@ XtPointer call_data;
 #endif
 /***********************************************************************/
 {
-   float percent = *(float *) call_data;
-   float total_y=(float)(SP->sb_total_y);
-   float viewport_y=(float)(SP->sb_viewport_y);
+   double percent = *(double *) call_data;
+   double total_y=(double)(SP->sb_total_y);
+   double viewport_y=(double)(SP->sb_viewport_y);
    int cur_y=SP->sb_cur_y;
 
 #if 0
@@ -3195,11 +3195,11 @@ fprintf(stderr,"Thumb_up_down: percent %f\n",percent);
     */
    if (SP->sb_viewport_y >= SP->sb_total_y)
       return;
-   if ((SP->sb_cur_y = (int)((float)total_y * percent)) >= (total_y - viewport_y))
+   if ((SP->sb_cur_y = (int)((double)total_y * percent)) >= (total_y - viewport_y))
       SP->sb_cur_y = total_y - viewport_y;
 
    /* SP->sb_cur_y = cur_y;*/
-   XawScrollbarSetThumb(w,(float)(cur_y/total_y),(float)(viewport_y/total_y));
+   XawScrollbarSetThumb(w,(double)(cur_y/total_y),(double)(viewport_y/total_y));
    /*
     * Send a key: if pixels negative, send KEY_SCROLL_DOWN
     */
@@ -3219,9 +3219,9 @@ XtPointer call_data;
 #endif
 /***********************************************************************/
 {
-   float percent = *(float *) call_data;
-   float total_x=(float)(SP->sb_total_x);
-   float viewport_x=(float)(SP->sb_viewport_x);
+   double percent = *(double *) call_data;
+   double total_x=(double)(SP->sb_total_x);
+   double viewport_x=(double)(SP->sb_viewport_x);
    int cur_x=SP->sb_cur_x;
 
 #if 0
@@ -3237,7 +3237,7 @@ fprintf(stderr,"Thumb_up_down: percent %f\n",percent);
       SP->sb_cur_x = total_x - viewport_x;
 
    /* SP->sb_cur_x = cur_x;*/
-   XawScrollbarSetThumb(w,(float)(cur_x/total_x),(float)(viewport_x/total_x));
+   XawScrollbarSetThumb(w,(double)(cur_x/total_x),(double)(viewport_x/total_x));
    /*
     * Send a key: if pixels negative, send KEY_SCROLL_DOWN
     */

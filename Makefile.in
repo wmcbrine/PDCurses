@@ -4,8 +4,8 @@ SHELL = /bin/sh
 
 @SET_MAKE@
 
-VER=26
-VER_DOT=2.6
+VER=@VER@
+VER_DOT=@VER_DOT@
 PDC_DIR=PDCurses-$(VER_DOT)
 
 srcdir		=@srcdir@
@@ -13,6 +13,7 @@ VPATH		=@srcdir@
 prefix		=@prefix@
 exec_prefix		=@exec_prefix@
 libdir		=$(exec_prefix)/lib
+bindir		=$(exec_prefix)/bin
 includedir		=$(exec_prefix)/include
 pdcursesdir=./pdcurses
 paneldir=./panel
@@ -39,6 +40,7 @@ realclean ::
 
 install:
 	$(INSTALL) -d -m 755 $(libdir)
+	$(INSTALL) -d -m 755 $(bindir)
 	$(INSTALL) -d -m 755 $(includedir)
 	$(INSTALL) -c -m 644 $(srcdir)/curses.h $(includedir)/xcurses.h
 	sed -e 's/#include <curses.h>/#include <xcurses.h>/' < $(srcdir)/panel.h > ./xpanel.h
@@ -48,6 +50,7 @@ install:
 	$(INSTALL) -c -m 555 $(pdcursesdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) $(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST)
 	$(INSTALL) -c -m 644 $(paneldir)/libpanel.a $(libdir)/libpanel.a
 	-$(RANLIB) $(libdir)/libpanel.a
+	$(INSTALL) -c -m 755 ./xcurses-config $(bindir)/xcurses-config
 
 clean ::
 	rm -f config.log config.cache config.status
@@ -60,7 +63,7 @@ manual:
 	cd tools; $(MAKE) $(MFLAGS) $@
 
 zip:
-	zip -y pdcurs$(VER) README INSTALL TODO Makefile.in config.h.in configure \
+	zip -y pdcurs$(VER) README INSTALL TODO Makefile.in config.h.in configure xcurses-config.in \
 	configure.in config.guess config.sub install-sh aclocal.m4 pdc64.gif \
 	curses.h xcurses.h curspriv.h panel.h maintain.er readme.* makezip.cmd \
 	pdcurses/README pdcurses/*.c demos/*.c demos/*.h \
@@ -78,7 +81,7 @@ zip:
 
 dist:
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/Makefile.in \
-	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure $(PDC_DIR)/config.guess $(PDC_DIR)/aclocal.m4 $(PDC_DIR)/common/accommon.m4 \
+	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure $(PDC_DIR)/config.guess $(PDC_DIR)/aclocal.m4 $(PDC_DIR)/common/accommon.m4 $(PDC_DIR)/xcurses-config.in \
 	$(PDC_DIR)/config.sub $(PDC_DIR)/configure.in $(PDC_DIR)/install-sh $(PDC_DIR)/curses.h $(PDC_DIR)/xcurses.h \
 	$(PDC_DIR)/curspriv.h $(PDC_DIR)/panel.h $(PDC_DIR)/pdc64.gif \
 	$(PDC_DIR)/maintain.er $(PDC_DIR)/readme.* $(PDC_DIR)/makezip.cmd \
@@ -97,7 +100,7 @@ dist:
 
 tar:
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/Makefile.in \
-	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure $(PDC_DIR)/config.guess $(PDC_DIR)/aclocal.m4 $(PDC_DIR)/common/accommon.m4 \
+	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure $(PDC_DIR)/config.guess $(PDC_DIR)/aclocal.m4 $(PDC_DIR)/common/accommon.m4 $(PDC_DIR)/xcurses-config.in \
 	$(PDC_DIR)/config.sub $(PDC_DIR)/configure.in $(PDC_DIR)/install-sh $(PDC_DIR)/curses.h $(PDC_DIR)/xcurses.h \
 	$(PDC_DIR)/curspriv.h $(PDC_DIR)/panel.h $(PDC_DIR)/pdc64.gif \
 	$(PDC_DIR)/maintain.er $(PDC_DIR)/readme.* $(PDC_DIR)/makezip.cmd \

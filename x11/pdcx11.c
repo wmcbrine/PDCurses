@@ -1542,9 +1542,7 @@ Boolean *continue_to_dispatch;
 #endif
 /***********************************************************************/
 {
-#if 0
  XClientMessageEvent *client_event=(XClientMessageEvent *)event;
-#endif
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("%s:XCursesNonmaskable called: otherpid %d\n",(XCursesProcess)?"     X":"CURSES",otherpid);
@@ -1555,16 +1553,13 @@ Boolean *continue_to_dispatch;
 #ifdef PDCDEBUG
          say("ClientMessage received\n");
 #endif
-#if 0
          /*
-          * This code used to be included, but it resulted in continual
-          * failure of THE on my Toshiba laptop. Removed 3-2-2001 to see
-          * what effect it has.
+          * This code used to include handling of WM_SAVE_YOURSELF, but 
+          * it resulted in continual failure of THE on my Toshiba laptop. 
+          * Removed on 3-3-2001. Now only exits on WM_DELETE_WINDOW
           */
-         if ((Atom)client_event->data.s[0] == wm_atom[0]
-         ||  (Atom)client_event->data.s[0] == wm_atom[1])
+         if ( (Atom)client_event->data.s[0] == wm_atom[0] )
             XCursesExitXCursesProcess(0,SIGKILL,"");
-#endif
          break;
     default:
 #ifdef PDCDEBUG

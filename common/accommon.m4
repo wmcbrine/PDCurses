@@ -1,20 +1,20 @@
 dnl ---------------------------------------------------------------------------
 dnl This file offers the following common macros...
 dnl ---------------------------------------------------------------------------
-CHECK_REXX
-MH_IPC
-MH_CHECK_X_INC
-MH_CHECK_X_LIB
-MH_HAVE_PROTO
-MH_PROG_CC
-MH_CHECK_X_HEADERS
-MH_CHECK_X_KEYDEFS
-MH_TRY_LINK
-MH_CHECK_LIB
-MH_HOWTO_SHARED_LIBRARY
-MH_SHARED_LIBRARY
-MH_HOWTO_DYN_LINK
-MH_CHECK_CC_O
+dnl CHECK_REXX
+dnl MH_IPC
+dnl MH_CHECK_X_INC
+dnl MH_CHECK_X_LIB
+dnl MH_HAVE_PROTO
+dnl MH_PROG_CC
+dnl MH_CHECK_X_HEADERS
+dnl MH_CHECK_X_KEYDEFS
+dnl MH_TRY_LINK
+dnl MH_CHECK_LIB
+dnl MH_HOWTO_SHARED_LIBRARY
+dnl MH_SHARED_LIBRARY
+dnl MH_HOWTO_DYN_LINK
+dnl MH_CHECK_CC_O
 
 dnl ---------------------------------------------------------------------------
 dnl Check REXX library and header files
@@ -836,11 +836,17 @@ case "$target" in
 		BASE_BINARY="beosbinary"
 		OTHER_INSTALLS=""
 		;;
+	*apple-darwin*)
+		LD_RXLIB1="${CC} -dynamiclib -install_name=\$(prefix)/lib/\$(@)"
+		DYN_COMP="-fno-common"
+		OTHER_INSTALLS=""
+		SHLPST=".dylib"
+		;;
 	*qnx*)
 		LIBPRE=""
 		LIBPST=".lib"
 		SHLPRE=""
-		SHLPST=""
+		SHLPST=".lib"
 		DYN_COMP="-Q"   # force no check for dynamic loading
 		SHLFILE=""
 		EEXTRA="-mf -N0x20000 -Q"

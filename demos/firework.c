@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.3 2004/01/02 05:50:05 mark Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.4 2004/08/07 04:45:08 rexx Exp $";
 #endif
 
 #if __STDC__
@@ -44,7 +44,7 @@ char *rcsid_firework  = "$Id: firework.c,v 1.3 2004/01/02 05:50:05 mark Exp $";
 # define Args(x) ()
 #endif
 
-int myrefresh Args((void));
+void myrefresh Args((void));
 chtype get_colour Args((void));
 void explode Args((int,int));
 
@@ -153,7 +153,7 @@ int row,col;
        myrefresh();
 }
 
-int myrefresh()
+void myrefresh()
 {
        napms(DELAYSIZE);
        move(LINES-1,COLS-1);
@@ -162,7 +162,7 @@ int myrefresh()
 
 chtype get_colour()
 {
-       static chtype tbl[] = 
+       static chtype tbl[] =
        {
                COLOR_RED,
                COLOR_BLUE,

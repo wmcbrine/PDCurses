@@ -831,6 +831,7 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 #	mh_dyn_link='${CC} -Wl,-shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
 	if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
 		LD_RXLIB1="ld -shared"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
 		LD_RXLIB2="${REXX_LIBS}"
 		SHLPRE="lib"
@@ -841,6 +842,7 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 #		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
 		if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
 			LD_RXLIB1="ld -G"
+			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"
 			LD_RXLIB2="${REXX_LIBS}"
 			SHLPRE="lib"
@@ -848,6 +850,7 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 			RXLIBLEN="6"
 		else
 			LD_RXLIB1=""
+			LD_RXTRANSLIB1="$LD_RXLIB1"
 			LD_RXLIB2=""
 			SHLPRE=""
 			SHLPST=""
@@ -883,6 +886,7 @@ BASE_INSTALL="installbase"
 BASE_BINARY="binarybase"
 SHLPRE="lib"
 LD_RXLIB1=""
+LD_RXTRANSLIB1="$LD_RXLIB1"
 CAN_USE_ABI="no"
 LIBEXE="ar"
 LIBFLAGS="cr"
@@ -901,6 +905,7 @@ case "$target" in
 		SYS_DEFS="-D_HPUX_SOURCE"
 		EEXTRA="-Wl,-E"
 		LD_RXLIB1="ld -b -q -n"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
@@ -914,6 +919,7 @@ case "$target" in
 		DYN_COMP="-DDYNAMIC"
 		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
 		LD_RXLIB1="ld $mh_entry -bM:SRE"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
 		RXPACKEXP="$SHLFILE.exp"
 		;;
@@ -924,29 +930,37 @@ case "$target" in
 			SYS_DEFS="-D_POSIX_SOURCE -D_XOPEN_SOURCE -Olimit 800"
 		fi
 		LD_RXLIB1="ld -shared"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*sequent-dynix*)
 		LD_RXLIB1="ld -G"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*solaris*)
 		if test "$ac_cv_prog_CC" = "gcc"; then
 			LD_RXLIB1="gcc -shared"
+			LD_RXTRANSLIB1="$LD_RXLIB1"
 		else
 			LD_RXLIB1="ld -G"
+			LD_RXTRANSLIB1="$LD_RXLIB1"
 		fi
 		;;
 	*esix*)
 		LD_RXLIB1="ld -G"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*dgux*)
 		LD_RXLIB1="ld -G"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	sparc*sunos*)
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
 		LD_RXLIB1="ld"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*linux*)
 		LD_RXLIB1="${CC} -shared"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		CAN_USE_ABI="yes"
 		if test "$USE_ABI" = "yes"; then
 			OTHER_INSTALLS="installabilib"
@@ -954,15 +968,19 @@ case "$target" in
 		;;
 	*atheos*)
 		LD_RXLIB1="${CC} -shared"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*freebsd*)
 		LD_RXLIB1="ld -Bdynamic -Bshareable"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*pc-sco*)
 		LD_RXLIB1="ld -dy -G"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*beos*)
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		BEOS_DYN="yes"
 		BASE_INSTALL="beosinstall"
 		BASE_BINARY="beosbinary"
@@ -970,6 +988,7 @@ case "$target" in
 		;;
 	*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*qnx*)
 		LIBPRE=""
@@ -985,13 +1004,17 @@ case "$target" in
 		DYN_COMP="-DDYNAMIC"
 		LIBPST=".a"
 		EXE=".exe"
-		LD_RXLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
+# Only for Rexx/Trans do we produce an import library for the DLL we are
+# building
+		LD_RXLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --target i386-cygwin32 --dllname \$(@)"
+		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
 		BASE_INSTALL="cygwininstall"
 		BASE_BINARY="cygwinbinary"
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
 		LD_RXLIB1="${CC} -dynamiclib -install_name=\$(@)"
+		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*)
 		;;
@@ -1086,6 +1109,7 @@ AC_SUBST(DYN_COMP)
 AC_SUBST(LIBS)
 AC_SUBST(SHLIBS)
 AC_SUBST(LD_RXLIB1)
+AC_SUBST(LD_RXTRANSLIB1)
 AC_SUBST(SHLPRE)
 AC_SUBST(SHLPST)
 AC_SUBST(LIBPST)

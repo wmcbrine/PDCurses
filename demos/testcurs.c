@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.6 2003/06/23 07:55:02 mark Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.7 2003/12/28 08:33:54 mark Exp $";
 #endif
 
 #include <stdio.h>
@@ -308,6 +308,9 @@ WINDOW *win;
     int w, h, bx, by, sw, sh, i, c,num;
     char buffer [80];
     WINDOW *subWin;
+    char spinner[4] = "/-\\|";
+    int spinner_count = 0;
+
     wclear (win);
 
     getmaxyx(win, h, w);
@@ -342,16 +345,35 @@ WINDOW *win;
     raw();
     noecho();
     typeahead(-1);
+#if 1
+    wtimeout(win,500); /* we have a timeout of 1/2 second */
+#else
+    halfdelay(5); /* half a second */
+#endif
 #if defined(PDCURSES)
     mouse_set(ALL_MOUSE_EVENTS);
     PDC_save_key_modifiers(TRUE);
     PDC_return_key_modifiers(TRUE);
 #endif
     while(1)
-      {
+    {
+       while(1)
+       {
+          c = wgetch(win);
+          if ( c == ERR )
+          {
+             spinner_count++;
+             if (spinner_count == 4 )
+                spinner_count = 0;
+             wmove(win,3,3);
+             waddch(win,spinner[spinner_count]);
+             wrefresh(win);
+          }
+          else
+             break;
+       }
        wmove(win,3,5);
-       c = wgetch(win);
-       wclrtobot(win);
+       wclrtoeol(win);
        if (c >= KEY_MIN)
           wprintw(win,"Key Pressed: %s", keyname(c));
        else if (isprint(c))
@@ -413,7 +435,13 @@ WINDOW *win;
        wrefresh(win);
        if (c == ' ')
           break;
-      }
+    }
+#if 1
+    wtimeout(win,-1); /* turn off timeout() */
+#else
+    nocbreak(); /* turn off halfdelay() mode */
+#endif
+
 #if 0
     nodelay(win, TRUE);
     wgetch(win);

@@ -48,12 +48,12 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattrs  = "$Id: termattr.c,v 1.1 2001/01/10 08:27:30 mark Exp $";
+char *rcsid_termattr  = "$Id: termattr.c,v 1.2 2002/11/27 11:25:18 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
 
-  Name:                                                     termattrs
+  Name:                                                     termattr
 
   Synopsis:
   	int baudrate(void);
@@ -62,7 +62,7 @@ char *rcsid_termattrs  = "$Id: termattr.c,v 1.1 2001/01/10 08:27:30 mark Exp $";
   	bool has_il(void);
   	char killchar(void);
   	char *longname(void);
-  	attr_t termattrsr(void);
+  	attr_t termattrs(void);
   	char *termname(void);
 
   	char	wordchar(void);
@@ -340,11 +340,7 @@ attr_t	PDC_CDECL	termattrs()
 #endif
 /***********************************************************************/
 {
-#if defined (XCURSES)
-	attr_t temp =   (A_NORMAL | A_BOLD); /* X cannot blink */
-#else
-	attr_t temp =   (A_NORMAL | A_BOLD) | A_BLINK;
-#endif
+	attr_t temp =   (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE); /* blink is bold background on some platforms */
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("termattrs() - called\n");
@@ -352,9 +348,6 @@ attr_t	PDC_CDECL	termattrs()
 
 	if( ! SP->mono )
 		temp |= A_COLOR;
-
-	if( COLORS < 1 )
-		temp |= A_REVERSE;
 
 	return( temp );
 }

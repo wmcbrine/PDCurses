@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.6 2004/01/02 05:50:05 mark Exp $
+$Id: curspriv.h,v 1.7 2004/01/02 21:02:13 mark Exp $
 */
 /*
 *
@@ -151,15 +151,16 @@ $Id: curspriv.h,v 1.6 2004/01/02 05:50:05 mark Exp $
      void setdosmemword (int offs, unsigned short w);
 #  else
 #    if SMALL || MEDIUM || MSC || PC
-#      define PDC_FAR far
+#      define getdosmembyte(offs)    (*((unsigned char far *) _FAR_POINTER(0,offs)))
+#      define getdosmemword(offs)    (*((unsigned short far *) _FAR_POINTER(0,offs)))
+#      define setdosmembyte(offs,x)  (*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))
+#      define setdosmemword(offs,x)  (*((unsigned short far *) _FAR_POINTER(0,offs)) = (x))
 #    else
-#      define PDC_FAR
+#      define getdosmembyte(offs)    (*((unsigned char *) _FAR_POINTER(0,offs)))
+#      define getdosmemword(offs)    (*((unsigned short *) _FAR_POINTER(0,offs)))
+#      define setdosmembyte(offs,x)  (*((unsigned char *) _FAR_POINTER(0,offs)) = (x))
+#      define setdosmemword(offs,x)  (*((unsigned short *) _FAR_POINTER(0,offs)) = (x))
 #    endif
-#    define getdosmembyte(offs)    (*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)))
-#    define getdosmemword(offs)    (*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)))
-#    define setdosmembyte(offs,x)  (*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
-#    define setdosmemword(offs,x)  (*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
-#    under PDC_FAR
 #  endif
 #endif
 

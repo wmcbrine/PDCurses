@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.36 2003/04/13 01:48:59 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.37 2003/07/18 08:43:02 mark Exp $";
 
 #include "rxpack.h"
 
@@ -213,7 +213,7 @@ int SetRexxVariable
 
    if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
    {
-      char buf1[50], buf2[50];
+      char buf1[150], buf2[150];
 
       (void)fprintf( RxPackageGlobalData->RxTraceFilePointer,
          "*DEBUG* Setting variable \"%s\" to \"%s\".\n",
@@ -234,7 +234,7 @@ int SetRexxVariable
    {
       if ( RxPackageGlobalData->RxRunFlags & MODE_DEBUG)
       {
-         char buf1[50], buf2[50];
+         char buf1[150], buf2[150];
          char *err;
          switch( rc )
          {

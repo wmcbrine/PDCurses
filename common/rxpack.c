@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.6 2002/07/06 10:58:06 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.7 2002/07/28 02:27:06 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1292,7 +1292,7 @@ RSH_RETURN_TYPE RxSubcomHandler
 /***********************************************************************/
 {
    RSH_RETURN_TYPE rcode=0;
-   int rc;
+   int rc=0;
    char *buf;
    /*
     * Set the Flags variable to RXSUBCOM_DUP. If this value is still

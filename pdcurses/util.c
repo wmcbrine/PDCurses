@@ -65,7 +65,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.2 2001/01/10 08:27:34 mark Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.3 2001/04/22 05:53:22 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -234,7 +234,7 @@ int key;
  "KEY_SHIFT_L","KEY_SHIFT_R",
  "KEY_CONTROL_L","KEY_CONTROL_R",
  "KEY_ALT_L","KEY_ALT_R",
- "KEY_RESIZE"
+ "KEY_RESIZE", "KEY_SUP", "KEY_SDOWN"
 	};
 
 #ifdef PDCDEBUG

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.4 2001/03/02 13:39:58 mark Exp $
+$Id: curses.h,v 1.5 2001/04/22 05:52:54 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1502,7 +1502,9 @@ extern chtype *acs_map;
 # define KEY_ALT_L       0x220   /* Left-alt                      */
 # define KEY_ALT_R       0x221   /* Right-alt                     */
 # define KEY_RESIZE      0x222   /* Window resize                 */
-# define KEY_MAX         0x222   /* Maximum curses key            */
+# define KEY_SUP         0x223   /* Shifted up arrow              */
+# define KEY_SDOWN       0x224   /* Shifted down arrow            */
+# define KEY_MAX         0x224   /* Maximum curses key            */
 #endif
 
 /*----------------------------------------------------------------------

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.3 2002/01/12 11:53:09 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.4 2002/03/02 11:52:05 mark Exp $";
 
 #include "rxpack.h"
 
@@ -1071,7 +1071,7 @@ int RxReturnPointer
    }
    else
    {
-      sprintf( (char *)retstr->strptr, "" );
+      strcpy( (char *)retstr->strptr, "" );
       retstr->strlength = 0;
    }
    if ( RxPackageGlobalData

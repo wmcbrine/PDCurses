@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /* 
-$Id: curses.h,v 1.7 2001/10/16 10:33:06 mark Exp $
+$Id: curses.h,v 1.8 2002/01/12 03:37:57 mark Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1431,7 +1431,7 @@ extern chtype *acs_map;
 # define ALT_PADMINUS    0x1d9   /* alt-minus on keypad           */
 # define ALT_PADSLASH    0x1da   /* alt-slash on keypad           */
 # define ALT_PADSTAR     0x1db   /* alt-star on keypad            */
-# define ALT_PADSTOP     0x1dc   /* alt-star on keypad            */
+# define ALT_PADSTOP     0x1dc   /* alt-stop on keypad            */
 # define CTL_INS         0x1dd   /* ctl-insert                    */
 # define ALT_DEL         0x1de   /* alt-delete                    */
 # define ALT_INS         0x1df   /* alt-insert                    */

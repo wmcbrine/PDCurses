@@ -14,9 +14,9 @@ prefix		=@prefix@
 exec_prefix		=@exec_prefix@
 libdir		=$(exec_prefix)/lib
 includedir		=$(exec_prefix)/include
-pdcursesdir=$(srcdir)/pdcurses
-paneldir=$(srcdir)/panel
-demosdir=$(srcdir)/demos
+pdcursesdir=./pdcurses
+paneldir=./panel
+demosdir=./demos
 
 INSTALL		=$(srcdir)/install-sh
 RANLIB		=@RANLIB@

@@ -38,8 +38,9 @@ char *msg;
 /***********************************************************************/
 {
 #ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesExitXCursesProcess() - called: rc:%d sig:%d %s\n",(XCursesProcess)?"     X":"CURSES",rc,sig,msg);
 #endif
+   if ( rc | sig )
+      fprintf( stderr, "%s:XCursesExitXCursesProcess() - called: rc:%d sig:%d %s\n",(XCursesProcess)?"     X":"CURSES",rc,sig,msg);
    shmdt((char *)SP);
    shmdt((char *)Xcurscr);
    shmctl(shmidSP,IPC_RMID,0);
@@ -165,258 +166,260 @@ if ( (int)*(Xcurscr+XCURSCR_LENGTH_OFF+row) != 0 )
                         SP->cursrow,SP->curscol);
    return(0);
 }
-/***********************************************************************/
-#ifdef HAVE_PROTO
-void XCursesProcessRequestsFromCurses(XtPointer client_data,int *fid,XtInputId *id)
-#else
-void XCursesProcessRequestsFromCurses(client_data,fid,id)
-XtPointer client_data;
-int *fid;
-XtInputId *id;
-#endif
-/***********************************************************************/
-{
-   int s,idx;
-   int old_row,new_row;
-   int old_x,new_x;
-   int pos,num_cols;
-   long length;
-   char buf[12]; /* big enough for 2 integers */
-   char title[1024]; /* big enough for window title */
-   unsigned char save_atrtab[MAX_ATRTAB];
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses()\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+/***********************************************************************/ 
+#ifdef HAVE_PROTO 
+void XCursesProcessRequestsFromCurses(XtPointer client_data,int *fid,XtInputId *id) 
+#else 
+void XCursesProcessRequestsFromCurses(client_data,fid,id) 
+XtPointer client_data; 
+int *fid; 
+XtInputId *id; 
+#endif 
+/***********************************************************************/ 
+{ 
+   int s,idx; 
+   int old_row,new_row; 
+   int old_x,new_x; 
+   int pos,num_cols; 
+   long length; 
+   char buf[12]; /* big enough for 2 integers */ 
+   char title[1024]; /* big enough for window title */ 
+   unsigned char save_atrtab[MAX_ATRTAB]; 
+ 
+#ifdef PDCDEBUG 
+   if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses()\n",(XCursesProcess)?"     X":"CURSES"); 
+#endif 
+ 
+   if (!ReceivedMapNotify) 
+      return; 
+   FD_ZERO ( &readfds ); 
+   FD_SET ( display_sock, &readfds ); 
+ 
+   if ( ( s = select ( FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, NULL, &socket_timeout ) ) < 0 ) 
+      XCursesExitXCursesProcess(2,SIGKILL,"exiting from XCursesProcessRequestsFromCurses - select failed"); 
+             
+   if ( s == 0 ) /* no requests pending - should never happen!*/ 
+      return; 
+             
+   if ( FD_ISSET ( display_sock, &readfds ) ) 
+   { 
+/* read first integer to determine total message has been received */ 
+#ifdef PDCDEBUG 
+      if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses() - before read_socket()\n",(XCursesProcess)?"     X":"CURSES"); 
+#endif 
+      if (read_socket(display_sock,buf,sizeof(int)) < 0) 
+         XCursesExitXCursesProcess(3,SIGKILL,"exiting from XCursesProcessRequestsFromCurses - first read"); 
+#ifdef PDCDEBUG 
+      if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses() - after read_socket()\n",(XCursesProcess)?"     X":"CURSES"); 
+#endif 
+      memcpy((char *)&num_cols,buf,sizeof(int)); 
+      after_first_curses_request = True; 
+ 
+      switch(num_cols) 
+      { 
+         case 0: break; 
+         case CURSES_EXIT: /* request from curses to stop */ 
+            say("CURSES_EXIT received from child\n"); 
+            XCursesExitXCursesProcess(0,0,"XCursesProcess requested to exit by child"); 
+            break; 
+         case CURSES_BELL: /* request from curses to beep */ 
+            say("CURSES_BELL received from child\n"); 
+            XBell(XCURSESDISPLAY,50); 
+            break; 
+         case CURSES_CLEAR: /* request from curses to clear window */ 
+            say("CURSES_CLEAR received from child\n"); 
+            XClearWindow(XCURSESDISPLAY,XCURSESWIN); 
+            break; 
+         case CURSES_FLASH: /* request from curses to beep */ 
+            say("CURSES_FLASH received from child\n"); 
+#if 0 
+            XFillRectangle(XCURSESDISPLAY,XCURSESWIN,normal_highlight_gc,10,10,XCursesWindowWidth-10,XCursesWindowHeight-10); 
+            delay_output(50); 
+            XFillRectangle(XCURSESDISPLAY,XCURSESWIN,normal_highlight_gc,10,10,XCursesWindowWidth-10,XCursesWindowHeight-10); 
+            XCursesDisplayCursor(SP->cursrow,SP->curscol, 
+                                 SP->cursrow,SP->curscol); 
+#endif 
+            old_x = CURSES_CONTINUE; 
+            memcpy(buf,(char *)&old_x,sizeof(int)); 
+            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+            break; 
+         case CURSES_REFRESH: /* request from curses to confirm completion of display */ 
+            say("CURSES_REFRESH received from child\n"); 
+            visible_cursor = 1; 
+            XCursesRefreshScreen(); 
+            XCursesDisplayCursor(SP->cursrow,SP->curscol, 
+                                 SP->cursrow,SP->curscol); 
+            old_x = CURSES_CONTINUE; 
+            memcpy(buf,(char *)&old_x,sizeof(int)); 
+            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+            break; 
+         case CURSES_REFRESH_SCROLLBAR: /* request from curses draw scrollbar */ 
+            XCursesRefreshScrollbar(); 
+#if 0 
+            old_x = CURSES_CONTINUE; 
+            memcpy(buf,(char *)&old_x,sizeof(int)); 
+            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+#endif 
+            break; 
+         case CURSES_CURSOR: /* display cursor */ 
+            say("CURSES_CURSOR received from child\n"); 
+            if (read_socket(display_sock,buf,sizeof(int)*2) < 0) 
+               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_CURSOR XCursesProcessRequestsFromCurses"); 
+            memcpy((char *)&pos,buf,sizeof(int)); 
+            old_row = pos & 0xFF; 
+            old_x = pos >> 8; 
+            idx = sizeof(int); 
+            memcpy((char *)&pos,buf+idx,sizeof(int)); 
+            new_row = pos & 0xFF; 
+            new_x = pos >> 8; 
+            visible_cursor = 1; 
+            XCursesDisplayCursor(old_row,old_x,new_row,new_x); 
+            break; 
+         case CURSES_DISPLAY_CURSOR: /* display cursor */ 
+            say("CURSES_DISPLAY_CURSOR received from child. Vis now: %d\n",visible_cursor); 
+            /* 
+             * If the window is not active, ignore this command. The 
+             * cursor will stay solid. 
+             */ 
+            if ( windowEntered ) 
+            { 
+               if ( visible_cursor ) 
+               { 
+                  /* 
+                   * Cursor currently ON, turn it off 
+                   */ 
+                  int save_visibility = SP->visibility; 
+                  SP->visibility = 0; 
+                  XCursesDisplayCursor(SP->cursrow,SP->curscol, 
+                                       SP->cursrow,SP->curscol); 
+                  SP->visibility = save_visibility; 
+                  visible_cursor = 0; 
+               } 
+               else 
+               { 
+                  /* 
+                   * Cursor currently OFF, turn it on 
+                   */ 
+                  XCursesDisplayCursor(SP->cursrow,SP->curscol, 
+                                       SP->cursrow,SP->curscol); 
+                  visible_cursor = 1; 
+               } 
+            } 
+            break; 
+         case CURSES_TITLE: /* display window title */ 
+            say("CURSES_TITLE received from child\n"); 
+            if (read_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses"); 
+            memcpy((char *)&pos,buf,sizeof(int)); 
+            if (read_socket(display_sock,title,pos) < 0) 
+               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses"); 
+            XtVaSetValues(topLevel, XtNtitle, title, NULL); 
+            break; 
+         case CURSES_RESIZE: /* resize window */ 
+            after_first_curses_request = False; 
+            say("CURSES_RESIZE received from child\n"); 
+            SP->lines = XCursesLINES = ((resizeXCursesWindowHeight-(2*XCURSESBORDERWIDTH)) / XCursesFontHeight); 
+            LINES = XCursesLINES - SP->linesrippedoff - SP->slklines; 
+            SP->cols =  COLS  = XCursesCOLS = ((resizeXCursesWindowWidth-(2*XCURSESBORDERWIDTH)) / XCursesFontWidth); 
+            XCursesWindowWidth = resizeXCursesWindowWidth; 
+            XCursesWindowHeight = resizeXCursesWindowHeight; 
+            visible_cursor = 1; 
+            /* 
+             * Draw the border if required 
+             */ 
+            if (XCURSESBORDERWIDTH) 
+               XDrawRectangle(XCURSESDISPLAY,XCURSESWIN,border_gc, 
+                             (XCURSESBORDERWIDTH/2),(XCURSESBORDERWIDTH/2), 
+                             (XCursesWindowWidth-XCURSESBORDERWIDTH), 
+                             (XCursesWindowHeight-XCURSESBORDERWIDTH)); 
+/* 
+ * detach and drop the current shared memory segment and create and attach 
+ * to a new segment. 
+ */ 
+            memcpy(save_atrtab,atrtab,sizeof(save_atrtab)); 
+            SP->XcurscrSize = XCURSCR_SIZE; 
+            shmdt((char *)Xcurscr); 
+            shmctl(shmid_Xcurscr,IPC_RMID,0); 
+            if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,SP->XcurscrSize+XCURSESSHMMIN,0700|IPC_CREAT)) < 0) 
+            { 
+               perror("Cannot allocate shared memory for curscr"); 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+            } 
+            Xcurscr = (unsigned char*)shmat(shmid_Xcurscr,0,0); 
+            memset(Xcurscr, 0, SP->XcurscrSize);  
+            atrtab = (unsigned char *)(Xcurscr+XCURSCR_ATRTAB_OFF); 
+            memcpy(atrtab,save_atrtab,sizeof(save_atrtab)); 
+ 
+            old_x = CURSES_CONTINUE; 
+            memcpy(buf,(char *)&old_x,sizeof(int)); 
+            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+            break; 
+         case CURSES_GET_SELECTION: /* request selection contents */ 
+            say("CURSES_GET_SELECTION received from child\n"); 
+            old_x = CURSES_CONTINUE; 
+            memcpy(buf,(char *)&old_x,sizeof(int)); 
+            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+            XtGetSelectionValue(topLevel,XA_PRIMARY,XA_STRING,XCursesRequestorCallbackForGetSelection,(XtPointer)NULL,0); 
+            break; 
+         case CURSES_SET_SELECTION: /* set the selection contents */ 
+            say("CURSES_SET_SELECTION received from child\n"); 
+            if (read_socket(display_sock,buf,sizeof(long)) < 0) 
+               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses"); 
+            memcpy((char *)&length,buf,sizeof(long)); 
+            if (length > tmpsel_length) 
+            { 
+               if (tmpsel_length == 0) 
+                  tmpsel = (char *)malloc(length+1); 
+               else 
+                  tmpsel = (char *)realloc(tmpsel,length+1); 
+            } 
+            if (!tmpsel) 
+            { 
+               old_x = PDC_CLIP_MEMORY_ERROR; 
+               memcpy(buf,(char *)&old_x,sizeof(int)); 
+               if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+                  XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+               break; 
+            } 
+            if (read_socket(display_sock,tmpsel,length) < 0) 
+               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses"); 
+            tmpsel_length = length; 
+            *(tmpsel+length) = '\0'; 
+            if (XtOwnSelection(topLevel, 
+                               XA_PRIMARY, 
+                               CurrentTime, 
+                               XCursesConvertProc, 
+                               XCursesLoseOwnership, 
+                               NULL) == False) 
+            { 
+               old_x = PDC_CLIP_ACCESS_ERROR; 
+               free(tmpsel); 
+               tmpsel = NULL; 
+               tmpsel_length = 0; 
+            } 
+            else 
+               old_x = PDC_CLIP_SUCCESS; 
+            SelectionOff(); 
+            memcpy(buf,(char *)&old_x,sizeof(int)); 
+            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
+               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
+            break; 
+         default: 
+#ifdef PDCDEBUG 
+            if (trace_on) PDC_debug("%s:Unknown request %d\n",(XCursesProcess)?"     X":"CURSES",num_cols); 
+#endif 
+            break; 
+      } 
+   } 
+   return; 
+} 
 
-   if (!ReceivedMapNotify)
-      return;
-   FD_ZERO ( &readfds );
-   FD_SET ( display_sock, &readfds );
-
-   if ( ( s = select ( FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, NULL, &socket_timeout ) ) < 0 )
-      XCursesExitXCursesProcess(2,SIGKILL,"exiting from XCursesProcessRequestsFromCurses - select failed");
-            
-   if ( s == 0 ) /* no requests pending - should never happen!*/
-      return;
-            
-   if ( FD_ISSET ( display_sock, &readfds ) )
-   {
-/* read first integer to determine total message has been received */
-#ifdef PDCDEBUG
-      if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses() - before read_socket()\n",(XCursesProcess)?"     X":"CURSES");
-#endif
-      if (read_socket(display_sock,buf,sizeof(int)) < 0)
-         XCursesExitXCursesProcess(3,SIGKILL,"exiting from XCursesProcessRequestsFromCurses - first read");
-#ifdef PDCDEBUG
-      if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses() - after read_socket()\n",(XCursesProcess)?"     X":"CURSES");
-#endif
-      memcpy((char *)&num_cols,buf,sizeof(int));
-      after_first_curses_request = True;
-
-      switch(num_cols)
-      {
-         case 0: break;
-         case CURSES_EXIT: /* request from curses to stop */
-            say("CURSES_EXIT received from child\n");
-            XCursesExitXCursesProcess(0,0,"XCursesProcess requested to exit by child");
-            break;
-         case CURSES_BELL: /* request from curses to beep */
-            say("CURSES_BELL received from child\n");
-            XBell(XCURSESDISPLAY,50);
-            break;
-         case CURSES_CLEAR: /* request from curses to clear window */
-            say("CURSES_CLEAR received from child\n");
-            XClearWindow(XCURSESDISPLAY,XCURSESWIN);
-            break;
-         case CURSES_FLASH: /* request from curses to beep */
-            say("CURSES_FLASH received from child\n");
-#if 0
-            XFillRectangle(XCURSESDISPLAY,XCURSESWIN,normal_highlight_gc,10,10,XCursesWindowWidth-10,XCursesWindowHeight-10);
-            delay_output(50);
-            XFillRectangle(XCURSESDISPLAY,XCURSESWIN,normal_highlight_gc,10,10,XCursesWindowWidth-10,XCursesWindowHeight-10);
-            XCursesDisplayCursor(SP->cursrow,SP->curscol,
-                                 SP->cursrow,SP->curscol);
-#endif
-            old_x = CURSES_CONTINUE;
-            memcpy(buf,(char *)&old_x,sizeof(int));
-            if (write_socket(display_sock,buf,sizeof(int)) < 0)
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-            break;
-         case CURSES_REFRESH: /* request from curses to confirm completion of display */
-            say("CURSES_REFRESH received from child\n");
-            visible_cursor = 1;
-            XCursesRefreshScreen();
-            XCursesDisplayCursor(SP->cursrow,SP->curscol,
-                                 SP->cursrow,SP->curscol);
-            old_x = CURSES_CONTINUE;
-            memcpy(buf,(char *)&old_x,sizeof(int));
-            if (write_socket(display_sock,buf,sizeof(int)) < 0)
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-            break;
-         case CURSES_REFRESH_SCROLLBAR: /* request from curses draw scrollbar */
-            XCursesRefreshScrollbar();
-#if 0
-            old_x = CURSES_CONTINUE;
-            memcpy(buf,(char *)&old_x,sizeof(int));
-            if (write_socket(display_sock,buf,sizeof(int)) < 0)
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-#endif
-            break;
-         case CURSES_CURSOR: /* display cursor */
-            say("CURSES_CURSOR received from child\n");
-            if (read_socket(display_sock,buf,sizeof(int)*2) < 0)
-               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_CURSOR XCursesProcessRequestsFromCurses");
-            memcpy((char *)&pos,buf,sizeof(int));
-            old_row = pos & 0xFF;
-            old_x = pos >> 8;
-            idx = sizeof(int);
-            memcpy((char *)&pos,buf+idx,sizeof(int));
-            new_row = pos & 0xFF;
-            new_x = pos >> 8;
-            visible_cursor = 1;
-            XCursesDisplayCursor(old_row,old_x,new_row,new_x);
-            break;
-         case CURSES_DISPLAY_CURSOR: /* display cursor */
-            say("CURSES_DISPLAY_CURSOR received from child. Vis now: %d\n",visible_cursor);
-            /*
-             * If the window is not active, ignore this command. The
-             * cursor will stay solid.
-             */
-            if ( windowEntered )
-            {
-               if ( visible_cursor )
-               {
-                  /*
-                   * Cursor currently ON, turn it off
-                   */
-                  int save_visibility = SP->visibility;
-                  SP->visibility = 0;
-                  XCursesDisplayCursor(SP->cursrow,SP->curscol,
-                                       SP->cursrow,SP->curscol);
-                  SP->visibility = save_visibility;
-                  visible_cursor = 0;
-               }
-               else
-               {
-                  /*
-                   * Cursor currently OFF, turn it on
-                   */
-                  XCursesDisplayCursor(SP->cursrow,SP->curscol,
-                                       SP->cursrow,SP->curscol);
-                  visible_cursor = 1;
-               }
-            }
-            break;
-         case CURSES_TITLE: /* display window title */
-            say("CURSES_TITLE received from child\n");
-            if (read_socket(display_sock,buf,sizeof(int)) < 0)
-               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
-            memcpy((char *)&pos,buf,sizeof(int));
-            if (read_socket(display_sock,title,pos) < 0)
-               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
-            XtVaSetValues(topLevel, XtNtitle, title, NULL);
-            break;
-         case CURSES_RESIZE: /* resize window */
-            after_first_curses_request = False;
-            say("CURSES_RESIZE received from child\n");
-            SP->lines = XCursesLINES = ((resizeXCursesWindowHeight-(2*XCURSESBORDERWIDTH)) / XCursesFontHeight);
-            LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
-            SP->cols =  COLS  = XCursesCOLS = ((resizeXCursesWindowWidth-(2*XCURSESBORDERWIDTH)) / XCursesFontWidth);
-            XCursesWindowWidth = resizeXCursesWindowWidth;
-            XCursesWindowHeight = resizeXCursesWindowHeight;
-            visible_cursor = 1;
-            /*
-             * Draw the border if required
-             */
-            if (XCURSESBORDERWIDTH)
-               XDrawRectangle(XCURSESDISPLAY,XCURSESWIN,border_gc,
-                             (XCURSESBORDERWIDTH/2),(XCURSESBORDERWIDTH/2),
-                             (XCursesWindowWidth-XCURSESBORDERWIDTH),
-                             (XCursesWindowHeight-XCURSESBORDERWIDTH));
-/*
- * detach and drop the current shared memory segment and create and attach
- * to a new segment.
- */
-            memcpy(save_atrtab,atrtab,sizeof(save_atrtab));
-            SP->XcurscrSize = XCURSCR_SIZE;
-            shmdt((char *)Xcurscr);
-            shmctl(shmid_Xcurscr,IPC_RMID,0);
-            if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,SP->XcurscrSize+XCURSESSHMMIN,0700|IPC_CREAT)) < 0)
-            {
-               perror("Cannot allocate shared memory for curscr");
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-            }
-            Xcurscr = (unsigned char*)shmat(shmid_Xcurscr,0,0);
-            memset(Xcurscr, 0, SP->XcurscrSize); 
-            atrtab = (unsigned char *)(Xcurscr+XCURSCR_ATRTAB_OFF);
-            memcpy(atrtab,save_atrtab,sizeof(save_atrtab));
-
-            old_x = CURSES_CONTINUE;
-            memcpy(buf,(char *)&old_x,sizeof(int));
-            if (write_socket(display_sock,buf,sizeof(int)) < 0)
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-            break;
-         case CURSES_GET_SELECTION: /* request selection contents */
-            say("CURSES_GET_SELECTION received from child\n");
-            old_x = CURSES_CONTINUE;
-            memcpy(buf,(char *)&old_x,sizeof(int));
-            if (write_socket(display_sock,buf,sizeof(int)) < 0)
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-            XtGetSelectionValue(topLevel,XA_PRIMARY,XA_STRING,XCursesRequestorCallbackForGetSelection,(XtPointer)NULL,0);
-            break;
-         case CURSES_SET_SELECTION: /* set the selection contents */
-            say("CURSES_SET_SELECTION received from child\n");
-            if (read_socket(display_sock,buf,sizeof(long)) < 0)
-               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
-            memcpy((char *)&length,buf,sizeof(long));
-            if (length > tmpsel_length)
-            {
-               if (tmpsel_length == 0)
-                  tmpsel = (char *)malloc(length+1);
-               else
-                  tmpsel = (char *)realloc(tmpsel,length+1);
-            }
-            if (!tmpsel)
-            {
-               old_x = PDC_CLIP_MEMORY_ERROR;
-               memcpy(buf,(char *)&old_x,sizeof(int));
-               if (write_socket(display_sock,buf,sizeof(int)) < 0)
-                  XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-               break;
-            }
-            if (read_socket(display_sock,tmpsel,length) < 0)
-               XCursesExitXCursesProcess(5,SIGKILL,"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
-            tmpsel_length = length;
-            *(tmpsel+length) = '\0';
-            if (XtOwnSelection(topLevel,
-                               XA_PRIMARY,
-                               CurrentTime,
-                               XCursesConvertProc,
-                               XCursesLoseOwnership,
-                               NULL) == False)
-            {
-               old_x = PDC_CLIP_ACCESS_ERROR;
-               free(tmpsel);
-               tmpsel = NULL;
-               tmpsel_length = 0;
-            }
-            else
-               old_x = PDC_CLIP_SUCCESS;
-            SelectionOff();
-            memcpy(buf,(char *)&old_x,sizeof(int));
-            if (write_socket(display_sock,buf,sizeof(int)) < 0)
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses");
-            break;
-         default:
-#ifdef PDCDEBUG
-            if (trace_on) PDC_debug("%s:Unknown request %d\n",(XCursesProcess)?"     X":"CURSES",num_cols);
-#endif
-            break;
-      }
-   }
-   return;
-}
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int XCursesSetupX(char *display_name,int argc, char *argv[])
@@ -430,6 +433,7 @@ char *argv[];
 {
    extern bool sb_started;
 
+   int italic_font_valid;
    XColor pointerforecolor,pointerbackcolor;
    XrmValue rmfrom,rmto;
    char wait_buf[5];
@@ -556,21 +560,20 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
    XCursesFontHeight = XCURSESNORMALFONTINFO->max_bounds.ascent + XCURSESNORMALFONTINFO->max_bounds.descent;
    XCursesFontAscent = XCURSESNORMALFONTINFO->max_bounds.ascent;
    XCursesFontDescent = XCURSESNORMALFONTINFO->max_bounds.descent;
-#if 0
+
    /*
-    * Check that the bold font and normal fonts are the same size...
+    * Check that the italic font and normal fonts are the same size...
     */
-   if (XCursesFontWidth != XCURSESBOLDFONTINFO->max_bounds.rbearing - XCURSESBOLDFONTINFO->min_bounds.lbearing
-   ||  XCursesFontHeight != XCURSESBOLDFONTINFO->max_bounds.ascent + XCURSESBOLDFONTINFO->max_bounds.descent)
+   if (XCursesFontWidth != XCURSESITALICFONTINFO->max_bounds.rbearing - XCURSESITALICFONTINFO->min_bounds.lbearing
+   ||  XCursesFontHeight != XCURSESITALICFONTINFO->max_bounds.ascent + XCURSESITALICFONTINFO->max_bounds.descent)
    {
-      fprintf(stderr,"Error: normal font and bold font are different sizes\n");
-      fprintf(stderr,"\tNormal\tBold\n");
-      fprintf(stderr,"Width :\t%d\t%d\n",XCursesFontWidth,XCURSESBOLDFONTINFO->max_bounds.rbearing - XCURSESBOLDFONTINFO->min_bounds.lbearing);
-      fprintf(stderr,"Height:\t%d\t%d\n",XCursesFontHeight,XCURSESBOLDFONTINFO->max_bounds.ascent + XCURSESBOLDFONTINFO->max_bounds.descent);
-      kill(otherpid,SIGKILL);
-      return(ERR);
+      italic_font_valid = 1;
    }
-#endif
+   else
+   {
+      italic_font_valid = 0;
+   }
+
    /*
     * Calculate size of display window...
     */
@@ -716,9 +719,9 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
 #endif
    XtAddEventHandler(topLevel,0,True,XCursesNonmaskable,NULL);
    /*
-    * Add input handler form display_sock (requests from curses program)
+    * Add input handler from display_sock (requests from curses program)
     */
-   XtAppAddInput(app_context,display_sock,(XtPointer)XtInputReadMask,XCursesProcessRequestsFromCurses,NULL);
+   XtAppAddInput( app_context, display_sock, (XtPointer)XtInputReadMask, XCursesProcessRequestsFromCurses, NULL );
    /*
     * Leave telling the curses process that it can start to here so that
     * when the curses process makes a request, the Xcurses process can
@@ -747,8 +750,14 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
    say("before get_GC\n");
 #endif
    get_GC(XCURSESDISPLAY,XCURSESWIN,&normal_gc,XCURSESNORMALFONTINFO,COLOR_WHITE,COLOR_BLACK,FALSE);
-   get_GC(XCURSESDISPLAY,XCURSESWIN,&normal_highlight_gc,XCURSESNORMALFONTINFO,COLOR_WHITE,COLOR_BLACK,TRUE);
-   get_GC(XCURSESDISPLAY,XCURSESWIN,&bold_highlight_gc,XCURSESBOLDFONTINFO,COLOR_WHITE,COLOR_BLACK,TRUE);
+   if ( italic_font_valid )
+   {
+      get_GC(XCURSESDISPLAY,XCURSESWIN,&italic_gc,XCURSESITALICFONTINFO,COLOR_WHITE,COLOR_BLACK,FALSE);
+   }
+   else
+   {
+      get_GC(XCURSESDISPLAY,XCURSESWIN,&italic_gc,XCURSESNORMALFONTINFO,COLOR_WHITE,COLOR_BLACK,FALSE);
+   }
    get_GC(XCURSESDISPLAY,XCURSESWIN,&block_cursor_gc,XCURSESNORMALFONTINFO,COLOR_BLACK,COLOR_CURSOR,FALSE);
    get_GC(XCURSESDISPLAY,XCURSESWIN,&rect_cursor_gc,XCURSESNORMALFONTINFO,COLOR_CURSOR,COLOR_BLACK,FALSE);
    get_GC(XCURSESDISPLAY,XCURSESWIN,&border_gc,XCURSESNORMALFONTINFO,COLOR_BORDER,COLOR_BLACK,FALSE);

@@ -18,8 +18,9 @@
  Ports
  -----
 
- PDCurses has been ported to DOS, OS/2, X11, WIN32 and Flexos. A
- directory containing the port-specific source files exists for each
+ PDCurses has been ported to DOS, OS/2, X11, WIN32 and Amiga. A port
+ to Flexos is also included, but likely to be out of date.
+ A directory containing the port-specific source files exists for each
  of these platforms.
 
 

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.8 2004/07/01 07:25:34 rexx Exp $
+$Id: curspriv.h,v 1.9 2004/09/14 07:53:09 rexx Exp $
 */
 /*
 *
@@ -405,7 +405,7 @@ void            movedata Args(((unsigned, unsigned, unsigned, unsigned, unsigned
 #endif
 
 # ifdef PDCDEBUG
-void            PDC_debug Args(( char*,... ));
+void PDC_CDECL  PDC_debug Args(( char*,... ));
 # endif
 
 # ifdef  REGISTERWINDOWS

@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.5 2004/09/10 07:47:44 rexx Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.6 2004/09/14 07:54:26 rexx Exp $";
 #endif
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
@@ -161,7 +161,6 @@ bool  PDC_scrn_modes_equal(int mode1, int mode2)
 
 int   PDC_scr_open(SCREEN *internal, bool echo)
 {
-   DWORD numbuttons=0;
    COORD bufsize,origin;
    SMALL_RECT rect;
    char *str=NULL;

@@ -2,7 +2,7 @@
 #
 # Watcom WMAKE Makefile for PDCurses library - DOS/4GW Watcom C/C++ 10.6
 #
-# Usage: wmake -f [path\]wccdos4g.mak [-DDEBUG] [target]
+# Usage: wmake -f [win32\]wccwin32.mak [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
@@ -21,9 +21,9 @@ CCINCDIR		=d:\h
 VER=26
 VERDOT=2.6
 
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
-PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h
-PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PDCURSES_CURSES_H	=$(PDCURSES_HOME)\curses.h
+PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)\curspriv.h
+PDCURSES_HEADERS	=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
 
 
@@ -45,7 +45,7 @@ LDFLAGS =
 
 CPPFLAGS	= /i=$(PDCURSES_HOME) /i=$(CCINCDIR) /DPDC_STATIC_BUILD
 
-CCFLAGS		= /ei /zq /mf $(CFLAGS) $(CPPFLAGS)
+CCFLAGS		= /ei /zq /mf /wx $(CFLAGS) $(CPPFLAGS)
 
 LINK		= wlink
 

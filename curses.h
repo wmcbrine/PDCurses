@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.22 2004/09/10 07:28:44 rexx Exp $
+$Id: curses.h,v 1.23 2004/09/14 07:53:01 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -647,8 +647,8 @@ PDCurses portable platform definitions list:
 #     define DISPLAY_XGA        9
 #    endif
 #  endif
-#  ifdef __NT__                         /* This specifies WIN32 target */
-#    ifdef INCLUDE_WINDOWS_H
+#  if defined(__NT__) || define (WIN32)       /* This specifies WIN32 target */
+#    if defined(INCLUDE_WINDOWS_H) || __WATCOMC__ >= 1200
 #      include <windows.h>
 #      ifdef MOUSE_MOVED
 #        undef MOUSE_MOVED
@@ -657,14 +657,10 @@ PDCurses portable platform definitions list:
 #    ifndef WIN32
 #      define WIN32
 #    endif
-
-/*
 #    ifdef PDC_CDECL
 #      undef PDC_CDECL
-#      define PDC_CDECL cdecl
+#      define PDC_CDECL cdecl   /* needed for compatibility to other systems */
 #    endif
-*/
-
 #  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
@@ -1601,6 +1597,7 @@ int     PDC_CDECL baudrate Args(( void ));
 int     PDC_CDECL beep Args(( void ));
 int     PDC_CDECL border Args(( chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype ));
 int     PDC_CDECL can_change_color  Args(( void ));
+int     PDC_CDECL cbreak Args(( void ));
 int     PDC_CDECL clearok Args(( WINDOW*, bool ));
 int     PDC_CDECL color_content Args(( short, short*, short*, short* ));
 int     PDC_CDECL copywin Args(( WINDOW*, WINDOW*, int, int, int, int, int, int, int ));
@@ -1642,6 +1639,7 @@ char*   PDC_CDECL keyname Args((  int  ));
 char    PDC_CDECL killchar Args(( void ));
 char*   PDC_CDECL longname Args(( void ));
 int     PDC_CDECL meta Args(( WINDOW*, bool ));
+int     PDC_CDECL move Args(( int, int ));
 int     PDC_CDECL mvcur Args(( int, int, int, int ));
 int     PDC_CDECL mvderwin Args(( WINDOW*, int, int ));
 #ifdef HAVE_STDARG_H
@@ -1650,6 +1648,7 @@ int     PDC_CDECL mvscanw Args(( int, int, char*,... ));
 #endif
 int     PDC_CDECL mvwaddnstr Args(( WINDOW*,int,int,char*,int ));
 int     PDC_CDECL mvwin Args(( WINDOW*, int, int ));
+chtype  PDC_CDECL mvwinch Args(( WINDOW*, int, int ));
 int     PDC_CDECL mvwinsertln Args(( WINDOW*, int, int ));
 #ifdef HAVE_STDARG_H
 int     PDC_CDECL mvwprintw Args(( WINDOW*, int, int, char*,... ));
@@ -1712,6 +1711,7 @@ void    PDC_CDECL traceon Args(( void ));
 int     PDC_CDECL typeahead Args(( int ));
 char*   PDC_CDECL unctrl Args(( chtype ));
 int     PDC_CDECL vline Args(( chtype, int ));
+int     PDC_CDECL waddch Args(( WINDOW*, chtype ));
 int     PDC_CDECL waddchnstr Args(( WINDOW*, chtype*, int ));
 int     PDC_CDECL waddnstr Args(( WINDOW*, char*, int ));
 int     PDC_CDECL waddstr Args(( WINDOW*, char* ));

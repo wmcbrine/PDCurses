@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.14 2004/09/10 07:51:40 rexx Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.15 2004/09/14 07:54:18 rexx Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -1305,7 +1305,7 @@ static int win32_kbhit(int timeout)
 /***********************************************************************/
 {
    INPUT_RECORD ip;
-   DWORD read, avail;
+   DWORD read;
    int rc=FALSE;
 
 #ifdef PDCDEBUG

@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.6 2003/06/23 07:53:54 mark Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.7 2003/10/18 11:32:10 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -290,8 +290,8 @@ int n;
                ch = *--p;
                if ((ch < ' ') && (oldecho))
                   waddstr (win, "\b \b");
+               chars--;
             }
-            chars--;
             break;
 
          case _DLCHAR:  /* CTRL-U */    /* Delete line   */

@@ -20,8 +20,8 @@ demosdir=./demos
 
 INSTALL		=$(srcdir)/install-sh
 RANLIB		=@RANLIB@
-RXLIBPRE = @RXLIBPRE@
-RXLIBPST = @RXLIBPST@
+SHLPRE = @SHLPRE@
+SHLPST = @SHLPST@
 SHLFILE = XCurses
 
 all ::	pdcurses demos panel
@@ -44,7 +44,7 @@ install:
 	$(INSTALL) -m 644 ./xpanel.h $(includedir)/xpanel.h
 	$(INSTALL) -c -m 644 $(pdcursesdir)/libXCurses.a $(libdir)/libXCurses.a
 	-$(RANLIB) $(libdir)/libXCurses.a
-	$(INSTALL) -c -m 555 $(pdcursesdir)/$(RXLIBPRE)$(SHLFILE)$(RXLIBPST) $(libdir)/$(RXLIBPRE)$(SHLFILE)$(RXLIBPST)
+	$(INSTALL) -c -m 555 $(pdcursesdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) $(libdir)/$(RXLIBPRE)$(SHLFILE)$(RXLIBPST)
 	$(INSTALL) -c -m 644 $(paneldir)/libpanel.a $(libdir)/libpanel.a
 	-$(RANLIB) $(libdir)/libpanel.a
 

@@ -19,6 +19,7 @@
 
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
+#include <X11/Shell.h>
 
 #include "x11/ScrollBoxP.h"
 
@@ -33,11 +34,16 @@
  *
  ****************************************************************/
 
-static XtResource resources[] = {
-    {XtNhSpace, XtCHSpace, XtRDimension, sizeof(Dimension),
-    XtOffset(ScrollBoxWidget, scrollBox.h_space), XtRImmediate, (XtPointer)4},
-    {XtNvSpace, XtCVSpace, XtRDimension, sizeof(Dimension),
-    XtOffset(ScrollBoxWidget, scrollBox.v_space), XtRImmediate, (XtPointer)4},
+static XtResource resources[] = 
+{
+   { XtNhSpace, XtCHSpace, XtRDimension, sizeof(Dimension),
+      XtOffset(ScrollBoxWidget, scrollBox.h_space), XtRImmediate, (XtPointer)4},
+   { XtNvSpace, XtCVSpace, XtRDimension, sizeof(Dimension),
+      XtOffset(ScrollBoxWidget, scrollBox.v_space), XtRImmediate, (XtPointer)4},
+   { XtNheightInc, XtCHeightInc, XtRDimension, sizeof(Dimension),
+      XtOffset(ScrollBoxWidget, scrollBox.increment_height), XtRImmediate, (XtPointer)13},
+   { XtNwidthInc, XtCWidthInc, XtRDimension, sizeof(Dimension),
+      XtOffset(ScrollBoxWidget, scrollBox.increment_width), XtRImmediate, (XtPointer)7},
 };
 
 /****************************************************************
@@ -132,8 +138,6 @@ Boolean doit;
    Dimension th;
    Dimension tw;
 #endif
-   long supp=0;
-   XSizeHints hints;
    int i;
 
    if (sbw->composite.num_children != 3)
@@ -158,25 +162,6 @@ Boolean doit;
    vscroll = sbw->composite.children[1];
    hscroll = sbw->composite.children[2];
 
-#if 1
-fprintf(stderr,"%s %d:\n",__FILE__,__LINE__);
-   if ( XtIsRealized(wmain) )
-   {
-      if ( !XGetWMNormalHints( XtDisplay(wmain), XtWindow(wmain), &hints, &supp ) )
-      {
-         hints.height_inc = 13;
-         hints.width_inc = 7;
-fprintf(stderr,"%s %d:\n",__FILE__,__LINE__);
-      }
-   }
-   else
-   {
-      hints.height_inc = 13;
-      hints.width_inc = 7;
-   }
-fprintf(stderr,"%s %d: height: %d width: %d\n",__FILE__,__LINE__,hints.height_inc,hints.width_inc);
-#endif
-
    /* 
     * Size all three widgets so that space is fully utilized.
     */
@@ -193,8 +178,8 @@ fprintf(stderr,"%s %d: height: %d width: %d\n",__FILE__,__LINE__,hints.height_in
    /*
     * Force the main window to be sized to the appropriate increments
     */
-   mw = (mw/hints.width_inc)*hints.width_inc;
-   mh = ((mh/hints.height_inc)*hints.height_inc)+hints.height_inc;
+   mw = (mw/sbw->scrollBox.increment_width)*sbw->scrollBox.increment_width;
+   mh = ((mh/sbw->scrollBox.increment_height)*sbw->scrollBox.increment_height)+sbw->scrollBox.increment_height;
 
    vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
 
@@ -202,7 +187,7 @@ fprintf(stderr,"%s %d: height: %d width: %d\n",__FILE__,__LINE__,hints.height_in
 
    vh = mh;   /* scrollbars are always same length as main window */
    hw = mw;
-fprintf(stderr,"%s %d: mw %d mh %d vx %d hy %d hinc %d winc %d\n",__FILE__,__LINE__,mw,mh,vx,hy,hints.height_inc,hints.width_inc);
+fprintf(stderr,"%s %d: mw %d mh %d vx %d hy %d hinc %d winc %d hspace %d\n",__FILE__,__LINE__,mw,mh,vx,hy,sbw->scrollBox.increment_height,sbw->scrollBox.increment_width,sbw->scrollBox.h_space);
 
    if (doit) {
       XtResizeWidget(wmain, mw, mh, 1);
@@ -219,7 +204,6 @@ fprintf(stderr,"%s %d: mw %d mh %d vx %d hy %d hinc %d winc %d\n",__FILE__,__LIN
    vh = mh = wmain->core.height;
 
    vx = wmain->core.x + mw + sbw->scrollBox.h_space + wmain->core.border_width + vscroll->core.border_width; 
-
    hy = wmain->core.y + mh + sbw->scrollBox.v_space + wmain->core.border_width + hscroll->core.border_width; 
 
    if (doit) {

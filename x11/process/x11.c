@@ -258,12 +258,6 @@ XtInputId *id;
             break; 
          case CURSES_REFRESH_SCROLLBAR: /* request from curses draw scrollbar */ 
             XCursesRefreshScrollbar(); 
-#if 0 
-            old_x = CURSES_CONTINUE; 
-            memcpy(buf,(char *)&old_x,sizeof(int)); 
-            if (write_socket(display_sock,buf,sizeof(int)) < 0) 
-               XCursesExitXCursesProcess(4,SIGKILL,"exiting from XCursesProcessRequestsFromCurses"); 
-#endif 
             break; 
          case CURSES_CURSOR: /* display cursor */ 
             say("CURSES_CURSOR received from child\n"); 
@@ -590,8 +584,6 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
    XCursesGetIcon();
    
    XtVaSetValues(topLevel,
-                           XtNwidthInc,XCursesFontWidth,
-                           XtNheightInc,XCursesFontHeight,
                            XtNminWidth,minwidth,
                            XtNminHeight,minheight,
                            XtNiconPixmap,icon_pixmap,
@@ -612,6 +604,8 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
       scrollBox = XtVaCreateManagedWidget(XCursesProgramName,scrollBoxWidgetClass,topLevel,
                                           XtNwidth,XCursesWindowWidth+XCURSESSCROLLBARWIDTH,
                                           XtNheight,XCursesWindowHeight+XCURSESSCROLLBARWIDTH,
+                                          XtNwidthInc,XCursesFontWidth,
+                                          XtNheightInc,XCursesFontHeight,
                                           NULL);
       drawing = XtVaCreateManagedWidget(XCursesProgramName,boxWidgetClass,
                                         scrollBox,
@@ -642,10 +636,12 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
       drawing = XtVaCreateManagedWidget(XCursesProgramName,boxWidgetClass,topLevel,
                                         XtNwidth,XCursesWindowWidth,
                                         XtNheight,XCursesWindowHeight,
+                                        XtNwidthInc,XCursesFontWidth,
+                                        XtNheightInc,XCursesFontHeight,
                                         NULL);
    }
 
-#if 1
+#if 0
    fprintf(stderr,"Width: %d Height: %d FontWidth: %d FontHeight: %d\n",XCursesWindowWidth+XCURSESSCROLLBARWIDTH,
                                    XCursesWindowHeight+XCURSESSCROLLBARWIDTH,
                                         XCursesFontWidth,

@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_sb  = "$Id: sb.c,v 1.1 2001/01/10 08:29:56 mark Exp $";
+char *rcsid_sb  = "$Id: sb.c,v 1.2 2002/07/04 10:23:50 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -98,9 +98,9 @@ int	PDC_CDECL	sb_init()
 /*
 	sb_set_horz()	Used to set horizontal scrollbar.
 
-   total = total number of lines
-   viewport = size of viewport in lines
-   cur = current line in total
+   total = total number of columns
+   viewport = size of viewport in columns
+   cur = current column in total
  */
 #ifdef HAVE_PROTO
 int	PDC_CDECL	sb_set_horz(int total, int viewport, int cur)

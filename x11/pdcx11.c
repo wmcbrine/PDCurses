@@ -24,6 +24,11 @@
 #if defined(XCURSES)
 #include "pdcx11.h"
 
+#if NeedWidePrototypes
+# define PDC_SCROLLBAR_TYPE double
+#else
+# define PDC_SCROLLBAR_TYPE float
+#endif
 
 /***************************************************************************/
 /* Default icons for XCurses applications.                                 */
@@ -1353,34 +1358,34 @@ int XCursesRefreshScrollbar()
 #endif
 /***********************************************************************/
 {
- double total_y=(double)(SP->sb_total_y);
- double viewport_y=(double)(SP->sb_viewport_y);
- double cur_y=(double)(SP->sb_cur_y);
- double total_x=(double)(SP->sb_total_x*XCursesFontWidth);
- double viewport_x=(double)(SP->sb_viewport_x*XCursesFontWidth);
- double cur_x=(double)(SP->sb_cur_x*XCursesFontWidth);
- double vtop=(double)(cur_y/total_y);
- double vlength=(double)(viewport_y/total_y);
- double htop=(double)(cur_x/total_x);
- double hlength=(double)(viewport_x/total_x);
+   PDC_SCROLLBAR_TYPE total_y=(PDC_SCROLLBAR_TYPE)(SP->sb_total_y*XCursesFontHeight);
+   PDC_SCROLLBAR_TYPE viewport_y=(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y*XCursesFontHeight);
+   PDC_SCROLLBAR_TYPE cur_y=(PDC_SCROLLBAR_TYPE)(SP->sb_cur_y*XCursesFontHeight);
+   PDC_SCROLLBAR_TYPE total_x=(PDC_SCROLLBAR_TYPE)(SP->sb_total_x*XCursesFontWidth);
+   PDC_SCROLLBAR_TYPE viewport_x=(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x*XCursesFontWidth);
+   PDC_SCROLLBAR_TYPE cur_x=(PDC_SCROLLBAR_TYPE)(SP->sb_cur_x*XCursesFontWidth);
+   PDC_SCROLLBAR_TYPE vtop=(PDC_SCROLLBAR_TYPE)(cur_y/total_y);
+   PDC_SCROLLBAR_TYPE vlength=(PDC_SCROLLBAR_TYPE)(viewport_y/total_y);
+   PDC_SCROLLBAR_TYPE htop=(PDC_SCROLLBAR_TYPE)(cur_x/total_x);
+   PDC_SCROLLBAR_TYPE hlength=(PDC_SCROLLBAR_TYPE)(viewport_x/total_x);
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesRefreshScrollbar() - called: \n",(XCursesProcess)?"     X":"CURSES");
+   if (trace_on) PDC_debug("%s:XCursesRefreshScrollbar() - called: \n",(XCursesProcess)?"     X":"CURSES");
 #endif
- if (!SP->sb_on)
-    return(ERR);
-#if 1
+   if (!SP->sb_on)
+      return(ERR);
+#if 0
 fprintf(stderr,"%s:XCursesRefreshScrollbar() - vert: %d %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
                         SP->sb_total_y,total_y,viewport_y,cur_y,
                         vtop,vlength);
-fprintf(stderr,"%s:XCursesRefreshScrollbar() - horz: %d %d %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
-                        SP->sb_total_x,XCursesFontWidth,total_x,viewport_x,cur_x,
+fprintf(stderr,"%s:XCursesRefreshScrollbar() - horz: %d %f %f %f %f %f\n",(XCursesProcess)?"     X":"CURSES",
+                        SP->sb_total_x,total_x,viewport_x,cur_x,
                         htop,hlength);
 #endif
- if (SP->sb_total_y != (double)0)
-    XawScrollbarSetThumb( scrollVert, (double)vtop, (double)vlength );
- if (SP->sb_total_x != (double)0)
-    XawScrollbarSetThumb( scrollHoriz, (double)htop, (double)hlength );
- return(OK);
+   if (SP->sb_total_y != (PDC_SCROLLBAR_TYPE)0)
+      XawScrollbarSetThumb( scrollVert, (PDC_SCROLLBAR_TYPE)vtop, (PDC_SCROLLBAR_TYPE)vlength );
+   if (SP->sb_total_x != (PDC_SCROLLBAR_TYPE)0)
+      XawScrollbarSetThumb( scrollHoriz, (PDC_SCROLLBAR_TYPE)htop, (PDC_SCROLLBAR_TYPE)hlength );
+   return(OK);
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

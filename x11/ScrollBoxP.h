@@ -50,6 +50,7 @@ typedef struct {
     Dimension   h_space, v_space;
     Dimension	preferred_width, preferred_height;
     Dimension	last_query_width, last_query_height;
+    Dimension	increment_width, increment_height;
     XtGeometryMask last_query_mode;
 } ScrollBoxPart;
 

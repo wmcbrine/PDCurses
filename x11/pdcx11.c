@@ -1023,7 +1023,7 @@ bool highlight;
 
 #if 0
  fprintf(stderr,"%2.2d ",x);
- for (idx=0;idx<num_cols;idx++)
+   for (idx=0;idx<num_cols;idx++)
    {
     save_ch = *(ch+idx);
     attr =  save_ch & A_CHARTEXT;
@@ -1075,13 +1075,29 @@ bool highlight;
 
          if (old_attr & A_REVERSE)
          {
-            XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-            XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+            if ( highlight )
+            {
+               XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+               XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
+            }
+            else
+            {
+               XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
+               XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+            }
          }
          else
          {
-            XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
-            XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+            if ( highlight )
+            {
+               XSetForeground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+               XSetBackground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+            }
+            else
+            {
+               XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+               XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+            }
          }
 
          makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
@@ -1159,13 +1175,29 @@ bool highlight;
 
    if (old_attr & A_REVERSE)
    {
-      XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-      XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+      if ( highlight )
+      {
+         XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
+         XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+      }
+      else
+      {
+         XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
+         XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
+      }
    }
    else
    {
-      XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
-      XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+      if ( highlight )
+      {
+         XSetForeground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+         XSetBackground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+      }
+      else
+      {
+         XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+         XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+      }
    }
 
    makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
@@ -2162,7 +2194,7 @@ bool highlight;
  int i,num_cols,start_col,row;
 
 #ifdef PDCDEBUG
- if (trace_on) PDC_debug("%s:ShowSelection() - called\n",(XCursesProcess)?"     X":"CURSES");
+ if (trace_on) PDC_debug("%s:ShowSelection() - called StartX: %d StartY: %d EndX: %d EndY: %d Highlight: %d\n",(XCursesProcess)?"     X":"CURSES", start_x, start_y, end_x, end_y, highlight );
 #endif
 
  for (i=0; i< (end_y-start_y)+1; i++)
@@ -2351,6 +2383,7 @@ void SelectionSet()
     start_y = selection_end_y;
     end_x = selection_start_x;
     end_y = selection_start_y;
+    length = start - end +1;
  }
  else
  {
@@ -2358,8 +2391,8 @@ void SelectionSet()
     end_y = selection_end_y;
     start_x = selection_start_x;
     start_y = selection_start_y;
+    length = end - start +1;
  }
- length = end - start +1;
  if (length > tmpsel_length)
  {
     if (tmpsel_length == 0)
@@ -2413,19 +2446,23 @@ void SelectionSet()
 
     *(Xcurscr+XCURSCR_FLAG_OFF+row) = 1;
     ptr = (chtype *)(Xcurscr+XCURSCR_Y_OFF(row)+(start_col*sizeof(chtype)));
-    last_nonblank = 0;
-    for (j=0; j<num_cols; j++)
+    if ( i < end_y-start_y )
     {
-       ch = (int)(*(ptr+j) & A_CHARTEXT);
-       if (ch != (int)' ')
-          last_nonblank = j;
+       last_nonblank = 0;
+       for (j=0; j<num_cols; j++)
+       {
+          ch = (int)(*(ptr+j) & A_CHARTEXT);
+          if (ch != (int)' ')
+             last_nonblank = j;
+       }
     }
+    else last_nonblank = num_cols-1;
     for (j=0; j<=last_nonblank; j++)
     {
        *(tmpsel+num_chars++) = (int)(*(ptr+j) & A_CHARTEXT);
     }
     *(Xcurscr+XCURSCR_FLAG_OFF+row) = 0;
-    *(tmpsel+num_chars++) = '\n';
+    if ( i < end_y-start_y ) *(tmpsel+num_chars++) = '\n';
  }
  *(tmpsel+num_chars) = '\0';
  tmpsel_length = num_chars;

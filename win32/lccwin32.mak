@@ -65,7 +65,7 @@ DLL_DEMOS       = testcurs_dll.exe newdemo_dll.exe xmas_dll.exe tuidemo_dll.exe 
 
 ###############################################################################
 
-all:    $(PDCLIBS) $(DEMOS) $(DLL_DEMOS)
+all:    $(PDCLIBS) $(DEMOS) #$(DLL_DEMOS)
 
 clean:
 	-del *.obj
@@ -192,8 +192,7 @@ panel.lib : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
 
 curses.dll : $(DLL_DIR) $(LIBDLLS) $(PDCDLLS) $(DEFFILE)
-	$(SHL_LD) -o$(CURSESDLL) $(LIBDLLS) $(PDCDLLS) $(CCLIBS)
-	implib $(CURSESDLL)
+	$(SHL_LD) -o $(CURSESDLL) $(LIBDLLS) $(PDCDLLS) $(CCLIBS)
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\addch.c

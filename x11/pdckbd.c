@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.4 2003/12/28 08:39:21 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.5 2004/01/01 22:07:41 mark Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -226,28 +226,29 @@ int	PDC_rawgetch()
 #endif
 /***********************************************************************/
 {
-extern	WINDOW*	_getch_win_;
+   extern WINDOW* _getch_win_;
 
-	int	c=0;
-	int	delay;
+   int c=0;
+   int delay;
+   bool  return_immediately;
 
 #ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
+   if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
 #endif
 
-	if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
-		return( -1 );
+   if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
+      return( -1 );
 
-	if (_getch_win_->_nodelay && !PDC_breakout()) /* @@ */
-		return( -1 );
+   if (SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
+      return_immediately = TRUE;
+   else
+      return_immediately = FALSE;
 
-	if ( SP->delaytenths || _getch_win_->_delayms > 0 )
-		delay = 1;
-	else
-		delay = 0;
+   if (return_immediately && !PDC_breakout())
+      return( -1 );
 
-	c = XCurses_rawgetch( delay );
-	return(c);
+   c = XCurses_rawgetch( 0 );
+   return(c);
 }
 
 /*man-start*********************************************************************

@@ -115,6 +115,7 @@ window.obj
 
 PDCOBJS =     \
 pdcdebug.obj  \
+pdcclip.obj   \
 pdcdisp.obj   \
 pdcgetsc.obj  \
 pdckbd.obj    \
@@ -247,6 +248,9 @@ window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
 
 pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcdebug.c
+ 
+pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcclip.c
 
 pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcdisp.c

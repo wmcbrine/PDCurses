@@ -25,9 +25,13 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2001/10/16 10:33:06 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.4 2002/05/11 09:54:10 mark Exp $";
 #endif
 
+#include <string.h>
+
+/* global clipboard contents, should be NULL if none set */
+static char *pdc_DOS_clipboard = NULL;
 
 /*man-start*********************************************************************
 
@@ -44,6 +48,10 @@ char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2001/10/16 10:33:06 mark Exp $";
 
   PDCurses Return Value:
  	indicator of success/failure of call.
+ 	PDC_CLIP_SUCCESS	the call was successful
+ 	PDC_CLIP_MEMORY_ERROR	unable to allocate sufficient memory for 
+ 		the clipboard contents
+ 	PDC_CLIP_EMPTY	the clipboard contains no text
  	PDC_CLIP_ACCESS_ERROR	no clipboard support
 
   Portability:
@@ -52,11 +60,22 @@ char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2001/10/16 10:33:06 mark Exp $";
 **man-end**********************************************************************/
 int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 {
+  int len;
+
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_getclipboard() - called\n");
 #endif
 
- return PDC_CLIP_ACCESS_ERROR;
+	if (pdc_DOS_clipboard == NULL) return PDC_CLIP_EMPTY;
+
+	len = strlen(pdc_DOS_clipboard);
+	if ((*contents = (char *)malloc((len+1) * sizeof(char))) == NULL)
+		return PDC_CLIP_MEMORY_ERROR;
+
+	strcpy(*contents, pdc_DOS_clipboard);
+	*length = len;
+
+	return PDC_CLIP_SUCCESS;
 }
 
 /*man-start*********************************************************************
@@ -71,6 +90,9 @@ int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 
   PDCurses Return Value:
  	indicator of success/failure of call.
+ 	PDC_CLIP_SUCCESS	the call was successful
+ 	PDC_CLIP_MEMORY_ERROR	unable to allocate sufficient memory for 
+ 		the clipboard contents
  	PDC_CLIP_ACCESS_ERROR	no clipboard support
 
   Portability:
@@ -83,7 +105,22 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_setclipboard() - called\n");
 #endif
- return PDC_CLIP_ACCESS_ERROR;
+
+	if (pdc_DOS_clipboard != NULL) 
+	{
+		free(pdc_DOS_clipboard);
+		pdc_DOS_clipboard = NULL;
+	}
+
+	if (contents != NULL)
+	{
+		if ((pdc_DOS_clipboard = (char *)malloc((length+1) * sizeof(char))) == NULL)
+			return PDC_CLIP_MEMORY_ERROR;
+
+		strcpy(pdc_DOS_clipboard, contents);
+	}
+
+	return PDC_CLIP_SUCCESS;
 }
 
 /*man-start*********************************************************************
@@ -96,7 +133,7 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
  	Frees the memory allocated by PDC_getclipboard().
 
   PDCurses Return Value:
- 	Always returns PDC_CLIP_ACCESS_ERROR	no clipboard support
+ 	Always returns PDC_CLIP_SUCCESS
 
   Portability:
  	PDCurses	int PDC_freeclipboard( char *contents );
@@ -108,5 +145,21 @@ int	PDC_CDECL	PDC_freeclipboard(char *contents)
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_freeclipboard() - called\n");
 #endif
- return PDC_CLIP_ACCESS_ERROR;
+
+	/* should we also free empty the system clipboard? probably not */
+
+	if (contents != NULL)
+	{
+		/* NOTE: We free the memory, but we can not set caller's pointer
+		         to NULL, so if caller calls again then will try to
+		         access free'd memory.  We 1st overwrite memory with
+		         a string so if caller tries to use free memory they
+		         won't get what they expect & hopefully notice.
+		*/
+		/* memset(contents, 0xFD, strlen(contents)); */
+		if (strlen(contents) >= strlen("PDCURSES")) strcpy(contents, "PDCURSES");
+		free(contents);
+	}
+
+	return PDC_CLIP_SUCCESS;
 }

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char RCSid[] = "$Id: rxpack.c,v 1.14 2002/07/30 03:46:24 mark Exp $";
+static char RCSid[] = "$Id: rxpack.c,v 1.15 2002/07/30 07:07:05 mark Exp $";
 
 #include "rxpack.h"
 
@@ -869,7 +869,7 @@ RxPackageGlobalDataDef *InitRxPackage
     */
    if ( ptr )
    {
-      *rc = (*ptr)( );
+      *rc = (*ptr)( RxPackageGlobalData );
    }
    DEBUGDUMP(fprintf(stderr,"%s-%d: End of InitRxPackage with rc = %d\n",__FILE__,__LINE__,*rc);)
    return RxPackageGlobalData;
@@ -914,7 +914,7 @@ int TermRxPackage
     */
    if ( ptr )
    {
-      if ( ( rc = (*ptr)( ) ) != 0 )
+      if ( ( rc = (*ptr)( RxPackageGlobalData ) ) != 0 )
          return (int)FunctionEpilogue( RxPackageGlobalData, "TermRxPackage", (long)rc );
    }
 #if defined(USE_REXX6000)

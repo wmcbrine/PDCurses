@@ -164,9 +164,6 @@
 typedef USHORT RexxFunctionHandler(PSZ, ULONG, PRXSTRING, PSZ, PRXSTRING) ;
 #endif
 
-typedef int PackageInitialiser( void );
-typedef int PackageTerminator( void );
-
 /*-----------------------------------------------------------------------------
  * Definition of an external function
  *----------------------------------------------------------------------------*/
@@ -189,6 +186,9 @@ typedef struct
    FILE *RxTraceFilePointer;          /* file pointer for all output */
    char RxTraceFileName[MAX_PATH];    /* filename of output file */
 } RxPackageGlobalDataDef;
+
+typedef int PackageInitialiser( RxPackageGlobalDataDef * );
+typedef int PackageTerminator( RxPackageGlobalDataDef * );
 
 #ifdef HAVE_PROTO
 # define Args(a) a

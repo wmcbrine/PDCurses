@@ -187,7 +187,7 @@ Boolean doit;
 
    vh = mh;   /* scrollbars are always same length as main window */
    hw = mw;
-fprintf(stderr,"%s %d: mw %d mh %d vx %d hy %d hinc %d winc %d hspace %d\n",__FILE__,__LINE__,mw,mh,vx,hy,sbw->scrollBox.increment_height,sbw->scrollBox.increment_width,sbw->scrollBox.h_space);
+/* fprintf(stderr,"%s %d: mw %d mh %d vx %d hy %d hinc %d winc %d hspace %d\n",__FILE__,__LINE__,mw,mh,vx,hy,sbw->scrollBox.increment_height,sbw->scrollBox.increment_width,sbw->scrollBox.h_space); */
 
    if (doit) {
       XtResizeWidget(wmain, mw, mh, 1);

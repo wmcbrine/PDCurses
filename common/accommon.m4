@@ -65,6 +65,16 @@ case "$with_rexx" in
 			AC_SEARCH_LIBS(crypt,crypt)
 			AC_PROG_LEX
 		fi
+dnl for FreeBSD, the use of -pthread with ld doesn't work,
+dnl so remove it.
+		case "$target" in
+			*freebsd*)
+				
+				REXX_LIBS="`echo ${REXX_LIBS} | sed -e s/-pthread//`"
+				;;
+			*)
+				;;
+		esac
 	;;
 	rexxtrans)            dnl -------- Rexx/Trans
 		AC_DEFINE(USE_REXXTRANS)

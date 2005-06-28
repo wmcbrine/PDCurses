@@ -913,10 +913,14 @@ char *defaultTranslations =
    "!Shift <Btn2Down>: XCursesButton() \n" \
    "!Ctrl <Btn2Up>: XCursesButton() \n" \
    "!Shift <Btn2Up>: XCursesButton() \n" \
-   "<Btn2Down>,<Btn2Up>: XCursesPasteSelection() \n" \
-   "<Btn3Down>: XCursesButton() \n" \
    "<Btn1Up>: XCursesButton() \n" \
+   "<Btn2Down>,<Btn2Up>: XCursesPasteSelection() \n" \
    "<Btn3Up>: XCursesButton() \n" \
+   "<Btn3Down>: XCursesButton() \n" \
+   "<Btn4Up>: XCursesButton() \n" \
+   "<Btn4Down>: XCursesButton() \n" \
+   "<Btn5Up>: XCursesButton() \n" \
+   "<Btn5Down>: XCursesButton() \n" \
    "<BtnMotion>: XCursesButton()"
 };
 

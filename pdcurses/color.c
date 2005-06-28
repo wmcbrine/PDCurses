@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.4 2004/12/16 01:01:24 rexx Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.5 2005/06/28 01:21:34 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -424,7 +424,7 @@ short bg;
       ttt = A_REVERSE >> 19;
       uuu = i&ttt;
       if (uuu == ttt)
-         atrtab[(pairnum*PDC_OFFSET)+i] = 0x70;
+         atrtab[(pairnum*PDC_OFFSET)+i] = bg | (fg << 4);
       ttt = A_UNDERLINE >> 19;
       uuu = i&ttt;
       if (uuu == ttt)

@@ -4,7 +4,7 @@
  Contents
  --------
  This directory contains core PDCurses source code files specific to
- the Win32 platform - console mode (NT and Window 95).
+ the Win32 platform - console mode (Win9x/Me/NT/2k/XP).
 
 
  Distribution Status

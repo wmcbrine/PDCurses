@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.24 2004/12/16 00:56:10 rexx Exp $
+$Id: curses.h,v 1.25 2005/06/28 01:14:07 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -125,11 +125,6 @@ $Id: curses.h,v 1.24 2004/12/16 00:56:10 rexx Exp $
 *
 *----------------------------------------------------------------------
 */
-#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
- extern "C"
-   {
-# define bool _bool
-#endif
 
 #ifndef  __PDCURSES__
 #define	__PDCURSES__ 1
@@ -757,6 +752,13 @@ PDCurses portable platform definitions list:
 
 /*---------------------------------------------------------------------*/
 #include <stdio.h>		/* Required by X/Open usage below	*/
+
+#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+ extern "C"
+   {
+# define bool _bool
+#endif
+
 /*----------------------------------------------------------------------
  *
  *	PDCurses Manifest Constants
@@ -2014,13 +2016,13 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 # include <curspriv.h>
 #endif
 
-#include <stdlib.h>
-
 #endif  /* __PDCURSES__ */
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 # undef bool
    }
 #endif
+
+#include <stdlib.h>
 
 

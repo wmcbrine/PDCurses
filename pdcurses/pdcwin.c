@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -27,12 +27,16 @@
 # include <memory.h>
 #endif
 
+#ifdef HAVE_STRING_H
+# include <string.h>
+#endif
+
 #ifndef HAVE_MEMMOVE
 # define memmove PDC_memmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.3 2004/01/01 01:13:00 mark Exp $";
+char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.4 2005/08/24 09:24:27 rexx Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -59,7 +63,7 @@ char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.3 2004/01/01 01:13:00 mark Exp $";
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int PDC_copy_win(WINDOW *src_w, WINDOW *dst_w,int src_tr,int src_tc,int 
+int PDC_copy_win(WINDOW *src_w, WINDOW *dst_w,int src_tr,int src_tc,int
    src_br,int src_bc,int dst_tr,int dst_tc,int dst_br,int dst_bc,bool overlay)
 #else
 int PDC_copy_win(src_w,dst_w,src_tr,src_tc,src_br,src_bc,dst_tr,dst_tc,dst_br,dst_bc,overlay)
@@ -344,9 +348,9 @@ WINDOW *win;
    if (trace_on) PDC_debug("PDC_sync() - called:\n");
 #endif
 
-   if (win->_immed) 
+   if (win->_immed)
       wrefresh(win);
-   if (win->_sync) 
+   if (win->_sync)
       wsyncup(win);
    return;
 }
@@ -402,7 +406,7 @@ int *len;
    (*len)--;      /* Now we are zero relative */
    (*len)--;      /* Now we are looking at the previous
              * character */
-   if( *len >= 0 ) 
+   if( *len >= 0 )
    {
       nbs++;
       /*
@@ -649,7 +653,7 @@ bool advance;
    y  = win->_cury;
    ts = win->_tabsize;
 
-   /* 
+   /*
     * Remove any A_ALTCHASET attribute from the ch before any further
     * testing. If the character has A_ALTCHARSET, set xlat to FALSE.
     */
@@ -688,7 +692,7 @@ bool advance;
 
    if ((attr & A_COLOR) == 0)
       attr = (attr | (win->_bkgd & A_ATTRIBUTES));
-   else 
+   else
    {
       bktmp = (win->_bkgd & A_COLOR);
       attr = (attr | ( (win->_bkgd & A_ATTRIBUTES) ^ bktmp ));
@@ -708,7 +712,7 @@ bool advance;
 
    if (xlat)
    {
-      switch (ch) 
+      switch (ch)
       {
          case '\t':
             for (newx = ((x   / ts) +  1) * ts; x < newx; x++)

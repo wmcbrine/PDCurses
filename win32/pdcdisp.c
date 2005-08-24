@@ -7,13 +7,13 @@
 * that PDCurses code is used would be appreciated, but is not mandatory.
 *
 * Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
+* it, should be forwarded to the current maintainer for the benefit of
 * other users.
 *
 * The only restriction placed on this code is that no distribution of
 * modified PDCurses code be made under the PDCurses name, by anyone
 * other than the current maintainer.
-* 
+*
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
@@ -29,7 +29,7 @@
 extern HANDLE hConOut;
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.1 2001/01/10 08:30:47 mark Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.2 2005/08/24 08:45:18 rexx Exp $";
 #endif
 
 static CHAR_INFO ci[512];
@@ -107,7 +107,7 @@ int   PDC_clr_update(WINDOW *s)
       }
       WriteConsoleOutput(hConOut, ci, bufSize, bufPos, &sr);
 
-      if (SP->refrbrk && (SP->cbreak || SP->raw_inp)) 
+      if (SP->refrbrk && (SP->cbreak || SP->raw_inp))
       {
          rc = PDC_breakout();
          if (rc)
@@ -180,7 +180,7 @@ CONSOLE_CURSOR_INFO cci;
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_cursor_off() - called\n");
 #endif
-   
+
    if (SP->visible_cursor)
    {
       SP->visible_cursor = FALSE;
@@ -256,11 +256,8 @@ int   PDC_gotoxy(int row, int col)
    COORD coord;
 
 #ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_gotoxy() - called: row %d col %d\n",row,col);
+   if (trace_on) PDC_debug("PDC_gotoxy() - called: row %d col %d from row %d col %d\n", row, col, SP->cursrow, SP->curscol );
 #endif
-
-   if ((SP->cursrow == row) && (SP->curscol == col))
-   return( OK );
 
    coord.X = col;
    coord.Y = row;
@@ -312,7 +309,7 @@ int   PDC_putc( chtype character, chtype color )
 
    buffer[0] = character;
    WriteConsoleOutputCharacter(hConOut, (char*)&buffer[0], 1, coord, &written);
-       
+
    return (OK);
 }
 
@@ -354,15 +351,15 @@ int   PDC_putctty( chtype character, chtype color )
    if (trace_on) PDC_debug("PDC_putctty() - called\n");
 #endif
 
-   buffer = color; 
+   buffer = color;
    PDC_get_cursor_pos (&curRow, &curCol);
    coord.X = curCol;
    coord.Y = curRow;
 //   WriteConsoleOutputAttribute(hConOut, &buffer, 1, coord, &written);
-       
-   buffer = character; 
+
+   buffer = character;
    WriteConsoleOutputCharacter(hConOut, (char*)&buffer, 1, coord, &written);
-       
+
    return (OK);
 }
 
@@ -475,8 +472,8 @@ bool  PDC_transform_line(register int lineno)
 
    curscr->_firstch[lineno] = _NO_CHANGE;
    curscr->_lastch[lineno] = _NO_CHANGE;
-   
-   if (SP->refrbrk && (SP->cbreak || SP->raw_inp)) 
+
+   if (SP->refrbrk && (SP->cbreak || SP->raw_inp))
    {
       rc = PDC_breakout();
       if (rc)

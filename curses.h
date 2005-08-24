@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.25 2005/06/28 01:14:07 rexx Exp $
+$Id: curses.h,v 1.26 2005/08/24 09:18:01 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -581,6 +581,9 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
+#  endif
+#  ifndef HAVE_STRING_H                             /* have <string.h> */
+#    define HAVE_STRING_H
 #  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */

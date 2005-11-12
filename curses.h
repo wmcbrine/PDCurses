@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.26 2005/08/24 09:18:01 rexx Exp $
+$Id: curses.h,v 1.27 2005/11/12 13:55:54 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -403,7 +403,9 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1            /* emx supports ANSI C prototypes  */
 #  endif
-#  define __OS2__                      /* EMX does not define this :-( */
+#  ifndef __OS2__
+#    define __OS2__                    /* EMX does not define this :-( */
+#  endif
 #  define OS2 3                     /* Major release of OS/2 supported */
 #  define CURSES__32BIT__
 #  ifndef HAVE_STDARG_H

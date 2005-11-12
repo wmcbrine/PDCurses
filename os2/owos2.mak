@@ -42,7 +42,7 @@ CFLAGS  = /oneatx
 LDFLAGS =
 !endif
 
-CPPFLAGS = /i=$(PDCURSES_HOME)
+CPPFLAGS = /i=$(PDCURSES_HOME) /i=$(CCINCDIR)
 
 CCFLAGS = /bt=$(TARGET) /bm /3s /wx /s /zq /mf $(CFLAGS) $(CPPFLAGS)
 

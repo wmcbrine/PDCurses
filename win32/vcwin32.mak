@@ -188,17 +188,12 @@ panel.dll.obj
 
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) -out:$@ @<<
-	$(LIBOBJS) $(PDCOBJS)
-<<
+	$(LIBEXE) -out:$@ $(LIBOBJS) $(PDCOBJS)
 
 curses.dll : $(LIBDLLS) $(PDCDLLS) $(osdir)\curses.def pdcurses.obj
-	$(SHL_LD) @<<
-	$(LIBDLLS) $(PDCDLLS) pdcurses.obj $(CCLIBS)
-<<
+	$(SHL_LD) $(LIBDLLS) $(PDCDLLS) pdcurses.obj $(CCLIBS)
 
 pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
-	copy $(osdir)\pdcurses.ico
 	rc /r /fopdcurses.res $(osdir)\pdcurses.rc
 	cvtres /MACHINE:IX86 /NOLOGO /OUT:pdcurses.obj pdcurses.res
 

@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.3 2002/01/12 04:04:18 mark Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.4 2005/11/12 13:51:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -474,9 +474,7 @@ int PDC_query_adapter_type( VIOCONFIGINFO *configinfo )
 #endif
 /***********************************************************************/
 {
-#ifndef EMXVIDEO
-   VIOCONFIGINFO aconfiginfo;
-#else
+#ifdef EMXVIDEO
    int retval = _NONE;
 #endif
 #ifdef PDCDEBUG
@@ -489,8 +487,7 @@ int PDC_query_adapter_type( VIOCONFIGINFO *configinfo )
       retval = _UNIX_COLOR;
    return(retval);
 #else
-   VioGetConfig( 0, &aconfiginfo, 0 );
-   *configinfo = aconfiginfo;
+   VioGetConfig( 0, configinfo, 0 );
    return(OK);
 #endif
 }

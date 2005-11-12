@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.6 2004/12/16 01:00:22 rexx Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.7 2005/11/12 20:54:58 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -238,7 +238,7 @@ char *argv[];
 #endif
 /***********************************************************************/
 {
-register int i=0;
+register int i;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("Xinitscr() - called\n");

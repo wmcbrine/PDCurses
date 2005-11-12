@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.27 2005/11/12 13:55:54 wmcbrine Exp $
+$Id: curses.h,v 1.28 2005/11/12 20:53:44 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -232,6 +232,9 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
+#  endif
+#  ifndef HAVE_STRING_H
+#    define HAVE_STRING_H
 #  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE                             /* have memmove() */
@@ -460,6 +463,9 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
 #  endif
+#  ifndef HAVE_STRING_H
+#    define HAVE_STRING_H
+#  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
@@ -552,9 +558,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
-#  endif
-#  ifndef HAVE_UNISTD_H
-#    define HAVE_UNISTD_H                           /* have <unistd.h> */
 #  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE                             /* have memmove() */
@@ -670,6 +673,9 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
+#  endif
+#  ifndef HAVE_STRING_H
+#    define HAVE_STRING_H
 #  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE                             /* have memmove() */

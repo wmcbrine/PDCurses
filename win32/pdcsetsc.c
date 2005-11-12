@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.1 2001/01/10 08:30:53 mark Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -201,7 +201,7 @@ int visibility;
 /***********************************************************************/
 {
  CONSOLE_CURSOR_INFO cci;
- int ret_vis=0;
+ int ret_vis;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_curs_set() - called: visibility=%d\n",visibility);

@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.2 2001/01/10 08:29:38 mark Exp $";
+char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.3 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 #if !defined (CURSES__32BIT__) && !defined(CSET2) && !defined(MSC) &&!defined(TC)
@@ -85,5 +85,7 @@ int port;
 	DosWrite(Lpt,&byte,1,&NoWritten);
 	DosClose(Lpt);
 	return(NoWritten == 1);
+#else
+	return (OK);
 #endif
 }

@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh  = "$Id: refresh.c,v 1.3 2003/06/23 07:53:55 mark Exp $";
+char *rcsid_refresh  = "$Id: refresh.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -132,7 +132,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-   bool save_clear=FALSE;
+   bool save_clear;
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("wrefresh() - called\n");
 #endif
@@ -164,10 +164,10 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-register int      first=0; /* first changed char on line */
-register int      last=0;  /* last changed char on line  */
-   int      begy=0,begx=0; /* window's place on screen   */
-   int      i=0,j=0,x=0,y=0;
+register int      first; /* first changed char on line */
+register int      last;  /* last changed char on line  */
+   int      begy, begx;  /* window's place on screen   */
+   int      i, j, x, y;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("wnoutrefresh() - called: win=%x\n",win);

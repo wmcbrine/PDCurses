@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.7 2004/12/16 01:06:26 rexx Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.8 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
@@ -163,7 +163,7 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
 {
    COORD bufsize,origin;
    SMALL_RECT rect;
-   char *str=NULL;
+   char *str;
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 #if defined(PDC_THREAD_BUILD)
    HANDLE hThread;

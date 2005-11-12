@@ -63,7 +63,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.4 2005/11/12 15:31:14 wmcbrine Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -95,11 +95,11 @@ size_t n;
 #endif
 /***********************************************************************/
 {
-  char *dd=NULL;
+  char *dd;
 #ifdef HAVE_PROTO
-  const char *ss=NULL;
+  const char *ss;
 #else
-  char *ss=NULL;
+  char *ss;
 #endif
 
   dd = (char *)s1;

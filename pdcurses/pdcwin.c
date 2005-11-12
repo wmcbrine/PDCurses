@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.4 2005/08/24 09:24:27 rexx Exp $";
+char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -81,17 +81,17 @@ bool overlay;
 #endif
 /***********************************************************************/
 {
-   register int fc=0;
+   register int fc;
    register int lc=0;
-   int*  minchng=0;
-   int*  maxchng=0;
-   chtype*  w1ptr=NULL;
-   chtype*  w2ptr=NULL;
-   int   col=0;
-   int   line=0;
+   int*  minchng;
+   int*  maxchng;
+   chtype*  w1ptr;
+   chtype*  w2ptr;
+   int   col;
+   int   line;
    int   xdiff = src_bc - src_tc;
    int   ydiff = src_br - src_tr;
-   int   y1=0;
+   int   y1;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_copy_win() - called\n");
@@ -195,7 +195,7 @@ extern   void* (*callc)();
 extern   void  (*fre)();
 #endif
 
-   short i=0;
+   short i;
    WINDOW *win=NULL;
 
 #ifdef PDCDEBUG
@@ -636,11 +636,11 @@ bool advance;
 /***********************************************************************/
 {
    int   retval = ERR;
-   int   x=0;
-   int   y=0;
+   int   x;
+   int   y;
    int   newx=0;
    chtype   attr=0, bktmp=0;
-   int   ts=0;
+   int   ts;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_chadd() - called: win=%x ch=%x (char=%c attr=0x%x) xlat=%d advance=%d\n",win,ch,ch & A_CHARTEXT,ch & A_ATTRIBUTES,xlat,advance);
@@ -905,8 +905,8 @@ int ex;
 /***********************************************************************/
 {
    chtype   oldattr = win->_attrs;
-   int   c=0;
-   int   l=0;
+   int   c;
+   int   l;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_chr_attrs() - called\n");
@@ -979,10 +979,10 @@ bool xlat;
 /***********************************************************************/
 {
    int   retval = ERR;
-   int   x=0;
-   int   y=0;
-   int   maxx=0;
-   int   offset=0;
+   int   x;
+   int   y;
+   int   maxx;
+   int   offset;
    chtype *temp1;
    char  ch = (c & A_CHARTEXT);
 

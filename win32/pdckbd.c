@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.15 2004/09/14 07:54:18 rexx Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.16 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -795,7 +795,6 @@ int   PDC_get_bios_key(void)
             break;
          case WINDOW_BUFFER_SIZE_EVENT:
             return(-1);
-            break;
          default:
             break;
       }
@@ -920,8 +919,8 @@ int   PDC_rawgetch(void)
 {
    extern   WINDOW*  _getch_win_;
 
-   int   c=0;
-   int   oldc=0;
+   int   c;
+   int   oldc;
    bool  return_immediately;
 
 #ifdef PDCDEBUG
@@ -1017,7 +1016,7 @@ int   PDC_sysgetch(void)
 {
    extern   WINDOW*  _getch_win_;
 
-   int  c=0;
+   int  c;
    bool return_immediately;
 
 #ifdef PDCDEBUG

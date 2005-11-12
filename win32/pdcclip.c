@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2002/11/27 11:17:49 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 
@@ -56,7 +56,7 @@ char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2002/11/27 11:17:49 mark Exp $";
 int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 {
  HANDLE handle;
- long len=0;
+ long len;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_getclipboard() - called\n");

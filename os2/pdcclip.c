@@ -32,7 +32,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.4 2002/11/27 11:16:27 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 
@@ -242,9 +242,6 @@ int   PDC_CDECL   PDC_clearclipboard( void )
    HAB hab;
    PTIB ptib;
    PPIB ppib;
-   ULONG ulRC;
-   PSZ szTextOut=NULL;
-   int rc=0;
 #endif
 
 #ifdef PDCDEBUG

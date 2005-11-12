@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd  = "$Id: bkgd.c,v 1.1 2001/01/10 08:26:50 mark Exp $";
+char *rcsid_bkgd  = "$Id: bkgd.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -116,8 +116,9 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-	int x=0, y=0;
-	chtype oldcolr=0, oldattr=0, oldch=0, newcolr=0, newattr=0, newch=0, colr=0, attr=0;
+	int x, y;
+	chtype oldcolr, oldch, newcolr, newch, colr, attr;
+	chtype oldattr = 0, newattr = 0;
 	chtype *winptr;
 #ifdef NDP
 	char tmpbuf[60];

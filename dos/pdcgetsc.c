@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.3 2003/06/23 07:54:33 mark Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -561,7 +561,9 @@ int	PDC_query_adapter_type()
 #  endif
 
 	int	equip;
+#if !defined(__DJGPP__) && !defined(WATCOMC)
 	struct SREGS segs;
+#endif
 	short video_base = getdosmemword (0x463);
 
 #ifdef PDCDEBUG

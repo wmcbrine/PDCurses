@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.5 2005/06/28 01:21:34 rexx Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.6 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -385,7 +385,7 @@ int	PDC_init_atrtab()
 /***********************************************************************/
 {
    int orig_fore, orig_back;
-   register int i=0;
+   register int i;
 
    if ( SP->orig_attr == 0 )
    {
@@ -414,8 +414,8 @@ short bg;
 #endif
 /***********************************************************************/
 {
-   register int i=0;
-   unsigned char temp_bg=0;
+   register int i;
+   unsigned char temp_bg;
    int ttt,uuu;
 
    for (i=0;i<PDC_OFFSET;i++)

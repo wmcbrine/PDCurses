@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.1 2001/01/10 08:30:48 mark Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut, hConIn;
@@ -378,7 +378,7 @@ int	PDC_get_scrn_mode(void)
 
 int	PDC_query_adapter_type(void)
 {
-	int	retval = _NONE;
+	int retval;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_query_adapter_type() - called\n");

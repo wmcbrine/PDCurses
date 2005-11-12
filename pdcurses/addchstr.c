@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.3 2002/12/16 09:41:34 mark Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -202,7 +202,7 @@ int n;
 {
    register int i,y,x,num,maxx,minx;
    int first=1;
-   chtype *ptr,*mptr;
+   chtype *ptr;
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("waddchnstr() - called: win=%x n=%d\n",win,n);
 #endif
@@ -216,7 +216,7 @@ int n;
 
    x = win->_curx;
    y = win->_cury;
-   ptr = mptr = &(win->_y[y][x]);
+   ptr = &(win->_y[y][x]);
 
 #if 0
    if (n == (-1))

@@ -23,8 +23,12 @@
 #endif
 #include <curses.h>
 
+#ifdef HAVE_STRING_H
+#  include <string.h>
+#endif
+
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2002/01/12 04:04:18 mark Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

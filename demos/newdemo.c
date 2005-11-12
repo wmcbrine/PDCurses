@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.4 2004/01/04 08:51:31 mark Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 #if __STDC__
@@ -206,30 +206,30 @@ WINDOW *win;
    xd1 = 1;
    yd1 = 1;
    xd2 = 1;
-   yd2 = 0;
-   xd3 = 0;
+   yd2 = -1;
+   xd3 = -1;
    yd3 = 1;
    nodelay(stdscr,TRUE);
    while((c = getch()) == ERR)
    {
-      x1 = (xd1 > 0) ? ++x1 : --x1;
+      x1 += xd1;
       if (x1 <= 1 || x1 >= w - 2)
-         xd1 = xd1 ? 0 : 1;
-      y1 = (yd1 > 0) ? ++y1 : --y1;
+         xd1 = (xd1 == 1) ? -1 : 1;
+      y1 += yd1;
       if (y1 <= 1 || y1 >= h - 2)
-         yd1 = yd1 ? 0 : 1;
-      x2 = (xd2 > 0) ? ++x2 : --x2;
+         yd1 = (yd1 == 1) ? -1 : 1;
+      x2 += xd2;
       if (x2 <= 1 || x2 >= w - 2)
-         xd2 = xd2 ? 0 : 1;
-      y2 = (yd2 > 0) ? ++y2 : --y2;
+         xd2 = (xd2 == 1) ? -1 : 1;
+      y2 += yd2;
       if (y2 <= 1 || y2 >= h - 2)
-         yd2 = yd2 ? 0 : 1;
-      x3 = (xd3 > 0) ? ++x3 : --x3;
+         yd2 = (yd2 == 1) ? -1 : 1;
+      x3 += xd3;
       if (x3 <= 1 || x3 >= w - 2)
-         xd3 = xd3 ? 0 : 1;
-      y3 = (yd3 > 0) ? ++y3 : --y3;
+         xd3 = (xd3 == 1) ? -1 : 1;
+      y3 += yd3;
       if (y3 <= 1 || y3 >= h - 2)
-         yd3 = yd3 ? 0 : 1;
+         yd3 = (yd3 == 1) ? -1 : 1;
 
       c1 = mvwinch(win, y1, x1);
       c2 = mvwinch(win, y2, x2);
@@ -276,8 +276,7 @@ int sig;
 int main(int argc, char *argv[])
 {
 WINDOW  *win;
-int     w, x, y, i, j, len;
-char    *message;
+int     w, x, y, i, j;
 int     width, height;
 chtype  save[80], ch;
 void    trap();
@@ -376,10 +375,6 @@ void    trap();
       /* Draw running messages */
       init_pair(6,COLOR_BLACK,COLOR_WHITE);
       wattrset(win, COLOR_PAIR(6));
-      message = messages[0];
-      len = strlen(message);
-      j = 0;
-      i = 2;
       w = width-2;
       nodelay(win,TRUE);
 

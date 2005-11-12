@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.2 2001/01/10 08:28:01 mark Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.3 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 
@@ -299,7 +299,7 @@ __calculate_obscure()
 PANEL *pan;
 register PANEL *pan2;
 register PANELOBS *tobs;			/* "this" one */
-PANELOBS *lobs = (PANELOBS *)0;		/* last one */
+PANELOBS *lobs;
 
 	pan = __bottom_panel;
 	while(pan)

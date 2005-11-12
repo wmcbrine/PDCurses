@@ -29,7 +29,7 @@
 extern HANDLE hConOut;
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.2 2005/08/24 08:45:18 rexx Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.3 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 static CHAR_INFO ci[512];
@@ -62,10 +62,10 @@ int   PDC_clr_update(WINDOW *s)
 {
    extern unsigned char atrtab[MAX_ATRTAB];
 
-   register int   i=0,j=0;
+   register int i, j;
    register chtype *srcp;
-   WINDOW *w = NULL;
-   bool rc=FALSE;
+   WINDOW *w;
+   bool rc;
    COORD bufSize, bufPos;
    SMALL_RECT sr;
 
@@ -428,12 +428,12 @@ bool  PDC_transform_line(register int lineno)
 {
    extern unsigned   char atrtab[MAX_ATRTAB];
 
-   register int j=0;
+   register int j;
    register chtype *srcp;
-   int   x=0;
-   int   endx=0;
-   int   len=0;
-   bool rc=FALSE;
+   int x;
+   int endx;
+   int len;
+   bool rc;
    COORD bufSize, bufPos;
    SMALL_RECT sr;
 
@@ -506,14 +506,14 @@ bool  PDC_transform_line(register int lineno)
 void PDC_doupdate(void)
 /***********************************************************************/
 {
-   extern unsigned   char atrtab[MAX_ATRTAB];
+   extern unsigned char atrtab[MAX_ATRTAB];
 
-   register int i=0,j=0,k=0;
-   int   starty=_NO_CHANGE,startx=_NO_CHANGE;
-   int size=0;
-   int   endy=_NO_CHANGE,endx=_NO_CHANGE;
+   register int i, j, k;
+   int starty = _NO_CHANGE, startx = _NO_CHANGE;
+   int size;
+   int endy = _NO_CHANGE, endx = _NO_CHANGE;
    register chtype *srcp;
-   CHAR_INFO *ptr=NULL;
+   CHAR_INFO *ptr;
    COORD bufSize, bufPos;
    SMALL_RECT sr;
 

@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window  = "$Id: window.c,v 1.4 2004/09/10 07:44:25 rexx Exp $";
+char *rcsid_window  = "$Id: window.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -582,7 +582,7 @@ extern	void	(*fre)();
 	WINDOW*	new;
 	int	i;
 	int	j;
-	int	save_cury=0,save_curx=0;
+	int	save_cury, save_curx;
 	int	new_begy=0,new_begx=0;
 
 #ifdef PDCDEBUG
@@ -683,7 +683,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	WINDOW *tmp=(WINDOW *)NULL;
+	WINDOW *tmp;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("wsyncup() - called\n");
@@ -723,7 +723,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	WINDOW *tmp=(WINDOW *)NULL;
+	WINDOW *tmp;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("wcursyncup() - called\n");
@@ -744,7 +744,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	WINDOW *tmp=(WINDOW *)NULL;
+	WINDOW *tmp;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("wsyncdown() - called\n");

@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk  = "$Id: slk.c,v 1.1 2001/01/10 08:27:29 mark Exp $";
+char *rcsid_slk  = "$Id: slk.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -563,7 +563,7 @@ static void	PDC_slk_init()
 #endif
 /***********************************************************************/
 {
- register int i=0;
+ register int i;
  attr_t save_attr;
 #ifdef PDCDEBUG
  if (trace_on) PDC_debug("PDC_slk_init() - called\n");
@@ -614,8 +614,8 @@ void	PDC_slk_calc()
 #endif
 /***********************************************************************/
 {
- register int i=0;
- register int col=0, center=0;
+ register int i;
+ register int col=0, center;
 
 #ifdef PDCDEBUG
  if (trace_on) PDC_debug("PDC_slk_calc() - called\n");

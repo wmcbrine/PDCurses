@@ -51,7 +51,7 @@
 #  include <limits.h>
 #endif
 
-#ifdef STDC_HEADERS
+#ifdef HAVE_STRING_H
 #  include <string.h>
 #endif
 
@@ -63,7 +63,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.3 2004/09/10 07:43:05 rexx Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.4 2005/11/12 15:31:14 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

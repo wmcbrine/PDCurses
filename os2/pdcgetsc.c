@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.4 2005/11/12 13:51:59 wmcbrine Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.5 2005/11/12 14:30:51 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -427,17 +427,13 @@ int PDC_get_scrn_mode( VIOMODEINFO *modeinfo )
 #endif
 /***********************************************************************/
 {
-#ifndef EMXVIDEO
-   VIOMODEINFO amodeinfo;
-#endif
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_get_scrn_mode() - called\n");
 #endif
 #ifdef EMXVIDEO
    return(ERR);
 #else
-   VioGetMode ( &amodeinfo, 0 );
-   *modeinfo = amodeinfo;
+   VioGetMode ( modeinfo, 0 );
    return(OK);
 #endif
 }
@@ -474,18 +470,11 @@ int PDC_query_adapter_type( VIOCONFIGINFO *configinfo )
 #endif
 /***********************************************************************/
 {
-#ifdef EMXVIDEO
-   int retval = _NONE;
-#endif
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_query_adapter_type() - called\n");
 #endif
 #ifdef EMXVIDEO
-   if (v_hardware() == V_MONOCHROME)
-      retval = _UNIX_MONO;
-   else
-      retval = _UNIX_COLOR;
-   return(retval);
+   return (v_hardware() == V_MONOCHROME) ? _UNIX_MONO : _UNIX_COLOR;
 #else
    VioGetConfig( 0, configinfo, 0 );
    return(OK);

@@ -874,11 +874,6 @@ SCREEN *XSP;
 #endif
 
 
-/*
- * Used by base curses calls
- */
-MOUSE_STATUS Mouse_status;
-
 #ifdef FOREIGN
  XIM Xim;
  XIC Xic;

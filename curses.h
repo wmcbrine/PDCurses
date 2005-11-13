@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.28 2005/11/12 20:53:44 wmcbrine Exp $
+$Id: curses.h,v 1.29 2005/11/13 16:42:58 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -413,6 +413,9 @@ PDCurses portable platform definitions list:
 #  define CURSES__32BIT__
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
+#  endif
+#  ifndef HAVE_STRING_H
+#    define HAVE_STRING_H
 #  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */

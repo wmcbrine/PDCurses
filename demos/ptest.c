@@ -26,7 +26,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.1 2001/01/10 08:27:40 mark Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.2 2005/11/13 14:54:50 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -163,7 +163,7 @@ int argc;
 char **argv;
 {
 int itmp;
-register y,x;
+register int y,x;
 
 	if((argc > 1) && atol(argv[1]))
 		nap_msec = atol(argv[1]);

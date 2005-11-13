@@ -31,11 +31,14 @@
  *
  * Mark Hessling                 Email:             M.Hessling@qut.edu.au
  * PO Box 203                    Phone:                    +617 3849 7731
- * Bellara                       http://www.gu.edu.au/gwis/the/markh.html
+ * Bellara
  * QLD 4507                      **** Maintainer PDCurses & REXX/SQL ****
  * Australia                     ************* Author of THE ************
  */
+
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void display_info();
 
@@ -48,10 +51,8 @@ char *argv[];
 /***********************************************************************/
 {
  char    s[MAX_LINE + 1];        /* input line */
- register int     i = 0;
+ register int     i;
  FILE *fp;
- char c;
- char append=0;
 
 #ifdef __EMX__
  _wildcard(&argc, &argv);

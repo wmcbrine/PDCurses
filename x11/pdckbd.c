@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.5 2004/01/01 22:07:41 mark Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.6 2005/11/13 14:54:50 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -228,9 +228,8 @@ int	PDC_rawgetch()
 {
    extern WINDOW* _getch_win_;
 
-   int c=0;
-   int delay;
-   bool  return_immediately;
+   int c;
+   bool return_immediately;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_rawgetch() - called\n");

@@ -134,7 +134,7 @@ Boolean doit;
    Dimension hw;   /* horizontal scrollbar length (width) */
    Position vx;
    Position hy;
-#if 1
+#if 0
    Dimension th;
    Dimension tw;
 #endif

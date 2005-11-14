@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.16 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.17 2005/11/14 00:17:32 rexx Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -105,11 +105,11 @@ static KPTAB kptab[] =
    {0x0D,       0x0D,       CTL_ENTER,   ALT_ENTER,  1           }, /* 13  VK_RETURN        */
    {0,          0,          0,           0,          0           }, /* 14  */
    {0,          0,          0,           0,          0           }, /* 15  */
-   {0,          0,          0,           0,          0           }, /* 16  VK_SHIFT         */
-   {0,          0,          0,           0,          0           }, /* 17  VK_CONTROL       */
-   {0,          0,          0,           0,          0           }, /* 18  VK_MENU          */
+   {0,          0,          0,           0,          0           }, /* 16  VK_SHIFT    HANDLED SEPARATELY */
+   {0,          0,          0,           0,          0           }, /* 17  VK_CONTROL  HANDLED SEPARATELY */
+   {0,          0,          0,           0,          0           }, /* 18  VK_MENU     HANDLED SEPARATELY */
    {0,          0,          0,           0,          0           }, /* 19  VK_PAUSE         */
-   {0,          0,          0,           0,          0           }, /* 20  VK_CAPITAL       */
+   {0,          0,          0,           0,          0           }, /* 20  VK_CAPITAL  HANDLED SEPARATELY */
    {0,          0,          0,           0,          0           }, /* 21  VK_HANGUL        */
    {0,          0,          0,           0,          0           }, /* 22  */
    {0,          0,          0,           0,          0           }, /* 23  VK_JUNJA         */
@@ -233,8 +233,8 @@ static KPTAB kptab[] =
    {0,          0,          0,           0,          0           }, /* 141 */
    {0,          0,          0,           0,          0           }, /* 142 */
    {0,          0,          0,           0,          0           }, /* 143 */
-   {0,          0,          0,           0,          0           }, /* 144 VK_NUMLOCK       */
-   {0,          0,          0,           0,          0           }, /* 145 VK_SCROLL        */
+   {0,          0,          0,           0,          0           }, /* 144 VK_NUMLOCK  HANDLED SEPARATELY */
+   {0,          0,          0,           0,          0           }, /* 145 VK_SCROLL   HANDLED SEPARATELY */
    {0,          0,          0,           0,          0           }, /* 146 */
    {0,          0,          0,           0,          0           }, /* 147 */
    {0,          0,          0,           0,          0           }, /* 148 */
@@ -275,13 +275,13 @@ static KPTAB kptab[] =
    {0,          0,          0,           0,          0           }, /* 183 */
    {0,          0,          0,           0,          0           }, /* 184 */
    {0,          0,          0,           0,          0           }, /* 185 */
-   {0x3B,       0x3A,       0x3B,        ALT_SEMICOLON,0,        }, /* 186 */
-   {0x3D,       0x2B,       0x3D,        ALT_EQUAL,  0           }, /* 187 */
-   {0x2C,       0x3C,       0x2C,        ALT_COMMA,  0           }, /* 188 */
-   {0x2D,       0x5F,       0x2D,        0x2D,       0           }, /* 189 */
-   {0x2E,       0x3E,       0x2E,        ALT_STOP,   0           }, /* 190 */
-   {0x2F,       0x3F,       0x2F,        ALT_FSLASH, 13          }, /* 191 */
-   {0x60,       0x7E,       0x60,        ALT_BQUOTE, 0           }, /* 192 */
+   {0,          0,          0,           0,          0           }, /* 186 */
+   {0,          0,          0,           0,          0           }, /* 187 */
+   {0,          0,          0,           0,          0           }, /* 188 */
+   {0,          0,          0,           0,          0           }, /* 189 */
+   {0,          0,          0,           0,          0           }, /* 190 */
+   {0,          0,          0,           0,          0           }, /* 191 */
+   {0,          0,          0,           0,          0           }, /* 192 */
    {0,          0,          0,           0,          0           }, /* 193 */
    {0,          0,          0,           0,          0           }, /* 194 */
    {0,          0,          0,           0,          0           }, /* 195 */
@@ -457,6 +457,137 @@ bool PDC_check_bios_key(void)
    return(win32_kbhit(0));
 }
 
+/*
+ * processKeyEvent returns -1 if the key in save_ip should be ignored for some
+ * reasons. Otherwise the keycode is returned which should be returned by
+ * PDC_get_bios_code.
+ * save_ip MUST BE A KEY_EVENT!
+ *
+ * The Unicode support has been disabled. See below for the reason.
+ * CTRL-ALT support has been disabled, when is it emitted plainly?
+ */
+int processKeyEvent(void)
+{
+   CHAR ascii = save_ip.Event.KeyEvent.uChar.AsciiChar;
+   WCHAR unicode = save_ip.Event.KeyEvent.uChar.UnicodeChar;
+   WORD vk = save_ip.Event.KeyEvent.wVirtualKeyCode;
+   DWORD state = save_ip.Event.KeyEvent.dwControlKeyState;
+   unsigned long local_key_modifiers = 0L;
+   int idx;
+   BOOL enhanced;
+
+#if 0
+   {
+      char buf[KL_NAMELENGTH];
+      GetKeyboardLayoutName( buf );
+      fprintf(stderr,"OS=%X, AsciiChar: %u=%02X Unicode: %u=%02X KeyCode: %d ScanCode: %d State: %x Name: %s\n",
+                     SP->os_version,
+                     (unsigned char) ascii,
+                     (unsigned char) ascii,
+                     unicode,
+                     unicode,
+                     vk,
+                     save_ip.Event.KeyEvent.wVirtualScanCode,
+                     state,
+                     buf);
+   }
+#endif
+
+   pdc_key_modifiers = 0L;
+
+   /*
+    * Must calculate the key modifiers so that Alt keys work!
+    * Save the key modifiers if required.
+    * Do this first to allow to detect e.g. a pressed CTRL key
+    * after a hit of NUMLOCK.
+    */
+   if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
+      local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+   if (state & SHIFT_PRESSED)
+      local_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+   if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
+      local_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+   if (state & NUMLOCK_ON)
+      local_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+   pdc_key_modifiers = SP->save_key_modifiers ? local_key_modifiers : 0;
+
+
+   /*
+    * Handle modifier keys hit by themselves
+    */
+
+   switch (vk)
+   {
+      case VK_SHIFT: /* shift */
+         if ( !SP->return_key_modifiers )
+            return -1;
+         return KEY_SHIFT_R;
+
+      case VK_CONTROL: /* control */
+         if ( !SP->return_key_modifiers )
+            return -1;
+         return (state & LEFT_CTRL_PRESSED) ? KEY_CONTROL_L : KEY_CONTROL_R;
+
+      case VK_MENU: /* alt */
+         if ( !SP->return_key_modifiers )
+            return -1;
+         return (state & LEFT_ALT_PRESSED) ? KEY_ALT_L : KEY_ALT_R;
+
+      default:
+         break;
+   }
+
+   /*
+    * The system may emit Ascii or Unicode characters depending on whether
+    * ReadConsoleInputA or ReadConsoleInputW is used. We use ReadConsoleInputA
+    * in all cases currently, so we just check Ascii. Unicode characters
+    * are very hard to implement, because our "special keys" like KEY_F(1)
+    * is one of the unicode range.
+    *
+    * Now the ridiculous part of the processing. Normally, if ascii != 0
+    * then the system did the translation successfully. But this is not true
+    * for LEFT_ALT (different to RIGHT_ALT)  in case of LEFT_ALT we get
+    * we get ascii != 0. So check for this first.
+    */
+   if ((ascii != 0)
+    && (((state & LEFT_ALT_PRESSED) == 0) || (state & RIGHT_ALT_PRESSED)))
+   {
+      /*
+       * This code should catch all keys returning a printable character.
+       * Characters above 0x7F should be returned as positive codes.
+       * But if'ndef NUMKEYPAD we have to return extended keycodes for
+       * keypad codes. Test for it and don't return an ascii code in case.
+       */
+#ifndef NUMKEYPAD
+      if (kptab[vk].extended == 0)
+#endif
+         return (unsigned char) ascii;
+   }
+
+
+   /*
+    * This case happens if a functional key has been entered.
+    */
+   if ((state & ENHANCED_KEY) && (kptab[vk].extended != 999))
+   {
+      enhanced = TRUE;
+      idx = kptab[vk].extended;
+   }
+   else
+   {
+      enhanced = FALSE;
+      idx = vk;
+   }
+   if (state & SHIFT_PRESSED)
+      return((enhanced)?ext_kptab[idx].shift:kptab[idx].shift);
+   if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
+      return((enhanced)?ext_kptab[idx].control:kptab[idx].control);
+   if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
+      return((enhanced)?ext_kptab[idx].alt:kptab[idx].alt);
+   return((enhanced)?ext_kptab[idx].normal:kptab[idx].normal);
+}
+
+
 /*man-start*********************************************************************
 
   PDC_get_bios_key() - Returns the next key available from the BIOS.
@@ -469,7 +600,7 @@ bool PDC_check_bios_key(void)
    code. If bit 0-7 are non-zero, the upper bits = 0.
 
   PDCurses Return Value:
-   This function returns OK on success and ERR on error.
+   See above.
 
   PDCurses Errors:
    No errors are defined for this function.
@@ -488,8 +619,7 @@ int   PDC_get_bios_key(void)
    bool trap_mouse=FALSE;
    int idx=0,key=0;
    bool enhanced=FALSE;
-   unsigned long local_key_modifiers=0L;
-   int ignore_key;
+   int retval;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("PDC_get_bios_key() - called\n");
@@ -499,166 +629,17 @@ int   PDC_get_bios_key(void)
    {
       win32_getch();
 
-      switch(save_ip.EventType)
+      switch (save_ip.EventType)
       {
          case KEY_EVENT:
+            retval = processKeyEvent();
+            if (retval == -1) /* ignore key? */
+               continue;
 #if 0
-         {
-            char buf[KL_NAMELENGTH];
-            GetKeyboardLayoutName( buf );
-            fprintf(stderr,"AsciiChar: %d Unicode: %d KeyCode: %d ScanCode: %d State: %x Name: %s\n",
-                    save_ip.Event.KeyEvent.uChar.AsciiChar,
-                    save_ip.Event.KeyEvent.uChar.UnicodeChar,
-                    save_ip.Event.KeyEvent.wVirtualKeyCode,
-                    save_ip.Event.KeyEvent.wVirtualScanCode,
-                    save_ip.Event.KeyEvent.dwControlKeyState,
-                    buf
-                    );
-         }
+            fprintf(stderr,"KEY_EVENT returns 0x%X\n",retval);
 #endif
-            local_key_modifiers = pdc_key_modifiers = 0L;
-            ignore_key = 0;
-            /*
-             * Handle modifier keys hit by themselves
-             */
-            switch(save_ip.Event.KeyEvent.wVirtualKeyCode)
-            {
-               case 16: /* shift */
-                  if ( SP->return_key_modifiers ) return KEY_SHIFT_R;
-                  ignore_key = 1;
-                  break;
-               case 17: /* control */
-                  if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED)
-                  {
-                     if ( SP->return_key_modifiers ) return KEY_CONTROL_L;
-                  }
-                  else
-                  {
-                     if ( SP->return_key_modifiers ) return KEY_CONTROL_R;
-                  }
-                  ignore_key = 1;
-                  break;
-               case 18: /* alt */
-                  if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
-                  {
-                     if ( SP->return_key_modifiers ) return KEY_ALT_L;
-                  }
-                  else
-                  {
-                     if ( SP->return_key_modifiers ) return KEY_ALT_R;
-                  }
-                  ignore_key = 1;
-                  break;
-               default:
-                  break;
-            }
-            if ( ignore_key )
-               break;
-            /*
-             * Must calculate the key modifiers so that Alt keys work!
-             */
-            if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
-            ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
-               local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
-            if (save_ip.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED)
-               local_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
-            if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED
-            ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED)
-               local_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
-            if (save_ip.Event.KeyEvent.dwControlKeyState & NUMLOCK_ON)
-               local_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-            /*
-             * Save the key modifiers if required
-             */
-            if (SP->save_key_modifiers)
-            {
-               pdc_key_modifiers = local_key_modifiers;
-            }
-            /*
-             * If the Unicode character is not zero; its a displayable character.
-             * Check for Ctrl-Alt sequences; they are diatric characters
-             */
-#if 0
-            if ( ( SP->os_version < 0x80000000 ) && ( save_ip.Event.KeyEvent.uChar.UnicodeChar != 0 ) ) /* NT only ! */
-            {
-               idx = save_ip.Event.KeyEvent.wVirtualKeyCode;
-               if ( local_key_modifiers & PDC_KEY_MODIFIER_CONTROL
-               &&   local_key_modifiers & PDC_KEY_MODIFIER_ALT )
-                  return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
-               if ( local_key_modifiers & PDC_KEY_MODIFIER_CONTROL )
-                  return kptab[idx].control;
-               if ( local_key_modifiers & PDC_KEY_MODIFIER_ALT )
-                  return kptab[idx].alt;
-               if ( local_key_modifiers & PDC_KEY_MODIFIER_SHIFT )
-                  return kptab[idx].shift;
-               return (int)save_ip.Event.KeyEvent.uChar.UnicodeChar;
-            }
-#endif
-            if (save_ip.Event.KeyEvent.uChar.AsciiChar == 0
-            ||  save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
-            ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED
-            ||  save_ip.Event.KeyEvent.dwControlKeyState & ENHANCED_KEY)
-            {
-               if (save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED
-               &&  save_ip.Event.KeyEvent.uChar.AsciiChar != 0)
-/*                  return((int)(unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar); */
-                  return((int)save_ip.Event.KeyEvent.uChar.UnicodeChar);
-               if (save_ip.Event.KeyEvent.dwControlKeyState & ENHANCED_KEY)
-               {
-                  enhanced = TRUE;
-                  idx = kptab[save_ip.Event.KeyEvent.wVirtualKeyCode].extended;
-               }
-               else
-               {
-                  enhanced = FALSE;
-                  idx = save_ip.Event.KeyEvent.wVirtualKeyCode;
-               }
-               if (save_ip.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED)
-                  return((enhanced)?ext_kptab[idx].shift:kptab[idx].shift);
-               if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED
-               ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED)
-                  return((enhanced)?ext_kptab[idx].control:kptab[idx].control);
-               if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
-               ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
-                  return((enhanced)?ext_kptab[idx].alt:kptab[idx].alt);
-               return((enhanced)?ext_kptab[idx].normal:kptab[idx].normal);
-            }
-            else
-            {
-               if (kptab[save_ip.Event.KeyEvent.wVirtualKeyCode].extended == 999)
-               {
-                  idx = save_ip.Event.KeyEvent.wVirtualKeyCode;
-                  if (save_ip.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED)
-                     return(kptab[idx].shift);
-                  if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED
-                  ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED)
-                     return(kptab[idx].control);
-                  if (save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
-                  ||  save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
-                     return(kptab[idx].alt);
-                  return(kptab[idx].normal);
-               }
-               else
-               {
-                  idx = save_ip.Event.KeyEvent.wVirtualKeyCode;
-                  if (save_ip.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED
-                  && kptab[idx].shift)
-                     return(kptab[idx].shift);
-                  if ((save_ip.Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED
-                  ||   save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED)
-                  &&  kptab[idx].control)
-                     return(kptab[idx].control);
-                  if ((save_ip.Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED
-                  ||   save_ip.Event.KeyEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
-                  &&  kptab[idx].alt)
-                     return(kptab[idx].alt);
-                  if ( SP->os_version < 0x80000000 ) /* NT only ! */
-                     return((int)save_ip.Event.KeyEvent.uChar.UnicodeChar);
-                  else
-                     return((int)(unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar);
-               }
-            }
-            break;
+            return retval;
+
          case MOUSE_EVENT:
             memset((char*)&Temp_Mouse_status,0,sizeof(MOUSE_STATUS));
             /*
@@ -1106,8 +1087,45 @@ int   PDC_validchar(int c)
 static int GetInterestingEvent( INPUT_RECORD *ip )
 /***********************************************************************/
 {
-   int numKeys = 0;
+   /*
+    * GetInterestingEvent returns 0 if *ip doesn't contain an event which
+    * should be passed back to the user. This function filters "useless"
+    * events.
+    * The function returns the number of events waiting. This may be > 1
+    * if the repeation of real keys pressed so far are > 1.
+    *
+    * Keyboard: Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
+    *
+    *           Returns 1 for SHIFT, ALT, CTRL only if no other key has been
+    *           pressed in between; these are returned on keyup in opposite to
+    *           normal keys. The overall flags for processing of SHIFT, ALT,
+    *           CTRL (SP->return_key_modifiers) must have been set.
+    *           FGC: CHANGED BEHAVIOUR: In previous version SHIFT etc had a
+    *                chance to be returned on the first keydown, too. This
+    *                was a bug, because return_key_modifiers were 0.
+    *
+    *           Normal keys are returned on keydown only. The number of
+    *           repeations are returned. Dead keys (diacritics) are omitted.
+    *           See below for a description.
+    *
+    *           The keypad entering of special keys is not supported. This
+    *           feature can be built in by replacing "#ifdef NUMPAD_CHARS"
+    *           with an intelligent code.
+    *
+    * Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
+    *           a pressed mouse key are ignored.
+    *
+    * Window:   Everything is ignored, including resize requests. In case
+    *           of resize requests the global flag SP->resized is set.
+    *
+    * PLEASE DOCUMENT YOUR WORK!
+    *
+    * THIS FUNCTION IS NOT THREAD-SAFE. NEVER USE MORE THREADS THAN TO
+    * USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
+    */
+   int numKeys = 0, vk;
    static int save_press;
+   static unsigned numpadChar = 0;
 #ifdef PDCDEBUG
 #if defined(PDC_THREAD_BUILD)
 #  define PDC_DEBUG_THREADING1 "-->"
@@ -1123,51 +1141,112 @@ static int GetInterestingEvent( INPUT_RECORD *ip )
    switch(ip->EventType)
    {
       case KEY_EVENT:
-         if (ip->Event.KeyEvent.wVirtualKeyCode == 20
-          ||  ip->Event.KeyEvent.wVirtualKeyCode == 144
-          ||  ip->Event.KeyEvent.wVirtualKeyCode == 145)
+         vk = ip->Event.KeyEvent.wVirtualKeyCode;
+         if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
          {
 #ifdef PDCDEBUG
             ptr = "KEY MODIFIERS";
 #endif
+            numpadChar = 0;
+            save_press = 0;
             break;  /* throw away some modifiers */
          }
          if (ip->Event.KeyEvent.bKeyDown == FALSE)
          {
-            /* key up */
-            if ((ip->Event.KeyEvent.wVirtualKeyCode == 16
-            ||  ip->Event.KeyEvent.wVirtualKeyCode == 17
-            ||  ip->Event.KeyEvent.wVirtualKeyCode == 18)
-            &&  ip->Event.KeyEvent.wVirtualKeyCode == save_press
-            &&  SP->return_key_modifiers)
+            /* key up, the following check for VK_??? is paranoid hopefully */
+            if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
+             && vk == save_press
+             && SP->return_key_modifiers)
+            {
 #ifdef PDCDEBUG
                ptr = "KEYUP WANTED";
 #else
                ;
 #endif
+               /*
+                * Fall through and return this key. Still have to check the
+                * dead key condition.
+                */
+               ip->Event.KeyEvent.wRepeatCount = 1; /* always limited */
+            }
+            else if (vk == VK_MENU && numpadChar)
+            {
+               ip->Event.KeyEvent.uChar.AsciiChar = (CHAR) (unsigned char) numpadChar;
+               ip->Event.KeyEvent.dwControlKeyState &= ~LEFT_ALT_PRESSED;
+               ip->Event.KeyEvent.wRepeatCount = 1; /* always limited */
+               ip->Event.KeyEvent.wVirtualKeyCode = VK_NUMPAD0; /* change ALT to something else */
+               numpadChar = 0;
+            }
             else
             {
 #ifdef PDCDEBUG
                ptr = "KEYUP IGNORED";
 #endif
-               break;                    /* throw away KeyUp events */
+               break;                    /* throw away other KeyUp events */
             }
          }
          else
          {
-            if ((ip->Event.KeyEvent.wVirtualKeyCode == 16
-            ||  ip->Event.KeyEvent.wVirtualKeyCode == 17
-            ||  ip->Event.KeyEvent.wVirtualKeyCode == 18)
-            &&  SP->return_key_modifiers)
+            if (vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
             {
-               save_press = ip->Event.KeyEvent.wVirtualKeyCode;
+               /*
+                * These keys are returned on keyup only.
+                */
+               save_press = (SP->return_key_modifiers) ? vk : 0;
+               numpadChar = 0;
 #ifdef PDCDEBUG
                ptr = "KEYDOWN SAVED";
 #endif
                break; /* throw away key press */
             }
+
+#ifdef NUMPAD_CHARS
+            {
+               if ((ip->Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | ENHANCED_KEY)) == LEFT_ALT_PRESSED)
+               {
+                  switch (vk)
+                  {
+                     case VK_CLEAR:  vk = VK_NUMPAD5; break;
+                     case VK_PRIOR:  vk = VK_NUMPAD9; break;
+                     case VK_NEXT:   vk = VK_NUMPAD3; break;
+                     case VK_END:    vk = VK_NUMPAD1; break;
+                     case VK_HOME:   vk = VK_NUMPAD7; break;
+                     case VK_LEFT:   vk = VK_NUMPAD4; break;
+                     case VK_UP:     vk = VK_NUMPAD8; break;
+                     case VK_RIGHT:  vk = VK_NUMPAD6; break;
+                     case VK_DOWN:   vk = VK_NUMPAD2; break;
+                     case VK_INSERT: vk = VK_NUMPAD0; break;
+                     default:
+                        break;
+                  }
+               }
+               if ((vk >= VK_NUMPAD0 && vk <= VK_NUMPAD9)
+                && ip->Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
+               {
+#ifdef PDCDEBUG
+                  ptr = "NUMPAD ALTERNATE INPUT";
+#endif
+                  numpadChar *= 10;
+                  numpadChar += vk - VK_NUMPAD0;
+                  break;
+               }
+               else
+                  numpadChar = 0;
+            }
+#else /* NUMPAD_CHARS */
+            {
+               numpadChar = 0;
+            }
+#endif
          }
          save_press = 0;
+         /*
+          * Check for diacritics. These are dead keys. Some locale have
+          * modified characters like umlaut-a, which is an "a" with two dots
+          * on it. In some locales you have to press a special key (the dead
+          * key) immediately followed by the "a" to get a composed umlaut-a.
+          * The special key may have a normal meaning with different modifiers.
+          */
          if (ip->Event.KeyEvent.uChar.AsciiChar == 0 &&
              (MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode,2) & 0x80000000))
          {
@@ -1181,6 +1260,7 @@ static int GetInterestingEvent( INPUT_RECORD *ip )
 #endif
          numKeys = ip->Event.KeyEvent.wRepeatCount;
          break;
+
       case MOUSE_EVENT:
          /*
           * If we aren't trapping mouse events, then the "keyboard" hasn't
@@ -1206,21 +1286,18 @@ static int GetInterestingEvent( INPUT_RECORD *ip )
 #endif
          numKeys = 1;
          break;
+
       case WINDOW_BUFFER_SIZE_EVENT:
-  /*
-         PDC_resize_screen( PDC_get_rows(), PDC_get_columns() );
-  */
          SP->resized = TRUE;
 #ifdef PDCDEBUG
          ptr = "BUFFER SIZE";
 #endif
-         numKeys = 0; /* was 1 */
          break;
+
       default:
 #ifdef PDCDEBUG
          ptr = "UNKNOWN";
 #endif
-         numKeys = 0;
          break;
    }
 #ifdef PDCDEBUG

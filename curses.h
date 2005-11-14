@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.29 2005/11/13 16:42:58 wmcbrine Exp $
+$Id: curses.h,v 1.30 2005/11/14 14:37:45 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1225,45 +1225,33 @@ extern chtype *acs_map;
 #endif
 
 #if defined(DOS) || defined(OS2) || defined(WIN32)
-/* ALTCHARSET definitions from jshumate@wrdis01.robins.af.mil */
-# define ACS_ULCORNER	(chtype)0xda			/* SysV		*/
-# define ACS_LLCORNER	(chtype)0xc0			/* SysV		*/
-# define ACS_URCORNER	(chtype)0xbf			/* SysV		*/
-# define ACS_LRCORNER	(chtype)0xd9			/* SysV		*/
-# define ACS_RTEE	(chtype)0xb4			/* SysV		*/
-# define ACS_LTEE	(chtype)0xc3			/* SysV		*/
-# define ACS_BTEE	(chtype)0xc1			/* SysV		*/
-# define ACS_TTEE	(chtype)0xc2			/* SysV		*/
-# define ACS_HLINE	(chtype)0xc4			/* SysV		*/
-# define ACS_VLINE	(chtype)0xb3			/* SysV		*/
-# define ACS_PLUS	(chtype)0xc5			/* SysV		*/
-# define ACS_S1	(chtype)0x2d			/* SysV		*/
-# define ACS_S9	(chtype)0x5f			/* SysV		*/
-# define ACS_DIAMOND	(chtype)0xc5			/* SysV		*/
-# define ACS_CKBOARD	(chtype)0xb2			/* SysV		*/
-# define ACS_DEGREE	(chtype)0xf8			/* SysV		*/
-# define ACS_PLMINUS	(chtype)0xf1			/* SysV		*/
-# define ACS_BULLET	(chtype)0xf9			/* SysV		*/
-# define ACS_LARROW	(chtype)0x3c			/* SysV		*/
-# define ACS_RARROW	(chtype)0x3e			/* SysV		*/
-# define ACS_DARROW	(chtype)0x76			/* SysV		*/
-# define ACS_UARROW	(chtype)0x5e			/* SysV		*/
-# define ACS_BOARD	(chtype)0x23			/* SysV		*/
-# define ACS_LANTERN	(chtype)0x23			/* SysV		*/
-# define ACS_BLOCK	(chtype)0x23			/* SysV		*/
-
-/* the following definitions can be used if you have set raw_output()
-   or are using the PDCurses *raw*() functions                        */
-# if 0
-#  define ACS_DIAMOND	(chtype)0x04			/* SysV		*/
-#  define ACS_LARROW	(chtype)0x1b			/* SysV		*/
-#  define ACS_RARROW	(chtype)0x1a			/* SysV		*/
-#  define ACS_DARROW	(chtype)0x19			/* SysV		*/
-#  define ACS_UARROW	(chtype)0x18			/* SysV		*/
-#  define ACS_BOARD	(chtype)0xb0			/* SysV		*/
-#  define ACS_LANTERN	(chtype)0x0f			/* SysV		*/
-#  define ACS_BLOCK	(chtype)0xdb			/* SysV		*/
-# endif
+/* ALTCHARSET definitions from jshumate@wrdis01.robins.af.mil
+   These correspond to CP437, CP850, CP852, CP855 and CP866 */
+# define ACS_ULCORNER	(chtype)0xda			/* SysV */
+# define ACS_LLCORNER	(chtype)0xc0			/* SysV	*/
+# define ACS_URCORNER	(chtype)0xbf			/* SysV	*/
+# define ACS_LRCORNER	(chtype)0xd9			/* SysV	*/
+# define ACS_RTEE	(chtype)0xb4			/* SysV	*/
+# define ACS_LTEE	(chtype)0xc3			/* SysV	*/
+# define ACS_BTEE	(chtype)0xc1			/* SysV	*/
+# define ACS_TTEE	(chtype)0xc2			/* SysV	*/
+# define ACS_HLINE	(chtype)0xc4			/* SysV */
+# define ACS_VLINE	(chtype)0xb3			/* SysV */
+# define ACS_PLUS	(chtype)0xc5			/* SysV */
+# define ACS_S1		(chtype)0x2d			/* SysV */
+# define ACS_S9		(chtype)0x5f			/* SysV */
+# define ACS_DIAMOND	((chtype)0x04 | A_ALTCHARSET)	/* SysV */
+# define ACS_CKBOARD	(chtype)0xb1			/* SysV */
+# define ACS_DEGREE	(chtype)0xf8			/* SysV */
+# define ACS_PLMINUS	(chtype)0xf1			/* SysV */
+# define ACS_BULLET	(chtype)0xf9			/* SysV */
+# define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)	/* SysV */
+# define ACS_RARROW	((chtype)0x1a | A_ALTCHARSET)	/* SysV */
+# define ACS_DARROW	((chtype)0x19 | A_ALTCHARSET)	/* SysV */
+# define ACS_UARROW	((chtype)0x18 | A_ALTCHARSET)	/* SysV */
+# define ACS_BOARD	(chtype)0xb0			/* SysV */
+# define ACS_LANTERN	((chtype)0x0f | A_ALTCHARSET)	/* SysV */
+# define ACS_BLOCK	(chtype)0xdb			/* SysV */
 #endif
 
 /* colour attributes */

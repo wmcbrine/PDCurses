@@ -201,7 +201,7 @@ libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS)
 	-$(RANLIB) $@
 
 $(SHLPRE)$(SHLFILE)$(SHLPST) : $(SHOFILES)
-	cp $(srcdir)/../win32/curses.def ./XCursesw32.def
+	cp $(srcdir)/../win32/curses.def ./cygwin.def
 	$(LD_RXLIB1) $(RXPACKEXPORTS) -o $@ $(SHOFILES) $(LD_RXLIB2)
 
 addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)

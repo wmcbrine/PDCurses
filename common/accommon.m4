@@ -1035,7 +1035,7 @@ case "$target" in
 		EXE=".exe"
 # Only for Rexx/Trans do we produce an import library for the DLL we are
 # building
-		LD_RXLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --target i386-cygwin32 --dllname \$(@)"
+		LD_RXLIB1="dllwrap --def ./cygwin.def --target i386-cygwin32 --dllname \$(@)"
 		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
 		BASE_INSTALL="cygwininstall"
 		BASE_BINARY="cygwinbinary"

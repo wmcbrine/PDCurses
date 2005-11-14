@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.30 2005/11/14 14:37:45 wmcbrine Exp $
+$Id: curses.h,v 1.31 2005/11/14 16:15:19 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1192,16 +1192,16 @@ extern chtype *acs_map;
 # define ACS_LLCORNER	ACS_SSBB
 # define ACS_URCORNER	ACS_BBSS
 # define ACS_LRCORNER	ACS_SBBS
-# define ACS_RTEE	    ACS_SBSS
-# define ACS_LTEE	    ACS_SSSB
-# define ACS_BTEE	    ACS_SSBS
-# define ACS_TTEE	    ACS_BSSS
-# define ACS_HLINE	   ACS_BSBS
-# define ACS_VLINE	   ACS_SBSB
-# define ACS_PLUS	    ACS_SSSS
+# define ACS_RTEE	ACS_SBSS
+# define ACS_LTEE	ACS_SSSB
+# define ACS_BTEE	ACS_SSBS
+# define ACS_TTEE	ACS_BSSS
+# define ACS_HLINE	ACS_BSBS
+# define ACS_VLINE	ACS_SBSB
+# define ACS_PLUS	ACS_SSSS
 
-# define ACS_S1	(acs_map['o'])
-# define ACS_S9	(acs_map['s'])
+# define ACS_S1		(acs_map['o'])
+# define ACS_S9		(acs_map['s'])
 # define ACS_DIAMOND	(acs_map['\''])
 # define ACS_CKBOARD	(acs_map['a'])
 # define ACS_DEGREE	(acs_map['f'])
@@ -1215,18 +1215,22 @@ extern chtype *acs_map;
 # define ACS_LANTERN	(acs_map['i'])
 # define ACS_BLOCK	(acs_map['0'])
 
-# define ACS_S3	(acs_map['p'])
-# define ACS_S7	(acs_map['r'])
+# define ACS_S3		(acs_map['p'])
+# define ACS_S7		(acs_map['r'])
 # define ACS_LEQUAL	(acs_map['y'])
 # define ACS_GEQUAL	(acs_map['z'])
-# define ACS_PI	(acs_map['{'])
+# define ACS_PI		(acs_map['{'])
 # define ACS_NEQUAL	(acs_map['|'])
 # define ACS_STERLING	(acs_map['}'])
 #endif
 
 #if defined(DOS) || defined(OS2) || defined(WIN32)
 /* ALTCHARSET definitions from jshumate@wrdis01.robins.af.mil
-   These correspond to CP437, CP850, CP852, CP855 and CP866 */
+   These match code page 437 and compatible pages (CP850, CP852, etc.)
+*/
+
+/* VT100-compatible symbols */
+
 # define ACS_ULCORNER	(chtype)0xda			/* SysV */
 # define ACS_LLCORNER	(chtype)0xc0			/* SysV	*/
 # define ACS_URCORNER	(chtype)0xbf			/* SysV	*/
@@ -1245,6 +1249,23 @@ extern chtype *acs_map;
 # define ACS_DEGREE	(chtype)0xf8			/* SysV */
 # define ACS_PLMINUS	(chtype)0xf1			/* SysV */
 # define ACS_BULLET	(chtype)0xf9			/* SysV */
+
+# define ACS_BSSB	ACS_ULCORNER
+# define ACS_SSBB	ACS_LLCORNER
+# define ACS_BBSS	ACS_URCORNER
+# define ACS_SBBS	ACS_LRCORNER
+# define ACS_SBSS	ACS_RTEE
+# define ACS_SSSB	ACS_LTEE
+# define ACS_SSBS	ACS_BTEE
+# define ACS_BSSS	ACS_TTEE
+# define ACS_BSBS	ACS_HLINE
+# define ACS_SBSB	ACS_VLINE
+# define ACS_SSSS	ACS_PLUS
+
+/* Teletype 5410v1 symbols -- these are defined in SysV curses, but 
+   are not well-supported by most terminals. Stick to VT100 characters 
+   for optimum portability.
+*/
 # define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)	/* SysV */
 # define ACS_RARROW	((chtype)0x1a | A_ALTCHARSET)	/* SysV */
 # define ACS_DARROW	((chtype)0x19 | A_ALTCHARSET)	/* SysV */

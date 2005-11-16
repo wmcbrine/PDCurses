@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.31 2005/11/14 16:15:19 wmcbrine Exp $
+$Id: curses.h,v 1.32 2005/11/16 21:34:27 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1273,6 +1273,18 @@ extern chtype *acs_map;
 # define ACS_BOARD	(chtype)0xb0			/* SysV */
 # define ACS_LANTERN	((chtype)0x0f | A_ALTCHARSET)	/* SysV */
 # define ACS_BLOCK	(chtype)0xdb			/* SysV */
+
+/* That goes double for these -- undocumented SysV symbols. Don't use
+   them. Also, the definitions here aren't compatible with as many
+   code pages as those above.
+*/
+# define ACS_S3         (chtype)0x2d
+# define ACS_S7         (chtype)0x2d
+# define ACS_LEQUAL     (chtype)0xf3
+# define ACS_GEQUAL     (chtype)0xf2
+# define ACS_PI         (chtype)0xe3
+# define ACS_NEQUAL     (chtype)0xd8
+# define ACS_STERLING   (chtype)0x9c
 #endif
 
 /* colour attributes */

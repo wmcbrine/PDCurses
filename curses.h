@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.32 2005/11/16 21:34:27 wmcbrine Exp $
+$Id: curses.h,v 1.33 2005/11/17 12:36:04 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1935,7 +1935,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvdelch(y,x)            (move( y, x )==ERR?ERR:wdelch( stdscr ))
 #define mvgetch(y,x)            (move( y, x )==ERR?ERR:wgetch(stdscr))
 #define mvgetstr(y,x,str)       (move( y, x )==ERR?ERR:wgetstr( stdscr, str ))
-#define mvinch(y,x)             (move( y, x )==ERR?ERR:(stdscr->_y[y][x]))
+#define mvinch(y,x)             (move( y, x )==ERR?((chtype)ERR):(stdscr->_y[y][x]))
 #define mvinchstr(y,x,c)        (move( y, x )==ERR?ERR:inchnstr( c, stdscr->_maxx-stdscr->_curx ))
 #define mvinchnstr(y,x,c,n)     (move( y, x )==ERR?ERR:inchnstr( c, n ))
 #define mvinsch(y,x,c)          (move( y, x )==ERR?ERR:winsch( stdscr, c ))
@@ -1953,7 +1953,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvwgetch(w,y,x)         (wmove( w, y, x )==ERR?ERR:wgetch( w ))
 #define mvwgetstr(w,y,x,str)    (wmove( w, y, x )==ERR?ERR:wgetstr( w, str ))
 #define mvwgetnstr(w,y,x,str,n) (wmove( w, y, x )==ERR?ERR:wgetnstr( w, str , n ))
-#define mvwinch(w,y,x)          (wmove( w, y, x )==ERR?ERR:((w)->_y[y][x]))
+#define mvwinch(w,y,x)          (wmove( w, y, x )==ERR?((chtype)ERR):((w)->_y[y][x]))
 #define mvwinchstr(w,y,x,c)     (wmove( w, y, x )==ERR?ERR:winchnstr( w, c, (w)->_maxx-(w)->_curx ))
 #define mvwinchnstr(w,y,x,c,n)  (wmove( w, y, x )==ERR?ERR:winchnstr( w, c, n ))
 #define mvwinsch(w,y,x,c)       (wmove( w, y, x )==ERR?ERR:winsch( w, c ))

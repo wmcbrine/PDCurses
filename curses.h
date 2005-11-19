@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.34 2005/11/19 19:07:21 wmcbrine Exp $
+$Id: curses.h,v 1.35 2005/11/19 19:11:10 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -653,7 +653,7 @@ PDCurses portable platform definitions list:
 #     define DISPLAY_XGA        9
 #    endif
 #  endif
-#  if defined(__NT__) || define (WIN32)       /* This specifies WIN32 target */
+#  if defined( __NT__ ) || defined ( WIN32 )
 #    if defined(INCLUDE_WINDOWS_H) || __WATCOMC__ >= 1200
 #      include <windows.h>
 #      ifdef MOUSE_MOVED

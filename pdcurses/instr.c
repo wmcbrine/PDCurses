@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_instr  = "$Id: instr.c,v 1.1 2001/01/10 08:27:12 mark Exp $";
+char *rcsid_instr  = "$Id: instr.c,v 1.2 2005/11/19 20:34:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -175,7 +175,7 @@ int n;
 	for ( ic=0; ic < imax; ic++ )
 	{
 		tmp = mvwinch( win, oldy, oldx+ic );
-		if( tmp == ERR ) 
+		if( tmp == (chtype)ERR ) 
 		{
 			*(str+imax) = '\0';
 			return( ERR );

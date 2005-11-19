@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.35 2005/11/19 19:11:10 wmcbrine Exp $
+$Id: curses.h,v 1.36 2005/11/19 19:44:31 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -654,7 +654,7 @@ PDCurses portable platform definitions list:
 #    endif
 #  endif
 #  if defined( __NT__ ) || defined ( WIN32 )
-#    if defined(INCLUDE_WINDOWS_H) || __WATCOMC__ >= 1200
+#    ifdef INCLUDE_WINDOWS_H
 #      include <windows.h>
 #      ifdef MOUSE_MOVED
 #        undef MOUSE_MOVED

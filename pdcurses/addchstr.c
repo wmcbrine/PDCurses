@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.5 2005/11/19 19:07:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -52,14 +52,14 @@ char *rcsid_addchstr  = "$Id: addchstr.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp 
   Name:                                                        addchstr
 
   Synopsis:
-   int addchstr(chtype *ch);
-   int addchnstr(chtype *ch, int n);
-   int waddchstr(WINDOW *win, chtype *ch);
-   int waddchnstr(WINDOW *win, chtype *ch, int n);
-   int mvaddchstr(int y, int x, chtype *ch);
-   int mvaddchnstr(int y, int x, chtype *ch, int n);
-   int mvwaddchstr(WINDOW *, int y, int x, chtype *ch);
-   int mvwaddchnstr(WINDOW *, int y, int x, chtype *ch, int n);
+   int addchstr(const chtype *ch);
+   int addchnstr(const chtype *ch, int n);
+   int waddchstr(WINDOW *win, const chtype *ch);
+   int waddchnstr(WINDOW *win, const chtype *ch, int n);
+   int mvaddchstr(int y, int x, const chtype *ch);
+   int mvaddchnstr(int y, int x, const chtype *ch, int n);
+   int mvwaddchstr(WINDOW *, int y, int x, const chtype *ch);
+   int mvwaddchnstr(WINDOW *, int y, int x, const chtype *ch, int n);
 
   X/Open Description:
    These routines write a chtype directly into the window structure
@@ -96,10 +96,10 @@ char *rcsid_addchstr  = "$Id: addchstr.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp 
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   addchstr(chtype *ch)
+int   PDC_CDECL   addchstr(const chtype *ch)
 #else
 int   PDC_CDECL   addchstr(ch)
-chtype *ch;
+const chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -111,10 +111,10 @@ chtype *ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   addchnstr(chtype *ch, int n)
+int   PDC_CDECL   addchnstr(const chtype *ch, int n)
 #else
 int   PDC_CDECL   addchnstr(ch,n)
-chtype *ch;
+const chtype *ch;
 int n;
 #endif
 /***********************************************************************/
@@ -172,11 +172,11 @@ int n;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   waddchstr(WINDOW *win, chtype *ch)
+int   PDC_CDECL   waddchstr(WINDOW *win, const chtype *ch)
 #else
 int   PDC_CDECL   waddchstr(win,ch)
 WINDOW *win;
-chtype *ch;
+const chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -191,11 +191,11 @@ chtype *ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   waddchnstr(WINDOW *win, chtype *ch, int n)
+int   PDC_CDECL   waddchnstr(WINDOW *win, const chtype *ch, int n)
 #else
 int   PDC_CDECL   waddchnstr(win,ch,n)
 WINDOW *win;
-chtype *ch;
+const chtype *ch;
 int n;
 #endif
 /***********************************************************************/
@@ -297,12 +297,12 @@ int n;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   mvaddchstr(int y, int x, chtype *ch)
+int   PDC_CDECL   mvaddchstr(int y, int x, const chtype *ch)
 #else
 int   PDC_CDECL   mvaddchstr(y,x,ch)
 int y;
 int x;
-chtype *ch;
+const chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -320,12 +320,12 @@ chtype *ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   mvaddchnstr(int y, int x, chtype *ch, int n)
+int   PDC_CDECL   mvaddchnstr(int y, int x, const chtype *ch, int n)
 #else
 int   PDC_CDECL   mvaddchnstr(y,x,ch,n)
 int y;
 int x;
-chtype *ch;
+const chtype *ch;
 int n;
 #endif
 /***********************************************************************/
@@ -344,13 +344,13 @@ int n;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   mvwaddchstr(WINDOW *win, int y, int x, chtype *ch)
+int   PDC_CDECL   mvwaddchstr(WINDOW *win, int y, int x, const chtype *ch)
 #else
 int   PDC_CDECL   mvwaddchstr(win,y,x,ch)
 WINDOW *win;
 int y;
 int x;
-chtype *ch;
+const chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -368,13 +368,13 @@ chtype *ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   mvwaddchnstr(WINDOW *win,int y, int x, chtype *ch, int n)
+int   PDC_CDECL   mvwaddchnstr(WINDOW *win,int y, int x, const chtype *ch, int n)
 #else
 int   PDC_CDECL   mvwaddchnstr(win,y,x,ch,n)
 WINDOW *win;
 int y;
 int x;
-chtype *ch;
+const chtype *ch;
 int n;
 #endif
 /***********************************************************************/

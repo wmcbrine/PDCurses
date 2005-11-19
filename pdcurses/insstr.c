@@ -46,7 +46,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insstr  = "$Id: insstr.c,v 1.2 2002/03/22 22:36:52 mark Exp $";
+char *rcsid_insstr  = "$Id: insstr.c,v 1.3 2005/11/19 19:07:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,14 +54,14 @@ char *rcsid_insstr  = "$Id: insstr.c,v 1.2 2002/03/22 22:36:52 mark Exp $";
   Name:                                                        insstr
 
   Synopsis:
-  	int insstr(char *str);
-  	int insnstr(char *str, int n);
-  	int winsstr(WINDOW *win, char *str);
-  	int winsnstr(WINDOW *win, char *str, int n);
-  	int mvinsstr(int y, int x, char *str);
-  	int mvinsnstr(int y, int x, char *str, int n);
-  	int mvwinsstr(WINDOW *, int y, int x, char *str);
-  	int mvwinsnstr(WINDOW *, int y, int x, char *str, int n);
+  	int insstr(const char *str);
+  	int insnstr(const char *str, int n);
+  	int winsstr(WINDOW *win, const char *str);
+  	int winsnstr(WINDOW *win, const char *str, int n);
+  	int mvinsstr(int y, int x, const char *str);
+  	int mvinsnstr(int y, int x, const char *str, int n);
+  	int mvwinsstr(WINDOW *, int y, int x, const char *str);
+  	int mvwinsnstr(WINDOW *, int y, int x, const char *str, int n);
 
   System V Curses Description:
   	With these routines, a character string (as many characters as 
@@ -104,10 +104,10 @@ char *rcsid_insstr  = "$Id: insstr.c,v 1.2 2002/03/22 22:36:52 mark Exp $";
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	insstr(char *str)
+int	PDC_CDECL	insstr(const char *str)
 #else
 int	PDC_CDECL	insstr(str)
-char *str;
+const char *str;
 #endif
 /***********************************************************************/
 {
@@ -122,10 +122,10 @@ char *str;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	insnstr(char *str, int n)
+int	PDC_CDECL	insnstr(const char *str, int n)
 #else
 int	PDC_CDECL	insnstr(str,n)
-char *str;
+const char *str;
 int n;
 #endif
 /***********************************************************************/
@@ -141,11 +141,11 @@ int n;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	winsstr(WINDOW *win, char *str)
+int	PDC_CDECL	winsstr(WINDOW *win, const char *str)
 #else
 int	PDC_CDECL	winsstr(win,str)
 WINDOW *win;
-char *str;
+const char *str;
 #endif
 /***********************************************************************/
 {
@@ -160,11 +160,11 @@ char *str;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	winsnstr(WINDOW *win, char *str, int n)
+int	PDC_CDECL	winsnstr(WINDOW *win, const char *str, int n)
 #else
 int	PDC_CDECL	winsnstr(win,str,n)
 WINDOW *win;
-char *str;
+const char *str;
 int n;
 #endif
 /***********************************************************************/
@@ -194,12 +194,12 @@ int n;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvinsstr(int y, int x, char *str)
+int	PDC_CDECL	mvinsstr(int y, int x, const char *str)
 #else
 int	PDC_CDECL	mvinsstr(y,x,str)
 int y;
 int x;
-char *str;
+const char *str;
 #endif
 /***********************************************************************/
 {
@@ -217,12 +217,12 @@ char *str;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvinsnstr(int y, int x, char *str, int n)
+int	PDC_CDECL	mvinsnstr(int y, int x, const char *str, int n)
 #else
 int	PDC_CDECL	mvinsnstr(y,x,str,n)
 int y;
 int x;
-char *str;
+const char *str;
 int n;
 #endif
 /***********************************************************************/
@@ -241,13 +241,13 @@ int n;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvwinsstr(WINDOW *win, int y, int x, char *str)
+int	PDC_CDECL	mvwinsstr(WINDOW *win, int y, int x, const char *str)
 #else
 int	PDC_CDECL	mvwinsstr(win,y,x,str)
 WINDOW *win;
 int y;
 int x;
-char *str;
+const char *str;
 #endif
 /***********************************************************************/
 {
@@ -265,13 +265,13 @@ char *str;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvwinsnstr(WINDOW *win,int y, int x, char *str, int n)
+int	PDC_CDECL	mvwinsnstr(WINDOW *win,int y, int x, const char *str, int n)
 #else
 int	PDC_CDECL	mvwinsnstr(win,y,x,str,n)
 WINDOW *win;
 int y;
 int x;
-char *str;
+const char *str;
 int n;
 #endif
 /***********************************************************************/

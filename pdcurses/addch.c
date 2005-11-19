@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addch  = "$Id: addch.c,v 1.1 2001/01/10 08:26:44 mark Exp $";
+char *rcsid_addch  = "$Id: addch.c,v 1.2 2005/11/19 19:07:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -48,12 +48,12 @@ char *rcsid_addch  = "$Id: addch.c,v 1.1 2001/01/10 08:26:44 mark Exp $";
   Name:                                                         addch
 
   Synopsis:
-  	int addch(chtype ch);
-  	int waddch(WINDOW *win, chtype ch);
-  	int mvaddch(int y, int x, chtype ch);
-  	int mvwaddch(WINDOW *win, int y, int x, chtype ch);
-  	int echochar(chtype ch);
-  	int wechochar(WINDOW *win, chtype ch);
+  	int addch(const chtype ch);
+  	int waddch(WINDOW *win, const chtype ch);
+  	int mvaddch(int y, int x, const chtype ch);
+  	int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
+  	int echochar(const chtype ch);
+  	int wechochar(WINDOW *win, const chtype ch);
 
   X/Open Description:
  	The routine addch() inserts the character ch into the default
@@ -135,10 +135,10 @@ char *rcsid_addch  = "$Id: addch.c,v 1.1 2001/01/10 08:26:44 mark Exp $";
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	addch(chtype ch)
+int	PDC_CDECL	addch(const chtype ch)
 #else
 int	PDC_CDECL	addch(ch)
-chtype ch;
+const chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -150,11 +150,11 @@ chtype ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	waddch(WINDOW *win, chtype ch)
+int	PDC_CDECL	waddch(WINDOW *win, const chtype ch)
 #else
 int	PDC_CDECL	waddch(win,ch)
 WINDOW *win;
-chtype ch;
+const chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -166,12 +166,12 @@ chtype ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvaddch(int y, int x, chtype ch)
+int	PDC_CDECL	mvaddch(int y, int x, const chtype ch)
 #else
 int	PDC_CDECL	mvaddch(y,x,ch)
 int y;
 int x;
-chtype ch;
+const chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -184,13 +184,13 @@ chtype ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvwaddch(WINDOW *win, int y, int x, chtype ch)
+int	PDC_CDECL	mvwaddch(WINDOW *win, int y, int x, const chtype ch)
 #else
 int	PDC_CDECL	mvwaddch(win,y,x,ch)
 WINDOW *win;
 int y;
 int x;
-chtype ch;
+const chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -203,10 +203,10 @@ chtype ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	echochar(chtype ch)
+int	PDC_CDECL	echochar(const chtype ch)
 #else
 int	PDC_CDECL	echochar(ch)
-chtype ch;
+const chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -220,11 +220,11 @@ chtype ch;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wechochar(WINDOW *win, chtype ch)
+int	PDC_CDECL	wechochar(WINDOW *win, const chtype ch)
 #else
 int	PDC_CDECL	wechochar(win,ch)
 WINDOW *win;
-chtype ch;
+const chtype ch;
 #endif
 /***********************************************************************/
 {

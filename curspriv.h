@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.9 2004/09/14 07:53:09 rexx Exp $
+$Id: curspriv.h,v 1.10 2005/11/19 19:07:21 wmcbrine Exp $
 */
 /*
 *
@@ -296,7 +296,7 @@ int             PDC_chg_attr Args(( WINDOW*, chtype, int, int, int, int ));
 int             PDC_chins Args(( WINDOW*, chtype, bool ));
 int             PDC_clr_scrn Args(( WINDOW* ));
 int             PDC_clr_update Args(( WINDOW* ));
-int             PDC_copy_win Args(( WINDOW *,WINDOW *,int,int,int,int,int,int,int,int,bool ));
+int             PDC_copy_win Args(( const WINDOW *,WINDOW *,int,int,int,int,int,int,int,int,bool ));
 int             PDC_cursor_off Args(( void ));
 int             PDC_cursor_on Args(( void ));
 int             PDC_curs_set Args(( int ));

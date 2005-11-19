@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk  = "$Id: slk.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_slk  = "$Id: slk.c,v 1.3 2005/11/19 19:07:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -52,7 +52,7 @@ char *rcsid_slk  = "$Id: slk.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
   Synopsis:
 
   	int slk_init(int fmt);
-  	int slk_set(int labnum, char *label, int fmt);
+  	int slk_set(int labnum, const char *label, int fmt);
   	int slk_refresh(void);
   	int slk_noutrefresh(void);
   	char *slk_label(int labnum);
@@ -213,11 +213,11 @@ int fmt;
    save = 1 yes or 0 no
  */
 #ifdef HAVE_PROTO
-static int PDC_slk_set(int label_num, char *label_str, int label_fmt, int save)
+static int PDC_slk_set(int label_num, const char *label_str, int label_fmt, int save)
 #else
 static int PDC_slk_set(label_num, label_str, label_fmt, save)
 int label_num;
-char *label_str;
+const char *label_str;
 int label_fmt;
 int save;
 #endif
@@ -324,11 +324,11 @@ int col;
       2 = right
  */
 #ifdef HAVE_PROTO
-int PDC_CDECL slk_set(int label_num, char *label_str, int label_fmt)
+int PDC_CDECL slk_set(int label_num, const char *label_str, int label_fmt)
 #else
 int PDC_CDECL slk_set(label_num, label_str, label_fmt)
 int label_num;
-char *label_str;
+const char *label_str;
 int label_fmt;
 #endif
 /***********************************************************************/

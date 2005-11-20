@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.8 2005/11/20 18:44:16 wmcbrine Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.9 2005/11/20 18:55:11 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -307,6 +307,9 @@ short *blue;
 	   ncurses uses 680 for non-A_BOLD, so let's copy that. - WJM3
 	*/
 
+	if ((color >= COLORS || color < 0) || (!red || !green || !blue))
+		return(ERR);
+
 	*red = (color & COLOR_RED) ? 680 : 0;
 	*green = (color & COLOR_GREEN) ? 680 : 0;
 	*blue = (color & COLOR_BLUE) ? 680 : 0;
@@ -346,8 +349,9 @@ short *background;
 /***********************************************************************/
 {
 
- if (colorpair >= COLOR_PAIRS || colorpair < 1)
-    return(ERR);
+ if ((colorpair >= COLOR_PAIRS || colorpair < 1) ||
+     (!foreground || !background))
+	return(ERR);
 
  *foreground = (short)(atrtab[colorpair*PDC_OFFSET] & 0x0F);
  *background = (short)((atrtab[colorpair*PDC_OFFSET] & 0xF0)>>4);
@@ -358,7 +362,7 @@ short *background;
   */
 #if 0
  if ( *foreground <= 0 && *background <= 0 )
- 	return(ERR);
+	return(ERR);
 #endif
  /*
   * End of patch by:

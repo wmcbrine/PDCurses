@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.6 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.7 2005/11/20 16:39:24 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -286,7 +286,7 @@ short blue;
 	if (trace_on) PDC_debug("init_color() - called\n");
 #endif
 /*************** this does nothing at the moment ******************/
-	return(OK);
+	return(ERR);
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -303,7 +303,15 @@ short *blue;
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("color_content() - called\n");
 #endif
-/*************** this does nothing at the moment ******************/
+	/* A crude implementation. Does not account for intensity. 
+	   Colors (without A_BOLD) are assumed to be at half-intensity, 
+	   which may not be right. I should find out the actual values. - WJM3
+	*/
+
+	*red = (color & COLOR_RED) ? 500 : 0;
+	*green = (color & COLOR_GREEN) ? 500 : 0;
+	*blue = (color & COLOR_BLUE) ? 500 : 0;
+
 	return(OK);
 }
 /***********************************************************************/

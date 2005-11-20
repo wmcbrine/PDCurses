@@ -26,7 +26,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.2 2005/11/13 14:54:50 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.3 2005/11/20 04:01:00 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -102,7 +102,7 @@ PANEL *pan;
 
 	if(!win)
 		return((PANEL *)0);
-	if(pan = new_panel(win))
+	if((pan = new_panel(win)))
 		return(pan);
 	delwin(win);
 	return((PANEL *)0);

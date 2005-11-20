@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.17 2005/11/14 00:17:32 rexx Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.18 2005/11/20 04:01:01 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -469,7 +469,9 @@ bool PDC_check_bios_key(void)
 int processKeyEvent(void)
 {
    CHAR ascii = save_ip.Event.KeyEvent.uChar.AsciiChar;
+#if 0
    WCHAR unicode = save_ip.Event.KeyEvent.uChar.UnicodeChar;
+#endif
    WORD vk = save_ip.Event.KeyEvent.wVirtualKeyCode;
    DWORD state = save_ip.Event.KeyEvent.dwControlKeyState;
    unsigned long local_key_modifiers = 0L;
@@ -617,8 +619,7 @@ int   PDC_get_bios_key(void)
    static MOUSE_STATUS Actual_Mouse_status;
    int button_no=0;
    bool trap_mouse=FALSE;
-   int idx=0,key=0;
-   bool enhanced=FALSE;
+   int key=0;
    int retval;
 
 #ifdef PDCDEBUG

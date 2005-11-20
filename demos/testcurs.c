@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.12 2004/09/14 07:56:14 rexx Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.13 2005/11/20 04:01:00 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -44,6 +44,10 @@ char *rcsid_testcurs  = "$Id: testcurs.c,v 1.12 2004/09/14 07:56:14 rexx Exp $";
 
 #if defined(XCURSES)
 	char *XCursesProgramName = "testcurs";
+#endif
+
+#if defined(HAVE_PROTO) && !defined(__STDC__)
+# define __STDC__
 #endif
 
 #ifdef __STDC__

@@ -44,7 +44,7 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.1 2001/01/10 08:27:46 mark Exp $";
+char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.2 2005/11/20 04:01:00 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)
@@ -54,7 +54,9 @@ char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.1 2001/01/10 08:27:46 mark Exp $";
 #  define FNAME   "demos\\tui.c"    /* change this if source at other location */
 #endif
 
-
+#if defined(HAVE_PROTO) && !defined(__STDC__)
+# define __STDC__
+#endif
 
 /**************************** strings entry box ***************************/
 
@@ -159,10 +161,17 @@ char *fname;
 
 /***************************** forward declarations ***********************/
 
+#ifdef __STDC__
+void sub0(void), sub1(void), sub2(void), sub3(void);
+void func1(void), func2(void);
+void subfunc1(void), subfunc2(void);
+void subsub(void);
+#else
 void sub0(), sub1(), sub2(), sub3();
 void func1(), func2();
 void subfunc1(), subfunc2();
 void subsub();
+#endif
 
 /***************************** menus initialization ***********************/
 

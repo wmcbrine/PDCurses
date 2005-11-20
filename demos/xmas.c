@@ -115,7 +115,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas  = "$Id: xmas.c,v 1.2 2003/06/23 07:55:04 mark Exp $";
+char *rcsid_xmas  = "$Id: xmas.c,v 1.3 2005/11/20 04:01:00 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -125,6 +125,24 @@ char *rcsid_xmas  = "$Id: xmas.c,v 1.2 2003/06/23 07:55:04 mark Exp $";
 	char *XCursesProgramName = "xmas";
 #endif
 
+#ifdef HAVE_PROTO
+int boxit(void);
+int seas(void);
+int greet(void);
+int fromwho(void);
+int del_msg(void);
+int tree(void);
+int balls(void);
+int star(void);
+int strng1(void);
+int strng2(void);
+int strng3(void);
+int strng4(void);
+int strng5(void);
+int blinkit(void);
+int reindeer(void);
+void done(void);
+#else
 int boxit();
 int seas();
 int greet();
@@ -141,6 +159,7 @@ int strng5();
 int blinkit();
 int reindeer();
 void done();
+#endif
 
 #define FROMWHO "Mark Hessling - (M.Hessling@qut.edu.au)"
 

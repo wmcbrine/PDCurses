@@ -35,20 +35,20 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.4 2004/08/07 04:45:08 rexx Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.5 2005/11/20 04:01:00 wmcbrine Exp $";
 #endif
 
-#if __STDC__
-# define Args(x) x
-#else
-# define Args(x) ()
+#ifndef Args
+# ifdef HAVE_PROTO
+#  define Args(x) x
+# else
+#  define Args(x) ()
+# endif
 #endif
 
 void myrefresh Args((void));
 chtype get_colour Args((void));
 void explode Args((int,int));
-
-#undef Args
 
 int main()
 {

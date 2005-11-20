@@ -37,8 +37,14 @@
 #include <time.h>
 #include "tui.h"
 
+#ifdef __STDC__
+void statusmsg (char *);
+int waitforkey (void);
+void rmerror (void);
+#endif
+
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.3 2005/11/13 14:54:50 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.4 2005/11/20 04:01:00 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -99,7 +105,7 @@ int length;
   static char buf[MAXSTRLEN];
   char fmt[10];
 
-  sprintf (fmt, strlen(s)>length ? "%%.%ds" : "%%-%ds", length);
+  sprintf (fmt, ((int)strlen(s))>length ? "%%.%ds" : "%%-%ds", length);
   sprintf (buf, fmt, s);
   return buf;
 }
@@ -779,7 +785,8 @@ int field;
   WINDOW *wedit;
   int c=0;
 
-  if ((field>=MAXSTRLEN) || (buf==NULL) || (strlen(buf) > field-1)) return ERR;
+  if ((field>=MAXSTRLEN) || (buf==NULL) || ((int)strlen(buf) > field-1))
+    return ERR;
   strcpy (org, buf);  /* save original */
 
   wrefresh (win);
@@ -819,7 +826,7 @@ int field;
 
       case KEY_RIGHT:
         defdisp = FALSE;
-        if (bp - buf < strlen(buf)) bp++;
+        if (bp - buf < (int)strlen(buf)) bp++;
         break;
 
       case '\t':     /* TAB, because Insert not properly handled on HP-UX ! */
@@ -855,7 +862,7 @@ int field;
           if (defdisp) { bp = buf; *bp = '\0'; defdisp = FALSE; }
           if (insert)
           {
-            if (strlen(buf) < field-1)
+            if ((int)strlen(buf) < field-1)
             {
               memmove ((void *)(bp+1), (const void *)bp, strlen(bp)+1);
               *bp++ = c;

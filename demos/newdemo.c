@@ -44,21 +44,21 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.6 2005/11/20 04:01:00 wmcbrine Exp $";
 #endif
 
-#if __STDC__
-#define Args(x) x
-#else
-#define Args(x) ()
+#ifndef Args
+# ifdef HAVE_PROTO
+#  define Args(x) x
+# else
+#  define Args(x) ()
+# endif
 #endif
 
 int WaitForUser Args((void));
 int SubWinTest Args((WINDOW *));
 int BouncingBalls Args((WINDOW *));
 void trap Args((int));
-
-#undef Args
 
 /*
  *  The Australian map
@@ -107,7 +107,7 @@ int WaitForUser()
    t = time((time_t *)0);
    while(1)
    {
-      if ((ch = getch()) != ERR)
+      if ((ch = getch()) != (chtype)ERR)
       {
          if (ch == '\033')
          {

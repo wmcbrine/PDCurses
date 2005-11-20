@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.3 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.4 2005/11/20 04:01:01 wmcbrine Exp $";
 #endif
 
 
@@ -111,6 +111,17 @@ PANEL *__top_panel = (PANEL *)0;
 PANEL __stdscr_pseudo_panel = { (WINDOW *)0 };
 
 #define STATIC static
+
+#ifdef HAVE_PROTO
+STATIC void __calculate_obscure(void);
+STATIC void __free_obscure(PANEL *);
+STATIC void __override(PANEL *, int);
+STATIC int __panel_is_linked(PANEL *);
+STATIC void __panel_link_bottom(PANEL *);
+STATIC void __panel_link_top(PANEL *);
+STATIC int __panels_overlapped(PANEL *, PANEL *);
+STATIC void __panel_unlink(PANEL *);
+#endif
 
 /*+-------------------------------------------------------------------------
 	dPanel(text,pan)

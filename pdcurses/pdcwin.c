@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.6 2005/11/19 19:07:21 wmcbrine Exp $";
+char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.7 2005/11/20 04:01:01 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -638,8 +638,8 @@ bool advance;
    int   retval = ERR;
    int   x;
    int   y;
-   int   newx=0;
-   chtype   attr=0, bktmp=0;
+   int   newx;
+   chtype   attr=0, bktmp;
    int   ts;
 
 #ifdef PDCDEBUG

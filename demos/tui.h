@@ -29,6 +29,10 @@
 
 #include <curses.h>
 
+#if defined(HAVE_PROTO) && !defined(__STDC__)
+# define __STDC__
+#endif
+
 #ifndef getbegyx
 #define getbegyx(w,y,x)        ( y = (w)->_begy, x = (w)->_begx )
 #endif

@@ -44,7 +44,7 @@ void rmerror (void);
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.4 2005/11/20 04:01:00 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.5 2005/11/20 15:52:08 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -271,10 +271,10 @@ static int hotkey (s)
 char *s;
 #endif
 {
-  int c, c0 = *s;  /* if no upper case found, return first char */
+  int c0 = *s;  /* if no upper case found, return first char */
 
-  for (c = *s; c; s++) if (isupper(c)) break;
-  return c ? c : c0;
+  for (; *s; s++) if (isupper(*s)) break;
+  return *s ? *s : c0;
 }
 
 #ifdef __STDC__

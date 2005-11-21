@@ -334,7 +334,7 @@ void XCursesGetIcon(void);
 int XCursesRefreshScrollbar(void);
 int XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
 void XCursesButton(Widget,XEvent *,String *,Cardinal *);
-void XCursesCursorBlink(Widget w, XtIntervalId *id);
+void XCursesCursorBlink(XtPointer unused, XtIntervalId *id);
 void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data);
 void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data);

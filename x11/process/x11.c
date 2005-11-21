@@ -28,6 +28,12 @@ int visible_cursor=0;
 int windowEntered = 1;
 static char *XCursesProgramName;
 
+#ifdef HAVE_PROTO
+extern void say(const char *);
+#else
+extern void say();
+#endif
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 void XCursesExitXCursesProcess(int rc,int sig,char *msg)
@@ -275,7 +281,8 @@ XtInputId *id;
             XCursesDisplayCursor(old_row,old_x,new_row,new_x); 
             break; 
          case CURSES_DISPLAY_CURSOR: /* display cursor */ 
-            say("CURSES_DISPLAY_CURSOR received from child. Vis now: %d\n",visible_cursor); 
+            say("CURSES_DISPLAY_CURSOR received from child. Vis now: ");
+            say(visible_cursor ? "1\n" : "0\n");
             /* 
              * If the window is not active, ignore this command. The 
              * cursor will stay solid. 

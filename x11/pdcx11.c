@@ -929,10 +929,10 @@ pthread_mutex_t key_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 int xerror();
 
 #ifdef HAVE_PROTO
-void say(char *msg)
+void say(const char *msg)
 #else
 void say(msg)
-char *msg;
+const char *msg;
 #endif
 {
 #ifdef PDCDEBUG
@@ -2714,10 +2714,10 @@ MOUSE_STATUS *ms;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-void XCursesCursorBlink(Widget w, XtIntervalId *id)
+void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 #else
-void XCursesCursorBlink(w, id)
-Widget w;
+void XCursesCursorBlink(unused, id)
+XtPointer unused;
 XtIntervalId *id;
 #endif
 /***********************************************************************/

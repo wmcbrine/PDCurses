@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.5 2005/11/20 04:01:00 wmcbrine Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.6 2005/11/21 02:59:58 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -47,7 +47,7 @@ char *rcsid_firework  = "$Id: firework.c,v 1.5 2005/11/20 04:01:00 wmcbrine Exp 
 #endif
 
 void myrefresh Args((void));
-chtype get_colour Args((void));
+void get_colour Args((void));
 void explode Args((int,int));
 
 int main()
@@ -109,15 +109,13 @@ int row,col;
        mvprintw(row,col,"-");
        myrefresh();
 
-       init_pair(1,get_colour(),COLOR_BLACK);
-       attrset(COLOR_PAIR(1));
+       get_colour();
        mvprintw(row-1,col-1," - ");
        mvprintw(row,col-1,"-+-");
        mvprintw(row+1,col-1," - ");
        myrefresh();
 
-       init_pair(1,get_colour(),COLOR_BLACK);
-       attrset(COLOR_PAIR(1));
+       get_colour();
        mvprintw(row-2,col-2," --- ");
        mvprintw(row-1,col-2,"-+++-");
        mvprintw(row,  col-2,"-+#+-");
@@ -125,8 +123,7 @@ int row,col;
        mvprintw(row+2,col-2," --- ");
        myrefresh();
 
-       init_pair(1,get_colour(),COLOR_BLACK);
-       attrset(COLOR_PAIR(1));
+       get_colour();
        mvprintw(row-2,col-2," +++ ");
        mvprintw(row-1,col-2,"++#++");
        mvprintw(row,  col-2,"+# #+");
@@ -134,8 +131,7 @@ int row,col;
        mvprintw(row+2,col-2," +++ ");
        myrefresh();
 
-       init_pair(1,get_colour(),COLOR_BLACK);
-       attrset(COLOR_PAIR(1));
+       get_colour();
        mvprintw(row-2,col-2,"  #  ");
        mvprintw(row-1,col-2,"## ##");
        mvprintw(row,  col-2,"#   #");
@@ -143,8 +139,7 @@ int row,col;
        mvprintw(row+2,col-2,"  #  ");
        myrefresh();
 
-       init_pair(1,get_colour(),COLOR_BLACK);
-       attrset(COLOR_PAIR(1));
+       get_colour();
        mvprintw(row-2,col-2," # # ");
        mvprintw(row-1,col-2,"#   #");
        mvprintw(row,  col-2,"     ");
@@ -160,9 +155,9 @@ void myrefresh()
        refresh();
 }
 
-chtype get_colour()
+void get_colour()
 {
-       static chtype tbl[] =
+       static short tbl[] =
        {
                COLOR_RED,
                COLOR_BLUE,
@@ -173,11 +168,9 @@ chtype get_colour()
                COLOR_YELLOW,
                COLOR_WHITE,
        };
-       chtype attr;
 
-       attr = tbl[rand() % 8];
+       int bold = (rand() % 2) ? A_BOLD : A_NORMAL;
 
-       if (rand() % 2)
-          attr |= A_BOLD;
-       return(attr);
+       init_pair(1, tbl[rand() % 8], COLOR_BLACK);
+       attrset(COLOR_PAIR(1) | bold);
 }

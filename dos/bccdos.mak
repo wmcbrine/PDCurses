@@ -46,7 +46,7 @@ LDFLAGS =
 
 CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR)
 
-CCFLAGS		= -c +$(osdir)\bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+CCFLAGS		= -c +bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LINK		= tlink
 

@@ -17,7 +17,7 @@ CC_HOME		=l:\msvc
 MODEL		=L       # one of L, S, M, T, H, C
 SIZE		=LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 ################################################################################
-# Nothing below here should required changing.
+# Nothing below here should require changing.
 ################################################################################
 VER=26
 VERDOT=2.6

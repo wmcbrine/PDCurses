@@ -16,7 +16,7 @@ PDCURSES_HOME		=c:\curses
 CC_HOME		=c:\bcos2
 #MODEL		=l
 ################################################################################
-# Nothing below here should required changing.
+# Nothing below here should require changing.
 ################################################################################
 VER=26
 VERDOT=2.6

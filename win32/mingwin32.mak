@@ -15,7 +15,7 @@
 PDCURSES_HOME		=d:/pdcurses/pdcurses
 CC_HOME		=c:/mingw32
 ################################################################################
-# Nothing below here should required changing.
+# Nothing below here should require changing.
 ################################################################################
 
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h

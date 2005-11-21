@@ -15,7 +15,7 @@
 PDCURSES_HOME		=$(%PDCURSES_SRCDIR)
 CCINCDIR		=k:\h
 ################################################################################
-# Nothing below here should required changing.
+# Nothing below here should require changing.
 ################################################################################
 VER=26
 VERDOT=2.6

@@ -15,7 +15,7 @@
 PDCURSES_HOME		= $(PDCURSES_SRCDIR)
 #CC_HOME		=/cygnus/cygwin-b20/H-i586-cygwin32/i586-cygwin32
 ################################################################################
-# Nothing below here should required changing.
+# Nothing below here should require changing.
 ################################################################################
 
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h

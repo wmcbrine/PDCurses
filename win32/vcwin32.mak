@@ -18,7 +18,7 @@ VERDOT=2.6
 
 PDCURSES_HOME		=$(PDCURSES_SRCDIR)
 ################################################################################
-# Nothing below here should required changing.
+# Nothing below here should require changing.
 ################################################################################
 
 PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h

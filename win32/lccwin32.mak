@@ -8,16 +8,13 @@
 # [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
 #
 ###############################################################################
-
 #
 # Change these for your environment...
 #
 ###############################################################################
-
 PDCURSES_HOME		=\pdcurses
 ###############################################################################
-
-# Nothing below here should required changing.
+# Nothing below here should require changing.
 ###############################################################################
 PDCURSES_CURSES_H         =$(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H         =$(PDCURSES_HOME)\curspriv.h

@@ -34,7 +34,7 @@ osdir		= $(PDCURSES_HOME)\dos
 pandir		= $(PDCURSES_HOME)\panel
 demodir		= $(PDCURSES_HOME)\demos
 
-CC		= bcc
+#CC		= bcc
 
 !if $d(DEBUG)
 CFLAGS  = -N -v -y -DPDCDEBUG 

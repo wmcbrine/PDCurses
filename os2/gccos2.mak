@@ -87,8 +87,7 @@ all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.o
-	-del curses.lib
-	-del panel.lib
+	-del *.lib
 	-del *.exe
 
 demos:	$(DEMOS)

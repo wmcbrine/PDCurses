@@ -66,8 +66,7 @@ all:    $(PDCLIBS) $(DEMOS) #$(DLL_DEMOS)
 
 clean:
 	-del *.obj
-	-del pdcurses.lib
-	-del panel.lib
+	-del *.lib
 	-del *.exe
 
 demos:  $(DEMOS)

@@ -66,8 +66,7 @@ all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-rm -f *.o
-	-rm -f curses.lib
-	-rm -f panel.lib
+	-rm -f *.lib
 	-rm -f *.exe
 
 demos:	$(DEMOS)

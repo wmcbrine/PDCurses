@@ -64,8 +64,7 @@ all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.o
-	-del pdcurses.a
-	-del panel.a
+	-del *.a
 	-del *.exe
 
 demos:	$(DEMOS)

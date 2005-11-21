@@ -59,11 +59,11 @@ DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
 
-clean:
+clean
 	-del *.obj
-	-del curses.lib
-	-del panel.lib
+	-del *.lib
 	-del *.exe
+	-del *.err
 
 demos:	$(DEMOS)
 

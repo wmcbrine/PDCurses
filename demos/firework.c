@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.6 2005/11/21 02:59:58 wmcbrine Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.7 2005/11/21 04:03:03 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -169,7 +169,7 @@ void get_colour()
                COLOR_WHITE,
        };
 
-       int bold = (rand() % 2) ? A_BOLD : A_NORMAL;
+       attr_t bold = (rand() % 2) ? A_BOLD : A_NORMAL;
 
        init_pair(1, tbl[rand() % 8], COLOR_BLACK);
        attrset(COLOR_PAIR(1) | bold);

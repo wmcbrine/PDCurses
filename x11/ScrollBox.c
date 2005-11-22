@@ -141,7 +141,7 @@ Boolean doit;
    int i;
 
    if (sbw->composite.num_children != 3)
-      XtAppError(XtWidgetToApplicationContext((Widget)sbw),
+      XtAppError(XtWidgetToApplicationContext(w),
             "ScrollBox: must manage exactly three widgets.");
 
    for (i = 0; i < sbw->composite.num_children; i++) 
@@ -149,7 +149,7 @@ Boolean doit;
       child = sbw->composite.children[i];
       if (!XtIsManaged(child)) 
       {
-         XtAppError(XtWidgetToApplicationContext((Widget)sbw),
+         XtAppError(XtWidgetToApplicationContext(w),
             "ScrollBox: all three widgets must be managed.");
       }
    }
@@ -248,10 +248,10 @@ static XtGeometryResult GeometryManager(w, request, reply)
     return XtGeometryYes;
 }
 
-static void RefigureLocations(sbw)
-    ScrollBoxWidget sbw;
+static void RefigureLocations(w)
+    Widget w;
 {
-   DoLayout(sbw, False);
+   DoLayout(w, False);
 }
 
 
@@ -316,15 +316,13 @@ XtWidgetGeometry *request, *reply_return;
 static void Resize(w)
 Widget w;
 {
-   ScrollBoxWidget sbw = (ScrollBoxWidget) w;
-   DoLayout(sbw, True);
+   DoLayout(w, True);
 }
 
 static void ChangeManaged(w)
-ScrollBoxWidget w;
+Widget w;
 {
-   ScrollBoxWidget sbw = (ScrollBoxWidget) w;
-   DoLayout(sbw, True);
+   DoLayout(w, True);
 }
 
 /* ARGSUSED */
@@ -352,7 +350,7 @@ Cardinal *num_args;
    /* need to relayout if h_space or v_space change */
    if ((sbwnew->scrollBox.h_space != sbwcurrent->scrollBox.h_space) ||
                    (sbwnew->scrollBox.v_space != sbwcurrent->scrollBox.v_space))
-      DoLayout(sbwnew, True);
+      DoLayout(new, True);
 
    return False;
 }

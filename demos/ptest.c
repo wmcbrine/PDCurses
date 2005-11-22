@@ -26,7 +26,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.3 2005/11/20 04:01:00 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.4 2005/11/22 00:45:45 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -63,6 +63,15 @@ char *mod[] =
 	"LAST "
 };
 
+#ifdef HAVE_PROTO
+PANEL *mkpanel(int, int, int, int);
+void fill_panel(PANEL *);
+void pflush(void);
+void wait_a_while(long);
+void saywhat(const char *);
+void rmpanel(PANEL *);
+#endif
+
 /*+-------------------------------------------------------------------------
 	wait_a_while(msec)
 --------------------------------------------------------------------------*/
@@ -79,7 +88,7 @@ long msec;
 --------------------------------------------------------------------------*/
 void
 saywhat(text)
-char *text;
+const char *text;
 {
 
 	wmove(stdscr,LINES - 1,0);
@@ -354,7 +363,7 @@ register int y,x;
 #ifdef XCURSES
 	XCursesExit();
 #endif
-	exit(0);
+	return 0;
 }	/* end of main */
 
 /* vi: set tabstop=4 shiftwidth=4: */

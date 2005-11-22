@@ -40,7 +40,7 @@ CC		= bcc32
 CFLAGS  = -N -v -y -DPDCDEBUG
 LDFLAGS = /c /v /s /l /e
 !else
-CFLAGS  =  -O
+CFLAGS  =  -O -w-eff -w-par
 LDFLAGS =
 !endif
 

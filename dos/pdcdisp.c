@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.5 2004/01/02 21:02:50 mark Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.6 2005/11/22 05:55:04 wmcbrine Exp $";
 #endif
 
 #ifdef PC
@@ -634,11 +634,9 @@ register int lineno;
 /***********************************************************************/
 {
 #if defined (MSC)
-chtype*	dstp=NULL;
-chtype*	srcp=NULL;
+chtype *srcp;
 #else
-register chtype*	dstp=NULL;
-register chtype*	srcp=NULL;
+register chtype *srcp;
 #endif
 
 #if SMALL || MEDIUM
@@ -648,20 +646,20 @@ struct SREGS segregs;
 int ds=0;
 #endif
 
-	int	x=0;
-	int	endx=0;
-	int	len=0;
+	int x;
+	int endx;
+	int len;
 
 #if defined(NDP)
 	int *VIDPOINT;
 #endif
 
 	unsigned short temp_line[256]; /* this should be enough for the maximum width of a screen. MH-920715 */
-	unsigned short chr=0;
-	unsigned short*	ch=NULL;
+	unsigned short chr;
+	unsigned short *ch;
 
-	register int j=0;
-	bool rc=FALSE;
+	register int j;
+	bool rc;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_transform_line() - called: line %d\n",lineno);
@@ -674,7 +672,6 @@ int ds=0;
 
 	x = curscr->_firstch[lineno];
 	endx = curscr->_lastch[lineno];
-	dstp = curscr->_y[lineno] + x;
 	srcp = curscr->_y[lineno] + x;
 	len = endx-x+1;
 
@@ -691,10 +688,6 @@ int ds=0;
 
 	if (SP->direct_video)
 	{
-
-#if IS_THIS_REALLY_NEEDED
-		memcpy(dstp, srcp, len * sizeof(chtype));
-#endif
 
 #ifdef __DJGPP__
 		dosmemput (ch, len * sizeof(unsigned short),

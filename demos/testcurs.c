@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.13 2005/11/20 04:01:00 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.14 2005/11/22 05:55:04 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -260,7 +260,7 @@ WINDOW *win;
 #endif
 {
     int i;
-    int OldX, OldY;
+    int OldY;
     char *Message = "The window will now scroll slowly";
 
 /* disable typeahead checking */
@@ -276,7 +276,7 @@ WINDOW *win;
       wrefresh (win);
     };
 
-    getmaxyx (win, OldY, OldX);
+    OldY = getmaxy (win);
     mvwprintw (win, 6, 1, "The top of the window will scroll");
     wmove (win, 1, 1);
     wsetscrreg (win, 0, 4);
@@ -401,7 +401,7 @@ WINDOW *win;
        }
        if (c == KEY_MOUSE)
        {
-          int button=0;
+          int button = 0;
           request_mouse_pos();
           if (BUTTON_CHANGED(1))
              button = 1;
@@ -409,8 +409,6 @@ WINDOW *win;
              button = 2;
           else if (BUTTON_CHANGED(3))
              button = 3;
-          else
-             button = 0;
           if (BUTTON_STATUS(button) & BUTTON_MODIFIER_MASK)
           {
              waddstr(win, " Modifier(s):");

@@ -22,8 +22,12 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.8 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.9 2005/11/23 04:41:38 rexx Exp $";
 #endif
+
+#define PDC_RESTORE_NONE     0
+#define PDC_RESTORE_BUFFER   1
+#define PDC_RESTORE_WINDOW   2
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
 HANDLE hConIn = INVALID_HANDLE_VALUE;
@@ -83,7 +87,17 @@ int   PDC_scr_close(void)
    SetConsoleScreenBufferSize(hConOut, orig_scr.dwSize);
    SetConsoleWindowInfo(hConOut,TRUE,&orig_scr.srWindow);
 
-   if (SP->_restore)
+   if (SP->_restore == PDC_RESTORE_WINDOW)
+   {
+      rect.Top = orig_scr.srWindow.Top;
+      rect.Left = orig_scr.srWindow.Left;
+      rect.Bottom = orig_scr.srWindow.Bottom;
+      rect.Right = orig_scr.srWindow.Right;
+      origin.X = origin.Y = 0;
+      if (!WriteConsoleOutput(hConOut,ciSaveBuffer,orig_scr.dwSize,origin,&rect))
+         return(ERR);
+   }
+   else if (SP->_restore == PDC_RESTORE_BUFFER)
    {
       rect.Top = rect.Left = 0;
       rect.Bottom = orig_scr.dwSize.Y  - 1;
@@ -220,10 +234,19 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
       internal->orig_attr = 0;
    }
 
+   internal->_restore = PDC_RESTORE_NONE;
    if (getenv("PDC_RESTORE_SCREEN") != NULL)
    {
+      /*
+       * Attempt to save the complete console buffer...
+       */
       if ((ciSaveBuffer = (CHAR_INFO*)malloc(orig_scr.dwSize.X*orig_scr.dwSize.Y*sizeof(CHAR_INFO))) == NULL)
+      {
+#ifdef PDCDEBUG
+         if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d\n",__LINE__);
+#endif
          return(ERR);
+      }
       bufsize.X = orig_scr.dwSize.X;
       bufsize.Y = orig_scr.dwSize.Y;
 
@@ -234,21 +257,63 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
       rect.Right = orig_scr.dwSize.X - 1;
       if (!ReadConsoleOutput(hConOut,ciSaveBuffer,bufsize,origin,&rect))
       {
+         /*
+          * We can't save the complete buffer, so try and save just the displayed window...
+          */
          free(ciSaveBuffer);
          ciSaveBuffer = NULL;
-         return(ERR);
+
+         bufsize.X = orig_scr.srWindow.Right - orig_scr.srWindow.Left + 1;
+         bufsize.Y = orig_scr.srWindow.Bottom - orig_scr.srWindow.Top + 1;
+         if ((ciSaveBuffer = (CHAR_INFO*)malloc(bufsize.X*bufsize.Y*sizeof(CHAR_INFO))) == NULL)
+         {
+            CHAR LastError[256];
+            ULONG last_error = GetLastError();
+            FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
+#ifdef PDCDEBUG
+            if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
+#endif
+            return(ERR);
+         }
+
+         origin.X = origin.Y = 0;
+
+         rect.Top = orig_scr.srWindow.Top;
+         rect.Left = orig_scr.srWindow.Left;
+         rect.Bottom = orig_scr.srWindow.Bottom;
+         rect.Right = orig_scr.srWindow.Right;
+         if (!ReadConsoleOutput(hConOut,ciSaveBuffer,bufsize,origin,&rect))
+         {
+            CHAR LastError[256];
+            ULONG last_error = GetLastError();
+            FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
+            free(ciSaveBuffer);
+            ciSaveBuffer = NULL;
+#ifdef PDCDEBUG
+            if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
+#endif
+            return(ERR);
+         }
+         internal->_restore = PDC_RESTORE_WINDOW;
       }
-      internal->_restore = TRUE;
+      else
+         internal->_restore = PDC_RESTORE_BUFFER;
    }
-   else
-      internal->_restore = FALSE;
 
    if (getenv("PDC_PRESERVE_SCREEN") != NULL)
    {
       bufsize.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
       bufsize.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
       if ((save_ci = (CHAR_INFO*)malloc(bufsize.X*bufsize.Y*sizeof(CHAR_INFO))) == NULL)
+      {
+         CHAR LastError[256];
+         ULONG last_error = GetLastError();
+         FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
+#ifdef PDCDEBUG
+         if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
+#endif
          return(ERR);
+      }
 
       origin.X = origin.Y = 0;
 
@@ -258,8 +323,14 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
       rect.Right = csbi.srWindow.Right;
       if (!ReadConsoleOutput(hConOut,save_ci,bufsize,origin,&rect))
       {
+         CHAR LastError[256];
+         ULONG last_error = GetLastError();
+         FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
          free(save_ci);
          save_ci = NULL;
+#ifdef PDCDEBUG
+         if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
+#endif
          return(ERR);
       }
       internal->_preserve = TRUE;

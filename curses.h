@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.36 2005/11/19 19:44:31 wmcbrine Exp $
+$Id: curses.h,v 1.37 2005/11/23 04:42:43 rexx Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1020,7 +1020,7 @@ typedef struct
 	int	linesrippedoffontop;		/* Lines ripped off on top via ripoffline() */
 	int	delaytenths;		/* 1/10ths second to wait block getch() for */
 	bool	_preserve;		/* TRUE if screen background to be preserved */
-	bool	_restore;		/* TRUE if screen background to be restored */
+	int	_restore;		/* specifies if screen background to be restored and how*/
 	bool	save_key_modifiers;		/* TRUE if each key modifiers saved with each key press */
 	bool	return_key_modifiers;		/* TRUE if modifier keys are returned as "real" keys */
 
@@ -1262,8 +1262,8 @@ extern chtype *acs_map;
 # define ACS_SBSB	ACS_VLINE
 # define ACS_SSSS	ACS_PLUS
 
-/* Teletype 5410v1 symbols -- these are defined in SysV curses, but 
-   are not well-supported by most terminals. Stick to VT100 characters 
+/* Teletype 5410v1 symbols -- these are defined in SysV curses, but
+   are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability.
 */
 # define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)	/* SysV */

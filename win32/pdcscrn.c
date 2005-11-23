@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.9 2005/11/23 04:41:38 rexx Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.10 2005/11/23 15:30:52 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -269,7 +269,7 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
          {
             CHAR LastError[256];
             ULONG last_error = GetLastError();
-            FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
+            FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
 #ifdef PDCDEBUG
             if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
 #endif
@@ -286,7 +286,7 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
          {
             CHAR LastError[256];
             ULONG last_error = GetLastError();
-            FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
+            FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
             free(ciSaveBuffer);
             ciSaveBuffer = NULL;
 #ifdef PDCDEBUG
@@ -308,7 +308,7 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
       {
          CHAR LastError[256];
          ULONG last_error = GetLastError();
-         FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
+         FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
 #ifdef PDCDEBUG
          if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
 #endif
@@ -325,7 +325,7 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
       {
          CHAR LastError[256];
          ULONG last_error = GetLastError();
-         FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
+         FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
          free(save_ci);
          save_ci = NULL;
 #ifdef PDCDEBUG

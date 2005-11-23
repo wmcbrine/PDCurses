@@ -74,6 +74,7 @@ clean:
 	-del *.lib
 	-del *.dll
 	-del *.exp
+	-del *.res
 	-del *.exe
 
 demos:	$(DEMOS)

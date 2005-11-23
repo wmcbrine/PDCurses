@@ -23,6 +23,9 @@
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
  * Version: 1.02
+ *
+ * Modified by Mark Hessling and William McBrine
+ * halfdelay() added (and CPUACCOUNT removed) November 22, 2005
  */
 
 #ifdef HAVE_CONFIG_H
@@ -44,12 +47,11 @@ void rmerror (void);
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.5 2005/11/20 15:52:08 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.6 2005/11/23 00:47:07 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
 #include <unistd.h>
-#define CPUACCOUNT                /* necessary if CPU cycles are to be paid! */
 #endif
 
 #ifdef A_COLOR
@@ -222,9 +224,6 @@ static void idle ()
     tp->tm_hour, tp->tm_min, tp->tm_sec);
   mvwaddstr (wtitl, 0, bw-strlen(buf)-2, buf);
   wrefresh (wtitl); 
-#ifdef CPUACCOUNT
-  sleep (1);    /* necessary if CPU cycles are to be paid ! */
-#endif
 }
 
 #ifdef __STDC__
@@ -559,7 +558,8 @@ bool keypressed (void)
 bool keypressed ()
 #endif
 {
-  if (ch == ERR) ch = wgetch(wbody);
+  ch = wgetch(wbody);
+
   return ch != ERR;
 }
 
@@ -579,21 +579,11 @@ int getkey ()
 }
 
 #ifdef __STDC__
-void flushkeys (void)
-#else
-void flushkeys ()
-#endif
-{
-  while (keypressed()) getkey();
-}
-
-#ifdef __STDC__
 int waitforkey (void)
 #else
 int waitforkey ()
 #endif
 {
-  flushkeys ();
   while (!keypressed()) idle ();
   return getkey ();
 }
@@ -713,6 +703,7 @@ char *mtitle;
   noecho ();                /* ... without echoing */
   hidecursor ();            /* hide cursor (if possible) */
   nodelay (wbody, TRUE);    /* don't wait for input */
+  halfdelay(10);
   keypad (wbody, TRUE);     /* enable cursor keys */
   scrollok (wbody, TRUE);   /* enable scrolling in main window */
   leaveok (stdscr, TRUE);
@@ -796,18 +787,10 @@ int field;
   colorbox (wedit, EDITBOXCOLOR, 0);
 
   normalcursor ();
-#ifdef CPUACCOUNT
-  nodelay (win, FALSE);
-  keypad (wedit, TRUE);
-#endif
   while (!stop)
   {
     repainteditbox (wedit, bp-buf, buf);
-#ifdef CPUACCOUNT
-    switch (c = wgetch(wedit))
-#else
     switch (c = waitforkey())
-#endif
     {
       case KEY_ESC:
         strcpy (buf, org);  /* restore original */
@@ -877,9 +860,6 @@ int field;
         break;
     }
   }
-#ifdef CPUACCOUNT
-  nodelay (win, TRUE);
-#endif
   wattrset (wedit, oldattr);
   repainteditbox (wedit, bp-buf, buf);
   delwin (wedit);

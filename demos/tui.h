@@ -80,7 +80,6 @@ void    statusmsg  (char *msg);
 
 bool    keypressed (void);
 int     getkey     (void);
-void    flushkeys  (void);
 int     waitforkey (void);
 
 void    DoExit     (void);
@@ -105,7 +104,6 @@ void    statusmsg  ();
 
 bool    keypressed ();
 int     getkey     ();
-void    flushkeys  ();
 int     waitforkey ();
 
 void    DoExit     ();

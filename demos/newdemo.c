@@ -32,7 +32,6 @@
 #include <stdio.h>
 #include <signal.h>
 #include <string.h>
-#include <time.h>
 #include <curses.h>
 
 #ifdef HAVE_MEMORY_H
@@ -44,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.6 2005/11/20 04:01:00 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.7 2005/11/23 23:46:42 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -100,32 +99,18 @@ char    *messages[] =
  */
 int WaitForUser()
 {
-   time_t  t;
    chtype ch;
 
    nodelay(stdscr,TRUE);
-   t = time((time_t *)0);
-   while(1)
-   {
-      if ((ch = getch()) != (chtype)ERR)
-      {
-         if (ch == '\033')
-         {
-            nodelay(stdscr, FALSE);
-            return  ch;
-         }
-         else
-         {
-            nodelay(stdscr, FALSE);
-            return  0;
-         }
-      }
-      if (time((time_t *)0) - t > 5)
-      {
-         nodelay(stdscr, FALSE);
-         return  0;
-      }
-   }
+   halfdelay(50);
+
+   ch = getch();
+
+   nodelay(stdscr,FALSE);
+   nocbreak();            /* Reset the halfdelay() value */
+   cbreak();
+
+   return (ch == '\033') ? ch : 0;
 }
 
 /*
@@ -339,7 +324,7 @@ void    trap();
          {
             ch = 'b';
             init_pair(3,COLOR_CYAN,COLOR_YELLOW);
-            wattron(win, COLOR_PAIR(3));
+            wattrset(win, COLOR_PAIR(3));
          }
       }
       nodelay(stdscr,FALSE);

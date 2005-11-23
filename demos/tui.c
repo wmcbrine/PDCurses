@@ -47,7 +47,7 @@ void rmerror (void);
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.6 2005/11/23 00:47:07 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.7 2005/11/23 01:16:55 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -584,7 +584,7 @@ int waitforkey (void)
 int waitforkey ()
 #endif
 {
-  while (!keypressed()) idle ();
+  do idle (); while (!keypressed());
   return getkey ();
 }
 
@@ -702,8 +702,8 @@ char *mtitle;
   cbreak ();                /* direct input (no newline required)... */
   noecho ();                /* ... without echoing */
   hidecursor ();            /* hide cursor (if possible) */
-  nodelay (wbody, TRUE);    /* don't wait for input */
-  halfdelay(10);
+  nodelay (wbody, TRUE);    /* don't wait for input... */
+  halfdelay(10);            /* ...well, no more than a second, anyway */
   keypad (wbody, TRUE);     /* enable cursor keys */
   scrollok (wbody, TRUE);   /* enable scrolling in main window */
   leaveok (stdscr, TRUE);

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.37 2005/11/23 04:42:43 rexx Exp $
+$Id: curses.h,v 1.38 2005/11/23 19:44:20 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -151,7 +151,7 @@ PDCurses definitions list:  (Only define those needed)
 	MSC             True if using a Microsoft compiler.
 	HAVE_PROTO      True if the compiler supports ANSI prototypes.
 	CPLUSPLUS       True if the compiler supports C++.
-	PDC_BUILD????   Defines API build version.
+	PDC_BUILD       Defines API build version.
 
 PDCurses portable platform definitions list:
 

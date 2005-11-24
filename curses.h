@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.38 2005/11/23 19:44:20 wmcbrine Exp $
+$Id: curses.h,v 1.39 2005/11/24 19:02:01 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -583,9 +583,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef WIN32
 #    define WIN32
-#  endif
-#  ifndef INT_MAX
-#    define INT_MAX 32762
 #  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */

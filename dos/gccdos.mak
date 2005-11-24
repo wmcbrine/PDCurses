@@ -13,17 +13,10 @@
 #
 # PDCURSES_HOME = .. works in the 'dos' directory except for 'dist' rule
 # PDC_HOME is the backslashed version of PDCURSES_HOME, generated automatically
-# CC_HOME should be set automatically if you are running DJGPP make
 #
 ################################################################################
-PDCURSES_HOME	= c:/projects/pdcurses
+PDCURSES_HOME	= $(PDCURSES_SRCDIR)
 PDC_HOME	= $(subst /,\,$(PDCURSES_HOME))
-
-ifdef DJDIR
-CC_HOME		= $(DJDIR)
-else
-CC_HOME		= c:/djgpp
-endif
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -34,9 +27,6 @@ PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)/panel.h
-
-CCLIBDIR		=$(CC_HOME)/lib
-CCINCDIR		=$(CC_HOME)/include
 
 srcdir		= $(PDCURSES_HOME)/pdcurses
 osdir		= $(PDCURSES_HOME)/dos
@@ -53,7 +43,7 @@ else
 	LDFLAGS =
 endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR) -D_NAIVE_DOS_REGS -funsigned-char
+CPPFLAGS	= -I$(PDCURSES_HOME) -D_NAIVE_DOS_REGS -funsigned-char
 
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 

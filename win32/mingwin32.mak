@@ -12,8 +12,7 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=d:/pdcurses/pdcurses
-CC_HOME		=c:/mingw32
+PDCURSES_HOME		=$(PDCURSES_SRCDIR)
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -22,9 +21,6 @@ PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)/panel.h
-
-CCLIBDIR		=$(CC_HOME)/lib
-CCINCDIR		=$(CC_HOME)/include
 
 srcdir		= $(PDCURSES_HOME)/pdcurses
 osdir		= $(PDCURSES_HOME)/win32
@@ -41,14 +37,14 @@ else
 	LDFLAGS =
 endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR)
+CPPFLAGS	= -I$(PDCURSES_HOME)
 
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 
 LINK		= gcc
 COFF2EXE	=coff2exe $*
 
-CCLIBS		= -L$(CCLIBDIR) -lkernel32 -luser32
+CCLIBS		= -lkernel32 -luser32
 
 LIBEXE		= ar
 LIBFLAGS		=rcv

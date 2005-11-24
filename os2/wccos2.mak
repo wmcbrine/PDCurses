@@ -12,7 +12,7 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=c:\curses
+PDCURSES_HOME		=$(%PDCURSES_SRCDIR)
 CCINCDIR		=k:\h
 ################################################################################
 # Nothing below here should require changing.

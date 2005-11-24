@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.7 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.8 2005/11/24 18:50:40 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -108,25 +108,40 @@ char c_printscanbuf[513];  /* buffer used during I/O */
 char *c_strbeg;
 
 #if   EMALLOC
-void* emalloc( size_t );
-void* ecalloc( size_t, size_t );
-void  efree( void* );
-
+# ifdef HAVE_PROTO
+extern   void* emalloc( size_t );
+extern   void* ecalloc( size_t, size_t );
+extern   void  efree( void* );
+# else
 extern   void* emalloc();  /* user's emalloc(size)    */
 extern   void* ecalloc();  /* user's ecalloc(num,size)   */
-extern   void  efree(); /* user's efree(ptr)    */
+extern   void  efree();    /* user's efree(ptr)    */
+# endif
 #endif
 
 #if !defined(UNIX) && !defined(XCURSES)
-extern   void* malloc();   /* runtime's malloc(size)  */
+# ifdef HAVE_PROTO
+extern   void* malloc( size_t );          /* runtime's malloc(size)     */
+extern   void* calloc( size_t, size_t );  /* runtime's calloc(num,size) */
+extern   void  free( void* );             /* runtime's free(ptr)        */
+# else
+extern   void* malloc();   /* runtime's malloc(size)     */
 extern   void* calloc();   /* runtime's calloc(num,size) */
-extern   void  free();     /* runtime's free(ptr)     */
+extern   void  free();     /* runtime's free(ptr)        */
+# endif
 #endif
 
-void* (*mallc)();    /* ptr to some malloc(size)   */
-void* (*callc)();    /* ptr to some ecalloc(num,size)*/
-void  (*fre)();      /* ptr to some free(ptr)   */
-void* (*reallc)();      /* ptr to some realloc(ptr,size) */
+#ifdef HAVE_PROTO
+void* (*mallc)( size_t );            /* ptr to some malloc(size)      */
+void* (*callc)( size_t, size_t );    /* ptr to some ecalloc(num,size) */
+void  (*fre)( void* );               /* ptr to some free(ptr)         */
+void* (*reallc)( void*, size_t );    /* ptr to some realloc(ptr,size) */
+#else
+void* (*mallc)();    /* ptr to some malloc(size)      */
+void* (*callc)();    /* ptr to some ecalloc(num,size) */
+void  (*fre)();      /* ptr to some free(ptr)         */
+void* (*reallc)();   /* ptr to some realloc(ptr,size) */
+#endif
 
 #ifdef XCURSES
 chtype *acs_map;

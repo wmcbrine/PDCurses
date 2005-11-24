@@ -63,7 +63,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.6 2005/11/24 18:56:57 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -345,7 +345,7 @@ va_dcl
 	char *char_ptr;
 	unsigned char f;
 	char neg, assign, ok, size;
-	unsigned long n;
+	long n;
 	char map[256], end;
 	double dx, dd, *dbl_ptr;
 	float *flt_ptr;

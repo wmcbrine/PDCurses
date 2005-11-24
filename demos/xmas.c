@@ -115,7 +115,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas  = "$Id: xmas.c,v 1.3 2005/11/20 04:01:00 wmcbrine Exp $";
+char *rcsid_xmas  = "$Id: xmas.c,v 1.4 2005/11/24 19:04:41 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -179,7 +179,6 @@ WINDOW
 
 int main()
 {
- void done();
  int loopy;
  chtype noseattr;
 

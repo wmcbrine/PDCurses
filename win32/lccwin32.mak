@@ -67,6 +67,8 @@ all:    $(PDCLIBS) $(DEMOS) #$(DLL_DEMOS)
 clean:
 	-del *.obj
 	-del *.lib
+	-del *.dll
+	-del *.exp
 	-del *.exe
 
 demos:  $(DEMOS)

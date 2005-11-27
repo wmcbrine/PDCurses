@@ -22,9 +22,6 @@ PDCURSES_HEADERS              =$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 
 PANEL_HEADER      =$(PDCURSES_HOME)\panel.h
 
-CCLIBDIR        = $(CC_HOME)\lib
-CCINCDIR        = $(CC_HOME)\include
-
 srcdir          = $(PDCURSES_HOME)\pdcurses
 osdir           = $(PDCURSES_HOME)\win32
 pandir          = $(PDCURSES_HOME)\panel
@@ -36,7 +33,7 @@ CC              = lcc
 CFLAGS          = -c -O -D__LCC__
 LDFLAGS         =
 
-CPPFLAGS        = -I$(PDCURSES_HOME) -I$(CCINCDIR)
+CPPFLAGS        = -I$(PDCURSES_HOME)
 
 CCFLAGS         = $(CFLAGS) $(CPPFLAGS)
 DLL_CCFLAGS     = $(CFLAGS) $(CPPFLAGS) -DPDC_THREAD_BUILD
@@ -46,8 +43,6 @@ LINK            = lcclnk
 DEFFILE         = $(osdir)\curses_lcc.def
 SHL_LD          = lcclnk $(LDFLAGS) -DLL $(DEFFILE)
 
-CCLIBS          = -L$(CCLIBDIR) -lkernel32 -luser32
-
 LIBEXE          = lcclib
 LIBFLAGS        =
 
@@ -56,7 +51,7 @@ DLLCURSES       = curses.lib
 CURSESDLL       = curses.dll
 LIBPANEL        = panel.lib
 
-PDCLIBS         = $(LIBCURSES) $(LIBPANEL) $(CURSESDLL)
+PDCLIBS         = $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
 DEMOS           = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 DLL_DEMOS       = testcurs_dll.exe newdemo_dll.exe xmas_dll.exe tuidemo_dll.exe firework_dll.exe
 
@@ -67,8 +62,8 @@ all:    $(PDCLIBS) $(DEMOS) #$(DLL_DEMOS)
 clean:
 	-del *.obj
 	-del *.lib
-	-del *.dll
-	-del *.exp
+#	-del *.dll
+#	-del *.exp
 	-del *.exe
 
 demos:  $(DEMOS)
@@ -190,7 +185,7 @@ panel.lib : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
 
 curses.dll : $(DLL_DIR) $(LIBDLLS) $(PDCDLLS) $(DEFFILE)
-	$(SHL_LD) -o $(CURSESDLL) $(LIBDLLS) $(PDCDLLS) $(CCLIBS)
+	$(SHL_LD) -o $(CURSESDLL) $(LIBDLLS) $(PDCDLLS)
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\addch.c
@@ -488,22 +483,22 @@ panel.dll.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER) $(DLL_DIR)
 #------------------------------------------------------------------------
 
 firework.exe:   firework.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o firework.exe firework.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o firework.exe firework.obj $(LIBCURSES)
 
 newdemo.exe:    newdemo.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o newdemo.exe newdemo.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o newdemo.exe newdemo.obj $(LIBCURSES)
 
 ptest.exe:      ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) -o ptest.exe ptest.obj $(LIBCURSES) $(LIBPANEL) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o ptest.exe ptest.obj $(LIBCURSES) $(LIBPANEL)
 
 testcurs.exe:   testcurs.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o testcurs.exe testcurs.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o testcurs.exe testcurs.obj $(LIBCURSES)
 
 tuidemo.exe:    tuidemo.obj tui.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o tuidemo.exe tuidemo.obj tui.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o tuidemo.exe tuidemo.obj tui.obj $(LIBCURSES)
 
 xmas.exe:       xmas.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o xmas.exe xmas.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o xmas.exe xmas.obj $(LIBCURSES)
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
@@ -530,25 +525,25 @@ xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 #--- Targets for dynamically linked demo programs -----------------------
 
 firework_dll.exe:	firework.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ firework.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ firework.dll.obj $(DLLCURSES)
 
 newdemo_dll.exe:	newdemo.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ newdemo.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ newdemo.dll.obj $(DLLCURSES)
 
 ptest_dll.exe:	ptest.dll.obj $(CURSESDLL) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ ptest.dll.obj $(LIBPANEL) $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ ptest.dll.obj $(LIBPANEL) $(DLLCURSES)
 
 testcurs_dll.exe:	testcurs.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ testcurs.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ testcurs.dll.obj $(DLLCURSES)
 
 tuidemo_dll.exe:	tuidemo.dll.obj tui.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ tui.dll.obj tuidemo.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ tui.dll.obj tuidemo.dll.obj $(DLLCURSES)
 
 xmas_dll.exe:	xmas.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ xmas.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ xmas.dll.obj $(DLLCURSES)
 
 test_dll.exe:	test.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ test.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ test.dll.obj $(DLLCURSES)
 
 #--- Targets for dynamically linked demo objects ------------------------
 

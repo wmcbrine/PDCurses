@@ -29,8 +29,8 @@ demodir         = $(PDCURSES_HOME)\demos
 
 CC              = lcc
 
-#CFLAGS  = -c -g3 -D__LCC__
-CFLAGS          = -c -O -D__LCC__
+#CFLAGS  = -c -g3 -ansic -D__LCC__
+CFLAGS          = -c -O -ansic -D__LCC__
 LDFLAGS         =
 
 CPPFLAGS        = -I$(PDCURSES_HOME)
@@ -182,7 +182,7 @@ pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) /out:$@ $(LIBOBJS) $(PDCOBJS)
 
 panel.lib : $(PANOBJS)
-	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
+	$(LIBEXE) $(LIBFLAGS) /out:$@ $(PANOBJS)
 
 curses.dll : $(DLL_DIR) $(LIBDLLS) $(PDCDLLS) $(DEFFILE)
 	$(SHL_LD) -o $(CURSESDLL) $(LIBDLLS) $(PDCDLLS)

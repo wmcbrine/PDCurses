@@ -80,15 +80,19 @@ LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
 PDCLIBS	= $(LIBCURSES) $(DLLTARGET) $(LIBPANEL)
-DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
+DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.o
+	-del *.dlo
+	-del *.a
 	-del *.lib
+	-del *.dll
 	-del *.exe
+	-del testcurs newdemo xmas tuidemo firework ptest
 
 demos:	$(DEMOS)
 
@@ -206,7 +210,7 @@ pdcurses.a : $(LIBOBJS) $(PDCOBJS)
 
 curses.dll : $(DLLOBJS) $(PDCDLOS)
 	$(LINK) $(DLLFLAGS) -o curses.dll $(DLLOBJS) $(PDCDLOS) $(osdir)\pdcurses.def
-	lxlite curses.dll
+#	lxlite curses.dll
 	emximp -o curses.lib $(osdir)\pdcurses.def
 	emximp -o curses.a curses.lib
 

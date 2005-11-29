@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Watcom WMAKE Makefile for PDCurses library - DOS/4GW Watcom C/C++ 10.6
+# Watcom WMAKE Makefile for PDCurses library - DOS/4GW Watcom C/C++ 10.6+
 #
 # Usage: wmake -f [path\]wccdos4g.mak [-DDEBUG] [target]
 #
@@ -13,7 +13,6 @@
 #
 ################################################################################
 PDCURSES_HOME		=$(%PDCURSES_SRCDIR)
-CCINCDIR		=k:\h
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -42,7 +41,7 @@ CFLAGS  = /oneatx
 LDFLAGS =
 !endif
 
-CPPFLAGS	= /i=$(PDCURSES_HOME) /i=$(CCINCDIR)
+CPPFLAGS	= /i=$(PDCURSES_HOME)
 
 CCFLAGS		= /bt=$(TARGET) /zq /mf $(CFLAGS) $(CPPFLAGS)
 

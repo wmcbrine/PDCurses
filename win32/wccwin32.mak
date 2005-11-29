@@ -14,7 +14,6 @@
 #
 ################################################################################
 PDCURSES_HOME		=$(%PDCURSES_SRCDIR)
-CCINCDIR		=d:\h
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -43,7 +42,7 @@ CFLAGS  = /oneatx /wcd=302
 LDFLAGS =
 !endif
 
-CPPFLAGS	= /i=$(PDCURSES_HOME) /i=$(CCINCDIR) /DPDC_STATIC_BUILD
+CPPFLAGS	= /i=$(PDCURSES_HOME) /DPDC_STATIC_BUILD
 
 CCFLAGS		= /ei /zq /mf /wx $(CFLAGS) $(CPPFLAGS)
 

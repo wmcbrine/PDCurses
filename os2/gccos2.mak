@@ -1,6 +1,6 @@
 ################################################################################
 #
-# GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c
+# GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c+
 #
 # Usage: make -f [path\]gccos2.mak [DEBUG=Y] [EMXVIDEO=Y] [target]
 #
@@ -16,7 +16,6 @@
 #
 ################################################################################
 PDCURSES_HOME		=$(PDCURSES_SRCDIR)
-CC_HOME		=c:/emx
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -27,9 +26,6 @@ PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)/panel.h
-
-CCLIBDIR		=$(CC_HOME)/lib
-CCINCDIR		=$(CC_HOME)/include
 
 srcdir		= $(PDCURSES_HOME)/pdcurses
 osdir		= $(PDCURSES_HOME)/os2
@@ -63,7 +59,7 @@ endif
 DLLFLAGS = -Zdll -Zcrtdll -Zomf
 DLLCURSES = curses.lib
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR) $(EMXVID)
+CPPFLAGS	= -I$(PDCURSES_HOME) $(EMXVID)
 
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 
@@ -510,32 +506,32 @@ panel.o: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o firework firework.o $(LIBCURSES) -L$(CCLIBDIR) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o firework firework.o $(LIBCURSES) $(CCLIBS)
 	$(EMXBIND) firework $(BINDFLAGS)
 
 newdemo.exe:	newdemo.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o newdemo newdemo.o $(LIBCURSES) -L$(CCLIBDIR) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o newdemo newdemo.o $(LIBCURSES) $(CCLIBS)
 	$(EMXBIND) newdemo $(BINDFLAGS)
 
 ptest.exe:	ptest.o $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) -o ptest ptest.o $(LIBCURSES) $(LIBPANEL) -L$(CCLIBDIR) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o ptest ptest.o $(LIBCURSES) $(LIBPANEL) $(CCLIBS)
 	$(EMXBIND) ptest $(BINDFLAGS)
 
 testcurs.exe:	testcurs.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o testcurs testcurs.o $(LIBCURSES) -L$(CCLIBDIR) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o testcurs testcurs.o $(LIBCURSES) $(CCLIBS)
 	$(EMXBIND) testcurs $(BINDFLAGS)
 
 tuidemo.exe:	tuidemo.o tui.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES) -L$(CCLIBDIR) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES) $(CCLIBS)
 	$(EMXBIND) tuidemo $(BINDFLAGS)
 
 xmas.exe:	xmas.o $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -o xmas xmas.o $(LIBCURSES) -L$(CCLIBDIR) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o xmas xmas.o $(LIBCURSES) $(CCLIBS)
 	$(EMXBIND) xmas $(BINDFLAGS)
 
 
 testcurs_dyn.exe:	testcurs.obj curses.dll
-	$(LINK) $(LDFLAGS) $(DLLFLAGS) -o testcurs_dyn testcurs.obj $(DLLCURSES) -L$(CCLIBDIR) $(CCLIBS)
+	$(LINK) $(LDFLAGS) $(DLLFLAGS) -o testcurs_dyn testcurs.obj $(DLLCURSES) $(CCLIBS)
 	$(EMXBIND) testcurs_dyn $(BINDFLAGS)
 
 firework.o: $(demodir)\firework.c $(PDCURSES_CURSES_H)

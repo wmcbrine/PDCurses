@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.39 2005/11/24 19:02:01 wmcbrine Exp $
+$Id: curses.h,v 1.40 2005/11/29 08:35:30 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1164,6 +1164,11 @@ and blink.
 # define A_COLOR       (chtype)0xF800                  /* System V  */
 # define A_CHARTEXT    (chtype)(0xFF)                  /* X/Open   */
 # define A_ATTRIBUTES  (chtype)(~A_CHARTEXT)           /* X/Open   */
+
+# define A_LEFTLINE    (chtype)0x0000
+# define A_RIGHTLINE   (chtype)0x0000
+# define A_ITALIC      (chtype)0x0000
+# define A_INVIS       (chtype)0x0000
 #endif
 
 #define CHR_MSK		A_CHARTEXT		/* Obsolete	*/

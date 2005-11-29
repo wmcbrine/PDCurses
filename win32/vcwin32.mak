@@ -43,7 +43,7 @@ LDFLAGS =
 
 SHL_LD=link $(LDFLAGS) /NOLOGO /DLL /OUT:curses.dll /DEF:$(osdir)\curses.def
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I.
+CPPFLAGS	= -I$(PDCURSES_HOME)
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -DPDC_STATIC_BUILD
 DLL_CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -MT -DPDC_THREAD_BUILD
@@ -53,7 +53,6 @@ LINK		= link.exe -nologo
 CCLIBS		= user32.lib
 # may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
 #CCLIBS		= msvcrt.lib user32.lib
-STARTUP		=
 
 LIBEXE		= lib -nologo
 
@@ -62,19 +61,19 @@ DLLCURSES	= curses.lib
 CURSESDLL = curses.dll
 LIBPANEL	= panel.lib
 
-PDCLIBS	= $(LIBCURSES) $(LIBPANEL) $(CURSESDLL)
+PDCLIBS	= $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
 DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 DLL_DEMOS	=testcurs_dll.exe newdemo_dll.exe xmas_dll.exe tuidemo_dll.exe firework_dll.exe
 
 ################################################################################
-all:	$(PDCLIBS) $(DEMOS) $(DLL_DEMOS)
+all:	$(PDCLIBS) $(DEMOS) #$(DLL_DEMOS)
 
 clean:
 	-del *.obj
 	-del *.lib
-	-del *.dll
-	-del *.exp
-	-del *.res
+#	-del *.dll
+#	-del *.exp
+#	-del *.res
 	-del *.exe
 
 demos:	$(DEMOS)
@@ -500,25 +499,25 @@ panel.dll.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #--- Targets for statically linked demo programs ------------------------
 
 firework.exe:	firework.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
 
 newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ $*.obj $(LIBPANEL) $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBPANEL) $(LIBCURSES) $(CCLIBS)
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ tui.obj $*.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ tui.obj $*.obj $(LIBCURSES) $(CCLIBS)
 
 xmas.exe:	xmas.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
 
 test.exe:	test.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
 
 #--- Targets for statically linked demo objects -------------------------
 
@@ -549,25 +548,25 @@ test.obj: test.c $(PDCURSES_CURSES_H)
 #--- Targets for dynamically linked demo programs -----------------------
 
 firework_dll.exe:	firework.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ firework.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ firework.dll.obj $(DLLCURSES) $(CCLIBS)
 
 newdemo_dll.exe:	newdemo.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ newdemo.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ newdemo.dll.obj $(DLLCURSES) $(CCLIBS)
 
 ptest_dll.exe:	ptest.dll.obj $(CURSESDLL) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ ptest.dll.obj $(LIBPANEL) $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ ptest.dll.obj $(LIBPANEL) $(DLLCURSES) $(CCLIBS)
 
 testcurs_dll.exe:	testcurs.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ testcurs.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ testcurs.dll.obj $(DLLCURSES) $(CCLIBS)
 
 tuidemo_dll.exe:	tuidemo.dll.obj tui.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ tui.dll.obj tuidemo.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ tui.dll.obj tuidemo.dll.obj $(DLLCURSES) $(CCLIBS)
 
 xmas_dll.exe:	xmas.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ xmas.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ xmas.dll.obj $(DLLCURSES) $(CCLIBS)
 
 test_dll.exe:	test.dll.obj $(CURSESDLL)
-	$(LINK) $(LDFLAGS) $(STARTUP) -out:$@ test.dll.obj $(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -out:$@ test.dll.obj $(DLLCURSES) $(CCLIBS)
 
 #--- Targets for dynamically linked demo objects ------------------------
 

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.40 2005/11/29 08:35:30 wmcbrine Exp $
+$Id: curses.h,v 1.41 2005/11/30 18:13:38 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1111,21 +1111,43 @@ extern	ACTIVE*	CurWins;	/* Currently Visible Windows	*/
 
 PDCurses Text Attributes:
 
-To include colour in PDCurses, a number of things had to be sacrificed
-from the strict Unix and System V support.
-The main problem is fitting all character attributes and colour into
-an unsigned char (all 8 bits!). On System V, chtype is a long on
-PDCurses it is a short int.
+Originally, PDCurses used a short (16 bits) for its chtype. To include 
+colour, a number of things had to be sacrificed from the strict Unix and 
+System V support. The main problem was fitting all character attributes 
+and colour into an unsigned char (all 8 bits!).
+
+Today, PDCurses by default uses a long (32 bits) for its chtype, as in 
+System V. The short chtype is still available (for use with 16-bit 
+compilers only -- don't try it in 32-bit mode!), by undefining 
+CHTYPE_LONG.
 
 The following is the structure of a win->_attrs chtype:
+
+short form:
+
+-------------------------------------------------
+|15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
+-------------------------------------------------
+ colour number |  attrs |   character eg 'a'
+
+The available attribute enhancers are bold, reverse and blink. All other 
+Unix attributes have no effect. The high order char is an index into an 
+array of physical colours (defined in INITPAIR.c). 32 (5 bits) 
+foreground/background colour combinations combined with 8 (3 bits) 
+attribute modifiers are available.
+
+long form:
 
 -------------------------------------------------------------------------------------------------
 |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 -------------------------------------------------------------------------------------------------
      colour number      |     modifiers         |      character eg 'a' (potential for DBCS)
 
-The available attribute modifiers are bold, underline, invisible, protect, reverse
-and blink.
+The available attribute modifiers are bold, underline, invisible, 
+protect, reverse and blink. 256 (8 bits) colour pairs, 8 bits for 
+modifiers, and 16 bits for character data. (In practice, only 64 colour 
+pairs are available, and only the lower 8 bits of character data are
+currently used.)
 
 **man-end**********************************************************************/
 

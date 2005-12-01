@@ -2699,7 +2699,7 @@ MOUSE_STATUS *ms;
    if (trace_on) PDC_debug("%s:XCursesSendKeyToCurses() - called: sending %d\n",(XCursesProcess)?"     X":"CURSES",key);
 #endif
    memcpy(buf,(char *)&key,sizeof(unsigned long));
-   if (write_socket(key_sock,buf,sizeof(int)) < 0)
+   if (write_socket(key_sock,buf,sizeof(unsigned long)) < 0)
       XCursesExitXCursesProcess(1,SIGKILL,"exiting from XCursesSendKeyToCurses");
    if ( ms != NULL )
    {

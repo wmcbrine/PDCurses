@@ -195,7 +195,7 @@ int delaytenths;
          if (read_socket(key_sock,buf,sizeof(unsigned long)) < 0)
             XCursesExitCursesProcess(2,"exiting from XCurses_rawchar"); /* what else ?? */
          memcpy((char *)&newkey,buf,sizeof(unsigned long));
-         pdc_key_modifier = newkey >> 24; /*(sizeof(unsigned long) - sizeof(unsigned char)); */
+         pdc_key_modifier = (newkey >> 24) & 0xFF; /*(sizeof(unsigned long) - sizeof(unsigned char)); */
          key = (int)(newkey & 0x00FFFFFF);
       }
 #if 0

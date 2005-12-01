@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.42 2005/11/30 18:19:51 wmcbrine Exp $
+$Id: curses.h,v 1.43 2005/12/01 19:49:22 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1117,9 +1117,8 @@ System V support. The main problem was fitting all character attributes
 and colour into an unsigned char (all 8 bits!).
 
 Today, PDCurses by default uses a long (32 bits) for its chtype, as in 
-System V. The short chtype is still available (for use with 16-bit 
-compilers only -- don't try it in 32-bit mode!), by undefining 
-CHTYPE_LONG and rebuilding the library.
+System V. The short chtype is still available, by undefining CHTYPE_LONG 
+and rebuilding the library.
 
 The following is the structure of a win->_attrs chtype:
 

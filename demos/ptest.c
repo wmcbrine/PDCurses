@@ -26,7 +26,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.4 2005/11/22 00:45:45 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.5 2005/12/02 23:47:51 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -75,9 +75,13 @@ void rmpanel(PANEL *);
 /*+-------------------------------------------------------------------------
 	wait_a_while(msec)
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+void wait_a_while(long msec)
+#else
 void
 wait_a_while(msec)
 long msec;
+#endif
 {
 	getch();
 	return;
@@ -86,9 +90,13 @@ long msec;
 /*+-------------------------------------------------------------------------
 	saywhat(text)
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+void saywhat(const char *text)
+#else
 void
 saywhat(text)
 const char *text;
+#endif
 {
 
 	wmove(stdscr,LINES - 1,0);
@@ -99,12 +107,16 @@ const char *text;
 /*+-------------------------------------------------------------------------
 	mkpanel(rows,cols,tly,tlx) - alloc a win and panel and associate them
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+PANEL *mkpanel(int rows, int cols, int tly, int tlx)
+#else
 PANEL *
 mkpanel(rows,cols,tly,tlx)
 int rows;
 int cols;
 int tly;
 int tlx;
+#endif
 {
 WINDOW *win = newwin(rows,cols,tly,tlx);
 PANEL *pan;
@@ -120,9 +132,13 @@ PANEL *pan;
 /*+-------------------------------------------------------------------------
 	rmpanel(pan)
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+void rmpanel(PANEL *pan)
+#else
 void
 rmpanel(pan)
 PANEL *pan;
+#endif
 {
 WINDOW *win = pan->win;
 	del_panel(pan);
@@ -132,8 +148,12 @@ WINDOW *win = pan->win;
 /*+-------------------------------------------------------------------------
 	pflush()
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+void pflush(void)
+#else
 void
 pflush()
+#endif
 {
 	update_panels();
 	doupdate();
@@ -142,9 +162,13 @@ pflush()
 /*+-------------------------------------------------------------------------
 	fill_panel(win)
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+void fill_panel(PANEL *pan)
+#else
 void
 fill_panel(pan)
 PANEL *pan;
+#endif
 {
 WINDOW *win = pan->win;
 char num = *(pan->user + 1);
@@ -166,10 +190,14 @@ int y,x;
 /*+-------------------------------------------------------------------------
 	main(argc,argv)
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+int main(int argc, char **argv)
+#else
 int
 main(argc,argv)
 int argc;
 char **argv;
+#endif
 {
 int itmp;
 register int y,x;

@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.7 2005/11/23 23:46:42 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.8 2005/12/02 23:47:51 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -97,7 +97,11 @@ char    *messages[] =
 /*
  *  Wait for user
  */
+#ifdef HAVE_PROTO
+int WaitForUser(void)
+#else
 int WaitForUser()
+#endif
 {
    chtype ch;
 
@@ -116,8 +120,12 @@ int WaitForUser()
 /*
  * Test sub windows
  */
+#ifdef HAVE_PROTO
+int SubWinTest(WINDOW *win)
+#else
 int SubWinTest(win)
 WINDOW *win;
+#endif
 {
    int     w, h, sw, sh, bx, by;
    WINDOW  *swin1, *swin2, *swin3;
@@ -164,8 +172,12 @@ WINDOW *win;
 /*
  *  Bouncing balls
  */
+#ifdef HAVE_PROTO
+int BouncingBalls(WINDOW *win)
+#else
 int BouncingBalls(win)
 WINDOW *win;
+#endif
 {
    chtype c1, c2, c3;
    int    w, h;
@@ -245,8 +257,12 @@ WINDOW *win;
 /*
  *  Trap interrupt
  */
+#ifdef HAVE_PROTO
+void trap(int sig)
+#else
 void trap(sig)
 int sig;
+#endif
 {
     endwin();
 #ifdef XCURSES
@@ -258,7 +274,11 @@ int sig;
 /*
  *  Main driver
  */
-int main(int argc, char *argv[])
+#ifdef HAVE_PROTO
+int main(void)
+#else
+int main()
+#endif
 {
 WINDOW  *win;
 int     w, x, y, i, j;

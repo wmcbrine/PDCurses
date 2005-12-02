@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.7 2005/11/21 04:03:03 wmcbrine Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.8 2005/12/02 23:47:51 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -50,7 +50,11 @@ void myrefresh Args((void));
 void get_colour Args((void));
 void explode Args((int,int));
 
+#ifdef HAVE_PROTO
+int main(void)
+#else
 int main()
+#endif
 {
        int start,end,row,diff,flag,direction,seed;
 
@@ -102,8 +106,12 @@ int main()
        return(0);
 }
 
+#ifdef HAVE_PROTO
+void explode(int row,int col)
+#else
 void explode(row,col)
 int row,col;
+#endif
 {
        clear();
        mvprintw(row,col,"-");
@@ -148,14 +156,22 @@ int row,col;
        myrefresh();
 }
 
+#ifdef HAVE_PROTO
+void myrefresh(void)
+#else
 void myrefresh()
+#endif
 {
        napms(DELAYSIZE);
        move(LINES-1,COLS-1);
        refresh();
 }
 
+#ifdef HAVE_PROTO
+void get_colour(void)
+#else
 void get_colour()
+#endif
 {
        static short tbl[] =
        {

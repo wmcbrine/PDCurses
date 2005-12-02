@@ -115,7 +115,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas  = "$Id: xmas.c,v 1.4 2005/11/24 19:04:41 wmcbrine Exp $";
+char *rcsid_xmas  = "$Id: xmas.c,v 1.5 2005/12/02 23:47:51 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -177,7 +177,11 @@ WINDOW
        *w_holiday,
        *w_del_msg;
 
+#ifdef HAVE_PROTO
+int main(void)
+#else
 int main()
+#endif
 {
  int loopy;
  chtype noseattr;
@@ -692,8 +696,11 @@ int main()
       return 0;
 }
 
-int
-boxit()
+#ifdef HAVE_PROTO
+int boxit(void)
+#else
+int boxit()
+#endif
 {
  int x = 0;
 
@@ -722,8 +729,11 @@ boxit()
   return( 0 );
 }
 
-int
-seas()
+#ifdef HAVE_PROTO
+int seas(void)
+#else
+int seas()
+#endif
 {
   mvaddch(4, 1, 'S');
   mvaddch(6, 1, 'E');
@@ -737,8 +747,11 @@ seas()
   return( 0 );
 }
 
-int
-greet()
+#ifdef HAVE_PROTO
+int greet(void)
+#else
+int greet()
+#endif
 {
   mvaddch(3, 5, 'G');
   mvaddch(5, 5, 'R');
@@ -753,15 +766,21 @@ greet()
   return( 0 );
 }
 
-int
-fromwho()
+#ifdef HAVE_PROTO
+int fromwho(void)
+#else
+int fromwho()
+#endif
 {
   mvaddstr(21, 13, FROMWHO);
   return( 0 );
 }
 
-int
-del_msg()
+#ifdef HAVE_PROTO
+int del_msg(void)
+#else
+int del_msg()
+#endif
 {
 #if 0
   mvaddstr(23, 60, "Hit any key to quit");
@@ -772,8 +791,11 @@ del_msg()
   return( 0 );
 }
 
-int
-tree()
+#ifdef HAVE_PROTO
+int tree(void)
+#else
+int tree()
+#endif
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -831,8 +853,11 @@ tree()
   return( 0 );
 }
 
-int
-balls()
+#ifdef HAVE_PROTO
+int balls(void)
+#else
+int balls()
+#endif
 {
   chtype ball1,ball2,ball3,ball4,ball5,ball6;
   overlay(treescrn, treescrn2);
@@ -881,8 +906,11 @@ balls()
   return( 0 );
 }
 
-int
-star()
+#ifdef HAVE_PROTO
+int star(void)
+#else
+int star()
+#endif
 {
   mvwaddch(treescrn2, 0, 12, (chtype)'*' | A_STANDOUT );
 
@@ -891,8 +919,11 @@ star()
   return( 0 );
 }
 
-int
-strng1()
+#ifdef HAVE_PROTO
+int strng1(void)
+#else
+int strng1()
+#endif
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -910,8 +941,11 @@ strng1()
   return( 0 );
 }
 
-int
-strng2()
+#ifdef HAVE_PROTO
+int strng2(void)
+#else
+int strng2()
+#endif
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -932,8 +966,11 @@ strng2()
   return( 0 );
 }
 
-int
-strng3()
+#ifdef HAVE_PROTO
+int strng3(void)
+#else
+int strng3()
+#endif
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -956,8 +993,11 @@ strng3()
   return( 0 );
 }
 
-int
-strng4()
+#ifdef HAVE_PROTO
+int strng4(void)
+#else
+int strng4()
+#endif
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -985,8 +1025,11 @@ strng4()
   return( 0 );
 }
 
-int
-strng5()
+#ifdef HAVE_PROTO
+int strng5(void)
+#else
+int strng5()
+#endif
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -1012,8 +1055,11 @@ strng5()
   return( 0 );
 }
 
-int
-blinkit()
+#ifdef HAVE_PROTO
+int blinkit(void)
+#else
+int blinkit()
+#endif
 {
  static int cycle;
 
@@ -1077,8 +1123,11 @@ blinkit()
   return( 0 );
 }
 
-int
-reindeer()
+#ifdef HAVE_PROTO
+int reindeer(void)
+#else
+int reindeer()
+#endif
 {
  int looper;
 
@@ -1373,7 +1422,11 @@ reindeer()
   return( 0 );
 }
 
+#ifdef HAVE_PROTO
+void done(void)
+#else
 void done()
+#endif
 {
 /*  signal(SIGINT,done);
   signal(SIGTERM,done);

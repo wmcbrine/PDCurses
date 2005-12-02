@@ -44,7 +44,7 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.2 2005/11/20 04:01:00 wmcbrine Exp $";
+char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.3 2005/12/02 23:47:51 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)
@@ -308,7 +308,11 @@ void subsub ()
 
 /***************************** start main menu  ***************************/
 
+#ifdef __STDC__
+int main (void)
+#else
 int main ()
+#endif
 {
   startmenu (MainMenu, "TUI - 'textual user interface' demonstration program");
 

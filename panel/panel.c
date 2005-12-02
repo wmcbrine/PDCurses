@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.4 2005/11/20 04:01:01 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.5 2005/12/02 23:47:52 wmcbrine Exp $";
 #endif
 
 
@@ -127,9 +127,13 @@ STATIC void __panel_unlink(PANEL *);
 	dPanel(text,pan)
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
+# ifdef HAVE_PROTO
+dPanel(char *text,PANEL *pan)
+# else
 dPanel(text,pan)
 char *text;
 PANEL *pan;
+# endif
 {
 	_tracef("%s id=%s b=%s a=%s y=%d x=%d",
 		text,pan->user,
@@ -145,11 +149,15 @@ PANEL *pan;
 	dStack(fmt,num,pan)
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
+# ifdef HAVE_PROTO
+void dStack(char *fmt,int num,PANEL *pan)
+# else
 void
 dStack(fmt,num,pan)
 char *fmt;
 int num;
 PANEL *pan;
+# endif
 {
 char s80[80];
 
@@ -174,9 +182,13 @@ char s80[80];
 	Wnoutrefresh(pan) - debugging hook for wnoutrefresh
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
+# ifdef HAVE_PROTO
+STATIC int Wnoutrefresh(PANEL *pan)
+# else
 STATIC int
 Wnoutrefresh(pan)
 PANEL *pan;
+# endif
 {
 	dPanel("wnoutrefresh",pan);
 	wnoutrefresh(pan->win);
@@ -189,9 +201,13 @@ PANEL *pan;
 	Touchpan(pan)
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
+# ifdef HAVE_PROTO
+STATIC int Touchpan(PANEL *pan)
+# else
 STATIC int
 Touchpan(pan)
 PANEL *pan;
+# endif
 {
 	dPanel("Touchpan",pan);
 	touchwin(pan->win);
@@ -204,11 +220,15 @@ PANEL *pan;
 	Touchline(pan,start,count)
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
+# ifdef HAVE_PROTO
+STATIC int Touchline(PANEL *pan,int start,int count)
+# else
 STATIC int
 Touchline(pan,start,count)
 PANEL *pan;
 int start;
 int count;
+# endif
 {
 char s80[80];
 	sprintf(s80,"Touchline s=%d c=%d",start,count);
@@ -222,10 +242,14 @@ char s80[80];
 /*+-------------------------------------------------------------------------
 	__panels_overlapped(pan1,pan2) - check panel overlapped
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC int __panels_overlapped(register PANEL *pan1,register PANEL *pan2)
+#else
 STATIC int
 __panels_overlapped(pan1,pan2)
 register PANEL *pan1;
 register PANEL *pan2;
+#endif
 {
 	if(!pan1 || !pan2)
 		return(0);
@@ -238,9 +262,13 @@ register PANEL *pan2;
 /*+-------------------------------------------------------------------------
 	__free_obscure(pan)
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC void __free_obscure(PANEL *pan)
+#else
 STATIC void
 __free_obscure(pan)
 PANEL *pan;
+#endif
 {
 PANELOBS *tobs = pan->obscure;				/* "this" one */
 PANELOBS *nobs;								/* "next" one */
@@ -257,10 +285,14 @@ PANELOBS *nobs;								/* "next" one */
 /*+-------------------------------------------------------------------------
 	__override(pan,show)
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC void __override(PANEL *pan,int show)
+#else
 STATIC void
 __override(pan,show)
 PANEL *pan;
 int show;
+#endif
 {
 register int y;
 register PANEL *pan2;
@@ -304,8 +336,12 @@ PANELOBS *tobs = pan->obscure;				/* "this" one */
 /*+-------------------------------------------------------------------------
 	__calculate_obscure()
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC void __calculate_obscure(void)
+#else
 STATIC void
 __calculate_obscure()
+#endif
 {
 PANEL *pan;
 register PANEL *pan2;
@@ -345,9 +381,13 @@ PANELOBS *lobs;
 /*+-------------------------------------------------------------------------
 	__panel_is_linked(pan) - check to see if panel is in the stack
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC int __panel_is_linked(PANEL *pan)
+#else
 STATIC int
 __panel_is_linked(pan)
 PANEL *pan;
+#endif
 {
 register PANEL *pan2 = __bottom_panel;
 
@@ -363,9 +403,13 @@ register PANEL *pan2 = __bottom_panel;
 /*+-------------------------------------------------------------------------
 	__panel_link_top(pan) - link panel into stack at top
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC void __panel_link_top(PANEL *pan)
+#else
 STATIC void
 __panel_link_top(pan)
 PANEL *pan;
+#endif
 {
 
 #ifdef PANEL_DEBUG
@@ -392,9 +436,13 @@ PANEL *pan;
 /*+-------------------------------------------------------------------------
 	__panel_link_bottom(pan) - link panel into stack at bottom
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC void __panel_link_bottom(PANEL *pan)
+#else
 STATIC void
 __panel_link_bottom(pan)
 PANEL *pan;
+#endif
 {
 
 #ifdef PANEL_DEBUG
@@ -421,9 +469,13 @@ PANEL *pan;
 /*+-------------------------------------------------------------------------
 	__panel_unlink(pan) - unlink panel from stack
 --------------------------------------------------------------------------*/
+#ifdef HAVE_PROTO
+STATIC void __panel_unlink(PANEL *pan)
+#else
 STATIC void
 __panel_unlink(pan)
 PANEL *pan;
+#endif
 {
 register PANEL *prev;
 register PANEL *next;
@@ -485,9 +537,13 @@ register PANEL *next;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int bottom_panel(register PANEL *pan)
+#else
 int
 bottom_panel(pan)
 register PANEL *pan;
+#endif
 {
 	if(!pan)
 		return(ERR);
@@ -518,9 +574,13 @@ register PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int del_panel(register PANEL *pan)
+#else
 int
 del_panel(pan)
 register PANEL *pan;
+#endif
 {
 	if(pan)
 	{
@@ -552,9 +612,13 @@ register PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int hide_panel(register PANEL *pan)
+#else
 int
 hide_panel(pan)
 register PANEL *pan;
+#endif
 {
 
 	if(!pan)
@@ -594,11 +658,15 @@ register PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int move_panel(PANEL *pan,int starty,int startx)
+#else
 int
 move_panel(pan,starty,startx)
 PANEL *pan;
 int starty;
 int startx;
+#endif
 {
 WINDOW *win;
 
@@ -638,9 +706,13 @@ WINDOW *win;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+PANEL *new_panel(WINDOW *win)
+#else
 PANEL *
 new_panel(win)
 WINDOW *win;
+#endif
 {
 PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
 
@@ -698,9 +770,13 @@ PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+PANEL *panel_above(PANEL *pan)
+#else
 PANEL *
 panel_above(pan)
 PANEL *pan;
+#endif
 {
 	if(!pan)
 		return(__bottom_panel);
@@ -730,9 +806,13 @@ PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+PANEL *panel_below(PANEL *pan)
+#else
 PANEL *
 panel_below(pan)
 PANEL *pan;
+#endif
 {
 	if(!pan)
 		return(__top_panel);
@@ -759,9 +839,13 @@ PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int panel_hidden(PANEL *pan)
+#else
 int
 panel_hidden(pan)
 PANEL *pan;
+#endif
 {
 	if(!pan)
 		return(ERR);
@@ -789,9 +873,13 @@ PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+char *panel_userptr(PANEL *pan)
+#else
 char *
 panel_userptr(pan)
 PANEL *pan;
+#endif
 {
 	if(!pan)
 		return((char *)0);
@@ -818,9 +906,13 @@ PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+WINDOW *panel_window(PANEL *pan)
+#else
 WINDOW *
 panel_window(pan)
 PANEL *pan;
+#endif
 {
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("panel_window() - called\n");
@@ -847,10 +939,14 @@ PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int replace_panel(PANEL *pan,WINDOW *win)
+#else
 int
 replace_panel(pan,win)
 PANEL *pan;
 WINDOW *win;
+#endif
 {
 	if(!pan)
 		return(ERR);
@@ -886,10 +982,14 @@ WINDOW *win;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int set_panel_userptr(PANEL *pan,char *uptr)
+#else
 int
 set_panel_userptr(pan,uptr)
 PANEL *pan;
 char *uptr;
+#endif
 {
 	if(!pan)
 		return(ERR);
@@ -917,9 +1017,13 @@ char *uptr;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int show_panel(register PANEL *pan)
+#else
 int
 show_panel(pan)
 register PANEL *pan;
+#endif
 {
 
 	if(!pan)
@@ -952,9 +1056,13 @@ register PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+int top_panel(register PANEL *pan)
+#else
 int
 top_panel(pan)
 register PANEL *pan;
+#endif
 {
 	return(show_panel(pan));
 }	/* end of top_panel */
@@ -980,8 +1088,12 @@ register PANEL *pan;
 
 **man-end**********************************************************************/
 
+#ifdef HAVE_PROTO
+void update_panels(void)
+#else
 void
 update_panels()
+#endif
 {
 PANEL *pan;
 

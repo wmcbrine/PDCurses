@@ -25,7 +25,8 @@ PANEL_LIB	=	-L../panel -lpanel
 LIBPANEL	=	../panel/libpanel.a
 
 LINK		= @PURIFY@ $(CC)
-LDFLAGS		= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
+#LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
+LDFLAGS		= $(LIBXCURSES) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 
 DEMOS = \
 	firework \
@@ -50,7 +51,8 @@ newdemo: newdemo.o $(LIBXCURSES)
 	$(LINK) newdemo.o -o $@ $(LDFLAGS)
 
 ptest: ptest.o $(LIBXCURSES) $(LIBPANEL)
-	$(LINK) ptest.o -o $@ $(PANEL_LIB) $(LDFLAGS)
+#	$(LINK) ptest.o -o $@ $(PANEL_LIB) $(LDFLAGS)
+	$(LINK) ptest.o -o $@ $(LIBPANEL) $(LDFLAGS)
 
 testcurs: testcurs.o $(LIBXCURSES)
 	$(LINK) testcurs.o -o $@ $(LDFLAGS)

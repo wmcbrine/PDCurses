@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.14 2005/11/22 05:55:04 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.15 2005/12/02 22:21:55 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -194,7 +194,7 @@ WINDOW *win;
     wgetch(win);
 }
 
-#ifdef __STDC_
+#ifdef __STDC__
 int initTest (WINDOW **win, int argc, char *argv[])
 #else
 int initTest (win, argc, argv)

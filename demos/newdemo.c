@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.8 2005/12/02 23:47:51 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.9 2005/12/03 05:52:35 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -232,14 +232,14 @@ WINDOW *win;
       c2 = mvwinch(win, y2, x2);
       c3 = mvwinch(win, y3, x3);
 
-      init_pair(8,COLOR_RED,COLOR_GREEN);
-      wattrset(win, COLOR_PAIR(8));
+      init_pair(11,COLOR_RED,COLOR_GREEN);
+      wattrset(win, COLOR_PAIR(11));
       mvwaddch(win, y1, x1, 'O');
-      init_pair(9,COLOR_BLUE,COLOR_RED);
-      wattrset(win, COLOR_PAIR(9));
+      init_pair(12,COLOR_BLUE,COLOR_RED);
+      wattrset(win, COLOR_PAIR(12));
       mvwaddch(win, y2, x2, '*');
-      init_pair(10,COLOR_YELLOW,COLOR_WHITE);
-      wattrset(win, COLOR_PAIR(10));
+      init_pair(13,COLOR_YELLOW,COLOR_WHITE);
+      wattrset(win, COLOR_PAIR(13));
       mvwaddch(win, y3, x3, '@');
       wmove(win, 0, 0);
       wrefresh(win);

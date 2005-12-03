@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.9 2005/11/20 18:55:11 wmcbrine Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.10 2005/12/03 04:49:32 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -216,7 +216,11 @@ short background;
 /***********************************************************************/
 {
  short oldforeground, oldbackground;
+#if defined(CHTYPE_LONG) && !defined(XCURSES)
+# define USE_PDC_INIT
+#else
  unsigned char norm;
+#endif
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("init_pair() - called: colorpair %d fore %d back %d\n",colorpair,foreground,background);
@@ -225,21 +229,20 @@ short background;
  if (colorpair >= COLOR_PAIRS || colorpair < 1)
     return(ERR);
 
- norm = (unsigned char)(foreground & 0x0007) + ((background & 0x0007)<<4);
  oldforeground = (short)(atrtab[colorpair*PDC_OFFSET] & 0x0F);
  oldbackground = (short)((atrtab[colorpair*PDC_OFFSET] & 0xF0)>>4);
 
-#if defined(CHTYPE_LONG)
-#  if defined(XCURSES)
- atrtab[colorpair*PDC_OFFSET] = norm;
-#  else
+#ifdef USE_PDC_INIT
  PDC_init_pair(colorpair,foreground,background);
-#  endif
 #else
+ norm = (unsigned char)(foreground & 0x0007) + ((background & 0x0007)<<4);
+
  atrtab[(colorpair*PDC_OFFSET)+0] = norm;                         /* normal */
+# ifndef XCURSES
  atrtab[(colorpair*PDC_OFFSET)+1] = norm + 8;                       /* bold */
  atrtab[(colorpair*PDC_OFFSET)+4] = norm + 128;                    /* blink */
  atrtab[(colorpair*PDC_OFFSET)+5] = norm + 8 + 128;           /* bold-blink */
+# endif
 #endif
 
 /*

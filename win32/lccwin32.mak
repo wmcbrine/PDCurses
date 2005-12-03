@@ -29,8 +29,8 @@ demodir         = $(PDCURSES_HOME)\demos
 
 CC              = lcc
 
-#CFLAGS  = -c -g3 -ansic -D__LCC__
-CFLAGS          = -c -O -ansic -D__LCC__
+#CFLAGS  = -c -g3 -A -ansic -D__LCC__
+CFLAGS          = -c -O -A -ansic -D__LCC__
 LDFLAGS         =
 
 CPPFLAGS        = -I$(PDCURSES_HOME)

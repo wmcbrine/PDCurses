@@ -26,7 +26,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.5 2005/12/02 23:47:51 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.6 2005/12/03 04:49:32 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -119,14 +119,14 @@ int tlx;
 #endif
 {
 WINDOW *win = newwin(rows,cols,tly,tlx);
-PANEL *pan;
+PANEL *pan = (PANEL *)0;
 
-	if(!win)
-		return((PANEL *)0);
-	if((pan = new_panel(win)))
-		return(pan);
-	delwin(win);
-	return((PANEL *)0);
+	if (win) {
+		pan = new_panel(win);
+		if (!pan)
+			delwin(win);
+	}
+	return pan;
 }	/* end of mkpanel */
 
 /*+-------------------------------------------------------------------------

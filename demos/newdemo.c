@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.9 2005/12/03 05:52:35 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.10 2005/12/05 23:32:15 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -264,11 +264,14 @@ void trap(sig)
 int sig;
 #endif
 {
-    endwin();
+   if (sig == SIGINT)
+   {
+      endwin();
 #ifdef XCURSES
-    XCursesExit();
+      XCursesExit();
 #endif
-    exit(0);
+      exit(0);
+   }
 }
 
 /*
@@ -284,7 +287,6 @@ WINDOW  *win;
 int     w, x, y, i, j;
 int     width, height;
 chtype  save[80], ch;
-void    trap();
 
 #ifdef PDCDEBUG
 /*  traceon();*/

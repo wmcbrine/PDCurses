@@ -3176,7 +3176,7 @@ XtPointer call_data;
 #endif
 /***********************************************************************/
 {
-   int pixels = (int) call_data;
+   int pixels = (long) call_data;
    int total_y=(SP->sb_total_y*XCursesFontHeight);
    int viewport_y=(SP->sb_viewport_y*XCursesFontHeight);
    int cur_y=(SP->sb_cur_y*XCursesFontHeight);
@@ -3218,7 +3218,7 @@ XtPointer call_data;
 #endif
 /***********************************************************************/
 {
-   int pixels = (int) call_data;
+   int pixels = (long) call_data;
    int total_x=(SP->sb_total_x*XCursesFontWidth);
    int viewport_x=(SP->sb_viewport_x*XCursesFontWidth);
    int cur_x=(SP->sb_cur_x*XCursesFontWidth);

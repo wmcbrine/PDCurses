@@ -2179,10 +2179,10 @@ int *format_return;
    {
       XSelectionRequestEvent *req = XtGetSelectionRequest(w, *selection, (XtRequestId)NULL);
       Atom *targetP;
-      Atom *std_targets;
+      XPointer std_targets;
       unsigned long std_length;
       XmuConvertStandardSelection(topLevel, req->time, selection,
-          target, type_return, (XPointer*)&std_targets, &std_length,
+          target, type_return, &std_targets, &std_length,
           format_return);
       *value_return = XtMalloc(sizeof(Atom)*(std_length + 1));
       targetP = *(Atom**)value_return;

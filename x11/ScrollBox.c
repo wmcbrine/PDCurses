@@ -138,7 +138,7 @@ Boolean doit;
    Dimension th;
    Dimension tw;
 #endif
-   int i;
+   Cardinal i;
 
    if (sbw->composite.num_children != 3)
       XtAppError(XtWidgetToApplicationContext(w),

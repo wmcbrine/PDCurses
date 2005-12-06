@@ -1106,31 +1106,15 @@ bool highlight;
          else
             gc = normal_gc;
 
-         if (old_attr & A_REVERSE)
+         if ( !!(old_attr & A_REVERSE) ^ highlight )
          {
-            if ( highlight )
-            {
-               XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
-               XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-            }
-            else
-            {
-               XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-               XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
-            }
+            XSetForeground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+            XSetBackground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
          }
          else
          {
-            if ( highlight )
-            {
-               XSetForeground(XCURSESDISPLAY, gc, colors[back+back_offset]);
-               XSetBackground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
-            }
-            else
-            {
-               XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
-               XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
-            }
+            XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+            XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
          }
 
          makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);
@@ -1206,31 +1190,15 @@ bool highlight;
    else
       gc = normal_gc;
 
-   if (old_attr & A_REVERSE)
+   if ( !!(old_attr & A_REVERSE) ^ highlight )
    {
-      if ( highlight )
-      {
-         XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-         XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
-      }
-      else
-      {
-         XSetForeground(XCURSESDISPLAY, gc, colors[COLOR_WHITE]);
-         XSetBackground(XCURSESDISPLAY, gc, colors[COLOR_BLACK]);
-      }
+      XSetForeground(XCURSESDISPLAY, gc, colors[back+back_offset]);
+      XSetBackground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
    }
    else
    {
-      if ( highlight )
-      {
-         XSetForeground(XCURSESDISPLAY, gc, colors[back+back_offset]);
-         XSetBackground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
-      }
-      else
-      {
-         XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
-         XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
-      }
+      XSetForeground(XCURSESDISPLAY, gc, colors[fore+fore_offset]);
+      XSetBackground(XCURSESDISPLAY, gc, colors[back+back_offset]);
    }
 
    makeXY(original_x,row,XCursesFontWidth,XCursesFontHeight,&xpos,&ypos);

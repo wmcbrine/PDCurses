@@ -30,12 +30,8 @@
 #include <time.h>
 #define DELAYSIZE 200
 
-#if defined(XCURSES)
-	char *XCursesProgramName = "firework";
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.8 2005/12/02 23:47:51 wmcbrine Exp $";
+char *rcsid_firework  = "$Id: firework.c,v 1.9 2005/12/06 00:20:31 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -51,14 +47,20 @@ void get_colour Args((void));
 void explode Args((int,int));
 
 #ifdef HAVE_PROTO
-int main(void)
+int main(int argc, char **argv)
 #else
-int main()
+int main(argc, argv)
+int argc;
+char **argv;
 #endif
 {
        int start,end,row,diff,flag,direction,seed;
 
+#ifdef XCURSES
+       Xinitscr(argc, argv);
+#else
        initscr();
+#endif
        nodelay( stdscr, TRUE );
        noecho();
        if (has_colors())

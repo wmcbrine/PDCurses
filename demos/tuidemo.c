@@ -44,11 +44,10 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.3 2005/12/02 23:47:51 wmcbrine Exp $";
+char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.4 2005/12/06 00:20:31 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)
-	char *XCursesProgramName = "tuidemo";
 #  define FNAME   "demos/tui.c"    /* change this if source at other location */
 #else
 #  define FNAME   "demos\\tui.c"    /* change this if source at other location */

@@ -115,15 +115,11 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas  = "$Id: xmas.c,v 1.5 2005/12/02 23:47:51 wmcbrine Exp $";
+char *rcsid_xmas  = "$Id: xmas.c,v 1.6 2005/12/06 00:20:31 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
 #include <signal.h>
-
-#if defined(XCURSES)
-	char *XCursesProgramName = "xmas";
-#endif
 
 #ifdef HAVE_PROTO
 int boxit(void);
@@ -178,15 +174,21 @@ WINDOW
        *w_del_msg;
 
 #ifdef HAVE_PROTO
-int main(void)
+int main(int argc, char **argv)
 #else
-int main()
+int main(argc, argv)
+int argc;
+char **argv;
 #endif
 {
  int loopy;
  chtype noseattr;
 
+#ifdef XCURSES
+  Xinitscr(argc, argv);
+#else
   initscr();
+#endif
   nodelay(stdscr, TRUE);
   noecho();
   nonl();

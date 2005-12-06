@@ -38,12 +38,8 @@
 #  include <memory.h>
 #endif
 
-#if defined(XCURSES)
-	char *XCursesProgramName = "newdemo";
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.10 2005/12/05 23:32:15 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.11 2005/12/06 00:20:31 wmcbrine Exp $";
 #endif
 
 #ifndef Args
@@ -278,9 +274,11 @@ int sig;
  *  Main driver
  */
 #ifdef HAVE_PROTO
-int main(void)
+int main(int argc, char **argv)
 #else
-int main()
+int main(argc, argv)
+int argc;
+char **argv;
 #endif
 {
 WINDOW  *win;
@@ -291,7 +289,11 @@ chtype  save[80], ch;
 #ifdef PDCDEBUG
 /*  traceon();*/
 #endif
+#ifdef XCURSES
+   Xinitscr(argc, argv);
+#else
    initscr();
+#endif
    start_color();
    cbreak();
    noecho();

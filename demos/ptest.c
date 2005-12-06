@@ -26,15 +26,11 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.6 2005/12/03 04:49:32 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.7 2005/12/06 00:20:31 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
 #include "panel.h"
-
-#if defined(XCURSES)
-	char *XCursesProgramName = "ptest";
-#endif
 
 PANEL *p1;
 PANEL *p2;
@@ -205,7 +201,11 @@ register int y,x;
 	if((argc > 1) && atol(argv[1]))
 		nap_msec = atol(argv[1]);
 
+#ifdef XCURSES
+	Xinitscr(argc, argv);
+#else
 	initscr();
+#endif
 
 	for(y = 0; y < LINES - 1; y++)
 	{

@@ -34,17 +34,13 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.15 2005/12/02 22:21:55 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.16 2005/12/06 00:20:31 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
 #include <curses.h>
-
-#if defined(XCURSES)
-	char *XCursesProgramName = "testcurs";
-#endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
 # define __STDC__
@@ -112,7 +108,13 @@ COMMAND command[MAX_OPTIONS] =
 
 int     width, height;
 
-int main( int argc, char *argv[])
+#ifdef __STDC__
+int main (int argc, char *argv[])
+#else
+int main (argc, argv)
+int argc;
+char *argv[];
+#endif
 {
 WINDOW  *win;
 int key,old_option=(-1),new_option=0;

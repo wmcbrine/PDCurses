@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.17 2005/12/06 10:29:38 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.18 2005/12/06 23:36:33 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -184,6 +184,7 @@ bool quit=FALSE;
 #endif
     return 0;
 }
+
 #ifdef __STDC__
 void Continue (WINDOW *win)
 #else
@@ -233,6 +234,7 @@ char *argv[];
     }
     return(0);
 }
+
 #ifdef __STDC__
 void introTest (WINDOW *win)
 #else
@@ -240,6 +242,7 @@ void introTest (win)
 WINDOW *win;
 #endif
 {
+    werase(win);
     wmove( win, height/2-5, width/2 );
     wvline( win, ACS_VLINE, 10 );
     wmove( win, height/2, width/2-10 );
@@ -257,6 +260,7 @@ WINDOW *win;
     Continue(win);
     return;
 }
+
 #ifdef __STDC__
 void scrollTest (WINDOW *win)
 #else
@@ -266,15 +270,17 @@ WINDOW *win;
 {
     int i;
     int OldY;
-    char *Message = "The window will now scroll slowly";
 
 /* disable typeahead checking */
 
     typeahead(-1);
 
-    mvwprintw (win, height - 2, 1, Message);
+    werase (win);
+    mvwprintw (win, height - 2, 1, "The window will now scroll slowly");
+    box(win, ACS_VLINE, ACS_HLINE);
     wrefresh (win);
     scrollok(win, TRUE);
+    napms (500);
     for (i = 1; i <= height; i++) {
       napms (150);
       scroll(win);
@@ -308,6 +314,7 @@ WINDOW *win;
     wsetscrreg (win, 0, OldY);
 
 }
+
 #ifdef __STDC__
 void inputTest (WINDOW *win)
 #else

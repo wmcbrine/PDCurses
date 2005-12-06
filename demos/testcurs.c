@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.16 2005/12/06 00:20:31 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.17 2005/12/06 10:29:38 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -150,6 +150,7 @@ bool quit=FALSE;
           case 10:
           case 13:
           case KEY_ENTER:
+			 old_option = -1;
                          erase();
                          refresh();
                          (*command[new_option].function)(win);
@@ -157,10 +158,12 @@ bool quit=FALSE;
                          display_menu(old_option,new_option);
                          break;
           case KEY_UP:
+			 old_option = new_option;
                          new_option = (new_option == 0) ? new_option : new_option-1;
                          display_menu(old_option,new_option);
                          break;
           case KEY_DOWN:
+			 old_option = new_option;
                          new_option = (new_option == MAX_OPTIONS-1) ? new_option : new_option+1;
                          display_menu(old_option,new_option);
                          break;
@@ -875,23 +878,22 @@ void display_menu(old_option,new_option)
 int old_option,new_option;
 #endif
 {
- register int i;
+ if (old_option == -1) {
+    int i;
 
-#ifdef XCURSES
- attrset(A_PROTECT);
-#else
- attrset(A_BOLD);
-#endif
- mvaddstr(3,20,"PDCurses Test Program");
- attrset(A_NORMAL);
+    attrset(A_BOLD);
+    mvaddstr(3,20,"PDCurses Test Program");
+    attrset(A_NORMAL);
 
- for (i=0;i<MAX_OPTIONS;i++)
-    mvaddstr(5+i,25,command[i].text);
- if (old_option != (-1))
+    for (i=0;i<MAX_OPTIONS;i++)
+       mvaddstr(5+i,25,command[i].text);
+ } else
     mvaddstr(5+old_option,25,command[old_option].text);
+
  attrset(A_REVERSE);
  mvaddstr(5+new_option,25,command[new_option].text);
  attrset(A_NORMAL);
+
  mvaddstr(13,3,"Use Up and Down Arrows to select - Enter to run - Q to quit");
  refresh();
 }

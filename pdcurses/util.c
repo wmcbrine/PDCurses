@@ -65,7 +65,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.6 2004/08/07 07:18:46 rexx Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.7 2005/12/06 01:56:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -243,7 +243,7 @@ int key;
 #endif
 	key -= KEY_MIN;
 	if (key >= 0
-	&& key <= sizeof(key_name) / sizeof(key_name[0]))
+	&& key <= (int)(sizeof(key_name) / sizeof(key_name[0])) )
 		return( key_name[key] );
 	else
 		return("NO KEY NAME");
@@ -261,7 +261,7 @@ int key;
 #endif
 	key -= KEY_MIN;
 	return key >= 0
-	    && key <= sizeof(key_name) / sizeof(key_name[0]);
+	    && key <= (int)(sizeof(key_name) / sizeof(key_name[0]));
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

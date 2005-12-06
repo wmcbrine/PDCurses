@@ -2133,7 +2133,7 @@ int *format;
 #endif
 /***********************************************************************/
 {
-   int i=0,key=0;
+   unsigned long i=0,key=0;
    char *string=(char *)value;
 
 #ifdef PDCDEBUG
@@ -2145,10 +2145,10 @@ int *format;
 
    for (i=0;i<(*length);i++)
    {
-      key = (int)(*(string+i));
+      key = (unsigned long)(*(string+i));
       if (key == 10) /* new line - convert to ^M */
          key = 13;
-      XCursesSendKeyToCurses( (unsigned long)key, NULL );
+      XCursesSendKeyToCurses( key, NULL );
    }
    return;
 }

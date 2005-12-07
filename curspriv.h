@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.10 2005/11/19 19:07:21 wmcbrine Exp $
+$Id: curspriv.h,v 1.11 2005/12/07 11:56:05 wmcbrine Exp $
 */
 /*
 *
@@ -301,7 +301,6 @@ int             PDC_cursor_off Args(( void ));
 int             PDC_cursor_on Args(( void ));
 int             PDC_curs_set Args(( int ));
 int             PDC_fix_cursor Args(( int ));
-int             PDC_gattr Args(( void ));
 int             PDC_get_bios_key Args(( void ));
 int             PDC_get_columns Args(( void ));
 bool            PDC_get_ctrl_break Args(( void ));

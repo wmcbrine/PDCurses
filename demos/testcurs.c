@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.19 2005/12/07 01:37:43 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.20 2005/12/07 05:25:35 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -62,7 +62,7 @@ void outputTest Args((WINDOW *));
 void padTest Args((WINDOW *));
 void display_menu Args((int,int));
 #ifdef PDCURSES
-# ifdef XCURSES
+# ifndef XCURSES
 void resizeTest Args((WINDOW *));
 # endif
 void clipboardTest Args((WINDOW *));

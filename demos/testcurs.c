@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.20 2005/12/07 05:25:35 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.21 2005/12/07 06:12:48 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -191,8 +191,6 @@ void Continue (win)
 WINDOW *win;
 #endif
 {
-    wmove(win, 10, 1);
-    wclrtoeol(win);
     mvwaddstr(win, 10, 1, " Press any key to continue");
     wrefresh(win);
     raw();

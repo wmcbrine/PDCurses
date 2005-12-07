@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.43 2005/12/01 19:49:22 wmcbrine Exp $
+$Id: curses.h,v 1.44 2005/12/07 11:53:19 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -779,16 +779,16 @@ PDCurses portable platform definitions list:
 #  define	FALSE	0
 #endif
 #ifndef	TRUE			/* booleans		 */
-#  define	TRUE	!FALSE
+#  define	TRUE	1
 #endif
 #ifndef	NULL
 #  define NULL	(void*)0	/* Null pointer		 */
 #endif
 #ifndef	ERR
-#  define	 ERR	-1		/* general error flag	 */
+#  define	ERR	(-1)		/* general error flag	 */
 #endif
 #ifndef	OK
-#  define	 OK	1		/* general OK flag	 */
+#  define	OK	0		/* general OK flag	 */
 #endif
 
 

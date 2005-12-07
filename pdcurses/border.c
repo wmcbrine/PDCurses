@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.3 2001/03/02 13:40:26 mark Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.4 2005/12/07 09:52:06 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -108,6 +108,76 @@ char *rcsid_border  = "$Id: border.c,v 1.3 2001/03/02 13:40:26 mark Exp $";
 
 **man-end**********************************************************************/
 
+/*man-start*********************************************************************
+  PDC_attr_passthru()   - Combines chtype with current and/or background 
+                          attributes of a window
+
+  PDCurses Description:
+    This is a private PDCurses function.
+
+    Takes a single chtype 'ch' and checks if the current attribute of 
+    window 'win', as set by wattrset(), and/or the current background 
+    of win, as set by wbkgd(), should by combined with it. Attributes 
+    set explicitly in ch take precedence.
+ 
+  PDCurses Return Value:
+    Returns ch, combined (or not) with existing attributes.
+
+  PDCurses Errors:
+    No errors are defined for this function.
+
+  Portability:
+    PDCurses chtype PDC_attr_passthru( WINDOW *win, chtype ch );
+
+**man-end**********************************************************************/
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+chtype PDC_attr_passthru(WINDOW *win, chtype ch)
+#else
+chtype PDC_attr_passthru(win, ch)
+WINDOW *win;
+chtype ch;
+#endif
+/***********************************************************************/
+{
+	chtype attr, bktmp;
+
+   /*
+    * If the incoming character doesn't have its own attribute,
+    * then use the current attributes for the window.
+    * If the incoming character has attributes, but not a colour
+    * component, OR the attributes to the current attributes
+    * for the window.
+    * If the incoming character has a colour component, use only
+    * the attributes from the incoming character.
+    */
+
+	if ((ch & A_ATTRIBUTES) == 0)
+		attr = win->_attrs;
+	else
+		if ((ch & A_COLOR) == 0)
+			attr = (ch & A_ATTRIBUTES) | win->_attrs;
+		else
+			attr = (ch & A_ATTRIBUTES);
+
+   /* wrs (4/10/93)
+    * Apply the same sort of logic for the window background, in that it 
+    * only takes precedence if other color attributes are not there.
+    */
+
+	if ((attr & A_COLOR) == 0)
+		attr = (attr | (win->_bkgd & A_ATTRIBUTES));
+	else
+	{
+		bktmp = (win->_bkgd & A_COLOR);
+		attr = (attr | ( (win->_bkgd & A_ATTRIBUTES) ^ bktmp ));
+	}
+
+	ch = (ch & A_CHARTEXT) | attr;
+
+	return ch;
+}
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, chtype bs,
@@ -129,8 +199,6 @@ chtype br;
 	int ymax,xmax;
 	int ymin,xmin;
 	int	i;
-	chtype	vattr;
-	chtype	hattr;
 
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("wborder() - called\n");
@@ -143,39 +211,14 @@ chtype br;
 	ymin = 0;
 	xmin = 0;
 
-	if ((ts	& A_ATTRIBUTES)	== 0)
-	   hattr	= win->_attrs;
-	else
-	   if ((ts & A_COLOR) == 0)
-	      hattr = (ts & A_ATTRIBUTES) | win->_attrs;
-	   else
-	      hattr = (ts & A_ATTRIBUTES);
-
-	if ((ls	& A_ATTRIBUTES)	== 0)
-	   vattr	= win->_attrs;
-	else
-	   if ((ls & A_COLOR) == 0)
-	      vattr = (ls & A_ATTRIBUTES) | win->_attrs;
-	   else
-	      vattr = (ls & A_ATTRIBUTES);
-
-	ls = (ls == 0) ? ACS_VLINE | vattr : ls;
-	rs = (rs == 0) ? ACS_VLINE | vattr : rs;
-	ts = (ts == 0) ? ACS_HLINE | hattr : ts;
-	bs = (bs == 0) ? ACS_HLINE | hattr : bs;
-	tl = (tl == 0) ? ACS_ULCORNER | vattr : tl;
-	tr = (tr == 0) ? ACS_URCORNER | vattr : tr;
-	bl = (bl == 0) ? ACS_LLCORNER | vattr : bl;
-	br = (br == 0) ? ACS_LRCORNER | vattr : br;
-
-	ls = (ls & A_ATTRIBUTES) ? ls : ls | vattr;
-	rs = (rs & A_ATTRIBUTES) ? rs : rs | vattr;
-	ts = (ts & A_ATTRIBUTES) ? ts : ts | hattr;
-	bs = (bs & A_ATTRIBUTES) ? bs : bs | hattr;
-	tl = (tl & A_ATTRIBUTES) ? tl : tl | vattr;
-	tr = (tr & A_ATTRIBUTES) ? tr : tr | vattr;
-	bl = (bl & A_ATTRIBUTES) ? bl : bl | vattr;
-	br = (br & A_ATTRIBUTES) ? br : br | vattr;
+	ls = PDC_attr_passthru(win, ls ? ls : ACS_VLINE);
+	rs = PDC_attr_passthru(win, rs ? rs : ACS_VLINE);
+	ts = PDC_attr_passthru(win, ts ? ts : ACS_HLINE);
+	bs = PDC_attr_passthru(win, bs ? bs : ACS_HLINE);
+	tl = PDC_attr_passthru(win, tl ? tl : ACS_ULCORNER);
+	tr = PDC_attr_passthru(win, tr ? tr : ACS_URCORNER);
+	bl = PDC_attr_passthru(win, bl ? bl : ACS_LLCORNER);
+	br = PDC_attr_passthru(win, br ? br : ACS_LRCORNER);
 
 	for (i = xmin + 1; i <= xmax - 1; i++)
 	{
@@ -276,17 +319,15 @@ int n;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	whline(WINDOW *win, chtype inch, int n)
+int	PDC_CDECL	whline(WINDOW *win, chtype ch, int n)
 #else
-int	PDC_CDECL	whline(win,inch,n)
+int	PDC_CDECL	whline(win,ch,n)
 WINDOW *win;
-chtype inch;
+chtype ch;
 int n;
 #endif
 /***********************************************************************/
 {
-	chtype	attr;
-	chtype	ch=inch;
 	int	startpos;
 	int	endpos;
 
@@ -302,34 +343,8 @@ int n;
 
 	endpos = min(win->_curx + n -1, win->_maxx);
 
-	/*
-	** If the incoming character doesn't have it's own attribute
-	** then use the current attributes for the window.
-	*/
+	ch = PDC_attr_passthru(win, ch ? ch : ACS_HLINE);
 
-	if ((ch & A_ATTRIBUTES) == 0)
-		attr = win->_attrs;
-	else
-	{
-		if ((ch & A_COLOR) == 0)
-			attr = (ch & A_ATTRIBUTES) | win->_attrs;
-		else
-			attr = (ch & A_ATTRIBUTES);
-	}
-
-	ch &= A_CHARTEXT;
-
-	/*
-	** If the incoming character is zero then use the default horizontal
-	** line character.
-	*/
-
-	if (ch == 0)
-{
-		ch = ACS_HLINE;
-}
-
-	ch |= attr;
 	startpos = win->_curx;
 
 	for (n = win->_curx; n <= endpos; n++)
@@ -379,7 +394,6 @@ int n;
 #endif
 /***********************************************************************/
 {
-	chtype	attr;
 	int	endpos;
 
 #ifdef PDCDEBUG
@@ -394,30 +408,7 @@ int n;
 
 	endpos = min(win->_cury + n -1, win->_maxy);
 
-	/*
-	** If the incoming character doesn't have it's own attribute
-	** then use the current attributes for the window.
-	*/
-
-	if ((ch & A_ATTRIBUTES) == 0)
-		attr = win->_attrs;
-	else
-		if ((ch & A_COLOR) == 0)
-			attr = (ch & A_ATTRIBUTES) | win->_attrs;
-		else
-			attr = (ch & A_ATTRIBUTES);
-
-	ch &= A_CHARTEXT;
-
-	/*
-	** If the incoming character is zero then use the default vertical
-	** line character.
-	*/
-
-	if (ch == 0)
-		ch = ACS_VLINE;
-
-	ch |= attr;
+	ch = PDC_attr_passthru(win, ch ? ch : ACS_VLINE);
 
 	for (n = win->_cury; n <= endpos; n++)
 	{

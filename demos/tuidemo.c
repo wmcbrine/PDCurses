@@ -44,7 +44,7 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.4 2005/12/06 00:20:31 wmcbrine Exp $";
+char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.5 2005/12/07 01:37:43 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)
@@ -53,17 +53,9 @@ char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.4 2005/12/06 00:20:31 wmcbrine Exp $"
 #  define FNAME   "demos\\tui.c"    /* change this if source at other location */
 #endif
 
-#if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__
-#endif
-
 /**************************** strings entry box ***************************/
 
-#ifdef __STDC__
-void address (void)
-#else
-void address ()
-#endif
+void address Args((void))
 {
 #ifdef __STDC__
   char *fieldname[6] = {"Name","Street","City","State","Country",(char*)0};
@@ -94,7 +86,7 @@ void address ()
 
 /**************************** string entry box ****************************/
 
-#ifdef __STDC__
+#if __STDC__
 char *getfname (char *desc, char *fname, int field)
 #else
 char *getfname (desc, fname, field)
@@ -112,7 +104,7 @@ int field;
 
 /**************************** a very simple file browser ******************/
 
-#ifdef __STDC__
+#if __STDC__
 void showfile (char *fname)
 #else
 void showfile (fname)
@@ -160,17 +152,10 @@ char *fname;
 
 /***************************** forward declarations ***********************/
 
-#ifdef __STDC__
-void sub0(void), sub1(void), sub2(void), sub3(void);
-void func1(void), func2(void);
-void subfunc1(void), subfunc2(void);
-void subsub(void);
-#else
-void sub0(), sub1(), sub2(), sub3();
-void func1(), func2();
-void subfunc1(), subfunc2();
-void subsub();
-#endif
+void sub0 Args((void)), sub1 Args((void)), sub2 Args((void)), sub3 Args((void));
+void func1 Args((void)), func2 Args((void));
+void subfunc1 Args((void)), subfunc2 Args((void));
+void subsub Args((void));
 
 /***************************** menus initialization ***********************/
 
@@ -212,59 +197,35 @@ menu SubMenu3[] =
 
 /***************************** main menu functions ************************/
 
-#ifdef __STDC__
-void sub0 (void)
-#else
-void sub0 ()
-#endif
+void sub0 Args((void))
 {
   domenu (SubMenu0);
 }
 
-#ifdef __STDC__
-void sub1 (void)
-#else
-void sub1 ()
-#endif
+void sub1 Args((void))
 {
   domenu (SubMenu1);
 }
 
-#ifdef __STDC__
-void sub2 (void)
-#else
-void sub2 ()
-#endif
+void sub2 Args((void))
 {
   domenu (SubMenu2);
 }
 
-#ifdef __STDC__
-void sub3 (void)
-#else
-void sub3 ()
-#endif
+void sub3 Args((void))
 {
   domenu (SubMenu3);
 }
 
 /***************************** submenu1 functions *************************/
 
-#ifdef __STDC__
-void func1 (void)
-#else
-void func1 ()
-#endif
+void func1 Args((void))
 {
   beep ();
   bodymsg ("One beep! ");
 }
 
-#ifdef __STDC__
-void func2 (void)
-#else
-void func2 ()
-#endif
+void func2 Args((void))
 {
   beep ();
   bodymsg ("Two beeps! ");
@@ -273,20 +234,12 @@ void func2 ()
 
 /***************************** submenu2 functions *************************/
 
-#ifdef __STDC__
-void subfunc1 (void)
-#else
-void subfunc1 ()
-#endif
+void subfunc1 Args((void))
 {
   showfile (FNAME);
 }
 
-#ifdef __STDC__
-void subfunc2 (void)
-#else
-void subfunc2 ()
-#endif
+void subfunc2 Args((void))
 {
   char fname[MAXSTRLEN];
 
@@ -296,22 +249,14 @@ void subfunc2 ()
 
 /***************************** submenu3 functions *************************/
 
-#ifdef __STDC__
-void subsub (void)
-#else
-void subsub ()
-#endif
+void subsub Args((void))
 {
   domenu (SubMenu2);
 }
 
 /***************************** start main menu  ***************************/
 
-#ifdef __STDC__
-int main (void)
-#else
-int main ()
-#endif
+int main Args((void))
 {
   startmenu (MainMenu, "TUI - 'textual user interface' demonstration program");
 

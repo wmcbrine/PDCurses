@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.18 2005/12/06 23:36:33 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.19 2005/12/07 01:37:43 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -43,37 +43,29 @@ char *rcsid_testcurs  = "$Id: testcurs.c,v 1.18 2005/12/06 23:36:33 wmcbrine Exp
 #include <curses.h>
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__
+# define __STDC__ 1
 #endif
 
-#ifdef __STDC__
-void inputTest (WINDOW *);
-void scrollTest (WINDOW *);
-void introTest (WINDOW *);
-int initTest (WINDOW **, int, char **);
-void outputTest (WINDOW *);
-void padTest (WINDOW *);
-void display_menu(int,int);
-#  if defined(PDCURSES) && !defined(XCURSES)
-void resizeTest (WINDOW *);
-#  endif
-#  ifdef PDCURSES
-void clipboardTest(WINDOW *);
-#  endif
-#else
-void inputTest ();
-void scrollTest ();
-void introTest ();
-int initTest ();
-void outputTest ();
-void padTest ();
-void display_menu();
-#  if defined(PDCURSES) && !defined(XCURSES)
-void resizeTest ();
-#  endif
-#  ifdef PDCURSES
-void clipboardTest();
-#  endif
+#ifndef Args
+# if __STDC__
+#  define Args(x) x
+# else
+#  define Args(x) ()
+# endif
+#endif
+
+void inputTest Args((WINDOW *));
+void scrollTest Args((WINDOW *));
+void introTest Args((WINDOW *));
+int initTest Args((WINDOW **, int, char **));
+void outputTest Args((WINDOW *));
+void padTest Args((WINDOW *));
+void display_menu Args((int,int));
+#ifdef PDCURSES
+# ifdef XCURSES
+void resizeTest Args((WINDOW *));
+# endif
+void clipboardTest Args((WINDOW *));
 #endif
 
 struct commands
@@ -85,25 +77,32 @@ struct commands
  void (*function)();
 #endif
 };
+
 typedef struct commands COMMAND;
-#if defined(PDCURSES) && !defined(XCURSES)
-# define MAX_OPTIONS 7
+
+#ifdef PDCURSES
+# ifndef XCURSES
+#  define MAX_OPTIONS 7
+# else
+#  define MAX_OPTIONS 6
+# endif
 #else
-# define MAX_OPTIONS 6
+# define MAX_OPTIONS 5
 #endif
+
 COMMAND command[MAX_OPTIONS] =
 {
  {"Intro Test",introTest},
  {"Pad Test",padTest},
-#  if defined(PDCURSES) && !defined(XCURSES)
+#if defined(PDCURSES) && !defined(XCURSES)
  {"Resize Test",resizeTest},
 #endif
  {"Scroll Test",scrollTest},
  {"Input Test",inputTest},
  {"Output Test",outputTest},
-#  if defined(PDCURSES)
+#if defined(PDCURSES)
  {"Clipboard Test",clipboardTest},
-#  endif
+#endif
 };
 
 int     width, height;
@@ -531,6 +530,7 @@ WINDOW *win;
     mvwprintw(win, 4, 2, "String: %s", buffer);
     Continue(win);
 }
+
 #ifdef __STDC__
 void outputTest (WINDOW *win)
 #else
@@ -793,12 +793,12 @@ WINDOW *pad,*spad;
 }
 
 #ifdef PDCURSES
-#ifdef __STDC__
+# ifdef __STDC__
 void clipboardTest (WINDOW *win)
-#else
+# else
 void clipboardTest (win)
 WINDOW *win;
-#endif
+# endif
 {
     long i,length=0;
     char *Message1 = "This test will display the contents of the system clipboard";

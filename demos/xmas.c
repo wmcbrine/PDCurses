@@ -115,47 +115,40 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas  = "$Id: xmas.c,v 1.6 2005/12/06 00:20:31 wmcbrine Exp $";
+char *rcsid_xmas  = "$Id: xmas.c,v 1.7 2005/12/07 01:37:43 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
 #include <signal.h>
 
-#ifdef HAVE_PROTO
-int boxit(void);
-int seas(void);
-int greet(void);
-int fromwho(void);
-int del_msg(void);
-int tree(void);
-int balls(void);
-int star(void);
-int strng1(void);
-int strng2(void);
-int strng3(void);
-int strng4(void);
-int strng5(void);
-int blinkit(void);
-int reindeer(void);
-void done(void);
-#else
-int boxit();
-int seas();
-int greet();
-int fromwho();
-int del_msg();
-int tree();
-int balls();
-int star();
-int strng1();
-int strng2();
-int strng3();
-int strng4();
-int strng5();
-int blinkit();
-int reindeer();
-void done();
+#if defined(HAVE_PROTO) && !defined(__STDC__)
+# define __STDC__ 1
 #endif
+
+#ifndef Args
+# if __STDC__
+#  define Args(x) x
+# else
+#  define Args(x) ()
+# endif
+#endif
+
+int boxit Args((void));
+int seas Args((void));
+int greet Args((void));
+int fromwho Args((void));
+int del_msg Args((void));
+int tree Args((void));
+int balls Args((void));
+int star Args((void));
+int strng1 Args((void));
+int strng2 Args((void));
+int strng3 Args((void));
+int strng4 Args((void));
+int strng5 Args((void));
+int blinkit Args((void));
+int reindeer Args((void));
+void done Args((void));
 
 #define FROMWHO "Mark Hessling - (M.Hessling@qut.edu.au)"
 
@@ -173,7 +166,7 @@ WINDOW
        *w_holiday,
        *w_del_msg;
 
-#ifdef HAVE_PROTO
+#if __STDC__
 int main(int argc, char **argv)
 #else
 int main(argc, argv)
@@ -698,11 +691,7 @@ char **argv;
       return 0;
 }
 
-#ifdef HAVE_PROTO
-int boxit(void)
-#else
-int boxit()
-#endif
+int boxit Args((void))
 {
  int x = 0;
 
@@ -731,11 +720,7 @@ int boxit()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int seas(void)
-#else
-int seas()
-#endif
+int seas Args((void))
 {
   mvaddch(4, 1, 'S');
   mvaddch(6, 1, 'E');
@@ -749,11 +734,7 @@ int seas()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int greet(void)
-#else
-int greet()
-#endif
+int greet Args((void))
 {
   mvaddch(3, 5, 'G');
   mvaddch(5, 5, 'R');
@@ -768,21 +749,13 @@ int greet()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int fromwho(void)
-#else
-int fromwho()
-#endif
+int fromwho Args((void))
 {
   mvaddstr(21, 13, FROMWHO);
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int del_msg(void)
-#else
-int del_msg()
-#endif
+int del_msg Args((void))
 {
 #if 0
   mvaddstr(23, 60, "Hit any key to quit");
@@ -793,11 +766,7 @@ int del_msg()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int tree(void)
-#else
-int tree()
-#endif
+int tree Args((void))
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -855,11 +824,7 @@ int tree()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int balls(void)
-#else
-int balls()
-#endif
+int balls Args((void))
 {
   chtype ball1,ball2,ball3,ball4,ball5,ball6;
   overlay(treescrn, treescrn2);
@@ -908,11 +873,7 @@ int balls()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int star(void)
-#else
-int star()
-#endif
+int star Args((void))
 {
   mvwaddch(treescrn2, 0, 12, (chtype)'*' | A_STANDOUT );
 
@@ -921,11 +882,7 @@ int star()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int strng1(void)
-#else
-int strng1()
-#endif
+int strng1 Args((void))
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -943,11 +900,7 @@ int strng1()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int strng2(void)
-#else
-int strng2()
-#endif
+int strng2 Args((void))
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -968,11 +921,7 @@ int strng2()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int strng3(void)
-#else
-int strng3()
-#endif
+int strng3 Args((void))
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -995,11 +944,7 @@ int strng3()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int strng4(void)
-#else
-int strng4()
-#endif
+int strng4 Args((void))
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -1027,11 +972,7 @@ int strng4()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int strng5(void)
-#else
-int strng5()
-#endif
+int strng5 Args((void))
 {
 #ifdef A_COLOR
   if (has_colors() )
@@ -1057,11 +998,7 @@ int strng5()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int blinkit(void)
-#else
-int blinkit()
-#endif
+int blinkit Args((void))
 {
  static int cycle;
 
@@ -1125,11 +1062,7 @@ int blinkit()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-int reindeer(void)
-#else
-int reindeer()
-#endif
+int reindeer Args((void))
 {
  int looper;
 
@@ -1424,11 +1357,7 @@ int reindeer()
   return( 0 );
 }
 
-#ifdef HAVE_PROTO
-void done(void)
-#else
-void done()
-#endif
+void done Args((void))
 {
 /*  signal(SIGINT,done);
   signal(SIGTERM,done);

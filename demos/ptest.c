@@ -26,11 +26,11 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.7 2005/12/06 00:20:31 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.8 2005/12/07 01:37:43 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
-#include "panel.h"
+#include <panel.h>
 
 PANEL *p1;
 PANEL *p2;
@@ -43,8 +43,6 @@ WINDOW *w3;
 WINDOW *w4;
 WINDOW *w5;
 
-#define getmaxx(w)	(w)->_maxx
-#define getmaxy(w)	(w)->_maxy
 #define	nap(x)		usleep(1000*x)
 
 long nap_msec = 1;
@@ -59,19 +57,29 @@ char *mod[] =
 	"LAST "
 };
 
-#ifdef HAVE_PROTO
-PANEL *mkpanel(int, int, int, int);
-void fill_panel(PANEL *);
-void pflush(void);
-void wait_a_while(long);
-void saywhat(const char *);
-void rmpanel(PANEL *);
+#if defined(HAVE_PROTO) && !defined(__STDC__)
+# define __STDC__ 1
 #endif
+
+#ifndef Args
+# if __STDC__
+#  define Args(x) x
+# else
+#  define Args(x) ()
+# endif
+#endif
+
+PANEL *mkpanel Args((int, int, int, int));
+void fill_panel Args((PANEL *));
+void pflush Args((void));
+void wait_a_while Args((long));
+void saywhat Args((const char *));
+void rmpanel Args((PANEL *));
 
 /*+-------------------------------------------------------------------------
 	wait_a_while(msec)
 --------------------------------------------------------------------------*/
-#ifdef HAVE_PROTO
+#if __STDC__
 void wait_a_while(long msec)
 #else
 void
@@ -86,7 +94,7 @@ long msec;
 /*+-------------------------------------------------------------------------
 	saywhat(text)
 --------------------------------------------------------------------------*/
-#ifdef HAVE_PROTO
+#if __STDC__
 void saywhat(const char *text)
 #else
 void
@@ -103,7 +111,7 @@ const char *text;
 /*+-------------------------------------------------------------------------
 	mkpanel(rows,cols,tly,tlx) - alloc a win and panel and associate them
 --------------------------------------------------------------------------*/
-#ifdef HAVE_PROTO
+#if __STDC__
 PANEL *mkpanel(int rows, int cols, int tly, int tlx)
 #else
 PANEL *
@@ -128,7 +136,7 @@ PANEL *pan = (PANEL *)0;
 /*+-------------------------------------------------------------------------
 	rmpanel(pan)
 --------------------------------------------------------------------------*/
-#ifdef HAVE_PROTO
+#if __STDC__
 void rmpanel(PANEL *pan)
 #else
 void
@@ -144,12 +152,7 @@ WINDOW *win = pan->win;
 /*+-------------------------------------------------------------------------
 	pflush()
 --------------------------------------------------------------------------*/
-#ifdef HAVE_PROTO
-void pflush(void)
-#else
-void
-pflush()
-#endif
+void pflush Args((void))
 {
 	update_panels();
 	doupdate();
@@ -158,7 +161,7 @@ pflush()
 /*+-------------------------------------------------------------------------
 	fill_panel(win)
 --------------------------------------------------------------------------*/
-#ifdef HAVE_PROTO
+#if __STDC__
 void fill_panel(PANEL *pan)
 #else
 void
@@ -167,7 +170,7 @@ PANEL *pan;
 #endif
 {
 WINDOW *win = pan->win;
-char num = *(pan->user + 1);
+char num = *((char *)pan->user + 1);
 int y,x;
 
 	box(win, 0, 0);  
@@ -186,7 +189,7 @@ int y,x;
 /*+-------------------------------------------------------------------------
 	main(argc,argv)
 --------------------------------------------------------------------------*/
-#ifdef HAVE_PROTO
+#if __STDC__
 int main(int argc, char **argv)
 #else
 int

@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.22 2005/12/08 05:48:04 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.23 2005/12/08 06:12:11 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -137,10 +137,8 @@ bool quit=FALSE;
        wbkgd(win, COLOR_PAIR(1));
       }
     else
-       wbkgd(win, A_REVERSE);
-#else
-    wbkgd(win, A_REVERSE);
 #endif
+       wbkgd(win, A_REVERSE);
 
     erase();
     display_menu(old_option,new_option);
@@ -235,7 +233,7 @@ char *argv[];
     {   endwin();
         return 1;
     }
-    return(0);
+    return 0;
 }
 
 #ifdef __STDC__
@@ -261,7 +259,6 @@ WINDOW *win;
     mvwaddstr(win, 1, 1, "You should have rectangle in the middle of the screen");
     mvwaddstr(win, 2, 1, "You should have heard a beep");
     Continue(win);
-    return;
 }
 
 #ifdef __STDC__
@@ -348,10 +345,9 @@ WINDOW *win;
        wbkgd(subWin, COLOR_PAIR(2) | A_BOLD);
       }
     else
-       wbkgd(subWin, A_BOLD);
-#else
-    wbkgd(subWin, A_BOLD);
 #endif
+       wbkgd(subWin, A_BOLD);
+
     box(subWin, ACS_VLINE, ACS_HLINE);
     wrefresh(win);
 
@@ -584,10 +580,9 @@ WINDOW *win;
           wbkgd(win1, COLOR_PAIR(3));
          }
        else
-          wbkgd(win1, A_NORMAL);
-#else
-       wbkgd(win1, A_NORMAL);
 #endif
+          wbkgd(win1, A_NORMAL);
+
        wclear (win1);
        mvwaddstr(win1, 5, 1, "This text should appear; using overlay option");
        copywin(win, win1,0,0,0,0,9,49,TRUE);

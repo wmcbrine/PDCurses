@@ -34,13 +34,25 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.21 2005/12/07 06:12:48 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.22 2005/12/08 05:48:04 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
 #include <curses.h>
+
+#if defined(PDCURSES) && !defined(XCURSES)
+# define HAVE_RESIZE 1
+#else
+# define HAVE_RESIZE 0
+#endif
+
+#ifdef PDCURSES
+# define HAVE_CLIPBOARD 1
+#else
+# define HAVE_CLIPBOARD 0
+#endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
 # define __STDC__ 1
@@ -61,10 +73,12 @@ int initTest Args((WINDOW **, int, char **));
 void outputTest Args((WINDOW *));
 void padTest Args((WINDOW *));
 void display_menu Args((int,int));
-#ifdef PDCURSES
-# ifndef XCURSES
+
+#if HAVE_RESIZE
 void resizeTest Args((WINDOW *));
-# endif
+#endif
+
+#if HAVE_CLIPBOARD
 void clipboardTest Args((WINDOW *));
 #endif
 
@@ -80,27 +94,19 @@ struct commands
 
 typedef struct commands COMMAND;
 
-#ifdef PDCURSES
-# ifndef XCURSES
-#  define MAX_OPTIONS 7
-# else
-#  define MAX_OPTIONS 6
-# endif
-#else
-# define MAX_OPTIONS 5
-#endif
+#define MAX_OPTIONS (5 + HAVE_RESIZE + HAVE_CLIPBOARD)
 
 COMMAND command[MAX_OPTIONS] =
 {
  {"Intro Test",introTest},
  {"Pad Test",padTest},
-#if defined(PDCURSES) && !defined(XCURSES)
+#if HAVE_RESIZE
  {"Resize Test",resizeTest},
 #endif
  {"Scroll Test",scrollTest},
  {"Input Test",inputTest},
  {"Output Test",outputTest},
-#if defined(PDCURSES)
+#if HAVE_CLIPBOARD
  {"Clipboard Test",clipboardTest},
 #endif
 };
@@ -586,11 +592,8 @@ WINDOW *win;
        mvwaddstr(win1, 5, 1, "This text should appear; using overlay option");
        copywin(win, win1,0,0,0,0,9,49,TRUE);
 
-#if defined(PDCURSES) && !defined(XCURSES)
-       box(win1,0xb3,0xc4);
-#else
        box(win1,ACS_VLINE,ACS_HLINE);
-#endif
+
        wmove(win1, 8, 26);
        wrefresh(win1);
        wgetch(win1);
@@ -696,7 +699,7 @@ WINDOW *win;
     Continue(win);
 }
 
-#if defined(PDCURSES) && !defined(XCURSES)
+#if HAVE_RESIZE
 # ifdef __STDC__
 void resizeTest(WINDOW *dummy)
 # else
@@ -716,7 +719,6 @@ WINDOW *dummy;
     resize_term(50,80);
 #  endif
 # endif
-
 
     win1 = newwin(10, 50, 14, 25);
     if(win1 == NULL)
@@ -790,7 +792,7 @@ WINDOW *pad,*spad;
  delwin(pad);
 }
 
-#ifdef PDCURSES
+#if HAVE_CLIPBOARD
 # ifdef __STDC__
 void clipboardTest (WINDOW *win)
 # else
@@ -799,8 +801,6 @@ WINDOW *win;
 # endif
 {
     long i,length=0;
-    char *Message1 = "This test will display the contents of the system clipboard";
-    char *Message2 = "This test will place the following string in the system clipboard:";
     char *text = "This string placed in clipboard by PDCurses test program, testcurs.";
     char *ptr=NULL;
 
@@ -809,7 +809,7 @@ WINDOW *win;
     typeahead(-1);
 
     clear();
-    mvprintw (1, 1, Message1);
+    mvprintw (1, 1, "This test will display the contents of the system clipboard");
     refresh ();
     move(LINES-1, 1);
     clrtoeol();
@@ -851,7 +851,7 @@ WINDOW *win;
     getch();
 
     clear();
-    mvprintw (1, 1, Message2);
+    mvprintw (1, 1, "This test will place the following string in the system clipboard:");
     mvprintw (2, 1, text);
     refresh ();
     i = PDC_setclipboard( text, strlen(text) );

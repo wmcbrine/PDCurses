@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad  = "$Id: pad.c,v 1.3 2002/05/26 01:12:45 mark Exp $";
+char *rcsid_pad  = "$Id: pad.c,v 1.4 2005/12/08 08:12:32 wmcbrine Exp $";
 #endif
 
 /*
@@ -224,8 +224,8 @@ int begin_x;
 {
    WINDOW*  win;
    int   i;
-   int   j = begin_y - orig->_begy;
-   int   k = begin_x - orig->_begx;
+   int   j = begin_y;
+   int   k = begin_x;
 
 #ifdef PDCDEBUG
    if (trace_on) PDC_debug("subpad() - called: lines=%d cols=%d begy=%d begx=%d\n",nlines,ncols,begin_y,begin_x);

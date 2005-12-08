@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.23 2005/12/08 06:12:11 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.24 2005/12/08 08:12:31 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -769,7 +769,7 @@ WINDOW *pad,*spad;
  raw();
  wgetch(pad);
 
- spad = subpad(pad,12,25,6,52);
+ spad = subpad(pad,12,25,7,52);
  mvwaddstr(spad, 2, 2, "This is a new subpad");
  box(spad,0,0);
  prefresh(pad,0,0,0,0,15,75);

@@ -26,7 +26,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.8 2005/12/07 01:37:43 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.9 2005/12/08 16:33:39 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -171,14 +171,15 @@ PANEL *pan;
 {
 WINDOW *win = pan->win;
 char num = *((char *)pan->user + 1);
-int y,x;
+int y,x,maxy,maxx;
 
 	box(win, 0, 0);  
 	wmove(win,1,1);
 	wprintw(win,"-pan%c-",num);
-	for(y = 2; y < getmaxy(win) - 1; y++)
+	getmaxyx(win,maxy,maxx);
+	for(y = 2; y < maxy - 1; y++)
 	{
-		for(x = 1; x < getmaxx(win) - 1; x++)
+		for(x = 1; x < maxx - 1; x++)
 		{
 			wmove(win,y,x);
 			waddch(win,num);

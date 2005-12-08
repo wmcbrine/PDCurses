@@ -45,7 +45,7 @@ int waitforkey Args((void));
 void rmerror Args((void));
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.8 2005/12/07 01:37:43 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.9 2005/12/08 16:33:39 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -185,6 +185,7 @@ chtype color;
 int hasbox;
 #endif
 {
+  int maxy, maxx;
   chtype attr = color & A_ATTR;  /* extract Bold, Reverse, Blink bits */
 
   setcolor (win, color);
@@ -192,12 +193,14 @@ int hasbox;
   if (has_colors())
      wbkgd (win, COLOR_PAIR(color & A_CHARTEXT) | (attr & ~A_REVERSE));
   else
-     wbkgd (win, color);
-#else
-  wbkgd (win, color);
 #endif
+     wbkgd (win, color);
+
   werase (win); 
-  if (hasbox && win->_maxy > 2) box (win, 0, 0);
+
+  getmaxyx (win, maxy, maxx);
+
+  if (hasbox && (maxy > 2)) box (win, 0, 0);
   touchwin (win); wrefresh (win);
 }
 
@@ -439,7 +442,10 @@ void clsbody Args((void))
 
 int bodylen Args((void))
 {
-  return wbody->_maxy;
+  int maxy, maxx;
+
+  getmaxyx (wbody, maxy, maxx);
+  return maxy;
 }
 
 WINDOW *bodywin Args((void))
@@ -691,7 +697,10 @@ int x;
 char *buf;
 #endif
 {
-  werase (win); mvwprintw (win, 0, 0, "%s", padstr (buf, win->_maxx));
+  int maxy, maxx;
+
+  getmaxyx (win, maxy, maxx);
+  werase (win); mvwprintw (win, 0, 0, "%s", padstr (buf, maxx));
   wmove (win, 0, x); wrefresh (win); 
 }
 

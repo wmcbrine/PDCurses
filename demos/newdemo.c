@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.12 2005/12/07 01:37:43 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.13 2005/12/08 16:33:39 wmcbrine Exp $";
 #endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
@@ -127,10 +127,8 @@ WINDOW *win;
    WINDOW  *swin1, *swin2, *swin3;
 
    wattrset(win, 0);
-   w  = win->_maxx;
-   h  = win->_maxy;
-   bx = win->_begx;
-   by = win->_begy;
+   getmaxyx(win, h, w);
+   getbegyx(win, by, bx);
    sw = w / 3;
    sh = h / 3;
    if ((swin1 = derwin(win, sh, sw, 3, 5)) == NULL)
@@ -188,8 +186,7 @@ WINDOW *win;
    wbkgd( win, COLOR_PAIR(1) );
    wrefresh(win);
 
-   w    = win->_maxx;
-   h    = win->_maxy;
+   getmaxyx(win, h, w);
    x1   = 2 + rand() % (w - 4);
    y1   = 2 + rand() % (h - 4);
    x2   = 2 + rand() % (w - 4);

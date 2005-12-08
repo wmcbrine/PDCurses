@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.13 2005/12/08 16:33:39 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.14 2005/12/08 17:27:08 wmcbrine Exp $";
 #endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
@@ -174,6 +174,7 @@ WINDOW *win;
 #endif
 {
    chtype c1, c2, c3;
+   chtype ball1, ball2, ball3;
    int    w, h;
    int    x1, y1, xd1, yd1;
    int    x2, y2, xd2, yd2;
@@ -185,6 +186,15 @@ WINDOW *win;
 #endif
    wbkgd( win, COLOR_PAIR(1) );
    wrefresh(win);
+   wattrset(win,0);
+
+   init_pair(11,COLOR_RED,COLOR_GREEN);
+   init_pair(12,COLOR_BLUE,COLOR_RED);
+   init_pair(13,COLOR_YELLOW,COLOR_WHITE);
+
+   ball1 = 'O' | COLOR_PAIR(11);
+   ball2 = '*' | COLOR_PAIR(12);
+   ball3 = '@' | COLOR_PAIR(13);
 
    getmaxyx(win, h, w);
    x1   = 2 + rand() % (w - 4);
@@ -225,18 +235,11 @@ WINDOW *win;
       c2 = mvwinch(win, y2, x2);
       c3 = mvwinch(win, y3, x3);
 
-      init_pair(11,COLOR_RED,COLOR_GREEN);
-      wattrset(win, COLOR_PAIR(11));
-      mvwaddch(win, y1, x1, 'O');
-      init_pair(12,COLOR_BLUE,COLOR_RED);
-      wattrset(win, COLOR_PAIR(12));
-      mvwaddch(win, y2, x2, '*');
-      init_pair(13,COLOR_YELLOW,COLOR_WHITE);
-      wattrset(win, COLOR_PAIR(13));
-      mvwaddch(win, y3, x3, '@');
+      mvwaddch(win, y1, x1, ball1);
+      mvwaddch(win, y2, x2, ball2);
+      mvwaddch(win, y3, x3, ball3);
       wmove(win, 0, 0);
       wrefresh(win);
-      wattrset(win,0);
       mvwaddch(win, y1, x1, c1);
       mvwaddch(win, y2, x2, c2);
       mvwaddch(win, y3, x3, c3);

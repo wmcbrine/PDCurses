@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd  = "$Id: bkgd.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_bkgd  = "$Id: bkgd.c,v 1.3 2005/12/09 00:07:31 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -68,17 +68,17 @@ char *rcsid_bkgd  = "$Id: bkgd.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
  	rendition of the character put on the screen.
 
   PDCurses Description:
- 	The attributes that are defined with the attrset()/attron() set of 
+ 	The attributes that are defined with the attrset()/attron() set of
  	functions take precedence over the background attributes if there is a
  	conflict (e.g., different color pairs).
 
   System V Return Value:
  	bkgd() and wbkgd() return the integer OK, or a non-negative integer, if
- 	immedok() is set (although this is likely NOT the case).
+ 	immedok() is set.
 
   PDCurses Return Value:
- 	bkgd() and wbkgd() return the integer OK ( the function immedok() is
- 	currently not supported ).
+ 	bkgd() and wbkgd() return the integer OK, unless the window is NULL,
+ 	in which case they return ERR.
 
   System V Notes:
  	Note that bkgdset() and bkgd() may be macros.

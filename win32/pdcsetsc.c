@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2005/12/09 16:38:36 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -216,7 +216,6 @@ int visibility;
 	{
 		case 0:                 /* invisible */
 			cci.bVisible = FALSE;
-			cci.dwSize = 1;
 			break;
 		case 2:                 /* highly visible */
 			cci.bVisible = TRUE;

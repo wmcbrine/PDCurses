@@ -20,8 +20,8 @@ PDC_HOME	= $(subst /,\,$(PDCURSES_HOME))
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
-VER=26
-VERDOT=2.6
+VER=27
+VERDOT=2.7
 
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h

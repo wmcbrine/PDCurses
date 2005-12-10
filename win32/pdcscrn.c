@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.10 2005/11/23 15:30:52 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.11 2005/12/10 14:24:59 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -617,7 +617,7 @@ int   PDC_reset_shell_mode()
    return(OK);
 }
 
-#if !defined(PDC_STATIC_BUILD)
+#if defined(PDC_DLL_BUILD)
 BOOL WINAPI DllMain( HINSTANCE hDLL, DWORD dwReason, LPVOID pReserved)
 {
    switch( dwReason)

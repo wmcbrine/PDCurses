@@ -42,7 +42,7 @@ CFLAGS  = /oneatx /wcd=302
 LDFLAGS =
 !endif
 
-CPPFLAGS	= /i=$(PDCURSES_HOME) /DPDC_STATIC_BUILD
+CPPFLAGS	= /i=$(PDCURSES_HOME)
 
 CCFLAGS		= /ei /zq /mf /wx $(CFLAGS) $(CPPFLAGS)
 

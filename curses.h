@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.45 2005/12/09 01:54:48 wmcbrine Exp $
+$Id: curses.h,v 1.46 2005/12/10 14:24:58 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1063,7 +1063,8 @@ typedef struct
 
 
 /* external variables */
-#if !defined(PDC_STATIC_BUILD) && (defined(_MSC_VER) || defined(__MINGW32__)) && defined(WIN32) && !defined(CURSES_LIBRARY)
+#if defined(PDC_DLL_BUILD)
+# if !defined(CURSES_LIBRARY)
 __declspec(dllimport)	int	LINES;		/* terminal height		*/
 __declspec(dllimport)	int	COLS;		/* terminal width		*/
 __declspec(dllimport)	WINDOW*	stdscr;		/* the default screen window	*/
@@ -1073,8 +1074,7 @@ __declspec(dllimport)	int	use_emalloc;	/* set to true to use your own malloc,etc
 __declspec(dllimport)	MOUSE_STATUS Mouse_status;
 __declspec(dllimport)	int COLORS;
 __declspec(dllimport)	int COLOR_PAIRS;
-#else
-# if !defined(PDC_STATIC_BUILD) && (defined(_MSC_VER) || defined(__MINGW32__)) && defined(WIN32)
+# else
 __declspec(dllexport) extern	int	LINES;		/* terminal height		*/
 __declspec(dllexport) extern	int	COLS;		/* terminal width		*/
 __declspec(dllexport) extern	WINDOW*	stdscr;		/* the default screen window	*/
@@ -1084,7 +1084,8 @@ __declspec(dllexport) extern	int	use_emalloc;	/* set to true to use your own mal
 __declspec(dllexport) extern	MOUSE_STATUS Mouse_status;
 __declspec(dllexport) extern	int COLORS;
 __declspec(dllexport) extern	int COLOR_PAIRS;
-# else
+# endif
+#else
 extern	int	LINES;		/* terminal height		*/
 extern	int	COLS;		/* terminal width		*/
 extern	WINDOW*	stdscr;		/* the default screen window	*/
@@ -1093,7 +1094,6 @@ extern	SCREEN	*SP;	/* curses variables		*/
 extern	int	use_emalloc;	/* set to true to use your own malloc,etc */
 extern	MOUSE_STATUS Mouse_status;
 extern	int COLORS,COLOR_PAIRS;
-# endif
 #endif
 
 #if	defined (CURSES_LIBRARY)

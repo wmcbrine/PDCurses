@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.5 2005/12/02 23:47:52 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.6 2005/12/10 21:44:45 wmcbrine Exp $";
 #endif
 
 
@@ -116,10 +116,10 @@ PANEL __stdscr_pseudo_panel = { (WINDOW *)0 };
 STATIC void __calculate_obscure(void);
 STATIC void __free_obscure(PANEL *);
 STATIC void __override(PANEL *, int);
-STATIC int __panel_is_linked(PANEL *);
+STATIC bool __panel_is_linked(PANEL *);
 STATIC void __panel_link_bottom(PANEL *);
 STATIC void __panel_link_top(PANEL *);
-STATIC int __panels_overlapped(PANEL *, PANEL *);
+STATIC bool __panels_overlapped(PANEL *, PANEL *);
 STATIC void __panel_unlink(PANEL *);
 #endif
 
@@ -243,16 +243,16 @@ char s80[80];
 	__panels_overlapped(pan1,pan2) - check panel overlapped
 --------------------------------------------------------------------------*/
 #ifdef HAVE_PROTO
-STATIC int __panels_overlapped(register PANEL *pan1,register PANEL *pan2)
+STATIC bool __panels_overlapped(register PANEL *pan1,register PANEL *pan2)
 #else
-STATIC int
+STATIC bool
 __panels_overlapped(pan1,pan2)
 register PANEL *pan1;
 register PANEL *pan2;
 #endif
 {
 	if(!pan1 || !pan2)
-		return(0);
+		return FALSE;
 	return((pan1->wstarty >= pan2->wstarty && pan1->wstarty < pan2->wendy) ||
 		(pan2->wstarty >= pan1->wstarty && pan2->wstarty < pan1->wendy))
 	&& ((pan1->wstartx >= pan2->wstartx && pan1->wstartx < pan2->wendx) ||
@@ -382,9 +382,9 @@ PANELOBS *lobs;
 	__panel_is_linked(pan) - check to see if panel is in the stack
 --------------------------------------------------------------------------*/
 #ifdef HAVE_PROTO
-STATIC int __panel_is_linked(PANEL *pan)
+STATIC bool __panel_is_linked(PANEL *pan)
 #else
-STATIC int
+STATIC bool
 __panel_is_linked(pan)
 PANEL *pan;
 #endif
@@ -394,10 +394,10 @@ register PANEL *pan2 = __bottom_panel;
 	while(pan2)
 	{
 		if(pan2 == pan)
-			return(1);
+			return TRUE;
 		pan2 = pan2->above;
 	}
-	return(OK);
+	return FALSE;
 }	/* end of __panel_is_linked */
 
 /*+-------------------------------------------------------------------------
@@ -825,10 +825,10 @@ PANEL *pan;
   panel_hidden	- indicates if panel is hidden
 
   PDCurses Description:
- 	This function returns TRUE if pan is hidden and FALSE if it is not.
+ 	This function returns OK if pan is hidden and ERR if it is not.
 
   PDCurses Return Value:
- 	TRUE or FALSE.
+ 	OK or ERR.
 
   PDCurses Errors:
  	Returns ERR if pan is NULL.

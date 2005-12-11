@@ -13,7 +13,6 @@
 #
 ################################################################################
 PDCURSES_HOME		= $(PDCURSES_SRCDIR)
-#CC_HOME		=/cygnus/cygwin-b20/H-i586-cygwin32/i586-cygwin32
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -24,9 +23,6 @@ PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)/panel.h
-
-#CCLIBDIR		=$(CC_HOME)/lib
-#CCINCDIR		=$(CC_HOME)/include
 
 srcdir		= $(PDCURSES_HOME)/pdcurses
 osdir		= $(PDCURSES_HOME)/win32
@@ -59,7 +55,7 @@ LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
+DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 
 SHELL = /bin/bash
 

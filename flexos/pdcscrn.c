@@ -30,7 +30,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.1 2001/01/10 08:31:11 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.2 2005/12/11 05:51:24 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -251,8 +251,7 @@ bool echo;
 	internal->raw_inp	= FALSE;	/* tty I/O modes	      */
 	internal->cbreak	= TRUE;
 	internal->echo		= echo;
-/* under System V Curses, typeahead checking is enabled by default */
-	internal->refrbrk	= TRUE;	/* allow premature end of refresh*/
+	internal->refrbrk	= FALSE;	/* no premature end of refresh*/
 #if !defined(OS2) && !defined(XCURSES)
 	internal->video_seg	= 0xb000;	/* Base screen segment addr   */
 	internal->video_ofs	= 0x0;		/* Base screen segment ofs    */

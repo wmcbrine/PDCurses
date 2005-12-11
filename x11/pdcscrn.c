@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.3 2004/12/16 01:03:18 rexx Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.4 2005/12/11 05:51:24 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on=FALSE;
@@ -152,8 +152,7 @@ extern bool sb_started;
 	internal->save_key_modifiers	= FALSE;
 	internal->return_key_modifiers	= FALSE;
 	internal->echo		= echo;
-/* under System V Curses, typeahead checking is enabled by default */
-	internal->refrbrk	= TRUE;	/* allow premature end of refresh*/
+	internal->refrbrk	= FALSE;	/* no premature end of refresh*/
 	internal->video_page	= 0;		/* Current Video Page	      */
 	internal->visible_cursor= TRUE;		/* Assume that it is visible  */
 	internal->cursor	= 0;

@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.4 2004/01/02 05:50:05 mark Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.5 2005/12/11 05:51:23 wmcbrine Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;
@@ -214,8 +214,7 @@ int ds=0;
 	internal->save_key_modifiers	= FALSE;
 	internal->return_key_modifiers	= FALSE;
 	internal->echo		= echo;
-/* under System V Curses, typeahead checking is enabled by default */
-	internal->refrbrk	= TRUE;	/* allow premature end of refresh*/
+	internal->refrbrk	= FALSE;	/* no premature end of refresh*/
 	internal->video_seg	= 0xb000;	/* Base screen segment addr   */
 	internal->video_ofs	= 0x0;		/* Base screen segment ofs    */
 	internal->video_page	= 0;		/* Current Video Page	      */

@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.11 2005/12/10 14:24:59 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.12 2005/12/11 05:51:24 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -360,8 +360,7 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
    internal->save_key_modifiers  = FALSE;
    internal->return_key_modifiers   = FALSE;
    internal->echo = echo;
-   /* under System V Curses, typeahead checking is enabled by default */
-   internal->refrbrk = TRUE;  /* allow premature end of refresh*/
+   internal->refrbrk = FALSE;  /* no premature end of refresh*/
    internal->video_seg  = 0xb000;   /* Base screen segment addr   */
    internal->video_ofs  = 0x0;      /* Base screen segment ofs    */
    internal->video_page = 0;     /* Current Video Page         */

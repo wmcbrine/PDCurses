@@ -926,11 +926,13 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
    wmhints.flags = InputHint;
    wmhints.input = True;
    XSetWMHints(XtDisplay(topLevel), XtWindow(topLevel), &wmhints);
+#if 0
    XSetInputFocus(XtDisplay(topLevel), XtWindow(topLevel),
                   RevertToNone, CurrentTime);
 
    XSetInputFocus(XtDisplay(drawing), XtWindow(drawing),
                   RevertToNone, CurrentTime);
+#endif
    /*
     * Wait for events...
     */

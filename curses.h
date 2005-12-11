@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.46 2005/12/10 14:24:58 wmcbrine Exp $
+$Id: curses.h,v 1.47 2005/12/11 23:03:04 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -519,14 +519,14 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
 #  endif
+#  ifndef HAVE_STRING_H
+#    define HAVE_STRING_H
+#  endif
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H                           /* have <unistd.h> */
 #  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE                             /* have memmove() */
-#  endif
-#  ifndef HAVE_USLEEP
-#    define HAVE_USLEEP                               /* have usleep() */
 #  endif
 #endif
 

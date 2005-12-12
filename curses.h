@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.49 2005/12/12 04:09:49 wmcbrine Exp $
+$Id: curses.h,v 1.50 2005/12/12 04:22:32 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1961,6 +1961,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvdelch(y,x)            (move( y, x )==ERR?ERR:wdelch( stdscr ))
 #define mvgetch(y,x)            (move( y, x )==ERR?ERR:wgetch(stdscr))
 #define mvgetstr(y,x,str)       (move( y, x )==ERR?ERR:wgetstr( stdscr, str ))
+#define mvhline(y,x,c,n)        (move( y, x )==ERR?ERR:hline( c, n ))
 #define mvinch(y,x)             (move( y, x )==ERR?((chtype)ERR):(stdscr->_y[y][x]))
 #define mvinchstr(y,x,c)        (move( y, x )==ERR?ERR:inchnstr( c, stdscr->_maxx-stdscr->_curx ))
 #define mvinchnstr(y,x,c,n)     (move( y, x )==ERR?ERR:inchnstr( c, n ))
@@ -1969,6 +1970,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvinsstr(y,x,s)         (move( y, x )==ERR?ERR:winsnstr(stdscr,s,(-1)))
 #define mvinstr(y,x,str)        (move( y, x )==ERR?ERR:winnstr(stdscr,(str),stdscr->_maxx))
 #define mvinnstr(y,x,str,n)     (move( y, x )==ERR?ERR:winnstr(stdscr,(str),(n)))
+#define mvvline(y,x,c,n)        (move( y, x )==ERR?ERR:vline( c, n ))
 #define mvwaddch(w,y,x,c)       (wmove( w, y, x )==ERR?ERR:waddch( w, c ))
 #define mvwaddchstr(w,y,x,c)    (wmove( w, y, x )==ERR?ERR:waddchnstr( w, c, -1 ))
 #define mvwaddchnstr(w,y,x,c,n) (wmove( w, y, x )==ERR?ERR:waddchnstr( w, c, n ))
@@ -1979,6 +1981,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvwgetch(w,y,x)         (wmove( w, y, x )==ERR?ERR:wgetch( w ))
 #define mvwgetstr(w,y,x,str)    (wmove( w, y, x )==ERR?ERR:wgetstr( w, str ))
 #define mvwgetnstr(w,y,x,str,n) (wmove( w, y, x )==ERR?ERR:wgetnstr( w, str , n ))
+#define mvwhline(w,y,x,c,n)     (wmove( w, y, x )==ERR?ERR:whline( w, c, n ))
 #define mvwinch(w,y,x)          (wmove( w, y, x )==ERR?((chtype)ERR):((w)->_y[y][x]))
 #define mvwinchstr(w,y,x,c)     (wmove( w, y, x )==ERR?ERR:winchnstr( w, c, (w)->_maxx-(w)->_curx ))
 #define mvwinchnstr(w,y,x,c,n)  (wmove( w, y, x )==ERR?ERR:winchnstr( w, c, n ))
@@ -1987,6 +1990,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvwinnstr(w,y,x,str,n)  (wmove( w, y, x )==ERR?ERR:winnstr(w,str,n))
 #define mvwinsnstr(w,y,x,s,n)   (wmove( w, y, x )==ERR?ERR:winsnstr(w,s,n))
 #define mvwinsstr(w,y,x,s)      (wmove( w, y, x )==ERR?ERR:winsnstr(w,s,(-1)))
+#define mvwvline(w,y,x,c,n)     (wmove( w, y, x )==ERR?ERR:wvline( w, c, n ))
 #define napms(ms)               delay_output(ms)
 #define nl()                    (SP->autocr = TRUE, OK)
 #define nonl()                  (SP->autocr = FALSE, OK)

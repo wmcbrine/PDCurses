@@ -26,6 +26,7 @@ EXPORTS clear
 EXPORTS clearok
 EXPORTS clrtobot
 EXPORTS clrtoeol
+EXPORTS color_set
 EXPORTS copywin
 EXPORTS curs_set
 EXPORTS def_prog_mode
@@ -191,6 +192,7 @@ EXPORTS wborder
 EXPORTS wclear
 EXPORTS wclrtobot
 EXPORTS wclrtoeol
+EXPORTS wcolor_set
 EXPORTS wcursyncup
 EXPORTS wdelch
 EXPORTS wdeleteln

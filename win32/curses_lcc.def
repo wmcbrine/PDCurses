@@ -19,6 +19,7 @@ clear
 clearok
 clrtobot
 clrtoeol
+color_set
 copywin
 curs_set
 def_prog_mode
@@ -184,6 +185,7 @@ wborder
 wclear
 wclrtobot
 wclrtoeol
+wcolor_set
 wcursyncup
 wdelch
 wdeleteln

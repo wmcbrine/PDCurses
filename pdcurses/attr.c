@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.3 2005/12/12 00:26:58 wmcbrine Exp $";
+char *rcsid_attr  = "$Id: attr.c,v 1.4 2005/12/12 06:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -83,8 +83,11 @@ char *rcsid_attr  = "$Id: attr.c,v 1.3 2005/12/12 00:26:58 wmcbrine Exp $";
  	The attrset() function sets the current attributes of the given
  	window to attrs.  The attroff() function turns off the named
  	attributes without turning on or off any other attributes.  The
- 	attron() function turs on the named attriutes without affecting
- 	any others.  The standout() function is the same as
+ 	attron() function turns on the named attributes without affecting
+ 	any others.  The color_set() function sets the window color to 
+ 	the value of color_pair.
+
+  The standout() function is the same as
  	attron( A_STANDOUT ).  The standend() function is the same as
  	attrset( A_NORMAL ); that is it turns off all attributes.
 

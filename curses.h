@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.48 2005/12/12 00:26:57 wmcbrine Exp $
+$Id: curses.h,v 1.49 2005/12/12 04:09:49 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1760,6 +1760,7 @@ int     PDC_CDECL slk_touch Args((void));
 int     PDC_CDECL slk_attron Args((attr_t));
 int     PDC_CDECL slk_attrset Args((attr_t));
 int     PDC_CDECL slk_attroff Args((attr_t));
+int     PDC_CDECL slk_color Args((short));
 WINDOW* PDC_CDECL subpad Args(( WINDOW*, int, int, int, int ));
 WINDOW* PDC_CDECL subwin Args(( WINDOW*, int, int, int, int ));
 int     PDC_CDECL syncok Args((WINDOW*, bool));

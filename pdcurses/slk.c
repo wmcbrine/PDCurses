@@ -36,13 +36,14 @@
 #undef	slk_attron
 #undef	slk_attrset
 #undef	slk_attroff
+#undef	slk_color
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk  = "$Id: slk.c,v 1.3 2005/11/19 19:07:21 wmcbrine Exp $";
+char *rcsid_slk  = "$Id: slk.c,v 1.4 2005/12/12 04:09:49 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -62,6 +63,7 @@ char *rcsid_slk  = "$Id: slk.c,v 1.3 2005/11/19 19:07:21 wmcbrine Exp $";
   	int slk_attron(attr_t attrs);
   	int slk_attrset(attr_t attrs);
   	int slk_attroff(attr_t attrs);
+  	int slk_color(short color_pair);
 
   X/Open Description:
  	These functions manipulate a window that contain Soft Label Keys (SLK).
@@ -546,6 +548,30 @@ attr_t attrs;
 #endif
 
  rc = wattrset(SP->slk_winptr, attrs);
+ for (i = 0; i < labels; ++i)
+ {
+    PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
+ }
+
+ return rc;
+
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int     PDC_CDECL       slk_color(short color_pair)
+#else
+int     PDC_CDECL       slk_color(color_pair)
+short color_pair;
+#endif
+/***********************************************************************/
+{
+ int i,rc;
+#ifdef PDCDEBUG
+ if (trace_on) PDC_debug("slk_color() - called\n");
+#endif
+
+ rc = wcolor_set(SP->slk_winptr, color_pair, NULL);
  for (i = 0; i < labels; ++i)
  {
     PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);

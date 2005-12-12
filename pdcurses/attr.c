@@ -35,13 +35,15 @@
 #undef	wstandend
 #undef	wstandout
 #undef	getattrs
+#undef	color_set
+#undef	wcolor_set
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.2 2004/08/07 07:18:46 rexx Exp $";
+char *rcsid_attr  = "$Id: attr.c,v 1.3 2005/12/12 00:26:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -59,11 +61,13 @@ char *rcsid_attr  = "$Id: attr.c,v 1.2 2004/08/07 07:18:46 rexx Exp $";
   	int wstandend(WINDOW *win);
   	int standout(void);
   	int wstandout(WINDOW *win);
+  	int color_set(short color_pair, void *opts);
+  	int wcolor_set(WINDOW *win, short color_pair, void *opts);
 
   X/Open Description:
- 	These functions manipulate the current attributes of the named
- 	window.  These attributes can be any combination of A_STANDOUT,
- 	A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
+ 	These functions manipulate the current attributes and/or colors 
+ 	of the named window.  These attributes can be any combination 
+ 	of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
 
  	These constants are defined in <curses.h> and can be combined
  	with the bitwise-OR operator (|).
@@ -296,4 +300,35 @@ WINDOW *win;
 	if (trace_on) PDC_debug("wstandout() - called\n");
 #endif
 	return( wattrset( win, A_STANDOUT ) );
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	color_set(short color_pair, void *opts)
+#else
+int	PDC_CDECL	color_set(color_pair, opts)
+short color_pair;
+void *opts;
+#endif
+/***********************************************************************/
+{
+	return( wcolor_set( stdscr, color_pair, opts ) );
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	wcolor_set(WINDOW *win, short color_pair, void *opts)
+#else
+int	PDC_CDECL	wcolor_set(win, color_pair, opts)
+WINDOW *win;
+short color_pair;
+void *opts;		/* "opts" not used, but required by the standard */
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("wcolor_set() - called\n");
+#endif
+	if (win == (WINDOW *)NULL)
+		return( ERR );
+	win->_attrs = (win->_attrs & ~A_COLOR) | COLOR_PAIR(color_pair);
+	return( OK );
 }

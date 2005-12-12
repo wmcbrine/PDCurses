@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.47 2005/12/11 23:03:04 wmcbrine Exp $
+$Id: curses.h,v 1.48 2005/12/12 00:26:57 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1787,6 +1787,7 @@ int     PDC_CDECL wborder Args(( WINDOW*, chtype, chtype, chtype, chtype, chtype
 int     PDC_CDECL wclear Args(( WINDOW* ));
 int     PDC_CDECL wclrtobot Args(( WINDOW* ));
 int     PDC_CDECL wclrtoeol Args(( WINDOW* ));
+int	PDC_CDECL wcolor_set Args(( WINDOW*, short, void* ));
 void    PDC_CDECL wcursyncup Args((WINDOW*));
 int     PDC_CDECL wdelch Args(( WINDOW* ));
 int     PDC_CDECL wdeleteln Args(( WINDOW* ));
@@ -1911,6 +1912,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define clear()                 wclear( stdscr )
 #define clrtobot()              wclrtobot( stdscr )
 #define clrtoeol()              wclrtoeol( stdscr )
+#define color_set(a,b)          wcolor_set( stdscr, a, b )
 #define delch()                 wdelch( stdscr )
 #define deleteln()              wdeleteln( stdscr )
 #define derwin(w,nl,nc,by,bx)   subwin((w),(nl),(nc),(by+(w)->_begy),(bx+(w)->_begx))

@@ -102,7 +102,7 @@ realclean: distclean
 # This section provides for compiling and linking the
 # ncurses test programs.
 #
-ncurses_testdir=/home/mark/ncurses-1.9.6/test
+ncurses_testdir=$(HOME)/ncurses-5.5/test
 
 NCURSES_TESTS = \
 	bs \
@@ -116,6 +116,11 @@ NCURSES_TESTS = \
 	ncurses
 
 ncurses_tests: $(NCURSES_TESTS)
+
+ncurses_clean:
+	-rm -rf *.o trace $(NCURSES_TESTS)
+
+NCFLAGS=-I$(ncurses_testdir)
 
 bs: bs.o $(LIBXCURSES)
 	$(LINK) bs.o -o $@ $(LDFLAGS)
@@ -141,35 +146,35 @@ view: view.o $(LIBXCURSES)
 worm: worm.o $(LIBXCURSES)
 	$(LINK) worm.o -o $@ $(LDFLAGS)
 
-ncurses: ncurses.o $(LIBXCURSES)
-	$(LINK) ncurses.o -o $@ $(LDFLAGS)
+ncurses: ncurses.o $(LIBXCURSES) $(LIBPANEL)
+	$(LINK) ncurses.o -o $@ $(LDFLAGS) $(LIBPANEL)
 
 bs.o: $(ncurses_testdir)/bs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/bs.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/bs.c
 
 gdc.o: $(ncurses_testdir)/gdc.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/gdc.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/gdc.c
 
 hanoi.o: $(ncurses_testdir)/hanoi.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/hanoi.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/hanoi.c
 
 knight.o: $(ncurses_testdir)/knight.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/knight.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/knight.c
 
 rain.o: $(ncurses_testdir)/rain.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/rain.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/rain.c
 
 tclock.o: $(ncurses_testdir)/tclock.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/tclock.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/tclock.c
 
 view.o: $(ncurses_testdir)/view.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/view.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/view.c
 
 worm.o: $(ncurses_testdir)/worm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/worm.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/worm.c
 
 ncurses.o: $(ncurses_testdir)/ncurses.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o $@ $(ncurses_testdir)/ncurses.c
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/ncurses.c
 
 #
 # This section provides for compiling and linking the

@@ -147,6 +147,7 @@ slk_attroff
 slk_attron
 slk_attrset
 slk_clear
+slk_color
 slk_init
 slk_label
 slk_noutrefresh

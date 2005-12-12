@@ -154,6 +154,7 @@ EXPORTS slk_attroff
 EXPORTS slk_attron
 EXPORTS slk_attrset
 EXPORTS slk_clear
+EXPORTS slk_color
 EXPORTS slk_init
 EXPORTS slk_label
 EXPORTS slk_noutrefresh

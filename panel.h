@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id
+$Id: panel.h,v 1.5 2005/12/13 06:01:20 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -48,42 +48,42 @@ typedef struct panel
 	int wendx;
 	struct panel *below;
 	struct panel *above;
-	char *user;
+	const void *user;
 	struct panelobs *obscure;
 } PANEL;
 
 #ifdef HAVE_PROTO
-WINDOW *panel_window(PANEL *pan);
-void update_panels(void );
+WINDOW *panel_window(const PANEL *pan);
+void update_panels(void);
 int hide_panel(PANEL *pan);
 int show_panel(PANEL *pan);
 int del_panel(PANEL *pan);
 int top_panel(PANEL *pan);
 int bottom_panel(PANEL *pan);
 PANEL *new_panel(WINDOW *win);
-PANEL *panel_above(PANEL *pan);
-PANEL *panel_below(PANEL *pan);
-int panel_hidden(PANEL *pan);
-int set_panel_userptr(PANEL *pan,char *uptr);
-char *panel_userptr(PANEL *pan);
-int move_panel(PANEL *pan,int starty,int startx);
-int replace_panel(PANEL *pan,WINDOW *win);
+PANEL *panel_above(const PANEL *pan);
+PANEL *panel_below(const PANEL *pan);
+int panel_hidden(const PANEL *pan);
+int set_panel_userptr(PANEL *pan, const void *uptr);
+const void *panel_userptr(const PANEL *pan);
+int move_panel(PANEL *pan, int starty, int startx);
+int replace_panel(PANEL *pan, WINDOW *win);
 #else
-WINDOW *panel_window( /* PANEL *pan */ );
-void update_panels( /* void  */ );
-int hide_panel( /* PANEL *pan */ );
-int show_panel( /* PANEL *pan */ );
-int del_panel( /* PANEL *pan */ );
-int top_panel( /* PANEL *pan */ );
-int bottom_panel( /* PANEL *pan */ );
-PANEL *new_panel( /* WINDOW *win */ );
-PANEL *panel_above( /* PANEL *pan */ );
-PANEL *panel_below( /* PANEL *pan */ );
-int panel_hidden( /* PANEL *pan */ );
-int set_panel_userptr( /* PANEL *pan,char *uptr */ );
-char *panel_userptr( /* PANEL *pan */ );
-int move_panel( /* PANEL *pan,int starty,int startx */ );
-int replace_panel( /* PANEL *pan,WINDOW *win */ );
+WINDOW *panel_window();
+void update_panels();
+int hide_panel();
+int show_panel();
+int del_panel();
+int top_panel();
+int bottom_panel();
+PANEL *new_panel();
+PANEL *panel_above();
+PANEL *panel_below();
+int panel_hidden();
+int set_panel_userptr();
+const void *panel_userptr();
+int move_panel();
+int replace_panel();
 #endif
 
 /* end of panel.h */

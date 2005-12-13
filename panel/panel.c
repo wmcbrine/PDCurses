@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.6 2005/12/10 21:44:45 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.7 2005/12/13 06:01:22 wmcbrine Exp $";
 #endif
 
 
@@ -77,15 +77,15 @@ char *rcsid_panel = "$Id: panel.c,v 1.6 2005/12/10 21:44:45 wmcbrine Exp $";
 	int bottom_panel(PANEL *pan);
 	int del_panel(PANEL *pan);
 	int hide_panel(PANEL *pan);
-	int move_panel(PANEL *pan,int starty,int startx);
+	int move_panel(PANEL *pan, int starty, int startx);
 	PANEL *new_panel(WINDOW *win);
-	PANEL *panel_above(PANEL *pan);
-	PANEL *panel_below(PANEL *pan);
-	int panel_hidden(PANEL *pan);
-	char *panel_userptr(PANEL *pan);
-	WINDOW *panel_window(PANEL *pan);
-	int replace_panel(PANEL *pan,WINDOW *win);
-	int set_panel_userptr(PANEL *pan,char *uptr);
+	PANEL *panel_above(const PANEL *pan);
+	PANEL *panel_below(const PANEL *pan);
+	int panel_hidden(const PANEL *pan);
+	const void *panel_userptr(const PANEL *pan);
+	WINDOW *panel_window(const PANEL *pan);
+	int replace_panel(PANEL *pan, WINDOW *win);
+	int set_panel_userptr(PANEL *pan, const void *uptr);
 	int show_panel(PANEL *pan);
 	int top_panel(PANEL *pan);
 	void update_panels(void);
@@ -116,7 +116,7 @@ PANEL __stdscr_pseudo_panel = { (WINDOW *)0 };
 STATIC void __calculate_obscure(void);
 STATIC void __free_obscure(PANEL *);
 STATIC void __override(PANEL *, int);
-STATIC bool __panel_is_linked(PANEL *);
+STATIC bool __panel_is_linked(const PANEL *);
 STATIC void __panel_link_bottom(PANEL *);
 STATIC void __panel_link_top(PANEL *);
 STATIC bool __panels_overlapped(PANEL *, PANEL *);
@@ -382,11 +382,11 @@ PANELOBS *lobs;
 	__panel_is_linked(pan) - check to see if panel is in the stack
 --------------------------------------------------------------------------*/
 #ifdef HAVE_PROTO
-STATIC bool __panel_is_linked(PANEL *pan)
+STATIC bool __panel_is_linked(const PANEL *pan)
 #else
 STATIC bool
 __panel_is_linked(pan)
-PANEL *pan;
+const PANEL *pan;
 #endif
 {
 register PANEL *pan2 = __bottom_panel;
@@ -765,17 +765,17 @@ PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
  	Returns NULL if an error occurs.
 
   Portability:
- 	PDCurses	PANEL *panel_above( PANEL *pan );
- 	SYS V Curses	PANEL *panel_above( PANEL *pan );
+ 	PDCurses	PANEL *panel_above( const PANEL *pan );
+ 	SYS V Curses	PANEL *panel_above( const PANEL *pan );
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-PANEL *panel_above(PANEL *pan)
+PANEL *panel_above(const PANEL *pan)
 #else
 PANEL *
 panel_above(pan)
-PANEL *pan;
+const PANEL *pan;
 #endif
 {
 	if(!pan)
@@ -801,17 +801,17 @@ PANEL *pan;
  	Returns NULL if an error occurs.
 
   Portability:
- 	PDCurses	PANEL *panel_below( PANEL *pan );
- 	SYS V Curses	PANEL *panel_below( PANEL *pan );
+ 	PDCurses	PANEL *panel_below( const PANEL *pan );
+ 	SYS V Curses	PANEL *panel_below( const PANEL *pan );
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-PANEL *panel_below(PANEL *pan)
+PANEL *panel_below(const PANEL *pan)
 #else
 PANEL *
 panel_below(pan)
-PANEL *pan;
+const PANEL *pan;
 #endif
 {
 	if(!pan)
@@ -834,17 +834,17 @@ PANEL *pan;
  	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int panel_hidden( PANEL *pan );
- 	SYS V Curses	int panel_hidden( PANEL *pan );
+ 	PDCurses	int panel_hidden( const PANEL *pan );
+ 	SYS V Curses	int panel_hidden( const PANEL *pan );
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int panel_hidden(PANEL *pan)
+int panel_hidden(const PANEL *pan)
 #else
 int
 panel_hidden(pan)
-PANEL *pan;
+const PANEL *pan;
 #endif
 {
 	if(!pan)
@@ -868,21 +868,21 @@ PANEL *pan;
  	Returns NULL if pan is NULL or no user information exists.
 
   Portability:
- 	PDCurses	char *panel_userptr( PANEL *pan );
- 	SYS V Curses	char *panel_userptr( PANEL *pan );
+ 	PDCurses	const void *panel_userptr( const PANEL *pan );
+ 	SYS V Curses	const void *panel_userptr( const PANEL *pan );
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-char *panel_userptr(PANEL *pan)
+const void *panel_userptr(const PANEL *pan)
 #else
-char *
+const void *
 panel_userptr(pan)
-PANEL *pan;
+const PANEL *pan;
 #endif
 {
 	if(!pan)
-		return((char *)0);
+		return(NULL);
 	return(pan->user);
 }	/* end of panel_userptr */
 
@@ -901,17 +901,17 @@ PANEL *pan;
  	Return NULL on error.
 
   Portability:
- 	PDCurses	WINDOW *panel_window(PANEL *);
- 	SYS V Curses	WINDOW *panel_window(PANEL *);
+ 	PDCurses	WINDOW *panel_window(const PANEL *);
+ 	SYS V Curses	WINDOW *panel_window(const PANEL *);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-WINDOW *panel_window(PANEL *pan)
+WINDOW *panel_window(const PANEL *pan)
 #else
 WINDOW *
 panel_window(pan)
-PANEL *pan;
+const PANEL *pan;
 #endif
 {
 #ifdef PDCDEBUG
@@ -977,18 +977,18 @@ WINDOW *win;
  	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int set_panel_userptr( PANEL *pan, char *uptr );
- 	SYS V Curses	int set_panel_userptr( PANEL *pan, char *uptr );
+ 	PDCurses	int set_panel_userptr( PANEL *pan, const void *uptr );
+ 	SYS V Curses	int set_panel_userptr( PANEL *pan, const void *uptr );
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int set_panel_userptr(PANEL *pan,char *uptr)
+int set_panel_userptr(PANEL *pan, const void *uptr)
 #else
 int
 set_panel_userptr(pan,uptr)
 PANEL *pan;
-char *uptr;
+const void *uptr;
 #endif
 {
 	if(!pan)

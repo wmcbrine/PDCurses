@@ -64,7 +64,7 @@ all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-rm -f *.o
-	-rm -f *.lib
+	-rm -f *.a
 	-rm -f *.exe
 
 demos:	$(DEMOS)

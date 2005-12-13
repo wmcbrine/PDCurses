@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.7 2005/12/11 01:07:19 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.8 2005/12/13 04:27:42 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -191,7 +191,7 @@ extern  WINDOW*	_getch_win_;
 
 /* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
 /*                  if there have been changes to it and it is not a pad */
-	if( (! (win->_flags & _PAD)) && (! win->_nodelay) ) 
+	if( ! (win->_flags & _PAD) )
 	{
 		if( is_wintouched(win) )
 			wrefresh(win);

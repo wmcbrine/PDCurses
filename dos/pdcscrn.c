@@ -27,16 +27,12 @@
 #  include <memory.h>
 #endif
 
-#ifndef HAVE_MEMMOVE
-#  define memmove PDC_memmove
-#endif
-
 #ifdef __DJGPP__
 # include <sys/movedata.h>
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.5 2005/12/11 05:51:23 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.6 2005/12/14 21:37:48 wmcbrine Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;

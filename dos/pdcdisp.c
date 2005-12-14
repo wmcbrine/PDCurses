@@ -29,12 +29,8 @@
 #  include <memory.h>
 #endif
 
-#ifndef HAVE_MEMMOVE
-#  define memmove PDC_memmove
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.6 2005/11/22 05:55:04 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.7 2005/12/14 21:37:48 wmcbrine Exp $";
 #endif
 
 #ifdef PC

@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.5 2005/11/19 19:07:21 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.6 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -99,7 +99,7 @@ char *rcsid_addchstr  = "$Id: addchstr.c,v 1.5 2005/11/19 19:07:21 wmcbrine Exp 
 int   PDC_CDECL   addchstr(const chtype *ch)
 #else
 int   PDC_CDECL   addchstr(ch)
-const chtype *ch;
+chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -114,7 +114,7 @@ const chtype *ch;
 int   PDC_CDECL   addchnstr(const chtype *ch, int n)
 #else
 int   PDC_CDECL   addchnstr(ch,n)
-const chtype *ch;
+chtype *ch;
 int n;
 #endif
 /***********************************************************************/
@@ -176,7 +176,7 @@ int   PDC_CDECL   waddchstr(WINDOW *win, const chtype *ch)
 #else
 int   PDC_CDECL   waddchstr(win,ch)
 WINDOW *win;
-const chtype *ch;
+chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -195,7 +195,7 @@ int   PDC_CDECL   waddchnstr(WINDOW *win, const chtype *ch, int n)
 #else
 int   PDC_CDECL   waddchnstr(win,ch,n)
 WINDOW *win;
-const chtype *ch;
+chtype *ch;
 int n;
 #endif
 /***********************************************************************/
@@ -302,7 +302,7 @@ int   PDC_CDECL   mvaddchstr(int y, int x, const chtype *ch)
 int   PDC_CDECL   mvaddchstr(y,x,ch)
 int y;
 int x;
-const chtype *ch;
+chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -325,7 +325,7 @@ int   PDC_CDECL   mvaddchnstr(int y, int x, const chtype *ch, int n)
 int   PDC_CDECL   mvaddchnstr(y,x,ch,n)
 int y;
 int x;
-const chtype *ch;
+chtype *ch;
 int n;
 #endif
 /***********************************************************************/
@@ -350,7 +350,7 @@ int   PDC_CDECL   mvwaddchstr(win,y,x,ch)
 WINDOW *win;
 int y;
 int x;
-const chtype *ch;
+chtype *ch;
 #endif
 /***********************************************************************/
 {
@@ -374,7 +374,7 @@ int   PDC_CDECL   mvwaddchnstr(win,y,x,ch,n)
 WINDOW *win;
 int y;
 int x;
-const chtype *ch;
+chtype *ch;
 int n;
 #endif
 /***********************************************************************/

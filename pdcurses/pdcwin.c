@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.7 2005/11/20 04:01:01 wmcbrine Exp $";
+char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.8 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -67,7 +67,7 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w,int src_tr,int src_tc,int
    src_br,int src_bc,int dst_tr,int dst_tc,int dst_br,int dst_bc,bool overlay)
 #else
 int PDC_copy_win(src_w,dst_w,src_tr,src_tc,src_br,src_bc,dst_tr,dst_tc,dst_br,dst_bc,overlay)
-const WINDOW *src_w;
+WINDOW *src_w;
 WINDOW *dst_w;
 int src_tr;
 int src_tc;

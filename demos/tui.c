@@ -45,7 +45,7 @@ int waitforkey Args((void));
 void rmerror Args((void));
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.9 2005/12/08 16:33:39 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.10 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -123,7 +123,11 @@ int length;
 
   if (length > 0)
   {
+#if __STDC__
     memmove ((void *)(s+length), (const void *)s, strlen(s)+1);
+#else
+    memmove (s+length, s, strlen(s)+1);
+#endif
     for (i=0; i<length; i++) *p++ = ' ';
   }
   return s;
@@ -768,7 +772,11 @@ int field;
         {
           if (bp > buf)
           {
+#if __STDC__
             memmove ((void *)(bp-1), (const void *)bp, strlen(bp)+1);
+#else
+            memmove (bp-1, bp, strlen(bp)+1);
+#endif
             bp--;
           }
         }
@@ -781,7 +789,11 @@ int field;
           tp = bp;
           while ((bp > buf) && (*(bp-1) == ' ')) bp--;
           while ((bp > buf) && (*(bp-1) != ' ')) bp--;
+#if __STDC__
           memmove ((void *)bp, (const void *)tp, strlen(tp)+1);
+#else
+          memmove (bp, tp, strlen(tp)+1);
+#endif
         }
         else if (isprint(c))
         {
@@ -790,7 +802,11 @@ int field;
           {
             if ((int)strlen(buf) < field-1)
             {
+#if __STDC__
               memmove ((void *)(bp+1), (const void *)bp, strlen(bp)+1);
+#else
+              memmove (bp+1, bp, strlen(bp)+1);
+#endif
               *bp++ = c;
             }
           }

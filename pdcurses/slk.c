@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk  = "$Id: slk.c,v 1.4 2005/12/12 04:09:49 wmcbrine Exp $";
+char *rcsid_slk  = "$Id: slk.c,v 1.5 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -219,7 +219,7 @@ static int PDC_slk_set(int label_num, const char *label_str, int label_fmt, int 
 #else
 static int PDC_slk_set(label_num, label_str, label_fmt, save)
 int label_num;
-const char *label_str;
+char *label_str;
 int label_fmt;
 int save;
 #endif
@@ -330,7 +330,7 @@ int PDC_CDECL slk_set(int label_num, const char *label_str, int label_fmt)
 #else
 int PDC_CDECL slk_set(label_num, label_str, label_fmt)
 int label_num;
-const char *label_str;
+char *label_str;
 int label_fmt;
 #endif
 /***********************************************************************/

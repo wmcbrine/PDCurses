@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: panel.h,v 1.5 2005/12/13 06:01:20 wmcbrine Exp $
+$Id: panel.h,v 1.6 2005/12/14 19:40:28 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -48,7 +48,11 @@ typedef struct panel
 	int wendx;
 	struct panel *below;
 	struct panel *above;
+#ifdef HAVE_PROTO
 	const void *user;
+#else
+	void *user;
+#endif
 	struct panelobs *obscure;
 } PANEL;
 
@@ -81,7 +85,7 @@ PANEL *panel_above();
 PANEL *panel_below();
 int panel_hidden();
 int set_panel_userptr();
-const void *panel_userptr();
+void *panel_userptr();
 int move_panel();
 int replace_panel();
 #endif

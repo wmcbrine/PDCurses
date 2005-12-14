@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addstr  = "$Id: addstr.c,v 1.2 2005/11/19 19:07:21 wmcbrine Exp $";
+char *rcsid_addstr  = "$Id: addstr.c,v 1.3 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -100,7 +100,7 @@ char *rcsid_addstr  = "$Id: addstr.c,v 1.2 2005/11/19 19:07:21 wmcbrine Exp $";
 int	PDC_CDECL	addstr(const char *str)
 #else
 int	PDC_CDECL	addstr(str)
-const char *str;
+char *str;
 #endif
 /***********************************************************************/
 {
@@ -127,7 +127,7 @@ const char *str;
 int	PDC_CDECL	addnstr(const char *str, int n)
 #else
 int	PDC_CDECL	addnstr(str,n)
-const char *str;
+char *str;
 int n;
 #endif
 /***********************************************************************/
@@ -158,7 +158,7 @@ int	PDC_CDECL	waddstr(WINDOW *win, const char *str)
 #else
 int	PDC_CDECL	waddstr(win,str)
 WINDOW *win;
-const char *str;
+char *str;
 #endif
 /***********************************************************************/
 {
@@ -186,7 +186,7 @@ int	PDC_CDECL	waddnstr(WINDOW *win, const char *str, int n)
 #else
 int	PDC_CDECL	waddnstr(win,str,n)
 WINDOW *win;
-const char *str;
+char *str;
 int n;
 #endif
 /***********************************************************************/
@@ -219,7 +219,7 @@ int	PDC_CDECL	mvaddstr(int y, int x, const char *str)
 int	PDC_CDECL	mvaddstr(y,x,str)
 int y;
 int x;
-const char *str;
+char *str;
 #endif
 /***********************************************************************/
 {
@@ -251,7 +251,7 @@ int	PDC_CDECL	mvaddnstr(int y, int x, const char *str, int n)
 int	PDC_CDECL	mvaddnstr(y,x,str,n)
 int y;
 int x;
-const char *str;
+char *str;
 int n;
 #endif
 /***********************************************************************/
@@ -288,7 +288,7 @@ int	PDC_CDECL	mvwaddstr(win,y,x,str)
 WINDOW *win;
 int y;
 int x;
-const char *str;
+char *str;
 #endif
 /***********************************************************************/
 {
@@ -321,7 +321,7 @@ int	PDC_CDECL	mvwaddnstr(win,y,x,str,n)
 WINDOW *win;
 int y;
 int x;
-const char *str;
+char *str;
 int n;
 #endif
 /***********************************************************************/

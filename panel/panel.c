@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.7 2005/12/13 06:01:22 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.8 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 
@@ -386,7 +386,7 @@ STATIC bool __panel_is_linked(const PANEL *pan)
 #else
 STATIC bool
 __panel_is_linked(pan)
-const PANEL *pan;
+PANEL *pan;
 #endif
 {
 register PANEL *pan2 = __bottom_panel;
@@ -775,7 +775,7 @@ PANEL *panel_above(const PANEL *pan)
 #else
 PANEL *
 panel_above(pan)
-const PANEL *pan;
+PANEL *pan;
 #endif
 {
 	if(!pan)
@@ -811,7 +811,7 @@ PANEL *panel_below(const PANEL *pan)
 #else
 PANEL *
 panel_below(pan)
-const PANEL *pan;
+PANEL *pan;
 #endif
 {
 	if(!pan)
@@ -844,7 +844,7 @@ int panel_hidden(const PANEL *pan)
 #else
 int
 panel_hidden(pan)
-const PANEL *pan;
+PANEL *pan;
 #endif
 {
 	if(!pan)
@@ -876,9 +876,9 @@ const PANEL *pan;
 #ifdef HAVE_PROTO
 const void *panel_userptr(const PANEL *pan)
 #else
-const void *
+void *
 panel_userptr(pan)
-const PANEL *pan;
+PANEL *pan;
 #endif
 {
 	if(!pan)
@@ -911,7 +911,7 @@ WINDOW *panel_window(const PANEL *pan)
 #else
 WINDOW *
 panel_window(pan)
-const PANEL *pan;
+PANEL *pan;
 #endif
 {
 #ifdef PDCDEBUG
@@ -988,7 +988,7 @@ int set_panel_userptr(PANEL *pan, const void *uptr)
 int
 set_panel_userptr(pan,uptr)
 PANEL *pan;
-const void *uptr;
+void *uptr;
 #endif
 {
 	if(!pan)

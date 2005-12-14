@@ -26,7 +26,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.9 2005/12/08 16:33:39 wmcbrine Exp $";
+char *rcsid_ptest  = "$Id: ptest.c,v 1.10 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -99,7 +99,7 @@ void saywhat(const char *text)
 #else
 void
 saywhat(text)
-const char *text;
+char *text;
 #endif
 {
 

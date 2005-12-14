@@ -932,7 +932,7 @@ int xerror();
 void say(const char *msg)
 #else
 void say(msg)
-const char *msg;
+char *msg;
 #endif
 {
 #ifdef PDCDEBUG

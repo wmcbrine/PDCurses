@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addch  = "$Id: addch.c,v 1.2 2005/11/19 19:07:21 wmcbrine Exp $";
+char *rcsid_addch  = "$Id: addch.c,v 1.3 2005/12/14 19:40:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -138,7 +138,7 @@ char *rcsid_addch  = "$Id: addch.c,v 1.2 2005/11/19 19:07:21 wmcbrine Exp $";
 int	PDC_CDECL	addch(const chtype ch)
 #else
 int	PDC_CDECL	addch(ch)
-const chtype ch;
+chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -154,7 +154,7 @@ int	PDC_CDECL	waddch(WINDOW *win, const chtype ch)
 #else
 int	PDC_CDECL	waddch(win,ch)
 WINDOW *win;
-const chtype ch;
+chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -171,7 +171,7 @@ int	PDC_CDECL	mvaddch(int y, int x, const chtype ch)
 int	PDC_CDECL	mvaddch(y,x,ch)
 int y;
 int x;
-const chtype ch;
+chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -190,7 +190,7 @@ int	PDC_CDECL	mvwaddch(win,y,x,ch)
 WINDOW *win;
 int y;
 int x;
-const chtype ch;
+chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -206,7 +206,7 @@ const chtype ch;
 int	PDC_CDECL	echochar(const chtype ch)
 #else
 int	PDC_CDECL	echochar(ch)
-const chtype ch;
+chtype ch;
 #endif
 /***********************************************************************/
 {
@@ -224,7 +224,7 @@ int	PDC_CDECL	wechochar(WINDOW *win, const chtype ch)
 #else
 int	PDC_CDECL	wechochar(win,ch)
 WINDOW *win;
-const chtype ch;
+chtype ch;
 #endif
 /***********************************************************************/
 {

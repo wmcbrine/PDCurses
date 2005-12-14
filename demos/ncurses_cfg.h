@@ -23,6 +23,8 @@
 
 /* Some functions we don't have */
 
+#define __NCURSES_H
+
 #ifdef HAVE_PROTO
 WINDOW *getwin(FILE *filep) { return (WINDOW *)NULL; }
 int putwin(WINDOW *win, FILE *filep) { return ERR; }

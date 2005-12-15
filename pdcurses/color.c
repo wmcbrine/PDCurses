@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.10 2005/12/03 04:49:32 wmcbrine Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.11 2005/12/15 17:32:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -358,19 +358,6 @@ short *background;
 
  *foreground = (short)(atrtab[colorpair*PDC_OFFSET] & 0x0F);
  *background = (short)((atrtab[colorpair*PDC_OFFSET] & 0xF0)>>4);
-
- /*
-  * End of patch by:
-  * William McBrine <wmcbrine@clark.net> 30-Dec-1998
-  */
-#if 0
- if ( *foreground <= 0 && *background <= 0 )
-	return(ERR);
-#endif
- /*
-  * End of patch by:
-  * William McBrine <wmcbrine@clark.net> 30-Dec-1998
-  */
 
  return(OK);
 }

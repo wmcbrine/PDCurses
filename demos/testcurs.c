@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs  = "$Id: testcurs.c,v 1.25 2005/12/08 16:33:39 wmcbrine Exp $";
+char *rcsid_testcurs  = "$Id: testcurs.c,v 1.26 2005/12/15 17:08:03 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -681,7 +681,7 @@ WINDOW *win;
     mvwaddstr(win, 3, 1, termname());
     mvwaddstr(win, 4, 1, longname());
     if ( termattrs() & A_BLINK )
-       mvwaddstr(win,5, 1, "This terminal supports blinking.");
+       mvwaddstr(win,5, 1, "This terminal claims to support blinking.");
     else
        mvwaddstr(win,5, 1, "This terminal does NOT support blinking.");
 

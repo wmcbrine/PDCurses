@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.6 2005/12/14 21:37:48 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.7 2005/12/15 00:56:49 wmcbrine Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;
@@ -240,7 +240,6 @@ int ds=0;
  * If the environment variable PDCURSES_BIOS is set, the DOS int10()
  * BIOS calls are used in place of direct video memory access.
  */
-	internal->direct_video = TRUE;
 	if (getenv("PDCURSES_BIOS") != NULL)
 		internal->direct_video = FALSE;
 /*

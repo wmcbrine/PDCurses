@@ -10,7 +10,7 @@ This release of PDCurses includes the following changes:
 BUGS FIXED:
 - Allow accented characters on Win32 platform when run on non-English keyboards.
 - Allow "special" characters like Ctrl-S, Ctrl-Q under OS/2 to be returned.
-- Some bugs with halfdelay() principally on DOS fixed by William McBrine.
+- Some bugs with halfdelay() fixed by William McBrine.
 - pechochar() should now work correctly.
 - redrawwin() macro in curses.h was incorrect - fixed by Alberto Ornaghi
 - Don't include "special" characters like KEY_SHIFT_L to be returned in getnstr()

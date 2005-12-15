@@ -30,7 +30,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.7 2005/12/14 21:37:48 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.8 2005/12/15 00:48:15 wmcbrine Exp $";
 #endif
 
 #ifdef PC
@@ -421,10 +421,6 @@ int col;
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("PDC_gotoxy() - called: row %d col %d\n",row,col);
 #endif
-
-	if ((SP->cursrow == row) && (SP->curscol == col))
-		return( OK );
-
 	regs.h.ah = 0x02;
 	regs.h.bh = SP->video_page;
 	regs.h.dh = (unsigned char) row;

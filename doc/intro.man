@@ -217,6 +217,7 @@ FUNCTIONS
 		clrtobot                 clear
 		clrtoeol                 clear
 	***	color_content             color
+		color_set                attr
 		copywin                  overlay
 		curs_set                 kernel
 		def_prog_mode            kernel
@@ -225,7 +226,7 @@ FUNCTIONS
 		delay_output             util
 		delch                    delch
 		deleteln                 deleteln
-		delscreen                *** initscr
+	***	delscreen                 initscr
 		delwin                   window
 		derwin                   window
 		doupdate                 refresh
@@ -370,6 +371,7 @@ FUNCTIONS
 		slk_attron               slk
 		slk_attrset              slk
 		slk_clear                slk
+		slk_color                slk
 		slk_init                 slk
 		slk_label                slk
 		slk_noutrefresh          slk
@@ -424,6 +426,7 @@ FUNCTIONS
 		wclear                   clear
 		wclrtobot                clear
 		wclrtoeol                clear
+		wcolor_set               attr
 		wcursyncup               window
 		wdelch                   delch
 		wdeleteln                deleteln

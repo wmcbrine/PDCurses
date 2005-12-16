@@ -32,8 +32,8 @@ NEW FEATURES:
   (Win32 only at the moment)
 
 NEW COMPILER SUPPORT:
-- OpenWatcom 1.1 supported on OS/2, Win32 and DOS4G. Bug 808864
-- DOS Pacfic Compiler - Ron Thibodeau
+- OpenWatcom 1.1+ supported on OS/2, Win32 and DOS. Bug 808864
+- Pacific C for DOS - Ron Thibodeau
 
 Cheers, Mark
 ------------------------------------------------------------------------

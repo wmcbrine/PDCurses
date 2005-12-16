@@ -44,6 +44,7 @@ EXPORTS echochar
 EXPORTS endwin
 EXPORTS erase
 EXPORTS erasechar
+EXPORTS filter
 EXPORTS flash
 EXPORTS flushinp
 EXPORTS getstr
@@ -126,6 +127,7 @@ EXPORTS nocbreak
 EXPORTS nodelay
 EXPORTS noecho
 EXPORTS nonl
+EXPORTS noqiflush
 EXPORTS noraw
 EXPORTS notimeout
 EXPORTS overlay
@@ -135,6 +137,7 @@ EXPORTS pechochar
 EXPORTS pnoutrefresh
 EXPORTS prefresh
 EXPORTS printw
+EXPORTS qiflush
 EXPORTS raw
 EXPORTS raw_output
 EXPORTS redrawwin
@@ -178,6 +181,7 @@ EXPORTS traceoff
 EXPORTS typeahead
 EXPORTS unctrl
 EXPORTS untouchwin
+EXPORTS use_env
 EXPORTS vline
 EXPORTS waddch
 EXPORTS waddchnstr

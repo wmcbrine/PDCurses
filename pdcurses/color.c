@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.11 2005/12/15 17:32:00 wmcbrine Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.12 2005/12/16 23:27:47 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -63,10 +63,10 @@ char *rcsid_color  = "$Id: color.c,v 1.11 2005/12/15 17:32:00 wmcbrine Exp $";
   Synopsis:
   	int start_color(void);
   	int init_pair(short pair, short fg, short bg);
-  ***	int init_color(short color, short red, short green, short blue);
+  	int init_color(short color, short red, short green, short blue);
   	bool has_colors(void);
   	bool can_change_color(void);
-  ***	int color_content(short color, short *redp, short *greenp, short *bluep);
+  	int color_content(short color, short *redp, short *greenp, short *bluep);
   	int pair_content(short pair, short *fgp, short *bgp);
   	int PDC_set_line_color(short color);
 

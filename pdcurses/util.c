@@ -65,7 +65,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.7 2005/12/06 01:56:18 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.8 2005/12/16 23:27:47 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -75,8 +75,8 @@ char *rcsid_util  = "$Id: util.c,v 1.7 2005/12/06 01:56:18 wmcbrine Exp $";
   Synopsis:
   	char *unctrl(chtype c);
   	char *keyname(int key);
-  ***	int filter(void);
-  ***	void use_env(void);
+  	void filter(void);
+  	void use_env(bool x);
   ***	int putwin(WINDOW *win, FILE *filep);
   ***	WINDOW *getwin(FILE *filep);
   	int delay_output( int ms );
@@ -112,6 +112,8 @@ char *rcsid_util  = "$Id: util.c,v 1.7 2005/12/06 01:56:18 wmcbrine Exp $";
  	tail pointers, resetting the typeahead to implement flushinp().
  	If this is not true, then we will be unable to reliably flush
  	the typeahead.
+
+ 	filter() and use_env() are no-ops on PDCurses.
 
   X/Open Return Value:
  	All functions return OK on success and ERR on error.
@@ -262,6 +264,31 @@ int key;
 	key -= KEY_MIN;
 	return key >= 0
 	    && key <= (int)(sizeof(key_name) / sizeof(key_name[0]));
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void	PDC_CDECL	filter(void)
+#else
+void	PDC_CDECL	filter()
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("filter() - called\n");
+#endif
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void	PDC_CDECL	use_env( bool x )
+#else
+void	PDC_CDECL	use_env(x)
+bool x;
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("use_env() - called: x %d\n",x);
+#endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

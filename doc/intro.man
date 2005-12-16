@@ -216,7 +216,7 @@ FUNCTIONS
 		clearok                  outopts
 		clrtobot                 clear
 		clrtoeol                 clear
-	***	color_content             color
+		color_content            color
 		color_set                attr
 		copywin                  overlay
 		curs_set                 kernel
@@ -237,7 +237,7 @@ FUNCTIONS
 		endwin                   initscr
 		erase                    clear
 		erasechar                termattr
-	***	filter                    util
+		filter                   util
 		flash                    beep
 		flushinp                 util
 		getbegyx                 getyx
@@ -331,7 +331,7 @@ FUNCTIONS
 		nodelay                  inopts
 		noecho                   inopts
 		nonl                     outopts
-	***	noqiflush                 inopts
+		noqiflush                inopts
 		noraw                    inopts
 		notimeout                inopts
 		overlay                  overlay
@@ -343,7 +343,7 @@ FUNCTIONS
 		printw                   printw
 	***	putp                      terminfo
 	***	putwin                    util
-	***	qiflush                   inopts
+		qiflush                  inopts
 		raw                      inopts
 		raw_output               outopts
 		redrawwin                refresh
@@ -406,7 +406,7 @@ FUNCTIONS
 		unctrl                   util
 		ungetch                  getch
 		untouchwin               touch
-	***	use_env                   util
+		use_env                  util
 	***	vidattr                   terminfo
 	***	vidputs                   terminfo
 		vline                    border

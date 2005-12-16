@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.51 2005/12/15 17:32:00 wmcbrine Exp $
+$Id: curses.h,v 1.52 2005/12/16 23:27:47 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1675,6 +1675,7 @@ WINDOW* PDC_CDECL dupwin Args(( WINDOW* ));
 int     PDC_CDECL endwin Args(( void ));
 int     PDC_CDECL erase Args(( void ));
 char    PDC_CDECL erasechar Args(( void ));
+void    PDC_CDECL filter Args(( void ));
 int     PDC_CDECL flash Args(( void ));
 int     PDC_CDECL flushinp Args(( void ));
 attr_t  PDC_CDECL getattrs Args(( WINDOW* ));
@@ -1721,6 +1722,7 @@ WINDOW* PDC_CDECL newpad Args(( int, int ));
 SCREEN* PDC_CDECL newterm Args(( char*, FILE*, FILE* ));
 WINDOW* PDC_CDECL newwin Args(( int, int, int, int ));
 int     PDC_CDECL noraw Args(( void ));
+void    PDC_CDECL noqiflush Args(( void ));
 int     PDC_CDECL notimeout Args(( WINDOW *, bool ));
 int     PDC_CDECL overlay Args(( const WINDOW*, WINDOW* ));
 int     PDC_CDECL overwrite Args(( const WINDOW*, WINDOW* ));
@@ -1732,6 +1734,7 @@ int     PDC_CDECL prefresh Args(( WINDOW*, int, int, int, int, int, int ));
 int     PDC_CDECL printw Args(( char*,... ));
 int     PDC_CDECL scanw Args(( char*,... ));
 #endif
+void    PDC_CDECL qiflush Args(( void ));
 int     PDC_CDECL raw Args(( void ));
 int     PDC_CDECL refresh Args(( void ));
 int     PDC_CDECL reset_prog_mode Args(( void ));
@@ -1774,6 +1777,7 @@ void    PDC_CDECL traceon Args(( void ));
 #endif
 int     PDC_CDECL typeahead Args(( int ));
 char*   PDC_CDECL unctrl Args(( chtype ));
+void    PDC_CDECL use_env Args(( bool ));
 int     PDC_CDECL vline Args(( chtype, int ));
 int     PDC_CDECL waddch Args(( WINDOW*, const chtype ));
 int     PDC_CDECL waddchnstr Args(( WINDOW*, const chtype*, int ));

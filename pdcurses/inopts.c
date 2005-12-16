@@ -55,7 +55,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.2 2003/12/28 08:38:59 mark Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.3 2005/12/16 23:27:47 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -75,8 +75,8 @@ char *rcsid_inopts  = "$Id: inopts.c,v 1.2 2003/12/28 08:38:59 mark Exp $";
   	int notimeout(WINDOW *win, bool bf);
   	int raw(void);
   	int noraw(void);
-  ***	void noqiflush(void);
-  ***	void qiflush(void);
+  	void noqiflush(void);
+  	void qiflush(void);
   	int timeout(int delay);
   	int wtimeout(WINDOW *win, int delay);
   	int typeahead(int fildes);
@@ -167,7 +167,7 @@ char *rcsid_inopts  = "$Id: inopts.c,v 1.2 2003/12/28 08:38:59 mark Exp $";
  	The meta() function is provided for portability.  By default, 8 bits
  	are returned.
 
- 	notimeout() is a no-op in PDCurses.
+ 	notimeout(), noqiflush() and qiflush() are no-ops in PDCurses.
 
   X/Open Return Value:
  	All functions return OK on success and ERR on error.
@@ -530,6 +530,30 @@ int	PDC_CDECL	noraw()
 	SP->raw_inp = FALSE;
 	PDC_set_ctrl_break(TRUE);
 	return( OK );
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void	PDC_CDECL	noqiflush(void)
+#else
+void	PDC_CDECL	noqiflush()
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("noqiflush() - called\n");
+#endif
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void	PDC_CDECL	qiflush(void)
+#else
+void	PDC_CDECL	qiflush()
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("qiflush() - called\n");
+#endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

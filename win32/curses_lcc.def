@@ -37,6 +37,7 @@ echochar
 endwin
 erase
 erasechar
+filter
 flash
 flushinp
 getstr
@@ -119,6 +120,7 @@ nocbreak
 nodelay
 noecho
 nonl
+noqiflush
 noraw
 notimeout
 overlay
@@ -128,6 +130,7 @@ pechochar
 pnoutrefresh
 prefresh
 printw
+qiflush
 raw
 raw_output
 redrawwin
@@ -171,6 +174,7 @@ traceoff
 typeahead
 unctrl
 untouchwin
+use_env
 vline
 waddch
 waddchnstr

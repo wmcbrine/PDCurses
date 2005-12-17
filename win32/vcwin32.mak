@@ -13,17 +13,16 @@
 # PDCURSES_SRCDIR=c:\pdcurses
 #
 ################################################################################
-VER = 27
-VERDOT=2.7
-
 PDCURSES_HOME		=$(PDCURSES_SRCDIR)
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
+VER=27
+VERDOT=2.7
 
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
-PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h
-PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PDCURSES_CURSES_H	=$(PDCURSES_HOME)\curses.h
+PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)\curspriv.h
+PDCURSES_HEADERS	=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
 
 srcdir		= $(PDCURSES_HOME)\pdcurses

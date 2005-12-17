@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.9 2005/12/15 17:32:00 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.10 2005/12/17 09:17:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -417,59 +417,4 @@ extern	int	c_ungch[NUNGETCH];	/* array of ungotten chars */
 	c_ungch[c_ungind++] = ch;
 	return( OK );
 }
-/*man-start*********************************************************************
 
-  PDC_breakout()	- check for type-ahead
-
-  X/Open Description:
- 	The curses package does the "line-breakout optimisation" by
- 	looking for type-ahead periodically while updating the screen.
- 	If input is found, the current update will be postponed until
- 	refresh() or doupdate() are called again.  This allows faster
- 	response to commands typed in advance.  Normally, the input FILE
- 	pointer passed to newterm(), or stdin in the case when initscr()
- 	was called, will be used to do this type-ahead checking.  This routine
- 	will do the actual check for PDcurses to see if input is pending.
-
-  PDCurses Description:
- 	This routine does what the PDcurses typeahead routine used to do.  But
- 	to make that routine consistent with its System V counterpart, all it
- 	does now is set whether or not typeahead checking is performed.
-
-  X/Open Return Value:
- 	The PDC_breakout() routine returns TRUE if keyboard input is pending
- 	otherwise FALSE is returned.
-
-  Portability:
- 	PDCurses	bool PDC_breakout( void );
-
-**man-end**********************************************************************/
-
-/***********************************************************************/
-#ifdef HAVE_PROTO
-bool	PDC_breakout( void )
-#else
-bool	PDC_breakout()
-#endif
-/***********************************************************************/
-{
-extern	int	c_pindex;			/* putter index */
-extern	int	c_gindex;			/* getter index */
-extern	int	c_ungind;			/* wungetch() push index */
-	bool	rc;
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_breakout() - called\n");
-#endif
-
-	/* ungotten or buffered char */
-	rc = (c_ungind) || (c_pindex > c_gindex);
-
-	if (!rc)
-		rc = PDC_check_bios_key();
-
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_breakout() - returned: %d c_ungind: %d c_pindex: %d c_gindex: %d\n",rc,c_ungind,c_pindex,c_gindex);
-#endif
-	return rc;
-}

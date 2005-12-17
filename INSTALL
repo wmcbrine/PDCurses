@@ -10,9 +10,8 @@
 
  OS2
  ---
- . If you're using EMX or Watcom, you can set the environment variable 
-   PDCURSES_SRCDIR to point to the directory where you unpacked 
-   PDCurses. For example:
+ . Set the environment variable PDCURSES_SRCDIR to point to the 
+   directory where you unpacked PDCurses. For example:
 
          set PDCURSES_SRCDIR=c:\emx\PDCurses-2.7
 
@@ -25,20 +24,15 @@
          owos2.mak  - OpenWatcom
          wccos2.mak - Watcom 10.6+
 
- . EMX users can proceed to the next step. Others need to edit the top
-   section of their makefiles. The lines you need to change may include:
-
-         PDCURSES_HOME=
-         CC_HOME=
-         CCINCDIR=
-
-   (If using Watcom, CCINCDIR should point to the location of os2.h.)
+ . Borland users may have to edit bccos2.mak to point CC_HOME at the 
+   directory where they installed their compiler. Watcom users may have 
+   to set CCINCDIR to the directory containing os2.h.
 
  . Build it:
 
          make -f makefilename
 
-   (For Watcom, use "wmake" instead of "make".)
+   (For Watcom, use "wmake" instead of "make"; for C Set/2, "nmake".)
 
  . That's it!
 
@@ -60,11 +54,10 @@
          wccdos16.mak - Watcom 10.6+ (16bit)
          wccdos4g.mak - Watcom 10.6+ (32bit)
 
- . Borland and Microsoft users may have to edit their makefiles to point
-   CC_HOME at the directory where they installed their compiler. 
-   Microsoft users may also have to point PDCURSES_HOME to the PDCurses 
-   directory. For 16-bit compilers, you may also want to set the memory 
-   MODEL. (Large model is the default, and recommended.)
+ . Borland users may have to edit bccdos.mak to point CC_HOME at the 
+   directory where they installed their compiler. For 16-bit compilers, 
+   you may also want to change the memory MODEL. (Large model is the 
+   default, and recommended.)
 
  . Build it:
 

@@ -355,10 +355,10 @@ FUNCTIONS
 		ripoffline               kernel
 		savetty                  kernel
 		scanw                    scanw
-	***	scr_dump                  scr_dump
-	***	scr_init                  scr_dump
-	***	scr_restore               scr_dump
-	***	scr_set                   scr_dump
+		scr_dump                 scr_dump
+		scr_init                 scr_dump
+		scr_restore              scr_dump
+		scr_set                  scr_dump
 		scrl                     scroll
 		scroll                   scroll
 		scrollok                 outopts

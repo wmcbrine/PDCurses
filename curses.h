@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.53 2005/12/17 00:26:16 wmcbrine Exp $
+$Id: curses.h,v 1.54 2005/12/17 01:20:45 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1680,6 +1680,7 @@ int     PDC_CDECL flash Args(( void ));
 int     PDC_CDECL flushinp Args(( void ));
 attr_t  PDC_CDECL getattrs Args(( WINDOW* ));
 int     PDC_CDECL getsyx Args(( int*, int* ));
+WINDOW* PDC_CDECL getwin Args(( FILE * ));
 int     PDC_CDECL halfdelay Args(( int ));
 bool    PDC_CDECL has_colors Args(( void ));
 bool 	PDC_CDECL has_ic Args((void));
@@ -1734,6 +1735,7 @@ int     PDC_CDECL prefresh Args(( WINDOW*, int, int, int, int, int, int ));
 int     PDC_CDECL printw Args(( char*,... ));
 int     PDC_CDECL scanw Args(( char*,... ));
 #endif
+int     PDC_CDECL putwin Args(( WINDOW *, FILE * ));
 void    PDC_CDECL qiflush Args(( void ));
 int     PDC_CDECL raw Args(( void ));
 int     PDC_CDECL refresh Args(( void ));

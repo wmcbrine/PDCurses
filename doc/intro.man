@@ -247,7 +247,7 @@ FUNCTIONS
 		getparyx                 getyx
 		getstr                   getstr
 		getsyx                   kernel
-	***	getwin                    util
+		getwin                   util
 		getyx                    getyx
 		halfdelay                inopts
 		has_colors               color
@@ -342,7 +342,7 @@ FUNCTIONS
 		prefresh                 pad
 		printw                   printw
 	***	putp                      terminfo
-	***	putwin                    util
+		putwin                   util
 		qiflush                  inopts
 		raw                      inopts
 		raw_output               outopts
@@ -395,7 +395,7 @@ FUNCTIONS
 	***	tigetflag                 terminfo
 	***	tigetnum                  terminfo
 	***	tigetstr                  terminfo
-		timeout                   inopts
+		timeout                  inopts
 		touchline                touch
 		touchwin                 touch
 	***	tparm                     terminfo

@@ -26,13 +26,9 @@
 #define __NCURSES_H
 
 #ifdef HAVE_PROTO
-WINDOW *getwin(FILE *filep) { return (WINDOW *)NULL; }
-int putwin(WINDOW *win, FILE *filep) { return ERR; }
 int tigetnum(const char *capname) { return -2; }
 int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts) { return ERR; }
 #else
-WINDOW *getwin(filep) { return (WINDOW *)NULL; }
-int putwin(win, filep) { return ERR; }
 int tigetnum(capname) { return -2; }
 int wchgat(win, n, attr, color, opts) { return ERR; }
 #endif

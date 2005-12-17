@@ -107,6 +107,7 @@ pad.o       \
 printw.o    \
 refresh.o   \
 scanw.o     \
+scr_dump.o  \
 scroll.o    \
 slk.o       \
 termattr.o  \
@@ -166,6 +167,7 @@ pad.sho       \
 printw.sho    \
 refresh.sho   \
 scanw.sho     \
+scr_dump.sho  \
 scroll.sho    \
 slk.sho       \
 termattr.sho  \
@@ -293,6 +295,9 @@ refresh.o: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
 
 scanw.o: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scanw.c
+
+scr_dump.o: $(srcdir)/scr_dump.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scr_dump.c
 
 scroll.o: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scroll.c
@@ -542,6 +547,12 @@ refresh.sho: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
 scanw.sho: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scanw.c
+	$(O2SHO)
+	$(SAVE2O)
+
+scr_dump.sho: $(srcdir)/scr_dump.c $(PDCURSES_HEADERS)
+	$(O2SAVE)
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scr_dump.c
 	$(O2SHO)
 	$(SAVE2O)
 

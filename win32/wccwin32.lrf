@@ -28,6 +28,7 @@
 +printw.obj
 +refresh.obj
 +scanw.obj
++scr_dump.obj
 +scroll.obj
 +slk.obj  
 +termattr.obj

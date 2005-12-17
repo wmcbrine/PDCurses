@@ -96,6 +96,7 @@ pad.obj       \
 printw.obj    \
 refresh.obj   \
 scanw.obj     \
+scr_dump.obj  \
 scroll.obj    \
 slk.obj       \
 termattr.obj  \
@@ -214,6 +215,9 @@ refresh.obj: $(srcdir)\refresh.c $(PDCURSES_HEADERS)
 
 scanw.obj: $(srcdir)\scanw.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\scanw.c
+
+scr_dump.obj: $(srcdir)\scr_dump.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\scr_dump.c
 
 scroll.obj: $(srcdir)\scroll.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\scroll.c

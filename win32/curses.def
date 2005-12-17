@@ -150,6 +150,10 @@ EXPORTS resetty
 EXPORTS ripoffline
 EXPORTS savetty
 EXPORTS scanw
+EXPORTS scr_dump
+EXPORTS scr_init
+EXPORTS scr_restore
+EXPORTS scr_set
 EXPORTS scrl
 EXPORTS scroll
 EXPORTS scrollok

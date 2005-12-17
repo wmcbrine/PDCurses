@@ -107,6 +107,7 @@ pad.o       \
 printw.o    \
 refresh.o   \
 scanw.o     \
+scr_dump.o  \
 scroll.o    \
 slk.o       \
 termattr.o  \
@@ -228,6 +229,9 @@ refresh.o: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
 
 scanw.o: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)/scanw.c
+
+scr_dump.o: $(srcdir)/scr_dump.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o$@ $(srcdir)/scr_dump.c
 
 scroll.o: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)/scroll.c

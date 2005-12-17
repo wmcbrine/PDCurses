@@ -101,6 +101,7 @@ pad.obj       \
 printw.obj    \
 refresh.obj   \
 scanw.obj     \
+scr_dump.obj  \
 scroll.obj    \
 slk.obj       \
 termattr.obj  \
@@ -155,6 +156,7 @@ pad.dll.obj       \
 printw.dll.obj    \
 refresh.dll.obj   \
 scanw.dll.obj     \
+scr_dump.dll.obj  \
 scroll.dll.obj    \
 slk.dll.obj       \
 termattr.dll.obj  \
@@ -276,6 +278,9 @@ refresh.obj: $(srcdir)\refresh.c $(PDCURSES_HEADERS)
 
 scanw.obj: $(srcdir)\scanw.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\scanw.c
+
+scr_dump.obj: $(srcdir)\scr_dump.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\scr_dump.c
 
 scroll.obj: $(srcdir)\scroll.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\scroll.c
@@ -419,6 +424,9 @@ refresh.dll.obj: $(srcdir)\refresh.c $(PDCURSES_HEADERS) $(DLL_DIR)
 
 scanw.dll.obj: $(srcdir)\scanw.c $(PDCURSES_HEADERS) $(DLL_DIR)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(srcdir)\scanw.c
+
+scr_dump.dll.obj: $(srcdir)\scr_dump.c $(PDCURSES_HEADERS) $(DLL_DIR)
+	$(CC) $(DLL_CCFLAGS) -Fo$@ $(srcdir)\scr_dump.c
 
 scroll.dll.obj: $(srcdir)\scroll.c $(PDCURSES_HEADERS) $(DLL_DIR)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(srcdir)\scroll.c

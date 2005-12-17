@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.54 2005/12/17 01:20:45 wmcbrine Exp $
+$Id: curses.h,v 1.55 2005/12/17 09:07:23 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1750,6 +1750,10 @@ int     PDC_CDECL sb_set_vert Args((int, int, int));
 int     PDC_CDECL sb_get_horz Args((int *, int *, int *));
 int     PDC_CDECL sb_get_vert Args((int *, int *, int *));
 int     PDC_CDECL sb_refresh Args((void));
+int     PDC_CDECL scr_dump Args((const char *));
+int     PDC_CDECL scr_init Args((const char *));
+int     PDC_CDECL scr_restore Args((const char *));
+int     PDC_CDECL scr_set Args((const char *));
 int     PDC_CDECL scroll Args(( WINDOW* ));
 SCREEN* PDC_CDECL set_term Args(( SCREEN* ));
 int     PDC_CDECL setsyx Args(( int, int ));

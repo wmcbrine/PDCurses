@@ -97,6 +97,10 @@ EXPORTS
             resize_window
             savetty                        
             scanw                          
+            scr_dump
+            scr_init
+            scr_restore
+            scr_set
             scroll                         
             scrollok                       
             setscrreg                      

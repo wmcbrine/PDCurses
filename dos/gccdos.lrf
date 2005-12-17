@@ -28,6 +28,7 @@
 -+printw.o &
 -+refresh.o &
 -+scanw.o &
+-+scr_dump.o &
 -+scroll.o &
 -+slk.o &  
 -+termattr.o &

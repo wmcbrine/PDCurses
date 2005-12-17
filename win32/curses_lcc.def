@@ -143,6 +143,10 @@ resetty
 ripoffline
 savetty
 scanw
+scr_dump
+scr_init
+scr_restore
+scr_set
 scrl
 scroll
 scrollok

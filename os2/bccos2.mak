@@ -12,7 +12,7 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=c:\curses
+PDCURSES_HOME		=$(PDCURSES_SRCDIR)
 CC_HOME		=c:\bcos2
 #MODEL		=l
 ################################################################################

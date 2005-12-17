@@ -12,8 +12,7 @@
 # Change these for your environment...
 #
 ################################################################################
-PDCURSES_HOME		=c:\curses
-CC_HOME		=c:\c600
+PDCURSES_HOME		=$(PDCURSES_SRCDIR)
 MODEL		=L       # one of L, S, M, T, H, C
 SIZE		=LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 ################################################################################
@@ -26,8 +25,6 @@ PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
-
-CCLIBDIR		=$(ICC_HOME)\lib
 
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\dos

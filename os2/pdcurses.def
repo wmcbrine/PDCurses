@@ -46,6 +46,7 @@ EXPORTS
             filter
             flash                          
             flushinp                       
+            getwin
             has_colors                     
             has_ic                         
             has_il                         
@@ -84,6 +85,7 @@ EXPORTS
             pnoutrefresh                   
             prefresh                       
             printw                         
+            putwin
             qiflush
             raw                            
             raw_output                     

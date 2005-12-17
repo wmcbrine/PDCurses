@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.8 2005/11/24 18:50:40 wmcbrine Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.9 2005/12/17 01:03:16 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -165,7 +165,7 @@ extern void (*PDC_initial_slk)();
    WINDOW *Xinitscr(int argc, char *argv[]);
    int endwin(void);
    int isendwin(void);
-  *** SCREEN *newterm(char *type, FILE *outfd, FILE *infd);
+   SCREEN *newterm(char *type, FILE *outfd, FILE *infd);
    SCREEN *set_term(SCREEN *new);
   *** void delscreen(SCREEN *sp);
 

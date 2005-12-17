@@ -324,7 +324,7 @@ FUNCTIONS
 		mvwscanw                 scanw
 		napms                    kernel
 		newpad                   pad
-	***	newterm                   initscr
+		newterm                  initscr
 		newwin                   window
 		nl                       outopts
 		nocbreak                 inopts

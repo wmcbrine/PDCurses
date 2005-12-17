@@ -53,10 +53,11 @@
 /* undefine any macros for functions defined in this module */
 #undef	unctrl
 #undef	keyname
+#undef	has_key
 #undef	filter
 #undef	use_env
-#undef	put_win
-#undef	get_win
+#undef	putwin
+#undef	getwin
 #undef	delay_output
 #undef	flushinp
 
@@ -65,7 +66,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.8 2005/12/16 23:27:47 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.9 2005/12/17 01:03:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -77,8 +78,8 @@ char *rcsid_util  = "$Id: util.c,v 1.8 2005/12/16 23:27:47 wmcbrine Exp $";
   	char *keyname(int key);
   	void filter(void);
   	void use_env(bool x);
-  ***	int putwin(WINDOW *win, FILE *filep);
-  ***	WINDOW *getwin(FILE *filep);
+  	int putwin(WINDOW *win, FILE *filep);
+  	WINDOW *getwin(FILE *filep);
   	int delay_output( int ms );
   	int flushinp(void);
 
@@ -113,7 +114,8 @@ char *rcsid_util  = "$Id: util.c,v 1.8 2005/12/16 23:27:47 wmcbrine Exp $";
  	If this is not true, then we will be unable to reliably flush
  	the typeahead.
 
- 	filter() and use_env() are no-ops on PDCurses.
+ 	filter() and use_env() are no-ops on PDCurses. getwin() and 
+ 	putwin() also do nothing yet.
 
   X/Open Return Value:
  	All functions return OK on success and ERR on error.
@@ -289,6 +291,35 @@ bool x;
 #ifdef PDCDEBUG
 	if (trace_on) PDC_debug("use_env() - called: x %d\n",x);
 #endif
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	putwin(WINDOW *win, FILE *filep)
+#else
+int	PDC_CDECL	putwin(win, filep)
+WINDOW *win;
+FILE *filep;
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("putwin() - called\n");
+#endif
+	return ERR;
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+WINDOW*	PDC_CDECL	getwin(FILE *filep)
+#else
+WINDOW*	PDC_CDECL	getwin(filep)
+FILE *filep;
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("getwin() - called\n");
+#endif
+	return (WINDOW *)NULL;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

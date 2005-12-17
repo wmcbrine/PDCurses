@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.2 2005/12/17 00:26:17 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.3 2005/12/17 01:03:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -97,9 +97,9 @@ int newcol;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int vidattr(chtype attr)
+int	PDC_CDECL	vidattr(chtype attr)
 #else
-int vidattr(attr)
+int	PDC_CDECL	vidattr(attr)
 chtype attr;
 #endif
 /***********************************************************************/
@@ -111,9 +111,9 @@ chtype attr;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int vidputs(chtype attr, int (*putfunc)(int))
+int	PDC_CDECL	vidputs(chtype attr, int (*putfunc)(int))
 #else
-int vidputs(attr, putfunc)
+int	PDC_CDECL	vidputs(attr, putfunc)
 chtype attr;
 int (*putfunc)();
 #endif

@@ -48,6 +48,7 @@ EXPORTS filter
 EXPORTS flash
 EXPORTS flushinp
 EXPORTS getstr
+EXPORTS getwin
 EXPORTS halfdelay
 EXPORTS has_colors
 EXPORTS has_ic
@@ -137,6 +138,7 @@ EXPORTS pechochar
 EXPORTS pnoutrefresh
 EXPORTS prefresh
 EXPORTS printw
+EXPORTS putwin
 EXPORTS qiflush
 EXPORTS raw
 EXPORTS raw_output

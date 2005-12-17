@@ -41,6 +41,7 @@ filter
 flash
 flushinp
 getstr
+getwin
 halfdelay
 has_colors
 has_ic
@@ -130,6 +131,7 @@ pechochar
 pnoutrefresh
 prefresh
 printw
+putwin
 qiflush
 raw
 raw_output

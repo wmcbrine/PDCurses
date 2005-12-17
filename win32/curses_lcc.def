@@ -175,6 +175,8 @@ typeahead
 unctrl
 untouchwin
 use_env
+vidattr
+vidputs
 vline
 waddch
 waddchnstr

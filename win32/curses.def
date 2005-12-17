@@ -182,6 +182,8 @@ EXPORTS typeahead
 EXPORTS unctrl
 EXPORTS untouchwin
 EXPORTS use_env
+EXPORTS vidattr
+EXPORTS vidputs
 EXPORTS vline
 EXPORTS waddch
 EXPORTS waddchnstr

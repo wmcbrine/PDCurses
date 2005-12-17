@@ -25,13 +25,15 @@
 
 /* undefine any macros for functions defined in this module */
 #undef	mvcur
+#undef  vidattr
+#undef  vidputs
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.1 2001/01/10 08:27:31 mark Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.2 2005/12/17 00:26:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -40,6 +42,8 @@ char *rcsid_terminfo  = "$Id: terminfo.c,v 1.1 2001/01/10 08:27:31 mark Exp $";
 
   Synopsis:
   	int mvcur(int oldrow, int oldcol, int newrow, int newcol)
+  	int vidattr(chtype attr);
+  	int vidputs(chtype attr, int (*putfunc)(int));
 
   X/Open Description:
  	The mvcur() function controls low-level cursor motion with 
@@ -90,4 +94,33 @@ int newcol;
 	SP->cursrow = newrow;
 	SP->curscol = newcol;
 	return( OK );
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int vidattr(chtype attr)
+#else
+int vidattr(attr)
+chtype attr;
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("vidattr() - called: attr %d\n", attr);
+#endif
+	return ERR;
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int vidputs(chtype attr, int (*putfunc)(int))
+#else
+int vidputs(attr, putfunc)
+chtype attr;
+int (*putfunc)();
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+	if (trace_on) PDC_debug("vidputs() - called: attr %d\n", attr);
+#endif
+	return ERR;
 }

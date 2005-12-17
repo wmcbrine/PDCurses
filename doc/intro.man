@@ -407,8 +407,8 @@ FUNCTIONS
 		ungetch                  getch
 		untouchwin               touch
 		use_env                  util
-	***	vidattr                   terminfo
-	***	vidputs                   terminfo
+		vidattr                  terminfo
+		vidputs                  terminfo
 		vline                    border
 	***	vwprintw                  printw
 	***	vwscanw                   scanw

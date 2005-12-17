@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.52 2005/12/16 23:27:47 wmcbrine Exp $
+$Id: curses.h,v 1.53 2005/12/17 00:26:16 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1778,6 +1778,8 @@ void    PDC_CDECL traceon Args(( void ));
 int     PDC_CDECL typeahead Args(( int ));
 char*   PDC_CDECL unctrl Args(( chtype ));
 void    PDC_CDECL use_env Args(( bool ));
+int     PDC_CDECL vidattr Args(( chtype ));
+int     PDC_CDECL vidputs Args(( chtype, int (*)(int) ));
 int     PDC_CDECL vline Args(( chtype, int ));
 int     PDC_CDECL waddch Args(( WINDOW*, const chtype ));
 int     PDC_CDECL waddchnstr Args(( WINDOW*, const chtype*, int ));

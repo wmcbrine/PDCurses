@@ -123,6 +123,8 @@ EXPORTS
             typeahead                      
             unctrl                         
             use_env
+            vidattr
+            vidputs
             waddch                         
             waddchnstr
             waddstr                        

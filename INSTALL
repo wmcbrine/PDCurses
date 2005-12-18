@@ -24,8 +24,8 @@
          owos2.mak  - OpenWatcom
          wccos2.mak - Watcom 10.6+
 
- . Watcom users may have to set CCINCDIR to the directory containing 
-   os2.h.
+ . Watcom users may have to edit the makefile to set CCINCDIR to the 
+   directory containing os2.h.
 
  . Build it:
 
@@ -53,8 +53,9 @@
          wccdos16.mak - Watcom 10.6+ (16bit)
          wccdos4g.mak - Watcom 10.6+ (32bit)
 
- . For 16-bit compilers, you may also want to change the memory MODEL. 
-   (Large model is the default, and recommended.)
+ . For 16-bit compilers, you may also want to edit the makefile to
+   change the memory MODEL. (Large model is the default, and 
+   recommended.)
 
  . Build it:
 
@@ -69,7 +70,7 @@
  -------
  . Set the environment variable PDCURSES_SRCDIR to point to the 
    directory where you unpacked PDCurses. (Skip this step if you're 
-   using LCC.) For example:
+   using LCC-Win32.) For example:
 
          set PDCURSES_SRCDIR=c:\PDCurses-2.7
 

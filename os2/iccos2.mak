@@ -60,7 +60,7 @@ clean:
 	-del *.lib
 	-del *.exe
 
-demos:	testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
+demos:	testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 
 #------------------------------------------------------------------------
 

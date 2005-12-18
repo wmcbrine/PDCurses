@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.55 2005/12/17 09:07:23 wmcbrine Exp $
+$Id: curses.h,v 1.56 2005/12/18 21:47:53 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1373,10 +1373,10 @@ extern chtype *acs_map;
 # define COLOR_BLUE      FOREGROUND_BLUE
 # define COLOR_RED       FOREGROUND_RED
 # define COLOR_GREEN     FOREGROUND_GREEN
-# define COLOR_CYAN      FOREGROUND_BLUE | FOREGROUND_GREEN
-# define COLOR_MAGENTA   FOREGROUND_RED | FOREGROUND_BLUE
-# define COLOR_YELLOW    FOREGROUND_RED | FOREGROUND_GREEN
-# define COLOR_WHITE     FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE
+# define COLOR_CYAN      (FOREGROUND_BLUE | FOREGROUND_GREEN)
+# define COLOR_MAGENTA   (FOREGROUND_RED | FOREGROUND_BLUE)
+# define COLOR_YELLOW    (FOREGROUND_RED | FOREGROUND_GREEN)
+# define COLOR_WHITE     (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE)
 #endif
 
 #ifdef CHTYPE_LONG

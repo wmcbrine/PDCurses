@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Watcom WMAKE Makefile for PDCurses library - DOS/4GW Watcom C/C++ 10.6
+# Watcom WMAKE Makefile for PDCurses library - Win32 Watcom C/C++ 10.6
 #
 # Usage: wmake -f [win32\]wccwin32.mak [DEBUG=Y] [target]
 #

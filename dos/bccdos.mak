@@ -13,7 +13,6 @@
 #
 ################################################################################
 PDCURSES_HOME		=$(PDCURSES_SRCDIR)
-CC_HOME		=c:\c
 MODEL		=l
 ################################################################################
 # Nothing below here should require changing.
@@ -26,9 +25,6 @@ PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
 
-CCLIBDIR		=$(CC_HOME)\lib
-CCINCDIR		=$(CC_HOME)\include
-
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\dos
 pandir		= $(PDCURSES_HOME)\panel
@@ -38,20 +34,15 @@ demodir		= $(PDCURSES_HOME)\demos
 
 !if $d(DEBUG)
 CFLAGS  = -N -v -y -DPDCDEBUG 
-LDFLAGS = /c /v /s /l /e
 !else
 CFLAGS  = -O 
-LDFLAGS = 
 !endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR)
+CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS		= -c +bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+CCFLAGS		= -c @bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LINK		= tlink
-
-CCLIBS		=$(CCLIBDIR)\c$(MODEL).lib
-STARTUP	=$(CCLIBDIR)\c0$(MODEL).obj
 
 LIBEXE		= tlib /C /E
 
@@ -288,22 +279,22 @@ panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBPANEL)+$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj+tui.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 xmas.exe:	xmas.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)

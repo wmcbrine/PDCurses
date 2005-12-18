@@ -13,7 +13,6 @@
 #
 ################################################################################
 PDCURSES_HOME		=$(PDCURSES_SRCDIR)
-CC_HOME		=c:\bcos2
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -25,9 +24,6 @@ PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h
 PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
 
-CCLIBDIR		=$(CC_HOME)\lib
-CCINCDIR		=$(CC_HOME)\include
-
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\os2
 pandir		= $(PDCURSES_HOME)\panel
@@ -37,21 +33,15 @@ CC		= bcc
 
 !if $d(DEBUG)
 CFLAGS  = -N -v -y -DPDCDEBUG 
-LDFLAGS = /c /v /s /l /e
 !else
 CFLAGS  = -O 
-LDFLAGS = 
 !endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR)
+CPPFLAGS	= -I$(PDCURSES_HOME)
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS)
 
 LINK		= tlink
-
-#CCLIBS		=$(CCLIBDIR)\c2.lib
-CCLIBS		=c2.lib+os2.lib
-STARTUP	=$(CCLIBDIR)\c02.obj
 
 LIBEXE		= tlib /C /E
 
@@ -59,7 +49,7 @@ LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe
+DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
@@ -287,22 +277,22 @@ panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBPANEL)+$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj+tui.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 xmas.exe:	xmas.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) $(STARTUP)+$*.obj,$*,,$(LIBCURSES)+$(CCLIBS);
+	$(CC) -e$@ $**
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)

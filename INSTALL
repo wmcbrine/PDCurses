@@ -24,9 +24,8 @@
          owos2.mak  - OpenWatcom
          wccos2.mak - Watcom 10.6+
 
- . Borland users may have to edit bccos2.mak to point CC_HOME at the 
-   directory where they installed their compiler. Watcom users may have 
-   to set CCINCDIR to the directory containing os2.h.
+ . Watcom users may have to set CCINCDIR to the directory containing 
+   os2.h.
 
  . Build it:
 
@@ -54,10 +53,8 @@
          wccdos16.mak - Watcom 10.6+ (16bit)
          wccdos4g.mak - Watcom 10.6+ (32bit)
 
- . Borland users may have to edit bccdos.mak to point CC_HOME at the 
-   directory where they installed their compiler. For 16-bit compilers, 
-   you may also want to change the memory MODEL. (Large model is the 
-   default, and recommended.)
+ . For 16-bit compilers, you may also want to change the memory MODEL. 
+   (Large model is the default, and recommended.)
 
  . Build it:
 
@@ -86,9 +83,8 @@
          vcwin32.mak    - Visual C++ 2.0+
          wccwin32.mak   - Watcom 10.6+
 
- . Borland users may have to edit bccwin32.mak to point CC_HOME at the 
-   directory where they installed their compiler. LCC users will have to
-   edit lccwin32.mak to point PDCURSES_HOME to the PDCurses directory.
+ . LCC users will have to edit lccwin32.mak to point PDCURSES_HOME to 
+   the PDCurses directory.
 
  . Build it:
 

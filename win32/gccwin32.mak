@@ -39,14 +39,14 @@ else
 	LDFLAGS =
 endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I$(CCINCDIR)
+CPPFLAGS	= -I$(PDCURSES_HOME)
 
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 
 LINK		= gcc
 COFF2EXE	=coff2exe $*
 
-CCLIBS		= -L$(CCLIBDIR) -lkernel32 -luser32
+CCLIBS		= -lkernel32 -luser32
 
 LIBEXE		= ar
 LIBFLAGS		=rcv

@@ -8,90 +8,55 @@
  Next, go to the section below for the platform you intend to build
  the software on, and follow the steps there.
 
- OS2
- ---
- . Set the environment variable PDCURSES_SRCDIR to point to the 
-   directory where you unpacked PDCurses. For example:
-
-         set PDCURSES_SRCDIR=c:\emx\PDCurses-2.7
-
- . cd to the "os2" directory under that directory. You'll find a number 
-   of ".mak" files here, one for each supported compiler:
-
-         bccos2.mak - Borland C++ 2.0
-         gccos2.mak - EMX 0.9b+
-         iccos2.mak - C Set/2
-         owos2.mak  - OpenWatcom
-         wccos2.mak - Watcom 10.6+
-
- . Watcom users may have to edit the makefile to set CCINCDIR to the 
-   directory containing os2.h.
-
- . Build it:
-
-         make -f makefilename
-
-   (For Watcom, use "wmake" instead of "make"; for C Set/2, "nmake".)
-
- . That's it!
-
-
- DOS
- ---
- . Set the environment variable PDCURSES_SRCDIR to point to the 
-   directory where you unpacked PDCurses. For example:
-
-         set PDCURSES_SRCDIR=c:\pdcurs27
-
- . cd to the "dos" directory under that directory. You'll find a number 
-   of ".mak" files here, one for each supported compiler:
-
-         bccdos.mak   - Borland C++ 3.0+
-         gccdos.mak   - DJGPP V2
-         mscdos.mak   - Microsoft C 6.0
-         msvcdos.mak  - Visual C++ 1.0+
-         wccdos16.mak - Watcom 10.6+ (16bit)
-         wccdos4g.mak - Watcom 10.6+ (32bit)
-
- . For 16-bit compilers, you may also want to edit the makefile to
-   change the memory MODEL. (Large model is the default, and 
-   recommended.)
-
- . Build it:
-
-         make -f makefilename
-
-   (For Watcom, use "wmake" instead of "make"; for MSVC, "nmake".)
-
- . That's it!
-
-
- Windows
- -------
+ DOS, OS/2, or Windows
+ ---------------------
  . Set the environment variable PDCURSES_SRCDIR to point to the 
    directory where you unpacked PDCurses. (Skip this step if you're 
    using LCC-Win32.) For example:
 
-         set PDCURSES_SRCDIR=c:\PDCurses-2.7
+         set PDCURSES_SRCDIR=c:\pdcurs27
 
- . cd to the "win32" directory under that directory. You'll find a 
-   number of ".mak" files here, one for each supported compiler:
+ . In the subdirectory for each OS, you'll find a number of ".mak" 
+   files, one for each supported compiler:
 
-         bccwin32.mak   - Borland C++ 4.0.2+
-         gccwin32.mak   - Cygnus GNU Compiler
-         lccwin32.mak   - LCC-Win32
-         mingwin32.mak  - MinGW
-         vcwin32.mak    - Visual C++ 2.0+
-         wccwin32.mak   - Watcom 10.6+
+   DOS:
+         bccdos.mak    - Borland C++ 3.0+
+         gccdos.mak    - DJGPP V2
+         mscdos.mak    - Microsoft C 6.0
+         msvcdos.mak   - Visual C++ 1.0+
+         wccdos16.mak  - Watcom 10.6+ (16bit)
+         wccdos4g.mak  - Watcom 10.6+ (32bit)
 
- . LCC users will have to edit lccwin32.mak to point PDCURSES_HOME to 
-   the PDCurses directory.
+   OS/2:
+         bccos2.mak    - Borland C++ 2.0
+         gccos2.mak    - EMX 0.9b+
+         iccos2.mak    - C Set/2
+         owos2.mak     - OpenWatcom
+         wccos2.mak    - Watcom 10.6+
+
+   Windows:
+         bccwin32.mak  - Borland C++ 4.0.2+
+         gccwin32.mak  - Cygnus GNU Compiler
+         lccwin32.mak  - LCC-Win32
+         mingwin32.mak - MinGW
+         vcwin32.mak   - Visual C++ 2.0+
+         wccwin32.mak  - Watcom 10.6+
+
+ . In some cases, you may have to edit the makefile before proceeding.
+   LCC-Win32 users must point PDCURSES_HOME to the PDCurses directory.
+   For 16-bit compilers, some might want to change the memory MODEL. 
+   (Large model is the default, and recommended.) Read the makefile for 
+   other options; but generally, you can proceed to...
 
  . Build it:
 
          make -f makefilename
 
-   (For Watcom, use "wmake" instead of "make"; for MSVC, "nmake".)
+   You can build it from the OS subdirectory, or from another location 
+   by specifying the full path to the makefile. (For Watcom, use "wmake" 
+   instead of "make"; for MSVC or C Set/2, "nmake".) You'll get the libs 
+   (pdcurses.lib or .a, depending on your compiler; and panel.lib or .a),
+   the demos (*.exe), and a lot of object files.
 
  . That's it!
 

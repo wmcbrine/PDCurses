@@ -298,17 +298,3 @@ scroll.o: $(cdk_exampledir)/scroll_ex.c $(PDCURSES_CURSES_H)
 
 selection.o: $(cdk_exampledir)/selection_ex.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) $(CDK_INC) -o $@ $(cdk_exampledir)/selection_ex.c
-
-#
-# This section provides for compiling and linking the
-# saa example program.
-#
-saa_homedir	=../saa
-SAA_INC	=-I$(saa_homedir)
-SAA_LIB	=-L$(saa_homedir) -lsaa
-
-fhterm: fhterm.o $(LIBXCURSES)
-	$(LINK) fhterm.o -o $@ $(SAA_LIB) $(LDFLAGS)
-
-fhterm.o: $(saa_homedir)/fhterm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -DUSE_PDCURSES $(SAA_INC) -o $@ $(saa_homedir)/fhterm.c

@@ -14,7 +14,11 @@
 #include "../config.h"
 #include <curses.h>
 
-#define ExitProgram XCursesExit(),exit
+#ifdef XCURSES
+# define ExitProgram XCursesExit(),exit
+#else
+# define ExitProgram exit
+#endif
 
 #define HAVE_GETNSTR 1
 #define HAVE_GETTIMEOFDAY 1

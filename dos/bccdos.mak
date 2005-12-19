@@ -40,7 +40,7 @@ CFLAGS  = -O
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS		= -c @bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+CCFLAGS		= -c @$(osdir)\bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LINK		= tlink
 

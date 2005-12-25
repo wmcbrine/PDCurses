@@ -226,7 +226,7 @@ FUNCTIONS
 		delay_output             util
 		delch                    delch
 		deleteln                 deleteln
-	***	delscreen                 initscr
+		delscreen                initscr
 		delwin                   window
 		derwin                   window
 		doupdate                 refresh

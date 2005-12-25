@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.56 2005/12/18 21:47:53 wmcbrine Exp $
+$Id: curses.h,v 1.57 2005/12/25 04:24:41 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1668,6 +1668,7 @@ int     PDC_CDECL curs_set Args(( int ));
 int     PDC_CDECL def_prog_mode Args(( void ));
 int     PDC_CDECL def_shell_mode Args(( void ));
 int     PDC_CDECL delay_output Args((  int  ));
+void    PDC_CDECL delscreen Args(( SCREEN * ));
 int     PDC_CDECL delwin Args(( WINDOW* ));
 WINDOW* PDC_CDECL derwin Args(( WINDOW*, int, int, int, int ));
 int     PDC_CDECL doupdate Args(( void ));

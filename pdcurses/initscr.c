@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.9 2005/12/17 01:03:16 wmcbrine Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.10 2005/12/25 04:24:42 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -167,7 +167,7 @@ extern void (*PDC_initial_slk)();
    int isendwin(void);
    SCREEN *newterm(char *type, FILE *outfd, FILE *infd);
    SCREEN *set_term(SCREEN *new);
-  *** void delscreen(SCREEN *sp);
+   void delscreen(SCREEN *sp);
 
    int resize_term(int nlines, int ncols);
    bool is_termresized(void);
@@ -467,62 +467,6 @@ int PDC_CDECL endwin()
    if (trace_on) PDC_debug("endwin() - called\n");
 #endif
 
-#ifdef ORIGINAL_PDCURSES_BEHAVIOUR
-   PDC_scr_close();
-/* resetty();*/
-   if (SP->orig_font != SP->font)  /* screen has not been resized */
-   {
-      PDC_set_font(SP->orig_font);
-      resize_term(PDC_get_rows(),PDC_get_columns());
-   }
-
-   SP->visible_cursor = FALSE;   /* Force the visible cursor */
-   SP->cursor = SP->orig_cursor;
-   PDC_cursor_on();
-   /*
-    * Position cursor so that the screen will not scroll until they hit
-    * a carriage return. Do this BEFORE delwin(curscr) as PDC_gotoxy() uses
-    * curscr.
-    */
-   PDC_gotoxy(PDC_get_rows() - 2, 0);
-   delwin(stdscr);
-   delwin(curscr);
-   stdscr = (WINDOW *)NULL;
-   curscr = (WINDOW *)NULL;
-   SP->alive = FALSE;
-
-# if !defined (XCURSES)
-   if (SP)
-   {
-      fre(SP);
-      SP = (SCREEN *)NULL;
-   }
-# endif
-
-
-# ifdef  FLEXOS
-   _flexos_8bitmode();
-# endif
-/* PDC_fix_cursor(SP->orig_emulation);*/
-
-# ifdef UNIX
-   if (exit_ca_mode != NULL)
-      putp(exit_ca_mode);
-# endif
-
-# if defined(DOS) || defined(OS2)
-   reset_shell_mode();
-# endif
-
-# if DONOTKILLXFROMHERE
-#  if defined (XCURSES)
-   XCursesInstruct(CURSES_EXIT);
-   XCursesCleanupCursesProcess(0);
-#  endif
-# endif
-
-#else
-
 /*
  * New endwin() behaviour; to allow temporary exit from curses
  * using endwin().
@@ -549,8 +493,6 @@ int PDC_CDECL endwin()
 #endif
 
    SP->alive = FALSE;
-
-#endif
 
    return( OK );
 }
@@ -666,6 +608,63 @@ SCREEN *new;
 #  pragma argsused
 #endif
    return( SP );  /* We only have one screen supported right now */
+}
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void  PDC_CDECL   delscreen( SCREEN *sp )
+#else
+void  PDC_CDECL   delscreen(sp)
+SCREEN *sp;
+#endif
+/***********************************************************************/
+{
+#ifdef PDCDEBUG
+   if (trace_on) PDC_debug("delscreen() - called\n");
+#endif
+
+   if (sp != SP)
+      return;
+
+#if 0
+   PDC_scr_close();
+/* resetty();*/
+   if (SP->orig_font != SP->font)  /* screen has not been resized */
+   {
+      PDC_set_font(SP->orig_font);
+      resize_term(PDC_get_rows(),PDC_get_columns());
+   }
+
+   SP->visible_cursor = FALSE;   /* Force the visible cursor */
+   SP->cursor = SP->orig_cursor;
+   PDC_cursor_on();
+   /*
+    * Position cursor so that the screen will not scroll until they hit
+    * a carriage return. Do this BEFORE delwin(curscr) as PDC_gotoxy() uses
+    * curscr.
+    */
+   PDC_gotoxy(PDC_get_rows() - 2, 0);
+#endif
+
+   delwin(stdscr);
+   delwin(curscr);
+   stdscr = (WINDOW *)NULL;
+   curscr = (WINDOW *)NULL;
+   SP->alive = FALSE;
+
+# if !defined (XCURSES)
+   if (SP)
+   {
+      fre(SP);
+      SP = (SCREEN *)NULL;
+   }
+# endif
+
+# if DONOTKILLXFROMHERE
+#  if defined (XCURSES)
+   XCursesInstruct(CURSES_EXIT);
+   XCursesCleanupCursesProcess(0);
+#  endif
+# endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

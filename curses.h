@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.57 2005/12/25 04:24:41 wmcbrine Exp $
+$Id: curses.h,v 1.58 2005/12/25 19:24:43 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1825,7 +1825,7 @@ int     PDC_CDECL wscanw Args(( WINDOW*, char*,... ));
 #endif
 int     PDC_CDECL wredrawln Args(( WINDOW*, int ,int ));
 int     PDC_CDECL wrefresh Args(( WINDOW* ));
-int     PDC_CDECL wresize Args((WINDOW **win, int lins, int cols));
+/* int     PDC_CDECL wresize Args((WINDOW **win, int lins, int cols)); */
 int     PDC_CDECL wscrl Args(( WINDOW*, int ));
 int     PDC_CDECL wsetscrreg Args(( WINDOW*, int, int ));
 int     PDC_CDECL wtimeout Args(( WINDOW *, int ));

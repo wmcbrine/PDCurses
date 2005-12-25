@@ -25,7 +25,7 @@ BUGS FIXED:
 
 NEW FEATURES:
 - Implemented timeout() and wtimeout() Bug 695827
-- Implemented getattrs(), has_key(), wresize(), mvwgetnstr()
+- Implemented getattrs(), has_key(), mvwgetnstr()
   Alexandr Zamaraev (Feature 1004399)
 - A window's default colors are used as curses default colors when
   environment variable: PDC_ORIGINAL_COLORS is set to any value.

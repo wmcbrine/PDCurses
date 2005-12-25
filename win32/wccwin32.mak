@@ -24,6 +24,7 @@ PDCURSES_CURSES_H	=$(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)\curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
+TERM_HEADER		=$(PDCURSES_HOME)\term.h
 
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\win32
@@ -233,7 +234,7 @@ slk.obj: $(srcdir)\slk.c $(PDCURSES_HEADERS)
 termattr.obj: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) /fo=$@ $(srcdir)\termattr.c
 
-terminfo.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS)
+terminfo.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
 	$(CC) $(CCFLAGS) /fo=$@ $(srcdir)\terminfo.c
 
 touch.obj: $(srcdir)\touch.c $(PDCURSES_HEADERS)
@@ -346,7 +347,7 @@ firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
 newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\newdemo.c
 
-ptest.obj: $(demodir)\ptest.c $(PDCURSES_HOME)\panel.h $(PDCURSES_CURSES_H)
+ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\ptest.c
 
 testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)

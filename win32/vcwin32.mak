@@ -24,6 +24,7 @@ PDCURSES_CURSES_H	=$(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)\curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
+TERM_HEADER		=$(PDCURSES_HOME)\term.h
 
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\win32
@@ -305,7 +306,7 @@ slk.obj: $(srcdir)\slk.c $(PDCURSES_HEADERS)
 termattr.obj: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\termattr.c
 
-terminfo.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS)
+terminfo.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\terminfo.c
 
 touch.obj: $(srcdir)\touch.c $(PDCURSES_HEADERS)
@@ -452,7 +453,7 @@ slk.dll.obj: $(srcdir)\slk.c $(PDCURSES_HEADERS)
 termattr.dll.obj: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\termattr.c
 
-terminfo.dll.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS)
+terminfo.dll.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\terminfo.c
 
 touch.dll.obj: $(srcdir)\touch.c $(PDCURSES_HEADERS)
@@ -534,7 +535,7 @@ firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
 newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\newdemo.c
 
-ptest.obj: $(demodir)\ptest.c $(PDCURSES_HOME)\panel.h $(PDCURSES_CURSES_H)
+ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\ptest.c
 
 testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
@@ -583,7 +584,7 @@ firework.dll.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
 newdemo.dll.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(demodir)\newdemo.c
 
-ptest.dll.obj: $(demodir)\ptest.c $(PDCURSES_HOME)\panel.h $(PDCURSES_CURSES_H)
+ptest.dll.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ $(demodir)\ptest.c
 
 testcurs.dll.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)

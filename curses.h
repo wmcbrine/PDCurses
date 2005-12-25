@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.58 2005/12/25 19:24:43 wmcbrine Exp $
+$Id: curses.h,v 1.59 2005/12/25 22:01:29 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -2036,6 +2036,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define winchstr(w, c)          (winchnstr( w, c, (w)->_maxx-(w)->_curx ) )
 #define winsstr(w,str)          winsnstr((w),(str),(-1))
 #define winstr(w,str)           winnstr((w),str,(w)->_maxx)
+#define wresize(w,l,c)          ((w = resize_window(w,l,c)) ? OK : ERR)
 #define wstandend(w)            wattrset(w, A_NORMAL)
 #define wstandout(w)            wattrset(w, A_STANDOUT)
 

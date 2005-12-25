@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window  = "$Id: window.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_window  = "$Id: window.c,v 1.6 2005/12/25 22:01:30 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -542,6 +542,7 @@ extern	void	(*fre)();
 	return( new );
 
 }
+#if 0
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int PDC_CDECL wresize(WINDOW **win, int lins, int cols)
@@ -560,6 +561,7 @@ int cols;
   *win = new;
   return OK;
 }
+#endif
 /***********************************************************************/
 #ifdef HAVE_PROTO
 WINDOW *	PDC_CDECL	resize_window(WINDOW *win, int lins, int cols)

@@ -25,14 +25,16 @@
 #define HAVE_PANEL_H 1
 #define HAVE_LIBPANEL 1
 
-/* Some functions we don't have */
+/* Fool ncurses.c so it gives us all the tests, and doesn't redefine 
+   ACS_ chars
+*/
 
-#define __NCURSES_H
+#define NCURSES_VERSION PDCURSES
+
+/* A function we don't have, for view.c */
 
 #ifdef HAVE_PROTO
-int tigetnum(const char *capname) { return -2; }
 int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts) { return ERR; }
 #else
-int tigetnum(capname) { return -2; }
 int wchgat(win, n, attr, color, opts) { return ERR; }
 #endif

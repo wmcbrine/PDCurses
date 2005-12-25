@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: panel.h,v 1.7 2005/12/25 06:33:52 wmcbrine Exp $
+$Id: panel.h,v 1.8 2005/12/25 06:44:36 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -60,38 +60,28 @@ typedef struct panel
 } PANEL;
 
 #ifdef HAVE_PROTO
-WINDOW *panel_window(const PANEL *pan);
-void update_panels(void);
-int hide_panel(PANEL *pan);
-int show_panel(PANEL *pan);
-int del_panel(PANEL *pan);
-int top_panel(PANEL *pan);
-int bottom_panel(PANEL *pan);
-PANEL *new_panel(WINDOW *win);
-PANEL *panel_above(const PANEL *pan);
-PANEL *panel_below(const PANEL *pan);
-int panel_hidden(const PANEL *pan);
-int set_panel_userptr(PANEL *pan, const void *uptr);
-const void *panel_userptr(const PANEL *pan);
-int move_panel(PANEL *pan, int starty, int startx);
-int replace_panel(PANEL *pan, WINDOW *win);
+# define Args(x) x
 #else
-WINDOW *panel_window();
-void update_panels();
-int hide_panel();
-int show_panel();
-int del_panel();
-int top_panel();
-int bottom_panel();
-PANEL *new_panel();
-PANEL *panel_above();
-PANEL *panel_below();
-int panel_hidden();
-int set_panel_userptr();
-void *panel_userptr();
-int move_panel();
-int replace_panel();
+# define Args(x) ()
 #endif
+
+WINDOW *panel_window Args((const PANEL *pan));
+void update_panels Args((void));
+int hide_panel Args((PANEL *pan));
+int show_panel Args((PANEL *pan));
+int del_panel Args((PANEL *pan));
+int top_panel Args((PANEL *pan));
+int bottom_panel Args((PANEL *pan));
+PANEL *new_panel Args((WINDOW *win));
+PANEL *panel_above Args((const PANEL *pan));
+PANEL *panel_below Args((const PANEL *pan));
+int panel_hidden Args((const PANEL *pan));
+int set_panel_userptr Args((PANEL *pan, const void *uptr));
+const void *panel_userptr Args((const PANEL *pan));
+int move_panel Args((PANEL *pan, int starty, int startx));
+int replace_panel Args((PANEL *pan, WINDOW *win));
+
+#undef Args
 
 #endif /* __PDCURSES_PANEL_H__ */
 

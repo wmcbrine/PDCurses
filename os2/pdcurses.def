@@ -38,6 +38,7 @@ EXPORTS
             def_prog_mode                  
             def_shell_mode                 
             delay_output                   
+            delscreen
             delwin                         
             doupdate                       
             echo                           
@@ -164,3 +165,20 @@ EXPORTS
             wtimeout
             wtouchln
             wvline
+            cur_term
+            del_curterm
+            putp
+            restartterm
+            set_curterm
+            setterm
+            setupterm
+            tgetent
+            tgetflag
+            tgetnum
+            tgetstr
+            tgoto
+            tigetflag
+            tigetnum
+            tigetstr
+            tparm
+            tputs

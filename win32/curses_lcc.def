@@ -27,6 +27,7 @@ def_shell_mode
 delay_output
 delch
 deleteln
+delscreen
 delwin
 derwin
 doupdate
@@ -243,6 +244,22 @@ wmouse_position
 getmouse
 getbmap
 resize_term
+del_curterm
+putp
+restartterm
+set_curterm
+setterm
+setupterm
+tgetent
+tgetflag
+tgetnum
+tgetstr
+tgoto
+tigetflag
+tigetnum
+tigetstr
+tparm
+tputs
 PDC_chadd
 PDC_check_bios_key
 PDC_chg_attrs
@@ -303,6 +320,7 @@ SP
 stdscr
 COLS
 LINES
+cur_term
 Mouse_status
 SECTION
 DATA SHARED

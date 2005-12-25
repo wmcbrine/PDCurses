@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: panel.h,v 1.6 2005/12/14 19:40:28 wmcbrine Exp $
+$Id: panel.h,v 1.7 2005/12/25 06:33:52 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -32,6 +32,9 @@ $Id: panel.h,v 1.6 2005/12/14 19:40:28 wmcbrine Exp $
 extern "C"
 {
 #endif
+
+#ifndef __PDCURSES_PANEL_H__
+#define __PDCURSES_PANEL_H__ 1
 
 typedef struct panelobs
 {
@@ -90,7 +93,7 @@ int move_panel();
 int replace_panel();
 #endif
 
-/* end of panel.h */
+#endif /* __PDCURSES_PANEL_H__ */
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 }

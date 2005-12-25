@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: term.h,v 1.1 2005/12/25 08:12:17 wmcbrine Exp $
+$Id: term.h,v 1.2 2005/12/25 15:07:09 wmcbrine Exp $
 */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
@@ -39,7 +39,15 @@ extern "C"
 
 typedef void TERMINAL;
 
+#if defined(PDC_DLL_BUILD)
+# if !defined(CURSES_LIBRARY)
+__declspec(dllimport)  TERMINAL *cur_term;
+# else
+__declspec(dllexport) extern TERMINAL *cur_term;
+# endif
+#else
 extern TERMINAL *cur_term;
+#endif
 
 #ifdef HAVE_PROTO
 # define Args(x) x

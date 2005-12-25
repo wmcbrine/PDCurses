@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.4 2005/12/25 08:12:19 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.5 2005/12/25 15:07:09 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -80,7 +80,7 @@ char *rcsid_terminfo  = "$Id: terminfo.c,v 1.4 2005/12/25 08:12:19 wmcbrine Exp 
 
 **man-end**********************************************************************/
 
-TERMINAL *cur_term;
+TERMINAL *cur_term = NULL;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO

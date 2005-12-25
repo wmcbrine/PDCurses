@@ -222,7 +222,7 @@ FUNCTIONS
 		curs_set                 kernel
 		def_prog_mode            kernel
 		def_shell_mode           kernel
-	***	del_curterm               terminfo
+		del_curterm              terminfo
 		delay_output             util
 		delch                    delch
 		deleteln                 deleteln
@@ -341,7 +341,7 @@ FUNCTIONS
 		pnoutrefresh             pad
 		prefresh                 pad
 		printw                   printw
-	***	putp                      terminfo
+		putp                     terminfo
 		putwin                   util
 		qiflush                  inopts
 		raw                      inopts
@@ -351,7 +351,7 @@ FUNCTIONS
 		reset_prog_mode          kernel
 		reset_shell_mode         kernel
 		resetty                  kernel
-	***	restartterm               terminfo
+		restartterm              terminfo
 		ripoffline               kernel
 		savetty                  kernel
 		scanw                    scanw
@@ -365,8 +365,8 @@ FUNCTIONS
 		set_term                 initscr
 		setscrreg                outopts
 		setsyx                   kernel
-	***	setterm                   terminfo
-	***	setupterm                 terminfo
+		setterm                  terminfo
+		setupterm                terminfo
 		slk_attroff              slk
 		slk_attron               slk
 		slk_attrset              slk
@@ -387,20 +387,19 @@ FUNCTIONS
 		syncok                   window
 		termattrs                termattrs
 		termname                 termattrs
-	***	tgetent                   termcap
-	***	tgetflag                  termcap
-	***	tgetnum                   termcap
-	***	tgetstr                   termcap
-	***	tgoto                     termcap
-	***	tigetflag                 terminfo
-	***	tigetnum                  terminfo
-	***	tigetstr                  terminfo
+		tgetent                  termcap
+		tgetflag                 termcap
+		tgetnum                  termcap
+		tgetstr                  termcap
+		tgoto                    termcap
+		tigetflag                terminfo
+		tigetnum                 terminfo
+		tigetstr                 terminfo
 		timeout                  inopts
 		touchline                touch
 		touchwin                 touch
-	***	tparm                     terminfo
-	***	tputs                     terminfo
-	***	tputs                     termcap
+		tparm                    terminfo
+		tputs                    terminfo
 		trace_on                 pdcdebug
 		typeahead                inopts
 		unctrl                   util

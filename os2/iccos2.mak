@@ -331,14 +331,12 @@ dist: pdcurses.lib panel.lib
 	copy $(PDCURSES_HOME)\maintain.er .
 	copy ..\pdcurses.lib .
 	copy ..\panel.lib .
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > file_id.diz
-	echo      PDCurses - Public Domain Curses >> file_id.diz
+	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT)   for C Set/2 OS/2   PDC$(VER)_ICC_OS2.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
 	echo  Public Domain Curses library for >> file_id.diz
 	echo  C Set/2 for OS/2. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> file_id.diz
 	zip pdc$(VER)_icc_os2 *.*
 	cd ..

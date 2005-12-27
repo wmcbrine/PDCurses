@@ -175,7 +175,6 @@ makefileid: Procedure
 fn = 'file_id.diz'
 Parse Arg zipfile verdot version desc
 Call Stream fn,'C','OPEN WRITE REPLACE'
-Call Lineout fn,'컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴'
 Call Lineout fn,'     PDCurses - Public Domain Curses'
 Call Lineout fn,Left(' Version:' verdot, 15) Right(zipfile,25)
 Call Lineout fn,'------------------------------------------'
@@ -183,6 +182,5 @@ Call Lineout fn,' Public Domain Curses library for'
 Call Lineout fn,' '|| desc
 Call Lineout fn,' Source available in pdcurs'version'.zip'
 Call Lineout fn,' Public Domain.'
-Call Lineout fn,'컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴'
 Call Stream fn,'C','CLOSE'
 Return 0

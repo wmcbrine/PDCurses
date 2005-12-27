@@ -331,14 +331,12 @@ dist: pdcurses.lib panel.lib
 	copy $(PDCURSES_HOME)\maintain.er .
 	copy ..\pdcurses.lib .
 	copy ..\panel.lib .
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > file_id.diz
-	echo      PDCurses - Public Domain Curses >> file_id.diz
+	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Borland C++ Win32 PDC$(VER)_BCC_W32.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
 	echo  Public Domain Curses library for >> file_id.diz
 	echo  Borland C/C++ 4.0+ for Win32. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> file_id.diz
 	zip pdc$(VER)_bcc_w32 *.*
 	cd ..

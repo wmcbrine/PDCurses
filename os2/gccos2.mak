@@ -582,13 +582,11 @@ dist: $(DISTTARGETS)
 	copy pdcurses.lib tmp
 	copy panel.a tmp
 	copy panel.lib tmp
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > tmp\file_id.diz
-	echo      PDCurses - Public Domain Curses >> tmp\file_id.diz
+	echo      PDCurses - Public Domain Curses > tmp\file_id.diz
 	echo  Version $(VERDOT)   for EMX OS/2   PDC$(VER)_EMX_OS2.ZIP >> tmp\file_id.diz
 	echo  ------------------------------------------ >> tmp\file_id.diz
 	echo  Public Domain Curses library for >> tmp\file_id.diz
 	echo  EMX 0.9c for OS/2. >> tmp\file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> tmp\file_id.diz
 	echo  Public Domain. >> tmp\file_id.diz
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> tmp\file_id.diz
 	rexx 'cd tmp'; 'zip pdc$(VER)_emx_os2 "*.*"'; return 0

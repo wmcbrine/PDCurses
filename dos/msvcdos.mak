@@ -337,14 +337,12 @@ dist: pdcurses.lib panel.lib
 	copy $(PDCURSES_HOME)\maintain.er .
 	copy ..\pdcurses.lib .
 	copy ..\panel.lib .
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > file_id.diz
-	echo      PDCurses - Public Domain Curses >> file_id.diz
+	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Microsoft Visual C++ 1.0 PDC$(VER)VCD.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
 	echo  Public Domain Curses library for >> file_id.diz
 	echo  Microsoft Visual C/C++ 1.0 for DOS. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> file_id.diz
 	zip pdc$(VER)vcd *.*
 	cd ..

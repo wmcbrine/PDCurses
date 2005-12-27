@@ -380,14 +380,12 @@ dist: pdcurses.lib panel.lib
 	copy $(PDCURSES_HOME)\maintain.er .
 	copy ..\pdcurses.lib .
 	copy ..\panel.lib .
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > file_id.diz
-	echo      PDCurses - Public Domain Curses >> file_id.diz
+	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Watcom C++ 32bit DOS PDC$(VER)32W.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
 	echo  Public Domain Curses library for >> file_id.diz
 	echo  Watcom C/C++ 10.6 for 32 bit DOS. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> file_id.diz
 	zip pdc$(VER)32w *.*
 	cd ..

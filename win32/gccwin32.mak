@@ -337,14 +337,12 @@ dist: $(LIBCURSES) $(LIBPANEL)
 	copy $(PDCURSES_HOME)\maintain.er .
 	copy ..\$(LIBCURSES) .
 	copy ..\$(LIBPANEL) .
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 > file_id.diz
-	echo      PDCurses - Public Domain Curses >> file_id.diz
+	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Cygnus Win32 PDC$(VER)_CYG_W32.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
 	echo  Public Domain Curses library for >> file_id.diz
 	echo  Cygnus GCC for Win32. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> file_id.diz
 	zip pdc$(VER)_cyg_w32 *.*
 	cd ..

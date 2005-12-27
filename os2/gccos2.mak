@@ -569,19 +569,6 @@ xmas.o: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
 dist: $(DISTTARGETS)
-	-mkdir tmp
-	copy $(PDCURSES_HOME)\README tmp\README
-	copy $(PDCURSES_HOME)\readme.?? tmp
-	copy $(PDCURSES_HOME)\curses.h tmp
-	copy $(PDCURSES_HOME)\curspriv.h tmp
-	copy $(PDCURSES_HOME)\maintain.er tmp
-	-copy curses.dll tmp
-	-copy curses.lib tmp
-	-copy curses.a tmp
-	copy pdcurses.a tmp
-	copy pdcurses.lib tmp
-	copy panel.a tmp
-	copy panel.lib tmp
 	echo      PDCurses - Public Domain Curses > tmp\file_id.diz
 	echo  Version $(VERDOT)   for EMX OS/2   PDC$(VER)_EMX_OS2.ZIP >> tmp\file_id.diz
 	echo  ------------------------------------------ >> tmp\file_id.diz
@@ -589,4 +576,16 @@ dist: $(DISTTARGETS)
 	echo  EMX 0.9c for OS/2. >> tmp\file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> tmp\file_id.diz
 	echo  Public Domain. >> tmp\file_id.diz
-	rexx 'cd tmp'; 'zip pdc$(VER)_emx_os2 "*.*"'; return 0
+	echo $(PDCURSES_HOME)\README* > flist
+	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo curses.dll >> flist
+	echo curses.lib >> flist
+	echo curses.a >> flist
+	echo pdcurses.a >> flist
+	echo pdcurses.lib >> flist
+	echo panel.a >> flist
+	echo panel.lib >> flist
+	zip -j pdc$(VER)_emx_os2 -@ <flist
+	del flist
+	del file_id.diz

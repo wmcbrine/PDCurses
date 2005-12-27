@@ -603,17 +603,6 @@ test.dll.obj: test.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ test.c
 
 dist: curses.dll pdcurses.lib panel.lib
-	-mkdir tmp
-	cd tmp
-	copy $(PDCURSES_HOME)\README .
-	copy $(PDCURSES_HOME)\readme.?? .
-	copy $(PDCURSES_HOME)\curses.h .
-	copy $(PDCURSES_HOME)\curspriv.h .
-	copy $(PDCURSES_HOME)\maintain.er .
-	copy ..\curses.dll .
-	copy ..\curses.lib .
-	copy ..\pdcurses.lib .
-	copy ..\panel.lib .
 	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT)   for VC++        PDC$(VER)_VC_W32.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
@@ -621,5 +610,13 @@ dist: curses.dll pdcurses.lib panel.lib
 	echo  Microsoft Visual C/C++ for Win32. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	zip pdc$(VER)_vc_w32 *.*
-	cd ..
+	echo $(PDCURSES_HOME)\README* > flist
+	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo curses.dll >> flist
+	echo curses.lib >> flist
+	echo pdcurses.lib >> flist
+	echo panel.lib >> flist
+	zip -j pdc$(VER)_vc_w32 -@ <flist
+	del flist
+	del file_id.diz

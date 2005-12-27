@@ -20,11 +20,6 @@ PDCURSES_HOME	= $(PDCURSES_SRCDIR)
 VER=27
 VERDOT=2.7
 
-# PDC_HOME is the backslashed version of PDCURSES_HOME, generated 
-# automatically
-
-PDC_HOME	= $(subst /,\,$(PDCURSES_HOME))
-
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
@@ -347,19 +342,6 @@ xmas.o: $(demodir)/xmas.c $(PDCURSES_CURSES_H)
 #------------------------------------------------------------------------
 
 dist: $(PDCLIBS)
-	-mkdir tmp
-	cd tmp
-	copy $(PDC_HOME)\README README
-	copy $(PDC_HOME)\readme.?? .
-	copy $(PDC_HOME)\curses.h .
-	copy $(PDC_HOME)\curspriv.h .
-	copy $(PDC_HOME)\maintain.er .
-	copy $(PDC_HOME)\INSTALL INSTALL
-	copy $(PDC_HOME)\TODO TODO
-	copy $(PDC_HOME)\panel.h panel.h
-	copy $(PDC_HOME)\pdc64.gif pdc64.gif
-	copy ..\$(LIBCURSES) .
-	copy ..\$(LIBPANEL) .
 	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for DJGPP 2.0 PDC$(VER)DJG.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
@@ -367,5 +349,14 @@ dist: $(PDCLIBS)
 	echo  DJGPP 2.0. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	zip pdc$(VER)djg *.*
-	cd ..
+	echo $(PDCURSES_HOME)\README* > flist
+	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo $(PDCURSES_HOME)\INSTALL >> flist
+	echo $(PDCURSES_HOME)\TODO >> flist
+	echo $(PDCURSES_HOME)\pdc64.gif >> flist
+	echo $(LIBCURSES) >> flist
+	echo $(LIBPANEL) >> flist
+	zip -j pdc$(VER)djg -@ <flist
+	del flist
+	del file_id.diz

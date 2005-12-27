@@ -363,15 +363,6 @@ xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\xmas.c
 
 dist: pdcurses.lib panel.lib
-	-mkdir tmp
-	cd tmp
-	copy $(PDCURSES_HOME)\README README
-	copy $(PDCURSES_HOME)\readme.?? .
-	copy $(PDCURSES_HOME)\curses.h .
-	copy $(PDCURSES_HOME)\curspriv.h .
-	copy $(PDCURSES_HOME)\maintain.er .
-	copy ..\pdcurses.lib .
-	copy ..\panel.lib .
 	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Watcom C++ Win32 PDC$(VER)_WCC_W32.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
@@ -379,5 +370,11 @@ dist: pdcurses.lib panel.lib
 	echo  Watcom C/C++ 10.6 for Win32. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	zip pdc$(VER)_wcc_w32 *.*
-	cd ..
+	echo $(PDCURSES_HOME)\README* > flist
+	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo pdcurses.lib >> flist
+	echo panel.lib >> flist
+	zip -j pdc$(VER)_wcc_w32 -@ <flist
+	del flist
+	del file_id.diz

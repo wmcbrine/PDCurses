@@ -321,15 +321,6 @@ xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
 dist: pdcurses.lib panel.lib
-	-mkdir tmp
-	cd tmp
-	copy $(PDCURSES_HOME)\README README
-	copy $(PDCURSES_HOME)\readme.?? .
-	copy $(PDCURSES_HOME)\curses.h .
-	copy $(PDCURSES_HOME)\curspriv.h .
-	copy $(PDCURSES_HOME)\maintain.er .
-	copy ..\pdcurses.lib .
-	copy ..\panel.lib .
 	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Borland C++ 3.1 PDC$(VER)BCC.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
@@ -337,5 +328,11 @@ dist: pdcurses.lib panel.lib
 	echo  Borland C/C++ 3.1. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	zip pdc$(VER)bcc *.*
-	cd ..
+	echo $(PDCURSES_HOME)\README* > flist
+	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo pdcurses.lib >> flist
+	echo panel.lib >> flist
+	zip -j pdc$(VER)bcc -@ <flist
+	del flist
+	del file_id.diz

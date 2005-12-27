@@ -62,7 +62,10 @@ distclean ::
 manual:
 	cd tools; $(MAKE) $(MFLAGS) $@
 
-zip:
+xcurses.h:
+	ln -s curses.h $@
+
+zip: xcurses.h
 	zip -y pdcurs$(VER) README INSTALL TODO Makefile.in config.h.in configure xcurses-config.in \
 	configure.in config.guess config.sub install-sh aclocal.m4 pdc64.gif \
 	curses.h xcurses.h curspriv.h panel.h term.h maintain.er readme.* \
@@ -82,7 +85,7 @@ zip:
 #	os2/*.rsp win32/*.rsp \
 #	makezip.cmd \
 
-dist:
+dist: xcurses.h
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/Makefile.in \
 	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure $(PDC_DIR)/config.guess $(PDC_DIR)/aclocal.m4 $(PDC_DIR)/common/accommon.m4 $(PDC_DIR)/xcurses-config.in \
 	$(PDC_DIR)/config.sub $(PDC_DIR)/configure.in $(PDC_DIR)/install-sh $(PDC_DIR)/curses.h $(PDC_DIR)/xcurses.h \
@@ -104,7 +107,7 @@ dist:
 #	$(PDC_DIR)/os2/*.rsp  $(PDC_DIR)/win32/*.rsp \
 #	$(PDC_DIR)/makezip.cmd \
 
-tar:
+tar: xcurses.h
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/Makefile.in \
 	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure $(PDC_DIR)/config.guess $(PDC_DIR)/aclocal.m4 $(PDC_DIR)/common/accommon.m4 $(PDC_DIR)/xcurses-config.in \
 	$(PDC_DIR)/config.sub $(PDC_DIR)/configure.in $(PDC_DIR)/install-sh $(PDC_DIR)/curses.h $(PDC_DIR)/xcurses.h \

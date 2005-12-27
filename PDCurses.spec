@@ -1,7 +1,7 @@
 Summary: Public Domain Curses
 Name: PDCurses
 Version: 2.7
-Release: 2
+Release: 1
 Copyright: Some portions 1995-2003 Mark Hessling
 Distribution: Public Domain and LGPL
 Vendor: Mark Hessling
@@ -34,4 +34,3 @@ make install
 /usr/lib/libXCurses.so
 /usr/include/xcurses.h
 /usr/include/xpanel.h
-

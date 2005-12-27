@@ -131,7 +131,7 @@ tar: xcurses.h
 
 rpm: dist
 	cp $(srcdir)/../PDCurses-$(VER_DOT).tar.gz /usr/src/redhat/SOURCES
-	rpm -ba $(srcdir)/PDCurses-$(VER_DOT).spec
+	rpm -ba $(srcdir)/PDCurses.spec
 #
 # End of makefile
 #

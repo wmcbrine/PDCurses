@@ -148,7 +148,9 @@ Select
       End
 End
 'copy' curses_home || '\curses.h .'
+'copy' curses_home || '\curspriv.h .'
 'copy' curses_home || '\panel.h .'
+'copy' curses_home || '\term.h .'
 'copy' curses_home || '\maintain.er .'
 'copy' curses_home || '\README .'
 'copy' curses_home || '\INSTALL .'

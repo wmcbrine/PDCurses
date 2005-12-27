@@ -9,7 +9,7 @@
 #
 ###############################################################################
 #
-# Change these for your environment...
+# Edit the line below for your environment.
 #
 ###############################################################################
 PDCURSES_HOME		=\pdcurses

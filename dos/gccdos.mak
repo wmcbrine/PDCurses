@@ -1,6 +1,6 @@
 ################################################################################
 #
-# GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0
+# GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
 #
 # Usage: make -f [path\]gccdos.mak [-DDEBUG] [target]
 #
@@ -9,19 +9,21 @@
 #
 ################################################################################
 #
-# Change these for your environment...
-#
-# PDCURSES_HOME = .. works in the 'dos' directory except for 'dist' rule
-# PDC_HOME is the backslashed version of PDCURSES_HOME, generated automatically
+# First, set the environment variable PDCURSES_SRCDIR, or edit the line 
+# below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
 #
 ################################################################################
 PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-PDC_HOME	= $(subst /,\,$(PDCURSES_HOME))
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
 VER=27
 VERDOT=2.7
+
+# PDC_HOME is the backslashed version of PDCURSES_HOME, generated 
+# automatically
+
+PDC_HOME	= $(subst /,\,$(PDCURSES_HOME))
 
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
@@ -369,5 +371,3 @@ dist: $(PDCLIBS)
 	echo 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴 >> file_id.diz
 	zip pdc$(VER)djg *.*
 	cd ..
-
-

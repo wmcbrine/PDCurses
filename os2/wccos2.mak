@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Watcom WMAKE Makefile for PDCurses library - OS/2 Watcom C/C++ 10.6
+# Watcom WMAKE Makefile for PDCurses library - OS/2 Watcom C/C++ 10.6+
 #
 # Usage: wmake -f [path\]wccos2.mak [DEBUG=Y] [target]
 #
@@ -9,7 +9,8 @@
 #
 ################################################################################
 #
-# Change these for your environment...
+# First, set the environment variable PDCURSES_SRCDIR, and/or edit the 
+# lines below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
 #
 ################################################################################
 PDCURSES_HOME		=$(%PDCURSES_SRCDIR)

@@ -111,7 +111,6 @@ NCURSES_TESTS = \
 	knight \
 	rain \
 	tclock \
-	view \
 	worm \
 	ncurses
 

@@ -8,7 +8,7 @@
  * "make ncurses_tests" to start.
  * "make ncurses_clean" when you're done.
  *
- * Builds: bs gdc hanoi knight rain tclock worm ncurses view
+ * Builds: bs gdc hanoi knight rain tclock worm ncurses
  */
 
 #include "../config.h"
@@ -30,11 +30,3 @@
 */
 
 #define NCURSES_VERSION PDCURSES
-
-/* A function we don't have, for view.c */
-
-#ifdef HAVE_PROTO
-int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts) { return ERR; }
-#else
-int wchgat(win, n, attr, color, opts) { return ERR; }
-#endif

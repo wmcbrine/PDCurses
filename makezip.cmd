@@ -155,7 +155,6 @@ End
 'copy' curses_home || '\README .'
 'copy' curses_home || '\INSTALL .'
 'copy' curses_home || '\TODO .'
-'copy' curses_home || '\pdc64.gif .'
 'copy' curses_home || '\readme.?? .'
 
 'zip' zipfile '*'

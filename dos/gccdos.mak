@@ -354,7 +354,6 @@ dist: $(PDCLIBS)
 	echo $(PDCURSES_HOME)\maintain.er >> flist
 	echo $(PDCURSES_HOME)\INSTALL >> flist
 	echo $(PDCURSES_HOME)\TODO >> flist
-	echo $(PDCURSES_HOME)\pdc64.gif >> flist
 	echo $(LIBCURSES) >> flist
 	echo $(LIBPANEL) >> flist
 	zip -j pdc$(VER)djg -@ <flist

@@ -372,9 +372,10 @@ dist: pdcurses.lib panel.lib
 	echo  Watcom C/C++ 10.6 for OS/2. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo $(PDCURSES_HOME)\README* > flist
-	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\README > flist
+	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo $(PDCURSES_HOME)\*.h >> flist
 	echo pdcurses.lib >> flist
 	echo panel.lib >> flist
 	zip -j pdc$(VER)_wcc_os2 -@ <flist

@@ -326,9 +326,10 @@ dist: pdcurses.lib panel.lib
 	echo  Borland C/C++ os/2 1.0. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo $(PDCURSES_HOME)\README* > flist
-	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\README > flist
+	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo $(PDCURSES_HOME)\*.h >> flist
 	echo pdcurses.lib >> flist
 	echo panel.lib >> flist
 	zip -j pdc$(VER)bcos2 -@ <flist

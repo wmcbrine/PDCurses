@@ -153,9 +153,7 @@ End
 'copy' curses_home || '\term.h .'
 'copy' curses_home || '\maintain.er .'
 'copy' curses_home || '\README .'
-'copy' curses_home || '\INSTALL .'
-'copy' curses_home || '\TODO .'
-'copy' curses_home || '\readme.?? .'
+'copy' curses_home || '\readme.'version' .'
 
 'zip' zipfile '*'
 Return 0

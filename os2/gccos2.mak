@@ -576,9 +576,10 @@ dist: $(DISTTARGETS)
 	echo  EMX 0.9c for OS/2. >> tmp\file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> tmp\file_id.diz
 	echo  Public Domain. >> tmp\file_id.diz
-	echo $(PDCURSES_HOME)\README* > flist
-	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\README > flist
+	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo $(PDCURSES_HOME)\*.h >> flist
 	echo curses.dll >> flist
 	echo curses.lib >> flist
 	echo curses.a >> flist

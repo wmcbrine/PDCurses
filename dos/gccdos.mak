@@ -349,11 +349,10 @@ dist: $(PDCLIBS)
 	echo  DJGPP 2.0. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo $(PDCURSES_HOME)\README* > flist
-	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\README > flist
+	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\INSTALL >> flist
-	echo $(PDCURSES_HOME)\TODO >> flist
+	echo $(PDCURSES_HOME)\*.h >> flist
 	echo $(LIBCURSES) >> flist
 	echo $(LIBPANEL) >> flist
 	zip -j pdc$(VER)djg -@ <flist

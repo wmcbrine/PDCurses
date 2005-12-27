@@ -1,7 +1,9 @@
 
                         Welcome to PDCurses
 
- PDCurses is a port of System VR4 curses for multiple platforms. 
+ PDCurses is an independent reimplementation of System VR4 curses for 
+ multiple platforms.
+
 
  Legal Stuff
  -----------
@@ -18,10 +20,9 @@
  Ports
  -----
 
- PDCurses has been ported to DOS, OS/2, X11, WIN32 and Amiga. A port
- to Flexos is also included, but likely to be out of date.
- A directory containing the port-specific source files exists for each
- of these platforms.
+ PDCurses has been ported to DOS, OS/2, WIN32 and X11. A directory
+ containing the port-specific source files exists for each of these 
+ platforms.
 
 
  Distribution Status
@@ -35,5 +36,5 @@
  ----------
 
  The PDCurses package (and its predecessors) have had various 
- maintainers over the years.  The contact details of the current 
+ maintainers over the years.  The contact details of the current
  maintainer of the package are listed in the file; maintain.er

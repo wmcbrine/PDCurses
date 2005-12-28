@@ -81,7 +81,7 @@ zip: xcurses.h
 	pdcurses/Makefile.in pdcurses/Makefile.aix.in demos/Makefile.in panel/Makefile.in tools/Makefile.in
 #	x11/thread/*.c x11/thread/*.h \
 #	flexos/README flexos/*.c \
-#	dos/*.ini os2/*.ini os2/*.lnk \
+#	dos/*.ini os2/*.ini \
 #	os2/*.rsp win32/*.rsp \
 #	pdc64.gif makezip.cmd \
 
@@ -103,7 +103,7 @@ dist: xcurses.h
 	$(PDC_DIR)/panel/Makefile.in | gzip > PDCurses-$(VER_DOT).tar.gz)
 #	$(PDC_DIR)/x11/thread/*.c $(PDC_DIR)/x11/thread/*.h \
 #	$(PDC_DIR)/flexos/README $(PDC_DIR)/flexos/*.c \
-#	$(PDC_DIR)/dos/*.ini $(PDC_DIR)/os2/*.ini $(PDC_DIR)/os2/*.lnk \
+#	$(PDC_DIR)/dos/*.ini $(PDC_DIR)/os2/*.ini \
 #	$(PDC_DIR)/os2/*.rsp  $(PDC_DIR)/win32/*.rsp \
 #	$(PDC_DIR)/pdc64.gif $(PDC_DIR)/makezip.cmd \
 
@@ -125,7 +125,7 @@ tar: xcurses.h
 	$(PDC_DIR)/panel/Makefile.in | compress > PDCurses-$(VER_DOT).tar.Z)
 #	$(PDC_DIR)/x11/thread/*.c $(PDC_DIR)/x11/thread/*.h \
 #	$(PDC_DIR)/flexos/README $(PDC_DIR)/flexos/*.c \
-#	$(PDC_DIR)/dos/*.ini $(PDC_DIR)/os2/*.ini $(PDC_DIR)/os2/*.lnk \
+#	$(PDC_DIR)/dos/*.ini $(PDC_DIR)/os2/*.ini \
 #	$(PDC_DIR)/os2/*.rsp  $(PDC_DIR)/win32/*.rsp \
 #	$(PDC_DIR)/pdc64.gif $(PDC_DIR)/makezip.cmd \
 

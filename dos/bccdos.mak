@@ -320,7 +320,7 @@ tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
-dist: pdcurses.lib panel.lib
+dist: $(PDCLIBS)
 	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Borland C++ 3.1 PDC$(VER)BCC.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
@@ -331,9 +331,12 @@ dist: pdcurses.lib panel.lib
 	echo $(PDCURSES_HOME)\README > flist
 	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\*.h >> flist
-	echo pdcurses.lib >> flist
-	echo panel.lib >> flist
-	zip -j pdc$(VER)bcc -@ <flist
+	echo $(PDCURSES_HOME)\curses.h >> flist
+	echo $(PDCURSES_HOME)\curspriv.h >> flist
+	echo $(PDCURSES_HOME)\panel.h >> flist
+	echo $(PDCURSES_HOME)\term.h >> flist
+	echo $(LIBCURSES) >> flist
+	echo $(LIBPANEL) >> flist
+	zip -jX pdc$(VER)bcc -@ <flist
 	del flist
 	del file_id.diz

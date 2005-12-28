@@ -602,7 +602,7 @@ xmas.dll.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 test.dll.obj: test.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ test.c
 
-dist: curses.dll pdcurses.lib panel.lib
+dist: $(PDCLIBS)
 	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT)   for VC++        PDC$(VER)_VC_W32.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
@@ -613,11 +613,14 @@ dist: curses.dll pdcurses.lib panel.lib
 	echo $(PDCURSES_HOME)\README > flist
 	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\*.h >> flist
-	echo curses.dll >> flist
-	echo curses.lib >> flist
-	echo pdcurses.lib >> flist
-	echo panel.lib >> flist
-	zip -j pdc$(VER)_vc_w32 -@ <flist
+	echo $(PDCURSES_HOME)\curses.h >> flist
+	echo $(PDCURSES_HOME)\curspriv.h >> flist
+	echo $(PDCURSES_HOME)\panel.h >> flist
+	echo $(PDCURSES_HOME)\term.h >> flist
+#	echo curses.dll >> flist
+#	echo curses.lib >> flist
+	echo $(LIBCURSES) >> flist
+	echo $(LIBPANEL) >> flist
+	zip -jX pdc$(VER)_vc_w32 -@ <flist
 	del flist
 	del file_id.diz

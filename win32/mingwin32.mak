@@ -1,6 +1,6 @@
 ################################################################################
 #
-# GNU MAKE Makefile for PDCurses library - WIN32 MingW32 GCC
+# GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
 # Usage: make -f [path\]gccwin32.mak [-DDEBUG] [target]
 #
@@ -322,3 +322,24 @@ tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 
 xmas.o: $(demodir)/xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/xmas.c
+
+dist: $(PDCLIBS)
+	echo      PDCurses - Public Domain Curses > file_id.diz
+	echo  Version $(VERDOT) for MinGW Win32 PDC$(VER)_BCC_W32.ZIP >> file_id.diz
+	echo  ------------------------------------------ >> file_id.diz
+	echo  Public Domain Curses library for >> file_id.diz
+	echo  MinGW for Win32. >> file_id.diz
+	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
+	echo  Public Domain. >> file_id.diz
+	echo $(PDCURSES_HOME)\README > flist
+	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
+	echo $(PDCURSES_HOME)\maintain.er >> flist
+	echo $(PDCURSES_HOME)\curses.h >> flist
+	echo $(PDCURSES_HOME)\curspriv.h >> flist
+	echo $(PDCURSES_HOME)\panel.h >> flist
+	echo $(PDCURSES_HOME)\term.h >> flist
+	echo $(LIBCURSES) >> flist
+	echo $(LIBPANEL) >> flist
+	zip -jX pdc$(VER)_ming_w32 -@ <flist
+	del flist
+	del file_id.diz

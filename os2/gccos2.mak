@@ -579,7 +579,10 @@ dist: $(DISTTARGETS)
 	echo $(PDCURSES_HOME)\README > flist
 	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\curses.h >> flist
+	echo $(PDCURSES_HOME)\curspriv.h >> flist
+	echo $(PDCURSES_HOME)\panel.h >> flist
+	echo $(PDCURSES_HOME)\term.h >> flist
 	echo curses.dll >> flist
 	echo curses.lib >> flist
 	echo curses.a >> flist
@@ -587,6 +590,6 @@ dist: $(DISTTARGETS)
 	echo pdcurses.lib >> flist
 	echo panel.a >> flist
 	echo panel.lib >> flist
-	zip -j pdc$(VER)_emx_os2 -@ <flist
+	zip -jX pdc$(VER)_emx_os2 -@ <flist
 	del flist
 	del file_id.diz

@@ -15,6 +15,15 @@ If Stream('tmp','C','QUERY EXISTS') = '' Then  'mkdir tmp'
 rc = Chdir('tmp')
 If rc \= 0 Then Abort( 'Cannot change dir to "tmp"' )
 'del *.*'
+
+'copy' curses_home || '\README .'
+'copy' curses_home || '\readme.'version' .'
+'copy' curses_home || '\maintain.er .'
+'copy' curses_home || '\curses.h .'
+'copy' curses_home || '\curspriv.h .'
+'copy' curses_home || '\panel.h .'
+'copy' curses_home || '\term.h .'
+
 Select
    When plat = 'DOS' Then
       Do
@@ -127,7 +136,7 @@ Select
                   'copy  ..\pdcurses.a .'
                   'copy  ..\panel.a .'
                   zipfile = 'pdc'version'_ming_w32.zip'
-                  Call makefileid zipfile verdot version 'Win32 MingW32'
+                  Call makefileid zipfile verdot version 'Win32 MinGW'
                End
             When target = 'WCC' Then
                Do
@@ -147,13 +156,6 @@ Select
          End
       End
 End
-'copy' curses_home || '\curses.h .'
-'copy' curses_home || '\curspriv.h .'
-'copy' curses_home || '\panel.h .'
-'copy' curses_home || '\term.h .'
-'copy' curses_home || '\maintain.er .'
-'copy' curses_home || '\README .'
-'copy' curses_home || '\readme.'version' .'
 
 'zip' zipfile '*'
 Return 0

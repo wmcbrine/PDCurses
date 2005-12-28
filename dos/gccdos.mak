@@ -352,9 +352,12 @@ dist: $(PDCLIBS)
 	echo $(PDCURSES_HOME)\README > flist
 	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\*.h >> flist
+	echo $(PDCURSES_HOME)\curses.h >> flist
+	echo $(PDCURSES_HOME)\curspriv.h >> flist
+	echo $(PDCURSES_HOME)\panel.h >> flist
+	echo $(PDCURSES_HOME)\term.h >> flist
 	echo $(LIBCURSES) >> flist
 	echo $(LIBPANEL) >> flist
-	zip -j pdc$(VER)djg -@ <flist
+	zip -jX pdc$(VER)djg -@ <flist
 	del flist
 	del file_id.diz

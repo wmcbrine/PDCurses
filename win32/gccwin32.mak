@@ -327,7 +327,7 @@ tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 xmas.o: $(demodir)/xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/xmas.c
 
-dist: $(LIBCURSES) $(LIBPANEL)
+dist: $(PDCLIBS)
 	echo      PDCurses - Public Domain Curses > file_id.diz
 	echo  Version $(VERDOT) for Cygnus Win32 PDC$(VER)_CYG_W32.ZIP >> file_id.diz
 	echo  ------------------------------------------ >> file_id.diz
@@ -344,5 +344,5 @@ dist: $(LIBCURSES) $(LIBPANEL)
 	echo $(PDCURSES_HOME)/term.h >> flist
 	echo $(LIBCURSES) >> flist
 	echo $(LIBPANEL) >> flist
-	zip -j pdc$(VER)_cyg_w32 -@ <flist
+	zip -jX pdc$(VER)_cyg_w32 -@ <flist
 	rm flist file_id.diz

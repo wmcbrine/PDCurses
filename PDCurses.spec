@@ -1,4 +1,4 @@
-# $Id: PDCurses.spec,v 1.3 2005/12/28 21:47:17 wmcbrine Exp $
+# $Id: PDCurses.spec,v 1.4 2005/12/28 22:12:13 wmcbrine Exp $
 %define prefix /usr
 
 Summary: Public Domain Curses for X11
@@ -31,6 +31,7 @@ make
 make DESTDIR=$RPM_BUILD_ROOT install
 
 %files
+%{prefix}/bin/xcurses-config
 %{prefix}/lib/libXCurses.a
 %{prefix}/lib/libXpanel.a
 %{prefix}/lib/libXCurses.so

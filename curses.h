@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.59 2005/12/25 22:01:29 wmcbrine Exp $
+$Id: curses.h,v 1.60 2005/12/28 10:41:23 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1841,19 +1841,11 @@ WINDOW* PDC_CDECL resize_window Args(( WINDOW*, int, int ));
 #endif
 
 #ifdef OBSOLETE_OR_TBD
-char    PDC_CDECL breakchar Args(( /* void */ ));
-int     PDC_CDECL cursoff Args(( /* void */ ));
-int     PDC_CDECL curson Args(( /* void */ ));
-int     PDC_CDECL gettmode Args(( /* void */ ));
 int     PDC_CDECL mvaddrawch Args(( /* int, int, chtype */ ));
 int     PDC_CDECL mvaddrawstr Args(( /* int, int, char* */ ));
 int     PDC_CDECL mvwinsrawch Args(( /* WINDOW*, int, int, chtype */ ));
 int     PDC_CDECL mvinsrawch Args(( /* int, int, chtype */ ));
-int     PDC_CDECL saveoldterm Args(( /* void */ ));
-int     PDC_CDECL tabsize Args(( /* int */ ));
 int     PDC_CDECL waddrawstr Args(( /* WINDOW*, char* */ ));
-int     PDC_CDECL wtabsize Args(( /* WINDOW*, int */ ));
-int     PDC_CDECL win_print Args(( /* WINDOW*, int */ ));
 #endif
 
 #ifdef  XCURSES

@@ -58,7 +58,6 @@ endif
 
 DLLFLAGS = -Zdll -Zcrtdll -Zomf
 DLLCURSES = curses.lib
-DISTTARGETS = pdcurses.a panel.a
 
 CPPFLAGS	= -I$(PDCURSES_HOME) $(EMXVID)
 
@@ -76,7 +75,7 @@ LIBFLAGS		=rcv
 LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
-PDCLIBS	= $(LIBCURSES) $(LIBPANEL) #$(DLLTARGET)
+PDCLIBS	= $(LIBCURSES) $(LIBPANEL) #$(DLLTARGET) pdcurses.lib panel.lib
 DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 
 ################################################################################
@@ -571,7 +570,7 @@ tuidemo.o: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 xmas.o: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
-dist: $(DISTTARGETS)
+dist: $(PDCLIBS)
 	echo      PDCurses - Public Domain Curses > tmp\file_id.diz
 	echo  Version $(VERDOT)   for EMX OS/2   PDC$(VER)_EMX_OS2.ZIP >> tmp\file_id.diz
 	echo  ------------------------------------------ >> tmp\file_id.diz
@@ -586,8 +585,8 @@ dist: $(DISTTARGETS)
 	echo $(PDCURSES_HOME)\curspriv.h >> flist
 	echo $(PDCURSES_HOME)\panel.h >> flist
 	echo $(PDCURSES_HOME)\term.h >> flist
-	echo pdcurses.a >> flist
-	echo panel.a >> flist
+	echo $(LIBCURSES) >> flist
+	echo $(LIBPANEL) >> flist
 	zip -jX pdc$(VER)_emx_os2 -@ <flist
 	del flist
 	del file_id.diz

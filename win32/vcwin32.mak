@@ -71,9 +71,9 @@ all:	$(PDCLIBS) $(DEMOS) #$(DLL_DEMOS)
 clean:
 	-del *.obj
 	-del *.lib
-#	-del *.dll
-#	-del *.exp
-#	-del *.res
+	-del *.dll
+	-del *.exp
+	-del *.res
 	-del *.exe
 
 demos:	$(DEMOS)
@@ -617,8 +617,6 @@ dist: $(PDCLIBS)
 	echo $(PDCURSES_HOME)\curspriv.h >> flist
 	echo $(PDCURSES_HOME)\panel.h >> flist
 	echo $(PDCURSES_HOME)\term.h >> flist
-#	echo curses.dll >> flist
-#	echo curses.lib >> flist
 	echo $(LIBCURSES) >> flist
 	echo $(LIBPANEL) >> flist
 	zip -jX pdc$(VER)_vc_w32 -@ <flist

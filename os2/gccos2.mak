@@ -41,13 +41,11 @@ ifeq ($(EMXVIDEO),Y)
 	VIDLIB = -lvideo
 	BINDFLAGS = -acm
 	DLLTARGET = 
-	DISTTARGETS = pdcurses.a pdcurses.lib panel.a panel.lib
 else
 	EMXVID =
 	VIDLIB =
 	BINDFLAGS = 
 	DLLTARGET = curses.dll
-	DISTTARGETS = curses.a curses.dll curses.lib pdcurses.a pdcurses.lib panel.a panel.lib
 endif
 
 ifeq ($(DEBUG),Y)
@@ -60,6 +58,7 @@ endif
 
 DLLFLAGS = -Zdll -Zcrtdll -Zomf
 DLLCURSES = curses.lib
+DISTTARGETS = pdcurses.a panel.a
 
 CPPFLAGS	= -I$(PDCURSES_HOME) $(EMXVID)
 
@@ -77,7 +76,7 @@ LIBFLAGS		=rcv
 LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
-PDCLIBS	= $(LIBCURSES) $(DLLTARGET) $(LIBPANEL)
+PDCLIBS	= $(LIBCURSES) $(LIBPANEL) #$(DLLTARGET)
 DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
 
 ################################################################################
@@ -204,8 +203,9 @@ PANOBJS =     \
 panel.o
 
 pdcurses.a : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) $(LIBFLAGS) $@ *.o
-	$(LIBEXE) d $@ $(PANOBJS) firework.o newdemo.o ptest.o testcurs.o tui.o tuidemo.o xmas.o
+	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
+
+pdcurses.lib : pdcurses.a
 	$(EMXOMF) -o pdcurses.lib pdcurses.a
 
 curses.dll : $(DLLOBJS) $(PDCDLOS)
@@ -216,7 +216,10 @@ curses.dll : $(DLLOBJS) $(PDCDLOS)
 
 panel.a : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
+
+panel.lib : panel.a
 	$(EMXOMF) -o panel.lib panel.a
+
 
 addch.o: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addch.c
@@ -583,13 +586,8 @@ dist: $(DISTTARGETS)
 	echo $(PDCURSES_HOME)\curspriv.h >> flist
 	echo $(PDCURSES_HOME)\panel.h >> flist
 	echo $(PDCURSES_HOME)\term.h >> flist
-	echo curses.dll >> flist
-	echo curses.lib >> flist
-	echo curses.a >> flist
 	echo pdcurses.a >> flist
-	echo pdcurses.lib >> flist
 	echo panel.a >> flist
-	echo panel.lib >> flist
 	zip -jX pdc$(VER)_emx_os2 -@ <flist
 	del flist
 	del file_id.diz

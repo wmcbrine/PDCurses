@@ -372,10 +372,10 @@ dist: $(PDCLIBS)
 	echo  Watcom C/C++ 10.6 for OS/2. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	zip -jX pdc$(VER)_wcc_os2 \
-	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) \
-	$(PDCURSES_HOME)\maintain.er \
-	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h \
-	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h \
+	zip -jX pdc$(VER)_wcc_os2 &
+	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) &
+	$(PDCURSES_HOME)\maintain.er &
+	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h &
+	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h &
 	$(LIBCURSES) $(LIBPANEL) file_id.diz
 	del file_id.diz

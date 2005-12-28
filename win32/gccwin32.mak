@@ -335,14 +335,10 @@ dist: $(PDCLIBS)
 	echo  Cygnus GCC for Win32. >> file_id.diz
 	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo  Public Domain. >> file_id.diz
-	echo $(PDCURSES_HOME)/README > flist
-	echo $(PDCURSES_HOME)/readme.$(VER) >> flist
-	echo $(PDCURSES_HOME)/maintain.er >> flist
-	echo $(PDCURSES_HOME)/curses.h >> flist
-	echo $(PDCURSES_HOME)/curspriv.h >> flist
-	echo $(PDCURSES_HOME)/panel.h >> flist
-	echo $(PDCURSES_HOME)/term.h >> flist
-	echo $(LIBCURSES) >> flist
-	echo $(LIBPANEL) >> flist
-	zip -jX pdc$(VER)_cyg_w32 -@ <flist
-	rm flist file_id.diz
+	zip -jX pdc$(VER)_cyg_w32 \
+	$(PDCURSES_HOME)/README $(PDCURSES_HOME)/readme.$(VER) \
+	$(PDCURSES_HOME)/maintain.er \
+	$(PDCURSES_HOME)/curses.h $(PDCURSES_HOME)/curspriv.h \
+	$(PDCURSES_HOME)/panel.h $(PDCURSES_HOME)/term.h \
+	$(LIBCURSES) $(LIBPANEL) file_id.diz
+	rm file_id.diz

@@ -344,6 +344,7 @@ dist: $(PDCLIBS)
 	echo $(PDCURSES_HOME)\term.h >> flist
 	echo $(LIBCURSES) >> flist
 	echo $(LIBPANEL) >> flist
+	echo file_id.diz >> flist
 	zip -jX pdc$(VER)msc -@ <flist
 	del flist
 	del file_id.diz

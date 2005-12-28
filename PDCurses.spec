@@ -1,14 +1,20 @@
-Summary: Public Domain Curses
+# $Id: PDCurses.spec,v 1.2 2005/12/28 21:12:46 wmcbrine Exp $
+%define _sourcedir /home/wmcbrine
+%define _builddir %{_tmppath}
+%define _srcrpmdir %{_sourcedir}
+%define _rpmdir %{_sourcedir}
+%define prefix /usr
+
+Summary: Public Domain Curses for X11
 Name: PDCurses
 Version: 2.7
 Release: 1
-Copyright: Some portions 1995-2003 Mark Hessling
-Distribution: Public Domain and LGPL
-Vendor: Mark Hessling
-Packager: Mark Hessling
-Group: Development/Languages
-Source: ftp://prdownloads.sourceforge.net/pdcurses/PDCurses-2.7.tar.gz
+Copyright: LGPL
+Packager: William McBrine <wmcbrine@users.sf.net>
+Group: Development/Libraries
+Source: %{name}-%{version}.tar.gz
 URL: http://pdcurses.sourceforge.net
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
 %description
 PDCurses is an implementation of the curses library for X11. It provides
@@ -22,15 +28,15 @@ For more information on PDCurses, visit http://pdcurses.sourceforge.net
 %setup
 
 %build
-./configure
-make
+./configure --prefix=%{prefix}
+make 
 
 %install
-make install
+make DESTDIR=$RPM_BUILD_ROOT install
 
 %files
-/usr/lib/libXCurses.a
-/usr/lib/libXpanel.a
-/usr/lib/libXCurses.so
-/usr/include/xcurses.h
-/usr/include/xpanel.h
+%{prefix}/lib/libXCurses.a
+%{prefix}/lib/libXpanel.a
+%{prefix}/lib/libXCurses.so
+%{prefix}/include/xcurses.h
+%{prefix}/include/xpanel.h

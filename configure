@@ -9,9 +9,8 @@
 
 # Defaults:
 ac_help=
-ac_default_prefix=/usr/local
-# Any additions from configure.in:
 ac_default_prefix=/usr
+# Any additions from configure.in:
 ac_help="$ac_help
   --enable-debug          turn on debugging"
 ac_help="$ac_help

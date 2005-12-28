@@ -1,8 +1,4 @@
-# $Id: PDCurses.spec,v 1.2 2005/12/28 21:12:46 wmcbrine Exp $
-%define _sourcedir /home/wmcbrine
-%define _builddir %{_tmppath}
-%define _srcrpmdir %{_sourcedir}
-%define _rpmdir %{_sourcedir}
+# $Id: PDCurses.spec,v 1.3 2005/12/28 21:47:17 wmcbrine Exp $
 %define prefix /usr
 
 Summary: Public Domain Curses for X11

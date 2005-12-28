@@ -115,7 +115,7 @@ zip: $(ZIPFILE)
 dist: ../$(TARBALL)
 
 rpm: ../$(TARBALL)
-	rpm -ba $(srcdir)/PDCurses.spec
+	rpmbuild -ba $(srcdir)/PDCurses.spec
 #
 # End of makefile
 #

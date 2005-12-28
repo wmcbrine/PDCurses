@@ -579,19 +579,3 @@ xmas.dll.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 
 test.dll.obj: test.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ test.c
-
-dist: $(PDCLIBS)
-	echo      PDCurses - Public Domain Curses > file_id.diz
-	echo  Version $(VERDOT) for LCC-Win32 PDC$(VER)_LCC_W32.ZIP >> file_id.diz
-	echo  ------------------------------------------ >> file_id.diz
-	echo  Public Domain Curses library for >> file_id.diz
-	echo  LCC-Win32. >> file_id.diz
-	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo  Public Domain. >> file_id.diz
-	zip -jX pdc$(VER)_lcc_w32 \
-	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) \
-	$(PDCURSES_HOME)\maintain.er \
-	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h \
-	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h \
-	$(LIBCURSES) $(LIBPANEL) file_id.diz
-	del file_id.diz

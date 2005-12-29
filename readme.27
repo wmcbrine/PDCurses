@@ -5,36 +5,124 @@
 
 INTRODUCTION:
 
-This release of PDCurses includes the following changes:
-
-BUGS FIXED:
-- Allow Russian 'r' character ASCII 0xe0 to be returned. Fix courtesy
-  of Ruslan Fedyarov.
-- SF bugs:
-  - 695842: nl() and nonl() now return OK - fix by Warren Gay
-  - 695847: termattrs() now also return A_UNDERLINE, A_REVERSE
-- Changes for cursor size under DOS.
-- Lots of code cleanup courtesy of Ron Thibodeau
-- Removed idcok() and idlok() macros - Alexandr Zamaraev (Feature 1004399)
-- Macros for nocbreak(), cbreak(), nocrmode(), crmode() and nodelay()
-  now return OK - Alexandr Zamaraev (Feature 1004399)
-- ERR is now defined as (-1) NOT 0 to be compatible with ncurses - Alexandr
-  Zamaraev (Feature 1004399)
-  **** NOTE This change is NOT binary compatible. You will need to rebuild
-  **** programs that use shared/dynamic libraries!!!!!
+ A brief summary of changes in this release. (More details are available 
+ in the CVS log and trackers on SourceForge.)
 
 NEW FEATURES:
-- Implemented timeout() and wtimeout() Bug 695827
-- Implemented getattrs(), has_key(), mvwgetnstr()
-  Alexandr Zamaraev (Feature 1004399)
-- A window's default colors are used as curses default colors when
-  environment variable: PDC_ORIGINAL_COLORS is set to any value.
+
+- Functions: delscreen(), getattrs(), has_key(), slk_color(), 
+  wcolor_set(), wtimeout()
+
+- Macros: color_set(), mvhline(), mvvline(), mvwgetnstr(), mvwhline(), 
+  mvwvline(), timeout(), wresize()
+
+- Stub implementations of terminfo functions (including a term.h)
+
+- More stubs for compatibility: filter(), getwin(), putwin(), 
+  noqiflush(), qiflush(), scr_dump(), scr_init(), scr_restore(), 
+  scr_set(), use_env(), vidattr(), vidputs()
+
+- The terminal's default colors are used as curses' default colors when
+  the environment variable "PDC_ORIGINAL_COLORS" is set to any value
   (Win32 only at the moment)
 
-NEW COMPILER SUPPORT:
-- OpenWatcom 1.1+ supported on OS/2, Win32 and DOS. Bug 808864
-- Pacific C for DOS - Ron Thibodeau
+- Simplified build system
 
+- Replaced PDC_STATIC_BUILD with its opposite, PDC_DLL_BUILD (see .mak 
+  files for more info)
 
--- Mark Hessling and William McBrine
+- Minimal implementation of color_content() -- no longer a stub
+
+- Added the remaining ACS defines (ACS_S3, ACS_BBSS, etc.) for
+  DOS/OS2/Win; use "enhanced" versions of existing ACS characters
+
+- Support for scroll wheels
+
+- Support for Pacific C
+
+BUGS FIXED:
+
+- Builds correctly (including demos) on all tested platforms; nearly all 
+  compiler warnings cleaned up; build ptest demo on all platforms; 
+  improved "clean" targets
+
+- Restored the ability to build ncurses_tests
+
+- Line-breakout optimization now defaults to off (equivalent to 
+  "typeahead(-1)"), so output is not interrupted by keystrokes (it's 
+  supposed to resume on the next refresh(), which wasn't working)
+
+- Implicit wrefresh() in wgetch() was not invoked in nodelay mode
+
+- subpad() was erroneously offsetting from the origin coordinates of the 
+  parent pad (which are always -1,-1)
+
+- In wborder(), whline(), and wvline(), the current (wattrset) attribute 
+  was being used, but not the current background (wbkgd)
+
+- Allow Russian 'r' character ASCII 0xe0 to be returned
+
+- termattrs() now also returns A_UNDERLINE, A_REVERSE
+
+- Unwanted scrolling on startup in Win32 with large scrollback buffers
+
+- Revamped keyboard handling for Win32
+
+- napms() etc. now work with Cygwin
+
+- curs_set(0) wasn't working in Win32 in full-screen (ALT-ENTER) mode -- 
+  the cursor stayed on
+
+- A_REVERSE now works right in XCurses
+
+- On 64-bit systems, XCurses was ignoring every other keystroke
+
+- Added focus hints for XCurses
+
+- Demos (except for tuidemo) once again have their proper titles in
+  XCurses (using Xinitscr() instead of the obsolete XCursesProgramName)
+
+- The 16-bit chtype is a working option again (by removing #define 
+  CHTYPE_LONG from curses.h), except in XCurses
+
+- Reset screen size in resetty() under DOS, as in Win32 and OS/2
+
+- Changes for cursor size under DOS
+
+- Automatic setting of BIOS mode for CGA under DOS now works
+
+- Cursor is now always updated in PDC_gotoxy(); fixes missing characters 
+  in BIOS mode
+
+- Macros nocbreak(), cbreak(), nocrmode(), crmode(), nodelay(),
+  nl() and nonl() now return OK
+
+- ERR and OK are now defined as -1 and 0, respectively, for 
+  compatibility with other curses implementations -- note that this
+  change is not binary compatible; you'll have to rebuild programs that 
+  use shared/dynamic libraries
+
+- Added "const" to prototypes where appropriate
+
+- Miscellaneous code cleanup
+
+ACKNOWLEDGEMENTS:
+
+ Walter Briscoe
+ Jean-Pierre Demailly
+ Ruslan Fedyarov
+ Warren Gay
+ Florian Grosse-Coosmann
+ Vladimir Kokovic
+ Matt Maloy
+ K.H. Man
+ Michael Ryazanov
+ Ron Thibodeau
+ Alexandr Zamaraev
+
+ and of course MARK HESSLING for his over 13 years of service as the 
+ maintainer of PDCurses. Plus thanks to all who've reported bugs or 
+ requested features, and anyone else I've forgotten.
+
+-- William McBrine
    December 29, 2005

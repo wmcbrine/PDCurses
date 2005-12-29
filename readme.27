@@ -35,11 +35,6 @@ NEW COMPILER SUPPORT:
 - OpenWatcom 1.1+ supported on OS/2, Win32 and DOS. Bug 808864
 - Pacific C for DOS - Ron Thibodeau
 
-Cheers, Mark
-------------------------------------------------------------------------
- Mark Hessling,  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
- Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL
- Maintainer of PDCurses: Public Domain Curses and, Regina Rexx interpreter
- Use Rexx ? join the Rexx Language Association: http://www.rexxla.org
-------------------------------------------------------------------------
 
+-- Mark Hessling and William McBrine
+   December 29, 2005

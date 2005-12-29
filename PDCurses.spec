@@ -1,4 +1,4 @@
-# $Id: PDCurses.spec,v 1.6 2005/12/29 02:49:55 wmcbrine Exp $
+# $Id: PDCurses.spec,v 1.7 2005/12/29 03:05:45 wmcbrine Exp $
 
 %define ver 27
 %define verdot 2.7
@@ -13,6 +13,7 @@ Group: Development/Libraries
 Source: %{name}-%{version}.tar.gz
 URL: http://pdcurses.sourceforge.net
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
+Prefix: %base
 
 %description
 PDCurses for X11, also known as XCurses, is an implementation of the 

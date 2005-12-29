@@ -1,30 +1,30 @@
-# $Id: PDCurses.spec,v 1.5 2005/12/29 00:02:18 wmcbrine Exp $
-%define prefix /usr
+# $Id: PDCurses.spec,v 1.6 2005/12/29 02:49:55 wmcbrine Exp $
+
+%define ver 27
+%define verdot 2.7
+%define base /usr
 
 Summary: Public Domain Curses for X11
 Name: PDCurses
-Version: 2.7
+Version: %verdot
 Release: 1
 Copyright: LGPL
 Group: Development/Libraries
 Source: %{name}-%{version}.tar.gz
 URL: http://pdcurses.sourceforge.net
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Requires: /sbin/ldconfig
 
 %description
-PDCurses is an implementation of the curses library for X11. It provides
-the ability for existing text-mode curses programs to be re-built as
-native X11 applications with very little modification.
-PDCurses for X11 is also known as XCurses.
-For more information on PDCurses, visit http://pdcurses.sourceforge.net
+PDCurses for X11, also known as XCurses, is an implementation of the 
+curses library that lets you rebuild existing text-mode curses programs 
+as native X11 applications, with very little modification. For more 
+information, visit http://pdcurses.sourceforge.net
 
 %prep
-
 %setup -q
 
 %build
-./configure --prefix=%{prefix}
+./configure --prefix=%{base}
 make 
 
 %install
@@ -40,9 +40,10 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 
 %files
 %defattr(-,root,root)
-%{prefix}/bin/xcurses-config
-%{prefix}/lib/libXCurses.a
-%{prefix}/lib/libXpanel.a
-%{prefix}/lib/libXCurses.so
-%{prefix}/include/xcurses.h
-%{prefix}/include/xpanel.h
+%doc README readme.%{ver} maintain.er
+%{base}/bin/xcurses-config
+%{base}/lib/libXCurses.a
+%{base}/lib/libXpanel.a
+%{base}/lib/libXCurses.so
+%{base}/include/xcurses.h
+%{base}/include/xpanel.h

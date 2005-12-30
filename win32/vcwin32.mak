@@ -603,13 +603,12 @@ test.dll.obj: test.c $(PDCURSES_CURSES_H)
 	$(CC) $(DLL_CCFLAGS) -Fo$@ test.c
 
 dist: $(PDCLIBS)
-	echo      PDCurses - Public Domain Curses > file_id.diz
-	echo  Version $(VERDOT)   for VC++        PDC$(VER)_VC_W32.ZIP >> file_id.diz
-	echo  ------------------------------------------ >> file_id.diz
-	echo  Public Domain Curses library for >> file_id.diz
-	echo  Microsoft Visual C/C++ for Win32. >> file_id.diz
-	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo  Public Domain. >> file_id.diz
+	echo PDCurses $(VERDOT) for Visual C++ > file_id.diz
+	echo ------------------------------------------ >> file_id.diz
+	echo Public Domain Curses library for >> file_id.diz
+	echo Microsoft Visual C/C++ for Win32. >> file_id.diz
+	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
+	echo Public Domain. >> file_id.diz
 	zip -jX pdc$(VER)_vc_w32 \
 	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) \
 	$(PDCURSES_HOME)\maintain.er \

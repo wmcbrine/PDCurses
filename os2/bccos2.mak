@@ -319,13 +319,12 @@ xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
 dist: $(PDCLIBS)
-	echo      PDCurses - Public Domain Curses > file_id.diz
-	echo  Version $(VERDOT) for Borland C++ OS/2 1.0 PDC$(VER)BCOS2.ZIP >> file_id.diz
-	echo  ------------------------------------------ >> file_id.diz
-	echo  Public Domain Curses library for >> file_id.diz
-	echo  Borland C/C++ os/2 1.0. >> file_id.diz
-	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo  Public Domain. >> file_id.diz
+	echo PDCurses $(VERDOT) for Borland C++ OS/2 1.0 > file_id.diz
+	echo ------------------------------------------ >> file_id.diz
+	echo Public Domain Curses library for >> file_id.diz
+	echo Borland C/C++ OS/2 1.0. >> file_id.diz
+	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
+	echo Public Domain. >> file_id.diz
 	zip -jX pdc$(VER)bcos2 \
 	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) \
 	$(PDCURSES_HOME)\maintain.er \

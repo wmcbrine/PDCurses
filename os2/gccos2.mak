@@ -571,13 +571,12 @@ xmas.o: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
 dist: $(PDCLIBS)
-	echo      PDCurses - Public Domain Curses > file_id.diz
-	echo  Version $(VERDOT)   for EMX OS/2   PDC$(VER)_EMX_OS2.ZIP >> file_id.diz
-	echo  ------------------------------------------ >> file_id.diz
-	echo  Public Domain Curses library for >> file_id.diz
-	echo  EMX 0.9c for OS/2. >> file_id.diz
-	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo  Public Domain. >> file_id.diz
+	echo PDCurses $(VERDOT) for EMX OS/2 > file_id.diz
+	echo ------------------------------------------ >> file_id.diz
+	echo Public Domain Curses library for >> file_id.diz
+	echo EMX 0.9d for OS/2. >> file_id.diz
+	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
+	echo Public Domain. >> file_id.diz
 	zip -jX pdc$(VER)_emx_os2 \
 	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) \
 	$(PDCURSES_HOME)\maintain.er \

@@ -365,13 +365,12 @@ xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\xmas.c
 
 dist: $(PDCLIBS)
-	echo      PDCurses - Public Domain Curses > file_id.diz
-	echo  Version $(VERDOT)   for Watcom C++ OS/2   PDC$(VER)_WCC_OS2.ZIP >> file_id.diz
-	echo  ------------------------------------------ >> file_id.diz
-	echo  Public Domain Curses library for >> file_id.diz
-	echo  Watcom C/C++ 10.6 for OS/2. >> file_id.diz
-	echo  Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo  Public Domain. >> file_id.diz
+	echo PDCurses $(VERDOT) for Watcom C++ OS/2 > file_id.diz
+	echo ------------------------------------------ >> file_id.diz
+	echo Public Domain Curses library for >> file_id.diz
+	echo Open Watcom 1.3 for OS/2. >> file_id.diz
+	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
+	echo Public Domain. >> file_id.diz
 	zip -jX pdc$(VER)_wcc_os2 &
 	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) &
 	$(PDCURSES_HOME)\maintain.er &

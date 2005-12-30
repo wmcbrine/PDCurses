@@ -96,8 +96,8 @@ BUGS FIXED:
 
 - Automatic setting of BIOS mode for CGA under DOS now works.
 
-- Cursor is now always updated in PDC_gotoxy(); fixes missing characters
-  in BIOS mode.
+- The cursor is now always updated in PDC_gotoxy(); this fixes the
+  problem of missing characters in BIOS mode.
 
 - Macros nocbreak(), cbreak(), nocrmode(), crmode(), nodelay(),
   nl() and nonl() now return OK.

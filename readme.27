@@ -5,106 +5,109 @@
 
 INTRODUCTION:
 
- A brief summary of changes in this release. (More details are available 
+ Hello all. As of 2.7, I'm the new maintainer for PDCurses. Here's a 
+ brief summary of changes in this release. (More details are available 
  in the CVS log and trackers on SourceForge.)
 
 NEW FEATURES:
 
 - Functions: delscreen(), getattrs(), has_key(), slk_color(), 
-  wcolor_set(), wtimeout()
+  wcolor_set(), wtimeout().
 
 - Macros: color_set(), mvhline(), mvvline(), mvwgetnstr(), mvwhline(), 
-  mvwvline(), timeout(), wresize()
+  mvwvline(), timeout(), wresize().
 
-- Stub implementations of terminfo functions (including a term.h)
+- Stub implementations of terminfo functions (including a term.h).
 
 - More stubs for compatibility: filter(), getwin(), putwin(), 
   noqiflush(), qiflush(), scr_dump(), scr_init(), scr_restore(), 
-  scr_set(), use_env(), vidattr(), vidputs()
+  scr_set(), use_env(), vidattr(), vidputs().
 
 - The terminal's default colors are used as curses' default colors when
   the environment variable "PDC_ORIGINAL_COLORS" is set to any value
-  (Win32 only at the moment)
+  (Win32 only at the moment).
 
-- Simplified build system
+- Simplified build system.
 
 - Replaced PDC_STATIC_BUILD with its opposite, PDC_DLL_BUILD (see .mak 
-  files for more info)
+  files for more info).
 
-- Minimal implementation of color_content() -- no longer a stub
+- Minimal implementation of color_content() -- no longer a stub.
 
 - Added the remaining ACS defines (ACS_S3, ACS_BBSS, etc.) for
-  DOS/OS2/Win; use "enhanced" versions of existing ACS characters
+  DOS/OS2/Win; use "enhanced" versions of existing ACS characters.
 
-- Support for scroll wheels
+- Support for scroll wheels.
 
-- Support for Pacific C
+- Support for Pacific C.
 
 BUGS FIXED:
 
-- Builds correctly (including demos) on all tested platforms; nearly all 
-  compiler warnings cleaned up; build ptest demo on all platforms; 
-  improved "clean" targets
+- Builds correctly (including demos) on all tested platforms (see 
+  below); nearly all compiler warnings cleaned up; build ptest demo on 
+  all platforms; improved "clean" targets.
 
-- Restored the ability to build ncurses_tests
+- Restored the ability to build ncurses_tests.
 
 - Line-breakout optimization now defaults to off (equivalent to 
   "typeahead(-1)"), so output is not interrupted by keystrokes (it's 
-  supposed to resume on the next refresh(), which wasn't working)
+  supposed to resume on the next refresh(), which wasn't working).
 
-- Implicit wrefresh() in wgetch() was not invoked in nodelay mode
+- Implicit wrefresh() in wgetch() was not invoked in nodelay mode.
 
 - subpad() was erroneously offsetting from the origin coordinates of the 
-  parent pad (which are always -1,-1)
+  parent pad (which are always -1,-1).
 
 - In wborder(), whline(), and wvline(), the current (wattrset) attribute 
-  was being used, but not the current background (wbkgd)
+  was being used, but not the current background (wbkgd).
 
-- Allow Russian 'r' character ASCII 0xe0 to be returned
+- Allow Russian 'r' character ASCII 0xe0 to be returned.
 
-- termattrs() now also returns A_UNDERLINE, A_REVERSE
+- termattrs() now also returns A_UNDERLINE, A_REVERSE.
 
-- Unwanted scrolling on startup in Win32 with large scrollback buffers
+- Unwanted scrolling on startup in Win32 with large scrollback buffers.
 
-- Revamped keyboard handling for Win32
+- Revamped keyboard handling for Win32.
 
-- napms() etc. now work with Cygwin
+- New screen resize method for Win32.
+
+- napms() etc. now work with Cygwin.
 
 - curs_set(0) wasn't working in Win32 in full-screen (ALT-ENTER) mode -- 
-  the cursor stayed on
+  the cursor stayed on.
 
-- A_REVERSE now works right in XCurses
+- A_REVERSE now works right in XCurses.
 
-- On 64-bit systems, XCurses was ignoring every other keystroke
+- On 64-bit systems, XCurses was ignoring every other keystroke.
 
-- Added focus hints for XCurses
+- Added focus hints for XCurses.
 
 - Demos (except for tuidemo) once again have their proper titles in
-  XCurses (using Xinitscr() instead of the obsolete XCursesProgramName)
+  XCurses (using Xinitscr() instead of the obsolete XCursesProgramName).
 
 - The 16-bit chtype is a working option again (by removing #define 
-  CHTYPE_LONG from curses.h), except in XCurses
+  CHTYPE_LONG from curses.h), except in XCurses.
 
-- Reset screen size in resetty() under DOS, as in Win32 and OS/2
+- Reset screen size in resetty() under DOS, as in Win32 and OS/2.
 
-- Changes for cursor size under DOS
+- Changes for cursor size under DOS.
 
-- Automatic setting of BIOS mode for CGA under DOS now works
+- Automatic setting of BIOS mode for CGA under DOS now works.
 
 - Cursor is now always updated in PDC_gotoxy(); fixes missing characters 
-  in BIOS mode
+  in BIOS mode.
 
 - Macros nocbreak(), cbreak(), nocrmode(), crmode(), nodelay(),
-  nl() and nonl() now return OK
+  nl() and nonl() now return OK.
 
 - ERR and OK are now defined as -1 and 0, respectively, for 
   compatibility with other curses implementations -- note that this
   change is not binary compatible; you'll have to rebuild programs that 
-  use shared/dynamic libraries
+  use shared/dynamic libraries.
 
-- Added "const" to prototypes where appropriate
+- Added "const" to prototypes where appropriate.
 
-- Miscellaneous code cleanup
+- Miscellaneous code cleanup.
 
 ACKNOWLEDGEMENTS:
 
@@ -123,6 +126,12 @@ ACKNOWLEDGEMENTS:
  and of course MARK HESSLING for his over 13 years of service as the 
  maintainer of PDCurses. Plus thanks to all who've reported bugs or 
  requested features, and anyone else I've forgotten.
+
+ I've tested this version on Turbo C++ 3.0 and Borland C++ 3.1 for DOS; 
+ DJGPP 2.X; Open Watcom 1.3 for DOS (16 and 32-bit), Windows and OS/2; 
+ EMX 0.9d and the "newgcc" version of EMX; Borland C++ 5.5 for Windows; 
+ recent versions of MinGW, Cygwin, LCC-Win32 and Microsoft Visual C++; 
+ and gcc under several flavors of Linux, Mac OS X, *BSD and Solaris. 
 
 -- William McBrine
    December 29, 2005

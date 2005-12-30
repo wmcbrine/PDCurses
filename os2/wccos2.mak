@@ -1,6 +1,6 @@
 ################################################################################
 #
-# Watcom WMAKE Makefile for PDCurses library - OS/2 Watcom C/C++ 10.6+
+# Watcom WMAKE Makefile for PDCurses library - OS/2 Open Watcom 1.1+
 #
 # Usage: wmake -f [path\]wccos2.mak [DEBUG=Y] [target]
 #
@@ -9,7 +9,7 @@
 #
 ################################################################################
 #
-# First, set the environment variable PDCURSES_SRCDIR, and/or edit the 
+# First, set the environment variable PDCURSES_SRCDIR, and/or edit the
 # lines below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
 #
 ################################################################################
@@ -38,19 +38,19 @@ TARGET=os2v2
 
 !ifeq DEBUG Y
 CFLAGS  = /d2 /DPDCDEBUG
-LDFLAGS = DEBUG
+LDFLAGS = DEBUG ALL
 !else
-CFLAGS  = /oneatx
+CFLAGS  = /oneatx /wcd=302
 LDFLAGS =
 !endif
 
-CPPFLAGS	= /i=$(PDCURSES_HOME) /i=$(CCINCDIR)
+CPPFLAGS = /i=$(PDCURSES_HOME) /i=$(CCINCDIR)
 
-CCFLAGS		= /bt=$(TARGET) /zq /mf $(CFLAGS) $(CPPFLAGS)
+CCFLAGS = /bt=$(TARGET) /bm /3s /wx /s /zq /mf $(CFLAGS) $(CPPFLAGS)
 
 LINK		= wlink
 
-LIBEXE		= wlib /q /n
+LIBEXE = wlib /q /n /b /c
 
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib

@@ -5,22 +5,22 @@
 
 INTRODUCTION:
 
- Hello all. As of 2.7, I'm the new maintainer for PDCurses. Here's a 
- brief summary of changes in this release. (More details are available 
- in the CVS log and trackers on SourceForge.)
+ Hello all. As of a few weeks ago, I'm the new maintainer for PDCurses.
+ Here's a brief summary of changes in this release. (More details are
+ available in the CVS log and trackers on SourceForge.)
 
 NEW FEATURES:
 
-- Functions: delscreen(), getattrs(), has_key(), slk_color(), 
+- Functions: delscreen(), getattrs(), has_key(), slk_color(),
   wcolor_set(), wtimeout().
 
-- Macros: color_set(), mvhline(), mvvline(), mvwgetnstr(), mvwhline(), 
+- Macros: color_set(), mvhline(), mvvline(), mvwgetnstr(), mvwhline(),
   mvwvline(), timeout(), wresize().
 
 - Stub implementations of terminfo functions (including a term.h).
 
-- More stubs for compatibility: filter(), getwin(), putwin(), 
-  noqiflush(), qiflush(), scr_dump(), scr_init(), scr_restore(), 
+- More stubs for compatibility: filter(), getwin(), putwin(),
+  noqiflush(), qiflush(), scr_dump(), scr_init(), scr_restore(),
   scr_set(), use_env(), vidattr(), vidputs().
 
 - The terminal's default colors are used as curses' default colors when
@@ -29,13 +29,13 @@ NEW FEATURES:
 
 - Simplified build system.
 
-- Replaced PDC_STATIC_BUILD with its opposite, PDC_DLL_BUILD (see .mak 
+- Replaced PDC_STATIC_BUILD with its opposite, PDC_DLL_BUILD (see .mak
   files for more info).
 
 - Minimal implementation of color_content() -- no longer a stub.
 
 - Added the remaining ACS defines (ACS_S3, ACS_BBSS, etc.) for
-  DOS/OS2/Win; use "enhanced" versions of existing ACS characters.
+  DOS/OS2/Win; "enhanced" versions of existing ACS characters used.
 
 - Support for scroll wheels.
 
@@ -43,40 +43,41 @@ NEW FEATURES:
 
 BUGS FIXED:
 
-- Builds correctly (including demos) on all tested platforms (see 
-  below); nearly all compiler warnings cleaned up; build ptest demo on 
-  all platforms; improved "clean" targets.
+- Builds correctly (including demos) on all tested platforms (see
+  below); nearly all compiler warnings have been cleaned up; the ptest
+  demo is built on all platforms; "clean" targets are improved.
 
-- Restored the ability to build ncurses_tests.
+- The ability to build ncurses_tests has been restored (see demos dir).
 
-- Line-breakout optimization now defaults to off (equivalent to 
-  "typeahead(-1)"), so output is not interrupted by keystrokes (it's 
+- Line-breakout optimization now defaults to off (equivalent to
+  "typeahead(-1)"), so output is not interrupted by keystrokes (it's
   supposed to resume on the next refresh(), which wasn't working).
 
-- Implicit wrefresh() in wgetch() was not invoked in nodelay mode.
+- Implicit wrefresh() in wgetch() was not being invoked in nodelay mode.
 
-- subpad() was erroneously offsetting from the origin coordinates of the 
+- subpad() was erroneously offsetting from the origin coordinates of the
   parent pad (which are always -1,-1).
 
-- In wborder(), whline(), and wvline(), the current (wattrset) attribute 
+- In wborder(), whline(), and wvline(), the current (wattrset) attribute
   was being used, but not the current background (wbkgd).
 
 - Allow Russian 'r' character ASCII 0xe0 to be returned.
 
 - termattrs() now also returns A_UNDERLINE, A_REVERSE.
 
-- Unwanted scrolling on startup in Win32 with large scrollback buffers.
+- In Win32, with large scrollback buffers set, there was an unwanted
+  "scrollup" effect on startup.
 
 - Revamped keyboard handling for Win32.
 
 - New screen resize method for Win32.
 
-- napms() etc. now work with Cygwin.
+- napms(), delay_output(), etc. now work with Cygwin.
 
-- curs_set(0) wasn't working in Win32 in full-screen (ALT-ENTER) mode -- 
+- curs_set(0) wasn't working in Win32 in full-screen (ALT-ENTER) mode --
   the cursor stayed on.
 
-- A_REVERSE now works right in XCurses.
+- The A_REVERSE attribute was broken in XCurses.
 
 - On 64-bit systems, XCurses was ignoring every other keystroke.
 
@@ -85,8 +86,9 @@ BUGS FIXED:
 - Demos (except for tuidemo) once again have their proper titles in
   XCurses (using Xinitscr() instead of the obsolete XCursesProgramName).
 
-- The 16-bit chtype is a working option again (by removing #define 
-  CHTYPE_LONG from curses.h), except in XCurses.
+- The 16-bit chtype is a working option again (by removing #define
+  CHTYPE_LONG from curses.h), except in XCurses. It's not recommended;
+  but if your needs are limited, it still works.
 
 - Reset screen size in resetty() under DOS, as in Win32 and OS/2.
 
@@ -94,15 +96,15 @@ BUGS FIXED:
 
 - Automatic setting of BIOS mode for CGA under DOS now works.
 
-- Cursor is now always updated in PDC_gotoxy(); fixes missing characters 
+- Cursor is now always updated in PDC_gotoxy(); fixes missing characters
   in BIOS mode.
 
 - Macros nocbreak(), cbreak(), nocrmode(), crmode(), nodelay(),
   nl() and nonl() now return OK.
 
-- ERR and OK are now defined as -1 and 0, respectively, for 
+- ERR and OK are now defined as -1 and 0, respectively, for
   compatibility with other curses implementations -- note that this
-  change is not binary compatible; you'll have to rebuild programs that 
+  change is not binary compatible; you'll have to rebuild programs that
   use shared/dynamic libraries.
 
 - Added "const" to prototypes where appropriate.
@@ -123,15 +125,15 @@ ACKNOWLEDGEMENTS:
  Ron Thibodeau
  Alexandr Zamaraev
 
- and of course MARK HESSLING for his over 13 years of service as the 
- maintainer of PDCurses. Plus thanks to all who've reported bugs or 
- requested features, and anyone else I've forgotten.
+ and of course, MARK HESSLING, for his over 13 years of service as the
+ maintainer of PDCurses. Plus, thanks to all who've reported bugs or
+ requested features. Apologies to anyone I've forgotten.
 
- I've tested this version on Turbo C++ 3.0 and Borland C++ 3.1 for DOS; 
- DJGPP 2.X; Open Watcom 1.3 for DOS (16 and 32-bit), Windows and OS/2; 
- EMX 0.9d and the "newgcc" version of EMX; Borland C++ 5.5 for Windows; 
- recent versions of MinGW, Cygwin, LCC-Win32 and Microsoft Visual C++; 
- and gcc under several flavors of Linux, Mac OS X, *BSD and Solaris. 
+ I've tested this version on Turbo C++ 3.0 and Borland C++ 3.1 for DOS;
+ DJGPP 2.X; Open Watcom 1.3 for DOS (16 and 32-bit), Windows and OS/2;
+ EMX 0.9d and the "newgcc" version of EMX; Borland C++ 5.5 for Windows;
+ recent versions of MinGW, Cygwin, LCC-Win32 and Microsoft Visual C++;
+ and gcc under several flavors of Linux, Mac OS X, *BSD and Solaris.
 
 -- William McBrine
    December 29, 2005

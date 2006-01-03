@@ -2775,7 +2775,7 @@ Cardinal *nparams;
                SelectionOn(MOUSE_X_POS,MOUSE_Y_POS);
             }
 #else
-            PDC_usleep( XCURSESCLICKPERIOD * 1000 ); /* microseconds to milliseconds */
+            napms( XCURSESCLICKPERIOD );
             event->type = ButtonRelease;
             XSendEvent(event->xbutton.display, event->xbutton.window, True,
                        0, event);

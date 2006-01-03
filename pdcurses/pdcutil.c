@@ -26,21 +26,6 @@
 #endif
 #include <curses.h>
 
-#ifdef TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# ifdef HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-#ifdef HAVE_UNISTD_H
-#  include <unistd.h>
-#endif
-
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -61,7 +46,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.10 2006/01/03 16:59:55 wmcbrine Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.11 2006/01/03 17:19:24 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -127,11 +112,6 @@ void PDC_beep ()
 #endif
 /***********************************************************************/
 {
-#ifdef UNIX
-	if (bell != NULL)
-		putp(bell);
-#endif
-
 #if defined (XCURSES)
 	XCursesInstruct(CURSES_BELL);
 #endif
@@ -152,8 +132,6 @@ void PDC_beep ()
 /*	MessageBeep(MB_OK); */
 	MessageBeep(0XFFFFFFFF);
 #endif
-
-  return;
 }
 
 #ifndef HAVE_VSSCANF

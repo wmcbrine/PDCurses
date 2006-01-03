@@ -85,7 +85,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.14 2006/01/03 16:59:55 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.15 2006/01/03 17:19:24 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -506,9 +506,16 @@ int ms;
 
 #if defined(WIN32)
 	Sleep( ms );
-#elif (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
+#elif defined(OS2)
+# if defined(EMX)
+	_sleep2(ms);
+# else
+	DosSleep(ms);
+# endif
+#elif defined(DOS)
+# if defined(TC) || defined(__WATCOMC__)
 	delay( ms );
-#elif defined(PC)
+# elif defined(PC)
 	{
          /* get number of ticks since startup from address 0040:006ch
           * 1 sec. = 18.2065
@@ -518,24 +525,20 @@ int ms;
 		while (goal > *ticks)
 		;
 	}
-#elif defined(OS2)
-# if defined(EMX)
-	_sleep2(ms);
-# else
-	DosSleep(ms);
-# endif
-#elif defined(DOS) && (defined(MSC) || defined(NDP))
+# elif defined(MSC) || defined(NDP)
 	{
 		clock_t goal = (ms / 50) + clock();
 		while (goal > clock())
 		;
 	}
+# endif
 #elif defined(HAVE_USLEEP)
 	usleep(1000 * ms);
 #elif defined(HAVE_POLL)
-        struct pollfd fd;
-
-        poll(&fd, 0L, min(1L, ms));
+	{
+		struct pollfd fd;
+		poll(&fd, 0L, min(1L, ms));
+	}
 #endif
 	return OK;
 }

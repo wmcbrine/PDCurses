@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad  = "$Id: pad.c,v 1.4 2005/12/08 08:12:32 wmcbrine Exp $";
+char *rcsid_pad  = "$Id: pad.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*
@@ -156,9 +156,7 @@ int ncols;
    int   i;
    int   j;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("newpad() - called: lines=%d cols=%d\n",nlines,ncols);
-#endif
+   PDC_LOG(("newpad() - called: lines=%d cols=%d\n",nlines,ncols));
 
    if ((win = PDC_makenew( nlines, ncols, -1, -1 )) == (WINDOW *)NULL)
       return( (WINDOW *)NULL );
@@ -227,9 +225,7 @@ int begin_x;
    int   j = begin_y;
    int   k = begin_x;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("subpad() - called: lines=%d cols=%d begy=%d begx=%d\n",nlines,ncols,begin_y,begin_x);
-#endif
+   PDC_LOG(("subpad() - called: lines=%d cols=%d begy=%d begx=%d\n",nlines,ncols,begin_y,begin_x));
 
    if (!orig)
       return( (WINDOW *)NULL );
@@ -299,9 +295,7 @@ int sx2;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("prefresh() - called\n");
-#endif
+   PDC_LOG(("prefresh() - called\n"));
 
    if (win == (WINDOW *)NULL)
       return( ERR );
@@ -332,10 +326,7 @@ int sx2;
    int      pline = py;
    int      num_cols = min((sx2-sx1+1),(w->_maxx-px));
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("pnoutrefresh() - called\n");
-#endif
-
+   PDC_LOG(("pnoutrefresh() - called\n"));
 
    if (w == (WINDOW *)NULL)
       return( ERR );
@@ -408,9 +399,7 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("pechochar() - called\n");
-#endif
+   PDC_LOG(("pechochar() - called\n"));
 
    if ( PDC_chadd( pad, ch, !(SP->raw_out), TRUE ) == ERR )
       return(ERR);

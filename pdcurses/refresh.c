@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh  = "$Id: refresh.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_refresh  = "$Id: refresh.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -117,9 +117,7 @@ int   PDC_CDECL   refresh()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("refresh() - called\n");
-#endif
+   PDC_LOG(("refresh() - called\n"));
 
    return( wrefresh(stdscr) );
 }
@@ -133,9 +131,8 @@ WINDOW *win;
 /***********************************************************************/
 {
    bool save_clear;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("wrefresh() - called\n");
-#endif
+
+   PDC_LOG(("wrefresh() - called\n"));
 
    if (win == (WINDOW *)NULL) return( ERR );
    if (win->_flags & _PAD) return( ERR );
@@ -169,9 +166,8 @@ register int      last;  /* last changed char on line  */
    int      begy, begx;  /* window's place on screen   */
    int      i, j, x, y;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("wnoutrefresh() - called: win=%x\n",win);
-#endif
+   PDC_LOG(("wnoutrefresh() - called: win=%x\n",win));
+
    if (win == (WINDOW *)NULL)
       return( ERR );
 
@@ -257,9 +253,7 @@ bool rc;
    WINDS*   next = SP->visible;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("doupdate() - called\n");
-#endif
+   PDC_LOG(("doupdate() - called\n"));
 
    if (isendwin())  /* coming back after endwin() called */
    {
@@ -309,25 +303,15 @@ bool rc;
       &&  getenv("PDC_FULL_DISPLAY") != NULL)
          PDC_doupdate();
       else
-      {
+#endif
          for (i = 0; i < SP->lines; i++)
          {
-# ifdef PDCDEBUG
-   if (trace_on) PDC_debug("doupdate() - Transforming line %d of %d: %s\n",i,SP->lines,(curscr->_firstch[i] != _NO_CHANGE)?"Yes" : "No");
-#endif
+            PDC_LOG(("doupdate() - Transforming line %d of %d: %s\n",i,SP->lines,(curscr->_firstch[i] != _NO_CHANGE)?"Yes" : "No"));
+
             if (curscr->_firstch[i] != _NO_CHANGE)
                if (PDC_transform_line(i))  /* if test new */
                   break;
          }
-      }
-#else
-      for (i = 0; i < SP->lines; i++)
-      {
-         if (curscr->_firstch[i] != _NO_CHANGE)
-            if (PDC_transform_line(i))  /* if test new */
-               break;
-      }
-#endif
    }
 
 # if defined (XCURSES)
@@ -353,10 +337,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("redrawwin() - called: win=%x\n",win);
-#endif
+   PDC_LOG(("redrawwin() - called: win=%x\n",win));
 
    if (win == (WINDOW *)NULL)
       return( ERR );
@@ -376,9 +357,7 @@ int num;
 {
    register int i;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("wredrawln() - called: win=%x start=%d num=%d\n",win,start,num);
-#endif
+   PDC_LOG(("wredrawln() - called: win=%x start=%d num=%d\n",win,start,num));
 
    if (win == (WINDOW *)NULL)
       return( ERR );

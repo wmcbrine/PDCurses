@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_clear  = "$Id: clear.c,v 1.3 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_clear  = "$Id: clear.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -110,9 +110,7 @@ int	PDC_CDECL	clear()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("clear() - called\n");
-#endif
+	PDC_LOG(("clear() - called\n"));
 
 	if  (stdscr == (WINDOW *)NULL)
 		return(ERR);
@@ -129,9 +127,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wclear() - called\n");
-#endif
+	PDC_LOG(("wclear() - called\n"));
 
 	if  (win == (WINDOW *)NULL)
 		return( ERR );
@@ -158,10 +154,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("werase() - called\n");
-#endif
+	PDC_LOG(("werase() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -191,9 +184,7 @@ WINDOW *win;
 	int	savey=win->_cury;
 	int	savex=win->_curx;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wclrtobot() - called\n");
-#endif
+	PDC_LOG(("wclrtobot() - called\n"));
 
 	if  (win == (WINDOW *)NULL)
 		return( ERR );
@@ -236,10 +227,7 @@ WINDOW *win;
 	int	x, y, minx;
 	chtype	blank, *ptr;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wclrtoeol() - called: Row: %d Col: %d\n",
-		win->_cury, win->_curx);
-#endif
+	PDC_LOG(("wclrtoeol() - called: Row: %d Col: %d\n", win->_cury, win->_curx));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );

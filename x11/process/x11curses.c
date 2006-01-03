@@ -44,9 +44,8 @@ int nlines,ncols;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesResizeScreen() - called: Lines: %d Cols: %d\n",(XCursesProcess)?"     X":"CURSES",nlines,ncols);
-#endif
+   PDC_LOG(("%s:XCursesResizeScreen() - called: Lines: %d Cols: %d\n",(XCursesProcess)?"     X":"CURSES",nlines,ncols));
+
    shmdt((char *)Xcurscr);
    XCursesInstructAndWait(CURSES_RESIZE);
    if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,SP->XcurscrSize+XCURSESSHMMIN,0700)) < 0)
@@ -57,9 +56,9 @@ int nlines,ncols;
    }
    XCursesLINES = SP->lines;
    XCursesCOLS = SP->cols;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d SP->cols %d\n",(XCursesProcess)?"     X":"CURSES",shmid_Xcurscr,shmkey_Xcurscr,SP->lines,SP->cols);
-#endif
+
+   PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d SP->cols %d\n",(XCursesProcess)?"     X":"CURSES",shmid_Xcurscr,shmkey_Xcurscr,SP->lines,SP->cols));
+
    Xcurscr = (unsigned char*)shmat(shmid_Xcurscr,0,0);
    atrtab = (unsigned char *)(Xcurscr+XCURSCR_ATRTAB_OFF);
    SP->resized=FALSE;
@@ -77,10 +76,7 @@ int oldrow,oldcol,newrow,newcol,visibility;
    char buf[30];
    int idx,pos;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_display_cursor() - called: NEW row %d col %d, vis %d\n",
-                        (XCursesProcess)?"X":"CURSES",newrow,newcol,visibility);
-#endif
+   PDC_LOG(("%s:XCurses_display_cursor() - called: NEW row %d col %d, vis %d\n", (XCursesProcess)?"X":"CURSES",newrow,newcol,visibility));
 
    if ( visibility == -1 )
    {
@@ -121,10 +117,7 @@ char *title;
    char buf[30];
    int idx,len;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_set_title() - called: TITLE: %s\n",
-                        (XCursesProcess)?"X":"CURSES",title);
-#endif
+   PDC_LOG(("%s:XCurses_set_title() - called: TITLE: %s\n", (XCursesProcess)?"X":"CURSES",title));
 
    idx = CURSES_TITLE;
    memcpy(buf,(char *)&idx,sizeof(int));
@@ -153,9 +146,7 @@ int XCurses_refresh_scrollbar()
    char buf[30];
    int idx;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_refresh_scrollbar() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCurses_refresh_scrollbar() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
    idx = CURSES_REFRESH_SCROLLBAR;
    memcpy(buf,(char *)&idx,sizeof(int));
@@ -180,9 +171,7 @@ int delaytenths;
    int key=0;
    char buf[100]; /* big enough for MOUSE_STATUS struct */
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_rawgetch() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCurses_rawgetch() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
    while(1)
    {
@@ -237,9 +226,8 @@ int delaytenths;
          break;
    }
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_rawgetch() - key %d returned\n",(XCursesProcess)?"     X":"CURSES",key);
-#endif
+   PDC_LOG(("%s:XCurses_rawgetch() - key %d returned\n",(XCursesProcess)?"     X":"CURSES",key));
+
    return(key);
 }
 /***********************************************************************/
@@ -250,11 +238,10 @@ int XCurses_get_input_fd()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCurses_get_input_fd() - called\n",(XCursesProcess)?"     X":"CURSES");
-	if (trace_on) PDC_debug("%s:XCurses_get_input_fd() - returning %i\n",(XCursesProcess)?"     X":"CURSES",key_sock);
-#endif
- return key_sock;
+	PDC_LOG(("%s:XCurses_get_input_fd() - called\n",(XCursesProcess)?"     X":"CURSES"));
+	PDC_LOG(("%s:XCurses_get_input_fd() - returning %i\n",(XCursesProcess)?"     X":"CURSES",key_sock));
+
+	return key_sock;
 }
 
 /***********************************************************************/
@@ -267,9 +254,8 @@ bool XCurses_kbhit()
 {
    int s;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_kbhit() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCurses_kbhit() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    /*
     * Is something ready to be read on the socket ? Must be a key.
     */
@@ -278,9 +264,8 @@ bool XCurses_kbhit()
    if ( ( s = select ( FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, NULL, &socket_timeout ) ) < 0 )
       XCursesExitCursesProcess(3,"child - exiting from XCurses_kbhit select failed");
             
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_kbhit() - returning %s\n",(XCursesProcess)?"     X":"CURSES",(s == 0) ? "FALSE" : "TRUE");
-#endif
+   PDC_LOG(("%s:XCurses_kbhit() - returning %s\n",(XCursesProcess)?"     X":"CURSES",(s == 0) ? "FALSE" : "TRUE"));
+
    if ( s == 0 )
       return(FALSE);
    return(TRUE);
@@ -296,9 +281,8 @@ int flag;
 {
    char buf[10];
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesInstruct() - called flag %d\n",(XCursesProcess)?"     X":"CURSES",flag);
-#endif
+   PDC_LOG(("%s:XCursesInstruct() - called flag %d\n",(XCursesProcess)?"     X":"CURSES",flag));
+
    /*
     * Send a request to X...
     */
@@ -319,9 +303,8 @@ int flag;
    int result;
    char buf[10];
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesInstructAndWait() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesInstructAndWait() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    /*
     * Tell X we want to do something...
     */
@@ -346,10 +329,7 @@ int row,start_col,num_cols;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_transform_line() called: row %d start_col %d num_cols %d flag %d\n",
-                        (XCursesProcess)?"X":"CURSES",row,start_col,num_cols,*(Xcurscr+XCURSCR_FLAG_OFF+row));
-#endif
+   PDC_LOG(("%s:XCurses_transform_line() called: row %d start_col %d num_cols %d flag %d\n", (XCursesProcess)?"X":"CURSES",row,start_col,num_cols,*(Xcurscr+XCURSCR_FLAG_OFF+row)));
 
    while(*(Xcurscr+XCURSCR_FLAG_OFF+row))
    /*
@@ -389,9 +369,8 @@ static int XCursesSetupCurses()
    char wait_buf[5];
    int wait_value;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesSetupCurses called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesSetupCurses called\n",(XCursesProcess)?"     X":"CURSES"));
+
    close ( display_sockets[1] );
    close ( key_sockets[1] );
    display_sock = display_sockets[0];
@@ -422,9 +401,9 @@ static int XCursesSetupCurses()
       kill(otherpid,SIGKILL);
       return(ERR);
    }
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",(XCursesProcess)?"     X":"CURSES",shmid_Xcurscr,shmkey_Xcurscr,LINES,COLS);
-#endif
+
+   PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",(XCursesProcess)?"     X":"CURSES",shmid_Xcurscr,shmkey_Xcurscr,LINES,COLS));
+
    Xcurscr = (unsigned char *)shmat(shmid_Xcurscr,0,0);
    atrtab = (unsigned char *)(Xcurscr+XCURSCR_ATRTAB_OFF);
    PDC_init_atrtab();
@@ -450,9 +429,7 @@ char *argv[];
 {
    int pid,rc;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesInitscr() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesInitscr() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
 #if defined FOREIGN
    if (setlocale(LC_ALL, "") == NULL)
@@ -531,9 +508,8 @@ long *length;
    int len;
    char buf[12];
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_getclipboard() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCurses_getclipboard() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    XCursesInstructAndWait(CURSES_GET_SELECTION);
 
    if (read_socket(display_sock,buf,sizeof(int)) < 0)
@@ -570,9 +546,9 @@ long length;
    int rc=0;
    char buf[12]; /* big enough for 2 integers */
    long len=length;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_setclipboard() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+
+   PDC_LOG(("%s:XCurses_setclipboard() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    XCursesInstruct(CURSES_SET_SELECTION);
    memcpy(buf,(char *)&len,sizeof(long));
    if (write_socket(display_sock,buf,sizeof(long)) < 0)
@@ -599,9 +575,9 @@ int XCurses_clearclipboard( )
    int rc=0;
    char buf[12]; /* big enough for 2 integers */
    long len;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCurses_clearclipboard() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+
+   PDC_LOG(("%s:XCurses_clearclipboard() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    XCursesInstruct(CURSES_CLEAR_SELECTION);
    memcpy(buf,(char *)&len,sizeof(long));
    if (write_socket(display_sock,buf,sizeof(long)) < 0)
@@ -624,9 +600,8 @@ int rc;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesCleanupCursesProcess() - called: %d\n",(XCursesProcess)?"     X":"CURSES",rc);
-#endif
+   PDC_LOG(("%s:XCursesCleanupCursesProcess() - called: %d\n",(XCursesProcess)?"     X":"CURSES",rc));
+
    shutdown(display_sock,2);
    close(display_sock);
    shutdown(key_sock,2);
@@ -648,9 +623,8 @@ char *msg;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesExitCursesProcess() - called: %d %s\n",(XCursesProcess)?"     X":"CURSES",rc,msg);
-#endif
+   PDC_LOG(("%s:XCursesExitCursesProcess() - called: %d %s\n",(XCursesProcess)?"     X":"CURSES",rc,msg));
+
    endwin();
    XCursesCleanupCursesProcess(rc);
    return;
@@ -663,9 +637,8 @@ void XCursesExit()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesExit() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesExit() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    XCursesInstruct(CURSES_EXIT);
    XCursesCleanupCursesProcess(0);
    return;

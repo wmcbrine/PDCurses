@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.4 2005/12/07 09:52:06 wmcbrine Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -200,9 +200,7 @@ chtype br;
 	int ymin,xmin;
 	int	i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wborder() - called\n");
-#endif
+	PDC_LOG(("wborder() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -270,10 +268,7 @@ chtype br;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("border() - called\n");
-#endif
+	PDC_LOG(("border() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -291,9 +286,7 @@ chtype horch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("box() - called\n");
-#endif
+	PDC_LOG(("box() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -310,10 +303,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("hline() - called\n");
-#endif
+	PDC_LOG(("hline() - called\n"));
 
 	return(whline(stdscr,ch,n));
 }
@@ -331,9 +321,7 @@ int n;
 	int	startpos;
 	int	endpos;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("whline() - called\n");
-#endif
+	PDC_LOG(("whline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -376,10 +364,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("vline() - called\n");
-#endif
+	PDC_LOG(("vline() - called\n"));
 
 	return(wvline(stdscr,ch,n));
 }
@@ -396,9 +381,7 @@ int n;
 {
 	int	endpos;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wvline() - called\n");
-#endif
+	PDC_LOG(("wvline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -442,9 +425,7 @@ bool state;
 {
 	int	endpos;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_wunderline() - called\n");
-#endif
+	PDC_LOG(("PDC_wunderline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -489,9 +470,7 @@ bool state;
 {
 	int	endpos;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_wleftline() - called\n");
-#endif
+	PDC_LOG(("PDC_wleftline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -536,9 +515,7 @@ bool state;
 {
 	int	endpos;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_wrightline() - called\n");
-#endif
+	PDC_LOG(("PDC_wrightline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );

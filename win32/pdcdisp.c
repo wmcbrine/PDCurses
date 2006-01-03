@@ -29,7 +29,7 @@
 extern HANDLE hConOut;
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.3 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 static CHAR_INFO ci[512];
@@ -69,9 +69,7 @@ int   PDC_clr_update(WINDOW *s)
    COORD bufSize, bufPos;
    SMALL_RECT sr;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_clr_update() - called\n");
-#endif
+   PDC_LOG(("PDC_clr_update() - called\n"));
 
    w = curscr;
    if (w == (WINDOW *)NULL)
@@ -136,11 +134,9 @@ int   PDC_clr_update(WINDOW *s)
 int   PDC_cursor_on(void)
 /***********************************************************************/
 {
-CONSOLE_CURSOR_INFO cci;
+   CONSOLE_CURSOR_INFO cci;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_cursor_on() - called\n");
-#endif
+   PDC_LOG(("PDC_cursor_on() - called\n"));
 
    if (!SP->visible_cursor)
    {
@@ -175,11 +171,9 @@ CONSOLE_CURSOR_INFO cci;
 int   PDC_cursor_off(void)
 /***********************************************************************/
 {
-CONSOLE_CURSOR_INFO cci;
+   CONSOLE_CURSOR_INFO cci;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_cursor_off() - called\n");
-#endif
+   PDC_LOG(("PDC_cursor_off() - called\n"));
 
    if (SP->visible_cursor)
    {
@@ -255,9 +249,7 @@ int   PDC_gotoxy(int row, int col)
 {
    COORD coord;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_gotoxy() - called: row %d col %d from row %d col %d\n", row, col, SP->cursrow, SP->curscol );
-#endif
+   PDC_LOG(("PDC_gotoxy() - called: row %d col %d from row %d col %d\n", row, col, SP->cursrow, SP->curscol ));
 
    coord.X = col;
    coord.Y = row;
@@ -296,9 +288,7 @@ int   PDC_putc( chtype character, chtype color )
    COORD coord;
    DWORD written;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_putc() - called:char=%c attrib=0x%x color=0x%x\n",character & A_CHARTEXT,character & A_ATTRIBUTES,color);
-#endif
+   PDC_LOG(("PDC_putc() - called:char=%c attrib=0x%x color=0x%x\n",character & A_CHARTEXT,character & A_ATTRIBUTES,color));
 
    buffer[0] = color;
    PDC_get_cursor_pos (&curRow, &curCol);
@@ -346,10 +336,7 @@ int   PDC_putctty( chtype character, chtype color )
    COORD coord;
    DWORD written;
 
-
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_putctty() - called\n");
-#endif
+   PDC_LOG(("PDC_putctty() - called\n"));
 
    buffer = color;
    PDC_get_cursor_pos (&curRow, &curCol);
@@ -392,9 +379,7 @@ int   PDC_putctty( chtype character, chtype color )
 int   PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_scroll() - called: urow %d lcol %d lrow %d rcol %d nlines %d\n",urow,lcol,lrow,rcol,nlines);
-#endif
+   PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d rcol %d nlines %d\n",urow,lcol,lrow,rcol,nlines));
 
    return( OK );
 }
@@ -437,9 +422,7 @@ bool  PDC_transform_line(register int lineno)
    COORD bufSize, bufPos;
    SMALL_RECT sr;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_transform_line() - called: lineno=%d\n",lineno);
-#endif
+   PDC_LOG(("PDC_transform_line() - called: lineno=%d\n",lineno));
 
    if (curscr == (WINDOW *)NULL)
       return( FALSE );
@@ -517,9 +500,7 @@ void PDC_doupdate(void)
    COORD bufSize, bufPos;
    SMALL_RECT sr;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_doupdate() - called:\n");
-#endif
+   PDC_LOG(("PDC_doupdate() - called:\n"));
 
    if (curscr == (WINDOW *)NULL)
       return;

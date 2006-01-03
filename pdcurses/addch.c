@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addch  = "$Id: addch.c,v 1.3 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_addch  = "$Id: addch.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -142,9 +142,7 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("addch() - called: ch=%x\n",ch);
-#endif
+	PDC_LOG(("addch() - called: ch=%x\n",ch));
 
 	return( PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE ) );
 }
@@ -158,9 +156,7 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("waddch() - called: win=%x ch=%x\n",win,ch);
-#endif
+	PDC_LOG(("waddch() - called: win=%x ch=%x\n",win,ch));
 
 	return( PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE ) );
 }
@@ -175,9 +171,8 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvaddch() - called: y=%d x=%d ch=%x\n",y,x,ch);
-#endif
+	PDC_LOG(("mvaddch() - called: y=%d x=%d ch=%x\n",y,x,ch));
+
 	if (move(y,x) == ERR)
 		return(ERR);
 	return( PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE ) );
@@ -194,9 +189,8 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwaddch() - called: win=%x y=%d x=%d ch=%d\n",win,y,x,ch);
-#endif
+	PDC_LOG(("mvwaddch() - called: win=%x y=%d x=%d ch=%d\n",win,y,x,ch));
+
 	if (wmove(win,y,x) == ERR)
 		return(ERR);
 	return( PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE ) );
@@ -210,9 +204,7 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("echochar() - called: ch=%x\n",ch);
-#endif
+	PDC_LOG(("echochar() - called: ch=%x\n",ch));
 
 	if (PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE ) == ERR)
 		return(ERR);
@@ -228,9 +220,7 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wechochar() - called: win=%x ch=%x\n",win,ch);
-#endif
+	PDC_LOG(("wechochar() - called: win=%x ch=%x\n",win,ch));
 
 	if (PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE ) == ERR)
 		return(ERR);

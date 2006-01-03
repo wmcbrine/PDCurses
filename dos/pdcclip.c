@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.6 2003/06/23 07:54:31 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.7 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 #include <string.h>
@@ -60,11 +60,9 @@ static char *pdc_DOS_clipboard = NULL;
 **man-end**********************************************************************/
 int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 {
-  int len;
+	int len;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_getclipboard() - called\n");
-#endif
+	PDC_LOG(("PDC_getclipboard() - called\n"));
 
 	if (pdc_DOS_clipboard == NULL) return PDC_CLIP_EMPTY;
 
@@ -102,9 +100,7 @@ int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 
 int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_setclipboard() - called\n");
-#endif
+	PDC_LOG(("PDC_setclipboard() - called\n"));
 
 	if (pdc_DOS_clipboard != NULL) 
 	{
@@ -142,9 +138,7 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 
 int	PDC_CDECL	PDC_freeclipboard(char *contents)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_freeclipboard() - called\n");
-#endif
+	PDC_LOG(("PDC_freeclipboard() - called\n"));
 
 	/* should we also free empty the system clipboard? probably not */
 
@@ -183,9 +177,7 @@ int	PDC_CDECL	PDC_freeclipboard(char *contents)
 
 int	PDC_CDECL	PDC_clearclipboard( void )
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_clearclipboard() - called\n");
-#endif
+	PDC_LOG(("PDC_clearclipboard() - called\n"));
 
 	if (pdc_DOS_clipboard != NULL) 
 	{

@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: scr_dump.c,v 1.1 2005/12/17 09:07:23 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: scr_dump.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -96,10 +96,8 @@ char *filename;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("scr_dump() - called: filename %s\n",
-		filename);
-#endif
+	PDC_LOG(("scr_dump() - called: filename %s\n", filename));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -111,10 +109,8 @@ char *filename;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("scr_init() - called: filename %s\n",
-		filename);
-#endif
+	PDC_LOG(("scr_init() - called: filename %s\n", filename));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -126,10 +122,8 @@ char *filename;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("scr_restore() - called: filename %s\n", 
-		filename);
-#endif
+	PDC_LOG(("scr_restore() - called: filename %s\n", filename));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -141,9 +135,7 @@ char *filename;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("scr_set() - called: filename %s\n", 
-		filename);
-#endif
+	PDC_LOG(("scr_set() - called: filename %s\n", filename));
+
 	return ERR;
 }

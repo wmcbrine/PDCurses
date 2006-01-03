@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.4 2005/12/12 06:17:59 wmcbrine Exp $";
+char *rcsid_attr  = "$Id: attr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -128,9 +128,8 @@ chtype attrs;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("attroff() - called\n");
-#endif
+	PDC_LOG(("attroff() - called\n"));
+
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
 
@@ -147,9 +146,8 @@ attr_t attrs;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wattroff() - called\n");
-#endif
+	PDC_LOG(("wattroff() - called\n"));
+
 	if (win == (WINDOW *)NULL)
 		return( ERR );
 
@@ -165,9 +163,8 @@ attr_t attrs;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("attron() - called\n");
-#endif
+	PDC_LOG(("attron() - called\n"));
+
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
 	return(wattron(stdscr,attrs));
@@ -185,9 +182,7 @@ attr_t attrs;
 	attr_t newcolr, oldcolr;
 	attr_t newattr, oldattr;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wattron() - called\n");
-#endif
+	PDC_LOG(("wattron() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -213,9 +208,8 @@ attr_t attrs;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("attrset() - called\n");
-#endif
+	PDC_LOG(("attrset() - called\n"));
+
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
 	stdscr->_attrs = attrs & A_ATTRIBUTES;
@@ -231,9 +225,8 @@ attr_t attrs;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wattrset() - called\n");
-#endif
+	PDC_LOG(("wattrset() - called\n"));
+
 	if (win == (WINDOW *)NULL)
 		return( ERR );
 	win->_attrs = attrs & A_ATTRIBUTES;
@@ -258,9 +251,8 @@ int	PDC_CDECL	standend()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("standend() - called\n");
-#endif
+	PDC_LOG(("standend() - called\n"));
+
 	return( wattrset( stdscr, A_NORMAL ) );
 }
 /***********************************************************************/
@@ -271,9 +263,8 @@ int	PDC_CDECL	standout()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("standout() - called\n");
-#endif
+	PDC_LOG(("standout() - called\n"));
+
 	return( wattrset( stdscr, A_STANDOUT ) );
 }
 /***********************************************************************/
@@ -285,9 +276,8 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wstandend() - called\n");
-#endif
+	PDC_LOG(("wstandend() - called\n"));
+
 	return( wattrset( win, A_NORMAL ) );
 }
 /***********************************************************************/
@@ -299,9 +289,8 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wstandout() - called\n");
-#endif
+	PDC_LOG(("wstandout() - called\n"));
+
 	return( wattrset( win, A_STANDOUT ) );
 }
 /***********************************************************************/
@@ -327,9 +316,8 @@ void *opts;		/* "opts" not used, but required by the standard */
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wcolor_set() - called\n");
-#endif
+	PDC_LOG(("wcolor_set() - called\n"));
+
 	if (win == (WINDOW *)NULL)
 		return( ERR );
 	win->_attrs = (win->_attrs & ~A_COLOR) | COLOR_PAIR(color_pair);

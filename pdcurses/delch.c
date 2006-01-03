@@ -46,7 +46,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.1 2001/01/10 08:26:57 mark Exp $";
+char *rcsid_delch  = "$Id: delch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -99,10 +99,7 @@ int	PDC_CDECL	delch()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("delch() - called\n");
-#endif
+	PDC_LOG(("delch() - called\n"));
 
 	return (wdelch(stdscr));
 }
@@ -120,9 +117,7 @@ WINDOW *win;
 	int		maxx;
 	chtype*		temp1;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wdelch() - called\n");
-#endif
+	PDC_LOG(("wdelch() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return (ERR);
@@ -161,9 +156,7 @@ int x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvdelch() - called\n");
-#endif
+	PDC_LOG(("mvdelch() - called\n"));
 
 	if (move(y,x) == ERR)
 		return(ERR);
@@ -180,9 +173,7 @@ int x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwdelch() - called\n");
-#endif
+	PDC_LOG(("mvwdelch() - called\n"));
 
 	if (wmove(win,y,x) == ERR)
 		return(ERR);

@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getyx  = "$Id: getyx.c,v 1.1 2001/01/10 08:27:03 mark Exp $";
+char *rcsid_getyx  = "$Id: getyx.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -100,9 +100,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getbegy() - called\n");
-#endif
+	PDC_LOG(("getbegy() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -118,9 +116,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getbegx() - called\n");
-#endif
+	PDC_LOG(("getbegx() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -136,9 +132,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getpary() - called\n");
-#endif
+	PDC_LOG(("getpary() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -154,9 +148,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getparx() - called\n");
-#endif
+	PDC_LOG(("getparx() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -172,9 +164,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getmaxy() - called\n");
-#endif
+	PDC_LOG(("getmaxy() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -190,9 +180,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getmaxx() - called\n");
-#endif
+	PDC_LOG(("getmaxx() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );

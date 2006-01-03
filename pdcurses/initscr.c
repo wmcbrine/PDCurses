@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.10 2005/12/25 04:24:42 wmcbrine Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.11 2006/01/03 07:34:43 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -255,9 +255,7 @@ char *argv[];
 {
 register int i;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("Xinitscr() - called\n");
-#endif
+   PDC_LOG(("Xinitscr() - called\n"));
 
    if (SP != (SCREEN *)NULL
    &&  SP->alive)
@@ -450,9 +448,8 @@ WINDOW*  PDC_CDECL   initscr()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("initscr() - called\n");
-#endif
+   PDC_LOG(("initscr() - called\n"));
+
    return (Xinitscr( 0, NULL ) );
 }
 /***********************************************************************/
@@ -463,9 +460,7 @@ int PDC_CDECL endwin()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("endwin() - called\n");
-#endif
+   PDC_LOG(("endwin() - called\n"));
 
 /*
  * New endwin() behaviour; to allow temporary exit from curses
@@ -504,9 +499,7 @@ int   PDC_CDECL   isendwin()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("isendwin() - called\n");
-#endif
+   PDC_LOG(("isendwin() - called\n"));
 
    return((SP->alive) ? FALSE : TRUE);
 }
@@ -535,9 +528,7 @@ extern   void* malloc();
 extern   void* calloc();
 extern   void  free();
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("newterm() - called\n");
-#endif
+   PDC_LOG(("newterm() - called\n"));
 
    if  (SP->alive)
       return( ERR );
@@ -600,9 +591,7 @@ SCREEN *new;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("set_term() - called\n");
-#endif
+   PDC_LOG(("set_term() - called\n"));
 
 #ifdef   TC
 #  pragma argsused
@@ -618,9 +607,7 @@ SCREEN *sp;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("delscreen() - called\n");
-#endif
+   PDC_LOG(("delscreen() - called\n"));
 
    if (sp != SP)
       return;
@@ -675,10 +662,7 @@ int nlines,ncols;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("resize_term() - called: nlines %d\n",nlines);
-#endif
+   PDC_LOG(("resize_term() - called: nlines %d\n",nlines));
 
    if (stdscr == (WINDOW *)NULL)
       return(ERR);
@@ -728,8 +712,7 @@ bool  PDC_CDECL   is_termresized()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("is_termresized() - called\n");
-#endif
+   PDC_LOG(("is_termresized() - called\n"));
+
    return( SP->resized );
 }

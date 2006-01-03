@@ -53,7 +53,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.12 2005/12/16 23:27:47 wmcbrine Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.13 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -189,9 +189,8 @@ int	PDC_CDECL	start_color()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("start_color() - called\n");
-#endif
+ PDC_LOG(("start_color() - called\n"));
+
  if (SP->mono)
     return(ERR);
  COLORS = 8;
@@ -222,9 +221,7 @@ short background;
  unsigned char norm;
 #endif
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("init_pair() - called: colorpair %d fore %d back %d\n",colorpair,foreground,background);
-#endif
+ PDC_LOG(("init_pair() - called: colorpair %d fore %d back %d\n",colorpair,foreground,background));
 
  if (colorpair >= COLOR_PAIRS || colorpair < 1)
     return(ERR);
@@ -266,9 +263,8 @@ bool	PDC_CDECL	has_colors()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("has_colors() - called\n");
-#endif
+	PDC_LOG(("has_colors() - called\n"));
+
 	if (SP->mono)
 		return(FALSE);
 	return(TRUE);
@@ -285,10 +281,8 @@ short blue;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("init_color() - called\n");
-#endif
-/*************** this does nothing at the moment ******************/
+	PDC_LOG(("init_color() - called\n"));
+
 	return(ERR);
 }
 /***********************************************************************/
@@ -303,9 +297,8 @@ short *blue;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("color_content() - called\n");
-#endif
+	PDC_LOG(("color_content() - called\n"));
+
 	/* A crude implementation. Does not account for intensity. 
 	   ncurses uses 680 for non-A_BOLD, so let's copy that. - WJM3
 	*/
@@ -327,9 +320,7 @@ int	PDC_CDECL	can_change_color()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("can_change_color() - called\n");
-#endif
+	PDC_LOG(("can_change_color() - called\n"));
 
 #ifdef UNIX
 	if (can_change)

@@ -44,8 +44,6 @@ char *msg;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-#endif
    if ( rc | sig )
       fprintf( stderr, "%s:XCursesExitXCursesProcess() - called: rc:%d sig:%d <%s>\n",(XCursesProcess)?"     X":"CURSES",rc,sig,msg);
    shmdt((char *)SP);
@@ -77,9 +75,8 @@ bool highlight;
 {
    int row=0;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesDisplayScreen() - called:\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesDisplayScreen() - called:\n",(XCursesProcess)?"     X":"CURSES"));
+
    for (row=0;row<XCursesLINES;row++)
    {
       while(*(Xcurscr+XCURSCR_FLAG_OFF+row))
@@ -124,9 +121,8 @@ int XCursesRefreshScreen()
 {
    int row=0,start_col=0,num_cols=0;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesRefreshScreen() - called:\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesRefreshScreen() - called:\n",(XCursesProcess)?"     X":"CURSES"));
+
    for (row=0;row<XCursesLINES;row++)
    {
 #if 0
@@ -194,9 +190,7 @@ XtInputId *id;
    char title[1024]; /* big enough for window title */ 
    unsigned char save_atrtab[MAX_ATRTAB]; 
  
-#ifdef PDCDEBUG 
-   if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses()\n",(XCursesProcess)?"     X":"CURSES"); 
-#endif 
+   PDC_LOG(("%s:XCursesProcessRequestsFromCurses()\n",(XCursesProcess)?"     X":"CURSES")); 
  
    if (!ReceivedMapNotify) 
       return; 
@@ -212,14 +206,14 @@ XtInputId *id;
    if ( FD_ISSET ( display_sock, &readfds ) ) 
    { 
 /* read first integer to determine total message has been received */ 
-#ifdef PDCDEBUG 
-      if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses() - before read_socket()\n",(XCursesProcess)?"     X":"CURSES"); 
-#endif 
+
+      PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - before read_socket()\n",(XCursesProcess)?"     X":"CURSES")); 
+
       if (read_socket(display_sock,buf,sizeof(int)) < 0) 
          XCursesExitXCursesProcess(3,SIGKILL,"exiting from XCursesProcessRequestsFromCurses - first read"); 
-#ifdef PDCDEBUG 
-      if (trace_on) PDC_debug("%s:XCursesProcessRequestsFromCurses() - after read_socket()\n",(XCursesProcess)?"     X":"CURSES"); 
-#endif 
+
+      PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - after read_socket()\n",(XCursesProcess)?"     X":"CURSES")); 
+
       memcpy((char *)&num_cols,buf,sizeof(int)); 
       after_first_curses_request = True; 
  
@@ -421,9 +415,7 @@ XtInputId *id;
             SelectionOff(); 
             break; 
          default: 
-#ifdef PDCDEBUG 
-            if (trace_on) PDC_debug("%s:Unknown request %d\n",(XCursesProcess)?"     X":"CURSES",num_cols); 
-#endif 
+            PDC_LOG(("%s:Unknown request %d\n",(XCursesProcess)?"     X":"CURSES",num_cols));
             break; 
       } 
    } 
@@ -453,9 +445,7 @@ char *argv[];
    int myargc;
    char *myargv[2];
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesSetupX called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesSetupX called\n",(XCursesProcess)?"     X":"CURSES"));
 
    /*
     * The following kludge is to force XtVaAppInitialize() to recognize the
@@ -741,9 +731,9 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
    SP->XcurscrSize = XCURSCR_SIZE;
    SP->lines = XCursesLINES;
    SP->cols = XCursesCOLS;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:SHM size for curscr %d\n",(XCursesProcess)?"     X":"CURSES",SP->XcurscrSize);
-#endif
+
+   PDC_LOG(("%s:SHM size for curscr %d\n",(XCursesProcess)?"     X":"CURSES",SP->XcurscrSize));
+
    if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,SP->XcurscrSize+XCURSESSHMMIN,0700|IPC_CREAT)) < 0)
    {
       perror("Cannot allocate shared memory for curscr");
@@ -756,9 +746,9 @@ printf("Width %d Height %d\n",XCURSESGEOMETRY.width,XCURSESGEOMETRY.height);
    memset(Xcurscr, 0, SP->XcurscrSize); 
    atrtab = (unsigned char *)(Xcurscr+XCURSCR_ATRTAB_OFF);
    PDC_init_atrtab();
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",(XCursesProcess)?"     X":"CURSES",shmid_Xcurscr,shmkey_Xcurscr,LINES,COLS);
-#endif
+
+   PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",(XCursesProcess)?"     X":"CURSES",shmid_Xcurscr,shmkey_Xcurscr,LINES,COLS));
+
    /*
     * Add Event handlers to the drawing widget...
     */
@@ -951,9 +941,8 @@ int signo;
    char buf[10];
    int flag = CURSES_EXIT;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesSignalHandler() - called: %d\n",(XCursesProcess)?"     X":"CURSES",signo);
-#endif
+   PDC_LOG(("%s:XCursesSignalHandler() - called: %d\n",(XCursesProcess)?"     X":"CURSES",signo));
+
    /*
     * Patch by:
     * Georg Fuchs, georg.fuchs@rz.uni-regensburg.de 04-Dec-1998
@@ -1008,9 +997,7 @@ int *format;
    char buf[12]; /* big enough for 2 integers */
    char *string=(char *)value;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesRequestorCallbackForSelection() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesRequestorCallbackForSelection() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
    if ((value == NULL) && (*length == 0))
    {
@@ -1050,9 +1037,7 @@ Boolean *continue_to_dispatch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesStructureNotify called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesStructureNotify called\n",(XCursesProcess)?"     X":"CURSES"));
 
 #if 0
 printf("Notify: %d\n",event->type);
@@ -1101,9 +1086,7 @@ printf("Notify: %d\n",event->type);
                           (XCursesWindowHeight-XCURSESBORDERWIDTH));
          break;
       default:
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("%s:XCursesStructureNotify - unknown event %d\n",(XCursesProcess)?"     X":"CURSES",event->type);
-#endif
+         PDC_LOG(("%s:XCursesStructureNotify - unknown event %d\n",(XCursesProcess)?"     X":"CURSES",event->type));
          break;
    }
    return;

@@ -30,7 +30,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.8 2005/12/15 00:48:15 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 #ifdef PC
@@ -100,9 +100,7 @@ int ds=0;
 	unsigned short temp_line[256]; /* this should be enough for the maximum width of a screen. MH-920715 */
 	unsigned short chr;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_clr_update() - called\n");
-#endif
+	PDC_LOG(("PDC_clr_update() - called\n"));
 
 	w = curscr;
 	if (w == (WINDOW *)NULL)
@@ -208,9 +206,7 @@ int	PDC_cursor_on()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_cursor_on() - called\n");
-#endif
+	PDC_LOG(("PDC_cursor_on() - called\n"));
 
 	if	(!SP->visible_cursor)
 	{
@@ -279,9 +275,7 @@ int	PDC_cursor_off()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_cursor_off() - called\n");
-#endif
+	PDC_LOG(("PDC_cursor_off() - called\n"));
 
 	if	(SP->visible_cursor)
 	{
@@ -336,10 +330,7 @@ int flag;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_fix_cursor() - called\n");
-#endif
+	PDC_LOG(("PDC_fix_cursor() - called\n"));
 
 	if (SP->bogus_adapter)
 		return( OK );
@@ -383,7 +374,6 @@ int flag;
 		break;
 	}
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -418,16 +408,14 @@ int col;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_gotoxy() - called: row %d col %d\n",row,col);
-#endif
+	PDC_LOG(("PDC_gotoxy() - called: row %d col %d\n",row,col));
+
 	regs.h.ah = 0x02;
 	regs.h.bh = SP->video_page;
 	regs.h.dh = (unsigned char) row;
 	regs.h.dl = (unsigned char) col;
 	int86(0x10, &regs, &regs);
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -461,10 +449,7 @@ chtype color;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_putc() - called:char=%c attrib=0x%x color=0x%x\n",character & A_CHARTEXT,character & A_ATTRIBUTES,color);
-#endif
+	PDC_LOG(("PDC_putc() - called:char=%c attrib=0x%x color=0x%x\n",character & A_CHARTEXT,character & A_ATTRIBUTES,color));
 
 	regs.h.ah = 0x09;	/* Avoid screen wrap.  Don't advance cursor. */
 	regs.h.al = (unsigned char) (character & 0x00FF);
@@ -477,7 +462,6 @@ chtype color;
 #endif
 	int86(0x10, &regs, &regs);
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -514,10 +498,7 @@ chtype color;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_putctty() - called\n");
-#endif
+	PDC_LOG(("PDC_putctty() - called\n"));
 
 	regs.h.ah = 0x0e;	/* Write in TTY fashion, advance cursor. */
 	regs.h.al = (unsigned char) (character & 0x00FF);
@@ -525,7 +506,6 @@ chtype color;
 	regs.h.bl = (unsigned char) ((color & 0xFF00) >> 8);
 	int86(0x10, &regs, &regs);
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -569,9 +549,7 @@ chtype attr;
 {
 	int	phys_attr=chtype_attr(attr);
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_scroll() - called: urow %d lcol %d lrow %d rcol %d nlines %d\n",urow,lcol,lrow,rcol,nlines);
-#endif
+	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d rcol %d nlines %d\n",urow,lcol,lrow,rcol,nlines));
 
 	if (nlines >= 0)
 	{
@@ -653,9 +631,7 @@ int ds=0;
 	register int j;
 	bool rc;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_transform_line() - called: line %d\n",lineno);
-#endif
+	PDC_LOG(("PDC_transform_line() - called: line %d\n",lineno));
 
 	if (curscr == (WINDOW *)NULL)
 		return( FALSE );

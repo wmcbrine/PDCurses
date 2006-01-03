@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.2 2001/01/10 08:30:16 mark Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 
@@ -64,9 +64,8 @@ int size;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_font() - called\n");
-#endif
+	PDC_LOG(("PDC_set_font() - called\n"));
+
 	return(OK);
 }
 
@@ -106,9 +105,8 @@ int rows;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_rows() - called\n");
-#endif
+	PDC_LOG(("PDC_set_rows() - called\n"));
+
 	return(0);
 }
 /***********************************************************************/
@@ -122,9 +120,7 @@ int visibility;
 {
    int ret_vis = SP->visibility;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_curs_set() - called: visibility=%d\n",visibility);
-#endif
+   PDC_LOG(("PDC_curs_set() - called: visibility=%d\n",visibility));
 
    if ( visibility != -1 )
    {
@@ -161,9 +157,8 @@ char *title;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_title() - called:<%s>\n",title);
-#endif
+	PDC_LOG(("PDC_set_title() - called:<%s>\n",title));
+
 	XCurses_set_title(title);
 	return;
 }

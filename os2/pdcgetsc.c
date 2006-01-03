@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.5 2005/11/12 14:30:51 wmcbrine Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.6 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,9 +54,7 @@ char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.5 2005/11/12 14:30:51 wmcbrine Exp 
 int PDC_get_cursor_pos(int *row, int *col)
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_cursor_pos() - called\n");
-#endif
+   PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
 #ifdef EMXVIDEO
    v_getxy (col, row);
@@ -97,9 +95,7 @@ int PDC_get_cur_col(void)
 #else
    USHORT curCol=0, curRow=0;
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_cur_col() - called\n");
-#endif
+   PDC_LOG(("PDC_get_cur_col() - called\n"));
 
    /* find the current cursor position */
 #ifdef EMXVIDEO
@@ -141,9 +137,7 @@ int PDC_get_cur_row(void)
 #else
    USHORT curCol=0, curRow=0;
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_cur_row() - called\n");
-#endif
+   PDC_LOG(("PDC_get_cur_row() - called\n"));
 
    /* find the current cursor position */
 #ifdef EMXVIDEO
@@ -184,9 +178,8 @@ int PDC_get_attribute(void)
 #endif
    int curRow=0, curCol=0;
    char Cell[4];
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_attribute() - called\n");
-#endif
+
+   PDC_LOG(("PDC_get_attribute() - called\n"));
 
    PDC_get_cursor_pos(&curRow, &curCol);
 #ifdef EMXVIDEO
@@ -229,9 +222,8 @@ int PDC_get_columns(void)
 #endif
    int cols=0;
    char *env_cols=NULL;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_columns() - called\n");
-#endif
+
+   PDC_LOG(("PDC_get_columns() - called\n"));
 
 #ifdef EMXVIDEO
    v_dimen (&cols, &rows);
@@ -246,9 +238,9 @@ int PDC_get_columns(void)
    {
       cols = min(atoi(env_cols),cols);
    }
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_columns() - returned: cols %d\n",cols);
-#endif
+
+   PDC_LOG(("PDC_get_columns() - returned: cols %d\n",cols));
+
    return(cols);
 }
 
@@ -282,9 +274,7 @@ int PDC_get_cursor_mode(void)
 #endif
    short cmode=0;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_cursor_mode() - called\n");
-#endif
+   PDC_LOG(("PDC_get_cursor_mode() - called\n"));
 
 #ifdef EMXVIDEO
    v_getctype (&curstart, &curend);
@@ -328,9 +318,7 @@ int PDC_get_font(void)
    VIOMODEINFO modeInfo={0};
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_font() - called\n");
-#endif
+   PDC_LOG(("PDC_get_font() - called\n"));
 
 #ifdef EMXVIDEO
    retval = v_hardware();
@@ -376,9 +364,7 @@ int PDC_get_rows(void)
    int   rows=0;
    char *env_rows=NULL;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_rows() - called\n");
-#endif
+   PDC_LOG(("PDC_get_rows() - called\n"));
 
 /* use the value from LINES environment variable, if set. MH 10-Jun-92 */
 /* and use the minimum of LINES and *ROWS.                MH 18-Jun-92 */
@@ -392,9 +378,9 @@ int PDC_get_rows(void)
    env_rows = (char *)getenv("LINES");
    if (env_rows != (char *)NULL)
       rows = min(atoi(env_rows),rows);
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_rows() - returned: rows %d\n",rows);
-#endif
+
+   PDC_LOG(("PDC_get_rows() - returned: rows %d\n",rows));
+
    return(rows);
 }
 
@@ -427,9 +413,7 @@ int PDC_get_scrn_mode( VIOMODEINFO *modeinfo )
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_scrn_mode() - called\n");
-#endif
+   PDC_LOG(("PDC_get_scrn_mode() - called\n"));
 #ifdef EMXVIDEO
    return(ERR);
 #else
@@ -470,9 +454,7 @@ int PDC_query_adapter_type( VIOCONFIGINFO *configinfo )
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_query_adapter_type() - called\n");
-#endif
+   PDC_LOG(("PDC_query_adapter_type() - called\n"));
 #ifdef EMXVIDEO
    return (v_hardware() == V_MONOCHROME) ? _UNIX_MONO : _UNIX_COLOR;
 #else

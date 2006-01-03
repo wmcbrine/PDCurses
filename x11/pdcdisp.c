@@ -30,7 +30,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.3 2005/12/14 21:06:15 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -65,13 +65,11 @@ WINDOW *s;
 #endif
 /***********************************************************************/
 {
-register int	i=0;
+	register int i=0;
 	WINDOW*	w=NULL;
 	bool rc=FALSE;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_clr_update() - called\n");
-#endif
+	PDC_LOG(("PDC_clr_update() - called\n"));
 
 	w = curscr;
 	if (w == (WINDOW *)NULL)
@@ -119,9 +117,8 @@ int	PDC_cursor_on()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_cursor_on() - called\n");
-#endif
+	PDC_LOG(("PDC_cursor_on() - called\n"));
+
 	return( OK );
 }
 
@@ -152,9 +149,8 @@ int	PDC_cursor_off()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_cursor_off() - called\n");
-#endif
+	PDC_LOG(("PDC_cursor_off() - called\n"));
+
 	return( OK );
 }
 
@@ -190,9 +186,7 @@ int col;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_gotoxy() - called: row %d col %d\n",row,col);
-#endif
+	PDC_LOG(("PDC_gotoxy() - called: row %d col %d\n",row,col));
 
 	XCurses_display_cursor(SP->cursrow,SP->curscol,row,col,SP->visibility);
 	return(OK);
@@ -236,9 +230,7 @@ register int lineno;
 	int	len=0;
 	bool rc=FALSE;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_transform_line() - called: line %d\n",lineno);
-#endif
+	PDC_LOG(("PDC_transform_line() - called: line %d\n",lineno));
 
 	if (curscr == (WINDOW *)NULL)
 		return( FALSE );

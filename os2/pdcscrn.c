@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.4 2005/12/11 05:51:24 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -69,9 +69,9 @@ int PDC_scr_close(void)
 /***********************************************************************/
 {
    char *ptr;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_scr_close() - called\n");
-#endif
+
+   PDC_LOG(("PDC_scr_close() - called\n"));
+
 #ifdef EMXVIDEO
    ptr = getenv("PDC_RESTORE_SCREEN");
 #else
@@ -122,9 +122,7 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_scrn_modes_equal() - called\n");
-#endif
+   PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
 
 #if !defined( EMXVIDEO )
    return ((mode1.cb == mode2.cb) && (mode1.fbType == mode2.fbType)
@@ -169,9 +167,9 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 #if !defined( EMXVIDEO )
    USHORT totchars=0;
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_scr_open() - called. internal: %x, echo: %d\n", internal, echo);
-#endif
+
+   PDC_LOG(("PDC_scr_open() - called. internal: %x, echo: %d\n", internal, echo));
+
    internal->orig_attr   = 0;
    internal->orig_emulation = 0;
    PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
@@ -195,14 +193,9 @@ int PDC_scr_open(SCREEN *internal, bool echo)
    (void)PDC_query_adapter_type( &internal->adapter );
    (void)PDC_get_scrn_mode( &internal->scrnmode );
    (void)PDC_get_keyboard_info( &internal->kbdinfo );
-# ifdef PDCDEBUG1
-   if (trace_on) PDC_debug("PDC_scr_open() - after PDC_get_keyboard_info(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-      SP->kbdinfo.cb,
-      SP->kbdinfo.fsMask,
-      SP->kbdinfo.chTurnAround,
-      SP->kbdinfo.fsInterim,
-      SP->kbdinfo.fsState);
-# endif
+
+   PDC_LOG(("PDC_scr_open() - after PDC_get_keyboard_info(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n", SP->kbdinfo.cb, SP->kbdinfo.fsMask, SP->kbdinfo.chTurnAround, SP->kbdinfo.fsInterim, SP->kbdinfo.fsState));
+
    /*
     * Now set the keyboard into binary mode
     */
@@ -298,9 +291,7 @@ int PDC_resize_screen(int nlines, int ncols)
    USHORT result=0;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols);
-#endif
+   PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols));
 
 #ifdef EMXVIDEO
    return (ERR);
@@ -323,9 +314,8 @@ int PDC_resize_screen(int nlines, int ncols)
 int PDC_reset_shell_mode( void )
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_reset_shell_mode() - called.\n");
-#endif
+   PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
+
    PDC_set_keyboard_default();
    return OK;
 }
@@ -334,9 +324,8 @@ int PDC_reset_shell_mode( void )
 int PDC_reset_prog_mode( void )
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_reset_prog_mode() - called.\n");
-#endif
+   PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+
    PDC_set_keyboard_binary();
    return OK;
 }

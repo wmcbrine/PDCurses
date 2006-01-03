@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.19 2005/12/11 01:07:19 wmcbrine Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.20 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -367,9 +367,7 @@ unsigned long PDC_get_input_fd()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
-#endif
+   PDC_LOG(("PDC_get_input_fd() - called\n"));
 
 #if defined(PDC_THREAD_BUILD)
    return (unsigned long)hSemKeyCount;
@@ -569,9 +567,7 @@ int   PDC_get_bios_key(void)
    int key=0;
    int retval;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_bios_key() - called\n");
-#endif
+   PDC_LOG(("PDC_get_bios_key() - called\n"));
 
    while(1)
    {
@@ -812,9 +808,8 @@ int   PDC_get_bios_key(void)
 
 bool  PDC_get_ctrl_break(void)
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_ctrl_break() - called\n");
-#endif
+   PDC_LOG(("PDC_get_ctrl_break() - called\n"));
+
    return FALSE;
 }
 
@@ -852,9 +847,7 @@ int   PDC_rawgetch(void)
    int   oldc;
    bool  return_immediately;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
-#endif
+   PDC_LOG(("PDC_rawgetch() - called\n"));
 
    if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
       return( -1 );
@@ -909,9 +902,7 @@ int   PDC_rawgetch(void)
 
 int   PDC_set_ctrl_break(bool setting)
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_ctrl_break() - called\n");
-#endif
+   PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
    return(OK);
 }
@@ -948,9 +939,7 @@ int   PDC_sysgetch(void)
    int  c;
    bool return_immediately;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_sysgetch() - called\n");
-#endif
+   PDC_LOG(("PDC_sysgetch() - called\n"));
 
    if (_getch_win_ == (WINDOW *)NULL)  /* @@ */
       return (-1);
@@ -1015,9 +1004,7 @@ int   PDC_validchar(int c)
    extern   WINDOW*  _getch_win_;
    int ch=c;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_validchar() - called\n");
-#endif
+   PDC_LOG(("PDC_validchar() - called\n"));
 
    if (_getch_win_ == (WINDOW *)NULL)
       ch = (-1);   /* bad window pointer     */
@@ -1025,9 +1012,9 @@ int   PDC_validchar(int c)
       ch = c;      /* normal character */
    else if (!(_getch_win_->_use_keypad))
       ch = (-1);   /* skip if keys if !keypad mode */
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_validchar() - returned: %x\n",ch);
-#endif
+
+   PDC_LOG(("PDC_validchar() - returned: %x\n",ch));
+
    return(ch);
 }
 
@@ -1083,7 +1070,7 @@ static int GetInterestingEvent( INPUT_RECORD *ip )
 #  define PDC_DEBUG_THREADING2 ""
 # endif
    char *ptr="";
-   if (trace_on) PDC_debug("%sGetInterestingEvent(%s) - called\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2);
+   PDC_LOG(("%sGetInterestingEvent(%s) - called\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2));
 #endif
 
    switch(ip->EventType)
@@ -1248,9 +1235,8 @@ static int GetInterestingEvent( INPUT_RECORD *ip )
 #endif
          break;
    }
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%sGetInterestingEvent(%s) - returning: numKeys %d type %d: %s\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2,numKeys,ip->EventType,ptr);
-#endif
+   PDC_LOG(("%sGetInterestingEvent(%s) - returning: numKeys %d type %d: %s\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2,numKeys,ip->EventType,ptr));
+
    return numKeys;
 }
 
@@ -1261,10 +1247,8 @@ static int win32_kbhit(int timeout)
 {
    DWORD read=0,avail=0,unread=0;
    INPUT_RECORD ip;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("win32_kbhit(THREADING) - called: timeout %d\n", timeout);
-#endif
 
+   PDC_LOG(("win32_kbhit(THREADING) - called: timeout %d\n", timeout));
 
 #if 0
    if ( timeout == INFINITE )
@@ -1280,9 +1264,8 @@ static int win32_kbhit(int timeout)
       }
       if ( PeekNamedPipe( hPipeRead, &ip, sizeof(INPUT_RECORD), &read, &avail, &unread ) )
       {
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread);
-#endif
+         PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread));
+
          if ( read == sizeof(INPUT_RECORD) )
             return TRUE;
       }
@@ -1301,9 +1284,8 @@ static int win32_kbhit(int timeout)
    {
       if ( PeekNamedPipe( hPipeRead, &ip, sizeof(INPUT_RECORD), &read, &avail, &unread ) )
       {
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread);
-#endif
+         PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread));
+
          if ( read == sizeof(INPUT_RECORD) )
             return TRUE;
       }
@@ -1332,9 +1314,7 @@ static int win32_kbhit(int timeout)
    DWORD read;
    int rc=FALSE;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("win32_kbhit() - called: timeout %d keyCount %d\n", timeout, keyCount);
-#endif
+   PDC_LOG(("win32_kbhit() - called: timeout %d keyCount %d\n", timeout, keyCount));
 
    if (keyCount > 0)
       return TRUE;
@@ -1406,9 +1386,8 @@ unsigned long  PDC_get_key_modifiers()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_key_modifiers() - called\n");
-#endif
+   PDC_LOG(("PDC_get_key_modifiers() - called\n"));
+
    return(pdc_key_modifiers);
 }
 
@@ -1423,9 +1402,8 @@ LONG InputThread( LPVOID lpThreadData )
    LONG prev;
    int num_keys,i;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("-->InputThread() - called\n");
-#endif
+   PDC_LOG(("-->InputThread() - called\n"));
+
    /*
     * Create a semaphore on which the parent thread will wait...
     */
@@ -1440,13 +1418,13 @@ LONG InputThread( LPVOID lpThreadData )
           * key/mouse event is relevant to us. If so, write it to the
           * anonymous pipe.
           */
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("-->InputThread() - read %d character(s)\n",read);
-#endif
+
+         PDC_LOG(("-->InputThread() - read %d character(s)\n",read));
+
          num_keys = GetInterestingEvent( &ip );
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("-->InputThread() - got %d interesting keys\n",num_keys);
-#endif
+
+         PDC_LOG(("-->InputThread() - got %d interesting keys\n",num_keys));
+
          for ( i = 0; i < num_keys; i++ )
          {
             /*
@@ -1454,9 +1432,8 @@ LONG InputThread( LPVOID lpThreadData )
              */
             if ( ReleaseSemaphore( hSemKeyCount, 1, &prev ) )
             {
-#ifdef PDCDEBUG
-               if (trace_on) PDC_debug("-->InputThread() - writing to pipe; sem incremented from %d\n",prev);
-#endif
+               PDC_LOG(("-->InputThread() - writing to pipe; sem incremented from %d\n",prev));
+
                if ( !WriteFile( hPipeWrite, &ip, sizeof(INPUT_RECORD), &read, NULL ) )
                {
                   /*
@@ -1469,9 +1446,9 @@ LONG InputThread( LPVOID lpThreadData )
          }
       }
    }
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("-->InputThread() - finished\n");
-#endif
+
+   PDC_LOG(("-->InputThread() - finished\n"));
+
    return 0;
 }
 #endif

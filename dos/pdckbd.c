@@ -32,7 +32,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.8 2005/12/11 01:07:18 wmcbrine Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*******************************************************************************
@@ -159,10 +159,7 @@ unsigned long PDC_get_input_fd()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
-#endif
+	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
 	return (unsigned long)fileno (stdin);
 }
@@ -196,10 +193,7 @@ bool PDC_check_bios_key()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_check_bios_key() - called\n");
-#endif
+	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 	return(kbhit());
 }         
@@ -237,9 +231,7 @@ int	PDC_get_bios_key()
 	int ascii=0,scan=0;
 	static unsigned char keyboard_function=0xFF;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_bios_key() - called\n");
-#endif
+	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
 	if (keyboard_function == 0xFF)
 		{
@@ -344,10 +336,7 @@ bool	PDC_get_ctrl_break()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_ctrl_break() - called\n");
-#endif
+	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
 
 	regs.h.ah = 0x33;
 	regs.h.al = 0x00;
@@ -398,9 +387,7 @@ extern	WINDOW*	_getch_win_;
 	int	oldc=0;
 	bool	return_immediately;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
-#endif
+	PDC_LOG(("PDC_rawgetch() - called\n"));
 
 	if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
 		return( -1 );
@@ -460,9 +447,7 @@ bool setting;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_ctrl_break() - called\n");
-#endif
+	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
 #ifdef	NDP
 	if( setting )
@@ -525,9 +510,7 @@ extern	WINDOW*	_getch_win_;
 	int c=0;
 	bool	return_immediately;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_sysgetch() - called\n");
-#endif
+	PDC_LOG(("PDC_sysgetch() - called\n"));
 
 	if (_getch_win_ == (WINDOW *)NULL)  /* @@ */
 		return (-1);
@@ -599,9 +582,7 @@ extern	WINDOW*	_getch_win_;
 
 	int *scanp=NULL;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_validchar() - called\n");
-#endif
+	PDC_LOG(("PDC_validchar() - called\n"));
 
 	if (_getch_win_ == (WINDOW *)NULL)
 		return (-1);	/* bad window pointer	  */
@@ -659,9 +640,8 @@ unsigned long	PDC_get_key_modifiers()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_key_modifiers() - called\n");
-#endif
+	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
+
 	return(pdc_key_modifiers);
 }
 

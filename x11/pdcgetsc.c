@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.1 2001/01/10 08:30:08 mark Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -56,9 +56,8 @@ int	PDC_get_columns()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_columns() - called\n");
-#endif
+	PDC_LOG(("PDC_get_columns() - called\n"));
+
 	return(XCurses_get_cols());
 }
 
@@ -91,9 +90,8 @@ int	PDC_get_rows()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_rows() - called\n");
-#endif
+	PDC_LOG(("PDC_get_rows() - called\n"));
+
 	return(XCurses_get_rows());
 }
 
@@ -126,8 +124,7 @@ int	PDC_get_font()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_font() - called\n");
-#endif
+	PDC_LOG(("PDC_get_font() - called\n"));
+
 	return(OK);
 }

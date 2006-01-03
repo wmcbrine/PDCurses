@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_sb  = "$Id: sb.c,v 1.2 2002/07/04 10:23:50 mark Exp $";
+char *rcsid_sb  = "$Id: sb.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -83,9 +83,7 @@ int	PDC_CDECL	sb_init()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("sb_init() - called\n");
-#endif
+	PDC_LOG(("sb_init() - called\n"));
 
 	if (SP)
 		return (ERR);
@@ -110,9 +108,8 @@ int total, viewport, cur;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("sb_set_horz() - called: total %d viewport %d cur %d\n",total, viewport, cur);
-#endif
+	PDC_LOG(("sb_set_horz() - called: total %d viewport %d cur %d\n",total, viewport, cur));
+
 	if (!SP)
 		return(ERR);
 
@@ -138,9 +135,8 @@ int total, viewport, cur;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("sb_set_vert() - called: total %d viewport %d cur %d\n",total, viewport, cur);
-#endif
+	PDC_LOG(("sb_set_vert() - called: total %d viewport %d cur %d\n",total, viewport, cur));
+
 	if (!SP)
 		return(ERR);
 
@@ -166,9 +162,8 @@ int *total, *viewport, *cur;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("sb_get_horz() - called\n");
-#endif
+	PDC_LOG(("sb_get_horz() - called\n"));
+
 	if (!SP)
 		return(ERR);
 
@@ -194,9 +189,8 @@ int *total, *viewport, *cur;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("sb_get_vert() - called\n");
-#endif
+	PDC_LOG(("sb_get_vert() - called\n"));
+
 	if (!SP)
 		return(ERR);
 
@@ -217,9 +211,7 @@ int	PDC_CDECL	sb_refresh()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("sb_refresh() - called\n");
-#endif
+	PDC_LOG(("sb_refresh() - called\n"));
 
 	if (!SP)
 		return(ERR);

@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd  = "$Id: bkgd.c,v 1.3 2005/12/09 00:07:31 wmcbrine Exp $";
+char *rcsid_bkgd  = "$Id: bkgd.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -101,9 +101,8 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("bkgd() - called\n");
-#endif
+	PDC_LOG(("bkgd() - called\n"));
+
 	return(wbkgd(stdscr,ch));
 }
 /***********************************************************************/
@@ -124,9 +123,7 @@ chtype ch;
 	char tmpbuf[60];
 #endif
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wbkgd() - called\n");
-#endif
+	PDC_LOG(("wbkgd() - called\n"));
 
 	if (win == NULL)
 		return(ERR);
@@ -209,9 +206,8 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("bkgdset() - called\n");
-#endif
+	PDC_LOG(("bkgdset() - called\n"));
+
 	wbkgdset(stdscr,ch);
 }
 /***********************************************************************/
@@ -225,9 +221,8 @@ chtype ch;
 /***********************************************************************/
 {
 	chtype bkgdattr;
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wbkgdset() - called\n");
-#endif
+
+	PDC_LOG(("wbkgdset() - called\n"));
 
 	if (win == NULL)
 		return;

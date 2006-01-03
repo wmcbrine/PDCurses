@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw  = "$Id: printw.c,v 1.1 2001/01/10 08:27:24 mark Exp $";
+char *rcsid_printw  = "$Id: printw.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -116,9 +116,7 @@ va_dcl
 	int	retval = ERR;
 	va_list args;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("printw() - called\n");
-#endif
+	PDC_LOG(("printw() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return (retval);
@@ -150,9 +148,7 @@ va_dcl
 	int	retval = ERR;
 	va_list args;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wprintw() - called\n");
-#endif
+	PDC_LOG(("wprintw() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return (retval);
@@ -184,9 +180,7 @@ va_dcl
 	int	retval = ERR;
 	va_list args;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvprintw() - called\n");
-#endif
+	PDC_LOG(("mvprintw() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return (retval);
@@ -223,9 +217,7 @@ va_dcl
 	int	retval = ERR;
 	va_list args;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwprintw() - called\n");
-#endif
+	PDC_LOG(("mvwprintw() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return (retval);

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.11 2005/12/07 11:56:05 wmcbrine Exp $
+$Id: curspriv.h,v 1.12 2006/01/03 07:34:42 wmcbrine Exp $
 */
 /*
 *
@@ -403,9 +403,12 @@ unsigned long   XCurses_get_key_modifiers Args(( void ));
 void            movedata Args(((unsigned, unsigned, unsigned, unsigned, unsigned));
 #endif
 
-# ifdef PDCDEBUG
+#ifdef PDCDEBUG
 void PDC_CDECL  PDC_debug Args(( char*,... ));
-# endif
+# define PDC_LOG(x) if (trace_on) PDC_debug x
+#else
+# define PDC_LOG(x)
+#endif
 
 # ifdef  REGISTERWINDOWS
 bool            PDC_inswin Args(( WINDOW*, WINDOW* ));

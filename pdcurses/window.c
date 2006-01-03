@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window  = "$Id: window.c,v 1.6 2005/12/25 22:01:30 wmcbrine Exp $";
+char *rcsid_window  = "$Id: window.c,v 1.7 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -182,9 +182,7 @@ extern	void	(*fre)();
 	int	i;
 	int	j;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("newwin() - called:lines=%d cols=%d begy=%d begx=%d\n",nlines,ncols,begy,begx);
-#endif
+	PDC_LOG(("newwin() - called:lines=%d cols=%d begy=%d begx=%d\n",nlines,ncols,begy,begx));
 
 	if (nlines == 0)	nlines = LINES - begy;
 	if (ncols  == 0)	ncols  = COLS  - begx;
@@ -249,10 +247,7 @@ extern	void	(*fre)();
 #endif
 	int	i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("delwin() - called\n");
-#endif
-
+	PDC_LOG(("delwin() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -290,9 +285,7 @@ int x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwin() - called\n");
-#endif
+	PDC_LOG(("mvwin() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -326,9 +319,7 @@ int begin_x;
 	int	j = begin_y - orig->_begy;
 	int	k = begin_x - orig->_begx;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("subwin() - called: lines %d cols %d begy %d begx %d\n",nlines,ncols,begin_y,begin_x);
-#endif
+	PDC_LOG(("subwin() - called: lines %d cols %d begy %d begx %d\n",nlines,ncols,begin_y,begin_x));
 
 	if (!orig)
 		return( (WINDOW *)NULL );
@@ -587,9 +578,7 @@ extern	void	(*fre)();
 	int	save_cury, save_curx;
 	int	new_begy=0,new_begx=0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("resize_window() - called: lins %d cols %d\n",lins,cols);
-#endif
+	PDC_LOG(("resize_window() - called: lins %d cols %d\n",lins,cols));
 
 	if (win == (WINDOW *)NULL)
 		return( (WINDOW *)NULL );
@@ -687,9 +676,7 @@ WINDOW *win;
 {
 	WINDOW *tmp;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wsyncup() - called\n");
-#endif
+	PDC_LOG(("wsyncup() - called\n"));
 
 	for (tmp = win; tmp != (WINDOW *)NULL; tmp = tmp->_parent)
 	{
@@ -707,9 +694,8 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("syncok() - called\n");
-#endif
+	PDC_LOG(("syncok() - called\n"));
+
 	if (win == (WINDOW *)NULL)
 		return(ERR);
 
@@ -727,9 +713,7 @@ WINDOW *win;
 {
 	WINDOW *tmp;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wcursyncup() - called\n");
-#endif
+	PDC_LOG(("wcursyncup() - called\n"));
 
 	for( tmp = win; (tmp != (WINDOW *)NULL) && (tmp->_parent != (WINDOW *)NULL); tmp = tmp->_parent )
 	{
@@ -748,9 +732,7 @@ WINDOW *win;
 {
 	WINDOW *tmp;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wsyncdown() - called\n");
-#endif
+	PDC_LOG(("wsyncdown() - called\n"));
 
 	for (tmp = win; tmp != (WINDOW *)NULL; tmp = tmp->_parent)
 	{

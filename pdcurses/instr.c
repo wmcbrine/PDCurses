@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_instr  = "$Id: instr.c,v 1.2 2005/11/19 20:34:25 wmcbrine Exp $";
+char *rcsid_instr  = "$Id: instr.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -98,9 +98,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("instr() - called: string=\"%s\"\n",str);
-#endif
+	PDC_LOG(("instr() - called: string=\"%s\"\n",str));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -117,9 +115,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("innstr() - called: n %d \n",n);
-#endif
+	PDC_LOG(("innstr() - called: n %d \n",n));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -136,9 +132,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("winstr() - called: \n");
-#endif
+	PDC_LOG(("winstr() - called: \n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -162,9 +156,7 @@ int n;
 	int imax = (win->_maxx - win->_curx);
 	int ic;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("winnstr() - called: n %d \n",n);
-#endif
+	PDC_LOG(("winnstr() - called: n %d \n",n));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -200,9 +192,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvinstr() - called: y %d x %d \n",y,x);
-#endif
+	PDC_LOG(("mvinstr() - called: y %d x %d \n",y,x));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -224,9 +214,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvinnstr() - called: y %d x %d n %d \n",y,x,n);
-#endif
+	PDC_LOG(("mvinnstr() - called: y %d x %d n %d \n",y,x,n));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -248,9 +236,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwinstr() - called: y %d x %d \n",y,x);
-#endif
+	PDC_LOG(("mvwinstr() - called: y %d x %d \n",y,x));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -273,9 +259,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwinnstr() - called: y %d x %d n %d \n",y,x,n);
-#endif
+	PDC_LOG(("mvwinnstr() - called: y %d x %d n %d \n",y,x,n));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );

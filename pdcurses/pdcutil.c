@@ -63,7 +63,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.7 2005/12/17 09:17:16 wmcbrine Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.8 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -187,9 +187,8 @@ long wait;
 # endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_usleep() - called\n");
-#endif
+	PDC_LOG(("PDC_usleep() - called\n"));
+
 	usleep(wait);
 	return;
 }
@@ -205,9 +204,9 @@ long wait;
 /***********************************************************************/
 {
 	struct pollfd fd;
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_usleep() - called\n");
-#endif
+
+	PDC_LOG(("PDC_usleep() - called\n"));
+
 	poll(&fd,0L,min(1L,wait/1000));
 	return;
 }
@@ -259,9 +258,7 @@ long wait;
 #ifndef WIN32
 	clock_t goal;
 #endif
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_usleep() - called\n");
-# endif
+	PDC_LOG(("PDC_usleep() - called\n"));
 
 #if defined(WIN32)
 	Sleep(wait);
@@ -352,9 +349,7 @@ va_dcl
 	int exp;
 	char eneg;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_vsscanf() - called\n");
-#endif
+	PDC_LOG(("PDC_vsscanf() - called\n"));
 
 #if 0
 # ifdef HAVE_STDARG_H_HAVE_PROTO
@@ -771,9 +766,7 @@ extern	int	c_gindex;			/* getter index */
 extern	int	c_ungind;			/* wungetch() push index */
 	bool	rc;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_breakout() - called\n");
-#endif
+	PDC_LOG(("PDC_breakout() - called\n"));
 
 	/* ungotten or buffered char */
 	rc = (c_ungind) || (c_pindex > c_gindex);
@@ -781,8 +774,7 @@ extern	int	c_ungind;			/* wungetch() push index */
 	if (!rc)
 		rc = PDC_check_bios_key();
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_breakout() - returned: %d c_ungind: %d c_pindex: %d c_gindex: %d\n",rc,c_ungind,c_pindex,c_gindex);
-#endif
+	PDC_LOG(("PDC_breakout() - returned: %d c_ungind: %d c_pindex: %d c_gindex: %d\n",rc,c_ungind,c_pindex,c_gindex));
+
 	return rc;
 }

@@ -50,7 +50,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw  = "$Id: scanw.c,v 1.1 2001/01/10 08:27:26 mark Exp $";
+char *rcsid_scanw  = "$Id: scanw.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -114,9 +114,7 @@ va_dcl
 	va_list args;
 	int	retval = ERR;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("scanw() - called\n");
-#endif
+	PDC_LOG(("scanw() - called\n"));
 
 #if	!defined (HC)
 	if (stdscr == (WINDOW *)NULL)
@@ -157,9 +155,7 @@ va_dcl
 	va_list args;
 	int	retval = ERR;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wscanw() - called\n");
-#endif
+	PDC_LOG(("wscanw() - called\n"));
 
 #if	!defined (HC)
 	if (win == (WINDOW *)NULL)
@@ -199,9 +195,7 @@ va_dcl
 	va_list args;
 	int	retval = ERR;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvscanw() - called\n");
-#endif
+	PDC_LOG(("mvscanw() - called\n"));
 
 #if	!defined (HC)
 	if (stdscr == (WINDOW *)NULL)
@@ -245,9 +239,7 @@ va_dcl
 	va_list args;
 	int	retval = ERR;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvscanw() - called\n");
-#endif
+	PDC_LOG(("mvscanw() - called\n"));
 
 #if	!defined (HC)
 	if (win == (WINDOW *)NULL)

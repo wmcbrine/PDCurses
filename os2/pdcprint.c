@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.3 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 #if !defined (CURSES__32BIT__) && !defined(CSET2) && !defined(MSC) &&!defined(TC)
@@ -74,10 +74,7 @@ int port;
 	USHORT Action=0;
 	USHORT NoWritten=0;
 #endif
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_print() - called\n");
-#endif
+	PDC_LOG(("PDC_print() - called\n"));
 
 #if !defined (CURSES__32BIT__) && !defined(CSET2) && !defined(TC)
 	if (DosOpen((PSZ)Printer, &Lpt, &Action, 0,0,0,0,0) != 0)

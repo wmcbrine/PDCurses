@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2003/12/28 08:38:16 mark Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -58,10 +58,7 @@ int	PDC_set_80x25()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_80x25() - called\n");
-#endif
+	PDC_LOG(("PDC_set_80x25() - called\n"));
 
 	switch (SP->adapter)
 	{
@@ -84,7 +81,6 @@ int	PDC_set_80x25()
 		break;
 	}
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -116,17 +112,13 @@ int endrow;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",startrow,endrow);
-#endif
+	PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",startrow,endrow));
 
 	regs.h.ah = 0x01;
 	regs.h.ch = (unsigned char) startrow;
 	regs.h.cl = (unsigned char) endrow;
 	int86(0x10, &regs, &regs);
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -165,10 +157,7 @@ int size;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_font() - called\n");
-#endif
+	PDC_LOG(("PDC_set_font() - called\n"));
 
 	if (SP->bogus_adapter)
 		return( ERR );
@@ -244,7 +233,6 @@ int size;
 		PDC_cursor_off();
 	SP->font = PDC_get_font();
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -283,10 +271,7 @@ int rows;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_rows() - called\n");
-#endif
+	PDC_LOG(("PDC_set_rows() - called\n"));
 
 	if (SP->bogus_adapter)
 		return( ERR );
@@ -324,7 +309,6 @@ int rows;
 	LINES = PDC_get_rows();
 	COLS = PDC_get_columns();
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -355,12 +339,9 @@ int new_mode;
 #endif
 /***********************************************************************/
 {
-
 	int	cur=0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_scrn_mode() - called\n");
-#endif
+	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
 	cur = (int) PDC_get_scrn_mode();
 	if (cur != new_mode)
@@ -374,7 +355,6 @@ int new_mode;
 	LINES = PDC_get_rows();
 	COLS = PDC_get_columns();
 	return( OK );
-
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -385,12 +365,10 @@ int visibility;
 #endif
 /***********************************************************************/
 {
- int start=6,end=7;
- int ret_vis=0;
+	int start=6,end=7;
+	int ret_vis=0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_curs_set() - called: visibility=%d\n",visibility);
-#endif
+	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n",visibility));
 
 	ret_vis = SP->visibility;
 	SP->visibility = visibility;
@@ -453,9 +431,7 @@ char *title;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_title() - called:<%s>\n",title);
-#endif
+	PDC_LOG(("PDC_set_title() - called:<%s>\n",title));
 
 	return;
 }

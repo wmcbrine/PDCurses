@@ -66,7 +66,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.9 2005/12/17 01:03:16 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.10 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -149,9 +149,7 @@ chtype c;
 {
 	chtype	ic = c;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("unctrl() - called\n");
-#endif
+	PDC_LOG(("unctrl() - called\n"));
 
 	ic &= A_CHARTEXT;
 	if (ic >= 0x20 && ic != 0x7f)		/* normal characters */
@@ -242,9 +240,8 @@ int key;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("keyname() - called: key %d\n",key);
-#endif
+	PDC_LOG(("keyname() - called: key %d\n",key));
+
 	key -= KEY_MIN;
 	if (key >= 0
 	&& key <= (int)(sizeof(key_name) / sizeof(key_name[0])) )
@@ -260,9 +257,8 @@ bool	PDC_CDECL	has_key(key)
 int key;
 #endif
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("has_key() - called: key %d\n",key);
-#endif
+	PDC_LOG(("has_key() - called: key %d\n",key));
+
 	key -= KEY_MIN;
 	return key >= 0
 	    && key <= (int)(sizeof(key_name) / sizeof(key_name[0]));
@@ -275,9 +271,7 @@ void	PDC_CDECL	filter()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("filter() - called\n");
-#endif
+	PDC_LOG(("filter() - called\n"));
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -288,9 +282,7 @@ bool x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("use_env() - called: x %d\n",x);
-#endif
+	PDC_LOG(("use_env() - called: x %d\n",x));
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -302,9 +294,8 @@ FILE *filep;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("putwin() - called\n");
-#endif
+	PDC_LOG(("putwin() - called\n"));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -316,9 +307,8 @@ FILE *filep;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getwin() - called\n");
-#endif
+	PDC_LOG(("getwin() - called\n"));
+
 	return (WINDOW *)NULL;
 }
 /***********************************************************************/
@@ -330,9 +320,7 @@ int ms;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("delay_output() - called: ms %d\n",ms);
-#endif
+	PDC_LOG(("delay_output() - called: ms %d\n",ms));
 
 #if (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
 	delay( ms );
@@ -389,9 +377,7 @@ extern int	c_pindex;		/* putter index */
 extern int	c_gindex;		/* getter index */
 extern int	c_ungind;		/* wungetch() push index */
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("flushinp() - called\n");
-#endif
+	PDC_LOG(("flushinp() - called\n"));
 
 #if defined(DOS) && defined(FAST_VIDEO)
 	setdosmemword (0x41a, getdosmemword (0x41c)); /* Force the BIOS kbd buf       */
@@ -440,9 +426,8 @@ void	PDC_CDECL	traceon()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("traceon() - called\n");
-#endif
+	PDC_LOG(("traceon() - called\n"));
+
 	trace_on = TRUE;
 	return;
 }
@@ -454,9 +439,8 @@ void	PDC_CDECL	traceoff()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("traceoff() - called\n");
-#endif
+	PDC_LOG(("traceoff() - called\n"));
+
 	trace_on = FALSE;
 	return;
 }

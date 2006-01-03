@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.1 2001/01/10 08:26:58 mark Exp $";
+char *rcsid_deleteln  = "$Id: deleteln.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -104,9 +104,7 @@ int	PDC_CDECL	deleteln()
 	chtype*	ptr;
 	int	y;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("deleteln() - called\n");
-#endif
+	PDC_LOG(("deleteln() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -152,9 +150,7 @@ WINDOW *win;
 	chtype*	ptr;
 	int	y;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wdeleteln() - called\n");
-#endif
+	PDC_LOG(("wdeleteln() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -195,9 +191,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("insdelln() - called\n");
-#endif
+	PDC_LOG(("insdelln() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -216,9 +210,7 @@ int n;
 {
 	int i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("winsdelln() - called\n");
-#endif
+	PDC_LOG(("winsdelln() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -253,9 +245,7 @@ WINDOW *win;
 	chtype*	end;
 	short	y;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("winsertln() - called\n");
-#endif
+	PDC_LOG(("winsertln() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -295,9 +285,7 @@ int	PDC_CDECL	insertln()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("insertln() - called\n");
-#endif
+	PDC_LOG(("insertln() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -314,9 +302,7 @@ int y,x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwinsertln() - called\n");
-#endif
+	PDC_LOG(("mvwinsertln() - called\n"));
 
 	if (wmove(win,y,x) == ERR)
 		return(ERR);

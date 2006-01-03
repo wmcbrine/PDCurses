@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.6 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.7 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -103,9 +103,7 @@ chtype *ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("addchstr() - called\n");
-#endif
+   PDC_LOG(("addchstr() - called\n"));
 
    return( addchnstr( ch, -1) );
 }
@@ -121,9 +119,8 @@ int n;
 {
    int y,x,num,maxx;
    chtype *ptr;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("addchnstr() - called\n");
-#endif
+
+   PDC_LOG(("addchnstr() - called\n"));
 
    if (stdscr == (WINDOW *)NULL)
       return( ERR );
@@ -180,9 +177,7 @@ chtype *ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("waddchstr() - called: win=%x\n",win);
-#endif
+   PDC_LOG(("waddchstr() - called: win=%x\n",win));
 
    if (win == (WINDOW *)NULL)
       return( ERR );
@@ -203,9 +198,8 @@ int n;
    register int i,y,x,num,maxx,minx;
    int first=1;
    chtype *ptr;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("waddchnstr() - called: win=%x n=%d\n",win,n);
-#endif
+
+   PDC_LOG(("waddchnstr() - called: win=%x n=%d\n",win,n));
 
    if (win == (WINDOW *)NULL)
       return( ERR );
@@ -275,16 +269,7 @@ int n;
                maxx = i;
          }
 
-#ifdef PDCDEBUG
-      if (trace_on)
-      {
-         PDC_debug("y %d i %d minx %d maxx %d *ptr %x *ch %x firstch: %d lastch: %d\n",
-                   y,i,minx,maxx,
-                   *ptr,*ch,
-                   win->_firstch[y],win->_lastch[y]
-                   );
-      }
-#endif
+      PDC_LOG(("y %d i %d minx %d maxx %d *ptr %x *ch %x firstch: %d lastch: %d\n", y,i,minx,maxx, *ptr,*ch, win->_firstch[y],win->_lastch[y]));
 
       *ptr++ = *ch++;
    }
@@ -306,9 +291,7 @@ chtype *ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("mvaddchstr() - called: y %d x %d\n",y,x);
-#endif
+   PDC_LOG(("mvaddchstr() - called: y %d x %d\n",y,x));
 
    if (stdscr == (WINDOW *)NULL)
       return( ERR );
@@ -330,9 +313,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("mvaddchnstr() - called: y %d x %d n %d\n",y,x,n);
-#endif
+   PDC_LOG(("mvaddchnstr() - called: y %d x %d n %d\n",y,x,n));
 
    if (stdscr == (WINDOW *)NULL)
       return( ERR );
@@ -354,9 +335,7 @@ chtype *ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("waddchstr() - called:\n");
-#endif
+   PDC_LOG(("waddchstr() - called:\n"));
 
    if (win == (WINDOW *)NULL)
       return( ERR );
@@ -379,9 +358,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("mvwaddchnstr() - called: y %d x %d n %d \n",y,x,n);
-#endif
+   PDC_LOG(("mvwaddchnstr() - called: y %d x %d n %d \n",y,x,n));
 
    if (win == (WINDOW *)NULL)
       return( ERR );

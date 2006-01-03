@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_beep  = "$Id: beep.c,v 1.1 2001/01/10 08:26:49 mark Exp $";
+char *rcsid_beep  = "$Id: beep.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -80,9 +80,7 @@ int	PDC_CDECL	beep()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("beep() - called\n");
-#endif
+	PDC_LOG(("beep() - called\n"));
 
 	if (!SP->audible)
 	{
@@ -102,10 +100,7 @@ int	PDC_CDECL	flash()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("flash() - called\n");
-#endif
+	PDC_LOG(("flash() - called\n"));
 
 #ifdef UNIX
 	if (flash_screen != NULL)

@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.5 2005/12/25 15:07:09 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.6 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -94,9 +94,7 @@ int newcol;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",oldrow,oldcol,newrow,newcol);
-#endif
+	PDC_LOG(("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",oldrow,oldcol,newrow,newcol));
 
 #ifdef	TC
 #  pragma argsused
@@ -122,9 +120,8 @@ TERMINAL *oterm;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("del_curterm() - called\n");
-#endif
+	PDC_LOG(("del_curterm() - called\n"));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -136,9 +133,8 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("putp() - called: str %s\n", str);
-#endif
+	PDC_LOG(("putp() - called: str %s\n", str));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -152,9 +148,8 @@ int *errret;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("restartterm() - called\n");
-#endif
+	PDC_LOG(("restartterm() - called\n"));
+
 	if (errret)
 		*errret = -1;
 
@@ -169,9 +164,8 @@ TERMINAL *nterm;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("set_curterm() - called\n");
-#endif
+	PDC_LOG(("set_curterm() - called\n"));
+
 	return (TERMINAL *)NULL;
 }
 /***********************************************************************/
@@ -183,9 +177,8 @@ char *term;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("setterm() - called\n");
-#endif
+	PDC_LOG(("setterm() - called\n"));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -199,9 +192,8 @@ int *errret;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("setupterm() - called\n");
-#endif
+	PDC_LOG(("setupterm() - called\n"));
+
 	if (errret)
 		*errret = -1;
 	else
@@ -219,9 +211,8 @@ char *name;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tgetent() - called: name %s\n", name);
-#endif
+	PDC_LOG(("tgetent() - called: name %s\n", name));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -233,9 +224,8 @@ char *id;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tgetflag() - called: id %s\n", id);
-#endif
+	PDC_LOG(("tgetflag() - called: id %s\n", id));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -247,9 +237,8 @@ char *id;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tgetnum() - called: id %s\n", id);
-#endif
+	PDC_LOG(("tgetnum() - called: id %s\n", id));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -262,9 +251,8 @@ char **area;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tgetstr() - called: id %s\n", id);
-#endif
+	PDC_LOG(("tgetstr() - called: id %s\n", id));
+
 	return (char *)NULL;
 }
 /***********************************************************************/
@@ -278,9 +266,8 @@ int row;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tgoto() - called\n");
-#endif
+	PDC_LOG(("tgoto() - called\n"));
+
 	return (char *)NULL;
 }
 /***********************************************************************/
@@ -292,9 +279,8 @@ char *capname;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tigetflag() - called: capname %s\n", capname);
-#endif
+	PDC_LOG(("tigetflag() - called: capname %s\n", capname));
+
 	return -1;
 }
 /***********************************************************************/
@@ -306,9 +292,8 @@ char *capname;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tigetnum() - called: capname %s\n", capname);
-#endif
+	PDC_LOG(("tigetnum() - called: capname %s\n", capname));
+
 	return -2;
 }
 /***********************************************************************/
@@ -320,9 +305,8 @@ char *capname;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tigetstr() - called: capname %s\n", capname);
-#endif
+	PDC_LOG(("tigetstr() - called: capname %s\n", capname));
+
 	return (char *)(-1);
 }
 /***********************************************************************/
@@ -344,9 +328,8 @@ long p9;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tparm() - called: cap %s\n", cap);
-#endif
+	PDC_LOG(("tparm() - called: cap %s\n", cap));
+
 	return (char *)NULL;
 }
 /***********************************************************************/
@@ -360,9 +343,8 @@ int (*putfunc)(int);
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("tputs() - called\n");
-#endif
+	PDC_LOG(("tputs() - called\n"));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -374,9 +356,8 @@ chtype attr;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("vidattr() - called: attr %d\n", attr);
-#endif
+	PDC_LOG(("vidattr() - called: attr %d\n", attr));
+
 	return ERR;
 }
 /***********************************************************************/
@@ -389,8 +370,7 @@ int (*putfunc)();
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("vidputs() - called: attr %d\n", attr);
-#endif
+	PDC_LOG(("vidputs() - called: attr %d\n", attr));
+
 	return ERR;
 }

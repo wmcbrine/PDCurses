@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.12 2005/12/11 05:51:24 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.13 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -76,9 +76,8 @@ int   PDC_scr_close(void)
  COORD origin;
  SMALL_RECT rect;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_scr_close() - called\n");
-#endif
+   PDC_LOG(("PDC_scr_close() - called\n"));
+
    /*
     * All of this code should probably go into DllMain() at DLL_PROCESS_DETACH
     */
@@ -142,9 +141,8 @@ int   PDC_scr_close(void)
 
 bool  PDC_scrn_modes_equal(int mode1, int mode2)
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_scrn_modes_equal() - called\n");
-#endif
+   PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
+
    return (mode1 == mode2);
 }
 
@@ -184,9 +182,7 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
    DWORD dwThreadID;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_scr_open() - called\n");
-#endif
+   PDC_LOG(("PDC_scr_open() - called\n"));
 
    hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
    hConIn = GetStdHandle(STD_INPUT_HANDLE);
@@ -242,9 +238,8 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
        */
       if ((ciSaveBuffer = (CHAR_INFO*)malloc(orig_scr.dwSize.X*orig_scr.dwSize.Y*sizeof(CHAR_INFO))) == NULL)
       {
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d\n",__LINE__);
-#endif
+         PDC_LOG(("PDC_scr_open() - exiting at line %d\n",__LINE__));
+
          return(ERR);
       }
       bufsize.X = orig_scr.dwSize.X;
@@ -270,9 +265,9 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
             CHAR LastError[256];
             ULONG last_error = GetLastError();
             FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
-#ifdef PDCDEBUG
-            if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
-#endif
+
+            PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError));
+
             return(ERR);
          }
 
@@ -289,9 +284,9 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
             FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
             free(ciSaveBuffer);
             ciSaveBuffer = NULL;
-#ifdef PDCDEBUG
-            if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
-#endif
+
+            PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError));
+
             return(ERR);
          }
          internal->_restore = PDC_RESTORE_WINDOW;
@@ -309,9 +304,9 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
          CHAR LastError[256];
          ULONG last_error = GetLastError();
          FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
-#endif
+
+         PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError));
+
          return(ERR);
       }
 
@@ -328,9 +323,9 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
          FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, last_error, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LastError, 256, NULL ) ;
          free(save_ci);
          save_ci = NULL;
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError);
-#endif
+
+         PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",__LINE__,LastError));
+
          return(ERR);
       }
       internal->_preserve = TRUE;
@@ -490,9 +485,8 @@ int nlines,ncols;
    CONSOLE_SCREEN_BUFFER_INFO csbi;
    int external_resized = SP->resized;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols);
-#endif
+   PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols));
+
    SP->resized = FALSE; /* prevent endless loops in case of errors */
 
    if (nlines == 0
@@ -538,9 +532,7 @@ int nlines,ncols;
    COORD size;
    SMALL_RECT rect;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols);
-#endif
+   PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols));
 
    if (nlines < 2)
       return(ERR);

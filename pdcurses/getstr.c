@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.8 2004/08/07 07:18:46 rexx Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -110,9 +110,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("getstr() - called\n");
-#endif
+   PDC_LOG(("getstr() - called\n"));
 
    if (stdscr == (WINDOW *)NULL)
       return (ERR);
@@ -128,9 +126,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("wgetstr() - called\n");
-#endif
+   PDC_LOG(("wgetstr() - called\n"));
 
    if (win == (WINDOW *)NULL)
       return (ERR);
@@ -148,9 +144,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("mvgetstr() - called\n");
-#endif
+   PDC_LOG(("mvgetstr() - called\n"));
 
    if (stdscr == (WINDOW *)NULL)
       return (ERR);
@@ -170,9 +164,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("mvwgetstr() - called\n");
-#endif
+   PDC_LOG(("mvwgetstr() - called\n"));
 
    if (win == (WINDOW *)NULL)
       return (ERR);
@@ -190,9 +182,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("getnstr() - called\n");
-#endif
+   PDC_LOG(("getnstr() - called\n"));
 
    if (stdscr == (WINDOW *)NULL)
       return (ERR);
@@ -218,9 +208,7 @@ int n;
    bool  oldcbreak;
    bool  oldnodelay;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("wgetnstr() - called\n");
-#endif
+   PDC_LOG(("wgetnstr() - called\n"));
 
    if (win == (WINDOW *)NULL)
       return (ERR);

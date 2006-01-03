@@ -55,7 +55,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.3 2005/12/16 23:27:47 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -205,9 +205,7 @@ int	PDC_CDECL	cbreak()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("cbreak() - called\n");
-#endif
+	PDC_LOG(("cbreak() - called\n"));
 
 #ifdef UNIX
 #ifdef USE_TERMIO
@@ -235,9 +233,7 @@ int	PDC_CDECL	nocbreak()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("nocbreak() - called\n");
-#endif
+	PDC_LOG(("nocbreak() - called\n"));
 
 #ifdef UNIX
 #ifdef USE_TERMIO
@@ -261,9 +257,7 @@ int	PDC_CDECL	echo()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("echo() - called\n");
-#endif
+	PDC_LOG(("echo() - called\n"));
 
 #ifdef UNIX
 #ifdef USE_TERMIO
@@ -286,9 +280,7 @@ int	PDC_CDECL	noecho()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("noecho() - called\n");
-#endif
+	PDC_LOG(("noecho() - called\n"));
 
 #ifdef UNIX
 #ifdef USE_TERMIO
@@ -312,9 +304,8 @@ int tenths;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("halfdelay() - called\n");
-#endif
+	PDC_LOG(("halfdelay() - called\n"));
+
 	if (tenths < 1 || tenths > 255)
 		return (ERR);
 	SP->delaytenths = tenths;
@@ -336,9 +327,7 @@ bool bf;
 	int	y;
 	int	maxy;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("intrflush() - called\n");
-#endif
+	PDC_LOG(("intrflush() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -361,9 +350,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("keypad() - called\n");
-#endif
+	PDC_LOG(("keypad() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -381,9 +368,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("meta() - called\n");
-#endif
+	PDC_LOG(("meta() - called\n"));
 
 #ifdef UNIX
 /* INCOMPLETE */
@@ -405,9 +390,7 @@ bool flag;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("nodelay() - called\n");
-#endif
+	PDC_LOG(("nodelay() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -425,9 +408,7 @@ bool flag;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("notimeout() - called\n");
-#endif
+	PDC_LOG(("notimeout() - called\n"));
 
 	return( OK );
 }
@@ -445,9 +426,7 @@ int	PDC_CDECL	raw()
 # endif
 #endif
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("raw() - called\n");
-#endif
+	PDC_LOG(("raw() - called\n"));
 
 #ifdef OS2
 # ifndef EMXVIDEO
@@ -497,9 +476,7 @@ int	PDC_CDECL	noraw()
 # endif
 #endif
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("noraw() - called\n");
-#endif
+	PDC_LOG(("noraw() - called\n"));
 
 #ifdef OS2
 # ifndef EMXVIDEO
@@ -539,9 +516,7 @@ void	PDC_CDECL	noqiflush()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("noqiflush() - called\n");
-#endif
+	PDC_LOG(("noqiflush() - called\n"));
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -551,9 +526,7 @@ void	PDC_CDECL	qiflush()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("qiflush() - called\n");
-#endif
+	PDC_LOG(("qiflush() - called\n"));
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -564,9 +537,7 @@ int fildes;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("typeahead() - called\n");
-#endif
+	PDC_LOG(("typeahead() - called\n"));
 
 	if (fildes < 0)
 		SP->refrbrk = FALSE;
@@ -584,9 +555,7 @@ int delay;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wtimeout() - called\n");
-#endif
+	PDC_LOG(("wtimeout() - called\n"));
 
 	if (win == NULL)
 		return ERR;
@@ -630,8 +599,7 @@ int delay;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("timeout() - called\n");
-#endif
+	PDC_LOG(("timeout() - called\n"));
+
 	return(wtimeout(stdscr,delay));
 }

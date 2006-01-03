@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.7 2005/12/11 01:07:19 wmcbrine Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.8 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -57,10 +57,7 @@ unsigned long PDC_get_input_fd()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
-#endif
+	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
 	return XCurses_get_input_fd();
 }
@@ -94,9 +91,8 @@ bool PDC_check_bios_key()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_check_bios_key() - called\n");
-#endif
+	PDC_LOG(("PDC_check_bios_key() - called\n"));
+
 	return(XCurses_kbhit());
 }         
 
@@ -134,9 +130,8 @@ bool	PDC_get_ctrl_break()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_ctrl_break() - called\n");
-#endif
+	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
+
 	return(FALSE);
 }
 
@@ -179,9 +174,7 @@ int	PDC_rawgetch()
    int c;
    bool return_immediately;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
-#endif
+   PDC_LOG(("PDC_rawgetch() - called\n"));
 
    if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
       return( -1 );
@@ -229,9 +222,8 @@ bool setting;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_ctrl_break() - called\n");
-#endif
+	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
+
 	return(OK);
 }
 
@@ -267,8 +259,7 @@ unsigned long	PDC_get_key_modifiers()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_key_modifiers() - called\n");
-#endif
+	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
+
 	return(XCurses_get_key_modifiers());
 }

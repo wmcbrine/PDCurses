@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr  = "$Id: termattr.c,v 1.4 2003/12/28 08:39:48 mark Exp $";
+char *rcsid_termattr  = "$Id: termattr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -160,9 +160,7 @@ int	PDC_CDECL	baudrate()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("baudrate() - called\n");
-#endif
+	PDC_LOG(("baudrate() - called\n"));
 
 #ifdef UNIX
 	return (_CUR_TERM.baudrate);
@@ -182,9 +180,7 @@ char	PDC_CDECL	erasechar()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("erasechar() - called\n");
-#endif
+	PDC_LOG(("erasechar() - called\n"));
 
 #ifdef UNIX
 #ifdef USE_TERMIO
@@ -206,9 +202,7 @@ bool	PDC_CDECL	has_ic()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("has_ic() - called\n");
-#endif
+	PDC_LOG(("has_ic() - called\n"));
 
 #ifdef UNIX
 	if (insert_character != NULL && delete_character != NULL)
@@ -227,9 +221,7 @@ bool	PDC_CDECL	has_il()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("has_il() - called\n");
-#endif
+	PDC_LOG(("has_il() - called\n"));
 
 #ifdef UNIX
 	if (insert_line != NULL && delete_line != NULL)
@@ -248,9 +240,7 @@ char	PDC_CDECL	killchar()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("killchar() - called\n");
-#endif
+	PDC_LOG(("killchar() - called\n"));
 
 #ifdef UNIX
 #ifdef USE_TERMIO
@@ -272,9 +262,7 @@ char*	PDC_CDECL	longname()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("longname() - called\n");
-#endif
+	PDC_LOG(("longname() - called\n"));
 
 #if defined (XCURSES)
 	if (SP->mono)
@@ -345,9 +333,7 @@ attr_t	PDC_CDECL	termattrs()
 {
 	attr_t temp =   (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | A_UNDERLINE | A_ITALIC); /* blink is bold background on some platforms */
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("termattrs() - called\n");
-#endif
+	PDC_LOG(("termattrs() - called\n"));
 
 	if( ! SP->mono )
 		temp |= A_COLOR;
@@ -362,9 +348,7 @@ char*	PDC_CDECL	termname()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("termname() - called\n");
-#endif
+	PDC_LOG(("termname() - called\n"));
 
 #if defined (XCURSES)
 	if (SP->mono)
@@ -426,9 +410,7 @@ char	PDC_CDECL	wordchar()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wordchar() - called\n");
-#endif
+	PDC_LOG(("wordchar() - called\n"));
 
 #ifdef UNIX
 #ifdef USE_TERMIO

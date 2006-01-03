@@ -28,7 +28,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -61,9 +61,7 @@ int PDC_set_80x25(void)
 #ifndef EMXVIDEO
    VIOMODEINFO modeInfo={0};
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_80x25() - called\n");
-#endif
+   PDC_LOG(("PDC_set_80x25() - called\n"));
 
 #ifndef EMXVIDEO
    modeInfo.cb = sizeof(modeInfo);
@@ -101,9 +99,7 @@ int PDC_set_cursor_mode( int startrow, int endrow )
 #ifndef EMXVIDEO
    VIOCURSORINFO cursorInfo={0};
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",startrow,endrow);
-#endif
+   PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",startrow,endrow));
 
 #ifdef EMXVIDEO
    if (endrow <= startrow)
@@ -154,9 +150,7 @@ int PDC_set_font(int size)
 #ifndef EMXVIDEO
    VIOMODEINFO modeInfo={0};
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_font() - called\n");
-#endif
+   PDC_LOG(("PDC_set_font() - called\n"));
 
 #ifndef EMXVIDEO
    if (SP->sizeable && (SP->font != size))
@@ -212,9 +206,7 @@ int PDC_set_rows(int rows)
    VIOMODEINFO modeInfo={0};
    USHORT result=0;
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_rows() - called\n");
-#endif
+   PDC_LOG(("PDC_set_rows() - called\n"));
 
 #ifdef EMXVIDEO
    return (ERR);
@@ -259,9 +251,7 @@ int PDC_set_scrn_mode(int new_mode)
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_scrn_mode() - called\n");
-#endif
+   PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
 #ifdef EMXVIDEO
    return ( OK );
@@ -283,14 +273,12 @@ int PDC_curs_set(int visibility)
 /***********************************************************************/
 {
 #ifndef EMXVIDEO
- VIOCURSORINFO pvioCursorInfo;
+   VIOCURSORINFO pvioCursorInfo;
 #endif
- int start=0,end=0;
- int ret_vis=0,hidden=0;
+   int start=0,end=0;
+   int ret_vis=0,hidden=0;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_curs_set() - called: visibility=%d\n",visibility);
-#endif
+   PDC_LOG(("PDC_curs_set() - called: visibility=%d\n",visibility));
 
    ret_vis = SP->visibility;
    SP->visibility = visibility;
@@ -353,8 +341,7 @@ int PDC_curs_set(int visibility)
 void PDC_set_title(char *title)
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_title() - called:<%s>\n",title);
-#endif
+   PDC_LOG(("PDC_set_title() - called:<%s>\n",title));
+
    return;
 }

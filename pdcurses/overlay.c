@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_overlay  = "$Id: overlay.c,v 1.3 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_overlay  = "$Id: overlay.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -119,9 +119,7 @@ WINDOW *dst_w;
 	int	ydiff;
 	int	rc;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("overlay() - called\n");
-#endif
+	PDC_LOG(("overlay() - called\n"));
 
 	if (src_w == (WINDOW *)NULL)	return( ERR );
 	if (dst_w == (WINDOW *)NULL)	return( ERR );
@@ -188,9 +186,7 @@ WINDOW *dst_w;
 	int	ydiff;
 	int	rc;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("overwrit() - called\n");
-#endif
+	PDC_LOG(("overwrite() - called\n"));
 
 	if (src_w == (WINDOW *)NULL)	return( ERR );
 	if (dst_w == (WINDOW *)NULL)	return( ERR );
@@ -267,9 +263,7 @@ int overlay;
 	int	min_rows,min_cols;
 	int	rc;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("copywin() - called\n");
-#endif
+	PDC_LOG(("copywin() - called\n"));
 
 	if (src_w == (WINDOW *)NULL
 	||  dst_w == (WINDOW *)NULL)

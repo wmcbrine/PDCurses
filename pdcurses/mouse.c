@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.2 2002/03/22 22:36:53 mark Exp $";
+char *rcsid_mouse = "$Id: mouse.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -117,9 +117,8 @@ unsigned long mbe;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mouse_set() - called: event %x\n",mbe);
-#endif
+	PDC_LOG(("mouse_set() - called: event %x\n",mbe));
+
 	SP->_trap_mbe = mbe;
 	return( OK );
 }
@@ -132,9 +131,8 @@ unsigned long mbe;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mouse_on() - called: event %x\n",mbe);
-#endif
+	PDC_LOG(("mouse_on() - called: event %x\n",mbe));
+
 	SP->_trap_mbe |= mbe;
 	return( OK );
 }
@@ -147,9 +145,8 @@ unsigned long mbe;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mouse_off() - called: event %x\n",mbe);
-#endif
+	PDC_LOG(("mouse_off() - called: event %x\n",mbe));
+
 	SP->_trap_mbe &= ~mbe;
 	return( OK );
 }
@@ -162,9 +159,8 @@ unsigned long button;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("map_button() - called: button %x\n",button);
-#endif
+	PDC_LOG(("map_button() - called: button %x\n",button));
+
 /****************** this does nothing at the moment ***************/
 	SP->_map_mbe_to_key = button;
 	return( OK );
@@ -177,10 +173,10 @@ int	PDC_CDECL	request_mouse_pos()
 #endif
 /***********************************************************************/
 {
-extern MOUSE_STATUS Trapped_Mouse_status;
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("request_mouse_pos() - called\n");
-#endif
+	extern MOUSE_STATUS Trapped_Mouse_status;
+
+	PDC_LOG(("request_mouse_pos() - called\n"));
+
 	memcpy((char*)&Mouse_status,(char*)&Trapped_Mouse_status,sizeof(MOUSE_STATUS));
 	return( OK );
 }
@@ -194,9 +190,8 @@ int *y,*x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wmouse_position() - called\n");
-#endif
+	PDC_LOG(("wmouse_position() - called\n"));
+
 /* if the current mouse position is outside the provided window, put  */
 /* -1 in x and y                                                      */
 	if (win == (WINDOW *)NULL)
@@ -226,9 +221,8 @@ unsigned long	PDC_CDECL	getmouse()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getmouse() - called\n");
-#endif
+	PDC_LOG(("getmouse() - called\n"));
+
 	return(SP->_trap_mbe);
 }
 /***********************************************************************/
@@ -239,8 +233,7 @@ unsigned long	PDC_CDECL	getbmap()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getbmap() - called\n");
-#endif
+	PDC_LOG(("getbmap() - called\n"));
+
 	return(SP->_map_mbe_to_key);
 }

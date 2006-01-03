@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.4 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -60,9 +60,7 @@ int *col;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cursor_pos() - called\n");
-#endif
+	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
 	regs.h.ah = 0x03;
 	regs.h.bh = SP->video_page;
@@ -70,7 +68,6 @@ int *col;
 	*row = regs.h.dh;
 	*col = regs.h.dl;
 	return( OK );
-
 }
 
 /*man-start*********************************************************************
@@ -103,10 +100,7 @@ int	PDC_get_cur_col()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cur_col() - called\n");
-#endif
+	PDC_LOG(("PDC_get_cur_col() - called\n"));
 
 #ifdef WATCOMC
 	regs.w.ax = 0x0003;
@@ -116,7 +110,6 @@ int	PDC_get_cur_col()
 	regs.h.bh = SP->video_page;
 	int86(0x10, &regs, &regs);
 	return((int) regs.h.dl);
-
 }
 
 /*man-start*********************************************************************
@@ -149,10 +142,7 @@ int	PDC_get_cur_row()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cur_row() - called\n");
-#endif
+	PDC_LOG(("PDC_get_cur_row() - called\n"));
 
 #ifdef WATCOMC
 	regs.w.ax = 0x0003;
@@ -162,7 +152,6 @@ int	PDC_get_cur_row()
 	regs.h.bh = SP->video_page;
 	int86(0x10, &regs, &regs);
 	return ((int) regs.h.dh);
-
 }
 
 /*man-start*********************************************************************
@@ -194,10 +183,7 @@ int	PDC_get_attribute()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_attribute() - called\n");
-#endif
+	PDC_LOG(("PDC_get_attribute() - called\n"));
 
 #ifdef WATCOMC
 	regs.w.ax = 0x0800;
@@ -207,7 +193,6 @@ int	PDC_get_attribute()
 	regs.h.bh = SP->video_page;
 	int86(0x10, &regs, &regs);
 	return ((int) regs.h.ah);
-
 }
 
 /*man-start*********************************************************************
@@ -242,9 +227,7 @@ int	PDC_get_columns()
 	int	cols=0;
 	char *env_cols=NULL;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_columns() - called\n");
-#endif
+	PDC_LOG(("PDC_get_columns() - called\n"));
 
 /* use the value from COLS environment variable, if set. MH 10-Jun-92 */
 /* and use the minimum of COLS and return from int10h    MH 18-Jun-92 */
@@ -256,11 +239,10 @@ int	PDC_get_columns()
 	{
 		cols = min(atoi(env_cols),cols);
 	}
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_columns() - returned: cols %d\n",cols);
-#endif
-	return(cols);
 
+	PDC_LOG(("PDC_get_columns() - returned: cols %d\n",cols));
+
+	return(cols);
 }
 
 /*man-start*********************************************************************
@@ -292,9 +274,7 @@ int	PDC_get_cursor_mode()
 {
 	short	cmode=0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cursor_mode() - called\n");
-#endif
+	PDC_LOG(("PDC_get_cursor_mode() - called\n"));
 
 	cmode = getdosmemword (0x460);
 	return (cmode);
@@ -334,9 +314,7 @@ int	PDC_get_font()
 	int	retval=0;
 #endif
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_font() - called\n");
-#endif
+	PDC_LOG(("PDC_get_font() - called\n"));
 
 #if	defined (FAST_VIDEO)
 	retval = getdosmemword (0x485);
@@ -416,9 +394,7 @@ int	PDC_get_rows()
 	char *env_rows=NULL;
 	int	rows=0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_rows() - called\n");
-#endif
+	PDC_LOG(("PDC_get_rows() - called\n"));
 
 /* use the value from LINES environment variable, if set. MH 10-Jun-92 */
 /* and use the minimum of LINES and *ROWS.                MH 18-Jun-92 */
@@ -472,12 +448,9 @@ int	PDC_get_rows()
 		break;
 	}
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_rows() - returned: rows %d\n",rows);
-#endif
+	PDC_LOG(("PDC_get_rows() - returned: rows %d\n",rows));
 
 	return (rows);
-
 }
 
 /*man-start*********************************************************************
@@ -509,15 +482,11 @@ int	PDC_get_scrn_mode()
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_scrn_mode() - called\n");
-#endif
+	PDC_LOG(("PDC_get_scrn_mode() - called\n"));
 
 	regs.h.ah = 0x0f;
 	int86(0x10, &regs, &regs);
 	return ((int) regs.h.al);
-
 }
 
 /*man-start*********************************************************************
@@ -566,9 +535,7 @@ int	PDC_query_adapter_type()
 #endif
 	short video_base = getdosmemword (0x463);
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_query_adapter_type() - called\n");
-#endif
+	PDC_LOG(("PDC_query_adapter_type() - called\n"));
 
 	/*
 	 * Attempt to call VGA Identify Adapter Function...
@@ -774,9 +741,7 @@ int adapter;
 	int	fontsize = PDC_get_font();
 	int	rows	 = PDC_get_rows();
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_sanity_check() - called: Adapter %d\n",adapter);
-#endif
+	PDC_LOG(("PDC_sanity_check() - called: Adapter %d\n",adapter));
 
 	switch (adapter)
 	{

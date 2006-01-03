@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts  = "$Id: outopts.c,v 1.1 2001/01/10 08:27:17 mark Exp $";
+char *rcsid_outopts  = "$Id: outopts.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -165,9 +165,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("clearok() - called\n");
-#endif
+	PDC_LOG(("clearok() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -190,9 +188,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("idlok() - called\n");
-#endif
+	PDC_LOG(("idlok() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -210,9 +206,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("idcok() - called\n");
-#endif
+	PDC_LOG(("idcok() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -230,9 +224,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("immedok() - called\n");
-#endif
+	PDC_LOG(("immedok() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -250,9 +242,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("leaveok() - called\n");
-#endif
+	PDC_LOG(("leaveok() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -271,9 +261,7 @@ int bottom;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("setscrreg() - called: top %d bottom %d\n",top,bottom);
-#endif
+	PDC_LOG(("setscrreg() - called: top %d bottom %d\n",top,bottom));
 
 	if (stdscr == (WINDOW *)NULL)
 		return (ERR);
@@ -303,9 +291,7 @@ int bottom;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wsetscrreg() - called: top %d bottom %d\n",top,bottom);
-#endif
+	PDC_LOG(("wsetscrreg() - called: top %d bottom %d\n",top,bottom));
 
 	if (win == (WINDOW *)NULL)
 		return (ERR);
@@ -334,9 +320,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("scrollok() - called\n");
-#endif
+	PDC_LOG(("scrollok() - called\n"));
 
 	if  (win == (WINDOW *)NULL)
 		return( ERR );
@@ -352,9 +336,7 @@ int	PDC_CDECL	nl()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("nl() - called\n");
-#endif
+	PDC_LOG(("nl() - called\n"));
 
 	SP->autocr = TRUE;
 	return( OK );
@@ -367,9 +349,7 @@ int	PDC_CDECL	nonl()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("nonl() - called\n");
-#endif
+	PDC_LOG(("nonl() - called\n"));
 
 	SP->autocr = FALSE;
 	return( OK );
@@ -383,9 +363,7 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("raw_output() - called\n");
-#endif
+	PDC_LOG(("raw_output() - called\n"));
 
 	SP->raw_out = bf;
 	return( OK );

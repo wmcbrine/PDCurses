@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_move  = "$Id: move.c,v 1.1 2001/01/10 08:27:16 mark Exp $";
+char *rcsid_move  = "$Id: move.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -74,9 +74,7 @@ int x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("move() - called: y=%d x=%d\n",y,x);
-#endif
+	PDC_LOG(("move() - called: y=%d x=%d\n",y,x));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -103,9 +101,7 @@ int x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wmove() - called: y=%d x=%d\n",y,x);
-#endif
+	PDC_LOG(("wmove() - called: y=%d x=%d\n",y,x));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );

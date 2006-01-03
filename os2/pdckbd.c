@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.7 2005/12/11 01:07:19 wmcbrine Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.8 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*******************************************************************************
@@ -155,9 +155,8 @@ MOUSE_STATUS Trapped_Mouse_status;
 unsigned long PDC_get_input_fd(void)
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_input_fd() - called\n");
-#endif
+   PDC_LOG(("PDC_get_input_fd() - called\n"));
+
    return (unsigned long)fileno(stdin);
 }
 
@@ -167,20 +166,15 @@ int PDC_get_keyboard_info( KBDINFO *kbdinfo )
 /***********************************************************************/
 {
    KBDINFO akbdinfo;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_keyboard_info() - called\n");
-#endif
+
+   PDC_LOG(("PDC_get_keyboard_info() - called\n"));
+
    akbdinfo.cb = sizeof(akbdinfo);
    KbdGetStatus( &akbdinfo, 0 );
    *kbdinfo = akbdinfo;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_keyboard_info(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-      kbdinfo->cb,
-      kbdinfo->fsMask,
-      kbdinfo->chTurnAround,
-      kbdinfo->fsInterim,
-      kbdinfo->fsState);
-#endif
+
+   PDC_LOG(("PDC_get_keyboard_info(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n", kbdinfo->cb, kbdinfo->fsMask, kbdinfo->chTurnAround, kbdinfo->fsInterim, kbdinfo->fsState));
+
    return OK;
 }
 
@@ -189,29 +183,19 @@ int PDC_set_keyboard_binary( void )
 /***********************************************************************/
 {
    KBDINFO kbdinfo;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_keyboard_binary() - called\n");
-#endif
+
+   PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
+
    kbdinfo.cb = sizeof(kbdinfo);
    KbdGetStatus( &kbdinfo, 0);
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-      kbdinfo.cb,
-      kbdinfo.fsMask,
-      kbdinfo.chTurnAround,
-      kbdinfo.fsInterim,
-      kbdinfo.fsState);
-#endif
+
+   PDC_LOG(("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n", kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, kbdinfo.fsInterim, kbdinfo.fsState));
+
    kbdinfo.fsMask = (kbdinfo.fsMask & ~KEYBOARD_ASCII_MODE) | KEYBOARD_BINARY_MODE;
    KbdSetStatus( &kbdinfo, 0 );
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_keyboard_binary() - after. cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-      kbdinfo.cb,
-      kbdinfo.fsMask,
-      kbdinfo.chTurnAround,
-      kbdinfo.fsInterim,
-      kbdinfo.fsState);
-#endif
+
+   PDC_LOG(("PDC_set_keyboard_binary() - after. cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n", kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, kbdinfo.fsInterim, kbdinfo.fsState));
+
    return OK;
 }
 
@@ -219,17 +203,10 @@ int PDC_set_keyboard_binary( void )
 int PDC_set_keyboard_default( void )
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_keyboard_default() - called\n");
-#endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_keyboard_default(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-      SP->kbdinfo.cb,
-      SP->kbdinfo.fsMask,
-      SP->kbdinfo.chTurnAround,
-      SP->kbdinfo.fsInterim,
-      SP->kbdinfo.fsState);
-#endif
+   PDC_LOG(("PDC_set_keyboard_default() - called\n"));
+
+   PDC_LOG(("PDC_set_keyboard_default(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n", SP->kbdinfo.cb, SP->kbdinfo.fsMask, SP->kbdinfo.chTurnAround, SP->kbdinfo.fsInterim, SP->kbdinfo.fsState));
+
    KbdSetStatus( &SP->kbdinfo, 0 );
    return OK;
 }
@@ -263,9 +240,8 @@ bool PDC_check_bios_key(void)
 #if !defined(MSC) && !defined(EMXVIDEO)
    KBDKEYINFO keyInfo={0};
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_check_bios_key() - called\n");
-#endif
+
+   PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 #ifdef EMXVIDEO
    if (SP->tahead == -1)   /* Nothing typed yet */
@@ -316,9 +292,9 @@ int PDC_get_bios_key(void)
 #ifndef EMXVIDEO
    KBDKEYINFO keyInfo={0};
 #endif
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_bios_key() - called\n");
-#endif
+
+   PDC_LOG(("PDC_get_bios_key() - called\n"));
+
 #ifdef EMXVIDEO
    if (SP->tahead == -1)
    {
@@ -386,9 +362,9 @@ int PDC_get_bios_key(void)
            key = ((int) (scan << 8));
    else
       key = ((int) (ascii));
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_bios_key() - returned: %d(0x%x), ascii: %d(0x%x) scan: %d(0x%x)\n", key, key, ascii, ascii, scan, scan);
-#endif
+
+   PDC_LOG(("PDC_get_bios_key() - returned: %d(0x%x), ascii: %d(0x%x) scan: %d(0x%x)\n", key, key, ascii, ascii, scan, scan));
+
    return key;
 }
 
@@ -430,9 +406,7 @@ bool  PDC_get_ctrl_break(void)
 #   endif
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_ctrl_break() - called\n");
-#endif
+   PDC_LOG(("PDC_get_ctrl_break() - called\n"));
 
 #if defined(CURSES__32BIT__) || defined(CSET2) || defined(TC)
    oldAction = signal (SIGINT, SIG_DFL);
@@ -490,9 +464,9 @@ extern   WINDOW*  _getch_win_;
    int   c=0;
    int   oldc=0;
    bool  return_immediately;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_rawgetch() - called\n");
-#endif
+
+   PDC_LOG(("PDC_rawgetch() - called\n"));
+
    if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
       return( -1 );
 
@@ -546,9 +520,8 @@ extern   WINDOW*  _getch_win_;
 int PDC_set_ctrl_break(bool setting)
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_set_ctrl_break() - called. Setting: %d\n",setting);
-#endif
+   PDC_LOG(("PDC_set_ctrl_break() - called. Setting: %d\n",setting));
+
 #if defined (CURSES__32BIT__) || defined (CSET2) || defined(TC)
    signal (SIGINT, (setting?SIG_DFL:SIG_IGN));
    signal (SIGBREAK, (setting?SIG_DFL:SIG_IGN));
@@ -607,9 +580,9 @@ extern   WINDOW*  _getch_win_;
 
    int c=0;
    bool  return_immediately;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_sysgetch() - called\n");
-#endif
+
+   PDC_LOG(("PDC_sysgetch() - called\n"));
+
    if (_getch_win_ == (WINDOW *)NULL)  /* @@ */
       return (-1);
 
@@ -676,9 +649,9 @@ extern   WINDOW*  _getch_win_;
                         /* to _getch_win_ - marked with @@ */
 
    int *scanp=NULL;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_validchar() - called. c: %d\n",c);
-#endif
+
+   PDC_LOG(("PDC_validchar() - called. c: %d\n",c));
+
    if (_getch_win_ == (WINDOW *)NULL)
       return (-1);   /* bad window pointer     */
 
@@ -731,8 +704,7 @@ extern   WINDOW*  _getch_win_;
 unsigned long  PDC_get_key_modifiers(void)
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_key_modifiers() - called\n");
-#endif
+   PDC_LOG(("PDC_get_key_modifiers() - called\n"));
+
    return(pdc_key_modifiers);
 }

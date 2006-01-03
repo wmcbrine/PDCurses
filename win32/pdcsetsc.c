@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2005/12/09 16:38:36 wmcbrine Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -52,10 +52,7 @@ extern HANDLE hConOut;
 
 int	PDC_set_80x25(void)
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_80x25() - called\n");
-#endif
+	PDC_LOG(("PDC_set_80x25() - called\n"));
 
 	return(OK);
 }
@@ -81,10 +78,7 @@ int	PDC_set_80x25(void)
 
 int	PDC_set_cursor_mode( int startrow, int endrow )
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",startrow,endrow);
-#endif
+	PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",startrow,endrow));
 
 	return(OK);
 }
@@ -118,10 +112,7 @@ int	PDC_set_cursor_mode( int startrow, int endrow )
 
 int	PDC_set_font(int size)
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_font() - called\n");
-#endif
+	PDC_LOG(("PDC_set_font() - called\n"));
 
 	return(OK);
 }
@@ -155,10 +146,7 @@ int	PDC_set_font(int size)
 
 int	PDC_set_rows(int rows)
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_rows() - called\n");
-#endif
+	PDC_LOG(("PDC_set_rows() - called\n"));
 
 	return(0);
 }
@@ -184,10 +172,7 @@ int	PDC_set_rows(int rows)
 
 int	PDC_set_scrn_mode(int new_mode)
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_scrn_mode() - called\n");
-#endif
+	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
 	return(OK); /* this is N/A */
 }
@@ -200,12 +185,10 @@ int visibility;
 #endif
 /***********************************************************************/
 {
- CONSOLE_CURSOR_INFO cci;
- int ret_vis;
+	CONSOLE_CURSOR_INFO cci;
+	int ret_vis;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_curs_set() - called: visibility=%d\n",visibility);
-#endif
+	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n",visibility));
 
 	ret_vis = SP->visibility;
 
@@ -261,9 +244,7 @@ char *title;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_set_title() - called:<%s>\n",title);
-#endif
+	PDC_LOG(("PDC_set_title() - called:<%s>\n",title));
 
 	SetConsoleTitle(title);
 	return;

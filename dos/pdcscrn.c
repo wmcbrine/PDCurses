@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.7 2005/12/15 00:56:49 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.8 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;
@@ -80,9 +80,8 @@ struct SREGS segregs;
 int ds=0;
 #endif
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_scr_close() - called\n");
-#endif
+	PDC_LOG(("PDC_scr_close() - called\n"));
+
 	if (getenv("PDC_RESTORE_SCREEN") != NULL)
 	{
 		if (saved_screen == NULL)
@@ -145,9 +144,7 @@ int mode2;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_scrn_modes_equal() - called\n");
-#endif
+	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
 
 	return (mode1 == mode2);
 }
@@ -194,9 +191,7 @@ struct SREGS segregs;
 int ds=0;
 #endif
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_scr_open() - called\n");
-#endif
+	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	internal->orig_attr	 = 0;
 	internal->orig_emulation = getdosmembyte (0x487);
@@ -314,9 +309,7 @@ int nlines,ncols;
 {
 	int rc=OK;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols);
-#endif
+	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols));
 
 	switch (SP->adapter)
 	{

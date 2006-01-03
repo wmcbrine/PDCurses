@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.8 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -93,9 +93,7 @@ bool overlay;
    int   ydiff = src_br - src_tr;
    int   y1;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_copy_win() - called\n");
-#endif
+   PDC_LOG(("PDC_copy_win() - called\n"));
 
    if (src_w == (WINDOW *)NULL)  return( ERR );
    if (dst_w == (WINDOW *)NULL)  return( ERR );
@@ -198,9 +196,7 @@ extern   void  (*fre)();
    short i;
    WINDOW *win=NULL;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_makenew() - called: lines %d cols %d begy %d begx %d\n",num_lines,num_columns,begy,begx);
-#endif
+   PDC_LOG(("PDC_makenew() - called: lines %d cols %d begy %d begx %d\n",num_lines,num_columns,begy,begx));
 
    /*
    *  Use the standard runtime malloc/calloc package or use
@@ -343,10 +339,7 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_sync() - called:\n");
-#endif
+   PDC_LOG(("PDC_sync() - called:\n"));
 
    if (win->_immed)
       wrefresh(win);
@@ -396,9 +389,7 @@ int *len;
    char* p = c_strbeg;
    bool  save_raw_out = SP->raw_out;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_backchar() - called\n");
-#endif
+   PDC_LOG(("PDC_backchar() - called\n"));
 
    if (w == (WINDOW *)NULL)
       return( ERR );
@@ -526,9 +517,7 @@ chtype attr;
    UBYTE a = (UBYTE) phys_attr;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_chg_attr_pair() - called\n");
-#endif
+   PDC_LOG(("PDC_chg_attr_pair() - called\n"));
 
 #ifdef   FLEXOS
    drect.r_row = PDC_get_cur_row();
@@ -642,9 +631,7 @@ bool advance;
    chtype   attr=0, bktmp;
    int   ts;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_chadd() - called: win=%x ch=%x (char=%c attr=0x%x) xlat=%d advance=%d\n",win,ch,ch & A_CHARTEXT,ch & A_ATTRIBUTES,xlat,advance);
-#endif
+   PDC_LOG(("PDC_chadd() - called: win=%x ch=%x (char=%c attr=0x%x) xlat=%d advance=%d\n",win,ch,ch & A_CHARTEXT,ch & A_ATTRIBUTES,xlat,advance));
 
    if (win  == (WINDOW *)NULL)
       return(  retval );
@@ -908,9 +895,7 @@ int ex;
    int   c;
    int   l;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_chr_attrs() - called\n");
-#endif
+   PDC_LOG(("PDC_chr_attrs() - called\n"));
 
    if (win == (WINDOW *)NULL)    return( ERR );
    if (sy > win->_maxy) return( ERR );
@@ -986,9 +971,7 @@ bool xlat;
    chtype *temp1;
    char  ch = (c & A_CHARTEXT);
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_chins() - called: win=%x ch=%x (char=%c attr=0x%x) xlat=%d\n",win,ch,ch & A_CHARTEXT,ch & A_ATTRIBUTES,xlat);
-#endif
+   PDC_LOG(("PDC_chins() - called: win=%x ch=%x (char=%c attr=0x%x) xlat=%d\n",win,ch,ch & A_CHARTEXT,ch & A_ATTRIBUTES,xlat));
 
    if (win == (WINDOW *)NULL)
       return( retval );
@@ -1052,9 +1035,7 @@ WINDOW *win;
 # endif
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_clr_scrn() - called\n");
-#endif
+   PDC_LOG(("PDC_clr_scrn() - called\n"));
 
 #if defined(XCURSES)
    XCursesInstruct(CURSES_CLEAR);
@@ -1097,9 +1078,7 @@ int lin;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_newline() - called: line %d\n",lin);
-#endif
+   PDC_LOG(("PDC_newline() - called: line %d\n",lin));
 
    if (win == (WINDOW *)NULL)
       return( -1 );

@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.10 2005/12/17 09:17:16 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.11 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -123,9 +123,7 @@ int	PDC_CDECL	PDC_getch()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("getch() - called\n");
-#endif
+	PDC_LOG(("getch() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -162,9 +160,7 @@ extern  WINDOW*	_getch_win_;
 #endif
 	int waitingtenths = 0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wgetch() - called\n");
-#endif
+	PDC_LOG(("wgetch() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -185,9 +181,7 @@ extern  WINDOW*	_getch_win_;
 			waitingtenths = 1;
 	}
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("initial: %d delaytenths %d delayms %d\n", waitingtenths,SP->delaytenths, win->_delayms);
-#endif
+	PDC_LOG(("initial: %d delaytenths %d delayms %d\n", waitingtenths,SP->delaytenths, win->_delayms));
 
 /* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
 /*                  if there have been changes to it and it is not a pad */
@@ -281,9 +275,8 @@ extern  WINDOW*	_getch_win_;
  */
 		if (SP->delaytenths || w->_delayms)
 		{
-#ifdef PDCDEBUG
-			if (trace_on) PDC_debug("waiting: %d delaytenths %d delayms %d\n", waitingtenths,SP->delaytenths, w->_delayms);
-#endif
+			PDC_LOG(("waiting: %d delaytenths %d delayms %d\n", waitingtenths,SP->delaytenths, w->_delayms));
+
 			if (waitingtenths == 0 && key == (-1))
 				return(ERR);
 			if (key == (-1))
@@ -362,9 +355,7 @@ int x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvgetch() - called\n");
-#endif
+	PDC_LOG(("mvgetch() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
 		return( ERR );
@@ -384,9 +375,7 @@ int x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwgetch() - called\n");
-#endif
+	PDC_LOG(("mvwgetch() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -407,9 +396,7 @@ int ch;
 extern	int	c_ungind;		/* ungetch() push index */
 extern	int	c_ungch[NUNGETCH];	/* array of ungotten chars */
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("ungetch() - called\n");
-#endif
+	PDC_LOG(("ungetch() - called\n"));
 
 	if (c_ungind >= NUNGETCH)	/* pushback stack full */
 		return( ERR );

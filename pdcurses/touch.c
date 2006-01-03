@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_touch  = "$Id: touch.c,v 1.1 2001/01/10 08:27:32 mark Exp $";
+char *rcsid_touch  = "$Id: touch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -106,9 +106,7 @@ WINDOW *win;
 {
 	register int	i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("touchwin() - called: Win=%x\n",win);
-#endif
+	PDC_LOG(("touchwin() - called: Win=%x\n",win));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -133,9 +131,7 @@ int count;
 {
 	register int i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("touchline() - called: win=%x start %d count %d\n",win,start,count);
-#endif
+	PDC_LOG(("touchline() - called: win=%x start %d count %d\n",win,start,count));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -160,9 +156,7 @@ WINDOW *win;
 {
 	register int i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("untouchwin() - called: win=%x",win);
-#endif
+	PDC_LOG(("untouchwin() - called: win=%x",win));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -188,9 +182,7 @@ int changed;
 {
 	register int i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("wtouchln() - called: win=%x y=%d n=%d changed=%d\n",win,y,n,changed);
-#endif
+	PDC_LOG(("wtouchln() - called: win=%x y=%d n=%d changed=%d\n",win,y,n,changed));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
@@ -223,10 +215,7 @@ int line;
 #endif
 /***********************************************************************/
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("is_linetouched() - called: win=%x line=%d\n",win,line);
-#endif
+	PDC_LOG(("is_linetouched() - called: win=%x line=%d\n",win,line));
 
 	if (win == NULL)
 		return(ERR);
@@ -248,9 +237,7 @@ WINDOW *win;
 {
 	register int i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("is_wintouched() - called: win=%x\n",win);
-#endif
+	PDC_LOG(("is_wintouched() - called: win=%x\n",win));
 
 	if (win == NULL)
 		return(ERR);

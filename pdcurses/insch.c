@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insch  = "$Id: insch.c,v 1.1 2001/01/10 08:27:10 mark Exp $";
+char *rcsid_insch  = "$Id: insch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -136,9 +136,7 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("insch() - called\n");
-#endif
+	PDC_LOG(("insch() - called\n"));
 
 	return( PDC_chins( stdscr, ch, (bool)(!(SP->raw_out))) );
 }
@@ -152,9 +150,7 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("winsch() - called\n");
-#endif
+	PDC_LOG(("winsch() - called\n"));
 
 	return( PDC_chins( win, ch, (bool)(!(SP->raw_out))) );
 }
@@ -169,9 +165,8 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvinsch() - called\n");
-#endif
+	PDC_LOG(("mvinsch() - called\n"));
+
 	if (move(y,x) == ERR)
 		return(ERR);
 	return( PDC_chins( stdscr, ch, (bool)(!(SP->raw_out))) );
@@ -188,9 +183,8 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("mvwinsch() - called\n");
-#endif
+	PDC_LOG(("mvwinsch() - called\n"));
+
 	if (wmove(win,y,x) == ERR)
 		return(ERR);
 	return( PDC_chins( win, ch, (bool)(!(SP->raw_out))) );

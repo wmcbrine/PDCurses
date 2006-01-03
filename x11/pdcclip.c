@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2002/11/27 11:16:48 mark Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 
@@ -57,11 +57,9 @@ char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.3 2002/11/27 11:16:48 mark Exp $";
 
 int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_getclipboard() - called\n");
-#endif
+	PDC_LOG(("PDC_getclipboard() - called\n"));
 
- return XCurses_getclipboard( contents, length );
+	return XCurses_getclipboard( contents, length );
 }
 
 
@@ -88,11 +86,9 @@ int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 
 int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_setclipboard() - called\n");
-#endif
+	PDC_LOG(("PDC_setclipboard() - called\n"));
 
- return XCurses_setclipboard( contents, length );
+	return XCurses_setclipboard( contents, length );
 }
 
 /*man-start*********************************************************************
@@ -114,12 +110,10 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 
 int	PDC_CDECL	PDC_freeclipboard(char *contents)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_freeclipboard() - called\n");
-#endif
+	PDC_LOG(("PDC_freeclipboard() - called\n"));
 
- free(contents);
- return PDC_CLIP_SUCCESS;
+	free(contents);
+	return PDC_CLIP_SUCCESS;
 }
 
 /*man-start*********************************************************************
@@ -141,5 +135,5 @@ int	PDC_CDECL	PDC_freeclipboard(char *contents)
 
 int PDC_CDECL PDC_clearclipboard( void )
 {
- return XCurses_clearclipboard( );
+	return XCurses_clearclipboard( );
 }

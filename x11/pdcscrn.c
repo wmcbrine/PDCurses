@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.4 2005/12/11 05:51:24 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on=FALSE;
@@ -58,9 +58,7 @@ bool GLOBAL_slk_on=FALSE;
 
 int	PDC_scr_close(void)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_scr_close() - called\n");
-#endif
+	PDC_LOG(("PDC_scr_close() - called\n"));
 
 	return( OK );
 }
@@ -96,9 +94,8 @@ int mode2;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_scrn_modes_equal() - called\n");
-#endif
+	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
+
 	return (mode1 == mode2);
 }
 
@@ -137,11 +134,9 @@ bool echo;
 #endif
 /***********************************************************************/
 {
-extern bool sb_started;
+	extern bool sb_started;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_scr_open() - called\n");
-#endif
+	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	internal->cursrow = internal->curscol = 0;
 	internal->direct_video	= FALSE;		/* Assume that we can't	      */
@@ -214,9 +209,7 @@ int nlines,ncols;
 {
 	int rc=OK;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols);
-#endif
+	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols));
 
 	rc = XCursesResizeScreen(nlines,ncols);
 	return (rc);

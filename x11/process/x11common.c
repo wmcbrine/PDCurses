@@ -56,9 +56,9 @@ int len;
 /***********************************************************************/
 {
    int start=0,length=len,rc;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:write_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len);
-#endif
+
+   PDC_LOG(("%s:write_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len));
+
 #ifdef MOUSE_DEBUG1
 if (sock_num == key_sock)
     printf("%s:write_socket(key) len: %d\n",(XCursesProcess)?"     X":"CURSES",len);
@@ -85,9 +85,9 @@ int len;
 /***********************************************************************/
 {
    int start=0,length=len,rc;
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:read_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len);
-#endif
+
+   PDC_LOG(("%s:read_socket called: sock_num %d len %d\n",(XCursesProcess)?"     X":"CURSES",sock_num,len));
+
    while(1)
    {
       rc = read(sock_num,buf+start,length);

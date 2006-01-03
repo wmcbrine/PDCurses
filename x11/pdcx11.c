@@ -935,9 +935,7 @@ void say(msg)
 char *msg;
 #endif
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:%s",(XCursesProcess)?"     X":"CURSES",msg);
-#endif
+	PDC_LOG(("%s:%s",(XCursesProcess)?"     X":"CURSES",msg));
 }
 
 #ifdef HAVE_PROTO
@@ -990,9 +988,8 @@ int signo;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",(XCursesProcess)?"     X":"CURSES",signo);
-#endif
+   PDC_LOG(("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",(XCursesProcess)?"     X":"CURSES",signo));
+
 #ifdef BEFORE_CHANGE_BY_G_FUCHS
    /*
     * Patch by:
@@ -1020,9 +1017,8 @@ int XCurses_redraw_curscr()
 {
  int i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCurses_redraw_curscr() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+ PDC_LOG(("%s:XCurses_redraw_curscr() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
  for (i=0;i<curscr->_maxy;i++)
     XCurses_transform_line(curscr->_y[i],i,0,curscr->_maxx);
  return(OK);
@@ -1048,9 +1044,8 @@ bool highlight;
    int fore_offset=0, back_offset=0;
    GC gc;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesDisplayText() - called: Row: %d X: %d NumCols: %d\n",(XCursesProcess)?"     X":"CURSES", row,x,num_cols);
-#endif
+   PDC_LOG(("%s:XCursesDisplayText() - called: Row: %d X: %d NumCols: %d\n",(XCursesProcess)?"     X":"CURSES", row,x,num_cols));
+
    if (num_cols == 0)
       return(OK);
 
@@ -1146,10 +1141,7 @@ bool highlight;
             XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
          }
 
-#ifdef PDCDEBUG
-         if (trace_on)
-            PDC_debug("%s:XCursesDisplayText() - row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
-#endif
+         PDC_LOG(("%s:XCursesDisplayText() - row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text));
 
          new_packet = FALSE;
          old_attr = attr;
@@ -1230,10 +1222,7 @@ bool highlight;
       XDrawLine(XCURSESDISPLAY,XCURSESWIN,gc,xpos,ypos+1,xpos+(XCursesFontWidth*i),ypos+1);
    }
 
-#ifdef PDCDEBUG
-   if (trace_on)
-      PDC_debug("%s:XCursesDisplayText() (end) row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text);
-#endif
+   PDC_LOG(("%s:XCursesDisplayText() (end) row: %d col: %d num_cols: %d fore: %d back: %d text:<%s>\n",(XCursesProcess)?"     X":"CURSES",row,original_x,i,fore,back,text));
 
    return(OK);
 }
@@ -1324,9 +1313,8 @@ int XCursesEndwin()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesEndwin() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesEndwin() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    if (bitmap_file != NULL)
    {
       XFreePixmap(XCURSESDISPLAY,icon_bitmap);
@@ -1371,9 +1359,9 @@ int XCursesRefreshScrollbar()
    PDC_SCROLLBAR_TYPE vlength=(PDC_SCROLLBAR_TYPE)(viewport_y/total_y);
    PDC_SCROLLBAR_TYPE htop=(PDC_SCROLLBAR_TYPE)(cur_x/total_x);
    PDC_SCROLLBAR_TYPE hlength=(PDC_SCROLLBAR_TYPE)(viewport_x/total_x);
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesRefreshScrollbar() - called: \n",(XCursesProcess)?"     X":"CURSES");
-#endif
+
+   PDC_LOG(("%s:XCursesRefreshScrollbar() - called: \n",(XCursesProcess)?"     X":"CURSES"));
+
    if (!SP->sb_on)
       return(ERR);
 #if 0
@@ -1445,9 +1433,8 @@ void XCursesGetIcon()
    int x_hot=0,y_hot=0;
    int i;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesGetIcon\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesGetIcon\n",(XCursesProcess)?"     X":"CURSES"));
+
    icon_size = XAllocIconSize();
    rc = XGetIconSizes(XtDisplay(topLevel),
                     RootWindowOfScreen(XtScreen(topLevel)),
@@ -1456,20 +1443,18 @@ void XCursesGetIcon()
    if (rc  /* if the WM can advise on icon sizes... */
    &&  size_count)
    {
-#ifdef PDCDEBUG
-      if (trace_on) PDC_debug("%s:size_count: %d rc: %d\n",(XCursesProcess)?"     X":"CURSES",size_count,rc);
-#endif
+      PDC_LOG(("%s:size_count: %d rc: %d\n",(XCursesProcess)?"     X":"CURSES",size_count,rc));
+
       for (i=0;i<size_count;i++)
       {
          if (icon_size[i].max_width > max_width)
             max_width = icon_size[i].max_width;
          if (icon_size[i].max_height > max_height)
             max_height = icon_size[i].max_height;
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("%s:min: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].min_width,icon_size[i].min_height);
-         if (trace_on) PDC_debug("%s:max: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].max_width,icon_size[i].max_height);
-         if (trace_on) PDC_debug("%s:inc: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].width_inc,icon_size[i].height_inc);
-#endif
+
+         PDC_LOG(("%s:min: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].min_width,icon_size[i].min_height));
+         PDC_LOG(("%s:max: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].max_width,icon_size[i].max_height));
+         PDC_LOG(("%s:inc: %d %d\n",(XCursesProcess)?"     X":"CURSES",icon_size[i].width_inc,icon_size[i].height_inc));
       }
       if (max_width >= BIG_ICON_WIDTH
       &&  max_height >= BIG_ICON_HEIGHT)
@@ -1547,9 +1532,7 @@ Boolean *continue_to_dispatch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesExpose called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+ PDC_LOG(("%s:XCursesExpose called\n",(XCursesProcess)?"     X":"CURSES"));
 
 #if 0
 /* get all other Expose events on the queue */
@@ -1598,9 +1581,8 @@ Boolean *continue_to_dispatch;
 {
  XClientMessageEvent *client_event=(XClientMessageEvent *)event;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesNonmaskable called: otherpid %d\n",(XCursesProcess)?"     X":"CURSES",otherpid);
-#endif
+ PDC_LOG(("%s:XCursesNonmaskable called: otherpid %d\n",(XCursesProcess)?"     X":"CURSES",otherpid));
+
  switch(event->type)
    {
     case ClientMessage:
@@ -1616,9 +1598,7 @@ Boolean *continue_to_dispatch;
             XCursesExitXCursesProcess(0,SIGKILL,"");
          break;
     default:
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("%s:XCursesNonmaskable - unknown event %d\n",(XCursesProcess)?"     X":"CURSES",event->type);
-#endif
+         PDC_LOG(("%s:XCursesNonmaskable - unknown event %d\n",(XCursesProcess)?"     X":"CURSES",event->type));
          break;
    }
  return;
@@ -1651,9 +1631,8 @@ Cardinal *nparams;
    Status status;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesModifierPress called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesModifierPress called\n",(XCursesProcess)?"     X":"CURSES"));
+
    buffer[0] = '\0';
    count = XLookupString(&(event->xkey),buffer,buflen,&keysym, &compose);
    /*
@@ -1721,9 +1700,7 @@ Cardinal *nparams;
  short fore=0,back=0;
  unsigned long modifier=0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesKeyPress called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+ PDC_LOG(("%s:XCursesKeyPress called\n",(XCursesProcess)?"     X":"CURSES"));
 
  if (event->type == KeyRelease)
     return; /* ignore KeyReleases */
@@ -1801,7 +1778,6 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
 /* translate keysym into curses key code */
 #ifdef PDCDEBUG
  PDC_debug("%s:Key mask: %x\n",(XCursesProcess)?"     X":"CURSES",event->xkey.state);
- key = 0;
  for (key=0;key<4;key++)
    PDC_debug("%s:Keysym %x %d\n",(XCursesProcess)?"     X":"CURSES",XKeycodeToKeysym(XCURSESDISPLAY,event->xkey.keycode,key),key);
 #endif
@@ -1923,9 +1899,9 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
  /*
   * To get here we are procesing "normal" keys
   */
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("%s:Keysym %x %d\n",(XCursesProcess)?"     X":"CURSES",XKeycodeToKeysym(XCURSESDISPLAY,event->xkey.keycode,key),key);
-#endif
+
+ PDC_LOG(("%s:Keysym %x %d\n",(XCursesProcess)?"     X":"CURSES",XKeycodeToKeysym(XCURSESDISPLAY,event->xkey.keycode,key),key));
+
  if (SP->save_key_modifiers)
  {
     if (event->xkey.state & Mod2Mask)  /* 0x10: usually, numlock modifier */
@@ -1949,9 +1925,8 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
    {
     if (XCursesKeys[i].keycode == keysym)
       {
-#ifdef PDCDEBUG
-       if (trace_on) PDC_debug("%s:State %x\n",(XCursesProcess)?"     X":"CURSES",event->xkey.state);
-#endif
+       PDC_LOG(("%s:State %x\n",(XCursesProcess)?"     X":"CURSES",event->xkey.state));
+
        if (XCursesKeys[i].numkeypad)
          {
           if (event->xkey.state & Mod2Mask  /* 0x10: usually, numlock modifier */
@@ -1987,9 +1962,9 @@ printf("%d: %ld %d %d %d %d %d\n",__LINE__,keysym,
  && buffer[0] != 0
  && count == 1)
     key = (int)buffer[0];
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("%s:Key: %s pressed - %x Mod: %x\n",(XCursesProcess)?"     X":"CURSES",XKeysymToString(keysym),key,event->xkey.state);
-#endif
+
+ PDC_LOG(("%s:Key: %s pressed - %x Mod: %x\n",(XCursesProcess)?"     X":"CURSES",XKeysymToString(keysym),key,event->xkey.state));
+
 /*---------------------------------------------------------------------*/
 /* Handle ALT letters and numbers...                                   */
 /*---------------------------------------------------------------------*/
@@ -2077,9 +2052,8 @@ XButtonEvent *button_event;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("%s:XCursesPasteSelection() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+ PDC_LOG(("%s:XCursesPasteSelection() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
  XtGetSelectionValue(w,XA_PRIMARY,XA_STRING,XCursesRequestorCallbackForPaste,(XtPointer)button_event,button_event->time);
  return;
 }
@@ -2104,9 +2078,7 @@ int *format;
    unsigned long i=0,key=0;
    char *string=(char *)value;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesRequestorCallbackForPaste() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesRequestorCallbackForPaste() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
    if ((value == NULL) && (*length == 0))
       return;
@@ -2139,9 +2111,7 @@ int *format_return;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesConvertProc() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesConvertProc() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
    if (*target == XA_TARGETS(XtDisplay(topLevel)))
    {
@@ -2193,9 +2163,8 @@ Atom *type;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesLoseOwnership() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesLoseOwnership() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    if (tmpsel) free(tmpsel);
    tmpsel = NULL;
    tmpsel_length = 0;
@@ -2215,9 +2184,7 @@ bool highlight;
 {
  int i,num_cols,start_col,row;
 
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("%s:ShowSelection() - called StartX: %d StartY: %d EndX: %d EndY: %d Highlight: %d\n",(XCursesProcess)?"     X":"CURSES", start_x, start_y, end_x, end_y, highlight );
-#endif
+ PDC_LOG(("%s:ShowSelection() - called StartX: %d StartY: %d EndX: %d EndY: %d Highlight: %d\n",(XCursesProcess)?"     X":"CURSES", start_x, start_y, end_x, end_y, highlight ));
 
  for (i=0; i< (end_y-start_y)+1; i++)
  {
@@ -2271,9 +2238,8 @@ void SelectionOff()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:SelectionOff() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:SelectionOff() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    XCursesDisplayScreen(FALSE);
    selection_start_x = selection_start_y = selection_end_x = selection_end_y = 0;
    mouse_selection = False;
@@ -2288,9 +2254,8 @@ int x,y;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:SelectionOn() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:SelectionOn() - called\n",(XCursesProcess)?"     X":"CURSES"));
+
    selection_start_x = selection_end_x = x;
    selection_start_y = selection_end_y = y;
 }
@@ -2308,9 +2273,7 @@ int x,y;
    int current_start,current_end,current_start_x,current_end_x,current_start_y,current_end_y;
    int new_start,new_end,new_start_x,new_end_x,new_start_y,new_end_y;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:SelectionExtend() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:SelectionExtend() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
    mouse_selection = True;
 
@@ -2385,9 +2348,7 @@ void SelectionSet()
  int ch,last_nonblank,length;
  chtype *ptr=NULL;
 
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("%s:SelectionSet() - called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+ PDC_LOG(("%s:SelectionSet() - called\n",(XCursesProcess)?"     X":"CURSES"));
 
 /* convert x/y coordinates into start/stop */
  start = (selection_start_y * COLS) + selection_start_x;
@@ -2505,9 +2466,7 @@ int old_row,old_x,new_row,new_x;
    chtype *ch;
    short fore=0,back=0;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x);
-#endif
+   PDC_LOG(("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x));
 
    /*
     * If the cursor position is outside the boundary of the screen, ignore
@@ -2520,9 +2479,9 @@ int old_row,old_x,new_row,new_x;
       return;
 
    /* display the character at the current cursor position */
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x);
-#endif
+
+   PDC_LOG(("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",(XCursesProcess)?"     X":"CURSES",old_row,old_x));
+
    XCursesDisplayText( (chtype *)(Xcurscr+(XCURSCR_Y_OFF(old_row)+(old_x*sizeof(chtype)))), old_row, old_x, 1, FALSE );
    /* display the cursor at the new cursor position */
 
@@ -2545,9 +2504,8 @@ int old_row,old_x,new_row,new_x;
             for ( i = 0; i < XCURSESNORMALFONTINFO->descent + 2; i++ )
                XDrawLine( XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc, (xpos), (ypos-2+i), (xpos+XCursesFontWidth), (ypos-2+i) );
          }
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw line at row %d col %d\n",(XCursesProcess)?"     X":"CURSES",new_row,new_x);
-#endif
+
+         PDC_LOG(("%s:XCursesDisplayCursor() - draw line at row %d col %d\n",(XCursesProcess)?"     X":"CURSES",new_row,new_x));
          break;
       default: /* cursor visibility high */
          makeXY( new_x, new_row, XCursesFontWidth, XCursesFontHeight, &xpos, &ypos );
@@ -2569,9 +2527,7 @@ int old_row,old_x,new_row,new_x;
             XSetBackground( XCURSESDISPLAY, block_cursor_gc, colors[back] );
             XDrawImageString( XCURSESDISPLAY, XCURSESWIN, block_cursor_gc, xpos, ypos, buf, 1 );
          }
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("%s:XCursesDisplayCursor() - draw cursor at row: %d col %d char <%s>\n",(XCursesProcess)?"     X":"CURSES",new_row,new_x,buf);
-#endif
+         PDC_LOG(("%s:XCursesDisplayCursor() - draw cursor at row: %d col %d char <%s>\n",(XCursesProcess)?"     X":"CURSES",new_row,new_x,buf));
          break;
    }
    return;
@@ -2589,9 +2545,8 @@ Boolean *continue_to_dispatch;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesEnterLeaveWindow called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesEnterLeaveWindow called\n",(XCursesProcess)?"     X":"CURSES"));
+
    switch(event->type)
    {
       case EnterNotify:
@@ -2613,9 +2568,7 @@ Boolean *continue_to_dispatch;
                               SP->cursrow,SP->curscol);
          break;
       default:
-#ifdef PDCDEBUG
-         if (trace_on) PDC_debug("%s:XCursesEnterleaveWindow - unknown event %d\n",(XCursesProcess)?"     X":"CURSES",event->type);
-#endif
+         PDC_LOG(("%s:XCursesEnterleaveWindow - unknown event %d\n",(XCursesProcess)?"     X":"CURSES",event->type));
          break;
    }
    return;
@@ -2663,9 +2616,8 @@ MOUSE_STATUS *ms;
 {
    char buf[100]; /* enough for MOUSE_STATUS */
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesSendKeyToCurses() - called: sending %d\n",(XCursesProcess)?"     X":"CURSES",key);
-#endif
+   PDC_LOG(("%s:XCursesSendKeyToCurses() - called: sending %d\n",(XCursesProcess)?"     X":"CURSES",key));
+
    memcpy(buf,(char *)&key,sizeof(unsigned long));
    if (write_socket(key_sock,buf,sizeof(unsigned long)) < 0)
       XCursesExitXCursesProcess(1,SIGKILL,"exiting from XCursesSendKeyToCurses");
@@ -2690,9 +2642,8 @@ XtIntervalId *id;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesCursorBlink() - called:\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesCursorBlink() - called:\n",(XCursesProcess)?"     X":"CURSES"));
+
    if ( windowEntered )
    {
       if ( visible_cursor )
@@ -2741,9 +2692,7 @@ Cardinal *nparams;
    static bool remove_release;
    static bool handle_real_release;
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("%s:XCursesButton called\n",(XCursesProcess)?"     X":"CURSES");
-#endif
+   PDC_LOG(("%s:XCursesButton called\n",(XCursesProcess)?"     X":"CURSES"));
 
    save_mouse_status=Mouse_status;
    button_no = event->xbutton.button;

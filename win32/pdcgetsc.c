@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.2 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut, hConIn;
@@ -53,9 +53,7 @@ extern CONSOLE_SCREEN_BUFFER_INFO scr;
 
 int	PDC_get_cursor_pos(int *row, int *col)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cursor_pos() - called\n");
-#endif
+   PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
    GetConsoleScreenBufferInfo(hConOut, &scr);
    *col = scr.dwCursorPosition.X;
@@ -87,9 +85,7 @@ int	PDC_get_cursor_pos(int *row, int *col)
 
 int	PDC_get_cur_col(void)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cur_col() - called\n");
-#endif
+   PDC_LOG(("PDC_get_cur_col() - called\n"));
 
    GetConsoleScreenBufferInfo(hConOut, &scr);
    return (scr.dwCursorPosition.X);
@@ -119,10 +115,7 @@ int	PDC_get_cur_col(void)
 
 int	PDC_get_cur_row(void)
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cur_row() - called\n");
-#endif
+   PDC_LOG(("PDC_get_cur_row() - called\n"));
 
    GetConsoleScreenBufferInfo(hConOut, &scr);
    return (scr.dwCursorPosition.Y);
@@ -153,9 +146,8 @@ int	PDC_get_cur_row(void)
 
 int	PDC_get_attribute(void)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_attribute() - called\n");
-#endif
+	PDC_LOG(("PDC_get_attribute() - called\n"));
+
 /* doesnt do anything !! */
 	return(0);
 }
@@ -183,9 +175,7 @@ int	PDC_get_cursor_mode(void)
 {
  CONSOLE_CURSOR_INFO ci;
     
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_cursor_mode() - called\n");
-#endif
+ PDC_LOG(("PDC_get_cursor_mode() - called\n"));
 
  GetConsoleCursorInfo(hConOut, &ci);
 /* size is between 1 and 100, so convert it */
@@ -215,10 +205,7 @@ int	PDC_get_cursor_mode(void)
 
 int	PDC_get_font(void)
 {
-
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_font() - called\n");
-#endif
+	PDC_LOG(("PDC_get_font() - called\n"));
 
 	return(0); /* this is N/A */
 }
@@ -246,10 +233,7 @@ int	PDC_get_font(void)
 
 int	PDC_get_rows(void)
 {
-
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_rows() - called\n");
-#endif
+   PDC_LOG(("PDC_get_rows() - called\n"));
 
    GetConsoleScreenBufferInfo(hConOut, &scr);
 #if FGC0
@@ -279,10 +263,7 @@ int	PDC_get_rows(void)
 
 int	PDC_get_buffer_rows(void)
 {
-
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_get_buffer_rows() - called\n");
-#endif
+   PDC_LOG(("PDC_get_buffer_rows() - called\n"));
 
    GetConsoleScreenBufferInfo( hConOut, &scr );
    return ( scr.dwSize.Y );
@@ -311,9 +292,7 @@ int	PDC_get_buffer_rows(void)
 
 int	PDC_get_columns(void)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_columns() - called\n");
-#endif
+   PDC_LOG(("PDC_get_columns() - called\n"));
 
    GetConsoleScreenBufferInfo(hConOut, &scr);
 #if FGC0
@@ -346,9 +325,8 @@ int	PDC_get_columns(void)
 
 int	PDC_get_scrn_mode(void)
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_get_scrn_mode() - called\n");
-#endif
+	PDC_LOG(("PDC_get_scrn_mode() - called\n"));
+
 	return(OK);
 }
 
@@ -380,9 +358,7 @@ int	PDC_query_adapter_type(void)
 {
 	int retval;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_query_adapter_type() - called\n");
-#endif
+	PDC_LOG(("PDC_query_adapter_type() - called\n"));
 
 	SP->mono = FALSE;
 	retval = _VGACOLOR;
@@ -412,10 +388,7 @@ int	PDC_query_adapter_type(void)
 
 int	PDC_sanity_check(int adapter)
 {
-#ifdef PDCDEBUG
-   if (trace_on) 
-      PDC_debug("PDC_sanity_check() - called: Adapter %d\n",adapter);
-#endif
+   PDC_LOG(("PDC_sanity_check() - called: Adapter %d\n",adapter));
 
    return (adapter);
 }

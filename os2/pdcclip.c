@@ -32,7 +32,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.5 2005/11/12 20:54:58 wmcbrine Exp $";
+char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.6 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 
@@ -75,9 +75,7 @@ int   PDC_CDECL   PDC_getclipboard(char **contents, long *length)
    int rc=0;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_getclipboard() - called\n");
-#endif
+   PDC_LOG(("PDC_getclipboard() - called\n"));
 
 #if !defined(EMXVIDEO)
    DosGetInfoBlocks( &ptib, &ppib );
@@ -151,9 +149,7 @@ int   PDC_CDECL   PDC_setclipboard(char *contents, long length)
    int rc=0;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_setclipboard() - called\n");
-#endif
+   PDC_LOG(("PDC_setclipboard() - called\n"));
 
 #if !defined(EMXVIDEO)
    DosGetInfoBlocks( &ptib, &ppib );
@@ -211,9 +207,7 @@ int   PDC_CDECL   PDC_setclipboard(char *contents, long length)
 
 int   PDC_CDECL   PDC_freeclipboard(char *contents)
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_freeclipboard() - called\n");
-#endif
+   PDC_LOG(("PDC_freeclipboard() - called\n"));
 
    if ( contents) free(contents);
    return PDC_CLIP_SUCCESS;
@@ -244,9 +238,7 @@ int   PDC_CDECL   PDC_clearclipboard( void )
    PPIB ppib;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("PDC_clearclipboard() - called\n");
-#endif
+   PDC_LOG(("PDC_clearclipboard() - called\n"));
 
 #if !defined(EMXVIDEO)
    DosGetInfoBlocks( &ptib, &ppib );

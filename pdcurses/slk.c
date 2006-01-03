@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk  = "$Id: slk.c,v 1.5 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_slk  = "$Id: slk.c,v 1.6 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -161,9 +161,7 @@ int fmt;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_init() - called\n");
-#endif
+ PDC_LOG(("slk_init() - called\n"));
 
  if (SP)
    return (ERR);
@@ -230,9 +228,7 @@ int slen;
 int llen;
 int col;
 
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("PDC_slk_set() - called\n");
-#endif
+ PDC_LOG(("PDC_slk_set() - called\n"));
 
  if (label_num < 1 
  || label_num > labels 
@@ -335,14 +331,10 @@ int label_fmt;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_set() - called\n");
-#endif
+ PDC_LOG(("slk_set() - called\n"));
 
  return( PDC_slk_set( label_num, label_str, label_fmt, 1 ) );
 }
-
-
 
 
 /***********************************************************************/
@@ -353,9 +345,7 @@ int	PDC_CDECL	slk_refresh()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_refresh() - called\n");
-#endif
+ PDC_LOG(("slk_refresh() - called\n"));
 
  if (SP->slk_winptr == (WINDOW *)NULL)
     return (ERR);
@@ -374,16 +364,13 @@ int	PDC_CDECL	slk_noutrefresh()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_noutrefresh() - called\n");
-#endif
+ PDC_LOG(("slk_noutrefresh() - called\n"));
 
  if (SP->slk_winptr == (WINDOW *)NULL)
     return (ERR);
 
  return (wnoutrefresh(SP->slk_winptr));
 }
-
 
 
 /***********************************************************************/
@@ -395,9 +382,7 @@ int labnum;   /* 1 - 8 (or 10) */
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_label() - called\n");
-#endif
+ PDC_LOG(("slk_label() - called\n"));
 
  if (labnum < 0 || labnum > labels)
     return ((char *)0);
@@ -410,7 +395,6 @@ int labnum;   /* 1 - 8 (or 10) */
 }
 
 
-
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	slk_clear(void)
@@ -421,9 +405,7 @@ int	PDC_CDECL	slk_clear()
 {
  register int i;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("slk_clear() - called\n");
-#endif
+ PDC_LOG(("slk_clear() - called\n"));
 
  for (i = 0; i < labels; ++i)
  {
@@ -432,9 +414,6 @@ int	PDC_CDECL	slk_clear()
  }
  return wrefresh(SP->slk_winptr);
 }
-
-
-
 
 
 /***********************************************************************/
@@ -448,9 +427,7 @@ int	PDC_CDECL	slk_restore()
  register int i;
  chtype attr=SP->slk_winptr->_attrs;
 
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_restore() - called\n");
-#endif
+ PDC_LOG(("slk_restore() - called\n"));
 
  for (i = 0; i < labels; ++i)
  {
@@ -475,14 +452,10 @@ int	PDC_CDECL	slk_touch()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_touch() - called\n");
-#endif
+ PDC_LOG(("slk_touch() - called\n"));
 
  return touchwin(SP->slk_winptr);
 }
-
-
 
 
 /***********************************************************************/
@@ -495,9 +468,9 @@ attr_t attrs;
 /***********************************************************************/
 {
  int i,rc;
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_attron() - called\n");
-#endif
+
+ PDC_LOG(("slk_attron() - called\n"));
+
  rc = wattron(SP->slk_winptr, attrs);
  for (i = 0; i < labels; ++i)
  {
@@ -505,8 +478,6 @@ attr_t attrs;
  }
  return rc;
 }
-
-
 
 
 /***********************************************************************/
@@ -519,9 +490,9 @@ attr_t attrs;
 /***********************************************************************/
 {
  int i,rc;
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_attroff() - called\n");
-#endif
+
+ PDC_LOG(("slk_attroff() - called\n"));
+
  rc = wattroff(SP->slk_winptr, attrs);
  for (i = 0; i < labels; ++i)
  {
@@ -529,8 +500,6 @@ attr_t attrs;
  }
  return rc;
 }
-
-
 
 
 /***********************************************************************/
@@ -543,9 +512,8 @@ attr_t attrs;
 /***********************************************************************/
 {
  int i,rc;
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_attrset() - called\n");
-#endif
+
+ PDC_LOG(("slk_attrset() - called\n"));
 
  rc = wattrset(SP->slk_winptr, attrs);
  for (i = 0; i < labels; ++i)
@@ -557,6 +525,7 @@ attr_t attrs;
 
 }
 
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL       slk_color(short color_pair)
@@ -567,9 +536,8 @@ short color_pair;
 /***********************************************************************/
 {
  int i,rc;
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("slk_color() - called\n");
-#endif
+
+ PDC_LOG(("slk_color() - called\n"));
 
  rc = wcolor_set(SP->slk_winptr, color_pair, NULL);
  for (i = 0; i < labels; ++i)
@@ -591,9 +559,8 @@ static void	PDC_slk_init()
 {
  register int i;
  attr_t save_attr;
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("PDC_slk_init() - called\n");
-#endif
+
+ PDC_LOG(("PDC_slk_init() - called\n"));
 
 /*
  * Don't set this to NULL as resize_term() calls it.
@@ -643,9 +610,7 @@ void	PDC_slk_calc()
  register int i;
  register int col=0, center;
 
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("PDC_slk_calc() - called\n");
-#endif
+ PDC_LOG(("PDC_slk_calc() - called\n"));
 
  switch (label_fmt) 
  {
@@ -762,9 +727,7 @@ int y, x;
 {
  register int i;
 
-#ifdef PDCDEBUG
- if (trace_on) PDC_debug("PDC_mouse_in_slk() - called: y->%d x->%d\n",y,x);
-#endif
+ PDC_LOG(("PDC_mouse_in_slk() - called: y->%d x->%d\n",y,x));
 
 /*
  * If the line on which the mouse was clicked is NOT the last line of

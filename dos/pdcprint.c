@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.2 2001/01/10 08:28:45 mark Exp $";
+char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -64,9 +64,7 @@ int port;
 {
 	int	status = 0;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("PDC_print() - called\n");
-#endif
+	PDC_LOG(("PDC_print() - called\n"));
 
 	regs.h.ah = (unsigned char)cmd;
 	regs.h.al = (unsigned char)byte;
@@ -78,5 +76,4 @@ int port;
 	int86(0x17, &regs, &regs);
 	status = regs.h.ah;
 	return (status);
-
 }

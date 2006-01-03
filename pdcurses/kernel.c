@@ -55,7 +55,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.8 2005/12/27 05:46:01 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -176,9 +176,7 @@ int   PDC_CDECL   def_prog_mode()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("def_prog_mode() - called\n");
-#endif
+   PDC_LOG(("def_prog_mode() - called\n"));
 
 #ifdef   FLEXOS
    _flexos_16bitmode();
@@ -200,9 +198,7 @@ int   PDC_CDECL   def_shell_mode()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("def_shell_mode() - called\n");
-#endif
+   PDC_LOG(("def_shell_mode() - called\n"));
 
 #ifdef   FLEXOS
    _flexos_8bitmode();
@@ -228,9 +224,7 @@ int PDC_CDECL reset_prog_mode()
    VIOMODEINFO modeInfo;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("reset_prog_mode() - called\n");
-#endif
+   PDC_LOG(("reset_prog_mode() - called\n"));
 
    if (c_pr_tty.been_set == TRUE)
    {
@@ -283,9 +277,7 @@ int PDC_CDECL reset_shell_mode()
    VIOMODEINFO modeInfo;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("reset_shell_mode() - called\n");
-#endif
+   PDC_LOG(("reset_shell_mode() - called\n"));
 
 #ifndef WIN32
    if (c_sh_tty.been_set == TRUE)
@@ -345,9 +337,7 @@ int PDC_CDECL resetty()
    VIOMODEINFO modeInfo;
 #endif
 
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("resetty() - called\n");
-#endif
+   PDC_LOG(("resetty() - called\n"));
 
 #ifndef UNIX
    if (c_save_tty.been_set == TRUE)
@@ -391,9 +381,7 @@ int   PDC_CDECL   savetty()
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("savetty() - called\n");
-#endif
+   PDC_LOG(("savetty() - called\n"));
 
    c_save_tty.been_set = TRUE;
    memcpy(&c_save_tty.saved, SP, sizeof(SCREEN));
@@ -409,9 +397,7 @@ int *y,*x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("getsyx() - called\n");
-#endif
+   PDC_LOG(("getsyx() - called\n"));
 
    if (curscr->_leaveit)
       *y = *x = (-1);
@@ -431,9 +417,7 @@ int y,x;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("setsyx() - called\n");
-#endif
+   PDC_LOG(("setsyx() - called\n"));
 
    if (y < 0 && x < 0)
       curscr->_leaveit = TRUE;
@@ -455,9 +439,7 @@ int visibility;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("curs_set() - called: visibility=%d\n",visibility);
-#endif
+   PDC_LOG(("curs_set() - called: visibility=%d\n",visibility));
 
    return(PDC_curs_set(visibility));
 }
@@ -471,9 +453,7 @@ int (*init)();
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("ripoffline() - called: line=%d\n",line);
-#endif
+   PDC_LOG(("ripoffline() - called: line=%d\n",line));
 
    if (linesrippedoff < 5
    &&  line != 0)
@@ -492,9 +472,8 @@ int ms;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("napms() - called: ms=%d\n",ms);
-#endif
+   PDC_LOG(("napms() - called: ms=%d\n",ms));
+
    return(delay_output(ms));
 }
 /***********************************************************************/
@@ -506,8 +485,7 @@ int ms;
 #endif
 /***********************************************************************/
 {
-#ifdef PDCDEBUG
-   if (trace_on) PDC_debug("draino() - called: ms=%d\n",ms);
-#endif
+   PDC_LOG(("draino() - called: ms=%d\n",ms));
+
    return(delay_output(ms));
 }

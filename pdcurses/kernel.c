@@ -78,7 +78,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.11 2006/01/03 09:04:42 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.12 2006/01/03 09:28:29 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -497,11 +497,9 @@ int ms;
 {
 	PDC_LOG(("napms() - called: ms=%d\n",ms));
 
-#if defined(WIN32)
-	Sleep(ms);
-#elif (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
+#if (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
 	delay( ms );
-#elif defined(PC)
+#elif defined(PC) || defined(WIN32)
 	PDC_usleep( ms );
 #elif defined(OS2)
 # if defined(EMX)

@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.6 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.7 2006/01/03 07:41:49 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -96,9 +96,6 @@ int newcol;
 {
 	PDC_LOG(("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",oldrow,oldcol,newrow,newcol));
 
-#ifdef	TC
-#  pragma argsused
-#endif
 	if ((newrow >= LINES)	||
 	    (newcol >= COLS)	||
 	    (newrow < 0)	||

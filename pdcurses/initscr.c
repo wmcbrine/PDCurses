@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.11 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.12 2006/01/03 07:41:49 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -515,10 +515,6 @@ FILE *infd;
 #endif
 /***********************************************************************/
 {
-#ifdef   TC
-#  pragma argsused
-#endif
-
 #if 0
 extern   void* mallc(); /* malloc(size)      */
 extern   void* callc(); /* calloc(num,size)  */
@@ -593,9 +589,6 @@ SCREEN *new;
 {
    PDC_LOG(("set_term() - called\n"));
 
-#ifdef   TC
-#  pragma argsused
-#endif
    return( SP );  /* We only have one screen supported right now */
 }
 /***********************************************************************/

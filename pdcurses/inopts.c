@@ -55,7 +55,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.5 2006/01/03 07:41:49 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -321,9 +321,6 @@ bool bf;
 #endif
 /***********************************************************************/
 {
-#ifdef	TC
-#  pragma argsused
-#endif
 	int	y;
 	int	maxy;
 
@@ -370,13 +367,6 @@ bool bf;
 {
 	PDC_LOG(("meta() - called\n"));
 
-#ifdef UNIX
-/* INCOMPLETE */
-#endif
-
-#ifdef	TC
-# pragma argsused;
-#endif
 	SP->raw_inp = bf;
 	return( OK );
 }

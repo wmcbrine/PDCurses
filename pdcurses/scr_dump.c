@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: scr_dump.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_scr_dump  = "$Id: scr_dump.c,v 1.3 2006/01/03 07:36:11 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

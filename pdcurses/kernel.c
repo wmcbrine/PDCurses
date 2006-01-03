@@ -21,6 +21,9 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
+#if !defined(XCURSES)
+# define        INCLUDE_WINDOWS_H
+#endif
 #include <curses.h>
 
 #ifdef HAVE_STRING_H
@@ -78,7 +81,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.12 2006/01/03 09:28:29 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.13 2006/01/03 09:53:21 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -497,9 +500,11 @@ int ms;
 {
 	PDC_LOG(("napms() - called: ms=%d\n",ms));
 
-#if (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
+#if defined(WIN32)
+	Sleep( ms );
+#elif (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
 	delay( ms );
-#elif defined(PC) || defined(WIN32)
+#elif defined(PC)
 	PDC_usleep( ms );
 #elif defined(OS2)
 # if defined(EMX)

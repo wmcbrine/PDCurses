@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.62 2006/01/03 08:32:11 wmcbrine Exp $
+$Id: curses.h,v 1.63 2006/01/03 19:54:29 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -145,7 +145,6 @@ PDCurses definitions list:  (Only define those needed)
 	DOS             True if compiling for DOS.
 	OS2             True if compiling for OS/2.
 	WIN32           True if compiling for Windoze 95 or Windoze NT
-	FLEXOS          True if compiling for Flexos.
 	HC              True if using a Metaware compiler.
 	TC              True if using a Borland compiler.
 	MSC             True if using a Microsoft compiler.
@@ -251,7 +250,6 @@ PDCurses portable platform definitions list:
 *       Metaware definitions:
 *               HC
 *               DOS
-*               FLEXOS
 */
 #ifdef __HIGHC__
 #  define HC    1
@@ -263,9 +261,6 @@ PDCurses portable platform definitions list:
 #    define DOS 6              /* Major release of DOS supported       */
 #    include <bios.h>
 #    include <dos.h>
-#  endif
-#  ifdef __FLEXOS__            /* define this on the command line      */
-#    define FLEXOS 2           /* or latest major release value.       */
 #  endif
 #endif
 
@@ -456,9 +451,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  define DOS	6
 #  include <dos.h>
-#  ifdef __FLEXOS__ 		   /* define this on the command line	   */
-#    define FLEXOS 2           /* or latest major release value.       */
-#  endif
 #  define CURSES__32BIT__
 #  ifdef _cplusplus
 #    define CPLUSPLUS 1
@@ -1526,21 +1518,6 @@ extern chtype *acs_map;
 #define CTL_PGDN        0x1be   /* Control-PgDn         PC only  */
 #define CTL_HOME        0x1bf   /* Control-Home         PC only  */
 #define CTL_END         0x1c0   /* Control-End          PC only  */
-
-#if defined(FLEXOS)
-# define KEY_MOUSE       0x1c1 /* "mouse" key  */
-# define KEY_A1          KEY_HOME/* upper left on Virtual keypad  */
-# define KEY_A2          KEY_UP  /* upper middle on Virt. keypad  */
-# define KEY_A3          KEY_PPAGE/* upper right on Vir. keypad   */
-# define KEY_B1          KEY_LEFT/* middle left on Virt. keypad   */
-# define KEY_B2          0x00    /* center on Virt. keypad        */
-# define KEY_B3          KEY_RIGHT/* middle right on Vir. keypad  */
-# define KEY_C1          KEY_LL  /* lower left on Virt. keypad    */
-# define KEY_C2          KEY_DOWN /* lower middle on Virt. keypad */
-# define KEY_C3          KEY_NPAGE /* lower right on Vir. keypad  */
-# define KEY_MAX         KEY_MOUSE /* Maximum curses key        */
-#endif
-
 
 #if defined(DOS)  || defined (OS2) || defined(XCURSES) || defined(WIN32)
 # define KEY_A1          0x1c1   /* upper left on Virtual keypad  */

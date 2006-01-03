@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.6 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.7 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -396,8 +396,6 @@ int PDC_get_rows(void)
    Returns the current BIOS Video Mode Number.
 
   PDCurses Errors:
-   The FLEXOS version of this routine returns an ERR.
-   The UNIX version of this routine returns an ERR.
    The EMXVIDEO version of this routine returns an ERR.
 
   Portability:

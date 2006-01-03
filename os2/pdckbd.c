@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.8 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.9 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 /*******************************************************************************
@@ -378,13 +378,8 @@ int PDC_get_bios_key(void)
    Returns the current OS Control Break Check state.
 
   PDCurses Return Value:
-   DOS:
-      This function returns TRUE on if the Control Break
-      Check is enabled otherwise FALSE is returned.
-
-   FLEXOS:
-      This function returns TRUE on if the Keyboard Mode
-      allows a break to bre reported otherwise FALSE is returned.
+   This function returns TRUE on if the Control Break
+   Check is enabled otherwise FALSE is returned.
 
   PDCurses Errors:
    No errors are defined for this function.
@@ -623,9 +618,6 @@ extern   WINDOW*  _getch_win_;
   PDCurses Return Value:
    This function returns -1 if the passed character is invalid, or
    the WINDOW* 'w' is NULL, or 'w's keypad is not active.
-  
-   This function returns 0 under Flexos if the passed character
-   is 0x0300.  (-:Forget why.  --Frotz 911130:-)
   
    Otherwise, this function returns the PDCurses equivalent of the
    passed character.  See the function key and key macros in

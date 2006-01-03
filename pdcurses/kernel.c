@@ -80,7 +80,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.18 2006/01/03 19:09:44 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.19 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -202,9 +202,6 @@ int   PDC_CDECL   def_prog_mode()
 {
 	PDC_LOG(("def_prog_mode() - called\n"));
 
-#ifdef   FLEXOS
-	_flexos_16bitmode();
-#endif
 	c_pr_tty.been_set = TRUE;
 
 	memcpy(&c_pr_tty.saved, SP, sizeof(SCREEN));
@@ -222,9 +219,6 @@ int   PDC_CDECL   def_shell_mode()
 {
 	PDC_LOG(("def_shell_mode() - called\n"));
 
-#ifdef   FLEXOS
-	_flexos_8bitmode();
-#endif
 	c_sh_tty.been_set = TRUE;
 
 	memcpy(&c_sh_tty.saved, SP, sizeof(SCREEN));
@@ -273,9 +267,6 @@ int PDC_CDECL reset_prog_mode()
 #endif
       PDC_set_rows(c_pr_tty.saved.lines);
    }
-#ifdef FLEXOS
-   _flexos_16bitmode();
-#endif
 
 #if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))
    PDC_reset_prog_mode();
@@ -329,10 +320,6 @@ int PDC_CDECL reset_shell_mode()
       PDC_set_rows(c_sh_tty.saved.lines);
 # endif
    }
-#endif
-
-#ifdef   FLEXOS
-   _flexos_8bitmode();
 #endif
 
 #if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))

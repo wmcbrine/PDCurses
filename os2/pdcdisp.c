@@ -30,7 +30,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.5 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -43,8 +43,7 @@ char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $"
  	input characters, the update will be prematurely terminated.
 
   PDCurses Return Value:
- 	This routine returns ERR if it is unable to accomplish it's task.
- 	This return value is ONLY under FLEXOS.
+ 	This routine returns ERR if it is unable to accomplish its task.
 
  	The return value OK is returned if there were no errors.
 
@@ -174,7 +173,7 @@ int	PDC_cursor_on()
  	Returns OK upon success, ERR upon failure.
 
   PDCurses Errors:
- 	ERR will be returned (in the case of FLEXOS) if the hardware cursor
+ 	ERR will be returned if the hardware cursor
  	can not be disabled.
 
   Portability:
@@ -396,10 +395,6 @@ chtype color;
   PDCurses Return Value:
  	The PDC_scroll() function returns OK on success otherwise ERR is returned.
 
-  PDCurses Errors:
- 	An error will only be returned on the Flexos platform if s_copy()
- 	fails.
-
   Portability:
  	PDCurses	int PDC_scroll( int urow, int lcol, int rcol,
  				     int nlines, chtype attr );
@@ -422,15 +417,6 @@ chtype attr;
 {
 	extern unsigned	char atrtab[MAX_ATRTAB];
 	int	phys_attr=chtype_attr(attr);
-#ifdef	FLEXOS
-	int	srow=0;
-	int	scol=0;
-	int	drow=0;
-	int	dcol=0;
-	int	nrows=0;
-	int	ncols=0;
-	char	blank = (char) SP->blank;
-#endif
 
 #ifndef EMXVIDEO
 	USHORT ch=(phys_attr | SP->blank);

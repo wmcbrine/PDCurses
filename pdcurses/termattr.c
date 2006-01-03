@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr  = "$Id: termattr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_termattr  = "$Id: termattr.c,v 1.6 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -112,8 +112,6 @@ char *rcsid_termattr  = "$Id: termattr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp 
  	For DOS, has_ic() and has_il() always return TRUE, as the speed of
  	the DIRECT VIDEO or even BIOS writes is quicker than on a
  	serial terminal.
- 	For FLEXOS, this value has meaning and depends on the terminal,
- 	though at this time, it is a constant TRUE.
 
  	In addition to the above definition for longname(), the form of 
  	this string is the adapter name (or video card name) and the text 
@@ -146,9 +144,6 @@ char *rcsid_termattr  = "$Id: termattr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp 
 
 **man-end**********************************************************************/
 
-#ifdef	FLEXOS
-extern	char*	_flexos_gname();
-#endif
 static	char	_display[ 128 ];
 static	char	_shrtnme[ 14 ];
 
@@ -309,15 +304,6 @@ char*	PDC_CDECL	longname()
 	}
 #endif
 
-#ifdef	FLEXOS
-	switch	(SP->adapter)
-	{
-	case _FLEXOS:	sprintf(_display, "%s", _cursesgname());	  break;
-	default:	sprintf(_display, "Unknown-%dx%d", LINES, COLS);  break;
-	}
-#endif
-
-
 	if (SP->bogus_adapter)
 		strcat(_display, " (Clone)");
 
@@ -388,14 +374,6 @@ char*	PDC_CDECL	termname()
 	case _MCGACOLOR:sprintf(_shrtnme, "MCGAColor");break;
 	case _MCGAMONO:	sprintf(_shrtnme, "MCGAMono"); break;
 	case _MDS_GENIUS:sprintf(_shrtnme, "Genius");  break;
-	default:	sprintf(_shrtnme, "Unknown");  break;
-	}
-#endif
-
-#ifdef	FLEXOS
-	switch	(SP->adapter)
-	{
-	case _FLEXOS:	sprintf(_shrtnme, "%s", _cursesgname());	  break;
 	default:	sprintf(_shrtnme, "Unknown");  break;
 	}
 #endif

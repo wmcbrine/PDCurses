@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.4 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 
@@ -46,9 +46,6 @@ char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp 
  	adapter.  The reason for this is that we have a known video
  	adapter identity problem.  e.g. Two adapters report the same
  	identifying characteristics.
-
- 	It is also an error to attempt to change the size of the Flexos
- 	console (as there is currently no support for that).
 
   Portability:
  	PDCurses	int	PDC_set_font( int size );
@@ -87,9 +84,6 @@ int size;
  	adapter.  The reason for this is that we have a known video
  	adapter identity problem.  e.g. Two adapters report the same
  	identifying characteristics.
-
- 	It is also an error to attempt to change the size of the Flexos
- 	console (as there is currently no support for that).
 
   Portability:
  	PDCurses	int	PDC_set_rows( int rows );

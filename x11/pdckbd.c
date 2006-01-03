@@ -25,7 +25,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.8 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.9 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -106,13 +106,8 @@ bool PDC_check_bios_key()
  	Returns the current OS Control Break Check state.
 
   PDCurses Return Value:
- 	DOS:
- 		This function returns TRUE if the Control Break
- 		Check is enabled otherwise FALSE is returned.
-
- 	FLEXOS:
- 		This function returns TRUE on if the Keyboard Mode
- 		allows a break to bre reported otherwise FALSE is returned.
+ 	This function returns TRUE if the Control Break
+ 	Check is enabled otherwise FALSE is returned.
 
   PDCurses Errors:
  	No errors are defined for this function.

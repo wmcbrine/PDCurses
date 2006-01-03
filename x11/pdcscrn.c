@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.6 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on=FALSE;
@@ -35,21 +35,13 @@ bool GLOBAL_slk_on=FALSE;
   PDC_scr_close()	- Internal low-level binding to close the physical screen
 
   PDCurses Description:
- 	This function provides a low-level binding for the Flexos
- 	platform which must close the screen before writing to it.
  	This is a nop for the DOS platform.
-
- 	This function is provided in order to reset the FlexOS 16 bit
- 	character set for input rather than the limited input
- 	character set associated with the VT52.
 
   PDCurses Return Value:
  	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
- 	The DOS platform will never fail.  The Flexos platform may fail
- 	depending on the ability to close the current virtual console in
- 	8 (as opposed to 16) bit mode.
+ 	The DOS platform will never fail.
 
   Portability:
  	PDCurses	int	PDC_scr_close( void );
@@ -104,20 +96,13 @@ int mode2;
   PDC_scr_open()	- Internal low-level binding to open the physical screen
 
   PDCurses Description:
- 	This function provides a low-level binding for the Flexos
- 	platform which must open the screen before writing to it.
-
- 	This function is provided in order to access the FlexOS 16 bit
- 	character set for input rather than the limited input
- 	character set associated with the VT52.
+	This is a NOP in DOS.
 
   PDCurses Return Value:
  	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
- 	The DOS platform will never fail.  The Flexos platform may fail
- 	depending on the ability to open the current virtual console in
- 	8 (as opposed to 16) bit mode.
+ 	The DOS platform will never fail.
 
   Portability:
  	PDCurses	int	PDC_scr_open( SCREEN* internal, bool echo );

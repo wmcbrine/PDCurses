@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.13 2006/01/03 16:59:55 wmcbrine Exp $
+$Id: curspriv.h,v 1.14 2006/01/03 19:54:29 wmcbrine Exp $
 */
 /*
 *
@@ -104,9 +104,6 @@ $Id: curspriv.h,v 1.13 2006/01/03 16:59:55 wmcbrine Exp $
 *
 *               DOS             The one we all know and love:-}
 *               OS/2            The new kid on the block.
-*               FLEXOS          A Real-time, protected-mode OS from
-*                               Digital Research, Inc.
-*				(AKA, the 4680 from IBM...)
 */
 
 /*----------------------------------------*/
@@ -163,19 +160,6 @@ $Id: curspriv.h,v 1.13 2006/01/03 16:59:55 wmcbrine Exp $
 #    endif
 #  endif
 #endif
-
-/*----------------------------------------*/
-#ifdef  FLEXOS
-#  define FAST_VIDEO 1          /* We can use scopy()   */
-#  define GMODE  0 /* KLUDGE ALERT!
-                   * GMODE == 0 defines character mode structures in FLEXTAB.H.
-                   * GMODE == 1 defines graphics  mode structures in FLEXTAB.H.
-                   */
-#include <flextab.h>
-extern VIRCON vir;
-#endif
-
-
 
 
 /*----------------------------------------------------------------------
@@ -264,7 +248,6 @@ extern WINDOW*  twin;                   /* used by many routines */
 #define _VGAMONO        0x08
 #define _MCGACOLOR      0x0a
 #define _MCGAMONO       0x0b
-#define _FLEXOS         0x20            /* A Flexos console */
 #define _MDS_GENIUS     0x30
 #define _UNIX_COLOR     0x40
 #define _UNIX_MONO      0x41
@@ -358,12 +341,6 @@ int             PDC_set_scrn_mode Args(( int ));
 bool            PDC_scrn_modes_equal  Args((int, int));
 int             PDC_get_scrn_mode Args(( void ));
 int             PDC_query_adapter_type Args(( void ));
-# endif
-
-# ifdef  FLEXOS
-int             PDC_flexos_8bitmode Args(( void ));
-int             PDC_flexos_16bitmode Args(( void ));
-char*           PDC_flexos_gname Args(( void ));
 # endif
 
 # ifdef UNIX

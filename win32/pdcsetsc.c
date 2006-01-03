@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.5 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -35,9 +35,6 @@ extern HANDLE hConOut;
  	This is a private PDCurses function.
 
  	Forces the appropriate 80x25 alpha mode given the display adapter.
-
- 	Since we currently do not support changing the virtual console size,
- 	this routine is a NOP under Flexos.
 
   PDCurses Return Value:
  	This function returns OK upon success otherwise ERR is returned.
@@ -102,9 +99,6 @@ int	PDC_set_cursor_mode( int startrow, int endrow )
  	adapter identity problem.  e.g. Two adapters report the same
  	identifying characteristics.
 
- 	It is also an error to attempt to change the size of the Flexos
- 	console (as there is currently no support for that).
-
   Portability:
  	PDCurses	int	PDC_set_font( int size );
 
@@ -135,9 +129,6 @@ int	PDC_set_font(int size)
  	adapter.  The reason for this is that we have a known video
  	adapter identity problem.  e.g. Two adapters report the same
  	identifying characteristics.
-
- 	It is also an error to attempt to change the size of the Flexos
- 	console (as there is currently no support for that).
 
   Portability:
  	PDCurses	int	PDC_set_rows( int rows );

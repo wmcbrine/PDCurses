@@ -30,7 +30,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.10 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 #ifdef PC
@@ -55,8 +55,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg, unsigned doff, unsign
  	input characters, the update will be prematurely terminated.
 
   PDCurses Return Value:
- 	This routine returns ERR if it is unable to accomplish it's task.
- 	This return value is ONLY under FLEXOS.
+ 	This routine returns ERR if it is unable to accomplish its task.
 
  	The return value OK is returned if there were no errors.
 
@@ -237,9 +236,6 @@ int	PDC_cursor_on()
 				PDC_set_cursor_mode((SP->cursor & 0xff00) >> 8,
 					     (SP->cursor & 0x00ff));
 				break;
-			case _FLEXOS:
-				PDC_set_cursor_mode(SP->visible_cursor, 0);
-				break;
 			default:
 				break;
 			}
@@ -259,7 +255,7 @@ int	PDC_cursor_on()
  	Returns OK upon success, ERR upon failure.
 
   PDCurses Errors:
- 	ERR will be returned (in the case of FLEXOS) if the hardware cursor
+ 	ERR will be returned if the hardware cursor
  	can not be disabled.
 
   Portability:
@@ -277,20 +273,12 @@ int	PDC_cursor_off()
 {
 	PDC_LOG(("PDC_cursor_off() - called\n"));
 
-	if	(SP->visible_cursor)
+	if (SP->visible_cursor)
 	{
 		SP->visible_cursor = FALSE;
-		switch (SP->adapter)
-		{
-		case _FLEXOS:
-			PDC_set_cursor_mode(SP->visible_cursor, 0);
-			break;
-		default:
-			PDC_set_cursor_mode(32, 33);	/* turn it off */
-			break;
-		}
+		PDC_set_cursor_mode(32, 33);	/* turn it off */
 	}
-	return( OK );
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -521,11 +509,8 @@ chtype color;
  	fills them with the colour 'attr' instead.
 
   PDCurses Return Value:
- 	The PDC_scroll() function returns OK on success otherwise ERR is returned.
-
-  PDCurses Errors:
- 	An error will only be returned on the Flexos platform if s_copy()
- 	fails.
+ 	The PDC_scroll() function returns OK on success otherwise ERR is 
+ 	returned.
 
   Portability:
  	PDCurses	int PDC_scroll( int urow, int lcol, int rcol,

@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts  = "$Id: outopts.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_outopts  = "$Id: outopts.c,v 1.3 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -118,9 +118,6 @@ char *rcsid_outopts  = "$Id: outopts.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $"
 
   PDCurses Description:
  	idlok() and idcok() are provided for portability.  
- 	This may have some value for the FLEXOS platform, but there is 
- 	no code in PDCurses at this time (910725) that takes advantage 
- 	of this.
 
  	Though not explicitly stated, the cursor will be made visible
  	again, if leaveok() is passed a FALSE value.

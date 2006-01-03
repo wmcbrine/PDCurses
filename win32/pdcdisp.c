@@ -29,7 +29,7 @@
 extern HANDLE hConOut;
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCdisp  = "$Id: pdcdisp.c,v 1.5 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 static CHAR_INFO ci[512];
@@ -43,8 +43,7 @@ static CHAR_INFO ci[512];
    input characters, the update will be prematurely terminated.
 
   PDCurses Return Value:
-   This routine returns ERR if it is unable to accomplish it's task.
-   This return value is ONLY under FLEXOS.
+   This routine returns ERR if it is unable to accomplish its task.
 
    The return value OK is returned if there were no errors.
 
@@ -159,7 +158,7 @@ int   PDC_cursor_on(void)
    Returns OK upon success, ERR upon failure.
 
   PDCurses Errors:
-   ERR will be returned (in the case of FLEXOS) if the hardware cursor
+   ERR will be returned if the hardware cursor
    can not be disabled.
 
   Portability:
@@ -364,10 +363,6 @@ int   PDC_putctty( chtype character, chtype color )
 
   PDCurses Return Value:
    The PDC_scroll() function returns OK on success otherwise ERR is returned.
-
-  PDCurses Errors:
-   An error will only be returned on the Flexos platform if s_copy()
-   fails.
 
   Portability:
    PDCurses int PDC_scroll( int urow, int lcol, int rcol,

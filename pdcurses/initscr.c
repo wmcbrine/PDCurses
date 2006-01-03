@@ -61,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.12 2006/01/03 07:41:49 wmcbrine Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.13 2006/01/03 19:54:29 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -306,10 +306,6 @@ register int i;
 
    PDC_scr_open(SP, 0);
 
-#ifdef   FLEXOS
-   _flexos_16bitmode();
-#endif
-
    LINES = SP->lines;
    COLS = SP->cols;
 
@@ -469,10 +465,6 @@ int PDC_CDECL endwin()
 
    PDC_scr_close();
 
-# ifdef  FLEXOS
-   _flexos_8bitmode();
-# endif
-
 # if defined(DOS) || defined(OS2)
    reset_shell_mode();
 # endif
@@ -553,9 +545,6 @@ extern   void  free();
    SP->orig_font = PDC_get_font();
    SP->orgcbr = PDC_get_ctrl_break();
    SP->blank = ' ';
-#ifdef   FLEXOS
-   _flexos_16bitmode();
-#endif
    savetty();
    LINES = PDC_get_rows();
    COLS = PDC_get_columns();

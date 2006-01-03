@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCwin  = "$Id: pdcwin.c,v 1.10 2006/01/03 19:54:29 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -483,9 +483,6 @@ int *len;
   PDCurses Errors:
     No errors are defined for this function under DOS.
 
-    An ERR may be returned under FLEXOS if s_copy() fails.  See the
-    Flexos Programmer's Reference Manual for details on the error.
-
   Portability:
     PDCurses int PDC_chg_attr_pair( chtype chr, chtype attr );
 
@@ -512,34 +509,7 @@ chtype attr;
 # endif
 #endif
 
-#ifdef   FLEXOS
-   UBYTE c = (UBYTE) chr;
-   UBYTE a = (UBYTE) phys_attr;
-#endif
-
    PDC_LOG(("PDC_chg_attr_pair() - called\n"));
-
-#ifdef   FLEXOS
-   drect.r_row = PDC_get_cur_row();
-   drect.r_col = PDC_get_cur_col();
-   drect.r_nrow = 1;
-   drect.r_ncol = 1;
-
-   sframe.fr_pl[0] = (UBYTE *) & c;
-   sframe.fr_pl[1] = (UBYTE *) & a;
-   sframe.fr_pl[2] = (UBYTE *) " ";
-   sframe.fr_nrow = 1;
-   sframe.fr_ncol = 1;
-   sframe.fr_use = 0x00;
-
-   srect.r_col = 0;
-   srect.r_row = 0;
-   srect.r_nrow = 1;
-   srect.r_ncol = 1;
-
-   retcode = s_copy(0x03, 0x01L, 0L, (far unsigned short *) &drect, (far unsigned short *) &sframe, (far unsigned short *) &srect);
-   return( (retcode < 0L) ? ERR : OK );
-#endif
 
 #ifdef   DOS
    regs.h.ah = 0x09;
@@ -569,11 +539,6 @@ chtype attr;
    return( OK );
 #endif
 
-#ifdef UNIX
-/* INCOMPLETE - check attribute and output attr and/or color */
-   putchar(chr & A_CHARTEXT);
-   return(OK);
-#endif
 }
 #endif
 

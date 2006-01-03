@@ -115,7 +115,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas  = "$Id: xmas.c,v 1.7 2005/12/07 01:37:43 wmcbrine Exp $";
+char *rcsid_xmas  = "$Id: xmas.c,v 1.8 2006/01/03 08:32:12 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -475,25 +475,25 @@ char **argv;
     werase(treescrn8);
     touchwin(treescrn8);
     refresh();
-    delay_output(1000);
+    napms(1000);
     boxit();
     del_msg();
-    delay_output(1000);
+    napms(1000);
     seas();
     del_msg();
-    delay_output(1000);
+    napms(1000);
     greet();
     del_msg();
-    delay_output(1000);
+    napms(1000);
     fromwho();
     del_msg();
-    delay_output(1000);
+    napms(1000);
     tree();
-    delay_output(1000);
+    napms(1000);
     balls();
-    delay_output(1000);
+    napms(1000);
     star();
-    delay_output(1000);
+    napms(1000);
     strng1();
     strng2();
     strng3();
@@ -668,14 +668,14 @@ char **argv;
 	       mvwaddch(treescrn7, 12, 14, ' ');
 
 
-    delay_output(1000);
+    napms(1000);
     reindeer();
 
     touchwin(w_holiday);
     wrefresh(w_holiday);
     wrefresh(w_del_msg);
 
-    delay_output(1000);
+    napms(1000);
     for(loopy = 0;loopy < 50;loopy++)
     {
       blinkit();
@@ -1209,7 +1209,7 @@ int reindeer Args((void))
     }
   }
 
-  delay_output(2000);
+  napms(2000);
 
   y_pos = 1;
 

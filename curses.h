@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.61 2006/01/03 07:42:28 wmcbrine Exp $
+$Id: curses.h,v 1.62 2006/01/03 08:32:11 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1667,7 +1667,6 @@ int     PDC_CDECL copywin Args(( const WINDOW*, WINDOW*, int, int, int, int, int
 int     PDC_CDECL curs_set Args(( int ));
 int     PDC_CDECL def_prog_mode Args(( void ));
 int     PDC_CDECL def_shell_mode Args(( void ));
-int     PDC_CDECL delay_output Args((  int  ));
 void    PDC_CDECL delscreen Args(( SCREEN * ));
 int     PDC_CDECL delwin Args(( WINDOW* ));
 WINDOW* PDC_CDECL derwin Args(( WINDOW*, int, int, int, int ));
@@ -1720,6 +1719,7 @@ int     PDC_CDECL mvwinsertln Args(( WINDOW*, int, int ));
 int     PDC_CDECL mvwprintw Args(( WINDOW*, int, int, char*,... ));
 int     PDC_CDECL mvwscanw Args(( WINDOW*, int, int, char*,... ));
 #endif
+int     PDC_CDECL napms Args(( int ));
 WINDOW* PDC_CDECL newpad Args(( int, int ));
 SCREEN* PDC_CDECL newterm Args(( char*, FILE*, FILE* ));
 WINDOW* PDC_CDECL newwin Args(( int, int, int, int ));
@@ -1919,10 +1919,11 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define clrtobot()              wclrtobot( stdscr )
 #define clrtoeol()              wclrtoeol( stdscr )
 #define color_set(a,b)          wcolor_set( stdscr, a, b )
+#define delay_output(ms)        napms( ms )
 #define delch()                 wdelch( stdscr )
 #define deleteln()              wdeleteln( stdscr )
 #define derwin(w,nl,nc,by,bx)   subwin((w),(nl),(nc),(by+(w)->_begy),(bx+(w)->_begx))
-#define draino(ms)              delay_output(ms)
+#define draino(ms)              napms( ms )
 #define echochar(c)             (addch((chtype)c)==ERR?ERR:refresh())
 #define erase()                 werase( stdscr )
 #define fixterm()               reset_prog_mode()
@@ -1996,7 +1997,6 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvwinsnstr(w,y,x,s,n)   (wmove( w, y, x )==ERR?ERR:winsnstr(w,s,n))
 #define mvwinsstr(w,y,x,s)      (wmove( w, y, x )==ERR?ERR:winsnstr(w,s,(-1)))
 #define mvwvline(w,y,x,c,n)     (wmove( w, y, x )==ERR?ERR:wvline( w, c, n ))
-#define napms(ms)               delay_output(ms)
 #define nl()                    (SP->autocr = TRUE, OK)
 #define nonl()                  (SP->autocr = FALSE, OK)
 #define redrawwin(w)            wredrawln((w),0,(w)->_maxy)

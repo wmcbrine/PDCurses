@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo  = "$Id: newdemo.c,v 1.14 2005/12/08 17:27:08 wmcbrine Exp $";
+char *rcsid_newdemo  = "$Id: newdemo.c,v 1.15 2006/01/03 08:32:12 wmcbrine Exp $";
 #endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
@@ -410,7 +410,7 @@ chtype  save[80], ch;
                stop = 1;
                break;
             }
-            delay_output(100);
+            napms(100);
          }
          free(scrollbuf);
          if (stop)

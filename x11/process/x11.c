@@ -236,7 +236,7 @@ XtInputId *id;
             say("CURSES_FLASH received from child\n"); 
 #if 0 
             XFillRectangle(XCURSESDISPLAY,XCURSESWIN,normal_highlight_gc,10,10,XCursesWindowWidth-10,XCursesWindowHeight-10); 
-            delay_output(50); 
+            napms(50); 
             XFillRectangle(XCURSESDISPLAY,XCURSESWIN,normal_highlight_gc,10,10,XCursesWindowWidth-10,XCursesWindowHeight-10); 
             XCursesDisplayCursor(SP->cursrow,SP->curscol, 
                                  SP->cursrow,SP->curscol); 

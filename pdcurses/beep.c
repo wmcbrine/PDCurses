@@ -34,12 +34,11 @@
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	delay_output
 #  undef	wrefresh
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_beep  = "$Id: beep.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_beep  = "$Id: beep.c,v 1.3 2006/01/03 08:32:12 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -110,7 +109,7 @@ int	PDC_CDECL	flash()
 
 #if defined(DOS) || defined(OS2) || defined(WIN32)
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_NORMAL);
-	delay_output( 50 );
+	napms( 50 );
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_REVERSE);
 	wrefresh(curscr);
 	return( OK );

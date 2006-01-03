@@ -22,7 +22,7 @@
 #  include <config.h>
 #endif
 #if !defined(XCURSES)
-# define        INCLUDE_WINDOWS_H
+# define INCLUDE_WINDOWS_H
 #endif
 #include <curses.h>
 
@@ -38,13 +38,8 @@
 # include <unistd.h>
 #endif
 
-#ifdef HAVE_POLL
+#if defined(HAVE_POLL) && !defined(HAVE_USLEEP)
 # include <poll.h>
-#endif
-
-#ifdef UNIX
-#include <defs.h>
-#include <term.h>
 #endif
 
 #if defined(DOS) && defined(MSC)
@@ -63,7 +58,7 @@
 #endif
 
 #if defined(OS2) && !defined(EMX)
-        APIRET APIENTRY DosSleep(ULONG ulTime);
+	APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -85,7 +80,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.17 2006/01/03 18:38:06 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.18 2006/01/03 19:09:44 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -197,7 +192,6 @@ char linesrippedoff=0;
 
 **man-end**********************************************************************/
 
-#ifndef UNIX
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   def_prog_mode(void)
@@ -206,20 +200,18 @@ int   PDC_CDECL   def_prog_mode()
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("def_prog_mode() - called\n"));
+	PDC_LOG(("def_prog_mode() - called\n"));
 
 #ifdef   FLEXOS
-   _flexos_16bitmode();
+	_flexos_16bitmode();
 #endif
-   c_pr_tty.been_set = TRUE;
+	c_pr_tty.been_set = TRUE;
 
-   memcpy(&c_pr_tty.saved, SP, sizeof(SCREEN));
+	memcpy(&c_pr_tty.saved, SP, sizeof(SCREEN));
 
-   return( OK );
+	return OK;
 }
-#endif
 
-#ifndef UNIX
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   def_shell_mode(void)
@@ -228,20 +220,18 @@ int   PDC_CDECL   def_shell_mode()
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("def_shell_mode() - called\n"));
+	PDC_LOG(("def_shell_mode() - called\n"));
 
 #ifdef   FLEXOS
-   _flexos_8bitmode();
+	_flexos_8bitmode();
 #endif
-   c_sh_tty.been_set = TRUE;
+	c_sh_tty.been_set = TRUE;
 
-   memcpy(&c_sh_tty.saved, SP, sizeof(SCREEN));
+	memcpy(&c_sh_tty.saved, SP, sizeof(SCREEN));
 
-   return( OK );
+	return OK;
 }
-#endif
 
-#ifndef UNIX
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int PDC_CDECL reset_prog_mode(void)
@@ -290,11 +280,9 @@ int PDC_CDECL reset_prog_mode()
 #if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))
    PDC_reset_prog_mode();
 #endif
-   return( OK );
+   return OK;
 }
-#endif
 
-#ifndef UNIX
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int PDC_CDECL reset_shell_mode(void)
@@ -351,9 +339,8 @@ int PDC_CDECL reset_shell_mode()
    PDC_reset_shell_mode();
 #endif
 
-   return( OK );
+   return OK;
 }
-#endif
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -369,7 +356,6 @@ int PDC_CDECL resetty()
 
    PDC_LOG(("resetty() - called\n"));
 
-#ifndef UNIX
    if (c_save_tty.been_set == TRUE)
    {
       memcpy(SP, &c_save_tty.saved, sizeof(SCREEN));
@@ -400,9 +386,10 @@ int PDC_CDECL resetty()
       PDC_set_rows(c_save_tty.saved.lines);
 # endif
    }
-#endif
-   return( c_save_tty.been_set ? OK : ERR );
+
+   return c_save_tty.been_set ? OK : ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   savetty(void)
@@ -411,12 +398,13 @@ int   PDC_CDECL   savetty()
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("savetty() - called\n"));
+	PDC_LOG(("savetty() - called\n"));
 
-   c_save_tty.been_set = TRUE;
-   memcpy(&c_save_tty.saved, SP, sizeof(SCREEN));
-   return( OK );
+	c_save_tty.been_set = TRUE;
+	memcpy(&c_save_tty.saved, SP, sizeof(SCREEN));
+	return OK;
 }
+
 #if 0
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -427,17 +415,18 @@ int *y,*x;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("getsyx() - called\n"));
+	PDC_LOG(("getsyx() - called\n"));
 
-   if (curscr->_leaveit)
-      *y = *x = (-1);
-   else
-   {
-      *y = curscr->_cury - SP->linesrippedoffontop;
-      *x = curscr->_curx;
-   }
-   return( OK );
+	if (curscr->_leaveit)
+		*y = *x = (-1);
+	else
+	{
+		*y = curscr->_cury - SP->linesrippedoffontop;
+		*x = curscr->_curx;
+	}
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   setsyx(int y, int x)
@@ -447,19 +436,20 @@ int y,x;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("setsyx() - called\n"));
+	PDC_LOG(("setsyx() - called\n"));
 
-   if (y < 0 && x < 0)
-      curscr->_leaveit = TRUE;
-   else
-   {
-      curscr->_cury = y + SP->linesrippedoffontop;
-      curscr->_curx = x;
-      curscr->_leaveit = FALSE;
-   }
-   return( OK );
+	if (y < 0 && x < 0)
+		curscr->_leaveit = TRUE;
+	else
+	{
+		curscr->_cury = y + SP->linesrippedoffontop;
+		curscr->_curx = x;
+		curscr->_leaveit = FALSE;
+	}
+	return OK;
 }
-#endif
+#endif /* if 0 */
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   curs_set(int visibility)
@@ -469,13 +459,14 @@ int visibility;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("curs_set() - called: visibility=%d\n",visibility));
+	PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
 
-   return(PDC_curs_set(visibility));
+	return PDC_curs_set(visibility);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   ripoffline(int line, int (*init)(WINDOW *,int))
+int   PDC_CDECL   ripoffline(int line, int (*init)(WINDOW *, int))
 #else
 int   PDC_CDECL   ripoffline(line, init)
 int line;
@@ -483,16 +474,16 @@ int (*init)();
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("ripoffline() - called: line=%d\n",line));
+	PDC_LOG(("ripoffline() - called: line=%d\n", line));
 
-   if (linesrippedoff < 5
-   &&  line != 0)
-   {
-   linesripped[(int)linesrippedoff].line = line;
-   linesripped[(int)linesrippedoff++].init = init;
-   }
-   return(OK);
+	if (linesrippedoff < 5 && line != 0)
+	{
+		linesripped[(int)linesrippedoff].line = line;
+		linesripped[(int)linesrippedoff++].init = init;
+	}
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   napms(int ms)
@@ -502,9 +493,18 @@ int ms;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("napms() - called: ms=%d\n",ms));
+	PDC_LOG(("napms() - called: ms=%d\n", ms));
 
-#if defined(WIN32)
+#if defined(HAVE_USLEEP)
+	usleep(1000 * ms);
+#elif defined(HAVE_POLL)
+	{
+		struct pollfd fd;
+		fd.fd = -1;
+		fd.events = 0;
+		poll(&fd, 1, ms);
+	}
+#elif defined(WIN32)
 	Sleep( ms );
 #elif defined(OS2)
 # if defined(EMX)
@@ -515,6 +515,12 @@ int ms;
 #elif defined(DOS)
 # if defined(TC) || defined(__WATCOMC__)
 	delay( ms );
+# elif defined(MSC) || defined(NDP)
+	{
+		clock_t goal = (ms / 50) + clock();
+		while (goal > clock())
+		;
+	}
 # elif defined(PC)
 	{
          /* get number of ticks since startup from address 0040:006ch
@@ -525,25 +531,11 @@ int ms;
 		while (goal > *ticks)
 		;
 	}
-# elif defined(MSC) || defined(NDP)
-	{
-		clock_t goal = (ms / 50) + clock();
-		while (goal > clock())
-		;
-	}
 # endif
-#elif defined(HAVE_USLEEP)
-	usleep(1000 * ms);
-#elif defined(HAVE_POLL)
-	{
-		struct pollfd fd;
-		fd.fd = -1;
-		fd.events = 0;
-		poll(&fd, 1, ms);
-	}
 #endif
 	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   draino(int ms)
@@ -553,7 +545,7 @@ int ms;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("draino() - called: ms=%d\n",ms));
+	PDC_LOG(("draino() - called: ms=%d\n", ms));
 
 	return napms(ms);
 }

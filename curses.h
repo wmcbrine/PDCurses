@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.64 2006/01/03 20:07:12 wmcbrine Exp $
+$Id: curses.h,v 1.65 2006/01/03 23:43:58 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1122,7 +1122,8 @@ currently used.)
 
 **man-end**********************************************************************/
 
-/* Video attribute definitions. */
+/*** Video attribute macros ***/
+
 #ifdef CHTYPE_LONG
 # define A_NORMAL        0x00000000L
 # define A_UNDERLINE     0x00100000L
@@ -1154,7 +1155,7 @@ currently used.)
 # define A_REVERSE     (chtype)0x0200                  /* X/Open   */
 # define A_STANDOUT    ((chtype)(A_REVERSE | A_BOLD))  /* X/Open   */
 # define A_UNDERLINE   (chtype)0x0000                  /* X/Open   */
-# define A_COLOR       (chtype)0xF800                  /* System V  */
+# define A_COLOR       (chtype)0xF800                  /* System V */
 # define A_CHARTEXT    (chtype)(0xFF)                  /* X/Open   */
 # define A_ATTRIBUTES  (chtype)(~A_CHARTEXT)           /* X/Open   */
 
@@ -1164,36 +1165,30 @@ currently used.)
 # define A_INVIS       (chtype)0x0000
 #endif
 
-#define CHR_MSK		A_CHARTEXT		/* Obsolete	*/
-#define ATR_MSK		A_ATTRIBUTES	/* Obsolete	*/
-#define ATR_NRM		A_NORMAL			/* Obsolete	*/
+#define CHR_MSK		A_CHARTEXT			/* Obsolete */
+#define ATR_MSK		A_ATTRIBUTES			/* Obsolete */
+#define ATR_NRM		A_NORMAL			/* Obsolete */
+
+/*** Alternate character set macros ***/
 
 #ifdef XCURSES
 extern chtype *acs_map;
 
-# define ACS_BSSB	(acs_map['l'])
-# define ACS_SSBB	(acs_map['m'])
-# define ACS_BBSS	(acs_map['k'])
-# define ACS_SBBS	(acs_map['j'])
-# define ACS_SBSS	(acs_map['u'])
-# define ACS_SSSB	(acs_map['t'])
-# define ACS_SSBS	(acs_map['v'])
-# define ACS_BSSS	(acs_map['w'])
-# define ACS_BSBS	(acs_map['q'])
-# define ACS_SBSB	(acs_map['x'])
-# define ACS_SSSS	(acs_map['n'])
+/* VT100-compatible symbols -- box chars */
 
-# define ACS_ULCORNER	ACS_BSSB
-# define ACS_LLCORNER	ACS_SSBB
-# define ACS_URCORNER	ACS_BBSS
-# define ACS_LRCORNER	ACS_SBBS
-# define ACS_RTEE	ACS_SBSS
-# define ACS_LTEE	ACS_SSSB
-# define ACS_BTEE	ACS_SSBS
-# define ACS_TTEE	ACS_BSSS
-# define ACS_HLINE	ACS_BSBS
-# define ACS_VLINE	ACS_SBSB
-# define ACS_PLUS	ACS_SSSS
+# define ACS_ULCORNER	(acs_map['l'])
+# define ACS_LLCORNER	(acs_map['m'])
+# define ACS_URCORNER	(acs_map['k'])
+# define ACS_LRCORNER	(acs_map['j'])
+# define ACS_RTEE	(acs_map['u'])
+# define ACS_LTEE	(acs_map['t'])
+# define ACS_BTEE	(acs_map['v'])
+# define ACS_TTEE	(acs_map['w'])
+# define ACS_HLINE	(acs_map['q'])
+# define ACS_VLINE	(acs_map['x'])
+# define ACS_PLUS	(acs_map['n'])
+
+/* VT100-compatible symbols -- other */
 
 # define ACS_S1		(acs_map['o'])
 # define ACS_S9		(acs_map['s'])
@@ -1202,6 +1197,11 @@ extern chtype *acs_map;
 # define ACS_DEGREE	(acs_map['f'])
 # define ACS_PLMINUS	(acs_map['g'])
 # define ACS_BULLET	(acs_map['~'])
+
+/* Teletype 5410v1 symbols -- these are defined in SysV curses, but
+   are not well-supported by most terminals. Stick to VT100 characters
+   for optimum portability.
+*/
 # define ACS_LARROW	(acs_map[','])
 # define ACS_RARROW	(acs_map['+'])
 # define ACS_DARROW	(acs_map['.'])
@@ -1210,6 +1210,10 @@ extern chtype *acs_map;
 # define ACS_LANTERN	(acs_map['i'])
 # define ACS_BLOCK	(acs_map['0'])
 
+/* That goes double for these -- undocumented SysV symbols. Don't use
+   them. Also, the definitions here aren't compatible with as many
+   code pages as those above.
+*/
 # define ACS_S3		(acs_map['p'])
 # define ACS_S7		(acs_map['r'])
 # define ACS_LEQUAL	(acs_map['y'])
@@ -1217,62 +1221,49 @@ extern chtype *acs_map;
 # define ACS_PI		(acs_map['{'])
 # define ACS_NEQUAL	(acs_map['|'])
 # define ACS_STERLING	(acs_map['}'])
-#endif
 
-#if defined(DOS) || defined(OS2) || defined(WIN32)
+#else	/* not XCURSES -- DOS, OS2 or WIN32 */
+
 /* ALTCHARSET definitions from jshumate@wrdis01.robins.af.mil
    These match code page 437 and compatible pages (CP850, CP852, etc.)
 */
 
-/* VT100-compatible symbols */
+/* VT100 box */
 
-# define ACS_ULCORNER	(chtype)0xda			/* SysV */
-# define ACS_LLCORNER	(chtype)0xc0			/* SysV	*/
-# define ACS_URCORNER	(chtype)0xbf			/* SysV	*/
-# define ACS_LRCORNER	(chtype)0xd9			/* SysV	*/
-# define ACS_RTEE	(chtype)0xb4			/* SysV	*/
-# define ACS_LTEE	(chtype)0xc3			/* SysV	*/
-# define ACS_BTEE	(chtype)0xc1			/* SysV	*/
-# define ACS_TTEE	(chtype)0xc2			/* SysV	*/
-# define ACS_HLINE	(chtype)0xc4			/* SysV */
-# define ACS_VLINE	(chtype)0xb3			/* SysV */
-# define ACS_PLUS	(chtype)0xc5			/* SysV */
-# define ACS_S1		(chtype)0x2d			/* SysV */
-# define ACS_S9		(chtype)0x5f			/* SysV */
-# define ACS_DIAMOND	((chtype)0x04 | A_ALTCHARSET)	/* SysV */
-# define ACS_CKBOARD	(chtype)0xb1			/* SysV */
-# define ACS_DEGREE	(chtype)0xf8			/* SysV */
-# define ACS_PLMINUS	(chtype)0xf1			/* SysV */
-# define ACS_BULLET	(chtype)0xf9			/* SysV */
+# define ACS_ULCORNER	(chtype)0xda
+# define ACS_LLCORNER	(chtype)0xc0
+# define ACS_URCORNER	(chtype)0xbf
+# define ACS_LRCORNER	(chtype)0xd9
+# define ACS_RTEE	(chtype)0xb4
+# define ACS_LTEE	(chtype)0xc3
+# define ACS_BTEE	(chtype)0xc1
+# define ACS_TTEE	(chtype)0xc2
+# define ACS_HLINE	(chtype)0xc4
+# define ACS_VLINE	(chtype)0xb3
+# define ACS_PLUS	(chtype)0xc5
 
-# define ACS_BSSB	ACS_ULCORNER
-# define ACS_SSBB	ACS_LLCORNER
-# define ACS_BBSS	ACS_URCORNER
-# define ACS_SBBS	ACS_LRCORNER
-# define ACS_SBSS	ACS_RTEE
-# define ACS_SSSB	ACS_LTEE
-# define ACS_SSBS	ACS_BTEE
-# define ACS_BSSS	ACS_TTEE
-# define ACS_BSBS	ACS_HLINE
-# define ACS_SBSB	ACS_VLINE
-# define ACS_SSSS	ACS_PLUS
+/* VT100 other */
 
-/* Teletype 5410v1 symbols -- these are defined in SysV curses, but
-   are not well-supported by most terminals. Stick to VT100 characters
-   for optimum portability.
-*/
-# define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)	/* SysV */
-# define ACS_RARROW	((chtype)0x1a | A_ALTCHARSET)	/* SysV */
-# define ACS_DARROW	((chtype)0x19 | A_ALTCHARSET)	/* SysV */
-# define ACS_UARROW	((chtype)0x18 | A_ALTCHARSET)	/* SysV */
-# define ACS_BOARD	(chtype)0xb0			/* SysV */
-# define ACS_LANTERN	((chtype)0x0f | A_ALTCHARSET)	/* SysV */
-# define ACS_BLOCK	(chtype)0xdb			/* SysV */
+# define ACS_S1		(chtype)0x2d
+# define ACS_S9		(chtype)0x5f
+# define ACS_DIAMOND	((chtype)0x04 | A_ALTCHARSET)
+# define ACS_CKBOARD	(chtype)0xb1
+# define ACS_DEGREE	(chtype)0xf8
+# define ACS_PLMINUS	(chtype)0xf1
+# define ACS_BULLET	(chtype)0xf9
 
-/* That goes double for these -- undocumented SysV symbols. Don't use
-   them. Also, the definitions here aren't compatible with as many
-   code pages as those above.
-*/
+/* Teletype 5410v1 */
+
+# define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)
+# define ACS_RARROW	((chtype)0x1a | A_ALTCHARSET)
+# define ACS_DARROW	((chtype)0x19 | A_ALTCHARSET)
+# define ACS_UARROW	((chtype)0x18 | A_ALTCHARSET)
+# define ACS_BOARD	(chtype)0xb0
+# define ACS_LANTERN	((chtype)0x0f | A_ALTCHARSET)
+# define ACS_BLOCK	(chtype)0xdb
+
+/* Undocumented */
+
 # define ACS_S3         (chtype)0x2d
 # define ACS_S7         (chtype)0x2d
 # define ACS_LEQUAL     (chtype)0xf3
@@ -1282,30 +1273,37 @@ extern chtype *acs_map;
 # define ACS_STERLING   (chtype)0x9c
 #endif
 
-/* colour attributes */
+/* Box char aliases */
+
+#define ACS_BSSB	ACS_ULCORNER
+#define ACS_SSBB	ACS_LLCORNER
+#define ACS_BBSS	ACS_URCORNER
+#define ACS_SBBS	ACS_LRCORNER
+#define ACS_SBSS	ACS_RTEE
+#define ACS_SSSB	ACS_LTEE
+#define ACS_SSBS	ACS_BTEE
+#define ACS_BSSS	ACS_TTEE
+#define ACS_BSBS	ACS_HLINE
+#define ACS_SBSB	ACS_VLINE
+#define ACS_SSSS	ACS_PLUS
+
+/*** Colour macros ***/
+
+#define COLOR_BLACK		0
+
 #if defined (XCURSES)
-# define COLOR_BLACK		0
 # define COLOR_RED		1
 # define COLOR_GREEN		2
-# define COLOR_YELLOW		3
 # define COLOR_BLUE		4
-# define COLOR_MAGENTA		5
-# define COLOR_CYAN		6
-# define COLOR_WHITE		7
-#endif
 
-#if defined(DOS) || defined(OS2)
-# define COLOR_BLACK		0
+#elif defined(DOS) || defined(OS2)
+
 # define COLOR_BLUE		1
 # define COLOR_GREEN		2
-# define COLOR_CYAN		3
 # define COLOR_RED		4
-# define COLOR_MAGENTA		5
-# define COLOR_YELLOW		6
-# define COLOR_WHITE		7
-#endif
 
-#if defined(WIN32)
+#elif defined(WIN32)
+
 # define MS_MOUSE_MOVED	0x0001
 /*
  * These defines taken directly from windows.h to reduce
@@ -1325,7 +1323,7 @@ extern chtype *acs_map;
 # ifndef FOREGROUND_INTENSITY
 #  define FOREGROUND_INTENSITY	0x0008		/* BOLD */
 # endif
-#define  FOREGROUND_MASK 0x000F
+# define  FOREGROUND_MASK 0x000F
 
 # ifndef BACKGROUND_BLUE
 #  define BACKGROUND_BLUE	0x0010
@@ -1339,17 +1337,17 @@ extern chtype *acs_map;
 # ifndef BACKGROUND_INTENSITY
 #  define BACKGROUND_INTENSITY	0x0080		/* BLINK */
 # endif
-#define  BACKGROUND_MASK 0x00F0
+# define  BACKGROUND_MASK 0x00F0
 
-# define COLOR_BLACK     0
 # define COLOR_BLUE      FOREGROUND_BLUE
 # define COLOR_RED       FOREGROUND_RED
 # define COLOR_GREEN     FOREGROUND_GREEN
-# define COLOR_CYAN      (FOREGROUND_BLUE | FOREGROUND_GREEN)
-# define COLOR_MAGENTA   (FOREGROUND_RED | FOREGROUND_BLUE)
-# define COLOR_YELLOW    (FOREGROUND_RED | FOREGROUND_GREEN)
-# define COLOR_WHITE     (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE)
 #endif
+
+#define COLOR_CYAN      (COLOR_BLUE | COLOR_GREEN)
+#define COLOR_MAGENTA   (COLOR_RED | COLOR_BLUE)
+#define COLOR_YELLOW    (COLOR_RED | COLOR_GREEN)
+#define COLOR_WHITE     (COLOR_RED | COLOR_GREEN | COLOR_BLUE)
 
 #ifdef CHTYPE_LONG
 #define COLOR_PAIR(n)  ((chtype)(n) << 24)

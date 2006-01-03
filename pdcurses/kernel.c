@@ -85,7 +85,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.15 2006/01/03 17:19:24 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.16 2006/01/03 17:42:17 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -537,7 +537,9 @@ int ms;
 #elif defined(HAVE_POLL)
 	{
 		struct pollfd fd;
-		poll(&fd, 0L, min(1L, ms));
+		fd.fd = 0;
+		fd.events = 0;
+		poll(&fd, 1, ms);
 	}
 #endif
 	return OK;

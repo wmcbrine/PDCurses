@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.63 2006/01/03 19:54:29 wmcbrine Exp $
+$Id: curses.h,v 1.64 2006/01/03 20:07:12 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -675,26 +675,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF                             /* have vsscanf() */
 #  endif
-#endif
-
-#if 0
-/*----------------------------------------
-*       gcc under UNIX
-*
-*       GNU definitions:
-*               UNIX
-*/
-#ifdef UNIX
-#  define HAVE_PROTO 1                  /* GNU C supports ANSI C prototypes  */
-#  ifdef SUNOS
-#    define NO_VSSCANF
-#    define NO_MEMMOVE
-#    undef BSD
-#  endif
-#  ifdef linux
-#    undef BSD
-#  endif
-#endif
 #endif
 
 /*----------------------------------------
@@ -2009,7 +1989,7 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define wstandend(w)            wattrset(w, A_NORMAL)
 #define wstandout(w)            wattrset(w, A_STANDOUT)
 
-#if !defined(UNIX) && !defined(XCURSES)
+#if !defined(XCURSES)
 # define nocbreak()             (SP->cbreak = FALSE, SP->delaytenths = 0, OK)
 # define cbreak()               (SP->cbreak = TRUE, OK)
 # define nocrmode()             (SP->cbreak = FALSE, OK)

@@ -23,11 +23,6 @@
 #endif
 #include <curses.h>
 
-#ifdef UNIX
-#include <defs.h>
-#include <term.h>
-#endif
-
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
@@ -48,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr  = "$Id: termattr.c,v 1.6 2006/01/03 19:54:29 wmcbrine Exp $";
+char *rcsid_termattr  = "$Id: termattr.c,v 1.7 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -157,14 +152,10 @@ int	PDC_CDECL	baudrate()
 {
 	PDC_LOG(("baudrate() - called\n"));
 
-#ifdef UNIX
-	return (_CUR_TERM.baudrate);
-#else
 #ifdef FAST_VIDEO
 	return (SP->direct_video ? INT_MAX : 19200 );
 #else
 	return (19200);			/* Approx. guess at BIOS speeds.*/
-#endif
 #endif
 }
 /***********************************************************************/
@@ -177,17 +168,7 @@ char	PDC_CDECL	erasechar()
 {
 	PDC_LOG(("erasechar() - called\n"));
 
-#ifdef UNIX
-#ifdef USE_TERMIO
-	ioctl(_CUR_TERM.fd, TCGETA, &_CUR_TERM.prog_mode);
-	return(_CUR_TERM.prog_mode.c_cc[VERASE]);
-#else
-	ioctl(_CUR_TERM.fd, TIOCGETP, &_CUR_TERM.prog_mode.v6);
-	return(_CUR_TERM.prog_mode.v6.sg_erase);
-#endif
-#else
 	return(	_ECHAR );	/* character delete char (^H) */
-#endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -199,14 +180,7 @@ bool	PDC_CDECL	has_ic()
 {
 	PDC_LOG(("has_ic() - called\n"));
 
-#ifdef UNIX
-	if (insert_character != NULL && delete_character != NULL)
-		return(TRUE);
-	else
-		return(FALSE);
-#else
 	return( TRUE );
-#endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -218,14 +192,7 @@ bool	PDC_CDECL	has_il()
 {
 	PDC_LOG(("has_il() - called\n"));
 
-#ifdef UNIX
-	if (insert_line != NULL && delete_line != NULL)
-		return(TRUE);
-	else
-		return(FALSE);
-#else
 	return( TRUE );
-#endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -237,17 +204,7 @@ char	PDC_CDECL	killchar()
 {
 	PDC_LOG(("killchar() - called\n"));
 
-#ifdef UNIX
-#ifdef USE_TERMIO
-	ioctl(_CUR_TERM.fd, TCGETA, &_CUR_TERM.prog_mode);
-	return(_CUR_TERM.prog_mode.c_cc[VKILL]);
-#else
-	ioctl(_CUR_TERM.fd, TIOCGETP, &_CUR_TERM.prog_mode.v6);
-	return(_CUR_TERM.prog_mode.v6.sg_kill);
-#endif
-#else
 	return( _DLCHAR );	/* line delete char (^U) */
-#endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -390,19 +347,5 @@ char	PDC_CDECL	wordchar()
 {
 	PDC_LOG(("wordchar() - called\n"));
 
-#ifdef UNIX
-#ifdef USE_TERMIO
-	ioctl(_CUR_TERM.fd, TCGETA, &_CUR_TERM.prog_mode);
-	return(_CUR_TERM.prog_mode.c_cc[VWERASE]);
-#else
-#ifdef TIOCGLTC
-	ioctl(_CUR_TERM.fd, TIOCGLTC, &_CUR_TERM.prog_mode.bsd_new);
-	return(_CUR_TERM.prog_mode.bsd_new.t_werase);
-#else
-	return(0);
-#endif
-#endif
-#else
 	return (_DWCHAR);			/* word delete char */
-#endif
 }

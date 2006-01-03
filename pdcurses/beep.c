@@ -23,11 +23,6 @@
 #endif
 #include <curses.h>
 
-#ifdef UNIX
-#include <defs.h>
-#include <term.h>
-#endif
-
 /* undefine any macros for functions defined in this module */
 #undef	beep
 #undef	flash
@@ -38,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_beep  = "$Id: beep.c,v 1.3 2006/01/03 08:32:12 wmcbrine Exp $";
+char *rcsid_beep  = "$Id: beep.c,v 1.4 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -89,7 +84,7 @@ int	PDC_CDECL	beep()
 
 	PDC_beep();
 
-	return( OK );
+	return OK;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -101,22 +96,15 @@ int	PDC_CDECL	flash()
 {
 	PDC_LOG(("flash() - called\n"));
 
-#ifdef UNIX
-	if (flash_screen != NULL)
-		putp(flash_screen);
-	return(OK);
-#endif
-
 #if defined(DOS) || defined(OS2) || defined(WIN32)
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_NORMAL);
 	napms( 50 );
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_REVERSE);
 	wrefresh(curscr);
-	return( OK );
 #endif
 
 #if defined(XCURSES)
 	XCursesInstructAndWait(CURSES_FLASH);
-	return( OK );
 #endif
+	return OK;
 }

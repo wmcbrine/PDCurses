@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.14 2006/01/03 19:54:29 wmcbrine Exp $
+$Id: curspriv.h,v 1.15 2006/01/03 20:07:14 wmcbrine Exp $
 */
 /*
 *
@@ -341,11 +341,6 @@ int             PDC_set_scrn_mode Args(( int ));
 bool            PDC_scrn_modes_equal  Args((int, int));
 int             PDC_get_scrn_mode Args(( void ));
 int             PDC_query_adapter_type Args(( void ));
-# endif
-
-# ifdef UNIX
-int             PDC_kbhit Args((void));
-int             PDC_setup_keys Args((void));
 # endif
 
 # ifdef WIN32

@@ -23,12 +23,6 @@
 #endif
 #include <curses.h>
 
-#ifdef UNIX
-#define NOTLIB
-#include <defs.h>
-#include <term.h>
-#endif
-
 /* undefine any macros for functions defined in this module */
 #undef	cbreak
 #undef	nocbreak
@@ -55,7 +49,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.5 2006/01/03 07:41:49 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.6 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -207,21 +201,6 @@ int	PDC_CDECL	cbreak()
 {
 	PDC_LOG(("cbreak() - called\n"));
 
-#ifdef UNIX
-#ifdef USE_TERMIO
-	_CUR_TERM.prog_mode.c_lflag &= ~(ICANON);
-	_CUR_TERM.prog_mode.c_iflag &= ~(ICRNL);
-/*	_CUR_TERM.prog_mode.c_lflag |= ISIG;*/
-	_CUR_TERM.prog_mode.c_cc[VMIN] = 1;
-	_CUR_TERM.prog_mode.c_cc[VTIME] = 0;
-	ioctl(_CUR_TERM.fd, TCSETAW, &_CUR_TERM.prog_mode);
-#else
-	_CUR_TERM.prog_mode.sg_flags |= CBREAK;
-	ioctl(_CUR_TERM.fd, TIOCSETP, &_CUR_TERM.prog_mode);
-#endif
-
-#endif
-
 	SP->cbreak = TRUE;
 	return( OK );
 }
@@ -234,16 +213,6 @@ int	PDC_CDECL	nocbreak()
 /***********************************************************************/
 {
 	PDC_LOG(("nocbreak() - called\n"));
-
-#ifdef UNIX
-#ifdef USE_TERMIO
-	_CUR_TERM.prog_mode.c_lflag |= ICANON;
-	ioctl(_CUR_TERM.fd, TCSETAW, &_CUR_TERM.prog_mode);
-#else 
-	_CUR_TERM->prog_mode.sg_flags &= ~CBREAK;
-	ioctl(_CUR_TERM.fd, TIOCSETP,&_CUR_TERM.prog_mode);
-#endif
-#endif
 
 	SP->cbreak = FALSE;
 	SP->delaytenths = 0;
@@ -259,16 +228,6 @@ int	PDC_CDECL	echo()
 {
 	PDC_LOG(("echo() - called\n"));
 
-#ifdef UNIX
-#ifdef USE_TERMIO
-	_CUR_TERM.prog_mode.c_lflag |= ECHOCTL|ECHOKE;
-	ioctl(_CUR_TERM.fd, TCSETAW, &_CUR_TERM.prog_mode);
-#else
-	_CUR_TERM.prog_mode.sg_flags |= ECHO;
-	ioctl(_CUR_TERM.fd, TIOCSETP, &_CUR_TERM.prog_mode);
-#endif
-#endif
-
 	SP->echo = TRUE;
 	return( OK );
 }
@@ -281,16 +240,6 @@ int	PDC_CDECL	noecho()
 /***********************************************************************/
 {
 	PDC_LOG(("noecho() - called\n"));
-
-#ifdef UNIX
-#ifdef USE_TERMIO
-	_CUR_TERM.prog_mode.c_lflag &= ~(ECHO|ECHOPRT);
-	ioctl(_CUR_TERM.fd, TCSETAW, &_CUR_TERM.prog_mode);
-#else
-	_CUR_TERM.prog_mode.sg_flags &= ~ECHO;
-	ioctl(_CUR_TERM.fd, TIOCSETP, &_CUR_TERM.prog_mode);
-#endif
-#endif
 
 	SP->echo = FALSE;
 	return( OK );
@@ -427,26 +376,6 @@ int	PDC_CDECL	raw()
 # endif
 #endif
 
-#if defined( UNIX )	/* || defined( EMXVIDEO )	NOT COMPLETED */
-#ifdef USE_TERMIO
-#if 0
-	_CUR_TERM.prog_mode.c_lflag &= ~(ICANON|ISIG);
-	_CUR_TERM.prog_mode.c_iflag &= ~(INPCK|ISTRIP|IXON);
-	_CUR_TERM.prog_mode.c_oflag &= ~(OPOST);
-	_CUR_TERM.prog_mode.c_cc[VMIN] = 1;
-	_CUR_TERM.prog_mode.c_cc[VTIME] = 0;
-	ioctl(_CUR_TERM.fd, TCSETAW, &_CUR_TERM.prog_mode);
-#endif
-	_CUR_TERM.prog_mode.c_lflag &= ~(ICANON|ISIG);
-	_CUR_TERM.prog_mode.c_iflag &= ~(IXON);
-	_CUR_TERM.prog_mode.c_iflag |= ICRNL;
-	ioctl(_CUR_TERM.fd, TCSETAW, &_CUR_TERM.prog_mode);
-#else
-	_CUR_TERM.prog_mode.sg_flags |= RAW;
-	ioctl(_CUR_TERM.fd, TIOCSETP, &_CUR_TERM.prog_mode);
-#endif
-#endif
-
 	SP->raw_inp = TRUE;
 	PDC_set_ctrl_break(FALSE);      /* disallow ^BREAK on disk I/O */
 /*	flushinp(); */
@@ -475,23 +404,6 @@ int	PDC_CDECL	noraw()
 	KbdInfo.fsMask &= ~KEYBOARD_BINARY_MODE;
 	KbdSetStatus(&KbdInfo,0);
 # endif
-#endif
-
-#if defined( UNIX ) /* || defined( EMXVIDEO ) NOT COMPLETE */
-#ifdef USE_TERMIO
-#if 0
-	_CUR_TERM.prog_mode.c_lflag |= ISIG|ICANON;
-	_CUR_TERM.prog_mode.c_iflag |= IXON|INPCK|ISTRIP;
-	_CUR_TERM.prog_mode.c_oflag |= OPOST;
-	_CUR_TERM.prog_mode.c_cc[VMIN] = _CUR_TERM.shell_mode.c_cc[VMIN];
-	_CUR_TERM.prog_mode.c_cc[VTIME] = _CUR_TERM.shell_mode.c_cc[VTIME];
-#endif
-	_CUR_TERM.prog_mode.c_lflag |= ICANON;
-	ioctl(_CUR_TERM.fd, TCSETAW, &_CUR_TERM.prog_mode);
-#else
-	_CUR_TERM.prog_mode.sg_flags &= ~RAW;
-	ioctl(_CUR_TERM.fd, TIOCSETP, &_CUR_TERM.prog_mode);
-#endif
 #endif
 
 	SP->raw_inp = FALSE;

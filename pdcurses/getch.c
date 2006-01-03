@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.11 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.12 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -152,12 +152,7 @@ extern  WINDOW*	_getch_win_;
 #endif
 /*	static	chtype	buffer[_INBUFSIZ];MH*/	/* character buffer */
 	static	int	buffer[_INBUFSIZ];	/* character buffer */
-#ifdef UNIX
-	short display_key = 0400;
-	bool cbreak_set = FALSE;
-#else
 	short display_key = 0x100;
-#endif
 	int waitingtenths = 0;
 
 	PDC_LOG(("wgetch() - called\n"));
@@ -228,20 +223,6 @@ extern  WINDOW*	_getch_win_;
 
 	for(;;)			/* loop for any buffering */
 	{
-
-#ifdef UNIX
-		if (!(SP->raw_inp || SP->cbreak))
-			{
-			cbreak();
-			cbreak_set = TRUE;
-			}
-		if (w->_use_keypad)
-			key = PDC_sysgetch();
-		else
-			key = PDC_rawgetch();
-		if (cbreak_set)
-			nocbreak();
-#endif
 
 #if defined(DOS) || defined(OS2) || defined(WIN32)
 		if (SP->raw_inp)

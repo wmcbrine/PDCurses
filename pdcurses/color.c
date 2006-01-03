@@ -27,11 +27,6 @@
 # include <string.h>
 #endif
 
-#ifdef UNIX
-#include <defs.h>
-#include <term.h>
-#endif
-
 /* undefine any macros for functions defined in this module */
 #undef	start_color
 #undef	init_pair
@@ -53,7 +48,7 @@ static int PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.13 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_color  = "$Id: color.c,v 1.14 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -322,14 +317,7 @@ int	PDC_CDECL	can_change_color()
 {
 	PDC_LOG(("can_change_color() - called\n"));
 
-#ifdef UNIX
-	if (can_change)
-		return(TRUE);
-	else
-		return(FALSE);
-#else
 	return(FALSE);
-#endif
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

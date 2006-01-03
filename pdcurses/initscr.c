@@ -27,12 +27,6 @@
 #include <memory.h>
 #endif
 
-#ifdef UNIX
-#define NOTLIB
-#include <defs.h>
-#include <term.h>
-#endif
-
 /* undefine any macros for functions defined in this module */
 #undef   initscr
 #undef   endwin
@@ -52,16 +46,8 @@
 #  undef wnoutrefresh
 #endif
 
-#ifdef UNIX
-#define NOTLIB
-#include <defs.h>
-#include <term.h>
-/* following is to stop compilation problems with #define of lines */
-#undef lines
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_initscr  = "$Id: initscr.c,v 1.13 2006/01/03 19:54:29 wmcbrine Exp $";
+char *rcsid_initscr  = "$Id: initscr.c,v 1.14 2006/01/03 20:07:15 wmcbrine Exp $";
 #else
 char* _curses_notice = "PDCurses 2.2 - Public Domain 1994";
 #endif
@@ -119,7 +105,7 @@ extern   void  efree();    /* user's efree(ptr)    */
 # endif
 #endif
 
-#if !defined(UNIX) && !defined(XCURSES)
+#if !defined(XCURSES)
 # ifdef HAVE_PROTO
 extern   void* malloc( size_t );          /* runtime's malloc(size)     */
 extern   void* calloc( size_t, size_t );  /* runtime's calloc(num,size) */
@@ -283,12 +269,6 @@ register int i;
       reallc = realloc;
    }
 
-#ifdef UNIX
-   setupterm((char *)0,1,(int *)0);
-   if (enter_ca_mode != NULL)
-      putp(enter_ca_mode);
-#endif
-
 #if defined (XCURSES)
    if (XCursesInitscr(NULL,argc,argv) == ERR)
       exit(7);
@@ -428,11 +408,7 @@ register int i;
 
    SP->alive = TRUE;
 
-#ifdef UNIX
-   PDC_setup_keys();
-#else
-   def_shell_mode(); /* don't do this for UNIX as scropen has already changed things */
-#endif
+   def_shell_mode();
 
    return( stdscr );
 }

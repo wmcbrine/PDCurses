@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.9 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.10 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -213,24 +213,6 @@ int n;
    if (win == (WINDOW *)NULL)
       return (ERR);
 
-#ifdef UNIX
-/*
- * this code is very dodgy
- *
-   wrefresh(win);
-
-   while ((*str = wgetch(win)) != ERR && *str != '\n')
-      ;
-   if (*str == ERR) {
-      *str = '\0';
-      waddstr(win,p);
-      return ERR;
-   }
-   *str = '\0';
-   waddstr(win,p);
-   return OK;
-*/
-#else
    oldcbreak = SP->cbreak; /* remember states    */
    oldecho = SP->echo;
    oldnodelay = win->_nodelay;
@@ -343,5 +325,4 @@ int n;
    win->_nodelay = oldnodelay;
 
    return (OK);
-#endif
 }

@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window  = "$Id: window.c,v 1.7 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_window  = "$Id: window.c,v 1.8 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -226,9 +226,7 @@ extern	void	(*fre)();
 			}
 		}
 	}
-#ifdef UNIX
-	PDC_gotoxy(begy, begx);
-#endif
+
 	return( win );
 }
 /***********************************************************************/

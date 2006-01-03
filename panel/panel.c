@@ -25,13 +25,8 @@
 
 #include <panel.h>
 
-#ifdef UNIX
-#include <defs.h>
-#include <term.h>
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.8 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.9 2006/01/03 20:07:15 wmcbrine Exp $";
 #endif
 
 

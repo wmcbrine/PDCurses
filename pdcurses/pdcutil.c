@@ -63,7 +63,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.8 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.9 2006/01/03 08:07:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -160,7 +160,8 @@ void PDC_beep ()
 
 /*man-start*********************************************************************
 
-  PDC_usleep()	- waits for specified number of microseconds
+  PDC_usleep()	- waits for specified number of microseconds _or_ 
+        milliseconds, depending on the platform; should die
 
   PDCurses Description:
  	This routine is intended to provide a mechanism to wait the
@@ -173,53 +174,36 @@ void PDC_beep ()
   Acknowledgement
  	PDC_usleep() was written by John Steele  (jsteele@netcom.com)
  	and hacked savagely by Mark Hessling
+ 	and even more savagely by William McBrine
 
 **man-end**********************************************************************/
 
-
 /***********************************************************************/
-#if defined(HAVE_USLEEP)
-# ifdef HAVE_PROTO
+#ifdef HAVE_PROTO
 void	PDC_usleep(long wait)
-# else
+#else
 void	PDC_usleep(wait)
 long wait;
 # endif
 /***********************************************************************/
 {
+#if defined(HAVE_USLEEP)
+
 	PDC_LOG(("PDC_usleep() - called\n"));
 
 	usleep(wait);
-	return;
-}
-/***********************************************************************/
+
 #elif defined(HAVE_POLL)
-#   include <poll.h>
-#   ifdef HAVE_PROTO
-void	PDC_usleep(long wait)
-#   else
-void	PDC_usleep(wait)
-long wait;
-#   endif
-/***********************************************************************/
-{
+# include <poll.h>
+
 	struct pollfd fd;
 
 	PDC_LOG(("PDC_usleep() - called\n"));
 
 	poll(&fd,0L,min(1L,wait/1000));
-	return;
-}
-/***********************************************************************/
+
 #elif defined(PC)
-#  ifdef HAVE_PROTO
-void PDC_usleep(long wait)
-#  else
-void PDC_usleep(wait)
-long wait;
-#  endif
-/***********************************************************************/
-{
+
 	far long *ticks = MK_FP(0x0040, 0x006c);
 	long t1, t2;
 
@@ -244,32 +228,24 @@ long wait;
 			t2 = *ticks;
 		} while (t1 == t2);
 	}
-}
-/***********************************************************************/
-# else
-#  ifdef HAVE_PROTO
-void	PDC_usleep(long wait)
-#  else
-void	PDC_usleep(wait)
-long wait;
-#  endif
-/***********************************************************************/
-{
-#ifndef WIN32
+
+#else
+
+# ifndef WIN32
 	clock_t goal;
-#endif
+# endif
 	PDC_LOG(("PDC_usleep() - called\n"));
 
-#if defined(WIN32)
+# if defined(WIN32)
 	Sleep(wait);
-#else
+# else
 	goal = (clock_t)wait + clock();
 	while (goal > clock())
 	;
+# endif
+
 #endif
-	return;
 }
-#endif
 
 #ifndef HAVE_VSSCANF
 /*

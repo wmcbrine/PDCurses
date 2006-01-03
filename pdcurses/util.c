@@ -66,7 +66,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.10 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.11 2006/01/03 08:07:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -322,48 +322,31 @@ int ms;
 {
 	PDC_LOG(("delay_output() - called: ms %d\n",ms));
 
-#if (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
+#if defined(WIN32)
+	Sleep(ms);
+#elif (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
 	delay( ms );
-	return( OK );
-#endif
-
-#if defined(WIN32) || defined(PC)
+#elif defined(PC)
 	PDC_usleep( ms );
-	return( OK );
-#endif
-
-#if	defined(OS2)
+#elif defined(OS2)
 # if defined(EMX)
 	_sleep2(ms);
 # else
 	DosSleep(ms);
 # endif
-	return( OK );
-#endif
-
-#if	defined(DOS) && defined(MSC)
+#elif defined(DOS) && defined(MSC)
 	PDC_usleep((clock_t)ms);
-	return( OK );
-#endif
-
-#if	defined(DOS) && defined(NDP)
+#elif defined(DOS) && defined(NDP)
 	clock_t goal;
 	goal = ms + (float)( (float)clock()/(float)CLOCKS_PER_SEC )*1000;
 	while (goal > (float)( (float)clock()/(float)CLOCKS_PER_SEC )*1000)
 	;
-	return( OK );
-#endif
-
-#if defined(UNIX) || defined(__DJGPP__)
+#elif defined(UNIX) || defined(__DJGPP__)
 	usleep(1000*ms);
-	return( OK );
-#endif
-
-#if defined(XCURSES)
+#elif defined(XCURSES)
 	PDC_usleep(ms*1000);
-	return( OK );
 #endif
-
+	return OK;
 }
 /***********************************************************************/
 #ifdef HAVE_PROTO

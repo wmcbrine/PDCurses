@@ -38,6 +38,10 @@
 # include <unistd.h>
 #endif
 
+#ifdef HAVE_POLL
+# include <poll.h>
+#endif
+
 #ifdef UNIX
 #include <defs.h>
 #include <term.h>
@@ -81,7 +85,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.13 2006/01/03 09:53:21 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.14 2006/01/03 16:59:55 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -505,24 +509,33 @@ int ms;
 #elif (defined(TC) || defined(__WATCOMC__)) && defined(DOS)
 	delay( ms );
 #elif defined(PC)
-	PDC_usleep( ms );
+	{
+         /* get number of ticks since startup from address 0040:006ch
+          * 1 sec. = 18.2065
+          */
+		volatile far long *ticks = MK_FP(0x0040, 0x006c);
+		long goal = (ms / 50) + *ticks;
+		while (goal > *ticks)
+		;
+	}
 #elif defined(OS2)
 # if defined(EMX)
 	_sleep2(ms);
 # else
 	DosSleep(ms);
 # endif
-#elif defined(DOS) && defined(MSC)
-	PDC_usleep((clock_t)ms);
-#elif defined(DOS) && defined(NDP)
-	clock_t goal;
-	goal = ms + (float)( (float)clock()/(float)CLOCKS_PER_SEC )*1000;
-	while (goal > (float)( (float)clock()/(float)CLOCKS_PER_SEC )*1000)
-	;
-#elif defined(UNIX) || defined(__DJGPP__)
-	usleep(1000*ms);
-#elif defined(XCURSES)
-	PDC_usleep(ms*1000);
+#elif defined(DOS) && (defined(MSC) || defined(NDP))
+	{
+		clock_t goal = (ms / 50) + clock();
+		while (goal > clock())
+		;
+	}
+#elif defined(HAVE_USLEEP)
+	usleep(1000 * ms);
+#elif defined(HAVE_POLL)
+        struct pollfd fd;
+
+        poll(&fd, 0L, min(1L, ms));
 #endif
 	return OK;
 }

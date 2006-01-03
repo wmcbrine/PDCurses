@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.12 2006/01/03 07:34:42 wmcbrine Exp $
+$Id: curspriv.h,v 1.13 2006/01/03 16:59:55 wmcbrine Exp $
 */
 /*
 *
@@ -337,7 +337,6 @@ int             PDC_split_plane Args(( WINDOW*, char*, char*, int, int, int, int
 void            PDC_sync Args(( WINDOW * ));
 int             PDC_sysgetch Args(( void ));
 bool            PDC_transform_line Args(( int ));
-void            PDC_usleep Args(( long ));
 int             PDC_validchar Args(( int ));
 int             PDC_vsscanf Args(( char *, const char *, va_list));
 

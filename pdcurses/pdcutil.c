@@ -26,8 +26,6 @@
 #endif
 #include <curses.h>
 
-#undef PDC_usleep
-
 #ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>
 # include <time.h>
@@ -63,7 +61,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.9 2006/01/03 08:07:33 wmcbrine Exp $";
+char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.10 2006/01/03 16:59:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -156,95 +154,6 @@ void PDC_beep ()
 #endif
 
   return;
-}
-
-/*man-start*********************************************************************
-
-  PDC_usleep()	- waits for specified number of microseconds _or_ 
-        milliseconds, depending on the platform; should die
-
-  PDCurses Description:
- 	This routine is intended to provide a mechanism to wait the
- 	specified number of microseconds. It is provided for those
- 	platforms that do not have their own usleep() function.
-
-  Portability:
- 	PDCurses	void PDC_usleep( clock_t );
-
-  Acknowledgement
- 	PDC_usleep() was written by John Steele  (jsteele@netcom.com)
- 	and hacked savagely by Mark Hessling
- 	and even more savagely by William McBrine
-
-**man-end**********************************************************************/
-
-/***********************************************************************/
-#ifdef HAVE_PROTO
-void	PDC_usleep(long wait)
-#else
-void	PDC_usleep(wait)
-long wait;
-# endif
-/***********************************************************************/
-{
-#if defined(HAVE_USLEEP)
-
-	PDC_LOG(("PDC_usleep() - called\n"));
-
-	usleep(wait);
-
-#elif defined(HAVE_POLL)
-# include <poll.h>
-
-	struct pollfd fd;
-
-	PDC_LOG(("PDC_usleep() - called\n"));
-
-	poll(&fd,0L,min(1L,wait/1000));
-
-#elif defined(PC)
-
-	far long *ticks = MK_FP(0x0040, 0x006c);
-	long t1, t2;
-
-	wait /= 50;
-
-	if (!wait) {
-		wait++;
-	}
-
-	/*
-	 * get number of ticks,
-	 * since startup from
-	 * address 0040:006ch
-	 *
-	 * 1 sec. = 18.2065
-	 */
-
-	while (wait--) {
-		t1 = *ticks;
-
-		do {
-			t2 = *ticks;
-		} while (t1 == t2);
-	}
-
-#else
-
-# ifndef WIN32
-	clock_t goal;
-# endif
-	PDC_LOG(("PDC_usleep() - called\n"));
-
-# if defined(WIN32)
-	Sleep(wait);
-# else
-	goal = (clock_t)wait + clock();
-	while (goal > clock())
-	;
-# endif
-
-#endif
 }
 
 #ifndef HAVE_VSSCANF

@@ -23,31 +23,8 @@
 #endif
 #include <curses.h>
 
-#if defined(DOS) && defined(MSC)
-#include <time.h>
-#endif
-
-#ifdef TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# ifdef HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-#ifdef HAVE_UNISTD_H
-#  include <unistd.h>
-#endif
-
-#ifdef OS2
-# ifdef EMXVIDEO
-#include <termios.h>
-# else
-	APIRET APIENTRY DosSleep(ULONG ulTime);
-# endif
+#if defined (OS2) && defined(EMXVIDEO)
+#  include <termios.h>
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -66,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.12 2006/01/03 08:32:12 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.13 2006/01/03 09:04:42 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -358,10 +335,6 @@ extern int	c_ungind;		/* wungetch() push index */
 #  else
 	KbdFlushBuffer(0);
 #  endif
-#endif
-
-#ifdef UNIX
-/* INCOMPLETE */
 #endif
 
 #ifdef XCURSES

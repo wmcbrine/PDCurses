@@ -28,12 +28,35 @@
 #endif
 
 #ifdef HAVE_MEMORY_H
-#include <memory.h>
+# include <memory.h>
+#endif
+
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
 #endif
 
 #ifdef UNIX
 #include <defs.h>
 #include <term.h>
+#endif
+
+#if defined(DOS) && defined(MSC)
+#include <time.h>
+#endif
+
+#ifdef TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# ifdef HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
+
+#if defined(OS2) && !defined(EMX)
+        APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -55,7 +78,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel  = "$Id: kernel.c,v 1.10 2006/01/03 08:32:12 wmcbrine Exp $";
+char *rcsid_kernel  = "$Id: kernel.c,v 1.11 2006/01/03 09:04:42 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];

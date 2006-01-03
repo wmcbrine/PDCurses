@@ -318,7 +318,6 @@ EXPORTS PDC_set_scrn_mode
 EXPORTS PDC_sysgetch
 EXPORTS PDC_transform_line
 EXPORTS PDC_ungetch
-EXPORTS PDC_usleep
 EXPORTS PDC_validchar
 EXPORTS PDC_vsscanf
 EXPORTS PDC_freeclipboard

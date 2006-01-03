@@ -531,7 +531,6 @@ FUNCTIONS
 		PDC_sysgetch             pdckbd
 		PDC_transform_line       pdcdisp
 		PDC_ungetch              getch
-		PDC_usleep               pdcutil
 		PDC_validchar            pdckbd
 		PDC_vsscanf              pdcutil
 

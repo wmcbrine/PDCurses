@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.69 2006/01/04 09:08:14 wmcbrine Exp $
+$Id: curses.h,v 1.70 2006/01/04 09:17:35 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1749,14 +1749,6 @@ int     PDC_CDECL resize_term Args(( int, int ));
 WINDOW* PDC_CDECL resize_window Args(( WINDOW*, int, int ));
 #endif
 
-#ifdef OBSOLETE_OR_TBD
-int     PDC_CDECL mvaddrawch Args(( /* int, int, chtype */ ));
-int     PDC_CDECL mvaddrawstr Args(( /* int, int, char* */ ));
-int     PDC_CDECL mvwinsrawch Args(( /* WINDOW*, int, int, chtype */ ));
-int     PDC_CDECL mvinsrawch Args(( /* int, int, chtype */ ));
-int     PDC_CDECL waddrawstr Args(( /* WINDOW*, char* */ ));
-#endif
-
 #ifdef  XCURSES
 void    PDC_CDECL XCursesExit Args(( void ));
 int     PDC_CDECL nocbreak Args(( void ));
@@ -1890,7 +1882,6 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define mvwaddchstr(w,y,x,c)    (wmove( w, y, x )==ERR?ERR:waddchnstr( w, c, -1 ))
 #define mvwaddchnstr(w,y,x,c,n) (wmove( w, y, x )==ERR?ERR:waddchnstr( w, c, n ))
 #define mvwaddrawch(w,y,x,c)    (wmove( w, y, x )==ERR?ERR:waddrawch( w, c ))
-#define mvwaddrawstr(w,y,x,str) (wmove( w, y, x )==ERR?ERR:waddrawstr( w, str ))
 #define mvwaddstr(w,y,x,str)    (wmove( w, y, x )==ERR?ERR:waddstr( w, str ))
 #define mvwdelch(w,y,x)         (wmove( w, y, x )==ERR?ERR:wdelch( w ))
 #define mvwgetch(w,y,x)         (wmove( w, y, x )==ERR?ERR:wgetch( w ))
@@ -1953,7 +1944,6 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 
 #if defined(PDCURSES)
 # define addrawch( c )          waddrawch( stdscr, c )
-# define addrawstr(str)         waddrawstr( stdscr, str )
 # define insrawch( c )          winsrawch( stdscr, c )
 # define waddrawch(w, c)        PDC_chadd( w, (chtype)c, FALSE, TRUE )
 # define winsrawch(w, c)        PDC_chins( w, (chtype)c, FALSE )

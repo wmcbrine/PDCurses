@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.68 2006/01/04 02:26:26 wmcbrine Exp $
+$Id: curses.h,v 1.69 2006/01/04 09:08:14 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1142,9 +1142,7 @@ currently used.)
 # define A_ITALIC        A_INVIS
 # define A_STANDOUT      ( A_BOLD | A_REVERSE )
 # define A_PROTECT       ( A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE )
-
 #else
-
 # define A_NORMAL      (chtype)0x0000                  /* System V */
 # define A_ALTCHARSET  (chtype)0x0000                  /* X/Open   */
 # define A_BLINK       (chtype)0x0400                  /* X/Open   */
@@ -1285,7 +1283,7 @@ extern chtype *acs_map;
 #define ACS_SBSB	ACS_VLINE
 #define ACS_SSSS	ACS_PLUS
 
-/*** Colour macros ***/
+/*** Color macros ***/
 
 #define COLOR_BLACK	0
 
@@ -1304,10 +1302,6 @@ extern chtype *acs_map;
 #define COLOR_YELLOW    (COLOR_RED | COLOR_GREEN)
 
 #define COLOR_WHITE	7
-
-#if defined(WIN32)
-# define MS_MOUSE_MOVED	0x0001
-#endif
 
 #ifdef CHTYPE_LONG
 #define COLOR_PAIR(n)  ((chtype)(n) << 24)
@@ -1986,10 +1980,10 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 /*
  * PDCurses key modifier masks
  */
-#define PDC_KEY_MODIFIER_SHIFT     (1 << 0)
-#define PDC_KEY_MODIFIER_CONTROL   (1 << 1)
-#define PDC_KEY_MODIFIER_ALT       (1 << 2)
-#define PDC_KEY_MODIFIER_NUMLOCK   (1 << 3)
+#define PDC_KEY_MODIFIER_SHIFT     1
+#define PDC_KEY_MODIFIER_CONTROL   2
+#define PDC_KEY_MODIFIER_ALT       4
+#define PDC_KEY_MODIFIER_NUMLOCK   8
 
 /*
  *      Load up curspriv.h. We allow anyone who defines CURSES_LIBRARY

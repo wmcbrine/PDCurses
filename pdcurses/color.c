@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -48,7 +48,7 @@ static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.15 2006/01/04 13:14:47 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.16 2006/01/04 13:39:34 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -56,63 +56,63 @@ char *rcsid_color = "$Id: color.c,v 1.15 2006/01/04 13:14:47 wmcbrine Exp $";
   Name:                                                         color
 
   Synopsis:
-  	int start_color(void);
-  	int init_pair(short pair, short fg, short bg);
-  	int init_color(short color, short red, short green, short blue);
-  	bool has_colors(void);
-  	bool can_change_color(void);
-  	int color_content(short color, short *redp, short *greenp,
+	int start_color(void);
+	int init_pair(short pair, short fg, short bg);
+	int init_color(short color, short red, short green, short blue);
+	bool has_colors(void);
+	bool can_change_color(void);
+	int color_content(short color, short *redp, short *greenp,
 			  short *bluep);
-  	int pair_content(short pair, short *fgp, short *bgp);
-  	int PDC_set_line_color(short color);
+	int pair_content(short pair, short *fgp, short *bgp);
+	int PDC_set_line_color(short color);
 
   X/Open Description:
- 	To use these routines, start_color() must be called, usually
- 	immediately after initscr(). Colors are always used in pairs refered
- 	to as color-pairs. A color-pair consists of a foreground color and
- 	a background color. A color-pair is initialized with init_pair().
- 	After it has been initialized, COLOR_PAIR(n), a macro defined in
- 	<curses.h>, can be used like any other video attribute.
+	To use these routines, start_color() must be called, usually 
+	immediately after initscr(). Colors are always used in pairs 
+	refered to as color-pairs. A color-pair consists of a foreground 
+	color and a background color. A color-pair is initialized with 
+	init_pair(). After it has been initialized, COLOR_PAIR(n), a 
+	macro defined in <curses.h>, can be used like any other video 
+	attribute.
 
- 	start_color() initializes eight basic colors (black,red,green,yellow,
- 	blue,magenta,cyan, and white), and two global variables; COLORS
- 	and COLOR_PAIRS (respectively defining the maximum number of
- 	colors and color-pairs the terminal is capable of displaying).
+	start_color() initializes eight basic colors (black, red, green, 
+	yellow, blue, magenta, cyan, and white), and two global 
+	variables; COLORS and COLOR_PAIRS (respectively defining the 
+	maximum number of colors and color-pairs the terminal is capable 
+	of displaying).
 
- 	init_pair() changes the definitions of a color-pair.
- 	The routine takes three arguments: the number of the color-pair
- 	to be redefined, and the new values of the foreground and
- 	background colors.
- 	The value of color-pair must be between 1 and COLOR_PAIRS-1.
- 	The values of foreground and background must be between 0 and
- 	COLORS-1 (this is a PDCurses abberation; normally it is 0 and
- 	COLORS).
- 	If the color pair was previously initialized, the screen is refreshed
- 	and all occurrences of that color-pair are changed to the new
- 	definition.
+	init_pair() changes the definitions of a color-pair. The routine 
+	takes three arguments: the number of the color-pair to be 
+	redefined, and the new values of the foreground and background 
+	colors. The value of color-pair must be between 1 and 
+	COLOR_PAIRS - 1. The values of foreground and background must be 
+	between 0 and COLORS - 1 (this is a PDCurses abberation; 
+	normally it is 0 and COLORS). If the color pair was previously 
+	initialized, the screen is refreshed and all occurrences of that 
+	color-pair are changed to the new definition.
 
- 	has_colors() indicates if the terminal supports, and can maniplulate
- 	color. It returns TRUE or FALSE.
+	has_colors() indicates if the terminal supports, and can 
+	maniplulate color. It returns TRUE or FALSE.
 
- 	can_change_color() indicates if the terminal has the capability
- 	to change the definition of its colors. Although this is possible,
- 	at least with VGA monitors, this function always returns FALSE.
+	can_change_color() indicates if the terminal has the capability
+	to change the definition of its colors. Although this is possible,
+	at least with VGA monitors, this function always returns FALSE.
 
- 	pair_content() is used to determine what the colors of a given
- 	color-pair consist of.
+	pair_content() is used to determine what the colors of a given
+	color-pair consist of.
 
- 	PDC_set_line_color() is used to set the color, globally, for the
- 	color of the lines drawn for the attributes: A_UNDERLINE, A_OVERLINE,
- 	A_LEFTLINE and A_RIGHTLINE.  PDCurses only feature.
+	PDC_set_line_color() is used to set the color, globally, for the 
+	color of the lines drawn for the attributes: A_UNDERLINE, 
+	A_OVERLINE, A_LEFTLINE and A_RIGHTLINE.  PDCurses only feature.
 
- 	NOTE: has_colors() is implemented as a macro.
+	NOTE: has_colors() is implemented as a macro.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error except for
- 	has_colors() and can_change_colors() which return TRUE or FALSE.
+	All functions return OK on success and ERR on error except for
+	has_colors() and can_change_colors() which return TRUE or FALSE.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V   PDCurses
                                           Dec '88

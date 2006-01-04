@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.65 2006/01/03 23:43:58 wmcbrine Exp $
+$Id: curses.h,v 1.66 2006/01/04 00:19:50 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1291,63 +1291,27 @@ extern chtype *acs_map;
 
 #define COLOR_BLACK		0
 
-#if defined (XCURSES)
+#if defined(XCURSES)
 # define COLOR_RED		1
 # define COLOR_GREEN		2
 # define COLOR_BLUE		4
 
-#elif defined(DOS) || defined(OS2)
+#elif defined(DOS) || defined(OS2) || defined(WIN32)
 
 # define COLOR_BLUE		1
 # define COLOR_GREEN		2
 # define COLOR_RED		4
-
-#elif defined(WIN32)
-
-# define MS_MOUSE_MOVED	0x0001
-/*
- * These defines taken directly from windows.h to reduce
- * compilation time by only #include'ing <windows.h>
- * when absolutely necesssary. Cygnus-W32 #defines all of these
- * so we need to check for that.
- */
-# ifndef FOREGROUND_BLUE
-#  define FOREGROUND_BLUE	0x0001
-# endif
-# ifndef FOREGROUND_GREEN
-#  define FOREGROUND_GREEN	0x0002
-# endif
-# ifndef FOREGROUND_RED
-#  define FOREGROUND_RED	0x0004
-# endif
-# ifndef FOREGROUND_INTENSITY
-#  define FOREGROUND_INTENSITY	0x0008		/* BOLD */
-# endif
-# define  FOREGROUND_MASK 0x000F
-
-# ifndef BACKGROUND_BLUE
-#  define BACKGROUND_BLUE	0x0010
-# endif
-# ifndef BACKGROUND_GREEN
-#  define BACKGROUND_GREEN	0x0020
-# endif
-# ifndef BACKGROUND_RED
-#  define BACKGROUND_RED	0x0040
-# endif
-# ifndef BACKGROUND_INTENSITY
-#  define BACKGROUND_INTENSITY	0x0080		/* BLINK */
-# endif
-# define  BACKGROUND_MASK 0x00F0
-
-# define COLOR_BLUE      FOREGROUND_BLUE
-# define COLOR_RED       FOREGROUND_RED
-# define COLOR_GREEN     FOREGROUND_GREEN
 #endif
 
 #define COLOR_CYAN      (COLOR_BLUE | COLOR_GREEN)
 #define COLOR_MAGENTA   (COLOR_RED | COLOR_BLUE)
 #define COLOR_YELLOW    (COLOR_RED | COLOR_GREEN)
-#define COLOR_WHITE     (COLOR_RED | COLOR_GREEN | COLOR_BLUE)
+
+#define COLOR_WHITE		7
+
+#if defined(WIN32)
+# define MS_MOUSE_MOVED	0x0001
+#endif
 
 #ifdef CHTYPE_LONG
 #define COLOR_PAIR(n)  ((chtype)(n) << 24)

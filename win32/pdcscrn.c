@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.14 2006/01/03 19:54:29 wmcbrine Exp $";
+char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.15 2006/01/04 00:19:50 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -206,8 +206,8 @@ int   PDC_scr_open(SCREEN *internal, bool echo)
    if ( getenv( "PDC_ORIGINAL_COLORS" ) != NULL )
    {
       chtype orig_back, orig_fore;
-      orig_fore = csbi.wAttributes & FOREGROUND_MASK;
-      orig_back = (csbi.wAttributes & BACKGROUND_MASK) >> 4;
+      orig_fore = csbi.wAttributes & 0x0f;
+      orig_back = (csbi.wAttributes & 0xf0) >> 4;
       internal->orig_attr = (orig_back << 16) | orig_fore;
    }
    else

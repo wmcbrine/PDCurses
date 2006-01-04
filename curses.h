@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.66 2006/01/04 00:19:50 wmcbrine Exp $
+$Id: curses.h,v 1.67 2006/01/04 00:41:32 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1171,11 +1171,17 @@ currently used.)
 
 /*** Alternate character set macros ***/
 
+/* ALTCHARSET definitions for PC from jshumate@wrdis01.robins.af.mil
+   These match code page 437 and compatible pages (CP850, CP852, etc.)
+*/
+
 #ifdef XCURSES
 extern chtype *acs_map;
+#endif
 
 /* VT100-compatible symbols -- box chars */
 
+#ifdef XCURSES
 # define ACS_ULCORNER	(acs_map['l'])
 # define ACS_LLCORNER	(acs_map['m'])
 # define ACS_URCORNER	(acs_map['k'])
@@ -1187,49 +1193,7 @@ extern chtype *acs_map;
 # define ACS_HLINE	(acs_map['q'])
 # define ACS_VLINE	(acs_map['x'])
 # define ACS_PLUS	(acs_map['n'])
-
-/* VT100-compatible symbols -- other */
-
-# define ACS_S1		(acs_map['o'])
-# define ACS_S9		(acs_map['s'])
-# define ACS_DIAMOND	(acs_map['\''])
-# define ACS_CKBOARD	(acs_map['a'])
-# define ACS_DEGREE	(acs_map['f'])
-# define ACS_PLMINUS	(acs_map['g'])
-# define ACS_BULLET	(acs_map['~'])
-
-/* Teletype 5410v1 symbols -- these are defined in SysV curses, but
-   are not well-supported by most terminals. Stick to VT100 characters
-   for optimum portability.
-*/
-# define ACS_LARROW	(acs_map[','])
-# define ACS_RARROW	(acs_map['+'])
-# define ACS_DARROW	(acs_map['.'])
-# define ACS_UARROW	(acs_map['-'])
-# define ACS_BOARD	(acs_map['h'])
-# define ACS_LANTERN	(acs_map['i'])
-# define ACS_BLOCK	(acs_map['0'])
-
-/* That goes double for these -- undocumented SysV symbols. Don't use
-   them. Also, the definitions here aren't compatible with as many
-   code pages as those above.
-*/
-# define ACS_S3		(acs_map['p'])
-# define ACS_S7		(acs_map['r'])
-# define ACS_LEQUAL	(acs_map['y'])
-# define ACS_GEQUAL	(acs_map['z'])
-# define ACS_PI		(acs_map['{'])
-# define ACS_NEQUAL	(acs_map['|'])
-# define ACS_STERLING	(acs_map['}'])
-
-#else	/* not XCURSES -- DOS, OS2 or WIN32 */
-
-/* ALTCHARSET definitions from jshumate@wrdis01.robins.af.mil
-   These match code page 437 and compatible pages (CP850, CP852, etc.)
-*/
-
-/* VT100 box */
-
+#else
 # define ACS_ULCORNER	(chtype)0xda
 # define ACS_LLCORNER	(chtype)0xc0
 # define ACS_URCORNER	(chtype)0xbf
@@ -1241,9 +1205,19 @@ extern chtype *acs_map;
 # define ACS_HLINE	(chtype)0xc4
 # define ACS_VLINE	(chtype)0xb3
 # define ACS_PLUS	(chtype)0xc5
+#endif
 
-/* VT100 other */
+/* VT100-compatible symbols -- other */
 
+#ifdef XCURSES
+# define ACS_S1		(acs_map['o'])
+# define ACS_S9		(acs_map['s'])
+# define ACS_DIAMOND	(acs_map['\''])
+# define ACS_CKBOARD	(acs_map['a'])
+# define ACS_DEGREE	(acs_map['f'])
+# define ACS_PLMINUS	(acs_map['g'])
+# define ACS_BULLET	(acs_map['~'])
+#else
 # define ACS_S1		(chtype)0x2d
 # define ACS_S9		(chtype)0x5f
 # define ACS_DIAMOND	((chtype)0x04 | A_ALTCHARSET)
@@ -1251,9 +1225,21 @@ extern chtype *acs_map;
 # define ACS_DEGREE	(chtype)0xf8
 # define ACS_PLMINUS	(chtype)0xf1
 # define ACS_BULLET	(chtype)0xf9
+#endif
 
-/* Teletype 5410v1 */
-
+/* Teletype 5410v1 symbols -- these are defined in SysV curses, but
+   are not well-supported by most terminals. Stick to VT100 characters
+   for optimum portability.
+*/
+#ifdef XCURSES
+# define ACS_LARROW	(acs_map[','])
+# define ACS_RARROW	(acs_map['+'])
+# define ACS_DARROW	(acs_map['.'])
+# define ACS_UARROW	(acs_map['-'])
+# define ACS_BOARD	(acs_map['h'])
+# define ACS_LANTERN	(acs_map['i'])
+# define ACS_BLOCK	(acs_map['0'])
+#else
 # define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)
 # define ACS_RARROW	((chtype)0x1a | A_ALTCHARSET)
 # define ACS_DARROW	((chtype)0x19 | A_ALTCHARSET)
@@ -1261,9 +1247,21 @@ extern chtype *acs_map;
 # define ACS_BOARD	(chtype)0xb0
 # define ACS_LANTERN	((chtype)0x0f | A_ALTCHARSET)
 # define ACS_BLOCK	(chtype)0xdb
+#endif
 
-/* Undocumented */
-
+/* That goes double for these -- undocumented SysV symbols. Don't use
+   them. Also, the definitions here aren't compatible with as many
+   code pages as those above.
+*/
+#ifdef XCURSES
+# define ACS_S3		(acs_map['p'])
+# define ACS_S7		(acs_map['r'])
+# define ACS_LEQUAL	(acs_map['y'])
+# define ACS_GEQUAL	(acs_map['z'])
+# define ACS_PI		(acs_map['{'])
+# define ACS_NEQUAL	(acs_map['|'])
+# define ACS_STERLING	(acs_map['}'])
+#else
 # define ACS_S3         (chtype)0x2d
 # define ACS_S7         (chtype)0x2d
 # define ACS_LEQUAL     (chtype)0xf3
@@ -1289,25 +1287,23 @@ extern chtype *acs_map;
 
 /*** Colour macros ***/
 
-#define COLOR_BLACK		0
+#define COLOR_BLACK	0
 
-#if defined(XCURSES)
-# define COLOR_RED		1
-# define COLOR_GREEN		2
-# define COLOR_BLUE		4
-
-#elif defined(DOS) || defined(OS2) || defined(WIN32)
-
-# define COLOR_BLUE		1
-# define COLOR_GREEN		2
-# define COLOR_RED		4
+#if defined(XCURSES)	/* RGB */
+# define COLOR_RED	1
+# define COLOR_GREEN	2
+# define COLOR_BLUE	4
+#else			/* BGR */
+# define COLOR_BLUE	1
+# define COLOR_GREEN	2
+# define COLOR_RED	4
 #endif
 
 #define COLOR_CYAN      (COLOR_BLUE | COLOR_GREEN)
 #define COLOR_MAGENTA   (COLOR_RED | COLOR_BLUE)
 #define COLOR_YELLOW    (COLOR_RED | COLOR_GREEN)
 
-#define COLOR_WHITE		7
+#define COLOR_WHITE	7
 
 #if defined(WIN32)
 # define MS_MOUSE_MOVED	0x0001

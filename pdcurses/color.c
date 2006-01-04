@@ -42,13 +42,13 @@
 #endif
 
 #ifdef HAVE_PROTO
-static int PDC_init_pair(short,short,short);
+static void PDC_init_pair(short, short, short);
 #else
-static int PDC_init_pair();
+static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color  = "$Id: color.c,v 1.14 2006/01/03 20:07:15 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.15 2006/01/04 13:14:47 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -61,7 +61,8 @@ char *rcsid_color  = "$Id: color.c,v 1.14 2006/01/03 20:07:15 wmcbrine Exp $";
   	int init_color(short color, short red, short green, short blue);
   	bool has_colors(void);
   	bool can_change_color(void);
-  	int color_content(short color, short *redp, short *greenp, short *bluep);
+  	int color_content(short color, short *redp, short *greenp,
+			  short *bluep);
   	int pair_content(short pair, short *fgp, short *bgp);
   	int PDC_set_line_color(short color);
 
@@ -85,7 +86,7 @@ char *rcsid_color  = "$Id: color.c,v 1.14 2006/01/03 20:07:15 wmcbrine Exp $";
  	The value of color-pair must be between 1 and COLOR_PAIRS-1.
  	The values of foreground and background must be between 0 and
  	COLORS-1 (this is a PDCurses abberation; normally it is 0 and
- 	COLORS)
+ 	COLORS).
  	If the color pair was previously initialized, the screen is refreshed
  	and all occurrences of that color-pair are changed to the new
  	definition.
@@ -126,55 +127,58 @@ char *rcsid_color  = "$Id: color.c,v 1.14 2006/01/03 20:07:15 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-int	COLORS = PDC_COLORS;
-int	COLOR_PAIRS = PDC_COLOR_PAIRS;
+int COLORS = PDC_COLORS;
+int COLOR_PAIRS = PDC_COLOR_PAIRS;
+
+/* COLOR_PAIR to attribute encoding table. */
 
 #if defined(CHTYPE_LONG)
-#   if defined(XCURSES)
-unsigned char *atrtab=NULL;
-#   else
-unsigned char atrtab[MAX_ATRTAB]; /* COLOR_PAIR to attribute encoding table. */
-#   endif
+# if defined(XCURSES)
+unsigned char *atrtab = NULL;
+# else
+unsigned char atrtab[MAX_ATRTAB];
+# endif
 #else
-unsigned char  atrtab[MAX_ATRTAB] = /* COLOR_PAIR to attribute encoding table. */
- {0x07,0x0F,0x70,0x78,0x87,0x8F,0xF0,0xF8, /* A_NORMAL */
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
-  0x70,0x00,0x17,0x00,0x00,0x00,0x00,0x00  /* for flash() */
-  };
+unsigned char atrtab[MAX_ATRTAB] = 
+{
+	0x07,0x0F,0x70,0x78,0x87,0x8F,0xF0,0xF8, /* A_NORMAL */
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x00,0x08,0x70,0x78,0x80,0x88,0xF0,0xF8,
+	0x70,0x00,0x17,0x00,0x00,0x00,0x00,0x00  /* for flash() */
+};
 #endif
 
-unsigned char colourset[PDC_COLOR_PAIRS];
+unsigned char colorset[PDC_COLOR_PAIRS];
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -184,56 +188,62 @@ int	PDC_CDECL	start_color()
 #endif
 /***********************************************************************/
 {
- PDC_LOG(("start_color() - called\n"));
+	PDC_LOG(("start_color() - called\n"));
 
- if (SP->mono)
-    return(ERR);
- COLORS = 8;
+	if (SP->mono)
+		return ERR;
+
+	COLORS = 8;
+
 #if defined(CHTYPE_LONG)
- COLOR_PAIRS = PDC_COLOR_PAIRS;
-/* PDC_init_atrtab(); - already done in initscr() */
+	COLOR_PAIRS = PDC_COLOR_PAIRS;
+	/* PDC_init_atrtab(); - already done in initscr() */
 #else
- COLOR_PAIRS = 33;  /* actually only allows 32 */
+	COLOR_PAIRS = 33;  /* actually only allows 32 */
 #endif
- memset(colourset,0,PDC_COLOR_PAIRS);
- return(OK);
+	memset(colorset, 0, PDC_COLOR_PAIRS);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	init_pair(short colorpair,short foreground,short background)
+int	PDC_CDECL	init_pair(short colorpair, short foreground,
+				  short background)
 #else
-int	PDC_CDECL	init_pair(colorpair,foreground,background)
+int	PDC_CDECL	init_pair(colorpair, foreground, background)
 short colorpair;
 short foreground;
 short background;
 #endif
 /***********************************************************************/
 {
- short oldforeground, oldbackground;
 #if defined(CHTYPE_LONG) && !defined(XCURSES)
 # define USE_PDC_INIT
-#else
- unsigned char norm;
 #endif
+	short oldforeground, oldbackground;
+#ifndef USE_PDC_INIT
+	unsigned char norm;
+#endif
+	PDC_LOG(("init_pair() - called: colorpair %d fore %d back %d\n",
+		colorpair, foreground, background));
 
- PDC_LOG(("init_pair() - called: colorpair %d fore %d back %d\n",colorpair,foreground,background));
+	if (colorpair >= COLOR_PAIRS || colorpair < 1)
+		return ERR;
 
- if (colorpair >= COLOR_PAIRS || colorpair < 1)
-    return(ERR);
-
- oldforeground = (short)(atrtab[colorpair*PDC_OFFSET] & 0x0F);
- oldbackground = (short)((atrtab[colorpair*PDC_OFFSET] & 0xF0)>>4);
+	oldforeground = (short)(atrtab[colorpair * PDC_OFFSET] & 0x0F);
+	oldbackground = (short)((atrtab[colorpair * PDC_OFFSET] & 0xF0) >> 4);
 
 #ifdef USE_PDC_INIT
- PDC_init_pair(colorpair,foreground,background);
+	PDC_init_pair(colorpair, foreground, background);
 #else
- norm = (unsigned char)(foreground & 0x0007) + ((background & 0x0007)<<4);
+	norm = (unsigned char)(foreground & 0x0007) +
+		((background & 0x0007) << 4);
 
- atrtab[(colorpair*PDC_OFFSET)+0] = norm;                         /* normal */
+	atrtab[(colorpair * PDC_OFFSET)] = norm;		/* normal */
 # ifndef XCURSES
- atrtab[(colorpair*PDC_OFFSET)+1] = norm + 8;                       /* bold */
- atrtab[(colorpair*PDC_OFFSET)+4] = norm + 128;                    /* blink */
- atrtab[(colorpair*PDC_OFFSET)+5] = norm + 8 + 128;           /* bold-blink */
+	atrtab[(colorpair * PDC_OFFSET) + 1] = norm + 8;	/* bold */
+	atrtab[(colorpair * PDC_OFFSET) + 4] = norm + 128;	/* blink */
+	atrtab[(colorpair * PDC_OFFSET) + 5] = norm + 8 + 128;	/* bold-blink */
 # endif
 #endif
 
@@ -242,14 +252,15 @@ short background;
  * curscr if this call to init_pair() alters a color pair created
  * by the user.
  */
- if (colourset[colorpair])
-   {
-    if ( oldforeground != foreground || oldbackground != background )
-        curscr->_clear = TRUE;
-   }
- colourset[colorpair] = TRUE;
- return(OK);
+	if (colorset[colorpair])
+	{
+	    if ( oldforeground != foreground || oldbackground != background )
+		curscr->_clear = TRUE;
+	}
+	colorset[colorpair] = TRUE;
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 bool	PDC_CDECL	has_colors(void)
@@ -260,15 +271,15 @@ bool	PDC_CDECL	has_colors()
 {
 	PDC_LOG(("has_colors() - called\n"));
 
-	if (SP->mono)
-		return(FALSE);
-	return(TRUE);
+	return SP->mono ? FALSE : TRUE;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	init_color(short color,short red,short green,short blue)
+int	PDC_CDECL	init_color(short color, short red, short green,
+				   short blue)
 #else
-int	PDC_CDECL	init_color(color,red,green,blue)
+int	PDC_CDECL	init_color(color, red, green, blue)
 short color;
 short red;
 short green;
@@ -278,13 +289,15 @@ short blue;
 {
 	PDC_LOG(("init_color() - called\n"));
 
-	return(ERR);
+	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	color_content(short color,short *red,short *green,short *blue)
+int	PDC_CDECL	color_content(short color, short *red, short *green,
+				      short *blue)
 #else
-int	PDC_CDECL	color_content(color,red,green,blue)
+int	PDC_CDECL	color_content(color, red, green, blue)
 short color;
 short *red;
 short *green;
@@ -299,14 +312,15 @@ short *blue;
 	*/
 
 	if ((color >= COLORS || color < 0) || (!red || !green || !blue))
-		return(ERR);
+		return ERR;
 
 	*red = (color & COLOR_RED) ? 680 : 0;
 	*green = (color & COLOR_GREEN) ? 680 : 0;
 	*blue = (color & COLOR_BLUE) ? 680 : 0;
 
-	return(OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	can_change_color(void)
@@ -317,29 +331,33 @@ int	PDC_CDECL	can_change_color()
 {
 	PDC_LOG(("can_change_color() - called\n"));
 
-	return(FALSE);
+	return FALSE;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	pair_content(int colorpair,short *foreground,short *background)
+int	PDC_CDECL	pair_content(int colorpair, short *foreground,
+				     short *background)
 #else
-int	PDC_CDECL	pair_content(colorpair,foreground,background)
+int	PDC_CDECL	pair_content(colorpair, foreground, background)
 int colorpair;
 short *foreground;
 short *background;
 #endif
 /***********************************************************************/
 {
+	PDC_LOG(("pair_content() - called\n"));
 
- if ((colorpair >= COLOR_PAIRS || colorpair < 1) ||
-     (!foreground || !background))
-	return(ERR);
+	if ((colorpair >= COLOR_PAIRS || colorpair < 1) ||
+	    (!foreground || !background))
+		return ERR;
 
- *foreground = (short)(atrtab[colorpair*PDC_OFFSET] & 0x0F);
- *background = (short)((atrtab[colorpair*PDC_OFFSET] & 0xF0)>>4);
+	*foreground = (short)(atrtab[colorpair * PDC_OFFSET] & 0x0F);
+	*background = (short)((atrtab[colorpair * PDC_OFFSET] & 0xF0) >> 4);
 
- return(OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_set_line_color(short color)
@@ -349,82 +367,75 @@ short color;
 #endif
 /***********************************************************************/
 {
-   if (color >= COLORS || color < 0)
-      return(ERR);
-   SP->line_color = color;
-   return(OK);
+	if (color >= COLORS || color < 0)
+		return ERR;
+
+	SP->line_color = color;
+
+	return OK;
 }
 
 #if defined(CHTYPE_LONG)
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_init_atrtab(void)
+void	PDC_init_atrtab(void)
 #else
-int	PDC_init_atrtab()
+void	PDC_init_atrtab()
 #endif
 /***********************************************************************/
 {
-   int orig_fore, orig_back;
-   register int i;
+	int i, orig_fore, orig_back;
 
-   if ( SP->orig_attr == 0 )
-   {
-      orig_fore = COLOR_WHITE;
-      orig_back = COLOR_BLACK;
-   }
-   else
-   {
-      orig_fore = SP->orig_attr & A_CHARTEXT;
-      orig_back = (SP->orig_attr & A_ATTRIBUTES) >> 16;
-   }
+	if ( SP->orig_attr == 0 )
+	{
+		orig_fore = COLOR_WHITE;
+		orig_back = COLOR_BLACK;
+	}
+	else
+	{
+		orig_fore = SP->orig_attr & A_CHARTEXT;
+		orig_back = (SP->orig_attr & A_ATTRIBUTES) >> 16;
+	}
 
-   for ( i = 0; i <PDC_COLOR_PAIRS; i++ )
-      PDC_init_pair( i, orig_fore, orig_back );
-   PDC_init_pair( PDC_COLOR_PAIRS, orig_back, orig_fore );
-   return(0);
+	for ( i = 0; i < PDC_COLOR_PAIRS; i++ )
+		PDC_init_pair( i, orig_fore, orig_back );
+
+	PDC_init_pair( PDC_COLOR_PAIRS, orig_back, orig_fore );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-static	int PDC_init_pair(short pairnum,short fg,short bg)
+static	void PDC_init_pair(short pairnum, short fg, short bg)
 #else
-static	int PDC_init_pair(pairnum,fg,bg)
+static	void PDC_init_pair(pairnum, fg, bg)
 short pairnum;
 short fg;
 short bg;
 #endif
 /***********************************************************************/
 {
-   register int i;
-   unsigned char temp_bg;
-   int ttt,uuu;
+	unsigned char att, temp_bg;
+	attr_t i;
 
-   for (i=0;i<PDC_OFFSET;i++)
-   {
-      atrtab[(pairnum*PDC_OFFSET)+i] = fg | (bg << 4);
-      ttt = A_REVERSE >> 19;
-      uuu = i&ttt;
-      if (uuu == ttt)
-         atrtab[(pairnum*PDC_OFFSET)+i] = bg | (fg << 4);
-      ttt = A_UNDERLINE >> 19;
-      uuu = i&ttt;
-      if (uuu == ttt)
-         atrtab[(pairnum*PDC_OFFSET)+i] = 1;
-      ttt = A_INVIS >> 19;
-      uuu = i&ttt;
-      if (uuu == ttt)
-      {
-         temp_bg = (atrtab[(pairnum*PDC_OFFSET)+i])>>4;
-         atrtab[(pairnum*PDC_OFFSET)+i] = temp_bg<<4|temp_bg;
-      }
-      ttt = A_BOLD >> 19;
-      uuu = i&ttt;
-      if (uuu == ttt)
-         atrtab[(pairnum*PDC_OFFSET)+i] |= 8;
-      ttt = A_BLINK >> 19;
-      uuu = i&ttt;
-      if (uuu == ttt)
-         atrtab[(pairnum*PDC_OFFSET)+i] |= 128;
-   }
-   return(0);
+	for (i = 0; i < PDC_OFFSET; i++)
+	{
+		att = fg | (bg << 4);
+
+		if (i & (A_REVERSE >> 19))
+			att = bg | (fg << 4);
+		if (i & (A_UNDERLINE >> 19))
+			att = 1;
+		if (i & (A_INVIS >> 19))
+		{
+			temp_bg = att >> 4;
+			att = temp_bg << 4 | temp_bg;
+		}
+		if (i & (A_BOLD >> 19))
+			att |= 8;
+		if (i & (A_BLINK >> 19))
+			att |= 128;
+
+		atrtab[(pairnum * PDC_OFFSET) + i] = att;
+	}
 }
 #endif

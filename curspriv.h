@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.15 2006/01/03 20:07:14 wmcbrine Exp $
+$Id: curspriv.h,v 1.16 2006/01/04 13:14:46 wmcbrine Exp $
 */
 /*
 *
@@ -295,7 +295,7 @@ int             PDC_get_font Args(( void ));
 int             PDC_get_rows Args(( void ));
 int             PDC_get_buffer_rows Args(( void ));
 int             PDC_gotoxy Args(( int, int ));
-int             PDC_init_atrtab Args((void));
+void            PDC_init_atrtab Args((void));
 WINDOW*         PDC_makenew Args(( int, int, int, int ));
 int             PDC_mouse_in_slk Args(( int, int ));
 int             PDC_newline Args(( WINDOW*, int ));

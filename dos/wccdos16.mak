@@ -50,7 +50,7 @@ CCFLAGS		= /bt=$(TARGET) /zq /m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LINK		= wlink
 
-LIBEXE		= wlib /q /n
+LIBEXE		= wlib /q /n /t
 
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
@@ -371,7 +371,7 @@ tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\xmas.c
 
-dist: $(PDCLIBS)
+dist: .symbolic $(PDCLIBS)
 	echo PDCurses $(VERDOT) for Watcom C++ 16bit DOS > file_id.diz
 	echo ------------------------------------------ >> file_id.diz
 	echo Public Domain Curses library for >> file_id.diz

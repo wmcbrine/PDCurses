@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.67 2006/01/04 00:41:32 wmcbrine Exp $
+$Id: curses.h,v 1.68 2006/01/04 02:26:26 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1412,50 +1412,50 @@ extern chtype *acs_map;
 #define KEY_SUSPEND    0x195   /* suspend key                   */
 #define KEY_UNDO       0x196   /* undo key                      */
 
-/* PDCurses specific key definitions */
+/* PDCurses-specific key definitions -- PC only */
 
-#define ALT_0           0x197   /* Alt-0                PC only  */
-#define ALT_1           0x198   /* Alt-1                PC only  */
-#define ALT_2           0x199   /* Alt-2                PC only  */
-#define ALT_3           0x19a   /* Alt-3                PC only  */
-#define ALT_4           0x19b   /* Alt-4                PC only  */
-#define ALT_5           0x19c   /* Alt-5                PC only  */
-#define ALT_6           0x19d   /* Alt-6                PC only  */
-#define ALT_7           0x19e   /* Alt-7                PC only  */
-#define ALT_8           0x19f   /* Alt-8                PC only  */
-#define ALT_9           0x1a0   /* Alt-9                PC only  */
-#define ALT_A           0x1a1   /* Alt-A                PC only  */
-#define ALT_B           0x1a2   /* Alt-B                PC only  */
-#define ALT_C           0x1a3   /* Alt-C                PC only  */
-#define ALT_D           0x1a4   /* Alt-D                PC only  */
-#define ALT_E           0x1a5   /* Alt-E                PC only  */
-#define ALT_F           0x1a6   /* Alt-F                PC only  */
-#define ALT_G           0x1a7   /* Alt-G                PC only  */
-#define ALT_H           0x1a8   /* Alt-H                PC only  */
-#define ALT_I           0x1a9   /* Alt-I                PC only  */
-#define ALT_J           0x1aa   /* Alt-J                PC only  */
-#define ALT_K           0x1ab   /* Alt-K                PC only  */
-#define ALT_L           0x1ac   /* Alt-L                PC only  */
-#define ALT_M           0x1ad   /* Alt-M                PC only  */
-#define ALT_N           0x1ae   /* Alt-N                PC only  */
-#define ALT_O           0x1af   /* Alt-O                PC only  */
-#define ALT_P           0x1b0   /* Alt-P                PC only  */
-#define ALT_Q           0x1b1   /* Alt-Q                PC only  */
-#define ALT_R           0x1b2   /* Alt-R                PC only  */
-#define ALT_S           0x1b3   /* Alt-S                PC only  */
-#define ALT_T           0x1b4   /* Alt-T                PC only  */
-#define ALT_U           0x1b5   /* Alt-U                PC only  */
-#define ALT_V           0x1b6   /* Alt-V                PC only  */
-#define ALT_W           0x1b7   /* Alt-W                PC only  */
-#define ALT_X           0x1b8   /* Alt-X                PC only  */
-#define ALT_Y           0x1b9   /* Alt-Y                PC only  */
-#define ALT_Z           0x1ba   /* Alt-Z                PC only  */
-#define CTL_LEFT        0x1bb   /* Control-Left-Arrow   PC only  */
-#define CTL_RIGHT       0x1bc   /* Control-Right-Arrow  PC only  */
-#define CTL_PGUP        0x1bd   /* Control-PgUp         PC only  */
-#define CTL_PGDN        0x1be   /* Control-PgDn         PC only  */
-#define CTL_HOME        0x1bf   /* Control-Home         PC only  */
-#define CTL_END         0x1c0   /* Control-End          PC only  */
+#define ALT_0           0x197
+#define ALT_1           0x198
+#define ALT_2           0x199
+#define ALT_3           0x19a
+#define ALT_4           0x19b
+#define ALT_5           0x19c
+#define ALT_6           0x19d
+#define ALT_7           0x19e
+#define ALT_8           0x19f
+#define ALT_9           0x1a0
+#define ALT_A           0x1a1
+#define ALT_B           0x1a2
+#define ALT_C           0x1a3
+#define ALT_D           0x1a4
+#define ALT_E           0x1a5
+#define ALT_F           0x1a6
+#define ALT_G           0x1a7
+#define ALT_H           0x1a8
+#define ALT_I           0x1a9
+#define ALT_J           0x1aa
+#define ALT_K           0x1ab
+#define ALT_L           0x1ac
+#define ALT_M           0x1ad
+#define ALT_N           0x1ae
+#define ALT_O           0x1af
+#define ALT_P           0x1b0
+#define ALT_Q           0x1b1
+#define ALT_R           0x1b2
+#define ALT_S           0x1b3
+#define ALT_T           0x1b4
+#define ALT_U           0x1b5
+#define ALT_V           0x1b6
+#define ALT_W           0x1b7
+#define ALT_X           0x1b8
+#define ALT_Y           0x1b9
+#define ALT_Z           0x1ba
+#define CTL_LEFT        0x1bb   /* Control-Left-Arrow    */
+#define CTL_RIGHT       0x1bc   /* Control-Right-Arrow   */
+#define CTL_PGUP        0x1bd   /* Control-PgUp          */
+#define CTL_PGDN        0x1be   /* Control-PgDn          */
+#define CTL_HOME        0x1bf   /* Control-Home          */
+#define CTL_END         0x1c0   /* Control-End           */
 
 #if defined(DOS)  || defined (OS2) || defined(XCURSES) || defined(WIN32)
 # define KEY_A1          0x1c1   /* upper left on Virtual keypad  */
@@ -1515,7 +1515,7 @@ extern chtype *acs_map;
 # define ALT_FSLASH      0x1f7   /* alt-forward slash             */
 # define ALT_BKSP        0x1f8   /* alt-backspace                 */
 # define CTL_BKSP        0x1f9   /* ctl-backspace                 */
-# define PAD0            0x1fa   /* ctl-keypad 0                  */
+# define PAD0            0x1fa   /* keypad 0                      */
 # define CTL_PAD0        0x1fb   /* ctl-keypad 0                  */
 # define CTL_PAD1        0x1fc   /* ctl-keypad 1                  */
 # define CTL_PAD2        0x1fd   /* ctl-keypad 2                  */
@@ -1526,16 +1526,16 @@ extern chtype *acs_map;
 # define CTL_PAD7        0x202   /* ctl-keypad 7                  */
 # define CTL_PAD8        0x203   /* ctl-keypad 8                  */
 # define CTL_PAD9        0x204   /* ctl-keypad 9                  */
-# define ALT_PAD0        0x205   /* ctl-keypad 0                  */
-# define ALT_PAD1        0x206   /* ctl-keypad 1                  */
-# define ALT_PAD2        0x207   /* ctl-keypad 2                  */
-# define ALT_PAD3        0x208   /* ctl-keypad 3                  */
-# define ALT_PAD4        0x209   /* ctl-keypad 4                  */
-# define ALT_PAD5        0x20a   /* ctl-keypad 5                  */
-# define ALT_PAD6        0x20b   /* ctl-keypad 6                  */
-# define ALT_PAD7        0x20c   /* ctl-keypad 7                  */
-# define ALT_PAD8        0x20d   /* ctl-keypad 8                  */
-# define ALT_PAD9        0x20e   /* ctl-keypad 9                  */
+# define ALT_PAD0        0x205   /* alt-keypad 0                  */
+# define ALT_PAD1        0x206   /* alt-keypad 1                  */
+# define ALT_PAD2        0x207   /* alt-keypad 2                  */
+# define ALT_PAD3        0x208   /* alt-keypad 3                  */
+# define ALT_PAD4        0x209   /* alt-keypad 4                  */
+# define ALT_PAD5        0x20a   /* alt-keypad 5                  */
+# define ALT_PAD6        0x20b   /* alt-keypad 6                  */
+# define ALT_PAD7        0x20c   /* alt-keypad 7                  */
+# define ALT_PAD8        0x20d   /* alt-keypad 8                  */
+# define ALT_PAD9        0x20e   /* alt-keypad 9                  */
 # define CTL_DEL         0x20f   /* clt-delete                    */
 # define ALT_BSLASH      0x210   /* alt-back slash                */
 # define CTL_ENTER       0x211   /* ctl-enter                     */
@@ -1992,10 +1992,8 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #define PDC_KEY_MODIFIER_NUMLOCK   (1 << 3)
 
 /*
- *      Load up curspriv.h.     This should be in the same place as
- *      stdlib.h.  We allow anyone who defines CURSES_LIBRARY to have
- *      access to our internal routines.  This provides quick
- *      PC applications at the expense of portability.
+ *      Load up curspriv.h. We allow anyone who defines CURSES_LIBRARY
+ *      to have access to our internal routines.
  */
 #if defined(CURSES_LIBRARY)
 # include <curspriv.h>
@@ -2009,5 +2007,3 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 #endif
 
 #include <stdlib.h>
-
-

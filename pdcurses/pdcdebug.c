@@ -38,68 +38,68 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdebug  = "$Id: pdcdebug.c,v 1.5 2005/11/21 19:39:03 wmcbrine Exp $";
+char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.6 2006/01/05 22:38:28 wmcbrine Exp $";
 #endif
 
-   bool trace_on = FALSE;
+	bool trace_on = FALSE;
 
 /*man-start*********************************************************************
 
   PDC_debug()  - Write debugging info to log file.
 
   PDCurses Description:
-   This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
   PDCurses Return Value:
-   No return value.
+	No return value.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses void PDC_debug( char *,... );
+	PDCurses void PDC_debug(char *, ...);
 
 **man-end**********************************************************************/
 
+/***********************************************************************/
 #ifdef HAVE_STDARG_H_HAVE_PROTO
-void  PDC_CDECL   PDC_debug( char *fmt, ... )
+void  PDC_CDECL   PDC_debug(char *fmt, ...)
 #else
-void  PDC_CDECL   PDC_debug(fmt,va_alist)
+void  PDC_CDECL   PDC_debug(fmt, va_alist)
 char *fmt;
 va_dcl
 #endif
+/***********************************************************************/
 {
-   va_list args;
-   FILE *dbfp;
-   char buffer[256], hms[9];
-   time_t now;
+	va_list args;
+	FILE *dbfp;
+	char hms[9];
+	time_t now;
 
-   /*
-    * open debug log file append
-    */
-   buffer[0] = '\0';
-   if (!trace_on)
-      return; 
-   dbfp = fopen("trace","a");
-   if (dbfp == NULL)
-   {
-      fprintf( stderr, "PDC_debug(): Unable to open debug log file\n" );
-      return;
-   }
+	if (!trace_on)
+		return; 
+
+	/* open debug log file append */
+
+	dbfp = fopen("trace", "a");
+	if (dbfp == NULL)
+	{
+		fprintf(stderr,
+			"PDC_debug(): Unable to open debug log file\n");
+		return;
+	}
+
+	time(&now);
+	strftime(hms, 9, "%H:%M:%S", localtime(&now));
+	fprintf(dbfp, "At: %8.8ld - %s ", (long) clock(), hms);
 
 #ifdef HAVE_STDARG_H_HAVE_PROTO
-   va_start(args, fmt);
+	va_start(args, fmt);
 #else
-   va_start(args);
+	va_start(args);
 #endif
+	vfprintf(dbfp, fmt, args);
+	va_end(args);
 
-   time(&now);
-   strftime(hms, 9, "%H:%M:%S", localtime(&now));
-   fprintf(dbfp, "At: %8.8ld - %s ", (long) clock(), hms);
-
-   vsprintf(buffer,fmt,args);
-   fputs(buffer,dbfp);
-   va_end(args);
-   fclose(dbfp);
-   return;
+	fclose(dbfp);
 }

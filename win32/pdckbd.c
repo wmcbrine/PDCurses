@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.22 2006/01/04 09:08:14 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.23 2006/01/06 10:23:28 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE

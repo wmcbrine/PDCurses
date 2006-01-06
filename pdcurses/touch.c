@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_touch  = "$Id: touch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_touch = "$Id: touch.c,v 1.3 2006/01/06 08:43:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -46,43 +46,43 @@ char *rcsid_touch  = "$Id: touch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                         touch
 
   Synopsis:
-  	int touchwin(WINDOW *win);
-  	int touchline(WINDOW *win, int start,int count);
-  	int untouchwin(WINDOW *win);
-  	int wtouchln(WINDOW *win, int y, int n, int changed);
-  	int is_linetouched(WINDOW *win,int line);
-  	int is_wintouched(WINDOW *win);
+	int touchwin(WINDOW *win);
+	int touchline(WINDOW *win, int start, int count);
+	int untouchwin(WINDOW *win);
+	int wtouchln(WINDOW *win, int y, int n, int changed);
+	bool is_linetouched(WINDOW *win, int line);
+	bool is_wintouched(WINDOW *win);
 
   X/Open Description:
- 	The touchwin() and touchline() functions throw away all optimisation 
- 	information about which parts of the window have been touched, 
- 	by pretending that the entire window has been drawn on.  
- 	This is sometimes necessary when using overlapping
- 	windows, since a change to one window will affect the other window,
- 	but the records of which lines have been changed in the other
- 	window will not reflect the change.
+	The touchwin() and touchline() functions throw away all 
+	optimisation information about which parts of the window have 
+	been touched, by pretending that the entire window has been 
+	drawn on.  This is sometimes necessary when using overlapping 
+	windows, since a change to one window will affect the other 
+	window, but the records of which lines have been changed in the 
+	other window will not reflect the change.
 
- 	The untouchwin() routine marks all lines in the window as unchanged
- 	since the last call to wrefresh().
+	The untouchwin() routine marks all lines in the window as 
+	unchanged since the last call to wrefresh().
 
- 	The wtouchln() routine makes n lines in the window, starting at 
- 	line y, look as if they have (changed=1) or have not (changed=0) 
- 	been changed since the last call to wrefresh().
+	The wtouchln() routine makes n lines in the window, starting at 
+	line y, look as if they have (changed=1) or have not (changed=0) 
+	been changed since the last call to wrefresh().
 
- 	The is_linetouched() routine returns TRUE if the specified line 
- 	in the specified window has been changed since the last call to 
- 	wrefresh(). If the line has not changed, FALSE is returned.
+	The is_linetouched() routine returns TRUE if the specified line 
+	in the specified window has been changed since the last call to 
+	wrefresh(). If the line has not changed, FALSE is returned.
 
- 	The is_wintouched() routine returns TRUE if the specified window 
- 	has been changed since the last call to wrefresh(). If the window 
- 	has not changed, FALSE is returned.
+	The is_wintouched() routine returns TRUE if the specified window 
+	has been changed since the last call to wrefresh(). If the 
+	window has not changed, FALSE is returned.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error except
- 	is_wintouched() and is_linetouched().
+	All functions return OK on success and ERR on error except
+	is_wintouched() and is_linetouched().
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -118,6 +118,7 @@ WINDOW *win;
 	}
 	return( OK );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	touchline(WINDOW *win, int start,int count)
@@ -145,6 +146,7 @@ int count;
 	   }
 	return( OK );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	untouchwin(WINDOW *win)
@@ -168,6 +170,7 @@ WINDOW *win;
 	}
 	return(OK);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wtouchln(WINDOW *win, int y, int n, int changed)
@@ -205,11 +208,12 @@ int changed;
 	}
 	return( OK );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	is_linetouched(WINDOW *win,int line)
+bool	PDC_CDECL	is_linetouched(WINDOW *win,int line)
 #else
-int	PDC_CDECL	is_linetouched(win,line)
+bool	PDC_CDECL	is_linetouched(win,line)
 WINDOW *win;
 int line;
 #endif
@@ -226,11 +230,12 @@ int line;
 		return(TRUE);
 	return(FALSE);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	is_wintouched(WINDOW *win)
+bool	PDC_CDECL	is_wintouched(WINDOW *win)
 #else
-int	PDC_CDECL	is_wintouched(win)
+bool	PDC_CDECL	is_wintouched(win)
 WINDOW *win;
 #endif
 /***********************************************************************/

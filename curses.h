@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.70 2006/01/04 09:17:35 wmcbrine Exp $
+$Id: curses.h,v 1.71 2006/01/06 08:43:27 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1607,8 +1607,8 @@ WINDOW* PDC_CDECL initscr Args(( void ));
 WINDOW* PDC_CDECL Xinitscr Args(( int, char ** ));
 #endif
 int     PDC_CDECL intrflush Args((  WINDOW*, bool  ));
-int     PDC_CDECL is_linetouched Args((WINDOW *,int));
-int     PDC_CDECL is_wintouched Args((WINDOW *));
+bool    PDC_CDECL is_linetouched Args((WINDOW *,int));
+bool    PDC_CDECL is_wintouched Args((WINDOW *));
 char*   PDC_CDECL keyname Args((  int  ));
 char    PDC_CDECL killchar Args(( void ));
 char*   PDC_CDECL longname Args(( void ));

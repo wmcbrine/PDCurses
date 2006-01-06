@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addch  = "$Id: addch.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_addch  = "$Id: addch.c,v 1.5 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -48,79 +48,79 @@ char *rcsid_addch  = "$Id: addch.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                         addch
 
   Synopsis:
-  	int addch(const chtype ch);
-  	int waddch(WINDOW *win, const chtype ch);
-  	int mvaddch(int y, int x, const chtype ch);
-  	int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
-  	int echochar(const chtype ch);
-  	int wechochar(WINDOW *win, const chtype ch);
+	int addch(const chtype ch);
+	int waddch(WINDOW *win, const chtype ch);
+	int mvaddch(int y, int x, const chtype ch);
+	int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
+	int echochar(const chtype ch);
+	int wechochar(WINDOW *win, const chtype ch);
 
   X/Open Description:
- 	The routine addch() inserts the character ch into the default
- 	window at the current cursor position and the window cursor is
- 	advanced.  The character is of the type chtype as containing
- 	both data and attributes.
+	The routine addch() inserts the character ch into the default
+	window at the current cursor position and the window cursor is
+	advanced.  The character is of the type chtype as containing
+	both data and attributes.
 
- 	The routine waddch() inserts the character ch into the specified
- 	window at the current cursor position.  The cursor position is
- 	advanced.
+	The routine waddch() inserts the character ch into the specified
+	window at the current cursor position.  The cursor position is
+	advanced.
 
- 	The routine mvaddch() moves the cursor to the specified (y, x)
- 	position and inserts the character ch into the default window.
- 	The cursor position is advanced after the character has been
- 	inserted.
+	The routine mvaddch() moves the cursor to the specified (y, x)
+	position and inserts the character ch into the default window.
+	The cursor position is advanced after the character has been
+	inserted.
 
- 	The routine mvwaddch() moves the cursor to the specified (y, x)
- 	position and inserts the character ch into the specified
- 	window.  The cursor position is advanced after the character
- 	has been inserted.
+	The routine mvwaddch() moves the cursor to the specified (y, x)
+	position and inserts the character ch into the specified
+	window.  The cursor position is advanced after the character
+	has been inserted.
 
- 	The routine echochar() inserts the character ch into stdscr
- 	at the current cursor position and a refresh() is called.  
- 	The cursor position is advanced.
+	The routine echochar() inserts the character ch into stdscr
+	at the current cursor position and a refresh() is called.  
+	The cursor position is advanced.
 
- 	The routine wechochar() inserts the character ch into the
- 	specified window at the current cursor position and a wrefresh() 
- 	is called. The cursor position is advanced.
+	The routine wechochar() inserts the character ch into the
+	specified window at the current cursor position and a wrefresh() 
+	is called. The cursor position is advanced.
 
- 	All these routines are similar to putchar().  The following
- 	information applies to all the routines.
+	All these routines are similar to putchar().  The following
+	information applies to all the routines.
 
- 	If the cursor moves on to the right margin, an automatic
- 	newline is performed.  If scrollok is enabled, and a character
- 	is added to the bottom right corner of the screen, the
- 	scrolling region will be scrolled up one line.  If scrolling
- 	is not allowed, ERR will be returned.
+	If the cursor moves on to the right margin, an automatic
+	newline is performed.  If scrollok is enabled, and a character
+	is added to the bottom right corner of the screen, the
+	scrolling region will be scrolled up one line.  If scrolling
+	is not allowed, ERR will be returned.
 
- 	If ch is a tab, newline, or backspace, the cursor will be
- 	moved appropriately within the window.  If ch is a newline,
- 	the clrtoeol routine is called before the cursor is moved to
- 	the beginning of the next line.  If newline mapping is off,
- 	the cursor will be moved to the next line, but the x
- 	coordinate will be unchanged.  If ch is a tab the cursor is
- 	moved to the next tab position within the window.  If ch is
- 	another control character, it will be drawn in the ^X
- 	notation.  Calling the inch() routine after adding a control
- 	character returns the representation of the control character,
- 	not the control character.
+	If ch is a tab, newline, or backspace, the cursor will be
+	moved appropriately within the window.  If ch is a newline,
+	the clrtoeol routine is called before the cursor is moved to
+	the beginning of the next line.  If newline mapping is off,
+	the cursor will be moved to the next line, but the x
+	coordinate will be unchanged.  If ch is a tab the cursor is
+	moved to the next tab position within the window.  If ch is
+	another control character, it will be drawn in the ^X
+	notation.  Calling the inch() routine after adding a control
+	character returns the representation of the control character,
+	not the control character.
 
- 	Video attributes can be combined with a character by ORing
- 	them into the parameter.  This will result in these attributes
- 	being set.  The intent here is that text, including
- 	attributes, can be copied from one place to another using inch()
- 	and addch().
+	Video attributes can be combined with a character by ORing
+	them into the parameter.  This will result in these attributes
+	being set.  The intent here is that text, including
+	attributes, can be copied from one place to another using inch()
+	and addch().
 
- 	NOTE: All these functions are implemented as macros.
+	NOTE: All these functions are implemented as macros.
 
   PDCurses Description:
- 	Depending upon the state of the raw character output, 7- or
- 	8-bit characters will be output.
+	Depending upon the state of the raw character output, 7- or
+	8-bit characters will be output.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -142,46 +142,50 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("addch() - called: ch=%x\n",ch));
+	PDC_LOG(("addch() - called: ch=%x\n", ch));
 
-	return( PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE ) );
+	return PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	waddch(WINDOW *win, const chtype ch)
 #else
-int	PDC_CDECL	waddch(win,ch)
+int	PDC_CDECL	waddch(win, ch)
 WINDOW *win;
 chtype ch;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("waddch() - called: win=%x ch=%x\n",win,ch));
+	PDC_LOG(("waddch() - called: win=%x ch=%x\n", win, ch));
 
-	return( PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE ) );
+	return PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvaddch(int y, int x, const chtype ch)
 #else
-int	PDC_CDECL	mvaddch(y,x,ch)
+int	PDC_CDECL	mvaddch(y, x, ch)
 int y;
 int x;
 chtype ch;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvaddch() - called: y=%d x=%d ch=%x\n",y,x,ch));
+	PDC_LOG(("mvaddch() - called: y=%d x=%d ch=%x\n", y, x, ch));
 
 	if (move(y,x) == ERR)
-		return(ERR);
-	return( PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE ) );
+		return ERR;
+
+	return PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvwaddch(WINDOW *win, int y, int x, const chtype ch)
 #else
-int	PDC_CDECL	mvwaddch(win,y,x,ch)
+int	PDC_CDECL	mvwaddch(win, y, x, ch)
 WINDOW *win;
 int y;
 int x;
@@ -189,12 +193,15 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvwaddch() - called: win=%x y=%d x=%d ch=%d\n",win,y,x,ch));
+	PDC_LOG(("mvwaddch() - called: win=%x y=%d x=%d ch=%d\n",
+		win, y, x, ch));
 
-	if (wmove(win,y,x) == ERR)
-		return(ERR);
-	return( PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE ) );
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	echochar(const chtype ch)
@@ -204,25 +211,28 @@ chtype ch;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("echochar() - called: ch=%x\n",ch));
+	PDC_LOG(("echochar() - called: ch=%x\n", ch));
 
 	if (PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		return(ERR);
-	return(refresh());
+		return ERR;
+
+	return refresh();
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wechochar(WINDOW *win, const chtype ch)
 #else
-int	PDC_CDECL	wechochar(win,ch)
+int	PDC_CDECL	wechochar(win, ch)
 WINDOW *win;
 chtype ch;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("wechochar() - called: win=%x ch=%x\n",win,ch));
+	PDC_LOG(("wechochar() - called: win=%x ch=%x\n", win, ch));
 
 	if (PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		return(ERR);
-	return(wrefresh(win));
+		return ERR;
+
+	return wrefresh(win);
 }

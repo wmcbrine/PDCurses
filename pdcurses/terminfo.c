@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <term.h>
 
@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.7 2006/01/03 07:41:49 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.8 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -41,38 +41,38 @@ char *rcsid_terminfo  = "$Id: terminfo.c,v 1.7 2006/01/03 07:41:49 wmcbrine Exp 
   Name:                                                      terminfo
 
   Synopsis:
-  	int mvcur(int oldrow, int oldcol, int newrow, int newcol);
-  	int del_curterm(TERMINAL *);
-  	int putp(const char *);
-  	int restartterm(char *, int, int *);
-  	TERMINAL *set_curterm(TERMINAL *);
-  	int setupterm(char *, int, int *);
-  	int tgetent(char *, const char *);
-  	int tgetflag(char *);
-  	int tgetnum(char *);
-  	char *tgetstr(char *, char **);
-  	char *tgoto(char *, int, int);
-  	int tigetflag(char *);
-  	int tigetnum(char *);
-  	char *tigetstr(char *);
-  	char *tparm(char *,long, long, long, long, long, long, long, 
-  		long, long);
-  	int tputs(const char *, int, int (*)(int));
-  	int vidattr(chtype attr);
-  	int vidputs(chtype attr, int (*putfunc)(int));
+	int mvcur(int oldrow, int oldcol, int newrow, int newcol);
+	int del_curterm(TERMINAL *);
+	int putp(const char *);
+	int restartterm(char *, int, int *);
+	TERMINAL *set_curterm(TERMINAL *);
+	int setupterm(char *, int, int *);
+	int tgetent(char *, const char *);
+	int tgetflag(char *);
+	int tgetnum(char *);
+	char *tgetstr(char *, char **);
+	char *tgoto(char *, int, int);
+	int tigetflag(char *);
+	int tigetnum(char *);
+	char *tigetstr(char *);
+	char *tparm(char *,long, long, long, long, long, long, long, 
+		long, long);
+	int tputs(const char *, int, int (*)(int));
+	int vidattr(chtype attr);
+	int vidputs(chtype attr, int (*putfunc)(int));
 
   X/Open Description:
- 	The mvcur() function controls low-level cursor motion with 
- 	optimization.
+	The mvcur() function controls low-level cursor motion with 
+	optimization.
 
- 	NOTE: The remainer of the terminfo functions have not been
- 			implemented.
+	NOTE: The remainer of the terminfo functions have not been
+	implemented.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -86,7 +86,7 @@ TERMINAL *cur_term = NULL;
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvcur(int oldrow, int oldcol, int newrow, int newcol)
 #else
-int	PDC_CDECL	mvcur(oldrow,oldcol,newrow,newcol)
+int	PDC_CDECL	mvcur(oldrow, oldcol, newrow, newcol)
 int oldrow;
 int oldcol;
 int newrow;
@@ -94,20 +94,20 @@ int newcol;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",oldrow,oldcol,newrow,newcol));
+	PDC_LOG(("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",
+		oldrow, oldcol, newrow, newcol));
 
-	if ((newrow >= LINES)	||
-	    (newcol >= COLS)	||
-	    (newrow < 0)	||
-	    (newcol < 0))
-	{
-		return( ERR );
-	}
-	PDC_gotoxy( newrow, newcol );
+	if ((newrow >= LINES) || (newcol >= COLS) ||
+	    (newrow < 0) || (newcol < 0))
+		return ERR;
+
+	PDC_gotoxy(newrow, newcol);
 	SP->cursrow = newrow;
 	SP->curscol = newcol;
-	return( OK );
+
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL del_curterm(TERMINAL *oterm)
@@ -121,6 +121,7 @@ TERMINAL *oterm;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL putp(const char *str)
@@ -134,6 +135,7 @@ char *str;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL restartterm(char *term, int filedes, int *errret)
@@ -152,6 +154,7 @@ int *errret;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 TERMINAL* PDC_CDECL set_curterm(TERMINAL *nterm)
@@ -165,6 +168,7 @@ TERMINAL *nterm;
 
 	return (TERMINAL *)NULL;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL setterm(char *term)
@@ -178,6 +182,7 @@ char *term;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL setupterm(char *term, int filedes, int *errret)
@@ -198,6 +203,7 @@ int *errret;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL tgetent(char *bp, const char *name)
@@ -212,6 +218,7 @@ char *name;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL tgetflag(char *id)
@@ -225,6 +232,7 @@ char *id;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL tgetnum(char *id)
@@ -238,6 +246,7 @@ char *id;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char*   PDC_CDECL tgetstr(char *id, char **area)
@@ -252,6 +261,7 @@ char **area;
 
 	return (char *)NULL;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char*   PDC_CDECL tgoto(char *cap, int col, int row)
@@ -267,6 +277,7 @@ int row;
 
 	return (char *)NULL;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL tigetflag(char *capname)
@@ -280,6 +291,7 @@ char *capname;
 
 	return -1;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL tigetnum(char *capname)
@@ -293,6 +305,7 @@ char *capname;
 
 	return -2;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char*   PDC_CDECL tigetstr(char *capname)
@@ -306,6 +319,7 @@ char *capname;
 
 	return (char *)(-1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char*   PDC_CDECL tparm(char *cap, long p1, long p2, long p3, long p4, 
@@ -329,6 +343,7 @@ long p9;
 
 	return (char *)NULL;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int     PDC_CDECL tputs(const char *str, int affcnt, int (*putfunc)(int))
@@ -344,6 +359,7 @@ int (*putfunc)(int);
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	vidattr(chtype attr)
@@ -357,6 +373,7 @@ chtype attr;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	vidputs(chtype attr, int (*putfunc)(int))

@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #if !defined(XCURSES)
 # define	INCLUDE_WINDOWS_H
@@ -46,7 +46,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.11 2006/01/03 17:19:24 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.12 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,81 +54,79 @@ char *rcsid_PDCutil  = "$Id: pdcutil.c,v 1.11 2006/01/03 17:19:24 wmcbrine Exp $
   PDC_memmove()	- Replacement memmove() for lacking compliers.
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Move a portion of memory taking consideration of overlapping memory
- 	areas.
+	Move a portion of memory taking consideration of overlapping memory
+	areas.
 
   PDCurses Return Value:
- 	This function returns NULL if no temporary memory could be allocated.
+	This function returns NULL if no temporary memory could be allocated.
 
   Portability:
- 	PDCurses	int PDC_memmove(void *s1,const void *s2,size_t n);
+	PDCurses  int PDC_memmove(void *s1, const void *s2, size_t n);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-void *PDC_memmove (void *s1, const void *s2, size_t n)
+void *PDC_memmove(void *s1, const void *s2, size_t n)
 #else
-void *PDC_memmove (s1,s2,n)
+void *PDC_memmove(s1, s2, n)
 void *s1;
 void *s2;
 size_t n;
 #endif
 /***********************************************************************/
 {
-  char *dd;
+	char *dd;
 #ifdef HAVE_PROTO
-  const char *ss;
+	const char *ss;
 #else
-  char *ss;
+	char *ss;
 #endif
 
-  dd = (char *)s1;
+	dd = (char *)s1;
 #ifdef HAVE_PROTO
-  ss = (const char *)s2;
+	ss = (const char *)s2;
 #else
-  ss = (char *)s2;
+	ss = (char *)s2;
 #endif
-  if (dd > ss && dd < ss + n)
-    {
-      dd += n;
-      ss += n;
-      while (n--)
-        *--dd = *--ss;
-    }
-  else
-    while (n--)
-      *dd++ = *ss++;
-  return s1;
+	if (dd > ss && dd < ss + n)
+	{
+		dd += n;
+		ss += n;
+		while (n--)
+			*--dd = *--ss;
+	}
+	else
+		while (n--)
+			*dd++ = *ss++;
+
+	return s1;
 }
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-void PDC_beep (void)
+void PDC_beep(void)
 #else
-void PDC_beep ()
+void PDC_beep()
 #endif
 /***********************************************************************/
 {
-#if defined (XCURSES)
+#if defined(XCURSES)
 	XCursesInstruct(CURSES_BELL);
-#endif
 
-#if defined(DOS)
-	PDC_putctty( (chtype)'\007', 0 );
-#endif
+#elif defined(DOS)
+	PDC_putctty((chtype)'\007', 0);
 
-#if defined(OS2)
+#elif defined(OS2)
 #   if defined(EMXVIDEO)
 	putchar('\007');
 #   else
-	DosBeep( 1380, 100 );
+	DosBeep(1380, 100);
 #   endif
-#endif
 
-#if defined(WIN32)
+#elif defined(WIN32)
 /*	MessageBeep(MB_OK); */
 	MessageBeep(0XFFFFFFFF);
 #endif
@@ -137,13 +135,13 @@ void PDC_beep ()
 #ifndef HAVE_VSSCANF
 /*
  * Do not compile this module unless required.  This is due to the
- * requirement of some compilers; at least Borland C++ 3.0, of having
+ * requirement of some compilers (at least Borland C++ 3.0) of having
  * to link with math libraries due to the use of floats in the code.
  *
  * This module is based on vsscanf.c and input.c from emx 0.8f library
  * source which is Copyright (c) 1990-1992 by Eberhard Mattes.
- * Eberhard Mattes has kindly agreed to allow this module to be incorporated
- * into PDCurses.
+ * Eberhard Mattes has kindly agreed to allow this module to be
+ * incorporated into PDCurses.
  */
 
 /*man-start*********************************************************************
@@ -151,21 +149,21 @@ void PDC_beep ()
   PDC_vsscanf()	- Internal routine to parse and format an input buffer.
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Scan a series of input fields. Each field is formatted according to
- 	a supplied format string and the formatted input is stored in the
- 	variable number of addresses passed.
+	Scan a series of input fields. Each field is formatted according to
+	a supplied format string and the formatted input is stored in the
+	variable number of addresses passed.
 
   PDCurses Return Value:
- 	This function returns the number of input fields or EOF on error.
+	This function returns the number of input fields or EOF on error.
 
   PDCurses Errors:
- 	If the supplied data is invalid or an incorrect number of arguments
- 	are passed, EOF is returned as an error.
+	If the supplied data is invalid or an incorrect number of arguments
+	are passed, EOF is returned as an error.
 
   Portability:
- 	PDCurses	int PDC_vsscanf(char *buf,const char *fmt,va_list arg_ptr);
+	PDCurses  int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr);
 
 **man-end**********************************************************************/
 
@@ -186,9 +184,9 @@ void PDC_beep ()
 
 /***********************************************************************/
 #ifdef HAVE_STDARG_H_HAVE_PROTO
-int PDC_vsscanf ( char *buf, const char *fmt, va_list arg_ptr)
+int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 #else
-int PDC_vsscanf (buf,fmt,va_alist)
+int PDC_vsscanf(buf, fmt, va_alist)
 char *buf;
 char *fmt;
 va_dcl
@@ -593,41 +591,43 @@ scan_unsigned_number:
   PDC_breakout()	- check for type-ahead
 
   X/Open Description:
- 	The curses package does the "line-breakout optimisation" by
- 	looking for type-ahead periodically while updating the screen.
- 	If input is found, the current update will be postponed until
- 	refresh() or doupdate() are called again.  This allows faster
- 	response to commands typed in advance.  Normally, the input FILE
- 	pointer passed to newterm(), or stdin in the case when initscr()
- 	was called, will be used to do this type-ahead checking.  This routine
- 	will do the actual check for PDcurses to see if input is pending.
+	The curses package does the "line-breakout optimisation" by
+	looking for type-ahead periodically while updating the screen.
+	If input is found, the current update will be postponed until
+	refresh() or doupdate() are called again.  This allows faster
+	response to commands typed in advance.  Normally, the input FILE
+	pointer passed to newterm(), or stdin in the case when initscr()
+	was called, will be used to do this type-ahead checking.  This 
+	routine will do the actual check for PDcurses to see if input is 
+	pending.
 
   PDCurses Description:
- 	This routine does what the PDcurses typeahead routine used to do.  But
- 	to make that routine consistent with its System V counterpart, all it
- 	does now is set whether or not typeahead checking is performed.
+	This routine does what the PDcurses typeahead routine used to 
+	do.  But to make that routine consistent with its System V 
+	counterpart, all it does now is set whether or not typeahead 
+	checking is performed.
 
   X/Open Return Value:
- 	The PDC_breakout() routine returns TRUE if keyboard input is pending
- 	otherwise FALSE is returned.
+	The PDC_breakout() routine returns TRUE if keyboard input is 
+	pending otherwise FALSE is returned.
 
   Portability:
- 	PDCurses	bool PDC_breakout( void );
+	PDCurses  bool PDC_breakout(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-bool	PDC_breakout( void )
+bool	PDC_breakout(void)
 #else
 bool	PDC_breakout()
 #endif
 /***********************************************************************/
 {
-extern	int	c_pindex;			/* putter index */
-extern	int	c_gindex;			/* getter index */
-extern	int	c_ungind;			/* wungetch() push index */
-	bool	rc;
+extern	int c_pindex;			/* putter index */
+extern	int c_gindex;			/* getter index */
+extern	int c_ungind;			/* wungetch() push index */
+	bool rc;
 
 	PDC_LOG(("PDC_breakout() - called\n"));
 
@@ -637,7 +637,8 @@ extern	int	c_ungind;			/* wungetch() push index */
 	if (!rc)
 		rc = PDC_check_bios_key();
 
-	PDC_LOG(("PDC_breakout() - returned: %d c_ungind: %d c_pindex: %d c_gindex: %d\n",rc,c_ungind,c_pindex,c_gindex));
+	PDC_LOG(("PDC_breakout() - rc %d c_ungind %d c_pindex %d c_gindex %d\n",
+		rc, c_ungind, c_pindex, c_gindex));
 
 	return rc;
 }

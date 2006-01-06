@@ -19,12 +19,12 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #if defined (OS2) && defined(EMXVIDEO)
-#  include <termios.h>
+# include <termios.h>
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.14 2006/01/03 09:17:26 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.15 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -51,54 +51,54 @@ char *rcsid_util  = "$Id: util.c,v 1.14 2006/01/03 09:17:26 wmcbrine Exp $";
   Name:                                                          util
 
   Synopsis:
-  	char *unctrl(chtype c);
-  	char *keyname(int key);
-  	void filter(void);
-  	void use_env(bool x);
-  	int putwin(WINDOW *win, FILE *filep);
-  	WINDOW *getwin(FILE *filep);
-  	int delay_output( int ms );
-  	int flushinp(void);
+	char *unctrl(chtype c);
+	char *keyname(int key);
+	void filter(void);
+	void use_env(bool x);
+	int putwin(WINDOW *win, FILE *filep);
+	WINDOW *getwin(FILE *filep);
+	int delay_output(int ms);
+	int flushinp(void);
 
   X/Open Description:
- 	The unctrl() routine expands the character c into a character
- 	string which is a printable representation of the character.
- 	Control characters are displayed in the ^X notation.  Printing
- 	characters are displayed normally.
+	The unctrl() routine expands the character c into a character
+	string which is a printable representation of the character.
+	Control characters are displayed in the ^X notation.  Printing
+	characters are displayed normally.
 
- 	The keyname() function returns a pointer to a character string 
- 	containing a symbolic name corresponding to that specified in 
- 	the argument key. key may be any key returned by wgetch().
+	The keyname() function returns a pointer to a character string 
+	containing a symbolic name corresponding to that specified in 
+	the argument key. key may be any key returned by wgetch().
 
- 	The delay_output() function inserts ms millisecond pause in output.
- 	On some systems, this has no effect.
+	The delay_output() function inserts ms millisecond pause in output.
+	On some systems, this has no effect.
 
- 	The flushinp() routine throws away any type-ahead that has been 
- 	typed by the user and has not yet been read by the program.
+	The flushinp() routine throws away any type-ahead that has been 
+	typed by the user and has not yet been read by the program.
 
   PDCurses Description:
- 	The conversion from a control character to a two-character
- 	sequence is done by the unctrl() function. In the BSD version
- 	of curses it is done by a macro, which uses a publicly
- 	available translation table. Some ill-behaved application
- 	programs use the table directly, and since it does not exist
- 	in this curses version such application will link with an
- 	error message complaining about undefined symbols.
+	The conversion from a control character to a two-character
+	sequence is done by the unctrl() function. In the BSD version
+	of curses it is done by a macro, which uses a publicly
+	available translation table. Some ill-behaved application
+	programs use the table directly, and since it does not exist
+	in this curses version such application will link with an
+	error message complaining about undefined symbols.
 
- 	If the PDCurses library is compiled under DOS with the FAST_VIDEO
- 	define true, then we will poke the BIOS keyboard buffer head and
- 	tail pointers, resetting the typeahead to implement flushinp().
- 	If this is not true, then we will be unable to reliably flush
- 	the typeahead.
+	If the PDCurses library is compiled under DOS with the FAST_VIDEO
+	define true, then we will poke the BIOS keyboard buffer head and
+	tail pointers, resetting the typeahead to implement flushinp().
+	If this is not true, then we will be unable to reliably flush
+	the typeahead.
 
- 	filter() and use_env() are no-ops on PDCurses. getwin() and 
- 	putwin() also do nothing yet.
+	filter() and use_env() are no-ops on PDCurses. getwin() and 
+	putwin() also do nothing yet.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -124,33 +124,27 @@ chtype c;
 #endif
 /***********************************************************************/
 {
-	chtype	ic = c;
+	chtype ic = c;
 
 	PDC_LOG(("unctrl() - called\n"));
 
 	ic &= A_CHARTEXT;
+
 	if (ic >= 0x20 && ic != 0x7f)		/* normal characters */
 	{
 		strbuf[0] = (char) ic;
 		strbuf[1] = '\0';
 		return( strbuf );
 	}
-	strbuf[0] = '^';	/* '^' prefix */
-	if (c == 0x7f)
-	{
-		/*
-		 * 0x7f == DEL
-		 */
+
+	strbuf[0] = '^';			/* '^' prefix */
+
+	if (c == 0x7f)				/* 0x7f == DEL */
 		strbuf[1] = '?';
-	}
-	else
-	{
-		/*
-		 * other control
-		 */
+	else					/* other control */
 		strbuf[1] = (char)(ic + '@');
-	}
-	return( strbuf );
+
+	return strbuf;
 }
 
 /***********************************************************************/
@@ -227,15 +221,17 @@ int key;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("keyname() - called: key %d\n",key));
+	PDC_LOG(("keyname() - called: key %d\n", key));
 
 	key -= KEY_MIN;
+
 	if (key >= 0
-	&& key <= (int)(sizeof(key_name) / sizeof(key_name[0])) )
-		return( key_name[key] );
+	 && key <= (int)(sizeof(key_name) / sizeof(key_name[0])) )
+		return key_name[key];
 	else
-		return("NO KEY NAME");
+		return "NO KEY NAME";
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 bool 	PDC_CDECL 	has_key(int key)
@@ -247,9 +243,11 @@ int key;
 	PDC_LOG(("has_key() - called: key %d\n",key));
 
 	key -= KEY_MIN;
+
 	return key >= 0
 	    && key <= (int)(sizeof(key_name) / sizeof(key_name[0]));
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 void	PDC_CDECL	filter(void)
@@ -260,17 +258,19 @@ void	PDC_CDECL	filter()
 {
 	PDC_LOG(("filter() - called\n"));
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-void	PDC_CDECL	use_env( bool x )
+void	PDC_CDECL	use_env(bool x)
 #else
 void	PDC_CDECL	use_env(x)
 bool x;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("use_env() - called: x %d\n",x));
+	PDC_LOG(("use_env() - called: x %d\n", x));
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	putwin(WINDOW *win, FILE *filep)
@@ -285,6 +285,7 @@ FILE *filep;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 WINDOW*	PDC_CDECL	getwin(FILE *filep)
@@ -298,19 +299,21 @@ FILE *filep;
 
 	return (WINDOW *)NULL;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	delay_output( int ms )
+int	PDC_CDECL	delay_output(int ms)
 #else
 int	PDC_CDECL	delay_output(ms)
 int ms;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("delay_output() - called: ms %d\n",ms));
+	PDC_LOG(("delay_output() - called: ms %d\n", ms));
 
 	return napms(ms);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	flushinp(void)
@@ -319,47 +322,40 @@ int	PDC_CDECL	flushinp()
 #endif
 /***********************************************************************/
 {
-extern int	c_pindex;		/* putter index */
-extern int	c_gindex;		/* getter index */
-extern int	c_ungind;		/* wungetch() push index */
+	extern int c_pindex;		/* putter index */
+	extern int c_gindex;		/* getter index */
+	extern int c_ungind;		/* wungetch() push index */
 
 	PDC_LOG(("flushinp() - called\n"));
 
 #if defined(DOS) && defined(FAST_VIDEO)
-	setdosmemword (0x41a, getdosmemword (0x41c)); /* Force the BIOS kbd buf */
-					/* head/tail pointers to be the */
-					/* same...  Real nasty trick... */
-#  if defined(NDP)
-/*
-	int *KB_HEAD = (int *) mapdev( 0x041aL, sizeof(short) );
-	int *KB_TAIL = (int *) mapdev( 0x041cL, sizeof(short) );
+	/* Force the BIOS kbd buf head/tail pointers to be the
+	   same...  Real nasty trick... */
 
-	memcpy( KB_HEAD, KB_TAIL, sizeof(short) );
-*/
-#  endif
+	setdosmemword (0x41a, getdosmemword (0x41c));
 #endif
 
 #ifdef OS2
-#  ifdef EMXVIDEO
-	tcflush(0,TCIFLUSH);
-#  else
+# ifdef EMXVIDEO
+	tcflush(0, TCIFLUSH);
+# else
 	KbdFlushBuffer(0);
-#  endif
+# endif
 #endif
 
 #ifdef XCURSES
-	while(XCurses_kbhit())
-		(void)XCurses_rawgetch(0);
+	while (XCurses_kbhit())
+		XCurses_rawgetch(0);
 #endif
-
 	c_gindex = 1;			/* set indices to kill buffer	 */
 	c_pindex = 0;
 	c_ungind = 0;			/* clear c_ungch array		 */
-	return( OK );
+	return OK;
 }
 
 #undef traceon
 #undef traceoff
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 void	PDC_CDECL	traceon(void)
@@ -371,8 +367,8 @@ void	PDC_CDECL	traceon()
 	PDC_LOG(("traceon() - called\n"));
 
 	trace_on = TRUE;
-	return;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 void	PDC_CDECL	traceoff(void)
@@ -384,5 +380,4 @@ void	PDC_CDECL	traceoff()
 	PDC_LOG(("traceoff() - called\n"));
 
 	trace_on = FALSE;
-	return;
 }

@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_deleteln  = "$Id: deleteln.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -45,39 +45,37 @@ char *rcsid_deleteln  = "$Id: deleteln.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp 
   Name:                                                      deleteln
 
   Synopsis:
-  	int deleteln(void);
-  	int wdeleteln(WINDOW *win);
-  	int insdelln(int n);
-  	int winsdelln(WINDOW *win, int n);
-  	int insertln(void);
-  	int winsertln(WINDOW *win);
-  	int mvwinsertln(WINDOW *win, int y, int x);
+	int deleteln(void);
+	int wdeleteln(WINDOW *win);
+	int insdelln(int n);
+	int winsdelln(WINDOW *win, int n);
+	int insertln(void);
+	int winsertln(WINDOW *win);
+	int mvwinsertln(WINDOW *win, int y, int x);
 
   X/Open Description:
- 	With the deleteln() and wdelteln() functions,
- 	the line under the cursor in the window is deleted.  All
- 	lines below the current line are moved up one line.  The
- 	bottom line of the window is cleared.  The cursor position
- 	does not change.
+	With the deleteln() and wdelteln() functions, the line under the 
+	cursor in the window is deleted.  All lines below the current 
+	line are moved up one line.  The bottom line of the window is 
+	cleared.  The cursor position does not change.
 
- 	With the insertln() and winsertn() functions,
- 	a blank line is inserted above the current line and the bottom
- 	line is lost.
+	With the insertln() and winsertn() functions, a blank line is 
+	inserted above the current line and the bottom line is lost.
 
- 	NOTE: deleteln() and insertln() are implemented as macros.
+	NOTE: deleteln() and insertln() are implemented as macros.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   NOTE:
- 	The behaviour of Unix curses is to clear the line with a space
- 	and attributes of A_NORMAL. PDCurses clears the line with the
- 	window's current attributes (including current colour). To get
- 	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
- 	add -DPDCURSES_WCLR to the compile switches.
+	The behaviour of Unix curses is to clear the line with a space
+	and attributes of A_NORMAL. PDCurses clears the line with the
+	window's current attributes (including current colour). To get
+	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
+	add -DPDCURSES_WCLR to the compile switches.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -107,19 +105,19 @@ int	PDC_CDECL	deleteln()
 	PDC_LOG(("deleteln() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 #if defined(PDCURSES_WCLR)
-	blank	= stdscr->_blank | stdscr->_attrs;
+	blank = stdscr->_blank | stdscr->_attrs;
 #else
 /* wrs (4/10/93) account for window background */
-	blank	= stdscr->_bkgd;
+	blank = stdscr->_bkgd;
 #endif
-	temp	= stdscr->_y[stdscr->_cury];
+	temp = stdscr->_y[stdscr->_cury];
 
 	for (y = stdscr->_cury; y < stdscr->_bmarg; y++)
 	{
-		stdscr->_y[y]	 = stdscr->_y[y + 1];
+		stdscr->_y[y] = stdscr->_y[y + 1];
 		stdscr->_firstch[y] = 0;
 		stdscr->_lastch[y] = stdscr->_maxx - 1;
 	}
@@ -127,15 +125,16 @@ int	PDC_CDECL	deleteln()
 	for (ptr = temp; (ptr - temp < stdscr->_maxx); ptr++)
 		*ptr = blank;			/* make a blank line */
 
-	if( stdscr->_cury <= stdscr->_bmarg ) 
+	if (stdscr->_cury <= stdscr->_bmarg)
 	{
-		stdscr->_firstch[stdscr->_bmarg]	= 0;
+		stdscr->_firstch[stdscr->_bmarg] = 0;
 		stdscr->_lastch[stdscr->_bmarg]	= stdscr->_maxx - 1;
-		stdscr->_y[stdscr->_bmarg]		= temp;
+		stdscr->_y[stdscr->_bmarg] = temp;
 	}
 
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wdeleteln(WINDOW *win)
@@ -153,19 +152,19 @@ WINDOW *win;
 	PDC_LOG(("wdeleteln() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 #if defined(PDCURSES_WCLR)
-	blank	= win->_blank | win->_attrs;
+	blank = win->_blank | win->_attrs;
 #else
 /* wrs (4/10/93) account for window background */
-	blank	= win->_bkgd;
+	blank = win->_bkgd;
 #endif
-	temp	= win->_y[win->_cury];
+	temp = win->_y[win->_cury];
 
 	for (y = win->_cury; y < win->_bmarg; y++)
 	{
-		win->_y[y]	 = win->_y[y + 1];
+		win->_y[y] = win->_y[y + 1];
 		win->_firstch[y] = 0;
 		win->_lastch[y] = win->_maxx - 1;
 	}
@@ -175,13 +174,14 @@ WINDOW *win;
 
 	if( win->_cury <= win->_bmarg ) 
 	{
-		win->_firstch[win->_bmarg]	= 0;
-		win->_lastch[win->_bmarg]	= win->_maxx - 1;
-		win->_y[win->_bmarg]		= temp;
+		win->_firstch[win->_bmarg] = 0;
+		win->_lastch[win->_bmarg] = win->_maxx - 1;
+		win->_y[win->_bmarg] = temp;
 	}
 
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	insdelln(int n)
@@ -194,15 +194,16 @@ int n;
 	PDC_LOG(("insdelln() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(winsdelln(stdscr,n));
+	return winsdelln(stdscr, n);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	winsdelln(WINDOW *win, int n)
 #else
-int	PDC_CDECL	winsdelln(win,n)
+int	PDC_CDECL	winsdelln(win, n)
 WINDOW *win;
 int n;
 #endif
@@ -213,24 +214,25 @@ int n;
 	PDC_LOG(("winsdelln() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	if( n > 0 ) {
-		for(i=0; i<n; i++) {
-			if( winsertln(win) == ERR )
+	if ( n > 0 ) {
+		for (i = 0; i < n; i++) {
+			if ( winsertln(win) == ERR )
 				return ERR;
 		}
 	}
-	else if( n < 0 ) {
+	else if ( n < 0 ) {
 		n = -n;
-		for(i=0; i<n; i++) {
-			if( wdeleteln(win) == ERR )
+		for (i = 0; i < n; i++) {
+			if ( wdeleteln(win) == ERR )
 				return ERR;
 		}
 	}
 
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	winsertln(WINDOW *win)
@@ -248,19 +250,19 @@ WINDOW *win;
 	PDC_LOG(("winsertln() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 #if defined(PDCURSES_WCLR)
-	blank	= win->_blank | win->_attrs;
+	blank = win->_blank | win->_attrs;
 #else
 /* wrs (4/10/93) account for window background */
-	blank	= win->_bkgd;
+	blank = win->_bkgd;
 #endif
-	temp	= win->_y[win->_maxy-1];
+	temp = win->_y[win->_maxy-1];
 
 	for (y = win->_maxy-1; y > win->_cury; y--)
 	{
-		win->_y[y]	 = win->_y[y - 1];
+		win->_y[y] = win->_y[y - 1];
 		win->_firstch[y] = 0;
 		win->_lastch[y] = win->_maxx - 1;
 	}
@@ -268,15 +270,14 @@ WINDOW *win;
 	win->_y[win->_cury] = temp;
 
 	for (end = &temp[win->_maxx - 1]; temp <= end; temp++)
-	{
 		*temp = blank;
-	}
 
 	win->_firstch[win->_cury] = 0;
 	win->_lastch[win->_cury] = win->_maxx - 1;
 
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	insertln(void)
@@ -288,10 +289,11 @@ int	PDC_CDECL	insertln()
 	PDC_LOG(("insertln() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(winsertln(stdscr));
+	return winsertln(stdscr);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvwinsertln(WINDOW *win, int y, int x)
@@ -304,7 +306,8 @@ int y,x;
 {
 	PDC_LOG(("mvwinsertln() - called\n"));
 
-	if (wmove(win,y,x) == ERR)
-		return(ERR);
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
 	return(winsertln(win));
 }

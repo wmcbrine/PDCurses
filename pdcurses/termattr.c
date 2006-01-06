@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr  = "$Id: termattr.c,v 1.7 2006/01/03 20:07:15 wmcbrine Exp $";
+char *rcsid_termattr = "$Id: termattr.c,v 1.8 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -51,79 +51,78 @@ char *rcsid_termattr  = "$Id: termattr.c,v 1.7 2006/01/03 20:07:15 wmcbrine Exp 
   Name:                                                     termattr
 
   Synopsis:
-  	int baudrate(void);
-  	char erasechar(void);
-  	bool has_ic(void);
-  	bool has_il(void);
-  	char killchar(void);
-  	char *longname(void);
-  	attr_t termattrs(void);
-  	char *termname(void);
+	int baudrate(void);
+	char erasechar(void);
+	bool has_ic(void);
+	bool has_il(void);
+	char killchar(void);
+	char *longname(void);
+	attr_t termattrs(void);
+	char *termname(void);
 
-  	char	wordchar(void);
+	char wordchar(void);
 
   X/Open Description:
- 	baudrate() returns the output speed of the terminal.  The number 
- 	returned is bits per second, for example 9600, and is an integer.
+	baudrate() returns the output speed of the terminal.  The number 
+	returned is bits per second, for example 9600, and is an integer.
 
- 	The user's current ERASE character is returned from a call to
- 	erasechar();
+	The user's current ERASE character is returned from a call to
+	erasechar();
 
- 	The has_ic function will return TRUE if the terminal has insert 
- 	character and delete character capabilities.
+	The has_ic function will return TRUE if the terminal has insert 
+	character and delete character capabilities.
 
- 	The has_il() function will return TRUE if the terminal has insert
- 	line and delete line capabilities.
+	The has_il() function will return TRUE if the terminal has insert
+	line and delete line capabilities.
 
- 	The user's current KILL character is returned from a call to
- 	killchar();
+	The user's current KILL character is returned from a call to
+	killchar();
 
- 	longname() returns a pointer to a static area containing a
- 	verbose description of the current terminal.  The maximum length
- 	of the string is 128 characters.  It is defined only after the
- 	call to initscr() or newterm().  The area is overwritten by each
- 	call to newterm() and is not restored by set_term().  The value
- 	should therefore be saved between calls to newterm(), if
- 	longname() is going to be used with multiple terminals.
+	longname() returns a pointer to a static area containing a
+	verbose description of the current terminal.  The maximum length
+	of the string is 128 characters.  It is defined only after the
+	call to initscr() or newterm().  The area is overwritten by each
+	call to newterm() and is not restored by set_term().  The value
+	should therefore be saved between calls to newterm(), if
+	longname() is going to be used with multiple terminals.
 
- 	termname() returns a pointer to a static area containing a
- 	short description of the current terminal (14 characters).
+	termname() returns a pointer to a static area containing a
+	short description of the current terminal (14 characters).
 
- 	termattrs() returns a logical OR of all video attributes
- 	supported by the terminal.
+	termattrs() returns a logical OR of all video attributes
+	supported by the terminal.
 
   PDCurses Description:
- 	If FAST_VIDEO is true, then this is the largest possible
- 	(portable) int value (INT_MAX from limits.h) IF direct
- 	video is possible, OR the approximate guess at BIOS speeds,
- 	19200.
- 	If FAST_VIDEO is false, this is an approximate guess at BIOS
- 	speeds, 19200.
+	If FAST_VIDEO is true, then this is the largest possible 
+	(portable) int value (INT_MAX from limits.h) IF direct video is 
+	possible, OR the approximate guess at BIOS speeds, 19200. If 
+	FAST_VIDEO is false, this is an approximate guess at BIOS 
+	speeds, 19200.
 
- 	erasechar(), killchar() and wordchar() all return values that are 
- 	hardcoded at this time.  There may be future development
- 	to allow applications an easy way to specify these value.
+	erasechar(), killchar() and wordchar() all return values that 
+	are hardcoded at this time.  There may be future development to 
+	allow applications an easy way to specify these value.
 
- 	For DOS, has_ic() and has_il() always return TRUE, as the speed of
- 	the DIRECT VIDEO or even BIOS writes is quicker than on a
- 	serial terminal.
+	For DOS, has_ic() and has_il() always return TRUE, as the speed 
+	of the DIRECT VIDEO or even BIOS writes is quicker than on a 
+	serial terminal.
 
- 	In addition to the above definition for longname(), the form of 
- 	this string is the adapter name (or video card name) and the text 
- 	resolution. This may also be followed by the notation that the video 
- 	card may be a clone, which indicates that the card identification
- 	maps to more than one unique card.
- 	e.g. The MDS Genius and the Quadram QuadHPG identify themselves
- 	in the same manner, but are vastly different in maximum resolution.
+	In addition to the above definition for longname(), the form of 
+	this string is the adapter name (or video card name) and the 
+	text resolution. This may also be followed by the notation that 
+	the video card may be a clone, which indicates that the card 
+	identification maps to more than one unique card. e.g. The MDS 
+	Genius and the Quadram QuadHPG identify themselves in the same 
+	manner, but are vastly different in maximum resolution.
 
- 	The user's current WORD character is returned from a call to
- 	wordchar();
+	The user's current WORD character is returned from a call to
+	wordchar().
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -139,8 +138,8 @@ char *rcsid_termattr  = "$Id: termattr.c,v 1.7 2006/01/03 20:07:15 wmcbrine Exp 
 
 **man-end**********************************************************************/
 
-static	char	_display[ 128 ];
-static	char	_shrtnme[ 14 ];
+static char _display[128];
+static char _shrtnme[14];
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -153,11 +152,12 @@ int	PDC_CDECL	baudrate()
 	PDC_LOG(("baudrate() - called\n"));
 
 #ifdef FAST_VIDEO
-	return (SP->direct_video ? INT_MAX : 19200 );
+	return SP->direct_video ? INT_MAX : 19200;
 #else
-	return (19200);			/* Approx. guess at BIOS speeds.*/
+	return 19200;		/* Approx. guess at BIOS speeds.*/
 #endif
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char	PDC_CDECL	erasechar(void)
@@ -168,8 +168,9 @@ char	PDC_CDECL	erasechar()
 {
 	PDC_LOG(("erasechar() - called\n"));
 
-	return(	_ECHAR );	/* character delete char (^H) */
+	return _ECHAR;		/* character delete char (^H) */
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 bool	PDC_CDECL	has_ic(void)
@@ -180,8 +181,9 @@ bool	PDC_CDECL	has_ic()
 {
 	PDC_LOG(("has_ic() - called\n"));
 
-	return( TRUE );
+	return TRUE;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 bool	PDC_CDECL	has_il(void)
@@ -192,8 +194,9 @@ bool	PDC_CDECL	has_il()
 {
 	PDC_LOG(("has_il() - called\n"));
 
-	return( TRUE );
+	return TRUE;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char	PDC_CDECL	killchar(void)
@@ -204,8 +207,9 @@ char	PDC_CDECL	killchar()
 {
 	PDC_LOG(("killchar() - called\n"));
 
-	return( _DLCHAR );	/* line delete char (^U) */
+	return _DLCHAR;		/* line delete char (^U) */
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char*	PDC_CDECL	longname(void)
@@ -217,55 +221,90 @@ char*	PDC_CDECL	longname()
 	PDC_LOG(("longname() - called\n"));
 
 #if defined (XCURSES)
-	if (SP->mono)
-		sprintf(_display,"X11-MONO-%dx%d",LINES,COLS);
-	else
-		sprintf(_display,"X11-COLOR-%dx%d",LINES,COLS);
+	sprintf(_display, "X11-%s-%dx%d", SP->mono ? "MONO" : "COLOR",
+		LINES, COLS);
 #endif
 
 #ifdef OS2
 # ifdef EMXVIDEO
 	switch (SP->mono)
 	{
-	case FALSE:	sprintf(_display,"COLOR-%dx%d", LINES, COLS); break;
-	case TRUE:	sprintf(_display,"MONO-%dx%d", LINES, COLS); break;
+	case FALSE:
+		sprintf(_display,"COLOR-%dx%d", LINES, COLS);
+		break;
+	case TRUE:
+		sprintf(_display,"MONO-%dx%d", LINES, COLS);
+		break;
 # else
-	switch	(SP->adapter.adapter)
+	switch (SP->adapter.adapter)
 	{
-	case DISPLAY_CGA:	sprintf(_display, "CGA-%dx%d", LINES, COLS);	  break;
-	case DISPLAY_MONOCHROME:	sprintf(_display, "MDA-%dx%d", LINES, COLS);	  break;
-	case DISPLAY_EGA:	sprintf(_display, "EGA-%dx%d", LINES, COLS); break;
-	case DISPLAY_VGA:	sprintf(_display, "VGA-%dx%d", LINES, COLS); break;
-	case DISPLAY_8514A:     sprintf(_display, "8514-%dx%d", LINES, COLS);  break;
+	case DISPLAY_CGA:
+		sprintf(_display, "CGA-%dx%d", LINES, COLS);	  
+		break;
+	case DISPLAY_MONOCHROME:
+		sprintf(_display, "MDA-%dx%d", LINES, COLS);	  
+		break;
+	case DISPLAY_EGA:
+		sprintf(_display, "EGA-%dx%d", LINES, COLS);
+		break;
+	case DISPLAY_VGA:
+		sprintf(_display, "VGA-%dx%d", LINES, COLS);
+		break;
+	case DISPLAY_8514A:
+		sprintf(_display, "8514-%dx%d", LINES, COLS); 
+		break;
 #  ifdef DISPLAY_XGA
-	case DISPLAY_XGA:	sprintf(_display, "XGA-%dx%d", LINES, COLS); break;
+	case DISPLAY_XGA:
+		sprintf(_display, "XGA-%dx%d", LINES, COLS);
+		break;
 #  endif
 # endif
-	default:	sprintf(_display, "Unknown-%dx%d", LINES, COLS);  break;
+	default:
+		sprintf(_display, "Unknown-%dx%d", LINES, COLS);
 	}
 #endif
 
 #ifdef DOS
-	switch	(SP->adapter)
+	switch (SP->adapter)
 	{
-	case _CGA:	sprintf(_display, "CGA-%dx%d", LINES, COLS);	  break;
-	case _MDA:	sprintf(_display, "MDA-%dx%d", LINES, COLS);	  break;
-	case _EGACOLOR:	sprintf(_display, "EGAColor-%dx%d", LINES, COLS); break;
-	case _EGAMONO:	sprintf(_display, "EGAMono-%dx%d", LINES, COLS);  break;
-	case _VGACOLOR:	sprintf(_display, "VGAColor-%dx%d", LINES, COLS); break;
-	case _VGAMONO:	sprintf(_display, "VGAMono-%dx%d", LINES, COLS);  break;
-	case _MCGACOLOR:sprintf(_display, "MCGAColor-%dx%d", LINES, COLS);break;
-	case _MCGAMONO:	sprintf(_display, "MCGAMono-%dx%d", LINES, COLS); break;
-	case _MDS_GENIUS:sprintf(_display, "Genius-%dx%d", LINES, COLS);  break;
-	default:	sprintf(_display, "Unknown-%dx%d", LINES, COLS);  break;
+	case _CGA:
+		sprintf(_display, "CGA-%dx%d", LINES, COLS);	  
+		break;
+	case _MDA:
+		sprintf(_display, "MDA-%dx%d", LINES, COLS);	  
+		break;
+	case _EGACOLOR:
+		sprintf(_display, "EGAColor-%dx%d", LINES, COLS);
+		break;
+	case _EGAMONO:
+		sprintf(_display, "EGAMono-%dx%d", LINES, COLS);
+		break;
+	case _VGACOLOR:
+		sprintf(_display, "VGAColor-%dx%d", LINES, COLS);
+		break;
+	case _VGAMONO:
+		sprintf(_display, "VGAMono-%dx%d", LINES, COLS);
+		break;
+	case _MCGACOLOR:
+		sprintf(_display, "MCGAColor-%dx%d", LINES, COLS);
+		break;
+	case _MCGAMONO:
+		sprintf(_display, "MCGAMono-%dx%d", LINES, COLS);
+		break;
+	case _MDS_GENIUS:
+		sprintf(_display, "Genius-%dx%d", LINES, COLS);
+		break;
+	default:
+		sprintf(_display, "Unknown-%dx%d", LINES, COLS);
 	}
 #endif
 
 	if (SP->bogus_adapter)
 		strcat(_display, " (Clone)");
 
-	return (_display);
+	return _display;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 attr_t	PDC_CDECL	termattrs(void)
@@ -274,15 +313,19 @@ attr_t	PDC_CDECL	termattrs()
 #endif
 /***********************************************************************/
 {
-	attr_t temp =   (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | A_UNDERLINE | A_ITALIC); /* blink is bold background on some platforms */
+	attr_t temp = (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | 
+		A_UNDERLINE | A_ITALIC);
+
+	/* note: blink is bold background on some platforms */
 
 	PDC_LOG(("termattrs() - called\n"));
 
-	if( ! SP->mono )
+	if (!SP->mono)
 		temp |= A_COLOR;
 
-	return( temp );
+	return temp;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char*	PDC_CDECL	termname(void)
@@ -294,49 +337,80 @@ char*	PDC_CDECL	termname()
 	PDC_LOG(("termname() - called\n"));
 
 #if defined (XCURSES)
-	if (SP->mono)
-		sprintf(_shrtnme,"X-MONO");
-	else
-		sprintf(_shrtnme,"X-COLOR");
+	sprintf(_shrtnme, SP->mono ? "X-MONO" : "X-COLOR");
 #endif
 
-#ifdef     OS2
+#ifdef OS2
 # ifdef	EMXVIDEO
 	switch (SP->mono)
 	{
-	case FALSE:	sprintf(_shrtnme,"COLOR"); break;
-	case TRUE:	sprintf(_shrtnme,"MONO"); break;
+	case FALSE:
+		sprintf(_shrtnme,"COLOR");
+		break;
+	case TRUE:
+		sprintf(_shrtnme,"MONO");
+		break;
 # else
-	switch	(SP->adapter.adapter)
+	switch (SP->adapter.adapter)
 	{
-	case DISPLAY_CGA:	sprintf(_shrtnme, "CGA");	  break;
-	case DISPLAY_MONOCHROME:	sprintf(_shrtnme, "MDA");	  break;
-	case DISPLAY_EGA:	sprintf(_shrtnme, "EGA"); break;
-	case DISPLAY_VGA:	sprintf(_shrtnme, "VGA"); break;
-	case DISPLAY_8514A:     sprintf(_shrtnme, "8514");  break;
+	case DISPLAY_CGA:
+		sprintf(_shrtnme, "CGA");
+		break;
+	case DISPLAY_MONOCHROME:
+		sprintf(_shrtnme, "MDA");
+		break;
+	case DISPLAY_EGA:
+		sprintf(_shrtnme, "EGA");
+		break;
+	case DISPLAY_VGA:
+		sprintf(_shrtnme, "VGA");
+		break;
+	case DISPLAY_8514A:
+		sprintf(_shrtnme, "8514");
+		break;
 # endif
-	default:	sprintf(_shrtnme, "Unknown");  break;
+	default:
+		sprintf(_shrtnme, "Unknown");
 	}
 #endif
 
 #ifdef DOS
-	switch	(SP->adapter)
+	switch (SP->adapter)
 	{
-	case _CGA:	sprintf(_shrtnme, "CGA");	  break;
-	case _MDA:	sprintf(_shrtnme, "MDA");	  break;
-	case _EGACOLOR:	sprintf(_shrtnme, "EGAColor"); break;
-	case _EGAMONO:	sprintf(_shrtnme, "EGAMono");  break;
-	case _VGACOLOR:	sprintf(_shrtnme, "VGAColor"); break;
-	case _VGAMONO:	sprintf(_shrtnme, "VGAMono");  break;
-	case _MCGACOLOR:sprintf(_shrtnme, "MCGAColor");break;
-	case _MCGAMONO:	sprintf(_shrtnme, "MCGAMono"); break;
-	case _MDS_GENIUS:sprintf(_shrtnme, "Genius");  break;
-	default:	sprintf(_shrtnme, "Unknown");  break;
+	case _CGA:
+		sprintf(_shrtnme, "CGA");
+		break;
+	case _MDA:
+		sprintf(_shrtnme, "MDA");
+		break;
+	case _EGACOLOR:
+		sprintf(_shrtnme, "EGAColor");
+		break;
+	case _EGAMONO:
+		sprintf(_shrtnme, "EGAMono");
+		break;
+	case _VGACOLOR:
+		sprintf(_shrtnme, "VGAColor");
+		break;
+	case _VGAMONO:
+		sprintf(_shrtnme, "VGAMono");
+		break;
+	case _MCGACOLOR:
+		sprintf(_shrtnme, "MCGAColor");
+		break;
+	case _MCGAMONO:
+		sprintf(_shrtnme, "MCGAMono");
+		break;
+	case _MDS_GENIUS:
+		sprintf(_shrtnme, "Genius");
+		break;
+	default:
+		sprintf(_shrtnme, "Unknown");
 	}
 #endif
-
-	return (_shrtnme);
+	return _shrtnme;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 char	PDC_CDECL	wordchar(void)
@@ -347,5 +421,5 @@ char	PDC_CDECL	wordchar()
 {
 	PDC_LOG(("wordchar() - called\n"));
 
-	return (_DWCHAR);			/* word delete char */
+	return _DWCHAR;			/* word delete char */
 }

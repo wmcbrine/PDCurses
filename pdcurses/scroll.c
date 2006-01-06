@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scroll  = "$Id: scroll.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_scroll = "$Id: scroll.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -45,38 +45,38 @@ char *rcsid_scroll  = "$Id: scroll.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                        scroll
 
   Synopsis:
-    int scroll(WINDOW *win);
-    int scrl(int n);
-    int wscrl(WINDOW *win, int n);
+	int scroll(WINDOW *win);
+	int scrl(int n);
+	int wscrl(WINDOW *win, int n);
 
   X/Open Description:
-    scroll() causes the window to scroll up one line.  This involves 
-    moving the lines in the window data strcture.
+	scroll() causes the window to scroll up one line.  This involves 
+	moving the lines in the window data strcture.
  
-    With the scrl() and wscrl() routines, for positive n scroll the 
-    window up n lines (line i+n becomes i); otherwise scroll the 
-    window down n lines.
+	With the scrl() and wscrl() routines, for positive n scroll the 
+	window up n lines (line i+n becomes i); otherwise scroll the 
+	window down n lines.
  
-    For these functions to work, scrolling must be enabled via 
-    scrollok().
+	For these functions to work, scrolling must be enabled via 
+	scrollok().
  
-    Note that scrl() and scroll() may be macros.
+	Note that scrl() and scroll() may be macros.
  
-    Note also that scrolling is not allowed if the supplied window 
-    is a PAD.
+	Note also that scrolling is not allowed if the supplied window 
+	is a PAD.
 
   X/Open Return Value:
-    All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
-    No errors are defined for this function.
+	No errors are defined for this function.
 
   NOTE:
-    The behaviour of Unix curses is to clear the line with a space
-    and attributes of A_NORMAL. PDCurses clears the line with the
-    window's current attributes (including current colour). To get
-    the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
-    add -DPDCURSES_WCLR to the compile switches.
+	The behaviour of Unix curses is to clear the line with a space
+	and attributes of A_NORMAL. PDCurses clears the line with the
+	window's current attributes (including current colour). To get
+	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
+	add -DPDCURSES_WCLR to the compile switches.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -95,93 +95,98 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("scroll() - called\n"));
+	PDC_LOG(("scroll() - called\n"));
 
-   if (win == (WINDOW *)NULL)
-      return( ERR );
+	if (win == (WINDOW *)NULL)
+		return ERR;
 
-   return(wscrl(win,1));
+	return wscrl(win, 1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int  PDC_CDECL wscrl(WINDOW *win, int n)
 #else
-int  PDC_CDECL wscrl(win,n)
+int  PDC_CDECL wscrl(win, n)
 WINDOW *win;
 int n;
 #endif
 /***********************************************************************/
 {
-   register int   i;
-   register int   l;
-   chtype*  ptr;
-   chtype*  temp;
-   static   chtype   blank;
+	int i, l;
+	chtype blank, *ptr, *temp;
 
-   if (win == (WINDOW *)NULL)
-      return( ERR );
+	/* Check if window scrolls. Valid for window AND pad */
+
+	if ((win == (WINDOW *)NULL) || !win->_scroll)
+		return ERR;
 
 #if defined(PDCURSES_WCLR)
-   blank = win->_blank | win->_attrs;
+	blank = win->_blank | win->_attrs;
 #else
-/* wrs (4/10/93) account for window background */
-   blank = win->_bkgd;
+	/* wrs (4/10/93) account for window background */
+
+	blank = win->_bkgd;
 #endif
+	/* wrs -- 7/11/93 -- quick add to original scroll() routine to 
+	   implement scrolling for a specified number of lines (not very 
+	   efficient for more than 1 line) */
 
-   /*
-    * Check if window scrolls. Valid for window AND pad
-    */
-   if ( !win->_scroll )
-   {
-      return( ERR );
-   }
+	if (n >= 0)
+	{
+		for (l = 0; l < n; l++) 
+		{
+			temp = win->_y[win->_tmarg];
 
-   /* wrs -- 7/11/93 -- quick add to original scroll() routine to implement
-    *                   scrolling for a specified number of lines
-    *                   (not very efficient for more than 1 line)
-    */
+			/* re-arrange line pointers */
 
-   if ( n >= 0 )
-   {
-      for ( l=0; l<n; l++ ) 
-      {
-         temp = win->_y[win->_tmarg];
-         for (i = win->_tmarg; (i < win->_bmarg); i++)
-         {
-            win->_y[i] = win->_y[i + 1];  /* re-arrange line
-                            * pointers */
-            win->_firstch[i] = 0;
-            win->_lastch[i] = win->_maxx - 1;
-         }
-         for (ptr = temp; (ptr - temp < win->_maxx); ptr++)
-            *ptr = blank;           /* make a blank line */
-         win->_y[win->_bmarg] = temp;
-         win->_firstch[win->_bmarg] = 0;
-         win->_lastch[win->_bmarg] = win->_maxx - 1;
-      }
-   }
-   else 
-   {
-      for ( l=n; l<0; l++ ) 
-      {
-         temp = win->_y[win->_bmarg];
-         for (i = win->_bmarg; (i > win->_tmarg); i--)
-         {
-            win->_y[i] = win->_y[i - 1];  /* re-arrange line
-                            * pointers */
-            win->_firstch[i] = 0;
-            win->_lastch[i] = win->_maxx - 1;
-         }
-         for (ptr = temp; (ptr - temp < win->_maxx); ptr++)
-            *ptr = blank;           /* make a blank line */
-         win->_y[win->_tmarg] = temp;
-         win->_firstch[win->_tmarg] = 0;
-         win->_lastch[win->_tmarg] = win->_maxx - 1;
-      }
-   }
-   PDC_sync(win);
-   return( OK );
+			for (i = win->_tmarg; i < win->_bmarg; i++)
+			{
+				win->_y[i] = win->_y[i + 1];
+				win->_firstch[i] = 0;
+				win->_lastch[i] = win->_maxx - 1;
+			}
+
+			/* make a blank line */
+
+			for (ptr = temp; (ptr - temp) < win->_maxx; ptr++)
+				*ptr = blank;
+
+			win->_y[win->_bmarg] = temp;
+			win->_firstch[win->_bmarg] = 0;
+			win->_lastch[win->_bmarg] = win->_maxx - 1;
+		}
+	}
+	else 
+	{
+		for (l = n; l < 0; l++)
+		{
+			temp = win->_y[win->_bmarg];
+
+			/* re-arrange line pointers */
+
+			for (i = win->_bmarg; i > win->_tmarg; i--)
+			{
+				win->_y[i] = win->_y[i - 1];
+				win->_firstch[i] = 0;
+				win->_lastch[i] = win->_maxx - 1;
+			}
+
+			/* make a blank line */
+
+			for (ptr = temp; (ptr - temp) < win->_maxx; ptr++)
+				*ptr = blank;
+
+			win->_y[win->_tmarg] = temp;
+			win->_firstch[win->_tmarg] = 0;
+			win->_lastch[win->_tmarg] = win->_maxx - 1;
+		}
+	}
+
+	PDC_sync(win);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int PDC_CDECL scrl(int n)
@@ -191,7 +196,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("scrl() - called\n"));
+	PDC_LOG(("scrl() - called\n"));
 
-   return(wscrl(stdscr,n));
+	return wscrl(stdscr, n);
 }

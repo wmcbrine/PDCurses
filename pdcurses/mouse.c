@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_mouse = "$Id: mouse.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -51,49 +51,51 @@ char *rcsid_mouse = "$Id: mouse.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 
   Synopsis:
 
-  	int mouse_set( long );
-  	int mouse_on( long );
-  	int mouse_off( long );
-  	int request_mouse_pos( void );
-  	int map_button( unsigned long );
-  	void wmouse_position( WINDOW *, int *, int * );
-  	unsigned long getmouse( void );
-  	unsigned long getbmap( void );
+	int mouse_set(long);
+	int mouse_on(long);
+	int mouse_off(long);
+	int request_mouse_pos(void);
+	int map_button(unsigned long);
+	void wmouse_position(WINDOW *, int *, int *);
+	unsigned long getmouse(void);
+	unsigned long getbmap(void);
 
   PDCurses Description:
- 	ALL DESCRIPTIONS ARE GUESSES. I DON'T KNOW ANYONE WHO KNOWS
- 	EXACTLY WHAT THESE FUNCTIONS DO!
+	ALL DESCRIPTIONS ARE GUESSES. I DON'T KNOW ANYONE WHO KNOWS
+	EXACTLY WHAT THESE FUNCTIONS DO!
 
- 	The mouse_set(), mouse_on() and mouse_off() functions are analagous to
- 	the attrset(), attron() and attroff() functions.  These functions
- 	set the mouse button events to trap.  The button masks used in these
- 	functions are defined in curses.h and can be or'ed together. They are
- 	the group of masks starting with BUTTON1_RELEASED.
+	The mouse_set(), mouse_on() and mouse_off() functions are 
+	analagous to the attrset(), attron() and attroff() functions.  
+	These functions set the mouse button events to trap.  The button 
+	masks used in these functions are defined in curses.h and can be 
+	or'ed together. They are the group of masks starting with 
+	BUTTON1_RELEASED.
 
- 	The request_mouse_pos() function requests curses to fill in the
- 	Mouse_status structure with the current state of the mouse.
+	The request_mouse_pos() function requests curses to fill in the
+	Mouse_status structure with the current state of the mouse.
 
- 	The map_button() function enables the mouse requested mouse action
- 	to activate the Soft Label Keys if the mouse action occurs over the
- 	area of the screen where the Soft Label Keys are displayed.  The
- 	mouse actions are defined in curses.h and are the group that start
- 	with BUTTON_RELEASED.
+	The map_button() function enables the mouse requested mouse 
+	action to activate the Soft Label Keys if the mouse action 
+	occurs over the area of the screen where the Soft Label Keys are 
+	displayed.  The mouse actions are defined in curses.h and are 
+	the group that start with BUTTON_RELEASED.
 
- 	The wmouse_position() function determines if the current mouse
- 	position is within the window passed as an argument.  If the mouse
- 	is outside the current window, -1 is returned in the y and x arguments
- 	otherwise the y and x coordinates of the mouse (relative to the top
- 	left corner of the window) are returned in y and x.
+	The wmouse_position() function determines if the current mouse 
+	position is within the window passed as an argument.  If the 
+	mouse is outside the current window, -1 is returned in the y and 
+	x arguments otherwise the y and x coordinates of the mouse 
+	(relative to the top left corner of the window) are returned in 
+	y and x.
 
- 	The getmouse() function returns the current status of the trapped
- 	mouse buttons as set by mouse_set(), mouse_on();
+	The getmouse() function returns the current status of the trapped
+	mouse buttons as set by mouse_set(), mouse_on();
 
- 	The getbmap() function returns the current status of the button action
- 	used to map a mouse action to the Soft Label Keys as set by the
- 	map_button() function.
+	The getbmap() function returns the current status of the button 
+	action used to map a mouse action to the Soft Label Keys as set 
+	by the map_button() function.
 
   PDCurses Errors:
- 	None.
+	None.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -117,11 +119,12 @@ unsigned long mbe;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mouse_set() - called: event %x\n",mbe));
+	PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
 	SP->_trap_mbe = mbe;
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mouse_on(unsigned long mbe)
@@ -131,11 +134,12 @@ unsigned long mbe;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mouse_on() - called: event %x\n",mbe));
+	PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
 	SP->_trap_mbe |= mbe;
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mouse_off(unsigned long mbe)
@@ -145,11 +149,12 @@ unsigned long mbe;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mouse_off() - called: event %x\n",mbe));
+	PDC_LOG(("mouse_off() - called: event %x\n", mbe));
 
 	SP->_trap_mbe &= ~mbe;
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	map_button(unsigned long button)
@@ -159,12 +164,13 @@ unsigned long button;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("map_button() - called: button %x\n",button));
+	PDC_LOG(("map_button() - called: button %x\n", button));
 
 /****************** this does nothing at the moment ***************/
 	SP->_map_mbe_to_key = button;
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	request_mouse_pos(void)
@@ -177,14 +183,17 @@ int	PDC_CDECL	request_mouse_pos()
 
 	PDC_LOG(("request_mouse_pos() - called\n"));
 
-	memcpy((char*)&Mouse_status,(char*)&Trapped_Mouse_status,sizeof(MOUSE_STATUS));
-	return( OK );
+	memcpy((char*)&Mouse_status, (char*)&Trapped_Mouse_status,
+		sizeof(MOUSE_STATUS));
+
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 void	PDC_CDECL	wmouse_position(WINDOW *win, int *y, int *x)
 #else
-void	PDC_CDECL	wmouse_position(win,y,x)
+void	PDC_CDECL	wmouse_position(win, y, x)
 WINDOW *win;
 int *y,*x;
 #endif
@@ -192,27 +201,28 @@ int *y,*x;
 {
 	PDC_LOG(("wmouse_position() - called\n"));
 
-/* if the current mouse position is outside the provided window, put  */
-/* -1 in x and y                                                      */
+ /* if the current mouse position is outside the provided window, put */
+ /* -1 in x and y                                                     */
+
 	if (win == (WINDOW *)NULL)
 	{
-		*y = *x = (-1);
+		*y = *x = -1;
 		return;
 	}
-	if (win->_begy > MOUSE_Y_POS 
-	||  win->_begx > MOUSE_X_POS 
-	||  win->_begy+win->_maxy <= MOUSE_Y_POS
-	||  win->_begx+win->_maxx <= MOUSE_X_POS)
+
+	if (win->_begy > MOUSE_Y_POS || win->_begx > MOUSE_X_POS 
+	    || win->_begy + win->_maxy <= MOUSE_Y_POS
+	    || win->_begx + win->_maxx <= MOUSE_X_POS)
 	{
-		*x = *y = (-1);
+		*x = *y = -1;
 	}
 	else
 	{
 		*x = MOUSE_X_POS - win->_begx;
 		*y = MOUSE_Y_POS - win->_begy;
 	}
-	return;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 unsigned long	PDC_CDECL	getmouse(void)
@@ -223,8 +233,9 @@ unsigned long	PDC_CDECL	getmouse()
 {
 	PDC_LOG(("getmouse() - called\n"));
 
-	return(SP->_trap_mbe);
+	return SP->_trap_mbe;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 unsigned long	PDC_CDECL	getbmap(void)
@@ -235,5 +246,5 @@ unsigned long	PDC_CDECL	getbmap()
 {
 	PDC_LOG(("getbmap() - called\n"));
 
-	return(SP->_map_mbe_to_key);
+	return SP->_map_mbe_to_key;
 }

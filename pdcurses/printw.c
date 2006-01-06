@@ -17,18 +17,18 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 #include <string.h>
 
 #if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
-#  include <stdarg.h>
-#  define HAVE_STDARG_H_HAVE_PROTO
+# include <stdarg.h>
+# define HAVE_STDARG_H_HAVE_PROTO
 #else
-#  include <varargs.h>
+# include <varargs.h>
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw  = "$Id: printw.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_printw = "$Id: printw.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -52,46 +52,46 @@ char *rcsid_printw  = "$Id: printw.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                        printw
 
   Synopsis:
-  	int printw(char *fmt, ...);
-  	int wprintw(WINDOW *win, char *fmt, ...);
-  	int mvprintw(int y, int x, char *fmt, ...);
-  	int mvwprintw(WINDOW *win, int y, int x, char *fmt,...);
+	int printw(char *fmt, ...);
+	int wprintw(WINDOW *win, char *fmt, ...);
+	int mvprintw(int y, int x, char *fmt, ...);
+	int mvwprintw(WINDOW *win, int y, int x, char *fmt,...);
   ***	int vwprintw(WINDOW *win, char *fmt, va_list varglist);
 
   X/Open Description:
- 	The printw() routine adds a string to the default window
- 	starting at the current cursor position.  This routine causes
- 	the string that would normally be output by printf() to be
- 	output by addstr().
+	The printw() routine adds a string to the default window
+	starting at the current cursor position.  This routine causes
+	the string that would normally be output by printf() to be
+	output by addstr().
 
- 	The routine wprintw() adds a string to the specified window
- 	starting at the current cursor position.  This routine causes
- 	the string that would normally be output by printf() to be
- 	output by waddstr().
+	The routine wprintw() adds a string to the specified window
+	starting at the current cursor position.  This routine causes
+	the string that would normally be output by printf() to be
+	output by waddstr().
 
- 	The routine mvprintw() adds a string to the default window
- 	starting at the specified cursor position.  This routine
- 	causes the string that would normally be output by printf() to
- 	be output by addstr().
+	The routine mvprintw() adds a string to the default window
+	starting at the specified cursor position.  This routine
+	causes the string that would normally be output by printf() to
+	be output by addstr().
 
- 	The routine mvwprintw() adds a string to the specified window
- 	starting at the specified cursor position.  This routine
- 	causes the string that would normally be output by printf() to
- 	be output by waddstr().
+	The routine mvwprintw() adds a string to the specified window
+	starting at the specified cursor position.  This routine
+	causes the string that would normally be output by printf() to
+	be output by waddstr().
 
- 	All these routines are analogous to printf().  It is advisable
- 	to use the field width options of printf() to avoid leaving
- 	unwanted characters on the screen from earlier calls.
+	All these routines are analogous to printf().  It is advisable
+	to use the field width options of printf() to avoid leaving
+	unwanted characters on the screen from earlier calls.
 
   PDCurses Description:
- 	The old Bjorn Larssen code for the 68K platform has been removed
- 	from this module.
+	The old Bjorn Larssen code for the 68K platform has been removed
+	from this module.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -105,136 +105,128 @@ char *rcsid_printw  = "$Id: printw.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 
 /***********************************************************************/
 #ifdef HAVE_STDARG_H_HAVE_PROTO
-int	PDC_CDECL	printw(char *fmt,...)
+int	PDC_CDECL	printw(char *fmt, ...)
 #else
-int	PDC_CDECL	printw(fmt,va_alist)
+int	PDC_CDECL	printw(fmt, va_alist)
 char *fmt;
 va_dcl
 #endif
 /***********************************************************************/
 {
-	int	retval = ERR;
 	va_list args;
 
 	PDC_LOG(("printw() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return (retval);
+		return ERR;
 
 #ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
 #else
 	va_start(args);
 #endif
-
 	vsprintf(c_printscanbuf, fmt, args);
 	va_end(args);
+
 	if (waddstr(stdscr, c_printscanbuf) == ERR)
-		return (retval);
-	retval = (strlen(c_printscanbuf));
-	return (retval);
+		return ERR;
+
+	return strlen(c_printscanbuf);
 }
+
 /***********************************************************************/
 #ifdef HAVE_STDARG_H_HAVE_PROTO
-int	PDC_CDECL	wprintw(WINDOW *win,char *fmt,...)
+int	PDC_CDECL	wprintw(WINDOW *win, char *fmt, ...)
 #else
-int	PDC_CDECL	wprintw(win,fmt,va_alist)
+int	PDC_CDECL	wprintw(win, fmt, va_alist)
 WINDOW *win;
 char *fmt;
 va_dcl
 #endif
 /***********************************************************************/
 {
-	int	retval = ERR;
 	va_list args;
 
 	PDC_LOG(("wprintw() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return (retval);
+		return ERR;
 
 #ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
 #else
 	va_start(args);
 #endif
-
 	vsprintf(c_printscanbuf, fmt, args);
 	va_end(args);
+
 	if (waddstr(win, c_printscanbuf) == ERR)
-		return (retval);
-	retval = (strlen(c_printscanbuf));
-	return (retval);
+		return ERR;
+
+	return strlen(c_printscanbuf);
 }
+
 /***********************************************************************/
 #ifdef HAVE_STDARG_H_HAVE_PROTO
-int	PDC_CDECL	mvprintw(int y, int x,char *fmt,...)
+int	PDC_CDECL	mvprintw(int y, int x, char *fmt, ...)
 #else
-int	PDC_CDECL	mvprintw(y,x,fmt,va_alist)
-int y,x;
+int	PDC_CDECL	mvprintw(y, x, fmt, va_alist)
+int y, x;
 char *fmt;
 va_dcl
 #endif
 /***********************************************************************/
 {
-	int	retval = ERR;
 	va_list args;
 
 	PDC_LOG(("mvprintw() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return (retval);
-
-	if (wmove(stdscr, y, x) == ERR)
-		return( retval );
+	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+		return ERR;
 
 #ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
 #else
 	va_start(args);
 #endif
-
 	vsprintf(c_printscanbuf, fmt, args);
 	va_end(args);
 
 	if (waddstr(stdscr, c_printscanbuf) == ERR)
-		return( retval );
-	retval = (strlen(c_printscanbuf));
-	return( retval );
+		return ERR;
+
+	return strlen(c_printscanbuf);
 }
+
 /***********************************************************************/
 #ifdef HAVE_STDARG_H_HAVE_PROTO
-int	PDC_CDECL	mvwprintw(WINDOW *win,int y, int x,char *fmt,...)
+int	PDC_CDECL	mvwprintw(WINDOW *win, int y, int x, char *fmt, ...)
 #else
-int	PDC_CDECL	mvwprintw(win,y,x,fmt,va_alist)
+int	PDC_CDECL	mvwprintw(win, y, x, fmt, va_alist)
 WINDOW *win;
-int y,x;
+int y, x;
 char *fmt;
 va_dcl
 #endif
 /***********************************************************************/
 {
-	int	retval = ERR;
 	va_list args;
 
 	PDC_LOG(("mvwprintw() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return (retval);
-	if (wmove(win, y, x) == ERR)
-		return( retval );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
 #ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
 #else
 	va_start(args);
 #endif
-
 	vsprintf(c_printscanbuf, fmt, args);
 	va_end(args);
 
 	if (waddstr(win, c_printscanbuf) == ERR)
-		return (retval);
-	retval = (strlen(c_printscanbuf));
-	return (retval);
+		return ERR;
+
+	return strlen(c_printscanbuf);
 }

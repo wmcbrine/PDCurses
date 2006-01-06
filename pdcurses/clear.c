@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_clear  = "$Id: clear.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_clear  = "$Id: clear.c,v 1.5 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -46,48 +46,48 @@ char *rcsid_clear  = "$Id: clear.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                         clear
 
   Synopsis:
-  	int clear(void);
-  	int wclear(WINDOW *win);
-  	int erase(void);
-  	int werase(WINDOW *win);
-  	int clrtobot(void);
-  	int wclrtobot(WINDOW *win);
-  	int clrtoeol(void);
-  	int wclrtoeol(WINDOW *win);
+	int clear(void);
+	int wclear(WINDOW *win);
+	int erase(void);
+	int werase(WINDOW *win);
+	int clrtobot(void);
+	int wclrtobot(WINDOW *win);
+	int clrtoeol(void);
+	int wclrtoeol(WINDOW *win);
 
   X/Open Description:
-  	The erase() and werase() functions copy blanks to every position
-  	of the window.
+	The erase() and werase() functions copy blanks to every position
+	of the window.
 
-  	The clear() and wclear() functions are similar to erase() and
-  	werase() except they also call clearok() to ensure that the
-  	the screen is cleared on the next call to wrefresh() for that
-  	window.
+	The clear() and wclear() functions are similar to erase() and
+	werase() except they also call clearok() to ensure that the
+	the screen is cleared on the next call to wrefresh() for that
+	window.
 
-  	The clrtobot() and wclrtobot() functions clear the screen from
-  	the current cursor position to the end of the current line and
-  	all remaining lines in the window.
+	The clrtobot() and wclrtobot() functions clear the screen from
+	the current cursor position to the end of the current line and
+	all remaining lines in the window.
 
-  	The clrtoeol() and wclrtoeol() functions clear the screen from
-  	the current cursor position to the end of the current line only.
+	The clrtoeol() and wclrtoeol() functions clear the screen from
+	the current cursor position to the end of the current line only.
 
- 	NOTE: clear(), wclear(), erase(), clrtobot(), and clrtoeol()
- 	are implemented as macros
+	NOTE: clear(), wclear(), erase(), clrtobot(), and clrtoeol()
+	are implemented as macros
 
   PDCurses Description:
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   NOTE:
- 	The behaviour of Unix curses is to clear the line with a space
- 	and attributes of A_NORMAL. PDCurses clears the line with the
- 	window's current attributes (including current colour). To get
- 	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
- 	add -DPDCURSES_WCLR to the compile switches.
+	The behaviour of Unix curses is to clear the line with a space
+	and attributes of A_NORMAL. PDCurses clears the line with the
+	window's current attributes (including current colour). To get
+	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
+	add -DPDCURSES_WCLR to the compile switches.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -113,14 +113,15 @@ int	PDC_CDECL	clear()
 	PDC_LOG(("clear() - called\n"));
 
 	if  (stdscr == (WINDOW *)NULL)
-		return(ERR);
+		return ERR;
 
 	stdscr->_clear = TRUE;
-	return(erase());
+	return erase();
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wclear( WINDOW *win )
+int	PDC_CDECL	wclear(WINDOW *win)
 #else
 int	PDC_CDECL	wclear(win)
 WINDOW *win;
@@ -130,11 +131,12 @@ WINDOW *win;
 	PDC_LOG(("wclear() - called\n"));
 
 	if  (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	win->_clear = TRUE;
-	return( werase( win ) );
+	return werase( win );
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	erase(void)
@@ -143,8 +145,9 @@ int	PDC_CDECL	erase()
 #endif
 /***********************************************************************/
 {
-	return( werase(stdscr) );
+	return werase(stdscr);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	werase(WINDOW *win)
@@ -159,9 +162,10 @@ WINDOW *win;
 	if (win == (WINDOW *)NULL)
 		return( ERR );
 
-	(void)wmove(win,0,0);
-	return (wclrtobot(win));
+	wmove(win, 0, 0);
+	return wclrtobot(win);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	clrtobot(void)
@@ -170,8 +174,9 @@ int	PDC_CDECL	clrtobot()
 #endif
 /***********************************************************************/
 {
-	return( wclrtobot(stdscr) );
+	return wclrtobot(stdscr);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wclrtobot(WINDOW *win)
@@ -187,24 +192,25 @@ WINDOW *win;
 	PDC_LOG(("wclrtobot() - called\n"));
 
 	if  (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 /* should this involve scrolling region somehow ? */
 
 	if (win->_cury + 1 < win->_maxy)
-		{
+	{
 		win->_curx = 0;
 		win->_cury++;
 		for ( ; win->_maxy > win->_cury; win->_cury++)
-			(void)wclrtoeol(win);
+			wclrtoeol(win);
 		win->_cury = savey;
 		win->_curx = savex;
-		}
-	(void)wclrtoeol(win);
+	}
+	wclrtoeol(win);
 
 	PDC_sync(win);
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	clrtoeol(void)
@@ -213,8 +219,9 @@ int	PDC_CDECL	clrtoeol()
 #endif
 /***********************************************************************/
 {
-	return( wclrtoeol(stdscr) );
+	return wclrtoeol(stdscr);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wclrtoeol(WINDOW *win)
@@ -224,13 +231,14 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	int	x, y, minx;
-	chtype	blank, *ptr;
+	int x, y, minx;
+	chtype blank, *ptr;
 
-	PDC_LOG(("wclrtoeol() - called: Row: %d Col: %d\n", win->_cury, win->_curx));
+	PDC_LOG(("wclrtoeol() - called: Row: %d Col: %d\n",
+		win->_cury, win->_curx));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	y = win->_cury;
 	x = win->_curx;
@@ -250,5 +258,5 @@ WINDOW *win;
 	win->_lastch[y] = max(win->_lastch[y], win->_maxx - 1);
 
 	PDC_sync(win);
-	return( OK );
+	return OK;
 }

@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -46,7 +46,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insstr  = "$Id: insstr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_insstr  = "$Id: insstr.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,40 +54,41 @@ char *rcsid_insstr  = "$Id: insstr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                        insstr
 
   Synopsis:
-  	int insstr(const char *str);
-  	int insnstr(const char *str, int n);
-  	int winsstr(WINDOW *win, const char *str);
-  	int winsnstr(WINDOW *win, const char *str, int n);
-  	int mvinsstr(int y, int x, const char *str);
-  	int mvinsnstr(int y, int x, const char *str, int n);
-  	int mvwinsstr(WINDOW *, int y, int x, const char *str);
-  	int mvwinsnstr(WINDOW *, int y, int x, const char *str, int n);
+	int insstr(const char *str);
+	int insnstr(const char *str, int n);
+	int winsstr(WINDOW *win, const char *str);
+	int winsnstr(WINDOW *win, const char *str, int n);
+	int mvinsstr(int y, int x, const char *str);
+	int mvinsnstr(int y, int x, const char *str, int n);
+	int mvwinsstr(WINDOW *, int y, int x, const char *str);
+	int mvwinsnstr(WINDOW *, int y, int x, const char *str, int n);
 
   System V Curses Description:
-  	With these routines, a character string (as many characters as 
-  	will fit on the line) is inserted before the character under 
-  	the cursor.  All characters to the right of the cursor are moved 
-  	to the right, with the possibility of the rightmost characters 
-  	on the line being lost.  The cursor position does not change 
-  	(after moving to y,x if specified).  The four routines with n as 
-  	the last argument insert at most n characters.  If n<=0, then 
-  	the entire string is inserted.
+	With these routines, a character string (as many characters as 
+	will fit on the line) is inserted before the character under 
+	the cursor.  All characters to the right of the cursor are moved 
+	to the right, with the possibility of the rightmost characters 
+	on the line being lost.  The cursor position does not change 
+	(after moving to y,x if specified).  The four routines with n as 
+	the last argument insert at most n characters.  If n<=0, then 
+	the entire string is inserted.
 
- 	NOTE:	insstr(), mvinsstr(), and mvwinsstr() are implemented as macros.
- 		insnstr(), mvinsnstr(), and mvwinsnstr() are implemented as macros.
+	NOTE: insstr(), insnstr(), mvinsstr(), mvinsnstr(), mvwinsstr() 
+	and mvwinsnstr() are implemented as macros.
 
   PDCurses Description:
- 	The *raw*() routines output 8 bit values.  These contrast to their
- 	normal counterparts which output 7 bit values and convert control
- 	character to the ^X notation.
+	The *raw*() routines output 8 bit values.  These contrast to 
+	their normal counterparts which output 7 bit values and convert 
+	control character to the ^X notation.
 
- 	str is a standard 8 bit character string WITHOUT embedded attributes.
+	str is a standard 8 bit character string WITHOUT embedded 
+	attributes.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -111,52 +112,55 @@ char *str;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("insstr() - called: string=\"%s\"\n",str));
+	PDC_LOG(("insstr() - called: string=\"%s\"\n", str));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(winsnstr(stdscr,str,(-1)));
+	return winsnstr(stdscr, str, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	insnstr(const char *str, int n)
 #else
-int	PDC_CDECL	insnstr(str,n)
+int	PDC_CDECL	insnstr(str, n)
 char *str;
 int n;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("insnstr() - called: string=\"%s\" n %d \n",str,n));
+	PDC_LOG(("insnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(winsnstr(stdscr,str,n));
+	return winsnstr(stdscr, str, n);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	winsstr(WINDOW *win, const char *str)
 #else
-int	PDC_CDECL	winsstr(win,str)
+int	PDC_CDECL	winsstr(win, str)
 WINDOW *win;
 char *str;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("winsstr() - called: string=\"%s\"\n",str));
+	PDC_LOG(("winsstr() - called: string=\"%s\"\n", str));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(winsnstr(win,str,(-1)));
+	return winsnstr(win, str, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	winsnstr(WINDOW *win, const char *str, int n)
 #else
-int	PDC_CDECL	winsnstr(win,str,n)
+int	PDC_CDECL	winsnstr(win, str, n)
 WINDOW *win;
 char *str;
 int n;
@@ -165,51 +169,48 @@ int n;
 {
 	int ic = strlen(str);
 
-	PDC_LOG(("winsnstr() - called: string=\"%s\" n %d \n",str,n));
+	PDC_LOG(("winsnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	if( n > 0 )
-		ic = ((ic<n)?ic:n) - 1;
+		ic = ((ic < n) ? ic : n) - 1;
 	else
 		ic = ic - 1;
 
 	for ( ; ic >= 0; ic-- )
-	{
-		if (winsch(win, *(str+ic) ) == ERR)
-		{
-			return( ERR );
-		}
-	}
-	return( OK );
+		if (winsch(win, *(str + ic)) == ERR)
+			return ERR;
+
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvinsstr(int y, int x, const char *str)
 #else
-int	PDC_CDECL	mvinsstr(y,x,str)
+int	PDC_CDECL	mvinsstr(y, x, str)
 int y;
 int x;
 char *str;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvinsstr() - called: y %d x %d string=\"%s\"\n",y,x,str));
+	PDC_LOG(("mvinsstr() - called: y %d x %d string=\"%s\"\n",
+		y, x, str));
 
-	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (move(y,x) == ERR))
+		return ERR;
 
-	if (move(y,x) == ERR)
-		return( ERR );
-
-	return(winsnstr(stdscr,str,(-1)));
+	return winsnstr(stdscr, str, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvinsnstr(int y, int x, const char *str, int n)
 #else
-int	PDC_CDECL	mvinsnstr(y,x,str,n)
+int	PDC_CDECL	mvinsnstr(y, x, str, n)
 int y;
 int x;
 char *str;
@@ -217,21 +218,20 @@ int n;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvinsnstr() - called: y %d x %d string=\"%s\" n %d \n",y,x,str,n));
+	PDC_LOG(("mvinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
+		y, x, str, n));
 
-	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (move(y,x) == ERR))
+		return ERR;
 
-	if (move(y,x) == ERR)
-		return( ERR );
-
-	return(winsnstr(stdscr,str,n));
+	return winsnstr(stdscr, str, n);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvwinsstr(WINDOW *win, int y, int x, const char *str)
 #else
-int	PDC_CDECL	mvwinsstr(win,y,x,str)
+int	PDC_CDECL	mvwinsstr(win, y, x, str)
 WINDOW *win;
 int y;
 int x;
@@ -239,21 +239,20 @@ char *str;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("winsstr() - called: string=\"%s\"\n",str));
+	PDC_LOG(("winsstr() - called: string=\"%s\"\n", str));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
-	if (wmove(win,y,x) == ERR)
-		return( ERR );
-
-	return(winsnstr(win,str,(-1)));
+	return winsnstr(win, str, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvwinsnstr(WINDOW *win,int y, int x, const char *str, int n)
+int	PDC_CDECL	mvwinsnstr(WINDOW *win,int y, int x,
+				   const char *str, int n)
 #else
-int	PDC_CDECL	mvwinsnstr(win,y,x,str,n)
+int	PDC_CDECL	mvwinsnstr(win, y, x, str, n)
 WINDOW *win;
 int y;
 int x;
@@ -262,13 +261,11 @@ int n;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvwinsnstr() - called: y %d x %d string=\"%s\" n %d \n",y,x,str,n));
+	PDC_LOG(("mvwinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
+		y, x, str, n));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
-	if (wmove(win,y,x) == ERR)
-		return( ERR );
-
-	return(winsnstr(win,str,n));
+	return winsnstr(win, str, n);
 }

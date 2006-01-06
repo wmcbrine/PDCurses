@@ -19,7 +19,7 @@
 */
 #define CURSES_LIBRARY  1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scr_dump  = "$Id: scr_dump.c,v 1.3 2006/01/03 07:36:11 wmcbrine Exp $";
+char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -42,48 +42,49 @@ char *rcsid_scr_dump  = "$Id: scr_dump.c,v 1.3 2006/01/03 07:36:11 wmcbrine Exp 
   Name:                                                       scr_dump
 
   Synopsis:
-    int scr_dump(const char *filename);
-    int scr_init(const char *filename);
-    int scr_restore(const char *filename);
-    int scr_set(const char *filename);
+	int scr_dump(const char *filename);
+	int scr_init(const char *filename);
+	int scr_restore(const char *filename);
+	int scr_set(const char *filename);
 
   X/Open Description:
-    The scr_dump() function writes the current contents of the virtual 
-    screen to the file named by filename in an unspecified format.
+	The scr_dump() function writes the current contents of the 
+	virtual screen to the file named by filename in an unspecified 
+	format.
 
-    The scr_restore() function sets the virtual screen to the contents 
-    of the file named by filename, which must have been written using 
-    scr_dump(). The next refresh operation restores the screen to the 
-    way it looked in the dump file.
+	The scr_restore() function sets the virtual screen to the 
+	contents of the file named by filename, which must have been 
+	written using scr_dump(). The next refresh operation restores 
+	the screen to the way it looked in the dump file.
 
-    The scr_init() function reads the contents of the file named by 
-    filename and uses them to initialise the Curses data structures to 
-    what the terminal currently has on its screen. The next refresh 
-    operation bases any updates on this information, unless either of 
-    the following conditions is true:
+	The scr_init() function reads the contents of the file named by 
+	filename and uses them to initialise the Curses data structures 
+	to what the terminal currently has on its screen. The next 
+	refresh operation bases any updates on this information, unless 
+	either of the following conditions is true:
 
-        * The terminal has been written to since the virtual screen was 
-          dumped to filename
+	* The terminal has been written to since the virtual screen was 
+	  dumped to filename
 
-        * The terminfo capabilities rmcup and nrrmc are defined for the 
-          current terminal.
+	* The terminfo capabilities rmcup and nrrmc are defined for the 
+	  current terminal.
 
-    The scr_set() function is a combination of scr_restore() and 
-    scr_init(). It tells the program that the information in the file 
-    named by filename is what is currently on the screen, and also what 
-    the program wants on the screen. This can be thought of as a screen 
-    inheritance function.
+	The scr_set() function is a combination of scr_restore() and 
+	scr_init(). It tells the program that the information in the 
+	file named by filename is what is currently on the screen, and 
+	also what the program wants on the screen. This can be thought 
+	of as a screen inheritance function.
 
   PDCurses Description:
-    These functions are not yet meaningfully implemented in PDCurses. 
-    This file is a placeholder.
+	These functions are not yet meaningfully implemented in 
+	PDCurses. This file is a placeholder.
 
   X/Open Return Value:
-    On successful completion, these functions return OK. Otherwise, they 
-    return ERR.
+	On successful completion, these functions return OK. Otherwise, 
+	they return ERR.
 
   X/Open Errors:
-    No errors are defined. 
+	No errors are defined. 
 
 **man-end**********************************************************************/
 
@@ -100,6 +101,7 @@ char *filename;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int scr_init(const char *filename)
@@ -113,6 +115,7 @@ char *filename;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int scr_restore(const char *filename)
@@ -126,6 +129,7 @@ char *filename;
 
 	return ERR;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int scr_set(const char *filename)

@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getyx  = "$Id: getyx.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_getyx  = "$Id: getyx.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -44,37 +44,37 @@ char *rcsid_getyx  = "$Id: getyx.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                         getyx
 
   Synopsis:
-  	void getyx(WINDOW *win, int y, int x);
-  	void getparyx(WINDOW *win, int y, int x);
-  	void getbegyx(WINDOW *win, int y, int x);
-  	void getmaxyx(WINDOW *win, int y, int x);
+	void getyx(WINDOW *win, int y, int x);
+	void getparyx(WINDOW *win, int y, int x);
+	void getbegyx(WINDOW *win, int y, int x);
+	void getmaxyx(WINDOW *win, int y, int x);
 
-  	int getbegy(WINDOW *win);
-  	int getbegx(WINDOW *win);
-  	int getpary(WINDOW *win);
-  	int getparx(WINDOW *win);
-  	int getmaxy(WINDOW *win);
-  	int getmaxx(WINDOW *win);
+	int getbegy(WINDOW *win);
+	int getbegx(WINDOW *win);
+	int getpary(WINDOW *win);
+	int getparx(WINDOW *win);
+	int getmaxy(WINDOW *win);
+	int getmaxx(WINDOW *win);
 
   X/Open Description:
- 	With the getyx() macro, the cursor position of the window is placed
- 	in the two integer variables y and x. getbegyx() and getmaxyx()
- 	return the current beginning coordinates and size of the specified
- 	window respectively. getparyx() returns the beginning coordinates 
- 	of the parent's window if the specified window is a sub-window
- 	otherwise -1 is returned.
+	With the getyx() macro, the cursor position of the window is placed
+	in the two integer variables y and x. getbegyx() and getmaxyx()
+	return the current beginning coordinates and size of the specified
+	window respectively. getparyx() returns the beginning coordinates 
+	of the parent's window if the specified window is a sub-window
+	otherwise -1 is returned.
 
- 	These functions are implemented as macros, so their return values
- 	are undefined. Also as these functions are implemented as macros,
- 	no '&' is required before the variables y and x.
+	These functions are implemented as macros, so their return values
+	are undefined. Also as these functions are implemented as macros,
+	no '&' is required before the variables y and x.
 
- 	The functions getbegy(), getbegx(), getmaxy(), getmaxx() ,
- 	getpary(), and getparx() do return the beginning coordinate or 
- 	size values, so they can be specified on the right-hand side of 
- 	an assignment statement. They are, however, implemented as macros.
+	The functions getbegy(), getbegx(), getmaxy(), getmaxx() ,
+	getpary(), and getparx() do return the beginning coordinate or 
+	size values, so they can be specified on the right-hand side of 
+	an assignment statement. They are, however, implemented as macros.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -103,10 +103,11 @@ WINDOW *win;
 	PDC_LOG(("getbegy() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(win->_begy);
+	return win->_begy;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	getbegx(WINDOW *win)
@@ -119,10 +120,11 @@ WINDOW *win;
 	PDC_LOG(("getbegx() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(win->_begx);
+	return win->_begx;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	getpary(WINDOW *win)
@@ -135,10 +137,11 @@ WINDOW *win;
 	PDC_LOG(("getpary() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(win->_pary);
+	return win->_pary;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	getparx(WINDOW *win)
@@ -151,10 +154,11 @@ WINDOW *win;
 	PDC_LOG(("getparx() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(win->_parx);
+	return win->_parx;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	getmaxy(WINDOW *win)
@@ -167,10 +171,11 @@ WINDOW *win;
 	PDC_LOG(("getmaxy() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(win->_maxy);
+	return win->_maxy;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	getmaxx(WINDOW *win)
@@ -183,7 +188,7 @@ WINDOW *win;
 	PDC_LOG(("getmaxx() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(win->_maxx);
+	return win->_maxx;
 }

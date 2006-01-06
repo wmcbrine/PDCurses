@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_attr  = "$Id: attr.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -51,58 +51,58 @@ char *rcsid_attr  = "$Id: attr.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                          attr
 
   Synopsis:
-  	int attroff(attr_t attrs);
-  	int wattroff(WINDOW *win, attr_t attrs);
-  	int attron(attr_t attrs);
-  	int wattron(WINDOW *win, attr_t attrs);
-  	int attrset(attr_t attrs);
-  	int wattrset(WINDOW *win, attr_t attrs);
-  	int standend(void);
-  	int wstandend(WINDOW *win);
-  	int standout(void);
-  	int wstandout(WINDOW *win);
-  	int color_set(short color_pair, void *opts);
-  	int wcolor_set(WINDOW *win, short color_pair, void *opts);
+	int attroff(attr_t attrs);
+	int wattroff(WINDOW *win, attr_t attrs);
+	int attron(attr_t attrs);
+	int wattron(WINDOW *win, attr_t attrs);
+	int attrset(attr_t attrs);
+	int wattrset(WINDOW *win, attr_t attrs);
+	int standend(void);
+	int wstandend(WINDOW *win);
+	int standout(void);
+	int wstandout(WINDOW *win);
+	int color_set(short color_pair, void *opts);
+	int wcolor_set(WINDOW *win, short color_pair, void *opts);
 
   X/Open Description:
- 	These functions manipulate the current attributes and/or colors 
- 	of the named window.  These attributes can be any combination 
- 	of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
+	These functions manipulate the current attributes and/or colors 
+	of the named window.  These attributes can be any combination 
+	of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
 
- 	These constants are defined in <curses.h> and can be combined
- 	with the bitwise-OR operator (|).
+	These constants are defined in <curses.h> and can be combined
+	with the bitwise-OR operator (|).
 
- 	The current attributes of a window are applied to all characters
- 	that are written into the window with waddch().  Attributes are
- 	a property of the character, and move with the character
- 	through any scrolling and insert/delete line/character operations.
- 	To the extent possible on the particular terminal, they will be
- 	displayed as the graphic rendition of characters put on the
- 	screen.
+	The current attributes of a window are applied to all characters
+	that are written into the window with waddch().  Attributes are
+	a property of the character, and move with the character
+	through any scrolling and insert/delete line/character operations.
+	To the extent possible on the particular terminal, they will be
+	displayed as the graphic rendition of characters put on the
+	screen.
 
- 	The attrset() function sets the current attributes of the given
- 	window to attrs.  The attroff() function turns off the named
- 	attributes without turning on or off any other attributes.  The
- 	attron() function turns on the named attributes without affecting
- 	any others.  The color_set() function sets the window color to 
- 	the value of color_pair.
+	The attrset() function sets the current attributes of the given
+	window to attrs.  The attroff() function turns off the named
+	attributes without turning on or off any other attributes.  The
+	attron() function turns on the named attributes without affecting
+	any others.  The color_set() function sets the window color to 
+	the value of color_pair.
 
-  The standout() function is the same as
- 	attron( A_STANDOUT ).  The standend() function is the same as
- 	attrset( A_NORMAL ); that is it turns off all attributes.
+	The standout() function is the same as attron( A_STANDOUT ).  
+	The standend() function is the same as attrset( A_NORMAL ); that 
+	is, it turns off all attributes.
 
- 	NOTE:	attroff(), attron(), attrset(), standend(), standout(),
+	NOTE:	attroff(), attron(), attrset(), standend(), standout(),
  		wstandend(), and wstandout() are defined as macros.
 
   PDCurses Description:
- 	System V compatible color support is included.
- 	See <curses.h> for further details.
+	System V compatible color support is included.
+	See <curses.h> for further details.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	It is an error to call this function with a NULL window pointer.
+	It is an error to call this function with a NULL window pointer.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -131,16 +131,17 @@ chtype attrs;
 	PDC_LOG(("attroff() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	stdscr->_attrs &= (~attrs & A_ATTRIBUTES);
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wattroff(WINDOW *win, attr_t attrs)
 #else
-int	PDC_CDECL	wattroff(win,attrs)
+int	PDC_CDECL	wattroff(win, attrs)
 WINDOW *win;
 attr_t attrs;
 #endif
@@ -149,11 +150,12 @@ attr_t attrs;
 	PDC_LOG(("wattroff() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	win->_attrs &= (~attrs & A_ATTRIBUTES);
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	attron(attr_t attrs)
@@ -166,14 +168,16 @@ attr_t attrs;
 	PDC_LOG(("attron() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
-	return(wattron(stdscr,attrs));
+		return ERR;
+
+	return wattron(stdscr, attrs);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wattron(WINDOW *win, attr_t attrs)
 #else
-int	PDC_CDECL	wattron(win,attrs)
+int	PDC_CDECL	wattron(win, attrs)
 WINDOW *win;
 attr_t attrs;
 #endif
@@ -185,20 +189,23 @@ attr_t attrs;
 	PDC_LOG(("wattron() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
+
 	if( (win->_attrs & A_COLOR) && (attrs & A_COLOR) ) 
-		{
+	{
 		oldcolr = win->_attrs & A_COLOR;
 		oldattr = win->_attrs ^ oldcolr;
 		newcolr = attrs & A_COLOR;
 		newattr = (attrs & A_ATTRIBUTES) ^ newcolr;
 		newattr |= oldattr;
 		win->_attrs = newattr | newcolr;
-		}
+	}
 	else
 		win->_attrs |= (attrs & A_ATTRIBUTES);
-	return( OK );
+
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	attrset(attr_t attrs)
@@ -211,15 +218,17 @@ attr_t attrs;
 	PDC_LOG(("attrset() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
+
 	stdscr->_attrs = attrs & A_ATTRIBUTES;
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wattrset(WINDOW *win, attr_t attrs)
 #else
-int	PDC_CDECL	wattrset(win,attrs)
+int	PDC_CDECL	wattrset(win, attrs)
 WINDOW *win;
 attr_t attrs;
 #endif
@@ -228,10 +237,12 @@ attr_t attrs;
 	PDC_LOG(("wattrset() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
+
 	win->_attrs = attrs & A_ATTRIBUTES;
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 attr_t  PDC_CDECL	getattrs(WINDOW* win)
@@ -241,8 +252,9 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-  return win ? win->_attrs : 0;
+	return win ? win->_attrs : 0;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	standend(void)
@@ -253,8 +265,9 @@ int	PDC_CDECL	standend()
 {
 	PDC_LOG(("standend() - called\n"));
 
-	return( wattrset( stdscr, A_NORMAL ) );
+	return wattrset(stdscr, A_NORMAL);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	standout(void)
@@ -265,8 +278,9 @@ int	PDC_CDECL	standout()
 {
 	PDC_LOG(("standout() - called\n"));
 
-	return( wattrset( stdscr, A_STANDOUT ) );
+	return wattrset(stdscr, A_STANDOUT);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wstandend( WINDOW *win )
@@ -278,8 +292,9 @@ WINDOW *win;
 {
 	PDC_LOG(("wstandend() - called\n"));
 
-	return( wattrset( win, A_NORMAL ) );
+	return wattrset(win, A_NORMAL);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wstandout( WINDOW *win )
@@ -291,8 +306,9 @@ WINDOW *win;
 {
 	PDC_LOG(("wstandout() - called\n"));
 
-	return( wattrset( win, A_STANDOUT ) );
+	return wattrset(win, A_STANDOUT);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	color_set(short color_pair, void *opts)
@@ -303,8 +319,9 @@ void *opts;
 #endif
 /***********************************************************************/
 {
-	return( wcolor_set( stdscr, color_pair, opts ) );
+	return wcolor_set(stdscr, color_pair, opts);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wcolor_set(WINDOW *win, short color_pair, void *opts)
@@ -319,7 +336,8 @@ void *opts;		/* "opts" not used, but required by the standard */
 	PDC_LOG(("wcolor_set() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
+
 	win->_attrs = (win->_attrs & ~A_COLOR) | COLOR_PAIR(color_pair);
-	return( OK );
+	return OK;
 }

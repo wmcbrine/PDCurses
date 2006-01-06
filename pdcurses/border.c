@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -48,50 +48,50 @@ char *rcsid_border  = "$Id: border.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                        border
 
   Synopsis:
-  	int border(chtype ls, chtype rs, chtype ts, chtype bs, chtype tl, 
-  	           chtype tr, chtype bl, chtype br);
-  	int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
-  	            chtype bs, chtype tl, chtype tr, chtype bl, chtype br);
-  	int box(WINDOW *win, chtype verch, chtype horch);
-  	int hline(chtype ch, int n);
-  	int vline(chtype ch, int n);
-  	int whline(WINDOW *win, chtype ch, int n);
-  	int wvline(WINDOW *win, chtype ch, int n);
-  	int PDC_wunderline(WINDOW *win, int n, bool state);
-  	int PDC_wleftline(WINDOW *win, int n, bool state);
-  	int PDC_wrightline(WINDOW *win, int n, bool state);
+	int border(chtype ls, chtype rs, chtype ts, chtype bs, chtype tl, 
+		   chtype tr, chtype bl, chtype br);
+	int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
+		    chtype bs, chtype tl, chtype tr, chtype bl, chtype br);
+	int box(WINDOW *win, chtype verch, chtype horch);
+	int hline(chtype ch, int n);
+	int vline(chtype ch, int n);
+	int whline(WINDOW *win, chtype ch, int n);
+	int wvline(WINDOW *win, chtype ch, int n);
+	int PDC_wunderline(WINDOW *win, int n, bool state);
+	int PDC_wleftline(WINDOW *win, int n, bool state);
+	int PDC_wrightline(WINDOW *win, int n, bool state);
 
   X/Open Description:
- 	The border(), wborder(), and box() routines, a border is drawn
- 	around the edge of the window. If any of the arguments is zero,
- 	an appropriate default is used. These default values are specified
- 	in <curses.h>. The arguments and defaults to these functions are:
- 		ls	left side of border		ACS_VLINE
- 		rs	right side of border		ACS_VLINE
- 		ts	top side of border		ACS_HLINE
- 		bs	bottom side of border		ACS_HLINE
- 		tl	top left corner of border	ACS_ULCORNER
- 		tr	top right corner of border	ACS_URCORNER
- 		bl	bottom left corner of border	ACS_BLCORNER
- 		br	bottom right corner of border	ACS_BLCORNER
+	The border(), wborder(), and box() routines, a border is drawn
+	around the edge of the window. If any of the arguments is zero,
+	an appropriate default is used. These default values are specified
+	in <curses.h>. The arguments and defaults to these functions are:
+		ls	left side of border		ACS_VLINE
+		rs	right side of border		ACS_VLINE
+		ts	top side of border		ACS_HLINE
+		bs	bottom side of border		ACS_HLINE
+		tl	top left corner of border	ACS_ULCORNER
+		tr	top right corner of border	ACS_URCORNER
+		bl	bottom left corner of border	ACS_BLCORNER
+		br	bottom right corner of border	ACS_BLCORNER
 
- 	The hline() and whline() functions draw a left to right line
- 	using ch starting from the current cursor position. The cursor
- 	position does not change. The line is at most n characters long
- 	or as many as will fit in the window.
+	The hline() and whline() functions draw a left to right line
+	using ch starting from the current cursor position. The cursor
+	position does not change. The line is at most n characters long
+	or as many as will fit in the window.
 
- 	The vline() and wvline() functions draw a top to bottom line
- 	using ch starting from the current cursor position. The cursor
- 	position does not change. The line is at most n characters long
- 	or as many as will fit in the window.
+	The vline() and wvline() functions draw a top to bottom line
+	using ch starting from the current cursor position. The cursor
+	position does not change. The line is at most n characters long
+	or as many as will fit in the window.
 
- 	border(), box(), hline(), and vline() are implemented as macros.
+	border(), box(), hline(), and vline() are implemented as macros.
 
   X/Open Return Value:
- 	These functions return OK on success and ERR on error.
+	These functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for these functions.
+	No errors are defined for these functions.
 
   Portability                             X/Open    BSD    SYS V  PDCurses
                                           Dec '88
@@ -110,24 +110,24 @@ char *rcsid_border  = "$Id: border.c,v 1.5 2006/01/03 07:34:43 wmcbrine Exp $";
 
 /*man-start*********************************************************************
   PDC_attr_passthru()   - Combines chtype with current and/or background 
-                          attributes of a window
+			  attributes of a window
 
   PDCurses Description:
-    This is a private PDCurses function.
+	This is a private PDCurses function.
 
-    Takes a single chtype 'ch' and checks if the current attribute of 
-    window 'win', as set by wattrset(), and/or the current background 
-    of win, as set by wbkgd(), should by combined with it. Attributes 
-    set explicitly in ch take precedence.
+	Takes a single chtype 'ch' and checks if the current attribute 
+	of window 'win', as set by wattrset(), and/or the current 
+	background of win, as set by wbkgd(), should by combined with 
+	it. Attributes set explicitly in ch take precedence.
  
   PDCurses Return Value:
-    Returns ch, combined (or not) with existing attributes.
+	Returns ch, combined (or not) with existing attributes.
 
   PDCurses Errors:
-    No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-    PDCurses chtype PDC_attr_passthru( WINDOW *win, chtype ch );
+	PDCurses chtype PDC_attr_passthru( WINDOW *win, chtype ch );
 
 **man-end**********************************************************************/
 
@@ -178,12 +178,14 @@ chtype ch;
 
 	return ch;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, chtype bs,
-            chtype tl, chtype tr, chtype bl, chtype br)
+int	PDC_CDECL	wborder(WINDOW *win, chtype ls, chtype rs,
+				chtype ts, chtype bs, chtype tl,
+				chtype tr, chtype bl, chtype br)
 #else
-int	PDC_CDECL	wborder(win,ls,rs,ts,bs,tl,tr,bl,br)
+int	PDC_CDECL	wborder(win, ls, rs, ts, bs, tl, tr, bl, br)
 WINDOW *win;
 chtype ls;
 chtype rs;
@@ -196,14 +198,15 @@ chtype br;
 #endif
 /***********************************************************************/
 {
-	int ymax,xmax;
-	int ymin,xmin;
-	int	i;
+	int ymax, xmax;
+	int ymin, xmin;
+	int i;
 
 	PDC_LOG(("wborder() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
+
 	ymax = win->_maxy - 1;
 	xmax = win->_maxx - 1;
 	ymin = 0;
@@ -249,14 +252,15 @@ chtype br;
 		}
 	}
 	PDC_sync(win);
-	return (OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	border(chtype ls, chtype rs, chtype ts, chtype bs,
-           chtype tl, chtype tr, chtype bl, chtype br)
+			       chtype tl, chtype tr, chtype bl, chtype br)
 #else
-int	PDC_CDECL	border(ls,rs,ts,bs,tl,tr,bl,br)
+int	PDC_CDECL	border(ls, rs, ts, bs, tl, tr, bl, br)
 chtype ls;
 chtype rs;
 chtype ts;
@@ -271,15 +275,16 @@ chtype br;
 	PDC_LOG(("border() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(wborder(stdscr,ls,rs,ts,bs,tl,tr,bl,br));
+	return(wborder(stdscr, ls, rs, ts, bs, tl, tr, bl, br));
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	box(WINDOW *win, chtype verch, chtype horch)
 #else
-int	PDC_CDECL	box(win,verch,horch)
+int	PDC_CDECL	box(win, verch, horch)
 WINDOW *win;
 chtype verch;
 chtype horch;
@@ -289,15 +294,16 @@ chtype horch;
 	PDC_LOG(("box() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return(wborder(win,verch,verch,horch,horch,0,0,0,0));
+	return wborder(win, verch, verch, horch, horch, 0, 0, 0, 0);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	hline(chtype ch, int n)
 #else
-int	PDC_CDECL	hline(ch,n)
+int	PDC_CDECL	hline(ch, n)
 chtype ch;
 int n;
 #endif
@@ -305,31 +311,31 @@ int n;
 {
 	PDC_LOG(("hline() - called\n"));
 
-	return(whline(stdscr,ch,n));
+	return whline(stdscr, ch, n);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	whline(WINDOW *win, chtype ch, int n)
 #else
-int	PDC_CDECL	whline(win,ch,n)
+int	PDC_CDECL	whline(win, ch, n)
 WINDOW *win;
 chtype ch;
 int n;
 #endif
 /***********************************************************************/
 {
-	int	startpos;
-	int	endpos;
+	int startpos, endpos;
 
 	PDC_LOG(("whline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	if (n < 1)
-		return( ERR );
+		return ERR;
 
-	endpos = min(win->_curx + n -1, win->_maxx);
+	endpos = min(win->_curx + n - 1, win->_maxx);
 
 	ch = PDC_attr_passthru(win, ch ? ch : ACS_HLINE);
 
@@ -352,13 +358,14 @@ int n;
 	}
 
 	PDC_sync(win);
-	return (OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	vline(chtype ch, int n)
 #else
-int	PDC_CDECL	vline(ch,n)
+int	PDC_CDECL	vline(ch, n)
 chtype ch;
 int n;
 #endif
@@ -366,30 +373,31 @@ int n;
 {
 	PDC_LOG(("vline() - called\n"));
 
-	return(wvline(stdscr,ch,n));
+	return(wvline(stdscr, ch, n));
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wvline(WINDOW *win, chtype ch, int n)
 #else
-int	PDC_CDECL	wvline(win,ch,n)
+int	PDC_CDECL	wvline(win, ch, n)
 WINDOW *win;
 chtype ch;
 int n;
 #endif
 /***********************************************************************/
 {
-	int	endpos;
+	int endpos;
 
 	PDC_LOG(("wvline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	if (n < 1)
-		return( ERR );
+		return ERR;
 
-	endpos = min(win->_cury + n -1, win->_maxy);
+	endpos = min(win->_cury + n - 1, win->_maxy);
 
 	ch = PDC_attr_passthru(win, ch ? ch : ACS_VLINE);
 
@@ -410,37 +418,38 @@ int n;
 	}
 
 	PDC_sync(win);
-	return (OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_wunderline(WINDOW *win, int n, bool state)
 #else
-int	PDC_CDECL	PDC_wunderline(win,n,state)
+int	PDC_CDECL	PDC_wunderline(win, n, state)
 WINDOW *win;
 int n;
 bool state;
 #endif
 /***********************************************************************/
 {
-	int	endpos;
+	int endpos;
 
 	PDC_LOG(("PDC_wunderline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	if (n < 1)
-		return( ERR );
+		return ERR;
 
-	endpos = min(win->_cury + n -1, win->_maxy);
+	endpos = min(win->_cury + n - 1, win->_maxy);
 
 	for (n = win->_cury; n <= endpos; n++)
 	{
-		if ( state ) 
-			win->_y[n][win->_curx] |= A_UNDERLINE; /* Turn ON A_UNDERLINE */
+		if (state) 
+			win->_y[n][win->_curx] |= A_UNDERLINE;
 		else
-			win->_y[n][win->_curx] |= ~A_UNDERLINE; /* Turn OFF A_UNDERLINE */
+			win->_y[n][win->_curx] |= ~A_UNDERLINE;
 
 		if (win->_firstch[n] == _NO_CHANGE)
 		{
@@ -455,37 +464,38 @@ bool state;
 	}
 
 	PDC_sync(win);
-	return (OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_wleftline(WINDOW *win, int n, bool state)
 #else
-int	PDC_CDECL	PDC_wleftline(win,n,state)
+int	PDC_CDECL	PDC_wleftline(win, n, state)
 WINDOW *win;
 int n;
 bool state;
 #endif
 /***********************************************************************/
 {
-	int	endpos;
+	int endpos;
 
 	PDC_LOG(("PDC_wleftline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR ;
 
 	if (n < 1)
-		return( ERR );
+		return ERR;
 
-	endpos = min(win->_cury + n -1, win->_maxy);
+	endpos = min(win->_cury + n - 1, win->_maxy);
 
 	for (n = win->_cury; n <= endpos; n++)
 	{
 		if ( state ) 
-			win->_y[n][win->_curx] |= A_LEFTLINE; /* Turn ON A_LEFTLINE */
+			win->_y[n][win->_curx] |= A_LEFTLINE;
 		else
-			win->_y[n][win->_curx] |= ~A_LEFTLINE; /* Turn OFF A_LEFTLINE */
+			win->_y[n][win->_curx] |= ~A_LEFTLINE;
 
 		if (win->_firstch[n] == _NO_CHANGE)
 		{
@@ -500,37 +510,38 @@ bool state;
 	}
 
 	PDC_sync(win);
-	return (OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_wrightline(WINDOW *win, int n, bool state)
 #else
-int	PDC_CDECL	PDC_wrightline(win,n,state)
+int	PDC_CDECL	PDC_wrightline(win, n, state)
 WINDOW *win;
 int n;
 bool state;
 #endif
 /***********************************************************************/
 {
-	int	endpos;
+	int endpos;
 
 	PDC_LOG(("PDC_wrightline() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	if (n < 1)
-		return( ERR );
+		return ERR;
 
-	endpos = min(win->_cury + n -1, win->_maxy);
+	endpos = min(win->_cury + n - 1, win->_maxy);
 
 	for (n = win->_cury; n <= endpos; n++)
 	{
-		if ( state ) 
-			win->_y[n][win->_curx] |= A_RIGHTLINE; /* Turn ON A_RIGHTLINE */
+		if (state) 
+			win->_y[n][win->_curx] |= A_RIGHTLINE;
 		else
-			win->_y[n][win->_curx] |= ~A_RIGHTLINE; /* Turn OFF A_RIGHTLINE */
+			win->_y[n][win->_curx] |= ~A_RIGHTLINE;
 
 		if (win->_firstch[n] == _NO_CHANGE)
 		{
@@ -545,5 +556,5 @@ bool state;
 	}
 
 	PDC_sync(win);
-	return (OK);
+	return OK;
 }

@@ -19,7 +19,7 @@
 */
 #define  CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.7 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.8 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -52,34 +52,34 @@ char *rcsid_addchstr  = "$Id: addchstr.c,v 1.7 2006/01/03 07:34:43 wmcbrine Exp 
   Name:                                                        addchstr
 
   Synopsis:
-   int addchstr(const chtype *ch);
-   int addchnstr(const chtype *ch, int n);
-   int waddchstr(WINDOW *win, const chtype *ch);
-   int waddchnstr(WINDOW *win, const chtype *ch, int n);
-   int mvaddchstr(int y, int x, const chtype *ch);
-   int mvaddchnstr(int y, int x, const chtype *ch, int n);
-   int mvwaddchstr(WINDOW *, int y, int x, const chtype *ch);
-   int mvwaddchnstr(WINDOW *, int y, int x, const chtype *ch, int n);
+	int addchstr(const chtype *ch);
+	int addchnstr(const chtype *ch, int n);
+	int waddchstr(WINDOW *win, const chtype *ch);
+	int waddchnstr(WINDOW *win, const chtype *ch, int n);
+	int mvaddchstr(int y, int x, const chtype *ch);
+	int mvaddchnstr(int y, int x, const chtype *ch, int n);
+	int mvwaddchstr(WINDOW *, int y, int x, const chtype *ch);
+	int mvwaddchnstr(WINDOW *, int y, int x, const chtype *ch, int n);
 
   X/Open Description:
-   These routines write a chtype directly into the window structure
-   starting at the current position.
-   The four routines with n as the last argument copy at most n
-   elements, but no more than will fit on the line.
-   If n=-1 then the whole string is copied, to the maximum number
-   that will fit on the line.
+	These routines write a chtype directly into the window structure 
+	starting at the current position. The four routines with n as 
+	the last argument copy at most n elements, but no more than will 
+	fit on the line. If n = -1 then the whole string is copied, to 
+	the maximum number that will fit on the line.
 
-   The cursor position is not advanced. These routines do not check for
-   newline or other special characters, no does any line wrapping occur.
+	The cursor position is not advanced. These routines do not check 
+	for newline or other special characters, nor does any line 
+	wrapping occur.
 
-   NOTE: addchstr(), mvaddchstr(), mvwaddchstr() addchnstr(), 
-      mvaddchnstr(), and mvwaddchnstr() are implemented as macros.
+	NOTE: addchstr(), mvaddchstr(), mvwaddchstr() addchnstr(), 
+	mvaddchnstr(), and mvwaddchnstr() are implemented as macros.
 
   X/Open Return Value:
-   All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -103,209 +103,197 @@ chtype *ch;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("addchstr() - called\n"));
+	PDC_LOG(("addchstr() - called\n"));
 
-   return( addchnstr( ch, -1) );
+	return addchnstr(ch, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   addchnstr(const chtype *ch, int n)
 #else
-int   PDC_CDECL   addchnstr(ch,n)
+int   PDC_CDECL   addchnstr(ch, n)
 chtype *ch;
 int n;
 #endif
 /***********************************************************************/
 {
-   int y,x,num,maxx;
-   chtype *ptr;
+	int y, x, num, maxx;
+	chtype *ptr;
 
-   PDC_LOG(("addchnstr() - called\n"));
+	PDC_LOG(("addchnstr() - called\n"));
 
-   if (stdscr == (WINDOW *)NULL)
-      return( ERR );
+	if (stdscr == (WINDOW *)NULL)
+		return ERR;
 
-   if (n == 0
-   ||  n < (-1))
-      return( ERR );
+	if (n == 0 || n < (-1))
+		return ERR;
 
-   x = stdscr->_curx;
-   y = stdscr->_cury;
-   ptr = &(stdscr->_y[y][x]);
+	x = stdscr->_curx;
+	y = stdscr->_cury;
+	ptr = &(stdscr->_y[y][x]);
 
 
-   if (n == (-1))
-   {
-      for (num = stdscr->_maxx - x; *ch && num--; num++)
-      {
-         *ptr++ = *ch++;
-      }
-      maxx = num;
-   }
-   else
-   {
-      num = min(stdscr->_maxx - x,n);
-      memcpy((char *)ptr, (char *)ch, (int)(num * sizeof(chtype)));
-      maxx = x+num-1;
-   }
+	if (n == (-1))
+	{
+		for (num = stdscr->_maxx - x; *ch && num--; num++)
+			*ptr++ = *ch++;
+		maxx = num;
+	}
+	else
+	{
+		num = min(stdscr->_maxx - x,n);
+		memcpy((char *)ptr, (char *)ch, (int)(num * sizeof(chtype)));
+		maxx = x + num - 1;
+	}
 
-   if (stdscr->_firstch[y] == _NO_CHANGE)
-   {
-      stdscr->_firstch[y] = x;
-      stdscr->_lastch[y] = maxx;
-   }
-   else
-   {
-      if (x <  stdscr->_firstch[y])
-      {
-         stdscr->_firstch[y] = x;
-      }
-      if (maxx >  stdscr->_lastch[y])
-      {
-         stdscr->_lastch[y] = maxx;
-      }
-   }
-   return( OK );
+	if (stdscr->_firstch[y] == _NO_CHANGE)
+	{
+		stdscr->_firstch[y] = x;
+		stdscr->_lastch[y] = maxx;
+	}
+	else
+	{
+		if (x < stdscr->_firstch[y])
+			stdscr->_firstch[y] = x;
+		if (maxx > stdscr->_lastch[y])
+			stdscr->_lastch[y] = maxx;
+	}
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   waddchstr(WINDOW *win, const chtype *ch)
 #else
-int   PDC_CDECL   waddchstr(win,ch)
+int   PDC_CDECL   waddchstr(win, ch)
 WINDOW *win;
 chtype *ch;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("waddchstr() - called: win=%x\n",win));
+	PDC_LOG(("waddchstr() - called: win=%x\n", win));
 
-   if (win == (WINDOW *)NULL)
-      return( ERR );
+	if (win == (WINDOW *)NULL)
+		return ERR;
 
-   return( waddchnstr( win, ch, -1) );
+	return waddchnstr(win, ch, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   waddchnstr(WINDOW *win, const chtype *ch, int n)
 #else
-int   PDC_CDECL   waddchnstr(win,ch,n)
+int   PDC_CDECL   waddchnstr(win, ch, n)
 WINDOW *win;
 chtype *ch;
 int n;
 #endif
 /***********************************************************************/
 {
-   register int i,y,x,num,maxx,minx;
-   int first=1;
-   chtype *ptr;
+	int i, y, x, num, maxx, minx, first = 1;
+	chtype *ptr;
 
-   PDC_LOG(("waddchnstr() - called: win=%x n=%d\n",win,n));
+	PDC_LOG(("waddchnstr() - called: win=%x n=%d\n", win, n));
 
-   if (win == (WINDOW *)NULL)
-      return( ERR );
+	if (win == (WINDOW *)NULL)
+		return ERR;
 
-   if (n == 0
-   ||  n < (-1))
-      return( ERR );
+	if (n == 0 || n < (-1))
+		return ERR;
 
-   x = win->_curx;
-   y = win->_cury;
-   ptr = &(win->_y[y][x]);
+	x = win->_curx;
+	y = win->_cury;
+	ptr = &(win->_y[y][x]);
 
 #if 0
-   if (n == (-1))
-      {
-      for (num = win->_maxx - x; *ch && num--; num++)
-         *ptr++ = *ch++;
-      maxx = num;
-      }
-   else
-      {
-      num = min(win->_maxx - x,n);
-      maxx = x+num-1;
-      memcpy((char *)ptr, (char *)ch, (int)(num * sizeof(chtype)));
-      }
+	if (n == (-1))
+	{
+		for (num = win->_maxx - x; *ch && num--; num++)
+			*ptr++ = *ch++;
+		maxx = num;
+	}
+	else
+	{
+		num = min(win->_maxx - x, n);
+		maxx = x + num - 1;
+		memcpy((char *)ptr, (char *)ch, (int)(num * sizeof(chtype)));
+	}
 
-   if (win->_firstch[y] == _NO_CHANGE)
-      {
-      win->_firstch[y] = x;
-      win->_lastch[y] = maxx;
-      }
-   else
-      {
-      if (x <  win->_firstch[y])
-         {
-         win->_firstch[y] = x;
-         }
-      if (maxx >  win->_lastch[y])
-         {
-         win->_lastch[y] = maxx;
-         }
-      }
-
+	if (win->_firstch[y] == _NO_CHANGE)
+	{
+		win->_firstch[y] = x;
+		win->_lastch[y] = maxx;
+	}
+	else
+	{
+		if (x < win->_firstch[y])
+			win->_firstch[y] = x;
+		if (maxx > win->_lastch[y])
+			win->_lastch[y] = maxx;
+	}
 #else
+	if (n == (-1))
+		num = win->_maxx - x;
+	else
+		num = min(win->_maxx - x, n);
 
-   if (n == (-1))
-      num = win->_maxx - x;
-   else
-      num = min(win->_maxx - x,n);
+	minx = win->_firstch[y];
+	maxx = win->_lastch[y];
 
-   minx = win->_firstch[y];
-   maxx = win->_lastch[y];
-   for (i=x; num && *ch; num--, i++)
-   {
-      if (i < win->_firstch[y]
-      ||  win->_firstch[y] == _NO_CHANGE)
-      {
-         if (*ptr != *ch && first)
-         {
-            minx = i;
-            first = 0;
-         }
-         }
-         if (i > win->_lastch[y])
-         {
-            if (*ptr != *ch)
-               maxx = i;
-         }
+	for (i = x; num && *ch; num--, i++)
+	{
+		if (i < win->_firstch[y] || win->_firstch[y] == _NO_CHANGE)
+		{
+			if (*ptr != *ch && first)
+			{
+				minx = i;
+				first = 0;
+			}
+		}
+		if (i > win->_lastch[y])
+		{
+			if (*ptr != *ch)
+				maxx = i;
+		}
 
-      PDC_LOG(("y %d i %d minx %d maxx %d *ptr %x *ch %x firstch: %d lastch: %d\n", y,i,minx,maxx, *ptr,*ch, win->_firstch[y],win->_lastch[y]));
+		PDC_LOG(("y %d i %d minx %d maxx %d *ptr %x *ch %x firstch: %d lastch: %d\n",
+			y, i, minx, maxx, *ptr, *ch, 
+			win->_firstch[y], win->_lastch[y]));
 
-      *ptr++ = *ch++;
-   }
+		*ptr++ = *ch++;
+	}
 
-   win->_firstch[y] = minx;
-   win->_lastch[y] = maxx;
+	win->_firstch[y] = minx;
+	win->_lastch[y] = maxx;
 #endif
-
-   return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   mvaddchstr(int y, int x, const chtype *ch)
 #else
-int   PDC_CDECL   mvaddchstr(y,x,ch)
+int   PDC_CDECL   mvaddchstr(y, x, ch)
 int y;
 int x;
 chtype *ch;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("mvaddchstr() - called: y %d x %d\n",y,x));
+	PDC_LOG(("mvaddchstr() - called: y %d x %d\n", y, x));
 
-   if (stdscr == (WINDOW *)NULL)
-      return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+		return ERR;
 
-   if (wmove(stdscr,y,x) == ERR)
-      return( ERR );
-
-   return( addchnstr( ch, -1) );
+	return addchnstr(ch, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   mvaddchnstr(int y, int x, const chtype *ch, int n)
 #else
-int   PDC_CDECL   mvaddchnstr(y,x,ch,n)
+int   PDC_CDECL   mvaddchnstr(y, x, ch, n)
 int y;
 int x;
 chtype *ch;
@@ -313,21 +301,19 @@ int n;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("mvaddchnstr() - called: y %d x %d n %d\n",y,x,n));
+	PDC_LOG(("mvaddchnstr() - called: y %d x %d n %d\n", y, x, n));
 
-   if (stdscr == (WINDOW *)NULL)
-      return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+		return ERR;
 
-   if (wmove(stdscr,y,x) == ERR)
-      return( ERR );
-
-   return( addchnstr( ch, n) );
+	return addchnstr(ch, n);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int   PDC_CDECL   mvwaddchstr(WINDOW *win, int y, int x, const chtype *ch)
 #else
-int   PDC_CDECL   mvwaddchstr(win,y,x,ch)
+int   PDC_CDECL   mvwaddchstr(win, y, x, ch)
 WINDOW *win;
 int y;
 int x;
@@ -335,21 +321,20 @@ chtype *ch;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("waddchstr() - called:\n"));
+	PDC_LOG(("waddchstr() - called:\n"));
 
-   if (win == (WINDOW *)NULL)
-      return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
-   if (wmove(win,y,x) == ERR)
-      return( ERR );
-
-   return( waddchnstr( win, ch, -1) );
+	return waddchnstr(win, ch, -1);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int   PDC_CDECL   mvwaddchnstr(WINDOW *win,int y, int x, const chtype *ch, int n)
+int   PDC_CDECL   mvwaddchnstr(WINDOW *win, int y, int x,
+			       const chtype *ch, int n)
 #else
-int   PDC_CDECL   mvwaddchnstr(win,y,x,ch,n)
+int   PDC_CDECL   mvwaddchnstr(win, y, x, ch, n)
 WINDOW *win;
 int y;
 int x;
@@ -358,13 +343,10 @@ int n;
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("mvwaddchnstr() - called: y %d x %d n %d \n",y,x,n));
+	PDC_LOG(("mvwaddchnstr() - called: y %d x %d n %d \n", y, x, n));
 
-   if (win == (WINDOW *)NULL)
-      return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
-   if (wmove(win,y,x) == ERR)
-      return( ERR );
-
-   return( waddchnstr( win, ch, n) );
+	return waddchnstr(win, ch, n);
 }

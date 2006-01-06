@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_touch = "$Id: touch.c,v 1.3 2006/01/06 08:43:26 wmcbrine Exp $";
+char *rcsid_touch = "$Id: touch.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -104,47 +104,49 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	register int	i;
+	int i;
 
-	PDC_LOG(("touchwin() - called: Win=%x\n",win));
+	PDC_LOG(("touchwin() - called: Win=%x\n", win));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	for (i=0;i<win->_maxy;i++)
+	for (i = 0; i < win->_maxy; i++)
 	{
 		win->_firstch[i] = 0;
-		win->_lastch[i] = win->_maxx-1;
+		win->_lastch[i] = win->_maxx - 1;
 	}
-	return( OK );
+
+	return OK;
 }
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	touchline(WINDOW *win, int start,int count)
+int	PDC_CDECL	touchline(WINDOW *win, int start, int count)
 #else
-int	PDC_CDECL	touchline(win,start,count)
+int	PDC_CDECL	touchline(win, start, count)
 WINDOW *win;
 int start;
 int count;
 #endif
 /***********************************************************************/
 {
-	register int i;
+	int i;
 
-	PDC_LOG(("touchline() - called: win=%x start %d count %d\n",win,start,count));
+	PDC_LOG(("touchline() - called: win=%x start %d count %d\n",
+		win, start, count));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) ||
+	    (start > win->_maxy || start + count > win->_maxy))
+		return ERR;
 
-	if  (start > win->_maxy || start + count > win->_maxy)
-		return( ERR );
-	for(i=start;i<start+count;i++)
-	   {
+	for (i = start; i < start + count; i++)
+	{
 		win->_firstch[i] = 0;
 		win->_lastch[i] = win->_maxx - 1;
-	   }
-	return( OK );
+	}
+
+	return OK;
 }
 
 /***********************************************************************/
@@ -156,26 +158,27 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	register int i;
+	int i;
 
-	PDC_LOG(("untouchwin() - called: win=%x",win));
+	PDC_LOG(("untouchwin() - called: win=%x", win));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	for (i=0;i<win->_maxy;i++)
+	for (i = 0; i < win->_maxy; i++)
 	{
 		win->_firstch[i] = _NO_CHANGE;
 		win->_lastch[i] = _NO_CHANGE;
 	}
-	return(OK);
+
+	return OK;
 }
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wtouchln(WINDOW *win, int y, int n, int changed)
 #else
-int	PDC_CDECL	wtouchln(win,y,n,changed)
+int	PDC_CDECL	wtouchln(win, y, n, changed)
 WINDOW *win;
 int y;
 int n;
@@ -183,19 +186,17 @@ int changed;
 #endif
 /***********************************************************************/
 {
-	register int i;
+	int i;
 
-	PDC_LOG(("wtouchln() - called: win=%x y=%d n=%d changed=%d\n",win,y,n,changed));
+	PDC_LOG(("wtouchln() - called: win=%x y=%d n=%d changed=%d\n",
+		win, y, n, changed));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (y > win->_maxy || y + n > win->_maxy))
+		return ERR;
 
-	if  (y > win->_maxy || y + n > win->_maxy)
-		return( ERR );
-
-	for (i=y;i<y+n;i++)
+	for (i = y; i < y + n; i++)
 	{
-		if ( changed ) 
+		if (changed)
 		{
 			win->_firstch[i] = 0;
 			win->_lastch[i] = win->_maxx - 1;
@@ -206,29 +207,26 @@ int changed;
 			win->_lastch[i] = _NO_CHANGE;
 		}
 	}
-	return( OK );
+
+	return OK;
 }
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-bool	PDC_CDECL	is_linetouched(WINDOW *win,int line)
+bool	PDC_CDECL	is_linetouched(WINDOW *win, int line)
 #else
-bool	PDC_CDECL	is_linetouched(win,line)
+bool	PDC_CDECL	is_linetouched(win, line)
 WINDOW *win;
 int line;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("is_linetouched() - called: win=%x line=%d\n",win,line));
+	PDC_LOG(("is_linetouched() - called: win=%x line=%d\n", win, line));
 
-	if (win == NULL)
-		return(ERR);
+	if ((win == NULL) || (line > win->_maxy || line < 0))
+		return FALSE;
 
-	if (line > win->_maxy || line < 0)
-		return(ERR);
-	if (win->_firstch[line] != _NO_CHANGE) 
-		return(TRUE);
-	return(FALSE);
+	return (win->_firstch[line] != _NO_CHANGE) ? TRUE : FALSE;
 }
 
 /***********************************************************************/
@@ -240,15 +238,14 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	register int i;
+	int i;
 
-	PDC_LOG(("is_wintouched() - called: win=%x\n",win));
+	PDC_LOG(("is_wintouched() - called: win=%x\n", win));
 
-	if (win == NULL)
-		return(ERR);
+	if (win != NULL)
+		for (i = 0; i < win->_maxy; i++)
+			if (win->_firstch[i] != _NO_CHANGE)
+				return TRUE;
 
-	for (i=0;i<win->_maxy;i++)
-		if (win->_firstch[i] != _NO_CHANGE)
-			return(TRUE);
-	return(FALSE);
+	return FALSE;
 }

@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_beep  = "$Id: beep.c,v 1.4 2006/01/03 20:07:15 wmcbrine Exp $";
+char *rcsid_beep  = "$Id: beep.c,v 1.5 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -41,23 +41,23 @@ char *rcsid_beep  = "$Id: beep.c,v 1.4 2006/01/03 20:07:15 wmcbrine Exp $";
   Name:                                                          beep
 
   Synopsis:
-  	int beep(void);
-  	int flash(void);
+	int beep(void);
+	int flash(void);
 
   X/Open Description:
- 	These routines are used to signal the terminal user.  The beep()
- 	function will sound the audible bell on the terminal, if possible
- 	and if not, will flash the screen (visible bell), if possible.
- 	The flash() function will flash the screen, and if that is not
- 	possible, will sound the audible signal.  If neither signal is
- 	possible, nothing will happen.  Nearly all terminals have an
- 	audible signal (bell or beep), but only some can flash the screen.
+	These routines are used to signal the terminal user.  The beep()
+	function will sound the audible bell on the terminal, if possible
+	and if not, will flash the screen (visible bell), if possible.
+	The flash() function will flash the screen, and if that is not
+	possible, will sound the audible signal.  If neither signal is
+	possible, nothing will happen.  Nearly all terminals have an
+	audible signal (bell or beep), but only some can flash the screen.
 
   X/Open Return Value:
- 	These functions return OK on success and ERR on error.
+	These functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for these functions.
+	No errors are defined for these functions.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -79,13 +79,14 @@ int	PDC_CDECL	beep()
 	if (!SP->audible)
 	{
 		flash();
-		return( ERR );		/* We try to flash instead...*/
+		return ERR;		/* We try to flash instead...*/
 	}
 
 	PDC_beep();
 
 	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	flash(void)

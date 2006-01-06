@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inchstr  = "$Id: inchstr.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_inchstr = "$Id: inchstr.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -48,31 +48,31 @@ char *rcsid_inchstr  = "$Id: inchstr.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $"
   Name:                                                        inchstr
 
   Synopsis:
-  	int inchstr(chtype *ch);
-  	int inchnstr(chtype *ch, int n);
-  	int winchstr(WINDOW *win, chtype *ch);
-  	int winchnstr(WINDOW *win, chtype *ch, int n);
-  	int mvinchstr(int y, int x, chtype *ch);
-  	int mvinchnstr(int y, int x, chtype *ch, int n);
-  	int mvwinchstr(WINDOW *, int y, int x, chtype *ch);
-  	int mvwinchnstr(WINDOW *, int y, int x, chtype *ch, int n);
+	int inchstr(chtype *ch);
+	int inchnstr(chtype *ch, int n);
+	int winchstr(WINDOW *win, chtype *ch);
+	int winchnstr(WINDOW *win, chtype *ch, int n);
+	int mvinchstr(int y, int x, chtype *ch);
+	int mvinchnstr(int y, int x, chtype *ch, int n);
+	int mvwinchstr(WINDOW *, int y, int x, chtype *ch);
+	int mvwinchnstr(WINDOW *, int y, int x, chtype *ch, int n);
 
   X/Open Description:
- 	These routines read a chtype string directly from the window structure
- 	starting at the current position and ending at the right margin.
- 	The four routines with n as the last argument copy at most n
- 	elements, but no more than will fit on the line.
+	These routines read a chtype string directly from the window structure
+	starting at the current position and ending at the right margin.
+	The four routines with n as the last argument copy at most n
+	elements, but no more than will fit on the line.
 
- 	NOTE:	inchstr(), mvinchstr(), mvwinchstr() inchnstr(), 
- 		mvinchnstr(), and mvwinchnstr() are implemented as macros.
+	NOTE:	inchstr(), mvinchstr(), mvwinchstr() inchnstr(), 
+		mvinchnstr(), and mvwinchnstr() are implemented as macros.
 
   X/Open Return Value:
- 	All functions return ERR on error and an integer value other than
- 	ERR on success. 
+	All functions return ERR on error and an integer value other than
+	ERR on success. 
 
   X/Open Errors:
- 	Normally the value returned indicates the number of chtypes
- 	returned.
+	Normally the value returned indicates the number of chtypes
+	returned.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -99,45 +99,45 @@ chtype *ch;
 	PDC_LOG(("inchstr() - called\n"));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	return( inchnstr( ch, stdscr->_maxx - stdscr->_curx ) );
+	return inchnstr(ch, stdscr->_maxx - stdscr->_curx);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	inchnstr(chtype *ch, int n)
 #else
-int	PDC_CDECL	inchnstr(ch,n)
+int	PDC_CDECL	inchnstr(ch, n)
 chtype *ch;
 int n;
 #endif
 /***********************************************************************/
 {
-	chtype	*ptr = &(stdscr->_y[stdscr->_cury][stdscr->_curx]);
-	int	i;
+	int i;
+	chtype *ptr = &(stdscr->_y[stdscr->_cury][stdscr->_curx]);
 
 	PDC_LOG(("inchnstr() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
-
-	if (n < 0)
-		return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (n < 0))
+		return ERR;
 
 	if ((stdscr->_curx + n) > stdscr->_maxx)
 		n = stdscr->_maxx - stdscr->_curx;
 
-	for(i=0;i<n;i++)
+	for (i = 0; i < n; i++)
 		*ch++ = *ptr++;
 
 	*ch = (chtype)0;
-	return(i);
+
+	return i;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	winchstr(WINDOW *win, chtype *ch)
 #else
-int	PDC_CDECL	winchstr(win,ch)
+int	PDC_CDECL	winchstr(win, ch)
 WINDOW *win;
 chtype *ch;
 #endif
@@ -148,65 +148,63 @@ chtype *ch;
 	if (win == (WINDOW *)NULL)
 		return( ERR );
 
-	return(winchnstr(win,ch,win->_maxx - win->_curx));
+	return winchnstr(win, ch, win->_maxx - win->_curx);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	winchnstr(WINDOW *win, chtype *ch, int n)
 #else
-int	PDC_CDECL	winchnstr(win,ch,n)
+int	PDC_CDECL	winchnstr(win, ch, n)
 WINDOW *win;
 chtype *ch;
 int n;
 #endif
 /***********************************************************************/
 {
-	chtype	*ptr = &(win->_y[win->_cury][win->_curx]);
-	int	i;
+	int i;
+	chtype *ptr = &(win->_y[win->_cury][win->_curx]);
 
 	PDC_LOG(("winchnstr() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
-
-	if (n < 0)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (n < 0))
+		return ERR;
 
 	if ((win->_curx + n) > win->_maxx)
 		n = win->_maxx - win->_curx;
 
-	for(i=0;i<n;i++)
+	for (i = 0; i < n; i++)
 		*ch++ = *ptr++;
 
 	*ch = (chtype)0;
-	return(i);
+
+	return i;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvinchstr(int y, int x, chtype *ch)
 #else
-int	PDC_CDECL	mvinchstr(y,x,ch)
+int	PDC_CDECL	mvinchstr(y, x, ch)
 int y;
 int x;
 chtype *ch;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvinchstr() - called: y %d x %d\n",y,x));
+	PDC_LOG(("mvinchstr() - called: y %d x %d\n", y, x));
 
-	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+		return ERR;
 
-	if (wmove(stdscr,y,x) == ERR)
-		return( ERR );
-
-	return( inchnstr( ch, stdscr->_maxx - stdscr->_curx) );
+	return inchnstr(ch, stdscr->_maxx - stdscr->_curx);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvinchnstr(int y, int x, chtype *ch, int n)
 #else
-int	PDC_CDECL	mvinchnstr(y,x,ch,n)
+int	PDC_CDECL	mvinchnstr(y, x, ch, n)
 int y;
 int x;
 chtype *ch;
@@ -214,21 +212,19 @@ int n;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvinchnstr() - called: y %d x %d n %d\n",y,x,n));
+	PDC_LOG(("mvinchnstr() - called: y %d x %d n %d\n", y, x, n));
 
-	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+		return ERR;
 
-	if (wmove(stdscr,y,x) == ERR)
-		return( ERR );
-
-	return( inchnstr( ch, n) );
+	return inchnstr(ch, n);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvwinchstr(WINDOW *win, int y, int x, chtype *ch)
 #else
-int	PDC_CDECL	mvwinchstr(win,y,x,ch)
+int	PDC_CDECL	mvwinchstr(win, y, x, ch)
 WINDOW *win;
 int y;
 int x;
@@ -238,19 +234,18 @@ chtype *ch;
 {
 	PDC_LOG(("winchstr() - called:\n"));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
-	if (wmove(win,y,x) == ERR)
-		return( ERR );
-
-	return( winchnstr( win, ch, win->_maxx - win->_curx) );
+	return winchnstr(win, ch, win->_maxx - win->_curx);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvwinchnstr(WINDOW *win,int y, int x, chtype *ch, int n)
+int	PDC_CDECL	mvwinchnstr(WINDOW *win, int y, int x,
+				    chtype *ch, int n)
 #else
-int	PDC_CDECL	mvwinchnstr(win,y,x,ch,n)
+int	PDC_CDECL	mvwinchnstr(win, y, x, ch, n)
 WINDOW *win;
 int y;
 int x;
@@ -259,13 +254,10 @@ int n;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("mvwinchnstr() - called: y %d x %d n %d \n",y,x,n));
+	PDC_LOG(("mvwinchnstr() - called: y %d x %d n %d \n", y, x, n));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win,y,x) == ERR))
+		return ERR;
 
-	if (wmove(win,y,x) == ERR)
-		return( ERR );
-
-	return( winchnstr( win, ch, n) );
+	return winchnstr(win, ch, n);
 }

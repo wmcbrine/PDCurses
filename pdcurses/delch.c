@@ -19,13 +19,13 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 #include <string.h>
 
 #ifdef HAVE_MEMORY_H
-#  include <memory.h>
+# include <memory.h>
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -46,7 +46,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_delch  = "$Id: delch.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,33 +54,33 @@ char *rcsid_delch  = "$Id: delch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                         delch
 
   Synopsis:
-  	int delch(void);
-  	int wdelch(WINDOW *win);
-  	int mvdelch(int y, int x);
-  	int mvwdelch(WINDOW *win, int y, int x);
+	int delch(void);
+	int wdelch(WINDOW *win);
+	int mvdelch(int y, int x);
+	int mvwdelch(WINDOW *win, int y, int x);
 
   X/Open Description:
- 	The character under the cursor in the window is deleted.  All
- 	characters to the right on the same line are moved to the left
- 	one position and the last character on the line is filled with
- 	a blank.  The cursor position does not change (after moving to
- 	y, x if coordinates are specified).
+	The character under the cursor in the window is deleted.  All
+	characters to the right on the same line are moved to the left
+	one position and the last character on the line is filled with
+	a blank.  The cursor position does not change (after moving to
+	y, x if coordinates are specified).
 
- 	NOTE: delch(), mvdelch(), and mvwdelch() are implemented as macros.
+	NOTE: delch(), mvdelch(), and mvwdelch() are implemented as macros.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   NOTE:
- 	The behaviour of Unix curses is to display a blank in the last
- 	column of the window with the A_NORMAL attribute. PDCurses
- 	displays the blank with the window's current attributes 
- 	(including current colour). To get the behaviour of PDCurses,
- 	#define PDCURSES_WCLR in curses.h or add -DPDCURSES_WCLR to the 
- 	compile switches.
+	The behaviour of Unix curses is to display a blank in the last
+	column of the window with the A_NORMAL attribute. PDCurses
+	displays the blank with the window's current attributes 
+	(including current colour). To get the behaviour of PDCurses,
+	#define PDCURSES_WCLR in curses.h or add -DPDCURSES_WCLR to the 
+	compile switches.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -101,8 +101,9 @@ int	PDC_CDECL	delch()
 {
 	PDC_LOG(("delch() - called\n"));
 
-	return (wdelch(stdscr));
+	return wdelch(stdscr);
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wdelch(WINDOW *win)
@@ -112,15 +113,13 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	int		y;
-	int		x;
-	int		maxx;
-	chtype*		temp1;
+	int y, x, maxx;
+	chtype* temp1;
 
 	PDC_LOG(("wdelch() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return (ERR);
+		return ERR;
 
 	y	= win->_cury;
 	x	= win->_curx;
@@ -138,19 +137,18 @@ WINDOW *win;
 
 	win->_lastch[y] = maxx;
 
-	if ((win->_firstch[y] == _NO_CHANGE) ||
-	    (win->_firstch[y] > x))
-	{
+	if ((win->_firstch[y] == _NO_CHANGE) || (win->_firstch[y] > x))
 		win->_firstch[y] = x;
-	}
+
 	PDC_sync(win);
-	return (OK);
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvdelch(int y, int x)
 #else
-int	PDC_CDECL	mvdelch(y,x)
+int	PDC_CDECL	mvdelch(y, x)
 int y;
 int x;
 #endif
@@ -158,15 +156,17 @@ int x;
 {
 	PDC_LOG(("mvdelch() - called\n"));
 
-	if (move(y,x) == ERR)
-		return(ERR);
-	return(delch());
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return delch();
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvwdelch(WINDOW *win, int y, int x)
 #else
-int	PDC_CDECL	mvwdelch(win,y,x)
+int	PDC_CDECL	mvwdelch(win, y, x)
 WINDOW *win;
 int y;
 int x;
@@ -175,7 +175,8 @@ int x;
 {
 	PDC_LOG(("mvwdelch() - called\n"));
 
-	if (wmove(win,y,x) == ERR)
-		return(ERR);
-	return(wdelch(win));
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wdelch(win);
 }

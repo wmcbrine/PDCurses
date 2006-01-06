@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addstr  = "$Id: addstr.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_addstr  = "$Id: addstr.c,v 1.5 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -50,37 +50,39 @@ char *rcsid_addstr  = "$Id: addstr.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                        addstr
 
   Synopsis:
-  	int addstr(const char *str);
-  	int addnstr(const char *str, int n);
-  	int waddstr(WINDOW *win, const char *str);
-  	int waddnstr(WINDOW *win, const char *str, int n);
-  	int mvaddstr(int y, int x, const char *str);
-  	int mvaddnstr(int y, int x, const char *str, int n);
-  	int mvwaddstr(WINDOW *, int y, int x, const char *str);
-  	int mvwaddnstr(WINDOW *, int y, int x, const char *str, int n);
+	int addstr(const char *str);
+	int addnstr(const char *str, int n);
+	int waddstr(WINDOW *win, const char *str);
+	int waddnstr(WINDOW *win, const char *str, int n);
+	int mvaddstr(int y, int x, const char *str);
+	int mvaddnstr(int y, int x, const char *str, int n);
+	int mvwaddstr(WINDOW *, int y, int x, const char *str);
+	int mvwaddnstr(WINDOW *, int y, int x, const char *str, int n);
 
   X/Open Description:
- 	These routines write all the characters of the null-terminated
- 	string str on the given window.  The functionality is equivalent
- 	to calling waddch() once for each character in the string.  The four
- 	routines with n as the last argument write at most n characters.  If n
- 	is negative, then the entire string will be added.
+	These routines write all the characters of the null-terminated 
+	string str on the given window.  The functionality is equivalent 
+	to calling waddch() once for each character in the string.  The 
+	four routines with n as the last argument write at most n 
+	characters.  If n is negative, then the entire string will be 
+	added.
 
- 	NOTE:	addstr(), mvaddstr(), and mvwaddstr() are implemented as macros.
- 		addnstr(), mvaddnstr(), and mvwaddnstr() are implemented as macros.
+	NOTE: addstr(), addnstr(), mvaddstr(), mvaddnstr(), mvwaddstr(), 
+	and mvwaddnstr() are implemented as macros.
 
   PDCurses Description:
- 	The *raw*() routines output 8 bit values.  These contrast to their
- 	normal counterparts which output 7 bit values and convert control
- 	character to the ^X notation.
+	The *raw*() routines output 8 bit values.  These contrast to
+	their normal counterparts which output 7 bit values and convert
+	control character to the ^X notation.
 
- 	str is a standard 8 bit character string WITHOUT embedded attributes.
+	str is a standard 8 bit character string WITHOUT embedded 
+	attributes.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -106,55 +108,59 @@ char *str;
 {
 	int i;
 
-	PDC_LOG(("addstr() - called: string=\"%s\"\n",str));
+	PDC_LOG(("addstr() - called: string=\"%s\"\n", str));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	while (*str)
 	{
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( stdscr, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( stdscr, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	addnstr(const char *str, int n)
 #else
-int	PDC_CDECL	addnstr(str,n)
+int	PDC_CDECL	addnstr(str, n)
 char *str;
 int n;
 #endif
 /***********************************************************************/
 {
-	int ic = 0;
-	int i;
+	int i, ic;
 
-	PDC_LOG(("addnstr() - called: string=\"%s\" n %d \n",str,n));
+	PDC_LOG(("addnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	while ( *str && (ic < n || n < 0) )
+	for (ic = 0; *str && (ic < n || n < 0); ic++)
 	{
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( stdscr, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
-		ic++;
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( stdscr, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	waddstr(WINDOW *win, const char *str)
 #else
-int	PDC_CDECL	waddstr(win,str)
+int	PDC_CDECL	waddstr(win, str)
 WINDOW *win;
 char *str;
 #endif
@@ -162,56 +168,60 @@ char *str;
 {
 	int i;
 
-	PDC_LOG(("waddstr() - called: string=\"%s\"\n",str));
+	PDC_LOG(("waddstr() - called: string=\"%s\"\n", str));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	while (*str)
 	{
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( win, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( win, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	waddnstr(WINDOW *win, const char *str, int n)
 #else
-int	PDC_CDECL	waddnstr(win,str,n)
+int	PDC_CDECL	waddnstr(win, str, n)
 WINDOW *win;
 char *str;
 int n;
 #endif
 /***********************************************************************/
 {
-	int ic = 0;
-	int i;
+	int i, ic;
 
-	PDC_LOG(("waddnstr() - called: string=\"%s\" n %d \n",str,n));
+	PDC_LOG(("waddnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (win == (WINDOW *)NULL)
 		return( ERR );
 
-	while ( *str && (ic < n || n < 0) )
+	for (ic = 0; *str && (ic < n || n < 0); ic++)
 	{
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( win, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
-		ic++;
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( win, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvaddstr(int y, int x, const char *str)
 #else
-int	PDC_CDECL	mvaddstr(y,x,str)
+int	PDC_CDECL	mvaddstr(y, x, str)
 int y;
 int x;
 char *str;
@@ -220,29 +230,29 @@ char *str;
 {
 	int i;
 
-	PDC_LOG(("mvaddstr() - called: y %d x %d string=\"%s\"\n",y,x,str));
+	PDC_LOG(("mvaddstr() - called: y %d x %d string=\"%s\"\n", y, x, str));
 
-	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
-
-	if (wmove(stdscr,y,x) == ERR)
-		return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+		return ERR;
 
 	while (*str)
 	{     
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( stdscr, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( stdscr, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvaddnstr(int y, int x, const char *str, int n)
 #else
-int	PDC_CDECL	mvaddnstr(y,x,str,n)
+int	PDC_CDECL	mvaddnstr(y, x, str, n)
 int y;
 int x;
 char *str;
@@ -250,33 +260,32 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int ic = 0;
-	int i;
+	int i, ic;
 
-	PDC_LOG(("mvaddnstr() - called: y %d x %d string=\"%s\" n %d \n",y,x,str,n));
+	PDC_LOG(("mvaddnstr() - called: y %d x %d string=\"%s\" n %d \n",
+		y, x, str, n));
 
-	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+		return ERR;
 
-	if (wmove(stdscr,y,x) == ERR)
-		return( ERR );
-
-	while ( *str && (ic < n || n < 0) )
+	for (ic = 0; *str && (ic < n || n < 0); ic++)
 	{                
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( stdscr, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
-		ic++;
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( stdscr, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	mvwaddstr(WINDOW *win, int y, int x, const char *str)
 #else
-int	PDC_CDECL	mvwaddstr(win,y,x,str)
+int	PDC_CDECL	mvwaddstr(win, y, x, str)
 WINDOW *win;
 int y;
 int x;
@@ -286,29 +295,30 @@ char *str;
 {
 	int i;
 
-	PDC_LOG(("waddstr() - called: string=\"%s\"\n",str));
+	PDC_LOG(("waddstr() - called: string=\"%s\"\n", str));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
-
-	if (wmove(win,y,x) == ERR)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
 	while (*str)
 	{     
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( win, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( win, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	mvwaddnstr(WINDOW *win,int y, int x, const char *str, int n)
+int	PDC_CDECL	mvwaddnstr(WINDOW *win, int y, int x,
+				   const char *str, int n)
 #else
-int	PDC_CDECL	mvwaddnstr(win,y,x,str,n)
+int	PDC_CDECL	mvwaddnstr(win, y, x, str, n)
 WINDOW *win;
 int y;
 int x;
@@ -317,25 +327,23 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int ic = 0;
-	int i;
+	int i, ic;
 
-	PDC_LOG(("mvwaddnstr() - called: y %d x %d string=\"%s\" n %d \n",y,x,str,n));
+	PDC_LOG(("mvwaddnstr() - called: y %d x %d string=\"%s\" n %d \n",
+		y, x, str, n));
 
-	if (win == (WINDOW *)NULL)
-		return( ERR );
+	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+		return ERR;
 
-	if (wmove(win,y,x) == ERR)
-		return( ERR );
-
-	while ( *str && (ic < n || n < 0) )
+	for (ic = 0; *str && (ic < n || n < 0); ic++)
 	{     
-		if ((i = *str++)<0) i += 256;  /* make negative chars positive - PJK */
-		if (PDC_chadd( win, (chtype)i, (bool)(!(SP->raw_out)), TRUE ) == ERR)
-		{
-			return( ERR );
-		}
-		ic++;
+		/* make negative chars positive - PJK */
+		if ((i = *str++) < 0)
+			i += 256;
+
+		if (PDC_chadd( win, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+			return ERR;
 	}
-	return( OK );
+	return OK;
 }

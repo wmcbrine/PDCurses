@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_move  = "$Id: move.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_move  = "$Id: move.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -40,22 +40,22 @@ char *rcsid_move  = "$Id: move.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                          move
 
   Synopsis:
-  	int move(int y, int x);
-  	int wmove(WINDOW *win, int y, int x);
+	int move(int y, int x);
+	int wmove(WINDOW *win, int y, int x);
 
   X/Open Description:
- 	The cursor associated with the window is moved to the given
- 	location.  This does not move the physical cursor of the
- 	terminal until refresh() is called.  The position specified is
- 	relative to the upper left corner of the window, which is (0,0).
+	The cursor associated with the window is moved to the given
+	location.  This does not move the physical cursor of the
+	terminal until refresh() is called.  The position specified is
+	relative to the upper left corner of the window, which is (0,0).
 
- 	NOTE: move() is a macro.
+	NOTE: move() is a macro.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -68,52 +68,47 @@ char *rcsid_move  = "$Id: move.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
 #ifdef HAVE_PROTO
 int	PDC_CDECL	move(int y, int x)
 #else
-int	PDC_CDECL	move(y,x)
+int	PDC_CDECL	move(y, x)
 int y;
 int x;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("move() - called: y=%d x=%d\n",y,x));
+	PDC_LOG(("move() - called: y=%d x=%d\n", y, x));
 
 	if (stdscr == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	if ((x < 0) ||
-	    (y < 0) ||
-	    (x >= stdscr->_maxx) ||
-	    (y >= stdscr->_maxy))
-	{
-		return( ERR );
-	}
+	if ((x < 0) || (y < 0) || (x >= stdscr->_maxx) || (y >= stdscr->_maxy))
+		return ERR;
+
 	stdscr->_curx = x;
 	stdscr->_cury = y;
-	return( OK );
+
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	wmove(WINDOW *win, int y, int x)
 #else
-int	PDC_CDECL	wmove(win,y,x)
+int	PDC_CDECL	wmove(win, y, x)
 WINDOW *win;
 int y;
 int x;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("wmove() - called: y=%d x=%d\n",y,x));
+	PDC_LOG(("wmove() - called: y=%d x=%d\n", y, x));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
-	if ((x < 0) ||
-	    (y < 0) ||
-	    (x >= win->_maxx) ||
-	    (y >= win->_maxy))
-	{
-		return( ERR );
-	}
+	if ((x < 0) || (y < 0) || (x >= win->_maxx) || (y >= win->_maxy))
+		return ERR;
+
 	win->_curx = x;
 	win->_cury = y;
-	return( OK );
+
+	return OK;
 }

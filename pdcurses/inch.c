@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inch  = "$Id: inch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_inch  = "$Id: inch.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -44,24 +44,24 @@ char *rcsid_inch  = "$Id: inch.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                          inch
 
   Synopsis:
-  	chtype inch(void);
-  	chtype winch(WINDOW *win);
-  	chtype mvinch(int y, int x);
-  	chtype mvwinch(WINDOW *win, int y, int x);
+	chtype inch(void);
+	chtype winch(WINDOW *win);
+	chtype mvinch(int y, int x);
+	chtype mvwinch(WINDOW *win, int y, int x);
 
   X/Open Description:
 
- 	NOTE: All these functions are implemented as macros.
+	NOTE: All these functions are implemented as macros.
 
   PDCurses Description:
- 	Depending upon the state of the raw character output, 7- or
- 	8-bit characters will be output.
+	Depending upon the state of the raw character output, 7- or
+	8-bit characters will be output.
 
   X/Open Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   X/Open Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -82,8 +82,9 @@ chtype	PDC_CDECL	inch()
 {
 	PDC_LOG(("inch() - called\n"));
 
-	return( stdscr->_y[stdscr->_cury][stdscr->_curx] );
+	return stdscr->_y[stdscr->_cury][stdscr->_curx];
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 chtype	PDC_CDECL	winch(WINDOW *win)
@@ -95,13 +96,14 @@ WINDOW *win;
 {
 	PDC_LOG(("winch() - called\n"));
 
-	return( win->_y[win->_cury][win->_curx] );
+	return win->_y[win->_cury][win->_curx];
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 chtype	PDC_CDECL	mvinch(int y, int x)
 #else
-chtype	PDC_CDECL	mvinch(y,x)
+chtype	PDC_CDECL	mvinch(y, x)
 int y;
 int x;
 #endif
@@ -109,9 +111,12 @@ int x;
 {
 	PDC_LOG(("mvinch() - called\n"));
 
-	(void)(move(y,x));
-	return( stdscr->_y[stdscr->_cury][stdscr->_curx] );
+	if (move(y, x) == ERR)
+		return (chtype)ERR;
+
+	return stdscr->_y[stdscr->_cury][stdscr->_curx];
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
 chtype	PDC_CDECL	mvwinch(WINDOW *win, int y, int x)
@@ -125,6 +130,8 @@ int x;
 {
 	PDC_LOG(("mvwinch() - called\n"));
 
-	(void)(wmove(win,y,x));
-	return( win->_y[win->_cury][win->_curx] );
+	if (wmove(win, y, x) == ERR)
+		return (chtype)ERR;
+
+	return win->_y[win->_cury][win->_curx];
 }

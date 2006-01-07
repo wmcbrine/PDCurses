@@ -19,41 +19,39 @@
 */
 #define CURSES_LIBRARY  1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgo32  = "$Id: pdcgo32.c,v 1.2 2001/01/10 08:28:41 mark Exp $";
+char *rcsid_PDCgo32 = "$Id: pdcgo32.c,v 1.3 2006/01/07 02:53:25 wmcbrine Exp $";
 #endif
-
-
 
 #include <pc.h>    
 #include <sys/movedata.h> /* prototypes of dosmemget() and dosmemput() */
 
-unsigned char getdosmembyte (int offset)
+unsigned char getdosmembyte(int offset)
 {
- unsigned char b=0;
+	unsigned char b;
 
-  dosmemget (offset, sizeof(unsigned char), &b);
-  return b;
+	dosmemget(offset, sizeof(unsigned char), &b);
+	return b;
 }
 
-unsigned short getdosmemword (int offset)
+unsigned short getdosmemword(int offset)
 {
-  unsigned short w=0;
+	unsigned short w;
 
-  dosmemget (offset, sizeof(unsigned short), &w);
-  return w;
+	dosmemget(offset, sizeof(unsigned short), &w);
+	return w;
 }
 
-void setdosmembyte (int offset, unsigned char b)
+void setdosmembyte(int offset, unsigned char b)
 {
-  dosmemput (&b, sizeof(unsigned char), offset);
+	dosmemput(&b, sizeof(unsigned char), offset);
 }
 
-void setdosmemword (int offset, unsigned short w)
+void setdosmemword(int offset, unsigned short w)
 {
-  dosmemput (&w, sizeof(unsigned short), offset);
+	dosmemput(&w, sizeof(unsigned short), offset);
 }

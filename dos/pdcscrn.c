@@ -19,12 +19,12 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef HAVE_MEMORY_H
-#  include <memory.h>
+# include <memory.h>
 #endif
 
 #ifdef __DJGPP__
@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.9 2006/01/03 19:54:29 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.10 2006/01/07 02:53:25 wmcbrine Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;
@@ -41,19 +41,20 @@ char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.9 2006/01/03 19:54:29 wmcbrine Exp $"
 
 /*man-start*********************************************************************
 
-  PDC_scr_close()	- Internal low-level binding to close the physical screen
+  PDC_scr_close()	- Internal low-level binding to close the
+			  physical screen
 
   PDCurses Description:
- 	This is a nop for the DOS platform.
+	This is a nop for the DOS platform.
 
   PDCurses Return Value:
- 	This function returns OK on success, otherwise an ERR is returned.
+	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
- 	The DOS platform will never fail.
+	The DOS platform will never fail.
 
   Portability:
- 	PDCurses	int	PDC_scr_close( void );
+	PDCurses  int PDC_scr_close(void);
 
 **man-end**********************************************************************/
 
@@ -67,42 +68,43 @@ int	PDC_scr_close()
 {
 #if SMALL || MEDIUM
 # if !PC
-struct SREGS segregs;
+	struct SREGS segregs;
 # endif
-int ds=0;
+	int ds;
 #endif
-
 	PDC_LOG(("PDC_scr_close() - called\n"));
 
 	if (getenv("PDC_RESTORE_SCREEN") != NULL)
 	{
 		if (saved_screen == NULL)
-			return( OK );
+			return OK;
 #ifdef __DJGPP__
 		dosmemput(saved_screen,
 			saved_lines * saved_cols * sizeof(unsigned short),
-		(unsigned long)_FAR_POINTER(SP->video_seg,SP->video_ofs));
+			(unsigned long)_FAR_POINTER(SP->video_seg,
+			SP->video_ofs));
 #else
-#  if	(SMALL || MEDIUM)
-#    if PC
-		ds = FP_SEG((void far *) saved_screen);
-#    else
-	segread(&segregs);
-	ds = segregs.ds;
-#    endif
-	movedata(ds, (int)saved_screen,
+# if (SMALL || MEDIUM)
+#  if PC
+		ds = FP_SEG((void far *)saved_screen);
+#  else
+		segread(&segregs);
+		ds = segregs.ds;
+#  endif
+		movedata(ds, (int)saved_screen,
 		SP->video_seg,SP->video_ofs,
 		(saved_lines * saved_cols * sizeof(unsigned short)));
-#  else
-	memcpy((void *)_FAR_POINTER(SP->video_seg,SP->video_ofs),
-		(void*)saved_screen,
+# else
+		memcpy((void *)_FAR_POINTER(SP->video_seg, SP->video_ofs),
+		(void *)saved_screen,
 		(saved_lines * saved_cols * sizeof(unsigned short)));
-#  endif
+# endif
 #endif
 		free(saved_screen);
 		saved_screen = NULL;
 	}
-	return( OK );
+
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -110,19 +112,20 @@ int ds=0;
   PDC_scrn_modes_equal()	- Decide if two screen modes are equal
 
   PDCurses Description:
- 	Mainly required for OS/2. It decides if two screen modes
-        (VIOMODEINFO structure) are equal. Under DOS it just compares
-        two integers
+	Mainly required for OS/2. It decides if two screen modes
+	(VIOMODEINFO structure) are equal. Under DOS it just compares
+	two integers.
 
   PDCurses Return Value:
- 	This function returns TRUE if equal else FALSe.
+	This function returns TRUE if equal else FALSE.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int PDC_scrn_modes_equal( int mode1, int mode2 );
- 	OS2 PDCurses	int PDC_scrn_modes_equal( VIOMODEINFO mode1, VIOMODEINFO mode2 );
+	PDCurses      int PDC_scrn_modes_equal(int mode1, int mode2);
+	OS2 PDCurses  int PDC_scrn_modes_equal(VIOMODEINFO mode1, 
+					       VIOMODEINFO mode2);
 
 **man-end**********************************************************************/
 
@@ -130,7 +133,7 @@ int ds=0;
 #ifdef HAVE_PROTO
 bool	PDC_scrn_modes_equal(int mode1, int mode2)
 #else
-bool	PDC_scrn_modes_equal(mode1,mode2)
+bool	PDC_scrn_modes_equal(mode1, mode2)
 int mode1;
 int mode2;
 #endif
@@ -143,19 +146,20 @@ int mode2;
 
 /*man-start*********************************************************************
 
-  PDC_scr_open()	- Internal low-level binding to open the physical screen
+  PDC_scr_open()	- Internal low-level binding to open the
+			  physical screen
 
   PDCurses Description:
- 	This is a NOP for the DOS platform.
+	This is a NOP for the DOS platform.
 
   PDCurses Return Value:
- 	This function returns OK on success, otherwise an ERR is returned.
+	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
- 	The DOS platform will never fail.
+	The DOS platform will never fail.
 
   Portability:
- 	PDCurses	int	PDC_scr_open( SCREEN* internal, bool echo );
+	PDCurses  int PDC_scr_open(SCREEN *internal, bool echo);
 
 **man-end**********************************************************************/
 
@@ -163,7 +167,7 @@ int mode2;
 #ifdef HAVE_PROTO
 int	PDC_scr_open(SCREEN *internal, bool echo)
 #else
-int	PDC_scr_open(internal,echo)
+int	PDC_scr_open(internal, echo)
 SCREEN *internal;
 bool echo;
 #endif
@@ -171,24 +175,24 @@ bool echo;
 {
 #if SMALL || MEDIUM
 # if !PC
-struct SREGS segregs;
+	struct SREGS segregs;
 # endif
-int ds=0;
+	int ds;
 #endif
-
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	internal->orig_attr	 = 0;
 	internal->orig_emulation = getdosmembyte (0x487);
 
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
+
 	internal->direct_video	= TRUE;		/* Assume that we can	      */
 	internal->autocr	= TRUE;		/* lf -> crlf by default      */
 	internal->raw_out	= FALSE;	/* tty I/O modes	      */
 	internal->raw_inp	= FALSE;	/* tty I/O modes	      */
 	internal->cbreak	= TRUE;
-	internal->save_key_modifiers	= FALSE;
-	internal->return_key_modifiers	= FALSE;
+	internal->save_key_modifiers = FALSE;
+	internal->return_key_modifiers = FALSE;
 	internal->echo		= echo;
 	internal->refrbrk	= FALSE;	/* no premature end of refresh*/
 	internal->video_seg	= 0xb000;	/* Base screen segment addr   */
@@ -200,66 +204,65 @@ int ds=0;
 	internal->adapter	= PDC_query_adapter_type();
 	internal->scrnmode	= PDC_get_scrn_mode();
 
-	internal->orig_font = internal->font	= PDC_get_font();
+	internal->orig_font = internal->font = PDC_get_font();
 	internal->lines		= PDC_get_rows();
 	internal->cols		= PDC_get_columns();
 
 	internal->audible	= TRUE;
 	internal->visibility	= 1;
-	internal->orig_cursor = internal->cursor;
-	internal->orgcbr = PDC_get_ctrl_break();
-	internal->blank = ' ';
-	internal->resized = FALSE;
-	internal->shell = FALSE;
-	internal->_trap_mbe = 0L;
+	internal->orig_cursor	= internal->cursor;
+	internal->orgcbr	= PDC_get_ctrl_break();
+	internal->blank		= ' ';
+	internal->resized	= FALSE;
+	internal->shell		= FALSE;
+	internal->_trap_mbe	= 0L;
 	internal->_map_mbe_to_key = 0L;
 	internal->linesrippedoff = 0;
 	internal->linesrippedoffontop = 0;
-	internal->delaytenths = 0;
-/*
- * If the environment variable PDCURSES_BIOS is set, the DOS int10()
- * BIOS calls are used in place of direct video memory access.
- */
+	internal->delaytenths	= 0;
+
+	/* If the environment variable PDCURSES_BIOS is set, the DOS 
+	   int10() BIOS calls are used in place of direct video memory 
+	   access. */
+
 	if (getenv("PDCURSES_BIOS") != NULL)
 		internal->direct_video = FALSE;
-/*
- * This code for preserving the current screen...
- */
+
+	/* This code for preserving the current screen. */
+
 	if (getenv("PDC_RESTORE_SCREEN") != NULL)
 	{
 		saved_lines = internal->lines;
 		saved_cols = internal->cols;
-		if ((saved_screen = (unsigned short*)malloc(saved_lines*saved_cols*sizeof(unsigned short))) == NULL)
-			return(ERR);
+		if ((saved_screen = (unsigned short*)malloc(saved_lines
+		    * saved_cols * sizeof(unsigned short))) == NULL)
+			return ERR;
 
 #ifdef __DJGPP__
-		dosmemget ((unsigned long)_FAR_POINTER(SP->video_seg,SP->video_ofs),
-			saved_lines * saved_cols * sizeof(unsigned short),saved_screen);
+		dosmemget ((unsigned long)_FAR_POINTER(SP->video_seg,
+			SP->video_ofs), saved_lines * saved_cols * 
+			sizeof(unsigned short), saved_screen);
 #else
-#  if	(SMALL || MEDIUM)
-#    if PC
+# if	(SMALL || MEDIUM)
+#  if PC
 		ds = FP_SEG((void far *) saved_screen);
-#    else
-	segread(&segregs);
-	ds = segregs.ds;
-#    endif
-	movedata(SP->video_seg,SP->video_ofs,
-		ds, (int)saved_screen,
-		(saved_lines * saved_cols * sizeof(unsigned short)));
 #  else
-	memcpy((void*)saved_screen,
-		(void *)_FAR_POINTER(SP->video_seg,SP->video_ofs),
-		(saved_lines * saved_cols * sizeof(unsigned short)));
+		segread(&segregs);
+		ds = segregs.ds;
 #  endif
+		movedata(SP->video_seg,SP->video_ofs, ds, (int)saved_screen,
+			(saved_lines * saved_cols * sizeof(unsigned short)));
+# else
+		memcpy((void*)saved_screen,
+			(void *)_FAR_POINTER(SP->video_seg, SP->video_ofs),
+			(saved_lines * saved_cols * sizeof(unsigned short)));
+# endif
 #endif
 	}
 
-	if (getenv("PDC_PRESERVE_SCREEN") != NULL)
-		internal->_preserve = TRUE;
-	else
-		internal->_preserve = FALSE;
+	internal->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
-	return( OK );
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -267,19 +270,19 @@ int ds=0;
   PDC_resize_screen()	- Internal low-level function to resize screen
 
   PDCurses Description:
- 	This function provides a means for the application program to
- 	resize the overall dimensions of the screen.  Under DOS and OS/2
- 	the application can tell PDCurses what size to make the screen;
- 	under X11, resizing is done by the user and this function simply
- 	adjusts its internal structures to fit the new size.
+	This function provides a means for the application program to
+	resize the overall dimensions of the screen.  Under DOS and OS/2
+	the application can tell PDCurses what size to make the screen;
+	under X11, resizing is done by the user and this function simply
+	adjusts its internal structures to fit the new size.
 
   PDCurses Return Value:
- 	This function returns OK on success, otherwise an ERR is returned.
+	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
 
   Portability:
- 	PDCurses	int	PDC_resize_screen( int, int );
+	PDCurses  int PDC_resize_screen(int, int);
 
 **man-end**********************************************************************/
 
@@ -288,32 +291,31 @@ int ds=0;
 int	PDC_resize_screen(int nlines, int ncols)
 #else
 int	PDC_resize_screen(nlines, ncols)
-int nlines,ncols;
+int nlines, ncols;
 #endif
 /***********************************************************************/
 {
-	int rc=OK;
-
-	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols));
+	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
+		nlines, ncols));
 
 	switch (SP->adapter)
 	{
 	case _EGACOLOR:
-		if (nlines >= 43)		PDC_set_font(_FONT8);
-		else				PDC_set_80x25();
+		if (nlines >= 43)
+			PDC_set_font(_FONT8);
+		else
+			PDC_set_80x25();
 		break;
 
 	case _VGACOLOR:
-		if	(nlines > 28)		PDC_set_font(_FONT8);
-		else	if (nlines > 25)	PDC_set_font(_FONT14);
-		else				PDC_set_80x25();
-		break;
-
-	default:
-		break;
+		if (nlines > 28)
+			PDC_set_font(_FONT8);
+		else
+			if (nlines > 25)
+				PDC_set_font(_FONT14);
+			else
+				PDC_set_80x25();
 	}
 
-	return ( rc );
+	return OK;
 }
-
-

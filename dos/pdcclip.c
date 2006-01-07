@@ -20,17 +20,18 @@
 
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.7 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.8 2006/01/07 02:53:24 wmcbrine Exp $";
 #endif
 
 #include <string.h>
 
 /* global clipboard contents, should be NULL if none set */
+
 static char *pdc_DOS_clipboard = NULL;
 
 /*man-start*********************************************************************
@@ -38,24 +39,24 @@ static char *pdc_DOS_clipboard = NULL;
   PDC_getclipboard()	- Gets the contents of the clipboard
 
   PDCurses Description:
- 	This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
- 	Gets the textual contents of the system's clipboard. This
- 	function returns the contents of the clipboard in the contents
- 	argument. It is the responsibilitiy of the caller to free the
- 	memory returned with the PDC_freeclipboard() call.  The length of the
- 	clipboard contents is returned in the length argument.
+	Gets the textual contents of the system's clipboard. This 
+	function returns the contents of the clipboard in the contents 
+	argument. It is the responsibilitiy of the caller to free the 
+	memory returned with the PDC_freeclipboard() call.  The length 
+	of the clipboard contents is returned in the length argument.
 
   PDCurses Return Value:
- 	indicator of success/failure of call.
- 	PDC_CLIP_SUCCESS	the call was successful
- 	PDC_CLIP_MEMORY_ERROR	unable to allocate sufficient memory for 
- 		the clipboard contents
- 	PDC_CLIP_EMPTY	the clipboard contains no text
- 	PDC_CLIP_ACCESS_ERROR	no clipboard support
+	indicator of success/failure of call.
+	PDC_CLIP_SUCCESS	the call was successful
+	PDC_CLIP_MEMORY_ERROR	unable to allocate sufficient memory for 
+				the clipboard contents
+	PDC_CLIP_EMPTY	the clipboard contains no text
+	PDC_CLIP_ACCESS_ERROR	no clipboard support
 
   Portability:
- 	PDCurses	int PDC_getclipboard( char **contents, long *length );
+	PDCurses  int PDC_getclipboard(char **contents, long *length);
 
 **man-end**********************************************************************/
 int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
@@ -64,7 +65,8 @@ int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 
 	PDC_LOG(("PDC_getclipboard() - called\n"));
 
-	if (pdc_DOS_clipboard == NULL) return PDC_CLIP_EMPTY;
+	if (pdc_DOS_clipboard == NULL)
+		return PDC_CLIP_EMPTY;
 
 	len = strlen(pdc_DOS_clipboard);
 	if ((*contents = (char *)malloc((len+1) * sizeof(char))) == NULL)
@@ -81,20 +83,20 @@ int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
   PDC_setclipboard()	- Sets the contents of the clipboard
 
   PDCurses Description:
- 	This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
- 	Copies the supplied text into the system's clipboard, emptying
- 	the clipboard prior to the copy.
+	Copies the supplied text into the system's clipboard, emptying
+	the clipboard prior to the copy.
 
   PDCurses Return Value:
- 	indicator of success/failure of call.
- 	PDC_CLIP_SUCCESS	the call was successful
- 	PDC_CLIP_MEMORY_ERROR	unable to allocate sufficient memory for 
- 		the clipboard contents
- 	PDC_CLIP_ACCESS_ERROR	no clipboard support
+	indicator of success/failure of call.
+	PDC_CLIP_SUCCESS	the call was successful
+	PDC_CLIP_MEMORY_ERROR	unable to allocate sufficient memory for 
+				the clipboard contents
+	PDC_CLIP_ACCESS_ERROR	no clipboard support
 
   Portability:
- 	PDCurses	int PDC_setclipboard( char *contents, long length );
+	PDCurses  int PDC_setclipboard(char *contents, long length);
 
 **man-end**********************************************************************/
 
@@ -110,7 +112,8 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 
 	if (contents != NULL)
 	{
-		if ((pdc_DOS_clipboard = (char *)malloc((length+1) * sizeof(char))) == NULL)
+		if ((pdc_DOS_clipboard = (char *)malloc((length+1) *
+		     sizeof(char))) == NULL)
 			return PDC_CLIP_MEMORY_ERROR;
 
 		strcpy(pdc_DOS_clipboard, contents);
@@ -121,18 +124,19 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 
 /*man-start*********************************************************************
 
-  PDC_freeclipboard()	- Frees the memory associated with the contents of the clipboard
+  PDC_freeclipboard()	- Frees the memory associated with the contents
+			  of the clipboard
 
   PDCurses Description:
- 	This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
- 	Frees the memory allocated by PDC_getclipboard().
+	Frees the memory allocated by PDC_getclipboard().
 
   PDCurses Return Value:
- 	Always returns PDC_CLIP_SUCCESS
+	Always returns PDC_CLIP_SUCCESS
 
   Portability:
- 	PDCurses	int PDC_freeclipboard( char *contents );
+	PDCurses  int PDC_freeclipboard(char *contents);
 
 **man-end**********************************************************************/
 
@@ -144,14 +148,17 @@ int	PDC_CDECL	PDC_freeclipboard(char *contents)
 
 	if (contents != NULL)
 	{
-		/* NOTE: We free the memory, but we can not set caller's pointer
-		         to NULL, so if caller calls again then will try to
-		         access free'd memory.  We 1st overwrite memory with
-		         a string so if caller tries to use free memory they
-		         won't get what they expect & hopefully notice.
-		*/
+		/* NOTE: We free the memory, but we can not set caller's 
+		   pointer to NULL, so if caller calls again then will 
+		   try to access free'd memory.  We 1st overwrite memory 
+		   with a string so if caller tries to use free memory 
+		   they won't get what they expect & hopefully notice. */
+
 		/* memset(contents, 0xFD, strlen(contents)); */
-		if (strlen(contents) >= strlen("PDCURSES")) strcpy(contents, "PDCURSES");
+
+		if (strlen(contents) >= strlen("PDCURSES"))
+			strcpy(contents, "PDCURSES");
+
 		free(contents);
 	}
 
@@ -163,19 +170,19 @@ int	PDC_CDECL	PDC_freeclipboard(char *contents)
   PDC_clearclipboard()	- Clears the contents of the clipboard
 
   PDCurses Description:
- 	This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
- 	Clears the internal clipboard.
+	Clears the internal clipboard.
 
   PDCurses Return Value:
- 	Always returns PDC_CLIP_SUCCESS
+	Always returns PDC_CLIP_SUCCESS
 
   Portability:
- 	PDCurses	int PDC_clearclipboard( void );
+	PDCurses  int PDC_clearclipboard(void);
 
 **man-end**********************************************************************/
 
-int	PDC_CDECL	PDC_clearclipboard( void )
+int	PDC_CDECL	PDC_clearclipboard(void)
 {
 	PDC_LOG(("PDC_clearclipboard() - called\n"));
 
@@ -184,7 +191,6 @@ int	PDC_CDECL	PDC_clearclipboard( void )
 		free(pdc_DOS_clipboard);
 		pdc_DOS_clipboard = NULL;
 	}
+
 	return PDC_CLIP_SUCCESS;
 }
-
-

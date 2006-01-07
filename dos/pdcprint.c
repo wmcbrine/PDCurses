@@ -19,12 +19,12 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.4 2006/01/07 02:53:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -32,22 +32,22 @@ char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp 
   PDC_print()	- Provides primitive access to the BIOS printer functions
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Implements write/init/read printer services at the BIOS level.
+	Implements write/init/read printer services at the BIOS level.
 
- 	This provides the basic support that PDCurses needs to dump the
- 	contents of windows or pads to the printer attached to the BIOS
- 	printer port.
+	This provides the basic support that PDCurses needs to dump the
+	contents of windows or pads to the printer attached to the BIOS
+	printer port.
 
   PDCurses Return Value:
- 	See the BIOS INT 0x17 specifications.
+	See the BIOS INT 0x17 specifications.
 
   PDCurses Errors:
- 	See the BIOS INT 0x17 specifications.
+	See the BIOS INT 0x17 specifications.
 
   Portability:
- 	PDCurses	int PDC_print( int cmd, int byte, int port );
+	PDCurses  int PDC_print(int cmd, int byte, int port);
 
 **man-end**********************************************************************/
 
@@ -55,15 +55,13 @@ char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp 
 #ifdef HAVE_PROTO
 int	PDC_print(int cmd, int byte, int port)
 #else
-int	PDC_print(cmd,byte,port)
+int	PDC_print(cmd, byte, port)
 int cmd;
 int byte;
 int port;
 #endif
 /***********************************************************************/
 {
-	int	status = 0;
-
 	PDC_LOG(("PDC_print() - called\n"));
 
 	regs.h.ah = (unsigned char)cmd;
@@ -74,6 +72,6 @@ int port;
 	regs.x.dx = (unsigned int)port;
 # endif
 	int86(0x17, &regs, &regs);
-	status = regs.h.ah;
-	return (status);
+
+	return (int)regs.h.ah;
 }

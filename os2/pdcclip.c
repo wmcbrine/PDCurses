@@ -18,10 +18,9 @@
 ***************************************************************************
 */
 
-
 #define  CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #if !defined(EMXVIDEO)
 # define INCL_DOS
@@ -32,185 +31,190 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip  = "$Id: pdcclip.c,v 1.6 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.7 2006/01/08 11:53:42 wmcbrine Exp $";
 #endif
-
 
 /*man-start*********************************************************************
 
   PDC_getclipboard() - Gets the contents of the clipboard
 
   PDCurses Description:
-   This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
-   Gets the textual contents of the system's clipboard. This
-   function returns the contents of the clipboard in the contents
-   argument. It is the responsibilitiy of the caller to free the
-   memory returned with the PDC_freeclipboard() call.  The length of the
-   clipboard contents is returned in the length argument.
+	Gets the textual contents of the system's clipboard. This 
+	function returns the contents of the clipboard in the contents 
+	argument. It is the responsibilitiy of the caller to free the 
+	memory returned with the PDC_freeclipboard() call.  The length 
+	of the clipboard contents is returned in the length argument.
 
   PDCurses Return Value:
-   indicator of success/failure of call.
-   PDC_CLIP_SUCCESS  the call was successful
-   PDC_CLIP_ACCESS_ERROR   an error occured while accessing the
-      clipboard
-   PDC_CLIP_MEMORY_ERROR   unable to allocate sufficient memory for 
-      the clipboard contents
-   PDC_CLIP_EMPTY the clipboard contains no text
+	indicator of success/failure of call.
+	PDC_CLIP_SUCCESS  the call was successful
+	PDC_CLIP_ACCESS_ERROR   an error occured while accessing the
+				clipboard
+	PDC_CLIP_MEMORY_ERROR   unable to allocate sufficient memory for 
+				the clipboard contents
+	PDC_CLIP_EMPTY the clipboard contains no text
 
   Portability:
-   PDCurses int PDC_getclipboard( char **contents, long *length );
+	PDCurses  int PDC_getclipboard(char **contents, long *length);
 
 **man-end**********************************************************************/
 
 int   PDC_CDECL   PDC_getclipboard(char **contents, long *length)
 {
 #if !defined(EMXVIDEO)
-   HMQ hmq;
-   HAB hab;
-   PTIB ptib;
-   PPIB ppib;
-   ULONG ulRet;
-   long len=0;
-   int rc=0;
+	HMQ hmq;
+	HAB hab;
+	PTIB ptib;
+	PPIB ppib;
+	ULONG ulRet;
+	long len;
+	int rc;
 #endif
-
-   PDC_LOG(("PDC_getclipboard() - called\n"));
+	PDC_LOG(("PDC_getclipboard() - called\n"));
 
 #if !defined(EMXVIDEO)
-   DosGetInfoBlocks( &ptib, &ppib );
-   ppib->pib_ultype = 3;
-   hab = WinInitialize( 0 );
-   hmq = WinCreateMsgQueue( hab, 0 );
+	DosGetInfoBlocks(&ptib, &ppib);
+	ppib->pib_ultype = 3;
+	hab = WinInitialize(0);
+	hmq = WinCreateMsgQueue(hab, 0);
 
-   if ( !WinOpenClipbrd( hab ) )
-   {
-      WinDestroyMsgQueue( hmq );
-      WinTerminate( hab );
-      return PDC_CLIP_ACCESS_ERROR;
-   }
-   ulRet = WinQueryClipbrdData( hab, CF_TEXT );
-   if ( !ulRet )
-      rc = PDC_CLIP_EMPTY;
-   else
-   {
-      len = strlen( (char *)ulRet );
-      *contents = (char *)malloc( len+1 );
-      if ( !*contents )
-      {
-         rc = PDC_CLIP_MEMORY_ERROR;
-      }
-      else
-      {
-         strcpy( (char *)*contents, (char *)ulRet );
-         *length = len;
-         rc = PDC_CLIP_SUCCESS;
-      }
-   }
-   WinCloseClipbrd( hab );
-   WinDestroyMsgQueue( hmq );
-   WinTerminate( hab );
-   return( rc );
+	if (!WinOpenClipbrd(hab))
+	{
+		WinDestroyMsgQueue(hmq);
+		WinTerminate(hab);
+		return PDC_CLIP_ACCESS_ERROR;
+	}
+
+	rc = PDC_CLIP_EMPTY;
+
+	ulRet = WinQueryClipbrdData(hab, CF_TEXT);
+
+	if (ulRet)
+	{
+		len = strlen((char *)ulRet);
+		*contents = (char *)malloc(len + 1);
+
+		if (!*contents)
+			rc = PDC_CLIP_MEMORY_ERROR;
+		else
+		{
+			strcpy((char *)*contents, (char *)ulRet);
+			*length = len;
+			rc = PDC_CLIP_SUCCESS;
+		}
+	}
+
+	WinCloseClipbrd(hab);
+	WinDestroyMsgQueue(hmq);
+	WinTerminate(hab);
+
+	return rc;
 #else
-   return PDC_CLIP_ACCESS_ERROR;
+	return PDC_CLIP_ACCESS_ERROR;
 #endif
 }
-
 
 /*man-start*********************************************************************
 
   PDC_setclipboard() - Sets the contents of the clipboard
 
   PDCurses Description:
-   This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
-   Copies the supplied text into the system's clipboard, emptying
-   the clipboard prior to the copy.
+	Copies the supplied text into the system's clipboard, emptying
+	the clipboard prior to the copy.
 
   PDCurses Return Value:
-   indicator of success/failure of call.
-   PDC_CLIP_SUCCESS  the call was successful
-   PDC_CLIP_ACCESS_ERROR   an error occured while accessing the
-      clipboard
+	indicator of success/failure of call.
+	PDC_CLIP_SUCCESS  the call was successful
+	PDC_CLIP_ACCESS_ERROR   an error occured while accessing the
+				clipboard
 
   Portability:
-   PDCurses int PDC_getclipboard( char *contents, long length );
+	PDCurses  int PDC_getclipboard(char *contents, long length);
 
 **man-end**********************************************************************/
 
 int   PDC_CDECL   PDC_setclipboard(char *contents, long length)
 {
 #if !defined(EMXVIDEO)
-   HAB hab;
-   PTIB ptib;
-   PPIB ppib;
-   ULONG ulRC;
-   PSZ szTextOut=NULL;
-   int rc=0;
+	HAB hab;
+	PTIB ptib;
+	PPIB ppib;
+	ULONG ulRC;
+	PSZ szTextOut = NULL;
+	int rc;
 #endif
-
-   PDC_LOG(("PDC_setclipboard() - called\n"));
+	PDC_LOG(("PDC_setclipboard() - called\n"));
 
 #if !defined(EMXVIDEO)
-   DosGetInfoBlocks( &ptib, &ppib );
-   ppib->pib_ultype = 3;
-   hab = WinInitialize( 0 );
+	DosGetInfoBlocks(&ptib, &ppib);
+	ppib->pib_ultype = 3;
+	hab = WinInitialize(0);
 
-   if ( !WinOpenClipbrd( hab ) )
-   {
-      WinTerminate( hab );
-      return PDC_CLIP_ACCESS_ERROR;
-   }
-   ulRC = DosAllocSharedMem( (PVOID) &szTextOut, NULL, length+1, PAG_WRITE | PAG_COMMIT | OBJ_GIVEABLE );
-   if (ulRC != 0)
-   {
-      rc = PDC_CLIP_MEMORY_ERROR;
-   }
-   else
-   {
-      strcpy( szTextOut, contents );
-      WinEmptyClipbrd( hab );
-      if ( WinSetClipbrdData( hab, (ULONG)szTextOut, CF_TEXT, CFI_POINTER ) )
-      {
-         rc = PDC_CLIP_SUCCESS;
-      }
-      else
-      {
-         DosFreeMem( szTextOut );
-         rc = PDC_CLIP_ACCESS_ERROR;
-      }
-   }
-   WinCloseClipbrd( hab );
-   WinTerminate( hab );
-   return( rc );
+	if (!WinOpenClipbrd(hab))
+	{
+		WinTerminate(hab);
+		return PDC_CLIP_ACCESS_ERROR;
+	}
+
+	rc = PDC_CLIP_MEMORY_ERROR;
+
+	ulRC = DosAllocSharedMem((PVOID)&szTextOut, NULL, length + 1,
+		PAG_WRITE | PAG_COMMIT | OBJ_GIVEABLE);
+
+	if (ulRC == 0)
+	{
+		strcpy(szTextOut, contents);
+		WinEmptyClipbrd(hab);
+
+		if (WinSetClipbrdData(hab, (ULONG)szTextOut,
+		    CF_TEXT, CFI_POINTER))
+			rc = PDC_CLIP_SUCCESS;
+		else
+		{
+			DosFreeMem(szTextOut);
+			rc = PDC_CLIP_ACCESS_ERROR;
+		}
+	}
+
+	WinCloseClipbrd(hab);
+	WinTerminate(hab);
+
+	return rc;
 #else
-   return PDC_CLIP_ACCESS_ERROR;
+	return PDC_CLIP_ACCESS_ERROR;
 #endif
 }
 
 /*man-start*********************************************************************
 
-  PDC_freeclipboard()   - Frees the memory associated with the contents of the clipboard
+  PDC_freeclipboard()   - Frees the memory associated with the contents
+			  of the clipboard
 
   PDCurses Description:
-   This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
-   Frees the memory allocated by PDC_getclipboard().
+	Frees the memory allocated by PDC_getclipboard().
 
   PDCurses Return Value:
-   Always returns PDC_CLIP_SUCCESS
+	Always returns PDC_CLIP_SUCCESS
 
   Portability:
-   PDCurses int PDC_freeclipboard( char *contents );
+	PDCurses  int PDC_freeclipboard(char *contents);
 
 **man-end**********************************************************************/
 
 int   PDC_CDECL   PDC_freeclipboard(char *contents)
 {
-   PDC_LOG(("PDC_freeclipboard() - called\n"));
+	PDC_LOG(("PDC_freeclipboard() - called\n"));
 
-   if ( contents) free(contents);
-   return PDC_CLIP_SUCCESS;
+	if (contents)
+		free(contents);
+
+	return PDC_CLIP_SUCCESS;
 }
 
 /*man-start*********************************************************************
@@ -218,39 +222,39 @@ int   PDC_CDECL   PDC_freeclipboard(char *contents)
   PDC_clearclipboard()  - Clears the contents of the clipboard
 
   PDCurses Description:
-   This is a PDCurses only routine.
+	This is a PDCurses only routine.
 
-   Clears the internal clipboard.
+	Clears the internal clipboard.
 
   PDCurses Return Value:
-   Always returns PDC_CLIP_SUCCESS
+	Always returns PDC_CLIP_SUCCESS
 
   Portability:
-   PDCurses int PDC_clearclipboard( void );
+	PDCurses  int PDC_clearclipboard(void);
 
 **man-end**********************************************************************/
 
-int   PDC_CDECL   PDC_clearclipboard( void )
+int   PDC_CDECL   PDC_clearclipboard(void)
 {
 #if !defined(EMXVIDEO)
-   HAB hab;
-   PTIB ptib;
-   PPIB ppib;
+	HAB hab;
+	PTIB ptib;
+	PPIB ppib;
 #endif
-
-   PDC_LOG(("PDC_clearclipboard() - called\n"));
+	PDC_LOG(("PDC_clearclipboard() - called\n"));
 
 #if !defined(EMXVIDEO)
-   DosGetInfoBlocks( &ptib, &ppib );
-   ppib->pib_ultype = 3;
-   hab = WinInitialize( 0 );
+	DosGetInfoBlocks(&ptib, &ppib);
+	ppib->pib_ultype = 3;
+	hab = WinInitialize(0);
 
-   WinEmptyClipbrd( hab );
+	WinEmptyClipbrd(hab);
 
-   WinCloseClipbrd( hab );
-   WinTerminate( hab );
-   return PDC_CLIP_SUCCESS;
+	WinCloseClipbrd(hab);
+	WinTerminate(hab);
+
+	return PDC_CLIP_SUCCESS;
 #else
-   return PDC_CLIP_ACCESS_ERROR;
+	return PDC_CLIP_ACCESS_ERROR;
 #endif
 }

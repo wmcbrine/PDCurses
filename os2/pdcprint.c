@@ -19,42 +19,42 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.4 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.5 2006/01/08 11:53:42 wmcbrine Exp $";
 #endif
 
-#if !defined (CURSES__32BIT__) && !defined(CSET2) && !defined(MSC) &&!defined(TC)
-#define INCL_DOS
-#include <bsedos.h>
+#if !defined(CURSES__32BIT__) && !defined(CSET2) && !defined(MSC) &&!defined(TC)
+# define INCL_DOS
+# include <bsedos.h>
 #endif
 
-char Printer[]="LPT1:";
+char Printer[] = "LPT1:";
 
 /*man-start*********************************************************************
 
   PDC_print()	- Provides primitive access to the BIOS printer functions
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Implements write/init/read printer services at the BIOS level.
+	Implements write/init/read printer services at the BIOS level.
 
- 	This provides the basic support that PDCurses needs to dump the
- 	contents of windows or pads to the printer attached to the BIOS
- 	printer port.
+	This provides the basic support that PDCurses needs to dump the
+	contents of windows or pads to the printer attached to the BIOS
+	printer port.
 
   PDCurses Return Value:
- 	See the BIOS INT 0x17 specifications.
+	See the BIOS INT 0x17 specifications.
 
   PDCurses Errors:
- 	See the BIOS INT 0x17 specifications.
+	See the BIOS INT 0x17 specifications.
 
   Portability:
- 	PDCurses	int PDC_print( int cmd, int byte, int port );
+	PDCurses  int PDC_print(int cmd, int byte, int port);
 
 **man-end**********************************************************************/
 
@@ -62,27 +62,30 @@ char Printer[]="LPT1:";
 #ifdef HAVE_PROTO
 int	PDC_print(int cmd, int byte, int port)
 #else
-int	PDC_print(cmd,byte,port)
+int	PDC_print(cmd, byte, port)
 int cmd;
 int byte;
 int port;
 #endif
 /***********************************************************************/
 {
-#if !defined (CURSES__32BIT__) && !defined(CSET2) && !defined(TC)
+#if !defined(CURSES__32BIT__) && !defined(CSET2) && !defined(TC)
 	HFILE Lpt;
-	USHORT Action=0;
-	USHORT NoWritten=0;
+	USHORT Action = 0;
+	USHORT NoWritten = 0;
 #endif
 	PDC_LOG(("PDC_print() - called\n"));
 
 #if !defined (CURSES__32BIT__) && !defined(CSET2) && !defined(TC)
-	if (DosOpen((PSZ)Printer, &Lpt, &Action, 0,0,0,0,0) != 0)
-		return(ERR);
-	DosWrite(Lpt,&byte,1,&NoWritten);
+
+	if (DosOpen((PSZ)Printer, &Lpt, &Action, 0, 0, 0, 0, 0) != 0)
+		return ERR;
+
+	DosWrite(Lpt, &byte, 1, &NoWritten);
 	DosClose(Lpt);
-	return(NoWritten == 1);
+
+	return (NoWritten == 1);
 #else
-	return (OK);
+	return OK;
 #endif
 }

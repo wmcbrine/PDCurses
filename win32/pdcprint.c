@@ -21,37 +21,36 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint  = "$Id: pdcprint.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.3 2006/01/08 11:53:43 wmcbrine Exp $";
 #endif
-
 
 /*man-start*********************************************************************
 
   PDC_print()	- Provides primitive access to the BIOS printer functions
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Implements write/init/read printer services at the BIOS level.
+	Implements write/init/read printer services at the BIOS level.
 
- 	This provides the basic support that PDCurses needs to dump the
- 	contents of windows or pads to the printer attached to the BIOS
- 	printer port.
+	This provides the basic support that PDCurses needs to dump the
+	contents of windows or pads to the printer attached to the BIOS
+	printer port.
 
   PDCurses Return Value:
- 	See the BIOS INT 0x17 specifications.
+	See the BIOS INT 0x17 specifications.
 
   PDCurses Errors:
- 	See the BIOS INT 0x17 specifications.
+	See the BIOS INT 0x17 specifications.
 
   Portability:
- 	PDCurses	int PDC_print( int cmd, int byte, int port );
+	PDCurses  int PDC_print(int cmd, int byte, int port);
 
 **man-end**********************************************************************/
 
-int	PDC_print(int cmd, int byte, int port)
+int PDC_print(int cmd, int byte, int port)
 {
 	PDC_LOG(("PDC_print() - called\n"));
 
-	return( OK );
+	return OK;
 }

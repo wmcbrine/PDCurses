@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc  = "$Id: pdcsetsc.c,v 1.5 2006/01/03 19:54:29 wmcbrine Exp $";
+char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.6 2006/01/08 11:53:43 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -32,26 +32,26 @@ extern HANDLE hConOut;
   PDC_set_80x25()	- force a known screen state: 80x25 text mode.
 
   PDCurses Description:
- 	This is a private PDCurses function.
+	This is a private PDCurses function.
 
- 	Forces the appropriate 80x25 alpha mode given the display adapter.
+	Forces the appropriate 80x25 alpha mode given the display adapter.
 
   PDCurses Return Value:
- 	This function returns OK upon success otherwise ERR is returned.
+	This function returns OK upon success otherwise ERR is returned.
 
   PDCurses Errors:
- 	No errors are defined for this routine.
+	No errors are defined for this routine.
 
   Portability:
- 	PDCurses	int	PDC_set_80x25( void );
+	PDCurses  int PDC_set_80x25(void);
 
 **man-end**********************************************************************/
 
-int	PDC_set_80x25(void)
+int PDC_set_80x25(void)
 {
 	PDC_LOG(("PDC_set_80x25() - called\n"));
 
-	return(OK);
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -59,25 +59,26 @@ int	PDC_set_80x25(void)
   PDC_set_cursor_mode()	- Set the cursor start and stop scan lines.
 
   PDCurses Description:
- 	Sets the cursor type to begin in scan line startrow and end in
- 	scan line endrow.  Both values should be 0-31.
+	Sets the cursor type to begin in scan line startrow and end in
+	scan line endrow.  Both values should be 0-31.
 
   PDCurses Return Value:
- 	This function returns OK on success and ERR on error.
+	This function returns OK on success and ERR on error.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int PDC_set_cursor_mode( int startrow, int endrow );
+	PDCurses  int PDC_set_cursor_mode(int startrow, int endrow);
 
 **man-end**********************************************************************/
 
-int	PDC_set_cursor_mode( int startrow, int endrow )
+int PDC_set_cursor_mode(int startrow, int endrow)
 {
-	PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",startrow,endrow));
+	PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",
+		startrow, endrow));
 
-	return(OK);
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -85,30 +86,30 @@ int	PDC_set_cursor_mode( int startrow, int endrow )
   PDC_set_font()	- sets the current font size
 
   PDCurses Description:
- 	This is a private PDCurses function.
+	This is a private PDCurses function.
 
- 	This routine sets the current font size, if the adapter allows
- 	such a change.
+	This routine sets the current font size, if the adapter allows
+	such a change.
 
   PDCurses Return Value:
- 	This function returns OK upon success otherwise ERR is returned.
+	This function returns OK upon success otherwise ERR is returned.
 
   PDCurses Errors:
- 	It is an error to attempt to change the font size on a "bogus"
- 	adapter.  The reason for this is that we have a known video
- 	adapter identity problem.  e.g. Two adapters report the same
- 	identifying characteristics.
+	It is an error to attempt to change the font size on a "bogus"
+	adapter.  The reason for this is that we have a known video
+	adapter identity problem.  e.g. Two adapters report the same
+	identifying characteristics.
 
   Portability:
- 	PDCurses	int	PDC_set_font( int size );
+	PDCurses  int PDC_set_font(int size);
 
 **man-end**********************************************************************/
 
-int	PDC_set_font(int size)
+int PDC_set_font(int size)
 {
 	PDC_LOG(("PDC_set_font() - called\n"));
 
-	return(OK);
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -116,30 +117,30 @@ int	PDC_set_font(int size)
   PDC_set_rows()	- sets the physical number of rows on screen
 
   PDCurses Description:
- 	This is a private PDCurses function.
+	This is a private PDCurses function.
 
- 	This routine attempts to set the number of rows on the physical
- 	screen to the passed value.
+	This routine attempts to set the number of rows on the physical
+	screen to the passed value.
 
   PDCurses Return Value:
- 	This function returns OK upon success otherwise ERR is returned.
+	This function returns OK upon success otherwise ERR is returned.
 
   PDCurses Errors:
- 	It is an error to attempt to change the screen size on a "bogus"
- 	adapter.  The reason for this is that we have a known video
- 	adapter identity problem.  e.g. Two adapters report the same
- 	identifying characteristics.
+	It is an error to attempt to change the screen size on a "bogus"
+	adapter.  The reason for this is that we have a known video
+	adapter identity problem.  e.g. Two adapters report the same
+	identifying characteristics.
 
   Portability:
- 	PDCurses	int	PDC_set_rows( int rows );
+	PDCurses  int PDC_set_rows(int rows);
 
 **man-end**********************************************************************/
 
-int	PDC_set_rows(int rows)
+int PDC_set_rows(int rows)
 {
 	PDC_LOG(("PDC_set_rows() - called\n"));
 
-	return(0);
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -161,17 +162,18 @@ int	PDC_set_rows(int rows)
 
 **man-end**********************************************************************/
 
-int	PDC_set_scrn_mode(int new_mode)
+int PDC_set_scrn_mode(int new_mode)
 {
 	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
-	return(OK); /* this is N/A */
+	return OK;
 }
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_curs_set(int visibility)
+int PDC_curs_set(int visibility)
 #else
-int	PDC_curs_set(visibility)
+int PDC_curs_set(visibility)
 int visibility;
 #endif
 /***********************************************************************/
@@ -179,7 +181,7 @@ int visibility;
 	CONSOLE_CURSOR_INFO cci;
 	int ret_vis;
 
-	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n",visibility));
+	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n", visibility));
 
 	ret_vis = SP->visibility;
 
@@ -188,17 +190,17 @@ int visibility;
 
 	switch(visibility)
 	{
-		case 0:                 /* invisible */
-			cci.bVisible = FALSE;
-			break;
-		case 2:                 /* highly visible */
-			cci.bVisible = TRUE;
-			cci.dwSize = 95;
-			break;
-		default:                /* normal visibility */
-			cci.bVisible = TRUE;
-			cci.dwSize = 25;
-			break;
+	case 0:				/* invisible */
+		cci.bVisible = FALSE;
+		break;
+	case 2:				/* highly visible */
+		cci.bVisible = TRUE;
+		cci.dwSize = 95;
+		break;
+	default:			/* normal visibility */
+		cci.bVisible = TRUE;
+		cci.dwSize = 25;
+		break;
 	}
 
 	if (SetConsoleCursorInfo(hConOut,&cci) == FALSE)
@@ -213,29 +215,24 @@ int visibility;
   PDC_set_title()	- Set window title
 
   PDCurses Description:
- 	Sets the title of the window in which the curses program is running.
- 	This function may not do anything on some platforms.
-
-  PDCurses Return Value:
- 	N/A
-
-  PDCurses Errors:
- 	No errors are defined for this function.
+	Sets the title of the window in which the curses program is 
+	running. This function may not do anything on some platforms.
 
   Portability:
- 	PDCurses	void PDC_set_title( char *title );
+	PDCurses  void PDC_set_title(char *title);
 
 **man-end**********************************************************************/
+
 /***********************************************************************/
 #ifdef HAVE_PROTO
-void	PDC_set_title(char *title)
+void PDC_set_title(char *title)
 #else
-void	PDC_set_title(title)
+void PDC_set_title(title)
 char *title;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("PDC_set_title() - called:<%s>\n",title));
+	PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
 
 	SetConsoleTitle(title);
 	return;

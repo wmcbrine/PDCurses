@@ -25,16 +25,15 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.23 2006/01/06 10:23:28 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.24 2006/01/08 11:53:43 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
 #define MS_MOUSE_MOVED 1
 
-/*
- * MingW32 header files are missing the following in some versions
- * of the compiler
- */
+/* MingW32 header files are missing the following in some versions
+   of the compiler */
+
 #ifndef DOUBLE_CLICK
 # define DOUBLE_CLICK 0x0002
 #endif
@@ -54,12 +53,12 @@ char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.23 2006/01/06 10:23:28 wmcbrine Exp $";
 #ifndef RIGHTMOST_BUTTON_PRESSED
 # define RIGHTMOST_BUTTON_PRESSED 0x0002
 #endif
-/*
- * These variables are used to store information about the next
- * Input Event.
- */
+
+/* These variables are used to store information about the next
+   Input Event. */
+
 INPUT_RECORD save_ip;
-static unsigned long pdc_key_modifiers=0L;
+static unsigned long pdc_key_modifiers = 0L;
 
 extern HANDLE hConIn;
 
@@ -74,24 +73,24 @@ static int keyCount = 0;
 static void win32_getch(void);
 static int win32_kbhit(int);
 
-/*******************************************************************************
+/******************************************************************************
 *  Table for key code translation of function keys in keypad mode
 *  These values are for strict IBM keyboard compatibles only
-*******************************************************************************/
+******************************************************************************/
 
 typedef struct
 {
-   int normal;
-   int shift;
-   int control;
-   int alt;
-   int extended;
+	int normal;
+	int shift;
+	int control;
+	int alt;
+	int extended;
 } KPTAB;
 
 static KPTAB kptab[] =
 {
    {0,          0,          0,           0,          0           }, /* 0  */
-   {0,          0,          0,           0,          0           }, /* 1   VK_LBUTTON       */
+   {0,          0,          0,           0,          0           }, /* 1   VK_LBUTTON */
    {0,          0,          0,           0,          0           }, /* 2   VK_RBUTTON       */
    {0,          0,          0,           0,          0           }, /* 3   VK_CANCEL        */
    {0,          0,          0,           0,          0           }, /* 4   VK_MBUTTON       */
@@ -335,7 +334,8 @@ static KPTAB ext_kptab[] =
    {KEY_DC,     KEY_SDC,        CTL_DEL,     ALT_DEL     }, /* 46 */
    {PADSLASH,   SHF_PADSLASH,   CTL_PADSLASH,ALT_PADSLASH}, /* 191 */
 };
- /* End of kptab[]       */
+
+/* End of kptab[] */
 
 MOUSE_STATUS Trapped_Mouse_status;
 
@@ -344,19 +344,19 @@ MOUSE_STATUS Trapped_Mouse_status;
   PDC_get_input_fd() - Get file descriptor used for PDCurses input
 
   PDCurses Description:
-   This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
-   This routine will return the file descriptor that PDCurses reads
-   its input from. It can be used for WaitForMulitpleObjects()
+	This routine will return the file descriptor that PDCurses reads
+	its input from. It can be used for WaitForMulitpleObjects().
 
   PDCurses Return Value:
-   Returns a HANDLE.
+	Returns a HANDLE.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses int   PDC_get_input_fd( void );
+	PDCurses  int PDC_get_input_fd(void);
 
 **man-end**********************************************************************/
 
@@ -368,12 +368,12 @@ unsigned long PDC_get_input_fd()
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("PDC_get_input_fd() - called\n"));
+	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
 #if defined(PDC_THREAD_BUILD)
-   return (unsigned long)hSemKeyCount;
+	return (unsigned long)hSemKeyCount;
 #else
-   return 0L;
+	return 0L;
 #endif
 }
 
@@ -382,157 +382,155 @@ unsigned long PDC_get_input_fd()
   PDC_check_bios_key()  - Check BIOS key data area for input
 
   PDCurses Description:
-   This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
-   This routine will check the BIOS for any indication that
-   keystrokes are pending.
+	This routine will check the BIOS for any indication that
+	keystrokes are pending.
 
   PDCurses Return Value:
-   Returns 1 if a keyboard character is available, 0 otherwise.
+	Returns 1 if a keyboard character is available, 0 otherwise.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses bool  PDC_check_bios_key( void );
+	PDCurses  bool PDC_check_bios_key(void);
 
 **man-end**********************************************************************/
 
 bool PDC_check_bios_key(void)
 {
-   return(win32_kbhit(0));
+	return win32_kbhit(0);
 }
 
-/*
- * processKeyEvent returns -1 if the key in save_ip should be ignored for some
- * reasons. Otherwise the keycode is returned which should be returned by
- * PDC_get_bios_code.
- * save_ip MUST BE A KEY_EVENT!
- *
- * The Unicode support has been disabled. See below for the reason.
- * CTRL-ALT support has been disabled, when is it emitted plainly?
- */
+ /* processKeyEvent returns -1 if the key in save_ip should be ignored 
+    for some reasons. Otherwise the keycode is returned which should be 
+    returned by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
+
+    The Unicode support has been disabled. See below for the reason.
+    CTRL-ALT support has been disabled, when is it emitted plainly?  */
+
 int processKeyEvent(void)
 {
-   CHAR ascii = save_ip.Event.KeyEvent.uChar.AsciiChar;
+	CHAR ascii = save_ip.Event.KeyEvent.uChar.AsciiChar;
 #if 0
-   WCHAR unicode = save_ip.Event.KeyEvent.uChar.UnicodeChar;
+	WCHAR unicode = save_ip.Event.KeyEvent.uChar.UnicodeChar;
 #endif
-   WORD vk = save_ip.Event.KeyEvent.wVirtualKeyCode;
-   DWORD state = save_ip.Event.KeyEvent.dwControlKeyState;
-   unsigned long local_key_modifiers = 0L;
-   int idx;
-   BOOL enhanced;
+	WORD vk = save_ip.Event.KeyEvent.wVirtualKeyCode;
+	DWORD state = save_ip.Event.KeyEvent.dwControlKeyState;
 
+	unsigned long local_key_modifiers = 0L;
+	int idx;
+	BOOL enhanced;
 #if 0
-   {
-      char buf[KL_NAMELENGTH];
-      GetKeyboardLayoutName( buf );
-      fprintf(stderr,"OS=%X, AsciiChar: %u=%02X Unicode: %u=%02X KeyCode: %d ScanCode: %d State: %x Name: %s\n",
-                     SP->os_version,
-                     (unsigned char) ascii,
-                     (unsigned char) ascii,
-                     unicode,
-                     unicode,
-                     vk,
-                     save_ip.Event.KeyEvent.wVirtualScanCode,
-                     state,
-                     buf);
-   }
+	{
+		char buf[KL_NAMELENGTH];
+		GetKeyboardLayoutName(buf);
+
+		fprintf(stderr,
+			"OS=%X, AsciiChar: %u=%02X Unicode: %u=%02X KeyCode: %d ScanCode: %d State: %x Name: %s\n",
+
+			SP->os_version, (unsigned char) ascii,
+			(unsigned char) ascii, unicode, unicode, vk, 
+			save_ip.Event.KeyEvent.wVirtualScanCode, state, buf);
+	}
 #endif
+	pdc_key_modifiers = 0L;
 
-   pdc_key_modifiers = 0L;
+ /* Must calculate the key modifiers so that Alt keys work! Save the key 
+    modifiers if required. Do this first to allow to detect e.g. a 
+    pressed CTRL key after a hit of NUMLOCK. */
 
-   /*
-    * Must calculate the key modifiers so that Alt keys work!
-    * Save the key modifiers if required.
-    * Do this first to allow to detect e.g. a pressed CTRL key
-    * after a hit of NUMLOCK.
-    */
-   if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
-      local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
-   if (state & SHIFT_PRESSED)
-      local_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
-   if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
-      local_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
-   if (state & NUMLOCK_ON)
-      local_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-   pdc_key_modifiers = SP->save_key_modifiers ? local_key_modifiers : 0;
+	if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
+		local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+
+	if (state & SHIFT_PRESSED)
+		local_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+
+	if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
+		local_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+
+	if (state & NUMLOCK_ON)
+		local_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+
+	pdc_key_modifiers = SP->save_key_modifiers ? local_key_modifiers : 0;
 
 
-   /*
-    * Handle modifier keys hit by themselves
-    */
+	/* Handle modifier keys hit by themselves */
 
-   switch (vk)
-   {
-      case VK_SHIFT: /* shift */
-         if ( !SP->return_key_modifiers )
-            return -1;
-         return KEY_SHIFT_R;
+	switch (vk)
+	{
+	case VK_SHIFT: /* shift */
+		if (!SP->return_key_modifiers)
+			return -1;
 
-      case VK_CONTROL: /* control */
-         if ( !SP->return_key_modifiers )
-            return -1;
-         return (state & LEFT_CTRL_PRESSED) ? KEY_CONTROL_L : KEY_CONTROL_R;
+		return KEY_SHIFT_R;
 
-      case VK_MENU: /* alt */
-         if ( !SP->return_key_modifiers )
-            return -1;
-         return (state & LEFT_ALT_PRESSED) ? KEY_ALT_L : KEY_ALT_R;
+	case VK_CONTROL: /* control */
+		if (!SP->return_key_modifiers)
+			return -1;
 
-      default:
-         break;
-   }
+		return (state & LEFT_CTRL_PRESSED) ?
+			KEY_CONTROL_L : KEY_CONTROL_R;
 
-   /*
-    * The system may emit Ascii or Unicode characters depending on whether
-    * ReadConsoleInputA or ReadConsoleInputW is used. We use ReadConsoleInputA
-    * in all cases currently, so we just check Ascii. Unicode characters
-    * are very hard to implement, because our "special keys" like KEY_F(1)
-    * is one of the unicode range.
-    *
-    * Now the ridiculous part of the processing. Normally, if ascii != 0
-    * then the system did the translation successfully. But this is not true
-    * for LEFT_ALT (different to RIGHT_ALT)  in case of LEFT_ALT we get
-    * we get ascii != 0. So check for this first.
-    */
-   if ((ascii != 0)
-    && (((state & LEFT_ALT_PRESSED) == 0) || (state & RIGHT_ALT_PRESSED)))
-   {
-      /*
-       * This code should catch all keys returning a printable character.
-       * Characters above 0x7F should be returned as positive codes.
-       * But if'ndef NUMKEYPAD we have to return extended keycodes for
-       * keypad codes. Test for it and don't return an ascii code in case.
-       */
+	case VK_MENU: /* alt */
+		if (!SP->return_key_modifiers)
+			return -1;
+
+		return (state & LEFT_ALT_PRESSED) ?
+			KEY_ALT_L : KEY_ALT_R;
+	}
+
+ /* The system may emit Ascii or Unicode characters depending on whether 
+    ReadConsoleInputA or ReadConsoleInputW is used. We use 
+    ReadConsoleInputA in all cases currently, so we just check Ascii. 
+    Unicode characters are very hard to implement, because our "special 
+    keys" like KEY_F(1) is one of the unicode range.
+
+    Now the ridiculous part of the processing. Normally, if ascii != 0
+    then the system did the translation successfully. But this is not 
+    true for LEFT_ALT (different to RIGHT_ALT) in case of LEFT_ALT we 
+    get we get ascii != 0. So check for this first. */
+
+	if ((ascii != 0) && (((state & LEFT_ALT_PRESSED) == 0) ||
+	    (state & RIGHT_ALT_PRESSED)))
+	{
+
+	/* This code should catch all keys returning a printable 
+	   character. Characters above 0x7F should be returned as 
+	   positive codes. But if'ndef NUMKEYPAD we have to return 
+	   extended keycodes for keypad codes. Test for it and don't 
+	   return an ascii code in case. */
+
 #ifndef NUMKEYPAD
-      if (kptab[vk].extended == 0)
+	if (kptab[vk].extended == 0)
 #endif
-         return (unsigned char) ascii;
-   }
+	    return (unsigned char) ascii;
+	}
 
+	/* This case happens if a functional key has been entered. */
 
-   /*
-    * This case happens if a functional key has been entered.
-    */
-   if ((state & ENHANCED_KEY) && (kptab[vk].extended != 999))
-   {
-      enhanced = TRUE;
-      idx = kptab[vk].extended;
-   }
-   else
-   {
-      enhanced = FALSE;
-      idx = vk;
-   }
-   if (state & SHIFT_PRESSED)
-      return((enhanced)?ext_kptab[idx].shift:kptab[idx].shift);
-   if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
-      return((enhanced)?ext_kptab[idx].control:kptab[idx].control);
-   if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
-      return((enhanced)?ext_kptab[idx].alt:kptab[idx].alt);
-   return((enhanced)?ext_kptab[idx].normal:kptab[idx].normal);
+	if ((state & ENHANCED_KEY) && (kptab[vk].extended != 999))
+	{
+		enhanced = TRUE;
+		idx = kptab[vk].extended;
+	}
+	else
+	{
+		enhanced = FALSE;
+		idx = vk;
+	}
+
+	if (state & SHIFT_PRESSED)
+		return enhanced ? ext_kptab[idx].shift : kptab[idx].shift;
+
+	if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
+		return enhanced ? ext_kptab[idx].control : kptab[idx].control;
+
+	if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
+		return enhanced ? ext_kptab[idx].alt : kptab[idx].alt;
+
+	return enhanced ? ext_kptab[idx].normal : kptab[idx].normal;
 }
 
 
@@ -541,244 +539,291 @@ int processKeyEvent(void)
   PDC_get_bios_key() - Returns the next key available from the BIOS.
 
   PDCurses Description:
-   This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
-   Returns the next key code struck at the keyboard. If the low 8
-   bits are 0, the upper bits contain the extended character
-   code. If bit 0-7 are non-zero, the upper bits = 0.
+	Returns the next key code struck at the keyboard. If the low 8
+	bits are 0, the upper bits contain the extended character
+	code. If bit 0-7 are non-zero, the upper bits = 0.
 
   PDCurses Return Value:
-   See above.
+	See above.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses int PDC_get_bios_key( void );
+	PDCurses  int PDC_get_bios_key(void);
 
 **man-end**********************************************************************/
 
-int   PDC_get_bios_key(void)
+int PDC_get_bios_key(void)
 {
-   MOUSE_STATUS Temp_Mouse_status;
-   static int last_button_no=0;
-   static MOUSE_STATUS Actual_Mouse_status;
-   int button_no=0;
-   bool trap_mouse=FALSE;
-   int key=0;
-   int retval;
+	MOUSE_STATUS Temp_Mouse_status;
+	static int last_button_no = 0;
+	static MOUSE_STATUS Actual_Mouse_status;
+	int button_no = 0;
+	bool trap_mouse = FALSE;
+	int key = 0;
+	int retval;
 
-   PDC_LOG(("PDC_get_bios_key() - called\n"));
+	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
-   while(1)
-   {
-      win32_getch();
+	while(1)
+	{
+	    win32_getch();
 
-      switch (save_ip.EventType)
-      {
-         case KEY_EVENT:
-            retval = processKeyEvent();
-            if (retval == -1) /* ignore key? */
-               continue;
+	    switch (save_ip.EventType)
+	    {
+	    case KEY_EVENT:
+		retval = processKeyEvent();
+		if (retval == -1)	/* ignore key? */
+			continue;
 #if 0
-            fprintf(stderr,"KEY_EVENT returns 0x%X\n",retval);
+		fprintf(stderr, "KEY_EVENT returns 0x%X\n", retval);
 #endif
-            return retval;
+		return retval;
 
-         case MOUSE_EVENT:
-            memset((char*)&Temp_Mouse_status,0,sizeof(MOUSE_STATUS));
-            /*
-             * Wheel has been scrolled
-             */
-/*fprintf(stderr,"%s %d: %x\n",__FILE__,__LINE__,save_ip.Event.MouseEvent.dwButtonState);*/
-            if ( save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED )
-            {
-               if (save_ip.Event.MouseEvent.dwButtonState & 0xFF000000)
-                  Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
-               else
-                  Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_UP;
-            }
-            /*
-             * button press, release or double click ...
-             */
-            else if (save_ip.Event.MouseEvent.dwEventFlags == 0
-                 ||  save_ip.Event.MouseEvent.dwEventFlags == DOUBLE_CLICK)
-            {
-               /*
-                * Check for Left-most button - always button 1
-                */
-               if (save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED
-               && !(ACTUAL_BUTTON_STATUS(1) & BUTTON_RELEASED))
-               {
-                  button_no = 1;
-                  TEMP_BUTTON_STATUS(button_no) = (save_ip.Event.MouseEvent.dwEventFlags)?BUTTON_DOUBLE_CLICKED:BUTTON_PRESSED;
-                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
-                  && (SP->_trap_mbe) & BUTTON1_PRESSED)
-                     trap_mouse = TRUE;
-                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_DOUBLE_CLICKED
-                  && (SP->_trap_mbe) & BUTTON1_DOUBLE_CLICKED)
-                     trap_mouse = TRUE;
-                  break;
-               }
-               /*
-                * Check for Right-most button - always button 3
-                */
-               if (save_ip.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED
-               && !(ACTUAL_BUTTON_STATUS(3) & BUTTON_RELEASED))
-               {
-                  button_no = 3;
-                  TEMP_BUTTON_STATUS(button_no) = (save_ip.Event.MouseEvent.dwEventFlags)?BUTTON_DOUBLE_CLICKED:BUTTON_PRESSED;
-                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
-                  && (SP->_trap_mbe) & BUTTON3_PRESSED)
-                     trap_mouse = TRUE;
-                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_DOUBLE_CLICKED
-                  && (SP->_trap_mbe) & BUTTON3_DOUBLE_CLICKED)
-                     trap_mouse = TRUE;
-                  break;
-               }
-               /*
-                * To get here we have a button release event or another button press
-                * while a current button is pressed. The latter, we throw away.
-                * We have to use the information from the previous mouse event to
-                * determine which button was released.
-                */
-               if (last_button_no == 1
-               && (ACTUAL_BUTTON_STATUS(1) & BUTTON_PRESSED
-                   || ACTUAL_BUTTON_STATUS(1) & BUTTON_DOUBLE_CLICKED
-                   || ACTUAL_MOUSE_MOVED)
-               && !(save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED))
-               {
-                  button_no = 1;
-                  TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-                  if ((SP->_trap_mbe) & BUTTON1_RELEASED)
-                     trap_mouse = TRUE;
-                  break;
-               }
-               /*
-                * Check for Right-most button - always button 3
-                */
-               if (last_button_no == 3
-               && (ACTUAL_BUTTON_STATUS(3) & BUTTON_PRESSED
-                  || ACTUAL_BUTTON_STATUS(3) & BUTTON_DOUBLE_CLICKED
-                   || ACTUAL_MOUSE_MOVED)
-               && !(save_ip.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED))
-               {
-                  button_no = 3;
-                  TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-                  if ((SP->_trap_mbe) & BUTTON3_RELEASED)
-                     trap_mouse = TRUE;
-                  break;
-               }
-               /*
-                * Check for Middle button - button 2 only for 3 button mice
-                */
-               if (save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED
-               && !(ACTUAL_BUTTON_STATUS(2) & BUTTON_RELEASED))
-               {
-                  button_no = 2;
-                  TEMP_BUTTON_STATUS(button_no) = (save_ip.Event.MouseEvent.dwEventFlags)?BUTTON_DOUBLE_CLICKED:BUTTON_PRESSED;
-                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
-                  && (SP->_trap_mbe) & BUTTON2_PRESSED)
-                     trap_mouse = TRUE;
-                  if (TEMP_BUTTON_STATUS(button_no) == BUTTON_DOUBLE_CLICKED
-                  && (SP->_trap_mbe) & BUTTON2_DOUBLE_CLICKED)
-                     trap_mouse = TRUE;
-                  break;
-               }
-               if (last_button_no == 2
-               && (ACTUAL_BUTTON_STATUS(2) & BUTTON_PRESSED
-                  || ACTUAL_BUTTON_STATUS(2) & BUTTON_DOUBLE_CLICKED
-                  || ACTUAL_MOUSE_MOVED)
-               && !(save_ip.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED))
-               {
-                  button_no = 2;
-                  TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-                  if ((SP->_trap_mbe) & BUTTON2_RELEASED)
-                     trap_mouse = TRUE;
-                  break;
-               }
-               /*
-                * If we get here, then we don't know how to handle the event, so
-                * dispose of it
-                */
-               break;
-            }
-            else /* button motion event */
-            {
-               Temp_Mouse_status.changes |= PDC_MOUSE_MOVED;
-               button_no = last_button_no;
-               if (button_no == 1
-               &&  (SP->_trap_mbe) & BUTTON1_MOVED)
-                  trap_mouse = TRUE;
-               if (button_no == 2
-               &&  (SP->_trap_mbe) & BUTTON2_MOVED)
-                  trap_mouse = TRUE;
-               if (button_no == 3
-               &&  (SP->_trap_mbe) & BUTTON3_MOVED)
-                  trap_mouse = TRUE;
-               break;
-            }
-            break;
-         case WINDOW_BUFFER_SIZE_EVENT:
-            return(-1);
-         default:
-            break;
-      }
-      if (button_no != 0)
-      {
-         /*
-          * We have a button action, rather than a mouse movement or wheel action
-          */
-         TEMP_MOUSE_X_POS = save_ip.Event.MouseEvent.dwMousePosition.X;
-         TEMP_MOUSE_Y_POS = save_ip.Event.MouseEvent.dwMousePosition.Y;
-         /*
-          * First thing is to check if the mouse has been clicked
-          * on a slk area. If the return value is > 0 (indicating the
-          * label number, return with the KEY_F(key) value.
-          * Only call this if we have set trap_mouse to TRUE above.
-          */
-         if (trap_mouse
-         && (key = PDC_mouse_in_slk(TEMP_MOUSE_Y_POS,TEMP_MOUSE_X_POS)))
-            return(KEY_F(key));
+	    case MOUSE_EVENT:
+		memset((char*)&Temp_Mouse_status, 0, sizeof(MOUSE_STATUS));
 
-         Temp_Mouse_status.changes |= (1 << (button_no-1));
-         if (save_ip.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED)
-            TEMP_BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
-         if (save_ip.Event.MouseEvent.dwControlKeyState & LEFT_CTRL_PRESSED)
-            TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
-         if (save_ip.Event.MouseEvent.dwControlKeyState & RIGHT_CTRL_PRESSED)
-            TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
-         if (save_ip.Event.MouseEvent.dwControlKeyState & RIGHT_ALT_PRESSED)
-            TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
-         if (save_ip.Event.MouseEvent.dwControlKeyState & LEFT_ALT_PRESSED)
-            TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
-         last_button_no = button_no;
-         /*
-          * We now have the current mouse status information for the last
-          * Mouse event.  We need to save this in Actual_Mouse_status so
-          * we can use that when comparing against the next mouse event.
-          * We also need to determine if we need to set Trapped_Mouse_status
-          * based on the settings in SP->_trap_mbe.
-          */
-         memcpy((char*)&Actual_Mouse_status,(char*)&Temp_Mouse_status,sizeof(MOUSE_STATUS));
-         if (trap_mouse)
-            break;
-      }
-      if ( ( Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN
-        ||   Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_UP )
-      &&  SP->_trap_mbe & MOUSE_WHEEL_SCROLL )
-      {
-         TEMP_MOUSE_X_POS = -1;
-         TEMP_MOUSE_Y_POS = -1;
-         break;
-      }
-   }
-   /*
-    * To get here we have a mouse event that has been trapped by the
-    * user. Save it in the Trapped_Mouse_status structure.
-    */
-   memcpy((char*)&Trapped_Mouse_status,(char*)&Temp_Mouse_status,sizeof(MOUSE_STATUS));
-   return(KEY_MOUSE);
+		/* Wheel has been scrolled */
+#if 0
+		fprintf(stderr, "%s %d: %x\n", __FILE__, __LINE__, 
+			save_ip.Event.MouseEvent.dwButtonState);
+#endif
+		if (save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED)
+		{
+		    if (save_ip.Event.MouseEvent.dwButtonState & 0xFF000000)
+			Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+		    else
+			Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+		}
+
+		/* button press, release or double click */
+
+		else if (save_ip.Event.MouseEvent.dwEventFlags == 0 ||
+			 save_ip.Event.MouseEvent.dwEventFlags == DOUBLE_CLICK)
+		{
+		    /* Check for Left-most button - always button 1 */
+
+		    if (save_ip.Event.MouseEvent.dwButtonState &
+			FROM_LEFT_1ST_BUTTON_PRESSED && 
+			!(ACTUAL_BUTTON_STATUS(1) & BUTTON_RELEASED))
+		    {
+			button_no = 1;
+
+			TEMP_BUTTON_STATUS(button_no) = 
+			    (save_ip.Event.MouseEvent.dwEventFlags) ?
+			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
+
+			if (TEMP_BUTTON_STATUS(button_no) == 
+			    BUTTON_PRESSED && (SP->_trap_mbe) &
+			    BUTTON1_PRESSED)
+				trap_mouse = TRUE;
+
+			if (TEMP_BUTTON_STATUS(button_no) == 
+			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe) & 
+			    BUTTON1_DOUBLE_CLICKED)
+				trap_mouse = TRUE;
+
+			break;
+		    }
+
+		    /* Check for Right-most button - always button 3 */
+
+		    if (save_ip.Event.MouseEvent.dwButtonState & 
+			RIGHTMOST_BUTTON_PRESSED && 
+			!(ACTUAL_BUTTON_STATUS(3) & BUTTON_RELEASED))
+		    {
+			button_no = 3;
+
+			TEMP_BUTTON_STATUS(button_no) = 
+			    (save_ip.Event.MouseEvent.dwEventFlags) ? 
+			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
+
+			if (TEMP_BUTTON_STATUS(button_no) == 
+			    BUTTON_PRESSED && (SP->_trap_mbe) & 
+			    BUTTON3_PRESSED)
+				trap_mouse = TRUE;
+
+			if (TEMP_BUTTON_STATUS(button_no) == 
+			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe) & 
+			    BUTTON3_DOUBLE_CLICKED)
+				trap_mouse = TRUE;
+
+			break;
+		    }
+
+		    /* To get here we have a button release event or 
+		       another button press while a current button is 
+		       pressed. The latter, we throw away. We have to 
+		       use the information from the previous mouse event 
+		       to determine which button was released. */
+
+		    if (last_button_no == 1 && (ACTUAL_BUTTON_STATUS(1) &
+			BUTTON_PRESSED || ACTUAL_BUTTON_STATUS(1) & 
+			BUTTON_DOUBLE_CLICKED || ACTUAL_MOUSE_MOVED) &&
+			!(save_ip.Event.MouseEvent.dwButtonState & 
+			FROM_LEFT_1ST_BUTTON_PRESSED))
+		    {
+			button_no = 1;
+			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+
+			if ((SP->_trap_mbe) & BUTTON1_RELEASED)
+				trap_mouse = TRUE;
+			break;
+		    }
+
+		    /* Check for Right-most button - always button 3 */
+
+		    if (last_button_no == 3 && (ACTUAL_BUTTON_STATUS(3) &
+			BUTTON_PRESSED || ACTUAL_BUTTON_STATUS(3) & 
+			BUTTON_DOUBLE_CLICKED || ACTUAL_MOUSE_MOVED) &&
+			!(save_ip.Event.MouseEvent.dwButtonState & 
+			RIGHTMOST_BUTTON_PRESSED))
+		    {
+			button_no = 3;
+			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+
+			if ((SP->_trap_mbe) & BUTTON3_RELEASED)
+				trap_mouse = TRUE;
+			break;
+		    }
+
+		    /* Check for Middle button - button 2 only for 3 
+		       button mice */
+
+		    if (save_ip.Event.MouseEvent.dwButtonState & 
+			FROM_LEFT_2ND_BUTTON_PRESSED &&
+			!(ACTUAL_BUTTON_STATUS(2) & BUTTON_RELEASED))
+		    {
+			button_no = 2;
+			TEMP_BUTTON_STATUS(button_no) = 
+			    (save_ip.Event.MouseEvent.dwEventFlags) ? 
+			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
+
+			if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
+			    && (SP->_trap_mbe) & BUTTON2_PRESSED)
+				trap_mouse = TRUE;
+
+			if (TEMP_BUTTON_STATUS(button_no) == 
+			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe) & 
+			    BUTTON2_DOUBLE_CLICKED)
+				trap_mouse = TRUE;
+
+			break;
+		    }
+
+		    if (last_button_no == 2 && (ACTUAL_BUTTON_STATUS(2) &
+			BUTTON_PRESSED || ACTUAL_BUTTON_STATUS(2) & 
+			BUTTON_DOUBLE_CLICKED || ACTUAL_MOUSE_MOVED) &&
+			!(save_ip.Event.MouseEvent.dwButtonState & 
+			FROM_LEFT_2ND_BUTTON_PRESSED))
+		    {
+			button_no = 2;
+			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+
+			if ((SP->_trap_mbe) & BUTTON2_RELEASED)
+				trap_mouse = TRUE;
+			break;
+		    }
+
+		    /* If we get here, then we don't know how to handle 
+		       the event, so dispose of it */
+
+		    break;
+		}
+		else	/* button motion event */
+		{
+		    Temp_Mouse_status.changes |= PDC_MOUSE_MOVED;
+		    button_no = last_button_no;
+
+		    if ((button_no == 1 && SP->_trap_mbe & BUTTON1_MOVED)
+		     || (button_no == 2 && SP->_trap_mbe & BUTTON2_MOVED)
+		     || (button_no == 3 && SP->_trap_mbe & BUTTON3_MOVED))
+			trap_mouse = TRUE;
+
+		    break;
+		}
+
+		break;
+
+	    case WINDOW_BUFFER_SIZE_EVENT:
+		return -1;
+	    }
+
+	    if (button_no != 0)
+	    {
+		/* We have a button action, rather than a mouse movement 
+		   or wheel action */
+
+		TEMP_MOUSE_X_POS = save_ip.Event.MouseEvent.dwMousePosition.X;
+		TEMP_MOUSE_Y_POS = save_ip.Event.MouseEvent.dwMousePosition.Y;
+
+		/* First thing is to check if the mouse has been clicked 
+		   on a slk area. If the return value is > 0 (indicating 
+		   the label number), return with the KEY_F(key) value. 
+		   Only call this if we have set trap_mouse to TRUE above. */
+
+		if (trap_mouse && (key = PDC_mouse_in_slk(TEMP_MOUSE_Y_POS,
+		    TEMP_MOUSE_X_POS)))
+			return KEY_F(key);
+
+		Temp_Mouse_status.changes |= 1 << (button_no - 1);
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState &
+		    SHIFT_PRESSED)
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState & 
+		    LEFT_CTRL_PRESSED)
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState & 
+		    RIGHT_CTRL_PRESSED)
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState & 
+		    RIGHT_ALT_PRESSED)
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState & 
+		    LEFT_ALT_PRESSED)
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
+
+		last_button_no = button_no;
+
+		/* We now have the current mouse status information
+		   for the last Mouse event.  We need to save this in
+		   Actual_Mouse_status so we can use that when comparing
+		   against the next mouse event. We also need to
+		   determine if we need to set Trapped_Mouse_status
+		   based on the settings in SP->_trap_mbe. */
+
+		memcpy((char*)&Actual_Mouse_status,
+			(char*)&Temp_Mouse_status, sizeof(MOUSE_STATUS));
+
+		if (trap_mouse)
+			 break;
+	    }
+
+	    if ((Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN ||
+		Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_UP) &&
+		SP->_trap_mbe & MOUSE_WHEEL_SCROLL)
+	    {
+		TEMP_MOUSE_X_POS = -1;
+		TEMP_MOUSE_Y_POS = -1;
+		break;
+	    }
+	}
+
+	/* To get here we have a mouse event that has been trapped by 
+	   the user. Save it in the Trapped_Mouse_status structure. */
+
+	memcpy((char*)&Trapped_Mouse_status, (char*)&Temp_Mouse_status, 
+		sizeof(MOUSE_STATUS));
+
+	return KEY_MOUSE;
 }
 
 /*man-start*********************************************************************
@@ -786,27 +831,27 @@ int   PDC_get_bios_key(void)
   PDC_get_ctrl_break()  - return OS control break state
 
   PDCurses Description:
-   This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
-   Returns the current OS Control Break Check state.
+	Returns the current OS Control Break Check state.
 
   PDCurses Return Value:
-   This function returns TRUE if the Control Break
-   Check is enabled otherwise FALSE is returned.
+	This function returns TRUE if the Control Break Check is 
+	enabled; otherwise, FALSE is returned.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses bool  PDC_get_ctrl_break( void );
+	PDCurses  bool PDC_get_ctrl_break(void);
 
 **man-end**********************************************************************/
 
-bool  PDC_get_ctrl_break(void)
+bool PDC_get_ctrl_break(void)
 {
-   PDC_LOG(("PDC_get_ctrl_break() - called\n"));
+	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
 
-   return FALSE;
+	return FALSE;
 }
 
 /*man-start*********************************************************************
@@ -814,64 +859,55 @@ bool  PDC_get_ctrl_break(void)
   PDC_rawgetch()  - Returns the next uninterpreted character (if available).
 
   PDCurses Description:
-   Gets a character without any interpretation at all and returns
-   it. If keypad mode is active for the designated window,
-   function key translation will be performed.  Otherwise,
-   function keys are ignored.  If nodelay mode is active in the
-   window, then PDC_rawgetch() returns -1 if no character is
-   available.
+	Gets a character without any interpretation at all and returns 
+	it. If keypad mode is active for the designated window, function 
+	key translation will be performed.  Otherwise, function keys are 
+	ignored.  If nodelay mode is active in the window, then 
+	PDC_rawgetch() returns -1 if no character is available.
 
-   WARNING:  It is unknown whether the FUNCTION key translation
-        is performed at this level. --Frotz 911130 BUG
+	WARNING:  It is unknown whether the FUNCTION key translation
+	is performed at this level. --Frotz 911130 BUG
 
   PDCurses Return Value:
-   This function returns OK on success and ERR on error.
+	This function returns OK on success and ERR on error.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses int   PDC_rawgetch( void );
+	PDCurses  int PDC_rawgetch(void);
 
 **man-end**********************************************************************/
 
-int   PDC_rawgetch(void)
+int PDC_rawgetch(void)
 {
-   extern   WINDOW*  _getch_win_;
+	extern WINDOW *_getch_win_;
+	int c, oldc;
 
-   int   c;
-   int   oldc;
-   bool  return_immediately;
+	PDC_LOG(("PDC_rawgetch() - called\n"));
 
-   PDC_LOG(("PDC_rawgetch() - called\n"));
+	if (_getch_win_ == (WINDOW *)NULL)
+		return -1;
 
-   if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
-      return( -1 );
+	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
+	    && !PDC_breakout())
+		return -1;
 
-   if (SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-      return_immediately = TRUE;
-   else
-      return_immediately = FALSE;
+	while (1)
+	{
+		c = PDC_get_bios_key();
+		oldc = c;
 
-   if (return_immediately && !PDC_breakout())
-      return( -1 );
+		/* return the key if it is not a special key */
 
-   while (1)      /* loop to get valid char */
-   {
-      c = PDC_get_bios_key();
-      oldc = c;
-      /*
-       * Return the key if it is not a special key.
-       */
-      if (c != KEY_MOUSE
-      && (c = PDC_validchar(c)) >= 0)
-      {     /* get & check next char */
-         return( c );
-      }
-      if (_getch_win_->_use_keypad)
-         return( oldc );
-   }
-   return( -1 );
+		if (c != KEY_MOUSE && (c = PDC_validchar(c)) >= 0)
+			return c;
+
+		if (_getch_win_->_use_keypad)
+			return oldc;
+	}
+
+	return -1;
 }
 
 /*man-start*********************************************************************
@@ -879,28 +915,28 @@ int   PDC_rawgetch(void)
   PDC_set_ctrl_break()  - Enables/Disables the host OS BREAK key check.
 
   PDCurses Description:
-   This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
-   Enables/Disables the host OS BREAK key check. If the supplied setting
-   is TRUE, this enables CTRL/C and CTRL/BREAK to abort the process.
-   If FALSE, CTRL/C and CTRL/BREAK are ignored.
+	Enables/Disables the host OS BREAK key check. If the supplied 
+	setting is TRUE, this enables CTRL/C and CTRL/BREAK to abort the 
+	process. If FALSE, CTRL/C and CTRL/BREAK are ignored.
 
   PDCurses Return Value:
-   This function returns OK on success and ERR on error.
+	This function returns OK on success and ERR on error.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses int PDC_set_ctrl_break( bool setting );
+	PDCurses  int PDC_set_ctrl_break(bool setting);
 
 **man-end**********************************************************************/
 
-int   PDC_set_ctrl_break(bool setting)
+int PDC_set_ctrl_break(bool setting)
 {
-   PDC_LOG(("PDC_set_ctrl_break() - called\n"));
+	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
-   return(OK);
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -908,329 +944,358 @@ int   PDC_set_ctrl_break(bool setting)
   PDC_sysgetch()  - Return a character using default system routines.
 
   PDCurses Description:
-   This is a private PDCurses function.
+	This is a private PDCurses function.
 
-   Gets a character without normal ^S, ^Q, ^P and ^C interpretation
-   and returns it.  If keypad mode is active for the designated
-   window, function key translation will be performed. Otherwise,
-   function keys are ignored. If nodelay mode is active in the
-   window, then sysgetch() returns -1 if no character is
-   available.
+	Gets a character without normal ^S, ^Q, ^P and ^C interpretation
+	and returns it.  If keypad mode is active for the designated
+	window, function key translation will be performed. Otherwise,
+	function keys are ignored. If nodelay mode is active in the
+	window, then sysgetch() returns -1 if no character is
+	available.
 
   PDCurses Return Value:
-   This function returns OK upon success otherwise ERR is returned.
+	This function returns OK upon success otherwise ERR is returned.
 
   PDCurses Errors:
-   No errors are defined for this routine.
+	No errors are defined for this routine.
 
   Portability:
-   PDCurses int   PDC_sysgetch( void );
+	PDCurses  int PDC_sysgetch(void);
 
 **man-end**********************************************************************/
 
-int   PDC_sysgetch(void)
+int PDC_sysgetch(void)
 {
-   extern   WINDOW*  _getch_win_;
+	extern WINDOW *_getch_win_;
+	int c;
 
-   int  c;
-   bool return_immediately;
+	PDC_LOG(("PDC_sysgetch() - called\n"));
 
-   PDC_LOG(("PDC_sysgetch() - called\n"));
+	if (_getch_win_ == (WINDOW *)NULL)
+		return -1;
 
-   if (_getch_win_ == (WINDOW *)NULL)  /* @@ */
-      return (-1);
+	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
+	    && !PDC_breakout())
+		return -1;
 
-   if (SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-      return_immediately = TRUE;
-   else
-      return_immediately = FALSE;
+	while (1)
+	{
+		c = PDC_get_bios_key();
 
-   if (return_immediately && !PDC_breakout())
-      return (-1);
+		/* return the key if it is not a special key */
 
-   while (1)
-   {
-      c = PDC_get_bios_key();
-      /*
-       * Return the key if it is not a special key.
-       */
-      if ((unsigned int)c < 256)
-         return(c);
-      if ((c = PDC_validchar(c)) >= 0)
-      {
-         return (c);      /* get & check next char */
-      }
-   }
-   return( -1 );
+		if ((unsigned int)c < 256)
+			return c;
+
+		if ((c = PDC_validchar(c)) >= 0)
+			return c;
+	}
+
+	return -1;
 }
-
 
 /*man-start*********************************************************************
 
   PDC_validchar() - validate/translate passed character
 
   PDCurses Description:
-   This is a private PDCurses function.
+	This is a private PDCurses function.
 
-   Checks that 'c' is a valid character, and if so returns it,
-   with function key translation applied if 'w' has keypad mode
-   set.  If char is invalid, returns -1.
+	Checks that 'c' is a valid character, and if so returns it,
+	with function key translation applied if 'w' has keypad mode
+	set.  If char is invalid, returns -1.
 
   PDCurses Return Value:
-   This function returns -1 if the passed character is invalid, or
-   the WINDOW* 'w' is NULL, or 'w's keypad is not active.
+	This function returns -1 if the passed character is invalid, or
+	the WINDOW *_getch_win_ is NULL, or _getch_win_'s keypad is not 
+	active.
 
-   Otherwise, this function returns the PDCurses equivalent of the
-   passed character.  See the function key and key macros in
-   <curses.h>
+	Otherwise, this function returns the PDCurses equivalent of the
+	passed character.  See the function key and key macros in
+	<curses.h>.
 
   PDCurses Errors:
-   There are no errors defined for this routine.
+	There are no errors defined for this routine.
 
   Portability:
-   PDCurses int   PDC_validchar( int c );
+	PDCurses  int PDC_validchar(int c);
 
 **man-end**********************************************************************/
 
-int   PDC_validchar(int c)
+int PDC_validchar(int c)
 {
-   extern   WINDOW*  _getch_win_;
-   int ch=c;
+	extern WINDOW *_getch_win_;
 
-   PDC_LOG(("PDC_validchar() - called\n"));
+	PDC_LOG(("PDC_validchar() - called\n"));
 
-   if (_getch_win_ == (WINDOW *)NULL)
-      ch = (-1);   /* bad window pointer     */
-   else if ((unsigned int)c < 256)
-      ch = c;      /* normal character */
-   else if (!(_getch_win_->_use_keypad))
-      ch = (-1);   /* skip if keys if !keypad mode */
+	/* skip special keys if !keypad mode */
 
-   PDC_LOG(("PDC_validchar() - returned: %x\n",ch));
+	if ((_getch_win_ == (WINDOW *)NULL) ||
+	    ((unsigned int)c >= 256 && !_getch_win_->_use_keypad))
+		c = -1;
 
-   return(ch);
+	PDC_LOG(("PDC_validchar() - returned: %x\n", c));
+
+	return c;
 }
 
 /***********************************************************************/
-static int GetInterestingEvent( INPUT_RECORD *ip )
+static int GetInterestingEvent(INPUT_RECORD *ip)
 /***********************************************************************/
 {
-   /*
-    * GetInterestingEvent returns 0 if *ip doesn't contain an event which
-    * should be passed back to the user. This function filters "useless"
-    * events.
-    * The function returns the number of events waiting. This may be > 1
-    * if the repeation of real keys pressed so far are > 1.
-    *
-    * Keyboard: Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
-    *
-    *           Returns 1 for SHIFT, ALT, CTRL only if no other key has been
-    *           pressed in between; these are returned on keyup in opposite to
-    *           normal keys. The overall flags for processing of SHIFT, ALT,
-    *           CTRL (SP->return_key_modifiers) must have been set.
-    *           FGC: CHANGED BEHAVIOUR: In previous version SHIFT etc had a
-    *                chance to be returned on the first keydown, too. This
-    *                was a bug, because return_key_modifiers were 0.
-    *
-    *           Normal keys are returned on keydown only. The number of
-    *           repeations are returned. Dead keys (diacritics) are omitted.
-    *           See below for a description.
-    *
-    *           The keypad entering of special keys is not supported. This
-    *           feature can be built in by replacing "#ifdef NUMPAD_CHARS"
-    *           with an intelligent code.
-    *
-    * Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
-    *           a pressed mouse key are ignored.
-    *
-    * Window:   Everything is ignored, including resize requests. In case
-    *           of resize requests the global flag SP->resized is set.
-    *
-    * PLEASE DOCUMENT YOUR WORK!
-    *
-    * THIS FUNCTION IS NOT THREAD-SAFE. NEVER USE MORE THREADS THAN TO
-    * USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
-    */
-   int numKeys = 0, vk;
-   static int save_press;
-   static unsigned numpadChar = 0;
+ /* GetInterestingEvent returns 0 if *ip doesn't contain an event which
+    should be passed back to the user. This function filters "useless"
+    events.
+
+    The function returns the number of events waiting. This may be > 1
+    if the repeation of real keys pressed so far are > 1.
+
+    Keyboard: Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
+
+              Returns 1 for SHIFT, ALT, CTRL only if no other key has been
+              pressed in between; these are returned on keyup in opposite to
+              normal keys. The overall flags for processing of SHIFT, ALT,
+              CTRL (SP->return_key_modifiers) must have been set.
+              FGC: CHANGED BEHAVIOUR: In previous version SHIFT etc had a
+                   chance to be returned on the first keydown, too. This
+                   was a bug, because return_key_modifiers were 0.
+
+              Normal keys are returned on keydown only. The number of
+              repeations are returned. Dead keys (diacritics) are omitted.
+              See below for a description.
+
+              The keypad entering of special keys is not supported. This
+              feature can be built in by replacing "#ifdef NUMPAD_CHARS"
+              with an intelligent code.
+
+    Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
+              a pressed mouse key are ignored.
+
+    Window:   Everything is ignored, including resize requests. In case
+              of resize requests the global flag SP->resized is set.
+
+    THIS FUNCTION IS NOT THREAD-SAFE. NEVER USE MORE THREADS THAN TO
+    USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
+ */
+	int numKeys = 0, vk;
+	static int save_press;
+	static unsigned numpadChar = 0;
+
 #ifdef PDCDEBUG
 #if defined(PDC_THREAD_BUILD)
-#  define PDC_DEBUG_THREADING1 "-->"
-#  define PDC_DEBUG_THREADING2 "THREADING"
+# define PDC_DEBUG_THREADING1 "-->"
+# define PDC_DEBUG_THREADING2 "THREADING"
 # else
-#  define PDC_DEBUG_THREADING1 ""
-#  define PDC_DEBUG_THREADING2 ""
+# define PDC_DEBUG_THREADING1 ""
+# define PDC_DEBUG_THREADING2 ""
 # endif
-   char *ptr="";
-   PDC_LOG(("%sGetInterestingEvent(%s) - called\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2));
+	char *ptr = "";
+
+	PDC_LOG(("%sGetInterestingEvent(%s) - called\n",
+		PDC_DEBUG_THREADING1, PDC_DEBUG_THREADING2));
 #endif
 
-   switch(ip->EventType)
-   {
-      case KEY_EVENT:
-         vk = ip->Event.KeyEvent.wVirtualKeyCode;
-         if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
-         {
+	switch(ip->EventType)
+	{
+	case KEY_EVENT:
+	    vk = ip->Event.KeyEvent.wVirtualKeyCode;
+
+	    /* throw away some modifiers */
+
+	    if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
+	    {
 #ifdef PDCDEBUG
-            ptr = "KEY MODIFIERS";
+		ptr = "KEY MODIFIERS";
 #endif
-            numpadChar = 0;
-            save_press = 0;
-            break;  /* throw away some modifiers */
-         }
-         if (ip->Event.KeyEvent.bKeyDown == FALSE)
-         {
-            /* key up, the following check for VK_??? is paranoid hopefully */
-            if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
-             && vk == save_press
-             && SP->return_key_modifiers)
-            {
+		numpadChar = 0;
+		save_press = 0;
+		break;
+	    }
+
+	    if (ip->Event.KeyEvent.bKeyDown == FALSE)
+	    {
+		/* key up, the following check for VK_??? is paranoid 
+		   hopefully */
+
+		if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
+		    && vk == save_press && SP->return_key_modifiers)
+		{
 #ifdef PDCDEBUG
-               ptr = "KEYUP WANTED";
-#else
-               ;
+		    ptr = "KEYUP WANTED";
 #endif
-               /*
-                * Fall through and return this key. Still have to check the
-                * dead key condition.
-                */
-               ip->Event.KeyEvent.wRepeatCount = 1; /* always limited */
-            }
-            else if (vk == VK_MENU && numpadChar)
-            {
-               ip->Event.KeyEvent.uChar.AsciiChar = (CHAR) (unsigned char) numpadChar;
-               ip->Event.KeyEvent.dwControlKeyState &= ~LEFT_ALT_PRESSED;
-               ip->Event.KeyEvent.wRepeatCount = 1; /* always limited */
-               ip->Event.KeyEvent.wVirtualKeyCode = VK_NUMPAD0; /* change ALT to something else */
-               numpadChar = 0;
-            }
-            else
-            {
+
+		    /* Fall through and return this key. Still have to 
+		       check the dead key condition. */
+
+		    /* always limited */
+
+		    ip->Event.KeyEvent.wRepeatCount = 1;
+		}
+		else if (vk == VK_MENU && numpadChar)
+		{
+		    ip->Event.KeyEvent.uChar.AsciiChar =
+			(CHAR) (unsigned char) numpadChar;
+
+		    ip->Event.KeyEvent.dwControlKeyState &= 
+			~LEFT_ALT_PRESSED;
+
+		    ip->Event.KeyEvent.wRepeatCount = 1; /* always limited */
+
+		    /* change ALT to something else */
+
+		    ip->Event.KeyEvent.wVirtualKeyCode = VK_NUMPAD0;
+
+		    numpadChar = 0;
+		}
+		else
+		{
 #ifdef PDCDEBUG
-               ptr = "KEYUP IGNORED";
+		    ptr = "KEYUP IGNORED";
 #endif
-               break;                    /* throw away other KeyUp events */
-            }
-         }
-         else
-         {
-            if (vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
-            {
-               /*
-                * These keys are returned on keyup only.
-                */
-               save_press = (SP->return_key_modifiers) ? vk : 0;
-               numpadChar = 0;
+		    break;		/* throw away other KeyUp events */
+		}
+	    }
+	    else
+	    {
+		if (vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
+		{
+		    /* These keys are returned on keyup only. */
+
+		    save_press = (SP->return_key_modifiers) ? vk : 0;
+		    numpadChar = 0;
 #ifdef PDCDEBUG
-               ptr = "KEYDOWN SAVED";
+		    ptr = "KEYDOWN SAVED";
 #endif
-               break; /* throw away key press */
-            }
+		    break;	/* throw away key press */
+		}
 
 #ifdef NUMPAD_CHARS
-            {
-               if ((ip->Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | ENHANCED_KEY)) == LEFT_ALT_PRESSED)
-               {
-                  switch (vk)
-                  {
-                     case VK_CLEAR:  vk = VK_NUMPAD5; break;
-                     case VK_PRIOR:  vk = VK_NUMPAD9; break;
-                     case VK_NEXT:   vk = VK_NUMPAD3; break;
-                     case VK_END:    vk = VK_NUMPAD1; break;
-                     case VK_HOME:   vk = VK_NUMPAD7; break;
-                     case VK_LEFT:   vk = VK_NUMPAD4; break;
-                     case VK_UP:     vk = VK_NUMPAD8; break;
-                     case VK_RIGHT:  vk = VK_NUMPAD6; break;
-                     case VK_DOWN:   vk = VK_NUMPAD2; break;
-                     case VK_INSERT: vk = VK_NUMPAD0; break;
-                     default:
-                        break;
-                  }
-               }
-               if ((vk >= VK_NUMPAD0 && vk <= VK_NUMPAD9)
-                && ip->Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
-               {
+		if ((ip->Event.KeyEvent.dwControlKeyState & 
+		    (LEFT_ALT_PRESSED | ENHANCED_KEY)) == LEFT_ALT_PRESSED)
+		{
+		    switch (vk)
+		    {
+		    case VK_CLEAR:
+			vk = VK_NUMPAD5;
+			break;
+		    case VK_PRIOR:
+			vk = VK_NUMPAD9;
+			break;
+		    case VK_NEXT:
+			vk = VK_NUMPAD3;
+			break;
+		    case VK_END:
+			vk = VK_NUMPAD1;
+			break;
+		    case VK_HOME:
+			vk = VK_NUMPAD7;
+			break;
+		    case VK_LEFT:
+			vk = VK_NUMPAD4;
+			break;
+		    case VK_UP:
+			vk = VK_NUMPAD8;
+			break;
+		    case VK_RIGHT:
+			vk = VK_NUMPAD6;
+			break;
+		    case VK_DOWN:
+			vk = VK_NUMPAD2;
+			break;
+		    case VK_INSERT:
+			vk = VK_NUMPAD0;
+		    }
+               
+		}
+
+		if ((vk >= VK_NUMPAD0 && vk <= VK_NUMPAD9) &&
+                    ip->Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
+		{
 #ifdef PDCDEBUG
-                  ptr = "NUMPAD ALTERNATE INPUT";
+		    ptr = "NUMPAD ALTERNATE INPUT";
 #endif
-                  numpadChar *= 10;
-                  numpadChar += vk - VK_NUMPAD0;
-                  break;
-               }
-               else
-                  numpadChar = 0;
-            }
+		    numpadChar *= 10;
+		    numpadChar += vk - VK_NUMPAD0;
+		    break;
+		}
+		else
+		    numpadChar = 0;
+
 #else /* NUMPAD_CHARS */
-            {
-               numpadChar = 0;
-            }
+		numpadChar = 0;
 #endif
-         }
-         save_press = 0;
-         /*
-          * Check for diacritics. These are dead keys. Some locale have
-          * modified characters like umlaut-a, which is an "a" with two dots
-          * on it. In some locales you have to press a special key (the dead
-          * key) immediately followed by the "a" to get a composed umlaut-a.
-          * The special key may have a normal meaning with different modifiers.
-          */
-         if (ip->Event.KeyEvent.uChar.AsciiChar == 0 &&
-             (MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode,2) & 0x80000000))
-         {
-#ifdef PDCDEBUG
-            ptr = "DIACRITIC IGNORED";
-#endif
-            break;              /* Diacritic characters, ignore them */
-         }
-#ifdef PDCDEBUG
-         ptr = "KEY WANTED";
-#endif
-         numKeys = ip->Event.KeyEvent.wRepeatCount;
-         break;
+	    }
 
-      case MOUSE_EVENT:
-         /*
-          * If we aren't trapping mouse events, then the "keyboard" hasn't
-          * been hit. Fix from stepheng@clearspeed.com
-          */
-         if (!SP->_trap_mbe)
-         {
-#ifdef PDCDEBUG
-            ptr = "MOUSE - NOT TRAPPED";
-#endif
-            break;
-         }
-         if (ip->Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED
-         &&  ip->Event.MouseEvent.dwButtonState == 0)
-         {
-#ifdef PDCDEBUG
-            ptr = "MOUSE MOVE IGNORED";
-#endif
-            break;               /* throw away plain MOUSE_MOVE events */
-         }
-#ifdef PDCDEBUG
-         ptr = "MOUSE MOVE WANTED";
-#endif
-         numKeys = 1;
-         break;
+	    save_press = 0;
 
-      case WINDOW_BUFFER_SIZE_EVENT:
-         SP->resized = TRUE;
-#ifdef PDCDEBUG
-         ptr = "BUFFER SIZE";
-#endif
-         break;
+	    /* Check for diacritics. These are dead keys. Some locale 
+	       have modified characters like umlaut-a, which is an "a" 
+	       with two dots on it. In some locales you have to press a 
+	       special key (the dead key) immediately followed by the 
+	       "a" to get a composed umlaut-a. The special key may have 
+	       a normal meaning with different modifiers. */
 
-      default:
+	    if (ip->Event.KeyEvent.uChar.AsciiChar == 0 &&
+		(MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode, 2) &
+		0x80000000))
+	    {
 #ifdef PDCDEBUG
-         ptr = "UNKNOWN";
+		ptr = "DIACRITIC IGNORED";
 #endif
-         break;
-   }
-   PDC_LOG(("%sGetInterestingEvent(%s) - returning: numKeys %d type %d: %s\n",PDC_DEBUG_THREADING1,PDC_DEBUG_THREADING2,numKeys,ip->EventType,ptr));
+		break;		/* Diacritic characters, ignore them */
+	    }
+#ifdef PDCDEBUG
+	    ptr = "KEY WANTED";
+#endif
+	    numKeys = ip->Event.KeyEvent.wRepeatCount;
+	    break;
 
-   return numKeys;
+	case MOUSE_EVENT:
+	    /* If we aren't trapping mouse events, then the "keyboard" 
+	       hasn't been hit. Fix from stepheng@clearspeed.com */
+
+	    if (!SP->_trap_mbe)
+	    {
+#ifdef PDCDEBUG
+		ptr = "MOUSE - NOT TRAPPED";
+#endif
+		break;
+	    }
+
+	    if (ip->Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED
+		&& ip->Event.MouseEvent.dwButtonState == 0)
+	    {
+#ifdef PDCDEBUG
+		ptr = "MOUSE MOVE IGNORED";
+#endif
+		break;		/* throw away plain MOUSE_MOVE events */
+	    }
+
+#ifdef PDCDEBUG
+	    ptr = "MOUSE MOVE WANTED";
+#endif
+	    numKeys = 1;
+	    break;
+
+	case WINDOW_BUFFER_SIZE_EVENT:
+	    SP->resized = TRUE;
+#ifdef PDCDEBUG
+	    ptr = "BUFFER SIZE";
+#endif
+	    break;
+
+	default:
+#ifdef PDCDEBUG
+	    ptr = "UNKNOWN";
+#endif
+	    break;
+	}
+
+	PDC_LOG(("%sGetInterestingEvent(%s) - returning: numKeys %d type %d: %s\n",
+		PDC_DEBUG_THREADING1, PDC_DEBUG_THREADING2, numKeys, 
+		ip->EventType, ptr));
+
+	return numKeys;
 }
 
 #if defined(PDC_THREAD_BUILD)
@@ -1238,64 +1303,67 @@ static int GetInterestingEvent( INPUT_RECORD *ip )
 static int win32_kbhit(int timeout)
 /***********************************************************************/
 {
-   DWORD read=0,avail=0,unread=0;
-   INPUT_RECORD ip;
+	DWORD read = 0, avail = 0, unread = 0;
+	INPUT_RECORD ip;
 
-   PDC_LOG(("win32_kbhit(THREADING) - called: timeout %d\n", timeout));
-
+	PDC_LOG(("win32_kbhit(THREADING) - called: timeout %d\n", 
+		timeout));
 #if 0
-   if ( timeout == INFINITE )
-   {
-      ReadFile( hPipeRead, &save_ip, sizeof(INPUT_RECORD), &read, NULL );
-      return TRUE;
-   }
-   else
-   {
-      if ( WaitForSingleObject( hSemKeyCount, timeout ) != WAIT_OBJECT_0 )
-      {
-         return FALSE;
-      }
-      if ( PeekNamedPipe( hPipeRead, &ip, sizeof(INPUT_RECORD), &read, &avail, &unread ) )
-      {
-         PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread));
+	if (timeout == INFINITE)
+	{
+		ReadFile(hPipeRead, &save_ip, sizeof(INPUT_RECORD), 
+			&read, NULL);
+		return TRUE;
+	}
+	else
+	{
+		if (WaitForSingleObject(hSemKeyCount, timeout) != 
+		    WAIT_OBJECT_0)
+			return FALSE;
 
-         if ( read == sizeof(INPUT_RECORD) )
-            return TRUE;
-      }
-   }
+		if (PeekNamedPipe(hPipeRead, &ip, sizeof(INPUT_RECORD), 
+		    &read, &avail, &unread))
+		{
+
+			PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",
+				read, avail, unread));
+
+			if (read == sizeof(INPUT_RECORD))
+				return TRUE;
+		}
+	}
 #else
-   if ( WaitForSingleObject( hSemKeyCount, timeout ) != WAIT_OBJECT_0 )
-   {
-      return FALSE;
-   }
-   if ( timeout == INFINITE )
-   {
-      ReadFile( hPipeRead, &save_ip, sizeof(INPUT_RECORD), &read, NULL );
-      return TRUE;
-   }
-   else
-   {
-      if ( PeekNamedPipe( hPipeRead, &ip, sizeof(INPUT_RECORD), &read, &avail, &unread ) )
-      {
-         PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",read,avail,unread));
+	if (WaitForSingleObject(hSemKeyCount, timeout) != WAIT_OBJECT_0)
+		return FALSE;
 
-         if ( read == sizeof(INPUT_RECORD) )
-            return TRUE;
-      }
-   }
+	if (timeout == INFINITE)
+	{
+		ReadFile(hPipeRead, &save_ip, sizeof(INPUT_RECORD), 
+			&read, NULL);
+		return TRUE;
+	}
+	else
+	{
+		if (PeekNamedPipe(hPipeRead, &ip, sizeof(INPUT_RECORD), 
+		    &read, &avail, &unread))
+		{
+			PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",
+				read, avail, unread));
+
+			if (read == sizeof(INPUT_RECORD))
+				return TRUE;
+		}
+	}
 #endif
-   return FALSE;
+	return FALSE;
 }
-
 
 /***********************************************************************/
 static void win32_getch(void)
 /***********************************************************************/
 {
-   while (win32_kbhit(INFINITE) == FALSE)
-      ;
-
-   return;
+	while (win32_kbhit(INFINITE) == FALSE)
+	;
 }
 #else
 
@@ -1303,145 +1371,142 @@ static void win32_getch(void)
 static int win32_kbhit(int timeout)
 /***********************************************************************/
 {
-   INPUT_RECORD ip;
-   DWORD read;
-   int rc=FALSE;
+	INPUT_RECORD ip;
+	DWORD read;
+	int rc = FALSE;
 
-   PDC_LOG(("win32_kbhit() - called: timeout %d keyCount %d\n", timeout, keyCount));
+	PDC_LOG(("win32_kbhit() - called: timeout %d keyCount %d\n",
+		timeout, keyCount));
 
-   if (keyCount > 0)
-      return TRUE;
+	if (keyCount > 0)
+		return TRUE;
 
-   if (WaitForSingleObject(hConIn, timeout) != WAIT_OBJECT_0)
-   {
-      return FALSE;
-   }
+	if (WaitForSingleObject(hConIn, timeout) != WAIT_OBJECT_0)
+		return FALSE;
 
-   PeekConsoleInput(hConIn, &ip, 1, &read);
-   if (read == 0)
-      return(FALSE);
-   ReadConsoleInput(hConIn, &ip, 1, &read);
+	PeekConsoleInput(hConIn, &ip, 1, &read);
+	if (read == 0)
+		return FALSE;
 
-   keyCount = GetInterestingEvent( &ip );
-   if ( keyCount )
-   {
-      /*
-       * To get here a recognised event has occurred; save it and return TRUE
-       */
-      memcpy( (char*)&save_ip, (char*)&ip, sizeof(INPUT_RECORD) );
-      rc = TRUE;
-   }
-   return(rc);
+	ReadConsoleInput(hConIn, &ip, 1, &read);
+
+	keyCount = GetInterestingEvent(&ip);
+	if (keyCount)
+	{
+		/* To get here a recognised event has occurred; save it 
+		   and return TRUE */
+
+		memcpy((char*)&save_ip, (char*)&ip, sizeof(INPUT_RECORD));
+		rc = TRUE;
+	}
+
+	return rc;
 }
 
 /***********************************************************************/
 static void win32_getch(void)
 /***********************************************************************/
 {
-   while (win32_kbhit(INFINITE) == FALSE)
-      ;
+	while (win32_kbhit(INFINITE) == FALSE)
+	;
 
-   keyCount --;
-
-   return;
+	keyCount--;
 }
 #endif
 
 /*man-start*********************************************************************
 
-  PDC_get_key_modifiers()  - Returns the keyboard modifier(s) at time of last getch()
+  PDC_get_key_modifiers()  - Returns the keyboard modifier(s) at time
+			     of last getch()
 
   PDCurses Description:
-   This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
-   Returns the keyboard modifiers effective at the time of the last getch()
-   call only if PDC_save_key_modifiers(TRUE) has been called before the
-   getch();
-   Use the macros; PDC_KEY_MODIFIER_* to determine which modifier(s)
-   were set.
+	Returns the keyboard modifiers effective at the time of the last 
+	getch() call only if PDC_save_key_modifiers(TRUE) has been 
+	called before the getch(). Use the macros; PDC_KEY_MODIFIER_* to 
+	determine which modifier(s) were set.
 
   PDCurses Return Value:
-   This function returns the modifiers.
+	This function returns the modifiers.
 
   PDCurses Errors:
-   No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
-   PDCurses int PDC_get_key_modifiers( void );
+	PDCurses  int PDC_get_key_modifiers(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-unsigned long  PDC_get_key_modifiers(void)
+unsigned long PDC_get_key_modifiers(void)
 #else
-unsigned long  PDC_get_key_modifiers()
+unsigned long PDC_get_key_modifiers()
 #endif
 /***********************************************************************/
 {
-   PDC_LOG(("PDC_get_key_modifiers() - called\n"));
+	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
-   return(pdc_key_modifiers);
+	return pdc_key_modifiers;
 }
-
 
 #if defined(PDC_THREAD_BUILD)
 /***********************************************************************/
-LONG InputThread( LPVOID lpThreadData )
+LONG InputThread(LPVOID lpThreadData)
 /***********************************************************************/
 {
-   INPUT_RECORD ip;
-   DWORD read;
-   LONG prev;
-   int num_keys,i;
+	INPUT_RECORD ip;
+	DWORD read;
+	LONG prev;
+	int num_keys, i;
 
-   PDC_LOG(("-->InputThread() - called\n"));
+	PDC_LOG(("-->InputThread() - called\n"));
 
-   /*
-    * Create a semaphore on which the parent thread will wait...
-    */
-   hSemKeyCount = CreateSemaphore( NULL, 0, 1024, NULL );
-   if ( hSemKeyCount != NULL )
-   {
-      for ( ; ; )
-      {
-         ReadConsoleInput(hConIn, &ip, 1, &read);
-         /*
-          * Now that this thread has woken up we need to check if the
-          * key/mouse event is relevant to us. If so, write it to the
-          * anonymous pipe.
-          */
+	/* Create a semaphore on which the parent thread will wait */
 
-         PDC_LOG(("-->InputThread() - read %d character(s)\n",read));
+	hSemKeyCount = CreateSemaphore(NULL, 0, 1024, NULL);
+	if (hSemKeyCount != NULL)
+	{
+	    for (;;)
+	    {
+		ReadConsoleInput(hConIn, &ip, 1, &read);
 
-         num_keys = GetInterestingEvent( &ip );
+		/* Now that this thread has woken up we need to check if 
+		   the key/mouse event is relevant to us. If so, write 
+		   it to the anonymous pipe. */
 
-         PDC_LOG(("-->InputThread() - got %d interesting keys\n",num_keys));
+		PDC_LOG(("-->InputThread() - read %d character(s)\n",
+			read));
 
-         for ( i = 0; i < num_keys; i++ )
-         {
-            /*
-             * For each key written to the pipe, increment the semaphore...
-             */
-            if ( ReleaseSemaphore( hSemKeyCount, 1, &prev ) )
-            {
-               PDC_LOG(("-->InputThread() - writing to pipe; sem incremented from %d\n",prev));
+		num_keys = GetInterestingEvent(&ip);
 
-               if ( !WriteFile( hPipeWrite, &ip, sizeof(INPUT_RECORD), &read, NULL ) )
-               {
-                  /*
-                   * An error occured, we assume it is because the pipe broke;
-                   * therefore the parent thread is shutting down; so will we.
-                   */
-                  break;
-               }
-            }
-         }
-      }
-   }
+		PDC_LOG(("-->InputThread() - got %d interesting keys\n",
+			num_keys));
 
-   PDC_LOG(("-->InputThread() - finished\n"));
+		/* For each key written to the pipe, increment the 
+		   semaphore */
 
-   return 0;
+		for (i = 0; i < num_keys; i++)
+		    if (ReleaseSemaphore(hSemKeyCount, 1, &prev))
+		    {
+			PDC_LOG(("-->InputThread() - writing to pipe; sem incremented from %d\n",
+				prev));
+
+			/* If an error occured, we assume it is because 
+			   the pipe broke; therefore the parent thread 
+			   is shutting down; so will we. */
+
+			if (!WriteFile(hPipeWrite, &ip, sizeof(INPUT_RECORD),
+			    &read, NULL))
+				/* break; */
+				return 0;		/* ? */
+		    }
+	    }
+	}
+
+	PDC_LOG(("-->InputThread() - finished\n"));
+
+	return 0;
 }
 #endif

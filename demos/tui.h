@@ -21,7 +21,6 @@
  * File   : tui.h      'textual user interface'
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
- * Version: 1.02
  */
 
 #ifndef _TUI_H_
@@ -56,7 +55,7 @@
 
 
 #define MAXSTRLEN  256
-#define KEY_ESC    0x1b     /* Escape */
+#define KEY_ESC    0x1b		/* Escape */
 
 #if __STDC__
 typedef void (*FUNC)(void);
@@ -66,9 +65,9 @@ typedef void (*FUNC)();
 
 typedef struct 
 {
-  char *name;   /* item label */
-  FUNC  func;   /* (pointer to) function */
-  char *desc;   /* function description */
+	char *name;	/* item label */
+	FUNC  func;	/* (pointer to) function */
+	char *desc;	/* function description */
 } menu;
 
 /* ANSI C function prototypes: */

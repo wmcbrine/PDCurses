@@ -22,14 +22,10 @@
  * File   : tui.c      'textual user interface'
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
- * Version: 1.02
- *
- * Modified by Mark Hessling and William McBrine
- * halfdelay() added (and CPUACCOUNT removed) November 22, 2005
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 
 #include <ctype.h>
@@ -45,7 +41,7 @@ int waitforkey Args((void));
 void rmerror Args((void));
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.10 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.11 2006/01/11 08:22:07 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)

@@ -22,7 +22,6 @@
  * File   : tuidemo.c
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
- * Version: 1.02
  *
  * Purpose: This program demonstrates the use of the 'curses' library
  *          for the creation of (simple) menu-operated programs.
@@ -34,8 +33,9 @@
  * Acknowledgement: some ideas were borrowed from Mark Hessling's
  *                  version of the 'testcurs' program.
  */
+
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -44,13 +44,13 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo  = "$Id: tuidemo.c,v 1.5 2005/12/07 01:37:43 wmcbrine Exp $";
+char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.6 2006/01/11 08:22:07 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)
-#  define FNAME   "demos/tui.c"    /* change this if source at other location */
+# define FNAME  "demos/tui.c"	/* change this if source at other location */
 #else
-#  define FNAME   "demos\\tui.c"    /* change this if source at other location */
+# define FNAME  "demos\\tui.c"	/* change this if source at other location */
 #endif
 
 /**************************** strings entry box ***************************/

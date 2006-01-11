@@ -25,7 +25,7 @@
  *
  * Purpose: This program demonstrates the use of the 'curses' library
  *          for the creation of (simple) menu-operated programs.
- *          In the PD-Curses version, use is made of colors for the
+ *          In the PDCurses version, use is made of colors for the
  *          highlighting of subwindows (title bar, status bar etc).
  *          The program was tested using DJGPP 1.09 ('GO32') and
  *          Turbo C (2.0), as well as on a UNIX machine (HP-UX 8.07).
@@ -44,7 +44,7 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.6 2006/01/11 08:22:07 wmcbrine Exp $";
+char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.7 2006/01/11 23:19:53 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)
@@ -58,96 +58,113 @@ char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.6 2006/01/11 08:22:07 wmcbrine Exp $";
 void address Args((void))
 {
 #ifdef __STDC__
-  char *fieldname[6] = {"Name","Street","City","State","Country",(char*)0};
+	char *fieldname[6] = 
+	{
+		"Name", "Street", "City", "State", "Country", (char *)0
+	};
 #else
-  char *fieldname[6];
+	char *fieldname[6];
 #endif
-  char *fieldbuf[5];
-  WINDOW *wbody = bodywin();
-  int i, field = 50;
+	char *fieldbuf[5];
+	WINDOW *wbody = bodywin();
+	int i, field = 50;
 
 #ifndef __STDC__
-  fieldname[0] = "Name";
-  fieldname[1] = "Street";
-  fieldname[2] = "City";
-  fieldname[3] = "State";
-  fieldname[4] = "Country";
-  fieldname[5] = (char*)0;
+	fieldname[0] = "Name";
+	fieldname[1] = "Street";
+	fieldname[2] = "City";
+	fieldname[3] = "State";
+	fieldname[4] = "Country";
+	fieldname[5] = (char *)0;
 #endif
-  for (i=0; i<5; i++) fieldbuf[i] = (char *) calloc (field+1, sizeof(char));
-  if (getstrings (fieldname, fieldbuf, field) != KEY_ESC)
-  {
-    for (i=0; fieldname[i]; i++)
-      wprintw (wbody, "%10s : %s\n", fieldname[i], fieldbuf[i]);
-    wrefresh (wbody);
-  }
-  for (i=0; i<5; i++) free (fieldbuf[i]);
+
+	for (i = 0; i < 5; i++)
+		fieldbuf[i] = (char *) calloc(field + 1, sizeof(char));
+
+	if (getstrings(fieldname, fieldbuf, field) != KEY_ESC)
+	{
+		for (i = 0; fieldname[i]; i++)
+			wprintw(wbody, "%10s : %s\n",
+				fieldname[i], fieldbuf[i]);
+
+		wrefresh(wbody);
+	}
+
+	for (i = 0; i < 5; i++)
+		free(fieldbuf[i]);
 }
 
 /**************************** string entry box ****************************/
 
 #if __STDC__
-char *getfname (char *desc, char *fname, int field)
+char *getfname(char *desc, char *fname, int field)
 #else
-char *getfname (desc, fname, field)
+char *getfname(desc, fname, field)
 char *desc;
 char *fname;
 int field;
 #endif
 {
-  char *fieldname[2];
-  char *fieldbuf[1];
+	char *fieldname[2];
+	char *fieldbuf[1];
 
-  fieldname[0] = desc; fieldname[1] = 0; fieldbuf[0] = fname;
-  return (getstrings (fieldname, fieldbuf, field) == KEY_ESC) ? NULL : fname;
+	fieldname[0] = desc;
+	fieldname[1] = 0;
+	fieldbuf[0] = fname;
+
+	return (getstrings(fieldname, fieldbuf, field) == KEY_ESC) ? 
+		NULL : fname;
 }
 
 /**************************** a very simple file browser ******************/
 
 #if __STDC__
-void showfile (char *fname)
+void showfile(char *fname)
 #else
-void showfile (fname)
+void showfile(fname)
 char *fname;
 #endif
 {
-  int i, bh = bodylen();
-  FILE *fp;
-  char buf[MAXSTRLEN];
-  bool ateof = FALSE;
+	int i, bh = bodylen();
+	FILE *fp;
+	char buf[MAXSTRLEN];
+	bool ateof = FALSE;
 
-  statusmsg ("FileBrowser: Hit key to continue, Q to quit");
+	statusmsg("FileBrowser: Hit key to continue, Q to quit");
 
-  if ((fp = fopen (fname, "r")) != NULL)   /* file available ? */
-  {
-    while (!ateof)
-    {
-      clsbody ();
-      for (i=0; i<bh-1 && !ateof; i++)
-      {
-        buf[0] = '\0';
-        fgets (buf, MAXSTRLEN, fp);
-        if (strlen(buf)) bodymsg (buf); else ateof = TRUE;
-      }
-      switch (waitforkey())
-      {
-        case 'Q':
-        case 'q':
-        case 0x1b: /* ESCAPE */
-          ateof = TRUE;
-          break;
+	if ((fp = fopen (fname, "r")) != NULL)	/* file available? */
+	{
+		while (!ateof)
+		{
+			clsbody();
 
-        default:
-          break;
-      }
-    }
-    fclose (fp);
-  }
-  else
-  {
-    sprintf (buf, "ERROR: file '%s' not found", fname);
-    errormsg (buf);
-  }
+			for (i = 0; i < bh - 1 && !ateof; i++)
+			{
+				buf[0] = '\0';
+				fgets(buf, MAXSTRLEN, fp);
+
+				if (strlen(buf))
+					bodymsg(buf);
+				else
+					ateof = TRUE;
+			}
+
+			switch (waitforkey())
+			{
+			case 'Q':
+			case 'q':
+			case 0x1b:
+				ateof = TRUE;
+			}
+		}
+
+		fclose (fp);
+	}
+	else
+	{
+		sprintf(buf, "ERROR: file '%s' not found", fname);
+		errormsg(buf);
+	}
 }
 
 /***************************** forward declarations ***********************/
@@ -161,105 +178,108 @@ void subsub Args((void));
 
 menu MainMenu[] =
 {
- { "Asub",     sub0,     "Go inside first submenu" },
- { "Bsub",     sub1,     "Go inside second submenu" },
- { "Csub",     sub2,     "Go inside third submenu" },
- { "Dsub",     sub3,     "Go inside fourth submenu" },
- { "",         (FUNC)0,  "" }   /* always add this as the last item ! */
+	{ "Asub",  sub0,     "Go inside first submenu" },
+	{ "Bsub",  sub1,     "Go inside second submenu" },
+	{ "Csub",  sub2,     "Go inside third submenu" },
+	{ "Dsub",  sub3,     "Go inside fourth submenu" },
+	{ "",      (FUNC)0,  "" }   /* always add this as the last item! */
 };
 
 menu SubMenu0[] =
 {
- { "Exit",     DoExit,     "Terminate program" },
- { "",         (FUNC)0,  "" }   /* always add this as the last item ! */
+	{ "Exit",  DoExit,   "Terminate program" },
+	{ "",      (FUNC)0,  "" }
 };
 
 menu SubMenu1[] =
 {
- { "OneBeep",  func1,    "Sound one beep" },
- { "TwoBeeps", func2,    "Sound two beeps" },
- { "",         (FUNC)0,  "" }   /* always add this as the last item ! */
+	{ "OneBeep",  func1,    "Sound one beep" },
+	{ "TwoBeeps", func2,    "Sound two beeps" },
+	{ "",         (FUNC)0,  "" }
 };
 
 menu SubMenu2[] =
 {
- { "Browse",   subfunc1, "Source file lister" },
- { "Input",    subfunc2, "Interactive file lister" },
- { "Address",  address,  "Get address data" },
- { "",         (FUNC)0,  "" }   /* always add this as the last item ! */
+	{ "Browse",   subfunc1, "Source file lister" },
+	{ "Input",    subfunc2, "Interactive file lister" },
+	{ "Address",  address,  "Get address data" },
+	{ "",         (FUNC)0,  "" }
 };
 
 menu SubMenu3[] =
 {
- { "SubSub",   subsub,   "Go inside sub-submenu" },
- { "",         (FUNC)0,  "" }   /* always add this as the last item ! */
+	{ "SubSub",   subsub,   "Go inside sub-submenu" },
+	{ "",         (FUNC)0,  "" }
 };
 
 /***************************** main menu functions ************************/
 
 void sub0 Args((void))
 {
-  domenu (SubMenu0);
+	domenu(SubMenu0);
 }
 
 void sub1 Args((void))
 {
-  domenu (SubMenu1);
+	domenu(SubMenu1);
 }
 
 void sub2 Args((void))
 {
-  domenu (SubMenu2);
+	domenu(SubMenu2);
 }
 
 void sub3 Args((void))
 {
-  domenu (SubMenu3);
+	domenu(SubMenu3);
 }
 
 /***************************** submenu1 functions *************************/
 
 void func1 Args((void))
 {
-  beep ();
-  bodymsg ("One beep! ");
+	beep();
+	bodymsg("One beep! ");
 }
 
 void func2 Args((void))
 {
-  beep ();
-  bodymsg ("Two beeps! ");
-  beep ();
+	beep();
+	bodymsg("Two beeps! ");
+	beep();
 }
 
 /***************************** submenu2 functions *************************/
 
 void subfunc1 Args((void))
 {
-  showfile (FNAME);
+	showfile(FNAME);
 }
 
 void subfunc2 Args((void))
 {
-  char fname[MAXSTRLEN];
+	char fname[MAXSTRLEN];
 
-  strcpy (fname, FNAME);
-  if (getfname ("File to browse:", fname, 50)) showfile (fname);
+	strcpy(fname, FNAME);
+	if (getfname ("File to browse:", fname, 50))
+		showfile(fname);
 }
 
 /***************************** submenu3 functions *************************/
 
 void subsub Args((void))
 {
-  domenu (SubMenu2);
+	domenu(SubMenu2);
 }
 
 /***************************** start main menu  ***************************/
 
 int main Args((void))
 {
-  startmenu (MainMenu, "TUI - 'textual user interface' demonstration program");
+	startmenu(MainMenu,
+		"TUI - 'textual user interface' demonstration program");
 
-  return 0;
+	return 0;
 }
+
 /********************************* tuidemo.c ********************************/

@@ -22,39 +22,24 @@
 --------------------------------------------------------------------------*/
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest  = "$Id: ptest.c,v 1.10 2005/12/14 19:40:29 wmcbrine Exp $";
+char *rcsid_ptest = "$Id: ptest.c,v 1.11 2006/01/11 23:19:52 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
 #include <panel.h>
 
-PANEL *p1;
-PANEL *p2;
-PANEL *p3;
-PANEL *p4;
-PANEL *p5;
-WINDOW *w1;
-WINDOW *w2;
-WINDOW *w3;
-WINDOW *w4;
-WINDOW *w5;
-
-#define	nap(x)		usleep(1000*x)
+PANEL *p1, *p2, *p3, *p4, *p5;
+WINDOW *w1, *w2, *w3, *w4, *w5;
 
 long nap_msec = 1;
 
 char *mod[] = 
 {
-	"test ",
-	"TEST ",
-	"(**) ",
-	"*()* ",
-	"<--> ",
-	"LAST "
+	"test ", "TEST ", "(**) ", "*()* ", "<--> ", "LAST "
 };
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
@@ -82,14 +67,13 @@ void rmpanel Args((PANEL *));
 #if __STDC__
 void wait_a_while(long msec)
 #else
-void
-wait_a_while(msec)
+void wait_a_while(msec)
 long msec;
 #endif
 {
+	/* timeout(msec); */
 	getch();
-	return;
-}	/* end of wait_a_while */
+}
 
 /*+-------------------------------------------------------------------------
 	saywhat(text)
@@ -97,41 +81,40 @@ long msec;
 #if __STDC__
 void saywhat(const char *text)
 #else
-void
-saywhat(text)
+void saywhat(text)
 char *text;
 #endif
 {
-
-	wmove(stdscr,LINES - 1,0);
-	wprintw(stdscr,"%-20.20s",text);
-
-}	/* end of saywhat */
+	wmove(stdscr, LINES - 1, 0);
+	wprintw(stdscr, "%-20.20s", text);
+}
 
 /*+-------------------------------------------------------------------------
-	mkpanel(rows,cols,tly,tlx) - alloc a win and panel and associate them
+  mkpanel(rows, cols, tly, tlx) - alloc a win and panel and associate them
 --------------------------------------------------------------------------*/
 #if __STDC__
 PANEL *mkpanel(int rows, int cols, int tly, int tlx)
 #else
-PANEL *
-mkpanel(rows,cols,tly,tlx)
+PANEL *mkpanel(rows, cols, tly, tlx)
 int rows;
 int cols;
 int tly;
 int tlx;
 #endif
 {
-WINDOW *win = newwin(rows,cols,tly,tlx);
-PANEL *pan = (PANEL *)0;
+	WINDOW *win = newwin(rows, cols, tly, tlx);
+	PANEL *pan = (PANEL *)0;
 
-	if (win) {
+	if (win)
+	{
 		pan = new_panel(win);
+
 		if (!pan)
 			delwin(win);
 	}
+
 	return pan;
-}	/* end of mkpanel */
+}
 
 /*+-------------------------------------------------------------------------
 	rmpanel(pan)
@@ -139,15 +122,15 @@ PANEL *pan = (PANEL *)0;
 #if __STDC__
 void rmpanel(PANEL *pan)
 #else
-void
-rmpanel(pan)
+void rmpanel(pan)
 PANEL *pan;
 #endif
 {
-WINDOW *win = pan->win;
+	WINDOW *win = pan->win;
+
 	del_panel(pan);
 	delwin(win);
-}	/* end of rmpanel */
+}
 
 /*+-------------------------------------------------------------------------
 	pflush()
@@ -156,7 +139,7 @@ void pflush Args((void))
 {
 	update_panels();
 	doupdate();
-}	/* end of pflush */
+}
 
 /*+-------------------------------------------------------------------------
 	fill_panel(win)
@@ -164,28 +147,26 @@ void pflush Args((void))
 #if __STDC__
 void fill_panel(PANEL *pan)
 #else
-void
-fill_panel(pan)
+void fill_panel(pan)
 PANEL *pan;
 #endif
 {
-WINDOW *win = pan->win;
-char num = *((char *)pan->user + 1);
-int y,x,maxy,maxx;
+	WINDOW *win = pan->win;
+	char num = *((char *)pan->user + 1);
+	int y, x, maxy, maxx;
 
 	box(win, 0, 0);  
-	wmove(win,1,1);
-	wprintw(win,"-pan%c-",num);
-	getmaxyx(win,maxy,maxx);
-	for(y = 2; y < maxy - 1; y++)
-	{
-		for(x = 1; x < maxx - 1; x++)
+	wmove(win, 1, 1);
+	wprintw(win, "-pan%c-", num);
+	getmaxyx(win, maxy, maxx);
+
+	for (y = 2; y < maxy - 1; y++)
+		for (x = 1; x < maxx - 1; x++)
 		{
-			wmove(win,y,x);
-			waddch(win,num);
+			wmove(win, y, x);
+			waddch(win, num);
 		}
-	}
-}	/* end of fill_panel */
+}
 
 /*+-------------------------------------------------------------------------
 	main(argc,argv)
@@ -193,16 +174,14 @@ int y,x,maxy,maxx;
 #if __STDC__
 int main(int argc, char **argv)
 #else
-int
-main(argc,argv)
+int main(argc, argv)
 int argc;
 char **argv;
 #endif
 {
-int itmp;
-register int y,x;
+	int itmp, y,x;
 
-	if((argc > 1) && atol(argv[1]))
+	if ((argc > 1) && atol(argv[1]))
 		nap_msec = atol(argv[1]);
 
 #ifdef XCURSES
@@ -211,32 +190,31 @@ register int y,x;
 	initscr();
 #endif
 
-	for(y = 0; y < LINES - 1; y++)
+	for (y = 0; y < LINES - 1; y++)
+		for (x = 0; x < COLS; x++)
+			wprintw(stdscr, "%d", (y + x) % 10);
+
+	for (y = 0; y < 5; y++)
 	{
-		for(x = 0; x < COLS; x++)
-			wprintw(stdscr,"%d",(y + x) % 10);
-	}
-	for(y = 0; y < 5; y++)
-	{
-		p1 = mkpanel(10,10,0,0);
+		p1 = mkpanel(10, 10, 0, 0);
 		w1 = panel_window(p1);
-		set_panel_userptr(p1,"p1");
+		set_panel_userptr(p1, "p1");
 
-		p2 = mkpanel(14,14,5,5);
+		p2 = mkpanel(14, 14, 5, 5);
 		w2 = panel_window(p2);
-		set_panel_userptr(p2,"p2");
+		set_panel_userptr(p2, "p2");
 
-		p3 = mkpanel(6,8,12,12);
+		p3 = mkpanel(6, 8, 12, 12);
 		w3 = panel_window(p3);
-		set_panel_userptr(p3,"p3");
+		set_panel_userptr(p3, "p3");
 
-		p4 = mkpanel(10,10,10,30);
+		p4 = mkpanel(10, 10, 10, 30);
 		w4 = panel_window(p4);
-		set_panel_userptr(p4,"p4");
+		set_panel_userptr(p4, "p4");
 
-		p5 = mkpanel(10,10,13,37);
+		p5 = mkpanel(10, 10, 13, 37);
 		w5 = panel_window(p5);
-		set_panel_userptr(p5,"p5");
+		set_panel_userptr(p5, "p5");
 
 		fill_panel(p1);
 		fill_panel(p2);
@@ -249,7 +227,7 @@ register int y,x;
 		wait_a_while(nap_msec);
 
 		saywhat("h3 s1 s2 s4 s5;");
-		move_panel(p1,0,0);
+		move_panel(p1, 0, 0);
 		hide_panel(p3);
 		show_panel(p1);
 		show_panel(p2);
@@ -269,7 +247,7 @@ register int y,x;
 		wait_a_while(nap_msec);
 
 		saywhat("m2;");
-		move_panel(p2,10,10);
+		move_panel(p2, 10, 10);
 		pflush();
 		wait_a_while(nap_msec);
 
@@ -279,7 +257,7 @@ register int y,x;
 		wait_a_while(nap_msec);
 
 		saywhat("m3;");
-		move_panel(p3,5,5);
+		move_panel(p3, 5, 5);
 		pflush();
 		wait_a_while(nap_msec);
 
@@ -323,28 +301,28 @@ register int y,x;
 		pflush();
 		wait_a_while(nap_msec);
 
-		for(itmp = 0; itmp < 6; itmp++)
+		for (itmp = 0; itmp < 6; itmp++)
 		{
 			saywhat("m4;");
-			wmove(w4,3,1);
-			waddstr(w4,mod[itmp]);
-			move_panel(p4,4,itmp*10);
-			wmove(w5,4,1);
-			waddstr(w5,mod[itmp]);
+			wmove(w4, 3, 1);
+			waddstr(w4, mod[itmp]);
+			move_panel(p4, 4, itmp * 10);
+			wmove(w5, 4, 1);
+			waddstr(w5, mod[itmp]);
 			pflush();
 			wait_a_while(nap_msec);
 			saywhat("m5;");
-			wmove(w4,4,1);
-			waddstr(w4,mod[itmp]);
-			move_panel(p5,7,(itmp*10) + 6);
-			wmove(w5,3,1);
-			waddstr(w5,mod[itmp]);
+			wmove(w4, 4, 1);
+			waddstr(w4, mod[itmp]);
+			move_panel(p5, 7, itmp * 10 + 6);
+			wmove(w5, 3, 1);
+			waddstr(w5, mod[itmp]);
 			pflush();
 			wait_a_while(nap_msec);
 		}
 
 		saywhat("m4;");
-		move_panel(p4,4,itmp*10);
+		move_panel(p4, 4, itmp * 10);
 		pflush();
 		wait_a_while(nap_msec);
 
@@ -387,10 +365,13 @@ register int y,x;
 		rmpanel(p5);
 		pflush();
 		wait_a_while(nap_msec);
-		if(nap_msec == 1)
+
+		if (nap_msec == 1)
 			break;
+
 		nap_msec = 100L;
 	}
+
 	endwin();
 #ifdef XCURSES
 	XCursesExit();
@@ -398,5 +379,4 @@ register int y,x;
 	return 0;
 }	/* end of main */
 
-/* vi: set tabstop=4 shiftwidth=4: */
 /* end of ptest.c */

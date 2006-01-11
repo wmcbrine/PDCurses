@@ -19,7 +19,7 @@
 */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -31,7 +31,7 @@
 #define DELAYSIZE 200
 
 #ifdef PDCDEBUG
-char *rcsid_firework  = "$Id: firework.c,v 1.10 2005/12/07 01:37:42 wmcbrine Exp $";
+char *rcsid_firework = "$Id: firework.c,v 1.11 2006/01/11 23:19:52 wmcbrine Exp $";
 #endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
@@ -48,7 +48,7 @@ char *rcsid_firework  = "$Id: firework.c,v 1.10 2005/12/07 01:37:42 wmcbrine Exp
 
 void myrefresh Args((void));
 void get_colour Args((void));
-void explode Args((int,int));
+void explode Args((int, int));
 
 #if __STDC__
 int main(int argc, char **argv)
@@ -58,133 +58,140 @@ int argc;
 char **argv;
 #endif
 {
-       int start,end,row,diff,flag,direction,seed;
+	int start, end, row, diff, flag, direction, seed;
 
 #ifdef XCURSES
-       Xinitscr(argc, argv);
+	Xinitscr(argc, argv);
 #else
-       initscr();
+	initscr();
 #endif
-       nodelay( stdscr, TRUE );
-       noecho();
-       if (has_colors())
-          start_color();
-       seed = time((time_t *)0);
-       srand(seed);
-       flag = 0;
-       while(getch() == ERR)  /* loop until a key is hit */
-       {
-               do {
-                      start = rand() % (COLS -3);
-                      end = rand() % (COLS - 3);
-                      start = (start < 2) ? 2 : start;
-                      end = (end < 2) ? 2 : end;
-                      direction = (start > end) ? -1 : 1;
-                      diff = abs(start-end);
-                  } while (diff<2 || diff>=LINES-2);
-               attrset(A_NORMAL);
-               for (row=0;row<diff;row++)
-               {
-                       mvprintw(LINES - row,start + (row * direction),
-                              (direction < 0) ? "\\" : "/");
-                       if (flag++)
-                       {
-                               myrefresh();
-                               clear();
-                               flag = 0;
-                       }
-               }
-               if (flag++)
-               {
-                        myrefresh();
-                        flag = 0;
-               }
-               seed = time((time_t *)0);
-               srand(seed);
-               explode(LINES-row,start+(diff*direction));
-               clear();
-               myrefresh();
-       }
-       endwin();
+	nodelay(stdscr, TRUE);
+	noecho();
+
+	if (has_colors())
+		start_color();
+
+	seed = time((time_t *)0);
+	srand(seed);
+	flag = 0;
+       
+	while (getch() == ERR)		/* loop until a key is hit */
+	{
+		do {
+			start = rand() % (COLS -3);
+			end = rand() % (COLS - 3);
+			start = (start < 2) ? 2 : start;
+			end = (end < 2) ? 2 : end;
+			direction = (start > end) ? -1 : 1;
+			diff = abs(start - end);
+
+		} while (diff < 2 || diff >= LINES - 2);
+
+		attrset(A_NORMAL);
+
+		for (row = 0; row < diff; row++)
+		{
+			mvprintw(LINES - row, row * direction + start,
+				(direction < 0) ? "\\" : "/");
+
+			if (flag++)
+			{
+				myrefresh();
+				clear();
+				flag = 0;
+			}
+		}
+
+		if (flag++)
+		{
+			myrefresh();
+			flag = 0;
+		}
+
+		seed = time((time_t *)0);
+		srand(seed);
+		explode(LINES - row, diff * direction + start);
+		clear();
+		myrefresh();
+	}
+
+	endwin();
 #ifdef XCURSES
-       XCursesExit();
+	XCursesExit();
 #endif
-       return(0);
+	return 0;
 }
 
 #if __STDC__
-void explode(int row,int col)
+void explode(int row, int col)
 #else
-void explode(row,col)
-int row,col;
+void explode(row, col)
+int row, col;
 #endif
 {
-       clear();
-       mvprintw(row,col,"-");
-       myrefresh();
+	clear();
+	mvprintw(row, col, "-");
+	myrefresh();
 
-       get_colour();
-       mvprintw(row-1,col-1," - ");
-       mvprintw(row,col-1,"-+-");
-       mvprintw(row+1,col-1," - ");
-       myrefresh();
+	--col;
 
-       get_colour();
-       mvprintw(row-2,col-2," --- ");
-       mvprintw(row-1,col-2,"-+++-");
-       mvprintw(row,  col-2,"-+#+-");
-       mvprintw(row+1,col-2,"-+++-");
-       mvprintw(row+2,col-2," --- ");
-       myrefresh();
+	get_colour();
+	mvprintw(row - 1, col, " - ");
+	mvprintw(row,     col, "-+-");
+	mvprintw(row + 1, col, " - ");
+	myrefresh();
 
-       get_colour();
-       mvprintw(row-2,col-2," +++ ");
-       mvprintw(row-1,col-2,"++#++");
-       mvprintw(row,  col-2,"+# #+");
-       mvprintw(row+1,col-2,"++#++");
-       mvprintw(row+2,col-2," +++ ");
-       myrefresh();
+	--col;
 
-       get_colour();
-       mvprintw(row-2,col-2,"  #  ");
-       mvprintw(row-1,col-2,"## ##");
-       mvprintw(row,  col-2,"#   #");
-       mvprintw(row+1,col-2,"## ##");
-       mvprintw(row+2,col-2,"  #  ");
-       myrefresh();
+	get_colour();
+	mvprintw(row - 2, col, " --- ");
+	mvprintw(row - 1, col, "-+++-");
+	mvprintw(row,     col, "-+#+-");
+	mvprintw(row + 1, col, "-+++-");
+	mvprintw(row + 2, col, " --- ");
+	myrefresh();
 
-       get_colour();
-       mvprintw(row-2,col-2," # # ");
-       mvprintw(row-1,col-2,"#   #");
-       mvprintw(row,  col-2,"     ");
-       mvprintw(row+1,col-2,"#   #");
-       mvprintw(row+2,col-2," # # ");
-       myrefresh();
+	get_colour();
+	mvprintw(row - 2, col, " +++ ");
+	mvprintw(row - 1, col, "++#++");
+	mvprintw(row,     col, "+# #+");
+	mvprintw(row + 1, col, "++#++");
+	mvprintw(row + 2, col, " +++ ");
+	myrefresh();
+
+	get_colour();
+	mvprintw(row - 2, col, "  #  ");
+	mvprintw(row - 1, col, "## ##");
+	mvprintw(row,     col, "#   #");
+	mvprintw(row + 1, col, "## ##");
+	mvprintw(row + 2, col, "  #  ");
+	myrefresh();
+
+	get_colour();
+	mvprintw(row - 2, col, " # # ");
+	mvprintw(row - 1, col, "#   #");
+	mvprintw(row,     col, "     ");
+	mvprintw(row + 1, col, "#   #");
+	mvprintw(row + 2, col, " # # ");
+	myrefresh();
 }
 
 void myrefresh Args((void))
 {
-       napms(DELAYSIZE);
-       move(LINES-1,COLS-1);
-       refresh();
+	napms(DELAYSIZE);
+	move(LINES - 1, COLS - 1);
+	refresh();
 }
 
 void get_colour Args((void))
 {
-       static short tbl[] =
-       {
-               COLOR_RED,
-               COLOR_BLUE,
-               COLOR_GREEN,
-               COLOR_CYAN,
-               COLOR_RED,
-               COLOR_MAGENTA,
-               COLOR_YELLOW,
-               COLOR_WHITE,
-       };
+	static short tbl[] =
+	{
+		COLOR_RED, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN,
+		COLOR_RED, COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE
+	};
 
-       attr_t bold = (rand() % 2) ? A_BOLD : A_NORMAL;
-
-       init_pair(1, tbl[rand() % 8], COLOR_BLACK);
-       attrset(COLOR_PAIR(1) | bold);
+	attr_t bold = (rand() % 2) ? A_BOLD : A_NORMAL;
+	init_pair(1, tbl[rand() % 8], COLOR_BLACK);
+	attrset(COLOR_PAIR(1) | bold);
 }

@@ -19,7 +19,7 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_sb  = "$Id: sb.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_sb = "$Id: sb.c,v 1.4 2006/01/11 06:46:24 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -44,19 +44,18 @@ char *rcsid_sb  = "$Id: sb.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
   Name:                                                          sb
 
   Synopsis:
-
-  	int sb_init(void)
-  	int sb_set_horz(int total, int viewport, int cur)
-  	int sb_set_vert(int total, int viewport, int cur)
-  	int sb_get_horz(int *total, int *viewport, int *cur)
-  	int sb_get_vert(int *total, int *viewport, int *cur)
-  	int sb_refresh(void);
+	int sb_init(void)
+	int sb_set_horz(int total, int viewport, int cur)
+	int sb_set_vert(int total, int viewport, int cur)
+	int sb_get_horz(int *total, int *viewport, int *cur)
+	int sb_get_vert(int *total, int *viewport, int *cur)
+	int sb_refresh(void);
 
   PDCurses Description:
- 	These functions manipulate the scrollbar...
+	These functions manipulate the scrollbar.
 
   PDCurses Return Value:
- 	All functions return OK on success and ERR on error.
+	All functions return OK on success and ERR on error.
 
   Portability                             X/Open    BSD    SYS V
                                           Dec '88
@@ -71,11 +70,10 @@ char *rcsid_sb  = "$Id: sb.c,v 1.3 2006/01/03 07:34:43 wmcbrine Exp $";
 
 bool sb_started = FALSE;
 
+/* sb_init() is the sb initialization routine.
+   This must be called before initscr(). */
+
 /***********************************************************************/
-/*
-   sb_init()	is the sb initialization routine.
-   This must be called before initscr().
- */
 #ifdef HAVE_PROTO
 int	PDC_CDECL	sb_init(void)
 #else
@@ -86,20 +84,20 @@ int	PDC_CDECL	sb_init()
 	PDC_LOG(("sb_init() - called\n"));
 
 	if (SP)
-		return (ERR);
+		return ERR;
 
 	sb_started = TRUE;
-	return(OK);
+
+	return OK;
 }
 
-/***********************************************************************/
-/*
-	sb_set_horz()	Used to set horizontal scrollbar.
+/* sb_set_horz() - Used to set horizontal scrollbar.
 
    total = total number of columns
    viewport = size of viewport in columns
-   cur = current column in total
- */
+   cur = current column in total */
+
+/***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	sb_set_horz(int total, int viewport, int cur)
 #else
@@ -108,25 +106,26 @@ int total, viewport, cur;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("sb_set_horz() - called: total %d viewport %d cur %d\n",total, viewport, cur));
+	PDC_LOG(("sb_set_horz() - called: total %d viewport %d cur %d\n",
+		total, viewport, cur));
 
 	if (!SP)
-		return(ERR);
+		return ERR;
 
 	SP->sb_total_x = total;
 	SP->sb_viewport_x = viewport;
 	SP->sb_cur_x = cur;
-	return( OK );
+
+	return OK;
 }
 
-/***********************************************************************/
-/*
-	sb_set_vert()	Used to set vertical scrollbar.
+/* sb_set_vert() - Used to set vertical scrollbar.
 
    total = total number of columns on line
    viewport = size of viewport in columns
-   cur = current column in total
- */
+   cur = current column in total */
+
+/***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	sb_set_vert(int total, int viewport, int cur)
 #else
@@ -135,25 +134,26 @@ int total, viewport, cur;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("sb_set_vert() - called: total %d viewport %d cur %d\n",total, viewport, cur));
+	PDC_LOG(("sb_set_vert() - called: total %d viewport %d cur %d\n",
+		total, viewport, cur));
 
 	if (!SP)
-		return(ERR);
+		return ERR;
 
 	SP->sb_total_y = total;
 	SP->sb_viewport_y = viewport;
 	SP->sb_cur_y = cur;
-	return( OK );
+
+	return OK;
 }
 
-/***********************************************************************/
-/*
-	sb_get_horz()	Used to get horizontal scrollbar.
+/* sb_get_horz() - Used to get horizontal scrollbar.
 
    total = total number of lines
    viewport = size of viewport in lines
-   cur = current line in total
- */
+   cur = current line in total */
+
+/***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	sb_get_horz(int *total, int *viewport, int *cur)
 #else
@@ -165,22 +165,25 @@ int *total, *viewport, *cur;
 	PDC_LOG(("sb_get_horz() - called\n"));
 
 	if (!SP)
-		return(ERR);
+		return ERR;
 
-	if (total) *total = SP->sb_total_x;
-	if (viewport) *viewport = SP->sb_viewport_x;
-	if (cur) *cur = SP->sb_cur_x;
-	return( OK );
+	if (total)
+		*total = SP->sb_total_x;
+	if (viewport)
+		*viewport = SP->sb_viewport_x;
+	if (cur)
+		*cur = SP->sb_cur_x;
+
+	return OK;
 }
 
-/***********************************************************************/
-/*
-	sb_get_vert()	Used to get vertical scrollbar.
+/* sb_get_vert() - Used to get vertical scrollbar.
 
    total = total number of lines
    viewport = size of viewport in lines
-   cur = current line in total
- */
+   cur = current line in total */
+
+/***********************************************************************/
 #ifdef HAVE_PROTO
 int	PDC_CDECL	sb_get_vert(int *total, int *viewport, int *cur)
 #else
@@ -192,18 +195,21 @@ int *total, *viewport, *cur;
 	PDC_LOG(("sb_get_vert() - called\n"));
 
 	if (!SP)
-		return(ERR);
+		return ERR;
 
-	if (total) *total = SP->sb_total_y;
-	if (viewport) *viewport = SP->sb_viewport_y;
-	if (cur) *cur = SP->sb_cur_y;
-	return( OK );
+	if (total)
+		*total = SP->sb_total_y;
+	if (viewport)
+		*viewport = SP->sb_viewport_y;
+	if (cur)
+		*cur = SP->sb_cur_y;
+
+	return OK;
 }
 
+/* sb_refresh() - Used to draw the scrollbars. */
+
 /***********************************************************************/
-/*
-	sb_refresh()	Used to draw the scrollbars.
- */
 #ifdef HAVE_PROTO
 int	PDC_CDECL	sb_refresh(void)
 #else
@@ -214,7 +220,7 @@ int	PDC_CDECL	sb_refresh()
 	PDC_LOG(("sb_refresh() - called\n"));
 
 	if (!SP)
-		return(ERR);
+		return ERR;
 
-	return(XCurses_refresh_scrollbar());
+	return XCurses_refresh_scrollbar();
 }

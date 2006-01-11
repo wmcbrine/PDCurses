@@ -19,40 +19,41 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn  = "$Id: pdcscrn.c,v 1.6 2006/01/03 19:54:29 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.7 2006/01/11 06:46:24 wmcbrine Exp $";
 #endif
 
-bool GLOBAL_sb_on=FALSE;
-bool GLOBAL_slk_on=FALSE;
+bool GLOBAL_sb_on = FALSE;
+bool GLOBAL_slk_on = FALSE;
 
 /*man-start*********************************************************************
 
-  PDC_scr_close()	- Internal low-level binding to close the physical screen
+  PDC_scr_close()	- Internal low-level binding to close the
+			  physical screen
 
   PDCurses Description:
- 	This is a nop for the DOS platform.
+	This is a nop for the DOS platform.
 
   PDCurses Return Value:
- 	This function returns OK on success, otherwise an ERR is returned.
+	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
- 	The DOS platform will never fail.
+	The DOS platform will never fail.
 
   Portability:
- 	PDCurses	int	PDC_scr_close( void );
+	PDCurses  int PDC_scr_close(void);
 
 **man-end**********************************************************************/
 
-int	PDC_scr_close(void)
+int PDC_scr_close(void)
 {
 	PDC_LOG(("PDC_scr_close() - called\n"));
 
-	return( OK );
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -60,27 +61,28 @@ int	PDC_scr_close(void)
   PDC_scrn_modes_equal()	- Decide if two screen modes are equal
 
   PDCurses Description:
- 	Mainly required for OS/2. It decides if two screen modes
-        (VIOMODEINFO structure) are equal. Under DOS it just compares
-        two integers
+	Mainly required for OS/2. It decides if two screen modes
+	(VIOMODEINFO structure) are equal. Under DOS it just compares
+	two integers
 
   PDCurses Return Value:
- 	This function returns TRUE if equal else FALSe.
+	This function returns TRUE if equal else FALSe.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int PDC_scrn_modes_equal( int mode1, int mode2 );
- 	OS2 PDCurses	int PDC_scrn_modes_equal( VIOMODEINFO mode1, VIOMODEINFO mode2 );
+	PDCurses  int PDC_scrn_modes_equal(int mode1, int mode2);
+    OS2 PDCurses  int PDC_scrn_modes_equal(VIOMODEINFO mode1, 
+					   VIOMODEINFO mode2);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-bool	PDC_scrn_modes_equal(int mode1, int mode2)
+bool PDC_scrn_modes_equal(int mode1, int mode2)
 #else
-bool	PDC_scrn_modes_equal(mode1,mode2)
+bool PDC_scrn_modes_equal(mode1, mode2)
 int mode1;
 int mode2;
 #endif
@@ -93,27 +95,28 @@ int mode2;
 
 /*man-start*********************************************************************
 
-  PDC_scr_open()	- Internal low-level binding to open the physical screen
+  PDC_scr_open()	- Internal low-level binding to open the physical
+			  screen
 
   PDCurses Description:
 	This is a NOP in DOS.
 
   PDCurses Return Value:
- 	This function returns OK on success, otherwise an ERR is returned.
+	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
- 	The DOS platform will never fail.
+	The DOS platform will never fail.
 
   Portability:
- 	PDCurses	int	PDC_scr_open( SCREEN* internal, bool echo );
+	PDCurses  int PDC_scr_open(SCREEN *internal, bool echo);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_scr_open(SCREEN *internal, bool echo)
+int PDC_scr_open(SCREEN *internal, bool echo)
 #else
-int	PDC_scr_open(internal,echo)
+int PDC_scr_open(internal, echo)
 SCREEN *internal;
 bool echo;
 #endif
@@ -124,7 +127,7 @@ bool echo;
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	internal->cursrow = internal->curscol = 0;
-	internal->direct_video	= FALSE;		/* Assume that we can't	      */
+	internal->direct_video	= FALSE;	/* Assume that we can't	      */
 	internal->autocr	= TRUE;		/* lf -> crlf by default      */
 	internal->raw_out	= FALSE;	/* tty I/O modes	      */
 	internal->raw_inp	= FALSE;	/* tty I/O modes	      */
@@ -159,7 +162,7 @@ bool echo;
 	internal->sb_cur_x = 0;
 	internal->line_color = COLOR_WHITE;
 
-	return( OK );
+	return OK;
 }
 
 /*man-start*********************************************************************
@@ -167,35 +170,33 @@ bool echo;
   PDC_resize_screen()	- Internal low-level function to resize screen
 
   PDCurses Description:
- 	This function provides a means for the application program to
- 	resize the overall dimensions of the screen.  Under DOS and OS/2
- 	the application can tell PDCurses what size to make the screen;
- 	under X11, resizing is done by the user and this function simply
- 	adjusts its internal structures to fit the new size.
+	This function provides a means for the application program to
+	resize the overall dimensions of the screen.  Under DOS and OS/2
+	the application can tell PDCurses what size to make the screen;
+	under X11, resizing is done by the user and this function simply
+	adjusts its internal structures to fit the new size.
 
   PDCurses Return Value:
- 	This function returns OK on success, otherwise an ERR is returned.
+	This function returns OK on success, otherwise an ERR is returned.
 
   PDCurses Errors:
 
   Portability:
- 	PDCurses	int	PDC_resize_screen( int, int );
+	PDCurses  int PDC_resize_screen(int, int);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_resize_screen(int nlines, int ncols)
+int PDC_resize_screen(int nlines, int ncols)
 #else
-int	PDC_resize_screen(nlines, ncols)
-int nlines,ncols;
+int PDC_resize_screen(nlines, ncols)
+int nlines, ncols;
 #endif
 /***********************************************************************/
 {
-	int rc=OK;
+	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
+		nlines, ncols));
 
-	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",nlines,ncols));
-
-	rc = XCursesResizeScreen(nlines,ncols);
-	return (rc);
+	return XCursesResizeScreen(nlines, ncols);
 }

@@ -20,12 +20,12 @@
 
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.9 2006/01/03 19:54:29 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.10 2006/01/11 06:46:24 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -33,19 +33,19 @@ char *rcsid_PDCkbd  = "$Id: pdckbd.c,v 1.9 2006/01/03 19:54:29 wmcbrine Exp $";
   PDC_get_input_fd()	- Get file descriptor used for PDCurses input
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	This routine will return the file descriptor that PDCurses reads
- 	its input from. It can be used for select().
+	This routine will return the file descriptor that PDCurses reads
+	its input from. It can be used for select().
 
   PDCurses Return Value:
- 	Returns a file descriptor.
+	Returns a file descriptor.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int	PDC_get_input_fd( void );
+	PDCurses  int PDC_get_input_fd(void);
 
 **man-end**********************************************************************/
 
@@ -67,19 +67,19 @@ unsigned long PDC_get_input_fd()
   PDC_check_bios_key()	- Check BIOS key data area for input
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	This routine will check the BIOS for any indication that
- 	keystrokes are pending.
+	This routine will check the BIOS for any indication that
+	keystrokes are pending.
 
   PDCurses Return Value:
- 	Returns 1 if a keyboard character is available, 0 otherwise.
+	Returns 1 if a keyboard character is available, 0 otherwise.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	bool	PDC_check_bios_key( void );
+	PDCurses  bool PDC_check_bios_key(void);
 
 **man-end**********************************************************************/
 
@@ -93,7 +93,7 @@ bool PDC_check_bios_key()
 {
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
-	return(XCurses_kbhit());
+	return XCurses_kbhit();
 }         
 
 /*man-start*********************************************************************
@@ -101,89 +101,82 @@ bool PDC_check_bios_key()
   PDC_get_ctrl_break()	- return OS control break state
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Returns the current OS Control Break Check state.
+	Returns the current OS Control Break Check state.
 
   PDCurses Return Value:
- 	This function returns TRUE if the Control Break
- 	Check is enabled otherwise FALSE is returned.
+	This function returns TRUE if the Control Break
+	Check is enabled otherwise FALSE is returned.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	bool	PDC_get_ctrl_break( void );
+	PDCurses  bool PDC_get_ctrl_break(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-bool	PDC_get_ctrl_break(void)
+bool PDC_get_ctrl_break(void)
 #else
-bool	PDC_get_ctrl_break()
+bool PDC_get_ctrl_break()
 #endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
 
-	return(FALSE);
+	return FALSE;
 }
 
 /*man-start*********************************************************************
 
-  PDC_rawgetch()	- Returns the next uninterpreted character (if available).
+  PDC_rawgetch()	- Returns the next uninterpreted character
+			  (if available).
 
   PDCurses Description:
- 	Gets a character without any interpretation at all and returns
- 	it. If keypad mode is active for the designated window,
- 	function key translation will be performed.  Otherwise,
- 	function keys are ignored.  If nodelay mode is active in the
- 	window, then PDC_rawgetch() returns -1 if no character is
- 	available.
+	Gets a character without any interpretation at all and returns
+	it. If keypad mode is active for the designated window,
+	function key translation will be performed.  Otherwise,
+	function keys are ignored.  If nodelay mode is active in the
+	window, then PDC_rawgetch() returns -1 if no character is
+	available.
 
- 	WARNING:  It is unknown whether the FUNCTION key translation
- 		  is performed at this level. --Frotz 911130 BUG
+	WARNING:  It is unknown whether the FUNCTION key translation
+		  is performed at this level. --Frotz 911130 BUG
 
   PDCurses Return Value:
- 	This function returns OK on success and ERR on error.
+	This function returns OK on success and ERR on error.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int	PDC_rawgetch( void );
+	PDCurses  int PDC_rawgetch(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_rawgetch(void)
+int PDC_rawgetch(void)
 #else
-int	PDC_rawgetch()
+int PDC_rawgetch()
 #endif
 /***********************************************************************/
 {
-   extern WINDOW* _getch_win_;
+	extern WINDOW *_getch_win_;
 
-   int c;
-   bool return_immediately;
+	PDC_LOG(("PDC_rawgetch() - called\n"));
 
-   PDC_LOG(("PDC_rawgetch() - called\n"));
+	if (_getch_win_ == (WINDOW *)NULL)
+		return -1;
 
-   if (_getch_win_ == (WINDOW *)NULL)   /* @@ */
-      return( -1 );
+	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
+	    && !PDC_breakout())
+		return -1;
 
-   if (SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-      return_immediately = TRUE;
-   else
-      return_immediately = FALSE;
-
-   if (return_immediately && !PDC_breakout())
-      return( -1 );
-
-   c = XCurses_rawgetch( 0 );
-   return(c);
+	return XCurses_rawgetch(0);
 }
 
 /*man-start*********************************************************************
@@ -191,70 +184,70 @@ int	PDC_rawgetch()
   PDC_set_ctrl_break()	- Enables/Disables the host OS BREAK key check.
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Enables/Disables the host OS BREAK key check. If the supplied setting
- 	is TRUE, this enables CTRL/C and CTRL/BREAK to abort the process.
- 	If FALSE, CTRL/C and CTRL/BREAK are ignored.
+	Enables/Disables the host OS BREAK key check. If the supplied 
+	setting is TRUE, this enables CTRL/C and CTRL/BREAK to abort the 
+	process. If FALSE, CTRL/C and CTRL/BREAK are ignored.
 
   PDCurses Return Value:
- 	This function returns OK on success and ERR on error.
+	This function returns OK on success and ERR on error.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int PDC_set_ctrl_break( bool setting );
+	PDCurses  int PDC_set_ctrl_break(bool setting);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_set_ctrl_break(bool setting)
+int PDC_set_ctrl_break(bool setting)
 #else
-int	PDC_set_ctrl_break(setting)
+int PDC_set_ctrl_break(setting)
 bool setting;
 #endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
-	return(OK);
+	return OK;
 }
 
 /*man-start*********************************************************************
 
-  PDC_get_key_modifiers()	- Returns the keyboard modifier(s) at time of last getch()
+  PDC_get_key_modifiers()	- Returns the keyboard modifier(s)
+				  at time of last getch()
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Returns the keyboard modifiers effective at the time of the last getch()
- 	call only if PDC_save_key_modifiers(TRUE) has been called before the
- 	getch();
- 	Use the macros; PDC_KEY_MODIFIER_* to determine which modifier(s)
- 	were set.
+	Returns the keyboard modifiers effective at the time of the last 
+	getch() call only if PDC_save_key_modifiers(TRUE) has been 
+	called before the getch(). Use the macros; PDC_KEY_MODIFIER_* to 
+	determine which modifier(s) were set.
 
   PDCurses Return Value:
- 	This function returns the modifiers.
+	This function returns the modifiers.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int PDC_get_key_modifiers( void );
+	PDCurses  int PDC_get_key_modifiers(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-unsigned long	PDC_get_key_modifiers(void)
+unsigned long PDC_get_key_modifiers(void)
 #else
-unsigned long	PDC_get_key_modifiers()
+unsigned long PDC_get_key_modifiers()
 #endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
-	return(XCurses_get_key_modifiers());
+	return XCurses_get_key_modifiers();
 }

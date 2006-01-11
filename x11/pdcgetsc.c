@@ -19,12 +19,12 @@
 */
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.3 2006/01/11 06:46:24 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -32,33 +32,33 @@ char *rcsid_PDCgetsc  = "$Id: pdcgetsc.c,v 1.2 2006/01/03 07:34:43 wmcbrine Exp 
   PDC_get_columns()	- return width of screen/viewport.
 
   PDCurses Description:
- 	This is a private PDCurses function
+	This is a private PDCurses function
 
- 	This function will return the width of the current screen.
+	This function will return the width of the current screen.
 
   PDCurses Return Value:
- 	This routine will return OK upon success and otherwise ERR will be
- 	returned.
+	This routine will return OK upon success and otherwise ERR will
+	be returned.
 
   PDCurses Errors:
- 	There are no defined errors for this routine.
+	There are no defined errors for this routine.
 
   Portability:
- 	PDCurses	int	PDC_get_columns( void );
+	PDCurses  int PDC_get_columns(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_get_columns(void)
+int PDC_get_columns(void)
 #else
-int	PDC_get_columns()
+int PDC_get_columns()
 #endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
-	return(XCurses_get_cols());
+	return XCurses_get_cols();
 }
 
 /*man-start*********************************************************************
@@ -66,33 +66,33 @@ int	PDC_get_columns()
   PDC_get_rows()	- Return number of screen rows.
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	Returns the maximum number of rows supported by the display.
- 	e.g.  25, 28, 43, 50, 60, 66...
+	Returns the maximum number of rows supported by the display.
+	e.g.  25, 28, 43, 50, 60, 66...
 
   PDCurses Return Value:
- 	This function returns OK on success and ERR on error.
+	This function returns OK on success and ERR on error.
 
   PDCurses Errors:
- 	No errors are defined for this function.
+	No errors are defined for this function.
 
   Portability:
- 	PDCurses	int PDC_get_rows( void );
+	PDCurses  int PDC_get_rows(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_get_rows(void)
+int PDC_get_rows(void)
 #else
-int	PDC_get_rows()
+int PDC_get_rows()
 #endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
-	return(XCurses_get_rows());
+	return XCurses_get_rows();
 }
 
 /*man-start*********************************************************************
@@ -100,31 +100,31 @@ int	PDC_get_rows()
   PDC_get_font()	- Get the current font size
 
   PDCurses Description:
- 	This is a private PDCurses routine.
+	This is a private PDCurses routine.
 
- 	This function returns the current font size.  This function only
- 	works if the #define FAST_VIDEO is true.
+	This function returns the current font size.  This function only
+	works if the #define FAST_VIDEO is true.
 
   PDCurses Return Value:
- 	This function returns OK on success and ERR on error.
+	This function returns OK on success and ERR on error.
 
   PDCurses Errors:
- 	An ERR will be returned if FAST_VIDEO is not true.
+	An ERR will be returned if FAST_VIDEO is not true.
 
   Portability:
- 	PDCurses	int PDC_get_font( void );
+	PDCurses  int PDC_get_font(void);
 
 **man-end**********************************************************************/
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_get_font(void)
+int PDC_get_font(void)
 #else
-int	PDC_get_font()
+int PDC_get_font()
 #endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_font() - called\n"));
 
-	return(OK);
+	return OK;
 }

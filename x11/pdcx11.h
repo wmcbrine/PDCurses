@@ -23,11 +23,11 @@
 
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 #include <stdio.h>
@@ -35,9 +35,8 @@
 #include <ctype.h>
 #include <pwd.h>
 
-/*
- * #includes specific to running XCurses with seperate processes
- */
+/* #includes specific to running XCurses with seperate processes */
+
 #ifdef USE_PROCESSES
 # include <sys/types.h>
 # include <sys/socket.h>
@@ -53,13 +52,6 @@
 
 #if !defined(XPOINTER_TYPEDEFED)
  typedef char * XPointer;
-#endif
-
-/*
- * #includes specific to running XCurses with threads
- */
-#ifdef USE_THREADS
-# include <pthreads.h>
 #endif
 
 #ifdef TIME_WITH_SYS_TIME
@@ -82,14 +74,14 @@
 #include <Shell.h>
 
 #ifdef USE_XAW3D
-#include <Xaw3d/Box.h>
-#include <Xaw3d/Scrollbar.h>
+# include <Xaw3d/Box.h>
+# include <Xaw3d/Scrollbar.h>
 #elif defined(USE_NEXTAW)
-#include <neXtaw/Box.h>
-#include <neXtaw/Scrollbar.h>
+# include <neXtaw/Box.h>
+# include <neXtaw/Scrollbar.h>
 #else
-#include <Xaw/Box.h>
-#include <Xaw/Scrollbar.h>
+# include <Xaw/Box.h>
+# include <Xaw/Scrollbar.h>
 #endif
 #include "x11/ScrollBox.h"
 
@@ -103,11 +95,11 @@
 #endif
 
 #ifdef HAVE_DECKEYSYM_H
-#include <DECkeysym.h>
+# include <DECkeysym.h>
 #endif
 
 #ifdef HAVE_SUNKEYSYM_H
-#include <Sunkeysym.h>
+# include <Sunkeysym.h>
 #endif
 
 #ifdef HAVE_XPM_H
@@ -193,50 +185,50 @@
 #define XtCColorBoldWhite    "ColorBoldWhite"
 
 #ifndef MAX_PATH
-#  define MAX_PATH 256
+# define MAX_PATH 256
 #endif
 
 typedef struct
 {
- int lines;
- int cols;
- Pixel cursorColor;
- Pixel colorBlack;
- Pixel colorRed;
- Pixel colorGreen;
- Pixel colorYellow;
- Pixel colorBlue;
- Pixel colorMagenta;
- Pixel colorCyan;
- Pixel colorWhite;
- Pixel colorBoldBlack;
- Pixel colorBoldRed;
- Pixel colorBoldGreen;
- Pixel colorBoldYellow;
- Pixel colorBoldBlue;
- Pixel colorBoldMagenta;
- Pixel colorBoldCyan;
- Pixel colorBoldWhite;
- Pixel pointerForeColor;
- Pixel pointerBackColor;
- XFontStruct *normalfont;
- XFontStruct *italicfont;
- char *bitmapFile;
+	int lines;
+	int cols;
+	Pixel cursorColor;
+	Pixel colorBlack;
+	Pixel colorRed;
+	Pixel colorGreen;
+	Pixel colorYellow;
+	Pixel colorBlue;
+	Pixel colorMagenta;
+	Pixel colorCyan;
+	Pixel colorWhite;
+	Pixel colorBoldBlack;
+	Pixel colorBoldRed;
+	Pixel colorBoldGreen;
+	Pixel colorBoldYellow;
+	Pixel colorBoldBlue;
+	Pixel colorBoldMagenta;
+	Pixel colorBoldCyan;
+	Pixel colorBoldWhite;
+	Pixel pointerForeColor;
+	Pixel pointerBackColor;
+	XFontStruct *normalfont;
+	XFontStruct *italicfont;
+	char *bitmapFile;
 #ifdef HAVE_XPM_H
- char *pixmapFile;
+	char *pixmapFile;
 #endif
- char *composeKey;
- Cursor pointer;
- int shmmin;
- int borderWidth;
- int borderColor;
- int clickPeriod;
- int doubleClickPeriod;
- int scrollbarWidth;
- int cursorBlinkRate;
- char *textCursor;
+	char *composeKey;
+	Cursor pointer;
+	int shmmin;
+	int borderWidth;
+	int borderColor;
+	int clickPeriod;
+	int doubleClickPeriod;
+	int scrollbarWidth;
+	int cursorBlinkRate;
+	char *textCursor;
 #if 0
- XtWidgetGeometry geometry;
+	XtWidgetGeometry geometry;
 #endif
 } AppData;
 
@@ -263,28 +255,31 @@ typedef struct
 #define XCURSESGEOMETRY         app_data.geometry
 #define XCURSESTEXTCURSOR       app_data.textCursor
 
-#define XCURSESDISPLAY      (XtDisplay(drawing))
-#define XCURSESWIN          (XtWindow(drawing))
+#define XCURSESDISPLAY          (XtDisplay(drawing))
+#define XCURSESWIN              (XtWindow(drawing))
+
+#define XCLOGMSG                (XCursesProcess ? "     X" : "CURSES")
 
 #define MAX_COLORS   8  /* maximum of "normal" colours */
-#define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2*MAX_COLORS */
-#define COLOR_BORDER 17 /* colour of border - 2 more than 2*MAX_COLORS */
+#define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2 * MAX_COLORS */
+#define COLOR_BORDER 17 /* colour of border - 2 more than 2 * MAX_COLORS */
+
 #ifdef HAVE_XPM_H
 # define PDC_NUMBER_OPTIONS 33
 #define PDC_NUMBER_APP_RESOURCES 35
 #else
 # define PDC_NUMBER_OPTIONS 32
-#define PDC_NUMBER_APP_RESOURCES 34
+# define PDC_NUMBER_APP_RESOURCES 34
 #endif
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
 #include "x11.h"
 
-extern GC normal_gc,block_cursor_gc,rect_cursor_gc,italic_gc,border_gc;
-extern int XCursesFontHeight,XCursesFontWidth;
-extern int XCursesFontAscent,XCursesFontDescent;
-extern int XCursesWindowWidth,XCursesWindowHeight;
-extern int resizeXCursesWindowWidth,resizeXCursesWindowHeight;
+extern GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
+extern int XCursesFontHeight, XCursesFontWidth;
+extern int XCursesFontAscent, XCursesFontDescent;
+extern int XCursesWindowWidth, XCursesWindowHeight;
+extern int resizeXCursesWindowWidth, resizeXCursesWindowHeight;
 extern char *bitmap_file;
 #ifdef HAVE_XPM_H
 extern char *pixmap_file;
@@ -300,7 +295,7 @@ extern char *defaultTranslations;
 extern XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS];
 extern char *XCursesClassName;
 extern XtAppContext app_context;
-extern Widget topLevel,drawing,d1,scrollBox,scrollVert,scrollHoriz;
+extern Widget topLevel, drawing, d1, scrollBox, scrollVert, scrollHoriz;
 extern int ReceivedMapNotify;
 extern Boolean mouse_selection;
 extern char *tmpsel;
@@ -319,7 +314,7 @@ extern XrmOptionDescRec options[PDC_NUMBER_OPTIONS];
 extern char global_display_name[100];
 extern Bool after_first_curses_request;
 /* extern char *XCursesProgramName; */
-extern int colors[(2*MAX_COLORS)+2];
+extern int colors[(2 * MAX_COLORS) + 2];
 extern int windowEntered;
 extern int visible_cursor;
 extern Bool vertical_cursor;
@@ -327,13 +322,15 @@ extern Bool vertical_cursor;
 typedef RETSIGTYPE (*signal_handler)();
 
 #ifdef HAVE_PROTO
-void XCursesNonmaskable(Widget w,XtPointer client_data,XEvent *event,Boolean *continue_to_dispatch);
-void XCursesExpose(Widget w,XtPointer client_data,XEvent *event,Boolean *continue_to_dispatch);
-signal_handler XCursesSetSignal(int,signal_handler);
+void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event, 
+			Boolean *continue_to_dispatch);
+void XCursesExpose(Widget w, XtPointer client_data, XEvent *event, 
+		   Boolean *continue_to_dispatch);
+signal_handler XCursesSetSignal(int, signal_handler);
 void XCursesGetIcon(void);
 int XCursesRefreshScrollbar(void);
 int XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
-void XCursesButton(Widget,XEvent *,String *,Cardinal *);
+void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 void XCursesCursorBlink(XtPointer unused, XtIntervalId *id);
 void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data);

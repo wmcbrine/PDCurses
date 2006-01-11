@@ -20,55 +20,54 @@
 #define	CURSES_LIBRARY	1
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+# include <config.h>
 #endif
 
 #include <panel.h>
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.9 2006/01/03 20:07:15 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.10 2006/01/11 07:54:19 wmcbrine Exp $";
 #endif
-
 
 /*man-start*********************************************************************
 
   panels	- panel package for curses
 
   PDCurses Description:
- 	The panel library is built using the curses library and any program
- 	using panels routines must call one of the curses initialization
- 	routines such as initscr(). A program using these routines must be
- 	linked with the panels and curses libraries.
+	The panel library is built using the curses library and any 
+	program using panels routines must call one of the curses 
+	initialization routines such as initscr(). A program using these 
+	routines must be linked with the panels and curses libraries.
 
- 	The panels package gives the applications programmer a way to have
- 	depth relationships between curses windows; a curses window is
- 	associated with every panel. The panels routines allow curses windows
- 	to overlap without making visible the overlapped portions of 
- 	underlying windows. The initial curses window, stdscr, lies beneath
- 	all panels. The set of currently visible panels is the 'deck' of
- 	panels.
+	The panels package gives the applications programmer a way to 
+	have depth relationships between curses windows; a curses window 
+	is associated with every panel. The panels routines allow curses 
+	windows to overlap without making visible the overlapped 
+	portions of underlying windows. The initial curses window, 
+	stdscr, lies beneath all panels. The set of currently visible 
+	panels is the 'deck' of panels.
 
- 	The panels package allows the applications programmer to create
- 	panels, fetch and set their associated windows, shuffle panels in 
- 	the deck, and manipulate panels in other ways.
+	The panels package allows the applications programmer to create 
+	panels, fetch and set their associated windows, shuffle panels 
+	in the deck, and manipulate panels in other ways.
 
   PDCurses Return Value:
- 	Each panels routine that returns a pointer to an object returns NULL
- 	if an error occurs. Each panel routine that returns an integer, 
- 	returns OK if it executes successfully and ERR if it does not.
+	Each panels routine that returns a pointer to an object returns 
+	NULL if an error occurs. Each panel routine that returns an 
+	integer, returns OK if it executes successfully and ERR if it 
+	does not.
 
   Notes
- 	The header <panel.h> includes the header <curses.h>.
+	The header <panel.h> includes the header <curses.h>.
 
   Credits
- 	Original Author - Warren Tucker N4HGF
- 	{gatech,emory}!n4hgf!wht -or- wht@n4hgf.Mt-Park.GA.US
+	Original Author - Warren Tucker N4HGF
+	{gatech,emory}!n4hgf!wht -or- wht@n4hgf.Mt-Park.GA.US
 
 **man-end**********************************************************************/
 
-
 /*
-  Defined functions:
+  Public functions:
 	int bottom_panel(PANEL *pan);
 	int del_panel(PANEL *pan);
 	int hide_panel(PANEL *pan);
@@ -85,7 +84,8 @@ char *rcsid_panel = "$Id: panel.c,v 1.9 2006/01/03 20:07:15 wmcbrine Exp $";
 	int top_panel(PANEL *pan);
 	void update_panels(void);
 
-	Touchline(pan,start,count)
+  Private functions:
+	Touchline(pan, start, count)
 	Touchpan(pan)
 	Wnoutrefresh(pan)
 	__calculate_obscure()
@@ -95,9 +95,9 @@ char *rcsid_panel = "$Id: panel.c,v 1.9 2006/01/03 20:07:15 wmcbrine Exp $";
 	__panel_link_bottom(pan)
 	__panel_link_top(pan)
 	__panel_unlink(pan)
-	__panels_overlapped(pan1,pan2)
-	dPanel(text,pan)
-	dStack(fmt,num,pan)
+	__panels_overlapped(pan1, pan2)
+	dPanel(text, pan)
+	dStack(fmt, num, pan)
 	open_dfp()
 
 --------------------------------------------------------------------------*/
@@ -119,58 +119,60 @@ STATIC void __panel_unlink(PANEL *);
 #endif
 
 /*+-------------------------------------------------------------------------
-	dPanel(text,pan)
+	dPanel(text, pan)
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
 # ifdef HAVE_PROTO
-dPanel(char *text,PANEL *pan)
+STATIC void dPanel(char *text, PANEL *pan)
 # else
-dPanel(text,pan)
+STATIC void dPanel(text, pan)
 char *text;
 PANEL *pan;
 # endif
 {
 	_tracef("%s id=%s b=%s a=%s y=%d x=%d",
-		text,pan->user,
-		(pan->below) ? pan->below->user : "--",
-		(pan->above) ? pan->above->user : "--",
+		text, pan->user,
+		pan->below ? pan->below->user : "--",
+		pan->above ? pan->above->user : "--",
 		pan->wstarty, pan->wstartx);
-}	/* end of dPanel */
+}
 #else
-#define dPanel(text,pan)
+#define dPanel(text, pan)
 #endif
 
 /*+-------------------------------------------------------------------------
-	dStack(fmt,num,pan)
+	dStack(fmt, num, pan)
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
 # ifdef HAVE_PROTO
-void dStack(char *fmt,int num,PANEL *pan)
+STATIC void dStack(char *fmt, int num, PANEL *pan)
 # else
-void
-dStack(fmt,num,pan)
+STATIC void dStack(fmt, num, pan)
 char *fmt;
 int num;
 PANEL *pan;
 # endif
 {
-char s80[80];
+	char s80[80];
 
-	sprintf(s80,fmt,num,pan);
-	_tracef("%s b=%s t=%s",s80,
-		(__bottom_panel) ? __bottom_panel->user : "--",
-		(__top_panel)    ? __top_panel->user    : "--");
-	if(pan)
-		_tracef("pan id=%s",pan->user);
+	sprintf(s80, fmt, num, pan);
+	_tracef("%s b=%s t=%s", s80,
+		__bottom_panel ? __bottom_panel->user : "--",
+		__top_panel    ? __top_panel->user    : "--");
+
+	if (pan)
+		_tracef("pan id=%s", pan->user);
+
 	pan = __bottom_panel;
-	while(pan)
+
+	while (pan)
 	{
-		dPanel("stk",pan);
+		dPanel("stk", pan);
 		pan = pan->above;
 	}
-}	/* end of dStack */
+}
 #else
-#define dStack(fmt,num,pan)
+#define dStack(fmt, num, pan)
 #endif
 
 /*+-------------------------------------------------------------------------
@@ -178,16 +180,15 @@ char s80[80];
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
 # ifdef HAVE_PROTO
-STATIC int Wnoutrefresh(PANEL *pan)
+STATIC void Wnoutrefresh(PANEL *pan)
 # else
-STATIC int
-Wnoutrefresh(pan)
+STATIC void Wnoutrefresh(pan)
 PANEL *pan;
 # endif
 {
-	dPanel("wnoutrefresh",pan);
+	dPanel("wnoutrefresh", pan);
 	wnoutrefresh(pan->win);
-}	/* end of Wnoutrefresh */
+}
 #else
 #define Wnoutrefresh(pan) wnoutrefresh((pan)->win)
 #endif
@@ -197,62 +198,63 @@ PANEL *pan;
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
 # ifdef HAVE_PROTO
-STATIC int Touchpan(PANEL *pan)
+STATIC void Touchpan(PANEL *pan)
 # else
-STATIC int
-Touchpan(pan)
+STATIC void Touchpan(pan)
 PANEL *pan;
 # endif
 {
-	dPanel("Touchpan",pan);
+	dPanel("Touchpan", pan);
 	touchwin(pan->win);
-}	/* end of Touchpan */
+}
 #else
 #define Touchpan(pan) touchwin((pan)->win)
 #endif
 
 /*+-------------------------------------------------------------------------
-	Touchline(pan,start,count)
+	Touchline(pan, start, count)
 --------------------------------------------------------------------------*/
 #ifdef PANEL_DEBUG
 # ifdef HAVE_PROTO
-STATIC int Touchline(PANEL *pan,int start,int count)
+STATIC void Touchline(PANEL *pan, int start, int count)
 # else
-STATIC int
-Touchline(pan,start,count)
+STATIC void Touchline(pan, start, count)
 PANEL *pan;
 int start;
 int count;
 # endif
 {
-char s80[80];
-	sprintf(s80,"Touchline s=%d c=%d",start,count);
-	dPanel(s80,pan);
-	touchline(pan->win,start,count);
-}	/* end of Touchline */
+	char s80[80];
+
+	sprintf(s80, "Touchline s=%d c=%d", start, count);
+	dPanel(s80, pan);
+	touchline(pan->win, start, count);
+}
 #else
-#define Touchline(pan,start,count) touchline((pan)->win,start,count)
+#define Touchline(pan, start, count) touchline((pan)->win, start, count)
 #endif
 
 /*+-------------------------------------------------------------------------
-	__panels_overlapped(pan1,pan2) - check panel overlapped
+	__panels_overlapped(pan1, pan2) - check panel overlapped
 --------------------------------------------------------------------------*/
 #ifdef HAVE_PROTO
-STATIC bool __panels_overlapped(register PANEL *pan1,register PANEL *pan2)
+STATIC bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
 #else
-STATIC bool
-__panels_overlapped(pan1,pan2)
-register PANEL *pan1;
-register PANEL *pan2;
+STATIC bool __panels_overlapped(pan1, pan2)
+PANEL *pan1;
+PANEL *pan2;
 #endif
 {
-	if(!pan1 || !pan2)
+	if (!pan1 || !pan2)
 		return FALSE;
-	return((pan1->wstarty >= pan2->wstarty && pan1->wstarty < pan2->wendy) ||
-		(pan2->wstarty >= pan1->wstarty && pan2->wstarty < pan1->wendy))
-	&& ((pan1->wstartx >= pan2->wstartx && pan1->wstartx < pan2->wendx) ||
-		(pan2->wstartx >= pan1->wstartx && pan2->wstartx < pan1->wendx));
-}	/* end of __panels_overlapped */
+
+	return ((pan1->wstarty >= pan2->wstarty && pan1->wstarty < 
+		pan2->wendy) || (pan2->wstarty >= pan1->wstarty && 
+		pan2->wstarty < pan1->wendy)) && ((pan1->wstartx >= 
+		pan2->wstartx && pan1->wstartx < pan2->wendx) ||
+		(pan2->wstartx >= pan1->wstartx && pan2->wstartx < 
+		pan1->wendx));
+}
 
 /*+-------------------------------------------------------------------------
 	__free_obscure(pan)
@@ -260,73 +262,61 @@ register PANEL *pan2;
 #ifdef HAVE_PROTO
 STATIC void __free_obscure(PANEL *pan)
 #else
-STATIC void
-__free_obscure(pan)
+STATIC void __free_obscure(pan)
 PANEL *pan;
 #endif
 {
-PANELOBS *tobs = pan->obscure;				/* "this" one */
-PANELOBS *nobs;								/* "next" one */
+	PANELOBS *tobs = pan->obscure;		/* "this" one */
+	PANELOBS *nobs;				/* "next" one */
 
-	while(tobs)
+	while (tobs)
 	{
 		nobs = tobs->above;
 		free((char *)tobs);
 		tobs = nobs;
 	}
 	pan->obscure = (PANELOBS *)0;
-}	/* end of __free_obscure */
+}
 
 /*+-------------------------------------------------------------------------
-	__override(pan,show)
+	__override(pan, show)
 --------------------------------------------------------------------------*/
 #ifdef HAVE_PROTO
-STATIC void __override(PANEL *pan,int show)
+STATIC void __override(PANEL *pan, int show)
 #else
-STATIC void
-__override(pan,show)
+STATIC void __override(pan, show)
 PANEL *pan;
 int show;
 #endif
 {
-register int y;
-register PANEL *pan2;
-PANELOBS *tobs = pan->obscure;				/* "this" one */
+	int y;
+	PANEL *pan2;
+	PANELOBS *tobs = pan->obscure;		/* "this" one */
 
+	if (show == 1)
+	    Touchpan(pan);
 
-	if(show == 1)
-		Touchpan(pan);
-	else if(!show)
+	else if (!show)
 	{
-		Touchpan(pan);
-/*
-		Touchline(&__stdscr_pseudo_panel,pan->wendy,getmaxy(pan->win));
-*/
-		Touchpan(&__stdscr_pseudo_panel);
+	    Touchpan(pan);
+	    Touchpan(&__stdscr_pseudo_panel);
 	}
-	else if(show == -1)
-	{
-		while(tobs && (tobs->pan != pan))
-			tobs = tobs->above;
-	}
-
-	while(tobs)
-	{
-		if((pan2 = tobs->pan) != pan)
-		{
-			for(y = pan->wstarty; y < pan->wendy; y++)
-			{
-				if( (y >= pan2->wstarty) && (y < pan2->wendy) &&
-					((is_linetouched(pan->win,y - pan->wstarty)) ||
-					(is_linetouched(stdscr,y))))
-				{
-					Touchline(pan2,y - pan2->wstarty,1);
-				}
-			}
-		}
+	else if (show == -1)
+	    while (tobs && (tobs->pan != pan))
 		tobs = tobs->above;
+
+	while (tobs)
+	{
+	    if ((pan2 = tobs->pan) != pan)
+		for (y = pan->wstarty; y < pan->wendy; y++)
+		    if ((y >= pan2->wstarty) && (y < pan2->wendy) &&
+			((is_linetouched(pan->win, y - pan->wstarty)) ||
+			(is_linetouched(stdscr, y))))
+			    Touchline(pan2, y - pan2->wstarty, 1);
+
+	    tobs = tobs->above;
 	}
-}	/* end of __override */
+}
 
 /*+-------------------------------------------------------------------------
 	__calculate_obscure()
@@ -334,44 +324,50 @@ PANELOBS *tobs = pan->obscure;				/* "this" one */
 #ifdef HAVE_PROTO
 STATIC void __calculate_obscure(void)
 #else
-STATIC void
-__calculate_obscure()
+STATIC void __calculate_obscure()
 #endif
 {
-PANEL *pan;
-register PANEL *pan2;
-register PANELOBS *tobs;			/* "this" one */
-PANELOBS *lobs;
+	PANEL *pan;
+	PANEL *pan2;
+	PANELOBS *tobs;			/* "this" one */
+	PANELOBS *lobs;
 
 	pan = __bottom_panel;
+
 	while(pan)
 	{
-		if(pan->obscure)
-			__free_obscure(pan);
-		lobs = (PANELOBS *)0;		/* last one */
-		pan2 = __bottom_panel;
-		while(pan2)
-		{
-			if(__panels_overlapped(pan,pan2))
-			{
-				if(!(tobs = (PANELOBS *)malloc(sizeof(PANELOBS))))
-					return;
-				tobs->pan = pan2;
-				dPanel("obscured",pan2);
-				tobs->above = (PANELOBS *)0;
-				if(lobs)
-					lobs->above = tobs;
-				else
-					pan->obscure = tobs;
-				lobs  = tobs;
-			}
-			pan2 = pan2->above;
-		}
-		__override(pan,1);
-		pan = pan->above;
-	}
+	    if (pan->obscure)
+		__free_obscure(pan);
 
-}	/* end of __calculate_obscure */
+	    lobs = (PANELOBS *)0;		/* last one */
+	    pan2 = __bottom_panel;
+
+	    while(pan2)
+	    {
+		if (__panels_overlapped(pan, pan2))
+		{
+			if (!(tobs = (PANELOBS *)malloc(sizeof(PANELOBS))))
+				return;
+
+			tobs->pan = pan2;
+			dPanel("obscured", pan2);
+			tobs->above = (PANELOBS *)0;
+
+			if (lobs)
+				lobs->above = tobs;
+			else
+				pan->obscure = tobs;
+
+			lobs  = tobs;
+		}
+
+		pan2 = pan2->above;
+	    }
+
+	    __override(pan, 1);
+	    pan = pan->above;
+	}
+}
 
 /*+-------------------------------------------------------------------------
 	__panel_is_linked(pan) - check to see if panel is in the stack
@@ -379,21 +375,22 @@ PANELOBS *lobs;
 #ifdef HAVE_PROTO
 STATIC bool __panel_is_linked(const PANEL *pan)
 #else
-STATIC bool
-__panel_is_linked(pan)
+STATIC bool __panel_is_linked(pan)
 PANEL *pan;
 #endif
 {
-register PANEL *pan2 = __bottom_panel;
+	PANEL *pan2 = __bottom_panel;
 
-	while(pan2)
+	while (pan2)
 	{
-		if(pan2 == pan)
+		if (pan2 == pan)
 			return TRUE;
+
 		pan2 = pan2->above;
 	}
+
 	return FALSE;
-}	/* end of __panel_is_linked */
+}
 
 /*+-------------------------------------------------------------------------
 	__panel_link_top(pan) - link panel into stack at top
@@ -401,32 +398,32 @@ register PANEL *pan2 = __bottom_panel;
 #ifdef HAVE_PROTO
 STATIC void __panel_link_top(PANEL *pan)
 #else
-STATIC void
-__panel_link_top(pan)
+STATIC void __panel_link_top(pan)
 PANEL *pan;
 #endif
 {
-
 #ifdef PANEL_DEBUG
-	dStack("<lt%d>",1,pan);
-	if(__panel_is_linked(pan))
+	dStack("<lt%d>", 1, pan);
+	if (__panel_is_linked(pan))
 		return;
 #endif
-
 	pan->above = (PANEL *)0;
 	pan->below = (PANEL *)0;
-	if(__top_panel)
+
+	if (__top_panel)
 	{
 		__top_panel->above = pan;
 		pan->below = __top_panel;
 	}
-	__top_panel = pan;
-	if(!__bottom_panel)
-		__bottom_panel = pan;
-	__calculate_obscure();
-	dStack("<lt%d>",9,pan);
 
-}	/* end of __panel_link_top */
+	__top_panel = pan;
+
+	if (!__bottom_panel)
+		__bottom_panel = pan;
+
+	__calculate_obscure();
+	dStack("<lt%d>", 9, pan);
+}
 
 /*+-------------------------------------------------------------------------
 	__panel_link_bottom(pan) - link panel into stack at bottom
@@ -434,32 +431,32 @@ PANEL *pan;
 #ifdef HAVE_PROTO
 STATIC void __panel_link_bottom(PANEL *pan)
 #else
-STATIC void
-__panel_link_bottom(pan)
+STATIC void __panel_link_bottom(pan)
 PANEL *pan;
 #endif
 {
-
 #ifdef PANEL_DEBUG
-	dStack("<lb%d>",1,pan);
-	if(__panel_is_linked(pan))
+	dStack("<lb%d>", 1, pan);
+	if (__panel_is_linked(pan))
 		return;
 #endif
-
 	pan->above = (PANEL *)0;
 	pan->below = (PANEL *)0;
-	if(__bottom_panel)
+
+	if (__bottom_panel)
 	{
 		__bottom_panel->below = pan;
 		pan->above = __bottom_panel;
 	}
-	__bottom_panel = pan;
-	if(!__top_panel)
-		__top_panel = pan;
-	__calculate_obscure();
-	dStack("<lb%d>",9,pan);
 
-}	/* end of __panel_link_bottom */
+	__bottom_panel = pan;
+
+	if (!__top_panel)
+		__top_panel = pan;
+
+	__calculate_obscure();
+	dStack("<lb%d>", 9, pan);
+}
 
 /*+-------------------------------------------------------------------------
 	__panel_unlink(pan) - unlink panel from stack
@@ -467,46 +464,48 @@ PANEL *pan;
 #ifdef HAVE_PROTO
 STATIC void __panel_unlink(PANEL *pan)
 #else
-STATIC void
-__panel_unlink(pan)
+STATIC void __panel_unlink(pan)
 PANEL *pan;
 #endif
 {
-register PANEL *prev;
-register PANEL *next;
+	PANEL *prev;
+	PANEL *next;
 
 #ifdef PANEL_DEBUG
-	dStack("<u%d>",1,pan);
-	if(!__panel_is_linked(pan))
+	dStack("<u%d>", 1, pan);
+	if (!__panel_is_linked(pan))
 		return;
 #endif
-
-	__override(pan,0);
+	__override(pan, 0);
 	__free_obscure(pan);
 
 	prev = pan->below;
 	next = pan->above;
 
-	if(prev)		/* if non-zero, we will not update the list head */
+	/* if non-zero, we will not update the list head */
+
+	if (prev)
 	{
 		prev->above = next;
 		if(next)
 			next->below = prev;
 	}
-	else if(next)
+	else if (next)
 		next->below = prev;
-	if(pan == __bottom_panel)
+
+	if (pan == __bottom_panel)
 		__bottom_panel = next;
-	if(pan == __top_panel)
+
+	if (pan == __top_panel)
 		__top_panel = prev;
 
 	__calculate_obscure();
 
 	pan->above = (PANEL *)0;
 	pan->below = (PANEL *)0;
-	dStack("<u%d>",9,pan);
+	dStack("<u%d>", 9, pan);
 
-}	/* end of __panel_unlink */
+}
 
 /**********************************************************************/
 /* The following are the public functions for the panels library.     */
@@ -517,201 +516,207 @@ register PANEL *next;
   bottom_panel	- puts panel at bottom of deck
 
   PDCurses Description:
- 	This function places pan at the bottom of the deck. The size, location
- 	and contents of the panel are unchanged.
+	This function places pan at the bottom of the deck. The size, 
+	location and contents of the panel are unchanged.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int bottom_panel( PANEL *pan );
- 	SYS V Curses	int bottom_panel( PANEL *pan );
+	PDCurses	int bottom_panel(PANEL *pan);
+	SYS V Curses	int bottom_panel(PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int bottom_panel(register PANEL *pan)
+int bottom_panel(PANEL *pan)
 #else
-int
-bottom_panel(pan)
-register PANEL *pan;
+int bottom_panel(pan)
+PANEL *pan;
 #endif
 {
-	if(!pan)
-		return(ERR);
-	if(pan == __bottom_panel)
-		return(OK);
-	if(__panel_is_linked(pan))
-		(void)hide_panel(pan);
+	if (!pan)
+		return ERR;
+
+	if (pan == __bottom_panel)
+		return OK;
+
+	if (__panel_is_linked(pan))
+		hide_panel(pan);
+
 	__panel_link_bottom(pan);
-	return(OK);
-}	/* end of bottom_panel */
+
+	return OK;
+}
 
 /*man-start*********************************************************************
 
   del_panel	- deletes a panel
 
   PDCurses Description:
- 	This function deletes pan but not its associated winwow.
+	This function deletes pan but not its associated winwow.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int del_panel( PANEL *pan );
- 	SYS V Curses	int del_panel( PANEL *pan );
+	PDCurses	int del_panel(PANEL *pan);
+	SYS V Curses	int del_panel(PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int del_panel(register PANEL *pan)
+int del_panel(PANEL *pan)
 #else
-int
-del_panel(pan)
-register PANEL *pan;
+int del_panel(pan)
+PANEL *pan;
 #endif
 {
-	if(pan)
+	if (pan)
 	{
-		if(__panel_is_linked(pan))
-			(void)hide_panel(pan);
+		if (__panel_is_linked(pan))
+			hide_panel(pan);
+
 		free((char *)pan);
-		return(OK);
+		return OK;
 	}
-	return(ERR);
-}	/* end of del_panel */
+
+	return ERR;
+}
 
 /*man-start*********************************************************************
 
   hide_panel	- removes a panel from the deck
 
   PDCurses Description:
- 	This function removes a panel from the deck and thus hides it from
- 	view.
+	This function removes a panel from the deck and thus hides it 
+	from view.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int hide_panel( PANEL *pan );
- 	SYS V Curses	int hide_panel( PANEL *pan );
+	PDCurses	int hide_panel(PANEL *pan);
+	SYS V Curses	int hide_panel(PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int hide_panel(register PANEL *pan)
+int hide_panel(PANEL *pan)
 #else
-int
-hide_panel(pan)
-register PANEL *pan;
+int hide_panel(pan)
+PANEL *pan;
 #endif
 {
+	if (!pan)
+		return ERR;
 
-	if(!pan)
-		return(ERR);
-
-	if(!__panel_is_linked(pan))
+	if (!__panel_is_linked(pan))
 	{
 		pan->above = (PANEL *)0;
 		pan->below = (PANEL *)0;
-		return(ERR);
+		return ERR;
 	}
 
 	__panel_unlink(pan);
 
-	return(OK);
-}	/* end of hide_panel */
+	return OK;
+}
 
 /*man-start*********************************************************************
 
   move_panel	- move a window on the virtual screen
 
   PDCurses Description:
- 	This function move the curses window associated with pan so that
- 	its upper lefthand corner is at the supplied coordinates. Do not
- 	use mvwin() on the window.
+	This function move the curses window associated with pan so that
+	its upper lefthand corner is at the supplied coordinates. Do not
+	use mvwin() on the window.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL or an error occurs when
- 	trying to move the curses window.
+	Returns ERR if pan is NULL or an error occurs when trying to
+	move the curses window.
 
   Portability:
- 	PDCurses	int move_panel( PANEL *pan, int starty, int startx);
- 	SYS V Curses	int move_panel( PANEL *pan, int starty, int startx);
+	PDCurses	int move_panel(PANEL *pan, int starty, int startx);
+	SYS V Curses	int move_panel(PANEL *pan, int starty, int startx);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int move_panel(PANEL *pan,int starty,int startx)
+int move_panel(PANEL *pan, int starty, int startx)
 #else
-int
-move_panel(pan,starty,startx)
+int move_panel(pan, starty, startx)
 PANEL *pan;
 int starty;
 int startx;
 #endif
 {
-WINDOW *win;
+	WINDOW *win;
 
-	if(!pan)
-		return(ERR);
-	if(__panel_is_linked(pan))
-		__override(pan,0);
+	if (!pan)
+		return ERR;
+
+	if (__panel_is_linked(pan))
+		__override(pan, 0);
+
 	win = pan->win;
-	if(mvwin(win,starty,startx) == ERR)
-		return(ERR);
+
+	if (mvwin(win, starty, startx) == ERR)
+		return ERR;
+
 	pan->wstarty = getbegy(win);
 	pan->wstartx = getbegx(win);
 	pan->wendy = pan->wstarty + getmaxy(win);
 	pan->wendx = pan->wstartx + getmaxx(win);
-	if(__panel_is_linked(pan))
+
+	if (__panel_is_linked(pan))
 		__calculate_obscure();
-	return(OK);
-}	/* end of move_panel */
+
+	return OK;
+}
 
 /*man-start*********************************************************************
 
   new_panel	- create a new panel
 
   PDCurses Description:
- 	This function creates a new panel associated with win and returns
- 	the panel pointer. The new panel is placed at the top of the deck.
+	This function creates a new panel associated with win and returns
+	the panel pointer. The new panel is placed at the top of the deck.
 
   PDCurses Return Value:
- 	Returns pointer to new panel, or NULL if an error occurs.
+	Returns pointer to new panel, or NULL if an error occurs.
 
   PDCurses Errors:
- 	Returns NULL if an error occurs.
+	Returns NULL if an error occurs.
 
   Portability:
- 	PDCurses	PANEL *new_panel( WINDOW *win );
- 	SYS V Curses	PANEL *new_panel( WINDOW *win );
+	PDCurses	PANEL *new_panel(WINDOW *win);
+	SYS V Curses	PANEL *new_panel(WINDOW *win);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 PANEL *new_panel(WINDOW *win)
 #else
-PANEL *
-new_panel(win)
+PANEL *new_panel(win)
 WINDOW *win;
 #endif
 {
-PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
+	PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
 
-	if(!__stdscr_pseudo_panel.win)
+	if (!__stdscr_pseudo_panel.win)
 	{
 		__stdscr_pseudo_panel.win = stdscr;
 		__stdscr_pseudo_panel.wstarty = 0;
@@ -722,7 +727,7 @@ PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
 		__stdscr_pseudo_panel.obscure = (PANELOBS *)0;
 	}
 
-	if(pan)
+	if (pan)
 	{
 		pan->win = win;
 		pan->above = (PANEL *)0;
@@ -737,385 +742,373 @@ PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
 		pan->user = (char *)0;
 #endif
 		pan->obscure = (PANELOBS *)0;
-		(void)show_panel(pan);
+		show_panel(pan);
 	}
 
-	return(pan);
-}	/* end of new_panel */
+	return pan;
+}
 
 /*man-start*********************************************************************
 
   panel_above	- return pointer to panel above
 
   PDCurses Description:
- 	This function returns a pointer to the panel in the deck above
- 	pan. If the value of pan passed is NULL, this function returns
- 	a pointer to the bottom panel in the deck.
+	This function returns a pointer to the panel in the deck above
+	pan. If the value of pan passed is NULL, this function returns
+	a pointer to the bottom panel in the deck.
 
   PDCurses Return Value:
- 	Returns pointer to panel above pan, or NULL if pan is the top
- 	panel.
+	Returns pointer to panel above pan, or NULL if pan is the top
+	panel.
 
   PDCurses Errors:
- 	Returns NULL if an error occurs.
+	Returns NULL if an error occurs.
 
   Portability:
- 	PDCurses	PANEL *panel_above( const PANEL *pan );
- 	SYS V Curses	PANEL *panel_above( const PANEL *pan );
+	PDCurses	PANEL *panel_above(const PANEL *pan);
+	SYS V Curses	PANEL *panel_above(const PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 PANEL *panel_above(const PANEL *pan)
 #else
-PANEL *
-panel_above(pan)
+PANEL *panel_above(pan)
 PANEL *pan;
 #endif
 {
-	if(!pan)
-		return(__bottom_panel);
-	else
-		return(pan->above);
-}	/* end of panel_above */
+	return pan ? pan->above : __bottom_panel;
+}
 
 /*man-start*********************************************************************
 
   panel_below	- return pointer to panel below
 
   PDCurses Description:
- 	This function returns a pointer to the panel in the deck below
- 	pan. If the value of pan passed is NULL, this function returns
- 	a pointer to the top panel in the deck.
+	This function returns a pointer to the panel in the deck below
+	pan. If the value of pan passed is NULL, this function returns
+	a pointer to the top panel in the deck.
 
   PDCurses Return Value:
- 	Returns pointer to panel below pan, or NULL if pan is the bottom
- 	panel.
+	Returns pointer to panel below pan, or NULL if pan is the bottom
+	panel.
 
   PDCurses Errors:
- 	Returns NULL if an error occurs.
+	Returns NULL if an error occurs.
 
   Portability:
- 	PDCurses	PANEL *panel_below( const PANEL *pan );
- 	SYS V Curses	PANEL *panel_below( const PANEL *pan );
+	PDCurses	PANEL *panel_below(const PANEL *pan);
+	SYS V Curses	PANEL *panel_below(const PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 PANEL *panel_below(const PANEL *pan)
 #else
-PANEL *
-panel_below(pan)
+PANEL *panel_below(pan)
 PANEL *pan;
 #endif
 {
-	if(!pan)
-		return(__top_panel);
-	else
-		return(pan->below);
-}	/* end of panel_below */
+	return pan ? pan->below : __top_panel;
+}
 
 /*man-start*********************************************************************
 
   panel_hidden	- indicates if panel is hidden
 
   PDCurses Description:
- 	This function returns OK if pan is hidden and ERR if it is not.
+	This function returns OK if pan is hidden and ERR if it is not.
 
   PDCurses Return Value:
- 	OK or ERR.
+	OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int panel_hidden( const PANEL *pan );
- 	SYS V Curses	int panel_hidden( const PANEL *pan );
+	PDCurses	int panel_hidden(const PANEL *pan);
+	SYS V Curses	int panel_hidden(const PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 int panel_hidden(const PANEL *pan)
 #else
-int
-panel_hidden(pan)
+int panel_hidden(pan)
 PANEL *pan;
 #endif
 {
-	if(!pan)
-		return(ERR);
-	return(__panel_is_linked(pan) ? ERR : OK);
-}	/* end of panel_hidden */
+	if (!pan)
+		return ERR;
+
+	return __panel_is_linked(pan) ? ERR : OK;
+}
 
 /*man-start*********************************************************************
 
   panel_userptr	- return user information
 
   PDCurses Description:
- 	Each panel has a user pointer available for maintaining relevant
- 	information. This function returns a pointer to that information
- 	previously set up by set_panel_userptr().
+	Each panel has a user pointer available for maintaining relevant
+	information. This function returns a pointer to that information
+	previously set up by set_panel_userptr().
 
   PDCurses Return Value:
- 	Returns pointer to user information.
+	Returns pointer to user information.
 
   PDCurses Errors:
- 	Returns NULL if pan is NULL or no user information exists.
+	Returns NULL if pan is NULL or no user information exists.
 
   Portability:
- 	PDCurses	const void *panel_userptr( const PANEL *pan );
- 	SYS V Curses	const void *panel_userptr( const PANEL *pan );
+	PDCurses	const void *panel_userptr(const PANEL *pan);
+	SYS V Curses	const void *panel_userptr(const PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 const void *panel_userptr(const PANEL *pan)
 #else
-void *
-panel_userptr(pan)
+void *panel_userptr(pan)
 PANEL *pan;
 #endif
 {
-	if(!pan)
-		return(NULL);
-	return(pan->user);
-}	/* end of panel_userptr */
+	return pan ? pan->user : NULL;
+}
 
 /*man-start*********************************************************************
 
   panel_window	- returns pointer to curses window
 
   PDCurses Description:
- 	This function returns a pointer to the curses window associated
- 	with the panel.
+	This function returns a pointer to the curses window associated
+	with the panel.
 
   PDCurses Return Value:
- 	Pointer to panel's window.
+	Pointer to panel's window.
 
   PDCurses Errors:
- 	Return NULL on error.
+	Return NULL on error.
 
   Portability:
- 	PDCurses	WINDOW *panel_window(const PANEL *);
- 	SYS V Curses	WINDOW *panel_window(const PANEL *);
+	PDCurses	WINDOW *panel_window(const PANEL *);
+	SYS V Curses	WINDOW *panel_window(const PANEL *);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 WINDOW *panel_window(const PANEL *pan)
 #else
-WINDOW *
-panel_window(pan)
+WINDOW *panel_window(pan)
 PANEL *pan;
 #endif
 {
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("panel_window() - called\n");
-#endif
-	return(pan->win);
-}	/* end of panel_window */
+	PDC_LOG(("panel_window() - called\n"));
+
+	return pan->win;
+}
 
 /*man-start*********************************************************************
 
   replace_panel	- set curses window contents
 
   PDCurses Description:
- 	This function replaces the current window of pan with win.
+	This function replaces the current window of pan with win.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int replace_panel( PANEL *pan, WINDOW *win );
- 	SYS V Curses	int replace_panel( PANEL *pan, WINDOW *win );
+	PDCurses	int replace_panel(PANEL *pan, WINDOW *win);
+	SYS V Curses	int replace_panel(PANEL *pan, WINDOW *win);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int replace_panel(PANEL *pan,WINDOW *win)
+int replace_panel(PANEL *pan, WINDOW *win)
 #else
-int
-replace_panel(pan,win)
+int replace_panel(pan, win)
 PANEL *pan;
 WINDOW *win;
 #endif
 {
-	if(!pan)
-		return(ERR);
-	if(__panel_is_linked(pan))
-		__override(pan,0);
+	if (!pan)
+		return ERR;
+
+	if (__panel_is_linked(pan))
+		__override(pan, 0);
+
 	pan->win = win;
 	pan->wstarty = getbegy(win);
 	pan->wstartx = getbegx(win);
 	pan->wendy = pan->wstarty + getmaxy(win);
 	pan->wendx = pan->wstartx + getmaxx(win);
-	if(__panel_is_linked(pan))
+
+	if (__panel_is_linked(pan))
 		__calculate_obscure();
-	return(OK);
-}	/* end of replace_panel */
+
+	return OK;
+}
 
 /*man-start*********************************************************************
 
   set_panel_userptr	- sets user information for a panel
 
   PDCurses Description:
- 	Each panel has a user pointer available for maintaining relevant
- 	information. This function sets the value of that information.
+	Each panel has a user pointer available for maintaining relevant
+	information. This function sets the value of that information.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int set_panel_userptr( PANEL *pan, const void *uptr );
- 	SYS V Curses	int set_panel_userptr( PANEL *pan, const void *uptr );
+	PDCurses	int set_panel_userptr(PANEL *pan, const void *uptr);
+	SYS V Curses	int set_panel_userptr(PANEL *pan, const void *uptr);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 int set_panel_userptr(PANEL *pan, const void *uptr)
 #else
-int
-set_panel_userptr(pan,uptr)
+int set_panel_userptr(pan, uptr)
 PANEL *pan;
 void *uptr;
 #endif
 {
-	if(!pan)
-		return(ERR);
+	if (!pan)
+		return ERR;
+
 	pan->user = uptr;
-	return(OK);
-}	/* end of set_panel_userptr */
+	return OK;
+}
 
 /*man-start*********************************************************************
 
   show_panel	- displays a panel
 
   PDCurses Description:
- 	This function makes a previously hidden panel visible and places
- 	it back in the deck on top.
+	This function makes a previously hidden panel visible and places
+	it back in the deck on top.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int show_panel( PANEL *pan );
- 	SYS V Curses	int show_panel( PANEL *pan );
+	PDCurses	int show_panel(PANEL *pan);
+	SYS V Curses	int show_panel(PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int show_panel(register PANEL *pan)
+int show_panel(PANEL *pan)
 #else
-int
-show_panel(pan)
-register PANEL *pan;
+int show_panel(pan)
+PANEL *pan;
 #endif
 {
+	if (!pan)
+		return ERR;
 
-	if(!pan)
-		return(ERR);
-	if(pan == __top_panel)
-		return(OK);
-	if(__panel_is_linked(pan))
-		(void)hide_panel(pan);
+	if (pan == __top_panel)
+		return OK;
+
+	if (__panel_is_linked(pan))
+		hide_panel(pan);
+
 	__panel_link_top(pan);
-	return(OK);
-}	/* end of show_panel */
+
+	return OK;
+}
 
 /*man-start*********************************************************************
 
   top_panel	- puts panel on top of deck
 
   PDCurses Description:
- 	This function places pan on the top of the deck. The size, location
- 	and contents of the panel are unchanged.
+	This function places pan on the top of the deck. The size, location
+	and contents of the panel are unchanged.
 
   PDCurses Return Value:
- 	Returns OK or ERR.
+	Returns OK or ERR.
 
   PDCurses Errors:
- 	Returns ERR if pan is NULL.
+	Returns ERR if pan is NULL.
 
   Portability:
- 	PDCurses	int top_panel( PANEL *pan );
- 	SYS V Curses	int top_panel( PANEL *pan );
+	PDCurses	int top_panel(PANEL *pan);
+	SYS V Curses	int top_panel(PANEL *pan);
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
-int top_panel(register PANEL *pan)
+int top_panel(PANEL *pan)
 #else
-int
-top_panel(pan)
-register PANEL *pan;
+int top_panel(pan)
+PANEL *pan;
 #endif
 {
-	return(show_panel(pan));
-}	/* end of top_panel */
+	return show_panel(pan);
+}
 
 /*man-start*********************************************************************
 
   update_panels	- panels virtual screen refresh routine
 
   PDCurses Description:
- 	This function refreshes the virtual screen to reflect the depth
- 	relationships between the panels in the deck. The user must use
- 	doupdate() to refresh the physical screen.
+	This function refreshes the virtual screen to reflect the depth
+	relationships between the panels in the deck. The user must use
+	doupdate() to refresh the physical screen.
 
   PDCurses Return Value:
- 	None
+	None
 
   PDCurses Errors:
- 	None
+	None
 
   Portability:
- 	PDCurses	void update_panels( void )
- 	SYS V Curses	void update_panels( void )
+	PDCurses	void update_panels(void)
+	SYS V Curses	void update_panels(void)
 
 **man-end**********************************************************************/
 
 #ifdef HAVE_PROTO
 void update_panels(void)
 #else
-void
-update_panels()
+void update_panels()
 #endif
 {
-PANEL *pan;
+	PANEL *pan;
 
-#ifdef PDCDEBUG
-	if (trace_on) PDC_debug("update_panels() - called\n");
-#endif
+	PDC_LOG(("update_panels() - called\n"));
 
 	pan = __bottom_panel;
-	while(pan)
+
+	while (pan)
 	{
-		__override(pan,-1);
+		__override(pan, -1);
 		pan = pan->above;
 	}
 
-	if(is_wintouched(stdscr))
+	if (is_wintouched(stdscr))
 		Wnoutrefresh(&__stdscr_pseudo_panel);
 	
 	pan = __bottom_panel;
-	if(pan)
+
+	while (pan)
 	{
-		while(pan)
-		{
-			if(is_wintouched(pan->win) || !pan->above)
-				Wnoutrefresh(pan);
-			pan = pan->above;
-		}
+		if (is_wintouched(pan->win) || !pan->above)
+			Wnoutrefresh(pan);
+
+		pan = pan->above;
 	}
-}	/* end of update_panels */
+}
 
 /* end of panel.c */

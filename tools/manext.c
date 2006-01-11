@@ -40,94 +40,103 @@
 #include <stdlib.h>
 #include <string.h>
 
-void display_info();
-
 #define MAX_LINE 255
 
-/***********************************************************************/
-int main(argc,argv)
-int argc;
-char *argv[];
-/***********************************************************************/
-{
- char    s[MAX_LINE + 1];        /* input line */
- register int     i;
- FILE *fp;
-
-#ifdef __EMX__
- _wildcard(&argc, &argv);
-#endif
- if (strcmp(argv[1],"-h") == 0)
-   {
-    display_info();
-    exit(1);
-   }
- for(i=1;i<argc;i++)
-    {
-     if ((fp = fopen(argv[i],"r")) == NULL)
-       {
-        fprintf(stderr,"\nCould not open %s\n",argv[i]);
-        continue;
-       }
-     while(1)
-       {
-        if (fgets(s, (int)sizeof(s), fp) == NULL)
-          {
-	   if (ferror(fp) != 0)
-             {
-              fprintf(stderr, "*** Error reading %s.  Exiting.\n",argv[i]);
-              exit(1);
-             }
-	   break;
-          }
-
-        /* check for manual entry marker at beginning of line */
-        if (strncmp(s, "/*man-start*", 12) != 0)
-            continue;
-
-        /* inner loop */
-        for (;;)
-           {
-            /* read next line of manual entry */
-	    if (fgets(s, (int)sizeof(s), fp) == NULL)
-              {
-	       if (ferror(fp) != 0)
-		 {
-		  fprintf(stderr, "*** Error reading %s.  Exiting.\n",argv[i]);
-		  exit(1);
-		 }
-		break;
-	      }
-	    /* check for end of entry marker */
-	    if (strncmp(s, "**man-end", 9) == 0)
-	       break;
-
-	    printf("     %s",s);
-            }
-	printf("\n\n\n     --------------------------------------------------------------------------\n");
-
-        /* check if end of file */
-        if (feof(fp) != 0)
-            break;
-       }
-     fclose(fp);
-    }
- printf("\n\n\n\n\n");
- return(0);
-}
 /***********************************************************************/
 void display_info()
 /***********************************************************************/
 {
-/*--------------------------- local data ------------------------------*/
-/*--------------------------- processing ------------------------------*/
+	fprintf(stderr,
+		"\nMANEXT 1.01 Copyright (C) 1991-1996 Mark Hessling\n"
+		"All rights reserved.\n"
+		"MANEXT is distributed under the terms of the GNU\n"
+		"General Public License and comes with NO WARRANTY.\n"
+		"See the file COPYING for details.\n"
+		"\nUsage: manext sourcefile [...]\n\n");
+}
 
- fprintf(stderr,"\nMANEXT 1.00 Copyright (C) 1991-1996 Mark Hessling\n");
- fprintf(stderr,"All rights reserved.\n");
- fprintf(stderr,"MANEXT is distributed under the terms of the GNU\n");
- fprintf(stderr,"General Public License and comes with NO WARRANTY.\n");
- fprintf(stderr,"See the file COPYING for details.\n");
- fprintf(stderr,"\nUsage: manext sourcefile [...]\n\n");
- fflush(stderr);
- return;
+/***********************************************************************/
+int main(int argc, char **argv)
+/***********************************************************************/
+{
+	char s[MAX_LINE + 1];		/* input line */
+	int i;
+	FILE *fp;
+
+#ifdef __EMX__
+	_wildcard(&argc, &argv);
+#endif
+	if (strcmp(argv[1], "-h") == 0)
+	{
+	    display_info();
+	    exit(1);
+	}
+
+	for (i = 1; i < argc; i++)
+	{
+	    if ((fp = fopen(argv[i], "r")) == NULL)
+	    {
+		fprintf(stderr, "\nCould not open %s\n", argv[i]);
+		continue;
+	    }
+
+	    while(1)
+	    {
+		if (fgets(s, (int)sizeof(s), fp) == NULL)
+		{
+		    if (ferror(fp) != 0)
+		    {
+			fprintf(stderr, "*** Error reading %s.  Exiting.\n",
+			    argv[i]);
+			exit(1);
+		    }
+
+		    break;
+		}
+
+		/* check for manual entry marker at beginning of line */
+
+		if (strncmp(s, "/*man-start*", 12) != 0)
+			continue;
+
+		/* inner loop */
+
+		for (;;)
+		{
+		    /* read next line of manual entry */
+
+		    if (fgets(s, (int)sizeof(s), fp) == NULL)
+		    {
+			if (ferror(fp) != 0)
+			{
+			    fprintf(stderr, "*** Error reading %s.  Exiting.\n",
+				argv[i]);
+			    exit(1);
+			}
+
+			break;
+		    }
+
+		    /* check for end of entry marker */
+
+		    if (strncmp(s, "**man-end", 9) == 0)
+			break;
+
+		    printf("     %s", s);
+		}
+
+		printf("\n\n\n     -----------------------------------"
+			"---------------------------------------\n");
+
+		/* check if end of file */
+
+		if (feof(fp) != 0)
+			break;
+	    }
+
+	    fclose(fp);
+	}
+
+	printf("\n\n\n\n\n");
+	return 0;
 }

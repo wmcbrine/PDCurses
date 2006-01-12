@@ -100,7 +100,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas = "$Id: xmas.c,v 1.10 2006/01/12 00:32:20 wmcbrine Exp $";
+char *rcsid_xmas = "$Id: xmas.c,v 1.11 2006/01/12 00:56:46 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -133,7 +133,6 @@ void strng4 Args((void));
 void strng5 Args((void));
 void blinkit Args((void));
 void reindeer Args((void));
-void done Args((void));
 
 #define FROMWHO "Mark Hessling - (M.Hessling@qut.edu.au)"
 
@@ -644,7 +643,12 @@ char **argv;
 	for (loopy = 0; loopy < 50; loopy++)
 		blinkit();
 
-	done();
+	clear();
+	refresh();
+	endwin();
+#ifdef XCURSES
+	XCursesExit();
+#endif
 
 	return 0;
 }
@@ -1272,15 +1276,4 @@ void reindeer Args((void))
 	mvwin(lookdeer3, y_pos, x_pos);
 	wrefresh(lookdeer3);
 	wrefresh(w_del_msg);
-}
-
-void done Args((void))
-{
-	clear();
-	refresh();
-	endwin();
-#ifdef XCURSES
-	XCursesExit();
-#endif
-	exit(0);
 }

@@ -33,13 +33,14 @@
 #include <signal.h>
 #include <string.h>
 #include <curses.h>
+#include <stdlib.h>
 
 #ifdef HAVE_MEMORY_H
 # include <memory.h>
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo = "$Id: newdemo.c,v 1.16 2006/01/11 23:19:52 wmcbrine Exp $";
+char *rcsid_newdemo = "$Id: newdemo.c,v 1.17 2006/01/12 06:45:43 wmcbrine Exp $";
 #endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)

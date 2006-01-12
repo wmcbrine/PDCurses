@@ -22,6 +22,9 @@
 */
 
 #include "pdcx11.h"
+
+#include <stdlib.h>
+
 extern AppData app_data;
 
 int visible_cursor = 0;

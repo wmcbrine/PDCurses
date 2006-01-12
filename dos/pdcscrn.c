@@ -22,6 +22,7 @@
 # include <config.h>
 #endif
 #include <curses.h>
+#include <stdlib.h>
 
 #ifdef HAVE_MEMORY_H
 # include <memory.h>
@@ -32,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.10 2006/01/07 02:53:25 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.11 2006/01/12 06:45:43 wmcbrine Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;

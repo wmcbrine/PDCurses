@@ -22,7 +22,7 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
+#include <stdlib.h>
 #include <string.h>
 
 #ifdef HAVE_MEMORY_H
@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh = "$Id: refresh.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_refresh = "$Id: refresh.c,v 1.7 2006/01/12 06:45:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

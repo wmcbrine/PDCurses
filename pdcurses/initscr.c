@@ -22,6 +22,7 @@
 # include <config.h>
 #endif
 #include <curses.h>
+#include <stdlib.h>
 
 #ifdef HAVE_MEMORY_H
 #include <memory.h>
@@ -47,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.15 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.16 2006/01/12 06:45:43 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif

@@ -17,6 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
+
 #define	CURSES_LIBRARY	1
 
 #ifdef HAVE_CONFIG_H
@@ -24,9 +25,10 @@
 #endif
 
 #include <panel.h>
+#include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.10 2006/01/11 07:54:19 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.11 2006/01/12 06:45:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

@@ -22,9 +22,10 @@
 # include <config.h>
 #endif
 #include <curses.h>
+#include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.8 2006/01/08 11:53:42 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.9 2006/01/12 06:45:43 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

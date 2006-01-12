@@ -23,6 +23,8 @@
 
 #include "pdcx11.h"
 
+#include <stdlib.h>
+
 AppData app_data;
 
 #if NeedWidePrototypes

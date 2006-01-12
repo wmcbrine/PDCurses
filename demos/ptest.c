@@ -26,11 +26,12 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest = "$Id: ptest.c,v 1.11 2006/01/11 23:19:52 wmcbrine Exp $";
+char *rcsid_ptest = "$Id: ptest.c,v 1.12 2006/01/12 06:45:43 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
 #include <panel.h>
+#include <stdlib.h>
 
 PANEL *p1, *p2, *p3, *p4, *p5;
 WINDOW *w1, *w2, *w3, *w4, *w5;

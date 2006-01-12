@@ -26,12 +26,13 @@
 #include <signal.h>
 #include <curses.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <time.h>
 #define DELAYSIZE 200
 
 #ifdef PDCDEBUG
-char *rcsid_firework = "$Id: firework.c,v 1.11 2006/01/11 23:19:52 wmcbrine Exp $";
+char *rcsid_firework = "$Id: firework.c,v 1.12 2006/01/12 06:45:43 wmcbrine Exp $";
 #endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)

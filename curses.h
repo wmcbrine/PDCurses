@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.74 2006/01/12 06:56:25 wmcbrine Exp $
+$Id: curses.h,v 1.75 2006/01/12 07:23:54 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -445,7 +445,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  define DOS	6
 #  include <dos.h>
-#  define CURSES__32BIT__
 #  ifdef _cplusplus
 #    define CPLUSPLUS 1
 #  endif
@@ -492,7 +491,6 @@ PDCurses portable platform definitions list:
 #  ifndef INT_MAX
 #    define INT_MAX 32762
 #  endif
-#  define CURSES__32BIT__
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
@@ -529,7 +527,6 @@ PDCurses portable platform definitions list:
 #  ifndef WIN32
 #    define WIN32
 #  endif
-#  define CURSES__32BIT__
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
@@ -588,7 +585,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1      /* Watcom C supports ANSI C prototypes   */
 #  endif
-#  define CURSES__32BIT__
 #  if defined( __DOS__ ) || defined( __DOS4G__ )
 #    define DOS 7                    /* Major release of DOS supported */
 #    include <bios.h>
@@ -716,8 +712,8 @@ PDCurses portable platform definitions list:
 #include <stdio.h>		/* Required by X/Open usage below	*/
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
- extern "C"
-   {
+extern "C"
+{
 # define bool _bool
 #endif
 
@@ -952,7 +948,7 @@ typedef struct
 	int	cursrow;	/* position of physical cursor	    */
 	int	curscol;	/* position of physical cursor	    */
 	int	cursor;		/* Current Cursor definition	    */
-	int	visibility;		/* Visibility of cursor	*/
+	int	visibility;	/* Visibility of cursor	*/
 	int	video_page;	/* Current PC video page	    */
 	int	orig_emulation; /* Original cursor emulation value  */
 	int	orig_cursor;	/* Original cursor size		    */
@@ -960,35 +956,35 @@ typedef struct
 	int	orig_font;	/* Original font size		    */
 	int	lines;		/* New value for LINES		    */
 	int	cols;		/* New value for COLS		    */
-	unsigned long _trap_mbe;		/* trap these mouse button events */
+	unsigned long _trap_mbe;	/* trap these mouse button events */
 	unsigned long _map_mbe_to_key;	/* map mouse buttons to slk */
 	int	slklines;		/* Lines in use by slk_init() */
-	WINDOW *	slk_winptr;		/* window for slk */
+	WINDOW *slk_winptr;		/* window for slk */
 	int	linesrippedoff;		/* Lines ripped off via ripoffline() */
-	int	linesrippedoffontop;		/* Lines ripped off on top via ripoffline() */
+	int	linesrippedoffontop;	/* Lines ripped off on top via ripoffline() */
 	int	delaytenths;		/* 1/10ths second to wait block getch() for */
 	bool	_preserve;		/* TRUE if screen background to be preserved */
 	int	_restore;		/* specifies if screen background to be restored and how*/
-	bool	save_key_modifiers;		/* TRUE if each key modifiers saved with each key press */
-	bool	return_key_modifiers;		/* TRUE if modifier keys are returned as "real" keys */
+	bool	save_key_modifiers;	/* TRUE if each key modifiers saved with each key press */
+	bool	return_key_modifiers;	/* TRUE if modifier keys are returned as "real" keys */
 
 #ifdef OS2
 # ifdef EMXVIDEO			/* nop if using EMX builtins */
 	int tahead; 			/* Type-ahead value */
 	int adapter;			/* Screen type	*/
 # else
-	VIOMODEINFO scrnmode;	/* default screen mode			*/
-	VIOCONFIGINFO adapter;	/* Screen type				*/
+	VIOMODEINFO scrnmode;	/* default screen mode */
+	VIOCONFIGINFO adapter;	/* Screen type */
 	KBDINFO kbdinfo;	/* keyboard info */
 # endif
 #else
-	int adapter;			/* Screen type	*/
+	int adapter;			/* Screen type */
 #endif
 
 #if defined(DOS) || defined(WIN32)
-	int	scrnmode;	/* default screen mode		    */
-	unsigned video_seg;	/* video base segment		    */
-	unsigned video_ofs;	/* video base offset		    */
+	int	scrnmode;	/* default screen mode */
+	unsigned video_seg;	/* video base segment */
+	unsigned video_ofs;	/* video base offset */
 	unsigned long os_version; /* Win32 Version */
 #endif
 
@@ -1016,10 +1012,10 @@ typedef struct
 /* external variables */
 #if defined(PDC_DLL_BUILD)
 # if !defined(CURSES_LIBRARY)
-__declspec(dllimport)	int	LINES;		/* terminal height		*/
-__declspec(dllimport)	int	COLS;		/* terminal width		*/
-__declspec(dllimport)	WINDOW*	stdscr;		/* the default screen window	*/
-__declspec(dllimport)	WINDOW*	curscr;		/* the current screen image	*/
+__declspec(dllimport)	int	LINES;	/* terminal height		*/
+__declspec(dllimport)	int	COLS;	/* terminal width		*/
+__declspec(dllimport)	WINDOW*	stdscr;	/* the default screen window	*/
+__declspec(dllimport)	WINDOW*	curscr;	/* the current screen image	*/
 __declspec(dllimport)	SCREEN	*SP;	/* curses variables		*/
 __declspec(dllimport)	int	use_emalloc;	/* set to true to use your own malloc,etc */
 __declspec(dllimport)	MOUSE_STATUS Mouse_status;
@@ -1030,7 +1026,7 @@ __declspec(dllexport) extern	int	LINES;		/* terminal height		*/
 __declspec(dllexport) extern	int	COLS;		/* terminal width		*/
 __declspec(dllexport) extern	WINDOW*	stdscr;		/* the default screen window	*/
 __declspec(dllexport) extern	WINDOW*	curscr;		/* the current screen image	*/
-__declspec(dllexport) extern	SCREEN	*SP;	/* curses variables		*/
+__declspec(dllexport) extern	SCREEN	*SP;		/* curses variables		*/
 __declspec(dllexport) extern	int	use_emalloc;	/* set to true to use your own malloc,etc */
 __declspec(dllexport) extern	MOUSE_STATUS Mouse_status;
 __declspec(dllexport) extern	int COLORS;
@@ -1041,7 +1037,7 @@ extern	int	LINES;		/* terminal height		*/
 extern	int	COLS;		/* terminal width		*/
 extern	WINDOW*	stdscr;		/* the default screen window	*/
 extern	WINDOW*	curscr;		/* the current screen image	*/
-extern	SCREEN	*SP;	/* curses variables		*/
+extern	SCREEN	*SP;		/* curses variables		*/
 extern	int	use_emalloc;	/* set to true to use your own malloc,etc */
 extern	MOUSE_STATUS Mouse_status;
 extern	int COLORS,COLOR_PAIRS;
@@ -1966,5 +1962,5 @@ int     PDC_CDECL PDC_set_line_color Args(( short ));
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 # undef bool
-   }
+}
 #endif

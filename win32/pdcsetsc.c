@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.6 2006/01/08 11:53:43 wmcbrine Exp $";
+char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.7 2006/01/12 00:20:14 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -170,12 +170,7 @@ int PDC_set_scrn_mode(int new_mode)
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_curs_set(int visibility)
-#else
-int PDC_curs_set(visibility)
-int visibility;
-#endif
 /***********************************************************************/
 {
 	CONSOLE_CURSOR_INFO cci;
@@ -224,12 +219,7 @@ int visibility;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void PDC_set_title(char *title)
-#else
-void PDC_set_title(title)
-char *title;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_set_title() - called:<%s>\n", title));

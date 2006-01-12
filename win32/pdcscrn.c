@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.17 2006/01/12 00:05:30 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.18 2006/01/12 00:20:14 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -461,12 +461,7 @@ static BOOL FitConsoleWindow(HANDLE hConOut, CONST SMALL_RECT *rect)
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_resize_screen(int nlines, int ncols)
-#else
-int PDC_resize_screen(nlines, ncols)
-int nlines, ncols;
-#endif
 /***********************************************************************/
 {
 #if defined(MHES)
@@ -606,11 +601,7 @@ int nlines, ncols;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_reset_prog_mode(void)
-#else
-int PDC_reset_prog_mode()
-#endif
 /***********************************************************************/
 {
 	SetConsoleMode(hConIn, ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT);
@@ -618,11 +609,7 @@ int PDC_reset_prog_mode()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_reset_shell_mode(void)
-#else
-int PDC_reset_shell_mode()
-#endif
 /***********************************************************************/
 {
 	SetConsoleMode(hConIn, dwConsoleMode);

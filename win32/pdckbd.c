@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.24 2006/01/08 11:53:43 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.25 2006/01/12 00:20:14 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -361,11 +361,7 @@ MOUSE_STATUS Trapped_Mouse_status;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 unsigned long PDC_get_input_fd(void)
-#else
-unsigned long PDC_get_input_fd()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
@@ -1439,11 +1435,7 @@ static void win32_getch(void)
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 unsigned long PDC_get_key_modifiers(void)
-#else
-unsigned long PDC_get_key_modifiers()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));

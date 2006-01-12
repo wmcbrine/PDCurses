@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.16 2006/01/08 11:53:43 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.17 2006/01/12 00:05:30 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -41,9 +41,8 @@ extern LONG InputThread(LPVOID lpThreadData);
 CONSOLE_SCREEN_BUFFER_INFO scr;
 CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
-static CHAR_INFO *ciSaveBuffer=NULL;
-static CHAR_INFO *save_ci=NULL;
-static DWORD dwConsoleMode=0;
+static CHAR_INFO *ciSaveBuffer = NULL;
+static DWORD dwConsoleMode = 0;
 
 /*man-start*********************************************************************
 
@@ -313,54 +312,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	}
 
 	if (getenv("PDC_PRESERVE_SCREEN") != NULL)
-	{
-		bufsize.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-		bufsize.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-
-		if ((save_ci = (CHAR_INFO*)malloc(bufsize.X * bufsize.Y * 
-		    sizeof(CHAR_INFO))) == NULL)
-		{
-		    CHAR LastError[256];
-		    ULONG last_error = GetLastError();
-
-		    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, 
-			last_error, MAKELANGID(LANG_NEUTRAL, 
-			SUBLANG_DEFAULT), LastError, 256, NULL);
-
-		    PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",
-			__LINE__, LastError));
-
-		    return ERR;
-		}
-
-		origin.X = origin.Y = 0;
-
-		rect.Top = csbi.srWindow.Top;
-		rect.Left = csbi.srWindow.Left;
-		rect.Bottom = csbi.srWindow.Bottom;
-		rect.Right = csbi.srWindow.Right;
-
-		if (!ReadConsoleOutput(hConOut, save_ci, bufsize, 
-		    origin, &rect))
-		{
-		    CHAR LastError[256];
-		    ULONG last_error = GetLastError();
-
-		    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, 
-			last_error, MAKELANGID(LANG_NEUTRAL, 
-			SUBLANG_DEFAULT), LastError, 256, NULL);
-
-		    free(save_ci);
-		    save_ci = NULL;
-
-		    PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",
-			__LINE__, LastError));
-
-		    return ERR;
-		}
-
 		internal->_preserve = TRUE;
-	}
 	else
 		internal->_preserve = FALSE;
 

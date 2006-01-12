@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.75 2006/01/12 07:23:54 wmcbrine Exp $
+$Id: curses.h,v 1.76 2006/01/12 07:34:09 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -149,7 +149,6 @@ PDCurses definitions list:  (Only define those needed)
 	TC              True if using a Borland compiler.
 	MSC             True if using a Microsoft compiler.
 	HAVE_PROTO      True if the compiler supports ANSI prototypes.
-	CPLUSPLUS       True if the compiler supports C++.
 	PDC_BUILD       Defines API build version.
 
 PDCurses portable platform definitions list:
@@ -179,7 +178,6 @@ PDCurses portable platform definitions list:
 *               TC
 *               DOS
 *               OS2
-*               CPLUSPLUS
 *
 *               __TURBOC__, __MSDOS__,
 *               __OS2__ and __WIN32__
@@ -210,17 +208,6 @@ PDCurses portable platform definitions list:
 #    endif
 #    ifndef WIN32
 #      define WIN32 1
-#    endif
-#  endif
-#  if __TURBOC__ >= 0x290
-#    ifdef  __BCPLUSPLUS__
-#      define CPLUSPLUS   1    /* Define that we are compiling C++.    */
-#    endif
-#    ifdef  __TCPLUSPLUS__
-#      define CPLUSPLUS   1    /* Define that we are compiling C++.    */
-#    endif
-#    ifdef  __CPLUSPLUS__
-#      define CPLUSPLUS   1    /* Define that we are compiling C++.    */
 #    endif
 #  endif
 #  ifndef HAVE_LIMITS_H
@@ -445,9 +432,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  define DOS	6
 #  include <dos.h>
-#  ifdef _cplusplus
-#    define CPLUSPLUS 1
-#  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
 #  endif

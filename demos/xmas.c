@@ -93,21 +93,6 @@
 /*                                                                            */
 /* The above compile will also hold true for other BSD systems. (I hope)      */
 /*                                                                            */
-/*                                                                            */
-/*                                                                            */
-/*                                                                            */
-/* For the Scrooges out there among you who don't want this thing to loop     */
-/* forever (or until the user hits a key), insert this into your compile      */
-/* line just after "cc" :                                                     */
-/*                                                                            */
-/* -DNOLOOP                                                                   */
-/*                                                                            */
-/* like so:                                                                   */
-/*                                                                            */
-/* cc -DNOLOOP -O asciixmas.c -lcurses -o asciixmas -s                        */
-/*                                                                            */
-/*                                                                            */
-/*                                                                            */
 /******************************************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -115,7 +100,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas = "$Id: xmas.c,v 1.9 2006/01/11 23:19:53 wmcbrine Exp $";
+char *rcsid_xmas = "$Id: xmas.c,v 1.10 2006/01/12 00:32:20 wmcbrine Exp $";
 #endif
 
 #include <curses.h>

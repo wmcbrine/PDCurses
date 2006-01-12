@@ -22,10 +22,7 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
-#ifdef HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 /* undefine any macros for functions defined in this module */
 #undef	start_color
@@ -48,7 +45,7 @@ static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.16 2006/01/04 13:39:34 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.17 2006/01/12 06:56:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

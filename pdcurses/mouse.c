@@ -22,10 +22,7 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
-#ifdef HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 /* undefine any macros for functions defined in this module */
 #undef	mouse_set
@@ -42,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_mouse = "$Id: mouse.c,v 1.5 2006/01/12 06:56:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

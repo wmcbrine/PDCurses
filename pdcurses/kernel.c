@@ -26,9 +26,7 @@
 #endif
 #include <curses.h>
 
-#ifdef HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 #ifdef HAVE_MEMORY_H
 # include <memory.h>
@@ -80,7 +78,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel = "$Id: kernel.c,v 1.20 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_kernel = "$Id: kernel.c,v 1.21 2006/01/12 06:56:25 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];

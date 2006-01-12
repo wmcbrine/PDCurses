@@ -27,16 +27,14 @@
 # include <memory.h>
 #endif
 
-#ifdef HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 #ifndef HAVE_MEMMOVE
 # define memmove PDC_memmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.11 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.12 2006/01/12 06:56:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

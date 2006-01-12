@@ -26,7 +26,7 @@
 #include <string.h>
 
 #ifdef HAVE_MEMORY_H
-#include <memory.h>
+# include <memory.h>
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh = "$Id: refresh.c,v 1.7 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_refresh = "$Id: refresh.c,v 1.8 2006/01/12 06:56:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

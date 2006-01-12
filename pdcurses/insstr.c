@@ -22,10 +22,7 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
-#ifdef HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 /* undefine any macros for functions defined in this module */
 #undef	insstr
@@ -46,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insstr  = "$Id: insstr.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_insstr  = "$Id: insstr.c,v 1.7 2006/01/12 06:56:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

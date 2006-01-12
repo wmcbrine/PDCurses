@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.73 2006/01/12 06:45:43 wmcbrine Exp $
+$Id: curses.h,v 1.74 2006/01/12 06:56:25 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -232,9 +232,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
 #  endif
-#  ifndef HAVE_STRING_H
-#    define HAVE_STRING_H
-#  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE                             /* have memmove() */
 #  endif
@@ -409,9 +406,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
 #  endif
-#  ifndef HAVE_STRING_H
-#    define HAVE_STRING_H
-#  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
@@ -457,9 +451,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
-#  endif
-#  ifndef HAVE_STRING_H
-#    define HAVE_STRING_H
 #  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
@@ -511,9 +502,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
 #  endif
-#  ifndef HAVE_STRING_H
-#    define HAVE_STRING_H
-#  endif
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H                           /* have <unistd.h> */
 #  endif
@@ -545,9 +533,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
-#  ifndef HAVE_STRING_H                             /* have <string.h> */
-#    define HAVE_STRING_H
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
 #  endif
@@ -578,9 +563,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_LIMITS_H
 #    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
-#  ifndef HAVE_STRING_H                             /* have <string.h> */
-#    define HAVE_STRING_H
 #  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
@@ -665,9 +647,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
-#  endif
-#  ifndef HAVE_STRING_H
-#    define HAVE_STRING_H
 #  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE                             /* have memmove() */

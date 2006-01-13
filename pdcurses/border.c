@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.7 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -251,7 +251,9 @@ chtype br;
 			win->_lastch[i] = max(win->_lastch[i], xmax);
 		}
 	}
+
 	PDC_sync(win);
+
 	return OK;
 }
 
@@ -274,10 +276,7 @@ chtype br;
 {
 	PDC_LOG(("border() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	return(wborder(stdscr, ls, rs, ts, bs, tl, tr, bl, br));
+	return wborder(stdscr, ls, rs, ts, bs, tl, tr, bl, br);
 }
 
 /***********************************************************************/
@@ -358,6 +357,7 @@ int n;
 	}
 
 	PDC_sync(win);
+
 	return OK;
 }
 
@@ -373,7 +373,7 @@ int n;
 {
 	PDC_LOG(("vline() - called\n"));
 
-	return(wvline(stdscr, ch, n));
+	return wvline(stdscr, ch, n);
 }
 
 /***********************************************************************/
@@ -418,6 +418,7 @@ int n;
 	}
 
 	PDC_sync(win);
+
 	return OK;
 }
 
@@ -464,6 +465,7 @@ bool state;
 	}
 
 	PDC_sync(win);
+
 	return OK;
 }
 
@@ -510,6 +512,7 @@ bool state;
 	}
 
 	PDC_sync(win);
+
 	return OK;
 }
 
@@ -556,5 +559,6 @@ bool state;
 	}
 
 	PDC_sync(win);
+
 	return OK;
 }

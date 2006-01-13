@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.15 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.16 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -124,17 +124,17 @@ chtype c;
 #endif
 /***********************************************************************/
 {
-	chtype ic = c;
+	chtype ic;
 
 	PDC_LOG(("unctrl() - called\n"));
 
-	ic &= A_CHARTEXT;
+	ic = c & A_CHARTEXT;
 
 	if (ic >= 0x20 && ic != 0x7f)		/* normal characters */
 	{
 		strbuf[0] = (char) ic;
 		strbuf[1] = '\0';
-		return( strbuf );
+		return strbuf;
 	}
 
 	strbuf[0] = '^';			/* '^' prefix */
@@ -350,6 +350,7 @@ int	PDC_CDECL	flushinp()
 	c_gindex = 1;			/* set indices to kill buffer	 */
 	c_pindex = 0;
 	c_ungind = 0;			/* clear c_ungch array		 */
+
 	return OK;
 }
 

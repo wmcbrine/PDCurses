@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scroll = "$Id: scroll.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_scroll = "$Id: scroll.c,v 1.5 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -96,9 +96,6 @@ WINDOW *win;
 /***********************************************************************/
 {
 	PDC_LOG(("scroll() - called\n"));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
 
 	return wscrl(win, 1);
 }

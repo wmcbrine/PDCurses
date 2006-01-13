@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.11 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.12 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -112,9 +112,6 @@ char *str;
 {
 	PDC_LOG(("getstr() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
 	return wgetnstr(stdscr, str, MAXLINE);
 }
 
@@ -129,9 +126,6 @@ char *str;
 /***********************************************************************/
 {
 	PDC_LOG(("wgetstr() - called\n"));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
 
 	return wgetnstr(win, str, MAXLINE);
 }
@@ -149,7 +143,7 @@ char *str;
 {
 	PDC_LOG(("mvgetstr() - called\n"));
 
-	if ((stdscr == (WINDOW *)NULL) || (move(y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
 	return wgetnstr(stdscr, str, MAXLINE);
@@ -169,7 +163,7 @@ char *str;
 {
 	PDC_LOG(("mvwgetstr() - called\n"));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return wgetnstr(win, str, MAXLINE);
@@ -187,9 +181,6 @@ int n;
 {
 	PDC_LOG(("getnstr() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
 	return wgetnstr(stdscr, str, n);
 }
 
@@ -204,15 +195,18 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int ch, i, num, t, x, chars = 0;
-	char *p = str;
-	bool stop = FALSE;
-	bool oldecho, oldcbreak, oldnodelay;
+	int ch, i, num, t, x, chars;
+	char *p;
+	bool stop, oldecho, oldcbreak, oldnodelay;
 
 	PDC_LOG(("wgetnstr() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
+
+	chars = 0;
+	p = str;
+	stop = FALSE;
 
 	t = win->_tabsize;
 	x = win->_curx;
@@ -230,18 +224,18 @@ int n;
 
 	while (!stop)
 	{
-		ch = wgetch (win);
+		ch = wgetch(win);
 
 		/* ignore modifier keys on their own */
 
-		if ( ch == KEY_SHIFT_L   || ch == KEY_SHIFT_R ||
-		     ch == KEY_CONTROL_L || ch == KEY_CONTROL_R ||
-		     ch == KEY_ALT_L     || ch == KEY_ALT_R )
+		if (ch == KEY_SHIFT_L   || ch == KEY_SHIFT_R ||
+		    ch == KEY_CONTROL_L || ch == KEY_CONTROL_R ||
+		    ch == KEY_ALT_L     || ch == KEY_ALT_R)
 		         continue;
 
 		ch = ch & A_CHARTEXT;
 
-		switch( ch )
+		switch (ch)
 		{
 
 		case '\t':
@@ -330,6 +324,7 @@ int n;
 		}
 		wrefresh(win);
 	}
+
 	*p = '\0';
 
 	SP->echo = oldecho;		/* restore old settings */

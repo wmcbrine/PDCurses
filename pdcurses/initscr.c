@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.16 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.17 2006/01/13 01:17:59 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -490,7 +490,7 @@ int     PDC_CDECL   isendwin()
 {
 	PDC_LOG(("isendwin() - called\n"));
 
-	return((SP->alive) ? FALSE : TRUE);
+	return SP->alive ? FALSE : TRUE;
 }
 
 /***********************************************************************/

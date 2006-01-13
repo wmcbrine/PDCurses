@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inchstr = "$Id: inchstr.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_inchstr = "$Id: inchstr.c,v 1.4 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -98,10 +98,7 @@ chtype *ch;
 {
 	PDC_LOG(("inchstr() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	return inchnstr(ch, stdscr->_maxx - stdscr->_curx);
+	return winchnstr(stdscr, ch, stdscr->_maxx - stdscr->_curx);
 }
 
 /***********************************************************************/
@@ -114,23 +111,9 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int i;
-	chtype *ptr = &(stdscr->_y[stdscr->_cury][stdscr->_curx]);
-
 	PDC_LOG(("inchnstr() - called\n"));
 
-	if ((stdscr == (WINDOW *)NULL) || (n < 0))
-		return ERR;
-
-	if ((stdscr->_curx + n) > stdscr->_maxx)
-		n = stdscr->_maxx - stdscr->_curx;
-
-	for (i = 0; i < n; i++)
-		*ch++ = *ptr++;
-
-	*ch = (chtype)0;
-
-	return i;
+	return winchnstr(stdscr, ch, n);
 }
 
 /***********************************************************************/
@@ -144,9 +127,6 @@ chtype *ch;
 /***********************************************************************/
 {
 	PDC_LOG(("winchstr() - called\n"));
-
-	if (win == (WINDOW *)NULL)
-		return( ERR );
 
 	return winchnstr(win, ch, win->_maxx - win->_curx);
 }
@@ -163,12 +143,14 @@ int n;
 /***********************************************************************/
 {
 	int i;
-	chtype *ptr = &(win->_y[win->_cury][win->_curx]);
+	chtype *ptr;
 
 	PDC_LOG(("winchnstr() - called\n"));
 
 	if ((win == (WINDOW *)NULL) || (n < 0))
 		return ERR;
+
+	ptr = &(win->_y[win->_cury][win->_curx]);
 
 	if ((win->_curx + n) > win->_maxx)
 		n = win->_maxx - win->_curx;
@@ -194,10 +176,10 @@ chtype *ch;
 {
 	PDC_LOG(("mvinchstr() - called: y %d x %d\n", y, x));
 
-	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	return inchnstr(ch, stdscr->_maxx - stdscr->_curx);
+	return winchnstr(stdscr, ch, stdscr->_maxx - stdscr->_curx);
 }
 
 /***********************************************************************/
@@ -214,10 +196,10 @@ int n;
 {
 	PDC_LOG(("mvinchnstr() - called: y %d x %d n %d\n", y, x, n));
 
-	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	return inchnstr(ch, n);
+	return winchnstr(stdscr, ch, n);
 }
 
 /***********************************************************************/
@@ -234,7 +216,7 @@ chtype *ch;
 {
 	PDC_LOG(("winchstr() - called:\n"));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return winchnstr(win, ch, win->_maxx - win->_curx);
@@ -256,7 +238,7 @@ int n;
 {
 	PDC_LOG(("mvwinchnstr() - called: y %d x %d n %d \n", y, x, n));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win,y,x) == ERR))
+	if (wmove(win,y,x) == ERR)
 		return ERR;
 
 	return winchnstr(win, ch, n);

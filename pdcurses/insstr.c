@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insstr  = "$Id: insstr.c,v 1.7 2006/01/12 06:56:25 wmcbrine Exp $";
+char *rcsid_insstr  = "$Id: insstr.c,v 1.8 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -111,9 +111,6 @@ char *str;
 {
 	PDC_LOG(("insstr() - called: string=\"%s\"\n", str));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
 	return winsnstr(stdscr, str, -1);
 }
 
@@ -128,9 +125,6 @@ int n;
 /***********************************************************************/
 {
 	PDC_LOG(("insnstr() - called: string=\"%s\" n %d \n", str, n));
-
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
 
 	return winsnstr(stdscr, str, n);
 }
@@ -147,9 +141,6 @@ char *str;
 {
 	PDC_LOG(("winsstr() - called: string=\"%s\"\n", str));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
 	return winsnstr(win, str, -1);
 }
 
@@ -164,20 +155,22 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int ic = strlen(str);
+	int ic;
 
 	PDC_LOG(("winsnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-	if( n > 0 )
+	ic = strlen(str);
+
+	if (n > 0)
 		ic = ((ic < n) ? ic : n) - 1;
 	else
-		ic = ic - 1;
+		--ic;
 
-	for ( ; ic >= 0; ic-- )
-		if (winsch(win, *(str + ic)) == ERR)
+	for (; ic >= 0; ic--)
+		if (winsch(win, str[ic]) == ERR)
 			return ERR;
 
 	return OK;
@@ -197,7 +190,7 @@ char *str;
 	PDC_LOG(("mvinsstr() - called: y %d x %d string=\"%s\"\n",
 		y, x, str));
 
-	if ((stdscr == (WINDOW *)NULL) || (move(y,x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
 	return winsnstr(stdscr, str, -1);
@@ -218,7 +211,7 @@ int n;
 	PDC_LOG(("mvinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));
 
-	if ((stdscr == (WINDOW *)NULL) || (move(y,x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
 	return winsnstr(stdscr, str, n);
@@ -238,7 +231,7 @@ char *str;
 {
 	PDC_LOG(("winsstr() - called: string=\"%s\"\n", str));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return winsnstr(win, str, -1);
@@ -261,7 +254,7 @@ int n;
 	PDC_LOG(("mvwinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return winsnstr(win, str, n);

@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window = "$Id: window.c,v 1.9 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_window = "$Id: window.c,v 1.10 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -172,14 +172,14 @@ int begx;
 /***********************************************************************/
 {
 #ifdef HAVE_PROTO
-	extern void* (*callc)( size_t, size_t );
-	extern void  (*fre)( void* );
+	extern void *(*callc)(size_t, size_t);
+	extern void  (*fre)(void*);
 #else
-	extern void* (*callc)();
+	extern void *(*callc)();
 	extern void  (*fre)();
 #endif
-	WINDOW*	win;
-	chtype*	ptr;
+	WINDOW *win;
+	chtype *ptr;
 	int i, j;
 
 	PDC_LOG(("newwin() - called:lines=%d cols=%d begy=%d begx=%d\n",
@@ -234,7 +234,7 @@ WINDOW *win;
 /***********************************************************************/
 {
 #ifdef HAVE_PROTO
-	extern void (*fre)( void* );
+	extern void (*fre)(void*);
 #else
 	extern void (*fre)();
 #endif
@@ -362,9 +362,6 @@ int begin_x;
 #endif
 /***********************************************************************/
 {
-	if (orig == (WINDOW *)NULL)
-		return (WINDOW *)NULL;
-
 	return subwin(orig, nlines, ncols, begin_y + orig->_begy,
 		begin_x + orig->_begx);
 }
@@ -414,10 +411,10 @@ WINDOW *win;
 /***********************************************************************/
 {
 #ifdef HAVE_PROTO
-	extern void* (*callc)( size_t, size_t );
-	extern void  (*fre)( void* );
+	extern void *(*callc)(size_t, size_t);
+	extern void  (*fre)(void*);
 #else
-	extern void* (*callc)();
+	extern void *(*callc)();
 	extern void  (*fre)();
 #endif
 	WINDOW *new;
@@ -518,10 +515,10 @@ int cols;
 /***********************************************************************/
 {
 #ifdef HAVE_PROTO
-	extern void* (*callc)( size_t, size_t );
-	extern void  (*fre)( void* );
+	extern void *(*callc)(size_t, size_t);
+	extern void  (*fre)(void*);
 #else
-	extern void* (*callc)();
+	extern void *(*callc)();
 	extern void  (*fre)();
 #endif
 	WINDOW *new;
@@ -645,6 +642,7 @@ bool bf;
 		return ERR;
 
 	win->_sync = bf;
+
 	return OK;
 }
 

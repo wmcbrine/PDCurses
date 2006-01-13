@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_instr  = "$Id: instr.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_instr  = "$Id: instr.c,v 1.5 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -100,9 +100,6 @@ char *str;
 {
 	PDC_LOG(("instr() - called: string=\"%s\"\n", str));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
 	return winnstr(stdscr, str, stdscr->_maxx);
 }
 
@@ -117,9 +114,6 @@ int n;
 /***********************************************************************/
 {
 	PDC_LOG(("innstr() - called: n %d \n", n));
-
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
 
 	return winnstr(stdscr, str, n);
 }
@@ -136,9 +130,6 @@ char *str;
 {
 	PDC_LOG(("winstr() - called: \n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
 	return winnstr(win, str, win->_maxx);
 }
 
@@ -154,15 +145,16 @@ int n;
 /***********************************************************************/
 {
 	chtype tmp;
-	int oldy = win->_cury;
-	int oldx = win->_curx;
-	int imax = (win->_maxx - win->_curx);
-	int ic;
+	int oldy, oldx, imax, ic;
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
+
+	oldy = win->_cury;
+	oldx = win->_curx;
+	imax = win->_maxx - win->_curx;
 
 	if (n > 0)
 		imax = ((imax < n) ? imax : n);
@@ -170,11 +162,13 @@ int n;
 	for (ic = 0; ic < imax; ic++)
 	{
 		tmp = mvwinch(win, oldy, oldx + ic);
+
 		if (tmp == (chtype)ERR) 
 		{
 			str[imax] = '\0';
 			return ERR;
 		}
+
 		str[ic] = tmp & A_CHARTEXT;
 	}
 
@@ -198,7 +192,7 @@ char *str;
 {
 	PDC_LOG(("mvinstr() - called: y %d x %d \n", y, x));
 
-	if ((stdscr == (WINDOW *)NULL) || (move(y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
 	return winnstr(stdscr, str, stdscr->_maxx);
@@ -218,7 +212,7 @@ int n;
 {
 	PDC_LOG(("mvinnstr() - called: y %d x %d n %d \n", y, x, n));
 
-	if ((stdscr == (WINDOW *)NULL) || (move(y,x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
 	return winnstr(stdscr, str, n);
@@ -238,7 +232,7 @@ char *str;
 {
 	PDC_LOG(("mvwinstr() - called: y %d x %d \n", y, x));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win,y,x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return winnstr(win, str, win->_maxx);
@@ -259,7 +253,7 @@ int n;
 {
 	PDC_LOG(("mvwinnstr() - called: y %d x %d n %d \n", y, x, n));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return winnstr(win, str, n);

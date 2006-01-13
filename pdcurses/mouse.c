@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.5 2006/01/12 06:56:25 wmcbrine Exp $";
+char *rcsid_mouse = "$Id: mouse.c,v 1.6 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -119,6 +119,7 @@ unsigned long mbe;
 	PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
 	SP->_trap_mbe = mbe;
+
 	return OK;
 }
 
@@ -134,6 +135,7 @@ unsigned long mbe;
 	PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
 	SP->_trap_mbe |= mbe;
+
 	return OK;
 }
 
@@ -149,6 +151,7 @@ unsigned long mbe;
 	PDC_LOG(("mouse_off() - called: event %x\n", mbe));
 
 	SP->_trap_mbe &= ~mbe;
+
 	return OK;
 }
 
@@ -165,6 +168,7 @@ unsigned long button;
 
 /****************** this does nothing at the moment ***************/
 	SP->_map_mbe_to_key = button;
+
 	return OK;
 }
 

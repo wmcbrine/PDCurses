@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.9 2006/01/12 06:56:25 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.10 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -102,7 +102,7 @@ chtype *ch;
 {
 	PDC_LOG(("addchstr() - called\n"));
 
-	return addchnstr(ch, -1);
+	return waddchnstr(stdscr, ch, -1);
 }
 
 /***********************************************************************/
@@ -115,48 +115,9 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int y, x, num, maxx;
-	chtype *ptr;
-
 	PDC_LOG(("addchnstr() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	if (n == 0 || n < (-1))
-		return ERR;
-
-	x = stdscr->_curx;
-	y = stdscr->_cury;
-	ptr = &(stdscr->_y[y][x]);
-
-
-	if (n == (-1))
-	{
-		for (num = stdscr->_maxx - x; *ch && num--; num++)
-			*ptr++ = *ch++;
-		maxx = num;
-	}
-	else
-	{
-		num = min(stdscr->_maxx - x,n);
-		memcpy((char *)ptr, (char *)ch, (int)(num * sizeof(chtype)));
-		maxx = x + num - 1;
-	}
-
-	if (stdscr->_firstch[y] == _NO_CHANGE)
-	{
-		stdscr->_firstch[y] = x;
-		stdscr->_lastch[y] = maxx;
-	}
-	else
-	{
-		if (x < stdscr->_firstch[y])
-			stdscr->_firstch[y] = x;
-		if (maxx > stdscr->_lastch[y])
-			stdscr->_lastch[y] = maxx;
-	}
-	return OK;
+	return waddchnstr(stdscr, ch, n);
 }
 
 /***********************************************************************/
@@ -170,9 +131,6 @@ chtype *ch;
 /***********************************************************************/
 {
 	PDC_LOG(("waddchstr() - called: win=%x\n", win));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
 
 	return waddchnstr(win, ch, -1);
 }
@@ -248,6 +206,7 @@ int n;
 				first = 0;
 			}
 		}
+
 		if (i > win->_lastch[y])
 		{
 			if (*ptr != *ch)
@@ -280,10 +239,10 @@ chtype *ch;
 {
 	PDC_LOG(("mvaddchstr() - called: y %d x %d\n", y, x));
 
-	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	return addchnstr(ch, -1);
+	return waddchnstr(stdscr, ch, -1);
 }
 
 /***********************************************************************/
@@ -300,10 +259,10 @@ int n;
 {
 	PDC_LOG(("mvaddchnstr() - called: y %d x %d n %d\n", y, x, n));
 
-	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	return addchnstr(ch, n);
+	return waddchnstr(stdscr, ch, n);
 }
 
 /***********************************************************************/
@@ -320,7 +279,7 @@ chtype *ch;
 {
 	PDC_LOG(("waddchstr() - called:\n"));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return waddchnstr(win, ch, -1);
@@ -342,7 +301,7 @@ int n;
 {
 	PDC_LOG(("mvwaddchnstr() - called: y %d x %d n %d \n", y, x, n));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	return waddchnstr(win, ch, n);

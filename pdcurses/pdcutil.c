@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.13 2006/01/12 06:56:25 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.14 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -118,11 +118,11 @@ void PDC_beep()
 	PDC_putctty((chtype)'\007', 0);
 
 #elif defined(OS2)
-#   if defined(EMXVIDEO)
+# if defined(EMXVIDEO)
 	putchar('\007');
-#   else
+# else
 	DosBeep(1380, 100);
-#   endif
+# endif
 
 #elif defined(WIN32)
 /*	MessageBeep(MB_OK); */
@@ -622,9 +622,9 @@ bool	PDC_breakout()
 #endif
 /***********************************************************************/
 {
-extern	int c_pindex;			/* putter index */
-extern	int c_gindex;			/* getter index */
-extern	int c_ungind;			/* wungetch() push index */
+	extern int c_pindex;		/* putter index */
+	extern int c_gindex;		/* getter index */
+	extern int c_ungind;		/* wungetch() push index */
 	bool rc;
 
 	PDC_LOG(("PDC_breakout() - called\n"));

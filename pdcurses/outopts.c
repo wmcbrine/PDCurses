@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts = "$Id: outopts.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_outopts = "$Id: outopts.c,v 1.5 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -190,6 +190,7 @@ bool bf;
 		return ERR;
 
 	win->_use_idl = bf;
+
 	return OK;
 }
 
@@ -209,6 +210,7 @@ bool bf;
 		return ERR;
 
 	win->_use_idc = bf;
+
 	return OK;
 }
 
@@ -228,6 +230,7 @@ bool bf;
 		return ERR;
 
 	win->_immed = bf;
+
 	return OK;
 }
 
@@ -276,6 +279,7 @@ int bottom;
 	{
 		stdscr->_tmarg = top;
 		stdscr->_bmarg = bottom;
+
 		return OK;
 	}
 	else
@@ -303,6 +307,7 @@ int bottom;
 	{
 		win->_tmarg = top;
 		win->_bmarg = bottom;
+
 		return OK;
 	}
 	else
@@ -325,6 +330,7 @@ bool bf;
 		return ERR;
 
 	win->_scroll = bf;
+
 	return OK;
 }
 
@@ -339,6 +345,7 @@ int	PDC_CDECL	nl()
 	PDC_LOG(("nl() - called\n"));
 
 	SP->autocr = TRUE;
+
 	return OK;
 }
 
@@ -353,6 +360,7 @@ int	PDC_CDECL	nonl()
 	PDC_LOG(("nonl() - called\n"));
 
 	SP->autocr = FALSE;
+
 	return OK;
 }
 
@@ -368,5 +376,6 @@ bool bf;
 	PDC_LOG(("raw_output() - called\n"));
 
 	SP->raw_out = bf;
+
 	return OK;
 }

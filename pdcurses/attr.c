@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_attr  = "$Id: attr.c,v 1.7 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -130,11 +130,7 @@ chtype attrs;
 {
 	PDC_LOG(("attroff() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	stdscr->_attrs &= (~attrs & A_ATTRIBUTES);
-	return OK;
+	return wattroff(stdscr, attrs);
 }
 
 /***********************************************************************/
@@ -153,6 +149,7 @@ attr_t attrs;
 		return ERR;
 
 	win->_attrs &= (~attrs & A_ATTRIBUTES);
+
 	return OK;
 }
 
@@ -166,9 +163,6 @@ attr_t attrs;
 /***********************************************************************/
 {
 	PDC_LOG(("attron() - called\n"));
-
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
 
 	return wattron(stdscr, attrs);
 }
@@ -191,7 +185,7 @@ attr_t attrs;
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-	if( (win->_attrs & A_COLOR) && (attrs & A_COLOR) ) 
+	if ((win->_attrs & A_COLOR) && (attrs & A_COLOR)) 
 	{
 		oldcolr = win->_attrs & A_COLOR;
 		oldattr = win->_attrs ^ oldcolr;
@@ -217,11 +211,7 @@ attr_t attrs;
 {
 	PDC_LOG(("attrset() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	stdscr->_attrs = attrs & A_ATTRIBUTES;
-	return OK;
+	return wattrset(stdscr, attrs);
 }
 
 /***********************************************************************/
@@ -240,6 +230,7 @@ attr_t attrs;
 		return ERR;
 
 	win->_attrs = attrs & A_ATTRIBUTES;
+
 	return OK;
 }
 
@@ -283,7 +274,7 @@ int	PDC_CDECL	standout()
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wstandend( WINDOW *win )
+int	PDC_CDECL	wstandend(WINDOW *win)
 #else
 int	PDC_CDECL	wstandend(win)
 WINDOW *win;
@@ -297,7 +288,7 @@ WINDOW *win;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wstandout( WINDOW *win )
+int	PDC_CDECL	wstandout(WINDOW *win)
 #else
 int	PDC_CDECL	wstandout(win)
 WINDOW *win;
@@ -319,6 +310,8 @@ void *opts;
 #endif
 /***********************************************************************/
 {
+	PDC_LOG(("color_set() - called\n"));
+
 	return wcolor_set(stdscr, color_pair, opts);
 }
 
@@ -339,5 +332,6 @@ void *opts;		/* "opts" not used, but required by the standard */
 		return ERR;
 
 	win->_attrs = (win->_attrs & ~A_COLOR) | COLOR_PAIR(color_pair);
+
 	return OK;
 }

@@ -78,7 +78,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel = "$Id: kernel.c,v 1.21 2006/01/12 06:56:25 wmcbrine Exp $";
+char *rcsid_kernel = "$Id: kernel.c,v 1.22 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -262,6 +262,7 @@ int PDC_CDECL reset_prog_mode()
 # if !defined(EMXVIDEO)
 #  if defined(OS2)
 		PDC_get_scrn_mode(&modeInfo);
+
 		if (!PDC_scrn_modes_equal(modeInfo, c_pr_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_pr_tty.saved.scrnmode);
 #  else
@@ -291,7 +292,6 @@ int PDC_CDECL reset_shell_mode()
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
 #endif
-
 	PDC_LOG(("reset_shell_mode() - called\n"));
 
 #ifndef WIN32
@@ -317,6 +317,7 @@ int PDC_CDECL reset_shell_mode()
 # if !defined(EMXVIDEO)
 #  if defined(OS2)
 		PDC_get_scrn_mode(&modeInfo);
+
 		if (!PDC_scrn_modes_equal(modeInfo, c_sh_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_sh_tty.saved.scrnmode);
 #  else
@@ -338,7 +339,6 @@ int PDC_CDECL reset_shell_mode()
 #if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))
 	PDC_reset_shell_mode();
 #endif
-
 	return OK;
 }
 
@@ -353,7 +353,6 @@ int PDC_CDECL resetty()
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
 #endif
-
 	PDC_LOG(("resetty() - called\n"));
 
 	if (c_save_tty.been_set == TRUE)
@@ -377,6 +376,7 @@ int PDC_CDECL resetty()
 # if !defined(EMXVIDEO)
 #  if defined(OS2)
 		PDC_get_scrn_mode(&modeInfo);
+
 		if (!PDC_scrn_modes_equal(modeInfo, c_save_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_save_tty.saved.scrnmode);
 #  else
@@ -410,6 +410,7 @@ int   PDC_CDECL   savetty()
 
 	c_save_tty.been_set = TRUE;
 	memcpy(&c_save_tty.saved, SP, sizeof(SCREEN));
+
 	return OK;
 }
 
@@ -418,7 +419,7 @@ int   PDC_CDECL   savetty()
 #ifdef HAVE_PROTO
 int   PDC_CDECL   getsyx(int *y, int *x)
 #else
-int   PDC_CDECL   getsyx(y,x)
+int   PDC_CDECL   getsyx(y, x)
 int *y,*x;
 #endif
 /***********************************************************************/
@@ -426,12 +427,13 @@ int *y,*x;
 	PDC_LOG(("getsyx() - called\n"));
 
 	if (curscr->_leaveit)
-		*y = *x = (-1);
+		*y = *x = -1;
 	else
 	{
 		*y = curscr->_cury - SP->linesrippedoffontop;
 		*x = curscr->_curx;
 	}
+
 	return OK;
 }
 
@@ -454,6 +456,7 @@ int y,x;
 		curscr->_curx = x;
 		curscr->_leaveit = FALSE;
 	}
+
 	return OK;
 }
 #endif /* if 0 */
@@ -489,6 +492,7 @@ int (*init)();
 		linesripped[(int)linesrippedoff].line = line;
 		linesripped[(int)linesrippedoff++].init = init;
 	}
+
 	return OK;
 }
 

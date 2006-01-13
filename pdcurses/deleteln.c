@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_deleteln  = "$Id: deleteln.c,v 1.4 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -97,42 +97,9 @@ int	PDC_CDECL	deleteln()
 #endif
 /***********************************************************************/
 {
-	chtype	blank;
-	chtype*	temp;
-	chtype*	ptr;
-	int	y;
-
 	PDC_LOG(("deleteln() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-#if defined(PDCURSES_WCLR)
-	blank = stdscr->_blank | stdscr->_attrs;
-#else
-/* wrs (4/10/93) account for window background */
-	blank = stdscr->_bkgd;
-#endif
-	temp = stdscr->_y[stdscr->_cury];
-
-	for (y = stdscr->_cury; y < stdscr->_bmarg; y++)
-	{
-		stdscr->_y[y] = stdscr->_y[y + 1];
-		stdscr->_firstch[y] = 0;
-		stdscr->_lastch[y] = stdscr->_maxx - 1;
-	}
-
-	for (ptr = temp; (ptr - temp < stdscr->_maxx); ptr++)
-		*ptr = blank;			/* make a blank line */
-
-	if (stdscr->_cury <= stdscr->_bmarg)
-	{
-		stdscr->_firstch[stdscr->_bmarg] = 0;
-		stdscr->_lastch[stdscr->_bmarg]	= stdscr->_maxx - 1;
-		stdscr->_y[stdscr->_bmarg] = temp;
-	}
-
-	return OK;
+	return wdeleteln(stdscr);
 }
 
 /***********************************************************************/
@@ -144,10 +111,10 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	chtype	blank;
-	chtype*	temp;
-	chtype*	ptr;
-	int	y;
+	chtype blank;
+	chtype *temp;
+	chtype *ptr;
+	int y;
 
 	PDC_LOG(("wdeleteln() - called\n"));
 
@@ -172,7 +139,7 @@ WINDOW *win;
 	for (ptr = temp; (ptr - temp < win->_maxx); ptr++)
 		*ptr = blank;			/* make a blank line */
 
-	if( win->_cury <= win->_bmarg ) 
+	if (win->_cury <= win->_bmarg) 
 	{
 		win->_firstch[win->_bmarg] = 0;
 		win->_lastch[win->_bmarg] = win->_maxx - 1;
@@ -192,9 +159,6 @@ int n;
 /***********************************************************************/
 {
 	PDC_LOG(("insdelln() - called\n"));
-
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
 
 	return winsdelln(stdscr, n);
 }
@@ -216,18 +180,18 @@ int n;
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-	if ( n > 0 ) {
-		for (i = 0; i < n; i++) {
-			if ( winsertln(win) == ERR )
+	if (n > 0)
+	{
+		for (i = 0; i < n; i++)
+			if (winsertln(win) == ERR)
 				return ERR;
-		}
 	}
-	else if ( n < 0 ) {
+	else if (n < 0)
+	{
 		n = -n;
-		for (i = 0; i < n; i++) {
-			if ( wdeleteln(win) == ERR )
+		for (i = 0; i < n; i++)
+			if (wdeleteln(win) == ERR)
 				return ERR;
-		}
 	}
 
 	return OK;
@@ -242,10 +206,10 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-	chtype	blank;
-	chtype*	temp;
-	chtype*	end;
-	short	y;
+	chtype blank;
+	chtype *temp;
+	chtype *end;
+	int y;
 
 	PDC_LOG(("winsertln() - called\n"));
 
@@ -288,9 +252,6 @@ int	PDC_CDECL	insertln()
 {
 	PDC_LOG(("insertln() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
 	return winsertln(stdscr);
 }
 
@@ -309,5 +270,5 @@ int y,x;
 	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-	return(winsertln(win));
+	return winsertln(win);
 }

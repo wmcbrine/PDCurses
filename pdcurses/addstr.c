@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addstr  = "$Id: addstr.c,v 1.5 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_addstr  = "$Id: addstr.c,v 1.6 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -106,24 +106,9 @@ char *str;
 #endif
 /***********************************************************************/
 {
-	int i;
-
 	PDC_LOG(("addstr() - called: string=\"%s\"\n", str));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	while (*str)
-	{
-		/* make negative chars positive - PJK */
-		if ((i = *str++) < 0)
-			i += 256;
-
-		if (PDC_chadd( stdscr, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
-			return ERR;
-	}
-	return OK;
+	return waddnstr(stdscr, str, -1);
 }
 
 /***********************************************************************/
@@ -136,24 +121,9 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int i, ic;
-
 	PDC_LOG(("addnstr() - called: string=\"%s\" n %d \n", str, n));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	for (ic = 0; *str && (ic < n || n < 0); ic++)
-	{
-		/* make negative chars positive - PJK */
-		if ((i = *str++) < 0)
-			i += 256;
-
-		if (PDC_chadd( stdscr, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
-			return ERR;
-	}
-	return OK;
+	return waddnstr(stdscr, str, n);
 }
 
 /***********************************************************************/
@@ -166,24 +136,9 @@ char *str;
 #endif
 /***********************************************************************/
 {
-	int i;
-
 	PDC_LOG(("waddstr() - called: string=\"%s\"\n", str));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	while (*str)
-	{
-		/* make negative chars positive - PJK */
-		if ((i = *str++) < 0)
-			i += 256;
-
-		if (PDC_chadd( win, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
-			return ERR;
-	}
-	return OK;
+	return waddnstr(win, str, -1);
 }
 
 /***********************************************************************/
@@ -202,7 +157,7 @@ int n;
 	PDC_LOG(("waddnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	for (ic = 0; *str && (ic < n || n < 0); ic++)
 	{
@@ -210,10 +165,11 @@ int n;
 		if ((i = *str++) < 0)
 			i += 256;
 
-		if (PDC_chadd( win, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
+		if (PDC_chadd(win, (chtype)i,
+		    (bool)(!(SP->raw_out)), TRUE) == ERR)
 			return ERR;
 	}
+
 	return OK;
 }
 
@@ -228,24 +184,12 @@ char *str;
 #endif
 /***********************************************************************/
 {
-	int i;
-
 	PDC_LOG(("mvaddstr() - called: y %d x %d string=\"%s\"\n", y, x, str));
 
-	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	while (*str)
-	{     
-		/* make negative chars positive - PJK */
-		if ((i = *str++) < 0)
-			i += 256;
-
-		if (PDC_chadd( stdscr, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
-			return ERR;
-	}
-	return OK;
+	return waddnstr(stdscr, str, -1);
 }
 
 /***********************************************************************/
@@ -260,25 +204,13 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int i, ic;
-
 	PDC_LOG(("mvaddnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));
 
-	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	for (ic = 0; *str && (ic < n || n < 0); ic++)
-	{                
-		/* make negative chars positive - PJK */
-		if ((i = *str++) < 0)
-			i += 256;
-
-		if (PDC_chadd( stdscr, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
-			return ERR;
-	}
-	return OK;
+	return waddnstr(stdscr, str, n);
 }
 
 /***********************************************************************/
@@ -293,24 +225,12 @@ char *str;
 #endif
 /***********************************************************************/
 {
-	int i;
+	PDC_LOG(("mvwaddstr() - called: string=\"%s\"\n", str));
 
-	PDC_LOG(("waddstr() - called: string=\"%s\"\n", str));
-
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-	while (*str)
-	{     
-		/* make negative chars positive - PJK */
-		if ((i = *str++) < 0)
-			i += 256;
-
-		if (PDC_chadd( win, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
-			return ERR;
-	}
-	return OK;
+	return waddnstr(win, str, -1);
 }
 
 /***********************************************************************/
@@ -327,23 +247,11 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int i, ic;
-
 	PDC_LOG(("mvwaddnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-	for (ic = 0; *str && (ic < n || n < 0); ic++)
-	{     
-		/* make negative chars positive - PJK */
-		if ((i = *str++) < 0)
-			i += 256;
-
-		if (PDC_chadd( win, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE ) == ERR)
-			return ERR;
-	}
-	return OK;
+	return waddnstr(win, str, n);
 }

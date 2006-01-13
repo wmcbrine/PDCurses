@@ -49,7 +49,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.7 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.8 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -204,6 +204,7 @@ int	PDC_CDECL	cbreak()
 	PDC_LOG(("cbreak() - called\n"));
 
 	SP->cbreak = TRUE;
+
 	return OK;
 }
 
@@ -219,6 +220,7 @@ int	PDC_CDECL	nocbreak()
 
 	SP->cbreak = FALSE;
 	SP->delaytenths = 0;
+
 	return OK;
 }
 
@@ -233,6 +235,7 @@ int	PDC_CDECL	echo()
 	PDC_LOG(("echo() - called\n"));
 
 	SP->echo = TRUE;
+
 	return OK;
 }
 
@@ -247,6 +250,7 @@ int	PDC_CDECL	noecho()
 	PDC_LOG(("noecho() - called\n"));
 
 	SP->echo = FALSE;
+
 	return OK;
 }
 
@@ -265,6 +269,7 @@ int tenths;
 		return ERR;
 
 	SP->delaytenths = tenths;
+
 	return OK;
 }
 
@@ -288,9 +293,8 @@ bool bf;
 	maxy = win->_maxy - 1;
 
 	for (y = 0; y <= maxy; y++)
-	{
 		win->_firstch[y] = _NO_CHANGE;
-	}
+
 	return OK;
 }
 
@@ -310,6 +314,7 @@ bool bf;
 		return ERR;
 
 	win->_use_keypad = bf;
+
 	return OK;
 }
 
@@ -326,6 +331,7 @@ bool bf;
 	PDC_LOG(("meta() - called\n"));
 
 	SP->raw_inp = bf;
+
 	return OK;
 }
 
@@ -345,6 +351,7 @@ bool flag;
 		return ERR;
 
 	win->_nodelay = flag;
+
 	return OK;
 }
 
@@ -391,6 +398,7 @@ int	PDC_CDECL	raw()
 	SP->raw_inp = TRUE;
 	PDC_set_ctrl_break(FALSE);      /* disallow ^BREAK on disk I/O */
 /*	flushinp(); */
+
 	return OK;
 }
 
@@ -421,6 +429,7 @@ int	PDC_CDECL	noraw()
 
 	SP->raw_inp = FALSE;
 	PDC_set_ctrl_break(TRUE);
+
 	return OK;
 }
 
@@ -457,10 +466,7 @@ int fildes;
 {
 	PDC_LOG(("typeahead() - called\n"));
 
-	if (fildes < 0)
-		SP->refrbrk = FALSE;
-	else
-		SP->refrbrk = TRUE;
+	SP->refrbrk = (fildes >= 0);
 
 	return OK;
 }
@@ -508,6 +514,7 @@ int delay;
 		/*win->_nodelay = TRUE;*/
 		win->_delayms = delay;
 	}
+
 	return OK;
 }
 

@@ -50,7 +50,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw = "$Id: scanw.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_scanw = "$Id: scanw.c,v 1.4 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -191,7 +191,7 @@ va_dcl
 	PDC_LOG(("mvscanw() - called\n"));
 
 #if !defined(HC)
-	if ((stdscr == (WINDOW *)NULL) || (wmove(stdscr, y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
 	/* get string */
@@ -229,7 +229,7 @@ va_dcl
 	PDC_LOG(("mvscanw() - called\n"));
 
 #if !defined (HC)
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
+	if (wmove(win, y, x) == ERR)
 		return ERR;
 
 	/* get string */

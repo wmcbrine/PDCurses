@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.12 2006/01/12 06:56:25 wmcbrine Exp $";
+char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.13 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -187,13 +187,13 @@ int begx;
 /***********************************************************************/
 {
 #ifdef HAVE_PROTO
-extern   void* (*mallc)( size_t );
-extern   void* (*callc)( size_t, size_t );
-extern   void  (*fre)( void* );
+	extern void *(*mallc)(size_t);
+	extern void *(*callc)(size_t, size_t);
+	extern void  (*fre)(void*);
 #else
-extern   void* (*mallc)();
-extern   void* (*callc)();
-extern   void  (*fre)();
+	extern void *(*mallc)();
+	extern void *(*callc)();
+	extern void  (*fre)();
 #endif
 
 	int i;
@@ -762,6 +762,7 @@ bool advance;
 	}
 
 	PDC_sync(win);
+
 	return OK;
 }
 
@@ -1008,5 +1009,6 @@ int lin;
 			return -1;
 
 	}
+
 	return lin;
 }

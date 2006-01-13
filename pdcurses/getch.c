@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.13 2006/01/05 03:52:21 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.14 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -124,9 +124,6 @@ int	PDC_CDECL	PDC_getch()
 {
 	PDC_LOG(("getch() - called\n"));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
 	return wgetch(stdscr);
 }
 
@@ -139,29 +136,29 @@ WINDOW *win;
 #endif
 /***********************************************************************/
 {
-extern	int	c_pindex;		/* putter index		   */
-extern	int	c_gindex;		/* getter index		   */
-extern	int	c_ungind;		/* ungetch() push index   */
-extern	int	c_ungch[NUNGETCH];	/* array of ungotten chars */
-extern  WINDOW*	_getch_win_;
-
-	int key;
+	extern int c_pindex;		/* putter index	*/
+	extern int c_gindex;		/* getter index	*/
+	extern int c_ungind;		/* ungetch() push index */
+	extern int c_ungch[NUNGETCH];	/* array of ungotten chars */
+	extern WINDOW *_getch_win_;
 
 	static int buffer[_INBUFSIZ];	/* character buffer */
-	short display_key = 0x100;
-	int waitingtenths = 0;
+	int key, display_key, waitingtenths;
 
 	PDC_LOG(("wgetch() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
+	display_key = 0x100;
+	waitingtenths = 0;
+
 	 /* set the number of 1/20th second napms() calls */
 
-	if ( SP->delaytenths )
-		waitingtenths = 2*SP->delaytenths;
+	if (SP->delaytenths)
+		waitingtenths = 2 * SP->delaytenths;
 	else
-		if ( win->_delayms )
+		if (win->_delayms)
 		{
 /*
  * As granularity of clocks is not ideal for waiting for individual periods
@@ -181,7 +178,7 @@ extern  WINDOW*	_getch_win_;
 /* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
 /*                  if there have been changes to it and it is not a pad */
 
-	if ( !(win->_flags & _PAD) && is_wintouched(win) )
+	if (!(win->_flags & _PAD) && is_wintouched(win))
 		wrefresh(win);
 
 	_getch_win_ = win;
@@ -217,10 +214,8 @@ extern  WINDOW*	_getch_win_;
 			key = PDC_rawgetch();	/* get a raw character */
 		else
 		{
-			/*
-			 * get a system character
-			 * if break return proper
-			 */
+			/* get a system character if break return proper */
+
 			bool cbr = PDC_get_ctrl_break();
 			PDC_set_ctrl_break(SP->orgcbr);
 			key = PDC_sysgetch();
@@ -257,7 +252,7 @@ extern  WINDOW*	_getch_win_;
 
 		/* if echo is enabled */
 
-		if ( SP->echo && (key < display_key) )
+		if (SP->echo && (key < display_key))
 		{
 			waddch(win, key);
 			wrefresh(win);
@@ -265,7 +260,7 @@ extern  WINDOW*	_getch_win_;
 
 		/* if no buffering */
 
-		if ( (SP->raw_inp || SP->cbreak) )
+		if ((SP->raw_inp || SP->cbreak))
 			return key;
 
 		/* if no overflow, put data in buffer */
@@ -292,10 +287,10 @@ int x;
 {
 	PDC_LOG(("mvgetch() - called\n"));
 
-	if ((stdscr == (WINDOW *)NULL) || (move(y, x) == ERR))
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	return getch();
+	return wgetch(stdscr);
 }
 
 /***********************************************************************/
@@ -311,8 +306,8 @@ int x;
 {
 	PDC_LOG(("mvwgetch() - called\n"));
 
-	if ((win == (WINDOW *)NULL) || (wmove(win, y, x) == ERR))
-		return(ERR);
+	if (wmove(win, y, x) == ERR)
+		return ERR;
 
 	return wgetch(win);
 }
@@ -326,8 +321,8 @@ int ch;
 #endif
 /***********************************************************************/
 {
-extern	int	c_ungind;		/* ungetch() push index */
-extern	int	c_ungch[NUNGETCH];	/* array of ungotten chars */
+	extern int c_ungind;		/* ungetch() push index */
+	extern int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 	PDC_LOG(("ungetch() - called\n"));
 
@@ -335,5 +330,6 @@ extern	int	c_ungch[NUNGETCH];	/* array of ungotten chars */
 		return ERR;
 
 	c_ungch[c_ungind++] = ch;
+
 	return OK;
 }

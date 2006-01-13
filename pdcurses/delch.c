@@ -46,7 +46,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.3 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_delch  = "$Id: delch.c,v 1.4 2006/01/13 01:17:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -114,7 +114,7 @@ WINDOW *win;
 /***********************************************************************/
 {
 	int y, x, maxx;
-	chtype* temp1;
+	chtype *temp1;
 
 	PDC_LOG(("wdelch() - called\n"));
 
@@ -141,6 +141,7 @@ WINDOW *win;
 		win->_firstch[y] = x;
 
 	PDC_sync(win);
+
 	return OK;
 }
 
@@ -156,10 +157,10 @@ int x;
 {
 	PDC_LOG(("mvdelch() - called\n"));
 
-	if (move(y, x) == ERR)
+	if (wmove(stdscr, y, x) == ERR)
 		return ERR;
 
-	return delch();
+	return wdelch(stdscr);
 }
 
 /***********************************************************************/

@@ -1104,6 +1104,9 @@ bool highlight;
 	{
 	    attr = ch[j] & A_ATTRIBUTES;
 
+	    if (!(ch[j] & A_CHARTEXT))
+		attr ^= A_REVERSE;
+
 	    if (attr != old_attr)
 		new_packet = TRUE;
 

@@ -281,22 +281,22 @@ panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.obj $(LIBCURSES)
-	$(CC) -e$@ $**
+	$(CC) -m$(MODEL) -e$@ $**
 
 newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(CC) -e$@ $**
+	$(CC) -m$(MODEL) -e$@ $**
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(CC) -e$@ $**
+	$(CC) -m$(MODEL) -e$@ $**
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(CC) -e$@ $**
+	$(CC) -m$(MODEL) -e$@ $**
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(CC) -e$@ $**
+	$(CC) -m$(MODEL) -e$@ $**
 
 xmas.exe:	xmas.obj $(LIBCURSES)
-	$(CC) -e$@ $**
+	$(CC) -m$(MODEL) -e$@ $**
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)

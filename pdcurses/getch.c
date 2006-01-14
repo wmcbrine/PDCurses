@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.14 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.15 2006/01/14 06:42:03 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -287,7 +287,7 @@ int x;
 {
 	PDC_LOG(("mvgetch() - called\n"));
 
-	if (wmove(stdscr, y, x) == ERR)
+	if (move(y, x) == ERR)
 		return ERR;
 
 	return wgetch(stdscr);

@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define CURSES_LIBRARY	1
+#define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw = "$Id: printw.c,v 1.4 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_printw = "$Id: printw.c,v 1.5 2006/01/14 06:42:03 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -181,7 +181,7 @@ va_dcl
 
 	PDC_LOG(("mvprintw() - called\n"));
 
-	if (wmove(stdscr, y, x) == ERR)
+	if (move(y, x) == ERR)
 		return ERR;
 
 #ifdef HAVE_STDARG_H_HAVE_PROTO

@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insstr  = "$Id: insstr.c,v 1.8 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_insstr  = "$Id: insstr.c,v 1.9 2006/01/14 06:42:03 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -190,7 +190,7 @@ char *str;
 	PDC_LOG(("mvinsstr() - called: y %d x %d string=\"%s\"\n",
 		y, x, str));
 
-	if (wmove(stdscr, y, x) == ERR)
+	if (move(y, x) == ERR)
 		return ERR;
 
 	return winsnstr(stdscr, str, -1);
@@ -211,7 +211,7 @@ int n;
 	PDC_LOG(("mvinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));
 
-	if (wmove(stdscr, y, x) == ERR)
+	if (move(y, x) == ERR)
 		return ERR;
 
 	return winsnstr(stdscr, str, n);

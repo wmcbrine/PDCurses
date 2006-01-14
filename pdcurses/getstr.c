@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.12 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.13 2006/01/14 06:42:03 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -143,7 +143,7 @@ char *str;
 {
 	PDC_LOG(("mvgetstr() - called\n"));
 
-	if (wmove(stdscr, y, x) == ERR)
+	if (move(y, x) == ERR)
 		return ERR;
 
 	return wgetnstr(stdscr, str, MAXLINE);

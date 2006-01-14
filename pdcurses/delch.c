@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -46,7 +46,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.4 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_delch  = "$Id: delch.c,v 1.5 2006/01/14 06:42:03 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -126,7 +126,7 @@ WINDOW *win;
 	maxx	= win->_maxx - 1;
 	temp1	= &win->_y[y][x];
 
-	memmove( temp1, temp1 + 1, (maxx - x) * sizeof(chtype) );
+	memmove(temp1, temp1 + 1, (maxx - x) * sizeof(chtype));
 
 #if defined(PDCURSES_WCLR)
 	win->_y[y][maxx]	= win->_blank | win->_attrs;
@@ -157,7 +157,7 @@ int x;
 {
 	PDC_LOG(("mvdelch() - called\n"));
 
-	if (wmove(stdscr, y, x) == ERR)
+	if (move(y, x) == ERR)
 		return ERR;
 
 	return wdelch(stdscr);

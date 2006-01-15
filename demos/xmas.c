@@ -100,7 +100,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas = "$Id: xmas.c,v 1.11 2006/01/12 00:56:46 wmcbrine Exp $";
+char *rcsid_xmas = "$Id: xmas.c,v 1.12 2006/01/15 10:56:57 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -787,33 +787,33 @@ void balls Args((void))
 		init_pair(4, COLOR_CYAN, COLOR_BLACK);
 		init_pair(5, COLOR_YELLOW, COLOR_BLACK);
 		init_pair(6, COLOR_WHITE, COLOR_BLACK);
-		ball1 = COLOR_PAIR(1);
-		ball2 = COLOR_PAIR(2);
-		ball3 = COLOR_PAIR(3);
-		ball4 = COLOR_PAIR(4);
-		ball5 = COLOR_PAIR(5);
-		ball6 = COLOR_PAIR(6);
+		ball1 = COLOR_PAIR(1) | '@';
+		ball2 = COLOR_PAIR(2) | '@';
+		ball3 = COLOR_PAIR(3) | '@';
+		ball4 = COLOR_PAIR(4) | '@';
+		ball5 = COLOR_PAIR(5) | '@';
+		ball6 = COLOR_PAIR(6) | '@';
 	}
 	else
 #endif
-		ball1 = ball2 = ball3 = ball4 = ball5 = ball6 = 0;
+		ball1 = ball2 = ball3 = ball4 = ball5 = ball6 = '@';
 
-	mvwaddch(treescrn2, 3, 9, (chtype) '@' | ball1);
-	mvwaddch(treescrn2, 3, 15, (chtype) '@' | ball2);
-	mvwaddch(treescrn2, 4, 8, (chtype) '@' | ball3);
-	mvwaddch(treescrn2, 4, 16, (chtype) '@' | ball4);
-	mvwaddch(treescrn2, 5, 7, (chtype) '@' | ball5);
-	mvwaddch(treescrn2, 5, 17, (chtype) '@' | ball6);
-	mvwaddch(treescrn2, 7, 6, (chtype) '@' | ball1 | A_BOLD);
-	mvwaddch(treescrn2, 7, 18, (chtype) '@' | ball2 | A_BOLD);
-	mvwaddch(treescrn2, 8, 5, (chtype) '@' | ball3 | A_BOLD);
-	mvwaddch(treescrn2, 8, 19, (chtype) '@' | ball4 | A_BOLD);
-	mvwaddch(treescrn2, 10, 4, (chtype) '@' | ball5 | A_BOLD);
-	mvwaddch(treescrn2, 10, 20, (chtype) '@' | ball6 | A_BOLD);
-	mvwaddch(treescrn2, 11, 2, (chtype) '@' | ball1);
-	mvwaddch(treescrn2, 11, 22, (chtype) '@' | ball2);
-	mvwaddch(treescrn2, 12, 1, (chtype) '@' | ball3);
-	mvwaddch(treescrn2, 12, 23, (chtype) '@' | ball4);
+	mvwaddch(treescrn2, 3, 9, ball1);
+	mvwaddch(treescrn2, 3, 15, ball2);
+	mvwaddch(treescrn2, 4, 8, ball3);
+	mvwaddch(treescrn2, 4, 16, ball4);
+	mvwaddch(treescrn2, 5, 7, ball5);
+	mvwaddch(treescrn2, 5, 17, ball6);
+	mvwaddch(treescrn2, 7, 6, ball1 | A_BOLD);
+	mvwaddch(treescrn2, 7, 18, ball2 | A_BOLD);
+	mvwaddch(treescrn2, 8, 5, ball3 | A_BOLD);
+	mvwaddch(treescrn2, 8, 19, ball4 | A_BOLD);
+	mvwaddch(treescrn2, 10, 4, ball5 | A_BOLD);
+	mvwaddch(treescrn2, 10, 20, ball6 | A_BOLD);
+	mvwaddch(treescrn2, 11, 2, ball1);
+	mvwaddch(treescrn2, 11, 22, ball2);
+	mvwaddch(treescrn2, 12, 1, ball3);
+	mvwaddch(treescrn2, 12, 23, ball4);
 
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.76 2006/01/12 07:34:09 wmcbrine Exp $
+$Id: curses.h,v 1.77 2006/01/15 11:21:38 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1132,24 +1132,20 @@ currently used.)
    These match code page 437 and compatible pages (CP850, CP852, etc.)
 */
 
-#ifdef XCURSES
-extern chtype *acs_map;
-#endif
-
 /* VT100-compatible symbols -- box chars */
 
 #ifdef XCURSES
-# define ACS_ULCORNER	(acs_map['l'])
-# define ACS_LLCORNER	(acs_map['m'])
-# define ACS_URCORNER	(acs_map['k'])
-# define ACS_LRCORNER	(acs_map['j'])
-# define ACS_RTEE	(acs_map['u'])
-# define ACS_LTEE	(acs_map['t'])
-# define ACS_BTEE	(acs_map['v'])
-# define ACS_TTEE	(acs_map['w'])
-# define ACS_HLINE	(acs_map['q'])
-# define ACS_VLINE	(acs_map['x'])
-# define ACS_PLUS	(acs_map['n'])
+# define ACS_ULCORNER	((chtype)13 | A_ALTCHARSET)
+# define ACS_LLCORNER	((chtype)14 | A_ALTCHARSET)
+# define ACS_URCORNER	((chtype)12 | A_ALTCHARSET)
+# define ACS_LRCORNER	((chtype)11 | A_ALTCHARSET)
+# define ACS_RTEE	((chtype)22 | A_ALTCHARSET)
+# define ACS_LTEE	((chtype)21 | A_ALTCHARSET)
+# define ACS_BTEE	((chtype)23 | A_ALTCHARSET)
+# define ACS_TTEE	((chtype)24 | A_ALTCHARSET)
+# define ACS_HLINE	((chtype)18 | A_ALTCHARSET)
+# define ACS_VLINE	((chtype)25 | A_ALTCHARSET)
+# define ACS_PLUS	((chtype)15 | A_ALTCHARSET)
 #else
 # define ACS_ULCORNER	(chtype)0xda
 # define ACS_LLCORNER	(chtype)0xc0
@@ -1167,13 +1163,13 @@ extern chtype *acs_map;
 /* VT100-compatible symbols -- other */
 
 #ifdef XCURSES
-# define ACS_S1		(acs_map['o'])
-# define ACS_S9		(acs_map['s'])
-# define ACS_DIAMOND	(acs_map['\''])
-# define ACS_CKBOARD	(acs_map['a'])
-# define ACS_DEGREE	(acs_map['f'])
-# define ACS_PLMINUS	(acs_map['g'])
-# define ACS_BULLET	(acs_map['~'])
+# define ACS_S1		((chtype)16 | A_ALTCHARSET)
+# define ACS_S9		((chtype)20 | A_ALTCHARSET)
+# define ACS_DIAMOND	((chtype)1 | A_ALTCHARSET)
+# define ACS_CKBOARD	((chtype)2 | A_ALTCHARSET)
+# define ACS_DEGREE	((chtype)7 | A_ALTCHARSET)
+# define ACS_PLMINUS	((chtype)8 | A_ALTCHARSET)
+# define ACS_BULLET	((chtype)'*' | A_ALTCHARSET)
 #else
 # define ACS_S1		(chtype)0x2d
 # define ACS_S9		(chtype)0x5f
@@ -1189,13 +1185,13 @@ extern chtype *acs_map;
    for optimum portability.
 */
 #ifdef XCURSES
-# define ACS_LARROW	(acs_map[','])
-# define ACS_RARROW	(acs_map['+'])
-# define ACS_DARROW	(acs_map['.'])
-# define ACS_UARROW	(acs_map['-'])
-# define ACS_BOARD	(acs_map['h'])
-# define ACS_LANTERN	(acs_map['i'])
-# define ACS_BLOCK	(acs_map['0'])
+# define ACS_LARROW	((chtype)'<' | A_ALTCHARSET)
+# define ACS_RARROW	((chtype)'>' | A_ALTCHARSET)
+# define ACS_DARROW	((chtype)'v' | A_ALTCHARSET)
+# define ACS_UARROW	((chtype)'^' | A_ALTCHARSET)
+# define ACS_BOARD	((chtype)'#' | A_ALTCHARSET)
+# define ACS_LANTERN	((chtype)'#' | A_ALTCHARSET)
+# define ACS_BLOCK	((chtype)0 | A_ALTCHARSET)
 #else
 # define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)
 # define ACS_RARROW	((chtype)0x1a | A_ALTCHARSET)
@@ -1211,13 +1207,13 @@ extern chtype *acs_map;
    code pages as those above.
 */
 #ifdef XCURSES
-# define ACS_S3		(acs_map['p'])
-# define ACS_S7		(acs_map['r'])
-# define ACS_LEQUAL	(acs_map['y'])
-# define ACS_GEQUAL	(acs_map['z'])
-# define ACS_PI		(acs_map['{'])
-# define ACS_NEQUAL	(acs_map['|'])
-# define ACS_STERLING	(acs_map['}'])
+# define ACS_S3		((chtype)17 | A_ALTCHARSET)
+# define ACS_S7		((chtype)19 | A_ALTCHARSET)
+# define ACS_LEQUAL	((chtype)26 | A_ALTCHARSET)
+# define ACS_GEQUAL	((chtype)27 | A_ALTCHARSET)
+# define ACS_PI		((chtype)28 | A_ALTCHARSET)
+# define ACS_NEQUAL	((chtype)29 | A_ALTCHARSET)
+# define ACS_STERLING	((chtype)30 | A_ALTCHARSET)
 #else
 # define ACS_S3         (chtype)0x2d
 # define ACS_S7         (chtype)0x2d

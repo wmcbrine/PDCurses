@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.17 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.18 2006/01/15 11:21:40 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -131,10 +131,6 @@ void* (*mallc)();			/* ptr to some malloc(size) */
 void* (*callc)();			/* ptr to some ecalloc(num, size) */
 void  (*fre)();				/* ptr to some free(ptr) */
 void* (*reallc)();			/* ptr to some realloc(ptr, size) */
-#endif
-
-#ifdef XCURSES
-chtype *acs_map;
 #endif
 
 extern RIPPEDOFFLINE linesripped[5];
@@ -305,52 +301,6 @@ char *argv[];
 		fprintf(stderr, "initscr(): Unable to create curscr.\n");
 		exit(2);
 	}
-
-#ifdef XCURSES
-	if ((acs_map = (chtype *)(*mallc)(128*sizeof(chtype))) == 
-	    (chtype *)NULL)
-	{
-		fprintf(stderr, "initscr(): Unable to create acs_map.\n");
-		exit(5);
-	}
-
-	for (i = 0; i < 128; i++)
-		acs_map[i] = '#' | A_ALTCHARSET;
-
-	ACS_BSSB = (chtype)13 | A_ALTCHARSET;
-	ACS_SSBB = (chtype)14 | A_ALTCHARSET;
-	ACS_BBSS = (chtype)12 | A_ALTCHARSET;
-	ACS_SBBS = (chtype)11 | A_ALTCHARSET;
-	ACS_SBSS = (chtype)22 | A_ALTCHARSET;
-	ACS_SSSB = (chtype)21 | A_ALTCHARSET;
-	ACS_SSBS = (chtype)23 | A_ALTCHARSET;
-	ACS_BSSS = (chtype)24 | A_ALTCHARSET;
-	ACS_BSBS = (chtype)18 | A_ALTCHARSET;
-	ACS_SBSB = (chtype)25 | A_ALTCHARSET;
-	ACS_SSSS = (chtype)15 | A_ALTCHARSET;
-	ACS_S1      = (chtype)16 | A_ALTCHARSET;
-	ACS_S9      = (chtype)20 | A_ALTCHARSET;
-	ACS_DIAMOND = (chtype)1 | A_ALTCHARSET;
-	ACS_CKBOARD = (chtype)2 | A_ALTCHARSET;
-	ACS_DEGREE  = (chtype)7 | A_ALTCHARSET;
-	ACS_PLMINUS = (chtype)8 | A_ALTCHARSET;
-	ACS_BULLET  = (chtype)'*' | A_ALTCHARSET;
-	ACS_LARROW  = (chtype)'<' | A_ALTCHARSET;
-	ACS_RARROW  = (chtype)'>' | A_ALTCHARSET;
-	ACS_DARROW  = (chtype)'v' | A_ALTCHARSET;
-	ACS_UARROW  = (chtype)'^' | A_ALTCHARSET;
-	ACS_BOARD   = (chtype)'#' | A_ALTCHARSET;
-	ACS_LANTERN = (chtype)'#' | A_ALTCHARSET;
-	ACS_BLOCK   = (chtype)0 | A_ALTCHARSET;
-	/* extra, non-standard symbols */
-	ACS_S3      = (chtype)17 | A_ALTCHARSET;
-	ACS_S7      = (chtype)19 | A_ALTCHARSET;
-	ACS_LEQUAL  = (chtype)26 | A_ALTCHARSET;
-	ACS_GEQUAL  = (chtype)27 | A_ALTCHARSET;
-	ACS_PI      = (chtype)28 | A_ALTCHARSET;
-	ACS_NEQUAL  = (chtype)29 | A_ALTCHARSET;
-	ACS_STERLING= (chtype)30 | A_ALTCHARSET;
-#endif
 
 	if (PDC_initial_slk)
 	{

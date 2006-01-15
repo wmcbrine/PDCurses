@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.16 2006/01/04 13:14:46 wmcbrine Exp $
+$Id: curspriv.h,v 1.17 2006/01/15 18:36:53 wmcbrine Exp $
 */
 /*
 *
@@ -108,7 +108,6 @@ $Id: curspriv.h,v 1.16 2006/01/04 13:14:46 wmcbrine Exp $
 
 /*----------------------------------------*/
 #ifdef  DOS
-#  define FAST_VIDEO 1          /* We can write directly to the screen. */
 #  ifdef NDP
      typedef union REGS16 Regs;
 #  else

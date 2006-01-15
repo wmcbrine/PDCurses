@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.16 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.17 2006/01/15 18:36:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -85,11 +85,9 @@ char *rcsid_util  = "$Id: util.c,v 1.16 2006/01/13 01:17:59 wmcbrine Exp $";
 	in this curses version such application will link with an
 	error message complaining about undefined symbols.
 
-	If the PDCurses library is compiled under DOS with the FAST_VIDEO
-	define true, then we will poke the BIOS keyboard buffer head and
-	tail pointers, resetting the typeahead to implement flushinp().
-	If this is not true, then we will be unable to reliably flush
-	the typeahead.
+	If the PDCurses library is compiled under DOS, then we will poke 
+	the BIOS keyboard buffer head and tail pointers, resetting the 
+	typeahead to implement flushinp().
 
 	filter() and use_env() are no-ops on PDCurses. getwin() and 
 	putwin() also do nothing yet.
@@ -328,11 +326,11 @@ int	PDC_CDECL	flushinp()
 
 	PDC_LOG(("flushinp() - called\n"));
 
-#if defined(DOS) && defined(FAST_VIDEO)
+#ifdef DOS
 	/* Force the BIOS kbd buf head/tail pointers to be the
 	   same...  Real nasty trick... */
 
-	setdosmemword (0x41a, getdosmemword (0x41c));
+	setdosmemword(0x41a, getdosmemword (0x41c));
 #endif
 
 #ifdef OS2

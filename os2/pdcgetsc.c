@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.9 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.10 2006/01/15 18:36:58 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -298,14 +298,7 @@ int PDC_get_cursor_mode(void)
   PDCurses Description:
 	This is a private PDCurses routine.
 
-	This function returns the current font size.  This function only 
-	works if the #define FAST_VIDEO is true.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	An ERR will be returned if FAST_VIDEO is not true.
+	This function returns the current font size.
 
   Portability:
 	PDCurses  int PDC_get_font(void);

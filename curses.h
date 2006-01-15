@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.79 2006/01/15 17:53:20 wmcbrine Exp $
+$Id: curses.h,v 1.80 2006/01/15 18:36:53 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -140,8 +140,6 @@ rely on #if, rather than a complicated set of #if defined() or
 PDCurses definitions list:  (Only define those needed)
 
 	REGISTERWINDOWS True for auto window update registery.
-	FAST_VIDEO      True if display is memory mapped, or
-	                we can utilize the fast video update routines.
 	DOS             True if compiling for DOS.
 	OS2             True if compiling for OS/2.
 	WIN32           True if compiling for Windoze 95 or Windoze NT

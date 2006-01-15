@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.6 2006/01/15 18:20:24 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.7 2006/01/15 18:36:58 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut, hConIn;
@@ -193,9 +193,6 @@ int PDC_get_cursor_mode(void)
 	This is a private PDCurses routine.
 
 	This function returns the current font size.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
 
   Portability:
 	PDCurses  int PDC_get_font(void);

@@ -22,10 +22,8 @@
 #define  INCLUDE_WINDOWS_H
 #include <curses.h>
 
-#include <stdio.h>
-
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.25 2006/01/12 00:20:14 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.26 2006/01/15 18:03:32 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE

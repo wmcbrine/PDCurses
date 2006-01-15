@@ -23,7 +23,6 @@
 #endif
 #include <curses.h>
 
-#include <stdio.h>
 #include <string.h>
 #include <limits.h>
 
@@ -43,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr = "$Id: termattr.c,v 1.8 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_termattr = "$Id: termattr.c,v 1.9 2006/01/15 18:03:32 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

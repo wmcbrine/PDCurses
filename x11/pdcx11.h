@@ -30,7 +30,6 @@
 # include <unistd.h>
 #endif
 
-#include <stdio.h>
 #include <signal.h>
 #include <ctype.h>
 #include <pwd.h>

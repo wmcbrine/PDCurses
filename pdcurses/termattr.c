@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr = "$Id: termattr.c,v 1.9 2006/01/15 18:03:32 wmcbrine Exp $";
+char *rcsid_termattr = "$Id: termattr.c,v 1.10 2006/01/15 18:20:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -92,11 +92,9 @@ char *rcsid_termattr = "$Id: termattr.c,v 1.9 2006/01/15 18:03:32 wmcbrine Exp $
 	supported by the terminal.
 
   PDCurses Description:
-	If FAST_VIDEO is true, then this is the largest possible 
-	(portable) int value (INT_MAX from limits.h) IF direct video is 
-	possible, OR the approximate guess at BIOS speeds, 19200. If 
-	FAST_VIDEO is false, this is an approximate guess at BIOS 
-	speeds, 19200.
+	baudrate() returns the largest possible (portable) int value 
+	(INT_MAX from limits.h) IF direct video is possible, OR the 
+	approximate guess at BIOS speeds, 19200.
 
 	erasechar(), killchar() and wordchar() all return values that 
 	are hardcoded at this time.  There may be future development to 
@@ -150,11 +148,7 @@ int	PDC_CDECL	baudrate()
 {
 	PDC_LOG(("baudrate() - called\n"));
 
-#ifdef FAST_VIDEO
 	return SP->direct_video ? INT_MAX : 19200;
-#else
-	return 19200;		/* Approx. guess at BIOS speeds.*/
-#endif
 }
 
 /***********************************************************************/

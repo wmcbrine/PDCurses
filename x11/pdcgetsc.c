@@ -24,7 +24,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.3 2006/01/11 06:46:24 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.4 2006/01/15 18:20:24 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -102,14 +102,10 @@ int PDC_get_rows()
   PDCurses Description:
 	This is a private PDCurses routine.
 
-	This function returns the current font size.  This function only
-	works if the #define FAST_VIDEO is true.
+	This function returns the current font size.
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	An ERR will be returned if FAST_VIDEO is not true.
 
   Portability:
 	PDCurses  int PDC_get_font(void);

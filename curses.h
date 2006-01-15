@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.80 2006/01/15 18:36:53 wmcbrine Exp $
+$Id: curses.h,v 1.81 2006/01/15 21:38:03 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -142,7 +142,7 @@ PDCurses definitions list:  (Only define those needed)
 	REGISTERWINDOWS True for auto window update registery.
 	DOS             True if compiling for DOS.
 	OS2             True if compiling for OS/2.
-	WIN32           True if compiling for Windoze 95 or Windoze NT
+	WIN32           True if compiling for Windows.
 	HC              True if using a Metaware compiler.
 	TC              True if using a Borland compiler.
 	MSC             True if using a Microsoft compiler.

@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs = "$Id: testcurs.c,v 1.27 2006/01/11 23:19:52 wmcbrine Exp $";
+char *rcsid_testcurs = "$Id: testcurs.c,v 1.28 2006/01/15 07:37:31 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -70,6 +70,7 @@ void introTest Args((WINDOW *));
 int initTest Args((WINDOW **, int, char **));
 void outputTest Args((WINDOW *));
 void padTest Args((WINDOW *));
+void acsTest Args((WINDOW *));
 void display_menu Args((int, int));
 
 #if HAVE_RESIZE
@@ -92,7 +93,7 @@ struct commands
 
 typedef struct commands COMMAND;
 
-#define MAX_OPTIONS (5 + HAVE_RESIZE + HAVE_CLIPBOARD)
+#define MAX_OPTIONS (6 + HAVE_RESIZE + HAVE_CLIPBOARD)
 
 COMMAND command[MAX_OPTIONS] =
 {
@@ -104,6 +105,7 @@ COMMAND command[MAX_OPTIONS] =
 	{"Scroll Test", scrollTest},
 	{"Input Test", inputTest},
 	{"Output Test", outputTest},
+	{"ACS Test", acsTest},
 #if HAVE_CLIPBOARD
 	{"Clipboard Test", clipboardTest},
 #endif
@@ -935,6 +937,71 @@ WINDOW *win;
 #endif
 
 #ifdef __STDC__
+void acsTest(WINDOW *win)
+#else
+void acsTest(win)
+WINDOW *win;
+#endif
+{
+	static char *acs_names[] =
+	{
+		"ACS_ULCORNER", "ACS_URCORNER", "ACS_LLCORNER", 
+		"ACS_LRCORNER", "ACS_LTEE", "ACS_RTEE", "ACS_TTEE", 
+		"ACS_BTEE", "ACS_HLINE", "ACS_VLINE", "ACS_PLUS",
+
+		"ACS_S1", "ACS_S9", "ACS_DIAMOND", "ACS_CKBOARD", 
+		"ACS_DEGREE", "ACS_PLMINUS", "ACS_BULLET",
+
+		"ACS_LARROW", "ACS_RARROW", "ACS_UARROW", "ACS_DARROW", 
+		"ACS_BOARD", "ACS_LANTERN", "ACS_BLOCK",
+
+		"ACS_S3", "ACS_S7", "ACS_LEQUAL", "ACS_GEQUAL", 
+		"ACS_PI", "ACS_NEQUAL", "ACS_STERLING"
+	};
+
+	/* initscr() must be called before accessing any ACS values
+	   in implementations that define them in terms of acs_map[], 
+	   hence why this array is not static. */
+
+	chtype acs_values[] =
+	{
+		ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER, 
+		ACS_LTEE, ACS_RTEE, ACS_TTEE, ACS_BTEE, ACS_HLINE, 
+		ACS_VLINE, ACS_PLUS,
+
+		ACS_S1, ACS_S9, ACS_DIAMOND, ACS_CKBOARD, ACS_DEGREE, 
+		ACS_PLMINUS, ACS_BULLET,
+
+		ACS_LARROW, ACS_RARROW, ACS_UARROW, ACS_DARROW, 
+		ACS_BOARD, ACS_LANTERN, ACS_BLOCK,
+
+		ACS_S3, ACS_S7, ACS_LEQUAL, ACS_GEQUAL, ACS_PI, 
+		ACS_NEQUAL, ACS_STERLING
+	};
+
+	int i;
+
+	clear();
+
+	attrset(A_BOLD);
+	mvprintw(1, (COLS - 23) / 2, "Alternate Character Set");
+	attrset(A_NORMAL);
+
+	for (i = 0; i < 32; i++)
+	{
+		move((i % 8) * 2 + 4, (i / 8) * (COLS / 4) +
+			(COLS / 8 - 7));
+
+		addch(acs_values[i]);
+		printw(" %s", acs_names[i]);
+	}
+
+	printw("\n\n\n  Press any key to continue");
+	getch();
+}
+
+
+#ifdef __STDC__
 void display_menu(int old_option, int new_option)
 #else
 void display_menu(old_option, new_option)
@@ -957,7 +1024,7 @@ int old_option, new_option;
 	mvaddstr(5 + new_option, 25, command[new_option].text);
 	attrset(A_NORMAL);
 
-	mvaddstr(13, 3,
+	mvaddstr(14, 3,
 		"Use Up and Down Arrows to select - Enter to run - Q to quit");
 	refresh();
 }

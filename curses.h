@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.81 2006/01/15 21:38:03 wmcbrine Exp $
+$Id: curses.h,v 1.82 2006/01/15 22:50:46 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -198,12 +198,6 @@ PDCurses portable platform definitions list:
 #    include <os2.h>
 #  endif
 #  ifdef __WIN32__
-#    ifdef INCLUDE_WINDOWS_H           /* only include for WIN32 files */
-#      include <windows.h>
-#      ifdef MOUSE_MOVED                 /* get rid of Windows #define */
-#        undef MOUSE_MOVED
-#      endif
-#    endif
 #    ifndef WIN32
 #      define WIN32 1
 #    endif
@@ -267,12 +261,6 @@ PDCurses portable platform definitions list:
 #    ifdef _WIN32	
 #      ifndef WIN32
 #        define WIN32
-#      endif
-#      ifdef INCLUDE_WINDOWS_H         /* only include for WIN32 files */
-#        include <windows.h>
-#        ifdef MOUSE_MOVED               /* get rid of Windows #define */
-#          undef MOUSE_MOVED
-#        endif
 #      endif
 #      ifndef HAVE_MEMORY_H
 #        define HAVE_MEMORY_H                       /* have <memory.h> */
@@ -440,12 +428,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1    /* Cygnuc GCC supports ANSI C prototypes   */
 #  endif
-#  ifdef INCLUDE_WINDOWS_H
-#    include <windows.h>
-#    ifdef MOUSE_MOVED
-#      undef MOUSE_MOVED
-#    endif
-#  endif
 #  if !defined( WIN32 ) && !defined(XCURSES)
 #    define WIN32
 #  endif
@@ -473,12 +455,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1    /* Ming GCC supports ANSI C prototypes   */
 #  endif
-#  ifdef INCLUDE_WINDOWS_H
-#    include <windows.h>
-#    ifdef MOUSE_MOVED
-#      undef MOUSE_MOVED
-#    endif
-#  endif
 #  ifndef WIN32
 #    define WIN32
 #  endif
@@ -500,12 +476,6 @@ PDCurses portable platform definitions list:
 #ifdef __LCC__  /* should already be defined by the compiler */
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1         /* LCC-Win32 supports ANSI C prototypes   */
-#  endif
-#  ifdef INCLUDE_WINDOWS_H
-#    include <windows.h>
-#    ifdef MOUSE_MOVED
-#      undef MOUSE_MOVED
-#    endif
 #  endif
 #  ifndef WIN32
 #    define WIN32
@@ -570,12 +540,6 @@ PDCurses portable platform definitions list:
 #    endif
 #  endif
 #  if defined( __NT__ ) || defined ( WIN32 )
-#    ifdef INCLUDE_WINDOWS_H
-#      include <windows.h>
-#      ifdef MOUSE_MOVED
-#        undef MOUSE_MOVED
-#      endif
-#    endif
 #    ifndef WIN32
 #      define WIN32
 #    endif
@@ -649,6 +613,14 @@ PDCurses portable platform definitions list:
 #endif
 
 /*---------------------------------------------------------------------*/
+
+#if defined(WIN32) && defined(INCLUDE_WINDOWS_H)
+# include <windows.h>
+# ifdef MOUSE_MOVED
+#  undef MOUSE_MOVED
+# endif
+#endif
+
 #include <stdio.h>		/* Required by X/Open usage below	*/
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)

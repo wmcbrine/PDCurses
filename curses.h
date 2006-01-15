@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.77 2006/01/15 11:21:38 wmcbrine Exp $
+$Id: curses.h,v 1.78 2006/01/15 17:30:28 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1169,7 +1169,7 @@ currently used.)
 # define ACS_CKBOARD	((chtype)2 | A_ALTCHARSET)
 # define ACS_DEGREE	((chtype)7 | A_ALTCHARSET)
 # define ACS_PLMINUS	((chtype)8 | A_ALTCHARSET)
-# define ACS_BULLET	((chtype)'*' | A_ALTCHARSET)
+# define ACS_BULLET	(chtype)'*'
 #else
 # define ACS_S1		(chtype)0x2d
 # define ACS_S9		(chtype)0x5f
@@ -1185,12 +1185,12 @@ currently used.)
    for optimum portability.
 */
 #ifdef XCURSES
-# define ACS_LARROW	((chtype)'<' | A_ALTCHARSET)
-# define ACS_RARROW	((chtype)'>' | A_ALTCHARSET)
-# define ACS_DARROW	((chtype)'v' | A_ALTCHARSET)
-# define ACS_UARROW	((chtype)'^' | A_ALTCHARSET)
-# define ACS_BOARD	((chtype)'#' | A_ALTCHARSET)
-# define ACS_LANTERN	((chtype)'#' | A_ALTCHARSET)
+# define ACS_LARROW	(chtype)'<'
+# define ACS_RARROW	(chtype)'>'
+# define ACS_DARROW	(chtype)'v'
+# define ACS_UARROW	(chtype)'^'
+# define ACS_BOARD	(chtype)'#'
+# define ACS_LANTERN	(chtype)'#'
 # define ACS_BLOCK	((chtype)0 | A_ALTCHARSET)
 #else
 # define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)

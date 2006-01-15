@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs = "$Id: testcurs.c,v 1.28 2006/01/15 07:37:31 wmcbrine Exp $";
+char *rcsid_testcurs = "$Id: testcurs.c,v 1.29 2006/01/15 07:50:46 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -165,6 +165,20 @@ char *argv[];
 			display_menu(old_option, new_option);
 			break;
 
+		case KEY_PPAGE:
+		case KEY_HOME:
+			old_option = new_option;
+			new_option = 0;
+			display_menu(old_option, new_option);
+			break;
+
+		case KEY_NPAGE:
+		case KEY_END:
+			old_option = new_option;
+			new_option = MAX_OPTIONS - 1;
+			display_menu(old_option, new_option);
+			break;
+
 		case KEY_UP:
 			old_option = new_option;
 			new_option = (new_option == 0) ?
@@ -174,7 +188,7 @@ char *argv[];
 
 		case KEY_DOWN:
 			old_option = new_option;
-			new_option = (new_option == MAX_OPTIONS-1) ?
+			new_option = (new_option == MAX_OPTIONS - 1) ?
 				new_option : new_option + 1;
 			display_menu(old_option, new_option);
 			break;

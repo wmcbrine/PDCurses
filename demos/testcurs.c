@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs = "$Id: testcurs.c,v 1.29 2006/01/15 07:50:46 wmcbrine Exp $";
+char *rcsid_testcurs = "$Id: testcurs.c,v 1.30 2006/01/15 09:21:17 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -993,17 +993,19 @@ WINDOW *win;
 		ACS_NEQUAL, ACS_STERLING
 	};
 
-	int i;
+	int i, tmarg = (LINES - 22) / 2;
 
 	clear();
 
 	attrset(A_BOLD);
-	mvprintw(1, (COLS - 23) / 2, "Alternate Character Set");
+	mvprintw(tmarg, (COLS - 23) / 2, "Alternate Character Set");
 	attrset(A_NORMAL);
+
+	tmarg += 3;
 
 	for (i = 0; i < 32; i++)
 	{
-		move((i % 8) * 2 + 4, (i / 8) * (COLS / 4) +
+		move((i % 8) * 2 + tmarg, (i / 8) * (COLS / 4) +
 			(COLS / 8 - 7));
 
 		addch(acs_values[i]);
@@ -1022,23 +1024,26 @@ void display_menu(old_option, new_option)
 int old_option, new_option;
 #endif
 {
+	int lmarg = (COLS - 14) / 2,
+		tmarg = (LINES - (MAX_OPTIONS + 2)) / 2;
+
 	if (old_option == -1) {
 		int i;
 
 		attrset(A_BOLD);
-		mvaddstr(3, 20, "PDCurses Test Program");
+		mvaddstr(tmarg - 3, lmarg - 5, "PDCurses Test Program");
 		attrset(A_NORMAL);
 
 		for (i = 0; i < MAX_OPTIONS; i++)
-			mvaddstr(5 + i, 25, command[i].text);
+			mvaddstr(tmarg + i, lmarg, command[i].text);
 	} else
-		mvaddstr(5 + old_option, 25, command[old_option].text);
+		mvaddstr(tmarg + old_option, lmarg, command[old_option].text);
 
 	attrset(A_REVERSE);
-	mvaddstr(5 + new_option, 25, command[new_option].text);
+	mvaddstr(tmarg + new_option, lmarg, command[new_option].text);
 	attrset(A_NORMAL);
 
-	mvaddstr(14, 3,
+	mvaddstr(tmarg + MAX_OPTIONS + 2, lmarg - 23,
 		"Use Up and Down Arrows to select - Enter to run - Q to quit");
 	refresh();
 }

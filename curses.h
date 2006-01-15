@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.78 2006/01/15 17:30:28 wmcbrine Exp $
+$Id: curses.h,v 1.79 2006/01/15 17:53:20 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -210,9 +210,6 @@ PDCurses portable platform definitions list:
 #      define WIN32 1
 #    endif
 #  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
 #  endif
@@ -292,9 +289,6 @@ PDCurses portable platform definitions list:
 #      undef  HAVE_VSSCANF        /* vsscanf() function NOT in library */
 #    endif
 #  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE                             /* have memmove() */
 #  endif
@@ -313,9 +307,6 @@ PDCurses portable platform definitions list:
 #  include <bios.h>
 #  include <dos.h>
 #  undef  HAVE_VSSCANF            /* vsscanf() function NOT in library */
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #endif
 
 /*----------------------------------------
@@ -336,9 +327,6 @@ PDCurses portable platform definitions list:
 #    define INCL_KBD
 #    include <os2.h>
 #  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #endif
 
 /*----------------------------------------
@@ -355,9 +343,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
-#  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
@@ -392,9 +377,6 @@ PDCurses portable platform definitions list:
 #  define CURSES__32BIT__
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
-#  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
@@ -435,9 +417,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H                           /* have <stdarg.h> */
 #  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
 #  endif
@@ -472,12 +451,6 @@ PDCurses portable platform definitions list:
 #  if !defined( WIN32 ) && !defined(XCURSES)
 #    define WIN32
 #  endif
-#  ifndef INT_MAX
-#    define INT_MAX 32762
-#  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
 #  endif
@@ -511,9 +484,6 @@ PDCurses portable platform definitions list:
 #  ifndef WIN32
 #    define WIN32
 #  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
 #  endif
@@ -541,9 +511,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef WIN32
 #    define WIN32
-#  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
 #  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
@@ -619,9 +586,6 @@ PDCurses portable platform definitions list:
 #      define PDC_CDECL cdecl   /* needed for compatibility to other systems */
 #    endif
 #  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H                           /* have <memory.h> */
 #  endif
@@ -652,9 +616,6 @@ PDCurses portable platform definitions list:
 #    endif
 #  endif
 #    undef  NO_VSSCANF            /* vsscanf() function NOT in library */
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H                           /* have <limits.h> */
-#  endif
 #endif
 
 /*
@@ -677,9 +638,6 @@ PDCurses portable platform definitions list:
 #  include <stdlib.h>
 #  ifndef __SMALL__
 #    define __SMALL__
-#  endif
-#  ifndef HAVE_LIMITS_H
-#    define HAVE_LIMITS_H
 #  endif
 #  ifndef HAVE_STDARG_H
 #    define HAVE_STDARG_H

@@ -28,12 +28,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <stdio.h>
-
-#ifdef HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
+#include <limits.h>
 #include <string.h>
 
 #if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
@@ -44,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.15 2006/01/14 06:29:37 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.16 2006/01/15 17:53:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

@@ -31,15 +31,8 @@
 #include <limits.h>
 #include <string.h>
 
-#if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
-# include <stdarg.h>
-# define HAVE_STDARG_H_HAVE_PROTO
-#else
-# include <varargs.h>
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.16 2006/01/15 17:53:21 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.17 2006/01/15 23:17:35 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

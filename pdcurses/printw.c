@@ -24,13 +24,6 @@
 #include <curses.h>
 #include <string.h>
 
-#if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
-# include <stdarg.h>
-# define HAVE_STDARG_H_HAVE_PROTO
-#else
-# include <varargs.h>
-#endif
-
 /* undefine any macros for functions defined in this module */
 #undef	printw
 #undef	wprintw
@@ -44,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw = "$Id: printw.c,v 1.5 2006/01/14 06:42:03 wmcbrine Exp $";
+char *rcsid_printw = "$Id: printw.c,v 1.6 2006/01/15 23:17:35 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

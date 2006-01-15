@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define  CURSES_LIBRARY 1
+#define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -27,18 +27,10 @@
 #include <sys/types.h>
 #include <time.h>
 
-
 #undef   PDC_debug
 
-#if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
-# include <stdarg.h>
-# define HAVE_STDARG_H_HAVE_PROTO
-#else
-# include <varargs.h>
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.6 2006/01/05 22:38:28 wmcbrine Exp $";
+char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.7 2006/01/15 23:17:35 wmcbrine Exp $";
 #endif
 
 	bool trace_on = FALSE;

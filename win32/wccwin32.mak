@@ -125,7 +125,7 @@ PANOBJS =     &
 panel.obj
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) $@ @$(osdir)\wccwin32.lrf
+	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
 
 panel.lib : $(PANOBJS)
 	echo +$(PANOBJS)   >  lib.rsp

@@ -17,12 +17,12 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define  CURSES_LIBRARY 1
-#define  INCLUDE_WINDOWS_H
+#define CURSES_LIBRARY 1
+#define INCLUDE_WINDOWS_H
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.18 2006/01/12 00:20:14 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.19 2006/01/17 22:29:07 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -74,28 +74,25 @@ int PDC_scr_close(void)
 	   DLL_PROCESS_DETACH */
 
 	SetConsoleScreenBufferSize(hConOut, orig_scr.dwSize);
-	SetConsoleWindowInfo(hConOut,TRUE, &orig_scr.srWindow);
+	SetConsoleWindowInfo(hConOut, TRUE, &orig_scr.srWindow);
 	SetConsoleScreenBufferSize(hConOut, orig_scr.dwSize);
 	SetConsoleWindowInfo(hConOut, TRUE, &orig_scr.srWindow);
 
-	if (SP->_restore == PDC_RESTORE_WINDOW)
+	if (SP->_restore != PDC_RESTORE_NONE)
 	{
-		rect.Top = orig_scr.srWindow.Top;
-		rect.Left = orig_scr.srWindow.Left;
-		rect.Bottom = orig_scr.srWindow.Bottom;
-		rect.Right = orig_scr.srWindow.Right;
-
-		origin.X = origin.Y = 0;
-
-		if (!WriteConsoleOutput(hConOut, ciSaveBuffer, 
-		    orig_scr.dwSize, origin, &rect))
-			return ERR;
-	}
-	else if (SP->_restore == PDC_RESTORE_BUFFER)
-	{
-		rect.Top = rect.Left = 0;
-		rect.Bottom = orig_scr.dwSize.Y - 1;
-		rect.Right = orig_scr.dwSize.X - 1;
+		if (SP->_restore == PDC_RESTORE_WINDOW)
+		{
+			rect.Top = orig_scr.srWindow.Top;
+			rect.Left = orig_scr.srWindow.Left;
+			rect.Bottom = orig_scr.srWindow.Bottom;
+			rect.Right = orig_scr.srWindow.Right;
+		}
+		else	/* PDC_RESTORE_BUFFER */
+		{
+			rect.Top = rect.Left = 0;
+			rect.Bottom = orig_scr.dwSize.Y - 1;
+			rect.Right = orig_scr.dwSize.X - 1;
+		}
 
 		origin.X = origin.Y = 0;
 
@@ -167,9 +164,9 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 
 int PDC_scr_open(SCREEN *internal, bool echo)
 {
-	COORD bufsize,origin;
+	COORD bufsize, origin;
 	SMALL_RECT rect;
-	char *str;
+	const char *str;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
 #if defined(PDC_THREAD_BUILD)
@@ -185,18 +182,13 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	GetConsoleScreenBufferInfo(hConOut, &orig_scr);
 	GetConsoleMode(hConIn, &dwConsoleMode);
 
-	if ((str = getenv("LINES")) != NULL)
-		internal->lines = atoi(str);
-	else
-		internal->lines = PDC_get_rows();
+	internal->lines = ((str = getenv("LINES")) != NULL) ?
+		atoi(str) : PDC_get_rows();
 
-	if ((str = getenv("COLS")) != NULL)
-		internal->cols = atoi(str);
-	else
-		internal->cols = PDC_get_columns();
+	internal->cols = ((str = getenv("COLS")) != NULL) ?
+		atoi(str) : PDC_get_columns();
 
-	if (internal->lines < 2 ||
-	    internal->lines > csbi.dwMaximumWindowSize.Y)
+	if (internal->lines < 2 || internal->lines > csbi.dwMaximumWindowSize.Y)
 	{
 		fprintf(stderr, "LINES value must be >= 2 and <= %d: got %d\n",
 			csbi.dwMaximumWindowSize.Y, internal->lines);
@@ -204,8 +196,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 		return ERR;
 	}
 
-	if (internal->cols < 2 ||
-	    internal->cols > csbi.dwMaximumWindowSize.X)
+	if (internal->cols < 2 || internal->cols > csbi.dwMaximumWindowSize.X)
 	{
 		fprintf(stderr, "COLS value must be >= 2 and <= %d: got %d\n",
 			csbi.dwMaximumWindowSize.X, internal->cols);
@@ -234,8 +225,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 		if ((ciSaveBuffer = (CHAR_INFO*)malloc(orig_scr.dwSize.X *
 		    orig_scr.dwSize.Y * sizeof(CHAR_INFO))) == NULL)
 		{
-		    PDC_LOG(("PDC_scr_open() - exiting at line %d\n",
-			__LINE__));
+		    PDC_LOG(("PDC_scr_open() - malloc failure (1)\n"));
 
 		    return ERR;
 		}
@@ -266,15 +256,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 		    if ((ciSaveBuffer = (CHAR_INFO*)malloc(bufsize.X * 
 			bufsize.Y * sizeof(CHAR_INFO))) == NULL)
 		    {
-			CHAR LastError[256];
-			ULONG last_error = GetLastError();
-
-			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, 
-			    last_error, MAKELANGID(LANG_NEUTRAL, 
-			    SUBLANG_DEFAULT), LastError, 256, NULL);
-
-			PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",
-				__LINE__, LastError));
+			PDC_LOG(("PDC_scr_open() - malloc failure (2)\n"));
 
 			return ERR;
 		    }
@@ -289,18 +271,17 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 		    if (!ReadConsoleOutput(hConOut, ciSaveBuffer, 
 			bufsize, origin, &rect))
 		    {
+#ifdef PDCDEBUG
 			CHAR LastError[256];
-			ULONG last_error = GetLastError();
 
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, 
-			    last_error, MAKELANGID(LANG_NEUTRAL, 
+			    GetLastError(), MAKELANGID(LANG_NEUTRAL, 
 			    SUBLANG_DEFAULT), LastError, 256, NULL);
 
+			PDC_LOG(("PDC_scr_open() - %s\n", LastError));
+#endif
 			free(ciSaveBuffer);
 			ciSaveBuffer = NULL;
-
-			PDC_LOG(("PDC_scr_open() - exiting at line %d: %s\n",
-			    __LINE__, LastError));
 
 			return ERR;
 		    }
@@ -311,10 +292,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 		    internal->_restore = PDC_RESTORE_BUFFER;
 	}
 
-	if (getenv("PDC_PRESERVE_SCREEN") != NULL)
-		internal->_preserve = TRUE;
-	else
-		internal->_preserve = FALSE;
+	internal->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
 	bufsize.X = orig_scr.srWindow.Right - orig_scr.srWindow.Left + 1;
 	bufsize.Y = orig_scr.srWindow.Bottom - orig_scr.srWindow.Top + 1;
@@ -419,7 +397,7 @@ static BOOL FitConsoleWindow(HANDLE hConOut, CONST SMALL_RECT *rect)
 	my = run.Bottom;
 
 	if (!SetConsoleWindowInfo(hConOut, TRUE, &run))
-		return(FALSE);
+		return FALSE;
 
 	for (run.Right = rect->Right; run.Right >= mx; run.Right--)
 		if (SetConsoleWindowInfo(hConOut, TRUE, &run))
@@ -467,7 +445,7 @@ int PDC_resize_screen(int nlines, int ncols)
 #if defined(MHES)
 
 	COORD size, max;
-	SMALL_RECT rect, displayarea = {0,0,0,0};
+	SMALL_RECT rect, displayarea = {0, 0, 0, 0};
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
 	int external_resized = SP->resized;
@@ -503,12 +481,12 @@ int PDC_resize_screen(int nlines, int ncols)
 	rect.Left = rect.Top = 0;
 	rect.Right = ncols - 1;
 
-	if (rect.Right >= max.X)
+	if (rect.Right > max.X)
 		rect.Right = max.X;
 
 	rect.Bottom = rect.Top + nlines - 1;
 
-	if (rect.Bottom >= max.Y)
+	if (rect.Bottom > max.Y)
 		rect.Bottom = max.Y;
 
 	/* helps to allow the BufferSize */
@@ -557,9 +535,9 @@ int PDC_resize_screen(int nlines, int ncols)
 	rect.Right = SP->cols - 1;
 
 	SetConsoleScreenBufferSize(hConOut, size);
-	SetConsoleWindowInfo(hConOut,TRUE, &rect);
+	SetConsoleWindowInfo(hConOut, TRUE, &rect);
 	SetConsoleScreenBufferSize(hConOut, size);
-	SetConsoleWindowInfo(hConOut,TRUE, &rect);
+	SetConsoleWindowInfo(hConOut, TRUE, &rect);
 	SetConsoleActiveScreenBuffer(hConOut);
 
 	SP->resized = FALSE;
@@ -577,12 +555,12 @@ int PDC_resize_screen(int nlines, int ncols)
 	rect.Left = rect.Top = 0;
 	rect.Right = ncols - 1;
 
-	if (rect.Right >= max.X)
+	if (rect.Right > max.X)
 		rect.Right = max.X;
 
 	rect.Bottom = nlines - 1;
 
-	if (rect.Bottom >= max.Y)
+	if (rect.Bottom > max.Y)
 		rect.Bottom = max.Y;
 
 	size.X = rect.Right + 1;

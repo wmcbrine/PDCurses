@@ -337,6 +337,6 @@ dist: $(PDCLIBS)
 	echo $(LIBCURSES) >> flist
 	echo $(LIBPANEL) >> flist
 	echo file_id.diz >> flist
-	zip -jX pdc$(VER)bcc -@ <flist
+	zip -9jX pdc$(VER)bcc -@ <flist
 	del flist
 	del file_id.diz

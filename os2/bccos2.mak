@@ -325,7 +325,7 @@ dist: $(PDCLIBS)
 	echo Borland C/C++ OS/2 1.0. >> file_id.diz
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
-	zip -jX pdc$(VER)bcos2 \
+	zip -9jX pdc$(VER)bcos2 \
 	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) \
 	$(PDCURSES_HOME)\maintain.er \
 	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h \

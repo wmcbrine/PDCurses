@@ -369,7 +369,7 @@ dist: .symbolic $(PDCLIBS)
 	echo Open Watcom 1.3 for Win32. >> file_id.diz
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
-	zip -jX pdc$(VER)_wcc_w32 &
+	zip -9jX pdc$(VER)_wcc_w32 &
 	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) &
 	$(PDCURSES_HOME)\maintain.er &
 	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h &

@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.12 2006/01/18 19:30:22 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.13 2006/01/18 19:40:08 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -174,7 +174,7 @@ int n;
 			if (x < minx || minx == _NO_CHANGE)
 				minx = x;
 
-			if (x > maxx || maxx == _NO_CHANGE)
+			if (x > maxx)
 				maxx = x;
 
 			PDC_LOG(("y %d x %d minx %d maxx %d *ptr %x *ch"

@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.11 2006/01/14 06:42:03 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.12 2006/01/18 19:30:22 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -146,7 +146,7 @@ int n;
 #endif
 /***********************************************************************/
 {
-	int i, y, x, num, maxx, minx, first = 1;
+	int y, x, maxx, minx;
 	chtype *ptr;
 
 	PDC_LOG(("waddchnstr() - called: win=%x n=%d\n", win, n));
@@ -154,75 +154,41 @@ int n;
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-	if (n == 0 || n < (-1))
+	if (n == 0 || n < -1)
 		return ERR;
 
 	x = win->_curx;
 	y = win->_cury;
 	ptr = &(win->_y[y][x]);
 
-#if 0
-	if (n == (-1))
-	{
-		for (num = win->_maxx - x; *ch && num--; num++)
-			*ptr++ = *ch++;
-		maxx = num;
-	}
-	else
-	{
-		num = min(win->_maxx - x, n);
-		maxx = x + num - 1;
-		memcpy((char *)ptr, (char *)ch, (int)(num * sizeof(chtype)));
-	}
-
-	if (win->_firstch[y] == _NO_CHANGE)
-	{
-		win->_firstch[y] = x;
-		win->_lastch[y] = maxx;
-	}
-	else
-	{
-		if (x < win->_firstch[y])
-			win->_firstch[y] = x;
-		if (maxx > win->_lastch[y])
-			win->_lastch[y] = maxx;
-	}
-#else
-	if (n == (-1))
-		num = win->_maxx - x;
-	else
-		num = min(win->_maxx - x, n);
+	if (n == -1 || n > win->_maxx - x)
+		n = win->_maxx - x;
 
 	minx = win->_firstch[y];
 	maxx = win->_lastch[y];
 
-	for (i = x; num && *ch; num--, i++)
+	for (; n && *ch; n--, x++, ptr++, ch++)
 	{
-		if (i < win->_firstch[y] || win->_firstch[y] == _NO_CHANGE)
+		if (*ptr != *ch)
 		{
-			if (*ptr != *ch && first)
-			{
-				minx = i;
-				first = 0;
-			}
+			if (x < minx || minx == _NO_CHANGE)
+				minx = x;
+
+			if (x > maxx || maxx == _NO_CHANGE)
+				maxx = x;
+
+			PDC_LOG(("y %d x %d minx %d maxx %d *ptr %x *ch"
+				 " %x firstch: %d lastch: %d\n",
+				 y, x, minx, maxx, *ptr, *ch, 
+				 win->_firstch[y], win->_lastch[y]));
+
+			*ptr = *ch;
 		}
-
-		if (i > win->_lastch[y])
-		{
-			if (*ptr != *ch)
-				maxx = i;
-		}
-
-		PDC_LOG(("y %d i %d minx %d maxx %d *ptr %x *ch %x firstch: %d lastch: %d\n",
-			y, i, minx, maxx, *ptr, *ch, 
-			win->_firstch[y], win->_lastch[y]));
-
-		*ptr++ = *ch++;
 	}
 
 	win->_firstch[y] = minx;
 	win->_lastch[y] = maxx;
-#endif
+
 	return OK;
 }
 

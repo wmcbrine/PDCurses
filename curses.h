@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.83 2006/01/15 23:17:28 wmcbrine Exp $
+$Id: curses.h,v 1.84 2006/01/20 01:43:06 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -160,7 +160,7 @@ PDCurses portable platform definitions list:
 	                See notes in wclrtoeol() and wclrtoeof().
 **man-end**********************************************************************/
 
-#define PDC_BUILD 2703
+#define PDC_BUILD 2704
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/

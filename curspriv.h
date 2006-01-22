@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.17 2006/01/15 18:36:53 wmcbrine Exp $
+$Id: curspriv.h,v 1.18 2006/01/22 20:22:08 wmcbrine Exp $
 */
 /*
 *
@@ -447,19 +447,6 @@ WINDS*          PDC_findwin Args(( WINDOW* ));
 #define CURSES_SET_SELECTION       999987
 #define CURSES_DISPLAY_CURSOR      999986
 #define CURSES_CLEAR_SELECTION     999985
-
-#define XCURSCR_Y_SIZE      (XCursesLINES*XCursesCOLS*sizeof(chtype))
-#define XCURSCR_FLAG_SIZE   (XCursesLINES*sizeof(int))
-#define XCURSCR_START_SIZE  (XCursesLINES*sizeof(int))
-#define XCURSCR_LENGTH_SIZE (XCursesLINES*sizeof(int))
-#define XCURSCR_ATRTAB_SIZE (MAX_ATRTAB*sizeof(unsigned char))
-#define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE+XCURSCR_START_SIZE+XCURSCR_LENGTH_SIZE+XCURSCR_Y_SIZE+XCURSCR_ATRTAB_SIZE)
-
-#define XCURSCR_Y_OFF(y)    ((y)*XCursesCOLS*(sizeof(chtype)))
-#define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0)+XCURSCR_Y_SIZE)
-#define XCURSCR_START_OFF   (XCURSCR_FLAG_OFF+XCURSCR_FLAG_SIZE)
-#define XCURSCR_LENGTH_OFF  (XCURSCR_START_OFF+XCURSCR_START_SIZE)
-#define XCURSCR_ATRTAB_OFF  (XCURSCR_LENGTH_OFF+XCURSCR_LENGTH_SIZE)
 #endif
 
 #endif /* __CURSES_INTERNALS__*/

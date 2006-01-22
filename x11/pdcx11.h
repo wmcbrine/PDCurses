@@ -107,6 +107,20 @@
 
 #include <curses.h>
 
+#define XCURSCR_Y_SIZE      (XCursesLINES * XCursesCOLS * sizeof(chtype))
+#define XCURSCR_FLAG_SIZE   (XCursesLINES * sizeof(int))
+#define XCURSCR_START_SIZE  (XCursesLINES * sizeof(int))
+#define XCURSCR_LENGTH_SIZE (XCursesLINES * sizeof(int))
+#define XCURSCR_ATRTAB_SIZE (MAX_ATRTAB * sizeof(unsigned char))
+#define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE + XCURSCR_START_SIZE + \
+	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + XCURSCR_ATRTAB_SIZE)
+
+#define XCURSCR_Y_OFF(y)    ((y) * XCursesCOLS * sizeof(chtype))
+#define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0) + XCURSCR_Y_SIZE)
+#define XCURSCR_START_OFF   (XCURSCR_FLAG_OFF + XCURSCR_FLAG_SIZE)
+#define XCURSCR_LENGTH_OFF  (XCURSCR_START_OFF + XCURSCR_START_SIZE)
+#define XCURSCR_ATRTAB_OFF  (XCURSCR_LENGTH_OFF + XCURSCR_LENGTH_SIZE)
+
 #define XtNlines         "lines"
 #define XtCLines         "Lines"
 #define XtNcols          "cols"

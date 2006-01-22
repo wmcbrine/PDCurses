@@ -18,111 +18,11 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.84 2006/01/20 01:43:06 wmcbrine Exp $
+$Id: curses.h,v 1.85 2006/01/22 20:51:43 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
 *				PDCurses
-*----------------------------------------------------------------------
-* MH
-*	991212	2.4
-*		Key modifiers pressed by themselves are now returned as keys
-*			KEY_SHIFT_L KEY_SHIFT_R
-*			KEY_CONTROL_L KEY_CONTROL_R
-*			KEY_ALT_L KEY_ALT_R
-*			This works on Win32 and X11 ports only
-*		Added support for lcc-win32, supplied by Matthias Burian
-*		Added support for MingW32, and CygnusW32 compilers
-*		Added clipboard support for X11, Win32 and OS/2 ports
-*		Added ability to get to the input file descriptor
-*		New function for X11; Xinitscr() which allows standard X11
-*			switches to be passed to the application
-*		Added X11 shared library support
-*
-* MH
-*	960920	2.3	Added more System V R4 functions
-*
-*			Rewrote X11 port
-*
-*			Added Win32 port - original port by Chris Szurgot
-*				some updates by Mark Hessling
-*				some updates by Gurusamy Sarathy
-*
-*			slk() functions added by Kim Huron
-*
-*			Support for more and newer versions of compilers
-*
-*			Added mouse support for X11 and Win32 ports
-*
-*			Size of chtype now long
-*
-* MH
-*	950126	2.2	Added more System V R4 functions
-*
-*			Added beta Xwindows port
-*
-*			Changed chtype to long
-*
-*			Incorporated panels library
-*
-*			Support for more and newer versions of compilers
-*
-* MH
-*	930531	2.1	Added support for djgpp
-*
-*			Added beta Unix version
-*
-*			Added OS/2 DLL support.
-*
-*			Changed behaviour of overlay(), overwrite() and typeahead()
-*
-*	921120	2.0	Changed #if to #ifdef/#if defined to make it
-*			easier to add new platforms/compilers.
-*
-*			Added System V colour support.
-*
-*			Added OS/2 port.
-*-------
-* Frotz
-*	911221	2.0 pre-beta	Changed back from short to int. (int is the
-*			correct size for the default platform.  Short
-*			might be too short on some platforms.  This
-*			is more portable.  I, also, made this mistake.)
-*
-*			Many functions are now macros.  If you want
-*			the real thing, #undef the macro. (X/Open
-*			requirement.)
-*
-*			Merged many sources into current release.
-*
-*			Added many X/Open routines (not quite all yet).
-*
-*			Added internal documentation to all routines.
-*
-*			Added a HISTORY file to the environment.
-*
-*			Added a CONTRIB file to the environment.
-*-------
-* bl	900114	1.4	Window origin mod in overlay() and overwrite(), on
-*			public (and very reasonable) request. Swapped
-*			#define'd values of OK and ERR; OK now 1, and
-*			ERR is 0/NULL. Conforms better to UNIX
-*			versions.  borderchars[] removed from WINDOW
-*			struct since the border() functions were
-*			redefined. Use of short wherever possible.
-*			Portability improvements, mispelled name of
-*			[w]setscrreg().
-*
-*	881005	1.3	All modules lint-checked with MSC '-W3' and
-*			turbo'C' '-w -w-pro' switches. Support for
-*			border(), wborder() functions.
-*
-*	881002	1.2	Rcsid[] string in all modules, for maintenance.
-*
-*	880306	1.1	'Raw' output routines, revision info in curses.h.
-*
-*	870515	1.0	Initial Release.
-*
 *----------------------------------------------------------------------
 */
 

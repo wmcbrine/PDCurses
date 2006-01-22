@@ -18,40 +18,14 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.21 2006/01/22 20:36:39 wmcbrine Exp $
+$Id: curspriv.h,v 1.22 2006/01/22 20:51:44 wmcbrine Exp $
 */
 /*
 *
 *                          CURSPRIV.H
 *
-* Header file for definitions and declarations for the
-* PDCurses package. These definitions should not be generally
-* accessible to programmers, but are provided if the applications
-* programmer decides to make the decision in favor of speed on a
-* PC over portability.
-*
-* Revision History:
-* Frotz 1.5Beta 900714  Added many levels of compiler support.
-*                       Added mixed prototypes for all "internal" routines.
-*                       Removed all assembly language.  Added EGA/VGA
-*                       support.  Converted all #ifdef to #if in all
-*                       modules except CURSES.H and CURSPRIV.H.
-*                       Always include ASSERT.H.  Added support for an
-*                       external malloc(), calloc() and free().
-*                       Added support for FAST_VIDEO (direct-memory writes).
-*                       Added various memory model support (for FAST_VIDEO).
-*                       Added much of the December 1988 X/Open Curses
-*                       specification.
-* bl    1.3     881005  All modules lint-checked with MSC '-W3' and turbo'C'
-*                       '-w -w-pro' switches.
-* bl    1.2     881002  Support (by #ifdef UCMASM) for uppercase-only
-*                       assembly routine names. If UCMASM if defined,
-*                       all assembler names are #defined as upper case.
-*                       Not needed if you do "MASM /MX. Also missing
-*                       declaration of cursesscroll(). Fixes thanks to
-*                       N.D. Pentcheff
-* bl    1.1     880306  Add _chadd() for raw output routines.
-* bl    1.0     870515  Release.
+* Private definitions and declarations for use within the PDCurses 
+* package. These should generally not be referenced by applications.
 *
 */
 

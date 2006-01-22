@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.18 2006/01/22 20:22:08 wmcbrine Exp $
+$Id: curspriv.h,v 1.19 2006/01/22 20:28:05 wmcbrine Exp $
 */
 /*
 *
@@ -232,9 +232,6 @@ extern bool trace_on;
 
 /* Strget stuff */
 extern char*    c_strbeg;
-
-/* doupdate stuff */
-extern WINDOW*  twin;                   /* used by many routines */
 
 
 /* Monitor (terminal) type information */

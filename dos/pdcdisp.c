@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -30,8 +30,10 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.11 2006/01/07 02:53:24 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.12 2006/01/22 19:57:10 wmcbrine Exp $";
 #endif
+
+extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PC
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -66,8 +68,6 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 	PDCurses  int PDC_clr_update(WINDOW *s);
 
 **man-end**********************************************************************/
-
-	extern unsigned	char atrtab[MAX_ATRTAB];
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
@@ -108,7 +108,7 @@ WINDOW *s;
 
 	for (i = 0; i < LINES; i++)	/* update physical screen */
 	{
-		/* copy s to curscr - must be same size */
+		/* copy s to curscr -- must be same size */
 
 		if (s != curscr)
 			memcpy(curscr->_y[i], s->_y[i], COLS * sizeof(chtype));

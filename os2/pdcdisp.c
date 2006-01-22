@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -30,8 +30,10 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.7 2006/01/12 00:20:13 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.8 2006/01/22 19:57:12 wmcbrine Exp $";
 #endif
+
+extern unsigned char atrtab[MAX_ATRTAB];
 
 /*man-start*********************************************************************
 
@@ -61,8 +63,6 @@ int PDC_clr_update(WINDOW *s)
 {
 	int i, j;
 	unsigned short *ch;
-
-	extern unsigned	char atrtab[MAX_ATRTAB];
 
 	/* the next two variables have been changed from chtype to 
 	   unsigned short as this is the correct datatype for a physical 
@@ -99,8 +99,8 @@ int PDC_clr_update(WINDOW *s)
 
 		for (j = 0; j < COLS; j++)
 		{
-		    chr = (unsigned short)(s->_y[i][j] & A_CHARTEXT);
-		    temp_line[j] = chtype_attr(s->_y[i][j]) | chr;
+			chr = (unsigned short)(s->_y[i][j] & A_CHARTEXT);
+			temp_line[j] = chtype_attr(s->_y[i][j]) | chr;
 		}
 
 		if (SP->direct_video)
@@ -115,8 +115,7 @@ int PDC_clr_update(WINDOW *s)
 			for (j = 0; j < COLS; j++)
 			{
 				PDC_gotoxy(i, j);
-				PDC_putc((*ch & A_CHARTEXT),
-					(*ch & A_ATTRIBUTES) >> 8);
+				PDC_putc((*ch & 0x00FF), (*ch & 0xFF00) >> 8);
 				ch++;
 			}
 
@@ -382,7 +381,6 @@ int PDC_putctty(chtype character, chtype color)
 int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 /***********************************************************************/
 {
-	extern unsigned	char atrtab[MAX_ATRTAB];
 	int phys_attr = chtype_attr(attr);
 
 #ifndef EMXVIDEO
@@ -445,8 +443,6 @@ bool PDC_transform_line(int lineno)
 {
 	chtype *srcp;
 	int j, x, endx, len;
-
-	extern unsigned	char atrtab[MAX_ATRTAB];
 
 	/* this should be enough for the maximum width of a screen. */
 

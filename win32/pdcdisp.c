@@ -18,8 +18,8 @@
 ***************************************************************************
 */
 #include <string.h>
-#define  CURSES_LIBRARY 1
-#define  INCLUDE_WINDOWS_H
+#define CURSES_LIBRARY 1
+#define INCLUDE_WINDOWS_H
 #include <curses.h>
 
 #ifdef HAVE_MEMORY_H
@@ -27,9 +27,10 @@
 #endif
 
 extern HANDLE hConOut;
+extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.6 2006/01/08 11:53:43 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.7 2006/01/22 19:57:12 wmcbrine Exp $";
 #endif
 
 static CHAR_INFO ci[512];
@@ -60,8 +61,6 @@ static CHAR_INFO ci[512];
 int PDC_clr_update(WINDOW *s)
 /***********************************************************************/
 {
-	extern unsigned char atrtab[MAX_ATRTAB];
-
 	int i, j;
 	chtype *srcp;
 	COORD bufSize, bufPos;
@@ -97,9 +96,6 @@ int PDC_clr_update(WINDOW *s)
 			ci[j].Char.AsciiChar = srcp[j] & A_CHARTEXT;
 			ci[j].Attributes =
 				(chtype_attr(srcp[j]) & 0xFF00) >> 8;
-#ifdef HIDE_ATTR
-			ci[j].Attributes = COLOR_WHITE;
-#endif
 		}
 
 		WriteConsoleOutput(hConOut, ci, bufSize, bufPos, &sr);
@@ -415,8 +411,6 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 bool PDC_transform_line(int lineno)
 /***********************************************************************/
 {
-	extern unsigned char atrtab[MAX_ATRTAB];
-
 	int j, x, endx, len;
 	chtype *srcp;
 	COORD bufSize, bufPos;
@@ -446,9 +440,6 @@ bool PDC_transform_line(int lineno)
 	{
 		ci[j].Char.AsciiChar = srcp[j] & A_CHARTEXT;
 		ci[j].Attributes = (chtype_attr(srcp[j]) & 0xFF00) >> 8;
-#ifdef HIDE_ATTR
-		ci[j].Attributes = COLOR_WHITE;
-#endif
 	}
 
 	WriteConsoleOutput(hConOut, ci, bufSize, bufPos, &sr);
@@ -487,8 +478,6 @@ bool PDC_transform_line(int lineno)
 void PDC_doupdate(void)
 /***********************************************************************/
 {
-	extern unsigned char atrtab[MAX_ATRTAB];
-
 	int i, j, k;
 	int starty = _NO_CHANGE, startx = _NO_CHANGE;
 	int size;
@@ -551,9 +540,6 @@ void PDC_doupdate(void)
 			ptr[k].Char.AsciiChar = srcp[j] & A_CHARTEXT;
 			ptr[k].Attributes =
 				(chtype_attr(srcp[j]) & 0xFF00) >> 8;
-#ifdef HIDE_ATTR
-			ptr[k].Attributes = COLOR_WHITE;
-#endif
 			k++;
 		}
 		curscr->_firstch[i] = _NO_CHANGE;

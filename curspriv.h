@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.20 2006/01/22 20:34:30 wmcbrine Exp $
+$Id: curspriv.h,v 1.21 2006/01/22 20:36:39 wmcbrine Exp $
 */
 /*
 *
@@ -267,7 +267,7 @@ void            PDC_beep Args(( void ));
 bool            PDC_breakout Args(( void ));
 int             PDC_chadd Args(( WINDOW*, chtype, bool, bool ));
 bool            PDC_check_bios_key Args(( void ));
-int             PDC_chg_attr Args(( WINDOW*, chtype, int, int, int, int ));
+int             PDC_chg_attrs Args(( WINDOW*, chtype, int, int, int, int ));
 int             PDC_chins Args(( WINDOW*, chtype, bool ));
 int             PDC_clr_scrn Args(( WINDOW* ));
 int             PDC_clr_update Args(( WINDOW* ));

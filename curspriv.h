@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.19 2006/01/22 20:28:05 wmcbrine Exp $
+$Id: curspriv.h,v 1.20 2006/01/22 20:34:30 wmcbrine Exp $
 */
 /*
 *
@@ -230,9 +230,6 @@ extern char c_printscanbuf[];           /* buffer used during I/O */
 /* tracing flag */
 extern bool trace_on;
 
-/* Strget stuff */
-extern char*    c_strbeg;
-
 
 /* Monitor (terminal) type information */
 #define _NONE           0x00
@@ -267,7 +264,6 @@ extern char*    c_strbeg;
 #endif
 
 void            PDC_beep Args(( void ));
-int             PDC_backchar Args(( WINDOW*, char*, int* ));
 bool            PDC_breakout Args(( void ));
 int             PDC_chadd Args(( WINDOW*, chtype, bool, bool ));
 bool            PDC_check_bios_key Args(( void ));

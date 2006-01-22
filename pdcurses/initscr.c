@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.18 2006/01/15 11:21:40 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.19 2006/01/22 20:34:30 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -91,11 +91,6 @@ struct cttyset c_save_trm = {0};
  * Global definitions for printscan routines
  */
 char c_printscanbuf[513];  /* buffer used during I/O */
-
-/*
- * Global definitions for strget routines
- */
-char *c_strbeg;
 
 #if EMALLOC
 # ifdef HAVE_PROTO

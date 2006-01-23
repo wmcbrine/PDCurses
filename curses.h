@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.88 2006/01/23 22:30:56 wmcbrine Exp $
+$Id: curses.h,v 1.89 2006/01/23 22:34:50 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1534,11 +1534,9 @@ void	PDC_CDECL wsyncdown Args((WINDOW *));
 void	PDC_CDECL wsyncup Args((WINDOW *));
 int	PDC_CDECL wvline Args((WINDOW *, chtype, int));
 
-#ifdef PDCURSES
 int	PDC_CDECL raw_output Args((bool));
 int	PDC_CDECL resize_term Args((int, int));
 WINDOW* PDC_CDECL resize_window Args((WINDOW *, int, int));
-#endif
 
 #ifdef XCURSES
 void	PDC_CDECL XCursesExit Args((void));

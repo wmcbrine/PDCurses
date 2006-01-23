@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.23 2006/01/22 21:48:23 wmcbrine Exp $
+$Id: curspriv.h,v 1.24 2006/01/23 00:37:48 wmcbrine Exp $
 */
 /*
 *                          CURSPRIV.H
@@ -275,15 +275,12 @@ int		PDC_set_ctrl_break Args((bool));
 int		PDC_set_cursor_mode Args((int, int));
 int		PDC_set_font Args((int));
 int		PDC_set_rows Args((int));
-int		PDC_split_plane Args((WINDOW *, char *, char *, int, 
-				      int, int, int));
+void		PDC_slk_calc Args((void));
 void		PDC_sync Args((WINDOW *));
 int		PDC_sysgetch Args((void));
 bool		PDC_transform_line Args((int));
 int		PDC_validchar Args((int));
 int		PDC_vsscanf Args((char *, const char *, va_list));
-
-void		PDC_slk_calc Args((void));
 
 
 #if defined(OS2) && !defined(EMXVIDEO)

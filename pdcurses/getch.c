@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.15 2006/01/14 06:42:03 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.16 2006/01/23 12:36:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -143,7 +143,7 @@ WINDOW *win;
 	extern WINDOW *_getch_win_;
 
 	static int buffer[_INBUFSIZ];	/* character buffer */
-	int key, display_key, waitingtenths;
+	int key, display_key, waitcount;
 
 	PDC_LOG(("wgetch() - called\n"));
 
@@ -151,32 +151,28 @@ WINDOW *win;
 		return ERR;
 
 	display_key = 0x100;
-	waitingtenths = 0;
+	waitcount = 0;
 
 	 /* set the number of 1/20th second napms() calls */
 
 	if (SP->delaytenths)
-		waitingtenths = 2 * SP->delaytenths;
+		waitcount = 2 * SP->delaytenths;
 	else
 		if (win->_delayms)
 		{
-/*
- * As granularity of clocks is not ideal for waiting for individual periods
- * of 1 millisecond, we need to determine a reasonably accurate mechanism
- * based on the specified delay period. As delaying by 1/20th of a second
- * is reasonable, then determine how many 1/20th seconds are in the specified
- * delay time, and pause that many times.
- */
-			waitingtenths = win->_delayms / 50;
-			if (waitingtenths == 0)
-				waitingtenths = 1;
+			/* Can't really do millisecond intervals, so 
+			   delay in 1/20ths of a second (50ms) */
+
+			waitcount = win->_delayms / 50;
+			if (waitcount == 0)
+				waitcount = 1;
 		}
 
 	PDC_LOG(("initial: %d delaytenths %d delayms %d\n",
-		waitingtenths, SP->delaytenths, win->_delayms));
+		waitcount, SP->delaytenths, win->_delayms));
 
-/* wrs (7/31/93) -- System V curses refreshes window when wgetch is called */
-/*                  if there have been changes to it and it is not a pad */
+	/* wrs (7/31/93) -- System V curses refreshes window when wgetch 
+	   is called if there have been changes to it and it is not a pad */
 
 	if (!(win->_flags & _PAD) && is_wintouched(win))
 		wrefresh(win);
@@ -198,11 +194,9 @@ WINDOW *win;
 	c_pindex = 0;
 	c_gindex = 0;
 
-/*
- * to get here, no keys are buffered. go and get one...
- */
+	/* to get here, no keys are buffered. go and get one. */
 
-	for(;;)			/* loop for any buffering */
+	for (;;)			/* loop for any buffering */
 	{
 
 #ifdef XCURSES
@@ -222,21 +216,19 @@ WINDOW *win;
 			PDC_set_ctrl_break(cbr);
 		}
 #endif
+		/* Handle timeout() and halfdelay() */
 
-/*
- * Handle timeout() and halfdelay().
- */
 		if (SP->delaytenths || win->_delayms)
 		{
-			PDC_LOG(("waiting: %d delaytenths %d delayms %d\n",
-			    waitingtenths, SP->delaytenths, win->_delayms));
+			PDC_LOG(("waitcount: %d delaytenths %d delayms %d\n",
+			    waitcount, SP->delaytenths, win->_delayms));
 
-			if (waitingtenths == 0 && key == -1)
+			if (waitcount == 0 && key == -1)
 				return ERR;
 
 			if (key == -1)
 			{
-				waitingtenths--;
+				waitcount--;
 				napms(50);	/* sleep for 1/20th second */
 				continue;
 			}

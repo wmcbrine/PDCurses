@@ -1,124 +1,120 @@
 MH
-	991212	2.4	Key modifiers pressed by themselves are now 
-			returned as keys
-				KEY_SHIFT_L KEY_SHIFT_R
-				KEY_CONTROL_L KEY_CONTROL_R
-				KEY_ALT_L KEY_ALT_R
-			This works on Win32 and X11 ports only
 
-			Added support for lcc-win32, supplied by 
-			Matthias Burian
+991212	2.4	Key modifiers pressed by themselves are now 
+		returned as keys
+			KEY_SHIFT_L KEY_SHIFT_R
+			KEY_CONTROL_L KEY_CONTROL_R
+			KEY_ALT_L KEY_ALT_R
+		This works on Win32 and X11 ports only
 
-			Added support for MingW32, and CygnusW32 compilers
+		Added support for lcc-win32, supplied by Matthias Burian
 
-			Added clipboard support for X11, Win32 and OS/2 ports
+		Added support for MingW32, and CygnusW32 compilers
 
-			Added ability to get to the input file descriptor
+		Added clipboard support for X11, Win32 and OS/2 ports
 
-			New function for X11; Xinitscr() which allows 
-			standard X11 switches to be passed to the 
-			application
+		Added ability to get to the input file descriptor
 
-			Added X11 shared library support
+		New function for X11; Xinitscr() which allows standard 
+		X11 switches to be passed to the application
 
-	960920	2.3	Added more System V R4 functions
+		Added X11 shared library support
 
-			Rewrote X11 port
+960920	2.3	Added more System V R4 functions
 
-			Added Win32 port - original port by Chris Szurgot
-				some updates by Mark Hessling
-				some updates by Gurusamy Sarathy
+		Rewrote X11 port
 
-			slk() functions added by Kim Huron
+		Added Win32 port - original port by Chris Szurgot
+			some updates by Mark Hessling
+			some updates by Gurusamy Sarathy
 
-			Support for more and newer versions of compilers
+		slk() functions added by Kim Huron
 
-			Added mouse support for X11 and Win32 ports
+		Support for more and newer versions of compilers
 
-			Size of chtype now long
+		Added mouse support for X11 and Win32 ports
 
-	950126	2.2	Added more System V R4 functions
+		Size of chtype now long
 
-			Added beta Xwindows port
+950126	2.2	Added more System V R4 functions
 
-			Changed chtype to long
+		Added beta Xwindows port
 
-			Incorporated panels library
+		Changed chtype to long
 
-			Support for more and newer versions of compilers
+		Incorporated panels library
 
-	930531	2.1	Added support for djgpp
+		Support for more and newer versions of compilers
 
-			Added beta Unix version
+930531	2.1	Added support for djgpp
 
-			Added OS/2 DLL support.
+		Added beta Unix version
 
-			Changed behaviour of overlay(), overwrite() and 
-			typeahead()
+		Added OS/2 DLL support.
 
-	921120	2.0	Changed #if to #ifdef/#if defined to make it
-			easier to add new platforms/compilers.
+		Changed behaviour of overlay(), overwrite() and
+		typeahead()
 
-			Added System V colour support.
+921120	2.0	Changed #if to #ifdef/#if defined to make it 
+		easier to add new platforms/compilers.
 
-			Added OS/2 port.
+		Added System V colour support.
+
+		Added OS/2 port.
 -------
 Frotz
-	911221	2.0Beta	Changed back from short to int. (int is the
-			correct size for the default platform.  Short
-			might be too short on some platforms.  This
-			is more portable.  I, also, made this mistake.)
 
-			Many functions are now macros.  If you want
-			the real thing, #undef the macro. (X/Open
-			requirement.)
+911221	2.0Beta	Changed back from short to int. (int is the
+		correct size for the default platform. Short might be
+		too short on some platforms. This is more portable. I,
+		also, made this mistake.)
 
-			Merged many sources into current release.
+		Many functions are now macros.  If you want the real 
+		thing, #undef the macro. (X/Open requirement.)
 
-			Added many X/Open routines (not quite all yet).
+		Merged many sources into current release.
 
-			Added internal documentation to all routines.
+		Added many X/Open routines (not quite all yet).
 
-			Added a HISTORY file to the environment.
+		Added internal documentation to all routines.
 
-			Added a CONTRIB file to the environment.
+		Added a HISTORY file to the environment.
 
-	900714  1.5Beta Added many levels of compiler support.
-			Added mixed prototypes for all "internal" routines.
-			Removed all assembly language.  Added EGA/VGA
-			support.  Converted all #ifdef to #if in all
-			modules except CURSES.H and CURSPRIV.H.
-			Always include ASSERT.H.  Added support for an
-			external malloc(), calloc() and free().
-			Added support for FAST_VIDEO (direct-memory writes).
-			Added various memory model support (for FAST_VIDEO).
-			Added much of the December 1988 X/Open Curses
-			specification.
+		Added a CONTRIB file to the environment.
+
+900714	1.5Beta Added many levels of compiler support. Added mixed 
+		prototypes for all "internal" routines. Removed all 
+		assembly language.  Added EGA/VGA support.  Converted 
+		all #ifdef to #if in all modules except CURSES.H and 
+		CURSPRIV.H. Always include ASSERT.H.  Added support for 
+		an external malloc(), calloc() and free(). Added support 
+		for FAST_VIDEO (direct-memory writes). Added various 
+		memory model support (for FAST_VIDEO). Added much of the 
+		December 1988 X/Open Curses specification.
 -------
 bl	
-	900114	1.4	Window origin mod in overlay() and overwrite(), on
-			public (and very reasonable) request. Swapped
-			#define'd values of OK and ERR; OK now 1, and
-			ERR is 0/NULL. Conforms better to UNIX
-			versions.  borderchars[] removed from WINDOW
-			struct since the border() functions were
-			redefined. Use of short wherever possible.
-			Portability improvements, mispelled name of
-			[w]setscrreg().
 
-	881005	1.3	All modules lint-checked with MSC '-W3' and
-			turbo'C' '-w -w-pro' switches. Support for
-			border(), wborder() functions.
+900114	1.4	Window origin mod in overlay() and overwrite(), 
+		on public (and very reasonable) request. Swapped
+		#define'd values of OK and ERR; OK now 1, and
+		ERR is 0/NULL. Conforms better to UNIX versions.  
+		borderchars[] removed from WINDOW struct since the 
+		border() functions were redefined. Use of short wherever 
+		possible. Portability improvements, mispelled name of 
+		[w]setscrreg().
 
-	881002	1.2	Rcsid[] string in all modules, for maintenance.
+881005	1.3	All modules lint-checked with MSC '-W3' and 
+		turbo'C' '-w -w-pro' switches. Support for border(), 
+		wborder() functions.
 
-			Support (by #ifdef UCMASM) for uppercase-only
-			assembly routine names. If UCMASM if defined,
-			all assembler names are #defined as upper case.
-			Not needed if you do "MASM /MX. Also missing
-			declaration of cursesscroll(). Fixes thanks to
-			N.D. Pentcheff
+881002	1.2	Rcsid[] string in all modules, for maintenance.
 
-	880306	1.1	'Raw' output routines, revision info in curses.h.
+		Support (by #ifdef UCMASM) for uppercase-only assembly 
+		routine names. If UCMASM if defined, all assembler names 
+		are #defined as upper case. Not needed if you do "MASM 
+		/MX. Also missing declaration of cursesscroll(). Fixes 
+		thanks to N.D. Pentcheff
 
-	870515	1.0	Initial Release.
+880306	1.1	'Raw' output routines, revision info in curses.h.
+
+870515	1.0	Initial Release.

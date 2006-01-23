@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.87 2006/01/23 22:23:11 wmcbrine Exp $
+$Id: curses.h,v 1.88 2006/01/23 22:30:56 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1415,18 +1415,14 @@ int	PDC_CDECL meta Args((WINDOW *, bool));
 int	PDC_CDECL move Args((int, int));
 int	PDC_CDECL mvcur Args((int, int, int, int));
 int	PDC_CDECL mvderwin Args((WINDOW *, int, int));
-#ifdef HAVE_STDARG_H
 int	PDC_CDECL mvprintw Args((int, int, char *, ...));
 int	PDC_CDECL mvscanw Args((int, int, char *, ...));
-#endif
 int	PDC_CDECL mvwaddnstr Args((WINDOW *, int, int, const char *, int));
 int	PDC_CDECL mvwin Args((WINDOW *, int, int));
 chtype	PDC_CDECL mvwinch Args((WINDOW *, int, int));
 int	PDC_CDECL mvwinsertln Args((WINDOW *, int, int));
-#ifdef HAVE_STDARG_H
 int	PDC_CDECL mvwprintw Args((WINDOW *, int, int, char *, ...));
 int	PDC_CDECL mvwscanw Args((WINDOW *, int, int, char *, ...));
-#endif
 int	PDC_CDECL napms Args((int));
 WINDOW* PDC_CDECL newpad Args((int, int));
 SCREEN* PDC_CDECL newterm Args((char *, FILE *, FILE *));
@@ -1440,10 +1436,8 @@ int	PDC_CDECL pair_content Args((int, short *, short *));
 int	PDC_CDECL pechochar Args((WINDOW *, chtype));
 int	PDC_CDECL pnoutrefresh Args((WINDOW *, int, int, int, int, int, int));
 int	PDC_CDECL prefresh Args((WINDOW *, int, int, int, int, int, int));
-#ifdef HAVE_STDARG_H
 int	PDC_CDECL printw Args((char *, ...));
 int	PDC_CDECL scanw Args((char *, ...));
-#endif
 int	PDC_CDECL putwin Args((WINDOW *, FILE *));
 void	PDC_CDECL qiflush Args((void));
 int	PDC_CDECL raw Args((void));
@@ -1528,10 +1522,8 @@ int	PDC_CDECL winsnstr Args((WINDOW *, const char *, int));
 int	PDC_CDECL wmove Args((WINDOW *, int, int));
 int	PDC_CDECL wnoutrefresh Args((WINDOW *));
 char	PDC_CDECL wordchar Args((void));
-#ifdef HAVE_STDARG_H
 int	PDC_CDECL wprintw Args((WINDOW *, char *, ...));
 int	PDC_CDECL wscanw Args((WINDOW *, char *, ...));
-#endif
 int	PDC_CDECL wredrawln Args((WINDOW *, int ,int));
 int	PDC_CDECL wrefresh Args((WINDOW *));
 int	PDC_CDECL wscrl Args((WINDOW *, int));

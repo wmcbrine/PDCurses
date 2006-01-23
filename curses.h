@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.86 2006/01/23 11:19:08 wmcbrine Exp $
+$Id: curses.h,v 1.87 2006/01/23 22:23:11 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1248,109 +1248,107 @@ currently used.)
 #define CTL_HOME	0x1bf	/* Control-Home		*/
 #define CTL_END		0x1c0	/* Control-End		*/
 
-#if defined(DOS) || defined (OS2) || defined(XCURSES) || defined(WIN32)
-# define KEY_A1		0x1c1	/* upper left on Virtual keypad	*/
-# define KEY_A2		0x1c2	/* upper middle on Virt. keypad	*/
-# define KEY_A3		0x1c3	/* upper right on Vir. keypad	*/
-# define KEY_B1		0x1c4	/* middle left on Virt. keypad	*/
-# define KEY_B2		0x1c5	/* center on Virt. keypad	*/
-# define KEY_B3		0x1c6	/* middle right on Vir. keypad	*/
-# define KEY_C1		0x1c7	/* lower left on Virt. keypad	*/
-# define KEY_C2		0x1c8	/* lower middle on Virt. keypad */
-# define KEY_C3		0x1c9	/* lower right on Vir. keypad	*/
-# define PADSLASH	0x1ca	/* slash on keypad		*/
-# define PADENTER	0x1cb	/* enter on keypad		*/
-# define CTL_PADENTER	0x1cc	/* ctl-enter on keypad		*/
-# define ALT_PADENTER	0x1cd	/* alt-enter on keypad		*/
-# define PADSTOP	0x1ce	/* stop on keypad		*/
-# define PADSTAR	0x1cf	/* star on keypad		*/
-# define PADMINUS	0x1d0	/* minus on keypad		*/
-# define PADPLUS	0x1d1	/* plus on keypad		*/
-# define CTL_PADSTOP	0x1d2	/* ctl-stop on keypad		*/
-# define CTL_PADCENTER	0x1d3	/* ctl-enter on keypad		*/
-# define CTL_PADPLUS	0x1d4	/* ctl-plus on keypad		*/
-# define CTL_PADMINUS	0x1d5	/* ctl-minus on keypad		*/
-# define CTL_PADSLASH	0x1d6	/* ctl-slash on keypad		*/
-# define CTL_PADSTAR	0x1d7	/* ctl-star on keypad		*/
-# define ALT_PADPLUS	0x1d8	/* alt-plus on keypad		*/
-# define ALT_PADMINUS	0x1d9	/* alt-minus on keypad		*/
-# define ALT_PADSLASH	0x1da	/* alt-slash on keypad		*/
-# define ALT_PADSTAR	0x1db	/* alt-star on keypad		*/
-# define ALT_PADSTOP	0x1dc	/* alt-stop on keypad		*/
-# define CTL_INS	0x1dd	/* ctl-insert			*/
-# define ALT_DEL	0x1de	/* alt-delete			*/
-# define ALT_INS	0x1df	/* alt-insert			*/
-# define CTL_UP		0x1e0	/* ctl-up arrow			*/
-# define CTL_DOWN	0x1e1	/* ctl-down arrow		*/
-# define CTL_TAB	0x1e2	/* ctl-tab			*/
-# define ALT_TAB	0x1e3	/* alt-tab			*/
-# define ALT_MINUS	0x1e4	/* alt-minus			*/
-# define ALT_EQUAL	0x1e5	/* alt-equal			*/
-# define ALT_HOME	0x1e6	/* alt-home			*/
-# define ALT_PGUP	0x1e7	/* alt-pgup			*/
-# define ALT_PGDN	0x1e8	/* alt-pgdn			*/
-# define ALT_END	0x1e9	/* alt-end			*/
-# define ALT_UP		0x1ea	/* alt-up arrow			*/
-# define ALT_DOWN	0x1eb	/* alt-down arrow		*/
-# define ALT_RIGHT	0x1ec	/* alt-right arrow		*/
-# define ALT_LEFT	0x1ed	/* alt-left arrow		*/
-# define ALT_ENTER	0x1ee	/* alt-enter			*/
-# define ALT_ESC	0x1ef	/* alt-escape			*/
-# define ALT_BQUOTE	0x1f0	/* alt-back quote		*/
-# define ALT_LBRACKET	0x1f1	/* alt-left bracket		*/
-# define ALT_RBRACKET	0x1f2	/* alt-right bracket		*/
-# define ALT_SEMICOLON	0x1f3	/* alt-semi-colon		*/
-# define ALT_FQUOTE	0x1f4	/* alt-forward quote		*/
-# define ALT_COMMA	0x1f5	/* alt-comma			*/
-# define ALT_STOP	0x1f6	/* alt-stop			*/
-# define ALT_FSLASH	0x1f7	/* alt-forward slash		*/
-# define ALT_BKSP	0x1f8	/* alt-backspace		*/
-# define CTL_BKSP	0x1f9	/* ctl-backspace		*/
-# define PAD0		0x1fa	/* keypad 0			*/
-# define CTL_PAD0	0x1fb	/* ctl-keypad 0			*/
-# define CTL_PAD1	0x1fc	/* ctl-keypad 1			*/
-# define CTL_PAD2	0x1fd	/* ctl-keypad 2			*/
-# define CTL_PAD3	0x1fe	/* ctl-keypad 3			*/
-# define CTL_PAD4	0x1ff	/* ctl-keypad 4			*/
-# define CTL_PAD5	0x200	/* ctl-keypad 5			*/
-# define CTL_PAD6	0x201	/* ctl-keypad 6			*/
-# define CTL_PAD7	0x202	/* ctl-keypad 7			*/
-# define CTL_PAD8	0x203	/* ctl-keypad 8			*/
-# define CTL_PAD9	0x204	/* ctl-keypad 9			*/
-# define ALT_PAD0	0x205	/* alt-keypad 0			*/
-# define ALT_PAD1	0x206	/* alt-keypad 1			*/
-# define ALT_PAD2	0x207	/* alt-keypad 2			*/
-# define ALT_PAD3	0x208	/* alt-keypad 3			*/
-# define ALT_PAD4	0x209	/* alt-keypad 4			*/
-# define ALT_PAD5	0x20a	/* alt-keypad 5			*/
-# define ALT_PAD6	0x20b	/* alt-keypad 6			*/
-# define ALT_PAD7	0x20c	/* alt-keypad 7			*/
-# define ALT_PAD8	0x20d	/* alt-keypad 8			*/
-# define ALT_PAD9	0x20e	/* alt-keypad 9			*/
-# define CTL_DEL	0x20f	/* clt-delete			*/
-# define ALT_BSLASH	0x210	/* alt-back slash		*/
-# define CTL_ENTER	0x211	/* ctl-enter			*/
-# define SHF_PADENTER	0x212	/* shift-enter on keypad	*/
-# define SHF_PADSLASH	0x213	/* shift-slash on keypad	*/
-# define SHF_PADSTAR	0x214	/* shift-star  on keypad	*/
-# define SHF_PADPLUS	0x215	/* shift-plus  on keypad	*/
-# define SHF_PADMINUS	0x216	/* shift-minus on keypad	*/
-# define SHF_UP		0x217	/* shift-up on keypad		*/
-# define SHF_DOWN	0x218	/* shift-down on keypad		*/
-# define SHF_IC		0x219	/* shift-insert on keypad	*/
-# define SHF_DC		0x21a	/* shift-delete on keypad	*/
-# define KEY_MOUSE	0x21b	/* "mouse" key			*/
-# define KEY_SHIFT_L	0x21c	/* Left-shift			*/
-# define KEY_SHIFT_R	0x21d	/* Right-shift			*/
-# define KEY_CONTROL_L	0x21e	/* Left-control			*/
-# define KEY_CONTROL_R	0x21f	/* Right-control		*/
-# define KEY_ALT_L	0x220	/* Left-alt			*/
-# define KEY_ALT_R	0x221	/* Right-alt			*/
-# define KEY_RESIZE	0x222	/* Window resize		*/
-# define KEY_SUP	0x223	/* Shifted up arrow		*/
-# define KEY_SDOWN	0x224	/* Shifted down arrow		*/
-# define KEY_MAX	0x224	/* Maximum curses key		*/
-#endif
+#define KEY_A1		0x1c1	/* upper left on Virtual keypad	*/
+#define KEY_A2		0x1c2	/* upper middle on Virt. keypad	*/
+#define KEY_A3		0x1c3	/* upper right on Vir. keypad	*/
+#define KEY_B1		0x1c4	/* middle left on Virt. keypad	*/
+#define KEY_B2		0x1c5	/* center on Virt. keypad	*/
+#define KEY_B3		0x1c6	/* middle right on Vir. keypad	*/
+#define KEY_C1		0x1c7	/* lower left on Virt. keypad	*/
+#define KEY_C2		0x1c8	/* lower middle on Virt. keypad */
+#define KEY_C3		0x1c9	/* lower right on Vir. keypad	*/
+#define PADSLASH	0x1ca	/* slash on keypad		*/
+#define PADENTER	0x1cb	/* enter on keypad		*/
+#define CTL_PADENTER	0x1cc	/* ctl-enter on keypad		*/
+#define ALT_PADENTER	0x1cd	/* alt-enter on keypad		*/
+#define PADSTOP		0x1ce	/* stop on keypad		*/
+#define PADSTAR		0x1cf	/* star on keypad		*/
+#define PADMINUS	0x1d0	/* minus on keypad		*/
+#define PADPLUS		0x1d1	/* plus on keypad		*/
+#define CTL_PADSTOP	0x1d2	/* ctl-stop on keypad		*/
+#define CTL_PADCENTER	0x1d3	/* ctl-enter on keypad		*/
+#define CTL_PADPLUS	0x1d4	/* ctl-plus on keypad		*/
+#define CTL_PADMINUS	0x1d5	/* ctl-minus on keypad		*/
+#define CTL_PADSLASH	0x1d6	/* ctl-slash on keypad		*/
+#define CTL_PADSTAR	0x1d7	/* ctl-star on keypad		*/
+#define ALT_PADPLUS	0x1d8	/* alt-plus on keypad		*/
+#define ALT_PADMINUS	0x1d9	/* alt-minus on keypad		*/
+#define ALT_PADSLASH	0x1da	/* alt-slash on keypad		*/
+#define ALT_PADSTAR	0x1db	/* alt-star on keypad		*/
+#define ALT_PADSTOP	0x1dc	/* alt-stop on keypad		*/
+#define CTL_INS		0x1dd	/* ctl-insert			*/
+#define ALT_DEL		0x1de	/* alt-delete			*/
+#define ALT_INS		0x1df	/* alt-insert			*/
+#define CTL_UP		0x1e0	/* ctl-up arrow			*/
+#define CTL_DOWN	0x1e1	/* ctl-down arrow		*/
+#define CTL_TAB		0x1e2	/* ctl-tab			*/
+#define ALT_TAB		0x1e3	/* alt-tab			*/
+#define ALT_MINUS	0x1e4	/* alt-minus			*/
+#define ALT_EQUAL	0x1e5	/* alt-equal			*/
+#define ALT_HOME	0x1e6	/* alt-home			*/
+#define ALT_PGUP	0x1e7	/* alt-pgup			*/
+#define ALT_PGDN	0x1e8	/* alt-pgdn			*/
+#define ALT_END		0x1e9	/* alt-end			*/
+#define ALT_UP		0x1ea	/* alt-up arrow			*/
+#define ALT_DOWN	0x1eb	/* alt-down arrow		*/
+#define ALT_RIGHT	0x1ec	/* alt-right arrow		*/
+#define ALT_LEFT	0x1ed	/* alt-left arrow		*/
+#define ALT_ENTER	0x1ee	/* alt-enter			*/
+#define ALT_ESC		0x1ef	/* alt-escape			*/
+#define ALT_BQUOTE	0x1f0	/* alt-back quote		*/
+#define ALT_LBRACKET	0x1f1	/* alt-left bracket		*/
+#define ALT_RBRACKET	0x1f2	/* alt-right bracket		*/
+#define ALT_SEMICOLON	0x1f3	/* alt-semi-colon		*/
+#define ALT_FQUOTE	0x1f4	/* alt-forward quote		*/
+#define ALT_COMMA	0x1f5	/* alt-comma			*/
+#define ALT_STOP	0x1f6	/* alt-stop			*/
+#define ALT_FSLASH	0x1f7	/* alt-forward slash		*/
+#define ALT_BKSP	0x1f8	/* alt-backspace		*/
+#define CTL_BKSP	0x1f9	/* ctl-backspace		*/
+#define PAD0		0x1fa	/* keypad 0			*/
+#define CTL_PAD0	0x1fb	/* ctl-keypad 0			*/
+#define CTL_PAD1	0x1fc	/* ctl-keypad 1			*/
+#define CTL_PAD2	0x1fd	/* ctl-keypad 2			*/
+#define CTL_PAD3	0x1fe	/* ctl-keypad 3			*/
+#define CTL_PAD4	0x1ff	/* ctl-keypad 4			*/
+#define CTL_PAD5	0x200	/* ctl-keypad 5			*/
+#define CTL_PAD6	0x201	/* ctl-keypad 6			*/
+#define CTL_PAD7	0x202	/* ctl-keypad 7			*/
+#define CTL_PAD8	0x203	/* ctl-keypad 8			*/
+#define CTL_PAD9	0x204	/* ctl-keypad 9			*/
+#define ALT_PAD0	0x205	/* alt-keypad 0			*/
+#define ALT_PAD1	0x206	/* alt-keypad 1			*/
+#define ALT_PAD2	0x207	/* alt-keypad 2			*/
+#define ALT_PAD3	0x208	/* alt-keypad 3			*/
+#define ALT_PAD4	0x209	/* alt-keypad 4			*/
+#define ALT_PAD5	0x20a	/* alt-keypad 5			*/
+#define ALT_PAD6	0x20b	/* alt-keypad 6			*/
+#define ALT_PAD7	0x20c	/* alt-keypad 7			*/
+#define ALT_PAD8	0x20d	/* alt-keypad 8			*/
+#define ALT_PAD9	0x20e	/* alt-keypad 9			*/
+#define CTL_DEL		0x20f	/* clt-delete			*/
+#define ALT_BSLASH	0x210	/* alt-back slash		*/
+#define CTL_ENTER	0x211	/* ctl-enter			*/
+#define SHF_PADENTER	0x212	/* shift-enter on keypad	*/
+#define SHF_PADSLASH	0x213	/* shift-slash on keypad	*/
+#define SHF_PADSTAR	0x214	/* shift-star  on keypad	*/
+#define SHF_PADPLUS	0x215	/* shift-plus  on keypad	*/
+#define SHF_PADMINUS	0x216	/* shift-minus on keypad	*/
+#define SHF_UP		0x217	/* shift-up on keypad		*/
+#define SHF_DOWN	0x218	/* shift-down on keypad		*/
+#define SHF_IC		0x219	/* shift-insert on keypad	*/
+#define SHF_DC		0x21a	/* shift-delete on keypad	*/
+#define KEY_MOUSE	0x21b	/* "mouse" key			*/
+#define KEY_SHIFT_L	0x21c	/* Left-shift			*/
+#define KEY_SHIFT_R	0x21d	/* Right-shift			*/
+#define KEY_CONTROL_L	0x21e	/* Left-control			*/
+#define KEY_CONTROL_R	0x21f	/* Right-control		*/
+#define KEY_ALT_L	0x220	/* Left-alt			*/
+#define KEY_ALT_R	0x221	/* Right-alt			*/
+#define KEY_RESIZE	0x222	/* Window resize		*/
+#define KEY_SUP		0x223	/* Shifted up arrow		*/
+#define KEY_SDOWN	0x224	/* Shifted down arrow		*/
+#define KEY_MAX		0x224	/* Maximum curses key		*/
 
 /*----------------------------------------------------------------------
 *
@@ -1570,9 +1568,8 @@ void	PDC_CDECL wmouse_position Args((WINDOW *, int *, int *));
 unsigned long PDC_CDECL getmouse Args((void));
 unsigned long PDC_CDECL getbmap Args((void));
 
-/*
-*       Keep the compiler happy with our macros below...
-*/
+/* Private functions referred to in macros here */
+
 int	PDC_CDECL PDC_chadd Args((WINDOW *, chtype, bool, bool));
 int	PDC_CDECL PDC_chins Args((WINDOW *, chtype, bool));
 int	PDC_CDECL PDC_ungetch Args((int));
@@ -1602,9 +1599,7 @@ int	PDC_CDECL PDC_set_line_color Args((short));
 # define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
-/*
-*	Functions defined as macros
-*/
+/*** Functions defined as macros ***/
 
 #define addch(c)		waddch(stdscr, c)
 #define addchstr(c)		addchnstr(c, -1)
@@ -1751,35 +1746,31 @@ int	PDC_CDECL PDC_set_line_color Args((short));
 # define PDC_save_key_modifiers(flag) (SP->save_key_modifiers = flag)
 # define PDC_return_key_modifiers(flag) (SP->return_key_modifiers = flag)
 
-/*
- * FYI: Need to document these functions...
- */
+/* FYI: Need to document these functions */
+
 # define title(s, a)		wtitle(stdscr, s, (chtype)a)
 # define titleofs(ofs)		wtitleofs(stdscr, ofs)
 # define wtitle(w, s, a)	(w->_title = s, w->_title_attr = (chtype)a)
 # define wtitleofs(w, ofs)	(w->_title_ofs = ofs)
 #endif
 
-/*
- * return codes from PDC_getclipboard() and PDC_setclipboard() calls.
- */
+/* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
+
 #define PDC_CLIP_SUCCESS	0
 #define PDC_CLIP_ACCESS_ERROR 	1
 #define PDC_CLIP_EMPTY		2
 #define PDC_CLIP_MEMORY_ERROR	3
 
-/*
- * PDCurses key modifier masks
- */
+/* PDCurses key modifier masks */
+
 #define PDC_KEY_MODIFIER_SHIFT		1
 #define PDC_KEY_MODIFIER_CONTROL	2
 #define PDC_KEY_MODIFIER_ALT		4
 #define PDC_KEY_MODIFIER_NUMLOCK	8
 
-/*
- * Load up curspriv.h. We allow anyone who defines CURSES_LIBRARY
- * to have access to our internal routines.
- */
+/* Load up curspriv.h. We allow anyone who defines CURSES_LIBRARY
+   to have access to our internal routines. */
+
 #if defined(CURSES_LIBRARY)
 # include <curspriv.h>
 #endif

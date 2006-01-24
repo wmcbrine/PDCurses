@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.91 2006/01/24 06:21:40 wmcbrine Exp $
+$Id: curses.h,v 1.92 2006/01/24 07:05:58 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -296,6 +296,9 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
+#  ifndef HAVE_VSSCANF
+#    define HAVE_VSSCANF			/* have vsscanf() */
+#  endif
 #  ifndef HAVE_USLEEP
 #    define HAVE_USLEEP				/* have usleep() */
 #  endif
@@ -327,6 +330,9 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
+#  ifndef HAVE_VSSCANF
+#    define HAVE_VSSCANF			/* have vsscanf() */
+#  endif
 #endif
 
 /*----------------------------------------
@@ -350,6 +356,9 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE			/* have memmove() */
+#  endif
+#  ifndef HAVE_VSSCANF
+#    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
 #endif
 

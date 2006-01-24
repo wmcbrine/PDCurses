@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.90 2006/01/24 05:48:18 wmcbrine Exp $
+$Id: curses.h,v 1.91 2006/01/24 06:21:40 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -93,9 +93,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
-#    define INCL_VIO
-#    define INCL_KBD
-#    include <os2.h>
 #  endif
 #  ifdef __WIN32__
 #    ifndef WIN32
@@ -152,9 +149,6 @@ PDCurses portable platform definitions list:
 #  ifdef __OS2__		/* You will have to define in makefile	*/
 #    define USE_OS2_H 1		/* Use the os2.h for the compiler	*/
 #    define OS2 3		/* Major release of OS/2 supported	*/
-#    define INCL_VIO
-#    define INCL_KBD
-#    include <os2.h>
 #    define FARKeyword far
 #    define APIRET USHORT
 #  else				/* no __OS2__ define, so assume DOS	*/
@@ -209,9 +203,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
-#    define INCL_VIO
-#    define INCL_KBD
-#    include <os2.h>
 #  endif
 #endif
 
@@ -238,9 +229,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
-#    define INCL_VIO
-#    define INCL_KBD
-#    include <os2.h>
 #  endif
 #endif
 
@@ -279,10 +267,6 @@ PDCurses portable platform definitions list:
 #  if defined(EMXVIDEO)
 #    include <stdlib.h>
 #    include <sys/video.h>
-#  else
-#    define INCL_VIO
-#    define INCL_KBD
-#    include <os2.h>
 #  endif
 #endif
 
@@ -328,7 +312,7 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1	/* Cygnuc GCC supports ANSI C prototypes*/
 #  endif
-#  if !defined( WIN32 ) && !defined(XCURSES)
+#  if !defined(WIN32) && !defined(XCURSES)
 #    define WIN32
 #  endif
 #  ifndef HAVE_MEMORY_H
@@ -404,7 +388,7 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1	/* Watcom C supports ANSI C prototypes	*/
 #  endif
-#  if defined( __DOS__ ) || defined( __DOS4G__ )
+#  if defined(__DOS__) || defined(__DOS4G__)
 #    define DOS 7		/* Major release of DOS supported	*/
 #    include <bios.h>
 #    include <dos.h>
@@ -414,12 +398,9 @@ PDCurses portable platform definitions list:
 #      define int86x int386x
 #    endif
 #  endif
-#  if defined( __OS2__ ) || defined( __OS2V2__ )
+#  if defined(__OS2__) || defined(__OS2V2__)
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #    define CURSES__32BIT__
-#    define INCL_VIO
-#    define INCL_KBD
-#    include <os2.h>
 #    ifndef  DISPLAY_MONOCHROME
 #     define DISPLAY_MONOCHROME 0
 #    endif
@@ -439,7 +420,7 @@ PDCurses portable platform definitions list:
 #     define DISPLAY_XGA	9
 #    endif
 #  endif
-#  if defined( __NT__ ) || defined ( WIN32 )
+#  if defined(__NT__) || defined(WIN32)
 #    ifndef WIN32
 #      define WIN32
 #    endif
@@ -517,6 +498,12 @@ PDCurses portable platform definitions list:
 # ifdef MOUSE_MOVED
 #  undef MOUSE_MOVED
 # endif
+#endif
+
+#if defined(OS2) && !defined(EMXVIDEO)
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
 #endif
 
 #include <stdio.h>		/* Required by X/Open usage below	*/

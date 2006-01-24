@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.89 2006/01/23 22:34:50 wmcbrine Exp $
+$Id: curses.h,v 1.90 2006/01/24 05:48:18 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -477,7 +477,7 @@ PDCurses portable platform definitions list:
        typedef int      _int;
 #    endif
 #  endif
-#    undef  NO_VSSCANF		/* vsscanf() function NOT in library	*/
+#    undef HAVE_VSSCANF		/* vsscanf() function NOT in library	*/
 #endif
 
 /*----------------------------------------
@@ -496,8 +496,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  include <dos.h>
 #  include <ctype.h>
-#  include <string.h>
-#  include <stdlib.h>
 #  ifndef __SMALL__
 #    define __SMALL__
 #  endif

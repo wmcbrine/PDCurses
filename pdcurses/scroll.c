@@ -23,10 +23,6 @@
 #endif
 #include <curses.h>
 
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
-
 /* undefine any macros for functions defined in this module */
 #undef   scroll
 #undef   scrl
@@ -37,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scroll = "$Id: scroll.c,v 1.5 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_scroll = "$Id: scroll.c,v 1.6 2006/01/25 14:53:23 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

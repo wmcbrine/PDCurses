@@ -185,6 +185,8 @@ use_env
 vidattr
 vidputs
 vline
+vwprintw
+vwscanw
 waddch
 waddchnstr
 waddchstr

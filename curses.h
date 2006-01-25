@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.92 2006/01/24 07:05:58 wmcbrine Exp $
+$Id: curses.h,v 1.93 2006/01/25 13:41:34 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -513,6 +513,13 @@ PDCurses portable platform definitions list:
 # define INCL_VIO
 # define INCL_KBD
 # include <os2.h>
+#endif
+
+#if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
+# include <stdarg.h>
+# define HAVE_STDARG_H_HAVE_PROTO
+#else
+# include <varargs.h>
 #endif
 
 #include <stdio.h>		/* Required by X/Open usage below	*/
@@ -1484,6 +1491,8 @@ void	PDC_CDECL use_env Args((bool));
 int	PDC_CDECL vidattr Args((chtype));
 int	PDC_CDECL vidputs Args((chtype, int (*)(int)));
 int	PDC_CDECL vline Args((chtype, int));
+int	PDC_CDECL vwprintw Args((WINDOW *, char *, va_list));
+int	PDC_CDECL vwscanw Args((WINDOW *, char *, va_list));
 int	PDC_CDECL waddch Args((WINDOW *, const chtype));
 int	PDC_CDECL waddchnstr Args((WINDOW *, const chtype *, int));
 int	PDC_CDECL waddnstr Args((WINDOW *, const char *, int));
@@ -1699,6 +1708,8 @@ int	PDC_CDECL PDC_set_line_color Args((short));
 #endif
 #define ungetch(ch)		PDC_ungetch(ch)
 #define untouchwin(w)		wtouchln(w, 0, (w)->_maxy, FALSE)
+#define vw_printw		vwprintw
+#define vw_scanw		vwscanw
 #define waddch(w, c)		PDC_chadd(w, (chtype)c, (bool)!(SP->raw_out), TRUE)
 #define waddchstr(w, c)         waddchnstr(w, c, -1)
 #define werase(w)		(wmove(w, 0, 0), wclrtobot(w))

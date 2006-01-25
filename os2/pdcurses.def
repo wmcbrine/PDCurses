@@ -132,6 +132,8 @@ EXPORTS
             use_env
             vidattr
             vidputs
+            vwprintw
+            vwscanw
             waddch                         
             waddchnstr
             waddstr                        

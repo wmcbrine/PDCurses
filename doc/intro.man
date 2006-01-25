@@ -409,8 +409,8 @@ FUNCTIONS
 		vidattr                  terminfo
 		vidputs                  terminfo
 		vline                    border
-	***	vwprintw                  printw
-	***	vwscanw                   scanw
+		vwprintw                 printw
+		vwscanw                  scanw
 		waddch                   addch
 		waddchnstr               addchstr
 		waddchstr                addchstr

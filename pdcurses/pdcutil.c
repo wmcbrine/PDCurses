@@ -32,7 +32,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.17 2006/01/15 23:17:35 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.18 2006/01/25 13:41:35 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -197,16 +197,8 @@ va_dcl
 
 	PDC_LOG(("PDC_vsscanf() - called\n"));
 
-#if 0
-# ifdef HAVE_STDARG_H_HAVE_PROTO
-	va_start(arg_ptr, fmt);
-# else
+#if !defined(HAVE_STDARG_H_HAVE_PROTO)
 	va_start(arg_ptr);
-# endif
-#else
-# if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_start(arg_ptr);
-# endif
 #endif
 
 	count = 0;

@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.24 2006/01/23 00:37:48 wmcbrine Exp $
+$Id: curspriv.h,v 1.25 2006/01/25 13:41:34 wmcbrine Exp $
 */
 /*
 *                          CURSPRIV.H
@@ -32,13 +32,6 @@ $Id: curspriv.h,v 1.24 2006/01/23 00:37:48 wmcbrine Exp $
 #define __CURSES_INTERNALS__
 
 #include <assert.h>
-
-#if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
-# include <stdarg.h>
-# define HAVE_STDARG_H_HAVE_PROTO
-#else
-# include <varargs.h>
-#endif
 
 /*----------------------------------------------------------------------
 *	MEMORY MODEL SUPPORT:

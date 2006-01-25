@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.19 2006/01/22 20:34:30 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.20 2006/01/25 14:32:35 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -69,9 +69,8 @@ int use_emalloc = FALSE;
 Regs regs;
 #endif
 
-/*
- * Global definitions for charget routines
- */
+/* Global definitions for charget routines */
+
 int c_pindex = 0;			/* putter index */
 int c_gindex = 1;			/* getter index */
 int c_ungind = 0;			/* wungetch() push index */
@@ -79,24 +78,18 @@ int c_ungch[NUNGETCH];			/* array of ungotten chars */
 
 WINDOW *_getch_win_ = NULL;
 
-/*
- * Global definitions for setmode routines
- */
+/* Global definitions for setmode routines */
+
 struct cttyset c_sh_tty = {0};		/* tty modes for def_shell_mode */
 struct cttyset c_pr_tty = {0};		/* tty modes for def_prog_mode  */
 struct cttyset c_save_tty = {0};
 struct cttyset c_save_trm = {0};
 
-/*
- * Global definitions for printscan routines
- */
-char c_printscanbuf[513];  /* buffer used during I/O */
-
 #if EMALLOC
 # ifdef HAVE_PROTO
-extern void *emalloc( size_t );
-extern void *ecalloc( size_t, size_t );
-extern void efree( void * );
+extern void *emalloc(size_t);
+extern void *ecalloc(size_t, size_t);
+extern void efree(void *);
 # else
 extern void *emalloc();			/* user's emalloc(size) */
 extern void *ecalloc();			/* user's ecalloc(num, size) */
@@ -106,9 +99,9 @@ extern void efree();			/* user's efree(ptr) */
 
 #if !defined(XCURSES)
 # ifdef HAVE_PROTO
-extern void *malloc( size_t );		/* runtime's malloc(size) */
-extern void *calloc( size_t, size_t );	/* runtime's calloc(num, size) */
-extern void free( void* );		/* runtime's free(ptr) */
+extern void *malloc(size_t);		/* runtime's malloc(size) */
+extern void *calloc(size_t, size_t);	/* runtime's calloc(num, size) */
+extern void free(void *);		/* runtime's free(ptr) */
 # else
 extern void *malloc();			/* runtime's malloc(size) */
 extern void *calloc();			/* runtime's calloc(num, size) */
@@ -117,10 +110,10 @@ extern void free();			/* runtime's free(ptr) */
 #endif
 
 #ifdef HAVE_PROTO
-void* (*mallc)( size_t );		/* ptr to some malloc(size) */
-void* (*callc)( size_t, size_t );	/* ptr to some ecalloc(num, size) */
-void  (*fre)( void* );			/* ptr to some free(ptr) */
-void* (*reallc)( void*, size_t );	/* ptr to some realloc(ptr, size) */
+void* (*mallc)(size_t);			/* ptr to some malloc(size) */
+void* (*callc)(size_t, size_t);		/* ptr to some ecalloc(num, size) */
+void  (*fre)(void *);			/* ptr to some free(ptr) */
+void* (*reallc)(void *, size_t);	/* ptr to some realloc(ptr, size) */
 #else
 void* (*mallc)();			/* ptr to some malloc(size) */
 void* (*callc)();			/* ptr to some ecalloc(num, size) */

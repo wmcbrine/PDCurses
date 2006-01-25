@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.25 2006/01/25 13:41:34 wmcbrine Exp $
+$Id: curspriv.h,v 1.26 2006/01/25 14:32:34 wmcbrine Exp $
 */
 /*
 *                          CURSPRIV.H
@@ -182,9 +182,6 @@ extern struct cttyset c_sh_tty;		/* tty modes for shell_mode	*/
 extern struct cttyset c_pr_tty;		/* tty modes for prog_mode	*/
 extern struct cttyset c_save_tty;
 extern struct cttyset c_save_trm;
-
-/* Printscan stuff */
-extern char c_printscanbuf[];		/* buffer used during I/O	*/
 
 /* tracing flag */
 extern bool trace_on;

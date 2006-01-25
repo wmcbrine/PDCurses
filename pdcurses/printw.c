@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw = "$Id: printw.c,v 1.7 2006/01/25 13:41:35 wmcbrine Exp $";
+char *rcsid_printw = "$Id: printw.c,v 1.8 2006/01/25 14:32:35 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -224,6 +224,7 @@ va_dcl
 #if !defined(HAVE_STDARG_H_HAVE_PROTO)
 	va_list varglist;
 #endif
+	char printbuf[513];
 	int len;
 
 	PDC_LOG(("vwprintw() - called\n"));
@@ -231,7 +232,7 @@ va_dcl
 #if !defined(HAVE_STDARG_H_HAVE_PROTO)
 	va_start(varglist);
 #endif
-	len = vsprintf(c_printscanbuf, fmt, varglist);
+	len = vsprintf(printbuf, fmt, varglist);
 
-	return (waddstr(win, c_printscanbuf) == ERR) ? ERR : len;
+	return (waddstr(win, printbuf) == ERR) ? ERR : len;
 }

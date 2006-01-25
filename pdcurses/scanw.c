@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw = "$Id: scanw.c,v 1.7 2006/01/25 13:41:35 wmcbrine Exp $";
+char *rcsid_scanw = "$Id: scanw.c,v 1.8 2006/01/25 14:32:35 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -222,14 +222,15 @@ va_dcl
 #if !defined(HAVE_STDARG_H_HAVE_PROTO)
 	va_list varglist;
 #endif
+	char scanbuf[513];
 
 	PDC_LOG(("vwscanw() - called\n"));
 
-	if (wgetstr(win, c_printscanbuf) == ERR)
+	if (wgetstr(win, scanbuf) == ERR)
 		return ERR;
 
 #if !defined(HAVE_STDARG_H_HAVE_PROTO)
 	va_start(varglist);
 #endif
-	return vsscanf(c_printscanbuf, fmt, varglist);
+	return vsscanf(scanbuf, fmt, varglist);
 }

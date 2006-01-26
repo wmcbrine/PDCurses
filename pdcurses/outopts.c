@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts = "$Id: outopts.c,v 1.6 2006/01/26 18:07:08 wmcbrine Exp $";
+char *rcsid_outopts = "$Id: outopts.c,v 1.7 2006/01/26 19:44:39 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -206,10 +206,8 @@ bool bf;
 {
 	PDC_LOG(("idcok() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	win->_use_idc = bf;
+	if (win != (WINDOW *)NULL)
+		win->_use_idc = bf;
 }
 
 /***********************************************************************/
@@ -224,10 +222,8 @@ bool bf;
 {
 	PDC_LOG(("immedok() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	win->_immed = bf;
+	if (win != (WINDOW *)NULL)
+		win->_immed = bf;
 }
 
 /***********************************************************************/

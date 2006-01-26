@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.100 2006/01/26 20:31:21 wmcbrine Exp $
+$Id: curses.h,v 1.101 2006/01/26 20:50:41 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1362,6 +1362,8 @@ currently used.)
 # define Args(x) ()
 #endif
 
+/* Standard */
+
 int	PDC_CDECL addchnstr Args((const chtype *, int));
 int	PDC_CDECL baudrate Args((void));
 int	PDC_CDECL beep Args((void));
@@ -1521,15 +1523,34 @@ void	PDC_CDECL wsyncdown Args((WINDOW *));
 void	PDC_CDECL wsyncup Args((WINDOW *));
 int	PDC_CDECL wvline Args((WINDOW *, chtype, int));
 
+/* Quasi-standard */
+
+int	PDC_CDECL crmode Args((void));
 chtype	PDC_CDECL getattrs Args((WINDOW *));
 int	PDC_CDECL getsyx Args((int *, int *));
+int	PDC_CDECL nocrmode Args((void));
+int	PDC_CDECL setsyx Args((int, int));
+char *	PDC_CDECL unctrl Args((chtype));
+
+int	PDC_CDECL mouse_set Args((unsigned long));
+int	PDC_CDECL mouse_on Args((unsigned long));
+int	PDC_CDECL mouse_off Args((unsigned long));
+int	PDC_CDECL request_mouse_pos Args((void));
+int	PDC_CDECL map_button Args((unsigned long));
+void	PDC_CDECL wmouse_position Args((WINDOW *, int *, int *));
+unsigned long PDC_CDECL getmouse Args((void));
+unsigned long PDC_CDECL getbmap Args((void));
+
+/* NCurses */
+
 bool	PDC_CDECL has_key Args((int));
+
+/* PDCurses */
+
 int	PDC_CDECL mvwinsertln Args((WINDOW *, int, int));
 int	PDC_CDECL raw_output Args((bool));
 int	PDC_CDECL resize_term Args((int, int));
 WINDOW* PDC_CDECL resize_window Args((WINDOW *, int, int));
-int	PDC_CDECL setsyx Args((int, int));
-char *	PDC_CDECL unctrl Args((chtype));
 char	PDC_CDECL wordchar Args((void));
 
 #if !defined (CURSES_LIBRARY)
@@ -1546,19 +1567,7 @@ int	PDC_CDECL sb_set_vert Args((int, int, int));
 int	PDC_CDECL sb_get_horz Args((int *, int *, int *));
 int	PDC_CDECL sb_get_vert Args((int *, int *, int *));
 int	PDC_CDECL sb_refresh Args((void));
-
-int	PDC_CDECL nocrmode Args((void));
-int	PDC_CDECL crmode Args((void));
 #endif
-
-int	PDC_CDECL mouse_set Args((unsigned long));
-int	PDC_CDECL mouse_on Args((unsigned long));
-int	PDC_CDECL mouse_off Args((unsigned long));
-int	PDC_CDECL request_mouse_pos Args((void));
-int	PDC_CDECL map_button Args((unsigned long));
-void	PDC_CDECL wmouse_position Args((WINDOW *, int *, int *));
-unsigned long PDC_CDECL getmouse Args((void));
-unsigned long PDC_CDECL getbmap Args((void));
 
 /* Private functions referred to in macros here */
 

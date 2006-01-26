@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.98 2006/01/26 19:40:47 wmcbrine Exp $
+$Id: curses.h,v 1.99 2006/01/26 19:56:25 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1433,7 +1433,7 @@ void	PDC_CDECL noqiflush Args((void));
 int	PDC_CDECL notimeout Args((WINDOW *, bool));
 int	PDC_CDECL overlay Args((const WINDOW *, WINDOW *));
 int	PDC_CDECL overwrite Args((const WINDOW *, WINDOW *));
-int	PDC_CDECL pair_content Args((int, short *, short *));
+int	PDC_CDECL pair_content Args((short, short *, short *));
 int	PDC_CDECL pechochar Args((WINDOW *, chtype));
 int	PDC_CDECL pnoutrefresh Args((WINDOW *, int, int, int, int, int, int));
 int	PDC_CDECL prefresh Args((WINDOW *, int, int, int, int, int, int));

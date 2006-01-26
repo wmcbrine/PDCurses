@@ -45,7 +45,7 @@ static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.19 2006/01/26 19:40:48 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.20 2006/01/26 19:56:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -333,11 +333,11 @@ bool	PDC_CDECL	can_change_color()
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	pair_content(int colorpair, short *foreground,
+int	PDC_CDECL	pair_content(short colorpair, short *foreground,
 				     short *background)
 #else
 int	PDC_CDECL	pair_content(colorpair, foreground, background)
-int colorpair;
+short colorpair;
 short *foreground;
 short *background;
 #endif

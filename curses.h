@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.101 2006/01/26 20:50:41 wmcbrine Exp $
+$Id: curses.h,v 1.102 2006/01/26 21:00:18 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1569,21 +1569,16 @@ int	PDC_CDECL sb_get_vert Args((int *, int *, int *));
 int	PDC_CDECL sb_refresh Args((void));
 #endif
 
-/* Private functions referred to in macros here */
-
 int	PDC_CDECL PDC_chadd Args((WINDOW *, chtype, bool, bool));
 int	PDC_CDECL PDC_chins Args((WINDOW *, chtype, bool));
 int	PDC_CDECL PDC_ungetch Args((int));
-
 void	PDC_CDECL PDC_set_title Args((char *));
-
 int	PDC_CDECL PDC_getclipboard Args((char **, long *));
 int	PDC_CDECL PDC_setclipboard Args((char *, long));
 int	PDC_CDECL PDC_freeclipboard Args((char *));
 int	PDC_CDECL PDC_clearclipboard Args((void));
 
 unsigned long PDC_CDECL PDC_get_input_fd Args((void));
-int	PDC_CDECL PDC_curs_set Args((int));
 unsigned long PDC_CDECL PDC_get_key_modifiers Args((void));
 
 int	PDC_CDECL PDC_wunderline Args((WINDOW *, int, bool));

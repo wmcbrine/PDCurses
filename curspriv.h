@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curspriv.h,v 1.26 2006/01/25 14:32:34 wmcbrine Exp $
+$Id: curspriv.h,v 1.27 2006/01/26 21:00:18 wmcbrine Exp $
 */
 /*
 *                          CURSPRIV.H
@@ -271,7 +271,6 @@ int		PDC_sysgetch Args((void));
 bool		PDC_transform_line Args((int));
 int		PDC_validchar Args((int));
 int		PDC_vsscanf Args((char *, const char *, va_list));
-
 
 #if defined(OS2) && !defined(EMXVIDEO)
 int		PDC_set_scrn_mode Args((VIOMODEINFO));

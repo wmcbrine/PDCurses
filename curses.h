@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.96 2006/01/26 18:07:06 wmcbrine Exp $
+$Id: curses.h,v 1.97 2006/01/26 18:28:48 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1531,7 +1531,7 @@ int	PDC_CDECL wredrawln Args((WINDOW *, int ,int));
 int	PDC_CDECL wrefresh Args((WINDOW *));
 int	PDC_CDECL wscrl Args((WINDOW *, int));
 int	PDC_CDECL wsetscrreg Args((WINDOW *, int, int));
-int	PDC_CDECL wtimeout Args((WINDOW *, int));
+void	PDC_CDECL wtimeout Args((WINDOW *, int));
 int	PDC_CDECL wtouchln Args((WINDOW *, int, int, int));
 void	PDC_CDECL wsyncdown Args((WINDOW *));
 void	PDC_CDECL wsyncup Args((WINDOW *));

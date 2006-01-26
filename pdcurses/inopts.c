@@ -49,7 +49,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.8 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.9 2006/01/26 18:28:48 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -71,8 +71,8 @@ char *rcsid_inopts  = "$Id: inopts.c,v 1.8 2006/01/13 01:17:59 wmcbrine Exp $";
 	int noraw(void);
 	void noqiflush(void);
 	void qiflush(void);
-	int timeout(int delay);
-	int wtimeout(WINDOW *win, int delay);
+	void timeout(int delay);
+	void wtimeout(WINDOW *win, int delay);
 	int typeahead(int fildes);
 
   X/Open Description:
@@ -473,9 +473,9 @@ int fildes;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wtimeout(WINDOW *win, int delay)
+void	PDC_CDECL	wtimeout(WINDOW *win, int delay)
 #else
-int	PDC_CDECL	wtimeout(win, delay)
+void	PDC_CDECL	wtimeout(win, delay)
 WINDOW *win;
 int delay;
 #endif
@@ -484,50 +484,45 @@ int delay;
 	PDC_LOG(("wtimeout() - called\n"));
 
 	if (win == NULL)
-		return ERR;
+		return;
 
 	if (delay < 0)
 	{
-		/*
-		 * This causes a blocking read on the window
-		 * so turn on delay mode
-		 */
+		/* This causes a blocking read on the window
+		   so turn on delay mode  */
+
 		win->_nodelay = FALSE;
 		win->_delayms = 0;
 	}
 	else if (delay == 0)
 	{
-		/*
-		 * This causes a non-blocking read on the window
-		 * so turn off delay mode
-		 */
+		/* This causes a non-blocking read on the window
+		   so turn off delay mode */
+
 		win->_nodelay = TRUE;
 		win->_delayms = 0;
 	}
 	else
 	{
-		/*
-		 * This causes the read on the window
-		 * to delay for the number of milliseconds.
-		 * Also forces the window into non-blocking read mode
-		 */
+		/* This causes the read on the window
+		   to delay for the number of milliseconds.
+		   Also forces the window into non-blocking read mode */
+
 		/*win->_nodelay = TRUE;*/
 		win->_delayms = delay;
 	}
-
-	return OK;
 }
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	timeout(int delay)
+void	PDC_CDECL	timeout(int delay)
 #else
-int	PDC_CDECL	timeout(delay)
+void	PDC_CDECL	timeout(delay)
 int delay;
 #endif
 /***********************************************************************/
 {
 	PDC_LOG(("timeout() - called\n"));
 
-	return wtimeout(stdscr, delay);
+	wtimeout(stdscr, delay);
 }

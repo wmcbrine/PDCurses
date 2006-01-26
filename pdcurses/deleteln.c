@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.4 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_deleteln  = "$Id: deleteln.c,v 1.5 2006/01/26 18:35:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -222,9 +222,9 @@ WINDOW *win;
 /* wrs (4/10/93) account for window background */
 	blank = win->_bkgd;
 #endif
-	temp = win->_y[win->_maxy-1];
+	temp = win->_y[win->_maxy - 1];
 
-	for (y = win->_maxy-1; y > win->_cury; y--)
+	for (y = win->_maxy - 1; y > win->_cury; y--)
 	{
 		win->_y[y] = win->_y[y - 1];
 		win->_firstch[y] = 0;

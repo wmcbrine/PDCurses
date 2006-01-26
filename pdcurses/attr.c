@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.7 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_attr  = "$Id: attr.c,v 1.8 2006/01/26 19:40:48 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -51,12 +51,12 @@ char *rcsid_attr  = "$Id: attr.c,v 1.7 2006/01/13 01:17:59 wmcbrine Exp $";
   Name:                                                          attr
 
   Synopsis:
-	int attroff(attr_t attrs);
-	int wattroff(WINDOW *win, attr_t attrs);
-	int attron(attr_t attrs);
-	int wattron(WINDOW *win, attr_t attrs);
-	int attrset(attr_t attrs);
-	int wattrset(WINDOW *win, attr_t attrs);
+	int attroff(chtype attrs);
+	int wattroff(WINDOW *win, chtype attrs);
+	int attron(chtype attrs);
+	int wattron(WINDOW *win, chtype attrs);
+	int attrset(chtype attrs);
+	int wattrset(WINDOW *win, chtype attrs);
 	int standend(void);
 	int wstandend(WINDOW *win);
 	int standout(void);
@@ -87,8 +87,8 @@ char *rcsid_attr  = "$Id: attr.c,v 1.7 2006/01/13 01:17:59 wmcbrine Exp $";
 	any others.  The color_set() function sets the window color to 
 	the value of color_pair.
 
-	The standout() function is the same as attron( A_STANDOUT ).  
-	The standend() function is the same as attrset( A_NORMAL ); that 
+	The standout() function is the same as attron(A_STANDOUT).  
+	The standend() function is the same as attrset(A_NORMAL); that 
 	is, it turns off all attributes.
 
 	NOTE:	attroff(), attron(), attrset(), standend(), standout(),
@@ -121,7 +121,7 @@ char *rcsid_attr  = "$Id: attr.c,v 1.7 2006/01/13 01:17:59 wmcbrine Exp $";
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	attroff(attr_t attrs)
+int	PDC_CDECL	attroff(chtype attrs)
 #else
 int	PDC_CDECL	attroff(attrs)
 chtype attrs;
@@ -135,11 +135,11 @@ chtype attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wattroff(WINDOW *win, attr_t attrs)
+int	PDC_CDECL	wattroff(WINDOW *win, chtype attrs)
 #else
 int	PDC_CDECL	wattroff(win, attrs)
 WINDOW *win;
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
@@ -155,10 +155,10 @@ attr_t attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	attron(attr_t attrs)
+int	PDC_CDECL	attron(chtype attrs)
 #else
 int	PDC_CDECL	attron(attrs)
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
@@ -169,16 +169,16 @@ attr_t attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wattron(WINDOW *win, attr_t attrs)
+int	PDC_CDECL	wattron(WINDOW *win, chtype attrs)
 #else
 int	PDC_CDECL	wattron(win, attrs)
 WINDOW *win;
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
-	attr_t newcolr, oldcolr;
-	attr_t newattr, oldattr;
+	chtype newcolr, oldcolr;
+	chtype newattr, oldattr;
 
 	PDC_LOG(("wattron() - called\n"));
 
@@ -202,10 +202,10 @@ attr_t attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	attrset(attr_t attrs)
+int	PDC_CDECL	attrset(chtype attrs)
 #else
 int	PDC_CDECL	attrset(attrs)
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
@@ -216,11 +216,11 @@ attr_t attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	wattrset(WINDOW *win, attr_t attrs)
+int	PDC_CDECL	wattrset(WINDOW *win, chtype attrs)
 #else
 int	PDC_CDECL	wattrset(win, attrs)
 WINDOW *win;
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
@@ -236,9 +236,9 @@ attr_t attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-attr_t  PDC_CDECL	getattrs(WINDOW* win)
+chtype  PDC_CDECL	getattrs(WINDOW* win)
 #else
-attr_t  PDC_CDECL	getattrs(win)
+chtype  PDC_CDECL	getattrs(win)
 WINDOW *win;
 #endif
 /***********************************************************************/

@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr = "$Id: termattr.c,v 1.10 2006/01/15 18:20:16 wmcbrine Exp $";
+char *rcsid_termattr = "$Id: termattr.c,v 1.11 2006/01/26 19:40:48 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -56,7 +56,7 @@ char *rcsid_termattr = "$Id: termattr.c,v 1.10 2006/01/15 18:20:16 wmcbrine Exp 
 	bool has_il(void);
 	char killchar(void);
 	char *longname(void);
-	attr_t termattrs(void);
+	chtype termattrs(void);
 	char *termname(void);
 
 	char wordchar(void);
@@ -300,13 +300,13 @@ char*	PDC_CDECL	longname()
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-attr_t	PDC_CDECL	termattrs(void)
+chtype	PDC_CDECL	termattrs(void)
 #else
-attr_t	PDC_CDECL	termattrs()
+chtype	PDC_CDECL	termattrs()
 #endif
 /***********************************************************************/
 {
-	attr_t temp = (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | 
+	chtype temp = (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | 
 		A_UNDERLINE | A_ITALIC);
 
 	/* note: blink is bold background on some platforms */

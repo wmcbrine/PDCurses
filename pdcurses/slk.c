@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk = "$Id: slk.c,v 1.7 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_slk = "$Id: slk.c,v 1.8 2006/01/26 19:40:48 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -59,9 +59,9 @@ char *rcsid_slk = "$Id: slk.c,v 1.7 2006/01/06 10:32:16 wmcbrine Exp $";
 	int slk_clear(void);
 	int slk_restore(void);
 	int slk_touch(void);
-	int slk_attron(attr_t attrs);
-	int slk_attrset(attr_t attrs);
-	int slk_attroff(attr_t attrs);
+	int slk_attron(chtype attrs);
+	int slk_attrset(chtype attrs);
+	int slk_attroff(chtype attrs);
 	int slk_color(short color_pair);
 
   X/Open Description:
@@ -448,10 +448,10 @@ int	PDC_CDECL	slk_touch()
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	slk_attron(attr_t attrs)
+int	PDC_CDECL	slk_attron(chtype attrs)
 #else
 int	PDC_CDECL	slk_attron(attrs)
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
@@ -469,10 +469,10 @@ attr_t attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	slk_attroff(attr_t attrs)
+int	PDC_CDECL	slk_attroff(chtype attrs)
 #else
 int	PDC_CDECL	slk_attroff(attrs)
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
@@ -490,10 +490,10 @@ attr_t attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	slk_attrset(attr_t attrs)
+int	PDC_CDECL	slk_attrset(chtype attrs)
 #else
 int	PDC_CDECL	slk_attrset(attrs)
-attr_t attrs;
+chtype attrs;
 #endif
 /***********************************************************************/
 {
@@ -539,7 +539,7 @@ static void	PDC_slk_init()
 /***********************************************************************/
 {
 	int i;
-	attr_t save_attr;
+	chtype save_attr;
 
 	PDC_LOG(("PDC_slk_init() - called\n"));
 

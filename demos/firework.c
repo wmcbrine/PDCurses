@@ -32,7 +32,7 @@
 #define DELAYSIZE 200
 
 #ifdef PDCDEBUG
-char *rcsid_firework = "$Id: firework.c,v 1.12 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_firework = "$Id: firework.c,v 1.13 2006/01/26 19:40:47 wmcbrine Exp $";
 #endif
 
 #if defined(HAVE_PROTO) && !defined(__STDC__)
@@ -192,7 +192,7 @@ void get_colour Args((void))
 		COLOR_RED, COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE
 	};
 
-	attr_t bold = (rand() % 2) ? A_BOLD : A_NORMAL;
+	chtype bold = (rand() % 2) ? A_BOLD : A_NORMAL;
 	init_pair(1, tbl[rand() % 8], COLOR_BLACK);
 	attrset(COLOR_PAIR(1) | bold);
 }

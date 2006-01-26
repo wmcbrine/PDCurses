@@ -45,7 +45,7 @@ static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.18 2006/01/26 17:55:00 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.19 2006/01/26 19:40:48 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -412,7 +412,7 @@ short bg;
 /***********************************************************************/
 {
 	unsigned char att, temp_bg;
-	attr_t i;
+	chtype i;
 
 	for (i = 0; i < PDC_OFFSET; i++)
 	{

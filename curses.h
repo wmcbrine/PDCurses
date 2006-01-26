@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.97 2006/01/26 18:28:48 wmcbrine Exp $
+$Id: curses.h,v 1.98 2006/01/26 19:40:47 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -677,7 +677,7 @@ typedef struct _win		/* definition of a window	*/
 	int	_lastsx2;	/* last lower x coordinate of screen
 				   window for pad */
 	int	_flags;		/* window properties		*/
-	attr_t	_attrs;		/* standard A_STANDOUT attributes and colors */
+	chtype	_attrs;		/* standard A_STANDOUT attributes and colors */
 	chtype	_bkgd;		/* wrs(4/6/93) background, normally blank */
 	int	_tabsize;	/* tab character size		*/
 	bool	_clear;		/* causes clear at next refresh	*/
@@ -697,7 +697,7 @@ typedef struct _win		/* definition of a window	*/
 	int	_delayms;	/* milliseconds of delay for getch()	*/
 	char	*_title;	/* window title			   */
 	char	_title_ofs;	/* window title offset from left   */
-	attr_t	_title_attr;	/* window title attributes	   */
+	chtype	_title_attr;	/* window title attributes	   */
 	chtype	_blank;		/* window's blank character	   */
 	int	_parx, _pary;	/* coords relative to parent (0,0) */
 	struct	_win *_parent;	/* subwin's pointer to parent win  */
@@ -763,7 +763,7 @@ typedef struct
 	bool	shell;		/* TRUE if reset_prog_mode() needs
 				   to be called.			*/
 	chtype	blank;		/* Background character			*/
-	attr_t	orig_attr;	/* Original screen attributes - 
+	chtype	orig_attr;	/* Original screen attributes - 
 				   top 16 bits background,
 				   bottom 16 bits foreground		*/
 	int	cursrow;	/* position of physical cursor		*/
@@ -1387,7 +1387,7 @@ char	PDC_CDECL erasechar Args((void));
 void	PDC_CDECL filter Args((void));
 int	PDC_CDECL flash Args((void));
 int	PDC_CDECL flushinp Args((void));
-attr_t	PDC_CDECL getattrs Args((WINDOW *));
+chtype	PDC_CDECL getattrs Args((WINDOW *));
 int	PDC_CDECL getsyx Args((int *, int *));
 WINDOW* PDC_CDECL getwin Args((FILE *));
 int	PDC_CDECL halfdelay Args((int));
@@ -1470,14 +1470,14 @@ char *	PDC_CDECL slk_label Args((int));
 int	PDC_CDECL slk_clear Args((void));
 int	PDC_CDECL slk_restore Args((void));
 int	PDC_CDECL slk_touch Args((void));
-int	PDC_CDECL slk_attron Args((attr_t));
-int	PDC_CDECL slk_attrset Args((attr_t));
-int	PDC_CDECL slk_attroff Args((attr_t));
+int	PDC_CDECL slk_attron Args((chtype));
+int	PDC_CDECL slk_attrset Args((chtype));
+int	PDC_CDECL slk_attroff Args((chtype));
 int	PDC_CDECL slk_color Args((short));
 WINDOW* PDC_CDECL subpad Args((WINDOW *, int, int, int, int));
 WINDOW* PDC_CDECL subwin Args((WINDOW *, int, int, int, int));
 int	PDC_CDECL syncok Args((WINDOW *, bool));
-attr_t	PDC_CDECL termattrs Args((void));
+chtype	PDC_CDECL termattrs Args((void));
 char *	PDC_CDECL termname Args((void));
 int	PDC_CDECL touchline Args((WINDOW *, int, int));
 int	PDC_CDECL touchwin Args((WINDOW *));
@@ -1497,9 +1497,9 @@ int	PDC_CDECL waddch Args((WINDOW *, const chtype));
 int	PDC_CDECL waddchnstr Args((WINDOW *, const chtype *, int));
 int	PDC_CDECL waddnstr Args((WINDOW *, const char *, int));
 int	PDC_CDECL waddstr Args((WINDOW *, const char *));
-int	PDC_CDECL wattroff Args((WINDOW *, attr_t));
-int	PDC_CDECL wattron Args((WINDOW *, attr_t));
-int	PDC_CDECL wattrset Args((WINDOW *, attr_t));
+int	PDC_CDECL wattroff Args((WINDOW *, chtype));
+int	PDC_CDECL wattron Args((WINDOW *, chtype));
+int	PDC_CDECL wattrset Args((WINDOW *, chtype));
 int	PDC_CDECL wbkgd Args((WINDOW *, chtype));
 void	PDC_CDECL wbkgdset Args((WINDOW *, chtype));
 int	PDC_CDECL wborder Args((WINDOW *, chtype, chtype, chtype, 

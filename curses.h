@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.95 2006/01/26 17:54:59 wmcbrine Exp $
+$Id: curses.h,v 1.96 2006/01/26 18:07:06 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1397,8 +1397,8 @@ bool	PDC_CDECL has_il Args((void));
 bool	PDC_CDECL has_key Args((int));
 int	PDC_CDECL hline Args((chtype, int));
 int	PDC_CDECL idlok Args((WINDOW *, bool));
-int	PDC_CDECL idcok Args((WINDOW *, bool));
-int	PDC_CDECL immedok Args((WINDOW *, bool));
+void	PDC_CDECL idcok Args((WINDOW *, bool));
+void	PDC_CDECL immedok Args((WINDOW *, bool));
 int	PDC_CDECL inchnstr Args((chtype *, int));
 int	PDC_CDECL init_color Args((short, short, short, short));
 int	PDC_CDECL init_pair Args((short, short, short));
@@ -1633,7 +1633,6 @@ int	PDC_CDECL PDC_set_line_color Args((short));
 #define getsyx(y, x)		{ if( curscr->_leaveit) (y)=(x)=-1; else getyx(curscr,(y),(x)); }
 #define getyx(w, y, x)		(y = (w)->_cury, x = (w)->_curx)
 #define has_colors()            ((SP->mono) ? FALSE : TRUE)
-/*#define idcok(w, flag)	OK*/
 /*#define idlok(w, flag)	OK*/
 #define inch()			(stdscr->_y[stdscr->_cury][stdscr->_curx])
 #define inchstr(c)		inchnstr(c, stdscr->_maxx-stdscr->_curx)

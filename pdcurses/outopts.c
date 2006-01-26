@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts = "$Id: outopts.c,v 1.5 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_outopts = "$Id: outopts.c,v 1.6 2006/01/26 18:07:08 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -51,8 +51,8 @@ char *rcsid_outopts = "$Id: outopts.c,v 1.5 2006/01/13 01:17:59 wmcbrine Exp $";
   Synopsis:
 	int clearok(WINDOW *win, bool bf);
 	int idlok(WINDOW *win, bool bf);
-	int idcok(WINDOW *win, bool bf);
-	int immedok(WINDOW *win, bool bf);
+	void idcok(WINDOW *win, bool bf);
+	void immedok(WINDOW *win, bool bf);
 	int leaveok(WINDOW *win, bool bf);
 	int setscrreg(int top, int bot);
 	int wsetscrreg(WINDOW *win, int top, int bot);
@@ -196,9 +196,9 @@ bool bf;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	idcok(WINDOW *win, bool bf)
+void	PDC_CDECL	idcok(WINDOW *win, bool bf)
 #else
-int	PDC_CDECL	idcok(win, bf)
+void	PDC_CDECL	idcok(win, bf)
 WINDOW *win;
 bool bf;
 #endif
@@ -210,15 +210,13 @@ bool bf;
 		return ERR;
 
 	win->_use_idc = bf;
-
-	return OK;
 }
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int	PDC_CDECL	immedok(WINDOW *win, bool bf)
+void	PDC_CDECL	immedok(WINDOW *win, bool bf)
 #else
-int	PDC_CDECL	immedok(win, bf)
+void	PDC_CDECL	immedok(win, bf)
 WINDOW *win;
 bool bf;
 #endif
@@ -230,8 +228,6 @@ bool bf;
 		return ERR;
 
 	win->_immed = bf;
-
-	return OK;
 }
 
 /***********************************************************************/

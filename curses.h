@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.94 2006/01/25 13:45:47 wmcbrine Exp $
+$Id: curses.h,v 1.95 2006/01/26 17:54:59 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1367,7 +1367,7 @@ int	PDC_CDECL baudrate Args((void));
 int	PDC_CDECL beep Args((void));
 int	PDC_CDECL border Args((chtype, chtype, chtype, chtype, 
 			   chtype, chtype, chtype, chtype));
-int	PDC_CDECL can_change_color Args((void));
+bool	PDC_CDECL can_change_color Args((void));
 int	PDC_CDECL cbreak Args((void));
 int	PDC_CDECL clearok Args((WINDOW *, bool));
 int	PDC_CDECL color_content Args((short, short *, short *, short *));

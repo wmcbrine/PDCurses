@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -49,7 +49,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.9 2006/01/26 18:28:48 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.10 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

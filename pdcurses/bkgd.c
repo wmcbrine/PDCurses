@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -30,7 +30,7 @@
 #undef	wbkgdset
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd  = "$Id: bkgd.c,v 1.5 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_bkgd  = "$Id: bkgd.c,v 1.6 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -142,12 +142,13 @@ chtype ch;
 	newch = (win->_bkgd & A_CHARTEXT);
 
 #ifdef NDP
-/* buggy compiler fix */
+	/* buggy compiler fix */
+
 	sprintf(tmpbuf, "%d %d", oldch, newch);
 #endif
 	
-/* what follows is what seems to occur in the System V implementation of */
-/* this routine */
+	/* what follows is what seems to occur in the System V 
+	   implementation of this routine */
 
 	for (y = 0; y < win->_maxy; y++) {
 		for (x = 0; x < win->_maxx; x++) {
@@ -156,30 +157,31 @@ chtype ch;
 
 			ch = *winptr;
 
-		/* determine the colors and attributes of the character */
-		/* read from the window */
+			/* determine the colors and attributes of the 
+			   character read from the window */
 
 			colr = (ch & A_COLOR);
 			attr = (ch & A_ATTRIBUTES);
 			if (colr != 0)
 				attr = (attr ^ colr);
 
-		/* if the color is the same as the old background color, */
-		/* then make it the new background color, otherwise */
-		/* leave it */
+			/* if the color is the same as the old 
+			   background color, then make it the new 
+			   background color, otherwise leave it */
 
 			if (colr == oldcolr)
 				colr = newcolr;
 
-		/* remove any attributes (non color) from the character */
-		/* that were part of the old background, then combine */
-		/* the remaining ones with the new background */
+			/* remove any attributes (non color) from the 
+			   character that were part of the old 
+			   background, then combine the remaining ones 
+			   with the new background */
 
 			attr = (attr ^ oldattr);
 			attr |= newattr;
 
-		/* change character if it is there because it was the */
-		/* old background character */
+			/* change character if it is there because it 
+			   was the old background character */
 
 			ch = (ch & A_CHARTEXT);
 			if (ch == oldch)
@@ -231,7 +233,7 @@ chtype ch;
 	if (win->_bkgd == ch)
 		return;
 
-	if ( (ch & A_ATTRIBUTES) == 0 )
+	if ((ch & A_ATTRIBUTES) == 0)
 		bkgdattr = A_NORMAL;
 	else
 		bkgdattr = (ch & A_ATTRIBUTES);

@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.6 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_mouse = "$Id: mouse.c,v 1.7 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -202,8 +202,8 @@ int *y,*x;
 {
 	PDC_LOG(("wmouse_position() - called\n"));
 
- /* if the current mouse position is outside the provided window, put */
- /* -1 in x and y                                                     */
+	/* if the current mouse position is outside the provided window, 
+	   put -1 in x and y */
 
 	if (win == (WINDOW *)NULL)
 	{

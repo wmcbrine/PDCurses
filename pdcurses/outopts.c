@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts = "$Id: outopts.c,v 1.7 2006/01/26 19:44:39 wmcbrine Exp $";
+char *rcsid_outopts = "$Id: outopts.c,v 1.8 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -263,19 +263,7 @@ int bottom;
 {
 	PDC_LOG(("setscrreg() - called: top %d bottom %d\n", top, bottom));
 
-	if (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	if ((0 <= top) && (top <= stdscr->_cury) &&
-	    (stdscr->_cury <= bottom) && (bottom < LINES))
-	{
-		stdscr->_tmarg = top;
-		stdscr->_bmarg = bottom;
-
-		return OK;
-	}
-	else
-		return ERR;
+	return wsetscrreg(stdscr, top, bottom);
 }
 
 /***********************************************************************/

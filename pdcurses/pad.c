@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad = "$Id: pad.c,v 1.6 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_pad = "$Id: pad.c,v 1.7 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */
@@ -136,8 +136,8 @@ int ncols;
 /***********************************************************************/
 {
 #ifdef HAVE_PROTO
-	extern void* (*callc)( size_t, size_t );
-	extern void  (*fre)( void* );
+	extern void* (*callc)(size_t, size_t);
+	extern void  (*fre)(void *);
 #else
 	extern void* (*callc)();
 	extern void  (*fre)();
@@ -358,8 +358,7 @@ int sx2;
 	/* position the cursor to the pad's current position if
 	   possible -- is the pad current position going to end up 
 	   displayed? if not, then don't move the cursor; if so, move it 
-	   to the correct place 
-	 */
+	   to the correct place */
 
 	if (!w->_leaveit && w->_cury >= py && w->_curx >= px &&
 	     w->_cury <= py + (sy2 - sy1 + 1) &&

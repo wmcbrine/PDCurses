@@ -32,7 +32,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.18 2006/01/25 13:41:35 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.19 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -604,7 +604,7 @@ va_dcl
 	}
 	return count;
 }
-#endif
+#endif /* HAVE_VSSCANF */
 
 /*man-start*********************************************************************
 

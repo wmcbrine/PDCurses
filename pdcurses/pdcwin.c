@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define  CURSES_LIBRARY 1
+#define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.14 2006/01/22 20:34:30 wmcbrine Exp $";
+char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.15 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -189,7 +189,7 @@ int begx;
 #ifdef HAVE_PROTO
 	extern void *(*mallc)(size_t);
 	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void*);
+	extern void  (*fre)(void *);
 #else
 	extern void *(*mallc)();
 	extern void *(*callc)();

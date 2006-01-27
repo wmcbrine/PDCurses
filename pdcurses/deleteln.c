@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.5 2006/01/26 18:35:25 wmcbrine Exp $";
+char *rcsid_deleteln  = "$Id: deleteln.c,v 1.6 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -124,7 +124,8 @@ WINDOW *win;
 #if defined(PDCURSES_WCLR)
 	blank = win->_blank | win->_attrs;
 #else
-/* wrs (4/10/93) account for window background */
+	/* wrs (4/10/93) account for window background */
+
 	blank = win->_bkgd;
 #endif
 	temp = win->_y[win->_cury];

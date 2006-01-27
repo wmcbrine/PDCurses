@@ -27,13 +27,13 @@
 #include <sys/types.h>
 #include <time.h>
 
-#undef   PDC_debug
+#undef PDC_debug
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.7 2006/01/15 23:17:35 wmcbrine Exp $";
+char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.8 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
-	bool trace_on = FALSE;
+bool trace_on = FALSE;
 
 /*man-start*********************************************************************
 

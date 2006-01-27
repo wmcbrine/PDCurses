@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -45,7 +45,7 @@ static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.20 2006/01/26 19:56:25 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.21 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -383,7 +383,7 @@ void	PDC_init_atrtab()
 {
 	int i, orig_fore, orig_back;
 
-	if ( SP->orig_attr == 0 )
+	if (SP->orig_attr == 0)
 	{
 		orig_fore = COLOR_WHITE;
 		orig_back = COLOR_BLACK;
@@ -394,10 +394,10 @@ void	PDC_init_atrtab()
 		orig_back = (SP->orig_attr & A_ATTRIBUTES) >> 16;
 	}
 
-	for ( i = 0; i < PDC_COLOR_PAIRS; i++ )
-		PDC_init_pair( i, orig_fore, orig_back );
+	for (i = 0; i < PDC_COLOR_PAIRS; i++)
+		PDC_init_pair(i, orig_fore, orig_back);
 
-	PDC_init_pair( PDC_COLOR_PAIRS, orig_back, orig_fore );
+	PDC_init_pair(PDC_COLOR_PAIRS, orig_back, orig_fore);
 }
 
 /***********************************************************************/

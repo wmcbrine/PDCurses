@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insstr  = "$Id: insstr.c,v 1.9 2006/01/14 06:42:03 wmcbrine Exp $";
+char *rcsid_insstr  = "$Id: insstr.c,v 1.10 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -229,7 +229,7 @@ char *str;
 #endif
 /***********************************************************************/
 {
-	PDC_LOG(("winsstr() - called: string=\"%s\"\n", str));
+	PDC_LOG(("mvwinsstr() - called: string=\"%s\"\n", str));
 
 	if (wmove(win, y, x) == ERR)
 		return ERR;

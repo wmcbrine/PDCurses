@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw = "$Id: scanw.c,v 1.8 2006/01/25 14:32:35 wmcbrine Exp $";
+char *rcsid_scanw = "$Id: scanw.c,v 1.9 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,7 +54,7 @@ char *rcsid_scanw = "$Id: scanw.c,v 1.8 2006/01/25 14:32:35 wmcbrine Exp $";
 	int scanw(char *fmt, ...);
 	int wscanw(WINDOW *win, char *fmt, ...);
 	int mvscanw(int y, int x, char *fmt, ...);
-	int mvwscanw(WINDOW *win, int y, int x, char *fmt,...);
+	int mvwscanw(WINDOW *win, int y, int x, char *fmt, ...);
 	int vwscanw(WINDOW *win, char *fmt, va_list varglist);
 
   X/Open Description:

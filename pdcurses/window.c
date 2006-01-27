@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window = "$Id: window.c,v 1.10 2006/01/13 01:17:59 wmcbrine Exp $";
+char *rcsid_window = "$Id: window.c,v 1.11 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -173,7 +173,7 @@ int begx;
 {
 #ifdef HAVE_PROTO
 	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void*);
+	extern void  (*fre)(void *);
 #else
 	extern void *(*callc)();
 	extern void  (*fre)();
@@ -412,7 +412,7 @@ WINDOW *win;
 {
 #ifdef HAVE_PROTO
 	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void*);
+	extern void  (*fre)(void *);
 #else
 	extern void *(*callc)();
 	extern void  (*fre)();
@@ -516,7 +516,7 @@ int cols;
 {
 #ifdef HAVE_PROTO
 	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void*);
+	extern void  (*fre)(void *);
 #else
 	extern void *(*callc)();
 	extern void  (*fre)();

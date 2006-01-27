@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define CURSES_LIBRARY  1
+#define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.4 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.5 2006/01/27 16:18:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

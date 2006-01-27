@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addch  = "$Id: addch.c,v 1.5 2006/01/06 10:32:16 wmcbrine Exp $";
+char *rcsid_addch  = "$Id: addch.c,v 1.6 2006/01/27 15:03:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -144,7 +144,7 @@ chtype ch;
 {
 	PDC_LOG(("addch() - called: ch=%x\n", ch));
 
-	return PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE );
+	return PDC_chadd(stdscr, ch, (bool)(!(SP->raw_out)), TRUE);
 }
 
 /***********************************************************************/
@@ -159,7 +159,7 @@ chtype ch;
 {
 	PDC_LOG(("waddch() - called: win=%x ch=%x\n", win, ch));
 
-	return PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE );
+	return PDC_chadd(win, ch, (bool)(!(SP->raw_out)), TRUE);
 }
 
 /***********************************************************************/
@@ -178,7 +178,7 @@ chtype ch;
 	if (move(y,x) == ERR)
 		return ERR;
 
-	return PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE );
+	return PDC_chadd(stdscr, ch, (bool)(!(SP->raw_out)), TRUE);
 }
 
 /***********************************************************************/
@@ -199,7 +199,7 @@ chtype ch;
 	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-	return PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE );
+	return PDC_chadd(win, ch, (bool)(!(SP->raw_out)), TRUE);
 }
 
 /***********************************************************************/
@@ -213,7 +213,7 @@ chtype ch;
 {
 	PDC_LOG(("echochar() - called: ch=%x\n", ch));
 
-	if (PDC_chadd( stdscr, ch, (bool)(!(SP->raw_out)), TRUE ) == ERR)
+	if (PDC_chadd(stdscr, ch, (bool)(!(SP->raw_out)), TRUE) == ERR)
 		return ERR;
 
 	return refresh();
@@ -231,7 +231,7 @@ chtype ch;
 {
 	PDC_LOG(("wechochar() - called: win=%x ch=%x\n", win, ch));
 
-	if (PDC_chadd( win, ch, (bool)(!(SP->raw_out)), TRUE ) == ERR)
+	if (PDC_chadd(win, ch, (bool)(!(SP->raw_out)), TRUE) == ERR)
 		return ERR;
 
 	return wrefresh(win);

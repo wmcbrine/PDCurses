@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.20 2006/01/25 14:32:35 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.21 2006/01/27 04:43:59 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -138,7 +138,7 @@ extern void (*PDC_initial_slk)();
 	WINDOW *initscr(void);
 	WINDOW *Xinitscr(int argc, char *argv[]);
 	int endwin(void);
-	int isendwin(void);
+	bool isendwin(void);
 	SCREEN *newterm(char *type, FILE *outfd, FILE *infd);
 	SCREEN *set_term(SCREEN *new);
 	void delscreen(SCREEN *sp);
@@ -420,9 +420,9 @@ int PDC_CDECL endwin()
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-int     PDC_CDECL   isendwin(void)
+bool	PDC_CDECL   isendwin(void)
 #else
-int     PDC_CDECL   isendwin()
+bool	PDC_CDECL   isendwin()
 #endif
 /***********************************************************************/
 {

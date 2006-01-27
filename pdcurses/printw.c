@@ -29,6 +29,8 @@
 #undef	wprintw
 #undef	mvprintw
 #undef	mvwprintw
+#undef	vwprintw
+#undef	vw_printw
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
@@ -37,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw = "$Id: printw.c,v 1.8 2006/01/25 14:32:35 wmcbrine Exp $";
+char *rcsid_printw = "$Id: printw.c,v 1.9 2006/01/27 18:41:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -50,6 +52,7 @@ char *rcsid_printw = "$Id: printw.c,v 1.8 2006/01/25 14:32:35 wmcbrine Exp $";
 	int mvprintw(int y, int x, char *fmt, ...);
 	int mvwprintw(WINDOW *win, int y, int x, char *fmt,...);
 	int vwprintw(WINDOW *win, char *fmt, va_list varglist);
+	int vw_printw(WINDOW *win, char *fmt, va_list varglist);
 
   X/Open Description:
 	The printw() routine adds a string to the default window
@@ -75,10 +78,6 @@ char *rcsid_printw = "$Id: printw.c,v 1.8 2006/01/25 14:32:35 wmcbrine Exp $";
 	All these routines are analogous to printf().  It is advisable
 	to use the field width options of printf() to avoid leaving
 	unwanted characters on the screen from earlier calls.
-
-  PDCurses Description:
-	The old Bjorn Larssen code for the 68K platform has been removed
-	from this module.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -235,4 +234,26 @@ va_dcl
 	len = vsprintf(printbuf, fmt, varglist);
 
 	return (waddstr(win, printbuf) == ERR) ? ERR : len;
+}
+
+/***********************************************************************/
+#ifdef HAVE_STDARG_H_HAVE_PROTO
+int	PDC_CDECL	vw_printw(WINDOW *win, char *fmt, va_list varglist)
+#else
+int	PDC_CDECL	vw_printw(win, fmt, va_alist)
+WINDOW *win;
+char *fmt;
+va_dcl
+#endif
+/***********************************************************************/
+{
+#if !defined(HAVE_STDARG_H_HAVE_PROTO)
+	va_list varglist;
+#endif
+	PDC_LOG(("vw_printw() - called\n"));
+
+#if !defined(HAVE_STDARG_H_HAVE_PROTO)
+	va_start(varglist);
+#endif
+	return vwprintw(win, fmt, varglist);
 }

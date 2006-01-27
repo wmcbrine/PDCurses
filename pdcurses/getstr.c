@@ -28,9 +28,10 @@
 #undef wgetstr
 #undef mvgetstr
 #undef mvwgetstr
-#undef ungetstr
 #undef getnstr
 #undef wgetnstr
+#undef mvgetnstr
+#undef mvwgetnstr
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
@@ -43,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.13 2006/01/14 06:42:03 wmcbrine Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.14 2006/01/27 18:41:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -55,9 +56,10 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.13 2006/01/14 06:42:03 wmcbrine Exp $";
 	int wgetstr(WINDOW *win, char *str);
 	int mvgetstr(int y, int x, char *str);
 	int mvwgetstr(WINDOW *win, int y, int x, char *str);
-	int getnstr(char *str, int ch);
-	int wgetnstr(WINDOW *win, char *str, int ch);
-	int mvwgetnstr(WINDOW *win, int y, int x, char *str, int ch);
+	int getnstr(char *str, int n);
+	int wgetnstr(WINDOW *win, char *str, int n);
+	int mvgetnstr(int y, int x, char *str, int n);
+	int mvwgetnstr(WINDOW *win, int y, int x, char *str, int n);
 
   X/Open Description:
 	The effect of getstr() is as though a series of calls to getch()
@@ -73,8 +75,8 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.13 2006/01/14 06:42:03 wmcbrine Exp $";
 	wgetstr() in that the number of characters read is limited by a 
 	passed argument.
 
-	NOTE: getstr(), getnstr(), mvgetstr(), mvwgetstr(), mwwgetnstr() 
-	are implemented as macros.
+	NOTE: getstr(), getnstr(), mvgetstr(), mvwgetstr(), mvgetnstr() 
+	and mvwgetnstr() are implemented as macros.
 
 	WARNING: There is no way to know how long the buffer passed to 
 	wgetstr() is, so it is possible to overwrite wrong memory or 
@@ -332,4 +334,45 @@ int n;
 	win->_nodelay = oldnodelay;
 
 	return OK;
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int PDC_CDECL mvgetnstr(int y, int x, char *str, int n)
+#else
+int PDC_CDECL mvgetnstr(y, x, str, n)
+int y;
+int x;
+char *str;
+int n;
+#endif
+/***********************************************************************/
+{
+	PDC_LOG(("mvgetnstr() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wgetnstr(stdscr, str, n);
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int PDC_CDECL mvwgetnstr(WINDOW *win, int y, int x, char *str, int n)
+#else
+int PDC_CDECL mvwgetnstr(win, y, x, str, n)
+WINDOW *win;
+int y;
+int x;
+char *str;
+int n;
+#endif
+/***********************************************************************/
+{
+	PDC_LOG(("mvwgetnstr() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wgetnstr(win, str, n);
 }

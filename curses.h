@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.102 2006/01/26 21:00:18 wmcbrine Exp $
+$Id: curses.h,v 1.103 2006/01/27 18:41:37 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -1101,14 +1101,6 @@ currently used.)
 
 #define COLOR_WHITE	7
 
-#ifdef CHTYPE_LONG
-# define COLOR_PAIR(n)	((chtype)(n) << 24)
-# define PAIR_NUMBER(n)	(((n) & A_COLOR) >> 24)
-#else
-# define COLOR_PAIR(n)	(((n) << 11) & A_ATTRIBUTES)
-# define PAIR_NUMBER(n)	(((n) & A_COLOR) >> 11)
-#endif
-
 /*----------------------------------------------------------------------
  *
  *	Function and Keypad Key Definitions.
@@ -1596,6 +1588,14 @@ int	PDC_CDECL PDC_set_line_color Args((short));
 #endif
 
 /*** Functions defined as macros ***/
+
+#ifdef CHTYPE_LONG
+# define COLOR_PAIR(n)	((chtype)(n) << 24)
+# define PAIR_NUMBER(n)	(((n) & A_COLOR) >> 24)
+#else
+# define COLOR_PAIR(n)	(((n) << 11) & A_ATTRIBUTES)
+# define PAIR_NUMBER(n)	(((n) & A_COLOR) >> 11)
+#endif
 
 #define addch(c)		waddch(stdscr, c)
 #define addchstr(c)		addchnstr(c, -1)

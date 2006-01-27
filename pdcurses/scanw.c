@@ -30,6 +30,7 @@
 #undef	mvscanw
 #undef	mvwscanw
 #undef	vwscanw
+#undef	vw_scanw
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
@@ -43,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw = "$Id: scanw.c,v 1.9 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_scanw = "$Id: scanw.c,v 1.10 2006/01/27 18:41:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -56,6 +57,7 @@ char *rcsid_scanw = "$Id: scanw.c,v 1.9 2006/01/27 16:18:00 wmcbrine Exp $";
 	int mvscanw(int y, int x, char *fmt, ...);
 	int mvwscanw(WINDOW *win, int y, int x, char *fmt, ...);
 	int vwscanw(WINDOW *win, char *fmt, va_list varglist);
+	int vw_scanw(WINDOW *win, char *fmt, va_list varglist);
 
   X/Open Description:
 	These routines correspond to scanf(). The function scanw() reads
@@ -70,10 +72,6 @@ char *rcsid_scanw = "$Id: scanw.c,v 1.9 2006/01/27 16:18:00 wmcbrine Exp $";
 	string from the window, and the resulting line is used as
 	input for the scan.  All character interpretation is carried
 	out according to the scanf function rules.
-
-  PDCurses Description:
-	The old Bjorn Larssen code for the 68K platform has been removed
-	from this module.
 
   X/Open Return Value:
 	Upon successful completion, the scanw, mvscanw, mvwscanw and
@@ -233,4 +231,26 @@ va_dcl
 	va_start(varglist);
 #endif
 	return vsscanf(scanbuf, fmt, varglist);
+}
+
+/***********************************************************************/
+#ifdef HAVE_STDARG_H_HAVE_PROTO
+int	PDC_CDECL	vw_scanw(WINDOW *win, char *fmt, va_list varglist)
+#else
+int	PDC_CDECL	vw_scanw(win, fmt, va_alist)
+WINDOW *win;
+char *fmt;
+va_dcl
+#endif
+/***********************************************************************/
+{
+#if !defined(HAVE_STDARG_H_HAVE_PROTO)
+	va_list varglist;
+#endif
+	PDC_LOG(("vw_scanw() - called\n"));
+
+#if !defined(HAVE_STDARG_H_HAVE_PROTO)
+	va_start(varglist);
+#endif
+	return vwscanw(win, fmt, varglist);
 }

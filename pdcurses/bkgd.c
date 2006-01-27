@@ -26,11 +26,12 @@
 /* undefine any macros for functions defined in this module */
 #undef	bkgd
 #undef	bkgdset
+#undef	getbkgd
 #undef	wbkgd
 #undef	wbkgdset
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd  = "$Id: bkgd.c,v 1.6 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_bkgd = "$Id: bkgd.c,v 1.7 2006/01/27 18:41:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -40,6 +41,7 @@ char *rcsid_bkgd  = "$Id: bkgd.c,v 1.6 2006/01/27 16:18:00 wmcbrine Exp $";
   Synopsis:
 	int bkgd(chtype ch);
 	void bkgdset(chtype ch);
+	chtype getbkgd(WINDOW *win);
 	int wbkgd(WINDOW *win, chtype ch);
 	void wbkgdset(WINDOW *win, chtype ch);
 
@@ -85,6 +87,7 @@ char *rcsid_bkgd  = "$Id: bkgd.c,v 1.6 2006/01/27 16:18:00 wmcbrine Exp $";
                                           Dec '88
       bkgd                                  -        -      4.0
       bkgdset                               -        -      4.0
+      getbkgd
       wbkgd                                 -        -      4.0
       wbkgdset                              -        -      4.0
 
@@ -102,6 +105,32 @@ chtype ch;
 	PDC_LOG(("bkgd() - called\n"));
 
 	return wbkgd(stdscr, ch);
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+void	PDC_CDECL	bkgdset(chtype ch)
+#else
+void	PDC_CDECL	bkgdset(ch)
+chtype ch;
+#endif
+/***********************************************************************/
+{
+	PDC_LOG(("bkgdset() - called\n"));
+
+	wbkgdset(stdscr, ch);
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+chtype  PDC_CDECL       getbkgd(WINDOW *win)
+#else
+chtype  PDC_CDECL       getbkgd(win)
+WINDOW *win;
+#endif
+/***********************************************************************/
+{
+        return win ? win->_bkgd : (chtype)ERR;
 }
 
 /***********************************************************************/
@@ -197,20 +226,6 @@ chtype ch;
 	touchwin(win);
 	PDC_sync(win);
 	return OK;
-}
-
-/***********************************************************************/
-#ifdef HAVE_PROTO
-void	PDC_CDECL	bkgdset(chtype ch)
-#else
-void	PDC_CDECL	bkgdset(ch)
-chtype ch;
-#endif
-/***********************************************************************/
-{
-	PDC_LOG(("bkgdset() - called\n"));
-
-	wbkgdset(stdscr, ch);
 }
 
 /***********************************************************************/

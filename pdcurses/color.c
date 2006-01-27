@@ -25,6 +25,8 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
+#undef	COLOR_PAIR
+#undef	PAIR_NUMBER
 #undef	start_color
 #undef	init_pair
 #undef	init_color
@@ -45,7 +47,7 @@ static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.21 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.22 2006/01/27 18:41:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -53,6 +55,8 @@ char *rcsid_color = "$Id: color.c,v 1.21 2006/01/27 16:18:00 wmcbrine Exp $";
   Name:                                                         color
 
   Synopsis:
+	chtype COLOR_PAIR(int n);
+	int PAIR_NUMBER(chtype value);
 	int start_color(void);
 	int init_pair(short pair, short fg, short bg);
 	int init_color(short color, short red, short green, short blue);
@@ -68,9 +72,8 @@ char *rcsid_color = "$Id: color.c,v 1.21 2006/01/27 16:18:00 wmcbrine Exp $";
 	immediately after initscr(). Colors are always used in pairs 
 	refered to as color-pairs. A color-pair consists of a foreground 
 	color and a background color. A color-pair is initialized with 
-	init_pair(). After it has been initialized, COLOR_PAIR(n), a 
-	macro defined in <curses.h>, can be used like any other video 
-	attribute.
+	init_pair(). After it has been initialized, COLOR_PAIR(n) can be 
+	used like any other video attribute.
 
 	start_color() initializes eight basic colors (black, red, green, 
 	yellow, blue, magenta, cyan, and white), and two global 
@@ -102,7 +105,8 @@ char *rcsid_color = "$Id: color.c,v 1.21 2006/01/27 16:18:00 wmcbrine Exp $";
 	color of the lines drawn for the attributes: A_UNDERLINE, 
 	A_OVERLINE, A_LEFTLINE and A_RIGHTLINE.  PDCurses only feature.
 
-	NOTE: has_colors() is implemented as a macro.
+	NOTE: COLOR_PAIR(), PAIR_NUMBER() and has_colors() are
+	implemented as macros.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error except for
@@ -176,6 +180,38 @@ unsigned char atrtab[MAX_ATRTAB] =
 #endif
 
 unsigned char colorset[PDC_COLOR_PAIRS];
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+chtype	PDC_CDECL	COLOR_PAIR(int n)
+#else
+chtype	PDC_CDECL	COLOR_PAIR(n)
+int n;
+#endif
+/***********************************************************************/
+{
+#ifdef CHTYPE_LONG
+	return (chtype)n << 24;
+#else
+	return (n << 11) & A_ATTRIBUTES;
+#endif
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+int	PDC_CDECL	PAIR_NUMBER(chtype value)
+#else
+int	PDC_CDECL	PAIR_NUMBER(value)
+chtype value;
+#endif
+/***********************************************************************/
+{
+#ifdef CHTYPE_LONG
+	return (value & A_COLOR) >> 24;
+#else
+	return (value & A_COLOR) >> 11;
+#endif
+}
 
 /***********************************************************************/
 #ifdef HAVE_PROTO

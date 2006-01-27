@@ -28,9 +28,13 @@
 #undef	wborder
 #undef	box
 #undef	hline
-#undef	whline
 #undef	vline
+#undef	whline
 #undef	wvline
+#undef	mvhline
+#undef	mvvline
+#undef	mvwhline
+#undef	mvwvline
 #undef	PDC_wunderline
 #undef	PDC_leftline
 #undef	PDC_rightline
@@ -40,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.9 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.10 2006/01/27 18:41:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

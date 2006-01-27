@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_attr  = "$Id: attr.c,v 1.9 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_attr = "$Id: attr.c,v 1.10 2006/01/27 18:41:37 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -61,6 +61,7 @@ char *rcsid_attr  = "$Id: attr.c,v 1.9 2006/01/27 16:18:00 wmcbrine Exp $";
 	int wstandend(WINDOW *win);
 	int standout(void);
 	int wstandout(WINDOW *win);
+	chtype getattrs(WINDOW *win);
 	int color_set(short color_pair, void *opts);
 	int wcolor_set(WINDOW *win, short color_pair, void *opts);
 
@@ -236,18 +237,6 @@ chtype attrs;
 
 /***********************************************************************/
 #ifdef HAVE_PROTO
-chtype  PDC_CDECL	getattrs(WINDOW* win)
-#else
-chtype  PDC_CDECL	getattrs(win)
-WINDOW *win;
-#endif
-/***********************************************************************/
-{
-	return win ? win->_attrs : 0;
-}
-
-/***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	standend(void)
 #else
 int	PDC_CDECL	standend()
@@ -298,6 +287,18 @@ WINDOW *win;
 	PDC_LOG(("wstandout() - called\n"));
 
 	return wattrset(win, A_STANDOUT);
+}
+
+/***********************************************************************/
+#ifdef HAVE_PROTO
+chtype  PDC_CDECL	getattrs(WINDOW *win)
+#else
+chtype  PDC_CDECL	getattrs(win)
+WINDOW *win;
+#endif
+/***********************************************************************/
+{
+	return win ? win->_attrs : 0;
 }
 
 /***********************************************************************/

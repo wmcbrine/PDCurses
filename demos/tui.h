@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 * 
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 /*
  * File   : tui.h      'textual user interface'
  * Author : P.J. Kunst  (kunst@prl.philips.nl)

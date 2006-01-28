@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -18,8 +17,7 @@
 *
 * This file is NOT public domain software.  It is Copyright, Mark Hessling
 * 1994-1999. M.Hessling@qut.edu.au
-***************************************************************************
-*/
+**************************************************************************/
 
 #define	CURSES_LIBRARY	1
 #ifdef HAVE_CONFIG_H

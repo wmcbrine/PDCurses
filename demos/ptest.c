@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 * 
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 /*+-------------------------------------------------------------------------
 	ptest.c
 --------------------------------------------------------------------------*/
@@ -26,7 +25,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest = "$Id: ptest.c,v 1.12 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_ptest = "$Id: ptest.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $";
 #endif
 
 #include <curses.h>

@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 * 
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 /********************************* tuidemo.c ********************************/
 /*
  * File   : tuidemo.c
@@ -44,7 +43,7 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.7 2006/01/11 23:19:53 wmcbrine Exp $";
+char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.8 2006/01/28 13:27:23 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)

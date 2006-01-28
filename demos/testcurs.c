@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 /*
  * This is a test program for the PDCurses screen package for IBM PC type
  * machines.
@@ -32,7 +31,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs = "$Id: testcurs.c,v 1.30 2006/01/15 09:21:17 wmcbrine Exp $";
+char *rcsid_testcurs = "$Id: testcurs.c,v 1.31 2006/01/28 13:27:23 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>

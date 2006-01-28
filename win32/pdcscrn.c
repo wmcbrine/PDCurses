@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,14 +14,14 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 #define CURSES_LIBRARY 1
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.19 2006/01/17 22:29:07 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.20 2006/01/28 13:27:23 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0

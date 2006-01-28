@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,18 +14,14 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
-/*
-$Id: curspriv.h,v 1.27 2006/01/26 21:00:18 wmcbrine Exp $
-*/
-/*
-*                          CURSPRIV.H
-*
-* Private definitions and declarations for use within PDCurses.
-* These should generally not be referenced by applications.
-*
-*/
+**************************************************************************/
+
+/* $Id: curspriv.h,v 1.28 2006/01/28 13:27:23 wmcbrine Exp $ */
+
+/*                         CURSPRIV.H
+
+   Private definitions and declarations for use within PDCurses.
+   These should generally not be referenced by applications. */
 
 #ifndef __CURSES_INTERNALS__
 #define __CURSES_INTERNALS__
@@ -63,13 +58,6 @@ $Id: curspriv.h,v 1.27 2006/01/26 21:00:18 wmcbrine Exp $
 # define HUGE 1
 #endif
 
-
-/*----------------------------------------------------------------------
-*	OPERATING SYSTEM SUPPORT:
-*
-*		DOS		The one we all know and love:-}
-*		OS/2		The new kid on the block.
-*/
 
 /*----------------------------------------*/
 #ifdef DOS

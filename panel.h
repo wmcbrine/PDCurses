@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,16 +14,13 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
-/*
-$Id: panel.h,v 1.8 2005/12/25 06:44:36 wmcbrine Exp $
-*/
-/*
-*----------------------------------------------------------------------
-*				Panels for PDCurses
-*----------------------------------------------------------------------
-*/
+**************************************************************************/
+
+/* $Id: panel.h,v 1.9 2006/01/28 13:27:23 wmcbrine Exp $ */
+
+/* ----------------------------------------------------------------------
+			     Panels for PDCurses
+   ---------------------------------------------------------------------- */
 
 #include <curses.h>
 

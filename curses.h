@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,16 +14,13 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
-/*
-$Id: curses.h,v 1.106 2006/01/28 12:52:36 wmcbrine Exp $
-*/
-/*
-*----------------------------------------------------------------------
-*				PDCurses
-*----------------------------------------------------------------------
-*/
+**************************************************************************/
+
+/* $Id: curses.h,v 1.107 2006/01/28 13:27:23 wmcbrine Exp $ */
+
+/* ----------------------------------------------------------------------
+				PDCurses
+   ---------------------------------------------------------------------- */
 
 #ifndef  __PDCURSES__
 #define	__PDCURSES__ 1

@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 * 
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 /********************************* tui.c ************************************/
 /*
  * File   : tui.c      'textual user interface'
@@ -41,7 +40,7 @@ int waitforkey Args((void));
 void rmerror Args((void));
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.12 2006/01/11 23:19:53 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)

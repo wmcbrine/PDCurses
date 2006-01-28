@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 * 
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 /******************************************************************************/
 /* asciixmas                                                                  */
 /* December 1989             Larry Bartz           Indianapolis, IN           */
@@ -100,7 +99,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas = "$Id: xmas.c,v 1.12 2006/01/15 10:56:57 wmcbrine Exp $";
+char *rcsid_xmas = "$Id: xmas.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $";
 #endif
 
 #include <curses.h>

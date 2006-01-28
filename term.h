@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,17 +14,14 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
-/*
-$Id: term.h,v 1.2 2005/12/25 15:07:09 wmcbrine Exp $
-*/
+**************************************************************************/
+
+/* $Id: term.h,v 1.3 2006/01/28 13:27:23 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
    other languages) to be compiled. Anyone who tries to actually _use_ 
-   them will be disappointed, since they only return ERR.
-*/
+   them will be disappointed, since they only return ERR. */
 
 #include <curses.h>
 
@@ -55,22 +51,23 @@ extern TERMINAL *cur_term;
 # define Args(x) ()
 #endif
 
-int     PDC_CDECL del_curterm Args((TERMINAL *));
-int     PDC_CDECL putp Args((const char *));
-int     PDC_CDECL restartterm Args((char *, int, int *));
+int	PDC_CDECL del_curterm Args((TERMINAL *));
+int	PDC_CDECL putp Args((const char *));
+int	PDC_CDECL restartterm Args((char *, int, int *));
 TERMINAL* PDC_CDECL set_curterm Args((TERMINAL *));
-int     PDC_CDECL setterm Args((char *));
-int     PDC_CDECL setupterm Args((char *, int, int *));
-int     PDC_CDECL tgetent Args((char *, const char *));
-int     PDC_CDECL tgetflag Args((char *));
-int     PDC_CDECL tgetnum Args((char *));
-char*   PDC_CDECL tgetstr Args((char *, char **));
-char*   PDC_CDECL tgoto Args((char *, int, int));
-int     PDC_CDECL tigetflag Args((char *));
-int     PDC_CDECL tigetnum Args((char *));
-char*   PDC_CDECL tigetstr Args((char *));
-char*   PDC_CDECL tparm Args((char *,long, long, long, long, long, long, long, long, long));
-int     PDC_CDECL tputs Args((const char *, int, int (*)(int)));
+int	PDC_CDECL setterm Args((char *));
+int	PDC_CDECL setupterm Args((char *, int, int *));
+int	PDC_CDECL tgetent Args((char *, const char *));
+int	PDC_CDECL tgetflag Args((char *));
+int	PDC_CDECL tgetnum Args((char *));
+char *	PDC_CDECL tgetstr Args((char *, char **));
+char *	PDC_CDECL tgoto Args((char *, int, int));
+int	PDC_CDECL tigetflag Args((char *));
+int	PDC_CDECL tigetnum Args((char *));
+char *	PDC_CDECL tigetstr Args((char *));
+char *	PDC_CDECL tparm Args((char *,long, long, long, long, long, 
+				long, long, long, long));
+int	PDC_CDECL tputs Args((const char *, int, int (*)(int)));
 
 #undef Args
 

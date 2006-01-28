@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.109 2006/01/28 14:51:16 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.110 2006/01/28 15:02:15 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -79,9 +79,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef __TURBOC__		/* Borland gives defines this as a value*/
 #  define TC    __TURBOC__	/* Define a value for TC		*/
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* Borland supports ANSI C prototypes	*/
-#  endif
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
 #    include <bios.h>
@@ -117,9 +114,6 @@ PDCurses portable platform definitions list:
 #ifdef __HIGHC__
 #  define HC    1
 #  pragma off(prototype_override_warnings)
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* Metaware supports ANSI C prototypes	*/
-#  endif
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
 #    include <bios.h>
@@ -136,9 +130,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef _MSC_VER					/* defined by compiler	*/
 #  define MSC   1
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* Microsoft supports ANSI C prototypes */
-#  endif
 #  ifdef __OS2__		/* You will have to define in makefile	*/
 #    define USE_OS2_H 1		/* Use the os2.h for the compiler	*/
 #    define OS2 3		/* Major release of OS/2 supported	*/
@@ -170,9 +161,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef _QC					/* defined by compiler	*/
 #  define MSC   1
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* QuickC supports ANSI C prototypes	*/
-#  endif
 #  define DOS 6			/* Major release of DOS supported	*/
 #  include <bios.h>
 #  include <dos.h>
@@ -188,9 +176,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef __TSC__			/* You may have to define in makefile	*/
 #  define TSC   1
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* TopSpeed supports ANSI C prototypes	*/
-#  endif
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #  endif
@@ -205,9 +190,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef __IBMC__
 #  define CSET2 1
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* C Set/2 supports ANSI C prototypes	*/
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
@@ -228,9 +210,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef __EMX__			/* You may have to define in makefile	*/
 #  define EMX   1
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* emx supports ANSI C prototypes	*/
-#  endif
 #  ifndef __OS2__
 #    define __OS2__		/* EMX does not define this :-( 	*/
 #  endif
@@ -263,9 +242,6 @@ PDCurses portable platform definitions list:
 *		DOS
 */
 #ifdef __DJGPP__		/* You may have to define in makefile	*/
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* DJGPP supports ANSI C prototypes	*/
-#  endif
 #  define DOS	6
 #  include <dos.h>
 #  ifndef HAVE_MEMORY_H
@@ -293,9 +269,6 @@ PDCurses portable platform definitions list:
 *		WIN32
 */
 #ifdef __CYGWIN32__		/* You may have to define in makefile	*/
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* Cygnus GCC supports ANSI C prototypes*/
-#  endif
 #  if !defined(WIN32) && !defined(XCURSES)
 #    define WIN32
 #  endif
@@ -320,9 +293,6 @@ PDCurses portable platform definitions list:
 *		WIN32
 */
 #ifdef __MINGW32__
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* Ming GCC supports ANSI C prototypes	*/
-#  endif
 #  ifndef WIN32
 #    define WIN32
 #  endif
@@ -342,9 +312,6 @@ PDCurses portable platform definitions list:
 *
 */
 #ifdef __LCC__		/* should already be defined by the compiler	*/
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* LCC-Win32 supports ANSI C prototypes */
-#  endif
 #  ifndef WIN32
 #    define WIN32
 #  endif
@@ -366,9 +333,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef __WATCOMC__
 #  define WATCOMC  1
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* Watcom C supports ANSI C prototypes	*/
-#  endif
 #  if defined(__DOS__) || defined(__DOS4G__)
 #    define DOS 7		/* Major release of DOS supported	*/
 #    include <bios.h>
@@ -425,7 +389,6 @@ PDCurses portable platform definitions list:
 *	MicroWay NDP C/C++ 386 4.2.0 compiler
 */
 #ifdef MX386
-#  define HAVE_PROTO 1
 #  define NDP	1
 #  include 	<bios.h>
 #  ifdef DOS
@@ -450,9 +413,6 @@ PDCurses portable platform definitions list:
 */
 #ifdef __PACIFIC__
 #  define PC    __PACIFIC__
-#  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1
-#  endif
 #  include <dos.h>
 #  include <ctype.h>
 #  ifndef __SMALL__
@@ -467,6 +427,10 @@ PDCurses portable platform definitions list:
 #endif
 
 /*---------------------------------------------------------------------*/
+
+#ifndef HAVE_PROTO
+# define HAVE_PROTO 1
+#endif
 
 #if defined(WIN32) && defined(INCLUDE_WINDOWS_H)
 # include <windows.h>

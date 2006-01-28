@@ -21,7 +21,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.20 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.21 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -437,9 +437,7 @@ static BOOL FitConsoleWindow(HANDLE hConOut, CONST SMALL_RECT *rect)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_resize_screen(int nlines, int ncols)
-/***********************************************************************/
 {
 #if defined(MHES)
 
@@ -577,23 +575,20 @@ int PDC_resize_screen(int nlines, int ncols)
 #endif
 }
 
-/***********************************************************************/
 int PDC_reset_prog_mode(void)
-/***********************************************************************/
 {
 	SetConsoleMode(hConIn, ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT);
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_reset_shell_mode(void)
-/***********************************************************************/
 {
 	SetConsoleMode(hConIn, dwConsoleMode);
 	return OK;
 }
 
 #if defined(PDC_DLL_BUILD)
+
 BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID pReserved)
 {
 	switch(dwReason)
@@ -612,4 +607,5 @@ BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID pReserved)
 	}
 	return TRUE;
 }
+
 #endif

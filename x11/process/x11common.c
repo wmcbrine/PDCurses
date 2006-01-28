@@ -44,9 +44,7 @@ fd_set writefds;
 
 struct timeval socket_timeout;
 
-/***********************************************************************/
 int write_socket(int sock_num, char *buf, int len)
-/***********************************************************************/
 {
 	int start = 0, rc;
 
@@ -69,9 +67,7 @@ int write_socket(int sock_num, char *buf, int len)
 	}
 }
 
-/***********************************************************************/
 int read_socket(int sock_num, char *buf, int len)
-/***********************************************************************/
 {
 	int start = 0, length = len, rc;
 

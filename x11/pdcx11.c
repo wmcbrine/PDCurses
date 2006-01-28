@@ -31,9 +31,7 @@ AppData app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-/***************************************************************************/
-/* Default icons for XCurses applications.                                 */
-/***************************************************************************/
+/* Default icons for XCurses applications.  */
 
 #include "big_icon.xbm"
 #include "little_icon.xbm"
@@ -911,9 +909,7 @@ void dummy_function(void)
 {
 }
 
-/***********************************************************************/
 signal_handler XCursesSetSignal(int signo, signal_handler action)
-/***********************************************************************/
 {
 #if defined(SA_INTERRUPT) || defined(SA_RESTART)
 	struct sigaction sigact, osigact;
@@ -941,9 +937,7 @@ signal_handler XCursesSetSignal(int signo, signal_handler action)
 #endif
 }
 
-/***********************************************************************/
 RETSIGTYPE XCursesSigwinchHandler(int signo)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",
 		XCLOGMSG, signo));
@@ -960,10 +954,7 @@ RETSIGTYPE XCursesSigwinchHandler(int signo)
 #endif
 }
 
-/***********************************************************************/
-/* NOT USED */
-int XCurses_redraw_curscr(void)
-/***********************************************************************/
+int XCurses_redraw_curscr(void)	/* NOT USED */
 {
 	int i;
 
@@ -975,10 +966,8 @@ int XCurses_redraw_curscr(void)
 	return OK;
 }
 
-/***********************************************************************/
 int XCursesDisplayText(chtype *ch, int row, int x, int num_cols,
 		       bool highlight)
-/***********************************************************************/
 {
 	char text[300];
 	bool new_packet = FALSE;
@@ -1218,10 +1207,8 @@ int XCursesDisplayText(chtype *ch, int row, int x, int num_cols,
 	return OK;
 }
 
-/***********************************************************************/
 void get_GC(Display *display, Window win, GC *gc, XFontStruct *font_info,
 	    int fore, int back, bool highlight)
-/***********************************************************************/
 {
 	XGCValues values;
 
@@ -1242,18 +1229,14 @@ void get_GC(Display *display, Window win, GC *gc, XFontStruct *font_info,
 		XSetFunction(display, *gc, GXxor);
 }
 
-/***********************************************************************/
 void makeXY(int x, int y, int fontwidth, int fontheight, int *xpos, int *ypos)
-/***********************************************************************/
 {
 	*xpos = (x * fontwidth) + XCURSESBORDERWIDTH;
 	*ypos = XCURSESNORMALFONTINFO->ascent + (y * fontheight) + 
 		XCURSESBORDERWIDTH;
 }
 
-/***********************************************************************/
 int get_colors(void)
-/***********************************************************************/
 {
 #ifdef PDCDEBUG
 	say("in get_colors\n");
@@ -1282,9 +1265,7 @@ int get_colors(void)
 	return OK;
 }
 
-/***********************************************************************/
 int XCursesEndwin(void)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesEndwin() - called\n", XCLOGMSG));
 
@@ -1316,9 +1297,7 @@ int XCursesEndwin(void)
 	return 0;
 }
 
-/***********************************************************************/
 int XCursesRefreshScrollbar(void)
-/***********************************************************************/
 {
 	PDC_SCROLLBAR_TYPE cur_x =
 		(PDC_SCROLLBAR_TYPE)(SP->sb_cur_x * XCursesFontWidth);
@@ -1354,9 +1333,7 @@ int XCursesRefreshScrollbar(void)
 	return OK;
 }
 
-/***********************************************************************/
 void SetCursorColor(chtype *ch, short *fore, short *back)
-/***********************************************************************/
 {
 	int attr;
 	short f, b;
@@ -1384,9 +1361,7 @@ void SetCursorColor(chtype *ch, short *fore, short *back)
 	}
 }
 
-/***********************************************************************/
 void XCursesGetIcon(void)
-/***********************************************************************/
 {
 	XIconSize *icon_size;
 	int size_count = 0;
@@ -1498,10 +1473,8 @@ void XCursesGetIcon(void)
 		(char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
 }
 
-/***********************************************************************/
 void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 		   Boolean *continue_to_dispatch)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesExpose called\n", XCLOGMSG));
 
@@ -1514,10 +1487,8 @@ void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 		XCursesDisplayScreen(FALSE);
 }
 
-/***********************************************************************/
 void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 			Boolean *continue_to_dispatch)
-/***********************************************************************/
 {
 	XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
@@ -1539,10 +1510,8 @@ void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 	}
 }
 
-/***********************************************************************/
 void XCursesModifierPress(Widget w, XEvent *event, String *params, 
 			  Cardinal *nparams)
-/***********************************************************************/
 {
 #define STATE_NORMAL   0
 #define STATE_COMPOSE  1
@@ -1596,10 +1565,8 @@ void XCursesModifierPress(Widget w, XEvent *event, String *params,
 		XCursesSendKeyToCurses((unsigned long)key, NULL);
 }
 
-/***********************************************************************/
 void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		     Cardinal *nparams)
-/***********************************************************************/
 {
 #define STATE_NORMAL   0
 #define STATE_COMPOSE  1
@@ -1902,10 +1869,8 @@ void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	}
 }
 
-/***********************************************************************/
 void XCursesHandleString(Widget w, XEvent *event, String *params,
 			 Cardinal *nparams)
-/***********************************************************************/
 {
 	int i = 0;
 	unsigned char *ptr = NULL;
@@ -1947,9 +1912,7 @@ void XCursesHandleString(Widget w, XEvent *event, String *params,
 	}
 }
 
-/***********************************************************************/
 void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesPasteSelection() - called\n", XCLOGMSG));
 
@@ -1958,12 +1921,10 @@ void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
 		(XtPointer)button_event, button_event->time);
 }
 
-/***********************************************************************/
 void XCursesRequestorCallbackForPaste(Widget w, XtPointer data,
 				      Atom *selection, Atom *type, 
 				      XtPointer value,
 				      unsigned long *length, int *format)
-/***********************************************************************/
 {
 	unsigned long i, key;
 	char *string = (char *)value;
@@ -1985,11 +1946,9 @@ void XCursesRequestorCallbackForPaste(Widget w, XtPointer data,
 	}
 }
 
-/***********************************************************************/
 Boolean XCursesConvertProc(Widget w,Atom *selection, Atom *target,
 			   Atom *type_return, XtPointer *value_return,
 			   unsigned long *length_return, int *format_return)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesConvertProc() - called\n", XCLOGMSG));
 
@@ -2045,9 +2004,7 @@ Boolean XCursesConvertProc(Widget w,Atom *selection, Atom *target,
 	return False;
 }
 
-/***********************************************************************/
 void XCursesLoseOwnership(Widget w, Atom *type)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesLoseOwnership() - called\n", XCLOGMSG));
 
@@ -2059,10 +2016,8 @@ void XCursesLoseOwnership(Widget w, Atom *type)
 	SelectionOff();
 }
 
-/***********************************************************************/
 void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 		   bool highlight)
-/***********************************************************************/
 {
 	int i, num_cols, start_col, row;
 
@@ -2113,9 +2068,7 @@ void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 	}
 }
 
-/***********************************************************************/
 void SelectionOff(void)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:SelectionOff() - called\n", XCLOGMSG));
 
@@ -2127,9 +2080,7 @@ void SelectionOff(void)
 	mouse_selection = False;
 }
 
-/***********************************************************************/
 void SelectionOn(int x, int y)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:SelectionOn() - called\n", XCLOGMSG));
 
@@ -2137,9 +2088,7 @@ void SelectionOn(int x, int y)
 	selection_start_y = selection_end_y = y;
 }
 
-/***********************************************************************/
 void SelectionExtend(int x, int y)
-/***********************************************************************/
 {
 	int temp, current_start, current_end, current_start_x, 
 		current_end_x, current_start_y, current_end_y,
@@ -2219,9 +2168,7 @@ void SelectionExtend(int x, int y)
 			new_start_x, new_start_y, TRUE);
 }
 
-/***********************************************************************/
 void SelectionSet(void)
-/***********************************************************************/
 {
 	int i, j, start, end, start_x, end_x, start_y, end_y, num_cols, 
 		start_col, row, num_chars, ch, last_nonblank, length;
@@ -2347,9 +2294,7 @@ void SelectionSet(void)
 	tmpsel_length = num_chars;
 }
 
-/***********************************************************************/
 void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
-/***********************************************************************/
 {
 	int xpos, ypos, i;
 	char buf[2];
@@ -2459,10 +2404,8 @@ void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
 	}
 }
 
-/***********************************************************************/
 void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 			     Boolean *continue_to_dispatch)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesEnterLeaveWindow called\n", XCLOGMSG));
 
@@ -2494,30 +2437,22 @@ void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 	}
 }
 
-/***********************************************************************/
 int XCurses_get_rows(void)
-/***********************************************************************/
 {
 	return XCursesLINES;
 }
 
-/***********************************************************************/
 int XCurses_get_cols(void)
-/***********************************************************************/
 {
 	return XCursesCOLS;
 }
 
-/***********************************************************************/
 unsigned long XCurses_get_key_modifiers(void)
-/***********************************************************************/
 {
 	return pdc_key_modifier;
 }
 
-/***********************************************************************/
 int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
-/***********************************************************************/
 {
 	char buf[100];		/* enough for MOUSE_STATUS */
 
@@ -2545,9 +2480,7 @@ int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 	return 0;
 }
 
-/***********************************************************************/
 void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesCursorBlink() - called:\n", XCLOGMSG));
 
@@ -2580,9 +2513,7 @@ void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 		XCursesCursorBlink, NULL);
 }
 
-/***********************************************************************/
 void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
-/***********************************************************************/
 {
 	int button_no = 0;
 	static int last_button_no;
@@ -2983,9 +2914,7 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 	XCursesSendKeyToCurses((unsigned long)KEY_MOUSE, &Mouse_status);
 }
 
-/***********************************************************************/
 void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
-/***********************************************************************/
 {
 	int pixels = (long) call_data;
 	int total_y = SP->sb_total_y * XCursesFontHeight;
@@ -3016,9 +2945,7 @@ void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
 	XCursesSendKeyToCurses((unsigned long)KEY_SF, NULL);
 }
 
-/***********************************************************************/
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
-/***********************************************************************/
 {
 	int pixels = (long) call_data;
 	int total_x = SP->sb_total_x * XCursesFontWidth;
@@ -3049,9 +2976,7 @@ void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
 	XCursesSendKeyToCurses((unsigned long)KEY_SR, NULL);
 }
 
-/***********************************************************************/
 void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
-/***********************************************************************/
 {
 	double percent = *(double *) call_data;
 	double total_y = (double)SP->sb_total_y;
@@ -3076,9 +3001,7 @@ void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
 	XCursesSendKeyToCurses((unsigned long)KEY_SF, NULL);
 }
 
-/***********************************************************************/
 void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
-/***********************************************************************/
 {
 	double percent = *(double *) call_data;
 	double total_x = (double)SP->sb_total_x;

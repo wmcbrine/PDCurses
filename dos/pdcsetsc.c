@@ -23,7 +23,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.10 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -46,9 +46,7 @@ char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_set_80x25(void)
-/***********************************************************************/
+int PDC_set_80x25(void)
 {
 	PDC_LOG(("PDC_set_80x25() - called\n"));
 
@@ -93,9 +91,7 @@ int	PDC_set_80x25(void)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_set_cursor_mode(int startrow, int endrow)
-/***********************************************************************/
+int PDC_set_cursor_mode(int startrow, int endrow)
 {
 	PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",
 		startrow, endrow));
@@ -132,9 +128,7 @@ int	PDC_set_cursor_mode(int startrow, int endrow)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_set_font(int size)
-/***********************************************************************/
+int PDC_set_font(int size)
 {
 	PDC_LOG(("PDC_set_font() - called\n"));
 
@@ -232,9 +226,7 @@ int	PDC_set_font(int size)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_set_rows(int rows)
-/***********************************************************************/
+int PDC_set_rows(int rows)
 {
 	PDC_LOG(("PDC_set_rows() - called\n"));
 
@@ -288,9 +280,7 @@ int	PDC_set_rows(int rows)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_set_scrn_mode(int new_mode)
-/***********************************************************************/
+int PDC_set_scrn_mode(int new_mode)
 {
 	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
@@ -309,9 +299,7 @@ int	PDC_set_scrn_mode(int new_mode)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_curs_set(int visibility)
-/***********************************************************************/
+int PDC_curs_set(int visibility)
 {
 	int ret_vis, start = 6, end = 7;
 
@@ -373,9 +361,7 @@ int	PDC_curs_set(int visibility)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-void	PDC_set_title(char *title)
-/***********************************************************************/
+void PDC_set_title(char *title)
 {
 	PDC_LOG(("PDC_set_title() - called: <%s>\n", title));
 }

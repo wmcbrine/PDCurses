@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.111 2006/01/28 16:53:25 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.112 2006/01/28 17:41:24 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -55,7 +55,7 @@ PDCurses portable platform definitions list:
 
 **man-end**********************************************************************/
 
-#define PDC_BUILD 2707
+#define PDC_BUILD 2708
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/

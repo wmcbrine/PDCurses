@@ -29,7 +29,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.10 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.11 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -59,7 +59,7 @@ char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.10 2006/01/28 13:27:23 wmcbrine Exp $"
 
 **man-end**********************************************************************/
 
-int   PDC_CDECL   PDC_getclipboard(char **contents, long *length)
+int PDC_CDECL PDC_getclipboard(char **contents, long *length)
 {
 #if !defined(EMXVIDEO)
 	HMQ hmq;
@@ -135,7 +135,7 @@ int   PDC_CDECL   PDC_getclipboard(char **contents, long *length)
 
 **man-end**********************************************************************/
 
-int   PDC_CDECL   PDC_setclipboard(char *contents, long length)
+int PDC_CDECL PDC_setclipboard(char *contents, long length)
 {
 #if !defined(EMXVIDEO)
 	HAB hab;
@@ -205,7 +205,7 @@ int   PDC_CDECL   PDC_setclipboard(char *contents, long length)
 
 **man-end**********************************************************************/
 
-int   PDC_CDECL   PDC_freeclipboard(char *contents)
+int PDC_CDECL PDC_freeclipboard(char *contents)
 {
 	PDC_LOG(("PDC_freeclipboard() - called\n"));
 
@@ -232,7 +232,7 @@ int   PDC_CDECL   PDC_freeclipboard(char *contents)
 
 **man-end**********************************************************************/
 
-int   PDC_CDECL   PDC_clearclipboard(void)
+int PDC_CDECL PDC_clearclipboard(void)
 {
 #if !defined(EMXVIDEO)
 	HAB hab;

@@ -23,7 +23,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.10 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.11 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on = FALSE;
@@ -77,9 +77,7 @@ int PDC_scr_close(void)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 bool PDC_scrn_modes_equal(int mode1, int mode2)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
 
@@ -105,9 +103,7 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_scr_open(SCREEN *internal, bool echo)
-/***********************************************************************/
 {
 	extern bool sb_started;
 
@@ -173,9 +169,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_resize_screen(int nlines, int ncols)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
 		nlines, ncols));

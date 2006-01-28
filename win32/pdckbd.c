@@ -21,7 +21,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.28 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.29 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -356,9 +356,7 @@ MOUSE_STATUS Trapped_Mouse_status;
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 unsigned long PDC_get_input_fd(void)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
@@ -1068,9 +1066,7 @@ int PDC_validchar(int c)
    USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
 */
 
-/***********************************************************************/
 static int GetInterestingEvent(INPUT_RECORD *ip)
-/***********************************************************************/
 {
 	int numKeys = 0, vk;
 	static int save_press;
@@ -1294,9 +1290,8 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 }
 
 #if defined(PDC_THREAD_BUILD)
-/***********************************************************************/
+
 static int win32_kbhit(int timeout)
-/***********************************************************************/
 {
 	DWORD read = 0, avail = 0, unread = 0;
 	INPUT_RECORD ip;
@@ -1353,18 +1348,15 @@ static int win32_kbhit(int timeout)
 	return FALSE;
 }
 
-/***********************************************************************/
 static void win32_getch(void)
-/***********************************************************************/
 {
 	while (win32_kbhit(INFINITE) == FALSE)
 	;
 }
-#else
 
-/***********************************************************************/
+#else	/* PDC_THREAD_BUILD */
+
 static int win32_kbhit(int timeout)
-/***********************************************************************/
 {
 	INPUT_RECORD ip;
 	DWORD read;
@@ -1398,16 +1390,15 @@ static int win32_kbhit(int timeout)
 	return rc;
 }
 
-/***********************************************************************/
 static void win32_getch(void)
-/***********************************************************************/
 {
 	while (win32_kbhit(INFINITE) == FALSE)
 	;
 
 	keyCount--;
 }
-#endif
+
+#endif	/* PDC_THREAD_BUILD */
 
 /*man-start*********************************************************************
 
@@ -1433,9 +1424,7 @@ static void win32_getch(void)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 unsigned long PDC_get_key_modifiers(void)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
@@ -1443,9 +1432,8 @@ unsigned long PDC_get_key_modifiers(void)
 }
 
 #if defined(PDC_THREAD_BUILD)
-/***********************************************************************/
+
 LONG InputThread(LPVOID lpThreadData)
-/***********************************************************************/
 {
 	INPUT_RECORD ip;
 	DWORD read;
@@ -1500,4 +1488,5 @@ LONG InputThread(LPVOID lpThreadData)
 
 	return 0;
 }
+
 #endif

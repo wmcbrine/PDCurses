@@ -29,7 +29,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.15 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.16 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -68,9 +68,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_clr_update(WINDOW *s)
-/***********************************************************************/
+int PDC_clr_update(WINDOW *s)
 {
 	int i, j;
 	unsigned short *ch;
@@ -180,9 +178,7 @@ int	PDC_clr_update(WINDOW *s)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_cursor_on(void)
-/***********************************************************************/
+int PDC_cursor_on(void)
 {
 	PDC_LOG(("PDC_cursor_on() - called\n"));
 
@@ -233,9 +229,7 @@ int	PDC_cursor_on(void)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_cursor_off(void)
-/***********************************************************************/
+int PDC_cursor_off(void)
 {
 	PDC_LOG(("PDC_cursor_off() - called\n"));
 
@@ -278,9 +272,7 @@ int	PDC_cursor_off(void)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_fix_cursor(int flag)
-/***********************************************************************/
+int PDC_fix_cursor(int flag)
 {
 	PDC_LOG(("PDC_fix_cursor() - called\n"));
 
@@ -343,9 +335,7 @@ int	PDC_fix_cursor(int flag)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_gotoxy(int row, int col)
-/***********************************************************************/
+int PDC_gotoxy(int row, int col)
 {
 	PDC_LOG(("PDC_gotoxy() - called: row %d col %d\n", row, col));
 
@@ -379,9 +369,7 @@ int	PDC_gotoxy(int row, int col)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_putc(chtype character, chtype color)
-/***********************************************************************/
+int PDC_putc(chtype character, chtype color)
 {
 	PDC_LOG(("PDC_putc() - called: char=%c attrib=0x%x color=0x%x\n",
 		character & A_CHARTEXT, character & A_ATTRIBUTES, color));
@@ -424,9 +412,7 @@ int	PDC_putc(chtype character, chtype color)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_putctty(chtype character, chtype color)
-/***********************************************************************/
+int PDC_putctty(chtype character, chtype color)
 {
 	PDC_LOG(("PDC_putctty() - called\n"));
 
@@ -461,10 +447,7 @@ int	PDC_putctty(chtype character, chtype color)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines,
-		   chtype attr)
-/***********************************************************************/
+int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 {
 	int phys_attr = chtype_attr(attr);
 
@@ -515,9 +498,7 @@ int	PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines,
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-bool	PDC_transform_line(int lineno)
-/***********************************************************************/
+bool PDC_transform_line(int lineno)
 {
 	chtype *srcp;
 	int j, x, endx, len;

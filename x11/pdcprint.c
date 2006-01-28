@@ -23,7 +23,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.6 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.7 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 
@@ -51,9 +51,7 @@ char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.6 2006/01/28 16:53:26 wmcbrine Exp $
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_print(int cmd, int byte, int port)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_print() - called\n"));
 

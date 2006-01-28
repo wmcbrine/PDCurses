@@ -28,15 +28,9 @@
 
 extern AppData app_data;
 
-#ifdef PROTO
 static void XCursesExitCursesProcess(int, char *);
-#else
-static void XCursesExitCursesProcess();
-#endif
 
-/***********************************************************************/
 int XCursesResizeScreen(int nlines, int ncols)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesResizeScreen() - called: Lines: %d Cols: %d\n",
 		XCLOGMSG, nlines, ncols));
@@ -66,10 +60,8 @@ int XCursesResizeScreen(int nlines, int ncols)
 	return OK;
 }
 
-/***********************************************************************/
 int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
-/***********************************************************************/
 {
 	char buf[30];
 	int idx, pos;
@@ -108,9 +100,7 @@ int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 	return OK;
 }
 
-/***********************************************************************/
 void XCurses_set_title(char *title)
-/***********************************************************************/
 {
 	char buf[30];
 	int idx, len;
@@ -134,9 +124,7 @@ void XCurses_set_title(char *title)
 		XCursesExitCursesProcess(1, "exiting from XCurses_set_title");
 }
 
-/***********************************************************************/
 int XCurses_refresh_scrollbar(void)
-/***********************************************************************/
 {
 	char buf[30];
 	int idx;
@@ -154,9 +142,7 @@ int XCurses_refresh_scrollbar(void)
 	return OK;
 }
 
-/***********************************************************************/
 int XCurses_rawgetch(int delaytenths)
-/***********************************************************************/
 {
 	unsigned long newkey = 0;
 	int key = 0;
@@ -220,9 +206,7 @@ int XCurses_rawgetch(int delaytenths)
 	return key;
 }
 
-/***********************************************************************/
 int XCurses_get_input_fd(void)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCurses_get_input_fd() - called\n", XCLOGMSG));
 	PDC_LOG(("%s:XCurses_get_input_fd() - returning %i\n", XCLOGMSG,
@@ -231,9 +215,7 @@ int XCurses_get_input_fd(void)
 	return key_sock;
 }
 
-/***********************************************************************/
 bool XCurses_kbhit(void)
-/***********************************************************************/
 {
 	int s;
 
@@ -258,9 +240,7 @@ bool XCurses_kbhit(void)
 	return TRUE;
 }
 
-/***********************************************************************/
 int XCursesInstruct(int flag)
-/***********************************************************************/
 {
 	char buf[10];
 
@@ -276,9 +256,7 @@ int XCursesInstruct(int flag)
 	return OK;
 }
 
-/***********************************************************************/
 int XCursesInstructAndWait(int flag)
-/***********************************************************************/
 {
 	int result;
 	char buf[10];
@@ -304,9 +282,7 @@ int XCursesInstructAndWait(int flag)
 	return OK;
 }
 
-/***********************************************************************/
 int XCurses_transform_line(chtype *ch, int row, int start_col, int num_cols)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCurses_transform_line() called: row %d start_col %d num_cols %d flag %d\n",
 		XCLOGMSG, row, start_col, num_cols,
@@ -330,9 +306,7 @@ int XCurses_transform_line(chtype *ch, int row, int start_col, int num_cols)
 	return 0;
 }
 
-/***********************************************************************/
 static int XCursesSetupCurses(void)
-/***********************************************************************/
 {
 	char wait_buf[5];
 	int wait_value;
@@ -396,9 +370,7 @@ static int XCursesSetupCurses(void)
 	return OK;
 }
 
-/***********************************************************************/
 int XCursesInitscr(char *display_name, int argc, char *argv[])
-/***********************************************************************/
 {
 	int pid, rc;
 
@@ -471,9 +443,7 @@ int XCursesInitscr(char *display_name, int argc, char *argv[])
 	return rc;
 }
 
-/***********************************************************************/
 int XCurses_getclipboard(char **contents, long *length)
-/***********************************************************************/
 {
 	int result = 0;
 	int len;
@@ -516,9 +486,7 @@ int XCurses_getclipboard(char **contents, long *length)
 	return result;
 }
 
-/***********************************************************************/
 int XCurses_setclipboard(char *contents, long length)
-/***********************************************************************/
 {
 	int rc;
 	char buf[12];		/* big enough for 2 integers */
@@ -547,9 +515,7 @@ int XCurses_setclipboard(char *contents, long length)
 	return rc;
 }
 
-/***********************************************************************/
 int XCurses_clearclipboard(void)
-/***********************************************************************/
 {
 	int rc;
 	char buf[12];		/* big enough for 2 integers */
@@ -574,9 +540,7 @@ int XCurses_clearclipboard(void)
 	return rc;
 }
 
-/***********************************************************************/
 void XCursesCleanupCursesProcess(int rc)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesCleanupCursesProcess() - called: %d\n",
 		XCLOGMSG, rc));
@@ -594,9 +558,7 @@ void XCursesCleanupCursesProcess(int rc)
 		_exit(rc);
 }
 
-/***********************************************************************/
 static void XCursesExitCursesProcess(int rc, char *msg)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesExitCursesProcess() - called: %d %s\n",
 		XCLOGMSG, rc, msg));
@@ -605,9 +567,7 @@ static void XCursesExitCursesProcess(int rc, char *msg)
 	XCursesCleanupCursesProcess(rc);
 }
 
-/***********************************************************************/
 void XCursesExit(void)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesExit() - called\n", XCLOGMSG));
 

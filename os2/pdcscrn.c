@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.10 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.11 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -57,9 +57,7 @@ static USHORT saved_cols = 0;
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_scr_close(void)
-/***********************************************************************/
 {
 	char *ptr;
 
@@ -110,13 +108,11 @@ int PDC_scr_close(void)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 #if !defined(EMXVIDEO)
 bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
 #else
 bool PDC_scrn_modes_equal(int mode1, int mode2)
 #endif
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
 
@@ -149,9 +145,7 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_scr_open(SCREEN *internal, bool echo)
-/***********************************************************************/
 {
 	char *ptr;
 #if !defined(EMXVIDEO)
@@ -278,9 +272,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_resize_screen(int nlines, int ncols)
-/***********************************************************************/
 {
 #ifndef EMXVIDEO
 	VIOMODEINFO modeInfo = {0};
@@ -311,9 +303,8 @@ int PDC_resize_screen(int nlines, int ncols)
 }
 
 #if !defined(EMXVIDEO)
-/***********************************************************************/
+
 int PDC_reset_shell_mode(void)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 
@@ -322,9 +313,7 @@ int PDC_reset_shell_mode(void)
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_reset_prog_mode(void)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
 
@@ -332,4 +321,5 @@ int PDC_reset_prog_mode(void)
 
 	return OK;
 }
+
 #endif

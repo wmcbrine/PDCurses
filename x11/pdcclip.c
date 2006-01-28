@@ -24,7 +24,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.8 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.9 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -54,7 +54,7 @@ char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.8 2006/01/28 13:27:23 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
+int PDC_CDECL PDC_getclipboard(char **contents, long *length)
 {
 	PDC_LOG(("PDC_getclipboard() - called\n"));
 
@@ -82,7 +82,7 @@ int	PDC_CDECL	PDC_getclipboard(char **contents, long *length)
 
 **man-end**********************************************************************/
 
-int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
+int PDC_CDECL PDC_setclipboard(char *contents, long length)
 {
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
@@ -107,7 +107,7 @@ int	PDC_CDECL	PDC_setclipboard(char *contents, long length)
 
 **man-end**********************************************************************/
 
-int	PDC_CDECL	PDC_freeclipboard(char *contents)
+int PDC_CDECL PDC_freeclipboard(char *contents)
 {
 	PDC_LOG(("PDC_freeclipboard() - called\n"));
 

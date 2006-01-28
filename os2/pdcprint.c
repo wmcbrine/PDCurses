@@ -23,7 +23,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.7 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.8 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 #if !defined(CURSES__32BIT__) && !defined(CSET2) && !defined(MSC) &&!defined(TC)
@@ -57,9 +57,7 @@ char Printer[] = "LPT1:";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_print(int cmd, int byte, int port)
-/***********************************************************************/
 {
 #if !defined(CURSES__32BIT__) && !defined(CSET2) && !defined(TC)
 	HFILE Lpt;

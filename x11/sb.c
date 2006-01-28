@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_sb = "$Id: sb.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_sb = "$Id: sb.c,v 1.8 2006/01/28 17:41:25 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -72,9 +72,7 @@ bool sb_started = FALSE;
 /* sb_init() is the sb initialization routine.
    This must be called before initscr(). */
 
-/***********************************************************************/
-int	PDC_CDECL	sb_init(void)
-/***********************************************************************/
+int PDC_CDECL sb_init(void)
 {
 	PDC_LOG(("sb_init() - called\n"));
 
@@ -92,9 +90,7 @@ int	PDC_CDECL	sb_init(void)
    viewport = size of viewport in columns
    cur = current column in total */
 
-/***********************************************************************/
-int	PDC_CDECL	sb_set_horz(int total, int viewport, int cur)
-/***********************************************************************/
+int PDC_CDECL sb_set_horz(int total, int viewport, int cur)
 {
 	PDC_LOG(("sb_set_horz() - called: total %d viewport %d cur %d\n",
 		total, viewport, cur));
@@ -115,9 +111,7 @@ int	PDC_CDECL	sb_set_horz(int total, int viewport, int cur)
    viewport = size of viewport in columns
    cur = current column in total */
 
-/***********************************************************************/
-int	PDC_CDECL	sb_set_vert(int total, int viewport, int cur)
-/***********************************************************************/
+int PDC_CDECL sb_set_vert(int total, int viewport, int cur)
 {
 	PDC_LOG(("sb_set_vert() - called: total %d viewport %d cur %d\n",
 		total, viewport, cur));
@@ -138,9 +132,7 @@ int	PDC_CDECL	sb_set_vert(int total, int viewport, int cur)
    viewport = size of viewport in lines
    cur = current line in total */
 
-/***********************************************************************/
-int	PDC_CDECL	sb_get_horz(int *total, int *viewport, int *cur)
-/***********************************************************************/
+int PDC_CDECL sb_get_horz(int *total, int *viewport, int *cur)
 {
 	PDC_LOG(("sb_get_horz() - called\n"));
 
@@ -163,9 +155,7 @@ int	PDC_CDECL	sb_get_horz(int *total, int *viewport, int *cur)
    viewport = size of viewport in lines
    cur = current line in total */
 
-/***********************************************************************/
-int	PDC_CDECL	sb_get_vert(int *total, int *viewport, int *cur)
-/***********************************************************************/
+int PDC_CDECL sb_get_vert(int *total, int *viewport, int *cur)
 {
 	PDC_LOG(("sb_get_vert() - called\n"));
 
@@ -184,9 +174,7 @@ int	PDC_CDECL	sb_get_vert(int *total, int *viewport, int *cur)
 
 /* sb_refresh() - Used to draw the scrollbars. */
 
-/***********************************************************************/
-int	PDC_CDECL	sb_refresh(void)
-/***********************************************************************/
+int PDC_CDECL sb_refresh(void)
 {
 	PDC_LOG(("sb_refresh() - called\n"));
 

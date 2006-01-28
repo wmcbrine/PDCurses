@@ -31,9 +31,7 @@ static char *XCursesProgramName;
 
 extern void say(const char *);
 
-/***********************************************************************/
 void XCursesExitXCursesProcess(int rc, int sig, char *msg)
-/***********************************************************************/
 {
 	if (rc || sig)
 	    fprintf(stderr,
@@ -64,9 +62,7 @@ void XCursesExitXCursesProcess(int rc, int sig, char *msg)
 
 /* This function redraws the entire screen. */
 
-/***********************************************************************/
 void XCursesDisplayScreen(bool highlight)
-/***********************************************************************/
 {
 	int row;
 
@@ -102,9 +98,7 @@ void XCursesDisplayScreen(bool highlight)
 
 /* This function draws those portions of the screen that have changed. */
 
-/***********************************************************************/
 int XCursesRefreshScreen(void)
-/***********************************************************************/
 {
 	int row, start_col, num_cols;
 
@@ -142,10 +136,8 @@ int XCursesRefreshScreen(void)
 	return 0;
 }
 
-/***********************************************************************/ 
 void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 				      XtInputId *id) 
-/***********************************************************************/ 
 { 
 	int s, idx;
 	int old_row, new_row;
@@ -471,9 +463,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	} 
 } 
 
-/***********************************************************************/
 int XCursesSetupX(char *display_name, int argc, char *argv[])
-/***********************************************************************/
 {
 	static char *myargv[] = {"PDCurses", NULL};
 	extern bool sb_started;
@@ -907,9 +897,7 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	return OK;			/* won't get here */
 }
 
-/***********************************************************************/
 RETSIGTYPE XCursesSignalHandler(int signo)
-/***********************************************************************/
 {
 	char buf[10];
 	int flag = CURSES_EXIT;
@@ -957,12 +945,10 @@ RETSIGTYPE XCursesSignalHandler(int signo)
 			"exiting from XCursesSignalHandler");
 }
 
-/***********************************************************************/
 void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 					     Atom *selection, Atom *type,
 					     XtPointer value,
 					     unsigned long *length, int *format)
-/***********************************************************************/
 {
 	int rc;
 	char buf[12];		/* big enough for 2 integers */
@@ -1002,10 +988,8 @@ void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 			"exiting from XCursesRequestorCallbackForGetSelection");
 }
 
-/***********************************************************************/
 void XCursesStructureNotify(Widget w, XtPointer client_data, XEvent *event,
 			    Boolean *continue_to_dispatch)
-/***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesStructureNotify called\n", XCLOGMSG));
 

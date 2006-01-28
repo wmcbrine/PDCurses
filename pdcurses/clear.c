@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_clear  = "$Id: clear.c,v 1.6 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_clear  = "$Id: clear.c,v 1.7 2006/01/28 01:23:38 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -160,7 +160,7 @@ WINDOW *win;
 	PDC_LOG(("werase() - called\n"));
 
 	if (win == (WINDOW *)NULL)
-		return( ERR );
+		return ERR;
 
 	wmove(win, 0, 0);
 	return wclrtobot(win);

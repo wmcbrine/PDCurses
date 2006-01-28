@@ -78,7 +78,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel = "$Id: kernel.c,v 1.23 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_kernel = "$Id: kernel.c,v 1.24 2006/01/28 14:36:42 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -413,53 +413,6 @@ int   PDC_CDECL   savetty()
 
 	return OK;
 }
-
-#if 0
-/***********************************************************************/
-#ifdef HAVE_PROTO
-int   PDC_CDECL   getsyx(int *y, int *x)
-#else
-int   PDC_CDECL   getsyx(y, x)
-int *y,*x;
-#endif
-/***********************************************************************/
-{
-	PDC_LOG(("getsyx() - called\n"));
-
-	if (curscr->_leaveit)
-		*y = *x = -1;
-	else
-	{
-		*y = curscr->_cury - SP->linesrippedoffontop;
-		*x = curscr->_curx;
-	}
-
-	return OK;
-}
-
-/***********************************************************************/
-#ifdef HAVE_PROTO
-int   PDC_CDECL   setsyx(int y, int x)
-#else
-int   PDC_CDECL   setsyx(y, x)
-int y,x;
-#endif
-/***********************************************************************/
-{
-	PDC_LOG(("setsyx() - called\n"));
-
-	if (y < 0 && x < 0)
-		curscr->_leaveit = TRUE;
-	else
-	{
-		curscr->_cury = y + SP->linesrippedoffontop;
-		curscr->_curx = x;
-		curscr->_leaveit = FALSE;
-	}
-
-	return OK;
-}
-#endif /* if 0 */
 
 /***********************************************************************/
 #ifdef HAVE_PROTO

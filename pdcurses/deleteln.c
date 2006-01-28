@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_deleteln  = "$Id: deleteln.c,v 1.9 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -88,18 +88,14 @@ char *rcsid_deleteln  = "$Id: deleteln.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp 
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	deleteln(void)
-/***********************************************************************/
+int PDC_CDECL deleteln(void)
 {
 	PDC_LOG(("deleteln() - called\n"));
 
 	return wdeleteln(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wdeleteln(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wdeleteln(WINDOW *win)
 {
 	chtype blank;
 	chtype *temp;
@@ -140,18 +136,14 @@ int	PDC_CDECL	wdeleteln(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	insdelln(int n)
-/***********************************************************************/
+int PDC_CDECL insdelln(int n)
 {
 	PDC_LOG(("insdelln() - called\n"));
 
 	return winsdelln(stdscr, n);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	winsdelln(WINDOW *win, int n)
-/***********************************************************************/
+int PDC_CDECL winsdelln(WINDOW *win, int n)
 {
 	int i;
 
@@ -177,9 +169,7 @@ int	PDC_CDECL	winsdelln(WINDOW *win, int n)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	winsertln(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL winsertln(WINDOW *win)
 {
 	chtype blank;
 	chtype *temp;
@@ -217,18 +207,14 @@ int	PDC_CDECL	winsertln(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	insertln(void)
-/***********************************************************************/
+int PDC_CDECL insertln(void)
 {
 	PDC_LOG(("insertln() - called\n"));
 
 	return winsertln(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwinsertln(WINDOW *win, int y, int x)
-/***********************************************************************/
+int PDC_CDECL mvwinsertln(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwinsertln() - called\n"));
 

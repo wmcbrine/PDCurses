@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_mouse = "$Id: mouse.c,v 1.10 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -106,9 +106,7 @@ char *rcsid_mouse = "$Id: mouse.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	mouse_set(unsigned long mbe)
-/***********************************************************************/
+int PDC_CDECL mouse_set(unsigned long mbe)
 {
 	PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
@@ -117,9 +115,7 @@ int	PDC_CDECL	mouse_set(unsigned long mbe)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mouse_on(unsigned long mbe)
-/***********************************************************************/
+int PDC_CDECL mouse_on(unsigned long mbe)
 {
 	PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
@@ -128,9 +124,7 @@ int	PDC_CDECL	mouse_on(unsigned long mbe)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mouse_off(unsigned long mbe)
-/***********************************************************************/
+int PDC_CDECL mouse_off(unsigned long mbe)
 {
 	PDC_LOG(("mouse_off() - called: event %x\n", mbe));
 
@@ -139,9 +133,7 @@ int	PDC_CDECL	mouse_off(unsigned long mbe)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	map_button(unsigned long button)
-/***********************************************************************/
+int PDC_CDECL map_button(unsigned long button)
 {
 	PDC_LOG(("map_button() - called: button %x\n", button));
 
@@ -151,9 +143,7 @@ int	PDC_CDECL	map_button(unsigned long button)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	request_mouse_pos(void)
-/***********************************************************************/
+int PDC_CDECL request_mouse_pos(void)
 {
 	extern MOUSE_STATUS Trapped_Mouse_status;
 
@@ -165,9 +155,7 @@ int	PDC_CDECL	request_mouse_pos(void)
 	return OK;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	wmouse_position(WINDOW *win, int *y, int *x)
-/***********************************************************************/
+void PDC_CDECL wmouse_position(WINDOW *win, int *y, int *x)
 {
 	PDC_LOG(("wmouse_position() - called\n"));
 
@@ -193,18 +181,14 @@ void	PDC_CDECL	wmouse_position(WINDOW *win, int *y, int *x)
 	}
 }
 
-/***********************************************************************/
-unsigned long	PDC_CDECL	getmouse(void)
-/***********************************************************************/
+unsigned long PDC_CDECL getmouse(void)
 {
 	PDC_LOG(("getmouse() - called\n"));
 
 	return SP->_trap_mbe;
 }
 
-/***********************************************************************/
-unsigned long	PDC_CDECL	getbmap(void)
-/***********************************************************************/
+unsigned long PDC_CDECL getbmap(void)
 {
 	PDC_LOG(("getbmap() - called\n"));
 

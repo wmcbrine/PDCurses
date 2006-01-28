@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.16 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.17 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -102,27 +102,21 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.16 2006/01/28 16:53:26 wmcbrine Exp $";
 
 #define MAXLINE 255
 
-/***********************************************************************/
 int PDC_CDECL getstr(char *str)
-/***********************************************************************/
 {
 	PDC_LOG(("getstr() - called\n"));
 
 	return wgetnstr(stdscr, str, MAXLINE);
 }
 
-/***********************************************************************/
 int PDC_CDECL wgetstr(WINDOW *win, char *str)
-/***********************************************************************/
 {
 	PDC_LOG(("wgetstr() - called\n"));
 
 	return wgetnstr(win, str, MAXLINE);
 }
 
-/***********************************************************************/
 int PDC_CDECL mvgetstr(int y, int x, char *str)
-/***********************************************************************/
 {
 	PDC_LOG(("mvgetstr() - called\n"));
 
@@ -132,9 +126,7 @@ int PDC_CDECL mvgetstr(int y, int x, char *str)
 	return wgetnstr(stdscr, str, MAXLINE);
 }
 
-/***********************************************************************/
 int PDC_CDECL mvwgetstr(WINDOW *win, int y, int x, char *str)
-/***********************************************************************/
 {
 	PDC_LOG(("mvwgetstr() - called\n"));
 
@@ -144,18 +136,14 @@ int PDC_CDECL mvwgetstr(WINDOW *win, int y, int x, char *str)
 	return wgetnstr(win, str, MAXLINE);
 }
 
-/***********************************************************************/
 int PDC_CDECL getnstr(char *str, int n)
-/***********************************************************************/
 {
 	PDC_LOG(("getnstr() - called\n"));
 
 	return wgetnstr(stdscr, str, n);
 }
 
-/***********************************************************************/
 int PDC_CDECL wgetnstr(WINDOW *win, char *str, int n)
-/***********************************************************************/
 {
 	int ch, i, num, t, x, chars;
 	char *p;
@@ -296,9 +284,7 @@ int PDC_CDECL wgetnstr(WINDOW *win, char *str, int n)
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_CDECL mvgetnstr(int y, int x, char *str, int n)
-/***********************************************************************/
 {
 	PDC_LOG(("mvgetnstr() - called\n"));
 
@@ -308,9 +294,7 @@ int PDC_CDECL mvgetnstr(int y, int x, char *str, int n)
 	return wgetnstr(stdscr, str, n);
 }
 
-/***********************************************************************/
 int PDC_CDECL mvwgetnstr(WINDOW *win, int y, int x, char *str, int n)
-/***********************************************************************/
 {
 	PDC_LOG(("mvwgetnstr() - called\n"));
 

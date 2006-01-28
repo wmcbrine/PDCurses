@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.12 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -192,9 +192,7 @@ char *rcsid_inopts  = "$Id: inopts.c,v 1.12 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	cbreak(void)
-/***********************************************************************/
+int PDC_CDECL cbreak(void)
 {
 	PDC_LOG(("cbreak() - called\n"));
 
@@ -203,9 +201,7 @@ int	PDC_CDECL	cbreak(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	nocbreak(void)
-/***********************************************************************/
+int PDC_CDECL nocbreak(void)
 {
 	PDC_LOG(("nocbreak() - called\n"));
 
@@ -215,9 +211,7 @@ int	PDC_CDECL	nocbreak(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	echo(void)
-/***********************************************************************/
+int PDC_CDECL echo(void)
 {
 	PDC_LOG(("echo() - called\n"));
 
@@ -226,9 +220,7 @@ int	PDC_CDECL	echo(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	noecho(void)
-/***********************************************************************/
+int PDC_CDECL noecho(void)
 {
 	PDC_LOG(("noecho() - called\n"));
 
@@ -237,9 +229,7 @@ int	PDC_CDECL	noecho(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	halfdelay(int tenths)
-/***********************************************************************/
+int PDC_CDECL halfdelay(int tenths)
 {
 	PDC_LOG(("halfdelay() - called\n"));
 
@@ -251,9 +241,7 @@ int	PDC_CDECL	halfdelay(int tenths)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	intrflush(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL intrflush(WINDOW *win, bool bf)
 {
 	int y, maxy;
 
@@ -270,9 +258,7 @@ int	PDC_CDECL	intrflush(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	keypad(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL keypad(WINDOW *win, bool bf)
 {
 	PDC_LOG(("keypad() - called\n"));
 
@@ -284,9 +270,7 @@ int	PDC_CDECL	keypad(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	meta(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL meta(WINDOW *win, bool bf)
 {
 	PDC_LOG(("meta() - called\n"));
 
@@ -295,9 +279,7 @@ int	PDC_CDECL	meta(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	nodelay(WINDOW *win, bool flag)
-/***********************************************************************/
+int PDC_CDECL nodelay(WINDOW *win, bool flag)
 {
 	PDC_LOG(("nodelay() - called\n"));
 
@@ -309,18 +291,14 @@ int	PDC_CDECL	nodelay(WINDOW *win, bool flag)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	notimeout(WINDOW *win, bool flag)
-/***********************************************************************/
+int PDC_CDECL notimeout(WINDOW *win, bool flag)
 {
 	PDC_LOG(("notimeout() - called\n"));
 
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	raw(void)
-/***********************************************************************/
+int PDC_CDECL raw(void)
 {
 #ifdef OS2
 # ifndef EMXVIDEO
@@ -346,9 +324,7 @@ int	PDC_CDECL	raw(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	noraw(void)
-/***********************************************************************/
+int PDC_CDECL noraw(void)
 {
 #ifdef OS2
 # ifndef EMXVIDEO
@@ -373,23 +349,17 @@ int	PDC_CDECL	noraw(void)
 	return OK;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	noqiflush(void)
-/***********************************************************************/
+void PDC_CDECL noqiflush(void)
 {
 	PDC_LOG(("noqiflush() - called\n"));
 }
 
-/***********************************************************************/
-void	PDC_CDECL	qiflush(void)
-/***********************************************************************/
+void PDC_CDECL qiflush(void)
 {
 	PDC_LOG(("qiflush() - called\n"));
 }
 
-/***********************************************************************/
-int	PDC_CDECL	typeahead(int fildes)
-/***********************************************************************/
+int PDC_CDECL typeahead(int fildes)
 {
 	PDC_LOG(("typeahead() - called\n"));
 
@@ -398,9 +368,7 @@ int	PDC_CDECL	typeahead(int fildes)
 	return OK;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	wtimeout(WINDOW *win, int delay)
-/***********************************************************************/
+void PDC_CDECL wtimeout(WINDOW *win, int delay)
 {
 	PDC_LOG(("wtimeout() - called\n"));
 
@@ -434,9 +402,7 @@ void	PDC_CDECL	wtimeout(WINDOW *win, int delay)
 	}
 }
 
-/***********************************************************************/
-void	PDC_CDECL	timeout(int delay)
-/***********************************************************************/
+void PDC_CDECL timeout(int delay)
 {
 	PDC_LOG(("timeout() - called\n"));
 

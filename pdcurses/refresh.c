@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh = "$Id: refresh.c,v 1.12 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_refresh = "$Id: refresh.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -104,18 +104,14 @@ char *rcsid_refresh = "$Id: refresh.c,v 1.12 2006/01/28 18:19:51 wmcbrine Exp $"
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int   PDC_CDECL   refresh(void)
-/***********************************************************************/
+int PDC_CDECL refresh(void)
 {
 	PDC_LOG(("refresh() - called\n"));
 
 	return wrefresh(stdscr);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   wrefresh(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wrefresh(WINDOW *win)
 {
 	bool save_clear;
 
@@ -138,9 +134,7 @@ int   PDC_CDECL   wrefresh(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   wnoutrefresh(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wnoutrefresh(WINDOW *win)
 {
 	int first;		/* first changed char on line */
 	int last;		/* last changed char on line  */
@@ -214,9 +208,7 @@ int   PDC_CDECL   wnoutrefresh(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   doupdate(void)
-/***********************************************************************/
+int PDC_CDECL doupdate(void)
 {
 	int i;
 #ifdef REGISTERWINDOWS
@@ -293,9 +285,7 @@ int   PDC_CDECL   doupdate(void)
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   redrawwin(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL redrawwin(WINDOW *win)
 {
 	PDC_LOG(("redrawwin() - called: win=%x\n", win));
 
@@ -305,9 +295,7 @@ int   PDC_CDECL   redrawwin(WINDOW *win)
 	return wredrawln(win, 0, win->_maxy);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   wredrawln(WINDOW *win, int start, int num)
-/***********************************************************************/
+int PDC_CDECL wredrawln(WINDOW *win, int start, int num)
 {
 	int i;
 

@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_touch = "$Id: touch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_touch = "$Id: touch.c,v 1.8 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -94,9 +94,7 @@ char *rcsid_touch = "$Id: touch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	touchwin(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL touchwin(WINDOW *win)
 {
 	int i;
 
@@ -114,9 +112,7 @@ int	PDC_CDECL	touchwin(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	touchline(WINDOW *win, int start, int count)
-/***********************************************************************/
+int PDC_CDECL touchline(WINDOW *win, int start, int count)
 {
 	int i;
 
@@ -136,9 +132,7 @@ int	PDC_CDECL	touchline(WINDOW *win, int start, int count)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	untouchwin(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL untouchwin(WINDOW *win)
 {
 	int i;
 
@@ -156,9 +150,7 @@ int	PDC_CDECL	untouchwin(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wtouchln(WINDOW *win, int y, int n, int changed)
-/***********************************************************************/
+int PDC_CDECL wtouchln(WINDOW *win, int y, int n, int changed)
 {
 	int i;
 
@@ -185,9 +177,7 @@ int	PDC_CDECL	wtouchln(WINDOW *win, int y, int n, int changed)
 	return OK;
 }
 
-/***********************************************************************/
-bool	PDC_CDECL	is_linetouched(WINDOW *win, int line)
-/***********************************************************************/
+bool PDC_CDECL is_linetouched(WINDOW *win, int line)
 {
 	PDC_LOG(("is_linetouched() - called: win=%x line=%d\n", win, line));
 
@@ -197,9 +187,7 @@ bool	PDC_CDECL	is_linetouched(WINDOW *win, int line)
 	return (win->_firstch[line] != _NO_CHANGE) ? TRUE : FALSE;
 }
 
-/***********************************************************************/
-bool	PDC_CDECL	is_wintouched(WINDOW *win)
-/***********************************************************************/
+bool PDC_CDECL is_wintouched(WINDOW *win)
 {
 	int i;
 

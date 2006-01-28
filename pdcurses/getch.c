@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.18 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.19 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -113,18 +113,14 @@ char *rcsid_getch  = "$Id: getch.c,v 1.18 2006/01/28 16:53:26 wmcbrine Exp $";
 #define getch PDC_getch
 #define ungetch PDC_ungetch
 
-/***********************************************************************/
-int	PDC_CDECL	PDC_getch(void)
-/***********************************************************************/
+int PDC_CDECL PDC_getch(void)
 {
 	PDC_LOG(("getch() - called\n"));
 
 	return wgetch(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wgetch(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wgetch(WINDOW *win)
 {
 	extern int c_pindex;		/* putter index	*/
 	extern int c_gindex;		/* getter index	*/
@@ -257,9 +253,7 @@ int	PDC_CDECL	wgetch(WINDOW *win)
 	}
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvgetch(int y, int x)
-/***********************************************************************/
+int PDC_CDECL mvgetch(int y, int x)
 {
 	PDC_LOG(("mvgetch() - called\n"));
 
@@ -269,9 +263,7 @@ int	PDC_CDECL	mvgetch(int y, int x)
 	return wgetch(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwgetch(WINDOW *win, int y, int x)
-/***********************************************************************/
+int PDC_CDECL mvwgetch(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwgetch() - called\n"));
 
@@ -281,9 +273,7 @@ int	PDC_CDECL	mvwgetch(WINDOW *win, int y, int x)
 	return wgetch(win);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	PDC_ungetch(int ch)
-/***********************************************************************/
+int PDC_CDECL PDC_ungetch(int ch)
 {
 	extern int c_ungind;		/* ungetch() push index */
 	extern int c_ungch[NUNGETCH];	/* array of ungotten chars */

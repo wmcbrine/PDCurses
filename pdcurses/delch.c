@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.8 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_delch  = "$Id: delch.c,v 1.9 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -122,9 +122,7 @@ int PDC_CDECL wdelch(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvdelch(int y, int x)
-/***********************************************************************/
+int PDC_CDECL mvdelch(int y, int x)
 {
 	PDC_LOG(("mvdelch() - called\n"));
 
@@ -134,9 +132,7 @@ int	PDC_CDECL	mvdelch(int y, int x)
 	return wdelch(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwdelch(WINDOW *win, int y, int x)
-/***********************************************************************/
+int PDC_CDECL mvwdelch(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwdelch() - called\n"));
 

@@ -47,7 +47,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window = "$Id: window.c,v 1.13 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_window = "$Id: window.c,v 1.14 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -158,9 +158,7 @@ char *rcsid_window = "$Id: window.c,v 1.13 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-WINDOW*	PDC_CDECL	newwin(int nlines, int ncols, int begy, int begx)
-/***********************************************************************/
+WINDOW * PDC_CDECL newwin(int nlines, int ncols, int begy, int begx)
 {
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
@@ -211,9 +209,7 @@ WINDOW*	PDC_CDECL	newwin(int nlines, int ncols, int begy, int begx)
 	return win;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	delwin(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL delwin(WINDOW *win)
 {
 	extern void (*fre)(void*);
 
@@ -242,9 +238,7 @@ int	PDC_CDECL	delwin(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwin(WINDOW *win, int y, int x)
-/***********************************************************************/
+int PDC_CDECL mvwin(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwin() - called\n"));
 
@@ -260,10 +254,8 @@ int	PDC_CDECL	mvwin(WINDOW *win, int y, int x)
 	return OK;
 }
 
-/***********************************************************************/
-WINDOW*	PDC_CDECL	subwin(WINDOW *orig, int nlines, int ncols,
-			       int begin_y, int begin_x)
-/***********************************************************************/
+WINDOW * PDC_CDECL subwin(WINDOW *orig, int nlines, int ncols,
+			  int begin_y, int begin_x)
 {
 	WINDOW *win;
 	int i;
@@ -311,18 +303,14 @@ WINDOW*	PDC_CDECL	subwin(WINDOW *orig, int nlines, int ncols,
 	return win;
 }
 
-/***********************************************************************/
-WINDOW*	PDC_CDECL	derwin(WINDOW *orig, int nlines, int ncols,
-			       int begin_y, int begin_x)
-/***********************************************************************/
+WINDOW * PDC_CDECL derwin(WINDOW *orig, int nlines, int ncols,
+			  int begin_y, int begin_x)
 {
 	return subwin(orig, nlines, ncols, begin_y + orig->_begy,
 		begin_x + orig->_begx);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvderwin(WINDOW* win, int par_y, int par_x)
-/***********************************************************************/
+int PDC_CDECL mvderwin(WINDOW *win, int par_y, int par_x)
 {
 	int i, j;
 	WINDOW *mypar;
@@ -348,9 +336,7 @@ int	PDC_CDECL	mvderwin(WINDOW* win, int par_y, int par_x)
 	return OK;
 }
 
-/***********************************************************************/
-WINDOW*	PDC_CDECL	dupwin(WINDOW *win)
-/***********************************************************************/
+WINDOW * PDC_CDECL dupwin(WINDOW *win)
 {
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
@@ -441,9 +427,7 @@ WINDOW*	PDC_CDECL	dupwin(WINDOW *win)
 
 }
 
-/***********************************************************************/
-WINDOW *	PDC_CDECL	resize_window(WINDOW *win, int lins, int cols)
-/***********************************************************************/
+WINDOW * PDC_CDECL resize_window(WINDOW *win, int lins, int cols)
 {
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
@@ -536,9 +520,7 @@ WINDOW *	PDC_CDECL	resize_window(WINDOW *win, int lins, int cols)
 	return new;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	wsyncup(WINDOW *win)
-/***********************************************************************/
+void PDC_CDECL wsyncup(WINDOW *win)
 {
 	WINDOW *tmp;
 
@@ -548,9 +530,7 @@ void	PDC_CDECL	wsyncup(WINDOW *win)
 		touchwin(tmp);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	syncok(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL syncok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("syncok() - called\n"));
 
@@ -562,9 +542,7 @@ int	PDC_CDECL	syncok(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	wcursyncup(WINDOW *win)
-/***********************************************************************/
+void PDC_CDECL wcursyncup(WINDOW *win)
 {
 	WINDOW *tmp;
 
@@ -575,9 +553,7 @@ void	PDC_CDECL	wcursyncup(WINDOW *win)
 			tmp->_parx + tmp->_curx);
 }
 
-/***********************************************************************/
-void	PDC_CDECL	wsyncdown(WINDOW *win)
-/***********************************************************************/
+void PDC_CDECL wsyncdown(WINDOW *win)
 {
 	WINDOW *tmp;
 

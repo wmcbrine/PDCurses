@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad = "$Id: pad.c,v 1.10 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_pad = "$Id: pad.c,v 1.11 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */
@@ -119,11 +119,9 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-WINDOW* PDC_CDECL newpad(int nlines, int ncols)
-/***********************************************************************/
+WINDOW * PDC_CDECL newpad(int nlines, int ncols)
 {
-	extern void* (*callc)(size_t, size_t);
+	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
 
 	WINDOW *win;
@@ -174,10 +172,8 @@ WINDOW* PDC_CDECL newpad(int nlines, int ncols)
 	return win;
 }
 
-/***********************************************************************/
-WINDOW* PDC_CDECL subpad(WINDOW *orig, int nlines, int ncols,
-			 int begin_y, int begin_x)
-/***********************************************************************/
+WINDOW * PDC_CDECL subpad(WINDOW *orig, int nlines, int ncols,
+			  int begin_y, int begin_x)
 {
 	WINDOW *win;
 	int i;
@@ -234,10 +230,8 @@ WINDOW* PDC_CDECL subpad(WINDOW *orig, int nlines, int ncols,
 	return win;
 }
 
-/***********************************************************************/
 int PDC_CDECL prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
 		       int sy2, int sx2)
-/***********************************************************************/
 {
 	PDC_LOG(("prefresh() - called\n"));
 
@@ -251,10 +245,8 @@ int PDC_CDECL prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_CDECL pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
 		       int sy2, int sx2)
-/***********************************************************************/
 {
 	int num_cols;
 	int sline = sy1;
@@ -324,9 +316,7 @@ int PDC_CDECL pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_CDECL pechochar(WINDOW *pad, chtype ch)
-/***********************************************************************/
 {
 	PDC_LOG(("pechochar() - called\n"));
 

@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw = "$Id: scanw.c,v 1.12 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_scanw = "$Id: scanw.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -91,9 +91,7 @@ char *rcsid_scanw = "$Id: scanw.c,v 1.12 2006/01/28 15:01:41 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	scanw(char *fmt, ...)
-/***********************************************************************/
+int PDC_CDECL scanw(char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -107,9 +105,7 @@ int	PDC_CDECL	scanw(char *fmt, ...)
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wscanw(WINDOW *win, char *fmt, ...)
-/***********************************************************************/
+int PDC_CDECL wscanw(WINDOW *win, char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -123,9 +119,7 @@ int	PDC_CDECL	wscanw(WINDOW *win, char *fmt, ...)
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvscanw(int y, int x, char *fmt, ... )
-/***********************************************************************/
+int PDC_CDECL mvscanw(int y, int x, char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -142,9 +136,7 @@ int	PDC_CDECL	mvscanw(int y, int x, char *fmt, ... )
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwscanw(WINDOW *win, int y, int x, char *fmt,...)
-/***********************************************************************/
+int PDC_CDECL mvwscanw(WINDOW *win, int y, int x, char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -161,9 +153,7 @@ int	PDC_CDECL	mvwscanw(WINDOW *win, int y, int x, char *fmt,...)
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	vwscanw(WINDOW *win, char *fmt, va_list varglist)
-/***********************************************************************/
+int PDC_CDECL vwscanw(WINDOW *win, char *fmt, va_list varglist)
 {
 	char scanbuf[513];
 
@@ -175,9 +165,7 @@ int	PDC_CDECL	vwscanw(WINDOW *win, char *fmt, va_list varglist)
 	return vsscanf(scanbuf, fmt, varglist);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	vw_scanw(WINDOW *win, char *fmt, va_list varglist)
-/***********************************************************************/
+int PDC_CDECL vw_scanw(WINDOW *win, char *fmt, va_list varglist)
 {
 	PDC_LOG(("vw_scanw() - called\n"));
 

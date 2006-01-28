@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insch  = "$Id: insch.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_insch = "$Id: insch.c,v 1.9 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -126,27 +126,21 @@ char *rcsid_insch  = "$Id: insch.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	insch(chtype ch)
-/***********************************************************************/
+int PDC_CDECL insch(chtype ch)
 {
 	PDC_LOG(("insch() - called\n"));
 
 	return PDC_chins(stdscr, ch, (bool)(!(SP->raw_out)));
 }
 
-/***********************************************************************/
-int	PDC_CDECL	winsch(WINDOW *win, chtype ch)
-/***********************************************************************/
+int PDC_CDECL winsch(WINDOW *win, chtype ch)
 {
 	PDC_LOG(("winsch() - called\n"));
 
 	return PDC_chins(win, ch, (bool)(!(SP->raw_out)));
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvinsch(int y, int x, chtype ch)
-/***********************************************************************/
+int PDC_CDECL mvinsch(int y, int x, chtype ch)
 {
 	PDC_LOG(("mvinsch() - called\n"));
 
@@ -156,9 +150,7 @@ int	PDC_CDECL	mvinsch(int y, int x, chtype ch)
 	return PDC_chins(stdscr, ch, (bool)(!(SP->raw_out)));
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwinsch(WINDOW *win, int y, int x, chtype ch)
-/***********************************************************************/
+int PDC_CDECL mvwinsch(WINDOW *win, int y, int x, chtype ch)
 {
 	PDC_LOG(("mvwinsch() - called\n"));
 

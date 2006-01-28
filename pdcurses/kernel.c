@@ -72,7 +72,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel = "$Id: kernel.c,v 1.27 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_kernel = "$Id: kernel.c,v 1.28 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -187,9 +187,7 @@ char linesrippedoff = 0;
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int   PDC_CDECL   def_prog_mode(void)
-/***********************************************************************/
+int PDC_CDECL def_prog_mode(void)
 {
 	PDC_LOG(("def_prog_mode() - called\n"));
 
@@ -200,9 +198,7 @@ int   PDC_CDECL   def_prog_mode(void)
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   def_shell_mode(void)
-/***********************************************************************/
+int PDC_CDECL def_shell_mode(void)
 {
 	PDC_LOG(("def_shell_mode() - called\n"));
 
@@ -213,9 +209,7 @@ int   PDC_CDECL   def_shell_mode(void)
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_CDECL reset_prog_mode(void)
-/***********************************************************************/
 {
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
@@ -263,9 +257,7 @@ int PDC_CDECL reset_prog_mode(void)
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_CDECL reset_shell_mode(void)
-/***********************************************************************/
 {
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
@@ -320,9 +312,7 @@ int PDC_CDECL reset_shell_mode(void)
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_CDECL resetty(void)
-/***********************************************************************/
 {
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
@@ -372,9 +362,7 @@ int PDC_CDECL resetty(void)
 	return c_save_tty.been_set ? OK : ERR;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   savetty(void)
-/***********************************************************************/
+int PDC_CDECL savetty(void)
 {
 	PDC_LOG(("savetty() - called\n"));
 
@@ -384,18 +372,14 @@ int   PDC_CDECL   savetty(void)
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   curs_set(int visibility)
-/***********************************************************************/
+int PDC_CDECL curs_set(int visibility)
 {
 	PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
 
 	return PDC_curs_set(visibility);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   ripoffline(int line, int (*init)(WINDOW *, int))
-/***********************************************************************/
+int PDC_CDECL ripoffline(int line, int (*init)(WINDOW *, int))
 {
 	PDC_LOG(("ripoffline() - called: line=%d\n", line));
 
@@ -408,9 +392,7 @@ int   PDC_CDECL   ripoffline(int line, int (*init)(WINDOW *, int))
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   napms(int ms)
-/***********************************************************************/
+int PDC_CDECL napms(int ms)
 {
 	PDC_LOG(("napms() - called: ms=%d\n", ms));
 
@@ -427,7 +409,7 @@ int   PDC_CDECL   napms(int ms)
 	}
 #elif defined(WIN32)
 
-	Sleep( ms );
+	Sleep(ms);
 
 #elif defined(OS2)
 
@@ -441,7 +423,7 @@ int   PDC_CDECL   napms(int ms)
 
 # if defined(TC) || defined(__WATCOMC__)
 
-	delay( ms );
+	delay(ms);
 
 # elif defined(MSC) || defined(NDP)
 	{
@@ -464,9 +446,7 @@ int   PDC_CDECL   napms(int ms)
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   draino(int ms)
-/***********************************************************************/
+int PDC_CDECL draino(int ms)
 {
 	PDC_LOG(("draino() - called: ms=%d\n", ms));
 

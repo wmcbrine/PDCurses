@@ -30,7 +30,7 @@
 #undef	wbkgdset
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd = "$Id: bkgd.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_bkgd = "$Id: bkgd.c,v 1.10 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -92,34 +92,26 @@ char *rcsid_bkgd = "$Id: bkgd.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	bkgd(chtype ch)
-/***********************************************************************/
+int PDC_CDECL bkgd(chtype ch)
 {
 	PDC_LOG(("bkgd() - called\n"));
 
 	return wbkgd(stdscr, ch);
 }
 
-/***********************************************************************/
-void	PDC_CDECL	bkgdset(chtype ch)
-/***********************************************************************/
+void PDC_CDECL bkgdset(chtype ch)
 {
 	PDC_LOG(("bkgdset() - called\n"));
 
 	wbkgdset(stdscr, ch);
 }
 
-/***********************************************************************/
-chtype  PDC_CDECL       getbkgd(WINDOW *win)
-/***********************************************************************/
+chtype PDC_CDECL getbkgd(WINDOW *win)
 {
         return win ? win->_bkgd : (chtype)ERR;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wbkgd(WINDOW *win, chtype ch)
-/***********************************************************************/
+int PDC_CDECL wbkgd(WINDOW *win, chtype ch)
 {
 	int x, y;
 	chtype oldcolr, oldch, newcolr, newch, colr, attr;
@@ -206,9 +198,7 @@ int	PDC_CDECL	wbkgd(WINDOW *win, chtype ch)
 	return OK;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	wbkgdset(WINDOW *win, chtype ch)
-/***********************************************************************/
+void PDC_CDECL wbkgdset(WINDOW *win, chtype ch)
 {
 	chtype bkgdattr;
 

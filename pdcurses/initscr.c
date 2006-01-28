@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.26 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.27 2006/01/28 19:31:00 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -190,9 +190,7 @@ extern void (*PDC_initial_slk)(void);
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-WINDOW*  PDC_CDECL   Xinitscr(int argc, char *argv[])
-/***********************************************************************/
+WINDOW * PDC_CDECL Xinitscr(int argc, char *argv[])
 {
 	int i;
 
@@ -326,18 +324,14 @@ WINDOW*  PDC_CDECL   Xinitscr(int argc, char *argv[])
 	return stdscr;
 }
 
-/***********************************************************************/
-WINDOW*  PDC_CDECL   initscr(void)
-/***********************************************************************/
+WINDOW * PDC_CDECL initscr(void)
 {
 	PDC_LOG(("initscr() - called\n"));
 
 	return Xinitscr(0, NULL);
 }
 
-/***********************************************************************/
 int PDC_CDECL endwin(void)
-/***********************************************************************/
 {
 	PDC_LOG(("endwin() - called\n"));
 
@@ -376,27 +370,21 @@ int PDC_CDECL endwin(void)
 	return OK;
 }
 
-/***********************************************************************/
-bool	PDC_CDECL   isendwin(void)
-/***********************************************************************/
+bool PDC_CDECL isendwin(void)
 {
 	PDC_LOG(("isendwin() - called\n"));
 
 	return SP->alive ? FALSE : TRUE;
 }
 
-/***********************************************************************/
-SCREEN* PDC_CDECL   newterm(char *type, FILE *outfd, FILE *infd)
-/***********************************************************************/
+SCREEN * PDC_CDECL newterm(char *type, FILE *outfd, FILE *infd)
 {
 	PDC_LOG(("newterm() - called\n"));
 
 	return NULL;
 }
 
-/***********************************************************************/
-SCREEN* PDC_CDECL   set_term(SCREEN *new)
-/***********************************************************************/
+SCREEN * PDC_CDECL set_term(SCREEN *new)
 {
 	PDC_LOG(("set_term() - called\n"));
 
@@ -405,9 +393,7 @@ SCREEN* PDC_CDECL   set_term(SCREEN *new)
 	return SP;
 }
 
-/***********************************************************************/
-void    PDC_CDECL   delscreen(SCREEN *sp)
-/***********************************************************************/
+void PDC_CDECL delscreen(SCREEN *sp)
 {
 	PDC_LOG(("delscreen() - called\n"));
 
@@ -429,9 +415,7 @@ void    PDC_CDECL   delscreen(SCREEN *sp)
 #endif
 }
 
-/***********************************************************************/
-int   PDC_CDECL   resize_term(int nlines, int ncols)
-/***********************************************************************/
+int PDC_CDECL resize_term(int nlines, int ncols)
 {
 	PDC_LOG(("resize_term() - called: nlines %d\n",nlines));
 
@@ -477,9 +461,7 @@ int   PDC_CDECL   resize_term(int nlines, int ncols)
 	return OK;
 }
 
-/***********************************************************************/
-bool  PDC_CDECL   is_termresized(void)
-/***********************************************************************/
+bool PDC_CDECL is_termresized(void)
 {
 	PDC_LOG(("is_termresized() - called\n"));
 

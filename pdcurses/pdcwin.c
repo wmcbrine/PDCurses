@@ -24,7 +24,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.18 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.19 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -51,10 +51,9 @@ char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.18 2006/01/28 18:19:51 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w,
-		 int src_tr, int src_tc, int src_br, int src_bc,
-		 int dst_tr, int dst_tc, int dst_br, int dst_bc,
-		 bool overlay)
+int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
+		 int src_tc, int src_br, int src_bc, int dst_tr,
+		 int dst_tc, int dst_br, int dst_bc, bool overlay)
 {
 	int col, line, y1, fc, *minchng, *maxchng;
 	chtype *w1ptr, *w2ptr;
@@ -141,12 +140,12 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w,
 	a NULL pointer.
 
   Portability:
-	PDCurses  WINDOW *PDC_makenew(int num_lines, int num_columns,
-				      int begy, int begx);
+	PDCurses  WINDOW * PDC_makenew(int num_lines, int num_columns,
+				       int begy, int begx);
 
 **man-end**********************************************************************/
 
-WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
+WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 {
 	extern void *(*mallc)(size_t);
 	extern void *(*callc)(size_t, size_t);

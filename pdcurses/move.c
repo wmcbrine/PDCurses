@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_move  = "$Id: move.c,v 1.6 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_move  = "$Id: move.c,v 1.7 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -63,9 +63,7 @@ char *rcsid_move  = "$Id: move.c,v 1.6 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	move(int y, int x)
-/***********************************************************************/
+int PDC_CDECL move(int y, int x)
 {
 	PDC_LOG(("move() - called: y=%d x=%d\n", y, x));
 
@@ -81,9 +79,7 @@ int	PDC_CDECL	move(int y, int x)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wmove(WINDOW *win, int y, int x)
-/***********************************************************************/
+int PDC_CDECL wmove(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("wmove() - called: y=%d x=%d\n", y, x));
 

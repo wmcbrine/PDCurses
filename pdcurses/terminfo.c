@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.11 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.12 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -81,9 +81,7 @@ char *rcsid_terminfo  = "$Id: terminfo.c,v 1.11 2006/01/28 16:53:26 wmcbrine Exp
 
 TERMINAL *cur_term = NULL;
 
-/***********************************************************************/
-int	PDC_CDECL	mvcur(int oldrow, int oldcol, int newrow, int newcol)
-/***********************************************************************/
+int PDC_CDECL mvcur(int oldrow, int oldcol, int newrow, int newcol)
 {
 	PDC_LOG(("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",
 		oldrow, oldcol, newrow, newcol));
@@ -99,27 +97,21 @@ int	PDC_CDECL	mvcur(int oldrow, int oldcol, int newrow, int newcol)
 	return OK;
 }
 
-/***********************************************************************/
-int     PDC_CDECL del_curterm(TERMINAL *oterm)
-/***********************************************************************/
+int PDC_CDECL del_curterm(TERMINAL *oterm)
 {
 	PDC_LOG(("del_curterm() - called\n"));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int     PDC_CDECL putp(const char *str)
-/***********************************************************************/
+int PDC_CDECL putp(const char *str)
 {
 	PDC_LOG(("putp() - called: str %s\n", str));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int     PDC_CDECL restartterm(char *term, int filedes, int *errret)
-/***********************************************************************/
+int PDC_CDECL restartterm(char *term, int filedes, int *errret)
 {
 	PDC_LOG(("restartterm() - called\n"));
 
@@ -129,27 +121,21 @@ int     PDC_CDECL restartterm(char *term, int filedes, int *errret)
 	return ERR;
 }
 
-/***********************************************************************/
-TERMINAL* PDC_CDECL set_curterm(TERMINAL *nterm)
-/***********************************************************************/
+TERMINAL * PDC_CDECL set_curterm(TERMINAL *nterm)
 {
 	PDC_LOG(("set_curterm() - called\n"));
 
 	return (TERMINAL *)NULL;
 }
 
-/***********************************************************************/
-int     PDC_CDECL setterm(char *term)
-/***********************************************************************/
+int PDC_CDECL setterm(char *term)
 {
 	PDC_LOG(("setterm() - called\n"));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int     PDC_CDECL setupterm(char *term, int filedes, int *errret)
-/***********************************************************************/
+int PDC_CDECL setupterm(char *term, int filedes, int *errret)
 {
 	PDC_LOG(("setupterm() - called\n"));
 
@@ -161,109 +147,85 @@ int     PDC_CDECL setupterm(char *term, int filedes, int *errret)
 	return ERR;
 }
 
-/***********************************************************************/
-int     PDC_CDECL tgetent(char *bp, const char *name)
-/***********************************************************************/
+int PDC_CDECL tgetent(char *bp, const char *name)
 {
 	PDC_LOG(("tgetent() - called: name %s\n", name));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int     PDC_CDECL tgetflag(char *id)
-/***********************************************************************/
+int PDC_CDECL tgetflag(char *id)
 {
 	PDC_LOG(("tgetflag() - called: id %s\n", id));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int     PDC_CDECL tgetnum(char *id)
-/***********************************************************************/
+int PDC_CDECL tgetnum(char *id)
 {
 	PDC_LOG(("tgetnum() - called: id %s\n", id));
 
 	return ERR;
 }
 
-/***********************************************************************/
-char*   PDC_CDECL tgetstr(char *id, char **area)
-/***********************************************************************/
+char * PDC_CDECL tgetstr(char *id, char **area)
 {
 	PDC_LOG(("tgetstr() - called: id %s\n", id));
 
 	return (char *)NULL;
 }
 
-/***********************************************************************/
-char*   PDC_CDECL tgoto(char *cap, int col, int row)
-/***********************************************************************/
+char * PDC_CDECL tgoto(char *cap, int col, int row)
 {
 	PDC_LOG(("tgoto() - called\n"));
 
 	return (char *)NULL;
 }
 
-/***********************************************************************/
-int     PDC_CDECL tigetflag(char *capname)
-/***********************************************************************/
+int PDC_CDECL tigetflag(char *capname)
 {
 	PDC_LOG(("tigetflag() - called: capname %s\n", capname));
 
 	return -1;
 }
 
-/***********************************************************************/
-int     PDC_CDECL tigetnum(char *capname)
-/***********************************************************************/
+int PDC_CDECL tigetnum(char *capname)
 {
 	PDC_LOG(("tigetnum() - called: capname %s\n", capname));
 
 	return -2;
 }
 
-/***********************************************************************/
-char*   PDC_CDECL tigetstr(char *capname)
-/***********************************************************************/
+char * PDC_CDECL tigetstr(char *capname)
 {
 	PDC_LOG(("tigetstr() - called: capname %s\n", capname));
 
 	return (char *)(-1);
 }
 
-/***********************************************************************/
-char*   PDC_CDECL tparm(char *cap, long p1, long p2, long p3, long p4, 
+char * PDC_CDECL tparm(char *cap, long p1, long p2, long p3, long p4, 
 			long p5, long p6, long p7, long p8, long p9)
-/***********************************************************************/
 {
 	PDC_LOG(("tparm() - called: cap %s\n", cap));
 
 	return (char *)NULL;
 }
 
-/***********************************************************************/
-int     PDC_CDECL tputs(const char *str, int affcnt, int (*putfunc)(int))
-/***********************************************************************/
+int PDC_CDECL tputs(const char *str, int affcnt, int (*putfunc)(int))
 {
 	PDC_LOG(("tputs() - called\n"));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	vidattr(chtype attr)
-/***********************************************************************/
+int PDC_CDECL vidattr(chtype attr)
 {
 	PDC_LOG(("vidattr() - called: attr %d\n", attr));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	vidputs(chtype attr, int (*putfunc)(int))
-/***********************************************************************/
+int PDC_CDECL vidputs(chtype attr, int (*putfunc)(int))
 {
 	PDC_LOG(("vidputs() - called: attr %d\n", attr));
 

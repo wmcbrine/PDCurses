@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inch  = "$Id: inch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_inch  = "$Id: inch.c,v 1.8 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -71,9 +71,7 @@ char *rcsid_inch  = "$Id: inch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-chtype	PDC_CDECL	winch(WINDOW *win)
-/***********************************************************************/
+chtype PDC_CDECL winch(WINDOW *win)
 {
 	PDC_LOG(("winch() - called\n"));
 
@@ -83,18 +81,14 @@ chtype	PDC_CDECL	winch(WINDOW *win)
 	return win->_y[win->_cury][win->_curx];
 }
 
-/***********************************************************************/
-chtype	PDC_CDECL	inch(void)
-/***********************************************************************/
+chtype PDC_CDECL inch(void)
 {
 	PDC_LOG(("inch() - called\n"));
 
 	return winch(stdscr);
 }
 
-/***********************************************************************/
-chtype	PDC_CDECL	mvinch(int y, int x)
-/***********************************************************************/
+chtype PDC_CDECL mvinch(int y, int x)
 {
 	PDC_LOG(("mvinch() - called\n"));
 
@@ -104,9 +98,7 @@ chtype	PDC_CDECL	mvinch(int y, int x)
 	return stdscr->_y[stdscr->_cury][stdscr->_curx];
 }
 
-/***********************************************************************/
-chtype	PDC_CDECL	mvwinch(WINDOW *win, int y, int x)
-/***********************************************************************/
+chtype PDC_CDECL mvwinch(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwinch() - called\n"));
 

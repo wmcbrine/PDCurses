@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.15 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.16 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -90,36 +90,28 @@ char *rcsid_addchstr  = "$Id: addchstr.c,v 1.15 2006/01/28 16:53:26 wmcbrine Exp
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int   PDC_CDECL   addchstr(const chtype *ch)
-/***********************************************************************/
+int PDC_CDECL addchstr(const chtype *ch)
 {
 	PDC_LOG(("addchstr() - called\n"));
 
 	return waddchnstr(stdscr, ch, -1);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   addchnstr(const chtype *ch, int n)
-/***********************************************************************/
+int PDC_CDECL addchnstr(const chtype *ch, int n)
 {
 	PDC_LOG(("addchnstr() - called\n"));
 
 	return waddchnstr(stdscr, ch, n);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   waddchstr(WINDOW *win, const chtype *ch)
-/***********************************************************************/
+int PDC_CDECL waddchstr(WINDOW *win, const chtype *ch)
 {
 	PDC_LOG(("waddchstr() - called: win=%x\n", win));
 
 	return waddchnstr(win, ch, -1);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   waddchnstr(WINDOW *win, const chtype *ch, int n)
-/***********************************************************************/
+int PDC_CDECL waddchnstr(WINDOW *win, const chtype *ch, int n)
 {
 	int y, x, maxx, minx;
 	chtype *ptr;
@@ -167,9 +159,7 @@ int   PDC_CDECL   waddchnstr(WINDOW *win, const chtype *ch, int n)
 	return OK;
 }
 
-/***********************************************************************/
-int   PDC_CDECL   mvaddchstr(int y, int x, const chtype *ch)
-/***********************************************************************/
+int PDC_CDECL mvaddchstr(int y, int x, const chtype *ch)
 {
 	PDC_LOG(("mvaddchstr() - called: y %d x %d\n", y, x));
 
@@ -179,9 +169,7 @@ int   PDC_CDECL   mvaddchstr(int y, int x, const chtype *ch)
 	return waddchnstr(stdscr, ch, -1);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   mvaddchnstr(int y, int x, const chtype *ch, int n)
-/***********************************************************************/
+int PDC_CDECL mvaddchnstr(int y, int x, const chtype *ch, int n)
 {
 	PDC_LOG(("mvaddchnstr() - called: y %d x %d n %d\n", y, x, n));
 
@@ -191,9 +179,7 @@ int   PDC_CDECL   mvaddchnstr(int y, int x, const chtype *ch, int n)
 	return waddchnstr(stdscr, ch, n);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   mvwaddchstr(WINDOW *win, int y, int x, const chtype *ch)
-/***********************************************************************/
+int PDC_CDECL mvwaddchstr(WINDOW *win, int y, int x, const chtype *ch)
 {
 	PDC_LOG(("waddchstr() - called:\n"));
 
@@ -203,10 +189,8 @@ int   PDC_CDECL   mvwaddchstr(WINDOW *win, int y, int x, const chtype *ch)
 	return waddchnstr(win, ch, -1);
 }
 
-/***********************************************************************/
-int   PDC_CDECL   mvwaddchnstr(WINDOW *win, int y, int x,
-			       const chtype *ch, int n)
-/***********************************************************************/
+int PDC_CDECL mvwaddchnstr(WINDOW *win, int y, int x,
+			   const chtype *ch, int n)
 {
 	PDC_LOG(("mvwaddchnstr() - called: y %d x %d n %d \n", y, x, n));
 

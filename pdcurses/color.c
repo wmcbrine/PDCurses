@@ -42,7 +42,7 @@
 static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.24 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.25 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -176,9 +176,7 @@ unsigned char atrtab[MAX_ATRTAB] =
 
 unsigned char colorset[PDC_COLOR_PAIRS];
 
-/***********************************************************************/
-chtype	PDC_CDECL	COLOR_PAIR(int n)
-/***********************************************************************/
+chtype PDC_CDECL COLOR_PAIR(int n)
 {
 #ifdef CHTYPE_LONG
 	return (chtype)n << 24;
@@ -187,9 +185,7 @@ chtype	PDC_CDECL	COLOR_PAIR(int n)
 #endif
 }
 
-/***********************************************************************/
-int	PDC_CDECL	PAIR_NUMBER(chtype value)
-/***********************************************************************/
+int PDC_CDECL PAIR_NUMBER(chtype value)
 {
 #ifdef CHTYPE_LONG
 	return (value & A_COLOR) >> 24;
@@ -198,9 +194,7 @@ int	PDC_CDECL	PAIR_NUMBER(chtype value)
 #endif
 }
 
-/***********************************************************************/
-int	PDC_CDECL	start_color(void)
-/***********************************************************************/
+int PDC_CDECL start_color(void)
 {
 	PDC_LOG(("start_color() - called\n"));
 
@@ -219,10 +213,7 @@ int	PDC_CDECL	start_color(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	init_pair(short colorpair, short foreground,
-				  short background)
-/***********************************************************************/
+int PDC_CDECL init_pair(short colorpair, short foreground, short background)
 {
 #if defined(CHTYPE_LONG) && !defined(XCURSES)
 # define USE_PDC_INIT
@@ -254,43 +245,34 @@ int	PDC_CDECL	init_pair(short colorpair, short foreground,
 # endif
 #endif
 
-/*
- * To allow the PDC_PRESERVE_SCREEN option to work, we only reset
- * curscr if this call to init_pair() alters a color pair created
- * by the user.
- */
+	/* To allow the PDC_PRESERVE_SCREEN option to work, we only 
+	   reset curscr if this call to init_pair() alters a color pair 
+	   created by the user. */
+
 	if (colorset[colorpair])
-	{
-	    if ( oldforeground != foreground || oldbackground != background )
+	    if (oldforeground != foreground || oldbackground != background)
 		curscr->_clear = TRUE;
-	}
+
 	colorset[colorpair] = TRUE;
+
 	return OK;
 }
 
-/***********************************************************************/
-bool	PDC_CDECL	has_colors(void)
-/***********************************************************************/
+bool PDC_CDECL has_colors(void)
 {
 	PDC_LOG(("has_colors() - called\n"));
 
 	return SP->mono ? FALSE : TRUE;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	init_color(short color, short red, short green,
-				   short blue)
-/***********************************************************************/
+int PDC_CDECL init_color(short color, short red, short green, short blue)
 {
 	PDC_LOG(("init_color() - called\n"));
 
 	return ERR;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	color_content(short color, short *red, short *green,
-				      short *blue)
-/***********************************************************************/
+int PDC_CDECL color_content(short color, short *red, short *green, short *blue)
 {
 	PDC_LOG(("color_content() - called\n"));
 
@@ -308,19 +290,15 @@ int	PDC_CDECL	color_content(short color, short *red, short *green,
 	return OK;
 }
 
-/***********************************************************************/
-bool	PDC_CDECL	can_change_color(void)
-/***********************************************************************/
+bool PDC_CDECL can_change_color(void)
 {
 	PDC_LOG(("can_change_color() - called\n"));
 
 	return FALSE;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	pair_content(short colorpair, short *foreground,
-				     short *background)
-/***********************************************************************/
+int PDC_CDECL pair_content(short colorpair, short *foreground,
+			   short *background)
 {
 	PDC_LOG(("pair_content() - called\n"));
 
@@ -334,9 +312,7 @@ int	PDC_CDECL	pair_content(short colorpair, short *foreground,
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	PDC_set_line_color(short color)
-/***********************************************************************/
+int PDC_CDECL PDC_set_line_color(short color)
 {
 	if (color >= COLORS || color < 0)
 		return ERR;
@@ -347,9 +323,8 @@ int	PDC_CDECL	PDC_set_line_color(short color)
 }
 
 #if defined(CHTYPE_LONG)
-/***********************************************************************/
-void	PDC_init_atrtab(void)
-/***********************************************************************/
+
+void PDC_init_atrtab(void)
 {
 	int i, orig_fore, orig_back;
 
@@ -370,9 +345,7 @@ void	PDC_init_atrtab(void)
 	PDC_init_pair(PDC_COLOR_PAIRS, orig_back, orig_fore);
 }
 
-/***********************************************************************/
-static	void PDC_init_pair(short pairnum, short fg, short bg)
-/***********************************************************************/
+static void PDC_init_pair(short pairnum, short fg, short bg)
 {
 	unsigned char att, temp_bg;
 	chtype i;
@@ -398,4 +371,5 @@ static	void PDC_init_pair(short pairnum, short fg, short bg)
 		atrtab[(pairnum * PDC_OFFSET) + i] = att;
 	}
 }
+
 #endif

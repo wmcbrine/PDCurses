@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.8 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -87,36 +87,28 @@ char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int scr_dump(const char *filename)
-/***********************************************************************/
 {
 	PDC_LOG(("scr_dump() - called: filename %s\n", filename));
 
 	return ERR;
 }
 
-/***********************************************************************/
 int scr_init(const char *filename)
-/***********************************************************************/
 {
 	PDC_LOG(("scr_init() - called: filename %s\n", filename));
 
 	return ERR;
 }
 
-/***********************************************************************/
 int scr_restore(const char *filename)
-/***********************************************************************/
 {
 	PDC_LOG(("scr_restore() - called: filename %s\n", filename));
 
 	return ERR;
 }
 
-/***********************************************************************/
 int scr_set(const char *filename)
-/***********************************************************************/
 {
 	PDC_LOG(("scr_set() - called: filename %s\n", filename));
 

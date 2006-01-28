@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts = "$Id: outopts.c,v 1.10 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_outopts = "$Id: outopts.c,v 1.11 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -153,9 +153,7 @@ char *rcsid_outopts = "$Id: outopts.c,v 1.10 2006/01/28 16:53:26 wmcbrine Exp $"
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	clearok(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL clearok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("clearok() - called\n"));
 
@@ -167,9 +165,7 @@ int	PDC_CDECL	clearok(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	idlok(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL idlok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("idlok() - called\n"));
 
@@ -181,9 +177,7 @@ int	PDC_CDECL	idlok(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	idcok(WINDOW *win, bool bf)
-/***********************************************************************/
+void PDC_CDECL idcok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("idcok() - called\n"));
 
@@ -191,9 +185,7 @@ void	PDC_CDECL	idcok(WINDOW *win, bool bf)
 		win->_use_idc = bf;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	immedok(WINDOW *win, bool bf)
-/***********************************************************************/
+void PDC_CDECL immedok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("immedok() - called\n"));
 
@@ -201,9 +193,7 @@ void	PDC_CDECL	immedok(WINDOW *win, bool bf)
 		win->_immed = bf;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	leaveok(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL leaveok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("leaveok() - called\n"));
 
@@ -220,18 +210,14 @@ int	PDC_CDECL	leaveok(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	setscrreg(int top, int bottom)
-/***********************************************************************/
+int PDC_CDECL setscrreg(int top, int bottom)
 {
 	PDC_LOG(("setscrreg() - called: top %d bottom %d\n", top, bottom));
 
 	return wsetscrreg(stdscr, top, bottom);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wsetscrreg(WINDOW *win, int top, int bottom)
-/***********************************************************************/
+int PDC_CDECL wsetscrreg(WINDOW *win, int top, int bottom)
 {
 	PDC_LOG(("wsetscrreg() - called: top %d bottom %d\n", top, bottom));
 
@@ -250,9 +236,7 @@ int	PDC_CDECL	wsetscrreg(WINDOW *win, int top, int bottom)
 		return ERR;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	scrollok(WINDOW *win, bool bf)
-/***********************************************************************/
+int PDC_CDECL scrollok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("scrollok() - called\n"));
 
@@ -264,9 +248,7 @@ int	PDC_CDECL	scrollok(WINDOW *win, bool bf)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	nl(void)
-/***********************************************************************/
+int PDC_CDECL nl(void)
 {
 	PDC_LOG(("nl() - called\n"));
 
@@ -275,9 +257,7 @@ int	PDC_CDECL	nl(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	nonl(void)
-/***********************************************************************/
+int PDC_CDECL nonl(void)
 {
 	PDC_LOG(("nonl() - called\n"));
 
@@ -286,9 +266,7 @@ int	PDC_CDECL	nonl(void)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	raw_output(bool bf)
-/***********************************************************************/
+int PDC_CDECL raw_output(bool bf)
 {
 	PDC_LOG(("raw_output() - called\n"));
 

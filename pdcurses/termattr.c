@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr = "$Id: termattr.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_termattr = "$Id: termattr.c,v 1.15 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -137,54 +137,42 @@ char *rcsid_termattr = "$Id: termattr.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp 
 static char _display[128];
 static char _shrtnme[14];
 
-/***********************************************************************/
-int	PDC_CDECL	baudrate(void)
-/***********************************************************************/
+int PDC_CDECL baudrate(void)
 {
 	PDC_LOG(("baudrate() - called\n"));
 
 	return SP->direct_video ? INT_MAX : 19200;
 }
 
-/***********************************************************************/
-char	PDC_CDECL	erasechar(void)
-/***********************************************************************/
+char PDC_CDECL erasechar(void)
 {
 	PDC_LOG(("erasechar() - called\n"));
 
 	return _ECHAR;		/* character delete char (^H) */
 }
 
-/***********************************************************************/
-bool	PDC_CDECL	has_ic(void)
-/***********************************************************************/
+bool PDC_CDECL has_ic(void)
 {
 	PDC_LOG(("has_ic() - called\n"));
 
 	return TRUE;
 }
 
-/***********************************************************************/
-bool	PDC_CDECL	has_il(void)
-/***********************************************************************/
+bool PDC_CDECL has_il(void)
 {
 	PDC_LOG(("has_il() - called\n"));
 
 	return TRUE;
 }
 
-/***********************************************************************/
-char	PDC_CDECL	killchar(void)
-/***********************************************************************/
+char PDC_CDECL killchar(void)
 {
 	PDC_LOG(("killchar() - called\n"));
 
 	return _DLCHAR;		/* line delete char (^U) */
 }
 
-/***********************************************************************/
-char*	PDC_CDECL	longname(void)
-/***********************************************************************/
+char * PDC_CDECL longname(void)
 {
 	PDC_LOG(("longname() - called\n"));
 
@@ -273,9 +261,7 @@ char*	PDC_CDECL	longname(void)
 	return _display;
 }
 
-/***********************************************************************/
-chtype	PDC_CDECL	termattrs(void)
-/***********************************************************************/
+chtype PDC_CDECL termattrs(void)
 {
 	chtype temp = (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | 
 		A_UNDERLINE | A_ITALIC);
@@ -290,9 +276,7 @@ chtype	PDC_CDECL	termattrs(void)
 	return temp;
 }
 
-/***********************************************************************/
-char*	PDC_CDECL	termname(void)
-/***********************************************************************/
+char * PDC_CDECL termname(void)
 {
 	PDC_LOG(("termname() - called\n"));
 
@@ -371,9 +355,7 @@ char*	PDC_CDECL	termname(void)
 	return _shrtnme;
 }
 
-/***********************************************************************/
-char	PDC_CDECL	wordchar(void)
-/***********************************************************************/
+char PDC_CDECL wordchar(void)
 {
 	PDC_LOG(("wordchar() - called\n"));
 

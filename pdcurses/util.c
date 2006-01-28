@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.20 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.21 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -112,9 +112,7 @@ char *rcsid_util  = "$Id: util.c,v 1.20 2006/01/28 16:53:26 wmcbrine Exp $";
 
 static char strbuf[3] = {0, 0, 0};
 
-/***********************************************************************/
-char *	PDC_CDECL	unctrl(chtype c)
-/***********************************************************************/
+char * PDC_CDECL unctrl(chtype c)
 {
 	chtype ic;
 
@@ -204,9 +202,7 @@ static char *key_name[] = {
 	"KEY_SUP", "KEY_SDOWN"
 };
 
-/***********************************************************************/
-char *	PDC_CDECL	keyname(int key)
-/***********************************************************************/
+char * PDC_CDECL keyname(int key)
 {
 	PDC_LOG(("keyname() - called: key %d\n", key));
 
@@ -219,8 +215,7 @@ char *	PDC_CDECL	keyname(int key)
 		return "NO KEY NAME";
 }
 
-/***********************************************************************/
-bool 	PDC_CDECL 	has_key(int key)
+bool PDC_CDECL has_key(int key)
 {
 	PDC_LOG(("has_key() - called: key %d\n",key));
 
@@ -230,50 +225,38 @@ bool 	PDC_CDECL 	has_key(int key)
 	    && key <= (int)(sizeof(key_name) / sizeof(key_name[0]));
 }
 
-/***********************************************************************/
-void	PDC_CDECL	filter(void)
-/***********************************************************************/
+void PDC_CDECL filter(void)
 {
 	PDC_LOG(("filter() - called\n"));
 }
 
-/***********************************************************************/
-void	PDC_CDECL	use_env(bool x)
-/***********************************************************************/
+void PDC_CDECL use_env(bool x)
 {
 	PDC_LOG(("use_env() - called: x %d\n", x));
 }
 
-/***********************************************************************/
-int	PDC_CDECL	putwin(WINDOW *win, FILE *filep)
-/***********************************************************************/
+int PDC_CDECL putwin(WINDOW *win, FILE *filep)
 {
 	PDC_LOG(("putwin() - called\n"));
 
 	return ERR;
 }
 
-/***********************************************************************/
-WINDOW*	PDC_CDECL	getwin(FILE *filep)
-/***********************************************************************/
+WINDOW * PDC_CDECL getwin(FILE *filep)
 {
 	PDC_LOG(("getwin() - called\n"));
 
 	return (WINDOW *)NULL;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	delay_output(int ms)
-/***********************************************************************/
+int PDC_CDECL delay_output(int ms)
 {
 	PDC_LOG(("delay_output() - called: ms %d\n", ms));
 
 	return napms(ms);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	flushinp(void)
-/***********************************************************************/
+int PDC_CDECL flushinp(void)
 {
 	extern int c_pindex;		/* putter index */
 	extern int c_gindex;		/* getter index */
@@ -310,18 +293,14 @@ int	PDC_CDECL	flushinp(void)
 #undef traceon
 #undef traceoff
 
-/***********************************************************************/
-void	PDC_CDECL	traceon(void)
-/***********************************************************************/
+void PDC_CDECL traceon(void)
 {
 	PDC_LOG(("traceon() - called\n"));
 
 	trace_on = TRUE;
 }
 
-/***********************************************************************/
-void	PDC_CDECL	traceoff(void)
-/***********************************************************************/
+void PDC_CDECL traceoff(void)
 {
 	PDC_LOG(("traceoff() - called\n"));
 

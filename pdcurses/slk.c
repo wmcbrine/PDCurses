@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk = "$Id: slk.c,v 1.11 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_slk = "$Id: slk.c,v 1.12 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -128,13 +128,11 @@ static void PDC_slk_init(void);
 
 static struct {
 	char	label[32];
-	int	format;		
-} slk_save[ LABEL_NCURSES_EXTENDED ];
+	int	format;
+} slk_save[LABEL_NCURSES_EXTENDED];
 
 
-/***********************************************************************/
-/*
-   slk_init()	is the slk initialization routine.
+/* slk_init() is the slk initialization routine.
    This must be called before initscr().
 
    label_fmt = 0, 1 or 55.
@@ -143,12 +141,9 @@ static struct {
        2 = 4-4-4 format	(ncurses extension for PC 12 function keys)
        3 = 4-4-4 format	(ncurses extension for PC 12 function keys -
 	with index line)
-      55 = 5 - 5 format	(extended for PC, 10 function keys)
-
- */
+      55 = 5 - 5 format	(extended for PC, 10 function keys) */
 
 int PDC_CDECL slk_init(int fmt)
-/***********************************************************************/
 {
 	PDC_LOG(("slk_init() - called\n"));
 
@@ -187,9 +182,7 @@ int PDC_CDECL slk_init(int fmt)
 	return OK;
 }
 
-/***********************************************************************/
-/*
- PDC_slk_set() Used to set a slk label to a string.
+/* PDC_slk_set() Used to set a slk label to a string.
 
    label_num = 1 - 8 (or 10) (number of the label)
    label_str = string (8 or 7 bytes total), NULL chars or NULL pointer
@@ -197,12 +190,10 @@ int PDC_CDECL slk_init(int fmt)
       0 = left
       1 = center
       2 = right
-   save = 1 yes or 0 no
- */
+   save = 1 yes or 0 no  */
 
 static int PDC_slk_set(int label_num, const char *label_str,
 		       int label_fmt, int save)
-/***********************************************************************/
 {
 	int i, num, slen, llen, col;
 
@@ -292,29 +283,23 @@ static int PDC_slk_set(int label_num, const char *label_str,
 	return OK;
 }
 
-/***********************************************************************/
-/*
- slk_set() Used to set a slk label to a string.
+/*  slk_set() Used to set a slk label to a string.
 
    label_num = 1 - 8 (or 10) (number of the label)
    label_str = string (8 or 7 bytes total), NULL chars or NULL pointer
    label_fmt =  justification
       0 = left
       1 = center
-      2 = right
- */
+      2 = right  */
 
 int PDC_CDECL slk_set(int label_num, const char *label_str, int label_fmt)
-/***********************************************************************/
 {
 	PDC_LOG(("slk_set() - called\n"));
 
 	return PDC_slk_set(label_num, label_str, label_fmt, 1);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_refresh(void)
-/***********************************************************************/
+int PDC_CDECL slk_refresh(void)
 {
 	PDC_LOG(("slk_refresh() - called\n"));
 
@@ -325,9 +310,7 @@ int	PDC_CDECL	slk_refresh(void)
 	return doupdate();
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_noutrefresh(void)
-/***********************************************************************/
+int PDC_CDECL slk_noutrefresh(void)
 {
 	PDC_LOG(("slk_noutrefresh() - called\n"));
 
@@ -337,9 +320,7 @@ int	PDC_CDECL	slk_noutrefresh(void)
 	return wnoutrefresh(SP->slk_winptr);
 }
 
-/***********************************************************************/
-char*	PDC_CDECL	slk_label(int labnum)
-/***********************************************************************/
+char * PDC_CDECL slk_label(int labnum)
 {
 	PDC_LOG(("slk_label() - called\n"));
 
@@ -352,9 +333,7 @@ char*	PDC_CDECL	slk_label(int labnum)
 	return slk_temp_string;	/* only good temporarily */
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_clear(void)
-/***********************************************************************/
+int PDC_CDECL slk_clear(void)
 {
 	int i;
 
@@ -369,9 +348,7 @@ int	PDC_CDECL	slk_clear(void)
 	return wrefresh(SP->slk_winptr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_restore(void)
-/***********************************************************************/
+int PDC_CDECL slk_restore(void)
 {
 	int i;
 	chtype attr = SP->slk_winptr->_attrs;
@@ -389,18 +366,14 @@ int	PDC_CDECL	slk_restore(void)
 	return wrefresh(SP->slk_winptr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_touch(void)
-/***********************************************************************/
+int PDC_CDECL slk_touch(void)
 {
 	PDC_LOG(("slk_touch() - called\n"));
 
 	return touchwin(SP->slk_winptr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_attron(const chtype attrs)
-/***********************************************************************/
+int PDC_CDECL slk_attron(const chtype attrs)
 {
 	int i, rc;
 
@@ -414,9 +387,7 @@ int	PDC_CDECL	slk_attron(const chtype attrs)
 	return rc;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_attroff(const chtype attrs)
-/***********************************************************************/
+int PDC_CDECL slk_attroff(const chtype attrs)
 {
 	int i, rc;
 
@@ -430,9 +401,7 @@ int	PDC_CDECL	slk_attroff(const chtype attrs)
 	return rc;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	slk_attrset(const chtype attrs)
-/***********************************************************************/
+int PDC_CDECL slk_attrset(const chtype attrs)
 {
 	int i, rc;
 
@@ -446,9 +415,7 @@ int	PDC_CDECL	slk_attrset(const chtype attrs)
 	return rc;
 }
 
-/***********************************************************************/
-int     PDC_CDECL       slk_color(short color_pair)
-/***********************************************************************/
+int PDC_CDECL slk_color(short color_pair)
 {
 	int i, rc;
 
@@ -462,9 +429,7 @@ int     PDC_CDECL       slk_color(short color_pair)
 	return rc;
 }
 
-/***********************************************************************/
-static void	PDC_slk_init(void)
-/***********************************************************************/
+static void PDC_slk_init(void)
 {
 	int i;
 	chtype save_attr;
@@ -509,9 +474,7 @@ static void	PDC_slk_init(void)
 	touchwin(SP->slk_winptr);
 }
 
-/***********************************************************************/
-void	PDC_slk_calc(void)
-/***********************************************************************/
+void PDC_slk_calc(void)
 {
 	int i, center, col = 0;
 
@@ -629,9 +592,7 @@ void	PDC_slk_calc(void)
 		slk_set(i + 1, slk_save[i].label, slk_save[i].format);
 }
 
-/***********************************************************************/
-int	PDC_mouse_in_slk(int y, int x)
-/***********************************************************************/
+int PDC_mouse_in_slk(int y, int x)
 {
 	int i;
 

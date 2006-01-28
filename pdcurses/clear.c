@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_clear  = "$Id: clear.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_clear  = "$Id: clear.c,v 1.10 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -101,9 +101,7 @@ char *rcsid_clear  = "$Id: clear.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	clear(void)
-/***********************************************************************/
+int PDC_CDECL clear(void)
 {
 	PDC_LOG(("clear() - called\n"));
 
@@ -114,9 +112,7 @@ int	PDC_CDECL	clear(void)
 	return erase();
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wclear(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wclear(WINDOW *win)
 {
 	PDC_LOG(("wclear() - called\n"));
 
@@ -127,16 +123,12 @@ int	PDC_CDECL	wclear(WINDOW *win)
 	return werase(win);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	erase(void)
-/***********************************************************************/
+int PDC_CDECL erase(void)
 {
 	return werase(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	werase(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL werase(WINDOW *win)
 {
 	PDC_LOG(("werase() - called\n"));
 
@@ -147,16 +139,12 @@ int	PDC_CDECL	werase(WINDOW *win)
 	return wclrtobot(win);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	clrtobot(void)
-/***********************************************************************/
+int PDC_CDECL clrtobot(void)
 {
 	return wclrtobot(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wclrtobot(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wclrtobot(WINDOW *win)
 {
 	int	savey=win->_cury;
 	int	savex=win->_curx;
@@ -166,7 +154,7 @@ int	PDC_CDECL	wclrtobot(WINDOW *win)
 	if  (win == (WINDOW *)NULL)
 		return ERR;
 
-/* should this involve scrolling region somehow ? */
+	/* should this involve scrolling region somehow ? */
 
 	if (win->_cury + 1 < win->_maxy)
 	{
@@ -183,16 +171,12 @@ int	PDC_CDECL	wclrtobot(WINDOW *win)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	clrtoeol(void)
-/***********************************************************************/
+int PDC_CDECL clrtoeol(void)
 {
 	return wclrtoeol(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wclrtoeol(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wclrtoeol(WINDOW *win)
 {
 	int x, y, minx;
 	chtype blank, *ptr;

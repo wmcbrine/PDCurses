@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.12 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -124,9 +124,7 @@ char *rcsid_border  = "$Id: border.c,v 1.12 2006/01/28 16:53:26 wmcbrine Exp $";
    current background of win, as set by wbkgd(), should by combined with 
    it. Attributes set explicitly in ch take precedence. */
 
-/***********************************************************************/
 chtype PDC_attr_passthru(WINDOW *win, chtype ch)
-/***********************************************************************/
 {
 	chtype attr, bktmp;
 
@@ -162,11 +160,8 @@ chtype PDC_attr_passthru(WINDOW *win, chtype ch)
 	return ch;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wborder(WINDOW *win, chtype ls, chtype rs,
-				chtype ts, chtype bs, chtype tl,
-				chtype tr, chtype bl, chtype br)
-/***********************************************************************/
+int PDC_CDECL wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
+		      chtype bs, chtype tl, chtype tr, chtype bl, chtype br)
 {
 	int ymax, xmax;
 	int ymin, xmin;
@@ -227,19 +222,15 @@ int	PDC_CDECL	wborder(WINDOW *win, chtype ls, chtype rs,
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	border(chtype ls, chtype rs, chtype ts, chtype bs,
-			       chtype tl, chtype tr, chtype bl, chtype br)
-/***********************************************************************/
+int PDC_CDECL border(chtype ls, chtype rs, chtype ts, chtype bs,
+		     chtype tl, chtype tr, chtype bl, chtype br)
 {
 	PDC_LOG(("border() - called\n"));
 
 	return wborder(stdscr, ls, rs, ts, bs, tl, tr, bl, br);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	box(WINDOW *win, chtype verch, chtype horch)
-/***********************************************************************/
+int PDC_CDECL box(WINDOW *win, chtype verch, chtype horch)
 {
 	PDC_LOG(("box() - called\n"));
 
@@ -249,27 +240,21 @@ int	PDC_CDECL	box(WINDOW *win, chtype verch, chtype horch)
 	return wborder(win, verch, verch, horch, horch, 0, 0, 0, 0);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	hline(chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL hline(chtype ch, int n)
 {
 	PDC_LOG(("hline() - called\n"));
 
 	return whline(stdscr, ch, n);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	vline(chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL vline(chtype ch, int n)
 {
 	PDC_LOG(("vline() - called\n"));
 
 	return wvline(stdscr, ch, n);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	whline(WINDOW *win, chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL whline(WINDOW *win, chtype ch, int n)
 {
 	int startpos, endpos;
 
@@ -308,9 +293,7 @@ int	PDC_CDECL	whline(WINDOW *win, chtype ch, int n)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wvline(WINDOW *win, chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL wvline(WINDOW *win, chtype ch, int n)
 {
 	int endpos;
 
@@ -347,9 +330,7 @@ int	PDC_CDECL	wvline(WINDOW *win, chtype ch, int n)
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvhline(int y, int x, chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL mvhline(int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvhline() - called\n"));
 
@@ -359,9 +340,7 @@ int	PDC_CDECL	mvhline(int y, int x, chtype ch, int n)
 	return whline(stdscr, ch, n);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvvline(int y, int x, chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL mvvline(int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvvline() - called\n"));
 
@@ -371,9 +350,7 @@ int	PDC_CDECL	mvvline(int y, int x, chtype ch, int n)
 	return wvline(stdscr, ch, n);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvwhline() - called\n"));
 
@@ -383,9 +360,7 @@ int	PDC_CDECL	mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
 	return whline(win, ch, n);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
-/***********************************************************************/
+int PDC_CDECL mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvwvline() - called\n"));
 
@@ -398,10 +373,7 @@ int	PDC_CDECL	mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
 /* PDC_lineattr() -- add the specified attribute to a line of chtypes. 
    Used only as the core routine for the next three functions. */
 
-/***********************************************************************/
-int	PDC_CDECL	PDC_lineattr(WINDOW *win, int n, bool state,
-				     chtype attr)
-/***********************************************************************/
+int PDC_CDECL PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
 {
 	int endpos;
 
@@ -439,27 +411,21 @@ int	PDC_CDECL	PDC_lineattr(WINDOW *win, int n, bool state,
 	return OK;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	PDC_wunderline(WINDOW *win, int n, bool state)
-/***********************************************************************/
+int PDC_CDECL PDC_wunderline(WINDOW *win, int n, bool state)
 {
 	PDC_LOG(("PDC_wunderline() - called\n"));
 
 	return PDC_lineattr(win, n, state, A_UNDERLINE);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	PDC_wleftline(WINDOW *win, int n, bool state)
-/***********************************************************************/
+int PDC_CDECL PDC_wleftline(WINDOW *win, int n, bool state)
 {
 	PDC_LOG(("PDC_wleftline() - called\n"));
 
 	return PDC_lineattr(win, n, state, A_LEFTLINE);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	PDC_wrightline(WINDOW *win, int n, bool state)
-/***********************************************************************/
+int PDC_CDECL PDC_wrightline(WINDOW *win, int n, bool state)
 {
 	PDC_LOG(("PDC_wrightline() - called\n"));
 

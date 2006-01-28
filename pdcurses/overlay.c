@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_overlay = "$Id: overlay.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_overlay = "$Id: overlay.c,v 1.9 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -96,9 +96,7 @@ char *rcsid_overlay = "$Id: overlay.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	overlay(const WINDOW *src_w, WINDOW *dst_w)
-/***********************************************************************/
+int PDC_CDECL overlay(const WINDOW *src_w, WINDOW *dst_w)
 {
 	int first_line, first_col, last_line, last_col;
 	int src_start_x, src_start_y, dst_start_x, dst_start_y;
@@ -158,9 +156,7 @@ int	PDC_CDECL	overlay(const WINDOW *src_w, WINDOW *dst_w)
 		TRUE);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	overwrite(const WINDOW *src_w, WINDOW *dst_w)
-/***********************************************************************/
+int PDC_CDECL overwrite(const WINDOW *src_w, WINDOW *dst_w)
 {
 	int first_line, first_col, last_line, last_col;
 	int src_start_x, src_start_y, dst_start_x, dst_start_y;
@@ -220,21 +216,13 @@ int	PDC_CDECL	overwrite(const WINDOW *src_w, WINDOW *dst_w)
 		FALSE);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	copywin(const WINDOW *src_w, WINDOW *dst_w, 
-				int src_tr, int src_tc, int dst_tr,
-				int dst_tc, int dst_br, int dst_bc,
-				int overlay)
-/***********************************************************************/
+int PDC_CDECL copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
+		      int src_tc, int dst_tr, int dst_tc, int dst_br, 
+		      int dst_bc, int overlay)
 {
-	int	src_start_x = src_tc;
-	int	src_start_y = src_tr;
-	int	dst_start_x = dst_tc;
-	int	dst_start_y = dst_tr;
-
-	int	src_end_x, src_end_y, dst_end_x, dst_end_y;
-	int	src_rows, src_cols, dst_rows, dst_cols;
-	int	min_rows, min_cols;
+	int src_end_x, src_end_y, dst_end_x, dst_end_y;
+	int src_rows, src_cols, dst_rows, dst_cols;
+	int min_rows, min_cols;
 
 	PDC_LOG(("copywin() - called\n"));
 
@@ -261,7 +249,7 @@ int	PDC_CDECL	copywin(const WINDOW *src_w, WINDOW *dst_w,
 	dst_end_y = dst_tr + min_rows;
 	dst_end_x = dst_tc + min_cols;
 
-	return PDC_copy_win(src_w, dst_w, src_start_y, src_start_x, 
-		src_end_y, src_end_x, dst_start_y, dst_start_x, 
+	return PDC_copy_win(src_w, dst_w, src_tr, src_tc,
+		src_end_y, src_end_x, dst_tr, dst_tc,
 		dst_end_y, dst_end_x, overlay);
 }

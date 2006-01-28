@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scroll = "$Id: scroll.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_scroll = "$Id: scroll.c,v 1.10 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -81,18 +81,14 @@ char *rcsid_scroll = "$Id: scroll.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_CDECL scroll(WINDOW *win)
-/***********************************************************************/
 {
 	PDC_LOG(("scroll() - called\n"));
 
 	return wscrl(win, 1);
 }
 
-/***********************************************************************/
-int  PDC_CDECL wscrl(WINDOW *win, int n)
-/***********************************************************************/
+int PDC_CDECL wscrl(WINDOW *win, int n)
 {
 	int i, l;
 	chtype blank, *ptr, *temp;
@@ -168,9 +164,7 @@ int  PDC_CDECL wscrl(WINDOW *win, int n)
 	return OK;
 }
 
-/***********************************************************************/
 int PDC_CDECL scrl(int n)
-/***********************************************************************/
 {
 	PDC_LOG(("scrl() - called\n"));
 

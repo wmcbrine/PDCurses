@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw = "$Id: printw.c,v 1.11 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_printw = "$Id: printw.c,v 1.12 2006/01/28 19:31:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -94,9 +94,7 @@ char *rcsid_printw = "$Id: printw.c,v 1.11 2006/01/28 15:01:41 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	printw(char *fmt, ...)
-/***********************************************************************/
+int PDC_CDECL printw(char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -110,9 +108,7 @@ int	PDC_CDECL	printw(char *fmt, ...)
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wprintw(WINDOW *win, char *fmt, ...)
-/***********************************************************************/
+int PDC_CDECL wprintw(WINDOW *win, char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -126,9 +122,7 @@ int	PDC_CDECL	wprintw(WINDOW *win, char *fmt, ...)
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvprintw(int y, int x, char *fmt, ...)
-/***********************************************************************/
+int PDC_CDECL mvprintw(int y, int x, char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -145,9 +139,7 @@ int	PDC_CDECL	mvprintw(int y, int x, char *fmt, ...)
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	mvwprintw(WINDOW *win, int y, int x, char *fmt, ...)
-/***********************************************************************/
+int PDC_CDECL mvwprintw(WINDOW *win, int y, int x, char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -164,9 +156,7 @@ int	PDC_CDECL	mvwprintw(WINDOW *win, int y, int x, char *fmt, ...)
 	return retval;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	vwprintw(WINDOW *win, char *fmt, va_list varglist)
-/***********************************************************************/
+int PDC_CDECL vwprintw(WINDOW *win, char *fmt, va_list varglist)
 {
 	char printbuf[513];
 	int len;
@@ -178,9 +168,7 @@ int	PDC_CDECL	vwprintw(WINDOW *win, char *fmt, va_list varglist)
 	return (waddstr(win, printbuf) == ERR) ? ERR : len;
 }
 
-/***********************************************************************/
-int	PDC_CDECL	vw_printw(WINDOW *win, char *fmt, va_list varglist)
-/***********************************************************************/
+int PDC_CDECL vw_printw(WINDOW *win, char *fmt, va_list varglist)
 {
 	PDC_LOG(("vw_printw() - called\n"));
 

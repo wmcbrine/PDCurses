@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_terminfo  = "$Id: terminfo.c,v 1.10 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_terminfo  = "$Id: terminfo.c,v 1.11 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -82,15 +82,7 @@ char *rcsid_terminfo  = "$Id: terminfo.c,v 1.10 2006/01/28 15:01:41 wmcbrine Exp
 TERMINAL *cur_term = NULL;
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvcur(int oldrow, int oldcol, int newrow, int newcol)
-#else
-int	PDC_CDECL	mvcur(oldrow, oldcol, newrow, newcol)
-int oldrow;
-int oldcol;
-int newrow;
-int newcol;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",
@@ -108,12 +100,7 @@ int newcol;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL del_curterm(TERMINAL *oterm)
-#else
-int     PDC_CDECL del_curterm(oterm)
-TERMINAL *oterm;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("del_curterm() - called\n"));
@@ -122,12 +109,7 @@ TERMINAL *oterm;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL putp(const char *str)
-#else
-int     PDC_CDECL putp(str)
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("putp() - called: str %s\n", str));
@@ -136,14 +118,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL restartterm(char *term, int filedes, int *errret)
-#else
-int     PDC_CDECL restartterm(term, filedes, errret)
-char *term;
-int filedes;
-int *errret;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("restartterm() - called\n"));
@@ -155,12 +130,7 @@ int *errret;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 TERMINAL* PDC_CDECL set_curterm(TERMINAL *nterm)
-#else
-TERMINAL* PDC_CDECL set_curterm(nterm)
-TERMINAL *nterm;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("set_curterm() - called\n"));
@@ -169,12 +139,7 @@ TERMINAL *nterm;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL setterm(char *term)
-#else
-int     PDC_CDECL setterm(term)
-char *term;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("setterm() - called\n"));
@@ -183,14 +148,7 @@ char *term;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL setupterm(char *term, int filedes, int *errret)
-#else
-int     PDC_CDECL setupterm(term, filedes, errret)
-char *term;
-int filedes;
-int *errret;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("setupterm() - called\n"));
@@ -204,13 +162,7 @@ int *errret;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL tgetent(char *bp, const char *name)
-#else
-int     PDC_CDECL tgetent(bp, name)
-char *bp;
-char *name;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tgetent() - called: name %s\n", name));
@@ -219,12 +171,7 @@ char *name;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL tgetflag(char *id)
-#else
-int     PDC_CDECL tgetflag(id)
-char *id;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tgetflag() - called: id %s\n", id));
@@ -233,12 +180,7 @@ char *id;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL tgetnum(char *id)
-#else
-int     PDC_CDECL tgetnum(id)
-char *id;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tgetnum() - called: id %s\n", id));
@@ -247,13 +189,7 @@ char *id;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char*   PDC_CDECL tgetstr(char *id, char **area)
-#else
-char*   PDC_CDECL tgetstr(id, area)
-char *id;
-char **area;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tgetstr() - called: id %s\n", id));
@@ -262,14 +198,7 @@ char **area;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char*   PDC_CDECL tgoto(char *cap, int col, int row)
-#else
-char*   PDC_CDECL tgoto(cap, col, row)
-char *cap;
-int col;
-int row;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tgoto() - called\n"));
@@ -278,12 +207,7 @@ int row;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL tigetflag(char *capname)
-#else
-int     PDC_CDECL tigetflag(capname)
-char *capname;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tigetflag() - called: capname %s\n", capname));
@@ -292,12 +216,7 @@ char *capname;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL tigetnum(char *capname)
-#else
-int     PDC_CDECL tigetnum(capname)
-char *capname;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tigetnum() - called: capname %s\n", capname));
@@ -306,12 +225,7 @@ char *capname;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char*   PDC_CDECL tigetstr(char *capname)
-#else
-char*   PDC_CDECL tigetstr(capname)
-char *capname;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tigetstr() - called: capname %s\n", capname));
@@ -320,22 +234,8 @@ char *capname;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char*   PDC_CDECL tparm(char *cap, long p1, long p2, long p3, long p4, 
 			long p5, long p6, long p7, long p8, long p9)
-#else
-char*   PDC_CDECL tparm(cap, p1, p2, p3, p4, p5, p6, p7, p8, p9)
-char *cap;
-long p1;
-long p2;
-long p3;
-long p4; 
-long p5;
-long p6;
-long p7;
-long p8;
-long p9;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tparm() - called: cap %s\n", cap));
@@ -344,14 +244,7 @@ long p9;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL tputs(const char *str, int affcnt, int (*putfunc)(int))
-#else
-int     PDC_CDECL tputs(str, affcnt, putfunc)
-char *str;
-int affcnt;
-int (*putfunc)(int);
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("tputs() - called\n"));
@@ -360,12 +253,7 @@ int (*putfunc)(int);
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	vidattr(chtype attr)
-#else
-int	PDC_CDECL	vidattr(attr)
-chtype attr;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("vidattr() - called: attr %d\n", attr));
@@ -374,13 +262,7 @@ chtype attr;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	vidputs(chtype attr, int (*putfunc)(int))
-#else
-int	PDC_CDECL	vidputs(attr, putfunc)
-chtype attr;
-int (*putfunc)();
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("vidputs() - called: attr %d\n", attr));

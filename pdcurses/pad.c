@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad = "$Id: pad.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_pad = "$Id: pad.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */
@@ -125,22 +125,12 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW* PDC_CDECL newpad(int nlines, int ncols)
-#else
-WINDOW* PDC_CDECL newpad(nlines, ncols)
-int nlines;
-int ncols;
-#endif
 /***********************************************************************/
 {
-#ifdef HAVE_PROTO
 	extern void* (*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
-#else
-	extern void* (*callc)();
-	extern void  (*fre)();
-#endif
+
 	WINDOW *win;
 	chtype *ptr;
 	int i, j;
@@ -190,17 +180,8 @@ int ncols;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW* PDC_CDECL subpad(WINDOW *orig, int nlines, int ncols,
 			 int begin_y, int begin_x)
-#else
-WINDOW* PDC_CDECL subpad(orig, nlines, ncols, begin_y, begin_x)
-WINDOW *orig;
-int nlines;
-int ncols;
-int begin_y;
-int begin_x;
-#endif
 /***********************************************************************/
 {
 	WINDOW *win;
@@ -259,19 +240,8 @@ int begin_x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
 		       int sy2, int sx2)
-#else
-int PDC_CDECL prefresh(win, py, px, sy1, sx1, sy2, sx2)
-WINDOW *win;
-int py;
-int px;
-int sy1;
-int sx1;
-int sy2;
-int sx2;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("prefresh() - called\n"));
@@ -287,19 +257,8 @@ int sx2;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
 		       int sy2, int sx2)
-#else
-int PDC_CDECL pnoutrefresh(w, py, px, sy1, sx1, sy2, sx2)
-WINDOW *w;
-int py;
-int px;
-int sy1;
-int sx1;
-int sy2;
-int sx2;
-#endif
 /***********************************************************************/
 {
 	int num_cols;
@@ -371,13 +330,7 @@ int sx2;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL pechochar(WINDOW *pad, chtype ch)
-#else
-int PDC_CDECL pechochar(pad, ch)
-WINDOW *pad;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("pechochar() - called\n"));

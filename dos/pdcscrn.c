@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 	static unsigned short *saved_screen = NULL;
@@ -59,11 +59,7 @@ char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $"
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_scr_close(void)
-#else
-int	PDC_scr_close()
-#endif
 /***********************************************************************/
 {
 #if SMALL || MEDIUM
@@ -130,13 +126,7 @@ int	PDC_scr_close()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_scrn_modes_equal(int mode1, int mode2)
-#else
-bool	PDC_scrn_modes_equal(mode1, mode2)
-int mode1;
-int mode2;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
@@ -164,13 +154,7 @@ int mode2;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_scr_open(SCREEN *internal, bool echo)
-#else
-int	PDC_scr_open(internal, echo)
-SCREEN *internal;
-bool echo;
-#endif
 /***********************************************************************/
 {
 #if SMALL || MEDIUM
@@ -287,12 +271,7 @@ bool echo;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_resize_screen(int nlines, int ncols)
-#else
-int	PDC_resize_screen(nlines, ncols)
-int nlines, ncols;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",

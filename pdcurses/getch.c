@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getch  = "$Id: getch.c,v 1.17 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_getch  = "$Id: getch.c,v 1.18 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -114,11 +114,7 @@ char *rcsid_getch  = "$Id: getch.c,v 1.17 2006/01/28 15:01:41 wmcbrine Exp $";
 #define ungetch PDC_ungetch
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_getch(void)
-#else
-int	PDC_CDECL	PDC_getch()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getch() - called\n"));
@@ -127,12 +123,7 @@ int	PDC_CDECL	PDC_getch()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wgetch(WINDOW *win)
-#else
-int	PDC_CDECL	wgetch(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	extern int c_pindex;		/* putter index	*/
@@ -267,13 +258,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvgetch(int y, int x)
-#else
-int	PDC_CDECL	mvgetch(y, x)
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvgetch() - called\n"));
@@ -285,14 +270,7 @@ int x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwgetch(WINDOW *win, int y, int x)
-#else
-int	PDC_CDECL	mvwgetch(win, y, x)
-WINDOW *win;
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwgetch() - called\n"));
@@ -304,12 +282,7 @@ int x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_ungetch(int ch)
-#else
-int	PDC_CDECL	PDC_ungetch(ch)
-int ch;
-#endif
 /***********************************************************************/
 {
 	extern int c_ungind;		/* ungetch() push index */

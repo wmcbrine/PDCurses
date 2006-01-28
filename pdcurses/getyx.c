@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getyx  = "$Id: getyx.c,v 1.5 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_getyx  = "$Id: getyx.c,v 1.6 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -91,12 +91,7 @@ char *rcsid_getyx  = "$Id: getyx.c,v 1.5 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	getbegy(WINDOW *win)
-#else
-int	PDC_CDECL	getbegy(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getbegy() - called\n"));
@@ -108,12 +103,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	getbegx(WINDOW *win)
-#else
-int	PDC_CDECL	getbegx(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getbegx() - called\n"));
@@ -125,12 +115,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	getpary(WINDOW *win)
-#else
-int	PDC_CDECL	getpary(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getpary() - called\n"));
@@ -142,12 +127,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	getparx(WINDOW *win)
-#else
-int	PDC_CDECL	getparx(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getparx() - called\n"));
@@ -159,12 +139,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	getmaxy(WINDOW *win)
-#else
-int	PDC_CDECL	getmaxy(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getmaxy() - called\n"));
@@ -176,12 +151,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	getmaxx(WINDOW *win)
-#else
-int	PDC_CDECL	getmaxx(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getmaxx() - called\n"));

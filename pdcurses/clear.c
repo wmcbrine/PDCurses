@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_clear  = "$Id: clear.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_clear  = "$Id: clear.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -102,11 +102,7 @@ char *rcsid_clear  = "$Id: clear.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	clear(void)
-#else
-int	PDC_CDECL	clear()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("clear() - called\n"));
@@ -119,12 +115,7 @@ int	PDC_CDECL	clear()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wclear(WINDOW *win)
-#else
-int	PDC_CDECL	wclear(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wclear() - called\n"));
@@ -137,23 +128,14 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	erase(void)
-#else
-int	PDC_CDECL	erase()
-#endif
 /***********************************************************************/
 {
 	return werase(stdscr);
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	werase(WINDOW *win)
-#else
-int	PDC_CDECL	werase(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("werase() - called\n"));
@@ -166,23 +148,14 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	clrtobot(void)
-#else
-int	PDC_CDECL	clrtobot()
-#endif
 /***********************************************************************/
 {
 	return wclrtobot(stdscr);
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wclrtobot(WINDOW *win)
-#else
-int	PDC_CDECL	wclrtobot(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	int	savey=win->_cury;
@@ -211,23 +184,14 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	clrtoeol(void)
-#else
-int	PDC_CDECL	clrtoeol()
-#endif
 /***********************************************************************/
 {
 	return wclrtoeol(stdscr);
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wclrtoeol(WINDOW *win)
-#else
-int	PDC_CDECL	wclrtoeol(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	int x, y, minx;

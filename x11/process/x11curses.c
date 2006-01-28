@@ -35,12 +35,7 @@ static void XCursesExitCursesProcess();
 #endif
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesResizeScreen(int nlines, int ncols)
-#else
-int XCursesResizeScreen(nlines, ncols)
-int nlines, ncols;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesResizeScreen() - called: Lines: %d Cols: %d\n",
@@ -72,13 +67,8 @@ int nlines, ncols;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
-#else
-int XCurses_display_cursor(oldrow, oldcol, newrow, newcol, visibility)
-int oldrow, oldcol, newrow, newcol, visibility;
-#endif
 /***********************************************************************/
 {
 	char buf[30];
@@ -119,12 +109,7 @@ int oldrow, oldcol, newrow, newcol, visibility;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCurses_set_title(char *title)
-#else
-void XCurses_set_title(title)
-char *title;
-#endif
 /***********************************************************************/
 {
 	char buf[30];
@@ -150,11 +135,7 @@ char *title;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_refresh_scrollbar(void)
-#else
-int XCurses_refresh_scrollbar()
-#endif
 /***********************************************************************/
 {
 	char buf[30];
@@ -174,12 +155,7 @@ int XCurses_refresh_scrollbar()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_rawgetch(int delaytenths)
-#else
-int XCurses_rawgetch(delaytenths)
-int delaytenths;
-#endif
 /***********************************************************************/
 {
 	unsigned long newkey = 0;
@@ -245,11 +221,7 @@ int delaytenths;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_get_input_fd(void)
-#else
-int XCurses_get_input_fd()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCurses_get_input_fd() - called\n", XCLOGMSG));
@@ -260,11 +232,7 @@ int XCurses_get_input_fd()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool XCurses_kbhit(void)
-#else
-bool XCurses_kbhit()
-#endif
 /***********************************************************************/
 {
 	int s;
@@ -291,12 +259,7 @@ bool XCurses_kbhit()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesInstruct(int flag)
-#else
-int XCursesInstruct(flag)
-int flag;
-#endif
 /***********************************************************************/
 {
 	char buf[10];
@@ -314,12 +277,7 @@ int flag;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesInstructAndWait(int flag)
-#else
-int XCursesInstructAndWait(flag)
-int flag;
-#endif
 /***********************************************************************/
 {
 	int result;
@@ -347,13 +305,7 @@ int flag;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_transform_line(chtype *ch, int row, int start_col, int num_cols)
-#else
-int XCurses_transform_line(ch, row, start_col, num_cols)
-chtype *ch;
-int row,start_col,num_cols;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCurses_transform_line() called: row %d start_col %d num_cols %d flag %d\n",
@@ -379,11 +331,7 @@ int row,start_col,num_cols;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 static int XCursesSetupCurses(void)
-#else
-static int XCursesSetupCurses()
-#endif
 /***********************************************************************/
 {
 	char wait_buf[5];
@@ -449,14 +397,7 @@ static int XCursesSetupCurses()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesInitscr(char *display_name, int argc, char *argv[])
-#else
-int XCursesInitscr(display_name, argc,argv)
-char *display_name;
-int argc;
-char *argv[];
-#endif
 /***********************************************************************/
 {
 	int pid, rc;
@@ -531,13 +472,7 @@ char *argv[];
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_getclipboard(char **contents, long *length)
-#else
-int XCurses_getclipboard(contents, length)
-char **contents;
-long *length;
-#endif
 /***********************************************************************/
 {
 	int result = 0;
@@ -582,13 +517,7 @@ long *length;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_setclipboard(char *contents, long length)
-#else
-int XCurses_setclipboard(contents, length)
-char *contents;
-long length;
-#endif
 /***********************************************************************/
 {
 	int rc;
@@ -619,11 +548,7 @@ long length;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_clearclipboard(void)
-#else
-int XCurses_clearclipboard()
-#endif
 /***********************************************************************/
 {
 	int rc;
@@ -650,12 +575,7 @@ int XCurses_clearclipboard()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesCleanupCursesProcess(int rc)
-#else
-void XCursesCleanupCursesProcess(rc)
-int rc;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesCleanupCursesProcess() - called: %d\n",
@@ -675,13 +595,7 @@ int rc;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 static void XCursesExitCursesProcess(int rc, char *msg)
-#else
-static void XCursesExitCursesProcess(rc, msg)
-int rc;
-char *msg;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesExitCursesProcess() - called: %d %s\n",
@@ -692,11 +606,7 @@ char *msg;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesExit(void)
-#else
-void XCursesExit()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesExit() - called\n", XCLOGMSG));

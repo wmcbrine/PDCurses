@@ -23,7 +23,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.7 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -48,11 +48,7 @@ char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.7 2006/01/28 13:27:23 wmcbrine Exp $
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_get_columns(void)
-#else
-int PDC_get_columns()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_columns() - called\n"));
@@ -82,11 +78,7 @@ int PDC_get_columns()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_get_rows(void)
-#else
-int PDC_get_rows()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_rows() - called\n"));
@@ -109,11 +101,7 @@ int PDC_get_rows()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_get_font(void)
-#else
-int PDC_get_font()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_font() - called\n"));

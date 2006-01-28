@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: term.h,v 1.3 2006/01/28 13:27:23 wmcbrine Exp $ */
+/* $Id: term.h,v 1.4 2006/01/28 16:53:25 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
@@ -45,31 +45,23 @@ __declspec(dllexport) extern TERMINAL *cur_term;
 extern TERMINAL *cur_term;
 #endif
 
-#ifdef HAVE_PROTO
-# define Args(x) x
-#else
-# define Args(x) ()
-#endif
-
-int	PDC_CDECL del_curterm Args((TERMINAL *));
-int	PDC_CDECL putp Args((const char *));
-int	PDC_CDECL restartterm Args((char *, int, int *));
-TERMINAL* PDC_CDECL set_curterm Args((TERMINAL *));
-int	PDC_CDECL setterm Args((char *));
-int	PDC_CDECL setupterm Args((char *, int, int *));
-int	PDC_CDECL tgetent Args((char *, const char *));
-int	PDC_CDECL tgetflag Args((char *));
-int	PDC_CDECL tgetnum Args((char *));
-char *	PDC_CDECL tgetstr Args((char *, char **));
-char *	PDC_CDECL tgoto Args((char *, int, int));
-int	PDC_CDECL tigetflag Args((char *));
-int	PDC_CDECL tigetnum Args((char *));
-char *	PDC_CDECL tigetstr Args((char *));
-char *	PDC_CDECL tparm Args((char *,long, long, long, long, long, 
-				long, long, long, long));
-int	PDC_CDECL tputs Args((const char *, int, int (*)(int)));
-
-#undef Args
+int	PDC_CDECL del_curterm(TERMINAL *);
+int	PDC_CDECL putp(const char *);
+int	PDC_CDECL restartterm(char *, int, int *);
+TERMINAL* PDC_CDECL set_curterm(TERMINAL *);
+int	PDC_CDECL setterm(char *);
+int	PDC_CDECL setupterm(char *, int, int *);
+int	PDC_CDECL tgetent(char *, const char *);
+int	PDC_CDECL tgetflag(char *);
+int	PDC_CDECL tgetnum(char *);
+char *	PDC_CDECL tgetstr(char *, char **);
+char *	PDC_CDECL tgoto(char *, int, int);
+int	PDC_CDECL tigetflag(char *);
+int	PDC_CDECL tigetnum(char *);
+char *	PDC_CDECL tigetstr(char *);
+char *	PDC_CDECL tparm(char *,long, long, long, long, long, 
+				long, long, long, long);
+int	PDC_CDECL tputs(const char *, int, int (*)(int));
 
 #endif /* __PDCURSES_TERM_H__ */
 

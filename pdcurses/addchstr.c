@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.14 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_addchstr  = "$Id: addchstr.c,v 1.15 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -91,12 +91,7 @@ char *rcsid_addchstr  = "$Id: addchstr.c,v 1.14 2006/01/28 15:01:41 wmcbrine Exp
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   addchstr(const chtype *ch)
-#else
-int   PDC_CDECL   addchstr(ch)
-chtype *ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("addchstr() - called\n"));
@@ -105,13 +100,7 @@ chtype *ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   addchnstr(const chtype *ch, int n)
-#else
-int   PDC_CDECL   addchnstr(ch, n)
-chtype *ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("addchnstr() - called\n"));
@@ -120,13 +109,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   waddchstr(WINDOW *win, const chtype *ch)
-#else
-int   PDC_CDECL   waddchstr(win, ch)
-WINDOW *win;
-chtype *ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("waddchstr() - called: win=%x\n", win));
@@ -135,14 +118,7 @@ chtype *ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   waddchnstr(WINDOW *win, const chtype *ch, int n)
-#else
-int   PDC_CDECL   waddchnstr(win, ch, n)
-WINDOW *win;
-chtype *ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	int y, x, maxx, minx;
@@ -192,14 +168,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   mvaddchstr(int y, int x, const chtype *ch)
-#else
-int   PDC_CDECL   mvaddchstr(y, x, ch)
-int y;
-int x;
-chtype *ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvaddchstr() - called: y %d x %d\n", y, x));
@@ -211,15 +180,7 @@ chtype *ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   mvaddchnstr(int y, int x, const chtype *ch, int n)
-#else
-int   PDC_CDECL   mvaddchnstr(y, x, ch, n)
-int y;
-int x;
-chtype *ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvaddchnstr() - called: y %d x %d n %d\n", y, x, n));
@@ -231,15 +192,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   mvwaddchstr(WINDOW *win, int y, int x, const chtype *ch)
-#else
-int   PDC_CDECL   mvwaddchstr(win, y, x, ch)
-WINDOW *win;
-int y;
-int x;
-chtype *ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("waddchstr() - called:\n"));
@@ -251,17 +204,8 @@ chtype *ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   mvwaddchnstr(WINDOW *win, int y, int x,
 			       const chtype *ch, int n)
-#else
-int   PDC_CDECL   mvwaddchnstr(win, y, x, ch, n)
-WINDOW *win;
-int y;
-int x;
-chtype *ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwaddchnstr() - called: y %d x %d n %d \n", y, x, n));

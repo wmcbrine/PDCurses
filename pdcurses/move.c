@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_move  = "$Id: move.c,v 1.5 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_move  = "$Id: move.c,v 1.6 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -64,13 +64,7 @@ char *rcsid_move  = "$Id: move.c,v 1.5 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	move(int y, int x)
-#else
-int	PDC_CDECL	move(y, x)
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("move() - called: y=%d x=%d\n", y, x));
@@ -88,14 +82,7 @@ int x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wmove(WINDOW *win, int y, int x)
-#else
-int	PDC_CDECL	wmove(win, y, x)
-WINDOW *win;
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wmove() - called: y=%d x=%d\n", y, x));

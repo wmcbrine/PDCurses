@@ -27,40 +27,16 @@
 
 #include <curses.h>
 
-#if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__ 1
-#endif
-
-#ifndef Args
-# if __STDC__
-#  define Args(x) x
-# else
-#  define Args(x) ()
-# endif
-#endif
-
-#ifndef getbegyx
-#define getbegyx(w,y,x)        ( y = (w)->_begy, x = (w)->_begx )
-#endif
-#ifndef getmaxyx
-#define getmaxyx(w,y,x)        ( y = (w)->_maxy, x = (w)->_maxx )
-#endif
-
 #ifdef A_COLOR
 #define A_ATTR  (A_ATTRIBUTES ^ A_COLOR)  /* A_BLINK, A_REVERSE, A_BOLD */
 #else
 #define A_ATTR  (A_ATTRIBUTES)            /* standard UNIX attributes */
 #endif
 
-
 #define MAXSTRLEN  256
 #define KEY_ESC    0x1b		/* Escape */
 
-#if __STDC__
 typedef void (*FUNC)(void);
-#else
-typedef void (*FUNC)();
-#endif
 
 typedef struct 
 {
@@ -71,29 +47,29 @@ typedef struct
 
 /* ANSI C function prototypes: */
 
-void    clsbody    Args((void));
-int     bodylen    Args((void));
-WINDOW *bodywin    Args((void));
+void    clsbody(void);
+int     bodylen(void);
+WINDOW *bodywin(void);
 
-void    rmerror    Args((void));
-void    rmstatus   Args((void));
+void    rmerror(void);
+void    rmstatus(void);
 
-void    titlemsg   Args((char *msg));
-void    bodymsg    Args((char *msg));
-void    errormsg   Args((char *msg));
-void    statusmsg  Args((char *msg));
+void    titlemsg(char *msg);
+void    bodymsg(char *msg);
+void    errormsg(char *msg);
+void    statusmsg(char *msg);
 
-bool    keypressed Args((void));
-int     getkey     Args((void));
-int     waitforkey Args((void));
+bool    keypressed(void);
+int     getkey(void);
+int     waitforkey(void);
 
-void    DoExit     Args((void));
-void    startmenu  Args((menu *mp, char *title));
-void    domenu     Args((menu *mp));
+void    DoExit(void);
+void    startmenu(menu *mp, char *title);
+void    domenu(menu *mp);
 
-int     weditstr   Args((WINDOW *win, char *buf, int field));
-WINDOW *winputbox  Args((WINDOW *win, int nlines, int ncols));
-int     getstrings Args((char *desc[], char *buf[], int field));
+int     weditstr(WINDOW *win, char *buf, int field);
+WINDOW *winputbox(WINDOW *win, int nlines, int ncols);
+int     getstrings(char *desc[], char *buf[], int field);
 
 #define editstr(s,f)           (weditstr(stdscr,s,f))
 #define mveditstr(y,x,s,f)     (move(y,x)==ERR?ERR:editstr(s,f))

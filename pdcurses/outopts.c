@@ -40,7 +40,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_outopts = "$Id: outopts.c,v 1.9 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_outopts = "$Id: outopts.c,v 1.10 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -154,13 +154,7 @@ char *rcsid_outopts = "$Id: outopts.c,v 1.9 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	clearok(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	clearok(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("clearok() - called\n"));
@@ -174,13 +168,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	idlok(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	idlok(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("idlok() - called\n"));
@@ -194,13 +182,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	idcok(WINDOW *win, bool bf)
-#else
-void	PDC_CDECL	idcok(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("idcok() - called\n"));
@@ -210,13 +192,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	immedok(WINDOW *win, bool bf)
-#else
-void	PDC_CDECL	immedok(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("immedok() - called\n"));
@@ -226,13 +202,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	leaveok(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	leaveok(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("leaveok() - called\n"));
@@ -251,13 +221,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	setscrreg(int top, int bottom)
-#else
-int	PDC_CDECL	setscrreg(top, bottom)
-int top;
-int bottom;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("setscrreg() - called: top %d bottom %d\n", top, bottom));
@@ -266,14 +230,7 @@ int bottom;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wsetscrreg(WINDOW *win, int top, int bottom)
-#else
-int	PDC_CDECL	wsetscrreg(win, top, bottom)
-WINDOW *win;
-int top;
-int bottom;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wsetscrreg() - called: top %d bottom %d\n", top, bottom));
@@ -294,13 +251,7 @@ int bottom;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	scrollok(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	scrollok(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("scrollok() - called\n"));
@@ -314,11 +265,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	nl(void)
-#else
-int	PDC_CDECL	nl()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("nl() - called\n"));
@@ -329,11 +276,7 @@ int	PDC_CDECL	nl()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	nonl(void)
-#else
-int	PDC_CDECL	nonl()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("nonl() - called\n"));
@@ -344,12 +287,7 @@ int	PDC_CDECL	nonl()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	raw_output(bool bf)
-#else
-int	PDC_CDECL	raw_output(bf)
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("raw_output() - called\n"));

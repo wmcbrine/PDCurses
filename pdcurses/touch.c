@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_touch = "$Id: touch.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_touch = "$Id: touch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -95,12 +95,7 @@ char *rcsid_touch = "$Id: touch.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	touchwin(WINDOW *win)
-#else
-int	PDC_CDECL	touchwin(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -120,14 +115,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	touchline(WINDOW *win, int start, int count)
-#else
-int	PDC_CDECL	touchline(win, start, count)
-WINDOW *win;
-int start;
-int count;
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -149,12 +137,7 @@ int count;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	untouchwin(WINDOW *win)
-#else
-int	PDC_CDECL	untouchwin(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -174,15 +157,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wtouchln(WINDOW *win, int y, int n, int changed)
-#else
-int	PDC_CDECL	wtouchln(win, y, n, changed)
-WINDOW *win;
-int y;
-int n;
-int changed;
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -211,13 +186,7 @@ int changed;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_CDECL	is_linetouched(WINDOW *win, int line)
-#else
-bool	PDC_CDECL	is_linetouched(win, line)
-WINDOW *win;
-int line;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("is_linetouched() - called: win=%x line=%d\n", win, line));
@@ -229,12 +198,7 @@ int line;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_CDECL	is_wintouched(WINDOW *win)
-#else
-bool	PDC_CDECL	is_wintouched(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	int i;

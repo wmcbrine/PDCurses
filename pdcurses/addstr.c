@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addstr  = "$Id: addstr.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_addstr  = "$Id: addstr.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -97,12 +97,7 @@ char *rcsid_addstr  = "$Id: addstr.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	addstr(const char *str)
-#else
-int	PDC_CDECL	addstr(str)
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("addstr() - called: string=\"%s\"\n", str));
@@ -111,13 +106,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	addnstr(const char *str, int n)
-#else
-int	PDC_CDECL	addnstr(str, n)
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("addnstr() - called: string=\"%s\" n %d \n", str, n));
@@ -126,13 +115,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	waddstr(WINDOW *win, const char *str)
-#else
-int	PDC_CDECL	waddstr(win, str)
-WINDOW *win;
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("waddstr() - called: string=\"%s\"\n", str));
@@ -141,14 +124,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	waddnstr(WINDOW *win, const char *str, int n)
-#else
-int	PDC_CDECL	waddnstr(win, str, n)
-WINDOW *win;
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	int i, ic;
@@ -173,14 +149,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvaddstr(int y, int x, const char *str)
-#else
-int	PDC_CDECL	mvaddstr(y, x, str)
-int y;
-int x;
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvaddstr() - called: y %d x %d string=\"%s\"\n", y, x, str));
@@ -192,15 +161,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvaddnstr(int y, int x, const char *str, int n)
-#else
-int	PDC_CDECL	mvaddnstr(y, x, str, n)
-int y;
-int x;
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvaddnstr() - called: y %d x %d string=\"%s\" n %d \n",
@@ -213,15 +174,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwaddstr(WINDOW *win, int y, int x, const char *str)
-#else
-int	PDC_CDECL	mvwaddstr(win, y, x, str)
-WINDOW *win;
-int y;
-int x;
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwaddstr() - called: string=\"%s\"\n", str));
@@ -233,17 +186,8 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwaddnstr(WINDOW *win, int y, int x,
 				   const char *str, int n)
-#else
-int	PDC_CDECL	mvwaddnstr(win, y, x, str, n)
-WINDOW *win;
-int y;
-int x;
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwaddnstr() - called: y %d x %d string=\"%s\" n %d \n",

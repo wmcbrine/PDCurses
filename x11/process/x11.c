@@ -29,20 +29,10 @@ int visible_cursor = 0;
 int windowEntered = 1;
 static char *XCursesProgramName;
 
-#ifdef HAVE_PROTO
 extern void say(const char *);
-#else
-extern void say();
-#endif
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesExitXCursesProcess(int rc, int sig, char *msg)
-#else
-void XCursesExitXCursesProcess(rc, sig, msg)
-int rc, sig;
-char *msg;
-#endif
 /***********************************************************************/
 {
 	if (rc || sig)
@@ -75,12 +65,7 @@ char *msg;
 /* This function redraws the entire screen. */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesDisplayScreen(bool highlight)
-#else
-void XCursesDisplayScreen(highlight)
-bool highlight;
-#endif
 /***********************************************************************/
 {
 	int row;
@@ -118,11 +103,7 @@ bool highlight;
 /* This function draws those portions of the screen that have changed. */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesRefreshScreen(void)
-#else
-int XCursesRefreshScreen()
-#endif
 /***********************************************************************/
 {
 	int row, start_col, num_cols;
@@ -162,15 +143,8 @@ int XCursesRefreshScreen()
 }
 
 /***********************************************************************/ 
-#ifdef HAVE_PROTO 
 void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 				      XtInputId *id) 
-#else 
-void XCursesProcessRequestsFromCurses(client_data, fid, id) 
-XtPointer client_data; 
-int *fid; 
-XtInputId *id; 
-#endif 
 /***********************************************************************/ 
 { 
 	int s, idx;
@@ -498,14 +472,7 @@ XtInputId *id;
 } 
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesSetupX(char *display_name, int argc, char *argv[])
-#else
-int XCursesSetupX(display_name, argc, argv)
-char *display_name;
-int arc;
-char *argv[];
-#endif
 /***********************************************************************/
 {
 	static char *myargv[] = {"PDCurses", NULL};
@@ -941,12 +908,7 @@ char *argv[];
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 RETSIGTYPE XCursesSignalHandler(int signo)
-#else
-RETSIGTYPE XCursesSignalHandler(signo)
-int signo;
-#endif
 /***********************************************************************/
 {
 	char buf[10];
@@ -996,22 +958,10 @@ int signo;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 					     Atom *selection, Atom *type,
 					     XtPointer value,
 					     unsigned long *length, int *format)
-#else
-void XCursesRequestorCallbackForGetSelection(w, data, selection, type, 
-					     value, length, format)
-Widget w;
-XtPointer data;
-Atom *selection;
-Atom *type;
-XtPointer value;
-unsigned long *length;
-int *format;
-#endif
 /***********************************************************************/
 {
 	int rc;
@@ -1053,16 +1003,8 @@ int *format;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesStructureNotify(Widget w, XtPointer client_data, XEvent *event,
 			    Boolean *continue_to_dispatch)
-#else
-void XCursesStructureNotify(w, client_data, event, continue_to_dispatch)
-Widget w;
-XtPointer client_data;
-XEvent *event;
-Boolean *continue_to_dispatch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesStructureNotify called\n", XCLOGMSG));

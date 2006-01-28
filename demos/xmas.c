@@ -99,39 +99,27 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_xmas = "$Id: xmas.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_xmas = "$Id: xmas.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
 #include <signal.h>
 
-#if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__ 1
-#endif
-
-#ifndef Args
-# if __STDC__
-#  define Args(x) x
-# else
-#  define Args(x) ()
-# endif
-#endif
-
-void boxit Args((void));
-void seas Args((void));
-void greet Args((void));
-void fromwho Args((void));
-void del_msg Args((void));
-void tree Args((void));
-void balls Args((void));
-void star Args((void));
-void strng1 Args((void));
-void strng2 Args((void));
-void strng3 Args((void));
-void strng4 Args((void));
-void strng5 Args((void));
-void blinkit Args((void));
-void reindeer Args((void));
+void boxit(void);
+void seas(void);
+void greet(void);
+void fromwho(void);
+void del_msg(void);
+void tree(void);
+void balls(void);
+void star(void);
+void strng1(void);
+void strng2(void);
+void strng3(void);
+void strng4(void);
+void strng5(void);
+void blinkit(void);
+void reindeer(void);
 
 #define FROMWHO "Mark Hessling - (M.Hessling@qut.edu.au)"
 
@@ -144,13 +132,7 @@ WINDOW *treescrn, *treescrn2, *treescrn3, *treescrn4, *treescrn5,
 	*bigdeer2, *bigdeer3, *bigdeer4, *lookdeer0, *lookdeer1,
 	*lookdeer2, *lookdeer3, *lookdeer4, *w_holiday, *w_del_msg;
 
-#if __STDC__
 int main(int argc, char **argv)
-#else
-int main(argc, argv)
-int argc;
-char **argv;
-#endif
 {
 	int loopy;
 	chtype noseattr;
@@ -652,7 +634,7 @@ char **argv;
 	return 0;
 }
 
-void boxit Args((void))
+void boxit(void)
 {
 	int x = 0;
 
@@ -679,7 +661,7 @@ void boxit Args((void))
 	}
 }
 
-void seas Args((void))
+void seas(void)
 {
 	mvaddch(4, 1, 'S');
 	mvaddch(6, 1, 'E');
@@ -691,7 +673,7 @@ void seas Args((void))
 	mvaddch(18, 1, 'S');
 }
 
-void greet Args((void))
+void greet(void)
 {
 	mvaddch(3, 5, 'G');
 	mvaddch(5, 5, 'R');
@@ -704,17 +686,17 @@ void greet Args((void))
 	mvaddch(19, 5, 'S');
 }
 
-void fromwho Args((void))
+void fromwho(void)
 {
 	mvaddstr(21, 13, FROMWHO);
 }
 
-void del_msg Args((void))
+void del_msg(void)
 {
 	refresh();
 }
 
-void tree Args((void))
+void tree(void)
 {
 #ifdef A_COLOR
 	if (has_colors())
@@ -771,7 +753,7 @@ void tree Args((void))
 	wrefresh(w_del_msg);
 }
 
-void balls Args((void))
+void balls(void)
 {
 	chtype ball1, ball2, ball3, ball4, ball5, ball6;
 
@@ -818,7 +800,7 @@ void balls Args((void))
 	wrefresh(w_del_msg);
 }
 
-void star Args((void))
+void star(void)
 {
 	mvwaddch(treescrn2, 0, 12, (chtype) '*' | A_STANDOUT);
 
@@ -826,7 +808,7 @@ void star Args((void))
 	wrefresh(w_del_msg);
 }
 
-void strng1 Args((void))
+void strng1(void)
 {
 #ifdef A_COLOR
 	if (has_colors())
@@ -843,7 +825,7 @@ void strng1 Args((void))
 	wrefresh(w_del_msg);
 }
 
-void strng2 Args((void))
+void strng2(void)
 {
 #ifdef A_COLOR
 	if (has_colors())
@@ -863,7 +845,7 @@ void strng2 Args((void))
 	wrefresh(w_del_msg);
 }
 
-void strng3 Args((void))
+void strng3(void)
 {
 #ifdef A_COLOR
 	if (has_colors())
@@ -885,7 +867,7 @@ void strng3 Args((void))
 	wrefresh(w_del_msg);
 }
 
-void strng4 Args((void))
+void strng4(void)
 {
 #ifdef A_COLOR
 	if (has_colors())
@@ -912,7 +894,7 @@ void strng4 Args((void))
 	wrefresh(w_del_msg);
 }
 
-void strng5 Args((void))
+void strng5(void)
 {
 #ifdef A_COLOR
 	if (has_colors())
@@ -937,7 +919,7 @@ void strng5 Args((void))
 	wrefresh(w_del_msg);
 }
 
-void blinkit Args((void))
+void blinkit(void)
 {
 	static int cycle;
 
@@ -990,7 +972,7 @@ void blinkit Args((void))
 	++cycle;
 }
 
-void reindeer Args((void))
+void reindeer(void)
 {
 	int looper;
 

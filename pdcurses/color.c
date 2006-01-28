@@ -39,14 +39,10 @@
 #ifdef PDCDEBUG
 #endif
 
-#ifdef HAVE_PROTO
 static void PDC_init_pair(short, short, short);
-#else
-static void PDC_init_pair();
-#endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.23 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.24 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -181,12 +177,7 @@ unsigned char atrtab[MAX_ATRTAB] =
 unsigned char colorset[PDC_COLOR_PAIRS];
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype	PDC_CDECL	COLOR_PAIR(int n)
-#else
-chtype	PDC_CDECL	COLOR_PAIR(n)
-int n;
-#endif
 /***********************************************************************/
 {
 #ifdef CHTYPE_LONG
@@ -197,12 +188,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PAIR_NUMBER(chtype value)
-#else
-int	PDC_CDECL	PAIR_NUMBER(value)
-chtype value;
-#endif
 /***********************************************************************/
 {
 #ifdef CHTYPE_LONG
@@ -213,11 +199,7 @@ chtype value;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	start_color(void)
-#else
-int	PDC_CDECL	start_color()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("start_color() - called\n"));
@@ -238,15 +220,8 @@ int	PDC_CDECL	start_color()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	init_pair(short colorpair, short foreground,
 				  short background)
-#else
-int	PDC_CDECL	init_pair(colorpair, foreground, background)
-short colorpair;
-short foreground;
-short background;
-#endif
 /***********************************************************************/
 {
 #if defined(CHTYPE_LONG) && !defined(XCURSES)
@@ -294,11 +269,7 @@ short background;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_CDECL	has_colors(void)
-#else
-bool	PDC_CDECL	has_colors()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("has_colors() - called\n"));
@@ -307,16 +278,8 @@ bool	PDC_CDECL	has_colors()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	init_color(short color, short red, short green,
 				   short blue)
-#else
-int	PDC_CDECL	init_color(color, red, green, blue)
-short color;
-short red;
-short green;
-short blue;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("init_color() - called\n"));
@@ -325,16 +288,8 @@ short blue;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	color_content(short color, short *red, short *green,
 				      short *blue)
-#else
-int	PDC_CDECL	color_content(color, red, green, blue)
-short color;
-short *red;
-short *green;
-short *blue;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("color_content() - called\n"));
@@ -354,11 +309,7 @@ short *blue;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_CDECL	can_change_color(void)
-#else
-bool	PDC_CDECL	can_change_color()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("can_change_color() - called\n"));
@@ -367,15 +318,8 @@ bool	PDC_CDECL	can_change_color()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	pair_content(short colorpair, short *foreground,
 				     short *background)
-#else
-int	PDC_CDECL	pair_content(colorpair, foreground, background)
-short colorpair;
-short *foreground;
-short *background;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("pair_content() - called\n"));
@@ -391,12 +335,7 @@ short *background;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_set_line_color(short color)
-#else
-int	PDC_CDECL	PDC_set_line_color(color)
-short color;
-#endif
 /***********************************************************************/
 {
 	if (color >= COLORS || color < 0)
@@ -409,11 +348,7 @@ short color;
 
 #if defined(CHTYPE_LONG)
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_init_atrtab(void)
-#else
-void	PDC_init_atrtab()
-#endif
 /***********************************************************************/
 {
 	int i, orig_fore, orig_back;
@@ -436,14 +371,7 @@ void	PDC_init_atrtab()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 static	void PDC_init_pair(short pairnum, short fg, short bg)
-#else
-static	void PDC_init_pair(pairnum, fg, bg)
-short pairnum;
-short fg;
-short bg;
-#endif
 /***********************************************************************/
 {
 	unsigned char att, temp_bg;

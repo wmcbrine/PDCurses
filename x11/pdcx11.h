@@ -332,7 +332,6 @@ extern Bool vertical_cursor;
 
 typedef RETSIGTYPE (*signal_handler)();
 
-#ifdef HAVE_PROTO
 void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event, 
 			Boolean *continue_to_dispatch);
 void XCursesExpose(Widget w, XtPointer client_data, XEvent *event, 
@@ -347,17 +346,3 @@ void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data);
 void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data);
-#else
-void XCursesNonmaskable();
-void XCursesExpose();
-signal_handler XCursesSetSignal();
-void XCursesGetIcon();
-int XCursesRefreshScrollbar();
-int XCursesSendKeyToCurses();
-void XCursesButton();
-void XCursesCursorBlink();
-void Scroll_up_down();
-void Scroll_left_right();
-void Thumb_up_down();
-void Thumb_left_right();
-#endif

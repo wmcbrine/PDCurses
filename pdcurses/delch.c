@@ -45,7 +45,7 @@
 
 
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_delch  = "$Id: delch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -91,11 +91,7 @@ char *rcsid_delch  = "$Id: delch.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	delch(void)
-#else
-int	PDC_CDECL	delch()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("delch() - called\n"));
@@ -104,12 +100,7 @@ int	PDC_CDECL	delch()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wdelch(WINDOW *win)
-#else
-int	PDC_CDECL	wdelch(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	int y, x, maxx;
@@ -145,13 +136,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvdelch(int y, int x)
-#else
-int	PDC_CDECL	mvdelch(y, x)
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvdelch() - called\n"));
@@ -163,14 +148,7 @@ int x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwdelch(WINDOW *win, int y, int x)
-#else
-int	PDC_CDECL	mvwdelch(win, y, x)
-WINDOW *win;
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwdelch() - called\n"));

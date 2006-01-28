@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.19 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_util  = "$Id: util.c,v 1.20 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -113,12 +113,7 @@ char *rcsid_util  = "$Id: util.c,v 1.19 2006/01/28 15:01:41 wmcbrine Exp $";
 static char strbuf[3] = {0, 0, 0};
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
-char*	PDC_CDECL	unctrl(chtype c)
-#else
-char*	PDC_CDECL	unctrl(c)
-chtype c;
-#endif
+char *	PDC_CDECL	unctrl(chtype c)
 /***********************************************************************/
 {
 	chtype ic;
@@ -210,12 +205,7 @@ static char *key_name[] = {
 };
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char *	PDC_CDECL	keyname(int key)
-#else
-char *	PDC_CDECL	keyname(key)
-int key;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("keyname() - called: key %d\n", key));
@@ -230,12 +220,7 @@ int key;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool 	PDC_CDECL 	has_key(int key)
-#else
-bool	PDC_CDECL	has_key(key)
-int key;
-#endif
 {
 	PDC_LOG(("has_key() - called: key %d\n",key));
 
@@ -246,36 +231,21 @@ int key;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	filter(void)
-#else
-void	PDC_CDECL	filter()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("filter() - called\n"));
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	use_env(bool x)
-#else
-void	PDC_CDECL	use_env(x)
-bool x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("use_env() - called: x %d\n", x));
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	putwin(WINDOW *win, FILE *filep)
-#else
-int	PDC_CDECL	putwin(win, filep)
-WINDOW *win;
-FILE *filep;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("putwin() - called\n"));
@@ -284,12 +254,7 @@ FILE *filep;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW*	PDC_CDECL	getwin(FILE *filep)
-#else
-WINDOW*	PDC_CDECL	getwin(filep)
-FILE *filep;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getwin() - called\n"));
@@ -298,12 +263,7 @@ FILE *filep;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	delay_output(int ms)
-#else
-int	PDC_CDECL	delay_output(ms)
-int ms;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("delay_output() - called: ms %d\n", ms));
@@ -312,11 +272,7 @@ int ms;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	flushinp(void)
-#else
-int	PDC_CDECL	flushinp()
-#endif
 /***********************************************************************/
 {
 	extern int c_pindex;		/* putter index */
@@ -355,11 +311,7 @@ int	PDC_CDECL	flushinp()
 #undef traceoff
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	traceon(void)
-#else
-void	PDC_CDECL	traceon()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("traceon() - called\n"));
@@ -368,11 +320,7 @@ void	PDC_CDECL	traceon()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	traceoff(void)
-#else
-void	PDC_CDECL	traceoff()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("traceoff() - called\n"));

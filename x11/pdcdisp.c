@@ -29,7 +29,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.8 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -55,12 +55,7 @@ char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.8 2006/01/28 13:27:23 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_clr_update(WINDOW *s)
-#else
-int PDC_clr_update(s)
-WINDOW *s;
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -106,11 +101,7 @@ WINDOW *s;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_cursor_on(void)
-#else
-int PDC_cursor_on()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_cursor_on() - called\n"));
@@ -137,11 +128,7 @@ int PDC_cursor_on()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_cursor_off(void)
-#else
-int PDC_cursor_off()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_cursor_off() - called\n"));
@@ -172,13 +159,7 @@ int PDC_cursor_off()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_gotoxy(int row, int col)
-#else
-int PDC_gotoxy(row, col)
-int row;
-int col;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_gotoxy() - called: row %d col %d\n", row, col));
@@ -213,12 +194,7 @@ int col;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool PDC_transform_line(int lineno)
-#else
-bool PDC_transform_line(lineno)
-int lineno;
-#endif
 /***********************************************************************/
 {
 	chtype *dstp;

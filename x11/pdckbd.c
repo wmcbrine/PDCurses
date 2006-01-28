@@ -23,7 +23,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.12 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.13 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -48,11 +48,7 @@ char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.12 2006/01/28 13:27:23 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 unsigned long PDC_get_input_fd(void)
-#else
-unsigned long PDC_get_input_fd()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
@@ -82,11 +78,7 @@ unsigned long PDC_get_input_fd()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool PDC_check_bios_key(void)
-#else
-bool PDC_check_bios_key()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
@@ -116,11 +108,7 @@ bool PDC_check_bios_key()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool PDC_get_ctrl_break(void)
-#else
-bool PDC_get_ctrl_break()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
@@ -156,11 +144,7 @@ bool PDC_get_ctrl_break()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_rawgetch(void)
-#else
-int PDC_rawgetch()
-#endif
 /***********************************************************************/
 {
 	extern WINDOW *_getch_win_;
@@ -200,12 +184,7 @@ int PDC_rawgetch()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_set_ctrl_break(bool setting)
-#else
-int PDC_set_ctrl_break(setting)
-bool setting;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
@@ -238,11 +217,7 @@ bool setting;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 unsigned long PDC_get_key_modifiers(void)
-#else
-unsigned long PDC_get_key_modifiers()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));

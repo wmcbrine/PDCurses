@@ -23,7 +23,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.5 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.6 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 
@@ -52,14 +52,7 @@ char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.5 2006/01/28 13:27:23 wmcbrine Exp $
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_print(int cmd, int byte, int port)
-#else
-int PDC_print(cmd, byte, port)
-int cmd;
-int byte;
-int port;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_print() - called\n"));

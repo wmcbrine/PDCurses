@@ -47,7 +47,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window = "$Id: window.c,v 1.12 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_window = "$Id: window.c,v 1.13 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -159,24 +159,12 @@ char *rcsid_window = "$Id: window.c,v 1.12 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW*	PDC_CDECL	newwin(int nlines, int ncols, int begy, int begx)
-#else
-WINDOW*	PDC_CDECL	newwin(nlines, ncols, begy, begx)
-int nlines;
-int ncols;
-int begy;
-int begx;
-#endif
 /***********************************************************************/
 {
-#ifdef HAVE_PROTO
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
-#else
-	extern void *(*callc)();
-	extern void  (*fre)();
-#endif
+
 	WINDOW *win;
 	chtype *ptr;
 	int i, j;
@@ -224,19 +212,11 @@ int begx;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	delwin(WINDOW *win)
-#else
-int	PDC_CDECL	delwin(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
-#ifdef HAVE_PROTO
 	extern void (*fre)(void*);
-#else
-	extern void (*fre)();
-#endif
+
 	int i;
 
 	PDC_LOG(("delwin() - called\n"));
@@ -263,14 +243,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwin(WINDOW *win, int y, int x)
-#else
-int	PDC_CDECL	mvwin(win, y, x)
-WINDOW *win;
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwin() - called\n"));
@@ -288,17 +261,8 @@ int x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW*	PDC_CDECL	subwin(WINDOW *orig, int nlines, int ncols,
 			       int begin_y, int begin_x)
-#else
-WINDOW*	PDC_CDECL	subwin(orig, nlines, ncols, begin_y, begin_x)
-WINDOW *orig;
-int nlines;
-int ncols;
-int begin_y;
-int begin_x;
-#endif
 /***********************************************************************/
 {
 	WINDOW *win;
@@ -348,17 +312,8 @@ int begin_x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW*	PDC_CDECL	derwin(WINDOW *orig, int nlines, int ncols,
 			       int begin_y, int begin_x)
-#else
-WINDOW*	PDC_CDECL	derwin(orig, nlines, ncols, begin_y, begin_x)
-WINDOW *orig;
-int nlines;
-int ncols;
-int begin_y;
-int begin_x;
-#endif
 /***********************************************************************/
 {
 	return subwin(orig, nlines, ncols, begin_y + orig->_begy,
@@ -366,14 +321,7 @@ int begin_x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvderwin(WINDOW* win, int par_y, int par_x)
-#else
-int	PDC_CDECL	mvderwin(win, par_y, par_x)
-WINDOW *win;
-int par_y;
-int par_x;
-#endif
 /***********************************************************************/
 {
 	int i, j;
@@ -401,21 +349,12 @@ int par_x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW*	PDC_CDECL	dupwin(WINDOW *win)
-#else
-WINDOW*	PDC_CDECL	dupwin(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
-#ifdef HAVE_PROTO
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
-#else
-	extern void *(*callc)();
-	extern void  (*fre)();
-#endif
+
 	WINDOW *new;
 	chtype *ptr, *ptr1;
 	int nlines, ncols, begy, begx, i, j;
@@ -503,23 +442,12 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW *	PDC_CDECL	resize_window(WINDOW *win, int lins, int cols)
-#else
-WINDOW *	PDC_CDECL	resize_window(win, lins, cols)
-WINDOW *win;
-int lins;
-int cols;
-#endif
 /***********************************************************************/
 {
-#ifdef HAVE_PROTO
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
-#else
-	extern void *(*callc)();
-	extern void  (*fre)();
-#endif
+
 	WINDOW *new;
 	int i, j, save_cury, save_curx;
 	int new_begy = 0, new_begx = 0;
@@ -609,12 +537,7 @@ int cols;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	wsyncup(WINDOW *win)
-#else
-void	PDC_CDECL	wsyncup(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	WINDOW *tmp;
@@ -626,13 +549,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	syncok(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	syncok(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("syncok() - called\n"));
@@ -646,12 +563,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	wcursyncup(WINDOW *win)
-#else
-void	PDC_CDECL	wcursyncup(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	WINDOW *tmp;
@@ -664,12 +576,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	wsyncdown(WINDOW *win)
-#else
-void	PDC_CDECL	wsyncdown(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	WINDOW *tmp;

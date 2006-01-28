@@ -36,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.7 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_deleteln  = "$Id: deleteln.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -89,11 +89,7 @@ char *rcsid_deleteln  = "$Id: deleteln.c,v 1.7 2006/01/28 15:01:41 wmcbrine Exp 
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	deleteln(void)
-#else
-int	PDC_CDECL	deleteln()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("deleteln() - called\n"));
@@ -102,12 +98,7 @@ int	PDC_CDECL	deleteln()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wdeleteln(WINDOW *win)
-#else
-int	PDC_CDECL	wdeleteln(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	chtype blank;
@@ -150,12 +141,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	insdelln(int n)
-#else
-int	PDC_CDECL	insdelln(n)
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("insdelln() - called\n"));
@@ -164,13 +150,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	winsdelln(WINDOW *win, int n)
-#else
-int	PDC_CDECL	winsdelln(win, n)
-WINDOW *win;
-int n;
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -198,12 +178,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	winsertln(WINDOW *win)
-#else
-int	PDC_CDECL	winsertln(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	chtype blank;
@@ -243,11 +218,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	insertln(void)
-#else
-int	PDC_CDECL	insertln()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("insertln() - called\n"));
@@ -256,13 +227,7 @@ int	PDC_CDECL	insertln()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwinsertln(WINDOW *win, int y, int x)
-#else
-int	PDC_CDECL	mvwinsertln(win, y, x)
-WINDOW *win;
-int y,x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwinsertln() - called\n"));

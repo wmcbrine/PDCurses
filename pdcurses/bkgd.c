@@ -30,7 +30,7 @@
 #undef	wbkgdset
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd = "$Id: bkgd.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_bkgd = "$Id: bkgd.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -93,12 +93,7 @@ char *rcsid_bkgd = "$Id: bkgd.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	bkgd(chtype ch)
-#else
-int	PDC_CDECL	bkgd(ch)
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("bkgd() - called\n"));
@@ -107,12 +102,7 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	bkgdset(chtype ch)
-#else
-void	PDC_CDECL	bkgdset(ch)
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("bkgdset() - called\n"));
@@ -121,25 +111,14 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype  PDC_CDECL       getbkgd(WINDOW *win)
-#else
-chtype  PDC_CDECL       getbkgd(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
         return win ? win->_bkgd : (chtype)ERR;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wbkgd(WINDOW *win, chtype ch)
-#else
-int	PDC_CDECL	wbkgd(win, ch)
-WINDOW *win;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	int x, y;
@@ -228,13 +207,7 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	wbkgdset(WINDOW *win, chtype ch)
-#else
-void	PDC_CDECL	wbkgdset(win, ch)
-WINDOW *win;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	chtype bkgdattr;

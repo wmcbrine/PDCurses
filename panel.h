@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: panel.h,v 1.9 2006/01/28 13:27:23 wmcbrine Exp $ */
+/* $Id: panel.h,v 1.10 2006/01/28 16:53:25 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 			     Panels for PDCurses
@@ -47,37 +47,25 @@ typedef struct panel
 	int wendx;
 	struct panel *below;
 	struct panel *above;
-#ifdef HAVE_PROTO
 	const void *user;
-#else
-	void *user;
-#endif
 	struct panelobs *obscure;
 } PANEL;
 
-#ifdef HAVE_PROTO
-# define Args(x) x
-#else
-# define Args(x) ()
-#endif
-
-WINDOW *panel_window Args((const PANEL *pan));
-void update_panels Args((void));
-int hide_panel Args((PANEL *pan));
-int show_panel Args((PANEL *pan));
-int del_panel Args((PANEL *pan));
-int top_panel Args((PANEL *pan));
-int bottom_panel Args((PANEL *pan));
-PANEL *new_panel Args((WINDOW *win));
-PANEL *panel_above Args((const PANEL *pan));
-PANEL *panel_below Args((const PANEL *pan));
-int panel_hidden Args((const PANEL *pan));
-int set_panel_userptr Args((PANEL *pan, const void *uptr));
-const void *panel_userptr Args((const PANEL *pan));
-int move_panel Args((PANEL *pan, int starty, int startx));
-int replace_panel Args((PANEL *pan, WINDOW *win));
-
-#undef Args
+WINDOW *panel_window(const PANEL *pan);
+void update_panels(void);
+int hide_panel(PANEL *pan);
+int show_panel(PANEL *pan);
+int del_panel(PANEL *pan);
+int top_panel(PANEL *pan);
+int bottom_panel(PANEL *pan);
+PANEL *new_panel(WINDOW *win);
+PANEL *panel_above(const PANEL *pan);
+PANEL *panel_below(const PANEL *pan);
+int panel_hidden(const PANEL *pan);
+int set_panel_userptr(PANEL *pan, const void *uptr);
+const void *panel_userptr(const PANEL *pan);
+int move_panel(PANEL *pan, int starty, int startx);
+int replace_panel(PANEL *pan, WINDOW *win);
 
 #endif /* __PDCURSES_PANEL_H__ */
 

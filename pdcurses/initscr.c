@@ -47,7 +47,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.24 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.25 2006/01/28 16:53:26 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -85,49 +85,26 @@ struct cttyset c_save_tty = {0};
 struct cttyset c_save_trm = {0};
 
 #if EMALLOC
-# ifdef HAVE_PROTO
-extern void *emalloc(size_t);
-extern void *ecalloc(size_t, size_t);
-extern void efree(void *);
-# else
-extern void *emalloc();			/* user's emalloc(size) */
-extern void *ecalloc();			/* user's ecalloc(num, size) */
-extern void efree();			/* user's efree(ptr) */
-# endif
+extern void *emalloc(size_t);		/* user's emalloc(size) */
+extern void *ecalloc(size_t, size_t);	/* user's ecalloc(num, size) */
+extern void efree(void *);		/* user's efree(ptr) */
 #endif
 
 #if !defined(XCURSES)
-# ifdef HAVE_PROTO
 extern void *malloc(size_t);		/* runtime's malloc(size) */
 extern void *calloc(size_t, size_t);	/* runtime's calloc(num, size) */
 extern void free(void *);		/* runtime's free(ptr) */
-# else
-extern void *malloc();			/* runtime's malloc(size) */
-extern void *calloc();			/* runtime's calloc(num, size) */
-extern void free();			/* runtime's free(ptr) */
-# endif
 #endif
 
-#ifdef HAVE_PROTO
 void* (*mallc)(size_t);			/* ptr to some malloc(size) */
 void* (*callc)(size_t, size_t);		/* ptr to some ecalloc(num, size) */
 void  (*fre)(void *);			/* ptr to some free(ptr) */
 void* (*reallc)(void *, size_t);	/* ptr to some realloc(ptr, size) */
-#else
-void* (*mallc)();			/* ptr to some malloc(size) */
-void* (*callc)();			/* ptr to some ecalloc(num, size) */
-void  (*fre)();				/* ptr to some free(ptr) */
-void* (*reallc)();			/* ptr to some realloc(ptr, size) */
-#endif
 
 extern RIPPEDOFFLINE linesripped[5];
 extern char linesrippedoff;
 
-#ifdef HAVE_PROTO
 extern void (*PDC_initial_slk)(void);
-#else
-extern void (*PDC_initial_slk)();
-#endif
 
 /*man-start*********************************************************************
 
@@ -218,13 +195,7 @@ extern void (*PDC_initial_slk)();
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW*  PDC_CDECL   Xinitscr(int argc, char *argv[])
-#else
-WINDOW*  PDC_CDECL   Xinitscr(argc, argv)
-int argc;
-char *argv[];
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -360,11 +331,7 @@ char *argv[];
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW*  PDC_CDECL   initscr(void)
-#else
-WINDOW*  PDC_CDECL   initscr()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("initscr() - called\n"));
@@ -373,11 +340,7 @@ WINDOW*  PDC_CDECL   initscr()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL endwin(void)
-#else
-int PDC_CDECL endwin()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("endwin() - called\n"));
@@ -418,11 +381,7 @@ int PDC_CDECL endwin()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_CDECL   isendwin(void)
-#else
-bool	PDC_CDECL   isendwin()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("isendwin() - called\n"));
@@ -431,14 +390,7 @@ bool	PDC_CDECL   isendwin()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 SCREEN* PDC_CDECL   newterm(char *type, FILE *outfd, FILE *infd)
-#else
-SCREEN* PDC_CDECL   newterm(type, outfd, infd)
-char *type;
-FILE *outfd;
-FILE *infd;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("newterm() - called\n"));
@@ -447,12 +399,7 @@ FILE *infd;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 SCREEN* PDC_CDECL   set_term(SCREEN *new)
-#else
-SCREEN* PDC_CDECL   set_term(new)
-SCREEN *new;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("set_term() - called\n"));
@@ -463,12 +410,7 @@ SCREEN *new;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void    PDC_CDECL   delscreen(SCREEN *sp)
-#else
-void    PDC_CDECL   delscreen(sp)
-SCREEN *sp;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("delscreen() - called\n"));
@@ -492,12 +434,7 @@ SCREEN *sp;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   resize_term(int nlines, int ncols)
-#else
-int   PDC_CDECL   resize_term(nlines, ncols)
-int nlines, ncols;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("resize_term() - called: nlines %d\n",nlines));
@@ -545,11 +482,7 @@ int nlines, ncols;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool  PDC_CDECL   is_termresized(void)
-#else
-bool  PDC_CDECL   is_termresized()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("is_termresized() - called\n"));

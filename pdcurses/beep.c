@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_beep  = "$Id: beep.c,v 1.7 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_beep  = "$Id: beep.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -66,11 +66,7 @@ char *rcsid_beep  = "$Id: beep.c,v 1.7 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	beep(void)
-#else
-int	PDC_CDECL	beep()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("beep() - called\n"));
@@ -87,11 +83,7 @@ int	PDC_CDECL	beep()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	flash(void)
-#else
-int	PDC_CDECL	flash()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("flash() - called\n"));

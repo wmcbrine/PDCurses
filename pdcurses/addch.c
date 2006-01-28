@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addch  = "$Id: addch.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_addch  = "$Id: addch.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -133,12 +133,7 @@ char *rcsid_addch  = "$Id: addch.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	addch(const chtype ch)
-#else
-int	PDC_CDECL	addch(ch)
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("addch() - called: ch=%x\n", ch));
@@ -147,13 +142,7 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	waddch(WINDOW *win, const chtype ch)
-#else
-int	PDC_CDECL	waddch(win, ch)
-WINDOW *win;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("waddch() - called: win=%x ch=%x\n", win, ch));
@@ -162,14 +151,7 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvaddch(int y, int x, const chtype ch)
-#else
-int	PDC_CDECL	mvaddch(y, x, ch)
-int y;
-int x;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvaddch() - called: y=%d x=%d ch=%x\n", y, x, ch));
@@ -181,15 +163,7 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwaddch(WINDOW *win, int y, int x, const chtype ch)
-#else
-int	PDC_CDECL	mvwaddch(win, y, x, ch)
-WINDOW *win;
-int y;
-int x;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwaddch() - called: win=%x y=%d x=%d ch=%d\n",
@@ -202,12 +176,7 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	echochar(const chtype ch)
-#else
-int	PDC_CDECL	echochar(ch)
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("echochar() - called: ch=%x\n", ch));
@@ -219,13 +188,7 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wechochar(WINDOW *win, const chtype ch)
-#else
-int	PDC_CDECL	wechochar(win, ch)
-WINDOW *win;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wechochar() - called: win=%x ch=%x\n", win, ch));

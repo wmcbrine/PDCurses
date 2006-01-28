@@ -39,25 +39,13 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo = "$Id: newdemo.c,v 1.18 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_newdemo = "$Id: newdemo.c,v 1.19 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
-#if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__ 1
-#endif
-
-#ifndef Args
-# if __STDC__
-#  define Args(x) x
-# else
-#  define Args(x) ()
-# endif
-#endif
-
-int WaitForUser Args((void));
-int SubWinTest Args((WINDOW *));
-int BouncingBalls Args((WINDOW *));
-void trap Args((int));
+int WaitForUser(void);
+int SubWinTest(WINDOW *);
+int BouncingBalls(WINDOW *);
+void trap(int);
 
 /* An ASCII map of Australia */
 
@@ -91,7 +79,7 @@ char *messages[] =
 	NULL
 };
 
-int WaitForUser Args((void))
+int WaitForUser(void)
 {
 	chtype ch;
 
@@ -107,12 +95,7 @@ int WaitForUser Args((void))
 	return (ch == '\033') ? ch : 0;
 }
 
-#if __STDC__
 int SubWinTest(WINDOW *win)
-#else
-int SubWinTest(win)
-WINDOW *win;
-#endif
 {
 	WINDOW *swin1, *swin2, *swin3;
 	int w, h, sw, sh, bx, by;
@@ -157,12 +140,7 @@ WINDOW *win;
 	return 0;
 }
 
-#if __STDC__
 int BouncingBalls(WINDOW *win)
-#else
-int BouncingBalls(win)
-WINDOW *win;
-#endif
 {
 	chtype c1, c2, c3, ball1, ball2, ball3;
 	int w, h, x1, y1, xd1, yd1, x2, y2, xd2, yd2, x3, y3, xd3, yd3, c;
@@ -250,12 +228,7 @@ WINDOW *win;
 
 /* Trap interrupt */
 
-#if __STDC__
 void trap(int sig)
-#else
-void trap(sig)
-int sig;
-#endif
 {
 	if (sig == SIGINT)
 	{
@@ -267,13 +240,7 @@ int sig;
 	}
 }
 
-#if __STDC__
 int main(int argc, char **argv)
-#else
-int main(argc, argv)
-int argc;
-char **argv;
-#endif
 {
 	WINDOW *win;
 	chtype save[80], ch;

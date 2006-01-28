@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_mouse = "$Id: mouse.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -107,12 +107,7 @@ char *rcsid_mouse = "$Id: mouse.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mouse_set(unsigned long mbe)
-#else
-int	PDC_CDECL	mouse_set(mbe)
-unsigned long mbe;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mouse_set() - called: event %x\n", mbe));
@@ -123,12 +118,7 @@ unsigned long mbe;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mouse_on(unsigned long mbe)
-#else
-int	PDC_CDECL	mouse_on(mbe)
-unsigned long mbe;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mouse_on() - called: event %x\n", mbe));
@@ -139,12 +129,7 @@ unsigned long mbe;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mouse_off(unsigned long mbe)
-#else
-int	PDC_CDECL	mouse_off(mbe)
-unsigned long mbe;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mouse_off() - called: event %x\n", mbe));
@@ -155,12 +140,7 @@ unsigned long mbe;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	map_button(unsigned long button)
-#else
-int	PDC_CDECL	map_button(button)
-unsigned long button;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("map_button() - called: button %x\n", button));
@@ -172,11 +152,7 @@ unsigned long button;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	request_mouse_pos(void)
-#else
-int	PDC_CDECL	request_mouse_pos()
-#endif
 /***********************************************************************/
 {
 	extern MOUSE_STATUS Trapped_Mouse_status;
@@ -190,13 +166,7 @@ int	PDC_CDECL	request_mouse_pos()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	wmouse_position(WINDOW *win, int *y, int *x)
-#else
-void	PDC_CDECL	wmouse_position(win, y, x)
-WINDOW *win;
-int *y,*x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wmouse_position() - called\n"));
@@ -224,11 +194,7 @@ int *y,*x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 unsigned long	PDC_CDECL	getmouse(void)
-#else
-unsigned long	PDC_CDECL	getmouse()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getmouse() - called\n"));
@@ -237,11 +203,7 @@ unsigned long	PDC_CDECL	getmouse()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 unsigned long	PDC_CDECL	getbmap(void)
-#else
-unsigned long	PDC_CDECL	getbmap()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getbmap() - called\n"));

@@ -32,7 +32,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scroll = "$Id: scroll.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_scroll = "$Id: scroll.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -82,12 +82,7 @@ char *rcsid_scroll = "$Id: scroll.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL scroll(WINDOW *win)
-#else
-int PDC_CDECL scroll(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("scroll() - called\n"));
@@ -96,13 +91,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int  PDC_CDECL wscrl(WINDOW *win, int n)
-#else
-int  PDC_CDECL wscrl(win, n)
-WINDOW *win;
-int n;
-#endif
 /***********************************************************************/
 {
 	int i, l;
@@ -180,12 +169,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL scrl(int n)
-#else
-int PDC_CDECL scrl(n)
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("scrl() - called\n"));

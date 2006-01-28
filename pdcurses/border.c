@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_border  = "$Id: border.c,v 1.11 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_border  = "$Id: border.c,v 1.12 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -125,13 +125,7 @@ char *rcsid_border  = "$Id: border.c,v 1.11 2006/01/28 15:01:41 wmcbrine Exp $";
    it. Attributes set explicitly in ch take precedence. */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype PDC_attr_passthru(WINDOW *win, chtype ch)
-#else
-chtype PDC_attr_passthru(win, ch)
-WINDOW *win;
-chtype ch;
-#endif
 /***********************************************************************/
 {
 	chtype attr, bktmp;
@@ -169,22 +163,9 @@ chtype ch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wborder(WINDOW *win, chtype ls, chtype rs,
 				chtype ts, chtype bs, chtype tl,
 				chtype tr, chtype bl, chtype br)
-#else
-int	PDC_CDECL	wborder(win, ls, rs, ts, bs, tl, tr, bl, br)
-WINDOW *win;
-chtype ls;
-chtype rs;
-chtype ts;
-chtype bs;
-chtype tl;
-chtype tr;
-chtype bl;
-chtype br;
-#endif
 /***********************************************************************/
 {
 	int ymax, xmax;
@@ -247,20 +228,8 @@ chtype br;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	border(chtype ls, chtype rs, chtype ts, chtype bs,
 			       chtype tl, chtype tr, chtype bl, chtype br)
-#else
-int	PDC_CDECL	border(ls, rs, ts, bs, tl, tr, bl, br)
-chtype ls;
-chtype rs;
-chtype ts;
-chtype bs;
-chtype tl;
-chtype tr;
-chtype bl;
-chtype br;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("border() - called\n"));
@@ -269,14 +238,7 @@ chtype br;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	box(WINDOW *win, chtype verch, chtype horch)
-#else
-int	PDC_CDECL	box(win, verch, horch)
-WINDOW *win;
-chtype verch;
-chtype horch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("box() - called\n"));
@@ -288,13 +250,7 @@ chtype horch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	hline(chtype ch, int n)
-#else
-int	PDC_CDECL	hline(ch, n)
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("hline() - called\n"));
@@ -303,13 +259,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	vline(chtype ch, int n)
-#else
-int	PDC_CDECL	vline(ch, n)
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("vline() - called\n"));
@@ -318,14 +268,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	whline(WINDOW *win, chtype ch, int n)
-#else
-int	PDC_CDECL	whline(win, ch, n)
-WINDOW *win;
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	int startpos, endpos;
@@ -366,14 +309,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	wvline(WINDOW *win, chtype ch, int n)
-#else
-int	PDC_CDECL	wvline(win, ch, n)
-WINDOW *win;
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	int endpos;
@@ -412,15 +348,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvhline(int y, int x, chtype ch, int n)
-#else
-int	PDC_CDECL	mvhline(y, x, ch, n)
-int y;
-int x;
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvhline() - called\n"));
@@ -432,15 +360,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvvline(int y, int x, chtype ch, int n)
-#else
-int	PDC_CDECL	mvvline(y, x, ch, n)
-int y;
-int x;
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvvline() - called\n"));
@@ -452,16 +372,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
-#else
-int	PDC_CDECL	mvwhline(win, y, x, ch, n)
-WINDOW *win;
-int y;
-int x;
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwhline() - called\n"));
@@ -473,16 +384,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
-#else
-int	PDC_CDECL	mvwvline(win, y, x, ch, n)
-WINDOW *win;
-int y;
-int x;
-chtype ch;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwvline() - called\n"));
@@ -497,16 +399,8 @@ int n;
    Used only as the core routine for the next three functions. */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_lineattr(WINDOW *win, int n, bool state,
 				     chtype attr)
-#else
-int	PDC_CDECL	PDC_lineattr(win, n, state, attr)
-WINDOW *win;
-int n;
-bool state;
-chtype attr;
-#endif
 /***********************************************************************/
 {
 	int endpos;
@@ -546,14 +440,7 @@ chtype attr;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_wunderline(WINDOW *win, int n, bool state)
-#else
-int	PDC_CDECL	PDC_wunderline(win, n, state)
-WINDOW *win;
-int n;
-bool state;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_wunderline() - called\n"));
@@ -562,14 +449,7 @@ bool state;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_wleftline(WINDOW *win, int n, bool state)
-#else
-int	PDC_CDECL	PDC_wleftline(win, n, state)
-WINDOW *win;
-int n;
-bool state;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_wleftline() - called\n"));
@@ -578,14 +458,7 @@ bool state;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	PDC_wrightline(WINDOW *win, int n, bool state)
-#else
-int	PDC_CDECL	PDC_wrightline(win, n, state)
-WINDOW *win;
-int n;
-bool state;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_wrightline() - called\n"));

@@ -43,7 +43,7 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.8 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)
@@ -54,28 +54,16 @@ char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.8 2006/01/28 13:27:23 wmcbrine Exp $";
 
 /**************************** strings entry box ***************************/
 
-void address Args((void))
+void address(void)
 {
-#ifdef __STDC__
 	char *fieldname[6] = 
 	{
 		"Name", "Street", "City", "State", "Country", (char *)0
 	};
-#else
-	char *fieldname[6];
-#endif
+
 	char *fieldbuf[5];
 	WINDOW *wbody = bodywin();
 	int i, field = 50;
-
-#ifndef __STDC__
-	fieldname[0] = "Name";
-	fieldname[1] = "Street";
-	fieldname[2] = "City";
-	fieldname[3] = "State";
-	fieldname[4] = "Country";
-	fieldname[5] = (char *)0;
-#endif
 
 	for (i = 0; i < 5; i++)
 		fieldbuf[i] = (char *) calloc(field + 1, sizeof(char));
@@ -95,14 +83,7 @@ void address Args((void))
 
 /**************************** string entry box ****************************/
 
-#if __STDC__
 char *getfname(char *desc, char *fname, int field)
-#else
-char *getfname(desc, fname, field)
-char *desc;
-char *fname;
-int field;
-#endif
 {
 	char *fieldname[2];
 	char *fieldbuf[1];
@@ -117,12 +98,7 @@ int field;
 
 /**************************** a very simple file browser ******************/
 
-#if __STDC__
 void showfile(char *fname)
-#else
-void showfile(fname)
-char *fname;
-#endif
 {
 	int i, bh = bodylen();
 	FILE *fp;
@@ -168,10 +144,10 @@ char *fname;
 
 /***************************** forward declarations ***********************/
 
-void sub0 Args((void)), sub1 Args((void)), sub2 Args((void)), sub3 Args((void));
-void func1 Args((void)), func2 Args((void));
-void subfunc1 Args((void)), subfunc2 Args((void));
-void subsub Args((void));
+void sub0(void), sub1(void), sub2(void), sub3(void);
+void func1(void), func2(void);
+void subfunc1(void), subfunc2(void);
+void subsub(void);
 
 /***************************** menus initialization ***********************/
 
@@ -213,35 +189,35 @@ menu SubMenu3[] =
 
 /***************************** main menu functions ************************/
 
-void sub0 Args((void))
+void sub0(void)
 {
 	domenu(SubMenu0);
 }
 
-void sub1 Args((void))
+void sub1(void)
 {
 	domenu(SubMenu1);
 }
 
-void sub2 Args((void))
+void sub2(void)
 {
 	domenu(SubMenu2);
 }
 
-void sub3 Args((void))
+void sub3(void)
 {
 	domenu(SubMenu3);
 }
 
 /***************************** submenu1 functions *************************/
 
-void func1 Args((void))
+void func1(void)
 {
 	beep();
 	bodymsg("One beep! ");
 }
 
-void func2 Args((void))
+void func2(void)
 {
 	beep();
 	bodymsg("Two beeps! ");
@@ -250,12 +226,12 @@ void func2 Args((void))
 
 /***************************** submenu2 functions *************************/
 
-void subfunc1 Args((void))
+void subfunc1(void)
 {
 	showfile(FNAME);
 }
 
-void subfunc2 Args((void))
+void subfunc2(void)
 {
 	char fname[MAXSTRLEN];
 
@@ -266,14 +242,14 @@ void subfunc2 Args((void))
 
 /***************************** submenu3 functions *************************/
 
-void subsub Args((void))
+void subsub(void)
 {
 	domenu(SubMenu2);
 }
 
 /***************************** start main menu  ***************************/
 
-int main Args((void))
+int main(void)
 {
 	startmenu(MainMenu,
 		"TUI - 'textual user interface' demonstration program");

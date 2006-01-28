@@ -35,12 +35,12 @@
 #include <time.h>
 #include "tui.h"
 
-void statusmsg Args((char *));
-int waitforkey Args((void));
-void rmerror Args((void));
+void statusmsg(char *);
+int waitforkey(void);
+void rmerror(void);
 
 #ifdef PDCDEBUG
-char *rcsid_tui  = "$Id: tui.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_tui  = "$Id: tui.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -86,19 +86,13 @@ static bool quit = FALSE;
 static bool incurses = FALSE;
 
 #ifndef PDCURSES
-static char wordchar Args((void))
+static char wordchar(void)
 {
 	return 0x17;	/* ^W */ 
 }
 #endif
 
-#if __STDC__
 static char *padstr(char *s, int length)
-#else
-static char *padstr(s, length)
-char *s;
-int length;
-#endif
 {
 	static char buf[MAXSTRLEN];
 	char fmt[10];
@@ -109,24 +103,15 @@ int length;
 	return buf;
 }
 
-#if __STDC__
 static char *prepad(char *s, int length)
-#else
-static char *prepad(s, length)
-char *s;
-int length;
-#endif
 {
 	int i;
 	char *p = s;
 
 	if (length > 0)
 	{
-#if __STDC__
 		memmove((void *)(s + length), (const void *)s, strlen(s) + 1);
-#else
-		memmove(s + length, s, strlen(s) + 1);
-#endif
+
 		for (i = 0; i < length; i++)
 			*p++ = ' ';
 	}
@@ -134,19 +119,13 @@ int length;
 	return s;
 }
 
-#if __STDC__
 static void rmline(WINDOW *win, int nr)   /* keeps box lines intact */
-#else
-static void rmline(win, nr)
-WINDOW *win;
-int nr;
-#endif
 {
 	mvwaddstr(win, nr, 1, padstr(" ", bw - 2));
 	wrefresh(win);
 }
 
-static void initcolor Args((void))
+static void initcolor(void)
 {
 #ifdef A_COLOR
 	if (has_colors())
@@ -166,13 +145,7 @@ static void initcolor Args((void))
 #endif
 }
 
-#if __STDC__
 static void setcolor(WINDOW *win, chtype color)
-#else
-static void setcolor(win, color)
-WINDOW *win;
-chtype color;
-#endif
 {
 	chtype attr = color & A_ATTR;  /* extract Bold, Reverse, Blink bits */
 
@@ -185,14 +158,7 @@ chtype color;
 #endif
 }
 
-#if __STDC__
 static void colorbox(WINDOW *win, chtype color, int hasbox)
-#else
-static void colorbox(win, color, hasbox)
-WINDOW *win;
-chtype color;
-int hasbox;
-#endif
 {
 	int maxy, maxx;
 	chtype attr = color & A_ATTR;  /* extract Bold, Reverse, Blink bits */
@@ -218,7 +184,7 @@ int hasbox;
 	wrefresh(win);
 }
 
-static void idle Args((void))
+static void idle(void)
 {
 	char buf[MAXSTRLEN];
 	time_t t;
@@ -236,14 +202,7 @@ static void idle Args((void))
 	wrefresh(wtitl); 
 }
 
-#if __STDC__
 static void menudim(menu *mp, int *lines, int *columns)
-#else
-static void menudim(mp, lines, columns)
-menu *mp;
-int *lines;
-int *columns;
-#endif
 {
 	int n, l, mmax = 0;
 
@@ -254,34 +213,19 @@ int *columns;
 	*columns = mmax + 2;
 }
 
-#if __STDC__
 static void setmenupos(int y, int x)
-#else
-static void setmenupos(y, x)
-int y, x;
-#endif
 {
 	nexty = y;
 	nextx = x;
 }
 
-#if __STDC__
 static void getmenupos(int *y, int *x)
-#else
-static void getmenupos(y, x)
-int *y, *x;
-#endif
 {
 	*y = nexty;
 	*x = nextx;
 }
 
-#if __STDC__
 static int hotkey(char *s)
-#else
-static int hotkey(s)
-char *s;
-#endif
 {
 	int c0 = *s;	/* if no upper case found, return first char */
 
@@ -292,13 +236,7 @@ char *s;
 	return *s ? *s : c0;
 }
 
-#if __STDC__
 static void repaintmenu(WINDOW *wmenu, menu *mp)
-#else
-static void repaintmenu(wmenu, mp)
-WINDOW *wmenu;
-menu *mp;
-#endif
 {
 	int i;
 	menu *p = mp;
@@ -310,13 +248,7 @@ menu *mp;
 	wrefresh(wmenu);
 }
 
-#if __STDC__
 static void repaintmainmenu(int width, menu *mp)
-#else
-static void repaintmainmenu(width, mp)
-int width;
-menu *mp;
-#endif
 {
 	int i;
 	menu *p = mp;
@@ -328,7 +260,7 @@ menu *mp;
 	touchwin (wmain); wrefresh (wmain);
 }
 
-static void mainhelp Args((void))
+static void mainhelp(void)
 {
 #ifdef ALT_X
 	statusmsg("Use arrow keys and Enter to select (Alt-X to quit)");
@@ -337,33 +269,28 @@ static void mainhelp Args((void))
 #endif
 }
 
-static void hidecursor Args((void))
+static void hidecursor(void)
 {
 #if defined(PDCURSES) || defined(SYSV)
 	curs_set(0);
 #endif
 }
 
-static void normalcursor Args((void))
+static void normalcursor(void)
 {
 #if defined(PDCURSES) || defined(SYSV)
 	curs_set(1);
 #endif
 }
 
-static void insertcursor Args((void))
+static void insertcursor(void)
 {
 #if defined(PDCURSES) || defined(SYSV)
 	curs_set(2);
 #endif
 }
 
-#if __STDC__
 static void mainmenu(menu *mp)
-#else
-static void mainmenu(mp)
-menu *mp;
-#endif
 {
 	int nitems, barlen, old = -1, cur = 0, c, cur0;
 
@@ -460,7 +387,7 @@ menu *mp;
 	wrefresh(wbody);
 }
 
-static void cleanup Args((void))	/* cleanup curses settings */
+static void cleanup(void)	/* cleanup curses settings */
 {
 	if (incurses)
 	{
@@ -480,13 +407,13 @@ static void cleanup Args((void))	/* cleanup curses settings */
 
 /******************************* EXTERNAL **********************************/
 
-void clsbody Args((void))
+void clsbody(void)
 {
 	werase(wbody);
 	wmove(wbody, 0, 0);
 }
 
-int bodylen Args((void))
+int bodylen(void)
 {
 	int maxy, maxx;
 
@@ -494,74 +421,54 @@ int bodylen Args((void))
 	return maxy;
 }
 
-WINDOW *bodywin Args((void))
+WINDOW *bodywin(void)
 {
 	return wbody;
 }
 
-void rmerror Args((void))
+void rmerror(void)
 {
 	rmline(wstat, 0);
 }
 
-void rmstatus Args((void))
+void rmstatus(void)
 {
 	rmline(wstat, 1);
 }
 
-#if __STDC__
 void titlemsg(char *msg)
-#else
-void titlemsg(msg)
-char *msg;
-#endif
 {
 	mvwaddstr(wtitl, 0, 2, padstr(msg, bw - 3));
 	wrefresh(wtitl);
 }
 
-#if __STDC__
 void bodymsg(char *msg)
-#else
-void bodymsg(msg)
-char *msg;
-#endif
 {
 	waddstr(wbody, msg);
 	wrefresh(wbody);
 }
 
-#if __STDC__
 void errormsg(char *msg)
-#else
-void errormsg(msg)
-char *msg;
-#endif
 {
 	beep();
 	mvwaddstr(wstat, 0, 2, padstr(msg, bw - 3));
 	wrefresh(wstat);
 }
 
-#if __STDC__
 void statusmsg(char *msg)
-#else
-void statusmsg(msg)
-char *msg;
-#endif
 {
 	mvwaddstr(wstat, 1, 2, padstr(msg, bw - 3));
 	wrefresh(wstat);
 }
 
-bool keypressed Args((void))
+bool keypressed(void)
 {
 	ch = wgetch(wbody);
 
 	return ch != ERR;
 }
 
-int getkey Args((void))
+int getkey(void)
 {
 	int c = ch;
 
@@ -572,23 +479,18 @@ int getkey Args((void))
 	return c;
 }
 
-int waitforkey Args((void))
+int waitforkey(void)
 {
 	do idle(); while (!keypressed());
 	return getkey();
 }
 
-void DoExit Args((void))	/* terminate program */
+void DoExit(void)	/* terminate program */
 {
 	quit = TRUE;
 }
 
-#if __STDC__
 void domenu(menu *mp)
-#else
-void domenu(mp)
-menu *mp;
-#endif
 {
 	int y, x, nitems, barlen, mheight, mw, old = -1, cur = 0, cur0;
 	bool stop = FALSE;
@@ -684,13 +586,7 @@ menu *mp;
 	wrefresh(wbody);
 }
 
-#if __STDC__
 void startmenu(menu *mp, char *mtitle)
-#else
-void startmenu(mp, mtitle)
-menu *mp;
-char *mtitle;
-#endif
 {
 	initscr();
 	incurses = TRUE;
@@ -758,15 +654,7 @@ char *mtitle;
 
 **man-end**********************************************************************/
 
-
-#if __STDC__
 static void repainteditbox(WINDOW *win, int x, char *buf)
-#else
-static void repainteditbox(win, x, buf)
-WINDOW *win;
-int x;
-char *buf;
-#endif
 {
 	int maxy, maxx;
 
@@ -777,14 +665,7 @@ char *buf;
 	wrefresh(win); 
 }
 
-#if __STDC__
 int weditstr(WINDOW *win, char *buf, int field)
-#else
-int weditstr(win, buf, field)
-WINDOW *win;
-char *buf;
-int field;
-#endif
 {
 	char org[MAXSTRLEN], *tp, *bp = buf;
 	bool defdisp = TRUE, stop = FALSE, insert = FALSE;
@@ -854,13 +735,9 @@ int field;
 			{
 				if (bp > buf)
 				{
-#if __STDC__
 					memmove((void *)(bp - 1),
 						(const void *)bp,
 						strlen(bp) + 1);
-#else
-					memmove(bp-1, bp, strlen(bp) + 1);
-#endif
 					bp--;
 				}
 			}
@@ -877,12 +754,9 @@ int field;
 					bp--;
 				while ((bp > buf) && (*(bp - 1) != ' ')) 
 					bp--;
-#if __STDC__
+
 				memmove((void *)bp, (const void *)tp, 
 					strlen(tp) + 1);
-#else
-				memmove(bp, tp, strlen(tp) + 1);
-#endif
 			}
 			else if (isprint(c))
 			{
@@ -897,14 +771,10 @@ int field;
 				{
 					if ((int)strlen(buf) < field - 1)
 					{
-#if __STDC__
 						memmove((void *)(bp + 1), 
 							(const void *)bp,
 							strlen(bp) + 1);
-#else
-						memmove(bp + 1, bp, 
-							strlen(bp) + 1);
-#endif
+
 						*bp++ = c;
 					}
 				}
@@ -928,13 +798,7 @@ int field;
 	return c;
 }
 
-#if __STDC__
 WINDOW *winputbox(WINDOW *win, int nlines, int ncols)
-#else
-WINDOW *winputbox(win, nlines, ncols)
-WINDOW *win;
-int nlines, ncols;
-#endif
 {
 	WINDOW *winp;
 	int cury, curx, begy, begx;
@@ -948,14 +812,7 @@ int nlines, ncols;
 	return winp;
 }
 
-#if __STDC__
 int getstrings(char *desc[], char *buf[], int field)
-#else
-int getstrings(desc, buf, field)
-char *desc[];
-char *buf[];
-int field;
-#endif
 {
 	WINDOW *winput;
 	int oldy, oldx, maxy, maxx, nlines, ncols, i, n, l, mmax = 0;

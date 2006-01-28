@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.11 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_inopts  = "$Id: inopts.c,v 1.12 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -193,11 +193,7 @@ char *rcsid_inopts  = "$Id: inopts.c,v 1.11 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	cbreak(void)
-#else
-int	PDC_CDECL	cbreak()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("cbreak() - called\n"));
@@ -208,11 +204,7 @@ int	PDC_CDECL	cbreak()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	nocbreak(void)
-#else
-int	PDC_CDECL	nocbreak()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("nocbreak() - called\n"));
@@ -224,11 +216,7 @@ int	PDC_CDECL	nocbreak()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	echo(void)
-#else
-int	PDC_CDECL	echo()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("echo() - called\n"));
@@ -239,11 +227,7 @@ int	PDC_CDECL	echo()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	noecho(void)
-#else
-int	PDC_CDECL	noecho()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("noecho() - called\n"));
@@ -254,12 +238,7 @@ int	PDC_CDECL	noecho()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	halfdelay(int tenths)
-#else
-int	PDC_CDECL	halfdelay(tenths)
-int tenths;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("halfdelay() - called\n"));
@@ -273,13 +252,7 @@ int tenths;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	intrflush(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	intrflush(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	int y, maxy;
@@ -298,13 +271,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	keypad(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	keypad(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("keypad() - called\n"));
@@ -318,13 +285,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	meta(WINDOW *win, bool bf)
-#else
-int	PDC_CDECL	meta(win, bf)
-WINDOW *win;
-bool bf;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("meta() - called\n"));
@@ -335,13 +296,7 @@ bool bf;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	nodelay(WINDOW *win, bool flag)
-#else
-int	PDC_CDECL	nodelay(win, flag)
-WINDOW *win;
-bool flag;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("nodelay() - called\n"));
@@ -355,13 +310,7 @@ bool flag;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	notimeout(WINDOW *win, bool flag)
-#else
-int	PDC_CDECL	notimeout(win, flag)
-WINDOW *win;
-bool flag;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("notimeout() - called\n"));
@@ -370,11 +319,7 @@ bool flag;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	raw(void)
-#else
-int	PDC_CDECL	raw()
-#endif
 /***********************************************************************/
 {
 #ifdef OS2
@@ -402,11 +347,7 @@ int	PDC_CDECL	raw()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	noraw(void)
-#else
-int	PDC_CDECL	noraw()
-#endif
 /***********************************************************************/
 {
 #ifdef OS2
@@ -433,34 +374,21 @@ int	PDC_CDECL	noraw()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	noqiflush(void)
-#else
-void	PDC_CDECL	noqiflush()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("noqiflush() - called\n"));
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	qiflush(void)
-#else
-void	PDC_CDECL	qiflush()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("qiflush() - called\n"));
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	typeahead(int fildes)
-#else
-int	PDC_CDECL	typeahead(fildes)
-int fildes;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("typeahead() - called\n"));
@@ -471,13 +399,7 @@ int fildes;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	wtimeout(WINDOW *win, int delay)
-#else
-void	PDC_CDECL	wtimeout(win, delay)
-WINDOW *win;
-int delay;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wtimeout() - called\n"));
@@ -513,12 +435,7 @@ int delay;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_CDECL	timeout(int delay)
-#else
-void	PDC_CDECL	timeout(delay)
-int delay;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("timeout() - called\n"));

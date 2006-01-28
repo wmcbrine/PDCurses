@@ -31,7 +31,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.21 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.22 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -53,29 +53,15 @@ char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.21 2006/01/28 15:01:41 wmcbrine Exp $"
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void *PDC_memmove(void *s1, const void *s2, size_t n)
-#else
-void *PDC_memmove(s1, s2, n)
-void *s1;
-void *s2;
-size_t n;
-#endif
 /***********************************************************************/
 {
 	char *dd;
-#ifdef HAVE_PROTO
 	const char *ss;
-#else
-	char *ss;
-#endif
 
 	dd = (char *) s1;
-#ifdef HAVE_PROTO
 	ss = (const char *) s2;
-#else
-	ss = (char *) s2;
-#endif
+
 	if (dd > ss && dd < ss + n)
 	{
 		dd += n;
@@ -90,11 +76,7 @@ size_t n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void PDC_beep(void)
-#else
-void PDC_beep()
-#endif
 /***********************************************************************/
 {
 #if defined(XCURSES)
@@ -622,11 +604,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool PDC_breakout(void)
-#else
-bool PDC_breakout()
-#endif
 /***********************************************************************/
 {
 	extern int c_pindex;	/* putter index */

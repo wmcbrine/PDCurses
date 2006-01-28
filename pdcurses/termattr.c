@@ -41,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_termattr = "$Id: termattr.c,v 1.13 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_termattr = "$Id: termattr.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -138,11 +138,7 @@ static char _display[128];
 static char _shrtnme[14];
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	baudrate(void)
-#else
-int	PDC_CDECL	baudrate()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("baudrate() - called\n"));
@@ -151,11 +147,7 @@ int	PDC_CDECL	baudrate()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char	PDC_CDECL	erasechar(void)
-#else
-char	PDC_CDECL	erasechar()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("erasechar() - called\n"));
@@ -164,11 +156,7 @@ char	PDC_CDECL	erasechar()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_CDECL	has_ic(void)
-#else
-bool	PDC_CDECL	has_ic()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("has_ic() - called\n"));
@@ -177,11 +165,7 @@ bool	PDC_CDECL	has_ic()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_CDECL	has_il(void)
-#else
-bool	PDC_CDECL	has_il()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("has_il() - called\n"));
@@ -190,11 +174,7 @@ bool	PDC_CDECL	has_il()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char	PDC_CDECL	killchar(void)
-#else
-char	PDC_CDECL	killchar()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("killchar() - called\n"));
@@ -203,11 +183,7 @@ char	PDC_CDECL	killchar()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char*	PDC_CDECL	longname(void)
-#else
-char*	PDC_CDECL	longname()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("longname() - called\n"));
@@ -298,11 +274,7 @@ char*	PDC_CDECL	longname()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype	PDC_CDECL	termattrs(void)
-#else
-chtype	PDC_CDECL	termattrs()
-#endif
 /***********************************************************************/
 {
 	chtype temp = (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | 
@@ -319,11 +291,7 @@ chtype	PDC_CDECL	termattrs()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char*	PDC_CDECL	termname(void)
-#else
-char*	PDC_CDECL	termname()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("termname() - called\n"));
@@ -404,11 +372,7 @@ char*	PDC_CDECL	termname()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char	PDC_CDECL	wordchar(void)
-#else
-char	PDC_CDECL	wordchar()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wordchar() - called\n"));

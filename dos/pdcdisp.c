@@ -29,7 +29,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.14 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.15 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -69,12 +69,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_clr_update(WINDOW *s)
-#else
-int	PDC_clr_update(s)
-WINDOW *s;
-#endif
 /***********************************************************************/
 {
 	int i, j;
@@ -186,11 +181,7 @@ WINDOW *s;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_cursor_on(void)
-#else
-int	PDC_cursor_on()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_cursor_on() - called\n"));
@@ -243,11 +234,7 @@ int	PDC_cursor_on()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_cursor_off(void)
-#else
-int	PDC_cursor_off()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_cursor_off() - called\n"));
@@ -292,12 +279,7 @@ int	PDC_cursor_off()
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_fix_cursor(int flag)
-#else
-int	PDC_fix_cursor(flag)
-int flag;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_fix_cursor() - called\n"));
@@ -362,13 +344,7 @@ int flag;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_gotoxy(int row, int col)
-#else
-int	PDC_gotoxy(row, col)
-int row;
-int col;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_gotoxy() - called: row %d col %d\n", row, col));
@@ -404,13 +380,7 @@ int col;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_putc(chtype character, chtype color)
-#else
-int	PDC_putc(character, color)
-chtype character;
-chtype color;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_putc() - called: char=%c attrib=0x%x color=0x%x\n",
@@ -455,13 +425,7 @@ chtype color;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_putctty(chtype character, chtype color)
-#else
-int	PDC_putctty(character, color)
-chtype character;
-chtype color;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_putctty() - called\n"));
@@ -498,18 +462,8 @@ chtype color;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines,
 		   chtype attr)
-#else
-int	PDC_scroll(urow, lcol, lrow, rcol, nlines, attr)
-int urow;
-int lcol;
-int lrow;
-int rcol;
-int nlines;
-chtype attr;
-#endif
 /***********************************************************************/
 {
 	int phys_attr = chtype_attr(attr);
@@ -562,12 +516,7 @@ chtype attr;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 bool	PDC_transform_line(int lineno)
-#else
-bool	PDC_transform_line(lineno)
-int lineno;
-#endif
 /***********************************************************************/
 {
 	chtype *srcp;

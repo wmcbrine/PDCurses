@@ -45,14 +45,7 @@ fd_set writefds;
 struct timeval socket_timeout;
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int write_socket(int sock_num, char *buf, int len)
-#else
-int write_socket(sock_num, buf, len)
-int sock_num;
-char *buf;
-int len;
-#endif
 /***********************************************************************/
 {
 	int start = 0, rc;
@@ -77,14 +70,7 @@ int len;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int read_socket(int sock_num, char *buf, int len)
-#else
-int read_socket(sock_num, buf, len)
-int sock_num;
-char *buf;
-int len;
-#endif
 /***********************************************************************/
 {
 	int start = 0, length = len, rc;

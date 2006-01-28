@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inch  = "$Id: inch.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_inch  = "$Id: inch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -72,12 +72,7 @@ char *rcsid_inch  = "$Id: inch.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype	PDC_CDECL	winch(WINDOW *win)
-#else
-chtype	PDC_CDECL	winch(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("winch() - called\n"));
@@ -89,11 +84,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype	PDC_CDECL	inch(void)
-#else
-chtype	PDC_CDECL	inch()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("inch() - called\n"));
@@ -102,13 +93,7 @@ chtype	PDC_CDECL	inch()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype	PDC_CDECL	mvinch(int y, int x)
-#else
-chtype	PDC_CDECL	mvinch(y, x)
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvinch() - called\n"));
@@ -120,14 +105,7 @@ int x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 chtype	PDC_CDECL	mvwinch(WINDOW *win, int y, int x)
-#else
-chtype	PDC_CDECL	mvwinch(win, y, x)
-WINDOW *win;
-int y;
-int x;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwinch() - called\n"));

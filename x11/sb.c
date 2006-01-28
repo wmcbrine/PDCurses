@@ -35,7 +35,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_sb = "$Id: sb.c,v 1.6 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_sb = "$Id: sb.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -73,11 +73,7 @@ bool sb_started = FALSE;
    This must be called before initscr(). */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	sb_init(void)
-#else
-int	PDC_CDECL	sb_init()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("sb_init() - called\n"));
@@ -97,12 +93,7 @@ int	PDC_CDECL	sb_init()
    cur = current column in total */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	sb_set_horz(int total, int viewport, int cur)
-#else
-int	PDC_CDECL	sb_set_horz(total, viewport, cur)
-int total, viewport, cur;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("sb_set_horz() - called: total %d viewport %d cur %d\n",
@@ -125,12 +116,7 @@ int total, viewport, cur;
    cur = current column in total */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	sb_set_vert(int total, int viewport, int cur)
-#else
-int	PDC_CDECL	sb_set_vert(total, viewport, cur)
-int total, viewport, cur;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("sb_set_vert() - called: total %d viewport %d cur %d\n",
@@ -153,12 +139,7 @@ int total, viewport, cur;
    cur = current line in total */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	sb_get_horz(int *total, int *viewport, int *cur)
-#else
-int	PDC_CDECL	sb_get_horz(total, viewport, cur)
-int *total, *viewport, *cur;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("sb_get_horz() - called\n"));
@@ -183,12 +164,7 @@ int *total, *viewport, *cur;
    cur = current line in total */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	sb_get_vert(int *total, int *viewport, int *cur)
-#else
-int	PDC_CDECL	sb_get_vert(total, viewport, cur)
-int *total, *viewport, *cur;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("sb_get_vert() - called\n"));
@@ -209,11 +185,7 @@ int *total, *viewport, *cur;
 /* sb_refresh() - Used to draw the scrollbars. */
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	sb_refresh(void)
-#else
-int	PDC_CDECL	sb_refresh()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("sb_refresh() - called\n"));

@@ -25,7 +25,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest = "$Id: ptest.c,v 1.13 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_ptest = "$Id: ptest.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -42,34 +42,17 @@ char *mod[] =
 	"test ", "TEST ", "(**) ", "*()* ", "<--> ", "LAST "
 };
 
-#if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__ 1
-#endif
-
-#ifndef Args
-# if __STDC__
-#  define Args(x) x
-# else
-#  define Args(x) ()
-# endif
-#endif
-
-PANEL *mkpanel Args((int, int, int, int));
-void fill_panel Args((PANEL *));
-void pflush Args((void));
-void wait_a_while Args((long));
-void saywhat Args((const char *));
-void rmpanel Args((PANEL *));
+PANEL *mkpanel(int, int, int, int);
+void fill_panel(PANEL *);
+void pflush(void);
+void wait_a_while(long);
+void saywhat(const char *);
+void rmpanel(PANEL *);
 
 /*+-------------------------------------------------------------------------
 	wait_a_while(msec)
 --------------------------------------------------------------------------*/
-#if __STDC__
 void wait_a_while(long msec)
-#else
-void wait_a_while(msec)
-long msec;
-#endif
 {
 	/* timeout(msec); */
 	getch();
@@ -78,12 +61,7 @@ long msec;
 /*+-------------------------------------------------------------------------
 	saywhat(text)
 --------------------------------------------------------------------------*/
-#if __STDC__
 void saywhat(const char *text)
-#else
-void saywhat(text)
-char *text;
-#endif
 {
 	wmove(stdscr, LINES - 1, 0);
 	wprintw(stdscr, "%-20.20s", text);
@@ -92,15 +70,7 @@ char *text;
 /*+-------------------------------------------------------------------------
   mkpanel(rows, cols, tly, tlx) - alloc a win and panel and associate them
 --------------------------------------------------------------------------*/
-#if __STDC__
 PANEL *mkpanel(int rows, int cols, int tly, int tlx)
-#else
-PANEL *mkpanel(rows, cols, tly, tlx)
-int rows;
-int cols;
-int tly;
-int tlx;
-#endif
 {
 	WINDOW *win = newwin(rows, cols, tly, tlx);
 	PANEL *pan = (PANEL *)0;
@@ -119,12 +89,7 @@ int tlx;
 /*+-------------------------------------------------------------------------
 	rmpanel(pan)
 --------------------------------------------------------------------------*/
-#if __STDC__
 void rmpanel(PANEL *pan)
-#else
-void rmpanel(pan)
-PANEL *pan;
-#endif
 {
 	WINDOW *win = pan->win;
 
@@ -135,7 +100,7 @@ PANEL *pan;
 /*+-------------------------------------------------------------------------
 	pflush()
 --------------------------------------------------------------------------*/
-void pflush Args((void))
+void pflush(void)
 {
 	update_panels();
 	doupdate();
@@ -144,12 +109,7 @@ void pflush Args((void))
 /*+-------------------------------------------------------------------------
 	fill_panel(win)
 --------------------------------------------------------------------------*/
-#if __STDC__
 void fill_panel(PANEL *pan)
-#else
-void fill_panel(pan)
-PANEL *pan;
-#endif
 {
 	WINDOW *win = pan->win;
 	char num = *((char *)pan->user + 1);
@@ -171,13 +131,7 @@ PANEL *pan;
 /*+-------------------------------------------------------------------------
 	main(argc,argv)
 --------------------------------------------------------------------------*/
-#if __STDC__
 int main(int argc, char **argv)
-#else
-int main(argc, argv)
-int argc;
-char **argv;
-#endif
 {
 	int itmp, y,x;
 

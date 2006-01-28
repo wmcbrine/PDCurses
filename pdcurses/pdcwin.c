@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.16 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.17 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -61,26 +61,10 @@ char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.16 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w,
 		 int src_tr, int src_tc, int src_br, int src_bc,
 		 int dst_tr, int dst_tc, int dst_br, int dst_bc,
 		 bool overlay)
-#else
-int PDC_copy_win(src_w, dst_w, src_tr, src_tc, src_br, src_bc, dst_tr, 
-		 dst_tc, dst_br, dst_bc, overlay)
-WINDOW *src_w;
-WINDOW *dst_w;
-int src_tr;
-int src_tc;
-int src_br;
-int src_bc;
-int dst_tr;
-int dst_tc;
-int dst_br;
-int dst_bc;
-bool overlay;
-#endif
 /***********************************************************************/
 {
 	int col, line, y1, fc, *minchng, *maxchng;
@@ -174,26 +158,12 @@ bool overlay;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
-#else
-WINDOW *PDC_makenew(num_lines, num_columns, begy, begx)
-int num_lines;
-int num_columns;
-int begy;
-int begx;
-#endif
 /***********************************************************************/
 {
-#ifdef HAVE_PROTO
 	extern void *(*mallc)(size_t);
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
-#else
-	extern void *(*mallc)();
-	extern void *(*callc)();
-	extern void  (*fre)();
-#endif
 
 	int i;
 	WINDOW *win = NULL;
@@ -303,12 +273,7 @@ int begx;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void PDC_sync(WINDOW *win)
-#else
-void PDC_sync(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_sync() - called:\n"));
@@ -358,15 +323,7 @@ WINDOW *win;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
-#else
-int PDC_CDECL PDC_chadd(win, ch, xlat, advance)
-WINDOW *win;
-chtype ch;
-bool xlat;
-bool advance;
-#endif
 /***********************************************************************/
 {
 	int x, y, newx, ts, retval;
@@ -588,17 +545,7 @@ bool advance;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_chg_attrs(WINDOW *win, chtype attr, int sy, int sx, int ey, int ex)
-#else
-int PDC_chg_attrs(win, attr, sy, sx, ey, ex)
-WINDOW *win;
-chtype attr;
-int sy;
-int sx;
-int ey;
-int ex;
-#endif
 /***********************************************************************/
 {
 	chtype oldattr = win->_attrs;
@@ -667,14 +614,7 @@ int ex;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_chins(WINDOW *win, chtype c, bool xlat)
-#else
-int PDC_chins(win, c, xlat)
-WINDOW *win;
-chtype c;
-bool xlat;
-#endif
 /***********************************************************************/
 {
 	int x, y, maxx, offset;
@@ -724,12 +664,7 @@ bool xlat;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_clr_scrn(WINDOW *win)
-#else
-int PDC_clr_scrn(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 #if !defined(XCURSES)
@@ -772,13 +707,7 @@ WINDOW *win;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_newline(WINDOW *win, int lin)
-#else
-int PDC_newline(win, lin)
-WINDOW *win;
-int lin;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("PDC_newline() - called: line %d\n", lin));

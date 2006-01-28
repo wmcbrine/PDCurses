@@ -47,7 +47,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh = "$Id: refresh.c,v 1.10 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_refresh = "$Id: refresh.c,v 1.11 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -109,11 +109,7 @@ char *rcsid_refresh = "$Id: refresh.c,v 1.10 2006/01/28 15:01:41 wmcbrine Exp $"
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   refresh(void)
-#else
-int   PDC_CDECL   refresh()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("refresh() - called\n"));
@@ -122,12 +118,7 @@ int   PDC_CDECL   refresh()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   wrefresh(WINDOW *win)
-#else
-int   PDC_CDECL   wrefresh(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	bool save_clear;
@@ -152,12 +143,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   wnoutrefresh(WINDOW *win)
-#else
-int   PDC_CDECL   wnoutrefresh(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	int first;		/* first changed char on line */
@@ -233,11 +219,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   doupdate(void)
-#else
-int   PDC_CDECL   doupdate()
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -316,12 +298,7 @@ int   PDC_CDECL   doupdate()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   redrawwin(WINDOW *win)
-#else
-int   PDC_CDECL   redrawwin(win)
-WINDOW *win;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("redrawwin() - called: win=%x\n", win));
@@ -333,14 +310,7 @@ WINDOW *win;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   wredrawln(WINDOW *win, int start, int num)
-#else
-int   PDC_CDECL   wredrawln(win, start, num)
-WINDOW *win;
-int start;
-int num;
-#endif
 /***********************************************************************/
 {
 	int i;

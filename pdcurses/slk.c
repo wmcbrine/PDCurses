@@ -42,7 +42,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_slk = "$Id: slk.c,v 1.10 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_slk = "$Id: slk.c,v 1.11 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -123,13 +123,8 @@ static int labels = 0;
 static int label_fmt = 0;
 static int label_line = 0;
 
-#ifdef HAVE_PROTO
 void (*PDC_initial_slk)(void);
 static void PDC_slk_init(void);
-#else
-void (*PDC_initial_slk)();
-static void PDC_slk_init();
-#endif
 
 static struct {
 	char	label[32];
@@ -151,12 +146,8 @@ static struct {
       55 = 5 - 5 format	(extended for PC, 10 function keys)
 
  */
-#ifdef HAVE_PROTO
+
 int PDC_CDECL slk_init(int fmt)
-#else
-int PDC_CDECL slk_init(fmt)
-int fmt;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("slk_init() - called\n"));
@@ -208,16 +199,9 @@ int fmt;
       2 = right
    save = 1 yes or 0 no
  */
-#ifdef HAVE_PROTO
+
 static int PDC_slk_set(int label_num, const char *label_str,
 		       int label_fmt, int save)
-#else
-static int PDC_slk_set(label_num, label_str, label_fmt, save)
-int label_num;
-char *label_str;
-int label_fmt;
-int save;
-#endif
 /***********************************************************************/
 {
 	int i, num, slen, llen, col;
@@ -319,14 +303,8 @@ int save;
       1 = center
       2 = right
  */
-#ifdef HAVE_PROTO
+
 int PDC_CDECL slk_set(int label_num, const char *label_str, int label_fmt)
-#else
-int PDC_CDECL slk_set(label_num, label_str, label_fmt)
-int label_num;
-char *label_str;
-int label_fmt;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("slk_set() - called\n"));
@@ -335,11 +313,7 @@ int label_fmt;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_refresh(void)
-#else
-int	PDC_CDECL	slk_refresh()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("slk_refresh() - called\n"));
@@ -352,11 +326,7 @@ int	PDC_CDECL	slk_refresh()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_noutrefresh(void)
-#else
-int	PDC_CDECL	slk_noutrefresh()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("slk_noutrefresh() - called\n"));
@@ -368,12 +338,7 @@ int	PDC_CDECL	slk_noutrefresh()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 char*	PDC_CDECL	slk_label(int labnum)
-#else
-char*	PDC_CDECL	slk_label(labnum)
-int labnum;   /* 1 - 8 (or 10) */
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("slk_label() - called\n"));
@@ -388,11 +353,7 @@ int labnum;   /* 1 - 8 (or 10) */
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_clear(void)
-#else
-int	PDC_CDECL	slk_clear()
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -409,11 +370,7 @@ int	PDC_CDECL	slk_clear()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_restore(void)
-#else
-int	PDC_CDECL	slk_restore()
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -433,11 +390,7 @@ int	PDC_CDECL	slk_restore()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_touch(void)
-#else
-int	PDC_CDECL	slk_touch()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("slk_touch() - called\n"));
@@ -446,12 +399,7 @@ int	PDC_CDECL	slk_touch()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_attron(const chtype attrs)
-#else
-int	PDC_CDECL	slk_attron(attrs)
-chtype attrs;
-#endif
 /***********************************************************************/
 {
 	int i, rc;
@@ -467,12 +415,7 @@ chtype attrs;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_attroff(const chtype attrs)
-#else
-int	PDC_CDECL	slk_attroff(attrs)
-chtype attrs;
-#endif
 /***********************************************************************/
 {
 	int i, rc;
@@ -488,12 +431,7 @@ chtype attrs;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	slk_attrset(const chtype attrs)
-#else
-int	PDC_CDECL	slk_attrset(attrs)
-chtype attrs;
-#endif
 /***********************************************************************/
 {
 	int i, rc;
@@ -509,12 +447,7 @@ chtype attrs;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int     PDC_CDECL       slk_color(short color_pair)
-#else
-int     PDC_CDECL       slk_color(color_pair)
-short color_pair;
-#endif
 /***********************************************************************/
 {
 	int i, rc;
@@ -530,11 +463,7 @@ short color_pair;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 static void	PDC_slk_init(void)
-#else
-static void	PDC_slk_init()
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -581,11 +510,7 @@ static void	PDC_slk_init()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void	PDC_slk_calc(void)
-#else
-void	PDC_slk_calc()
-#endif
 /***********************************************************************/
 {
 	int i, center, col = 0;
@@ -705,12 +630,7 @@ void	PDC_slk_calc()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_mouse_in_slk(int y, int x)
-#else
-int	PDC_mouse_in_slk(y, x)
-int y, x;
-#endif
 /***********************************************************************/
 {
 	int i;

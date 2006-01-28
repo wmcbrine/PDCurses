@@ -1,5 +1,3 @@
-#ifdef HAVE_PROTO
-
 void dummy_function(void);
 void get_GC(Display *, Window, GC *, XFontStruct *, int, int, bool);
 void makeXY(int, int, int, int, int *, int *);
@@ -37,45 +35,6 @@ int read_socket(int, char *, int);
 
 int XCursesSetupX(char *display_name, int argc, char *argv[]);
 RETSIGTYPE XCursesSigwinchHandler(int signo);
-
-#else    
-
-void dummy_function(void);
-void get_GC();
-void makeXY();
-int get_colors();
-void start_event_handler();
-
-int XCursesTransformLine();
-int XCursesDisplayText();
-void XCursesDisplayScreen();
-void XCursesDisplayCursor();
-void XCursesStructureNotify();
-void XCursesEnterLeaveWindow();
-void XCursesHandleString();
-void XCursesKeyPress();
-void XCursesModifierPress();
-void XCursesButton();
-void XCursesPasteSelection();
-Boolean XCursesConvertProc();
-void XCursesLoseOwnership();
-void XCursesRequestorCallbackForPaste();
-void XCursesRequestorCallbackForGetSelection();
-RETSIGTYPE XCursesSignalHandler();
-void XCursesExitXCursesProcess();
-
-void SelectionOff();
-void SelectionOn();
-void SelectionExtend();
-void SelectionSet();
-
-int write_socket();
-int read_socket();
-
-int XCursesSetupX();
-RETSIGTYPE XCursesSigwinchHandler();
-
-#endif
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *

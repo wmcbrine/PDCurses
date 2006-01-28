@@ -30,32 +30,14 @@
 #define DELAYSIZE 200
 
 #ifdef PDCDEBUG
-char *rcsid_firework = "$Id: firework.c,v 1.14 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_firework = "$Id: firework.c,v 1.15 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
-#if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__ 1
-#endif
+void myrefresh(void);
+void get_colour(void);
+void explode(int, int);
 
-#ifndef Args
-# if __STDC__
-#  define Args(x) x
-# else
-#  define Args(x) ()
-# endif
-#endif
-
-void myrefresh Args((void));
-void get_colour Args((void));
-void explode Args((int, int));
-
-#if __STDC__
 int main(int argc, char **argv)
-#else
-int main(argc, argv)
-int argc;
-char **argv;
-#endif
 {
 	int start, end, row, diff, flag, direction, seed;
 
@@ -121,12 +103,7 @@ char **argv;
 	return 0;
 }
 
-#if __STDC__
 void explode(int row, int col)
-#else
-void explode(row, col)
-int row, col;
-#endif
 {
 	clear();
 	mvprintw(row, col, "-");
@@ -175,14 +152,14 @@ int row, col;
 	myrefresh();
 }
 
-void myrefresh Args((void))
+void myrefresh(void)
 {
 	napms(DELAYSIZE);
 	move(LINES - 1, COLS - 1);
 	refresh();
 }
 
-void get_colour Args((void))
+void get_colour(void)
 {
 	static short tbl[] =
 	{

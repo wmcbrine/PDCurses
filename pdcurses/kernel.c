@@ -77,7 +77,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel = "$Id: kernel.c,v 1.25 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_kernel = "$Id: kernel.c,v 1.26 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -193,11 +193,7 @@ char linesrippedoff = 0;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   def_prog_mode(void)
-#else
-int   PDC_CDECL   def_prog_mode()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("def_prog_mode() - called\n"));
@@ -210,11 +206,7 @@ int   PDC_CDECL   def_prog_mode()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   def_shell_mode(void)
-#else
-int   PDC_CDECL   def_shell_mode()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("def_shell_mode() - called\n"));
@@ -227,11 +219,7 @@ int   PDC_CDECL   def_shell_mode()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL reset_prog_mode(void)
-#else
-int PDC_CDECL reset_prog_mode()
-#endif
 /***********************************************************************/
 {
 #if defined(OS2) && !defined(EMXVIDEO)
@@ -281,11 +269,7 @@ int PDC_CDECL reset_prog_mode()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL reset_shell_mode(void)
-#else
-int PDC_CDECL reset_shell_mode()
-#endif
 /***********************************************************************/
 {
 #if defined(OS2) && !defined(EMXVIDEO)
@@ -342,11 +326,7 @@ int PDC_CDECL reset_shell_mode()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL resetty(void)
-#else
-int PDC_CDECL resetty()
-#endif
 /***********************************************************************/
 {
 #if defined(OS2) && !defined(EMXVIDEO)
@@ -398,11 +378,7 @@ int PDC_CDECL resetty()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   savetty(void)
-#else
-int   PDC_CDECL   savetty()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("savetty() - called\n"));
@@ -414,12 +390,7 @@ int   PDC_CDECL   savetty()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   curs_set(int visibility)
-#else
-int   PDC_CDECL   curs_set(visibility)
-int visibility;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
@@ -428,13 +399,7 @@ int visibility;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   ripoffline(int line, int (*init)(WINDOW *, int))
-#else
-int   PDC_CDECL   ripoffline(line, init)
-int line;
-int (*init)();
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("ripoffline() - called: line=%d\n", line));
@@ -449,12 +414,7 @@ int (*init)();
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   napms(int ms)
-#else
-int   PDC_CDECL   napms(ms)
-int ms;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("napms() - called: ms=%d\n", ms));
@@ -510,12 +470,7 @@ int ms;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int   PDC_CDECL   draino(int ms)
-#else
-int   PDC_CDECL   draino(ms)
-int ms;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("draino() - called: ms=%d\n", ms));

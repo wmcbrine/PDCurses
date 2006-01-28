@@ -31,7 +31,7 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs = "$Id: testcurs.c,v 1.31 2006/01/28 13:27:23 wmcbrine Exp $";
+char *rcsid_testcurs = "$Id: testcurs.c,v 1.32 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -51,43 +51,27 @@ char *rcsid_testcurs = "$Id: testcurs.c,v 1.31 2006/01/28 13:27:23 wmcbrine Exp 
 # define HAVE_CLIPBOARD 0
 #endif
 
-#if defined(HAVE_PROTO) && !defined(__STDC__)
-# define __STDC__ 1
-#endif
-
-#ifndef Args
-# if __STDC__
-#  define Args(x) x
-# else
-#  define Args(x) ()
-# endif
-#endif
-
-void inputTest Args((WINDOW *));
-void scrollTest Args((WINDOW *));
-void introTest Args((WINDOW *));
-int initTest Args((WINDOW **, int, char **));
-void outputTest Args((WINDOW *));
-void padTest Args((WINDOW *));
-void acsTest Args((WINDOW *));
-void display_menu Args((int, int));
+void inputTest(WINDOW *);
+void scrollTest(WINDOW *);
+void introTest(WINDOW *);
+int initTest(WINDOW **, int, char **);
+void outputTest(WINDOW *);
+void padTest(WINDOW *);
+void acsTest(WINDOW *);
+void display_menu(int, int);
 
 #if HAVE_RESIZE
-void resizeTest Args((WINDOW *));
+void resizeTest(WINDOW *);
 #endif
 
 #if HAVE_CLIPBOARD
-void clipboardTest Args((WINDOW *));
+void clipboardTest(WINDOW *);
 #endif
 
 struct commands
 {
 	char *text;
-#ifdef __STDC__
 	void (*function)(WINDOW *);
-#else
-	void (*function)();
-#endif
 };
 
 typedef struct commands COMMAND;
@@ -112,13 +96,7 @@ COMMAND command[MAX_OPTIONS] =
 
 int width, height;
 
-#ifdef __STDC__
 int main(int argc, char *argv[])
-#else
-int main(argc, argv)
-int argc;
-char *argv[];
-#endif
 {
 	WINDOW *win;
 	int key, old_option = -1, new_option = 0;
@@ -210,12 +188,7 @@ char *argv[];
 	return 0;
 }
 
-#ifdef __STDC__
 void Continue(WINDOW *win)
-#else
-void Continue(win)
-WINDOW *win;
-#endif
 {
 	mvwaddstr(win, 10, 1, " Press any key to continue");
 	wrefresh(win);
@@ -223,14 +196,7 @@ WINDOW *win;
 	wgetch(win);
 }
 
-#ifdef __STDC__
 int initTest(WINDOW **win, int argc, char *argv[])
-#else
-int initTest(win, argc, argv)
-WINDOW **win;
-int argc;
-char *argv[];
-#endif
 {
 #ifdef PDCDEBUG
 	PDC_debug("initTest called\n");
@@ -263,12 +229,7 @@ char *argv[];
 	return 0;
 }
 
-#ifdef __STDC__
 void introTest(WINDOW *win)
-#else
-void introTest(win)
-WINDOW *win;
-#endif
 {
 	werase(win);
 	wmove(win, height / 2 - 5, width / 2);
@@ -290,12 +251,7 @@ WINDOW *win;
 	Continue(win);
 }
 
-#ifdef __STDC__
 void scrollTest(WINDOW *win)
-#else
-void scrollTest(win)
-WINDOW *win;
-#endif
 {
 	int i, OldY, OldX;
 
@@ -346,12 +302,7 @@ WINDOW *win;
 	wsetscrreg(win, 0, OldY);
 }
 
-#ifdef __STDC__
 void inputTest(WINDOW *win)
-#else
-void inputTest(win)
-WINDOW *win;
-#endif
 {
 	int w, h, bx, by, sw, sh, i, c, num;
 	char buffer[80];
@@ -581,12 +532,7 @@ WINDOW *win;
 	Continue(win);
 }
 
-#ifdef __STDC__
 void outputTest(WINDOW *win)
-#else
-void outputTest(win)
-WINDOW *win;
-#endif
 {
 	WINDOW *win1;
 	char Buffer[80];
@@ -757,12 +703,7 @@ WINDOW *win;
 }
 
 #if HAVE_RESIZE
-# ifdef __STDC__
 void resizeTest(WINDOW *dummy)
-# else
-void resizeTest(dummy)
-WINDOW *dummy;
-# endif
 {
 	WINDOW *win1;
 
@@ -803,14 +744,9 @@ WINDOW *dummy;
 	clear();
 	refresh();
 }
-#endif
+#endif /* HAVE_RESIZE */
 
-#ifdef __STDC__
 void padTest(WINDOW *dummy)
-#else
-void padTest(dummy)
-WINDOW *dummy;
-#endif
 {
 	WINDOW *pad, *spad;
 
@@ -848,12 +784,7 @@ WINDOW *dummy;
 }
 
 #if HAVE_CLIPBOARD
-# ifdef __STDC__
 void clipboardTest(WINDOW *win)
-# else
-void clipboardTest(win)
-WINDOW *win;
-# endif
 {
 	long i, length = 0;
 	char *text =
@@ -947,14 +878,9 @@ WINDOW *win;
 	raw();
 	getch();
 }
-#endif
+#endif /* HAVE_CLIPBOARD */
 
-#ifdef __STDC__
 void acsTest(WINDOW *win)
-#else
-void acsTest(win)
-WINDOW *win;
-#endif
 {
 	static char *acs_names[] =
 	{
@@ -1016,12 +942,7 @@ WINDOW *win;
 }
 
 
-#ifdef __STDC__
 void display_menu(int old_option, int new_option)
-#else
-void display_menu(old_option, new_option)
-int old_option, new_option;
-#endif
 {
 	int lmarg = (COLS - 14) / 2,
 		tmarg = (LINES - (MAX_OPTIONS + 2)) / 2;

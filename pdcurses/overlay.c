@@ -34,7 +34,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_overlay = "$Id: overlay.c,v 1.7 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_overlay = "$Id: overlay.c,v 1.8 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -97,13 +97,7 @@ char *rcsid_overlay = "$Id: overlay.c,v 1.7 2006/01/28 15:01:41 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	overlay(const WINDOW *src_w, WINDOW *dst_w)
-#else
-int	PDC_CDECL	overlay(src_w, dst_w)
-WINDOW *src_w;
-WINDOW *dst_w;
-#endif
 /***********************************************************************/
 {
 	int first_line, first_col, last_line, last_col;
@@ -165,13 +159,7 @@ WINDOW *dst_w;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	overwrite(const WINDOW *src_w, WINDOW *dst_w)
-#else
-int	PDC_CDECL	overwrite(src_w, dst_w)
-WINDOW *src_w;
-WINDOW *dst_w;
-#endif
 /***********************************************************************/
 {
 	int first_line, first_col, last_line, last_col;
@@ -233,24 +221,10 @@ WINDOW *dst_w;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int	PDC_CDECL	copywin(const WINDOW *src_w, WINDOW *dst_w, 
 				int src_tr, int src_tc, int dst_tr,
 				int dst_tc, int dst_br, int dst_bc,
 				int overlay)
-#else
-int	PDC_CDECL	copywin(src_w, dst_w, src_tr, src_tc, dst_tr,
-				dst_tc, dst_br, dst_bc, overlay)
-WINDOW *src_w;
-WINDOW *dst_w;
-int src_tr;
-int src_tc;
-int dst_tr;
-int dst_tc;
-int dst_br;
-int dst_bc;
-int overlay;
-#endif
 /***********************************************************************/
 {
 	int	src_start_x = src_tc;

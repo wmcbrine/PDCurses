@@ -43,7 +43,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.15 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_getstr  = "$Id: getstr.c,v 1.16 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -103,12 +103,7 @@ char *rcsid_getstr  = "$Id: getstr.c,v 1.15 2006/01/28 15:01:41 wmcbrine Exp $";
 #define MAXLINE 255
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL getstr(char *str)
-#else
-int PDC_CDECL getstr(str)
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getstr() - called\n"));
@@ -117,13 +112,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL wgetstr(WINDOW *win, char *str)
-#else
-int PDC_CDECL wgetstr(win, str)
-WINDOW *win;
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("wgetstr() - called\n"));
@@ -132,14 +121,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL mvgetstr(int y, int x, char *str)
-#else
-int PDC_CDECL mvgetstr(y, x, str)
-int y;
-int x;
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvgetstr() - called\n"));
@@ -151,15 +133,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL mvwgetstr(WINDOW *win, int y, int x, char *str)
-#else
-int PDC_CDECL mvwgetstr(win, y, x, str)
-WINDOW *win;
-int y;
-int x;
-char *str;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwgetstr() - called\n"));
@@ -171,13 +145,7 @@ char *str;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL getnstr(char *str, int n)
-#else
-int PDC_CDECL getnstr(str, n)
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("getnstr() - called\n"));
@@ -186,14 +154,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL wgetnstr(WINDOW *win, char *str, int n)
-#else
-int PDC_CDECL wgetnstr(win, str, n)
-WINDOW *win;
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	int ch, i, num, t, x, chars;
@@ -336,15 +297,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL mvgetnstr(int y, int x, char *str, int n)
-#else
-int PDC_CDECL mvgetnstr(y, x, str, n)
-int y;
-int x;
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvgetnstr() - called\n"));
@@ -356,16 +309,7 @@ int n;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int PDC_CDECL mvwgetnstr(WINDOW *win, int y, int x, char *str, int n)
-#else
-int PDC_CDECL mvwgetnstr(win, y, x, str, n)
-WINDOW *win;
-int y;
-int x;
-char *str;
-int n;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("mvwgetnstr() - called\n"));

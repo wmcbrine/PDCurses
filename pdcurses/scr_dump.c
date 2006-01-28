@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $";
+char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -88,12 +88,7 @@ char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.6 2006/01/28 15:01:41 wmcbrine Exp $
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int scr_dump(const char *filename)
-#else
-int scr_dump(filename)
-char *filename;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("scr_dump() - called: filename %s\n", filename));
@@ -102,12 +97,7 @@ char *filename;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int scr_init(const char *filename)
-#else
-int scr_init(filename)
-char *filename;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("scr_init() - called: filename %s\n", filename));
@@ -116,12 +106,7 @@ char *filename;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int scr_restore(const char *filename)
-#else
-int scr_restore(filename)
-char *filename;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("scr_restore() - called: filename %s\n", filename));
@@ -130,12 +115,7 @@ char *filename;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int scr_set(const char *filename)
-#else
-int scr_set(filename)
-char *filename;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("scr_set() - called: filename %s\n", filename));

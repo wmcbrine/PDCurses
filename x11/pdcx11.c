@@ -902,32 +902,17 @@ pthread_mutex_t key_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int xerror();
 
-#ifdef HAVE_PROTO
 void say(const char *msg)
-#else
-void say(msg)
-char *msg;
-#endif
 {
 	PDC_LOG(("%s:%s", XCLOGMSG, msg));
 }
 
-#ifdef HAVE_PROTO
 void dummy_function(void)
-#else
-void dummy_function()
-#endif
 {
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 signal_handler XCursesSetSignal(int signo, signal_handler action)
-#else
-signal_handler XCursesSetSignal(signo, action)
-int signo;
-signal_handler action;
-#endif
 /***********************************************************************/
 {
 #if defined(SA_INTERRUPT) || defined(SA_RESTART)
@@ -957,12 +942,7 @@ signal_handler action;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 RETSIGTYPE XCursesSigwinchHandler(int signo)
-#else
-RETSIGTYPE XCursesSigwinchHandler(signo)
-int signo;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",
@@ -982,11 +962,7 @@ int signo;
 
 /***********************************************************************/
 /* NOT USED */
-#ifdef HAVE_PROTO
 int XCurses_redraw_curscr(void)
-#else
-int XCurses_redraw_curscr()
-#endif
 /***********************************************************************/
 {
 	int i;
@@ -1000,15 +976,8 @@ int XCurses_redraw_curscr()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesDisplayText(chtype *ch, int row, int x, int num_cols,
 		       bool highlight)
-#else
-int XCursesDisplayText(ch, row, x, num_cols, highlight)
-chtype *ch;
-int row, x, num_cols;
-bool highlight;
-#endif
 /***********************************************************************/
 {
 	char text[300];
@@ -1250,18 +1219,8 @@ bool highlight;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void get_GC(Display *display, Window win, GC *gc, XFontStruct *font_info,
 	    int fore, int back, bool highlight)
-#else
-void get_GC(display, win, gc, font_info, fore, back, highlight)
-Display *display;
-Window win;
-GC *gc;
-XFontStruct *font_info;
-int fore, back;
-bool highlight;
-#endif
 /***********************************************************************/
 {
 	XGCValues values;
@@ -1284,12 +1243,7 @@ bool highlight;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void makeXY(int x, int y, int fontwidth, int fontheight, int *xpos, int *ypos)
-#else
-void makeXY(x, y, fontwidth, fontheight, xpos, ypos)
-int x, y, fontwidth, fontheight, *xpos,* ypos;
-#endif
 /***********************************************************************/
 {
 	*xpos = (x * fontwidth) + XCURSESBORDERWIDTH;
@@ -1298,11 +1252,7 @@ int x, y, fontwidth, fontheight, *xpos,* ypos;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int get_colors(void)
-#else
-int get_colors()
-#endif
 /***********************************************************************/
 {
 #ifdef PDCDEBUG
@@ -1333,11 +1283,7 @@ int get_colors()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesEndwin(void)
-#else
-int XCursesEndwin()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesEndwin() - called\n", XCLOGMSG));
@@ -1371,11 +1317,7 @@ int XCursesEndwin()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesRefreshScrollbar(void)
-#else
-int XCursesRefreshScrollbar()
-#endif
 /***********************************************************************/
 {
 	PDC_SCROLLBAR_TYPE cur_x =
@@ -1413,14 +1355,7 @@ int XCursesRefreshScrollbar()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void SetCursorColor(chtype *ch, short *fore, short *back)
-#else
-void SetCursorColor(ch, fore, back)
-chtype *ch;
-short *fore;
-short *back;
-#endif
 /***********************************************************************/
 {
 	int attr;
@@ -1450,11 +1385,7 @@ short *back;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesGetIcon(void)
-#else
-void XCursesGetIcon()
-#endif
 /***********************************************************************/
 {
 	XIconSize *icon_size;
@@ -1568,16 +1499,8 @@ void XCursesGetIcon()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 		   Boolean *continue_to_dispatch)
-#else
-void XCursesExpose(w, client_data, event, continue_to_dispatch)
-Widget w;
-XtPointer client_data;
-XEvent *event;
-Boolean *continue_to_dispatch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesExpose called\n", XCLOGMSG));
@@ -1592,16 +1515,8 @@ Boolean *continue_to_dispatch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 			Boolean *continue_to_dispatch)
-#else
-void XCursesNonmaskable(w, client_data, event, continue_to_dispatch)
-Widget w;
-XtPointer client_data;
-XEvent *event;
-Boolean *continue_to_dispatch;
-#endif
 /***********************************************************************/
 {
 	XClientMessageEvent *client_event = (XClientMessageEvent *)event;
@@ -1625,16 +1540,8 @@ Boolean *continue_to_dispatch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesModifierPress(Widget w, XEvent *event, String *params, 
 			  Cardinal *nparams)
-#else
-void XCursesModifierPress(w, event, params, nparams)
-Widget w;
-XEvent *event;
-String *params;
-Cardinal *nparams;
-#endif
 /***********************************************************************/
 {
 #define STATE_NORMAL   0
@@ -1690,16 +1597,8 @@ Cardinal *nparams;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		     Cardinal *nparams)
-#else
-void XCursesKeyPress(w, event, params, nparams)
-Widget w;
-XEvent *event;
-String *params;
-Cardinal *nparams;
-#endif
 /***********************************************************************/
 {
 #define STATE_NORMAL   0
@@ -2004,16 +1903,8 @@ Cardinal *nparams;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesHandleString(Widget w, XEvent *event, String *params,
 			 Cardinal *nparams)
-#else
-void XCursesHandleString(w, event, params, nparams)
-Widget w;
-XEvent *event;
-String *params;
-Cardinal *nparams;
-#endif
 /***********************************************************************/
 {
 	int i = 0;
@@ -2057,13 +1948,7 @@ Cardinal *nparams;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
-#else
-void XCursesPasteSelection(w, button_event)
-Widget w;
-XButtonEvent *button_event;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesPasteSelection() - called\n", XCLOGMSG));
@@ -2074,22 +1959,10 @@ XButtonEvent *button_event;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesRequestorCallbackForPaste(Widget w, XtPointer data,
 				      Atom *selection, Atom *type, 
 				      XtPointer value,
 				      unsigned long *length, int *format)
-#else
-void XCursesRequestorCallbackForPaste(w, data, selection, type, value, 
-				      length, format)
-Widget w;
-XtPointer data;
-Atom *selection;
-Atom *type;
-XtPointer value;
-unsigned long *length;
-int *format;
-#endif
 /***********************************************************************/
 {
 	unsigned long i, key;
@@ -2113,21 +1986,9 @@ int *format;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 Boolean XCursesConvertProc(Widget w,Atom *selection, Atom *target,
 			   Atom *type_return, XtPointer *value_return,
 			   unsigned long *length_return, int *format_return)
-#else
-Boolean XCursesConvertProc(w, selection, target, type_return, value_return,
-			   length_return, format_return)
-Widget w;
-Atom *selection;
-Atom *target;
-Atom *type_return;
-XtPointer *value_return;
-unsigned long *length_return;
-int *format_return;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesConvertProc() - called\n", XCLOGMSG));
@@ -2185,13 +2046,7 @@ int *format_return;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesLoseOwnership(Widget w, Atom *type)
-#else
-void XCursesLoseOwnership(w, type)
-Widget w;
-Atom *type;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesLoseOwnership() - called\n", XCLOGMSG));
@@ -2205,14 +2060,8 @@ Atom *type;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 		   bool highlight)
-#else
-void ShowSelection(start_x, start_y, end_x, end_y, highlight)
-int start_x, start_y, end_x, end_y;
-bool highlight;
-#endif
 /***********************************************************************/
 {
 	int i, num_cols, start_col, row;
@@ -2265,11 +2114,7 @@ bool highlight;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void SelectionOff(void)
-#else
-void SelectionOff()
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:SelectionOff() - called\n", XCLOGMSG));
@@ -2283,12 +2128,7 @@ void SelectionOff()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void SelectionOn(int x, int y)
-#else
-void SelectionOn(x, y)
-int x, y;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:SelectionOn() - called\n", XCLOGMSG));
@@ -2298,12 +2138,7 @@ int x, y;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void SelectionExtend(int x, int y)
-#else
-void SelectionExtend(x, y)
-int x, y;
-#endif
 /***********************************************************************/
 {
 	int temp, current_start, current_end, current_start_x, 
@@ -2385,11 +2220,7 @@ int x, y;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void SelectionSet(void)
-#else
-void SelectionSet()
-#endif
 /***********************************************************************/
 {
 	int i, j, start, end, start_x, end_x, start_y, end_y, num_cols, 
@@ -2517,12 +2348,7 @@ void SelectionSet()
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
-#else
-void XCursesDisplayCursor(old_row, old_x, new_row, new_x)
-int old_row, old_x, new_row, new_x;
-#endif
 /***********************************************************************/
 {
 	int xpos, ypos, i;
@@ -2634,16 +2460,8 @@ int old_row, old_x, new_row, new_x;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 			     Boolean *continue_to_dispatch)
-#else
-void XCursesEnterLeaveWindow(w, client_data, event, continue_to_dispatch)
-Widget w;
-XtPointer client_data;
-XEvent *event;
-Boolean *continue_to_dispatch;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesEnterLeaveWindow called\n", XCLOGMSG));
@@ -2677,46 +2495,28 @@ Boolean *continue_to_dispatch;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_get_rows(void)
-#else
-int XCurses_get_rows()
-#endif
 /***********************************************************************/
 {
 	return XCursesLINES;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCurses_get_cols(void)
-#else
-int XCurses_get_cols()
-#endif
 /***********************************************************************/
 {
 	return XCursesCOLS;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 unsigned long XCurses_get_key_modifiers(void)
-#else
-unsigned long XCurses_get_key_modifiers()
-#endif
 /***********************************************************************/
 {
 	return pdc_key_modifier;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
-#else
-int XCursesSendKeyToCurses(key, ms)
-unsigned long key;
-MOUSE_STATUS *ms;
-#endif
 /***********************************************************************/
 {
 	char buf[100];		/* enough for MOUSE_STATUS */
@@ -2746,13 +2546,7 @@ MOUSE_STATUS *ms;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
-#else
-void XCursesCursorBlink(unused, id)
-XtPointer unused;
-XtIntervalId *id;
-#endif
 /***********************************************************************/
 {
 	PDC_LOG(("%s:XCursesCursorBlink() - called:\n", XCLOGMSG));
@@ -2787,15 +2581,7 @@ XtIntervalId *id;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
-#else
-void XCursesButton(w, event, params, nparams)
-Widget w;
-XEvent *event;
-String *params;
-Cardinal *nparams;
-#endif
 /***********************************************************************/
 {
 	int button_no = 0;
@@ -3198,14 +2984,7 @@ Cardinal *nparams;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
-#else
-void Scroll_up_down(w, client_data, call_data)
-Widget w;
-XtPointer client_data;
-XtPointer call_data;
-#endif
 /***********************************************************************/
 {
 	int pixels = (long) call_data;
@@ -3238,14 +3017,7 @@ XtPointer call_data;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
-#else
-void Scroll_left_right(w, client_data, call_data)
-Widget w;
-XtPointer client_data;
-XtPointer call_data;
-#endif
 /***********************************************************************/
 {
 	int pixels = (long) call_data;
@@ -3278,14 +3050,7 @@ XtPointer call_data;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
-#else
-void Thumb_up_down(w, client_data, call_data)
-Widget w;
-XtPointer client_data;
-XtPointer call_data;
-#endif
 /***********************************************************************/
 {
 	double percent = *(double *) call_data;
@@ -3312,14 +3077,7 @@ XtPointer call_data;
 }
 
 /***********************************************************************/
-#ifdef HAVE_PROTO
 void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
-#else
-void Thumb_left_right(w, client_data, call_data)
-Widget w;
-XtPointer client_data;
-XtPointer call_data;
-#endif
 /***********************************************************************/
 {
 	double percent = *(double *) call_data;

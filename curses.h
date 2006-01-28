@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.108 2006/01/28 14:36:42 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.109 2006/01/28 14:51:16 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -98,9 +98,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
-#  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
@@ -154,9 +151,6 @@ PDCurses portable platform definitions list:
 #      endif
 #      ifndef HAVE_MEMORY_H
 #        define HAVE_MEMORY_H			/* have <memory.h> */
-#      endif
-#      ifndef HAVE_STDARG_H
-#        define HAVE_STDARG_H			/* have <stdarg.h> */
 #      endif
 #    else	
 #      define DOS 6		/* Major release of DOS supported	*/
@@ -214,9 +208,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_PROTO
 #    define HAVE_PROTO 1	/* C Set/2 supports ANSI C prototypes	*/
 #  endif
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
@@ -245,9 +236,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  define OS2 3			/* Major release of OS/2 supported	*/
 #  define CURSES__32BIT__
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
@@ -280,9 +268,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  define DOS	6
 #  include <dos.h>
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
-#  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
@@ -317,9 +302,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
-#  endif
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H			/* have <unistd.h> */
 #  endif
@@ -347,9 +329,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
-#  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
@@ -371,9 +350,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
-#  endif
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
 #  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE			/* have memmove() */
@@ -437,9 +413,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H			/* have <stdarg.h> */
-#  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
@@ -485,9 +458,6 @@ PDCurses portable platform definitions list:
 #  ifndef __SMALL__
 #    define __SMALL__
 #  endif
-#  ifndef HAVE_STDARG_H
-#    define HAVE_STDARG_H
-#  endif
 #  ifndef HAVE_MEMMOVE
 #    define HAVE_MEMMOVE
 #  endif
@@ -511,13 +481,7 @@ PDCurses portable platform definitions list:
 # include <os2.h>
 #endif
 
-#if defined(HAVE_STDARG_H) && defined(HAVE_PROTO)
-# include <stdarg.h>
-# define HAVE_STDARG_H_HAVE_PROTO
-#else
-# include <varargs.h>
-#endif
-
+#include <stdarg.h>
 #include <stdio.h>		/* Required by X/Open usage below	*/
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)

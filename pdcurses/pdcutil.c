@@ -32,7 +32,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.19 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.20 2006/01/28 14:51:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -168,19 +168,9 @@ void PDC_beep()
            } while (0)
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
-#else
-int PDC_vsscanf(buf, fmt, va_alist)
-char *buf;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_list arg_ptr;
-#endif
 	int count, chars, c, width, radix, d, i;
 	int *int_ptr;
 	long *long_ptr;
@@ -196,10 +186,6 @@ va_dcl
 	char eneg;
 
 	PDC_LOG(("PDC_vsscanf() - called\n"));
-
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_start(arg_ptr);
-#endif
 
 	count = 0;
 	chars = 0;

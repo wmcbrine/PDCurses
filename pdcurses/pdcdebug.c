@@ -30,7 +30,7 @@
 #undef PDC_debug
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.8 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.9 2006/01/28 14:51:16 wmcbrine Exp $";
 #endif
 
 bool trace_on = FALSE;
@@ -54,13 +54,7 @@ bool trace_on = FALSE;
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 void  PDC_CDECL   PDC_debug(char *fmt, ...)
-#else
-void  PDC_CDECL   PDC_debug(fmt, va_alist)
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -85,11 +79,7 @@ va_dcl
 	strftime(hms, 9, "%H:%M:%S", localtime(&now));
 	fprintf(dbfp, "At: %8.8ld - %s ", (long) clock(), hms);
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	vfprintf(dbfp, fmt, args);
 	va_end(args);
 

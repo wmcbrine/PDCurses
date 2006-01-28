@@ -44,7 +44,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw = "$Id: scanw.c,v 1.10 2006/01/27 18:41:37 wmcbrine Exp $";
+char *rcsid_scanw = "$Id: scanw.c,v 1.11 2006/01/28 14:51:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -93,13 +93,7 @@ char *rcsid_scanw = "$Id: scanw.c,v 1.10 2006/01/27 18:41:37 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	scanw(char *fmt, ...)
-#else
-int	PDC_CDECL	scanw(fmt, va_alist)
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -107,11 +101,7 @@ va_dcl
 
 	PDC_LOG(("scanw() - called\n"));
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwscanw(stdscr, fmt, args);
 	va_end(args);
 
@@ -119,14 +109,7 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	wscanw(WINDOW *win, char *fmt, ...)
-#else
-int	PDC_CDECL	wscanw(win, fmt, va_alist)
-WINDOW *win;
-char *fmt;
-va_dcl
-# endif
 /***********************************************************************/
 {
 	va_list args;
@@ -134,11 +117,7 @@ va_dcl
 
 	PDC_LOG(("wscanw() - called\n"));
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwscanw(win, fmt, args);
 	va_end(args);
 
@@ -146,14 +125,7 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	mvscanw(int y, int x, char *fmt, ... )
-#else
-int	PDC_CDECL	mvscanw(y, x, fmt, va_alist)
-int y, x;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -164,11 +136,7 @@ va_dcl
 	if (move(y, x) == ERR)
 		return ERR;
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwscanw(stdscr, fmt, args);
 	va_end(args);
 
@@ -176,15 +144,7 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	mvwscanw(WINDOW *win, int y, int x, char *fmt,...)
-#else
-int	PDC_CDECL	mvwscanw(win, y, x, fmt, va_alist)
-WINDOW *win;
-int y, x;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -195,11 +155,7 @@ va_dcl
 	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwscanw(win, fmt, args);
 	va_end(args);
 
@@ -207,19 +163,9 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	vwscanw(WINDOW *win, char *fmt, va_list varglist)
-#else
-int	PDC_CDECL	vwscanw(win, fmt, va_alist)
-WINDOW *win;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_list varglist;
-#endif
 	char scanbuf[513];
 
 	PDC_LOG(("vwscanw() - called\n"));
@@ -227,30 +173,14 @@ va_dcl
 	if (wgetstr(win, scanbuf) == ERR)
 		return ERR;
 
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_start(varglist);
-#endif
 	return vsscanf(scanbuf, fmt, varglist);
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	vw_scanw(WINDOW *win, char *fmt, va_list varglist)
-#else
-int	PDC_CDECL	vw_scanw(win, fmt, va_alist)
-WINDOW *win;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_list varglist;
-#endif
 	PDC_LOG(("vw_scanw() - called\n"));
 
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_start(varglist);
-#endif
 	return vwscanw(win, fmt, varglist);
 }

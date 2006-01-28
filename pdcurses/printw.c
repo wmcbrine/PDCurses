@@ -39,7 +39,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw = "$Id: printw.c,v 1.9 2006/01/27 18:41:37 wmcbrine Exp $";
+char *rcsid_printw = "$Id: printw.c,v 1.10 2006/01/28 14:51:16 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -96,13 +96,7 @@ char *rcsid_printw = "$Id: printw.c,v 1.9 2006/01/27 18:41:37 wmcbrine Exp $";
 **man-end**********************************************************************/
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	printw(char *fmt, ...)
-#else
-int	PDC_CDECL	printw(fmt, va_alist)
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -110,11 +104,7 @@ va_dcl
 
 	PDC_LOG(("printw() - called\n"));
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwprintw(stdscr, fmt, args);
 	va_end(args);
 
@@ -122,14 +112,7 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	wprintw(WINDOW *win, char *fmt, ...)
-#else
-int	PDC_CDECL	wprintw(win, fmt, va_alist)
-WINDOW *win;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -137,11 +120,7 @@ va_dcl
 
 	PDC_LOG(("wprintw() - called\n"));
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwprintw(win, fmt, args);
 	va_end(args);
 
@@ -149,14 +128,7 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	mvprintw(int y, int x, char *fmt, ...)
-#else
-int	PDC_CDECL	mvprintw(y, x, fmt, va_alist)
-int y, x;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -167,11 +139,7 @@ va_dcl
 	if (move(y, x) == ERR)
 		return ERR;
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwprintw(stdscr, fmt, args);
 	va_end(args);
 
@@ -179,15 +147,7 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	mvwprintw(WINDOW *win, int y, int x, char *fmt, ...)
-#else
-int	PDC_CDECL	mvwprintw(win, y, x, fmt, va_alist)
-WINDOW *win;
-int y, x;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
 	va_list args;
@@ -198,11 +158,7 @@ va_dcl
 	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 	va_start(args, fmt);
-#else
-	va_start(args);
-#endif
 	retval = vwprintw(win, fmt, args);
 	va_end(args);
 
@@ -210,50 +166,24 @@ va_dcl
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	vwprintw(WINDOW *win, char *fmt, va_list varglist)
-#else
-int	PDC_CDECL	vwprintw(win, fmt, va_alist)
-WINDOW *win;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_list varglist;
-#endif
 	char printbuf[513];
 	int len;
 
 	PDC_LOG(("vwprintw() - called\n"));
 
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_start(varglist);
-#endif
 	len = vsprintf(printbuf, fmt, varglist);
 
 	return (waddstr(win, printbuf) == ERR) ? ERR : len;
 }
 
 /***********************************************************************/
-#ifdef HAVE_STDARG_H_HAVE_PROTO
 int	PDC_CDECL	vw_printw(WINDOW *win, char *fmt, va_list varglist)
-#else
-int	PDC_CDECL	vw_printw(win, fmt, va_alist)
-WINDOW *win;
-char *fmt;
-va_dcl
-#endif
 /***********************************************************************/
 {
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_list varglist;
-#endif
 	PDC_LOG(("vw_printw() - called\n"));
 
-#if !defined(HAVE_STDARG_H_HAVE_PROTO)
-	va_start(varglist);
-#endif
 	return vwprintw(win, fmt, varglist);
 }

@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 #define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -48,7 +47,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.23 2006/01/28 12:52:36 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.24 2006/01/28 15:01:41 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif

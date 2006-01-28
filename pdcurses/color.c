@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 *
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -47,7 +46,7 @@ static void PDC_init_pair();
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.22 2006/01/27 18:41:37 wmcbrine Exp $";
+char *rcsid_color = "$Id: color.c,v 1.23 2006/01/28 15:01:41 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

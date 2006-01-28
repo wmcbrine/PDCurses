@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,8 @@
 * other than the current maintainer.
 * 
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
+
 #define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -42,7 +41,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad = "$Id: pad.c,v 1.7 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_pad = "$Id: pad.c,v 1.8 2006/01/28 15:01:41 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */

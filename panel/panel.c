@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -28,7 +28,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.11 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.12 2006/01/28 10:28:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -666,6 +666,7 @@ int startx;
 #endif
 {
 	WINDOW *win;
+	int maxy, maxx;
 
 	if (!pan)
 		return ERR;
@@ -678,10 +679,10 @@ int startx;
 	if (mvwin(win, starty, startx) == ERR)
 		return ERR;
 
-	pan->wstarty = getbegy(win);
-	pan->wstartx = getbegx(win);
-	pan->wendy = pan->wstarty + getmaxy(win);
-	pan->wendx = pan->wstartx + getmaxx(win);
+	getbegyx(win, pan->wstarty, pan->wstartx);
+	getmaxyx(win, maxy, maxx);
+	pan->wendy = pan->wstarty + maxy;
+	pan->wendx = pan->wstartx + maxx;
 
 	if (__panel_is_linked(pan))
 		__calculate_obscure();
@@ -731,13 +732,15 @@ WINDOW *win;
 
 	if (pan)
 	{
+		int maxy, maxx;
+
 		pan->win = win;
 		pan->above = (PANEL *)0;
 		pan->below = (PANEL *)0;
-		pan->wstarty = getbegy(win);
-		pan->wstartx = getbegx(win);
-		pan->wendy = pan->wstarty + getmaxy(win);
-		pan->wendx = pan->wstartx + getmaxx(win);
+		getbegyx(win, pan->wstarty, pan->wstartx);
+		getmaxyx(win, maxy, maxx);
+		pan->wendy = pan->wstarty + maxy;
+		pan->wendx = pan->wstartx + maxx;
 #ifdef PANEL_DEBUG
 		pan->user = "new";
 #else
@@ -936,6 +939,8 @@ PANEL *pan;
 WINDOW *win;
 #endif
 {
+	int maxy, maxx;
+
 	if (!pan)
 		return ERR;
 
@@ -943,10 +948,10 @@ WINDOW *win;
 		__override(pan, 0);
 
 	pan->win = win;
-	pan->wstarty = getbegy(win);
-	pan->wstartx = getbegx(win);
-	pan->wendy = pan->wstarty + getmaxy(win);
-	pan->wendx = pan->wstartx + getmaxx(win);
+	getbegyx(win, pan->wstarty, pan->wstartx);
+	getmaxyx(win, maxy, maxx);
+	pan->wendy = pan->wstarty + maxy;
+	pan->wendx = pan->wstartx + maxx;
 
 	if (__panel_is_linked(pan))
 		__calculate_obscure();

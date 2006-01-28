@@ -34,12 +34,8 @@
 #include <curses.h>
 #include <stdlib.h>
 
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_newdemo = "$Id: newdemo.c,v 1.19 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_newdemo = "$Id: newdemo.c,v 1.20 2006/01/28 18:19:50 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);

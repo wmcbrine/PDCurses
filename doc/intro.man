@@ -509,7 +509,6 @@ FUNCTIONS
 		PDC_getclipboard         pdcclip
 		PDC_gotoxy               pdcdisp
 		PDC_makenew              pdcwin
-		PDC_memmove              pdcutil
 		PDC_newline              pdcdisp
 		PDC_print                pdcprint
 		PDC_putc                 pdcdisp

@@ -21,15 +21,10 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
 #include <string.h>
 
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.10 2006/01/28 17:41:25 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.11 2006/01/28 18:19:51 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

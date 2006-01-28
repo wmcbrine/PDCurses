@@ -21,12 +21,7 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
 #include <string.h>
-
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
 
 /* undefine any macros for functions defined in this module */
 #undef newpad
@@ -41,7 +36,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad = "$Id: pad.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_pad = "$Id: pad.c,v 1.10 2006/01/28 18:19:51 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */

@@ -297,7 +297,6 @@ EXPORTS PDC_get_rows
 EXPORTS PDC_get_scrn_mode
 EXPORTS PDC_gotoxy
 EXPORTS PDC_makenew
-EXPORTS PDC_memmove
 EXPORTS PDC_newline
 EXPORTS PDC_print
 EXPORTS PDC_putc

@@ -23,10 +23,6 @@
 #include <curses.h>
 #include <string.h>
 
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
-
 /* undefine any macros for functions defined in this module */
 #undef	delch
 #undef	wdelch
@@ -39,13 +35,8 @@
 #  undef	wmove
 #endif
 
-#ifndef HAVE_MEMMOVE
-#  define memmove PDC_memmove
-#endif
-
-
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_delch  = "$Id: delch.c,v 1.8 2006/01/28 18:19:51 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -90,18 +81,14 @@ char *rcsid_delch  = "$Id: delch.c,v 1.7 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
-int	PDC_CDECL	delch(void)
-/***********************************************************************/
+int PDC_CDECL delch(void)
 {
 	PDC_LOG(("delch() - called\n"));
 
 	return wdelch(stdscr);
 }
 
-/***********************************************************************/
-int	PDC_CDECL	wdelch(WINDOW *win)
-/***********************************************************************/
+int PDC_CDECL wdelch(WINDOW *win)
 {
 	int y, x, maxx;
 	chtype *temp1;

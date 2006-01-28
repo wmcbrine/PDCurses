@@ -24,12 +24,7 @@
 # define INCLUDE_WINDOWS_H
 #endif
 #include <curses.h>
-
 #include <string.h>
-
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
@@ -77,7 +72,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel = "$Id: kernel.c,v 1.26 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_kernel = "$Id: kernel.c,v 1.27 2006/01/28 18:19:51 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];

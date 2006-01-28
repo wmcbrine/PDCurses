@@ -21,19 +21,10 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
-
 #include <string.h>
 
-#ifndef HAVE_MEMMOVE
-# define memmove PDC_memmove
-#endif
-
 #ifdef PDCDEBUG
-char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.17 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.18 2006/01/28 18:19:51 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -60,12 +51,10 @@ char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.17 2006/01/28 16:53:26 wmcbrine Exp $";
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w,
 		 int src_tr, int src_tc, int src_br, int src_bc,
 		 int dst_tr, int dst_tc, int dst_br, int dst_bc,
 		 bool overlay)
-/***********************************************************************/
 {
 	int col, line, y1, fc, *minchng, *maxchng;
 	chtype *w1ptr, *w2ptr;
@@ -157,9 +146,7 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w,
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
-/***********************************************************************/
 {
 	extern void *(*mallc)(size_t);
 	extern void *(*callc)(size_t, size_t);
@@ -272,9 +259,7 @@ WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 void PDC_sync(WINDOW *win)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_sync() - called:\n"));
 
@@ -322,9 +307,7 @@ void PDC_sync(WINDOW *win)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
-/***********************************************************************/
 {
 	int x, y, newx, ts, retval;
 	chtype attr = 0, bktmp;
@@ -544,9 +527,7 @@ int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_chg_attrs(WINDOW *win, chtype attr, int sy, int sx, int ey, int ex)
-/***********************************************************************/
 {
 	chtype oldattr = win->_attrs;
 	int c, l;
@@ -613,9 +594,7 @@ int PDC_chg_attrs(WINDOW *win, chtype attr, int sy, int sx, int ey, int ex)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_chins(WINDOW *win, chtype c, bool xlat)
-/***********************************************************************/
 {
 	int x, y, maxx, offset;
 	chtype *temp1;
@@ -663,9 +642,7 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_clr_scrn(WINDOW *win)
-/***********************************************************************/
 {
 #if !defined(XCURSES)
 # if defined(UNIX_WCLR)
@@ -706,9 +683,7 @@ int PDC_clr_scrn(WINDOW *win)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 int PDC_newline(WINDOW *win, int lin)
-/***********************************************************************/
 {
 	PDC_LOG(("PDC_newline() - called: line %d\n", lin));
 

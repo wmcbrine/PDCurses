@@ -16,20 +16,17 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-#include <string.h>
 #define CURSES_LIBRARY 1
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
-
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.10 2006/01/28 17:41:25 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.11 2006/01/28 18:19:51 wmcbrine Exp $";
 #endif
 
 static CHAR_INFO ci[512];

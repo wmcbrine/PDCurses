@@ -24,60 +24,16 @@
 # define INCLUDE_WINDOWS_H
 #endif
 #include <curses.h>
-
 #include <stdlib.h>
 #include <ctype.h>
 #include <limits.h>
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.22 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.23 2006/01/28 18:19:51 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
-
-  PDC_memmove()	- Replacement memmove() for lacking compliers.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Move a portion of memory taking consideration of overlapping memory
-	areas.
-
-  PDCurses Return Value:
-	This function returns NULL if no temporary memory could be allocated.
-
-  Portability:
-	PDCurses  int PDC_memmove(void *s1, const void *s2, size_t n);
-
-**man-end**********************************************************************/
-
-/***********************************************************************/
-void *PDC_memmove(void *s1, const void *s2, size_t n)
-/***********************************************************************/
-{
-	char *dd;
-	const char *ss;
-
-	dd = (char *) s1;
-	ss = (const char *) s2;
-
-	if (dd > ss && dd < ss + n)
-	{
-		dd += n;
-		ss += n;
-		while (n--)
-			*--dd = *--ss;
-	} else
-		while (n--)
-			*dd++ = *ss++;
-
-	return s1;
-}
-
-/***********************************************************************/
 void PDC_beep(void)
-/***********************************************************************/
 {
 #if defined(XCURSES)
 	XCursesInstruct(CURSES_BELL);
@@ -148,9 +104,7 @@ void PDC_beep(void)
             --buf; *buf = x; --chars; \
            } while (0)
 
-/***********************************************************************/
 int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
-/***********************************************************************/
 {
 	int count, chars, c, width, radix, d, i;
 	int *int_ptr;
@@ -603,9 +557,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 
 **man-end**********************************************************************/
 
-/***********************************************************************/
 bool PDC_breakout(void)
-/***********************************************************************/
 {
 	extern int c_pindex;	/* putter index */
 	extern int c_gindex;	/* getter index */

@@ -290,7 +290,6 @@ PDC_get_rows
 PDC_get_scrn_mode
 PDC_gotoxy
 PDC_makenew
-PDC_memmove
 PDC_newline
 PDC_print
 PDC_putc

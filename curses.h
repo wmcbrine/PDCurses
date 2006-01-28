@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.112 2006/01/28 17:41:24 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.113 2006/01/28 19:35:22 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -94,9 +94,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
-#  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
@@ -139,18 +136,12 @@ PDCurses portable platform definitions list:
 #      ifndef WIN32
 #        define WIN32
 #      endif
-#      ifndef HAVE_MEMORY_H
-#        define HAVE_MEMORY_H			/* have <memory.h> */
-#      endif
 #    else	
 #      define DOS 6		/* Major release of DOS supported	*/
 #      include <bios.h>
 #      include <dos.h>
 #      undef  HAVE_VSSCANF	/* vsscanf() function NOT in library	*/
 #    endif
-#  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
 #endif
 
@@ -192,9 +183,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
-#  endif
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #  endif
@@ -214,14 +202,8 @@ PDCurses portable platform definitions list:
 #  endif
 #  define OS2 3			/* Major release of OS/2 supported	*/
 #  define CURSES__32BIT__
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
-#  endif
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H			/* have <unistd.h> */
-#  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
@@ -249,9 +231,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H			/* have <unistd.h> */
 #  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
-#  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
@@ -271,14 +250,8 @@ PDCurses portable platform definitions list:
 #  if !defined(WIN32) && !defined(XCURSES)
 #    define WIN32
 #  endif
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
-#  endif
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H			/* have <unistd.h> */
-#  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
@@ -295,12 +268,6 @@ PDCurses portable platform definitions list:
 #  ifndef WIN32
 #    define WIN32
 #  endif
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
-#  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
-#  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
@@ -313,12 +280,6 @@ PDCurses portable platform definitions list:
 #ifdef __LCC__		/* should already be defined by the compiler	*/
 #  ifndef WIN32
 #    define WIN32
-#  endif
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
-#  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
 #  endif
 #endif
 
@@ -376,9 +337,6 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE			/* have memmove() */
-#  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
@@ -416,9 +374,6 @@ PDCurses portable platform definitions list:
 #  include <ctype.h>
 #  ifndef __SMALL__
 #    define __SMALL__
-#  endif
-#  ifndef HAVE_MEMMOVE
-#    define HAVE_MEMMOVE
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF

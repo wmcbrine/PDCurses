@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 
-#define  CURSES_LIBRARY 1
+#define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -31,7 +31,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.8 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.9 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

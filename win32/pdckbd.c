@@ -18,12 +18,12 @@
 ***************************************************************************
 */
 
-#define  CURSES_LIBRARY 1
-#define  INCLUDE_WINDOWS_H
+#define CURSES_LIBRARY 1
+#define INCLUDE_WINDOWS_H
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.26 2006/01/15 18:03:32 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.27 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -397,12 +397,12 @@ bool PDC_check_bios_key(void)
 	return win32_kbhit(0);
 }
 
- /* processKeyEvent returns -1 if the key in save_ip should be ignored 
-    for some reasons. Otherwise the keycode is returned which should be 
-    returned by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
+/* processKeyEvent returns -1 if the key in save_ip should be ignored 
+   for some reasons. Otherwise the keycode is returned which should be 
+   returned by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
 
-    The Unicode support has been disabled. See below for the reason.
-    CTRL-ALT support has been disabled, when is it emitted plainly?  */
+   The Unicode support has been disabled. See below for the reason.
+   CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
 int processKeyEvent(void)
 {
@@ -431,9 +431,9 @@ int processKeyEvent(void)
 #endif
 	pdc_key_modifiers = 0L;
 
- /* Must calculate the key modifiers so that Alt keys work! Save the key 
-    modifiers if required. Do this first to allow to detect e.g. a 
-    pressed CTRL key after a hit of NUMLOCK. */
+	/* Must calculate the key modifiers so that Alt keys work! Save 
+	   the key modifiers if required. Do this first to allow to 
+	   detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
 
 	if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
 		local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
@@ -475,31 +475,32 @@ int processKeyEvent(void)
 			KEY_ALT_L : KEY_ALT_R;
 	}
 
- /* The system may emit Ascii or Unicode characters depending on whether 
-    ReadConsoleInputA or ReadConsoleInputW is used. We use 
-    ReadConsoleInputA in all cases currently, so we just check Ascii. 
-    Unicode characters are very hard to implement, because our "special 
-    keys" like KEY_F(1) is one of the unicode range.
+	/* The system may emit Ascii or Unicode characters depending on 
+	   whether ReadConsoleInputA or ReadConsoleInputW is used. We 
+	   use ReadConsoleInputA in all cases currently, so we just 
+	   check Ascii. Unicode characters are very hard to implement, 
+	   because our "special keys" like KEY_F(1) is one of the 
+	   unicode range.
 
-    Now the ridiculous part of the processing. Normally, if ascii != 0
-    then the system did the translation successfully. But this is not 
-    true for LEFT_ALT (different to RIGHT_ALT) in case of LEFT_ALT we 
-    get we get ascii != 0. So check for this first. */
+	   Now the ridiculous part of the processing. Normally, if ascii 
+	   != 0 then the system did the translation successfully. But 
+	   this is not true for LEFT_ALT (different to RIGHT_ALT). In 
+	   case of LEFT_ALT we get we get ascii != 0. So check for this 
+	   first. */
 
 	if ((ascii != 0) && (((state & LEFT_ALT_PRESSED) == 0) ||
 	    (state & RIGHT_ALT_PRESSED)))
 	{
-
-	/* This code should catch all keys returning a printable 
-	   character. Characters above 0x7F should be returned as 
-	   positive codes. But if'ndef NUMKEYPAD we have to return 
-	   extended keycodes for keypad codes. Test for it and don't 
-	   return an ascii code in case. */
+		/* This code should catch all keys returning a printable 
+		   character. Characters above 0x7F should be returned 
+		   as positive codes. But if'ndef NUMKEYPAD we have to 
+		   return extended keycodes for keypad codes. Test for 
+		   it and don't return an ascii code in case. */
 
 #ifndef NUMKEYPAD
-	if (kptab[vk].extended == 0)
+		if (kptab[vk].extended == 0)
 #endif
-	    return (unsigned char) ascii;
+			return (unsigned char) ascii;
 	}
 
 	/* This case happens if a functional key has been entered. */
@@ -1033,44 +1034,46 @@ int PDC_validchar(int c)
 	return c;
 }
 
+/* GetInterestingEvent returns 0 if *ip doesn't contain an event which
+   should be passed back to the user. This function filters "useless"
+   events.
+
+   The function returns the number of events waiting. This may be > 1
+   if the repeation of real keys pressed so far are > 1.
+
+   Keyboard: Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
+
+	     Returns 1 for SHIFT, ALT, CTRL only if no other key has been
+	     pressed in between; these are returned on keyup in opposite 
+	     to normal keys. The overall flags for processing of SHIFT, ALT,
+	     CTRL (SP->return_key_modifiers) must have been set.
+
+	     FGC: CHANGED BEHAVIOUR: In previous version SHIFT etc had a
+	     chance to be returned on the first keydown, too. This was a 
+	     bug, because return_key_modifiers were 0.
+
+	     Normal keys are returned on keydown only. The number of 
+	     repetitions are returned. Dead keys (diacritics) are 
+	     omitted. See below for a description.
+
+	     The keypad entering of special keys is not supported. This 
+	     feature can be built in by replacing "#ifdef NUMPAD_CHARS" 
+	     with an intelligent code.
+
+   Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
+	     a pressed mouse key are ignored.
+
+   Window:   Everything is ignored, including resize requests. In case
+	     of resize requests the global flag SP->resized is set.
+
+   THIS FUNCTION IS NOT THREAD-SAFE. NEVER USE MORE THREADS THAN TO
+   USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
+*/
+
 /***********************************************************************/
 static int GetInterestingEvent(INPUT_RECORD *ip)
 /***********************************************************************/
 {
- /* GetInterestingEvent returns 0 if *ip doesn't contain an event which
-    should be passed back to the user. This function filters "useless"
-    events.
-
-    The function returns the number of events waiting. This may be > 1
-    if the repeation of real keys pressed so far are > 1.
-
-    Keyboard: Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
-
-              Returns 1 for SHIFT, ALT, CTRL only if no other key has been
-              pressed in between; these are returned on keyup in opposite to
-              normal keys. The overall flags for processing of SHIFT, ALT,
-              CTRL (SP->return_key_modifiers) must have been set.
-              FGC: CHANGED BEHAVIOUR: In previous version SHIFT etc had a
-                   chance to be returned on the first keydown, too. This
-                   was a bug, because return_key_modifiers were 0.
-
-              Normal keys are returned on keydown only. The number of
-              repeations are returned. Dead keys (diacritics) are omitted.
-              See below for a description.
-
-              The keypad entering of special keys is not supported. This
-              feature can be built in by replacing "#ifdef NUMPAD_CHARS"
-              with an intelligent code.
-
-    Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
-              a pressed mouse key are ignored.
-
-    Window:   Everything is ignored, including resize requests. In case
-              of resize requests the global flag SP->resized is set.
-
-    THIS FUNCTION IS NOT THREAD-SAFE. NEVER USE MORE THREADS THAN TO
-    USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
- */
 	int numKeys = 0, vk;
 	static int save_press;
 	static unsigned numpadChar = 0;

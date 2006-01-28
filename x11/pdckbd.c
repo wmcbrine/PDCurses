@@ -18,14 +18,14 @@
 ***************************************************************************
 */
 
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.10 2006/01/11 06:46:24 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.11 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

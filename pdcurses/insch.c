@@ -38,7 +38,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insch  = "$Id: insch.c,v 1.5 2006/01/14 06:42:03 wmcbrine Exp $";
+char *rcsid_insch  = "$Id: insch.c,v 1.6 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -190,7 +190,7 @@ chtype ch;
 	PDC_LOG(("mvwinsch() - called\n"));
 
 	if (wmove(win, y, x) == ERR)
-		return(ERR);
+		return ERR;
 
 	return PDC_chins(win, ch, (bool)(!(SP->raw_out)));
 }

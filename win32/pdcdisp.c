@@ -30,7 +30,7 @@ extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.7 2006/01/22 19:57:12 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.8 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 static CHAR_INFO ci[512];
@@ -447,9 +447,8 @@ bool PDC_transform_line(int lineno)
 	curscr->_firstch[lineno] = _NO_CHANGE;
 	curscr->_lastch[lineno] = _NO_CHANGE;
 
-	if (SP->refrbrk && (SP->cbreak || SP->raw_inp)
-	    && PDC_breakout())
-		return(TRUE);
+	if (SP->refrbrk && (SP->cbreak || SP->raw_inp) && PDC_breakout())
+		return TRUE;
 
 	return FALSE;
 }

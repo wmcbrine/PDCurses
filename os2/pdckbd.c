@@ -33,7 +33,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.10 2006/01/08 11:53:42 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.11 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 /******************************************************************************
@@ -206,8 +206,6 @@ int PDC_set_keyboard_binary(void)
 int PDC_set_keyboard_default(void)
 /***********************************************************************/
 {
-	PDC_LOG(("PDC_set_keyboard_default() - called\n"));
-
 	PDC_LOG(("PDC_set_keyboard_default(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
 		SP->kbdinfo.cb, SP->kbdinfo.fsMask, 
 		SP->kbdinfo.chTurnAround, SP->kbdinfo.fsInterim, 

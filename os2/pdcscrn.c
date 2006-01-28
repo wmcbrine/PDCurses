@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define  CURSES_LIBRARY 1
+#define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -26,7 +26,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.8 2006/01/12 06:45:43 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.9 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO

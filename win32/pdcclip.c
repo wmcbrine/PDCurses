@@ -18,11 +18,11 @@
 ***************************************************************************
 */
 #define	INCLUDE_WINDOWS_H
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.6 2006/01/08 11:53:43 wmcbrine Exp $";
+char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.7 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -63,6 +63,7 @@ int PDC_CDECL PDC_getclipboard(char **contents, long *length)
 		return PDC_CLIP_ACCESS_ERROR;
 
 	handle = GetClipboardData(CF_TEXT);
+
 	if (handle == NULL)
 	{
 		CloseClipboard();

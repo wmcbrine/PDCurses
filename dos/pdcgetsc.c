@@ -17,7 +17,7 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.9 2006/01/15 18:36:58 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.10 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -112,7 +112,7 @@ int	PDC_get_cur_col()
 	regs.h.bh = SP->video_page;
 	int86(0x10, &regs, &regs);
 
-	return (int) regs.h.dl;
+	return (int)regs.h.dl;
 }
 
 /*man-start*********************************************************************
@@ -155,7 +155,7 @@ int	PDC_get_cur_row()
 	regs.h.bh = SP->video_page;
 	int86(0x10, &regs, &regs);
 
-	return (int) regs.h.dh;
+	return (int)regs.h.dh;
 }
 
 /*man-start*********************************************************************
@@ -553,12 +553,10 @@ int	PDC_query_adapter_type()
 	}
 	else
 	{
-		/*
-		 * No VGA BIOS, check for an EGA BIOS by selecting an
-		 * Alternate Function Service...
-		 *
-		 * bx == 0x0010	 -->  return EGA information
-		 */
+		/* No VGA BIOS, check for an EGA BIOS by selecting an
+		   Alternate Function Service...
+
+		   bx == 0x0010 --> return EGA information */
 
 		regs.h.ah = 0x12;
 # ifdef WATCOMC
@@ -641,8 +639,8 @@ int	PDC_query_adapter_type()
 	else
 		SP->mono = FALSE;
 
-	/* Check for DESQview shadow buffer */
-	/* thanks to paganini@ax.apc.org for the GO32 fix */
+	/* Check for DESQview shadow buffer
+	   thanks to paganini@ax.apc.org for the GO32 fix */
 
 #if defined(__DJGPP__) && defined(NOW_WORKS)
 	dpmi_regs.h.ah = 0xfe;

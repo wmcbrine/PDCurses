@@ -17,14 +17,14 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.4 2006/01/07 02:53:25 wmcbrine Exp $";
+char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.5 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

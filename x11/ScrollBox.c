@@ -306,7 +306,7 @@ XtWidgetGeometry *request, *reply_return;
          result = XtGeometryYes;
    }
 
-   return(result);
+   return result;
 }
 
 /*

@@ -17,14 +17,14 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.7 2006/01/11 06:46:24 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.8 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on = FALSE;

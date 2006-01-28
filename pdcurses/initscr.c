@@ -48,7 +48,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.22 2006/01/27 16:18:00 wmcbrine Exp $";
+char *rcsid_initscr = "$Id: initscr.c,v 1.23 2006/01/28 12:52:36 wmcbrine Exp $";
 #else
 char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 #endif
@@ -296,10 +296,9 @@ char *argv[];
 		LINES -= SP->slklines;
 	}
 
-/*
- * We have to sort out ripped off lines here and reduce the height
- * of stdscr by the number of lines ripped off
- */
+	/* We have to sort out ripped off lines here, and reduce the
+	   height of stdscr by the number of lines ripped off */
+
 	for (i = 0; i < linesrippedoff; i++)
 	{
 		if (linesripped[i].line < 0)
@@ -312,6 +311,7 @@ char *argv[];
 		SP->linesrippedoff++;
 		LINES--;
 	}
+
 	linesrippedoff = 0;
 
 	if ((stdscr = newwin(LINES, COLS, SP->linesrippedoffontop, 0))
@@ -323,9 +323,8 @@ char *argv[];
 
 	wclrtobot(stdscr);
 
-   /*
-    * If preserving the existing screen, don't allow a screen clear...
-    */
+	/* If preserving the existing screen, don't allow a screen clear */
+
 	if (SP->_preserve)
 	{
 		untouchwin(curscr);
@@ -395,13 +394,14 @@ int PDC_CDECL endwin()
 		PDC_set_font(SP->orig_font);
 		resize_term(PDC_get_rows(), PDC_get_columns());
 	}
+
 	SP->visible_cursor = FALSE;   /* Force the visible cursor */
 	SP->cursor = SP->orig_cursor;
 #endif
 
-# if defined(DOS) || defined(OS2)
+#if defined(DOS) || defined(OS2)
 	reset_shell_mode();
-# endif
+#endif
 
 	curs_set(1);
 

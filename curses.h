@@ -18,7 +18,7 @@
 ***************************************************************************
 */
 /*
-$Id: curses.h,v 1.105 2006/01/28 01:23:36 wmcbrine Exp $
+$Id: curses.h,v 1.106 2006/01/28 12:52:36 wmcbrine Exp $
 */
 /*
 *----------------------------------------------------------------------
@@ -313,7 +313,7 @@ PDCurses portable platform definitions list:
 */
 #ifdef __CYGWIN32__		/* You may have to define in makefile	*/
 #  ifndef HAVE_PROTO
-#    define HAVE_PROTO 1	/* Cygnuc GCC supports ANSI C prototypes*/
+#    define HAVE_PROTO 1	/* Cygnus GCC supports ANSI C prototypes*/
 #  endif
 #  if !defined(WIN32) && !defined(XCURSES)
 #    define WIN32

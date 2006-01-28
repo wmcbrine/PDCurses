@@ -17,12 +17,12 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.7 2006/01/12 00:20:14 wmcbrine Exp $";
+char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.8 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -202,7 +202,7 @@ int PDC_curs_set(int visibility)
 		return ERR;
 
 	SP->visibility = visibility;
-	return(ret_vis);
+	return ret_vis;
 }
 
 /*man-start*********************************************************************

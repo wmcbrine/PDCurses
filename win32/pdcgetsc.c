@@ -17,12 +17,12 @@
 * See the file maintain.er for details of the current maintainer.
 ***************************************************************************
 */
-#define	CURSES_LIBRARY	1
+#define	CURSES_LIBRARY 1
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.7 2006/01/15 18:36:58 wmcbrine Exp $";
+char *rcsid_PDCgetsc = "$Id: pdcgetsc.c,v 1.8 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut, hConIn;

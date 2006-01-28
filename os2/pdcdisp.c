@@ -30,7 +30,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.8 2006/01/22 19:57:12 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.9 2006/01/28 12:52:36 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -465,10 +465,8 @@ bool PDC_transform_line(int lineno)
 
 	ch = temp_line;
 
- /* replace the attribute part of the chtype with the actual colour value */
- /* replacing the number that points to the actual colour value.	  */
-
-	/* for each chtype in the line... */
+	/* replace the attribute part of the chtype with the actual 
+	   colour value for each chtype in the line */
 
 	for (j = 0; j < len; j++)
 	{

@@ -25,6 +25,9 @@
    i.e., the parent process. */
 
 #include "pdcx11.h"
+
+#include <stdlib.h>
+
 extern AppData app_data;
 
 #ifdef PROTO

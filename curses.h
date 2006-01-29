@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.113 2006/01/28 19:35:22 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.114 2006/01/29 15:17:51 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -306,24 +306,6 @@ PDCurses portable platform definitions list:
 #  if defined(__OS2__) || defined(__OS2V2__)
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #    define CURSES__32BIT__
-#    ifndef  DISPLAY_MONOCHROME
-#     define DISPLAY_MONOCHROME 0
-#    endif
-#    ifndef  DISPLAY_CGA
-#     define DISPLAY_CGA	1
-#    endif
-#    ifndef  DISPLAY_EGA
-#     define DISPLAY_EGA	2
-#    endif
-#    ifndef  DISPLAY_VGA
-#     define DISPLAY_VGA	3
-#    endif
-#    ifndef  DISPLAY_8514A
-#     define DISPLAY_8514A	7
-#    endif
-#    ifndef  DISPLAY_XGA
-#     define DISPLAY_XGA	9
-#    endif
 #  endif
 #  if defined(__NT__) || defined(WIN32)
 #    ifndef WIN32

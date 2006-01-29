@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curspriv.h,v 1.29 2006/01/28 16:53:25 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.30 2006/01/29 19:18:28 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -275,7 +275,6 @@ void		PDC_doupdate(void);
 #endif
 
 #if defined(XCURSES)
-int		XCurses_redraw_curscr(void);
 int		XCurses_display_cursor(int, int, int, int, int);
 int		XCurses_rawgetch(int);
 bool		XCurses_kbhit(void);

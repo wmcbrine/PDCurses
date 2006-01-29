@@ -954,18 +954,6 @@ RETSIGTYPE XCursesSigwinchHandler(int signo)
 #endif
 }
 
-int XCurses_redraw_curscr(void)	/* NOT USED */
-{
-	int i;
-
-	PDC_LOG(("%s:XCurses_redraw_curscr() - called\n", XCLOGMSG));
-
-	for (i = 0; i < curscr->_maxy; i++)
-		XCurses_transform_line(curscr->_y[i], i, 0, curscr->_maxx);
-
-	return OK;
-}
-
 static int XCursesNewPacket(chtype attr, bool rev, int len,
 			    int col, int row, char *text)
 {

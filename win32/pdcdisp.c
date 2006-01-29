@@ -26,7 +26,7 @@ extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.11 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.12 2006/01/29 23:05:22 wmcbrine Exp $";
 #endif
 
 static CHAR_INFO ci[512];
@@ -358,8 +358,8 @@ int PDC_putctty(chtype character, chtype color)
 
 int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 {
-	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d rcol %d nlines %d\n",
-		urow, lcol, lrow, rcol, nlines));
+	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d "
+		"rcol %d nlines %d\n", urow, lcol, lrow, rcol, nlines));
 
 	return OK;
 }

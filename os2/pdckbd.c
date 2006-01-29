@@ -31,7 +31,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.13 2006/01/28 17:41:25 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.14 2006/01/29 23:05:21 wmcbrine Exp $";
 #endif
 
 /******************************************************************************
@@ -164,7 +164,8 @@ int PDC_get_keyboard_info(KBDINFO *kbdinfo)
 	KbdGetStatus(&akbdinfo, 0);
 	*kbdinfo = akbdinfo;
 
-	PDC_LOG(("PDC_get_keyboard_info(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
+	PDC_LOG(("PDC_get_keyboard_info(). cb: %x, fsMask: %x, "
+		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
 		kbdinfo->cb, kbdinfo->fsMask, kbdinfo->chTurnAround, 
 		kbdinfo->fsInterim, kbdinfo->fsState));
 
@@ -180,7 +181,8 @@ int PDC_set_keyboard_binary(void)
 	kbdinfo.cb = sizeof(kbdinfo);
 	KbdGetStatus(&kbdinfo, 0);
 
-	PDC_LOG(("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
+	PDC_LOG(("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, "
+		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
 		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
 		kbdinfo.fsInterim, kbdinfo.fsState));
 
@@ -188,7 +190,8 @@ int PDC_set_keyboard_binary(void)
 		KEYBOARD_BINARY_MODE;
 	KbdSetStatus(&kbdinfo, 0);
 
-	PDC_LOG(("PDC_set_keyboard_binary() - after. cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
+	PDC_LOG(("PDC_set_keyboard_binary() - after. cb: %x, fsMask: %x, "
+		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
 		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
 		kbdinfo.fsInterim, kbdinfo.fsState));
 
@@ -197,7 +200,8 @@ int PDC_set_keyboard_binary(void)
 
 int PDC_set_keyboard_default(void)
 {
-	PDC_LOG(("PDC_set_keyboard_default(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
+	PDC_LOG(("PDC_set_keyboard_default(). cb: %x, fsMask: %x, "
+		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
 		SP->kbdinfo.cb, SP->kbdinfo.fsMask, 
 		SP->kbdinfo.chTurnAround, SP->kbdinfo.fsInterim, 
 		SP->kbdinfo.fsState));
@@ -377,7 +381,8 @@ int PDC_get_bios_key(void)
 	else
 		key = ascii;
 
-	PDC_LOG(("PDC_get_bios_key() - returned: %d(0x%x), ascii: %d(0x%x) scan: %d(0x%x)\n",
+	PDC_LOG(("PDC_get_bios_key() - returned: %d(0x%x), "
+		"ascii: %d(0x%x) scan: %d(0x%x)\n",
 		key, key, ascii, ascii, scan, scan));
 
 	return key;

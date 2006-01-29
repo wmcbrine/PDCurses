@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.11 2006/01/28 17:41:25 wmcbrine Exp $";
+char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.12 2006/01/29 23:05:21 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -181,7 +181,8 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	PDC_get_scrn_mode(&internal->scrnmode);
 	PDC_get_keyboard_info(&internal->kbdinfo);
 
-	PDC_LOG(("PDC_scr_open() - after PDC_get_keyboard_info(). cb: %x, fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
+	PDC_LOG(("PDC_scr_open() - after PDC_get_keyboard_info(). cb: %x, "
+		"fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
 		SP->kbdinfo.cb, SP->kbdinfo.fsMask, 
 		SP->kbdinfo.chTurnAround, SP->kbdinfo.fsInterim, 
 		SP->kbdinfo.fsState));

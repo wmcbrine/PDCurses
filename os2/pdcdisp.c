@@ -24,7 +24,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.12 2006/01/28 18:19:51 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.13 2006/01/29 23:05:21 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -365,8 +365,8 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 	USHORT ch = (phys_attr | SP->blank);
 #endif
 
-	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d rcol %d nlines %d\n",
-		urow, lcol, lrow, rcol, nlines));
+	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d "
+		"rcol %d nlines %d\n", urow, lcol, lrow, rcol, nlines));
 
 #ifdef EMXVIDEO
 	v_attrib(phys_attr);

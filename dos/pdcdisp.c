@@ -29,7 +29,7 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.16 2006/01/28 17:41:25 wmcbrine Exp $";
+char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.17 2006/01/29 23:05:21 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -451,8 +451,8 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 {
 	int phys_attr = chtype_attr(attr);
 
-	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d rcol %d nlines %d\n",
-		urow, lcol, lrow, rcol, nlines));
+	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d "
+		"rcol %d nlines %d\n", urow, lcol, lrow, rcol, nlines));
 
 	if (nlines >= 0)
 	{

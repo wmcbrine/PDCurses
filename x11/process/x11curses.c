@@ -49,8 +49,9 @@ int XCursesResizeScreen(int nlines, int ncols)
 	XCursesLINES = SP->lines;
 	XCursesCOLS = SP->cols;
 
-	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d SP->cols %d\n",
-		XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, SP->lines, SP->cols));
+	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d "
+		"SP->cols %d\n", XCLOGMSG, shmid_Xcurscr, 
+		shmkey_Xcurscr, SP->lines, SP->cols));
 
 	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
 	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
@@ -66,7 +67,8 @@ int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 	char buf[30];
 	int idx, pos;
 
-	PDC_LOG(("%s:XCurses_display_cursor() - called: NEW row %d col %d, vis %d\n",
+	PDC_LOG(("%s:XCurses_display_cursor() - called: "
+		"NEW row %d col %d, vis %d\n",
 		XCLOGMSG, newrow, newcol, visibility));
 
 	if (visibility == -1)
@@ -276,17 +278,17 @@ int XCursesInstructAndWait(int flag)
 	memcpy((char *)&result, buf, sizeof(int));
 
 	if (result != CURSES_CONTINUE)
-		XCursesExitCursesProcess(6,
-			"exiting from XCursesInstructAndWait - synchronization error");
+		XCursesExitCursesProcess(6, "exiting from "
+			"XCursesInstructAndWait - synchronization error");
 
 	return OK;
 }
 
 int XCurses_transform_line(chtype *ch, int row, int start_col, int num_cols)
 {
-	PDC_LOG(("%s:XCurses_transform_line() called: row %d start_col %d num_cols %d flag %d\n",
-		XCLOGMSG, row, start_col, num_cols,
-		*(Xcurscr + XCURSCR_FLAG_OFF + row)));
+	PDC_LOG(("%s:XCurses_transform_line() called: row %d start_col %d "
+		"num_cols %d flag %d\n", XCLOGMSG, row, start_col, 
+		num_cols, *(Xcurscr + XCURSCR_FLAG_OFF + row)));
 
 	/* loop until we can write to the line */
 
@@ -472,8 +474,8 @@ int XCurses_getclipboard(char **contents, long *length)
 		*contents = (char *)malloc(len + 1);
 
 		if (!*contents)
-		    XCursesExitCursesProcess(6,
-			"exiting from XCurses_getclipboard - synchronization error");
+		    XCursesExitCursesProcess(6, "exiting from "
+			"XCurses_getclipboard - synchronization error");
 
 		if (read_socket(display_sock, *contents, len) < 0)
 		    XCursesExitCursesProcess(5,

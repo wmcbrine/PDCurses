@@ -1884,8 +1884,9 @@ void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 {
 	int i, num_cols, start_col, row;
 
-	PDC_LOG(("%s:ShowSelection() - called StartX: %d StartY: %d EndX: %d EndY: %d Highlight: %d\n",
-		XCLOGMSG, start_x, start_y, end_x, end_y, highlight));
+	PDC_LOG(("%s:ShowSelection() - called StartX: %d StartY: %d "
+		"EndX: %d EndY: %d Highlight: %d\n", XCLOGMSG,
+		start_x, start_y, end_x, end_y, highlight));
 
 	for (i = 0; i < end_y - start_y + 1; i++)
 	{
@@ -2215,8 +2216,8 @@ void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
 				xpos + XCursesFontWidth, 
 				ypos - 2 + i);
 
-		PDC_LOG(("%s:XCursesDisplayCursor() - draw line at row %d col %d\n",
-			XCLOGMSG, new_row, new_x));
+		PDC_LOG(("%s:XCursesDisplayCursor() - draw line at "
+			"row %d col %d\n", XCLOGMSG, new_row, new_x));
 
 		break;
 
@@ -2262,7 +2263,8 @@ void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
 				block_cursor_gc, xpos, ypos, buf, 1);
 		}
 
-		PDC_LOG(("%s:XCursesDisplayCursor() - draw cursor at row: %d col %d char <%s>\n",
+		PDC_LOG(("%s:XCursesDisplayCursor() - draw cursor at "
+			"row: %d col %d char <%s>\n",
 			XCLOGMSG, new_row, new_x, buf));
 	}
 }

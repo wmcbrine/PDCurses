@@ -24,7 +24,7 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.19 2006/01/28 19:31:00 wmcbrine Exp $";
+char *rcsid_PDCwin = "$Id: pdcwin.c,v 1.20 2006/01/29 23:05:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -311,8 +311,9 @@ int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 	int x, y, newx, ts, retval;
 	chtype attr = 0, bktmp;
 
-	PDC_LOG(("PDC_chadd() - called: win=%x ch=%x (char=%c attr=0x%x) xlat=%d advance=%d\n",
-		win, ch, ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat, advance));
+	PDC_LOG(("PDC_chadd() - called: win=%x ch=%x "
+		"(char=%c attr=0x%x) xlat=%d advance=%d\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat, advance));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
@@ -599,8 +600,9 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 	chtype *temp1;
 	char ch = (c & A_CHARTEXT);
 
-	PDC_LOG(("PDC_chins() - called: win=%x ch=%x (char=%c attr=0x%x) xlat=%d\n",
-		win, ch, ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat));
+	PDC_LOG(("PDC_chins() - called: win=%x ch=%x "
+		"(char=%c attr=0x%x) xlat=%d\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;

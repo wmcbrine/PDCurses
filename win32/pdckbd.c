@@ -21,7 +21,7 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.29 2006/01/28 17:41:25 wmcbrine Exp $";
+char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.30 2006/01/29 23:05:22 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -1282,9 +1282,9 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 	    break;
 	}
 
-	PDC_LOG(("%sGetInterestingEvent(%s) - returning: numKeys %d type %d: %s\n",
-		PDC_DEBUG_THREADING1, PDC_DEBUG_THREADING2, numKeys, 
-		ip->EventType, ptr));
+	PDC_LOG(("%sGetInterestingEvent(%s) - returning: numKeys %d "
+		"type %d: %s\n", PDC_DEBUG_THREADING1, 
+		PDC_DEBUG_THREADING2, numKeys, ip->EventType, ptr));
 
 	return numKeys;
 }
@@ -1315,7 +1315,8 @@ static int win32_kbhit(int timeout)
 		    &read, &avail, &unread))
 		{
 
-			PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",
+			PDC_LOG(("win32_kbhit(THREADING) - maybe key on "
+				"pipe. read %d avail %d unread %d\n",
 				read, avail, unread));
 
 			if (read == sizeof(INPUT_RECORD))
@@ -1337,7 +1338,8 @@ static int win32_kbhit(int timeout)
 		if (PeekNamedPipe(hPipeRead, &ip, sizeof(INPUT_RECORD), 
 		    &read, &avail, &unread))
 		{
-			PDC_LOG(("win32_kbhit(THREADING) - maybe key on pipe. read %d avail %d unread %d\n",
+			PDC_LOG(("win32_kbhit(THREADING) - maybe key on "
+				"pipe. read %d avail %d unread %d\n",
 				read, avail, unread));
 
 			if (read == sizeof(INPUT_RECORD))
@@ -1469,8 +1471,8 @@ LONG InputThread(LPVOID lpThreadData)
 		for (i = 0; i < num_keys; i++)
 		    if (ReleaseSemaphore(hSemKeyCount, 1, &prev))
 		    {
-			PDC_LOG(("-->InputThread() - writing to pipe; sem incremented from %d\n",
-				prev));
+			PDC_LOG(("-->InputThread() - writing to pipe; "
+				"sem incremented from %d\n", prev));
 
 			/* If an error occured, we assume it is because 
 			   the pipe broke; therefore the parent thread 

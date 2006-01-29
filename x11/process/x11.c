@@ -172,15 +172,15 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    /* read first integer to determine total message has 
 	       been received */
 
-	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - before read_socket()\n",
-		XCLOGMSG));
+	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - "
+		"before read_socket()\n", XCLOGMSG));
 
 	    if (read_socket(display_sock, buf, sizeof(int)) < 0) 
 		XCursesExitXCursesProcess(3, SIGKILL,
 		  "exiting from XCursesProcessRequestsFromCurses - first read");
 
-	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - after read_socket()\n",
-		XCLOGMSG));
+	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - "
+		"after read_socket()\n", XCLOGMSG));
 
 	    memcpy((char *)&num_cols, buf, sizeof(int)); 
 	    after_first_curses_request = True; 

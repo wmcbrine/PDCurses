@@ -1,5 +1,4 @@
-/*
-***************************************************************************
+/**************************************************************************
 * This file comprises part of PDCurses. PDCurses is Public Domain software.
 * You may use this code for whatever purposes you desire. This software
 * is provided AS IS with NO WARRANTY whatsoever.
@@ -15,8 +14,7 @@
 * other than the current maintainer.
 * 
 * See the file maintain.er for details of the current maintainer.
-***************************************************************************
-*/
+**************************************************************************/
 
 #define	CURSES_LIBRARY 1
 
@@ -28,7 +26,7 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_panel = "$Id: panel.c,v 1.13 2006/01/28 16:53:26 wmcbrine Exp $";
+char *rcsid_panel = "$Id: panel.c,v 1.14 2006/01/29 11:43:57 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -107,22 +105,21 @@ PANEL *__bottom_panel = (PANEL *)0;
 PANEL *__top_panel = (PANEL *)0;
 PANEL __stdscr_pseudo_panel = { (WINDOW *)0 };
 
-#define STATIC static
+static void __calculate_obscure(void);
+static void __free_obscure(PANEL *);
+static void __override(PANEL *, int);
+static bool __panel_is_linked(const PANEL *);
+static void __panel_link_bottom(PANEL *);
+static void __panel_link_top(PANEL *);
+static bool __panels_overlapped(PANEL *, PANEL *);
+static void __panel_unlink(PANEL *);
 
-STATIC void __calculate_obscure(void);
-STATIC void __free_obscure(PANEL *);
-STATIC void __override(PANEL *, int);
-STATIC bool __panel_is_linked(const PANEL *);
-STATIC void __panel_link_bottom(PANEL *);
-STATIC void __panel_link_top(PANEL *);
-STATIC bool __panels_overlapped(PANEL *, PANEL *);
-STATIC void __panel_unlink(PANEL *);
+#ifdef PANEL_DEBUG
 
 /*+-------------------------------------------------------------------------
 	dPanel(text, pan)
 --------------------------------------------------------------------------*/
-#ifdef PANEL_DEBUG
-STATIC void dPanel(char *text, PANEL *pan)
+static void dPanel(char *text, PANEL *pan)
 {
 	_tracef("%s id=%s b=%s a=%s y=%d x=%d",
 		text, pan->user,
@@ -130,15 +127,11 @@ STATIC void dPanel(char *text, PANEL *pan)
 		pan->above ? pan->above->user : "--",
 		pan->wstarty, pan->wstartx);
 }
-#else
-#define dPanel(text, pan)
-#endif
 
 /*+-------------------------------------------------------------------------
 	dStack(fmt, num, pan)
 --------------------------------------------------------------------------*/
-#ifdef PANEL_DEBUG
-STATIC void dStack(char *fmt, int num, PANEL *pan)
+static void dStack(char *fmt, int num, PANEL *pan)
 {
 	char s80[80];
 
@@ -158,41 +151,29 @@ STATIC void dStack(char *fmt, int num, PANEL *pan)
 		pan = pan->above;
 	}
 }
-#else
-#define dStack(fmt, num, pan)
-#endif
 
 /*+-------------------------------------------------------------------------
 	Wnoutrefresh(pan) - debugging hook for wnoutrefresh
 --------------------------------------------------------------------------*/
-#ifdef PANEL_DEBUG
-STATIC void Wnoutrefresh(PANEL *pan)
+static void Wnoutrefresh(PANEL *pan)
 {
 	dPanel("wnoutrefresh", pan);
 	wnoutrefresh(pan->win);
 }
-#else
-#define Wnoutrefresh(pan) wnoutrefresh((pan)->win)
-#endif
 
 /*+-------------------------------------------------------------------------
 	Touchpan(pan)
 --------------------------------------------------------------------------*/
-#ifdef PANEL_DEBUG
-STATIC void Touchpan(PANEL *pan)
+static void Touchpan(PANEL *pan)
 {
 	dPanel("Touchpan", pan);
 	touchwin(pan->win);
 }
-#else
-#define Touchpan(pan) touchwin((pan)->win)
-#endif
 
 /*+-------------------------------------------------------------------------
 	Touchline(pan, start, count)
 --------------------------------------------------------------------------*/
-#ifdef PANEL_DEBUG
-STATIC void Touchline(PANEL *pan, int start, int count)
+static void Touchline(PANEL *pan, int start, int count)
 {
 	char s80[80];
 
@@ -200,14 +181,21 @@ STATIC void Touchline(PANEL *pan, int start, int count)
 	dPanel(s80, pan);
 	touchline(pan->win, start, count);
 }
-#else
+
+#else	/* PANEL_DEBUG */
+
+#define dPanel(text, pan)
+#define dStack(fmt, num, pan)
+#define Wnoutrefresh(pan) wnoutrefresh((pan)->win)
+#define Touchpan(pan) touchwin((pan)->win)
 #define Touchline(pan, start, count) touchline((pan)->win, start, count)
-#endif
+
+#endif	/* PANEL_DEBUG */
 
 /*+-------------------------------------------------------------------------
 	__panels_overlapped(pan1, pan2) - check panel overlapped
 --------------------------------------------------------------------------*/
-STATIC bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
+static bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
 {
 	if (!pan1 || !pan2)
 		return FALSE;
@@ -223,7 +211,7 @@ STATIC bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
 /*+-------------------------------------------------------------------------
 	__free_obscure(pan)
 --------------------------------------------------------------------------*/
-STATIC void __free_obscure(PANEL *pan)
+static void __free_obscure(PANEL *pan)
 {
 	PANELOBS *tobs = pan->obscure;		/* "this" one */
 	PANELOBS *nobs;				/* "next" one */
@@ -240,7 +228,7 @@ STATIC void __free_obscure(PANEL *pan)
 /*+-------------------------------------------------------------------------
 	__override(pan, show)
 --------------------------------------------------------------------------*/
-STATIC void __override(PANEL *pan, int show)
+static void __override(PANEL *pan, int show)
 {
 	int y;
 	PANEL *pan2;
@@ -274,7 +262,7 @@ STATIC void __override(PANEL *pan, int show)
 /*+-------------------------------------------------------------------------
 	__calculate_obscure()
 --------------------------------------------------------------------------*/
-STATIC void __calculate_obscure(void)
+static void __calculate_obscure(void)
 {
 	PANEL *pan;
 	PANEL *pan2;
@@ -321,7 +309,7 @@ STATIC void __calculate_obscure(void)
 /*+-------------------------------------------------------------------------
 	__panel_is_linked(pan) - check to see if panel is in the stack
 --------------------------------------------------------------------------*/
-STATIC bool __panel_is_linked(const PANEL *pan)
+static bool __panel_is_linked(const PANEL *pan)
 {
 	PANEL *pan2 = __bottom_panel;
 
@@ -339,7 +327,7 @@ STATIC bool __panel_is_linked(const PANEL *pan)
 /*+-------------------------------------------------------------------------
 	__panel_link_top(pan) - link panel into stack at top
 --------------------------------------------------------------------------*/
-STATIC void __panel_link_top(PANEL *pan)
+static void __panel_link_top(PANEL *pan)
 {
 #ifdef PANEL_DEBUG
 	dStack("<lt%d>", 1, pan);
@@ -367,7 +355,7 @@ STATIC void __panel_link_top(PANEL *pan)
 /*+-------------------------------------------------------------------------
 	__panel_link_bottom(pan) - link panel into stack at bottom
 --------------------------------------------------------------------------*/
-STATIC void __panel_link_bottom(PANEL *pan)
+static void __panel_link_bottom(PANEL *pan)
 {
 #ifdef PANEL_DEBUG
 	dStack("<lb%d>", 1, pan);
@@ -395,7 +383,7 @@ STATIC void __panel_link_bottom(PANEL *pan)
 /*+-------------------------------------------------------------------------
 	__panel_unlink(pan) - unlink panel from stack
 --------------------------------------------------------------------------*/
-STATIC void __panel_unlink(PANEL *pan)
+static void __panel_unlink(PANEL *pan)
 {
 	PANEL *prev;
 	PANEL *next;

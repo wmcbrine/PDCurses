@@ -86,7 +86,7 @@ zip: $(ZIPFILE)
 
 ../$(TARBALL): xcurses.h
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/HISTORY \
-	$(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/Makefile.in 
+	$(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/Makefile.in \
 	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure $(PDC_DIR)/config.guess \
 	$(PDC_DIR)/aclocal.m4 $(PDC_DIR)/common/accommon.m4 \
 	$(PDC_DIR)/xcurses-config.in $(PDC_DIR)/config.sub \

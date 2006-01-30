@@ -25,25 +25,26 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef   refresh
-#undef   wrefresh
-#undef   wnoutrefresh
-#undef   doupdate
-#undef   redrawwin
-#undef   wredrawln
+#undef refresh
+#undef wrefresh
+#undef wnoutrefresh
+#undef doupdate
+#undef redrawwin
+#undef wredrawln
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef wattrset
-#  undef mvwprintw
-#  undef wmove
-#  undef wattrset
-#  undef touchwin
-#  undef reset_prog_mode
+# undef wattrset
+# undef mvwprintw
+# undef wmove
+# undef wattrset
+# undef touchwin
+# undef reset_prog_mode
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_refresh = "$Id: refresh.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_refresh =
+	"$Id: refresh.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

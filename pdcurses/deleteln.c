@@ -23,20 +23,17 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	deleteln
-#undef	wdeleteln
-#undef	insdelln
-#undef	winsdelln
-#undef	insertln
-#undef	winsertln
-#undef	mvwinsertln
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef deleteln
+#undef wdeleteln
+#undef insdelln
+#undef winsdelln
+#undef insertln
+#undef winsertln
+#undef mvwinsertln
 
 #ifdef PDCDEBUG
-char *rcsid_deleteln  = "$Id: deleteln.c,v 1.9 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_deleteln =
+	"$Id: deleteln.c,v 1.10 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

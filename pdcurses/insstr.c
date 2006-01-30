@@ -24,25 +24,26 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	insstr
-#undef	insnstr
-#undef	winsstr
-#undef	winsnstr
-#undef	mvinsstr
-#undef	mvinsnstr
-#undef	mvwinsstr
-#undef	mvwinsnstr
+#undef insstr
+#undef insnstr
+#undef winsstr
+#undef winsnstr
+#undef mvinsstr
+#undef mvinsnstr
+#undef mvwinsstr
+#undef mvwinsnstr
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	move
-#  undef	wmove
-#  undef	addch
-#  undef	waddch
+# undef move
+# undef wmove
+# undef addch
+# undef waddch
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_insstr  = "$Id: insstr.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_insstr =
+	"$Id: insstr.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

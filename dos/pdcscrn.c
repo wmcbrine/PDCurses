@@ -32,12 +32,13 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.15 2006/01/28 17:41:25 wmcbrine Exp $";
+const char *rcsid_PDCscrn =
+	"$Id: pdcscrn.c,v 1.16 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
-	static unsigned short *saved_screen = NULL;
-	static int saved_lines = 0;
-	static int saved_cols = 0;
+static unsigned short *saved_screen = NULL;
+static int saved_lines = 0;
+static int saved_cols = 0;
 
 /*man-start*********************************************************************
 

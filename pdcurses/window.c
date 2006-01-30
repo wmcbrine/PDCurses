@@ -23,31 +23,32 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	newwin
-#undef	delwin
-#undef	mvwin
-#undef	subwin
-#undef	derwin
-#undef	mvderwin
-#undef	dupwin
-#undef	wsyncup
-#undef	syncok
-#undef	wcursyncup
-#undef	wsyncdown
-#undef	wresize
-#undef	resize_window
+#undef newwin
+#undef delwin
+#undef mvwin
+#undef subwin
+#undef derwin
+#undef mvderwin
+#undef dupwin
+#undef wsyncup
+#undef syncok
+#undef wcursyncup
+#undef wsyncdown
+#undef wresize
+#undef resize_window
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	touchwin
-#  undef	wmove
-#  undef	overwrite
-#  undef	wmove
-#  undef	wclrtobot
+# undef touchwin
+# undef wmove
+# undef overwrite
+# undef wmove
+# undef wclrtobot
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_window = "$Id: window.c,v 1.14 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_window =
+	"$Id: window.c,v 1.15 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -72,7 +73,6 @@ char *rcsid_window = "$Id: window.c,v 1.14 2006/01/28 19:31:00 wmcbrine Exp $";
 	WINDOW *resize_window(WINDOW *w, int lins, int cols);
 
   X/Open Description:
-
 	newwin() creates a new window with the given number of lines, 
 	nlines and columns, ncols. The upper left corner of the window 
 	is at line begy, column begx. If either nlines or ncols is zero, 

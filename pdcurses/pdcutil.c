@@ -30,7 +30,8 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCutil = "$Id: pdcutil.c,v 1.23 2006/01/28 18:19:51 wmcbrine Exp $";
+const char *rcsid_PDCutil =
+	"$Id: pdcutil.c,v 1.24 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 void PDC_beep(void)
@@ -55,16 +56,15 @@ void PDC_beep(void)
 }
 
 #ifndef HAVE_VSSCANF
-/*
- * Do not compile this module unless required.  This is due to the
- * requirement of some compilers (at least Borland C++ 3.0) of having
- * to link with math libraries due to the use of floats in the code.
- *
- * This module is based on vsscanf.c and input.c from emx 0.8f library
- * source which is Copyright (c) 1990-1992 by Eberhard Mattes.
- * Eberhard Mattes has kindly agreed to allow this module to be
- * incorporated into PDCurses.
- */
+
+/* Do not compile this module unless required.  This is due to the
+   requirement of some compilers (at least Borland C++ 3.0) of having
+   to link with math libraries due to the use of floats in the code.
+
+   This module is based on vsscanf.c and input.c from emx 0.8f library
+   source which is Copyright (c) 1990-1992 by Eberhard Mattes.
+   Eberhard Mattes has kindly agreed to allow this module to be
+   incorporated into PDCurses. */
 
 /*man-start*********************************************************************
 

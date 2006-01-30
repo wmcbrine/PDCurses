@@ -23,26 +23,23 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	attroff
-#undef	wattroff
-#undef	attron
-#undef	wattron
-#undef	attrset
-#undef	wattrset
-#undef	standend
-#undef	standout
-#undef	wstandend
-#undef	wstandout
-#undef	getattrs
-#undef	color_set
-#undef	wcolor_set
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef attroff
+#undef wattroff
+#undef attron
+#undef wattron
+#undef attrset
+#undef wattrset
+#undef standend
+#undef standout
+#undef wstandend
+#undef wstandout
+#undef getattrs
+#undef color_set
+#undef wcolor_set
 
 #ifdef PDCDEBUG
-char *rcsid_attr = "$Id: attr.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_attr =
+	"$Id: attr.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

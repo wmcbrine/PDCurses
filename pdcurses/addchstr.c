@@ -24,23 +24,24 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef   addchstr
-#undef   addchnstr
-#undef   waddchstr
-#undef   waddchnstr
-#undef   mvaddchstr
-#undef   mvaddchnstr
-#undef   mvwaddchstr
-#undef   mvwaddchnstr
+#undef addchstr
+#undef addchnstr
+#undef waddchstr
+#undef waddchnstr
+#undef mvaddchstr
+#undef mvaddchnstr
+#undef mvwaddchstr
+#undef mvwaddchnstr
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef move
-#  undef wmove
+# undef move
+# undef wmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_addchstr  = "$Id: addchstr.c,v 1.16 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_addchstr =
+	"$Id: addchstr.c,v 1.17 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

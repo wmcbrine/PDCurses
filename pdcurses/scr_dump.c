@@ -28,12 +28,9 @@
 #undef scr_restore
 #undef scr_set
 
-/* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#endif
-
-#ifdef PDCDEBUG
-char *rcsid_scr_dump = "$Id: scr_dump.c,v 1.8 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_scr_dump =
+	"$Id: scr_dump.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

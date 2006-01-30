@@ -24,7 +24,8 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.13 2006/01/29 23:05:21 wmcbrine Exp $";
+const char *rcsid_PDCdisp =
+	"$Id: pdcdisp.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];

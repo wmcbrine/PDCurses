@@ -19,7 +19,9 @@
 * 1994-1999. M.Hessling@qut.edu.au
 **************************************************************************/
 
-#define	CURSES_LIBRARY	1
+/* $Id: pdcx11.h,v 1.17 2006/01/30 02:10:55 wmcbrine Exp $ */
+
+#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif

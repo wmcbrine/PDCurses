@@ -23,6 +23,11 @@
 
 #include <stdlib.h>
 
+#ifdef PDCDEBUG
+const char *rcsid_PDCx11 =
+	"$Id: pdcx11.c,v 1.40 2006/01/30 02:10:55 wmcbrine Exp $";
+#endif
+
 AppData app_data;
 
 #if NeedWidePrototypes

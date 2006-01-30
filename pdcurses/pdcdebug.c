@@ -21,7 +21,6 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
@@ -29,7 +28,8 @@
 #undef PDC_debug
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdebug = "$Id: pdcdebug.c,v 1.11 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_PDCdebug =
+	"$Id: pdcdebug.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 bool trace_on = FALSE;

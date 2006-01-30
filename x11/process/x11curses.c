@@ -26,6 +26,11 @@
 
 #include <stdlib.h>
 
+#ifdef PDCDEBUG
+const char rcsid_x11curses =
+        "$Id: x11curses.c,v 1.17 2006/01/30 02:10:55 wmcbrine Exp $";
+#endif
+
 extern AppData app_data;
 
 static void XCursesExitCursesProcess(int, char *);

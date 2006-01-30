@@ -25,7 +25,8 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_ptest = "$Id: ptest.c,v 1.14 2006/01/28 16:53:26 wmcbrine Exp $";
+const char *rcsid_ptest =
+	"$Id: ptest.c,v 1.15 2006/01/30 02:10:54 wmcbrine Exp $";
 #endif
 
 #include <curses.h>

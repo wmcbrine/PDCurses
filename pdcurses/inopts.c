@@ -23,32 +23,33 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	cbreak
-#undef	nocbreak
-#undef	echo
-#undef	noecho
-#undef	halfdelay
-#undef	intrflush
-#undef	keypad
-#undef	meta
-#undef	nodelay
-#undef	notimeout
-#undef	raw
-#undef	noraw
-#undef	noqiflush
-#undef	qiflush
-#undef	timeout
-#undef	wtimeout
-#undef	typeahead
+#undef cbreak
+#undef nocbreak
+#undef echo
+#undef noecho
+#undef halfdelay
+#undef intrflush
+#undef keypad
+#undef meta
+#undef nodelay
+#undef notimeout
+#undef raw
+#undef noraw
+#undef noqiflush
+#undef qiflush
+#undef timeout
+#undef wtimeout
+#undef typeahead
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	move
-#  undef	wmove
+# undef move
+# undef wmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inopts  = "$Id: inopts.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_inopts =
+	"$Id: inopts.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -378,7 +379,7 @@ void PDC_CDECL wtimeout(WINDOW *win, int delay)
 	if (delay < 0)
 	{
 		/* This causes a blocking read on the window
-		   so turn on delay mode  */
+		   so turn on delay mode */
 
 		win->_nodelay = FALSE;
 		win->_delayms = 0;
@@ -393,9 +394,9 @@ void PDC_CDECL wtimeout(WINDOW *win, int delay)
 	}
 	else
 	{
-		/* This causes the read on the window
-		   to delay for the number of milliseconds.
-		   Also forces the window into non-blocking read mode */
+		/* This causes the read on the window to delay for the 
+		   number of milliseconds. Also forces the window into 
+		   non-blocking read mode */
 
 		/*win->_nodelay = TRUE;*/
 		win->_delayms = delay;

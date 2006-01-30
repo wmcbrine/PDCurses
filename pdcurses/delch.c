@@ -24,19 +24,20 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	delch
-#undef	wdelch
-#undef	mvdelch
-#undef	mvwdelch
+#undef delch
+#undef wdelch
+#undef mvdelch
+#undef mvwdelch
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	move
-#  undef	wmove
+# undef move
+# undef wmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_delch  = "$Id: delch.c,v 1.9 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_delch =
+	"$Id: delch.c,v 1.10 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -106,10 +107,10 @@ int PDC_CDECL wdelch(WINDOW *win)
 	memmove(temp1, temp1 + 1, (maxx - x) * sizeof(chtype));
 
 #if defined(PDCURSES_WCLR)
-	win->_y[y][maxx]	= win->_blank | win->_attrs;
+	win->_y[y][maxx] = win->_blank | win->_attrs;
 #else
 /* wrs (4/10/93) account for window background */
-	win->_y[y][maxx]	= win->_bkgd;
+	win->_y[y][maxx] = win->_bkgd;
 #endif
 
 	win->_lastch[y] = maxx;

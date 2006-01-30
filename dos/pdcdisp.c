@@ -21,7 +21,6 @@
 # include <config.h>
 #endif
 #include <curses.h>
-
 #include <string.h>
 
 #ifdef HAVE_MEMORY_H
@@ -29,7 +28,8 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_PDCdisp = "$Id: pdcdisp.c,v 1.17 2006/01/29 23:05:21 wmcbrine Exp $";
+const char *rcsid_PDCdisp =
+	"$Id: pdcdisp.c,v 1.18 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];

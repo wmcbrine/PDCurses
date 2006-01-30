@@ -43,7 +43,8 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_getstr  = "$Id: getstr.c,v 1.17 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_getstr =
+	"$Id: getstr.c,v 1.18 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

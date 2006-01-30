@@ -23,21 +23,18 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	clear
-#undef	wclear
-#undef	erase
-#undef	werase
-#undef	clrtobot
-#undef	wclrtobot
-#undef	clrtoeol
-#undef	wclrtoeol
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef clear
+#undef wclear
+#undef erase
+#undef werase
+#undef clrtobot
+#undef wclrtobot
+#undef clrtoeol
+#undef wclrtoeol
 
 #ifdef PDCDEBUG
-char *rcsid_clear  = "$Id: clear.c,v 1.10 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_clear =
+	"$Id: clear.c,v 1.11 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -146,8 +143,8 @@ int PDC_CDECL clrtobot(void)
 
 int PDC_CDECL wclrtobot(WINDOW *win)
 {
-	int	savey=win->_cury;
-	int	savex=win->_curx;
+	int savey = win->_cury;
+	int savex = win->_curx;
 
 	PDC_LOG(("wclrtobot() - called\n"));
 
@@ -160,7 +157,7 @@ int PDC_CDECL wclrtobot(WINDOW *win)
 	{
 		win->_curx = 0;
 		win->_cury++;
-		for ( ; win->_maxy > win->_cury; win->_cury++)
+		for (; win->_maxy > win->_cury; win->_cury++)
 			wclrtoeol(win);
 		win->_cury = savey;
 		win->_curx = savex;

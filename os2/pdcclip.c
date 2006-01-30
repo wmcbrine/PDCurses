@@ -29,7 +29,8 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCclip = "$Id: pdcclip.c,v 1.11 2006/01/28 17:41:25 wmcbrine Exp $";
+const char *rcsid_PDCclip =
+	"$Id: pdcclip.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

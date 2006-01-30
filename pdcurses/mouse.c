@@ -24,21 +24,18 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	mouse_set
-#undef	mouse_on
-#undef	mouse_off
-#undef	request_mouse_pos
-#undef	map_button
-#undef	wmouse_position
-#undef	getmouse
-#undef	getbmap
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef mouse_set
+#undef mouse_on
+#undef mouse_off
+#undef request_mouse_pos
+#undef map_button
+#undef wmouse_position
+#undef getmouse
+#undef getbmap
 
 #ifdef PDCDEBUG
-char *rcsid_mouse = "$Id: mouse.c,v 1.10 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_mouse =
+	"$Id: mouse.c,v 1.11 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

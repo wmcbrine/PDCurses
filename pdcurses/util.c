@@ -27,22 +27,19 @@
 #endif
 
 /* undefine any macros for functions defined in this module */
-#undef	unctrl
-#undef	keyname
-#undef	has_key
-#undef	filter
-#undef	use_env
-#undef	putwin
-#undef	getwin
-#undef	delay_output
-#undef	flushinp
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef unctrl
+#undef keyname
+#undef has_key
+#undef filter
+#undef use_env
+#undef putwin
+#undef getwin
+#undef delay_output
+#undef flushinp
 
 #ifdef PDCDEBUG
-char *rcsid_util  = "$Id: util.c,v 1.21 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_util =
+	"$Id: util.c,v 1.22 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

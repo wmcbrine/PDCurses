@@ -24,25 +24,22 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	COLOR_PAIR
-#undef	PAIR_NUMBER
-#undef	start_color
-#undef	init_pair
-#undef	init_color
-#undef	has_colors
-#undef	can_change_color
-#undef	color_content
-#undef	pair_content
-#undef	PDC_set_line_color
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef COLOR_PAIR
+#undef PAIR_NUMBER
+#undef start_color
+#undef init_pair
+#undef init_color
+#undef has_colors
+#undef can_change_color
+#undef color_content
+#undef pair_content
+#undef PDC_set_line_color
 
 static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
-char *rcsid_color = "$Id: color.c,v 1.25 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_color =
+	"$Id: color.c,v 1.26 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

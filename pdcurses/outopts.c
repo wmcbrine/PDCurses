@@ -23,24 +23,21 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	clearok
-#undef	idlok
-#undef	idcok
-#undef	immedok
-#undef	leaveok
-#undef	setscrreg
-#undef	wsetscrreg
-#undef	scrollok
-#undef	nl
-#undef	nonl
-#undef	raw_output
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef clearok
+#undef idlok
+#undef idcok
+#undef immedok
+#undef leaveok
+#undef setscrreg
+#undef wsetscrreg
+#undef scrollok
+#undef nl
+#undef nonl
+#undef raw_output
 
 #ifdef PDCDEBUG
-char *rcsid_outopts = "$Id: outopts.c,v 1.11 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_outopts =
+	"$Id: outopts.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

@@ -24,7 +24,8 @@
 #include <string.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCsetsc = "$Id: pdcsetsc.c,v 1.11 2006/01/28 17:41:25 wmcbrine Exp $";
+const char *rcsid_PDCsetsc =
+	"$Id: pdcsetsc.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -333,6 +334,4 @@ int PDC_curs_set(int visibility)
 void PDC_set_title(char *title)
 {
 	PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
-
-	return;
 }

@@ -21,6 +21,11 @@
 
 #include "pdcx11.h"
 
+#ifdef PDCDEBUG
+const char rcsid_x11common =
+        "$Id: x11common.c,v 1.8 2006/01/30 02:10:55 wmcbrine Exp $";
+#endif
+
 /* Variables specific to process port */
 
 unsigned char *Xcurscr;

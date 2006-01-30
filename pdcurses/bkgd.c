@@ -23,14 +23,15 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	bkgd
-#undef	bkgdset
-#undef	getbkgd
-#undef	wbkgd
-#undef	wbkgdset
+#undef bkgd
+#undef bkgdset
+#undef getbkgd
+#undef wbkgd
+#undef wbkgdset
 
 #ifdef PDCDEBUG
-char *rcsid_bkgd = "$Id: bkgd.c,v 1.10 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_bkgd =
+	"$Id: bkgd.c,v 1.11 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -108,6 +109,8 @@ void PDC_CDECL bkgdset(chtype ch)
 
 chtype PDC_CDECL getbkgd(WINDOW *win)
 {
+	PDC_LOG(("getbkgd() - called\n"));
+
         return win ? win->_bkgd : (chtype)ERR;
 }
 

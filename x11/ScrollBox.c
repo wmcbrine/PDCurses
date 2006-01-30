@@ -15,6 +15,8 @@
 
 /* ScrollBox.c - scrollBox composite widget */
 
+/* $Id: ScrollBox.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $ */
+
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
 #include <X11/Shell.h>

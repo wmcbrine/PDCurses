@@ -25,7 +25,8 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCscrn = "$Id: pdcscrn.c,v 1.12 2006/01/29 23:05:21 wmcbrine Exp $";
+const char *rcsid_PDCscrn =
+	"$Id: pdcscrn.c,v 1.13 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO

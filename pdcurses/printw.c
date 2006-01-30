@@ -24,21 +24,22 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	printw
-#undef	wprintw
-#undef	mvprintw
-#undef	mvwprintw
-#undef	vwprintw
-#undef	vw_printw
+#undef printw
+#undef wprintw
+#undef mvprintw
+#undef mvwprintw
+#undef vwprintw
+#undef vw_printw
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	waddstr
-#  undef	wmove
+# undef waddstr
+# undef wmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_printw = "$Id: printw.c,v 1.12 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_printw =
+	"$Id: printw.c,v 1.13 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

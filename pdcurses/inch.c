@@ -23,19 +23,20 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	inch
-#undef	winch
-#undef	mvinch
-#undef	mvwinch
+#undef inch
+#undef winch
+#undef mvinch
+#undef mvwinch
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	move
-#  undef	wmove
+# undef move
+# undef wmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_inch  = "$Id: inch.c,v 1.8 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_inch =
+	"$Id: inch.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

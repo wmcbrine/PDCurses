@@ -30,7 +30,8 @@
 #define DELAYSIZE 200
 
 #ifdef PDCDEBUG
-char *rcsid_firework = "$Id: firework.c,v 1.15 2006/01/28 16:53:26 wmcbrine Exp $";
+const char *rcsid_firework =
+	"$Id: firework.c,v 1.16 2006/01/30 02:10:54 wmcbrine Exp $";
 #endif
 
 void myrefresh(void);

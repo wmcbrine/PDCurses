@@ -23,7 +23,8 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCprint = "$Id: pdcprint.c,v 1.8 2006/01/28 17:41:25 wmcbrine Exp $";
+const char *rcsid_PDCprint =
+	"$Id: pdcprint.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 #if !defined(CURSES__32BIT__) && !defined(CSET2) && !defined(MSC) &&!defined(TC)

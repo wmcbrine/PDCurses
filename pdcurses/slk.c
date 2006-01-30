@@ -24,25 +24,22 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	slk_init
-#undef	slk_set
-#undef	slk_refresh
-#undef	slk_noutrefresh
-#undef	slk_label
-#undef	slk_clear
-#undef	slk_restore
-#undef	slk_touch
-#undef	slk_attron
-#undef	slk_attrset
-#undef	slk_attroff
-#undef	slk_color
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef slk_init
+#undef slk_set
+#undef slk_refresh
+#undef slk_noutrefresh
+#undef slk_label
+#undef slk_clear
+#undef slk_restore
+#undef slk_touch
+#undef slk_attron
+#undef slk_attrset
+#undef slk_attroff
+#undef slk_color
 
 #ifdef PDCDEBUG
-char *rcsid_slk = "$Id: slk.c,v 1.12 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_slk =
+	"$Id: slk.c,v 1.13 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

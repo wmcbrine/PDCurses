@@ -54,25 +54,26 @@
 #endif
 
 /* undefine any macros for functions defined in this module */
-#undef   def_prog_mode
-#undef   def_shell_mode
-#undef   reset_prog_mode
-#undef   reset_shell_mode
-#undef   resetty
-#undef   savetty
-#undef   ripoffline
-#undef   curs_set
-#undef   napms
-#undef   draino
+#undef def_prog_mode
+#undef def_shell_mode
+#undef reset_prog_mode
+#undef reset_shell_mode
+#undef resetty
+#undef savetty
+#undef ripoffline
+#undef curs_set
+#undef napms
+#undef draino
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef move
-#  undef wmove
+# undef move
+# undef wmove
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_kernel = "$Id: kernel.c,v 1.28 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_kernel =
+	"$Id: kernel.c,v 1.29 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -433,9 +434,9 @@ int PDC_CDECL napms(int ms)
 	}
 # elif defined(PC)
 	{
-         /* get number of ticks since startup from address 0040:006ch
-          * 1 sec. = 18.2065
-          */
+		/* get number of ticks since startup from address 0040:006ch
+		   1 sec. = 18.2065  */
+
 		volatile far long *ticks = MK_FP(0x0040, 0x006c);
 		long goal = (ms / 50) + *ticks;
 		while (goal > *ticks)

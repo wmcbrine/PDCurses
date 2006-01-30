@@ -23,7 +23,8 @@
 #include <curses.h>
 
 #ifdef PDCDEBUG
-char *rcsid_PDCkbd = "$Id: pdckbd.c,v 1.14 2006/01/28 17:41:25 wmcbrine Exp $";
+const char *rcsid_PDCkbd =
+	"$Id: pdckbd.c,v 1.15 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

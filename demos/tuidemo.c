@@ -43,7 +43,8 @@
 #include "tui.h"
 
 #ifdef PDCDEBUG
-char *rcsid_tuidemo = "$Id: tuidemo.c,v 1.9 2006/01/28 16:53:26 wmcbrine Exp $";
+const char *rcsid_tuidemo =
+	"$Id: tuidemo.c,v 1.10 2006/01/30 02:10:54 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)

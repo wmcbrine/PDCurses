@@ -24,29 +24,30 @@
 #include <stdlib.h>
 
 /* undefine any macros for functions defined in this module */
-#undef   initscr
-#undef   endwin
-#undef   isendwin
-#undef   newterm
-#undef   set_term
-#undef   delscreen
-#undef   resize_term
-#undef   is_termresized
+#undef initscr
+#undef endwin
+#undef isendwin
+#undef newterm
+#undef set_term
+#undef delscreen
+#undef resize_term
+#undef is_termresized
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef move
-#  undef wmove
-#  undef resize_term
-#  undef touchwin
-#  undef wnoutrefresh
+# undef move
+# undef wmove
+# undef resize_term
+# undef touchwin
+# undef wnoutrefresh
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_initscr = "$Id: initscr.c,v 1.27 2006/01/28 19:31:00 wmcbrine Exp $";
-#else
-char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
+const char *rcsid_initscr =
+	"$Id: initscr.c,v 1.28 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
+
+const char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
 
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */
@@ -417,7 +418,7 @@ void PDC_CDECL delscreen(SCREEN *sp)
 
 int PDC_CDECL resize_term(int nlines, int ncols)
 {
-	PDC_LOG(("resize_term() - called: nlines %d\n",nlines));
+	PDC_LOG(("resize_term() - called: nlines %d\n", nlines));
 
 	if (stdscr == (WINDOW *)NULL)
 		return ERR;

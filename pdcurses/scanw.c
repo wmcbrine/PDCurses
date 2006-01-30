@@ -24,26 +24,27 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	scanw
-#undef	wscanw
-#undef	mvscanw
-#undef	mvwscanw
-#undef	vwscanw
-#undef	vw_scanw
+#undef scanw
+#undef wscanw
+#undef mvscanw
+#undef mvwscanw
+#undef vwscanw
+#undef vw_scanw
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-#  undef	wgetstr
-#  undef	wrefresh
-#  undef	wmove
+# undef wgetstr
+# undef wrefresh
+# undef wmove
 #endif
 
 #ifndef HAVE_VSSCANF
-#  define vsscanf PDC_vsscanf
+# define vsscanf PDC_vsscanf
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_scanw = "$Id: scanw.c,v 1.13 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_scanw =
+	"$Id: scanw.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

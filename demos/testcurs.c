@@ -31,7 +31,8 @@
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-char *rcsid_testcurs = "$Id: testcurs.c,v 1.32 2006/01/28 16:53:26 wmcbrine Exp $";
+const char *rcsid_testcurs =
+	"$Id: testcurs.c,v 1.33 2006/01/30 02:10:54 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>

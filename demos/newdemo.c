@@ -35,7 +35,8 @@
 #include <stdlib.h>
 
 #ifdef PDCDEBUG
-char *rcsid_newdemo = "$Id: newdemo.c,v 1.20 2006/01/28 18:19:50 wmcbrine Exp $";
+const char *rcsid_newdemo =
+	"$Id: newdemo.c,v 1.21 2006/01/30 02:10:54 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);

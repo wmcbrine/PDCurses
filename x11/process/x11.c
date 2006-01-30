@@ -23,6 +23,11 @@
 
 #include <stdlib.h>
 
+#ifdef PDCDEBUG
+const char rcsid_x11 =
+	"$Id: x11.c,v 1.30 2006/01/30 02:10:55 wmcbrine Exp $";
+#endif
+
 extern AppData app_data;
 
 int visible_cursor = 0;

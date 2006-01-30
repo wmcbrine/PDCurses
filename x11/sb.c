@@ -23,19 +23,16 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef	sb_init
-#undef	sb_set_horz
-#undef	sb_set_vert
-#undef	sb_get_horz
-#undef	sb_get_vert
-#undef	sb_refresh
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-#endif
+#undef sb_init
+#undef sb_set_horz
+#undef sb_set_vert
+#undef sb_get_horz
+#undef sb_get_vert
+#undef sb_refresh
 
 #ifdef PDCDEBUG
-char *rcsid_sb = "$Id: sb.c,v 1.8 2006/01/28 17:41:25 wmcbrine Exp $";
+const char *rcsid_sb =
+	"$Id: sb.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

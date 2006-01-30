@@ -36,7 +36,8 @@
 #endif
 
 #ifdef PDCDEBUG
-char *rcsid_pad = "$Id: pad.c,v 1.11 2006/01/28 19:31:00 wmcbrine Exp $";
+const char *rcsid_pad =
+	"$Id: pad.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */

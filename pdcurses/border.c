@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_border =
-	"$Id: border.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: border.c,v 1.15 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -97,22 +97,22 @@ const char *rcsid_border =
   X/Open Errors:
 	No errors are defined for these functions.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      border                                -        -      4.0
-      wborder                               -        -      4.0
-      box                                   Y        Y       Y
-      hline                                 -        -      4.0
-      vline                                 -        -      4.0
-      whline                                -        -      4.0
-      wvline                                -        -      4.0
-      mvhline
-      mvvline
-      mvwhline
-      mvwvline
-      PDC_wunderline                        -        -       -
-      PDC_wleftline                         -        -       -
-      PDC_wrightline                        -        -       -
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	border					-	-      4.0
+	wborder					-	-      4.0
+	box					Y	Y	Y
+	hline					-	-      4.0
+	vline					-	-      4.0
+	whline					-	-      4.0
+	wvline					-	-      4.0
+	mvhline
+	mvvline
+	mvwhline
+	mvwvline
+	PDC_wunderline				-	-	-
+	PDC_wleftline				-	-	-
+	PDC_wrightline				-	-	-
 
 **man-end**********************************************************************/
 

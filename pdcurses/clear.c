@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_clear =
-	"$Id: clear.c,v 1.11 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: clear.c,v 1.12 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -85,16 +85,16 @@ const char *rcsid_clear =
 	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
 	add -DPDCURSES_WCLR to the compile switches.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      clear                                 Y        Y       Y
-      wclear                                Y        Y       Y
-      erase                                 Y        Y       Y
-      werase                                Y        Y       Y
-      clrtobot                              Y        Y       Y
-      wclrtobot                             Y        Y       Y
-      clrtoeol                              Y        Y       Y
-      wclrtoeol                             Y        Y       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	clear					Y	Y	Y
+	wclear					Y	Y	Y
+	erase					Y	Y	Y
+	werase					Y	Y	Y
+	clrtobot				Y	Y	Y
+	wclrtobot				Y	Y	Y
+	clrtoeol				Y	Y	Y
+	wclrtoeol				Y	Y	Y
 
 **man-end**********************************************************************/
 

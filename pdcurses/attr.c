@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_attr =
-	"$Id: attr.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: attr.c,v 1.15 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -101,18 +101,18 @@ const char *rcsid_attr =
   X/Open Errors:
 	It is an error to call this function with a NULL window pointer.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      attroff                               Y        Y       Y
-      wattroff                              Y        Y       Y
-      attron                                Y        Y       Y
-      wattron                               Y        Y       Y
-      attrset                               Y        Y       Y
-      wattrset                              Y        Y       Y
-      standend                              Y        Y       Y
-      wstandend                             Y        Y       Y
-      standout                              Y        Y       Y
-      wstandout                             Y        Y       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	attroff					Y	Y	Y
+	wattroff				Y	Y	Y
+	attron					Y	Y	Y
+	wattron					Y	Y	Y
+	attrset					Y	Y	Y
+	wattrset				Y	Y	Y
+	standend				Y	Y	Y
+	wstandend				Y	Y	Y
+	standout				Y	Y	Y
+	wstandout				Y	Y	Y
 
 **man-end**********************************************************************/
 

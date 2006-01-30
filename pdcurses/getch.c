@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_getch =
-	"$Id: getch.c,v 1.20 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: getch.c,v 1.21 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -99,13 +99,13 @@ const char *rcsid_getch =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      getch                                 Y        Y       Y
-      wgetch                                Y        Y       Y
-      mvgetch                               Y        Y       Y
-      mvwgetch                              Y        Y       Y
-      ungetch                               Y        Y       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	getch					Y	Y	Y
+	wgetch					Y	Y	Y
+	mvgetch					Y	Y	Y
+	mvwgetch				Y	Y	Y
+	ungetch					Y	Y	Y
 
 **man-end**********************************************************************/
 

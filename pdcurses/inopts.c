@@ -49,7 +49,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.15 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -171,25 +171,25 @@ const char *rcsid_inopts =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      cbreak                                Y        Y       Y
-      nocbreak                              Y        Y       Y
-      echo                                  Y        Y       Y
-      noecho                                Y        Y       Y
-      halfdelay                             -        -       Y
-      intrflush                             Y        -       Y
-      keypad                                Y        -       Y
-      meta                                  -        -       Y
-      nodelay                               Y        -       Y
-      notimeout                             -        -       Y
-      raw                                   Y        Y       Y
-      noraw                                 Y        Y       Y
-      noqiflush                             -        -       Y
-      qiflush                               -        -       Y
-      timeout                               -        -       Y
-      wtimeout                              -        -       Y
-      typeahead                             Y        -       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	cbreak					Y	Y	Y
+	nocbreak				Y	Y	Y
+	echo					Y	Y	Y
+	noecho					Y	Y	Y
+	halfdelay				-	-	Y
+	intrflush				Y	-	Y
+	keypad					Y	-	Y
+	meta					-	-	Y
+	nodelay					Y	-	Y
+	notimeout				-	-	Y
+	raw					Y	Y	Y
+	noraw					Y	Y	Y
+	noqiflush				-	-	Y
+	qiflush					-	-	Y
+	timeout					-	-	Y
+	wtimeout				-	-	Y
+	typeahead				Y	-	Y
 
 **man-end**********************************************************************/
 

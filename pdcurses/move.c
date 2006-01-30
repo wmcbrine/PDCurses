@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_move =
-	"$Id: move.c,v 1.8 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: move.c,v 1.9 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -53,10 +53,10 @@ const char *rcsid_move =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      move                                  Y        Y       Y
-      wmove                                 Y        Y       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	move					Y	Y	Y
+	wmove					Y	Y	Y
 
 **man-end**********************************************************************/
 

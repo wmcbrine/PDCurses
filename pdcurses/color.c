@@ -39,7 +39,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.26 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: color.c,v 1.27 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -107,16 +107,16 @@ const char *rcsid_color =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V   PDCurses
-                                          Dec '88
-      start_color                           -        -      3.2
-      init_pair                             -        -      3.2
-      init_color                            -        -      3.2
-      has_colors                            -        -      3.2
-      can_change_color                      -        -      3.2
-      color_content                         -        -      3.2
-      pair_content                          -        -      3.2
-      PDC_set_line_color                    -        -       -       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	start_color				-	-      3.2
+	init_pair				-	-      3.2
+	init_color				-	-      3.2
+	has_colors				-	-      3.2
+	can_change_color			-	-      3.2
+	color_content				-	-      3.2
+	pair_content				-	-      3.2
+	PDC_set_line_color			-	-       -
 
 **man-end**********************************************************************/
 

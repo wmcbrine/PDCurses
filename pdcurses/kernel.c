@@ -73,7 +73,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.29 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.30 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -171,20 +171,20 @@ char linesrippedoff = 0;
   X/Open Errors:
 	No errors are defined for these functions.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      def_prog_mode                         Y        Y       Y
-      def_shell_mode                        Y        Y       Y
-      reset_prog_mode                       Y        Y       Y
-      reset_shell_mode                      Y        Y       Y
-      resetty                               Y        Y       Y
-      savetty                               Y        Y       Y
-      getsyx                                -        -      3.0
-      setsyx                                -        -      3.0
-      ripoffline                            -        -      3.0
-      curs_set                              -        -      3.0
-      napms                                 Y        Y       Y
-      draino                                ?        ?       N
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	def_prog_mode				Y	Y	Y
+	def_shell_mode				Y	Y	Y
+	reset_prog_mode				Y	Y	Y
+	reset_shell_mode			Y	Y	Y
+	resetty					Y	Y	Y
+	savetty					Y	Y	Y
+	getsyx					-	-      3.0
+	setsyx					-	-      3.0
+	ripoffline				-	-      3.0
+	curs_set				-	-      3.0
+	napms					Y	Y	Y
+	draino					?	?	N
 
 **man-end**********************************************************************/
 

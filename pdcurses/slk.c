@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_slk =
-	"$Id: slk.c,v 1.13 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: slk.c,v 1.14 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -89,19 +89,19 @@ const char *rcsid_slk =
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      slk_init                              Y        -       Y
-      slk_set                               Y        -       Y
-      slk_refresh                           Y        -       Y
-      slk_noutrefresh                       Y        -       Y
-      slk_label                             Y        -       Y
-      slk_clear                             Y        -       Y
-      slk_restore                           Y        -       Y
-      slk_touch                             Y        -       Y
-      slk_attron                            Y        -       Y
-      slk_attrset                           Y        -       Y
-      slk_attroff
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	slk_init				Y	-	Y
+	slk_set					Y	-	Y
+	slk_refresh				Y	-	Y
+	slk_noutrefresh				Y	-	Y
+	slk_label				Y	-	Y
+	slk_clear				Y	-	Y
+	slk_restore				Y	-	Y
+	slk_touch				Y	-	Y
+	slk_attron				Y	-	Y
+	slk_attrset				Y	-	Y
+	slk_attroff				Y	-	Y
 
 **man-end**********************************************************************/
 

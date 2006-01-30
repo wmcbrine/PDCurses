@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inchstr =
-	"$Id: inchstr.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: inchstr.c,v 1.10 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -74,16 +74,16 @@ const char *rcsid_inchstr =
 	Normally the value returned indicates the number of chtypes
 	returned.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      inchstr                               -        -      4.0
-      winchstr                              -        -      4.0
-      mvinchstr                             -        -      4.0
-      mvwinchstr                            -        -      4.0
-      inchnstr                              -        -      4.0
-      winchnstr                             -        -      4.0
-      mvinchnstr                            -        -      4.0
-      mvwinchnstr                           -        -      4.0
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	inchstr					-	-      4.0
+	winchstr				-	-      4.0
+	mvinchstr				-	-      4.0
+	mvwinchstr				-	-      4.0
+	inchnstr				-	-      4.0
+	winchnstr				-	-      4.0
+	mvinchnstr				-	-      4.0
+	mvwinchnstr				-	-      4.0
 
 **man-end**********************************************************************/
 

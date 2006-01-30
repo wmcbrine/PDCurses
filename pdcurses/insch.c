@@ -38,7 +38,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_insch =
-	"$Id: insch.c,v 1.10 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: insch.c,v 1.11 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -118,12 +118,12 @@ const char *rcsid_insch =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      insch                                 Y        Y       Y
-      winsch                                Y        Y       Y
-      mvinsch                               Y        Y       Y
-      mvwinsch                              Y        Y       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	insch					Y	Y	Y
+	winsch					Y	Y	Y
+	mvinsch					Y	Y	Y
+	mvwinsch				Y	Y	Y
 
 **man-end**********************************************************************/
 

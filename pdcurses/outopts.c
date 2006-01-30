@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_outopts =
-	"$Id: outopts.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: outopts.c,v 1.13 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -134,19 +134,19 @@ const char *rcsid_outopts =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      clearok                               Y        Y       Y
-      idlok                                 Y        Y       Y
-      idcok                                 -        -      4.0
-      immedok                               -        -      4.0
-      leaveok                               Y        Y       Y
-      setscrreg                             Y        Y       Y
-      wsetscrreg                            Y        Y       Y
-      scrollok                              Y        Y       Y
-      nl                                    Y        Y       Y
-      nonl                                  Y        Y       Y
-      raw_output                            -        -       -
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	clearok					Y	Y	Y
+	idlok					Y	Y	Y
+	idcok					-	-      4.0
+	immedok					-	-      4.0
+	leaveok					Y	Y	Y
+	setscrreg				Y	Y	Y
+	wsetscrreg				Y	Y	Y
+	scrollok				Y	Y	Y
+	nl					Y	Y	Y
+	nonl					Y	Y	Y
+	raw_output				-	-	-
 
 **man-end**********************************************************************/
 

@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_util =
-	"$Id: util.c,v 1.22 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: util.c,v 1.23 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -94,16 +94,16 @@ const char *rcsid_util =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      unctrl                                Y        Y       Y
-      keyname                               Y        -      3.0
-      filter                                Y        -      3.0
-      use_env                               -        -      4.0
-      putwin                                -        -      4.0
-      getwin                                -        -      4.0
-      delay_output                          Y        Y       Y
-      flushinp                              Y        Y       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	unctrl					Y	Y	Y
+	keyname					Y	-      3.0
+	filter					Y	-      3.0
+	use_env					-	-      4.0
+	putwin					-	-      4.0
+	getwin					-	-      4.0
+	delay_output				Y	Y	Y
+	flushinp				Y	Y	Y
 
 **man-end**********************************************************************/
 

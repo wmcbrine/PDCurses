@@ -44,7 +44,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_scanw =
-	"$Id: scanw.c,v 1.14 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: scanw.c,v 1.15 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -82,13 +82,13 @@ const char *rcsid_scanw =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      scanw                                 Y        Y       Y
-      wscanw                                Y        Y       Y
-      mvscanw                               Y        Y       Y
-      mvwscanw                              Y        Y       Y
-      vwscanw                               -        -      4.0
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	scanw					Y	Y	Y
+	wscanw					Y	Y	Y
+	mvscanw					Y	Y	Y
+	mvwscanw				Y	Y	Y
+	vwscanw					-	-      4.0
 
 **man-end**********************************************************************/
 

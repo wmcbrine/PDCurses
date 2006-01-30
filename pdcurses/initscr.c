@@ -44,7 +44,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.28 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.29 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 const char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
@@ -178,16 +178,16 @@ extern void (*PDC_initial_slk)(void);
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      initscr                               Y        Y       Y
-      endwin                                Y        Y       Y
-      isendwin                              -        -      3.0
-      newterm                               -        -       Y
-      set_term                              -        -       Y
-      delscreen                             -        -      4.0
-      resize_term                           -        -       -
-      is_termresized                        -        -       -
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	initscr					Y	Y	Y
+	endwin					Y	Y	Y
+	isendwin				-	-      3.0
+	newterm					-	-	Y
+	set_term				-	-	Y
+	delscreen				-	-      4.0
+	resize_term				-	-	-
+	is_termresized				-	-	-
 
 **man-end**********************************************************************/
 

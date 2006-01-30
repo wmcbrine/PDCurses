@@ -41,7 +41,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_addchstr =
-	"$Id: addchstr.c,v 1.17 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: addchstr.c,v 1.18 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -78,16 +78,16 @@ const char *rcsid_addchstr =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      addchstr                              -        -      4.0
-      waddchstr                             -        -      4.0
-      mvaddchstr                            -        -      4.0
-      mvwaddchstr                           -        -      4.0
-      addchnstr                             -        -      4.0
-      waddchnstr                            -        -      4.0
-      mvaddchnstr                           -        -      4.0
-      mvwaddchnstr                          -        -      4.0
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	addchstr				-	-      4.0
+	waddchstr				-	-      4.0
+	mvaddchstr				-	-      4.0
+	mvwaddchstr				-	-      4.0
+	addchnstr				-	-      4.0
+	waddchnstr				-	-      4.0
+	mvaddchnstr				-	-      4.0
+	mvwaddchnstr				-	-      4.0
 
 **man-end**********************************************************************/
 

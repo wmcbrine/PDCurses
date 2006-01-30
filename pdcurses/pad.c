@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_pad =
-	"$Id: pad.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pad.c,v 1.13 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */
@@ -110,13 +110,13 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      newpad                                Y        -       Y
-      subpad                                Y        -       Y
-      prefresh                              Y        -       Y
-      pnoutrefresh                          Y        -       Y
-      pechochar                             -        -      3.0
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	newpad					Y	-	Y
+	subpad					Y	-	Y
+	prefresh				Y	-	Y
+	pnoutrefresh				Y	-	Y
+	pechochar				-	-      3.0
 
 **man-end**********************************************************************/
 

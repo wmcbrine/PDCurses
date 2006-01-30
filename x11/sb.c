@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_sb =
-	"$Id: sb.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: sb.c,v 1.10 2006/01/30 12:17:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -53,14 +53,14 @@ const char *rcsid_sb =
   PDCurses Return Value:
 	All functions return OK on success and ERR on error.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      sb_init                               -        -       -
-      sb_set_horz                           -        -       -
-      sb_set_vert                           -        -       -
-      sb_get_horz                           -        -       -
-      sb_get_vert                           -        -       -
-      sb_refresh                            -        -       -
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	sb_init					-	-	-
+	sb_set_horz				-	-	-
+	sb_set_vert				-	-	-
+	sb_get_horz				-	-	-
+	sb_get_vert				-	-	-
+	sb_refresh				-	-	-
 
 **man-end**********************************************************************/
 

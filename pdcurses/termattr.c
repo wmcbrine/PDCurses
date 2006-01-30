@@ -38,7 +38,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.16 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: termattr.c,v 1.17 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -117,17 +117,17 @@ const char *rcsid_termattr =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      baudrate                              Y        Y       Y
-      erasechar                             Y        Y       Y
-      has_ic                                Y        Y       Y
-      has_il                                Y        Y       Y
-      killchar                              Y        Y       Y
-      longname                              Y        Y       Y
-      termattrs                             Y        Y       Y
-      termname                              Y        Y       Y
-      wordchar                              -        -       -
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	baudrate				Y	Y	Y
+	erasechar				Y	Y	Y
+	has_ic					Y	Y	Y
+	has_il					Y	Y	Y
+	killchar				Y	Y	Y
+	longname				Y	Y	Y
+	termattrs				Y	Y	Y
+	termname				Y	Y	Y
+	wordchar				-	-	-
 
 **man-end**********************************************************************/
 

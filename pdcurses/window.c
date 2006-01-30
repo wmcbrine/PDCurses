@@ -48,7 +48,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.15 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: window.c,v 1.16 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -141,20 +141,20 @@ const char *rcsid_window =
 	windows are left alone.  i.e. The resize is NOT cancelled for
 	those windows.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      newwin                                Y        Y       Y
-      delwin                                Y        Y       Y
-      mvwin                                 Y        Y       Y
-      subwin                                Y        Y       Y
-      derwin                                Y        -       Y
-      mvderwin                              Y        -       Y
-      dupwin                                -        -      4.0
-      wsyncup                               -        -      4.0
-      syncok                                -        -      4.0
-      wcursyncup                            -        -      4.0
-      wsyncdown                             -        -      4.0
-      resize_window                         -        -       -
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	newwin					Y	Y	Y
+	delwin					Y	Y	Y
+	mvwin					Y	Y	Y
+	subwin					Y	Y	Y
+	derwin					Y	-	Y
+	mvderwin				Y	-	Y
+	dupwin					-	-      4.0
+	wsyncup					-	-      4.0
+	syncok					-	-      4.0
+	wcursyncup				-	-      4.0
+	wsyncdown				-	-      4.0
+	resize_window				-	-	-
 
 **man-end**********************************************************************/
 

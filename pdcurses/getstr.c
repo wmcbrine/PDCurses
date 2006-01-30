@@ -44,7 +44,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_getstr =
-	"$Id: getstr.c,v 1.18 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: getstr.c,v 1.19 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -89,15 +89,15 @@ const char *rcsid_getstr =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      getstr                                Y        Y       Y
-      wgetstr                               Y        Y       Y
-      mvgetstr                              Y        Y       Y
-      mvwgetstr                             Y        Y       Y
-      getnstr                               -        -      4.0
-      wgetnstr                              -        -      4.0
-      mvwgetnstr                            -        -     ncurses
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	getstr					Y	Y	Y
+	wgetstr					Y	Y	Y
+	mvgetstr				Y	Y	Y
+	mvwgetstr				Y	Y	Y
+	getnstr					-	-      4.0
+	wgetnstr				-	-      4.0
+	mvwgetnstr				-	-     ncurses
 
 **man-end**********************************************************************/
 

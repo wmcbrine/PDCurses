@@ -38,7 +38,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_touch =
-	"$Id: touch.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: touch.c,v 1.10 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -84,14 +84,14 @@ const char *rcsid_touch =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      touchwin                              Y        Y       Y
-      touchline                             Y        -      3.0
-      untouchwin                            -        -      4.0
-      wtouchln                              Y        Y       Y
-      is_linetouched                        -        -      4.0
-      is_wintouched                         -        -      4.0
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	touchwin				Y	Y	Y
+	touchline				Y	-      3.0
+	untouchwin				-	-      4.0
+	wtouchln				Y	Y	Y
+	is_linetouched				-	-      4.0
+	is_wintouched				-	-      4.0
 
 **man-end**********************************************************************/
 

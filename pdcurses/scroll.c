@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_scroll =
-	"$Id: scroll.c,v 1.11 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: scroll.c,v 1.12 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -70,11 +70,11 @@ const char *rcsid_scroll =
 	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
 	add -DPDCURSES_WCLR to the compile switches.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      scroll                                Y        Y       Y
-      scrl                                  -        -      4.0
-      wscrl                                 -        -      4.0
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	scroll					Y	Y	Y
+	scrl					-	-      4.0
+	wscrl					-	-      4.0
 
 **man-end**********************************************************************/
 

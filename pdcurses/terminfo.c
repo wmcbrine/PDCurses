@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_terminfo =
-	"$Id: terminfo.c,v 1.13 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: terminfo.c,v 1.14 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -70,9 +70,9 @@ const char *rcsid_terminfo =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      mvcur                                 Y        Y       Y
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	mvcur					Y	Y	Y
 
 **man-end**********************************************************************/
 

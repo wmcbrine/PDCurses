@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_printw =
-	"$Id: printw.c,v 1.13 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: printw.c,v 1.14 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -85,13 +85,13 @@ const char *rcsid_printw =
   X/Open Errors:
 	No errors are defined for this function.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      printw                                Y        Y       Y
-      wprintw                               Y        Y       Y
-      mvprintw                              Y        Y       Y
-      mvwprintw                             Y        Y       Y
-      vwprintw                              -        -      4.0
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	printw					Y	Y	Y
+	wprintw					Y	Y	Y
+	mvprintw				Y	Y	Y
+	mvwprintw				Y	Y	Y
+	vwprintw				-	-      4.0
 
 **man-end**********************************************************************/
 

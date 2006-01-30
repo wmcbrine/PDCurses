@@ -33,7 +33,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_deleteln =
-	"$Id: deleteln.c,v 1.10 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: deleteln.c,v 1.11 2006/01/30 12:17:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -73,15 +73,15 @@ const char *rcsid_deleteln =
 	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
 	add -DPDCURSES_WCLR to the compile switches.
 
-  Portability                             X/Open    BSD    SYS V
-                                          Dec '88
-      deleteln                              Y        Y       Y
-      wdeleteln                             Y        Y       Y
-      insdelln                              -        -      4.0
-      winsdelln                             -        -      4.0
-      insertln                              Y        Y       Y
-      winsertln                             Y        Y       Y
-      mvwinsertln                           -        -       -
+  Portability				     X/Open    BSD    SYS V
+					     Dec '88
+	deleteln				Y	Y	Y
+	wdeleteln				Y	Y	Y
+	insdelln				-	-      4.0
+	winsdelln				-	-      4.0
+	insertln				Y	Y	Y
+	winsertln				Y	Y	Y
+	mvwinsertln				-	-	-
 
 **man-end**********************************************************************/
 

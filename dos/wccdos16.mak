@@ -379,7 +379,7 @@ dist: .symbolic $(PDCLIBS)
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
 	echo $(PDCURSES_HOME)\README > flist
-	echo $(PDCURSES_HOME)\readme.$(VER) >> flist
+	echo $(PDCURSES_HOME)\HISTORY >> flist
 	echo $(PDCURSES_HOME)\maintain.er >> flist
 	echo $(PDCURSES_HOME)\curses.h >> flist
 	echo $(PDCURSES_HOME)\curspriv.h >> flist

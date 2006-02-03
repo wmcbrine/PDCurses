@@ -333,7 +333,7 @@ dist: $(PDCLIBS)
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
 	zip -9jX pdc$(VER)_ming_w32 \
-	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\readme.$(VER) \
+	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\HISTORY \
 	$(PDCURSES_HOME)\maintain.er \
 	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h \
 	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h \

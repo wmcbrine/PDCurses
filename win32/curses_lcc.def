@@ -31,7 +31,6 @@ delscreen
 delwin
 derwin
 doupdate
-draino
 dupwin
 echo
 echochar

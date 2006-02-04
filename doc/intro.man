@@ -230,7 +230,6 @@ FUNCTIONS
 		delwin                   window
 		derwin                   window
 		doupdate                 refresh
-		draino                   kernel
 		dupwin                   window
 		echo                     inopts
 		echochar                 addch

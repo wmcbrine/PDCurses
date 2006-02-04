@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.115 2006/02/04 02:33:29 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.116 2006/02/04 03:00:01 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -1544,6 +1544,9 @@ int	PDC_CDECL PDC_set_line_color(short);
 
 #define crmode			cbreak
 #define nocrmode		nocbreak
+#define draino			napms
+#define resetterm		reset_shell_mode
+#define saveterm		def_prog_mode
 
 #ifdef CHTYPE_LONG
 # define COLOR_PAIR(n)	((chtype)(n) << 24)
@@ -1574,7 +1577,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 #define deleteln()		wdeleteln(stdscr)
 #define derwin(w,nl,nc,by,bx)	subwin((w),(nl),(nc),\
 					(by+(w)->_begy),(bx+(w)->_begx))
-#define draino(ms)		napms(ms)
 #define echo()			(SP->echo = TRUE, OK)
 #define echochar(c)		(addch((chtype)c)==ERR?ERR:refresh())
 #define erase()			werase(stdscr)
@@ -1644,8 +1646,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 #define nonl()			(SP->autocr = FALSE, OK)
 #define redrawwin(w)		wredrawln(w, 0, (w)->_maxy)
 #define refresh()		wrefresh(stdscr)
-#define resetterm()		reset_shell_mode()
-#define saveterm()		def_prog_mode()
 #define scrl(n)			wscrl(stdscr, n)
 #define scroll(w)		wscrl(w, 1)
 #define scrollok(w, flag)	((w)->_scroll = flag)

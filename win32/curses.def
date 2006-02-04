@@ -38,7 +38,6 @@ EXPORTS delscreen
 EXPORTS delwin
 EXPORTS derwin
 EXPORTS doupdate
-EXPORTS draino
 EXPORTS dupwin
 EXPORTS echo
 EXPORTS echochar

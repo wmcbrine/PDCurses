@@ -63,7 +63,6 @@
 #undef ripoffline
 #undef curs_set
 #undef napms
-#undef draino
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
@@ -73,7 +72,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.31 2006/02/04 01:57:50 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.32 2006/02/04 03:00:01 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -95,7 +94,6 @@ char linesrippedoff = 0;
 	int ripoffline(int line, int (*init)(WINDOW *,int));
 	int curs_set(int visibility);
 	int napms(int ms);
-	int draino(int ms);
 
   X/Open Description:
 	The def_prog_mode() and def_shell_mode() functions save the 
@@ -148,8 +146,8 @@ char linesrippedoff = 0;
 	ripoffline() with a NULL initialise function pointer is not 
 	advisable!
 
-	The napms() and draino() functions, suspends the program for the
-	specified number of milliseconds.
+	The napms() function, suspends the program for the specified 
+	number of milliseconds.
 
   PDCurses Description:
 	FYI: It is very unclear whether savetty() and resetty() 
@@ -184,7 +182,6 @@ char linesrippedoff = 0;
 	ripoffline				-	-      3.0
 	curs_set				-	-      3.0
 	napms					Y	Y	Y
-	draino					?	?	N
 
 **man-end**********************************************************************/
 
@@ -444,11 +441,4 @@ int PDC_CDECL napms(int ms)
 # endif
 #endif
 	return OK;
-}
-
-int PDC_CDECL draino(int ms)
-{
-	PDC_LOG(("draino() - called: ms=%d\n", ms));
-
-	return napms(ms);
 }

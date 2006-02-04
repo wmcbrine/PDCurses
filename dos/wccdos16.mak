@@ -46,7 +46,7 @@ LDFLAGS =
 
 CPPFLAGS	= /i=$(PDCURSES_HOME)
 
-CCFLAGS		= /bt=$(TARGET) /zq /m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+CCFLAGS		= /bt=$(TARGET) /zq /wx /m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LINK		= wlink
 

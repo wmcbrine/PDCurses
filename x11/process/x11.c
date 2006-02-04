@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.31 2006/02/04 17:35:12 wmcbrine Exp $";
+	"$Id: x11.c,v 1.32 2006/02/04 20:40:27 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -33,8 +33,6 @@ extern AppData app_data;
 int visible_cursor = 0;
 int windowEntered = 1;
 static char *XCursesProgramName;
-
-extern void say(const char *);
 
 void XCursesExitXCursesProcess(int rc, int sig, char *msg)
 {
@@ -196,23 +194,23 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		break; 
 
 	    case CURSES_EXIT:	/* request from curses to stop */
-		say("CURSES_EXIT received from child\n");
+		XC_LOG(("CURSES_EXIT received from child\n"));
 		XCursesExitXCursesProcess(0, 0,
 		    "XCursesProcess requested to exit by child");
 		break;
 
 	    case CURSES_BELL:
-		say("CURSES_BELL received from child\n");
+		XC_LOG(("CURSES_BELL received from child\n"));
 		XBell(XCURSESDISPLAY, 50);
 		break;
 
 	    case CURSES_CLEAR:
-		say("CURSES_CLEAR received from child\n"); 
-		XClearWindow(XCURSESDISPLAY, XCURSESWIN); 
-		break; 
+		XC_LOG(("CURSES_CLEAR received from child\n"));
+		XClearWindow(XCURSESDISPLAY, XCURSESWIN);
+		break;
 
 	    case CURSES_FLASH:
-		say("CURSES_FLASH received from child\n"); 
+		XC_LOG(("CURSES_FLASH received from child\n"));
 #if 0 
 		XFillRectangle(XCURSESDISPLAY, XCURSESWIN, 
 		    normal_highlight_gc, 10, 10, 
@@ -238,7 +236,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    /* request from curses to confirm completion of display */ 
 
 	    case CURSES_REFRESH:
-		say("CURSES_REFRESH received from child\n"); 
+		XC_LOG(("CURSES_REFRESH received from child\n"));
 		visible_cursor = 1; 
 		XCursesRefreshScreen(); 
 		XCursesDisplayCursor(SP->cursrow, SP->curscol, 
@@ -257,10 +255,11 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		break;
 
 	    case CURSES_CURSOR:
-		say("CURSES_CURSOR received from child\n");
+		XC_LOG(("CURSES_CURSOR received from child\n"));
 		if (read_socket(display_sock, buf, sizeof(int) * 2) < 0)
 		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_CURSOR XCursesProcessRequestsFromCurses");
+			"exiting from CURSES_CURSOR "
+			"XCursesProcessRequestsFromCurses");
 
 		memcpy((char *)&pos, buf, sizeof(int)); 
 
@@ -276,8 +275,9 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		break;
 
 	    case CURSES_DISPLAY_CURSOR:
-		say("CURSES_DISPLAY_CURSOR received from child. Vis now: ");
-		say(visible_cursor ? "1\n" : "0\n");
+		XC_LOG(("CURSES_DISPLAY_CURSOR received from child. "
+			"Vis now: "));
+		XC_LOG((visible_cursor ? "1\n" : "0\n"));
 
 		/* If the window is not active, ignore this 
 		   command. The cursor will stay solid. */
@@ -311,24 +311,26 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		break; 
 
 	    case CURSES_TITLE:
-		say("CURSES_TITLE received from child\n"); 
+		XC_LOG(("CURSES_TITLE received from child\n"));
 
 		if (read_socket(display_sock, buf, sizeof(int)) < 0)
 		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
+			"exiting from CURSES_TITLE "
+			"XCursesProcessRequestsFromCurses");
 
 		memcpy((char *)&pos, buf, sizeof(int));
 
 		if (read_socket(display_sock, title, pos) < 0)
 		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
+			"exiting from CURSES_TITLE "
+			"XCursesProcessRequestsFromCurses");
 
 		XtVaSetValues(topLevel, XtNtitle, title, NULL);
 		break;
 
 	    case CURSES_RESIZE:
 		after_first_curses_request = False;
-		say("CURSES_RESIZE received from child\n");
+		XC_LOG(("CURSES_RESIZE received from child\n"));
 
 		SP->lines = XCursesLINES = ((resizeXCursesWindowHeight -
 		    (2 * XCURSESBORDERWIDTH)) / XCursesFontHeight);
@@ -381,7 +383,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		break; 
 
 	    case CURSES_GET_SELECTION:
-		say("CURSES_GET_SELECTION received from child\n");
+		XC_LOG(("CURSES_GET_SELECTION received from child\n"));
 		old_x = CURSES_CONTINUE;
 		memcpy(buf, (char *)&old_x, sizeof(int));
 
@@ -396,11 +398,12 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		break;
 
 	    case CURSES_SET_SELECTION:
-		say("CURSES_SET_SELECTION received from child\n");
+		XC_LOG(("CURSES_SET_SELECTION received from child\n"));
 
 		if (read_socket(display_sock, buf, sizeof(long)) < 0)
 		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
+			"exiting from CURSES_TITLE "
+			"XCursesProcessRequestsFromCurses");
 
 		memcpy((char *)&length, buf, sizeof(long));
 
@@ -451,7 +454,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		break;
 
 	    case CURSES_CLEAR_SELECTION:
-		say("CURSES_CLEAR_SELECTION received from child\n");
+		XC_LOG(("CURSES_CLEAR_SELECTION received from child\n"));
 		old_x = CURSES_CONTINUE;
 		memcpy(buf, (char *)&old_x, sizeof(int));
 
@@ -756,9 +759,8 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	/* Create the Graphics Context for drawing. This MUST be done 
 	   AFTER the associated widget has been realized. */
 
-#ifdef PDCDEBUG
-	say("before get_GC\n");
-#endif
+	XC_LOG(("before get_GC\n"));
+
 	get_GC(XCURSESDISPLAY, XCURSESWIN, &normal_gc, 
 		XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK, FALSE);
 
@@ -1001,9 +1003,8 @@ void XCursesStructureNotify(Widget w, XtPointer client_data, XEvent *event,
 	switch(event->type)
 	{
 	case ConfigureNotify:
-#ifdef PDCDEBUG
-		say("ConfigureNotify received\n");
-#endif
+		XC_LOG(("ConfigureNotify received\n"));
+
 		/* Window has been resized, change width and height to 
 		   send to place_text and place_graphics in next Expose. 
 		   Also will need to kill (SIGWINCH) curses process if 
@@ -1023,9 +1024,8 @@ void XCursesStructureNotify(Widget w, XtPointer client_data, XEvent *event,
 		break;
 
 	case MapNotify:
-#ifdef PDCDEBUG
-		say("MapNotify received\n");
-#endif
+		XC_LOG(("MapNotify received\n"));
+
 		ReceivedMapNotify = 1;
 
 		/* Draw the window border */

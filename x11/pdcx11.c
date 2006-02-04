@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.41 2006/02/04 17:35:11 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.42 2006/02/04 20:40:26 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -905,10 +905,12 @@ pthread_mutex_t key_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int xerror();
 
+#ifdef PDCDEBUG
 void say(const char *msg)
 {
 	PDC_LOG(("%s:%s", XCLOGMSG, msg));
 }
+#endif
 
 void dummy_function(void)
 {
@@ -1106,9 +1108,8 @@ void makeXY(int x, int y, int fontwidth, int fontheight, int *xpos, int *ypos)
 
 int get_colors(void)
 {
-#ifdef PDCDEBUG
-	say("in get_colors\n");
-#endif
+	XC_LOG(("in get_colors\n"));
+
 	colors[0] = app_data.colorBlack;
 	colors[1] = app_data.colorRed;
 	colors[2] = app_data.colorGreen;
@@ -1127,9 +1128,9 @@ int get_colors(void)
 	colors[15] = app_data.colorBoldWhite;
 	colors[COLOR_CURSOR] = XCURSESCURSORCOLOR;
 	colors[COLOR_BORDER] = XCURSESBORDERCOLOR;
-#ifdef PDCDEBUG
-	say("out of get_colors\n");
-#endif
+
+	XC_LOG(("out of get_colors\n"));
+
 	return OK;
 }
 
@@ -1365,9 +1366,8 @@ void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 
 	if (event->type == ClientMessage)
 	{
-#ifdef PDCDEBUG
-		say("ClientMessage received\n");
-#endif
+		XC_LOG(("ClientMessage received\n"));
+
 		/* This code used to include handling of 
 		   WM_SAVE_YOURSELF, but it resulted in continual 
 		   failure of THE on my Toshiba laptop. Removed on 
@@ -2282,16 +2282,14 @@ void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 	switch(event->type)
 	{
 	case EnterNotify:
-#ifdef PDCDEBUG
-		say("EnterNotify received\n");
-#endif
+		XC_LOG(("EnterNotify received\n"));
+
 		windowEntered = TRUE;
 		break;
 
 	case LeaveNotify:
-#ifdef PDCDEBUG
-		say("LeaveNotify received\n");
-#endif
+		XC_LOG(("LeaveNotify received\n"));
+
 		windowEntered = FALSE;
 
 		/* Display the cursor so it stays on while the window is 

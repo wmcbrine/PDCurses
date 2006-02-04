@@ -19,7 +19,7 @@
 * 1994-1999. M.Hessling@qut.edu.au
 **************************************************************************/
 
-/* $Id: pdcx11.h,v 1.17 2006/01/30 02:10:55 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.18 2006/02/04 20:40:26 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -348,3 +348,10 @@ void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data);
 void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data);
+
+#ifdef PDCDEBUG
+void say(const char *msg);
+# define XC_LOG(x) say x
+#else
+# define XC_LOG(x)
+#endif

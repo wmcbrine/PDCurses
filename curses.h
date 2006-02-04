@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.119 2006/02/04 14:20:53 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.120 2006/02/04 14:36:15 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -1545,15 +1545,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 
 #define wresize(w, l, c)	((w = resize_window(w, l, c)) ? OK : ERR)
 
-/* Some quasi-standard aliases for standard functions */
-
-#define crmode			cbreak
-#define nocrmode		nocbreak
-#define draino			napms
-#define resetterm		reset_shell_mode
-#define fixterm			reset_prog_mode
-#define saveterm		def_prog_mode
-
 /* Macros mainly for those standard functions that are just wrappers for 
    the core functions. Defining NOMACROS saves space in the compiled 
    executable, but could slow it down slightly. It's also better for 
@@ -1672,6 +1663,15 @@ int	PDC_CDECL PDC_set_line_color(short);
 
 #endif /* !defined(MACROS) && !defined(PDCDEBUG) */
 
+/* Some quasi-standard aliases for standard functions */
+
+#define crmode			cbreak
+#define nocrmode		nocbreak
+#define draino			napms
+#define resetterm		reset_shell_mode
+#define fixterm			reset_prog_mode
+#define saveterm		def_prog_mode
+
 /* PDCurses-specific */
 
 #define is_termresized()	(SP->resized)
@@ -1683,12 +1683,12 @@ int	PDC_CDECL PDC_set_line_color(short);
 #define PDC_save_key_modifiers(flag) (SP->save_key_modifiers = flag)
 #define PDC_return_key_modifiers(flag) (SP->return_key_modifiers = flag)
 
-/* FYI: Need to document these functions */
+/* need to document these */
 
+#define wtitle(w, s, a)		(w->_title = s, w->_title_attr = (chtype)a)
+#define wtitleofs(w, ofs)	(w->_title_ofs = ofs)
 #define title(s, a)		wtitle(stdscr, s, (chtype)a)
 #define titleofs(ofs)		wtitleofs(stdscr, ofs)
-#define wtitle(w, s, a)	(w->_title = s, w->_title_attr = (chtype)a)
-#define wtitleofs(w, ofs)	(w->_title_ofs = ofs)
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

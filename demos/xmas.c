@@ -100,8 +100,12 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_xmas =
-	"$Id: xmas.c,v 1.15 2006/01/30 02:10:54 wmcbrine Exp $";
+	"$Id: xmas.c,v 1.16 2006/02/04 03:51:31 wmcbrine Exp $";
 #endif
+
+/* NOMACROS makes a big difference in the size with PDCurses */
+
+#define NOMACROS
 
 #include <curses.h>
 #include <signal.h>

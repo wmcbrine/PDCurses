@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.118 2006/02/04 03:43:08 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.119 2006/02/04 14:20:53 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -1551,6 +1551,7 @@ int	PDC_CDECL PDC_set_line_color(short);
 #define nocrmode		nocbreak
 #define draino			napms
 #define resetterm		reset_shell_mode
+#define fixterm			reset_prog_mode
 #define saveterm		def_prog_mode
 
 /* Macros mainly for those standard functions that are just wrappers for 
@@ -1590,7 +1591,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 					(by + (w)->_begy), (bx + (w)->_begx))
 # define echochar(c)		(addch((chtype)c)==ERR?ERR:refresh())
 # define erase()		werase(stdscr)
-# define fixterm()		reset_prog_mode()
 # define getbkgd(w)		((w)->_bkgd)
 # define getstr(str)		wgetstr(stdscr, str)
 # define getnstr(str, num)	wgetnstr(stdscr, str, num)
@@ -1605,7 +1605,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 # define insstr(s)		winsnstr(stdscr, s, -1)
 # define instr(str)		winnstr(stdscr, str, stdscr->_maxx)
 # define isendwin()		(SP->alive ? FALSE : TRUE)
-# define is_termresized()	(SP->resized)
 # define mvaddch(y, x, c)	(move(y, x)==ERR?ERR:addch(c))
 # define mvaddchstr(y, x, c)	(move(y, x)==ERR?ERR:addchnstr(c, -1))
 # define mvaddchnstr(y,x,c,n)	(move(y, x)==ERR?ERR:addchnstr(c, n))
@@ -1630,7 +1629,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 # define mvwaddch(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:waddch(w, c))
 # define mvwaddchstr(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddchnstr(w, c, -1))
 # define mvwaddchnstr(w,y,x,c,n) (wmove(w, y, x)==ERR?ERR:waddchnstr(w, c, n))
-# define mvwaddrawch(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddrawch(w, c))
 # define mvwaddstr(w,y,x,str)	(wmove(w, y, x)==ERR?ERR:waddstr(w, str))
 # define mvwdelch(w, y, x)	(wmove(w, y, x)==ERR?ERR:wdelch(w))
 # define mvwgetch(w, y, x)	(wmove(w, y, x)==ERR?ERR:wgetch(w))
@@ -1676,10 +1674,12 @@ int	PDC_CDECL PDC_set_line_color(short);
 
 /* PDCurses-specific */
 
+#define is_termresized()	(SP->resized)
+#define waddrawch(w, c)		PDC_chadd(w, (chtype)c, FALSE, TRUE)
+#define winsrawch(w, c)		PDC_chins(w, (chtype)c, FALSE)
 #define addrawch(c)		waddrawch(stdscr, c)
 #define insrawch(c)		winsrawch(stdscr, c)
-#define waddrawch(w, c)	PDC_chadd(w, (chtype)c, FALSE, TRUE)
-#define winsrawch(w, c)	PDC_chins(w, (chtype)c, FALSE)
+#define mvwaddrawch(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddrawch(w, c))
 #define PDC_save_key_modifiers(flag) (SP->save_key_modifiers = flag)
 #define PDC_return_key_modifiers(flag) (SP->return_key_modifiers = flag)
 

@@ -73,7 +73,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.30 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.31 2006/02/04 01:57:50 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -355,8 +355,7 @@ int PDC_CDECL resetty(void)
 #ifdef XCURSES
 		PDC_set_rows(c_save_tty.saved.lines);
 #else
-		PDC_resize_screen(c_save_tty.saved.lines,
-			c_save_tty.saved.cols);
+		resize_term(c_save_tty.saved.lines, c_save_tty.saved.cols);
 #endif
 	}
 

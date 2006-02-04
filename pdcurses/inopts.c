@@ -51,7 +51,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.16 2006/02/04 02:33:30 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.17 2006/02/04 19:30:32 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -254,6 +254,7 @@ int PDC_CDECL halfdelay(int tenths)
 
 int PDC_CDECL intrflush(WINDOW *win, bool bf)
 {
+#if 0
 	int y, maxy;
 
 	PDC_LOG(("intrflush() - called\n"));
@@ -265,7 +266,7 @@ int PDC_CDECL intrflush(WINDOW *win, bool bf)
 
 	for (y = 0; y <= maxy; y++)
 		win->_firstch[y] = _NO_CHANGE;
-
+#endif
 	return OK;
 }
 

@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.120 2006/02/04 14:36:15 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.121 2006/02/04 19:35:05 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -1683,7 +1683,7 @@ int	PDC_CDECL PDC_set_line_color(short);
 #define PDC_save_key_modifiers(flag) (SP->save_key_modifiers = flag)
 #define PDC_return_key_modifiers(flag) (SP->return_key_modifiers = flag)
 
-/* need to document these */
+/* need to get rid of these */
 
 #define wtitle(w, s, a)		(w->_title = s, w->_title_attr = (chtype)a)
 #define wtitleofs(w, ofs)	(w->_title_ofs = ofs)

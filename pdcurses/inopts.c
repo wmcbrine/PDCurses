@@ -51,7 +51,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.17 2006/02/04 19:30:32 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.18 2006/02/04 19:35:06 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -171,7 +171,8 @@ const char *rcsid_inopts =
 	The meta() function is provided for portability.  By default, 8 bits
 	are returned.
 
-	notimeout(), noqiflush() and qiflush() are no-ops in PDCurses.
+	intrflush(), notimeout(), noqiflush() and qiflush() are no-ops
+	in PDCurses.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -254,19 +255,8 @@ int PDC_CDECL halfdelay(int tenths)
 
 int PDC_CDECL intrflush(WINDOW *win, bool bf)
 {
-#if 0
-	int y, maxy;
-
 	PDC_LOG(("intrflush() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	maxy = win->_maxy - 1;
-
-	for (y = 0; y <= maxy; y++)
-		win->_firstch[y] = _NO_CHANGE;
-#endif
 	return OK;
 }
 

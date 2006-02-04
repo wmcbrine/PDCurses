@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.31 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.32 2006/02/04 01:47:50 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -413,18 +413,7 @@ int processKeyEvent(void)
 	unsigned long local_key_modifiers = 0L;
 	int idx;
 	BOOL enhanced;
-#if 0
-	{
-		char buf[KL_NAMELENGTH];
-		GetKeyboardLayoutName(buf);
 
-		fprintf(stderr, "OS=%X, AsciiChar: %u=%02X Unicode: %u=%02X "
-			"KeyCode: %d ScanCode: %d State: %x Name: %s\n",
-			SP->os_version, (unsigned char) ascii,
-			(unsigned char) ascii, unicode, unicode, vk, 
-			save_ip.Event.KeyEvent.wVirtualScanCode, state, buf);
-	}
-#endif
 	pdc_key_modifiers = 0L;
 
 	/* Must calculate the key modifiers so that Alt keys work! Save 
@@ -569,19 +558,14 @@ int PDC_get_bios_key(void)
 		retval = processKeyEvent();
 		if (retval == -1)	/* ignore key? */
 			continue;
-#if 0
-		fprintf(stderr, "KEY_EVENT returns 0x%X\n", retval);
-#endif
+
 		return retval;
 
 	    case MOUSE_EVENT:
 		memset((char*)&Temp_Mouse_status, 0, sizeof(MOUSE_STATUS));
 
 		/* Wheel has been scrolled */
-#if 0
-		fprintf(stderr, "%s %d: %x\n", __FILE__, __LINE__, 
-			save_ip.Event.MouseEvent.dwButtonState);
-#endif
+
 		if (save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED)
 		{
 		    if (save_ip.Event.MouseEvent.dwButtonState & 0xFF000000)
@@ -1298,32 +1282,7 @@ static int win32_kbhit(int timeout)
 
 	PDC_LOG(("win32_kbhit(THREADING) - called: timeout %d\n", 
 		timeout));
-#if 0
-	if (timeout == INFINITE)
-	{
-		ReadFile(hPipeRead, &save_ip, sizeof(INPUT_RECORD), 
-			&read, NULL);
-		return TRUE;
-	}
-	else
-	{
-		if (WaitForSingleObject(hSemKeyCount, timeout) != 
-		    WAIT_OBJECT_0)
-			return FALSE;
 
-		if (PeekNamedPipe(hPipeRead, &ip, sizeof(INPUT_RECORD), 
-		    &read, &avail, &unread))
-		{
-
-			PDC_LOG(("win32_kbhit(THREADING) - maybe key on "
-				"pipe. read %d avail %d unread %d\n",
-				read, avail, unread));
-
-			if (read == sizeof(INPUT_RECORD))
-				return TRUE;
-		}
-	}
-#else
 	if (WaitForSingleObject(hSemKeyCount, timeout) != WAIT_OBJECT_0)
 		return FALSE;
 
@@ -1346,7 +1305,7 @@ static int win32_kbhit(int timeout)
 				return TRUE;
 		}
 	}
-#endif
+
 	return FALSE;
 }
 

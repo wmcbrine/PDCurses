@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.114 2006/01/29 15:17:51 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.115 2006/02/04 02:33:29 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -597,7 +597,7 @@ typedef struct			/* structure for ripped off lines */
 typedef struct
 {
 	bool	alive;		/* if initscr() called			*/
-	bool	autocr;		/* if lf -> crlf			*/
+	bool	autocr;		/* if cr -> lf				*/
 	bool	cbreak;		/* if terminal unbuffered		*/
 	bool	echo;		/* if terminal echo			*/
 	bool	raw_inp;	/* raw input mode (v. cooked input)	*/

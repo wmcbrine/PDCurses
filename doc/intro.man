@@ -326,11 +326,11 @@ FUNCTIONS
 		newpad                   pad
 		newterm                  initscr
 		newwin                   window
-		nl                       outopts
+		nl                       inopts
 		nocbreak                 inopts
 		nodelay                  inopts
 		noecho                   inopts
-		nonl                     outopts
+		nonl                     inopts
 		noqiflush                inopts
 		noraw                    inopts
 		notimeout                inopts

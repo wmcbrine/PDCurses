@@ -31,6 +31,8 @@
 #undef intrflush
 #undef keypad
 #undef meta
+#undef nl
+#undef nonl
 #undef nodelay
 #undef notimeout
 #undef raw
@@ -49,7 +51,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.15 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.16 2006/02/04 02:33:30 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -65,6 +67,8 @@ const char *rcsid_inopts =
 	int intrflush(WINDOW *win, bool bf);
 	int keypad(WINDOW *win, bool bf);
 	int meta(WINDOW *win, bool bf);
+	int nl(void);
+	int nonl(void);
 	int nodelay(WINDOW *win, bool bf);
 	int notimeout(WINDOW *win, bool bf);
 	int raw(void);
@@ -125,9 +129,13 @@ const char *rcsid_inopts =
 	will return ERR. If disabled, wgetch() will hang until input
 	is ready.
 
+        The nl() function enables the translation of a carriage return 
+	into a newline on input. The nonl() function disables it. 
+	Initially, the translation does occur.
+
 	While interpreting an input escape sequence, wgetch sets a timer 
-	while waiting for the next character.  If notimeout(win,TRUE) is 
-	called, then wgetch does not set a timer.  The purpose of the 
+	while waiting for the next character.  If notimeout(win, TRUE) 
+	is called, then wgetch does not set a timer.  The purpose of the 
 	timeout is to differentiate between sequences received from a 
 	function key and those typed by a user.
 
@@ -181,6 +189,8 @@ const char *rcsid_inopts =
 	intrflush				Y	-	Y
 	keypad					Y	-	Y
 	meta					-	-	Y
+	nl					Y	Y	Y
+	nonl					Y	Y	Y
 	nodelay					Y	-	Y
 	notimeout				-	-	Y
 	raw					Y	Y	Y
@@ -276,6 +286,24 @@ int PDC_CDECL meta(WINDOW *win, bool bf)
 	PDC_LOG(("meta() - called\n"));
 
 	SP->raw_inp = bf;
+
+	return OK;
+}
+
+int PDC_CDECL nl(void)
+{
+	PDC_LOG(("nl() - called\n"));
+
+	SP->autocr = TRUE;
+
+	return OK;
+}
+
+int PDC_CDECL nonl(void)
+{
+	PDC_LOG(("nonl() - called\n"));
+
+	SP->autocr = FALSE;
 
 	return OK;
 }

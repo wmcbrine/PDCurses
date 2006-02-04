@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.21 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.22 2006/02/04 02:33:30 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -395,7 +395,7 @@ int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 		case '\n':
 			/* if lf -> crlf */
 
-			if (SP->autocr && !(SP->raw_out))
+			if (!SP->raw_out)
 				x = 0;
 
 			wclrtoeol(win);

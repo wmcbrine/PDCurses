@@ -31,13 +31,11 @@
 #undef setscrreg
 #undef wsetscrreg
 #undef scrollok
-#undef nl
-#undef nonl
 #undef raw_output
 
 #ifdef PDCDEBUG
 const char *rcsid_outopts =
-	"$Id: outopts.c,v 1.13 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: outopts.c,v 1.14 2006/02/04 02:33:30 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -53,8 +51,6 @@ const char *rcsid_outopts =
 	int setscrreg(int top, int bot);
 	int wsetscrreg(WINDOW *win, int top, int bot);
 	int scrollok(WINDOW *win, bool bf);
-	int nl(void);
-	int nonl(void);
 
 	int raw_output(bool bf);
 
@@ -100,20 +96,6 @@ const char *rcsid_outopts =
 	region to scroll up one line.  Only the text of the window is 
 	scrolled.
 
-	The nl() function enables the translation of newline into a 
-	carriage return and a line-feed on output, and a carriage return 
-	is translated into a newline on input.  Initially, the 
-	translations do occur.  By disabling these translations, curses 
-	is able to make better use of the line-feed capability, 
-	resulting in faster cursor motion.
-
-	The nonl() function disables the translation of newline into a 
-	carriage return and a line-feed on output, and a carriage return 
-	is translated into a newline on input.  Initially, the 
-	translations do occur.  By disabling these translations, curses 
-	is able to make better use of the line-feed capability, 
-	resulting in faster cursor motion.
-
   PDCurses Description:
 	idlok() and idcok() are provided for portability.  
 
@@ -144,8 +126,6 @@ const char *rcsid_outopts =
 	setscrreg				Y	Y	Y
 	wsetscrreg				Y	Y	Y
 	scrollok				Y	Y	Y
-	nl					Y	Y	Y
-	nonl					Y	Y	Y
 	raw_output				-	-	-
 
 **man-end**********************************************************************/
@@ -241,24 +221,6 @@ int PDC_CDECL scrollok(WINDOW *win, bool bf)
 		return ERR;
 
 	win->_scroll = bf;
-
-	return OK;
-}
-
-int PDC_CDECL nl(void)
-{
-	PDC_LOG(("nl() - called\n"));
-
-	SP->autocr = TRUE;
-
-	return OK;
-}
-
-int PDC_CDECL nonl(void)
-{
-	PDC_LOG(("nonl() - called\n"));
-
-	SP->autocr = FALSE;
 
 	return OK;
 }

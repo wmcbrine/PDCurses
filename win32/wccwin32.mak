@@ -38,7 +38,7 @@ TARGET=nt
 CFLAGS  = /d2 /DPDCDEBUG
 LDFLAGS = DEBUG WATCOM ALL
 !else
-CFLAGS  = /oneatx /wcd=302
+CFLAGS  = /oneatx
 LDFLAGS =
 !endif
 

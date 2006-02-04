@@ -36,7 +36,7 @@ CC		= bcc32 -q
 !if $d(DEBUG)
 CFLAGS  = -N -v -y -DPDCDEBUG
 !else
-CFLAGS  =  -O -w-eff -w-par
+CFLAGS  =  -O -w-par
 !endif
 
 CPPFLAGS	= -I$(PDCURSES_HOME)

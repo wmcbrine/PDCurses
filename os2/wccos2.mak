@@ -40,7 +40,7 @@ TARGET=os2v2
 CFLAGS  = /d2 /DPDCDEBUG
 LDFLAGS = DEBUG ALL
 !else
-CFLAGS  = /oneatx /wcd=302
+CFLAGS  = /oneatx
 LDFLAGS =
 !endif
 

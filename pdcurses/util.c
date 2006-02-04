@@ -17,6 +17,7 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
+#define INCLUDE_WINDOWS_H
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -39,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_util =
-	"$Id: util.c,v 1.23 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: util.c,v 1.24 2006/02/04 00:58:41 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -255,6 +256,9 @@ int PDC_CDECL delay_output(int ms)
 
 int PDC_CDECL flushinp(void)
 {
+#ifdef WIN32
+	extern HANDLE hConIn;
+#endif
 	extern int c_pindex;		/* putter index */
 	extern int c_gindex;		/* getter index */
 	extern int c_ungind;		/* wungetch() push index */
@@ -274,6 +278,10 @@ int PDC_CDECL flushinp(void)
 # else
 	KbdFlushBuffer(0);
 # endif
+#endif
+
+#ifdef WIN32
+	FlushConsoleInputBuffer(hConIn);
 #endif
 
 #ifdef XCURSES

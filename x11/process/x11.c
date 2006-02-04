@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.30 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: x11.c,v 1.31 2006/02/04 17:35:12 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -398,13 +398,13 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_SET_SELECTION:
 		say("CURSES_SET_SELECTION received from child\n");
 
-		if (read_socket(display_sock,buf,sizeof(long)) < 0)
+		if (read_socket(display_sock, buf, sizeof(long)) < 0)
 		    XCursesExitXCursesProcess(5, SIGKILL,
 			"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
 
 		memcpy((char *)&length, buf, sizeof(long));
 
-		if (length > tmpsel_length)
+		if (length > (long)tmpsel_length)
 		{
 		    if (tmpsel_length == 0)
 			tmpsel = (char *)malloc(length + 1);

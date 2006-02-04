@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.40 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.41 2006/02/04 17:35:11 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -2078,7 +2078,7 @@ void SelectionSet(void)
 		length = end - start + 1;
 	}
 
-	if (length > tmpsel_length)
+	if (length > (int)tmpsel_length)
 	{
 		if (tmpsel_length == 0)
 			tmpsel = (char *)malloc(length + 1 +
@@ -2438,7 +2438,7 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 #ifdef MOUSE_DEBUG
 		printf("\nButtonPress\n");
 #endif
-		if ((event->xbutton.time - last_button_press_time) <
+		if ((int)(event->xbutton.time - last_button_press_time) <
 		    XCURSESDOUBLECLICKPERIOD)
 		{
 			MOUSE_X_POS = save_mouse_status.x;

@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.117 2006/02/04 03:28:32 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.118 2006/02/04 03:43:08 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -52,6 +52,7 @@ PDCurses portable platform definitions list:
 	PDCURSES_WCLR	Makes behaviour of wclrtoeol() and wclrtoeof()
 			unique to PDCurses. By default Unix behavior is set.
 			See notes in wclrtoeol() and wclrtoeof().
+	NOMACROS	Don't use (most) macros in place of functions.
 
 **man-end**********************************************************************/
 
@@ -1552,8 +1553,8 @@ int	PDC_CDECL PDC_set_line_color(short);
 #define resetterm		reset_shell_mode
 #define saveterm		def_prog_mode
 
-/* Macros for those standard functions that are basically just wrappers 
-   for the core functions. Defining NOMACROS saves space in the compiled
+/* Macros mainly for those standard functions that are just wrappers for 
+   the core functions. Defining NOMACROS saves space in the compiled 
    executable, but could slow it down slightly. It's also better for 
    debugging. */
 
@@ -1578,7 +1579,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 # define bkgdset(c)		wbkgdset(stdscr, c)
 # define border(ls,rs,ts,bs,tl,tr,bl,br) wborder(stdscr,ls,rs,ts,bs,tl,tr,bl,br)
 # define box(w, v, h)		wborder(w, v, v, h, h, 0, 0, 0, 0)
-# define cbreak()		(SP->cbreak = TRUE, OK)
 # define clear()		wclear(stdscr)
 # define clrtobot()		wclrtobot(stdscr)
 # define clrtoeol()		wclrtoeol(stdscr)
@@ -1588,7 +1588,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 # define deleteln()		wdeleteln(stdscr)
 # define derwin(w,nl,nc,by,bx)	subwin((w), (nl), (nc),\
 					(by + (w)->_begy), (bx + (w)->_begx))
-# define echo()			(SP->echo = TRUE, OK)
 # define echochar(c)		(addch((chtype)c)==ERR?ERR:refresh())
 # define erase()		werase(stdscr)
 # define fixterm()		reset_prog_mode()
@@ -1607,7 +1606,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 # define instr(str)		winnstr(stdscr, str, stdscr->_maxx)
 # define isendwin()		(SP->alive ? FALSE : TRUE)
 # define is_termresized()	(SP->resized)
-# define keypad(w, flag)	(w->_use_keypad = flag, OK)
 # define mvaddch(y, x, c)	(move(y, x)==ERR?ERR:addch(c))
 # define mvaddchstr(y, x, c)	(move(y, x)==ERR?ERR:addchnstr(c, -1))
 # define mvaddchnstr(y,x,c,n)	(move(y, x)==ERR?ERR:addchnstr(c, n))
@@ -1650,11 +1648,6 @@ int	PDC_CDECL PDC_set_line_color(short);
 # define mvwinsnstr(w,y,x,s,n)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, n))
 # define mvwinsstr(w, y, x, s)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, -1))
 # define mvwvline(w,y,x,c,n)	(wmove(w, y, x)==ERR?ERR:wvline(w, c, n))
-# define nl()			(SP->autocr = TRUE, OK)
-# define nocbreak()		(SP->cbreak = FALSE, SP->delaytenths = 0, OK)
-# define noecho()		(SP->echo = FALSE, OK)
-# define nodelay(w, flag)	(w->_nodelay = flag, OK)
-# define nonl()			(SP->autocr = FALSE, OK)
 # define redrawwin(w)		wredrawln(w, 0, (w)->_maxy)
 # define refresh()		wrefresh(stdscr)
 # define scrl(n)		wscrl(stdscr, n)

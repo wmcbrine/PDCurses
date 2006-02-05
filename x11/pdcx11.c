@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.44 2006/02/05 05:09:18 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.45 2006/02/05 13:18:09 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -907,7 +907,7 @@ pthread_mutex_t key_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 int xerror();
 
 #ifdef PDCDEBUG
-void say(const char *msg)
+void XCsay(const char *msg)
 {
 	PDC_LOG(("%s:%s", XCLOGMSG, msg));
 }

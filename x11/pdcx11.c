@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.46 2006/02/05 13:55:09 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.47 2006/02/05 14:27:04 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -1513,9 +1513,8 @@ void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 	if (keysym == compose_key)
 	{
-
-	/* Change the shape of the cursor to an outline rectangle
-	   to indicate we are in "compose" status */
+		/* Change the shape of the cursor to an outline 
+		   rectangle to indicate we are in "compose" status */
 
 		save_visibility = SP->visibility;
 		SP->visibility = 0;
@@ -1802,7 +1801,7 @@ void XCursesRequestorCallbackForPaste(Widget w, XtPointer data,
 	}
 }
 
-Boolean XCursesConvertProc(Widget w,Atom *selection, Atom *target,
+Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 			   Atom *type_return, XtPointer *value_return,
 			   unsigned long *length_return, int *format_return)
 {
@@ -1848,16 +1847,9 @@ Boolean XCursesConvertProc(Widget w,Atom *selection, Atom *target,
 		return True;
 	}
 	else
-	{
-		if (XmuConvertStandardSelection(topLevel, CurrentTime, 
-		    selection, target, type_return, 
-		    (XPointer*)value_return, length_return, format_return))
-			return True;
-		else
-			return False;
-	}
-
-	return False;
+		return XmuConvertStandardSelection(topLevel, CurrentTime, 
+		    selection, target, type_return, (XPointer*)value_return,
+		    length_return, format_return);
 }
 
 void XCursesLoseOwnership(Widget w, Atom *type)

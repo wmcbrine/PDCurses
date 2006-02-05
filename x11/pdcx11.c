@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.45 2006/02/05 13:18:09 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.46 2006/02/05 13:55:09 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -1169,36 +1169,23 @@ int XCursesEndwin(void)
 
 int XCursesRefreshScrollbar(void)
 {
-	PDC_SCROLLBAR_TYPE cur_x =
-		(PDC_SCROLLBAR_TYPE)(SP->sb_cur_x * XCursesFontWidth);
-	PDC_SCROLLBAR_TYPE cur_y =
-		(PDC_SCROLLBAR_TYPE)(SP->sb_cur_y * XCursesFontHeight);
-
-	PDC_SCROLLBAR_TYPE total_x =
-		(PDC_SCROLLBAR_TYPE)(SP->sb_total_x * XCursesFontWidth);
-	PDC_SCROLLBAR_TYPE total_y =
-		(PDC_SCROLLBAR_TYPE)(SP->sb_total_y * XCursesFontHeight);
-
-	PDC_SCROLLBAR_TYPE viewport_x =
-		(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x * XCursesFontWidth);
-	PDC_SCROLLBAR_TYPE viewport_y =
-		(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y * XCursesFontHeight);
-
-	PDC_SCROLLBAR_TYPE vtop = cur_y / total_y;
-	PDC_SCROLLBAR_TYPE vlength = viewport_y / total_y;
-	PDC_SCROLLBAR_TYPE htop = cur_x / total_x;
-	PDC_SCROLLBAR_TYPE hlength = viewport_x / total_x;
+	PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
+	PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
 
 	PDC_LOG(("%s:XCursesRefreshScrollbar() - called: \n", XCLOGMSG));
 
 	if (!SP->sb_on)
 		return ERR;
 
-	if (SP->sb_total_y != 0)
-		XawScrollbarSetThumb(scrollVert, vtop, vlength);
+	if (total_y != 0)
+		XawScrollbarSetThumb(scrollVert,
+			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
+			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
 
-	if (SP->sb_total_x != 0)
-		XawScrollbarSetThumb(scrollHoriz, htop, hlength);
+	if (total_x != 0)
+		XawScrollbarSetThumb(scrollHoriz,
+			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
+			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
 
 	return OK;
 }

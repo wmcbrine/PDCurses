@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.17 2006/01/30 02:10:55 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.18 2006/02/05 05:03:09 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -197,12 +197,10 @@ int XCurses_rawgetch(int delaytenths)
 
 		break;
 
-#ifdef MOUSE_DEBUG
-		printf("rawgetch-x: %d y: %d Mouse status: %x\n",
-		    MOUSE_X_POS, MOUSE_Y_POS, Mouse_status.changes);
-		printf("rawgetch-Button1: %x Button2: %x Button3: %x\n",
-		    BUTTON_STATUS(1), BUTTON_STATUS(2), BUTTON_STATUS(3));
-#endif
+		MOUSE_LOG(("rawgetch-x: %d y: %d Mouse status: %x\n",
+		    MOUSE_X_POS, MOUSE_Y_POS, Mouse_status.changes));
+		MOUSE_LOG(("rawgetch-Button1: %x Button2: %x Button3: %x\n",
+		    BUTTON_STATUS(1), BUTTON_STATUS(2), BUTTON_STATUS(3)));
 	    }
 	    else
 		break;

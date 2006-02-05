@@ -19,7 +19,7 @@
 * 1994-1999. M.Hessling@qut.edu.au
 **************************************************************************/
 
-/* $Id: pdcx11.h,v 1.18 2006/02/04 20:40:26 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.19 2006/02/05 05:03:08 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -354,4 +354,10 @@ void say(const char *msg);
 # define XC_LOG(x) say x
 #else
 # define XC_LOG(x)
+#endif
+
+#ifdef MOUSE_DEBUG
+# define MOUSE_LOG(x) printf x
+#else
+# define MOUSE_LOG(x)
 #endif

@@ -23,7 +23,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11common =
-        "$Id: x11common.c,v 1.8 2006/01/30 02:10:55 wmcbrine Exp $";
+        "$Id: x11common.c,v 1.9 2006/02/05 05:03:09 wmcbrine Exp $";
 #endif
 
 /* Variables specific to process port */
@@ -56,7 +56,7 @@ int write_socket(int sock_num, char *buf, int len)
 	PDC_LOG(("%s:write_socket called: sock_num %d len %d\n",
 		XCLOGMSG, sock_num, len));
 
-#ifdef MOUSE_DEBUG1
+#ifdef MOUSE_DEBUG
 	if (sock_num == key_sock)
 		printf("%s:write_socket(key) len: %d\n", XCLOGMSG, len);
 #endif
@@ -83,7 +83,7 @@ int read_socket(int sock_num, char *buf, int len)
 	{
 		rc = read(sock_num, buf + start, length);
 
-#ifdef MOUSE_DEBUG1
+#ifdef MOUSE_DEBUG
 		if (sock_num == key_sock)
 		    printf("%s:read_socket(key) rc %d errno %d resized: %d\n",
 			XCLOGMSG, rc, errno, SP->resized);
@@ -91,9 +91,8 @@ int read_socket(int sock_num, char *buf, int len)
 		if (rc < 0 && sock_num == key_sock && errno == EINTR
 		    && SP->resized != FALSE)
 		{
-#ifdef MOUSE_DEBUG1
-			printf("%s:continuing\n", XCLOGMSG);
-#endif
+			MOUSE_LOG(("%s:continuing\n", XCLOGMSG));
+
 			rc = 0;
 
 			if (SP->resized > 1)

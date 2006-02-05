@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.42 2006/02/04 20:40:26 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.43 2006/02/05 05:03:08 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -2337,9 +2337,8 @@ int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 	{
 		memcpy(buf, (char *)&Mouse_status, sizeof(MOUSE_STATUS));
 
-#ifdef MOUSE_DEBUG1
-		printf("%s:writing mouse stuff\n", XCLOGMSG);
-#endif
+		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
+
 		if (write_socket(key_sock, buf, sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitXCursesProcess(1, SIGKILL,
 				"exiting from XCursesSendKeyToCurses");
@@ -2433,9 +2432,8 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 		remove_release = False;
 		handle_real_release = False;
 
-#ifdef MOUSE_DEBUG
-		printf("\nButtonPress\n");
-#endif
+		MOUSE_LOG(("\nButtonPress\n"));
+
 		if ((int)(event->xbutton.time - last_button_press_time) <
 		    XCURSESDOUBLECLICKPERIOD)
 		{
@@ -2500,11 +2498,10 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 		break;
 
 	case MotionNotify:
-#ifdef MOUSE_DEBUG
-		printf("\nMotionNotify: y: %d x: %d Width: %d Height: %d\n",
-			event->xbutton.y, event->xbutton.x, 
-			XCursesFontWidth, XCursesFontHeight);
-#endif
+		MOUSE_LOG(("\nMotionNotify: y: %d x: %d Width: %d "
+			"Height: %d\n", event->xbutton.y, event->xbutton.x, 
+			XCursesFontWidth, XCursesFontHeight));
+
 		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
 		    && !(event->xbutton.state & ControlMask)
 		    && !(event->xbutton.state & Mod1Mask))
@@ -2598,10 +2595,8 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 #else
 		if (remove_release)
 		{
-#ifdef MOUSE_DEBUG
-			printf("Release at: %ld - removed\n",
-				event->xbutton.time);
-#endif
+			MOUSE_LOG(("Release at: %ld - removed\n",
+				event->xbutton.time));
 			return;
 		}
 		else
@@ -2616,10 +2611,10 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 			    /* The "real" release was shorter than 
 			       usleep() time therefore generate a click 
 			       event */
-#ifdef MOUSE_DEBUG
-			    printf("Release at: %ld - click\n",
-				event->xbutton.time);
-#endif
+
+			    MOUSE_LOG(("Release at: %ld - click\n",
+				event->xbutton.time));
+
 			    MOUSE_X_POS = (event->xbutton.x - 
 				XCURSESBORDERWIDTH) / XCursesFontWidth;
 			    MOUSE_Y_POS = (event->xbutton.y - 
@@ -2665,10 +2660,10 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 			    /* Button release longer than usleep() time 
 			       therefore generate a press and wait for 
 			       the real release to occur later. */
-#ifdef MOUSE_DEBUG
-			    printf("Generated Release at: %ld - press & release\n",
-				event->xbutton.time);
-#endif
+
+			    MOUSE_LOG(("Generated Release at: %ld - "
+				"press & release\n", event->xbutton.time));
+
 			    MOUSE_X_POS = (event->xbutton.x - 
 				XCURSESBORDERWIDTH) / XCursesFontWidth;
 			    MOUSE_Y_POS = (event->xbutton.y - 
@@ -2702,16 +2697,13 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 		    }
 		    else
 		    {
-#ifdef MOUSE_DEBUG
-			printf("Release at: %ld - released\n",
-			    event->xbutton.time);
-#endif
+			MOUSE_LOG(("Release at: %ld - released\n",
+			    event->xbutton.time));
 		    }
 		}
 
-#ifdef MOUSE_DEBUG
-		printf("\nButtonRelease\n");
-#endif
+		MOUSE_LOG(("\nButtonRelease\n"));
+
 		MOUSE_X_POS = (event->xbutton.x - XCURSESBORDERWIDTH) / 
 		    XCursesFontWidth;
 		MOUSE_Y_POS = (event->xbutton.y - XCURSESBORDERWIDTH) / 
@@ -2762,15 +2754,14 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 	   outside the bounds of the screen (because of the border), 
 	   return here */
 
-#ifdef MOUSE_DEBUG
-	printf("Button: %d x: %d y: %d Button status: %x Mouse status: %x\n",
-		button_no, MOUSE_X_POS, MOUSE_Y_POS,
-		BUTTON_STATUS(button_no), Mouse_status.changes);
+	MOUSE_LOG(("Button: %d x: %d y: %d Button status: %x "
+		"Mouse status: %x\n", button_no, MOUSE_X_POS, MOUSE_Y_POS,
+		BUTTON_STATUS(button_no), Mouse_status.changes));
 
-	printf("Send: %d Button1: %x Button2: %x Button3: %x %d %d\n",
+	MOUSE_LOG(("Send: %d Button1: %x Button2: %x Button3: %x %d %d\n",
 		send_key, BUTTON_STATUS(1), BUTTON_STATUS(2), 
-		BUTTON_STATUS(3), XCursesLINES, XCursesCOLS);
-#endif
+		BUTTON_STATUS(3), XCursesLINES, XCursesCOLS));
+
 	if (!send_key || MOUSE_X_POS < 0 || MOUSE_X_POS >= XCursesCOLS ||
 	    MOUSE_Y_POS < 0 || MOUSE_Y_POS >= XCursesLINES)
 		return;

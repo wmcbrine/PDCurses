@@ -22,10 +22,11 @@
 #include "pdcx11.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.43 2006/02/05 05:03:08 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.44 2006/02/05 05:09:18 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -1838,7 +1839,7 @@ Boolean XCursesConvertProc(Widget w,Atom *selection, Atom *target,
 		*length_return = std_length + 1;
 		*targetP++ = XA_STRING;
 
-		bcopy((char *)std_targets, (char *)targetP,
+		memmove((void *)targetP, (const void *)std_targets,
 			sizeof(Atom) * std_length);
 
 		XtFree((char *)std_targets);

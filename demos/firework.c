@@ -16,10 +16,6 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #include <stdio.h>
 #include <signal.h>
 #include <curses.h>
@@ -27,11 +23,12 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <time.h>
+
 #define DELAYSIZE 200
 
 #ifdef PDCDEBUG
 const char *rcsid_firework =
-	"$Id: firework.c,v 1.16 2006/01/30 02:10:54 wmcbrine Exp $";
+	"$Id: firework.c,v 1.17 2006/02/05 23:54:31 wmcbrine Exp $";
 #endif
 
 void myrefresh(void);

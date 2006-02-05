@@ -23,10 +23,6 @@
  * Date   : 25-02-93
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #include <ctype.h>
 #include <curses.h>
 #include <stdio.h>
@@ -41,7 +37,7 @@ void rmerror(void);
 
 #ifdef PDCDEBUG
 const char *rcsid_tui =
-	"$Id: tui.c,v 1.15 2006/01/30 02:10:54 wmcbrine Exp $";
+	"$Id: tui.c,v 1.16 2006/02/05 23:54:31 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)

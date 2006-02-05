@@ -25,14 +25,10 @@
  *                  either PDCurses or under Unix System V, R4
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.33 2006/01/30 02:10:54 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.34 2006/02/05 23:54:31 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>

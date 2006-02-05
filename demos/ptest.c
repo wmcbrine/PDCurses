@@ -20,13 +20,9 @@
 	ptest.c
 --------------------------------------------------------------------------*/
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #ifdef PDCDEBUG
 const char *rcsid_ptest =
-	"$Id: ptest.c,v 1.15 2006/01/30 02:10:54 wmcbrine Exp $";
+	"$Id: ptest.c,v 1.16 2006/02/05 23:54:31 wmcbrine Exp $";
 #endif
 
 #include <curses.h>

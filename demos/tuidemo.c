@@ -33,10 +33,6 @@
  *                  version of the 'testcurs' program.
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_tuidemo =
-	"$Id: tuidemo.c,v 1.10 2006/01/30 02:10:54 wmcbrine Exp $";
+	"$Id: tuidemo.c,v 1.11 2006/02/05 23:54:31 wmcbrine Exp $";
 #endif
 
 #if defined(XCURSES)

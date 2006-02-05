@@ -94,13 +94,9 @@
 /*                                                                            */
 /******************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #ifdef PDCDEBUG
 const char *rcsid_xmas =
-	"$Id: xmas.c,v 1.16 2006/02/04 03:51:31 wmcbrine Exp $";
+	"$Id: xmas.c,v 1.17 2006/02/05 23:54:31 wmcbrine Exp $";
 #endif
 
 /* NOMACROS makes a big difference in the size with PDCurses */

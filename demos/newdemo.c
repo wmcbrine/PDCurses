@@ -24,10 +24,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #include <stdio.h>
 #include <signal.h>
 #include <string.h>
@@ -36,7 +32,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_newdemo =
-	"$Id: newdemo.c,v 1.21 2006/01/30 02:10:54 wmcbrine Exp $";
+	"$Id: newdemo.c,v 1.22 2006/02/05 23:54:31 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);

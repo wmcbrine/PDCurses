@@ -18,9 +18,6 @@
 
 #define	CURSES_LIBRARY 1
 #define INCLUDE_WINDOWS_H
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 #if defined (OS2) && defined(EMXVIDEO)
@@ -40,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_util =
-	"$Id: util.c,v 1.24 2006/02/04 00:58:41 wmcbrine Exp $";
+	"$Id: util.c,v 1.25 2006/02/06 01:13:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

@@ -17,9 +17,6 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
@@ -33,7 +30,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_deleteln =
-	"$Id: deleteln.c,v 1.11 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: deleteln.c,v 1.12 2006/02/06 01:13:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -94,9 +91,7 @@ int PDC_CDECL deleteln(void)
 
 int PDC_CDECL wdeleteln(WINDOW *win)
 {
-	chtype blank;
-	chtype *temp;
-	chtype *ptr;
+	chtype blank, *temp, *ptr;
 	int y;
 
 	PDC_LOG(("wdeleteln() - called\n"));
@@ -168,9 +163,7 @@ int PDC_CDECL winsdelln(WINDOW *win, int n)
 
 int PDC_CDECL winsertln(WINDOW *win)
 {
-	chtype blank;
-	chtype *temp;
-	chtype *end;
+	chtype blank, *temp, *end;
 	int y;
 
 	PDC_LOG(("winsertln() - called\n"));

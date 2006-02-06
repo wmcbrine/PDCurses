@@ -17,9 +17,6 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 #include <string.h>
 
@@ -39,7 +36,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_slk =
-	"$Id: slk.c,v 1.14 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: slk.c,v 1.15 2006/02/06 01:13:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

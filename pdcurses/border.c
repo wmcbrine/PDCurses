@@ -17,9 +17,6 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
@@ -40,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_border =
-	"$Id: border.c,v 1.15 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: border.c,v 1.16 2006/02/06 01:13:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -121,7 +118,7 @@ const char *rcsid_border =
    current background of win, as set by wbkgd(), should by combined with 
    it. Attributes set explicitly in ch take precedence. */
 
-chtype PDC_attr_passthru(WINDOW *win, chtype ch)
+static chtype PDC_attr_passthru(WINDOW *win, chtype ch)
 {
 	chtype attr, bktmp;
 
@@ -370,7 +367,7 @@ int PDC_CDECL mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
 /* PDC_lineattr() -- add the specified attribute to a line of chtypes. 
    Used only as the core routine for the next three functions. */
 
-int PDC_CDECL PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
+static int PDC_CDECL PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
 {
 	int endpos;
 

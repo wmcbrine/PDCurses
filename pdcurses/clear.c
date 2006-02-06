@@ -17,9 +17,6 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
@@ -34,7 +31,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_clear =
-	"$Id: clear.c,v 1.12 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: clear.c,v 1.13 2006/02/06 01:13:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

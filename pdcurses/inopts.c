@@ -17,9 +17,6 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
@@ -51,7 +48,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.18 2006/02/04 19:35:06 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.19 2006/02/06 01:13:18 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

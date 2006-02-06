@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.32 2006/02/04 01:47:50 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.33 2006/02/06 01:55:00 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -543,7 +543,6 @@ int PDC_get_bios_key(void)
 	static MOUSE_STATUS Actual_Mouse_status;
 	int button_no = 0;
 	bool trap_mouse = FALSE;
-	int key = 0;
 	int retval;
 
 	PDC_LOG(("PDC_get_bios_key() - called\n"));
@@ -729,6 +728,8 @@ int PDC_get_bios_key(void)
 
 	    if (button_no != 0)
 	    {
+		int key;
+
 		/* We have a button action, rather than a mouse movement 
 		   or wheel action */
 
@@ -741,7 +742,7 @@ int PDC_get_bios_key(void)
 		   Only call this if we have set trap_mouse to TRUE above. */
 
 		if (trap_mouse && (key = PDC_mouse_in_slk(TEMP_MOUSE_Y_POS,
-		    TEMP_MOUSE_X_POS)))
+		    TEMP_MOUSE_X_POS)) != 0)
 			return KEY_F(key);
 
 		Temp_Mouse_status.changes |= 1 << (button_no - 1);

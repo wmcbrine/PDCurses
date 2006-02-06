@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.22 2006/02/04 02:33:30 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.23 2006/02/06 01:55:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -153,7 +153,7 @@ WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 	extern void  (*fre)(void *);
 
 	int i;
-	WINDOW *win = NULL;
+	WINDOW *win;
 
 	PDC_LOG(("PDC_makenew() - called: lines %d cols %d begy %d begx %d\n",
 		num_lines, num_columns, begy, begx));
@@ -310,7 +310,7 @@ void PDC_sync(WINDOW *win)
 int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 {
 	int x, y, newx, ts, retval;
-	chtype attr = 0, bktmp;
+	chtype attr, bktmp;
 
 	PDC_LOG(("PDC_chadd() - called: win=%x ch=%x "
 		"(char=%c attr=0x%x) xlat=%d advance=%d\n", win, ch,
@@ -346,12 +346,10 @@ int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 	if ((ch & A_ATTRIBUTES) == 0)
 		attr = win->_attrs;
 	else
-	{
 		if ((ch & A_COLOR) == 0)
 			attr = (ch & A_ATTRIBUTES) | win->_attrs;
 		else
 			attr = ch & A_ATTRIBUTES;
-	}
 
 	ch = (ch & A_CHARTEXT);
 

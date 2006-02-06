@@ -48,7 +48,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.16 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: window.c,v 1.17 2006/02/06 01:55:00 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -434,7 +434,7 @@ WINDOW * PDC_CDECL resize_window(WINDOW *win, int lins, int cols)
 
 	WINDOW *new;
 	int i, j, save_cury, save_curx;
-	int new_begy = 0, new_begx = 0;
+	int new_begy, new_begx;
 
 	PDC_LOG(("resize_window() - called: lins %d cols %d\n", lins, cols));
 

@@ -27,7 +27,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_panel =
-	"$Id: panel.c,v 1.15 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: panel.c,v 1.16 2006/02/06 01:54:59 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -284,7 +284,8 @@ static void __calculate_obscure(void)
 	    {
 		if (__panels_overlapped(pan, pan2))
 		{
-			if (!(tobs = (PANELOBS *)malloc(sizeof(PANELOBS))))
+			if ((tobs = (PANELOBS *)malloc(sizeof(PANELOBS)))
+			     == NULL)
 				return;
 
 			tobs->pan = pan2;

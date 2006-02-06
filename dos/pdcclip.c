@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.13 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.14 2006/02/06 02:50:28 wmcbrine Exp $";
 #endif
 
 /* global clipboard contents, should be NULL if none set */
@@ -69,7 +69,7 @@ int PDC_CDECL PDC_getclipboard(char **contents, long *length)
 		return PDC_CLIP_EMPTY;
 
 	len = strlen(pdc_DOS_clipboard);
-	if ((*contents = (char *)malloc((len+1) * sizeof(char))) == NULL)
+	if ((*contents = (char *)malloc((len + 1) * sizeof(char))) == NULL)
 		return PDC_CLIP_MEMORY_ERROR;
 
 	strcpy(*contents, pdc_DOS_clipboard);

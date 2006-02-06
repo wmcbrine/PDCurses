@@ -17,14 +17,11 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.13 2006/02/04 02:34:00 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.14 2006/02/06 03:13:31 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on = FALSE;

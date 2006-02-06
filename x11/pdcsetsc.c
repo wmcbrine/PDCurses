@@ -17,14 +17,11 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.10 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pdcsetsc.c,v 1.11 2006/02/06 03:13:31 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

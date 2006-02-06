@@ -17,16 +17,13 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 #include <stdlib.h>
 #include <string.h>
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.14 2006/02/06 02:50:28 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.15 2006/02/06 02:54:27 wmcbrine Exp $";
 #endif
 
 /* global clipboard contents, should be NULL if none set */

@@ -17,9 +17,6 @@
 **************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #if !defined(EMXVIDEO)
 # define INCL_DOS
 # define INCL_WIN
@@ -30,7 +27,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.13 2006/02/06 02:54:27 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

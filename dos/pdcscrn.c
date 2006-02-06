@@ -17,9 +17,6 @@
 **************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 #include <stdlib.h>
 
@@ -33,7 +30,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.17 2006/02/04 02:33:30 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.18 2006/02/06 02:54:27 wmcbrine Exp $";
 #endif
 
 static unsigned short *saved_screen = NULL;

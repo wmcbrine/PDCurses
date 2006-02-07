@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_pad =
-	"$Id: pad.c,v 1.13 2006/01/30 12:17:17 wmcbrine Exp $";
+	"$Id: pad.c,v 1.14 2006/02/07 14:12:42 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */
@@ -321,7 +321,7 @@ int PDC_CDECL pechochar(WINDOW *pad, chtype ch)
 {
 	PDC_LOG(("pechochar() - called\n"));
 
-	if (PDC_chadd(pad, ch, !(SP->raw_out), TRUE) == ERR)
+	if (waddch(pad, ch) == ERR)
 		return ERR;
 
 	return prefresh(pad, save_pminrow, save_pmincol, save_sminrow, 

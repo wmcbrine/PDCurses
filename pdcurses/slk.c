@@ -36,7 +36,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_slk =
-	"$Id: slk.c,v 1.15 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: slk.c,v 1.16 2006/02/07 14:12:42 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -208,8 +208,7 @@ static int PDC_slk_set(int label_num, const char *label_str,
 		wmove(SP->slk_winptr, label_line, slk_start_col[num]);
 
 		for (i = 0; i < label_length; ++i)
-			PDC_chadd(SP->slk_winptr, ' ', 
-				(bool)(!(SP->raw_out)), TRUE);
+			waddch(SP->slk_winptr, ' ');
 
 		/* Save the string and attribute */
 
@@ -241,7 +240,7 @@ static int PDC_slk_set(int label_num, const char *label_str,
 	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
 
 	for (i = 0; i < label_length; ++i)
-		PDC_chadd(SP->slk_winptr, ' ', (bool)(!(SP->raw_out)), TRUE);
+		waddch(SP->slk_winptr, ' ');
 
 	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
 

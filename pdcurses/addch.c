@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_addch =
-	"$Id: addch.c,v 1.13 2006/02/06 01:13:17 wmcbrine Exp $";
+	"$Id: addch.c,v 1.14 2006/02/07 14:12:42 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -134,7 +134,7 @@ int PDC_CDECL addch(const chtype ch)
 {
 	PDC_LOG(("addch() - called: ch=%x\n", ch));
 
-	return PDC_chadd(stdscr, ch, (bool)(!(SP->raw_out)), TRUE);
+	return waddch(stdscr, ch);
 }
 
 int PDC_CDECL waddch(WINDOW *win, const chtype ch)
@@ -151,7 +151,7 @@ int PDC_CDECL mvaddch(int y, int x, const chtype ch)
 	if (move(y,x) == ERR)
 		return ERR;
 
-	return PDC_chadd(stdscr, ch, (bool)(!(SP->raw_out)), TRUE);
+	return waddch(stdscr, ch);
 }
 
 int PDC_CDECL mvwaddch(WINDOW *win, int y, int x, const chtype ch)
@@ -162,24 +162,21 @@ int PDC_CDECL mvwaddch(WINDOW *win, int y, int x, const chtype ch)
 	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-	return PDC_chadd(win, ch, (bool)(!(SP->raw_out)), TRUE);
+	return waddch(win, ch);
 }
 
 int PDC_CDECL echochar(const chtype ch)
 {
 	PDC_LOG(("echochar() - called: ch=%x\n", ch));
 
-	if (PDC_chadd(stdscr, ch, (bool)(!(SP->raw_out)), TRUE) == ERR)
-		return ERR;
-
-	return refresh();
+	return wechochar(stdscr, ch);
 }
 
 int PDC_CDECL wechochar(WINDOW *win, const chtype ch)
 {
 	PDC_LOG(("wechochar() - called: win=%x ch=%x\n", win, ch));
 
-	if (PDC_chadd(win, ch, (bool)(!(SP->raw_out)), TRUE) == ERR)
+	if (waddch(win, ch) == ERR)
 		return ERR;
 
 	return wrefresh(win);

@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_addstr =
-	"$Id: addstr.c,v 1.13 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: addstr.c,v 1.14 2006/02/07 14:12:42 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -130,8 +130,7 @@ int PDC_CDECL waddnstr(WINDOW *win, const char *str, int n)
 		if ((i = *str++) < 0)
 			i += 256;
 
-		if (PDC_chadd(win, (chtype)i,
-		    (bool)(!(SP->raw_out)), TRUE) == ERR)
+		if (waddch(win, (chtype)i) == ERR)
 			return ERR;
 	}
 

@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.18 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: termattr.c,v 1.19 2006/02/07 20:16:52 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -127,9 +127,6 @@ const char *rcsid_termattr =
 
 **man-end**********************************************************************/
 
-static char _display[128];
-static char _shrtnme[14];
-
 int PDC_CDECL baudrate(void)
 {
 	PDC_LOG(("baudrate() - called\n"));
@@ -167,89 +164,81 @@ char PDC_CDECL killchar(void)
 
 char * PDC_CDECL longname(void)
 {
+	static char _display[128];
+	char *p = _display;
+
 	PDC_LOG(("longname() - called\n"));
 
-#if defined (XCURSES)
-	sprintf(_display, "X11-%s-%dx%d", SP->mono ? "MONO" : "COLOR",
-		LINES, COLS);
+	p += sprintf(_display, "PDCurses for "
+#if defined(DOS)
+		"DOS "
+#elif defined(OS2)
+		"OS/2 "
+#elif defined(WIN32)
+		"Win32 "
+#else
+		"X11 "
 #endif
+		);
 
-#ifdef OS2
-# ifdef EMXVIDEO
-	switch (SP->mono)
-	{
-	case FALSE:
-		sprintf(_display,"COLOR-%dx%d", LINES, COLS);
-		break;
-	case TRUE:
-		sprintf(_display,"MONO-%dx%d", LINES, COLS);
-		break;
-# else
+#if defined(OS2) && !defined(EMXVIDEO)
 	switch (SP->adapter.adapter)
 	{
 	case DISPLAY_CGA:
-		sprintf(_display, "CGA-%dx%d", LINES, COLS);	  
+		p += sprintf(p, "CGA");
 		break;
 	case DISPLAY_MONOCHROME:
-		sprintf(_display, "MDA-%dx%d", LINES, COLS);	  
+		p += sprintf(p, "MDA");
 		break;
 	case DISPLAY_EGA:
-		sprintf(_display, "EGA-%dx%d", LINES, COLS);
+		p += sprintf(p, "EGA");
 		break;
 	case DISPLAY_VGA:
-		sprintf(_display, "VGA-%dx%d", LINES, COLS);
+		p += sprintf(p, "VGA");
 		break;
 	case DISPLAY_8514A:
-		sprintf(_display, "8514-%dx%d", LINES, COLS); 
+		p += sprintf(p, "8514");
 		break;
-#  ifdef DISPLAY_XGA
+# ifdef DISPLAY_XGA
 	case DISPLAY_XGA:
-		sprintf(_display, "XGA-%dx%d", LINES, COLS);
-		break;
-#  endif
+		p += sprintf(p, "XGA");
 # endif
-	default:
-		sprintf(_display, "Unknown-%dx%d", LINES, COLS);
 	}
-#endif
 
-#ifdef DOS
+#elif defined(DOS)
 	switch (SP->adapter)
 	{
 	case _CGA:
-		sprintf(_display, "CGA-%dx%d", LINES, COLS);	  
+		p += sprintf(p, "CGA");
 		break;
 	case _MDA:
-		sprintf(_display, "MDA-%dx%d", LINES, COLS);	  
+		p += sprintf(p, "MDA");
 		break;
 	case _EGACOLOR:
-		sprintf(_display, "EGAColor-%dx%d", LINES, COLS);
-		break;
 	case _EGAMONO:
-		sprintf(_display, "EGAMono-%dx%d", LINES, COLS);
+		p += sprintf(p, "EGA");
 		break;
 	case _VGACOLOR:
-		sprintf(_display, "VGAColor-%dx%d", LINES, COLS);
-		break;
 	case _VGAMONO:
-		sprintf(_display, "VGAMono-%dx%d", LINES, COLS);
+		p += sprintf(p, "VGA");
 		break;
 	case _MCGACOLOR:
-		sprintf(_display, "MCGAColor-%dx%d", LINES, COLS);
-		break;
 	case _MCGAMONO:
-		sprintf(_display, "MCGAMono-%dx%d", LINES, COLS);
+		p += sprintf(p, "MCGA");
 		break;
 	case _MDS_GENIUS:
-		sprintf(_display, "Genius-%dx%d", LINES, COLS);
+		p += sprintf(p, "Genius");
 		break;
 	default:
-		sprintf(_display, "Unknown-%dx%d", LINES, COLS);
+		p += sprintf(p, "Unknown");
 	}
-#endif
 
 	if (SP->bogus_adapter)
-		strcat(_display, " (Clone)");
+		p += sprintf(p, " (Clone)");
+#endif
+
+	sprintf(p, " %s-%dx%d", SP->mono ? "MONO" : "COLOR",
+		LINES, COLS);
 
 	return _display;
 }
@@ -273,79 +262,7 @@ char * PDC_CDECL termname(void)
 {
 	PDC_LOG(("termname() - called\n"));
 
-#if defined (XCURSES)
-	sprintf(_shrtnme, SP->mono ? "X-MONO" : "X-COLOR");
-#endif
-
-#ifdef OS2
-# ifdef	EMXVIDEO
-	switch (SP->mono)
-	{
-	case FALSE:
-		sprintf(_shrtnme,"COLOR");
-		break;
-	case TRUE:
-		sprintf(_shrtnme,"MONO");
-		break;
-# else
-	switch (SP->adapter.adapter)
-	{
-	case DISPLAY_CGA:
-		sprintf(_shrtnme, "CGA");
-		break;
-	case DISPLAY_MONOCHROME:
-		sprintf(_shrtnme, "MDA");
-		break;
-	case DISPLAY_EGA:
-		sprintf(_shrtnme, "EGA");
-		break;
-	case DISPLAY_VGA:
-		sprintf(_shrtnme, "VGA");
-		break;
-	case DISPLAY_8514A:
-		sprintf(_shrtnme, "8514");
-		break;
-# endif
-	default:
-		sprintf(_shrtnme, "Unknown");
-	}
-#endif
-
-#ifdef DOS
-	switch (SP->adapter)
-	{
-	case _CGA:
-		sprintf(_shrtnme, "CGA");
-		break;
-	case _MDA:
-		sprintf(_shrtnme, "MDA");
-		break;
-	case _EGACOLOR:
-		sprintf(_shrtnme, "EGAColor");
-		break;
-	case _EGAMONO:
-		sprintf(_shrtnme, "EGAMono");
-		break;
-	case _VGACOLOR:
-		sprintf(_shrtnme, "VGAColor");
-		break;
-	case _VGAMONO:
-		sprintf(_shrtnme, "VGAMono");
-		break;
-	case _MCGACOLOR:
-		sprintf(_shrtnme, "MCGAColor");
-		break;
-	case _MCGAMONO:
-		sprintf(_shrtnme, "MCGAMono");
-		break;
-	case _MDS_GENIUS:
-		sprintf(_shrtnme, "Genius");
-		break;
-	default:
-		sprintf(_shrtnme, "Unknown");
-	}
-#endif
-	return _shrtnme;
+	return "pdcurses";
 }
 
 char PDC_CDECL wordchar(void)

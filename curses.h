@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.123 2006/02/08 17:49:47 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.124 2006/02/08 17:57:18 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -1210,8 +1210,7 @@ int	baudrate(void);
 int	beep(void);
 int	bkgd(chtype);
 void	bkgdset(chtype);
-int	border(chtype, chtype, chtype, chtype, chtype,
-				chtype, chtype, chtype);
+int	border(chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype);
 int	box(WINDOW *, chtype, chtype);
 bool	can_change_color(void);
 int	cbreak(void); 
@@ -1222,8 +1221,7 @@ int	clrtoeol(void);
 int	color_content(short, short *, short *, short *);
 chtype	COLOR_PAIR(int);
 int	color_set(short, void *);
-int	copywin(const WINDOW *, WINDOW *, int, int, int,
-				int, int, int, int);
+int	copywin(const WINDOW *, WINDOW *, int, int, int, int, int, int, int);
 int	curs_set(int);
 int	def_prog_mode(void);
 int	def_shell_mode(void);
@@ -1408,7 +1406,7 @@ int	wattrset(WINDOW *, chtype);
 void	wbkgdset(WINDOW *, chtype);
 int	wbkgd(WINDOW *, chtype);
 int	wborder(WINDOW *, chtype, chtype, chtype, chtype,
-				chtype, chtype, chtype, chtype);
+		chtype, chtype, chtype, chtype);
 int	wclear(WINDOW *);
 int	wclrtobot(WINDOW *);
 int	wclrtoeol(WINDOW *);

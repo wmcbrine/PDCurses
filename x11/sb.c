@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_sb =
-	"$Id: sb.c,v 1.11 2006/02/06 03:13:31 wmcbrine Exp $";
+	"$Id: sb.c,v 1.12 2006/02/08 17:41:13 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -66,7 +66,7 @@ bool sb_started = FALSE;
 /* sb_init() is the sb initialization routine.
    This must be called before initscr(). */
 
-int PDC_CDECL sb_init(void)
+int sb_init(void)
 {
 	PDC_LOG(("sb_init() - called\n"));
 
@@ -84,7 +84,7 @@ int PDC_CDECL sb_init(void)
    viewport = size of viewport in columns
    cur = current column in total */
 
-int PDC_CDECL sb_set_horz(int total, int viewport, int cur)
+int sb_set_horz(int total, int viewport, int cur)
 {
 	PDC_LOG(("sb_set_horz() - called: total %d viewport %d cur %d\n",
 		total, viewport, cur));
@@ -105,7 +105,7 @@ int PDC_CDECL sb_set_horz(int total, int viewport, int cur)
    viewport = size of viewport in columns
    cur = current column in total */
 
-int PDC_CDECL sb_set_vert(int total, int viewport, int cur)
+int sb_set_vert(int total, int viewport, int cur)
 {
 	PDC_LOG(("sb_set_vert() - called: total %d viewport %d cur %d\n",
 		total, viewport, cur));
@@ -126,7 +126,7 @@ int PDC_CDECL sb_set_vert(int total, int viewport, int cur)
    viewport = size of viewport in lines
    cur = current line in total */
 
-int PDC_CDECL sb_get_horz(int *total, int *viewport, int *cur)
+int sb_get_horz(int *total, int *viewport, int *cur)
 {
 	PDC_LOG(("sb_get_horz() - called\n"));
 
@@ -149,7 +149,7 @@ int PDC_CDECL sb_get_horz(int *total, int *viewport, int *cur)
    viewport = size of viewport in lines
    cur = current line in total */
 
-int PDC_CDECL sb_get_vert(int *total, int *viewport, int *cur)
+int sb_get_vert(int *total, int *viewport, int *cur)
 {
 	PDC_LOG(("sb_get_vert() - called\n"));
 
@@ -168,7 +168,7 @@ int PDC_CDECL sb_get_vert(int *total, int *viewport, int *cur)
 
 /* sb_refresh() - Used to draw the scrollbars. */
 
-int PDC_CDECL sb_refresh(void)
+int sb_refresh(void)
 {
 	PDC_LOG(("sb_refresh() - called\n"));
 

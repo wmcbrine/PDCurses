@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.23 2006/02/06 01:55:00 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.24 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -307,7 +307,7 @@ void PDC_sync(WINDOW *win)
 
 **man-end**********************************************************************/
 
-int PDC_CDECL PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
+int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 {
 	int x, y, newx, ts, retval;
 	chtype attr, bktmp;

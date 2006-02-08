@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.19 2006/02/07 20:16:52 wmcbrine Exp $";
+	"$Id: termattr.c,v 1.20 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -127,42 +127,42 @@ const char *rcsid_termattr =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL baudrate(void)
+int baudrate(void)
 {
 	PDC_LOG(("baudrate() - called\n"));
 
 	return SP->direct_video ? INT_MAX : 19200;
 }
 
-char PDC_CDECL erasechar(void)
+char erasechar(void)
 {
 	PDC_LOG(("erasechar() - called\n"));
 
 	return _ECHAR;		/* character delete char (^H) */
 }
 
-bool PDC_CDECL has_ic(void)
+bool has_ic(void)
 {
 	PDC_LOG(("has_ic() - called\n"));
 
 	return TRUE;
 }
 
-bool PDC_CDECL has_il(void)
+bool has_il(void)
 {
 	PDC_LOG(("has_il() - called\n"));
 
 	return TRUE;
 }
 
-char PDC_CDECL killchar(void)
+char killchar(void)
 {
 	PDC_LOG(("killchar() - called\n"));
 
 	return _DLCHAR;		/* line delete char (^U) */
 }
 
-char * PDC_CDECL longname(void)
+char * longname(void)
 {
 	static char _display[128];
 	char *p = _display;
@@ -243,7 +243,7 @@ char * PDC_CDECL longname(void)
 	return _display;
 }
 
-chtype PDC_CDECL termattrs(void)
+chtype termattrs(void)
 {
 	chtype temp = (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | 
 		A_UNDERLINE | A_ITALIC);
@@ -258,14 +258,14 @@ chtype PDC_CDECL termattrs(void)
 	return temp;
 }
 
-char * PDC_CDECL termname(void)
+char * termname(void)
 {
 	PDC_LOG(("termname() - called\n"));
 
 	return "pdcurses";
 }
 
-char PDC_CDECL wordchar(void)
+char wordchar(void)
 {
 	PDC_LOG(("wordchar() - called\n"));
 

@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_overlay =
-	"$Id: overlay.c,v 1.12 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: overlay.c,v 1.13 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -94,7 +94,7 @@ const char *rcsid_overlay =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL overlay(const WINDOW *src_w, WINDOW *dst_w)
+int overlay(const WINDOW *src_w, WINDOW *dst_w)
 {
 	int first_line, first_col, last_line, last_col;
 	int src_start_x, src_start_y, dst_start_x, dst_start_y;
@@ -154,7 +154,7 @@ int PDC_CDECL overlay(const WINDOW *src_w, WINDOW *dst_w)
 		TRUE);
 }
 
-int PDC_CDECL overwrite(const WINDOW *src_w, WINDOW *dst_w)
+int overwrite(const WINDOW *src_w, WINDOW *dst_w)
 {
 	int first_line, first_col, last_line, last_col;
 	int src_start_x, src_start_y, dst_start_x, dst_start_y;
@@ -214,7 +214,7 @@ int PDC_CDECL overwrite(const WINDOW *src_w, WINDOW *dst_w)
 		FALSE);
 }
 
-int PDC_CDECL copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
+int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 		      int src_tc, int dst_tr, int dst_tc, int dst_br, 
 		      int dst_bc, int overlay)
 {

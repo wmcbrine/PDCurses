@@ -31,7 +31,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_clear =
-	"$Id: clear.c,v 1.13 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: clear.c,v 1.14 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -95,7 +95,7 @@ const char *rcsid_clear =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL clear(void)
+int clear(void)
 {
 	PDC_LOG(("clear() - called\n"));
 
@@ -106,7 +106,7 @@ int PDC_CDECL clear(void)
 	return erase();
 }
 
-int PDC_CDECL wclear(WINDOW *win)
+int wclear(WINDOW *win)
 {
 	PDC_LOG(("wclear() - called\n"));
 
@@ -117,12 +117,12 @@ int PDC_CDECL wclear(WINDOW *win)
 	return werase(win);
 }
 
-int PDC_CDECL erase(void)
+int erase(void)
 {
 	return werase(stdscr);
 }
 
-int PDC_CDECL werase(WINDOW *win)
+int werase(WINDOW *win)
 {
 	PDC_LOG(("werase() - called\n"));
 
@@ -133,12 +133,12 @@ int PDC_CDECL werase(WINDOW *win)
 	return wclrtobot(win);
 }
 
-int PDC_CDECL clrtobot(void)
+int clrtobot(void)
 {
 	return wclrtobot(stdscr);
 }
 
-int PDC_CDECL wclrtobot(WINDOW *win)
+int wclrtobot(WINDOW *win)
 {
 	int savey = win->_cury;
 	int savex = win->_curx;
@@ -165,12 +165,12 @@ int PDC_CDECL wclrtobot(WINDOW *win)
 	return OK;
 }
 
-int PDC_CDECL clrtoeol(void)
+int clrtoeol(void)
 {
 	return wclrtoeol(stdscr);
 }
 
-int PDC_CDECL wclrtoeol(WINDOW *win)
+int wclrtoeol(WINDOW *win)
 {
 	int x, y, minx;
 	chtype blank, *ptr;

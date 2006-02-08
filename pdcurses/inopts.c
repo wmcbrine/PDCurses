@@ -48,7 +48,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.19 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.20 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -201,7 +201,7 @@ const char *rcsid_inopts =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL cbreak(void)
+int cbreak(void)
 {
 	PDC_LOG(("cbreak() - called\n"));
 
@@ -210,7 +210,7 @@ int PDC_CDECL cbreak(void)
 	return OK;
 }
 
-int PDC_CDECL nocbreak(void)
+int nocbreak(void)
 {
 	PDC_LOG(("nocbreak() - called\n"));
 
@@ -220,7 +220,7 @@ int PDC_CDECL nocbreak(void)
 	return OK;
 }
 
-int PDC_CDECL echo(void)
+int echo(void)
 {
 	PDC_LOG(("echo() - called\n"));
 
@@ -229,7 +229,7 @@ int PDC_CDECL echo(void)
 	return OK;
 }
 
-int PDC_CDECL noecho(void)
+int noecho(void)
 {
 	PDC_LOG(("noecho() - called\n"));
 
@@ -238,7 +238,7 @@ int PDC_CDECL noecho(void)
 	return OK;
 }
 
-int PDC_CDECL halfdelay(int tenths)
+int halfdelay(int tenths)
 {
 	PDC_LOG(("halfdelay() - called\n"));
 
@@ -250,14 +250,14 @@ int PDC_CDECL halfdelay(int tenths)
 	return OK;
 }
 
-int PDC_CDECL intrflush(WINDOW *win, bool bf)
+int intrflush(WINDOW *win, bool bf)
 {
 	PDC_LOG(("intrflush() - called\n"));
 
 	return OK;
 }
 
-int PDC_CDECL keypad(WINDOW *win, bool bf)
+int keypad(WINDOW *win, bool bf)
 {
 	PDC_LOG(("keypad() - called\n"));
 
@@ -269,7 +269,7 @@ int PDC_CDECL keypad(WINDOW *win, bool bf)
 	return OK;
 }
 
-int PDC_CDECL meta(WINDOW *win, bool bf)
+int meta(WINDOW *win, bool bf)
 {
 	PDC_LOG(("meta() - called\n"));
 
@@ -278,7 +278,7 @@ int PDC_CDECL meta(WINDOW *win, bool bf)
 	return OK;
 }
 
-int PDC_CDECL nl(void)
+int nl(void)
 {
 	PDC_LOG(("nl() - called\n"));
 
@@ -287,7 +287,7 @@ int PDC_CDECL nl(void)
 	return OK;
 }
 
-int PDC_CDECL nonl(void)
+int nonl(void)
 {
 	PDC_LOG(("nonl() - called\n"));
 
@@ -296,7 +296,7 @@ int PDC_CDECL nonl(void)
 	return OK;
 }
 
-int PDC_CDECL nodelay(WINDOW *win, bool flag)
+int nodelay(WINDOW *win, bool flag)
 {
 	PDC_LOG(("nodelay() - called\n"));
 
@@ -308,14 +308,14 @@ int PDC_CDECL nodelay(WINDOW *win, bool flag)
 	return OK;
 }
 
-int PDC_CDECL notimeout(WINDOW *win, bool flag)
+int notimeout(WINDOW *win, bool flag)
 {
 	PDC_LOG(("notimeout() - called\n"));
 
 	return OK;
 }
 
-int PDC_CDECL raw(void)
+int raw(void)
 {
 #ifdef OS2
 # ifndef EMXVIDEO
@@ -341,7 +341,7 @@ int PDC_CDECL raw(void)
 	return OK;
 }
 
-int PDC_CDECL noraw(void)
+int noraw(void)
 {
 #ifdef OS2
 # ifndef EMXVIDEO
@@ -366,17 +366,17 @@ int PDC_CDECL noraw(void)
 	return OK;
 }
 
-void PDC_CDECL noqiflush(void)
+void noqiflush(void)
 {
 	PDC_LOG(("noqiflush() - called\n"));
 }
 
-void PDC_CDECL qiflush(void)
+void qiflush(void)
 {
 	PDC_LOG(("qiflush() - called\n"));
 }
 
-int PDC_CDECL typeahead(int fildes)
+int typeahead(int fildes)
 {
 	PDC_LOG(("typeahead() - called\n"));
 
@@ -385,7 +385,7 @@ int PDC_CDECL typeahead(int fildes)
 	return OK;
 }
 
-void PDC_CDECL wtimeout(WINDOW *win, int delay)
+void wtimeout(WINDOW *win, int delay)
 {
 	PDC_LOG(("wtimeout() - called\n"));
 
@@ -419,7 +419,7 @@ void PDC_CDECL wtimeout(WINDOW *win, int delay)
 	}
 }
 
-void PDC_CDECL timeout(int delay)
+void timeout(int delay)
 {
 	PDC_LOG(("timeout() - called\n"));
 

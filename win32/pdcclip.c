@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.9 2006/01/30 02:10:55 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.10 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -52,7 +52,7 @@ const char *rcsid_PDCclip =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL PDC_getclipboard(char **contents, long *length)
+int PDC_getclipboard(char **contents, long *length)
 {
 	HANDLE handle;
 	long len;
@@ -107,7 +107,7 @@ int PDC_CDECL PDC_getclipboard(char **contents, long *length)
 
 **man-end**********************************************************************/
 
-int PDC_CDECL PDC_setclipboard(char *contents, long length)
+int PDC_setclipboard(char *contents, long length)
 {
 	HGLOBAL ptr1;
 	LPTSTR ptr2;
@@ -159,7 +159,7 @@ int PDC_CDECL PDC_setclipboard(char *contents, long length)
 
 **man-end**********************************************************************/
 
-int PDC_CDECL PDC_freeclipboard(char *contents)
+int PDC_freeclipboard(char *contents)
 {
 	PDC_LOG(("PDC_freeclipboard() - called\n"));
 
@@ -184,7 +184,7 @@ int PDC_CDECL PDC_freeclipboard(char *contents)
 
 **man-end**********************************************************************/
 
-int PDC_CDECL PDC_clearclipboard(void)
+int PDC_clearclipboard(void)
 {
 	PDC_LOG(("PDC_clearclipboard() - called\n"));
 

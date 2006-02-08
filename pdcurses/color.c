@@ -36,7 +36,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.28 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: color.c,v 1.29 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -170,7 +170,7 @@ unsigned char atrtab[MAX_ATRTAB] =
 
 unsigned char colorset[PDC_COLOR_PAIRS];
 
-chtype PDC_CDECL COLOR_PAIR(int n)
+chtype COLOR_PAIR(int n)
 {
 #ifdef CHTYPE_LONG
 	return (chtype)n << 24;
@@ -179,7 +179,7 @@ chtype PDC_CDECL COLOR_PAIR(int n)
 #endif
 }
 
-int PDC_CDECL PAIR_NUMBER(chtype value)
+int PAIR_NUMBER(chtype value)
 {
 #ifdef CHTYPE_LONG
 	return (value & A_COLOR) >> 24;
@@ -188,7 +188,7 @@ int PDC_CDECL PAIR_NUMBER(chtype value)
 #endif
 }
 
-int PDC_CDECL start_color(void)
+int start_color(void)
 {
 	PDC_LOG(("start_color() - called\n"));
 
@@ -207,7 +207,7 @@ int PDC_CDECL start_color(void)
 	return OK;
 }
 
-int PDC_CDECL init_pair(short colorpair, short foreground, short background)
+int init_pair(short colorpair, short foreground, short background)
 {
 #if defined(CHTYPE_LONG) && !defined(XCURSES)
 # define USE_PDC_INIT
@@ -252,21 +252,21 @@ int PDC_CDECL init_pair(short colorpair, short foreground, short background)
 	return OK;
 }
 
-bool PDC_CDECL has_colors(void)
+bool has_colors(void)
 {
 	PDC_LOG(("has_colors() - called\n"));
 
 	return SP->mono ? FALSE : TRUE;
 }
 
-int PDC_CDECL init_color(short color, short red, short green, short blue)
+int init_color(short color, short red, short green, short blue)
 {
 	PDC_LOG(("init_color() - called\n"));
 
 	return ERR;
 }
 
-int PDC_CDECL color_content(short color, short *red, short *green, short *blue)
+int color_content(short color, short *red, short *green, short *blue)
 {
 	PDC_LOG(("color_content() - called\n"));
 
@@ -284,14 +284,14 @@ int PDC_CDECL color_content(short color, short *red, short *green, short *blue)
 	return OK;
 }
 
-bool PDC_CDECL can_change_color(void)
+bool can_change_color(void)
 {
 	PDC_LOG(("can_change_color() - called\n"));
 
 	return FALSE;
 }
 
-int PDC_CDECL pair_content(short colorpair, short *foreground,
+int pair_content(short colorpair, short *foreground,
 			   short *background)
 {
 	PDC_LOG(("pair_content() - called\n"));
@@ -306,7 +306,7 @@ int PDC_CDECL pair_content(short colorpair, short *foreground,
 	return OK;
 }
 
-int PDC_CDECL PDC_set_line_color(short color)
+int PDC_set_line_color(short color)
 {
 	if (color >= COLORS || color < 0)
 		return ERR;

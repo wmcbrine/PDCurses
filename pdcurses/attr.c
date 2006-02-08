@@ -36,7 +36,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_attr =
-	"$Id: attr.c,v 1.16 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: attr.c,v 1.17 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -113,14 +113,14 @@ const char *rcsid_attr =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL attroff(chtype attrs)
+int attroff(chtype attrs)
 {
 	PDC_LOG(("attroff() - called\n"));
 
 	return wattroff(stdscr, attrs);
 }
 
-int PDC_CDECL wattroff(WINDOW *win, chtype attrs)
+int wattroff(WINDOW *win, chtype attrs)
 {
 	PDC_LOG(("wattroff() - called\n"));
 
@@ -132,14 +132,14 @@ int PDC_CDECL wattroff(WINDOW *win, chtype attrs)
 	return OK;
 }
 
-int PDC_CDECL attron(chtype attrs)
+int attron(chtype attrs)
 {
 	PDC_LOG(("attron() - called\n"));
 
 	return wattron(stdscr, attrs);
 }
 
-int PDC_CDECL wattron(WINDOW *win, chtype attrs)
+int wattron(WINDOW *win, chtype attrs)
 {
 	chtype newcolr, oldcolr;
 	chtype newattr, oldattr;
@@ -164,14 +164,14 @@ int PDC_CDECL wattron(WINDOW *win, chtype attrs)
 	return OK;
 }
 
-int PDC_CDECL attrset(chtype attrs)
+int attrset(chtype attrs)
 {
 	PDC_LOG(("attrset() - called\n"));
 
 	return wattrset(stdscr, attrs);
 }
 
-int PDC_CDECL wattrset(WINDOW *win, chtype attrs)
+int wattrset(WINDOW *win, chtype attrs)
 {
 	PDC_LOG(("wattrset() - called\n"));
 
@@ -183,47 +183,47 @@ int PDC_CDECL wattrset(WINDOW *win, chtype attrs)
 	return OK;
 }
 
-int PDC_CDECL standend(void)
+int standend(void)
 {
 	PDC_LOG(("standend() - called\n"));
 
 	return wattrset(stdscr, A_NORMAL);
 }
 
-int PDC_CDECL standout(void)
+int standout(void)
 {
 	PDC_LOG(("standout() - called\n"));
 
 	return wattrset(stdscr, A_STANDOUT);
 }
 
-int PDC_CDECL wstandend(WINDOW *win)
+int wstandend(WINDOW *win)
 {
 	PDC_LOG(("wstandend() - called\n"));
 
 	return wattrset(win, A_NORMAL);
 }
 
-int PDC_CDECL wstandout(WINDOW *win)
+int wstandout(WINDOW *win)
 {
 	PDC_LOG(("wstandout() - called\n"));
 
 	return wattrset(win, A_STANDOUT);
 }
 
-chtype PDC_CDECL getattrs(WINDOW *win)
+chtype getattrs(WINDOW *win)
 {
 	return win ? win->_attrs : 0;
 }
 
-int PDC_CDECL color_set(short color_pair, void *opts)
+int color_set(short color_pair, void *opts)
 {
 	PDC_LOG(("color_set() - called\n"));
 
 	return wcolor_set(stdscr, color_pair, opts);
 }
 
-int PDC_CDECL wcolor_set(WINDOW *win, short color_pair, void *opts)
+int wcolor_set(WINDOW *win, short color_pair, void *opts)
 {
 	PDC_LOG(("wcolor_set() - called\n"));
 

@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_delch =
-	"$Id: delch.c,v 1.12 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: delch.c,v 1.13 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -79,14 +79,14 @@ const char *rcsid_delch =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL delch(void)
+int delch(void)
 {
 	PDC_LOG(("delch() - called\n"));
 
 	return wdelch(stdscr);
 }
 
-int PDC_CDECL wdelch(WINDOW *win)
+int wdelch(WINDOW *win)
 {
 	int y, x, maxx;
 	chtype *temp1;
@@ -120,7 +120,7 @@ int PDC_CDECL wdelch(WINDOW *win)
 	return OK;
 }
 
-int PDC_CDECL mvdelch(int y, int x)
+int mvdelch(int y, int x)
 {
 	PDC_LOG(("mvdelch() - called\n"));
 
@@ -130,7 +130,7 @@ int PDC_CDECL mvdelch(int y, int x)
 	return wdelch(stdscr);
 }
 
-int PDC_CDECL mvwdelch(WINDOW *win, int y, int x)
+int mvwdelch(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwdelch() - called\n"));
 

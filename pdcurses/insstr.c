@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_insstr =
-	"$Id: insstr.c,v 1.16 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: insstr.c,v 1.17 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -97,28 +97,28 @@ const char *rcsid_insstr =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL insstr(const char *str)
+int insstr(const char *str)
 {
 	PDC_LOG(("insstr() - called: string=\"%s\"\n", str));
 
 	return winsnstr(stdscr, str, -1);
 }
 
-int PDC_CDECL insnstr(const char *str, int n)
+int insnstr(const char *str, int n)
 {
 	PDC_LOG(("insnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	return winsnstr(stdscr, str, n);
 }
 
-int PDC_CDECL winsstr(WINDOW *win, const char *str)
+int winsstr(WINDOW *win, const char *str)
 {
 	PDC_LOG(("winsstr() - called: string=\"%s\"\n", str));
 
 	return winsnstr(win, str, -1);
 }
 
-int PDC_CDECL winsnstr(WINDOW *win, const char *str, int n)
+int winsnstr(WINDOW *win, const char *str, int n)
 {
 	int ic;
 
@@ -141,7 +141,7 @@ int PDC_CDECL winsnstr(WINDOW *win, const char *str, int n)
 	return OK;
 }
 
-int PDC_CDECL mvinsstr(int y, int x, const char *str)
+int mvinsstr(int y, int x, const char *str)
 {
 	PDC_LOG(("mvinsstr() - called: y %d x %d string=\"%s\"\n",
 		y, x, str));
@@ -152,7 +152,7 @@ int PDC_CDECL mvinsstr(int y, int x, const char *str)
 	return winsnstr(stdscr, str, -1);
 }
 
-int PDC_CDECL mvinsnstr(int y, int x, const char *str, int n)
+int mvinsnstr(int y, int x, const char *str, int n)
 {
 	PDC_LOG(("mvinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));
@@ -163,7 +163,7 @@ int PDC_CDECL mvinsnstr(int y, int x, const char *str, int n)
 	return winsnstr(stdscr, str, n);
 }
 
-int PDC_CDECL mvwinsstr(WINDOW *win, int y, int x, const char *str)
+int mvwinsstr(WINDOW *win, int y, int x, const char *str)
 {
 	PDC_LOG(("mvwinsstr() - called: string=\"%s\"\n", str));
 
@@ -173,7 +173,7 @@ int PDC_CDECL mvwinsstr(WINDOW *win, int y, int x, const char *str)
 	return winsnstr(win, str, -1);
 }
 
-int PDC_CDECL mvwinsnstr(WINDOW *win,int y, int x, const char *str, int n)
+int mvwinsnstr(WINDOW *win,int y, int x, const char *str, int n)
 {
 	PDC_LOG(("mvwinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));

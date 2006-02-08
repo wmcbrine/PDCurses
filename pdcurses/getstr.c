@@ -41,7 +41,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_getstr =
-	"$Id: getstr.c,v 1.20 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: getstr.c,v 1.21 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -100,21 +100,21 @@ const char *rcsid_getstr =
 
 #define MAXLINE 255
 
-int PDC_CDECL getstr(char *str)
+int getstr(char *str)
 {
 	PDC_LOG(("getstr() - called\n"));
 
 	return wgetnstr(stdscr, str, MAXLINE);
 }
 
-int PDC_CDECL wgetstr(WINDOW *win, char *str)
+int wgetstr(WINDOW *win, char *str)
 {
 	PDC_LOG(("wgetstr() - called\n"));
 
 	return wgetnstr(win, str, MAXLINE);
 }
 
-int PDC_CDECL mvgetstr(int y, int x, char *str)
+int mvgetstr(int y, int x, char *str)
 {
 	PDC_LOG(("mvgetstr() - called\n"));
 
@@ -124,7 +124,7 @@ int PDC_CDECL mvgetstr(int y, int x, char *str)
 	return wgetnstr(stdscr, str, MAXLINE);
 }
 
-int PDC_CDECL mvwgetstr(WINDOW *win, int y, int x, char *str)
+int mvwgetstr(WINDOW *win, int y, int x, char *str)
 {
 	PDC_LOG(("mvwgetstr() - called\n"));
 
@@ -134,14 +134,14 @@ int PDC_CDECL mvwgetstr(WINDOW *win, int y, int x, char *str)
 	return wgetnstr(win, str, MAXLINE);
 }
 
-int PDC_CDECL getnstr(char *str, int n)
+int getnstr(char *str, int n)
 {
 	PDC_LOG(("getnstr() - called\n"));
 
 	return wgetnstr(stdscr, str, n);
 }
 
-int PDC_CDECL wgetnstr(WINDOW *win, char *str, int n)
+int wgetnstr(WINDOW *win, char *str, int n)
 {
 	int ch, i, num, t, x, chars;
 	char *p;
@@ -282,7 +282,7 @@ int PDC_CDECL wgetnstr(WINDOW *win, char *str, int n)
 	return OK;
 }
 
-int PDC_CDECL mvgetnstr(int y, int x, char *str, int n)
+int mvgetnstr(int y, int x, char *str, int n)
 {
 	PDC_LOG(("mvgetnstr() - called\n"));
 
@@ -292,7 +292,7 @@ int PDC_CDECL mvgetnstr(int y, int x, char *str, int n)
 	return wgetnstr(stdscr, str, n);
 }
 
-int PDC_CDECL mvwgetnstr(WINDOW *win, int y, int x, char *str, int n)
+int mvwgetnstr(WINDOW *win, int y, int x, char *str, int n)
 {
 	PDC_LOG(("mvwgetnstr() - called\n"));
 

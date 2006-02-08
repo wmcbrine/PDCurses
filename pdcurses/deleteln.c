@@ -30,7 +30,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_deleteln =
-	"$Id: deleteln.c,v 1.12 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: deleteln.c,v 1.13 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -82,14 +82,14 @@ const char *rcsid_deleteln =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL deleteln(void)
+int deleteln(void)
 {
 	PDC_LOG(("deleteln() - called\n"));
 
 	return wdeleteln(stdscr);
 }
 
-int PDC_CDECL wdeleteln(WINDOW *win)
+int wdeleteln(WINDOW *win)
 {
 	chtype blank, *temp, *ptr;
 	int y;
@@ -128,14 +128,14 @@ int PDC_CDECL wdeleteln(WINDOW *win)
 	return OK;
 }
 
-int PDC_CDECL insdelln(int n)
+int insdelln(int n)
 {
 	PDC_LOG(("insdelln() - called\n"));
 
 	return winsdelln(stdscr, n);
 }
 
-int PDC_CDECL winsdelln(WINDOW *win, int n)
+int winsdelln(WINDOW *win, int n)
 {
 	int i;
 
@@ -161,7 +161,7 @@ int PDC_CDECL winsdelln(WINDOW *win, int n)
 	return OK;
 }
 
-int PDC_CDECL winsertln(WINDOW *win)
+int winsertln(WINDOW *win)
 {
 	chtype blank, *temp, *end;
 	int y;
@@ -197,14 +197,14 @@ int PDC_CDECL winsertln(WINDOW *win)
 	return OK;
 }
 
-int PDC_CDECL insertln(void)
+int insertln(void)
 {
 	PDC_LOG(("insertln() - called\n"));
 
 	return winsertln(stdscr);
 }
 
-int PDC_CDECL mvwinsertln(WINDOW *win, int y, int x)
+int mvwinsertln(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwinsertln() - called\n"));
 

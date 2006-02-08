@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curspriv.h,v 1.30 2006/01/29 19:18:28 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.31 2006/02/08 17:40:32 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -301,7 +301,7 @@ void		movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
 
 #ifdef PDCDEBUG
-void PDC_CDECL	PDC_debug(char *, ...);
+void PDC_debug(char *, ...);
 # define PDC_LOG(x) if (trace_on) PDC_debug x
 #else
 # define PDC_LOG(x)

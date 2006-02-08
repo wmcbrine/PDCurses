@@ -41,7 +41,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.16 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.17 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -102,14 +102,14 @@ const char *rcsid_refresh =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL refresh(void)
+int refresh(void)
 {
 	PDC_LOG(("refresh() - called\n"));
 
 	return wrefresh(stdscr);
 }
 
-int PDC_CDECL wrefresh(WINDOW *win)
+int wrefresh(WINDOW *win)
 {
 	bool save_clear;
 
@@ -132,7 +132,7 @@ int PDC_CDECL wrefresh(WINDOW *win)
 	return OK;
 }
 
-int PDC_CDECL wnoutrefresh(WINDOW *win)
+int wnoutrefresh(WINDOW *win)
 {
 	int first;		/* first changed char on line */
 	int last;		/* last changed char on line  */
@@ -206,7 +206,7 @@ int PDC_CDECL wnoutrefresh(WINDOW *win)
 	return OK;
 }
 
-int PDC_CDECL doupdate(void)
+int doupdate(void)
 {
 	int i;
 #ifdef REGISTERWINDOWS
@@ -283,7 +283,7 @@ int PDC_CDECL doupdate(void)
 	return OK;
 }
 
-int PDC_CDECL redrawwin(WINDOW *win)
+int redrawwin(WINDOW *win)
 {
 	PDC_LOG(("redrawwin() - called: win=%x\n", win));
 
@@ -293,7 +293,7 @@ int PDC_CDECL redrawwin(WINDOW *win)
 	return wredrawln(win, 0, win->_maxy);
 }
 
-int PDC_CDECL wredrawln(WINDOW *win, int start, int num)
+int wredrawln(WINDOW *win, int start, int num)
 {
 	int i;
 

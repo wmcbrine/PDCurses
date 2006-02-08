@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_scroll =
-	"$Id: scroll.c,v 1.13 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: scroll.c,v 1.14 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -75,14 +75,14 @@ const char *rcsid_scroll =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL scroll(WINDOW *win)
+int scroll(WINDOW *win)
 {
 	PDC_LOG(("scroll() - called\n"));
 
 	return wscrl(win, 1);
 }
 
-int PDC_CDECL wscrl(WINDOW *win, int n)
+int wscrl(WINDOW *win, int n)
 {
 	int i, l;
 	chtype blank, *ptr, *temp;
@@ -158,7 +158,7 @@ int PDC_CDECL wscrl(WINDOW *win, int n)
 	return OK;
 }
 
-int PDC_CDECL scrl(int n)
+int scrl(int n)
 {
 	PDC_LOG(("scrl() - called\n"));
 

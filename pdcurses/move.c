@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_move =
-	"$Id: move.c,v 1.10 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: move.c,v 1.11 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -57,7 +57,7 @@ const char *rcsid_move =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL move(int y, int x)
+int move(int y, int x)
 {
 	PDC_LOG(("move() - called: y=%d x=%d\n", y, x));
 
@@ -73,7 +73,7 @@ int PDC_CDECL move(int y, int x)
 	return OK;
 }
 
-int PDC_CDECL wmove(WINDOW *win, int y, int x)
+int wmove(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("wmove() - called: y=%d x=%d\n", y, x));
 

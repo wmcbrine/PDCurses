@@ -33,7 +33,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inch =
-	"$Id: inch.c,v 1.11 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: inch.c,v 1.12 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -69,7 +69,7 @@ const char *rcsid_inch =
 
 **man-end**********************************************************************/
 
-chtype PDC_CDECL winch(WINDOW *win)
+chtype winch(WINDOW *win)
 {
 	PDC_LOG(("winch() - called\n"));
 
@@ -79,14 +79,14 @@ chtype PDC_CDECL winch(WINDOW *win)
 	return win->_y[win->_cury][win->_curx];
 }
 
-chtype PDC_CDECL inch(void)
+chtype inch(void)
 {
 	PDC_LOG(("inch() - called\n"));
 
 	return winch(stdscr);
 }
 
-chtype PDC_CDECL mvinch(int y, int x)
+chtype mvinch(int y, int x)
 {
 	PDC_LOG(("mvinch() - called\n"));
 
@@ -96,7 +96,7 @@ chtype PDC_CDECL mvinch(int y, int x)
 	return stdscr->_y[stdscr->_cury][stdscr->_curx];
 }
 
-chtype PDC_CDECL mvwinch(WINDOW *win, int y, int x)
+chtype mvwinch(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwinch() - called\n"));
 

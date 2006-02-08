@@ -36,7 +36,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_getch =
-	"$Id: getch.c,v 1.22 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: getch.c,v 1.23 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -111,14 +111,14 @@ const char *rcsid_getch =
 #define getch PDC_getch
 #define ungetch PDC_ungetch
 
-int PDC_CDECL PDC_getch(void)
+int PDC_getch(void)
 {
 	PDC_LOG(("getch() - called\n"));
 
 	return wgetch(stdscr);
 }
 
-int PDC_CDECL wgetch(WINDOW *win)
+int wgetch(WINDOW *win)
 {
 	extern int c_pindex;		/* putter index	*/
 	extern int c_gindex;		/* getter index	*/
@@ -251,7 +251,7 @@ int PDC_CDECL wgetch(WINDOW *win)
 	}
 }
 
-int PDC_CDECL mvgetch(int y, int x)
+int mvgetch(int y, int x)
 {
 	PDC_LOG(("mvgetch() - called\n"));
 
@@ -261,7 +261,7 @@ int PDC_CDECL mvgetch(int y, int x)
 	return wgetch(stdscr);
 }
 
-int PDC_CDECL mvwgetch(WINDOW *win, int y, int x)
+int mvwgetch(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwgetch() - called\n"));
 
@@ -271,7 +271,7 @@ int PDC_CDECL mvwgetch(WINDOW *win, int y, int x)
 	return wgetch(win);
 }
 
-int PDC_CDECL PDC_ungetch(int ch)
+int PDC_ungetch(int ch)
 {
 	extern int c_ungind;		/* ungetch() push index */
 	extern int c_ungch[NUNGETCH];	/* array of ungotten chars */

@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdebug =
-	"$Id: pdcdebug.c,v 1.13 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: pdcdebug.c,v 1.14 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 bool trace_on = FALSE;
@@ -49,7 +49,7 @@ bool trace_on = FALSE;
 
 **man-end**********************************************************************/
 
-void PDC_CDECL PDC_debug(char *fmt, ...)
+void PDC_debug(char *fmt, ...)
 {
 	va_list args;
 	FILE *dbfp;

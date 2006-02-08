@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_getyx =
-	"$Id: getyx.c,v 1.10 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: getyx.c,v 1.11 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -84,7 +84,7 @@ const char *rcsid_getyx =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL getbegy(WINDOW *win)
+int getbegy(WINDOW *win)
 {
 	PDC_LOG(("getbegy() - called\n"));
 
@@ -94,7 +94,7 @@ int PDC_CDECL getbegy(WINDOW *win)
 	return win->_begy;
 }
 
-int PDC_CDECL getbegx(WINDOW *win)
+int getbegx(WINDOW *win)
 {
 	PDC_LOG(("getbegx() - called\n"));
 
@@ -104,7 +104,7 @@ int PDC_CDECL getbegx(WINDOW *win)
 	return win->_begx;
 }
 
-int PDC_CDECL getpary(WINDOW *win)
+int getpary(WINDOW *win)
 {
 	PDC_LOG(("getpary() - called\n"));
 
@@ -114,7 +114,7 @@ int PDC_CDECL getpary(WINDOW *win)
 	return win->_pary;
 }
 
-int PDC_CDECL getparx(WINDOW *win)
+int getparx(WINDOW *win)
 {
 	PDC_LOG(("getparx() - called\n"));
 
@@ -124,7 +124,7 @@ int PDC_CDECL getparx(WINDOW *win)
 	return win->_parx;
 }
 
-int PDC_CDECL getmaxy(WINDOW *win)
+int getmaxy(WINDOW *win)
 {
 	PDC_LOG(("getmaxy() - called\n"));
 
@@ -134,7 +134,7 @@ int PDC_CDECL getmaxy(WINDOW *win)
 	return win->_maxy;
 }
 
-int PDC_CDECL getmaxx(WINDOW *win)
+int getmaxx(WINDOW *win)
 {
 	PDC_LOG(("getmaxx() - called\n"));
 

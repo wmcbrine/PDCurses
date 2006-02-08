@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_border =
-	"$Id: border.c,v 1.16 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: border.c,v 1.17 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -154,7 +154,7 @@ static chtype PDC_attr_passthru(WINDOW *win, chtype ch)
 	return ch;
 }
 
-int PDC_CDECL wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
+int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
 		      chtype bs, chtype tl, chtype tr, chtype bl, chtype br)
 {
 	int ymax, xmax;
@@ -216,7 +216,7 @@ int PDC_CDECL wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
 	return OK;
 }
 
-int PDC_CDECL border(chtype ls, chtype rs, chtype ts, chtype bs,
+int border(chtype ls, chtype rs, chtype ts, chtype bs,
 		     chtype tl, chtype tr, chtype bl, chtype br)
 {
 	PDC_LOG(("border() - called\n"));
@@ -224,7 +224,7 @@ int PDC_CDECL border(chtype ls, chtype rs, chtype ts, chtype bs,
 	return wborder(stdscr, ls, rs, ts, bs, tl, tr, bl, br);
 }
 
-int PDC_CDECL box(WINDOW *win, chtype verch, chtype horch)
+int box(WINDOW *win, chtype verch, chtype horch)
 {
 	PDC_LOG(("box() - called\n"));
 
@@ -234,21 +234,21 @@ int PDC_CDECL box(WINDOW *win, chtype verch, chtype horch)
 	return wborder(win, verch, verch, horch, horch, 0, 0, 0, 0);
 }
 
-int PDC_CDECL hline(chtype ch, int n)
+int hline(chtype ch, int n)
 {
 	PDC_LOG(("hline() - called\n"));
 
 	return whline(stdscr, ch, n);
 }
 
-int PDC_CDECL vline(chtype ch, int n)
+int vline(chtype ch, int n)
 {
 	PDC_LOG(("vline() - called\n"));
 
 	return wvline(stdscr, ch, n);
 }
 
-int PDC_CDECL whline(WINDOW *win, chtype ch, int n)
+int whline(WINDOW *win, chtype ch, int n)
 {
 	int startpos, endpos;
 
@@ -287,7 +287,7 @@ int PDC_CDECL whline(WINDOW *win, chtype ch, int n)
 	return OK;
 }
 
-int PDC_CDECL wvline(WINDOW *win, chtype ch, int n)
+int wvline(WINDOW *win, chtype ch, int n)
 {
 	int endpos;
 
@@ -324,7 +324,7 @@ int PDC_CDECL wvline(WINDOW *win, chtype ch, int n)
 	return OK;
 }
 
-int PDC_CDECL mvhline(int y, int x, chtype ch, int n)
+int mvhline(int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvhline() - called\n"));
 
@@ -334,7 +334,7 @@ int PDC_CDECL mvhline(int y, int x, chtype ch, int n)
 	return whline(stdscr, ch, n);
 }
 
-int PDC_CDECL mvvline(int y, int x, chtype ch, int n)
+int mvvline(int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvvline() - called\n"));
 
@@ -344,7 +344,7 @@ int PDC_CDECL mvvline(int y, int x, chtype ch, int n)
 	return wvline(stdscr, ch, n);
 }
 
-int PDC_CDECL mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
+int mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvwhline() - called\n"));
 
@@ -354,7 +354,7 @@ int PDC_CDECL mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
 	return whline(win, ch, n);
 }
 
-int PDC_CDECL mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
+int mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
 {
 	PDC_LOG(("mvwvline() - called\n"));
 
@@ -367,7 +367,7 @@ int PDC_CDECL mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
 /* PDC_lineattr() -- add the specified attribute to a line of chtypes. 
    Used only as the core routine for the next three functions. */
 
-static int PDC_CDECL PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
+static int PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
 {
 	int endpos;
 
@@ -405,21 +405,21 @@ static int PDC_CDECL PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
 	return OK;
 }
 
-int PDC_CDECL PDC_wunderline(WINDOW *win, int n, bool state)
+int PDC_wunderline(WINDOW *win, int n, bool state)
 {
 	PDC_LOG(("PDC_wunderline() - called\n"));
 
 	return PDC_lineattr(win, n, state, A_UNDERLINE);
 }
 
-int PDC_CDECL PDC_wleftline(WINDOW *win, int n, bool state)
+int PDC_wleftline(WINDOW *win, int n, bool state)
 {
 	PDC_LOG(("PDC_wleftline() - called\n"));
 
 	return PDC_lineattr(win, n, state, A_LEFTLINE);
 }
 
-int PDC_CDECL PDC_wrightline(WINDOW *win, int n, bool state)
+int PDC_wrightline(WINDOW *win, int n, bool state)
 {
 	PDC_LOG(("PDC_wrightline() - called\n"));
 

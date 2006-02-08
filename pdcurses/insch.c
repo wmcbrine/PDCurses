@@ -35,7 +35,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_insch =
-	"$Id: insch.c,v 1.12 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: insch.c,v 1.13 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -124,21 +124,21 @@ const char *rcsid_insch =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL insch(chtype ch)
+int insch(chtype ch)
 {
 	PDC_LOG(("insch() - called\n"));
 
 	return PDC_chins(stdscr, ch, (bool)(!(SP->raw_out)));
 }
 
-int PDC_CDECL winsch(WINDOW *win, chtype ch)
+int winsch(WINDOW *win, chtype ch)
 {
 	PDC_LOG(("winsch() - called\n"));
 
 	return PDC_chins(win, ch, (bool)(!(SP->raw_out)));
 }
 
-int PDC_CDECL mvinsch(int y, int x, chtype ch)
+int mvinsch(int y, int x, chtype ch)
 {
 	PDC_LOG(("mvinsch() - called\n"));
 
@@ -148,7 +148,7 @@ int PDC_CDECL mvinsch(int y, int x, chtype ch)
 	return PDC_chins(stdscr, ch, (bool)(!(SP->raw_out)));
 }
 
-int PDC_CDECL mvwinsch(WINDOW *win, int y, int x, chtype ch)
+int mvwinsch(WINDOW *win, int y, int x, chtype ch)
 {
 	PDC_LOG(("mvwinsch() - called\n"));
 

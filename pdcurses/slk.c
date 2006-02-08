@@ -36,7 +36,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_slk =
-	"$Id: slk.c,v 1.16 2006/02/07 14:12:42 wmcbrine Exp $";
+	"$Id: slk.c,v 1.17 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -137,7 +137,7 @@ static struct {
 	with index line)
       55 = 5 - 5 format	(extended for PC, 10 function keys) */
 
-int PDC_CDECL slk_init(int fmt)
+int slk_init(int fmt)
 {
 	PDC_LOG(("slk_init() - called\n"));
 
@@ -285,14 +285,14 @@ static int PDC_slk_set(int label_num, const char *label_str,
       1 = center
       2 = right  */
 
-int PDC_CDECL slk_set(int label_num, const char *label_str, int label_fmt)
+int slk_set(int label_num, const char *label_str, int label_fmt)
 {
 	PDC_LOG(("slk_set() - called\n"));
 
 	return PDC_slk_set(label_num, label_str, label_fmt, 1);
 }
 
-int PDC_CDECL slk_refresh(void)
+int slk_refresh(void)
 {
 	PDC_LOG(("slk_refresh() - called\n"));
 
@@ -303,7 +303,7 @@ int PDC_CDECL slk_refresh(void)
 	return doupdate();
 }
 
-int PDC_CDECL slk_noutrefresh(void)
+int slk_noutrefresh(void)
 {
 	PDC_LOG(("slk_noutrefresh() - called\n"));
 
@@ -313,7 +313,7 @@ int PDC_CDECL slk_noutrefresh(void)
 	return wnoutrefresh(SP->slk_winptr);
 }
 
-char * PDC_CDECL slk_label(int labnum)
+char * slk_label(int labnum)
 {
 	PDC_LOG(("slk_label() - called\n"));
 
@@ -326,7 +326,7 @@ char * PDC_CDECL slk_label(int labnum)
 	return slk_temp_string;	/* only good temporarily */
 }
 
-int PDC_CDECL slk_clear(void)
+int slk_clear(void)
 {
 	int i;
 
@@ -341,7 +341,7 @@ int PDC_CDECL slk_clear(void)
 	return wrefresh(SP->slk_winptr);
 }
 
-int PDC_CDECL slk_restore(void)
+int slk_restore(void)
 {
 	int i;
 	chtype attr = SP->slk_winptr->_attrs;
@@ -359,14 +359,14 @@ int PDC_CDECL slk_restore(void)
 	return wrefresh(SP->slk_winptr);
 }
 
-int PDC_CDECL slk_touch(void)
+int slk_touch(void)
 {
 	PDC_LOG(("slk_touch() - called\n"));
 
 	return touchwin(SP->slk_winptr);
 }
 
-int PDC_CDECL slk_attron(const chtype attrs)
+int slk_attron(const chtype attrs)
 {
 	int i, rc;
 
@@ -380,7 +380,7 @@ int PDC_CDECL slk_attron(const chtype attrs)
 	return rc;
 }
 
-int PDC_CDECL slk_attroff(const chtype attrs)
+int slk_attroff(const chtype attrs)
 {
 	int i, rc;
 
@@ -394,7 +394,7 @@ int PDC_CDECL slk_attroff(const chtype attrs)
 	return rc;
 }
 
-int PDC_CDECL slk_attrset(const chtype attrs)
+int slk_attrset(const chtype attrs)
 {
 	int i, rc;
 
@@ -408,7 +408,7 @@ int PDC_CDECL slk_attrset(const chtype attrs)
 	return rc;
 }
 
-int PDC_CDECL slk_color(short color_pair)
+int slk_color(short color_pair)
 {
 	int i, rc;
 

@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inchstr =
-	"$Id: inchstr.c,v 1.11 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: inchstr.c,v 1.12 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -84,28 +84,28 @@ const char *rcsid_inchstr =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL inchstr(chtype *ch)
+int inchstr(chtype *ch)
 {
 	PDC_LOG(("inchstr() - called\n"));
 
 	return winchnstr(stdscr, ch, stdscr->_maxx - stdscr->_curx);
 }
 
-int PDC_CDECL inchnstr(chtype *ch, int n)
+int inchnstr(chtype *ch, int n)
 {
 	PDC_LOG(("inchnstr() - called\n"));
 
 	return winchnstr(stdscr, ch, n);
 }
 
-int PDC_CDECL winchstr(WINDOW *win, chtype *ch)
+int winchstr(WINDOW *win, chtype *ch)
 {
 	PDC_LOG(("winchstr() - called\n"));
 
 	return winchnstr(win, ch, win->_maxx - win->_curx);
 }
 
-int PDC_CDECL winchnstr(WINDOW *win, chtype *ch, int n)
+int winchnstr(WINDOW *win, chtype *ch, int n)
 {
 	int i;
 	chtype *ptr;
@@ -128,7 +128,7 @@ int PDC_CDECL winchnstr(WINDOW *win, chtype *ch, int n)
 	return i;
 }
 
-int PDC_CDECL mvinchstr(int y, int x, chtype *ch)
+int mvinchstr(int y, int x, chtype *ch)
 {
 	PDC_LOG(("mvinchstr() - called: y %d x %d\n", y, x));
 
@@ -138,7 +138,7 @@ int PDC_CDECL mvinchstr(int y, int x, chtype *ch)
 	return winchnstr(stdscr, ch, stdscr->_maxx - stdscr->_curx);
 }
 
-int PDC_CDECL mvinchnstr(int y, int x, chtype *ch, int n)
+int mvinchnstr(int y, int x, chtype *ch, int n)
 {
 	PDC_LOG(("mvinchnstr() - called: y %d x %d n %d\n", y, x, n));
 
@@ -148,7 +148,7 @@ int PDC_CDECL mvinchnstr(int y, int x, chtype *ch, int n)
 	return winchnstr(stdscr, ch, n);
 }
 
-int PDC_CDECL mvwinchstr(WINDOW *win, int y, int x, chtype *ch)
+int mvwinchstr(WINDOW *win, int y, int x, chtype *ch)
 {
 	PDC_LOG(("winchstr() - called:\n"));
 
@@ -158,7 +158,7 @@ int PDC_CDECL mvwinchstr(WINDOW *win, int y, int x, chtype *ch)
 	return winchnstr(win, ch, win->_maxx - win->_curx);
 }
 
-int PDC_CDECL mvwinchnstr(WINDOW *win, int y, int x, chtype *ch, int n)
+int mvwinchnstr(WINDOW *win, int y, int x, chtype *ch, int n)
 {
 	PDC_LOG(("mvwinchnstr() - called: y %d x %d n %d \n", y, x, n));
 

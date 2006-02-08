@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_util =
-	"$Id: util.c,v 1.25 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: util.c,v 1.26 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -107,7 +107,7 @@ const char *rcsid_util =
 
 static char strbuf[3] = {0, 0, 0};
 
-char * PDC_CDECL unctrl(chtype c)
+char * unctrl(chtype c)
 {
 	chtype ic;
 
@@ -197,7 +197,7 @@ static char *key_name[] = {
 	"KEY_SUP", "KEY_SDOWN"
 };
 
-char * PDC_CDECL keyname(int key)
+char * keyname(int key)
 {
 	PDC_LOG(("keyname() - called: key %d\n", key));
 
@@ -210,7 +210,7 @@ char * PDC_CDECL keyname(int key)
 		return "NO KEY NAME";
 }
 
-bool PDC_CDECL has_key(int key)
+bool has_key(int key)
 {
 	PDC_LOG(("has_key() - called: key %d\n",key));
 
@@ -220,38 +220,38 @@ bool PDC_CDECL has_key(int key)
 	    && key <= (int)(sizeof(key_name) / sizeof(key_name[0]));
 }
 
-void PDC_CDECL filter(void)
+void filter(void)
 {
 	PDC_LOG(("filter() - called\n"));
 }
 
-void PDC_CDECL use_env(bool x)
+void use_env(bool x)
 {
 	PDC_LOG(("use_env() - called: x %d\n", x));
 }
 
-int PDC_CDECL putwin(WINDOW *win, FILE *filep)
+int putwin(WINDOW *win, FILE *filep)
 {
 	PDC_LOG(("putwin() - called\n"));
 
 	return ERR;
 }
 
-WINDOW * PDC_CDECL getwin(FILE *filep)
+WINDOW * getwin(FILE *filep)
 {
 	PDC_LOG(("getwin() - called\n"));
 
 	return (WINDOW *)NULL;
 }
 
-int PDC_CDECL delay_output(int ms)
+int delay_output(int ms)
 {
 	PDC_LOG(("delay_output() - called: ms %d\n", ms));
 
 	return napms(ms);
 }
 
-int PDC_CDECL flushinp(void)
+int flushinp(void)
 {
 #ifdef WIN32
 	extern HANDLE hConIn;
@@ -295,14 +295,14 @@ int PDC_CDECL flushinp(void)
 #undef traceon
 #undef traceoff
 
-void PDC_CDECL traceon(void)
+void traceon(void)
 {
 	PDC_LOG(("traceon() - called\n"));
 
 	trace_on = TRUE;
 }
 
-void PDC_CDECL traceoff(void)
+void traceoff(void)
 {
 	PDC_LOG(("traceoff() - called\n"));
 

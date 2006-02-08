@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_outopts =
-	"$Id: outopts.c,v 1.15 2006/02/06 01:13:18 wmcbrine Exp $";
+	"$Id: outopts.c,v 1.16 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -127,7 +127,7 @@ const char *rcsid_outopts =
 
 **man-end**********************************************************************/
 
-int PDC_CDECL clearok(WINDOW *win, bool bf)
+int clearok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("clearok() - called\n"));
 
@@ -139,7 +139,7 @@ int PDC_CDECL clearok(WINDOW *win, bool bf)
 	return OK;
 }
 
-int PDC_CDECL idlok(WINDOW *win, bool bf)
+int idlok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("idlok() - called\n"));
 
@@ -151,7 +151,7 @@ int PDC_CDECL idlok(WINDOW *win, bool bf)
 	return OK;
 }
 
-void PDC_CDECL idcok(WINDOW *win, bool bf)
+void idcok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("idcok() - called\n"));
 
@@ -159,7 +159,7 @@ void PDC_CDECL idcok(WINDOW *win, bool bf)
 		win->_use_idc = bf;
 }
 
-void PDC_CDECL immedok(WINDOW *win, bool bf)
+void immedok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("immedok() - called\n"));
 
@@ -167,7 +167,7 @@ void PDC_CDECL immedok(WINDOW *win, bool bf)
 		win->_immed = bf;
 }
 
-int PDC_CDECL leaveok(WINDOW *win, bool bf)
+int leaveok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("leaveok() - called\n"));
 
@@ -184,14 +184,14 @@ int PDC_CDECL leaveok(WINDOW *win, bool bf)
 	return OK;
 }
 
-int PDC_CDECL setscrreg(int top, int bottom)
+int setscrreg(int top, int bottom)
 {
 	PDC_LOG(("setscrreg() - called: top %d bottom %d\n", top, bottom));
 
 	return wsetscrreg(stdscr, top, bottom);
 }
 
-int PDC_CDECL wsetscrreg(WINDOW *win, int top, int bottom)
+int wsetscrreg(WINDOW *win, int top, int bottom)
 {
 	PDC_LOG(("wsetscrreg() - called: top %d bottom %d\n", top, bottom));
 
@@ -210,7 +210,7 @@ int PDC_CDECL wsetscrreg(WINDOW *win, int top, int bottom)
 		return ERR;
 }
 
-int PDC_CDECL scrollok(WINDOW *win, bool bf)
+int scrollok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("scrollok() - called\n"));
 
@@ -222,7 +222,7 @@ int PDC_CDECL scrollok(WINDOW *win, bool bf)
 	return OK;
 }
 
-int PDC_CDECL raw_output(bool bf)
+int raw_output(bool bf)
 {
 	PDC_LOG(("raw_output() - called\n"));
 

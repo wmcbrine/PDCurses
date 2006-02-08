@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: term.h,v 1.4 2006/01/28 16:53:25 wmcbrine Exp $ */
+/* $Id: term.h,v 1.5 2006/02/08 17:40:32 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
@@ -45,23 +45,23 @@ __declspec(dllexport) extern TERMINAL *cur_term;
 extern TERMINAL *cur_term;
 #endif
 
-int	PDC_CDECL del_curterm(TERMINAL *);
-int	PDC_CDECL putp(const char *);
-int	PDC_CDECL restartterm(char *, int, int *);
-TERMINAL* PDC_CDECL set_curterm(TERMINAL *);
-int	PDC_CDECL setterm(char *);
-int	PDC_CDECL setupterm(char *, int, int *);
-int	PDC_CDECL tgetent(char *, const char *);
-int	PDC_CDECL tgetflag(char *);
-int	PDC_CDECL tgetnum(char *);
-char *	PDC_CDECL tgetstr(char *, char **);
-char *	PDC_CDECL tgoto(char *, int, int);
-int	PDC_CDECL tigetflag(char *);
-int	PDC_CDECL tigetnum(char *);
-char *	PDC_CDECL tigetstr(char *);
-char *	PDC_CDECL tparm(char *,long, long, long, long, long, 
+int	del_curterm(TERMINAL *);
+int	putp(const char *);
+int	restartterm(char *, int, int *);
+TERMINAL *set_curterm(TERMINAL *);
+int	setterm(char *);
+int	setupterm(char *, int, int *);
+int	tgetent(char *, const char *);
+int	tgetflag(char *);
+int	tgetnum(char *);
+char   *tgetstr(char *, char **);
+char   *tgoto(char *, int, int);
+int	tigetflag(char *);
+int	tigetnum(char *);
+char   *tigetstr(char *);
+char   *tparm(char *,long, long, long, long, long, 
 				long, long, long, long);
-int	PDC_CDECL tputs(const char *, int, int (*)(int));
+int	tputs(const char *, int, int (*)(int));
 
 #endif /* __PDCURSES_TERM_H__ */
 

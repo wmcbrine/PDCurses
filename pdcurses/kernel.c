@@ -72,7 +72,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.32 2006/02/04 03:00:01 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.33 2006/02/08 17:40:33 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -185,7 +185,7 @@ char linesrippedoff = 0;
 
 **man-end**********************************************************************/
 
-int PDC_CDECL def_prog_mode(void)
+int def_prog_mode(void)
 {
 	PDC_LOG(("def_prog_mode() - called\n"));
 
@@ -196,7 +196,7 @@ int PDC_CDECL def_prog_mode(void)
 	return OK;
 }
 
-int PDC_CDECL def_shell_mode(void)
+int def_shell_mode(void)
 {
 	PDC_LOG(("def_shell_mode() - called\n"));
 
@@ -207,7 +207,7 @@ int PDC_CDECL def_shell_mode(void)
 	return OK;
 }
 
-int PDC_CDECL reset_prog_mode(void)
+int reset_prog_mode(void)
 {
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
@@ -255,7 +255,7 @@ int PDC_CDECL reset_prog_mode(void)
 	return OK;
 }
 
-int PDC_CDECL reset_shell_mode(void)
+int reset_shell_mode(void)
 {
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
@@ -310,7 +310,7 @@ int PDC_CDECL reset_shell_mode(void)
 	return OK;
 }
 
-int PDC_CDECL resetty(void)
+int resetty(void)
 {
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO modeInfo;
@@ -359,7 +359,7 @@ int PDC_CDECL resetty(void)
 	return c_save_tty.been_set ? OK : ERR;
 }
 
-int PDC_CDECL savetty(void)
+int savetty(void)
 {
 	PDC_LOG(("savetty() - called\n"));
 
@@ -369,14 +369,14 @@ int PDC_CDECL savetty(void)
 	return OK;
 }
 
-int PDC_CDECL curs_set(int visibility)
+int curs_set(int visibility)
 {
 	PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
 
 	return PDC_curs_set(visibility);
 }
 
-int PDC_CDECL ripoffline(int line, int (*init)(WINDOW *, int))
+int ripoffline(int line, int (*init)(WINDOW *, int))
 {
 	PDC_LOG(("ripoffline() - called: line=%d\n", line));
 
@@ -389,7 +389,7 @@ int PDC_CDECL ripoffline(int line, int (*init)(WINDOW *, int))
 	return OK;
 }
 
-int PDC_CDECL napms(int ms)
+int napms(int ms)
 {
 	PDC_LOG(("napms() - called: ms=%d\n", ms));
 

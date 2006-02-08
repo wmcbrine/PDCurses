@@ -52,7 +52,7 @@ ifeq ($(DEBUG),Y)
 	CFLAGS  = -c -g -Wall -fomit-frame-pointer -DPDCDEBUG
 	LDFLAGS = -g
 else
-	CFLAGS  = -c -O3 -Wall -fomit-frame-pointer
+	CFLAGS  = -c -O2 -Wall -fomit-frame-pointer
 	LDFLAGS =
 endif
 

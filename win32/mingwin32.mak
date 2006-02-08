@@ -37,7 +37,7 @@ ifeq ($(DEBUG),Y)
 	CFLAGS  = -c -g -Wall -DPDCDEBUG -D_NO_OLDNAMES
 	LDFLAGS = -g
 else
-	CFLAGS  = -c -O -Wall -D_NO_OLDNAMES
+	CFLAGS  = -c -O2 -Wall -D_NO_OLDNAMES
 	LDFLAGS =
 endif
 

@@ -142,7 +142,7 @@ if test "$ac_cv_prog_CC" = "gcc"; then
 	if test "$with_debug" = yes; then
 		CFLAGS="${CFLAGS} -Wall"
 	else
-		CFLAGS="-O3 -Wall -fomit-frame-pointer"
+		CFLAGS="-O2 -Wall -fomit-frame-pointer"
 	fi
 fi
 if test "$on_qnx" = yes; then

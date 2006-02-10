@@ -16,12 +16,14 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: term.h,v 1.5 2006/02/08 17:40:32 wmcbrine Exp $ */
+/* $Id: term.h,v 1.6 2006/02/10 17:41:34 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
    other languages) to be compiled. Anyone who tries to actually _use_ 
    them will be disappointed, since they only return ERR. */
+
+#warning Terminfo/termcap functions don't really work in PDCurses.
 
 #include <curses.h>
 

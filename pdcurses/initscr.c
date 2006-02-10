@@ -44,7 +44,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.30 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.31 2006/02/10 17:55:28 wmcbrine Exp $";
 #endif
 
 const char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
@@ -191,7 +191,7 @@ extern void (*PDC_initial_slk)(void);
 
 **man-end**********************************************************************/
 
-WINDOW * Xinitscr(int argc, char *argv[])
+WINDOW *Xinitscr(int argc, char *argv[])
 {
 	int i;
 
@@ -325,7 +325,7 @@ WINDOW * Xinitscr(int argc, char *argv[])
 	return stdscr;
 }
 
-WINDOW * initscr(void)
+WINDOW *initscr(void)
 {
 	PDC_LOG(("initscr() - called\n"));
 
@@ -378,14 +378,14 @@ bool isendwin(void)
 	return SP->alive ? FALSE : TRUE;
 }
 
-SCREEN * newterm(char *type, FILE *outfd, FILE *infd)
+SCREEN *newterm(char *type, FILE *outfd, FILE *infd)
 {
 	PDC_LOG(("newterm() - called\n"));
 
 	return NULL;
 }
 
-SCREEN * set_term(SCREEN *new)
+SCREEN *set_term(SCREEN *new)
 {
 	PDC_LOG(("set_term() - called\n"));
 

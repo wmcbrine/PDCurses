@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_util =
-	"$Id: util.c,v 1.26 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: util.c,v 1.27 2006/02/10 17:55:28 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -107,7 +107,7 @@ const char *rcsid_util =
 
 static char strbuf[3] = {0, 0, 0};
 
-char * unctrl(chtype c)
+char *unctrl(chtype c)
 {
 	chtype ic;
 
@@ -197,7 +197,7 @@ static char *key_name[] = {
 	"KEY_SUP", "KEY_SDOWN"
 };
 
-char * keyname(int key)
+char *keyname(int key)
 {
 	PDC_LOG(("keyname() - called: key %d\n", key));
 
@@ -237,7 +237,7 @@ int putwin(WINDOW *win, FILE *filep)
 	return ERR;
 }
 
-WINDOW * getwin(FILE *filep)
+WINDOW *getwin(FILE *filep)
 {
 	PDC_LOG(("getwin() - called\n"));
 

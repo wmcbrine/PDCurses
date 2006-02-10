@@ -36,7 +36,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_slk =
-	"$Id: slk.c,v 1.17 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: slk.c,v 1.18 2006/02/10 17:55:28 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -313,7 +313,7 @@ int slk_noutrefresh(void)
 	return wnoutrefresh(SP->slk_winptr);
 }
 
-char * slk_label(int labnum)
+char *slk_label(int labnum)
 {
 	PDC_LOG(("slk_label() - called\n"));
 

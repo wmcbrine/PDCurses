@@ -48,7 +48,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.18 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: window.c,v 1.19 2006/02/10 17:55:28 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -158,7 +158,7 @@ const char *rcsid_window =
 
 **man-end**********************************************************************/
 
-WINDOW * newwin(int nlines, int ncols, int begy, int begx)
+WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 {
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
@@ -254,8 +254,7 @@ int mvwin(WINDOW *win, int y, int x)
 	return OK;
 }
 
-WINDOW * subwin(WINDOW *orig, int nlines, int ncols,
-			  int begin_y, int begin_x)
+WINDOW *subwin(WINDOW *orig, int nlines, int ncols, int begin_y, int begin_x)
 {
 	WINDOW *win;
 	int i;
@@ -303,8 +302,7 @@ WINDOW * subwin(WINDOW *orig, int nlines, int ncols,
 	return win;
 }
 
-WINDOW * derwin(WINDOW *orig, int nlines, int ncols,
-			  int begin_y, int begin_x)
+WINDOW *derwin(WINDOW *orig, int nlines, int ncols, int begin_y, int begin_x)
 {
 	return subwin(orig, nlines, ncols, begin_y + orig->_begy,
 		begin_x + orig->_begx);
@@ -336,7 +334,7 @@ int mvderwin(WINDOW *win, int par_y, int par_x)
 	return OK;
 }
 
-WINDOW * dupwin(WINDOW *win)
+WINDOW *dupwin(WINDOW *win)
 {
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
@@ -427,7 +425,7 @@ WINDOW * dupwin(WINDOW *win)
 
 }
 
-WINDOW * resize_window(WINDOW *win, int lins, int cols)
+WINDOW *resize_window(WINDOW *win, int lins, int cols)
 {
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);

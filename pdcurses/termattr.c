@@ -34,7 +34,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.20 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: termattr.c,v 1.21 2006/02/10 17:55:28 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -162,7 +162,7 @@ char killchar(void)
 	return _DLCHAR;		/* line delete char (^U) */
 }
 
-char * longname(void)
+char *longname(void)
 {
 	static char _display[128];
 	char *p = _display;
@@ -258,7 +258,7 @@ chtype termattrs(void)
 	return temp;
 }
 
-char * termname(void)
+char *termname(void)
 {
 	PDC_LOG(("termname() - called\n"));
 

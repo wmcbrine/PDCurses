@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_terminfo =
-	"$Id: terminfo.c,v 1.16 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: terminfo.c,v 1.17 2006/02/10 17:55:28 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -115,7 +115,7 @@ int restartterm(char *term, int filedes, int *errret)
 	return ERR;
 }
 
-TERMINAL * set_curterm(TERMINAL *nterm)
+TERMINAL *set_curterm(TERMINAL *nterm)
 {
 	PDC_LOG(("set_curterm() - called\n"));
 
@@ -162,14 +162,14 @@ int tgetnum(char *id)
 	return ERR;
 }
 
-char * tgetstr(char *id, char **area)
+char *tgetstr(char *id, char **area)
 {
 	PDC_LOG(("tgetstr() - called: id %s\n", id));
 
 	return (char *)NULL;
 }
 
-char * tgoto(char *cap, int col, int row)
+char *tgoto(char *cap, int col, int row)
 {
 	PDC_LOG(("tgoto() - called\n"));
 
@@ -190,14 +190,14 @@ int tigetnum(char *capname)
 	return -2;
 }
 
-char * tigetstr(char *capname)
+char *tigetstr(char *capname)
 {
 	PDC_LOG(("tigetstr() - called: capname %s\n", capname));
 
 	return (char *)(-1);
 }
 
-char * tparm(char *cap, long p1, long p2, long p3, long p4, 
+char *tparm(char *cap, long p1, long p2, long p3, long p4, 
 			long p5, long p6, long p7, long p8, long p9)
 {
 	PDC_LOG(("tparm() - called: cap %s\n", cap));

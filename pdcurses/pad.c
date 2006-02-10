@@ -37,7 +37,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_pad =
-	"$Id: pad.c,v 1.15 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: pad.c,v 1.16 2006/02/10 17:55:28 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */
@@ -120,7 +120,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
 **man-end**********************************************************************/
 
-WINDOW * newpad(int nlines, int ncols)
+WINDOW *newpad(int nlines, int ncols)
 {
 	extern void *(*callc)(size_t, size_t);
 	extern void  (*fre)(void *);
@@ -173,8 +173,7 @@ WINDOW * newpad(int nlines, int ncols)
 	return win;
 }
 
-WINDOW * subpad(WINDOW *orig, int nlines, int ncols,
-			  int begin_y, int begin_x)
+WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begin_y, int begin_x)
 {
 	WINDOW *win;
 	int i;
@@ -231,8 +230,7 @@ WINDOW * subpad(WINDOW *orig, int nlines, int ncols,
 	return win;
 }
 
-int prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
-		       int sy2, int sx2)
+int prefresh(WINDOW *win, int py, int px, int sy1, int sx1, int sy2, int sx2)
 {
 	PDC_LOG(("prefresh() - called\n"));
 
@@ -246,8 +244,7 @@ int prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
 	return OK;
 }
 
-int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
-		       int sy2, int sx2)
+int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 {
 	int num_cols;
 	int sline = sy1;

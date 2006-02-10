@@ -6,7 +6,7 @@ SHELL = /bin/sh
 
 include version
 
-PDC_DIR=PDCurses-$(VER_DOT)
+PDC_DIR=PDCurses-$(VERDOT)
 
 srcdir		=@srcdir@
 VPATH		=@srcdir@

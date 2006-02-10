@@ -169,7 +169,7 @@ BUGS FIXED:
     ncurses. Bug 624424.
   - Fix definition of echo() and noecho(). Bug 625001.
   - Fix definition of keypad() and leaveok(). Bug 632653.
-  - Missing panel_hidden() prottype. Bug 649320.
+  - Missing panel_hidden() prototype. Bug 649320.
 - Fixed bug with calling def_prog_mode(), resize_term(), 
   reset_prog_mode(); the resize details were being lost.
 
@@ -203,7 +203,7 @@ Add new PDC functions for adding underline, overline, leftline and rightline
 Add support for shifted keypad keys.
 Allow more keypad keys to work under Win32
 Change Win32 and OS/2 DLL name to curses.dll
-Change example resources to allow overriding from the cpmmand line
+Change example resources to allow overriding from the command line
 Changes for building cleanly on OS/2
 Changes to handle building XCurses under AIX
 Check if prefresh() and pnoutrefresh() parameters are valid.
@@ -245,14 +245,14 @@ This release of PDCurses includes the following changes:
 - removed the need for the cursos2.h file
 - enabled the "shifted" key on the numeric keypad
 - added native clipboard support for X11, Win32 and OS/2
-- added extra functions for obtaining internal PDCUrses status
+- added extra functions for obtaining internal PDCurses status
 - added clipboard and key modifier tests in testcurs.c
 - fixes for panel library
 - key modifiers pressed by themselves are now returned as keys
 - Added X11 shared library support
 - Added extra slk formats supported by ncurses
 - Fixed bug with resizing the terminal when slk were on.
-- Changed behaviour of slk_attrset(), slk_attron() alk_attroff()
+- Changed behaviour of slk_attrset(), slk_attron() slk_attroff()
   functions to work more like ncurses.
 
 BUGS FIXED:
@@ -282,7 +282,7 @@ Makefiles for each platform/compiler option reside in the platform
 directory.  These all have an extension of .mak.
 
 
-ACKNOWLEGEMENTS: (for this release)
+ACKNOWLEDGEMENTS: (for this release)
 
 Georg Fuchs for various changes.
 Juan David Palomar for pointing out getnstr() was not implemented.
@@ -365,7 +365,7 @@ contents of the screen at the time that PDCurses is started; initscr(),
 and when endwin() is called, the screen will be restored.
 
 
-ACKNOWLEGEMENTS: (for this release)
+ACKNOWLEDGEMENTS: (for this release)
 
 Chris Szurgot for original Win32 port.
 Gurusamy Sarathy for some updates to the Win32 port.
@@ -452,10 +452,10 @@ EXTRA OPTIONS:
 	using the value set by (w)bkgd(). To have PDCurses behave the
 	same way as it did before release 2.2, compile with -DPDCURSES_WCLR
 
-ACKNOWLEGEMENTS: (for this release)
+ACKNOWLEDGEMENTS: (for this release)
 
 	Pieter Kunst,David Nugent,Warren Tucker,Darin Haugen,Stefan Strack,
-	Wade Schauer and others who either allerted me to bugs or supplied
+	Wade Schauer and others who either alerted me to bugs or supplied
 	fixes.
 
 Added more System V R4 functions
@@ -527,7 +527,7 @@ OTHER NOTES:
 	overlay() and overwrite()
 	Both of theses functions in PDCurses 2.0 allowed for one window to
 	be effectively placed on top of another, and the characters in the
-	first window were overlayed or overwritten starting at 0,0 in both
+	first window were overlaid or overwritten starting at 0,0 in both
 	windows. This behaviour of these functions was not correct. These
 	functions only operate on windows that physically overlap with
 	respect to the displayed screen. To achieve the same functionality
@@ -560,7 +560,7 @@ OTHER NOTES:
 		 }
 
 
-ACKNOWLEGEMENTS: (in no particlar order)
+ACKNOWLEDGEMENTS: (in no particular order)
 
 	Jason Shumate,Pieter Kunst,David Nugent,Andreas Otte,
 	Pasi Hamalainen,James McLennan,Duane Paulson,Ib Hojme
@@ -647,7 +647,7 @@ OTHER NOTES:
 	when you build the documentation.
 	
 	To generate the library response file correctly, I had to write a
-	quick and dirty program (buildlrf) to achive this. Originally the
+	quick and dirty program (buildlrf) to achieve this. Originally the
 	makefiles just had statements like: "echo -+$(OBJ)\$* & >> $(LRF)"
 	which appended a suitable line to the response file. Unfortunately
 	under some combinations of makefiles and command processors (eg.
@@ -673,7 +673,7 @@ COMPILER-SPECIFIC NOTES:
 	-----------
 	It is possible with MSC 6.0 to build the OS/2 libraries and demo
 	programs from within DOS. This is the only case where it is possible
-	to specifiy the value of TOS on the command line to be OS2 and the
+	to specify the value of TOS on the command line to be OS2 and the
 	value of OS be DOS.
 
 	C Set/2
@@ -695,7 +695,7 @@ BUGS and UNFINISHED BUSINESS:
 	The file todo.man in the doc directory also lists those functions of
 	System V 3.2 curses not yet implemented. Any volunteers ?
 
-ACKNOWLEGEMENTS:
+ACKNOWLEDGEMENTS:
 
 	John 'Frotz' Fa'atuai, the previous maintainer for providing an
 	excellent base for further development.
@@ -793,18 +793,18 @@ This happened even if the normal precautions (clear / touch / refresh)
 were taken. The problem has now been fixed.
 
   PCCurses is currently also being used on a 68000 system with 
-hard-coded ESCape sequences for ANSI terminals. However, int's used by 
-the 68000 C compiler are 32 bits. Therefore int's have been turned into 
-short's wherever possible in the code (otherwise all window structures 
+hard-coded ESCape sequences for ANSI terminals. However, ints used by 
+the 68000 C compiler are 32 bits. Therefore ints have been turned into 
+shorts wherever possible in the code (otherwise all window structures 
 occupy twice as much space as required on the 68000). This does not 
-affect PC versions since normally both int's and short's are 16 bits for 
+affect PC versions since normally both ints and shorts are 16 bits for 
 PC C compilers.
 
   At some places in the source code there are references made to the 
 68000 version. There are also a makefile, a curses68.c file, and a 
 curses68.cmd file. These are for making, low-level I/O, and linking 
 commands when building the 68000 version. These files are probably 
-useful to no-one but the author, since it is very specific for it's 
+useful to no-one but the author, since it is very specific for its 
 special hardware environment. Still in an effort to keep all 
 curses-related sources in one place they are included. Note however that 
 PCCurses will not officially support a non-PC environment.
@@ -818,7 +818,7 @@ Microsoft C allows any way to return the data that is needed, and
 consequently you should not use cursesio.c. The best solution is to 
 simply use the ASM version. In v.1.2 and v.1.3, the user could edit the 
 makefile to select which version he wanted to use. The makefiles in 
-v.1.4 have removed this possiblity forcing the use of the ASM file, and 
+v.1.4 have removed this possibility forcing the use of the ASM file, and 
 cursesio.c has been dropped from the distribution.
 
   A bug in the wgetstr() function caused PCCurses to echo characters 
@@ -863,7 +863,7 @@ functions are called. If the new border characters are non-0, they
 override the border characters specified in the box() call. In my 
 understanding, this functionality is required for AT&T UNIX sV.3 
 compatibility. Thanks for this goes to Tony L. Hansen 
-(hansen@pegasus.UUCP) for posting an article about it on UseNet 
+(hansen@pegasus.UUCP) for posting an article about it on Usenet 
 (newsgroup comp.unix.questions; his posting was not related at all to 
 PCCurses).
 
@@ -887,10 +887,10 @@ PCCurses 1.2 - 1988/10/02
   The changes from v.1.1 to v.1.2 are minor. The biggest change is that 
 there was a bug related to limiting the cursor movement if the 
 application tried to move it outside the screen (something that should 
-not be done anyway). Such erronous application behaviour is now handled 
+not be done anyway). Such erroneous application behaviour is now handled 
 appropriately.
 
-  All modules have been changed to have a revison string in them, which 
+  All modules have been changed to have a revision string in them, which 
 makes it easier to determine what version is linked into a program (or 
 what library version you have).
 
@@ -916,7 +916,7 @@ reason to believe that it does not compile under Microsoft C v.3.0 and
 5.x, or Turbo C v.1.5, but this has not been tested.
 
   There are two makefiles included, one for Microsoft C, one for Turbo 
-C. They are both copies of my personal makefile's, and as such they 
+C. They are both copies of my personal makefiles, and as such they 
 reflect the directory structure on my own computer. This will have to be 
 changed before you run make. Check $(INCDIR) and $(LIBDIR) in 
 particular, and make the choice of ASM or C cursesio version as 
@@ -976,14 +976,14 @@ and new (non-portable) functions for verbatim IBM character font display
 have been added (in charadd.c and charins.c). The manual file 
 (curses.man) has been changed at appropriate places.
 
-  In the file v10tov11.dif there are listings of the differencies between
+  In the file v10tov11.dif there are listings of the differences between
 version 1.0 and 1.1. The diff listings are in UNIX diff(1) format.
 
   Version 1.1 compiles with Turbo C v.1.0, as well as Microsoft C v.3.0 
 and v.4.0. On the release disk there is a make.exe utility which is very 
 similar to UNIX make (If the package was mailed to you, the make utility 
 will be in uuencoded format - in make.uu - and must be uudecoded first). 
-It is much more powerful than Microsoft's different MAKE'S; the latter 
+It is much more powerful than Microsoft's different MAKEs; the latter 
 ones will NOT generate libraries properly if used with the PCCurses 
 makefiles.
 
@@ -1018,16 +1018,16 @@ UNIX curses). I mention this to clarify any copyright violation claims.
 The data structures and ideas are very similar to ncurses. As for UNIX 
 curses, I have not even seen any sources for it.
 
-  For an introduction to the use of 'curses' and it's derivatives, you 
+  For an introduction to the use of 'curses' and its derivatives, you 
 should read 'Screen Updating and Cursor Movement Optimization: A Library 
 Package' by Kenneth C. R. C. Arnold, which describes the original 
-Berkely UNIX version of curses. It is available as part of the UNIX 
+Berkeley UNIX version of curses. It is available as part of the UNIX 
 manuals. The other source of information is 'The Ncurses Reference 
 Manual' by Pavel Curtis. The latter is part of Curtis' ncurses package.
 
   The only other documentation provided is a 'man' page which describes 
 all the included functions in a very terse way. In the sources, each 
-function is preceded by a rather thourough description of what the 
+function is preceded by a rather thorough description of what the 
 function does. I didn't have time to write a nice manual/tutorial - 
 sorry.
 
@@ -1041,7 +1041,7 @@ worthwhile to grab the make.
 4.0), Microsoft MASM and LIB, plus some MS-DOS utilities. The reason for 
 supplying MAKE.EXE is that the Microsoft 'MAKE:s' are much inferior to a 
 real UNIX make. The supplied make is a port of a public domain make, 
-published on UseNet. It is almost completely compatible with UNIX make. 
+published on Usenet. It is almost completely compatible with UNIX make. 
 When generating the curses libraries, the makefile will direct make to 
 do some directory creating and file copying, and then re-invoke itself 
 with new targets. The workings of the makefile are not absolutely 
@@ -1059,7 +1059,7 @@ C.
   There are some parts left out between ncurses and PCCurses. One is the 
 support for multiple terminals - not very interesting on a PC anyway. 
 Because we KNOW what terminal we have, there is no need for a termcap or 
-termio library. PCCurses also has some things that neither curses nor 
+terminfo library. PCCurses also has some things that neither curses nor 
 ncurses have. Compared to the original UNIX curses, PCCurses has lots of 
 extras.
 
@@ -1072,7 +1072,7 @@ that, of course...
 normal, cbreak, and raw input modes are done. All those details are in 
 the 'charget' module - I do raw I/O via the BIOS, and perform any 
 buffering myself. If an application program uses PCCurses, it should do 
-ALL it's I/O via PCCurses calls, otherwise the mix of normal and 
+ALL its I/O via PCCurses calls, otherwise the mix of normal and 
 PCCurses I/O may mess up the display. I think my code is reasonable... 
 comments are welcome, provided you express them nicely...
 

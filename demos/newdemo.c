@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_newdemo =
-	"$Id: newdemo.c,v 1.22 2006/02/05 23:54:31 wmcbrine Exp $";
+	"$Id: newdemo.c,v 1.23 2006/02/10 19:06:22 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);
@@ -348,7 +348,7 @@ int main(int argc, char **argv)
 		init_pair(5, COLOR_BLUE, COLOR_WHITE);
 		wattrset(win, COLOR_PAIR(5) | A_BLINK);
 		mvwaddstr(win, height - 2, 3,
-			" PDCurses 2.7 for DOS, OS/2, X11 and Win32");
+			" PDCurses 2.8 for DOS, OS/2, X11 and Win32");
 		wrefresh(win);
 
 		/* Draw running messages */

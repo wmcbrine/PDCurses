@@ -44,10 +44,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.31 2006/02/10 17:55:28 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.32 2006/02/10 19:06:23 wmcbrine Exp $";
 #endif
 
-const char *_curses_notice = "PDCurses 2.7b - Public Domain 2006";
+const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */

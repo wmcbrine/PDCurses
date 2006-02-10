@@ -530,14 +530,6 @@ else
   ac_n= ac_c='\c' ac_t=
 fi
 
-
-
-VER=27
-VER_DOT=2.7
-
-
-
-
 CC_LIST="gcc acc cc c89"
 
 mh_sysv_incdir=""
@@ -3018,8 +3010,6 @@ s%@includedir@%$includedir%g
 s%@oldincludedir@%$oldincludedir%g
 s%@infodir@%$infodir%g
 s%@mandir@%$mandir%g
-s%@VER@%$VER%g
-s%@VER_DOT@%$VER_DOT%g
 s%@CC@%$CC%g
 s%@host@%$host%g
 s%@host_alias@%$host_alias%g

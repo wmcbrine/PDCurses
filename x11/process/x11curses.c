@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.19 2006/02/13 16:36:04 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.20 2006/02/13 17:03:34 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -371,6 +371,8 @@ static int XCursesSetupCurses(void)
 
 	XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);
 
+	atexit(XCursesExit);
+
 	return OK;
 }
 
@@ -573,8 +575,15 @@ static void XCursesExitCursesProcess(int rc, char *msg)
 
 void XCursesExit(void)
 {
+	static bool called = FALSE;
+
 	PDC_LOG(("%s:XCursesExit() - called\n", XCLOGMSG));
 
-	XCursesInstruct(CURSES_EXIT);
-	XCursesCleanupCursesProcess(0);
+	if (FALSE == called)
+	{
+		XCursesInstruct(CURSES_EXIT);
+		XCursesCleanupCursesProcess(0);
+
+		called = TRUE;
+	}
 }

@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_ptest =
-	"$Id: ptest.c,v 1.16 2006/02/05 23:54:31 wmcbrine Exp $";
+	"$Id: ptest.c,v 1.17 2006/02/13 17:18:05 wmcbrine Exp $";
 #endif
 
 #include <curses.h>
@@ -324,9 +324,7 @@ int main(int argc, char **argv)
 	}
 
 	endwin();
-#ifdef XCURSES
-	XCursesExit();
-#endif
+
 	return 0;
 }	/* end of main */
 

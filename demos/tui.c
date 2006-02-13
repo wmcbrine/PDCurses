@@ -37,7 +37,7 @@ void rmerror(void);
 
 #ifdef PDCDEBUG
 const char *rcsid_tui =
-	"$Id: tui.c,v 1.16 2006/02/05 23:54:31 wmcbrine Exp $";
+	"$Id: tui.c,v 1.17 2006/02/13 17:18:05 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -394,9 +394,6 @@ static void cleanup(void)	/* cleanup curses settings */
 		delwin(wstat);
 		normalcursor();
 		endwin();
-#ifdef XCURSES
-		XCursesExit();
-#endif
 		incurses = FALSE;
 	}
 }

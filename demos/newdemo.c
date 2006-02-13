@@ -32,7 +32,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_newdemo =
-	"$Id: newdemo.c,v 1.23 2006/02/10 19:06:22 wmcbrine Exp $";
+	"$Id: newdemo.c,v 1.24 2006/02/13 17:18:05 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);
@@ -226,9 +226,7 @@ void trap(int sig)
 	if (sig == SIGINT)
 	{
 		endwin();
-#ifdef XCURSES
-		XCursesExit();
-#endif
+
 		exit(0);
 	}
 }
@@ -270,9 +268,7 @@ int main(int argc, char **argv)
 	if (win == NULL)
 	{
 		endwin();
-#ifdef XCURSES
-		XCursesExit();
-#endif
+
 		return 1;
 	}
 
@@ -439,9 +435,7 @@ int main(int argc, char **argv)
 	}
 
 	endwin();
-#ifdef XCURSES
-	XCursesExit();
-#endif
+
 	return 0;
 }
 

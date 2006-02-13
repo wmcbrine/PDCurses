@@ -28,7 +28,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.34 2006/02/05 23:54:31 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.35 2006/02/13 17:18:05 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -179,9 +179,6 @@ int main(int argc, char *argv[])
 	delwin(win);
 	endwin();
 
-#ifdef XCURSES
-	XCursesExit();
-#endif
 	return 0;
 }
 

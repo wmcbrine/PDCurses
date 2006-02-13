@@ -96,7 +96,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_xmas =
-	"$Id: xmas.c,v 1.17 2006/02/05 23:54:31 wmcbrine Exp $";
+	"$Id: xmas.c,v 1.18 2006/02/13 17:18:05 wmcbrine Exp $";
 #endif
 
 /* NOMACROS makes a big difference in the size with PDCurses */
@@ -628,9 +628,6 @@ int main(int argc, char **argv)
 	clear();
 	refresh();
 	endwin();
-#ifdef XCURSES
-	XCursesExit();
-#endif
 
 	return 0;
 }

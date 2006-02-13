@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_firework =
-	"$Id: firework.c,v 1.17 2006/02/05 23:54:31 wmcbrine Exp $";
+	"$Id: firework.c,v 1.18 2006/02/13 17:18:05 wmcbrine Exp $";
 #endif
 
 void myrefresh(void);
@@ -95,9 +95,7 @@ int main(int argc, char **argv)
 	}
 
 	endwin();
-#ifdef XCURSES
-	XCursesExit();
-#endif
+
 	return 0;
 }
 

@@ -8,9 +8,9 @@ between the curses program and the child process created to manage the X
 stuff. XCurses also uses sockets for communication between the 
 processes.
 
-When compiling your curses application, you need to add -DXCURSES, and 
-include the <curses.h> or <xcurses.h> that comes with XCurses. You also 
-need to link your code with the XCurses library.
+When compiling your curses application, you need to include the 
+<curses.h> or <xcurses.h> that comes with XCurses. You also need to link 
+your code with the XCurses library.
 
 XCurses programs use the X Toolkit Intrinsics libraries.  You will need 
 to link your code with the following libraries under X11R5:
@@ -312,5 +312,8 @@ use Xinitscr(), or PDC_set_title() to set just the window title.
 The XCursesExit() function is now called automatically via atexit(). 
 (Multiple calls to it are OK, so you don't need to remove it if you've 
 already added it for previous versions of XCurses.)
+
+It is no longer necessary to explicitly define XCURSES, except if 
+building under Cygwin. (It's defined automatically.)
 
 **man-end**********************************************************************/

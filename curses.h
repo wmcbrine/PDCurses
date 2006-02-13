@@ -16,7 +16,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.124 2006/02/08 17:57:18 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.125 2006/02/13 19:44:37 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -370,6 +370,14 @@ PDCurses portable platform definitions list:
 # define INCL_VIO
 # define INCL_KBD
 # include <os2.h>
+#endif
+
+/* If it's not DOS, or OS/2, or Windows, it must be XCurses */
+
+#if !defined(DOS) && !defined(OS2) && !defined(WIN32)
+# ifndef XCURSES
+#  define XCURSES
+# endif
 #endif
 
 #include <stdarg.h>

@@ -1,42 +1,43 @@
 
                         Welcome to PDCurses
 
- PDCurses is an independent reimplementation of System VR4 curses for 
- multiple platforms. The latest version can be found at:
+PDCurses is an independent reimplementation of System VR4 curses for 
+multiple platforms. The latest version can be found at:
 
    http://pdcurses.sourceforge.net/
 
 
- Legal Stuff
- -----------
- The core curses package is Public Domain, but small portions of this 
- package are subject to various copyright conditions.  Each directory 
- in this package contains a README file. In each of these README files 
- is a section titled "Distribution Status" which describes the 
- distribution status of the files within that directory.
+Legal Stuff
+-----------
 
- Although the core PDCurses package is Public Domain, mention of PDCurses
- in the documentation of packages linked with it is greatly appreciated.
+The core curses package is Public Domain, but small portions of this 
+package are subject to various copyright conditions.  Each directory in 
+this package contains a README file. In each of these README files is a 
+section titled "Distribution Status" which describes the distribution 
+status of the files within that directory.
 
-
- Ports
- -----
-
- PDCurses has been ported to DOS, OS/2, WIN32 and X11. A directory
- containing the port-specific source files exists for each of these 
- platforms.
+Although the core PDCurses package is Public Domain, mention of PDCurses 
+in the documentation of packages linked with it is greatly appreciated.
 
 
- Distribution Status
- -------------------
+Ports
+-----
 
- The files in this directory contain core PDCurses functionality;
- therefore all files are released to the Public Domain.
+PDCurses has been ported to DOS, OS/2, WIN32 and X11. A directory 
+containing the port-specific source files exists for each of these 
+platforms.
 
 
- Maintainer
- ----------
+Distribution Status
+-------------------
 
- The PDCurses package (and its predecessors) have had various 
- maintainers over the years.  The contact details of the current
- maintainer of the package are listed in the file; maintain.er
+The files in this directory contain core PDCurses functionality; 
+therefore all files are released to the Public Domain.
+
+
+Maintainer
+----------
+
+The PDCurses package (and its predecessors) have had various maintainers 
+over the years.  The contact details of the current maintainer of the 
+package are listed in the file "maintain.er".

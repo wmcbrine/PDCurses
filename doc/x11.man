@@ -1,63 +1,49 @@
 /*man-start*********************************************************************
 
-Introduction:
+Introduction
 ------------
 
- XCurses uses the System V IPC shared memory facility for sharing data
- between the curses program and the child process created to manage the
- X stuff. XCurses also uses sockets for communication between the
- processes.
+XCurses uses the System V IPC shared memory facility for sharing data 
+between the curses program and the child process created to manage the X 
+stuff. XCurses also uses sockets for communication between the 
+processes.
 
- To use XCurses with an existing curses program, you need to make one
- change to your code:
+When compiling your curses application, you need to add -DXCURSES, and 
+include the <curses.h> or <xcurses.h> that comes with XCurses. You also 
+need to link your code with the XCurses library.
 
- Call XCursesExit() just before exiting from your program. eg.
-
-#ifdef XCURSES
- XCursesExit();
-#endif
- exit(0);
-
- This call is required to enable the child X process to shut down cleanly
- and free up the shared memory it used.
-
- When compiling your curses application, you need to add -DXCURSES, and
- include the <curses.h> or <xcurses.h> that comes with XCurses. You also
- need to link your code with the XCurses library.
-
- XCurses programs use the X Toolkit Intrinsics libraries.  You will need
- to link your code with the following libraries under X11R5:
+XCurses programs use the X Toolkit Intrinsics libraries.  You will need 
+to link your code with the following libraries under X11R5:
     Xaw Xmu Xt X11
 
- and under X11R6:
+and under X11R6:
     Xaw Xmu Xt X11 SM ICE Xext
 
- The best method of determining which libraries you need, is to
- compile one of the demo programs and take note of the libraries
- it uses.
+The best method of determining which libraries you need, is to compile 
+one of the demo programs and take note of the libraries it uses.
 
- To get the most out of XCurses in your curses application you need
- to call Xinitscr() rather than initscr(). This allows you to pass
- your program name and resource overrides to XCurses.
+To get the most out of XCurses in your curses application you need to 
+call Xinitscr() rather than initscr(). This allows you to pass your 
+program name and resource overrides to XCurses. The program name is used 
+as the title of the X window, and for defining X resources specific to 
+your program.
 
- The program name is used as the title of the X window, and for defining X
- resources specific to your program.
 
 Here be Dragons!
 ----------------
 
- Be aware that curses programs that expect to have a normal tty underneath
- them will be very disappointed! Output directed to stdout after a call
- to system() (maybe even exec()) will go to the xterm that invoked the
- XCurses application, or to the console if not invoked directly from an
- xterm. Similarly, stdin will expect its input from the same place as
- stdout.
+Be aware that curses programs that expect to have a normal tty 
+underneath them will be very disappointed! Output directed to stdout 
+after a call to system() (maybe even exec()) will go to the xterm that 
+invoked the XCurses application, or to the console if not invoked 
+directly from an xterm. Similarly, stdin will expect its input from the 
+same place as stdout.
 
- This situation is not desirable, but I know of no simple way to get
- around this.
+This situation is not desirable, but I know of no simple way to get 
+around this.
 
 
-X Resources:
+X Resources
 -----------
 
 XCurses recognises the following resources:
@@ -265,15 +251,16 @@ composeKey:	   The name of the X key that defines the "compose key"
 		   details on compose key usage.
 		   Default:	   No key is defined
 
-Using Resources:
+
+Using Resources
 ---------------
 
- All XCurses applications have a top-level class name of "XCurses".
- The top-level widget name for each XCurses application is the
- same as that defined by the XCursesProgram name in the application's
- main source module.
+All XCurses applications have a top-level class name of "XCurses". The 
+top-level widget name for each XCurses application is the same as that 
+defined by the XCursesProgram name in the application's main source 
+module.
 
- An example of an XCurses app-defaults or .Xdefaults file might be:
+An example of an XCurses app-defaults or .Xdefaults file might be:
 
 !
 ! resources for XCurses class of programs
@@ -310,10 +297,20 @@ the*pointerBackColor: black
 the.bitmap:     /home/mark/the/the64.xbm
 the.pixmap:     /home/mark/the/the64.xpm
 
-Resources may also be passed as a parameter to the Xinitscr() function.
-The parameter is a string in the form of switches. eg. to set the color
-"red" to "indianred", and the number of lines to 30, the string passed to 
-Xinitscr would be:
-"-colorRed indianred -lines 30"
+Resources may also be passed as a parameter to the Xinitscr() function. 
+The parameter is a string in the form of switches. eg. to set the color 
+"red" to "indianred", and the number of lines to 30, the string passed 
+to Xinitscr would be: "-colorRed indianred -lines 30"
+
+
+Deprecated
+----------
+
+XCursesProgramName is no longer used. To set the program name, you must 
+use Xinitscr(), or PDC_set_title() to set just the window title.
+
+The XCursesExit() function is now called automatically via atexit(). 
+(Multiple calls to it are OK, so you don't need to remove it if you've 
+already added it for previous versions of XCurses.)
 
 **man-end**********************************************************************/

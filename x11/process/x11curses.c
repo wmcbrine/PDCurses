@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.18 2006/02/05 05:03:09 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.19 2006/02/13 16:36:04 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -365,9 +365,8 @@ static int XCursesSetupCurses(void)
 	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 	PDC_init_atrtab();
 
-#ifdef PDCDEBUG
-	say ("cursesprocess exiting from Xinitscr\n");
-#endif
+	XC_LOG(("cursesprocess exiting from Xinitscr\n"));
+
 	/* Always trap SIGWINCH if the C library supports SIGWINCH */
 
 	XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);

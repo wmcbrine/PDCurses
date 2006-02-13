@@ -101,8 +101,8 @@ DATA TYPES
 
 The following data types are declared:
 
-	WINDOW*		pointer to screen representation
-	SCREEN*		pointer to terminal descriptor
+	WINDOW *	pointer to screen representation
+	SCREEN *	pointer to terminal descriptor
 	bool		boolean data type
 	chtype		representation of a character in a window
 

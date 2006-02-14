@@ -530,6 +530,8 @@ else
   ac_n= ac_c='\c' ac_t=
 fi
 
+source version
+
 CC_LIST="gcc acc cc c89"
 
 mh_sysv_incdir=""
@@ -2465,7 +2467,7 @@ if test "$ac_cv_prog_CC" = "gcc"; then
 	if test "$with_debug" = yes; then
 		CFLAGS="${CFLAGS} -Wall"
 	else
-		CFLAGS="-O2 -Wall -fomit-frame-pointer"
+		CFLAGS="-O3 -Wall -fomit-frame-pointer"
 	fi
 fi
 if test "$on_qnx" = yes; then
@@ -3010,6 +3012,8 @@ s%@includedir@%$includedir%g
 s%@oldincludedir@%$oldincludedir%g
 s%@infodir@%$infodir%g
 s%@mandir@%$mandir%g
+s%@VER@%$VER%g
+s%@VERDOT@%$VERDOT%g
 s%@CC@%$CC%g
 s%@host@%$host%g
 s%@host_alias@%$host_alias%g

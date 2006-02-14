@@ -13,18 +13,18 @@
 # below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
 #
 ################################################################################
-PDCURSES_HOME		=$(PDCURSES_SRCDIR)
+PDCURSES_HOME	= $(PDCURSES_SRCDIR)
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
 
-!include ..\version
+!include $(PDCURSES_HOME)\version
 
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
-PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h
-PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
-PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
-TERM_HEADER		=$(PDCURSES_HOME)\term.h
+PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
+PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h
+PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PANEL_HEADER		= $(PDCURSES_HOME)\panel.h
+TERM_HEADER		= $(PDCURSES_HOME)\term.h
 
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\win32

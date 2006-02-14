@@ -12,49 +12,49 @@
 # Edit the line below for your environment.
 #
 ###############################################################################
-PDCURSES_HOME		=\pdcurses
+PDCURSES_HOME	= \pdcurses
 ###############################################################################
 # Nothing below here should require changing.
 ###############################################################################
-PDCURSES_CURSES_H      =$(PDCURSES_HOME)\curses.h
-PDCURSES_CURSPRIV_H    =$(PDCURSES_HOME)\curspriv.h
-PDCURSES_HEADERS       =$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
+PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h
+PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 
-PANEL_HEADER    =$(PDCURSES_HOME)\panel.h
-TERM_HEADER     =$(PDCURSES_HOME)\term.h
+PANEL_HEADER	= $(PDCURSES_HOME)\panel.h
+TERM_HEADER	= $(PDCURSES_HOME)\term.h
 
-srcdir          = $(PDCURSES_HOME)\pdcurses
-osdir           = $(PDCURSES_HOME)\win32
-pandir          = $(PDCURSES_HOME)\panel
-demodir         = $(PDCURSES_HOME)\demos
+srcdir		= $(PDCURSES_HOME)\pdcurses
+osdir		= $(PDCURSES_HOME)\win32
+pandir		= $(PDCURSES_HOME)\panel
+demodir		= $(PDCURSES_HOME)\demos
 
-CC              = lcc
+CC		= lcc
 
-#CFLAGS  = -c -g3 -A -ansic -D__LCC__
-CFLAGS          = -c -O -A -ansic -D__LCC__
-LDFLAGS         =
+#CFLAGS		= -c -g3 -A -ansic -D__LCC__
+CFLAGS		= -c -O -A -ansic -D__LCC__
+LDFLAGS		=
 
-CPPFLAGS        = -I$(PDCURSES_HOME)
+CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS         = $(CFLAGS) $(CPPFLAGS)
-DLL_CCFLAGS     = $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD #-DPDC_THREAD_BUILD
+CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
+DLL_CCFLAGS	= $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD #-DPDC_THREAD_BUILD
 
-LINK            = lcclnk
+LINK		= lcclnk
 
-DEFFILE         = $(osdir)\curses_lcc.def
-SHL_LD          = lcclnk $(LDFLAGS) -DLL $(DEFFILE)
+DEFFILE		= $(osdir)\curses_lcc.def
+SHL_LD		= lcclnk $(LDFLAGS) -DLL $(DEFFILE)
 
-LIBEXE          = lcclib
-LIBFLAGS        =
+LIBEXE		= lcclib
+LIBFLAGS	=
 
-LIBCURSES       = pdcurses.lib
-DLLCURSES       = curses.lib
-CURSESDLL       = curses.dll
-LIBPANEL        = panel.lib
+LIBCURSES	= pdcurses.lib
+DLLCURSES	= curses.lib
+CURSESDLL	= curses.dll
+LIBPANEL	= panel.lib
 
-PDCLIBS         = $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
-DEMOS           = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
-DLL_DEMOS       = testcurs_dll.exe newdemo_dll.exe xmas_dll.exe tuidemo_dll.exe firework_dll.exe
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
+DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
+DLL_DEMOS	= testcurs_dll.exe newdemo_dll.exe xmas_dll.exe tuidemo_dll.exe firework_dll.exe
 
 ###############################################################################
 

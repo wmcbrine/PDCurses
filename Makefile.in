@@ -4,10 +4,6 @@ SHELL = /bin/sh
 
 @SET_MAKE@
 
-include version
-
-PDC_DIR=PDCurses-$(VERDOT)
-
 srcdir		=@srcdir@
 VPATH		=@srcdir@
 prefix		=@prefix@
@@ -23,6 +19,10 @@ RANLIB		=@RANLIB@
 SHLPRE = @SHLPRE@
 SHLPST = @SHLPST@
 SHLFILE = XCurses
+
+include $(srcdir)/version
+
+PDC_DIR=PDCurses-$(VERDOT)
 
 ZIPFILE = pdcurs$(VER).zip
 TARBALL = $(PDC_DIR).tar.gz

@@ -13,20 +13,20 @@
 # lines below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
 #
 ################################################################################
-PDCURSES_HOME		=$(PDCURSES_SRCDIR)
-MODEL		=L       # one of L, S, M, T, H, C
-SIZE		=LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
+PDCURSES_HOME	= $(PDCURSES_SRCDIR)
+MODEL		= L       # one of L, S, M, T, H, C
+SIZE		= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
 
-!include ..\version
+!include $(PDCURSES_HOME)\version
 
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)\curses.h
-PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)\curspriv.h
-PDCURSES_HEADERS		=$(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
-PANEL_HEADER		=$(PDCURSES_HOME)\panel.h
-TERM_HEADER		=$(PDCURSES_HOME)\term.h
+PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
+PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h
+PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PANEL_HEADER		= $(PDCURSES_HOME)\panel.h
+TERM_HEADER		= $(PDCURSES_HOME)\term.h
 
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\dos

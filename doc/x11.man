@@ -112,15 +112,11 @@ pointerForeColor:  The foreground colour of the pointer.
 pointerBackColor:  The background colour of the pointer.
 		   Default:	   white
 
-cursorColor:	   The colour of the text cursor.
-		   Default:	   red
-		   *** This resource is now obsolete and is ignored. ***
-
 textCursor:	   The alignment of the text cursor; horizontal or vertical.
 		   Default:	   horizontal
 
 colorBlack:	   The color of the COLOR_BLACK attribute.
-		   Default:	   black
+		   Default:	   Black
 
 colorRed:	   The color of the COLOR_RED attribute.
 		   Default:	   red3
@@ -141,7 +137,7 @@ colorCyan:	   The color of the COLOR_CYAN attribute.
 		   Default:	   cyan3
 
 colorWhite:	   The color of the COLOR_WHITE attribute.
-		   Default:	   grey
+		   Default:	   Grey
 
 colorBoldBlack:    COLOR_BLACK combined with A_BOLD.
 		   Default:	   grey40
@@ -165,7 +161,7 @@ colorBoldCyan:	   COLOR_CYAN combined with A_BOLD.
 		   Default:	   cyan1
 
 colorBoldWhite:    COLOR_WHITE combined with A_BOLD.
-		   Default:	   white
+		   Default:	   White
 
 bitmap:		   The name of a valid bitmap file of depth 1 (black and white)
 		   used for the application's icon. The file is an X bitmap.

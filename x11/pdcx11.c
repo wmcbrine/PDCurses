@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.47 2006/02/05 14:27:04 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.48 2006/02/14 00:21:53 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -447,16 +447,6 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcursorColor,
-		XtCCursorColor,
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(AppData, cursorColor),
-		XtRString,
-		(XtPointer)"Red",
-	},
-
-	{
 		XtNcolorBlack,
 		XtCColorBlack,
 		XtRPixel,
@@ -810,7 +800,6 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-pointerForeColor",    "*pointerForeColor",  XrmoptionSepArg,   NULL },
    {"-pointerBackColor",    "*pointerBackColor",  XrmoptionSepArg,   NULL },
    {"-cursorBlinkRate",     "*cursorBlinkRate",   XrmoptionSepArg,   NULL },
-   {"-cursorColor",         "*cursorColor",       XrmoptionSepArg,   NULL },
    {"-textCursor",          "*textCursor",        XrmoptionSepArg,   NULL },
    {"-colorBlack",          "*colorBlack",        XrmoptionSepArg,   NULL },
    {"-colorRed",            "*colorRed",          XrmoptionSepArg,   NULL },

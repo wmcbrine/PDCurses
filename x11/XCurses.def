@@ -15,7 +15,6 @@ testcurs.colorBlack:	midnightblue
 testcurs.lines:	30
 testcurs.normalFont:	7x13
 testcurs.boldFont:	7x13bold
-testcurs.cursorColor:	orange
 !
 ! resources for THE - Xcurses 
 !

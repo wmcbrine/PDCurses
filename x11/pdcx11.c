@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.49 2006/02/14 02:07:57 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.50 2006/02/15 08:36:12 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -1325,7 +1325,7 @@ void XCursesGetIcon(void)
 		}
 	}
 
-	XCreateBitmapFromData(XtDisplay(topLevel),
+	icon_bitmap = XCreateBitmapFromData(XtDisplay(topLevel),
 		RootWindowOfScreen(XtScreen(topLevel)),
 		(char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
 }

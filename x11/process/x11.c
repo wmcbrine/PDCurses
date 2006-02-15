@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.32 2006/02/04 20:40:27 wmcbrine Exp $";
+	"$Id: x11.c,v 1.33 2006/02/15 07:46:36 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -590,7 +590,7 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	XCursesGetIcon();
 
 #ifdef HAVE_XPM_H
-	if (XCURSESPIXMAPFILE != NULL)
+	if (XCURSESPIXMAPFILE != NULL && strcmp(XCURSESPIXMAPFILE, "") != 0)
 		XtVaSetValues(topLevel, XtNminWidth, minwidth,
 			XtNminHeight, minheight, XtNiconPixmap,
 			icon_pixmap, XtNiconMask, icon_pixmap_mask, NULL);

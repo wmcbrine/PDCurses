@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.33 2006/02/15 07:46:36 wmcbrine Exp $";
+	"$Id: x11.c,v 1.34 2006/02/15 08:39:57 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -473,7 +473,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 int XCursesSetupX(char *display_name, int argc, char *argv[])
 {
-	static char *myargv[] = {"PDCurses", NULL};
+	static char *myargv[] = {"XCurses", NULL};
 	extern bool sb_started;
 
 	int italic_font_valid;
@@ -488,7 +488,7 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 
 	/* The following kludge is to force XtVaAppInitialize() to 
 	   recognize the name of the program.  Without it, a default 
-	   value of "PDCurses" is used. */
+	   value of "XCurses" is used. */
 
 	if (!argv)
 	{

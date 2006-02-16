@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.34 2006/02/15 08:39:57 wmcbrine Exp $";
+	"$Id: x11.c,v 1.35 2006/02/16 03:11:57 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -890,6 +890,7 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	XSetICFocus(Xic);
 #endif
 
+#if 0
 	/* Keep focus on Click-to-front window managers. Change courtesy 
 	   of Jean-Pierre Demailly. */
 
@@ -897,6 +898,7 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	wmhints.input = True;
 
 	XSetWMHints(XtDisplay(topLevel), XtWindow(topLevel), &wmhints);
+#endif
 
 	/* Wait for events */
 

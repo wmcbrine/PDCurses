@@ -6,8 +6,8 @@ srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= $(exec_prefix)
-PDCURSES_HOME		=$(srcdir)/..
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
+PDCURSES_HOME	= $(srcdir)/..
+PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
 
 CC		= @CC@
 CFLAGS		= @CFLAGS@
@@ -17,11 +17,11 @@ CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
-LIB_DEPS	=	-L../pdcurses -lXCurses
-LIBXCURSES	=	../pdcurses/libXCurses.a
+LIB_DEPS	= -L../pdcurses -lXCurses
+LIBXCURSES	= ../pdcurses/libXCurses.a
 
-PANEL_LIB	=	-L../panel -lpanel
-LIBPANEL	=	../panel/libpanel.a
+PANEL_LIB	= -L../panel -lpanel
+LIBPANEL	= ../panel/libpanel.a
 
 LINK		= @PURIFY@ $(CC)
 #LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
@@ -31,8 +31,10 @@ DEMOS = \
 	firework \
 	newdemo \
 	ptest \
+	rain \
 	testcurs \
 	tuidemo \
+	worm \
 	xmas 
 
 all: $(DEMOS) 
@@ -53,11 +55,17 @@ ptest: ptest.o $(LIBXCURSES) $(LIBPANEL)
 #	$(LINK) ptest.o -o $@ $(PANEL_LIB) $(LDFLAGS)
 	$(LINK) ptest.o -o $@ $(LIBPANEL) $(LDFLAGS)
 
+rain: rain.o $(LIBXCURSES)
+	$(LINK) rain.o -o $@ $(LDFLAGS)
+
 testcurs: testcurs.o $(LIBXCURSES)
 	$(LINK) testcurs.o -o $@ $(LDFLAGS)
 
 tuidemo: tuidemo.o tui.o $(LIBXCURSES)
 	$(LINK) tui.o tuidemo.o -o $@ $(LDFLAGS)
+
+worm: worm.o $(LIBXCURSES)
+	$(LINK) worm.o -o $@ $(LDFLAGS)
 
 xmas: xmas.o $(LIBXCURSES)
 	$(LINK) xmas.o -o $@ $(LDFLAGS)
@@ -72,6 +80,9 @@ newdemo.o: $(srcdir)/newdemo.c $(PDCURSES_CURSES_H)
 ptest.o: $(srcdir)/ptest.c $(PDCURSES_HOME)/panel.h $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/ptest.c
 
+rain.o: $(srcdir)/rain.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/rain.c
+
 testcurs.o: $(srcdir)/testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/testcurs.c
 
@@ -80,6 +91,9 @@ tui.o: $(srcdir)/tui.c $(srcdir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(srcdir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/tuidemo.c
+
+worm.o: $(srcdir)/worm.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/worm.c
 
 xmas.o: $(srcdir)/xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/xmas.c
@@ -108,9 +122,7 @@ NCURSES_TESTS = \
 	gdc \
 	hanoi \
 	knight \
-	rain \
 	tclock \
-	worm \
 	ncurses
 
 ncurses_tests: $(NCURSES_TESTS)
@@ -132,17 +144,11 @@ hanoi: hanoi.o $(LIBXCURSES)
 knight: knight.o $(LIBXCURSES)
 	$(LINK) knight.o -o $@ $(LDFLAGS)
 
-rain: rain.o $(LIBXCURSES)
-	$(LINK) rain.o -o $@ $(LDFLAGS)
-
 tclock: tclock.o $(LIBXCURSES)
 	$(LINK) tclock.o -o $@ $(LDFLAGS) -lm
 
 view: view.o $(LIBXCURSES)
 	$(LINK) view.o -o $@ $(LDFLAGS)
-
-worm: worm.o $(LIBXCURSES)
-	$(LINK) worm.o -o $@ $(LDFLAGS)
 
 ncurses: ncurses.o $(LIBXCURSES) $(LIBPANEL)
 	$(LINK) ncurses.o -o $@ $(LDFLAGS) $(LIBPANEL)
@@ -159,17 +165,11 @@ hanoi.o: $(ncurses_testdir)/hanoi.c $(PDCURSES_CURSES_H)
 knight.o: $(ncurses_testdir)/knight.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/knight.c
 
-rain.o: $(ncurses_testdir)/rain.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/rain.c
-
 tclock.o: $(ncurses_testdir)/tclock.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/tclock.c
 
 view.o: $(ncurses_testdir)/view.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/view.c
-
-worm.o: $(ncurses_testdir)/worm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/worm.c
 
 ncurses.o: $(ncurses_testdir)/ncurses.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/ncurses.c

@@ -8,7 +8,7 @@
  * "make ncurses_tests" to start.
  * "make ncurses_clean" when you're done.
  *
- * Builds: bs gdc hanoi knight rain tclock worm ncurses
+ * Builds: bs gdc hanoi knight tclock ncurses
  */
 
 #include "../config.h"

@@ -1,18 +1,17 @@
-/**************************************************************************
-* This file comprises part of PDCurses. PDCurses is Public Domain software.
-* You may use this code for whatever purposes you desire. This software
-* is provided AS IS with NO WARRANTY whatsoever.
-* Should this software be used in another application, an acknowledgement
-* that PDCurses code is used would be appreciated, but is not mandatory.
+/************************************************************************** 
+* This file is part of PDCurses. PDCurses is public domain software;
+* you may use it for any purpose. This software is provided AS IS with
+* NO WARRANTY whatsoever.
 *
-* Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of 
-* other users.
+* If you use PDCurses in an application, an acknowledgement would be
+* appreciated, but is not mandatory. If you make corrections or
+* enhancements to PDCurses, please forward them to the current
+* maintainer for the benefit of other users.
 *
-* The only restriction placed on this code is that no distribution of
-* modified PDCurses code be made under the PDCurses name, by anyone
-* other than the current maintainer.
-* 
+* No distribution of modified PDCurses code may be made under the name
+* "PDCurses", except by the current maintainer. (Although PDCurses is
+* public domain, the name is a trademark.)
+*
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
@@ -25,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_move =
-	"$Id: move.c,v 1.11 2006/02/08 17:40:33 wmcbrine Exp $";
+	"$Id: move.c,v 1.12 2006/02/16 22:59:49 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************

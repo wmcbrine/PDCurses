@@ -1,21 +1,3 @@
-/**************************************************************************
-* This file comprises part of PDCurses. PDCurses is Public Domain software.
-* You may use this code for whatever purposes you desire. This software
-* is provided AS IS with NO WARRANTY whatsoever.
-* Should this software be used in another application, an acknowledgement
-* that PDCurses code is used would be appreciated, but is not mandatory.
-*
-* Any changes which you make to this software which may improve or enhance
-* it, should be forwarded to the current maintainer for the benefit of
-* other users.
-*
-* The only restriction placed on this code is that no distribution of
-* modified PDCurses code be made under the PDCurses name, by anyone
-* other than the current maintainer.
-*
-* See the file maintain.er for details of the current maintainer.
-**************************************************************************/
-
 #include <stdio.h>
 #include <signal.h>
 #include <curses.h>
@@ -28,7 +10,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_firework =
-	"$Id: firework.c,v 1.18 2006/02/13 17:18:05 wmcbrine Exp $";
+	"$Id: firework.c,v 1.19 2006/02/16 21:51:30 wmcbrine Exp $";
 #endif
 
 void myrefresh(void);

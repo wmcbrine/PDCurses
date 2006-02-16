@@ -56,7 +56,8 @@ LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
+DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
@@ -318,6 +319,16 @@ ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
 	$(LINK) $(LDFLAGS) @demos.lnk
 	del demos.lnk
 
+rain.exe:	rain.obj $(LIBCURSES)
+	@%create demos.lnk
+	@%append demos.lnk option quiet
+	@%append demos.lnk system $(TARGET)
+	@%append demos.lnk name rain.exe
+	@%append demos.lnk file rain.obj
+	@%append demos.lnk library $(LIBCURSES)
+	$(LINK) $(LDFLAGS) @demos.lnk
+	del demos.lnk
+
 testcurs.exe:	testcurs.obj $(LIBCURSES)
 	@%create demos.lnk
 	@%append demos.lnk option quiet
@@ -335,6 +346,16 @@ tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
 	@%append demos.lnk name tuidemo.exe
 	@%append demos.lnk file tuidemo.obj
 	@%append demos.lnk file tui.obj
+	@%append demos.lnk library $(LIBCURSES)
+	$(LINK) $(LDFLAGS) @demos.lnk
+	del demos.lnk
+
+worm.exe:	worm.obj $(LIBCURSES)
+	@%create demos.lnk
+	@%append demos.lnk option quiet
+	@%append demos.lnk system $(TARGET)
+	@%append demos.lnk name worm.exe
+	@%append demos.lnk file worm.obj
 	@%append demos.lnk library $(LIBCURSES)
 	$(LINK) $(LDFLAGS) @demos.lnk
 	del demos.lnk
@@ -359,6 +380,9 @@ newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
 ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\ptest.c
 
+rain.obj: $(demodir)\rain.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\rain.c
+
 testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\testcurs.c
 
@@ -367,6 +391,9 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -I$(demodir) /fo=$@ $(demodir)\tuidemo.c
+
+worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\worm.c
 
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) /fo=$@ $(demodir)\xmas.c

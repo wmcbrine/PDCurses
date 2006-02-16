@@ -55,7 +55,8 @@ LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
+DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 .PHONY: all libs clean demos dist
@@ -305,12 +306,20 @@ ptest.exe:	ptest.o $(LIBCURSES) $(LIBPANEL)
 	$(LINK) $(LDFLAGS) -o$@ ptest.o $(LIBCURSES) $(LIBPANEL)
 	strip $@
 
+rain.exe:	rain.o $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o$@ rain.o $(LIBCURSES)
+	strip $@
+
 testcurs.exe:	testcurs.o $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -o$@ testcurs.o $(LIBCURSES)
 	strip $@
 
 tuidemo.exe:	tuidemo.o tui.o $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
+	strip $@
+
+worm.exe:	worm.o $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o$@ worm.o $(LIBCURSES)
 	strip $@
 
 xmas.exe:	xmas.o $(LIBCURSES)
@@ -327,6 +336,9 @@ newdemo.o: $(demodir)/newdemo.c $(PDCURSES_CURSES_H)
 ptest.o: $(demodir)/ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/ptest.c
 
+rain.o: $(demodir)/rain.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o$@ $(demodir)/rain.c
+
 testcurs.o: $(demodir)/testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/testcurs.c
 
@@ -335,6 +347,9 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)/tuidemo.c
+
+worm.o: $(demodir)/worm.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o$@ $(demodir)/worm.c
 
 xmas.o: $(demodir)/xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/xmas.c

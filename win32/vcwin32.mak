@@ -62,8 +62,10 @@ CURSESDLL = curses.dll
 LIBPANEL	= panel.lib
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
-DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
-DLL_DEMOS	=testcurs_dll.exe newdemo_dll.exe xmas_dll.exe tuidemo_dll.exe firework_dll.exe
+DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+firework.exe ptest.exe rain.exe worm.exe
+DLL_DEMOS	= testcurs_dll.exe newdemo_dll.exe xmas_dll.exe \
+tuidemo_dll.exe firework_dll.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS) #$(DLL_DEMOS)
@@ -515,11 +517,17 @@ newdemo.exe:	newdemo.obj $(LIBCURSES)
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
 	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBPANEL) $(LIBCURSES) $(CCLIBS)
 
+rain.exe:	rain.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+
 testcurs.exe:	testcurs.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -out:$@ tui.obj $*.obj $(LIBCURSES) $(CCLIBS)
+
+worm.exe:	worm.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
 
 xmas.exe:	xmas.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
@@ -538,6 +546,9 @@ newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
 ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\ptest.c
 
+rain.obj: $(demodir)\rain.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\rain.c
+
 testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\testcurs.c
 
@@ -546,6 +557,9 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -I$(demodir) -Fo$@ $(demodir)\tuidemo.c
+
+worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\worm.c
 
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\xmas.c

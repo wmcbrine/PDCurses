@@ -57,7 +57,8 @@ LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	=testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
+DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
@@ -128,7 +129,7 @@ panel.o
 
 pdcurses.a : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ *.o
-	$(LIBEXE) d $@ $(PANOBJS) firework.o newdemo.o ptest.o testcurs.o tui.o tuidemo.o xmas.o
+	$(LIBEXE) d $@ $(PANOBJS) firework.o newdemo.o ptest.o testcurs.o tui.o tuidemo.o xmas.o rain.o worm.o
 
 panel.a : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
@@ -294,11 +295,17 @@ newdemo.exe:	newdemo.o $(LIBCURSES)
 ptest.exe:	ptest.o $(LIBCURSES) $(LIBPANEL)
 	$(LINK) $(LDFLAGS) -o ptest.exe ptest.o $(LIBCURSES) $(LIBPANEL) $(CCLIBS)
 
+rain.exe:	rain.o $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o rain.exe rain.o $(LIBCURSES) $(CCLIBS)
+
 testcurs.exe:	testcurs.o $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -o testcurs.exe testcurs.o $(LIBCURSES) $(CCLIBS)
 
 tuidemo.exe:	tuidemo.o tui.o $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -o tuidemo.exe tuidemo.o tui.o $(LIBCURSES) $(CCLIBS)
+
+worm.exe:	worm.o $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o worm.exe worm.o $(LIBCURSES) $(CCLIBS)
 
 xmas.exe:	xmas.o $(LIBCURSES)
 	$(LINK) $(LDFLAGS) -o xmas.exe xmas.o $(LIBCURSES) $(CCLIBS)
@@ -313,6 +320,9 @@ newdemo.o: $(demodir)/newdemo.c $(PDCURSES_CURSES_H)
 ptest.o: $(demodir)/ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/ptest.c
 
+rain.o: $(demodir)/rain.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o$@ $(demodir)/rain.c
+
 testcurs.o: $(demodir)/testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/testcurs.c
 
@@ -321,6 +331,9 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $(demodir)/tuidemo.c
+
+worm.o: $(demodir)/worm.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o$@ $(demodir)/worm.c
 
 xmas.o: $(demodir)/xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)/xmas.c

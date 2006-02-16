@@ -34,11 +34,10 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.1 2006/02/16 06:11:39 wmcbrine Exp $
+  $Id: worm.c,v 1.2 2006/02/16 07:29:09 wmcbrine Exp $
 */
 
 #include <curses.h>
-#include <signal.h>
 #include <stdlib.h>
 
 static chtype flavor[] = {
@@ -115,12 +114,6 @@ static void cleanup(void)
 	endwin();
 }
 
-static void onsig(int sig)
-{
-	cleanup();
-	exit(EXIT_FAILURE);
-}
-
 static float ranf(void)
 {
 	long r = (rand() & 077777);
@@ -189,7 +182,6 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	signal(SIGINT, onsig);
 #ifdef XCURSES
 	Xinitscr(argc, argv);
 #else
@@ -437,4 +429,6 @@ int main(int argc, char *argv[])
 		napms(10);
 		refresh();
 	}
+
+	return EXIT_SUCCESS;	/* unreachable */
 }

@@ -1,17 +1,9 @@
-/* $Id: rain.c,v 1.1 2006/02/16 06:11:39 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.2 2006/02/16 07:29:09 wmcbrine Exp $ */
 
 #include <curses.h>
-#include <signal.h>
 #include <stdlib.h>
 
 /* rain 11/3/1980 EPS/CITHEP */
-
-static void onsig(int n)
-{
-	curs_set(1);
-	endwin();
-	exit(EXIT_FAILURE);
-}
 
 static float ranf(void)
 {
@@ -46,10 +38,6 @@ int main(int argc, char *argv[])
 	static int xpos[5], ypos[5];
 	float r;
 	float c;
-
-	for (j = SIGHUP; j <= SIGTERM; j++)
-		if (signal(j, SIG_IGN) != SIG_IGN)
-			signal(j, onsig);
 
 #ifdef XCURSES
 	Xinitscr(argc, argv);
@@ -140,4 +128,6 @@ int main(int argc, char *argv[])
 		}
 		napms(50);
 	}
+
+	return EXIT_SUCCESS;	/* unreachable */
 }

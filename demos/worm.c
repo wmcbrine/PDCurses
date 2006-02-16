@@ -34,7 +34,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.2 2006/02/16 07:29:09 wmcbrine Exp $
+  $Id: worm.c,v 1.3 2006/02/16 07:43:17 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -236,7 +236,8 @@ int main(int argc, char *argv[])
 	{
 		w->orientation = w->head = 0;
 
-		if (!(ip = malloc(sizeof(short) * (length + 1)))) {
+		if ((ip = malloc(sizeof(short) * (length + 1))) == NULL)
+		{
 			fprintf(stderr, "%s: out of memory\n", *argv);
 			exit(EXIT_FAILURE);
 		}
@@ -245,7 +246,8 @@ int main(int argc, char *argv[])
 		for (x = length; --x >= 0;)
 			*ip++ = -1;
 
-		if (!(ip = malloc(sizeof(short) * (length + 1)))) {
+		if ((ip = malloc(sizeof(short) * (length + 1))) == NULL)
+		{
 			fprintf(stderr, "%s: out of memory\n", *argv);
 			exit(EXIT_FAILURE);
 		}

@@ -34,17 +34,21 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.3 2006/02/16 07:43:17 wmcbrine Exp $
+  $Id: worm.c,v 1.4 2006/02/17 00:03:04 wmcbrine Exp $
 */
 
 #include <curses.h>
 #include <stdlib.h>
 
-static chtype flavor[] = {
+#define FLAVORS 7
+
+static chtype flavor[FLAVORS] =
+{
 	'O', '*', '#', '$', '%', '0', '@',
 };
 
-static const short xinc[] = {
+static const short xinc[] =
+{
 	1, 1, 1, 0, -1, -1, -1, 0
 },
 yinc[] =
@@ -52,7 +56,8 @@ yinc[] =
 	-1, 0, 1, 1, 1, 0, -1, -1
 };
 
-static struct worm {
+static struct worm
+{
 	int orientation, head;
 	short *xpos, *ypos;
 } worm[40];
@@ -65,42 +70,60 @@ static chtype trail = ' ';
 static int generation, trace_start, trace_end, singlestep;
 #endif
 
-static const struct options {
+static const struct options
+{
 	int nopts;
 	int opts[3];
-} normal[8]={
+} normal[8] =
+{
 	{ 3, { 7, 0, 1 } }, { 3, { 0, 1, 2 } }, { 3, { 1, 2, 3 } },
 	{ 3, { 2, 3, 4 } }, { 3, { 3, 4, 5 } }, { 3, { 4, 5, 6 } },
 	{ 3, { 5, 6, 7 } }, { 3, { 6, 7, 0 } }
-}, upper[8]={
+},
+upper[8] =
+{
 	{ 1, { 1, 0, 0 } }, { 2, { 1, 2, 0 } }, { 0, { 0, 0, 0 } },
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }, { 2, { 4, 5, 0 } },
 	{ 1, { 5, 0, 0 } }, { 2, { 1, 5, 0 } }
-}, left[8]={
+},
+left[8] =
+{
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } },
 	{ 2, { 2, 3, 0 } }, { 1, { 3, 0, 0 } }, { 2, { 3, 7, 0 } },
 	{ 1, { 7, 0, 0 } }, { 2, { 7, 0, 0 } }
-}, right[8]={
+},
+right[8] =
+{
 	{ 1, { 7, 0, 0 } }, { 2, { 3, 7, 0 } }, { 1, { 3, 0, 0 } },
 	{ 2, { 3, 4, 0 } }, { 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } },
 	{ 0, { 0, 0, 0 } }, { 2, { 6, 7, 0 } }
-}, lower[8]={
+},
+lower[8] =
+{
 	{ 0, { 0, 0, 0 } }, { 2, { 0, 1, 0 } }, { 1, { 1, 0, 0 } },
 	{ 2, { 1, 5, 0 } }, { 1, { 5, 0, 0 } }, { 2, { 5, 6, 0 } },
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }
-}, upleft[8]={
+},
+upleft[8] =
+{
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } },
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }, { 1, { 3, 0, 0 } },
 	{ 2, { 1, 3, 0 } }, { 1, { 1, 0, 0 } }
-}, upright[8]={
+},
+upright[8] =
+{
 	{ 2, { 3, 5, 0 } }, { 1, { 3, 0, 0 } }, { 0, { 0, 0, 0 } },
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } },
 	{ 0, { 0, 0, 0 } }, { 1, { 5, 0, 0 } }
-}, lowleft[8]={
+},
+lowleft[8] =
+{
 	{ 3, { 7, 0, 1 } }, { 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } },
 	{ 1, { 1, 0, 0 } }, { 2, { 1, 7, 0 } }, { 1, { 7, 0, 0 } },
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }
-}, lowright[8]={
+},
+lowright[8] =
+{
 	{ 0, { 0, 0, 0 } }, { 1, { 7, 0, 0 } }, { 2, { 5, 7, 0 } },
 	{ 1, { 5, 0, 0 } }, { 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } },
 	{ 0, { 0, 0, 0 } }, { 0, { 0, 0, 0 } }
@@ -368,7 +391,7 @@ int main(int argc, char *argv[])
 			{
 				move(y = w->ypos[h] = bottom, x =
 				     w->xpos[h] = 0);
-				addch(flavor[n % sizeof(flavor)]);
+				addch(flavor[n % FLAVORS]);
 				ref[y][x]++;
 			}
 			else
@@ -425,7 +448,7 @@ int main(int argc, char *argv[])
 			if (y < 0)
 				y = 0;
 
-			addch(flavor[n % sizeof(flavor)]);
+			addch(flavor[n % FLAVORS]);
 			ref[w->ypos[h] = y][w->xpos[h] = x]++;
 		}
 		napms(10);

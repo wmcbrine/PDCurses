@@ -23,7 +23,7 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.6 2006/02/17 00:47:43 wmcbrine Exp $
+  $Id: worm.c,v 1.7 2006/02/17 01:00:30 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 		SET_COLOR(5, COLOR_BLUE);
 		SET_COLOR(6, COLOR_YELLOW);
 	}
-#endif				/* A_COLOR */
+#endif
 
 	ref = malloc(sizeof(short *) * LINES);
 
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 	/* if addressing the lower right corner doesn't work in your curses */
 
 	ref[bottom][last] = 1;
-#endif				/* BADCORNER */
+#endif
 
 	for (n = number, w = &worm[0]; --n >= 0; w++)
 	{

@@ -34,7 +34,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.4 2006/02/17 00:03:04 wmcbrine Exp $
+  $Id: worm.c,v 1.5 2006/02/17 00:31:49 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -44,7 +44,7 @@ Options:
 
 static chtype flavor[FLAVORS] =
 {
-	'O', '*', '#', '$', '%', '0', '@',
+	'O', '*', '#', '$', '%', '0', '@'
 };
 
 static const short xinc[] =
@@ -137,12 +137,6 @@ static void cleanup(void)
 	endwin();
 }
 
-static float ranf(void)
-{
-	long r = (rand() & 077777);
-	return ((float) r / 32768.);
-}
-
 int main(int argc, char *argv[])
 {
 	const struct options *op;
@@ -152,10 +146,11 @@ int main(int argc, char *argv[])
 
 	for (x = 1; x < argc; x++)
 	{
-		char *p;
-		p = argv[x];
+		char *p = argv[x];
+
 		if (*p == '-')
 			p++;
+
 		switch (*p)
 		{
 		case 'f':
@@ -164,23 +159,25 @@ int main(int argc, char *argv[])
 		case 'l':
 			if (++x == argc)
 				goto usage;
+
 			if ((length = atoi(argv[x])) < 2 || length > 1024)
 			{
-				fprintf(stderr,
-					"%s: Invalid length\n", *argv);
+				fprintf(stderr, "%s: Invalid length\n", *argv);
 				exit(EXIT_FAILURE);
 			}
+
 			break;
 		case 'n':
 			if (++x == argc)
 				goto usage;
+
 			if ((number = atoi(argv[x])) < 1 || number > 40)
 			{
-				fprintf(stderr,
-					"%s: Invalid number of worms\n",
+				fprintf(stderr, "%s: Invalid number of worms\n",
 					*argv);
 				exit(EXIT_FAILURE);
 			}
+
 			break;
 		case 't':
 			trail = '.';
@@ -241,17 +238,18 @@ int main(int argc, char *argv[])
 #endif				/* A_COLOR */
 
 	ref = malloc(sizeof(short *) * LINES);
+
 	for (y = 0; y < LINES; y++)
 	{
 		ref[y] = malloc(sizeof(short) * COLS);
+
 		for (x = 0; x < COLS; x++)
-		{
 			ref[y][x] = 0;
-		}
 	}
 
 #ifdef BADCORNER
 	/* if addressing the lower right corner doesn't work in your curses */
+
 	ref[bottom][last] = 1;
 #endif				/* BADCORNER */
 
@@ -266,6 +264,7 @@ int main(int argc, char *argv[])
 		}
 
 		w->xpos = ip;
+
 		for (x = length; --x >= 0;)
 			*ip++ = -1;
 
@@ -276,6 +275,7 @@ int main(int argc, char *argv[])
 		}
 
 		w->ypos = ip;
+
 		for (y = length; --y >= 0;)
 			*ip++ = -1;
 	}
@@ -285,14 +285,13 @@ int main(int argc, char *argv[])
 		const char *p = field;
 
 		for (y = bottom; --y >= 0;)
-		{
 			for (x = COLS; --x >= 0;)
 			{
 				addch((chtype) (*p++));
+
 				if (!*p)
 					p = field;
 			}
-		}
 	}
 
 	napms(10);
@@ -389,8 +388,9 @@ int main(int argc, char *argv[])
 		{
 			if ((x = w->xpos[h = w->head]) < 0)
 			{
-				move(y = w->ypos[h] = bottom, x =
-				     w->xpos[h] = 0);
+				move(y = w->ypos[h] = bottom,
+				     x = w->xpos[h] = 0);
+
 				addch(flavor[n % FLAVORS]);
 				ref[y][x]++;
 			}
@@ -408,13 +408,11 @@ int main(int argc, char *argv[])
 
 			if (w->xpos[w->head = h] >= 0)
 			{
-				int x1, y1;
+				int x1 = w->xpos[h];
+				int y1 = w->ypos[h];
 
-				x1 = w->xpos[h];
-				y1 = w->ypos[h];
-
-				if (y1 < LINES
-				    && x1 < COLS && --ref[y1][x1] == 0)
+				if (y1 < LINES && x1 < COLS &&
+				    --ref[y1][x1] == 0)
 				{
 					move(y1, x1);
 					addch(trail);
@@ -438,12 +436,11 @@ int main(int argc, char *argv[])
 				w->orientation = op->opts[0];
 				break;
 			default:
-				w->orientation = op->opts[(int)
-					 (ranf() * (float) op->nopts)];
+				w->orientation = op->opts[rand() % op->nopts];
 			}
 
-			move(y += yinc[w->orientation], x +=
-			     xinc[w->orientation]);
+			move(y += yinc[w->orientation],
+			     x += xinc[w->orientation]);
 
 			if (y < 0)
 				y = 0;

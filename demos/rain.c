@@ -1,15 +1,9 @@
-/* $Id: rain.c,v 1.2 2006/02/16 07:29:09 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.3 2006/02/17 00:31:49 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <stdlib.h>
 
 /* rain 11/3/1980 EPS/CITHEP */
-
-static float ranf(void)
-{
-	long r = (rand() & 077777);
-	return ((float) r / 32768.);
-}
 
 static int next_j(int j)
 {
@@ -20,7 +14,7 @@ static int next_j(int j)
 
 	if (has_colors())
 	{
-		int z = (int) (3 * ranf());
+		int z = rand() % 3;
 		chtype color = COLOR_PAIR(z);
 
 		if (z)
@@ -34,10 +28,8 @@ static int next_j(int j)
 
 int main(int argc, char *argv[])
 {
-	int x, y, j;
+	int x, y, j, r, c;
 	static int xpos[5], ypos[5];
-	float r;
-	float c;
 
 #ifdef XCURSES
 	Xinitscr(argc, argv);
@@ -60,19 +52,19 @@ int main(int argc, char *argv[])
 	timeout(0);
 	keypad(stdscr, TRUE);
 
-	r = (float) (LINES - 4);
-	c = (float) (COLS - 4);
+	r = (LINES - 4);
+	c = (COLS - 4);
 
 	for (j = 5; --j >= 0;)
 	{
-		xpos[j] = (int) (c * ranf()) + 2;
-		ypos[j] = (int) (r * ranf()) + 2;
+		xpos[j] = rand() % c + 2;
+		ypos[j] = rand() % r + 2;
 	}
 
 	for (j = 0;;)
 	{
-		x = (int) (c * ranf()) + 2;
-		y = (int) (r * ranf()) + 2;
+		x = rand() % c + 2;
+		y = rand() % r + 2;
 
 		mvaddch(y, x, '.');
 
@@ -121,8 +113,8 @@ int main(int argc, char *argv[])
 # ifdef PDCURSES
 			resize_term(0, 0);
 # endif
-			r = (float) (LINES - 4);
-			c = (float) (COLS - 4);
+			r = LINES - 4;
+			c = COLS - 4;
 			break;
 #endif
 		}

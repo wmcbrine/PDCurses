@@ -52,7 +52,8 @@ LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
 PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe ptest.exe
+DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
@@ -289,10 +290,16 @@ newdemo.exe:	newdemo.obj $(LIBCURSES)
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
 	$(CC) -m$(MODEL) -e$@ $**
 
+rain.exe:	rain.obj $(LIBCURSES)
+	$(CC) -m$(MODEL) -e$@ $**
+
 testcurs.exe:	testcurs.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
+	$(CC) -m$(MODEL) -e$@ $**
+
+worm.exe:	worm.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**
 
 xmas.exe:	xmas.obj $(LIBCURSES)
@@ -308,6 +315,9 @@ newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
 ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\ptest.c
 
+rain.obj: $(demodir)\rain.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o$@ $(demodir)\rain.c
+
 testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\testcurs.c
 
@@ -316,6 +326,9 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)\tuidemo.c
+
+worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o$@ $(demodir)\worm.c
 
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c

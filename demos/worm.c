@@ -14,27 +14,16 @@
 			  Caltech High Energy Physics
 				 October, 1980
 
-		Hacks to turn this into a test frame for cursor movement:
-			Eric S. Raymond <esr@snark.thyrsus.com>
-				January, 1995
-
-		July 1995 (esr): worms is now in living color! :-)
+			   Color by Eric S. Raymond
+				  July, 1995
 
 Options:
 	-f			fill screen with copies of 'WORM' at start.
 	-l <n>			set worm length
 	-n <n>			set number of worms
 	-t			make worms leave droppings
-	-T <start> <end>	set trace interval
-	-S			set single-stepping during trace interval
-	-N			suppress cursor-movement optimization
 
-  This program makes a good torture-test for the ncurses cursor-optimization
-  code.  You can use -T to set the worm move interval over which movement
-  traces will be dumped.  The program stops and waits for one character of
-  input at the beginning and end of the interval.
-
-  $Id: worm.c,v 1.5 2006/02/17 00:31:49 wmcbrine Exp $
+  $Id: worm.c,v 1.6 2006/02/17 00:47:43 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -65,10 +54,6 @@ static struct worm
 static const char *field;
 static int length = 16, number = 3;
 static chtype trail = ' ';
-
-#ifdef TRACE
-static int generation, trace_start, trace_end, singlestep;
-#endif
 
 static const struct options
 {
@@ -182,18 +167,6 @@ int main(int argc, char *argv[])
 		case 't':
 			trail = '.';
 			break;
-#ifdef TRACE
-		case 'S':
-			singlestep = TRUE;
-			break;
-		case 'T':
-			trace_start = atoi(argv[++x]);
-			trace_end = atoi(argv[++x]);
-			break;
-		case 'N':	/* declared by ncurses */
-			_nc_optimize_enable ^= OPTIMIZE_ALL;
-			break;
-#endif				/* TRACE */
 		default:
 		      usage:
 			fprintf(stderr, "usage: %s [-field] [-length #] "
@@ -296,43 +269,20 @@ int main(int argc, char *argv[])
 
 	napms(10);
 	refresh();
-#ifndef TRACE
 	nodelay(stdscr, TRUE);
-#endif
 
 	for (;;)
 	{
-#ifdef TRACE
-		if (trace_start || trace_end)
-		{
-			if (generation == trace_start)
-			{
-				trace(TRACE_CALLS);
-				getch();
-			}
-			else if (generation == trace_end)
-			{
-				trace(0);
-				getch();
-			}
-
-			if (singlestep && generation > trace_start
-			    && generation < trace_end)
-				getch();
-
-			generation++;
-		}
-#else
 		int ch;
 
 		if ((ch = getch()) > 0)
 		{
-# ifdef KEY_RESIZE
+#ifdef KEY_RESIZE
 		    if (ch == KEY_RESIZE)
 		    {
-#  ifdef PDCURSES
+# ifdef PDCURSES
 			resize_term(0, 0);
-#  endif
+# endif
 			if (last != COLS - 1)
 			{
 				for (y = 0; y <= bottom; y++)
@@ -366,7 +316,7 @@ int main(int argc, char *argv[])
 			}
 		    }
 
-# endif /* KEY_RESIZE */
+#endif /* KEY_RESIZE */
 
 		    /* Make it simple to put this into single-step mode, 
 		       or resume normal operation - T. Dickey */
@@ -381,8 +331,6 @@ int main(int argc, char *argv[])
 		    else if (ch == ' ')
 			nodelay(stdscr, TRUE);
 		}
-
-#endif /* TRACE */
 
 		for (n = 0, w = &worm[0]; n < number; n++, w++)
 		{

@@ -10,7 +10,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.36 2006/02/16 21:51:30 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.37 2006/02/18 23:52:26 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -148,7 +148,16 @@ int main(int argc, char *argv[])
 				new_option : new_option + 1;
 			display_menu(old_option, new_option);
 			break;
-
+#ifdef KEY_RESIZE
+		case KEY_RESIZE:
+# ifdef PDCURSES
+			resize_term(0, 0);
+# endif
+			old_option = -1;
+			erase();
+			display_menu(old_option, new_option);
+			break;
+#endif
 		case 'Q':
 		case 'q':
 			quit = TRUE;

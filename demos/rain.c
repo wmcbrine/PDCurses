@@ -1,4 +1,4 @@
-/* $Id: rain.c,v 1.3 2006/02/17 00:31:49 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.4 2006/02/18 23:28:11 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <stdlib.h>
@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
 		case (KEY_RESIZE):
 # ifdef PDCURSES
 			resize_term(0, 0);
+			erase();
 # endif
 			r = LINES - 4;
 			c = COLS - 4;

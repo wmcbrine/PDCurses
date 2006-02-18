@@ -23,7 +23,7 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.7 2006/02/17 01:00:30 wmcbrine Exp $
+  $Id: worm.c,v 1.8 2006/02/18 23:28:11 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -282,6 +282,7 @@ int main(int argc, char *argv[])
 		    {
 # ifdef PDCURSES
 			resize_term(0, 0);
+			erase();
 # endif
 			if (last != COLS - 1)
 			{

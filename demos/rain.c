@@ -1,4 +1,4 @@
-/* $Id: rain.c,v 1.4 2006/02/18 23:28:11 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.5 2006/02/18 23:52:07 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <stdlib.h>
@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
 	timeout(0);
 	keypad(stdscr, TRUE);
 
-	r = (LINES - 4);
-	c = (COLS - 4);
+	r = LINES - 4;
+	c = COLS - 4;
 
 	for (j = 5; --j >= 0;)
 	{
@@ -97,8 +97,8 @@ int main(int argc, char *argv[])
 
 		switch (getch())
 		{
-		case ('q'):
-		case ('Q'):
+		case 'q':
+		case 'Q':
 			curs_set(1);
 			endwin();
 			exit(EXIT_SUCCESS);
@@ -107,16 +107,15 @@ int main(int argc, char *argv[])
 			break;
 		case ' ':
 			nodelay(stdscr, TRUE);
-			break;
 #ifdef KEY_RESIZE
-		case (KEY_RESIZE):
+			break;
+		case KEY_RESIZE:
 # ifdef PDCURSES
 			resize_term(0, 0);
 			erase();
 # endif
 			r = LINES - 4;
 			c = COLS - 4;
-			break;
 #endif
 		}
 		napms(50);

@@ -19,7 +19,7 @@ void rmerror(void);
 
 #ifdef PDCDEBUG
 const char *rcsid_tui =
-	"$Id: tui.c,v 1.18 2006/02/16 21:51:30 wmcbrine Exp $";
+	"$Id: tui.c,v 1.19 2006/02/19 00:21:12 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -27,33 +27,33 @@ const char *rcsid_tui =
 #endif
 
 #ifdef A_COLOR
-# define TITLECOLOR         1                   /* color pair indices */
-# define MAINMENUCOLOR      (2 | A_BOLD)
-# define MAINMENUREVCOLOR   (3 | A_BOLD | A_REVERSE)
-# define SUBMENUCOLOR       (4 | A_BOLD)
-# define SUBMENUREVCOLOR    (5 | A_BOLD | A_REVERSE)
-# define BODYCOLOR          6
-# define STATUSCOLOR        (7 | A_BOLD)
-# define INPUTBOXCOLOR      8
-# define EDITBOXCOLOR       (9 | A_BOLD | A_REVERSE)
+# define TITLECOLOR		1		/* color pair indices */
+# define MAINMENUCOLOR		(2 | A_BOLD)
+# define MAINMENUREVCOLOR	(3 | A_BOLD | A_REVERSE)
+# define SUBMENUCOLOR		(4 | A_BOLD)
+# define SUBMENUREVCOLOR	(5 | A_BOLD | A_REVERSE)
+# define BODYCOLOR		6
+# define STATUSCOLOR		(7 | A_BOLD)
+# define INPUTBOXCOLOR		8
+# define EDITBOXCOLOR		(9 | A_BOLD | A_REVERSE)
 #else
-# define TITLECOLOR         0                   /* color pair indices */
-# define MAINMENUCOLOR      (A_BOLD)
-# define MAINMENUREVCOLOR   (A_BOLD | A_REVERSE)
-# define SUBMENUCOLOR       (A_BOLD)
-# define SUBMENUREVCOLOR    (A_BOLD | A_REVERSE)
-# define BODYCOLOR          0
-# define STATUSCOLOR        (A_BOLD)
-# define INPUTBOXCOLOR      0
-# define EDITBOXCOLOR       (A_BOLD | A_REVERSE)
+# define TITLECOLOR		0		/* color pair indices */
+# define MAINMENUCOLOR		(A_BOLD)
+# define MAINMENUREVCOLOR	(A_BOLD | A_REVERSE)
+# define SUBMENUCOLOR		(A_BOLD)
+# define SUBMENUREVCOLOR	(A_BOLD | A_REVERSE)
+# define BODYCOLOR		0
+# define STATUSCOLOR		(A_BOLD)
+# define INPUTBOXCOLOR		0
+# define EDITBOXCOLOR		(A_BOLD | A_REVERSE)
 #endif
 
 
-#define  th   1                   /* title window height */
-#define  mh   1                   /* main menu height */
-#define  sh   2                   /* status window height */
-#define  bh   (LINES-th-mh-sh-1)  /* body window height */
-#define  bw   COLS                /* body window width */
+#define th 1				/* title window height */
+#define mh 1				/* main menu height */
+#define sh 2				/* status window height */
+#define bh (LINES - th - mh - sh - 1)	/* body window height */
+#define bw COLS				/* body window width */
 
 
 /******************************* STATIC ************************************/

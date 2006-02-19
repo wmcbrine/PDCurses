@@ -9,7 +9,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.36 2006/02/16 22:59:50 wmcbrine Exp $";
+	"$Id: x11.c,v 1.37 2006/02/19 05:04:16 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -463,10 +463,9 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	int italic_font_valid;
 	XColor pointerforecolor, pointerbackcolor;
 	XrmValue rmfrom, rmto;
-	XWMHints wmhints;
 	char wait_buf[5];
 	int wait_value = 0, i = 0;
-	int minwidth = 0, minheight = 0;
+	int minwidth, minheight;
 
 	PDC_LOG(("%s:XCursesSetupX called\n", XCLOGMSG));
 
@@ -576,13 +575,18 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 #ifdef HAVE_XPM_H
 	if (XCURSESPIXMAPFILE != NULL && strcmp(XCURSESPIXMAPFILE, "") != 0)
 		XtVaSetValues(topLevel, XtNminWidth, minwidth,
-			XtNminHeight, minheight, XtNiconPixmap,
-			icon_pixmap, XtNiconMask, icon_pixmap_mask, NULL);
+			XtNminHeight, minheight,
+			XtNbaseWidth, XCURSESBORDERWIDTH * 2,
+			XtNbaseHeight, XCURSESBORDERWIDTH * 2,
+			XtNiconPixmap, icon_pixmap,
+			XtNiconMask, icon_pixmap_mask, NULL);
 	else
 #endif
 		XtVaSetValues(topLevel, XtNminWidth, minwidth, 
-			XtNminHeight, minheight, XtNiconPixmap, 
-			icon_bitmap, NULL);
+			XtNminHeight, minheight,
+			XtNbaseWidth, XCURSESBORDERWIDTH * 2,
+			XtNbaseHeight, XCURSESBORDERWIDTH * 2,
+			XtNiconPixmap, icon_bitmap, NULL);
 
 	/* Create a BOX widget in which to draw */
 
@@ -872,16 +876,6 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
 	XtAddEventHandler(drawing, im_event_mask, False, NULL, NULL);
 	XSetICFocus(Xic);
-#endif
-
-#if 0
-	/* Keep focus on Click-to-front window managers. Change courtesy 
-	   of Jean-Pierre Demailly. */
-
-	wmhints.flags = InputHint;
-	wmhints.input = True;
-
-	XSetWMHints(XtDisplay(topLevel), XtWindow(topLevel), &wmhints);
 #endif
 
 	/* Wait for events */

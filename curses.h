@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.129 2006/02/21 07:05:43 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.130 2006/02/21 17:20:17 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -1557,8 +1557,7 @@ int	PDC_set_line_color(short);
 
 #if !defined(NOMACROS) && !defined(PDCDEBUG)
 
-#define COLOR_PAIR(n)		(((chtype)(n) << PDC_COLOR_SHIFT) &\
-					A_ATTRIBUTES)
+#define COLOR_PAIR(n)		(((chtype)(n) << PDC_COLOR_SHIFT) & A_COLOR)
 #define PAIR_NUMBER(n)		(((n) & A_COLOR) >> PDC_COLOR_SHIFT)
 
 # define addch(c)		waddch(stdscr, c)

@@ -35,7 +35,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.39 2006/02/21 07:05:43 wmcbrine Exp $";
+	"$Id: color.c,v 1.40 2006/02/21 17:20:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -133,7 +133,7 @@ unsigned char colorset[PDC_COLOR_PAIRS];
 
 chtype COLOR_PAIR(int n)
 {
-	return ((chtype)n << PDC_COLOR_SHIFT) & A_ATTRIBUTES;
+	return ((chtype)n << PDC_COLOR_SHIFT) & A_COLOR;
 }
 
 int PAIR_NUMBER(chtype value)

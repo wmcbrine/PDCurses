@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curspriv.h,v 1.34 2006/02/21 04:21:13 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.35 2006/02/21 04:59:20 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -323,13 +323,13 @@ WINDS *		PDC_findwin(WINDOW *);
 # define PDC_SHIFT		19
 # define chtype_attr(ch)	(atrtab[((ch >> PDC_SHIFT) & 0xFFFF)] << 8)
 #else
-# define PDC_COLOR_PAIRS	33
+# define PDC_COLOR_PAIRS	32
 # define PDC_OFFSET		8
 # define PDC_SHIFT		8
 # define chtype_attr(ch)	(atrtab[((ch >> PDC_SHIFT) & 0xFF)] << 8)
 #endif
 
-#define MAX_ATRTAB		((PDC_COLOR_PAIRS + 1) * PDC_OFFSET)
+#define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
 
 /* Internal mouse handling macros */
 #define TRAPPED_MOUSE_X_POS       (Trapped_Mouse_status.x)

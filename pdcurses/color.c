@@ -35,7 +35,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.36 2006/02/21 04:41:17 wmcbrine Exp $";
+	"$Id: color.c,v 1.37 2006/02/21 04:59:21 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -72,12 +72,12 @@ const char *rcsid_color =
 	init_pair() changes the definitions of a color-pair. The routine 
 	takes three arguments: the number of the color-pair to be 
 	redefined, and the new values of the foreground and background 
-	colors. The value of color-pair must be between 1 and 
-	COLOR_PAIRS - 1. The values of foreground and background must be 
-	between 0 and COLORS - 1 (this is a PDCurses abberation; 
-	normally it is 0 and COLORS). If the color pair was previously 
-	initialized, the screen is refreshed and all occurrences of that 
-	color-pair are changed to the new definition.
+	colors. The value of color-pair must be between 0 and 
+	COLOR_PAIRS - 1, inclusive. The values of foreground and 
+	background must be between 0 and COLORS - 1, inclusive. If the 
+	color pair was previously initialized, the screen is refreshed 
+	and all occurrences of that color-pair are changed to the new 
+	definition.
 
 	has_colors() indicates if the terminal supports, and can 
 	maniplulate color. It returns TRUE or FALSE.
@@ -273,8 +273,6 @@ void PDC_init_atrtab(void)
 
 	for (i = 0; i < PDC_COLOR_PAIRS; i++)
 		PDC_init_pair(i, orig_fore, orig_back);
-
-	PDC_init_pair(PDC_COLOR_PAIRS, orig_back, orig_fore);
 }
 
 static void PDC_init_pair(short pairnum, short fg, short bg)

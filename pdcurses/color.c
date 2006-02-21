@@ -35,7 +35,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.37 2006/02/21 04:59:21 wmcbrine Exp $";
+	"$Id: color.c,v 1.38 2006/02/21 06:40:52 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -284,18 +284,18 @@ static void PDC_init_pair(short pairnum, short fg, short bg)
 	{
 		att = fg | (bg << 4);
 
-		if (i & (A_REVERSE >> PDC_SHIFT))
+		if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
 			att = bg | (fg << 4);
-		if (i & (A_UNDERLINE >> PDC_SHIFT))
+		if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
 			att = 1;
-		if (i & (A_INVIS >> PDC_SHIFT))
+		if (i & (A_INVIS >> PDC_ATTR_SHIFT))
 		{
 			temp_bg = att >> 4;
 			att = temp_bg << 4 | temp_bg;
 		}
-		if (i & (A_BOLD >> PDC_SHIFT))
+		if (i & (A_BOLD >> PDC_ATTR_SHIFT))
 			att |= 8;
-		if (i & (A_BLINK >> PDC_SHIFT))
+		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
 			att |= 128;
 
 		atrtab[(pairnum * PDC_OFFSET) + i] = att;

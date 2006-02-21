@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curspriv.h,v 1.35 2006/02/21 04:59:20 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.36 2006/02/21 06:40:52 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -320,13 +320,13 @@ WINDS *		PDC_findwin(WINDOW *);
 #if defined(CHTYPE_LONG)
 # define PDC_COLOR_PAIRS	64
 # define PDC_OFFSET		32
-# define PDC_SHIFT		19
-# define chtype_attr(ch)	(atrtab[((ch >> PDC_SHIFT) & 0xFFFF)] << 8)
+# define PDC_ATTR_SHIFT		19
+# define chtype_attr(ch)	(atrtab[((ch >> PDC_ATTR_SHIFT) & 0xFFFF)] << 8)
 #else
 # define PDC_COLOR_PAIRS	32
 # define PDC_OFFSET		8
-# define PDC_SHIFT		8
-# define chtype_attr(ch)	(atrtab[((ch >> PDC_SHIFT) & 0xFF)] << 8)
+# define PDC_ATTR_SHIFT		8
+# define chtype_attr(ch)	(atrtab[((ch >> PDC_ATTR_SHIFT) & 0xFF)] << 8)
 #endif
 
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)

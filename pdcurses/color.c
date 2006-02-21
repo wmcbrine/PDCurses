@@ -35,7 +35,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.31 2006/02/21 01:23:07 wmcbrine Exp $";
+	"$Id: color.c,v 1.32 2006/02/21 02:27:23 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -196,13 +196,8 @@ int start_color(void)
 	if (SP->mono)
 		return ERR;
 
-	COLORS = 8;
-
 #if defined(CHTYPE_LONG)
-	COLOR_PAIRS = PDC_COLOR_PAIRS;
 	/* PDC_init_atrtab(); - already done in initscr() */
-#else
-	COLOR_PAIRS = 33;  /* actually only allows 32 */
 #endif
 	memset(colorset, 0, PDC_COLOR_PAIRS);
 

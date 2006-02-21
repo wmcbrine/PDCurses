@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curspriv.h,v 1.32 2006/02/16 22:59:48 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.33 2006/02/21 02:27:22 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -315,18 +315,19 @@ WINDS *		PDC_findwin(WINDOW *);
 #endif
 
 #define PDC_COLORS        8
-#define PDC_COLOR_PAIRS   64
 
 /* Internal macros for attributes */
 #if defined(CHTYPE_LONG)
+# define PDC_COLOR_PAIRS  64
 # define PDC_OFFSET       32
-# define MAX_ATRTAB       ((PDC_COLOR_PAIRS + 1) * PDC_OFFSET)
 # define chtype_attr(ch)  (atrtab[((ch >> 19) & 0xFFFF)] << 8)
 #else
+# define PDC_COLOR_PAIRS  33
 # define PDC_OFFSET       8
-# define MAX_ATRTAB       272
 # define chtype_attr(ch)  ((atrtab[((ch >> 8) & 0xFF)] << 8) & A_ATTRIBUTES)
 #endif
+
+#define MAX_ATRTAB       ((PDC_COLOR_PAIRS + 1) * PDC_OFFSET)
 
 /* Internal mouse handling macros */
 #define TRAPPED_MOUSE_X_POS       (Trapped_Mouse_status.x)
@@ -335,7 +336,7 @@ WINDS *		PDC_findwin(WINDOW *);
 #define TRAPPED_MOUSE_MOVED       (Trapped_Mouse_status.changes & 8)
 #define TRAPPED_MOUSE_POS_REPORT  (Trapped_Mouse_status.changes & 16)
 #define TRAPPED_BUTTON_CHANGED(x) (Trapped_Mouse_status.changes & (1 << ((x) - 1)))
-#define TRAPPED_BUTTON_STATUS(x)  (Trapped_Mouse_status.button[(x)-1])
+#define TRAPPED_BUTTON_STATUS(x)  (Trapped_Mouse_status.button[(x) - 1])
 
 #define ACTUAL_MOUSE_X_POS        (Actual_Mouse_status.x)
 #define ACTUAL_MOUSE_Y_POS        (Actual_Mouse_status.y)
@@ -343,7 +344,7 @@ WINDS *		PDC_findwin(WINDOW *);
 #define ACTUAL_MOUSE_MOVED        (Actual_Mouse_status.changes & 8)
 #define ACTUAL_MOUSE_POS_REPORT   (Actual_Mouse_status.changes & 16)
 #define ACTUAL_BUTTON_CHANGED(x)  (Actual_Mouse_status.changes & (1 << ((x) - 1)))
-#define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x)-1])
+#define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
 
 #define TEMP_MOUSE_X_POS          (Temp_Mouse_status.x)
 #define TEMP_MOUSE_Y_POS          (Temp_Mouse_status.y)
@@ -351,7 +352,7 @@ WINDS *		PDC_findwin(WINDOW *);
 #define TEMP_MOUSE_MOVED          (Temp_Mouse_status.changes & 8)
 #define TEMP_MOUSE_POS_REPORT     (Temp_Mouse_status.changes & 16)
 #define TEMP_BUTTON_CHANGED(x)    (Temp_Mouse_status.changes & (1 << ((x) - 1)))
-#define TEMP_BUTTON_STATUS(x)     (Temp_Mouse_status.button[(x)-1])
+#define TEMP_BUTTON_STATUS(x)     (Temp_Mouse_status.button[(x) - 1])
 
 #if defined(XCURSES)
 #define CURSES_EXIT			999999

@@ -12,7 +12,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.21 2006/02/16 22:59:50 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.22 2006/02/21 04:32:26 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -347,7 +347,6 @@ static int XCursesSetupCurses(void)
 
 	Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
 	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-	PDC_init_atrtab();
 
 	XC_LOG(("cursesprocess exiting from Xinitscr\n"));
 

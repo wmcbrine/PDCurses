@@ -9,7 +9,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.37 2006/02/19 05:04:16 wmcbrine Exp $";
+	"$Id: x11.c,v 1.38 2006/02/21 04:32:26 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -698,7 +698,6 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 	Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
 	memset(Xcurscr, 0, SP->XcurscrSize); 
 	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-	PDC_init_atrtab();
 
 	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",
 		XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, LINES, COLS));

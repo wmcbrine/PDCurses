@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_beep =
-	"$Id: beep.c,v 1.14 2006/02/16 22:59:49 wmcbrine Exp $";
+	"$Id: beep.c,v 1.15 2006/02/21 04:46:51 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -83,7 +83,7 @@ int flash(void)
 
 #if defined(DOS) || defined(OS2) || defined(WIN32)
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_NORMAL);
-	napms( 50 );
+	napms(50);
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_REVERSE);
 	wrefresh(curscr);
 #endif

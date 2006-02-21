@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curspriv.h,v 1.33 2006/02/21 02:27:22 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.34 2006/02/21 04:21:13 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -314,20 +314,22 @@ int		PDC_rmwin(WINDOW *);
 WINDS *		PDC_findwin(WINDOW *);
 #endif
 
-#define PDC_COLORS        8
+#define PDC_COLORS		8
 
 /* Internal macros for attributes */
 #if defined(CHTYPE_LONG)
-# define PDC_COLOR_PAIRS  64
-# define PDC_OFFSET       32
-# define chtype_attr(ch)  (atrtab[((ch >> 19) & 0xFFFF)] << 8)
+# define PDC_COLOR_PAIRS	64
+# define PDC_OFFSET		32
+# define PDC_SHIFT		19
+# define chtype_attr(ch)	(atrtab[((ch >> PDC_SHIFT) & 0xFFFF)] << 8)
 #else
-# define PDC_COLOR_PAIRS  33
-# define PDC_OFFSET       8
-# define chtype_attr(ch)  ((atrtab[((ch >> 8) & 0xFF)] << 8) & A_ATTRIBUTES)
+# define PDC_COLOR_PAIRS	33
+# define PDC_OFFSET		8
+# define PDC_SHIFT		8
+# define chtype_attr(ch)	(atrtab[((ch >> PDC_SHIFT) & 0xFF)] << 8)
 #endif
 
-#define MAX_ATRTAB       ((PDC_COLOR_PAIRS + 1) * PDC_OFFSET)
+#define MAX_ATRTAB		((PDC_COLOR_PAIRS + 1) * PDC_OFFSET)
 
 /* Internal mouse handling macros */
 #define TRAPPED_MOUSE_X_POS       (Trapped_Mouse_status.x)

@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.128 2006/02/17 03:26:09 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.129 2006/02/21 07:05:43 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -798,6 +798,9 @@ currently used.)
 # define A_ITALIC	A_INVIS
 # define A_STANDOUT	(A_BOLD | A_REVERSE)
 # define A_PROTECT	(A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
+
+# define PDC_ATTR_SHIFT	19
+# define PDC_COLOR_SHIFT 24
 #else
 # define A_NORMAL	(chtype)0x0000			/* System V */
 # define A_ALTCHARSET	(chtype)0x0000			/* X/Open   */
@@ -817,6 +820,9 @@ currently used.)
 # define A_RIGHTLINE	(chtype)0x0000
 # define A_ITALIC	(chtype)0x0000
 # define A_INVIS	(chtype)0x0000
+
+# define PDC_ATTR_SHIFT	8
+# define PDC_COLOR_SHIFT 11
 #endif
 
 #define CHR_MSK		A_CHARTEXT			/* Obsolete */
@@ -1551,13 +1557,9 @@ int	PDC_set_line_color(short);
 
 #if !defined(NOMACROS) && !defined(PDCDEBUG)
 
-# ifdef CHTYPE_LONG
-#  define COLOR_PAIR(n)		((chtype)(n) << 24)
-#  define PAIR_NUMBER(n)	(((n) & A_COLOR) >> 24)
-# else
-#  define COLOR_PAIR(n)		(((n) << 11) & A_ATTRIBUTES)
-#  define PAIR_NUMBER(n)	(((n) & A_COLOR) >> 11)
-# endif
+#define COLOR_PAIR(n)		(((chtype)(n) << PDC_COLOR_SHIFT) &\
+					A_ATTRIBUTES)
+#define PAIR_NUMBER(n)		(((n) & A_COLOR) >> PDC_COLOR_SHIFT)
 
 # define addch(c)		waddch(stdscr, c)
 # define addchstr(c)		addchnstr(c, -1)

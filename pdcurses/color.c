@@ -35,7 +35,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.35 2006/02/21 04:21:13 wmcbrine Exp $";
+	"$Id: color.c,v 1.36 2006/02/21 04:41:17 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -212,8 +212,7 @@ int color_content(short color, short *red, short *green, short *blue)
 	PDC_LOG(("color_content() - called\n"));
 
 	/* A crude implementation. Does not account for intensity. 
-	   ncurses uses 680 for non-A_BOLD, so let's copy that. - WJM3
-	*/
+	   ncurses uses 680 for non-A_BOLD, so let's copy that. - WJM3 	*/
 
 	if ((color >= COLORS || color < 0) || (!red || !green || !blue))
 		return ERR;

@@ -35,7 +35,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.30 2006/02/16 22:59:49 wmcbrine Exp $";
+	"$Id: color.c,v 1.31 2006/02/21 01:23:07 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -118,6 +118,8 @@ const char *rcsid_color =
 
 int COLORS = PDC_COLORS;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
+
+static bool colorstarted = FALSE;
 
 /* COLOR_PAIR to attribute encoding table. */
 
@@ -203,6 +205,9 @@ int start_color(void)
 	COLOR_PAIRS = 33;  /* actually only allows 32 */
 #endif
 	memset(colorset, 0, PDC_COLOR_PAIRS);
+
+	colorstarted = TRUE;
+
 	return OK;
 }
 
@@ -218,7 +223,7 @@ int init_pair(short colorpair, short foreground, short background)
 	PDC_LOG(("init_pair() - called: colorpair %d fore %d back %d\n",
 		colorpair, foreground, background));
 
-	if (colorpair >= COLOR_PAIRS || colorpair < 1)
+	if (!colorstarted || colorpair >= COLOR_PAIRS || colorpair < 1)
 		return ERR;
 
 	oldforeground = (short)(atrtab[colorpair * PDC_OFFSET] & 0x0F);

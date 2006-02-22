@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curspriv.h,v 1.37 2006/02/21 07:05:43 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.38 2006/02/22 05:25:19 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -304,14 +304,6 @@ void PDC_debug(char *, ...);
 # define PDC_LOG(x) if (trace_on) PDC_debug x
 #else
 # define PDC_LOG(x)
-#endif
-
-#ifdef REGISTERWINDOWS
-bool		PDC_inswin(WINDOW *, WINDOW *);
-int		PDC_addtail(WINDOW *);
-int		PDC_addwin(WINDOW *, WINDOW *);
-int		PDC_rmwin(WINDOW *);
-WINDS *		PDC_findwin(WINDOW *);
 #endif
 
 #define PDC_COLORS		8

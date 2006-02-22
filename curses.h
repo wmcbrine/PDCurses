@@ -15,7 +15,7 @@
 * See the file maintain.er for details of the current maintainer.
 **************************************************************************/
 
-/* $Id: curses.h,v 1.130 2006/02/21 17:20:17 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.131 2006/02/22 05:25:19 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -33,10 +33,10 @@ complicated set of #if defined() or #ifdefs.
 
 PDCurses definitions list:  (Only define those needed)
 
-	REGISTERWINDOWS True for auto window update registery.
 	DOS		True if compiling for DOS.
 	OS2		True if compiling for OS/2.
 	WIN32		True if compiling for Windows.
+	XCURSES		True if compiling for X11.
 	HC		True if using a Metaware compiler.
 	TC		True if using a Borland compiler.
 	MSC		True if using a Microsoft compiler.
@@ -512,6 +512,7 @@ typedef struct
  *	PDCurses Structure Definitions:
  *
  */
+
 typedef struct _win		/* definition of a window	*/
 {
 	int	_cury;		/* current pseudo-cursor	*/
@@ -569,25 +570,6 @@ typedef struct _win		/* definition of a window	*/
 *	macro construction.
 *
 */
-
-#ifdef	REGISTERWINDOWS
-typedef struct _ref		/* Refresh Window Structure	*/
-{
-	WINDOW	*win;
-struct	_ref	*next;
-struct	_ref	*tail;
-} ACTIVE;
-
-typedef struct _wins
-{
-	WINDOW		*w;	/* pointer to a visible window	*/
-	struct _wins	*next;	/* Next visible window pointer	*/
-	struct _wins	*prev;	/* Next visible window pointer	*/
-	struct _wins	*tail;	/* Last visible window pointer	*/
-				/* Only head window (stdscr)
-				   has a valid tail pointer.	*/
-} WINDS;
-#endif
 
 typedef struct			/* structure for ripped off lines */
 {
@@ -669,7 +651,7 @@ typedef struct
 	unsigned long os_version;	/* Win32 Version		*/
 #endif
 
-#if defined (XCURSES)
+#if defined(XCURSES)
 	int	XcurscrSize;	/* size of Xcurscr shared memory block	*/
 	bool	sb_on;
 	int	sb_viewport_y;
@@ -679,12 +661,6 @@ typedef struct
 	int	sb_cur_y;
 	int	sb_cur_x;
 #endif
-
-#ifdef	REGISTERWINDOWS
-	WINDS	*visible;	/* List of visible windows		*/
-	bool	refreshall;	/* Refresh all registered windows?	*/
-#endif
-
 	short	line_color;	/* Color of line attributes - default white */
 
 } SCREEN;
@@ -726,10 +702,6 @@ extern	int		COLORS, COLOR_PAIRS;
 
 #if defined(CURSES_LIBRARY)
 extern	int		_default_lines;	/* For presetting maximum lines	*/
-#endif
-
-#ifdef REGISTERWINDOWS
-extern	ACTIVE		*CurWins;	/* Currently Visible Windows	*/
 #endif
 
 

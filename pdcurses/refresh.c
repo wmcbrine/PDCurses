@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.18 2006/02/16 22:59:49 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.19 2006/02/22 05:25:19 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -208,9 +208,7 @@ int wnoutrefresh(WINDOW *win)
 int doupdate(void)
 {
 	int i;
-#ifdef REGISTERWINDOWS
-	WINDS *next = SP->visible;
-#endif
+
 	PDC_LOG(("doupdate() - called\n"));
 
 	if (isendwin())			/* coming back after endwin() called */
@@ -219,23 +217,6 @@ int doupdate(void)
 		curscr->_clear = TRUE;
 		SP->alive = TRUE;	/* so isendwin() result is correct */
 	}
-
-#ifdef REGISTERWINDOWS
-	if (SP->refreshall)
-	{
-		while (next != NULL)
-		{
-			if (next->w->_parent != NULL)
-			{
-				touchwin(next->w->_parent);
-				wnoutrefresh(next->w->_parent);
-			}
-			touchwin(next->w);
-			wnoutrefresh(next->w);
-			next = next->next;
-		}
-	}
-#endif
 
 	if (SP->shell)
 		reset_prog_mode();

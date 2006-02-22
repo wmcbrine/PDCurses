@@ -43,7 +43,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.34 2006/02/21 04:21:13 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.35 2006/02/22 05:25:19 wmcbrine Exp $";
 #endif
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
@@ -297,11 +297,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	}
 
 	curscr->_clear = FALSE;
-
-#ifdef REGISTERWINDOWS
-	SP->refreshall = FALSE;
-	_inswin(stdscr, (WINDOW *)NULL);
-#endif
 
 	PDC_init_atrtab();	/* set up default colors */
 

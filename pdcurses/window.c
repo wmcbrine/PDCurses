@@ -47,7 +47,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.20 2006/02/16 22:59:49 wmcbrine Exp $";
+	"$Id: window.c,v 1.21 2006/02/22 05:25:19 wmcbrine Exp $";
 #endif
 
 /*man-start*********************************************************************
@@ -219,9 +219,6 @@ int delwin(WINDOW *win)
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-#ifdef	REGISTERWINDOWS
-	_rmwin(win);		/* remove from the visible windows list */
-#endif
 	/* subwindows use parents' lines */
 
 	if (!(win->_flags & (_SUBWIN|_SUBPAD)))

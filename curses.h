@@ -1,21 +1,21 @@
-/************************************************************************** 
-* This file is part of PDCurses. PDCurses is public domain software;
-* you may use it for any purpose. This software is provided AS IS with
-* NO WARRANTY whatsoever.
-*
-* If you use PDCurses in an application, an acknowledgement would be
-* appreciated, but is not mandatory. If you make corrections or
-* enhancements to PDCurses, please forward them to the current
-* maintainer for the benefit of other users.
-*
-* No distribution of modified PDCurses code may be made under the name
-* "PDCurses", except by the current maintainer. (Although PDCurses is
-* public domain, the name is a trademark.)
-*
-* See the file maintain.er for details of the current maintainer.
-**************************************************************************/
+/************************************************************************ 
+ * This file is part of PDCurses. PDCurses is public domain software;	*
+ * you may use it for any purpose. This software is provided AS IS with	*
+ * NO WARRANTY whatsoever.						*
+ *									*
+ * If you use PDCurses in an application, an acknowledgement would be	*
+ * appreciated, but is not mandatory. If you make corrections or	*
+ * enhancements to PDCurses, please forward them to the current		*
+ * maintainer for the benefit of other users.				*
+ *									*
+ * No distribution of modified PDCurses code may be made under the name	*
+ * "PDCurses", except by the current maintainer. (Although PDCurses is	*
+ * public domain, the name is a trademark.)				*
+ *									*
+ * See the file maintain.er for details of the current maintainer.	*
+ ************************************************************************/
 
-/* $Id: curses.h,v 1.131 2006/02/22 05:25:19 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.132 2006/02/22 06:09:46 wmcbrine Exp $ */
 
 /* ----------------------------------------------------------------------
 				PDCurses
@@ -63,17 +63,18 @@ PDCurses portable platform definitions list:
 #define	CHTYPE_LONG	1	/* size of chtype; long		*/
 
 /*----------------------------------------
-*	BORLAND COMPILERS	Turbo C[++], Borland C[++]
-*
-*	Borland definitions:
-*		TC
-*		DOS
-*		OS2
-*
-*		__TURBOC__, __MSDOS__,
-*		__OS2__ and __WIN32__
-*		are predefined by compiler.
-*/
+ *	BORLAND COMPILERS	Turbo C[++], Borland C[++]
+ *
+ *	Borland definitions:
+ *		TC
+ *		DOS
+ *		OS2
+ *
+ *		__TURBOC__, __MSDOS__,
+ *		__OS2__ and __WIN32__
+ *		are predefined by compiler.
+ */
+
 #ifdef __TURBOC__		/* Borland gives defines this as a value*/
 #  define TC    __TURBOC__	/* Define a value for TC		*/
 #  ifdef __MSDOS__
@@ -99,12 +100,13 @@ PDCurses portable platform definitions list:
 
 
 /*----------------------------------------
-*	METAWARE COMPILERS	High C
-*
-*	Metaware definitions:
-*		HC
-*		DOS
-*/
+ *	METAWARE COMPILERS	High C
+ *
+ *	Metaware definitions:
+ *		HC
+ *		DOS
+ */
+
 #ifdef __HIGHC__
 #  define HC    1
 #  pragma off(prototype_override_warnings)
@@ -116,12 +118,13 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	MICROSOFT COMPILERS	MSC
-*
-*	Microsoft definitions:
-*		MSC
-*		DOS || OS2
-*/
+ *	MICROSOFT COMPILERS	MSC
+ *
+ *	Microsoft definitions:
+ *		MSC
+ *		DOS || OS2
+ */
+
 #ifdef _MSC_VER					/* defined by compiler	*/
 #  define MSC   1
 #  ifdef __OS2__		/* You will have to define in makefile	*/
@@ -144,9 +147,10 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	MICROSOFT QUICK C COMPILERS	QC
-*
-*/
+ *	MICROSOFT QUICK C COMPILERS	QC
+ *
+ */
+
 #ifdef _QC					/* defined by compiler	*/
 #  define MSC   1
 #  define DOS 6			/* Major release of DOS supported	*/
@@ -156,12 +160,13 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	TOPSPEED compilers	TSC
-*
-*	TOPSPEED definitions:
-*		TSC
-*		DOS || OS2
-*/
+ *	TOPSPEED compilers	TSC
+ *
+ *	TOPSPEED definitions:
+ *		TSC
+ *		DOS || OS2
+ */
+
 #ifdef __TSC__			/* You may have to define in makefile	*/
 #  define TSC   1
 #  ifdef __OS2__
@@ -170,12 +175,13 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	IBM C Set/2 Compiler	CSET2
-*
-*	IBM definitions:
-*		CSET2
-*		OS2
-*/
+ *	IBM C Set/2 Compiler	CSET2
+ *
+ *	IBM definitions:
+ *		CSET2
+ *		OS2
+ */
+
 #ifdef __IBMC__
 #  define CSET2 1
 #  ifndef HAVE_MEMORY_H
@@ -187,12 +193,13 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	GNU compilers		emx
-*
-*	emx definitions:
-*		EMX
-*		OS2
-*/
+ *	GNU compilers		emx
+ *
+ *	emx definitions:
+ *		EMX
+ *		OS2
+ */
+
 #ifdef __EMX__			/* You may have to define in makefile	*/
 #  define EMX   1
 #  ifndef __OS2__
@@ -213,13 +220,14 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	GNU compilers		djgpp
-*
-*	djgpp definitions:
-*		__DJGPP__
-*		GO32 (deprecated)
-*		DOS
-*/
+ *	GNU compilers		djgpp
+ *
+ *	djgpp definitions:
+ *		__DJGPP__
+ *		GO32 (deprecated)
+ *		DOS
+ */
+
 #ifdef __DJGPP__		/* You may have to define in makefile	*/
 #  define DOS	6
 #  include <dos.h>
@@ -239,11 +247,12 @@ PDCurses portable platform definitions list:
 
 
 /*----------------------------------------
-*	GNU compilers	Cygnus Win32
-*
-*	cygnus definitions:
-*		WIN32
-*/
+ *	GNU compilers	Cygnus Win32
+ *
+ *	cygnus definitions:
+ *		WIN32
+ */
+
 #ifdef __CYGWIN32__		/* You may have to define in makefile	*/
 #  if !defined(WIN32) && !defined(XCURSES)
 #    define WIN32
@@ -257,11 +266,12 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	GNU compilers	Ming Win32
-*
-*	Ming definitions:
-*		WIN32
-*/
+ *	GNU compilers	Ming Win32
+ *
+ *	Ming definitions:
+ *		WIN32
+ */
+
 #ifdef __MINGW32__
 #  ifndef WIN32
 #    define WIN32
@@ -272,9 +282,10 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	LCC WIN32
-*
-*/
+ *	LCC WIN32
+ *
+ */
+
 #ifdef __LCC__		/* should already be defined by the compiler	*/
 #  ifndef WIN32
 #    define WIN32
@@ -282,13 +293,14 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	Watcom C/C++ 10.6 compiler
-*
-*	WATCOM definitions:
-*		WATCOMC
-*		OS2
-*		WIN32
-*/
+ *	Watcom C/C++ 10.6 compiler
+ *
+ *	WATCOM definitions:
+ *		WATCOMC
+ *		OS2
+ *		WIN32
+ */
+
 #ifdef __WATCOMC__
 #  define WATCOMC  1
 #  if defined(__DOS__) || defined(__DOS4G__)
@@ -319,8 +331,9 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	MicroWay NDP C/C++ 386 4.2.0 compiler
-*/
+ *	MicroWay NDP C/C++ 386 4.2.0 compiler
+ */
+
 #ifdef MX386
 #  define NDP	1
 #  include 	<bios.h>
@@ -336,14 +349,15 @@ PDCurses portable platform definitions list:
 #endif
 
 /*----------------------------------------
-*	HI-TECH COMPILERS Pacific C
-*
-*	Hi-Tech definitions:
-*		PC
-*
-*		__PACIFIC__, DOS
-*		are predefined by compiler.
-*/
+ *	HI-TECH COMPILERS Pacific C
+ *
+ *	Hi-Tech definitions:
+ *		PC
+ *
+ *		__PACIFIC__, DOS
+ *		are predefined by compiler.
+ */
+
 #ifdef __PACIFIC__
 #  define PC    __PACIFIC__
 #  include <dos.h>
@@ -393,6 +407,7 @@ extern "C"
  *	PDCurses Manifest Constants
  *
  */
+
 #ifndef FALSE			/* booleans		 */
 #  define	FALSE	0
 #endif
@@ -415,6 +430,7 @@ extern "C"
  *	PDCurses Type Declarations
  *
  */
+
 typedef unsigned char bool;	/* PDCurses Boolean type	*/
 
 #ifdef CHTYPE_LONG
@@ -427,6 +443,7 @@ typedef unsigned short chtype;	/* 8-bit attr + 8-bit char	*/
  * This defines a new type for attributes.
  *
  */
+
 typedef chtype attr_t;
 
 /*----------------------------------------------------------------------
@@ -565,11 +582,11 @@ typedef struct _win		/* definition of a window	*/
 
 
 /*----------------------------------------------------------------------
-*
-*	Private structures that are necessary for correct
-*	macro construction.
-*
-*/
+ *
+ *	Private structures that are necessary for correct
+ *	macro construction.
+ *
+ */
 
 typedef struct			/* structure for ripped off lines */
 {
@@ -804,8 +821,7 @@ currently used.)
 /*** Alternate character set macros ***/
 
 /* ALTCHARSET definitions for PC from jshumate@wrdis01.robins.af.mil
-   These match code page 437 and compatible pages (CP850, CP852, etc.)
-*/
+   These match code page 437 and compatible pages (CP850, CP852, etc.) */
 
 /* VT100-compatible symbols -- box chars */
 
@@ -857,8 +873,8 @@ currently used.)
 
 /* Teletype 5410v1 symbols -- these are defined in SysV curses, but
    are not well-supported by most terminals. Stick to VT100 characters
-   for optimum portability.
-*/
+   for optimum portability. */
+
 #ifdef XCURSES
 # define ACS_LARROW	(chtype)'<'
 # define ACS_RARROW	(chtype)'>'
@@ -879,8 +895,8 @@ currently used.)
 
 /* That goes double for these -- undocumented SysV symbols. Don't use
    them. Also, the definitions here aren't compatible with as many
-   code pages as those above.
-*/
+   code pages as those above. */
+
 #ifdef XCURSES
 # define ACS_S3		((chtype)17 | A_ALTCHARSET)
 # define ACS_S7		((chtype)19 | A_ALTCHARSET)
@@ -939,6 +955,7 @@ currently used.)
  *	Many are just for compatibility.
  *
  */
+
 #define KEY_MIN		0x101	/* Minimum curses key value	*/
 #define KEY_BREAK	0x101	/* Not on PC KBD		*/
 #define KEY_DOWN	0x102	/* Down arrow key		*/
@@ -1176,10 +1193,10 @@ currently used.)
 #define KEY_MAX		0x224	/* Maximum curses key		*/
 
 /*----------------------------------------------------------------------
-*
-*	PDCurses function declarations
-*
-*/
+ *
+ *	PDCurses function declarations
+ *
+ */
 
 /* Standard */
 

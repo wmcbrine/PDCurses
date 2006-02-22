@@ -1,21 +1,21 @@
-/************************************************************************** 
-* This file is part of PDCurses. PDCurses is public domain software;
-* you may use it for any purpose. This software is provided AS IS with
-* NO WARRANTY whatsoever.
-*
-* If you use PDCurses in an application, an acknowledgement would be
-* appreciated, but is not mandatory. If you make corrections or
-* enhancements to PDCurses, please forward them to the current
-* maintainer for the benefit of other users.
-*
-* No distribution of modified PDCurses code may be made under the name
-* "PDCurses", except by the current maintainer. (Although PDCurses is
-* public domain, the name is a trademark.)
-*
-* See the file maintain.er for details of the current maintainer.
-**************************************************************************/
+/************************************************************************ 
+ * This file is part of PDCurses. PDCurses is public domain software;	*
+ * you may use it for any purpose. This software is provided AS IS with	*
+ * NO WARRANTY whatsoever.						*
+ *									*
+ * If you use PDCurses in an application, an acknowledgement would be	*
+ * appreciated, but is not mandatory. If you make corrections or	*
+ * enhancements to PDCurses, please forward them to the current		*
+ * maintainer for the benefit of other users.				*
+ *									*
+ * No distribution of modified PDCurses code may be made under the name	*
+ * "PDCurses", except by the current maintainer. (Although PDCurses is	*
+ * public domain, the name is a trademark.)				*
+ *									*
+ * See the file maintain.er for details of the current maintainer.	*
+ ************************************************************************/
 
-/* $Id: curspriv.h,v 1.38 2006/02/22 05:25:19 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.39 2006/02/22 06:09:46 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -28,16 +28,17 @@
 #include <assert.h>
 
 /*----------------------------------------------------------------------
-*	MEMORY MODEL SUPPORT:
-*
-*	MODELS
-*		TINY		cs,ds,ss all in 1 segment (not enough memory!)
-*		SMALL		cs:1 segment,		ds:1 segment
-*		MEDIUM		cs:many segments	ds:1 segment
-*		COMPACT		cs:1 segment,		ds:many segments
-*		LARGE		cs:many segments	ds:many segments
-*		HUGE		cs:many segments	ds:segments > 64K
-*/
+ *	MEMORY MODEL SUPPORT:
+ *
+ *	MODELS
+ *		TINY	cs,ds,ss all in 1 segment (not enough memory!)
+ *		SMALL	cs:1 segment, ds:1 segment
+ *		MEDIUM	cs:many segments, ds:1 segment
+ *		COMPACT	cs:1 segment, ds:many segments
+ *		LARGE	cs:many segments, ds:many segments
+ *		HUGE	cs:many segments, ds:segments > 64K
+ */
+
 #ifdef __TINY__
 # define SMALL 1
 #endif
@@ -66,30 +67,30 @@
      typedef union REGS Regs;
 #  endif
    extern Regs regs;
-#  ifdef __DJGPP__                           /* Note: works only in plain DOS... */
+#  ifdef __DJGPP__		/* Note: works only in plain DOS... */
 #    if DJGPP == 2
-#      define _FAR_POINTER(s,o)		((((int)(s))<<4) + ((int)(o)))
+#      define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #    else
-#      define _FAR_POINTER(s,o)		(0xe0000000 + (((int)(s))<<4) + ((int)(o)))
+#      define _FAR_POINTER(s,o)	(0xe0000000 + (((int)(s)) << 4) + ((int)(o)))
 #    endif
-#    define _FP_SEGMENT(p)		(unsigned short)((((long)p) >> 4) & 0xffff)
-#    define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
+#    define _FP_SEGMENT(p)	(unsigned short)((((long)p) >> 4) & 0xffff)
+#    define _FP_OFFSET(p)	((unsigned short)p & 0x000f)
 #  else
 #    ifdef __TURBOC__
 #      define _FAR_POINTER(s,o)	MK_FP(s,o)
 #    else
 #      if defined(NDP)
-#        define _FAR_POINTER(s,o)	((((int)(s))<<4) + ((int)(o)))
+#        define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #      else
 #        if defined(WATCOMC) && defined(__FLAT__)
-#          define _FAR_POINTER(s,o)	((((int)(s))<<4) + ((int)(o)))
+#          define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #        else
 #          define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)
 #        endif
 #      endif
 #    endif
-#    define _FP_SEGMENT(p)		(unsigned short)(((long)p) >> 4)
-#    define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
+#    define _FP_SEGMENT(p)	(unsigned short)(((long)p) >> 4)
+#    define _FP_OFFSET(p)	((unsigned short)p & 0x000f)
 #  endif
 
 #  ifdef __DJGPP__
@@ -114,13 +115,14 @@
 
 
 /*----------------------------------------------------------------------
-*	MALLOC DEBUGGING SUPPORT:
-*
-*	Set EMALLOC and EMALLOC_MAGIC in order to use your private
-*	versions of malloc(), calloc(), and free().  This can help,
-*	but not solve, your malloc problems when debugging...
-*
-*/
+ *	MALLOC DEBUGGING SUPPORT:
+ *
+ *	Set EMALLOC and EMALLOC_MAGIC in order to use your private
+ *	versions of malloc(), calloc(), and free().  This can help,
+ *	but not solve, your malloc problems when debugging...
+ *
+ */
+
 #if defined(INTERNAL) || defined(CURSES_LIBRARY)
 # define EMALLOC 0		/* Enable/Disable External Malloc	*/
 # define EMALLOC_MAGIC  0x0C0C	/* Our magic indicator that we should	*/
@@ -133,6 +135,7 @@
 
 /*----------------------------------------------------------------------*/
 /* window properties */
+
 #define _SUBWIN		0x01	/* window is a subwindow		*/
 #define _ENDLINE	0x02	/* last winline is last screen line	*/
 #define _FULLWIN	0x04	/* window fills screen			*/
@@ -143,6 +146,7 @@
 
 /*----------------------------------------------------------------------*/
 /* Miscellaneous */
+
 #define _INBUFSIZ	512	/* size of terminal input buffer	*/
 #define _NO_CHANGE	-1	/* flags line edge unchanged		*/
 
@@ -196,107 +200,107 @@ extern bool trace_on;
 
 
 /*----------------------------------------------------------------------
-*	ANSI C prototypes.
-*/
+ *	ANSI C prototypes.
+ */
 
-void		PDC_beep(void);
-bool		PDC_breakout(void);
-int		PDC_chadd(WINDOW *, chtype, bool, bool);
-bool		PDC_check_bios_key(void);
-int		PDC_chg_attrs(WINDOW *, chtype, int, int, int, int);
-int		PDC_chins(WINDOW *, chtype, bool);
-int		PDC_clr_scrn(WINDOW *);
-int		PDC_clr_update(WINDOW *);
-int		PDC_copy_win(const WINDOW *, WINDOW *, int, int, int,
-				   int, int, int, int, int, bool);
-int		PDC_cursor_off(void);
-int		PDC_cursor_on(void);
-int		PDC_curs_set(int);
-int		PDC_fix_cursor(int);
-int		PDC_get_bios_key(void);
-int		PDC_get_columns(void);
-bool		PDC_get_ctrl_break(void);
-int		PDC_get_cur_col(void);
-int		PDC_get_cur_row(void);
-int		PDC_get_cursor_pos(int *, int *);
-int		PDC_get_cursor_mode(void);
-int		PDC_get_font(void);
-int		PDC_get_rows(void);
-int		PDC_get_buffer_rows(void);
-int		PDC_gotoxy(int, int);
-void		PDC_init_atrtab(void);
-WINDOW *	PDC_makenew(int, int, int, int);
-int		PDC_mouse_in_slk(int, int);
-int		PDC_newline(WINDOW *, int);
-int		PDC_print(int, int, int);
-int		PDC_putc(chtype, chtype);
-int		PDC_putchar(chtype);
-int		PDC_putctty(chtype, chtype);
-int		PDC_rawgetch(void);
-int		PDC_reset_prog_mode(void);
-int		PDC_reset_shell_mode(void);
-int		PDC_resize_screen(int, int);
-int		PDC_sanity_check(int);
-int		PDC_scr_close(void);
-int		PDC_scr_open(SCREEN *, bool);
-int		PDC_scroll(int, int, int, int, int, chtype);
-int		PDC_set_80x25(void);
-int		PDC_set_ctrl_break(bool);
-int		PDC_set_cursor_mode(int, int);
-int		PDC_set_font(int);
-int		PDC_set_rows(int);
-void		PDC_slk_calc(void);
-void		PDC_sync(WINDOW *);
-int		PDC_sysgetch(void);
-bool		PDC_transform_line(int);
-int		PDC_validchar(int);
-int		PDC_vsscanf(char *, const char *, va_list);
+void	PDC_beep(void);
+bool	PDC_breakout(void);
+int	PDC_chadd(WINDOW *, chtype, bool, bool);
+bool	PDC_check_bios_key(void);
+int	PDC_chg_attrs(WINDOW *, chtype, int, int, int, int);
+int	PDC_chins(WINDOW *, chtype, bool);
+int	PDC_clr_scrn(WINDOW *);
+int	PDC_clr_update(WINDOW *);
+int	PDC_copy_win(const WINDOW *, WINDOW *, int, int, int,
+		     int, int, int, int, int, bool);
+int	PDC_cursor_off(void);
+int	PDC_cursor_on(void);
+int	PDC_curs_set(int);
+int	PDC_fix_cursor(int);
+int	PDC_get_bios_key(void);
+int	PDC_get_columns(void);
+bool	PDC_get_ctrl_break(void);
+int	PDC_get_cur_col(void);
+int	PDC_get_cur_row(void);
+int	PDC_get_cursor_pos(int *, int *);
+int	PDC_get_cursor_mode(void);
+int	PDC_get_font(void);
+int	PDC_get_rows(void);
+int	PDC_get_buffer_rows(void);
+int	PDC_gotoxy(int, int);
+void	PDC_init_atrtab(void);
+WINDOW *PDC_makenew(int, int, int, int);
+int	PDC_mouse_in_slk(int, int);
+int	PDC_newline(WINDOW *, int);
+int	PDC_print(int, int, int);
+int	PDC_putc(chtype, chtype);
+int	PDC_putchar(chtype);
+int	PDC_putctty(chtype, chtype);
+int	PDC_rawgetch(void);
+int	PDC_reset_prog_mode(void);
+int	PDC_reset_shell_mode(void);
+int	PDC_resize_screen(int, int);
+int	PDC_sanity_check(int);
+int	PDC_scr_close(void);
+int	PDC_scr_open(SCREEN *, bool);
+int	PDC_scroll(int, int, int, int, int, chtype);
+int	PDC_set_80x25(void);
+int	PDC_set_ctrl_break(bool);
+int	PDC_set_cursor_mode(int, int);
+int	PDC_set_font(int);
+int	PDC_set_rows(int);
+void	PDC_slk_calc(void);
+void	PDC_sync(WINDOW *);
+int	PDC_sysgetch(void);
+bool	PDC_transform_line(int);
+int	PDC_validchar(int);
+int	PDC_vsscanf(char *, const char *, va_list);
 
 #if defined(OS2) && !defined(EMXVIDEO)
-int		PDC_set_scrn_mode(VIOMODEINFO);
-bool		PDC_scrn_modes_equal(VIOMODEINFO, VIOMODEINFO);
-int		PDC_get_scrn_mode(VIOMODEINFO *);
-int		PDC_query_adapter_type(VIOCONFIGINFO *);
-int		PDC_get_keyboard_info(KBDINFO *);
-int		PDC_set_keyboard_binary(void);
-int		PDC_set_keyboard_default(void);
-int		PDC_reset_shell_mode(void);
-int		PDC_reset_prog_mode(void);
+int	PDC_set_scrn_mode(VIOMODEINFO);
+bool	PDC_scrn_modes_equal(VIOMODEINFO, VIOMODEINFO);
+int	PDC_get_scrn_mode(VIOMODEINFO *);
+int	PDC_query_adapter_type(VIOCONFIGINFO *);
+int	PDC_get_keyboard_info(KBDINFO *);
+int	PDC_set_keyboard_binary(void);
+int	PDC_set_keyboard_default(void);
+int	PDC_reset_shell_mode(void);
+int	PDC_reset_prog_mode(void);
 #else
-int		PDC_set_scrn_mode(int);
-bool		PDC_scrn_modes_equal(int, int);
-int		PDC_get_scrn_mode(void);
-int		PDC_query_adapter_type(void);
+int	PDC_set_scrn_mode(int);
+bool	PDC_scrn_modes_equal(int, int);
+int	PDC_get_scrn_mode(void);
+int	PDC_query_adapter_type(void);
 #endif
 
 #ifdef WIN32
-void		PDC_doupdate(void);
+void	PDC_doupdate(void);
 #endif
 
 #if defined(XCURSES)
-int		XCurses_display_cursor(int, int, int, int, int);
-int		XCurses_rawgetch(int);
-bool		XCurses_kbhit(void);
-int		XCurses_get_input_fd(void);
-int		XCursesInstruct(int);
-int		XCursesInstructAndWait(int);
-int		XCurses_transform_line(chtype *, int, int, int);
-int		XCursesInitscr(char *, int, char **);
-int		XCursesEndwin(void);
-void		XCursesCleanupCursesProcess(int);
-int		XCursesResizeScreen(int, int);
-int		XCurses_get_cols(void);
-int		XCurses_get_rows(void);
-int		XCurses_refresh_scrollbar(void);
-void		XCurses_set_title(char *);
-int		XCurses_getclipboard(char **, long *);
-int		XCurses_setclipboard(char *, long);
-int		XCurses_clearclipboard(void);
-unsigned long	XCurses_get_key_modifiers(void);
+int	XCurses_display_cursor(int, int, int, int, int);
+int	XCurses_rawgetch(int);
+bool	XCurses_kbhit(void);
+int	XCurses_get_input_fd(void);
+int	XCursesInstruct(int);
+int	XCursesInstructAndWait(int);
+int	XCurses_transform_line(chtype *, int, int, int);
+int	XCursesInitscr(char *, int, char **);
+int	XCursesEndwin(void);
+void	XCursesCleanupCursesProcess(int);
+int	XCursesResizeScreen(int, int);
+int	XCurses_get_cols(void);
+int	XCurses_get_rows(void);
+int	XCurses_refresh_scrollbar(void);
+void	XCurses_set_title(char *);
+int	XCurses_getclipboard(char **, long *);
+int	XCurses_setclipboard(char *, long);
+int	XCurses_clearclipboard(void);
+unsigned long XCurses_get_key_modifiers(void);
 #endif
 
 #ifdef PC
-void		movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
+void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
 
 #ifdef PDCDEBUG

@@ -22,79 +22,79 @@ conforming to this interface are portable.  The interface routines
 curses may, however, also be used with synchronous and networked
 terminals, provided the restrictions below are considered. 
 
-These functions have been included been included in the X/Open
-definition in the "optional" category.  This means that although they
-are likely to appear on many X/Open compliant systems, they are not
-guaranteed to be on all systems.  Where they are supported, they will
-conform to the given definition. 
+These functions have been included been included in the X/Open 
+definition in the "optional" category.  This means that although they 
+are likely to appear on many X/Open compliant systems, they are not 
+guaranteed to be on all systems.  Where they are supported, they will 
+conform to the given definition.
 
 
-----------------------------------------------------------------------
+--------------------------------------------------------------------------
 
 	    Synchronous and Networked Asynchronous Terminals
 
-These notes indicate to the application writer some considerations to
-be borne in mind when driving synchronous, networked asynchronous
-(NWA) or non-standard directly connected asynchronous terminals.
+These notes indicate to the application writer some considerations to be 
+borne in mind when driving synchronous, networked asynchronous (NWA) or 
+non-standard directly connected asynchronous terminals.
 
-Such terminals are often used in a mainframe environment and
-communicatie to the host in block mode.  That is, the user types
-characters at the terminal then presses a special key to initiate
-transmission of the characters to the host. 
+Such terminals are often used in a mainframe environment and 
+communicatie to the host in block mode.  That is, the user types 
+characters at the terminal then presses a special key to initiate 
+transmission of the characters to the host.
 
-Frequently, although it may be possible to send arbitrary sized blocks
-to the host, it may not be possible or desireable to cause a character
-to be transmitted with only a single keystroke. 
+Frequently, although it may be possible to send arbitrary sized blocks 
+to the host, it may not be possible or desireable to cause a character 
+to be transmitted with only a single keystroke.
 
-This can cause severe problems to an application wishing to make use
-of single character input. 
+This can cause severe problems to an application wishing to make use of 
+single character input.
 
 
 
 OUTPUT
 
-The curses package can be used in the normal way for all operations
-pertaining to output to the terminal, with the possible exception that
-on some terminals the refresh() routine may have to redraw the entire
+The curses package can be used in the normal way for all operations 
+pertaining to output to the terminal, with the possible exception that 
+on some terminals the refresh() routine may have to redraw the entire 
 screen contents in order to perform any update.
 
-If it is additionally necessary to clear the screen before each such
-operation, the result could be unacceptable. 
+If it is additionally necessary to clear the screen before each such 
+operation, the result could be unacceptable.
 
 
 INPUT
 
-Because of the nature of operation of synchronous (block-mode) and NWA
-terminals, it may not be possible to support all or any of the curses
+Because of the nature of operation of synchronous (block-mode) and NWA 
+terminals, it may not be possible to support all or any of the curses 
 input functions.  In particular, the following points should be noted:
 
 * Single-character input may not be possible.  It may be necessary to
   press a special key to cause all characters typed at the terminal to
   be transmitted to the host. 
 
-* It may not be possibel to disable echo.  Character echo may be performed
-  directly by the terminal.  On terminals that behave this way, any curses
-  application that performs input should be aware that any characters
-  type will appear on the screen wherever the cursor is positioned.
-  This may not necessarily correspond to the position of the cursor in
-  the window.
+* It may not be possible to disable echo.  Character echo may be 
+  performed directly by the terminal.  On terminals that behave this 
+  way, any curses application that performs input should be aware that 
+  any characters type will appear on the screen wherever the cursor is 
+  positioned. This may not necessarily correspond to the position of the 
+  cursor in the window.
 
 
-----------------------------------------------------------------------
+--------------------------------------------------------------------------
 
 		Data Types and the <curses.h> Header
 
 The data types supported by curses are described in this section.
 
-As the library supports a procedural interface to the data types,
-actual structure contents are not described.  All curses data are
-manipulated using the routines provided. 
+As the library supports a procedural interface to the data types, actual 
+structure contents are not described.  All curses data are manipulated 
+using the routines provided.
 
 
 THE <curses.h> HEADER
 
-The <curses.h> header defines various constants and declares the data types
-that are available to the application.
+The <curses.h> header defines various constants and declares the data 
+types that are available to the application.
 
 
 DATA TYPES
@@ -106,9 +106,9 @@ The following data types are declared:
 	bool		boolean data type
 	chtype		representation of a character in a window
 
-The actual WINDOW and SCREEN objects used to store information are
-created by the corresponding routines and a pointer to them is
-provided.  All manipulation is through that pointer. 
+The actual WINDOW and SCREEN objects used to store information are 
+created by the corresponding routines and a pointer to them is provided.  
+All manipulation is through that pointer.
 
 
 CONSTANTS
@@ -142,11 +142,11 @@ Normally, attributres are a property of the character.
 
 INPUT VALUES
 
-The following constants might be returned by getch() if keypad() has
-been enabled.  Note that not all of these may be supported on a
-particular terminal if the terminal does not transmit a unique code
-when the key is pressed or the definition for the key is not present
-in the underlying table of terminal capabilities. 
+The following constants might be returned by getch() if keypad() has 
+been enabled.  Note that not all of these may be supported on a 
+particular terminal if the terminal does not transmit a unique code when 
+the key is pressed or the definition for the key is not present in the 
+underlying table of terminal capabilities.
 
 	KEY_BREAK	break key
 	KEY_DOWN	the four arrow keys
@@ -473,10 +473,10 @@ FUNCTIONS
                            
 		resize_term              initscr
 
-	The following table lists each private curses routine and the name 
-	of the manual page on which it is described. These routines should
-	not be used directly if avoidable. They are not portable, and 
-	are subject to change at any time.
+	The following table lists each private curses routine and the 
+	name of the manual page on which it is described. These routines 
+	should not be used directly if avoidable. They are not portable, 
+	and are subject to change at any time.
 
 	   Curses Function        Manual Page Name
 
@@ -533,7 +533,7 @@ FUNCTIONS
 		PDC_validchar            pdckbd
 		PDC_vsscanf              pdcutil
 
-	NOTE: Functions prefixed with '***' above and on each manual page are 
-		functions that have not been implemented.
+	NOTE: Functions prefixed with '***' above and on each manual 
+	page are functions that have not been implemented.
 
 **man-end**********************************************************************/

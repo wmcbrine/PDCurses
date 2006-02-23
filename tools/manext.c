@@ -42,9 +42,7 @@
 
 #define MAX_LINE 255
 
-/***********************************************************************/
 void display_info()
-/***********************************************************************/
 {
 	fprintf(stderr,
 		"\nMANEXT 1.01 Copyright (C) 1991-1996 Mark Hessling\n"
@@ -55,9 +53,7 @@ void display_info()
 		"\nUsage: manext sourcefile [...]\n\n");
 }
 
-/***********************************************************************/
 int main(int argc, char **argv)
-/***********************************************************************/
 {
 	char s[MAX_LINE + 1];		/* input line */
 	int i;
@@ -122,10 +118,10 @@ int main(int argc, char **argv)
 		    if (strncmp(s, "**man-end", 9) == 0)
 			break;
 
-		    printf("     %s", s);
+		    printf("%s", s);
 		}
 
-		printf("\n\n\n     -----------------------------------"
+		printf("\n\n\n-----------------------------------"
 			"---------------------------------------\n");
 
 		/* check if end of file */

@@ -40,10 +40,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_getstr =
-	"$Id: getstr.c,v 1.23 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: getstr.c,v 1.24 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        getstr
 
@@ -95,7 +95,7 @@ const char *rcsid_getstr =
 	wgetnstr				-	-      4.0
 	mvwgetnstr				-	-     ncurses
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 #define MAXLINE 255
 

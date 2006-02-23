@@ -15,7 +15,7 @@
 
 /* ScrollBox.c - scrollBox composite widget */
 
-/* $Id: ScrollBox.c,v 1.12 2006/01/30 02:10:55 wmcbrine Exp $ */
+/* $Id: ScrollBox.c,v 1.13 2006/02/23 01:46:52 wmcbrine Exp $ */
 
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
@@ -28,11 +28,11 @@
 #define INITIAL_WIDTH 300
 #define INITIAL_HEIGHT 300
 
-/****************************************************************
- *
- * scrollBox Resources
- *
- ****************************************************************/
+/************************************************************************
+ *									*
+ * scrollBox Resources							*
+ *									*
+ ************************************************************************/
 
 static XtResource resources[] = 
 {
@@ -50,11 +50,11 @@ static XtResource resources[] =
 		XtRImmediate, (XtPointer)7 },
 };
 
-/****************************************************************
- *
- * Full class record constant
- *
- ****************************************************************/
+/************************************************************************
+ *									*
+ * Full class record constant						*
+ *									*
+ ************************************************************************/
 
 static void Initialize(Widget, Widget);
 static void Resize(Widget);
@@ -117,11 +117,11 @@ ScrollBoxClassRec scrollBoxClassRec = {
 WidgetClass scrollBoxWidgetClass = (WidgetClass)&scrollBoxClassRec;
 
 
-/****************************************************************
- *
- * Private Routines
- *
- ****************************************************************/
+/************************************************************************
+ *									*
+ * Private Routines							*
+ *									*
+ ************************************************************************/
 
 /* Do a layout, either actually assigning positions, or just 
    calculating size. */

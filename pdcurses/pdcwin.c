@@ -24,10 +24,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.26 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.27 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_copy_win() - Common routine for copywin(), overlay() and 
 	overwrite() functions.
@@ -49,7 +49,7 @@ const char *rcsid_PDCwin =
 			int dst_tr, int dst_tc, int dst_br, int dst_bc, 
 			bool overlay);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 		 int src_tc, int src_br, int src_bc, int dst_tr,
@@ -120,7 +120,7 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_makenew()   - Create a WINDOW* (sans line allocation)
 
@@ -143,7 +143,7 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 	PDCurses  WINDOW * PDC_makenew(int num_lines, int num_columns,
 				       int begy, int begx);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 {
@@ -238,7 +238,7 @@ WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 	return win;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_sync()   - Cause window synchronisation to occur
 
@@ -256,7 +256,7 @@ WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
   Portability:
 	PDCurses  WINDOW *PDC_sync(WINDOW *win);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 void PDC_sync(WINDOW *win)
 {
@@ -268,7 +268,7 @@ void PDC_sync(WINDOW *win)
 		wsyncup(win);
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_chadd()      - Low level; Put a character to a window
 
@@ -304,7 +304,7 @@ void PDC_sync(WINDOW *win)
 	PDCurses  int PDC_chadd(WINDOW *win, chtype ch,
 				bool xlat, bool advance);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 {
@@ -503,7 +503,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_chg_attrs() - Change attributes in a rectangle
 
@@ -523,7 +523,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 	PDCurses  int PDC_chg_attrs(WINDOW *w, chtype attr,
 				    int sy, int sx, int ey, int ex);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_chg_attrs(WINDOW *win, chtype attr, int sy, int sx, int ey, int ex)
 {
@@ -567,7 +567,7 @@ int PDC_chg_attrs(WINDOW *win, chtype attr, int sy, int sx, int ey, int ex)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_chins()  - Low-level insert character in window
 
@@ -590,7 +590,7 @@ int PDC_chg_attrs(WINDOW *win, chtype attr, int sy, int sx, int ey, int ex)
   Portability:
 	PDCurses  int PDC_chins(WINDOW* win, chtype c, bool xlat);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_chins(WINDOW *win, chtype c, bool xlat)
 {
@@ -626,7 +626,7 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 	return PDC_chadd(win, c, xlat, FALSE);
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_clr_scrn()  - Clears the physical screen and homes the cursor.
 
@@ -639,7 +639,7 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
   Portability:
 	PDCurses  int PDC_clr_scrn(WINDOW *win);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_clr_scrn(WINDOW *win)
 {
@@ -661,7 +661,7 @@ int PDC_clr_scrn(WINDOW *win)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_newline()   - Advances 1 newline from supplied line number.
 
@@ -680,7 +680,7 @@ int PDC_clr_scrn(WINDOW *win)
   Portability:
 	PDCurses  int PDC_newline(WINDOW *win, int lin);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_newline(WINDOW *win, int lin)
 {

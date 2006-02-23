@@ -32,10 +32,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inch =
-	"$Id: inch.c,v 1.14 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: inch.c,v 1.15 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                          inch
 
@@ -66,7 +66,7 @@ const char *rcsid_inch =
 	mvinch					Y	Y	Y
 	mvwinch					Y	Y	Y
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 chtype winch(WINDOW *win)
 {

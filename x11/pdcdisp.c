@@ -21,10 +21,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.15 2006/02/22 06:10:34 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_clr_update()	- Updates the screen with a full redraw.
 
@@ -44,7 +44,7 @@ const char *rcsid_PDCdisp =
   Portability:
 	PDCurses  int PDC_clr_update(WINDOW *s);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_clr_update(WINDOW *s)
 {
@@ -75,7 +75,7 @@ int PDC_clr_update(WINDOW *s)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_cursor_on()	- Turns on the hardware cursor.
 
@@ -88,7 +88,7 @@ int PDC_clr_update(WINDOW *s)
   Portability:
 	PDCurses  int PDC_cursor_on(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_cursor_on(void)
 {
@@ -97,7 +97,7 @@ int PDC_cursor_on(void)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_cursor_off()	- Turns off the hardware cursor.
 
@@ -113,7 +113,7 @@ int PDC_cursor_on(void)
   Portability:
 	PDCurses  int PDC_cursor_off(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_cursor_off(void)
 {
@@ -122,7 +122,7 @@ int PDC_cursor_off(void)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_gotoxy()	- position hardware cursor at (x, y)
 
@@ -142,7 +142,7 @@ int PDC_cursor_off(void)
   Portability:
 	PDCurses  int PDC_gotoxy(int row, int col);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_gotoxy(int row, int col)
 {
@@ -154,7 +154,7 @@ int PDC_gotoxy(int row, int col)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_transform_line()	- display a physical line of the screen
 
@@ -175,7 +175,7 @@ int PDC_gotoxy(int row, int col)
   Portability:
 	PDCurses  bool PDC_transform_line(int lineno);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 bool PDC_transform_line(int lineno)
 {

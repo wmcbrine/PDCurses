@@ -26,10 +26,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_scr_dump =
-	"$Id: scr_dump.c,v 1.12 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: scr_dump.c,v 1.13 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                       scr_dump
 
@@ -78,7 +78,7 @@ const char *rcsid_scr_dump =
   X/Open Errors:
 	No errors are defined. 
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int scr_dump(const char *filename)
 {

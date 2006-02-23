@@ -35,10 +35,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_attr =
-	"$Id: attr.c,v 1.19 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: attr.c,v 1.20 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                          attr
 
@@ -110,7 +110,7 @@ const char *rcsid_attr =
 	standout				Y	Y	Y
 	wstandout				Y	Y	Y
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int attroff(chtype attrs)
 {

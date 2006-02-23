@@ -43,7 +43,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.36 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.37 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
@@ -102,7 +102,7 @@ extern char linesrippedoff;
 
 extern void (*PDC_initial_slk)(void);
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                       initscr
 
@@ -188,7 +188,7 @@ extern void (*PDC_initial_slk)(void);
 	resize_term				-	-	-
 	is_termresized				-	-	-
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 WINDOW *Xinitscr(int argc, char *argv[])
 {

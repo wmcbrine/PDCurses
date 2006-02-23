@@ -21,10 +21,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCgetsc =
-	"$Id: pdcgetsc.c,v 1.17 2006/02/22 06:09:46 wmcbrine Exp $";
+	"$Id: pdcgetsc.c,v 1.18 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_cursor_pos()	- return current cursor position
 
@@ -45,7 +45,7 @@ const char *rcsid_PDCgetsc =
   Portability:
 	PDCurses  int PDC_get_cursor_pos(int *row, int *col);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_cursor_pos(int *row, int *col)
 {
@@ -60,7 +60,7 @@ int PDC_get_cursor_pos(int *row, int *col)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_cur_col()	- get current column position of cursor
 
@@ -80,7 +80,7 @@ int PDC_get_cursor_pos(int *row, int *col)
   Portability:
 	PDCurses  int PDC_get_cur_col(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_cur_col(void)
 {
@@ -97,7 +97,7 @@ int PDC_get_cur_col(void)
 	return (int)regs.h.dl;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_cur_row()	- get current row position of cursor
 
@@ -117,7 +117,7 @@ int PDC_get_cur_col(void)
   Portability:
 	PDCurses  int PDC_get_cur_row(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_cur_row(void)
 {
@@ -134,7 +134,7 @@ int PDC_get_cur_row(void)
 	return (int)regs.h.dh;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_attribute()	- Get attribute at current cursor
 
@@ -154,7 +154,7 @@ int PDC_get_cur_row(void)
   Portability:
  	PDCurses  int PDC_get_attribute(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_attribute(void)
 {
@@ -171,7 +171,7 @@ int PDC_get_attribute(void)
 	return (int)regs.h.ah;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_columns()	- return width of screen/viewport.
 
@@ -190,7 +190,7 @@ int PDC_get_attribute(void)
   Portability:
 	PDCurses  int PDC_get_columns(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_columns(void)
 {
@@ -215,7 +215,7 @@ int PDC_get_columns(void)
 	return cols;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_cursor_mode()	- Get the cursor start and stop scan lines.
 
@@ -232,7 +232,7 @@ int PDC_get_columns(void)
   Portability:
 	PDCurses  int PDC_get_cursor_mode(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_cursor_mode(void)
 {
@@ -241,7 +241,7 @@ int PDC_get_cursor_mode(void)
 	return getdosmemword(0x460);
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_font()	- Get the current font size
 
@@ -253,7 +253,7 @@ int PDC_get_cursor_mode(void)
   Portability:
 	PDCurses  int PDC_get_font(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_font(void)
 {
@@ -293,7 +293,7 @@ int PDC_get_font(void)
 	return retval;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_rows()	- Return number of screen rows.
 
@@ -312,7 +312,7 @@ int PDC_get_font(void)
   Portability:
 	PDCurses  int PDC_get_rows(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_rows(void)
 {
@@ -369,7 +369,7 @@ int PDC_get_rows(void)
 	return rows;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_scrn_mode()	- Return the current BIOS video mode
 
@@ -383,7 +383,7 @@ int PDC_get_rows(void)
   Portability:
 	PDCurses  int PDC_get_scrn_mode(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_scrn_mode(void)
 {
@@ -395,7 +395,7 @@ int PDC_get_scrn_mode(void)
 	return (int)regs.h.al;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_query_adapter_type()	- Determine PC video adapter type
 
@@ -417,7 +417,7 @@ int PDC_get_scrn_mode(void)
   Portability:
 	PDCurses  int PDC_query_adapter_type(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_query_adapter_type(void)
 {
@@ -601,7 +601,7 @@ int PDC_query_adapter_type(void)
 	return PDC_sanity_check(retval);
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_sanity_check() - A video adapter identification sanity check
 
@@ -619,7 +619,7 @@ int PDC_query_adapter_type(void)
   Portability:
 	PDCurses  int PDC_sanity_check(int adapter);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_sanity_check(int adapter)
 {

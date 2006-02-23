@@ -1,7 +1,7 @@
-/**************************************************************************
-* This file is NOT public domain software.  It is Copyright, Mark Hessling
-* 1994-2000.
-**************************************************************************/
+/************************************************************************
+ * This file is NOT public domain software.  It is Copyright, Mark	*
+ * Hessling 1994-2000.							*
+ ************************************************************************/
 
 /* This file contains functions that are called by the "curses" process;
    i.e., the parent process. */
@@ -12,7 +12,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.22 2006/02/21 04:32:26 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.23 2006/02/23 01:46:54 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;

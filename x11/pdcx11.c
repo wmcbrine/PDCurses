@@ -1,7 +1,7 @@
-/**************************************************************************
-* This file is NOT public domain software.  It is Copyright, Mark Hessling
-* 1994,1995.
-**************************************************************************/
+/************************************************************************
+ * This file is NOT public domain software.  It is Copyright, Mark	*
+ * Hessling 1994,1995.							*
+ ************************************************************************/
 
 #include "pdcx11.h"
 
@@ -10,7 +10,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.51 2006/02/16 22:59:49 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.52 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -2527,9 +2527,9 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 
       case ButtonRelease:
 #if 0
-		MOUSE_X_POS = (event->xbutton.x-XCURSESBORDERWIDTH) / 
+		MOUSE_X_POS = (event->xbutton.x - XCURSESBORDERWIDTH) / 
 			XCursesFontWidth;
-		MOUSE_Y_POS = (event->xbutton.y-XCURSESBORDERWIDTH) / 
+		MOUSE_Y_POS = (event->xbutton.y - XCURSESBORDERWIDTH) / 
 			XCursesFontHeight;
 		BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 

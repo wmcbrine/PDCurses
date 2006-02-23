@@ -1,4 +1,4 @@
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
 Introduction
 ------------
@@ -312,4 +312,4 @@ already added it for previous versions of XCurses.)
 It is no longer necessary to explicitly define XCURSES, except if 
 building under Cygwin. (It's defined automatically.)
 
-**man-end**********************************************************************/
+**man-end****************************************************************/

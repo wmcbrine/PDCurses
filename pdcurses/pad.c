@@ -36,7 +36,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_pad =
-	"$Id: pad.c,v 1.18 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: pad.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 /* save values for pechochar() */
@@ -44,7 +44,7 @@ const char *rcsid_pad =
 static int save_pminrow, save_pmincol;
 static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                           pad
 
@@ -117,7 +117,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	pnoutrefresh				Y	-	Y
 	pechochar				-	-      3.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 WINDOW *newpad(int nlines, int ncols)
 {

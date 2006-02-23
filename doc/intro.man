@@ -1,4 +1,4 @@
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
 		Introduction to XSI Curses Interface
 
@@ -29,7 +29,7 @@ guaranteed to be on all systems.  Where they are supported, they will
 conform to the given definition.
 
 
---------------------------------------------------------------------------
+-------------------------------------------------------------------------
 
 	    Synchronous and Networked Asynchronous Terminals
 
@@ -80,7 +80,7 @@ input functions.  In particular, the following points should be noted:
   cursor in the window.
 
 
---------------------------------------------------------------------------
+-------------------------------------------------------------------------
 
 		Data Types and the <curses.h> Header
 
@@ -536,4 +536,4 @@ FUNCTIONS
 	NOTE: Functions prefixed with '***' above and on each manual 
 	page are functions that have not been implemented.
 
-**man-end**********************************************************************/
+**man-end****************************************************************/

@@ -21,10 +21,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.12 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.13 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_getclipboard()	- Gets the contents of the clipboard
 
@@ -49,7 +49,7 @@ const char *rcsid_PDCclip =
   Portability:
 	PDCurses  int PDC_getclipboard(char **contents, long *length);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_getclipboard(char **contents, long *length)
 {
@@ -85,7 +85,7 @@ int PDC_getclipboard(char **contents, long *length)
 	return PDC_CLIP_SUCCESS;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_setclipboard()	- Sets the contents of the clipboard
 
@@ -104,7 +104,7 @@ int PDC_getclipboard(char **contents, long *length)
   Portability:
 	PDCurses  int PDC_getclipboard(char *contents, long length);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_setclipboard(char *contents, long length)
 {
@@ -140,7 +140,7 @@ int PDC_setclipboard(char *contents, long length)
 	return PDC_CLIP_SUCCESS;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_freeclipboard()	- Frees the memory associated with the contents
 			  of the clipboard
@@ -156,7 +156,7 @@ int PDC_setclipboard(char *contents, long length)
   Portability:
 	PDCurses  int PDC_freeclipboard(char *contents);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_freeclipboard(char *contents)
 {
@@ -166,7 +166,7 @@ int PDC_freeclipboard(char *contents)
 	return PDC_CLIP_SUCCESS;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_clearclipboard()	- Clears the contents of the clipboard
 
@@ -181,7 +181,7 @@ int PDC_freeclipboard(char *contents)
   Portability:
 	PDCurses  int PDC_clearclipboard(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_clearclipboard(void)
 {

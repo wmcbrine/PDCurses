@@ -35,10 +35,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_getch =
-	"$Id: getch.c,v 1.25 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: getch.c,v 1.26 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                         getch
 
@@ -103,7 +103,7 @@ const char *rcsid_getch =
 	mvwgetch				Y	Y	Y
 	ungetch					Y	Y	Y
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 /* these defines to get around DOS library conflicts */
 

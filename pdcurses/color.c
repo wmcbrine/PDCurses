@@ -35,10 +35,10 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.41 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: color.c,v 1.42 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                         color
 
@@ -114,7 +114,7 @@ const char *rcsid_color =
 	pair_content				-	-      3.2
 	PDC_set_line_color			-	-       -
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int COLORS = PDC_COLORS;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;

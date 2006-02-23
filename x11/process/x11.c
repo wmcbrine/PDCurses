@@ -1,7 +1,7 @@
-/**************************************************************************
-* This file is NOT public domain software.  It is Copyright, Mark Hessling
-* 1994-2000.
-**************************************************************************/
+/************************************************************************
+ * This file is NOT public domain software.  It is Copyright, Mark	*
+ * Hessling 1994-2000.							*
+ ************************************************************************/
 
 #include "pdcx11.h"
 
@@ -9,7 +9,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.38 2006/02/21 04:32:26 wmcbrine Exp $";
+	"$Id: x11.c,v 1.39 2006/02/23 01:46:53 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;

@@ -20,10 +20,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCgetsc =
-	"$Id: pdcgetsc.c,v 1.13 2006/02/22 06:10:34 wmcbrine Exp $";
+	"$Id: pdcgetsc.c,v 1.14 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_columns()	- return width of screen/viewport.
 
@@ -42,7 +42,7 @@ const char *rcsid_PDCgetsc =
   Portability:
 	PDCurses  int PDC_get_columns(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_columns(void)
 {
@@ -51,7 +51,7 @@ int PDC_get_columns(void)
 	return XCurses_get_cols();
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_rows()	- Return number of screen rows.
 
@@ -70,7 +70,7 @@ int PDC_get_columns(void)
   Portability:
 	PDCurses  int PDC_get_rows(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_rows(void)
 {
@@ -79,7 +79,7 @@ int PDC_get_rows(void)
 	return XCurses_get_rows();
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_font()	- Get the current font size
 
@@ -91,7 +91,7 @@ int PDC_get_rows(void)
   Portability:
 	PDCurses  int PDC_get_font(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_font(void)
 {

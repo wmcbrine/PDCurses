@@ -34,10 +34,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_touch =
-	"$Id: touch.c,v 1.14 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: touch.c,v 1.15 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                         touch
 
@@ -89,7 +89,7 @@ const char *rcsid_touch =
 	is_linetouched				-	-      4.0
 	is_wintouched				-	-      4.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int touchwin(WINDOW *win)
 {

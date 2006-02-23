@@ -47,10 +47,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.22 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.23 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        inopts
 
@@ -77,13 +77,13 @@ const char *rcsid_inopts =
 
   X/Open Description:
 	cbreak() and nocbreak() puts the terminal into and out of cbreak
-	mode. In cbreak mode, characters typed by the user are immediately
-	available to the program and erase/kill character processing is
-	not performed.  When out of cbreak mode, the terminal driver
-	will buffer characters typed until a newline or carriage return
-	is typed.  Interrupt and flow control characters are unaffected
-	by this mode.  Initially the terminal may or may not need be
-	in cbreak mode.
+	mode. In cbreak mode, characters typed by the user are 
+	immediately available to the program and erase/kill character 
+	processing is not performed.  When out of cbreak mode, the 
+	terminal driver will buffer characters typed until a newline or 
+	carriage return is typed.  Interrupt and flow control characters 
+	are unaffected by this mode.  Initially the terminal may or may 
+	not need be in cbreak mode.
 
 	echo() and noecho() control whether characters typed by the user
 	are echoed by the input routine.  Initially, input characters
@@ -95,16 +95,16 @@ const char *rcsid_inopts =
 	getch() to block for that period before returning ERR if no key 
 	has been received.  tenths must be between 1 and 255.
 
-	If the intrflush() option is enabled (bf is TRUE), and an 
-	interrupt is pressed on the keyboard (INTR, BREAK, or QUIT) all 
-	output in the terminal driver queue will be flushed, giving the 
-	effect of faster response to the interrupt but causing curses to 
-	have the wrong idea of what is on the screen.  Disabling the 
-	option prevents the flush.  The default for the option is 
-	inherited from the terminal driver settings.  The window 
+	If the intrflush() option is enabled (bf is TRUE), and an
+	interrupt is pressed on the keyboard (INTR, BREAK, or QUIT) all
+	output in the terminal driver queue will be flushed, giving the
+	effect of faster response to the interrupt but causing curses to
+	have the wrong idea of what is on the screen.  Disabling the
+	option prevents the flush.  The default for the option is
+	inherited from the terminal driver settings.  The window
 	argument is ignored.
 
-	The keypad() function changes the keypad option of the user's 
+	The keypad() function changes the keypad option of the user's
 	terminal. If enabled (bf is TRUE), the user can press a function 
 	key (such as the left arrow key) and getch() will return a 
 	single value that represents the KEY_LEFT function key.  (See 
@@ -120,10 +120,10 @@ const char *rcsid_inopts =
 	ignored, but it must still be a valid window to avoid compiler 
 	errors.
 
-	The nodelay() function controls whether wgetch() is a non-blocking
-	call. If the option is enabled, and no input is ready, wgetch()
-	will return ERR. If disabled, wgetch() will hang until input
-	is ready.
+	The nodelay() function controls whether wgetch() is a 
+	non-blocking call. If the option is enabled, and no input is 
+	ready, wgetch() will return ERR. If disabled, wgetch() will hang 
+	until input is ready.
 
         The nl() function enables the translation of a carriage return 
 	into a newline on input. The nonl() function disables it. 
@@ -164,8 +164,8 @@ const char *rcsid_inopts =
 	type-ahead checking will be done.
 
   PDCurses Description:
-	The meta() function is provided for portability.  By default, 8 bits
-	are returned.
+	The meta() function is provided for portability.  By default, 8 
+	bits are returned.
 
 	intrflush(), notimeout(), noqiflush() and qiflush() are no-ops
 	in PDCurses.
@@ -198,7 +198,7 @@ const char *rcsid_inopts =
 	wtimeout				-	-	Y
 	typeahead				Y	-	Y
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int cbreak(void)
 {

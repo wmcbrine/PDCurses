@@ -36,10 +36,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_border =
-	"$Id: border.c,v 1.19 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: border.c,v 1.20 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        border
 
@@ -110,7 +110,7 @@ const char *rcsid_border =
 	PDC_wleftline				-	-	-
 	PDC_wrightline				-	-	-
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 /* PDC_attr_passthru() -- Takes a single chtype 'ch' and checks if the 
    current attribute of window 'win', as set by wattrset(), and/or the 
@@ -154,7 +154,7 @@ static chtype PDC_attr_passthru(WINDOW *win, chtype ch)
 }
 
 int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
-		      chtype bs, chtype tl, chtype tr, chtype bl, chtype br)
+	    chtype bs, chtype tl, chtype tr, chtype bl, chtype br)
 {
 	int ymax, xmax;
 	int ymin, xmin;

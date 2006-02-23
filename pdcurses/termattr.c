@@ -33,10 +33,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.23 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: termattr.c,v 1.24 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                     termattr
 
@@ -124,7 +124,7 @@ const char *rcsid_termattr =
 	termname				Y	Y	Y
 	wordchar				-	-	-
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int baudrate(void)
 {

@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.35 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.36 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -69,10 +69,10 @@ static int keyCount = 0;
 static void win32_getch(void);
 static int win32_kbhit(int);
 
-/******************************************************************************
-*  Table for key code translation of function keys in keypad mode
-*  These values are for strict IBM keyboard compatibles only
-******************************************************************************/
+/************************************************************************
+ *    Table for key code translation of function keys in keypad mode	*  
+ *    These values are for strict IBM keyboard compatibles only		*
+ ************************************************************************/
 
 typedef struct
 {
@@ -335,7 +335,7 @@ static KPTAB ext_kptab[] =
 
 MOUSE_STATUS Trapped_Mouse_status;
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_input_fd() - Get file descriptor used for PDCurses input
 
@@ -354,7 +354,7 @@ MOUSE_STATUS Trapped_Mouse_status;
   Portability:
 	PDCurses  int PDC_get_input_fd(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 unsigned long PDC_get_input_fd(void)
 {
@@ -367,7 +367,7 @@ unsigned long PDC_get_input_fd(void)
 #endif
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_check_bios_key()  - Check BIOS key data area for input
 
@@ -386,7 +386,7 @@ unsigned long PDC_get_input_fd(void)
   Portability:
 	PDCurses  bool PDC_check_bios_key(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 bool PDC_check_bios_key(void)
 {
@@ -513,7 +513,7 @@ int processKeyEvent(void)
 }
 
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_bios_key() - Returns the next key available from the BIOS.
 
@@ -533,7 +533,7 @@ int processKeyEvent(void)
   Portability:
 	PDCurses  int PDC_get_bios_key(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_get_bios_key(void)
 {
@@ -801,7 +801,7 @@ int PDC_get_bios_key(void)
 	return KEY_MOUSE;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_ctrl_break()  - return OS control break state
 
@@ -820,7 +820,7 @@ int PDC_get_bios_key(void)
   Portability:
 	PDCurses  bool PDC_get_ctrl_break(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 bool PDC_get_ctrl_break(void)
 {
@@ -829,7 +829,7 @@ bool PDC_get_ctrl_break(void)
 	return FALSE;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_rawgetch()  - Returns the next uninterpreted character (if available).
 
@@ -852,7 +852,7 @@ bool PDC_get_ctrl_break(void)
   Portability:
 	PDCurses  int PDC_rawgetch(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_rawgetch(void)
 {
@@ -885,7 +885,7 @@ int PDC_rawgetch(void)
 	return -1;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_ctrl_break()  - Enables/Disables the host OS BREAK key check.
 
@@ -905,7 +905,7 @@ int PDC_rawgetch(void)
   Portability:
 	PDCurses  int PDC_set_ctrl_break(bool setting);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_ctrl_break(bool setting)
 {
@@ -914,7 +914,7 @@ int PDC_set_ctrl_break(bool setting)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_sysgetch()  - Return a character using default system routines.
 
@@ -937,7 +937,7 @@ int PDC_set_ctrl_break(bool setting)
   Portability:
 	PDCurses  int PDC_sysgetch(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_sysgetch(void)
 {
@@ -969,7 +969,7 @@ int PDC_sysgetch(void)
 	return -1;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_validchar() - validate/translate passed character
 
@@ -995,7 +995,7 @@ int PDC_sysgetch(void)
   Portability:
 	PDCurses  int PDC_validchar(int c);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_validchar(int c)
 {
@@ -1361,7 +1361,7 @@ static void win32_getch(void)
 
 #endif	/* PDC_THREAD_BUILD */
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_key_modifiers()  - Returns the keyboard modifier(s) at time
 			     of last getch()
@@ -1383,7 +1383,7 @@ static void win32_getch(void)
   Portability:
 	PDCurses  int PDC_get_key_modifiers(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 unsigned long PDC_get_key_modifiers(void)
 {

@@ -1,9 +1,9 @@
-/**************************************************************************
-* This file is NOT public domain software.  It is Copyright, Mark Hessling
-* 1994-1999. M.Hessling@qut.edu.au
-**************************************************************************/
+/************************************************************************
+ * This file is NOT public domain software.  It is Copyright, Mark 	*
+ * Hessling 1994-1999. M.Hessling@qut.edu.au				*
+ ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.21 2006/02/16 23:40:30 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.22 2006/02/23 01:46:53 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H

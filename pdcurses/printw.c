@@ -35,10 +35,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_printw =
-	"$Id: printw.c,v 1.18 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: printw.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        printw
 
@@ -89,7 +89,7 @@ const char *rcsid_printw =
 	mvwprintw				Y	Y	Y
 	vwprintw				-	-      4.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int printw(char *fmt, ...)
 {

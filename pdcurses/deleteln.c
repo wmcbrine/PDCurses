@@ -29,10 +29,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_deleteln =
-	"$Id: deleteln.c,v 1.15 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: deleteln.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                      deleteln
 
@@ -79,7 +79,7 @@ const char *rcsid_deleteln =
 	winsertln				Y	Y	Y
 	mvwinsertln				-	-	-
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int deleteln(void)
 {

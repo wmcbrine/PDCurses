@@ -15,16 +15,16 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.132 2006/02/22 06:09:46 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.133 2006/02/23 01:46:51 wmcbrine Exp $ */
 
-/* ----------------------------------------------------------------------
-				PDCurses
-   ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------*
+ *				PDCurses				*
+ *----------------------------------------------------------------------*/
 
 #ifndef  __PDCURSES__
 #define	__PDCURSES__ 1
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
 All defines are "defined" here.  All compiler and environment specific 
 definitions are defined into generic class defines. These defines are to 
@@ -49,11 +49,11 @@ PDCurses portable platform definitions list:
 	SYSVcurses	True if you are compiling for SYSV portability.
 	BSDcurses	True if you are compiling for BSD portability.
 	PDCURSES_WCLR	Makes behaviour of wclrtoeol() and wclrtoeof()
-			unique to PDCurses. By default Unix behavior is set.
-			See notes in wclrtoeol() and wclrtoeof().
+			unique to PDCurses. By default Unix behavior is 
+			set. See notes in wclrtoeol() and wclrtoeof().
 	NOMACROS	Don't use (most) macros in place of functions.
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 #define PDC_BUILD 2712
 #define	PDCURSES	1	/* PDCurses-only routines	*/
@@ -370,7 +370,7 @@ PDCurses portable platform definitions list:
 #  endif
 #endif
 
-/*---------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
 #if defined(WIN32) && defined(INCLUDE_WINDOWS_H)
 # include <windows.h>
@@ -723,7 +723,7 @@ extern	int		_default_lines;	/* For presetting maximum lines	*/
 
 
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
 PDCurses Text Attributes:
 
@@ -762,10 +762,10 @@ long form:
 The available attribute modifiers are bold, underline, invisible, 
 protect, reverse and blink. 256 (8 bits) colour pairs, 8 bits for 
 modifiers, and 16 bits for character data. (In practice, only 64 colour 
-pairs are available, and only the lower 8 bits of character data are
+pairs are available, and only the lower 8 bits of character data are 
 currently used.)
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 /*** Video attribute macros ***/
 

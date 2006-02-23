@@ -47,10 +47,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.22 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: window.c,v 1.23 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        window
 
@@ -155,7 +155,7 @@ const char *rcsid_window =
 	wsyncdown				-	-      4.0
 	resize_window				-	-	-
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 {

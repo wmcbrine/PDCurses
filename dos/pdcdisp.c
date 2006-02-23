@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.21 2006/02/22 06:09:46 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.22 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -42,7 +42,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 }
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_clr_update()	- Updates the screen with a full redraw.
 
@@ -62,7 +62,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
   Portability:
 	PDCurses  int PDC_clr_update(WINDOW *s);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_clr_update(WINDOW *s)
 {
@@ -159,7 +159,7 @@ int PDC_clr_update(WINDOW *s)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_cursor_on()	- Turns on the hardware cursor.
 
@@ -172,7 +172,7 @@ int PDC_clr_update(WINDOW *s)
   Portability:
 	PDCurses  int PDC_cursor_on(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_cursor_on(void)
 {
@@ -207,12 +207,13 @@ int PDC_cursor_on(void)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_cursor_off()	- Turns off the hardware cursor.
 
   PDCurses Description:
-	Turns off the hardware curses, it does nothing if it is already off.
+	Turns off the hardware curses, it does nothing if it is already 
+	off.
 
   PDCurses Return Value:
 	Returns OK upon success, ERR upon failure.
@@ -223,7 +224,7 @@ int PDC_cursor_on(void)
   Portability:
 	PDCurses  int PDC_cursor_off(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_cursor_off(void)
 {
@@ -238,7 +239,7 @@ int PDC_cursor_off(void)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_fix_cursor()	- Fix the cursor start and stop scan lines
 			  (if necessary)
@@ -266,7 +267,7 @@ int PDC_cursor_off(void)
   Portability:
 	PDCurses  int PDC_fix_cursor(int flag);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_fix_cursor(int flag)
 {
@@ -309,7 +310,7 @@ int PDC_fix_cursor(int flag)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_gotoxy()	- position hardware cursor at (x, y)
 
@@ -329,7 +330,7 @@ int PDC_fix_cursor(int flag)
   Portability:
 	PDCurses  int PDC_gotoxy(int row, int col);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_gotoxy(int row, int col)
 {
@@ -344,7 +345,7 @@ int PDC_gotoxy(int row, int col)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_putc()	- Output a character in the current attribute.
 
@@ -363,7 +364,7 @@ int PDC_gotoxy(int row, int col)
   Portability:
 	PDCurses  int PDC_putc(chtype character, chtype color);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_putc(chtype character, chtype color)
 {
@@ -384,7 +385,7 @@ int PDC_putc(chtype character, chtype color)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_putctty()	- Output a character and attribute in TTY fashion.
 
@@ -406,7 +407,7 @@ int PDC_putc(chtype character, chtype color)
   Portability:
 	PDCurses  int PDC_putctty(chtype character, chtype color);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_putctty(chtype character, chtype color)
 {
@@ -421,7 +422,7 @@ int PDC_putctty(chtype character, chtype color)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_scroll()	- low level screen scroll
 
@@ -441,7 +442,7 @@ int PDC_putctty(chtype character, chtype color)
 	PDCurses  int PDC_scroll(int urow, int lcol, int rcol,
 				 int nlines, chtype attr);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 {
@@ -471,7 +472,7 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_transform_line()	- display a physical line of the screen
 
@@ -492,7 +493,7 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
   Portability:
 	PDCurses  bool PDC_transform_line(int lineno);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 bool PDC_transform_line(int lineno)
 {

@@ -37,10 +37,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_addchstr =
-	"$Id: addchstr.c,v 1.22 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: addchstr.c,v 1.23 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        addchstr
 
@@ -85,7 +85,7 @@ const char *rcsid_addchstr =
 	mvaddchnstr				-	-      4.0
 	mvwaddchnstr				-	-      4.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int addchstr(const chtype *ch)
 {

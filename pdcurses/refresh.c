@@ -40,10 +40,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.20 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.21 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                       refresh
 
@@ -99,7 +99,7 @@ const char *rcsid_refresh =
 	redrawwin				-	-      4.0
 	wredrawln				-	-      4.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int refresh(void)
 {

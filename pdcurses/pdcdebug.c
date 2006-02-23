@@ -25,12 +25,12 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdebug =
-	"$Id: pdcdebug.c,v 1.16 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: pdcdebug.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 bool trace_on = FALSE;
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_debug()  - Write debugging info to log file.
 
@@ -46,7 +46,7 @@ bool trace_on = FALSE;
   Portability:
 	PDCurses void PDC_debug(char *, ...);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 void PDC_debug(char *fmt, ...)
 {

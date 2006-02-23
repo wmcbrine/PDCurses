@@ -20,10 +20,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.18 2006/02/22 06:10:34 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_input_fd()	- Get file descriptor used for PDCurses input
 
@@ -42,7 +42,7 @@ const char *rcsid_PDCkbd =
   Portability:
 	PDCurses  int PDC_get_input_fd(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 unsigned long PDC_get_input_fd(void)
 {
@@ -51,7 +51,7 @@ unsigned long PDC_get_input_fd(void)
 	return XCurses_get_input_fd();
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_check_bios_key()	- Check BIOS key data area for input
 
@@ -70,7 +70,7 @@ unsigned long PDC_get_input_fd(void)
   Portability:
 	PDCurses  bool PDC_check_bios_key(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 bool PDC_check_bios_key(void)
 {
@@ -79,7 +79,7 @@ bool PDC_check_bios_key(void)
 	return XCurses_kbhit();
 }         
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_ctrl_break()	- return OS control break state
 
@@ -98,7 +98,7 @@ bool PDC_check_bios_key(void)
   Portability:
 	PDCurses  bool PDC_get_ctrl_break(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 bool PDC_get_ctrl_break(void)
 {
@@ -107,7 +107,7 @@ bool PDC_get_ctrl_break(void)
 	return FALSE;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_rawgetch()	- Returns the next uninterpreted character
 			  (if available).
@@ -132,7 +132,7 @@ bool PDC_get_ctrl_break(void)
   Portability:
 	PDCurses  int PDC_rawgetch(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_rawgetch(void)
 {
@@ -150,7 +150,7 @@ int PDC_rawgetch(void)
 	return XCurses_rawgetch(0);
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_ctrl_break()	- Enables/Disables the host OS BREAK key check.
 
@@ -170,7 +170,7 @@ int PDC_rawgetch(void)
   Portability:
 	PDCurses  int PDC_set_ctrl_break(bool setting);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_ctrl_break(bool setting)
 {
@@ -179,7 +179,7 @@ int PDC_set_ctrl_break(bool setting)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_get_key_modifiers()	- Returns the keyboard modifier(s)
 				  at time of last getch()
@@ -201,7 +201,7 @@ int PDC_set_ctrl_break(bool setting)
   Portability:
 	PDCurses  int PDC_get_key_modifiers(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 unsigned long PDC_get_key_modifiers(void)
 {

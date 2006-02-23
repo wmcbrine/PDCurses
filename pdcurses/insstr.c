@@ -39,10 +39,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_insstr =
-	"$Id: insstr.c,v 1.19 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: insstr.c,v 1.20 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        insstr
 
@@ -94,7 +94,7 @@ const char *rcsid_insstr =
 	mvinsnstr				-	-      4.0
 	mvwinsnstr				-	-      4.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int insstr(const char *str)
 {

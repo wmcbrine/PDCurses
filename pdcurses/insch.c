@@ -34,10 +34,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_insch =
-	"$Id: insch.c,v 1.15 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: insch.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                         insch
 
@@ -72,7 +72,7 @@ const char *rcsid_insch =
 	The cursor position is advanced.
 
 	The routine wechochar() inserts the character ch into the
-	specified window at the current cursor position and a wrefresh() 
+	specified window at the current cursor position and a wrefresh()
 	is called. The cursor position is advanced.
 
 	All these routines are similar to putchar().  The following
@@ -121,7 +121,7 @@ const char *rcsid_insch =
 	mvinsch					Y	Y	Y
 	mvwinsch				Y	Y	Y
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int insch(chtype ch)
 {

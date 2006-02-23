@@ -31,10 +31,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_mouse =
-	"$Id: mouse.c,v 1.16 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: mouse.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                         mouse
 
@@ -97,7 +97,7 @@ const char *rcsid_mouse =
 	getmouse				-	-      4.0
 	getbmap					-	-      4.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int mouse_set(unsigned long mbe)
 {

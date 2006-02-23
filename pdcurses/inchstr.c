@@ -36,10 +36,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inchstr =
-	"$Id: inchstr.c,v 1.14 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: inchstr.c,v 1.15 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        inchstr
 
@@ -54,17 +54,17 @@ const char *rcsid_inchstr =
 	int mvwinchnstr(WINDOW *, int y, int x, chtype *ch, int n);
 
   X/Open Description:
-	These routines read a chtype string directly from the window structure
-	starting at the current position and ending at the right margin.
-	The four routines with n as the last argument copy at most n
-	elements, but no more than will fit on the line.
+	These routines read a chtype string directly from the window 
+	structure starting at the current position and ending at the 
+	right margin. The four routines with n as the last argument copy 
+	at most n elements, but no more than will fit on the line.
 
 	NOTE:	inchstr(), mvinchstr(), mvwinchstr() inchnstr(), 
 		mvinchnstr(), and mvwinchnstr() are implemented as macros.
 
   X/Open Return Value:
-	All functions return ERR on error and an integer value other than
-	ERR on success. 
+	All functions return ERR on error and an integer value other 
+	than ERR on success. 
 
   X/Open Errors:
 	Normally the value returned indicates the number of chtypes
@@ -81,7 +81,7 @@ const char *rcsid_inchstr =
 	mvinchnstr				-	-      4.0
 	mvwinchnstr				-	-      4.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int inchstr(chtype *ch)
 {

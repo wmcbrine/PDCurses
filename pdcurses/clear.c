@@ -30,10 +30,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_clear =
-	"$Id: clear.c,v 1.16 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: clear.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                         clear
 
@@ -92,7 +92,7 @@ const char *rcsid_clear =
 	clrtoeol				Y	Y	Y
 	wclrtoeol				Y	Y	Y
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int clear(void)
 {

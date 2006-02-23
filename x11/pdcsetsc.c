@@ -20,10 +20,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.13 2006/02/22 06:10:34 wmcbrine Exp $";
+	"$Id: pdcsetsc.c,v 1.14 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_font()	- sets the current font size
 
@@ -45,7 +45,7 @@ const char *rcsid_PDCsetsc =
   Portability:
 	PDCurses  int PDC_set_font(int size);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_font(int size)
 {
@@ -54,7 +54,7 @@ int PDC_set_font(int size)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_rows()	- sets the physical number of rows on screen
 
@@ -76,7 +76,7 @@ int PDC_set_font(int size)
   Portability:
 	PDCurses  int PDC_set_rows(int rows);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_rows(int rows)
 {
@@ -101,13 +101,13 @@ int PDC_curs_set(int visibility)
 	return ret_vis;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_title()	- Set window title
 
   PDCurses Description:
-	Sets the title of the window in which the curses program is running.
-	This function may not do anything on some platforms.
+	Sets the title of the window in which the curses program is 
+	running. This function may not do anything on some platforms.
 
   PDCurses Return Value:
 	N/A
@@ -118,7 +118,7 @@ int PDC_curs_set(int visibility)
   Portability:
 	PDCurses  void PDC_set_title(char *title);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 void PDC_set_title(char *title)
 {

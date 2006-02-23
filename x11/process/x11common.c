@@ -1,13 +1,13 @@
-/**************************************************************************
-* This file is NOT public domain software.  It is Copyright, Mark Hessling
-* 1994-2000.
-**************************************************************************/
+/************************************************************************
+ * This file is NOT public domain software.  It is Copyright, Mark	*
+ * Hessling 1994-2000.							*
+ ************************************************************************/
 
 #include "pdcx11.h"
 
 #ifdef PDCDEBUG
 const char rcsid_x11common =
-        "$Id: x11common.c,v 1.10 2006/02/16 22:59:50 wmcbrine Exp $";
+        "$Id: x11common.c,v 1.11 2006/02/23 01:46:54 wmcbrine Exp $";
 #endif
 
 /* Variables specific to process port */

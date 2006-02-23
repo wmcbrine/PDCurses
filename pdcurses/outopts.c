@@ -31,10 +31,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_outopts =
-	"$Id: outopts.c,v 1.18 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: outopts.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                       outopts
 
@@ -124,7 +124,7 @@ const char *rcsid_outopts =
 	scrollok				Y	Y	Y
 	raw_output				-	-	-
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int clearok(WINDOW *win, bool bf)
 {

@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.17 2006/02/22 06:09:46 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.18 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -35,7 +35,7 @@ static USHORT saved_lines = 0;
 static USHORT saved_cols = 0;
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_scr_close() - Internal low-level binding to close the physical screen
 
@@ -52,7 +52,7 @@ static USHORT saved_cols = 0;
   Portability:
 	PDCurses  int PDC_scr_close(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_scr_close(void)
 {
@@ -83,7 +83,7 @@ int PDC_scr_close(void)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_scrn_modes_equal()   - Decide if two screen modes are equal
 
@@ -103,7 +103,7 @@ int PDC_scr_close(void)
     OS2 PDCurses  int PDC_scrn_modes_equal(VIOMODEINFO mode1,
 					   VIOMODEINFO mode2);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 #if !defined(EMXVIDEO)
 bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
@@ -123,7 +123,7 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 #endif
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_scr_open()  - Internal low-level binding to open the physical screen
 
@@ -140,7 +140,7 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
   Portability:
 	PDCurses  int PDC_scr_open(SCREEN *internal, bool echo);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_scr_open(SCREEN *internal, bool echo)
 {
@@ -248,7 +248,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_resize_screen()   - Internal low-level function to resize screen
 
@@ -268,7 +268,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
   Portability:
 	PDCurses  int PDC_resize_screen(int, int);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_resize_screen(int nlines, int ncols)
 {

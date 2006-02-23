@@ -71,13 +71,13 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.35 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.36 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                        kernel
 
@@ -182,7 +182,7 @@ char linesrippedoff = 0;
 	curs_set				-	-      3.0
 	napms					Y	Y	Y
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int def_prog_mode(void)
 {

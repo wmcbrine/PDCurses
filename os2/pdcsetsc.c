@@ -21,10 +21,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.15 2006/02/22 06:09:46 wmcbrine Exp $";
+	"$Id: pdcsetsc.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_80x25() - force a known screen state: 80x25 text mode.
 
@@ -43,7 +43,7 @@ const char *rcsid_PDCsetsc =
   Portability:
 	PDCurses  int PDC_set_80x25(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_80x25(void)
 {
@@ -64,7 +64,7 @@ int PDC_set_80x25(void)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_cursor_mode() - Set the cursor start and stop scan lines.
 
@@ -81,7 +81,7 @@ int PDC_set_80x25(void)
   Portability:
 	PDCurses  int PDC_set_cursor_mode(int startrow, int endrow);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_cursor_mode(int startrow, int endrow)
 {
@@ -108,7 +108,7 @@ int PDC_set_cursor_mode(int startrow, int endrow)
 #endif
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_font()  - sets the current font size
 
@@ -130,7 +130,7 @@ int PDC_set_cursor_mode(int startrow, int endrow)
   Portability:
 	PDCurses  int PDC_set_font(int size);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_font(int size)
 {
@@ -162,7 +162,7 @@ int PDC_set_font(int size)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_rows()  - sets the physical number of rows on screen
 
@@ -184,7 +184,7 @@ int PDC_set_font(int size)
   Portability:
 	PDCurses  int PDC_set_rows(int rows);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_set_rows(int rows)
 {
@@ -214,7 +214,7 @@ int PDC_set_rows(int rows)
 #endif
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_scrn_mode()   - Set BIOS Video Mode
 
@@ -231,7 +231,7 @@ int PDC_set_rows(int rows)
   Portability:
 	PDCurses  int PDC_set_scrn_mode(int new_mode);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 #if !defined(EMXVIDEO)
 int PDC_set_scrn_mode(VIOMODEINFO new_mode)
@@ -308,7 +308,7 @@ int PDC_curs_set(int visibility)
 	return ret_vis;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_set_title() - Set window title
 
@@ -325,7 +325,7 @@ int PDC_curs_set(int visibility)
   Portability:
 	PDCurses void PDC_set_title(char *title);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 void PDC_set_title(char *title)
 {

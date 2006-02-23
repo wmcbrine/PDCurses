@@ -31,10 +31,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_overlay =
-	"$Id: overlay.c,v 1.15 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: overlay.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   Name:                                                       overlay
 
@@ -91,7 +91,7 @@ const char *rcsid_overlay =
 	overwrite				Y	Y	Y
 	copywin					-	-      3.0
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int overlay(const WINDOW *src_w, WINDOW *dst_w)
 {

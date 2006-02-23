@@ -30,7 +30,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCutil =
-	"$Id: pdcutil.c,v 1.26 2006/02/22 06:09:47 wmcbrine Exp $";
+	"$Id: pdcutil.c,v 1.27 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 void PDC_beep(void)
@@ -65,28 +65,28 @@ void PDC_beep(void)
    Eberhard Mattes has kindly agreed to allow this module to be
    incorporated into PDCurses. */
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_vsscanf()	- Internal routine to parse and format an input buffer.
 
   PDCurses Description:
 	This is a private PDCurses routine.
 
-	Scan a series of input fields. Each field is formatted according to
-	a supplied format string and the formatted input is stored in the
-	variable number of addresses passed.
+	Scan a series of input fields. Each field is formatted according 
+	to a supplied format string and the formatted input is stored in 
+	the variable number of addresses passed.
 
   PDCurses Return Value:
 	This function returns the number of input fields or EOF on error.
 
   PDCurses Errors:
-	If the supplied data is invalid or an incorrect number of arguments
-	are passed, EOF is returned as an error.
+	If the supplied data is invalid or an incorrect number of 
+	arguments are passed, EOF is returned as an error.
 
   Portability:
 	PDCurses  int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 #define WHITE(x) ((x) == ' ' || (x) == '\t' || (x) == '\n')
 
@@ -526,7 +526,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 }
 #endif /* HAVE_VSSCANF */
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_breakout()	- check for type-ahead
 
@@ -554,7 +554,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
   Portability:
 	PDCurses  bool PDC_breakout(void);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 bool PDC_breakout(void)
 {

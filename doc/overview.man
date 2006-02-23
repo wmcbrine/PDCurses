@@ -1,4 +1,4 @@
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
 			Curses Overview
 
@@ -57,4 +57,4 @@ to disable and enable many input attributes: character echo, single
 character input with or without signal processing (cbreak or raw
 modes), carriage returns mapping to newlines, screen scrolling, etc. 
 
-**man-end**********************************************************************/
+**man-end****************************************************************/

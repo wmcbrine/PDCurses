@@ -20,7 +20,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCprint =
-	"$Id: pdcprint.c,v 1.12 2006/02/22 06:09:46 wmcbrine Exp $";
+	"$Id: pdcprint.c,v 1.13 2006/02/23 01:46:52 wmcbrine Exp $";
 #endif
 
 #if !defined(CURSES__32BIT__) && !defined(CSET2) && !defined(MSC) &&!defined(TC)
@@ -30,7 +30,7 @@ const char *rcsid_PDCprint =
 
 char Printer[] = "LPT1:";
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   PDC_print()	- Provides primitive access to the BIOS printer functions
 
@@ -52,7 +52,7 @@ char Printer[] = "LPT1:";
   Portability:
 	PDCurses  int PDC_print(int cmd, int byte, int port);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int PDC_print(int cmd, int byte, int port)
 {

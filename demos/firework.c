@@ -10,7 +10,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_firework =
-	"$Id: firework.c,v 1.19 2006/02/16 21:51:30 wmcbrine Exp $";
+	"$Id: firework.c,v 1.20 2006/02/24 02:34:23 wmcbrine Exp $";
 #endif
 
 void myrefresh(void);
@@ -69,8 +69,6 @@ int main(int argc, char **argv)
 			flag = 0;
 		}
 
-		seed = time((time_t *)0);
-		srand(seed);
 		explode(LINES - row, diff * direction + start);
 		clear();
 		myrefresh();

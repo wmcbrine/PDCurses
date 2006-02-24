@@ -23,7 +23,7 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.8 2006/02/18 23:28:11 wmcbrine Exp $
+  $Id: worm.c,v 1.9 2006/02/24 02:33:20 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
 			}
 	}
 
-	napms(10);
+	napms(12);
 	refresh();
 	nodelay(stdscr, TRUE);
 
@@ -397,7 +397,7 @@ int main(int argc, char *argv[])
 			addch(flavor[n % FLAVORS]);
 			ref[w->ypos[h] = y][w->xpos[h] = x]++;
 		}
-		napms(10);
+		napms(12);
 		refresh();
 	}
 

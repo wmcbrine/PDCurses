@@ -23,11 +23,12 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.10 2006/02/24 02:38:21 wmcbrine Exp $
+  $Id: worm.c,v 1.11 2006/02/24 02:40:31 wmcbrine Exp $
 */
 
 #include <curses.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define FLAVORS 7
 

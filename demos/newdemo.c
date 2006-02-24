@@ -11,10 +11,11 @@
 #include <string.h>
 #include <curses.h>
 #include <stdlib.h>
+#include <time.h>
 
 #ifdef PDCDEBUG
 const char *rcsid_newdemo =
-	"$Id: newdemo.c,v 1.26 2006/02/24 02:38:21 wmcbrine Exp $";
+	"$Id: newdemo.c,v 1.27 2006/02/24 02:40:31 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);

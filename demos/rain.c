@@ -1,7 +1,8 @@
-/* $Id: rain.c,v 1.6 2006/02/24 02:38:21 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.7 2006/02/24 02:40:31 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <stdlib.h>
+#include <time.h>
 
 /* rain 11/3/1980 EPS/CITHEP */
 

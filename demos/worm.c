@@ -23,7 +23,7 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.9 2006/02/24 02:33:20 wmcbrine Exp $
+  $Id: worm.c,v 1.10 2006/02/24 02:38:21 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 	const struct options *op;
 	struct worm *w;
 	short **ref, *ip;
-	int x, y, n, h, last, bottom;
+	int x, y, n, h, last, bottom, seed;
 
 	for (x = 1; x < argc; x++)
 	{
@@ -180,6 +180,9 @@ int main(int argc, char *argv[])
 #else
 	initscr();
 #endif
+	seed = time((time_t *)0);
+        srand(seed);
+
 	noecho();
 	cbreak();
 	nonl();

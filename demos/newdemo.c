@@ -14,7 +14,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_newdemo =
-	"$Id: newdemo.c,v 1.25 2006/02/16 21:51:30 wmcbrine Exp $";
+	"$Id: newdemo.c,v 1.26 2006/02/24 02:38:21 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);
@@ -217,13 +217,16 @@ int main(int argc, char **argv)
 {
 	WINDOW *win;
 	chtype save[80], ch;
-	int width, height, w, x, y, i, j;
+	int width, height, w, x, y, i, j, seed;
 
 #ifdef XCURSES
 	Xinitscr(argc, argv);
 #else
 	initscr();
 #endif
+	seed = time((time_t *)0);
+        srand(seed);
+
 	start_color();
 	cbreak();
 	noecho();

@@ -1,4 +1,4 @@
-/* $Id: rain.c,v 1.5 2006/02/18 23:52:07 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.6 2006/02/24 02:38:21 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <stdlib.h>
@@ -28,7 +28,7 @@ static int next_j(int j)
 
 int main(int argc, char *argv[])
 {
-	int x, y, j, r, c;
+	int x, y, j, r, c, seed;
 	static int xpos[5], ypos[5];
 
 #ifdef XCURSES
@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
 #else
 	initscr();
 #endif
+	seed = time((time_t *)0);
+        srand(seed);
 
 	if (has_colors())
 	{

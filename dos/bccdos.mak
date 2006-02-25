@@ -44,8 +44,6 @@ CPPFLAGS	= -I$(PDCURSES_HOME)
 
 CCFLAGS		= -c @$(osdir)\bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
-LINK		= tlink
-
 LIBEXE		= tlib /C /E
 
 LIBCURSES	= pdcurses.lib

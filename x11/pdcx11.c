@@ -10,7 +10,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.52 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.53 2006/02/25 21:21:16 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -1043,6 +1043,14 @@ int XCursesDisplayText(chtype *ch, int row, int col, int num_cols,
 
 	for (i = 0, j = 0; j < num_cols; j++)
 	{
+		/* Special handling for ACS_BLOCK */
+
+		if (!(ch[j] & A_CHARTEXT))
+		{
+			ch[j] |= ' ';
+			ch[j] ^= A_REVERSE;
+		}
+
 		attr = ch[j] & A_ATTRIBUTES;
 
 		if (attr != old_attr)

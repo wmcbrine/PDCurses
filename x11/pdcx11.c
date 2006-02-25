@@ -10,7 +10,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.53 2006/02/25 21:21:16 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.54 2006/02/25 21:34:45 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -1026,7 +1026,7 @@ static int XCursesNewPacket(chtype attr, bool rev, int len,
 	return OK;
 }
 
-int XCursesDisplayText(chtype *ch, int row, int col, int num_cols,
+int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 			bool highlight)
 {
 	char text[513];
@@ -1043,15 +1043,17 @@ int XCursesDisplayText(chtype *ch, int row, int col, int num_cols,
 
 	for (i = 0, j = 0; j < num_cols; j++)
 	{
+		chtype curr = ch[j];
+
 		/* Special handling for ACS_BLOCK */
 
-		if (!(ch[j] & A_CHARTEXT))
+		if (!(curr & A_CHARTEXT))
 		{
-			ch[j] |= ' ';
-			ch[j] ^= A_REVERSE;
+			curr |= ' ';
+			curr ^= A_REVERSE;
 		}
 
-		attr = ch[j] & A_ATTRIBUTES;
+		attr = curr & A_ATTRIBUTES;
 
 		if (attr != old_attr)
 		{
@@ -1064,7 +1066,7 @@ int XCursesDisplayText(chtype *ch, int row, int col, int num_cols,
 			i = 0;
 		}
 
-		text[i++] = ch[j] & A_CHARTEXT;
+		text[i++] = curr & A_CHARTEXT;
 	}
 
 	return XCursesNewPacket(old_attr, highlight, i, col, row, text);
@@ -1901,9 +1903,9 @@ void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 
 		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
 
-		XCursesDisplayText((chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
-			(start_col * sizeof(chtype))), row, start_col,
-			num_cols, highlight);
+		XCursesDisplayText((const chtype *)(Xcurscr + 
+			XCURSCR_Y_OFF(row) + (start_col * sizeof(chtype))),
+			row, start_col, num_cols, highlight);
 
 		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
 	}
@@ -2157,7 +2159,7 @@ void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
 	PDC_LOG(("%s:XCursesDisplayCursor() - draw char at row: %d col %d\n",
 		XCLOGMSG, old_row, old_x));
 
-	XCursesDisplayText((chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) 
+	XCursesDisplayText((const chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) 
 		+ (old_x * sizeof(chtype)))), old_row, old_x, 1, FALSE);
 
 	/* display the cursor at the new cursor position */

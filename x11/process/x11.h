@@ -5,7 +5,7 @@ int get_colors(void);
 void start_event_handler(void);
 
 int XCursesTransformLine(int, int, chtype, int, int, int, char *);
-int XCursesDisplayText(chtype *, int, int, int, bool);
+int XCursesDisplayText(const chtype *, int, int, int, bool);
 void XCursesDisplayScreen(bool);
 void XCursesDisplayCursor(int, int, int, int);
 void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);

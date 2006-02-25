@@ -9,7 +9,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.39 2006/02/23 01:46:53 wmcbrine Exp $";
+	"$Id: x11.c,v 1.40 2006/02/25 21:34:45 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -65,8 +65,8 @@ void XCursesDisplayScreen(bool highlight)
 
 		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
 
-		XCursesDisplayText((chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
-			row, 0, COLS, highlight);
+		XCursesDisplayText((const chtype *)(Xcurscr + 
+			XCURSCR_Y_OFF(row)), row, 0, COLS, highlight);
 
 		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
 	}
@@ -104,7 +104,7 @@ int XCursesRefreshScreen(void)
 
 			start_col = (int)*(Xcurscr + XCURSCR_START_OFF + row);
 
-			XCursesDisplayText((chtype *)(Xcurscr + 
+			XCursesDisplayText((const chtype *)(Xcurscr + 
 				XCURSCR_Y_OFF(row) + (start_col * 
 				sizeof(chtype))), row, start_col, 
 				num_cols, FALSE);

@@ -12,16 +12,15 @@ PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
 CC		= @CC@
 CFLAGS		= @CFLAGS@
 
-INCDIR		= $(srcdir)
-CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@
+CPPFLAGS	= -I$(PDCURSES_HOME) -I$(srcdir) -DXCURSES @SYS_DEFS@
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
-LIB_DEPS	= -L../pdcurses -lXCurses
-LIBXCURSES	= ../pdcurses/libXCurses.a
+LIB_DEPS	= -L$(PDCURSES_HOME)/pdcurses -lXCurses
+LIBXCURSES	= $(PDCURSES_HOME)/pdcurses/libXCurses.a
 
-PANEL_LIB	= -L../panel -lpanel
-LIBPANEL	= ../panel/libpanel.a
+PANEL_LIB	= -L$(PDCURSES_HOME)/panel -lpanel
+LIBPANEL	= $(PDCURSES_HOME)/panel/libpanel.a
 
 LINK		= @PURIFY@ $(CC)
 #LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
@@ -102,7 +101,7 @@ install:
 	echo Does nothing at the moment
 
 clean:
-	-rm -rf *.o trace $(DEMOS)
+	-rm -f *.o trace $(DEMOS)
 
 distclean: clean
 	-rm -f Makefile
@@ -128,7 +127,7 @@ NCURSES_TESTS = \
 ncurses_tests: $(NCURSES_TESTS)
 
 ncurses_clean:
-	-rm -rf *.o trace $(NCURSES_TESTS)
+	-rm -f *.o trace $(NCURSES_TESTS)
 
 NCFLAGS=-I$(ncurses_testdir)
 

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: term.h,v 1.9 2006/02/22 06:09:46 wmcbrine Exp $ */
+/* $Id: term.h,v 1.10 2006/02/27 09:20:16 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
@@ -32,7 +32,10 @@ extern "C"
 #ifndef __PDCURSES_TERM_H__
 #define __PDCURSES_TERM_H__ 1
 
-typedef void TERMINAL;
+typedef struct
+{
+	const char *_termname;
+} TERMINAL;
 
 #if defined(PDC_DLL_BUILD)
 # if !defined(CURSES_LIBRARY)

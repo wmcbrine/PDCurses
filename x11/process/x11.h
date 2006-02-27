@@ -33,7 +33,7 @@ void SelectionSet(void);
 int write_socket(int, char *, int);
 int read_socket(int, char *, int);
 
-int XCursesSetupX(char *display_name, int argc, char *argv[]);
+int XCursesSetupX(const char *display_name, int argc, char *argv[]);
 RETSIGTYPE XCursesSigwinchHandler(int signo);
 
 #ifdef _HPUX_SOURCE

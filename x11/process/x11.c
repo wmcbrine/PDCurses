@@ -9,7 +9,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11 =
-	"$Id: x11.c,v 1.40 2006/02/25 21:34:45 wmcbrine Exp $";
+	"$Id: x11.c,v 1.41 2006/02/27 07:58:31 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -455,7 +455,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	} 
 } 
 
-int XCursesSetupX(char *display_name, int argc, char *argv[])
+int XCursesSetupX(const char *display_name, int argc, char *argv[])
 {
 	static char *myargv[] = {"XCurses", NULL};
 	extern bool sb_started;
@@ -509,8 +509,7 @@ int XCursesSetupX(char *display_name, int argc, char *argv[])
 
 	if (display_name)
 	{
-		strcpy(global_display_name, "DISPLAY=");
-		strcat(global_display_name, display_name);
+		sprintf(global_display_name, "DISPLAY=%.90s", display_name);
 		putenv(global_display_name);
 	}
 

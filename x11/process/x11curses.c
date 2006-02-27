@@ -12,7 +12,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.25 2006/02/27 07:48:45 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.26 2006/02/27 07:58:31 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -360,7 +360,7 @@ static int XCursesSetupCurses(void)
 	return OK;
 }
 
-int XCursesInitscr(char *display_name, int argc, char *argv[])
+int XCursesInitscr(const char *display_name, int argc, char *argv[])
 {
 	int pid, rc;
 

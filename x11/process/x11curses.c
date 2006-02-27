@@ -12,7 +12,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.24 2006/02/27 07:28:32 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.25 2006/02/27 07:48:45 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -271,7 +271,8 @@ int XCursesInstructAndWait(int flag)
 	return OK;
 }
 
-int XCurses_transform_line(chtype *ch, int row, int start_col, int num_cols)
+int XCurses_transform_line(const chtype *ch, int row,
+			   int start_col, int num_cols)
 {
 	PDC_LOG(("%s:XCurses_transform_line() called: row %d start_col %d "
 		"num_cols %d flag %d\n", XCLOGMSG, row, start_col, 

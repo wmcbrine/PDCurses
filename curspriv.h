@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.40 2006/02/27 07:28:30 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.41 2006/02/27 07:48:45 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -284,7 +284,7 @@ bool	XCurses_kbhit(void);
 int	XCurses_get_input_fd(void);
 int	XCursesInstruct(int);
 int	XCursesInstructAndWait(int);
-int	XCurses_transform_line(chtype *, int, int, int);
+int	XCurses_transform_line(const chtype *, int, int, int);
 int	XCursesInitscr(char *, int, char **);
 int	XCursesEndwin(void);
 void	XCursesCleanupCursesProcess(int);

@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.17 2006/02/27 07:48:45 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -179,7 +179,7 @@ int PDC_gotoxy(int row, int col)
 
 bool PDC_transform_line(int lineno)
 {
-	chtype *dstp;
+	const chtype *dstp;
 	int x, endx, len;
 
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.136 2006/02/27 08:13:02 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.137 2006/02/27 08:38:14 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1299,7 +1299,7 @@ int	mvinsch(int, int, chtype);
 int	mvinsnstr(int, int, const char *, int);
 int	mvinsstr(int, int, const char *);
 int	mvinstr(int, int, char *);
-int	mvprintw(int, int, char *, ...);
+int	mvprintw(int, int, const char *, ...);
 int	mvscanw(int, int, char *, ...);
 int	mvvline(int, int, chtype, int);
 int	mvwaddchnstr(WINDOW *, int, int, const chtype *, int);
@@ -1321,7 +1321,7 @@ int	mvwinsnstr(WINDOW *, int, int, const char *, int);
 int	mvwinsstr(WINDOW *, int, int, const char *);
 int	mvwinstr(WINDOW *, int, int, char *);
 int	mvwin(WINDOW *, int, int);
-int	mvwprintw(WINDOW *, int, int, char *, ...);
+int	mvwprintw(WINDOW *, int, int, const char *, ...);
 int	mvwscanw(WINDOW *, int, int, char *, ...);
 int	mvwvline(WINDOW *, int, int, chtype, int);
 int	napms(int);
@@ -1343,7 +1343,7 @@ int	PAIR_NUMBER(chtype);
 int	pechochar(WINDOW *, chtype);
 int	pnoutrefresh(WINDOW *, int, int, int, int, int, int);
 int	prefresh(WINDOW *, int, int, int, int, int, int);
-int	printw(char *, ...);
+int	printw(const char *, ...);
 int	putwin(WINDOW *, FILE *);
 void	qiflush(void);
 int	raw(void);
@@ -1393,8 +1393,8 @@ void	use_env(bool);
 int	vidattr(chtype);
 int	vidputs(chtype, int (*)(int));
 int	vline(chtype, int);
-int	vw_printw(WINDOW *, char *, va_list);
-int	vwprintw(WINDOW *, char *, va_list);
+int	vw_printw(WINDOW *, const char *, va_list);
+int	vwprintw(WINDOW *, const char *, va_list);
 int	vw_scanw(WINDOW *, char *, va_list);
 int	vwscanw(WINDOW *, char *, va_list);
 int	waddchnstr(WINDOW *, const chtype *, int);
@@ -1434,7 +1434,7 @@ int	winsstr(WINDOW *, const char *);
 int	winstr(WINDOW *, char *);
 int	wmove(WINDOW *, int, int);
 int	wnoutrefresh(WINDOW *);
-int	wprintw(WINDOW *, char *, ...);
+int	wprintw(WINDOW *, const char *, ...);
 int	wredrawln(WINDOW *, int, int);
 int	wrefresh(WINDOW *);
 int	wscanw(WINDOW *, char *, ...);

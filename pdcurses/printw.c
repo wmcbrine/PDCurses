@@ -35,7 +35,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_printw =
-	"$Id: printw.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: printw.c,v 1.20 2006/02/27 08:38:14 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -43,12 +43,12 @@ const char *rcsid_printw =
   Name:                                                        printw
 
   Synopsis:
-	int printw(char *fmt, ...);
-	int wprintw(WINDOW *win, char *fmt, ...);
-	int mvprintw(int y, int x, char *fmt, ...);
-	int mvwprintw(WINDOW *win, int y, int x, char *fmt,...);
-	int vwprintw(WINDOW *win, char *fmt, va_list varglist);
-	int vw_printw(WINDOW *win, char *fmt, va_list varglist);
+	int printw(const char *fmt, ...);
+	int wprintw(WINDOW *win, const char *fmt, ...);
+	int mvprintw(int y, int x, const char *fmt, ...);
+	int mvwprintw(WINDOW *win, int y, int x, const char *fmt,...);
+	int vwprintw(WINDOW *win, const char *fmt, va_list varglist);
+	int vw_printw(WINDOW *win, const char *fmt, va_list varglist);
 
   X/Open Description:
 	The printw() routine adds a string to the default window
@@ -91,7 +91,7 @@ const char *rcsid_printw =
 
 **man-end****************************************************************/
 
-int printw(char *fmt, ...)
+int printw(const char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -105,7 +105,7 @@ int printw(char *fmt, ...)
 	return retval;
 }
 
-int wprintw(WINDOW *win, char *fmt, ...)
+int wprintw(WINDOW *win, const char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -119,7 +119,7 @@ int wprintw(WINDOW *win, char *fmt, ...)
 	return retval;
 }
 
-int mvprintw(int y, int x, char *fmt, ...)
+int mvprintw(int y, int x, const char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -136,7 +136,7 @@ int mvprintw(int y, int x, char *fmt, ...)
 	return retval;
 }
 
-int mvwprintw(WINDOW *win, int y, int x, char *fmt, ...)
+int mvwprintw(WINDOW *win, int y, int x, const char *fmt, ...)
 {
 	va_list args;
 	int retval;
@@ -153,7 +153,7 @@ int mvwprintw(WINDOW *win, int y, int x, char *fmt, ...)
 	return retval;
 }
 
-int vwprintw(WINDOW *win, char *fmt, va_list varglist)
+int vwprintw(WINDOW *win, const char *fmt, va_list varglist)
 {
 	char printbuf[513];
 	int len;
@@ -165,7 +165,7 @@ int vwprintw(WINDOW *win, char *fmt, va_list varglist)
 	return (waddstr(win, printbuf) == ERR) ? ERR : len;
 }
 
-int vw_printw(WINDOW *win, char *fmt, va_list varglist)
+int vw_printw(WINDOW *win, const char *fmt, va_list varglist)
 {
 	PDC_LOG(("vw_printw() - called\n"));
 

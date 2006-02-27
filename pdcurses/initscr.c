@@ -43,7 +43,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.37 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.38 2006/02/27 08:53:43 wmcbrine Exp $";
 #endif
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
@@ -141,7 +141,7 @@ extern void (*PDC_initial_slk)(void);
 	newterm() for each terminal instead of initscr().  The newterm()
 	function should be called once for each terminal.  It returns a
 	value of type SCREEN* which should be saved as a reference to 
-	that terminal. The arguments are the type of of terminal to be 
+	that terminal. The arguments are the type of terminal to be 
 	used in place of TERM (environment variable), a file pointer for 
 	output to the terminal and another file pointer for input from 
 	the terminal. The program must also call endwin() for each 
@@ -161,14 +161,14 @@ extern void (*PDC_initial_slk)(void);
 	has been resized by external means, and requires a call to 
 	resize_term().
 
-	Due to the fact that newterm() does not yet exist in PDCurses,
-	there is no way to recover from an error in initscr().
+	PDCurses supports only one terminal via newterm() or set_term(), 
+	and the parameters are ignored.
 
 	By default, curses will set default attributes to white on 
 	black. If you want to use the attributes of the current terminal 
-	to be the defaults, set the environment variable: 
-	PDC_ORIGINAL_COLORS to any value before calling initscr(). 
-	(Currently only effective under Win32)
+	to be the defaults, set the environment variable 
+	PDC_ORIGINAL_COLORS to any value before calling initscr() 
+	(currently only effective under Win32).
 
   X/Open Return Value:
 	All functions return NULL on error, except endwin(), which
@@ -372,9 +372,13 @@ bool isendwin(void)
 
 SCREEN *newterm(char *type, FILE *outfd, FILE *infd)
 {
+	WINDOW *result;
+
 	PDC_LOG(("newterm() - called\n"));
 
-	return NULL;
+	result = Xinitscr(0, NULL);
+
+	return result ? SP : NULL;
 }
 
 SCREEN *set_term(SCREEN *new)
@@ -383,7 +387,7 @@ SCREEN *set_term(SCREEN *new)
 
 	/* We only support one screen */
 
-	return SP;
+	return (new == SP) ? SP : NULL;
 }
 
 void delscreen(SCREEN *sp)

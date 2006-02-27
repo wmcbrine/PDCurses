@@ -30,7 +30,7 @@ void SelectionOn(int, int);
 void SelectionExtend(int, int);
 void SelectionSet(void);
 
-int write_socket(int, char *, int);
+int write_socket(int, const char *, int);
 int read_socket(int, char *, int);
 
 int XCursesSetupX(const char *display_name, int argc, char *argv[]);

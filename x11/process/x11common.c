@@ -7,7 +7,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11common =
-        "$Id: x11common.c,v 1.11 2006/02/23 01:46:54 wmcbrine Exp $";
+        "$Id: x11common.c,v 1.12 2006/02/27 08:19:33 wmcbrine Exp $";
 #endif
 
 /* Variables specific to process port */
@@ -33,7 +33,7 @@ fd_set writefds;
 
 struct timeval socket_timeout;
 
-int write_socket(int sock_num, char *buf, int len)
+int write_socket(int sock_num, const char *buf, int len)
 {
 	int start = 0, rc;
 

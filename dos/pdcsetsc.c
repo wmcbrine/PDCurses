@@ -20,7 +20,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.15 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcsetsc.c,v 1.16 2006/02/27 07:28:31 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -354,11 +354,11 @@ int PDC_curs_set(int visibility)
 	No errors are defined for this function.
 
   Portability:
-	PDCurses  void PDC_set_title(char *title);
+	PDCurses  void PDC_set_title(const char *title);
 
 **man-end****************************************************************/
 
-void PDC_set_title(char *title)
+void PDC_set_title(const char *title)
 {
 	PDC_LOG(("PDC_set_title() - called: <%s>\n", title));
 }

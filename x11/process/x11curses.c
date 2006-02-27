@@ -12,7 +12,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.23 2006/02/23 01:46:54 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.24 2006/02/27 07:28:32 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -91,7 +91,7 @@ int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 	return OK;
 }
 
-void XCurses_set_title(char *title)
+void XCurses_set_title(const char *title)
 {
 	char buf[30];
 	int idx, len;

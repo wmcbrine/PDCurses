@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.39 2006/02/22 06:09:46 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.40 2006/02/27 07:28:30 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -292,7 +292,7 @@ int	XCursesResizeScreen(int, int);
 int	XCurses_get_cols(void);
 int	XCurses_get_rows(void);
 int	XCurses_refresh_scrollbar(void);
-void	XCurses_set_title(char *);
+void	XCurses_set_title(const char *);
 int	XCurses_getclipboard(char **, long *);
 int	XCurses_setclipboard(char *, long);
 int	XCurses_clearclipboard(void);

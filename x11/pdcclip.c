@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.15 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.16 2006/02/27 08:13:03 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -75,11 +75,11 @@ int PDC_getclipboard(char **contents, long *length)
 				clipboard
 
   Portability:
-	PDCurses  int PDC_getclipboard(char *contents, long length);
+	PDCurses  int PDC_getclipboard(const char *contents, long length);
 
 **man-end****************************************************************/
 
-int PDC_setclipboard(char *contents, long length)
+int PDC_setclipboard(const char *contents, long length)
 {
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 

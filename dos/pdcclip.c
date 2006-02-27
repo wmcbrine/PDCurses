@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.20 2006/02/27 08:13:03 wmcbrine Exp $";
 #endif
 
 /* global clipboard contents, should be NULL if none set */
@@ -92,11 +92,11 @@ int PDC_getclipboard(char **contents, long *length)
 	PDC_CLIP_ACCESS_ERROR	no clipboard support
 
   Portability:
-	PDCurses  int PDC_setclipboard(char *contents, long length);
+	PDCurses  int PDC_setclipboard(const char *contents, long length);
 
 **man-end****************************************************************/
 
-int PDC_setclipboard(char *contents, long length)
+int PDC_setclipboard(const char *contents, long length)
 {
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 

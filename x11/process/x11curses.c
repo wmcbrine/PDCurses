@@ -12,7 +12,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.26 2006/02/27 07:58:31 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.27 2006/02/27 08:13:04 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -476,7 +476,7 @@ int XCurses_getclipboard(char **contents, long *length)
 	return result;
 }
 
-int XCurses_setclipboard(char *contents, long length)
+int XCurses_setclipboard(const char *contents, long length)
 {
 	int rc;
 	char buf[12];		/* big enough for 2 integers */

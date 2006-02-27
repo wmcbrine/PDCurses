@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.42 2006/02/27 07:58:30 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.43 2006/02/27 08:13:02 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -294,7 +294,7 @@ int	XCurses_get_rows(void);
 int	XCurses_refresh_scrollbar(void);
 void	XCurses_set_title(const char *);
 int	XCurses_getclipboard(char **, long *);
-int	XCurses_setclipboard(char *, long);
+int	XCurses_setclipboard(const char *, long);
 int	XCurses_clearclipboard(void);
 unsigned long XCurses_get_key_modifiers(void);
 #endif
@@ -304,7 +304,7 @@ void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
 
 #ifdef PDCDEBUG
-void PDC_debug(char *, ...);
+void PDC_debug(const char *, ...);
 # define PDC_LOG(x) if (trace_on) PDC_debug x
 #else
 # define PDC_LOG(x)

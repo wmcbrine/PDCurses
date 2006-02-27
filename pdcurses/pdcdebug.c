@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdebug =
-	"$Id: pdcdebug.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcdebug.c,v 1.18 2006/02/27 08:13:03 wmcbrine Exp $";
 #endif
 
 bool trace_on = FALSE;
@@ -44,11 +44,11 @@ bool trace_on = FALSE;
 	No errors are defined for this function.
 
   Portability:
-	PDCurses void PDC_debug(char *, ...);
+	PDCurses void PDC_debug(const char *, ...);
 
 **man-end****************************************************************/
 
-void PDC_debug(char *fmt, ...)
+void PDC_debug(const char *fmt, ...)
 {
 	va_list args;
 	FILE *dbfp;

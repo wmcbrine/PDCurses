@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.135 2006/02/27 07:28:30 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.136 2006/02/27 08:13:02 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1492,7 +1492,7 @@ int	PDC_chins(WINDOW *, chtype, bool);
 int	PDC_ungetch(int);
 void	PDC_set_title(const char *);
 int	PDC_getclipboard(char **, long *);
-int	PDC_setclipboard(char *, long);
+int	PDC_setclipboard(const char *, long);
 int	PDC_freeclipboard(char *);
 int	PDC_clearclipboard(void);
 

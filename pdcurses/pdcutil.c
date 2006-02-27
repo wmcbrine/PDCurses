@@ -30,7 +30,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCutil =
-	"$Id: pdcutil.c,v 1.27 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcutil.c,v 1.28 2006/02/27 21:48:04 wmcbrine Exp $";
 #endif
 
 void PDC_beep(void)
@@ -84,7 +84,8 @@ void PDC_beep(void)
 	arguments are passed, EOF is returned as an error.
 
   Portability:
-	PDCurses  int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr);
+	PDCurses  int PDC_vsscanf(const char *buf, const char *fmt,
+				  va_list arg_ptr);
 
 **man-end****************************************************************/
 
@@ -98,12 +99,12 @@ void PDC_beep(void)
             ++chars; \
            } while (0)
 
-#define UNGETC(x) \
+#define UNGETC() \
         do { \
-            --buf; *buf = x; --chars; \
+            --buf; --chars; \
            } while (0)
 
-int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
+int PDC_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 {
 	int count, chars, c, width, radix, d, i;
 	int *int_ptr;
@@ -147,7 +148,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 					++chars;
 			}
 			while (WHITE(c));
-			UNGETC(c);
+			UNGETC();
 		} else if (f != '%')
 		{
 			NEXT(c);
@@ -273,7 +274,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 				if (c == '\0')
 					return count;
 				else
-					UNGETC(c);
+					UNGETC();
 				break;
 			case 'f':
 			case 'e':
@@ -346,7 +347,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 					}
 					if (!(width > 0 && isdigit(c)))
 					{
-						UNGETC(c);
+						UNGETC();
 						return count;
 					}
 					while (width > 0 && isdigit(c))
@@ -392,7 +393,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 				if (c == '\0')
 					return count;
 				else
-					UNGETC(c);
+					UNGETC();
 				break;
 			case 'i':
 				neg = FALSE;
@@ -501,7 +502,7 @@ int PDC_vsscanf(char *buf, const char *fmt, va_list arg_ptr)
 				if (c == '\0')
 					return count;
 				else
-					UNGETC(c);
+					UNGETC();
 				break;
 			case 'n':
 				if (assign)

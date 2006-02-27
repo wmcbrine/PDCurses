@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.137 2006/02/27 08:38:14 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.138 2006/02/27 21:48:03 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1300,7 +1300,7 @@ int	mvinsnstr(int, int, const char *, int);
 int	mvinsstr(int, int, const char *);
 int	mvinstr(int, int, char *);
 int	mvprintw(int, int, const char *, ...);
-int	mvscanw(int, int, char *, ...);
+int	mvscanw(int, int, const char *, ...);
 int	mvvline(int, int, chtype, int);
 int	mvwaddchnstr(WINDOW *, int, int, const chtype *, int);
 int	mvwaddchstr(WINDOW *, int, int, const chtype *);
@@ -1322,7 +1322,7 @@ int	mvwinsstr(WINDOW *, int, int, const char *);
 int	mvwinstr(WINDOW *, int, int, char *);
 int	mvwin(WINDOW *, int, int);
 int	mvwprintw(WINDOW *, int, int, const char *, ...);
-int	mvwscanw(WINDOW *, int, int, char *, ...);
+int	mvwscanw(WINDOW *, int, int, const char *, ...);
 int	mvwvline(WINDOW *, int, int, chtype, int);
 int	napms(int);
 WINDOW *newpad(int, int);
@@ -1354,7 +1354,7 @@ int	reset_shell_mode(void);
 int	resetty(void);
 int	ripoffline(int, int (*)(WINDOW *, int));
 int	savetty(void);
-int	scanw(char *, ...);
+int	scanw(const char *, ...);
 int	scr_dump(const char *);
 int	scr_init(const char *);
 int	scrl(int);
@@ -1395,8 +1395,8 @@ int	vidputs(chtype, int (*)(int));
 int	vline(chtype, int);
 int	vw_printw(WINDOW *, const char *, va_list);
 int	vwprintw(WINDOW *, const char *, va_list);
-int	vw_scanw(WINDOW *, char *, va_list);
-int	vwscanw(WINDOW *, char *, va_list);
+int	vw_scanw(WINDOW *, const char *, va_list);
+int	vwscanw(WINDOW *, const char *, va_list);
 int	waddchnstr(WINDOW *, const chtype *, int);
 int	waddchstr(WINDOW *, const chtype *);
 int	waddch(WINDOW *, const chtype);
@@ -1437,7 +1437,7 @@ int	wnoutrefresh(WINDOW *);
 int	wprintw(WINDOW *, const char *, ...);
 int	wredrawln(WINDOW *, int, int);
 int	wrefresh(WINDOW *);
-int	wscanw(WINDOW *, char *, ...);
+int	wscanw(WINDOW *, const char *, ...);
 int	wscrl(WINDOW *, int);
 int	wsetscrreg(WINDOW *, int, int);
 int	wstandend(WINDOW *);

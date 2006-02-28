@@ -10,7 +10,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.37 2006/02/18 23:52:26 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.38 2006/02/28 19:18:57 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -24,11 +24,9 @@ const char *rcsid_testcurs =
 # define HAVE_RESIZE 0
 #endif
 
-#ifdef PDCURSES
-# define HAVE_CLIPBOARD 1
-#else
-# define HAVE_CLIPBOARD 0
-#endif
+/* Set to non-zero if you want to test the PDCurses clipboard */
+
+#define HAVE_CLIPBOARD 0
 
 void inputTest(WINDOW *);
 void scrollTest(WINDOW *);

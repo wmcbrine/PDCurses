@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.138 2006/02/27 21:48:03 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.139 2006/02/28 02:04:56 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -615,10 +615,10 @@ typedef struct
 	bool	bogus_adapter;	/* TRUE if adapter has insane values	*/
 	bool	shell;		/* TRUE if reset_prog_mode() needs
 				   to be called.			*/
+	bool	orig_attr;	/* TRUE if we have the original colors	*/
+	short	orig_fore;	/* Original screen foreground color	*/
+	short	orig_back;	/* Original screen foreground color	*/
 	chtype	blank;		/* Background character			*/
-	chtype	orig_attr;	/* Original screen attributes - 
-				   top 16 bits background,
-				   bottom 16 bits foreground		*/
 	int	cursrow;	/* position of physical cursor		*/
 	int	curscol;	/* position of physical cursor		*/
 	int	cursor;		/* Current Cursor definition		*/

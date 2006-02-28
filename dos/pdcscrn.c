@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.21 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.22 2006/02/28 02:04:57 wmcbrine Exp $";
 #endif
 
 static unsigned short *saved_screen = NULL;
@@ -156,7 +156,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	internal->orig_attr	 = 0;
+	internal->orig_attr	 = FALSE;
 	internal->orig_emulation = getdosmembyte (0x487);
 
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);

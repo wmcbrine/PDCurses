@@ -20,7 +20,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.18 2006/02/28 02:04:57 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on = FALSE;
@@ -123,7 +123,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->audible	= TRUE;
 	internal->visibility	= 1;
 	internal->orig_cursor = internal->cursor;
-	internal->orig_attr = 0;
+	internal->orig_attr = FALSE;
 	internal->orgcbr = 0;
 	internal->blank = ' ';
 	internal->resized = FALSE;

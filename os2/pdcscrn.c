@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.18 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.19 2006/02/28 02:04:57 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -152,7 +152,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	PDC_LOG(("PDC_scr_open() - called. internal: %x, echo: %d\n",
 		internal, echo));
 
-	internal->orig_attr = 0;
+	internal->orig_attr = FALSE;
 	internal->orig_emulation = 0;
 
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);

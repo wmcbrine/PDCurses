@@ -17,6 +17,7 @@
 
 #define	CURSES_LIBRARY 1
 #include <curses.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
@@ -35,7 +36,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.42 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: color.c,v 1.43 2006/02/28 02:04:57 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -148,7 +149,11 @@ int start_color(void)
 	if (SP->mono)
 		return ERR;
 
-	/* PDC_init_atrtab(); - already done in initscr() */
+	if (SP->orig_attr && !getenv("PDC_ORIGINAL_COLORS"))
+	{
+		SP->orig_attr = FALSE;
+		PDC_init_atrtab();
+	}
 
 	memset(colorset, 0, PDC_COLOR_PAIRS);
 
@@ -250,21 +255,16 @@ int PDC_set_line_color(short color)
 
 void PDC_init_atrtab(void)
 {
-	int i, orig_fore, orig_back;
+	int i;
 
-	if (SP->orig_attr == 0)
+	if (!SP->orig_attr)
 	{
-		orig_fore = COLOR_WHITE;
-		orig_back = COLOR_BLACK;
-	}
-	else
-	{
-		orig_fore = SP->orig_attr & A_CHARTEXT;
-		orig_back = (SP->orig_attr & A_ATTRIBUTES) >> 16;
+		SP->orig_fore = COLOR_WHITE;
+		SP->orig_back = COLOR_BLACK;
 	}
 
 	for (i = 0; i < PDC_COLOR_PAIRS; i++)
-		PDC_init_pair(i, orig_fore, orig_back);
+		PDC_init_pair(i, SP->orig_fore, SP->orig_back);
 }
 
 static void PDC_init_pair(short pairnum, short fg, short bg)

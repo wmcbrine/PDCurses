@@ -26,15 +26,7 @@ LINK		= @PURIFY@ $(CC)
 #LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 LDFLAGS		= $(LIBXCURSES) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 
-DEMOS = \
-	firework \
-	newdemo \
-	ptest \
-	rain \
-	testcurs \
-	tuidemo \
-	worm \
-	xmas 
+DEMOS 		= firework newdemo ptest rain testcurs tuidemo worm xmas
 
 all: $(DEMOS) 
 
@@ -114,15 +106,9 @@ realclean: distclean
 # This section provides for compiling and linking the
 # ncurses test programs.
 #
-ncurses_testdir=$(HOME)/ncurses-5.5/test
+ncurses_testdir	= $(HOME)/ncurses-5.5/test
 
-NCURSES_TESTS = \
-	bs \
-	gdc \
-	hanoi \
-	knight \
-	tclock \
-	ncurses
+NCURSES_TESTS	= bs gdc hanoi knight tclock ncurses
 
 ncurses_tests: $(NCURSES_TESTS)
 

@@ -70,7 +70,7 @@ EMXOMF	=emxomf
 CCLIBS		=$(VIDLIB)
 
 LIBEXE		= ar
-LIBFLAGS		=rcv
+LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
@@ -95,112 +95,28 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-LIBOBJS =     \
-addch.o     \
-addchstr.o  \
-addstr.o    \
-attr.o      \
-beep.o      \
-bkgd.o      \
-border.o    \
-clear.o     \
-color.o     \
-delch.o     \
-deleteln.o  \
-getch.o     \
-getstr.o    \
-getyx.o     \
-inch.o      \
-inchstr.o   \
-initscr.o   \
-inopts.o    \
-insch.o     \
-insstr.o    \
-instr.o     \
-kernel.o    \
-mouse.o     \
-move.o      \
-outopts.o   \
-overlay.o   \
-pad.o       \
-printw.o    \
-refresh.o   \
-scanw.o     \
-scr_dump.o  \
-scroll.o    \
-slk.o       \
-termattr.o  \
-terminfo.o  \
-touch.o     \
-util.o      \
-window.o
+LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
+clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
+inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
+move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
+scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
-DLLOBJS =     \
-addch.dlo     \
-addchstr.dlo  \
-addstr.dlo    \
-attr.dlo      \
-beep.dlo      \
-bkgd.dlo      \
-border.dlo    \
-clear.dlo     \
-color.dlo     \
-delch.dlo     \
-deleteln.dlo  \
-getch.dlo     \
-getstr.dlo    \
-getyx.dlo     \
-inch.dlo      \
-inchstr.dlo   \
-initscr.dlo   \
-inopts.dlo    \
-insch.dlo     \
-insstr.dlo    \
-instr.dlo     \
-kernel.dlo    \
-mouse.dlo     \
-move.dlo      \
-outopts.dlo   \
-overlay.dlo   \
-pad.dlo       \
-printw.dlo    \
-refresh.dlo   \
-scanw.dlo     \
-scr_dump.dlo  \
-scroll.dlo    \
-slk.dlo       \
-termattr.dlo  \
-terminfo.dlo  \
-touch.dlo     \
-util.dlo      \
+DLLOBJS = addch.dlo addchstr.dlo addstr.dlo attr.dlo beep.dlo bkgd.dlo \
+border.dlo clear.dlo color.dlo delch.dlo deleteln.dlo getch.dlo \
+getstr.dlo getyx.dlo inch.dlo inchstr.dlo initscr.dlo inopts.dlo \
+insch.dlo insstr.dlo instr.dlo kernel.dlo mouse.dlo move.dlo outopts.dlo \
+overlay.dlo pad.dlo printw.dlo refresh.dlo scanw.dlo scr_dump.dlo \
+scroll.dlo slk.dlo termattr.dlo terminfo.dlo touch.dlo util.dlo \
 window.dlo
 
-PDCOBJS =   \
-pdcclip.o   \
-pdcdebug.o  \
-pdcdisp.o   \
-pdcgetsc.o  \
-pdckbd.o    \
-pdcprint.o  \
-pdcscrn.o   \
-pdcsetsc.o  \
-pdcutil.o   \
-pdcwin.o
+PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o pdcprint.o \
+pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
-PDCDLOS =   \
-pdcclip.dlo   \
-pdcdebug.dlo  \
-pdcdisp.dlo   \
-pdcgetsc.dlo  \
-pdckbd.dlo    \
-pdcprint.dlo  \
-pdcscrn.dlo   \
-pdcsetsc.dlo  \
-pdcutil.dlo   \
-pdcwin.dlo
+PDCDLOS = pdcclip.dlo pdcdebug.dlo pdcdisp.dlo pdcgetsc.dlo pdckbd.dlo \
+pdcprint.dlo pdcscrn.dlo pdcsetsc.dlo pdcutil.dlo pdcwin.dlo
 
-PANOBJS =     \
-panel.o
+PANOBJS = panel.o
+
 
 pdcurses.a : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
@@ -209,7 +125,8 @@ pdcurses.lib : pdcurses.a
 	$(EMXOMF) -o pdcurses.lib pdcurses.a
 
 curses.dll : $(DLLOBJS) $(PDCDLOS)
-	$(LINK) $(DLLFLAGS) -o curses.dll $(DLLOBJS) $(PDCDLOS) $(osdir)\pdcurses.def
+	$(LINK) $(DLLFLAGS) -o curses.dll $(DLLOBJS) $(PDCDLOS) \
+$(osdir)\pdcurses.def
 #	lxlite curses.dll
 	emximp -o curses.lib $(osdir)\pdcurses.def
 	emximp -o curses.a curses.lib

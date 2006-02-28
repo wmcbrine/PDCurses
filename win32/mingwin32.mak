@@ -69,60 +69,16 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-LIBOBJS =   \
-addch.o     \
-addchstr.o  \
-addstr.o    \
-attr.o      \
-beep.o      \
-bkgd.o      \
-border.o    \
-clear.o     \
-color.o     \
-delch.o     \
-deleteln.o  \
-getch.o     \
-getstr.o    \
-getyx.o     \
-inch.o      \
-inchstr.o   \
-initscr.o   \
-inopts.o    \
-insch.o     \
-insstr.o    \
-instr.o     \
-kernel.o    \
-mouse.o     \
-move.o      \
-outopts.o   \
-overlay.o   \
-pad.o       \
-printw.o    \
-refresh.o   \
-scanw.o     \
-scr_dump.o  \
-scroll.o    \
-slk.o       \
-termattr.o  \
-terminfo.o  \
-touch.o     \
-util.o      \
-window.o
+LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
+clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
+inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
+move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
+scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
-PDCOBJS =   \
-pdcclip.o   \
-pdcdebug.o  \
-pdcdisp.o   \
-pdcgetsc.o  \
-pdckbd.o    \
-pdcprint.o  \
-pdcscrn.o   \
-pdcsetsc.o  \
-pdcutil.o   \
-pdcwin.o
+PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o pdcprint.o \
+pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
-PANOBJS =     \
-panel.o
+PANOBJS = panel.o
 
 
 pdcurses.a : $(LIBOBJS) $(PDCOBJS)

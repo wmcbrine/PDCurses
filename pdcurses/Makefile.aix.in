@@ -74,65 +74,17 @@ realclean: distclean
 
 #------------------------------------------------------------------------
 
-LIBOBJS =   \
-addch.o     \
-addchstr.o  \
-addstr.o    \
-attr.o      \
-beep.o      \
-bkgd.o      \
-border.o    \
-clear.o     \
-color.o     \
-delch.o     \
-deleteln.o  \
-getch.o     \
-getstr.o    \
-getyx.o     \
-inch.o      \
-inchstr.o   \
-initscr.o   \
-inopts.o    \
-insch.o     \
-insstr.o    \
-instr.o     \
-kernel.o    \
-mouse.o     \
-move.o      \
-outopts.o   \
-overlay.o   \
-pad.o       \
-printw.o    \
-refresh.o   \
-scanw.o     \
-scr_dump.o  \
-scroll.o    \
-slk.o       \
-termattr.o  \
-terminfo.o  \
-touch.o     \
-util.o      \
-window.o
+LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
+clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
+inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
+move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
+scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
-PDCOBJS =   \
-pdcclip.o   \
-pdcdebug.o  \
-pdcdisp.o   \
-pdcgetsc.o  \
-pdckbd.o    \
-pdcprint.o  \
-pdcscrn.o   \
-pdcsetsc.o   \
-pdcutil.o   \
-pdcwin.o
+PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o pdcprint.o \
+pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
-X11OBJS =   \
-pdcx11.o    \
-x11curses.o \
-x11common.o \
-x11.o       \
-sb.o        \
-ScrollBox.o
+X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
+
 
 libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS) curses.exp ../x11/xcurses.exp
 	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) $(LIBOBJS) $(PDCOBJS) $(X11OBJS) -o $@
@@ -140,6 +92,7 @@ libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS) curses.exp ../x11/xcurses.exp
 curses.exp: ../win32/curses.def ../x11/xcurses.exp
 	cp ../x11/xcurses.exp ./curses.exp
 	grep ^EXPORTS ../win32/curses.def | cut -f 2 -d\ >> curses.exp
+
 
 addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/addch.c

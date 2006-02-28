@@ -81,115 +81,34 @@ clean:
 demos:	$(DEMOS)
 #------------------------------------------------------------------------
 
-LIBOBJS =     \
-addch.obj     \
-addchstr.obj  \
-addstr.obj    \
-attr.obj      \
-beep.obj      \
-bkgd.obj      \
-border.obj    \
-clear.obj     \
-color.obj     \
-delch.obj     \
-deleteln.obj  \
-getch.obj     \
-getstr.obj    \
-getyx.obj     \
-inch.obj      \
-inchstr.obj   \
-initscr.obj   \
-inopts.obj    \
-insch.obj     \
-insstr.obj    \
-instr.obj     \
-kernel.obj    \
-mouse.obj     \
-move.obj      \
-outopts.obj   \
-overlay.obj   \
-pad.obj       \
-printw.obj    \
-refresh.obj   \
-scanw.obj     \
-scr_dump.obj  \
-scroll.obj    \
-slk.obj       \
-termattr.obj  \
-terminfo.obj  \
-touch.obj     \
-util.obj      \
+LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
+border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj \
+getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
+insch.obj insstr.obj instr.obj kernel.obj mouse.obj move.obj outopts.obj \
+overlay.obj pad.obj printw.obj refresh.obj scanw.obj scr_dump.obj \
+scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
 window.obj
 
-PDCOBJS =     \
-pdcclip.obj   \
-pdcdebug.obj  \
-pdcdisp.obj   \
-pdcgetsc.obj  \
-pdckbd.obj    \
-pdcprint.obj  \
-pdcscrn.obj   \
-pdcsetsc.obj  \
-pdcutil.obj   \
-pdcwin.obj
+PDCOBJS = pdcclip.obj pdcdebug.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj \
+pdcprint.obj pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
 
-PANOBJS =     \
-panel.obj
+PANOBJS = panel.obj
 
-LIBDLLS =     \
-addch.dll.obj     \
-addchstr.dll.obj  \
-addstr.dll.obj    \
-attr.dll.obj      \
-beep.dll.obj      \
-bkgd.dll.obj      \
-border.dll.obj    \
-clear.dll.obj     \
-color.dll.obj     \
-delch.dll.obj     \
-deleteln.dll.obj  \
-getch.dll.obj     \
-getstr.dll.obj    \
-getyx.dll.obj     \
-inch.dll.obj      \
-inchstr.dll.obj   \
-initscr.dll.obj   \
-inopts.dll.obj    \
-insch.dll.obj     \
-insstr.dll.obj    \
-instr.dll.obj     \
-kernel.dll.obj    \
-mouse.dll.obj     \
-move.dll.obj      \
-outopts.dll.obj   \
-overlay.dll.obj   \
-pad.dll.obj       \
-printw.dll.obj    \
-refresh.dll.obj   \
-scanw.dll.obj     \
-scr_dump.dll.obj  \
-scroll.dll.obj    \
-slk.dll.obj       \
-termattr.dll.obj  \
-terminfo.dll.obj  \
-touch.dll.obj     \
-util.dll.obj      \
-window.dll.obj
+LIBDLLS = addch.dll.obj addchstr.dll.obj addstr.dll.obj attr.dll.obj \
+beep.dll.obj bkgd.dll.obj border.dll.obj clear.dll.obj color.dll.obj \
+delch.dll.obj deleteln.dll.obj getch.dll.obj getstr.dll.obj \
+getyx.dll.obj inch.dll.obj inchstr.dll.obj initscr.dll.obj \
+inopts.dll.obj insch.dll.obj insstr.dll.obj instr.dll.obj kernel.dll.obj \
+mouse.dll.obj move.dll.obj outopts.dll.obj overlay.dll.obj pad.dll.obj \
+printw.dll.obj refresh.dll.obj scanw.dll.obj scr_dump.dll.obj \
+scroll.dll.obj slk.dll.obj termattr.dll.obj terminfo.dll.obj \
+touch.dll.obj util.dll.obj window.dll.obj
 
-PDCDLLS =     \
-pdcclip.dll.obj   \
-pdcdebug.dll.obj  \
-pdcdisp.dll.obj   \
-pdcgetsc.dll.obj  \
-pdckbd.dll.obj    \
-pdcprint.dll.obj  \
-pdcscrn.dll.obj   \
-pdcsetsc.dll.obj  \
-pdcutil.dll.obj   \
-pdcwin.dll.obj
+PDCDLLS = pdcclip.dll.obj pdcdebug.dll.obj pdcdisp.dll.obj \
+pdcgetsc.dll.obj pdckbd.dll.obj pdcprint.dll.obj pdcscrn.dll.obj \
+pdcsetsc.dll.obj pdcutil.dll.obj pdcwin.dll.obj
 
-PANDLLS =     \
-panel.dll.obj
+PANDLLS = panel.dll.obj
 
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)

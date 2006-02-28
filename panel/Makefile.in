@@ -16,8 +16,8 @@ exec_prefix	= @exec_prefix@
 libdir		= $(exec_prefix)
 includedir	= @includedir@
 
-PDCURSES_HOME		=$(srcdir)/..
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
+PDCURSES_HOME		= $(srcdir)/..
+PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -57,8 +57,7 @@ realclean: distclean
 
 #------------------------------------------------------------------------
 
-OBJS = \
-panel.o
+OBJS = panel.o
 
 libpanel.a : $(OBJS)
 	ar rv $@ $?

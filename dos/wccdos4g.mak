@@ -71,60 +71,19 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-LIBOBJS =    &
-addch.obj    &
-addchstr.obj &
-addstr.obj   &
-attr.obj     &
-beep.obj     &
-bkgd.obj     &
-border.obj   &
-clear.obj    &
-color.obj    &
-delch.obj    &
-deleteln.obj &
-getch.obj    &
-getstr.obj   &
-getyx.obj    &
-inch.obj     &
-inchstr.obj  &
-initscr.obj  &
-inopts.obj   &
-insch.obj    &
-insstr.obj   &
-instr.obj    &
-kernel.obj   &
-mouse.obj    &
-move.obj     &
-outopts.obj  &
-overlay.obj  &
-pad.obj      &
-printw.obj   &
-refresh.obj  &
-scanw.obj    &
-scr_dump.obj &
-scroll.obj   &
-slk.obj      &
-termattr.obj &
-terminfo.obj &
-touch.obj    &
-util.obj     &
+LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj &
+border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj &
+getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj &
+insch.obj insstr.obj instr.obj kernel.obj mouse.obj move.obj outopts.obj &
+overlay.obj pad.obj printw.obj refresh.obj scanw.obj scr_dump.obj &
+scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj &
 window.obj
 
-PDCOBJS =      &
-pdcclip.obj    &
-pdcdebug.obj   &
-pdcdisp.obj    &
-pdcgetsc.obj   &
-pdckbd.obj     &
-pdcprint.obj   &
-pdcscrn.obj    &
-pdcsetsc.obj   &
-pdcutil.obj    &
-pdcwin.obj
+PDCOBJS = pdcclip.obj pdcdebug.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj &
+pdcprint.obj pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
 
-PANOBJS =     &
-panel.obj
+PANOBJS = panel.obj
+
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf

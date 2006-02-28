@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.27 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.28 2006/02/28 21:48:10 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -325,7 +325,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 	if ((y > win->_maxy) || (x > win->_maxx) || (y < 0) || (x < 0))
 		return ERR;
 
-	/* Remove any A_ALTCHASET attribute from the ch before any
+	/* Remove any A_ALTCHARSET attribute from the ch before any
 	   further testing. If the character has A_ALTCHARSET, set xlat
 	   to FALSE. */
 

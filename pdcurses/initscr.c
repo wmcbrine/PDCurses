@@ -43,7 +43,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.38 2006/02/27 08:53:43 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.39 2006/02/28 02:09:15 wmcbrine Exp $";
 #endif
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
@@ -131,8 +131,8 @@ extern void (*PDC_initial_slk)(void);
 	escaping from curses mode temporarily.  This routine will
 	restore tty modes, move the cursor to the lower left corner
 	of the screen and reset the terminal into the proper non-visual
-	mode.  To resume curses after a temporary escape, refresh() or
-	doupdate() should be called.
+	mode.  To resume curses after a temporary escape, call refresh() 
+	or doupdate().
 
 	The isendwin() function returns TRUE if endwin() has been called
 	without any subsequent calls to wrefresh(), and FALSE otherwise.
@@ -163,12 +163,6 @@ extern void (*PDC_initial_slk)(void);
 
 	PDCurses supports only one terminal via newterm() or set_term(), 
 	and the parameters are ignored.
-
-	By default, curses will set default attributes to white on 
-	black. If you want to use the attributes of the current terminal 
-	to be the defaults, set the environment variable 
-	PDC_ORIGINAL_COLORS to any value before calling initscr() 
-	(currently only effective under Win32).
 
   X/Open Return Value:
 	All functions return NULL on error, except endwin(), which

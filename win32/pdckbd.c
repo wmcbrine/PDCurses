@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.36 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.37 2006/03/01 05:34:36 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -881,8 +881,6 @@ int PDC_rawgetch(void)
 		if (_getch_win_->_use_keypad)
 			return oldc;
 	}
-
-	return -1;
 }
 
 /*man-start**************************************************************
@@ -965,8 +963,6 @@ int PDC_sysgetch(void)
 		if ((c = PDC_validchar(c)) >= 0)
 			return c;
 	}
-
-	return -1;
 }
 
 /*man-start**************************************************************

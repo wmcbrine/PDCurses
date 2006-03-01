@@ -19,7 +19,7 @@ void rmerror(void);
 
 #ifdef PDCDEBUG
 const char *rcsid_tui =
-	"$Id: tui.c,v 1.19 2006/02/19 00:21:12 wmcbrine Exp $";
+	"$Id: tui.c,v 1.20 2006/03/01 07:48:33 wmcbrine Exp $";
 #endif
 
 #if defined(__unix) && !defined(__DJGPP__)
@@ -139,7 +139,10 @@ static void setcolor(WINDOW *win, chtype color)
 
 static void colorbox(WINDOW *win, chtype color, int hasbox)
 {
-	int maxy, maxx;
+	int maxy;
+#ifndef getmaxy
+	int maxx;
+#endif
 	chtype attr = color & A_ATTR;  /* extract Bold, Reverse, Blink bits */
 
 	setcolor(win, color);
@@ -154,8 +157,11 @@ static void colorbox(WINDOW *win, chtype color, int hasbox)
 
 	werase(win); 
 
+#ifdef getmaxy
+	maxy = getmaxy(win);
+#else
 	getmaxyx(win, maxy, maxx);
-
+#endif
 	if (hasbox && (maxy > 2))
 		box(win, 0, 0);
 
@@ -391,10 +397,14 @@ void clsbody(void)
 
 int bodylen(void)
 {
+#ifdef getmaxy
+	return getmaxy(wbody);
+#else
 	int maxy, maxx;
 
 	getmaxyx(wbody, maxy, maxx);
 	return maxy;
+#endif
 }
 
 WINDOW *bodywin(void)
@@ -632,9 +642,16 @@ void startmenu(menu *mp, char *mtitle)
 
 static void repainteditbox(WINDOW *win, int x, char *buf)
 {
-	int maxy, maxx;
+#ifndef getmaxx
+	int maxy;
+#endif
+	int maxx;
 
+#ifdef getmaxx
+	maxx = getmaxx(win);
+#else
 	getmaxyx(win, maxy, maxx);
+#endif
 	werase(win);
 	mvwprintw(win, 0, 0, "%s", padstr(buf, maxx));
 	wmove(win, 0, x);

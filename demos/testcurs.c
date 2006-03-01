@@ -10,7 +10,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.38 2006/02/28 19:18:57 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.39 2006/03/01 07:48:33 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -236,8 +236,10 @@ void introTest(WINDOW *win)
 
 void scrollTest(WINDOW *win)
 {
-	int i, OldY, OldX;
-
+	int i, OldY;
+#ifndef getmaxy
+	int OldX;
+#endif
 	/* disable typeahead checking */
 
 	typeahead(-1);
@@ -255,7 +257,11 @@ void scrollTest(WINDOW *win)
 		wrefresh(win);
 	};
 
+#ifdef getmaxy
+	OldY = getmaxy(win);
+#else
 	getmaxyx(win, OldY, OldX);
+#endif
 	mvwprintw(win, 6, 1, "The top of the window will scroll");
 	wmove(win, 1, 1);
 	wsetscrreg(win, 0, 4);

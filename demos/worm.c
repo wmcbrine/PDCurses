@@ -23,7 +23,7 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.12 2006/03/01 05:25:56 wmcbrine Exp $
+  $Id: worm.c,v 1.13 2006/03/01 07:48:33 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -384,7 +384,7 @@ int main(int argc, char *argv[])
 			{
 			case 0:
 				cleanup();
-				exit(EXIT_SUCCESS);
+				return EXIT_SUCCESS;
 			case 1:
 				w->orientation = op->opts[0];
 				break;

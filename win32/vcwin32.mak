@@ -34,14 +34,14 @@ demodir		= $(PDCURSES_HOME)\demos
 CC		= cl.exe -nologo
 
 !ifdef DEBUG
-CFLAGS  = -Z7 -DPDCDEBUG
-LDFLAGS = -debug -pdb:none
+CFLAGS		= -Z7 -DPDCDEBUG
+LDFLAGS		= -debug -pdb:none
 !else
-CFLAGS  =  -Ox
-LDFLAGS =
+CFLAGS		=  -Ox
+LDFLAGS		=
 !endif
 
-SHL_LD=link $(LDFLAGS) /NOLOGO /DLL /OUT:curses.dll /DEF:$(osdir)\curses.def
+SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:curses.dll /DEF:$(osdir)\curses.def
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
 
@@ -58,11 +58,11 @@ LIBEXE		= lib -nologo
 
 LIBCURSES	= pdcurses.lib
 DLLCURSES	= curses.lib
-CURSESDLL = curses.dll
+CURSESDLL	= curses.dll
 LIBPANEL	= panel.lib
 
-PDCLIBS	= $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
+DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 DLL_DEMOS	= testcurs_dll.exe newdemo_dll.exe xmas_dll.exe \
 tuidemo_dll.exe firework_dll.exe

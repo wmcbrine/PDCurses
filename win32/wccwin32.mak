@@ -32,14 +32,14 @@ pandir		= $(PDCURSES_HOME)\panel
 demodir		= $(PDCURSES_HOME)\demos
 
 CC		= wcc386
-TARGET=nt
+TARGET		= nt
 
 !ifeq DEBUG Y
-CFLAGS  = /d2 /DPDCDEBUG
-LDFLAGS = D W A op q sys $(TARGET)
+CFLAGS		= /d2 /DPDCDEBUG
+LDFLAGS		= D W A op q sys $(TARGET)
 !else
-CFLAGS  = /oneatx
-LDFLAGS = op q sys $(TARGET)
+CFLAGS		= /oneatx
+LDFLAGS		= op q sys $(TARGET)
 !endif
 
 CPPFLAGS	= /i=$(PDCURSES_HOME)
@@ -53,8 +53,8 @@ LIBEXE		= wlib /q /n /t
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
-PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe &
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe &
 firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################

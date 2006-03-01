@@ -56,18 +56,18 @@ else
 	LDFLAGS =
 endif
 
-DLLFLAGS = -Zdll -Zcrtdll -Zomf
-DLLCURSES = curses.lib
+DLLFLAGS 	= -Zdll -Zcrtdll -Zomf
+DLLCURSES	= curses.lib
 
 CPPFLAGS	= -I$(PDCURSES_HOME) $(EMXVID)
 
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 
 LINK		= gcc
-EMXBIND	=emxbind 
-EMXOMF	=emxomf
+EMXBIND		= emxbind 
+EMXOMF		= emxomf
 
-CCLIBS		=$(VIDLIB)
+CCLIBS		= $(VIDLIB)
 
 LIBEXE		= ar
 LIBFLAGS	= rcv
@@ -75,8 +75,8 @@ LIBFLAGS	= rcv
 LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
-PDCLIBS	= $(LIBCURSES) $(LIBPANEL) #$(DLLTARGET) pdcurses.lib panel.lib
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL) #$(DLLTARGET) pdcurses.lib panel.lib
+DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################

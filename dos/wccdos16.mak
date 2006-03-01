@@ -27,20 +27,20 @@ PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		= $(PDCURSES_HOME)\panel.h
 TERM_HEADER		= $(PDCURSES_HOME)\term.h
 
-srcdir	= $(PDCURSES_HOME)\pdcurses
-osdir	= $(PDCURSES_HOME)\dos
-pandir	= $(PDCURSES_HOME)\panel
-demodir	= $(PDCURSES_HOME)\demos
+srcdir		= $(PDCURSES_HOME)\pdcurses
+osdir		= $(PDCURSES_HOME)\dos
+pandir		= $(PDCURSES_HOME)\panel
+demodir		= $(PDCURSES_HOME)\demos
 
-CC	= wcc
-TARGET	= dos
+CC		= wcc
+TARGET		= dos
 
 !ifeq DEBUG Y
-CFLAGS  = /d2 /DPDCDEBUG
-LDFLAGS = D W A op q sys $(TARGET)
+CFLAGS  	= /d2 /DPDCDEBUG
+LDFLAGS 	= D W A op q sys $(TARGET)
 !else
-CFLAGS  = /oneatx
-LDFLAGS = op q sys $(TARGET)
+CFLAGS  	= /oneatx
+LDFLAGS 	= op q sys $(TARGET)
 !endif
 
 CPPFLAGS	= /i=$(PDCURSES_HOME)
@@ -54,8 +54,8 @@ LIBEXE		= wlib /q /n /t
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
-PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe &
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe &
 firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################

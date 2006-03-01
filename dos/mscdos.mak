@@ -36,11 +36,11 @@ demodir		= $(PDCURSES_HOME)\demos
 CC		= cl
 
 !ifdef DEBUG
-CFLAGS  = /nologo /Od /Zi /DPDCDEBUG
-LDFLAGS = /CO /NOE /SE:160 
+CFLAGS		= /nologo /Od /Zi /DPDCDEBUG
+LDFLAGS		= /CO /NOE /SE:160 
 !else
-CFLAGS  = /Ox
-LDFLAGS = /NOE /SE:160
+CFLAGS		= /Ox
+LDFLAGS		= /NOE /SE:160
 !endif
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
@@ -56,8 +56,8 @@ LIBEXE		= lib
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
-LIBRARIES	=	$(LIBCURSES) $(LIBPANEL)
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+LIBRARIES	= $(LIBCURSES) $(LIBPANEL)
+DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################

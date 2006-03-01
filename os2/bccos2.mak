@@ -34,9 +34,9 @@ demodir		= $(PDCURSES_HOME)\demos
 CC		= bcc
 
 !if $d(DEBUG)
-CFLAGS  = -N -v -y -DPDCDEBUG 
+CFLAGS  	= -N -v -y -DPDCDEBUG 
 !else
-CFLAGS  = -O 
+CFLAGS  	= -O 
 !endif
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
@@ -50,8 +50,8 @@ LIBEXE		= tlib /C /E
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
-PDCLIBS	= $(LIBCURSES) $(LIBPANEL)
-DEMOS	= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################

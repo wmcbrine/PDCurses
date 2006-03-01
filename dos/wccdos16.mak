@@ -27,21 +27,20 @@ PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		= $(PDCURSES_HOME)\panel.h
 TERM_HEADER		= $(PDCURSES_HOME)\term.h
 
+srcdir	= $(PDCURSES_HOME)\pdcurses
+osdir	= $(PDCURSES_HOME)\dos
+pandir	= $(PDCURSES_HOME)\panel
+demodir	= $(PDCURSES_HOME)\demos
 
-srcdir		= $(PDCURSES_HOME)\pdcurses
-osdir		= $(PDCURSES_HOME)\dos
-pandir		= $(PDCURSES_HOME)\panel
-demodir		= $(PDCURSES_HOME)\demos
-
-CC		= wcc
-TARGET=dos
+CC	= wcc
+TARGET	= dos
 
 !ifeq DEBUG Y
 CFLAGS  = /d2 /DPDCDEBUG
-LDFLAGS = DEBUG WATCOM ALL
+LDFLAGS = D W A op q sys $(TARGET)
 !else
 CFLAGS  = /oneatx
-LDFLAGS =
+LDFLAGS = op q sys $(TARGET)
 !endif
 
 CPPFLAGS	= /i=$(PDCURSES_HOME)
@@ -90,10 +89,8 @@ pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf
 
 panel.lib : $(PANOBJS)
-	@%create lib.rsp
-	@%append lib.rsp +$(PANOBJS)
-	$(LIBEXE) $@ @lib.rsp
-	del lib.rsp
+	$(LIBEXE) $@ +$(PANOBJS)
+
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) /fo=$@ $(srcdir)\addch.c
@@ -248,86 +245,28 @@ panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.obj $(LIBCURSES)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name firework.exe
-	@%append demos.lnk file firework.obj
-	@%append demos.lnk library $(LIBCURSES)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f firework.obj l $(LIBCURSES)
 
 newdemo.exe:	newdemo.obj $(LIBCURSES)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name newdemo.exe
-	@%append demos.lnk file newdemo.obj
-	@%append demos.lnk library $(LIBCURSES)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f newdemo.obj l $(LIBCURSES)
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name ptest.exe
-	@%append demos.lnk file ptest.obj
-	@%append demos.lnk library $(LIBCURSES)
-	@%append demos.lnk library $(LIBPANEL)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f ptest.obj l $(LIBCURSES) l $(LIBPANEL)
 
 rain.exe:	rain.obj $(LIBCURSES)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name rain.exe
-	@%append demos.lnk file rain.obj
-	@%append demos.lnk library $(LIBCURSES)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f rain.obj l $(LIBCURSES)
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name testcurs.exe
-	@%append demos.lnk file testcurs.obj
-	@%append demos.lnk library $(LIBCURSES)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f testcurs.obj l $(LIBCURSES)
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name tuidemo.exe
-	@%append demos.lnk file tuidemo.obj
-	@%append demos.lnk file tui.obj
-	@%append demos.lnk library $(LIBCURSES)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f tuidemo.obj f tui.obj l $(LIBCURSES)
 
 worm.exe:	worm.obj $(LIBCURSES)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name worm.exe
-	@%append demos.lnk file worm.obj
-	@%append demos.lnk library $(LIBCURSES)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f worm.obj l $(LIBCURSES)
 
 xmas.exe:	xmas.obj $(LIBCURSES)
-	@%create demos.lnk
-	@%append demos.lnk option quiet
-	@%append demos.lnk system $(TARGET)
-	@%append demos.lnk name xmas.exe
-	@%append demos.lnk file xmas.obj
-	@%append demos.lnk library $(LIBCURSES)
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f xmas.obj l $(LIBCURSES)
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)

@@ -14,7 +14,6 @@
 #
 ################################################################################
 PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
-CCINCDIR	= k:\h
 ################################################################################
 # Nothing below here should require changing.
 ################################################################################
@@ -27,30 +26,29 @@ PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PANEL_HEADER		= $(PDCURSES_HOME)\panel.h
 TERM_HEADER		= $(PDCURSES_HOME)\term.h
 
+srcdir	= $(PDCURSES_HOME)\pdcurses
+osdir	= $(PDCURSES_HOME)\os2
+pandir	= $(PDCURSES_HOME)\panel
+demodir	= $(PDCURSES_HOME)\demos
 
-srcdir		= $(PDCURSES_HOME)\pdcurses
-osdir		= $(PDCURSES_HOME)\os2
-pandir		= $(PDCURSES_HOME)\panel
-demodir		= $(PDCURSES_HOME)\demos
-
-CC		= wcc386
-TARGET=os2v2
+CC	= wcc386
+TARGET	= os2v2
 
 !ifeq DEBUG Y
 CFLAGS  = /d2 /DPDCDEBUG
-LDFLAGS = DEBUG ALL
+LDFLAGS = D A op q sys $(TARGET)
 !else
 CFLAGS  = /oneatx
-LDFLAGS =
+LDFLAGS = op q sys $(TARGET)
 !endif
 
-CPPFLAGS = /i=$(PDCURSES_HOME) /i=$(CCINCDIR)
+CPPFLAGS = /i=$(PDCURSES_HOME)
 
 CCFLAGS = /bt=$(TARGET) /wx /s /zq $(CFLAGS) $(CPPFLAGS)
 
 LINK		= wlink
 
-LIBEXE = wlib /q /n /b /c /t
+LIBEXE		= wlib /q /n /b /c /t
 
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
@@ -90,9 +88,8 @@ pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
 
 panel.lib : $(PANOBJS)
-	echo +$(PANOBJS)   >  lib.rsp
-	$(LIBEXE) $@ @lib.rsp
-	del lib.rsp
+	$(LIBEXE) $@ $(PANOBJS)
+
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) /fo=$@ $(srcdir)\addch.c
@@ -247,78 +244,28 @@ panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe:	firework.obj $(LIBCURSES)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name firework.exe    >> demos.lnk
-	echo file firework.obj    >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f firework.obj l $(LIBCURSES)
 
 newdemo.exe:	newdemo.obj $(LIBCURSES)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name newdemo.exe     >> demos.lnk
-	echo file newdemo.obj     >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f newdemo.obj l $(LIBCURSES)
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name ptest.exe       >> demos.lnk
-	echo file ptest.obj       >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	echo library $(LIBPANEL)  >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f ptest.obj l $(LIBCURSES) l $(LIBPANEL)
 
 rain.exe:	rain.obj $(LIBCURSES)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name rain.exe        >> demos.lnk
-	echo file rain.obj        >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f rain.obj l $(LIBCURSES)
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name testcurs.exe    >> demos.lnk
-	echo file testcurs.obj    >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f testcurs.obj l $(LIBCURSES)
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name tuidemo.exe     >> demos.lnk
-	echo file tuidemo.obj     >> demos.lnk
-	echo file tui.obj         >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f tuidemo.obj f tui.obj l $(LIBCURSES)
 
 worm.exe:	worm.obj $(LIBCURSES)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name worm.exe        >> demos.lnk
-	echo file worm.obj        >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f worm.obj l $(LIBCURSES)
 
 xmas.exe:	xmas.obj $(LIBCURSES)
-	echo option quiet         >  demos.lnk
-	echo system $(TARGET)     >> demos.lnk
-	echo name xmas.exe        >> demos.lnk
-	echo file xmas.obj        >> demos.lnk
-	echo library $(LIBCURSES) >> demos.lnk
-	$(LINK) $(LDFLAGS) @demos.lnk
-	del demos.lnk
+	$(LINK) $(LDFLAGS) n $@ f xmas.obj l $(LIBCURSES)
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)

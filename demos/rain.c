@@ -1,4 +1,4 @@
-/* $Id: rain.c,v 1.7 2006/02/24 02:40:31 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.8 2006/03/01 05:25:56 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <stdlib.h>
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 		case 'Q':
 			curs_set(1);
 			endwin();
-			exit(EXIT_SUCCESS);
+			return EXIT_SUCCESS;
 		case 's':
 			nodelay(stdscr, FALSE);
 			break;
@@ -123,6 +123,4 @@ int main(int argc, char *argv[])
 		}
 		napms(50);
 	}
-
-	return EXIT_SUCCESS;	/* unreachable */
 }

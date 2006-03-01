@@ -23,7 +23,7 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.11 2006/02/24 02:40:31 wmcbrine Exp $
+  $Id: worm.c,v 1.12 2006/03/01 05:25:56 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 			if ((length = atoi(argv[x])) < 2 || length > 1024)
 			{
 				fprintf(stderr, "%s: Invalid length\n", *argv);
-				exit(EXIT_FAILURE);
+				return EXIT_FAILURE;
 			}
 
 			break;
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 			{
 				fprintf(stderr, "%s: Invalid number of worms\n",
 					*argv);
-				exit(EXIT_FAILURE);
+				return EXIT_FAILURE;
 			}
 
 			break;
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 		      usage:
 			fprintf(stderr, "usage: %s [-field] [-length #] "
 				"[-number #] [-trail]\n", *argv);
-			exit(EXIT_FAILURE);
+			return EXIT_FAILURE;
 		}
 	}
 
@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
 		if ((ip = malloc(sizeof(short) * (length + 1))) == NULL)
 		{
 			fprintf(stderr, "%s: out of memory\n", *argv);
-			exit(EXIT_FAILURE);
+			return EXIT_FAILURE;
 		}
 
 		w->xpos = ip;
@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 		if ((ip = malloc(sizeof(short) * (length + 1))) == NULL)
 		{
 			fprintf(stderr, "%s: out of memory\n", *argv);
-			exit(EXIT_FAILURE);
+			return EXIT_FAILURE;
 		}
 
 		w->ypos = ip;
@@ -329,7 +329,7 @@ int main(int argc, char *argv[])
 		    if (ch == 'q')
 		    {
 			cleanup();
-			exit(EXIT_SUCCESS);
+			return EXIT_SUCCESS;
 		    }
 		    else if (ch == 's')
 			nodelay(stdscr, FALSE);
@@ -404,6 +404,4 @@ int main(int argc, char *argv[])
 		napms(12);
 		refresh();
 	}
-
-	return EXIT_SUCCESS;	/* unreachable */
 }

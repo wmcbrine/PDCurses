@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.37 2006/03/01 05:34:36 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.38 2006/03/01 08:01:02 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -868,7 +868,7 @@ int PDC_rawgetch(void)
 	    && !PDC_breakout())
 		return -1;
 
-	while (1)
+	for (;;)
 	{
 		c = PDC_get_bios_key();
 		oldc = c;
@@ -951,7 +951,7 @@ int PDC_sysgetch(void)
 	    && !PDC_breakout())
 		return -1;
 
-	while (1)
+	for (;;)
 	{
 		c = PDC_get_bios_key();
 

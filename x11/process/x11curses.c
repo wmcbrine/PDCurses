@@ -12,7 +12,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.27 2006/02/27 08:13:04 wmcbrine Exp $";
+        "$Id: x11curses.c,v 1.28 2006/03/01 08:04:34 wmcbrine Exp $";
 #endif
 
 extern AppData app_data;
@@ -141,7 +141,7 @@ int XCurses_rawgetch(int delaytenths)
 
 	PDC_LOG(("%s:XCurses_rawgetch() - called\n", XCLOGMSG));
 
-	while(1)
+	while (1)
 	{
 	    if (delaytenths && !XCurses_kbhit())
 		key = -1;

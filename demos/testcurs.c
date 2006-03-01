@@ -10,7 +10,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.39 2006/03/01 07:48:33 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.40 2006/03/01 08:04:33 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 	erase();
 	display_menu(old_option, new_option);
 
-	while(1)
+	while (1)
 	{
 		noecho();
 		keypad(stdscr, TRUE);

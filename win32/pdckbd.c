@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.38 2006/03/01 08:01:02 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.39 2006/03/01 08:04:34 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -546,7 +546,7 @@ int PDC_get_bios_key(void)
 
 	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
-	while(1)
+	while (1)
 	{
 	    win32_getch();
 

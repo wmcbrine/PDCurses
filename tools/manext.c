@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 		continue;
 	    }
 
-	    while(1)
+	    while (1)
 	    {
 		if (fgets(s, (int)sizeof(s), fp) == NULL)
 		{

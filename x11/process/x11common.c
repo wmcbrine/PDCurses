@@ -7,7 +7,7 @@
 
 #ifdef PDCDEBUG
 const char rcsid_x11common =
-        "$Id: x11common.c,v 1.12 2006/02/27 08:19:33 wmcbrine Exp $";
+        "$Id: x11common.c,v 1.13 2006/03/01 08:04:34 wmcbrine Exp $";
 #endif
 
 /* Variables specific to process port */
@@ -44,7 +44,7 @@ int write_socket(int sock_num, const char *buf, int len)
 	if (sock_num == key_sock)
 		printf("%s:write_socket(key) len: %d\n", XCLOGMSG, len);
 #endif
-	while(1)
+	while (1)
 	{
 		rc = write(sock_num, buf + start, len);
 
@@ -63,7 +63,7 @@ int read_socket(int sock_num, char *buf, int len)
 	PDC_LOG(("%s:read_socket called: sock_num %d len %d\n",
 		XCLOGMSG, sock_num, len));
 
-	while(1)
+	while (1)
 	{
 		rc = read(sock_num, buf + start, length);
 

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.44 2006/02/27 21:48:03 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.45 2006/03/01 08:34:35 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -212,7 +212,7 @@ int	PDC_chins(WINDOW *, chtype, bool);
 int	PDC_clr_scrn(WINDOW *);
 int	PDC_clr_update(WINDOW *);
 int	PDC_copy_win(const WINDOW *, WINDOW *, int, int, int,
-		     int, int, int, int, int, bool);
+		     int, int, int, bool);
 int	PDC_cursor_off(void);
 int	PDC_cursor_on(void);
 int	PDC_curs_set(int);

@@ -31,7 +31,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_overlay =
-	"$Id: overlay.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: overlay.c,v 1.17 2006/03/01 08:34:35 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -149,8 +149,7 @@ int overlay(const WINDOW *src_w, WINDOW *dst_w)
 
 	return PDC_copy_win(src_w, dst_w, src_start_y, src_start_x,
 		src_start_y + ydiff, src_start_x + xdiff, dst_start_y,
-		dst_start_x, dst_start_y + ydiff, dst_start_x + xdiff,
-		TRUE);
+		dst_start_x, TRUE);
 }
 
 int overwrite(const WINDOW *src_w, WINDOW *dst_w)
@@ -209,15 +208,14 @@ int overwrite(const WINDOW *src_w, WINDOW *dst_w)
 
 	return PDC_copy_win(src_w, dst_w, src_start_y, src_start_x,
 		src_start_y + ydiff, src_start_x + xdiff, dst_start_y,
-		dst_start_x, dst_start_y + ydiff, dst_start_x + xdiff,
-		FALSE);
+		dst_start_x, FALSE);
 }
 
 int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 		      int src_tc, int dst_tr, int dst_tc, int dst_br, 
 		      int dst_bc, int overlay)
 {
-	int src_end_x, src_end_y, dst_end_x, dst_end_y;
+	int src_end_x, src_end_y;
 	int src_rows, src_cols, dst_rows, dst_cols;
 	int min_rows, min_cols;
 
@@ -243,10 +241,7 @@ int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 
 	src_end_y = src_tr + min_rows;
 	src_end_x = src_tc + min_cols;
-	dst_end_y = dst_tr + min_rows;
-	dst_end_x = dst_tc + min_cols;
 
 	return PDC_copy_win(src_w, dst_w, src_tr, src_tc,
-		src_end_y, src_end_x, dst_tr, dst_tc,
-		dst_end_y, dst_end_x, overlay);
+		src_end_y, src_end_x, dst_tr, dst_tc, overlay);
 }

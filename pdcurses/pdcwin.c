@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.28 2006/02/28 21:48:10 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.29 2006/03/01 08:34:35 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -46,14 +46,13 @@ const char *rcsid_PDCwin =
   Portability:
 	PDCurses  int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w,
 			int src_tr, int src_tc, int src_br, int src_bc,
-			int dst_tr, int dst_tc, int dst_br, int dst_bc, 
-			bool overlay);
+			int dst_tr, int dst_tc, bool overlay);
 
 **man-end****************************************************************/
 
 int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 		 int src_tc, int src_br, int src_bc, int dst_tr,
-		 int dst_tc, int dst_br, int dst_bc, bool overlay)
+		 int dst_tc, bool overlay)
 {
 	int col, line, y1, fc, *minchng, *maxchng;
 	chtype *w1ptr, *w2ptr;

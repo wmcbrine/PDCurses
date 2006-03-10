@@ -223,7 +223,7 @@ dnl Force the ability of shared library usage
 with_rexx="rexxtrans"
 MH_SHARED_LIBRARY(XCurses)
 
-AC_OUTPUT(Makefile pdcurses/$mymakefile demos/Makefile panel/Makefile tools/Makefile saa/Makefile xcurses-config)
+AC_OUTPUT(Makefile pdcurses/$mymakefile demos/Makefile panel/Makefile tools/Makefile xcurses-config)
 
 case "$target" in
         *ibm-aix*)

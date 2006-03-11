@@ -3,8 +3,11 @@
 # The idea to this kind of setup info script was stolen from numerous
 # other packages, such as neon, libxml and gnome.
 #
-# $Id: xcurses-config.in,v 1.5 2006/02/17 03:25:33 wmcbrine Exp $
+# $Id: xcurses-config.in,v 1.6 2006/03/11 03:15:12 wmcbrine Exp $
 #
+
+verdot=2.8
+
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 includedir=@includedir@/xcurses
@@ -23,7 +26,7 @@ usage()
     echo "  --prefix       PDCurses install prefix"
     echo "                 [$prefix]"
     echo "  --version      output version information"
-    echo "                 [@VERDOT@]"
+    echo "                 [$verdot]"
     exit $1
 }
 
@@ -46,7 +49,7 @@ while test $# -gt 0; do
        ;;
 
     --version)
-       echo @VERDOT@
+       echo $verdot
        exit 0
        ;;
 

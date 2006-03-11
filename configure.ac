@@ -62,19 +62,16 @@ AC_PROG_MAKE_SET
 dnl ensure that the system has System V IPC support
 MH_IPC
 
+if test $ac_cv_header_stdc != yes; then
+	AC_MSG_ERROR([Need ANSI C headers])
+fi
+
 dnl Checks for libraries.
 
-dnl Checks for header files.
-AC_HEADER_STDC
-if test $ac_cv_header_stdc != yes; then
-	AC_MSG_ERROR([Need ANSI C compiler])
-fi
 AC_CHECK_HEADERS(fcntl.h \
-	limits.h \
 	time.h \
 	sys/time.h \
 	sys/select.h \
-	unistd.h \
 	dlfcn.h \
 	dl.h \
 	errno.h

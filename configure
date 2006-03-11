@@ -3696,9 +3696,11 @@ _ACEOF
 
 fi
 
-
-
-
+if test $ac_cv_header_stdc != yes; then
+	{ { echo "$as_me:$LINENO: error: Need ANSI C compiler" >&5
+echo "$as_me: error: Need ANSI C compiler" >&2;}
+   { (exit 1); exit 1; }; }
+fi
 
 
 
@@ -3712,9 +3714,6 @@ for ac_header in fcntl.h \
 	limits.h \
 	time.h \
 	sys/time.h \
-	memory.h \
-	string.h \
-	stdarg.h \
 	sys/select.h \
 	unistd.h \
 	dlfcn.h \
@@ -5735,7 +5734,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5738 "configure"
+#line 5737 "configure"
 int a=0
 EOF
 
@@ -5774,7 +5773,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5777 "configure"
+#line 5776 "configure"
 int foo()
 {
 return(0);

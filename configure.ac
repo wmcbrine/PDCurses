@@ -13,7 +13,7 @@ AC_ISC_POSIX
 
 AC_CONFIG_HEADER(config.h)
 dnl Checks for system first
-AC_CANONICAL_TARGET([])
+AC_CANONICAL_SYSTEM([])
 
 mymakefile="Makefile"
 on_qnx=no

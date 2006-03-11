@@ -35,7 +35,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_printw =
-	"$Id: printw.c,v 1.21 2006/03/11 03:45:35 wmcbrine Exp $";
+	"$Id: printw.c,v 1.22 2006/03/11 03:47:27 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -160,7 +160,7 @@ int vwprintw(WINDOW *win, const char *fmt, va_list varglist)
 
 	PDC_LOG(("vwprintw() - called\n"));
 
-#if HAVE_VSNPRINTF
+#ifdef HAVE_VSNPRINTF
 	len = vsnprintf(printbuf, 512, fmt, varglist);
 #else
 	len = vsprintf(printbuf, fmt, varglist);

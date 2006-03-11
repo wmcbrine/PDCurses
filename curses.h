@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.139 2006/02/28 02:04:56 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.140 2006/03/11 06:11:47 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -55,7 +55,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2713
+#define PDC_BUILD 2714
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -95,6 +95,9 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
+#  endif
+#  ifndef HAVE_VSNPRINTF
+#    define HAVE_VSNPRINTF
 #  endif
 #endif
 
@@ -263,6 +266,9 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
+#  ifndef HAVE_VSNPRINTF
+#    define HAVE_VSNPRINTF
+#  endif
 #endif
 
 /*----------------------------------------
@@ -279,6 +285,9 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
+#  ifndef HAVE_VSNPRINTF
+#    define HAVE_VSNPRINTF
+#  endif
 #endif
 
 /*----------------------------------------
@@ -289,6 +298,9 @@ PDCurses portable platform definitions list:
 #ifdef __LCC__		/* should already be defined by the compiler	*/
 #  ifndef WIN32
 #    define WIN32
+#  endif
+#  ifndef HAVE_VSNPRINTF
+#    define HAVE_VSNPRINTF
 #  endif
 #endif
 
@@ -327,6 +339,9 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
+#  endif
+#  ifndef HAVE_VSNPRINTF
+#    define HAVE_VSNPRINTF
 #  endif
 #endif
 

@@ -3,14 +3,8 @@
 /* Define to empty if the keyword does not work.  */
 #undef const
 
-/* Define if you don't have vprintf but do have _doprnt.  */
-#undef HAVE_DOPRNT
-
-/* Define if your compiler supports ANSI prototypes  */
-#undef HAVE_PROTO
-
-/* Define if you have the vprintf function.  */
-#undef HAVE_VPRINTF
+/* Define if you have the vsnprintf function.  */
+#undef HAVE_VSNPRINTF
 
 /* Define if you need to in order for stat and other things to work.  */
 #undef _POSIX_SOURCE

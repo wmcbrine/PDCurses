@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.140 2006/03/11 06:11:47 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.141 2006/03/20 00:56:56 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -95,9 +95,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
-#  endif
-#  ifndef HAVE_VSNPRINTF
-#    define HAVE_VSNPRINTF
 #  endif
 #endif
 

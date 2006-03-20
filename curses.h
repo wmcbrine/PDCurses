@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.143 2006/03/20 07:43:33 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.144 2006/03/20 07:46:26 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -587,7 +587,6 @@ typedef struct _win		/* definition of a window	*/
 	char	*_title;	/* window title			   */
 	char	_title_ofs;	/* window title offset from left   */
 	chtype	_title_attr;	/* window title attributes	   */
-	chtype	_blank;		/* window's blank character	   */
 	int	_parx, _pary;	/* coords relative to parent (0,0) */
 	struct	_win *_parent;	/* subwin's pointer to parent win  */
 } WINDOW;

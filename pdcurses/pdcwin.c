@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.30 2006/03/20 07:43:33 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.31 2006/03/20 07:46:26 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -85,7 +85,7 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 		for (col = 0; col < xdiff; col++)
 		{
 			if ((*w1ptr) != (*w2ptr) && !((*w1ptr & A_CHARTEXT)
-			    == src_w->_blank && overlay))
+			    == ' ' && overlay))
 			{
 				*w2ptr = *w1ptr;
 
@@ -210,7 +210,6 @@ WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 	win->_bmarg = num_lines - 1;
 	win->_title_ofs = 1;
 	win->_title_attr = win->_attrs;
-	win->_blank = ' ';
 	win->_parx = win->_pary = -1;
 
 	/* init to say window unchanged */

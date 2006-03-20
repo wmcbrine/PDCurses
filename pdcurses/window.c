@@ -47,7 +47,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.23 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: window.c,v 1.24 2006/03/20 07:46:26 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -403,7 +403,6 @@ WINDOW *dupwin(WINDOW *win)
 	new->_title = win->_title;
 	new->_title_ofs = win->_title_ofs;
 	new->_title_attr = win->_title_attr;
-	new->_blank = win->_blank;
 	new->_parx = win->_parx;
 	new->_pary = win->_pary;
 	new->_parent = win->_parent;

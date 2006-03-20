@@ -292,7 +292,9 @@ INTRODUCTION:
 
 - fixes for panel library
 
-- key modifiers pressed by themselves are now returned as keys
+- key modifiers pressed by themselves are now returned as keys:
+  KEY_SHIFT_L KEY_SHIFT_R KEY_CONTROL_L KEY_CONTROL_R KEY_ALT_L KEY_ALT_R
+  This works on Win32 and X11 ports only
 
 - Added X11 shared library support
 
@@ -310,7 +312,7 @@ BUGS FIXED:
 NEW FUNCTIONS:
 
 - PDC_getclipboard() and PDC_setclipboard() for accessing the native
-  clipboard.
+  clipboard (X11, Win32 and OS/2)
 
 - PDC_set_title() for setting the title of the window (X11 and Win32 
   only)
@@ -320,7 +322,7 @@ NEW FUNCTIONS:
 - PDC_get_key_modifiers() for getting the keyboard modifier settings at 
   the time of the last (w)getch()
 
-- initscrX() (only for X11 port) which allows standard X11 switches to 
+- Xinitscr() (only for X11 port) which allows standard X11 switches to 
   be passed to the application
 
 NEW COMPILER SUPPORT:
@@ -345,21 +347,6 @@ ACKNOWLEDGEMENTS: (for this release)
  the fixes for panel library.
  Matthias Burian for the lcc-win32 compiler support.
 
-Key modifiers pressed by themselves are now returned as keys
-KEY_SHIFT_L KEY_SHIFT_R
-KEY_CONTROL_L KEY_CONTROL_R
-KEY_ALT_L KEY_ALT_R
-This works on Win32 and X11 ports only
-
-Added support for lcc-win32, supplied by Matthias Burian
-
-Added clipboard support for X11, Win32 and OS/2 ports
-
-Added ability to get to the input file descriptor
-
-New function for X11; Xinitscr() which allows standard X11 switches to 
-be passed to the application
-
 ------------------------------------------------------------------------
 
 PDCurses 2.3 - 1998/07/09
@@ -368,6 +355,10 @@ PDCurses 2.3 - 1998/07/09
 INTRODUCTION:
 
  This release of PDCurses includes the following changes:
+
+- added more System V R4 functions
+
+- added Win32 port
 
 - the X11 port is now fully functional
 
@@ -378,6 +369,8 @@ INTRODUCTION:
 - the slk..() functions are now functional
 
 - support for scrollbars under X11 are experimental at this stage
+
+- long chtype extended to non-Unix ports
 
  The name of the statically built library is pdcurses.lib (or 
  pdcurses.a). The name of the DLL import library (where applicable) is 
@@ -429,18 +422,6 @@ ACKNOWLEDGEMENTS: (for this release)
  Augustin Martin Domingo for patches to X11 port to enable accented 
  characters.
 
-Added more System V R4 functions
-
-Added Win32 port - original port by Chris Szurgot
-some updates by Mark Hessling
-some updates by Gurusamy Sarathy
-
-slk() functions added by Kim Huron
-
-Support for more and newer versions of compilers
-
-Long chtype extended to non-Unix ports
-
 ------------------------------------------------------------------------
 
 PDCurses 2.2 - 1995/02/12
@@ -463,6 +444,8 @@ INTRODUCTION:
 - The curses datatype has been changed from an unsigned in to a long. 
   This allows more attributes to be stored as well as increasing the 
   number of color-pairs from 32 to 64.
+
+- Xwindows port (experimental at the moment).
 
 BUGS FIXED:
 
@@ -499,8 +482,6 @@ COMPILER SUPPORT:
 - The "names" of a couple of the compilers in the makefile has changed; 
   CSET2 is now ICC and GO32 is now GCC.
 
-- The Xwindows port is experimental at the moment.
-
 EXTRA OPTIONS:
 
  One difference between the behaviour of PDCurses and Unix curses is the 
@@ -517,16 +498,6 @@ ACKNOWLEDGEMENTS: (for this release)
  Pieter Kunst, David Nugent, Warren Tucker, Darin Haugen, Stefan Strack, 
  Wade Schauer and others who either alerted me to bugs or supplied 
  fixes.
-
-Added more System V R4 functions
-
-Added beta Xwindows port
-
-Changed chtype to long
-
-Incorporated panels library
-
-Support for more and newer versions of compilers
 
 ------------------------------------------------------------------------
 
@@ -579,6 +550,8 @@ OTHER NOTES:
  Functional changes
  ------------------
 
+ Added OS/2 DLL support.
+
  A few curses functions have been fixed to exhibit their correct 
  behaviour and make them more functionally portable with System V 
  curses. The functions that have changed are overlay(), overwrite() and 
@@ -628,8 +601,6 @@ ACKNOWLEDGEMENTS: (in no particular order)
 	
  Apologies to anyone I may have left out.
 
-Added OS/2 DLL support.
-
 ------------------------------------------------------------------------
 
 PDCurses 2.0 - 1992/11/23
@@ -640,7 +611,8 @@ INTRODUCTION:
  Well, here it finally is; PDCurses v2.0.
 
  PDCurses v2.0 is an almost total rewrite of PCCurses 1.4 done by John 
- 'Frotz' Fa'atuai, the previous maintainer.
+ 'Frotz' Fa'atuai, the previous maintainer. It adds support for OS/2 as 
+ well as DOS.
 
  This version has been tested with Microsoft C v6.0, QuickC v2.0 and 
  Borland C++ 2.0 under DOS and Microsoft C v6.0 and TopSpeed c v3.02 
@@ -727,6 +699,8 @@ OTHER NOTES:
  This will then use cause PDCurses to write directly to the CGA video 
  memory.
 
+ Added System V colour support.
+
 COMPILER-SPECIFIC NOTES:
 
  Microsoft C
@@ -769,13 +743,6 @@ ACKNOWLEDGEMENTS:
  Eberhardt Mattes (author of emx) for allowing code based on his
  C library to be included with PDCurses.
  Several others for their support, moral and actual.
-
-Changed #if to #ifdef/#if defined to make it easier to add new 
-platforms/compilers.
-
-Added System V colour support.
-
-Added OS/2 port.
 
 -- Mark Hessling
 

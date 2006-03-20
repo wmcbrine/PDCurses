@@ -27,7 +27,7 @@
 # include <ctype.h>
 # include <limits.h>
 
-int PDC_vsscanf(const char *, const char *, va_list);
+static int PDC_vsscanf(const char *, const char *, va_list);
 
 # define vsscanf PDC_vsscanf
 #endif
@@ -49,7 +49,7 @@ int PDC_vsscanf(const char *, const char *, va_list);
 
 #ifdef PDCDEBUG
 const char *rcsid_scanw =
-	"$Id: scanw.c,v 1.22 2006/03/20 17:30:37 wmcbrine Exp $";
+	"$Id: scanw.c,v 1.23 2006/03/20 17:33:57 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -228,7 +228,7 @@ int vw_scanw(WINDOW *win, const char *fmt, va_list varglist)
             --buf; --chars; \
            } while (0)
 
-int PDC_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
+static int PDC_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 {
 	int count, chars, c, width, radix, d, i;
 	int *int_ptr;

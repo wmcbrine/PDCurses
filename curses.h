@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.144 2006/03/20 07:46:26 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.145 2006/03/20 23:57:06 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -566,8 +566,8 @@ typedef struct _win		/* definition of a window	*/
 	int	_lastsx2;	/* last lower x coordinate of screen
 				   window for pad */
 	int	_flags;		/* window properties		*/
-	chtype	_attrs;		/* standard A_STANDOUT attributes and colors */
-	chtype	_bkgd;		/* wrs(4/6/93) background, normally blank */
+	chtype	_attrs;		/* standard attributes and colors */
+	chtype	_bkgd;		/* background, normally blank	*/
 	int	_tabsize;	/* tab character size		*/
 	bool	_clear;		/* causes clear at next refresh	*/
 	bool	_leaveit;	/* leaves cursor where it is	*/
@@ -583,7 +583,7 @@ typedef struct _win		/* definition of a window	*/
 	int	*_lastch;	/* last changed character in line  */
 	int	_tmarg;		/* top of scrolling region	*/
 	int	_bmarg;		/* bottom of scrolling region	*/
-	int	_delayms;	/* milliseconds of delay for getch()	*/
+	int	_delayms;	/* milliseconds of delay for getch() */
 	char	*_title;	/* window title			   */
 	char	_title_ofs;	/* window title offset from left   */
 	chtype	_title_attr;	/* window title attributes	   */

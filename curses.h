@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.142 2006/03/20 01:13:09 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.143 2006/03/20 07:43:33 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -40,6 +40,7 @@ PDCurses definitions list:  (Only define those needed)
 	HC		True if using a Metaware compiler.
 	TC		True if using a Borland compiler.
 	MSC		True if using a Microsoft compiler.
+	NOMACROS	Don't use (most) macros in place of functions.
 	PDC_BUILD	Defines API build version.
 
 PDCurses portable platform definitions list:
@@ -48,10 +49,6 @@ PDCurses portable platform definitions list:
 	XOPEN		Always true.
 	SYSVcurses	True if you are compiling for SYSV portability.
 	BSDcurses	True if you are compiling for BSD portability.
-	PDCURSES_WCLR	Makes behaviour of wclrtoeol() and wclrtoeof()
-			unique to PDCurses. By default Unix behavior is 
-			set. See notes in wclrtoeol() and wclrtoeof().
-	NOMACROS	Don't use (most) macros in place of functions.
 
 **man-end****************************************************************/
 

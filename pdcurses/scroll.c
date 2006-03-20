@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_scroll =
-	"$Id: scroll.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: scroll.c,v 1.18 2006/03/20 07:43:33 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -59,13 +59,6 @@ const char *rcsid_scroll =
   X/Open Errors:
 	No errors are defined for this function.
 
-  NOTE:
-	The behaviour of Unix curses is to clear the line with a space
-	and attributes of A_NORMAL. PDCurses clears the line with the
-	window's current attributes (including current colour). To get
-	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
-	add -DPDCURSES_WCLR to the compile switches.
-
   Portability				     X/Open    BSD    SYS V
 					     Dec '88
 	scroll					Y	Y	Y
@@ -91,13 +84,10 @@ int wscrl(WINDOW *win, int n)
 	if ((win == (WINDOW *)NULL) || !win->_scroll)
 		return ERR;
 
-#if defined(PDCURSES_WCLR)
-	blank = win->_blank | win->_attrs;
-#else
 	/* wrs (4/10/93) account for window background */
 
 	blank = win->_bkgd;
-#endif
+
 	/* wrs -- 7/11/93 -- quick add to original scroll() routine to 
 	   implement scrolling for a specified number of lines (not very 
 	   efficient for more than 1 line) */

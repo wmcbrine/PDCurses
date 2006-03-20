@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.29 2006/03/01 08:34:35 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.30 2006/03/20 07:43:33 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -643,11 +643,7 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 int PDC_clr_scrn(WINDOW *win)
 {
 #if !defined(XCURSES)
-# if defined(UNIX_WCLR)
-	chtype attrs = win->_attrs;
-# else
 	chtype attrs = win->_bkgd;
-# endif
 #endif
 	PDC_LOG(("PDC_clr_scrn() - called\n"));
 

@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_deleteln =
-	"$Id: deleteln.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: deleteln.c,v 1.17 2006/03/20 07:43:33 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -62,13 +62,6 @@ const char *rcsid_deleteln =
   X/Open Errors:
 	No errors are defined for this function.
 
-  NOTE:
-	The behaviour of Unix curses is to clear the line with a space
-	and attributes of A_NORMAL. PDCurses clears the line with the
-	window's current attributes (including current colour). To get
-	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
-	add -DPDCURSES_WCLR to the compile switches.
-
   Portability				     X/Open    BSD    SYS V
 					     Dec '88
 	deleteln				Y	Y	Y
@@ -98,13 +91,10 @@ int wdeleteln(WINDOW *win)
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-#if defined(PDCURSES_WCLR)
-	blank = win->_blank | win->_attrs;
-#else
 	/* wrs (4/10/93) account for window background */
 
 	blank = win->_bkgd;
-#endif
+
 	temp = win->_y[win->_cury];
 
 	for (y = win->_cury; y < win->_bmarg; y++)
@@ -170,12 +160,10 @@ int winsertln(WINDOW *win)
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-#if defined(PDCURSES_WCLR)
-	blank = win->_blank | win->_attrs;
-#else
-/* wrs (4/10/93) account for window background */
+	/* wrs (4/10/93) account for window background */
+
 	blank = win->_bkgd;
-#endif
+
 	temp = win->_y[win->_maxy - 1];
 
 	for (y = win->_maxy - 1; y > win->_cury; y--)

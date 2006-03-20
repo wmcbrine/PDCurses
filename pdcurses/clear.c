@@ -30,7 +30,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_clear =
-	"$Id: clear.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: clear.c,v 1.18 2006/03/20 07:43:33 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -73,13 +73,6 @@ const char *rcsid_clear =
 
   X/Open Errors:
 	No errors are defined for this function.
-
-  NOTE:
-	The behaviour of Unix curses is to clear the line with a space
-	and attributes of A_NORMAL. PDCurses clears the line with the
-	window's current attributes (including current colour). To get
-	the behaviour of PDCurses, #define PDCURSES_WCLR in curses.h or
-	add -DPDCURSES_WCLR to the compile switches.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88
@@ -183,12 +176,9 @@ int wclrtoeol(WINDOW *win)
 	y = win->_cury;
 	x = win->_curx;
 
-#if defined(PDCURSES_WCLR)
-	blank = win->_blank | win->_attrs;
-#else
-/* wrs (4/10/93) account for window background */
+	/* wrs (4/10/93) account for window background */
+
 	blank = win->_bkgd;
-#endif
 
 	for (minx = x, ptr = &win->_y[y][x]; minx < win->_maxx; minx++, ptr++)
 		*ptr = blank;

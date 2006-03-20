@@ -33,7 +33,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_delch =
-	"$Id: delch.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: delch.c,v 1.17 2006/03/20 07:43:33 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -60,14 +60,6 @@ const char *rcsid_delch =
 
   X/Open Errors:
 	No errors are defined for this function.
-
-  NOTE:
-	The behaviour of Unix curses is to display a blank in the last
-	column of the window with the A_NORMAL attribute. PDCurses
-	displays the blank with the window's current attributes 
-	(including current colour). To get the behaviour of PDCurses,
-	#define PDCURSES_WCLR in curses.h or add -DPDCURSES_WCLR to the 
-	compile switches.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88
@@ -102,12 +94,9 @@ int wdelch(WINDOW *win)
 
 	memmove(temp1, temp1 + 1, (maxx - x) * sizeof(chtype));
 
-#if defined(PDCURSES_WCLR)
-	win->_y[y][maxx] = win->_blank | win->_attrs;
-#else
-/* wrs (4/10/93) account for window background */
+	/* wrs (4/10/93) account for window background */
+
 	win->_y[y][maxx] = win->_bkgd;
-#endif
 
 	win->_lastch[y] = maxx;
 

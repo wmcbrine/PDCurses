@@ -43,7 +43,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_scanw =
-	"$Id: scanw.c,v 1.20 2006/02/27 21:48:04 wmcbrine Exp $";
+	"$Id: scanw.c,v 1.21 2006/03/20 17:11:18 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -155,11 +155,11 @@ int mvwscanw(WINDOW *win, int y, int x, const char *fmt, ...)
 
 int vwscanw(WINDOW *win, const char *fmt, va_list varglist)
 {
-	char scanbuf[513];
+	char scanbuf[256];
 
 	PDC_LOG(("vwscanw() - called\n"));
 
-	if (wgetstr(win, scanbuf) == ERR)
+	if (wgetnstr(win, scanbuf, 255) == ERR)
 		return ERR;
 
 	return vsscanf(scanbuf, fmt, varglist);

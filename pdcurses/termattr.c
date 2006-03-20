@@ -33,7 +33,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.24 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: termattr.c,v 1.25 2006/03/20 23:49:44 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -91,9 +91,7 @@ const char *rcsid_termattr =
 	are hardcoded at this time.  There may be future development to 
 	allow applications an easy way to specify these value.
 
-	For DOS, has_ic() and has_il() always return TRUE, as the speed 
-	of the DIRECT VIDEO or even BIOS writes is quicker than on a 
-	serial terminal.
+	has_ic() and has_il() always return TRUE.
 
 	In addition to the above definition for longname(), the form of 
 	this string is the adapter name (or video card name) and the 

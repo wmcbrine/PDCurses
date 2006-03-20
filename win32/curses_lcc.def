@@ -312,7 +312,6 @@ PDC_sysgetch
 PDC_transform_line
 PDC_ungetch
 PDC_validchar
-PDC_vsscanf
 PDC_freeclipboard
 PDC_clearclipboard
 SP

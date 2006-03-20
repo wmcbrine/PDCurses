@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.45 2006/03/01 08:34:35 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.46 2006/03/20 17:30:24 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -254,7 +254,6 @@ void	PDC_sync(WINDOW *);
 int	PDC_sysgetch(void);
 bool	PDC_transform_line(int);
 int	PDC_validchar(int);
-int	PDC_vsscanf(const char *, const char *, va_list);
 
 #if defined(OS2) && !defined(EMXVIDEO)
 int	PDC_set_scrn_mode(VIOMODEINFO);

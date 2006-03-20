@@ -531,9 +531,5 @@ FUNCTIONS
 		PDC_transform_line       pdcdisp
 		PDC_ungetch              getch
 		PDC_validchar            pdckbd
-		PDC_vsscanf              pdcutil
-
-	NOTE: Functions prefixed with '***' above and on each manual 
-	page are functions that have not been implemented.
 
 **man-end****************************************************************/

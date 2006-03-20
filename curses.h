@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.141 2006/03/20 00:56:56 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.142 2006/03/20 01:13:09 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -55,7 +55,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2714
+#define PDC_BUILD 2715
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -446,7 +446,11 @@ extern "C"
 typedef unsigned char bool;	/* PDCurses Boolean type	*/
 
 #ifdef CHTYPE_LONG
+# if _LP64
+typedef unsigned int chtype;
+# else
 typedef unsigned long chtype;	/* 16-bit attr + 16-bit char	*/
+# endif
 #else
 typedef unsigned short chtype;	/* 8-bit attr + 8-bit char	*/
 #endif
@@ -782,18 +786,18 @@ currently used.)
 /*** Video attribute macros ***/
 
 #ifdef CHTYPE_LONG
-# define A_NORMAL	0x00000000L
-# define A_UNDERLINE	0x00100000L
-# define A_REVERSE	0x00200000L
-# define A_BLINK	0x00400000L
-# define A_BOLD		0x00800000L
-# define A_RIGHTLINE	0x00010000L
-# define A_DIM		0x00020000L
-# define A_ALTCHARSET	0x00040000L
-# define A_INVIS	0x00080000L
-# define A_ATTRIBUTES	0xFFFF0000L
-# define A_CHARTEXT	0x0000FFFFL
-# define A_COLOR	0xFF000000L
+# define A_NORMAL	(chtype)0x00000000
+# define A_UNDERLINE	(chtype)0x00100000
+# define A_REVERSE	(chtype)0x00200000
+# define A_BLINK	(chtype)0x00400000
+# define A_BOLD		(chtype)0x00800000
+# define A_RIGHTLINE	(chtype)0x00010000
+# define A_DIM		(chtype)0x00020000
+# define A_ALTCHARSET	(chtype)0x00040000
+# define A_INVIS	(chtype)0x00080000
+# define A_ATTRIBUTES	(chtype)0xFFFF0000
+# define A_CHARTEXT	(chtype)0x0000FFFF
+# define A_COLOR	(chtype)0xFF000000
 
 # define A_LEFTLINE	A_DIM
 # define A_ITALIC	A_INVIS
@@ -811,7 +815,7 @@ currently used.)
 # define A_DIM		(chtype)0x0000			/* X/Open   */
 # define A_PROTECT	(chtype)0x0000			/* X/Open   */
 # define A_REVERSE	(chtype)0x0200			/* X/Open   */
-# define A_STANDOUT	((chtype)(A_REVERSE | A_BOLD))	/* X/Open   */
+# define A_STANDOUT	(A_REVERSE | A_BOLD)		/* X/Open   */
 # define A_UNDERLINE	(chtype)0x0000			/* X/Open   */
 # define A_COLOR	(chtype)0xF800			/* System V */
 # define A_CHARTEXT	(chtype)(0xFF)			/* X/Open   */

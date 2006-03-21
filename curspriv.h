@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.46 2006/03/20 17:30:24 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.47 2006/03/21 00:13:56 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -23,7 +23,7 @@
    These should generally not be referenced by applications. */
 
 #ifndef __CURSES_INTERNALS__
-#define __CURSES_INTERNALS__
+#define __CURSES_INTERNALS__ 1
 
 #include <assert.h>
 

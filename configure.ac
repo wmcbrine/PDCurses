@@ -1,7 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT
 AC_CONFIG_SRCDIR([curspriv.h])
-AC_PREFIX_DEFAULT(/usr)
 
 AC_SUBST(prefix)
 

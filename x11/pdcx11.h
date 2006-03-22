@@ -3,7 +3,7 @@
  * Hessling 1994-1999. M.Hessling@qut.edu.au				*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.23 2006/03/22 11:59:53 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.24 2006/03/22 14:05:29 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -18,23 +18,19 @@
 #include <ctype.h>
 #include <pwd.h>
 
-/* #includes specific to running XCurses with seperate processes */
-
-#ifdef USE_PROCESSES
-# include <sys/types.h>
-# include <sys/socket.h>
-# ifdef HAVE_FCNTL_H
-#  include <fcntl.h>
-# endif
-# ifdef HAVE_SYS_SELECT_H
-#  include <sys/select.h>   /* AIX needs this for FD_ZERO etc macros */
-# endif
-# include <sys/ipc.h>
-# include <sys/shm.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#ifdef HAVE_FCNTL_H
+# include <fcntl.h>
 #endif
+#ifdef HAVE_SYS_SELECT_H
+# include <sys/select.h>   /* AIX needs this for FD_ZERO etc macros */
+#endif
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 #if !defined(XPOINTER_TYPEDEFED)
- typedef char * XPointer;
+typedef char * XPointer;
 #endif
 
 #ifdef TIME_WITH_SYS_TIME
@@ -112,8 +108,8 @@
 
 #define XtCNormalFont    "NormalFont"
 #define XtNnormalFont    "normalFont"
-#define XtCItalicFont      "ItalicFont"
-#define XtNitalicFont      "italicFont"
+#define XtCItalicFont    "ItalicFont"
+#define XtNitalicFont    "italicFont"
 
 #define XtCPointer       "Pointer"
 #define XtNpointer       "pointer"
@@ -133,8 +129,8 @@
 #define XtCScrollbarWidth   "ScrollbarWidth"
 #define XtNscrollbarWidth   "scrollbarWidth"
 
-#define XtCCursorBlinkRate   "CursorBlinkRate"
-#define XtNcursorBlinkRate   "cursorBlinkRate"
+#define XtCCursorBlinkRate  "CursorBlinkRate"
+#define XtNcursorBlinkRate  "cursorBlinkRate"
 
 #define XtCPointerForeColor "PointerForeColor"
 #define XtNpointerForeColor "pointerForeColor"

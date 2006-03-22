@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS LIBOBJS MH_XINC_DIR MH_XLIBS x11type PURIFY SHLPST MODPST EEXTRA CEXTRA OSAVE OBJ EXE GETOPT DYN_COMP SHLIBS LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP CAN_USE_ABI LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS LIBOBJS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA CEXTRA OSAVE OBJ EXE GETOPT DYN_COMP SHLIBS LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP CAN_USE_ABI LTLIBOBJS'
 ac_subst_files='aix_exports'
 
 # Initialize some variables set by options.
@@ -5265,13 +5265,6 @@ _ACEOF
 
 fi
 
-	cat >>confdefs.h <<\_ACEOF
-#define USE_PROCESSES 1
-_ACEOF
-
-	x11type="process"
-
-
 # Check whether --enable-purify or --disable-purify was given.
 if test "${enable_purify+set}" = set; then
   enableval="$enable_purify"
@@ -5509,7 +5502,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5512 "configure"
+#line 5505 "configure"
 int a=0
 EOF
 
@@ -5548,7 +5541,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5551 "configure"
+#line 5544 "configure"
 int foo()
 {
 return(0);
@@ -6319,7 +6312,6 @@ s,@MH_EXTRA_LIBS@,$MH_EXTRA_LIBS,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@MH_XINC_DIR@,$MH_XINC_DIR,;t t
 s,@MH_XLIBS@,$MH_XLIBS,;t t
-s,@x11type@,$x11type,;t t
 s,@PURIFY@,$PURIFY,;t t
 s,@SHLPST@,$SHLPST,;t t
 s,@MODPST@,$MODPST,;t t

@@ -11,7 +11,7 @@ THIS		= Makefile
 
 srcdir		= @srcdir@
 x11basedir	= $(srcdir)/../x11
-x11dir		= $(x11basedir)/@x11type@
+x11dir		= $(x11basedir)/process
 
 VPATH		= @srcdir@
 prefix		= @prefix@

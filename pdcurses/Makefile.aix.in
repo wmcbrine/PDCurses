@@ -10,8 +10,8 @@ THIS		= Makefile
 @SET_MAKE@
 
 srcdir		= @srcdir@
-x11basedir		= $(srcdir)/../x11
-x11dir		= $(x11basedir)/@x11type@
+x11basedir	= $(srcdir)/../x11
+x11dir		= $(x11basedir)/process
 
 VPATH		= @srcdir@
 prefix		= @prefix@
@@ -20,28 +20,28 @@ libdir		= $(exec_prefix)
 includedir	= @includedir@
 
 PDCURSES_HOME		=$(srcdir)/..
-PDCURSES_CONFIG_H		=../config.h
-PDCURSES_CURSES_H		=$(PDCURSES_HOME)/curses.h
-PDCURSES_CURSPRIV_H		=$(PDCURSES_HOME)/curspriv.h
-PDCURSES_HEADERS		=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PDCURSES_CONFIG_H	=../config.h
+PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
+PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
+PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PDCURSES_X11_H		=$(x11basedir)/pdcx11.h
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
 
-SHL_TARGETS =      @SHL_TARGETS@
-DYN_COMP =         @DYN_COMP@
-SHLPRE =           @SHLPRE@
-SHLPST =           @SHLPST@
-LD_RXLIB1  =       @LD_RXLIB1@
-LD_RXLIB2  =       # @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
-MH_XLIBS =         @MH_XLIBS@
-MH_EXTRA_LIBS =    @MH_EXTRA_LIBS@
-O2SAVE  =          @O2SAVE@
-O2SHO  =           @O2SHO@
-CC2O   =           @CC2O@
-SAVE2O  =          @SAVE2O@
-DYNAMIC_LDFLAGS  = @DYNAMIC_LDFLAGS@ $(EEXTRA)
+SHL_TARGETS	= @SHL_TARGETS@
+DYN_COMP	= @DYN_COMP@
+SHLPRE		= @SHLPRE@
+SHLPST		= @SHLPST@
+LD_RXLIB1	= @LD_RXLIB1@
+LD_RXLIB2	= # @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
+MH_XLIBS	= @MH_XLIBS@
+MH_EXTRA_LIBS	= @MH_EXTRA_LIBS@
+O2SAVE		= @O2SAVE@
+O2SHO		= @O2SHO@
+CC2O		= @CC2O@
+SAVE2O		= @SAVE2O@
+DYNAMIC_LDFLAGS = @DYNAMIC_LDFLAGS@ $(EEXTRA)
 
 CC		= @CC@
 CFLAGS		= @CFLAGS@ $(DYN_COMP)

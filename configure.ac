@@ -75,7 +75,6 @@ AC_CHECK_HEADERS(fcntl.h \
 	dl.h \
 	errno.h
 	)
-MH_HAVE_PROTO
 
 
 dnl Checks for typedefs, structures, and compiler characteristics.

@@ -68,7 +68,6 @@ fi
 dnl Checks for libraries.
 
 AC_CHECK_HEADERS(fcntl.h \
-	time.h \
 	sys/time.h \
 	sys/select.h \
 	dlfcn.h \
@@ -88,11 +87,9 @@ AC_SUBST(MH_EXTRA_LIBS)
 MH_CHECK_CC_O
 
 dnl Checks for library functions.
-AC_PROG_GCC_TRADITIONAL
-AC_FUNC_MEMCMP
 AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS(select memmove vsscanf usleep poll vsnprintf)
+AC_CHECK_FUNCS(vsscanf usleep poll vsnprintf)
 
 dnl Check for X includes and X libraries
 MH_CHECK_X_INC

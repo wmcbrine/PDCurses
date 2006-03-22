@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS LIBOBJS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA CEXTRA OSAVE OBJ EXE GETOPT DYN_COMP SHLIBS LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP CAN_USE_ABI LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA CEXTRA OSAVE OBJ EXE GETOPT DYN_COMP SHLIBS LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP CAN_USE_ABI LIBOBJS LTLIBOBJS'
 ac_subst_files='aix_exports'
 
 # Initialize some variables set by options.
@@ -3541,9 +3541,7 @@ fi
 
 
 
-
 for ac_header in fcntl.h \
-	time.h \
 	sys/time.h \
 	sys/select.h \
 	dlfcn.h \
@@ -4139,137 +4137,6 @@ echo "${ECHO_T}no" >&6
 fi
 
 
-if test $ac_cv_c_compiler_gnu = yes; then
-    echo "$as_me:$LINENO: checking whether $CC needs -traditional" >&5
-echo $ECHO_N "checking whether $CC needs -traditional... $ECHO_C" >&6
-if test "${ac_cv_prog_gcc_traditional+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-    ac_pattern="Autoconf.*'x'"
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <sgtty.h>
-Autoconf TIOCGETP
-_ACEOF
-if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "$ac_pattern" >/dev/null 2>&1; then
-  ac_cv_prog_gcc_traditional=yes
-else
-  ac_cv_prog_gcc_traditional=no
-fi
-rm -f conftest*
-
-
-  if test $ac_cv_prog_gcc_traditional = no; then
-    cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-#include <termio.h>
-Autoconf TCGETA
-_ACEOF
-if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "$ac_pattern" >/dev/null 2>&1; then
-  ac_cv_prog_gcc_traditional=yes
-fi
-rm -f conftest*
-
-  fi
-fi
-echo "$as_me:$LINENO: result: $ac_cv_prog_gcc_traditional" >&5
-echo "${ECHO_T}$ac_cv_prog_gcc_traditional" >&6
-  if test $ac_cv_prog_gcc_traditional = yes; then
-    CC="$CC -traditional"
-  fi
-fi
-
-echo "$as_me:$LINENO: checking for working memcmp" >&5
-echo $ECHO_N "checking for working memcmp... $ECHO_C" >&6
-if test "${ac_cv_func_memcmp_working+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test "$cross_compiling" = yes; then
-  ac_cv_func_memcmp_working=no
-else
-  cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-$ac_includes_default
-int
-main ()
-{
-
-  /* Some versions of memcmp are not 8-bit clean.  */
-  char c0 = 0x40, c1 = 0x80, c2 = 0x81;
-  if (memcmp(&c0, &c2, 1) >= 0 || memcmp(&c1, &c2, 1) >= 0)
-    exit (1);
-
-  /* The Next x86 OpenStep bug shows up only when comparing 16 bytes
-     or more and with at least one buffer not starting on a 4-byte boundary.
-     William Lewis provided this test program.   */
-  {
-    char foo[21];
-    char bar[21];
-    int i;
-    for (i = 0; i < 4; i++)
-      {
-	char *a = foo + i;
-	char *b = bar + i;
-	strcpy (a, "--------01111111");
-	strcpy (b, "--------10000000");
-	if (memcmp (a, b, 16) >= 0)
-	  exit (1);
-      }
-    exit (0);
-  }
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest$ac_exeext
-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  ac_cv_func_memcmp_working=yes
-else
-  echo "$as_me: program exited with status $ac_status" >&5
-echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-( exit $ac_status )
-ac_cv_func_memcmp_working=no
-fi
-rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
-fi
-fi
-echo "$as_me:$LINENO: result: $ac_cv_func_memcmp_working" >&5
-echo "${ECHO_T}$ac_cv_func_memcmp_working" >&6
-test $ac_cv_func_memcmp_working = no && case $LIBOBJS in
-    "memcmp.$ac_objext"   | \
-  *" memcmp.$ac_objext"   | \
-    "memcmp.$ac_objext "* | \
-  *" memcmp.$ac_objext "* ) ;;
-  *) LIBOBJS="$LIBOBJS memcmp.$ac_objext" ;;
-esac
-
-
 echo "$as_me:$LINENO: checking return type of signal handlers" >&5
 echo $ECHO_N "checking return type of signal handlers... $ECHO_C" >&6
 if test "${ac_cv_type_signal+set}" = set; then
@@ -4541,9 +4408,7 @@ done
 
 
 
-
-
-for ac_func in select memmove vsscanf usleep poll vsnprintf
+for ac_func in vsscanf usleep poll vsnprintf
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
 echo "$as_me:$LINENO: checking for $ac_func" >&5
@@ -5502,7 +5367,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5505 "configure"
+#line 5370 "configure"
 int a=0
 EOF
 
@@ -5541,7 +5406,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5544 "configure"
+#line 5409 "configure"
 int foo()
 {
 return(0);
@@ -6309,7 +6174,6 @@ s,@SET_MAKE@,$SET_MAKE,;t t
 s,@CPP@,$CPP,;t t
 s,@EGREP@,$EGREP,;t t
 s,@MH_EXTRA_LIBS@,$MH_EXTRA_LIBS,;t t
-s,@LIBOBJS@,$LIBOBJS,;t t
 s,@MH_XINC_DIR@,$MH_XINC_DIR,;t t
 s,@MH_XLIBS@,$MH_XLIBS,;t t
 s,@PURIFY@,$PURIFY,;t t
@@ -6343,6 +6207,7 @@ s,@SAVE2O@,$SAVE2O,;t t
 s,@RXPACKEXPORTS@,$RXPACKEXPORTS,;t t
 s,@RXPACKEXP@,$RXPACKEXP,;t t
 s,@CAN_USE_ABI@,$CAN_USE_ABI,;t t
+s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 /@aix_exports@/r $aix_exports
 s,@aix_exports@,,;t t

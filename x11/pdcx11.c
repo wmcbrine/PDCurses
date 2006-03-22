@@ -10,7 +10,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.55 2006/03/22 11:59:53 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.56 2006/03/22 17:10:18 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -867,10 +867,6 @@ char *defaultTranslations =
 	"<Btn5Down>: XCursesButton() \n" \
 	"<BtnMotion>: XCursesButton()"
 };
-
-#ifdef USE_THREADS
-pthread_mutex_t key_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif
 
 int xerror();
 

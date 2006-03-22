@@ -21,17 +21,8 @@
 /* Define if you can safely include both <sys/time.h> and <time.h>.  */
 #undef TIME_WITH_SYS_TIME
 
-/* Define if your <sys/time.h> declares struct tm.  */
-#undef TM_IN_SYS_TIME
-
-/* Define if you have the memmove function.  */
-#undef HAVE_MEMMOVE
-
 /* Define if you have the poll function.  */
 #undef HAVE_POLL
-
-/* Define if you have the select function.  */
-#undef HAVE_SELECT
 
 /* Define if you have the usleep function.  */
 #undef HAVE_USLEEP
@@ -45,17 +36,11 @@
 /* Define if you have the <fcntl.h> header file.  */
 #undef HAVE_FCNTL_H
 
-/* Define if you have the <limits.h> header file.  */
-#undef HAVE_LIMITS_H
-
 /* Define if you have the <sys/select.h> header file.  */
 #undef HAVE_SYS_SELECT_H
 
 /* Define if you have the <sys/time.h> header file.  */
 #undef HAVE_SYS_TIME_H
-
-/* Define if you have the <time.h> header file.  */
-#undef HAVE_TIME_H
 
 /* Define if you have the <unistd.h> header file.  */
 #undef HAVE_UNISTD_H
@@ -112,9 +97,6 @@
 
 /* Define if you want to include LATIN1 key support */
 #undef INCLUDE_LATIN1
-
-/* Define if you want to build XCurses with threads */
-#undef USE_THREADS
 
 /* Define XPointer is typedefed in X11/Xlib.h */
 #undef XPOINTER_TYPEDEFED

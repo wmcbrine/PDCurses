@@ -10,7 +10,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.54 2006/02/25 21:34:45 wmcbrine Exp $";
+	"$Id: pdcx11.c,v 1.55 2006/03/22 11:59:53 wmcbrine Exp $";
 #endif
 
 AppData app_data;
@@ -40,137 +40,147 @@ typedef struct XCursesKey XCURSESKEY;
 
 XCURSESKEY XCursesKeys[] =
 {
-/* keycode       keypad  normal       shifted       control       alt*/
- {XK_Left,       FALSE,  KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,     ALT_LEFT},
- {XK_Right,      FALSE,  KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,    ALT_RIGHT},
- {XK_Up,         FALSE,  KEY_UP,      KEY_SUP,      CTL_UP,       ALT_UP},
- {XK_Down,       FALSE,  KEY_DOWN,    KEY_SDOWN,    CTL_DOWN,     ALT_DOWN},
- {XK_Home,       FALSE,  KEY_HOME,    KEY_SHOME,    CTL_HOME,     ALT_HOME},
- {XK_R7,         FALSE,  KEY_HOME,    KEY_SHOME,    CTL_HOME,     ALT_HOME}, /* Sun Type 4 keyboard */
- {XK_End,        FALSE,  KEY_END,     KEY_SEND,     CTL_END,      ALT_END},
- {XK_R13,        FALSE,  KEY_END,     KEY_SEND,     CTL_END,      ALT_END},  /* Sun Type 4 keyboard */
- {XK_Prior,      FALSE,  KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,     ALT_PGUP},
- {XK_R9,         FALSE,  KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,     ALT_PGUP}, /* Sun Type 4 keyboard */
- {XK_Next,       FALSE,  KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,     ALT_PGDN},
- {XK_R15,        FALSE,  KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,     ALT_PGDN}, /* Sun Type 4 keyboard */
- {XK_Insert,     FALSE,  KEY_IC,      KEY_SIC,      CTL_INS,      ALT_INS},
- {XK_Delete,     FALSE,  KEY_DC,      KEY_SDC,      CTL_DEL,      ALT_DEL},
- {XK_F1,         FALSE,  KEY_F(1),    KEY_F(13),    KEY_F(25),    KEY_F(37)},
- {XK_F2,         FALSE,  KEY_F(2),    KEY_F(14),    KEY_F(26),    KEY_F(38)},
- {XK_F3,         FALSE,  KEY_F(3),    KEY_F(15),    KEY_F(27),    KEY_F(39)},
- {XK_F4,         FALSE,  KEY_F(4),    KEY_F(16),    KEY_F(28),    KEY_F(40)},
- {XK_F5,         FALSE,  KEY_F(5),    KEY_F(17),    KEY_F(29),    KEY_F(41)},
- {XK_F6,         FALSE,  KEY_F(6),    KEY_F(18),    KEY_F(30),    KEY_F(42)},
- {XK_F7,         FALSE,  KEY_F(7),    KEY_F(19),    KEY_F(31),    KEY_F(43)},
- {XK_F8,         FALSE,  KEY_F(8),    KEY_F(20),    KEY_F(32),    KEY_F(44)},
- {XK_F9,         FALSE,  KEY_F(9),    KEY_F(21),    KEY_F(33),    KEY_F(45)},
- {XK_F10,        FALSE,  KEY_F(10),   KEY_F(22),    KEY_F(34),    KEY_F(46)},
- {XK_F11,        FALSE,  KEY_F(11),   KEY_F(23),    KEY_F(35),    KEY_F(47)},
- {XK_F12,        FALSE,  KEY_F(12),   KEY_F(24),    KEY_F(36),    KEY_F(48)},
- {XK_F13,        FALSE,  KEY_F(13),   KEY_F(25),    KEY_F(37),    KEY_F(49)},
- {XK_F14,        FALSE,  KEY_F(14),   KEY_F(26),    KEY_F(38),    KEY_F(50)},
- {XK_F15,        FALSE,  KEY_F(15),   KEY_F(27),    KEY_F(39),    KEY_F(51)},
- {XK_F16,        FALSE,  KEY_F(16),   KEY_F(28),    KEY_F(40),    KEY_F(52)},
- {XK_F17,        FALSE,  KEY_F(17),   KEY_F(29),    KEY_F(41),    KEY_F(53)},
- {XK_F18,        FALSE,  KEY_F(18),   KEY_F(30),    KEY_F(42),    KEY_F(54)},
- {XK_F19,        FALSE,  KEY_F(19),   KEY_F(31),    KEY_F(43),    KEY_F(55)},
- {XK_F20,        FALSE,  KEY_F(20),   KEY_F(32),    KEY_F(44),    KEY_F(56)},
- {XK_BackSpace,  FALSE,  0x08,        0x08,         CTL_BKSP,     ALT_BKSP},
- {XK_Tab,        FALSE,  0x09,        KEY_BTAB,     CTL_TAB,      ALT_TAB},
- {XK_Select,     FALSE,  KEY_SELECT,  KEY_SELECT,   KEY_SELECT,   KEY_SELECT},
- {XK_Print,      FALSE,  KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,    KEY_PRINT},
- {XK_Find,       FALSE,  KEY_FIND,    KEY_SFIND,    KEY_FIND,     KEY_FIND},
- {XK_Pause,      FALSE,  KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND,  KEY_SUSPEND},
- {XK_Clear,      FALSE,  KEY_CLEAR,   KEY_CLEAR,    KEY_CLEAR,    KEY_CLEAR},
- {XK_Cancel,     FALSE,  KEY_CANCEL,  KEY_SCANCEL,  KEY_CANCEL,   KEY_CANCEL},
- {XK_Break,      FALSE,  KEY_BREAK,   KEY_BREAK,    KEY_BREAK,    KEY_BREAK},
- {XK_Help,       FALSE,  KEY_HELP,    KEY_SHELP,    KEY_LHELP,    KEY_HELP},
- {XK_L4,         FALSE,  KEY_UNDO,    KEY_SUNDO,    KEY_UNDO,     KEY_UNDO},
- {XK_L6,         FALSE,  KEY_COPY,    KEY_SCOPY,    KEY_COPY,     KEY_COPY},
- {XK_L9,         FALSE,  KEY_FIND,    KEY_SFIND,    KEY_FIND,     KEY_FIND},
- {XK_Menu,       FALSE,  KEY_OPTIONS, KEY_SOPTIONS, KEY_OPTIONS,  KEY_OPTIONS},
+/* keycode	keypad	normal	     shifted	   control	alt*/
+ {XK_Left,	FALSE,	KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,	ALT_LEFT},
+ {XK_Right,	FALSE,	KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,	ALT_RIGHT},
+ {XK_Up,	FALSE,	KEY_UP,      KEY_SUP,	   CTL_UP,	ALT_UP},
+ {XK_Down,	FALSE,	KEY_DOWN,    KEY_SDOWN,    CTL_DOWN,	ALT_DOWN},
+ {XK_Home,	FALSE,	KEY_HOME,    KEY_SHOME,    CTL_HOME,	ALT_HOME},
+/* Sun Type 4 keyboard */
+ {XK_R7,	FALSE,	KEY_HOME,    KEY_SHOME,    CTL_HOME,	ALT_HOME},
+ {XK_End,	FALSE,	KEY_END,     KEY_SEND,	   CTL_END,	ALT_END},
+/* Sun Type 4 keyboard */
+ {XK_R13,	FALSE,	KEY_END,     KEY_SEND,	   CTL_END,	ALT_END},
+ {XK_Prior,	FALSE,	KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,	ALT_PGUP},
+/* Sun Type 4 keyboard */
+ {XK_R9,	FALSE,	KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,	ALT_PGUP},
+ {XK_Next,	FALSE,	KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,	ALT_PGDN},
+/* Sun Type 4 keyboard */
+ {XK_R15,	FALSE,	KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,	ALT_PGDN},
+ {XK_Insert,	FALSE,	KEY_IC,      KEY_SIC,	   CTL_INS,	ALT_INS},
+ {XK_Delete,	FALSE,	KEY_DC,      KEY_SDC,	   CTL_DEL,	ALT_DEL},
+ {XK_F1,	FALSE,	KEY_F(1),    KEY_F(13),    KEY_F(25),	KEY_F(37)},
+ {XK_F2,	FALSE,	KEY_F(2),    KEY_F(14),    KEY_F(26),	KEY_F(38)},
+ {XK_F3,	FALSE,	KEY_F(3),    KEY_F(15),    KEY_F(27),	KEY_F(39)},
+ {XK_F4,	FALSE,	KEY_F(4),    KEY_F(16),    KEY_F(28),	KEY_F(40)},
+ {XK_F5,	FALSE,	KEY_F(5),    KEY_F(17),    KEY_F(29),	KEY_F(41)},
+ {XK_F6,	FALSE,	KEY_F(6),    KEY_F(18),    KEY_F(30),	KEY_F(42)},
+ {XK_F7,	FALSE,	KEY_F(7),    KEY_F(19),    KEY_F(31),	KEY_F(43)},
+ {XK_F8,	FALSE,	KEY_F(8),    KEY_F(20),    KEY_F(32),	KEY_F(44)},
+ {XK_F9,	FALSE,	KEY_F(9),    KEY_F(21),    KEY_F(33),	KEY_F(45)},
+ {XK_F10,	FALSE,	KEY_F(10),   KEY_F(22),    KEY_F(34),	KEY_F(46)},
+ {XK_F11,	FALSE,	KEY_F(11),   KEY_F(23),    KEY_F(35),	KEY_F(47)},
+ {XK_F12,	FALSE,	KEY_F(12),   KEY_F(24),    KEY_F(36),	KEY_F(48)},
+ {XK_F13,	FALSE,	KEY_F(13),   KEY_F(25),    KEY_F(37),	KEY_F(49)},
+ {XK_F14,	FALSE,	KEY_F(14),   KEY_F(26),    KEY_F(38),	KEY_F(50)},
+ {XK_F15,	FALSE,	KEY_F(15),   KEY_F(27),    KEY_F(39),	KEY_F(51)},
+ {XK_F16,	FALSE,	KEY_F(16),   KEY_F(28),    KEY_F(40),	KEY_F(52)},
+ {XK_F17,	FALSE,	KEY_F(17),   KEY_F(29),    KEY_F(41),	KEY_F(53)},
+ {XK_F18,	FALSE,	KEY_F(18),   KEY_F(30),    KEY_F(42),	KEY_F(54)},
+ {XK_F19,	FALSE,	KEY_F(19),   KEY_F(31),    KEY_F(43),	KEY_F(55)},
+ {XK_F20,	FALSE,	KEY_F(20),   KEY_F(32),    KEY_F(44),	KEY_F(56)},
+ {XK_BackSpace, FALSE,	0x08,        0x08,	   CTL_BKSP,	ALT_BKSP},
+ {XK_Tab,	FALSE,	0x09,        KEY_BTAB,	   CTL_TAB,	ALT_TAB},
+ {XK_Select,	FALSE,	KEY_SELECT,  KEY_SELECT,   KEY_SELECT,	KEY_SELECT},
+ {XK_Print,	FALSE,	KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,	KEY_PRINT},
+ {XK_Find,	FALSE,	KEY_FIND,    KEY_SFIND,    KEY_FIND,	KEY_FIND},
+ {XK_Pause,	FALSE,	KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
+ {XK_Clear,	FALSE,	KEY_CLEAR,   KEY_CLEAR,    KEY_CLEAR,	KEY_CLEAR},
+ {XK_Cancel,	FALSE,	KEY_CANCEL,  KEY_SCANCEL,  KEY_CANCEL,	KEY_CANCEL},
+ {XK_Break,	FALSE,	KEY_BREAK,   KEY_BREAK,    KEY_BREAK,	KEY_BREAK},
+ {XK_Help,	FALSE,	KEY_HELP,    KEY_SHELP,    KEY_LHELP,	KEY_HELP},
+ {XK_L4,	FALSE,	KEY_UNDO,    KEY_SUNDO,    KEY_UNDO,	KEY_UNDO},
+ {XK_L6,	FALSE,	KEY_COPY,    KEY_SCOPY,    KEY_COPY,	KEY_COPY},
+ {XK_L9,	FALSE,	KEY_FIND,    KEY_SFIND,    KEY_FIND,	KEY_FIND},
+ {XK_Menu,	FALSE,	KEY_OPTIONS, KEY_SOPTIONS, KEY_OPTIONS, KEY_OPTIONS},
 #ifdef HAVE_SUNKEYSYM_H
- {SunXK_F36,     FALSE,  KEY_F(41),   KEY_F(43),    KEY_F(45),    KEY_F(47)},
- {SunXK_F37,     FALSE,  KEY_F(42),   KEY_F(44),    KEY_F(46),    KEY_F(48)},
+ {SunXK_F36,	FALSE,	KEY_F(41),   KEY_F(43),    KEY_F(45),	KEY_F(47)},
+ {SunXK_F37,	FALSE,	KEY_F(42),   KEY_F(44),    KEY_F(46),	KEY_F(48)},
 #endif
 #ifdef HAVE_DECKEYSYM_H
- {DXK_Remove,    FALSE,  KEY_DC,      KEY_SDC,      CTL_DEL,      ALT_DEL},
+ {DXK_Remove,	FALSE,	KEY_DC,      KEY_SDC,	   CTL_DEL,	ALT_DEL},
 #endif
- {XK_Escape,     FALSE,  0x1B,        0x1B,         0x1B,         ALT_ESC},
- {XK_KP_Enter,   TRUE,   PADENTER,    PADENTER,     CTL_PADENTER, ALT_PADENTER},
- {XK_KP_Add,     TRUE,   PADPLUS,     (int)'+',     CTL_PADPLUS,  ALT_PADPLUS},
- {XK_KP_Subtract,TRUE,   PADMINUS,    (int)'-',     CTL_PADMINUS, ALT_PADMINUS},
- {XK_KP_Multiply,TRUE,   PADSTAR,     (int)'*',     CTL_PADSTAR,  ALT_PADSTAR},
- {XK_R6,         TRUE,   PADSTAR,     (int)'*',     CTL_PADSTAR,  ALT_PADSTAR}, /* Sun Type 4 keyboard */
- {XK_KP_Divide,  TRUE,   PADSLASH,    (int)'/',     CTL_PADSLASH, ALT_PADSLASH},
- {XK_R5,         TRUE,   PADSLASH,    (int)'/',     CTL_PADSLASH, ALT_PADSLASH},/* Sun Type 4 keyboard */
- {XK_KP_Decimal, TRUE,   PADSTOP,     (int)'.',     CTL_PADSTOP,  ALT_PADSTOP},
- {XK_KP_0,       TRUE,   PAD0,        (int)'0',     CTL_PAD0,     ALT_PAD0},
- {XK_KP_1,       TRUE,   KEY_C1,      (int)'1',     CTL_PAD1,     ALT_PAD1},
- {XK_KP_2,       TRUE,   KEY_C2,      (int)'2',     CTL_PAD2,     ALT_PAD2},
- {XK_KP_3,       TRUE,   KEY_C3,      (int)'3',     CTL_PAD3,     ALT_PAD3},
- {XK_KP_4,       TRUE,   KEY_B1,      (int)'4',     CTL_PAD4,     ALT_PAD4},
- {XK_KP_5,       TRUE,   KEY_B2,      (int)'5',     CTL_PAD5,     ALT_PAD5},
- {XK_R11,        TRUE,   KEY_B2,      (int)'5',     CTL_PAD5,     ALT_PAD5}, /* Sun Type 4 keyboard */
- {XK_KP_6,       TRUE,   KEY_B3,      (int)'6',     CTL_PAD6,     ALT_PAD6},
- {XK_KP_7,       TRUE,   KEY_A1,      (int)'7',     CTL_PAD7,     ALT_PAD7},
- {XK_KP_8,       TRUE,   KEY_A2,      (int)'8',     CTL_PAD8,     ALT_PAD8},
- {XK_KP_9,       TRUE,   KEY_A3,      (int)'9',     CTL_PAD9,     ALT_PAD9},
+ {XK_Escape,	FALSE,	0x1B,        0x1B,	   0x1B,	ALT_ESC},
+ {XK_KP_Enter,	TRUE,	PADENTER,    PADENTER,	   CTL_PADENTER,ALT_PADENTER},
+ {XK_KP_Add,	TRUE,	PADPLUS,     (int)'+',	   CTL_PADPLUS, ALT_PADPLUS},
+ {XK_KP_Subtract,TRUE,	PADMINUS,    (int)'-',	   CTL_PADMINUS,ALT_PADMINUS},
+ {XK_KP_Multiply,TRUE,	PADSTAR,     (int)'*',	   CTL_PADSTAR, ALT_PADSTAR},
+/* Sun Type 4 keyboard */
+ {XK_R6,	TRUE,	PADSTAR,     (int)'*',	   CTL_PADSTAR, ALT_PADSTAR},
+ {XK_KP_Divide, TRUE,	PADSLASH,    (int)'/',	   CTL_PADSLASH,ALT_PADSLASH},
+/* Sun Type 4 keyboard */
+ {XK_R5,	TRUE,	PADSLASH,    (int)'/',	   CTL_PADSLASH,ALT_PADSLASH},
+ {XK_KP_Decimal,TRUE,	PADSTOP,     (int)'.',	   CTL_PADSTOP, ALT_PADSTOP},
+ {XK_KP_0,	TRUE,	PAD0,	     (int)'0',	   CTL_PAD0,	ALT_PAD0},
+ {XK_KP_1,	TRUE,	KEY_C1,      (int)'1',	   CTL_PAD1,	ALT_PAD1},
+ {XK_KP_2,	TRUE,	KEY_C2,      (int)'2',	   CTL_PAD2,	ALT_PAD2},
+ {XK_KP_3,	TRUE,	KEY_C3,      (int)'3',	   CTL_PAD3,	ALT_PAD3},
+ {XK_KP_4,	TRUE,	KEY_B1,      (int)'4',	   CTL_PAD4,	ALT_PAD4},
+ {XK_KP_5,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
+/* Sun Type 4 keyboard */
+ {XK_R11,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_KP_6,	TRUE,	KEY_B3,      (int)'6',	   CTL_PAD6,	ALT_PAD6},
+ {XK_KP_7,	TRUE,	KEY_A1,      (int)'7',	   CTL_PAD7,	ALT_PAD7},
+ {XK_KP_8,	TRUE,	KEY_A2,      (int)'8',	   CTL_PAD8,	ALT_PAD8},
+ {XK_KP_9,	TRUE,	KEY_A3,      (int)'9',	   CTL_PAD9,	ALT_PAD9},
 /* the following added to support Sun Type 5 keyboards */
- {XK_F21,        FALSE,  KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND,  KEY_SUSPEND},
- {XK_F22,        FALSE,  KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,    KEY_PRINT},
- {XK_F24,        TRUE,   PADMINUS,    (int)'-',     CTL_PADMINUS, ALT_PADMINUS},
- {XK_F25,        TRUE,   PADSLASH,    (int)'/',     CTL_PADSLASH, ALT_PADSLASH},/* Sun Type 4 keyboard */
- {XK_F26,        TRUE,   PADSTAR,     (int)'*',     CTL_PADSTAR,  ALT_PADSTAR}, /* Sun Type 4 keyboard */
- {XK_F27,        TRUE,   KEY_A1,      (int)'7',     CTL_PAD7,     ALT_PAD7},
- {XK_F29,        TRUE,   KEY_A3,      (int)'9',     CTL_PAD9,     ALT_PAD9},
- {XK_F31,        TRUE,   KEY_B2,      (int)'5',     CTL_PAD5,     ALT_PAD5},
- {XK_F35,        TRUE,   KEY_C3,      (int)'3',     CTL_PAD3,     ALT_PAD3},
+ {XK_F21,	FALSE,	KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
+ {XK_F22,	FALSE,	KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,	KEY_PRINT},
+ {XK_F24,	TRUE,	PADMINUS,    (int)'-',	   CTL_PADMINUS,ALT_PADMINUS},
+/* Sun Type 4 keyboard */
+ {XK_F25,	TRUE,	PADSLASH,    (int)'/',	   CTL_PADSLASH,ALT_PADSLASH},
+/* Sun Type 4 keyboard */
+ {XK_F26,	TRUE,	PADSTAR,     (int)'*',	   CTL_PADSTAR, ALT_PADSTAR},
+ {XK_F27,	TRUE,	KEY_A1,      (int)'7',	   CTL_PAD7,	ALT_PAD7},
+ {XK_F29,	TRUE,	KEY_A3,      (int)'9',	   CTL_PAD9,	ALT_PAD9},
+ {XK_F31,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_F35,	TRUE,	KEY_C3,      (int)'3',	   CTL_PAD3,	ALT_PAD3},
 #ifdef HAVE_XK_KP_DELETE
- {XK_KP_Delete,  TRUE,   PADSTOP,     (int)'.',     CTL_PADSTOP,  ALT_PADSTOP},
+ {XK_KP_Delete, TRUE,	PADSTOP,     (int)'.',	   CTL_PADSTOP, ALT_PADSTOP},
 #endif
 #ifdef HAVE_XK_KP_INSERT
- {XK_KP_Insert,  TRUE,   PAD0,        (int)'0',     CTL_PAD0,     ALT_PAD0},
+ {XK_KP_Insert, TRUE,	PAD0,	     (int)'0',	   CTL_PAD0,	ALT_PAD0},
 #endif
 #ifdef HAVE_XK_KP_END
- {XK_KP_End,     TRUE,   KEY_C1,      (int)'1',     CTL_PAD1,     ALT_PAD1},
+ {XK_KP_End,	TRUE,	KEY_C1,      (int)'1',	   CTL_PAD1,	ALT_PAD1},
 #endif
 #ifdef HAVE_XK_KP_DOWN
- {XK_KP_Down,    TRUE,   KEY_C2,      (int)'2',     CTL_PAD2,     ALT_PAD2},
+ {XK_KP_Down,	TRUE,	KEY_C2,      (int)'2',	   CTL_PAD2,	ALT_PAD2},
 #endif
 #ifdef HAVE_XK_KP_NEXT
- {XK_KP_Next,    TRUE,   KEY_C3,      (int)'3',     CTL_PAD3,     ALT_PAD3},
+ {XK_KP_Next,	TRUE,	KEY_C3,      (int)'3',	   CTL_PAD3,	ALT_PAD3},
 #endif
 #ifdef HAVE_XK_KP_LEFT
- {XK_KP_Left,    TRUE,   KEY_B1,      (int)'4',     CTL_PAD4,     ALT_PAD4},
+ {XK_KP_Left,	TRUE,	KEY_B1,      (int)'4',	   CTL_PAD4,	ALT_PAD4},
 #endif
 #ifdef HAVE_XK_KP_BEGIN
- {XK_KP_Begin,   TRUE,   KEY_B2,      (int)'5',     CTL_PAD5,     ALT_PAD5},
+ {XK_KP_Begin,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
 #endif
 #ifdef HAVE_XK_KP_RIGHT
- {XK_KP_Right,   TRUE,   KEY_B3,      (int)'6',     CTL_PAD6,     ALT_PAD6},
+ {XK_KP_Right,	TRUE,	KEY_B3,      (int)'6',	   CTL_PAD6,	ALT_PAD6},
 #endif
 #ifdef HAVE_XK_KP_HOME
- {XK_KP_Home,    TRUE,   KEY_A1,      (int)'7',     CTL_PAD7,     ALT_PAD7},
+ {XK_KP_Home,	TRUE,	KEY_A1,      (int)'7',	   CTL_PAD7,	ALT_PAD7},
 #endif
 #ifdef HAVE_XK_KP_UP
- {XK_KP_Up,      TRUE,   KEY_A2,      (int)'8',     CTL_PAD8,     ALT_PAD8},
+ {XK_KP_Up,	TRUE,	KEY_A2,      (int)'8',	   CTL_PAD8,	ALT_PAD8},
 #endif
 #ifdef HAVE_XK_KP_PRIOR
- {XK_KP_Prior,   TRUE,   KEY_A3,      (int)'9',     CTL_PAD9,     ALT_PAD9},
+ {XK_KP_Prior,	TRUE,	KEY_A3,      (int)'9',	   CTL_PAD9,	ALT_PAD9},
 #endif
 
 #ifdef INCLUDE_LATIN1
 # include "latin1kbd.h"
 #endif
 
- {0,             0,      0,           0,            0,            0},
+ {0,		0,	0,	     0,		   0,		0},
 };
 
 #define MAX_COMPOSE_CHARS 14
 #define MAX_COMPOSE_PRE 60
 
-char *compose_chars = "`'~^,/\"AaPpSs!?0123CcRr-_<>Xx.=Yy |EeIiOoUu+NnLlgDd:*TtMmVv";
+char *compose_chars =
+	"`'~^,/\"AaPpSs!?0123CcRr-_<>Xx.=Yy |EeIiOoUu+NnLlgDd:*TtMmVv";
 
 /*
    ` :    À   È   Ì   Ò   Ù   à   è   ì   ò   ù
@@ -762,65 +772,54 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 		(XtPointer)"",
 	},
 
-#if 0
-	{
-		XtNgeometry,
-		XtCGeometry,
-		XtRGeometry,
-		sizeof(XtWidgetGeometry),
-		XtOffsetOf(AppData, geometry),
-		XtRString,
-		(XtPointer)"80x25",
-	},
-#endif
 };
 
 XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
 {
-   {"-lines",               "*lines",             XrmoptionSepArg,   NULL },
-   {"-cols",                "*cols",              XrmoptionSepArg,   NULL },
-   {"-normalFont",          "*normalFont",        XrmoptionSepArg,   NULL },
-   {"-italicFont",          "*italicFont",        XrmoptionSepArg,   NULL },
-   {"-bitmap",              "*bitmap",            XrmoptionSepArg,   NULL },
+   {"-lines",		  "*lines",		XrmoptionSepArg, NULL},
+   {"-cols",		  "*cols",		XrmoptionSepArg, NULL},
+   {"-normalFont",	  "*normalFont",	XrmoptionSepArg, NULL},
+   {"-italicFont",	  "*italicFont",	XrmoptionSepArg, NULL},
+   {"-bitmap",		  "*bitmap",		XrmoptionSepArg, NULL},
 #ifdef HAVE_XPM_H
-   {"-pixmap",              "*pixmap",            XrmoptionSepArg,   NULL },
+   {"-pixmap",		  "*pixmap",		XrmoptionSepArg, NULL},
 #endif
-   {"-pointer",             "*pointer",           XrmoptionSepArg,   NULL },
-   {"-shmmin",              "*shmmin",            XrmoptionSepArg,   NULL },
-   {"-composeKey",          "*composeKey",        XrmoptionSepArg,   NULL },
-   {"-clickPeriod",         "*clickPeriod",       XrmoptionSepArg,   NULL },
-   {"-doubleClickPeriod",   "*doubleClickPeriod", XrmoptionSepArg,   NULL },
-   {"-scrollbarWidth",      "*scrollbarWidth",    XrmoptionSepArg,   NULL },
-   {"-pointerForeColor",    "*pointerForeColor",  XrmoptionSepArg,   NULL },
-   {"-pointerBackColor",    "*pointerBackColor",  XrmoptionSepArg,   NULL },
-   {"-cursorBlinkRate",     "*cursorBlinkRate",   XrmoptionSepArg,   NULL },
-   {"-cursorColor",         "*cursorColor",       XrmoptionSepArg,   NULL },
-   {"-textCursor",          "*textCursor",        XrmoptionSepArg,   NULL },
-   {"-colorBlack",          "*colorBlack",        XrmoptionSepArg,   NULL },
-   {"-colorRed",            "*colorRed",          XrmoptionSepArg,   NULL },
-   {"-colorGreen",          "*colorGreen",        XrmoptionSepArg,   NULL },
-   {"-colorYellow",         "*colorYellow",       XrmoptionSepArg,   NULL },
-   {"-colorBlue",           "*colorBlue",         XrmoptionSepArg,   NULL },
-   {"-colorMagenta",        "*colorMagenta",      XrmoptionSepArg,   NULL },
-   {"-colorCyan",           "*colorCyan",         XrmoptionSepArg,   NULL },
-   {"-colorWhite",          "*colorWhite",        XrmoptionSepArg,   NULL },
-   {"-colorBoldBlack",      "*colorBoldBlack",    XrmoptionSepArg,   NULL },
-   {"-colorBoldRed",        "*colorBoldRed",      XrmoptionSepArg,   NULL },
-   {"-colorBoldGreen",      "*colorBoldGreen",    XrmoptionSepArg,   NULL },
-   {"-colorBoldYellow",     "*colorBoldYellow",   XrmoptionSepArg,   NULL },
-   {"-colorBoldBlue",       "*colorBoldBlue",     XrmoptionSepArg,   NULL },
-   {"-colorBoldMagenta",    "*colorBoldMagenta",  XrmoptionSepArg,   NULL },
-   {"-colorBoldCyan",       "*colorBoldCyan",     XrmoptionSepArg,   NULL },
-   {"-colorBoldWhite",      "*colorBoldWhite",    XrmoptionSepArg,   NULL },
+   {"-pointer",		  "*pointer",		XrmoptionSepArg, NULL},
+   {"-shmmin",		  "*shmmin",		XrmoptionSepArg, NULL},
+   {"-composeKey",	  "*composeKey",	XrmoptionSepArg, NULL},
+   {"-clickPeriod",	  "*clickPeriod",	XrmoptionSepArg, NULL},
+   {"-doubleClickPeriod", "*doubleClickPeriod", XrmoptionSepArg, NULL},
+   {"-scrollbarWidth",	  "*scrollbarWidth",	XrmoptionSepArg, NULL},
+   {"-pointerForeColor",  "*pointerForeColor",	XrmoptionSepArg, NULL},
+   {"-pointerBackColor",  "*pointerBackColor",	XrmoptionSepArg, NULL},
+   {"-cursorBlinkRate",   "*cursorBlinkRate",	XrmoptionSepArg, NULL},
+   {"-cursorColor",	  "*cursorColor",	XrmoptionSepArg, NULL},
+   {"-textCursor",	  "*textCursor",	XrmoptionSepArg, NULL},
+   {"-colorBlack",	  "*colorBlack",	XrmoptionSepArg, NULL},
+   {"-colorRed",	  "*colorRed",		XrmoptionSepArg, NULL},
+   {"-colorGreen",	  "*colorGreen",	XrmoptionSepArg, NULL},
+   {"-colorYellow",	  "*colorYellow",	XrmoptionSepArg, NULL},
+   {"-colorBlue",	  "*colorBlue",		XrmoptionSepArg, NULL},
+   {"-colorMagenta",	  "*colorMagenta",	XrmoptionSepArg, NULL},
+   {"-colorCyan",	  "*colorCyan",		XrmoptionSepArg, NULL},
+   {"-colorWhite",	  "*colorWhite",	XrmoptionSepArg, NULL},
+   {"-colorBoldBlack",	  "*colorBoldBlack",	XrmoptionSepArg, NULL},
+   {"-colorBoldRed",	  "*colorBoldRed",	XrmoptionSepArg, NULL},
+   {"-colorBoldGreen",	  "*colorBoldGreen",	XrmoptionSepArg, NULL},
+   {"-colorBoldYellow",   "*colorBoldYellow",	XrmoptionSepArg, NULL},
+   {"-colorBoldBlue",	  "*colorBoldBlue",	XrmoptionSepArg, NULL},
+   {"-colorBoldMagenta",  "*colorBoldMagenta",	XrmoptionSepArg, NULL},
+   {"-colorBoldCyan",	  "*colorBoldCyan",	XrmoptionSepArg, NULL},
+   {"-colorBoldWhite",	  "*colorBoldWhite",	XrmoptionSepArg, NULL},
 };
 
 XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS] =
 {
-   {"XCursesButton",                  (XtActionProc)XCursesButton},
-   {"XCursesKeyPress",                (XtActionProc)XCursesKeyPress},
-   {"XCursesModifierPress",           (XtActionProc)XCursesModifierPress},
-   {"XCursesPasteSelection",          (XtActionProc)XCursesPasteSelection},
-   {"string",                         (XtActionProc)XCursesHandleString},
+   {"XCursesButton",		(XtActionProc)XCursesButton},
+   {"XCursesKeyPress",		(XtActionProc)XCursesKeyPress},
+   {"XCursesModifierPress",	(XtActionProc)XCursesModifierPress},
+   {"XCursesPasteSelection",	(XtActionProc)XCursesPasteSelection},
+   {"string",			(XtActionProc)XCursesHandleString},
 };
 
 char global_display_name[100];		/* large enough for DISPLAY=machine */
@@ -846,21 +845,6 @@ SCREEN *XSP;
 	long im_event_mask;
 	XIMStyles *im_supported_styles = NULL;
 	XIMStyle my_style = 0;
-#endif
-
-#if 0
-	"<KeyDown>Shift_L,<Key>: XCursesKeyPress() \n" \
-	"<KeyDown>Shift_R,<Key>: XCursesKeyPress() \n" \
-	"<KeyDown>Control_L,<Key>: XCursesKeyPress() \n" \
-	"<KeyDown>Control_R,<Key>: XCursesKeyPress() \n" \
-	"<KeyDown>Alt_L,<Key>: XCursesKeyPress() \n" \
-	"<KeyDown>Alt_R,<Key>: XCursesKeyPress() \n" \
-	"<KeyDown>Shift_L: XCursesModifierPress() \n" \
-	"<KeyDown>Shift_R: XCursesModifierPress() \n" \
-	"<KeyDown>Control_L: XCursesModifierPress() \n" \
-	"<KeyDown>Control_R: XCursesModifierPress() \n" \
-	"<KeyDown>Alt_L: XCursesModifierPress() \n" \
-	"<KeyDown>Alt_R: XCursesModifierPress() \n"
 #endif
 
 XtTranslations XCursesTranslations;
@@ -1154,9 +1138,6 @@ int XCursesEndwin(void)
 	XFreeGC(XCURSESDISPLAY, border_gc);
 #ifdef FOREIGN
 	XDestroyIC(Xic);
-#endif
-#if 0
-	XCloseDisplay(XCURSESDISPLAY);
 #endif
 	return 0;
 }
@@ -2354,8 +2335,8 @@ void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 
 void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 {
-	int button_no = 0;
-	static int last_button_no;
+	int button_no;
+	static int last_button_no = 0;
 	static Time last_button_press_time = 0;
 	MOUSE_STATUS save_mouse_status;
 	bool send_key=TRUE;
@@ -2432,32 +2413,6 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 		}
 		else
 		{
-#if 0
-			MOUSE_X_POS = (event->xbutton.x - 
-				XCURSESBORDERWIDTH) / XCursesFontWidth;
-			MOUSE_Y_POS = (event->xbutton.y - 
-				XCURSESBORDERWIDTH) / XCursesFontHeight;
-			BUTTON_STATUS(button_no) = BUTTON_PRESSED;
-
-			if (!(SP->_trap_mbe & BUTTON1_PRESSED)
-			    && button_no == 1)
-				send_key = FALSE;
-			if (!(SP->_trap_mbe & BUTTON2_PRESSED)
-			    && button_no == 2)
-				send_key = FALSE;
-			if (!(SP->_trap_mbe & BUTTON3_PRESSED)
-			    && button_no == 3)
-				send_key = FALSE;
-
-			if (button_no == 1
-			    && !(event->xbutton.state & ShiftMask)
-			    && !(event->xbutton.state & ControlMask)
-			    && !(event->xbutton.state & Mod1Mask))
-			{
-				SelectionOff();
-				SelectionOn(MOUSE_X_POS, MOUSE_Y_POS);
-			}
-#else
 			napms(XCURSESCLICKPERIOD);
 			event->type = ButtonRelease;
 			XSendEvent(event->xbutton.display, 
@@ -2465,7 +2420,6 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 			last_button_press_time = event->xbutton.time;
 
 			return;
-#endif
 		}
 
 		last_button_press_time = event->xbutton.time;
@@ -2522,51 +2476,9 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 			send_key = FALSE;
 		if (!(SP->_trap_mbe & BUTTON3_MOVED) && button_no == 3)
 			send_key = FALSE;
-#if 0
-		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
-		    && !(event->xbutton.state & ControlMask)
-		    && !(event->xbutton.state & Mod1Mask))
-		{
-			SelectionExtend(MOUSE_X_POS, MOUSE_Y_POS);
-			send_key = FALSE;
-		}
-		else
-			SelectionOff();
-#endif
 		break;
 
       case ButtonRelease:
-#if 0
-		MOUSE_X_POS = (event->xbutton.x - XCURSESBORDERWIDTH) / 
-			XCursesFontWidth;
-		MOUSE_Y_POS = (event->xbutton.y - XCURSESBORDERWIDTH) / 
-			XCursesFontHeight;
-		BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-
-		if (!(SP->_trap_mbe & BUTTON1_RELEASED) && button_no == 1)
-			send_key = FALSE;
-		if (!(SP->_trap_mbe & BUTTON2_RELEASED) && button_no == 2)
-			send_key = FALSE;
-		if (!(SP->_trap_mbe & BUTTON3_RELEASED) && button_no == 3)
-			send_key = FALSE;
-
-		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
-		    && !(event->xbutton.state & ControlMask)
-		    && !(event->xbutton.state & Mod1Mask) && mouse_selection)
-		{
-			send_key = FALSE;
-            
-			if (XtOwnSelection(topLevel, XA_PRIMARY, 
-			    event->xbutton.time, XCursesConvertProc, 
-			    XCursesLoseOwnership, NULL) == False)
-				SelectionOff();
-
-			SelectionSet();
-		}
-		else
-			SelectionOff();
-		break;
-#else
 		if (remove_release)
 		{
 			MOUSE_LOG(("Release at: %ld - removed\n",
@@ -2710,7 +2622,6 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 		    SelectionOff();
 
 		break;
-#endif
 	}
 
 	/* Set up the mouse status fields in preparation for sending */

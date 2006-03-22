@@ -68,7 +68,7 @@ clean ::
 
 distclean ::
 	rm -f config.log config.cache config.status
-	rm -f config.h Makefile
+	rm -f config.h Makefile xcurses-config
 
 manual:
 	cd tools; $(MAKE) $(MFLAGS) $@

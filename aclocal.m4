@@ -544,10 +544,9 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 		LD_RXLIB1="ld -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
-		LD_RXLIB2="${REXX_LIBS}"
+		LD_RXLIB2=""
 		SHLPRE="lib"
 		SHLPST=".so"
-		RXLIBLEN="6"
 	else
 		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
 #		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
@@ -555,17 +554,15 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 			LD_RXLIB1="ld -G"
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"
-			LD_RXLIB2="${REXX_LIBS}"
+			LD_RXLIB2=""
 			SHLPRE="lib"
 			SHLPST=".so"
-			RXLIBLEN="6"
 		else
 			LD_RXLIB1=""
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 			LD_RXLIB2=""
 			SHLPRE=""
 			SHLPST=""
-			RXLIBLEN="0"
 		fi
 	fi
 fi
@@ -585,7 +582,6 @@ dnl
 OSAVE=".o.save"
 OBJ="o"
 EXE=""
-GETOPT=""
 STATIC_LDFLAGS=""
 DYNAMIC_LDFLAGS=""
 AIX_DYN="no"
@@ -620,16 +616,11 @@ case "$target" in
 		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
-		if test "$with_rexx6000" = yes; then
-			mh_entry="-eInitFunc"
-		else
-			mh_entry="-bnoentry"
-		fi
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
 		AIX_DYN="yes"
 		DYN_COMP="-DDYNAMIC"
 		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
-		LD_RXLIB1="ld $mh_entry -bM:SRE"
+		LD_RXLIB1="ld -bnoentry -bM:SRE"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
 		RXPACKEXP="$SHLFILE.exp"
@@ -782,43 +773,35 @@ EOF
 fi
 
 
-aix_exports="config.exports.aix"
-echo "" > $aix_exports
-if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes" -o "$DLFCNINCDIR" != "" -o "$DLFCNLIBDIR" != ""; then
-	if test "$with_rexx" = "rexxtrans" -o "$with_rexx" = "regina" -o  "$with_rexx" = "objrexx" -o "$with_rexx" = "rexx6000"; then
-		EXPS="1,2,3,4,5,6,7,8,9"
-		SHL_TARGETS=""
-		for a in $SHLFILES
-		do
-			if test "$USE_ABI" = "yes" -a "$CAN_USE_ABI" = "yes"; then
-				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
-			else
-				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
-			fi
-			this=`echo $EXPS | cut -d, -f1`
-			EXPS=`echo $EXPS | cut -d, -f2-`
-			if test "$AIX_DYN" = "yes"; then
-				echo "RXPACKEXP$this=$a.exp" >> $aix_exports
-				echo "RXPACKEXPORTS$this=-bE:$a.exp" >> $aix_exports
-			else
-				echo "RXPACKEXP$this=" >> $aix_exports
-				echo "RXPACKEXPORTS$this=" >> $aix_exports
-			fi
-		done
-	else
-		SHL_TARGETS=""
-	fi
-else
-	SHL_TARGETS=""
+SHL_TARGETS=""
+
+if test "$AIX_DYN" = "yes"; then
+	aix_exports="config.exports.aix"
+	echo "" > $aix_exports
 fi
 
-AC_SUBST_FILE(aix_exports)
+if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes" -o "$DLFCNINCDIR" != "" -o "$DLFCNLIBDIR" != ""; then
+	EXPS="1,2,3,4,5,6,7,8,9"
+	for a in $SHLFILES
+	do
+		if test "$USE_ABI" = "yes" -a "$CAN_USE_ABI" = "yes"; then
+			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
+		else
+			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
+		fi
+		this=`echo $EXPS | cut -d, -f1`
+		EXPS=`echo $EXPS | cut -d, -f2-`
+		if test "$AIX_DYN" = "yes"; then
+			echo "RXPACKEXP$this=$a.exp" >> $aix_exports
+			echo "RXPACKEXPORTS$this=-bE:$a.exp" >> $aix_exports
+		fi
+	done
+fi
+
 AC_SUBST(EEXTRA)
-AC_SUBST(CEXTRA)
 AC_SUBST(OSAVE)
 AC_SUBST(OBJ)
 AC_SUBST(EXE)
-AC_SUBST(GETOPT)
 AC_SUBST(DYN_COMP)
 AC_SUBST(LIBS)
 AC_SUBST(SHLIBS)

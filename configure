@@ -309,8 +309,8 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA CEXTRA OSAVE OBJ EXE GETOPT DYN_COMP SHLIBS LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP CAN_USE_ABI LIBOBJS LTLIBOBJS'
-ac_subst_files='aix_exports'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA OSAVE OBJ EXE DYN_COMP SHLIBS LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP CAN_USE_ABI LIBOBJS LTLIBOBJS'
+ac_subst_files=''
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -5174,7 +5174,6 @@ _ACEOF
 
 fi
 
-with_rexx="rexxtrans"
 
 echo "$as_me:$LINENO: checking shared library/external function extensions" >&5
 echo $ECHO_N "checking shared library/external function extensions... $ECHO_C" >&6
@@ -5213,7 +5212,6 @@ echo "${ECHO_T}$SHLPST/$MODPST" >&6
 OSAVE=".o.save"
 OBJ="o"
 EXE=""
-GETOPT=""
 STATIC_LDFLAGS=""
 DYNAMIC_LDFLAGS=""
 AIX_DYN="no"
@@ -5248,16 +5246,11 @@ case "$target" in
 		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
-		if test "$with_rexx6000" = yes; then
-			mh_entry="-eInitFunc"
-		else
-			mh_entry="-bnoentry"
-		fi
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
 		AIX_DYN="yes"
 		DYN_COMP="-DDYNAMIC"
 		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
-		LD_RXLIB1="ld $mh_entry -bM:SRE"
+		LD_RXLIB1="ld -bnoentry -bM:SRE"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
 		RXPACKEXP="$SHLFILE.exp"
@@ -5367,7 +5360,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5370 "configure"
+#line 5363 "configure"
 int a=0
 EOF
 
@@ -5406,7 +5399,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5409 "configure"
+#line 5402 "configure"
 int foo()
 {
 return(0);
@@ -5427,10 +5420,9 @@ if { (eval echo "$as_me:$LINENO: \"$mh_compile\"") >&5
 		LD_RXLIB1="ld -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
-		LD_RXLIB2="${REXX_LIBS}"
+		LD_RXLIB2=""
 		SHLPRE="lib"
 		SHLPST=".so"
-		RXLIBLEN="6"
 	else
 		mh_dyn_link='ld -G -o conftest.rxlib conftest.o 1>&5'
 #		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
@@ -5442,17 +5434,15 @@ if { (eval echo "$as_me:$LINENO: \"$mh_compile\"") >&5
 			LD_RXLIB1="ld -G"
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"
-			LD_RXLIB2="${REXX_LIBS}"
+			LD_RXLIB2=""
 			SHLPRE="lib"
 			SHLPST=".so"
-			RXLIBLEN="6"
 		else
 			LD_RXLIB1=""
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 			LD_RXLIB2=""
 			SHLPRE=""
 			SHLPST=""
-			RXLIBLEN="0"
 		fi
 	fi
 fi
@@ -5464,38 +5454,30 @@ rm -f conftest*
 fi
 
 
-aix_exports="config.exports.aix"
-echo "" > $aix_exports
-if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes" -o "$DLFCNINCDIR" != "" -o "$DLFCNLIBDIR" != ""; then
-	if test "$with_rexx" = "rexxtrans" -o "$with_rexx" = "regina" -o  "$with_rexx" = "objrexx" -o "$with_rexx" = "rexx6000"; then
-		EXPS="1,2,3,4,5,6,7,8,9"
-		SHL_TARGETS=""
-		for a in $SHLFILES
-		do
-			if test "$USE_ABI" = "yes" -a "$CAN_USE_ABI" = "yes"; then
-				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
-			else
-				SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
-			fi
-			this=`echo $EXPS | cut -d, -f1`
-			EXPS=`echo $EXPS | cut -d, -f2-`
-			if test "$AIX_DYN" = "yes"; then
-				echo "RXPACKEXP$this=$a.exp" >> $aix_exports
-				echo "RXPACKEXPORTS$this=-bE:$a.exp" >> $aix_exports
-			else
-				echo "RXPACKEXP$this=" >> $aix_exports
-				echo "RXPACKEXPORTS$this=" >> $aix_exports
-			fi
-		done
-	else
-		SHL_TARGETS=""
-	fi
-else
-	SHL_TARGETS=""
+SHL_TARGETS=""
+
+if test "$AIX_DYN" = "yes"; then
+	aix_exports="config.exports.aix"
+	echo "" > $aix_exports
 fi
 
-
-
+if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX_DYN" = "yes" -o "$BEOS_DYN" = "yes" -o "$DLFCNINCDIR" != "" -o "$DLFCNLIBDIR" != ""; then
+	EXPS="1,2,3,4,5,6,7,8,9"
+	for a in $SHLFILES
+	do
+		if test "$USE_ABI" = "yes" -a "$CAN_USE_ABI" = "yes"; then
+			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
+		else
+			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
+		fi
+		this=`echo $EXPS | cut -d, -f1`
+		EXPS=`echo $EXPS | cut -d, -f2-`
+		if test "$AIX_DYN" = "yes"; then
+			echo "RXPACKEXP$this=$a.exp" >> $aix_exports
+			echo "RXPACKEXPORTS$this=-bE:$a.exp" >> $aix_exports
+		fi
+	done
+fi
 
 
 
@@ -6180,11 +6162,9 @@ s,@PURIFY@,$PURIFY,;t t
 s,@SHLPST@,$SHLPST,;t t
 s,@MODPST@,$MODPST,;t t
 s,@EEXTRA@,$EEXTRA,;t t
-s,@CEXTRA@,$CEXTRA,;t t
 s,@OSAVE@,$OSAVE,;t t
 s,@OBJ@,$OBJ,;t t
 s,@EXE@,$EXE,;t t
-s,@GETOPT@,$GETOPT,;t t
 s,@DYN_COMP@,$DYN_COMP,;t t
 s,@SHLIBS@,$SHLIBS,;t t
 s,@LD_RXLIB1@,$LD_RXLIB1,;t t
@@ -6209,8 +6189,6 @@ s,@RXPACKEXP@,$RXPACKEXP,;t t
 s,@CAN_USE_ABI@,$CAN_USE_ABI,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
-/@aix_exports@/r $aix_exports
-s,@aix_exports@,,;t t
 CEOF
 
 _ACEOF

@@ -192,7 +192,6 @@ fi
 
 dnl --------------- Check how to make shared libraries -------------------
 dnl Force the ability of shared library usage
-with_rexx="rexxtrans"
 MH_SHARED_LIBRARY(XCurses)
 
 AC_CONFIG_FILES([Makefile pdcurses/$mymakefile demos/Makefile panel/Makefile tools/Makefile xcurses-config])

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.146 2006/03/21 00:13:56 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.147 2006/03/25 00:11:47 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -584,9 +584,6 @@ typedef struct _win		/* definition of a window	*/
 	int	_tmarg;		/* top of scrolling region	*/
 	int	_bmarg;		/* bottom of scrolling region	*/
 	int	_delayms;	/* milliseconds of delay for getch() */
-	char	*_title;	/* window title			   */
-	char	_title_ofs;	/* window title offset from left   */
-	chtype	_title_attr;	/* window title attributes	   */
 	int	_parx, _pary;	/* coords relative to parent (0,0) */
 	struct	_win *_parent;	/* subwin's pointer to parent win  */
 } WINDOW;
@@ -1683,13 +1680,6 @@ int	PDC_set_line_color(short);
 #define mvwaddrawch(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddrawch(w, c))
 #define PDC_save_key_modifiers(flag) (SP->save_key_modifiers = flag)
 #define PDC_return_key_modifiers(flag) (SP->return_key_modifiers = flag)
-
-/* need to get rid of these */
-
-#define wtitle(w, s, a)		(w->_title = s, w->_title_attr = (chtype)a)
-#define wtitleofs(w, ofs)	(w->_title_ofs = ofs)
-#define title(s, a)		wtitle(stdscr, s, (chtype)a)
-#define titleofs(ofs)		wtitleofs(stdscr, ofs)
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

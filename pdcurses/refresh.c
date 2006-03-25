@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.21 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.22 2006/03/25 00:11:53 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -145,23 +145,6 @@ int wnoutrefresh(WINDOW *win)
 
 	y = win->_cury;
 	x = win->_curx;
-
-	/* There may be a better place to implement window 
-	   titles, but this seems to be the best place. -- Frotz */
-
-	if (win->_title != NULL)
-	{
-		int len = strlen(win->_title);
-		chtype attrs = win->_attrs;
-
-		if ((len > 0) && !(win->_flags & _SUBWIN))
-		{
-			wattrset(win, win->_title_attr);
-			mvwprintw(win, 0, win->_title_ofs, "%s", win->_title);
-			wmove(win, y, x);	/* restore cursor postion */
-			wattrset(win, attrs);	/* restore attributes */
-		}
-	}
 
 	begy = win->_begy;
 	begx = win->_begx;

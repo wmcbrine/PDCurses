@@ -47,7 +47,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.24 2006/03/20 07:46:26 wmcbrine Exp $";
+	"$Id: window.c,v 1.25 2006/03/25 00:11:53 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -400,9 +400,6 @@ WINDOW *dupwin(WINDOW *win)
 	new->_use_idc = win->_use_idc;
 	new->_tmarg = win->_tmarg;
 	new->_bmarg = win->_bmarg;
-	new->_title = win->_title;
-	new->_title_ofs = win->_title_ofs;
-	new->_title_attr = win->_title_attr;
 	new->_parx = win->_parx;
 	new->_pary = win->_pary;
 	new->_parent = win->_parent;
@@ -462,9 +459,6 @@ WINDOW *resize_window(WINDOW *win, int lins, int cols)
 	new->_tmarg = (win->_tmarg > new->_maxy - 1) ? 0 : win->_tmarg;
 	new->_bmarg = (win->_bmarg == win->_maxy - 1) ?
 		new->_maxy-1 : min(win->_bmarg, (new->_maxy - 1));
-	new->_title = win->_title;
-	new->_title_ofs = win->_title_ofs;
-	new->_title_attr = win->_title_attr;
 	new->_parent = win->_parent;
 	new->_immed = win->_immed;
 	new->_sync = win->_sync;

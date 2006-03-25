@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.22 2006/03/25 00:11:53 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.23 2006/03/25 00:41:22 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -207,17 +207,12 @@ int doupdate(void)
 	if (curscr == (WINDOW *)NULL)
 		return ERR;
 
-	/* if checking for typeahead, bail out here if any is found */
-   
-	if (SP->refrbrk && (SP->cbreak || SP->raw_inp) && PDC_breakout())
-		return OK;
-
 	if (curscr->_clear)
 		PDC_clr_update(curscr);
 	else
 	{
 #ifdef WIN32
-	    if (!SP->refrbrk && getenv("PDC_FULL_DISPLAY") != NULL)
+	    if (getenv("PDC_FULL_DISPLAY") != NULL)
 		PDC_doupdate();
 	    else
 #endif

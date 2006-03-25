@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.27 2006/02/28 02:04:57 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.28 2006/03/25 00:41:25 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -310,7 +310,6 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->save_key_modifiers = FALSE;
 	internal->return_key_modifiers = FALSE;
 	internal->echo = echo;
-	internal->refrbrk = FALSE;	/* no premature end of refresh */
 	internal->video_seg = 0xb000;	/* Base screen segment addr */
 	internal->video_ofs = 0;	/* Base screen segment ofs */
 	internal->video_page = 0;	/* Current Video Page */

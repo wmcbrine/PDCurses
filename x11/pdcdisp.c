@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.17 2006/02/27 07:48:45 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.18 2006/03/25 00:41:27 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -29,9 +29,8 @@ const char *rcsid_PDCdisp =
   PDC_clr_update()	- Updates the screen with a full redraw.
 
   PDCurses Description:
-	Updates the screen by clearing it and then redraw it in its
-	entirety. If SP->refrbrk is TRUE, and there is pending
-	input characters, the update will be prematurely terminated.
+	Updates the screen by clearing it and then redrawing it in its
+	entirety.
 
   PDCurses Return Value:
 	This routine returns ERR if it is unable to accomplish its task.
@@ -63,10 +62,6 @@ int PDC_clr_update(WINDOW *s)
 			memcpy(curscr->_y[i], s->_y[i], COLS * sizeof(chtype));
 
 		XCurses_transform_line(curscr->_y[i], i, 0, COLS);
-
-		if (SP->refrbrk && (SP->cbreak || SP->raw_inp)
-		    && PDC_breakout())
-			break;
 
 		curscr->_firstch[i] = _NO_CHANGE;
 		curscr->_lastch[i] = _NO_CHANGE;
@@ -196,9 +191,6 @@ bool PDC_transform_line(int lineno)
 
 	curscr->_firstch[lineno] = _NO_CHANGE;
 	curscr->_lastch[lineno] = _NO_CHANGE;
-
-	if (SP->refrbrk && (SP->cbreak || SP->raw_inp) && PDC_breakout())
-		return TRUE;
 
 	return FALSE;
 }

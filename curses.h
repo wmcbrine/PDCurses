@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.148 2006/03/25 00:30:26 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.149 2006/03/25 00:40:59 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -610,7 +610,6 @@ typedef struct
 	bool	echo;		/* if terminal echo			*/
 	bool	raw_inp;	/* raw input mode (v. cooked input)	*/
 	bool	raw_out;	/* raw output mode (7 v. 8 bits)	*/
-	bool	refrbrk;	/* if premature refresh brk allowed	*/
 	bool	orgcbr;		/* original MSDOS ^-BREAK setting	*/
 	bool	visible_cursor; /* TRUE if cursor is visible		*/
 	bool	audible;	/* FALSE if the bell is visual		*/

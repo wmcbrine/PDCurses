@@ -20,7 +20,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.18 2006/02/28 02:04:57 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.19 2006/03/25 00:41:27 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on = FALSE;
@@ -115,7 +115,6 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->save_key_modifiers	= FALSE;
 	internal->return_key_modifiers	= FALSE;
 	internal->echo		= echo;
-	internal->refrbrk	= FALSE;	/* no premature end of refresh*/
 	internal->video_page	= 0;		/* Current Video Page	      */
 	internal->visible_cursor= TRUE;		/* Assume that it is visible  */
 	internal->cursor	= 0;

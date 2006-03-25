@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.18 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.19 2006/03/25 00:41:12 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -31,9 +31,8 @@ extern unsigned char atrtab[MAX_ATRTAB];
   PDC_clr_update()	- Updates the screen with a full redraw.
 
   PDCurses Description:
-	Updates the screen by clearing it and then redraw it in its
-	entirety. If SP->refrbrk is TRUE, and there is pending
-	input characters, the update will be prematurely terminated.
+	Updates the screen by clearing it and then redrawing it in its
+	entirety.
 
   PDCurses Return Value:
 	This routine returns ERR if it is unable to accomplish its task.
@@ -107,10 +106,6 @@ int PDC_clr_update(WINDOW *s)
 				PDC_putc((*ch & 0x00FF), (*ch & 0xFF00) >> 8);
 				ch++;
 			}
-
-		if (SP->refrbrk && (SP->cbreak || SP->raw_inp)
-		    && PDC_breakout())
-			break;
 
 		curscr->_firstch[i] = _NO_CHANGE;
 		curscr->_lastch[i] = _NO_CHANGE;
@@ -465,9 +460,6 @@ bool PDC_transform_line(int lineno)
 
 	curscr->_firstch[lineno] = _NO_CHANGE;
 	curscr->_lastch[lineno] = _NO_CHANGE;
-
-	if (SP->refrbrk && (SP->cbreak || SP->raw_inp) && PDC_breakout())
-		return TRUE;
 
 	return FALSE;
 }

@@ -47,7 +47,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.23 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: inopts.c,v 1.24 2006/03/25 00:41:22 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -167,8 +167,8 @@ const char *rcsid_inopts =
 	The meta() function is provided for portability.  By default, 8 
 	bits are returned.
 
-	intrflush(), notimeout(), noqiflush() and qiflush() are no-ops
-	in PDCurses.
+	intrflush(), notimeout(), noqiflush(), qiflush() and typeahead()
+	are no-ops in PDCurses.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -378,8 +378,6 @@ void qiflush(void)
 int typeahead(int fildes)
 {
 	PDC_LOG(("typeahead() - called\n"));
-
-	SP->refrbrk = (fildes >= 0);
 
 	return OK;
 }

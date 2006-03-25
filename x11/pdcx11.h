@@ -3,7 +3,7 @@
  * Hessling 1994-1999. M.Hessling@qut.edu.au				*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.24 2006/03/22 14:05:29 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.25 2006/03/25 10:37:17 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -101,81 +101,81 @@ typedef char * XPointer;
 #define XCURSCR_LENGTH_OFF  (XCURSCR_START_OFF + XCURSCR_START_SIZE)
 #define XCURSCR_ATRTAB_OFF  (XCURSCR_LENGTH_OFF + XCURSCR_LENGTH_SIZE)
 
-#define XtNlines         "lines"
-#define XtCLines         "Lines"
-#define XtNcols          "cols"
-#define XtCCols          "Cols"
+#define XtNlines	"lines"
+#define XtCLines	"Lines"
+#define XtNcols		"cols"
+#define XtCCols		"Cols"
 
-#define XtCNormalFont    "NormalFont"
-#define XtNnormalFont    "normalFont"
-#define XtCItalicFont    "ItalicFont"
-#define XtNitalicFont    "italicFont"
+#define XtCNormalFont	"NormalFont"
+#define XtNnormalFont	"normalFont"
+#define XtCItalicFont	"ItalicFont"
+#define XtNitalicFont	"italicFont"
 
-#define XtCPointer       "Pointer"
-#define XtNpointer       "pointer"
+#define XtCPointer	"Pointer"
+#define XtNpointer	"pointer"
 
-#define XtCShmmin        "Shmmin"
-#define XtNshmmin        "shmmin"
+#define XtCShmmin	"Shmmin"
+#define XtNshmmin	"shmmin"
 
-#define XtCComposeKey    "ComposeKey"
-#define XtNcomposeKey    "composeKey"
+#define XtCComposeKey	"ComposeKey"
+#define XtNcomposeKey	"composeKey"
 
-#define XtCClickPeriod   "ClickPeriod"
-#define XtNclickPeriod   "clickPeriod"
+#define XtCClickPeriod	"ClickPeriod"
+#define XtNclickPeriod	"clickPeriod"
 
-#define XtCDoubleClickPeriod   "DoubleClickPeriod"
-#define XtNdoubleClickPeriod   "doubleClickPeriod"
+#define XtCDoubleClickPeriod	"DoubleClickPeriod"
+#define XtNdoubleClickPeriod	"doubleClickPeriod"
 
-#define XtCScrollbarWidth   "ScrollbarWidth"
-#define XtNscrollbarWidth   "scrollbarWidth"
+#define XtCScrollbarWidth	"ScrollbarWidth"
+#define XtNscrollbarWidth	"scrollbarWidth"
 
-#define XtCCursorBlinkRate  "CursorBlinkRate"
-#define XtNcursorBlinkRate  "cursorBlinkRate"
+#define XtCCursorBlinkRate	"CursorBlinkRate"
+#define XtNcursorBlinkRate	"cursorBlinkRate"
 
-#define XtCPointerForeColor "PointerForeColor"
-#define XtNpointerForeColor "pointerForeColor"
-#define XtCPointerBackColor "PointerBackColor"
-#define XtNpointerBackColor "pointerBackColor"
+#define XtCPointerForeColor	"PointerForeColor"
+#define XtNpointerForeColor	"pointerForeColor"
+#define XtCPointerBackColor	"PointerBackColor"
+#define XtNpointerBackColor	"pointerBackColor"
 
-#define XtNcursorColor   "cursorColor"
-#define XtCCursorColor   "CursorColor"
+#define XtNcursorColor	"cursorColor"
+#define XtCCursorColor	"CursorColor"
 
-#define XtNtextCursor   "textCursor"
-#define XtCTextCursor   "TextCursor"
+#define XtNtextCursor	"textCursor"
+#define XtCTextCursor	"TextCursor"
 
-#define XtNcolorBlack    "colorBlack"
-#define XtCColorBlack    "ColorBlack"
-#define XtNcolorRed      "colorRed"
-#define XtCColorRed      "ColorRed"
-#define XtNcolorGreen    "colorGreen"
-#define XtCColorGreen    "ColorGreen"
-#define XtNcolorYellow   "colorYellow"
-#define XtCColorYellow   "ColorYellow"
-#define XtNcolorBlue     "colorBlue"
-#define XtCColorBlue     "ColorBlue"
-#define XtNcolorMagenta  "colorMagenta"
-#define XtCColorMagenta  "ColorMagenta"
-#define XtNcolorCyan     "colorCyan"
-#define XtCColorCyan     "ColorCyan"
-#define XtNcolorWhite    "colorWhite"
-#define XtCColorWhite    "ColorWhite"
+#define XtNcolorBlack	"colorBlack"
+#define XtCColorBlack	"ColorBlack"
+#define XtNcolorRed	"colorRed"
+#define XtCColorRed	"ColorRed"
+#define XtNcolorGreen	"colorGreen"
+#define XtCColorGreen	"ColorGreen"
+#define XtNcolorYellow	"colorYellow"
+#define XtCColorYellow	"ColorYellow"
+#define XtNcolorBlue	"colorBlue"
+#define XtCColorBlue	"ColorBlue"
+#define XtNcolorMagenta "colorMagenta"
+#define XtCColorMagenta "ColorMagenta"
+#define XtNcolorCyan	"colorCyan"
+#define XtCColorCyan	"ColorCyan"
+#define XtNcolorWhite	"colorWhite"
+#define XtCColorWhite	"ColorWhite"
 
-#define XtNcolorBoldBlack    "colorBoldBlack"
-#define XtCColorBoldBlack    "ColorBoldBlack"
-#define XtNcolorBoldRed      "colorBoldRed"
-#define XtCColorBoldRed      "ColorBoldRed"
-#define XtNcolorBoldGreen    "colorBoldGreen"
-#define XtCColorBoldGreen    "ColorBoldGreen"
-#define XtNcolorBoldYellow   "colorBoldYellow"
-#define XtCColorBoldYellow   "ColorBoldYellow"
-#define XtNcolorBoldBlue     "colorBoldBlue"
-#define XtCColorBoldBlue     "ColorBoldBlue"
-#define XtNcolorBoldMagenta  "colorBoldMagenta"
-#define XtCColorBoldMagenta  "ColorBoldMagenta"
-#define XtNcolorBoldCyan     "colorBoldCyan"
-#define XtCColorBoldCyan     "ColorBoldCyan"
-#define XtNcolorBoldWhite    "colorBoldWhite"
-#define XtCColorBoldWhite    "ColorBoldWhite"
+#define XtNcolorBoldBlack	"colorBoldBlack"
+#define XtCColorBoldBlack	"ColorBoldBlack"
+#define XtNcolorBoldRed		"colorBoldRed"
+#define XtCColorBoldRed		"ColorBoldRed"
+#define XtNcolorBoldGreen	"colorBoldGreen"
+#define XtCColorBoldGreen	"ColorBoldGreen"
+#define XtNcolorBoldYellow	"colorBoldYellow"
+#define XtCColorBoldYellow	"ColorBoldYellow"
+#define XtNcolorBoldBlue	"colorBoldBlue"
+#define XtCColorBoldBlue	"ColorBoldBlue"
+#define XtNcolorBoldMagenta	"colorBoldMagenta"
+#define XtCColorBoldMagenta	"ColorBoldMagenta"
+#define XtNcolorBoldCyan	"colorBoldCyan"
+#define XtCColorBoldCyan	"ColorBoldCyan"
+#define XtNcolorBoldWhite	"colorBoldWhite"
+#define XtCColorBoldWhite	"ColorBoldWhite"
 
 #ifndef MAX_PATH
 # define MAX_PATH 256
@@ -222,33 +222,33 @@ typedef struct
 	char *textCursor;
 } AppData;
 
-#define XCURSESNORMALFONTINFO   app_data.normalfont
-#define XCURSESITALICFONTINFO   app_data.italicfont
-#define XCURSESLINES            app_data.lines
-#define XCURSESCOLS             app_data.cols
-#define XCURSESBITMAPFILE       app_data.bitmapFile
+#define XCURSESNORMALFONTINFO	app_data.normalfont
+#define XCURSESITALICFONTINFO	app_data.italicfont
+#define XCURSESLINES		app_data.lines
+#define XCURSESCOLS		app_data.cols
+#define XCURSESBITMAPFILE	app_data.bitmapFile
 #ifdef HAVE_XPM_H
-# define XCURSESPIXMAPFILE      app_data.pixmapFile
+# define XCURSESPIXMAPFILE	app_data.pixmapFile
 #endif
-#define XCURSESCOMPOSEKEY       app_data.composeKey
-#define XCURSESPOINTER          app_data.pointer
+#define XCURSESCOMPOSEKEY	app_data.composeKey
+#define XCURSESPOINTER		app_data.pointer
 #define XCURSESPOINTERFORECOLOR app_data.pointerForeColor
 #define XCURSESPOINTERBACKCOLOR app_data.pointerBackColor
-#define XCURSESCURSORCOLOR      app_data.cursorColor
-#define XCURSESSHMMIN           app_data.shmmin
-#define XCURSESBORDERWIDTH      app_data.borderWidth
-#define XCURSESBORDERCOLOR      app_data.borderColor
+#define XCURSESCURSORCOLOR	app_data.cursorColor
+#define XCURSESSHMMIN		app_data.shmmin
+#define XCURSESBORDERWIDTH	app_data.borderWidth
+#define XCURSESBORDERCOLOR	app_data.borderColor
 #define XCURSESDOUBLECLICKPERIOD app_data.doubleClickPeriod
-#define XCURSESCLICKPERIOD      app_data.clickPeriod
-#define XCURSESSCROLLBARWIDTH   app_data.scrollbarWidth
-#define XCURSESCURSORBLINKRATE  app_data.cursorBlinkRate
-#define XCURSESGEOMETRY         app_data.geometry
-#define XCURSESTEXTCURSOR       app_data.textCursor
+#define XCURSESCLICKPERIOD	app_data.clickPeriod
+#define XCURSESSCROLLBARWIDTH	app_data.scrollbarWidth
+#define XCURSESCURSORBLINKRATE	app_data.cursorBlinkRate
+#define XCURSESGEOMETRY		app_data.geometry
+#define XCURSESTEXTCURSOR	app_data.textCursor
 
-#define XCURSESDISPLAY          (XtDisplay(drawing))
-#define XCURSESWIN              (XtWindow(drawing))
+#define XCURSESDISPLAY		(XtDisplay(drawing))
+#define XCURSESWIN		(XtWindow(drawing))
 
-#define XCLOGMSG                (XCursesProcess ? "     X" : "CURSES")
+#define XCLOGMSG		(XCursesProcess ? "     X" : "CURSES")
 
 #define MAX_COLORS   8  /* maximum of "normal" colours */
 #define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2 * MAX_COLORS */

@@ -26,76 +26,8 @@ extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.17 2006/03/25 00:41:25 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.18 2006/03/25 03:17:35 wmcbrine Exp $";
 #endif
-
-static CHAR_INFO ci[512];
-
-/*man-start**************************************************************
-
-  PDC_clr_update()   - Updates the screen with a full redraw.
-
-  PDCurses Description:
-	Updates the screen by clearing it and then redrawing it in its
-	entirety.
-
-  PDCurses Return Value:
-	This routine returns ERR if it is unable to accomplish its task.
-
-	The return value OK is returned if there were no errors.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_clr_update(WINDOW *s);
-
-**man-end****************************************************************/
-
-int PDC_clr_update(WINDOW *s)
-{
-	int i, j;
-	chtype *srcp;
-	COORD bufSize, bufPos;
-	SMALL_RECT sr;
-
-	PDC_LOG(("PDC_clr_update() - called\n"));
-
-	if (curscr == (WINDOW *)NULL)
-		return ERR;
-#if 0
-	if (SP->full_redraw)
-		PDC_clr_scrn(s);	/* clear physical screen */
-#endif
-	s->_clear = FALSE;
-	bufPos.X = bufPos.Y = 0;
-	bufSize.X = COLS;
-	bufSize.Y = 1;
-	sr.Left = 0;
-	sr.Right = COLS - 1;
-
-	for (i = 0; i < LINES; i++)	/* update physical screen */
-	{
-		if (s != curscr)
-			memcpy(curscr->_y[i], s->_y[i], COLS * sizeof(chtype));
-
-		srcp = s->_y[i];
-
-		sr.Top = i;
-		sr.Bottom = i;
-
-		for (j = 0; j < COLS; j++)
-		{
-			ci[j].Char.AsciiChar = srcp[j] & A_CHARTEXT;
-			ci[j].Attributes =
-				(chtype_attr(srcp[j]) & 0xFF00) >> 8;
-		}
-
-		WriteConsoleOutput(hConOut, ci, bufSize, bufPos, &sr);
-	}
-
-	return OK;
-}
 
 /*man-start**************************************************************
 
@@ -385,6 +317,7 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 
 bool PDC_transform_line(int lineno)
 {
+	CHAR_INFO ci[512];
 	int j, x, endx, len;
 	chtype *srcp;
 	COORD bufSize, bufPos;

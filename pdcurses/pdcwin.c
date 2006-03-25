@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.34 2006/03/25 01:37:35 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.35 2006/03/25 03:17:33 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -649,6 +649,57 @@ int PDC_clr_scrn(WINDOW *win)
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, attrs);
 	PDC_gotoxy(0, 0);
 #endif
+	return OK;
+}
+
+/*man-start**************************************************************
+
+  PDC_clr_update()	- Updates the screen with a full redraw.
+
+  PDCurses Description:
+	Updates the screen by clearing it and then redrawing it in its
+	entirety.
+
+  PDCurses Return Value:
+	This routine returns ERR if it is unable to accomplish its task.
+
+	The return value OK is returned if there were no errors.
+
+  PDCurses Errors:
+	No errors are defined for this function.
+
+  Portability:
+	PDCurses  int PDC_clr_update(WINDOW *s);
+
+**man-end****************************************************************/
+
+int PDC_clr_update(WINDOW *s)
+{
+	int i;
+
+	PDC_LOG(("PDC_clr_update() - called\n"));
+
+	if (curscr == (WINDOW *)NULL)
+		return ERR;
+#if 0
+	if (SP->full_redraw)
+		PDC_clr_scrn(s);	/* clear physical screen */
+#endif
+	s->_clear = FALSE;
+
+	for (i = 0; i < LINES; i++)	/* update physical screen */
+	{
+		/* copy s to curscr -- must be same size */
+
+		if (s != curscr)
+			memcpy(curscr->_y[i], s->_y[i], COLS * sizeof(chtype));
+
+		curscr->_firstch[i] = 0;
+		curscr->_lastch[i] = COLS - 1;
+
+		PDC_transform_line(i);
+	}
+
 	return OK;
 }
 

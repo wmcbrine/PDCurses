@@ -21,54 +21,8 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.18 2006/03/25 00:41:27 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.19 2006/03/25 03:17:37 wmcbrine Exp $";
 #endif
-
-/*man-start**************************************************************
-
-  PDC_clr_update()	- Updates the screen with a full redraw.
-
-  PDCurses Description:
-	Updates the screen by clearing it and then redrawing it in its
-	entirety.
-
-  PDCurses Return Value:
-	This routine returns ERR if it is unable to accomplish its task.
-
-	The return value OK is returned if there were no errors.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_clr_update(WINDOW *s);
-
-**man-end****************************************************************/
-
-int PDC_clr_update(WINDOW *s)
-{
-	int i;
-
-	PDC_LOG(("PDC_clr_update() - called\n"));
-
-	if (curscr == (WINDOW *)NULL)
-		return ERR;
-
-	s->_clear = FALSE;
-
-	for (i = 0; i < LINES; i++)	/* update physical screen */
-	{
-		if (s != curscr)	/* copy s to curscr */
-			memcpy(curscr->_y[i], s->_y[i], COLS * sizeof(chtype));
-
-		XCurses_transform_line(curscr->_y[i], i, 0, COLS);
-
-		curscr->_firstch[i] = _NO_CHANGE;
-		curscr->_lastch[i] = _NO_CHANGE;
-	}
-
-	return OK;
-}
 
 /*man-start**************************************************************
 

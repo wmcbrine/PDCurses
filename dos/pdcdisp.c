@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.23 2006/03/25 00:41:04 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.24 2006/03/25 03:17:28 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -41,118 +41,6 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 		*dst++ = *src++;
 }
 #endif
-
-/*man-start**************************************************************
-
-  PDC_clr_update()	- Updates the screen with a full redraw.
-
-  PDCurses Description:
-	Updates the screen by clearing it and then redrawing it in its
-	entirety.
-
-  PDCurses Return Value:
-	This routine returns ERR if it is unable to accomplish its task.
-
-	The return value OK is returned if there were no errors.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_clr_update(WINDOW *s);
-
-**man-end****************************************************************/
-
-int PDC_clr_update(WINDOW *s)
-{
-	int i, j;
-	unsigned short *ch;
-
-#if SMALL || MEDIUM
-# if !PC
-	struct SREGS segregs;
-# endif
-	int ds;
-#endif
-	/* the next two variables have been changed from chtype to 
-	   unsigned short as this is the correct datatype for a physical 
-	   character/attribute */
-
-	/* this should be enough for the maximum width of a screen. */
-
-	unsigned short temp_line[256];
-	unsigned short chr;
-
-	PDC_LOG(("PDC_clr_update() - called\n"));
-
-	if (curscr == (WINDOW *)NULL)
-		return ERR;
-#if 0
-	if (SP->full_redraw)
-		PDC_clr_scrn(s);	/* clear physical screen */
-#endif
-	s->_clear = FALSE;
-
-	for (i = 0; i < LINES; i++)	/* update physical screen */
-	{
-		/* copy s to curscr -- must be same size */
-
-		if (s != curscr)
-			memcpy(curscr->_y[i], s->_y[i], COLS * sizeof(chtype));
-
-		/* now have ch pointing to area to contain real 
-		   attributes. MH-920715 */
-
-		ch = temp_line;
-
-		/* for each chtype in the line... */
-
-		for (j = 0; j < COLS; j++)
-		{
-			chr = (unsigned short)(s->_y[i][j] & A_CHARTEXT);
-			temp_line[j] = chtype_attr(s->_y[i][j]) | chr;
-		}
-
-		if (SP->direct_video)
-		{
-
-#ifdef __DJGPP__
-			dosmemput(ch, COLS * sizeof(unsigned short),
-				(unsigned long)_FAR_POINTER(SP->video_seg,
-				SP->video_ofs +
-				(i * COLS * sizeof(unsigned short)) ) );
-#else
-# if (SMALL || MEDIUM)
-#  if PC
-			ds = FP_SEG((void far *) ch);
-#  else
-			segread(&segregs);
-			ds = segregs.ds;
-#  endif
-			movedata(ds, (int)ch, SP->video_seg, SP->video_ofs +
-				(i * COLS * sizeof(unsigned short)),
-			        (COLS * sizeof(unsigned short)) );
-# else
-			memcpy((void *)_FAR_POINTER(SP->video_seg,
-			  SP->video_ofs + (i * COLS * sizeof(unsigned short))),
-			       ch, (COLS * sizeof(unsigned short)) );
-# endif
-#endif
-		}
-		else
-			for (j = 0; j < COLS; j++)
-			{
-				PDC_gotoxy(i, j);
-				PDC_putc((*ch & 0x00FF), (*ch & 0xFF00) >> 8);
-				ch++;
-			}
-
-		curscr->_firstch[i] = _NO_CHANGE;
-		curscr->_lastch[i] = _NO_CHANGE;
-	}
-
-	return OK;
-}
 
 /*man-start**************************************************************
 
@@ -512,8 +400,6 @@ bool PDC_transform_line(int lineno)
 
 	if (curscr == (WINDOW *)NULL)
 		return FALSE;
-
-	memset(temp_line, ' ', sizeof(temp_line));
 
 	x = curscr->_firstch[lineno];
 	endx = curscr->_lastch[lineno];

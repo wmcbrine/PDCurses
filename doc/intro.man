@@ -484,7 +484,6 @@ FUNCTIONS
 		PDC_check_bios_key       pdckbd
 		PDC_chg_attrs            pdcdisp
 		PDC_chins                pdcdisp
-		PDC_clr_scrn             pdcdisp
 		PDC_clr_update           pdcdisp
 		PDC_copy_win             pdcwin
 		PDC_cursor_off           pdcdisp

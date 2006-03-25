@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.150 2006/03/25 00:53:35 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.151 2006/03/25 23:57:40 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -613,7 +613,6 @@ typedef struct
 	bool	orgcbr;		/* original MSDOS ^-BREAK setting	*/
 	bool	visible_cursor; /* TRUE if cursor is visible		*/
 	bool	audible;	/* FALSE if the bell is visual		*/
-	bool	full_redraw;	/* TRUE for bad performance		*/
 	bool	direct_video;	/* Allow Direct Screen Memory writes	*/
 	bool	mono;		/* TRUE if current screen is mono	*/
 	bool	sizeable;	/* TRUE if adapter is resizeable	*/

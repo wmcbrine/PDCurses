@@ -272,7 +272,6 @@ EXPORTS PDC_chadd
 EXPORTS PDC_check_bios_key
 EXPORTS PDC_chg_attrs
 EXPORTS PDC_chins
-EXPORTS PDC_clr_scrn
 EXPORTS PDC_clr_update
 EXPORTS PDC_copy_win
 EXPORTS PDC_cursor_off

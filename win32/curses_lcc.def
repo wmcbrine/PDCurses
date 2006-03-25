@@ -265,7 +265,6 @@ PDC_chadd
 PDC_check_bios_key
 PDC_chg_attrs
 PDC_chins
-PDC_clr_scrn
 PDC_clr_update
 PDC_copy_win
 PDC_cursor_off

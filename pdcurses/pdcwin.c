@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.36 2006/03/25 23:39:55 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.37 2006/03/25 23:57:47 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -623,37 +623,6 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 
 /*man-start**************************************************************
 
-  PDC_clr_scrn()  - Clears the physical screen and homes the cursor.
-
-  PDCurses Description:
-	This is an internal routine called by the doupdate() routines.
-
-  PDCurses Return Value:
-	This routine always returns OK.
-
-  Portability:
-	PDCurses  int PDC_clr_scrn(WINDOW *win);
-
-**man-end****************************************************************/
-
-int PDC_clr_scrn(WINDOW *win)
-{
-#if !defined(XCURSES)
-	chtype attrs = win->_bkgd;
-#endif
-	PDC_LOG(("PDC_clr_scrn() - called\n"));
-
-#if defined(XCURSES)
-	XCursesInstruct(CURSES_CLEAR);
-#else
-	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, attrs);
-	PDC_gotoxy(0, 0);
-#endif
-	return OK;
-}
-
-/*man-start**************************************************************
-
   PDC_clr_update()	- Updates the screen with a full redraw.
 
   PDCurses Description:
@@ -681,10 +650,7 @@ int PDC_clr_update(void)
 
 	if (curscr == (WINDOW *)NULL)
 		return ERR;
-#if 0
-	if (SP->full_redraw)
-		PDC_clr_scrn(s);	/* clear physical screen */
-#endif
+
 	curscr->_clear = FALSE;
 
 	for (i = 0; i < LINES; i++)	/* update physical screen */

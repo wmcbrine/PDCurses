@@ -10,7 +10,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.40 2006/03/01 08:04:33 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.41 2006/03/25 12:17:11 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -240,10 +240,6 @@ void scrollTest(WINDOW *win)
 #ifndef getmaxy
 	int OldX;
 #endif
-	/* disable typeahead checking */
-
-	typeahead(-1);
-
 	werase(win);
 	mvwprintw (win, height - 2, 1, "The window will now scroll slowly");
 	box(win, ACS_VLINE, ACS_HLINE);
@@ -335,7 +331,6 @@ void inputTest(WINDOW *win)
 	keypad(win, TRUE);
 	raw();
 	noecho();
-	typeahead(-1);
 
 	wtimeout(win, 200);
 
@@ -779,10 +774,6 @@ void clipboardTest(WINDOW *win)
 	char *text =
 	"This string placed in clipboard by PDCurses test program, testcurs.";
 	char *ptr = NULL;
-
-	/* disable typeahead checking */
-
-	typeahead(-1);
 
 	clear();
 	mvprintw (1, 1,

@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_instr =
-	"$Id: instr.c,v 1.16 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: instr.c,v 1.17 2006/03/25 01:37:35 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -53,8 +53,8 @@ const char *rcsid_instr =
 	int winnstr(WINDOW *win, char *str, int n);
 	int mvinstr(int y, int x, char *str);
 	int mvinnstr(int y, int x, char *str, int n);
-	int mvwinstr(WINDOW *, int y, int x, char *str);
-	int mvwinnstr(WINDOW *, int y, int x, char *str, int n);
+	int mvwinstr(WINDOW *win, int y, int x, char *str);
+	int mvwinnstr(WINDOW *win, int y, int x, char *str, int n);
 
   System V Curses Description:
 	These routines return a string of characters in str, starting at 

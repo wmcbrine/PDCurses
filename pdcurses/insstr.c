@@ -39,7 +39,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_insstr =
-	"$Id: insstr.c,v 1.20 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: insstr.c,v 1.21 2006/03/25 01:37:35 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -53,8 +53,8 @@ const char *rcsid_insstr =
 	int winsnstr(WINDOW *win, const char *str, int n);
 	int mvinsstr(int y, int x, const char *str);
 	int mvinsnstr(int y, int x, const char *str, int n);
-	int mvwinsstr(WINDOW *, int y, int x, const char *str);
-	int mvwinsnstr(WINDOW *, int y, int x, const char *str, int n);
+	int mvwinsstr(WINDOW *win, int y, int x, const char *str);
+	int mvwinsnstr(WINDOW *win, int y, int x, const char *str, int n);
 
   System V Curses Description:
 	With these routines, a character string (as many characters as 
@@ -172,7 +172,7 @@ int mvwinsstr(WINDOW *win, int y, int x, const char *str)
 	return winsnstr(win, str, -1);
 }
 
-int mvwinsnstr(WINDOW *win,int y, int x, const char *str, int n)
+int mvwinsnstr(WINDOW *win, int y, int x, const char *str, int n)
 {
 	PDC_LOG(("mvwinsnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));

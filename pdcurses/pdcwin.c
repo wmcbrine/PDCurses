@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.33 2006/03/25 00:30:36 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.34 2006/03/25 01:37:35 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -139,12 +139,12 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 	a NULL pointer.
 
   Portability:
-	PDCurses  WINDOW * PDC_makenew(int num_lines, int num_columns,
+	PDCurses  WINDOW *PDC_makenew(int num_lines, int num_columns,
 				       int begy, int begx);
 
 **man-end****************************************************************/
 
-WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
+WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 {
 	extern void *(*mallc)(size_t);
 	extern void *(*callc)(size_t, size_t);

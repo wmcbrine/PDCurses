@@ -71,7 +71,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.36 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.37 2006/03/25 01:37:35 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -90,7 +90,7 @@ char linesrippedoff = 0;
 	int savetty(void);
 	void getsyx(int y, int x);
 	void setsyx(int y, int x);
-	int ripoffline(int line, int (*init)(WINDOW *,int));
+	int ripoffline(int line, int (*init)(WINDOW *, int));
 	int curs_set(int visibility);
 	int napms(int ms);
 

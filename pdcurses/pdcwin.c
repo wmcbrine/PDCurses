@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.35 2006/03/25 03:17:33 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.36 2006/03/25 23:39:55 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -669,11 +669,11 @@ int PDC_clr_scrn(WINDOW *win)
 	No errors are defined for this function.
 
   Portability:
-	PDCurses  int PDC_clr_update(WINDOW *s);
+	PDCurses  int PDC_clr_update(void);
 
 **man-end****************************************************************/
 
-int PDC_clr_update(WINDOW *s)
+int PDC_clr_update(void)
 {
 	int i;
 
@@ -685,15 +685,10 @@ int PDC_clr_update(WINDOW *s)
 	if (SP->full_redraw)
 		PDC_clr_scrn(s);	/* clear physical screen */
 #endif
-	s->_clear = FALSE;
+	curscr->_clear = FALSE;
 
 	for (i = 0; i < LINES; i++)	/* update physical screen */
 	{
-		/* copy s to curscr -- must be same size */
-
-		if (s != curscr)
-			memcpy(curscr->_y[i], s->_y[i], COLS * sizeof(chtype));
-
 		curscr->_firstch[i] = 0;
 		curscr->_lastch[i] = COLS - 1;
 

@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.23 2006/03/25 00:41:22 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.24 2006/03/25 23:39:55 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -208,7 +208,7 @@ int doupdate(void)
 		return ERR;
 
 	if (curscr->_clear)
-		PDC_clr_update(curscr);
+		PDC_clr_update();
 	else
 	{
 #ifdef WIN32

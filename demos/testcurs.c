@@ -10,7 +10,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.41 2006/03/25 12:17:11 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.42 2006/03/25 12:20:20 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -245,7 +245,7 @@ void scrollTest(WINDOW *win)
 	box(win, ACS_VLINE, ACS_HLINE);
 	wrefresh(win);
 	scrollok(win, TRUE);
-	napms (500);
+	napms(500);
 
 	for (i = 1; i <= height; i++) {
 		napms(150);
@@ -525,7 +525,8 @@ void outputTest(WINDOW *win)
 
 	nl();
 	wclear(win);
-	mvwaddstr(win, 1, 1, "You should now have a screen in the upper left corner, and this text should have wrapped");
+	mvwaddstr(win, 1, 1, "You should now have a screen in the upper "
+			     "left corner, and this text should have wrapped");
 	waddstr(win,"\nThis text should be down\n");
 	waddstr(win,  "and broken into two here ^");
 	Continue(win);

@@ -25,7 +25,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.24 2006/03/25 03:17:28 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.25 2006/03/25 13:49:27 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -381,7 +381,7 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 bool PDC_transform_line(int lineno)
 {
 	chtype *srcp;
-	int j, x, endx, len;
+	int j, x, len;
 
 #if SMALL || MEDIUM
 # if !PC
@@ -390,70 +390,60 @@ bool PDC_transform_line(int lineno)
 	int ds;
 #endif
 
-	/* this should be enough for the maximum width of a screen */
-
-	unsigned short temp_line[256];
-	unsigned short chr;
-	unsigned short *ch;
-
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
 	if (curscr == (WINDOW *)NULL)
 		return FALSE;
 
 	x = curscr->_firstch[lineno];
-	endx = curscr->_lastch[lineno];
+	len = curscr->_lastch[lineno] - x + 1;
 	srcp = curscr->_y[lineno] + x;
-	len = endx - x + 1;
-
-	/* now have ch pointing to area to contain real attributes. 
-	   MH-920715 */
-
-	ch = temp_line;
-
-	/* replace the attribute part of the chtype with the actual 
-	   colour value for each chtype in the line */
-
-	for (j = 0; j < len; j++)
-	{
-		chr = srcp[j] & A_CHARTEXT;
-		temp_line[j] = chtype_attr(srcp[j]) | chr;
-	}
 
 	if (SP->direct_video)
 	{
+		/* this should be enough for the maximum width of a 
+		   screen */
+
+		unsigned short temp_line[256];
+
+		/* replace the attribute part of the chtype with the 
+		   actual colour value for each chtype in the line */
+
+		for (j = 0; j < len; j++)
+			temp_line[j] = chtype_attr(srcp[j]) |
+				(srcp[j] & A_CHARTEXT);
 
 #ifdef __DJGPP__
-		dosmemput(ch, len * sizeof(unsigned short),
+		dosmemput(temp_line, len * sizeof(unsigned short),
 			(unsigned long)_FAR_POINTER(SP->video_seg,
 			SP->video_ofs + (((lineno * curscr->_maxx) + x) *
 			sizeof(unsigned short))));
 #else
 # if SMALL || MEDIUM
 #  if PC
-		ds = FP_SEG((void far *) ch);
+		ds = FP_SEG((void far *) temp_line);
 #  else
 		segread(&segregs);
 		ds = segregs.ds;
 #  endif
-		movedata(ds, (int)ch, SP->video_seg,
+		movedata(ds, (int)temp_line, SP->video_seg,
 			SP->video_ofs + (((lineno * curscr->_maxx) + x) *
 			sizeof(unsigned short)), len * sizeof(unsigned short));
 # else
 		memcpy((void *)_FAR_POINTER(SP->video_seg,
 			SP->video_ofs + (((lineno * curscr->_maxx) + x) *
-			sizeof(unsigned short))), ch,
+			sizeof(unsigned short))), temp_line,
 			len * sizeof(unsigned short));
 # endif
 #endif
 
 	}
 	else
-		for (; x <= endx; x++)
+		for (j = 0; j < len; j++)
 		{
-			PDC_gotoxy(lineno, x);
-			PDC_putc((*ch & 0x00FF), (*ch & 0xFF00) >> 8);
-			ch++;
+			PDC_gotoxy(lineno, j + x);
+			PDC_putc(srcp[j] & A_CHARTEXT,
+				chtype_attr(srcp[j]) >> 8);
 		}
 
 	curscr->_firstch[lineno] = _NO_CHANGE;

@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.20 2006/03/25 03:17:31 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.21 2006/03/25 13:49:31 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -322,13 +322,7 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 bool PDC_transform_line(int lineno)
 {
 	chtype *srcp;
-	int j, x, endx, len;
-
-	/* this should be enough for the maximum width of a screen. */
-
-	unsigned short temp_line[256];
-	unsigned short chr;
-	unsigned short *ch;
+	int j, x, len;
 
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
@@ -336,38 +330,36 @@ bool PDC_transform_line(int lineno)
 		return FALSE;
 
 	x = curscr->_firstch[lineno];
-	endx = curscr->_lastch[lineno];
+	len = curscr->_lastch[lineno] - x + 1;
 	srcp = curscr->_y[lineno] + x;
-	len = endx - x + 1;
-
-	/* now have ch pointing to area to contain real attributes. 
-	   MH-920715 */
-
-	ch = temp_line;
-
-	/* replace the attribute part of the chtype with the actual 
-	   colour value for each chtype in the line */
-
-	for (j = 0; j < len; j++)
-	{
-		chr = srcp[j] & A_CHARTEXT;
-		temp_line[j] = chtype_attr(srcp[j]) | chr;
-	}
 
 	if (SP->direct_video)
+	{
+		/* this should be enough for the maximum width of a 
+		   screen. */
+
+		unsigned short temp_line[256];
+
+		/* replace the attribute part of the chtype with the 
+		   actual colour value for each chtype in the line */
+
+		for (j = 0; j < len; j++)
+			temp_line[j] = chtype_attr(srcp[j]) |
+				(srcp[j] & A_CHARTEXT);
 #ifdef EMXVIDEO
-		v_putline((char*)ch, x, lineno, len);
+		v_putline((char*)temp_line, x, lineno, len);
 #else
-		VioWrtCellStr((PCH)ch, (USHORT)(len * sizeof(unsigned short)),
+		VioWrtCellStr((PCH)temp_line,
+			(USHORT)(len * sizeof(unsigned short)),
 			(USHORT)lineno, (USHORT)x, 0);
 #endif
+	}
 	else
-		for (; x <= endx; x++)
+		for (j = 0; j < len; j++)
 		{
-			PDC_gotoxy(lineno, x);
-			PDC_putc((*ch & A_CHARTEXT),
-				(*ch & A_ATTRIBUTES) >> 8);
-			ch++;
+			PDC_gotoxy(lineno, j + x);
+			PDC_putc((srcp[j] & A_CHARTEXT),
+				chtype_attr(srcp[j]) >> 8);
 		}
 
 	curscr->_firstch[lineno] = _NO_CHANGE;

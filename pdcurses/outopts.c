@@ -31,7 +31,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_outopts =
-	"$Id: outopts.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: outopts.c,v 1.20 2006/03/25 00:30:36 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -142,20 +142,12 @@ int idlok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("idlok() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	win->_use_idl = bf;
-
 	return OK;
 }
 
 void idcok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("idcok() - called\n"));
-
-	if (win != (WINDOW *)NULL)
-		win->_use_idc = bf;
 }
 
 void immedok(WINDOW *win, bool bf)

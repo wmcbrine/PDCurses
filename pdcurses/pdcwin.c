@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.32 2006/03/25 00:11:53 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.33 2006/03/25 00:30:36 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -206,7 +206,6 @@ WINDOW * PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 	win->_bkgd = ' '; /* wrs 4/10/93 -- initialize background to blank */
 	win->_tabsize = 8;
 	win->_clear = (bool) ((num_lines == LINES) && (num_columns == COLS));
-	win->_use_idc = TRUE;
 	win->_bmarg = num_lines - 1;
 	win->_parx = win->_pary = -1;
 

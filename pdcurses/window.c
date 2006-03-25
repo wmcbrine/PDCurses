@@ -47,7 +47,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_window =
-	"$Id: window.c,v 1.25 2006/03/25 00:11:53 wmcbrine Exp $";
+	"$Id: window.c,v 1.26 2006/03/25 00:30:36 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -396,8 +396,6 @@ WINDOW *dupwin(WINDOW *win)
 	new->_scroll = win->_scroll;
 	new->_nodelay = win->_nodelay;
 	new->_use_keypad = win->_use_keypad;
-	new->_use_idl = win->_use_idl;
-	new->_use_idc = win->_use_idc;
 	new->_tmarg = win->_tmarg;
 	new->_bmarg = win->_bmarg;
 	new->_parx = win->_parx;

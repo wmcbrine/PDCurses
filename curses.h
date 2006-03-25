@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.147 2006/03/25 00:11:47 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.148 2006/03/25 00:30:26 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -576,8 +576,6 @@ typedef struct _win		/* definition of a window	*/
 	bool	_immed;		/* immediate update flag	*/
 	bool	_sync;		/* synchronise window ancestors	*/
 	bool	_use_keypad;	/* flags keypad key mode active	*/
-	bool	_use_idl;	/* True if Ins/Del line can be used */
-	bool	_use_idc;	/* True if Ins/Del character can be used */
 	chtype	**_y;		/* pointer to line pointer array   */
 	int	*_firstch;	/* first changed character in line */
 	int	*_lastch;	/* last changed character in line  */

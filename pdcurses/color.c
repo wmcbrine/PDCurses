@@ -36,7 +36,7 @@ static void PDC_init_pair(short, short, short);
 
 #ifdef PDCDEBUG
 const char *rcsid_color =
-	"$Id: color.c,v 1.43 2006/02/28 02:04:57 wmcbrine Exp $";
+	"$Id: color.c,v 1.44 2006/03/26 01:48:52 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -124,7 +124,7 @@ static bool colorstarted = FALSE;
 
 /* COLOR_PAIR to attribute encoding table. */
 
-#if defined(XCURSES)
+#ifdef XCURSES
 unsigned char *atrtab = NULL;
 #else
 unsigned char atrtab[MAX_ATRTAB];

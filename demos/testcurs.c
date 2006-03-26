@@ -10,7 +10,7 @@
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
 const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.42 2006/03/25 12:20:20 wmcbrine Exp $";
+	"$Id: testcurs.c,v 1.43 2006/03/26 01:48:47 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>
@@ -334,7 +334,7 @@ void inputTest(WINDOW *win)
 
 	wtimeout(win, 200);
 
-#if defined(PDCURSES)
+#ifdef PDCURSES
 	mouse_set(ALL_MOUSE_EVENTS);
 	PDC_save_key_modifiers(TRUE);
 	PDC_return_key_modifiers(TRUE);
@@ -370,7 +370,7 @@ void inputTest(WINDOW *win)
 		else
 			wprintw(win, "Key Pressed: %s", unctrl(c));
 
-#if defined(PDCURSES)
+#ifdef PDCURSES
 		if (PDC_get_key_modifiers())
 		{
 			waddstr(win, " Modifier(s):");
@@ -450,7 +450,7 @@ void inputTest(WINDOW *win)
 	wtimeout(win, -1);	/* turn off timeout() */
 	curs_set(1);		/* turn cursor back on */
 
-#if defined(PDCURSES)
+#ifdef PDCURSES
 	mouse_set(0L);
 	PDC_save_key_modifiers(FALSE);
 	PDC_return_key_modifiers(FALSE);

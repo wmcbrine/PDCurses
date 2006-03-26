@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.20 2006/03/26 01:48:49 wmcbrine Exp $";
 #endif
 
 /************************************************************************
@@ -81,7 +81,7 @@ static int kptab[] =
 	0x89, KEY_F(35), 0x8a, KEY_F(36), 0x8b, KEY_F(47), 0x8c, KEY_F(48),
 	0x03, 0, /* NULL */
 
-#if defined(NUMKEYPAD)
+#ifdef NUMKEYPAD
 	0xff, (int)'/',     0x0d, (int)'\n',
 	0xfa, (int)'*',     0xfd, (int)'-',      0xfb, (int)'+',
 #else
@@ -251,7 +251,7 @@ bool PDC_check_bios_key(void)
 
 	return (SP->tahead != -1);
 #else
-# if !defined(MSC)
+# ifndef MSC
 	KbdPeek(&keyInfo, 0);   /* peek at keyboard  */
 	return (keyInfo.fbStatus != 0);
 # else
@@ -409,7 +409,7 @@ int PDC_get_bios_key(void)
 bool PDC_get_ctrl_break(void)
 {
 #if defined(CURSES__32BIT__) || defined(CSET2) || defined(TC)
-# if defined(TC)
+# ifdef TC
 	void __cdecl (*oldAction) (int);
 # else
 	void (*oldAction) (int);

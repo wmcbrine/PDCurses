@@ -43,7 +43,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.39 2006/02/28 02:09:15 wmcbrine Exp $";
+	"$Id: initscr.c,v 1.40 2006/03/26 01:48:52 wmcbrine Exp $";
 #endif
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
@@ -60,7 +60,7 @@ MOUSE_STATUS Mouse_status;
 
 int use_emalloc = FALSE;
 
-#if defined DOS
+#ifdef DOS
 Regs regs;
 #endif
 
@@ -86,7 +86,7 @@ extern void *ecalloc(size_t, size_t);	/* user's ecalloc(num, size) */
 extern void efree(void *);		/* user's efree(ptr) */
 #endif
 
-#if !defined(XCURSES)
+#ifndef XCURSES
 extern void *malloc(size_t);		/* runtime's malloc(size) */
 extern void *calloc(size_t, size_t);	/* runtime's calloc(num, size) */
 extern void free(void *);		/* runtime's free(ptr) */
@@ -215,12 +215,12 @@ WINDOW *Xinitscr(int argc, char *argv[])
 		reallc = realloc;
 	}
 
-#if defined (XCURSES)
+#ifdef XCURSES
 	if (XCursesInitscr(NULL, argc, argv) == ERR)
 		exit(7);
 #endif
 
-#if defined (XCURSES)
+#ifdef XCURSES
 	if (SP == (SCREEN*)NULL)  /* SP already attached in XCursesInitscr() */
 #else
 	if ((SP = (SCREEN*)callc(1, sizeof(SCREEN))) == (SCREEN*)NULL)
@@ -346,7 +346,7 @@ int endwin(void)
 
 	/* Position cursor to the bottom left of the screen. */
 
-#if defined(WIN32)
+#ifdef WIN32
 	PDC_gotoxy(PDC_get_buffer_rows() - 2, 0);
 #else
 	PDC_gotoxy(PDC_get_rows() - 2, 0);

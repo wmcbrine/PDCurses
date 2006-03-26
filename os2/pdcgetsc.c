@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCgetsc =
-	"$Id: pdcgetsc.c,v 1.18 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcgetsc.c,v 1.19 2006/03/26 01:48:49 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -383,7 +383,7 @@ int PDC_get_rows(void)
 
 **man-end****************************************************************/
 
-#if defined(EMXVIDEO)
+#ifdef EMXVIDEO
 int PDC_get_scrn_mode(void)
 #else
 int PDC_get_scrn_mode(VIOMODEINFO *modeinfo)
@@ -423,7 +423,7 @@ int PDC_get_scrn_mode(VIOMODEINFO *modeinfo)
 
 **man-end****************************************************************/
 
-#if defined(EMXVIDEO)
+#ifdef EMXVIDEO
 int PDC_query_adapter_type(void)
 #else
 int PDC_query_adapter_type(VIOCONFIGINFO *configinfo)

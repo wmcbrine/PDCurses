@@ -16,7 +16,7 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 # define INCL_DOS
 # define INCL_WIN
 #endif
@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.18 2006/02/27 08:13:03 wmcbrine Exp $";
+	"$Id: pdcclip.c,v 1.19 2006/03/26 01:48:49 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -58,7 +58,7 @@ const char *rcsid_PDCclip =
 
 int PDC_getclipboard(char **contents, long *length)
 {
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	HMQ hmq;
 	HAB hab;
 	PTIB ptib;
@@ -69,7 +69,7 @@ int PDC_getclipboard(char **contents, long *length)
 #endif
 	PDC_LOG(("PDC_getclipboard() - called\n"));
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	DosGetInfoBlocks(&ptib, &ppib);
 	ppib->pib_ultype = 3;
 	hab = WinInitialize(0);
@@ -134,7 +134,7 @@ int PDC_getclipboard(char **contents, long *length)
 
 int PDC_setclipboard(const char *contents, long length)
 {
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	HAB hab;
 	PTIB ptib;
 	PPIB ppib;
@@ -144,7 +144,7 @@ int PDC_setclipboard(const char *contents, long length)
 #endif
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	DosGetInfoBlocks(&ptib, &ppib);
 	ppib->pib_ultype = 3;
 	hab = WinInitialize(0);
@@ -231,14 +231,14 @@ int PDC_freeclipboard(char *contents)
 
 int PDC_clearclipboard(void)
 {
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	HAB hab;
 	PTIB ptib;
 	PPIB ppib;
 #endif
 	PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	DosGetInfoBlocks(&ptib, &ppib);
 	ppib->pib_ultype = 3;
 	hab = WinInitialize(0);

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.49 2006/03/25 23:57:40 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.50 2006/03/26 01:48:44 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -79,7 +79,7 @@
 #    ifdef __TURBOC__
 #      define _FAR_POINTER(s,o)	MK_FP(s,o)
 #    else
-#      if defined(NDP)
+#      ifdef NDP
 #        define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #      else
 #        if defined(WATCOMC) && defined(__FLAT__)
@@ -275,7 +275,7 @@ int	PDC_query_adapter_type(void);
 void	PDC_doupdate(void);
 #endif
 
-#if defined(XCURSES)
+#ifdef XCURSES
 int	XCurses_display_cursor(int, int, int, int, int);
 int	XCurses_rawgetch(int);
 bool	XCurses_kbhit(void);
@@ -311,7 +311,7 @@ void PDC_debug(const char *, ...);
 #define PDC_COLORS		8
 
 /* Internal macros for attributes */
-#if defined(CHTYPE_LONG)
+#ifdef CHTYPE_LONG
 # define PDC_COLOR_PAIRS	64
 # define PDC_OFFSET		32
 # define chtype_attr(ch)	(atrtab[((ch >> PDC_ATTR_SHIFT) & 0xFFFF)] << 8)
@@ -348,7 +348,7 @@ void PDC_debug(const char *, ...);
 #define TEMP_BUTTON_CHANGED(x)    (Temp_Mouse_status.changes & (1 << ((x) - 1)))
 #define TEMP_BUTTON_STATUS(x)     (Temp_Mouse_status.button[(x) - 1])
 
-#if defined(XCURSES)
+#ifdef XCURSES
 #define CURSES_EXIT			999999
 #define CURSES_REFRESH			999998
 #define CURSES_CHILD			999997

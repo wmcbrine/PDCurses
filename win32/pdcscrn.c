@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.30 2006/03/26 01:17:11 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.31 2006/03/26 01:48:53 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -30,7 +30,7 @@ const char *rcsid_PDCscrn =
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
 HANDLE hConIn = INVALID_HANDLE_VALUE;
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 HANDLE hPipeRead = INVALID_HANDLE_VALUE;
 HANDLE hPipeWrite = INVALID_HANDLE_VALUE;
 HANDLE hSemKeyCount = INVALID_HANDLE_VALUE;
@@ -103,7 +103,7 @@ int PDC_scr_close(void)
 	SetConsoleActiveScreenBuffer(hConOut);
 	SetConsoleMode(hConIn, dwConsoleMode);
 
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 	if (hPipeRead != INVALID_HANDLE_VALUE)
 		CloseHandle(hPipeRead);
 
@@ -168,7 +168,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	const char *str;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 	HANDLE hThread;
 	DWORD dwThreadID;
 #endif
@@ -331,7 +331,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->linesrippedoffontop = 0;
 	internal->delaytenths = 0;
 
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 
 	/* Create the anonymous pipe and thread for handling input */
 
@@ -575,7 +575,7 @@ int PDC_reset_shell_mode(void)
 	return OK;
 }
 
-#if defined(PDC_DLL_BUILD)
+#ifdef PDC_DLL_BUILD
 
 BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID pReserved)
 {

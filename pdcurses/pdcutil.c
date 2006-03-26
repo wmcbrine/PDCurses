@@ -19,14 +19,14 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
-#if !defined(XCURSES)
+#ifndef XCURSES
 # define INCLUDE_WINDOWS_H
 #endif
 #include <curses.h>
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCutil =
-	"$Id: pdcutil.c,v 1.29 2006/03/20 17:30:31 wmcbrine Exp $";
+	"$Id: pdcutil.c,v 1.30 2006/03/26 01:48:52 wmcbrine Exp $";
 #endif
 
 void PDC_beep(void)

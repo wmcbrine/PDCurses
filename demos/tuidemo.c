@@ -22,10 +22,10 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_tuidemo =
-	"$Id: tuidemo.c,v 1.12 2006/02/16 21:51:30 wmcbrine Exp $";
+	"$Id: tuidemo.c,v 1.13 2006/03/26 01:48:47 wmcbrine Exp $";
 #endif
 
-#if defined(XCURSES)
+#ifdef XCURSES
 # define FNAME  "demos/tui.c"	/* change this if source at other location */
 #else
 # define FNAME  "demos\\tui.c"	/* change this if source at other location */

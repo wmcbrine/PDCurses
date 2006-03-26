@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.21 2006/03/26 01:17:06 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.22 2006/03/26 01:48:49 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -105,7 +105,7 @@ int PDC_scr_close(void)
 
 **man-end****************************************************************/
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
 #else
 bool PDC_scrn_modes_equal(int mode1, int mode2)
@@ -113,7 +113,7 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 {
 	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	return ((mode1.cb == mode2.cb) && (mode1.fbType == mode2.fbType)
 		&& (mode1.color == mode2.color) && (mode1.col == mode2.col)
 		&& (mode1.row == mode2.row) && (mode1.hres == mode2.vres)
@@ -145,7 +145,7 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 int PDC_scr_open(SCREEN *internal, bool echo)
 {
 	char *ptr;
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	USHORT totchars;
 #endif
 
@@ -167,11 +167,11 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->echo    = echo;
 	internal->visible_cursor = TRUE;	/* Assume that it is visible */
 	internal->cursor  = PDC_get_cursor_mode();
-#if defined(EMXVIDEO)
+#ifdef EMXVIDEO
 	internal->tahead  = -1;
 #endif
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 	PDC_query_adapter_type(&internal->adapter);
 	PDC_get_scrn_mode(&internal->scrnmode);
 	PDC_get_keyboard_info(&internal->kbdinfo);
@@ -298,7 +298,7 @@ int PDC_resize_screen(int nlines, int ncols)
 #endif
 }
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 
 int PDC_reset_shell_mode(void)
 {

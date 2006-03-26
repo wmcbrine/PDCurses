@@ -3,7 +3,7 @@
  * Hessling 1994-1999. M.Hessling@qut.edu.au				*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.25 2006/03/25 10:37:17 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.26 2006/03/26 01:48:55 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -29,7 +29,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
-#if !defined(XPOINTER_TYPEDEFED)
+#ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
 #endif
 

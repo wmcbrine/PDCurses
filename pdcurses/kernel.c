@@ -19,7 +19,7 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
-#if !defined(XCURSES)
+#ifndef XCURSES
 # define INCLUDE_WINDOWS_H
 #endif
 #include <curses.h>
@@ -71,7 +71,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.37 2006/03/25 01:37:35 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.38 2006/03/26 01:48:52 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -231,9 +231,9 @@ int reset_prog_mode(void)
 		SP->font = PDC_get_font();
 		PDC_set_font(c_pr_tty.saved.font);
 
-#if !defined(XCURSES)
-# if !defined(EMXVIDEO)
-#  if defined(OS2)
+#ifndef XCURSES
+# ifndef EMXVIDEO
+#  ifdef OS2
 		PDC_get_scrn_mode(&modeInfo);
 
 		if (!PDC_scrn_modes_equal(modeInfo, c_pr_tty.saved.scrnmode))
@@ -280,9 +280,9 @@ int reset_shell_mode(void)
 		SP->font = PDC_get_font();
 		PDC_set_font(c_sh_tty.saved.font);
 
-#if !defined(XCURSES)
-# if !defined(EMXVIDEO)
-#  if defined(OS2)
+#ifndef XCURSES
+# ifndef EMXVIDEO
+#  ifdef OS2
 		PDC_get_scrn_mode(&modeInfo);
 
 		if (!PDC_scrn_modes_equal(modeInfo, c_sh_tty.saved.scrnmode))
@@ -295,7 +295,7 @@ int reset_shell_mode(void)
 # endif
 #endif
 
-# if defined(OS2)
+# ifdef OS2
 		PDC_resize_screen(c_sh_tty.saved.lines, c_sh_tty.saved.cols);
 # else
 		PDC_set_rows(c_sh_tty.saved.lines);
@@ -333,9 +333,9 @@ int resetty(void)
 		SP->font = PDC_get_font();
 		PDC_set_font(c_save_tty.saved.font);
 
-#if !defined(XCURSES)
-# if !defined(EMXVIDEO)
-#  if defined(OS2)
+#ifndef XCURSES
+# ifndef EMXVIDEO
+#  ifdef OS2
 		PDC_get_scrn_mode(&modeInfo);
 
 		if (!PDC_scrn_modes_equal(modeInfo, c_save_tty.saved.scrnmode))

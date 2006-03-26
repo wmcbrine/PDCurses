@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.17 2006/02/27 07:28:32 wmcbrine Exp $";
+	"$Id: pdcsetsc.c,v 1.18 2006/03/26 01:48:49 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -233,7 +233,7 @@ int PDC_set_rows(int rows)
 
 **man-end****************************************************************/
 
-#if !defined(EMXVIDEO)
+#ifndef EMXVIDEO
 int PDC_set_scrn_mode(VIOMODEINFO new_mode)
 #else
 int PDC_set_scrn_mode(int new_mode)

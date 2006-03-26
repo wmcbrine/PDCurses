@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.40 2006/03/25 04:11:21 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.41 2006/03/26 01:48:53 wmcbrine Exp $";
 #endif
 
 #define KEY_STATE TRUE
@@ -58,7 +58,7 @@ static unsigned long pdc_key_modifiers = 0L;
 
 extern HANDLE hConIn;
 
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 extern HANDLE hPipeRead;
 extern HANDLE hPipeWrite;
 extern HANDLE hSemKeyCount;
@@ -360,7 +360,7 @@ unsigned long PDC_get_input_fd(void)
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 	return (unsigned long)hSemKeyCount;
 #else
 	return 0L;
@@ -1053,12 +1053,12 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 	static unsigned numpadChar = 0;
 
 #ifdef PDCDEBUG
-#if defined(PDC_THREAD_BUILD)
-# define PDC_DEBUG_THREADING1 "-->"
-# define PDC_DEBUG_THREADING2 "THREADING"
+# ifdef PDC_THREAD_BUILD
+#  define PDC_DEBUG_THREADING1 "-->"
+#  define PDC_DEBUG_THREADING2 "THREADING"
 # else
-# define PDC_DEBUG_THREADING1 ""
-# define PDC_DEBUG_THREADING2 ""
+#  define PDC_DEBUG_THREADING1 ""
+#  define PDC_DEBUG_THREADING2 ""
 # endif
 	char *ptr = "";
 
@@ -1269,7 +1269,7 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 	return numKeys;
 }
 
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 
 static int win32_kbhit(int timeout)
 {
@@ -1388,7 +1388,7 @@ unsigned long PDC_get_key_modifiers(void)
 	return pdc_key_modifiers;
 }
 
-#if defined(PDC_THREAD_BUILD)
+#ifdef PDC_THREAD_BUILD
 
 LONG InputThread(LPVOID lpThreadData)
 {

@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_beep =
-	"$Id: beep.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: beep.c,v 1.18 2006/03/26 01:48:52 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -81,15 +81,13 @@ int flash(void)
 {
 	PDC_LOG(("flash() - called\n"));
 
-#if defined(DOS) || defined(OS2) || defined(WIN32)
+#ifdef XCURSES
+	XCursesInstructAndWait(CURSES_FLASH);
+#else
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_NORMAL);
 	napms(50);
 	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_REVERSE);
 	wrefresh(curscr);
-#endif
-
-#if defined(XCURSES)
-	XCursesInstructAndWait(CURSES_FLASH);
 #endif
 	return OK;
 }

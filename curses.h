@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.151 2006/03/25 23:57:40 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.152 2006/03/26 00:54:08 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -670,7 +670,6 @@ typedef struct
 	int	scrnmode;		/* default screen mode		*/
 	unsigned video_seg;		/* video base segment		*/
 	unsigned video_ofs;		/* video base offset		*/
-	unsigned long os_version;	/* Win32 Version		*/
 #endif
 
 #if defined(XCURSES)

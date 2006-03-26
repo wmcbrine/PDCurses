@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.28 2006/03/25 00:41:25 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.29 2006/03/26 00:54:10 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -334,7 +334,6 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->linesrippedoffontop = 0;
 	internal->delaytenths = 0;
 
-	internal->os_version = GetVersion();
 #if defined(PDC_THREAD_BUILD)
 
 	/* Create the anonymous pipe and thread for handling input */

@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.20 2006/03/25 00:41:12 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.21 2006/03/26 01:17:06 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -165,7 +165,6 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->save_key_modifiers = FALSE;
 	internal->return_key_modifiers  = FALSE;
 	internal->echo    = echo;
-	internal->video_page = 0;		/* Current Video Page */
 	internal->visible_cursor = TRUE;	/* Assume that it is visible */
 	internal->cursor  = PDC_get_cursor_mode();
 #if defined(EMXVIDEO)

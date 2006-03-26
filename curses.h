@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.152 2006/03/26 00:54:08 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.153 2006/03/26 01:17:01 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -73,7 +73,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __TURBOC__		/* Borland gives defines this as a value*/
-#  define TC    __TURBOC__	/* Define a value for TC		*/
+#  define TC __TURBOC__		/* Define a value for TC		*/
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
 #    include <bios.h>
@@ -105,7 +105,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __HIGHC__
-#  define HC    1
+#  define HC 1
 #  pragma off(prototype_override_warnings)
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
@@ -123,7 +123,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef _MSC_VER					/* defined by compiler	*/
-#  define MSC   1
+#  define MSC 1
 #  ifdef __OS2__		/* You will have to define in makefile	*/
 #    define USE_OS2_H 1		/* Use the os2.h for the compiler	*/
 #    define OS2 3		/* Major release of OS/2 supported	*/
@@ -149,7 +149,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef _QC					/* defined by compiler	*/
-#  define MSC   1
+#  define MSC 1
 #  define DOS 6			/* Major release of DOS supported	*/
 #  include <bios.h>
 #  include <dos.h>
@@ -165,7 +165,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __TSC__			/* You may have to define in makefile	*/
-#  define TSC   1
+#  define TSC 1
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #  endif
@@ -198,7 +198,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __EMX__			/* You may have to define in makefile	*/
-#  define EMX   1
+#  define EMX 1
 #  ifndef __OS2__
 #    define __OS2__		/* EMX does not define this :-( 	*/
 #  endif
@@ -210,7 +210,7 @@ PDCurses portable platform definitions list:
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
 #  endif
-#  if defined(EMXVIDEO)
+#  ifdef EMXVIDEO
 #    include <stdlib.h>
 #    include <sys/video.h>
 #  endif
@@ -226,7 +226,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __DJGPP__		/* You may have to define in makefile	*/
-#  define DOS	6
+#  define DOS 6
 #  include <dos.h>
 #  ifndef HAVE_MEMORY_H
 #    define HAVE_MEMORY_H			/* have <memory.h> */
@@ -308,7 +308,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __WATCOMC__
-#  define WATCOMC  1
+#  define WATCOMC 1
 #  if defined(__DOS__) || defined(__DOS4G__)
 #    define DOS 7		/* Major release of DOS supported	*/
 #    include <bios.h>
@@ -344,14 +344,14 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef MX386
-#  define NDP	1
-#  include 	<bios.h>
+#  define NDP 1
+#  include <bios.h>
 #  ifdef DOS
 #    define MK_FP(seg,ofs)	( (((int) (seg)) << 4) + ((int) (ofs)) )
 #    ifdef __i860
        typedef void _int;
 #    else
-       typedef int      _int;
+       typedef int  _int;
 #    endif
 #  endif
 #    undef HAVE_VSSCANF		/* vsscanf() function NOT in library	*/
@@ -368,7 +368,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __PACIFIC__
-#  define PC    __PACIFIC__
+#  define PC __PACIFIC__
 #  include <dos.h>
 #  include <ctype.h>
 #  ifndef __SMALL__
@@ -628,7 +628,6 @@ typedef struct
 	int	curscol;	/* position of physical cursor		*/
 	int	cursor;		/* Current Cursor definition		*/
 	int	visibility;	/* Visibility of cursor			*/
-	int	video_page;	/* Current PC video page		*/
 	int	orig_emulation; /* Original cursor emulation value	*/
 	int	orig_cursor;	/* Original cursor size			*/
 	int	font;		/* default font size			*/
@@ -655,24 +654,28 @@ typedef struct
 
 #ifdef OS2
 # ifdef EMXVIDEO			/* nop if using EMX builtins	*/
-	int tahead; 			/* Type-ahead value		*/
-	int adapter;			/* Screen type			*/
+	int	tahead; 		/* Type-ahead value		*/
+	int	adapter;		/* Screen type			*/
 # else
 	VIOMODEINFO scrnmode;		/* default screen mode		*/
 	VIOCONFIGINFO adapter;		/* Screen type			*/
 	KBDINFO kbdinfo;		/* keyboard info		*/
 # endif
 #else
-	int adapter;			/* Screen type			*/
+	int	adapter;		/* Screen type			*/
 #endif
 
 #if defined(DOS) || defined(WIN32)
 	int	scrnmode;		/* default screen mode		*/
+#endif
+
+#ifdef DOS
+	int	video_page;		/* Current PC video page	*/
 	unsigned video_seg;		/* video base segment		*/
 	unsigned video_ofs;		/* video base offset		*/
 #endif
 
-#if defined(XCURSES)
+#ifdef XCURSES
 	int	XcurscrSize;	/* size of Xcurscr shared memory block	*/
 	bool	sb_on;
 	int	sb_viewport_y;
@@ -688,8 +691,8 @@ typedef struct
 
 
 /* external variables */
-#if defined(PDC_DLL_BUILD)
-# if !defined(CURSES_LIBRARY)
+#ifdef PDC_DLL_BUILD
+# ifndef CURSES_LIBRARY
 __declspec(dllimport)	int		LINES;
 __declspec(dllimport)	int		COLS;
 __declspec(dllimport)	WINDOW		*stdscr;
@@ -721,7 +724,7 @@ extern	MOUSE_STATUS	Mouse_status;
 extern	int		COLORS, COLOR_PAIRS;
 #endif
 
-#if defined(CURSES_LIBRARY)
+#ifdef CURSES_LIBRARY
 extern	int		_default_lines;	/* For presetting maximum lines	*/
 #endif
 
@@ -937,7 +940,7 @@ currently used.)
 
 #define COLOR_BLACK	0
 
-#if defined(XCURSES)	/* RGB */
+#ifdef XCURSES		/* RGB */
 # define COLOR_RED	1
 # define COLOR_GREEN	2
 # define COLOR_BLUE	4
@@ -1693,7 +1696,7 @@ int	PDC_set_line_color(short);
 /* Load up curspriv.h. We allow anyone who defines CURSES_LIBRARY
    to have access to our internal routines. */
 
-#if defined(CURSES_LIBRARY)
+#ifdef CURSES_LIBRARY
 # include <curspriv.h>
 #endif
 

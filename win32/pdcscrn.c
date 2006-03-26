@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.29 2006/03/26 00:54:10 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.30 2006/03/26 01:17:11 wmcbrine Exp $";
 #endif
 
 #define PDC_RESTORE_NONE     0
@@ -310,9 +310,6 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->save_key_modifiers = FALSE;
 	internal->return_key_modifiers = FALSE;
 	internal->echo = echo;
-	internal->video_seg = 0xb000;	/* Base screen segment addr */
-	internal->video_ofs = 0;	/* Base screen segment ofs */
-	internal->video_page = 0;	/* Current Video Page */
 	internal->visible_cursor= TRUE;	/* Assume that it is visible */
 
 	internal->cursor = PDC_get_cursor_mode();

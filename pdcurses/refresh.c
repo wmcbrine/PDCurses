@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.24 2006/03/25 23:39:55 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.25 2006/03/26 02:23:23 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -136,15 +136,12 @@ int wnoutrefresh(WINDOW *win)
 	int first;		/* first changed char on line */
 	int last;		/* last changed char on line  */
 	int begy, begx;		/* window's place on screen   */
-	int i, j, x, y;
+	int i, j;
 
 	PDC_LOG(("wnoutrefresh() - called: win=%x\n", win));
 
 	if ( (win == (WINDOW *)NULL) || (win->_flags & (_PAD|_SUBPAD)) )
 		return ERR;
-
-	y = win->_cury;
-	x = win->_curx;
 
 	begy = win->_begy;
 	begx = win->_begx;

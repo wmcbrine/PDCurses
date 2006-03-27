@@ -26,7 +26,7 @@ extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.18 2006/03/25 03:17:35 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.19 2006/03/27 14:07:21 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -355,98 +355,4 @@ bool PDC_transform_line(int lineno)
 	curscr->_lastch[lineno] = _NO_CHANGE;
 
 	return FALSE;
-}
-
-/*man-start**************************************************************
-
-  PDC_doupdate()  - display updated data in one call (Win32 only)
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	Updates the given physical screen to look like _curscr.
-
-  PDCurses Return Value:
-	This routine returns nothing.
-
-  PDCurses Errors:
-	No errors are defined for this routine.
-
-  Portability:
-	PDCurses  void PDC_doupdate(void);
-
-**man-end****************************************************************/
-
-void PDC_doupdate(void)
-{
-	int i, j, k;
-	int starty = _NO_CHANGE, startx = _NO_CHANGE;
-	int size;
-	int endy = _NO_CHANGE, endx = _NO_CHANGE;
-	chtype *srcp;
-
-	CHAR_INFO *ptr;
-	COORD bufSize, bufPos;
-	SMALL_RECT sr;
-
-	PDC_LOG(("PDC_doupdate() - called:\n"));
-
-	if (curscr == (WINDOW *)NULL)
-		return;
-
-	for (i = 0; i < LINES; i++)
-		if (curscr->_firstch[i] != _NO_CHANGE)
-		{
-			if (starty == _NO_CHANGE)
-				starty = i;
-
-			endy = i;
-
-			if (startx == _NO_CHANGE
-			    && curscr->_firstch[i] != _NO_CHANGE)
-				startx = curscr->_firstch[i];
-
-			if (curscr->_firstch[i] < startx)
-				startx = curscr->_firstch[i];
-
-			if (curscr->_lastch[i] > endx)
-				endx = curscr->_lastch[i];
-		}
-
-	if (starty == _NO_CHANGE)	/* nothing to do... */
-		return;
-
-	size = ((endy - starty) + 1) * ((endx - startx) + 1);
-
-	ptr = (CHAR_INFO*)malloc(size * sizeof(CHAR_INFO));
-	if (ptr == NULL)
-		return;
-
-	bufPos.X = bufPos.Y = 0;
-	bufSize.X = endx - startx + 1;
-	bufSize.Y = endy - starty + 1;
-
-	sr.Top = starty;
-	sr.Bottom = endy;
-	sr.Left = startx;
-	sr.Right = endx;
-
-	k = 0;
-
-	for (i = starty; i <= endy; i++)
-	{
-		srcp = curscr->_y[i];
-		for (j = startx; j <= endx; j++)
-		{
-			ptr[k].Char.AsciiChar = srcp[j] & A_CHARTEXT;
-			ptr[k].Attributes =
-				(chtype_attr(srcp[j]) & 0xFF00) >> 8;
-			k++;
-		}
-		curscr->_firstch[i] = _NO_CHANGE;
-		curscr->_lastch[i] = _NO_CHANGE;
-	}
-
-	WriteConsoleOutput(hConOut, ptr, bufSize, bufPos, &sr);
-	free(ptr);
 }

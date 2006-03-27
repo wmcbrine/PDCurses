@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.25 2006/03/26 02:23:23 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.26 2006/03/27 14:07:21 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -207,12 +207,6 @@ int doupdate(void)
 	if (curscr->_clear)
 		PDC_clr_update();
 	else
-	{
-#ifdef WIN32
-	    if (getenv("PDC_FULL_DISPLAY") != NULL)
-		PDC_doupdate();
-	    else
-#endif
 		for (i = 0; i < SP->lines; i++)
 		{
 		    PDC_LOG(("doupdate() - Transforming line %d of %d: %s\n",
@@ -223,7 +217,6 @@ int doupdate(void)
 			 PDC_transform_line(i))		/* if test new */
 				break;
 		}
-	}
 
 #ifdef XCURSES
 	XCursesInstructAndWait(CURSES_REFRESH);

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.51 2006/03/27 04:26:18 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.52 2006/03/27 14:07:20 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -268,10 +268,6 @@ int	PDC_set_scrn_mode(int);
 bool	PDC_scrn_modes_equal(int, int);
 int	PDC_get_scrn_mode(void);
 int	PDC_query_adapter_type(void);
-#endif
-
-#ifdef WIN32
-void	PDC_doupdate(void);
 #endif
 
 #ifdef XCURSES

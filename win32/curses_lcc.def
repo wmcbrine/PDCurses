@@ -284,7 +284,6 @@ PDC_get_input_fd
 PDC_get_key_modifiers
 PDC_get_font
 PDC_get_rows
-PDC_get_scrn_mode
 PDC_gotoxy
 PDC_makenew
 PDC_newline
@@ -294,7 +293,6 @@ PDC_putctty
 PDC_query_adapter_type
 PDC_rawgetch
 PDC_sanity_check
-PDC_scrn_modes_equal
 PDC_scroll
 PDC_scr_close
 PDC_scr_open
@@ -305,7 +303,6 @@ PDC_set_cursor_mode
 PDC_set_font
 PDC_set_title
 PDC_set_rows
-PDC_set_scrn_mode
 PDC_sysgetch
 PDC_transform_line
 PDC_ungetch

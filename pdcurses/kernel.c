@@ -71,7 +71,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.38 2006/03/26 01:48:52 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.39 2006/03/27 16:24:16 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -231,19 +231,15 @@ int reset_prog_mode(void)
 		SP->font = PDC_get_font();
 		PDC_set_font(c_pr_tty.saved.font);
 
-#ifndef XCURSES
-# ifndef EMXVIDEO
-#  ifdef OS2
+#if defined(OS2) && !defined(EMXVIDEO)
 		PDC_get_scrn_mode(&modeInfo);
 
 		if (!PDC_scrn_modes_equal(modeInfo, c_pr_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_pr_tty.saved.scrnmode);
-#  else
+#elif defined(DOS)
 		if (!PDC_scrn_modes_equal(PDC_get_scrn_mode(), 
 		    c_pr_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_pr_tty.saved.scrnmode);
-#  endif
-# endif
 #endif
 		PDC_set_rows(c_pr_tty.saved.lines);
 	}
@@ -280,20 +276,16 @@ int reset_shell_mode(void)
 		SP->font = PDC_get_font();
 		PDC_set_font(c_sh_tty.saved.font);
 
-#ifndef XCURSES
-# ifndef EMXVIDEO
-#  ifdef OS2
+# if defined(OS2) && !defined(EMXVIDEO)
 		PDC_get_scrn_mode(&modeInfo);
 
 		if (!PDC_scrn_modes_equal(modeInfo, c_sh_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_sh_tty.saved.scrnmode);
-#  else
+# elif defined(DOS)
 		if (!PDC_scrn_modes_equal(PDC_get_scrn_mode(), 
 		    c_sh_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_sh_tty.saved.scrnmode);
-#  endif
 # endif
-#endif
 
 # ifdef OS2
 		PDC_resize_screen(c_sh_tty.saved.lines, c_sh_tty.saved.cols);
@@ -333,19 +325,15 @@ int resetty(void)
 		SP->font = PDC_get_font();
 		PDC_set_font(c_save_tty.saved.font);
 
-#ifndef XCURSES
-# ifndef EMXVIDEO
-#  ifdef OS2
+#if defined(OS2) && !defined(EMXVIDEO)
 		PDC_get_scrn_mode(&modeInfo);
 
 		if (!PDC_scrn_modes_equal(modeInfo, c_save_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_save_tty.saved.scrnmode);
-#  else
+#elif defined(DOS)
 		if (!PDC_scrn_modes_equal(PDC_get_scrn_mode(), 
 		    c_save_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_save_tty.saved.scrnmode);
-#  endif
-# endif
 #endif
 
 #ifdef XCURSES

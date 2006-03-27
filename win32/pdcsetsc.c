@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.15 2006/02/27 07:28:32 wmcbrine Exp $";
+	"$Id: pdcsetsc.c,v 1.16 2006/03/27 16:24:16 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut;
@@ -138,32 +138,6 @@ int PDC_set_font(int size)
 int PDC_set_rows(int rows)
 {
 	PDC_LOG(("PDC_set_rows() - called\n"));
-
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_set_scrn_mode()	- Set BIOS Video Mode
-
-  PDCurses Description:
- 	Sets the BIOS Video Mode Number ONLY if it is different from
- 	the current video mode.  This routine is for DOS systems only.
-
-  PDCurses Return Value:
- 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
- 	No errors are defined for this function.
-
-  Portability:
- 	PDCurses	int PDC_set_scrn_mode( int new_mode );
-
-**man-end****************************************************************/
-
-int PDC_set_scrn_mode(int new_mode)
-{
-	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
 	return OK;
 }

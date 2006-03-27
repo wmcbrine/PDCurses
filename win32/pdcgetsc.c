@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCgetsc =
-	"$Id: pdcgetsc.c,v 1.13 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcgetsc.c,v 1.14 2006/03/27 16:24:16 wmcbrine Exp $";
 #endif
 
 extern HANDLE hConOut, hConIn;
@@ -296,29 +296,6 @@ int PDC_get_columns(void)
 #else
 	return scr.srWindow.Right - scr.srWindow.Left + 1;
 #endif
-}
-
-/*man-start**************************************************************
-
-  PDC_get_scrn_mode()	- Return the current BIOS video mode
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-
-  PDCurses Return Value:
-	Returns the current BIOS Video Mode Number.
-
-  Portability:
-	PDCurses  int PDC_get_scrn_mode(void);
-
-**man-end****************************************************************/
-
-int PDC_get_scrn_mode(void)
-{
-	PDC_LOG(("PDC_get_scrn_mode() - called\n"));
-
-	return OK;
 }
 
 /*man-start**************************************************************

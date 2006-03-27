@@ -21,12 +21,12 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.28 2006/03/27 20:11:17 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.29 2006/03/27 20:35:13 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
-#ifdef PC
+#ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 	unsigned doff, unsigned n)
 {
@@ -375,7 +375,7 @@ void PDC_transform_line(int lineno)
 	int j, x, len;
 
 #if SMALL || MEDIUM
-# if !PC
+# ifndef __PACIFIC__
 	struct SREGS segregs;
 # endif
 	int ds;
@@ -411,7 +411,7 @@ void PDC_transform_line(int lineno)
 			sizeof(unsigned short))));
 #else
 # if SMALL || MEDIUM
-#  if PC
+#  ifdef __PACIFIC__
 		ds = FP_SEG((void far *) temp_line);
 #  else
 		segread(&segregs);

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.157 2006/03/27 20:11:16 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.158 2006/03/27 20:35:13 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -172,12 +172,10 @@ PDCurses portable platform definitions list:
  *	GNU compilers		emx
  *
  *	emx definitions:
- *		EMX
  *		OS2
  */
 
 #ifdef __EMX__			/* You may have to define in makefile	*/
-#  define EMX 1
 #  ifndef __OS2__
 #    define __OS2__		/* EMX does not define this :-( 	*/
 #  endif
@@ -313,7 +311,6 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef MX386
-#  define NDP 1
 #  include <bios.h>
 #  ifdef DOS
 #    define MK_FP(seg,ofs)	( (((int) (seg)) << 4) + ((int) (ofs)) )
@@ -323,21 +320,19 @@ PDCurses portable platform definitions list:
        typedef int  _int;
 #    endif
 #  endif
-#    undef HAVE_VSSCANF		/* vsscanf() function NOT in library	*/
+   undef HAVE_VSSCANF		/* vsscanf() function NOT in library	*/
 #endif
 
 /*----------------------------------------
  *	HI-TECH COMPILERS Pacific C
  *
  *	Hi-Tech definitions:
- *		PC
  *
  *		__PACIFIC__, DOS
  *		are predefined by compiler.
  */
 
 #ifdef __PACIFIC__
-#  define PC __PACIFIC__
 #  include <dos.h>
 #  include <ctype.h>
 #  ifndef __SMALL__

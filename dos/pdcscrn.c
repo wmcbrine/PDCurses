@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.25 2006/03/27 19:31:31 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.26 2006/03/27 20:35:13 wmcbrine Exp $";
 #endif
 
 static unsigned short *saved_screen = NULL;
@@ -55,7 +55,7 @@ static int saved_cols = 0;
 int PDC_scr_close(void)
 {
 #if SMALL || MEDIUM
-# if !PC
+# ifndef __PACIFIC__
 	struct SREGS segregs;
 # endif
 	int ds;
@@ -73,7 +73,7 @@ int PDC_scr_close(void)
 			SP->video_ofs));
 #else
 # if (SMALL || MEDIUM)
-#  if PC
+#  ifdef __PACIFIC__
 		ds = FP_SEG((void far *)saved_screen);
 #  else
 		segread(&segregs);
@@ -117,7 +117,7 @@ int PDC_scr_close(void)
 int PDC_scr_open(SCREEN *internal, bool echo)
 {
 #if SMALL || MEDIUM
-# if !PC
+# ifndef __PACIFIC__
 	struct SREGS segregs;
 # endif
 	int ds;
@@ -185,8 +185,8 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 			SP->video_ofs), saved_lines * saved_cols * 
 			sizeof(unsigned short), saved_screen);
 #else
-# if	(SMALL || MEDIUM)
-#  if PC
+# if SMALL || MEDIUM
+#  ifdef __PACIFIC__
 		ds = FP_SEG((void far *) saved_screen);
 #  else
 		segread(&segregs);

@@ -27,7 +27,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_bkgd =
-	"$Id: bkgd.c,v 1.17 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: bkgd.c,v 1.18 2006/03/27 20:35:30 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -116,7 +116,7 @@ int wbkgd(WINDOW *win, chtype ch)
 	chtype oldcolr, oldch, newcolr, newch, colr, attr;
 	chtype oldattr = 0, newattr = 0;
 	chtype *winptr;
-#ifdef NDP
+#ifdef MX386
 	char tmpbuf[60];
 #endif
 	PDC_LOG(("wbkgd() - called\n"));
@@ -139,7 +139,7 @@ int wbkgd(WINDOW *win, chtype ch)
 		newattr = ((win->_bkgd & A_ATTRIBUTES) ^ newcolr);
 	newch = (win->_bkgd & A_CHARTEXT);
 
-#ifdef NDP
+#ifdef MX386
 	/* buggy compiler fix */
 
 	sprintf(tmpbuf, "%d %d", oldch, newch);

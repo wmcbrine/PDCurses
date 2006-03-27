@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.57 2006/03/27 20:11:16 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.58 2006/03/27 20:35:13 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -61,7 +61,7 @@
 
 /*----------------------------------------*/
 #ifdef DOS
-#  ifdef NDP
+#  ifdef MX386
      typedef union REGS16 Regs;
 #  else
      typedef union REGS Regs;
@@ -79,7 +79,7 @@
 #    ifdef __TURBOC__
 #      define _FAR_POINTER(s,o)	MK_FP(s,o)
 #    else
-#      ifdef NDP
+#      ifdef MX386
 #        define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #      else
 #        if defined(__WATCOMC__) && defined(__FLAT__)
@@ -289,7 +289,7 @@ int	XCurses_clearclipboard(void);
 unsigned long XCurses_get_key_modifiers(void);
 #endif
 
-#ifdef PC
+#ifdef __PACIFIC__
 void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
 

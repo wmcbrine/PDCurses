@@ -48,8 +48,8 @@
 # endif
 #endif
 
-#if defined(OS2) && !defined(EMX)
-	APIRET APIENTRY DosSleep(ULONG ulTime);
+#if defined(OS2) && !defined(__EMX__)
+APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
 /* undefine any macros for functions defined in this module */
@@ -71,7 +71,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.41 2006/03/27 20:11:17 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.42 2006/03/27 20:35:30 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -394,7 +394,7 @@ int napms(int ms)
 
 #elif defined(OS2)
 
-# if defined(EMX)
+# if defined(__EMX__)
 	_sleep2(ms);
 # else
 	DosSleep(ms);
@@ -406,13 +406,13 @@ int napms(int ms)
 
 	delay(ms);
 
-# elif defined(MSC) || defined(NDP)
+# elif defined(MSC) || defined(MX386)
 	{
 		clock_t goal = (ms / 50) + clock();
 		while (goal > clock())
 		;
 	}
-# elif defined(PC)
+# elif defined(__PACIFIC__)
 	{
 		/* get number of ticks since startup from address 0040:006ch
 		   1 sec. = 18.2065  */

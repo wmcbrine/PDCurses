@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCgetsc =
-	"$Id: pdcgetsc.c,v 1.19 2006/03/26 01:48:49 wmcbrine Exp $";
+	"$Id: pdcgetsc.c,v 1.20 2006/03/27 20:35:13 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -124,7 +124,7 @@ int PDC_get_cur_col(void)
 
 int PDC_get_cur_row(void)
 {
-#ifdef  EMXVIDEO
+#ifdef EMXVIDEO
 	int curCol = 0, curRow = 0;
 #else
 	USHORT curCol = 0, curRow = 0;

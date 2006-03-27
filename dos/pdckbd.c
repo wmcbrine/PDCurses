@@ -26,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.21 2006/03/26 01:48:48 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.22 2006/03/27 20:35:13 wmcbrine Exp $";
 #endif
 
 /************************************************************************
@@ -422,7 +422,7 @@ int PDC_set_ctrl_break(bool setting)
 {
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
-#ifdef	NDP
+#ifdef MX386
 	if (setting)
 		_ignore_breaks();
 	else

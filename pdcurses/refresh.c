@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.26 2006/03/27 14:07:21 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.27 2006/03/27 14:15:54 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -205,7 +205,17 @@ int doupdate(void)
 		return ERR;
 
 	if (curscr->_clear)
-		PDC_clr_update();
+	{
+		curscr->_clear = FALSE;
+
+		for (i = 0; i < SP->lines; i++)
+		{
+			curscr->_firstch[i] = 0;
+			curscr->_lastch[i] = COLS - 1;
+
+			PDC_transform_line(i);
+		}
+	}
 	else
 		for (i = 0; i < SP->lines; i++)
 		{
@@ -214,7 +224,7 @@ int doupdate(void)
 			"Yes" : "No"));
 
 		    if ((curscr->_firstch[i] != _NO_CHANGE) &&
-			 PDC_transform_line(i))		/* if test new */
+			 PDC_transform_line(i))
 				break;
 		}
 

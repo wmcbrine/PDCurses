@@ -24,7 +24,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCwin =
-	"$Id: pdcwin.c,v 1.37 2006/03/25 23:57:47 wmcbrine Exp $";
+	"$Id: pdcwin.c,v 1.38 2006/03/27 14:15:54 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -619,49 +619,6 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 	/* PDC_chadd() fixes CTRL-chars too */
 
 	return PDC_chadd(win, c, xlat, FALSE);
-}
-
-/*man-start**************************************************************
-
-  PDC_clr_update()	- Updates the screen with a full redraw.
-
-  PDCurses Description:
-	Updates the screen by clearing it and then redrawing it in its
-	entirety.
-
-  PDCurses Return Value:
-	This routine returns ERR if it is unable to accomplish its task.
-
-	The return value OK is returned if there were no errors.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_clr_update(void);
-
-**man-end****************************************************************/
-
-int PDC_clr_update(void)
-{
-	int i;
-
-	PDC_LOG(("PDC_clr_update() - called\n"));
-
-	if (curscr == (WINDOW *)NULL)
-		return ERR;
-
-	curscr->_clear = FALSE;
-
-	for (i = 0; i < LINES; i++)	/* update physical screen */
-	{
-		curscr->_firstch[i] = 0;
-		curscr->_lastch[i] = COLS - 1;
-
-		PDC_transform_line(i);
-	}
-
-	return OK;
 }
 
 /*man-start**************************************************************

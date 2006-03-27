@@ -40,7 +40,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.27 2006/03/27 14:15:54 wmcbrine Exp $";
+	"$Id: refresh.c,v 1.28 2006/03/27 14:24:42 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -204,29 +204,24 @@ int doupdate(void)
 	if (curscr == (WINDOW *)NULL)
 		return ERR;
 
-	if (curscr->_clear)
+	for (i = 0; i < SP->lines; i++)
 	{
-		curscr->_clear = FALSE;
-
-		for (i = 0; i < SP->lines; i++)
-		{
-			curscr->_firstch[i] = 0;
-			curscr->_lastch[i] = COLS - 1;
-
-			PDC_transform_line(i);
-		}
-	}
-	else
-		for (i = 0; i < SP->lines; i++)
-		{
-		    PDC_LOG(("doupdate() - Transforming line %d of %d: %s\n",
+		PDC_LOG(("doupdate() - Transforming line %d of %d: %s\n",
 			i, SP->lines, (curscr->_firstch[i] != _NO_CHANGE) ?
 			"Yes" : "No"));
 
-		    if ((curscr->_firstch[i] != _NO_CHANGE) &&
-			 PDC_transform_line(i))
-				break;
+		if (curscr->_clear)
+		{
+			curscr->_firstch[i] = 0;
+			curscr->_lastch[i] = COLS - 1;
 		}
+
+		if ((curscr->_firstch[i] != _NO_CHANGE) &&
+			PDC_transform_line(i))
+				break;
+	}
+
+	curscr->_clear = FALSE;
 
 #ifdef XCURSES
 	XCursesInstructAndWait(CURSES_REFRESH);

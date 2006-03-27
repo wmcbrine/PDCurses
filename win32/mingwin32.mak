@@ -59,6 +59,7 @@ firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
+	strip *.exe
 
 clean:
 	-del *.o

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.59 2006/03/27 20:45:55 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.60 2006/03/27 23:00:16 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -61,56 +61,55 @@
 
 /*----------------------------------------*/
 #ifdef DOS
-#  ifdef MX386
-     typedef union REGS16 Regs;
+# ifdef MX386
+typedef union REGS16 Regs;
+# else
+typedef union REGS Regs;
+# endif
+extern Regs regs;
+# ifdef __DJGPP__		/* Note: works only in plain DOS... */
+#  if DJGPP == 2
+#   define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #  else
-     typedef union REGS Regs;
+#   define _FAR_POINTER(s,o)	(0xe0000000 + (((int)(s)) << 4) + ((int)(o)))
 #  endif
-   extern Regs regs;
-#  ifdef __DJGPP__		/* Note: works only in plain DOS... */
-#    if DJGPP == 2
-#      define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
-#    else
-#      define _FAR_POINTER(s,o)	(0xe0000000 + (((int)(s)) << 4) + ((int)(o)))
-#    endif
-#    define _FP_SEGMENT(p)	(unsigned short)((((long)p) >> 4) & 0xffff)
-#    define _FP_OFFSET(p)	((unsigned short)p & 0x000f)
+#  define _FP_SEGMENT(p)	(unsigned short)((((long)p) >> 4) & 0xffff)
+# else
+#  ifdef __TURBOC__
+#   define _FAR_POINTER(s,o)	MK_FP(s,o)
 #  else
-#    ifdef __TURBOC__
-#      define _FAR_POINTER(s,o)	MK_FP(s,o)
+#   ifdef MX386
+#    define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
+#   else
+#    if defined(__WATCOMC__) && defined(__FLAT__)
+#     define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #    else
-#      ifdef MX386
-#        define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
-#      else
-#        if defined(__WATCOMC__) && defined(__FLAT__)
-#          define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
-#        else
-#          define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)
-#        endif
-#      endif
+#     define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)
 #    endif
-#    define _FP_SEGMENT(p)	(unsigned short)(((long)p) >> 4)
-#    define _FP_OFFSET(p)	((unsigned short)p & 0x000f)
+#   endif
 #  endif
+#  define _FP_SEGMENT(p)	(unsigned short)(((long)p) >> 4)
+# endif
+# define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
 
-#  ifdef __DJGPP__
-     unsigned char getdosmembyte (int offs);    /* see: private\_dosmem.c */
-     unsigned short getdosmemword (int offs);
-     void setdosmembyte (int offs, unsigned char b);
-     void setdosmemword (int offs, unsigned short w);
+# ifdef __DJGPP__
+unsigned char getdosmembyte(int offs);	/* see: private\_dosmem.c */
+unsigned short getdosmemword(int offs);
+void setdosmembyte(int offs, unsigned char b);
+void setdosmemword(int offs, unsigned short w);
+# else
+#  if SMALL || MEDIUM || MSC || defined(__PACIFIC__)
+#   define getdosmembyte(offs)   (*((unsigned char far *) _FAR_POINTER(0,offs)))
+#   define getdosmemword(offs)   (*((unsigned short far *) _FAR_POINTER(0,offs)))
+#   define setdosmembyte(offs,x) (*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))
+#   define setdosmemword(offs,x) (*((unsigned short far *) _FAR_POINTER(0,offs)) = (x))
 #  else
-#    if SMALL || MEDIUM || MSC || defined(__PACIFIC__)
-#      define getdosmembyte(offs)    (*((unsigned char far *) _FAR_POINTER(0,offs)))
-#      define getdosmemword(offs)    (*((unsigned short far *) _FAR_POINTER(0,offs)))
-#      define setdosmembyte(offs,x)  (*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))
-#      define setdosmemword(offs,x)  (*((unsigned short far *) _FAR_POINTER(0,offs)) = (x))
-#    else
-#      define getdosmembyte(offs)    (*((unsigned char *) _FAR_POINTER(0,offs)))
-#      define getdosmemword(offs)    (*((unsigned short *) _FAR_POINTER(0,offs)))
-#      define setdosmembyte(offs,x)  (*((unsigned char *) _FAR_POINTER(0,offs)) = (x))
-#      define setdosmemword(offs,x)  (*((unsigned short *) _FAR_POINTER(0,offs)) = (x))
-#    endif
+#   define getdosmembyte(offs)   (*((unsigned char *) _FAR_POINTER(0,offs)))
+#   define getdosmemword(offs)   (*((unsigned short *) _FAR_POINTER(0,offs)))
+#   define setdosmembyte(offs,x) (*((unsigned char *) _FAR_POINTER(0,offs)) = (x))
+#   define setdosmemword(offs,x) (*((unsigned short *) _FAR_POINTER(0,offs)) = (x))
 #  endif
+# endif
 #endif
 
 

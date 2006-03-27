@@ -26,7 +26,7 @@ extern unsigned char atrtab[MAX_ATRTAB];
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.19 2006/03/27 14:07:21 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.20 2006/03/27 14:33:00 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -302,20 +302,15 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 	Updates the given physical line to look like the corresponding
 	line in _curscr.
 
-  PDCurses Return Value:
-	This routine returns TRUE if a premature refresh end
-	is allowed, and there is an input character pending.  Otherwise,
-	FALSE is returned.
-
   PDCurses Errors:
 	No errors are defined for this routine.
 
   Portability:
-	PDCurses  bool PDC_transform_line(int lineno);
+	PDCurses  void PDC_transform_line(int lineno);
 
 **man-end****************************************************************/
 
-bool PDC_transform_line(int lineno)
+void PDC_transform_line(int lineno)
 {
 	CHAR_INFO ci[512];
 	int j, x, endx, len;
@@ -326,7 +321,7 @@ bool PDC_transform_line(int lineno)
 	PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
 	if (curscr == (WINDOW *)NULL)
-		return FALSE;
+		return;
 
 	x = curscr->_firstch[lineno];
 	endx = curscr->_lastch[lineno];
@@ -353,6 +348,4 @@ bool PDC_transform_line(int lineno)
 
 	curscr->_firstch[lineno] = _NO_CHANGE;
 	curscr->_lastch[lineno] = _NO_CHANGE;
-
-	return FALSE;
 }

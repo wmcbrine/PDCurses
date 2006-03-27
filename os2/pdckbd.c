@@ -18,7 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-#if defined (CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
+#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
 # include <signal.h>
 #else
 # define INCL_DOSSIGNALS
@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.22 2006/03/27 20:45:55 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.23 2006/03/27 20:52:01 wmcbrine Exp $";
 #endif
 
 /************************************************************************

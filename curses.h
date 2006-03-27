@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.158 2006/03/27 20:35:13 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.159 2006/03/27 20:52:01 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -34,10 +34,10 @@ PDCurses definitions list:  (Only define those needed)
 	XCURSES		True if compiling for X11.
 	MSC		True if using a Microsoft compiler.
 	NOMACROS	Don't use (most) macros in place of functions.
-	PDC_BUILD	Defines API build version.
 
 PDCurses portable platform definitions list:
 
+	PDC_BUILD	Defines API build version.
 	PDCURSES	Enables access to PDCurses-only routines.
 	XOPEN		Always true.
 	SYSVcurses	True if you are compiling for SYSV portability.
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2716
+#define PDC_BUILD 2717
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/

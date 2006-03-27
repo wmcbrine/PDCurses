@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCgetsc =
-	"$Id: pdcgetsc.c,v 1.18 2006/02/23 01:46:52 wmcbrine Exp $";
+	"$Id: pdcgetsc.c,v 1.19 2006/03/27 20:11:17 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -86,7 +86,7 @@ int PDC_get_cur_col(void)
 {
 	PDC_LOG(("PDC_get_cur_col() - called\n"));
 
-#ifdef WATCOMC
+#ifdef __WATCOMC__
 	regs.w.ax = 0x0003;
 #else
 	regs.x.ax = 0x0003;
@@ -123,7 +123,7 @@ int PDC_get_cur_row(void)
 {
 	PDC_LOG(("PDC_get_cur_row() - called\n"));
 
-#ifdef WATCOMC
+#ifdef __WATCOMC__
 	regs.w.ax = 0x0003;
 #else
 	regs.x.ax = 0x0003;
@@ -160,7 +160,7 @@ int PDC_get_attribute(void)
 {
 	PDC_LOG(("PDC_get_attribute() - called\n"));
 
-#ifdef WATCOMC
+#ifdef __WATCOMC__
 	regs.w.ax = 0x0800;
 #else
 	regs.x.ax = 0x0800;
@@ -431,7 +431,7 @@ int PDC_query_adapter_type(void)
 	_go32_dpmi_registers dpmi_regs;
 #endif
 
-#if !defined(__DJGPP__) && !defined(WATCOMC)
+#if !defined(__DJGPP__) && !defined(__WATCOMC__)
 	struct SREGS segs;
 #endif
 	short video_base = getdosmemword(0x463);
@@ -493,7 +493,7 @@ int PDC_query_adapter_type(void)
 		   bx == 0x0010 --> return EGA information */
 
 		regs.h.ah = 0x12;
-# ifdef WATCOMC
+# ifdef __WATCOMC__
 		regs.w.bx = 0x10;
 # else
 		regs.x.bx = 0x10;
@@ -586,7 +586,7 @@ int PDC_query_adapter_type(void)
 	SP->video_seg = dpmi_regs.x.es;
 #endif
 
-#if !defined(__DJGPP__) && !defined(WATCOMC)
+#if !defined(__DJGPP__) && !defined(__WATCOMC__)
 	regs.h.ah = 0xfe;
 	regs.h.al = 0;
 	regs.x.di = SP->video_ofs;

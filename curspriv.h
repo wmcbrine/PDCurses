@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.56 2006/03/27 19:04:40 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.57 2006/03/27 20:11:16 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -82,7 +82,7 @@
 #      ifdef NDP
 #        define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #      else
-#        if defined(WATCOMC) && defined(__FLAT__)
+#        if defined(__WATCOMC__) && defined(__FLAT__)
 #          define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #        else
 #          define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)

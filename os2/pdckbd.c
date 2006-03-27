@@ -18,7 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-#if defined (CURSES__32BIT__) || defined(CSET2) || defined(TC)
+#if defined (CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
 # include <signal.h>
 #else
 # define INCL_DOSSIGNALS
@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.20 2006/03/26 01:48:49 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.21 2006/03/27 20:11:17 wmcbrine Exp $";
 #endif
 
 /************************************************************************
@@ -408,8 +408,8 @@ int PDC_get_bios_key(void)
 
 bool PDC_get_ctrl_break(void)
 {
-#if defined(CURSES__32BIT__) || defined(CSET2) || defined(TC)
-# ifdef TC
+#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
+# ifdef __TURBOC__
 	void __cdecl (*oldAction) (int);
 # else
 	void (*oldAction) (int);
@@ -417,7 +417,7 @@ bool PDC_get_ctrl_break(void)
 #endif
 	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
 
-#if defined(CURSES__32BIT__) || defined(CSET2) || defined(TC)
+#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
 
 	oldAction = signal(SIGINT, SIG_DFL);
 
@@ -526,7 +526,7 @@ int PDC_set_ctrl_break(bool setting)
 {
 	PDC_LOG(("PDC_set_ctrl_break() - called. Setting: %d\n", setting));
 
-#if defined(CURSES__32BIT__) || defined(CSET2) || defined(TC)
+#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
 	signal(SIGINT, setting ? SIG_DFL : SIG_IGN);
 	signal(SIGBREAK, setting ? SIG_DFL : SIG_IGN);
 #else

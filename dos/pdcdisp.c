@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.27 2006/03/27 19:31:31 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.28 2006/03/27 20:11:17 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -171,13 +171,13 @@ int PDC_fix_cursor(int flag)
 	case _VGACOLOR:
 	case _VGAMONO:
 		if (flag & 1)
-#ifdef WATCOMC
+#ifdef __WATCOMC__
 			regs.w.ax = 0x1200;
 #else
 			regs.x.ax = 0x1200;
 #endif
 		else
-#ifdef WATCOMC
+#ifdef __WATCOMC__
 			regs.w.ax = 0x1201;
 #else
 			regs.x.ax = 0x1201;
@@ -254,7 +254,7 @@ int PDC_putc(chtype character, chtype color)
 	regs.h.al = (unsigned char) (character & 0x00FF);
 	regs.h.bh = SP->video_page;
 	regs.h.bl = (unsigned char) (color);
-#ifdef WATCOMC
+#ifdef __WATCOMC__
 	regs.w.cx = 1;
 #else
 	regs.x.cx = 1;

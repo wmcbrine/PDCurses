@@ -15,7 +15,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_newdemo =
-	"$Id: newdemo.c,v 1.27 2006/02/24 02:40:31 wmcbrine Exp $";
+	"$Id: newdemo.c,v 1.28 2006/03/27 20:11:17 wmcbrine Exp $";
 #endif
 
 int WaitForUser(void);
@@ -234,7 +234,7 @@ int main(int argc, char **argv)
 
 	curs_set(0);
 
-#if !defined(TC) && !defined(OS2)
+#if !defined(__TURBOC__) && !defined(OS2)
 	signal(SIGINT, trap);
 #endif
 	noecho();

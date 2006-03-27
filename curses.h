@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.156 2006/03/27 19:31:30 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.157 2006/03/27 20:11:16 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -26,19 +26,12 @@
 
 /*man-start**************************************************************
 
-All defines are "defined" here.  All compiler and environment specific 
-definitions are defined into generic class defines. These defines are to 
-be given values so that the code can rely on #if, rather than a 
-complicated set of #if defined() or #ifdefs.
-
 PDCurses definitions list:  (Only define those needed)
 
 	DOS		True if compiling for DOS.
 	OS2		True if compiling for OS/2.
 	WIN32		True if compiling for Windows.
 	XCURSES		True if compiling for X11.
-	HC		True if using a Metaware compiler.
-	TC		True if using a Borland compiler.
 	MSC		True if using a Microsoft compiler.
 	NOMACROS	Don't use (most) macros in place of functions.
 	PDC_BUILD	Defines API build version.
@@ -63,7 +56,6 @@ PDCurses portable platform definitions list:
  *	BORLAND COMPILERS	Turbo C[++], Borland C[++]
  *
  *	Borland definitions:
- *		TC
  *		DOS
  *		OS2
  *
@@ -73,7 +65,6 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __TURBOC__		/* Borland gives defines this as a value*/
-#  define TC __TURBOC__		/* Define a value for TC		*/
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
 #    include <bios.h>
@@ -97,12 +88,10 @@ PDCurses portable platform definitions list:
  *	METAWARE COMPILERS	High C
  *
  *	Metaware definitions:
- *		HC
  *		DOS
  */
 
 #ifdef __HIGHC__
-#  define HC 1
 #  pragma off(prototype_override_warnings)
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
@@ -157,12 +146,10 @@ PDCurses portable platform definitions list:
  *	TOPSPEED compilers	TSC
  *
  *	TOPSPEED definitions:
- *		TSC
  *		DOS || OS2
  */
 
 #ifdef __TSC__			/* You may have to define in makefile	*/
-#  define TSC 1
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #  endif
@@ -172,12 +159,10 @@ PDCurses portable platform definitions list:
  *	IBM C Set/2 Compiler	CSET2
  *
  *	IBM definitions:
- *		CSET2
  *		OS2
  */
 
 #ifdef __IBMC__
-#  define CSET2 1
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #  endif
@@ -214,8 +199,6 @@ PDCurses portable platform definitions list:
  *	GNU compilers		djgpp
  *
  *	djgpp definitions:
- *		__DJGPP__
- *		GO32 (deprecated)
  *		DOS
  */
 
@@ -293,13 +276,11 @@ PDCurses portable platform definitions list:
  *	Watcom C/C++ 10.6 compiler
  *
  *	WATCOM definitions:
- *		WATCOMC
  *		OS2
  *		WIN32
  */
 
 #ifdef __WATCOMC__
-#  define WATCOMC 1
 #  if defined(__DOS__) || defined(__DOS4G__)
 #    define DOS 7		/* Major release of DOS supported	*/
 #    include <bios.h>

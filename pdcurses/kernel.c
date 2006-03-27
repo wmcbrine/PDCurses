@@ -71,7 +71,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.40 2006/03/27 19:04:40 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.41 2006/03/27 20:11:17 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -402,7 +402,7 @@ int napms(int ms)
 
 #elif defined(DOS)
 
-# if defined(TC) || defined(__WATCOMC__)
+# if defined(__TURBOC__) || defined(__WATCOMC__)
 
 	delay(ms);
 

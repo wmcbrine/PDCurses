@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.50 2006/03/26 01:48:44 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.51 2006/03/27 04:26:18 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -233,7 +233,6 @@ int	PDC_mouse_in_slk(int, int);
 int	PDC_newline(WINDOW *, int);
 int	PDC_print(int, int, int);
 int	PDC_putc(chtype, chtype);
-int	PDC_putchar(chtype);
 int	PDC_putctty(chtype, chtype);
 int	PDC_rawgetch(void);
 int	PDC_reset_prog_mode(void);

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.60 2006/03/27 23:00:16 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.61 2006/03/27 23:16:36 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -99,15 +99,23 @@ void setdosmembyte(int offs, unsigned char b);
 void setdosmemword(int offs, unsigned short w);
 # else
 #  if SMALL || MEDIUM || MSC || defined(__PACIFIC__)
-#   define getdosmembyte(offs)   (*((unsigned char far *) _FAR_POINTER(0,offs)))
-#   define getdosmemword(offs)   (*((unsigned short far *) _FAR_POINTER(0,offs)))
-#   define setdosmembyte(offs,x) (*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))
-#   define setdosmemword(offs,x) (*((unsigned short far *) _FAR_POINTER(0,offs)) = (x))
+#   define getdosmembyte(offs) \
+	(*((unsigned char far *) _FAR_POINTER(0,offs)))
+#   define getdosmemword(offs) \
+	(*((unsigned short far *) _FAR_POINTER(0,offs)))
+#   define setdosmembyte(offs,x) \
+	(*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))
+#   define setdosmemword(offs,x) \
+	(*((unsigned short far *) _FAR_POINTER(0,offs)) = (x))
 #  else
-#   define getdosmembyte(offs)   (*((unsigned char *) _FAR_POINTER(0,offs)))
-#   define getdosmemword(offs)   (*((unsigned short *) _FAR_POINTER(0,offs)))
-#   define setdosmembyte(offs,x) (*((unsigned char *) _FAR_POINTER(0,offs)) = (x))
-#   define setdosmemword(offs,x) (*((unsigned short *) _FAR_POINTER(0,offs)) = (x))
+#   define getdosmembyte(offs) \
+	(*((unsigned char *) _FAR_POINTER(0,offs)))
+#   define getdosmemword(offs) \
+	(*((unsigned short *) _FAR_POINTER(0,offs)))
+#   define setdosmembyte(offs,x) \
+	(*((unsigned char *) _FAR_POINTER(0,offs)) = (x))
+#   define setdosmemword(offs,x) \
+	(*((unsigned short *) _FAR_POINTER(0,offs)) = (x))
 #  endif
 # endif
 #endif
@@ -149,8 +157,6 @@ void setdosmemword(int offs, unsigned short w);
 #define _INBUFSIZ	512	/* size of terminal input buffer	*/
 #define _NO_CHANGE	-1	/* flags line edge unchanged		*/
 
-
-/* @@@ THESE SHOULD BE INDIVIDUAL FUNCTIONS, NOT MACROS! */
 #define _BCHAR		0x03	/* Break char	    (^C)		*/
 #define _ECHAR		0x08	/* Erase char	    (^H)		*/
 #define _DWCHAR		0x17	/* Delete Word char (^W)		*/
@@ -315,29 +321,29 @@ void PDC_debug(const char *, ...);
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
 
 /* Internal mouse handling macros */
-#define TRAPPED_MOUSE_X_POS       (Trapped_Mouse_status.x)
-#define TRAPPED_MOUSE_Y_POS       (Trapped_Mouse_status.y)
+#define TRAPPED_MOUSE_X_POS	  (Trapped_Mouse_status.x)
+#define TRAPPED_MOUSE_Y_POS	  (Trapped_Mouse_status.y)
 #define TRAPPED_A_BUTTON_CHANGED  (Trapped_Mouse_status.changes & 7)
-#define TRAPPED_MOUSE_MOVED       (Trapped_Mouse_status.changes & 8)
+#define TRAPPED_MOUSE_MOVED	  (Trapped_Mouse_status.changes & 8)
 #define TRAPPED_MOUSE_POS_REPORT  (Trapped_Mouse_status.changes & 16)
-#define TRAPPED_BUTTON_CHANGED(x) (Trapped_Mouse_status.changes & (1 << ((x) - 1)))
+#define TRAPPED_BUTTON_CHANGED(x) (Trapped_Mouse_status.changes & (1<<((x)-1)))
 #define TRAPPED_BUTTON_STATUS(x)  (Trapped_Mouse_status.button[(x) - 1])
 
-#define ACTUAL_MOUSE_X_POS        (Actual_Mouse_status.x)
-#define ACTUAL_MOUSE_Y_POS        (Actual_Mouse_status.y)
+#define ACTUAL_MOUSE_X_POS	  (Actual_Mouse_status.x)
+#define ACTUAL_MOUSE_Y_POS	  (Actual_Mouse_status.y)
 #define ACTUAL_A_BUTTON_CHANGED   (Actual_Mouse_status.changes & 7)
-#define ACTUAL_MOUSE_MOVED        (Actual_Mouse_status.changes & 8)
+#define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_MOUSE_POS_REPORT   (Actual_Mouse_status.changes & 16)
-#define ACTUAL_BUTTON_CHANGED(x)  (Actual_Mouse_status.changes & (1 << ((x) - 1)))
+#define ACTUAL_BUTTON_CHANGED(x)  (Actual_Mouse_status.changes & (1<<((x)-1)))
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
 
-#define TEMP_MOUSE_X_POS          (Temp_Mouse_status.x)
-#define TEMP_MOUSE_Y_POS          (Temp_Mouse_status.y)
-#define TEMP_A_BUTTON_CHANGED     (Temp_Mouse_status.changes & 7)
-#define TEMP_MOUSE_MOVED          (Temp_Mouse_status.changes & 8)
-#define TEMP_MOUSE_POS_REPORT     (Temp_Mouse_status.changes & 16)
-#define TEMP_BUTTON_CHANGED(x)    (Temp_Mouse_status.changes & (1 << ((x) - 1)))
-#define TEMP_BUTTON_STATUS(x)     (Temp_Mouse_status.button[(x) - 1])
+#define TEMP_MOUSE_X_POS	  (Temp_Mouse_status.x)
+#define TEMP_MOUSE_Y_POS	  (Temp_Mouse_status.y)
+#define TEMP_A_BUTTON_CHANGED	  (Temp_Mouse_status.changes & 7)
+#define TEMP_MOUSE_MOVED	  (Temp_Mouse_status.changes & 8)
+#define TEMP_MOUSE_POS_REPORT	  (Temp_Mouse_status.changes & 16)
+#define TEMP_BUTTON_CHANGED(x)	  (Temp_Mouse_status.changes & (1<<((x)-1)))
+#define TEMP_BUTTON_STATUS(x)	  (Temp_Mouse_status.button[(x) - 1])
 
 #ifdef XCURSES
 #define CURSES_EXIT			999999

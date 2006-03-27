@@ -28,7 +28,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.21 2006/03/27 20:11:17 wmcbrine Exp $";
+	"$Id: pdckbd.c,v 1.22 2006/03/27 20:45:55 wmcbrine Exp $";
 #endif
 
 /************************************************************************
@@ -233,7 +233,7 @@ int PDC_set_keyboard_default(void)
 
 bool PDC_check_bios_key(void)
 {
-#if !defined(MSC) && !defined(EMXVIDEO)
+#if !defined(_MSC_VER) && !defined(EMXVIDEO)
 	KBDKEYINFO keyInfo = {0};
 #endif
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
@@ -251,7 +251,7 @@ bool PDC_check_bios_key(void)
 
 	return (SP->tahead != -1);
 #else
-# ifndef MSC
+# ifndef _MSC_VER
 	KbdPeek(&keyInfo, 0);   /* peek at keyboard  */
 	return (keyInfo.fbStatus != 0);
 # else

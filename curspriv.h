@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.58 2006/03/27 20:35:13 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.59 2006/03/27 20:45:55 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -99,7 +99,7 @@
      void setdosmembyte (int offs, unsigned char b);
      void setdosmemword (int offs, unsigned short w);
 #  else
-#    if SMALL || MEDIUM || MSC || PC
+#    if SMALL || MEDIUM || MSC || defined(__PACIFIC__)
 #      define getdosmembyte(offs)    (*((unsigned char far *) _FAR_POINTER(0,offs)))
 #      define getdosmemword(offs)    (*((unsigned short far *) _FAR_POINTER(0,offs)))
 #      define setdosmembyte(offs,x)  (*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))

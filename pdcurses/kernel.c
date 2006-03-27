@@ -71,7 +71,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.39 2006/03/27 16:24:16 wmcbrine Exp $";
+	"$Id: kernel.c,v 1.40 2006/03/27 19:04:40 wmcbrine Exp $";
 #endif
 
 RIPPEDOFFLINE linesripped[5];
@@ -237,8 +237,7 @@ int reset_prog_mode(void)
 		if (!PDC_scrn_modes_equal(modeInfo, c_pr_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_pr_tty.saved.scrnmode);
 #elif defined(DOS)
-		if (!PDC_scrn_modes_equal(PDC_get_scrn_mode(), 
-		    c_pr_tty.saved.scrnmode))
+		if (PDC_get_scrn_mode() != c_pr_tty.saved.scrnmode)
 			PDC_set_scrn_mode(c_pr_tty.saved.scrnmode);
 #endif
 		PDC_set_rows(c_pr_tty.saved.lines);
@@ -282,8 +281,7 @@ int reset_shell_mode(void)
 		if (!PDC_scrn_modes_equal(modeInfo, c_sh_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_sh_tty.saved.scrnmode);
 # elif defined(DOS)
-		if (!PDC_scrn_modes_equal(PDC_get_scrn_mode(), 
-		    c_sh_tty.saved.scrnmode))
+		if (PDC_get_scrn_mode() != c_sh_tty.saved.scrnmode)
 			PDC_set_scrn_mode(c_sh_tty.saved.scrnmode);
 # endif
 
@@ -331,8 +329,7 @@ int resetty(void)
 		if (!PDC_scrn_modes_equal(modeInfo, c_save_tty.saved.scrnmode))
 			PDC_set_scrn_mode(c_save_tty.saved.scrnmode);
 #elif defined(DOS)
-		if (!PDC_scrn_modes_equal(PDC_get_scrn_mode(), 
-		    c_save_tty.saved.scrnmode))
+		if (PDC_get_scrn_mode() != c_save_tty.saved.scrnmode)
 			PDC_set_scrn_mode(c_save_tty.saved.scrnmode);
 #endif
 

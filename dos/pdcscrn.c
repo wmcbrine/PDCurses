@@ -29,7 +29,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.23 2006/03/25 00:41:04 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.24 2006/03/27 19:04:40 wmcbrine Exp $";
 #endif
 
 static unsigned short *saved_screen = NULL;
@@ -96,35 +96,6 @@ int PDC_scr_close(void)
 	}
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_scrn_modes_equal()	- Decide if two screen modes are equal
-
-  PDCurses Description:
-	Mainly required for OS/2. It decides if two screen modes
-	(VIOMODEINFO structure) are equal. Under DOS it just compares
-	two integers.
-
-  PDCurses Return Value:
-	This function returns TRUE if equal else FALSE.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses      int PDC_scrn_modes_equal(int mode1, int mode2);
-	OS2 PDCurses  int PDC_scrn_modes_equal(VIOMODEINFO mode1, 
-					       VIOMODEINFO mode2);
-
-**man-end****************************************************************/
-
-bool PDC_scrn_modes_equal(int mode1, int mode2)
-{
-	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
-
-	return (mode1 == mode2);
 }
 
 /*man-start**************************************************************

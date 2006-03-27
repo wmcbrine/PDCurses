@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.55 2006/03/27 17:10:14 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.56 2006/03/27 19:04:40 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -263,7 +263,6 @@ int	PDC_reset_shell_mode(void);
 int	PDC_reset_prog_mode(void);
 #else
 int	PDC_set_scrn_mode(int);
-bool	PDC_scrn_modes_equal(int, int);
 int	PDC_get_scrn_mode(void);
 int	PDC_query_adapter_type(void);
 #endif

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.159 2006/03/27 20:52:01 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.160 2006/03/27 22:44:53 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -124,7 +124,6 @@ PDCurses portable platform definitions list:
 #      define DOS 6		/* Major release of DOS supported	*/
 #      include <bios.h>
 #      include <dos.h>
-#      undef  HAVE_VSSCANF	/* vsscanf() function NOT in library	*/
 #    endif
 #  endif
 #endif
@@ -139,7 +138,6 @@ PDCurses portable platform definitions list:
 #  define DOS 6			/* Major release of DOS supported	*/
 #  include <bios.h>
 #  include <dos.h>
-#  undef  HAVE_VSSCANF		/* vsscanf() function NOT in library	*/
 #endif
 
 /*----------------------------------------
@@ -315,12 +313,11 @@ PDCurses portable platform definitions list:
 #  ifdef DOS
 #    define MK_FP(seg,ofs)	( (((int) (seg)) << 4) + ((int) (ofs)) )
 #    ifdef __i860
-       typedef void _int;
+typedef void _int;
 #    else
-       typedef int  _int;
+typedef int  _int;
 #    endif
 #  endif
-   undef HAVE_VSSCANF		/* vsscanf() function NOT in library	*/
 #endif
 
 /*----------------------------------------

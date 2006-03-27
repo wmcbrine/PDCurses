@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.21 2006/03/25 13:49:31 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.22 2006/03/27 04:35:41 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -321,6 +321,10 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 
 bool PDC_transform_line(int lineno)
 {
+	/* this should be enough for the maximum width of a screen. */
+
+	unsigned short temp_line[256];
+
 	chtype *srcp;
 	int j, x, len;
 
@@ -333,34 +337,18 @@ bool PDC_transform_line(int lineno)
 	len = curscr->_lastch[lineno] - x + 1;
 	srcp = curscr->_y[lineno] + x;
 
-	if (SP->direct_video)
-	{
-		/* this should be enough for the maximum width of a 
-		   screen. */
+	/* replace the attribute part of the chtype with the 
+	   actual colour value for each chtype in the line */
 
-		unsigned short temp_line[256];
+	for (j = 0; j < len; j++)
+		temp_line[j] = chtype_attr(srcp[j]) | (srcp[j] & A_CHARTEXT);
 
-		/* replace the attribute part of the chtype with the 
-		   actual colour value for each chtype in the line */
-
-		for (j = 0; j < len; j++)
-			temp_line[j] = chtype_attr(srcp[j]) |
-				(srcp[j] & A_CHARTEXT);
 #ifdef EMXVIDEO
-		v_putline((char*)temp_line, x, lineno, len);
+	v_putline((char*)temp_line, x, lineno, len);
 #else
-		VioWrtCellStr((PCH)temp_line,
-			(USHORT)(len * sizeof(unsigned short)),
-			(USHORT)lineno, (USHORT)x, 0);
+	VioWrtCellStr((PCH)temp_line, (USHORT)(len * sizeof(unsigned short)),
+		(USHORT)lineno, (USHORT)x, 0);
 #endif
-	}
-	else
-		for (j = 0; j < len; j++)
-		{
-			PDC_gotoxy(lineno, j + x);
-			PDC_putc((srcp[j] & A_CHARTEXT),
-				chtype_attr(srcp[j]) >> 8);
-		}
 
 	curscr->_firstch[lineno] = _NO_CHANGE;
 	curscr->_lastch[lineno] = _NO_CHANGE;

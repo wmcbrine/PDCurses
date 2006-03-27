@@ -22,7 +22,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.22 2006/03/26 01:48:49 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.23 2006/03/27 04:35:41 wmcbrine Exp $";
 #endif
 
 #ifdef EMXVIDEO
@@ -157,7 +157,6 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
 
-	internal->direct_video = TRUE;		/* Assume that we can */
 	internal->autocr  = TRUE;		/* cr -> lf by default */
 	internal->raw_out = FALSE;		/* tty I/O modes */
 	internal->raw_inp = FALSE;		/* tty I/O modes */

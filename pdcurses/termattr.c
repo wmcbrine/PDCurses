@@ -33,7 +33,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.25 2006/03/20 23:49:44 wmcbrine Exp $";
+	"$Id: termattr.c,v 1.26 2006/03/27 04:35:41 wmcbrine Exp $";
 #endif
 
 /*man-start**************************************************************
@@ -128,7 +128,11 @@ int baudrate(void)
 {
 	PDC_LOG(("baudrate() - called\n"));
 
+#ifdef DOS
 	return SP->direct_video ? INT_MAX : 19200;
+#else
+	return INT_MAX;
+#endif
 }
 
 char erasechar(void)

@@ -20,7 +20,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.20 2006/03/26 01:17:14 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.21 2006/03/27 04:35:41 wmcbrine Exp $";
 #endif
 
 bool GLOBAL_sb_on = FALSE;
@@ -107,7 +107,6 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	internal->cursrow = internal->curscol = 0;
-	internal->direct_video	= FALSE;	/* Assume that we can't	      */
 	internal->autocr	= TRUE;		/* cr -> lf by default        */
 	internal->raw_out	= FALSE;	/* tty I/O modes	      */
 	internal->raw_inp	= FALSE;	/* tty I/O modes	      */

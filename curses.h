@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.155 2006/03/27 16:25:29 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.156 2006/03/27 19:31:30 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -86,9 +86,6 @@ PDCurses portable platform definitions list:
 #    ifndef WIN32
 #      define WIN32 1
 #    endif
-#  endif
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */
@@ -181,9 +178,6 @@ PDCurses portable platform definitions list:
 
 #ifdef __IBMC__
 #  define CSET2 1
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
-#  endif
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #  endif
@@ -228,9 +222,6 @@ PDCurses portable platform definitions list:
 #ifdef __DJGPP__		/* You may have to define in makefile	*/
 #  define DOS 6
 #  include <dos.h>
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
-#  endif
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H			/* have <unistd.h> */
 #  endif
@@ -327,9 +318,6 @@ PDCurses portable platform definitions list:
 #    ifndef WIN32
 #      define WIN32
 #    endif
-#  endif
-#  ifndef HAVE_MEMORY_H
-#    define HAVE_MEMORY_H			/* have <memory.h> */
 #  endif
 #  ifndef HAVE_VSSCANF
 #    define HAVE_VSSCANF			/* have vsscanf() */

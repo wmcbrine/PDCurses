@@ -18,10 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 #include <stdlib.h>
-
-#ifdef HAVE_MEMORY_H
-# include <memory.h>
-#endif
+#include <string.h>
 
 #ifdef __DJGPP__
 # include <sys/movedata.h>
@@ -29,7 +26,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.24 2006/03/27 19:04:40 wmcbrine Exp $";
+	"$Id: pdcscrn.c,v 1.25 2006/03/27 19:31:31 wmcbrine Exp $";
 #endif
 
 static unsigned short *saved_screen = NULL;

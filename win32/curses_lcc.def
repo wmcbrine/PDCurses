@@ -287,7 +287,6 @@ PDC_get_rows
 PDC_gotoxy
 PDC_makenew
 PDC_newline
-PDC_print
 PDC_putc
 PDC_putctty
 PDC_query_adapter_type

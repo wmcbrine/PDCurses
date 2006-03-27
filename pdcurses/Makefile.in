@@ -81,7 +81,7 @@ inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
 move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
 scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
-PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o pdcprint.o \
+PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
 pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
@@ -95,7 +95,7 @@ scroll.sho slk.sho termattr.sho terminfo.sho touch.sho util.sho \
 window.sho
 
 PDCSHOBJS = pdcclip.sho pdcdebug.sho pdcdisp.sho pdcgetsc.sho pdckbd.sho \
-pdcprint.sho pdcscrn.sho pdcsetsc.sho pdcutil.sho pdcwin.sho
+pdcscrn.sho pdcsetsc.sho pdcutil.sho pdcwin.sho
 
 X11SHOBJS = pdcx11.sho x11curses.sho x11common.sho x11.sho sb.sho \
 ScrollBox.sho
@@ -240,9 +240,6 @@ pdcgetsc.o: $(x11basedir)/pdcgetsc.c $(PDCURSES_HEADERS)
 
 pdckbd.o: $(x11basedir)/pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdckbd.c
-
-pdcprint.o: $(x11basedir)/pdcprint.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcprint.c
 
 pdcscrn.o: $(x11basedir)/pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcscrn.c
@@ -531,12 +528,6 @@ pdcgetsc.sho: $(x11basedir)/pdcgetsc.c $(PDCURSES_HEADERS)
 pdckbd.sho: $(x11basedir)/pdckbd.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdckbd.c
-	$(O2SHO)
-	$(SAVE2O)
-
-pdcprint.sho: $(x11basedir)/pdcprint.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11basedir)/pdcprint.c
 	$(O2SHO)
 	$(SAVE2O)
 

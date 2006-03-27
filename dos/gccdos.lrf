@@ -41,7 +41,6 @@
 -+pdcdisp.o &
 -+pdcgetsc.o &
 -+pdckbd.o &
--+pdcprint.o &
 -+pdcscrn.o &
 -+pdcsetsc.o &
 -+pdcutil.o &

@@ -77,7 +77,7 @@ inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
 move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
 scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
-PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o pdcprint.o \
+PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
 pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 PANOBJS = panel.o
@@ -219,9 +219,6 @@ pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS)
 
 pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $(osdir)/pdckbd.c
-
-pdcprint.o: $(osdir)/pdcprint.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $(osdir)/pdcprint.c
 
 pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $(osdir)/pdcscrn.c

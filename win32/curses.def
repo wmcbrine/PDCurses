@@ -294,7 +294,6 @@ EXPORTS PDC_get_rows
 EXPORTS PDC_gotoxy
 EXPORTS PDC_makenew
 EXPORTS PDC_newline
-EXPORTS PDC_print
 EXPORTS PDC_putc
 EXPORTS PDC_putctty
 EXPORTS PDC_query_adapter_type

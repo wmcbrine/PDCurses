@@ -21,7 +21,7 @@
 
 #ifdef PDCDEBUG
 const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.29 2006/03/27 20:35:13 wmcbrine Exp $";
+	"$Id: pdcdisp.c,v 1.30 2006/03/28 13:45:06 wmcbrine Exp $";
 #endif
 
 extern unsigned char atrtab[MAX_ATRTAB];
@@ -163,24 +163,17 @@ int PDC_fix_cursor(int flag)
 	case _EGAMONO:
 	case _MDS_GENIUS:		/* Some clones look like a Genius */
 		if (flag & 1)
-			setdosmembyte (0x487, getdosmembyte (0x487) | 0x01);
+			setdosmembyte(0x487, getdosmembyte(0x487) | 0x01);
 		else
-			setdosmembyte (0x487, getdosmembyte (0x487) & ~0x01);
+			setdosmembyte(0x487, getdosmembyte(0x487) & ~0x01);
 		break;
 
 	case _VGACOLOR:
 	case _VGAMONO:
-		if (flag & 1)
 #ifdef __WATCOMC__
-			regs.w.ax = 0x1200;
+		regs.w.ax = 0x1201 ^ (flag & 1);
 #else
-			regs.x.ax = 0x1200;
-#endif
-		else
-#ifdef __WATCOMC__
-			regs.w.ax = 0x1201;
-#else
-			regs.x.ax = 0x1201;
+		regs.x.ax = 0x1201 ^ (flag & 1);
 #endif
 		regs.h.bl = 0x34;
 		int86(0x10, &regs, &regs);

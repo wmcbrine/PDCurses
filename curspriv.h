@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.61 2006/03/27 23:16:36 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.62 2006/03/28 19:02:39 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -61,12 +61,17 @@
 
 /*----------------------------------------*/
 #ifdef DOS
+
+# include <dos.h>
+
 # ifdef MX386
 typedef union REGS16 Regs;
 # else
 typedef union REGS Regs;
 # endif
+
 extern Regs regs;
+
 # ifdef __DJGPP__		/* Note: works only in plain DOS... */
 #  if DJGPP == 2
 #   define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))

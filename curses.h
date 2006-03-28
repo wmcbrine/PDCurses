@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.160 2006/03/27 22:44:53 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.161 2006/03/28 19:02:39 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -67,8 +67,6 @@ PDCurses portable platform definitions list:
 #ifdef __TURBOC__		/* Borland gives defines this as a value*/
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
-#    include <bios.h>
-#    include <dos.h>
 #  endif
 #  ifdef __OS2__
 #    define OS2 3		/* Major release of OS/2 supported	*/
@@ -96,7 +94,6 @@ PDCurses portable platform definitions list:
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
 #    include <bios.h>
-#    include <dos.h>
 #  endif
 #endif
 
@@ -123,7 +120,6 @@ PDCurses portable platform definitions list:
 #    else	
 #      define DOS 6		/* Major release of DOS supported	*/
 #      include <bios.h>
-#      include <dos.h>
 #    endif
 #  endif
 #endif
@@ -137,7 +133,6 @@ PDCurses portable platform definitions list:
 #  define MSC 1
 #  define DOS 6			/* Major release of DOS supported	*/
 #  include <bios.h>
-#  include <dos.h>
 #endif
 
 /*----------------------------------------
@@ -200,7 +195,6 @@ PDCurses portable platform definitions list:
 
 #ifdef __DJGPP__		/* You may have to define in makefile	*/
 #  define DOS 6
-#  include <dos.h>
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H			/* have <unistd.h> */
 #  endif
@@ -279,9 +273,6 @@ PDCurses portable platform definitions list:
 #ifdef __WATCOMC__
 #  if defined(__DOS__) || defined(__DOS4G__)
 #    define DOS 7		/* Major release of DOS supported	*/
-#    include <bios.h>
-#    include <dos.h>
-#    include <i86.h>
 #    ifdef __386__
 #      define int86 int386
 #      define int86x int386x
@@ -330,7 +321,6 @@ typedef int  _int;
  */
 
 #ifdef __PACIFIC__
-#  include <dos.h>
 #  include <ctype.h>
 #  ifndef __SMALL__
 #    define __SMALL__

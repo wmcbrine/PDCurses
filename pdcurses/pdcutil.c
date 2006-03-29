@@ -24,7 +24,7 @@
 #endif
 #include <curses.h>
 
-RCSID("$Id: pdcutil.c,v 1.31 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.32 2006/03/29 21:39:42 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -51,24 +51,11 @@ void PDC_beep(void)
 
   PDC_breakout()	- check for type-ahead
 
-  X/Open Description:
-	The curses package does the "line-breakout optimisation" by
-	looking for type-ahead periodically while updating the screen.
-	If input is found, the current update will be postponed until
-	refresh() or doupdate() are called again.  This allows faster
-	response to commands typed in advance.  Normally, the input FILE
-	pointer passed to newterm(), or stdin in the case when initscr()
-	was called, will be used to do this type-ahead checking.  This 
-	routine will do the actual check for PDcurses to see if input is 
-	pending.
-
   PDCurses Description:
-	This routine does what the PDcurses typeahead routine used to 
-	do.  But to make that routine consistent with its System V 
-	counterpart, all it does now is set whether or not typeahead 
-	checking is performed.
+	Check if input is pending, either directly from the keyboard,
+	or previously buffered.
 
-  X/Open Return Value:
+  PDCurses Return Value:
 	The PDC_breakout() routine returns TRUE if keyboard input is 
 	pending otherwise FALSE is returned.
 

@@ -18,24 +18,10 @@ written permission of the author, Mark Hessling (M.Hessling@qut.edu.au).
 To be Done
 ----------
 
-- add newterm() function and have it create a new X window
+- have newterm() create a new X window
 
 - provide a command line parsing function to enable X command line
   arguments to be parsed and stripped from the arguments passed back
   to the calling procedure.
 
 - add proper 'flash' behaviour
-
-
-Structure
----------
-
-*** THIS IS OUTDATED ***
-
-x11.c           - contains functions that are X11 specific functions that are
-                  used by both the process and thread implementations
-x11.h           - #defines and includes for the X11 process/thread
-x11_proc.c      - contains functions that are used by the X11 (child) process
-                  in the process implementation
-curses_proc.c   - contains functions that are used by the curses (parent)
-                  process in the process implementation

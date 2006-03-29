@@ -1,4 +1,6 @@
-/* This file is only used with the ncurses test programs.
+/* $Id: ncurses_cfg.h,v 1.10 2006/03/29 19:50:13 wmcbrine Exp $
+ *
+ * This file is only used with the ncurses test programs.
  *
  * Have ncurses-5.5 unpacked in your $(HOME) (you don't need to build 
  * it), or edit ncurses_testdir appropriately in the Makefile. Configure 

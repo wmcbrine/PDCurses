@@ -76,10 +76,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-#ifdef PDCDEBUG
-const char *rcsid_xmas =
-	"$Id: xmas.c,v 1.19 2006/02/16 21:51:30 wmcbrine Exp $";
-#endif
+/* $Id: xmas.c,v 1.20 2006/03/29 19:50:14 wmcbrine Exp $ */
 
 /* NOMACROS makes a big difference in the size with PDCurses */
 

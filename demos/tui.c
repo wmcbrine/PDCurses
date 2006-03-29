@@ -1,6 +1,9 @@
 /********************************* tui.c ************************************/
 /*
- * File   : tui.c      'textual user interface'
+ * 'textual user interface'
+ *
+ * $Id: tui.c,v 1.21 2006/03/29 19:50:14 wmcbrine Exp $
+ *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
  */
@@ -16,11 +19,6 @@
 void statusmsg(char *);
 int waitforkey(void);
 void rmerror(void);
-
-#ifdef PDCDEBUG
-const char *rcsid_tui =
-	"$Id: tui.c,v 1.20 2006/03/01 07:48:33 wmcbrine Exp $";
-#endif
 
 #if defined(__unix) && !defined(__DJGPP__)
 #include <unistd.h>

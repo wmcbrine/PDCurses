@@ -1,11 +1,6 @@
 /*+-------------------------------------------------------------------------
-	ptest.c
+	$Id: ptest.c,v 1.19 2006/03/29 19:50:13 wmcbrine Exp $
 --------------------------------------------------------------------------*/
-
-#ifdef PDCDEBUG
-const char *rcsid_ptest =
-	"$Id: ptest.c,v 1.18 2006/02/16 21:51:30 wmcbrine Exp $";
-#endif
 
 #include <curses.h>
 #include <panel.h>

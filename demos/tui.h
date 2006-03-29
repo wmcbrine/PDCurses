@@ -1,5 +1,8 @@
 /*
- * File   : tui.h      'textual user interface'
+ * 'textual user interface'
+ *
+ * $Id: tui.h,v 1.9 2006/03/29 19:50:14 wmcbrine Exp $
+ *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
  */

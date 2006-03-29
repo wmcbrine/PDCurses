@@ -4,6 +4,7 @@
  *
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  *
+ *  $Id: newdemo.c,v 1.29 2006/03/29 19:50:13 wmcbrine Exp $
  */
 
 #include <stdio.h>
@@ -12,11 +13,6 @@
 #include <curses.h>
 #include <stdlib.h>
 #include <time.h>
-
-#ifdef PDCDEBUG
-const char *rcsid_newdemo =
-	"$Id: newdemo.c,v 1.28 2006/03/27 20:11:17 wmcbrine Exp $";
-#endif
 
 int WaitForUser(void);
 int SubWinTest(WINDOW *);

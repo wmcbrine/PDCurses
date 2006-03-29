@@ -5,12 +5,12 @@
  *
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
+ *
+ *  $Id: testcurs.c,v 1.44 2006/03/29 19:50:14 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-const char *rcsid_testcurs =
-	"$Id: testcurs.c,v 1.43 2006/03/26 01:48:47 wmcbrine Exp $";
 #endif
 
 #include <stdio.h>

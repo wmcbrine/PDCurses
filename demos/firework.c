@@ -1,3 +1,5 @@
+/* $Id: firework.c,v 1.21 2006/03/29 19:50:13 wmcbrine Exp $ */
+
 #include <stdio.h>
 #include <signal.h>
 #include <curses.h>
@@ -7,11 +9,6 @@
 #include <time.h>
 
 #define DELAYSIZE 200
-
-#ifdef PDCDEBUG
-const char *rcsid_firework =
-	"$Id: firework.c,v 1.20 2006/02/24 02:34:23 wmcbrine Exp $";
-#endif
 
 void myrefresh(void);
 void get_colour(void);

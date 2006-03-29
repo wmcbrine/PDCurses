@@ -1,6 +1,7 @@
 /********************************* tuidemo.c ********************************/
 /*
- * File   : tuidemo.c
+ * $Id: tuidemo.c,v 1.14 2006/03/29 19:50:14 wmcbrine Exp $
+ *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
  *
@@ -19,11 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tui.h"
-
-#ifdef PDCDEBUG
-const char *rcsid_tuidemo =
-	"$Id: tuidemo.c,v 1.13 2006/03/26 01:48:47 wmcbrine Exp $";
-#endif
 
 #ifdef XCURSES
 # define FNAME  "demos/tui.c"	/* change this if source at other location */

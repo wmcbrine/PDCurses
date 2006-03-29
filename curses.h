@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.161 2006/03/28 19:02:39 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.162 2006/03/29 00:34:44 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -567,7 +567,6 @@ typedef struct
 	bool	mono;		/* TRUE if current screen is mono	*/
 	bool	sizeable;	/* TRUE if adapter is resizeable	*/
 	bool	resized;	/* TRUE if TERM has been resized	*/
-	bool	bogus_adapter;	/* TRUE if adapter has insane values	*/
 	bool	shell;		/* TRUE if reset_prog_mode() needs
 				   to be called.			*/
 	bool	orig_attr;	/* TRUE if we have the original colors	*/
@@ -621,6 +620,7 @@ typedef struct
 	int	video_page;	/* Current PC video page		*/
 	unsigned video_seg;	/* video base segment			*/
 	unsigned video_ofs;	/* video base offset			*/
+	bool	bogus_adapter;	/* TRUE if adapter has insane values	*/
 #endif
 
 #ifdef XCURSES

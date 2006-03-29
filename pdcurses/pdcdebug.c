@@ -23,10 +23,7 @@
 
 #undef PDC_debug
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCdebug =
-	"$Id: pdcdebug.c,v 1.18 2006/02/27 08:13:03 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcdebug.c,v 1.19 2006/03/29 20:06:41 wmcbrine Exp $");
 
 bool trace_on = FALSE;
 

@@ -18,10 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.16 2006/02/27 07:28:31 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcsetsc.c,v 1.17 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

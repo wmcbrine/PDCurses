@@ -24,10 +24,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.22 2006/03/27 20:35:13 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdckbd.c,v 1.23 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*

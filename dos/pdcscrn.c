@@ -24,10 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.26 2006/03/27 20:35:13 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcscrn.c,v 1.27 2006/03/29 20:06:40 wmcbrine Exp $");
 
 static unsigned short *saved_screen = NULL;
 static int saved_lines = 0;

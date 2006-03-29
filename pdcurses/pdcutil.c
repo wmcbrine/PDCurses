@@ -24,10 +24,7 @@
 #endif
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCutil =
-	"$Id: pdcutil.c,v 1.30 2006/03/26 01:48:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcutil.c,v 1.31 2006/03/29 20:06:41 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

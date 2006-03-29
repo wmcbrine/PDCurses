@@ -27,10 +27,7 @@
 #undef winsertln
 #undef mvwinsertln
 
-#ifdef PDCDEBUG
-const char *rcsid_deleteln =
-	"$Id: deleteln.c,v 1.17 2006/03/20 07:43:33 wmcbrine Exp $";
-#endif
+RCSID("$Id: deleteln.c,v 1.18 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

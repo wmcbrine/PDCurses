@@ -19,10 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.33 2006/03/27 16:24:16 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcscrn.c,v 1.34 2006/03/29 20:06:41 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1

@@ -33,10 +33,7 @@
 #undef color_set
 #undef wcolor_set
 
-#ifdef PDCDEBUG
-const char *rcsid_attr =
-	"$Id: attr.c,v 1.20 2006/02/23 01:46:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: attr.c,v 1.21 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

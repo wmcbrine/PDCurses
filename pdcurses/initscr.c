@@ -41,10 +41,7 @@
 # undef wnoutrefresh
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_initscr =
-	"$Id: initscr.c,v 1.40 2006/03/26 01:48:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: initscr.c,v 1.41 2006/03/29 20:06:40 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 

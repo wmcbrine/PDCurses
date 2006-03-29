@@ -8,10 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCx11 =
-	"$Id: pdcx11.c,v 1.56 2006/03/22 17:10:18 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcx11.c,v 1.57 2006/03/29 20:06:41 wmcbrine Exp $");
 
 AppData app_data;
 

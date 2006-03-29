@@ -19,10 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.41 2006/03/26 01:48:53 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdckbd.c,v 1.42 2006/03/29 20:06:41 wmcbrine Exp $");
 
 #define KEY_STATE TRUE
 #define MS_MOUSE_MOVED 1

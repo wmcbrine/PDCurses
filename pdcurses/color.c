@@ -34,10 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-#ifdef PDCDEBUG
-const char *rcsid_color =
-	"$Id: color.c,v 1.44 2006/03/26 01:48:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: color.c,v 1.45 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

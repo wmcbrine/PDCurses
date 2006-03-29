@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.62 2006/03/28 19:02:39 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.63 2006/03/29 20:06:40 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -306,8 +306,10 @@ void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #ifdef PDCDEBUG
 void PDC_debug(const char *, ...);
 # define PDC_LOG(x) if (trace_on) PDC_debug x
+# define RCSID(x) static const char *rcsid = x
 #else
 # define PDC_LOG(x)
+# define RCSID(x)
 #endif
 
 #define PDC_COLORS		8

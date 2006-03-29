@@ -23,10 +23,7 @@
 #undef scrl
 #undef wscrl
 
-#ifdef PDCDEBUG
-const char *rcsid_scroll =
-	"$Id: scroll.c,v 1.18 2006/03/20 07:43:33 wmcbrine Exp $";
-#endif
+RCSID("$Id: scroll.c,v 1.19 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -37,10 +37,7 @@
 # undef mvwinch
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_instr =
-	"$Id: instr.c,v 1.17 2006/03/25 01:37:35 wmcbrine Exp $";
-#endif
+RCSID("$Id: instr.c,v 1.18 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

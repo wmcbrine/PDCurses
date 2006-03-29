@@ -26,10 +26,7 @@
 #undef sb_get_vert
 #undef sb_refresh
 
-#ifdef PDCDEBUG
-const char *rcsid_sb =
-	"$Id: sb.c,v 1.15 2006/02/23 01:46:53 wmcbrine Exp $";
-#endif
+RCSID("$Id: sb.c,v 1.16 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

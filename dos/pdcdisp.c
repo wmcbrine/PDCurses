@@ -19,10 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.30 2006/03/28 13:45:06 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcdisp.c,v 1.31 2006/03/29 20:06:40 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 

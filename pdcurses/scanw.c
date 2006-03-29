@@ -47,10 +47,7 @@ static int PDC_vsscanf(const char *, const char *, va_list);
 # undef wmove
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_scanw =
-	"$Id: scanw.c,v 1.23 2006/03/20 17:33:57 wmcbrine Exp $";
-#endif
+RCSID("$Id: scanw.c,v 1.24 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

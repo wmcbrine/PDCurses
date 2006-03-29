@@ -45,10 +45,7 @@
 # undef wclrtobot
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_window =
-	"$Id: window.c,v 1.26 2006/03/25 00:30:36 wmcbrine Exp $";
-#endif
+RCSID("$Id: window.c,v 1.27 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

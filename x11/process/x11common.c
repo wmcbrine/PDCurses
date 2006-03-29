@@ -5,10 +5,7 @@
 
 #include "pdcx11.h"
 
-#ifdef PDCDEBUG
-const char rcsid_x11common =
-        "$Id: x11common.c,v 1.13 2006/03/01 08:04:34 wmcbrine Exp $";
-#endif
+RCSID("$Id: x11common.c,v 1.14 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /* Variables specific to process port */
 

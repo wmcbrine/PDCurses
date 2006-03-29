@@ -36,10 +36,7 @@
 # undef waddch
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_addstr =
-	"$Id: addstr.c,v 1.18 2006/02/23 01:46:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: addstr.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -19,10 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.16 2006/03/27 16:24:16 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcsetsc.c,v 1.17 2006/03/29 20:06:41 wmcbrine Exp $");
 
 extern HANDLE hConOut;
 

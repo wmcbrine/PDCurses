@@ -26,10 +26,7 @@
 # include <bsedos.h>
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCkbd =
-	"$Id: pdckbd.c,v 1.23 2006/03/27 20:52:01 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdckbd.c,v 1.24 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*

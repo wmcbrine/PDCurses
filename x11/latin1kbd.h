@@ -1,3 +1,4 @@
+/* $Id: latin1kbd.h,v 1.3 2006/03/29 20:06:41 wmcbrine Exp $ */
 
 /* Definitions of latin1 character set for XCurses */
 

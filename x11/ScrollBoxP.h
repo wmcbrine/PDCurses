@@ -11,6 +11,8 @@
      copies from any such party to do so.  This license includes without
      limitation a license to do the foregoing actions under any patents of
      the party supplying this software to the X Consortium.
+
+     $Id: ScrollBoxP.h,v 1.4 2006/03/29 20:06:41 wmcbrine Exp $
  */
 
 /* 

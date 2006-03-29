@@ -38,10 +38,7 @@
 # undef reset_prog_mode
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_refresh =
-	"$Id: refresh.c,v 1.29 2006/03/27 14:33:00 wmcbrine Exp $";
-#endif
+RCSID("$Id: refresh.c,v 1.30 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

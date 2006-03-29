@@ -18,10 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.22 2006/03/27 16:26:43 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcscrn.c,v 1.23 2006/03/29 20:06:41 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;

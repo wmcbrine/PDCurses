@@ -24,10 +24,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCdisp =
-	"$Id: pdcdisp.c,v 1.20 2006/03/27 14:33:00 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcdisp.c,v 1.21 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

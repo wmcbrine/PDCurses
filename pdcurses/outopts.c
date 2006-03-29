@@ -29,10 +29,7 @@
 #undef scrollok
 #undef raw_output
 
-#ifdef PDCDEBUG
-const char *rcsid_outopts =
-	"$Id: outopts.c,v 1.20 2006/03/25 00:30:36 wmcbrine Exp $";
-#endif
+RCSID("$Id: outopts.c,v 1.21 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

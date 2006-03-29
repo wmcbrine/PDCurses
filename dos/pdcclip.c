@@ -20,10 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.20 2006/02/27 08:13:03 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcclip.c,v 1.21 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /* global clipboard contents, should be NULL if none set */
 

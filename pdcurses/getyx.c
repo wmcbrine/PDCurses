@@ -26,10 +26,7 @@
 #undef getpary
 #undef getparx
 
-#ifdef PDCDEBUG
-const char *rcsid_getyx =
-	"$Id: getyx.c,v 1.14 2006/02/23 01:46:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: getyx.c,v 1.15 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

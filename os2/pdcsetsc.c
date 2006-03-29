@@ -19,10 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCsetsc =
-	"$Id: pdcsetsc.c,v 1.18 2006/03/26 01:48:49 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcsetsc.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

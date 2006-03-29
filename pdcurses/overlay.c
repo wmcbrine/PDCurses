@@ -29,10 +29,7 @@
 # undef wmove
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_overlay =
-	"$Id: overlay.c,v 1.17 2006/03/01 08:34:35 wmcbrine Exp $";
-#endif
+RCSID("$Id: overlay.c,v 1.18 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

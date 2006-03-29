@@ -69,10 +69,7 @@ APIRET APIENTRY DosSleep(ULONG ulTime);
 # undef wmove
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_kernel =
-	"$Id: kernel.c,v 1.42 2006/03/27 20:35:30 wmcbrine Exp $";
-#endif
+RCSID("$Id: kernel.c,v 1.43 2006/03/29 20:06:41 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;

@@ -18,10 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCgo32 =
-	"$Id: pdcgo32.c,v 1.9 2006/02/22 06:09:46 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcgo32.c,v 1.10 2006/03/29 20:06:40 wmcbrine Exp $");
 
 #include <pc.h>    
 #include <sys/movedata.h> /* prototypes of dosmemget() and dosmemput() */

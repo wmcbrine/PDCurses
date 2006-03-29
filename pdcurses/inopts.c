@@ -45,10 +45,7 @@
 # undef wmove
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_inopts =
-	"$Id: inopts.c,v 1.24 2006/03/25 00:41:22 wmcbrine Exp $";
-#endif
+RCSID("$Id: inopts.c,v 1.25 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

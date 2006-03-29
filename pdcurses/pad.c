@@ -34,10 +34,7 @@
 # undef doupdate
 #endif
 
-#ifdef PDCDEBUG
-const char *rcsid_pad =
-	"$Id: pad.c,v 1.19 2006/02/23 01:46:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: pad.c,v 1.20 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /* save values for pechochar() */
 

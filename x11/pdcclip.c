@@ -19,10 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCclip =
-	"$Id: pdcclip.c,v 1.16 2006/02/27 08:13:03 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcclip.c,v 1.17 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

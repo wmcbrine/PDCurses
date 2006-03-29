@@ -10,10 +10,7 @@
 
 #include <stdlib.h>
 
-#ifdef PDCDEBUG
-const char rcsid_x11curses =
-        "$Id: x11curses.c,v 1.28 2006/03/01 08:04:34 wmcbrine Exp $";
-#endif
+RCSID("$Id: x11curses.c,v 1.29 2006/03/29 20:06:41 wmcbrine Exp $");
 
 extern AppData app_data;
 

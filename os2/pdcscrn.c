@@ -20,10 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCscrn =
-	"$Id: pdcscrn.c,v 1.23 2006/03/27 04:35:41 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcscrn.c,v 1.24 2006/03/29 20:06:40 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;

@@ -19,10 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_PDCgetsc =
-	"$Id: pdcgetsc.c,v 1.14 2006/03/27 16:24:16 wmcbrine Exp $";
-#endif
+RCSID("$Id: pdcgetsc.c,v 1.15 2006/03/29 20:06:41 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 extern CONSOLE_SCREEN_BUFFER_INFO scr;

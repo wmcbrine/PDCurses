@@ -31,10 +31,7 @@
 #undef termname
 #undef wordchar
 
-#ifdef PDCDEBUG
-const char *rcsid_termattr =
-	"$Id: termattr.c,v 1.26 2006/03/27 04:35:41 wmcbrine Exp $";
-#endif
+RCSID("$Id: termattr.c,v 1.27 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

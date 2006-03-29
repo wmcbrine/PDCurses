@@ -28,10 +28,7 @@
 #undef clrtoeol
 #undef wclrtoeol
 
-#ifdef PDCDEBUG
-const char *rcsid_clear =
-	"$Id: clear.c,v 1.18 2006/03/20 07:43:33 wmcbrine Exp $";
-#endif
+RCSID("$Id: clear.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

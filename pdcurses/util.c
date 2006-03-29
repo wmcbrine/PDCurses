@@ -34,10 +34,7 @@
 #undef delay_output
 #undef flushinp
 
-#ifdef PDCDEBUG
-const char *rcsid_util =
-	"$Id: util.c,v 1.30 2006/02/23 01:46:52 wmcbrine Exp $";
-#endif
+RCSID("$Id: util.c,v 1.31 2006/03/29 20:06:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

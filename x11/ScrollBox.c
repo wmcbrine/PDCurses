@@ -11,11 +11,11 @@
      copies from any such party to do so.  This license includes without
      limitation a license to do the foregoing actions under any patents of
      the party supplying this software to the X Consortium.
+
+     $Id: ScrollBox.c,v 1.14 2006/03/29 20:37:04 wmcbrine Exp $
  */
 
 /* ScrollBox.c - scrollBox composite widget */
-
-/* $Id: ScrollBox.c,v 1.13 2006/02/23 01:46:52 wmcbrine Exp $ */
 
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
@@ -56,7 +56,7 @@ static XtResource resources[] =
  *									*
  ************************************************************************/
 
-static void Initialize(Widget, Widget);
+static void Initialize(Widget, Widget, ArgList, Cardinal *);
 static void Resize(Widget);
 static Boolean SetValues(Widget, Widget, Widget, ArgList, Cardinal *);
 static void ChangeManaged(Widget);
@@ -292,7 +292,8 @@ static void ChangeManaged(Widget w)
 	DoLayout(w, True);
 }
 
-static void Initialize(Widget request, Widget new)
+static void Initialize(Widget request, Widget new,
+		       ArgList args, Cardinal *num_args)
 {
 	ScrollBoxWidget newsbw = (ScrollBoxWidget)new;
 

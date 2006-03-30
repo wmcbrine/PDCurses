@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.162 2006/03/29 00:34:44 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.163 2006/03/30 03:28:18 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -731,14 +731,14 @@ currently used.)
 # define A_BLINK	(chtype)0x00400000
 # define A_BOLD		(chtype)0x00800000
 # define A_RIGHTLINE	(chtype)0x00010000
-# define A_DIM		(chtype)0x00020000
+# define A_LEFTLINE	(chtype)0x00020000
 # define A_ALTCHARSET	(chtype)0x00040000
 # define A_INVIS	(chtype)0x00080000
 # define A_ATTRIBUTES	(chtype)0xFFFF0000
 # define A_CHARTEXT	(chtype)0x0000FFFF
 # define A_COLOR	(chtype)0xFF000000
 
-# define A_LEFTLINE	A_DIM
+# define A_DIM		A_NORMAL
 # define A_ITALIC	A_INVIS
 # define A_STANDOUT	(A_BOLD | A_REVERSE)
 # define A_PROTECT	(A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)

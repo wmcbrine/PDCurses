@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.57 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.58 2006/03/30 02:12:56 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -2353,30 +2353,29 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 
 	Mouse_status.changes = 0;
 
+	/* Handle button 4 and 5, which are normally mapped to 
+	   the wheel mouse scroll up and down */
+
+	if ((SP->_trap_mbe & MOUSE_WHEEL_SCROLL)
+	    && (button_no == 4 || button_no == 5))
+	{
+		/* Send the KEY_MOUSE to curses program */
+
+		memset(&Mouse_status, 0, sizeof(Mouse_status));
+
+		Mouse_status.changes = (button_no == 5) ? 
+			PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+
+		MOUSE_X_POS = MOUSE_Y_POS = -1;
+
+		XCursesSendKeyToCurses((unsigned long)KEY_MOUSE, 
+			&Mouse_status);
+		return;
+	}
+
 	switch(event->type)
 	{
 	case ButtonPress:
-
-		/* Handle button 4 and 5, which are normally mapped to 
-		   the wheel mouse scroll up and down */
-
-		if ((SP->_trap_mbe & MOUSE_WHEEL_SCROLL)
-		    && (button_no == 4 || button_no == 5))
-		{
-			/* Send the KEY_MOUSE to curses program */
-
-			memset(&Mouse_status, 0, sizeof(Mouse_status));
-
-			Mouse_status.changes = (button_no == 5) ? 
-				PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
-
-			MOUSE_X_POS = MOUSE_Y_POS = -1;
-
-			XCursesSendKeyToCurses((unsigned long)KEY_MOUSE, 
-				&Mouse_status);
-			return;
-		}
-
 		remove_release = False;
 		handle_real_release = False;
 

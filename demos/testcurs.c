@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.44 2006/03/29 19:50:14 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.45 2006/03/30 02:52:51 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -399,7 +399,8 @@ void inputTest(WINDOW *win)
 			else if (BUTTON_CHANGED(3))
 				button = 3;
 
-			if (BUTTON_STATUS(button) & BUTTON_MODIFIER_MASK)
+			if (button && (BUTTON_STATUS(button) & 
+				BUTTON_MODIFIER_MASK))
 			{
 				waddstr(win, " Modifier(s):");
              

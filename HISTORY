@@ -1,3 +1,168 @@
+PDCurses 2.8 - 2006/04/01
+=========================
+
+As with the previous version, you should assume that apps linked against 
+older dynamic versions of the library won't work with this one until 
+recompiled.
+
+New features:
+
+- Simpler, faster.
+
+- Declarations for all supported, standard functions, per the X/Open
+  Curses 4.2 spec, with the notable exception of getch() and ungetch().
+  You can disable the use of the macro versions by defining NOMACROS
+  before including curses.h (see xmas.c for an example). NOMACROS yields
+  smaller but theoretically slower executables.
+
+- New functions: vwprintw(), vwscanw(), vw_printw() and vw_scanw(). This 
+  completes the list of X/Open 4.2 functions, except for those concerned 
+  with attr_t and wide characters. Some (especially the terminfo/termcap 
+  functions) aren't yet fully fleshed out, though.
+
+- Non-macro implementations for COLOR_PAIR(), PAIR_NUMBER(), getbkgd(), 
+  mvgetnstr(), mvwgetnstr(), mvhline(), mvvline(), mvwhline(), and 
+  mvwvline(). (The macros are still available, too.)
+
+- newterm() works now, in a limited way -- the parameters are ignored, 
+  and only the first invocation will work (i.e., only one SCREEN can be 
+  used).
+
+- start_color() works now -- which is to say, if you _don't_ call it, 
+  you'll only get monochrome output. Also, without calling it, the 
+  terminal's default colors will be used, where supported (currently 
+  only in Win32). This is equivalent to the PDC_ORIGINAL_COLORS behavior 
+  introduced in 2.7, except that _only_ the default colors will be used. 
+  (PDC_ORIGINAL_COLORS is still available, if you want to combine the 
+  use of specific colors and the default colors.)
+
+- New logic for termname() and longname(): termname() always returns
+  "pdcurses"; longname() returns "PDCurses for [platform] [adapter]
+  [COLOR/MONO]-YxX" (adapter is only defined for DOS and OS/2). This is
+  the first time these functions return _anything_ in Win32.
+
+- New installation method for XCurses: the header files are placed in a 
+  subdirectory "xcurses" within the include directory, rather than being 
+  renamed. (But the renamed xcurses.h and xpanel.h are also installed, 
+  for backwards compatiblity.) curspriv.h and term.h are now available,
+  and existing curses-based code need no longer be edited to use 
+  XCurses' curses.h. And with no more need for explicit XCursesExit() 
+  calls (see below), your code need not be changed at all to move from 
+  another curses implementation to XCurses. It can be as simple as "gcc 
+  -I/usr/local/include/xcurses -lXCurses -oprogname progname.c".
+
+- Combined readme.* into this HISTORY file, and incorporated the old 1.x
+  (PCCurses) history.
+
+- New functionality for the testcurs demo: ACS character display; menu 
+  support for PgUp, PgDn, Home and End; centered menu; and it can now 
+  be resized in X.
+
+- Added modified versions of the rain and worm demos from ncurses.
+
+Bug fixes and such:
+
+- Big cleanup of dead and redundant code, including unneeded defines, 
+  ifdefs, and structure elements.
+
+- flushinp() was not implemented for Win32.
+
+- resetty() was not restoring LINES and COLS.
+
+- nonl() made '\n' print a line feed without carriage return. This was 
+  incorrect.
+
+- Removed bogus implementation of intrflush().
+
+- The line-breakout optimization system, disabled by default in 2.7, is
+  removed in 2.8. It simply didn't work, and never has. (The typeahead() 
+  function remains, for compatibility, but does nothing.)
+
+- The declarations for the printw() and scanw() function families were
+  erroneously ifdef'd.
+
+- Safer printw() calls on platforms that support vsnprintf().
+
+- Use the native vsscanf() in DJGPP, MinGW and Cygwin.
+
+- ACS_BLOCK now works in X.
+
+- Explicit calls to XCursesExit() are no longer needed.
+
+- XCURSES is now defined automatically if not DOS, OS2 or WIN32.
+
+- The default icon for XCurses wasn't working (had to remove the focus 
+  hint code to fix this). Also, the default title is now "XCurses" 
+  instead of "main".
+
+- Incorrect dimensions (undercounting by two in each direction) were
+  shown while resizing in X.
+
+- Scroll wheel events were not always correctly reported in X.
+
+- 32 bits are enough for the "long" chtype, but 64 bits were used on a 
+  64-bit system, wasting memory. Now conditioned on _LP64. This could be 
+  faster, too.
+
+- The short, 16-bit chtype now works with XCurses.
+
+- Corrected return value for is_linetouched(), is_wintouched(),
+  can_change_color() and isendwin() (bool instead of int).
+
+- timeout(), wtimeout(), idcok() and immedok() return void.
+
+- pair_content() takes a short.
+
+- Replaced incorrect usages of attr_t with chtype. attr_t is still 
+  typedef'd, for backwards compatibility. (It's supposed to be used for 
+  the WA_*-style functions, which PDCurses doesn't yet support.)
+
+- Added const where required by the spec, and in other appropriate
+  places.
+
+- Removed PDC_usleep(). napms() is now the core delay routine.
+
+- Fixed poll() support in napms().
+
+- Various changes to the internal PDC_* functions -- don't depend on 
+  these, and don't use them unless you absolutely have to.
+
+- Some routines accessed window structures in their variable 
+  declarations, _before_ checking for a NULL window pointer.
+
+- Dropped support for the undocumented PDC_FULL_DISPLAY, wtitle(), and
+  PDC_print().
+
+- Cleaned up remaining warnings.
+
+- Reduced unnecessary #include directives -- speeds up compilation.
+
+- Fix for demos build in Borland/DOS -- the makefile in 2.7 didn't 
+  specify the memory model. Reported by Erwin Waterlander.
+
+- Simplified the makefiles; e.g., some now build each demo in a single 
+  step, and Watcom no longer uses demos.lnk. Also, the demo exes are now 
+  stripped when possible; maximum compression used for archives built 
+  by the makefiles; xcurses-config removed as part of "make distclean"; 
+  and I tweaked optimization for some platforms.
+
+- Reverted to /usr/local/ as default installation directory for XCurses.
+
+- Upgraded to autoconf 2.59... instantly doubling the size of the
+  configure script. Ah well. Otherwise, simplified the build system.
+
+- Dropped support for pre-ANSI compilers. (It hasn't worked since at
+  least version 2.4, anyway.)
+
+- Revised and, I hope, clarified the boilerplate and other comments.
+
+- Simplified logging and RCS ids; added RCS ids where missing.
+
+- Consistent formatting for all code, approximately equivalent to
+  "indent -kr -i8 -bl -bli0", with adjustments for 80 columns.
+
+------------------------------------------------------------------------
+
 PDCurses 2.7 - 2005/12/30
 =========================
 

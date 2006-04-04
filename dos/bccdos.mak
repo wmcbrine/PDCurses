@@ -81,10 +81,12 @@ PANOBJS = panel.obj
 
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
+	-del $@
 	$(LIBEXE) $@ @$(osdir)\bccdos.lrf
 
 panel.lib : $(PANOBJS)
-	$(LIBEXE) $@ -+$(PANOBJS)
+	-del $@
+	$(LIBEXE) $@ +$(PANOBJS)
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addch.c

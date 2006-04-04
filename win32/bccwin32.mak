@@ -43,7 +43,7 @@ CPPFLAGS	= -I$(PDCURSES_HOME)
 
 CCFLAGS		= -c -Tpe -w32 $(CFLAGS) $(CPPFLAGS)
 
-LIBEXE		= tlib /C /E
+LIBEXE		= tlib /C /E /0
 
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
@@ -84,10 +84,12 @@ first:
 	@echo $(srcdir)\addch.c
 
 pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
+	-del $@
 	$(LIBEXE) $@ @$(osdir)\bccwin32.lrf
 
 panel.lib : $(PANOBJS)
-	$(LIBEXE) $@ -+$(PANOBJS)
+	-del $@
+	$(LIBEXE) $@ +$(PANOBJS)
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addch.c

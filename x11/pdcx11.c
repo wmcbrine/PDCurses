@@ -1,6 +1,18 @@
-/************************************************************************
- * This file is NOT public domain software.  It is Copyright, Mark	*
- * Hessling 1994,1995.							*
+/************************************************************************ 
+ * This file is part of PDCurses. PDCurses is public domain software;	*
+ * you may use it for any purpose. This software is provided AS IS with	*
+ * NO WARRANTY whatsoever.						*
+ *									*
+ * If you use PDCurses in an application, an acknowledgement would be	*
+ * appreciated, but is not mandatory. If you make corrections or	*
+ * enhancements to PDCurses, please forward them to the current		*
+ * maintainer for the benefit of other users.				*
+ *									*
+ * No distribution of modified PDCurses code may be made under the name	*
+ * "PDCurses", except by the current maintainer. (Although PDCurses is	*
+ * public domain, the name is a trademark.)				*
+ *									*
+ * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 #include "pdcx11.h"
@@ -8,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.58 2006/03/30 02:12:56 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.59 2006/04/13 17:19:43 wmcbrine Exp $");
 
 AppData app_data;
 

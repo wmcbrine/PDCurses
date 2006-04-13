@@ -1,6 +1,18 @@
-/************************************************************************
- * This file is NOT public domain software.  It is Copyright, Mark	*
- * Hessling 1994-2000.							*
+/************************************************************************ 
+ * This file is part of PDCurses. PDCurses is public domain software;	*
+ * you may use it for any purpose. This software is provided AS IS with	*
+ * NO WARRANTY whatsoever.						*
+ *									*
+ * If you use PDCurses in an application, an acknowledgement would be	*
+ * appreciated, but is not mandatory. If you make corrections or	*
+ * enhancements to PDCurses, please forward them to the current		*
+ * maintainer for the benefit of other users.				*
+ *									*
+ * No distribution of modified PDCurses code may be made under the name	*
+ * "PDCurses", except by the current maintainer. (Although PDCurses is	*
+ * public domain, the name is a trademark.)				*
+ *									*
+ * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 /* This file contains functions that are called by the "curses" process;
@@ -10,7 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.29 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: x11curses.c,v 1.30 2006/04/13 17:19:44 wmcbrine Exp $");
 
 extern AppData app_data;
 

@@ -27,8 +27,6 @@ PDC_DIR=PDCurses-$(VERDOT)
 ZIPFILE = pdcurs$(VER).zip
 TARBALL = $(PDC_DIR).tar.gz
 
-all ::	pdcurses demos panel
-
 all \
 clean \
 distclean \

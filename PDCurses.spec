@@ -1,4 +1,4 @@
-# $Id: PDCurses.spec,v 1.9 2006/04/04 21:18:50 wmcbrine Exp $
+# $Id: PDCurses.spec,v 1.10 2006/04/13 17:30:12 wmcbrine Exp $
 
 %define ver 28
 %define verdot 2.8
@@ -8,7 +8,7 @@ Summary: Public Domain Curses for X11
 Name: PDCurses
 Version: %verdot
 Release: 1
-Copyright: LGPL
+Copyright: Public Domain
 Group: Development/Libraries
 Source: %{name}-%{version}.tar.gz
 URL: http://pdcurses.sourceforge.net

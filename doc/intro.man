@@ -246,7 +246,7 @@ FUNCTIONS
 		getparyx                 getyx
 		getstr                   getstr
 		getsyx                   kernel
-		getwin                   util
+		getwin                   scr_dump
 		getyx                    getyx
 		halfdelay                inopts
 		has_colors               color
@@ -341,7 +341,7 @@ FUNCTIONS
 		prefresh                 pad
 		printw                   printw
 		putp                     terminfo
-		putwin                   util
+		putwin                   scr_dump
 		qiflush                  inopts
 		raw                      inopts
 		raw_output               outopts

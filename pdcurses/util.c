@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-#if defined (OS2) && defined(EMXVIDEO)
+#if defined(OS2) && defined(EMXVIDEO)
 # include <termios.h>
 #endif
 
@@ -29,12 +29,10 @@
 #undef has_key
 #undef filter
 #undef use_env
-#undef putwin
-#undef getwin
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.31 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.32 2006/04/14 15:34:50 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -45,8 +43,6 @@ RCSID("$Id: util.c,v 1.31 2006/03/29 20:06:41 wmcbrine Exp $");
 	char *keyname(int key);
 	void filter(void);
 	void use_env(bool x);
-	int putwin(WINDOW *win, FILE *filep);
-	WINDOW *getwin(FILE *filep);
 	int delay_output(int ms);
 	int flushinp(void);
 
@@ -79,8 +75,7 @@ RCSID("$Id: util.c,v 1.31 2006/03/29 20:06:41 wmcbrine Exp $");
 	the BIOS keyboard buffer head and tail pointers, resetting the 
 	typeahead to implement flushinp().
 
-	filter() and use_env() are no-ops on PDCurses. getwin() and 
-	putwin() also do nothing yet.
+	filter() and use_env() are no-ops on PDCurses.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -94,8 +89,6 @@ RCSID("$Id: util.c,v 1.31 2006/03/29 20:06:41 wmcbrine Exp $");
 	keyname					Y	-      3.0
 	filter					Y	-      3.0
 	use_env					-	-      4.0
-	putwin					-	-      4.0
-	getwin					-	-      4.0
 	delay_output				Y	Y	Y
 	flushinp				Y	Y	Y
 
@@ -224,20 +217,6 @@ void filter(void)
 void use_env(bool x)
 {
 	PDC_LOG(("use_env() - called: x %d\n", x));
-}
-
-int putwin(WINDOW *win, FILE *filep)
-{
-	PDC_LOG(("putwin() - called\n"));
-
-	return ERR;
-}
-
-WINDOW *getwin(FILE *filep)
-{
-	PDC_LOG(("getwin() - called\n"));
-
-	return (WINDOW *)NULL;
 }
 
 int delay_output(int ms)

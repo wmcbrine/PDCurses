@@ -19,24 +19,36 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
+#undef getwin
+#undef putwin
 #undef scr_dump
 #undef scr_init
 #undef scr_restore
 #undef scr_set
 
-RCSID("$Id: scr_dump.c,v 1.14 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: scr_dump.c,v 1.15 2006/04/14 15:34:50 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
   Name:                                                       scr_dump
 
   Synopsis:
+	int putwin(WINDOW *win, FILE *filep);
+	WINDOW *getwin(FILE *filep);
 	int scr_dump(const char *filename);
 	int scr_init(const char *filename);
 	int scr_restore(const char *filename);
 	int scr_set(const char *filename);
 
   X/Open Description:
+	The getwin() function reads window-related data stored in the 
+	file by putwin(). The function then creates and initialises a 
+	new window using that data.
+
+	The putwin() function writes all data associated with win into 
+	the stdio stream to which filep points, using an unspecified 
+	format. This information can be retrieved later using getwin().
+
 	The scr_dump() function writes the current contents of the 
 	virtual screen to the file named by filename in an unspecified 
 	format.
@@ -69,13 +81,25 @@ RCSID("$Id: scr_dump.c,v 1.14 2006/03/29 20:06:41 wmcbrine Exp $");
 	PDCurses. This file is a placeholder.
 
   X/Open Return Value:
-	On successful completion, these functions return OK. Otherwise, 
-	they return ERR.
-
-  X/Open Errors:
-	No errors are defined. 
+	On successful completion, getwin() returns a pointer to the 
+	window it created. Otherwise, it returns a null pointer. Other 
+	functions return OK or ERR.
 
 **man-end****************************************************************/
+
+int putwin(WINDOW *win, FILE *filep)
+{
+        PDC_LOG(("putwin() - called\n"));
+
+        return ERR;
+}
+
+WINDOW *getwin(FILE *filep)
+{
+        PDC_LOG(("getwin() - called\n"));
+
+        return (WINDOW *)NULL;
+}
 
 int scr_dump(const char *filename)
 {

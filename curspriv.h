@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.63 2006/03/29 20:06:40 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.64 2006/04/15 16:51:46 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -269,8 +269,6 @@ int	PDC_query_adapter_type(VIOCONFIGINFO *);
 int	PDC_get_keyboard_info(KBDINFO *);
 int	PDC_set_keyboard_binary(void);
 int	PDC_set_keyboard_default(void);
-int	PDC_reset_shell_mode(void);
-int	PDC_reset_prog_mode(void);
 #else
 int	PDC_set_scrn_mode(int);
 int	PDC_get_scrn_mode(void);

@@ -1,4 +1,4 @@
-# $Id: PDCurses.spec,v 1.10 2006/04/13 17:30:12 wmcbrine Exp $
+# $Id: PDCurses.spec,v 1.11 2006/04/15 20:24:59 wmcbrine Exp $
 
 %define ver 28
 %define verdot 2.8
@@ -16,10 +16,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Prefix: %base
 
 %description
-PDCurses for X11, also known as XCurses, is an implementation of the 
-curses library that lets you rebuild existing text-mode curses programs 
-as native X11 applications, with very little modification. For more 
-information, visit http://pdcurses.sourceforge.net
+PDCurses for X11 is an implementation of the curses library that lets 
+you build text-mode curses programs as native X11 applications. For more 
+information, visit http://pdcurses.sourceforge.net/
 
 %prep
 %setup -q

@@ -57,7 +57,7 @@
  X11
  ---
  . Run the configure script in the PDCurses-x.x directory. This will
-   check for the dependencies XCurses requires.
+   check for the dependencies libXCurses requires.
 
    If configure can't find your X include files or X libraries, you can
    specify the paths with the arguments "--x-includes=inc_path" or
@@ -68,12 +68,12 @@
    switch; -O. You can turn this off, and turn on debugging (-g), by
    adding "--with-debug" to the configure command.
 
- . Run "make". This should make the XCurses library, the panels library
-   and all demo programs in the demos directory.
+ . Run "make". This should make libXCurses, the panels library and all
+   demo programs in the demos directory.
 
  . Alternately, you can cd to "pdcurses" directory, and run "make" from
    here. This will build libXCurses only.
 
  . Optionally, run "make install". curses.h, panel.h and the panel lib
-   will be renamed when installed (xcurses.h, xpanel.h and libXPanel),
+   will be renamed when installed (xcurses.h, xpanel.h and libXpanel),
    to avoid conflicts with any existing curses installations.

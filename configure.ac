@@ -168,7 +168,7 @@ fi
 AC_SUBST(PURIFY)
 
 dnl ---------------------- check for Xaw3d library -------------------
-dnl allow --with-xaw3d to link with XCurses
+dnl allow --with-xaw3d to link with PDCurses
 AC_ARG_WITH(xaw3d,
 	[  --with-xaw3d            link with Xaw3d],
 	[with_xaw3d=$withval],
@@ -179,7 +179,7 @@ if test "$with_xaw3d" = yes; then
 fi
 
 dnl ---------------------- check for neXtaw library -------------------
-dnl allow --with-nextaw to link with XCurses
+dnl allow --with-nextaw to link with PDCurses
 AC_ARG_WITH(nextaw,
 	[  --with-nextaw           link with neXtaw],
 	[with_nextaw=$withval],

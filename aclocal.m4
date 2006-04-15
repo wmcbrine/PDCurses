@@ -25,7 +25,7 @@ AC_DEFUN([MH_IPC],
 AC_MSG_CHECKING(for System V IPC support)
 AC_CHECK_HEADER(sys/ipc.h)
 if test $ac_cv_header_sys_ipc_h = no; then
-	AC_MSG_ERROR(Cannot find required header file sys/ipc.h; XCurses cannot be configured)
+	AC_MSG_ERROR(Cannot find required header file sys/ipc.h; PDCurses cannot be configured)
 fi
 ])dnl
 
@@ -144,13 +144,13 @@ dnl under Solaris. If so, ignore it.
 		MH_XINC_DIR="-I$mh_x11_dir"
 	fi
 else
-	AC_MSG_ERROR(Cannot find required header file Intrinsic.h; XCurses cannot be configured)
+	AC_MSG_ERROR(Cannot find required header file Intrinsic.h; PDCurses cannot be configured)
 fi
 
 if test "x$mh_x11_xaw_dir" != "x" ; then
 	MH_XINC_DIR="-I$mh_x11_xaw_dir $MH_XINC_DIR"
 else
-	AC_MSG_ERROR(Cannot find required Xaw header file Box.h; XCurses cannot be configured)
+	AC_MSG_ERROR(Cannot find required Xaw header file Box.h; PDCurses cannot be configured)
 fi
 
 	AC_MSG_RESULT(found in $mh_x11_dir $mh_x11_xaw_dir)
@@ -297,7 +297,7 @@ for mh_lib in $mh_libs; do
     done
   done
   if test "$mh_lib_found" = no; then
-    AC_MSG_ERROR(Cannot find required X library; lib$mh_lib. XCurses cannot be configured)
+    AC_MSG_ERROR(Cannot find required X library; lib$mh_lib. PDCurses cannot be configured)
   fi
 done
 AC_MSG_RESULT($mh_where_found)

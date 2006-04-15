@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.43 2006/04/13 17:19:44 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.44 2006/04/15 03:12:00 wmcbrine Exp $");
 
 extern AppData app_data;
 
@@ -466,7 +466,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 int XCursesSetupX(const char *display_name, int argc, char *argv[])
 {
-	static char *myargv[] = {"XCurses", NULL};
+	static char *myargv[] = {"PDCurses", NULL};
 	extern bool sb_started;
 
 	int italic_font_valid;
@@ -480,7 +480,7 @@ int XCursesSetupX(const char *display_name, int argc, char *argv[])
 
 	/* The following kludge is to force XtVaAppInitialize() to 
 	   recognize the name of the program.  Without it, a default 
-	   value of "XCurses" is used. */
+	   value of "PDCurses" is used. */
 
 	if (!argv)
 	{

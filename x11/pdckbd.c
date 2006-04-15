@@ -18,7 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.20 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.21 2006/04/15 16:55:28 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -144,7 +144,7 @@ int PDC_rawgetch(void)
 	    && !PDC_breakout())
 		return -1;
 
-	return XCurses_rawgetch(0);
+	return XCurses_rawgetch();
 }
 
 /*man-start**************************************************************

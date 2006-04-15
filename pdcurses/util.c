@@ -32,7 +32,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.32 2006/04/14 15:34:50 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.33 2006/04/15 16:55:28 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -258,7 +258,7 @@ int flushinp(void)
 
 #ifdef XCURSES
 	while (XCurses_kbhit())
-		XCurses_rawgetch(0);
+		XCurses_rawgetch();
 #endif
 	c_gindex = 1;			/* set indices to kill buffer	 */
 	c_pindex = 0;

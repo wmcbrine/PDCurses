@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.30 2006/04/13 17:19:44 wmcbrine Exp $");
+RCSID("$Id: x11curses.c,v 1.31 2006/04/15 16:55:28 wmcbrine Exp $");
 
 extern AppData app_data;
 
@@ -142,7 +142,7 @@ int XCurses_refresh_scrollbar(void)
 	return OK;
 }
 
-int XCurses_rawgetch(int delaytenths)
+int XCurses_rawgetch(void)
 {
 	unsigned long newkey = 0;
 	int key = 0;
@@ -152,18 +152,13 @@ int XCurses_rawgetch(int delaytenths)
 
 	while (1)
 	{
-	    if (delaytenths && !XCurses_kbhit())
-		key = -1;
-	    else
-	    {
-		if (read_socket(key_sock, buf, sizeof(unsigned long)) < 0)
-		    XCursesExitCursesProcess(2, 
-			"exiting from XCurses_rawchar");
+	    if (read_socket(key_sock, buf, sizeof(unsigned long)) < 0)
+		XCursesExitCursesProcess(2, 
+		    "exiting from XCurses_rawchar");
 
-		memcpy((char *)&newkey, buf, sizeof(unsigned long));
-		pdc_key_modifier = (newkey >> 24) & 0xFF;
-		key = (int)(newkey & 0x00FFFFFF);
-	    }
+	    memcpy((char *)&newkey, buf, sizeof(unsigned long));
+	    pdc_key_modifier = (newkey >> 24) & 0xFF;
+	    key = (int)(newkey & 0x00FFFFFF);
 
 	    if (key == KEY_MOUSE)
 	    {

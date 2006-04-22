@@ -45,7 +45,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.27 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.28 2006/04/22 16:54:06 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -457,6 +457,7 @@ WINDOW *resize_window(WINDOW *win, int lins, int cols)
 	new->_parent = win->_parent;
 	new->_immed = win->_immed;
 	new->_sync = win->_sync;
+	new->_bkgd = win->_bkgd;
 
 	/* make and clear the lines */
 

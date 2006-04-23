@@ -34,7 +34,7 @@
 #undef PDC_leftline
 #undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.21 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.22 2006/04/23 03:30:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -153,9 +153,7 @@ static chtype PDC_attr_passthru(WINDOW *win, chtype ch)
 int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
 	    chtype bs, chtype tl, chtype tr, chtype bl, chtype br)
 {
-	int ymax, xmax;
-	int ymin, xmin;
-	int i;
+	int i, ymax, xmax;
 
 	PDC_LOG(("wborder() - called\n"));
 
@@ -164,8 +162,6 @@ int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
 
 	ymax = win->_maxy - 1;
 	xmax = win->_maxx - 1;
-	ymin = 0;
-	xmin = 0;
 
 	ls = PDC_attr_passthru(win, ls ? ls : ACS_VLINE);
 	rs = PDC_attr_passthru(win, rs ? rs : ACS_VLINE);
@@ -176,35 +172,27 @@ int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
 	bl = PDC_attr_passthru(win, bl ? bl : ACS_LLCORNER);
 	br = PDC_attr_passthru(win, br ? br : ACS_LRCORNER);
 
-	for (i = xmin + 1; i <= xmax - 1; i++)
+	for (i = 1; i < xmax; i++)
 	{
-		win->_y[ymin][i] = ts;
+		win->_y[0][i] = ts;
 		win->_y[ymax][i] = bs;
 	}
 
-	for (i = ymin + 1; i <= ymax - 1; i++)
+	for (i = 1; i < ymax; i++)
 	{
-		win->_y[i][xmin] = ls;
+		win->_y[i][0] = ls;
 		win->_y[i][xmax] = rs;
 	}
 
-	win->_y[ymin][xmin] = tl;
-	win->_y[ymin][xmax] = tr;
-	win->_y[ymax][xmin] = bl;
+	win->_y[0][0] = tl;
+	win->_y[0][xmax] = tr;
+	win->_y[ymax][0] = bl;
 	win->_y[ymax][xmax] = br;
 
-	for (i = ymin; i <= ymax; i++)
+	for (i = 0 i <= ymax; i++)
 	{
-		if (win->_firstch[i] == _NO_CHANGE)
-		{
-			win->_firstch[i] = xmin;
-			win->_lastch[i] = xmax;
-		}
-		else
-		{
-			win->_firstch[i] = min(win->_firstch[i], xmin);
-			win->_lastch[i] = max(win->_lastch[i], xmax);
-		}
+		win->_firstch[i] = 0;
+		win->_lastch[i] = xmax;
 	}
 
 	PDC_sync(win);
@@ -223,9 +211,6 @@ int border(chtype ls, chtype rs, chtype ts, chtype bs,
 int box(WINDOW *win, chtype verch, chtype horch)
 {
 	PDC_LOG(("box() - called\n"));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
 
 	return wborder(win, verch, verch, horch, horch, 0, 0, 0, 0);
 }

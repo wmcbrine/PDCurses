@@ -76,7 +76,7 @@
 /*                                                                            */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.20 2006/03/29 19:50:14 wmcbrine Exp $ */
+/* $Id: xmas.c,v 1.21 2006/04/23 06:27:10 wmcbrine Exp $ */
 
 /* NOMACROS makes a big difference in the size with PDCurses */
 
@@ -85,6 +85,15 @@
 #include <curses.h>
 #include <signal.h>
 
+void lil(WINDOW *);
+void midtop(WINDOW *);
+void bigtop(WINDOW *);
+void bigface(WINDOW *, chtype);
+void legs1(WINDOW *);
+void legs2(WINDOW *);
+void legs3(WINDOW *);
+void legs4(WINDOW *);
+void initdeer(void);
 void boxit(void);
 void seas(void);
 void greet(void);
@@ -115,7 +124,6 @@ WINDOW *treescrn, *treescrn2, *treescrn3, *treescrn4, *treescrn5,
 int main(int argc, char **argv)
 {
 	int loopy;
-	chtype noseattr;
 
 #ifdef XCURSES
 	Xinitscr(argc, argv);
@@ -129,14 +137,8 @@ int main(int argc, char **argv)
 
 #ifdef A_COLOR
 	if (has_colors())
-	{
 		start_color();
-		init_pair(31, COLOR_RED, COLOR_BLACK);
-		noseattr = COLOR_PAIR(31);
-	}
-	else
 #endif
-		noseattr = A_NORMAL;
 
 #ifdef PDCURSES
 	curs_set(0);
@@ -150,242 +152,13 @@ int main(int argc, char **argv)
 	treescrn7 = newwin(16, 27, 3, 53);
 	treescrn8 = newwin(16, 27, 3, 53);
 
-	dotdeer0 = newwin(3, 71, 0, 8);
-
-	stardeer0 = newwin(4, 56, 0, 8);
-
-	lildeer0 = newwin(7, 53, 0, 8);
-	lildeer1 = newwin(2, 4, 0, 0);
-	lildeer2 = newwin(2, 4, 0, 0);
-	lildeer3 = newwin(2, 4, 0, 0);
-
-	middeer0 = newwin(15, 42, 0, 8);
-	middeer1 = newwin(3, 7, 0, 0);
-	middeer2 = newwin(3, 7, 0, 0);
-	middeer3 = newwin(3, 7, 0, 0);
-
-	bigdeer0 = newwin(10, 23, 0, 0);
-	bigdeer1 = newwin(10, 23, 0, 0);
-	bigdeer2 = newwin(10, 23, 0, 0);
-	bigdeer3 = newwin(10, 23, 0, 0);
-	bigdeer4 = newwin(10, 23, 0, 0);
-
-	lookdeer0 = newwin(10, 25, 0, 0);
-	lookdeer1 = newwin(10, 25, 0, 0);
-	lookdeer2 = newwin(10, 25, 0, 0);
-	lookdeer3 = newwin(10, 25, 0, 0);
-	lookdeer4 = newwin(10, 25, 0, 0);
-
 	w_holiday = newwin(1, 26, 3, 27);
 
 	w_del_msg = newwin(1, 12, 23, 60);
 
 	mvwaddstr(w_holiday, 0, 0, "H A P P Y  H O L I D A Y S");
 
-	/* set up the windows for our various reindeer */
-
-	/* lildeer1 */
-	mvwaddch(lildeer1, 0, 0, (chtype) 'V');
-	mvwaddch(lildeer1, 1, 0, (chtype) '@');
-	mvwaddch(lildeer1, 1, 1, (chtype) '<');
-	mvwaddch(lildeer1, 1, 2, (chtype) '>');
-	mvwaddch(lildeer1, 1, 3, (chtype) '~');
-
-	/* lildeer2 */
-	mvwaddch(lildeer2, 0, 0, (chtype) 'V');
-	mvwaddch(lildeer2, 1, 0, (chtype) '@');
-	mvwaddch(lildeer2, 1, 1, (chtype) '|');
-	mvwaddch(lildeer2, 1, 2, (chtype) '|');
-	mvwaddch(lildeer2, 1, 3, (chtype) '~');
-
-	/* lildeer3 */
-	mvwaddch(lildeer3, 0, 0, (chtype) 'V');
-	mvwaddch(lildeer3, 1, 0, (chtype) '@');
-	mvwaddch(lildeer3, 1, 1, (chtype) '>');
-	mvwaddch(lildeer3, 1, 2, (chtype) '<');
-	mvwaddch(lildeer2, 1, 3, (chtype) '~');
-
-	/* middeer1 */
-	mvwaddch(middeer1, 0, 2, (chtype) 'y');
-	mvwaddch(middeer1, 0, 3, (chtype) 'y');
-	mvwaddch(middeer1, 1, 2, (chtype) '0');
-	mvwaddch(middeer1, 1, 3, (chtype) '(');
-	mvwaddch(middeer1, 1, 4, (chtype) '=');
-	mvwaddch(middeer1, 1, 5, (chtype) ')');
-	mvwaddch(middeer1, 1, 6, (chtype) '~');
-	mvwaddch(middeer1, 2, 3, (chtype) '\\');
-	mvwaddch(middeer1, 2, 4, (chtype) '/');
-
-	/* middeer2 */
-	mvwaddch(middeer2, 0, 2, (chtype) 'y');
-	mvwaddch(middeer2, 0, 3, (chtype) 'y');
-	mvwaddch(middeer2, 1, 2, (chtype) '0');
-	mvwaddch(middeer2, 1, 3, (chtype) '(');
-	mvwaddch(middeer2, 1, 4, (chtype) '=');
-	mvwaddch(middeer2, 1, 5, (chtype) ')');
-	mvwaddch(middeer2, 1, 6, (chtype) '~');
-	mvwaddch(middeer2, 2, 3, (chtype) '|');
-	mvwaddch(middeer2, 2, 5, (chtype) '|');
-
-	/* middeer3 */
-	mvwaddch(middeer3, 0, 2, (chtype) 'y');
-	mvwaddch(middeer3, 0, 3, (chtype) 'y');
-	mvwaddch(middeer3, 1, 2, (chtype) '0');
-	mvwaddch(middeer3, 1, 3, (chtype) '(');
-	mvwaddch(middeer3, 1, 4, (chtype) '=');
-	mvwaddch(middeer3, 1, 5, (chtype) ')');
-	mvwaddch(middeer3, 1, 6, (chtype) '~');
-	mvwaddch(middeer3, 2, 2, (chtype) '/');
-	mvwaddch(middeer3, 2, 6, (chtype) '\\');
-
-	/* bigdeer1 */
-	mvwaddch(bigdeer1, 0, 17, (chtype) '\\');
-	mvwaddch(bigdeer1, 0, 18, (chtype) '/');
-	mvwaddch(bigdeer1, 0, 20, (chtype) '\\');
-	mvwaddch(bigdeer1, 0, 21, (chtype) '/');
-	mvwaddch(bigdeer1, 1, 18, (chtype) '\\');
-	mvwaddch(bigdeer1, 1, 20, (chtype) '/');
-	mvwaddch(bigdeer1, 2, 19, (chtype) '|');
-	mvwaddch(bigdeer1, 2, 20, (chtype) '_');
-	mvwaddch(bigdeer1, 3, 18, (chtype) '/');
-	mvwaddch(bigdeer1, 3, 19, (chtype) '^');
-	mvwaddch(bigdeer1, 3, 20, (chtype) '0');
-	mvwaddch(bigdeer1, 3, 21, (chtype) '\\');
-	mvwaddch(bigdeer1, 4, 17, (chtype) '/');
-	mvwaddch(bigdeer1, 4, 18, (chtype) '/');
-	mvwaddch(bigdeer1, 4, 19, (chtype) '\\');
-	mvwaddch(bigdeer1, 4, 22, (chtype) '\\');
-	mvwaddstr(bigdeer1, 5, 7, "^~~~~~~~~//  ~~U");
-	mvwaddstr(bigdeer1, 6, 7, "( \\_____( /");
-	mvwaddstr(bigdeer1, 7, 8, "( )    /");
-	mvwaddstr(bigdeer1, 8, 9, "\\\\   /");
-	mvwaddstr(bigdeer1, 9, 11, "\\>/>");
-
-	/* bigdeer2 */
-	mvwaddch(bigdeer2, 0, 17, (chtype) '\\');
-	mvwaddch(bigdeer2, 0, 18, (chtype) '/');
-	mvwaddch(bigdeer2, 0, 20, (chtype) '\\');
-	mvwaddch(bigdeer2, 0, 21, (chtype) '/');
-	mvwaddch(bigdeer2, 1, 18, (chtype) '\\');
-	mvwaddch(bigdeer2, 1, 20, (chtype) '/');
-	mvwaddch(bigdeer2, 2, 19, (chtype) '|');
-	mvwaddch(bigdeer2, 2, 20, (chtype) '_');
-	mvwaddch(bigdeer2, 3, 18, (chtype) '/');
-	mvwaddch(bigdeer2, 3, 19, (chtype) '^');
-	mvwaddch(bigdeer2, 3, 20, (chtype) '0');
-	mvwaddch(bigdeer2, 3, 21, (chtype) '\\');
-	mvwaddch(bigdeer2, 4, 17, (chtype) '/');
-	mvwaddch(bigdeer2, 4, 18, (chtype) '/');
-	mvwaddch(bigdeer2, 4, 19, (chtype) '\\');
-	mvwaddch(bigdeer2, 4, 22, (chtype) '\\');
-	mvwaddstr(bigdeer2, 5, 7, "^~~~~~~~~//  ~~U");
-	mvwaddstr(bigdeer2, 6, 7, "(( )____( /");
-	mvwaddstr(bigdeer2, 7, 7, "( /      |");
-	mvwaddstr(bigdeer2, 8, 8, "\\/      |");
-	mvwaddstr(bigdeer2, 9, 9, "|>     |>");
-
-	/* bigdeer3 */
-	mvwaddch(bigdeer3, 0, 17, (chtype) '\\');
-	mvwaddch(bigdeer3, 0, 18, (chtype) '/');
-	mvwaddch(bigdeer3, 0, 20, (chtype) '\\');
-	mvwaddch(bigdeer3, 0, 21, (chtype) '/');
-	mvwaddch(bigdeer3, 1, 18, (chtype) '\\');
-	mvwaddch(bigdeer3, 1, 20, (chtype) '/');
-	mvwaddch(bigdeer3, 2, 19, (chtype) '|');
-	mvwaddch(bigdeer3, 2, 20, (chtype) '_');
-	mvwaddch(bigdeer3, 3, 18, (chtype) '/');
-	mvwaddch(bigdeer3, 3, 19, (chtype) '^');
-	mvwaddch(bigdeer3, 3, 20, (chtype) '0');
-	mvwaddch(bigdeer3, 3, 21, (chtype) '\\');
-	mvwaddch(bigdeer3, 4, 17, (chtype) '/');
-	mvwaddch(bigdeer3, 4, 18, (chtype) '/');
-	mvwaddch(bigdeer3, 4, 19, (chtype) '\\');
-	mvwaddch(bigdeer3, 4, 22, (chtype) '\\');
-	mvwaddstr(bigdeer3, 5, 7, "^~~~~~~~~//  ~~U");
-	mvwaddstr(bigdeer3, 6, 6, "( ()_____( /");
-	mvwaddstr(bigdeer3, 7, 6, "/ /       /");
-	mvwaddstr(bigdeer3, 8, 5, "|/          \\");
-	mvwaddstr(bigdeer3, 9, 5, "/>           \\>");
-
-	/* bigdeer4 */
-	mvwaddch(bigdeer4, 0, 17, (chtype) '\\');
-	mvwaddch(bigdeer4, 0, 18, (chtype) '/');
-	mvwaddch(bigdeer4, 0, 20, (chtype) '\\');
-	mvwaddch(bigdeer4, 0, 21, (chtype) '/');
-	mvwaddch(bigdeer4, 1, 18, (chtype) '\\');
-	mvwaddch(bigdeer4, 1, 20, (chtype) '/');
-	mvwaddch(bigdeer4, 2, 19, (chtype) '|');
-	mvwaddch(bigdeer4, 2, 20, (chtype) '_');
-	mvwaddch(bigdeer4, 3, 18, (chtype) '/');
-	mvwaddch(bigdeer4, 3, 19, (chtype) '^');
-	mvwaddch(bigdeer4, 3, 20, (chtype) '0');
-	mvwaddch(bigdeer4, 3, 21, (chtype) '\\');
-	mvwaddch(bigdeer4, 4, 17, (chtype) '/');
-	mvwaddch(bigdeer4, 4, 18, (chtype) '/');
-	mvwaddch(bigdeer4, 4, 19, (chtype) '\\');
-	mvwaddch(bigdeer4, 4, 22, (chtype) '\\');
-	mvwaddstr(bigdeer4, 5, 7, "^~~~~~~~~//  ~~U");
-	mvwaddstr(bigdeer4, 6, 6, "( )______( /");
-	mvwaddstr(bigdeer4, 7, 5, "(/          \\");
-	mvwaddstr(bigdeer4, 8, 0, "v___=             ----^");
-
-	/* lookdeer1 */
-	mvwaddstr(lookdeer1, 0, 16, "\\/     \\/");
-	mvwaddstr(lookdeer1, 1, 17, "\\Y/ \\Y/");
-	mvwaddstr(lookdeer1, 2, 19, "\\=/");
-	mvwaddstr(lookdeer1, 3, 17, "^\\o o/^");
-	mvwaddstr(lookdeer1, 4, 17, "//( )");
-	mvwaddstr(lookdeer1, 5, 7, "^~~~~~~~~// \\");
-	waddch(lookdeer1, 'O' | noseattr);
-	waddstr(lookdeer1, "/");
-	mvwaddstr(lookdeer1, 6, 7, "( \\_____( /");
-	mvwaddstr(lookdeer1, 7, 8, "( )    /");
-	mvwaddstr(lookdeer1, 8, 9, "\\\\   /");
-	mvwaddstr(lookdeer1, 9, 11, "\\>/>");
-
-	/* lookdeer2 */
-	mvwaddstr(lookdeer2, 0, 16, "\\/     \\/");
-	mvwaddstr(lookdeer2, 1, 17, "\\Y/ \\Y/");
-	mvwaddstr(lookdeer2, 2, 19, "\\=/");
-	mvwaddstr(lookdeer2, 3, 17, "^\\o o/^");
-	mvwaddstr(lookdeer2, 4, 17, "//( )");
-	mvwaddstr(lookdeer2, 5, 7, "^~~~~~~~~// \\");
-	waddch(lookdeer2, 'O' | noseattr);
-	waddstr(lookdeer2, "/");
-	mvwaddstr(lookdeer2, 6, 7, "(( )____( /");
-	mvwaddstr(lookdeer2, 7, 7, "( /      |");
-	mvwaddstr(lookdeer2, 8, 8, "\\/      |");
-	mvwaddstr(lookdeer2, 9, 9, "|>     |>");
-
-	/* lookdeer3 */
-	mvwaddstr(lookdeer3, 0, 16, "\\/     \\/");
-	mvwaddstr(lookdeer3, 1, 17, "\\Y/ \\Y/");
-	mvwaddstr(lookdeer3, 2, 19, "\\=/");
-	mvwaddstr(lookdeer3, 3, 17, "^\\o o/^");
-	mvwaddstr(lookdeer3, 4, 17, "//( )");
-	mvwaddstr(lookdeer3, 5, 7, "^~~~~~~~~// \\");
-	waddch(lookdeer3, 'O' | noseattr);
-	waddstr(lookdeer3, "/");
-	mvwaddstr(lookdeer3, 6, 6, "( ()_____( /");
-	mvwaddstr(lookdeer3, 7, 6, "/ /       /");
-	mvwaddstr(lookdeer3, 8, 5, "|/          \\");
-	mvwaddstr(lookdeer3, 9, 5, "/>           \\>");
-
-	/* lookdeer4 */
-	mvwaddstr(lookdeer4, 0, 16, "\\/     \\/");
-	mvwaddstr(lookdeer4, 1, 17, "\\Y/ \\Y/");
-	mvwaddstr(lookdeer4, 2, 19, "\\=/");
-	mvwaddstr(lookdeer4, 3, 17, "^\\o o/^");
-	mvwaddstr(lookdeer4, 4, 17, "//( )");
-	mvwaddstr(lookdeer4, 5, 7, "^~~~~~~~~// \\");
-	waddch(lookdeer4, 'O' | noseattr);
-	waddstr(lookdeer4, "/");
-	mvwaddstr(lookdeer4, 6, 6, "( )______( /");
-	mvwaddstr(lookdeer4, 7, 5, "(/          \\");
-	mvwaddstr(lookdeer4, 8, 0, "v___=             ----^");
-
-
-	/***********************************************/
+	initdeer();
 
 	clear();
 	werase(treescrn);
@@ -611,30 +384,201 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+void lil(WINDOW *win)
+{
+	mvwaddch(win, 0, 0, (chtype) 'V');
+	mvwaddch(win, 1, 0, (chtype) '@');
+	mvwaddch(win, 1, 3, (chtype) '~');
+}
+
+void midtop(WINDOW *win)
+{
+	mvwaddch(win, 0, 2, (chtype) 'y');
+	mvwaddch(win, 0, 3, (chtype) 'y');
+	mvwaddch(win, 1, 2, (chtype) '0');
+	mvwaddch(win, 1, 3, (chtype) '(');
+	mvwaddch(win, 1, 4, (chtype) '=');
+	mvwaddch(win, 1, 5, (chtype) ')');
+	mvwaddch(win, 1, 6, (chtype) '~');
+}
+
+void bigtop(WINDOW *win)
+{
+	mvwaddch(win, 0, 17, (chtype) '\\');
+	mvwaddch(win, 0, 18, (chtype) '/');
+	mvwaddch(win, 0, 20, (chtype) '\\');
+	mvwaddch(win, 0, 21, (chtype) '/');
+	mvwaddch(win, 1, 18, (chtype) '\\');
+	mvwaddch(win, 1, 20, (chtype) '/');
+	mvwaddch(win, 2, 19, (chtype) '|');
+	mvwaddch(win, 2, 20, (chtype) '_');
+	mvwaddch(win, 3, 18, (chtype) '/');
+	mvwaddch(win, 3, 19, (chtype) '^');
+	mvwaddch(win, 3, 20, (chtype) '0');
+	mvwaddch(win, 3, 21, (chtype) '\\');
+	mvwaddch(win, 4, 17, (chtype) '/');
+	mvwaddch(win, 4, 18, (chtype) '/');
+	mvwaddch(win, 4, 19, (chtype) '\\');
+	mvwaddch(win, 4, 22, (chtype) '\\');
+	mvwaddstr(win, 5, 7, "^~~~~~~~~//  ~~U");
+}
+
+void bigface(WINDOW *win, chtype noseattr)
+{
+	mvwaddstr(win, 0, 16, "\\/     \\/");
+	mvwaddstr(win, 1, 17, "\\Y/ \\Y/");
+	mvwaddstr(win, 2, 19, "\\=/");
+	mvwaddstr(win, 3, 17, "^\\o o/^");
+	mvwaddstr(win, 4, 17, "//( )");
+	mvwaddstr(win, 5, 7, "^~~~~~~~~// \\");
+	waddch(win, 'O' | noseattr);
+	waddstr(win, "/");
+}
+
+void legs1(WINDOW *win)
+{
+	mvwaddstr(win, 6, 7, "( \\_____( /");
+	mvwaddstr(win, 7, 8, "( )    /");
+	mvwaddstr(win, 8, 9, "\\\\   /");
+	mvwaddstr(win, 9, 11, "\\>/>");
+}
+
+void legs2(WINDOW *win)
+{
+	mvwaddstr(win, 6, 7, "(( )____( /");
+	mvwaddstr(win, 7, 7, "( /      |");
+	mvwaddstr(win, 8, 8, "\\/      |");
+	mvwaddstr(win, 9, 9, "|>     |>");
+}
+
+void legs3(WINDOW *win)
+{
+	mvwaddstr(win, 6, 6, "( ()_____( /");
+	mvwaddstr(win, 7, 6, "/ /       /");
+	mvwaddstr(win, 8, 5, "|/          \\");
+	mvwaddstr(win, 9, 5, "/>           \\>");
+}
+
+void legs4(WINDOW *win)
+{
+	mvwaddstr(win, 6, 6, "( )______( /");
+	mvwaddstr(win, 7, 5, "(/          \\");
+	mvwaddstr(win, 8, 0, "v___=             ----^");
+}
+
+void initdeer(void)
+{
+	chtype noseattr;
+
+#ifdef A_COLOR
+	if (has_colors())
+	{
+		init_pair(31, COLOR_RED, COLOR_BLACK);
+		noseattr = COLOR_PAIR(31);
+	}
+	else
+#endif
+		noseattr = A_NORMAL;
+
+	/* set up the windows for our various reindeer */
+
+	dotdeer0 = newwin(3, 71, 0, 8);
+	stardeer0 = newwin(4, 56, 0, 8);
+	lildeer0 = newwin(7, 54, 0, 8);
+	middeer0 = newwin(15, 42, 0, 8);
+	bigdeer0 = newwin(10, 23, 0, 0);
+	lookdeer0 = newwin(10, 25, 0, 0);
+
+	/* lildeer1 */
+	lildeer1 = newwin(2, 4, 0, 0);
+	lil(lildeer1);
+	mvwaddch(lildeer1, 1, 1, (chtype) '<');
+	mvwaddch(lildeer1, 1, 2, (chtype) '>');
+
+	/* lildeer2 */
+	lildeer2 = newwin(2, 4, 0, 0);
+	lil(lildeer2);
+	mvwaddch(lildeer2, 1, 1, (chtype) '|');
+	mvwaddch(lildeer2, 1, 2, (chtype) '|');
+
+	/* lildeer3 */
+	lildeer3 = newwin(2, 4, 0, 0);
+	lil(lildeer3);
+	mvwaddch(lildeer3, 1, 1, (chtype) '>');
+	mvwaddch(lildeer3, 1, 2, (chtype) '<');
+
+	/* middeer1 */
+	middeer1 = newwin(3, 7, 0, 0);
+	midtop(middeer1);
+	mvwaddch(middeer1, 2, 3, (chtype) '\\');
+	mvwaddch(middeer1, 2, 4, (chtype) '/');
+
+	/* middeer2 */
+	middeer2 = newwin(3, 7, 0, 0);
+	midtop(middeer2);
+	mvwaddch(middeer2, 2, 3, (chtype) '|');
+	mvwaddch(middeer2, 2, 5, (chtype) '|');
+
+	/* middeer3 */
+	middeer3 = newwin(3, 7, 0, 0);
+	midtop(middeer3);
+	mvwaddch(middeer3, 2, 2, (chtype) '/');
+	mvwaddch(middeer3, 2, 6, (chtype) '\\');
+
+	/* bigdeer1 */
+	bigdeer1 = newwin(10, 23, 0, 0);
+	bigtop(bigdeer1);
+	legs1(bigdeer1);
+
+	/* bigdeer2 */
+	bigdeer2 = newwin(10, 23, 0, 0);
+	bigtop(bigdeer2);
+	legs2(bigdeer2);
+
+	/* bigdeer3 */
+	bigdeer3 = newwin(10, 23, 0, 0);
+	bigtop(bigdeer3);
+	legs3(bigdeer3);
+
+	/* bigdeer4 */
+	bigdeer4 = newwin(10, 23, 0, 0);
+	bigtop(bigdeer4);
+	legs4(bigdeer4);
+
+	/* lookdeer1 */
+	lookdeer1 = newwin(10, 25, 0, 0);
+	bigface(lookdeer1, noseattr);
+	legs1(lookdeer1);
+
+	/* lookdeer2 */
+	lookdeer2 = newwin(10, 25, 0, 0);
+	bigface(lookdeer2, noseattr);
+	legs2(lookdeer2);
+
+	/* lookdeer3 */
+	lookdeer3 = newwin(10, 25, 0, 0);
+	bigface(lookdeer3, noseattr);
+	legs3(lookdeer3);
+
+	/* lookdeer4 */
+	lookdeer4 = newwin(10, 25, 0, 0);
+	bigface(lookdeer4, noseattr);
+	legs4(lookdeer4);
+}
+
 void boxit(void)
 {
-	int x = 0;
+	int x;
 
-	while (x < 20)
-	{
+	for (x = 0; x < 20; ++x)
 		mvaddch(x, 7, '|');
-		++x;
-	}
 
-	x = 8;
-
-	while (x < 80)
+	for (x = 0; x < 80; ++x)
 	{
-		mvaddch(19, x, '_');
-		++x;
-	}
+		if (x > 7)
+			mvaddch(19, x, '_');
 
-	x = 0;
-
-	while (x < 80)
-	{
 		mvaddch(22, x, '_');
-		++x;
 	}
 }
 

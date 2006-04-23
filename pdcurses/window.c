@@ -45,7 +45,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.28 2006/04/22 16:54:06 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.29 2006/04/23 03:31:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -453,7 +453,7 @@ WINDOW *resize_window(WINDOW *win, int lins, int cols)
 	new->_use_keypad = win->_use_keypad;
 	new->_tmarg = (win->_tmarg > new->_maxy - 1) ? 0 : win->_tmarg;
 	new->_bmarg = (win->_bmarg == win->_maxy - 1) ?
-		new->_maxy-1 : min(win->_bmarg, (new->_maxy - 1));
+		new->_maxy - 1 : min(win->_bmarg, (new->_maxy - 1));
 	new->_parent = win->_parent;
 	new->_immed = win->_immed;
 	new->_sync = win->_sync;

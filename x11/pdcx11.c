@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.60 2006/04/23 01:48:52 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.61 2006/04/23 01:59:59 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -1335,10 +1335,6 @@ void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 void XCursesModifierPress(Widget w, XEvent *event, String *params, 
 			  Cardinal *nparams)
 {
-#define STATE_NORMAL   0
-#define STATE_COMPOSE  1
-#define STATE_CHAR     2
-
 #ifdef FOREIGN
 	wchar_t buffer[120];
 #else
@@ -1390,9 +1386,7 @@ void XCursesModifierPress(Widget w, XEvent *event, String *params,
 void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		     Cardinal *nparams)
 {
-#define STATE_NORMAL   0
-#define STATE_COMPOSE  1
-#define STATE_CHAR     2
+	enum { STATE_NORMAL, STATE_COMPOSE, STATE_CHAR };
 
 #ifdef FOREIGN
 	Status status;

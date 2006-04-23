@@ -34,7 +34,7 @@
 #undef PDC_leftline
 #undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.22 2006/04/23 03:30:36 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.23 2006/04/23 03:34:49 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -189,7 +189,7 @@ int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
 	win->_y[ymax][0] = bl;
 	win->_y[ymax][xmax] = br;
 
-	for (i = 0 i <= ymax; i++)
+	for (i = 0; i <= ymax; i++)
 	{
 		win->_firstch[i] = 0;
 		win->_lastch[i] = xmax;

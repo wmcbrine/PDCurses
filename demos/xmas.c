@@ -1,82 +1,82 @@
 /******************************************************************************/
-/* asciixmas                                                                  */
-/* December 1989             Larry Bartz           Indianapolis, IN           */
-/*                                                                            */
-/*                                                                            */
-/* I'm dreaming of an ascii character-based monochrome Christmas,             */
-/* Just like the one's I used to know!                                        */
-/* Via a full duplex communications channel,                                  */
-/* At 9600 bits per second,                                                   */
-/* Even though it's kinda slow.                                               */
-/*                                                                            */
-/* I'm dreaming of an ascii character-based monochrome Christmas,             */
-/* With ev'ry C program I write!                                              */
-/* May your screen be merry and bright!                                       */
-/* And may all your Christmases be amber or green,                            */
-/* (for reduced eyestrain and improved visibility)!                           */
-/*                                                                            */
-/*                                                                            */
-/*                                                                            */
-/*                                                                            */
-/*                                                                            */
-/* IMPLEMENTATION                                                             */
-/*                                                                            */
-/* Feel free to modify the defined string FROMWHO to reflect you, your        */
-/* organization, your site, whatever.                                         */
-/*                                                                            */
+/* asciixmas								      */
+/* December 1989	     Larry Bartz	   Indianapolis, IN	      */
+/*									      */
+/*									      */
+/* I'm dreaming of an ascii character-based monochrome Christmas,	      */
+/* Just like the one's I used to know!					      */
+/* Via a full duplex communications channel,				      */
+/* At 9600 bits per second,						      */
+/* Even though it's kinda slow.						      */
+/*									      */
+/* I'm dreaming of an ascii character-based monochrome Christmas,	      */
+/* With ev'ry C program I write!					      */
+/* May your screen be merry and bright!					      */
+/* And may all your Christmases be amber or green,			      */
+/* (for reduced eyestrain and improved visibility)!			      */
+/*									      */
+/*									      */
+/*									      */
+/*									      */
+/*									      */
+/* IMPLEMENTATION							      */
+/*									      */
+/* Feel free to modify the defined string FROMWHO to reflect you, your	      */
+/* organization, your site, whatever.					      */
+/*									      */
 /* This really looks a lot better if you can turn off your cursor before      */
-/* execution. I wanted to do that here but very few termcap entries or        */
+/* execution. I wanted to do that here but very few termcap entries or	      */
 /* terminfo definitions have the appropriate string defined. If you know      */
 /* the string(s) for the terminal(s) you use or which your site supports,     */
-/* you could call asciixmas from within a shell in which you issue the        */
+/* you could call asciixmas from within a shell in which you issue the	      */
 /* string to the terminal. The cursor is distracting but it doesn't really    */
-/* ruin the show.                                                             */
-/*                                                                            */
-/* At our site, we invoke this for our users just after login and the         */
-/* determination of terminal type.                                            */
-/*                                                                            */
-/*                                                                            */
-/* PORTABILITY                                                                */
-/*                                                                            */
+/* ruin the show.							      */
+/*									      */
+/* At our site, we invoke this for our users just after login and the	      */
+/* determination of terminal type.					      */
+/*									      */
+/*									      */
+/* PORTABILITY								      */
+/*									      */
 /* I wrote this using only the very simplest curses functions so that it      */
-/* might be the most portable. I was personally able to test on five          */
-/* different cpu/UNIX combinations.                                           */
-/*                                                                            */
-/*                                                                            */
-/* COMPILE                                                                    */
-/*                                                                            */
-/* usually this:                                                              */
-/*                                                                            */
-/* cc -O asciixmas.c -lcurses -o asciixmas -s                                 */
-/*                                                                            */
-/*                                                                            */
-/* Zilog S8000 models 11, 21, 31, etc with ZEUS variant of SYSTEM III         */
-/* maybe other SYSTEM III also:                                               */
-/*                                                                            */
-/* cc asciixmas.c -lcurses -ltermlib -o asciixmas -s                          */
-/*                                                                            */
-/* as above with optional "peephole optimizer" installed:                     */
-/*                                                                            */
-/* cc -O asciixmas.c -lcurses -ltermlib -o asciixmas -s                       */
-/*                                                                            */
-/*                                                                            */
-/* Zilog S8000 models 32, 130 with WE32100 chip and SYS V, REL2               */
-/* maybe 3B2 also?                                                            */
-/*                                                                            */
-/* cc -f -O -K sd asciixmas.c -lcurses -o asciixmas -s                        */
-/*                                                                            */
-/*                                                                            */
+/* might be the most portable. I was personally able to test on five	      */
+/* different cpu/UNIX combinations.					      */
+/*									      */
+/*									      */
+/* COMPILE								      */
+/*									      */
+/* usually this:							      */
+/*									      */
+/* cc -O asciixmas.c -lcurses -o asciixmas -s				      */
+/*									      */
+/*									      */
+/* Zilog S8000 models 11, 21, 31, etc with ZEUS variant of SYSTEM III	      */
+/* maybe other SYSTEM III also:						      */
+/*									      */
+/* cc asciixmas.c -lcurses -ltermlib -o asciixmas -s			      */
+/*									      */
+/* as above with optional "peephole optimizer" installed:		      */
+/*									      */
+/* cc -O asciixmas.c -lcurses -ltermlib -o asciixmas -s			      */
+/*									      */
+/*									      */
+/* Zilog S8000 models 32, 130 with WE32100 chip and SYS V, REL2		      */
+/* maybe 3B2 also?							      */
+/*									      */
+/* cc -f -O -K sd asciixmas.c -lcurses -o asciixmas -s			      */
+/*									      */
+/*									      */
 /* Pyramid, Sequent, any other "dual universe" types compile and execute      */
 /* under either universe. The compile line for the ucb universe (as you       */
-/* might expect) is the same as for SYS III UNIX:                             */
-/*                                                                            */
-/* cc -O asciixmas.c -lcurses -ltermlib -o asciixmas -s                       */
-/*                                                                            */
+/* might expect) is the same as for SYS III UNIX:			      */
+/*									      */
+/* cc -O asciixmas.c -lcurses -ltermlib -o asciixmas -s			      */
+/*									      */
 /* The above compile will also hold true for other BSD systems. (I hope)      */
-/*                                                                            */
+/*									      */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.21 2006/04/23 06:27:10 wmcbrine Exp $ */
+/* $Id: xmas.c,v 1.22 2006/04/23 20:19:11 wmcbrine Exp $ */
 
 /* NOMACROS makes a big difference in the size with PDCurses */
 

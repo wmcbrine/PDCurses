@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.65 2006/04/15 16:55:28 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.66 2006/04/23 01:40:05 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -189,25 +189,24 @@ extern bool trace_on;
 
 
 /* Monitor (terminal) type information */
-#define _NONE           0x00
-#define _MDA            0x01
-#define _CGA            0x02
-#define _EGACOLOR       0x04
-#define _EGAMONO        0x05
-#define _VGACOLOR       0x07
-#define _VGAMONO        0x08
-#define _MCGACOLOR      0x0a
-#define _MCGAMONO       0x0b
-#define _MDS_GENIUS     0x30
-#define _UNIX_COLOR     0x40
-#define _UNIX_MONO      0x41
+enum
+{
+	_NONE, _MDA, _CGA,
+	_EGACOLOR = 0x04, _EGAMONO,
+	_VGACOLOR = 0x07, _VGAMONO,
+	_MCGACOLOR = 0x0a, _MCGAMONO,
+	_MDS_GENIUS = 0x30,
+	_UNIX_COLOR = 0x40, _UNIX_MONO
+};
 
 /* Text-mode font size information */
-#define _FONT8  8
-#define _FONT14 14
-#define _FONT15 15              /* GENIUS */
-#define _FONT16 16
-
+enum
+{
+	_FONT8 = 8,
+	_FONT14 = 14,
+	_FONT15,	/* GENIUS */
+	_FONT16
+};
 
 /*----------------------------------------------------------------------
  *	ANSI C prototypes.
@@ -351,21 +350,14 @@ void PDC_debug(const char *, ...);
 #define TEMP_BUTTON_STATUS(x)	  (Temp_Mouse_status.button[(x) - 1])
 
 #ifdef XCURSES
-#define CURSES_EXIT			999999
-#define CURSES_REFRESH			999998
-#define CURSES_CHILD			999997
-#define CURSES_CURSOR			999996
-#define CURSES_CONTINUE			999995
-#define CURSES_BELL			999994
-#define CURSES_FLASH			999993
-#define CURSES_CLEAR			999992
-#define CURSES_RESIZE			999991
-#define CURSES_REFRESH_SCROLLBAR	999990
-#define CURSES_TITLE			999989
-#define CURSES_GET_SELECTION		999988
-#define CURSES_SET_SELECTION		999987
-#define CURSES_DISPLAY_CURSOR		999986
-#define CURSES_CLEAR_SELECTION		999985
+enum
+{
+	CURSES_CLEAR_SELECTION = 999985, CURSES_DISPLAY_CURSOR, 
+	CURSES_SET_SELECTION, CURSES_GET_SELECTION, CURSES_TITLE, 
+	CURSES_REFRESH_SCROLLBAR, CURSES_RESIZE, CURSES_CLEAR, 
+	CURSES_FLASH, CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, 
+	CURSES_CHILD, CURSES_REFRESH, CURSES_EXIT
+};
 #endif
 
 #endif /* __CURSES_INTERNALS__*/

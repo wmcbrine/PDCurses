@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.59 2006/04/13 17:19:43 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.60 2006/04/23 01:48:52 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -380,8 +380,6 @@ int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 };
 
 #define BITMAPDEPTH 1
-
-/* X11 Variables common to both process and thread ports */
 
 MOUSE_STATUS Trapped_Mouse_status;
 unsigned long pdc_key_modifier = 0L;
@@ -835,18 +833,6 @@ char global_display_name[100];		/* large enough for DISPLAY=machine */
 Bool after_first_curses_request = False;
 int colors[(2 * MAX_COLORS) + 2];
 Bool vertical_cursor = False;
-
-/* End X11 Variables common to both process and thread ports */
-
-#if NOT_USED
-#define SHM_CURSVAR         0
-#define SHM_CURSCR          1
-#define SHM_CURSCR_Y        2
-#define SHM_CURSCR_YY       3
-#define SHM_CURSCR_FIRSTCH  4
-#define SHM_CURSCR_LASTCH   5
-SCREEN *XSP;
-#endif
 
 #ifdef FOREIGN
 	XIM Xim;

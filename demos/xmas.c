@@ -17,8 +17,6 @@
 /*									      */
 /*									      */
 /*									      */
-/*									      */
-/*									      */
 /* IMPLEMENTATION							      */
 /*									      */
 /* Feel free to modify the defined string FROMWHO to reflect you, your	      */
@@ -47,36 +45,11 @@
 /*									      */
 /* usually this:							      */
 /*									      */
-/* cc -O asciixmas.c -lcurses -o asciixmas -s				      */
-/*									      */
-/*									      */
-/* Zilog S8000 models 11, 21, 31, etc with ZEUS variant of SYSTEM III	      */
-/* maybe other SYSTEM III also:						      */
-/*									      */
-/* cc asciixmas.c -lcurses -ltermlib -o asciixmas -s			      */
-/*									      */
-/* as above with optional "peephole optimizer" installed:		      */
-/*									      */
-/* cc -O asciixmas.c -lcurses -ltermlib -o asciixmas -s			      */
-/*									      */
-/*									      */
-/* Zilog S8000 models 32, 130 with WE32100 chip and SYS V, REL2		      */
-/* maybe 3B2 also?							      */
-/*									      */
-/* cc -f -O -K sd asciixmas.c -lcurses -o asciixmas -s			      */
-/*									      */
-/*									      */
-/* Pyramid, Sequent, any other "dual universe" types compile and execute      */
-/* under either universe. The compile line for the ucb universe (as you       */
-/* might expect) is the same as for SYS III UNIX:			      */
-/*									      */
-/* cc -O asciixmas.c -lcurses -ltermlib -o asciixmas -s			      */
-/*									      */
-/* The above compile will also hold true for other BSD systems. (I hope)      */
+/* cc -O xmas.c -lcurses -o xmas -s					      */
 /*									      */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.23 2006/04/24 02:59:55 wmcbrine Exp $ */
+/* $Id: xmas.c,v 1.24 2006/04/24 03:10:02 wmcbrine Exp $ */
 
 /* NOMACROS makes a big difference in the size with PDCurses */
 

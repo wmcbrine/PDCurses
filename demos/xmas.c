@@ -22,13 +22,8 @@
 /* Feel free to modify the defined string FROMWHO to reflect you, your	      */
 /* organization, your site, whatever.					      */
 /*									      */
-/* This really looks a lot better if you can turn off your cursor before      */
-/* execution. I wanted to do that here but very few termcap entries or	      */
-/* terminfo definitions have the appropriate string defined. If you know      */
-/* the string(s) for the terminal(s) you use or which your site supports,     */
-/* you could call asciixmas from within a shell in which you issue the	      */
-/* string to the terminal. The cursor is distracting but it doesn't really    */
-/* ruin the show.							      */
+/* This looks a lot better if you can turn off your cursor before execution.  */
+/* The cursor is distracting but it doesn't really ruin the show.	      */
 /*									      */
 /* At our site, we invoke this for our users just after login and the	      */
 /* determination of terminal type.					      */
@@ -49,7 +44,7 @@
 /*									      */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.24 2006/04/24 03:10:02 wmcbrine Exp $ */
+/* $Id: xmas.c,v 1.25 2006/04/24 03:14:45 wmcbrine Exp $ */
 
 /* NOMACROS makes a big difference in the size with PDCurses */
 

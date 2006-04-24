@@ -76,7 +76,7 @@
 /*									      */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.22 2006/04/23 20:19:11 wmcbrine Exp $ */
+/* $Id: xmas.c,v 1.23 2006/04/24 02:59:55 wmcbrine Exp $ */
 
 /* NOMACROS makes a big difference in the size with PDCurses */
 
@@ -853,33 +853,26 @@ void blinkit(void)
 	{
 	case 0:
 		overlay(treescrn3, treescrn8);
-		wrefresh(treescrn8);
-		wrefresh(w_del_msg);
 		break;
 
 	case 1:
 		overlay(treescrn4, treescrn8);
-		wrefresh(treescrn8);
-		wrefresh(w_del_msg);
 		break;
 
 	case 2:
 		overlay(treescrn5, treescrn8);
-		wrefresh(treescrn8);
-		wrefresh(w_del_msg);
 		break;
 
 	case 3:
 		overlay(treescrn6, treescrn8);
-		wrefresh(treescrn8);
-		wrefresh(w_del_msg);
 		break;
 
 	case 4:
 		overlay(treescrn7, treescrn8);
-		wrefresh(treescrn8);
-		wrefresh(w_del_msg);
 	}
+
+	wrefresh(treescrn8);
+	wrefresh(w_del_msg);
 
 	napms(50);
 	touchwin(treescrn8);
@@ -931,7 +924,6 @@ void reindeer(void)
 				wrefresh(w_del_msg);
 				werase(stardeer0);
 				wrefresh(stardeer0);
-				wrefresh(w_del_msg);
 			}
 			else
 			{
@@ -941,8 +933,8 @@ void reindeer(void)
 				wrefresh(w_del_msg);
 				werase(dotdeer0);
 				wrefresh(dotdeer0);
-				wrefresh(w_del_msg);
 			}
+			wrefresh(w_del_msg);
 		}
 	}
 

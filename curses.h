@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.167 2006/04/24 20:59:11 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.168 2006/04/24 21:07:43 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1640,11 +1640,10 @@ int	PDC_set_line_color(short);
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 
-enum
-{
-	PDC_CLIP_SUCCESS, PDC_CLIP_ACCESS_ERROR,
-	PDC_CLIP_EMPTY, PDC_CLIP_MEMORY_ERROR
-};
+#define	PDC_CLIP_SUCCESS	0
+#define PDC_CLIP_ACCESS_ERROR	1
+#define PDC_CLIP_EMPTY		2
+#define PDC_CLIP_MEMORY_ERROR	3
 
 /* PDCurses key modifier masks */
 

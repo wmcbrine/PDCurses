@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.66 2006/04/23 01:40:05 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.67 2006/04/25 21:09:25 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -83,14 +83,10 @@ extern Regs regs;
 #  ifdef __TURBOC__
 #   define _FAR_POINTER(s,o)	MK_FP(s,o)
 #  else
-#   ifdef MX386
+#   if (defined(__WATCOMC__) && defined(__FLAT__)) || defined(MX386)
 #    define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #   else
-#    if defined(__WATCOMC__) && defined(__FLAT__)
-#     define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
-#    else
-#     define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)
-#    endif
+#    define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)
 #   endif
 #  endif
 #  define _FP_SEGMENT(p)	(unsigned short)(((long)p) >> 4)

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.168 2006/04/24 21:07:43 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.169 2006/04/25 21:03:31 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -302,7 +302,6 @@ PDCurses portable platform definitions list:
 #ifdef MX386
 #  include <bios.h>
 #  ifdef DOS
-#    define MK_FP(seg,ofs)	( (((int) (seg)) << 4) + ((int) (ofs)) )
 #    ifdef __i860
 typedef void _int;
 #    else

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.67 2006/04/25 21:09:25 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.68 2006/04/25 22:43:12 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -94,30 +94,24 @@ extern Regs regs;
 # define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
 
 # ifdef __DJGPP__
-unsigned char getdosmembyte(int offs);	/* see: private\_dosmem.c */
+unsigned char getdosmembyte(int offs);
 unsigned short getdosmemword(int offs);
 void setdosmembyte(int offs, unsigned char b);
 void setdosmemword(int offs, unsigned short w);
 # else
 #  if SMALL || MEDIUM || MSC || defined(__PACIFIC__)
-#   define getdosmembyte(offs) \
-	(*((unsigned char far *) _FAR_POINTER(0,offs)))
-#   define getdosmemword(offs) \
-	(*((unsigned short far *) _FAR_POINTER(0,offs)))
-#   define setdosmembyte(offs,x) \
-	(*((unsigned char far *) _FAR_POINTER(0,offs)) = (x))
-#   define setdosmemword(offs,x) \
-	(*((unsigned short far *) _FAR_POINTER(0,offs)) = (x))
+#   define PDC_FAR far
 #  else
-#   define getdosmembyte(offs) \
-	(*((unsigned char *) _FAR_POINTER(0,offs)))
-#   define getdosmemword(offs) \
-	(*((unsigned short *) _FAR_POINTER(0,offs)))
-#   define setdosmembyte(offs,x) \
-	(*((unsigned char *) _FAR_POINTER(0,offs)) = (x))
-#   define setdosmemword(offs,x) \
-	(*((unsigned short *) _FAR_POINTER(0,offs)) = (x))
+#   define PDC_FAR
 #  endif
+#  define getdosmembyte(offs) \
+	(*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)))
+#  define getdosmemword(offs) \
+	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)))
+#  define setdosmembyte(offs,x) \
+	(*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+#  define setdosmemword(offs,x) \
+	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
 # endif
 #endif
 

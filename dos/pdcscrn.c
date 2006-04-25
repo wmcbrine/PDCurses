@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.27 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.28 2006/04/25 22:43:12 wmcbrine Exp $");
 
 static unsigned short *saved_screen = NULL;
 static int saved_lines = 0;
@@ -122,7 +122,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	internal->orig_attr	 = FALSE;
-	internal->orig_emulation = getdosmembyte (0x487);
+	internal->orig_emulation = getdosmembyte(0x487);
 
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
 

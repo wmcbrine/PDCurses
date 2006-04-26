@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.21 2006/03/29 19:50:14 wmcbrine Exp $
+ * $Id: tui.c,v 1.22 2006/04/26 23:50:32 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -50,7 +50,7 @@ void rmerror(void);
 #define th 1				/* title window height */
 #define mh 1				/* main menu height */
 #define sh 2				/* status window height */
-#define bh (LINES - th - mh - sh - 1)	/* body window height */
+#define bh (LINES - th - mh - sh)	/* body window height */
 #define bw COLS				/* body window width */
 
 

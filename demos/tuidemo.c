@@ -1,6 +1,6 @@
 /********************************* tuidemo.c ********************************/
 /*
- * $Id: tuidemo.c,v 1.14 2006/03/29 19:50:14 wmcbrine Exp $
+ * $Id: tuidemo.c,v 1.15 2006/04/26 23:55:38 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -9,8 +9,6 @@
  *          for the creation of (simple) menu-operated programs.
  *          In the PDCurses version, use is made of colors for the
  *          highlighting of subwindows (title bar, status bar etc).
- *          The program was tested using DJGPP 1.09 ('GO32') and
- *          Turbo C (2.0), as well as on a UNIX machine (HP-UX 8.07).
  *
  * Acknowledgement: some ideas were borrowed from Mark Hessling's
  *                  version of the 'testcurs' program.
@@ -82,7 +80,7 @@ void showfile(char *fname)
 
 	statusmsg("FileBrowser: Hit key to continue, Q to quit");
 
-	if ((fp = fopen (fname, "r")) != NULL)	/* file available? */
+	if ((fp = fopen(fname, "r")) != NULL)	/* file available? */
 	{
 		while (!ateof)
 		{
@@ -108,7 +106,7 @@ void showfile(char *fname)
 			}
 		}
 
-		fclose (fp);
+		fclose(fp);
 	}
 	else
 	{

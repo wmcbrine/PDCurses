@@ -37,7 +37,7 @@
 # undef mvwinch
 #endif
 
-RCSID("$Id: instr.c,v 1.18 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.19 2006/05/02 17:17:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -64,10 +64,10 @@ RCSID("$Id: instr.c,v 1.18 2006/03/29 20:06:41 wmcbrine Exp $");
 	mvwinstr() and mvwinnstr() are all macros.
 
   X/Open Return Value:
-	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
+	Upon successful completion, innstr(), mvinnstr(), mvwinnstr() 
+	and winnstr() return the number of characters actually read into
+	the string; instr(), mvinstr(), mvwinstr() and winstr() return 
+	OK. Otherwise, all these functions return ERR.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88
@@ -86,7 +86,7 @@ int instr(char *str)
 {
 	PDC_LOG(("instr() - called: string=\"%s\"\n", str));
 
-	return winnstr(stdscr, str, stdscr->_maxx);
+	return (ERR == winnstr(stdscr, str, stdscr->_maxx)) ? ERR : OK;
 }
 
 int innstr(char *str, int n)
@@ -100,7 +100,7 @@ int winstr(WINDOW *win, char *str)
 {
 	PDC_LOG(("winstr() - called: \n"));
 
-	return winnstr(win, str, win->_maxx);
+	return (ERR == winnstr(win, str, win->_maxx)) ? ERR : OK;
 }
 
 int winnstr(WINDOW *win, char *str, int n)
@@ -126,18 +126,18 @@ int winnstr(WINDOW *win, char *str, int n)
 
 		if (tmp == (chtype)ERR) 
 		{
-			str[imax] = '\0';
+			str[ic] = '\0';
 			return ERR;
 		}
 
 		str[ic] = tmp & A_CHARTEXT;
 	}
 
-	str[imax] = '\0';
+	str[ic] = '\0';
 
 	win->_curx = oldx;
 
-	return OK;
+	return ic;
 }
 
 int mvinstr(int y, int x, char *str)
@@ -147,7 +147,7 @@ int mvinstr(int y, int x, char *str)
 	if (move(y, x) == ERR)
 		return ERR;
 
-	return winnstr(stdscr, str, stdscr->_maxx);
+	return (ERR == winnstr(stdscr, str, stdscr->_maxx)) ? ERR : OK;
 }
 
 int mvinnstr(int y, int x, char *str, int n)
@@ -167,7 +167,7 @@ int mvwinstr(WINDOW *win, int y, int x, char *str)
 	if (wmove(win, y, x) == ERR)
 		return ERR;
 
-	return winnstr(win, str, win->_maxx);
+	return (ERR == winnstr(win, str, win->_maxx)) ? ERR : OK;
 }
 
 int mvwinnstr(WINDOW *win, int y, int x, char *str, int n)

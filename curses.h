@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.169 2006/04/25 21:03:31 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.170 2006/05/02 17:17:25 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1548,7 +1548,6 @@ int	PDC_set_line_color(short);
 # define insertln()		winsertln(stdscr)
 # define insnstr(s, n)		winsnstr(stdscr, s, n)
 # define insstr(s)		winsnstr(stdscr, s, -1)
-# define instr(str)		winnstr(stdscr, str, stdscr->_maxx)
 # define isendwin()		(SP->alive ? FALSE : TRUE)
 # define mvaddch(y, x, c)	(move(y, x)==ERR?ERR:addch(c))
 # define mvaddchstr(y, x, c)	(move(y, x)==ERR?ERR:addchnstr(c, -1))
@@ -1567,8 +1566,6 @@ int	PDC_set_line_color(short);
 # define mvinsch(y,x,c)		(move(y, x)==ERR?ERR:winsch(stdscr, c))
 # define mvinsnstr(y, x, s, n)	(move(y, x)==ERR?ERR:winsnstr(stdscr, s, n))
 # define mvinsstr(y, x, s)	(move(y, x)==ERR?ERR:winsnstr(stdscr, s, -1))
-# define mvinstr(y, x, str)	(move(y, x)==ERR?ERR:winnstr(stdscr,\
-					str, stdscr->_maxx))
 # define mvinnstr(y, x, str, n)	(move(y, x)==ERR?ERR:winnstr(stdscr, str, n))
 # define mvvline(y, x, c, n)	(move(y, x)==ERR?ERR:vline(c, n))
 # define mvwaddch(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:waddch(w, c))
@@ -1585,8 +1582,6 @@ int	PDC_set_line_color(short);
 					c, (w)->_maxx - (w)->_curx))
 # define mvwinchnstr(w,y,x,c,n)	(wmove(w, y, x)==ERR?ERR:winchnstr(w, c, n))
 # define mvwinsch(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:winsch(w, c))
-# define mvwinstr(w, y, x, str)	(wmove(w, y, x)==ERR?ERR:winnstr(w,\
-					str, (w)->_maxx))
 # define mvwinnstr(w,y,x,str,n)	(wmove(w, y, x)==ERR?ERR:winnstr(w, str, n))
 # define mvwinsnstr(w,y,x,s,n)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, n))
 # define mvwinsstr(w, y, x, s)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, -1))
@@ -1611,7 +1606,6 @@ int	PDC_set_line_color(short);
 # define winch(w)		((w)->_y[(w)->_cury][(w)->_curx])
 # define winchstr(w, c)		winchnstr(w, c, (w)->_maxx - (w)->_curx)
 # define winsstr(w, str)	winsnstr(w, str, -1)
-# define winstr(w, str)		winnstr(w, str, (w)->_maxx)
 # define wstandend(w)		wattrset(w, A_NORMAL)
 # define wstandout(w)		wattrset(w, A_STANDOUT)
 

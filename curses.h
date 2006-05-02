@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.170 2006/05/02 17:17:25 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.171 2006/05/02 17:21:02 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1542,7 +1542,6 @@ int	PDC_set_line_color(short);
 # define has_colors()           (SP->mono ? FALSE : TRUE)
 # define inch()			(stdscr->_y[stdscr->_cury][stdscr->_curx])
 # define inchstr(c)		inchnstr(c, stdscr->_maxx - stdscr->_curx)
-# define innstr(str, n)		winnstr(stdscr, str, n)
 # define insch(c)		winsch(stdscr, c)
 # define insdelln(n)		winsdelln(stdscr, n)
 # define insertln()		winsertln(stdscr)
@@ -1566,7 +1565,6 @@ int	PDC_set_line_color(short);
 # define mvinsch(y,x,c)		(move(y, x)==ERR?ERR:winsch(stdscr, c))
 # define mvinsnstr(y, x, s, n)	(move(y, x)==ERR?ERR:winsnstr(stdscr, s, n))
 # define mvinsstr(y, x, s)	(move(y, x)==ERR?ERR:winsnstr(stdscr, s, -1))
-# define mvinnstr(y, x, str, n)	(move(y, x)==ERR?ERR:winnstr(stdscr, str, n))
 # define mvvline(y, x, c, n)	(move(y, x)==ERR?ERR:vline(c, n))
 # define mvwaddch(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:waddch(w, c))
 # define mvwaddchstr(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddchnstr(w, c, -1))
@@ -1582,7 +1580,6 @@ int	PDC_set_line_color(short);
 					c, (w)->_maxx - (w)->_curx))
 # define mvwinchnstr(w,y,x,c,n)	(wmove(w, y, x)==ERR?ERR:winchnstr(w, c, n))
 # define mvwinsch(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:winsch(w, c))
-# define mvwinnstr(w,y,x,str,n)	(wmove(w, y, x)==ERR?ERR:winnstr(w, str, n))
 # define mvwinsnstr(w,y,x,s,n)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, n))
 # define mvwinsstr(w, y, x, s)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, -1))
 # define mvwvline(w,y,x,c,n)	(wmove(w, y, x)==ERR?ERR:wvline(w, c, n))

@@ -37,7 +37,7 @@
 # undef mvwinch
 #endif
 
-RCSID("$Id: instr.c,v 1.19 2006/05/02 17:17:27 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.20 2006/05/02 17:21:02 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -59,9 +59,6 @@ RCSID("$Id: instr.c,v 1.19 2006/05/02 17:17:27 wmcbrine Exp $");
 	the right margin of the window.  Attributes are stripped from 
 	the characters. The four functions with n as the last argument 
 	return the string at most n characters long.
-
-	Note: instr(), innstr(), winstr(), mvinstr(), mvinnstr(),
-	mvwinstr() and mvwinnstr() are all macros.
 
   X/Open Return Value:
 	Upon successful completion, innstr(), mvinnstr(), mvwinnstr() 

@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.45 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.46 2006/05/03 17:30:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -191,7 +191,7 @@ bool has_colors(void)
 {
 	PDC_LOG(("has_colors() - called\n"));
 
-	return SP->mono ? FALSE : TRUE;
+	return !(SP->mono);
 }
 
 int init_color(short color, short red, short green, short blue)
@@ -225,8 +225,7 @@ bool can_change_color(void)
 	return FALSE;
 }
 
-int pair_content(short colorpair, short *foreground,
-			   short *background)
+int pair_content(short colorpair, short *foreground, short *background)
 {
 	PDC_LOG(("pair_content() - called\n"));
 

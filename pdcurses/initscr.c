@@ -41,7 +41,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.41 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.42 2006/05/03 17:35:39 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 
@@ -358,7 +358,7 @@ bool isendwin(void)
 {
 	PDC_LOG(("isendwin() - called\n"));
 
-	return SP->alive ? FALSE : TRUE;
+	return !(SP->alive);
 }
 
 SCREEN *newterm(char *type, FILE *outfd, FILE *infd)

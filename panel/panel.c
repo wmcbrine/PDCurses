@@ -24,9 +24,9 @@
 #include <panel.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.20 2006/06/02 02:21:39 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.21 2006/06/02 02:39:34 wmcbrine Exp $");
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   panels	- panel package for curses
 
@@ -61,7 +61,7 @@ RCSID("$Id: panel.c,v 1.20 2006/06/02 02:21:39 wmcbrine Exp $");
 	Original Author - Warren Tucker N4HGF
 	{gatech,emory}!n4hgf!wht -or- wht@n4hgf.Mt-Park.GA.US
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 /*
   Public functions:
@@ -97,7 +97,8 @@ RCSID("$Id: panel.c,v 1.20 2006/06/02 02:21:39 wmcbrine Exp $");
 	dStack(fmt, num, pan)
 	open_dfp()
 
---------------------------------------------------------------------------*/
+------------------------------------------------------------------------*/
+
 PANEL *__bottom_panel = (PANEL *)0;
 PANEL *__top_panel = (PANEL *)0;
 PANEL __stdscr_pseudo_panel = { (WINDOW *)0 };
@@ -113,9 +114,6 @@ static void __panel_unlink(PANEL *);
 
 #ifdef PANEL_DEBUG
 
-/*+-------------------------------------------------------------------------
-	dPanel(text, pan)
---------------------------------------------------------------------------*/
 static void dPanel(char *text, PANEL *pan)
 {
 	_tracef("%s id=%s b=%s a=%s y=%d x=%d",
@@ -125,9 +123,6 @@ static void dPanel(char *text, PANEL *pan)
 		pan->wstarty, pan->wstartx);
 }
 
-/*+-------------------------------------------------------------------------
-	dStack(fmt, num, pan)
---------------------------------------------------------------------------*/
 static void dStack(char *fmt, int num, PANEL *pan)
 {
 	char s80[80];
@@ -149,27 +144,22 @@ static void dStack(char *fmt, int num, PANEL *pan)
 	}
 }
 
-/*+-------------------------------------------------------------------------
-	Wnoutrefresh(pan) - debugging hook for wnoutrefresh
---------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*
+ *	Wnoutrefresh(pan) - debugging hook for wnoutrefresh		*
+ *----------------------------------------------------------------------*/
+
 static void Wnoutrefresh(PANEL *pan)
 {
 	dPanel("wnoutrefresh", pan);
 	wnoutrefresh(pan->win);
 }
 
-/*+-------------------------------------------------------------------------
-	Touchpan(pan)
---------------------------------------------------------------------------*/
 static void Touchpan(PANEL *pan)
 {
 	dPanel("Touchpan", pan);
 	touchwin(pan->win);
 }
 
-/*+-------------------------------------------------------------------------
-	Touchline(pan, start, count)
---------------------------------------------------------------------------*/
 static void Touchline(PANEL *pan, int start, int count)
 {
 	char s80[80];
@@ -189,9 +179,10 @@ static void Touchline(PANEL *pan, int start, int count)
 
 #endif	/* PANEL_DEBUG */
 
-/*+-------------------------------------------------------------------------
-	__panels_overlapped(pan1, pan2) - check panel overlapped
---------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*
+ *	__panels_overlapped(pan1, pan2) - check panel overlapped	*
+ *----------------------------------------------------------------------*/
+
 static bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
 {
 	if (!pan1 || !pan2)
@@ -205,9 +196,6 @@ static bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
 		pan1->wendx));
 }
 
-/*+-------------------------------------------------------------------------
-	__free_obscure(pan)
---------------------------------------------------------------------------*/
 static void __free_obscure(PANEL *pan)
 {
 	PANELOBS *tobs = pan->obscure;		/* "this" one */
@@ -222,9 +210,6 @@ static void __free_obscure(PANEL *pan)
 	pan->obscure = (PANELOBS *)0;
 }
 
-/*+-------------------------------------------------------------------------
-	__override(pan, show)
---------------------------------------------------------------------------*/
 static void __override(PANEL *pan, int show)
 {
 	int y;
@@ -256,9 +241,6 @@ static void __override(PANEL *pan, int show)
 	}
 }
 
-/*+-------------------------------------------------------------------------
-	__calculate_obscure()
---------------------------------------------------------------------------*/
 static void __calculate_obscure(void)
 {
 	PANEL *pan;
@@ -304,9 +286,10 @@ static void __calculate_obscure(void)
 	}
 }
 
-/*+-------------------------------------------------------------------------
-	__panel_is_linked(pan) - check to see if panel is in the stack
---------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*
+ *	__panel_is_linked(pan) - check to see if panel is in the stack	*
+ *----------------------------------------------------------------------*/
+
 static bool __panel_is_linked(const PANEL *pan)
 {
 	PANEL *pan2 = __bottom_panel;
@@ -322,9 +305,10 @@ static bool __panel_is_linked(const PANEL *pan)
 	return FALSE;
 }
 
-/*+-------------------------------------------------------------------------
-	__panel_link_top(pan) - link panel into stack at top
---------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*
+ *	__panel_link_top(pan) - link panel into stack at top		*
+ *----------------------------------------------------------------------*/
+
 static void __panel_link_top(PANEL *pan)
 {
 #ifdef PANEL_DEBUG
@@ -350,9 +334,10 @@ static void __panel_link_top(PANEL *pan)
 	dStack("<lt%d>", 9, pan);
 }
 
-/*+-------------------------------------------------------------------------
-	__panel_link_bottom(pan) - link panel into stack at bottom
---------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*
+ *	__panel_link_bottom(pan) - link panel into stack at bottom	*
+ *----------------------------------------------------------------------*/
+
 static void __panel_link_bottom(PANEL *pan)
 {
 #ifdef PANEL_DEBUG
@@ -378,9 +363,10 @@ static void __panel_link_bottom(PANEL *pan)
 	dStack("<lb%d>", 9, pan);
 }
 
-/*+-------------------------------------------------------------------------
-	__panel_unlink(pan) - unlink panel from stack
---------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*
+ *	__panel_unlink(pan) - unlink panel from stack			*
+ *----------------------------------------------------------------------*/
+
 static void __panel_unlink(PANEL *pan)
 {
 	PANEL *prev;
@@ -422,11 +408,11 @@ static void __panel_unlink(PANEL *pan)
 
 }
 
-/**********************************************************************/
-/* The following are the public functions for the panels library.     */
-/**********************************************************************/
+/************************************************************************
+ *   The following are the public functions for the panels library.     *
+ ************************************************************************/
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   bottom_panel	- puts panel at bottom of deck
 
@@ -444,7 +430,7 @@ static void __panel_unlink(PANEL *pan)
 	PDCurses	int bottom_panel(PANEL *pan);
 	SYS V Curses	int bottom_panel(PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int bottom_panel(PANEL *pan)
 {
@@ -462,7 +448,7 @@ int bottom_panel(PANEL *pan)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   del_panel	- deletes a panel
 
@@ -479,7 +465,7 @@ int bottom_panel(PANEL *pan)
 	PDCurses	int del_panel(PANEL *pan);
 	SYS V Curses	int del_panel(PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int del_panel(PANEL *pan)
 {
@@ -495,7 +481,7 @@ int del_panel(PANEL *pan)
 	return ERR;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   hide_panel	- removes a panel from the deck
 
@@ -513,7 +499,7 @@ int del_panel(PANEL *pan)
 	PDCurses	int hide_panel(PANEL *pan);
 	SYS V Curses	int hide_panel(PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int hide_panel(PANEL *pan)
 {
@@ -532,7 +518,7 @@ int hide_panel(PANEL *pan)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   move_panel	- move a window on the virtual screen
 
@@ -552,7 +538,7 @@ int hide_panel(PANEL *pan)
 	PDCurses	int move_panel(PANEL *pan, int starty, int startx);
 	SYS V Curses	int move_panel(PANEL *pan, int starty, int startx);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int move_panel(PANEL *pan, int starty, int startx)
 {
@@ -581,7 +567,7 @@ int move_panel(PANEL *pan, int starty, int startx)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   new_panel	- create a new panel
 
@@ -599,7 +585,7 @@ int move_panel(PANEL *pan, int starty, int startx)
 	PDCurses	PANEL *new_panel(WINDOW *win);
 	SYS V Curses	PANEL *new_panel(WINDOW *win);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 PANEL *new_panel(WINDOW *win)
 {
@@ -639,7 +625,7 @@ PANEL *new_panel(WINDOW *win)
 	return pan;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   panel_above	- return pointer to panel above
 
@@ -659,14 +645,14 @@ PANEL *new_panel(WINDOW *win)
 	PDCurses	PANEL *panel_above(const PANEL *pan);
 	SYS V Curses	PANEL *panel_above(const PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 PANEL *panel_above(const PANEL *pan)
 {
 	return pan ? pan->above : __bottom_panel;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   panel_below	- return pointer to panel below
 
@@ -686,14 +672,14 @@ PANEL *panel_above(const PANEL *pan)
 	PDCurses	PANEL *panel_below(const PANEL *pan);
 	SYS V Curses	PANEL *panel_below(const PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 PANEL *panel_below(const PANEL *pan)
 {
 	return pan ? pan->below : __top_panel;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   panel_hidden	- indicates if panel is hidden
 
@@ -710,7 +696,7 @@ PANEL *panel_below(const PANEL *pan)
 	PDCurses	int panel_hidden(const PANEL *pan);
 	SYS V Curses	int panel_hidden(const PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int panel_hidden(const PANEL *pan)
 {
@@ -720,7 +706,7 @@ int panel_hidden(const PANEL *pan)
 	return __panel_is_linked(pan) ? ERR : OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   panel_userptr	- return user information
 
@@ -739,14 +725,14 @@ int panel_hidden(const PANEL *pan)
 	PDCurses	const void *panel_userptr(const PANEL *pan);
 	SYS V Curses	const void *panel_userptr(const PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 const void *panel_userptr(const PANEL *pan)
 {
 	return pan ? pan->user : NULL;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   panel_window	- returns pointer to curses window
 
@@ -764,7 +750,7 @@ const void *panel_userptr(const PANEL *pan)
 	PDCurses	WINDOW *panel_window(const PANEL *);
 	SYS V Curses	WINDOW *panel_window(const PANEL *);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 WINDOW *panel_window(const PANEL *pan)
 {
@@ -773,7 +759,7 @@ WINDOW *panel_window(const PANEL *pan)
 	return pan->win;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   replace_panel	- set curses window contents
 
@@ -790,7 +776,7 @@ WINDOW *panel_window(const PANEL *pan)
 	PDCurses	int replace_panel(PANEL *pan, WINDOW *win);
 	SYS V Curses	int replace_panel(PANEL *pan, WINDOW *win);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int replace_panel(PANEL *pan, WINDOW *win)
 {
@@ -814,7 +800,7 @@ int replace_panel(PANEL *pan, WINDOW *win)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   set_panel_userptr	- sets user information for a panel
 
@@ -832,7 +818,7 @@ int replace_panel(PANEL *pan, WINDOW *win)
 	PDCurses	int set_panel_userptr(PANEL *pan, const void *uptr);
 	SYS V Curses	int set_panel_userptr(PANEL *pan, const void *uptr);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int set_panel_userptr(PANEL *pan, const void *uptr)
 {
@@ -843,7 +829,7 @@ int set_panel_userptr(PANEL *pan, const void *uptr)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   show_panel	- displays a panel
 
@@ -861,7 +847,7 @@ int set_panel_userptr(PANEL *pan, const void *uptr)
 	PDCurses	int show_panel(PANEL *pan);
 	SYS V Curses	int show_panel(PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int show_panel(PANEL *pan)
 {
@@ -879,13 +865,13 @@ int show_panel(PANEL *pan)
 	return OK;
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   top_panel	- puts panel on top of deck
 
   PDCurses Description:
-	This function places pan on the top of the deck. The size, location
-	and contents of the panel are unchanged.
+	This function places pan on the top of the deck. The size, 
+	location and contents of the panel are unchanged.
 
   PDCurses Return Value:
 	Returns OK or ERR.
@@ -897,14 +883,14 @@ int show_panel(PANEL *pan)
 	PDCurses	int top_panel(PANEL *pan);
 	SYS V Curses	int top_panel(PANEL *pan);
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 int top_panel(PANEL *pan)
 {
 	return show_panel(pan);
 }
 
-/*man-start*********************************************************************
+/*man-start**************************************************************
 
   update_panels	- panels virtual screen refresh routine
 
@@ -923,7 +909,7 @@ int top_panel(PANEL *pan)
 	PDCurses	void update_panels(void)
 	SYS V Curses	void update_panels(void)
 
-**man-end**********************************************************************/
+**man-end****************************************************************/
 
 void update_panels(void)
 {

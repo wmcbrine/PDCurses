@@ -24,10 +24,7 @@
 #include <panel.h>
 #include <stdlib.h>
 
-#ifdef PDCDEBUG
-const char *rcsid_panel =
-	"$Id: panel.c,v 1.19 2006/03/01 08:04:34 wmcbrine Exp $";
-#endif
+RCSID("$Id: panel.c,v 1.20 2006/06/02 02:21:39 wmcbrine Exp $");
 
 /*man-start*********************************************************************
 

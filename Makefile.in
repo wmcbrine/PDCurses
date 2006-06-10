@@ -37,7 +37,7 @@ realclean ::
 	cd demos; $(MAKE) $(MFLAGS) $@
 	cd tools; $(MAKE) $(MFLAGS) $@
 
-install:
+install ::
 	$(INSTALL) -d -m 755 $(libdir)
 	$(INSTALL) -d -m 755 $(bindir)
 	$(INSTALL) -d -m 755 $(includedir)

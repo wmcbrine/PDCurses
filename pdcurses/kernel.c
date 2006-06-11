@@ -48,6 +48,10 @@
 # endif
 #endif
 
+#ifdef __EMX__
+# include <stdlib.h>
+#endif
+
 #if defined(OS2) && !defined(__EMX__)
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
@@ -69,7 +73,7 @@ APIRET APIENTRY DosSleep(ULONG ulTime);
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.43 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.44 2006/06/11 19:22:48 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;

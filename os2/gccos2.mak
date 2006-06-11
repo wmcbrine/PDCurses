@@ -139,293 +139,293 @@ panel.lib : panel.a
 
 
 addch.o: $(srcdir)\addch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addch.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 addchstr.o: $(srcdir)\addchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addchstr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 addstr.o: $(srcdir)\addstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addstr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 attr.o: $(srcdir)\attr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\attr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 beep.o: $(srcdir)\beep.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\beep.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 bkgd.o: $(srcdir)\bkgd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\bkgd.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 border.o: $(srcdir)\border.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\border.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 clear.o: $(srcdir)\clear.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\clear.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 color.o: $(srcdir)\color.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\color.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 delch.o: $(srcdir)\delch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\delch.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 deleteln.o: $(srcdir)\deleteln.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\deleteln.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 getch.o: $(srcdir)\getch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\getch.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 getstr.o: $(srcdir)\getstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\getstr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 getyx.o: $(srcdir)\getyx.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\getyx.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 inch.o: $(srcdir)\inch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\inch.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 inchstr.o: $(srcdir)\inchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\inchstr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 initscr.o: $(srcdir)\initscr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\initscr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 inopts.o: $(srcdir)\inopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\inopts.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 insch.o: $(srcdir)\insch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\insch.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 insstr.o: $(srcdir)\insstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\insstr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 instr.o: $(srcdir)\instr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\instr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 kernel.o: $(srcdir)\kernel.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\kernel.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 mouse.o: $(srcdir)\mouse.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\mouse.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 move.o: $(srcdir)\move.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\move.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 outopts.o: $(srcdir)\outopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\outopts.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 overlay.o: $(srcdir)\overlay.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\overlay.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pad.o: $(srcdir)\pad.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pad.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 printw.o: $(srcdir)\printw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\printw.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 refresh.o: $(srcdir)\refresh.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\refresh.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 scanw.o: $(srcdir)\scanw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\scanw.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 scr_dump.o: $(srcdir)\scr_dump.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\scr_dump.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 scroll.o: $(srcdir)\scroll.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\scroll.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 slk.o: $(srcdir)\slk.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\slk.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 termattr.o: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\termattr.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 terminfo.o: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\terminfo.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 touch.o: $(srcdir)\touch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\touch.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 util.o: $(srcdir)\util.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\util.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 window.o: $(srcdir)\window.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\window.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 
 pdcclip.o: $(osdir)\pdcclip.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcclip.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdcdebug.o: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcdebug.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdcdisp.o: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcdisp.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdcgetsc.o: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcgetsc.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdckbd.o: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdckbd.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdcscrn.o: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcscrn.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdcsetsc.o: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcsetsc.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdcutil.o: $(srcdir)\pdcutil.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcutil.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 pdcwin.o: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcwin.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 addch.dlo: $(srcdir)\addch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\addch.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 addchstr.dlo: $(srcdir)\addchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\addchstr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 addstr.dlo: $(srcdir)\addstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\addstr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 attr.dlo: $(srcdir)\attr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\attr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 beep.dlo: $(srcdir)\beep.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\beep.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 bkgd.dlo: $(srcdir)\bkgd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\bkgd.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 border.dlo: $(srcdir)\border.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\border.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 clear.dlo: $(srcdir)\clear.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\clear.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 color.dlo: $(srcdir)\color.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\color.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 delch.dlo: $(srcdir)\delch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\delch.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 deleteln.dlo: $(srcdir)\deleteln.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\deleteln.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 getch.dlo: $(srcdir)\getch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\getch.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 getstr.dlo: $(srcdir)\getstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\getstr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 getyx.dlo: $(srcdir)\getyx.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\getyx.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 inch.dlo: $(srcdir)\inch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\inch.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 inchstr.dlo: $(srcdir)\inchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\inchstr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 initscr.dlo: $(srcdir)\initscr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\initscr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 inopts.dlo: $(srcdir)\inopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\inopts.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 insch.dlo: $(srcdir)\insch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\insch.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 insstr.dlo: $(srcdir)\insstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\insstr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 instr.dlo: $(srcdir)\instr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\instr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 kernel.dlo: $(srcdir)\kernel.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\kernel.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 mouse.dlo: $(srcdir)\mouse.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\mouse.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 move.dlo: $(srcdir)\move.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\move.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 outopts.dlo: $(srcdir)\outopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\outopts.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 overlay.dlo: $(srcdir)\overlay.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\overlay.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pad.dlo: $(srcdir)\pad.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\pad.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 printw.dlo: $(srcdir)\printw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\printw.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 refresh.dlo: $(srcdir)\refresh.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\refresh.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 scanw.dlo: $(srcdir)\scanw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\scanw.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 scr_dump.dlo: $(srcdir)\scr_dump.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\scr_dump.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 scroll.dlo: $(srcdir)\scroll.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\scroll.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 slk.dlo: $(srcdir)\slk.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\slk.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 termattr.dlo: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\termattr.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 terminfo.dlo: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\terminfo.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
-touch.dlo: $(srcdir)\touch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\touch.c
+touch.dlo: (srcdir)\touch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 util.dlo: $(srcdir)\util.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\util.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 window.dlo: $(srcdir)\window.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\window.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 
 pdcclip.dlo: $(osdir)\pdcclip.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(osdir)\pdcclip.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcdebug.dlo: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\pdcdebug.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcdisp.dlo: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(osdir)\pdcdisp.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcgetsc.dlo: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(osdir)\pdcgetsc.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdckbd.dlo: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(osdir)\pdckbd.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcscrn.dlo: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(osdir)\pdcscrn.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcsetsc.dlo: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(osdir)\pdcsetsc.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcutil.dlo: $(srcdir)\pdcutil.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\pdcutil.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcwin.dlo: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $(srcdir)\pdcwin.c
+	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 #------------------------------------------------------------------------
 
 panel.o: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
-	$(CC) $(CCFLAGS) -o$@ $(pandir)\panel.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 #------------------------------------------------------------------------
 
@@ -467,34 +467,34 @@ testcurs_dyn.exe:	testcurs.obj curses.dll
 	$(EMXBIND) testcurs_dyn $(BINDFLAGS)
 
 firework.o: $(demodir)\firework.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\firework.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 newdemo.o: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\newdemo.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 ptest.o: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\ptest.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 rain.o: $(demodir)\rain.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\rain.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 testcurs.o: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\testcurs.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -Zomf -o$@ $(demodir)\testcurs.c
+	$(CC) $(CCFLAGS) -Zomf -o$@ $<
 
 tui.o: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $(demodir)\tui.c
-                               
+	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $<
+
 tuidemo.o: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $(demodir)\tuidemo.c
+	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $<
 
 worm.o: $(demodir)\worm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\worm.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 xmas.o: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
+	$(CC) $(CCFLAGS) -o$@ $<
 
 dist: $(PDCLIBS)
 	echo PDCurses $(VERDOT) for EMX OS/2 > file_id.diz

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.173 2006/06/15 17:29:09 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.174 2006/06/15 17:50:39 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -822,7 +822,7 @@ currently used.)
 /* VT100-compatible symbols -- other */
 
 #ifdef UNICODE
-# define ACS_S1		(chtype)0x2594
+# define ACS_S1		(chtype)0x2500
 # define ACS_S9		(chtype)0x005f
 # define ACS_DIAMOND	(chtype)0x2666
 # define ACS_CKBOARD	(chtype)0x2592

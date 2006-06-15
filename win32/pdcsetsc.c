@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.17 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.18 2006/06/15 12:33:27 wmcbrine Exp $");
 
 extern HANDLE hConOut;
 
@@ -190,6 +190,6 @@ void PDC_set_title(const char *title)
 {
 	PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
 
-	SetConsoleTitle(title);
+	SetConsoleTitleA(title);
 	return;
 }

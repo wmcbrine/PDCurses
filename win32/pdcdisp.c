@@ -24,7 +24,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.22 2006/06/15 12:33:27 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.23 2006/06/15 17:29:10 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -189,7 +189,7 @@ int PDC_gotoxy(int row, int col)
 int PDC_putc(chtype character, chtype color)
 {
 	int curRow, curCol;
-	WORD buffer[2];
+	TCHAR buffer;
 	COORD coord;
 	DWORD written;
 
@@ -201,12 +201,11 @@ int PDC_putc(chtype character, chtype color)
 	coord.X = curCol;
 	coord.Y = curRow;
 #if 0
-	buffer[0] = color;
+	buffer = color;
 	WriteConsoleOutputAttribute(hConOut, &buffer, 1, coord, &written);
 #endif
-	buffer[0] = character;
-	WriteConsoleOutputCharacter(hConOut, (char*)&buffer[0], 1, 
-		coord, &written);
+	buffer = character;
+	WriteConsoleOutputCharacter(hConOut, &buffer, 1, coord, &written);
 
 	return OK;
 }
@@ -237,26 +236,7 @@ int PDC_putc(chtype character, chtype color)
 
 int PDC_putctty(chtype character, chtype color)
 {
-	int curRow, curCol;
-	WORD buffer;
-	COORD coord;
-	DWORD written;
-
-	PDC_LOG(("PDC_putctty() - called\n"));
-
-	PDC_get_cursor_pos(&curRow, &curCol);
-
-	coord.X = curCol;
-	coord.Y = curRow;
-#if 0
-	buffer = color;
-	WriteConsoleOutputAttribute(hConOut, &buffer, 1, coord, &written);
-#endif
-	buffer = character;
-	WriteConsoleOutputCharacter(hConOut, (char*)&buffer, 1,
-		coord, &written);
-
-	return OK;
+	return PDC_putc(character, color);
 }
 
 /*man-start**************************************************************

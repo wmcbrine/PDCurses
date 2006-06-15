@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.61 2006/04/23 01:59:59 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.62 2006/06/15 13:03:06 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -922,7 +922,11 @@ RETSIGTYPE XCursesSigwinchHandler(int signo)
 }
 
 static int XCursesNewPacket(chtype attr, bool rev, int len,
+#ifdef UNICODE
+			    int col, int row, XChar2b *text)
+#else
 			    int col, int row, char *text)
+#endif
 {
 	GC gc;
 	int pair_num, xpos, ypos;
@@ -939,7 +943,12 @@ static int XCursesNewPacket(chtype attr, bool rev, int len,
 		back = COLOR_BLACK;
 	}
 
+#ifdef UNICODE
+	text[len].byte1 = 0;
+	text[len].byte2 = 0;
+#else
 	text[len] = '\0';
+#endif
 
 	/* Specify the colour table offsets */
 
@@ -961,9 +970,13 @@ static int XCursesNewPacket(chtype attr, bool rev, int len,
 
 	makeXY(col, row, XCursesFontWidth, XCursesFontHeight, &xpos, &ypos);
 
+#ifdef UNICODE
+	XDrawImageString16(XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, 
+		text, len);
+#else
 	XDrawImageString(XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, 
 		text, len);
-
+#endif
 	/* Underline, etc. */
 
 	if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
@@ -1004,7 +1017,11 @@ static int XCursesNewPacket(chtype attr, bool rev, int len,
 int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 			bool highlight)
 {
+#ifdef UNICODE
+	XChar2b text[513];
+#else
 	char text[513];
+#endif
 	chtype old_attr, attr;
 	int i, j;
 
@@ -1020,6 +1037,7 @@ int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 	{
 		chtype curr = ch[j];
 
+#ifndef UNICODE
 		/* Special handling for ACS_BLOCK */
 
 		if (!(curr & A_CHARTEXT))
@@ -1027,7 +1045,7 @@ int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 			curr |= ' ';
 			curr ^= A_REVERSE;
 		}
-
+#endif
 		attr = curr & A_ATTRIBUTES;
 
 		if (attr != old_attr)
@@ -1041,7 +1059,12 @@ int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 			i = 0;
 		}
 
+#ifdef UNICODE
+		text[i].byte1 = (curr & 0xff00) >> 8;
+		text[i++].byte2 = curr & 0x00ff;
+#else
 		text[i++] = curr & A_CHARTEXT;
+#endif
 	}
 
 	return XCursesNewPacket(old_attr, highlight, i, col, row, text);

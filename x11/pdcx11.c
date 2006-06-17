@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.62 2006/06/15 13:03:06 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.63 2006/06/17 02:16:40 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -624,7 +624,12 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 		sizeof(XFontStruct),
 		XtOffsetOf(AppData, normalfont),
 		XtRString,
+#ifdef UNICODE
+		(XtPointer)
+		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
+#else
 		(XtPointer)"7x13",
+#endif
 	},
 
 	{
@@ -634,7 +639,12 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 		sizeof(XFontStruct),
 		XtOffsetOf(AppData, italicfont),
 		XtRString,
+#ifdef UNICODE
+		(XtPointer)
+		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
+#else
 		(XtPointer)"7x13",
+#endif
 	},
 
 	{

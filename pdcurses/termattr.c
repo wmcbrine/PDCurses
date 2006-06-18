@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.27 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.28 2006/06/18 21:13:38 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -48,6 +48,9 @@ RCSID("$Id: termattr.c,v 1.27 2006/03/29 20:06:41 wmcbrine Exp $");
 	char *termname(void);
 
 	char wordchar(void);
+
+	int erasewchar(wchar_t *ch);
+	int killwchar(wchar_t *ch);
 
   X/Open Description:
 	baudrate() returns the output speed of the terminal.  The number 
@@ -269,3 +272,29 @@ char wordchar(void)
 
 	return _DWCHAR;			/* word delete char */
 }
+
+#ifdef UNICODE
+int erasewchar(wchar_t *ch)
+{
+	PDC_LOG(("erasewchar() - called\n"));
+
+	if (ch == (wchar_t *)NULL)
+		return ERR;
+
+	*ch = (wchar_t)_ECHAR;
+
+	return OK;
+}
+
+int killwchar(wchar_t *ch)
+{
+	PDC_LOG(("killwchar() - called\n"));
+
+	if (ch == (wchar_t *)NULL)
+		return ERR;
+
+	*ch = (wchar_t)_DLCHAR;
+
+	return OK;
+}
+#endif

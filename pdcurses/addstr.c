@@ -36,7 +36,7 @@
 # undef waddch
 #endif
 
-RCSID("$Id: addstr.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.20 2006/06/18 18:51:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -52,6 +52,15 @@ RCSID("$Id: addstr.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
 	int mvwaddstr(WINDOW *, int y, int x, const char *str);
 	int mvwaddnstr(WINDOW *, int y, int x, const char *str, int n);
 
+	int addwstr(const wchar_t *wstr);
+	int addnwstr(const wchar_t *wstr, int n);
+	int waddwstr(WINDOW *win, const wchar_t *wstr);
+	int waddnwstr(WINDOW *win, const wchar_t *wstr, int n);
+	int mvaddwstr(int y, int x, const wchar_t *wstr);
+	int mvaddnwstr(int y, int x, const wchar_t *wstr, int n);
+	int mvwaddwstr(WINDOW *win, int y, int x, const wchar_t *wstr);
+	int mvwaddnwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
+
   X/Open Description:
 	These routines write all the characters of the null-terminated 
 	string str on the given window.  The functionality is equivalent 
@@ -62,14 +71,6 @@ RCSID("$Id: addstr.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
 
 	NOTE: addstr(), addnstr(), mvaddstr(), mvaddnstr(), mvwaddstr(), 
 	and mvwaddnstr() are implemented as macros.
-
-  PDCurses Description:
-	The *raw*() routines output 8 bit values.  These contrast to
-	their normal counterparts which output 7 bit values and convert
-	control character to the ^X notation.
-
-	str is a standard 8 bit character string WITHOUT embedded 
-	attributes.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -164,8 +165,7 @@ int mvwaddstr(WINDOW *win, int y, int x, const char *str)
 	return waddnstr(win, str, -1);
 }
 
-int mvwaddnstr(WINDOW *win, int y, int x,
-			 const char *str, int n)
+int mvwaddnstr(WINDOW *win, int y, int x, const char *str, int n)
 {
 	PDC_LOG(("mvwaddnstr() - called: y %d x %d string=\"%s\" n %d \n",
 		y, x, str, n));
@@ -175,3 +175,87 @@ int mvwaddnstr(WINDOW *win, int y, int x,
 
 	return waddnstr(win, str, n);
 }
+
+#ifdef UNICODE
+int addwstr(const wchar_t *wstr)
+{
+	PDC_LOG(("addwstr() - called\n"));
+
+	return waddnwstr(stdscr, wstr, -1);
+}
+
+int addnwstr(const wchar_t *wstr, int n)
+{
+	PDC_LOG(("addnwstr() - called\n"));
+
+	return waddnwstr(stdscr, wstr, n);
+}
+
+int waddwstr(WINDOW *win, const wchar_t *wstr)
+{
+	PDC_LOG(("waddwstr() - called\n"));
+
+	return waddnwstr(win, wstr, -1);
+}
+
+int waddnwstr(WINDOW *win, const wchar_t *wstr, int n)
+{
+	chtype cn;
+	int ic;
+
+	PDC_LOG(("waddnwstr() - called\n"));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	for (ic = 0; *wstr && (ic < n || n < 0); ic++)
+	{
+		cn = *wstr++;
+
+		if (waddch(win, cn) == ERR)
+			return ERR;
+	}
+
+	return OK;
+}
+
+int mvaddwstr(int y, int x, const wchar_t *wstr)
+{
+	PDC_LOG(("mvaddstr() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return waddnwstr(stdscr, wstr, -1);
+}
+
+int mvaddnwstr(int y, int x, const wchar_t *wstr, int n)
+{
+	PDC_LOG(("mvaddnstr() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return waddnwstr(stdscr, wstr, n);
+}
+
+int mvwaddwstr(WINDOW *win, int y, int x, const wchar_t *wstr)
+{
+	PDC_LOG(("mvwaddstr() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return waddnwstr(win, wstr, -1);
+}
+
+int mvwaddnwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n)
+{
+	PDC_LOG(("mvwaddnstr() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return waddnwstr(win, wstr, n);
+}
+#endif

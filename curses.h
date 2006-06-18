@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.174 2006/06/15 17:50:39 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.175 2006/06/18 18:51:46 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -354,6 +354,9 @@ typedef int  _int;
 
 #include <stdarg.h>
 #include <stdio.h>		/* Required by X/Open usage below	*/
+#ifdef UNICODE
+# include <stddef.h>
+#endif
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 extern "C"
@@ -1456,6 +1459,17 @@ void	wsyncup(WINDOW *);
 void	wtimeout(WINDOW *, int);
 int	wtouchln(WINDOW *, int, int, int);
 int	wvline(WINDOW *, chtype, int);
+
+#ifdef UNICODE
+int	addwstr(const wchar_t *);
+int	addnwstr(const wchar_t *, int);
+int	waddwstr(WINDOW *, const wchar_t *);
+int	waddnwstr(WINDOW *, const wchar_t *, int);
+int	mvaddwstr(int, int, const wchar_t *);
+int	mvaddnwstr(int, int, const wchar_t *, int);
+int	mvwaddwstr(WINDOW *, int, int, const wchar_t *);
+int	mvwaddnwstr(WINDOW *, int, int, const wchar_t *, int);
+#endif
 
 /* Quasi-standard */
 

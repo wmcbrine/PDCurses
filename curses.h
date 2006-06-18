@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.176 2006/06/18 21:13:38 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.177 2006/06/18 21:52:02 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2805
+#define PDC_BUILD 2804
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1464,13 +1464,21 @@ int	wvline(WINDOW *, chtype, int);
 int	addnwstr(const wchar_t *, int);
 int	addwstr(const wchar_t *);
 int	erasewchar(wchar_t *);
+int	innwstr(wchar_t *, int);
+int	inwstr(wchar_t *);
 int	killwchar(wchar_t *);
 int	mvaddnwstr(int, int, const wchar_t *, int);
 int	mvaddwstr(int, int, const wchar_t *);
+int	mvinnwstr(int, int, wchar_t *, int);
+int	mvinwstr(int, int, wchar_t *);
 int	mvwaddnwstr(WINDOW *, int, int, const wchar_t *, int);
 int	mvwaddwstr(WINDOW *, int, int, const wchar_t *);
+int	mvwinnwstr(WINDOW *, int, int, wchar_t *, int);
+int	mvwinwstr(WINDOW *, int, int, wchar_t *);
 int	waddnwstr(WINDOW *, const wchar_t *, int);
 int	waddwstr(WINDOW *, const wchar_t *);
+int	winnwstr(WINDOW *, wchar_t *, int);
+int	winwstr(WINDOW *, wchar_t *);
 #endif
 
 /* Quasi-standard */

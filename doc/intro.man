@@ -473,14 +473,24 @@ FUNCTIONS
                            
 		resize_term		initscr
 
-		addwstr			addstr
 		addnwstr		addstr
-		waddwstr		addstr
-		waddnwstr		addstr
-		mvaddwstr		addstr
+		addwstr			addstr
+		erasewchar		termattr
+		innwstr			instr
+		inwstr			instr
+		killwchar		termattr
 		mvaddnwstr		addstr
-		mvwaddwstr		addstr
+		mvaddwstr		addstr
+		mvinnwstr		instr
+		mvinwstr		instr
 		mvwaddnwstr		addstr
+		mvwaddwstr		addstr
+		mvwinnwstr		instr
+		mvwinwstr		instr
+		waddnwstr		addstr
+		waddwstr		addstr
+		winnwstr		instr
+		winwstr			instr
 
 	The following table lists each private curses routine and the 
 	name of the manual page on which it is described. These routines 

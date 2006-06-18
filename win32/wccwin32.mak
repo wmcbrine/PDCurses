@@ -42,7 +42,7 @@ CFLAGS		= /oneatx
 LDFLAGS		= op q sys $(TARGET)
 !endif
 
-CPPFLAGS	= /i=$(PDCURSES_HOME)
+CPPFLAGS	= /i=$(PDCURSES_HOME) #/DUNICODE
 
 CCFLAGS		= /ei /zq /wx $(CFLAGS) $(CPPFLAGS)
 

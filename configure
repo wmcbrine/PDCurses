@@ -847,6 +847,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-debug          turn on debugging
   --enable-latin1         include support for LATIN1 keys
+  --enable-unicode        include support for Unicode
   --enable-purify         link with Purify (TM)
 
 Optional Packages:
@@ -5068,6 +5069,17 @@ _ACEOF
 
 fi
 
+# Check whether --enable-unicode or --disable-unicode was given.
+if test "${enable_unicode+set}" = set; then
+  enableval="$enable_unicode"
+  with_unicode=$enableval
+else
+  with_unicode=no
+fi;
+if test "$with_unicode" = yes; then
+	SYS_DEFS="$SYS_DEFS -DUNICODE"
+fi
+
 # Check whether --enable-purify or --disable-purify was given.
 if test "${enable_purify+set}" = set; then
   enableval="$enable_purify"
@@ -5298,7 +5310,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5301 "configure"
+#line 5313 "configure"
 int a=0
 EOF
 
@@ -5337,7 +5349,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5340 "configure"
+#line 5352 "configure"
 int foo()
 {
 return(0);

@@ -153,6 +153,17 @@ if test "$with_latin1" = yes; then
 	AC_DEFINE(INCLUDE_LATIN1)
 fi
 
+dnl ----------------- check for Unicode support ---------------------
+dnl allow --enable-unicode to include Unicode support
+AC_ARG_ENABLE(unicode,
+	[  --enable-unicode        include support for Unicode],
+	[with_unicode=$enableval],
+	[with_unicode=no],
+)
+if test "$with_unicode" = yes; then
+	SYS_DEFS="$SYS_DEFS -DUNICODE"
+fi
+
 dnl ----------------- check for Purify support -----------------------
 dnl allow --enable-purify to enable linking with Purify
 AC_ARG_ENABLE(purify,

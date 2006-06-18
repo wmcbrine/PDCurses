@@ -477,19 +477,27 @@ FUNCTIONS
 		addwstr			addstr
 		erasewchar		termattr
 		innwstr			instr
+		ins_nwstr		insstr
+		ins_wstr		insstr
 		inwstr			instr
 		killwchar		termattr
 		mvaddnwstr		addstr
 		mvaddwstr		addstr
 		mvinnwstr		instr
+		mvins_nwstr		insstr
+		mvins_wstr		insstr
 		mvinwstr		instr
 		mvwaddnwstr		addstr
 		mvwaddwstr		addstr
 		mvwinnwstr		instr
+		mvwins_nwstr		insstr
+		mvwins_wstr		insstr
 		mvwinwstr		instr
 		waddnwstr		addstr
 		waddwstr		addstr
 		winnwstr		instr
+		wins_nwstr		insstr
+		wins_wstr		insstr
 		winwstr			instr
 
 	The following table lists each private curses routine and the 

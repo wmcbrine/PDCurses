@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.177 2006/06/18 21:52:02 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.178 2006/06/18 23:22:42 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1465,19 +1465,27 @@ int	addnwstr(const wchar_t *, int);
 int	addwstr(const wchar_t *);
 int	erasewchar(wchar_t *);
 int	innwstr(wchar_t *, int);
+int	ins_nwstr(const wchar_t *, int);
+int	ins_wstr(const wchar_t *);
 int	inwstr(wchar_t *);
 int	killwchar(wchar_t *);
 int	mvaddnwstr(int, int, const wchar_t *, int);
 int	mvaddwstr(int, int, const wchar_t *);
 int	mvinnwstr(int, int, wchar_t *, int);
+int	mvins_nwstr(int, int, const wchar_t *, int);
+int	mvins_wstr(int, int, const wchar_t *);
 int	mvinwstr(int, int, wchar_t *);
 int	mvwaddnwstr(WINDOW *, int, int, const wchar_t *, int);
 int	mvwaddwstr(WINDOW *, int, int, const wchar_t *);
 int	mvwinnwstr(WINDOW *, int, int, wchar_t *, int);
+int	mvwins_nwstr(WINDOW *, int, int, const wchar_t *, int);
+int	mvwins_wstr(WINDOW *, int, int, const wchar_t *);
 int	mvwinwstr(WINDOW *, int, int, wchar_t *);
 int	waddnwstr(WINDOW *, const wchar_t *, int);
 int	waddwstr(WINDOW *, const wchar_t *);
 int	winnwstr(WINDOW *, wchar_t *, int);
+int	wins_nwstr(WINDOW *, const wchar_t *, int);
+int	wins_wstr(WINDOW *, const wchar_t *);
 int	winwstr(WINDOW *, wchar_t *);
 #endif
 

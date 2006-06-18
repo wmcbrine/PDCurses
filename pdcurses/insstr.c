@@ -37,7 +37,7 @@
 # undef waddch
 #endif
 
-RCSID("$Id: insstr.c,v 1.22 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.23 2006/06/18 23:22:43 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -53,6 +53,15 @@ RCSID("$Id: insstr.c,v 1.22 2006/03/29 20:06:41 wmcbrine Exp $");
 	int mvwinsstr(WINDOW *win, int y, int x, const char *str);
 	int mvwinsnstr(WINDOW *win, int y, int x, const char *str, int n);
 
+	int ins_wstr(const wchar_t *wstr);
+	int ins_nwstr(const wchar_t *wstr, int n);
+	int wins_wstr(WINDOW *win, const wchar_t *wstr);
+	int wins_nwstr(WINDOW *win, const wchar_t *wstr, int n);
+	int mvins_wstr(int y, int x, const wchar_t *wstr);
+	int mvins_nwstr(int y, int x, const wchar_t *wstr, int n);
+	int mvwins_wstr(WINDOW *win, int y, int x, const wchar_t *wstr);
+	int mvwins_nwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
+
   System V Curses Description:
 	With these routines, a character string (as many characters as 
 	will fit on the line) is inserted before the character under 
@@ -65,14 +74,6 @@ RCSID("$Id: insstr.c,v 1.22 2006/03/29 20:06:41 wmcbrine Exp $");
 
 	NOTE: insstr(), insnstr(), mvinsstr(), mvinsnstr(), mvwinsstr() 
 	and mvwinsnstr() are implemented as macros.
-
-  PDCurses Description:
-	The *raw*() routines output 8 bit values.  These contrast to 
-	their normal counterparts which output 7 bit values and convert 
-	control character to the ^X notation.
-
-	str is a standard 8 bit character string WITHOUT embedded 
-	attributes.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -120,7 +121,7 @@ int winsnstr(WINDOW *win, const char *str, int n)
 
 	PDC_LOG(("winsnstr() - called: string=\"%s\" n %d \n", str, n));
 
-	if (win == (WINDOW *)NULL)
+	if (win == (WINDOW *)NULL || str == (const char *)NULL)
 		return ERR;
 
 	ic = strlen(str);
@@ -179,3 +180,91 @@ int mvwinsnstr(WINDOW *win, int y, int x, const char *str, int n)
 
 	return winsnstr(win, str, n);
 }
+
+#ifdef UNICODE
+int ins_wstr(const wchar_t *wstr)
+{
+	PDC_LOG(("ins_wstr() - called\n"));
+
+	return wins_nwstr(stdscr, wstr, -1);
+}
+
+int ins_nwstr(const wchar_t *wstr, int n)
+{
+	PDC_LOG(("ins_nwstr() - called\n"));
+
+	return wins_nwstr(stdscr, wstr, n);
+}
+
+int wins_wstr(WINDOW *win, const wchar_t *wstr)
+{
+	PDC_LOG(("wins_wstr() - called\n"));
+
+	return wins_nwstr(win, wstr, -1);
+}
+
+int wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
+{
+	const wchar_t *p;
+	int ic;
+
+	PDC_LOG(("wins_nwstr() - called\n"));
+
+	if (win == (WINDOW *)NULL || wstr == (const wchar_t *)NULL)
+		return ERR;
+
+	for (ic = 0, p = wstr; *p != L'\0'; p++)
+		ic++;
+
+	if (n > 0)
+		ic = ((ic < n) ? ic : n) - 1;
+	else
+		--ic;
+
+	for (; ic >= 0; ic--)
+		if (winsch(win, wstr[ic]) == ERR)
+			return ERR;
+
+	return OK;
+}
+
+int mvins_wstr(int y, int x, const wchar_t *wstr)
+{
+	PDC_LOG(("mvins_wstr() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wins_nwstr(stdscr, wstr, -1);
+}
+
+int mvins_nwstr(int y, int x, const wchar_t *wstr, int n)
+{
+	PDC_LOG(("mvinsnstr() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wins_nwstr(stdscr, wstr, n);
+}
+
+int mvwins_wstr(WINDOW *win, int y, int x, const wchar_t *wstr)
+{
+	PDC_LOG(("mvwinsstr() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wins_nwstr(win, wstr, -1);
+}
+
+int mvwins_nwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n)
+{
+	PDC_LOG(("mvwinsnstr() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wins_nwstr(win, wstr, n);
+}
+#endif

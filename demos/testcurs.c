@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.46 2006/06/19 23:17:35 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.47 2006/06/19 23:53:58 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -17,6 +17,10 @@
 #include <ctype.h>
 #include <string.h>
 #include <curses.h>
+
+#ifdef UNICODE
+# include <locale.h>
+#endif
 
 #if defined(PDCURSES) && !defined(XCURSES)
 # define HAVE_RESIZE 1
@@ -81,6 +85,12 @@ int main(int argc, char *argv[])
 
 #ifdef PDCDEBUG
 	PDC_debug("testcurs started\n");
+#endif
+
+#ifdef UNICODE
+	/* This is here for ncurses. PDCurses doesn't need it. */
+
+	setlocale(LC_ALL, "");
 #endif
 	if (initTest(&win, argc, argv))
 		return 1;
@@ -922,11 +932,14 @@ void acsTest(WINDOW *win)
 #ifdef UNICODE
 	/* Spanish, Russian, Greek, Thai */
 
+	/* This style of string literals is not handled correctly by 
+	   Borland or LCC. */
+
 	mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\x00f1ol");
 	mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5,
-		L"\x0420\x0443\x0441\x0441\x043A\x0438\x0439");
+		L"\x0420\x0443\x0441\x0441\x043a\x0438\x0439");
 	mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5,
-		L"\x0395\x03BB\x03BB\x03B7\x03BD\x03B9\x03BA\x03AC");
+		L"\x0395\x03bb\x03bb\x03b7\x03bd\x03b9\x03ba\x03ac");
 	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, L"\x0e44\x0e17\x0e22");
 #endif
 	mvaddstr(tmarg + 18, 3, "Press any key to continue");

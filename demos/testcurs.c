@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.45 2006/03/30 02:52:51 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.46 2006/06/19 23:17:35 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -241,7 +241,7 @@ void scrollTest(WINDOW *win)
 	int OldX;
 #endif
 	werase(win);
-	mvwprintw (win, height - 2, 1, "The window will now scroll slowly");
+	mvwaddstr(win, height - 2, 1, "The window will now scroll slowly");
 	box(win, ACS_VLINE, ACS_HLINE);
 	wrefresh(win);
 	scrollok(win, TRUE);
@@ -258,7 +258,7 @@ void scrollTest(WINDOW *win)
 #else
 	getmaxyx(win, OldY, OldX);
 #endif
-	mvwprintw(win, 6, 1, "The top of the window will scroll");
+	mvwaddstr(win, 6, 1, "The top of the window will scroll");
 	wmove(win, 1, 1);
 	wsetscrreg(win, 0, 4);
 	box(win, ACS_VLINE, ACS_HLINE);
@@ -271,7 +271,7 @@ void scrollTest(WINDOW *win)
 		wrefresh(win);
 	}
 
-	mvwprintw(win, 3, 1, "The bottom of the window will scroll");
+	mvwaddstr(win, 3, 1, "The bottom of the window will scroll");
 	wmove(win, 8, 1);
 	wsetscrreg(win, 5, --OldY);
 	box(win, ACS_VLINE, ACS_HLINE);
@@ -421,22 +421,22 @@ void inputTest(WINDOW *win)
 			wprintw(win, "Button %d: ", button);
 
 			if (MOUSE_MOVED)
-				wprintw(win, "moved: ");
+				waddstr(win, "moved: ");
 			else if (MOUSE_WHEEL_UP)
-				wprintw(win, "wheel up: ");
+				waddstr(win, "wheel up: ");
 			else if (MOUSE_WHEEL_DOWN)
-				wprintw(win, "wheel down: ");
+				waddstr(win, "wheel down: ");
 			else if ((BUTTON_STATUS(button) & 
 			    BUTTON_ACTION_MASK) == BUTTON_PRESSED)
-				wprintw(win, "pressed: ");
+				waddstr(win, "pressed: ");
 			else if ((BUTTON_STATUS(button) & 
 			    BUTTON_ACTION_MASK) == BUTTON_CLICKED)
-				wprintw(win, "clicked: ");
+				waddstr(win, "clicked: ");
 			else if ((BUTTON_STATUS(button) & 
 			    BUTTON_ACTION_MASK) == BUTTON_DOUBLE_CLICKED)
-				wprintw(win, "double: ");
+				waddstr(win, "double: ");
 			else
-				wprintw(win, "released: ");
+				waddstr(win, "released: ");
 
 			wprintw(win, " Position: Y: %d X: %d", 
 				MOUSE_Y_POS, MOUSE_X_POS);
@@ -778,7 +778,7 @@ void clipboardTest(WINDOW *win)
 	char *ptr = NULL;
 
 	clear();
-	mvprintw (1, 1,
+	mvaddstr(1, 1,
 		"This test will display the contents of the system clipboard");
 	refresh();
 
@@ -796,23 +796,23 @@ void clipboardTest(WINDOW *win)
 	switch(i)
 	{
 	case PDC_CLIP_ACCESS_ERROR:
-		mvprintw (3, 1, "There was an error accessing the clipboard");
+		mvaddstr(3, 1, "There was an error accessing the clipboard");
 		refresh();
 		break;
 
 	case PDC_CLIP_MEMORY_ERROR:
-		mvprintw (3, 1,
+		mvaddstr(3, 1,
 			"Unable to allocate memory for clipboard contents");
 		break;
 
 	case PDC_CLIP_EMPTY:
-		mvprintw (3, 1, "There was no text in the clipboard");
+		mvaddstr(3, 1, "There was no text in the clipboard");
 		break;
 
 	default:
 		wsetscrreg(stdscr, 0, LINES - 1);
 		clear();
-		mvprintw (1, 1, "Clipboard contents...");
+		mvaddstr(1, 1, "Clipboard contents...");
 		move(2, 0);
 
 		for (i = 0; i < length; i++)
@@ -829,9 +829,9 @@ void clipboardTest(WINDOW *win)
 	getch();
 
 	clear();
-	mvprintw(1, 1,
+	mvaddstr(1, 1,
 	"This test will place the following string in the system clipboard:");
-	mvprintw(2, 1, text);
+	mvaddstr(2, 1, text);
 	refresh();
 
 	i = PDC_setclipboard(text, strlen(text));
@@ -839,17 +839,17 @@ void clipboardTest(WINDOW *win)
 	switch(i)
 	{
 	case PDC_CLIP_ACCESS_ERROR:
-		mvprintw(3, 1, "There was an error accessing the clipboard");
+		mvaddstr(3, 1, "There was an error accessing the clipboard");
 		refresh();
 		break;
 
 	case PDC_CLIP_MEMORY_ERROR:
-		mvprintw (3, 1,
+		mvaddstr(3, 1,
 			"Unable to allocate memory for clipboard contents");
 		break;
 
 	default:
-		mvprintw (3, 1,
+		mvaddstr(3, 1,
 			"The string was placed in the clipboard successfully");
 	}
 
@@ -905,7 +905,7 @@ void acsTest(WINDOW *win)
 	clear();
 
 	attrset(A_BOLD);
-	mvprintw(tmarg, (COLS - 23) / 2, "Alternate Character Set");
+	mvaddstr(tmarg, (COLS - 23) / 2, "Alternate Character Set");
 	attrset(A_NORMAL);
 
 	tmarg += 3;
@@ -919,7 +919,17 @@ void acsTest(WINDOW *win)
 		printw(" %s", acs_names[i]);
 	}
 
-	printw("\n\n\n  Press any key to continue");
+#ifdef UNICODE
+	/* Spanish, Russian, Greek, Thai */
+
+	mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\x00f1ol");
+	mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5,
+		L"\x0420\x0443\x0441\x0441\x043A\x0438\x0439");
+	mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5,
+		L"\x0395\x03BB\x03BB\x03B7\x03BD\x03B9\x03BA\x03AC");
+	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, L"\x0e44\x0e17\x0e22");
+#endif
+	mvaddstr(tmarg + 18, 3, "Press any key to continue");
 	getch();
 }
 

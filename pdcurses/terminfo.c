@@ -23,7 +23,7 @@
 #undef vidattr
 #undef vidputs
 
-RCSID("$Id: terminfo.c,v 1.21 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.22 2006/06/19 03:21:47 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -48,7 +48,10 @@ RCSID("$Id: terminfo.c,v 1.21 2006/03/29 20:06:41 wmcbrine Exp $");
 		long, long);
 	int tputs(const char *, int, int (*)(int));
 	int vidattr(chtype attr);
+	int vid_attr(attr_t attr, short color_pair, void *opt);
 	int vidputs(chtype attr, int (*putfunc)(int));
+	int vid_puts(attr_t attr, short color_pair, void *opt,
+		int (*putfunc)(int));
 
   X/Open Description:
 	The mvcur() function controls low-level cursor motion with 
@@ -215,9 +218,23 @@ int vidattr(chtype attr)
 	return ERR;
 }
 
+int vid_attr(attr_t attr, short color_pair, void *opt)
+{
+	PDC_LOG(("vid_attr() - called\n"));
+
+	return ERR;
+}
+
 int vidputs(chtype attr, int (*putfunc)(int))
 {
 	PDC_LOG(("vidputs() - called: attr %d\n", attr));
+
+	return ERR;
+}
+
+int vid_puts(attr_t attr, short color_pair, void *opt, int (*putfunc)(int))
+{
+	PDC_LOG(("vid_puts() - called\n"));
 
 	return ERR;
 }

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.179 2006/06/19 02:43:35 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.180 2006/06/19 03:21:46 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1419,6 +1419,7 @@ WINDOW *subpad(WINDOW *, int, int, int, int);
 WINDOW *subwin(WINDOW *, int, int, int, int);
 int	syncok(WINDOW *, bool);
 chtype	termattrs(void);
+attr_t	term_attrs(void);
 char   *termname(void);
 void	timeout(int);
 int	touchline(WINDOW *, int, int);
@@ -1427,7 +1428,9 @@ int	typeahead(int);
 int	untouchwin(WINDOW *);
 void	use_env(bool);
 int	vidattr(chtype);
+int	vid_attr(attr_t, short, void *);
 int	vidputs(chtype, int (*)(int));
+int	vid_puts(attr_t, short, void *, int (*)(int));
 int	vline(chtype, int);
 int	vw_printw(WINDOW *, const char *, va_list);
 int	vwprintw(WINDOW *, const char *, va_list);

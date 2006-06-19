@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.28 2006/06/18 21:13:38 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.29 2006/06/19 03:21:47 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -45,6 +45,7 @@ RCSID("$Id: termattr.c,v 1.28 2006/06/18 21:13:38 wmcbrine Exp $");
 	char killchar(void);
 	char *longname(void);
 	chtype termattrs(void);
+	attr_t term_attrs(void);
 	char *termname(void);
 
 	char wordchar(void);
@@ -246,8 +247,7 @@ char *longname(void)
 
 chtype termattrs(void)
 {
-	chtype temp = (A_NORMAL | A_BOLD | A_BLINK | A_REVERSE | 
-		A_UNDERLINE | A_ITALIC);
+	chtype temp = A_BLINK | A_BOLD | A_INVIS | A_REVERSE | A_UNDERLINE;
 
 	/* note: blink is bold background on some platforms */
 
@@ -257,6 +257,14 @@ chtype termattrs(void)
 		temp |= A_COLOR;
 
 	return temp;
+}
+
+attr_t term_attrs(void)
+{
+	PDC_LOG(("term_attrs() - called\n"));
+
+	return WA_BLINK | WA_BOLD | WA_INVIS | WA_LEFT |
+		WA_REVERSE | WA_RIGHT | WA_UNDERLINE;
 }
 
 char *termname(void)

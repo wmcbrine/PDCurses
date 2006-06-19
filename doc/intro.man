@@ -389,6 +389,7 @@ FUNCTIONS
 		subwin			window
 		syncok			window
 		termattrs		termattrs
+		term_attrs		termattrs
 		termname		termattrs
 		tgetent			termcap
 		tgetflag		termcap
@@ -410,7 +411,9 @@ FUNCTIONS
 		untouchwin		touch
 		use_env			util
 		vidattr			terminfo
+		vid_attr		terminfo
 		vidputs			terminfo
+		vid_puts		terminfo
 		vline			border
 		vwprintw		printw
 		vwscanw			scanw

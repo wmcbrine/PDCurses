@@ -33,7 +33,7 @@
 #undef slk_attroff
 #undef slk_color
 
-RCSID("$Id: slk.c,v 1.22 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.23 2006/06/19 03:36:38 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -49,8 +49,11 @@ RCSID("$Id: slk.c,v 1.22 2006/03/29 20:06:41 wmcbrine Exp $");
 	int slk_restore(void);
 	int slk_touch(void);
 	int slk_attron(const chtype attrs);
+	int slk_attr_on(const attr_t attrs, void *opts);
 	int slk_attrset(const chtype attrs);
+	int slk_attr_set(const attr_t attrs, short color_pair, void *opts);
 	int slk_attroff(const chtype attrs);
+	int slk_attr_off(const attr_t attrs, void *opts);
 	int slk_color(short color_pair);
 
   X/Open Description:
@@ -376,6 +379,13 @@ int slk_attron(const chtype attrs)
 	return rc;
 }
 
+int slk_attr_on(const attr_t attrs, void *opts)
+{
+	PDC_LOG(("slk_attr_on() - called\n"));
+
+	return slk_attron(attrs);
+}
+
 int slk_attroff(const chtype attrs)
 {
 	int i, rc;
@@ -388,6 +398,13 @@ int slk_attroff(const chtype attrs)
 		PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
 
 	return rc;
+}
+
+int slk_attr_off(const attr_t attrs, void *opts)
+{
+	PDC_LOG(("slk_attr_off() - called\n"));
+
+	return slk_attroff(attrs);
 }
 
 int slk_attrset(const chtype attrs)
@@ -416,6 +433,13 @@ int slk_color(short color_pair)
 		PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
 
 	return rc;
+}
+
+int slk_attr_set(const attr_t attrs, short color_pair, void *opts)
+{
+	PDC_LOG(("slk_attr_set() - called\n"));
+
+	return slk_attrset(attrs | COLOR_PAIR(color_pair));
 }
 
 static void PDC_slk_init(void)

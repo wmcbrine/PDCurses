@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.180 2006/06/19 03:21:46 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.181 2006/06/19 03:36:38 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1401,8 +1401,11 @@ int	scr_set(const char *);
 int	setscrreg(int, int);
 SCREEN *set_term(SCREEN *);
 int	slk_attroff(const chtype);
+int	slk_attr_off(const attr_t, void *);
 int	slk_attron(const chtype);
+int	slk_attr_on(const attr_t, void *);
 int	slk_attrset(const chtype);
+int	slk_attr_set(const attr_t, short, void *);
 int	slk_clear(void);
 int	slk_color(short);
 int	slk_init(int);

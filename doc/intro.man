@@ -371,8 +371,11 @@ FUNCTIONS
 		setterm			terminfo
 		setupterm		terminfo
 		slk_attroff		slk
+		slk_attr_off		slk
 		slk_attron		slk
+		slk_attr_on		slk
 		slk_attrset		slk
+		slk_attr_set		slk
 		slk_clear		slk
 		slk_color		slk
 		slk_init		slk

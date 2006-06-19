@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.34 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.35 2006/06/19 19:09:06 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -531,7 +531,7 @@ int PDC_resize_screen(int nlines, int ncols)
 
 int PDC_reset_prog_mode(void)
 {
-	SetConsoleMode(hConIn, ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT);
+	SetConsoleMode(hConIn, ENABLE_MOUSE_INPUT);
 	return OK;
 }
 

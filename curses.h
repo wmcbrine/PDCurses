@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.181 2006/06/19 03:36:38 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.182 2006/06/19 04:40:05 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1252,6 +1252,7 @@ int	border(chtype, chtype, chtype, chtype, chtype, chtype, chtype, chtype);
 int	box(WINDOW *, chtype, chtype);
 bool	can_change_color(void);
 int	cbreak(void); 
+int	chgat(int, attr_t, short, const void *);
 int	clearok(WINDOW *, bool);
 int	clear(void);
 int	clrtobot(void);
@@ -1320,6 +1321,7 @@ int	mvaddchnstr(int, int, const chtype *, int);
 int	mvaddchstr(int, int, const chtype *);
 int	mvaddnstr(int, int, const char *, int);
 int	mvaddstr(int, int, const char *);
+int	mvchgat(int, int, int, attr_t, short, const void *);
 int	mvcur(int, int, int, int);
 int	mvdelch(int, int);
 int	mvderwin(WINDOW *, int, int);
@@ -1343,6 +1345,7 @@ int	mvwaddchstr(WINDOW *, int, int, const chtype *);
 int	mvwaddch(WINDOW *, int, int, const chtype);
 int	mvwaddnstr(WINDOW *, int, int, const char *, int);
 int	mvwaddstr(WINDOW *, int, int, const char *);
+int	mvwchgat(WINDOW *, int, int, int, attr_t, short, const void *);
 int	mvwdelch(WINDOW *, int, int);
 int	mvwgetch(WINDOW *, int, int);
 int	mvwgetnstr(WINDOW *, int, int, char *, int);
@@ -1455,6 +1458,7 @@ void	wbkgdset(WINDOW *, chtype);
 int	wbkgd(WINDOW *, chtype);
 int	wborder(WINDOW *, chtype, chtype, chtype, chtype,
 		chtype, chtype, chtype, chtype);
+int	wchgat(WINDOW *, int, attr_t, short, const void *);
 int	wclear(WINDOW *);
 int	wclrtobot(WINDOW *);
 int	wclrtoeol(WINDOW *);

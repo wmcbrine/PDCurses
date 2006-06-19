@@ -216,6 +216,7 @@ FUNCTIONS
 		box			border
 		can_change_color	color
 		cbreak			inopts
+		chgat			attr
 		clear			clear
 		clearok			outopts
 		clrtobot		clear
@@ -290,6 +291,7 @@ FUNCTIONS
 		mvaddchstr		addchstr
 		mvaddnstr		addstr
 		mvaddstr		addstr
+		mvchgat			attr
 		mvcur			terminfo
 		mvdelch			delch
 		mvderwin		window
@@ -310,10 +312,10 @@ FUNCTIONS
 		mvwaddchstr		addchstr
 		mvwaddnstr		addstr
 		mvwaddstr		addstr
+		mvwchgat		attr
 		mvwdelch		delch
 		mvwgetch		getch
 		mvwgetnstr		getstr
-		wgetnstr		getstr
 		mvwin			window
 		mvwinch			inch
 		mvwinchnstr		inchstr
@@ -444,6 +446,7 @@ FUNCTIONS
 		wdeleteln		deleteln
 		wechochar		addch
 		werase			clear
+		wchgat			attr
 		wgetch			getch
 		wgetnstr		getstr
 		wgetstr			getstr

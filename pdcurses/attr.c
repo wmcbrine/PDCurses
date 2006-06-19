@@ -33,7 +33,7 @@
 #undef color_set
 #undef wcolor_set
 
-RCSID("$Id: attr.c,v 1.22 2006/06/19 02:43:36 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.23 2006/06/19 04:40:06 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -64,6 +64,14 @@ RCSID("$Id: attr.c,v 1.22 2006/06/19 02:43:36 wmcbrine Exp $");
 	int wattr_on(WINDOW *win, attr_t attrs, void *opts);
 	int wattr_set(WINDOW *win, attr_t attrs, short color_pair,
 		void *opts);
+
+	int chgat(int n, attr_t attr, short color, const void *opts);
+	int mvchgat(int y, int x, int n, attr_t attr, short color,
+		const void *opts);
+	int mvwchgat(WINDOW *win, int y, int x, int n, attr_t attr,
+		short color, const void *opts);
+	int wchgat(WINDOW *win, int n, attr_t attr, short color,
+		const void *opts);
 
   X/Open Description:
 	These functions manipulate the current attributes and/or colors 
@@ -309,6 +317,60 @@ int wattr_set(WINDOW *win, attr_t attrs, short color_pair, void *opts)
 
 	win->_attrs = (attrs & (A_ATTRIBUTES & ~A_COLOR)) |
 		COLOR_PAIR(color_pair);
+
+	return OK;
+}
+
+int chgat(int n, attr_t attr, short color, const void *opts)
+{
+	PDC_LOG(("wchgat() - called\n"));
+
+	return wchgat(stdscr, n, attr, color, opts);
+}
+
+int mvchgat(int y, int x, int n, attr_t attr, short color, const void *opts)
+{
+	PDC_LOG(("mvchgat() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wchgat(stdscr, n, attr, color, opts);
+}
+
+int mvwchgat(WINDOW *win, int y, int x, int n, attr_t attr,
+	     short color, const void *opts)
+{
+	PDC_LOG(("mvwchgat() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wchgat(win, n, attr, color, opts);
+}
+
+int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
+{
+	chtype newattr, tmp;
+        int basey, basex, imax, ic;
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	newattr = (attr & A_ATTRIBUTES) | COLOR_PAIR(color);
+
+        basey = win->_cury;
+        basex = win->_curx;
+        imax = win->_maxx - win->_curx;
+
+        if (n > 0)
+                imax = ((imax < n) ? imax : n);
+
+        for (ic = 0; ic < imax; ic++)
+	{
+		tmp = (win->_y[basey][basex + ic] & A_CHARTEXT) | newattr;
+		win->_y[basey][basex + ic] = tmp;
+	}
 
 	return OK;
 }

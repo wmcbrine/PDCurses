@@ -33,7 +33,7 @@
 #undef color_set
 #undef wcolor_set
 
-RCSID("$Id: attr.c,v 1.21 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.22 2006/06/19 02:43:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -53,6 +53,17 @@ RCSID("$Id: attr.c,v 1.21 2006/03/29 20:06:40 wmcbrine Exp $");
 	chtype getattrs(WINDOW *win);
 	int color_set(short color_pair, void *opts);
 	int wcolor_set(WINDOW *win, short color_pair, void *opts);
+
+	int attr_get(attr_t *attrs, short *color_pair, void *opts);
+	int attr_off(attr_t attrs, void *opts);
+	int attr_on(attr_t attrs, void *opts);
+	int attr_set(attr_t attrs, short color_pair, void *opts);
+	int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair,
+		void *opts);
+	int wattr_off(WINDOW *win, attr_t attrs, void *opts);
+	int wattr_on(WINDOW *win, attr_t attrs, void *opts);
+	int wattr_set(WINDOW *win, attr_t attrs, short color_pair,
+		void *opts);
 
   X/Open Description:
 	These functions manipulate the current attributes and/or colors 
@@ -227,6 +238,77 @@ int wcolor_set(WINDOW *win, short color_pair, void *opts)
 		return ERR;
 
 	win->_attrs = (win->_attrs & ~A_COLOR) | COLOR_PAIR(color_pair);
+
+	return OK;
+}
+
+int attr_get(attr_t *attrs, short *color_pair, void *opts)
+{
+	PDC_LOG(("attr_get() - called\n"));
+
+	return wattr_get(stdscr, attrs, color_pair, opts);
+}
+
+int attr_off(attr_t attrs, void *opts)
+{
+	PDC_LOG(("attr_off() - called\n"));
+
+	return wattroff(stdscr, attrs);
+}
+
+int attr_on(attr_t attrs, void *opts)
+{
+	PDC_LOG(("attr_on() - called\n"));
+
+	return wattron(stdscr, attrs);
+}
+
+int attr_set(attr_t attrs, short color_pair, void *opts)
+{
+	PDC_LOG(("attr_get() - called\n"));
+
+	return wattr_set(stdscr, attrs, color_pair, opts);
+}
+
+int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair, void *opts)
+{
+	PDC_LOG(("wattr_get() - called\n"));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	if (attrs != (attr_t *)NULL)
+		*attrs = win->_attrs & (A_ATTRIBUTES & ~A_COLOR);
+
+	if (color_pair != (short *)NULL)
+		*color_pair = PAIR_NUMBER(win->_attrs);
+
+	return OK;
+}
+
+int wattr_off(WINDOW *win, attr_t attrs, void *opts)
+{
+	PDC_LOG(("wattr_off() - called\n"));
+
+	return wattroff(win, attrs);
+}
+
+int wattr_on(WINDOW *win, attr_t attrs, void *opts)
+{
+	PDC_LOG(("wattr_off() - called\n"));
+
+	return wattron(win, attrs);
+}
+
+int wattr_set(WINDOW *win, attr_t attrs, short color_pair, void *opts)
+{
+	PDC_LOG(("wattr_set() - called\n"));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	win->_attrs = (attrs & (A_ATTRIBUTES & ~A_COLOR)) |
+		COLOR_PAIR(color_pair);
 
 	return OK;
 }

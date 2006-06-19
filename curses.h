@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.178 2006/06/18 23:22:42 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.179 2006/06/19 02:43:35 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2804
+#define PDC_BUILD 2806
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -775,6 +775,26 @@ currently used.)
 #define ATR_MSK		A_ATTRIBUTES			/* Obsolete */
 #define ATR_NRM		A_NORMAL			/* Obsolete */
 
+/* For use with attr_t -- X/Open says, "these shall be distinct", so 
+   this is a non-conforming implementation. */
+
+#define WA_ALTCHARSET	A_ALTCHARSET
+#define WA_BLINK	A_BLINK
+#define WA_BOLD		A_BOLD
+#define WA_DIM		A_DIM
+#define WA_INVIS	A_INVIS
+#define WA_LEFT		A_LEFTLINE
+#define WA_PROTECT	A_PROTECT
+#define WA_REVERSE	A_REVERSE
+#define WA_RIGHT	A_RIGHTLINE
+#define WA_STANDOUT	A_STANDOUT
+#define WA_UNDERLINE	A_UNDERLINE
+
+#define WA_HORIZONTAL	A_NORMAL
+#define WA_LOW		A_NORMAL
+#define WA_TOP		A_NORMAL
+#define WA_VERTICAL	A_NORMAL
+
 /*** Alternate character set macros ***/
 
 /* ALTCHARSET definitions for PC from jshumate@wrdis01.robins.af.mil
@@ -1220,6 +1240,10 @@ int	addstr(const char *);
 int	attroff(chtype);
 int	attron(chtype);
 int	attrset(chtype);
+int	attr_get(attr_t *, short *, void *);
+int	attr_off(attr_t, void *);
+int	attr_on(attr_t, void *);
+int	attr_set(attr_t, short, void *);
 int	baudrate(void);
 int	beep(void);
 int	bkgd(chtype);
@@ -1417,6 +1441,10 @@ int	waddstr(WINDOW *, const char *);
 int	wattroff(WINDOW *, chtype);
 int	wattron(WINDOW *, chtype);
 int	wattrset(WINDOW *, chtype);
+int	wattr_get(WINDOW *, attr_t *, short *, void *);
+int	wattr_off(WINDOW *, attr_t, void *);
+int	wattr_on(WINDOW *, attr_t, void *);
+int	wattr_set(WINDOW *, attr_t, short, void *);
 void	wbkgdset(WINDOW *, chtype);
 int	wbkgd(WINDOW *, chtype);
 int	wborder(WINDOW *, chtype, chtype, chtype, chtype,

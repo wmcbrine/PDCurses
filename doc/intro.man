@@ -193,7 +193,7 @@ FUNCTIONS
 
 	The following table lists each curses routine and the name of the 
 	manual page on which it is described. This list is based on
-	System V R4 curses:
+	X/Open and System V R4 curses:
 
 	   Curses Function        Manual Page Name
 
@@ -204,6 +204,10 @@ FUNCTIONS
 		addstr			addstr
 		attroff			attr
 		attron			attr
+		attr_get		attr
+		attr_off		attr
+		attr_on			attr
+		attr_set		attr
 		baudrate		termattr
 		beep			beep
 		bkgd			bkgd
@@ -418,6 +422,10 @@ FUNCTIONS
 		wattroff		attr
 		wattron			attr
 		wattrset		attr
+		wattr_get		attr
+		wattr_off		attr
+		wattr_on		attr
+		wattr_set		attr
 		wbkgd			bkgd
 		wbkgdset		bkgd
 		wborder			border

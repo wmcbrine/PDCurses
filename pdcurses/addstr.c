@@ -36,7 +36,7 @@
 # undef waddch
 #endif
 
-RCSID("$Id: addstr.c,v 1.20 2006/06/18 18:51:46 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.21 2006/06/19 21:51:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -118,7 +118,7 @@ int waddnstr(WINDOW *win, const char *str, int n)
 
 	PDC_LOG(("waddnstr() - called: string=\"%s\" n %d \n", str, n));
 
-	if (win == (WINDOW *)NULL)
+	if (win == (WINDOW *)NULL || str == (const char *)NULL)
 		return ERR;
 
 	for (ic = 0; *str && (ic < n || n < 0); ic++)
@@ -205,7 +205,7 @@ int waddnwstr(WINDOW *win, const wchar_t *wstr, int n)
 
 	PDC_LOG(("waddnwstr() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (win == (WINDOW *)NULL || wstr == (const wchar_t *)NULL)
 		return ERR;
 
 	for (ic = 0; *wstr && (ic < n || n < 0); ic++)

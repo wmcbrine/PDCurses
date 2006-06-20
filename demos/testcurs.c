@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.47 2006/06/19 23:53:58 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.48 2006/06/20 21:20:11 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -51,7 +51,7 @@ void clipboardTest(WINDOW *);
 
 struct commands
 {
-	char *text;
+	const char *text;
 	void (*function)(WINDOW *);
 };
 
@@ -302,7 +302,7 @@ void inputTest(WINDOW *win)
 	int w, h, bx, by, sw, sh, i, c, num;
 	char buffer[80];
 	WINDOW *subWin;
-	char spinner[4] = "/-\\|";
+	static const char spinner[4] = "/-\\|";
 	int spinner_count = 0;
 
 	wclear(win);
@@ -782,10 +782,10 @@ void padTest(WINDOW *dummy)
 #if HAVE_CLIPBOARD
 void clipboardTest(WINDOW *win)
 {
-	long i, length = 0;
-	char *text =
+	static const char *text =
 	"This string placed in clipboard by PDCurses test program, testcurs.";
 	char *ptr = NULL;
+	long i, length = 0;
 
 	clear();
 	mvaddstr(1, 1,
@@ -874,7 +874,7 @@ void clipboardTest(WINDOW *win)
 
 void acsTest(WINDOW *win)
 {
-	static char *acs_names[] =
+	static const char *acs_names[] =
 	{
 		"ACS_ULCORNER", "ACS_URCORNER", "ACS_LLCORNER", 
 		"ACS_LRCORNER", "ACS_LTEE", "ACS_RTEE", "ACS_TTEE", 
@@ -910,6 +910,18 @@ void acsTest(WINDOW *win)
 		ACS_NEQUAL, ACS_STERLING
 	};
 
+#ifdef UNICODE
+	static const wchar_t russian[] = {0x0420, 0x0443, 0x0441,
+		0x0441, 0x043a, 0x0438, 0x0439, 0x0020, 0x044f, 0x0437,
+		0x044b, 0x043a, 0};
+
+	static const wchar_t greek[] = {0x0395, 0x03bb, 0x03bb, 0x03b7,
+		0x03bd, 0x03b9, 0x03ba, 0x03ac, 0};
+
+	static const wchar_t thai[] = {0x0e20, 0x0e32, 0x0e29, 0x0e32,
+		0x0e44, 0x0e17, 0x0e22, 0};
+#endif
+
 	int i, tmarg = (LINES - 22) / 2;
 
 	clear();
@@ -932,15 +944,10 @@ void acsTest(WINDOW *win)
 #ifdef UNICODE
 	/* Spanish, Russian, Greek, Thai */
 
-	/* This style of string literals is not handled correctly by 
-	   Borland or LCC. */
-
 	mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\x00f1ol");
-	mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5,
-		L"\x0420\x0443\x0441\x0441\x043a\x0438\x0439");
-	mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5,
-		L"\x0395\x03bb\x03bb\x03b7\x03bd\x03b9\x03ba\x03ac");
-	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, L"\x0e44\x0e17\x0e22");
+	mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5, russian);
+	mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5, greek);
+	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, thai);
 #endif
 	mvaddstr(tmarg + 18, 3, "Press any key to continue");
 	getch();

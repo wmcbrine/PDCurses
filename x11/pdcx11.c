@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.63 2006/06/17 02:16:40 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.64 2006/06/20 15:17:34 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -885,6 +885,38 @@ void XCsay(const char *msg)
 void dummy_function(void)
 {
 }
+
+#ifdef UNICODE
+static int to_utf8(char *outcode, int code)
+{
+	if (code < 0x80) {
+		outcode[0] = code;
+		return 1;
+	} else
+		if (code < 0x800) {
+			outcode[0] = ((code & 0x07c0) >> 6) | 0xc0;
+			outcode[1] = (code & 0x003f) | 0x80;
+			return 2;
+		} else {
+			outcode[0] = ((code & 0xf000) >> 12) | 0xe0;
+			outcode[1] = ((code & 0x0fc0) >> 6) | 0x80;
+			outcode[2] = (code & 0x003f) | 0x80;
+			return 3;
+		}
+}
+
+# ifndef X_HAVE_UTF8_STRING
+static Atom XA_UTF8_STRING(Display *dpy)
+{
+	static AtomPtr p = NULL;
+
+	if (p == NULL)
+		p = XmuMakeAtom("UTF8_STRING");
+
+	return XmuInternAtom(dpy, p);
+}
+# endif
+#endif
 
 signal_handler XCursesSetSignal(int signo, signal_handler action)
 {
@@ -1813,10 +1845,18 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 			selection, target, type_return, &std_targets, 
 			&std_length, format_return);
 
+#ifdef UNICODE
+		*value_return = XtMalloc(sizeof(Atom) * (std_length + 2));
+		*length_return = std_length + 2;
+#else
 		*value_return = XtMalloc(sizeof(Atom) * (std_length + 1));
-		targetP = *(Atom**)value_return;
 		*length_return = std_length + 1;
+#endif
+		targetP = *(Atom**)value_return;
 		*targetP++ = XA_STRING;
+#ifdef UNICODE
+		*targetP++ = XA_UTF8_STRING(XtDisplay(topLevel));
+#endif
 
 		memmove((void *)targetP, (const void *)std_targets,
 			sizeof(Atom) * std_length);
@@ -1827,7 +1867,11 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 
 		return True;
 	}
-	else if (*target == XA_STRING)
+	else if (
+#ifdef UNICODE
+		 *target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
+#endif
+		 *target == XA_STRING)
 	{
 		char *data = XtMalloc(tmpsel_length + 1);
 
@@ -1835,7 +1879,7 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 		*value_return = data;
 		*length_return = tmpsel_length;
 		*format_return = 8;
-		*type_return = XA_STRING;
+		*type_return = *target;
 
 		return True;
 	}
@@ -2054,10 +2098,17 @@ void SelectionSet(void)
 	if (length > (int)tmpsel_length)
 	{
 		if (tmpsel_length == 0)
+#ifdef UNICODE
+			tmpsel = (char *)malloc(length * 3 + 1 +
+				end_y - start_y + 1);
+		else
+			tmpsel = (char *)realloc(tmpsel, length * 3 + 1 +
+#else
 			tmpsel = (char *)malloc(length + 1 +
 				end_y - start_y + 1);
 		else
 			tmpsel = (char *)realloc(tmpsel, length + 1 +
+#endif
 				end_y - start_y + 1);
 	}
 
@@ -2124,7 +2175,12 @@ void SelectionSet(void)
 			last_nonblank = num_cols - 1;
 
 		for (j = 0; j <= last_nonblank; j++)
+#ifdef UNICODE
+			num_chars += to_utf8(tmpsel + num_chars,
+				(int)(ptr[j] & A_CHARTEXT));
+#else
 			tmpsel[num_chars++] = (int)(ptr[j] & A_CHARTEXT);
+#endif
 
 		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
 

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.64 2006/06/20 15:17:34 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.65 2006/06/22 13:20:36 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -624,11 +624,11 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 		sizeof(XFontStruct),
 		XtOffsetOf(AppData, normalfont),
 		XtRString,
-#ifdef UNICODE
 		(XtPointer)
+#ifdef UNICODE
 		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
 #else
-		(XtPointer)"7x13",
+		"7x13",
 #endif
 	},
 
@@ -639,11 +639,11 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 		sizeof(XFontStruct),
 		XtOffsetOf(AppData, italicfont),
 		XtRString,
-#ifdef UNICODE
 		(XtPointer)
+#ifdef UNICODE
 		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
 #else
-		(XtPointer)"7x13",
+		"7x13",
 #endif
 	},
 
@@ -963,11 +963,11 @@ RETSIGTYPE XCursesSigwinchHandler(int signo)
 #endif
 }
 
-static int XCursesNewPacket(chtype attr, bool rev, int len,
+static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
 #ifdef UNICODE
-			    int col, int row, XChar2b *text)
+			    XChar2b *text)
 #else
-			    int col, int row, char *text)
+			    char *text)
 #endif
 {
 	GC gc;
@@ -1013,12 +1013,12 @@ static int XCursesNewPacket(chtype attr, bool rev, int len,
 	makeXY(col, row, XCursesFontWidth, XCursesFontHeight, &xpos, &ypos);
 
 #ifdef UNICODE
-	XDrawImageString16(XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, 
-		text, len);
+	XDrawImageString16(
 #else
-	XDrawImageString(XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, 
-		text, len);
+	XDrawImageString(
 #endif
+		XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
+
 	/* Underline, etc. */
 
 	if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
@@ -1845,13 +1845,14 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 			selection, target, type_return, &std_targets, 
 			&std_length, format_return);
 
+		*length_return = std_length +
 #ifdef UNICODE
-		*value_return = XtMalloc(sizeof(Atom) * (std_length + 2));
-		*length_return = std_length + 2;
+			2;
 #else
-		*value_return = XtMalloc(sizeof(Atom) * (std_length + 1));
-		*length_return = std_length + 1;
+			1;
 #endif
+		*value_return = XtMalloc(sizeof(Atom) * (*length_return));
+
 		targetP = *(Atom**)value_return;
 		*targetP++ = XA_STRING;
 #ifdef UNICODE
@@ -2057,7 +2058,7 @@ void SelectionExtend(int x, int y)
 void SelectionSet(void)
 {
 	int i, j, start, end, start_x, end_x, start_y, end_y, num_cols, 
-		start_col, row, num_chars, ch, last_nonblank, length;
+		start_col, row, num_chars, ch, last_nonblank, length, newlen;
 	chtype *ptr = NULL;
 
 	PDC_LOG(("%s:SelectionSet() - called\n", XCLOGMSG));
@@ -2095,21 +2096,18 @@ void SelectionSet(void)
 		length = end - start + 1;
 	}
 
+	newlen = length
+#ifdef UNICODE
+		* 3
+#endif
+		+ end_y - start_y + 2;
+
 	if (length > (int)tmpsel_length)
 	{
 		if (tmpsel_length == 0)
-#ifdef UNICODE
-			tmpsel = (char *)malloc(length * 3 + 1 +
-				end_y - start_y + 1);
+			tmpsel = (char *)malloc(newlen);
 		else
-			tmpsel = (char *)realloc(tmpsel, length * 3 + 1 +
-#else
-			tmpsel = (char *)malloc(length + 1 +
-				end_y - start_y + 1);
-		else
-			tmpsel = (char *)realloc(tmpsel, length + 1 +
-#endif
-				end_y - start_y + 1);
+			tmpsel = (char *)realloc(tmpsel, newlen);
 	}
 
 	if (!tmpsel)
@@ -2160,7 +2158,7 @@ void SelectionSet(void)
 		ptr = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
 			start_col * sizeof(chtype));
 
-		if (i < end_y-start_y)
+		if (i < end_y - start_y)
 		{
 			last_nonblank = 0;
 

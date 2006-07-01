@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.27 2006/04/13 17:19:43 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.28 2006/07/01 18:06:43 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -300,7 +300,7 @@ extern XtAppContext app_context;
 extern Widget topLevel, drawing, d1, scrollBox, scrollVert, scrollHoriz;
 extern int ReceivedMapNotify;
 extern Boolean mouse_selection;
-extern char *tmpsel;
+extern chtype *tmpsel;
 extern unsigned long tmpsel_length;
 extern int selection_start_x;
 extern int selection_start_y;

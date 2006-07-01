@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.65 2006/06/22 13:20:36 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.66 2006/07/01 18:06:43 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -413,7 +413,7 @@ XtAppContext app_context;
 Widget topLevel, drawing, d1, scrollBox, scrollVert, scrollHoriz;
 int ReceivedMapNotify = 0;
 Boolean mouse_selection = False;
-char *tmpsel = NULL;
+chtype *tmpsel = NULL;
 unsigned long tmpsel_length = 0;
 int selection_start_x = 0;
 int selection_start_y = 0;
@@ -1874,11 +1874,32 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 #endif
 		 *target == XA_STRING)
 	{
-		char *data = XtMalloc(tmpsel_length + 1);
+#ifdef UNICODE
+		bool utf8 = (*target == XA_UTF8_STRING(XtDisplay(topLevel)));
+#endif
+		char *data = XtMalloc(tmpsel_length
+#ifdef UNICODE
+			* 3
+#endif
+			+ 1);
 
-		memcpy(data, tmpsel, tmpsel_length);
+		chtype *tmp = tmpsel;
+		int ret_length = 0;
+
+#ifdef UNICODE
+		if (utf8)
+		{
+			while (*tmp)
+				ret_length += to_utf8(data + ret_length,
+					(int)(*tmp++ & A_CHARTEXT));
+		}
+		else
+#endif
+			while (*tmp)
+				data[ret_length++] = *tmp++ & 0xff;
+
 		*value_return = data;
-		*length_return = tmpsel_length;
+		*length_return = ret_length;
 		*format_return = 8;
 		*type_return = *target;
 
@@ -2096,18 +2117,15 @@ void SelectionSet(void)
 		length = end - start + 1;
 	}
 
-	newlen = length
-#ifdef UNICODE
-		* 3
-#endif
-		+ end_y - start_y + 2;
+	newlen = length + end_y - start_y + 2;
 
 	if (length > (int)tmpsel_length)
 	{
 		if (tmpsel_length == 0)
-			tmpsel = (char *)malloc(newlen);
+			tmpsel = (chtype *)malloc(newlen * sizeof(chtype));
 		else
-			tmpsel = (char *)realloc(tmpsel, newlen);
+			tmpsel = (chtype *)realloc(tmpsel,
+				newlen * sizeof(chtype));
 	}
 
 	if (!tmpsel)
@@ -2173,12 +2191,7 @@ void SelectionSet(void)
 			last_nonblank = num_cols - 1;
 
 		for (j = 0; j <= last_nonblank; j++)
-#ifdef UNICODE
-			num_chars += to_utf8(tmpsel + num_chars,
-				(int)(ptr[j] & A_CHARTEXT));
-#else
-			tmpsel[num_chars++] = (int)(ptr[j] & A_CHARTEXT);
-#endif
+			tmpsel[num_chars++] = ptr[j];
 
 		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
 

@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.44 2006/04/15 03:12:00 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.45 2006/07/01 18:06:43 wmcbrine Exp $");
 
 extern AppData app_data;
 
@@ -403,9 +403,11 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		if (length > (long)tmpsel_length)
 		{
 		    if (tmpsel_length == 0)
-			tmpsel = (char *)malloc(length + 1);
+			tmpsel = (chtype *)malloc((length + 1) * 
+				sizeof(chtype));
 		    else
-			tmpsel = (char *)realloc(tmpsel, length + 1);
+			tmpsel = (chtype *)realloc(tmpsel, (length + 1) *
+				sizeof(chtype));
 		}
 
 		if (!tmpsel)
@@ -420,9 +422,11 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    break;
 		}
 
-		if (read_socket(display_sock, tmpsel, length) < 0)
-		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_TITLE XCursesProcessRequestsFromCurses");
+		if (read_socket(display_sock, (char *)tmpsel,
+		    length * sizeof(chtype)) < 0)
+			XCursesExitXCursesProcess(5, SIGKILL,
+			    "exiting from CURSES_TITLE "
+			    "XCursesProcessRequestsFromCurses");
 
 		tmpsel_length = length;
 		tmpsel[length] = '\0';

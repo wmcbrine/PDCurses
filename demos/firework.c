@@ -1,4 +1,4 @@
-/* $Id: firework.c,v 1.21 2006/03/29 19:50:13 wmcbrine Exp $ */
+/* $Id: firework.c,v 1.22 2006/07/02 04:59:41 wmcbrine Exp $ */
 
 #include <stdio.h>
 #include <signal.h>
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
 		for (row = 0; row < diff; row++)
 		{
-			mvprintw(LINES - row, row * direction + start,
+			mvaddstr(LINES - row, row * direction + start,
 				(direction < 0) ? "\\" : "/");
 
 			if (flag++)
@@ -79,49 +79,49 @@ int main(int argc, char **argv)
 void explode(int row, int col)
 {
 	clear();
-	mvprintw(row, col, "-");
+	mvaddstr(row, col, "-");
 	myrefresh();
 
 	--col;
 
 	get_colour();
-	mvprintw(row - 1, col, " - ");
-	mvprintw(row,     col, "-+-");
-	mvprintw(row + 1, col, " - ");
+	mvaddstr(row - 1, col, " - ");
+	mvaddstr(row,     col, "-+-");
+	mvaddstr(row + 1, col, " - ");
 	myrefresh();
 
 	--col;
 
 	get_colour();
-	mvprintw(row - 2, col, " --- ");
-	mvprintw(row - 1, col, "-+++-");
-	mvprintw(row,     col, "-+#+-");
-	mvprintw(row + 1, col, "-+++-");
-	mvprintw(row + 2, col, " --- ");
+	mvaddstr(row - 2, col, " --- ");
+	mvaddstr(row - 1, col, "-+++-");
+	mvaddstr(row,     col, "-+#+-");
+	mvaddstr(row + 1, col, "-+++-");
+	mvaddstr(row + 2, col, " --- ");
 	myrefresh();
 
 	get_colour();
-	mvprintw(row - 2, col, " +++ ");
-	mvprintw(row - 1, col, "++#++");
-	mvprintw(row,     col, "+# #+");
-	mvprintw(row + 1, col, "++#++");
-	mvprintw(row + 2, col, " +++ ");
+	mvaddstr(row - 2, col, " +++ ");
+	mvaddstr(row - 1, col, "++#++");
+	mvaddstr(row,     col, "+# #+");
+	mvaddstr(row + 1, col, "++#++");
+	mvaddstr(row + 2, col, " +++ ");
 	myrefresh();
 
 	get_colour();
-	mvprintw(row - 2, col, "  #  ");
-	mvprintw(row - 1, col, "## ##");
-	mvprintw(row,     col, "#   #");
-	mvprintw(row + 1, col, "## ##");
-	mvprintw(row + 2, col, "  #  ");
+	mvaddstr(row - 2, col, "  #  ");
+	mvaddstr(row - 1, col, "## ##");
+	mvaddstr(row,     col, "#   #");
+	mvaddstr(row + 1, col, "## ##");
+	mvaddstr(row + 2, col, "  #  ");
 	myrefresh();
 
 	get_colour();
-	mvprintw(row - 2, col, " # # ");
-	mvprintw(row - 1, col, "#   #");
-	mvprintw(row,     col, "     ");
-	mvprintw(row + 1, col, "#   #");
-	mvprintw(row + 2, col, " # # ");
+	mvaddstr(row - 2, col, " # # ");
+	mvaddstr(row - 1, col, "#   #");
+	mvaddstr(row,     col, "     ");
+	mvaddstr(row + 1, col, "#   #");
+	mvaddstr(row + 2, col, " # # ");
 	myrefresh();
 }
 

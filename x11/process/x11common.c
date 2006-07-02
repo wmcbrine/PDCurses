@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11common.c,v 1.15 2006/04/13 17:19:44 wmcbrine Exp $");
+RCSID("$Id: x11common.c,v 1.16 2006/07/02 07:08:28 wmcbrine Exp $");
 
 /* Variables specific to process port */
 
@@ -104,4 +104,9 @@ int read_socket(int sock_num, char *buf, int len)
 		length -= rc;
 		start = rc;
 	}
+}
+
+int write_display_socket_int(int x)
+{
+	return write_socket(display_sock, (char *)&x, sizeof(int));
 }

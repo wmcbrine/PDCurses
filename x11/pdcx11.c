@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.66 2006/07/01 18:06:43 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.67 2006/07/02 07:08:27 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -2362,24 +2362,19 @@ unsigned long XCurses_get_key_modifiers(void)
 
 int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 {
-	char buf[100];		/* enough for MOUSE_STATUS */
-
 	PDC_LOG(("%s:XCursesSendKeyToCurses() - called: sending %d\n",
 		XCLOGMSG, key));
 
-	memcpy(buf, (char *)&key, sizeof(unsigned long));
-
-	if (write_socket(key_sock, buf, sizeof(unsigned long)) < 0)
+	if (write_socket(key_sock, (char *)&key, sizeof(unsigned long)) < 0)
 		XCursesExitXCursesProcess(1, SIGKILL,
 			"exiting from XCursesSendKeyToCurses");
 
 	if (ms != NULL)
 	{
-		memcpy(buf, (char *)&Mouse_status, sizeof(MOUSE_STATUS));
-
 		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
 
-		if (write_socket(key_sock, buf, sizeof(MOUSE_STATUS)) < 0)
+		if (write_socket(key_sock, (char *)&Mouse_status, 
+		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitXCursesProcess(1, SIGKILL,
 				"exiting from XCursesSendKeyToCurses");
 	}

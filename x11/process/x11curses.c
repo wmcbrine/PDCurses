@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.31 2006/04/15 16:55:28 wmcbrine Exp $");
+RCSID("$Id: x11curses.c,v 1.32 2006/07/02 07:08:28 wmcbrine Exp $");
 
 extern AppData app_data;
 
@@ -126,16 +126,9 @@ void XCurses_set_title(const char *title)
 
 int XCurses_refresh_scrollbar(void)
 {
-	char buf[30];
-	int idx;
-
 	PDC_LOG(("%s:XCurses_refresh_scrollbar() - called\n", XCLOGMSG));
 
-	idx = CURSES_REFRESH_SCROLLBAR;
-	memcpy(buf, (char *)&idx, sizeof(int));
-	idx = sizeof(int);
-
-	if (write_socket(display_sock, buf, idx) < 0)
+	if (write_display_socket_int(CURSES_REFRESH_SCROLLBAR) < 0)
 		XCursesExitCursesProcess(1,
 			"exiting from XCurses_refresh_scrollbar");
 
@@ -146,28 +139,25 @@ int XCurses_rawgetch(void)
 {
 	unsigned long newkey = 0;
 	int key = 0;
-	char buf[100];	/* big enough for MOUSE_STATUS struct */
 
 	PDC_LOG(("%s:XCurses_rawgetch() - called\n", XCLOGMSG));
 
 	while (1)
 	{
-	    if (read_socket(key_sock, buf, sizeof(unsigned long)) < 0)
-		XCursesExitCursesProcess(2, 
-		    "exiting from XCurses_rawchar");
+	    if (read_socket(key_sock, (char *)&newkey,
+		sizeof(unsigned long)) < 0)
+		    XCursesExitCursesProcess(2, 
+			"exiting from XCurses_rawchar");
 
-	    memcpy((char *)&newkey, buf, sizeof(unsigned long));
 	    pdc_key_modifier = (newkey >> 24) & 0xFF;
 	    key = (int)(newkey & 0x00FFFFFF);
 
 	    if (key == KEY_MOUSE)
 	    {
-		if (read_socket(key_sock, buf, sizeof(MOUSE_STATUS)) < 0)
-		    XCursesExitCursesProcess(2,
-			"exiting from XCurses_rawchar");
-
-		memcpy((char *)&Trapped_Mouse_status, buf,
-		    sizeof(MOUSE_STATUS));
+		if (read_socket(key_sock, (char *)&Trapped_Mouse_status, 
+		    sizeof(MOUSE_STATUS)) < 0)
+			XCursesExitCursesProcess(2,
+			    "exiting from XCurses_rawchar");
 
 		/* Check if the mouse has been clicked on a slk area. If 
 		   the return value is > 0 (indicating the label number), 
@@ -235,15 +225,11 @@ bool XCurses_kbhit(void)
 
 int XCursesInstruct(int flag)
 {
-	char buf[10];
-
 	PDC_LOG(("%s:XCursesInstruct() - called flag %d\n", XCLOGMSG, flag));
 
 	/* Send a request to X */
 
-	memcpy(buf, (char *)&flag, sizeof(int));
-
-	if (write_socket(display_sock, buf, sizeof(int)) < 0)
+	if (write_display_socket_int(flag) < 0)
 		XCursesExitCursesProcess(4, "exiting from XCursesInstruct");
 
 	return OK;
@@ -252,7 +238,6 @@ int XCursesInstruct(int flag)
 int XCursesInstructAndWait(int flag)
 {
 	int result;
-	char buf[10];
 
 	PDC_LOG(("%s:XCursesInstructAndWait() - called\n", XCLOGMSG));
 
@@ -262,11 +247,9 @@ int XCursesInstructAndWait(int flag)
 
 	/* wait for X to say the refresh has occurred*/
 
-	if (read_socket(display_sock, buf, sizeof(int)) < 0)
+	if (read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCursesInstructAndWait");
-
-	memcpy((char *)&result, buf, sizeof(int));
 
 	if (result != CURSES_CONTINUE)
 		XCursesExitCursesProcess(6, "exiting from "
@@ -302,7 +285,6 @@ int XCurses_transform_line(const chtype *ch, int row,
 
 static int XCursesSetupCurses(void)
 {
-	char wait_buf[5];
 	int wait_value;
 
 	PDC_LOG(("%s:XCursesSetupCurses called\n", XCLOGMSG));
@@ -316,8 +298,7 @@ static int XCursesSetupCurses(void)
 	FD_ZERO(&readfds);
 	FD_ZERO(&writefds);
 
-	read_socket(display_sock, wait_buf, sizeof(int));
-	memcpy((char *)&wait_value, wait_buf, sizeof(int));
+	read_socket(display_sock, (char *)&wait_value, sizeof(int));
 
 	if (wait_value != CURSES_CHILD)
 		return ERR;
@@ -441,25 +422,20 @@ int XCurses_getclipboard(char **contents, long *length)
 {
 	int result = 0;
 	int len;
-	char buf[12];
 
 	PDC_LOG(("%s:XCurses_getclipboard() - called\n", XCLOGMSG));
 
 	XCursesInstructAndWait(CURSES_GET_SELECTION);
 
-	if (read_socket(display_sock, buf, sizeof(int)) < 0)
+	if (read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
 	    XCursesExitCursesProcess(5,
 		"exiting from XCurses_getclipboard");
 
-	memcpy((char *)&result, buf, sizeof(int));
-
 	if (result == PDC_CLIP_SUCCESS)
 	{
-	    if (read_socket(display_sock, buf, sizeof(int)) < 0)
+	    if (read_socket(display_sock, (char *)&len, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 		    "exiting from XCurses_getclipboard");
-
-	    memcpy((char *)&len, buf, sizeof(int));
 
 	    if (len != 0)
 	    {
@@ -483,15 +459,12 @@ int XCurses_getclipboard(char **contents, long *length)
 int XCurses_setclipboard(const char *contents, long length)
 {
 	int rc;
-	char buf[12];		/* big enough for 2 integers */
-	long len = length;
 
 	PDC_LOG(("%s:XCurses_setclipboard() - called\n", XCLOGMSG));
 
 	XCursesInstruct(CURSES_SET_SELECTION);
-	memcpy(buf, (char *)&len, sizeof(long));
 
-	if (write_socket(display_sock, buf, sizeof(long)) < 0)
+	if (write_socket(display_sock, (char *)&length, sizeof(long)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCurses_setclipboard");
 
@@ -501,36 +474,32 @@ int XCurses_setclipboard(const char *contents, long length)
 
 	/* Wait for X to do its stuff. Now expect return code. */
 
-	if (read_socket(display_sock, buf, sizeof(int)) < 0)
+	if (read_socket(display_sock, (char *)&rc, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCurses_setclipboard");
 
-	memcpy((char *)&rc, buf, sizeof(int));
 	return rc;
 }
 
 int XCurses_clearclipboard(void)
 {
 	int rc;
-	char buf[12];		/* big enough for 2 integers */
 	long len = 0;
 
 	PDC_LOG(("%s:XCurses_clearclipboard() - called\n", XCLOGMSG));
 
 	XCursesInstruct(CURSES_CLEAR_SELECTION);
-	memcpy(buf, (char *)&len, sizeof(long));
 
-	if (write_socket(display_sock, buf, sizeof(long)) < 0)
+	if (write_socket(display_sock, (char *)&len, sizeof(long)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCurses_setclipboard");
 
 	/* Wait for X to do its stuff. Now expect return code. */
 
-	if (read_socket(display_sock, buf, sizeof(int)) < 0)
+	if (read_socket(display_sock, (char *)&rc, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCurses_clearclipboard");
 
-	memcpy((char *)&rc, buf, sizeof(int));
 	return rc;
 }
 

@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.45 2006/07/01 18:06:43 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.46 2006/07/02 07:08:27 wmcbrine Exp $");
 
 extern AppData app_data;
 
@@ -132,6 +132,13 @@ int XCursesRefreshScreen(void)
 	return 0;
 }
 
+static void XCursesContinue(void)
+{
+	if (write_display_socket_int(CURSES_CONTINUE) < 0)
+		XCursesExitXCursesProcess(4, SIGKILL,
+			"exiting from XCursesProcessRequestsFromCurses");
+}
+
 void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 				      XtInputId *id) 
 { 
@@ -157,8 +164,8 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, 
 	  NULL, &socket_timeout)) < 0)
-	    XCursesExitXCursesProcess(2, SIGKILL,
-		"exiting from XCursesProcessRequestsFromCurses - select failed");
+	    XCursesExitXCursesProcess(2, SIGKILL, "exiting from "
+		"XCursesProcessRequestsFromCurses - select failed");
 
 	if (s == 0)	/* no requests pending - should never happen!*/ 
 	    return; 
@@ -171,14 +178,13 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - "
 		"before read_socket()\n", XCLOGMSG));
 
-	    if (read_socket(display_sock, buf, sizeof(int)) < 0) 
-		XCursesExitXCursesProcess(3, SIGKILL,
-		  "exiting from XCursesProcessRequestsFromCurses - first read");
+	    if (read_socket(display_sock, (char *)&num_cols, sizeof(int)) < 0) 
+		XCursesExitXCursesProcess(3, SIGKILL, "exiting from "
+		    "XCursesProcessRequestsFromCurses - first read");
 
 	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - "
 		"after read_socket()\n", XCLOGMSG));
 
-	    memcpy((char *)&num_cols, buf, sizeof(int)); 
 	    after_first_curses_request = True; 
 
 	    switch(num_cols) 
@@ -218,12 +224,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		XCursesDisplayCursor(SP->cursrow, SP->curscol,
 		    SP->cursrow, SP->curscol);
 #endif 
-		old_x = CURSES_CONTINUE; 
-		memcpy(buf, (char *)&old_x, sizeof(int)); 
-
-		if (write_socket(display_sock, buf, sizeof(int)) < 0) 
-		    XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
+		XCursesContinue();
 		break; 
 
 	    /* request from curses to confirm completion of display */ 
@@ -235,12 +236,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		XCursesDisplayCursor(SP->cursrow, SP->curscol, 
 		    SP->cursrow, SP->curscol); 
 
-		old_x = CURSES_CONTINUE; 
-		memcpy(buf, (char *)&old_x, sizeof(int));
-
-		if (write_socket(display_sock, buf, sizeof(int)) < 0)
-		    XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
+		XCursesContinue();
 		break;
 
 	    case CURSES_REFRESH_SCROLLBAR:
@@ -306,12 +302,10 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_TITLE:
 		XC_LOG(("CURSES_TITLE received from child\n"));
 
-		if (read_socket(display_sock, buf, sizeof(int)) < 0)
+		if (read_socket(display_sock, (char *)&pos, sizeof(int)) < 0)
 		    XCursesExitXCursesProcess(5, SIGKILL,
 			"exiting from CURSES_TITLE "
 			"XCursesProcessRequestsFromCurses");
-
-		memcpy((char *)&pos, buf, sizeof(int));
 
 		if (read_socket(display_sock, title, pos) < 0)
 		    XCursesExitXCursesProcess(5, SIGKILL,
@@ -366,23 +360,14 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		memset(Xcurscr, 0, SP->XcurscrSize);
 		atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 		memcpy(atrtab, save_atrtab, sizeof(save_atrtab));
- 
-		old_x = CURSES_CONTINUE; 
-		memcpy(buf, (char *)&old_x, sizeof(int)); 
 
-		if (write_socket(display_sock, buf, sizeof(int)) < 0)
-		    XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses"); 
+		XCursesContinue(); 
 		break; 
 
 	    case CURSES_GET_SELECTION:
 		XC_LOG(("CURSES_GET_SELECTION received from child\n"));
-		old_x = CURSES_CONTINUE;
-		memcpy(buf, (char *)&old_x, sizeof(int));
 
-		if (write_socket(display_sock, buf, sizeof(int)) < 0)
-		    XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
+		XCursesContinue();
 
 		XtGetSelectionValue(topLevel, XA_PRIMARY, XA_STRING,
 		    XCursesRequestorCallbackForGetSelection,
@@ -393,12 +378,11 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_SET_SELECTION:
 		XC_LOG(("CURSES_SET_SELECTION received from child\n"));
 
-		if (read_socket(display_sock, buf, sizeof(long)) < 0)
-		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_TITLE "
-			"XCursesProcessRequestsFromCurses");
-
-		memcpy((char *)&length, buf, sizeof(long));
+		if (read_socket(display_sock, (char *)&length,
+		    sizeof(long)) < 0)
+			XCursesExitXCursesProcess(5, SIGKILL,
+			    "exiting from CURSES_TITLE "
+			    "XCursesProcessRequestsFromCurses");
 
 		if (length > (long)tmpsel_length)
 		{
@@ -412,11 +396,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 		if (!tmpsel)
 		{
-		    old_x = PDC_CLIP_MEMORY_ERROR;
-
-		    memcpy(buf, (char *)&old_x, sizeof(int));
-
-		    if (write_socket(display_sock, buf, sizeof(int)) < 0)
+		    if (write_display_socket_int(PDC_CLIP_MEMORY_ERROR) < 0)
 			XCursesExitXCursesProcess(4, SIGKILL,
 			    "exiting from XCursesProcessRequestsFromCurses");
 		    break;
@@ -443,21 +423,16 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    old_x = PDC_CLIP_SUCCESS;
 
 		SelectionOff();
-		memcpy(buf, (char *)&old_x, sizeof(int));
 
-		if (write_socket(display_sock, buf, sizeof(int)) < 0)
+		if (write_display_socket_int(old_x) < 0)
 		    XCursesExitXCursesProcess(4, SIGKILL,
 			"exiting from XCursesProcessRequestsFromCurses");
 		break;
 
 	    case CURSES_CLEAR_SELECTION:
 		XC_LOG(("CURSES_CLEAR_SELECTION received from child\n"));
-		old_x = CURSES_CONTINUE;
-		memcpy(buf, (char *)&old_x, sizeof(int));
 
-		if (write_socket(display_sock, buf, sizeof(int)) < 0)
-		    XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
+		XCursesContinue();
 
 		SelectionOff();
 		break;
@@ -476,8 +451,7 @@ int XCursesSetupX(const char *display_name, int argc, char *argv[])
 	int italic_font_valid;
 	XColor pointerforecolor, pointerbackcolor;
 	XrmValue rmfrom, rmto;
-	char wait_buf[5];
-	int wait_value = 0, i = 0;
+	int i = 0;
 	int minwidth, minheight;
 
 	PDC_LOG(("%s:XCursesSetupX called\n", XCLOGMSG));
@@ -741,9 +715,7 @@ int XCursesSetupX(const char *display_name, int argc, char *argv[])
 	   that when the curses process makes a request, the Xcurses 
 	   process can service the request.*/
 
-	wait_value = CURSES_CHILD;
-	memcpy(wait_buf, (char *)&wait_value, sizeof(int));
-	write_socket(display_sock, wait_buf, sizeof(int));
+	write_display_socket_int(CURSES_CHILD);
 
 	XtRealizeWidget(topLevel);
 
@@ -897,7 +869,6 @@ int XCursesSetupX(const char *display_name, int argc, char *argv[])
 
 RETSIGTYPE XCursesSignalHandler(int signo)
 {
-	char buf[10];
 	int flag = CURSES_EXIT;
 
 	PDC_LOG(("%s:XCursesSignalHandler() - called: %d\n", XCLOGMSG, signo));
@@ -936,9 +907,7 @@ RETSIGTYPE XCursesSignalHandler(int signo)
 
 	/* Send a CURSES_EXIT to myself */
 
-	memcpy(buf, (char *)&flag, sizeof(int));
-
-	if (write_socket(exit_sock, buf, sizeof(int)) < 0)
+	if (write_socket(exit_sock, (char *)&flag, sizeof(int)) < 0)
 		XCursesExitXCursesProcess(7, signo,
 			"exiting from XCursesSignalHandler");
 }
@@ -948,19 +917,12 @@ void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 					     XtPointer value,
 					     unsigned long *length, int *format)
 {
-	int rc;
-	char buf[12];		/* big enough for 2 integers */
-	char *string = (char *)value;
-
 	PDC_LOG(("%s:XCursesRequestorCallbackForSelection() - called\n",
 		XCLOGMSG));
 
 	if ((value == NULL) && (*length == 0))
 	{
-		rc = PDC_CLIP_EMPTY;
-		memcpy(buf, (char *)&rc, sizeof(int));
-
-		if (write_socket(display_sock, buf, sizeof(int)) < 0)
+		if (write_display_socket_int(PDC_CLIP_EMPTY) < 0)
 		    XCursesExitXCursesProcess(4, SIGKILL,
 			"exiting from XCursesRequestorCallbackForGetSelection");
 		return;
@@ -969,19 +931,15 @@ void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 	/* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
 	   contents */
 
-	rc = PDC_CLIP_SUCCESS;
-	memcpy(buf, (char *)&rc, sizeof(int));
-	if (write_socket(display_sock, buf, sizeof(int)) < 0)
+	if (write_display_socket_int(PDC_CLIP_SUCCESS) < 0)
 		XCursesExitXCursesProcess(4, SIGKILL,
 			"exiting from XCursesRequestorCallbackForGetSelection");
 
-	rc = *(length);
-	memcpy(buf, (char *)&rc, sizeof(int));
-	if (write_socket(display_sock, buf, sizeof(int)) < 0)
+	if (write_display_socket_int((int)(*length)) < 0)
 		XCursesExitXCursesProcess(4, SIGKILL,
 			"exiting from XCursesRequestorCallbackForGetSelection");
 
-	if (write_socket(display_sock, string, *length) < 0)
+	if (write_socket(display_sock, (char *)value, *length) < 0)
 		XCursesExitXCursesProcess(4, SIGKILL,
 			"exiting from XCursesRequestorCallbackForGetSelection");
 }

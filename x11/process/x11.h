@@ -1,4 +1,4 @@
-/* $Id: x11.h,v 1.8 2006/03/29 20:06:41 wmcbrine Exp $ */
+/* $Id: x11.h,v 1.9 2006/07/02 07:08:28 wmcbrine Exp $ */
 
 void dummy_function(void);
 void get_GC(Display *, Window, GC *, XFontStruct *, int, int, bool);
@@ -34,6 +34,7 @@ void SelectionSet(void);
 
 int write_socket(int, const char *, int);
 int read_socket(int, char *, int);
+int write_display_socket_int(int);
 
 int XCursesSetupX(const char *display_name, int argc, char *argv[]);
 RETSIGTYPE XCursesSigwinchHandler(int signo);

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.68 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.69 2006/07/02 20:07:01 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -889,15 +889,20 @@ void dummy_function(void)
 #ifdef UNICODE
 static int to_utf8(char *outcode, int code)
 {
-	if (code < 0x80) {
+	if (code < 0x80)
+	{
 		outcode[0] = code;
 		return 1;
-	} else
-		if (code < 0x800) {
+	}
+	else
+		if (code < 0x800)
+		{
 			outcode[0] = ((code & 0x07c0) >> 6) | 0xc0;
 			outcode[1] = (code & 0x003f) | 0x80;
 			return 2;
-		} else {
+		}
+		else
+		{
 			outcode[0] = ((code & 0xf000) >> 12) | 0xe0;
 			outcode[1] = ((code & 0x0fc0) >> 6) | 0x80;
 			outcode[2] = (code & 0x003f) | 0x80;

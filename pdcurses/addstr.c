@@ -36,7 +36,7 @@
 # undef waddch
 #endif
 
-RCSID("$Id: addstr.c,v 1.21 2006/06/19 21:51:36 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.22 2006/07/02 22:03:02 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -176,7 +176,7 @@ int mvwaddnstr(WINDOW *win, int y, int x, const char *str, int n)
 	return waddnstr(win, str, n);
 }
 
-#ifdef UNICODE
+#ifdef CHTYPE_LONG
 int addwstr(const wchar_t *wstr)
 {
 	PDC_LOG(("addwstr() - called\n"));

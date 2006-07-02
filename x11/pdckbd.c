@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.21 2006/04/15 16:55:28 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.22 2006/07/02 19:03:59 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -45,7 +44,7 @@ unsigned long PDC_get_input_fd(void)
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
-	return XCurses_get_input_fd();
+	return key_sock;
 }
 
 /*man-start**************************************************************
@@ -204,5 +203,5 @@ unsigned long PDC_get_key_modifiers(void)
 {
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
-	return XCurses_get_key_modifiers();
+	return pdc_key_modifier;
 }

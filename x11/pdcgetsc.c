@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcx11.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.15 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.16 2006/07/02 19:03:59 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -45,7 +44,7 @@ int PDC_get_columns(void)
 {
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
-	return XCurses_get_cols();
+	return XCursesCOLS;
 }
 
 /*man-start**************************************************************
@@ -73,7 +72,7 @@ int PDC_get_rows(void)
 {
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
-	return XCurses_get_rows();
+	return XCursesLINES;
 }
 
 /*man-start**************************************************************

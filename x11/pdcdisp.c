@@ -15,11 +15,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcx11.h"
+
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.21 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.22 2006/07/02 19:03:59 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -133,7 +133,20 @@ void PDC_transform_line(int lineno)
 	dstp = curscr->_y[lineno] + x;
 	len = endx - x + 1;
 
-	XCurses_transform_line(dstp, lineno, x, len);
+	/* loop until we can write to the line */
+
+	while (*(Xcurscr + XCURSCR_FLAG_OFF + lineno))
+		dummy_function();
+
+	*(Xcurscr + XCURSCR_FLAG_OFF + lineno) = 1;
+
+	memcpy(Xcurscr + XCURSCR_Y_OFF(lineno) + (x * sizeof(chtype)),
+		dstp, len * sizeof(chtype));
+
+	*(Xcurscr + XCURSCR_START_OFF + lineno) = x;
+	*(Xcurscr + XCURSCR_LENGTH_OFF + lineno) = len;
+
+	*(Xcurscr + XCURSCR_FLAG_OFF + lineno) = 0;
 
 	curscr->_firstch[lineno] = _NO_CHANGE;
 	curscr->_lastch[lineno] = _NO_CHANGE;

@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.23 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.24 2006/07/02 19:03:59 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;
@@ -136,5 +135,28 @@ int PDC_resize_screen(int nlines, int ncols)
 	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
 		nlines, ncols));
 
-	return XCursesResizeScreen(nlines, ncols);
+	shmdt((char *)Xcurscr);
+	XCursesInstructAndWait(CURSES_RESIZE);
+
+	if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,
+		SP->XcurscrSize + XCURSESSHMMIN, 0700)) < 0)
+	{
+		perror("Cannot allocate shared memory for curscr");
+		kill(otherpid, SIGKILL);
+		return ERR;
+	}
+
+	XCursesLINES = SP->lines;
+	XCursesCOLS = SP->cols;
+
+	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d "
+		"SP->cols %d\n", XCLOGMSG, shmid_Xcurscr, 
+		shmkey_Xcurscr, SP->lines, SP->cols));
+
+	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
+	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+
+	SP->resized = FALSE;
+
+	return OK;
 }

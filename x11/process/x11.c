@@ -19,9 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.47 2006/07/02 08:17:21 wmcbrine Exp $");
-
-extern AppData app_data;
+RCSID("$Id: x11.c,v 1.48 2006/07/02 19:03:59 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;

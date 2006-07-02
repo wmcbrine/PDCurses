@@ -15,10 +15,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcx11.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.16 2006/03/29 20:06:41 wmcbrine Exp $");
+#include <string.h>
+
+RCSID("$Id: pdcsetsc.c,v 1.17 2006/07/02 19:03:59 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -119,7 +120,17 @@ int PDC_curs_set(int visibility)
 
 void PDC_set_title(const char *title)
 {
+	int len;
+
 	PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
 
-	XCurses_set_title(title);
+	len = strlen(title) + 1;		/* write nul character */
+
+	XCursesInstruct(CURSES_TITLE);
+
+	if (write_display_socket_int(len) >= 0)
+		if (write_socket(display_sock, title, len) >= 0)
+			return;
+
+	XCursesExitCursesProcess(1, "exiting from PDC_set_title");
 }

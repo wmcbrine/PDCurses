@@ -22,42 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.33 2006/07/02 08:17:21 wmcbrine Exp $");
-
-extern AppData app_data;
-
-static void XCursesExitCursesProcess(int, char *);
-
-int XCursesResizeScreen(int nlines, int ncols)
-{
-	PDC_LOG(("%s:XCursesResizeScreen() - called: Lines: %d Cols: %d\n",
-		XCLOGMSG, nlines, ncols));
-
-	shmdt((char *)Xcurscr);
-	XCursesInstructAndWait(CURSES_RESIZE);
-
-	if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,
-		SP->XcurscrSize + XCURSESSHMMIN, 0700)) < 0)
-	{
-		perror("Cannot allocate shared memory for curscr");
-		kill(otherpid, SIGKILL);
-		return ERR;
-	}
-
-	XCursesLINES = SP->lines;
-	XCursesCOLS = SP->cols;
-
-	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d "
-		"SP->cols %d\n", XCLOGMSG, shmid_Xcurscr, 
-		shmkey_Xcurscr, SP->lines, SP->cols));
-
-	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
-	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-
-	SP->resized = FALSE;
-
-	return OK;
-}
+RCSID("$Id: x11curses.c,v 1.34 2006/07/02 19:03:59 wmcbrine Exp $");
 
 int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -98,24 +63,6 @@ int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			"exiting from XCurses_display_cursor");
 
 	return OK;
-}
-
-void XCurses_set_title(const char *title)
-{
-	int len;
-
-	PDC_LOG(("%s:XCurses_set_title() - called: TITLE: %s\n",
-		XCLOGMSG, title));
-
-	len = strlen(title) + 1;		/* write nul character */
-
-	XCursesInstruct(CURSES_TITLE);
-
-	if (write_display_socket_int(len) >= 0)
-		if (write_socket(display_sock, title, len) >= 0)
-			return;
-
-	XCursesExitCursesProcess(1, "exiting from XCurses_set_title");
 }
 
 int XCurses_refresh_scrollbar(void)
@@ -183,15 +130,6 @@ int XCurses_rawgetch(void)
 	return key;
 }
 
-int XCurses_get_input_fd(void)
-{
-	PDC_LOG(("%s:XCurses_get_input_fd() - called\n", XCLOGMSG));
-	PDC_LOG(("%s:XCurses_get_input_fd() - returning %i\n", XCLOGMSG,
-		key_sock));
-
-	return key_sock;
-}
-
 bool XCurses_kbhit(void)
 {
 	int s;
@@ -250,31 +188,6 @@ int XCursesInstructAndWait(int flag)
 			"XCursesInstructAndWait - synchronization error");
 
 	return OK;
-}
-
-int XCurses_transform_line(const chtype *ch, int row,
-			   int start_col, int num_cols)
-{
-	PDC_LOG(("%s:XCurses_transform_line() called: row %d start_col %d "
-		"num_cols %d flag %d\n", XCLOGMSG, row, start_col, 
-		num_cols, *(Xcurscr + XCURSCR_FLAG_OFF + row)));
-
-	/* loop until we can write to the line */
-
-	while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
-		dummy_function();
-
-	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
-
-	memcpy(Xcurscr + XCURSCR_Y_OFF(row) + (start_col * sizeof(chtype)),
-		ch, num_cols * sizeof(chtype));
-
-	*(Xcurscr + XCURSCR_START_OFF + row) = start_col;
-	*(Xcurscr + XCURSCR_LENGTH_OFF + row) = num_cols;
-
-	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
-
-	return 0;
 }
 
 static int XCursesSetupCurses(void)
@@ -412,85 +325,7 @@ int XCursesInitscr(const char *display_name, int argc, char *argv[])
 	return rc;
 }
 
-int XCurses_getclipboard(char **contents, long *length)
-{
-	int result = 0;
-	int len;
-
-	PDC_LOG(("%s:XCurses_getclipboard() - called\n", XCLOGMSG));
-
-	XCursesInstructAndWait(CURSES_GET_SELECTION);
-
-	if (read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
-	    XCursesExitCursesProcess(5,
-		"exiting from XCurses_getclipboard");
-
-	if (result == PDC_CLIP_SUCCESS)
-	{
-	    if (read_socket(display_sock, (char *)&len, sizeof(int)) < 0)
-		XCursesExitCursesProcess(5,
-		    "exiting from XCurses_getclipboard");
-
-	    if (len != 0)
-	    {
-		*contents = (char *)malloc(len + 1);
-
-		if (!*contents)
-		    XCursesExitCursesProcess(6, "exiting from "
-			"XCurses_getclipboard - synchronization error");
-
-		if (read_socket(display_sock, *contents, len) < 0)
-		    XCursesExitCursesProcess(5,
-			"exiting from XCurses_getclipboard");
-
-		*length = len;
-	    }
-	}
-
-	return result;
-}
-
-int XCurses_setclipboard(const char *contents, long length)
-{
-	int rc;
-
-	PDC_LOG(("%s:XCurses_setclipboard() - called\n", XCLOGMSG));
-
-	XCursesInstruct(CURSES_SET_SELECTION);
-
-	/* Write, then wait for X to do its stuff; expect return code. */
-
-	if (write_socket(display_sock, (char *)&length, sizeof(long)) >= 0)
-	    if (write_socket(display_sock, contents, length) >= 0)
-		if (read_socket(display_sock, (char *)&rc, sizeof(int)) >= 0)
-		    return rc;
-
-	XCursesExitCursesProcess(5, "exiting from XCurses_setclipboard");
-
-	return ERR;	/* not reached */
-}
-
-int XCurses_clearclipboard(void)
-{
-	int rc;
-	long len = 0;
-
-	PDC_LOG(("%s:XCurses_clearclipboard() - called\n", XCLOGMSG));
-
-	XCursesInstruct(CURSES_CLEAR_SELECTION);
-
-	/* Write, then wait for X to do its stuff; expect return code. */
-
-	if (write_socket(display_sock, (char *)&len, sizeof(long)) >= 0)
-	    if (read_socket(display_sock, (char *)&rc, sizeof(int)) >= 0)
-		return rc;
-
-	XCursesExitCursesProcess(5, "exiting from XCurses_clearclipboard");
-
-	return ERR;	/* not reached */
-}
-
-void XCursesCleanupCursesProcess(int rc)
+static void XCursesCleanupCursesProcess(int rc)
 {
 	PDC_LOG(("%s:XCursesCleanupCursesProcess() - called: %d\n",
 		XCLOGMSG, rc));
@@ -508,7 +343,7 @@ void XCursesCleanupCursesProcess(int rc)
 		_exit(rc);
 }
 
-static void XCursesExitCursesProcess(int rc, char *msg)
+void XCursesExitCursesProcess(int rc, char *msg)
 {
 	PDC_LOG(("%s:XCursesExitCursesProcess() - called: %d %s\n",
 		XCLOGMSG, rc, msg));

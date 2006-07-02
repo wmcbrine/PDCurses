@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.28 2006/07/01 18:06:43 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.29 2006/07/02 19:03:59 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -234,6 +234,8 @@ typedef struct
 	char *textCursor;
 } AppData;
 
+extern AppData app_data;
+
 #define XCURSESNORMALFONTINFO	app_data.normalfont
 #define XCURSESITALICFONTINFO	app_data.italicfont
 #define XCURSESLINES		app_data.lines
@@ -275,7 +277,74 @@ typedef struct
 #endif
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
-#include "x11.h"
+void dummy_function(void);
+void get_GC(Display *, Window, GC *, XFontStruct *, int, int, bool);
+void makeXY(int, int, int, int, int *, int *);
+int get_colors(void);
+void start_event_handler(void);
+
+int XCursesTransformLine(int, int, chtype, int, int, int, char *);
+int XCursesDisplayText(const chtype *, int, int, int, bool);
+void XCursesDisplayScreen(bool);
+void XCursesDisplayCursor(int, int, int, int);
+
+int XCurses_display_cursor(int, int, int, int, int);
+
+void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
+void XCursesEnterLeaveWindow(Widget, XtPointer, XEvent *, Boolean *);
+void XCursesPasteSelection(Widget, XButtonEvent *);
+void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
+void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
+void XCursesModifierPress(Widget, XEvent *, String *, Cardinal *);
+void XCursesButton(Widget, XEvent *, String *, Cardinal *);
+Boolean XCursesConvertProc(Widget, Atom *, Atom *, Atom *, XtPointer *,
+			   unsigned long *, int *);
+void XCursesLoseOwnership(Widget, Atom *);
+void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, Atom *,
+				      XtPointer, unsigned long *, int *);
+void XCursesRequestorCallbackForGetSelection(Widget, XtPointer, Atom *, Atom *,
+					     XtPointer, unsigned long *, int *);
+RETSIGTYPE XCursesSignalHandler(int);
+void XCursesExitCursesProcess(int, char *);
+void XCursesExitXCursesProcess(int, int, char *);
+
+void SelectionOff(void);
+void SelectionOn(int, int);
+void SelectionExtend(int, int);
+void SelectionSet(void);
+
+int write_socket(int, const char *, int);
+int read_socket(int, char *, int);
+int write_display_socket_int(int);
+
+int XCursesSetupX(const char *display_name, int argc, char *argv[]);
+RETSIGTYPE XCursesSigwinchHandler(int signo);
+
+#ifdef _HPUX_SOURCE
+# define FD_SET_CAST int *
+#else
+# define FD_SET_CAST fd_set *
+#endif
+
+extern fd_set readfds;
+extern fd_set writefds;
+extern struct timeval socket_timeout;
+
+extern unsigned char *Xcurscr;
+extern int XCursesProcess;
+extern int shmidSP;
+extern int shmid_Xcurscr;
+extern int shmkeySP;
+extern int shmkey_Xcurscr;
+extern int otherpid;
+extern int XCursesLINES;
+extern int XCursesCOLS;
+extern unsigned char *atrtab;
+extern int display_sock;
+extern int key_sock;
+extern int display_sockets[2];
+extern int key_sockets[2];
+extern int exit_sock;
 
 extern GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
 extern int XCursesFontHeight, XCursesFontWidth;
@@ -315,7 +384,6 @@ extern XtResource app_resources[PDC_NUMBER_APP_RESOURCES];
 extern XrmOptionDescRec options[PDC_NUMBER_OPTIONS];
 extern char global_display_name[100];
 extern Bool after_first_curses_request;
-/* extern char *XCursesProgramName; */
 extern int colors[(2 * MAX_COLORS) + 2];
 extern int windowEntered;
 extern int visible_cursor;

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.67 2006/07/02 07:08:27 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.68 2006/07/02 19:03:59 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -2343,21 +2343,6 @@ void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 		PDC_LOG(("%s:XCursesEnterleaveWindow - unknown event %d\n",
 			XCLOGMSG, event->type));
 	}
-}
-
-int XCurses_get_rows(void)
-{
-	return XCursesLINES;
-}
-
-int XCurses_get_cols(void)
-{
-	return XCursesCOLS;
-}
-
-unsigned long XCurses_get_key_modifiers(void)
-{
-	return pdc_key_modifier;
 }
 
 int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)

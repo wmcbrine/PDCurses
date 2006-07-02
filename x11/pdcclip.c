@@ -15,11 +15,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcx11.h"
+
 #include <stdlib.h>
 
-RCSID("$Id: pdcclip.c,v 1.17 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.18 2006/07/02 19:03:59 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -50,9 +50,40 @@ RCSID("$Id: pdcclip.c,v 1.17 2006/03/29 20:06:41 wmcbrine Exp $");
 
 int PDC_getclipboard(char **contents, long *length)
 {
+	int result = 0;
+	int len;
+
 	PDC_LOG(("PDC_getclipboard() - called\n"));
 
-	return XCurses_getclipboard(contents, length);
+	XCursesInstructAndWait(CURSES_GET_SELECTION);
+
+	if (read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
+	    XCursesExitCursesProcess(5,
+		"exiting from XCurses_getclipboard");
+
+	if (result == PDC_CLIP_SUCCESS)
+	{
+	    if (read_socket(display_sock, (char *)&len, sizeof(int)) < 0)
+		XCursesExitCursesProcess(5,
+		    "exiting from XCurses_getclipboard");
+
+	    if (len != 0)
+	    {
+		*contents = (char *)malloc(len + 1);
+
+		if (!*contents)
+		    XCursesExitCursesProcess(6, "exiting from "
+			"XCurses_getclipboard - synchronization error");
+
+		if (read_socket(display_sock, *contents, len) < 0)
+		    XCursesExitCursesProcess(5,
+			"exiting from XCurses_getclipboard");
+
+		*length = len;
+	    }
+	}
+
+	return result;
 }
 
 /*man-start**************************************************************
@@ -78,9 +109,22 @@ int PDC_getclipboard(char **contents, long *length)
 
 int PDC_setclipboard(const char *contents, long length)
 {
+	int rc;
+
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
-	return XCurses_setclipboard(contents, length);
+	XCursesInstruct(CURSES_SET_SELECTION);
+
+	/* Write, then wait for X to do its stuff; expect return code. */
+
+	if (write_socket(display_sock, (char *)&length, sizeof(long)) >= 0)
+	    if (write_socket(display_sock, contents, length) >= 0)
+		if (read_socket(display_sock, (char *)&rc, sizeof(int)) >= 0)
+		    return rc;
+
+	XCursesExitCursesProcess(5, "exiting from PDC_setclipboard");
+
+	return ERR;	/* not reached */
 }
 
 /*man-start**************************************************************
@@ -128,5 +172,20 @@ int PDC_freeclipboard(char *contents)
 
 int PDC_clearclipboard(void)
 {
-	return XCurses_clearclipboard();
+	int rc;
+	long len = 0;
+
+	PDC_LOG(("PDC_clearclipboard() - called\n"));
+
+	XCursesInstruct(CURSES_CLEAR_SELECTION);
+
+	/* Write, then wait for X to do its stuff; expect return code. */
+
+	if (write_socket(display_sock, (char *)&len, sizeof(long)) >= 0)
+	    if (read_socket(display_sock, (char *)&rc, sizeof(int)) >= 0)
+		return rc;
+
+	XCursesExitCursesProcess(5, "exiting from PDC_clearclipboard");
+
+	return ERR;	/* not reached */
 }

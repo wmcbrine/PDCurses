@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.68 2006/04/25 22:43:12 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.69 2006/07/02 19:03:59 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -265,25 +265,13 @@ int	PDC_query_adapter_type(void);
 #endif
 
 #ifdef XCURSES
-int	XCurses_display_cursor(int, int, int, int, int);
 int	XCurses_rawgetch(void);
 bool	XCurses_kbhit(void);
-int	XCurses_get_input_fd(void);
 int	XCursesInstruct(int);
 int	XCursesInstructAndWait(int);
-int	XCurses_transform_line(const chtype *, int, int, int);
 int	XCursesInitscr(const char *, int, char **);
 int	XCursesEndwin(void);
-void	XCursesCleanupCursesProcess(int);
-int	XCursesResizeScreen(int, int);
-int	XCurses_get_cols(void);
-int	XCurses_get_rows(void);
 int	XCurses_refresh_scrollbar(void);
-void	XCurses_set_title(const char *);
-int	XCurses_getclipboard(char **, long *);
-int	XCurses_setclipboard(const char *, long);
-int	XCurses_clearclipboard(void);
-unsigned long XCurses_get_key_modifiers(void);
 #endif
 
 #ifdef __PACIFIC__

@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.32 2006/07/02 07:08:28 wmcbrine Exp $");
+RCSID("$Id: x11curses.c,v 1.33 2006/07/02 08:17:21 wmcbrine Exp $");
 
 extern AppData app_data;
 
@@ -95,33 +95,27 @@ int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 
 	if (write_socket(display_sock, buf, idx) < 0)
 		XCursesExitCursesProcess(1,
-			"exitting from XCurses_display_cursor");
+			"exiting from XCurses_display_cursor");
 
 	return OK;
 }
 
 void XCurses_set_title(const char *title)
 {
-	char buf[30];
-	int idx, len;
+	int len;
 
 	PDC_LOG(("%s:XCurses_set_title() - called: TITLE: %s\n",
 		XCLOGMSG, title));
 
-	idx = CURSES_TITLE;
-	memcpy(buf, (char *)&idx, sizeof(int));
-
-	idx = sizeof(int);
 	len = strlen(title) + 1;		/* write nul character */
-	memcpy(buf + idx, (char *)&len, sizeof(int));
 
-	idx += sizeof(int);
+	XCursesInstruct(CURSES_TITLE);
 
-	if (write_socket(display_sock, buf, idx) < 0)
-		XCursesExitCursesProcess(1, "exiting from XCurses_set_title");
+	if (write_display_socket_int(len) >= 0)
+		if (write_socket(display_sock, title, len) >= 0)
+			return;
 
-	if (write_socket(display_sock, title, len) < 0)
-		XCursesExitCursesProcess(1, "exiting from XCurses_set_title");
+	XCursesExitCursesProcess(1, "exiting from XCurses_set_title");
 }
 
 int XCurses_refresh_scrollbar(void)
@@ -464,21 +458,16 @@ int XCurses_setclipboard(const char *contents, long length)
 
 	XCursesInstruct(CURSES_SET_SELECTION);
 
-	if (write_socket(display_sock, (char *)&length, sizeof(long)) < 0)
-		XCursesExitCursesProcess(5,
-			"exiting from XCurses_setclipboard");
+	/* Write, then wait for X to do its stuff; expect return code. */
 
-	if (write_socket(display_sock, contents, length) < 0)
-		XCursesExitCursesProcess(5,
-			"exiting from XCurses_setclipboard");
+	if (write_socket(display_sock, (char *)&length, sizeof(long)) >= 0)
+	    if (write_socket(display_sock, contents, length) >= 0)
+		if (read_socket(display_sock, (char *)&rc, sizeof(int)) >= 0)
+		    return rc;
 
-	/* Wait for X to do its stuff. Now expect return code. */
+	XCursesExitCursesProcess(5, "exiting from XCurses_setclipboard");
 
-	if (read_socket(display_sock, (char *)&rc, sizeof(int)) < 0)
-		XCursesExitCursesProcess(5,
-			"exiting from XCurses_setclipboard");
-
-	return rc;
+	return ERR;	/* not reached */
 }
 
 int XCurses_clearclipboard(void)
@@ -490,17 +479,15 @@ int XCurses_clearclipboard(void)
 
 	XCursesInstruct(CURSES_CLEAR_SELECTION);
 
-	if (write_socket(display_sock, (char *)&len, sizeof(long)) < 0)
-		XCursesExitCursesProcess(5,
-			"exiting from XCurses_setclipboard");
+	/* Write, then wait for X to do its stuff; expect return code. */
 
-	/* Wait for X to do its stuff. Now expect return code. */
+	if (write_socket(display_sock, (char *)&len, sizeof(long)) >= 0)
+	    if (read_socket(display_sock, (char *)&rc, sizeof(int)) >= 0)
+		return rc;
 
-	if (read_socket(display_sock, (char *)&rc, sizeof(int)) < 0)
-		XCursesExitCursesProcess(5,
-			"exiting from XCurses_clearclipboard");
+	XCursesExitCursesProcess(5, "exiting from XCurses_clearclipboard");
 
-	return rc;
+	return ERR;	/* not reached */
 }
 
 void XCursesCleanupCursesProcess(int rc)

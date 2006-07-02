@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.46 2006/07/02 07:08:27 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.47 2006/07/02 08:17:21 wmcbrine Exp $");
 
 extern AppData app_data;
 
@@ -381,7 +381,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		if (read_socket(display_sock, (char *)&length,
 		    sizeof(long)) < 0)
 			XCursesExitXCursesProcess(5, SIGKILL,
-			    "exiting from CURSES_TITLE "
+			    "exiting from CURSES_SET_SELECTION "
 			    "XCursesProcessRequestsFromCurses");
 
 		if (length > (long)tmpsel_length)
@@ -405,7 +405,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		if (read_socket(display_sock, (char *)tmpsel,
 		    length * sizeof(chtype)) < 0)
 			XCursesExitXCursesProcess(5, SIGKILL,
-			    "exiting from CURSES_TITLE "
+			    "exiting from CURSES_SET_SELECTION "
 			    "XCursesProcessRequestsFromCurses");
 
 		tmpsel_length = length;
@@ -922,26 +922,22 @@ void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 
 	if ((value == NULL) && (*length == 0))
 	{
-		if (write_display_socket_int(PDC_CLIP_EMPTY) < 0)
-		    XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesRequestorCallbackForGetSelection");
+	    if (write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
 		return;
 	}
+	else
+	{
+	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
+	       contents */
 
-	/* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
-	   contents */
+	    if (write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
+		if (write_display_socket_int((int)(*length)) >= 0)
+		    if (write_socket(display_sock, (char *)value, *length) >= 0)
+			return;
+	}
 
-	if (write_display_socket_int(PDC_CLIP_SUCCESS) < 0)
-		XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesRequestorCallbackForGetSelection");
-
-	if (write_display_socket_int((int)(*length)) < 0)
-		XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesRequestorCallbackForGetSelection");
-
-	if (write_socket(display_sock, (char *)value, *length) < 0)
-		XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesRequestorCallbackForGetSelection");
+	XCursesExitXCursesProcess(4, SIGKILL,
+		"exiting from XCursesRequestorCallbackForGetSelection");
 }
 
 void XCursesStructureNotify(Widget w, XtPointer client_data, XEvent *event,

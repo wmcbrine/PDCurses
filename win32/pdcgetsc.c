@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.15 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.16 2006/07/02 22:15:59 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 extern CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -228,11 +228,8 @@ int PDC_get_rows(void)
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
 	GetConsoleScreenBufferInfo(hConOut, &scr);
-#if FGC0
-	return scr.dwSize.Y;	/* Allow the whole screen to be accessed */
-#else
+
 	return scr.srWindow.Bottom - scr.srWindow.Top + 1;
-#endif
 }
 
 /*man-start**************************************************************
@@ -288,11 +285,8 @@ int PDC_get_columns(void)
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
 	GetConsoleScreenBufferInfo(hConOut, &scr);
-#if FGC0
-	return scr.dwSize.X;	/* Allow the whole screen to be accessed */
-#else
+
 	return scr.srWindow.Right - scr.srWindow.Left + 1;
-#endif
 }
 
 /*man-start**************************************************************

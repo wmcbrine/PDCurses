@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.35 2006/06/19 19:09:06 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.36 2006/07/02 22:15:59 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -393,108 +393,6 @@ static BOOL FitConsoleWindow(HANDLE hConOut, CONST SMALL_RECT *rect)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
-#if defined(MHES)
-
-	COORD size, max;
-	SMALL_RECT rect, displayarea = {0, 0, 0, 0};
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-	int external_resized = SP->resized;
-
-	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n", 
-		nlines, ncols));
-
-	/* prevent endless loops in case of errors */
-
-	SP->resized = FALSE;
-
-	/* undocumented feature: let assign LINES and COLS to current 
-	   values by the calling resize_term-function */
-
-	if (nlines == 0 && ncols == 0)
-		return OK;
-
-	if (nlines < 2 || ncols < 2)
-		return ERR;
-
-	/* needed for recovery */
-
-	if (!GetConsoleScreenBufferInfo(hConOut, &csbi))
-		return ERR;
-
-	max = GetLargestConsoleWindowSize(hConOut);
-
-	size.X = ncols;
-	size.Y = nlines;
-
-	/* Fit window into allowed values */
-
-	rect.Left = rect.Top = 0;
-	rect.Right = ncols - 1;
-
-	if (rect.Right > max.X)
-		rect.Right = max.X;
-
-	rect.Bottom = rect.Top + nlines - 1;
-
-	if (rect.Bottom > max.Y)
-		rect.Bottom = max.Y;
-
-	/* helps to allow the BufferSize */
-
-	FitConsoleWindow(hConOut, &rect);
-	displayarea.Right = rect.Right;
-	displayarea.Bottom = rect.Bottom;
-
-	if (!SetConsoleScreenBufferSize(hConOut, size) ||
-	    !FitConsoleWindow(hConOut, &rect) ||
-	    !SetConsoleWindowInfo(hConOut, TRUE, &displayarea))
-	{
-		SetConsoleScreenBufferSize(hConOut, csbi.dwSize);
-		SetConsoleWindowInfo(hConOut, TRUE, &csbi.srWindow);
-      
-		return external_resized ? OK : ERR;
-	}
-
-	SetConsoleActiveScreenBuffer(hConOut);
-
-	return OK;
-
-#elif defined(FGC)
-
-	COORD size;
-	SMALL_RECT rect;
-
-	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
-		nlines, ncols));
-
-	if (nlines < 2)
-		return ERR;
-
-	SP->lines = LINES = nlines;
-
-	if (ncols < 2)
-		return ERR;
-
-	SP->cols = COLS = ncols;
-
-	size.X = SP->cols;
-	size.Y = SP->lines;
-
-	rect.Top = rect.Left = 0;
-	rect.Bottom = SP->lines - 1;
-	rect.Right = SP->cols - 1;
-
-	SetConsoleScreenBufferSize(hConOut, size);
-	SetConsoleWindowInfo(hConOut, TRUE, &rect);
-	SetConsoleScreenBufferSize(hConOut, size);
-	SetConsoleWindowInfo(hConOut, TRUE, &rect);
-	SetConsoleActiveScreenBuffer(hConOut);
-
-	SP->resized = FALSE;
-
-	return OK;
-#else
 	SMALL_RECT rect;
 	COORD size, max;
 
@@ -526,7 +424,6 @@ int PDC_resize_screen(int nlines, int ncols)
 	SP->resized = FALSE;
 
 	return OK;
-#endif
 }
 
 int PDC_reset_prog_mode(void)

@@ -5459,7 +5459,7 @@ fi
 
 
 
-                                                            ac_config_files="$ac_config_files Makefile pdcurses/$mymakefile demos/Makefile panel/Makefile tools/Makefile xcurses-config"
+                                                  ac_config_files="$ac_config_files Makefile x11/$mymakefile demos/Makefile tools/Makefile x11/xcurses-config"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5987,11 +5987,10 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-  "pdcurses/$mymakefile" ) CONFIG_FILES="$CONFIG_FILES pdcurses/$mymakefile" ;;
+  "x11/$mymakefile" ) CONFIG_FILES="$CONFIG_FILES x11/$mymakefile" ;;
   "demos/Makefile" ) CONFIG_FILES="$CONFIG_FILES demos/Makefile" ;;
-  "panel/Makefile" ) CONFIG_FILES="$CONFIG_FILES panel/Makefile" ;;
   "tools/Makefile" ) CONFIG_FILES="$CONFIG_FILES tools/Makefile" ;;
-  "xcurses-config" ) CONFIG_FILES="$CONFIG_FILES xcurses-config" ;;
+  "x11/xcurses-config" ) CONFIG_FILES="$CONFIG_FILES x11/xcurses-config" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -6634,9 +6633,9 @@ fi
 
 case "$target" in
         *ibm-aix*)
-                mv pdcurses/Makefile.aix pdcurses/Makefile
-                echo "$as_me:$LINENO: result: renaming pdcurses/Makefile.aix to pdcurses/Makefile" >&5
-echo "${ECHO_T}renaming pdcurses/Makefile.aix to pdcurses/Makefile" >&6
+                mv x11/Makefile.aix x11/Makefile
+                echo "$as_me:$LINENO: result: renaming x11/Makefile.aix to x11/Makefile" >&5
+echo "${ECHO_T}renaming x11/Makefile.aix to x11/Makefile" >&6
                 ;;
         *)
                 ;;

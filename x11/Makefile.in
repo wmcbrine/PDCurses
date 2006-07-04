@@ -9,9 +9,10 @@ THIS		= Makefile
 
 @SET_MAKE@
 
-srcdir		= @srcdir@
-x11basedir	= $(srcdir)/../x11
+x11basedir	= @srcdir@
 x11dir		= $(x11basedir)/process
+srcdir		= $(x11basedir)/../pdcurses
+pandir		= $(x11basedir)/../panel
 
 VPATH		= @srcdir@
 prefix		= @prefix@
@@ -53,7 +54,7 @@ LDFLAGS		=
 
 RANLIB		= @RANLIB@
 
-LIBRARIES	= libXCurses.a
+LIBRARIES	= libXCurses.a libpanel.a
 
 SHLFILE = XCurses
 
@@ -86,6 +87,8 @@ pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
 
+PANOBJS = panel.o
+
 LIBSHOBJS = addch.sho addchstr.sho addstr.sho attr.sho beep.sho bkgd.sho \
 border.sho clear.sho color.sho delch.sho deleteln.sho getch.sho \
 getstr.sho getyx.sho inch.sho inchstr.sho initscr.sho inopts.sho \
@@ -107,8 +110,12 @@ libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS)
 	ar rv $@ $?
 	-$(RANLIB) $@
 
+libpanel.a : $(PANOBJS)
+	ar rv $@ $?
+	-$(RANLIB) $@
+
 $(SHLPRE)$(SHLFILE)$(SHLPST) : $(SHOFILES)
-	cp $(srcdir)/../win32/curses.def ./cygwin.def
+#	cp $(srcdir)/../win32/curses.def ./cygwin.def
 	$(LD_RXLIB1) $(RXPACKEXPORTS) -o $@ $(SHOFILES) $(LD_RXLIB2)
 
 addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)
@@ -270,6 +277,10 @@ x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS)
 
 x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
+
+
+panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PDCURSES_HOME)/panel.h
+	$(CC) $(CCFLAGS) -o $@ $(pandir)/panel.c
 
 
 addch.sho: $(srcdir)/addch.c $(PDCURSES_HEADERS)

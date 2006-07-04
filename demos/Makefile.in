@@ -16,11 +16,11 @@ CPPFLAGS	= -I$(PDCURSES_HOME) -I$(srcdir) -DXCURSES @SYS_DEFS@
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
-LIB_DEPS	= -L$(PDCURSES_HOME)/pdcurses -lXCurses
-LIBXCURSES	= $(PDCURSES_HOME)/pdcurses/libXCurses.a
+LIB_DEPS	= -L$(PDCURSES_HOME)/x11 -lXCurses
+LIBXCURSES	= $(PDCURSES_HOME)/x11/libXCurses.a
 
-PANEL_LIB	= -L$(PDCURSES_HOME)/panel -lpanel
-LIBPANEL	= $(PDCURSES_HOME)/panel/libpanel.a
+PANEL_LIB	= -L$(PDCURSES_HOME)/x11 -lpanel
+LIBPANEL	= $(PDCURSES_HOME)/x11/libpanel.a
 
 LINK		= @PURIFY@ $(CC)
 #LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
@@ -31,10 +31,8 @@ DEMOS 		= firework newdemo ptest rain testcurs tuidemo worm xmas
 all: $(DEMOS) 
 
 $(LIBXCURSES):
-	cd ../pdcurses; $(MAKE) $(MFLAGS)
-
 $(LIBPANEL):
-	cd ../panel; $(MAKE) $(MFLAGS)
+	cd ../x11; $(MAKE) $(MFLAGS)
 
 firework: firework.o $(LIBXCURSES)
 	$(LINK) firework.o -o $@ $(LDFLAGS)

@@ -3,7 +3,7 @@
 # The idea to this kind of setup info script was stolen from numerous
 # other packages, such as neon, libxml and gnome.
 #
-# $Id: xcurses-config.in,v 1.6 2006/03/11 03:15:12 wmcbrine Exp $
+# $Id: xcurses-config.in,v 1.1 2006/07/04 00:23:05 wmcbrine Exp $
 #
 
 verdot=2.8

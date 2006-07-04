@@ -9,9 +9,10 @@ THIS		= Makefile
 
 @SET_MAKE@
 
-srcdir		= @srcdir@
-x11basedir	= $(srcdir)/../x11
-x11dir		= $(x11basedir)/process
+x11basedir      = @srcdir@
+x11dir          = $(x11basedir)/process
+srcdir          = $(x11basedir)/../pdcurses
+pandir          = $(x11basedir)/../panel
 
 VPATH		= @srcdir@
 prefix		= @prefix@
@@ -54,7 +55,7 @@ CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 LINK		= $(CC)
 LDFLAGS		= 
 
-LIBRARIES	= libXCurses.a
+LIBRARIES	= libXCurses.a libpanel.a
 
 ################################################################################
 all :	$(LIBRARIES)
@@ -84,6 +85,8 @@ PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
 pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
+
+PANOBJS = panel.o
 
 
 libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS) curses.exp ../x11/xcurses.exp
@@ -254,3 +257,6 @@ x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS)
 x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
 
+
+panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PDCURSES_HOME)/panel.h
+	$(CC) $(CCFLAGS) -o $@ $(pandir)/panel.c

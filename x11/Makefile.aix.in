@@ -1,0 +1,268 @@
+# Makefile for XCurses library for AIX
+#
+# The variable 'srcdir' refers to the source-distribution, and can be set with
+# the configure script by "--srcdir=DIR".
+#
+
+SHELL		= /bin/sh
+THIS		= Makefile
+
+@SET_MAKE@
+
+x11basedir      = @srcdir@
+x11dir          = $(x11basedir)/process
+srcdir          = $(x11basedir)/../pdcurses
+pandir          = $(x11basedir)/../panel
+
+VPATH		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= $(exec_prefix)
+includedir	= @includedir@
+
+PDCURSES_HOME		=$(srcdir)/..
+PDCURSES_CONFIG_H	=../config.h
+PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
+PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
+PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) 
+$(PDCURSES_CURSPRIV_H)
+PDCURSES_X11_H		=$(x11basedir)/pdcx11.h
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+SHL_TARGETS	= @SHL_TARGETS@
+DYN_COMP	= @DYN_COMP@
+SHLPRE		= @SHLPRE@
+SHLPST		= @SHLPST@
+LD_RXLIB1	= @LD_RXLIB1@
+LD_RXLIB2	= # @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
+MH_XLIBS	= @MH_XLIBS@
+MH_EXTRA_LIBS	= @MH_EXTRA_LIBS@
+O2SAVE		= @O2SAVE@
+O2SHO		= @O2SHO@
+CC2O		= @CC2O@
+SAVE2O		= @SAVE2O@
+DYNAMIC_LDFLAGS = @DYNAMIC_LDFLAGS@ $(EEXTRA)
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@ $(DYN_COMP)
+
+INCDIR		= $(srcdir)
+CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@ -I$(x11basedir) -I$(x11dir)
+
+CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
+
+LINK		= $(CC)
+LDFLAGS		= 
+
+LIBRARIES	= libXCurses.a libpanel.a
+
+################################################################################
+all :	$(LIBRARIES)
+
+install : 
+	echo Does nothing at the moment
+
+clean :
+	-rm -rf *.o *.sho trace $(LIBRARIES)
+
+distclean: clean
+	-rm -f Makefile
+
+mostlyclean: clean
+
+realclean: distclean
+
+#------------------------------------------------------------------------
+
+LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
+clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
+inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
+move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
+scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
+
+PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
+pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
+
+X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
+
+PANOBJS = panel.o
+
+
+libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS) curses.exp ../x11/xcurses.exp
+	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) $(LIBOBJS) $(PDCOBJS) $(X11OBJS) -o $@
+
+libpanel.a : $(PANOBJS)
+        ar rv $@ $?
+        -$(RANLIB) $@
+
+
+curses.exp: ../win32/curses.def ../x11/xcurses.exp
+	cp ../x11/xcurses.exp ./curses.exp
+	grep ^EXPORTS ../win32/curses.def | cut -f 2 -d\ >> curses.exp
+
+
+addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/addch.c
+
+addchstr.o: $(srcdir)/addchstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/addchstr.c
+
+addstr.o: $(srcdir)/addstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/addstr.c
+
+attr.o: $(srcdir)/attr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/attr.c
+
+beep.o: $(srcdir)/beep.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/beep.c
+
+bkgd.o: $(srcdir)/bkgd.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/bkgd.c
+
+border.o: $(srcdir)/border.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/border.c
+
+clear.o: $(srcdir)/clear.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/clear.c
+
+color.o: $(srcdir)/color.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/color.c
+
+delch.o: $(srcdir)/delch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/delch.c
+
+deleteln.o: $(srcdir)/deleteln.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/deleteln.c
+
+getch.o: $(srcdir)/getch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/getch.c
+
+getstr.o: $(srcdir)/getstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/getstr.c
+
+getyx.o: $(srcdir)/getyx.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/getyx.c
+
+inch.o: $(srcdir)/inch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/inch.c
+
+inchstr.o: $(srcdir)/inchstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/inchstr.c
+
+initscr.o: $(srcdir)/initscr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/initscr.c
+
+inopts.o: $(srcdir)/inopts.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/inopts.c
+
+insch.o: $(srcdir)/insch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/insch.c
+
+insstr.o: $(srcdir)/insstr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/insstr.c
+
+instr.o: $(srcdir)/instr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/instr.c
+
+kernel.o: $(srcdir)/kernel.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/kernel.c
+
+mouse.o: $(srcdir)/mouse.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/mouse.c
+
+move.o: $(srcdir)/move.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/move.c
+
+outopts.o: $(srcdir)/outopts.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/outopts.c
+
+overlay.o: $(srcdir)/overlay.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/overlay.c
+
+pad.o: $(srcdir)/pad.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pad.c
+
+printw.o: $(srcdir)/printw.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/printw.c
+
+refresh.o: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/refresh.c
+
+scanw.o: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scanw.c
+
+scr_dump.o: $(srcdir)/scr_dump.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scr_dump.c
+
+scroll.o: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/scroll.c
+
+slk.o: $(srcdir)/slk.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/slk.c
+
+termattr.o: $(srcdir)/termattr.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/termattr.c
+
+terminfo.o: $(srcdir)/terminfo.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/terminfo.c
+
+touch.o: $(srcdir)/touch.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/touch.c
+
+util.o: $(srcdir)/util.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/util.c
+
+window.o: $(srcdir)/window.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/window.c
+
+
+pdcclip.o: $(x11basedir)/pdcclip.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcclip.c
+
+pdcdebug.o: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcdebug.c
+
+pdcdisp.o: $(x11basedir)/pdcdisp.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcdisp.c
+
+pdcgetsc.o: $(x11basedir)/pdcgetsc.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcgetsc.c
+
+pdckbd.o: $(x11basedir)/pdckbd.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdckbd.c
+
+pdcscrn.o: $(x11basedir)/pdcscrn.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcscrn.c
+
+pdcsetsc.o: $(x11basedir)/pdcsetsc.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcsetsc.c
+
+pdcutil.o: $(srcdir)/pdcutil.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcutil.c
+
+pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcwin.c
+
+pdcx11.o: $(x11basedir)/pdcx11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcx11.c
+
+ScrollBox.o: $(x11basedir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/ScrollBox.c
+
+sb.o: $(x11basedir)/sb.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/sb.c
+
+x11common.o: $(x11dir)/x11common.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11common.c
+
+x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11.c
+
+x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
+
+
+panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PDCURSES_HOME)/panel.h
+	$(CC) $(CCFLAGS) -o $@ $(pandir)/panel.c

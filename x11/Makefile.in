@@ -13,6 +13,7 @@ x11basedir	= @srcdir@
 x11dir		= $(x11basedir)/process
 srcdir		= $(x11basedir)/../pdcurses
 pandir		= $(x11basedir)/../panel
+demodir		= $(x11basedir)/../demos
 
 VPATH		= @srcdir@
 prefix		= @prefix@
@@ -49,23 +50,33 @@ CPPFLAGS	= -I$(PDCURSES_HOME) -I$(srcdir) @DEFS@ -DXCURSES @SYS_DEFS@ -I$(x11bas
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
-LINK		= $(CC)
-LDFLAGS		=
+LINK		= @PURIFY@ $(CC)
+#LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
+LDFLAGS		= $(LIBCURSES) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 
 RANLIB		= @RANLIB@
 
-LIBRARIES	= libXCurses.a libpanel.a
+LIBCURSES	= libXCurses.a
+LIBPANEL	= libpanel.a
 
-SHLFILE = XCurses
+LIB_DEPS        = -L$(PDCURSES_HOME)/x11 -lXCurses
+PANEL_LIB       = -L$(PDCURSES_HOME)/x11 -lpanel
+
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas
+
+SHLFILE		= XCurses
 
 ################################################################################
-all :	$(LIBRARIES) $(SHL_TARGETS)
+all:	$(PDCLIBS) $(SHL_TARGETS) $(DEMOS)
 
-install :
+install:
 	echo Does nothing at the moment
 
-clean :
-	-rm -rf *.o *.sho trace $(LIBRARIES) $(SHL_TARGETS)
+clean:
+	-rm -rf *.o *.sho trace $(PDCLIBS) $(SHL_TARGETS) $(DEMOS)
+
+demos:	$(DEMOS)
 
 distclean: clean
 	-rm -f Makefile
@@ -278,10 +289,12 @@ x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS)
 x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
 
+#------------------------------------------------------------------------
 
 panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PDCURSES_HOME)/panel.h
 	$(CC) $(CCFLAGS) -o $@ $(pandir)/panel.c
 
+#------------------------------------------------------------------------
 
 addch.sho: $(srcdir)/addch.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
@@ -601,3 +614,115 @@ x11curses.sho: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11curses.c
 	$(O2SHO)
 	$(SAVE2O)
+
+#------------------------------------------------------------------------
+
+firework: firework.o $(LIBCURSES)
+	$(LINK) firework.o -o $@ $(LDFLAGS)
+
+newdemo: newdemo.o $(LIBCURSES)
+	$(LINK) newdemo.o -o $@ $(LDFLAGS)
+
+ptest: ptest.o $(LIBCURSES) $(LIBPANEL)
+#	$(LINK) ptest.o -o $@ $(PANEL_LIB) $(LDFLAGS)
+	$(LINK) ptest.o -o $@ $(LIBPANEL) $(LDFLAGS)
+
+rain: rain.o $(LIBCURSES)
+	$(LINK) rain.o -o $@ $(LDFLAGS)
+
+testcurs: testcurs.o $(LIBCURSES)
+	$(LINK) testcurs.o -o $@ $(LDFLAGS)
+
+tuidemo: tuidemo.o tui.o $(LIBCURSES)
+	$(LINK) tui.o tuidemo.o -o $@ $(LDFLAGS)
+
+worm: worm.o $(LIBCURSES)
+	$(LINK) worm.o -o $@ $(LDFLAGS)
+
+xmas: xmas.o $(LIBCURSES)
+	$(LINK) xmas.o -o $@ $(LDFLAGS)
+
+
+firework.o: $(demodir)/firework.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/firework.c
+
+newdemo.o: $(demodir)/newdemo.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/newdemo.c
+
+ptest.o: $(demodir)/ptest.c $(PDCURSES_HOME)/panel.h $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/ptest.c
+
+rain.o: $(demodir)/rain.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/rain.c
+
+testcurs.o: $(demodir)/testcurs.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/testcurs.c
+
+tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/tui.c
+
+tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/tuidemo.c
+
+worm.o: $(demodir)/worm.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/worm.c
+
+xmas.o: $(demodir)/xmas.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) -o $@ $(demodir)/xmas.c
+
+#
+# This section provides for compiling and linking the
+# ncurses test programs.
+#
+ncurses_testdir	= $(HOME)/ncurses-5.5/test
+
+NCURSES_TESTS	= bs gdc hanoi knight tclock ncurses
+
+ncurses_tests: $(NCURSES_TESTS)
+
+ncurses_clean:
+	-rm -f *.o trace $(NCURSES_TESTS)
+
+NCFLAGS=-I$(ncurses_testdir)
+
+bs: bs.o $(LIBCURSES)
+	$(LINK) bs.o -o $@ $(LDFLAGS)
+
+gdc: gdc.o $(LIBCURSES)
+	$(LINK) gdc.o -o $@ $(LDFLAGS)
+
+hanoi: hanoi.o $(LIBCURSES)
+	$(LINK) hanoi.o -o $@ $(LDFLAGS)
+
+knight: knight.o $(LIBCURSES)
+	$(LINK) knight.o -o $@ $(LDFLAGS)
+
+tclock: tclock.o $(LIBCURSES)
+	$(LINK) tclock.o -o $@ $(LDFLAGS) -lm
+
+view: view.o $(LIBCURSES)
+	$(LINK) view.o -o $@ $(LDFLAGS)
+
+ncurses: ncurses.o $(LIBCURSES) $(LIBPANEL)
+	$(LINK) ncurses.o -o $@ $(LDFLAGS) $(LIBPANEL)
+
+bs.o: $(ncurses_testdir)/bs.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/bs.c
+
+gdc.o: $(ncurses_testdir)/gdc.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/gdc.c
+
+hanoi.o: $(ncurses_testdir)/hanoi.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/hanoi.c
+
+knight.o: $(ncurses_testdir)/knight.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/knight.c
+
+tclock.o: $(ncurses_testdir)/tclock.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/tclock.c
+
+view.o: $(ncurses_testdir)/view.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/view.c
+
+ncurses.o: $(ncurses_testdir)/ncurses.c $(PDCURSES_CURSES_H)
+	$(CC) $(CCFLAGS) $(NCFLAGS) -o $@ $(ncurses_testdir)/ncurses.c

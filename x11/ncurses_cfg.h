@@ -1,4 +1,4 @@
-/* $Id: ncurses_cfg.h,v 1.10 2006/03/29 19:50:13 wmcbrine Exp $
+/* $Id: ncurses_cfg.h,v 1.1 2006/07/05 06:36:57 wmcbrine Exp $
  *
  * This file is only used with the ncurses test programs.
  *

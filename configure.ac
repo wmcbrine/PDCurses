@@ -204,7 +204,7 @@ dnl --------------- Check how to make shared libraries -------------------
 dnl Force the ability of shared library usage
 MH_SHARED_LIBRARY(XCurses)
 
-AC_CONFIG_FILES([Makefile x11/$mymakefile demos/Makefile tools/Makefile x11/xcurses-config])
+AC_CONFIG_FILES([Makefile x11/$mymakefile tools/Makefile x11/xcurses-config])
 AC_OUTPUT
 
 case "$target" in

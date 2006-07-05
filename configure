@@ -5459,7 +5459,7 @@ fi
 
 
 
-                                                  ac_config_files="$ac_config_files Makefile x11/$mymakefile demos/Makefile tools/Makefile x11/xcurses-config"
+                                        ac_config_files="$ac_config_files Makefile x11/$mymakefile tools/Makefile x11/xcurses-config"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5988,7 +5988,6 @@ do
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "x11/$mymakefile" ) CONFIG_FILES="$CONFIG_FILES x11/$mymakefile" ;;
-  "demos/Makefile" ) CONFIG_FILES="$CONFIG_FILES demos/Makefile" ;;
   "tools/Makefile" ) CONFIG_FILES="$CONFIG_FILES tools/Makefile" ;;
   "x11/xcurses-config" ) CONFIG_FILES="$CONFIG_FILES x11/xcurses-config" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;

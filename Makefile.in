@@ -33,7 +33,6 @@ distclean \
 mostlyclean \
 realclean ::
 	cd x11; $(MAKE) $(MFLAGS) $@
-	cd demos; $(MAKE) $(MFLAGS) $@
 	cd tools; $(MAKE) $(MFLAGS) $@
 
 install ::
@@ -81,7 +80,7 @@ $(ZIPFILE):
 	x11/README x11/*.c x11/*.xbm x11/*.h x11/process/*.c \
 	win32/README win32/*.c win32/*.mak win32/*.lrf win32/*.def \
 	win32/*.ico win32/*.rc doc/*.man tools/manext.c \
-	x11/Makefile.* demos/Makefile.in tools/Makefile.in
+	x11/Makefile.* tools/Makefile.in
 
 zip: $(ZIPFILE)
 
@@ -106,7 +105,7 @@ zip: $(ZIPFILE)
 	$(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.lrf \
 	$(PDC_DIR)/win32/*.def $(PDC_DIR)/win32/*.ico \
 	$(PDC_DIR)/win32/*.rc $(PDC_DIR)/tools/manext.c \
-	$(PDC_DIR)/x11/Makefile.* $(PDC_DIR)/demos/Makefile.in \
+	$(PDC_DIR)/x11/Makefile.* \
 	$(PDC_DIR)/tools/Makefile.in | gzip -9 > $(TARBALL))
 
 dist: ../$(TARBALL)

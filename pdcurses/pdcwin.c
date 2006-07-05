@@ -16,13 +16,10 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.39 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.40 2006/07/05 20:20:48 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

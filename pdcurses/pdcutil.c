@@ -16,15 +16,12 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #ifndef XCURSES
 # define INCLUDE_WINDOWS_H
 #endif
 #include <curses.h>
 
-RCSID("$Id: pdcutil.c,v 1.32 2006/03/29 21:39:42 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.33 2006/07/05 20:20:48 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

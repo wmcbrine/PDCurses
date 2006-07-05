@@ -16,9 +16,6 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 #include <stdlib.h>
 
@@ -41,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.42 2006/05/03 17:35:39 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.43 2006/07/05 20:20:46 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 

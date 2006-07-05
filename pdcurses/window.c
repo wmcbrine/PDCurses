@@ -16,9 +16,6 @@
  ************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
@@ -45,7 +42,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.29 2006/04/23 03:31:30 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.30 2006/07/05 20:20:49 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

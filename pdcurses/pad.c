@@ -16,9 +16,6 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 #include <string.h>
 
@@ -34,7 +31,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.20 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.21 2006/07/05 20:20:48 wmcbrine Exp $");
 
 /* save values for pechochar() */
 

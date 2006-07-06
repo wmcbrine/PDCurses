@@ -34,7 +34,7 @@
 #undef PDC_leftline
 #undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.23 2006/04/23 03:34:49 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.24 2006/07/06 18:58:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -241,13 +241,13 @@ int whline(WINDOW *win, chtype ch, int n)
 	if (n < 1)
 		return ERR;
 
-	endpos = min(win->_curx + n - 1, win->_maxx);
+	endpos = min(win->_curx + n, win->_maxx);
 
 	ch = PDC_attr_passthru(win, ch ? ch : ACS_HLINE);
 
 	startpos = win->_curx;
 
-	for (n = win->_curx; n <= endpos; n++)
+	for (n = startpos; n < endpos; n++)
 		win->_y[win->_cury][n] = ch;
 
 	n = win->_cury;
@@ -255,12 +255,12 @@ int whline(WINDOW *win, chtype ch, int n)
 	if (win->_firstch[n] == _NO_CHANGE)
 	{
 		win->_firstch[n] = startpos;
-		win->_lastch[n] = endpos;
+		win->_lastch[n] = endpos - 1;
 	}
 	else
 	{
 		win->_firstch[n] = min(win->_firstch[n], startpos);
-		win->_lastch[n] = max(win->_lastch[n], endpos);
+		win->_lastch[n] = max(win->_lastch[n], endpos - 1);
 	}
 
 	PDC_sync(win);
@@ -280,11 +280,11 @@ int wvline(WINDOW *win, chtype ch, int n)
 	if (n < 1)
 		return ERR;
 
-	endpos = min(win->_cury + n - 1, win->_maxy);
+	endpos = min(win->_cury + n, win->_maxy);
 
 	ch = PDC_attr_passthru(win, ch ? ch : ACS_VLINE);
 
-	for (n = win->_cury; n <= endpos; n++)
+	for (n = win->_cury; n < endpos; n++)
 	{
 		win->_y[n][win->_curx] = ch;
 
@@ -360,9 +360,9 @@ static int PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
 	if (n < 1)
 		return ERR;
 
-	endpos = min(win->_cury + n - 1, win->_maxy);
+	endpos = min(win->_cury + n, win->_maxy);
 
-	for (n = win->_cury; n <= endpos; n++)
+	for (n = win->_cury; n < endpos; n++)
 	{
 		if (state) 
 			win->_y[n][win->_curx] |= attr;

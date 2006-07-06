@@ -4432,8 +4432,10 @@ mh_x11r6=no
 mh_lib_dirs="\
     $HOME/lib             \
     /tmp/lib              \
+    /usr/X11R6/lib64      \
     /usr/X11R6/lib        \
     /usr/lib/X11R6        \
+    /usr/local/X11R6/lib64 \
     /usr/local/X11R6/lib  \
     /usr/local/lib/X11R6  \
 
@@ -4457,6 +4459,7 @@ mh_lib_dirs="\
     /usr/x386/lib         \
     /usr/XFree86/lib/X11  \
                           \
+    /usr/lib64            \
     /usr/lib              \
     /usr/local/lib        \
     /usr/unsupported/lib  \
@@ -5139,7 +5142,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5142 "configure"
+#line 5145 "configure"
 int a=0
 EOF
 
@@ -5178,7 +5181,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5181 "configure"
+#line 5184 "configure"
 int foo()
 {
 return(0);

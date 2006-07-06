@@ -606,7 +606,7 @@ INTRODUCTION:
   incorporated into release 2.2. Wade also supplied the support for the 
   Microway NDP C/C++ 32 bit DOS compiler.
 
-- The curses datatype has been changed from an unsigned in to a long. 
+- The curses datatype has been changed from an unsigned int to a long. 
   This allows more attributes to be stored as well as increasing the 
   number of color-pairs from 32 to 64.
 

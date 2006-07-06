@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.69 2006/07/02 19:03:59 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.70 2006/07/06 23:50:10 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -214,6 +214,7 @@ int	PDC_cursor_off(void);
 int	PDC_cursor_on(void);
 int	PDC_curs_set(int);
 int	PDC_fix_cursor(int);
+void	PDC_flushinp(void);
 int	PDC_get_bios_key(void);
 int	PDC_get_columns(void);
 bool	PDC_get_ctrl_break(void);
@@ -265,8 +266,6 @@ int	PDC_query_adapter_type(void);
 #endif
 
 #ifdef XCURSES
-int	XCurses_rawgetch(void);
-bool	XCurses_kbhit(void);
 int	XCursesInstruct(int);
 int	XCursesInstructAndWait(int);
 int	XCursesInitscr(const char *, int, char **);

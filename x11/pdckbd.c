@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.22 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.23 2006/07/06 23:50:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -204,4 +204,27 @@ unsigned long PDC_get_key_modifiers(void)
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
 	return pdc_key_modifier;
+}
+
+/*man-start**************************************************************
+
+  PDC_flushinp()		- Low-level input flush
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	Discards any pending keyboard and mouse input. Called by 
+	flushinp().
+
+  Portability:
+	PDCurses  void PDC_flushinp(void);
+
+**man-end****************************************************************/
+
+void PDC_flushinp(void)
+{
+	PDC_LOG(("PDC_flushinp() - called\n"));
+
+	while (XCurses_kbhit())
+		XCurses_rawgetch();
 }

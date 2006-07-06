@@ -533,6 +533,7 @@ FUNCTIONS
 		PDC_cursor_on		pdcdisp
 		PDC_debug		pdcdebug
 		PDC_fix_cursor		pdcdisp
+		PDC_flushinp		pdckbd
 		PDC_getch		getch
 		PDC_get_attribute	pdcgetsc
 		PDC_get_bios_key	pdckbd

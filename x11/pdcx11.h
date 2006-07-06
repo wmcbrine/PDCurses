@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.29 2006/07/02 19:03:59 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.30 2006/07/06 23:50:13 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -287,6 +287,9 @@ int XCursesTransformLine(int, int, chtype, int, int, int, char *);
 int XCursesDisplayText(const chtype *, int, int, int, bool);
 void XCursesDisplayScreen(bool);
 void XCursesDisplayCursor(int, int, int, int);
+
+int XCurses_rawgetch(void);
+bool XCurses_kbhit(void);
 
 int XCurses_display_cursor(int, int, int, int, int);
 

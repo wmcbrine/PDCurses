@@ -16,12 +16,7 @@
  ************************************************************************/
 
 #define	CURSES_LIBRARY 1
-#define INCLUDE_WINDOWS_H
 #include <curses.h>
-
-#if defined(OS2) && defined(EMXVIDEO)
-# include <termios.h>
-#endif
 
 /* undefine any macros for functions defined in this module */
 #undef unctrl
@@ -32,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.34 2006/04/23 02:56:38 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.35 2006/07/06 23:50:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -230,38 +225,14 @@ int delay_output(int ms)
 
 int flushinp(void)
 {
-#ifdef WIN32
-	extern HANDLE hConIn;
-#endif
 	extern int c_pindex;		/* putter index */
 	extern int c_gindex;		/* getter index */
 	extern int c_ungind;		/* wungetch() push index */
 
 	PDC_LOG(("flushinp() - called\n"));
 
-#ifdef DOS
-	/* Force the BIOS kbd buf head/tail pointers to be the
-	   same...  Real nasty trick... */
+	PDC_flushinp();
 
-	setdosmemword(0x41a, getdosmemword (0x41c));
-#endif
-
-#ifdef OS2
-# ifdef EMXVIDEO
-	tcflush(0, TCIFLUSH);
-# else
-	KbdFlushBuffer(0);
-# endif
-#endif
-
-#ifdef WIN32
-	FlushConsoleInputBuffer(hConIn);
-#endif
-
-#ifdef XCURSES
-	while (XCurses_kbhit())
-		XCurses_rawgetch();
-#endif
 	c_gindex = 1;			/* set indices to kill buffer	 */
 	c_pindex = 0;
 	c_ungind = 0;			/* clear c_ungch array		 */

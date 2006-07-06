@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.44 2006/07/04 03:51:38 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.45 2006/07/06 23:50:13 wmcbrine Exp $");
 
 #define KEY_STATE TRUE
 #define MS_MOUSE_MOVED 1
@@ -1383,6 +1383,28 @@ unsigned long PDC_get_key_modifiers(void)
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
 	return pdc_key_modifiers;
+}
+
+/*man-start**************************************************************
+
+  PDC_flushinp()		- Low-level input flush
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	Discards any pending keyboard and mouse input. Called by 
+	flushinp().
+
+  Portability:
+	PDCurses  void PDC_flushinp(void);
+
+**man-end****************************************************************/
+
+void PDC_flushinp(void)
+{
+	PDC_LOG(("PDC_flushinp() - called\n"));
+
+	FlushConsoleInputBuffer(hConIn);
 }
 
 #ifdef PDC_THREAD_BUILD

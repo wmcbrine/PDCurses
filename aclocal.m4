@@ -209,8 +209,10 @@ dnl
 mh_lib_dirs="\
     $HOME/lib             \
     /tmp/lib              \
+    /usr/X11R6/lib64      \
     /usr/X11R6/lib        \
     /usr/lib/X11R6        \
+    /usr/local/X11R6/lib64 \
     /usr/local/X11R6/lib  \
     /usr/local/lib/X11R6  \
 
@@ -234,6 +236,7 @@ mh_lib_dirs="\
     /usr/x386/lib         \
     /usr/XFree86/lib/X11  \
                           \
+    /usr/lib64            \
     /usr/lib              \
     /usr/local/lib        \
     /usr/unsupported/lib  \

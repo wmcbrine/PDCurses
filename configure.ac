@@ -77,8 +77,8 @@ AC_CHECK_HEADERS(fcntl.h \
 
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
-AC_TYPE_SIZE_T
+dnl AC_C_CONST
+dnl AC_TYPE_SIZE_T
 AC_HEADER_TIME
 dnl AC_CHECK_TYPE(fd_set,int)
 MH_CHECK_LIB(socket nls)

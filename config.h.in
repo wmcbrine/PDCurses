@@ -1,8 +1,3 @@
-/* config.h.in.  Generated automatically from configure.in by autoheader.  */
-
-/* Define to empty if the keyword does not work.  */
-#undef const
-
 /* Define if you have the vsnprintf function.  */
 #undef HAVE_VSNPRINTF
 
@@ -14,9 +9,6 @@
 
 /* Define as the system defined limit for number of signals */
 #undef PDC_MAX_SIGNALS
-
-/* Define to `unsigned' if <sys/types.h> doesn't define.  */
-#undef size_t
 
 /* Define if you can safely include both <sys/time.h> and <time.h>.  */
 #undef TIME_WITH_SYS_TIME

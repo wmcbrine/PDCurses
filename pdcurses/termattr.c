@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.30 2006/07/02 22:03:02 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.31 2006/07/06 23:57:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -129,11 +129,7 @@ int baudrate(void)
 {
 	PDC_LOG(("baudrate() - called\n"));
 
-#ifdef DOS
-	return SP->direct_video ? INT_MAX : 19200;
-#else
 	return INT_MAX;
-#endif
 }
 
 char erasechar(void)

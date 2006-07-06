@@ -33,7 +33,7 @@
 #undef color_set
 #undef wcolor_set
 
-RCSID("$Id: attr.c,v 1.23 2006/06/19 04:40:06 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.24 2006/07/06 18:42:58 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -371,6 +371,20 @@ int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
 		tmp = (win->_y[basey][basex + ic] & A_CHARTEXT) | newattr;
 		win->_y[basey][basex + ic] = tmp;
 	}
+
+	if (win->_firstch[basey] == _NO_CHANGE)
+	{
+		win->_firstch[basey] = basex;
+		win->_lastch[basey] = basex + imax - 1;
+	}
+	else
+	{
+		win->_firstch[basey] = min(win->_firstch[basey], basex);
+		win->_lastch[basey] = max(win->_lastch[basey],
+			basex + imax - 1);
+	}
+
+	PDC_sync(win);
 
 	return OK;
 }

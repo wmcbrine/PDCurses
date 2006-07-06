@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.43 2006/07/05 20:20:46 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.44 2006/07/06 15:51:55 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 
@@ -78,12 +78,6 @@ struct cttyset c_save_trm = {0};
 extern void *emalloc(size_t);		/* user's emalloc(size) */
 extern void *ecalloc(size_t, size_t);	/* user's ecalloc(num, size) */
 extern void efree(void *);		/* user's efree(ptr) */
-#endif
-
-#ifndef XCURSES
-extern void *malloc(size_t);		/* runtime's malloc(size) */
-extern void *calloc(size_t, size_t);	/* runtime's calloc(num, size) */
-extern void free(void *);		/* runtime's free(ptr) */
 #endif
 
 void* (*mallc)(size_t);			/* ptr to some malloc(size) */

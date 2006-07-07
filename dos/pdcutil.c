@@ -16,9 +16,6 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curses.h>
 
 #ifdef HAVE_UNISTD_H
@@ -40,7 +37,7 @@
 # endif
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.3 2006/07/07 05:34:04 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.4 2006/07/07 05:56:18 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

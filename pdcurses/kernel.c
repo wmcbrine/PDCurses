@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.46 2006/07/07 05:34:05 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.47 2006/07/07 05:37:58 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -107,9 +107,9 @@ char linesrippedoff = 0;
 	before either of these functions.  The init function is passed a 
 	pointer to a 1 line WINDOW and the width of the window. Calling 
 	ripoffline() with a NULL initialise function pointer is not 
-	advisable!
+	advised.
 
-	The napms() function, suspends the program for the specified 
+	The napms() function suspends the program for the specified
 	number of milliseconds.
 
   PDCurses Description:
@@ -124,9 +124,6 @@ char linesrippedoff = 0;
 	visible by setting the parameter to 0, 1 or 2 respectively. If 
 	an invalid value is passed the function will set the cursor to 
 	"normal".
-
-	The napms() implementation has been moved to -------.c in the 
-	platform-specific directories.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error, except 

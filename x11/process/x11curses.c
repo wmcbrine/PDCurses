@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.35 2006/07/07 13:11:43 wmcbrine Exp $");
+RCSID("$Id: x11curses.c,v 1.36 2006/07/07 16:20:28 wmcbrine Exp $");
 
 int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -63,85 +63,6 @@ int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			"exiting from XCurses_display_cursor");
 
 	return OK;
-}
-
-int XCurses_rawgetch(void)
-{
-	unsigned long newkey = 0;
-	int key = 0;
-
-	PDC_LOG(("%s:XCurses_rawgetch() - called\n", XCLOGMSG));
-
-	while (1)
-	{
-	    if (read_socket(key_sock, (char *)&newkey,
-		sizeof(unsigned long)) < 0)
-		    XCursesExitCursesProcess(2, 
-			"exiting from XCurses_rawchar");
-
-	    pdc_key_modifier = (newkey >> 24) & 0xFF;
-	    key = (int)(newkey & 0x00FFFFFF);
-
-	    if (key == KEY_MOUSE)
-	    {
-		if (read_socket(key_sock, (char *)&Trapped_Mouse_status, 
-		    sizeof(MOUSE_STATUS)) < 0)
-			XCursesExitCursesProcess(2,
-			    "exiting from XCurses_rawchar");
-
-		/* Check if the mouse has been clicked on a slk area. If 
-		   the return value is > 0 (indicating the label number), 
-		   return with the KEY_F(key) value. */
-
-		if ((newkey = PDC_mouse_in_slk(TRAPPED_MOUSE_Y_POS,
-		    TRAPPED_MOUSE_X_POS)))
-		{
-		    if (TRAPPED_BUTTON_STATUS(1) & BUTTON_PRESSED)
-		    {
-			key = KEY_F(newkey);
-			break;
-		    }
-		}
-
-		break;
-
-		MOUSE_LOG(("rawgetch-x: %d y: %d Mouse status: %x\n",
-		    MOUSE_X_POS, MOUSE_Y_POS, Mouse_status.changes));
-		MOUSE_LOG(("rawgetch-Button1: %x Button2: %x Button3: %x\n",
-		    BUTTON_STATUS(1), BUTTON_STATUS(2), BUTTON_STATUS(3)));
-	    }
-	    else
-		break;
-	}
-
-	PDC_LOG(("%s:XCurses_rawgetch() - key %d returned\n", XCLOGMSG, key));
-
-	return key;
-}
-
-bool XCurses_kbhit(void)
-{
-	int s;
-
-	PDC_LOG(("%s:XCurses_kbhit() - called\n", XCLOGMSG));
-
-	/* Is something ready to be read on the socket ? Must be a key. */
-
-	FD_ZERO(&readfds);
-	FD_SET(key_sock, &readfds);
-
-	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, 
-	    NULL, &socket_timeout)) < 0)
-		XCursesExitCursesProcess(3,
-			"child - exiting from XCurses_kbhit select failed");
-
-	PDC_LOG(("%s:XCurses_kbhit() - returning %s\n", XCLOGMSG,
-		(s == 0) ? "FALSE" : "TRUE"));
-
-	if (s == 0)
-		return FALSE;
-
-	return TRUE;
 }
 
 int XCursesInstruct(int flag)

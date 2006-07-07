@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.70 2006/07/07 13:19:31 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.71 2006/07/07 16:20:28 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -2349,7 +2349,7 @@ void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 	}
 }
 
-int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
+void XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 {
 	PDC_LOG(("%s:XCursesSendKeyToCurses() - called: sending %d\n",
 		XCLOGMSG, key));
@@ -2367,8 +2367,6 @@ int XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 			XCursesExitXCursesProcess(1, SIGKILL,
 				"exiting from XCursesSendKeyToCurses");
 	}
-
-	return 0;
 }
 
 void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)

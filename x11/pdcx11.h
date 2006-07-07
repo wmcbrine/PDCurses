@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.31 2006/07/07 13:19:31 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.32 2006/07/07 16:20:28 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -288,9 +288,6 @@ int XCursesDisplayText(const chtype *, int, int, int, bool);
 void XCursesDisplayScreen(bool);
 void XCursesDisplayCursor(int, int, int, int);
 
-int XCurses_rawgetch(void);
-bool XCurses_kbhit(void);
-
 int XCurses_display_cursor(int, int, int, int, int);
 
 void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
@@ -402,7 +399,7 @@ void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 signal_handler XCursesSetSignal(int, signal_handler);
 void XCursesGetIcon(void);
 int XCursesRefreshScrollbar(void);
-int XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
+void XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
 void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 void XCursesCursorBlink(XtPointer unused, XtIntervalId *id);
 void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);

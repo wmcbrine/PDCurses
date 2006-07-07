@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.69 2006/07/02 20:07:01 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.70 2006/07/07 13:19:31 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -1174,7 +1174,7 @@ int get_colors(void)
 	return OK;
 }
 
-int XCursesEndwin(void)
+void XCursesEndwin(void)
 {
 	PDC_LOG(("%s:XCursesEndwin() - called\n", XCLOGMSG));
 
@@ -1200,7 +1200,6 @@ int XCursesEndwin(void)
 #ifdef FOREIGN
 	XDestroyIC(Xic);
 #endif
-	return 0;
 }
 
 int XCursesRefreshScrollbar(void)

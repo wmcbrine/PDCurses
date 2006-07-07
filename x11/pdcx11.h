@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.30 2006/07/06 23:50:13 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.31 2006/07/07 13:19:31 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -308,6 +308,7 @@ void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, Atom *,
 void XCursesRequestorCallbackForGetSelection(Widget, XtPointer, Atom *, Atom *,
 					     XtPointer, unsigned long *, int *);
 RETSIGTYPE XCursesSignalHandler(int);
+void XCursesEndwin(void);
 void XCursesExitCursesProcess(int, char *);
 void XCursesExitXCursesProcess(int, int, char *);
 

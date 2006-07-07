@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.34 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: x11curses.c,v 1.35 2006/07/07 13:11:43 wmcbrine Exp $");
 
 int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -61,17 +61,6 @@ int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 	if (write_socket(display_sock, buf, idx) < 0)
 		XCursesExitCursesProcess(1,
 			"exiting from XCurses_display_cursor");
-
-	return OK;
-}
-
-int XCurses_refresh_scrollbar(void)
-{
-	PDC_LOG(("%s:XCurses_refresh_scrollbar() - called\n", XCLOGMSG));
-
-	if (write_display_socket_int(CURSES_REFRESH_SCROLLBAR) < 0)
-		XCursesExitCursesProcess(1,
-			"exiting from XCurses_refresh_scrollbar");
 
 	return OK;
 }

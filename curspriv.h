@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.72 2006/07/07 05:34:04 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.73 2006/07/07 13:11:43 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -272,7 +272,6 @@ int	XCursesInstruct(int);
 int	XCursesInstructAndWait(int);
 int	XCursesInitscr(const char *, int, char **);
 int	XCursesEndwin(void);
-int	XCurses_refresh_scrollbar(void);
 #endif
 
 #ifdef __PACIFIC__

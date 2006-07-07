@@ -15,8 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcx11.h"
 
 /* undefine any macros for functions defined in this module */
 #undef sb_init
@@ -26,7 +25,7 @@
 #undef sb_get_vert
 #undef sb_refresh
 
-RCSID("$Id: sb.c,v 1.16 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: sb.c,v 1.17 2006/07/07 13:11:43 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -171,5 +170,10 @@ int sb_refresh(void)
 	if (!SP)
 		return ERR;
 
-	return XCurses_refresh_scrollbar();
+	if (write_display_socket_int(CURSES_REFRESH_SCROLLBAR) < 0)
+		XCursesExitCursesProcess(1,
+			"exiting from sb_refresh");
+
+        return OK;
 }
+

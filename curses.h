@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.184 2006/07/07 03:11:51 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.185 2006/07/07 12:49:41 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -110,7 +110,6 @@ PDCurses portable platform definitions list:
 #  ifdef __OS2__		/* You will have to define in makefile	*/
 #    define USE_OS2_H 1		/* Use the os2.h for the compiler	*/
 #    define OS2 3		/* Major release of OS/2 supported	*/
-#    define FARKeyword far
 #    define APIRET USHORT
 #  else				/* no __OS2__ define, so assume DOS	*/
 #    ifdef _WIN32	

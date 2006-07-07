@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.44 2006/07/06 15:51:55 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.45 2006/07/07 05:14:37 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 
@@ -53,10 +53,6 @@ int COLS = 0;				/* current terminal width */
 MOUSE_STATUS Mouse_status;
 
 int use_emalloc = FALSE;
-
-#ifdef DOS
-Regs regs;
-#endif
 
 /* Global definitions for charget routines */
 

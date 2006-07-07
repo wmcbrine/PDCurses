@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.45 2006/07/07 02:53:07 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.46 2006/07/07 05:34:05 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -325,6 +325,15 @@ int curs_set(int visibility)
 	PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
 
 	return PDC_curs_set(visibility);
+}
+
+int napms(int ms)
+{
+	PDC_LOG(("napms() - called: ms=%d\n", ms));
+
+	PDC_napms(ms);
+
+	return OK;
 }
 
 int ripoffline(int line, int (*init)(WINDOW *, int))

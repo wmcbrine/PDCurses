@@ -26,22 +26,7 @@
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.2 2006/07/07 04:27:44 wmcbrine Exp $");
-
-/*man-start**************************************************************
-
-  PDC_beep()			- Low-level beep function
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Generates a "beep" sound or flashes the screen. Called by 
-	beep().
-
-  Portability:
-	PDCurses  void PDC_beep(void);
-
-**man-end****************************************************************/
+RCSID("$Id: pdcutil.c,v 1.3 2006/07/07 05:34:05 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -103,16 +88,13 @@ char *PDC_sysname(char *p)
 	return p;
 }
 
-/* napms() is documented in ../pdcurses/kernel.c */
-
-int napms(int ms)
+void PDC_napms(int ms)
 {
-	PDC_LOG(("napms() - called: ms=%d\n", ms));
+	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
 #ifdef __EMX__
 	_sleep2(ms);
 #else
 	DosSleep(ms);
 #endif
-	return OK;
 }

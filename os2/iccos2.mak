@@ -76,7 +76,7 @@ scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
 window.obj
 
 PDCOBJS = pdcclip.obj pdcdebug.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj \
-pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
+pdckey.obj pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
 
 PANOBJS = panel.obj
 
@@ -216,14 +216,17 @@ pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
 pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(osdir)\pdckbd.c
 
+pdckey.obj: $(srcdir)\pdckey.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\pdckey.c
+
 pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(osdir)\pdcscrn.c
 
 pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(osdir)\pdcsetsc.c
 
-pdcutil.obj: $(srcdir)\pdcutil.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\pdcutil.c
+pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -Fo$@ $(osdir)\pdcutil.c
 
 pdcwin.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\pdcwin.c

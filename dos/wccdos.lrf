@@ -5,5 +5,5 @@
 +outopts.obj +overlay.obj +pad.obj +printw.obj +refresh.obj +scanw.obj 
 +scr_dump.obj +scroll.obj +slk.obj +termattr.obj +terminfo.obj 
 +touch.obj +util.obj +window.obj +pdcclip.obj +pdcdebug.obj +pdcdisp.obj 
-+pdcgetsc.obj +pdckbd.obj +pdcscrn.obj +pdcsetsc.obj +pdcutil.obj 
-+pdcwin.obj
++pdcgetsc.obj +pdckbd.obj +pdckey.obj +pdcscrn.obj +pdcsetsc.obj 
++pdcutil.obj +pdcwin.obj

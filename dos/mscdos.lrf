@@ -41,6 +41,7 @@
 -+pdcdisp.obj &
 -+pdcgetsc.obj &
 -+pdckbd.obj &
+-+pdckey.obj &
 -+pdcscrn.obj &
 -+pdcsetsc.obj &
 -+pdcutil.obj &

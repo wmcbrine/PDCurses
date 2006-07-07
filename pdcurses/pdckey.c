@@ -16,33 +16,9 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifndef XCURSES
-# define INCLUDE_WINDOWS_H
-#endif
 #include <curses.h>
 
-RCSID("$Id: pdcutil.c,v 1.33 2006/07/05 20:20:48 wmcbrine Exp $");
-
-void PDC_beep(void)
-{
-#if defined(XCURSES)
-	XCursesInstruct(CURSES_BELL);
-
-#elif defined(DOS)
-	PDC_putctty((chtype) '\007', 0);
-
-#elif defined(OS2)
-# if defined(EMXVIDEO)
-	putchar('\007');
-# else
-	DosBeep(1380, 100);
-# endif
-
-#elif defined(WIN32)
-/*	MessageBeep(MB_OK); */
-	MessageBeep(0XFFFFFFFF);
-#endif
-}
+RCSID("$Id: pdckey.c,v 1.1 2006/07/07 02:53:07 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -81,7 +81,7 @@ move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
 scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
 PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdcgo32.o pdckbd.o \
-pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
+pdckey.o pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 PANOBJS = panel.o
 
@@ -227,13 +227,16 @@ pdcgo32.o: $(osdir)/pdcgo32.c $(PDCURSES_HEADERS)
 pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
+pdckey.o: $(srcdir)/pdckey.c $(PDCURSES_HEADERS)
+	$(CC) -c $(CCFLAGS) -o$@ $<
+
 pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
 pdcsetsc.o: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdcutil.o: $(srcdir)/pdcutil.c $(PDCURSES_HEADERS)
+pdcutil.o: $(osdir)/pdcutil.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
 pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)

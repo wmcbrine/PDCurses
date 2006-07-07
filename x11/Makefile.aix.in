@@ -83,7 +83,7 @@ move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
 scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
 PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
-pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
+pdckey.o pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
 
@@ -233,14 +233,17 @@ pdcgetsc.o: $(x11basedir)/pdcgetsc.c $(PDCURSES_HEADERS)
 pdckbd.o: $(x11basedir)/pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdckbd.c
 
+pdckey.o: $(srcdir)/pdckey.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdckey.c
+
 pdcscrn.o: $(x11basedir)/pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcscrn.c
 
 pdcsetsc.o: $(x11basedir)/pdcsetsc.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcsetsc.c
 
-pdcutil.o: $(srcdir)/pdcutil.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcutil.c
+pdcutil.o: $(x11basedir)/pdcutil.c $(PDCURSES_HEADERS)
+	$(CC) $(CCFLAGS) -o $@ $(x11basedir)/pdcutil.c
 
 pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcwin.c

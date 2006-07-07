@@ -16,45 +16,8 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-#ifndef XCURSES
-# define INCLUDE_WINDOWS_H
-#endif
 #include <curses.h>
 #include <string.h>
-
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
-
-#if defined(HAVE_POLL) && !defined(HAVE_USLEEP)
-# include <poll.h>
-#endif
-
-#if defined(DOS) && defined(MSC)
-#include <time.h>
-#endif
-
-#ifdef TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# ifdef HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-#ifdef __EMX__
-# include <stdlib.h>
-#endif
-
-#if defined(OS2) && !defined(__EMX__)
-APIRET APIENTRY DosSleep(ULONG ulTime);
-#endif
 
 /* undefine any macros for functions defined in this module */
 #undef def_prog_mode
@@ -73,7 +36,7 @@ APIRET APIENTRY DosSleep(ULONG ulTime);
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.44 2006/06/11 19:22:48 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.45 2006/07/07 02:53:07 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -161,6 +124,9 @@ char linesrippedoff = 0;
 	visible by setting the parameter to 0, 1 or 2 respectively. If 
 	an invalid value is passed the function will set the cursor to 
 	"normal".
+
+	The napms() implementation has been moved to -------.c in the 
+	platform-specific directories.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error, except 
@@ -371,59 +337,5 @@ int ripoffline(int line, int (*init)(WINDOW *, int))
 		linesripped[(int)linesrippedoff++].init = init;
 	}
 
-	return OK;
-}
-
-int napms(int ms)
-{
-	PDC_LOG(("napms() - called: ms=%d\n", ms));
-
-#if defined(HAVE_USLEEP)
-
-	usleep(1000 * ms);
-
-#elif defined(HAVE_POLL)
-	{
-		struct pollfd fd;
-		fd.fd = -1;
-		fd.events = 0;
-		poll(&fd, 1, ms);
-	}
-#elif defined(WIN32)
-
-	Sleep(ms);
-
-#elif defined(OS2)
-
-# if defined(__EMX__)
-	_sleep2(ms);
-# else
-	DosSleep(ms);
-# endif
-
-#elif defined(DOS)
-
-# if defined(__TURBOC__) || defined(__WATCOMC__)
-
-	delay(ms);
-
-# elif defined(MSC) || defined(MX386)
-	{
-		clock_t goal = (ms / 50) + clock();
-		while (goal > clock())
-		;
-	}
-# elif defined(__PACIFIC__)
-	{
-		/* get number of ticks since startup from address 0040:006ch
-		   1 sec. = 18.2065  */
-
-		volatile far long *ticks = MK_FP(0x0040, 0x006c);
-		long goal = (ms / 50) + *ticks;
-		while (goal > *ticks)
-		;
-	}
-# endif
-#endif
 	return OK;
 }

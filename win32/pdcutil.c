@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcutil.c,v 1.1 2006/07/07 02:53:07 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.2 2006/07/07 04:27:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -42,6 +42,31 @@ void PDC_beep(void)
 
 /*	MessageBeep(MB_OK); */
 	MessageBeep(0XFFFFFFFF);
+}
+
+/*man-start**************************************************************
+
+  PDC_sysname()			- Platform/card name
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	The middle part of the long terminal description -- platform 
+	name, plus card type on DOS and OS/2. Called by longname().
+	Note that p must point to an already-allocated buffer.
+
+  Portability:
+	PDCurses  char *PDC_sysname(char *p);
+
+**man-end****************************************************************/
+
+char *PDC_sysname(char *p)
+{
+	PDC_LOG(("PDC_sysname() - called\n"));
+
+	p += sprintf(p, "Win32");
+
+	return p;
 }
 
 /* napms() is documented in ../pdcurses/kernel.c */

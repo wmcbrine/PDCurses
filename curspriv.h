@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.70 2006/07/06 23:50:10 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.71 2006/07/07 04:27:44 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -248,6 +248,7 @@ int	PDC_set_rows(int);
 void	PDC_slk_calc(void);
 void	PDC_sync(WINDOW *);
 int	PDC_sysgetch(void);
+char   *PDC_sysname(char *);
 void	PDC_transform_line(int);
 int	PDC_validchar(int);
 

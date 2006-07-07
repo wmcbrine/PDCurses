@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.31 2006/07/06 23:57:27 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.32 2006/07/07 04:27:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -85,8 +85,7 @@ RCSID("$Id: termattr.c,v 1.31 2006/07/06 23:57:27 wmcbrine Exp $");
 
   PDCurses Description:
 	baudrate() returns the largest possible (portable) int value 
-	(INT_MAX from limits.h) IF direct video is possible, OR the 
-	approximate guess at BIOS speeds, 19200.
+	(INT_MAX from limits.h).
 
 	erasechar(), killchar() and wordchar() all return values that 
 	are hardcoded at this time.  There may be future development to 
@@ -95,12 +94,12 @@ RCSID("$Id: termattr.c,v 1.31 2006/07/06 23:57:27 wmcbrine Exp $");
 	has_ic() and has_il() always return TRUE.
 
 	In addition to the above definition for longname(), the form of 
-	this string is the adapter name (or video card name) and the 
-	text resolution. This may also be followed by the notation that 
-	the video card may be a clone, which indicates that the card 
-	identification maps to more than one unique card. e.g. The MDS 
-	Genius and the Quadram QuadHPG identify themselves in the same 
-	manner, but are vastly different in maximum resolution.
+	this string includes the adapter name (or video card name) and 
+	the text resolution. This may also be followed by the notation 
+	that the video card may be a clone, which indicates that the 
+	card identification maps to more than one unique card. e.g. The 
+	MDS Genius and the Quadram QuadHPG identify themselves in the 
+	same manner, but are vastly different in maximum resolution.
 
 	The user's current WORD character is returned from a call to
 	wordchar().
@@ -167,73 +166,9 @@ char *longname(void)
 
 	PDC_LOG(("longname() - called\n"));
 
-	p += sprintf(_display, "PDCurses for "
-#if defined(DOS)
-		"DOS "
-#elif defined(OS2)
-		"OS/2 "
-#elif defined(WIN32)
-		"Win32 "
-#else
-		"X11 "
-#endif
-		);
+	p += sprintf(_display, "PDCurses for ");
 
-#if defined(OS2) && !defined(EMXVIDEO)
-	switch (SP->adapter.adapter)
-	{
-	case DISPLAY_CGA:
-		p += sprintf(p, "CGA");
-		break;
-	case DISPLAY_MONOCHROME:
-		p += sprintf(p, "MDA");
-		break;
-	case DISPLAY_EGA:
-		p += sprintf(p, "EGA");
-		break;
-	case DISPLAY_VGA:
-		p += sprintf(p, "VGA");
-		break;
-	case DISPLAY_8514A:
-		p += sprintf(p, "8514");
-		break;
-# ifdef DISPLAY_XGA
-	case DISPLAY_XGA:
-		p += sprintf(p, "XGA");
-# endif
-	}
-
-#elif defined(DOS)
-	switch (SP->adapter)
-	{
-	case _CGA:
-		p += sprintf(p, "CGA");
-		break;
-	case _MDA:
-		p += sprintf(p, "MDA");
-		break;
-	case _EGACOLOR:
-	case _EGAMONO:
-		p += sprintf(p, "EGA");
-		break;
-	case _VGACOLOR:
-	case _VGAMONO:
-		p += sprintf(p, "VGA");
-		break;
-	case _MCGACOLOR:
-	case _MCGAMONO:
-		p += sprintf(p, "MCGA");
-		break;
-	case _MDS_GENIUS:
-		p += sprintf(p, "Genius");
-		break;
-	default:
-		p += sprintf(p, "Unknown");
-	}
-
-	if (SP->bogus_adapter)
-		p += sprintf(p, " (Clone)");
-#endif
+	p = PDC_sysname(p);
 
 	sprintf(p, " %s-%dx%d", SP->mono ? "MONO" : "COLOR",
 		LINES, COLS);

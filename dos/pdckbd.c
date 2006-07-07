@@ -24,7 +24,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.24 2006/07/06 23:50:12 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.25 2006/07/07 00:00:52 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -601,8 +601,8 @@ void PDC_flushinp(void)
 {
 	PDC_LOG(("PDC_flushinp() - called\n"));
 
-	/* Force the BIOS kbd buf head/tail pointers to be the
-	   same...  Real nasty trick... */
+	/* Force the BIOS keyboard buffer head and tail pointers to be 
+	   the same...  Real nasty trick... */
 
-	setdosmemword(0x41a, getdosmemword (0x41c));
+	setdosmemword(0x41a, getdosmemword(0x41c));
 }

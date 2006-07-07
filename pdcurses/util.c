@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.35 2006/07/06 23:50:13 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.36 2006/07/07 00:00:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -65,10 +65,6 @@ RCSID("$Id: util.c,v 1.35 2006/07/06 23:50:13 wmcbrine Exp $");
 	programs use the table directly, and since it does not exist
 	in this curses version such application will link with an
 	error message complaining about undefined symbols.
-
-	If the PDCurses library is compiled under DOS, then we will poke 
-	the BIOS keyboard buffer head and tail pointers, resetting the 
-	typeahead to implement flushinp().
 
 	filter() and use_env() are no-ops on PDCurses.
 

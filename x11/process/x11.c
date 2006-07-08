@@ -19,11 +19,16 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.48 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.49 2006/07/08 00:21:41 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
 static char *XCursesProgramName;
+
+void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
+void XCursesRequestorCallbackForGetSelection(Widget, XtPointer, Atom *, Atom *,
+                                             XtPointer, unsigned long *, int *);
+RETSIGTYPE XCursesSignalHandler(int);
 
 void XCursesExitXCursesProcess(int rc, int sig, char *msg)
 {

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.71 2006/07/07 16:20:28 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.72 2006/07/08 00:21:41 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -34,6 +34,14 @@ AppData app_data;
 
 #include "big_icon.xbm"
 #include "little_icon.xbm"
+
+void XCursesPasteSelection(Widget, XButtonEvent *);
+void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
+void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
+void XCursesModifierPress(Widget, XEvent *, String *, Cardinal *);
+void XCursesButton(Widget, XEvent *, String *, Cardinal *);
+void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, Atom *,
+				      XtPointer, unsigned long *, int *);
 
 struct XCursesKey
 {
@@ -410,7 +418,7 @@ int state_mask[8] =
 Atom wm_atom[2];
 char *XCursesClassName = "XCurses";
 XtAppContext app_context;
-Widget topLevel, drawing, d1, scrollBox, scrollVert, scrollHoriz;
+Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
 int ReceivedMapNotify = 0;
 Boolean mouse_selection = False;
 chtype *tmpsel = NULL;
@@ -873,8 +881,6 @@ char *defaultTranslations =
 	"<BtnMotion>: XCursesButton()"
 };
 
-int xerror();
-
 #ifdef PDCDEBUG
 void XCsay(const char *msg)
 {
@@ -966,6 +972,14 @@ RETSIGTYPE XCursesSigwinchHandler(int signo)
 #ifdef SIGWINCH
 	XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);
 #endif
+}
+
+static void makeXY(int x, int y, int fontwidth, int fontheight,
+		   int *xpos, int *ypos)
+{
+	*xpos = (x * fontwidth) + XCURSESBORDERWIDTH;
+	*ypos = XCURSESNORMALFONTINFO->ascent + (y * fontheight) + 
+		XCURSESBORDERWIDTH;
 }
 
 static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
@@ -1137,13 +1151,6 @@ void get_GC(Display *display, Window win, GC *gc, XFontStruct *font_info,
 
 	if (highlight)
 		XSetFunction(display, *gc, GXxor);
-}
-
-void makeXY(int x, int y, int fontwidth, int fontheight, int *xpos, int *ypos)
-{
-	*xpos = (x * fontwidth) + XCURSESBORDERWIDTH;
-	*ypos = XCURSESNORMALFONTINFO->ascent + (y * fontheight) + 
-		XCURSESBORDERWIDTH;
 }
 
 int get_colors(void)

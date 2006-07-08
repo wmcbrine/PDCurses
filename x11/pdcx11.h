@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.32 2006/07/07 16:20:28 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.33 2006/07/08 00:21:41 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -279,40 +279,23 @@ extern AppData app_data;
 
 void dummy_function(void);
 void get_GC(Display *, Window, GC *, XFontStruct *, int, int, bool);
-void makeXY(int, int, int, int, int *, int *);
 int get_colors(void);
-void start_event_handler(void);
 
-int XCursesTransformLine(int, int, chtype, int, int, int, char *);
 int XCursesDisplayText(const chtype *, int, int, int, bool);
 void XCursesDisplayScreen(bool);
 void XCursesDisplayCursor(int, int, int, int);
 
 int XCurses_display_cursor(int, int, int, int, int);
 
-void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
 void XCursesEnterLeaveWindow(Widget, XtPointer, XEvent *, Boolean *);
-void XCursesPasteSelection(Widget, XButtonEvent *);
-void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
-void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
-void XCursesModifierPress(Widget, XEvent *, String *, Cardinal *);
-void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 Boolean XCursesConvertProc(Widget, Atom *, Atom *, Atom *, XtPointer *,
 			   unsigned long *, int *);
 void XCursesLoseOwnership(Widget, Atom *);
-void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, Atom *,
-				      XtPointer, unsigned long *, int *);
-void XCursesRequestorCallbackForGetSelection(Widget, XtPointer, Atom *, Atom *,
-					     XtPointer, unsigned long *, int *);
-RETSIGTYPE XCursesSignalHandler(int);
 void XCursesEndwin(void);
 void XCursesExitCursesProcess(int, char *);
 void XCursesExitXCursesProcess(int, int, char *);
 
 void SelectionOff(void);
-void SelectionOn(int, int);
-void SelectionExtend(int, int);
-void SelectionSet(void);
 
 int write_socket(int, const char *, int);
 int read_socket(int, char *, int);
@@ -367,15 +350,11 @@ extern char *defaultTranslations;
 extern XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS];
 extern char *XCursesClassName;
 extern XtAppContext app_context;
-extern Widget topLevel, drawing, d1, scrollBox, scrollVert, scrollHoriz;
+extern Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
 extern int ReceivedMapNotify;
 extern Boolean mouse_selection;
 extern chtype *tmpsel;
 extern unsigned long tmpsel_length;
-extern int selection_start_x;
-extern int selection_start_y;
-extern int selection_end_x;
-extern int selection_end_y;
 extern Pixmap icon_bitmap;
 #ifdef HAVE_XPM_H
 extern Pixmap icon_pixmap;
@@ -385,7 +364,6 @@ extern XtResource app_resources[PDC_NUMBER_APP_RESOURCES];
 extern XrmOptionDescRec options[PDC_NUMBER_OPTIONS];
 extern char global_display_name[100];
 extern Bool after_first_curses_request;
-extern int colors[(2 * MAX_COLORS) + 2];
 extern int windowEntered;
 extern int visible_cursor;
 extern Bool vertical_cursor;
@@ -400,7 +378,6 @@ signal_handler XCursesSetSignal(int, signal_handler);
 void XCursesGetIcon(void);
 int XCursesRefreshScrollbar(void);
 void XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
-void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 void XCursesCursorBlink(XtPointer unused, XtIntervalId *id);
 void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data);
 void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data);

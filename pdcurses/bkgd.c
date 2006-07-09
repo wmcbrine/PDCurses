@@ -25,7 +25,7 @@
 #undef wbkgd
 #undef wbkgdset
 
-RCSID("$Id: bkgd.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.20 2006/07/09 22:48:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -218,3 +218,53 @@ void wbkgdset(WINDOW *win, chtype ch)
 
 	win->_bkgd = (ch | bkgdattr);
 }
+
+#ifdef CHTYPE_LONG
+int bkgrnd(const cchar_t *wch)
+{
+	PDC_LOG(("bkgrnd() - called\n"));
+
+	return wbkgrnd(stdscr, wch);
+}
+
+void bkgrndset(const cchar_t *wch)
+{
+	PDC_LOG(("bkgrndset() - called\n"));
+
+	wbkgrndset(stdscr, wch);
+}
+
+int getbkgrnd(cchar_t *wch)
+{
+	PDC_LOG(("getbkgrnd() - called\n"));
+
+        return wgetbkgrnd(stdscr, wch);
+}
+
+int wbkgrnd(WINDOW *win, const cchar_t *wch)
+{
+	PDC_LOG(("wbkgrnd() - called\n"));
+
+	return wch ? wbkgd(win, *wch) : ERR;
+}
+
+void wbkgrndset(WINDOW *win, const cchar_t *wch)
+{
+	PDC_LOG(("wbkgdset() - called\n"));
+
+	if (wch)
+		wbkgdset(win, *wch);
+}
+
+int wgetbkgrnd(WINDOW *win, cchar_t *wch)
+{
+	PDC_LOG(("wgetbkgrnd() - called\n"));
+
+	if (!win || !wch)
+		return ERR;
+
+	*wch = win->_bkgd;
+
+	return OK;
+}
+#endif

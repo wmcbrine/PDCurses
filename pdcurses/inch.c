@@ -30,7 +30,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: inch.c,v 1.16 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.17 2006/07/09 22:48:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -101,3 +101,48 @@ chtype mvwinch(WINDOW *win, int y, int x)
 
 	return win->_y[win->_cury][win->_curx];
 }
+
+#ifdef CHTYPE_LONG
+int win_wch(WINDOW *win, cchar_t *wcval)
+{
+	PDC_LOG(("win_wch() - called\n"));
+
+	if (!win || !wcval)
+		return ERR;
+
+	*wcval = win->_y[win->_cury][win->_curx];
+
+	return OK;
+}
+
+int in_wch(cchar_t *wcval)
+{
+	PDC_LOG(("in_wch() - called\n"));
+
+	return win_wch(stdscr, wcval);
+}
+
+int mvin_wch(int y, int x, cchar_t *wcval)
+{
+	PDC_LOG(("mvin_wch() - called\n"));
+
+	if (!wcval || (move(y, x) == ERR))
+		return ERR;
+
+	*wcval = stdscr->_y[stdscr->_cury][stdscr->_curx];
+
+	return OK;
+}
+
+int mvwin_wch(WINDOW *win, int y, int x, cchar_t *wcval)
+{
+	PDC_LOG(("mvwin_wch() - called\n"));
+
+	if (!wcval || (wmove(win, y, x) == ERR))
+		return ERR;
+
+	*wcval = win->_y[win->_cury][win->_curx];
+
+	return OK;
+}
+#endif

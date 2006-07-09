@@ -32,7 +32,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: insch.c,v 1.17 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.18 2006/07/09 22:48:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -153,3 +153,39 @@ int mvwinsch(WINDOW *win, int y, int x, chtype ch)
 
 	return PDC_chins(win, ch, (bool)(!(SP->raw_out)));
 }
+
+#ifdef CHTYPE_LONG
+int ins_wch(const cchar_t *wch)
+{
+	PDC_LOG(("ins_wch() - called\n"));
+
+	return wch ? PDC_chins(stdscr, *wch, (bool)(!(SP->raw_out))) : ERR;
+}
+
+int wins_wch(WINDOW *win, const cchar_t *wch)
+{
+	PDC_LOG(("wins_wch() - called\n"));
+
+	return wch ? PDC_chins(win, *wch, (bool)(!(SP->raw_out))) : ERR;
+}
+
+int mvins_wch(int y, int x, const cchar_t *wch)
+{
+	PDC_LOG(("mvins_wch() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wch ? PDC_chins(stdscr, *wch, (bool)(!(SP->raw_out))) : ERR;
+}
+
+int mvwins_wch(WINDOW *win, int y, int x, const cchar_t *wch)
+{
+	PDC_LOG(("mvwins_wch() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wch? PDC_chins(win, *wch, (bool)(!(SP->raw_out))) : ERR;
+}
+#endif

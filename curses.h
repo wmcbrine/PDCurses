@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.187 2006/07/09 03:58:29 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.188 2006/07/09 22:48:16 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2807
+#define PDC_BUILD 2808
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -398,6 +398,7 @@ typedef unsigned int chtype;
 # else
 typedef unsigned long chtype;	/* 16-bit attr + 16-bit char	*/
 # endif
+typedef chtype cchar_t;
 #else
 typedef unsigned short chtype;	/* 8-bit attr + 8-bit char	*/
 #endif
@@ -946,6 +947,38 @@ currently used.)
 #define ACS_BSBS	ACS_HLINE
 #define ACS_SBSB	ACS_VLINE
 #define ACS_SSSS	ACS_PLUS
+
+/* cchar_t aliases */
+
+#ifdef CHTYPE_LONG
+# define WACS_ULCORNER	ACS_ULCORNER
+# define WACS_LLCORNER	ACS_LLCORNER
+# define WACS_URCORNER	ACS_URCORNER
+# define WACS_LRCORNER	ACS_LRCORNER
+# define WACS_RTEE	ACS_RTEE
+# define WACS_LTEE	ACS_LTEE
+# define WACS_BTEE	ACS_BTEE
+# define WACS_TTEE	ACS_TTEE
+# define WACS_HLINE	ACS_HLINE
+# define WACS_VLINE	ACS_VLINE
+# define WACS_PLUS	ACS_PLUS
+
+# define WACS_S1	ACS_S1
+# define WACS_S9	ACS_S9
+# define WACS_DIAMOND	ACS_DIAMOND
+# define WACS_CKBOARD	ACS_CKBOARD
+# define WACS_DEGREE	ACS_DEGREE
+# define WACS_PLMINUS	ACS_PLMINUS
+# define WACS_BULLET	ACS_BULLET
+
+# define WACS_LARROW	ACS_LARROW
+# define WACS_RARROW	ACS_RARROW
+# define WACS_DARROW	ACS_DARROW
+# define WACS_UARROW	ACS_UARROW
+# define WACS_BOARD	ACS_BOARD
+# define WACS_LANTERN	ACS_LANTERN
+# define WACS_BLOCK	ACS_BLOCK
+#endif
 
 /*** Color macros ***/
 
@@ -1524,6 +1557,60 @@ int	winnwstr(WINDOW *, wchar_t *, int);
 int	wins_nwstr(WINDOW *, const wchar_t *, int);
 int	wins_wstr(WINDOW *, const wchar_t *);
 int	winwstr(WINDOW *, wchar_t *);
+
+int	add_wch(const cchar_t *);
+int	add_wchnstr(const cchar_t *, int);
+int	add_wchstr(const cchar_t *);
+int	border_set(const cchar_t *, const cchar_t *, const cchar_t *, 
+		   const cchar_t *, const cchar_t *, const cchar_t *, 
+		   const cchar_t *, const cchar_t *);
+int	box_set(WINDOW *, const cchar_t *, const cchar_t *);
+int	echo_wchar(const cchar_t *);
+int	getbkgrnd(cchar_t *);
+int	getcchar(const cchar_t *, wchar_t *, attr_t *, short *, void *);
+int	hline_set(const cchar_t *, int);
+int	ins_wch(const cchar_t *);
+int	in_wch(cchar_t *);
+int	in_wchnstr(cchar_t *, int);
+int	in_wchstr(cchar_t *);
+int	mvadd_wch(int, int, const cchar_t *);
+int	mvadd_wchnstr(int, int, const cchar_t *, int);
+int	mvadd_wchstr(int, int, const cchar_t *);
+int	mvhline_set(int, int, const cchar_t *, int);
+int	mvins_wch(int, int, const cchar_t *);
+int	mvin_wch(int, int, cchar_t *);
+int	mvin_wchnstr(int, int, cchar_t *, int);
+int	mvin_wchstr(int, int, cchar_t *);
+int	mvvline_set(int, int, const cchar_t *, int);
+int	mvwadd_wch(WINDOW *, int, int, const cchar_t *);
+int	mvwadd_wchnstr(WINDOW *, int, int, const cchar_t *, int);
+int	mvwadd_wchstr(WINDOW *, int, int, const cchar_t *);
+int	mvwhline_set(WINDOW *, int, int, const cchar_t *, int);
+int	mvwins_wch(WINDOW *, int, int, const cchar_t *);
+int	mvwin_wch(WINDOW *, int, int, cchar_t *);
+int	mvwin_wchnstr(WINDOW *, int, int, cchar_t *, int);
+int	mvwin_wchstr(WINDOW *, int, int, cchar_t *);
+int	mvwvline_set(WINDOW *, int, int, const cchar_t *, int);
+int	pecho_wchar(WINDOW *, const cchar_t*);
+int	setcchar(cchar_t*, const wchar_t*, const attr_t, short, const void*);
+int	vline_set(const cchar_t *, int);
+int	wadd_wch(WINDOW *, const cchar_t *);
+int	wadd_wchnstr(WINDOW *, const cchar_t *, int);
+int	wadd_wchstr(WINDOW *, const cchar_t *);
+int	wbkgrnd(WINDOW *, const cchar_t *);
+void	wbkgrndset(WINDOW *, const cchar_t *);
+int	wborder_set(WINDOW *, const cchar_t *, const cchar_t *,
+		    const cchar_t *, const cchar_t *, const cchar_t *, 
+		    const cchar_t *, const cchar_t *, const cchar_t *);
+int	wecho_wchar(WINDOW *, const cchar_t *);
+int	wgetbkgrnd(WINDOW *, cchar_t *);
+int	whline_set(WINDOW *, const cchar_t *, int);
+int	wins_wch(WINDOW *, const cchar_t *);
+int	win_wch(WINDOW *, cchar_t *);
+int	win_wchnstr(WINDOW *, cchar_t *, int);
+int	win_wchstr(WINDOW *, cchar_t *);
+wchar_t *wunctrl(cchar_t *);
+int	wvline_set(WINDOW *, const cchar_t *, int);
 #endif
 
 /* Quasi-standard */

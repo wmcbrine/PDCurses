@@ -34,7 +34,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: addch.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.20 2006/07/09 22:48:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -177,3 +177,57 @@ int wechochar(WINDOW *win, const chtype ch)
 
 	return wrefresh(win);
 }
+
+#ifdef CHTYPE_LONG
+int add_wch(const cchar_t *wch)
+{
+	PDC_LOG(("add_wch() - called: wch=%x\n", *wch));
+
+	return wadd_wch(stdscr, wch);
+}
+
+int wadd_wch(WINDOW *win, const cchar_t *wch)
+{
+	PDC_LOG(("wadd_wch() - called: win=%x wch=%x\n", win, *wch));
+
+	return wch ? PDC_chadd(win, *wch, (bool)(!(SP->raw_out)), TRUE) : ERR;
+}
+
+int mvadd_wch(int y, int x, const cchar_t *wch)
+{
+	PDC_LOG(("mvaddch() - called: y=%d x=%d wch=%x\n", y, x, *wch));
+
+	if (move(y,x) == ERR)
+		return ERR;
+
+	return wadd_wch(stdscr, wch);
+}
+
+int mvwadd_wch(WINDOW *win, int y, int x, const cchar_t *wch)
+{
+	PDC_LOG(("mvwaddch() - called: win=%x y=%d x=%d wch=%d\n",
+		win, y, x, *wch));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wadd_wch(win, wch);
+}
+
+int echo_wchar(const cchar_t *wch)
+{
+	PDC_LOG(("echo_wchar() - called: wch=%x\n", *wch));
+
+	return wecho_wchar(stdscr, wch);
+}
+
+int wecho_wchar(WINDOW *win, const cchar_t *wch)
+{
+	PDC_LOG(("wecho_wchar() - called: win=%x wch=%x\n", win, *wch));
+
+	if (!wch || (wadd_wch(win, wch) == ERR))
+		return ERR;
+
+	return wrefresh(win);
+}
+#endif

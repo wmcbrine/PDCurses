@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.36 2006/07/07 00:00:53 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.37 2006/07/09 22:48:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -97,14 +97,14 @@ char *unctrl(chtype c)
 
 	if (ic >= 0x20 && ic != 0x7f)		/* normal characters */
 	{
-		strbuf[0] = (char) ic;
+		strbuf[0] = (char)ic;
 		strbuf[1] = '\0';
 		return strbuf;
 	}
 
 	strbuf[0] = '^';			/* '^' prefix */
 
-	if (c == 0x7f)				/* 0x7f == DEL */
+	if (ic == 0x7f)				/* 0x7f == DEL */
 		strbuf[1] = '?';
 	else					/* other control */
 		strbuf[1] = (char)(ic + '@');
@@ -235,6 +235,67 @@ int flushinp(void)
 
 	return OK;
 }
+
+#ifdef CHTYPE_LONG
+int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
+	     short *color_pair, void *opts)
+{
+	if (!wcval)
+		return ERR;
+
+	if (wch)
+	{
+		if (!attrs || !color_pair)
+			return ERR;
+
+		*wch = (*wcval & A_CHARTEXT);
+		*attrs = (*wcval & (A_ATTRIBUTES & ~A_COLOR));
+		*color_pair = PAIR_NUMBER(*wcval & A_COLOR);
+
+		return OK;
+	}
+	else
+		return 1;
+}
+
+int setcchar(cchar_t *wcval, const wchar_t *wch, const attr_t attrs,
+	     short color_pair, const void *opts)
+{
+	if (!wcval || !wch)
+		return ERR;
+
+	*wcval = *wch | attrs | COLOR_PAIR(color_pair);
+
+	return OK;
+}
+
+wchar_t *wunctrl(cchar_t *wc)
+{
+	static wchar_t strbuf[3] = {0, 0, 0};
+
+	cchar_t ic;
+
+	PDC_LOG(("wunctrl() - called\n"));
+
+	ic = *wc & A_CHARTEXT;
+
+	if (ic >= 0x20 && ic != 0x7f)		/* normal characters */
+	{
+		strbuf[0] = (wchar_t)ic;
+		strbuf[1] = '\0';
+		return strbuf;
+	}
+
+	strbuf[0] = '^';			/* '^' prefix */
+
+	if (ic == 0x7f)				/* 0x7f == DEL */
+		strbuf[1] = '?';
+	else					/* other control */
+		strbuf[1] = (wchar_t)(ic + '@');
+
+	return strbuf;
+}
+#endif
 
 #undef traceon
 #undef traceoff

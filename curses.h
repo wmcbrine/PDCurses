@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.185 2006/07/07 12:49:41 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.186 2006/07/09 03:56:15 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -794,8 +794,9 @@ currently used.)
 
 /*** Alternate character set macros ***/
 
-/* ALTCHARSET definitions for PC from jshumate@wrdis01.robins.af.mil
-   These match code page 437 and compatible pages (CP850, CP852, etc.) */
+/* X/Open says these should be chars, but they're chtypes in PDCurses.
+   Non-X, non-Unicode definitions are from jshumate@wrdis01.robins.af.mil --
+   these match code page 437 and compatible pages (CP850, CP852, etc.) */
 
 /* VT100-compatible symbols -- box chars */
 

@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.37 2006/07/09 22:48:16 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.38 2006/07/10 18:40:51 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -191,6 +191,9 @@ char *keyname(int key)
 	};
 
 	PDC_LOG(("keyname() - called: key %d\n", key));
+
+	if ((key >= 0) && (key < 0x80))
+		return unctrl((chtype)key);
 
 	return has_key(key) ? key_name[key - KEY_MIN] : "NO KEY NAME";
 }

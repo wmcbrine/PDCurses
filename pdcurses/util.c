@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.38 2006/07/10 18:40:51 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.39 2006/07/10 21:20:51 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -255,10 +255,12 @@ int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
 		*attrs = (*wcval & (A_ATTRIBUTES & ~A_COLOR));
 		*color_pair = PAIR_NUMBER(*wcval & A_COLOR);
 
+		*++wch = L'\0';
+
 		return OK;
 	}
 	else
-		return 1;
+		return ((*wcval & A_CHARTEXT) != L'\0');
 }
 
 int setcchar(cchar_t *wcval, const wchar_t *wch, const attr_t attrs,

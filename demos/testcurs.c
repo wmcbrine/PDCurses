@@ -1,12 +1,11 @@
 /*
- * This is a test program for the PDCurses screen package for IBM PC type
- * machines.
- * This program was written by John Burnell (johnb@kea.am.dsir.govt.nz)
+ * This is a test program for PDCurses. Originally by John Burnell 
+ * (johnb@kea.am.dsir.govt.nz).
  *
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.50 2006/07/11 19:43:31 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.51 2006/07/11 20:05:56 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -18,7 +17,17 @@
 #include <string.h>
 #include <curses.h>
 
-#ifdef WACS_S1
+#ifdef PDCURSES
+# ifdef UNICODE
+#  define HAVE_WIDE 1
+# endif
+#else
+# ifdef WACS_S1
+#  define HAVE_WIDE 1
+# endif
+#endif
+
+#ifdef HAVE_WIDE
 # include <locale.h>
 #endif
 
@@ -87,7 +96,7 @@ int main(int argc, char *argv[])
 	PDC_debug("testcurs started\n");
 #endif
 
-#ifdef WACS_S1
+#ifdef HAVE_WIDE
 	/* This is here for ncurses. PDCurses doesn't need it. */
 
 	setlocale(LC_ALL, "");
@@ -912,7 +921,7 @@ void acsTest(WINDOW *win)
 #endif
 	};
 
-#ifdef WACS_S1
+#ifdef HAVE_WIDE
 	cchar_t *wacs_values[] =
 	{
 		WACS_ULCORNER, WACS_URCORNER, WACS_LLCORNER, WACS_LRCORNER, 
@@ -969,7 +978,7 @@ void acsTest(WINDOW *win)
 	mvaddstr(tmarg + 18, 3, "Press any key to continue");
 	getch();
 
-#ifdef WACS_S1
+#ifdef HAVE_WIDE
 	clear();
 
 	attrset(A_BOLD);

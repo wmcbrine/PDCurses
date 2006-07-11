@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.49 2006/07/11 17:56:36 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.50 2006/07/11 19:43:31 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -18,7 +18,7 @@
 #include <string.h>
 #include <curses.h>
 
-#ifdef UNICODE
+#ifdef WACS_S1
 # include <locale.h>
 #endif
 
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 	PDC_debug("testcurs started\n");
 #endif
 
-#ifdef UNICODE
+#ifdef WACS_S1
 	/* This is here for ncurses. PDCurses doesn't need it. */
 
 	setlocale(LC_ALL, "");
@@ -884,10 +884,11 @@ void acsTest(WINDOW *win)
 		"ACS_DEGREE", "ACS_PLMINUS", "ACS_BULLET",
 
 		"ACS_LARROW", "ACS_RARROW", "ACS_UARROW", "ACS_DARROW", 
-		"ACS_BOARD", "ACS_LANTERN", "ACS_BLOCK",
-
-		"ACS_S3", "ACS_S7", "ACS_LEQUAL", "ACS_GEQUAL", 
+		"ACS_BOARD", "ACS_LANTERN", "ACS_BLOCK"
+#ifdef ACS_S3
+		, "ACS_S3", "ACS_S7", "ACS_LEQUAL", "ACS_GEQUAL", 
 		"ACS_PI", "ACS_NEQUAL", "ACS_STERLING"
+#endif
 	};
 
 	/* initscr() must be called before accessing any ACS values
@@ -904,13 +905,31 @@ void acsTest(WINDOW *win)
 		ACS_PLMINUS, ACS_BULLET,
 
 		ACS_LARROW, ACS_RARROW, ACS_UARROW, ACS_DARROW, 
-		ACS_BOARD, ACS_LANTERN, ACS_BLOCK,
-
-		ACS_S3, ACS_S7, ACS_LEQUAL, ACS_GEQUAL, ACS_PI, 
+		ACS_BOARD, ACS_LANTERN, ACS_BLOCK
+#ifdef ACS_S3
+		, ACS_S3, ACS_S7, ACS_LEQUAL, ACS_GEQUAL, ACS_PI, 
 		ACS_NEQUAL, ACS_STERLING
+#endif
 	};
 
-#ifdef UNICODE
+#ifdef WACS_S1
+	cchar_t *wacs_values[] =
+	{
+		WACS_ULCORNER, WACS_URCORNER, WACS_LLCORNER, WACS_LRCORNER, 
+		WACS_LTEE, WACS_RTEE, WACS_TTEE, WACS_BTEE, WACS_HLINE, 
+		WACS_VLINE, WACS_PLUS,
+
+		WACS_S1, WACS_S9, WACS_DIAMOND, WACS_CKBOARD, WACS_DEGREE, 
+		WACS_PLMINUS, WACS_BULLET,
+
+		WACS_LARROW, WACS_RARROW, WACS_UARROW, WACS_DARROW, 
+		WACS_BOARD, WACS_LANTERN, WACS_BLOCK
+# ifdef WACS_S3
+		, WACS_S3, WACS_S7, WACS_LEQUAL, WACS_GEQUAL, WACS_PI, 
+		WACS_NEQUAL, WACS_STERLING
+# endif
+	};
+
 	static const wchar_t russian[] = {0x0420, 0x0443, 0x0441,
 		0x0441, 0x043a, 0x0438, 0x0439, L' ', 0x044f, 0x0437,
 		0x044b, 0x043a, 0};
@@ -923,6 +942,11 @@ void acsTest(WINDOW *win)
 		0x10d0, 0};
 #endif
 
+#ifdef ACS_S3
+# define ACSNUM 32
+#else
+# define ACSNUM 25
+#endif
 	int i, tmarg = (LINES - 22) / 2;
 
 	clear();
@@ -933,7 +957,7 @@ void acsTest(WINDOW *win)
 
 	tmarg += 3;
 
-	for (i = 0; i < 32; i++)
+	for (i = 0; i < ACSNUM; i++)
 	{
 		move((i % 8) * 2 + tmarg, (i / 8) * (COLS / 4) +
 			(COLS / 8 - 7));
@@ -942,16 +966,35 @@ void acsTest(WINDOW *win)
 		printw(" %s", acs_names[i]);
 	}
 
-#ifdef UNICODE
+	mvaddstr(tmarg + 18, 3, "Press any key to continue");
+	getch();
+
+#ifdef WACS_S1
+	clear();
+
+	attrset(A_BOLD);
+	mvaddstr(tmarg - 3, (COLS - 28) / 2, "Wide Alternate Character Set");
+	attrset(A_NORMAL);
+
+	for (i = 0; i < ACSNUM; i++)
+	{
+		move((i % 8) * 2 + tmarg, (i / 8) * (COLS / 4) +
+			(COLS / 8 - 7));
+
+		add_wch(wacs_values[i]);
+		printw(" W%s", acs_names[i]);
+	}
+
 	/* Spanish, Russian, Greek, Georgian */
 
 	mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\x00f1ol");
 	mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5, russian);
 	mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5, greek);
 	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, georgian);
-#endif
+
 	mvaddstr(tmarg + 18, 3, "Press any key to continue");
 	getch();
+#endif
 }
 
 void display_menu(int old_option, int new_option)

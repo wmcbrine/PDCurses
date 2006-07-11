@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.189 2006/07/11 19:14:41 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.190 2006/07/11 19:57:12 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -843,8 +843,8 @@ currently used.)
 /* VT100-compatible symbols -- other */
 
 #ifdef UNICODE
-# define ACS_S1		(chtype)0x2500
-# define ACS_S9		(chtype)0x005f
+# define ACS_S1		(chtype)0x23ba
+# define ACS_S9		(chtype)0x23bd
 # define ACS_DIAMOND	(chtype)0x2666
 # define ACS_CKBOARD	(chtype)0x2592
 # define ACS_DEGREE	(chtype)0x00b0
@@ -907,8 +907,8 @@ currently used.)
    code pages as those above. */
 
 #ifdef UNICODE
-# define ACS_S3		(chtype)0x2500
-# define ACS_S7		(chtype)0x2500
+# define ACS_S3		(chtype)0x23bb
+# define ACS_S7		(chtype)0x23bc
 # define ACS_LEQUAL	(chtype)0x2264
 # define ACS_GEQUAL	(chtype)0x2265
 # define ACS_PI		(chtype)0x03c0

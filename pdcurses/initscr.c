@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.45 2006/07/07 05:14:37 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.46 2006/07/11 19:14:41 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 
@@ -69,6 +69,17 @@ struct cttyset c_sh_tty = {0};		/* tty modes for def_shell_mode */
 struct cttyset c_pr_tty = {0};		/* tty modes for def_prog_mode  */
 struct cttyset c_save_tty = {0};
 struct cttyset c_save_trm = {0};
+
+#ifdef CHTYPE_LONG
+cchar_t _wacs_map[] = {
+	ACS_ULCORNER, ACS_LLCORNER, ACS_URCORNER, ACS_LRCORNER, 
+	ACS_RTEE, ACS_LTEE, ACS_BTEE, ACS_TTEE, ACS_HLINE, ACS_VLINE, 
+	ACS_PLUS, ACS_S1, ACS_S9, ACS_DIAMOND, ACS_CKBOARD, ACS_DEGREE, 
+	ACS_PLMINUS, ACS_BULLET, ACS_LARROW, ACS_RARROW, ACS_DARROW, 
+	ACS_UARROW, ACS_BOARD, ACS_LANTERN, ACS_BLOCK, ACS_S3, ACS_S7, 
+	ACS_LEQUAL, ACS_GEQUAL, ACS_PI, ACS_NEQUAL, ACS_STERLING
+};
+#endif
 
 #if EMALLOC
 extern void *emalloc(size_t);		/* user's emalloc(size) */

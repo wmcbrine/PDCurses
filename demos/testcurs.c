@@ -5,11 +5,15 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.51 2006/07/11 20:05:56 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.52 2006/07/11 20:14:55 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
 # define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
+#endif
+
+#ifndef _XOPEN_SOURCE_EXTENDED
+# define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
 #include <stdio.h>

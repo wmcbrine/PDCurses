@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.48 2006/06/20 21:20:11 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.49 2006/07/11 17:56:36 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -912,14 +912,15 @@ void acsTest(WINDOW *win)
 
 #ifdef UNICODE
 	static const wchar_t russian[] = {0x0420, 0x0443, 0x0441,
-		0x0441, 0x043a, 0x0438, 0x0439, 0x0020, 0x044f, 0x0437,
+		0x0441, 0x043a, 0x0438, 0x0439, L' ', 0x044f, 0x0437,
 		0x044b, 0x043a, 0};
 
 	static const wchar_t greek[] = {0x0395, 0x03bb, 0x03bb, 0x03b7,
 		0x03bd, 0x03b9, 0x03ba, 0x03ac, 0};
 
-	static const wchar_t thai[] = {0x0e20, 0x0e32, 0x0e29, 0x0e32,
-		0x0e44, 0x0e17, 0x0e22, 0};
+	static const wchar_t georgian[] = {0x10e5, 0x10d0, 0x10e0, 
+		0x10d7, 0x10e3, 0x10da, 0x10d8, L' ', 0x10d4, 0x10dc, 
+		0x10d0, 0};
 #endif
 
 	int i, tmarg = (LINES - 22) / 2;
@@ -942,17 +943,16 @@ void acsTest(WINDOW *win)
 	}
 
 #ifdef UNICODE
-	/* Spanish, Russian, Greek, Thai */
+	/* Spanish, Russian, Greek, Georgian */
 
 	mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\x00f1ol");
 	mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5, russian);
 	mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5, greek);
-	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, thai);
+	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, georgian);
 #endif
 	mvaddstr(tmarg + 18, 3, "Press any key to continue");
 	getch();
 }
-
 
 void display_menu(int old_option, int new_option)
 {

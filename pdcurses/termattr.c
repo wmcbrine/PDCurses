@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.33 2006/07/12 05:19:32 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.34 2006/07/12 16:19:57 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -212,7 +212,7 @@ char wordchar(void)
 	return _DWCHAR;			/* word delete char */
 }
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 int erasewchar(wchar_t *ch)
 {
 	PDC_LOG(("erasewchar() - called\n"));

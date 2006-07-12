@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.191 2006/07/12 05:19:31 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.192 2006/07/12 16:19:56 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -352,7 +352,7 @@ typedef int  _int;
 #endif
 
 #if defined(CHTYPE_LONG) && (defined(XCURSES) || defined(WIN32))
-# define USE_WIDE
+# define PDC_WIDE
 #endif
 
 #include <stdarg.h>
@@ -406,7 +406,7 @@ typedef unsigned long chtype;	/* 16-bit attr + 16-bit char	*/
 typedef unsigned short chtype;	/* 8-bit attr + 8-bit char	*/
 #endif
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 typedef chtype cchar_t;
 #endif
 
@@ -807,7 +807,7 @@ currently used.)
 
 /* VT100-compatible symbols -- box chars */
 
-#if defined(USE_WIDE) && defined(UNICODE)
+#if defined(PDC_WIDE) && defined(UNICODE)
 # define ACS_ULCORNER	(chtype)0x250c
 # define ACS_LLCORNER	(chtype)0x2514
 # define ACS_URCORNER	(chtype)0x2510
@@ -849,7 +849,7 @@ currently used.)
 
 /* VT100-compatible symbols -- other */
 
-#if defined(USE_WIDE) && defined(UNICODE)
+#if defined(PDC_WIDE) && defined(UNICODE)
 # define ACS_S1		(chtype)0x23ba
 # define ACS_S9		(chtype)0x23bd
 # define ACS_DIAMOND	(chtype)0x2666
@@ -881,7 +881,7 @@ currently used.)
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#if defined(USE_WIDE) && defined(UNICODE)
+#if defined(PDC_WIDE) && defined(UNICODE)
 # define ACS_LARROW	(chtype)0x2190
 # define ACS_RARROW	(chtype)0x2192
 # define ACS_DARROW	(chtype)0x2193
@@ -913,7 +913,7 @@ currently used.)
    them. Also, the definitions here aren't compatible with as many
    code pages as those above. */
 
-#if defined(USE_WIDE) && defined(UNICODE)
+#if defined(PDC_WIDE) && defined(UNICODE)
 # define ACS_S3		(chtype)0x23bb
 # define ACS_S7		(chtype)0x23bc
 # define ACS_LEQUAL	(chtype)0x2264
@@ -957,7 +957,7 @@ currently used.)
 
 /* cchar_t aliases */
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 
 extern cchar_t _wacs_map[];
 
@@ -1024,6 +1024,8 @@ extern cchar_t _wacs_map[];
  *	Many are just for compatibility.
  *
  */
+
+#define KEY_CODE_YES	0x100	/* If get_wch() gives a key code */
 
 #define KEY_BREAK	0x101	/* Not on PC KBD		*/
 #define KEY_DOWN	0x102	/* Down arrow key		*/
@@ -1548,7 +1550,7 @@ int	wvline(WINDOW *, chtype, int);
 
 /* Wide-character functions */
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 int	addnwstr(const wchar_t *, int);
 int	addwstr(const wchar_t *);
 int	erasewchar(wchar_t *);

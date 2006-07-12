@@ -32,7 +32,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: insch.c,v 1.19 2006/07/12 05:19:32 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.20 2006/07/12 16:19:56 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -154,7 +154,7 @@ int mvwinsch(WINDOW *win, int y, int x, chtype ch)
 	return PDC_chins(win, ch, (bool)(!(SP->raw_out)));
 }
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 int ins_wch(const cchar_t *wch)
 {
 	PDC_LOG(("ins_wch() - called\n"));

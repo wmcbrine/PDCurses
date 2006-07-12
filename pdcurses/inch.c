@@ -30,7 +30,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: inch.c,v 1.18 2006/07/12 05:19:32 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.19 2006/07/12 16:19:56 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -102,7 +102,7 @@ chtype mvwinch(WINDOW *win, int y, int x)
 	return win->_y[win->_cury][win->_curx];
 }
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 int win_wch(WINDOW *win, cchar_t *wcval)
 {
 	PDC_LOG(("win_wch() - called\n"));

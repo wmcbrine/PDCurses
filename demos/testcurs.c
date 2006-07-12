@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.53 2006/07/12 05:19:31 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.54 2006/07/12 16:19:56 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -22,7 +22,7 @@
 #include <curses.h>
 
 #ifdef PDCURSES
-# if defined(USE_WIDE) && defined(UNICODE)
+# if defined(PDC_WIDE) && defined(UNICODE)
 #  define HAVE_WIDE 1
 # endif
 #else

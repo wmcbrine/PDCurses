@@ -34,7 +34,7 @@
 #undef PDC_leftline
 #undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.26 2006/07/12 05:19:32 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.27 2006/07/12 16:19:56 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -407,7 +407,7 @@ int PDC_wrightline(WINDOW *win, int n, bool state)
 	return PDC_lineattr(win, n, state, A_RIGHTLINE);
 }
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 int border_set(const cchar_t *ls, const cchar_t *rs, const cchar_t *ts,
 	       const cchar_t *bs, const cchar_t *tl, const cchar_t *tr,
 	       const cchar_t *bl, const cchar_t *br)

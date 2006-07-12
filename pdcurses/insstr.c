@@ -37,7 +37,7 @@
 # undef waddch
 #endif
 
-RCSID("$Id: insstr.c,v 1.25 2006/07/12 05:19:32 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.26 2006/07/12 16:19:56 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -181,7 +181,7 @@ int mvwinsnstr(WINDOW *win, int y, int x, const char *str, int n)
 	return winsnstr(win, str, n);
 }
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 int ins_wstr(const wchar_t *wstr)
 {
 	PDC_LOG(("ins_wstr() - called\n"));

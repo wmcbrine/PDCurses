@@ -34,7 +34,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: inchstr.c,v 1.18 2006/07/12 05:19:32 wmcbrine Exp $");
+RCSID("$Id: inchstr.c,v 1.19 2006/07/12 16:19:56 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -164,7 +164,7 @@ int mvwinchnstr(WINDOW *win, int y, int x, chtype *ch, int n)
 	return winchnstr(win, ch, n);
 }
 
-#ifdef USE_WIDE
+#ifdef PDC_WIDE
 int in_wchstr(cchar_t *wch)
 {
 	PDC_LOG(("in_wchstr() - called\n"));

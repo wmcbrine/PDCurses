@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.40 2006/07/11 17:21:23 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.41 2006/07/12 05:19:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -239,7 +239,7 @@ int flushinp(void)
 	return OK;
 }
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
 	     short *color_pair, void *opts)
 {

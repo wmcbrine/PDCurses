@@ -34,7 +34,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: addch.c,v 1.20 2006/07/09 22:48:16 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.21 2006/07/12 05:19:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -178,7 +178,7 @@ int wechochar(WINDOW *win, const chtype ch)
 	return wrefresh(win);
 }
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 int add_wch(const cchar_t *wch)
 {
 	PDC_LOG(("add_wch() - called: wch=%x\n", *wch));

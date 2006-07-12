@@ -31,7 +31,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.22 2006/07/09 22:48:16 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.23 2006/07/12 05:19:32 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -318,7 +318,7 @@ int pechochar(WINDOW *pad, chtype ch)
 		save_smincol, save_smaxrow, save_smaxcol);
 }
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 int pecho_wchar(WINDOW *pad, const cchar_t *wch)
 {
 	PDC_LOG(("pecho_wchar() - called\n"));

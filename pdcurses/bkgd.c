@@ -25,7 +25,7 @@
 #undef wbkgd
 #undef wbkgdset
 
-RCSID("$Id: bkgd.c,v 1.20 2006/07/09 22:48:16 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.21 2006/07/12 05:19:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -219,7 +219,7 @@ void wbkgdset(WINDOW *win, chtype ch)
 	win->_bkgd = (ch | bkgdattr);
 }
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 int bkgrnd(const cchar_t *wch)
 {
 	PDC_LOG(("bkgrnd() - called\n"));

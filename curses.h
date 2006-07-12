@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.190 2006/07/11 19:57:12 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.191 2006/07/12 05:19:31 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -351,6 +351,10 @@ typedef int  _int;
 # endif
 #endif
 
+#if defined(CHTYPE_LONG) && (defined(XCURSES) || defined(WIN32))
+# define USE_WIDE
+#endif
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>		/* Required by X/Open usage below	*/
@@ -398,9 +402,12 @@ typedef unsigned int chtype;
 # else
 typedef unsigned long chtype;	/* 16-bit attr + 16-bit char	*/
 # endif
-typedef chtype cchar_t;
 #else
 typedef unsigned short chtype;	/* 8-bit attr + 8-bit char	*/
+#endif
+
+#ifdef USE_WIDE
+typedef chtype cchar_t;
 #endif
 
 /*----------------------------------------------------------------------
@@ -800,7 +807,7 @@ currently used.)
 
 /* VT100-compatible symbols -- box chars */
 
-#ifdef UNICODE
+#if defined(USE_WIDE) && defined(UNICODE)
 # define ACS_ULCORNER	(chtype)0x250c
 # define ACS_LLCORNER	(chtype)0x2514
 # define ACS_URCORNER	(chtype)0x2510
@@ -842,7 +849,7 @@ currently used.)
 
 /* VT100-compatible symbols -- other */
 
-#ifdef UNICODE
+#if defined(USE_WIDE) && defined(UNICODE)
 # define ACS_S1		(chtype)0x23ba
 # define ACS_S9		(chtype)0x23bd
 # define ACS_DIAMOND	(chtype)0x2666
@@ -874,7 +881,7 @@ currently used.)
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#ifdef UNICODE
+#if defined(USE_WIDE) && defined(UNICODE)
 # define ACS_LARROW	(chtype)0x2190
 # define ACS_RARROW	(chtype)0x2192
 # define ACS_DARROW	(chtype)0x2193
@@ -906,7 +913,7 @@ currently used.)
    them. Also, the definitions here aren't compatible with as many
    code pages as those above. */
 
-#ifdef UNICODE
+#if defined(USE_WIDE) && defined(UNICODE)
 # define ACS_S3		(chtype)0x23bb
 # define ACS_S7		(chtype)0x23bc
 # define ACS_LEQUAL	(chtype)0x2264
@@ -950,7 +957,7 @@ currently used.)
 
 /* cchar_t aliases */
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 
 extern cchar_t _wacs_map[];
 
@@ -1541,7 +1548,7 @@ int	wvline(WINDOW *, chtype, int);
 
 /* Wide-character functions */
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 int	addnwstr(const wchar_t *, int);
 int	addwstr(const wchar_t *);
 int	erasewchar(wchar_t *);

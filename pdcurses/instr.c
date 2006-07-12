@@ -37,7 +37,7 @@
 # undef mvwinch
 #endif
 
-RCSID("$Id: instr.c,v 1.22 2006/07/02 22:03:02 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.23 2006/07/12 05:19:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -186,7 +186,7 @@ int mvwinnstr(WINDOW *win, int y, int x, char *str, int n)
 	return winnstr(win, str, n);
 }
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 int inwstr(wchar_t *wstr)
 {
 	PDC_LOG(("inwstr() - called\n"));

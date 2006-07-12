@@ -35,7 +35,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: addchstr.c,v 1.25 2006/07/09 22:48:16 wmcbrine Exp $");
+RCSID("$Id: addchstr.c,v 1.26 2006/07/12 05:19:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -190,7 +190,7 @@ int mvwaddchnstr(WINDOW *win, int y, int x, const chtype *ch, int n)
 	return waddchnstr(win, ch, n);
 }
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 int add_wchstr(const cchar_t *wch)
 {
 	PDC_LOG(("add_wchstr() - called\n"));

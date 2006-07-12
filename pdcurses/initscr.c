@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.46 2006/07/11 19:14:41 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.47 2006/07/12 05:19:32 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 
@@ -70,7 +70,7 @@ struct cttyset c_pr_tty = {0};		/* tty modes for def_prog_mode  */
 struct cttyset c_save_tty = {0};
 struct cttyset c_save_trm = {0};
 
-#ifdef CHTYPE_LONG
+#ifdef USE_WIDE
 cchar_t _wacs_map[] = {
 	ACS_ULCORNER, ACS_LLCORNER, ACS_URCORNER, ACS_LRCORNER, 
 	ACS_RTEE, ACS_LTEE, ACS_BTEE, ACS_TTEE, ACS_HLINE, ACS_VLINE, 

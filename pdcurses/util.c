@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.43 2006/07/13 20:55:43 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.44 2006/07/13 21:13:51 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -300,6 +300,13 @@ wchar_t *wunctrl(cchar_t *wc)
 		strbuf[1] = (wchar_t)(ic + '@');
 
 	return strbuf;
+}
+
+char *key_name(wchar_t c)
+{
+	PDC_LOG(("key_name() - called\n"));
+
+	return keyname((int)c);
 }
 #endif
 

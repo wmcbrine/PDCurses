@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.193 2006/07/13 00:20:25 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.194 2006/07/13 21:13:51 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1577,6 +1577,7 @@ int	inwstr(wchar_t *);
 int	in_wch(cchar_t *);
 int	in_wchnstr(cchar_t *, int);
 int	in_wchstr(cchar_t *);
+char   *key_name(wchar_t);
 int	killwchar(wchar_t *);
 int	mvaddnwstr(int, int, const wchar_t *, int);
 int	mvaddwstr(int, int, const wchar_t *);
@@ -1648,7 +1649,6 @@ int	wgetn_wstr(WINDOW *, wint_t *, int);
 int	wget_wch(WINDOW *, wint_t *);
 int	wget_wstr(WINDOW *, wint_t *);
 
-char   *key_name(wchar_t);
 int    slk_wset(int, const wchar_t *, int);
 int    unget_wch(const wchar_t);
 #endif

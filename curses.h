@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.192 2006/07/12 16:19:56 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.193 2006/07/13 00:20:25 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2808
+#define PDC_BUILD 2809
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -330,6 +330,10 @@ typedef int  _int;
 
 /*----------------------------------------------------------------------*/
 
+#if defined(WIN32) && defined(PDC_WIDE)
+# define UNICODE
+#endif
+
 #if defined(WIN32) && defined(INCLUDE_WINDOWS_H)
 # include <windows.h>
 # ifdef MOUSE_MOVED
@@ -351,13 +355,13 @@ typedef int  _int;
 # endif
 #endif
 
-#if defined(CHTYPE_LONG) && (defined(XCURSES) || defined(WIN32))
-# define PDC_WIDE
-#endif
-
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>		/* Required by X/Open usage below	*/
+
+#ifdef PDC_WIDE
+# include <wchar.h>
+#endif
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 extern "C"
@@ -807,7 +811,7 @@ currently used.)
 
 /* VT100-compatible symbols -- box chars */
 
-#if defined(PDC_WIDE) && defined(UNICODE)
+#ifdef PDC_WIDE
 # define ACS_ULCORNER	(chtype)0x250c
 # define ACS_LLCORNER	(chtype)0x2514
 # define ACS_URCORNER	(chtype)0x2510
@@ -849,7 +853,7 @@ currently used.)
 
 /* VT100-compatible symbols -- other */
 
-#if defined(PDC_WIDE) && defined(UNICODE)
+#ifdef PDC_WIDE
 # define ACS_S1		(chtype)0x23ba
 # define ACS_S9		(chtype)0x23bd
 # define ACS_DIAMOND	(chtype)0x2666
@@ -881,7 +885,7 @@ currently used.)
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#if defined(PDC_WIDE) && defined(UNICODE)
+#ifdef PDC_WIDE
 # define ACS_LARROW	(chtype)0x2190
 # define ACS_RARROW	(chtype)0x2192
 # define ACS_DARROW	(chtype)0x2193
@@ -913,7 +917,7 @@ currently used.)
    them. Also, the definitions here aren't compatible with as many
    code pages as those above. */
 
-#if defined(PDC_WIDE) && defined(UNICODE)
+#ifdef PDC_WIDE
 # define ACS_S3		(chtype)0x23bb
 # define ACS_S7		(chtype)0x23bc
 # define ACS_LEQUAL	(chtype)0x2264
@@ -1553,31 +1557,6 @@ int	wvline(WINDOW *, chtype, int);
 #ifdef PDC_WIDE
 int	addnwstr(const wchar_t *, int);
 int	addwstr(const wchar_t *);
-int	erasewchar(wchar_t *);
-int	innwstr(wchar_t *, int);
-int	ins_nwstr(const wchar_t *, int);
-int	ins_wstr(const wchar_t *);
-int	inwstr(wchar_t *);
-int	killwchar(wchar_t *);
-int	mvaddnwstr(int, int, const wchar_t *, int);
-int	mvaddwstr(int, int, const wchar_t *);
-int	mvinnwstr(int, int, wchar_t *, int);
-int	mvins_nwstr(int, int, const wchar_t *, int);
-int	mvins_wstr(int, int, const wchar_t *);
-int	mvinwstr(int, int, wchar_t *);
-int	mvwaddnwstr(WINDOW *, int, int, const wchar_t *, int);
-int	mvwaddwstr(WINDOW *, int, int, const wchar_t *);
-int	mvwinnwstr(WINDOW *, int, int, wchar_t *, int);
-int	mvwins_nwstr(WINDOW *, int, int, const wchar_t *, int);
-int	mvwins_wstr(WINDOW *, int, int, const wchar_t *);
-int	mvwinwstr(WINDOW *, int, int, wchar_t *);
-int	waddnwstr(WINDOW *, const wchar_t *, int);
-int	waddwstr(WINDOW *, const wchar_t *);
-int	winnwstr(WINDOW *, wchar_t *, int);
-int	wins_nwstr(WINDOW *, const wchar_t *, int);
-int	wins_wstr(WINDOW *, const wchar_t *);
-int	winwstr(WINDOW *, wchar_t *);
-
 int	add_wch(const cchar_t *);
 int	add_wchnstr(const cchar_t *, int);
 int	add_wchstr(const cchar_t *);
@@ -1586,34 +1565,54 @@ int	border_set(const cchar_t *, const cchar_t *, const cchar_t *,
 		   const cchar_t *, const cchar_t *);
 int	box_set(WINDOW *, const cchar_t *, const cchar_t *);
 int	echo_wchar(const cchar_t *);
+int	erasewchar(wchar_t *);
 int	getbkgrnd(cchar_t *);
 int	getcchar(const cchar_t *, wchar_t *, attr_t *, short *, void *);
 int	hline_set(const cchar_t *, int);
+int	innwstr(wchar_t *, int);
+int	ins_nwstr(const wchar_t *, int);
 int	ins_wch(const cchar_t *);
+int	ins_wstr(const wchar_t *);
+int	inwstr(wchar_t *);
 int	in_wch(cchar_t *);
 int	in_wchnstr(cchar_t *, int);
 int	in_wchstr(cchar_t *);
+int	killwchar(wchar_t *);
+int	mvaddnwstr(int, int, const wchar_t *, int);
+int	mvaddwstr(int, int, const wchar_t *);
 int	mvadd_wch(int, int, const cchar_t *);
 int	mvadd_wchnstr(int, int, const cchar_t *, int);
 int	mvadd_wchstr(int, int, const cchar_t *);
 int	mvhline_set(int, int, const cchar_t *, int);
+int	mvinnwstr(int, int, wchar_t *, int);
+int	mvins_nwstr(int, int, const wchar_t *, int);
 int	mvins_wch(int, int, const cchar_t *);
+int	mvins_wstr(int, int, const wchar_t *);
+int	mvinwstr(int, int, wchar_t *);
 int	mvin_wch(int, int, cchar_t *);
 int	mvin_wchnstr(int, int, cchar_t *, int);
 int	mvin_wchstr(int, int, cchar_t *);
 int	mvvline_set(int, int, const cchar_t *, int);
+int	mvwaddnwstr(WINDOW *, int, int, const wchar_t *, int);
+int	mvwaddwstr(WINDOW *, int, int, const wchar_t *);
 int	mvwadd_wch(WINDOW *, int, int, const cchar_t *);
 int	mvwadd_wchnstr(WINDOW *, int, int, const cchar_t *, int);
 int	mvwadd_wchstr(WINDOW *, int, int, const cchar_t *);
 int	mvwhline_set(WINDOW *, int, int, const cchar_t *, int);
+int	mvwinnwstr(WINDOW *, int, int, wchar_t *, int);
+int	mvwins_nwstr(WINDOW *, int, int, const wchar_t *, int);
 int	mvwins_wch(WINDOW *, int, int, const cchar_t *);
+int	mvwins_wstr(WINDOW *, int, int, const wchar_t *);
 int	mvwin_wch(WINDOW *, int, int, cchar_t *);
 int	mvwin_wchnstr(WINDOW *, int, int, cchar_t *, int);
 int	mvwin_wchstr(WINDOW *, int, int, cchar_t *);
+int	mvwinwstr(WINDOW *, int, int, wchar_t *);
 int	mvwvline_set(WINDOW *, int, int, const cchar_t *, int);
 int	pecho_wchar(WINDOW *, const cchar_t*);
 int	setcchar(cchar_t*, const wchar_t*, const attr_t, short, const void*);
 int	vline_set(const cchar_t *, int);
+int	waddnwstr(WINDOW *, const wchar_t *, int);
+int	waddwstr(WINDOW *, const wchar_t *);
 int	wadd_wch(WINDOW *, const cchar_t *);
 int	wadd_wchnstr(WINDOW *, const cchar_t *, int);
 int	wadd_wchstr(WINDOW *, const cchar_t *);
@@ -1625,12 +1624,33 @@ int	wborder_set(WINDOW *, const cchar_t *, const cchar_t *,
 int	wecho_wchar(WINDOW *, const cchar_t *);
 int	wgetbkgrnd(WINDOW *, cchar_t *);
 int	whline_set(WINDOW *, const cchar_t *, int);
+int	winnwstr(WINDOW *, wchar_t *, int);
+int	wins_nwstr(WINDOW *, const wchar_t *, int);
 int	wins_wch(WINDOW *, const cchar_t *);
+int	wins_wstr(WINDOW *, const wchar_t *);
+int	winwstr(WINDOW *, wchar_t *);
 int	win_wch(WINDOW *, cchar_t *);
 int	win_wchnstr(WINDOW *, cchar_t *, int);
 int	win_wchstr(WINDOW *, cchar_t *);
 wchar_t *wunctrl(cchar_t *);
 int	wvline_set(WINDOW *, const cchar_t *, int);
+
+int	getn_wstr(wint_t *, int);
+int	get_wch(wint_t *);
+int	get_wstr(wint_t *);
+int	mvgetn_wstr(int, int, wint_t *, int);
+int	mvget_wch(int, int, wint_t *);
+int	mvget_wstr(int, int, wint_t *);
+int	mvwgetn_wstr(WINDOW *, int, int, wint_t *, int);
+int	mvwget_wch(WINDOW *, int, int, wint_t *);
+int	mvwget_wstr(WINDOW *, int, int, wint_t *);
+int	wgetn_wstr(WINDOW *, wint_t *, int);
+int	wget_wch(WINDOW *, wint_t *);
+int	wget_wstr(WINDOW *, wint_t *);
+
+char   *key_name(wchar_t);
+int    slk_wset(int, const wchar_t *, int);
+int    unget_wch(const wchar_t);
 #endif
 
 /* Quasi-standard */

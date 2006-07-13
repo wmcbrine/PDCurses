@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.72 2006/07/08 00:21:41 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.73 2006/07/13 00:20:27 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -633,7 +633,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 		XtOffsetOf(AppData, normalfont),
 		XtRString,
 		(XtPointer)
-#ifdef UNICODE
+#ifdef PDC_WIDE
 		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
 #else
 		"7x13",
@@ -648,7 +648,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 		XtOffsetOf(AppData, italicfont),
 		XtRString,
 		(XtPointer)
-#ifdef UNICODE
+#ifdef PDC_WIDE
 		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
 #else
 		"7x13",
@@ -892,7 +892,7 @@ void dummy_function(void)
 {
 }
 
-#ifdef UNICODE
+#ifdef PDC_WIDE
 static int to_utf8(char *outcode, int code)
 {
 	if (code < 0x80)
@@ -983,7 +983,7 @@ static void makeXY(int x, int y, int fontwidth, int fontheight,
 }
 
 static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
-#ifdef UNICODE
+#ifdef PDC_WIDE
 			    XChar2b *text)
 #else
 			    char *text)
@@ -1004,7 +1004,7 @@ static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
 		back = COLOR_BLACK;
 	}
 
-#ifdef UNICODE
+#ifdef PDC_WIDE
 	text[len].byte1 = 0;
 	text[len].byte2 = 0;
 #else
@@ -1031,7 +1031,7 @@ static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
 
 	makeXY(col, row, XCursesFontWidth, XCursesFontHeight, &xpos, &ypos);
 
-#ifdef UNICODE
+#ifdef PDC_WIDE
 	XDrawImageString16(
 #else
 	XDrawImageString(
@@ -1078,7 +1078,7 @@ static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
 int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 			bool highlight)
 {
-#ifdef UNICODE
+#ifdef PDC_WIDE
 	XChar2b text[513];
 #else
 	char text[513];
@@ -1098,7 +1098,7 @@ int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 	{
 		chtype curr = ch[j];
 
-#ifndef UNICODE
+#ifndef PDC_WIDE
 		/* Special handling for ACS_BLOCK */
 
 		if (!(curr & A_CHARTEXT))
@@ -1120,7 +1120,7 @@ int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 			i = 0;
 		}
 
-#ifdef UNICODE
+#ifdef PDC_WIDE
 		text[i].byte1 = (curr & 0xff00) >> 8;
 		text[i++].byte2 = curr & 0x00ff;
 #else
@@ -1857,7 +1857,7 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 			&std_length, format_return);
 
 		*length_return = std_length +
-#ifdef UNICODE
+#ifdef PDC_WIDE
 			2;
 #else
 			1;
@@ -1866,7 +1866,7 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 
 		targetP = *(Atom**)value_return;
 		*targetP++ = XA_STRING;
-#ifdef UNICODE
+#ifdef PDC_WIDE
 		*targetP++ = XA_UTF8_STRING(XtDisplay(topLevel));
 #endif
 
@@ -1880,16 +1880,16 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 		return True;
 	}
 	else if (
-#ifdef UNICODE
+#ifdef PDC_WIDE
 		 *target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
 #endif
 		 *target == XA_STRING)
 	{
-#ifdef UNICODE
+#ifdef PDC_WIDE
 		bool utf8 = (*target == XA_UTF8_STRING(XtDisplay(topLevel)));
 #endif
 		char *data = XtMalloc(tmpsel_length
-#ifdef UNICODE
+#ifdef PDC_WIDE
 			* 3
 #endif
 			+ 1);
@@ -1897,7 +1897,7 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 		chtype *tmp = tmpsel;
 		int ret_length = 0;
 
-#ifdef UNICODE
+#ifdef PDC_WIDE
 		if (utf8)
 		{
 			while (*tmp)

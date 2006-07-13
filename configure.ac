@@ -153,15 +153,15 @@ if test "$with_latin1" = yes; then
 	AC_DEFINE(INCLUDE_LATIN1)
 fi
 
-dnl ----------------- check for Unicode support ---------------------
-dnl allow --enable-unicode to include Unicode support
-AC_ARG_ENABLE(unicode,
-	[  --enable-unicode        include support for Unicode],
-	[with_unicode=$enableval],
-	[with_unicode=no],
+dnl --------------- check for wide character support ----------------
+dnl allow --enable-widec to include wide character support
+AC_ARG_ENABLE(widec,
+	[  --enable-widec          include support for wide characters],
+	[with_widec=$enableval],
+	[with_widec=no],
 )
-if test "$with_unicode" = yes; then
-	SYS_DEFS="$SYS_DEFS -DUNICODE"
+if test "$with_widec" = yes; then
+	SYS_DEFS="$SYS_DEFS -DPDC_WIDE"
 fi
 
 dnl ----------------- check for Purify support -----------------------

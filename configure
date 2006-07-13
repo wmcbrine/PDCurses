@@ -847,7 +847,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-debug          turn on debugging
   --enable-latin1         include support for LATIN1 keys
-  --enable-unicode        include support for Unicode
+  --enable-widec          include support for wide characters
   --enable-purify         link with Purify (TM)
 
 Optional Packages:
@@ -4901,15 +4901,15 @@ _ACEOF
 
 fi
 
-# Check whether --enable-unicode or --disable-unicode was given.
-if test "${enable_unicode+set}" = set; then
-  enableval="$enable_unicode"
-  with_unicode=$enableval
+# Check whether --enable-widec or --disable-widec was given.
+if test "${enable_widec+set}" = set; then
+  enableval="$enable_widec"
+  with_widec=$enableval
 else
-  with_unicode=no
+  with_widec=no
 fi;
-if test "$with_unicode" = yes; then
-	SYS_DEFS="$SYS_DEFS -DUNICODE"
+if test "$with_widec" = yes; then
+	SYS_DEFS="$SYS_DEFS -DPDC_WIDE"
 fi
 
 # Check whether --enable-purify or --disable-purify was given.

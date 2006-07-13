@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.42 2006/07/12 16:19:57 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.43 2006/07/13 20:55:43 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -150,7 +150,7 @@ char *keyname(int key)
 		"KEY_SCANCEL", "KEY_SCOMMAND", "KEY_SCOPY", 
 		"KEY_SCREATE", "KEY_SDC", "KEY_SDL", "KEY_SELECT", 
 		"KEY_SEND", "KEY_SEOL", "KEY_SEXIT", "KEY_SFIND", 
-		"KEY_SHOME", "KEY_SIC", "NO KEY NAME", "KEY_SLEFT", 
+		"KEY_SHOME", "KEY_SIC", "UNKNOWN KEY", "KEY_SLEFT", 
 		"KEY_SMESSAGE", "KEY_SMOVE", "KEY_SNEXT", 
 		"KEY_SOPTIONS", "KEY_SPREVIOUS", "KEY_SPRINT", 
 		"KEY_SREDO", "KEY_SREPLACE", "KEY_SRIGHT", "KEY_SRSUME", 
@@ -195,7 +195,7 @@ char *keyname(int key)
 	if ((key >= 0) && (key < 0x80))
 		return unctrl((chtype)key);
 
-	return has_key(key) ? key_name[key - KEY_MIN] : "NO KEY NAME";
+	return has_key(key) ? key_name[key - KEY_MIN] : "UNKNOWN KEY";
 }
 
 bool has_key(int key)

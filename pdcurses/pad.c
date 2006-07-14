@@ -17,6 +17,7 @@
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
@@ -31,7 +32,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.25 2006/07/14 03:21:16 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.26 2006/07/14 06:27:32 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -128,17 +129,17 @@ WINDOW *newpad(int nlines, int ncols)
 	{
 		/* make and clear the lines */
 
-		if ((win->_y[i] = (*callc)(ncols, sizeof(chtype))) == NULL)
+		if ((win->_y[i] = calloc(ncols, sizeof(chtype))) == NULL)
 		{
 			/* if error, free all the data */
 
 			for (j = 0; j < i; j++)
-				(*fre)(win->_y[j]);
+				free(win->_y[j]);
 
-			(*fre)(win->_firstch);
-			(*fre)(win->_lastch);
-			(*fre)(win->_y);
-			(*fre)(win);
+			free(win->_firstch);
+			free(win->_lastch);
+			free(win->_y);
+			free(win);
 
 			return (WINDOW *)NULL;
 		}

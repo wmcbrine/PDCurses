@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.195 2006/07/14 03:21:16 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.196 2006/07/14 06:27:32 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -657,7 +657,6 @@ __declspec(dllimport)	int		COLS;
 __declspec(dllimport)	WINDOW		*stdscr;
 __declspec(dllimport)	WINDOW		*curscr;
 __declspec(dllimport)	SCREEN		*SP;
-__declspec(dllimport)	int		use_emalloc;
 __declspec(dllimport)	MOUSE_STATUS	Mouse_status;
 __declspec(dllimport)	int		COLORS;
 __declspec(dllimport)	int		COLOR_PAIRS;
@@ -667,7 +666,6 @@ __declspec(dllexport) extern	int		COLS;
 __declspec(dllexport) extern	WINDOW		*stdscr;
 __declspec(dllexport) extern	WINDOW		*curscr;
 __declspec(dllexport) extern	SCREEN		*SP;
-__declspec(dllexport) extern	int		use_emalloc;
 __declspec(dllexport) extern	MOUSE_STATUS	Mouse_status;
 __declspec(dllexport) extern	int 		COLORS;
 __declspec(dllexport) extern	int		COLOR_PAIRS;
@@ -678,7 +676,6 @@ extern	int		COLS;		/* terminal width		*/
 extern	WINDOW		*stdscr;	/* the default screen window	*/
 extern	WINDOW		*curscr;	/* the current screen image	*/
 extern	SCREEN		*SP;		/* curses variables		*/
-extern	int		use_emalloc;	/* set to use your own malloc	*/
 extern	MOUSE_STATUS	Mouse_status;
 extern	int		COLORS, COLOR_PAIRS;
 #endif

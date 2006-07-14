@@ -17,9 +17,10 @@
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
+#include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.41 2006/07/14 03:21:16 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.42 2006/07/14 06:27:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -146,12 +147,9 @@ WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 	PDC_LOG(("PDC_makenew() - called: lines %d cols %d begy %d begx %d\n",
 		num_lines, num_columns, begy, begx));
 
-	/*  Use the standard runtime malloc/calloc package or use
-	    the user's emalloc/ecalloc package. */
-
 	/* allocate the window structure itself */
 
-	if ((win = (*mallc)(sizeof(WINDOW))) == (WINDOW *)NULL)
+	if ((win = malloc(sizeof(WINDOW))) == (WINDOW *)NULL)
 		return win;
 
 	/* set all fields to zero */
@@ -160,26 +158,26 @@ WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 
 	/* allocate the line pointer array */
 
-	if ((win->_y = (*callc)(num_lines, sizeof(chtype *))) == NULL)
+	if ((win->_y = calloc(num_lines, sizeof(chtype *))) == NULL)
 	{
-		(*fre)(win);
+		free(win);
 		return (WINDOW *)NULL;
 	}
 
 	/* allocate the minchng and maxchng arrays */
 
-	if ((win->_firstch = (*callc)(num_lines, sizeof(int))) == NULL)
+	if ((win->_firstch = calloc(num_lines, sizeof(int))) == NULL)
 	{
-		(*fre)(win->_y);
-		(*fre)(win);
+		free(win->_y);
+		free(win);
 		return (WINDOW *)NULL;
 	}
 
-	if ((win->_lastch = (*callc)(num_lines, sizeof(int))) == NULL)
+	if ((win->_lastch = calloc(num_lines, sizeof(int))) == NULL)
 	{
-		(*fre)(win->_firstch);
-		(*fre)(win->_y);
-		(*fre)(win);
+		free(win->_firstch);
+		free(win->_y);
+		free(win);
 		return (WINDOW *)NULL;
 	}
 

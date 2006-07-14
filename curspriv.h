@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.75 2006/07/14 03:21:16 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.76 2006/07/14 06:27:32 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -116,25 +116,6 @@ void setdosmemword(int offs, unsigned short w);
 #endif
 
 
-/*----------------------------------------------------------------------
- *	MALLOC DEBUGGING SUPPORT:
- *
- *	Set EMALLOC and EMALLOC_MAGIC in order to use your private
- *	versions of malloc(), calloc(), and free().  This can help,
- *	but not solve, your malloc problems when debugging...
- *
- */
-
-#if defined(INTERNAL) || defined(CURSES_LIBRARY)
-# define EMALLOC 0		/* Enable/Disable External Malloc	*/
-# define EMALLOC_MAGIC  0x0C0C	/* Our magic indicator that we should	*/
-				/* use our external malloc rather than	*/
-				/* the runtime's malloc.		*/
-#else
-# define EMALLOC 0		/* Disable External Malloc		*/
-#endif
-
-
 /*----------------------------------------------------------------------*/
 /* window properties */
 
@@ -204,9 +185,6 @@ extern int c_ungind;            /* ungetch() push index */
 extern int c_ungch[NUNGETCH];   /* array of ungotten chars */
 extern WINDOW *_getch_win_;
 
-extern void *(*mallc)(size_t);
-extern void *(*callc)(size_t, size_t);
-extern void  (*fre)(void *);
 
 /*----------------------------------------------------------------------
  *	ANSI C prototypes.

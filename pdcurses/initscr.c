@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.48 2006/07/12 16:19:56 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.49 2006/07/14 06:27:32 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
 
@@ -51,8 +51,6 @@ int LINES = 0;				/* current terminal height */
 int COLS = 0;				/* current terminal width */
 
 MOUSE_STATUS Mouse_status;
-
-int use_emalloc = FALSE;
 
 /* Global definitions for charget routines */
 
@@ -80,17 +78,6 @@ cchar_t _wacs_map[] = {
 	ACS_LEQUAL, ACS_GEQUAL, ACS_PI, ACS_NEQUAL, ACS_STERLING
 };
 #endif
-
-#if EMALLOC
-extern void *emalloc(size_t);		/* user's emalloc(size) */
-extern void *ecalloc(size_t, size_t);	/* user's ecalloc(num, size) */
-extern void efree(void *);		/* user's efree(ptr) */
-#endif
-
-void* (*mallc)(size_t);			/* ptr to some malloc(size) */
-void* (*callc)(size_t, size_t);		/* ptr to some ecalloc(num, size) */
-void  (*fre)(void *);			/* ptr to some free(ptr) */
-void* (*reallc)(void *, size_t);	/* ptr to some realloc(ptr, size) */
 
 extern RIPPEDOFFLINE linesripped[5];
 extern char linesrippedoff;
@@ -192,33 +179,15 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	v_init();
 #endif
 
-#if EMALLOC
-	if (use_emalloc == EMALLOC_MAGIC)
-	{
-		use_emalloc = TRUE;
-		mallc = emalloc;
-		callc = ecalloc;
-		fre = efree;
-		reallc = erealloc;
-	}
-	else
-#endif
-	{
-		mallc = malloc;
-		callc = calloc;
-		fre = free;
-		reallc = realloc;
-	}
-
 #ifdef XCURSES
 	if (XCursesInitscr(NULL, argc, argv) == ERR)
 		exit(7);
 #endif
 
 #ifdef XCURSES
-	if (SP == (SCREEN*)NULL)  /* SP already attached in XCursesInitscr() */
+	if (SP == (SCREEN *)NULL)  /* SP already attached in XCursesInitscr() */
 #else
-	if ((SP = (SCREEN*)callc(1, sizeof(SCREEN))) == (SCREEN*)NULL)
+	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
 #endif
 	{
 		fprintf(stderr, "initscr(): Unable to create SP\n");
@@ -395,7 +364,7 @@ void delscreen(SCREEN *sp)
 #ifndef XCURSES
 	if (SP)
 	{
-		fre(SP);
+		free(SP);
 		SP = (SCREEN *)NULL;
 	}
 #endif

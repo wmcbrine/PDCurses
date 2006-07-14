@@ -17,6 +17,7 @@
 
 #define	CURSES_LIBRARY 1
 #include <curses.h>
+#include <stdlib.h>
 
 /* undefine any macros for functions defined in this module */
 #undef newwin
@@ -42,7 +43,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.31 2006/07/14 03:21:16 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.32 2006/07/14 06:27:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -175,17 +176,17 @@ WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 
 	for (i = 0; i < nlines; i++)
 	{
-		if ((win->_y[i] = (*callc)(ncols, sizeof(chtype))) == NULL)
+		if ((win->_y[i] = calloc(ncols, sizeof(chtype))) == NULL)
 		{
 			/* if error, free all the data */
 
 			for (j = 0; j < i; j++)
-				(*fre)(win->_y[j]);
+				free(win->_y[j]);
 
-			(*fre)(win->_firstch);
-			(*fre)(win->_lastch);
-			(*fre)(win->_y);
-			(*fre)(win);
+			free(win->_firstch);
+			free(win->_lastch);
+			free(win->_y);
+			free(win);
 
 			return (WINDOW *)NULL;
 		}
@@ -213,12 +214,12 @@ int delwin(WINDOW *win)
 	if (!(win->_flags & (_SUBWIN|_SUBPAD)))
 		for (i = 0; i < win->_pmaxy && win->_y[i]; i++)
 			if (win->_y[i] != NULL)
-				(*fre)(win->_y[i]);
+				free(win->_y[i]);
 
-	(*fre)(win->_firstch);
-	(*fre)(win->_lastch);
-	(*fre)(win->_y);
-	(*fre)(win);
+	free(win->_firstch);
+	free(win->_lastch);
+	free(win->_y);
+	free(win);
 
 	return OK;
 }
@@ -340,17 +341,17 @@ WINDOW *dupwin(WINDOW *win)
 
 	for (i = 0; i < nlines; i++)
 	{
-		if ((new->_y[i] = (*callc)(ncols, sizeof(chtype))) == NULL)
+		if ((new->_y[i] = calloc(ncols, sizeof(chtype))) == NULL)
 		{
 			/* if error, free all the data */
 
 			for (j = 0; j < i; j++)
-				(*fre)(new->_y[j]);
+				free(new->_y[j]);
 
-			(*fre)(new->_firstch);
-			(*fre)(new->_lastch);
-			(*fre)(new->_y);
-			(*fre)(new);
+			free(new->_firstch);
+			free(new->_lastch);
+			free(new->_y);
+			free(new);
 
 			return (WINDOW *)NULL;
 		}
@@ -449,18 +450,18 @@ WINDOW *resize_window(WINDOW *win, int lins, int cols)
 
 	for (i = 0; i < lins; i++)
 	{
-		if ((new->_y[i] = (chtype*)(*callc)(cols, sizeof(chtype)))
+		if ((new->_y[i] = (chtype *)calloc(cols, sizeof(chtype)))
 		    == NULL)
 		{
 			/* if error, free all the data */
 
 			for (j = 0; j < i; j++)
-				(*fre)(new->_y[j]);
+				free(new->_y[j]);
 
-			(*fre)(new->_firstch);
-			(*fre)(new->_lastch);
-			(*fre)(new->_y);
-			(*fre)(new);
+			free(new->_firstch);
+			free(new->_lastch);
+			free(new->_y);
+			free(new);
 
 			return (WINDOW *)NULL;
 		}

@@ -10,7 +10,7 @@
    directory where you unpacked PDCurses. (Skip this step if you're
    using LCC-Win32.) For example:
 
-         set PDCURSES_SRCDIR=c:\pdcurs28
+         set PDCURSES_SRCDIR=c:\pdcurses
 
  . In the subdirectory for each OS, you'll find a number of ".mak"
    files, one for each supported compiler:

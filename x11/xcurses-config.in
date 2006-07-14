@@ -3,10 +3,10 @@
 # The idea to this kind of setup info script was stolen from numerous
 # other packages, such as neon, libxml and gnome.
 #
-# $Id: xcurses-config.in,v 1.1 2006/07/04 00:23:05 wmcbrine Exp $
+# $Id: xcurses-config.in,v 1.2 2006/07/14 18:11:56 wmcbrine Exp $
 #
 
-verdot=2.8
+verdot=3.0
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@

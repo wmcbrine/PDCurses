@@ -38,9 +38,9 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.49 2006/07/14 06:27:32 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.50 2006/07/14 18:11:56 wmcbrine Exp $");
 
-const char *_curses_notice = "PDCurses 2.8 - Public Domain 2006";
+const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */

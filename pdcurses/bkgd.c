@@ -25,7 +25,7 @@
 #undef wbkgd
 #undef wbkgdset
 
-RCSID("$Id: bkgd.c,v 1.22 2006/07/12 16:19:56 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.23 2006/07/14 22:59:38 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -113,9 +113,7 @@ int wbkgd(WINDOW *win, chtype ch)
 	chtype oldcolr, oldch, newcolr, newch, colr, attr;
 	chtype oldattr = 0, newattr = 0;
 	chtype *winptr;
-#ifdef MX386
-	char tmpbuf[60];
-#endif
+
 	PDC_LOG(("wbkgd() - called\n"));
 
 	if (win == NULL)
@@ -136,12 +134,6 @@ int wbkgd(WINDOW *win, chtype ch)
 		newattr = ((win->_bkgd & A_ATTRIBUTES) ^ newcolr);
 	newch = (win->_bkgd & A_CHARTEXT);
 
-#ifdef MX386
-	/* buggy compiler fix */
-
-	sprintf(tmpbuf, "%d %d", oldch, newch);
-#endif
-	
 	/* what follows is what seems to occur in the System V 
 	   implementation of this routine */
 

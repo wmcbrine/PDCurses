@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.42 2006/07/14 06:27:32 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.43 2006/07/14 17:03:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -197,26 +197,13 @@ WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 	win->_bmarg = num_lines - 1;
 	win->_parx = win->_pary = -1;
 
-	/* init to say window unchanged */
+	/* init to say window all changed */
 
 	for (i = 0; i < num_lines; i++)
 	{
 		win->_firstch[i] = 0;
 		win->_lastch[i] = num_columns - 1;
 	}
-
-	/* set flags for window properties */
-
-	if ((begy + num_lines) == LINES)
-	{
-		win->_flags |= _ENDLINE;
-
-		if ((begx == 0) && (num_columns == COLS) && (begy == 0))
-			win->_flags |= _FULLWIN;
-	}
-
-	if (((begy + num_lines) == LINES) && ((begx + num_columns) == COLS))
-		win->_flags |= _SCROLLWIN;
 
 	return win;
 }

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.79 2006/07/14 16:52:10 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.80 2006/07/14 17:03:27 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -29,9 +29,6 @@
 /* window properties */
 
 #define _SUBWIN		0x01	/* window is a subwindow		*/
-#define _ENDLINE	0x02	/* last winline is last screen line	*/
-#define _FULLWIN	0x04	/* window fills screen			*/
-#define _SCROLLWIN	0x08	/* window lwr rgt is screen lwr rgt	*/
 #define _PAD		0x10	/* X/Open Pad.				*/
 #define _SUBPAD		0x20	/* X/Open subpad.			*/
 

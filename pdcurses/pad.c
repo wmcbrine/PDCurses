@@ -31,7 +31,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.24 2006/07/12 16:19:57 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.25 2006/07/14 03:21:16 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -115,9 +115,6 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
 WINDOW *newpad(int nlines, int ncols)
 {
-	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void *);
-
 	WINDOW *win;
 	chtype *ptr;
 	int i, j;

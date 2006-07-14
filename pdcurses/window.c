@@ -42,7 +42,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.30 2006/07/05 20:20:49 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.31 2006/07/14 03:21:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -153,9 +153,6 @@ RCSID("$Id: window.c,v 1.30 2006/07/05 20:20:49 wmcbrine Exp $");
 
 WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 {
-	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void *);
-
 	WINDOW *win;
 	chtype *ptr;
 	int i, j;
@@ -204,8 +201,6 @@ WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 
 int delwin(WINDOW *win)
 {
-	extern void (*fre)(void*);
-
 	int i;
 
 	PDC_LOG(("delwin() - called\n"));
@@ -326,9 +321,6 @@ int mvderwin(WINDOW *win, int par_y, int par_x)
 
 WINDOW *dupwin(WINDOW *win)
 {
-	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void *);
-
 	WINDOW *new;
 	chtype *ptr, *ptr1;
 	int nlines, ncols, begy, begx, i, j;
@@ -411,9 +403,6 @@ WINDOW *dupwin(WINDOW *win)
 
 WINDOW *resize_window(WINDOW *win, int lins, int cols)
 {
-	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void *);
-
 	WINDOW *new;
 	int i, j, save_cury, save_curx;
 	int new_begy, new_begx;

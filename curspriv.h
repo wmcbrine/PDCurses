@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.74 2006/07/07 13:19:31 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.75 2006/07/14 03:21:16 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -197,6 +197,16 @@ enum
 	_FONT15,	/* GENIUS */
 	_FONT16
 };
+
+extern int c_pindex;            /* putter index */
+extern int c_gindex;            /* getter index */
+extern int c_ungind;            /* ungetch() push index */
+extern int c_ungch[NUNGETCH];   /* array of ungotten chars */
+extern WINDOW *_getch_win_;
+
+extern void *(*mallc)(size_t);
+extern void *(*callc)(size_t, size_t);
+extern void  (*fre)(void *);
 
 /*----------------------------------------------------------------------
  *	ANSI C prototypes.

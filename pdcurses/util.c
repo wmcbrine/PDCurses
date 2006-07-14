@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.44 2006/07/13 21:13:51 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.45 2006/07/14 03:21:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -224,10 +224,6 @@ int delay_output(int ms)
 
 int flushinp(void)
 {
-	extern int c_pindex;		/* putter index */
-	extern int c_gindex;		/* getter index */
-	extern int c_ungind;		/* wungetch() push index */
-
 	PDC_LOG(("flushinp() - called\n"));
 
 	PDC_flushinp();

@@ -33,7 +33,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: getch.c,v 1.27 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.28 2006/07/14 03:21:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -116,12 +116,6 @@ int PDC_getch(void)
 
 int wgetch(WINDOW *win)
 {
-	extern int c_pindex;		/* putter index	*/
-	extern int c_gindex;		/* getter index	*/
-	extern int c_ungind;		/* ungetch() push index */
-	extern int c_ungch[NUNGETCH];	/* array of ungotten chars */
-	extern WINDOW *_getch_win_;
-
 	static int buffer[_INBUFSIZ];	/* character buffer */
 	int key, display_key, waitcount;
 
@@ -269,9 +263,6 @@ int mvwgetch(WINDOW *win, int y, int x)
 
 int PDC_ungetch(int ch)
 {
-	extern int c_ungind;		/* ungetch() push index */
-	extern int c_ungch[NUNGETCH];	/* array of ungotten chars */
-
 	PDC_LOG(("ungetch() - called\n"));
 
 	if (c_ungind >= NUNGETCH)	/* pushback stack full */

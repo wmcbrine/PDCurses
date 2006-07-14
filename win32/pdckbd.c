@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.45 2006/07/06 23:50:13 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.46 2006/07/14 03:21:16 wmcbrine Exp $");
 
 #define KEY_STATE TRUE
 #define MS_MOUSE_MOVED 1
@@ -853,7 +853,6 @@ bool PDC_get_ctrl_break(void)
 
 int PDC_rawgetch(void)
 {
-	extern WINDOW *_getch_win_;
 	int c, oldc;
 
 	PDC_LOG(("PDC_rawgetch() - called\n"));
@@ -936,7 +935,6 @@ int PDC_set_ctrl_break(bool setting)
 
 int PDC_sysgetch(void)
 {
-	extern WINDOW *_getch_win_;
 	int c;
 
 	PDC_LOG(("PDC_sysgetch() - called\n"));
@@ -992,8 +990,6 @@ int PDC_sysgetch(void)
 
 int PDC_validchar(int c)
 {
-	extern WINDOW *_getch_win_;
-
 	PDC_LOG(("PDC_validchar() - called\n"));
 
 	/* skip special keys if !keypad mode */

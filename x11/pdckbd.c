@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.24 2006/07/07 16:20:28 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.25 2006/07/14 03:21:16 wmcbrine Exp $");
 
 bool XCurses_kbhit(void)
 {
@@ -211,8 +211,6 @@ bool PDC_get_ctrl_break(void)
 
 int PDC_rawgetch(void)
 {
-	extern WINDOW *_getch_win_;
-
 	PDC_LOG(("PDC_rawgetch() - called\n"));
 
 	if (_getch_win_ == (WINDOW *)NULL)

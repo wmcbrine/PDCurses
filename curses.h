@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.194 2006/07/13 21:13:51 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.195 2006/07/14 03:21:16 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1636,6 +1636,8 @@ int	win_wchstr(WINDOW *, cchar_t *);
 wchar_t *wunctrl(cchar_t *);
 int	wvline_set(WINDOW *, const cchar_t *, int);
 
+/* Not implemented yet */
+
 int	getn_wstr(wint_t *, int);
 int	get_wch(wint_t *);
 int	get_wstr(wint_t *);
@@ -1649,8 +1651,8 @@ int	wgetn_wstr(WINDOW *, wint_t *, int);
 int	wget_wch(WINDOW *, wint_t *);
 int	wget_wstr(WINDOW *, wint_t *);
 
-int    slk_wset(int, const wchar_t *, int);
-int    unget_wch(const wchar_t);
+int	slk_wset(int, const wchar_t *, int);
+int	unget_wch(const wchar_t);
 #endif
 
 /* Quasi-standard */

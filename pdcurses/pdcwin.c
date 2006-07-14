@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.40 2006/07/05 20:20:48 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.41 2006/07/14 03:21:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -140,10 +140,6 @@ int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 
 WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 {
-	extern void *(*mallc)(size_t);
-	extern void *(*callc)(size_t, size_t);
-	extern void  (*fre)(void *);
-
 	int i;
 	WINDOW *win;
 

@@ -30,7 +30,7 @@
 # include <termios.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.25 2006/07/06 23:50:12 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.26 2006/07/14 03:21:16 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -474,7 +474,6 @@ bool PDC_get_ctrl_break(void)
 
 int PDC_rawgetch(void)
 {
-	extern WINDOW *_getch_win_;
 	int c, oldc;
 
 	PDC_LOG(("PDC_rawgetch() - called\n"));
@@ -576,7 +575,6 @@ int PDC_set_ctrl_break(bool setting)
 
 int PDC_sysgetch(void)
 {
-	extern WINDOW *_getch_win_;
 	int c;
 
 	PDC_LOG(("PDC_sysgetch() - called\n"));
@@ -631,7 +629,6 @@ int PDC_sysgetch(void)
 
 int PDC_validchar(int c)
 {
-	extern WINDOW *_getch_win_;
 	int *scanp;
 
 	PDC_LOG(("PDC_validchar() - called. c: %d\n", c));

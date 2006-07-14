@@ -18,7 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckey.c,v 1.1 2006/07/07 02:53:07 wmcbrine Exp $");
+RCSID("$Id: pdckey.c,v 1.2 2006/07/14 03:21:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -39,9 +39,6 @@ RCSID("$Id: pdckey.c,v 1.1 2006/07/07 02:53:07 wmcbrine Exp $");
 
 bool PDC_breakout(void)
 {
-	extern int c_pindex;	/* putter index */
-	extern int c_gindex;	/* getter index */
-	extern int c_ungind;	/* wungetch() push index */
 	bool rc;
 
 	PDC_LOG(("PDC_breakout() - called\n"));

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.196 2006/07/14 06:27:32 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.197 2006/07/14 17:50:15 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -330,6 +330,20 @@ typedef int  _int;
 
 /*----------------------------------------------------------------------*/
 
+/* If it's not DOS, or OS/2, or Windows, it must be XCurses */
+
+#if !defined(DOS) && !defined(OS2) && !defined(WIN32)
+# ifndef XCURSES
+#  define XCURSES
+# endif
+#endif
+
+#ifdef PDC_WIDE
+# if !defined(CHTYPE_LONG) || !(defined(WIN32) || defined(XCURSES))
+#  undef PDC_WIDE
+# endif
+#endif
+
 #if defined(WIN32) && defined(PDC_WIDE)
 # define UNICODE
 #endif
@@ -345,14 +359,6 @@ typedef int  _int;
 # define INCL_VIO
 # define INCL_KBD
 # include <os2.h>
-#endif
-
-/* If it's not DOS, or OS/2, or Windows, it must be XCurses */
-
-#if !defined(DOS) && !defined(OS2) && !defined(WIN32)
-# ifndef XCURSES
-#  define XCURSES
-# endif
 #endif
 
 #include <stdarg.h>

@@ -218,31 +218,31 @@ window.o: $(srcdir)/window.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/window.c
 
 
-pdcclip.o: $(osdir)/pdcclip.c $(PDCURSES_HEADERS)
+pdcclip.o: $(osdir)/pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdcclip.c
 
 pdcdebug.o: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdcdebug.c
 
-pdcdisp.o: $(osdir)/pdcdisp.c $(PDCURSES_HEADERS)
+pdcdisp.o: $(osdir)/pdcdisp.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdcdisp.c
 
-pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS)
+pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdcgetsc.c
 
-pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS)
+pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdckbd.c
 
 pdckey.o: $(srcdir)/pdckey.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdckey.c
 
-pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS)
+pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdcscrn.c
 
-pdcsetsc.o: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS)
+pdcsetsc.o: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdcsetsc.c
 
-pdcutil.o: $(osdir)/pdcutil.c $(PDCURSES_HEADERS)
+pdcutil.o: $(osdir)/pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdcutil.c
 
 pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
@@ -254,16 +254,16 @@ pdcx11.o: $(osdir)/pdcx11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 ScrollBox.o: $(osdir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/ScrollBox.c
 
-sb.o: $(osdir)/sb.c $(PDCURSES_HEADERS)
+sb.o: $(osdir)/sb.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/sb.c
 
-x11common.o: $(x11dir)/x11common.c $(PDCURSES_HEADERS)
+x11common.o: $(x11dir)/x11common.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11common.c
 
-x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS)
+x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11.c
 
-x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
+x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
 
 

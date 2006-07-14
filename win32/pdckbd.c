@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.47 2006/07/14 16:43:37 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.48 2006/07/14 19:22:02 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -835,59 +835,6 @@ bool PDC_get_ctrl_break(void)
 
 /*man-start**************************************************************
 
-  PDC_rawgetch()  - Returns the next uninterpreted character (if available).
-
-  PDCurses Description:
-	Gets a character without any interpretation at all and returns 
-	it. If keypad mode is active for the designated window, function 
-	key translation will be performed.  Otherwise, function keys are 
-	ignored.  If nodelay mode is active in the window, then 
-	PDC_rawgetch() returns -1 if no character is available.
-
-	WARNING:  It is unknown whether the FUNCTION key translation
-	is performed at this level. --Frotz 911130 BUG
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_rawgetch(void);
-
-**man-end****************************************************************/
-
-int PDC_rawgetch(void)
-{
-	int c, oldc;
-
-	PDC_LOG(("PDC_rawgetch() - called\n"));
-
-	if (_getch_win_ == (WINDOW *)NULL)
-		return -1;
-
-	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-	    && !PDC_breakout())
-		return -1;
-
-	for (;;)
-	{
-		c = PDC_get_bios_key();
-		oldc = c;
-
-		/* return the key if it is not a special key */
-
-		if (c != KEY_MOUSE && (c = PDC_validchar(c)) >= 0)
-			return c;
-
-		if (_getch_win_->_use_keypad)
-			return oldc;
-	}
-}
-
-/*man-start**************************************************************
-
   PDC_set_ctrl_break()  - Enables/Disables the host OS BREAK key check.
 
   PDCurses Description:
@@ -913,58 +860,6 @@ int PDC_set_ctrl_break(bool setting)
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_sysgetch()  - Return a character using default system routines.
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	Gets a character without normal ^S, ^Q, ^P and ^C interpretation
-	and returns it.  If keypad mode is active for the designated
-	window, function key translation will be performed. Otherwise,
-	function keys are ignored. If nodelay mode is active in the
-	window, then sysgetch() returns -1 if no character is
-	available.
-
-  PDCurses Return Value:
-	This function returns OK upon success otherwise ERR is returned.
-
-  PDCurses Errors:
-	No errors are defined for this routine.
-
-  Portability:
-	PDCurses  int PDC_sysgetch(void);
-
-**man-end****************************************************************/
-
-int PDC_sysgetch(void)
-{
-	int c;
-
-	PDC_LOG(("PDC_sysgetch() - called\n"));
-
-	if (_getch_win_ == (WINDOW *)NULL)
-		return -1;
-
-	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-	    && !PDC_breakout())
-		return -1;
-
-	for (;;)
-	{
-		c = PDC_get_bios_key();
-
-		/* return the key if it is not a special key */
-
-		if ((unsigned int)c < 256)
-			return c;
-
-		if ((c = PDC_validchar(c)) >= 0)
-			return c;
-	}
 }
 
 /*man-start**************************************************************

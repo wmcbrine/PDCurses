@@ -33,7 +33,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: getch.c,v 1.28 2006/07/14 03:21:16 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.29 2006/07/14 19:22:02 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -172,12 +172,6 @@ int wgetch(WINDOW *win)
 
 	for (;;)			/* loop for any buffering */
 	{
-
-#ifdef XCURSES
-		key = PDC_rawgetch();
-		if (!(_getch_win_->_use_keypad) && (unsigned int)key > 255)
-			key = -1;
-#else
 		if (SP->raw_inp)
 			key = PDC_rawgetch();	/* get a raw character */
 		else
@@ -189,7 +183,7 @@ int wgetch(WINDOW *win)
 			key = PDC_sysgetch();
 			PDC_set_ctrl_break(cbr);
 		}
-#endif
+
 		/* Handle timeout() and halfdelay() */
 
 		if (SP->delaytenths || win->_delayms)

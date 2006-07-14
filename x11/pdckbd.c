@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.26 2006/07/14 16:43:38 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.27 2006/07/14 19:22:02 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (Trapped_Mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (Trapped_Mouse_status.y)
@@ -48,12 +48,12 @@ bool XCurses_kbhit(void)
 	return TRUE;
 }
 
-int XCurses_rawgetch(void)
+int PDC_get_bios_key(void)
 {
 	unsigned long newkey = 0;
 	int key = 0;
 
-	PDC_LOG(("%s:XCurses_rawgetch() - called\n", XCLOGMSG));
+	PDC_LOG(("%s:PDC_get_bios_key() - called\n", XCLOGMSG));
 
 	while (1)
 	{
@@ -97,7 +97,7 @@ int XCurses_rawgetch(void)
 		break;
 	}
 
-	PDC_LOG(("%s:XCurses_rawgetch() - key %d returned\n", XCLOGMSG, key));
+	PDC_LOG(("%s:PDC_get_bios_key() - key %d returned\n", XCLOGMSG, key));
 
 	return key;
 }
@@ -188,47 +188,6 @@ bool PDC_get_ctrl_break(void)
 
 /*man-start**************************************************************
 
-  PDC_rawgetch()	- Returns the next uninterpreted character
-			  (if available).
-
-  PDCurses Description:
-	Gets a character without any interpretation at all and returns
-	it. If keypad mode is active for the designated window,
-	function key translation will be performed.  Otherwise,
-	function keys are ignored.  If nodelay mode is active in the
-	window, then PDC_rawgetch() returns -1 if no character is
-	available.
-
-	WARNING:  It is unknown whether the FUNCTION key translation
-		  is performed at this level. --Frotz 911130 BUG
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_rawgetch(void);
-
-**man-end****************************************************************/
-
-int PDC_rawgetch(void)
-{
-	PDC_LOG(("PDC_rawgetch() - called\n"));
-
-	if (_getch_win_ == (WINDOW *)NULL)
-		return -1;
-
-	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-	    && !PDC_breakout())
-		return -1;
-
-	return XCurses_rawgetch();
-}
-
-/*man-start**************************************************************
-
   PDC_set_ctrl_break()	- Enables/Disables the host OS BREAK key check.
 
   PDCurses Description:
@@ -254,6 +213,49 @@ int PDC_set_ctrl_break(bool setting)
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
 	return OK;
+}
+
+/*man-start**************************************************************
+
+  PDC_validchar() - validate/translate passed character
+
+  PDCurses Description:
+	This is a private PDCurses function.
+
+	Checks that 'c' is a valid character, and if so returns it,
+	with function key translation applied if 'w' has keypad mode
+	set.  If char is invalid, returns -1.
+
+  PDCurses Return Value:
+	This function returns -1 if the passed character is invalid, or
+	the WINDOW *_getch_win_ is NULL, or _getch_win_'s keypad is not 
+	active.
+
+	Otherwise, this function returns the PDCurses equivalent of the
+	passed character.  See the function key and key macros in
+	<curses.h>.
+
+  PDCurses Errors:
+	There are no errors defined for this routine.
+
+  Portability:
+	PDCurses  int PDC_validchar(int c);
+
+**man-end****************************************************************/
+
+int PDC_validchar(int c)
+{
+	PDC_LOG(("PDC_validchar() - called\n"));
+
+	/* skip special keys if !keypad mode */
+
+	if ((_getch_win_ == (WINDOW *)NULL) ||
+	    ((unsigned int)c >= 256 && !_getch_win_->_use_keypad))
+		c = -1;
+
+	PDC_LOG(("PDC_validchar() - returned: %x\n", c));
+
+	return c;
 }
 
 /*man-start**************************************************************
@@ -307,5 +309,5 @@ void PDC_flushinp(void)
 	PDC_LOG(("PDC_flushinp() - called\n"));
 
 	while (XCurses_kbhit())
-		XCurses_rawgetch();
+		PDC_get_bios_key();
 }

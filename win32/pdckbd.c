@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.48 2006/07/14 19:22:02 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.49 2006/07/14 19:38:29 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -58,7 +58,7 @@ RCSID("$Id: pdckbd.c,v 1.48 2006/07/14 19:22:02 wmcbrine Exp $");
    Input Event. */
 
 INPUT_RECORD save_ip;
-static unsigned long pdc_key_modifiers = 0L;
+unsigned long pdc_key_modifiers = 0L;
 
 extern HANDLE hConIn;
 
@@ -1251,37 +1251,6 @@ static void win32_getch(void)
 }
 
 #endif	/* PDC_THREAD_BUILD */
-
-/*man-start**************************************************************
-
-  PDC_get_key_modifiers()  - Returns the keyboard modifier(s) at time
-			     of last getch()
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the keyboard modifiers effective at the time of the last 
-	getch() call only if PDC_save_key_modifiers(TRUE) has been 
-	called before the getch(). Use the macros; PDC_KEY_MODIFIER_* to 
-	determine which modifier(s) were set.
-
-  PDCurses Return Value:
-	This function returns the modifiers.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_get_key_modifiers(void);
-
-**man-end****************************************************************/
-
-unsigned long PDC_get_key_modifiers(void)
-{
-	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
-
-	return pdc_key_modifiers;
-}
 
 /*man-start**************************************************************
 

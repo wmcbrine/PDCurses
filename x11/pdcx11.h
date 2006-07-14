@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.33 2006/07/08 00:21:41 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.34 2006/07/14 19:38:30 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -340,7 +340,6 @@ extern char *bitmap_file;
 extern char *pixmap_file;
 #endif
 extern MOUSE_STATUS Trapped_Mouse_status;
-extern unsigned long pdc_key_modifier;
 extern KeySym compose_key;
 extern int compose_mask;
 extern int state_mask[8];

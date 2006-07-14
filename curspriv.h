@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.80 2006/07/14 17:03:27 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.81 2006/07/14 19:38:29 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -77,7 +77,7 @@ extern int c_gindex;            /* getter index */
 extern int c_ungind;            /* ungetch() push index */
 extern int c_ungch[NUNGETCH];   /* array of ungotten chars */
 extern WINDOW *_getch_win_;
-
+extern unsigned long pdc_key_modifiers;
 
 /*----------------------------------------------------------------------
  *	ANSI C prototypes.

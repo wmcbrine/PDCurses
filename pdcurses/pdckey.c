@@ -18,7 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckey.c,v 1.3 2006/07/14 19:22:02 wmcbrine Exp $");
+RCSID("$Id: pdckey.c,v 1.4 2006/07/14 19:38:29 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -158,4 +158,35 @@ int PDC_sysgetch(void)
 		if ((c = PDC_validchar(c)) >= 0)
 			return c;
 	}
+}
+
+/*man-start**************************************************************
+
+  PDC_get_key_modifiers()  - Returns the keyboard modifier(s) at time
+			     of last getch()
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	Returns the keyboard modifiers effective at the time of the last 
+	getch() call only if PDC_save_key_modifiers(TRUE) has been 
+	called before the getch(). Use the macros; PDC_KEY_MODIFIER_* to 
+	determine which modifier(s) were set.
+
+  PDCurses Return Value:
+	This function returns the modifiers.
+
+  PDCurses Errors:
+	No errors are defined for this function.
+
+  Portability:
+	PDCurses  int PDC_get_key_modifiers(void);
+
+**man-end****************************************************************/
+
+unsigned long PDC_get_key_modifiers(void)
+{
+	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
+
+	return pdc_key_modifiers;
 }

@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.27 2006/07/14 19:22:02 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.28 2006/07/14 19:38:30 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (Trapped_Mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (Trapped_Mouse_status.y)
@@ -62,7 +62,7 @@ int PDC_get_bios_key(void)
 		    XCursesExitCursesProcess(2, 
 			"exiting from XCurses_rawchar");
 
-	    pdc_key_modifier = (newkey >> 24) & 0xFF;
+	    pdc_key_modifiers = (newkey >> 24) & 0xFF;
 	    key = (int)(newkey & 0x00FFFFFF);
 
 	    if (key == KEY_MOUSE)
@@ -256,37 +256,6 @@ int PDC_validchar(int c)
 	PDC_LOG(("PDC_validchar() - returned: %x\n", c));
 
 	return c;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_key_modifiers()	- Returns the keyboard modifier(s)
-				  at time of last getch()
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the keyboard modifiers effective at the time of the last 
-	getch() call only if PDC_save_key_modifiers(TRUE) has been 
-	called before the getch(). Use the macros; PDC_KEY_MODIFIER_* to 
-	determine which modifier(s) were set.
-
-  PDCurses Return Value:
-	This function returns the modifiers.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_get_key_modifiers(void);
-
-**man-end****************************************************************/
-
-unsigned long PDC_get_key_modifiers(void)
-{
-	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
-
-	return pdc_key_modifier;
 }
 
 /*man-start**************************************************************

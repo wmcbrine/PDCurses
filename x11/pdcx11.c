@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.73 2006/07/13 00:20:27 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.74 2006/07/14 19:38:30 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -390,7 +390,7 @@ int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 #define BITMAPDEPTH 1
 
 MOUSE_STATUS Trapped_Mouse_status;
-unsigned long pdc_key_modifier = 0L;
+unsigned long pdc_key_modifiers = 0L;
 GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
 int XCursesFontHeight, XCursesFontWidth;
 int XCursesFontAscent, XCursesFontDescent;

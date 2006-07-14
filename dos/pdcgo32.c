@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcdos.h"
 
-RCSID("$Id: pdcgo32.c,v 1.10 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcgo32.c,v 1.11 2006/07/14 16:00:52 wmcbrine Exp $");
 
 #include <pc.h>    
 #include <sys/movedata.h> /* prototypes of dosmemget() and dosmemput() */

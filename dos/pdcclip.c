@@ -15,12 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcdos.h"
+
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.21 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.22 2006/07/14 16:00:52 wmcbrine Exp $");
 
 /* global clipboard contents, should be NULL if none set */
 

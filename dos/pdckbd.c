@@ -21,10 +21,9 @@
 # include <conio.h>
 #endif
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.26 2006/07/14 03:21:16 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.27 2006/07/14 16:00:52 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*

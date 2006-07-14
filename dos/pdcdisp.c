@@ -15,11 +15,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcdos.h"
+
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.31 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.32 2006/07/14 16:00:52 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 

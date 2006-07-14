@@ -15,8 +15,8 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcdos.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.29 2006/07/07 05:14:37 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.30 2006/07/14 16:00:52 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 

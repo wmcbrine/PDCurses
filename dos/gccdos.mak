@@ -31,6 +31,8 @@ osdir		= $(PDCURSES_HOME)/dos
 pandir		= $(PDCURSES_HOME)/panel
 demodir		= $(PDCURSES_HOME)/demos
 
+PDCURSES_DOS_H	= $(osdir)/pdcdos.h
+
 CC		= gcc
 
 ifeq ($(DEBUG),Y)
@@ -209,34 +211,34 @@ window.o: $(srcdir)/window.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
 
-pdcclip.o: $(osdir)/pdcclip.c $(PDCURSES_HEADERS)
+pdcclip.o: $(osdir)/pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
 pdcdebug.o: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdcdisp.o: $(osdir)/pdcdisp.c $(PDCURSES_HEADERS)
+pdcdisp.o: $(osdir)/pdcdisp.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS)
+pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdcgo32.o: $(osdir)/pdcgo32.c $(PDCURSES_HEADERS)
+pdcgo32.o: $(osdir)/pdcgo32.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS)
+pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
 pdckey.o: $(srcdir)/pdckey.c $(PDCURSES_HEADERS)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS)
+pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdcsetsc.o: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS)
+pdcsetsc.o: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
-pdcutil.o: $(osdir)/pdcutil.c $(PDCURSES_HEADERS)
+pdcutil.o: $(osdir)/pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) -c $(CCFLAGS) -o$@ $<
 
 pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)

@@ -15,8 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcdos.h"
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
@@ -37,7 +36,7 @@
 # endif
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.4 2006/07/07 05:56:18 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.5 2006/07/14 16:00:52 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

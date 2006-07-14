@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.17 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.18 2006/07/14 16:00:52 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

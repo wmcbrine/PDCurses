@@ -32,6 +32,8 @@ osdir		= $(PDCURSES_HOME)\dos
 pandir		= $(PDCURSES_HOME)\panel
 demodir		= $(PDCURSES_HOME)\demos
 
+PDCURSES_DOS_H	= $(osdir)\pdcdos.h
+
 #CC		= bcc
 
 !if $d(DEBUG)
@@ -206,28 +208,28 @@ window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
 pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcdebug.c
  
-pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS)
+pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcclip.c
 
-pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS)
+pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcdisp.c
 
-pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
+pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcgetsc.c
 
-pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
+pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdckbd.c
 
 pdckey.obj: $(srcdir)\pdckey.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdckey.c
 
-pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
+pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcscrn.c
 
-pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS)
+pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcsetsc.c
 
-pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS)
+pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcutil.c
 
 pdcwin.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)

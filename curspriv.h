@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.76 2006/07/14 06:27:32 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.77 2006/07/14 16:00:51 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -24,97 +24,6 @@
 
 #ifndef __CURSES_INTERNALS__
 #define __CURSES_INTERNALS__ 1
-
-#include <assert.h>
-
-/*----------------------------------------------------------------------
- *	MEMORY MODEL SUPPORT:
- *
- *	MODELS
- *		TINY	cs,ds,ss all in 1 segment (not enough memory!)
- *		SMALL	cs:1 segment, ds:1 segment
- *		MEDIUM	cs:many segments, ds:1 segment
- *		COMPACT	cs:1 segment, ds:many segments
- *		LARGE	cs:many segments, ds:many segments
- *		HUGE	cs:many segments, ds:segments > 64K
- */
-
-#ifdef __TINY__
-# define SMALL 1
-#endif
-#ifdef __SMALL__
-# define SMALL 1
-#endif
-#ifdef __MEDIUM__
-# define MEDIUM 1
-#endif
-#ifdef __COMPACT__
-# define COMPACT 1
-#endif
-#ifdef __LARGE__
-# define LARGE 1
-#endif
-#ifdef __HUGE__
-# define HUGE 1
-#endif
-
-
-/*----------------------------------------*/
-#ifdef DOS
-
-# include <dos.h>
-
-# ifdef MX386
-typedef union REGS16 Regs;
-# else
-typedef union REGS Regs;
-# endif
-
-extern Regs regs;
-
-# ifdef __DJGPP__		/* Note: works only in plain DOS... */
-#  if DJGPP == 2
-#   define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
-#  else
-#   define _FAR_POINTER(s,o)	(0xe0000000 + (((int)(s)) << 4) + ((int)(o)))
-#  endif
-#  define _FP_SEGMENT(p)	(unsigned short)((((long)p) >> 4) & 0xffff)
-# else
-#  ifdef __TURBOC__
-#   define _FAR_POINTER(s,o)	MK_FP(s,o)
-#  else
-#   if (defined(__WATCOMC__) && defined(__FLAT__)) || defined(MX386)
-#    define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
-#   else
-#    define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)
-#   endif
-#  endif
-#  define _FP_SEGMENT(p)	(unsigned short)(((long)p) >> 4)
-# endif
-# define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
-
-# ifdef __DJGPP__
-unsigned char getdosmembyte(int offs);
-unsigned short getdosmemword(int offs);
-void setdosmembyte(int offs, unsigned char b);
-void setdosmemword(int offs, unsigned short w);
-# else
-#  if SMALL || MEDIUM || MSC || defined(__PACIFIC__)
-#   define PDC_FAR far
-#  else
-#   define PDC_FAR
-#  endif
-#  define getdosmembyte(offs) \
-	(*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)))
-#  define getdosmemword(offs) \
-	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)))
-#  define setdosmembyte(offs,x) \
-	(*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
-#  define setdosmemword(offs,x) \
-	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
-# endif
-#endif
-
 
 /*----------------------------------------------------------------------*/
 /* window properties */
@@ -168,15 +77,6 @@ enum
 	_MCGACOLOR = 0x0a, _MCGAMONO,
 	_MDS_GENIUS = 0x30,
 	_UNIX_COLOR = 0x40, _UNIX_MONO
-};
-
-/* Text-mode font size information */
-enum
-{
-	_FONT8 = 8,
-	_FONT14 = 14,
-	_FONT15,	/* GENIUS */
-	_FONT16
 };
 
 extern int c_pindex;            /* putter index */
@@ -259,10 +159,6 @@ int	PDC_query_adapter_type(void);
 int	XCursesInstruct(int);
 int	XCursesInstructAndWait(int);
 int	XCursesInitscr(const char *, int, char **);
-#endif
-
-#ifdef __PACIFIC__
-void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
 
 #ifdef PDCDEBUG

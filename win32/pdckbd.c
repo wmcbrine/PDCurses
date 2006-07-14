@@ -19,7 +19,14 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.46 2006/07/14 03:21:16 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.47 2006/07/14 16:43:37 wmcbrine Exp $");
+
+#define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
+#define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
+
+#define TEMP_MOUSE_X_POS	  (Temp_Mouse_status.x)
+#define TEMP_MOUSE_Y_POS	  (Temp_Mouse_status.y)
+#define TEMP_BUTTON_STATUS(x)	  (Temp_Mouse_status.button[(x) - 1])
 
 #define KEY_STATE TRUE
 #define MS_MOUSE_MOVED 1

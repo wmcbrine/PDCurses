@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.77 2006/07/14 16:00:51 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.78 2006/07/14 16:43:37 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -184,31 +184,6 @@ void PDC_debug(const char *, ...);
 #endif
 
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
-
-/* Internal mouse handling macros */
-#define TRAPPED_MOUSE_X_POS	  (Trapped_Mouse_status.x)
-#define TRAPPED_MOUSE_Y_POS	  (Trapped_Mouse_status.y)
-#define TRAPPED_A_BUTTON_CHANGED  (Trapped_Mouse_status.changes & 7)
-#define TRAPPED_MOUSE_MOVED	  (Trapped_Mouse_status.changes & 8)
-#define TRAPPED_MOUSE_POS_REPORT  (Trapped_Mouse_status.changes & 16)
-#define TRAPPED_BUTTON_CHANGED(x) (Trapped_Mouse_status.changes & (1<<((x)-1)))
-#define TRAPPED_BUTTON_STATUS(x)  (Trapped_Mouse_status.button[(x) - 1])
-
-#define ACTUAL_MOUSE_X_POS	  (Actual_Mouse_status.x)
-#define ACTUAL_MOUSE_Y_POS	  (Actual_Mouse_status.y)
-#define ACTUAL_A_BUTTON_CHANGED   (Actual_Mouse_status.changes & 7)
-#define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
-#define ACTUAL_MOUSE_POS_REPORT   (Actual_Mouse_status.changes & 16)
-#define ACTUAL_BUTTON_CHANGED(x)  (Actual_Mouse_status.changes & (1<<((x)-1)))
-#define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
-
-#define TEMP_MOUSE_X_POS	  (Temp_Mouse_status.x)
-#define TEMP_MOUSE_Y_POS	  (Temp_Mouse_status.y)
-#define TEMP_A_BUTTON_CHANGED	  (Temp_Mouse_status.changes & 7)
-#define TEMP_MOUSE_MOVED	  (Temp_Mouse_status.changes & 8)
-#define TEMP_MOUSE_POS_REPORT	  (Temp_Mouse_status.changes & 16)
-#define TEMP_BUTTON_CHANGED(x)	  (Temp_Mouse_status.changes & (1<<((x)-1)))
-#define TEMP_BUTTON_STATUS(x)	  (Temp_Mouse_status.button[(x) - 1])
 
 #ifdef XCURSES
 enum

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.78 2006/07/14 16:43:37 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.79 2006/07/14 16:52:10 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -42,13 +42,9 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer	*/
 #define _NO_CHANGE	-1	/* flags line edge unchanged		*/
 
-#define _BCHAR		0x03	/* Break char	    (^C)		*/
 #define _ECHAR		0x08	/* Erase char	    (^H)		*/
 #define _DWCHAR		0x17	/* Delete Word char (^W)		*/
 #define _DLCHAR		0x15	/* Delete Line char (^U)		*/
-#define _GOCHAR		0x11	/* ^Q character				*/
-#define _PRINTCHAR	0x10	/* ^P character				*/
-#define _STOPCHAR	0x13	/* ^S character				*/
 #define  NUNGETCH	256	/* max # chars to ungetch()		*/
 
 

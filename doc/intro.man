@@ -556,7 +556,6 @@ FUNCTIONS
 		PDC_putctty		pdcdisp
 		PDC_query_adapter_type	pdcgetsc
 		PDC_rawgetch		pdckbd
-		PDC_sanity_check	pdcgetsc
 		PDC_scrn_modes_equal	pdcscrn
 		PDC_scroll		pdcdisp
 		PDC_scr_close		pdcscrn

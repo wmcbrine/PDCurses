@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.21 2006/07/14 16:00:52 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.22 2006/07/15 13:13:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -394,6 +394,86 @@ int PDC_get_scrn_mode(void)
 
 /*man-start**************************************************************
 
+  PDC_sanity_check() - A video adapter identification sanity check
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	This routine will force sane values for various control flags.
+
+  PDCurses Return Value:
+	This function returns OK on success and ERR on error.
+
+  PDCurses Errors:
+	No errors are defined for this function.
+
+  Portability:
+	PDCurses  int PDC_sanity_check(int adapter);
+
+**man-end****************************************************************/
+
+int PDC_sanity_check(int adapter)
+{
+	int fontsize = PDC_get_font();
+	int rows = PDC_get_rows();
+
+	PDC_LOG(("PDC_sanity_check() - called: Adapter %d\n", adapter));
+
+	switch (adapter)
+	{
+	case _EGACOLOR:
+	case _EGAMONO:
+		switch (rows)
+		{
+		case 25:
+		case 43:	
+			break;
+		default:
+			SP->bogus_adapter = TRUE;
+		}
+
+		switch (fontsize)
+		{
+		case _FONT8:
+		case _FONT14:
+			break;
+		default:
+			SP->bogus_adapter = TRUE;
+		}
+		break;
+
+	case _VGACOLOR:
+	case _VGAMONO:
+		break;
+
+	case _CGA:
+	case _MDA:
+	case _MCGACOLOR:
+	case _MCGAMONO:
+		switch (rows)
+		{
+		case 25:
+			break;
+		default:
+			SP->bogus_adapter = TRUE;
+		}
+		break;
+
+	default:
+		SP->bogus_adapter = TRUE;
+	}
+
+	if (SP->bogus_adapter)
+	{
+		SP->sizeable = FALSE;
+		SP->direct_video = FALSE;
+	}
+
+	return adapter;
+}
+
+/*man-start**************************************************************
+
   PDC_query_adapter_type()	- Determine PC video adapter type
 
   PDCurses Description:
@@ -598,82 +678,3 @@ int PDC_query_adapter_type(void)
 	return PDC_sanity_check(retval);
 }
 
-/*man-start**************************************************************
-
-  PDC_sanity_check() - A video adapter identification sanity check
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine will force sane values for various control flags.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_sanity_check(int adapter);
-
-**man-end****************************************************************/
-
-int PDC_sanity_check(int adapter)
-{
-	int fontsize = PDC_get_font();
-	int rows = PDC_get_rows();
-
-	PDC_LOG(("PDC_sanity_check() - called: Adapter %d\n", adapter));
-
-	switch (adapter)
-	{
-	case _EGACOLOR:
-	case _EGAMONO:
-		switch (rows)
-		{
-		case 25:
-		case 43:	
-			break;
-		default:
-			SP->bogus_adapter = TRUE;
-		}
-
-		switch (fontsize)
-		{
-		case _FONT8:
-		case _FONT14:
-			break;
-		default:
-			SP->bogus_adapter = TRUE;
-		}
-		break;
-
-	case _VGACOLOR:
-	case _VGAMONO:
-		break;
-
-	case _CGA:
-	case _MDA:
-	case _MCGACOLOR:
-	case _MCGAMONO:
-		switch (rows)
-		{
-		case 25:
-			break;
-		default:
-			SP->bogus_adapter = TRUE;
-		}
-		break;
-
-	default:
-		SP->bogus_adapter = TRUE;
-	}
-
-	if (SP->bogus_adapter)
-	{
-		SP->sizeable = FALSE;
-		SP->direct_video = FALSE;
-	}
-
-	return adapter;
-}

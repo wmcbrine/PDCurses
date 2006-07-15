@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.16 2006/07/02 22:15:59 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.17 2006/07/15 13:13:46 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 extern CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -319,31 +319,4 @@ int PDC_query_adapter_type(void)
 
 	SP->mono = FALSE;
 	return _VGACOLOR;
-}
-
-/*man-start**************************************************************
-
-  PDC_sanity_check() - A video adapter identification sanity check
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine will force sane values for various control flags.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
-
-  Portability:
-	PDCurses  int PDC_sanity_check(int adapter);
-
-**man-end****************************************************************/
-
-int PDC_sanity_check(int adapter)
-{
-	PDC_LOG(("PDC_sanity_check() - called: Adapter %d\n", adapter));
-
-	return adapter;
 }

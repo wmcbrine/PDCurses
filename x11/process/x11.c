@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.50 2006/07/15 20:46:24 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.51 2006/07/15 21:03:38 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
@@ -192,9 +192,6 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	    switch(num_cols) 
 	    { 
-	    case 0:
-		break; 
-
 	    case CURSES_EXIT:	/* request from curses to stop */
 		XC_LOG(("CURSES_EXIT received from child\n"));
 		XCursesExitXCursesProcess(0, 0,

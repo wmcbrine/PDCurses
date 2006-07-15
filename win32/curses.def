@@ -276,7 +276,6 @@ EXPORTS PDC_copy_win
 EXPORTS PDC_cursor_off
 EXPORTS PDC_cursor_on
 EXPORTS PDC_debug
-EXPORTS PDC_fix_cursor
 EXPORTS PDC_getch
 EXPORTS PDC_getclipboard
 EXPORTS PDC_get_attribute

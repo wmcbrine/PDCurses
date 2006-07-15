@@ -269,7 +269,6 @@ PDC_copy_win
 PDC_cursor_off
 PDC_cursor_on
 PDC_debug
-PDC_fix_cursor
 PDC_getch
 PDC_getclipboard
 PDC_get_attribute

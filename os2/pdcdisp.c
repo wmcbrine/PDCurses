@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.25 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.26 2006/07/15 16:07:05 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -80,38 +80,6 @@ int PDC_cursor_off(void)
 		PDC_set_cursor_mode(32, 33);	/* turn it off */
 	}
 
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_fix_cursor()	- Fix the cursor start and stop scan lines
-			  (if necessary)
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine will fix the cursor shape for certain video 
-	adapters. Normally, the values used are correct, but some 
-	adapters choke. The most noticable choke is on a monochrome 
-	adapter.  The "correct" scan lines will result in the cursor 
-	being set in the middle of the character cell, rather than at 
-	the bottom.
-
-	The passed flag indicates whether the cursor is visible or not.
-
-	This only applies to the DOS platform.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_fix_cursor(int flag);
-
-**man-end****************************************************************/
-
-int PDC_fix_cursor(int flag)
-{
 	return OK;
 }
 

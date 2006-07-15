@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.35 2006/07/15 15:13:40 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.36 2006/07/15 15:15:37 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -94,12 +94,7 @@ RCSID("$Id: termattr.c,v 1.35 2006/07/15 15:13:40 wmcbrine Exp $");
 	has_ic() and has_il() always return TRUE.
 
 	In addition to the above definition for longname(), the form of 
-	this string includes the adapter name (or video card name) and 
-	the text resolution. This may also be followed by the notation 
-	that the video card may be a clone, which indicates that the 
-	card identification maps to more than one unique card. e.g. The 
-	MDS Genius and the Quadram QuadHPG identify themselves in the 
-	same manner, but are vastly different in maximum resolution.
+	this string includes the text resolution.
 
 	The user's current WORD character is returned from a call to
 	wordchar().

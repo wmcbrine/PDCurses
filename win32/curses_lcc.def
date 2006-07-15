@@ -278,8 +278,6 @@ PDC_get_columns
 PDC_get_ctrl_break
 PDC_get_cursor_mode
 PDC_get_cursor_pos
-PDC_get_cur_col
-PDC_get_cur_row
 PDC_get_input_fd
 PDC_get_key_modifiers
 PDC_get_font

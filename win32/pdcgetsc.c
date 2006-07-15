@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.17 2006/07/15 13:13:46 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.18 2006/07/15 13:32:52 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 extern CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -57,67 +57,6 @@ int PDC_get_cursor_pos(int *row, int *col)
 	*row = scr.dwCursorPosition.Y;
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_cur_col()	- get current column position of cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	This routine returns the current column position of the cursor
-	on screen.
-
-  PDCurses Return Value:
-	This routine returns the current column position of the cursor.
-	No error is returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_cur_col(void);
-
-**man-end****************************************************************/
-
-int PDC_get_cur_col(void)
-{
-	PDC_LOG(("PDC_get_cur_col() - called\n"));
-
-	GetConsoleScreenBufferInfo(hConOut, &scr);
-
-	return scr.dwCursorPosition.X;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_cur_row()	- get current row position of cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	This routine returns the current row position of the cursor
-	on screen.
-
-  PDCurses Return Value:
-	This routine returns the current row position of the cursor.
-	No error is returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_cur_row(void);
-
-**man-end****************************************************************/
-
-int PDC_get_cur_row(void)
-{
-	PDC_LOG(("PDC_get_cur_row() - called\n"));
-
-	GetConsoleScreenBufferInfo(hConOut, &scr);
-	return scr.dwCursorPosition.Y;
 }
 
 /*man-start**************************************************************

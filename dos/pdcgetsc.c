@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.22 2006/07/15 13:13:46 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.23 2006/07/15 13:32:51 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -55,80 +55,6 @@ int PDC_get_cursor_pos(int *row, int *col)
 	*col = regs.h.dl;
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_cur_col()	- get current column position of cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	This routine returns the current column position of the cursor 
-	on screen.
-
-  PDCurses Return Value:
-	This routine returns the current column position of the cursor. 
-	No error is returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_cur_col(void);
-
-**man-end****************************************************************/
-
-int PDC_get_cur_col(void)
-{
-	PDC_LOG(("PDC_get_cur_col() - called\n"));
-
-#ifdef __WATCOMC__
-	regs.w.ax = 0x0003;
-#else
-	regs.x.ax = 0x0003;
-#endif
-	regs.h.bh = SP->video_page;
-	int86(0x10, &regs, &regs);
-
-	return (int)regs.h.dl;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_cur_row()	- get current row position of cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	This routine returns the current row position of the cursor on
-	screen.
-
-  PDCurses Return Value:
-	This routine returns the current row position of the cursor. No
-	error is returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_cur_row(void);
-
-**man-end****************************************************************/
-
-int PDC_get_cur_row(void)
-{
-	PDC_LOG(("PDC_get_cur_row() - called\n"));
-
-#ifdef __WATCOMC__
-	regs.w.ax = 0x0003;
-#else
-	regs.x.ax = 0x0003;
-#endif
-	regs.h.bh = SP->video_page;
-	int86(0x10, &regs, &regs);
-
-	return (int)regs.h.dh;
 }
 
 /*man-start**************************************************************

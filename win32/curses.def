@@ -285,8 +285,6 @@ EXPORTS PDC_get_columns
 EXPORTS PDC_get_ctrl_break
 EXPORTS PDC_get_cursor_mode
 EXPORTS PDC_get_cursor_pos
-EXPORTS PDC_get_cur_col
-EXPORTS PDC_get_cur_row
 EXPORTS PDC_get_input_fd
 EXPORTS PDC_get_key_modifiers
 EXPORTS PDC_get_font

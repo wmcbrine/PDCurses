@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.82 2006/07/15 13:13:45 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.83 2006/07/15 13:32:51 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -99,8 +99,6 @@ void	PDC_flushinp(void);
 int	PDC_get_bios_key(void);
 int	PDC_get_columns(void);
 bool	PDC_get_ctrl_break(void);
-int	PDC_get_cur_col(void);
-int	PDC_get_cur_row(void);
 int	PDC_get_cursor_pos(int *, int *);
 int	PDC_get_cursor_mode(void);
 int	PDC_get_font(void);

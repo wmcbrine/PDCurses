@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.21 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.22 2006/07/15 13:32:52 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -54,88 +54,6 @@ int PDC_get_cursor_pos(int *row, int *col)
 	VioGetCurPos((PUSHORT)row, (PUSHORT)col, 0);
 #endif
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_cur_col()  - get current column position of cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	This routine returns the current column position of the cursor 
-	on screen.
-
-  PDCurses Return Value:
-	This routine returns the current column position of the cursor. 
-	No error is returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_cur_col(void);
-
-**man-end****************************************************************/
-
-int PDC_get_cur_col(void)
-{
-#ifdef EMXVIDEO
-	int curCol = 0, curRow = 0;
-#else
-	USHORT curCol = 0, curRow = 0;
-#endif
-	PDC_LOG(("PDC_get_cur_col() - called\n"));
-
-	/* find the current cursor position */
-
-#ifdef EMXVIDEO
-	v_getxy(&curCol, &curRow);
-#else
-	VioGetCurPos((PUSHORT)&curRow, (PUSHORT)&curCol, 0);
-#endif
-	return curCol;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_cur_row()  - get current row position of cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	This routine returns the current row position of the cursor on
-	screen.
-
-  PDCurses Return Value:
-	This routine returns the current row position of the cursor. No
-	error is returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_cur_row(void);
-
-**man-end****************************************************************/
-
-int PDC_get_cur_row(void)
-{
-#ifdef EMXVIDEO
-	int curCol = 0, curRow = 0;
-#else
-	USHORT curCol = 0, curRow = 0;
-#endif
-	PDC_LOG(("PDC_get_cur_row() - called\n"));
-
-	/* find the current cursor position */
-
-#ifdef EMXVIDEO
-	v_getxy(&curCol, &curRow);
-#else
-	VioGetCurPos((PUSHORT)&curRow, (PUSHORT)&curCol, 0);
-#endif
-	return curRow;
 }
 
 /*man-start**************************************************************

@@ -293,7 +293,6 @@ PDC_scroll
 PDC_scr_close
 PDC_scr_open
 PDC_setclipboard
-PDC_set_80x25
 PDC_set_ctrl_break
 PDC_set_cursor_mode
 PDC_set_font

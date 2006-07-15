@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.1 2006/07/14 16:00:52 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.2 2006/07/15 15:00:57 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -115,3 +115,5 @@ enum
 #ifdef __PACIFIC__
 void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
+
+int	PDC_set_80x25(void);

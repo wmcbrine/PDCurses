@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.83 2006/07/15 13:32:51 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.84 2006/07/15 15:00:57 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -119,7 +119,6 @@ int	PDC_resize_screen(int, int);
 int	PDC_scr_close(void);
 int	PDC_scr_open(SCREEN *, bool);
 int	PDC_scroll(int, int, int, int, int, chtype);
-int	PDC_set_80x25(void);
 int	PDC_set_ctrl_break(bool);
 int	PDC_set_cursor_mode(int, int);
 int	PDC_set_font(int);

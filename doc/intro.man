@@ -541,8 +541,6 @@ FUNCTIONS
 		PDC_get_ctrl_break	pdckbd
 		PDC_get_cursor_mode	pdcgetsc
 		PDC_get_cursor_pos	pdcgetsc
-		PDC_get_cur_col		pdcgetsc
-		PDC_get_cur_row		pdcgetsc
 		PDC_get_font		pdcgetsc
 		PDC_get_input_fd	pdckbd
 		PDC_get_key_modifiers	pdckbd
@@ -560,7 +558,6 @@ FUNCTIONS
 		PDC_scroll		pdcdisp
 		PDC_scr_close		pdcscrn
 		PDC_scr_open		pdcscrn
-		PDC_set_80x25		pdcsetsc
 		PDC_set_ctrl_break	pdckbd
 		PDC_set_cursor_mode	pdcsetsc
 		PDC_set_font		pdcsetsc

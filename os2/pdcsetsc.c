@@ -19,47 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
-
-/*man-start**************************************************************
-
-  PDC_set_80x25() - force a known screen state: 80x25 text mode.
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	Forces the appropriate 80x25 alpha mode given the display 
-	adapter.
-
-  PDCurses Return Value:
-	This function returns OK upon success otherwise ERR is returned.
-
-  PDCurses Errors:
-	No errors are defined for this routine.
-
-  Portability:
-	PDCurses  int PDC_set_80x25(void);
-
-**man-end****************************************************************/
-
-int PDC_set_80x25(void)
-{
-#ifndef EMXVIDEO
-	VIOMODEINFO modeInfo = {0};
-#endif
-	PDC_LOG(("PDC_set_80x25() - called\n"));
-
-#ifndef EMXVIDEO
-	modeInfo.cb = sizeof(modeInfo);
-
-	/* set most parameters of modeInfo */
-
-	VioGetMode(&modeInfo, 0);
-	modeInfo.fbType = 1;
-	VioSetMode(&modeInfo, 0);
-#endif
-	return OK;
-}
+RCSID("$Id: pdcsetsc.c,v 1.20 2006/07/15 15:00:57 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

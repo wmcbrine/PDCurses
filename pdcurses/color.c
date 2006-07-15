@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.46 2006/05/03 17:30:46 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.47 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -97,9 +97,6 @@ RCSID("$Id: color.c,v 1.46 2006/05/03 17:30:46 wmcbrine Exp $");
   X/Open Return Value:
 	All functions return OK on success and ERR on error except for
 	has_colors() and can_change_colors() which return TRUE or FALSE.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

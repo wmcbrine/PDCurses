@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.43 2006/07/14 17:03:27 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.44 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -608,9 +608,6 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_newline(WINDOW *win, int lin);

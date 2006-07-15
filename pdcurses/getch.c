@@ -33,7 +33,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: getch.c,v 1.29 2006/07/14 19:22:02 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.30 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -86,11 +86,8 @@ RCSID("$Id: getch.c,v 1.29 2006/07/14 19:22:02 wmcbrine Exp $");
 	many DOS compiler's runtime libraries.
 
   X/Open Return Value:
-	This functions return ERR or the value of the character, meta 
+	These functions return ERR or the value of the character, meta 
 	character or function key token.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

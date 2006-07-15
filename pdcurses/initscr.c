@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.50 2006/07/14 18:11:56 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.51 2006/07/15 15:38:24 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -149,9 +149,6 @@ extern void (*PDC_initial_slk)(void);
   X/Open Return Value:
 	All functions return NULL on error, except endwin(), which
 	returns ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

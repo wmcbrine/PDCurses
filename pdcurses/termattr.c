@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.36 2006/07/15 15:15:37 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.37 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -101,9 +101,6 @@ RCSID("$Id: termattr.c,v 1.36 2006/07/15 15:15:37 wmcbrine Exp $");
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

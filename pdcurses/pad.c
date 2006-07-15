@@ -32,7 +32,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.26 2006/07/14 06:27:32 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.27 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -100,9 +100,6 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

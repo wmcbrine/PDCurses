@@ -27,7 +27,7 @@
 #undef winsertln
 #undef mvwinsertln
 
-RCSID("$Id: deleteln.c,v 1.18 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.19 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -55,9 +55,6 @@ RCSID("$Id: deleteln.c,v 1.18 2006/03/29 20:06:40 wmcbrine Exp $");
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

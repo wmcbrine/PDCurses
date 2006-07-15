@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.17 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.18 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -109,9 +109,6 @@ int PDC_curs_set(int visibility)
 
   PDCurses Return Value:
 	N/A
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  void PDC_set_title(const char *title);

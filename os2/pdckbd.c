@@ -30,7 +30,7 @@
 # include <termios.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.28 2006/07/14 19:38:29 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.29 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -135,9 +135,6 @@ MOUSE_STATUS Trapped_Mouse_status;
   PDCurses Return Value:
 	Returns a file descriptor.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_get_input_fd(void);
 
@@ -224,9 +221,6 @@ int PDC_set_keyboard_default(void)
   PDCurses Return Value:
 	Returns 1 if a keyboard character is available, 0 otherwise.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  bool PDC_check_bios_key(void);
 
@@ -274,9 +268,6 @@ bool PDC_check_bios_key(void)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_get_bios_key(void);
@@ -399,9 +390,6 @@ int PDC_get_bios_key(void)
 	This function returns TRUE if the Control Break Check is enabled 
 	otherwise FALSE is returned.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  bool PDC_get_ctrl_break(void);
 
@@ -460,9 +448,6 @@ bool PDC_get_ctrl_break(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_set_ctrl_break(bool setting);
 
@@ -512,9 +497,6 @@ int PDC_set_ctrl_break(bool setting)
 	Otherwise, this function returns the PDCurses equivalent of the
 	passed character.  See the function key and key macros in
 	<curses.h>
-  
-  PDCurses Errors:
-	There are no errors defined for this routine.
   
   Portability:
 	PDCurses  int PDC_validchar(int c);

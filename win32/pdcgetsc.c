@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.18 2006/07/15 13:32:52 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.19 2006/07/15 15:38:24 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 extern CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -99,9 +99,6 @@ int PDC_get_attribute(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_get_cursor_mode(void);
 
@@ -154,9 +151,6 @@ int PDC_get_font(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_get_rows(void);
 
@@ -180,9 +174,6 @@ int PDC_get_rows(void)
 
   PDCurses Return Value:
 	Returns the maximum number of rows in the screen buffer.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_get_buffer_rows(void);
@@ -243,9 +234,6 @@ int PDC_get_columns(void)
   PDCurses Return Value:
 	This function returns a macro identifier indicating the adapter
 	type.  See the list of adapter types in CURSPRIV.H.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_query_adapter_type(void);

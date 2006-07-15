@@ -18,7 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckey.c,v 1.4 2006/07/14 19:38:29 wmcbrine Exp $");
+RCSID("$Id: pdckey.c,v 1.5 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -72,9 +72,6 @@ bool PDC_breakout(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_rawgetch(void);
 
@@ -125,9 +122,6 @@ int PDC_rawgetch(void)
   PDCurses Return Value:
 	This function returns OK upon success otherwise ERR is returned.
 
-  PDCurses Errors:
-	No errors are defined for this routine.
-
   Portability:
 	PDCurses  int PDC_sysgetch(void);
 
@@ -175,9 +169,6 @@ int PDC_sysgetch(void)
 
   PDCurses Return Value:
 	This function returns the modifiers.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_get_key_modifiers(void);

@@ -22,7 +22,7 @@
 #undef move
 #undef wmove
 
-RCSID("$Id: move.c,v 1.15 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: move.c,v 1.16 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -42,9 +42,6 @@ RCSID("$Id: move.c,v 1.15 2006/03/29 20:06:41 wmcbrine Exp $");
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.22 2006/07/15 13:32:52 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.23 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -161,9 +161,6 @@ int PDC_get_columns(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_get_cursor_mode(void);
 
@@ -238,9 +235,6 @@ int PDC_get_font(void)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_get_rows(void);
@@ -329,9 +323,6 @@ int PDC_get_scrn_mode(VIOMODEINFO *modeinfo)
   PDCurses Return Value:
 	This function returns a macro identifier indicating the adapter
 	type.  See the list of adapter types in CURSPRIV.H.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_query_adapter_type(void);

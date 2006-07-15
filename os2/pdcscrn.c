@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.24 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.25 2006/07/15 15:38:24 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -91,9 +91,6 @@ int PDC_scr_close(void)
 
   PDCurses Return Value:
 	This function returns TRUE if equal else FALSE.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_scrn_modes_equal(int mode1, int mode2);

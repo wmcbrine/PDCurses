@@ -17,7 +17,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.18 2006/07/14 16:00:52 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.19 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -30,9 +30,6 @@ RCSID("$Id: pdcsetsc.c,v 1.18 2006/07/14 16:00:52 wmcbrine Exp $");
 
   PDCurses Return Value:
 	This function returns OK upon success otherwise ERR is returned.
-
-  PDCurses Errors:
-	No errors are defined for this routine.
 
   Portability:
 	PDCurses  int PDC_set_80x25(void);
@@ -75,9 +72,6 @@ int PDC_set_80x25(void)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_set_cursor_mode(int startrow, int endrow);
@@ -265,9 +259,6 @@ int PDC_set_rows(int rows)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_set_scrn_mode(int new_mode);
 
@@ -345,9 +336,6 @@ int PDC_curs_set(int visibility)
 
   PDCurses Return Value:
 	N/A
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  void PDC_set_title(const char *title);

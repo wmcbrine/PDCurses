@@ -23,7 +23,7 @@
 
 #undef PDC_debug
 
-RCSID("$Id: pdcdebug.c,v 1.19 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcdebug.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
 
 bool trace_on = FALSE;
 
@@ -33,12 +33,6 @@ bool trace_on = FALSE;
 
   PDCurses Description:
 	This is a private PDCurses routine.
-
-  PDCurses Return Value:
-	No return value.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses void PDC_debug(const char *, ...);

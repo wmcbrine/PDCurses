@@ -23,7 +23,7 @@
 #undef vidattr
 #undef vidputs
 
-RCSID("$Id: terminfo.c,v 1.22 2006/06/19 03:21:47 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.23 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -62,9 +62,6 @@ RCSID("$Id: terminfo.c,v 1.22 2006/06/19 03:21:47 wmcbrine Exp $");
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

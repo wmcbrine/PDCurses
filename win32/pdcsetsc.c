@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.19 2006/07/15 15:00:57 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
 
 extern HANDLE hConOut;
 
@@ -33,9 +33,6 @@ extern HANDLE hConOut;
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_set_cursor_mode(int startrow, int endrow);

@@ -27,7 +27,7 @@
 # undef wrefresh
 #endif
 
-RCSID("$Id: beep.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -48,9 +48,6 @@ RCSID("$Id: beep.c,v 1.19 2006/03/29 20:06:40 wmcbrine Exp $");
 
   X/Open Return Value:
 	These functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for these functions.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

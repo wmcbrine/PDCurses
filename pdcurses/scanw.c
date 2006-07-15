@@ -47,7 +47,7 @@ static int PDC_vsscanf(const char *, const char *, va_list);
 # undef wmove
 #endif
 
-RCSID("$Id: scanw.c,v 1.24 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.25 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -80,9 +80,6 @@ RCSID("$Id: scanw.c,v 1.24 2006/03/29 20:06:41 wmcbrine Exp $");
 	wscanw functions return the number of items successfully
 	matched.  On end-of-file, they return EOF.  Otherwise they
 	return ERR.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

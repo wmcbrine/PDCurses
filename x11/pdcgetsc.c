@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.16 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.17 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -59,9 +59,6 @@ int PDC_get_columns(void)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_get_rows(void);

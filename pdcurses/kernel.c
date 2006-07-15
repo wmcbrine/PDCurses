@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.47 2006/07/07 05:37:58 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.48 2006/07/15 15:38:24 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -128,9 +128,6 @@ char linesrippedoff = 0;
   X/Open Return Value:
 	All functions return OK on success and ERR on error, except 
 	curs_set(), which returns the previous visibility.
-
-  X/Open Errors:
-	No errors are defined for these functions.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

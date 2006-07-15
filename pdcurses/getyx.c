@@ -26,7 +26,7 @@
 #undef getpary
 #undef getparx
 
-RCSID("$Id: getyx.c,v 1.15 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: getyx.c,v 1.16 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -61,9 +61,6 @@ RCSID("$Id: getyx.c,v 1.15 2006/03/29 20:06:40 wmcbrine Exp $");
 	getpary(), and getparx() do return the beginning coordinate or 
 	size values, so they can be specified on the right-hand side of 
 	an assignment statement. They are, however, implemented as macros.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

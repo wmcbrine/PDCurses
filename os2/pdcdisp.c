@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.24 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.25 2006/07/15 15:38:24 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -105,9 +105,6 @@ int PDC_cursor_off(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  PDCurses Errors:
-	No errors are defined for this function.
-
   Portability:
 	PDCurses  int PDC_fix_cursor(int flag);
 
@@ -131,9 +128,6 @@ int PDC_fix_cursor(int flag)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_gotoxy(int row, int col);
@@ -164,9 +158,6 @@ int PDC_gotoxy(int row, int col)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_putc(chtype character, chtype color);
@@ -210,9 +201,6 @@ int PDC_putc(chtype character, chtype color)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	No errors are defined for this function.
 
   Portability:
 	PDCurses  int PDC_putctty(chtype character, chtype color);
@@ -302,9 +290,6 @@ int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
 
 	Updates the given physical line to look like the corresponding
 	line in _curscr.
-
-  PDCurses Errors:
-	No errors are defined for this routine.
 
   Portability:
 	PDCurses  void PDC_transform_line(int lineno);

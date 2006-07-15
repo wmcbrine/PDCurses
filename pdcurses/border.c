@@ -34,7 +34,7 @@
 #undef PDC_leftline
 #undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.27 2006/07/12 16:19:56 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.28 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -86,9 +86,6 @@ RCSID("$Id: border.c,v 1.27 2006/07/12 16:19:56 wmcbrine Exp $");
 
   X/Open Return Value:
 	These functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for these functions.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

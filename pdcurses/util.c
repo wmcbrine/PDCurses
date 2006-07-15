@@ -27,7 +27,7 @@
 #undef delay_output
 #undef flushinp
 
-RCSID("$Id: util.c,v 1.45 2006/07/14 03:21:16 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.46 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -70,9 +70,6 @@ RCSID("$Id: util.c,v 1.45 2006/07/14 03:21:16 wmcbrine Exp $");
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   Portability				     X/Open    BSD    SYS V
 					     Dec '88

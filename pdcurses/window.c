@@ -43,7 +43,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.32 2006/07/14 06:27:32 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.33 2006/07/15 15:38:24 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -121,9 +121,6 @@ RCSID("$Id: window.c,v 1.32 2006/07/14 06:27:32 wmcbrine Exp $");
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	No errors are defined for this function.
 
   PDCurses Errors:
 	It is an error to call resize_window() before calling initscr().

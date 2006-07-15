@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.55 2006/07/13 00:20:26 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.56 2006/07/15 21:03:26 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -246,8 +246,12 @@ void introTest(WINDOW *win)
 
 	cbreak();
 	mvwaddstr(win, 1, 1,
-		"You should have rectangle in the middle of the screen");
+		"You should have a rectangle in the middle of the screen");
 	mvwaddstr(win, 2, 1, "You should have heard a beep");
+	Continue(win);
+
+	flash();
+	mvwaddstr(win, 3, 1, "You should have seen a flash");
 	Continue(win);
 }
 

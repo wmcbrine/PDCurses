@@ -36,68 +36,13 @@
 # endif
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.5 2006/07/14 16:00:52 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.6 2006/07/15 15:13:40 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
 	PDC_LOG(("PDC_beep() - called\n"));
 
 	PDC_putctty((chtype) '\007', 0);
-}
-
-/*man-start**************************************************************
-
-  PDC_sysname()			- Platform/card name
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	The middle part of the long terminal description -- platform 
-	name, plus card type on DOS and OS/2. Called by longname(). 
-	Note that p must point to an already-allocated buffer.
-
-  Portability:
-	PDCurses  char *PDC_sysname(char *p);
-
-**man-end****************************************************************/
-
-char *PDC_sysname(char *p)
-{
-	PDC_LOG(("PDC_sysname() - called\n"));
-
-	p += sprintf(p, "DOS ");
-
-	switch (SP->adapter)
-	{
-	case _CGA:
-		p += sprintf(p, "CGA");
-		break;
-	case _MDA:
-		p += sprintf(p, "MDA");
-		break;
-	case _EGACOLOR:
-	case _EGAMONO:
-		p += sprintf(p, "EGA");
-		break;
-	case _VGACOLOR:
-	case _VGAMONO:
-		p += sprintf(p, "VGA");
-		break;
-	case _MCGACOLOR:
-	case _MCGAMONO:
-		p += sprintf(p, "MCGA");
-		break;
-	case _MDS_GENIUS:
-		p += sprintf(p, "Genius");
-		break;
-	default:
-		p += sprintf(p, "Unknown");
-	}
-
-	if (SP->bogus_adapter)
-		p += sprintf(p, " (Clone)");
-
-	return p;
 }
 
 void PDC_napms(int ms)

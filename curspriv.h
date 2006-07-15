@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.84 2006/07/15 15:00:57 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.85 2006/07/15 15:13:40 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -126,7 +126,6 @@ int	PDC_set_rows(int);
 void	PDC_slk_calc(void);
 void	PDC_sync(WINDOW *);
 int	PDC_sysgetch(void);
-char   *PDC_sysname(char *);
 void	PDC_transform_line(int);
 int	PDC_validchar(int);
 
@@ -183,6 +182,20 @@ enum
 	CURSES_FLASH, CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, 
 	CURSES_CHILD, CURSES_REFRESH, CURSES_EXIT
 };
+#endif
+
+#ifdef DOS
+# define PDC_SYSNAME "DOS"
+#else
+# ifdef OS2
+#  define PDC_SYSNAME "OS/2"
+# else
+#  ifdef WIN32
+#   define PDC_SYSNAME "Win32"
+#  else
+#   define PDC_SYSNAME "X11"
+#  endif
+# endif
 #endif
 
 #endif /* __CURSES_INTERNALS__*/

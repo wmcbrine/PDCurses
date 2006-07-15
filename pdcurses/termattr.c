@@ -31,7 +31,7 @@
 #undef termname
 #undef wordchar
 
-RCSID("$Id: termattr.c,v 1.34 2006/07/12 16:19:57 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.35 2006/07/15 15:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -166,9 +166,7 @@ char *longname(void)
 
 	PDC_LOG(("longname() - called\n"));
 
-	p += sprintf(_display, "PDCurses for ");
-
-	p = PDC_sysname(p);
+	p += sprintf(_display, "PDCurses for " PDC_SYSNAME);
 
 	sprintf(p, " %s-%dx%d", SP->mono ? "MONO" : "COLOR",
 		LINES, COLS);

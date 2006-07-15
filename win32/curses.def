@@ -295,7 +295,6 @@ EXPORTS PDC_putc
 EXPORTS PDC_putctty
 EXPORTS PDC_query_adapter_type
 EXPORTS PDC_rawgetch
-EXPORTS PDC_scroll
 EXPORTS PDC_scr_close
 EXPORTS PDC_scr_open
 EXPORTS PDC_setclipboard

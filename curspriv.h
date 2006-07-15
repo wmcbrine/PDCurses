@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.85 2006/07/15 15:13:40 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.86 2006/07/15 20:46:23 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -118,7 +118,6 @@ int	PDC_reset_shell_mode(void);
 int	PDC_resize_screen(int, int);
 int	PDC_scr_close(void);
 int	PDC_scr_open(SCREEN *, bool);
-int	PDC_scroll(int, int, int, int, int, chtype);
 int	PDC_set_ctrl_break(bool);
 int	PDC_set_cursor_mode(int, int);
 int	PDC_set_font(int);
@@ -176,11 +175,11 @@ void PDC_debug(const char *, ...);
 #ifdef XCURSES
 enum
 {
-	CURSES_CLEAR_SELECTION = 999985, CURSES_DISPLAY_CURSOR, 
+	CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR, 
 	CURSES_SET_SELECTION, CURSES_GET_SELECTION, CURSES_TITLE, 
 	CURSES_REFRESH_SCROLLBAR, CURSES_RESIZE, CURSES_CLEAR, 
-	CURSES_FLASH, CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, 
-	CURSES_CHILD, CURSES_REFRESH, CURSES_EXIT
+	CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, CURSES_CHILD, 
+	CURSES_REFRESH, CURSES_EXIT
 };
 #endif
 

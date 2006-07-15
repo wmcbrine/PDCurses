@@ -24,7 +24,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.25 2006/07/15 16:07:06 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.26 2006/07/15 20:46:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -193,36 +193,6 @@ int PDC_putc(chtype character, chtype color)
 int PDC_putctty(chtype character, chtype color)
 {
 	return PDC_putc(character, color);
-}
-
-/*man-start**************************************************************
-
-  PDC_scroll() - low level screen scroll
-
-  PDCurses Description:
-	Scrolls a window in the current page up or down. Urow, lcol,
-	lrow, rcol are the window coordinates. Lines is the number of
-	lines to scroll. If 0, clears the window, if < 0 scrolls down,
-	if > 0 scrolls up.  Blanks areas that are left, and sets
-	character attributes to attr. If in a colour graphics mode,
-	fills them with the colour 'attr' instead.
-
-  PDCurses Return Value:
-	The PDC_scroll() function returns OK on success otherwise ERR is 
-	returned.
-
-  Portability:
-	PDCurses  int PDC_scroll(int urow, int lcol, int rcol,
-				 int nlines, chtype attr);
-
-**man-end****************************************************************/
-
-int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
-{
-	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d "
-		"rcol %d nlines %d\n", urow, lcol, lrow, rcol, nlines));
-
-	return OK;
 }
 
 /*man-start**************************************************************

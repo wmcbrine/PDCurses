@@ -288,7 +288,6 @@ PDC_putc
 PDC_putctty
 PDC_query_adapter_type
 PDC_rawgetch
-PDC_scroll
 PDC_scr_close
 PDC_scr_open
 PDC_setclipboard

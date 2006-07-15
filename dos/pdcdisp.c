@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.33 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.34 2006/07/15 20:46:23 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -274,56 +274,6 @@ int PDC_putctty(chtype character, chtype color)
 	regs.h.al = (unsigned char) (character & 0x00FF);
 	regs.h.bh = SP->video_page;
 	regs.h.bl = (unsigned char) ((color & 0xFF00) >> 8);
-	int86(0x10, &regs, &regs);
-
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_scroll()	- low level screen scroll
-
-  PDCurses Description:
-	Scrolls a window in the current page up or down. Urow, lcol,
-	lrow, rcol are the window coordinates.	Lines is the number of
-	lines to scroll. If 0, clears the window, if < 0 scrolls down,
-	if > 0 scrolls up.  Blanks areas that are left, and sets
-	character attributes to attr. If in a colour graphics mode,
-	fills them with the colour 'attr' instead.
-
-  PDCurses Return Value:
-	The PDC_scroll() function returns OK on success otherwise ERR is 
-	returned.
-
-  Portability:
-	PDCurses  int PDC_scroll(int urow, int lcol, int rcol,
-				 int nlines, chtype attr);
-
-**man-end****************************************************************/
-
-int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
-{
-	int phys_attr = chtype_attr(attr);
-
-	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d "
-		"rcol %d nlines %d\n", urow, lcol, lrow, rcol, nlines));
-
-	if (nlines >= 0)
-	{
-		regs.h.ah = 0x06;
-		regs.h.al = (unsigned char) nlines;
-	}
-	else
-	{
-		regs.h.ah = 0x07;
-		regs.h.al = (unsigned char) (-nlines);
-	}
-
-	regs.h.bh = (unsigned char)(phys_attr >> 8);
-	regs.h.ch = (unsigned char) urow;
-	regs.h.cl = (unsigned char) lcol;
-	regs.h.dh = (unsigned char) lrow;
-	regs.h.dl = (unsigned char) rcol;
 	int86(0x10, &regs, &regs);
 
 	return OK;

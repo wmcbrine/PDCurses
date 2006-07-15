@@ -27,7 +27,7 @@
 # undef wrefresh
 #endif
 
-RCSID("$Id: beep.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.21 2006/07/15 20:46:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -73,15 +73,21 @@ int beep(void)
 
 int flash(void)
 {
+	int z, y, x;
+
 	PDC_LOG(("flash() - called\n"));
 
-#ifdef XCURSES
-	XCursesInstructAndWait(CURSES_FLASH);
-#else
-	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_NORMAL);
-	napms(50);
-	PDC_scroll(0, 0, LINES - 1, COLS - 1, 0, A_REVERSE);
-	wrefresh(curscr);
-#endif
+	for (z = 0; z < 2; z++) {
+
+		for (y = 0; y < LINES; y++)
+			for (x = 0; x < COLS; x++)
+				curscr->_y[y][x] ^= A_REVERSE;
+
+		wrefresh(curscr);
+
+		if (!z)
+			napms(50);
+	}
+
 	return OK;
 }

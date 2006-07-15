@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.26 2006/07/15 16:07:05 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.27 2006/07/15 20:46:23 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -188,63 +188,6 @@ int PDC_putctty(chtype character, chtype color)
 #else
 	VioWrtTTY((PCH)&character, 1, 0);
 	VioWrtNAttr((PBYTE)&color, 1, (USHORT)curRow, (USHORT)curCol, 0);
-#endif
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_scroll()	- low level screen scroll
-
-  PDCurses Description:
-	Scrolls a window in the current page up or down. Urow, lcol,
-	lrow, rcol are the window coordinates.	Lines is the number of
-	lines to scroll. If 0, clears the window, if < 0 scrolls down,
-	if > 0 scrolls up.  Blanks areas that are left, and sets
-	character attributes to attr. If in a colour graphics mode,
-	fills them with the colour 'attr' instead.
-
-  PDCurses Return Value:
-	The PDC_scroll() function returns OK on success otherwise ERR is 
-	returned.
-
-  Portability:
-	PDCurses  int PDC_scroll(int urow, int lcol, int rcol,
-				 int nlines, chtype attr);
-
-**man-end****************************************************************/
-
-int PDC_scroll(int urow, int lcol, int lrow, int rcol, int nlines, chtype attr)
-{
-	int phys_attr = chtype_attr(attr);
-
-#ifndef EMXVIDEO
-	USHORT ch = (phys_attr | SP->blank);
-#endif
-
-	PDC_LOG(("PDC_scroll() - called: urow %d lcol %d lrow %d "
-		"rcol %d nlines %d\n", urow, lcol, lrow, rcol, nlines));
-
-#ifdef EMXVIDEO
-	v_attrib(phys_attr);
-
-	if (nlines > 0)
-		v_scroll(lcol, urow, rcol, lrow, nlines, V_SCROLL_UP);
-	else
-		if (nlines < 0)
-			v_scroll(lcol, urow, rcol, lrow, -nlines,
-				V_SCROLL_DOWN);
-		else	/* this clears the whole screen */
-			v_scroll(lcol, urow, rcol, lrow, -1, V_SCROLL_CLEAR);
-#else
-	if (nlines > 0)
-		VioScrollUp(urow, lcol, lrow, rcol, nlines, (PBYTE)&ch, 0);
-	else
-		if (nlines < 0)
-			VioScrollDn(urow, lcol, lrow, rcol, nlines,
-				(PBYTE)&ch, 0);
-		else	/* this clears the whole screen ?? */
-			VioScrollUp(0, 0, -1, -1, -1, (PBYTE)&ch, 0);
 #endif
 	return OK;
 }

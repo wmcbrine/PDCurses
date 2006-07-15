@@ -555,7 +555,6 @@ FUNCTIONS
 		PDC_query_adapter_type	pdcgetsc
 		PDC_rawgetch		pdckbd
 		PDC_scrn_modes_equal	pdcscrn
-		PDC_scroll		pdcdisp
 		PDC_scr_close		pdcscrn
 		PDC_scr_open		pdcscrn
 		PDC_set_ctrl_break	pdckbd

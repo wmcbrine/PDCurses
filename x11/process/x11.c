@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.51 2006/07/15 21:03:38 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.52 2006/07/16 18:41:53 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
@@ -424,7 +424,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	} 
 } 
 
-int XCursesSetupX(const char *display_name, int argc, char *argv[])
+int XCursesSetupX(int argc, char *argv[])
 {
 	static char *myargv[] = {"PDCurses", NULL};
 	extern bool sb_started;
@@ -471,15 +471,6 @@ int XCursesSetupX(const char *display_name, int argc, char *argv[])
 #if XtSpecificationRelease > 4
 	XtSetLanguageProc(NULL, (XtLanguageProc)NULL, NULL);
 #endif
-
-	/* If a DISPLAY value has been supplied, set the env variable 
-	   DISPLAY */
-
-	if (display_name)
-	{
-		sprintf(global_display_name, "DISPLAY=%.90s", display_name);
-		putenv(global_display_name);
-	}
 
 	/* Exit if no DISPLAY variable set */
 

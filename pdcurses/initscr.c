@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.54 2006/07/16 18:08:16 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.55 2006/07/16 18:41:53 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -173,7 +173,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
 		return NULL;
 
 #ifdef XCURSES
-	if (XCursesInitscr(NULL, argc, argv) == ERR)
+	if (XCursesInitscr(argc, argv) == ERR)
 		exit(7);
 #endif
 

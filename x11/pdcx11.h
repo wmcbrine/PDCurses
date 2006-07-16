@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.35 2006/07/16 00:45:15 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.36 2006/07/16 18:41:53 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -302,7 +302,7 @@ int write_socket(int, const char *, int);
 int read_socket(int, char *, int);
 int write_display_socket_int(int);
 
-int XCursesSetupX(const char *display_name, int argc, char *argv[]);
+int XCursesSetupX(int argc, char *argv[]);
 RETSIGTYPE XCursesSigwinchHandler(int signo);
 
 #ifdef _HPUX_SOURCE

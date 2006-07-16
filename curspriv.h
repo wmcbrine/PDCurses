@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.90 2006/07/16 16:42:31 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.91 2006/07/16 18:41:53 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -142,7 +142,7 @@ int	PDC_query_adapter_type(void);
 
 #ifdef XCURSES
 int	XCursesInstructAndWait(int);
-int	XCursesInitscr(const char *, int, char **);
+int	XCursesInitscr(int, char **);
 #endif
 
 #ifdef PDCDEBUG

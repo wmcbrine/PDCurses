@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.36 2006/07/07 16:20:28 wmcbrine Exp $");
+RCSID("$Id: x11curses.c,v 1.37 2006/07/16 18:41:53 wmcbrine Exp $");
 
 int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -162,7 +162,7 @@ static int XCursesSetupCurses(void)
 	return OK;
 }
 
-int XCursesInitscr(const char *display_name, int argc, char *argv[])
+int XCursesInitscr(int argc, char *argv[])
 {
 	int pid, rc;
 
@@ -216,7 +216,7 @@ int XCursesInitscr(const char *display_name, int argc, char *argv[])
 #else
 		XCursesProcess = 1;
 		otherpid = getppid();
-		rc = XCursesSetupX(display_name, argc, argv);
+		rc = XCursesSetupX(argc, argv);
 #endif
 		break;
 
@@ -225,7 +225,7 @@ int XCursesInitscr(const char *display_name, int argc, char *argv[])
 #ifdef XISPARENT
 		XCursesProcess = 1;
 		otherpid = pid;
-		rc = XCursesSetupX(display_name, argc, argv);
+		rc = XCursesSetupX(argc, argv);
 #else
 		XCursesProcess = 0;
 		rc = XCursesSetupCurses();

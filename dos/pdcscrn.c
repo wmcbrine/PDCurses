@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.31 2006/07/16 16:42:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.32 2006/07/16 18:08:16 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -129,17 +129,9 @@ int PDC_scr_open(SCREEN *internal)
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
 
 	internal->direct_video	= TRUE;		/* Assume that we can	      */
-	internal->autocr	= TRUE;		/* cr -> lf by default	      */
-	internal->raw_out	= FALSE;	/* tty I/O modes	      */
-	internal->raw_inp	= FALSE;	/* tty I/O modes	      */
-	internal->cbreak	= TRUE;
-	internal->save_key_modifiers = FALSE;
-	internal->return_key_modifiers = FALSE;
-	internal->echo		= FALSE;
 	internal->video_seg	= 0xb000;	/* Base screen segment addr   */
 	internal->video_ofs	= 0x0;		/* Base screen segment ofs    */
 	internal->video_page	= 0;		/* Current Video Page	      */
-	internal->visible_cursor= TRUE;		/* Assume that it is visible  */
 	internal->cursor	= PDC_get_cursor_mode();
 
 	internal->adapter	= PDC_query_adapter_type();
@@ -149,18 +141,8 @@ int PDC_scr_open(SCREEN *internal)
 	internal->lines		= PDC_get_rows();
 	internal->cols		= PDC_get_columns();
 
-	internal->audible	= TRUE;
-	internal->visibility	= 1;
 	internal->orig_cursor	= internal->cursor;
 	internal->orgcbr	= PDC_get_ctrl_break();
-	internal->blank		= ' ';
-	internal->resized	= FALSE;
-	internal->shell		= FALSE;
-	internal->_trap_mbe	= 0L;
-	internal->_map_mbe_to_key = 0L;
-	internal->linesrippedoff = 0;
-	internal->linesrippedoffontop = 0;
-	internal->delaytenths	= 0;
 
 	/* If the environment variable PDCURSES_BIOS is set, the DOS 
 	   int10() BIOS calls are used in place of direct video memory 

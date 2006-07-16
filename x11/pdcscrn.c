@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.25 2006/07/16 16:42:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.26 2006/07/16 18:08:16 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;
@@ -74,29 +74,11 @@ int PDC_scr_open(SCREEN *internal)
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	internal->cursrow = internal->curscol = 0;
-	internal->autocr	= TRUE;		/* cr -> lf by default        */
-	internal->raw_out	= FALSE;	/* tty I/O modes	      */
-	internal->raw_inp	= FALSE;	/* tty I/O modes	      */
-	internal->cbreak	= TRUE;
-	internal->save_key_modifiers	= FALSE;
-	internal->return_key_modifiers	= FALSE;
-	internal->echo		= FALSE;
-	internal->visible_cursor= TRUE;		/* Assume that it is visible  */
 	internal->cursor	= 0;
 	internal->adapter	= 0;
-	internal->audible	= TRUE;
-	internal->visibility	= 1;
 	internal->orig_cursor = internal->cursor;
 	internal->orig_attr = FALSE;
 	internal->orgcbr = 0;
-	internal->blank = ' ';
-	internal->resized = FALSE;
-	internal->shell = FALSE;
-	internal->_trap_mbe = 0L;
-	internal->_map_mbe_to_key = 0L;
-	internal->linesrippedoff = 0;
-	internal->linesrippedoffontop = 0;
-	internal->delaytenths = 0;
 	internal->sb_on = sb_started;
 	internal->sb_total_y = 0;
 	internal->sb_viewport_y = 0;

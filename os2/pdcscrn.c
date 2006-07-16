@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.27 2006/07/16 16:42:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.28 2006/07/16 18:08:16 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -153,14 +153,6 @@ int PDC_scr_open(SCREEN *internal)
 
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
 
-	internal->autocr  = TRUE;		/* cr -> lf by default */
-	internal->raw_out = FALSE;		/* tty I/O modes */
-	internal->raw_inp = FALSE;		/* tty I/O modes */
-	internal->cbreak  = TRUE;
-	internal->save_key_modifiers = FALSE;
-	internal->return_key_modifiers  = FALSE;
-	internal->echo    = FALSE;
-	internal->visible_cursor = TRUE;	/* Assume that it is visible */
 	internal->cursor  = PDC_get_cursor_mode();
 #ifdef EMXVIDEO
 	internal->tahead  = -1;
@@ -188,18 +180,8 @@ int PDC_scr_open(SCREEN *internal)
 	internal->orig_font = internal->font = PDC_get_font();
 	internal->lines = PDC_get_rows();
 	internal->cols = PDC_get_columns();
-	internal->audible = TRUE;
-	internal->visibility = 1;
 	internal->orig_cursor = internal->cursor;
 	internal->orgcbr = PDC_get_ctrl_break();
-	internal->blank = ' ';
-	internal->resized = FALSE;
-	internal->shell = FALSE;
-	internal->_trap_mbe = 0L;
-	internal->_map_mbe_to_key = 0L;
-	internal->linesrippedoff = 0;
-	internal->linesrippedoffontop = 0;
-	internal->delaytenths = 0;
 	internal->sizeable = TRUE;
 
 	/* This code for preserving the current screen */

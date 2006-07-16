@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.37 2006/07/16 16:42:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.38 2006/07/16 18:08:16 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -270,32 +270,12 @@ int PDC_scr_open(SCREEN *internal)
 
 	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
 
-	internal->autocr  = TRUE;	/* cr -> lf by default */
-	internal->raw_out = FALSE;	/* tty I/O modes */
-	internal->raw_inp = FALSE;	/* tty I/O modes */
-	internal->cbreak  = TRUE;
-	internal->save_key_modifiers = FALSE;
-	internal->return_key_modifiers = FALSE;
-	internal->echo = FALSE;
-	internal->visible_cursor= TRUE;	/* Assume that it is visible */
-
 	internal->cursor = PDC_get_cursor_mode();
 	internal->adapter = PDC_query_adapter_type();
 
-	internal->audible = TRUE;
-	internal->visibility = 1;
 	internal->orig_cursor = internal->cursor;
 
 	internal->orgcbr = PDC_get_ctrl_break();
-
-	internal->blank = ' ';
-	internal->resized = FALSE;
-	internal->shell = FALSE;
-	internal->_trap_mbe = 0L;
-	internal->_map_mbe_to_key = 0L;
-	internal->linesrippedoff = 0;
-	internal->linesrippedoffontop = 0;
-	internal->delaytenths = 0;
 
 #ifdef PDC_THREAD_BUILD
 

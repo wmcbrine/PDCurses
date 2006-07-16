@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.53 2006/07/16 16:42:31 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.54 2006/07/16 18:08:16 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -188,6 +188,25 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	}
 
 	PDC_scr_open(SP);
+
+	SP->autocr	= TRUE;		/* cr -> lf by default	      */
+	SP->raw_out	= FALSE;	/* tty I/O modes	      */
+	SP->raw_inp	= FALSE;	/* tty I/O modes	      */
+	SP->cbreak	= TRUE;
+	SP->save_key_modifiers = FALSE;
+	SP->return_key_modifiers = FALSE;
+	SP->echo	= FALSE;
+	SP->visible_cursor = TRUE;	/* Assume that it is visible  */
+	SP->visibility	= 1;
+	SP->audible	= TRUE;
+	SP->blank	= ' ';
+	SP->resized	= FALSE;
+	SP->shell	= FALSE;
+	SP->_trap_mbe	= 0L;
+	SP->_map_mbe_to_key = 0L;
+	SP->linesrippedoff = 0;
+	SP->linesrippedoffontop = 0;
+	SP->delaytenths	= 0;
 
 	LINES = SP->lines;
 	COLS = SP->cols;

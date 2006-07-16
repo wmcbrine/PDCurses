@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.51 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.52 2006/07/16 16:12:45 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -172,10 +172,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	if (SP != (SCREEN *)NULL && SP->alive)
 		return NULL;
 
-#ifdef EMXVIDEO
-	v_init();
-#endif
-
 #ifdef XCURSES
 	if (XCursesInitscr(NULL, argc, argv) == ERR)
 		exit(7);
@@ -254,10 +250,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	curscr->_clear = FALSE;
 
 	PDC_init_atrtab();	/* set up default colors */
-
-#ifdef EMXVIDEO
-	SP->tahead = -1;
-#endif
 
 	MOUSE_X_POS = MOUSE_Y_POS = (-1);
 	BUTTON_STATUS(1) = BUTTON_RELEASED;

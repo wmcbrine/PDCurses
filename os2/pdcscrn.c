@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.25 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.26 2006/07/16 16:12:44 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -146,6 +146,9 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	PDC_LOG(("PDC_scr_open() - called. internal: %x, echo: %d\n",
 		internal, echo));
 
+#ifdef EMXVIDEO
+        v_init();
+#endif
 	internal->orig_attr = FALSE;
 	internal->orig_emulation = 0;
 

@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.36 2006/07/02 22:15:59 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.37 2006/07/16 16:42:31 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -125,11 +125,11 @@ int PDC_scr_close(void)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal, bool echo);
+	PDCurses  int PDC_scr_open(SCREEN *internal);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal, bool echo)
+int PDC_scr_open(SCREEN *internal)
 {
 	COORD bufsize, origin;
 	SMALL_RECT rect;
@@ -276,7 +276,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->cbreak  = TRUE;
 	internal->save_key_modifiers = FALSE;
 	internal->return_key_modifiers = FALSE;
-	internal->echo = echo;
+	internal->echo = FALSE;
 	internal->visible_cursor= TRUE;	/* Assume that it is visible */
 
 	internal->cursor = PDC_get_cursor_mode();

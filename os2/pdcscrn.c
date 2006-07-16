@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.26 2006/07/16 16:12:44 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.27 2006/07/16 16:42:31 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -132,19 +132,18 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal, bool echo);
+	PDCurses  int PDC_scr_open(SCREEN *internal);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal, bool echo)
+int PDC_scr_open(SCREEN *internal)
 {
 	char *ptr;
 #ifndef EMXVIDEO
 	USHORT totchars;
 #endif
 
-	PDC_LOG(("PDC_scr_open() - called. internal: %x, echo: %d\n",
-		internal, echo));
+	PDC_LOG(("PDC_scr_open() - called. internal: %x\n", internal));
 
 #ifdef EMXVIDEO
         v_init();
@@ -160,7 +159,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->cbreak  = TRUE;
 	internal->save_key_modifiers = FALSE;
 	internal->return_key_modifiers  = FALSE;
-	internal->echo    = echo;
+	internal->echo    = FALSE;
 	internal->visible_cursor = TRUE;	/* Assume that it is visible */
 	internal->cursor  = PDC_get_cursor_mode();
 #ifdef EMXVIDEO

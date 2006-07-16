@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.24 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.25 2006/07/16 16:42:31 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;
@@ -63,11 +63,11 @@ int PDC_scr_close(void)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal, bool echo);
+	PDCurses  int PDC_scr_open(SCREEN *internal);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal, bool echo)
+int PDC_scr_open(SCREEN *internal)
 {
 	extern bool sb_started;
 
@@ -80,7 +80,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->cbreak	= TRUE;
 	internal->save_key_modifiers	= FALSE;
 	internal->return_key_modifiers	= FALSE;
-	internal->echo		= echo;
+	internal->echo		= FALSE;
 	internal->visible_cursor= TRUE;		/* Assume that it is visible  */
 	internal->cursor	= 0;
 	internal->adapter	= 0;

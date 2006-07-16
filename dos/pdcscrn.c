@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.30 2006/07/14 16:00:52 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.31 2006/07/16 16:42:31 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -109,11 +109,11 @@ int PDC_scr_close(void)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal, bool echo);
+	PDCurses  int PDC_scr_open(SCREEN *internal);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal, bool echo)
+int PDC_scr_open(SCREEN *internal)
 {
 #if SMALL || MEDIUM
 # ifndef __PACIFIC__
@@ -135,7 +135,7 @@ int PDC_scr_open(SCREEN *internal, bool echo)
 	internal->cbreak	= TRUE;
 	internal->save_key_modifiers = FALSE;
 	internal->return_key_modifiers = FALSE;
-	internal->echo		= echo;
+	internal->echo		= FALSE;
 	internal->video_seg	= 0xb000;	/* Base screen segment addr   */
 	internal->video_ofs	= 0x0;		/* Base screen segment ofs    */
 	internal->video_page	= 0;		/* Current Video Page	      */

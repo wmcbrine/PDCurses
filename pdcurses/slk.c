@@ -33,7 +33,7 @@
 #undef slk_attroff
 #undef slk_color
 
-RCSID("$Id: slk.c,v 1.23 2006/06/19 03:36:38 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.24 2006/07/16 01:26:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -118,6 +118,7 @@ static int label_line = 0;
 
 void (*PDC_initial_slk)(void);
 static void PDC_slk_init(void);
+static void PDC_slk_calc(void);
 
 static struct {
 	char	label[32];
@@ -487,7 +488,7 @@ static void PDC_slk_init(void)
 	touchwin(SP->slk_winptr);
 }
 
-void PDC_slk_calc(void)
+static void PDC_slk_calc(void)
 {
 	int i, center, col = 0;
 

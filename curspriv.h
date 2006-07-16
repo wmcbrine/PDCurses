@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.87 2006/07/16 00:45:15 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.88 2006/07/16 01:26:23 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -122,7 +122,6 @@ int	PDC_set_ctrl_break(bool);
 int	PDC_set_cursor_mode(int, int);
 int	PDC_set_font(int);
 int	PDC_set_rows(int);
-void	PDC_slk_calc(void);
 void	PDC_sync(WINDOW *);
 int	PDC_sysgetch(void);
 void	PDC_transform_line(int);

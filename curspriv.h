@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.88 2006/07/16 01:26:23 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.89 2006/07/16 01:59:43 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -94,7 +94,6 @@ int	PDC_copy_win(const WINDOW *, WINDOW *, int, int, int,
 int	PDC_cursor_off(void);
 int	PDC_cursor_on(void);
 int	PDC_curs_set(int);
-int	PDC_fix_cursor(int);
 void	PDC_flushinp(void);
 int	PDC_get_bios_key(void);
 int	PDC_get_columns(void);

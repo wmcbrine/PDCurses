@@ -532,7 +532,6 @@ FUNCTIONS
 		PDC_cursor_off		pdcdisp
 		PDC_cursor_on		pdcdisp
 		PDC_debug		pdcdebug
-		PDC_fix_cursor		pdcdisp
 		PDC_flushinp		pdckbd
 		PDC_getch		getch
 		PDC_get_attribute	pdcgetsc

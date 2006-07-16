@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.55 2006/07/16 18:41:53 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.56 2006/07/16 19:56:07 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -172,22 +172,11 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	if (SP != (SCREEN *)NULL && SP->alive)
 		return NULL;
 
-#ifdef XCURSES
-	if (XCursesInitscr(argc, argv) == ERR)
-		exit(7);
-#endif
-
-#ifdef XCURSES
-	if (SP == (SCREEN *)NULL)  /* SP already attached in XCursesInitscr() */
-#else
-	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
-#endif
+	if (PDC_scr_open(argc, argv) == ERR)
 	{
 		fprintf(stderr, "initscr(): Unable to create SP\n");
 		exit(8);
 	}
-
-	PDC_scr_open(SP);
 
 	SP->autocr	= TRUE;		/* cr -> lf by default	      */
 	SP->raw_out	= FALSE;	/* tty I/O modes	      */
@@ -369,13 +358,9 @@ void delscreen(SCREEN *sp)
 	curscr = (WINDOW *)NULL;
 	SP->alive = FALSE;
 
-#ifndef XCURSES
-	if (SP)
-	{
-		free(SP);
-		SP = (SCREEN *)NULL;
-	}
-#endif
+	PDC_scr_exit();
+
+	SP = (SCREEN *)NULL;
 }
 
 int resize_term(int nlines, int ncols)

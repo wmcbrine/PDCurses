@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.32 2006/07/16 18:08:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.33 2006/07/16 19:56:07 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -109,11 +109,11 @@ int PDC_scr_close(void)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal);
+	PDCurses  int PDC_scr_open(int argc, char **argv);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal)
+int PDC_scr_open(int argc, char **argv)
 {
 #if SMALL || MEDIUM
 # ifndef __PACIFIC__
@@ -123,44 +123,49 @@ int PDC_scr_open(SCREEN *internal)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	internal->orig_attr	 = FALSE;
-	internal->orig_emulation = getdosmembyte(0x487);
+        if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
+		return ERR;
 
-	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
+	SP->orig_attr	 = FALSE;
+	SP->orig_emulation = getdosmembyte(0x487);
 
-	internal->direct_video	= TRUE;		/* Assume that we can	      */
-	internal->video_seg	= 0xb000;	/* Base screen segment addr   */
-	internal->video_ofs	= 0x0;		/* Base screen segment ofs    */
-	internal->video_page	= 0;		/* Current Video Page	      */
-	internal->cursor	= PDC_get_cursor_mode();
+	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-	internal->adapter	= PDC_query_adapter_type();
-	internal->scrnmode	= PDC_get_scrn_mode();
+	SP->direct_video = TRUE;	/* Assume that we can	      */
+	SP->video_seg	= 0xb000;	/* Base screen segment addr   */
+	SP->video_ofs	= 0x0;		/* Base screen segment ofs    */
+	SP->video_page	= 0;		/* Current Video Page	      */
+	SP->cursor	= PDC_get_cursor_mode();
 
-	internal->orig_font = internal->font = PDC_get_font();
-	internal->lines		= PDC_get_rows();
-	internal->cols		= PDC_get_columns();
+	SP->adapter	= PDC_query_adapter_type();
+	SP->scrnmode	= PDC_get_scrn_mode();
 
-	internal->orig_cursor	= internal->cursor;
-	internal->orgcbr	= PDC_get_ctrl_break();
+	SP->orig_font = SP->font = PDC_get_font();
+	SP->lines	= PDC_get_rows();
+	SP->cols	= PDC_get_columns();
+
+	SP->orig_cursor	= SP->cursor;
+	SP->orgcbr	= PDC_get_ctrl_break();
 
 	/* If the environment variable PDCURSES_BIOS is set, the DOS 
 	   int10() BIOS calls are used in place of direct video memory 
 	   access. */
 
 	if (getenv("PDCURSES_BIOS") != NULL)
-		internal->direct_video = FALSE;
+		SP->direct_video = FALSE;
 
 	/* This code for preserving the current screen. */
 
 	if (getenv("PDC_RESTORE_SCREEN") != NULL)
 	{
-		saved_lines = internal->lines;
-		saved_cols = internal->cols;
+		saved_lines = SP->lines;
+		saved_cols = SP->cols;
 		if ((saved_screen = (unsigned short*)malloc(saved_lines
 		    * saved_cols * sizeof(unsigned short))) == NULL)
-			return ERR;
-
+		{
+			SP->_preserve = FALSE;
+			return OK;
+		}
 #ifdef __DJGPP__
 		dosmemget ((unsigned long)_FAR_POINTER(SP->video_seg,
 			SP->video_ofs), saved_lines * saved_cols * 
@@ -183,7 +188,7 @@ int PDC_scr_open(SCREEN *internal)
 #endif
 	}
 
-	internal->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
+	SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
 	return OK;
 }

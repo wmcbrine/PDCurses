@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.38 2006/07/16 18:08:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.39 2006/07/16 19:56:07 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -125,11 +125,11 @@ int PDC_scr_close(void)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal);
+	PDCurses  int PDC_scr_open(int argc, char **argv);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal)
+int PDC_scr_open(int argc, char **argv)
 {
 	COORD bufsize, origin;
 	SMALL_RECT rect;
@@ -142,6 +142,9 @@ int PDC_scr_open(SCREEN *internal)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
+	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
+		return ERR;
+
 	hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	hConIn = GetStdHandle(STD_INPUT_HANDLE);
 
@@ -149,34 +152,34 @@ int PDC_scr_open(SCREEN *internal)
 	GetConsoleScreenBufferInfo(hConOut, &orig_scr);
 	GetConsoleMode(hConIn, &dwConsoleMode);
 
-	internal->lines = ((str = getenv("LINES")) != NULL) ?
+	SP->lines = ((str = getenv("LINES")) != NULL) ?
 		atoi(str) : PDC_get_rows();
 
-	internal->cols = ((str = getenv("COLS")) != NULL) ?
+	SP->cols = ((str = getenv("COLS")) != NULL) ?
 		atoi(str) : PDC_get_columns();
 
-	if (internal->lines < 2 || internal->lines > csbi.dwMaximumWindowSize.Y)
+	if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
 	{
 		fprintf(stderr, "LINES value must be >= 2 and <= %d: got %d\n",
-			csbi.dwMaximumWindowSize.Y, internal->lines);
+			csbi.dwMaximumWindowSize.Y, SP->lines);
 
 		return ERR;
 	}
 
-	if (internal->cols < 2 || internal->cols > csbi.dwMaximumWindowSize.X)
+	if (SP->cols < 2 || SP->cols > csbi.dwMaximumWindowSize.X)
 	{
 		fprintf(stderr, "COLS value must be >= 2 and <= %d: got %d\n",
-			csbi.dwMaximumWindowSize.X, internal->cols);
+			csbi.dwMaximumWindowSize.X, SP->cols);
 
 		return ERR;
 	}
 
-	internal->orig_fore = csbi.wAttributes & 0x0f;
-	internal->orig_back = (csbi.wAttributes & 0xf0) >> 4;
+	SP->orig_fore = csbi.wAttributes & 0x0f;
+	SP->orig_back = (csbi.wAttributes & 0xf0) >> 4;
 
-	internal->orig_attr = TRUE;
+	SP->orig_attr = TRUE;
 
-	internal->_restore = PDC_RESTORE_NONE;
+	SP->_restore = PDC_RESTORE_NONE;
 
 	if (getenv("PDC_RESTORE_SCREEN") != NULL)
 	{
@@ -246,13 +249,13 @@ int PDC_scr_open(SCREEN *internal)
 			return ERR;
 		    }
 
-		    internal->_restore = PDC_RESTORE_WINDOW;
+		    SP->_restore = PDC_RESTORE_WINDOW;
 		}
 		else
-		    internal->_restore = PDC_RESTORE_BUFFER;
+		    SP->_restore = PDC_RESTORE_BUFFER;
 	}
 
-	internal->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
+	SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
 	bufsize.X = orig_scr.srWindow.Right - orig_scr.srWindow.Left + 1;
 	bufsize.Y = orig_scr.srWindow.Bottom - orig_scr.srWindow.Top + 1;
@@ -268,14 +271,14 @@ int PDC_scr_open(SCREEN *internal)
 
 	PDC_reset_prog_mode();
 
-	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
+	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-	internal->cursor = PDC_get_cursor_mode();
-	internal->adapter = PDC_query_adapter_type();
+	SP->cursor = PDC_get_cursor_mode();
+	SP->adapter = PDC_query_adapter_type();
 
-	internal->orig_cursor = internal->cursor;
+	SP->orig_cursor = SP->cursor;
 
-	internal->orgcbr = PDC_get_ctrl_break();
+	SP->orgcbr = PDC_get_ctrl_break();
 
 #ifdef PDC_THREAD_BUILD
 

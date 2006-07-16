@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.36 2006/07/16 18:41:53 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.37 2006/07/16 19:56:08 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -295,6 +295,7 @@ void XCursesEndwin(void);
 void XCursesExitCursesProcess(int, char *);
 void XCursesExitXCursesProcess(int, int, char *);
 int XCursesInstruct(int);
+int XCursesInitscr(int, char **);
 
 void SelectionOff(void);
 

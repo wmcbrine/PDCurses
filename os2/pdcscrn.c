@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.28 2006/07/16 18:08:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.29 2006/07/16 19:56:07 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -132,36 +132,38 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal);
+	PDCurses  int PDC_scr_open(int argc, char **argv);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal)
+int PDC_scr_open(int argc, char **argv)
 {
 	char *ptr;
 #ifndef EMXVIDEO
 	USHORT totchars;
 #endif
+	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	PDC_LOG(("PDC_scr_open() - called. internal: %x\n", internal));
+	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
+		return ERR;
 
 #ifdef EMXVIDEO
         v_init();
 #endif
-	internal->orig_attr = FALSE;
-	internal->orig_emulation = 0;
+	SP->orig_attr = FALSE;
+	SP->orig_emulation = 0;
 
-	PDC_get_cursor_pos(&internal->cursrow, &internal->curscol);
+	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-	internal->cursor  = PDC_get_cursor_mode();
+	SP->cursor  = PDC_get_cursor_mode();
 #ifdef EMXVIDEO
-	internal->tahead  = -1;
+	SP->tahead  = -1;
 #endif
 
 #ifndef EMXVIDEO
-	PDC_query_adapter_type(&internal->adapter);
-	PDC_get_scrn_mode(&internal->scrnmode);
-	PDC_get_keyboard_info(&internal->kbdinfo);
+	PDC_query_adapter_type(&SP->adapter);
+	PDC_get_scrn_mode(&SP->scrnmode);
+	PDC_get_keyboard_info(&SP->kbdinfo);
 
 	PDC_LOG(("PDC_scr_open() - after PDC_get_keyboard_info(). cb: %x, "
 		"fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
@@ -173,16 +175,16 @@ int PDC_scr_open(SCREEN *internal)
 
 	PDC_set_keyboard_binary();
 #else
-	internal->adapter = PDC_query_adapter_type();
-	if (internal->adapter == _UNIX_MONO)
-		internal->mono = TRUE;
+	SP->adapter = PDC_query_adapter_type();
+	if (SP->adapter == _UNIX_MONO)
+		SP->mono = TRUE;
 #endif
-	internal->orig_font = internal->font = PDC_get_font();
-	internal->lines = PDC_get_rows();
-	internal->cols = PDC_get_columns();
-	internal->orig_cursor = internal->cursor;
-	internal->orgcbr = PDC_get_ctrl_break();
-	internal->sizeable = TRUE;
+	SP->orig_font = SP->font = PDC_get_font();
+	SP->lines = PDC_get_rows();
+	SP->cols = PDC_get_columns();
+	SP->orig_cursor = SP->cursor;
+	SP->orgcbr = PDC_get_ctrl_break();
+	SP->sizeable = TRUE;
 
 	/* This code for preserving the current screen */
 
@@ -194,18 +196,24 @@ int PDC_scr_open(SCREEN *internal)
 #endif
 	if (ptr != NULL)
 	{
-		saved_lines = internal->lines;
-		saved_cols = internal->cols;
+		saved_lines = SP->lines;
+		saved_cols = SP->cols;
 #ifdef EMXVIDEO
 		if ((saved_screen = (unsigned char *)malloc(2 * saved_lines *
 		     saved_cols * sizeof(unsigned char))) == NULL)
-			return ERR;
+		{
+			SP->_preserve = FALSE;
+			return OK;
+		}
 
 		v_getline(saved_screen, 0, 0, saved_lines * saved_cols);
 #else
 		if ((saved_screen = (PCH)malloc(2 * saved_lines *
 		     saved_cols * sizeof(unsigned char))) == NULL)
-			return ERR;
+		{
+			SP->_preserve = FALSE;
+			return OK;
+		}
 
 		totchars = saved_lines * saved_cols * 2;
 		VioReadCellStr((PCH)saved_screen, &totchars, 0, 0, (HVIO)NULL);
@@ -218,7 +226,7 @@ int PDC_scr_open(SCREEN *internal)
 	if (DosScanEnv("PDC_PRESERVE_SCREEN", (PSZ *)&ptr))
 		ptr = NULL;
 #endif
-	internal->_preserve = (ptr != NULL);
+	SP->_preserve = (ptr != NULL);
 
 	return OK;
 }

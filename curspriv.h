@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.91 2006/07/16 18:41:53 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.92 2006/07/16 19:56:07 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -116,7 +116,7 @@ int	PDC_reset_prog_mode(void);
 int	PDC_reset_shell_mode(void);
 int	PDC_resize_screen(int, int);
 int	PDC_scr_close(void);
-int	PDC_scr_open(SCREEN *);
+int	PDC_scr_open(int, char **);
 int	PDC_set_ctrl_break(bool);
 int	PDC_set_cursor_mode(int, int);
 int	PDC_set_font(int);
@@ -142,7 +142,9 @@ int	PDC_query_adapter_type(void);
 
 #ifdef XCURSES
 int	XCursesInstructAndWait(int);
-int	XCursesInitscr(int, char **);
+# define PDC_scr_exit() XCursesExit()
+#else
+# define PDC_scr_exit() if (SP) free(SP)
 #endif
 
 #ifdef PDCDEBUG

@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.26 2006/07/16 18:08:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.27 2006/07/16 19:56:07 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;
@@ -63,30 +63,33 @@ int PDC_scr_close(void)
 	The DOS platform will never fail.
 
   Portability:
-	PDCurses  int PDC_scr_open(SCREEN *internal);
+	PDCurses  int PDC_scr_open(int argc, char **argv);
 
 **man-end****************************************************************/
 
-int PDC_scr_open(SCREEN *internal)
+int PDC_scr_open(int argc, char **argv)
 {
 	extern bool sb_started;
 
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	internal->cursrow = internal->curscol = 0;
-	internal->cursor	= 0;
-	internal->adapter	= 0;
-	internal->orig_cursor = internal->cursor;
-	internal->orig_attr = FALSE;
-	internal->orgcbr = 0;
-	internal->sb_on = sb_started;
-	internal->sb_total_y = 0;
-	internal->sb_viewport_y = 0;
-	internal->sb_cur_y = 0;
-	internal->sb_total_x = 0;
-	internal->sb_viewport_x = 0;
-	internal->sb_cur_x = 0;
-	internal->line_color = COLOR_WHITE;
+	if ((XCursesInitscr(argc, argv) == ERR) || (SP == (SCREEN *)NULL))
+		return ERR;
+
+	SP->cursrow = SP->curscol = 0;
+	SP->cursor = 0;
+	SP->adapter = 0;
+	SP->orig_cursor = SP->cursor;
+	SP->orig_attr = FALSE;
+	SP->orgcbr = 0;
+	SP->sb_on = sb_started;
+	SP->sb_total_y = 0;
+	SP->sb_viewport_y = 0;
+	SP->sb_cur_y = 0;
+	SP->sb_total_x = 0;
+	SP->sb_viewport_x = 0;
+	SP->sb_cur_x = 0;
+	SP->line_color = COLOR_WHITE;
 
 	return OK;
 }

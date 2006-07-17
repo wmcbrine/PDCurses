@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.24 2006/07/17 20:26:22 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.25 2006/07/17 21:05:18 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

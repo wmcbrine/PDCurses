@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.54 2006/07/17 21:05:18 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.55 2006/07/17 22:08:20 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
@@ -201,11 +201,6 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_BELL:
 		XC_LOG(("CURSES_BELL received from child\n"));
 		XBell(XCURSESDISPLAY, 50);
-		break;
-
-	    case CURSES_CLEAR:
-		XC_LOG(("CURSES_CLEAR received from child\n"));
-		XClearWindow(XCURSESDISPLAY, XCURSESWIN);
 		break;
 
 	    /* request from curses to confirm completion of display */ 

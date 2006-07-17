@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.92 2006/07/16 19:56:07 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.93 2006/07/17 07:02:30 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -87,7 +87,6 @@ void	PDC_beep(void);
 bool	PDC_breakout(void);
 int	PDC_chadd(WINDOW *, chtype, bool, bool);
 bool	PDC_check_bios_key(void);
-int	PDC_chg_attrs(WINDOW *, chtype, int, int, int, int);
 int	PDC_chins(WINDOW *, chtype, bool);
 int	PDC_copy_win(const WINDOW *, WINDOW *, int, int, int,
 		     int, int, int, bool);

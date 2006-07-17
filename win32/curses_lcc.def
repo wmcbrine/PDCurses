@@ -263,7 +263,6 @@ tparm
 tputs
 PDC_chadd
 PDC_check_bios_key
-PDC_chg_attrs
 PDC_chins
 PDC_copy_win
 PDC_cursor_off

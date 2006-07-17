@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.44 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.45 2006/07/17 07:02:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -468,70 +468,6 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 		win->_cury = y;
 	}
 
-	PDC_sync(win);
-
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_chg_attrs() - Change attributes in a rectangle
-
-  PDCurses Description:
-	This routine will change the attribute(s) from a starting (y,x)
-	position to an ending (y,x) position to the specified attribute.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	It is an error to call this function with a NULL window pointer.
-	It is also an error to pass rectangular coordinates that lay
-	outside of window.
-
-  Portability:
-	PDCurses  int PDC_chg_attrs(WINDOW *w, chtype attr,
-				    int sy, int sx, int ey, int ex);
-
-**man-end****************************************************************/
-
-int PDC_chg_attrs(WINDOW *win, chtype attr, int sy, int sx, int ey, int ex)
-{
-	chtype oldattr = win->_attrs;
-	int c, l;
-
-	PDC_LOG(("PDC_chr_attrs() - called\n"));
-
-	if ((win == (WINDOW *)NULL) || (sy > win->_maxy) || (sx > win->_maxx))
-		return ERR;
-
-	if (ey >= win->_maxy)
-		ey = win->_maxy - 1;
-	if (ex >= win->_maxx)
-		ex = win->_maxx - 1;
-
-	wattrset(win, attr);
-
-	for (l = sy; l <= ey; l++)
-	{
-		for (c = sx; c <= ex; c++)
-			win->_y[l][c] = (win->_y[l][c] & A_CHARTEXT) | attr;
-
-		if (win->_firstch[l] == _NO_CHANGE)
-		{
-			win->_firstch[l] = sx;
-			win->_lastch[l] = ex;
-		}
-		else if (win->_firstch[l] != _NO_CHANGE)
-		{
-			if (sx < win->_firstch[l])
-				win->_firstch[l] = sx;
-			if (ex > win->_lastch[l])
-				win->_lastch[l] = ex;
-		}
-	}
-
-	win->_attrs = oldattr;
 	PDC_sync(win);
 
 	return OK;

@@ -287,7 +287,6 @@ EXPORTS PDC_get_input_fd
 EXPORTS PDC_get_key_modifiers
 EXPORTS PDC_get_font
 EXPORTS PDC_get_rows
-EXPORTS PDC_gotoxy
 EXPORTS PDC_makenew
 EXPORTS PDC_newline
 EXPORTS PDC_putc

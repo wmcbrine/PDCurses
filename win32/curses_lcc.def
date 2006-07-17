@@ -280,7 +280,6 @@ PDC_get_input_fd
 PDC_get_key_modifiers
 PDC_get_font
 PDC_get_rows
-PDC_gotoxy
 PDC_makenew
 PDC_newline
 PDC_putc

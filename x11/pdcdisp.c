@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.25 2006/07/17 21:05:18 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.26 2006/07/17 21:45:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -70,7 +70,7 @@ int PDC_cursor_off(void)
 
 /*man-start**************************************************************
 
-  PDC_gotoxy()	- position hardware cursor at (x, y)
+  PDC_gotoyx()	- position hardware cursor at (y, x)
 
   PDCurses Description:
 	This is a private PDCurses routine.
@@ -83,13 +83,13 @@ int PDC_cursor_off(void)
 	This function returns OK on success and ERR on error.
 
   Portability:
-	PDCurses  int PDC_gotoxy(int row, int col);
+	PDCurses  int PDC_gotoyx(int row, int col);
 
 **man-end****************************************************************/
 
-int PDC_gotoxy(int row, int col)
+int PDC_gotoyx(int row, int col)
 {
-	PDC_LOG(("PDC_gotoxy() - called: row %d col %d\n", row, col));
+	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
 	XCurses_display_cursor(SP->cursrow, SP->curscol, row, col, 
 		SP->visibility);

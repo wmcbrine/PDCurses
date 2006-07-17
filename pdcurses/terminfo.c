@@ -23,7 +23,7 @@
 #undef vidattr
 #undef vidputs
 
-RCSID("$Id: terminfo.c,v 1.23 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.24 2006/07/17 21:45:15 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -80,7 +80,7 @@ int mvcur(int oldrow, int oldcol, int newrow, int newcol)
 	    (newrow < 0) || (newcol < 0))
 		return ERR;
 
-	PDC_gotoxy(newrow, newcol);
+	PDC_gotoyx(newrow, newcol);
 	SP->cursrow = newrow;
 	SP->curscol = newcol;
 

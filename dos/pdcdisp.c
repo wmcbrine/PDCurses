@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.35 2006/07/16 02:00:40 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.36 2006/07/17 21:45:15 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -180,7 +180,7 @@ int PDC_fix_cursor(int flag)
 
 /*man-start**************************************************************
 
-  PDC_gotoxy()	- position hardware cursor at (x, y)
+  PDC_gotoyx()	- position hardware cursor at (y, x)
 
   PDCurses Description:
 	This is a private PDCurses routine.
@@ -193,13 +193,13 @@ int PDC_fix_cursor(int flag)
 	This function returns OK on success and ERR on error.
 
   Portability:
-	PDCurses  int PDC_gotoxy(int row, int col);
+	PDCurses  int PDC_gotoyx(int row, int col);
 
 **man-end****************************************************************/
 
-int PDC_gotoxy(int row, int col)
+int PDC_gotoyx(int row, int col)
 {
-	PDC_LOG(("PDC_gotoxy() - called: row %d col %d\n", row, col));
+	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
 	regs.h.ah = 0x02;
 	regs.h.bh = SP->video_page;
@@ -359,7 +359,7 @@ void PDC_transform_line(int lineno)
 	else
 		for (j = 0; j < len; j++)
 		{
-			PDC_gotoxy(lineno, j + x);
+			PDC_gotoyx(lineno, j + x);
 			PDC_putc(srcp[j] & A_CHARTEXT,
 				chtype_attr(srcp[j]) >> 8);
 		}

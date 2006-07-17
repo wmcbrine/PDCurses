@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.56 2006/07/16 19:56:07 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.57 2006/07/17 21:45:15 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -308,9 +308,9 @@ int endwin(void)
 	/* Position cursor to the bottom left of the screen. */
 
 #ifdef WIN32
-	PDC_gotoxy(PDC_get_buffer_rows() - 2, 0);
+	PDC_gotoyx(PDC_get_buffer_rows() - 2, 0);
 #else
-	PDC_gotoxy(PDC_get_rows() - 2, 0);
+	PDC_gotoyx(PDC_get_rows() - 2, 0);
 #endif
 
 	SP->alive = FALSE;

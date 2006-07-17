@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.37 2006/07/16 19:56:08 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.38 2006/07/17 20:26:22 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -295,6 +295,7 @@ void XCursesEndwin(void);
 void XCursesExitCursesProcess(int, char *);
 void XCursesExitXCursesProcess(int, int, char *);
 int XCursesInstruct(int);
+int XCursesInstructAndWait(int);
 int XCursesInitscr(int, char **);
 
 void SelectionOff(void);
@@ -397,3 +398,12 @@ void XCsay(const char *msg);
 #else
 # define MOUSE_LOG(x)
 #endif
+
+enum
+{
+	CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR,
+	CURSES_SET_SELECTION, CURSES_GET_SELECTION, CURSES_TITLE,
+	CURSES_REFRESH_SCROLLBAR, CURSES_RESIZE, CURSES_CLEAR,
+	CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, CURSES_CHILD,
+	CURSES_REFRESH, CURSES_EXIT
+};

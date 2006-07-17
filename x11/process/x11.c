@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.52 2006/07/16 18:41:53 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.53 2006/07/17 20:26:22 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
@@ -123,14 +123,18 @@ int XCursesRefreshScreen(void)
 
 			*(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
 			*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
+
+			if (row == SP->cursrow)
+			{
+				visible_cursor = 1;
+				XCursesDisplayCursor(SP->cursrow, SP->curscol, 
+					SP->cursrow, SP->curscol);
+			}
 		}
 	}
 
 	if (mouse_selection)
 		SelectionOff();
-
-	XCursesDisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, 
-		SP->curscol);
 
 	return 0;
 }
@@ -212,11 +216,7 @@ void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	    case CURSES_REFRESH:
 		XC_LOG(("CURSES_REFRESH received from child\n"));
-		visible_cursor = 1; 
 		XCursesRefreshScreen(); 
-		XCursesDisplayCursor(SP->cursrow, SP->curscol, 
-		    SP->cursrow, SP->curscol); 
-
 		XCursesContinue();
 		break;
 

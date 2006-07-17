@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.74 2006/07/14 19:38:30 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.75 2006/07/17 20:26:22 wmcbrine Exp $");
 
 AppData app_data;
 

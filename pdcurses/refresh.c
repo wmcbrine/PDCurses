@@ -38,7 +38,7 @@
 # undef reset_prog_mode
 #endif
 
-RCSID("$Id: refresh.c,v 1.31 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.32 2006/07/17 20:26:22 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -216,9 +216,6 @@ int doupdate(void)
 
 	curscr->_clear = FALSE;
 
-#ifdef XCURSES
-	XCursesInstructAndWait(CURSES_REFRESH);
-#endif
 	if (SP->cursrow != curscr->_cury || SP->curscol != curscr->_curx)
 	{
 		PDC_gotoxy(curscr->_cury, curscr->_curx);

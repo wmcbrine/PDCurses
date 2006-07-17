@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.93 2006/07/17 07:02:30 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.94 2006/07/17 20:26:22 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -140,7 +140,6 @@ int	PDC_query_adapter_type(void);
 #endif
 
 #ifdef XCURSES
-int	XCursesInstructAndWait(int);
 # define PDC_scr_exit() XCursesExit()
 #else
 # define PDC_scr_exit() if (SP) free(SP)
@@ -169,17 +168,6 @@ void PDC_debug(const char *, ...);
 #endif
 
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
-
-#ifdef XCURSES
-enum
-{
-	CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR, 
-	CURSES_SET_SELECTION, CURSES_GET_SELECTION, CURSES_TITLE, 
-	CURSES_REFRESH_SCROLLBAR, CURSES_RESIZE, CURSES_CLEAR, 
-	CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, CURSES_CHILD, 
-	CURSES_REFRESH, CURSES_EXIT
-};
-#endif
 
 #ifdef DOS
 # define PDC_SYSNAME "DOS"

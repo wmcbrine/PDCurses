@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.29 2006/07/16 19:56:07 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.30 2006/07/17 02:20:48 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -37,14 +37,11 @@ static USHORT saved_cols = 0;
   PDC_scr_close() - Internal low-level binding to close the physical screen
 
   PDCurses Description:
-	This is a nop for the DOS platform.
+	May restore the screen to its state before PDC_scr_open();
+	miscellaneous cleanup.
 
   PDCurses Return Value:
-	This function returns OK on success, otherwise an ERR is 
-	returned.
-
-  PDCurses Errors:
-	The DOS platform will never fail.
+	This function returns OK on success, otherwise an ERR is returned.
 
   Portability:
 	PDCurses  int PDC_scr_close(void);
@@ -122,14 +119,12 @@ bool PDC_scrn_modes_equal(int mode1, int mode2)
   PDC_scr_open()  - Internal low-level binding to open the physical screen
 
   PDCurses Description:
-	This is a NOP for the DOS platform.
+	The platform-specific part of initscr() -- allocates SP, does
+	miscellaneous intialization, and may save the existing screen
+	for later restoration.
 
   PDCurses Return Value:
-	This function returns OK on success, otherwise an ERR is 
-	returned.
-
-  PDCurses Errors:
-	The DOS platform will never fail.
+	This function returns OK on success, otherwise an ERR is returned.
 
   Portability:
 	PDCurses  int PDC_scr_open(int argc, char **argv);

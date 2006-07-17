@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.27 2006/07/16 19:56:07 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.28 2006/07/17 02:20:48 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;
@@ -28,13 +28,11 @@ bool GLOBAL_slk_on = FALSE;
 			  physical screen
 
   PDCurses Description:
-	This is a nop for the DOS platform.
+	May restore the screen to its state before PDC_scr_open();
+	miscellaneous cleanup.
 
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is returned.
-
-  PDCurses Errors:
-	The DOS platform will never fail.
 
   Portability:
 	PDCurses  int PDC_scr_close(void);
@@ -54,13 +52,12 @@ int PDC_scr_close(void)
 			  screen
 
   PDCurses Description:
-	This is a NOP in DOS.
+	The platform-specific part of initscr() -- allocates SP, does
+	miscellaneous intialization, and may save the existing screen
+	for later restoration.
 
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is returned.
-
-  PDCurses Errors:
-	The DOS platform will never fail.
 
   Portability:
 	PDCurses  int PDC_scr_open(int argc, char **argv);

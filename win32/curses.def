@@ -288,7 +288,6 @@ EXPORTS PDC_get_key_modifiers
 EXPORTS PDC_get_font
 EXPORTS PDC_get_rows
 EXPORTS PDC_makenew
-EXPORTS PDC_newline
 EXPORTS PDC_putc
 EXPORTS PDC_putctty
 EXPORTS PDC_query_adapter_type

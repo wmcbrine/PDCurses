@@ -20,7 +20,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.45 2006/07/17 07:02:30 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.46 2006/07/18 11:25:46 wmcbrine Exp $");
+
+static int PDC_newline(WINDOW *, int);
 
 /*man-start**************************************************************
 
@@ -550,7 +552,7 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 
 **man-end****************************************************************/
 
-int PDC_newline(WINDOW *win, int lin)
+static int PDC_newline(WINDOW *win, int lin)
 {
 	PDC_LOG(("PDC_newline() - called: line %d\n", lin));
 

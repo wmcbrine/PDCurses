@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.96 2006/07/18 11:25:46 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.97 2006/07/18 11:30:27 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -55,7 +55,6 @@ struct cttyset
 extern struct cttyset c_sh_tty;		/* tty modes for shell_mode	*/
 extern struct cttyset c_pr_tty;		/* tty modes for prog_mode	*/
 extern struct cttyset c_save_tty;
-extern struct cttyset c_save_trm;
 
 /* tracing flag */
 extern bool trace_on;

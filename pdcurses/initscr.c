@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.57 2006/07/17 21:45:15 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.58 2006/07/18 11:30:28 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -66,7 +66,6 @@ WINDOW *_getch_win_ = NULL;
 struct cttyset c_sh_tty = {0};		/* tty modes for def_shell_mode */
 struct cttyset c_pr_tty = {0};		/* tty modes for def_prog_mode  */
 struct cttyset c_save_tty = {0};
-struct cttyset c_save_trm = {0};
 
 #ifdef PDC_WIDE
 cchar_t _wacs_map[] = {

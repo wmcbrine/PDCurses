@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.36 2006/07/17 21:45:15 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.37 2006/07/18 23:11:53 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -42,7 +42,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
   PDC_cursor_on()	- Turns on the hardware cursor.
 
   PDCurses Description:
-	Turns on the hardware curses, it does nothing if it is already on.
+	Turns on the hardware cursor; does nothing if it is already on.
 
   PDCurses Return Value:
 	Returns OK upon success, ERR upon failure.

@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.50 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.51 2006/07/19 06:46:00 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -941,6 +941,10 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 
 	PDC_LOG(("%sGetInterestingEvent(%s) - called\n",
 		PDC_DEBUG_THREADING1, PDC_DEBUG_THREADING2));
+
+# define PTR(x) ptr = x
+#else
+# define PTR(x)
 #endif
 
 	switch(ip->EventType)
@@ -952,9 +956,8 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 
 	    if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
 	    {
-#ifdef PDCDEBUG
-		ptr = "KEY MODIFIERS";
-#endif
+		PTR("KEY MODIFIERS");
+
 		numpadChar = 0;
 		save_press = 0;
 		break;
@@ -968,9 +971,7 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 		if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
 		    && vk == save_press && SP->return_key_modifiers)
 		{
-#ifdef PDCDEBUG
-		    ptr = "KEYUP WANTED";
-#endif
+		    PTR("KEYUP WANTED");
 
 		    /* Fall through and return this key. Still have to 
 		       check the dead key condition. */
@@ -997,9 +998,7 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 		}
 		else
 		{
-#ifdef PDCDEBUG
-		    ptr = "KEYUP IGNORED";
-#endif
+		    PTR("KEYUP IGNORED");
 		    break;		/* throw away other KeyUp events */
 		}
 	    }
@@ -1011,9 +1010,8 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 
 		    save_press = (SP->return_key_modifiers) ? vk : 0;
 		    numpadChar = 0;
-#ifdef PDCDEBUG
-		    ptr = "KEYDOWN SAVED";
-#endif
+
+		    PTR("KEYDOWN SAVED");
 		    break;	/* throw away key press */
 		}
 
@@ -1059,9 +1057,8 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 		if ((vk >= VK_NUMPAD0 && vk <= VK_NUMPAD9) &&
                     ip->Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
 		{
-#ifdef PDCDEBUG
-		    ptr = "NUMPAD ALTERNATE INPUT";
-#endif
+		    PTR("NUMPAD ALTERNATE INPUT");
+
 		    numpadChar *= 10;
 		    numpadChar += vk - VK_NUMPAD0;
 		    break;
@@ -1087,14 +1084,12 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 		(MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode, 2) &
 		0x80000000))
 	    {
-#ifdef PDCDEBUG
-		ptr = "DIACRITIC IGNORED";
-#endif
+		PTR("DIACRITIC IGNORED");
 		break;		/* Diacritic characters, ignore them */
 	    }
-#ifdef PDCDEBUG
-	    ptr = "KEY WANTED";
-#endif
+
+	    PTR("KEY WANTED");
+
 	    numKeys = ip->Event.KeyEvent.wRepeatCount;
 	    break;
 
@@ -1104,40 +1099,33 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 
 	    if (!SP->_trap_mbe)
 	    {
-#ifdef PDCDEBUG
-		ptr = "MOUSE - NOT TRAPPED";
-#endif
+		PTR("MOUSE - NOT TRAPPED");
 		break;
 	    }
 
 	    if (ip->Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED
 		&& ip->Event.MouseEvent.dwButtonState == 0)
 	    {
-#ifdef PDCDEBUG
-		ptr = "MOUSE MOVE IGNORED";
-#endif
+		PTR("MOUSE MOVE IGNORED");
 		break;		/* throw away plain MOUSE_MOVE events */
 	    }
 
-#ifdef PDCDEBUG
-	    ptr = "MOUSE MOVE WANTED";
-#endif
+	    PTR("MOUSE MOVE WANTED");
 	    numKeys = 1;
 	    break;
 
 	case WINDOW_BUFFER_SIZE_EVENT:
 	    SP->resized = TRUE;
-#ifdef PDCDEBUG
-	    ptr = "BUFFER SIZE";
-#endif
+
+	    PTR("BUFFER SIZE");
 	    break;
 
 	default:
-#ifdef PDCDEBUG
-	    ptr = "UNKNOWN";
-#endif
+	    PTR("UNKNOWN");
 	    break;
 	}
+
+#undef PTR
 
 	PDC_LOG(("%sGetInterestingEvent(%s) - returning: numKeys %d "
 		"type %d: %s\n", PDC_DEBUG_THREADING1, 

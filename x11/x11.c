@@ -17,10 +17,30 @@
 
 #include "pdcx11.h"
 
+#ifdef HAVE_DECKEYSYM_H
+# include <DECkeysym.h>
+#endif
+
+#ifdef HAVE_SUNKEYSYM_H
+# include <Sunkeysym.h>
+#endif
+
+#ifdef HAVE_XPM_H
+# include <xpm.h>
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.1 2006/07/21 15:28:18 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.2 2006/07/21 17:43:13 wmcbrine Exp $");
+
+#ifndef XPOINTER_TYPEDEFED
+typedef char * XPointer;
+#endif
+
+#ifndef MAX_PATH
+# define MAX_PATH 256
+#endif
 
 AppData app_data;
 
@@ -30,22 +50,62 @@ AppData app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
+#define MAX_COLORS   8  /* maximum of "normal" colours */
+#define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2 * MAX_COLORS */
+#define COLOR_BORDER 17 /* colour of border - 2 more than 2 * MAX_COLORS */
+
+#ifdef HAVE_XPM_H
+# define PDC_NUMBER_OPTIONS 33
+#define PDC_NUMBER_APP_RESOURCES 35
+#else
+# define PDC_NUMBER_OPTIONS 32
+# define PDC_NUMBER_APP_RESOURCES 34
+#endif
+#define PDC_NUMBER_XCURSES_ACTIONS 5
+
+#define XCURSESNORMALFONTINFO	app_data.normalfont
+#define XCURSESITALICFONTINFO	app_data.italicfont
+#define XCURSESLINES		app_data.lines
+#define XCURSESCOLS		app_data.cols
+#define XCURSESBITMAPFILE	app_data.bitmapFile
+#ifdef HAVE_XPM_H
+# define XCURSESPIXMAPFILE	app_data.pixmapFile
+#endif
+#define XCURSESCOMPOSEKEY	app_data.composeKey
+#define XCURSESPOINTER		app_data.pointer
+#define XCURSESPOINTERFORECOLOR app_data.pointerForeColor
+#define XCURSESPOINTERBACKCOLOR app_data.pointerBackColor
+#define XCURSESCURSORCOLOR	app_data.cursorColor
+#define XCURSESBORDERWIDTH	app_data.borderWidth
+#define XCURSESBORDERCOLOR	app_data.borderColor
+#define XCURSESDOUBLECLICKPERIOD app_data.doubleClickPeriod
+#define XCURSESCLICKPERIOD	app_data.clickPeriod
+#define XCURSESSCROLLBARWIDTH	app_data.scrollbarWidth
+#define XCURSESCURSORBLINKRATE	app_data.cursorBlinkRate
+#define XCURSESTEXTCURSOR	app_data.textCursor
+
+#define XCURSESDISPLAY		(XtDisplay(drawing))
+#define XCURSESWIN		(XtWindow(drawing))
+
 /* Default icons for XCurses applications.  */
 
 #include "big_icon.xbm"
 #include "little_icon.xbm"
 
-void XCursesPasteSelection(Widget, XButtonEvent *);
+void SelectionOff(void);
+void XCursesButton(Widget, XEvent *, String *, Cardinal *);
+void XCursesDisplayCursor(int, int, int, int);
+void XCursesExitXCursesProcess(int, int, char *);
 void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
 void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
 void XCursesModifierPress(Widget, XEvent *, String *, Cardinal *);
-void XCursesButton(Widget, XEvent *, String *, Cardinal *);
-void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, Atom *,
-				      XtPointer, unsigned long *, int *);
-void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
+void XCursesPasteSelection(Widget, XButtonEvent *);
 void XCursesRequestorCallbackForGetSelection(Widget, XtPointer, Atom *, Atom *,
                                              XtPointer, unsigned long *, int *);
+void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, Atom *,
+				      XtPointer, unsigned long *, int *);
 RETSIGTYPE XCursesSignalHandler(int);
+void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
 
 struct XCursesKey
 {
@@ -443,8 +503,8 @@ static char *XCursesProgramName;
 XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 {
 	{
-		XtNlines,
-		XtCLines,
+		"lines",
+		"Lines",
 		XtRInt,
 		sizeof(int),
 		XtOffsetOf(AppData, lines),
@@ -453,8 +513,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcols,
-		XtCCols,
+		"cols",
+		"Cols",
 		XtRInt,
 		sizeof(int), 
 		XtOffsetOf(AppData, cols),
@@ -463,8 +523,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcursorColor,
-		XtCCursorColor,
+		"cursorColor",
+		"CursorColor",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, cursorColor),
@@ -473,8 +533,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBlack,
-		XtCColorBlack,
+		"colorBlack",
+		"ColorBlack",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBlack),
@@ -483,8 +543,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorRed,
-		XtCColorRed,
+		"colorRed",
+		"ColorRed",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorRed),
@@ -493,8 +553,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorGreen,
-		XtCColorGreen,
+		"colorGreen",
+		"ColorGreen",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorGreen),
@@ -503,8 +563,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorYellow,
-		XtCColorYellow,
+		"colorYellow",
+		"ColorYellow",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorYellow),
@@ -513,8 +573,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBlue,
-		XtCColorBlue,
+		"colorBlue",
+		"ColorBlue",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBlue),
@@ -523,8 +583,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorMagenta,
-		XtCColorMagenta,
+		"colorMagenta",
+		"ColorMagenta",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorMagenta),
@@ -533,8 +593,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorCyan,
-		XtCColorCyan,
+		"colorCyan",
+		"ColorCyan",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorCyan),
@@ -543,8 +603,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorWhite,
-		XtCColorWhite,
+		"colorWhite",
+		"ColorWhite",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorWhite),
@@ -553,8 +613,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldBlack,
-		XtCColorBoldBlack,
+		"colorBoldBlack",
+		"ColorBoldBlack",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldBlack),
@@ -563,8 +623,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldRed,
-		XtCColorBoldRed,
+		"colorBoldRed",
+		"ColorBoldRed",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldRed),
@@ -573,8 +633,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldGreen,
-		XtCColorBoldGreen,
+		"colorBoldGreen",
+		"ColorBoldGreen",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldGreen),
@@ -583,8 +643,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldYellow,
-		XtCColorBoldYellow,
+		"colorBoldYellow",
+		"ColorBoldYellow",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldYellow),
@@ -593,8 +653,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldBlue,
-		XtCColorBoldBlue,
+		"colorBoldBlue",
+		"ColorBoldBlue",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldBlue),
@@ -603,8 +663,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldMagenta,
-		XtCColorBoldMagenta,
+		"colorBoldMagenta",
+		"ColorBoldMagenta",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldMagenta),
@@ -613,8 +673,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldCyan,
-		XtCColorBoldCyan,
+		"colorBoldCyan",
+		"ColorBoldCyan",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldCyan),
@@ -623,8 +683,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcolorBoldWhite,
-		XtCColorBoldWhite,
+		"colorBoldWhite",
+		"ColorBoldWhite",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, colorBoldWhite),
@@ -633,8 +693,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNnormalFont,
-		XtCNormalFont,
+		"normalFont",
+		"NormalFont",
 		XtRFontStruct,
 		sizeof(XFontStruct),
 		XtOffsetOf(AppData, normalfont),
@@ -648,8 +708,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNitalicFont,
-		XtCItalicFont,
+		"italicFont",
+		"ItalicFont",
 		XtRFontStruct,
 		sizeof(XFontStruct),
 		XtOffsetOf(AppData, italicfont),
@@ -663,8 +723,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNbitmap,
-		XtCBitmap,
+		"bitmap",
+		"Bitmap",
 		XtRString,
 		MAX_PATH,
 		XtOffsetOf(AppData, bitmapFile),
@@ -674,8 +734,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 
 #ifdef HAVE_XPM_H
 	{
-		XtNpixmap,
-		XtCPixmap,
+		"pixmap",
+		"Pixmap",
 		XtRString,
 		MAX_PATH,
 		XtOffsetOf(AppData, pixmapFile),
@@ -685,8 +745,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 #endif
 
 	{
-		XtNcomposeKey,
-		XtCComposeKey,
+		"composeKey",
+		"ComposeKey",
 		XtRString,
 		MAX_PATH,
 		XtOffsetOf(AppData, composeKey),
@@ -695,8 +755,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNpointer,
-		XtCPointer,
+		"pointer",
+		"Pointer",
 		XtRCursor,
 		sizeof(Cursor),
 		XtOffsetOf(AppData, pointer),
@@ -705,8 +765,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNpointerForeColor,
-		XtCPointerForeColor,
+		"pointerForeColor",
+		"PointerForeColor",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, pointerForeColor),
@@ -715,8 +775,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNpointerBackColor,
-		XtCPointerBackColor,
+		"pointerBackColor",
+		"PointerBackColor",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, pointerBackColor),
@@ -725,8 +785,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNshmmin,
-		XtCShmmin,
+		"shmmin",
+		"Shmmin",
 		XtRInt,
 		sizeof(int),
 		XtOffsetOf(AppData, shmmin),
@@ -735,8 +795,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNborderWidth,
-		XtCBorderWidth,
+		"borderWidth",
+		"BorderWidth",
 		XtRInt,
 		sizeof(int),
 		XtOffsetOf(AppData, borderWidth),
@@ -745,8 +805,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNborderColor,
-		XtCBorderColor,
+		"borderColor",
+		"BorderColor",
 		XtRPixel,
 		sizeof(Pixel),
 		XtOffsetOf(AppData, borderColor),
@@ -755,8 +815,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNdoubleClickPeriod,
-		XtCDoubleClickPeriod,
+		"doubleClickPeriod",
+		"DoubleClickPeriod",
 		XtRInt,
 		sizeof(int),
 		XtOffsetOf(AppData, doubleClickPeriod),
@@ -765,8 +825,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNclickPeriod,
-		XtCClickPeriod,
+		"clickPeriod",
+		"ClickPeriod",
 		XtRInt,
 		sizeof(int),
 		XtOffsetOf(AppData, clickPeriod),
@@ -775,8 +835,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNscrollbarWidth,
-		XtCScrollbarWidth,
+		"scrollbarWidth",
+		"ScrollbarWidth",
 		XtRInt,
 		sizeof(int),
 		XtOffsetOf(AppData, scrollbarWidth),
@@ -785,8 +845,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNcursorBlinkRate,
-		XtCCursorBlinkRate,
+		"cursorBlinkRate",
+		"CursorBlinkRate",
 		XtRInt,
 		sizeof(int),
 		XtOffsetOf(AppData, cursorBlinkRate),
@@ -795,8 +855,8 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 	},
 
 	{
-		XtNtextCursor,
-		XtCTextCursor,
+		"textCursor",
+		"TextCursor",
 		XtRString,
 		MAX_PATH,
 		XtOffsetOf(AppData, textCursor),

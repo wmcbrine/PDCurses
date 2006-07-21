@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.75 2006/07/17 20:26:22 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.76 2006/07/21 03:45:24 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -1372,6 +1372,42 @@ void XCursesGetIcon(void)
 		(char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
 }
 
+/* This function redraws the entire screen. */
+
+static void XCursesDisplayScreen(void)
+{
+	int row;
+
+	PDC_LOG(("%s:XCursesDisplayScreen() - called:\n", XCLOGMSG));
+
+	for (row = 0; row < XCursesLINES; row++)
+	{
+		/* loop until we can write to the line -- Patch by: 
+		   Georg Fuchs, georg.fuchs@rz.uni-regensburg.de */
+
+		while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
+			dummy_function();
+
+		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
+
+		XCursesDisplayText((const chtype *)(Xcurscr + 
+			XCURSCR_Y_OFF(row)), row, 0, COLS, FALSE);
+
+		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
+	}
+
+	XCursesDisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, 
+		SP->curscol);
+
+	/* Draw the border if required */
+
+	if (XCURSESBORDERWIDTH)
+		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
+			XCURSESBORDERWIDTH / 2, XCURSESBORDERWIDTH / 2,
+			XCursesWindowWidth - XCURSESBORDERWIDTH,
+			XCursesWindowHeight - XCURSESBORDERWIDTH);
+}
+
 void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 		   Boolean *continue_to_dispatch)
 {
@@ -1383,7 +1419,7 @@ void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 		return;
 
 	if (after_first_curses_request && ReceivedMapNotify)
-		XCursesDisplayScreen(FALSE);
+		XCursesDisplayScreen();
 }
 
 void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
@@ -1991,7 +2027,7 @@ void SelectionOff(void)
 {
 	PDC_LOG(("%s:SelectionOff() - called\n", XCLOGMSG));
 
-	XCursesDisplayScreen(FALSE);
+	XCursesDisplayScreen();
 
 	selection_start_x = selection_start_y = selection_end_x = 
 		selection_end_y = 0;

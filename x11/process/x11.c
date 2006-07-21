@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.56 2006/07/21 02:58:23 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.57 2006/07/21 03:45:25 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
@@ -59,45 +59,9 @@ void XCursesExitXCursesProcess(int rc, int sig, char *msg)
 	_exit(rc);
 }
 
-/* This function redraws the entire screen. */
-
-void XCursesDisplayScreen(bool highlight)
-{
-	int row;
-
-	PDC_LOG(("%s:XCursesDisplayScreen() - called:\n", XCLOGMSG));
-
-	for (row = 0; row < XCursesLINES; row++)
-	{
-		/* loop until we can write to the line -- Patch by: 
-		   Georg Fuchs, georg.fuchs@rz.uni-regensburg.de */
-
-		while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
-			dummy_function();
-
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
-
-		XCursesDisplayText((const chtype *)(Xcurscr + 
-			XCURSCR_Y_OFF(row)), row, 0, COLS, highlight);
-
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
-	}
-
-	XCursesDisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, 
-		SP->curscol);
-
-	/* Draw the border if required */
-
-	if (XCURSESBORDERWIDTH)
-		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
-			XCURSESBORDERWIDTH / 2, XCURSESBORDERWIDTH / 2,
-			XCursesWindowWidth - XCURSESBORDERWIDTH,
-			XCursesWindowHeight - XCURSESBORDERWIDTH);
-}
-
 /* This function draws those portions of the screen that have changed. */
 
-int XCursesRefreshScreen(void)
+static int XCursesRefreshScreen(void)
 {
 	int row, start_col, num_cols;
 

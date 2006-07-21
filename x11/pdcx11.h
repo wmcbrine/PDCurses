@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.41 2006/07/21 03:45:25 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.42 2006/07/21 04:07:05 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -277,7 +277,8 @@ extern AppData app_data;
 #endif
 #define PDC_NUMBER_XCURSES_ACTIONS 5
 
-void dummy_function(void);
+void get_line_lock(int);
+void release_line_lock(int);
 void get_GC(Display *, Window, GC *, XFontStruct *, int, int, bool);
 int get_colors(void);
 

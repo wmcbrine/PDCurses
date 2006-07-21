@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11common.c,v 1.16 2006/07/02 07:08:28 wmcbrine Exp $");
+RCSID("$Id: x11common.c,v 1.17 2006/07/21 04:07:05 wmcbrine Exp $");
 
 /* Variables specific to process port */
 
@@ -41,6 +41,26 @@ fd_set readfds;
 fd_set writefds;
 
 struct timeval socket_timeout;
+
+static void dummy_function(void)
+{
+}
+
+void get_line_lock(int row)
+{
+	/* loop until we can write to the line -- Patch by:
+	   Georg Fuchs, georg.fuchs@rz.uni-regensburg.de */
+
+	while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
+		dummy_function();
+
+	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
+}
+
+void release_line_lock(int row)
+{
+	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
+}
 
 int write_socket(int sock_num, const char *buf, int len)
 {

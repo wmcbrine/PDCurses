@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.28 2006/07/21 03:23:50 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.29 2006/07/21 04:07:05 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -168,12 +168,7 @@ void PDC_transform_line(int lineno)
 	dstp = curscr->_y[lineno] + x;
 	len = endx - x + 1;
 
-	/* loop until we can write to the line */
-
-	while (*(Xcurscr + XCURSCR_FLAG_OFF + lineno))
-		dummy_function();
-
-	*(Xcurscr + XCURSCR_FLAG_OFF + lineno) = 1;
+	get_line_lock(lineno);
 
 	memcpy(Xcurscr + XCURSCR_Y_OFF(lineno) + (x * sizeof(chtype)),
 		dstp, len * sizeof(chtype));
@@ -181,7 +176,7 @@ void PDC_transform_line(int lineno)
 	*(Xcurscr + XCURSCR_START_OFF + lineno) = x;
 	*(Xcurscr + XCURSCR_LENGTH_OFF + lineno) = len;
 
-	*(Xcurscr + XCURSCR_FLAG_OFF + lineno) = 0;
+	release_line_lock(lineno);
 
 	curscr->_firstch[lineno] = _NO_CHANGE;
 	curscr->_lastch[lineno] = _NO_CHANGE;

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcx11.c,v 1.76 2006/07/21 03:45:24 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.77 2006/07/21 04:07:05 wmcbrine Exp $");
 
 AppData app_data;
 
@@ -888,10 +888,6 @@ void XCsay(const char *msg)
 }
 #endif
 
-void dummy_function(void)
-{
-}
-
 #ifdef PDC_WIDE
 static int to_utf8(char *outcode, int code)
 {
@@ -1382,18 +1378,12 @@ static void XCursesDisplayScreen(void)
 
 	for (row = 0; row < XCursesLINES; row++)
 	{
-		/* loop until we can write to the line -- Patch by: 
-		   Georg Fuchs, georg.fuchs@rz.uni-regensburg.de */
-
-		while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
-			dummy_function();
-
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
+		get_line_lock(row);
 
 		XCursesDisplayText((const chtype *)(Xcurscr + 
 			XCURSCR_Y_OFF(row)), row, 0, COLS, FALSE);
 
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
+		release_line_lock(row);
 	}
 
 	XCursesDisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, 
@@ -2007,19 +1997,13 @@ void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 			row = start_y + i;
 		}
 
-		/* loop until we can write to the line - Patch by: Georg 
-		   Fuchs, georg.fuchs@rz.uni-regensburg.de 02-Feb-1999 */
-
-		while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
-			dummy_function();
-
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
+		get_line_lock(row);
 
 		XCursesDisplayText((const chtype *)(Xcurscr + 
 			XCURSCR_Y_OFF(row) + (start_col * sizeof(chtype))),
 			row, start_col, num_cols, highlight);
 
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
+		release_line_lock(row);
 	}
 }
 
@@ -2212,13 +2196,7 @@ void SelectionSet(void)
 			row = start_y + i;
 		}
 
-		/* loop until we can write to the line -- Patch by: 
-		   Georg Fuchs, georg.fuchs@rz.uni-regensburg.de */
-
-		while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
-			dummy_function();
-
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
+		get_line_lock(row);
 
 		ptr = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
 			start_col * sizeof(chtype));
@@ -2240,7 +2218,7 @@ void SelectionSet(void)
 		for (j = 0; j <= last_nonblank; j++)
 			tmpsel[num_chars++] = ptr[j];
 
-		*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
+		release_line_lock(row);
 
 		if (i < end_y - start_y)
 			tmpsel[num_chars++] = '\n';

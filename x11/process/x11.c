@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.58 2006/07/21 04:07:05 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.59 2006/07/21 04:09:29 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
@@ -81,6 +81,8 @@ static int XCursesRefreshScreen(void)
 				XCURSCR_Y_OFF(row) + (start_col * 
 				sizeof(chtype))), row, start_col, 
 				num_cols, FALSE);
+
+			*(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
 
 			release_line_lock(row);
 		}

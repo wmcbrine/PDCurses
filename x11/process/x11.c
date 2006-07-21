@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11.c,v 1.55 2006/07/17 22:08:20 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.56 2006/07/21 02:58:23 wmcbrine Exp $");
 
 int visible_cursor = 0;
 int windowEntered = 1;
@@ -129,9 +129,6 @@ int XCursesRefreshScreen(void)
 	if (mouse_selection)
 		SelectionOff();
 
-	visible_cursor = 1;
-	XCursesDisplayCursor(SP->cursrow, SP->curscol,
-			     SP->cursrow, SP->curscol);
 	return 0;
 }
 

@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.26 2006/07/17 21:45:16 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.27 2006/07/21 02:58:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -146,4 +146,8 @@ void PDC_transform_line(int lineno)
 	curscr->_lastch[lineno] = _NO_CHANGE;
 
 	XCursesInstructAndWait(CURSES_REFRESH);
+
+	if (lineno == SP->cursrow)
+		XCurses_display_cursor(SP->cursrow, SP->curscol,
+			SP->cursrow, SP->curscol, 1);
 }

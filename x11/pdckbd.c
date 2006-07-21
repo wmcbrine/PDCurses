@@ -17,17 +17,17 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.29 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.30 2006/07/21 03:23:50 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (Trapped_Mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (Trapped_Mouse_status.y)
 #define TRAPPED_BUTTON_STATUS(x)  (Trapped_Mouse_status.button[(x) - 1])
 
-bool XCurses_kbhit(void)
+bool PDC_kbhit(void)
 {
 	int s;
 
-	PDC_LOG(("%s:XCurses_kbhit() - called\n", XCLOGMSG));
+	PDC_LOG(("%s:PDC_kbhit() - called\n", XCLOGMSG));
 
 	/* Is something ready to be read on the socket ? Must be a key. */
 
@@ -37,9 +37,9 @@ bool XCurses_kbhit(void)
 	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, 
 	    NULL, &socket_timeout)) < 0)
 		XCursesExitCursesProcess(3,
-			"child - exiting from XCurses_kbhit select failed");
+			"child - exiting from PDC_kbhit select failed");
 
-	PDC_LOG(("%s:XCurses_kbhit() - returning %s\n", XCLOGMSG,
+	PDC_LOG(("%s:PDC_kbhit() - returning %s\n", XCLOGMSG,
 		(s == 0) ? "FALSE" : "TRUE"));
 
 	if (s == 0)
@@ -60,7 +60,7 @@ int PDC_get_bios_key(void)
 	    if (read_socket(key_sock, (char *)&newkey,
 		sizeof(unsigned long)) < 0)
 		    XCursesExitCursesProcess(2, 
-			"exiting from XCurses_rawchar");
+			"exiting from PDC_get_bios_key");
 
 	    pdc_key_modifiers = (newkey >> 24) & 0xFF;
 	    key = (int)(newkey & 0x00FFFFFF);
@@ -70,7 +70,7 @@ int PDC_get_bios_key(void)
 		if (read_socket(key_sock, (char *)&Trapped_Mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
-			    "exiting from XCurses_rawchar");
+			    "exiting from PDC_get_bios_key");
 
 		/* Check if the mouse has been clicked on a slk area. If 
 		   the return value is > 0 (indicating the label number), 
@@ -149,7 +149,7 @@ bool PDC_check_bios_key(void)
 {
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
-	return XCurses_kbhit();
+	return PDC_kbhit();
 }         
 
 /*man-start**************************************************************
@@ -262,6 +262,6 @@ void PDC_flushinp(void)
 {
 	PDC_LOG(("PDC_flushinp() - called\n"));
 
-	while (XCurses_kbhit())
+	while (PDC_kbhit())
 		PDC_get_bios_key();
 }

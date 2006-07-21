@@ -22,48 +22,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: x11curses.c,v 1.37 2006/07/16 18:41:53 wmcbrine Exp $");
-
-int XCurses_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
-			   int visibility)
-{
-	char buf[30];
-	int idx, pos;
-
-	PDC_LOG(("%s:XCurses_display_cursor() - called: "
-		"NEW row %d col %d, vis %d\n",
-		XCLOGMSG, newrow, newcol, visibility));
-
-	if (visibility == -1)
-	{
-		/* Only send the CURSES_DISPLAY_CURSOR message, no data */
-
-		idx = CURSES_DISPLAY_CURSOR;
-		memcpy(buf, (char *)&idx, sizeof(int));
-		idx = sizeof(int);
-	}
-	else
-	{
-		idx = CURSES_CURSOR;
-		memcpy(buf, (char *)&idx, sizeof(int));
-
-		idx = sizeof(int);
-		pos = oldrow + (oldcol << 8);
-		memcpy(buf + idx, (char *)&pos, sizeof(int));
-
-		idx += sizeof(int);
-		pos = newrow + (newcol << 8);
-		memcpy(buf + idx, (char *)&pos, sizeof(int));
-
-		idx += sizeof(int);
-	}
-
-	if (write_socket(display_sock, buf, idx) < 0)
-		XCursesExitCursesProcess(1,
-			"exiting from XCurses_display_cursor");
-
-	return OK;
-}
+RCSID("$Id: x11curses.c,v 1.38 2006/07/21 03:23:50 wmcbrine Exp $");
 
 int XCursesInstruct(int flag)
 {

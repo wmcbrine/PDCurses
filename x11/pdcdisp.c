@@ -19,7 +19,48 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.27 2006/07/21 02:58:23 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.28 2006/07/21 03:23:50 wmcbrine Exp $");
+
+int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
+			   int visibility)
+{
+	char buf[30];
+	int idx, pos;
+
+	PDC_LOG(("%s:PDC_display_cursor() - called: "
+		"NEW row %d col %d, vis %d\n",
+		XCLOGMSG, newrow, newcol, visibility));
+
+	if (visibility == -1)
+	{
+		/* Only send the CURSES_DISPLAY_CURSOR message, no data */
+
+		idx = CURSES_DISPLAY_CURSOR;
+		memcpy(buf, (char *)&idx, sizeof(int));
+		idx = sizeof(int);
+	}
+	else
+	{
+		idx = CURSES_CURSOR;
+		memcpy(buf, (char *)&idx, sizeof(int));
+
+		idx = sizeof(int);
+		pos = oldrow + (oldcol << 8);
+		memcpy(buf + idx, (char *)&pos, sizeof(int));
+
+		idx += sizeof(int);
+		pos = newrow + (newcol << 8);
+		memcpy(buf + idx, (char *)&pos, sizeof(int));
+
+		idx += sizeof(int);
+	}
+
+	if (write_socket(display_sock, buf, idx) < 0)
+		XCursesExitCursesProcess(1,
+			"exiting from PDC_display_cursor");
+
+	return OK;
+}
 
 /*man-start**************************************************************
 
@@ -91,7 +132,7 @@ int PDC_gotoyx(int row, int col)
 {
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
-	XCurses_display_cursor(SP->cursrow, SP->curscol, row, col, 
+	PDC_display_cursor(SP->cursrow, SP->curscol, row, col, 
 		SP->visibility);
 
 	return OK;
@@ -148,6 +189,6 @@ void PDC_transform_line(int lineno)
 	XCursesInstructAndWait(CURSES_REFRESH);
 
 	if (lineno == SP->cursrow)
-		XCurses_display_cursor(SP->cursrow, SP->curscol,
+		PDC_display_cursor(SP->cursrow, SP->curscol,
 			SP->cursrow, SP->curscol, 1);
 }

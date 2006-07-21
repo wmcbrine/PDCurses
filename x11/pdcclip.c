@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcclip.c,v 1.18 2006/07/02 19:03:59 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.19 2006/07/21 03:23:49 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -59,13 +59,13 @@ int PDC_getclipboard(char **contents, long *length)
 
 	if (read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
 	    XCursesExitCursesProcess(5,
-		"exiting from XCurses_getclipboard");
+		"exiting from PDC_getclipboard");
 
 	if (result == PDC_CLIP_SUCCESS)
 	{
 	    if (read_socket(display_sock, (char *)&len, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
-		    "exiting from XCurses_getclipboard");
+		    "exiting from PDC_getclipboard");
 
 	    if (len != 0)
 	    {
@@ -73,11 +73,11 @@ int PDC_getclipboard(char **contents, long *length)
 
 		if (!*contents)
 		    XCursesExitCursesProcess(6, "exiting from "
-			"XCurses_getclipboard - synchronization error");
+			"PDC_getclipboard - synchronization error");
 
 		if (read_socket(display_sock, *contents, len) < 0)
 		    XCursesExitCursesProcess(5,
-			"exiting from XCurses_getclipboard");
+			"exiting from PDC_getclipboard");
 
 		*length = len;
 	    }

@@ -10,7 +10,6 @@ THIS		= Makefile
 @SET_MAKE@
 
 osdir		= @srcdir@
-x11dir		= $(osdir)/process
 srcdir		= $(osdir)/../pdcurses
 pandir		= $(osdir)/../panel
 
@@ -24,8 +23,7 @@ PDCURSES_HOME		=$(srcdir)/..
 PDCURSES_CONFIG_H	=../config.h
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
-PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) 
-$(PDCURSES_CURSPRIV_H)
+PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 PDCURSES_X11_H		=$(osdir)/pdcx11.h
 
 INSTALL		= @INSTALL@
@@ -49,7 +47,7 @@ CC		= @CC@
 CFLAGS		= @CFLAGS@ $(DYN_COMP)
 
 INCDIR		= $(srcdir)
-CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@ -I$(osdir) -I$(x11dir)
+CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@ -I$(osdir)
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
@@ -85,7 +83,7 @@ scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
 pdckey.o pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
-X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
+X11OBJS = pdcx11.o x11.o sb.o ScrollBox.o
 
 PANOBJS = panel.o
 
@@ -257,14 +255,8 @@ ScrollBox.o: $(osdir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 sb.o: $(osdir)/sb.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/sb.c
 
-x11common.o: $(x11dir)/x11common.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11common.c
-
-x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11.c
-
-x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
+x11.o: $(osdir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(osdir)/x11.c
 
 
 panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PDCURSES_HOME)/panel.h

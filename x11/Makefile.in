@@ -10,7 +10,6 @@ THIS		= Makefile
 @SET_MAKE@
 
 osdir		= @srcdir@
-x11dir		= $(osdir)/process
 srcdir		= $(osdir)/../pdcurses
 pandir		= $(osdir)/../panel
 demodir		= $(osdir)/../demos
@@ -46,7 +45,7 @@ DYNAMIC_LDFLAGS = @DYNAMIC_LDFLAGS@ $(EEXTRA)
 CC		= @CC@
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -I$(srcdir) @DEFS@ -DXCURSES @SYS_DEFS@ -I$(osdir) -I$(x11dir)
+CPPFLAGS	= -I$(PDCURSES_HOME) -I$(srcdir) @DEFS@ -DXCURSES @SYS_DEFS@ -I$(osdir)
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
@@ -96,7 +95,7 @@ scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
 pdckey.o pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
-X11OBJS = pdcx11.o x11curses.o x11common.o x11.o sb.o ScrollBox.o
+X11OBJS = pdcx11.o x11.o sb.o ScrollBox.o
 
 PANOBJS = panel.o
 
@@ -111,8 +110,7 @@ window.sho
 PDCSHOBJS = pdcclip.sho pdcdebug.sho pdcdisp.sho pdcgetsc.sho pdckbd.sho \
 pdckey.sho pdcscrn.sho pdcsetsc.sho pdcutil.sho pdcwin.sho
 
-X11SHOBJS = pdcx11.sho x11curses.sho x11common.sho x11.sho sb.sho \
-ScrollBox.sho
+X11SHOBJS = pdcx11.sho x11.sho sb.sho ScrollBox.sho
 
 
 SHOFILES = $(LIBSHOBJS) $(PDCSHOBJS) $(X11SHOBJS)
@@ -283,14 +281,8 @@ ScrollBox.o: $(osdir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 sb.o: $(osdir)/sb.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/sb.c
 
-x11common.o: $(x11dir)/x11common.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11common.c
-
-x11.o: $(x11dir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11.c
-
-x11curses.o: $(x11dir)/x11curses.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) -o $@ $(x11dir)/x11curses.c
+x11.o: $(osdir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+	$(CC) $(CCFLAGS) -o $@ $(osdir)/x11.c
 
 #------------------------------------------------------------------------
 
@@ -606,21 +598,9 @@ sb.sho: $(osdir)/sb.c $(PDCURSES_HEADERS)
 	$(O2SHO)
 	$(SAVE2O)
 
-x11common.sho: $(x11dir)/x11common.c $(PDCURSES_HEADERS)
+x11.sho: $(osdir)/x11.c $(PDCURSES_HEADERS)
 	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11common.c
-	$(O2SHO)
-	$(SAVE2O)
-
-x11.sho: $(x11dir)/x11.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11.c
-	$(O2SHO)
-	$(SAVE2O)
-
-x11curses.sho: $(x11dir)/x11curses.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
-	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(x11dir)/x11curses.c
+	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/x11.c
 	$(O2SHO)
 	$(SAVE2O)
 

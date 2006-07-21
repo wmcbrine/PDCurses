@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.2 2006/07/21 17:43:13 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.3 2006/07/21 17:50:27 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -53,15 +53,6 @@ AppData app_data;
 #define MAX_COLORS   8  /* maximum of "normal" colours */
 #define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2 * MAX_COLORS */
 #define COLOR_BORDER 17 /* colour of border - 2 more than 2 * MAX_COLORS */
-
-#ifdef HAVE_XPM_H
-# define PDC_NUMBER_OPTIONS 33
-#define PDC_NUMBER_APP_RESOURCES 35
-#else
-# define PDC_NUMBER_OPTIONS 32
-# define PDC_NUMBER_APP_RESOURCES 34
-#endif
-#define PDC_NUMBER_XCURSES_ACTIONS 5
 
 #define XCURSESNORMALFONTINFO	app_data.normalfont
 #define XCURSESITALICFONTINFO	app_data.italicfont
@@ -500,7 +491,7 @@ int visible_cursor = 0;
 int windowEntered = 1;
 static char *XCursesProgramName;
 
-XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
+XtResource app_resources[] =
 {
 	{
 		"lines",
@@ -866,7 +857,7 @@ XtResource app_resources[PDC_NUMBER_APP_RESOURCES] =
 
 };
 
-XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
+XrmOptionDescRec options[] =
 {
    {"-lines",		  "*lines",		XrmoptionSepArg, NULL},
    {"-cols",		  "*cols",		XrmoptionSepArg, NULL},
@@ -905,7 +896,7 @@ XrmOptionDescRec options[PDC_NUMBER_OPTIONS] =
    {"-colorBoldWhite",	  "*colorBoldWhite",	XrmoptionSepArg, NULL},
 };
 
-XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS] =
+XtActionsRec XCursesActions[] =
 {
    {"XCursesButton",		(XtActionProc)XCursesButton},
    {"XCursesKeyPress",		(XtActionProc)XCursesKeyPress},
@@ -914,7 +905,6 @@ XtActionsRec XCursesActions[PDC_NUMBER_XCURSES_ACTIONS] =
    {"string",			(XtActionProc)XCursesHandleString},
 };
 
-char global_display_name[100];		/* large enough for DISPLAY=machine */
 Bool after_first_curses_request = False;
 int colors[(2 * MAX_COLORS) + 2];
 Bool vertical_cursor = False;

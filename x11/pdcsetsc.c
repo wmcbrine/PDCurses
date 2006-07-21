@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.18 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.19 2006/07/21 05:07:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -93,7 +93,7 @@ int PDC_curs_set(int visibility)
 	if (visibility != -1)
 		SP->visibility = visibility;
 
-	XCurses_display_cursor(SP->cursrow, SP->curscol, SP->cursrow, 
+	PDC_display_cursor(SP->cursrow, SP->curscol, SP->cursrow, 
 		SP->curscol, visibility);
 
 	return ret_vis;

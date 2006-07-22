@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.56 2006/07/15 21:03:26 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.57 2006/07/22 23:41:48 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -310,7 +310,7 @@ void scrollTest(WINDOW *win)
 
 void inputTest(WINDOW *win)
 {
-	int w, h, bx, by, sw, sh, i, c, num;
+	int w, h, bx, by, sw, sh, i, c, num = 0;
 	char buffer[80];
 	WINDOW *subWin;
 	static const char spinner[4] = "/-\\|";
@@ -519,6 +519,7 @@ void inputTest(WINDOW *win)
 	refresh();
 	wclear(win);
 	echo();
+	buffer[0] = '\0';
 	mvwaddstr(win, 3, 2, "The window should have moved");
 	mvwaddstr(win, 4, 2,
 		"This text should have appeared without you pressing a key");

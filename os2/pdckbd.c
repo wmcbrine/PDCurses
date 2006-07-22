@@ -30,7 +30,7 @@
 # include <termios.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.29 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.30 2006/07/22 22:33:38 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -299,10 +299,7 @@ int PDC_get_bios_key(void)
 
 	SP->tahead = -1;
 #else
-	/* PDC_get_keyboard_info(&SP->kbdinfo);
-	PDC_set_keyboard_binary(); */
 	KbdCharIn(&keyInfo, IO_WAIT, 0);	/* get a character */
-	/* PDC_set_keyboard_default(); */
 
 	ascii = keyInfo.chChar;
 	scan = keyInfo.chScan;

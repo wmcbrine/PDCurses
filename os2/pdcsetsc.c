@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.21 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.22 2006/07/23 13:45:52 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -114,58 +114,6 @@ int PDC_set_font(int size)
 	SP->font = PDC_get_font();
 #endif
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_set_rows()  - sets the physical number of rows on screen
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	This routine attempts to set the number of rows on the physical
-	screen to the passed value.
-
-  PDCurses Return Value:
-	This function returns OK upon success otherwise ERR is returned.
-
-  PDCurses Errors:
-	It is an error to attempt to change the screen size on a "bogus"
-	adapter.  The reason for this is that we have a known video
-	adapter identity problem.  e.g. Two adapters report the same
-	identifying characteristics.
-
-  Portability:
-	PDCurses  int PDC_set_rows(int rows);
-
-**man-end****************************************************************/
-
-int PDC_set_rows(int rows)
-{
-#ifndef EMXVIDEO
-	VIOMODEINFO modeInfo = {0};
-	USHORT result;
-#endif
-	PDC_LOG(("PDC_set_rows() - called\n"));
-
-#ifdef EMXVIDEO
-	return ERR;
-#else
-	modeInfo.cb = sizeof(modeInfo);
-
-	/* set most parameters of modeInfo */
-
-	VioGetMode(&modeInfo, 0);
-	modeInfo.fbType = 1;
-	modeInfo.row = rows;
-	result = VioSetMode(&modeInfo, 0);
-
-	SP->font = PDC_get_font();
-	LINES = PDC_get_rows();
-	COLS = PDC_get_columns();
-
-	return (result == 0) ? OK : ERR;
-#endif
 }
 
 /*man-start**************************************************************

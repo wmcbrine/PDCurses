@@ -299,7 +299,6 @@ EXPORTS PDC_set_ctrl_break
 EXPORTS PDC_set_cursor_mode
 EXPORTS PDC_set_font
 EXPORTS PDC_set_title
-EXPORTS PDC_set_rows
 EXPORTS PDC_sysgetch
 EXPORTS PDC_transform_line
 EXPORTS PDC_ungetch

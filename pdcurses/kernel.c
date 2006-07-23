@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.48 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.49 2006/07/23 12:55:23 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -145,13 +145,56 @@ char linesrippedoff = 0;
 
 **man-end****************************************************************/
 
+static void PDC_save_mode(struct cttyset *ctty)
+{
+	ctty->been_set = TRUE;
+
+	memcpy(&(ctty->saved), SP, sizeof(SCREEN));
+}
+
+static int PDC_restore_mode(struct cttyset *ctty)
+{
+#if defined(OS2) && !defined(EMXVIDEO)
+	VIOMODEINFO modeInfo;
+#endif
+	if (ctty->been_set == TRUE)
+	{
+		memcpy(SP, &(ctty->saved), sizeof(SCREEN));
+		mvcur(0, 0, ctty->saved.cursrow, ctty->saved.curscol);
+
+		if (PDC_get_ctrl_break() != ctty->saved.orgcbr)
+			PDC_set_ctrl_break(ctty->saved.orgcbr);
+
+		if (ctty->saved.raw_out)
+			raw();
+
+		if (ctty->saved.visible_cursor)
+			PDC_cursor_on();
+
+		SP->font = PDC_get_font();
+		PDC_set_font(ctty->saved.font);
+
+#if defined(OS2) && !defined(EMXVIDEO)
+		PDC_get_scrn_mode(&modeInfo);
+
+		if (!PDC_scrn_modes_equal(modeInfo, ctty->saved.scrnmode))
+			PDC_set_scrn_mode(ctty->saved.scrnmode);
+#elif defined(DOS)
+		if (PDC_get_scrn_mode() != ctty->saved.scrnmode)
+			PDC_set_scrn_mode(ctty->saved.scrnmode);
+#endif
+		if ((LINES != ctty->saved.lines) || (COLS != ctty->saved.cols))
+			resize_term(ctty->saved.lines, ctty->saved.cols);
+	}
+
+	return ctty->been_set ? OK : ERR;
+}
+
 int def_prog_mode(void)
 {
 	PDC_LOG(("def_prog_mode() - called\n"));
 
-	c_pr_tty.been_set = TRUE;
-
-	memcpy(&c_pr_tty.saved, SP, sizeof(SCREEN));
+	PDC_save_mode(&c_pr_tty);
 
 	return OK;
 }
@@ -160,49 +203,16 @@ int def_shell_mode(void)
 {
 	PDC_LOG(("def_shell_mode() - called\n"));
 
-	c_sh_tty.been_set = TRUE;
-
-	memcpy(&c_sh_tty.saved, SP, sizeof(SCREEN));
+	PDC_save_mode(&c_sh_tty);
 
 	return OK;
 }
 
 int reset_prog_mode(void)
 {
-#if defined(OS2) && !defined(EMXVIDEO)
-	VIOMODEINFO modeInfo;
-#endif
 	PDC_LOG(("reset_prog_mode() - called\n"));
 
-	if (c_pr_tty.been_set == TRUE)
-	{
-		memcpy(SP, &c_pr_tty.saved, sizeof(SCREEN));
-
-		mvcur(0, 0, c_pr_tty.saved.cursrow, c_pr_tty.saved.curscol);
-
-		if (PDC_get_ctrl_break() != c_pr_tty.saved.orgcbr)
-			PDC_set_ctrl_break(c_pr_tty.saved.orgcbr);
-
-		if (c_pr_tty.saved.raw_out)
-			raw();
-
-		if (c_pr_tty.saved.visible_cursor)
-			PDC_cursor_on();
-
-		SP->font = PDC_get_font();
-		PDC_set_font(c_pr_tty.saved.font);
-
-#if defined(OS2) && !defined(EMXVIDEO)
-		PDC_get_scrn_mode(&modeInfo);
-
-		if (!PDC_scrn_modes_equal(modeInfo, c_pr_tty.saved.scrnmode))
-			PDC_set_scrn_mode(c_pr_tty.saved.scrnmode);
-#elif defined(DOS)
-		if (PDC_get_scrn_mode() != c_pr_tty.saved.scrnmode)
-			PDC_set_scrn_mode(c_pr_tty.saved.scrnmode);
-#endif
-		PDC_set_rows(c_pr_tty.saved.lines);
-	}
+	PDC_restore_mode(&c_pr_tty);
 
 #if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))
 	PDC_reset_prog_mode();
@@ -212,47 +222,9 @@ int reset_prog_mode(void)
 
 int reset_shell_mode(void)
 {
-#if defined(OS2) && !defined(EMXVIDEO)
-	VIOMODEINFO modeInfo;
-#endif
 	PDC_LOG(("reset_shell_mode() - called\n"));
 
-#ifndef WIN32
-	if (c_sh_tty.been_set == TRUE)
-	{
-		memcpy(SP, &c_sh_tty.saved, sizeof(SCREEN));
-
-		mvcur(0, 0, c_sh_tty.saved.cursrow, c_sh_tty.saved.curscol);
-
-		if (PDC_get_ctrl_break() != c_sh_tty.saved.orgcbr)
-			PDC_set_ctrl_break(c_sh_tty.saved.orgcbr);
-
-		if (c_sh_tty.saved.raw_out)
-			raw();
-
-		if (c_sh_tty.saved.visible_cursor)
-			PDC_cursor_on();
-
-		SP->font = PDC_get_font();
-		PDC_set_font(c_sh_tty.saved.font);
-
-# if defined(OS2) && !defined(EMXVIDEO)
-		PDC_get_scrn_mode(&modeInfo);
-
-		if (!PDC_scrn_modes_equal(modeInfo, c_sh_tty.saved.scrnmode))
-			PDC_set_scrn_mode(c_sh_tty.saved.scrnmode);
-# elif defined(DOS)
-		if (PDC_get_scrn_mode() != c_sh_tty.saved.scrnmode)
-			PDC_set_scrn_mode(c_sh_tty.saved.scrnmode);
-# endif
-
-# ifdef OS2
-		PDC_resize_screen(c_sh_tty.saved.lines, c_sh_tty.saved.cols);
-# else
-		PDC_set_rows(c_sh_tty.saved.lines);
-# endif
-	}
-#endif
+	PDC_restore_mode(&c_sh_tty);
 
 #if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))
 	PDC_reset_shell_mode();
@@ -262,54 +234,16 @@ int reset_shell_mode(void)
 
 int resetty(void)
 {
-#if defined(OS2) && !defined(EMXVIDEO)
-	VIOMODEINFO modeInfo;
-#endif
 	PDC_LOG(("resetty() - called\n"));
 
-	if (c_save_tty.been_set == TRUE)
-	{
-		memcpy(SP, &c_save_tty.saved, sizeof(SCREEN));
-		mvcur(0, 0, c_save_tty.saved.cursrow, c_save_tty.saved.curscol);
-
-		if (PDC_get_ctrl_break() != c_save_tty.saved.orgcbr)
-			PDC_set_ctrl_break(c_save_tty.saved.orgcbr);
-
-		if (c_save_tty.saved.raw_out)
-			raw();
-
-		if (c_save_tty.saved.visible_cursor)
-			PDC_cursor_on();
-
-		SP->font = PDC_get_font();
-		PDC_set_font(c_save_tty.saved.font);
-
-#if defined(OS2) && !defined(EMXVIDEO)
-		PDC_get_scrn_mode(&modeInfo);
-
-		if (!PDC_scrn_modes_equal(modeInfo, c_save_tty.saved.scrnmode))
-			PDC_set_scrn_mode(c_save_tty.saved.scrnmode);
-#elif defined(DOS)
-		if (PDC_get_scrn_mode() != c_save_tty.saved.scrnmode)
-			PDC_set_scrn_mode(c_save_tty.saved.scrnmode);
-#endif
-
-#ifdef XCURSES
-		PDC_set_rows(c_save_tty.saved.lines);
-#else
-		resize_term(c_save_tty.saved.lines, c_save_tty.saved.cols);
-#endif
-	}
-
-	return c_save_tty.been_set ? OK : ERR;
+	return PDC_restore_mode(&c_save_tty);
 }
 
 int savetty(void)
 {
 	PDC_LOG(("savetty() - called\n"));
 
-	c_save_tty.been_set = TRUE;
-	memcpy(&c_save_tty.saved, SP, sizeof(SCREEN));
+	PDC_save_mode(&c_save_tty);
 
 	return OK;
 }

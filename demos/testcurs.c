@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.57 2006/07/22 23:41:48 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.58 2006/07/23 05:00:57 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -714,12 +714,14 @@ void outputTest(WINDOW *win)
 void resizeTest(WINDOW *dummy)
 {
 	WINDOW *win1;
+	int nwidth = 135, nheight = 52;
+	int owidth = COLS, oheight = LINES;
 
 	savetty();
 	clear();
 	refresh();
 
-	resize_term(50, 80);
+	resize_term(nheight, nwidth);
 
 	win1 = newwin(10, 50, 14, 25);
 
@@ -738,13 +740,17 @@ void resizeTest(WINDOW *dummy)
 
 	wclear(win1);
 #endif
-	mvwaddstr(win1, 1, 1, "The screen may now have 50 lines");
+	mvwaddstr(win1, 0, 0, "The screen may now be resized");
+	mvwprintw(win1, 1, 4, "Given size: %d by %d", nwidth, nheight);
+	mvwprintw(win1, 2, 4, "Actual size: %d by %d", COLS, LINES);
 	Continue(win1);
 
 	wclear(win1);
 	resetty();
 
-	mvwaddstr(win1, 1, 1, "The screen should now be reset");
+	mvwaddstr(win1, 0, 0, "The screen should now be reset");
+	mvwprintw(win1, 1, 6, "Old size: %d by %d", owidth, oheight);
+	mvwprintw(win1, 2, 6, "Size now: %d by %d", COLS, LINES);
 	Continue(win1);
 
 	delwin(win1);

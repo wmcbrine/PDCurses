@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.49 2006/07/23 12:55:23 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.50 2006/07/23 14:54:17 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -118,12 +118,6 @@ char linesrippedoff = 0;
 	reset_shell_mode() functions or whether this is a backing store 
 	type of operation. At this time, they are implemented similar to 
 	the reset_*_mode() routines.
-
-	The curs_set() routine is used to set the visibility of the 
-	cursor. The cursor can be made invisible, normal or highly 
-	visible by setting the parameter to 0, 1 or 2 respectively. If 
-	an invalid value is passed the function will set the cursor to 
-	"normal".
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error, except 
@@ -252,7 +246,8 @@ int curs_set(int visibility)
 {
 	PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
 
-	return PDC_curs_set(visibility);
+	return ((visibility < 0) || (visibility > 2)) ? ERR : 
+		PDC_curs_set(visibility);
 }
 
 int napms(int ms)

@@ -19,69 +19,9 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.28 2006/07/17 21:45:15 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.29 2006/07/23 19:10:32 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
-
-/*man-start**************************************************************
-
-  PDC_cursor_on()	- Turns on the hardware cursor.
-
-  PDCurses Description:
-	Turns on the hardware cursor; does nothing if it is already on.
-
-  PDCurses Return Value:
-	Returns OK upon success, ERR upon failure.
-
-  Portability:
-	PDCurses  int PDC_cursor_on(void);
-
-**man-end****************************************************************/
-
-int PDC_cursor_on(void)
-{
-	PDC_LOG(("PDC_cursor_on() - called\n"));
-
-	if (!SP->visible_cursor)
-	{
-		SP->visible_cursor = TRUE;
-		PDC_set_cursor_mode((SP->cursor & 0xff00) >> 8,
-			     (SP->cursor & 0x00ff));
-	}
-
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_cursor_off()	- Turns off the hardware cursor.
-
-  PDCurses Description:
-	Turns off the hardware cursor; does nothing if it is already off.
-
-  PDCurses Return Value:
-	Returns OK upon success, ERR upon failure.
-
-  PDCurses Errors:
-	ERR will be returned if the hardware cursor can not be disabled.
-
-  Portability:
-	PDCurses  int PDC_cursor_off(void);
-
-**man-end****************************************************************/
-
-int PDC_cursor_off(void)
-{
-	PDC_LOG(("PDC_cursor_off() - called\n"));
-
-	if (SP->visible_cursor)
-	{
-		SP->visible_cursor = FALSE;
-		PDC_set_cursor_mode(32, 33);	/* turn it off */
-	}
-
-	return OK;
-}
 
 /*man-start**************************************************************
 

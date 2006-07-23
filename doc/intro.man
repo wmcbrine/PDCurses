@@ -528,8 +528,6 @@ FUNCTIONS
 		PDC_check_bios_key	pdckbd
 		PDC_chins		pdcdisp
 		PDC_copy_win		pdcwin
-		PDC_cursor_off		pdcdisp
-		PDC_cursor_on		pdcdisp
 		PDC_debug		pdcdebug
 		PDC_flushinp		pdckbd
 		PDC_getch		getch
@@ -554,7 +552,6 @@ FUNCTIONS
 		PDC_scr_close		pdcscrn
 		PDC_scr_open		pdcscrn
 		PDC_set_ctrl_break	pdckbd
-		PDC_set_cursor_mode	pdcsetsc
 		PDC_set_font		pdcsetsc
 		PDC_set_scrn_mode	pdcsetsc
 		PDC_set_title		pdcsetsc

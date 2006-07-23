@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.29 2006/07/21 04:07:05 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.30 2006/07/23 19:10:32 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -58,53 +58,6 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 	if (write_socket(display_sock, buf, idx) < 0)
 		XCursesExitCursesProcess(1,
 			"exiting from PDC_display_cursor");
-
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_cursor_on()	- Turns on the hardware cursor.
-
-  PDCurses Description:
-	Turns on the hardware curses, it does nothing if it is already on.
-
-  PDCurses Return Value:
-	Returns OK upon success, ERR upon failure.
-
-  Portability:
-	PDCurses  int PDC_cursor_on(void);
-
-**man-end****************************************************************/
-
-int PDC_cursor_on(void)
-{
-	PDC_LOG(("PDC_cursor_on() - called\n"));
-
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_cursor_off()	- Turns off the hardware cursor.
-
-  PDCurses Description:
-	Turns off the hardware curses, it does nothing if it is already off.
-
-  PDCurses Return Value:
-	Returns OK upon success, ERR upon failure.
-
-  PDCurses Errors:
-	ERR will be returned if the hardware cursor can not be disabled.
-
-  Portability:
-	PDCurses  int PDC_cursor_off(void);
-
-**man-end****************************************************************/
-
-int PDC_cursor_off(void)
-{
-	PDC_LOG(("PDC_cursor_off() - called\n"));
 
 	return OK;
 }

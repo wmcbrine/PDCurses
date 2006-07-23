@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.100 2006/07/23 13:45:52 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.101 2006/07/23 19:10:32 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -86,8 +86,6 @@ void	PDC_beep(void);
 bool	PDC_check_bios_key(void);
 int	PDC_copy_win(const WINDOW *, WINDOW *, int, int, int,
 		     int, int, int, bool);
-int	PDC_cursor_off(void);
-int	PDC_cursor_on(void);
 int	PDC_curs_set(int);
 void	PDC_flushinp(void);
 int	PDC_get_bios_key(void);
@@ -112,7 +110,6 @@ int	PDC_resize_screen(int, int);
 int	PDC_scr_close(void);
 int	PDC_scr_open(int, char **);
 int	PDC_set_ctrl_break(bool);
-int	PDC_set_cursor_mode(int, int);
 int	PDC_set_font(int);
 void	PDC_sync(WINDOW *);
 int	PDC_sysgetch(void);

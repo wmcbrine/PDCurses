@@ -19,48 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.22 2006/07/23 13:45:52 wmcbrine Exp $");
-
-/*man-start**************************************************************
-
-  PDC_set_cursor_mode() - Set the cursor start and stop scan lines.
-
-  PDCurses Description:
-	Sets the cursor type to begin in scan line startrow and end in
-	scan line endrow.  Both values should be 0-31.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_set_cursor_mode(int startrow, int endrow);
-
-**man-end****************************************************************/
-
-int PDC_set_cursor_mode(int startrow, int endrow)
-{
-#ifndef EMXVIDEO
-	VIOCURSORINFO cursorInfo = {0};
-#endif
-	PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",
-		startrow, endrow));
-
-#ifdef EMXVIDEO
-	if (endrow <= startrow)
-		v_hidecursor();
-	else
-		v_ctype(startrow, endrow);
-
-	return OK;
-#else
-	cursorInfo.yStart = startrow;
-	cursorInfo.cEnd = endrow;
-	cursorInfo.cx = 1;
-	cursorInfo.attr = 0;
-
-	return (VioSetCurType(&cursorInfo, 0) == 0);
-#endif
-}
+RCSID("$Id: pdcsetsc.c,v 1.23 2006/07/23 19:10:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -106,10 +65,7 @@ int PDC_set_font(int size)
 		VioSetMode(&modeInfo, 0);
 	}
 
-	if (SP->visible_cursor)
-		PDC_cursor_on();
-	else
-		PDC_cursor_off();
+	curs_set(SP->visibility);
 
 	SP->font = PDC_get_font();
 #endif

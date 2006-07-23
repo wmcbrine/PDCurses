@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.58 2006/07/23 05:00:57 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.59 2006/07/23 15:09:18 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -718,10 +718,11 @@ void resizeTest(WINDOW *dummy)
 	int owidth = COLS, oheight = LINES;
 
 	savetty();
-	clear();
-	refresh();
 
 	resize_term(nheight, nwidth);
+
+	clear();
+	refresh();
 
 	win1 = newwin(10, 50, 14, 25);
 

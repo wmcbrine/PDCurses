@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.30 2006/07/17 02:20:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.31 2006/07/23 22:58:57 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -150,7 +150,6 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-	SP->cursor  = PDC_get_cursor_mode();
 #ifdef EMXVIDEO
 	SP->tahead  = -1;
 #endif
@@ -177,7 +176,7 @@ int PDC_scr_open(int argc, char **argv)
 	SP->orig_font = SP->font = PDC_get_font();
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
-	SP->orig_cursor = SP->cursor;
+	SP->orig_cursor = PDC_get_cursor_mode();
 	SP->orgcbr = PDC_get_ctrl_break();
 	SP->sizeable = TRUE;
 

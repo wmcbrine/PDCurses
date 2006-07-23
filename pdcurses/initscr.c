@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.60 2006/07/23 19:32:48 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.61 2006/07/23 22:58:57 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -292,8 +292,6 @@ int endwin(void)
 		PDC_set_font(SP->orig_font);
 		resize_term(PDC_get_rows(), PDC_get_columns());
 	}
-
-	SP->cursor = SP->orig_cursor;
 #endif
 
 #if defined(DOS) || defined(OS2)

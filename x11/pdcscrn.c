@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.28 2006/07/17 02:20:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.29 2006/07/23 22:58:57 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;
@@ -74,9 +74,8 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 
 	SP->cursrow = SP->curscol = 0;
-	SP->cursor = 0;
 	SP->adapter = 0;
-	SP->orig_cursor = SP->cursor;
+	SP->orig_cursor = 0;
 	SP->orig_attr = FALSE;
 	SP->orgcbr = 0;
 	SP->sb_on = sb_started;

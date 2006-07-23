@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.34 2006/07/17 02:20:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.35 2006/07/23 22:58:57 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -132,7 +132,6 @@ int PDC_scr_open(int argc, char **argv)
 	SP->video_seg	= 0xb000;	/* Base screen segment addr   */
 	SP->video_ofs	= 0x0;		/* Base screen segment ofs    */
 	SP->video_page	= 0;		/* Current Video Page	      */
-	SP->cursor	= PDC_get_cursor_mode();
 
 	SP->adapter	= PDC_query_adapter_type();
 	SP->scrnmode	= PDC_get_scrn_mode();
@@ -141,7 +140,7 @@ int PDC_scr_open(int argc, char **argv)
 	SP->lines	= PDC_get_rows();
 	SP->cols	= PDC_get_columns();
 
-	SP->orig_cursor	= SP->cursor;
+	SP->orig_cursor	= PDC_get_cursor_mode();
 	SP->orgcbr	= PDC_get_ctrl_break();
 
 	/* If the environment variable PDCURSES_BIOS is set, the DOS 

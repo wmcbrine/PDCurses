@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.58 2006/07/18 11:30:28 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.59 2006/07/23 12:52:06 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -375,14 +375,6 @@ int resize_term(int nlines, int ncols)
 	SP->lines = PDC_get_rows();
 	LINES = SP->lines - SP->linesrippedoff - SP->slklines;
 	SP->cols = COLS = PDC_get_columns();
-
-	/* change the saved prog_mode details */
-
-	if (c_pr_tty.been_set)
-	{
-		c_pr_tty.saved.lines = SP->lines;
-		c_pr_tty.saved.cols = SP->cols;
-	}
 
 	if ((curscr = resize_window(curscr, SP->lines, SP->cols)) == NULL)
 		return ERR;

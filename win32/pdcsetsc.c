@@ -19,33 +19,9 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.21 2006/07/23 13:45:52 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.22 2006/07/23 16:51:14 wmcbrine Exp $");
 
 extern HANDLE hConOut;
-
-/*man-start**************************************************************
-
-  PDC_set_cursor_mode()	- Set the cursor start and stop scan lines.
-
-  PDCurses Description:
-	Sets the cursor type to begin in scan line startrow and end in
-	scan line endrow.  Both values should be 0-31.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_set_cursor_mode(int startrow, int endrow);
-
-**man-end****************************************************************/
-
-int PDC_set_cursor_mode(int startrow, int endrow)
-{
-	PDC_LOG(("PDC_set_cursor_mode() - called: startrow %d endrow %d\n",
-		startrow, endrow));
-
-	return OK;
-}
 
 /*man-start**************************************************************
 

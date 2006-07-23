@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.23 2006/07/23 19:10:32 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.24 2006/07/23 23:42:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -144,8 +144,8 @@ int PDC_curs_set(int visibility)
 		break;
 
 	default:	/* normal visibility */
-		start = SP->font - (SP->font / 4);
-		end = SP->font - 1;
+		start = (SP->orig_cursor >> 8) & 0xff;
+		end = SP->orig_cursor & 0xff;
 	}
 
 #ifdef EMXVIDEO

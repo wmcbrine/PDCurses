@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.19 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.20 2006/07/23 23:42:23 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 extern CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -92,12 +92,7 @@ int PDC_get_attribute(void)
   PDC_get_cursor_mode()	- Get the cursor start and stop scan lines.
 
   PDCurses Description:
-	Gets the cursor type to begin in scan line startrow and end in
-	scan line endrow.  Both values should be in the range 0 through 
-	31.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
+	Gets the cursor size.
 
   Portability:
 	PDCurses  int PDC_get_cursor_mode(void);
@@ -112,9 +107,7 @@ int PDC_get_cursor_mode(void)
 
 	GetConsoleCursorInfo(hConOut, &ci);
 
-	/* size is between 1 and 100, so convert it */
-
-	return ci.dwSize * 32 / 100 - 1;
+	return ci.dwSize;
 }
 
 /*man-start**************************************************************

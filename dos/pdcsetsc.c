@@ -17,7 +17,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.21 2006/07/23 19:10:32 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.22 2006/07/23 23:42:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -194,7 +194,7 @@ int PDC_set_scrn_mode(int new_mode)
 
 int PDC_curs_set(int visibility)
 {
-	int ret_vis, start = 6, end = 7;
+	int ret_vis, start, end = 7;
 
 	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n", visibility));
 
@@ -208,20 +208,11 @@ int PDC_curs_set(int visibility)
 			end = 0;  /* was 32 */
 			break;
 		case 2:  /* highly visible */
-#if 0
-			start = 2;   /* almost full-height block */
-			end = SP->font-1;
-#else
 			start = 0;   /* full-height block */
-#endif
 			break;
 		default:  /* normal visibility */
-			  /* start = 6, end = 7 */
-#if 0
-			start = SP->font - 2;
-			end = SP->font-1;
-#endif
-			break;
+			start = (SP->orig_cursor >> 8) & 0xff;
+			end = SP->orig_cursor & 0xff;
 	}
 
 	/* if scrnmode is not set, some BIOSes hang */

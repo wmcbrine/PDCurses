@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.22 2006/07/23 16:51:14 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.23 2006/07/23 23:42:23 wmcbrine Exp $");
 
 extern HANDLE hConOut;
 
@@ -77,7 +77,7 @@ int PDC_curs_set(int visibility)
 		break;
 	default:			/* normal visibility */
 		cci.bVisible = TRUE;
-		cci.dwSize = 25;
+		cci.dwSize = SP->orig_cursor;
 		break;
 	}
 

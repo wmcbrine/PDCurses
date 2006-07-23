@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.23 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.24 2006/07/23 23:42:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -154,12 +154,7 @@ int PDC_get_columns(void)
   PDC_get_cursor_mode() - Get the cursor start and stop scan lines.
 
   PDCurses Description:
-	Gets the cursor type to begin in scan line startrow and end in
-	scan line endrow.  Both values should be in the range 0 through 
-	31.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
+	Gets the cursor size.
 
   Portability:
 	PDCurses  int PDC_get_cursor_mode(void);
@@ -180,8 +175,6 @@ int PDC_get_cursor_mode(void)
 	return (curstart << 8) | curend;
 #else
 	VioGetCurType (&cursorInfo, 0);
-
-	/* I am not sure about this JGB */
 
 	return (cursorInfo.yStart << 8) | cursorInfo.cEnd;
 #endif

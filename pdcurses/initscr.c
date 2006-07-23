@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.59 2006/07/23 12:52:06 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.60 2006/07/23 19:32:48 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -184,7 +184,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	SP->save_key_modifiers = FALSE;
 	SP->return_key_modifiers = FALSE;
 	SP->echo	= FALSE;
-	SP->visible_cursor = TRUE;	/* Assume that it is visible  */
 	SP->visibility	= 1;
 	SP->audible	= TRUE;
 	SP->blank	= ' ';
@@ -294,7 +293,6 @@ int endwin(void)
 		resize_term(PDC_get_rows(), PDC_get_columns());
 	}
 
-	SP->visible_cursor = FALSE;   /* Force the visible cursor */
 	SP->cursor = SP->orig_cursor;
 #endif
 

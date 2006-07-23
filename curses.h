@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.197 2006/07/14 17:50:15 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.198 2006/07/23 19:32:48 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2809
+#define PDC_BUILD 2810
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -579,7 +579,6 @@ typedef struct
 	bool	raw_inp;	/* raw input mode (v. cooked input)	*/
 	bool	raw_out;	/* raw output mode (7 v. 8 bits)	*/
 	bool	orgcbr;		/* original MSDOS ^-BREAK setting	*/
-	bool	visible_cursor; /* TRUE if cursor is visible		*/
 	bool	audible;	/* FALSE if the bell is visual		*/
 	bool	mono;		/* TRUE if current screen is mono	*/
 	bool	sizeable;	/* TRUE if adapter is resizeable	*/

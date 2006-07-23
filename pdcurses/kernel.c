@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.50 2006/07/23 14:54:17 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.51 2006/07/23 18:56:28 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -162,8 +162,7 @@ static int PDC_restore_mode(struct cttyset *ctty)
 		if (ctty->saved.raw_out)
 			raw();
 
-		if (ctty->saved.visible_cursor)
-			PDC_cursor_on();
+		curs_set(ctty->saved.visibility);
 
 		SP->font = PDC_get_font();
 		PDC_set_font(ctty->saved.font);

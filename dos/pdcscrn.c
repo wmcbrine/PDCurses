@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.35 2006/07/23 22:58:57 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.36 2006/07/24 20:34:18 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -214,6 +214,11 @@ int PDC_resize_screen(int nlines, int ncols)
 {
 	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
 		nlines, ncols));
+
+	/* Trash the stored value of orig_cursor -- it's only good if 
+	   the video mode doesn't change */
+
+	SP->orig_cursor = 0x0607;
 
 	switch (SP->adapter)
 	{

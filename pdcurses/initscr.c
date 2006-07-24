@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.61 2006/07/23 22:58:57 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.62 2006/07/24 20:34:19 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -298,7 +298,8 @@ int endwin(void)
 	reset_shell_mode();
 #endif
 
-	curs_set(1);
+	if (SP->visibility != 1)
+		curs_set(1);
 
 	/* Position cursor to the bottom left of the screen. */
 

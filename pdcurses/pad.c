@@ -32,7 +32,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.28 2006/07/24 01:01:56 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.29 2006/07/24 01:32:53 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -248,7 +248,7 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 	if (!(w->_flags == _PAD) && !(w->_flags == _SUBPAD))
 		return ERR;
 
-	while (sline <= sy2)
+	while (sline < sy2)
 	{
 		if (pline < w->_maxy)
 		{
@@ -289,8 +289,8 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 	   to the correct place */
 
 	if (!w->_leaveit && w->_cury >= py && w->_curx >= px &&
-	     w->_cury <= py + (sy2 - sy1 + 1) &&
-	     w->_curx <= px + (sx2 - sx1 + 1))
+	     w->_cury < py + (sy2 - sy1 + 1) &&
+	     w->_curx < px + (sx2 - sx1 + 1))
 	{
 		curscr->_cury = (w->_cury - py) + sy1;
 		curscr->_curx = (w->_curx - px) + sx1;

@@ -32,7 +32,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.27 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.28 2006/07/24 01:01:56 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -221,9 +221,6 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begin_y, int begin_x)
 int prefresh(WINDOW *win, int py, int px, int sy1, int sx1, int sy2, int sx2)
 {
 	PDC_LOG(("prefresh() - called\n"));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
 
 	if (pnoutrefresh(win, py, px, sy1, sx1, sy2, sx2) == ERR)
 		return ERR;

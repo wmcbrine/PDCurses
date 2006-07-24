@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.39 2006/07/24 20:34:18 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.40 2006/07/24 20:46:20 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -34,67 +34,6 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 		*dst++ = *src++;
 }
 #endif
-
-/*man-start**************************************************************
-
-  PDC_fix_cursor()	- Fix the cursor start and stop scan lines
-			  (if necessary)
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine will fix the cursor shape for certain video 
-	adapters. Normally, the values used are correct, but some 
-	adapters choke. The most noticable choke is on a monochrome 
-	adapter.  The "correct" scan lines will result in the cursor 
-	being set in the middle of the character cell, rather than at 
-	the bottom.
-
-	The passed flag indicates whether the cursor is visible or not.
-
-	This only applies to the DOS platform.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_fix_cursor(int flag);
-
-**man-end****************************************************************/
-
-int PDC_fix_cursor(int flag)
-{
-	PDC_LOG(("PDC_fix_cursor() - called\n"));
-
-	if (SP->bogus_adapter)
-		return OK;
-
-	/* flag & 1: enable emulation */
-
-	switch (SP->adapter)
-	{
-	case _EGACOLOR:
-	case _EGAMONO:
-	case _MDS_GENIUS:		/* Some clones look like a Genius */
-		if (flag & 1)
-			setdosmembyte(0x487, getdosmembyte(0x487) | 0x01);
-		else
-			setdosmembyte(0x487, getdosmembyte(0x487) & ~0x01);
-		break;
-
-	case _VGACOLOR:
-	case _VGAMONO:
-#ifdef __WATCOMC__
-		regs.w.ax = 0x1201 ^ (flag & 1);
-#else
-		regs.x.ax = 0x1201 ^ (flag & 1);
-#endif
-		regs.h.bl = 0x34;
-		int86(0x10, &regs, &regs);
-	}
-
-	return OK;
-}
 
 /*man-start**************************************************************
 

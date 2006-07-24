@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.36 2006/07/24 20:34:18 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.37 2006/07/24 20:46:20 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -124,7 +124,6 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 
 	SP->orig_attr	 = FALSE;
-	SP->orig_emulation = getdosmembyte(0x487);
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 

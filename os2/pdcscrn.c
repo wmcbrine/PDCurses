@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.31 2006/07/23 22:58:57 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.32 2006/07/24 20:46:20 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -146,7 +146,6 @@ int PDC_scr_open(int argc, char **argv)
         v_init();
 #endif
 	SP->orig_attr = FALSE;
-	SP->orig_emulation = 0;
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 

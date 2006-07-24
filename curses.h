@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.199 2006/07/23 22:58:57 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.200 2006/07/24 20:46:20 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -592,7 +592,6 @@ typedef struct
 	int	cursrow;	/* position of physical cursor		*/
 	int	curscol;	/* position of physical cursor		*/
 	int	visibility;	/* Visibility of cursor			*/
-	int	orig_emulation; /* Original cursor emulation value	*/
 	int	orig_cursor;	/* Original cursor size			*/
 	int	font;		/* default font size			*/
 	int	orig_font;	/* Original font size			*/

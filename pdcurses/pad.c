@@ -32,7 +32,7 @@
 # undef doupdate
 #endif
 
-RCSID("$Id: pad.c,v 1.29 2006/07/24 01:32:53 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.30 2006/07/24 02:10:07 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -237,18 +237,25 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 
 	PDC_LOG(("pnoutrefresh() - called\n"));
 
-	if (w == (WINDOW *)NULL)
+	if ((w == (WINDOW *)NULL) || !(w->_flags & (_PAD|_SUBPAD)) ||
+	    (sy2 >= LINES) || (sy2 >= COLS))
 		return ERR;
 
-	num_cols = min((sx2 - sx1 + 1), (w->_maxx - px));
+	if (py < 0)
+		py = 0;
+	if (px < 0)
+		px = 0;
+	if (sy1 < 0)
+		sy1 = 0;
+	if (sx1 < 0)
+		sx1 = 0;
 
 	if (sy2 < sy1 || sx2 < sx1)
 		return ERR;
 
-	if (!(w->_flags == _PAD) && !(w->_flags == _SUBPAD))
-		return ERR;
+	num_cols = min((sx2 - sx1 + 1), (w->_maxx - px));
 
-	while (sline < sy2)
+	while (sline <= sy2)
 	{
 		if (pline < w->_maxy)
 		{
@@ -289,8 +296,8 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 	   to the correct place */
 
 	if (!w->_leaveit && w->_cury >= py && w->_curx >= px &&
-	     w->_cury < py + (sy2 - sy1 + 1) &&
-	     w->_curx < px + (sx2 - sx1 + 1))
+	     w->_cury <= py + (sy2 - sy1) &&
+	     w->_curx <= px + (sx2 - sx1))
 	{
 		curscr->_cury = (w->_cury - py) + sy1;
 		curscr->_curx = (w->_curx - px) + sx1;

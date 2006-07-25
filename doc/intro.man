@@ -525,40 +525,19 @@ FUNCTIONS
 	   Curses Function        Manual Page Name
 
 		PDC_chadd		pdcdisp
-		PDC_check_bios_key	pdckbd
 		PDC_chins		pdcdisp
-		PDC_copy_win		pdcwin
-		PDC_debug		pdcdebug
-		PDC_flushinp		pdckbd
+		PDC_clearclipboard	pdcclip
+		PDC_freeclipboard	pdcclip
 		PDC_getch		getch
-		PDC_get_attribute	pdcgetsc
-		PDC_get_bios_key	pdckbd
-		PDC_get_columns		pdcgetsc
-		PDC_get_ctrl_break	pdckbd
-		PDC_get_cursor_mode	pdcgetsc
-		PDC_get_cursor_pos	pdcgetsc
-		PDC_get_font		pdcgetsc
 		PDC_get_input_fd	pdckbd
 		PDC_get_key_modifiers	pdckbd
-		PDC_get_rows		pdcgetsc
-		PDC_get_scrn_mode	pdcgetsc
 		PDC_getclipboard	pdcclip
-		PDC_makenew		pdcwin
-		PDC_putc		pdcdisp
-		PDC_putctty		pdcdisp
-		PDC_query_adapter_type	pdcgetsc
-		PDC_rawgetch		pdckbd
-		PDC_scrn_modes_equal	pdcscrn
-		PDC_scr_close		pdcscrn
-		PDC_scr_open		pdcscrn
-		PDC_set_ctrl_break	pdckbd
-		PDC_set_font		pdcsetsc
-		PDC_set_scrn_mode	pdcsetsc
+		PDC_set_line_color	color
 		PDC_set_title		pdcsetsc
 		PDC_setclipboard	pdcclip
-		PDC_sysgetch		pdckbd
-		PDC_transform_line	pdcdisp
 		PDC_ungetch		getch
-		PDC_validchar		pdckbd
+		PDC_wleftline		border
+		PDC_wrightline		border
+		PDC_wunderline		border
 
 **man-end****************************************************************/

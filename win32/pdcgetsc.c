@@ -19,7 +19,7 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.20 2006/07/23 23:42:23 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.21 2006/07/25 01:24:47 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 extern CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -57,34 +57,6 @@ int PDC_get_cursor_pos(int *row, int *col)
 	*row = scr.dwCursorPosition.Y;
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_attribute()	- Get attribute at current cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	Return the current attr at current cursor position on the screen.
-
-  PDCurses Return Value:
-	This routine will return OK upon success and otherwise ERR will
-	be returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_attribute(void);
-
-**man-end****************************************************************/
-
-int PDC_get_attribute(void)
-{
-	PDC_LOG(("PDC_get_attribute() - called\n"));
-
-	return 0;
 }
 
 /*man-start**************************************************************

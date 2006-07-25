@@ -268,7 +268,6 @@ PDC_copy_win
 PDC_debug
 PDC_getch
 PDC_getclipboard
-PDC_get_attribute
 PDC_get_bios_key
 PDC_get_columns
 PDC_get_ctrl_break

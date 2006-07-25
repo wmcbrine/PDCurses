@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.24 2006/07/23 23:42:23 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.25 2006/07/25 01:24:47 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -54,49 +54,6 @@ int PDC_get_cursor_pos(int *row, int *col)
 	VioGetCurPos((PUSHORT)row, (PUSHORT)col, 0);
 #endif
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_attribute()   - Get attribute at current cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	Return the current attr at current cursor position on the 
-	screen.
-
-  PDCurses Return Value:
-	This routine will return OK upon success and otherwise ERR will 
-	be returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_attribute(void);
-
-**man-end****************************************************************/
-
-int PDC_get_attribute(void)
-{
-#ifndef EMXVIDEO
-	USHORT cellLen = 2;
-#endif
-	int curRow = 0, curCol = 0;
-	char Cell[4];
-
-	PDC_LOG(("PDC_get_attribute() - called\n"));
-
-	PDC_get_cursor_pos(&curRow, &curCol);
-
-#ifdef EMXVIDEO
-	v_getline(Cell, curCol, curRow, 1);
-#else
-	VioReadCellStr((PCH)&Cell, (PUSHORT)&cellLen, (USHORT)curRow, 
-		(USHORT)curCol, 0);
-#endif
-	return (int)Cell[1];
 }
 
 /*man-start**************************************************************

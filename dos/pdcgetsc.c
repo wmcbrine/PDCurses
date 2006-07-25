@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.25 2006/07/23 23:42:23 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.26 2006/07/25 01:24:47 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -55,43 +55,6 @@ int PDC_get_cursor_pos(int *row, int *col)
 	*col = regs.h.dl;
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_attribute()	- Get attribute at current cursor
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	Return the current attr at current cursor position on the 
-	screen.
-
-  PDCurses Return Value:
-	This routine will return OK upon success and otherwise ERR will 
-	be returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
- 	PDCurses  int PDC_get_attribute(void);
-
-**man-end****************************************************************/
-
-int PDC_get_attribute(void)
-{
-	PDC_LOG(("PDC_get_attribute() - called\n"));
-
-#ifdef __WATCOMC__
-	regs.w.ax = 0x0800;
-#else
-	regs.x.ax = 0x0800;
-#endif
-	regs.h.bh = SP->video_page;
-	int86(0x10, &regs, &regs);
-
-	return (int)regs.h.ah;
 }
 
 /*man-start**************************************************************

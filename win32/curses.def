@@ -275,7 +275,6 @@ EXPORTS PDC_copy_win
 EXPORTS PDC_debug
 EXPORTS PDC_getch
 EXPORTS PDC_getclipboard
-EXPORTS PDC_get_attribute
 EXPORTS PDC_get_bios_key
 EXPORTS PDC_get_columns
 EXPORTS PDC_get_ctrl_break

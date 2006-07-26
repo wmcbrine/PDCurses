@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.22 2006/04/26 23:50:32 wmcbrine Exp $
+ * $Id: tui.c,v 1.23 2006/07/26 15:09:08 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -208,12 +208,12 @@ static void getmenupos(int *y, int *x)
 	*x = nextx;
 }
 
-static int hotkey(char *s)
+static int hotkey(const char *s)
 {
 	int c0 = *s;	/* if no upper case found, return first char */
 
 	for (; *s; s++)
-		if (isupper(*s))
+		if (isupper((int)*s))
 			break;
 
 	return *s ? *s : c0;

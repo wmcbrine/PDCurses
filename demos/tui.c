@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.23 2006/07/26 15:09:08 wmcbrine Exp $
+ * $Id: tui.c,v 1.24 2006/07/26 15:17:39 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -213,7 +213,7 @@ static int hotkey(const char *s)
 	int c0 = *s;	/* if no upper case found, return first char */
 
 	for (; *s; s++)
-		if (isupper((int)*s))
+		if (isupper((unsigned char)*s))
 			break;
 
 	return *s ? *s : c0;

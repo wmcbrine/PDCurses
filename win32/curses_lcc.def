@@ -278,8 +278,6 @@ PDC_get_key_modifiers
 PDC_get_font
 PDC_get_rows
 PDC_makenew
-PDC_putc
-PDC_putctty
 PDC_query_adapter_type
 PDC_rawgetch
 PDC_scr_close

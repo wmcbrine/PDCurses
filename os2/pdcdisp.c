@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.29 2006/07/23 19:10:32 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.30 2006/07/28 09:24:40 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -50,84 +50,6 @@ int PDC_gotoyx(int row, int col)
 	v_gotoxy(col, row);
 #else
 	VioSetCurPos(row, col, 0);
-#endif
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_putc()	- Output a character in the current attribute.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Outputs character 'chr' to screen in tty fashion. If a colour
-	mode is active, the character is written with colour 'colour'.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_putc(chtype character, chtype color);
-
-**man-end****************************************************************/
-
-int PDC_putc(chtype character, chtype color)
-{
-	int curRow = 0, curCol = 0;
-#ifdef EMXVIDEO
-	char Cell[2];
-#endif
-	PDC_LOG(("PDC_putc() - called: char=%c attrib=0x%x color=0x%x\n",
-		character & A_CHARTEXT, character & A_ATTRIBUTES, color));
-
-	PDC_get_cursor_pos(&curRow, &curCol);
-#ifdef EMXVIDEO
-	Cell[0] = (char)character;
-	Cell[1] = (char)color;
-	v_putline(Cell, curCol, curRow, 1);
-#else
-	VioWrtTTY((PCH)&character, 1, 0);
-	VioWrtNAttr((PBYTE)&color, 1, (USHORT)curRow, (USHORT)curCol, 0);
-	PDC_gotoyx(curRow, curCol);
-#endif
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_putctty()	- Output a character and attribute in TTY fashion.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Outputs character 'chr' to screen in tty fashion. If a colour
-	mode is active, the character is written with colour 'colour'.
-
-	This function moves the physical cursor after writing so the
-	screen will scroll if necessary.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_putctty(chtype character, chtype color);
-
-**man-end****************************************************************/
-
-int PDC_putctty(chtype character, chtype color)
-{
-	int curRow=0, curCol=0;
-
-	PDC_LOG(("PDC_putctty() - called\n"));
-
-	PDC_get_cursor_pos(&curRow, &curCol);
-#ifdef EMXVIDEO
-	v_attrib(color);
-	v_putc(character);
-#else
-	VioWrtTTY((PCH)&character, 1, 0);
-	VioWrtNAttr((PBYTE)&color, 1, (USHORT)curRow, (USHORT)curCol, 0);
 #endif
 	return OK;
 }

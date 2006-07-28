@@ -285,8 +285,6 @@ EXPORTS PDC_get_key_modifiers
 EXPORTS PDC_get_font
 EXPORTS PDC_get_rows
 EXPORTS PDC_makenew
-EXPORTS PDC_putc
-EXPORTS PDC_putctty
 EXPORTS PDC_query_adapter_type
 EXPORTS PDC_rawgetch
 EXPORTS PDC_scr_close

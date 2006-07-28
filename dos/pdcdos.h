@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.2 2006/07/15 15:00:57 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.3 2006/07/28 09:24:40 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -117,3 +117,4 @@ void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
 
 int	PDC_set_80x25(void);
+int	PDC_putctty(chtype, chtype);

@@ -24,7 +24,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.28 2006/07/23 19:10:32 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.29 2006/07/28 09:24:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -58,74 +58,6 @@ int PDC_gotoyx(int row, int col)
 	SetConsoleCursorPosition(hConOut, coord);
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_putc()   - Output a character in the current attribute.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Outputs character 'chr' to screen in tty fashion. If a colour
-	mode is active, the character is written with colour 'colour'.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_putc(chtype character, chtype color);
-
-**man-end****************************************************************/
-
-int PDC_putc(chtype character, chtype color)
-{
-	int curRow, curCol;
-	TCHAR buffer;
-	COORD coord;
-	DWORD written;
-
-	PDC_LOG(("PDC_putc() - called:char=%c attrib=0x%x color=0x%x\n",
-		character & A_CHARTEXT, character & A_ATTRIBUTES, color));
-
-	PDC_get_cursor_pos(&curRow, &curCol);
-
-	coord.X = curCol;
-	coord.Y = curRow;
-#if 0
-	buffer = color;
-	WriteConsoleOutputAttribute(hConOut, &buffer, 1, coord, &written);
-#endif
-	buffer = character;
-	WriteConsoleOutputCharacter(hConOut, &buffer, 1, coord, &written);
-
-	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_putctty()   - Output a character and attribute in TTY fashion.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Outputs character 'chr' to screen in tty fashion. If a colour
-	mode is active, the character is written with colour 'colour'.
-
-	This function moves the physical cursor after writing so the
-	screen will scroll if necessary.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_putctty(chtype character, chtype color);
-
-**man-end****************************************************************/
-
-int PDC_putctty(chtype character, chtype color)
-{
-	return PDC_putc(character, color);
 }
 
 /*man-start**************************************************************

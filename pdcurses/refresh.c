@@ -38,7 +38,7 @@
 # undef reset_prog_mode
 #endif
 
-RCSID("$Id: refresh.c,v 1.33 2006/07/17 21:45:15 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.34 2006/07/28 19:32:07 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -216,12 +216,11 @@ int doupdate(void)
 
 	curscr->_clear = FALSE;
 
-	if (SP->cursrow != curscr->_cury || SP->curscol != curscr->_curx)
-	{
+	if (SP->visibility)
 		PDC_gotoyx(curscr->_cury, curscr->_curx);
-		SP->cursrow = curscr->_cury;
-		SP->curscol = curscr->_curx;
-	}
+
+	SP->cursrow = curscr->_cury;
+	SP->curscol = curscr->_curx;
 
 	return OK;
 }

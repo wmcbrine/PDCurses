@@ -23,7 +23,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.30 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.31 2006/07/28 11:05:10 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -247,45 +247,42 @@ int PDC_get_bios_key(void)
 	||  (scan == 0xe0 && ascii == 0x2f)) /* Slash */
 		return ((ascii & 0x0f) | 0xf0) << 8;
 
-	if (ascii == 0xe0 && scan == 0x47 &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Home */
-		return (int)0xb000;
+	if (ascii == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+	{
+		switch (scan)
+		{
+		case 0x47: /* Shift Home */
+			return (int)0xb000;
 
-	if (ascii == 0xe0 && scan == 0x48 &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Up */
-		return (int)0xb100;
+		case 0x48: /* Shift Up */
+			return (int)0xb100;
 
-	if (ascii == 0xe0 && scan == 0x49 &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift PgUp */
-		return (int)0xb200;
+		case 0x49: /* Shift PgUp */
+			return (int)0xb200;
 
-	if (ascii == 0xe0 && scan == 0x4b &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Left */
-		return (int)0xb300;
+		case 0x4b: /* Shift Left */
+			return (int)0xb300;
 
-	if (ascii == 0xe0 && scan == 0x4d &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Right */
-		return (int)0xb400;
+		case 0x4d: /* Shift Right */
+			return (int)0xb400;
 
-	if (ascii == 0xe0 && scan == 0x4f &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift End */
-		return (int)0xb500;
+		case 0x4f: /* Shift End */
+			return (int)0xb500;
 
-	if (ascii == 0xe0 && scan == 0x50 &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Down */
-		return (int)0xb600;
+		case 0x50: /* Shift Down */
+			return (int)0xb600;
 
-	if (ascii == 0xe0 && scan == 0x51 &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift PgDn */
-		return (int)0xb700;
+		case 0x51: /* Shift PgDn */
+			return (int)0xb700;
 
-	if (ascii == 0xe0 && scan == 0x52 &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Ins */
-		return (int)0xb800;
+		case 0x52: /* Shift Ins */
+			return (int)0xb800;
 
-	if (ascii == 0xe0 && scan == 0x53 &&
-	    pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT) /* Shift Del */
-		return (int)0xb900;
+		case 0x53: /* Shift Del */
+			return (int)0xb900;
+
+		}
+	}
 
 	/* some NLS use 0xe0 as real character - Ruslan Fedyarov */
 

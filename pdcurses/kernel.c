@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.51 2006/07/23 18:56:28 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.52 2006/07/28 19:40:39 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -154,15 +154,12 @@ static int PDC_restore_mode(struct cttyset *ctty)
 	if (ctty->been_set == TRUE)
 	{
 		memcpy(SP, &(ctty->saved), sizeof(SCREEN));
-		mvcur(0, 0, ctty->saved.cursrow, ctty->saved.curscol);
 
 		if (PDC_get_ctrl_break() != ctty->saved.orgcbr)
 			PDC_set_ctrl_break(ctty->saved.orgcbr);
 
 		if (ctty->saved.raw_out)
 			raw();
-
-		curs_set(ctty->saved.visibility);
 
 		SP->font = PDC_get_font();
 		PDC_set_font(ctty->saved.font);
@@ -178,6 +175,10 @@ static int PDC_restore_mode(struct cttyset *ctty)
 #endif
 		if ((LINES != ctty->saved.lines) || (COLS != ctty->saved.cols))
 			resize_term(ctty->saved.lines, ctty->saved.cols);
+
+		PDC_curs_set(ctty->saved.visibility);
+
+		PDC_gotoyx(ctty->saved.cursrow, ctty->saved.curscol);
 	}
 
 	return ctty->been_set ? OK : ERR;

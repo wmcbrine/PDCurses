@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.42 2006/07/28 09:30:49 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.43 2006/07/28 18:45:14 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -192,8 +192,8 @@ void PDC_transform_line(int lineno)
 #ifdef __DJGPP__
 		dosmemput(temp_line, len * sizeof(unsigned short),
 			(unsigned long)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs + (((lineno * curscr->_maxx) + x) *
-			sizeof(unsigned short))));
+			SP->video_ofs + (lineno * curscr->_maxx + x) *
+			sizeof(unsigned short)));
 #else
 # if SMALL || MEDIUM
 #  ifdef __PACIFIC__
@@ -203,12 +203,12 @@ void PDC_transform_line(int lineno)
 		ds = segregs.ds;
 #  endif
 		movedata(ds, (int)temp_line, SP->video_seg,
-			SP->video_ofs + (((lineno * curscr->_maxx) + x) *
-			sizeof(unsigned short)), len * sizeof(unsigned short));
+			SP->video_ofs + (lineno * curscr->_maxx + x) *
+			sizeof(unsigned short), len * sizeof(unsigned short));
 # else
 		memcpy((void *)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs + (((lineno * curscr->_maxx) + x) *
-			sizeof(unsigned short))), temp_line,
+			SP->video_ofs + (lineno * curscr->_maxx + x) *
+			sizeof(unsigned short)), temp_line,
 			len * sizeof(unsigned short));
 # endif
 #endif

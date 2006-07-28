@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.31 2006/07/28 20:53:09 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.32 2006/07/28 22:06:53 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -61,27 +61,19 @@ void PDC_gotoyx(int row, int col)
 	line in _curscr.
 
   Portability:
-	PDCurses  void PDC_transform_line(int lineno);
+	PDCurses  void PDC_transform_line(int lineno, int x, int len, 
+					  const chtype *srcp);
 
 **man-end****************************************************************/
 
-void PDC_transform_line(int lineno)
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	/* this should be enough for the maximum width of a screen. */
 
 	unsigned short temp_line[256];
-
-	chtype *srcp;
-	int j, x, len;
+	int j;
 
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
-
-	if (curscr == (WINDOW *)NULL)
-		return;
-
-	x = curscr->_firstch[lineno];
-	len = curscr->_lastch[lineno] - x + 1;
-	srcp = curscr->_y[lineno] + x;
 
 	/* replace the attribute part of the chtype with the 
 	   actual colour value for each chtype in the line */
@@ -95,7 +87,4 @@ void PDC_transform_line(int lineno)
 	VioWrtCellStr((PCH)temp_line, (USHORT)(len * sizeof(unsigned short)),
 		(USHORT)lineno, (USHORT)x, 0);
 #endif
-
-	curscr->_firstch[lineno] = _NO_CHANGE;
-	curscr->_lastch[lineno] = _NO_CHANGE;
 }

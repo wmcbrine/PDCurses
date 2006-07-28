@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.45 2006/07/28 20:53:09 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.46 2006/07/28 22:06:53 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -135,14 +135,14 @@ void PDC_putctty(chtype character, chtype color)
 	line in _curscr.
 
   Portability:
-	PDCurses  void PDC_transform_line(int lineno);
+	PDCurses  void PDC_transform_line(int lineno, int x, int len, 
+					  const chtype *srcp);
 
 **man-end****************************************************************/
 
-void PDC_transform_line(int lineno)
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
-	chtype *srcp;
-	int j, x, len;
+	int j;
 
 #if SMALL || MEDIUM
 # ifndef __PACIFIC__
@@ -152,13 +152,6 @@ void PDC_transform_line(int lineno)
 #endif
 
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
-
-	if (curscr == (WINDOW *)NULL)
-		return;
-
-	x = curscr->_firstch[lineno];
-	len = curscr->_lastch[lineno] - x + 1;
-	srcp = curscr->_y[lineno] + x;
 
 	if (SP->direct_video)
 	{
@@ -214,7 +207,4 @@ void PDC_transform_line(int lineno)
 
 			j += count;
 		}
-
-	curscr->_firstch[lineno] = _NO_CHANGE;
-	curscr->_lastch[lineno] = _NO_CHANGE;
 }

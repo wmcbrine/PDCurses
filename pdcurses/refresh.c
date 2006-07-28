@@ -38,7 +38,7 @@
 # undef reset_prog_mode
 #endif
 
-RCSID("$Id: refresh.c,v 1.34 2006/07/28 19:32:07 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.35 2006/07/28 22:06:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -181,7 +181,7 @@ int wnoutrefresh(WINDOW *win)
 
 int doupdate(void)
 {
-	int i;
+	int y;
 
 	PDC_LOG(("doupdate() - called\n"));
 
@@ -198,20 +198,31 @@ int doupdate(void)
 	if (curscr == (WINDOW *)NULL)
 		return ERR;
 
-	for (i = 0; i < SP->lines; i++)
+	for (y = 0; y < SP->lines; y++)
 	{
 		PDC_LOG(("doupdate() - Transforming line %d of %d: %s\n",
-			i, SP->lines, (curscr->_firstch[i] != _NO_CHANGE) ?
+			y, SP->lines, (curscr->_firstch[y] != _NO_CHANGE) ?
 			"Yes" : "No"));
 
 		if (curscr->_clear)
 		{
-			curscr->_firstch[i] = 0;
-			curscr->_lastch[i] = COLS - 1;
+			curscr->_firstch[y] = 0;
+			curscr->_lastch[y] = COLS - 1;
 		}
 
-		if (curscr->_firstch[i] != _NO_CHANGE)
-			PDC_transform_line(i);
+		if (curscr->_firstch[y] != _NO_CHANGE)
+		{
+			int x = curscr->_firstch[y];
+
+			/* coordinates, length, starting pointer */
+
+			PDC_transform_line(y, x,
+				curscr->_lastch[y] - x + 1,
+				curscr->_y[y] + x);
+
+			curscr->_firstch[y] = _NO_CHANGE;
+			curscr->_lastch[y] = _NO_CHANGE;
+		}
 	}
 
 	curscr->_clear = FALSE;

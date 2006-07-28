@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.103 2006/07/28 20:53:09 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.104 2006/07/28 22:06:53 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -111,7 +111,7 @@ int	PDC_set_ctrl_break(bool);
 int	PDC_set_font(int);
 void	PDC_sync(WINDOW *);
 int	PDC_sysgetch(void);
-void	PDC_transform_line(int);
+void	PDC_transform_line(int, int, int, const chtype *);
 int	PDC_validchar(int);
 
 #if defined(OS2) && !defined(EMXVIDEO)

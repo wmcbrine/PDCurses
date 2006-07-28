@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.32 2006/07/28 20:53:09 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.33 2006/07/28 22:06:53 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -97,37 +97,24 @@ void PDC_gotoyx(int row, int col)
 	line in _curscr.
 
   Portability:
-	PDCurses  void PDC_transform_line(int lineno);
+	PDCurses  void PDC_transform_line(int lineno, int x, int len, 
+					  const chtype *srcp);
 
 **man-end****************************************************************/
 
-void PDC_transform_line(int lineno)
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
-	const chtype *dstp;
-	int x, endx, len;
-
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
-
-	if (curscr == (WINDOW *)NULL)
-		return;
-
-	x = curscr->_firstch[lineno];
-	endx = curscr->_lastch[lineno];
-	dstp = curscr->_y[lineno] + x;
-	len = endx - x + 1;
 
 	get_line_lock(lineno);
 
 	memcpy(Xcurscr + XCURSCR_Y_OFF(lineno) + (x * sizeof(chtype)),
-		dstp, len * sizeof(chtype));
+		srcp, len * sizeof(chtype));
 
 	*(Xcurscr + XCURSCR_START_OFF + lineno) = x;
 	*(Xcurscr + XCURSCR_LENGTH_OFF + lineno) = len;
 
 	release_line_lock(lineno);
-
-	curscr->_firstch[lineno] = _NO_CHANGE;
-	curscr->_lastch[lineno] = _NO_CHANGE;
 
 	XCursesInstructAndWait(CURSES_REFRESH);
 }

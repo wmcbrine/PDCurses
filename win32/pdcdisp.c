@@ -24,7 +24,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.30 2006/07/28 20:53:09 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.31 2006/07/28 22:06:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -66,27 +66,19 @@ void PDC_gotoyx(int row, int col)
 	line in _curscr.
 
   Portability:
-	PDCurses  void PDC_transform_line(int lineno);
+	PDCurses  void PDC_transform_line(int lineno, int x, int len, 
+					  const chtype *srcp);
 
 **man-end****************************************************************/
 
-void PDC_transform_line(int lineno)
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	CHAR_INFO ci[512];
-	int j, x, endx, len;
-	chtype *srcp;
+	int j;
 	COORD bufSize, bufPos;
 	SMALL_RECT sr;
 
 	PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
-
-	if (curscr == (WINDOW *)NULL)
-		return;
-
-	x = curscr->_firstch[lineno];
-	endx = curscr->_lastch[lineno];
-	srcp = curscr->_y[lineno] + x;
-	len = endx - x + 1;
 
 	bufPos.X = bufPos.Y = 0;
 
@@ -96,7 +88,7 @@ void PDC_transform_line(int lineno)
 	sr.Top = lineno;
 	sr.Bottom = lineno;
 	sr.Left = x;
-	sr.Right = endx;
+	sr.Right = x + len - 1;
 
 	for (j = 0; j < len; j++)
 	{
@@ -109,7 +101,4 @@ void PDC_transform_line(int lineno)
 	}
 
 	WriteConsoleOutput(hConOut, ci, bufSize, bufPos, &sr);
-
-	curscr->_firstch[lineno] = _NO_CHANGE;
-	curscr->_lastch[lineno] = _NO_CHANGE;
 }

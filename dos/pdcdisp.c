@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.40 2006/07/24 20:46:20 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.41 2006/07/28 07:49:38 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -132,7 +132,7 @@ int PDC_putctty(chtype character, chtype color)
 	regs.h.ah = 0x0e;	/* Write in TTY fashion, advance cursor. */
 	regs.h.al = (unsigned char) (character & 0x00FF);
 	regs.h.bh = SP->video_page;
-	regs.h.bl = (unsigned char) ((color & 0xFF00) >> 8);
+	regs.h.bl = (unsigned char) (color);
 	int86(0x10, &regs, &regs);
 
 	return OK;

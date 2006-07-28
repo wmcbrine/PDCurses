@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.52 2006/07/28 19:40:39 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.53 2006/07/28 19:56:27 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -244,10 +244,22 @@ int savetty(void)
 
 int curs_set(int visibility)
 {
+	int ret_vis;
+
 	PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
 
-	return ((visibility < 0) || (visibility > 2)) ? ERR : 
-		PDC_curs_set(visibility);
+	if ((visibility < 0) || (visibility > 2))
+		return ERR;
+
+	ret_vis = PDC_curs_set(visibility);
+
+	/* If the cursor is changing from invisible to visible, update 
+	   its position */
+
+	if (visibility && !ret_vis)
+		PDC_gotoyx(SP->cursrow, SP->curscol);
+
+	return ret_vis;
 }
 
 int napms(int ms)

@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.31 2006/07/28 19:32:07 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.32 2006/07/28 20:53:09 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -73,22 +73,17 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 	screen. We don't optimize here -- on a PC, it takes more time
 	to optimize than to do things directly.
 
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
   Portability:
-	PDCurses  int PDC_gotoyx(int row, int col);
+	PDCurses  void PDC_gotoyx(int row, int col);
 
 **man-end****************************************************************/
 
-int PDC_gotoyx(int row, int col)
+void PDC_gotoyx(int row, int col)
 {
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
 	PDC_display_cursor(SP->cursrow, SP->curscol, row, col, 
 		SP->visibility);
-
-	return OK;
 }
 
 /*man-start**************************************************************

@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.44 2006/07/28 19:08:24 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.45 2006/07/28 20:53:09 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -46,15 +46,12 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 	screen. We don't optimize here -- on a PC, it takes more time
 	to optimize than to do things directly.
 
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
   Portability:
-	PDCurses  int PDC_gotoyx(int row, int col);
+	PDCurses  void PDC_gotoyx(int row, int col);
 
 **man-end****************************************************************/
 
-int PDC_gotoyx(int row, int col)
+void PDC_gotoyx(int row, int col)
 {
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
@@ -63,8 +60,6 @@ int PDC_gotoyx(int row, int col)
 	regs.h.dh = (unsigned char) row;
 	regs.h.dl = (unsigned char) col;
 	int86(0x10, &regs, &regs);
-
-	return OK;
 }
 
 /*man-start**************************************************************

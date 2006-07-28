@@ -24,7 +24,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.29 2006/07/28 09:24:40 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.30 2006/07/28 20:53:09 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,15 +37,12 @@ RCSID("$Id: pdcdisp.c,v 1.29 2006/07/28 09:24:40 wmcbrine Exp $");
 	We don't optimize here -- on a PC, it takes more time to 
 	optimize than to do things directly.
 
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
   Portability:
-	PDCurses  int PDC_gotoyx(int row, int col);
+	PDCurses  void PDC_gotoyx(int row, int col);
 
 **man-end****************************************************************/
 
-int PDC_gotoyx(int row, int col)
+void PDC_gotoyx(int row, int col)
 {
 	COORD coord;
 
@@ -56,8 +53,6 @@ int PDC_gotoyx(int row, int col)
 	coord.Y = row;
 
 	SetConsoleCursorPosition(hConOut, coord);
-
-	return OK;
 }
 
 /*man-start**************************************************************

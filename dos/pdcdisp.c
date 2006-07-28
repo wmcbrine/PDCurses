@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.41 2006/07/28 07:49:38 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.42 2006/07/28 09:30:49 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -74,18 +74,19 @@ int PDC_gotoyx(int row, int col)
   PDCurses Description:
 	This is a private PDCurses routine.
 
-	Outputs character 'chr' to screen in tty fashion. If a colour
+	Outputs 'character' to screen, 'count' times. If a colour
 	mode is active, the character is written with colour 'colour'.
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
   Portability:
-	PDCurses  int PDC_putc(chtype character, chtype color);
+	PDCurses  int PDC_putc(chtype character, chtype color,
+				unsigned short count);
 
 **man-end****************************************************************/
 
-int PDC_putc(chtype character, chtype color)
+int PDC_putc(chtype character, chtype color, unsigned short count)
 {
 	PDC_LOG(("PDC_putc() - called: char=%c attrib=0x%x color=0x%x\n",
 		character & A_CHARTEXT, character & A_ATTRIBUTES, color));
@@ -95,9 +96,9 @@ int PDC_putc(chtype character, chtype color)
 	regs.h.bh = SP->video_page;
 	regs.h.bl = (unsigned char) (color);
 #ifdef __WATCOMC__
-	regs.w.cx = 1;
+	regs.w.cx = count;
 #else
-	regs.x.cx = 1;
+	regs.x.cx = count;
 #endif
 	int86(0x10, &regs, &regs);
 
@@ -111,7 +112,7 @@ int PDC_putc(chtype character, chtype color)
   PDCurses Description:
 	This is a private PDCurses routine.
 
-	Outputs character 'chr' to screen in tty fashion. If a colour
+	Outputs 'character' to screen in tty fashion. If a colour
 	mode is active, the character is written with colour 'colour'.
 
 	This function moves the physical cursor after writing so the
@@ -214,11 +215,19 @@ void PDC_transform_line(int lineno)
 
 	}
 	else
-		for (j = 0; j < len; j++)
+		for (j = 0; j < len;)
 		{
+			unsigned short count = 1;
+
+			while ((j + count < len) &&
+				(srcp[j] == srcp[j + count]))
+					count++;
+
 			PDC_gotoyx(lineno, j + x);
 			PDC_putc(srcp[j] & A_CHARTEXT,
-				chtype_attr(srcp[j]) >> 8);
+				chtype_attr(srcp[j]) >> 8, count);
+
+			j += count;
 		}
 
 	curscr->_firstch[lineno] = _NO_CHANGE;

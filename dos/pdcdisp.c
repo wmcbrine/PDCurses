@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.43 2006/07/28 18:45:14 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.44 2006/07/28 19:08:24 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -77,16 +77,13 @@ int PDC_gotoyx(int row, int col)
 	Outputs 'character' to screen, 'count' times. If a colour
 	mode is active, the character is written with colour 'colour'.
 
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
   Portability:
-	PDCurses  int PDC_putc(chtype character, chtype color,
+	PDCurses  void PDC_putc(chtype character, chtype color,
 				unsigned short count);
 
 **man-end****************************************************************/
 
-int PDC_putc(chtype character, chtype color, unsigned short count)
+void PDC_putc(chtype character, chtype color, unsigned short count)
 {
 	PDC_LOG(("PDC_putc() - called: char=%c attrib=0x%x color=0x%x\n",
 		character & A_CHARTEXT, character & A_ATTRIBUTES, color));
@@ -101,8 +98,6 @@ int PDC_putc(chtype character, chtype color, unsigned short count)
 	regs.x.cx = count;
 #endif
 	int86(0x10, &regs, &regs);
-
-	return OK;
 }
 
 /*man-start**************************************************************
@@ -118,15 +113,12 @@ int PDC_putc(chtype character, chtype color, unsigned short count)
 	This function moves the physical cursor after writing so the
 	screen will scroll if necessary.
 
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
   Portability:
-	PDCurses  int PDC_putctty(chtype character, chtype color);
+	PDCurses  void PDC_putctty(chtype character, chtype color);
 
 **man-end****************************************************************/
 
-int PDC_putctty(chtype character, chtype color)
+void PDC_putctty(chtype character, chtype color)
 {
 	PDC_LOG(("PDC_putctty() - called\n"));
 
@@ -135,8 +127,6 @@ int PDC_putctty(chtype character, chtype color)
 	regs.h.bh = SP->video_page;
 	regs.h.bl = (unsigned char) (color);
 	int86(0x10, &regs, &regs);
-
-	return OK;
 }
 
 /*man-start**************************************************************

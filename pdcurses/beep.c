@@ -27,7 +27,7 @@
 # undef wrefresh
 #endif
 
-RCSID("$Id: beep.c,v 1.21 2006/07/15 20:46:23 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.22 2006/07/28 07:28:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -76,6 +76,8 @@ int flash(void)
 	int z, y, x;
 
 	PDC_LOG(("flash() - called\n"));
+
+	/* Reverse each cell; wait; restore the screen */
 
 	for (z = 0; z < 2; z++) {
 

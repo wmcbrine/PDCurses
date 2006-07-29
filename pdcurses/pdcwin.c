@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.46 2006/07/18 11:25:46 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.47 2006/07/29 04:25:51 wmcbrine Exp $");
 
 static int PDC_newline(WINDOW *, int);
 
@@ -545,7 +545,7 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 	return -1.
 
   PDCurses Return Value:
-	This function returns OK on success and ERR on error.
+	See above.
 
   Portability:
 	PDCurses  int PDC_newline(WINDOW *win, int lin);
@@ -564,22 +564,9 @@ static int PDC_newline(WINDOW *win, int lin)
 		lin--;
 
 		if (win->_scroll)
-		{
 			scroll(win);
-
- /* wrs -- 7/11/93 ** it seems that System V Curses automatically refreshes
-  *                   a window when scrolling occurs via a newline.  This
-  *                   could be a feature that isn't intended, but I'll
-  *                   implement it here as well for consistency.
-  * fh -- 7/30/99 ** but it causes problems with panels -- a lower panel
-  *                  might be refreshed without updating the obscuring
-  *                  parts of other panels.
-  */
-			/* wrefresh(win); */
-		}
 		else
 			return -1;
-
 	}
 
 	return lin;

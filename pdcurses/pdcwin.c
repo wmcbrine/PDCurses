@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.47 2006/07/29 04:25:51 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.48 2006/07/29 06:18:24 wmcbrine Exp $");
 
 static int PDC_newline(WINDOW *, int);
 
@@ -151,12 +151,8 @@ WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 
 	/* allocate the window structure itself */
 
-	if ((win = malloc(sizeof(WINDOW))) == (WINDOW *)NULL)
+	if ((win = calloc(1, sizeof(WINDOW))) == (WINDOW *)NULL)
 		return win;
-
-	/* set all fields to zero */
-
-	memset(win, 0, sizeof(WINDOW));
 
 	/* allocate the line pointer array */
 

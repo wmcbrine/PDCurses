@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.202 2006/07/29 22:01:20 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.203 2006/07/29 22:08:31 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -572,7 +572,7 @@ typedef struct			/* structure for ripped off lines */
 
 typedef struct
 {
-	bool	alive;		/* if initscr() called			*/
+	bool	alive;		/* if initscr() called, and not endwin() */
 	bool	autocr;		/* if cr -> lf				*/
 	bool	cbreak;		/* if terminal unbuffered		*/
 	bool	echo;		/* if terminal echo			*/
@@ -583,8 +583,6 @@ typedef struct
 	bool	mono;		/* TRUE if current screen is mono	*/
 	bool	sizeable;	/* TRUE if adapter is resizeable	*/
 	bool	resized;	/* TRUE if TERM has been resized	*/
-	bool	shell;		/* TRUE if reset_prog_mode() needs
-				   to be called.			*/
 	bool	orig_attr;	/* TRUE if we have the original colors	*/
 	short	orig_fore;	/* Original screen foreground color	*/
 	short	orig_back;	/* Original screen foreground color	*/

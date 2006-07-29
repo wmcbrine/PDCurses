@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.62 2006/07/24 20:34:19 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.63 2006/07/29 22:01:20 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -188,7 +188,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	SP->audible	= TRUE;
 	SP->blank	= ' ';
 	SP->resized	= FALSE;
-	SP->shell	= FALSE;
 	SP->_trap_mbe	= 0L;
 	SP->_map_mbe_to_key = 0L;
 	SP->linesrippedoff = 0;

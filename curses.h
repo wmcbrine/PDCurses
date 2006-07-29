@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.201 2006/07/29 06:00:54 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.202 2006/07/29 22:01:20 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*

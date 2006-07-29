@@ -38,7 +38,7 @@
 # undef reset_prog_mode
 #endif
 
-RCSID("$Id: refresh.c,v 1.35 2006/07/28 22:06:53 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.36 2006/07/29 22:01:20 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -191,9 +191,6 @@ int doupdate(void)
 		curscr->_clear = TRUE;
 		SP->alive = TRUE;	/* so isendwin() result is correct */
 	}
-
-	if (SP->shell)
-		reset_prog_mode();
 
 	if (curscr == (WINDOW *)NULL)
 		return ERR;

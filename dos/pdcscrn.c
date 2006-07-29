@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.37 2006/07/24 20:46:20 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.38 2006/07/29 06:00:54 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -64,8 +64,7 @@ int PDC_scr_close(void)
 		if (saved_screen == NULL)
 			return OK;
 #ifdef __DJGPP__
-		dosmemput(saved_screen,
-			saved_lines * saved_cols * sizeof(unsigned short),
+		dosmemput(saved_screen, saved_lines * saved_cols * 2,
 			(unsigned long)_FAR_POINTER(SP->video_seg,
 			SP->video_ofs));
 #else
@@ -76,13 +75,11 @@ int PDC_scr_close(void)
 		segread(&segregs);
 		ds = segregs.ds;
 #  endif
-		movedata(ds, (int)saved_screen,
-		SP->video_seg,SP->video_ofs,
-		(saved_lines * saved_cols * sizeof(unsigned short)));
+		movedata(ds, (int)saved_screen, SP->video_seg, SP->video_ofs,
+		(saved_lines * saved_cols * 2));
 # else
 		memcpy((void *)_FAR_POINTER(SP->video_seg, SP->video_ofs),
-		(void *)saved_screen,
-		(saved_lines * saved_cols * sizeof(unsigned short)));
+		(void *)saved_screen, (saved_lines * saved_cols * 2));
 # endif
 #endif
 		free(saved_screen);
@@ -120,7 +117,7 @@ int PDC_scr_open(int argc, char **argv)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-        if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
+	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
 		return ERR;
 
 	SP->orig_attr	 = FALSE;
@@ -130,7 +127,6 @@ int PDC_scr_open(int argc, char **argv)
 	SP->direct_video = TRUE;	/* Assume that we can	      */
 	SP->video_seg	= 0xb000;	/* Base screen segment addr   */
 	SP->video_ofs	= 0x0;		/* Base screen segment ofs    */
-	SP->video_page	= 0;		/* Current Video Page	      */
 
 	SP->adapter	= PDC_query_adapter_type();
 	SP->scrnmode	= PDC_get_scrn_mode();
@@ -155,16 +151,17 @@ int PDC_scr_open(int argc, char **argv)
 	{
 		saved_lines = SP->lines;
 		saved_cols = SP->cols;
-		if ((saved_screen = (unsigned short*)malloc(saved_lines
-		    * saved_cols * sizeof(unsigned short))) == NULL)
+
+		if ((saved_screen = (unsigned short *)malloc(saved_lines
+		    * saved_cols * 2)) == NULL)
 		{
 			SP->_preserve = FALSE;
 			return OK;
 		}
 #ifdef __DJGPP__
 		dosmemget ((unsigned long)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs), saved_lines * saved_cols * 
-			sizeof(unsigned short), saved_screen);
+			SP->video_ofs), saved_lines * saved_cols * 2,
+			saved_screen);
 #else
 # if SMALL || MEDIUM
 #  ifdef __PACIFIC__
@@ -173,12 +170,12 @@ int PDC_scr_open(int argc, char **argv)
 		segread(&segregs);
 		ds = segregs.ds;
 #  endif
-		movedata(SP->video_seg,SP->video_ofs, ds, (int)saved_screen,
-			(saved_lines * saved_cols * sizeof(unsigned short)));
+		movedata(SP->video_seg, SP->video_ofs, ds, (int)saved_screen,
+			(saved_lines * saved_cols * 2));
 # else
-		memcpy((void*)saved_screen,
+		memcpy((void *)saved_screen,
 			(void *)_FAR_POINTER(SP->video_seg, SP->video_ofs),
-			(saved_lines * saved_cols * sizeof(unsigned short)));
+			(saved_lines * saved_cols * 2));
 # endif
 #endif
 	}

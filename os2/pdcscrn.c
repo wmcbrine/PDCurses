@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.32 2006/07/24 20:46:20 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.33 2006/07/29 06:00:54 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -193,7 +193,7 @@ int PDC_scr_open(int argc, char **argv)
 		saved_cols = SP->cols;
 #ifdef EMXVIDEO
 		if ((saved_screen = (unsigned char *)malloc(2 * saved_lines *
-		     saved_cols * sizeof(unsigned char))) == NULL)
+		     saved_cols)) == NULL)
 		{
 			SP->_preserve = FALSE;
 			return OK;
@@ -202,7 +202,7 @@ int PDC_scr_open(int argc, char **argv)
 		v_getline(saved_screen, 0, 0, saved_lines * saved_cols);
 #else
 		if ((saved_screen = (PCH)malloc(2 * saved_lines *
-		     saved_cols * sizeof(unsigned char))) == NULL)
+		     saved_cols)) == NULL)
 		{
 			SP->_preserve = FALSE;
 			return OK;

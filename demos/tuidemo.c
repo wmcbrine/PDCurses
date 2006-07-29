@@ -1,6 +1,6 @@
 /********************************* tuidemo.c ********************************/
 /*
- * $Id: tuidemo.c,v 1.15 2006/04/26 23:55:38 wmcbrine Exp $
+ * $Id: tuidemo.c,v 1.16 2006/07/29 06:00:54 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -39,7 +39,7 @@ void address(void)
 	int i, field = 50;
 
 	for (i = 0; i < 5; i++)
-		fieldbuf[i] = (char *) calloc(field + 1, sizeof(char));
+		fieldbuf[i] = (char *) calloc(1, field + 1);
 
 	if (getstrings(fieldname, fieldbuf, field) != KEY_ESC)
 	{

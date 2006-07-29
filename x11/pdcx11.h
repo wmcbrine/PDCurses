@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.43 2006/07/21 17:43:13 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.44 2006/07/29 06:00:54 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -87,9 +87,8 @@
 #define XCURSCR_FLAG_SIZE   (XCursesLINES * sizeof(int))
 #define XCURSCR_START_SIZE  (XCursesLINES * sizeof(int))
 #define XCURSCR_LENGTH_SIZE (XCursesLINES * sizeof(int))
-#define XCURSCR_ATRTAB_SIZE (MAX_ATRTAB * sizeof(unsigned char))
 #define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE + XCURSCR_START_SIZE + \
-	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + XCURSCR_ATRTAB_SIZE)
+	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + MAX_ATRTAB)
 
 #define XCURSCR_Y_OFF(y)    ((y) * XCursesCOLS * sizeof(chtype))
 #define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0) + XCURSCR_Y_SIZE)

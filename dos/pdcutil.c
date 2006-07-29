@@ -36,13 +36,13 @@
 # endif
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.6 2006/07/15 15:13:40 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.7 2006/07/29 06:00:54 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
 	PDC_LOG(("PDC_beep() - called\n"));
 
-	PDC_putctty((chtype) '\007', 0);
+	PDC_putctty((chtype) '\007');
 }
 
 void PDC_napms(int ms)

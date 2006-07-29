@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.26 2006/07/25 01:24:47 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.27 2006/07/29 06:00:54 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -49,7 +49,7 @@ int PDC_get_cursor_pos(int *row, int *col)
 	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
 	regs.h.ah = 0x03;
-	regs.h.bh = SP->video_page;
+	regs.h.bh = 0;
 	int86(0x10, &regs, &regs);
 	*row = regs.h.dh;
 	*col = regs.h.dl;

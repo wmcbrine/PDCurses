@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.200 2006/07/24 20:46:20 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.201 2006/07/29 06:00:54 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -631,7 +631,6 @@ typedef struct
 #ifdef DOS
 	int	scrnmode;	/* default screen mode			*/
 	bool	direct_video;	/* Allow Direct Screen Memory writes	*/
-	int	video_page;	/* Current PC video page		*/
 	unsigned video_seg;	/* video base segment			*/
 	unsigned video_ofs;	/* video base offset			*/
 	bool	bogus_adapter;	/* TRUE if adapter has insane values	*/

@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.46 2006/07/28 22:06:53 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.47 2006/07/29 06:00:54 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -56,7 +56,7 @@ void PDC_gotoyx(int row, int col)
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
 	regs.h.ah = 0x02;
-	regs.h.bh = SP->video_page;
+	regs.h.bh = 0;
 	regs.h.dh = (unsigned char) row;
 	regs.h.dl = (unsigned char) col;
 	int86(0x10, &regs, &regs);
@@ -64,29 +64,26 @@ void PDC_gotoyx(int row, int col)
 
 /*man-start**************************************************************
 
-  PDC_putc()	- Output a character in the current attribute.
+  PDC_putc()	- Output a character and attribute.
 
   PDCurses Description:
 	This is a private PDCurses routine.
 
-	Outputs 'character' to screen, 'count' times. If a colour
-	mode is active, the character is written with colour 'colour'.
+	Outputs 'ch' to screen, 'count' times.
 
   Portability:
-	PDCurses  void PDC_putc(chtype character, chtype color,
-				unsigned short count);
+	PDCurses  void PDC_putc(chtype ch, unsigned short count);
 
 **man-end****************************************************************/
 
-void PDC_putc(chtype character, chtype color, unsigned short count)
+static void PDC_putc(chtype ch, unsigned short count)
 {
-	PDC_LOG(("PDC_putc() - called: char=%c attrib=0x%x color=0x%x\n",
-		character & A_CHARTEXT, character & A_ATTRIBUTES, color));
+	PDC_LOG(("PDC_putc() - called\n"));
 
 	regs.h.ah = 0x09;	/* Avoid screen wrap.  Don't advance cursor. */
-	regs.h.al = (unsigned char) (character & 0x00FF);
-	regs.h.bh = SP->video_page;
-	regs.h.bl = (unsigned char) (color);
+	regs.h.al = (unsigned char) (ch & 0xff);
+	regs.h.bh = 0;
+	regs.h.bl = (unsigned char) (chtype_attr(ch) >> 8);
 #ifdef __WATCOMC__
 	regs.w.cx = count;
 #else
@@ -102,25 +99,24 @@ void PDC_putc(chtype character, chtype color, unsigned short count)
   PDCurses Description:
 	This is a private PDCurses routine.
 
-	Outputs 'character' to screen in tty fashion. If a colour
-	mode is active, the character is written with colour 'colour'.
+	Outputs 'ch' to screen in tty fashion.
 
 	This function moves the physical cursor after writing so the
 	screen will scroll if necessary.
 
   Portability:
-	PDCurses  void PDC_putctty(chtype character, chtype color);
+	PDCurses  void PDC_putctty(chtype ch);
 
 **man-end****************************************************************/
 
-void PDC_putctty(chtype character, chtype color)
+void PDC_putctty(chtype ch)
 {
 	PDC_LOG(("PDC_putctty() - called\n"));
 
 	regs.h.ah = 0x0e;	/* Write in TTY fashion, advance cursor. */
-	regs.h.al = (unsigned char) (character & 0x00FF);
-	regs.h.bh = SP->video_page;
-	regs.h.bl = (unsigned char) (color);
+	regs.h.al = (unsigned char) (ch & 0xff);
+	regs.h.bh = 0;
+	regs.h.bl = (unsigned char) (chtype_attr(ch) >> 8);
 	int86(0x10, &regs, &regs);
 }
 
@@ -164,14 +160,12 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		   actual colour value for each chtype in the line */
 
 		for (j = 0; j < len; j++)
-			temp_line[j] = chtype_attr(srcp[j]) |
-				(srcp[j] & A_CHARTEXT);
+			temp_line[j] = chtype_attr(srcp[j]) | (srcp[j] & 0xff);
 
 #ifdef __DJGPP__
-		dosmemput(temp_line, len * sizeof(unsigned short),
+		dosmemput(temp_line, len * 2,
 			(unsigned long)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs + (lineno * curscr->_maxx + x) *
-			sizeof(unsigned short)));
+			SP->video_ofs + (lineno * curscr->_maxx + x) * 2));
 #else
 # if SMALL || MEDIUM
 #  ifdef __PACIFIC__
@@ -181,13 +175,12 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		ds = segregs.ds;
 #  endif
 		movedata(ds, (int)temp_line, SP->video_seg,
-			SP->video_ofs + (lineno * curscr->_maxx + x) *
-			sizeof(unsigned short), len * sizeof(unsigned short));
+			SP->video_ofs + (lineno * curscr->_maxx + x) * 2,
+			len * 2);
 # else
 		memcpy((void *)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs + (lineno * curscr->_maxx + x) *
-			sizeof(unsigned short)), temp_line,
-			len * sizeof(unsigned short));
+			SP->video_ofs + (lineno * curscr->_maxx + x) * 2),
+			temp_line, len * 2);
 # endif
 #endif
 
@@ -202,8 +195,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 					count++;
 
 			PDC_gotoyx(lineno, j + x);
-			PDC_putc(srcp[j] & A_CHARTEXT,
-				chtype_attr(srcp[j]) >> 8, count);
+			PDC_putc(srcp[j], count);
 
 			j += count;
 		}

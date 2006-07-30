@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.29 2006/07/23 22:58:57 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.30 2006/07/30 07:13:07 wmcbrine Exp $");
 
 bool GLOBAL_sb_on = FALSE;
 bool GLOBAL_slk_on = FALSE;
@@ -115,6 +115,9 @@ int PDC_resize_screen(int nlines, int ncols)
 {
 	PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
 		nlines, ncols));
+
+	if (nlines || ncols || !SP->resized)
+		return ERR;
 
 	shmdt((char *)Xcurscr);
 	XCursesInstructAndWait(CURSES_RESIZE);

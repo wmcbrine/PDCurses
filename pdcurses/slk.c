@@ -33,7 +33,7 @@
 #undef slk_attroff
 #undef slk_color
 
-RCSID("$Id: slk.c,v 1.24 2006/07/16 01:26:23 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.25 2006/07/30 06:12:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -110,7 +110,6 @@ char slk_temp_string[64];
 
 static int slk_start_col[LABEL_NCURSES_EXTENDED];
 static chtype slk_attributes[LABEL_NCURSES_EXTENDED];
-static int space_seperator = 1;
 static int label_length = 0;
 static int labels = 0;
 static int label_fmt = 0;
@@ -494,28 +493,7 @@ static void PDC_slk_calc(void)
 
 	PDC_LOG(("PDC_slk_calc() - called\n"));
 
-	switch (label_fmt) 
-	{
-	case 0:  /* 3 - 2 - 3 */
-		label_length = (COLS / labels) - space_seperator - 1;
-		break;
-
-	case 1:   /* 4 - 4 */
-		label_length = (COLS / labels) - space_seperator;
-		break;
-
-	case 2:   /* 4 4 4 */
-	case 3:   /* 4 4 4 with index */
-		label_length = (COLS / labels) - space_seperator;
-		break;
-
-	case 55:  /* 5 - 5 */
-		label_length = (COLS / labels) - space_seperator;
-		break;
-
-	default: /* should never get here!! */
-		return;
-	}
+	label_length = COLS / labels;
 
 	/* set default attribute */
 
@@ -525,80 +503,77 @@ static void PDC_slk_calc(void)
 	switch (label_fmt)
 	{
 	case 0:     /* 3 - 2 - 3 F-Key layout */
+
+		--label_length;
+
 		slk_start_col[0] = col;
-		slk_start_col[1] = (col += label_length + space_seperator);
-		slk_start_col[2] = (col += label_length + space_seperator);
+		slk_start_col[1] = (col += label_length);
+		slk_start_col[2] = (col += label_length);
 
 		center = COLS / 2;
 
-		slk_start_col[3] = center - label_length;
-		slk_start_col[4] = center + space_seperator;
+		slk_start_col[3] = center - label_length + 1;
+		slk_start_col[4] = center + 1;
 
-		col = COLS - ((label_length + space_seperator) * 2 +
-			label_length);
+		col = COLS - (label_length * 3) + 1;
 
 		slk_start_col[5] = col;
-		slk_start_col[6] = (col += label_length + space_seperator);
-		slk_start_col[7] = (col += label_length + space_seperator);
+		slk_start_col[6] = (col += label_length);
+		slk_start_col[7] = (col += label_length);
 		break;
 
 	case 1:     /* 4 - 4 F-Key layout */
-		slk_start_col[0] = col;
-		slk_start_col[1] = (col += label_length + space_seperator);
-		slk_start_col[2] = (col += label_length + space_seperator);
-		slk_start_col[3] = (col += label_length + space_seperator);
 
-		col = COLS - ((label_length + space_seperator) * 3 + 
-			label_length);
+		for (i = 0; i < 8; i++)
+		{
+			slk_start_col[i] = col;
+			col += label_length;
 
-		slk_start_col[4] = col;
-		slk_start_col[5] = (col += label_length + space_seperator);
-		slk_start_col[6] = (col += label_length + space_seperator);
-		slk_start_col[7] = (col += label_length + space_seperator);
+			if (i == 3)
+				col = COLS - (label_length * 4) + 1; 
+		}
+
 		break;
 
 	case 2:     /* 4 4 4 F-Key layout */
 	case 3:     /* 4 4 4 F-Key layout with index */
-		slk_start_col[0] = col;
-		slk_start_col[1] = (col += label_length + space_seperator);
-		slk_start_col[2] = (col += label_length + space_seperator);
-		slk_start_col[3] = (col += label_length + space_seperator);
+
+		for (i = 0; i < 4; i++)
+		{
+			slk_start_col[i] = col;
+			col += label_length;
+		}
 
 		center = COLS/2;
 
-		slk_start_col[4] = center - (2 * label_length) -
-			space_seperator;
-		slk_start_col[5] = center - label_length;
-		slk_start_col[6] = center + space_seperator;
-		slk_start_col[7] = center + label_length +
-			(2 * space_seperator);
+		slk_start_col[4] = center - (label_length * 2) + 1;
+		slk_start_col[5] = center - label_length - 1;
+		slk_start_col[6] = center + 1;
+		slk_start_col[7] = center + label_length + 1;
 
-		col = COLS - ((label_length + space_seperator) * 3 + 
-			label_length);
+		col = COLS - (label_length * 4) + 1;
 
-		slk_start_col[8] = col;
-		slk_start_col[9] = (col += label_length + space_seperator);
-		slk_start_col[10] = (col += label_length + space_seperator);
-		slk_start_col[11] = (col += label_length + space_seperator);
+		for (i = 8; i < 12; i++)
+		{
+			slk_start_col[i] = col;
+			col += label_length;
+		}
+
 		break;
 
 	default:    /* 5 - 5 F-Key layout */
-		slk_start_col[0] = col;
-		slk_start_col[1] = (col += label_length + space_seperator);
-		slk_start_col[2] = (col += label_length + space_seperator);
-		slk_start_col[3] = (col += label_length + space_seperator);
-		slk_start_col[4] = (col += label_length + space_seperator);
 
-		col = COLS - ((label_length + space_seperator) * 4 + 
-			label_length);
+		for (i = 0; i < 10; i++)
+		{
+			slk_start_col[i] = col;
+			col += label_length;
 
-		slk_start_col[5] = col;
-		slk_start_col[6] = (col += label_length + space_seperator);
-		slk_start_col[7] = (col += label_length + space_seperator);
-		slk_start_col[8] = (col += label_length + space_seperator);
-		slk_start_col[9] = (col += label_length + space_seperator);
-		break;
+			if (i == 4)
+				col = COLS - (label_length * 5) + 1;
+		}
 	}
+
+	--label_length;
 
 	/* make sure labels are all in window */
 

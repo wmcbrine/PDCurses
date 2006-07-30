@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.48 2006/07/30 04:15:25 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.49 2006/07/30 04:23:19 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -158,25 +158,27 @@ int start_color(void)
 
 int init_pair(short colorpair, short foreground, short background)
 {
-	short oldforeground, oldbackground;
-
 	PDC_LOG(("init_pair() - called: colorpair %d fore %d back %d\n",
 		colorpair, foreground, background));
 
 	if (!colorstarted || colorpair >= COLOR_PAIRS || colorpair < 1)
 		return ERR;
 
-	pair_content(colorpair, &oldforeground, &oldbackground);
-
-	PDC_init_pair(colorpair, foreground, background);
-
 	/* To allow the PDC_PRESERVE_SCREEN option to work, we only 
 	   reset curscr if this call to init_pair() alters a color pair 
 	   created by the user. */
 
 	if (colorset[colorpair])
+	{
+	    short oldforeground, oldbackground;
+
+	    pair_content(colorpair, &oldforeground, &oldbackground);
+
 	    if (oldforeground != foreground || oldbackground != background)
 		curscr->_clear = TRUE;
+	}
+
+	PDC_init_pair(colorpair, foreground, background);
 
 	colorset[colorpair] = TRUE;
 

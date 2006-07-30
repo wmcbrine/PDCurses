@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.46 2006/07/30 23:03:33 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.47 2006/07/30 23:57:04 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -180,11 +180,11 @@ extern int otherpid;
 extern int XCursesLINES;
 extern int XCursesCOLS;
 extern unsigned char *atrtab;
-extern int display_sock;
-extern int key_sock;
+extern int XC_display_sock;
+extern int XC_key_sock;
 extern int display_sockets[2];
 extern int key_sockets[2];
-extern int exit_sock;
+extern int XC_exit_sock;
 
 typedef RETSIGTYPE (*signal_handler)();
 

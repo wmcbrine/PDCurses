@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.21 2006/07/30 23:03:33 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.22 2006/07/30 23:57:04 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -95,7 +95,7 @@ void PDC_set_title(const char *title)
 	XCursesInstruct(CURSES_TITLE);
 
 	if (XC_write_display_socket_int(len) >= 0)
-		if (XC_write_socket(display_sock, title, len) >= 0)
+		if (XC_write_socket(XC_display_sock, title, len) >= 0)
 			return;
 
 	XCursesExitCursesProcess(1, "exiting from PDC_set_title");

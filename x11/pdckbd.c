@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.32 2006/07/30 23:03:33 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.33 2006/07/30 23:57:04 wmcbrine Exp $");
 
 MOUSE_STATUS Trapped_Mouse_status;
 
@@ -34,7 +34,7 @@ static bool PDC_kbhit(void)
 	/* Is something ready to be read on the socket ? Must be a key. */
 
 	FD_ZERO(&readfds);
-	FD_SET(key_sock, &readfds);
+	FD_SET(XC_key_sock, &readfds);
 
 	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, 
 	    NULL, &socket_timeout)) < 0)
@@ -59,7 +59,7 @@ int PDC_get_bios_key(void)
 
 	while (1)
 	{
-	    if (XC_read_socket(key_sock, (char *)&newkey,
+	    if (XC_read_socket(XC_key_sock, (char *)&newkey,
 		sizeof(unsigned long)) < 0)
 		    XCursesExitCursesProcess(2, 
 			"exiting from PDC_get_bios_key");
@@ -69,7 +69,7 @@ int PDC_get_bios_key(void)
 
 	    if (key == KEY_MOUSE)
 	    {
-		if (XC_read_socket(key_sock, (char *)&Trapped_Mouse_status, 
+		if (XC_read_socket(XC_key_sock, (char *)&Trapped_Mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
 			    "exiting from PDC_get_bios_key");
@@ -126,7 +126,7 @@ unsigned long PDC_get_input_fd(void)
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
-	return key_sock;
+	return XC_key_sock;
 }
 
 /*man-start**************************************************************

@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.79 2006/07/30 23:03:33 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.80 2006/07/30 23:57:04 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -34,11 +34,11 @@ int shmkey_Xcurscr;
 int otherpid;
 int XCursesLINES = 24;
 int XCursesCOLS = 80;
-int display_sock;
-int key_sock;
+int XC_display_sock;
+int XC_key_sock;
 int display_sockets[2];
 int key_sockets[2];
-int exit_sock;
+int XC_exit_sock;
 
 fd_set readfds;
 fd_set writefds;
@@ -73,7 +73,7 @@ int XC_write_socket(int sock_num, const char *buf, int len)
 		XCLOGMSG, sock_num, len));
 
 #ifdef MOUSE_DEBUG
-	if (sock_num == key_sock)
+	if (sock_num == XC_key_sock)
 		printf("%s:XC_write_socket(key) len: %d\n", XCLOGMSG, len);
 #endif
 	while (1)
@@ -100,11 +100,11 @@ int XC_read_socket(int sock_num, char *buf, int len)
 		rc = read(sock_num, buf + start, length);
 
 #ifdef MOUSE_DEBUG
-		if (sock_num == key_sock)
+		if (sock_num == XC_key_sock)
 		    printf("%s:XC_read_socket(key) rc %d errno %d resized: %d\n",
 			XCLOGMSG, rc, errno, SP->resized);
 #endif
-		if (rc < 0 && sock_num == key_sock && errno == EINTR
+		if (rc < 0 && sock_num == XC_key_sock && errno == EINTR
 		    && SP->resized != FALSE)
 		{
 			MOUSE_LOG(("%s:continuing\n", XCLOGMSG));
@@ -131,7 +131,7 @@ int XC_read_socket(int sock_num, char *buf, int len)
 
 int XC_write_display_socket_int(int x)
 {
-	return XC_write_socket(display_sock, (char *)&x, sizeof(int));
+	return XC_write_socket(XC_display_sock, (char *)&x, sizeof(int));
 }
 
 
@@ -161,7 +161,7 @@ int XCursesInstructAndWait(int flag)
 
 	/* wait for X to say the refresh has occurred*/
 
-	if (XC_read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
+	if (XC_read_socket(XC_display_sock, (char *)&result, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCursesInstructAndWait");
 
@@ -181,13 +181,13 @@ static int XCursesSetupCurses(void)
 	close(display_sockets[1]);
 	close(key_sockets[1]);
 
-	display_sock = display_sockets[0];
-	key_sock = key_sockets[0];
+	XC_display_sock = display_sockets[0];
+	XC_key_sock = key_sockets[0];
 
 	FD_ZERO(&readfds);
 	FD_ZERO(&writefds);
 
-	XC_read_socket(display_sock, (char *)&wait_value, sizeof(int));
+	XC_read_socket(XC_display_sock, (char *)&wait_value, sizeof(int));
 
 	if (wait_value != CURSES_CHILD)
 		return ERR;
@@ -312,11 +312,11 @@ static void XCursesCleanupCursesProcess(int rc)
 	PDC_LOG(("%s:XCursesCleanupCursesProcess() - called: %d\n",
 		XCLOGMSG, rc));
 
-	shutdown(display_sock, 2);
-	close(display_sock);
+	shutdown(XC_display_sock, 2);
+	close(XC_display_sock);
 
-	shutdown(key_sock, 2);
-	close(key_sock);
+	shutdown(XC_key_sock, 2);
+	close(XC_key_sock);
 
 	shmdt((char *)SP);
 	shmdt((char *)Xcurscr);

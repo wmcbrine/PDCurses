@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.34 2006/07/30 23:03:33 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.35 2006/07/30 23:57:04 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -55,7 +55,7 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 		idx += sizeof(int);
 	}
 
-	if (XC_write_socket(display_sock, buf, idx) < 0)
+	if (XC_write_socket(XC_display_sock, buf, idx) < 0)
 		XCursesExitCursesProcess(1,
 			"exiting from PDC_display_cursor");
 

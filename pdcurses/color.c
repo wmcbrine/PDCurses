@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.47 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.48 2006/07/30 04:15:25 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -166,8 +166,7 @@ int init_pair(short colorpair, short foreground, short background)
 	if (!colorstarted || colorpair >= COLOR_PAIRS || colorpair < 1)
 		return ERR;
 
-	oldforeground = (short)(atrtab[colorpair * PDC_OFFSET] & 0x0F);
-	oldbackground = (short)((atrtab[colorpair * PDC_OFFSET] & 0xF0) >> 4);
+	pair_content(colorpair, &oldforeground, &oldbackground);
 
 	PDC_init_pair(colorpair, foreground, background);
 

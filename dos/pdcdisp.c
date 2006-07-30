@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.47 2006/07/29 06:00:54 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.48 2006/07/30 03:55:46 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -83,7 +83,7 @@ static void PDC_putc(chtype ch, unsigned short count)
 	regs.h.ah = 0x09;	/* Avoid screen wrap.  Don't advance cursor. */
 	regs.h.al = (unsigned char) (ch & 0xff);
 	regs.h.bh = 0;
-	regs.h.bl = (unsigned char) (chtype_attr(ch) >> 8);
+	regs.h.bl = chtype_attr(ch);
 #ifdef __WATCOMC__
 	regs.w.cx = count;
 #else
@@ -116,7 +116,7 @@ void PDC_putctty(chtype ch)
 	regs.h.ah = 0x0e;	/* Write in TTY fashion, advance cursor. */
 	regs.h.al = (unsigned char) (ch & 0xff);
 	regs.h.bh = 0;
-	regs.h.bl = (unsigned char) (chtype_attr(ch) >> 8);
+	regs.h.bl = chtype_attr(ch);
 	int86(0x10, &regs, &regs);
 }
 
@@ -160,7 +160,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		   actual colour value for each chtype in the line */
 
 		for (j = 0; j < len; j++)
-			temp_line[j] = chtype_attr(srcp[j]) | (srcp[j] & 0xff);
+			temp_line[j] =
+				(chtype_attr(srcp[j]) << 8) | (srcp[j] & 0xff);
 
 #ifdef __DJGPP__
 		dosmemput(temp_line, len * 2,

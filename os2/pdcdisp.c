@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.32 2006/07/28 22:06:53 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.33 2006/07/30 03:55:46 wmcbrine Exp $");
 
 extern unsigned char atrtab[MAX_ATRTAB];
 
@@ -79,7 +79,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	   actual colour value for each chtype in the line */
 
 	for (j = 0; j < len; j++)
-		temp_line[j] = chtype_attr(srcp[j]) | (srcp[j] & A_CHARTEXT);
+		temp_line[j] = (chtype_attr(srcp[j]) << 8) | (srcp[j] & 0xff);
 
 #ifdef EMXVIDEO
 	v_putline((char*)temp_line, x, lineno, len);

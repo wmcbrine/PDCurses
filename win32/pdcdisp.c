@@ -24,7 +24,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.31 2006/07/28 22:06:53 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.32 2006/07/30 03:55:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -95,9 +95,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 #ifdef UNICODE
 		ci[j].Char.UnicodeChar = srcp[j] & A_CHARTEXT;
 #else
-		ci[j].Char.AsciiChar = srcp[j] & A_CHARTEXT;
+		ci[j].Char.AsciiChar = srcp[j] & 0xff;
 #endif
-		ci[j].Attributes = (chtype_attr(srcp[j]) & 0xFF00) >> 8;
+		ci[j].Attributes = chtype_attr(srcp[j]);
 	}
 
 	WriteConsoleOutput(hConOut, ci, bufSize, bufPos, &sr);

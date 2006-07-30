@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.203 2006/07/29 22:08:31 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.204 2006/07/30 03:55:46 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2810
+#define PDC_BUILD 2811
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -732,8 +732,9 @@ currently used.)
 
 /*** Video attribute macros ***/
 
+#define A_NORMAL	(chtype)0
+
 #ifdef CHTYPE_LONG
-# define A_NORMAL	(chtype)0x00000000
 # define A_UNDERLINE	(chtype)0x00100000
 # define A_REVERSE	(chtype)0x00200000
 # define A_BLINK	(chtype)0x00400000
@@ -742,40 +743,40 @@ currently used.)
 # define A_LEFTLINE	(chtype)0x00020000
 # define A_ALTCHARSET	(chtype)0x00040000
 # define A_INVIS	(chtype)0x00080000
+
 # define A_ATTRIBUTES	(chtype)0xFFFF0000
 # define A_CHARTEXT	(chtype)0x0000FFFF
 # define A_COLOR	(chtype)0xFF000000
 
-# define A_DIM		A_NORMAL
 # define A_ITALIC	A_INVIS
-# define A_STANDOUT	(A_BOLD | A_REVERSE)
 # define A_PROTECT	(A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
 
 # define PDC_ATTR_SHIFT	19
 # define PDC_COLOR_SHIFT 24
 #else
-# define A_NORMAL	(chtype)0x0000			/* System V */
-# define A_ALTCHARSET	(chtype)0x0000			/* X/Open   */
-# define A_BLINK	(chtype)0x0400			/* X/Open   */
-# define A_BLANK	(chtype)0x0000			/* X/Open   */
 # define A_BOLD		(chtype)0x0100			/* X/Open   */
-# define A_DIM		(chtype)0x0000			/* X/Open   */
-# define A_PROTECT	(chtype)0x0000			/* X/Open   */
 # define A_REVERSE	(chtype)0x0200			/* X/Open   */
-# define A_STANDOUT	(A_REVERSE | A_BOLD)		/* X/Open   */
-# define A_UNDERLINE	(chtype)0x0000			/* X/Open   */
-# define A_COLOR	(chtype)0xF800			/* System V */
-# define A_CHARTEXT	(chtype)(0xFF)			/* X/Open   */
-# define A_ATTRIBUTES	(chtype)(~A_CHARTEXT)		/* X/Open   */
+# define A_BLINK	(chtype)0x0400			/* X/Open   */
 
-# define A_LEFTLINE	(chtype)0x0000
-# define A_RIGHTLINE	(chtype)0x0000
-# define A_ITALIC	(chtype)0x0000
-# define A_INVIS	(chtype)0x0000
+# define A_ATTRIBUTES	(chtype)0xFF00			/* X/Open   */
+# define A_CHARTEXT	(chtype)0x00FF			/* X/Open   */
+# define A_COLOR	(chtype)0xF800			/* System V */
+
+# define A_ALTCHARSET	A_NORMAL			/* X/Open   */
+# define A_PROTECT	A_NORMAL			/* X/Open   */
+# define A_UNDERLINE	A_NORMAL			/* X/Open   */
+
+# define A_LEFTLINE	A_NORMAL
+# define A_RIGHTLINE	A_NORMAL
+# define A_ITALIC	A_NORMAL
+# define A_INVIS	A_NORMAL
 
 # define PDC_ATTR_SHIFT	8
 # define PDC_COLOR_SHIFT 11
 #endif
+
+#define A_STANDOUT	(A_REVERSE | A_BOLD)		/* X/Open   */
+#define A_DIM		A_NORMAL
 
 #define CHR_MSK		A_CHARTEXT			/* Obsolete */
 #define ATR_MSK		A_ATTRIBUTES			/* Obsolete */

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.104 2006/07/28 22:06:53 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.105 2006/07/30 03:55:46 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -149,12 +149,12 @@ void PDC_debug(const char *, ...);
 #ifdef CHTYPE_LONG
 # define PDC_COLOR_PAIRS	64
 # define PDC_OFFSET		32
-# define chtype_attr(ch)	(atrtab[((ch >> PDC_ATTR_SHIFT) & 0xFFFF)] << 8)
 #else
 # define PDC_COLOR_PAIRS	32
 # define PDC_OFFSET		8
-# define chtype_attr(ch)	(atrtab[((ch >> PDC_ATTR_SHIFT) & 0xFF)] << 8)
 #endif
+
+#define chtype_attr(ch)		(atrtab[(chtype)(ch) >> PDC_ATTR_SHIFT])
 
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
 

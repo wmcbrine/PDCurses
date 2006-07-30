@@ -38,7 +38,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: getstr.c,v 1.27 2006/07/30 19:18:00 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.28 2006/07/30 23:08:05 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -136,7 +136,7 @@ int getnstr(char *str, int n)
 
 int wgetnstr(WINDOW *win, char *str, int n)
 {
-	int ch, i, num, t, x, chars;
+	int ch, i, num, x, chars;
 	char *p;
 	bool stop, oldecho, oldcbreak, oldnodelay;
 

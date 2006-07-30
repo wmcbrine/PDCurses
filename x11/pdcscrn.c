@@ -17,10 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.30 2006/07/30 07:13:07 wmcbrine Exp $");
-
-bool GLOBAL_sb_on = FALSE;
-bool GLOBAL_slk_on = FALSE;
+RCSID("$Id: pdcscrn.c,v 1.31 2006/07/30 22:00:25 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

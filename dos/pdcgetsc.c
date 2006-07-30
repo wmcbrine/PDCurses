@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.27 2006/07/29 06:00:54 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.28 2006/07/30 22:00:25 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -288,7 +288,7 @@ int PDC_get_scrn_mode(void)
 
 **man-end****************************************************************/
 
-int PDC_sanity_check(int adapter)
+static int PDC_sanity_check(int adapter)
 {
 	int fontsize = PDC_get_font();
 	int rows = PDC_get_rows();

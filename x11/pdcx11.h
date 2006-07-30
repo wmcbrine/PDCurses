@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.44 2006/07/29 06:00:54 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.45 2006/07/30 22:00:25 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -186,12 +186,9 @@ extern int display_sockets[2];
 extern int key_sockets[2];
 extern int exit_sock;
 
-extern MOUSE_STATUS Trapped_Mouse_status;
-
 typedef RETSIGTYPE (*signal_handler)();
 
 signal_handler XCursesSetSignal(int, signal_handler);
-void XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
 
 #ifdef PDCDEBUG
 void XCsay(const char *msg);

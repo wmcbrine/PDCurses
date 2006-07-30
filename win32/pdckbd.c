@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.52 2006/07/30 15:31:36 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.53 2006/07/30 22:00:25 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -57,7 +57,7 @@ RCSID("$Id: pdckbd.c,v 1.52 2006/07/30 15:31:36 wmcbrine Exp $");
 /* These variables are used to store information about the next
    Input Event. */
 
-INPUT_RECORD save_ip;
+static INPUT_RECORD save_ip;
 unsigned long pdc_key_modifiers = 0L;
 
 extern HANDLE hConIn;
@@ -398,7 +398,7 @@ bool PDC_check_bios_key(void)
    The Unicode support has been disabled. See below for the reason.
    CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
-int processKeyEvent(void)
+static int processKeyEvent(void)
 {
 	CHAR ascii = save_ip.Event.KeyEvent.uChar.AsciiChar;
 #if 0

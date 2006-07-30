@@ -17,13 +17,15 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.30 2006/07/21 03:23:50 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.31 2006/07/30 22:00:25 wmcbrine Exp $");
+
+MOUSE_STATUS Trapped_Mouse_status;
 
 #define TRAPPED_MOUSE_X_POS	  (Trapped_Mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (Trapped_Mouse_status.y)
 #define TRAPPED_BUTTON_STATUS(x)  (Trapped_Mouse_status.button[(x) - 1])
 
-bool PDC_kbhit(void)
+static bool PDC_kbhit(void)
 {
 	int s;
 

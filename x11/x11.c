@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.3 2006/07/21 17:50:27 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.4 2006/07/30 22:00:25 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -83,20 +83,21 @@ AppData app_data;
 #include "big_icon.xbm"
 #include "little_icon.xbm"
 
-void SelectionOff(void);
-void XCursesButton(Widget, XEvent *, String *, Cardinal *);
-void XCursesDisplayCursor(int, int, int, int);
-void XCursesExitXCursesProcess(int, int, char *);
-void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
-void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
-void XCursesModifierPress(Widget, XEvent *, String *, Cardinal *);
-void XCursesPasteSelection(Widget, XButtonEvent *);
-void XCursesRequestorCallbackForGetSelection(Widget, XtPointer, Atom *, Atom *,
-                                             XtPointer, unsigned long *, int *);
-void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, Atom *,
-				      XtPointer, unsigned long *, int *);
-RETSIGTYPE XCursesSignalHandler(int);
-void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
+static void SelectionOff(void);
+static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
+static void XCursesDisplayCursor(int, int, int, int);
+static void XCursesExitXCursesProcess(int, int, char *);
+static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
+static void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
+static void XCursesModifierPress(Widget, XEvent *, String *, Cardinal *);
+static void XCursesPasteSelection(Widget, XButtonEvent *);
+static void XCursesRequestorCallbackForGetSelection(Widget, XtPointer, 
+	Atom *, Atom *, XtPointer, unsigned long *, int *);
+static void XCursesRequestorCallbackForPaste(Widget, XtPointer, Atom *, 
+	Atom *, XtPointer, unsigned long *, int *);
+static RETSIGTYPE XCursesSignalHandler(int);
+static void XCursesSendKeyToCurses(unsigned long, MOUSE_STATUS *);
+static void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
 
 struct XCursesKey
 {
@@ -251,7 +252,7 @@ XCURSESKEY XCursesKeys[] =
 #define MAX_COMPOSE_CHARS 14
 #define MAX_COMPOSE_PRE 60
 
-char *compose_chars =
+static const char *compose_chars =
 	"`'~^,/\"AaPpSs!?0123CcRr-_<>Xx.=Yy |EeIiOoUu+NnLlgDd:*TtMmVv";
 
 /*
@@ -316,7 +317,7 @@ char *compose_chars =
    v :    ¦
 */
 
-char compose_lookups[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
+static const char compose_lookups[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 {
 /* ` */ {'A','E','I','O','U','a','e','i','o','u',000,000,000,000},
 /* ' */ {' ','A','E','I','O','U','Y','a','e','i','o','u','y', 39},
@@ -379,7 +380,7 @@ char compose_lookups[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 /* v */ {'b',000,000,000,000,000,000,000,000,000,000,000,000,000},
 };
 
-int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
+static const int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 {
 /* ` */ {192,200,204,210,217,224,232,236,242,249,000,000,000,000},
 /* ' */ {180,193,201,205,211,218,221,225,233,237,243,250,253,180},
@@ -444,21 +445,20 @@ int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 
 #define BITMAPDEPTH 1
 
-MOUSE_STATUS Trapped_Mouse_status;
 unsigned long pdc_key_modifiers = 0L;
-GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
-int XCursesFontHeight, XCursesFontWidth;
-int XCursesFontAscent, XCursesFontDescent;
-int XCursesWindowWidth, XCursesWindowHeight;
-int resizeXCursesWindowWidth = 0,resizeXCursesWindowHeight = 0;
-char *bitmap_file = NULL;
+static GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
+static int XCursesFontHeight, XCursesFontWidth,
+	XCursesFontAscent, XCursesFontDescent,
+	XCursesWindowWidth, XCursesWindowHeight;
+static int resizeXCursesWindowWidth = 0,resizeXCursesWindowHeight = 0;
+static char *bitmap_file = NULL;
 #ifdef HAVE_XPM_H
-char *pixmap_file = NULL;
+static char *pixmap_file = NULL;
 #endif
-KeySym compose_key = 0;
-int compose_mask = 0;
+static KeySym compose_key = 0;
+static int compose_mask = 0;
 
-int state_mask[8] =
+static int state_mask[8] =
 {
 	ShiftMask,
 	LockMask,
@@ -470,28 +470,26 @@ int state_mask[8] =
 	Mod5Mask
 };
 
-Atom wm_atom[2];
-char *XCursesClassName = "XCurses";
-XtAppContext app_context;
-Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
-int ReceivedMapNotify = 0;
-Boolean mouse_selection = False;
-chtype *tmpsel = NULL;
-unsigned long tmpsel_length = 0;
-int selection_start_x = 0;
-int selection_start_y = 0;
-int selection_end_x = 0;
-int selection_end_y = 0;
-Pixmap icon_bitmap;
+static Atom wm_atom[2];
+static char *XCursesClassName = "XCurses";
+static XtAppContext app_context;
+static Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
+static int ReceivedMapNotify = 0;
+static Boolean mouse_selection = False;
+static chtype *tmpsel = NULL;
+static unsigned long tmpsel_length = 0;
+static int selection_start_x = 0, selection_start_y = 0,
+	selection_end_x = 0, selection_end_y = 0;
+static Pixmap icon_bitmap;
 #ifdef HAVE_XPM_H
-Pixmap icon_pixmap;
-Pixmap icon_pixmap_mask;
+static Pixmap icon_pixmap;
+static Pixmap icon_pixmap_mask;
 #endif
-int visible_cursor = 0;
-int windowEntered = 1;
+static int visible_cursor = 0;
+static int windowEntered = 1;
 static char *XCursesProgramName;
 
-XtResource app_resources[] =
+static XtResource app_resources[] =
 {
 	{
 		"lines",
@@ -857,7 +855,7 @@ XtResource app_resources[] =
 
 };
 
-XrmOptionDescRec options[] =
+static XrmOptionDescRec options[] =
 {
    {"-lines",		  "*lines",		XrmoptionSepArg, NULL},
    {"-cols",		  "*cols",		XrmoptionSepArg, NULL},
@@ -896,7 +894,7 @@ XrmOptionDescRec options[] =
    {"-colorBoldWhite",	  "*colorBoldWhite",	XrmoptionSepArg, NULL},
 };
 
-XtActionsRec XCursesActions[] =
+static XtActionsRec XCursesActions[] =
 {
    {"XCursesButton",		(XtActionProc)XCursesButton},
    {"XCursesKeyPress",		(XtActionProc)XCursesKeyPress},
@@ -905,9 +903,9 @@ XtActionsRec XCursesActions[] =
    {"string",			(XtActionProc)XCursesHandleString},
 };
 
-Bool after_first_curses_request = False;
-int colors[(2 * MAX_COLORS) + 2];
-Bool vertical_cursor = False;
+static Bool after_first_curses_request = False;
+static int colors[(2 * MAX_COLORS) + 2];
+static Bool vertical_cursor = False;
 
 #ifdef FOREIGN
 	XIM Xim;
@@ -917,9 +915,9 @@ Bool vertical_cursor = False;
 	XIMStyle my_style = 0;
 #endif
 
-XtTranslations XCursesTranslations;
+static XtTranslations XCursesTranslations;
 
-char *defaultTranslations =
+static const char *defaultTranslations =
 {
 	"<Key>: XCursesKeyPress() \n" \
 	"<Btn1Down>: XCursesButton() \n" \
@@ -1128,8 +1126,8 @@ static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
 	return OK;
 }
 
-int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
-			bool highlight)
+static int XCursesDisplayText(const chtype *ch, int row, int col,
+			      int num_cols, bool highlight)
 {
 #ifdef PDC_WIDE
 	XChar2b text[513];
@@ -1184,8 +1182,8 @@ int XCursesDisplayText(const chtype *ch, int row, int col, int num_cols,
 	return XCursesNewPacket(old_attr, highlight, i, col, row, text);
 }
 
-void get_GC(Display *display, Window win, GC *gc, XFontStruct *font_info,
-	    int fore, int back, bool highlight)
+static void get_GC(Display *display, Window win, GC *gc,
+		   XFontStruct *font_info, int fore, int back, bool highlight)
 {
 	XGCValues values;
 
@@ -1206,7 +1204,7 @@ void get_GC(Display *display, Window win, GC *gc, XFontStruct *font_info,
 		XSetFunction(display, *gc, GXxor);
 }
 
-int get_colors(void)
+static int get_colors(void)
 {
 	XC_LOG(("in get_colors\n"));
 
@@ -1234,7 +1232,7 @@ int get_colors(void)
 	return OK;
 }
 
-void XCursesEndwin(void)
+static void XCursesEndwin(void)
 {
 	PDC_LOG(("%s:XCursesEndwin() - called\n", XCLOGMSG));
 
@@ -1262,7 +1260,7 @@ void XCursesEndwin(void)
 #endif
 }
 
-int XCursesRefreshScrollbar(void)
+static int XCursesRefreshScrollbar(void)
 {
 	PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
 	PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
@@ -1285,7 +1283,7 @@ int XCursesRefreshScrollbar(void)
 	return OK;
 }
 
-void SetCursorColor(chtype *ch, short *fore, short *back)
+static void SetCursorColor(chtype *ch, short *fore, short *back)
 {
 	int attr;
 	short f, b;
@@ -1313,7 +1311,7 @@ void SetCursorColor(chtype *ch, short *fore, short *back)
 	}
 }
 
-void XCursesGetIcon(void)
+static void XCursesGetIcon(void)
 {
 	XIconSize *icon_size;
 	int size_count = 0;
@@ -1488,8 +1486,8 @@ static void XCursesRefreshScreen(void)
 		SelectionOff();
 }
 
-void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
-		   Boolean *continue_to_dispatch)
+static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
+			  Boolean *continue_to_dispatch)
 {
 	PDC_LOG(("%s:XCursesExpose called\n", XCLOGMSG));
 
@@ -1502,8 +1500,8 @@ void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 		XCursesDisplayScreen();
 }
 
-void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
-			Boolean *continue_to_dispatch)
+static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
+			       Boolean *continue_to_dispatch)
 {
 	XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
@@ -1524,8 +1522,8 @@ void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 	}
 }
 
-void XCursesModifierPress(Widget w, XEvent *event, String *params, 
-			  Cardinal *nparams)
+static void XCursesModifierPress(Widget w, XEvent *event, String *params, 
+				 Cardinal *nparams)
 {
 #ifdef FOREIGN
 	wchar_t buffer[120];
@@ -1575,8 +1573,8 @@ void XCursesModifierPress(Widget w, XEvent *event, String *params,
 		XCursesSendKeyToCurses((unsigned long)key, NULL);
 }
 
-void XCursesKeyPress(Widget w, XEvent *event, String *params,
-		     Cardinal *nparams)
+static void XCursesKeyPress(Widget w, XEvent *event, String *params,
+			    Cardinal *nparams)
 {
 	enum { STATE_NORMAL, STATE_COMPOSE, STATE_CHAR };
 
@@ -1876,8 +1874,8 @@ void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	}
 }
 
-void XCursesHandleString(Widget w, XEvent *event, String *params,
-			 Cardinal *nparams)
+static void XCursesHandleString(Widget w, XEvent *event, String *params,
+				Cardinal *nparams)
 {
 	int i = 0;
 	unsigned char *ptr = NULL;
@@ -1919,7 +1917,7 @@ void XCursesHandleString(Widget w, XEvent *event, String *params,
 	}
 }
 
-void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
+static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
 {
 	PDC_LOG(("%s:XCursesPasteSelection() - called\n", XCLOGMSG));
 
@@ -1928,10 +1926,10 @@ void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
 		(XtPointer)button_event, button_event->time);
 }
 
-void XCursesRequestorCallbackForPaste(Widget w, XtPointer data,
-				      Atom *selection, Atom *type, 
-				      XtPointer value,
-				      unsigned long *length, int *format)
+static void XCursesRequestorCallbackForPaste(Widget w, XtPointer data,
+					     Atom *selection, Atom *type, 
+					     XtPointer value,
+					     unsigned long *length, int *format)
 {
 	unsigned long i, key;
 	char *string = (char *)value;
@@ -1953,9 +1951,10 @@ void XCursesRequestorCallbackForPaste(Widget w, XtPointer data,
 	}
 }
 
-Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
-			   Atom *type_return, XtPointer *value_return,
-			   unsigned long *length_return, int *format_return)
+static Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
+				  Atom *type_return, XtPointer *value_return,
+				  unsigned long *length_return,
+				  int *format_return)
 {
 	PDC_LOG(("%s:XCursesConvertProc() - called\n", XCLOGMSG));
 
@@ -2038,7 +2037,7 @@ Boolean XCursesConvertProc(Widget w, Atom *selection, Atom *target,
 		    length_return, format_return);
 }
 
-void XCursesLoseOwnership(Widget w, Atom *type)
+static void XCursesLoseOwnership(Widget w, Atom *type)
 {
 	PDC_LOG(("%s:XCursesLoseOwnership() - called\n", XCLOGMSG));
 
@@ -2050,8 +2049,8 @@ void XCursesLoseOwnership(Widget w, Atom *type)
 	SelectionOff();
 }
 
-void ShowSelection(int start_x, int start_y, int end_x, int end_y,
-		   bool highlight)
+static void ShowSelection(int start_x, int start_y, int end_x, int end_y,
+			  bool highlight)
 {
 	int i, num_cols, start_col, row;
 
@@ -2097,7 +2096,7 @@ void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 	}
 }
 
-void SelectionOff(void)
+static void SelectionOff(void)
 {
 	PDC_LOG(("%s:SelectionOff() - called\n", XCLOGMSG));
 
@@ -2109,7 +2108,7 @@ void SelectionOff(void)
 	mouse_selection = False;
 }
 
-void SelectionOn(int x, int y)
+static void SelectionOn(int x, int y)
 {
 	PDC_LOG(("%s:SelectionOn() - called\n", XCLOGMSG));
 
@@ -2117,7 +2116,7 @@ void SelectionOn(int x, int y)
 	selection_start_y = selection_end_y = y;
 }
 
-void SelectionExtend(int x, int y)
+static void SelectionExtend(int x, int y)
 {
 	int temp, current_start, current_end, current_start_x, 
 		current_end_x, current_start_y, current_end_y,
@@ -2197,7 +2196,7 @@ void SelectionExtend(int x, int y)
 			new_start_x, new_start_y, TRUE);
 }
 
-void SelectionSet(void)
+static void SelectionSet(void)
 {
 	int i, j, start, end, start_x, end_x, start_y, end_y, num_cols, 
 		start_col, row, num_chars, ch, last_nonblank, length, newlen;
@@ -2318,7 +2317,8 @@ void SelectionSet(void)
 	tmpsel_length = num_chars;
 }
 
-void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
+static void XCursesDisplayCursor(int old_row, int old_x,
+				 int new_row, int new_x)
 {
 	int xpos, ypos, i;
 	char buf[2];
@@ -2429,8 +2429,9 @@ void XCursesDisplayCursor(int old_row, int old_x, int new_row, int new_x)
 	}
 }
 
-void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
-			     Boolean *continue_to_dispatch)
+static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, 
+				    XEvent *event,
+				    Boolean *continue_to_dispatch)
 {
 	PDC_LOG(("%s:XCursesEnterLeaveWindow called\n", XCLOGMSG));
 
@@ -2460,7 +2461,7 @@ void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 	}
 }
 
-void XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
+static void XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 {
 	PDC_LOG(("%s:XCursesSendKeyToCurses() - called: sending %d\n",
 		XCLOGMSG, key));
@@ -2480,7 +2481,7 @@ void XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 	}
 }
 
-void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
+static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 {
 	PDC_LOG(("%s:XCursesCursorBlink() - called:\n", XCLOGMSG));
 
@@ -2511,7 +2512,8 @@ void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 		XCursesCursorBlink, NULL);
 }
 
-void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
+static void XCursesButton(Widget w, XEvent *event, String *params,
+			  Cardinal *nparams)
 {
 	int button_no;
 	static int last_button_no = 0;
@@ -2833,7 +2835,8 @@ void XCursesButton(Widget w, XEvent *event, String *params, Cardinal *nparams)
 	XCursesSendKeyToCurses((unsigned long)KEY_MOUSE, &Mouse_status);
 }
 
-void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+static void Scroll_up_down(Widget w, XtPointer client_data,
+			   XtPointer call_data)
 {
 	int pixels = (long) call_data;
 	int total_y = SP->sb_total_y * XCursesFontHeight;
@@ -2864,7 +2867,8 @@ void Scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
 	XCursesSendKeyToCurses((unsigned long)KEY_SF, NULL);
 }
 
-void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+static void Scroll_left_right(Widget w, XtPointer client_data,
+			      XtPointer call_data)
 {
 	int pixels = (long) call_data;
 	int total_x = SP->sb_total_x * XCursesFontWidth;
@@ -2895,7 +2899,8 @@ void Scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
 	XCursesSendKeyToCurses((unsigned long)KEY_SR, NULL);
 }
 
-void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+static void Thumb_up_down(Widget w, XtPointer client_data,
+			  XtPointer call_data)
 {
 	double percent = *(double *) call_data;
 	double total_y = (double)SP->sb_total_y;
@@ -2920,7 +2925,8 @@ void Thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
 	XCursesSendKeyToCurses((unsigned long)KEY_SF, NULL);
 }
 
-void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+static void Thumb_left_right(Widget w, XtPointer client_data,
+			     XtPointer call_data)
 {
 	double percent = *(double *) call_data;
 	double total_x = (double)SP->sb_total_x;
@@ -2945,7 +2951,7 @@ void Thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
 	XCursesSendKeyToCurses((unsigned long)KEY_SR, NULL);
 }
 
-void XCursesExitXCursesProcess(int rc, int sig, char *msg)
+static void XCursesExitXCursesProcess(int rc, int sig, char *msg)
 {
 	if (rc || sig)
 	    fprintf(stderr,
@@ -2981,8 +2987,8 @@ static void XCursesContinue(void)
 			"exiting from XCursesProcessRequestsFromCurses");
 }
 
-void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
-				      XtInputId *id) 
+static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
+					     XtInputId *id) 
 { 
 	int s, idx;
 	int old_row, new_row;
@@ -3669,7 +3675,7 @@ int XCursesSetupX(int argc, char *argv[])
 	return OK;			/* won't get here */
 }
 
-RETSIGTYPE XCursesSignalHandler(int signo)
+static RETSIGTYPE XCursesSignalHandler(int signo)
 {
 	int flag = CURSES_EXIT;
 
@@ -3714,10 +3720,11 @@ RETSIGTYPE XCursesSignalHandler(int signo)
 			"exiting from XCursesSignalHandler");
 }
 
-void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
-					     Atom *selection, Atom *type,
-					     XtPointer value,
-					     unsigned long *length, int *format)
+static void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
+						    Atom *selection, Atom *type,
+						    XtPointer value,
+						    unsigned long *length,
+						    int *format)
 {
 	PDC_LOG(("%s:XCursesRequestorCallbackForSelection() - called\n",
 		XCLOGMSG));
@@ -3742,8 +3749,9 @@ void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 		"exiting from XCursesRequestorCallbackForGetSelection");
 }
 
-void XCursesStructureNotify(Widget w, XtPointer client_data, XEvent *event,
-			    Boolean *continue_to_dispatch)
+static void XCursesStructureNotify(Widget w, XtPointer client_data, 
+				   XEvent *event,
+				   Boolean *continue_to_dispatch)
 {
 	PDC_LOG(("%s:XCursesStructureNotify called\n", XCLOGMSG));
 

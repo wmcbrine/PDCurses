@@ -38,7 +38,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: getstr.c,v 1.26 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.27 2006/07/30 19:18:00 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -149,7 +149,6 @@ int wgetnstr(WINDOW *win, char *str, int n)
 	p = str;
 	stop = FALSE;
 
-	t = win->_tabsize;
 	x = win->_curx;
 
 	oldcbreak = SP->cbreak;		/* remember states */
@@ -181,7 +180,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 
 		case '\t':
 			ch = ' ';
-			num = t - (win->_curx - x) % t;
+			num = TABSIZE - (win->_curx - x) % TABSIZE;
 			for (i = 0; i < num; i++)
 			{
 				if (chars < n)

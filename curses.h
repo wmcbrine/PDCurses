@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.204 2006/07/30 03:55:46 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.205 2006/07/30 19:18:00 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -536,7 +536,6 @@ typedef struct _win		/* definition of a window	*/
 	int	_flags;		/* window properties		*/
 	chtype	_attrs;		/* standard attributes and colors */
 	chtype	_bkgd;		/* background, normally blank	*/
-	int	_tabsize;	/* tab character size		*/
 	bool	_clear;		/* causes clear at next refresh	*/
 	bool	_leaveit;	/* leaves cursor where it is	*/
 	bool	_scroll;	/* allows window scrolling	*/
@@ -660,6 +659,7 @@ __declspec(dllimport)	SCREEN		*SP;
 __declspec(dllimport)	MOUSE_STATUS	Mouse_status;
 __declspec(dllimport)	int		COLORS;
 __declspec(dllimport)	int		COLOR_PAIRS;
+__declspec(dllimport)	int		TABSIZE;
 # else
 __declspec(dllexport) extern	int		LINES;
 __declspec(dllexport) extern	int		COLS;
@@ -669,6 +669,7 @@ __declspec(dllexport) extern	SCREEN		*SP;
 __declspec(dllexport) extern	MOUSE_STATUS	Mouse_status;
 __declspec(dllexport) extern	int 		COLORS;
 __declspec(dllexport) extern	int		COLOR_PAIRS;
+__declspec(dllexport) extern	int		TABSIZE;
 # endif
 #else
 extern	int		LINES;		/* terminal height		*/
@@ -677,7 +678,7 @@ extern	WINDOW		*stdscr;	/* the default screen window	*/
 extern	WINDOW		*curscr;	/* the current screen image	*/
 extern	SCREEN		*SP;		/* curses variables		*/
 extern	MOUSE_STATUS	Mouse_status;
-extern	int		COLORS, COLOR_PAIRS;
+extern	int		COLORS, COLOR_PAIRS, TABSIZE;
 #endif
 
 #ifdef CURSES_LIBRARY

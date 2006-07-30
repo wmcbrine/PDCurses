@@ -43,7 +43,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.34 2006/07/30 18:57:23 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.35 2006/07/30 19:18:00 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -374,7 +374,6 @@ WINDOW *dupwin(WINDOW *win)
 	new->_lastsx2 = win->_lastsx2;
 	new->_flags = win->_flags;
 	new->_attrs = win->_attrs;
-	new->_tabsize = win->_tabsize;
 	new->_clear = win->_clear;
 	new->_leaveit = win->_leaveit;
 	new->_scroll = win->_scroll;
@@ -429,7 +428,6 @@ WINDOW *resize_window(WINDOW *win, int lins, int cols)
 	new->_cury = min(win->_cury, new->_maxy);
 	new->_flags = win->_flags;
 	new->_attrs = win->_attrs;
-	new->_tabsize = win->_tabsize;
 	new->_clear = win->_clear;
 	new->_leaveit = win->_leaveit;
 	new->_scroll = win->_scroll;

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.48 2006/07/29 06:18:24 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.49 2006/07/30 19:18:00 wmcbrine Exp $");
 
 static int PDC_newline(WINDOW *, int);
 
@@ -190,7 +190,6 @@ WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 	win->_lastsy2 = LINES - 1;
 	win->_lastsx2 = COLS - 1;
 	win->_bkgd = ' '; /* wrs 4/10/93 -- initialize background to blank */
-	win->_tabsize = 8;
 	win->_clear = (bool) ((num_lines == LINES) && (num_columns == COLS));
 	win->_bmarg = num_lines - 1;
 	win->_parx = win->_pary = -1;
@@ -276,7 +275,7 @@ void PDC_sync(WINDOW *win)
 
 int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 {
-	int x, y, newx, ts, retval;
+	int x, y, x2, retval;
 	chtype attr, bktmp;
 
 	PDC_LOG(("PDC_chadd() - called: win=%x ch=%x "
@@ -288,7 +287,6 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 
 	x  = win->_curx;
 	y  = win->_cury;
-	ts = win->_tabsize;
 
 	if ((y > win->_maxy) || (x > win->_maxx) || (y < 0) || (x < 0))
 		return ERR;
@@ -341,7 +339,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 		switch (ch)
 		{
 		case '\t':
-			for (newx = ((x / ts) +  1) * ts; x < newx; x++)
+			for (x2 = ((x / TABSIZE) + 1) * TABSIZE; x < x2; x++)
 			{
 				if (waddch(win, ' ') == ERR)
 				{

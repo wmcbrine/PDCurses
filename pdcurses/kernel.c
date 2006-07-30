@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.54 2006/07/30 06:52:01 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.55 2006/07/30 07:15:48 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -173,10 +173,9 @@ static int PDC_restore_mode(struct cttyset *ctty)
 		if (PDC_get_scrn_mode() != ctty->saved.scrnmode)
 			PDC_set_scrn_mode(ctty->saved.scrnmode);
 #endif
-#ifndef XCURSES
 		if ((LINES != ctty->saved.lines) || (COLS != ctty->saved.cols))
 			resize_term(ctty->saved.lines, ctty->saved.cols);
-#endif
+
 		PDC_curs_set(ctty->saved.visibility);
 
 		PDC_gotoyx(ctty->saved.cursrow, ctty->saved.curscol);

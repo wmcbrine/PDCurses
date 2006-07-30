@@ -19,10 +19,9 @@
 #define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.21 2006/07/25 01:24:47 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.22 2006/07/30 22:36:18 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
-extern CONSOLE_SCREEN_BUFFER_INFO scr;
 
 /*man-start**************************************************************
 
@@ -49,6 +48,8 @@ extern CONSOLE_SCREEN_BUFFER_INFO scr;
 
 int PDC_get_cursor_pos(int *row, int *col)
 {
+	CONSOLE_SCREEN_BUFFER_INFO scr;
+
 	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
 	GetConsoleScreenBufferInfo(hConOut, &scr);
@@ -123,6 +124,8 @@ int PDC_get_font(void)
 
 int PDC_get_rows(void)
 {
+	CONSOLE_SCREEN_BUFFER_INFO scr;
+
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
 	GetConsoleScreenBufferInfo(hConOut, &scr);
@@ -147,6 +150,8 @@ int PDC_get_rows(void)
 
 int PDC_get_buffer_rows(void)
 {
+	CONSOLE_SCREEN_BUFFER_INFO scr;
+
 	PDC_LOG(("PDC_get_buffer_rows() - called\n"));
 
 	GetConsoleScreenBufferInfo(hConOut, &scr);
@@ -177,6 +182,8 @@ int PDC_get_buffer_rows(void)
 
 int PDC_get_columns(void)
 {
+	CONSOLE_SCREEN_BUFFER_INFO scr;
+
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
 	GetConsoleScreenBufferInfo(hConOut, &scr);

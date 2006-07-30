@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.42 2006/07/30 15:31:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.43 2006/07/30 22:36:18 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -34,8 +34,7 @@ HANDLE hSemKeyCount = INVALID_HANDLE_VALUE;
 extern LONG InputThread(LPVOID lpThreadData);
 #endif
 
-CONSOLE_SCREEN_BUFFER_INFO scr;
-CONSOLE_SCREEN_BUFFER_INFO orig_scr;
+static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
 static CHAR_INFO *ciSaveBuffer = NULL;
 static DWORD dwConsoleMode = 0;

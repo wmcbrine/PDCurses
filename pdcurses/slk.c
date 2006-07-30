@@ -33,7 +33,7 @@
 #undef slk_attroff
 #undef slk_color
 
-RCSID("$Id: slk.c,v 1.25 2006/07/30 06:12:45 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.26 2006/07/30 18:57:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -295,19 +295,12 @@ int slk_refresh(void)
 {
 	PDC_LOG(("slk_refresh() - called\n"));
 
-	if (SP->slk_winptr == (WINDOW *)NULL)
-		return ERR;
-
-	slk_noutrefresh();
-	return doupdate();
+	return (slk_noutrefresh() == ERR) ? ERR : doupdate();
 }
 
 int slk_noutrefresh(void)
 {
 	PDC_LOG(("slk_noutrefresh() - called\n"));
-
-	if (SP->slk_winptr == (WINDOW *)NULL)
-		return ERR;
 
 	return wnoutrefresh(SP->slk_winptr);
 }
@@ -596,7 +589,7 @@ int PDC_mouse_in_slk(int y, int x)
 
 	for (i = 0; i < labels; i++)
 		if (x >= slk_start_col[i]
-		 && x <= slk_start_col[i] + label_length - 1)
+		 && x < slk_start_col[i] + label_length)
 			return i + 1;
 
 	return 0;

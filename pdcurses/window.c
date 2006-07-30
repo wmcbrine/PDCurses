@@ -43,7 +43,7 @@
 # undef wclrtobot
 #endif
 
-RCSID("$Id: window.c,v 1.33 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.34 2006/07/30 18:57:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -412,7 +412,7 @@ WINDOW *resize_window(WINDOW *win, int lins, int cols)
 
 	if (win == SP->slk_winptr)
 	{
-		new_begy = SP->lines-SP->slklines;
+		new_begy = SP->lines - SP->slklines;
 		new_begx = 0;
 	}
 	else

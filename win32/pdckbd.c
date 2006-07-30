@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.51 2006/07/19 06:46:00 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.52 2006/07/30 15:31:36 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -916,9 +916,6 @@ int PDC_validchar(int c)
    Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
 	     a pressed mouse key are ignored.
 
-   Window:   Everything is ignored, including resize requests. In case
-	     of resize requests the global flag SP->resized is set.
-
    THIS FUNCTION IS NOT THREAD-SAFE. NEVER USE MORE THREADS THAN TO
    USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
 */
@@ -1112,12 +1109,6 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 
 	    PTR("MOUSE MOVE WANTED");
 	    numKeys = 1;
-	    break;
-
-	case WINDOW_BUFFER_SIZE_EVENT:
-	    SP->resized = TRUE;
-
-	    PTR("BUFFER SIZE");
 	    break;
 
 	default:

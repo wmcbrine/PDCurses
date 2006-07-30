@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.41 2006/07/23 22:58:57 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.42 2006/07/30 15:31:36 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -353,10 +353,8 @@ static BOOL FitConsoleWindow(HANDLE hConOut, CONST SMALL_RECT *rect)
 	the application can tell PDCurses what size to make the screen; 
 	under X11, resizing is done by the user and this function simply 
 	adjusts its internal structures to fit the new size. This 
-	function doesn't set LINES, COLS, SP->lines or SP->cols. This 
-	must be done by resize_term. If both arguments are 0 the 
-	function returns sucessfully. This allows the calling routine to 
-	reset the SP->resized flag. The functions fails if one of the 
+	function doesn't set LINES, COLS, SP->lines or SP->cols; that
+	must be done by resize_term. The functions fails if one of the 
 	arguments is less then 2.
 
   PDCurses Return Value:
@@ -397,8 +395,6 @@ int PDC_resize_screen(int nlines, int ncols)
 	FitConsoleWindow(hConOut, &rect);
 	SetConsoleScreenBufferSize(hConOut, size);
 	SetConsoleActiveScreenBuffer(hConOut);
-
-	SP->resized = FALSE;
 
 	return OK;
 }

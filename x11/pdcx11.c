@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.78 2006/07/21 15:28:18 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.79 2006/07/30 23:03:33 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -49,7 +49,7 @@ static void dummy_function(void)
 {
 }
 
-void get_line_lock(int row)
+void XC_get_line_lock(int row)
 {
 	/* loop until we can write to the line -- Patch by:
 	   Georg Fuchs, georg.fuchs@rz.uni-regensburg.de */
@@ -60,21 +60,21 @@ void get_line_lock(int row)
 	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
 }
 
-void release_line_lock(int row)
+void XC_release_line_lock(int row)
 {
 	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
 }
 
-int write_socket(int sock_num, const char *buf, int len)
+int XC_write_socket(int sock_num, const char *buf, int len)
 {
 	int start = 0, rc;
 
-	PDC_LOG(("%s:write_socket called: sock_num %d len %d\n",
+	PDC_LOG(("%s:XC_write_socket called: sock_num %d len %d\n",
 		XCLOGMSG, sock_num, len));
 
 #ifdef MOUSE_DEBUG
 	if (sock_num == key_sock)
-		printf("%s:write_socket(key) len: %d\n", XCLOGMSG, len);
+		printf("%s:XC_write_socket(key) len: %d\n", XCLOGMSG, len);
 #endif
 	while (1)
 	{
@@ -88,11 +88,11 @@ int write_socket(int sock_num, const char *buf, int len)
 	}
 }
 
-int read_socket(int sock_num, char *buf, int len)
+int XC_read_socket(int sock_num, char *buf, int len)
 {
 	int start = 0, length = len, rc;
 
-	PDC_LOG(("%s:read_socket called: sock_num %d len %d\n",
+	PDC_LOG(("%s:XC_read_socket called: sock_num %d len %d\n",
 		XCLOGMSG, sock_num, len));
 
 	while (1)
@@ -101,7 +101,7 @@ int read_socket(int sock_num, char *buf, int len)
 
 #ifdef MOUSE_DEBUG
 		if (sock_num == key_sock)
-		    printf("%s:read_socket(key) rc %d errno %d resized: %d\n",
+		    printf("%s:XC_read_socket(key) rc %d errno %d resized: %d\n",
 			XCLOGMSG, rc, errno, SP->resized);
 #endif
 		if (rc < 0 && sock_num == key_sock && errno == EINTR
@@ -129,9 +129,9 @@ int read_socket(int sock_num, char *buf, int len)
 	}
 }
 
-int write_display_socket_int(int x)
+int XC_write_display_socket_int(int x)
 {
-	return write_socket(display_sock, (char *)&x, sizeof(int));
+	return XC_write_socket(display_sock, (char *)&x, sizeof(int));
 }
 
 
@@ -143,7 +143,7 @@ int XCursesInstruct(int flag)
 
 	/* Send a request to X */
 
-	if (write_display_socket_int(flag) < 0)
+	if (XC_write_display_socket_int(flag) < 0)
 		XCursesExitCursesProcess(4, "exiting from XCursesInstruct");
 
 	return OK;
@@ -161,7 +161,7 @@ int XCursesInstructAndWait(int flag)
 
 	/* wait for X to say the refresh has occurred*/
 
-	if (read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
+	if (XC_read_socket(display_sock, (char *)&result, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCursesInstructAndWait");
 
@@ -187,7 +187,7 @@ static int XCursesSetupCurses(void)
 	FD_ZERO(&readfds);
 	FD_ZERO(&writefds);
 
-	read_socket(display_sock, (char *)&wait_value, sizeof(int));
+	XC_read_socket(display_sock, (char *)&wait_value, sizeof(int));
 
 	if (wait_value != CURSES_CHILD)
 		return ERR;

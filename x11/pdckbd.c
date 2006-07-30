@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.31 2006/07/30 22:00:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.32 2006/07/30 23:03:33 wmcbrine Exp $");
 
 MOUSE_STATUS Trapped_Mouse_status;
 
@@ -59,7 +59,7 @@ int PDC_get_bios_key(void)
 
 	while (1)
 	{
-	    if (read_socket(key_sock, (char *)&newkey,
+	    if (XC_read_socket(key_sock, (char *)&newkey,
 		sizeof(unsigned long)) < 0)
 		    XCursesExitCursesProcess(2, 
 			"exiting from PDC_get_bios_key");
@@ -69,7 +69,7 @@ int PDC_get_bios_key(void)
 
 	    if (key == KEY_MOUSE)
 	    {
-		if (read_socket(key_sock, (char *)&Trapped_Mouse_status, 
+		if (XC_read_socket(key_sock, (char *)&Trapped_Mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
 			    "exiting from PDC_get_bios_key");

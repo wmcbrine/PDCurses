@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.33 2006/07/28 22:06:53 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.34 2006/07/30 23:03:33 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -55,7 +55,7 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 		idx += sizeof(int);
 	}
 
-	if (write_socket(display_sock, buf, idx) < 0)
+	if (XC_write_socket(display_sock, buf, idx) < 0)
 		XCursesExitCursesProcess(1,
 			"exiting from PDC_display_cursor");
 
@@ -106,7 +106,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
-	get_line_lock(lineno);
+	XC_get_line_lock(lineno);
 
 	memcpy(Xcurscr + XCURSCR_Y_OFF(lineno) + (x * sizeof(chtype)),
 		srcp, len * sizeof(chtype));
@@ -114,7 +114,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	*(Xcurscr + XCURSCR_START_OFF + lineno) = x;
 	*(Xcurscr + XCURSCR_LENGTH_OFF + lineno) = len;
 
-	release_line_lock(lineno);
+	XC_release_line_lock(lineno);
 
 	XCursesInstructAndWait(CURSES_REFRESH);
 }

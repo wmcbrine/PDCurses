@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.45 2006/07/30 22:00:25 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.46 2006/07/30 23:03:33 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -143,8 +143,8 @@ extern AppData app_data;
 
 #define XCLOGMSG		(XCursesProcess ? "     X" : "CURSES")
 
-void get_line_lock(int);
-void release_line_lock(int);
+void XC_get_line_lock(int);
+void XC_release_line_lock(int);
 
 int PDC_display_cursor(int, int, int, int, int);
 
@@ -153,9 +153,9 @@ int XCursesInstruct(int);
 int XCursesInstructAndWait(int);
 int XCursesInitscr(int, char **);
 
-int write_socket(int, const char *, int);
-int read_socket(int, char *, int);
-int write_display_socket_int(int);
+int XC_write_socket(int, const char *, int);
+int XC_read_socket(int, char *, int);
+int XC_write_display_socket_int(int);
 
 int XCursesSetupX(int argc, char *argv[]);
 RETSIGTYPE XCursesSigwinchHandler(int signo);

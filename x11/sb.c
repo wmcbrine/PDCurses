@@ -25,7 +25,7 @@
 #undef sb_get_vert
 #undef sb_refresh
 
-RCSID("$Id: sb.c,v 1.17 2006/07/07 13:11:43 wmcbrine Exp $");
+RCSID("$Id: sb.c,v 1.18 2006/07/30 23:03:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -170,7 +170,7 @@ int sb_refresh(void)
 	if (!SP)
 		return ERR;
 
-	if (write_display_socket_int(CURSES_REFRESH_SCROLLBAR) < 0)
+	if (XC_write_display_socket_int(CURSES_REFRESH_SCROLLBAR) < 0)
 		XCursesExitCursesProcess(1,
 			"exiting from sb_refresh");
 

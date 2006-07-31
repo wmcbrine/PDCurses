@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.106 2006/07/30 22:00:22 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.107 2006/07/31 22:28:53 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -86,8 +86,6 @@ extern MOUSE_STATUS Trapped_Mouse_status;
 
 void	PDC_beep(void);
 bool	PDC_check_bios_key(void);
-int	PDC_copy_win(const WINDOW *, WINDOW *, int, int, int,
-		     int, int, int, bool);
 int	PDC_curs_set(int);
 void	PDC_flushinp(void);
 int	PDC_get_bios_key(void);

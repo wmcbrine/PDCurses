@@ -29,7 +29,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: overlay.c,v 1.19 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.20 2006/07/31 22:28:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -86,6 +86,75 @@ RCSID("$Id: overlay.c,v 1.19 2006/07/15 15:38:24 wmcbrine Exp $");
 	copywin					-	-      3.0
 
 **man-end****************************************************************/
+
+static int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
+			int src_tc, int src_br, int src_bc, int dst_tr,
+			int dst_tc, bool overlay)
+{
+	int col, line, y1, fc, *minchng, *maxchng;
+	chtype *w1ptr, *w2ptr;
+
+	int lc = 0;
+	int xdiff = src_bc - src_tc;
+	int ydiff = src_br - src_tr;
+
+	PDC_LOG(("PDC_copy_win() - called\n"));
+
+	if ((src_w == (WINDOW *)NULL) || (dst_w == (WINDOW *)NULL))
+		return ERR;
+
+	minchng = dst_w->_firstch;
+	maxchng = dst_w->_lastch;
+
+	for (y1 = 0; y1 < dst_tr; y1++)
+	{
+		minchng++;
+		maxchng++;
+	}
+
+	for (line = 0; line < ydiff; line++)
+	{
+		w1ptr = src_w->_y[line + src_tr] + src_tc;
+		w2ptr = dst_w->_y[line + dst_tr] + dst_tc;
+
+		fc = _NO_CHANGE;
+
+		for (col = 0; col < xdiff; col++)
+		{
+			if ((*w1ptr) != (*w2ptr) && !((*w1ptr & A_CHARTEXT)
+			    == ' ' && overlay))
+			{
+				*w2ptr = *w1ptr;
+
+				if (fc == _NO_CHANGE)
+					fc = col + dst_tc;
+            
+				lc = col + dst_tc;
+			}
+
+			w1ptr++;
+			w2ptr++;
+		}
+
+		if (*minchng == _NO_CHANGE)
+		{
+			*minchng = fc;
+			*maxchng = lc;
+		}
+		else if (fc != _NO_CHANGE)
+		{
+			if (fc < *minchng)
+				*minchng = fc;
+			if (lc > *maxchng)
+				*maxchng = lc;
+		}
+
+		minchng++;
+		maxchng++;
+	}
+
+	return OK;
+}
 
 int overlay(const WINDOW *src_w, WINDOW *dst_w)
 {

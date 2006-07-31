@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.49 2006/07/30 04:23:19 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.50 2006/07/31 22:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -124,7 +124,7 @@ unsigned char *atrtab = NULL;
 unsigned char atrtab[MAX_ATRTAB];
 #endif
 
-unsigned char colorset[PDC_COLOR_PAIRS];
+static unsigned char colorset[PDC_COLOR_PAIRS];
 
 chtype COLOR_PAIR(int n)
 {

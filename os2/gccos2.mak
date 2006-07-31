@@ -110,10 +110,10 @@ scroll.dlo slk.dlo termattr.dlo terminfo.dlo touch.dlo util.dlo \
 window.dlo
 
 PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
-pdckey.o pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
+pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 PDCDLOS = pdcclip.dlo pdcdebug.dlo pdcdisp.dlo pdcgetsc.dlo pdckbd.dlo \
-pdckey.dlo pdcscrn.dlo pdcsetsc.dlo pdcutil.dlo pdcwin.dlo
+pdcscrn.dlo pdcsetsc.dlo pdcutil.dlo pdcwin.dlo
 
 PANOBJS = panel.o
 
@@ -268,9 +268,6 @@ pdcgetsc.o: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
 pdckbd.o: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $<
 
-pdckey.o: $(srcdir)\pdckey.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $<
-
 pdcscrn.o: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -o$@ $<
 
@@ -411,9 +408,6 @@ pdcgetsc.dlo: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdckbd.dlo: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
-
-pdckey.dlo: $(srcdir)\pdckey.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
 
 pdcscrn.dlo: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)

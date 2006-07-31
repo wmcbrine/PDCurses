@@ -81,7 +81,7 @@ move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
 scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
 
 PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
-pdckey.o pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
+pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
 
 X11OBJS = pdcx11.o x11.o sb.o ScrollBox.o
 
@@ -230,9 +230,6 @@ pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 
 pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdckbd.c
-
-pdckey.o: $(srcdir)/pdckey.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o $@ $(srcdir)/pdckey.c
 
 pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
 	$(CC) $(CCFLAGS) -o $@ $(osdir)/pdcscrn.c

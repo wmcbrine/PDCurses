@@ -90,7 +90,7 @@ scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
 window.obj
 
 PDCOBJS = pdcclip.obj pdcdebug.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj \
-pdckey.obj pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
+pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
 
 PANOBJS = panel.obj
 
@@ -105,8 +105,8 @@ scroll.dll.obj slk.dll.obj termattr.dll.obj terminfo.dll.obj \
 touch.dll.obj util.dll.obj window.dll.obj
 
 PDCDLLS = pdcclip.dll.obj pdcdebug.dll.obj pdcdisp.dll.obj \
-pdcgetsc.dll.obj pdckbd.dll.obj pdckey.dll.obj pdcscrn.dll.obj \
-pdcsetsc.dll.obj pdcutil.dll.obj pdcwin.dll.obj
+pdcgetsc.dll.obj pdckbd.dll.obj pdcscrn.dll.obj pdcsetsc.dll.obj \
+pdcutil.dll.obj pdcwin.dll.obj
 
 PANDLLS = panel.dll.obj
 
@@ -255,9 +255,6 @@ pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
 pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(osdir)\pdckbd.c
 
-pdckey.obj: $(srcdir)\pdckey.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -Fo$@ $(srcdir)\pdckey.c
-
 pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) $(CCFLAGS) -Fo$@ $(osdir)\pdcscrn.c
 
@@ -401,9 +398,6 @@ pdcgetsc.dll.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
 
 pdckbd.dll.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdckbd.c
-
-pdckey.dll.obj: $(srcdir)\pdckey.c $(PDCURSES_HEADERS)
-	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(srcdir)\pdckey.c
 
 pdcscrn.dll.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
 	$(CC) -LD $(DLL_CCFLAGS) -Fo$@ $(osdir)\pdcscrn.c

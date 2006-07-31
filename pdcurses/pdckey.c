@@ -18,7 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckey.c,v 1.5 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdckey.c,v 1.6 2006/07/31 22:49:07 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,7 +37,7 @@ RCSID("$Id: pdckey.c,v 1.5 2006/07/15 15:38:24 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-bool PDC_breakout(void)
+static bool PDC_breakout(void)
 {
 	bool rc;
 

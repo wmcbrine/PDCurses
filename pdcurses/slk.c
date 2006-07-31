@@ -33,7 +33,7 @@
 #undef slk_attroff
 #undef slk_color
 
-RCSID("$Id: slk.c,v 1.26 2006/07/30 18:57:23 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.27 2006/07/31 22:49:07 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -106,7 +106,7 @@ RCSID("$Id: slk.c,v 1.26 2006/07/30 18:57:23 wmcbrine Exp $");
 #define LABEL_EXTENDED	10
 #define LABEL_NCURSES_EXTENDED	12
 
-char slk_temp_string[64];
+static char slk_temp_string[64];
 
 static int slk_start_col[LABEL_NCURSES_EXTENDED];
 static chtype slk_attributes[LABEL_NCURSES_EXTENDED];

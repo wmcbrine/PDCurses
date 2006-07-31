@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.80 2006/07/30 23:57:04 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.81 2006/07/31 00:20:18 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -101,8 +101,8 @@ int XC_read_socket(int sock_num, char *buf, int len)
 
 #ifdef MOUSE_DEBUG
 		if (sock_num == XC_key_sock)
-		    printf("%s:XC_read_socket(key) rc %d errno %d resized: %d\n",
-			XCLOGMSG, rc, errno, SP->resized);
+		    printf("%s:XC_read_socket(key) rc %d errno %d "
+			"resized: %d\n", XCLOGMSG, rc, errno, SP->resized);
 #endif
 		if (rc < 0 && sock_num == XC_key_sock && errno == EINTR
 		    && SP->resized != FALSE)

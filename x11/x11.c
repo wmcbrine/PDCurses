@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.6 2006/07/30 23:57:04 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.7 2006/07/31 00:20:18 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2466,18 +2466,23 @@ static void XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 	PDC_LOG(("%s:XCursesSendKeyToCurses() - called: sending %d\n",
 		XCLOGMSG, key));
 
-	if (XC_write_socket(XC_key_sock, (char *)&key, sizeof(unsigned long)) < 0)
+	if (XC_write_socket(XC_key_sock,
+	    (char *)&key, sizeof(unsigned long)) < 0)
+	{
 		XCursesExitXCursesProcess(1, SIGKILL,
 			"exiting from XCursesSendKeyToCurses");
+	}
 
 	if (ms != NULL)
 	{
 		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
 
-		if (XC_write_socket(XC_key_sock, (char *)&Mouse_status, 
-		    sizeof(MOUSE_STATUS)) < 0)
+		if (XC_write_socket(XC_key_sock,
+		    (char *)&Mouse_status, sizeof(MOUSE_STATUS)) < 0)
+		{
 			XCursesExitXCursesProcess(1, SIGKILL,
 				"exiting from XCursesSendKeyToCurses");
+		}
 	}
 }
 
@@ -3026,9 +3031,12 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - "
 		"before XC_read_socket()\n", XCLOGMSG));
 
-	    if (XC_read_socket(XC_display_sock, (char *)&num_cols, sizeof(int)) < 0) 
+	    if (XC_read_socket(XC_display_sock,
+		(char *)&num_cols, sizeof(int)) < 0) 
+	    {
 		XCursesExitXCursesProcess(3, SIGKILL, "exiting from "
 		    "XCursesProcessRequestsFromCurses - first read");
+	    }
 
 	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - "
 		"after XC_read_socket()\n", XCLOGMSG));
@@ -3062,10 +3070,13 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	    case CURSES_CURSOR:
 		XC_LOG(("CURSES_CURSOR received from child\n"));
+
 		if (XC_read_socket(XC_display_sock, buf, sizeof(int) * 2) < 0)
+		{
 		    XCursesExitXCursesProcess(5, SIGKILL,
 			"exiting from CURSES_CURSOR "
 			"XCursesProcessRequestsFromCurses");
+		}
 
 		memcpy((char *)&pos, buf, sizeof(int)); 
 
@@ -3119,15 +3130,20 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_TITLE:
 		XC_LOG(("CURSES_TITLE received from child\n"));
 
-		if (XC_read_socket(XC_display_sock, (char *)&pos, sizeof(int)) < 0)
+		if (XC_read_socket(XC_display_sock,
+		    (char *)&pos, sizeof(int)) < 0)
+		{
 		    XCursesExitXCursesProcess(5, SIGKILL,
 			"exiting from CURSES_TITLE "
 			"XCursesProcessRequestsFromCurses");
+		}
 
 		if (XC_read_socket(XC_display_sock, title, pos) < 0)
+		{
 		    XCursesExitXCursesProcess(5, SIGKILL,
 			"exiting from CURSES_TITLE "
 			"XCursesProcessRequestsFromCurses");
+		}
 
 		XtVaSetValues(topLevel, XtNtitle, title, NULL);
 		break;
@@ -3151,10 +3167,12 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		/* Draw the border if required */ 
 
 		if (XCURSESBORDERWIDTH) 
+		{
 		    XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
 			XCURSESBORDERWIDTH / 2, XCURSESBORDERWIDTH / 2,
 			XCursesWindowWidth - XCURSESBORDERWIDTH,
 			XCursesWindowHeight - XCURSESBORDERWIDTH);
+		}
 
 		/* Detach and drop the current shared memory segment and 
 		   create and attach to a new segment */
@@ -3169,6 +3187,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    SP->XcurscrSize + XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
 		{ 
 		    perror("Cannot allocate shared memory for curscr");
+
 		    XCursesExitXCursesProcess(4, SIGKILL,
 			"exiting from XCursesProcessRequestsFromCurses");
 		} 
@@ -3195,11 +3214,13 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_SET_SELECTION:
 		XC_LOG(("CURSES_SET_SELECTION received from child\n"));
 
-		if (XC_read_socket(XC_display_sock, (char *)&length,
-		    sizeof(long)) < 0)
-			XCursesExitXCursesProcess(5, SIGKILL,
-			    "exiting from CURSES_SET_SELECTION "
-			    "XCursesProcessRequestsFromCurses");
+		if (XC_read_socket(XC_display_sock,
+		    (char *)&length, sizeof(long)) < 0)
+		{
+		    XCursesExitXCursesProcess(5, SIGKILL,
+			"exiting from CURSES_SET_SELECTION "
+			"XCursesProcessRequestsFromCurses");
+		}
 
 		if (length > (long)tmpsel_length)
 		{
@@ -3219,11 +3240,13 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    break;
 		}
 
-		if (XC_read_socket(XC_display_sock, (char *)tmpsel,
-		    length * sizeof(chtype)) < 0)
-			XCursesExitXCursesProcess(5, SIGKILL,
-			    "exiting from CURSES_SET_SELECTION "
-			    "XCursesProcessRequestsFromCurses");
+		if (XC_read_socket(XC_display_sock,
+		    (char *)tmpsel, length * sizeof(chtype)) < 0)
+		{
+		    XCursesExitXCursesProcess(5, SIGKILL,
+			"exiting from CURSES_SET_SELECTION "
+			"XCursesProcessRequestsFromCurses");
+		}
 
 		tmpsel_length = length;
 		tmpsel[length] = '\0';
@@ -3741,8 +3764,9 @@ static void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 
 	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
 		if (XC_write_display_socket_int((int)(*length)) >= 0)
-		    if (XC_write_socket(XC_display_sock, (char *)value, *length) >= 0)
-			return;
+		    if (XC_write_socket(XC_display_sock,
+			(char *)value, *length) >= 0)
+			    return;
 	}
 
 	XCursesExitXCursesProcess(4, SIGKILL,

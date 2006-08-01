@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.64 2006/07/30 19:18:00 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.65 2006/08/01 03:16:17 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -59,8 +59,6 @@ int c_pindex = 0;			/* putter index */
 int c_gindex = 1;			/* getter index */
 int c_ungind = 0;			/* wungetch() push index */
 int c_ungch[NUNGETCH];			/* array of ungotten chars */
-
-WINDOW *_getch_win_ = NULL;
 
 /* Global definitions for setmode routines */
 

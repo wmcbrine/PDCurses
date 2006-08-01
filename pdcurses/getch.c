@@ -33,7 +33,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: getch.c,v 1.31 2006/07/31 23:07:41 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.32 2006/08/01 03:16:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -103,6 +103,8 @@ RCSID("$Id: getch.c,v 1.31 2006/07/31 23:07:41 wmcbrine Exp $");
 
 #define getch PDC_getch
 #define ungetch PDC_ungetch
+
+WINDOW *_getch_win_ = NULL;
 
 /*man-start**************************************************************
 

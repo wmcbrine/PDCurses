@@ -1,5 +1,7 @@
 LIBRARY curses
 EXPORTS
+COLOR_PAIR
+PAIR_NUMBER
 addch
 addchnstr
 addchstr

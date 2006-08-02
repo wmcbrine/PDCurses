@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.43 2006/07/30 22:36:18 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.44 2006/08/02 18:57:06 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -427,6 +427,7 @@ BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID pReserved)
 		break;
 	case DLL_THREAD_DETACH:
 /*		fprintf(stderr, "DLL_THREAD_DETACH\n"); */
+		;
 	}
 	return TRUE;
 }

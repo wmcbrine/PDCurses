@@ -80,10 +80,10 @@ pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
 
 PANOBJS = panel.obj
 
-pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\iccos2.lrf
 
-panel.lib : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) $@ -+$(PANOBJS);
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)

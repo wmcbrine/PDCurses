@@ -83,11 +83,11 @@ PANOBJS = panel.obj
 first:
 	@echo $(srcdir)\addch.c
 
-pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
 	$(LIBEXE) $@ @$(osdir)\bccwin32.lrf
 
-panel.lib : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
 	-del $@
 	$(LIBEXE) $@ +$(PANOBJS)
 

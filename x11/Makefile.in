@@ -115,11 +115,11 @@ X11SHOBJS = pdcx11.sho x11.sho sb.sho ScrollBox.sho
 
 SHOFILES = $(LIBSHOBJS) $(PDCSHOBJS) $(X11SHOBJS)
 
-libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) $(X11OBJS)
 	ar rv $@ $?
 	-$(RANLIB) $@
 
-libpanel.a : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
 	ar rv $@ $?
 	-$(RANLIB) $@
 

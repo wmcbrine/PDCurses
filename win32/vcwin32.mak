@@ -111,17 +111,17 @@ pdcutil.dll.obj pdcwin.dll.obj
 PANDLLS = panel.dll.obj
 
 
-pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) -out:$@ $(LIBOBJS) $(PDCOBJS)
 
-curses.dll : $(LIBDLLS) $(PDCDLLS) $(osdir)\curses.def pdcurses.obj
+$(CURSESDLL) : $(LIBDLLS) $(PDCDLLS) $(osdir)\curses.def pdcurses.obj
 	$(SHL_LD) $(LIBDLLS) $(PDCDLLS) pdcurses.obj $(CCLIBS)
 
 pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
 	rc /r /fopdcurses.res $(osdir)\pdcurses.rc
 	cvtres /MACHINE:IX86 /NOLOGO /OUT:pdcurses.obj pdcurses.res
 
-panel.lib : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) -out:$@ $(PANOBJS)
 
 

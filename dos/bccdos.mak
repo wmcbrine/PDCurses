@@ -82,11 +82,11 @@ pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
 PANOBJS = panel.obj
 
 
-pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
 	$(LIBEXE) $@ @$(osdir)\bccdos.lrf
 
-panel.lib : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
 	-del $@
 	$(LIBEXE) $@ +$(PANOBJS)
 

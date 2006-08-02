@@ -89,10 +89,10 @@ PANOBJS = panel.o
 
 #------------------------------------------------------------------------
 
-pdcurses.a : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
 
-panel.a : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
 
 

@@ -118,10 +118,10 @@ pdcscrn.dlo pdcsetsc.dlo pdcutil.dlo pdcwin.dlo
 PANOBJS = panel.o
 
 
-pdcurses.a : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
 
-pdcurses.lib : pdcurses.a
+$(LIBPANEL) : pdcurses.a
 	$(EMXOMF) -o pdcurses.lib pdcurses.a
 
 curses.dll : $(DLLOBJS) $(PDCDLOS)

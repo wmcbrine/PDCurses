@@ -101,13 +101,13 @@ pdcutil.dll.obj pdcwin.dll.obj
 PANDLLS = panel.dll.obj
 
 
-pdcurses.lib : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
 
-panel.lib : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) /out:$@ $(PANOBJS)
 
-curses.dll : $(DLL_DIR) $(LIBDLLS) $(PDCDLLS) $(DEFFILE)
+$(CURSESDLL) : $(DLL_DIR) $(LIBDLLS) $(PDCDLLS) $(DEFFILE)
 	$(SHL_LD) -o $(CURSESDLL) $(LIBDLLS) $(PDCDLLS)
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)

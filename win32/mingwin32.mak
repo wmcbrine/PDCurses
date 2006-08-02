@@ -239,7 +239,7 @@ panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
 #------------------------------------------------------------------------
 
 firework.exe: $(demodir)/firework.c $(PDCURSES_CURSES_H) $(LIBCURSES)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)/firework.c $(LIBCURSES)
+	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
 
 newdemo.exe: $(demodir)/newdemo.c $(PDCURSES_CURSES_H) $(LIBCURSES)
 	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)

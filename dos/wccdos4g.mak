@@ -19,11 +19,9 @@ PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
 ################################################################################
 
 !include $(PDCURSES_HOME)\version
+!include $(PDCURSES_HOME)\wccobjs
 
-srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\dos
-pandir		= $(PDCURSES_HOME)\panel
-demodir		= $(PDCURSES_HOME)\demos
 
 CC		= wcc386
 TARGET		= dos4g
@@ -44,13 +42,6 @@ LINK		= wlink
 
 LIBEXE		= wlib /q /n /t
 
-LIBCURSES	= pdcurses.lib
-LIBPANEL	= panel.lib
-
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
-DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe &
-firework.exe ptest.exe rain.exe worm.exe
-
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
 
@@ -64,25 +55,11 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj &
-border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj &
-getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj &
-insch.obj insstr.obj instr.obj kernel.obj mouse.obj move.obj outopts.obj &
-overlay.obj pad.obj printw.obj refresh.obj scanw.obj scr_dump.obj &
-scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj &
-window.obj pdcdebug.obj pdcwin.obj
-
-PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj &
-pdcsetsc.obj pdcutil.obj
-
-PANOBJS = panel.obj
-
-
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf
 
 $(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $@ +$(PANOBJS)
+	$(LIBEXE) $@ $(PANOBJS)
 
 .c: $(srcdir);$(osdir);$(pandir);$(demodir)
 .c.obj: .autodepend
@@ -90,30 +67,7 @@ $(LIBPANEL) : $(PANOBJS)
 
 #------------------------------------------------------------------------
 
-firework.exe:	firework.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) n $@ f firework.obj l $(LIBCURSES)
-
-newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) n $@ f newdemo.obj l $(LIBCURSES)
-
-ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) n $@ f ptest.obj l $(LIBCURSES) l $(LIBPANEL)
-
-rain.exe:	rain.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) n $@ f rain.obj l $(LIBCURSES)
-
-testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) n $@ f testcurs.obj l $(LIBCURSES)
-
-tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) n $@ f tuidemo.obj f tui.obj l $(LIBCURSES)
-
-worm.exe:	worm.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) n $@ f worm.obj l $(LIBCURSES)
-
-xmas.exe:	xmas.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) n $@ f xmas.obj l $(LIBCURSES)
-
+!include $(PDCURSES_HOME)\wccdems
 
 dist: .symbolic $(PDCLIBS)
 	echo PDCurses $(VERDOT) for Watcom C++ 32bit DOS > file_id.diz

@@ -1,0 +1,23 @@
+firework.exe:	firework.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) n $@ f firework.obj l $(LIBCURSES)
+
+newdemo.exe:	newdemo.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) n $@ f newdemo.obj l $(LIBCURSES)
+
+ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
+	$(LINK) $(LDFLAGS) n $@ f ptest.obj l $(LIBCURSES) l $(LIBPANEL)
+
+rain.exe:	rain.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) n $@ f rain.obj l $(LIBCURSES)
+
+testcurs.exe:	testcurs.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) n $@ f testcurs.obj l $(LIBCURSES)
+
+tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) n $@ f tuidemo.obj f tui.obj l $(LIBCURSES)
+
+worm.exe:	worm.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) n $@ f worm.obj l $(LIBCURSES)
+
+xmas.exe:	xmas.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) n $@ f xmas.obj l $(LIBCURSES)

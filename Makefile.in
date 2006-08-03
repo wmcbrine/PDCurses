@@ -78,7 +78,7 @@ $(ZIPFILE):
 	panel/*.c dos/README dos/*.c dos/*.h dos/*.rsp dos/*.mak \
 	dos/*.lrf os2/README os2/*.c os2/*.mak os2/*.lrf os2/*.def \
 	x11/README x11/*.c x11/*.xbm x11/*.h \
-	win32/README win32/*.c win32/*.mak win32/*.lrf win32/*.def \
+	win32/README win32/*.c win32/*.mak win32/*.def \
 	win32/*.ico win32/*.rc doc/*.man tools/manext.c \
 	x11/Makefile.* tools/Makefile.in
 
@@ -102,8 +102,7 @@ zip: $(ZIPFILE)
 	$(PDC_DIR)/os2/*.lrf $(PDC_DIR)/os2/*.def $(PDC_DIR)/x11/README \
 	$(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.h \
 	$(PDC_DIR)/x11/Makefile.* \
-	$(PDC_DIR)/win32/README $(PDC_DIR)/win32/*.c \
-	$(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.lrf \
+	$(PDC_DIR)/win32/README $(PDC_DIR)/win32/*.c $(PDC_DIR)/win32/*.mak \
 	$(PDC_DIR)/win32/*.def $(PDC_DIR)/win32/*.ico \
 	$(PDC_DIR)/win32/*.rc $(PDC_DIR)/tools/manext.c \
 	$(PDC_DIR)/tools/Makefile.in | gzip -9 > $(TARBALL))

@@ -59,7 +59,6 @@ firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)
-	strip *.exe
 
 clean:
 	-del *.o
@@ -67,6 +66,7 @@ clean:
 	-del *.exe
 
 demos:	$(DEMOS)
+	strip *.exe
 
 #------------------------------------------------------------------------
 
@@ -74,13 +74,15 @@ LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
 inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
 move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
-scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
+scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o pdcdebug.o \
+pdcwin.o
 
-PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
-pdcscrn.o pdcsetsc.o pdcutil.o pdcwin.o
+PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
+pdcutil.o
 
 PANOBJS = panel.o
 
+#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
@@ -88,180 +90,31 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 $(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
 
+$(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(PANOBJS) : $(PANEL_HEADER)
+$(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
+terminfo.o: $(TERM_HEADER)
 
-addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
+$(LIBOBJS) : %.o: $(srcdir)/%.c
+	$(CC) -c $(CCFLAGS) $<
 
-addchstr.o: $(srcdir)/addchstr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
+$(PDCOBJS) : %.o: $(osdir)/%.c
+	$(CC) -c $(CCFLAGS) $<
 
-addstr.o: $(srcdir)/addstr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-attr.o: $(srcdir)/attr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-beep.o: $(srcdir)/beep.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-bkgd.o: $(srcdir)/bkgd.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-border.o: $(srcdir)/border.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-clear.o: $(srcdir)/clear.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-color.o: $(srcdir)/color.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-delch.o: $(srcdir)/delch.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-deleteln.o: $(srcdir)/deleteln.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-getch.o: $(srcdir)/getch.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-getstr.o: $(srcdir)/getstr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-getyx.o: $(srcdir)/getyx.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-inch.o: $(srcdir)/inch.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-inchstr.o: $(srcdir)/inchstr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-initscr.o: $(srcdir)/initscr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-inopts.o: $(srcdir)/inopts.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-insch.o: $(srcdir)/insch.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-insstr.o: $(srcdir)/insstr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-instr.o: $(srcdir)/instr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-kernel.o: $(srcdir)/kernel.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-mouse.o: $(srcdir)/mouse.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-move.o: $(srcdir)/move.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-outopts.o: $(srcdir)/outopts.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-overlay.o: $(srcdir)/overlay.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pad.o: $(srcdir)/pad.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-printw.o: $(srcdir)/printw.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-refresh.o: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-scanw.o: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-scr_dump.o: $(srcdir)/scr_dump.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-scroll.o: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-slk.o: $(srcdir)/slk.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-termattr.o: $(srcdir)/termattr.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-terminfo.o: $(srcdir)/terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-touch.o: $(srcdir)/touch.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-util.o: $(srcdir)/util.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-window.o: $(srcdir)/window.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-
-pdcclip.o: $(osdir)/pdcclip.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdcdebug.o: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdcdisp.o: $(osdir)/pdcdisp.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdcsetsc.o: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdcutil.o: $(osdir)/pdcutil.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-pdcwin.o: $(srcdir)/pdcwin.c $(PDCURSES_HEADERS)
-	$(CC) -c $(CCFLAGS) -o$@ $<
+$(PANOBJS) : %.o: $(pandir)/%.c
+	$(CC) -c $(CCFLAGS) $<
 
 #------------------------------------------------------------------------
 
-panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
-	$(CC) -c $(CCFLAGS) -o$@ $<
-
-#------------------------------------------------------------------------
-
-firework.exe: $(demodir)/firework.c $(PDCURSES_CURSES_H) $(LIBCURSES)
+firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe: \
+%.exe: $(demodir)/%.c
 	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
 
-newdemo.exe: $(demodir)/newdemo.c $(PDCURSES_CURSES_H) $(LIBCURSES)
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
-
-ptest.exe: $(demodir)/ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H) $(LIBCURSES) $(LIBPANEL)
+ptest.exe: $(demodir)/ptest.c $(PANEL_HEADER) $(LIBPANEL)
 	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
 
-rain.exe: $(demodir)/rain.c $(PDCURSES_CURSES_H) $(LIBCURSES)
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
-
-testcurs.exe: $(demodir)/testcurs.c $(PDCURSES_CURSES_H) $(LIBCURSES)
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
-
-tuidemo.exe: tuidemo.o tui.o $(LIBCURSES)
+tuidemo.exe: tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o tuidemo.exe tuidemo.o tui.o $(LIBCURSES)
-
-worm.exe: $(demodir)/worm.c $(PDCURSES_CURSES_H) $(LIBCURSES)
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
-
-xmas.exe: $(demodir)/xmas.c $(PDCURSES_CURSES_H) $(LIBCURSES)
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
-
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 	$(CC) -c $(CCFLAGS) -I$(demodir) -o $@ $<
@@ -269,6 +122,7 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CCFLAGS) -I$(demodir) -o $@ $<
 
+#------------------------------------------------------------------------
 
 dist: $(PDCLIBS)
 	echo PDCurses $(VERDOT) for MinGW Win32 > file_id.diz

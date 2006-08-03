@@ -77,10 +77,10 @@ getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
 insch.obj insstr.obj instr.obj kernel.obj mouse.obj move.obj outopts.obj \
 overlay.obj pad.obj printw.obj refresh.obj scanw.obj scr_dump.obj \
 scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
-window.obj
+window.obj pdcdebug.obj pdcwin.obj
 
-PDCOBJS = pdcclip.obj pdcdebug.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj \
-pdcscrn.obj pdcsetsc.obj pdcutil.obj pdcwin.obj
+PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
+pdcsetsc.obj pdcutil.obj
 
 PANOBJS = panel.obj
 
@@ -92,11 +92,10 @@ inopts.dll.obj insch.dll.obj insstr.dll.obj instr.dll.obj kernel.dll.obj \
 mouse.dll.obj move.dll.obj outopts.dll.obj overlay.dll.obj pad.dll.obj \
 printw.dll.obj refresh.dll.obj scanw.dll.obj scr_dump.dll.obj \
 scroll.dll.obj slk.dll.obj termattr.dll.obj terminfo.dll.obj \
-touch.dll.obj util.dll.obj window.dll.obj
+touch.dll.obj util.dll.obj window.dll.obj pdcdebug.dll.obj pdcwin.dll.obj
 
-PDCDLLS = pdcclip.dll.obj pdcdebug.dll.obj pdcdisp.dll.obj \
-pdcgetsc.dll.obj pdckbd.dll.obj pdcscrn.dll.obj pdcsetsc.dll.obj \
-pdcutil.dll.obj pdcwin.dll.obj
+PDCDLLS = pdcclip.dll.obj pdcdisp.dll.obj pdcgetsc.dll.obj \
+pdckbd.dll.obj pdcscrn.dll.obj pdcsetsc.dll.obj pdcutil.dll.obj
 
 PANDLLS = panel.dll.obj
 

@@ -1,3 +1,5 @@
+# Common elements for most of the makefiles (not Watcom or LCC)
+
 LIBOBJS = addch.$(O) addchstr.$(O) addstr.$(O) attr.$(O) beep.$(O) \
 bkgd.$(O) border.$(O) clear.$(O) color.$(O) delch.$(O) deleteln.$(O) \
 getch.$(O) getstr.$(O) getyx.$(O) inch.$(O) inchstr.$(O) initscr.$(O) \

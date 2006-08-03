@@ -1,3 +1,5 @@
+# Common elements for the Watcom makefiles
+
 srcdir = $(PDCURSES_HOME)\pdcurses
 pandir = $(PDCURSES_HOME)\panel
 demodir = $(PDCURSES_HOME)\demos
@@ -22,8 +24,6 @@ LIBCURSES = pdcurses.lib
 LIBPANEL = panel.lib
 
 PDCLIBS = $(LIBCURSES) $(LIBPANEL)
-
-CPPFLAGS = /i=$(PDCURSES_HOME)
 
 LINK = wlink
 

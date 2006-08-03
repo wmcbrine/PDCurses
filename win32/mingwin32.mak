@@ -18,7 +18,10 @@ PDCURSES_HOME	= $(PDCURSES_SRCDIR)
 # Nothing below here should require changing.
 ################################################################################
 
+O = o
+
 include $(PDCURSES_HOME)/version
+include $(PDCURSES_HOME)/libobjs
 
 PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)/curspriv.h
@@ -67,20 +70,6 @@ clean:
 
 demos:	$(DEMOS)
 	strip *.exe
-
-#------------------------------------------------------------------------
-
-LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
-clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
-inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
-move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
-scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o pdcdebug.o \
-pdcwin.o
-
-PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
-pdcutil.o
-
-PANOBJS = panel.o
 
 #------------------------------------------------------------------------
 

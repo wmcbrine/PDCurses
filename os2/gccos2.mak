@@ -21,7 +21,10 @@ PDCURSES_HOME	= $(PDCURSES_SRCDIR)
 # Nothing below here should require changing.
 ################################################################################
 
+O = o
+
 include $(PDCURSES_HOME)/version
+include $(PDCURSES_HOME)/libobjs
 
 PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)/curspriv.h
@@ -95,13 +98,6 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
-clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
-inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
-move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
-scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o pdcdebug.o \
-pdcwin.o
-
 DLLOBJS = addch.dlo addchstr.dlo addstr.dlo attr.dlo beep.dlo bkgd.dlo \
 border.dlo clear.dlo color.dlo delch.dlo deleteln.dlo getch.dlo \
 getstr.dlo getyx.dlo inch.dlo inchstr.dlo initscr.dlo inopts.dlo \
@@ -110,13 +106,8 @@ overlay.dlo pad.dlo printw.dlo refresh.dlo scanw.dlo scr_dump.dlo \
 scroll.dlo slk.dlo termattr.dlo terminfo.dlo touch.dlo util.dlo \
 window.dlo pdcdebug.dlo pdcwin.dlo
 
-PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
-pdcutil.o
-
 PDCDLOS = pdcclip.dlo pdcdisp.dlo pdcgetsc.dlo pdckbd.dlo pdcscrn.dlo \
 pdcsetsc.dlo pdcutil.dlo
-
-PANOBJS = panel.o
 
 DEMOOBJS = testcurs.o newdemo.o xmas.o tui.o tuidemo.o firework.o \
 ptest.o rain.o worm.o

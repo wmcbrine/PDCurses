@@ -20,7 +20,10 @@ SIZE		= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 # Nothing below here should require changing.
 ################################################################################
 
+O = objs
+
 !include $(PDCURSES_HOME)\version
+!include $(PDCURSES_HOME)\libobjs
 
 PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h
@@ -73,20 +76,6 @@ clean:
 demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
-
-LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
-border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj \
-getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
-insch.obj insstr.obj instr.obj kernel.obj mouse.obj move.obj outopts.obj \
-overlay.obj pad.obj printw.obj refresh.obj scanw.obj scr_dump.obj \
-scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
-window.obj pdcdebug.obj pdcwin.obj
-
-PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
-pdcsetsc.obj pdcutil.obj
-
-PANOBJS = panel.obj
-
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\mscdos.lrf

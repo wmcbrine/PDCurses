@@ -55,8 +55,6 @@ LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
-DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
-firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)

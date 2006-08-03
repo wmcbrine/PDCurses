@@ -58,15 +58,14 @@ LIBPANEL	= panel.lib
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(PDCLIBS)
+all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.obj
 	-del *.lib
 	-del *.exe
 
-demos:	testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
-firework.exe ptest.exe rain.exe worm.exe
+demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 

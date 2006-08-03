@@ -65,8 +65,6 @@ CURSESDLL	= curses.dll
 LIBPANEL	= panel.lib
 
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL) #$(CURSESDLL)
-DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
-firework.exe ptest.exe rain.exe worm.exe
 DLL_DEMOS	= testcurs_dll.exe newdemo_dll.exe xmas_dll.exe \
 tuidemo_dll.exe firework_dll.exe
 

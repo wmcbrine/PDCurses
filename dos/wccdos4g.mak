@@ -19,7 +19,6 @@ PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
 ################################################################################
 
 !include $(PDCURSES_HOME)\version
-!include $(PDCURSES_HOME)\wccobjs
 
 osdir		= $(PDCURSES_HOME)\dos
 
@@ -35,39 +34,14 @@ LDFLAGS 	= op q sys $(TARGET)
 !endif
 
 CPPFLAGS	= /i=$(PDCURSES_HOME)
-
 CCFLAGS		= /bt=$(TARGET) /zq /wx /mf $(CFLAGS) $(CPPFLAGS)
-
-LINK		= wlink
 
 LIBEXE		= wlib /q /n /t
 
-################################################################################
-all:	$(PDCLIBS) $(DEMOS)
-
-clean
-	-del *.obj
-	-del *.lib
-	-del *.exe
-	-del *.err
-
-demos:	$(DEMOS)
-
-#------------------------------------------------------------------------
+!include $(PDCURSES_HOME)\wccinc
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf
-
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $@ $(PANOBJS)
-
-.c: $(srcdir);$(osdir);$(pandir);$(demodir)
-.c.obj: .autodepend
-	$(CC) $(CCFLAGS) $<
-
-#------------------------------------------------------------------------
-
-!include $(PDCURSES_HOME)\wccdems
 
 dist: .symbolic $(PDCLIBS)
 	echo PDCurses $(VERDOT) for Watcom C++ 32bit DOS > file_id.diz

@@ -20,7 +20,6 @@ MODEL		= l
 ################################################################################
 
 !include $(PDCURSES_HOME)\version
-!include $(PDCURSES_HOME)\wccobjs
 
 osdir		= $(PDCURSES_HOME)\dos
 
@@ -35,36 +34,15 @@ CFLAGS  	= /oneatx
 LDFLAGS 	= op q sys $(TARGET)
 !endif
 
+CPPFLAGS	= /i=$(PDCURSES_HOME)
 CCFLAGS		= /bt=$(TARGET) /zq /wx /m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= wlib /q /n /t
 
-################################################################################
-all:	$(PDCLIBS) $(DEMOS)
-
-clean
-	-del *.obj
-	-del *.lib
-	-del *.exe
-	-del *.err
-
-demos:	$(DEMOS)
-
-#------------------------------------------------------------------------
+!include $(PDCURSES_HOME)\wccinc
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf
-
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $@ $(PANOBJS)
-
-.c: $(srcdir);$(osdir);$(pandir);$(demodir)
-.c.obj: .autodepend
-	$(CC) $(CCFLAGS) $<
-
-#------------------------------------------------------------------------
-
-!include $(PDCURSES_HOME)\wccdems
 
 dist: .symbolic $(PDCLIBS)
 	echo PDCurses $(VERDOT) for Watcom C++ 16bit DOS > file_id.diz

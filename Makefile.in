@@ -71,7 +71,7 @@ manual:
 
 $(ZIPFILE):
 	zip -9y $(ZIPFILE) README HISTORY INSTALL TODO *.spec version \
-	libobjs wccobjs wccdems Makefile.in config.h.in configure \
+	libobjs wccinc Makefile.in config.h.in configure \
 	configure.ac config.guess config.sub x11/xcurses-config.in \
 	install-sh aclocal.m4 curses.h curspriv.h panel.h term.h \
 	maintain.er pdcurses/README pdcurses/*.c demos/README demos/*.c \
@@ -86,8 +86,8 @@ zip: $(ZIPFILE)
 ../$(TARBALL):
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/HISTORY \
 	$(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/*.spec \
-	$(PDC_DIR)/version $(PDC_DIR)/libobjs $(PDC_DIR)/wccobjs \
-	$(PDC_DIR)/wccdems $(PDC_DIR)/Makefile.in $(PDC_DIR)/aclocal.m4 \
+	$(PDC_DIR)/version $(PDC_DIR)/libobjs $(PDC_DIR)/wccinc \
+	$(PDC_DIR)/Makefile.in $(PDC_DIR)/aclocal.m4 \
 	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure \
 	$(PDC_DIR)/config.guess $(PDC_DIR)/x11/xcurses-config.in \
 	$(PDC_DIR)/config.sub $(PDC_DIR)/configure.ac \

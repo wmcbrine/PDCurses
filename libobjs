@@ -10,3 +10,6 @@ PDCOBJS = pdcclip.$(O) pdcdisp.$(O) pdcgetsc.$(O) pdckbd.$(O) pdcscrn.$(O) \
 pdcsetsc.$(O) pdcutil.$(O)
 
 PANOBJS = panel.$(O)
+
+DEMOS = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe \
+ptest.exe rain.exe worm.exe

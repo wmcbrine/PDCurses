@@ -59,8 +59,6 @@ LIBCURSES	= pdcurses.a
 LIBPANEL	= panel.a
 
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
-DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
-firework.exe ptest.exe rain.exe worm.exe
 
 ################################################################################
 .PHONY: all libs clean demos dist

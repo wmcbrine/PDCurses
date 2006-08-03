@@ -1,5 +1,15 @@
 # Common elements for most of the makefiles (not Watcom or LCC)
 
+PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
+PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)/curspriv.h
+PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PANEL_HEADER		= $(PDCURSES_HOME)/panel.h
+TERM_HEADER		= $(PDCURSES_HOME)/term.h
+
+srcdir	= $(PDCURSES_HOME)/pdcurses
+pandir	= $(PDCURSES_HOME)/panel
+demodir	= $(PDCURSES_HOME)/demos
+
 LIBOBJS = addch.$(O) addchstr.$(O) addstr.$(O) attr.$(O) beep.$(O) \
 bkgd.$(O) border.$(O) clear.$(O) color.$(O) delch.$(O) deleteln.$(O) \
 getch.$(O) getstr.$(O) getyx.$(O) inch.$(O) inchstr.$(O) initscr.$(O) \

@@ -23,16 +23,7 @@ O = o
 include $(PDCURSES_HOME)/version
 include $(PDCURSES_HOME)/libobjs
 
-PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
-PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)/curspriv.h
-PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
-PANEL_HEADER		= $(PDCURSES_HOME)/panel.h
-TERM_HEADER		= $(PDCURSES_HOME)/term.h
-
-srcdir		= $(PDCURSES_HOME)/pdcurses
 osdir		= $(PDCURSES_HOME)/dos
-pandir		= $(PDCURSES_HOME)/panel
-demodir		= $(PDCURSES_HOME)/demos
 
 PDCURSES_DOS_H	= $(osdir)/pdcdos.h
 

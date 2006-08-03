@@ -73,3 +73,24 @@ worm.exe:	worm.obj $(LIBCURSES)
 
 xmas.exe:	xmas.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) n $@ f xmas.obj l $(LIBCURSES)
+
+dist: .symbolic $(PDCLIBS)
+	%write file_id.diz PDCurses $(VERDOT) for Watcom C++ $(PLATFORM)
+	%append file_id.diz ------------------------------------------
+	%append file_id.diz Public Domain Curses library for
+	%append file_id.diz Open Watcom 1.3 for $(PLATFORM).
+	%append file_id.diz Source available in PDCURS$(VER).ZIP
+	%append file_id.diz Public Domain.
+	%write flist $(PDCURSES_HOME)\README
+	%append flist $(PDCURSES_HOME)\HISTORY
+	%append flist $(PDCURSES_HOME)\maintain.er
+	%append flist $(PDCURSES_HOME)\curses.h
+	%append flist $(PDCURSES_HOME)\curspriv.h
+	%append flist $(PDCURSES_HOME)\panel.h
+	%append flist $(PDCURSES_HOME)\term.h
+	%append flist $(LIBCURSES)
+	%append flist $(LIBPANEL)
+	%append flist file_id.diz
+	zip -9jX $(ARCNAME) -@ <flist
+	del flist
+	del file_id.diz

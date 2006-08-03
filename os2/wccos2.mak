@@ -38,22 +38,10 @@ CCFLAGS 	= /bt=$(TARGET) /wx /s /zq $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= wlib /q /n /b /c /t
 
+PLATFORM	= OS/2
+ARCNAME		= pdc$(VER)_wcc_os2
+
 !include $(PDCURSES_HOME)\wccinc
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
-
-dist: .symbolic $(PDCLIBS)
-	echo PDCurses $(VERDOT) for Watcom C++ OS/2 > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo Open Watcom 1.3 for OS/2. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	zip -9jX pdc$(VER)_wcc_os2 &
-	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\HISTORY &
-	$(PDCURSES_HOME)\maintain.er &
-	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h &
-	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h &
-	$(LIBCURSES) $(LIBPANEL) file_id.diz
-	del file_id.diz

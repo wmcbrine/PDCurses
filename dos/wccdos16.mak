@@ -39,28 +39,10 @@ CCFLAGS		= /bt=$(TARGET) /zq /wx /m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= wlib /q /n /t
 
+PLATFORM	= 16 bit DOS
+ARCNAME		= pdc$(VER)16w
+
 !include $(PDCURSES_HOME)\wccinc
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf
-
-dist: .symbolic $(PDCLIBS)
-	echo PDCurses $(VERDOT) for Watcom C++ 16bit DOS > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo Open Watcom 1.3 for 16 bit DOS. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	echo $(PDCURSES_HOME)\README > flist
-	echo $(PDCURSES_HOME)\HISTORY >> flist
-	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\curses.h >> flist
-	echo $(PDCURSES_HOME)\curspriv.h >> flist
-	echo $(PDCURSES_HOME)\panel.h >> flist
-	echo $(PDCURSES_HOME)\term.h >> flist
-	echo $(LIBCURSES) >> flist
-	echo $(LIBPANEL) >> flist
-	echo file_id.diz >> flist
-	zip -9jX pdc$(VER)16w -@ <flist
-	del flist
-	del file_id.diz

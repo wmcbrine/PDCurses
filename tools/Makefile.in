@@ -28,9 +28,9 @@ PANEL_DIR=$(srcdir)/../panel
 
 all: manual
 
-manual: manext PDCurses.man
+manual: PDCurses.man
 
-PDCurses.man:
+PDCurses.man: manext
 	./manext $(DOC_DIR)/intro.man 			> PDCurses.man
 	./manext $(DOC_DIR)/overview.man 			>> PDCurses.man
 	echo .......=================================== >> PDCurses.man

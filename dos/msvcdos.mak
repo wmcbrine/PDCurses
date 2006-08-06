@@ -22,8 +22,8 @@ SIZE		= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 
 O = objs
 
-!include $(PDCURSES_HOME)\version
-!include $(PDCURSES_HOME)\libobjs
+!include $(PDCURSES_HOME)\version.mif
+!include $(PDCURSES_HOME)\libobjs.mif
 
 osdir		= $(PDCURSES_HOME)\dos
 

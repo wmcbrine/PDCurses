@@ -19,7 +19,7 @@ MODEL		= l
 # Nothing below here should require changing.
 ################################################################################
 
-!include $(PDCURSES_HOME)\version
+!include $(PDCURSES_HOME)\version.mif
 
 osdir		= $(PDCURSES_HOME)\dos
 

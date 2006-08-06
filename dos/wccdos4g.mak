@@ -18,7 +18,7 @@ PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
 # Nothing below here should require changing.
 ################################################################################
 
-!include $(PDCURSES_HOME)\version
+!include $(PDCURSES_HOME)\version.mif
 
 osdir		= $(PDCURSES_HOME)\dos
 

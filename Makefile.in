@@ -20,7 +20,7 @@ SHLPRE = @SHLPRE@
 SHLPST = @SHLPST@
 SHLFILE = XCurses
 
-include $(srcdir)/version
+include $(srcdir)/version.mif
 
 PDC_DIR=PDCurses-$(VERDOT)
 
@@ -70,24 +70,23 @@ manual:
 	cd tools; $(MAKE) $(MFLAGS) $@
 
 $(ZIPFILE):
-	zip -9y $(ZIPFILE) README HISTORY INSTALL TODO *.spec version \
-	libobjs wccinc Makefile.in config.h.in configure \
-	configure.ac config.guess config.sub x11/xcurses-config.in \
-	install-sh aclocal.m4 curses.h curspriv.h panel.h term.h \
-	maintain.er pdcurses/README pdcurses/*.c demos/README demos/*.c \
-	demos/*.h panel/README panel/*.c dos/README dos/*.c dos/*.h \
-	dos/*.rsp dos/*.mak dos/*.lrf os2/README os2/*.c os2/*.mak \
-	os2/*.lrf os2/*.def x11/README x11/*.c x11/*.xbm x11/*.h \
-	win32/README win32/*.c win32/*.mak win32/*.def win32/*.ico \
-	win32/*.rc doc/*.man tools/manext.c x11/Makefile.* tools/Makefile.in
+	zip -9y $(ZIPFILE) README HISTORY INSTALL TODO *.spec *.mif \
+	Makefile.in config.h.in configure configure.ac config.guess \
+	config.sub x11/xcurses-config.in install-sh aclocal.m4 curses.h \
+	curspriv.h panel.h term.h maintain.er pdcurses/README \
+	pdcurses/*.c demos/README demos/*.c demos/*.h panel/README \
+	panel/*.c dos/README dos/*.c dos/*.h dos/*.rsp dos/*.mak \
+	dos/*.lrf os2/README os2/*.c os2/*.mak os2/*.lrf os2/*.def \
+	x11/README x11/*.c x11/*.xbm x11/*.h win32/README win32/*.c \
+	win32/*.mak win32/*.def win32/*.ico win32/*.rc doc/*.man \
+	tools/manext.c x11/Makefile.* tools/Makefile.in
 
 zip: $(ZIPFILE)
 
 ../$(TARBALL):
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/HISTORY \
 	$(PDC_DIR)/INSTALL $(PDC_DIR)/TODO $(PDC_DIR)/*.spec \
-	$(PDC_DIR)/version $(PDC_DIR)/libobjs $(PDC_DIR)/wccinc \
-	$(PDC_DIR)/Makefile.in $(PDC_DIR)/aclocal.m4 \
+	$(PDC_DIR)/*.mif $(PDC_DIR)/Makefile.in $(PDC_DIR)/aclocal.m4 \
 	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure \
 	$(PDC_DIR)/config.guess $(PDC_DIR)/x11/xcurses-config.in \
 	$(PDC_DIR)/config.sub $(PDC_DIR)/configure.ac \

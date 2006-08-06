@@ -20,8 +20,8 @@ PDCURSES_HOME	= $(PDCURSES_SRCDIR)
 
 O = o
 
-include $(PDCURSES_HOME)/version
-include $(PDCURSES_HOME)/libobjs
+include $(PDCURSES_HOME)/version.mif
+include $(PDCURSES_HOME)/libobjs.mif
 
 osdir		= $(PDCURSES_HOME)/dos
 

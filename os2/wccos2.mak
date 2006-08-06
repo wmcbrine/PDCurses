@@ -41,7 +41,7 @@ LIBEXE		= wlib /q /n /b /c /t
 PLATFORM	= OS/2
 ARCNAME		= pdc$(VER)_wcc_os2
 
-!include $(PDCURSES_HOME)\wccinc
+!include $(PDCURSES_HOME)\watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)

@@ -41,7 +41,7 @@ LIBEXE		= wlib /q /n /t
 PLATFORM	= 32 bit DOS
 ARCNAME		= pdc$(VER)32w
 
-!include $(PDCURSES_HOME)\wccinc
+!include $(PDCURSES_HOME)\watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf

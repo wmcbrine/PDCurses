@@ -52,10 +52,10 @@ LIBEXE		= lib
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
-LIBRARIES	= $(LIBCURSES) $(LIBPANEL)
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(LIBRARIES) $(DEMOS)
+all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.obj

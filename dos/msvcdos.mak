@@ -20,7 +20,7 @@ SIZE		= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 # Nothing below here should require changing.
 ################################################################################
 
-O = objs
+O = obj
 
 !include $(PDCURSES_HOME)\version.mif
 !include $(PDCURSES_HOME)\libobjs.mif
@@ -52,10 +52,10 @@ LIBEXE		= lib
 LIBCURSES	= pdcurses.lib
 LIBPANEL	= panel.lib
 
-LIBRARIES	= $(LIBCURSES) $(LIBPANEL)
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(LIBRARIES) $(DEMOS)
+all:	$(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.obj

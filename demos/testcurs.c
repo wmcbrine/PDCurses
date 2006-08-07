@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.59 2006/07/23 15:09:18 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.60 2006/08/07 01:34:29 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -268,7 +268,8 @@ void scrollTest(WINDOW *win)
 	scrollok(win, TRUE);
 	napms(500);
 
-	for (i = 1; i <= height; i++) {
+	for (i = 1; i <= height; i++)
+	{
 		napms(150);
 		scroll(win);
 		wrefresh(win);
@@ -1021,7 +1022,8 @@ void display_menu(int old_option, int new_option)
 	int lmarg = (COLS - 14) / 2,
 		tmarg = (LINES - (MAX_OPTIONS + 2)) / 2;
 
-	if (old_option == -1) {
+	if (old_option == -1)
+	{
 		int i;
 
 		attrset(A_BOLD);
@@ -1030,7 +1032,8 @@ void display_menu(int old_option, int new_option)
 
 		for (i = 0; i < MAX_OPTIONS; i++)
 			mvaddstr(tmarg + i, lmarg, command[i].text);
-	} else
+	}
+	else
 		mvaddstr(tmarg + old_option, lmarg, command[old_option].text);
 
 	attrset(A_REVERSE);

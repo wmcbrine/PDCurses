@@ -54,7 +54,7 @@ PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 ################################################################################
 .PHONY: all libs clean demos dist
 
-all:	$(PDCLIBS) $(DEMOS)
+all:	libs demos
 
 libs:	$(PDCLIBS)
 
@@ -65,6 +65,7 @@ clean:
 	-del *.exe
 
 demos:	$(DEMOS)
+	strip *.exe
 
 #------------------------------------------------------------------------
 
@@ -97,15 +98,12 @@ $(PANOBJS) : %.o: $(pandir)/%.c
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe: \
 %.exe: $(demodir)/%.c
 	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
-	strip $@
 
 ptest.exe: $(demodir)/ptest.c $(PANEL_HEADER) $(LIBPANEL)
 	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
-	strip $@
 
 tuidemo.exe: tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
-	strip $@
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<

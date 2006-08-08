@@ -50,7 +50,11 @@ LIBPANEL	= panel.a
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(PDCLIBS) $(DEMOS)
+.PHONY: all libs clean demos dist
+
+all:	libs demos
+
+libs:	$(PDCLIBS)
 
 clean:
 	-rm -f *.o

@@ -36,7 +36,8 @@ CFLAGS		= -O
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS		= -c @$(osdir)\bccdos.rsp -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+CCFLAGS		= -1- -K -G -rd -d -w-eff -w-par -c \
+-m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= tlib /C /E
 

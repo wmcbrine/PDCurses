@@ -28,9 +28,9 @@ osdir		= $(PDCURSES_HOME)\os2
 CC		= bcc
 
 !if $d(DEBUG)
-CFLAGS  	= -N -v -y -DPDCDEBUG 
+CFLAGS		= -N -v -y -DPDCDEBUG 
 !else
-CFLAGS  	= -O 
+CFLAGS		= -O 
 !endif
 
 CPPFLAGS	= -I$(PDCURSES_HOME)

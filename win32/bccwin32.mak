@@ -58,10 +58,6 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-$(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
-$(PANOBJS) : $(PANEL_HEADER)
-terminfo.obj: $(TERM_HEADER)
-
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
 	$(LIBEXE) $@ \
@@ -79,6 +75,8 @@ $(LIBPANEL) : $(PANOBJS)
 	-del $@
 	$(LIBEXE) $@ +$(PANOBJS)
 
+.autodepend
+
 {$(srcdir)\}.c.obj:
 	$(CC) $(CCFLAGS) $<
 
@@ -86,6 +84,9 @@ $(LIBPANEL) : $(PANOBJS)
 	$(CC) $(CCFLAGS) $<
 
 {$(pandir)\}.c.obj:
+	$(CC) $(CCFLAGS) $<
+
+{$(demodir)\}.c.obj:
 	$(CC) $(CCFLAGS) $<
 
 .c.obj:
@@ -117,33 +118,11 @@ worm.exe:	worm.obj $(LIBCURSES)
 xmas.exe:	xmas.obj $(LIBCURSES)
 	$(CC) -e$@ $**
 
-
-firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\firework.c
-
-newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\newdemo.c
-
-ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\ptest.c
-
-rain.obj: $(demodir)\rain.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\rain.c
-
-testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\testcurs.c
-
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)\tui.c
+	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tui.c
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)\tuidemo.c
-
-worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\worm.c
-
-xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
+	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tuidemo.c
 
 PLATFORM1 = Borland C++ Win32
 PLATFORM2 = Borland C/C++ 5.5 for Win32

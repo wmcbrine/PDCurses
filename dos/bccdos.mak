@@ -28,8 +28,6 @@ osdir		= $(PDCURSES_HOME)\dos
 
 PDCURSES_DOS_H	= $(osdir)\pdcdos.h
 
-#CC		= bcc
-
 !if $d(DEBUG)
 CFLAGS		= -N -v -y -DPDCDEBUG 
 !else
@@ -68,152 +66,22 @@ $(LIBPANEL) : $(PANOBJS)
 	-del $@
 	$(LIBEXE) $@ +$(PANOBJS)
 
-addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addch.c
+.autodepend
 
-addchstr.obj: $(srcdir)\addchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addchstr.c
+{$(srcdir)\}.c.obj:
+	$(CC) $(CCFLAGS) $<
 
-addstr.obj: $(srcdir)\addstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\addstr.c
+{$(osdir)\}.c.obj:
+	$(CC) $(CCFLAGS) $<
 
-attr.obj: $(srcdir)\attr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\attr.c
+{$(pandir)\}.c.obj:
+	$(CC) $(CCFLAGS) $<
 
-beep.obj: $(srcdir)\beep.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\beep.c
+{$(demodir)\}.c.obj:
+	$(CC) $(CCFLAGS) $<
 
-bkgd.obj: $(srcdir)\bkgd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\bkgd.c
-
-border.obj: $(srcdir)\border.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\border.c
-
-clear.obj: $(srcdir)\clear.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\clear.c
-
-color.obj: $(srcdir)\color.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\color.c
-
-delch.obj: $(srcdir)\delch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\delch.c
-
-deleteln.obj: $(srcdir)\deleteln.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\deleteln.c
-
-getch.obj: $(srcdir)\getch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\getch.c
-
-getstr.obj: $(srcdir)\getstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\getstr.c
-
-getyx.obj: $(srcdir)\getyx.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\getyx.c
-
-inch.obj: $(srcdir)\inch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\inch.c
-
-inchstr.obj: $(srcdir)\inchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\inchstr.c
-
-initscr.obj: $(srcdir)\initscr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\initscr.c
-
-inopts.obj: $(srcdir)\inopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\inopts.c
-
-insch.obj: $(srcdir)\insch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\insch.c
-
-insstr.obj: $(srcdir)\insstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\insstr.c
-
-instr.obj: $(srcdir)\instr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\instr.c
-
-kernel.obj: $(srcdir)\kernel.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\kernel.c
-
-mouse.obj: $(srcdir)\mouse.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\mouse.c
-
-move.obj: $(srcdir)\move.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\move.c
-
-outopts.obj: $(srcdir)\outopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\outopts.c
-
-overlay.obj: $(srcdir)\overlay.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\overlay.c
-
-pad.obj: $(srcdir)\pad.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pad.c
-
-printw.obj: $(srcdir)\printw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\printw.c
-
-refresh.obj: $(srcdir)\refresh.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\refresh.c
-
-scanw.obj: $(srcdir)\scanw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\scanw.c
-
-scr_dump.obj: $(srcdir)\scr_dump.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\scr_dump.c
-
-scroll.obj: $(srcdir)\scroll.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\scroll.c
-
-slk.obj: $(srcdir)\slk.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\slk.c
-
-termattr.obj: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\termattr.c
-
-terminfo.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\terminfo.c
-
-touch.obj: $(srcdir)\touch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\touch.c
-
-util.obj: $(srcdir)\util.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\util.c
-
-window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\window.c
-
-
-pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcdebug.c
- 
-pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcclip.c
-
-pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcdisp.c
-
-pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcgetsc.c
-
-pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdckbd.c
-
-pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcscrn.c
-
-pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcsetsc.c
-
-pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) -o$@ $(osdir)\pdcutil.c
-
-pdcwin.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) -o$@ $(srcdir)\pdcwin.c
-
-#------------------------------------------------------------------------
-
-panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
-	$(CC) $(CCFLAGS) -o$@ $(pandir)\panel.c
+.c.obj:
+	$(CC) $(CCFLAGS) $<
 
 #------------------------------------------------------------------------
 
@@ -241,33 +109,11 @@ worm.exe:	worm.obj $(LIBCURSES)
 xmas.exe:	xmas.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**
 
-
-firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\firework.c
-
-newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\newdemo.c
-
-ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\ptest.c
-
-rain.obj: $(demodir)\rain.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\rain.c
-
-testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\testcurs.c
-
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)\tui.c
+	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tui.c
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) -o$@ $(demodir)\tuidemo.c
-
-worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\worm.c
-
-xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
+	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tuidemo.c
 
 PLATFORM1 = Borland C++ 3.1
 PLATFORM2 = Borland C/C++ 3.1 for DOS

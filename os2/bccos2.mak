@@ -276,17 +276,8 @@ worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
-dist: $(PDCLIBS)
-	echo PDCurses $(VERDOT) for Borland C++ OS/2 1.0 > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo Borland C/C++ OS/2 1.0. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	zip -9jX pdc$(VER)bcos2 \
-	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\HISTORY \
-	$(PDCURSES_HOME)\maintain.er \
-	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h \
-	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h \
-	$(LIBCURSES) $(LIBPANEL) file_id.diz
-	del file_id.diz
+PLATFORM1 = Borland C++ OS/2 1.0
+PLATFORM2 = Borland C/C++ OS/2 1.0
+ARCNAME = pdc$(VER)bcos2
+
+!include $(PDCURSES_HOME)\makedist.mif

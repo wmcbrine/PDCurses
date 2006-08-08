@@ -10,7 +10,7 @@
 ################################################################################
 #
 # First, set the environment variable PDCURSES_SRCDIR, or edit the line
-# below; for example, "export PDCURSES_SRCDIR=/cygdrive/c/pdcurses". 
+# below; for example, "export PDCURSES_SRCDIR=c:/pdcurses". 
 #
 ################################################################################
 PDCURSES_HOME	= $(PDCURSES_SRCDIR)

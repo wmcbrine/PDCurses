@@ -273,23 +273,8 @@ worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\xmas.c
 
-dist: $(PDCLIBS)
-	echo PDCurses $(VERDOT) for Microsoft C++ 6.0 > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo Microsoft C/C++ 6.0 for DOS. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	echo $(PDCURSES_HOME)\README > flist
-	echo $(PDCURSES_HOME)\HISTORY >> flist
-	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\curses.h >> flist
-	echo $(PDCURSES_HOME)\curspriv.h >> flist
-	echo $(PDCURSES_HOME)\panel.h >> flist
-	echo $(PDCURSES_HOME)\term.h >> flist
-	echo $(LIBCURSES) >> flist
-	echo $(LIBPANEL) >> flist
-	echo file_id.diz >> flist
-	zip -9jX pdc$(VER)msc -@ <flist
-	del flist
-	del file_id.diz
+PLATFORM1 = Microsoft C++ 6.0
+PLATFORM2 = Microsoft C/C++ 6.0 for DOS
+ARCNAME = pdc$(VER)msc
+
+!include $(PDCURSES_HOME)\makedist.mif

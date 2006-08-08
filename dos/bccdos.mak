@@ -269,23 +269,8 @@ worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -o$@ $(demodir)\xmas.c
 
-dist: $(PDCLIBS)
-	echo PDCurses $(VERDOT) for Borland C++ 3.1 > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo Borland C/C++ 3.1 for DOS. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	echo $(PDCURSES_HOME)\README > flist
-	echo $(PDCURSES_HOME)\HISTORY >> flist
-	echo $(PDCURSES_HOME)\maintain.er >> flist
-	echo $(PDCURSES_HOME)\curses.h >> flist
-	echo $(PDCURSES_HOME)\curspriv.h >> flist
-	echo $(PDCURSES_HOME)\panel.h >> flist
-	echo $(PDCURSES_HOME)\term.h >> flist
-	echo $(LIBCURSES) >> flist
-	echo $(LIBPANEL) >> flist
-	echo file_id.diz >> flist
-	zip -9jX pdc$(VER)bcc -@ <flist
-	del flist
-	del file_id.diz
+PLATFORM1 = Borland C++ 3.1
+PLATFORM2 = Borland C/C++ 3.1 for DOS
+ARCNAME = pdc$(VER)bcc
+
+!include $(PDCURSES_HOME)\makedist.mif

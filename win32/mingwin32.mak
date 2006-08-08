@@ -102,17 +102,8 @@ tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 
 #------------------------------------------------------------------------
 
-dist: $(PDCLIBS)
-	echo PDCurses $(VERDOT) for MinGW Win32 > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo MinGW for Win32. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	zip -9jX pdc$(VER)_ming_w32 \
-	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\HISTORY \
-	$(PDCURSES_HOME)\maintain.er \
-	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h \
-	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h \
-	$(LIBCURSES) $(LIBPANEL) file_id.diz
-	del file_id.diz
+PLATFORM1 = MinGW Win32
+PLATFORM2 = MinGW for Win32
+ARCNAME = pdc$(VER)_ming_w32
+
+include $(PDCURSES_HOME)/makedist.mif

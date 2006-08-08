@@ -267,17 +267,8 @@ worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) -Fo$@ $(demodir)\xmas.c
 
-dist: $(PDCLIBS)
-	echo PDCurses $(VERDOT) for C Set/2 OS/2 > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo C Set/2 for OS/2. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	zip -9jX pdc$(VER)_icc_os2 \
-	$(PDCURSES_HOME)\README $(PDCURSES_HOME)\HISTORY \
-	$(PDCURSES_HOME)\maintain.er \
-	$(PDCURSES_HOME)\curses.h $(PDCURSES_HOME)\curspriv.h \
-	$(PDCURSES_HOME)\panel.h $(PDCURSES_HOME)\term.h \
-	$(LIBCURSES) $(LIBPANEL) file_id.diz
-	del file_id.diz
+PLATFORM1 = C Set/2 OS/2
+PLATFORM2 = C Set/2 for OS/2
+ARCNAME = pdc$(VER)_icc_os2
+
+!include $(PDCURSES_HOME)\makedist.mif

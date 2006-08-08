@@ -72,7 +72,11 @@ LIBPANEL	= panel.a
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL) #$(DLLTARGET) pdcurses.lib panel.lib
 
 ################################################################################
-all:	$(PDCLIBS) $(DEMOS) #testcurs_dyn.exe
+.PHONY: all libs clean demos dist
+
+all:	libs demos
+
+libs:	$(PDCLIBS)
 
 clean:
 	-del *.o
@@ -83,7 +87,7 @@ clean:
 	-del *.dll
 	-del testcurs newdemo xmas tuidemo firework ptest rain worm
 
-demos:	$(DEMOS)
+demos:	$(DEMOS) #testcurs_dyn.exe
 
 #------------------------------------------------------------------------
 

@@ -38,10 +38,13 @@ CCFLAGS 	= /bt=$(TARGET) /wx /s /zq $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= wlib /q /n /b /c /t
 
-PLATFORM	= OS/2
-ARCNAME		= pdc$(VER)_wcc_os2
-
 !include $(PDCURSES_HOME)\watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
+
+PLATFORM1	= Watcom C++ OS/2
+PLATFORM2	= Open Watcom 1.3 for OS/2
+ARCNAME		= pdc$(VER)_wcc_os2
+
+!include $(PDCURSES_HOME)\makedist.mif

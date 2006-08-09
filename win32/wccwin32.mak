@@ -38,10 +38,13 @@ CCFLAGS		= /ei /zq /wx $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= wlib /q /n /t
 
-PLATFORM	= Win32
-ARCNAME		= pdc$(VER)_wcc_w32
-
 !include $(PDCURSES_HOME)\watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
+
+PLATFORM1	= Watcom C++ Win32
+PLATFORM2	= Open Watcom 1.3 for Win32
+ARCNAME		= pdc$(VER)_wcc_w32
+
+!include $(PDCURSES_HOME)\makedist.mif

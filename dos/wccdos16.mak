@@ -39,10 +39,13 @@ CCFLAGS		= /bt=$(TARGET) /zq /wx /m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= wlib /q /n /t
 
-PLATFORM	= 16 bit DOS
-ARCNAME		= pdc$(VER)16w
-
 !include $(PDCURSES_HOME)\watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\wccdos.lrf
+
+PLATFORM1	= Watcom C++ 16-bit DOS
+PLATFORM2	= Open Watcom 1.3 for 16-bit DOS
+ARCNAME		= pdc$(VER)16w
+
+!include $(PDCURSES_HOME)\makedist.mif

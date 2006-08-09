@@ -1,4 +1,5 @@
-# Common elements for most of the makefiles (not Watcom or LCC)
+# Common elements for most of the DOS, OS/2 and Win32
+# makefiles (not Watcom or LCC)
 
 PDCURSES_CURSES_H	= $(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)/curspriv.h

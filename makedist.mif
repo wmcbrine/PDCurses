@@ -1,4 +1,5 @@
-# Build a binary archive
+# Makefile include: build a binary archive with Info-ZIP
+# under DOS, OS/2 or Win32
 
 dist: $(PDCLIBS)
 	echo PDCurses $(VERDOT) for $(PLATFORM1) > file_id.diz

@@ -1,6 +1,6 @@
 ################################################################################
 #
-# NMAKE Makefile for PDCurses library - DOS MSC
+# NMAKE Makefile for PDCurses library - Microsoft C for DOS
 #
 # Usage: nmake -f [path\]dosmsc.mak [DEBUG=1] [target]
 #
@@ -41,7 +41,7 @@ LDFLAGS		= /NOE /SE:160
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS		= /J /nologo /c /EM /D$(SIZE) /A$(MODEL) $(CFLAGS) $(CPPFLAGS)
+CCFLAGS		= /J /nologo /c /D$(SIZE) /A$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LINK		= link
 
@@ -273,8 +273,8 @@ worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
 	$(CC) $(CCFLAGS) $(demodir)\xmas.c
 
-PLATFORM1 = Microsoft C++ 6.0
-PLATFORM2 = Microsoft C/C++ 6.0 for DOS
+PLATFORM1 = Microsoft C
+PLATFORM2 = Microsoft C for DOS
 ARCNAME = pdc$(VER)msc
 
 !include $(PDCURSES_HOME)\makedist.mif

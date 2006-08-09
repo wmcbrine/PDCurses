@@ -1,4 +1,4 @@
-                    Welcome to PDCurses !
+			Welcome to PDCurses !
 
  This file provides information on building PDCurses for DOS, OS/2,
  Windows or X11. After unpacking the archive, go to the section below
@@ -10,32 +10,31 @@
    directory where you unpacked PDCurses. (Skip this step if you're
    using LCC-Win32.) For example:
 
-         set PDCURSES_SRCDIR=c:\pdcurses
+	set PDCURSES_SRCDIR=c:\pdcurses
 
  . In the subdirectory for each OS, you'll find a number of ".mak"
    files, one for each supported compiler:
 
    DOS:
-         bccdos.mak    - Borland C++ 3.0+
-         gccdos.mak    - DJGPP V2
-         mscdos.mak    - Microsoft C 6.0
-         msvcdos.mak   - Visual C++ 1.0+
-         wccdos16.mak  - Watcom 10.6+ (16bit)
-         wccdos4g.mak  - Watcom 10.6+ (32bit)
+	bccdos.mak	- Borland C++ 3.0+
+	gccdos.mak	- DJGPP V2
+	mscdos.mak	- Microsoft C
+	wccdos16.mak	- Watcom 10.6+ (16-bit)
+	wccdos4g.mak	- Watcom 10.6+ (32-bit)
 
    OS/2:
-         bccos2.mak    - Borland C++ 2.0
-         gccos2.mak    - EMX 0.9b+
-         iccos2.mak    - C Set/2
-         wccos2.mak    - Watcom 10.6+ (32bit)
+	bccos2.mak	- Borland C++ 2.0
+	gccos2.mak	- EMX 0.9b+
+	iccos2.mak	- C Set/2
+	wccos2.mak	- Watcom 10.6+ (32-bit)
 
    Windows:
-         bccwin32.mak  - Borland C++ 4.0.2+
-         gccwin32.mak  - Cygnus GNU Compiler
-         lccwin32.mak  - LCC-Win32
-         mingwin32.mak - MinGW
-         vcwin32.mak   - Visual C++ 2.0+
-         wccwin32.mak  - Watcom 10.6+
+	bccwin32.mak	- Borland C++ 4.0.2+
+	gccwin32.mak	- Cygnus GNU Compiler
+	lccwin32.mak	- LCC-Win32
+	mingwin32.mak	- MinGW
+	vcwin32.mak	- Microsoft Visual C++ 2.0+
+	wccwin32.mak	- Watcom 10.6+
 
  . In some cases, you may have to edit the makefile before proceeding.
    LCC-Win32 users must point PDCURSES_HOME to the PDCurses directory.
@@ -45,7 +44,7 @@
 
  . Build it:
 
-         make -f makefilename
+	make -f makefilename
 
    You can build it from the OS subdirectory, or from another location
    by specifying the full path to the makefile. (For Watcom, use "wmake"

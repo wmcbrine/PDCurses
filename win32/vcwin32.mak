@@ -2,7 +2,7 @@
 #
 # Visual C++ NMakefile for PDCurses library - Win32 VC++ 2.0+
 #
-# Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [target]
+# Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [DLLBUILD=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
@@ -51,15 +51,13 @@ LIBCURSES	= pdcurses.lib
 CURSESDLL	= pdcurses.dll
 LIBPANEL	= panel.lib
 
-# For a static build:
-
+!ifdef DLLBUILD
+CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
+!else
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS)
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
-
-# For a DLL build:
-
-#CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
-#PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
+!endif
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)

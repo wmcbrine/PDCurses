@@ -15,16 +15,15 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 
 #include <panel.h>
+#include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.21 2006/06/02 02:39:34 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.22 2006/08/10 01:44:08 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

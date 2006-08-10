@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.207 2006/08/10 08:30:01 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.208 2006/08/10 08:43:36 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -342,10 +342,6 @@ typedef int  _int;
 # if !defined(CHTYPE_LONG) || !(defined(WIN32) || defined(XCURSES))
 #  undef PDC_WIDE
 # endif
-#endif
-
-#if defined(WIN32) && defined(PDC_WIDE)
-# define UNICODE
 #endif
 
 #if defined(OS2) && !defined(EMXVIDEO)

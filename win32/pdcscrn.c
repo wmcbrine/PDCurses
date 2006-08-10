@@ -15,12 +15,16 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+#ifdef PDC_WIDE
+# define UNICODE
+#endif
+
 #include <windows.h>
 #undef MOUSE_MOVED
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.46 2006/08/10 08:30:01 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.47 2006/08/10 08:43:36 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1

@@ -15,6 +15,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+#ifdef PDC_WIDE
+# define UNICODE
+#endif
+
 #include <windows.h>
 #undef MOUSE_MOVED
 #define CURSES_LIBRARY 1
@@ -25,7 +29,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.33 2006/08/10 08:30:01 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.34 2006/08/10 08:43:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

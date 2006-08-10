@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.53 2006/07/30 22:00:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.54 2006/08/10 02:34:18 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -62,13 +62,7 @@ unsigned long pdc_key_modifiers = 0L;
 
 extern HANDLE hConIn;
 
-#ifdef PDC_THREAD_BUILD
-extern HANDLE hPipeRead;
-extern HANDLE hPipeWrite;
-extern HANDLE hSemKeyCount;
-#else
 static int keyCount = 0;
-#endif
 
 static void win32_getch(void);
 static int win32_kbhit(int);
@@ -361,11 +355,7 @@ unsigned long PDC_get_input_fd(void)
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
-#ifdef PDC_THREAD_BUILD
-	return (unsigned long)hSemKeyCount;
-#else
 	return 0L;
-#endif
 }
 
 /*man-start**************************************************************
@@ -915,9 +905,6 @@ int PDC_validchar(int c)
 
    Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
 	     a pressed mouse key are ignored.
-
-   THIS FUNCTION IS NOT THREAD-SAFE. NEVER USE MORE THREADS THAN TO
-   USE THIS FUNCTION. STATIC VARIABLES ARE USED HERE.
 */
 
 static int GetInterestingEvent(INPUT_RECORD *ip)
@@ -927,17 +914,9 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 	static unsigned numpadChar = 0;
 
 #ifdef PDCDEBUG
-# ifdef PDC_THREAD_BUILD
-#  define PDC_DEBUG_THREADING1 "-->"
-#  define PDC_DEBUG_THREADING2 "THREADING"
-# else
-#  define PDC_DEBUG_THREADING1 ""
-#  define PDC_DEBUG_THREADING2 ""
-# endif
 	char *ptr = "";
 
-	PDC_LOG(("%sGetInterestingEvent(%s) - called\n",
-		PDC_DEBUG_THREADING1, PDC_DEBUG_THREADING2));
+	PDC_LOG(("GetInterestingEvent() - called\n"));
 
 # define PTR(x) ptr = x
 #else
@@ -1118,56 +1097,11 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 
 #undef PTR
 
-	PDC_LOG(("%sGetInterestingEvent(%s) - returning: numKeys %d "
-		"type %d: %s\n", PDC_DEBUG_THREADING1, 
-		PDC_DEBUG_THREADING2, numKeys, ip->EventType, ptr));
+	PDC_LOG(("GetInterestingEvent() - returning: numKeys %d "
+		"type %d: %s\n", numKeys, ip->EventType, ptr));
 
 	return numKeys;
 }
-
-#ifdef PDC_THREAD_BUILD
-
-static int win32_kbhit(int timeout)
-{
-	DWORD read = 0, avail = 0, unread = 0;
-	INPUT_RECORD ip;
-
-	PDC_LOG(("win32_kbhit(THREADING) - called: timeout %d\n", 
-		timeout));
-
-	if (WaitForSingleObject(hSemKeyCount, timeout) != WAIT_OBJECT_0)
-		return FALSE;
-
-	if (timeout == INFINITE)
-	{
-		ReadFile(hPipeRead, &save_ip, sizeof(INPUT_RECORD), 
-			&read, NULL);
-		return TRUE;
-	}
-	else
-	{
-		if (PeekNamedPipe(hPipeRead, &ip, sizeof(INPUT_RECORD), 
-		    &read, &avail, &unread))
-		{
-			PDC_LOG(("win32_kbhit(THREADING) - maybe key on "
-				"pipe. read %d avail %d unread %d\n",
-				read, avail, unread));
-
-			if (read == sizeof(INPUT_RECORD))
-				return TRUE;
-		}
-	}
-
-	return FALSE;
-}
-
-static void win32_getch(void)
-{
-	while (win32_kbhit(INFINITE) == FALSE)
-	;
-}
-
-#else	/* PDC_THREAD_BUILD */
 
 static int win32_kbhit(int timeout)
 {
@@ -1211,8 +1145,6 @@ static void win32_getch(void)
 	keyCount--;
 }
 
-#endif	/* PDC_THREAD_BUILD */
-
 /*man-start**************************************************************
 
   PDC_flushinp()		- Low-level input flush
@@ -1234,63 +1166,3 @@ void PDC_flushinp(void)
 
 	FlushConsoleInputBuffer(hConIn);
 }
-
-#ifdef PDC_THREAD_BUILD
-
-LONG InputThread(LPVOID lpThreadData)
-{
-	INPUT_RECORD ip;
-	DWORD read;
-	LONG prev;
-	int num_keys, i;
-
-	PDC_LOG(("-->InputThread() - called\n"));
-
-	/* Create a semaphore on which the parent thread will wait */
-
-	hSemKeyCount = CreateSemaphore(NULL, 0, 1024, NULL);
-	if (hSemKeyCount != NULL)
-	{
-	    for (;;)
-	    {
-		ReadConsoleInput(hConIn, &ip, 1, &read);
-
-		/* Now that this thread has woken up we need to check if 
-		   the key/mouse event is relevant to us. If so, write 
-		   it to the anonymous pipe. */
-
-		PDC_LOG(("-->InputThread() - read %d character(s)\n",
-			read));
-
-		num_keys = GetInterestingEvent(&ip);
-
-		PDC_LOG(("-->InputThread() - got %d interesting keys\n",
-			num_keys));
-
-		/* For each key written to the pipe, increment the 
-		   semaphore */
-
-		for (i = 0; i < num_keys; i++)
-		    if (ReleaseSemaphore(hSemKeyCount, 1, &prev))
-		    {
-			PDC_LOG(("-->InputThread() - writing to pipe; "
-				"sem incremented from %d\n", prev));
-
-			/* If an error occured, we assume it is because 
-			   the pipe broke; therefore the parent thread 
-			   is shutting down; so will we. */
-
-			if (!WriteFile(hPipeWrite, &ip, sizeof(INPUT_RECORD),
-			    &read, NULL))
-				/* break; */
-				return 0;		/* ? */
-		    }
-	    }
-	}
-
-	PDC_LOG(("-->InputThread() - finished\n"));
-
-	return 0;
-}
-
-#endif

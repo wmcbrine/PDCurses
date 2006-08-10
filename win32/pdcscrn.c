@@ -19,7 +19,7 @@
 #define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.44 2006/08/02 18:57:06 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.45 2006/08/10 02:34:18 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -27,12 +27,6 @@ RCSID("$Id: pdcscrn.c,v 1.44 2006/08/02 18:57:06 wmcbrine Exp $");
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
 HANDLE hConIn = INVALID_HANDLE_VALUE;
-#ifdef PDC_THREAD_BUILD
-HANDLE hPipeRead = INVALID_HANDLE_VALUE;
-HANDLE hPipeWrite = INVALID_HANDLE_VALUE;
-HANDLE hSemKeyCount = INVALID_HANDLE_VALUE;
-extern LONG InputThread(LPVOID lpThreadData);
-#endif
 
 static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
@@ -96,13 +90,6 @@ int PDC_scr_close(void)
 	SetConsoleActiveScreenBuffer(hConOut);
 	SetConsoleMode(hConIn, dwConsoleMode);
 
-#ifdef PDC_THREAD_BUILD
-	if (hPipeRead != INVALID_HANDLE_VALUE)
-		CloseHandle(hPipeRead);
-
-	if (hPipeWrite != INVALID_HANDLE_VALUE)
-		CloseHandle(hPipeWrite);
-#endif
 	return OK;
 }
 
@@ -130,10 +117,6 @@ int PDC_scr_open(int argc, char **argv)
 	const char *str;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-#ifdef PDC_THREAD_BUILD
-	HANDLE hThread;
-	DWORD dwThreadID;
-#endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
@@ -273,36 +256,6 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->orgcbr = PDC_get_ctrl_break();
 
-#ifdef PDC_THREAD_BUILD
-
-	/* Create the anonymous pipe and thread for handling input */
-
-	if (!CreatePipe(&hPipeRead,	/* reading handle */
-			&hPipeWrite,	/* writing handle */
-			NULL,		/* handles not inherited */
-			0))		/* default buffer size */
-	{
-		/* error during pipe creation */
-
-		fprintf(stderr, "Cannot create input pipe\n");
-		return ERR;
-	}
-
-	hThread = CreateThread(NULL,	   /* security attributes */
-			0,		   /* initial stack size */
-			(LPTHREAD_START_ROUTINE) InputThread,
-			NULL,		   /* argument */
-			CREATE_SUSPENDED,  /* creation flag */
-			&dwThreadID);	   /* new thread ID */
-
-	if (!hThread)
-	{
-		fprintf(stderr, "Cannot create input thread\n");
-		return ERR;
-	}
-
-	ResumeThread(hThread);
-#endif
 	return OK;
 }
 

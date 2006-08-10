@@ -58,9 +58,8 @@ PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 # For a DLL build:
 
-CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
-#-MT -DPDC_THREAD_BUILD
-PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
+#CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+#PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
 
 ################################################################################
 all:	$(PDCLIBS) $(DEMOS)

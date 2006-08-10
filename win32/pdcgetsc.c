@@ -15,11 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+#include <windows.h>
+#undef MOUSE_MOVED
 #define	CURSES_LIBRARY 1
-#define	INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.22 2006/07/30 22:36:18 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.23 2006/08/10 08:30:01 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 

@@ -15,11 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	INCLUDE_WINDOWS_H
+#include <windows.h>
+#undef MOUSE_MOVED
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcclip.c,v 1.15 2006/03/29 20:06:41 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.16 2006/08/10 08:30:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

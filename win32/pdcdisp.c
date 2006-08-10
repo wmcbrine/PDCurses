@@ -15,8 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+#include <windows.h>
+#undef MOUSE_MOVED
 #define CURSES_LIBRARY 1
-#define INCLUDE_WINDOWS_H
 #include <curses.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +25,7 @@
 extern HANDLE hConOut;
 extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.32 2006/07/30 03:55:46 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.33 2006/08/10 08:30:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

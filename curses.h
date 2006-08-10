@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.206 2006/08/10 07:17:14 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.207 2006/08/10 08:30:01 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -281,7 +281,7 @@ PDCurses portable platform definitions list:
 #    define OS2 3		/* Major release of OS/2 supported	*/
 #    define CURSES__32BIT__
 #  endif
-#  if defined(__NT__) || defined(WIN32)
+#  if defined(__NT__)
 #    ifndef WIN32
 #      define WIN32
 #    endif
@@ -346,13 +346,6 @@ typedef int  _int;
 
 #if defined(WIN32) && defined(PDC_WIDE)
 # define UNICODE
-#endif
-
-#if defined(WIN32) && defined(INCLUDE_WINDOWS_H)
-# include <windows.h>
-# ifdef MOUSE_MOVED
-#  undef MOUSE_MOVED
-# endif
 #endif
 
 #if defined(OS2) && !defined(EMXVIDEO)

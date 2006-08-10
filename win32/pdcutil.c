@@ -15,11 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+#include <windows.h>
+#undef MOUSE_MOVED
 #define CURSES_LIBRARY 1
-#define INCLUDE_WINDOWS_H
 #include <curses.h>
 
-RCSID("$Id: pdcutil.c,v 1.4 2006/07/15 15:13:40 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.5 2006/08/10 08:30:01 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

@@ -4,7 +4,7 @@
 ; each entry point MUST be on a seperate line prefixed
 ; by EXPORTS in column 1
 ;
-LIBRARY curses INITINSTANCE BASE=0x01000000
+LIBRARY pdcurses INITINSTANCE BASE=0x01000000
 HEAPSIZE 40960
 STACKSIZE 10240
 EXPORTS COLOR_PAIR

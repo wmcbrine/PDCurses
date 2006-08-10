@@ -34,7 +34,7 @@
 #undef PDC_leftline
 #undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.28 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.29 2006/08/10 18:47:35 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -128,18 +128,18 @@ static chtype PDC_attr_passthru(WINDOW *win, chtype ch)
 		if ((ch & A_COLOR) == 0)
 			attr = (ch & A_ATTRIBUTES) | win->_attrs;
 		else
-			attr = (ch & A_ATTRIBUTES);
+			attr = ch & A_ATTRIBUTES;
 
 	/* wrs (4/10/93) -- Apply the same sort of logic for the window 
 	   background, in that it only takes precedence if other color 
 	   attributes are not there. */
 
 	if ((attr & A_COLOR) == 0)
-		attr = (attr | (win->_bkgd & A_ATTRIBUTES));
+		attr |= win->_bkgd & A_ATTRIBUTES;
 	else
 	{
-		bktmp = (win->_bkgd & A_COLOR);
-		attr = (attr | ( (win->_bkgd & A_ATTRIBUTES) ^ bktmp ));
+		bktmp = win->_bkgd & A_COLOR;
+		attr |= (win->_bkgd & A_ATTRIBUTES) ^ bktmp;
 	}
 
 	ch = (ch & A_CHARTEXT) | attr;

@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.28 2006/07/30 22:00:25 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.29 2006/08/10 07:17:15 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -213,7 +213,7 @@ int PDC_get_rows(void)
 
 	if (rows == 1)
 	{
-		rows = _default_lines;		/* Allow pre-setting LINES */
+		rows = 25;
 		SP->direct_video = FALSE;
 	}
 

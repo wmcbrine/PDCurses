@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.205 2006/07/30 19:18:00 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.206 2006/08/10 07:17:14 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -680,11 +680,6 @@ extern	SCREEN		*SP;		/* curses variables		*/
 extern	MOUSE_STATUS	Mouse_status;
 extern	int		COLORS, COLOR_PAIRS, TABSIZE;
 #endif
-
-#ifdef CURSES_LIBRARY
-extern	int		_default_lines;	/* For presetting maximum lines	*/
-#endif
-
 
 
 /*man-start**************************************************************

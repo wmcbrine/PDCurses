@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.65 2006/08/01 03:16:17 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.66 2006/08/10 07:17:15 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -46,7 +46,6 @@ SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */
 WINDOW *stdscr = (WINDOW *)NULL;	/* the default screen window */
 
-int _default_lines = 25;		/* default terminal height */
 int LINES = 0;				/* current terminal height */
 int COLS = 0;				/* current terminal width */
 int TABSIZE = 8;

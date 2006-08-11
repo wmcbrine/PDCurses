@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.49 2006/08/11 06:17:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.50 2006/08/11 07:04:31 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -255,7 +255,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-	SP->adapter = PDC_query_adapter_type();
+	SP->mono = FALSE;
 
 	SP->orig_cursor = PDC_get_cursor_mode();
 

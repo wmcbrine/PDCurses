@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.24 2006/07/23 23:42:23 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.25 2006/08/11 07:04:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -89,16 +89,11 @@ int PDC_set_font(int size)
 **man-end****************************************************************/
 
 #ifndef EMXVIDEO
+
 int PDC_set_scrn_mode(VIOMODEINFO new_mode)
-#else
-int PDC_set_scrn_mode(int new_mode)
-#endif
 {
 	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
-#ifdef EMXVIDEO
-	return OK;
-#else
 	if (VioSetMode(&new_mode, 0) != 0)
 	{
 		SP->font = PDC_get_font();
@@ -111,8 +106,9 @@ int PDC_set_scrn_mode(int new_mode)
 	}
 	else
 		return ERR;
-#endif
 }
+
+#endif
 
 int PDC_curs_set(int visibility)
 {

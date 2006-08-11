@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.110 2006/08/11 06:17:48 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.111 2006/08/11 07:04:31 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -53,8 +53,6 @@ struct cttyset
 };
 
 extern struct cttyset ctty[3];
-
-enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 
 /* tracing flag */
 extern bool trace_on;
@@ -113,19 +111,6 @@ void	PDC_set_keyboard_binary(bool);
 void	PDC_sync(WINDOW *);
 void	PDC_transform_line(int, int, int, const chtype *);
 int	PDC_validchar(int);
-
-#if defined(OS2) && !defined(EMXVIDEO)
-int	PDC_set_scrn_mode(VIOMODEINFO);
-bool	PDC_scrn_modes_equal(VIOMODEINFO, VIOMODEINFO);
-int	PDC_get_scrn_mode(VIOMODEINFO *);
-int	PDC_query_adapter_type(VIOCONFIGINFO *);
-void	PDC_get_keyboard_info(void);
-void	PDC_set_keyboard_default(void);
-#else
-int	PDC_set_scrn_mode(int);
-int	PDC_get_scrn_mode(void);
-int	PDC_query_adapter_type(void);
-#endif
 
 #ifdef XCURSES
 # define PDC_scr_exit() XCursesExit()

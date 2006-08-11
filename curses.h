@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.208 2006/08/10 08:43:36 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.209 2006/08/11 07:04:31 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -608,7 +608,6 @@ typedef struct
 # else
 	VIOMODEINFO scrnmode;		/* default screen mode		*/
 	VIOCONFIGINFO adapter;		/* Screen type			*/
-	KBDINFO kbdinfo;		/* keyboard info		*/
 # endif
 #else
 	int	adapter;		/* Screen type			*/

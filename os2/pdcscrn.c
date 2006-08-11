@@ -20,16 +20,24 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.35 2006/08/11 06:17:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.36 2006/08/11 07:04:31 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
 static int saved_lines = 0;
 static int saved_cols = 0;
+
+extern int PDC_query_adapter_type(void);
 #else
 static PCH saved_screen = NULL;
 static USHORT saved_lines = 0;
 static USHORT saved_cols = 0;
+
+extern void PDC_get_keyboard_info(void);
+extern int PDC_get_scrn_mode(VIOMODEINFO *);
+extern int PDC_query_adapter_type(VIOCONFIGINFO *);
+extern void PDC_set_keyboard_default(void);
+extern int PDC_set_scrn_mode(VIOMODEINFO);
 #endif
 
 /*man-start**************************************************************
@@ -90,29 +98,25 @@ int PDC_scr_close(void)
 	This function returns TRUE if equal else FALSE.
 
   Portability:
-	PDCurses  int PDC_scrn_modes_equal(int mode1, int mode2);
     OS2 PDCurses  int PDC_scrn_modes_equal(VIOMODEINFO mode1,
 					   VIOMODEINFO mode2);
 
 **man-end****************************************************************/
 
 #ifndef EMXVIDEO
-bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
-#else
-bool PDC_scrn_modes_equal(int mode1, int mode2)
-#endif
+
+static bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
+
 {
 	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
 
-#ifndef EMXVIDEO
 	return ((mode1.cb == mode2.cb) && (mode1.fbType == mode2.fbType)
 		&& (mode1.color == mode2.color) && (mode1.col == mode2.col)
 		&& (mode1.row == mode2.row) && (mode1.hres == mode2.vres)
 		&& (mode1.vres == mode2.vres));
-#else
-	return (mode1 == mode2);
-#endif
 }
+
+#endif
 
 /*man-start**************************************************************
 

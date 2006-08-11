@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.5 2006/07/29 06:00:54 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.6 2006/08/11 07:04:31 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -116,5 +116,8 @@ enum
 void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
 
-int	PDC_set_80x25(void);
+int	PDC_get_scrn_mode(void);
 void	PDC_putctty(chtype);
+int	PDC_query_adapter_type(void);
+int	PDC_set_80x25(void);
+int	PDC_set_scrn_mode(int);

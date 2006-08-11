@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.33 2006/08/11 06:17:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.34 2006/08/11 07:04:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -71,7 +71,6 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 
 	SP->cursrow = SP->curscol = 0;
-	SP->adapter = 0;
 	SP->orig_cursor = 0;
 	SP->orig_attr = FALSE;
 	SP->orgcbr = 0;

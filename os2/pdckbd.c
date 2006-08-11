@@ -28,9 +28,11 @@
 
 #ifdef EMXVIDEO
 # include <termios.h>
+#else
+static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.31 2006/08/11 05:43:37 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.32 2006/08/11 07:04:31 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -149,50 +151,36 @@ unsigned long PDC_get_input_fd(void)
 
 #ifndef EMXVIDEO
 
-int PDC_get_keyboard_info(KBDINFO *kbdinfo)
+void PDC_get_keyboard_info(void)
 {
-	KBDINFO akbdinfo;
-
 	PDC_LOG(("PDC_get_keyboard_info() - called\n"));
 
-	akbdinfo.cb = sizeof(akbdinfo);
-	KbdGetStatus(&akbdinfo, 0);
-	*kbdinfo = akbdinfo;
+	kbdinfo.cb = sizeof(kbdinfo);
+	KbdGetStatus(&kbdinfo, 0);
 
 	PDC_LOG(("PDC_get_keyboard_info(). cb: %x, fsMask: %x, "
 		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		kbdinfo->cb, kbdinfo->fsMask, kbdinfo->chTurnAround, 
-		kbdinfo->fsInterim, kbdinfo->fsState));
-
-	return OK;
+		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
+		kbdinfo.fsInterim, kbdinfo.fsState));
 }
 
-int PDC_set_keyboard_default(void)
+void PDC_set_keyboard_default(void)
 {
 	PDC_LOG(("PDC_set_keyboard_default(). cb: %x, fsMask: %x, "
 		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		SP->kbdinfo.cb, SP->kbdinfo.fsMask, 
-		SP->kbdinfo.chTurnAround, SP->kbdinfo.fsInterim, 
-		SP->kbdinfo.fsState));
+		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
+		kbdinfo.fsInterim, kbdinfo.fsState));
 
-	KbdSetStatus(&SP->kbdinfo, 0);
-
-	return OK;
+	KbdSetStatus(&kbdinfo, 0);
 }
 
 #endif /* ifndef EMXVIDEO */
 
 void PDC_set_keyboard_binary(bool on)
 {
-#ifndef EMXVIDEO
-	KBDINFO kbdinfo;
-#endif
 	PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 
 #ifndef EMXVIDEO
-	kbdinfo.cb = sizeof(kbdinfo);
-	KbdGetStatus(&kbdinfo, 0);
-
 	PDC_LOG(("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, "
 		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
 		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 

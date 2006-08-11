@@ -24,7 +24,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.24 2006/08/10 08:43:36 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.25 2006/08/11 07:04:31 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 
@@ -194,33 +194,4 @@ int PDC_get_columns(void)
 	GetConsoleScreenBufferInfo(hConOut, &scr);
 
 	return scr.srWindow.Right - scr.srWindow.Left + 1;
-}
-
-/*man-start**************************************************************
-
-  PDC_query_adapter_type()	- Determine PC video adapter type
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Thanks to Jeff Duntemann, K16RA for providing the impetus
-	(through the Dr. Dobbs Journal, March 1989 issue) for getting
-	the routines below merged into Bjorn Larsson's PDCurses 1.3...
-		-- frotz@dri.com	900730
-
-  PDCurses Return Value:
-	This function returns a macro identifier indicating the adapter
-	type.  See the list of adapter types in CURSPRIV.H.
-
-  Portability:
-	PDCurses  int PDC_query_adapter_type(void);
-
-**man-end****************************************************************/
-
-int PDC_query_adapter_type(void)
-{
-	PDC_LOG(("PDC_query_adapter_type() - called\n"));
-
-	SP->mono = FALSE;
-	return _VGACOLOR;
 }

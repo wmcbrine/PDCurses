@@ -36,10 +36,12 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.57 2006/08/11 06:17:48 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.58 2006/08/11 07:08:22 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
+
+enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 
 /*man-start**************************************************************
 

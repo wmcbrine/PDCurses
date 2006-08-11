@@ -69,8 +69,7 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o \
-pdcsetsc.o pdcutil.o pdcgo32.o
+PDCOBJS += pdcgo32.o
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)

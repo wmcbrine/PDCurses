@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.56 2006/08/10 08:43:36 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.57 2006/08/11 05:43:37 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -361,6 +361,11 @@ unsigned long PDC_get_input_fd(void)
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
 	return 0L;
+}
+
+void PDC_set_keyboard_binary(bool on)
+{
+        PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 }
 
 /*man-start**************************************************************

@@ -45,7 +45,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: inopts.c,v 1.26 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.27 2006/08/11 05:43:37 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -310,49 +310,20 @@ int notimeout(WINDOW *win, bool flag)
 
 int raw(void)
 {
-#ifdef OS2
-# ifndef EMXVIDEO
-	KBDINFO KbdInfo;
-# endif
-#endif
-
 	PDC_LOG(("raw() - called\n"));
 
-#ifdef OS2
-# ifndef EMXVIDEO
-	KbdGetStatus(&KbdInfo, 0);
-	KbdInfo.fsMask |= KEYBOARD_BINARY_MODE;
-	KbdInfo.fsMask &= ~KEYBOARD_ASCII_MODE;
-	KbdSetStatus(&KbdInfo, 0);
-# endif
-#endif
-
+	PDC_set_keyboard_binary(TRUE);
 	SP->raw_inp = TRUE;
-	PDC_set_ctrl_break(FALSE);      /* disallow ^BREAK on disk I/O */
-/*	flushinp(); */
+	PDC_set_ctrl_break(FALSE);
 
 	return OK;
 }
 
 int noraw(void)
 {
-#ifdef OS2
-# ifndef EMXVIDEO
-	KBDINFO KbdInfo;
-# endif
-#endif
-
 	PDC_LOG(("noraw() - called\n"));
 
-#ifdef OS2
-# ifndef EMXVIDEO
-	KbdGetStatus(&KbdInfo, 0);
-	KbdInfo.fsMask |= KEYBOARD_ASCII_MODE;
-	KbdInfo.fsMask &= ~KEYBOARD_BINARY_MODE;
-	KbdSetStatus(&KbdInfo, 0);
-# endif
-#endif
-
+	PDC_set_keyboard_binary(FALSE);
 	SP->raw_inp = FALSE;
 	PDC_set_ctrl_break(TRUE);
 

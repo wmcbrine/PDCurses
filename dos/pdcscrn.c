@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.38 2006/07/29 06:00:54 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.39 2006/08/11 05:43:37 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -236,4 +236,14 @@ int PDC_resize_screen(int nlines, int ncols)
 	}
 
 	return OK;
+}
+
+void PDC_reset_prog_mode(void)
+{
+        PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+}
+
+void PDC_reset_shell_mode(void)
+{
+        PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 }

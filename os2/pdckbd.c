@@ -30,7 +30,7 @@
 # include <termios.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.30 2006/07/22 22:33:38 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.31 2006/08/11 05:43:37 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -167,32 +167,6 @@ int PDC_get_keyboard_info(KBDINFO *kbdinfo)
 	return OK;
 }
 
-int PDC_set_keyboard_binary(void)
-{
-	KBDINFO kbdinfo;
-
-	PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
-
-	kbdinfo.cb = sizeof(kbdinfo);
-	KbdGetStatus(&kbdinfo, 0);
-
-	PDC_LOG(("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, "
-		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
-		kbdinfo.fsInterim, kbdinfo.fsState));
-
-	kbdinfo.fsMask = (kbdinfo.fsMask & ~KEYBOARD_ASCII_MODE) | 
-		KEYBOARD_BINARY_MODE;
-	KbdSetStatus(&kbdinfo, 0);
-
-	PDC_LOG(("PDC_set_keyboard_binary() - after. cb: %x, fsMask: %x, "
-		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
-		kbdinfo.fsInterim, kbdinfo.fsState));
-
-	return OK;
-}
-
 int PDC_set_keyboard_default(void)
 {
 	PDC_LOG(("PDC_set_keyboard_default(). cb: %x, fsMask: %x, "
@@ -207,6 +181,42 @@ int PDC_set_keyboard_default(void)
 }
 
 #endif /* ifndef EMXVIDEO */
+
+void PDC_set_keyboard_binary(bool on)
+{
+#ifndef EMXVIDEO
+	KBDINFO kbdinfo;
+#endif
+	PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
+
+#ifndef EMXVIDEO
+	kbdinfo.cb = sizeof(kbdinfo);
+	KbdGetStatus(&kbdinfo, 0);
+
+	PDC_LOG(("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, "
+		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
+		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
+		kbdinfo.fsInterim, kbdinfo.fsState));
+
+	if (on)
+	{
+		kbdinfo.fsMask &= ~KEYBOARD_ASCII_MODE;
+		kbdinfo.fsMask |= KEYBOARD_BINARY_MODE;
+	}
+	else
+	{
+		kbdinfo.fsMask &= ~KEYBOARD_BINARY_MODE;
+		kbdinfo.fsMask |= KEYBOARD_ASCII_MODE;
+	}
+
+	KbdSetStatus(&kbdinfo, 0);
+
+	PDC_LOG(("PDC_set_keyboard_binary() - after. cb: %x, fsMask: %x, "
+		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
+		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
+		kbdinfo.fsInterim, kbdinfo.fsState));
+#endif
+}
 
 /*man-start**************************************************************
 

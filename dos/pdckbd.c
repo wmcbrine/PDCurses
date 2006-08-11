@@ -23,7 +23,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.31 2006/07/28 11:05:10 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.32 2006/08/11 05:43:37 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -137,6 +137,11 @@ unsigned long PDC_get_input_fd(void)
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
 	return (unsigned long)fileno(stdin);
+}
+
+void PDC_set_keyboard_binary(bool on)
+{
+	PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 }
 
 /*man-start**************************************************************

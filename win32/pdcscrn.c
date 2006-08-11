@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.47 2006/08/10 08:43:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.48 2006/08/11 05:43:37 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -356,16 +356,18 @@ int PDC_resize_screen(int nlines, int ncols)
 	return OK;
 }
 
-int PDC_reset_prog_mode(void)
+void PDC_reset_prog_mode(void)
 {
+	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+
 	SetConsoleMode(hConIn, ENABLE_MOUSE_INPUT);
-	return OK;
 }
 
-int PDC_reset_shell_mode(void)
+void PDC_reset_shell_mode(void)
 {
+	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
+
 	SetConsoleMode(hConIn, dwConsoleMode);
-	return OK;
 }
 
 #ifdef PDC_DLL_BUILD

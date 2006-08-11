@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.108 2006/07/31 23:07:41 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.109 2006/08/11 05:43:36 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -101,13 +101,14 @@ void	PDC_init_atrtab(void);
 WINDOW *PDC_makenew(int, int, int, int);
 int	PDC_mouse_in_slk(int, int);
 void	PDC_napms(int);
-int	PDC_reset_prog_mode(void);
-int	PDC_reset_shell_mode(void);
+void	PDC_reset_prog_mode(void);
+void	PDC_reset_shell_mode(void);
 int	PDC_resize_screen(int, int);
 int	PDC_scr_close(void);
 int	PDC_scr_open(int, char **);
 int	PDC_set_ctrl_break(bool);
 int	PDC_set_font(int);
+void	PDC_set_keyboard_binary(bool);
 void	PDC_sync(WINDOW *);
 void	PDC_transform_line(int, int, int, const chtype *);
 int	PDC_validchar(int);
@@ -118,7 +119,6 @@ bool	PDC_scrn_modes_equal(VIOMODEINFO, VIOMODEINFO);
 int	PDC_get_scrn_mode(VIOMODEINFO *);
 int	PDC_query_adapter_type(VIOCONFIGINFO *);
 int	PDC_get_keyboard_info(KBDINFO *);
-int	PDC_set_keyboard_binary(void);
 int	PDC_set_keyboard_default(void);
 #else
 int	PDC_set_scrn_mode(int);

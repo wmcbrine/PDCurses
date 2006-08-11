@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.33 2006/07/30 23:57:04 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.34 2006/08/11 05:43:37 wmcbrine Exp $");
 
 MOUSE_STATUS Trapped_Mouse_status;
 
@@ -127,6 +127,11 @@ unsigned long PDC_get_input_fd(void)
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
 	return XC_key_sock;
+}
+
+void PDC_set_keyboard_binary(bool on)
+{
+        PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 }
 
 /*man-start**************************************************************

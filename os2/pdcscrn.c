@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.33 2006/07/29 06:00:54 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.34 2006/08/11 05:43:37 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -166,7 +166,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	/* Now set the keyboard into binary mode */
 
-	PDC_set_keyboard_binary();
+	PDC_set_keyboard_binary(TRUE);
 #else
 	SP->adapter = PDC_query_adapter_type();
 	if (SP->adapter == _UNIX_MONO)
@@ -276,24 +276,20 @@ int PDC_resize_screen(int nlines, int ncols)
 #endif
 }
 
-#ifndef EMXVIDEO
-
-int PDC_reset_shell_mode(void)
-{
-	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
-
-	PDC_set_keyboard_default();
-
-	return OK;
-}
-
-int PDC_reset_prog_mode(void)
+void PDC_reset_prog_mode(void)
 {
 	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
 
-	PDC_set_keyboard_binary();
-
-	return OK;
+#ifndef EMXVIDEO
+	PDC_set_keyboard_binary(TRUE);
+#endif
 }
 
+void PDC_reset_shell_mode(void)
+{
+	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
+
+#ifndef EMXVIDEO
+	PDC_set_keyboard_default();
 #endif
+}

@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.55 2006/07/30 07:15:48 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.56 2006/08/11 05:43:37 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -207,10 +207,8 @@ int reset_prog_mode(void)
 	PDC_LOG(("reset_prog_mode() - called\n"));
 
 	PDC_restore_mode(&c_pr_tty);
-
-#if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))
 	PDC_reset_prog_mode();
-#endif
+
 	return OK;
 }
 
@@ -219,10 +217,8 @@ int reset_shell_mode(void)
 	PDC_LOG(("reset_shell_mode() - called\n"));
 
 	PDC_restore_mode(&c_sh_tty);
-
-#if defined(WIN32) || (defined(OS2) && !defined(EMXVIDEO))
 	PDC_reset_shell_mode();
-#endif
+
 	return OK;
 }
 

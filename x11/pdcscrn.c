@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.31 2006/07/30 22:00:25 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.32 2006/08/11 05:43:37 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -140,4 +140,14 @@ int PDC_resize_screen(int nlines, int ncols)
 	SP->resized = FALSE;
 
 	return OK;
+}
+
+void PDC_reset_prog_mode(void)
+{
+        PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+}
+
+void PDC_reset_shell_mode(void)
+{
+        PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 }

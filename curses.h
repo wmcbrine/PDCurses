@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.210 2006/08/11 07:25:40 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.211 2006/08/11 07:33:25 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -600,15 +600,13 @@ typedef struct
 					   with each key press		*/
 	bool	return_key_modifiers;	/* TRUE if modifier keys are
 					   returned as "real" keys	*/
-#ifdef OS2
-# ifndef EMXVIDEO			/* nop if using EMX builtins	*/
+
+#if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO scrnmode;		/* default screen mode		*/
-# endif
-#else
-	int	adapter;		/* Screen type			*/
 #endif
 
 #ifdef DOS
+	int	adapter;	/* Screen type				*/
 	int	scrnmode;	/* default screen mode			*/
 	bool	direct_video;	/* Allow Direct Screen Memory writes	*/
 	unsigned video_seg;	/* video base segment			*/

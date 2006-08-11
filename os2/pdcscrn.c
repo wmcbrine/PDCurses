@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.36 2006/08/11 07:04:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.37 2006/08/11 07:25:40 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -138,7 +138,10 @@ static bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
 int PDC_scr_open(int argc, char **argv)
 {
 	char *ptr;
-#ifndef EMXVIDEO
+#ifdef EMXVIDEO
+	int adapter;
+#else
+	VIOCONFIGINFO adapter;
 	USHORT totchars;
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
@@ -153,12 +156,8 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-#ifdef EMXVIDEO
-	SP->tahead  = -1;
-#endif
-
 #ifndef EMXVIDEO
-	PDC_query_adapter_type(&SP->adapter);
+	PDC_query_adapter_type(&adapter);
 	PDC_get_scrn_mode(&SP->scrnmode);
 	PDC_get_keyboard_info();
 
@@ -166,8 +165,8 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_set_keyboard_binary(TRUE);
 #else
-	SP->adapter = PDC_query_adapter_type();
-	if (SP->adapter == _UNIX_MONO)
+	adapter = PDC_query_adapter_type();
+	if (adapter == _UNIX_MONO)
 		SP->mono = TRUE;
 #endif
 	SP->orig_font = SP->font = PDC_get_font();

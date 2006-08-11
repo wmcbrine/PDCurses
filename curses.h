@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.209 2006/08/11 07:04:31 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.210 2006/08/11 07:25:40 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -600,14 +600,9 @@ typedef struct
 					   with each key press		*/
 	bool	return_key_modifiers;	/* TRUE if modifier keys are
 					   returned as "real" keys	*/
-
 #ifdef OS2
-# ifdef EMXVIDEO			/* nop if using EMX builtins	*/
-	int	tahead; 		/* Type-ahead value		*/
-	int	adapter;		/* Screen type			*/
-# else
+# ifndef EMXVIDEO			/* nop if using EMX builtins	*/
 	VIOMODEINFO scrnmode;		/* default screen mode		*/
-	VIOCONFIGINFO adapter;		/* Screen type			*/
 # endif
 #else
 	int	adapter;		/* Screen type			*/

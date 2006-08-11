@@ -28,11 +28,12 @@
 
 #ifdef EMXVIDEO
 # include <termios.h>
+static int tahead = -1;
 #else
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.32 2006/08/11 07:04:31 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.33 2006/08/11 07:25:40 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -232,17 +233,17 @@ bool PDC_check_bios_key(void)
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 #ifdef EMXVIDEO
-	if (SP->tahead == -1)		/* Nothing typed yet */
+	if (tahead == -1)		/* Nothing typed yet */
 	{                    
-		SP->tahead = _read_kbd(0, 0, 0);
+		tahead = _read_kbd(0, 0, 0);
 
 		/* Read additional */
 
-		if (SP->tahead == 0)	
-			SP->tahead = _read_kbd(0, 1, 0) << 8;
+		if (tahead == 0)	
+			tahead = _read_kbd(0, 1, 0) << 8;
 	}
 
-	return (SP->tahead != -1);
+	return (tahead != -1);
 #else
 # ifndef _MSC_VER
 	KbdPeek(&keyInfo, 0);   /* peek at keyboard  */
@@ -281,21 +282,21 @@ int PDC_get_bios_key(void)
 	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
 #ifdef EMXVIDEO
-	if (SP->tahead == -1)
+	if (tahead == -1)
 	{
-		SP->tahead = _read_kbd(0, 1, 0);
+		tahead = _read_kbd(0, 1, 0);
 
 		/* Read additional */
 
-		if (SP->tahead == 0)
-			SP->tahead = _read_kbd(0, 1, 0) << 8;
+		if (tahead == 0)
+			tahead = _read_kbd(0, 1, 0) << 8;
 	}
 
-	ascii = SP->tahead & 0xff;
-	scan  = SP->tahead >> 8;
+	ascii = tahead & 0xff;
+	scan  = tahead >> 8;
 	pdc_key_modifiers = 0L;
 
-	SP->tahead = -1;
+	tahead = -1;
 #else
 	KbdCharIn(&keyInfo, IO_WAIT, 0);	/* get a character */
 

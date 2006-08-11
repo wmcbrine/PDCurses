@@ -24,40 +24,9 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.25 2006/08/10 08:43:36 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.26 2006/08/11 19:50:51 wmcbrine Exp $");
 
 extern HANDLE hConOut;
-
-/*man-start**************************************************************
-
-  PDC_set_font()	- sets the current font size
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	This routine sets the current font size, if the adapter allows
-	such a change.
-
-  PDCurses Return Value:
-	This function returns OK upon success otherwise ERR is returned.
-
-  PDCurses Errors:
-	It is an error to attempt to change the font size on a "bogus"
-	adapter.  The reason for this is that we have a known video
-	adapter identity problem.  e.g. Two adapters report the same
-	identifying characteristics.
-
-  Portability:
-	PDCurses  int PDC_set_font(int size);
-
-**man-end****************************************************************/
-
-int PDC_set_font(int size)
-{
-	PDC_LOG(("PDC_set_font() - called\n"));
-
-	return OK;
-}
 
 int PDC_curs_set(int visibility)
 {

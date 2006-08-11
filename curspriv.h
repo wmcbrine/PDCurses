@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.111 2006/08/11 07:04:31 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.112 2006/08/11 19:50:51 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -52,7 +52,7 @@ struct cttyset
 	SCREEN	saved;
 };
 
-extern struct cttyset ctty[3];
+extern struct cttyset *ctty;
 
 /* tracing flag */
 extern bool trace_on;
@@ -77,6 +77,8 @@ extern WINDOW *_getch_win_;
 extern unsigned long pdc_key_modifiers;
 
 extern MOUSE_STATUS Trapped_Mouse_status;
+
+extern unsigned char *atrtab;
 
 /*----------------------------------------------------------------------
  *	ANSI C prototypes.
@@ -104,19 +106,13 @@ void	PDC_reset_shell_mode(void);
 int	PDC_resize_screen(int, int);
 void	PDC_restore_screen_mode(int);
 int	PDC_scr_close(void);
+void	PDC_scr_exit(void);
 int	PDC_scr_open(int, char **);
 int	PDC_set_ctrl_break(bool);
-int	PDC_set_font(int);
 void	PDC_set_keyboard_binary(bool);
 void	PDC_sync(WINDOW *);
 void	PDC_transform_line(int, int, int, const chtype *);
 int	PDC_validchar(int);
-
-#ifdef XCURSES
-# define PDC_scr_exit() XCursesExit()
-#else
-# define PDC_scr_exit() if (SP) free(SP)
-#endif
 
 #ifdef PDCDEBUG
 void PDC_debug(const char *, ...);

@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.37 2006/08/11 07:25:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.38 2006/08/11 19:50:51 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -39,6 +39,7 @@ extern int PDC_query_adapter_type(VIOCONFIGINFO *);
 extern void PDC_set_keyboard_default(void);
 extern int PDC_set_scrn_mode(VIOMODEINFO);
 #endif
+extern int PDC_set_font(int);
 
 /*man-start**************************************************************
 
@@ -118,6 +119,14 @@ static bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
 
 #endif
 
+void PDC_scr_exit(void)
+{
+	if (SP)
+		free(SP);
+	if (atrtab)
+		free(atrtab);
+}
+
 /*man-start**************************************************************
 
   PDC_scr_open()  - Internal low-level binding to open the physical screen
@@ -146,7 +155,8 @@ int PDC_scr_open(int argc, char **argv)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
+	if (!(SP = (SCREEN *)calloc(1, sizeof(SCREEN)))
+	    || !(atrtab = (unsigned char *)calloc(MAX_ATRTAB, 1)) )
 		return ERR;
 
 #ifdef EMXVIDEO

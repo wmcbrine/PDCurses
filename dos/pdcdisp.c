@@ -19,9 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.48 2006/07/30 03:55:46 wmcbrine Exp $");
-
-extern unsigned char atrtab[MAX_ATRTAB];
+RCSID("$Id: pdcdisp.c,v 1.49 2006/08/11 19:50:51 wmcbrine Exp $");
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,

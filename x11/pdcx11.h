@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.47 2006/07/30 23:57:04 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.48 2006/08/11 19:50:51 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -179,7 +179,6 @@ extern int shmkey_Xcurscr;
 extern int otherpid;
 extern int XCursesLINES;
 extern int XCursesCOLS;
-extern unsigned char *atrtab;
 extern int XC_display_sock;
 extern int XC_key_sock;
 extern int display_sockets[2];

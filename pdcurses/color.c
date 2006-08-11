@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.50 2006/07/31 22:27:12 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.51 2006/08/11 19:50:51 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -118,11 +118,7 @@ static bool colorstarted = FALSE;
 
 /* COLOR_PAIR to attribute encoding table. */
 
-#ifdef XCURSES
 unsigned char *atrtab = NULL;
-#else
-unsigned char atrtab[MAX_ATRTAB];
-#endif
 
 static unsigned char colorset[PDC_COLOR_PAIRS];
 

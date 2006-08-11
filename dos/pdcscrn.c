@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.40 2006/08/11 06:17:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.41 2006/08/11 19:50:51 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -89,6 +89,14 @@ int PDC_scr_close(void)
 	return OK;
 }
 
+void PDC_scr_exit(void)
+{
+	if (SP)
+		free(SP);
+	if (atrtab)
+		free(atrtab);
+}
+
 /*man-start**************************************************************
 
   PDC_scr_open()	- Internal low-level binding to open the
@@ -117,7 +125,8 @@ int PDC_scr_open(int argc, char **argv)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	if ((SP = (SCREEN *)calloc(1, sizeof(SCREEN))) == (SCREEN *)NULL)
+	if (!(SP = (SCREEN *)calloc(1, sizeof(SCREEN)))
+	    || !(atrtab = (unsigned char *)calloc(MAX_ATRTAB, 1)) )
 		return ERR;
 
 	SP->orig_attr	 = FALSE;

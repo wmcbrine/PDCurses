@@ -27,9 +27,8 @@
 #include <string.h>
 
 extern HANDLE hConOut;
-extern unsigned char atrtab[MAX_ATRTAB];
 
-RCSID("$Id: pdcdisp.c,v 1.34 2006/08/10 08:43:36 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.35 2006/08/11 19:50:51 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

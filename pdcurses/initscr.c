@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.67 2006/08/11 07:08:22 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.68 2006/08/11 19:50:51 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -61,7 +61,7 @@ int c_ungch[NUNGETCH];			/* array of ungotten chars */
 
 /* Global definitions for setmode routines */
 
-struct cttyset ctty[3] = {{0}, {0}, {0}};
+struct cttyset *ctty;
 
 #ifdef PDC_WIDE
 cchar_t _wacs_map[] = {
@@ -173,6 +173,12 @@ WINDOW *Xinitscr(int argc, char *argv[])
 		exit(8);
 	}
 
+	if (!(ctty = calloc(3, sizeof(struct cttyset))))
+	{
+		fprintf(stderr, "initscr(): Unable to allocate ctty\n");
+		exit(9);
+	}
+
 	SP->autocr	= TRUE;		/* cr -> lf by default	      */
 	SP->raw_out	= FALSE;	/* tty I/O modes	      */
 	SP->raw_inp	= FALSE;	/* tty I/O modes	      */
@@ -280,15 +286,6 @@ int endwin(void)
 
 	PDC_scr_close();
 
-#if 0
-	/* resetty(); */
-	if (SP->orig_font != SP->font)  /* screen has not been resized */
-	{
-		PDC_set_font(SP->orig_font);
-		resize_term(PDC_get_rows(), PDC_get_columns());
-	}
-#endif
-
 #if defined(DOS) || defined(OS2)
 	reset_shell_mode();
 #endif
@@ -347,11 +344,16 @@ void delscreen(SCREEN *sp)
 	delwin(curscr);
 	stdscr = (WINDOW *)NULL;
 	curscr = (WINDOW *)NULL;
+
 	SP->alive = FALSE;
+
+	free(ctty);
+	ctty = NULL;
 
 	PDC_scr_exit();
 
 	SP = (SCREEN *)NULL;
+	atrtab = (unsigned char *)NULL;
 }
 
 int resize_term(int nlines, int ncols)

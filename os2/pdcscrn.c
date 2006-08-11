@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.34 2006/08/11 05:43:37 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.35 2006/08/11 06:17:48 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -156,13 +156,7 @@ int PDC_scr_open(int argc, char **argv)
 #ifndef EMXVIDEO
 	PDC_query_adapter_type(&SP->adapter);
 	PDC_get_scrn_mode(&SP->scrnmode);
-	PDC_get_keyboard_info(&SP->kbdinfo);
-
-	PDC_LOG(("PDC_scr_open() - after PDC_get_keyboard_info(). cb: %x, "
-		"fsMask: %x, chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		SP->kbdinfo.cb, SP->kbdinfo.fsMask, 
-		SP->kbdinfo.chTurnAround, SP->kbdinfo.fsInterim, 
-		SP->kbdinfo.fsState));
+	PDC_get_keyboard_info();
 
 	/* Now set the keyboard into binary mode */
 
@@ -291,5 +285,21 @@ void PDC_reset_shell_mode(void)
 
 #ifndef EMXVIDEO
 	PDC_set_keyboard_default();
+#endif
+}
+
+void PDC_restore_screen_mode(int i)
+{
+#ifndef EMXVIDEO
+	VIOMODEINFO modeInfo;
+#endif
+	SP->font = PDC_get_font();
+	PDC_set_font(ctty[i].saved.font);
+
+#ifndef EMXVIDEO
+	PDC_get_scrn_mode(&modeInfo);
+
+	if (!PDC_scrn_modes_equal(modeInfo, ctty[i].saved.scrnmode))
+		PDC_set_scrn_mode(ctty[i].saved.scrnmode);
 #endif
 }

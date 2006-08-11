@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.39 2006/08/11 05:43:37 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.40 2006/08/11 06:17:48 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -246,4 +246,13 @@ void PDC_reset_prog_mode(void)
 void PDC_reset_shell_mode(void)
 {
         PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
+}
+
+void PDC_restore_screen_mode(int i)
+{
+	SP->font = PDC_get_font();
+	PDC_set_font(ctty[i].saved.font);
+
+	if (PDC_get_scrn_mode() != ctty[i].saved.scrnmode)
+		PDC_set_scrn_mode(ctty[i].saved.scrnmode);
 }

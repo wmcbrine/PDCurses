@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.56 2006/08/11 05:43:37 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.57 2006/08/11 06:17:48 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -139,56 +139,44 @@ char linesrippedoff = 0;
 
 **man-end****************************************************************/
 
-static void PDC_save_mode(struct cttyset *ctty)
+static void PDC_save_mode(int i)
 {
-	ctty->been_set = TRUE;
+	ctty[i].been_set = TRUE;
 
-	memcpy(&(ctty->saved), SP, sizeof(SCREEN));
+	memcpy(&(ctty[i].saved), SP, sizeof(SCREEN));
 }
 
-static int PDC_restore_mode(struct cttyset *ctty)
+static int PDC_restore_mode(int i)
 {
-#if defined(OS2) && !defined(EMXVIDEO)
-	VIOMODEINFO modeInfo;
-#endif
-	if (ctty->been_set == TRUE)
+	if (ctty[i].been_set == TRUE)
 	{
-		memcpy(SP, &(ctty->saved), sizeof(SCREEN));
+		memcpy(SP, &(ctty[i].saved), sizeof(SCREEN));
 
-		if (PDC_get_ctrl_break() != ctty->saved.orgcbr)
-			PDC_set_ctrl_break(ctty->saved.orgcbr);
+		if (PDC_get_ctrl_break() != ctty[i].saved.orgcbr)
+			PDC_set_ctrl_break(ctty[i].saved.orgcbr);
 
-		if (ctty->saved.raw_out)
+		if (ctty[i].saved.raw_out)
 			raw();
 
-		SP->font = PDC_get_font();
-		PDC_set_font(ctty->saved.font);
+		PDC_restore_screen_mode(i);
 
-#if defined(OS2) && !defined(EMXVIDEO)
-		PDC_get_scrn_mode(&modeInfo);
+		if ((LINES != ctty[i].saved.lines) ||
+		    (COLS != ctty[i].saved.cols))
+			resize_term(ctty[i].saved.lines, ctty[i].saved.cols);
 
-		if (!PDC_scrn_modes_equal(modeInfo, ctty->saved.scrnmode))
-			PDC_set_scrn_mode(ctty->saved.scrnmode);
-#elif defined(DOS)
-		if (PDC_get_scrn_mode() != ctty->saved.scrnmode)
-			PDC_set_scrn_mode(ctty->saved.scrnmode);
-#endif
-		if ((LINES != ctty->saved.lines) || (COLS != ctty->saved.cols))
-			resize_term(ctty->saved.lines, ctty->saved.cols);
+		PDC_curs_set(ctty[i].saved.visibility);
 
-		PDC_curs_set(ctty->saved.visibility);
-
-		PDC_gotoyx(ctty->saved.cursrow, ctty->saved.curscol);
+		PDC_gotoyx(ctty[i].saved.cursrow, ctty[i].saved.curscol);
 	}
 
-	return ctty->been_set ? OK : ERR;
+	return ctty[i].been_set ? OK : ERR;
 }
 
 int def_prog_mode(void)
 {
 	PDC_LOG(("def_prog_mode() - called\n"));
 
-	PDC_save_mode(&c_pr_tty);
+	PDC_save_mode(PDC_PR_TTY);
 
 	return OK;
 }
@@ -197,7 +185,7 @@ int def_shell_mode(void)
 {
 	PDC_LOG(("def_shell_mode() - called\n"));
 
-	PDC_save_mode(&c_sh_tty);
+	PDC_save_mode(PDC_SH_TTY);
 
 	return OK;
 }
@@ -206,7 +194,7 @@ int reset_prog_mode(void)
 {
 	PDC_LOG(("reset_prog_mode() - called\n"));
 
-	PDC_restore_mode(&c_pr_tty);
+	PDC_restore_mode(PDC_PR_TTY);
 	PDC_reset_prog_mode();
 
 	return OK;
@@ -216,7 +204,7 @@ int reset_shell_mode(void)
 {
 	PDC_LOG(("reset_shell_mode() - called\n"));
 
-	PDC_restore_mode(&c_sh_tty);
+	PDC_restore_mode(PDC_SH_TTY);
 	PDC_reset_shell_mode();
 
 	return OK;
@@ -226,14 +214,14 @@ int resetty(void)
 {
 	PDC_LOG(("resetty() - called\n"));
 
-	return PDC_restore_mode(&c_save_tty);
+	return PDC_restore_mode(PDC_SAVE_TTY);
 }
 
 int savetty(void)
 {
 	PDC_LOG(("savetty() - called\n"));
 
-	PDC_save_mode(&c_save_tty);
+	PDC_save_mode(PDC_SAVE_TTY);
 
 	return OK;
 }

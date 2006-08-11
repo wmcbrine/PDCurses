@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.109 2006/08/11 05:43:36 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.110 2006/08/11 06:17:48 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -52,9 +52,9 @@ struct cttyset
 	SCREEN	saved;
 };
 
-extern struct cttyset c_sh_tty;		/* tty modes for shell_mode	*/
-extern struct cttyset c_pr_tty;		/* tty modes for prog_mode	*/
-extern struct cttyset c_save_tty;
+extern struct cttyset ctty[3];
+
+enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 
 /* tracing flag */
 extern bool trace_on;
@@ -104,6 +104,7 @@ void	PDC_napms(int);
 void	PDC_reset_prog_mode(void);
 void	PDC_reset_shell_mode(void);
 int	PDC_resize_screen(int, int);
+void	PDC_restore_screen_mode(int);
 int	PDC_scr_close(void);
 int	PDC_scr_open(int, char **);
 int	PDC_set_ctrl_break(bool);
@@ -118,8 +119,8 @@ int	PDC_set_scrn_mode(VIOMODEINFO);
 bool	PDC_scrn_modes_equal(VIOMODEINFO, VIOMODEINFO);
 int	PDC_get_scrn_mode(VIOMODEINFO *);
 int	PDC_query_adapter_type(VIOCONFIGINFO *);
-int	PDC_get_keyboard_info(KBDINFO *);
-int	PDC_set_keyboard_default(void);
+void	PDC_get_keyboard_info(void);
+void	PDC_set_keyboard_default(void);
 #else
 int	PDC_set_scrn_mode(int);
 int	PDC_get_scrn_mode(void);

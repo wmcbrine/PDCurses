@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.51 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.52 2006/08/11 20:59:44 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -50,11 +50,11 @@ static DWORD dwConsoleMode = 0;
 	This function returns OK on success, otherwise an ERR is returned.
 
   Portability:
-	PDCurses  int PDC_scr_close(void);
+	PDCurses  void PDC_scr_close(void);
 
 **man-end****************************************************************/
 
-int PDC_scr_close(void)
+void PDC_scr_close(void)
 {
 	COORD origin;
 	SMALL_RECT rect;
@@ -89,13 +89,18 @@ int PDC_scr_close(void)
 
 		if (!WriteConsoleOutput(hConOut, ciSaveBuffer, 
 		    orig_scr.dwSize, origin, &rect))
-			return ERR;
+			return;
 	}
 
 	SetConsoleActiveScreenBuffer(hConOut);
 	SetConsoleMode(hConIn, dwConsoleMode);
 
-	return OK;
+	if (SP->visibility != 1)
+		curs_set(1);
+
+	/* Position cursor to the bottom left of the screen. */
+
+	PDC_gotoyx(PDC_get_buffer_rows() - 2, 0);
 }
 
 void PDC_scr_exit(void)

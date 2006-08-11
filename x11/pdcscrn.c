@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.35 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.36 2006/08/11 20:59:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -32,15 +32,13 @@ RCSID("$Id: pdcscrn.c,v 1.35 2006/08/11 19:50:51 wmcbrine Exp $");
 	This function returns OK on success, otherwise an ERR is returned.
 
   Portability:
-	PDCurses  int PDC_scr_close(void);
+	PDCurses  void PDC_scr_close(void);
 
 **man-end****************************************************************/
 
-int PDC_scr_close(void)
+void PDC_scr_close(void)
 {
 	PDC_LOG(("PDC_scr_close() - called\n"));
-
-	return OK;
 }
 
 void PDC_scr_exit(void)

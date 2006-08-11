@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.41 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.42 2006/08/11 20:59:44 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -45,11 +45,11 @@ static int saved_cols = 0;
 	This function returns OK on success, otherwise an ERR is returned.
 
   Portability:
-	PDCurses  int PDC_scr_close(void);
+	PDCurses  void PDC_scr_close(void);
 
 **man-end****************************************************************/
 
-int PDC_scr_close(void)
+void PDC_scr_close(void)
 {
 #if SMALL || MEDIUM
 # ifndef __PACIFIC__
@@ -59,10 +59,8 @@ int PDC_scr_close(void)
 #endif
 	PDC_LOG(("PDC_scr_close() - called\n"));
 
-	if (getenv("PDC_RESTORE_SCREEN") != NULL)
+	if ((getenv("PDC_RESTORE_SCREEN") != NULL) && (saved_screen != NULL))
 	{
-		if (saved_screen == NULL)
-			return OK;
 #ifdef __DJGPP__
 		dosmemput(saved_screen, saved_lines * saved_cols * 2,
 			(unsigned long)_FAR_POINTER(SP->video_seg,
@@ -86,7 +84,14 @@ int PDC_scr_close(void)
 		saved_screen = NULL;
 	}
 
-	return OK;
+	reset_shell_mode();
+
+	if (SP->visibility != 1)
+		curs_set(1);
+
+	/* Position cursor to the bottom left of the screen. */
+
+	PDC_gotoyx(PDC_get_rows() - 2, 0);
 }
 
 void PDC_scr_exit(void)

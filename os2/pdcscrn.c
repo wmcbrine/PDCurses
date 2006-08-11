@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.38 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.39 2006/08/11 20:59:44 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -53,11 +53,11 @@ extern int PDC_set_font(int);
 	This function returns OK on success, otherwise an ERR is returned.
 
   Portability:
-	PDCurses  int PDC_scr_close(void);
+	PDCurses  void PDC_scr_close(void);
 
 **man-end****************************************************************/
 
-int PDC_scr_close(void)
+void PDC_scr_close(void)
 {
 	char *ptr;
 
@@ -69,10 +69,8 @@ int PDC_scr_close(void)
 	if (DosScanEnv("PDC_RESTORE_SCREEN", (PSZ *)&ptr))
 		ptr = NULL;
 #endif
-	if (ptr != NULL)
+	if ((ptr != NULL) && (saved_screen != NULL))
 	{
-		if (saved_screen == NULL)
-			return OK;
 #ifdef EMXVIDEO
 		v_putline(saved_screen, 0, 0, saved_lines * saved_cols);
 #else
@@ -83,7 +81,14 @@ int PDC_scr_close(void)
 		saved_screen = NULL;
 	}
 
-	return OK;
+	reset_shell_mode();
+
+	if (SP->visibility != 1)
+		curs_set(1);
+
+	/* Position cursor to the bottom left of the screen. */
+
+	PDC_gotoyx(PDC_get_rows() - 2, 0);
 }
 
 /*man-start**************************************************************

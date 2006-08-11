@@ -23,7 +23,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.32 2006/08/11 05:43:37 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.33 2006/08/11 22:19:45 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -349,22 +349,15 @@ int PDC_set_ctrl_break(bool setting)
 {
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
-#ifdef MX386
-	if (setting)
-		_ignore_breaks();
-	else
-		_watch_breaks();
-#else
-# ifdef __DJGPP__
+#ifdef __DJGPP__
 	signal(SIGINT, setting ? SIG_DFL : SIG_IGN);
 /*	__djgpp_set_ctrl_c(setting);*/
 	setcbrk(setting);
-# else
+#else
 	regs.h.ah = 0x33;
 	regs.h.al = 0x00;
 	regs.h.dl = (unsigned char) (setting ? 1 : 0);
 	int86(0x21, &regs, &regs);
-# endif
 #endif
 	return OK;
 }

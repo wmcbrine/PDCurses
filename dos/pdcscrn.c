@@ -24,9 +24,9 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.43 2006/08/11 22:10:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.44 2006/08/11 22:19:45 wmcbrine Exp $");
 
-Regs regs;	/* used in various other modules */
+union REGS regs;	/* used in various other modules */
 
 static unsigned short *saved_screen = NULL;
 static int saved_lines = 0;

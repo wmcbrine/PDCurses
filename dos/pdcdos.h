@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.8 2006/08/11 22:10:36 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.9 2006/08/11 22:19:45 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -53,13 +53,7 @@
 
 #include <dos.h>
 
-#ifdef MX386
-typedef union REGS16 Regs;
-#else
-typedef union REGS Regs;
-#endif
-
-extern Regs regs;
+extern union REGS regs;
 
 #ifdef __DJGPP__		/* Note: works only in plain DOS... */
 # if DJGPP == 2
@@ -72,7 +66,7 @@ extern Regs regs;
 # ifdef __TURBOC__
 #  define _FAR_POINTER(s,o)	MK_FP(s,o)
 # else
-#  if (defined(__WATCOMC__) && defined(__FLAT__)) || defined(MX386)
+#  if defined(__WATCOMC__) && defined(__FLAT__)
 #   define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 #  else
 #   define _FAR_POINTER(s,o)	(((long)s << 16) | (long)o)

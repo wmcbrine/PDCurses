@@ -36,7 +36,7 @@
 # endif
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.7 2006/07/29 06:00:54 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.8 2006/08/11 22:19:45 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -59,7 +59,7 @@ void PDC_napms(int ms)
 
 	delay(ms);
 
-# elif defined(MSC) || defined(MX386)
+# elif defined(MSC)
 	{
 		clock_t goal = (ms / 50) + clock();
 		while (goal > clock())

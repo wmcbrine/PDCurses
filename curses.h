@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.212 2006/08/11 22:10:36 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.213 2006/08/11 22:19:45 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -291,21 +291,6 @@ PDCurses portable platform definitions list:
 #  endif
 #  ifndef HAVE_VSNPRINTF
 #    define HAVE_VSNPRINTF
-#  endif
-#endif
-
-/*----------------------------------------
- *	MicroWay NDP C/C++ 386 4.2.0 compiler
- */
-
-#ifdef MX386
-#  include <bios.h>
-#  ifdef DOS
-#    ifdef __i860
-typedef void _int;
-#    else
-typedef int  _int;
-#    endif
 #  endif
 #endif
 

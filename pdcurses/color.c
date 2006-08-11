@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.51 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.52 2006/08/11 20:23:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -118,7 +118,7 @@ static bool colorstarted = FALSE;
 
 /* COLOR_PAIR to attribute encoding table. */
 
-unsigned char *atrtab = NULL;
+unsigned char *atrtab = (unsigned char *)NULL;
 
 static unsigned char colorset[PDC_COLOR_PAIRS];
 

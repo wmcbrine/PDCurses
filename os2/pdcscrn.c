@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.39 2006/08/11 20:59:44 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.40 2006/08/11 22:10:36 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -39,6 +39,7 @@ extern int PDC_query_adapter_type(VIOCONFIGINFO *);
 extern void PDC_set_keyboard_default(void);
 extern int PDC_set_scrn_mode(VIOMODEINFO);
 #endif
+extern int PDC_get_font(void);
 extern int PDC_set_font(int);
 
 /*man-start**************************************************************
@@ -184,7 +185,7 @@ int PDC_scr_open(int argc, char **argv)
 	if (adapter == _UNIX_MONO)
 		SP->mono = TRUE;
 #endif
-	SP->orig_font = SP->font = PDC_get_font();
+	SP->font = PDC_get_font();
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
 	SP->orig_cursor = PDC_get_cursor_mode();

@@ -24,7 +24,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.25 2006/08/11 07:04:31 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.26 2006/08/11 22:10:36 wmcbrine Exp $");
 
 extern HANDLE hConOut, hConIn;
 
@@ -86,27 +86,6 @@ int PDC_get_cursor_mode(void)
 	GetConsoleCursorInfo(hConOut, &ci);
 
 	return ci.dwSize;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_font()	- Get the current font size
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This function returns the current font size.
-
-  Portability:
-	PDCurses  int PDC_get_font(void);
-
-**man-end****************************************************************/
-
-int PDC_get_font(void)
-{
-	PDC_LOG(("PDC_get_font() - called\n"));
-
-	return 0;
 }
 
 /*man-start**************************************************************

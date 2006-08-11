@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.42 2006/08/11 20:59:44 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.43 2006/08/11 22:10:36 wmcbrine Exp $");
 
 Regs regs;	/* used in various other modules */
 
@@ -145,7 +145,7 @@ int PDC_scr_open(int argc, char **argv)
 	SP->adapter	= PDC_query_adapter_type();
 	SP->scrnmode	= PDC_get_scrn_mode();
 
-	SP->orig_font = SP->font = PDC_get_font();
+	SP->font	= PDC_get_font();
 	SP->lines	= PDC_get_rows();
 	SP->cols	= PDC_get_columns();
 

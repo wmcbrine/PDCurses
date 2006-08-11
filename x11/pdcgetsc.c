@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.17 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.18 2006/08/11 22:10:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -70,25 +70,4 @@ int PDC_get_rows(void)
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
 	return XCursesLINES;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_font()	- Get the current font size
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This function returns the current font size.
-
-  Portability:
-	PDCurses  int PDC_get_font(void);
-
-**man-end****************************************************************/
-
-int PDC_get_font(void)
-{
-	PDC_LOG(("PDC_get_font() - called\n"));
-
-	return OK;
 }

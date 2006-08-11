@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.113 2006/08/11 20:59:44 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.114 2006/08/11 22:10:36 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -93,9 +93,7 @@ int	PDC_get_columns(void);
 bool	PDC_get_ctrl_break(void);
 int	PDC_get_cursor_pos(int *, int *);
 int	PDC_get_cursor_mode(void);
-int	PDC_get_font(void);
 int	PDC_get_rows(void);
-int	PDC_get_buffer_rows(void);
 void	PDC_gotoyx(int, int);
 void	PDC_init_atrtab(void);
 WINDOW *PDC_makenew(int, int, int, int);

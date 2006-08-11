@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.52 2006/08/11 20:59:44 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.53 2006/08/11 22:10:36 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -37,6 +37,8 @@ static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
 static CHAR_INFO *ciSaveBuffer = NULL;
 static DWORD dwConsoleMode = 0;
+
+extern int PDC_get_buffer_rows(void);
 
 /*man-start**************************************************************
 

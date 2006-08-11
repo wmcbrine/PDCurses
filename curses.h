@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.211 2006/08/11 07:33:25 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.212 2006/08/11 22:10:36 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2811
+#define PDC_BUILD 2812
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -580,7 +580,6 @@ typedef struct
 	int	visibility;	/* Visibility of cursor			*/
 	int	orig_cursor;	/* Original cursor size			*/
 	int	font;		/* default font size			*/
-	int	orig_font;	/* Original font size			*/
 	int	lines;		/* New value for LINES			*/
 	int	cols;		/* New value for COLS			*/
 	unsigned long _trap_mbe;	/* trap these mouse button events */

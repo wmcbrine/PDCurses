@@ -19,7 +19,9 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.25 2006/08/11 07:04:31 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.26 2006/08/11 22:10:36 wmcbrine Exp $");
+
+extern int PDC_get_font(void);
 
 /*man-start**************************************************************
 

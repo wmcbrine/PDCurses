@@ -24,9 +24,15 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.44 2006/08/11 22:19:45 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.45 2006/08/12 02:44:08 wmcbrine Exp $");
 
-union REGS regs;	/* used in various other modules */
+union REGS regs;		/* used in various other modules 	*/
+
+int	pdc_adapter;		/* screen type				*/
+bool	pdc_direct_video;	/* allow direct screen memory writes	*/
+bool	pdc_bogus_adapter;	/* TRUE if adapter has insane values	*/
+unsigned pdc_video_seg;		/* video base segment			*/
+unsigned pdc_video_ofs;		/* video base offset			*/
 
 static unsigned short *saved_screen = NULL;
 static int saved_lines = 0;
@@ -63,8 +69,8 @@ void PDC_scr_close(void)
 	{
 #ifdef __DJGPP__
 		dosmemput(saved_screen, saved_lines * saved_cols * 2,
-			(unsigned long)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs));
+			(unsigned long)_FAR_POINTER(pdc_video_seg,
+			pdc_video_ofs));
 #else
 # if (SMALL || MEDIUM)
 #  ifdef __PACIFIC__
@@ -73,10 +79,10 @@ void PDC_scr_close(void)
 		segread(&segregs);
 		ds = segregs.ds;
 #  endif
-		movedata(ds, (int)saved_screen, SP->video_seg, SP->video_ofs,
+		movedata(ds, (int)saved_screen, pdc_video_seg, pdc_video_ofs,
 		(saved_lines * saved_cols * 2));
 # else
-		memcpy((void *)_FAR_POINTER(SP->video_seg, SP->video_ofs),
+		memcpy((void *)_FAR_POINTER(pdc_video_seg, pdc_video_ofs),
 		(void *)saved_screen, (saved_lines * saved_cols * 2));
 # endif
 #endif
@@ -138,11 +144,11 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-	SP->direct_video = TRUE;	/* Assume that we can	      */
-	SP->video_seg	= 0xb000;	/* Base screen segment addr   */
-	SP->video_ofs	= 0x0;		/* Base screen segment ofs    */
+	pdc_direct_video = TRUE;	/* Assume that we can	      */
+	pdc_video_seg	= 0xb000;	/* Base screen segment addr   */
+	pdc_video_ofs	= 0x0;		/* Base screen segment ofs    */
 
-	SP->adapter	= PDC_query_adapter_type();
+	pdc_adapter	= PDC_query_adapter_type();
 	SP->scrnmode	= PDC_get_scrn_mode();
 
 	SP->font	= PDC_get_font();
@@ -157,7 +163,7 @@ int PDC_scr_open(int argc, char **argv)
 	   access. */
 
 	if (getenv("PDCURSES_BIOS") != NULL)
-		SP->direct_video = FALSE;
+		pdc_direct_video = FALSE;
 
 	/* This code for preserving the current screen. */
 
@@ -173,8 +179,8 @@ int PDC_scr_open(int argc, char **argv)
 			return OK;
 		}
 #ifdef __DJGPP__
-		dosmemget ((unsigned long)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs), saved_lines * saved_cols * 2,
+		dosmemget ((unsigned long)_FAR_POINTER(pdc_video_seg,
+			pdc_video_ofs), saved_lines * saved_cols * 2,
 			saved_screen);
 #else
 # if SMALL || MEDIUM
@@ -184,11 +190,11 @@ int PDC_scr_open(int argc, char **argv)
 		segread(&segregs);
 		ds = segregs.ds;
 #  endif
-		movedata(SP->video_seg, SP->video_ofs, ds, (int)saved_screen,
+		movedata(pdc_video_seg, pdc_video_ofs, ds, (int)saved_screen,
 			(saved_lines * saved_cols * 2));
 # else
 		memcpy((void *)saved_screen,
-			(void *)_FAR_POINTER(SP->video_seg, SP->video_ofs),
+			(void *)_FAR_POINTER(pdc_video_seg, pdc_video_ofs),
 			(saved_lines * saved_cols * 2));
 # endif
 #endif
@@ -230,7 +236,7 @@ int PDC_resize_screen(int nlines, int ncols)
 
 	SP->orig_cursor = 0x0607;
 
-	switch (SP->adapter)
+	switch (pdc_adapter)
 	{
 	case _EGACOLOR:
 		if (nlines >= 43)

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.9 2006/08/11 22:19:45 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.10 2006/08/12 02:44:08 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -54,6 +54,12 @@
 #include <dos.h>
 
 extern union REGS regs;
+
+extern int	pdc_adapter;
+extern bool	pdc_direct_video;
+extern bool	pdc_bogus_adapter;
+extern unsigned pdc_video_seg;
+extern unsigned pdc_video_ofs;
 
 #ifdef __DJGPP__		/* Note: works only in plain DOS... */
 # if DJGPP == 2

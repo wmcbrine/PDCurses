@@ -17,7 +17,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.22 2006/07/23 23:42:23 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.23 2006/08/12 02:44:08 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -40,7 +40,7 @@ int PDC_set_80x25(void)
 {
 	PDC_LOG(("PDC_set_80x25() - called\n"));
 
-	switch (SP->adapter)
+	switch (pdc_adapter)
 	{
 	case _CGA:
 	case _EGACOLOR:
@@ -90,10 +90,10 @@ int PDC_set_font(int size)
 {
 	PDC_LOG(("PDC_set_font() - called\n"));
 
-	if (SP->bogus_adapter)
+	if (pdc_bogus_adapter)
 		return ERR;
 
-	switch (SP->adapter)
+	switch (pdc_adapter)
 	{
 	case _CGA:
 	case _MDA:

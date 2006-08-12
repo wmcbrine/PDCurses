@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.49 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.50 2006/08/12 02:44:08 wmcbrine Exp $");
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -147,7 +147,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
-	if (SP->direct_video)
+	if (pdc_direct_video)
 	{
 		/* this should be enough for the maximum width of a 
 		   screen */
@@ -163,8 +163,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 #ifdef __DJGPP__
 		dosmemput(temp_line, len * 2,
-			(unsigned long)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs + (lineno * curscr->_maxx + x) * 2));
+			(unsigned long)_FAR_POINTER(pdc_video_seg,
+			pdc_video_ofs + (lineno * curscr->_maxx + x) * 2));
 #else
 # if SMALL || MEDIUM
 #  ifdef __PACIFIC__
@@ -173,12 +173,12 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		segread(&segregs);
 		ds = segregs.ds;
 #  endif
-		movedata(ds, (int)temp_line, SP->video_seg,
-			SP->video_ofs + (lineno * curscr->_maxx + x) * 2,
+		movedata(ds, (int)temp_line, pdc_video_seg,
+			pdc_video_ofs + (lineno * curscr->_maxx + x) * 2,
 			len * 2);
 # else
-		memcpy((void *)_FAR_POINTER(SP->video_seg,
-			SP->video_ofs + (lineno * curscr->_maxx + x) * 2),
+		memcpy((void *)_FAR_POINTER(pdc_video_seg,
+			pdc_video_ofs + (lineno * curscr->_maxx + x) * 2),
 			temp_line, len * 2);
 # endif
 #endif

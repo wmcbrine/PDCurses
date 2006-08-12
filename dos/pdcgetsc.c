@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.29 2006/08/10 07:17:15 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.30 2006/08/12 02:44:08 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -144,10 +144,10 @@ int PDC_get_font(void)
 
 	/* Assume the MDS Genius is in 66 line mode. */
 
-	if ((retval == 0) && (SP->adapter == _MDS_GENIUS))
+	if ((retval == 0) && (pdc_adapter == _MDS_GENIUS))
 		retval = _FONT15;
 
-	switch (SP->adapter)
+	switch (pdc_adapter)
 	{
 	case _MDA:
 		retval = 10;	/* POINTS is not certain on MDA/Hercules */
@@ -206,18 +206,18 @@ int PDC_get_rows(void)
 	if (env_rows != (char *)NULL)
 		rows = min(atoi(env_rows), rows);
 
-	if ((rows == 1) && (SP->adapter == _MDS_GENIUS))
+	if ((rows == 1) && (pdc_adapter == _MDS_GENIUS))
 		rows = 66;
-	if ((rows == 1) && (SP->adapter == _MDA))
+	if ((rows == 1) && (pdc_adapter == _MDA))
 		rows = 25;
 
 	if (rows == 1)
 	{
 		rows = 25;
-		SP->direct_video = FALSE;
+		pdc_direct_video = FALSE;
 	}
 
-	switch (SP->adapter)
+	switch (pdc_adapter)
 	{
 	case _EGACOLOR:
 	case _EGAMONO:
@@ -305,7 +305,7 @@ static int PDC_sanity_check(int adapter)
 		case 43:	
 			break;
 		default:
-			SP->bogus_adapter = TRUE;
+			pdc_bogus_adapter = TRUE;
 		}
 
 		switch (fontsize)
@@ -314,7 +314,7 @@ static int PDC_sanity_check(int adapter)
 		case _FONT14:
 			break;
 		default:
-			SP->bogus_adapter = TRUE;
+			pdc_bogus_adapter = TRUE;
 		}
 		break;
 
@@ -331,18 +331,18 @@ static int PDC_sanity_check(int adapter)
 		case 25:
 			break;
 		default:
-			SP->bogus_adapter = TRUE;
+			pdc_bogus_adapter = TRUE;
 		}
 		break;
 
 	default:
-		SP->bogus_adapter = TRUE;
+		pdc_bogus_adapter = TRUE;
 	}
 
-	if (SP->bogus_adapter)
+	if (pdc_bogus_adapter)
 	{
 		SP->sizeable = FALSE;
-		SP->direct_video = FALSE;
+		pdc_direct_video = FALSE;
 	}
 
 	return adapter;
@@ -487,7 +487,7 @@ int PDC_query_adapter_type(void)
 
 	if (video_base == 0x3d4)
 	{
-		SP->video_seg = 0xb800;
+		pdc_video_seg = 0xb800;
 		switch (retval)
 		{
 		case _EGAMONO:
@@ -500,7 +500,7 @@ int PDC_query_adapter_type(void)
 
 	if (video_base == 0x3b4)
 	{
-		SP->video_seg = 0xb000;
+		pdc_video_seg = 0xb000;
 		switch (retval)
 		{
 		case _EGACOLOR:
@@ -516,9 +516,9 @@ int PDC_query_adapter_type(void)
 	||  (retval == _CGA)
 #endif
 	)
-		SP->direct_video = FALSE;
+		pdc_direct_video = FALSE;
 
-	if ((unsigned int) SP->video_seg == 0xb000)
+	if ((unsigned int) pdc_video_seg == 0xb000)
 		SP->mono = TRUE;
 	else
 		SP->mono = FALSE;
@@ -529,24 +529,24 @@ int PDC_query_adapter_type(void)
 #if defined(__DJGPP__) && defined(NOW_WORKS)
 	dpmi_regs.h.ah = 0xfe;
 	dpmi_regs.h.al = 0;
-	dpmi_regs.x.di = SP->video_ofs;
-	dpmi_regs.x.es = SP->video_seg;
+	dpmi_regs.x.di = pdc_video_ofs;
+	dpmi_regs.x.es = pdc_video_seg;
 	_go32_dpmi_simulate_int(0x10, &dpmi_regs);
-	SP->video_ofs = dpmi_regs.x.di;
-	SP->video_seg = dpmi_regs.x.es;
+	pdc_video_ofs = dpmi_regs.x.di;
+	pdc_video_seg = dpmi_regs.x.es;
 #endif
 
 #if !defined(__DJGPP__) && !defined(__WATCOMC__)
 	regs.h.ah = 0xfe;
 	regs.h.al = 0;
-	regs.x.di = SP->video_ofs;
-	segs.es   = SP->video_seg;
+	regs.x.di = pdc_video_ofs;
+	segs.es   = pdc_video_seg;
 	int86x(0x10, &regs, &regs, &segs);
-	SP->video_ofs = regs.x.di;
-	SP->video_seg = segs.es;
+	pdc_video_ofs = regs.x.di;
+	pdc_video_seg = segs.es;
 #endif
-	if (!SP->adapter)
-		SP->adapter = retval;
+	if (!pdc_adapter)
+		pdc_adapter = retval;
 
 	return PDC_sanity_check(retval);
 }

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.213 2006/08/11 22:19:45 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.214 2006/08/12 02:44:08 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -564,7 +564,6 @@ typedef struct
 	int	curscol;	/* position of physical cursor		*/
 	int	visibility;	/* Visibility of cursor			*/
 	int	orig_cursor;	/* Original cursor size			*/
-	int	font;		/* default font size			*/
 	int	lines;		/* New value for LINES			*/
 	int	cols;		/* New value for COLS			*/
 	unsigned long _trap_mbe;	/* trap these mouse button events */
@@ -587,15 +586,12 @@ typedef struct
 
 #if defined(OS2) && !defined(EMXVIDEO)
 	VIOMODEINFO scrnmode;		/* default screen mode		*/
+	int	font;		/* default font size			*/
 #endif
 
 #ifdef DOS
-	int	adapter;	/* Screen type				*/
 	int	scrnmode;	/* default screen mode			*/
-	bool	direct_video;	/* Allow Direct Screen Memory writes	*/
-	unsigned video_seg;	/* video base segment			*/
-	unsigned video_ofs;	/* video base offset			*/
-	bool	bogus_adapter;	/* TRUE if adapter has insane values	*/
+	int	font;		/* default font size			*/
 #endif
 
 #ifdef XCURSES

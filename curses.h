@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.215 2006/08/12 20:11:36 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.216 2006/08/12 22:22:49 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -362,7 +362,7 @@ extern "C"
 #  define	TRUE	1
 #endif
 #ifndef	NULL
-#  define	NULL	(void*)0	/* Null pointer		 */
+#  define	NULL	(void *)0	/* Null pointer		 */
 #endif
 #ifndef	ERR
 #  define	ERR	(-1)		/* general error flag	 */

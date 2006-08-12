@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.69 2006/08/11 20:59:44 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.70 2006/08/12 20:28:59 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -58,10 +58,6 @@ int c_pindex = 0;			/* putter index */
 int c_gindex = 1;			/* getter index */
 int c_ungind = 0;			/* wungetch() push index */
 int c_ungch[NUNGETCH];			/* array of ungotten chars */
-
-/* Global definitions for setmode routines */
-
-struct cttyset *ctty;
 
 #ifdef PDC_WIDE
 cchar_t _wacs_map[] = {
@@ -171,12 +167,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	{
 		fprintf(stderr, "initscr(): Unable to create SP\n");
 		exit(8);
-	}
-
-	if (!(ctty = calloc(3, sizeof(struct cttyset))))
-	{
-		fprintf(stderr, "initscr(): Unable to allocate ctty\n");
-		exit(9);
 	}
 
 	SP->autocr	= TRUE;		/* cr -> lf by default	      */
@@ -331,9 +321,6 @@ void delscreen(SCREEN *sp)
 	curscr = (WINDOW *)NULL;
 
 	SP->alive = FALSE;
-
-	free(ctty);
-	ctty = NULL;
 
 	PDC_scr_exit();
 

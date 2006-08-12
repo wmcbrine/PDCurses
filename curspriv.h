@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.115 2006/08/12 20:11:36 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.116 2006/08/12 20:28:59 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -32,7 +32,6 @@
 #define _PAD		0x10	/* X/Open Pad.				*/
 #define _SUBPAD		0x20	/* X/Open subpad.			*/
 
-
 /*----------------------------------------------------------------------*/
 /* Miscellaneous */
 
@@ -44,19 +43,8 @@
 #define _DLCHAR		0x15	/* Delete Line char (^U)		*/
 #define  NUNGETCH	256	/* max # chars to ungetch()		*/
 
-
-/* Setmode stuff */
-struct cttyset
-{
-	bool	been_set;
-	SCREEN	saved;
-};
-
-extern struct cttyset *ctty;
-
 /* tracing flag */
 extern bool trace_on;
-
 
 /* Monitor (terminal) type information */
 enum

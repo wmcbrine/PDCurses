@@ -36,10 +36,16 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.59 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.60 2006/08/12 20:28:59 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
+
+static struct cttyset
+{
+        bool    been_set;
+        SCREEN  saved;
+} ctty[3];
 
 enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 

@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.25 2006/07/25 01:24:47 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.26 2006/08/12 20:11:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -151,27 +151,23 @@ int PDC_get_cursor_mode(void)
 
 **man-end****************************************************************/
 
+#ifndef EMXVIDEO
+
 int PDC_get_font(void)
 {
-#ifdef EMXVIDEO
-	int retval;
-#else
 	VIOMODEINFO modeInfo = {0};
-#endif
+
 	PDC_LOG(("PDC_get_font() - called\n"));
 
-#ifdef EMXVIDEO
-	retval = v_hardware();
-	return (retval == V_MONOCHROME) ? 14 : (retval == V_COLOR_8) ? 8 : 12;
-#else
 	modeInfo.cb = sizeof(modeInfo);
 
 	/* set most parameters of modeInfo */
 
 	VioGetMode(&modeInfo, 0);
 	return (modeInfo.vres / modeInfo.row);
-#endif
 }
+
+#endif
 
 /*man-start**************************************************************
 

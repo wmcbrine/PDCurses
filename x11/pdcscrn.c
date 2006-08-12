@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.36 2006/08/11 20:59:44 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.37 2006/08/12 20:11:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -155,5 +155,9 @@ void PDC_reset_shell_mode(void)
 }
 
 void PDC_restore_screen_mode(int i)
+{
+}
+
+void PDC_save_screen_mode(int i)
 {
 }

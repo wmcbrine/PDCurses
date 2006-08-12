@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.40 2006/08/11 22:10:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.41 2006/08/12 20:11:36 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -29,18 +29,24 @@ static int saved_cols = 0;
 
 extern int PDC_query_adapter_type(void);
 #else
+VIOMODEINFO pdc_scrnmode;	/* default screen mode	*/
+int pdc_font;			/* default font size	*/
+
 static PCH saved_screen = NULL;
 static USHORT saved_lines = 0;
 static USHORT saved_cols = 0;
 
+static VIOMODEINFO saved_scrnmode[3];
+static int saved_font[3];
+
+extern int PDC_get_font(void);
 extern void PDC_get_keyboard_info(void);
 extern int PDC_get_scrn_mode(VIOMODEINFO *);
 extern int PDC_query_adapter_type(VIOCONFIGINFO *);
+extern int PDC_set_font(int);
 extern void PDC_set_keyboard_default(void);
 extern int PDC_set_scrn_mode(VIOMODEINFO);
 #endif
-extern int PDC_get_font(void);
-extern int PDC_set_font(int);
 
 /*man-start**************************************************************
 
@@ -174,18 +180,19 @@ int PDC_scr_open(int argc, char **argv)
 
 #ifndef EMXVIDEO
 	PDC_query_adapter_type(&adapter);
-	PDC_get_scrn_mode(&SP->scrnmode);
+	PDC_get_scrn_mode(&pdc_scrnmode);
 	PDC_get_keyboard_info();
 
 	/* Now set the keyboard into binary mode */
 
 	PDC_set_keyboard_binary(TRUE);
+
+	pdc_font = PDC_get_font();
 #else
 	adapter = PDC_query_adapter_type();
 	if (adapter == _UNIX_MONO)
 		SP->mono = TRUE;
 #endif
-	SP->font = PDC_get_font();
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
 	SP->orig_cursor = PDC_get_cursor_mode();
@@ -311,14 +318,27 @@ void PDC_restore_screen_mode(int i)
 {
 #ifndef EMXVIDEO
 	VIOMODEINFO modeInfo;
+
+	if (i >= 0 && i <= 2)
+	{
+		pdc_font = PDC_get_font();
+		PDC_set_font(saved_font[i]);
+
+		PDC_get_scrn_mode(&modeInfo);
+
+		if (!PDC_scrn_modes_equal(modeInfo, saved_scrnmode[i]))
+			PDC_set_scrn_mode(saved_scrnmode[i]);
+	}
 #endif
-	SP->font = PDC_get_font();
-	PDC_set_font(ctty[i].saved.font);
+}
 
+void PDC_save_screen_mode(int i)
+{
 #ifndef EMXVIDEO
-	PDC_get_scrn_mode(&modeInfo);
-
-	if (!PDC_scrn_modes_equal(modeInfo, ctty[i].saved.scrnmode))
-		PDC_set_scrn_mode(ctty[i].saved.scrnmode);
+	if (i >= 0 && i <= 2)
+	{
+		saved_font[i] = pdc_font;
+		saved_scrnmode[i] = pdc_scrnmode;
+	}
 #endif
 }

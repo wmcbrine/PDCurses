@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.10 2006/08/12 02:44:08 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.11 2006/08/12 20:11:36 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -56,6 +56,8 @@
 extern union REGS regs;
 
 extern int	pdc_adapter;
+extern int	pdc_scrnmode;
+extern int	pdc_font;
 extern bool	pdc_direct_video;
 extern bool	pdc_bogus_adapter;
 extern unsigned pdc_video_seg;

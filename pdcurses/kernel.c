@@ -36,7 +36,7 @@
 # undef wmove
 #endif
 
-RCSID("$Id: kernel.c,v 1.58 2006/08/11 07:08:22 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.59 2006/08/12 20:11:36 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -146,6 +146,8 @@ static void PDC_save_mode(int i)
 	ctty[i].been_set = TRUE;
 
 	memcpy(&(ctty[i].saved), SP, sizeof(SCREEN));
+
+	PDC_save_screen_mode(i);
 }
 
 static int PDC_restore_mode(int i)

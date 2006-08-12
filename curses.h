@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.214 2006/08/12 02:44:08 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.215 2006/08/12 20:11:36 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -583,17 +583,6 @@ typedef struct
 					   with each key press		*/
 	bool	return_key_modifiers;	/* TRUE if modifier keys are
 					   returned as "real" keys	*/
-
-#if defined(OS2) && !defined(EMXVIDEO)
-	VIOMODEINFO scrnmode;		/* default screen mode		*/
-	int	font;		/* default font size			*/
-#endif
-
-#ifdef DOS
-	int	scrnmode;	/* default screen mode			*/
-	int	font;		/* default font size			*/
-#endif
-
 #ifdef XCURSES
 	int	XcurscrSize;	/* size of Xcurscr shared memory block	*/
 	bool	sb_on;

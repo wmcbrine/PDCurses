@@ -24,11 +24,13 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.45 2006/08/12 02:44:08 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.46 2006/08/12 20:11:36 wmcbrine Exp $");
 
 union REGS regs;		/* used in various other modules 	*/
 
 int	pdc_adapter;		/* screen type				*/
+int	pdc_scrnmode;		/* default screen mode			*/
+int	pdc_font;		/* default font size			*/
 bool	pdc_direct_video;	/* allow direct screen memory writes	*/
 bool	pdc_bogus_adapter;	/* TRUE if adapter has insane values	*/
 unsigned pdc_video_seg;		/* video base segment			*/
@@ -37,6 +39,9 @@ unsigned pdc_video_ofs;		/* video base offset			*/
 static unsigned short *saved_screen = NULL;
 static int saved_lines = 0;
 static int saved_cols = 0;
+
+static int saved_scrnmode[3];
+static int saved_font[3];
 
 /*man-start**************************************************************
 
@@ -149,9 +154,9 @@ int PDC_scr_open(int argc, char **argv)
 	pdc_video_ofs	= 0x0;		/* Base screen segment ofs    */
 
 	pdc_adapter	= PDC_query_adapter_type();
-	SP->scrnmode	= PDC_get_scrn_mode();
+	pdc_scrnmode	= PDC_get_scrn_mode();
 
-	SP->font	= PDC_get_font();
+	pdc_font	= PDC_get_font();
 	SP->lines	= PDC_get_rows();
 	SP->cols	= PDC_get_columns();
 
@@ -270,9 +275,21 @@ void PDC_reset_shell_mode(void)
 
 void PDC_restore_screen_mode(int i)
 {
-	SP->font = PDC_get_font();
-	PDC_set_font(ctty[i].saved.font);
+	if (i >= 0 && i <= 2)
+	{
+		pdc_font = PDC_get_font();
+		PDC_set_font(saved_font[i]);
 
-	if (PDC_get_scrn_mode() != ctty[i].saved.scrnmode)
-		PDC_set_scrn_mode(ctty[i].saved.scrnmode);
+		if (PDC_get_scrn_mode() != saved_scrnmode[i])
+			PDC_set_scrn_mode(saved_scrnmode[i]);
+	}
+}
+
+void PDC_save_screen_mode(int i)
+{
+	if (i >= 0 && i <= 2)
+	{
+		saved_font[i] = pdc_font;
+		saved_scrnmode[i] = pdc_scrnmode;
+	}
 }

@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.53 2006/08/11 22:10:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.54 2006/08/12 20:11:36 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -387,6 +387,10 @@ void PDC_reset_shell_mode(void)
 }
 
 void PDC_restore_screen_mode(int i)
+{
+}
+
+void PDC_save_screen_mode(int i)
 {
 }
 

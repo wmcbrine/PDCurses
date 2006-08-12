@@ -19,9 +19,14 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.26 2006/08/11 22:10:36 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.27 2006/08/12 20:11:36 wmcbrine Exp $");
+
+#ifndef EMXVIDEO
+extern VIOMODEINFO pdc_scrnmode;
+extern int pdc_font;
 
 extern int PDC_get_font(void);
+#endif
 
 /*man-start**************************************************************
 
@@ -47,15 +52,15 @@ extern int PDC_get_font(void);
 
 **man-end****************************************************************/
 
+#ifndef EMXVIDEO
+
 int PDC_set_font(int size)
 {
-#ifndef EMXVIDEO
 	VIOMODEINFO modeInfo = {0};
-#endif
+
 	PDC_LOG(("PDC_set_font() - called\n"));
 
-#ifndef EMXVIDEO
-	if (SP->sizeable && (SP->font != size))
+	if (SP->sizeable && (pdc_font != size))
 	{
 		modeInfo.cb = sizeof(modeInfo);
 
@@ -69,10 +74,12 @@ int PDC_set_font(int size)
 
 	curs_set(SP->visibility);
 
-	SP->font = PDC_get_font();
-#endif
+	pdc_font = PDC_get_font();
+
 	return OK;
 }
+
+#endif
 
 /*man-start**************************************************************
 
@@ -98,8 +105,8 @@ int PDC_set_scrn_mode(VIOMODEINFO new_mode)
 
 	if (VioSetMode(&new_mode, 0) != 0)
 	{
-		SP->font = PDC_get_font();
-		memcpy((char *)&SP->scrnmode, (char *)&new_mode,
+		pdc_font = PDC_get_font();
+		memcpy((char *)&pdc_scrnmode, (char *)&new_mode,
 			sizeof(VIOMODEINFO));
 		LINES = PDC_get_rows();
 		COLS = PDC_get_columns();
@@ -130,15 +137,15 @@ int PDC_curs_set(int visibility)
 #ifdef EMXVIDEO
 		start = end = 0;
 #else
-		start = SP->font / 4;
-		end = SP->font;
+		start = pdc_font / 4;
+		end = pdc_font;
 #endif
 		hidden = -1;
 		break;
 
 	case 2: 	/* highly visible */
 		start = 2;		/* almost full-height block */
-		end = SP->font - 1;
+		end = pdc_font - 1;
 		break;
 
 	default:	/* normal visibility */

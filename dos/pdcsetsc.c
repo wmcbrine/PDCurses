@@ -17,7 +17,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.23 2006/08/12 02:44:08 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.24 2006/08/12 20:11:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -104,7 +104,7 @@ int PDC_set_font(int size)
 
 	case _EGACOLOR:
 	case _EGAMONO:
-		if (SP->sizeable && (SP->font != size))
+		if (SP->sizeable && (pdc_font != size))
 		{
 			switch (size)
 			{
@@ -125,7 +125,7 @@ int PDC_set_font(int size)
 
 	case _VGACOLOR:
 	case _VGAMONO:
-		if (SP->sizeable && (SP->font != size))
+		if (SP->sizeable && (pdc_font != size))
 		{
 			switch (size)
 			{
@@ -152,7 +152,7 @@ int PDC_set_font(int size)
 
 	curs_set(SP->visibility);
 
-	SP->font = PDC_get_font();
+	pdc_font = PDC_get_font();
 
 	return OK;
 }
@@ -184,8 +184,8 @@ int PDC_set_scrn_mode(int new_mode)
 		int86(0x10, &regs, &regs);
 	}
 
-	SP->font = PDC_get_font();
-	SP->scrnmode = new_mode;
+	pdc_font = PDC_get_font();
+	pdc_scrnmode = new_mode;
 	LINES = PDC_get_rows();
 	COLS = PDC_get_columns();
 
@@ -218,7 +218,7 @@ int PDC_curs_set(int visibility)
 	/* if scrnmode is not set, some BIOSes hang */
 
 	regs.h.ah = 0x01;
-	regs.h.al = (unsigned char)SP->scrnmode; 
+	regs.h.al = (unsigned char)pdc_scrnmode; 
 	regs.h.ch = (unsigned char)start;
 	regs.h.cl = (unsigned char)end;
 	int86(0x10, &regs, &regs);

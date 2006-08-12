@@ -25,9 +25,8 @@
 #undef filter
 #undef use_env
 #undef delay_output
-#undef flushinp
 
-RCSID("$Id: util.c,v 1.46 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.47 2006/08/12 22:22:05 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -39,7 +38,6 @@ RCSID("$Id: util.c,v 1.46 2006/07/15 15:38:24 wmcbrine Exp $");
 	void filter(void);
 	void use_env(bool x);
 	int delay_output(int ms);
-	int flushinp(void);
 
   X/Open Description:
 	The unctrl() routine expands the character c into a character
@@ -53,9 +51,6 @@ RCSID("$Id: util.c,v 1.46 2006/07/15 15:38:24 wmcbrine Exp $");
 
 	The delay_output() function inserts ms millisecond pause in output.
 	On some systems, this has no effect.
-
-	The flushinp() routine throws away any type-ahead that has been 
-	typed by the user and has not yet been read by the program.
 
   PDCurses Description:
 	The conversion from a control character to a two-character
@@ -219,19 +214,6 @@ int delay_output(int ms)
 	return napms(ms);
 }
 
-int flushinp(void)
-{
-	PDC_LOG(("flushinp() - called\n"));
-
-	PDC_flushinp();
-
-	c_gindex = 1;			/* set indices to kill buffer	 */
-	c_pindex = 0;
-	c_ungind = 0;			/* clear c_ungch array		 */
-
-	return OK;
-}
-
 #ifdef PDC_WIDE
 int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
 	     short *color_pair, void *opts)
@@ -310,12 +292,12 @@ void traceon(void)
 {
 	PDC_LOG(("traceon() - called\n"));
 
-	trace_on = TRUE;
+	pdc_trace_on = TRUE;
 }
 
 void traceoff(void)
 {
 	PDC_LOG(("traceoff() - called\n"));
 
-	trace_on = FALSE;
+	pdc_trace_on = FALSE;
 }

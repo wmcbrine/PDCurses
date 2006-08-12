@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.81 2006/07/31 00:20:18 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.82 2006/08/12 22:22:05 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -221,7 +221,7 @@ static int XCursesSetupCurses(void)
 		XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, LINES, COLS));
 
 	Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
-	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
 	XC_LOG(("cursesprocess exiting from Xinitscr\n"));
 

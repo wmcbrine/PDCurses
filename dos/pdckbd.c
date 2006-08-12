@@ -23,7 +23,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.33 2006/08/11 22:19:45 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.34 2006/08/12 22:22:05 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -392,7 +392,7 @@ int PDC_validchar(int c)
 
 	PDC_LOG(("PDC_validchar() - called\n"));
 
-	if (_getch_win_ == (WINDOW *)NULL)
+	if (pdc_getch_win == (WINDOW *)NULL)
 		return -1;
 
 	/* normal character */
@@ -402,7 +402,7 @@ int PDC_validchar(int c)
 
 	/* skip if keys if !keypad mode */
 
-	if (!(_getch_win_->_use_keypad))
+	if (!(pdc_getch_win->_use_keypad))
 		return -1;
 
 	/* Under DOS, extended keys are in the upper byte.  Shift down 

@@ -34,7 +34,7 @@
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.52 2006/08/11 20:23:13 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.53 2006/08/12 22:22:05 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -118,7 +118,7 @@ static bool colorstarted = FALSE;
 
 /* COLOR_PAIR to attribute encoding table. */
 
-unsigned char *atrtab = (unsigned char *)NULL;
+unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
 static unsigned char colorset[PDC_COLOR_PAIRS];
 
@@ -227,8 +227,8 @@ int pair_content(short colorpair, short *foreground, short *background)
 	    (!foreground || !background))
 		return ERR;
 
-	*foreground = (short)(atrtab[colorpair * PDC_OFFSET] & 0x0F);
-	*background = (short)((atrtab[colorpair * PDC_OFFSET] & 0xF0) >> 4);
+	*foreground = (short)(pdc_atrtab[colorpair * PDC_OFFSET] & 0x0F);
+	*background = (short)((pdc_atrtab[colorpair * PDC_OFFSET] & 0xF0) >> 4);
 
 	return OK;
 }
@@ -280,6 +280,6 @@ static void PDC_init_pair(short pairnum, short fg, short bg)
 		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
 			att |= 128;
 
-		atrtab[(pairnum * PDC_OFFSET) + i] = att;
+		pdc_atrtab[(pairnum * PDC_OFFSET) + i] = att;
 	}
 }

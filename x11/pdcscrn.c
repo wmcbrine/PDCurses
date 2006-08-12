@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.37 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.38 2006/08/12 22:22:05 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -137,7 +137,7 @@ int PDC_resize_screen(int nlines, int ncols)
 		shmkey_Xcurscr, SP->lines, SP->cols));
 
 	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
-	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
 	SP->resized = FALSE;
 

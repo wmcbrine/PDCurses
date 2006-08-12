@@ -24,6 +24,7 @@
 #undef mvgetch
 #undef mvwgetch
 #undef ungetch
+#undef flushinp
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
@@ -33,7 +34,15 @@
 # undef wmove
 #endif
 
-RCSID("$Id: getch.c,v 1.32 2006/08/01 03:16:17 wmcbrine Exp $");
+#define _INBUFSIZ	512	/* size of terminal input buffer */
+#define NUNGETCH	256	/* max # chars to ungetch() */
+
+RCSID("$Id: getch.c,v 1.33 2006/08/12 22:22:05 wmcbrine Exp $");
+
+static int c_pindex = 0;	/* putter index */
+static int c_gindex = 1;	/* getter index */
+static int c_ungind = 0;	/* wungetch() push index */
+static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 /*man-start**************************************************************
 
@@ -45,6 +54,7 @@ RCSID("$Id: getch.c,v 1.32 2006/08/01 03:16:17 wmcbrine Exp $");
 	int mvgetch(int y, int x);
 	int mvwgetch(WINDOW *win, int y, int x);
 	int ungetch(int ch);
+	int flushinp(void);
 
   X/Open Description:
 	With the getch(), wgetch(), mvgetch(), and mvwgetch() functions, 
@@ -75,6 +85,9 @@ RCSID("$Id: getch.c,v 1.32 2006/08/01 03:16:17 wmcbrine Exp $");
 	The ungetch() function places ch back onto the input queue to be
 	returned by the next call to wgetch().
 
+	The flushinp() routine throws away any type-ahead that has been
+	typed by the user and has not yet been read by the program.
+
 	NOTE: getch(), mvgetch() and mvwgetch() are implemented as macros.
 
   PDCurses Description:
@@ -104,7 +117,7 @@ RCSID("$Id: getch.c,v 1.32 2006/08/01 03:16:17 wmcbrine Exp $");
 #define getch PDC_getch
 #define ungetch PDC_ungetch
 
-WINDOW *_getch_win_ = NULL;
+WINDOW *pdc_getch_win = NULL;
 
 /*man-start**************************************************************
 
@@ -169,11 +182,11 @@ static int PDC_rawgetch(void)
 
 	PDC_LOG(("PDC_rawgetch() - called\n"));
 
-	if (_getch_win_ == (WINDOW *)NULL)
+	if (pdc_getch_win == (WINDOW *)NULL)
 		return -1;
 
-	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-	    && !PDC_breakout())
+	if ((SP->delaytenths || pdc_getch_win->_delayms ||
+	     pdc_getch_win->_nodelay) && !PDC_breakout())
 		return -1;
 
 	for (;;)
@@ -186,7 +199,7 @@ static int PDC_rawgetch(void)
 		if (c != KEY_MOUSE && (c = PDC_validchar(c)) >= 0)
 			return c;
 
-		if (_getch_win_->_use_keypad)
+		if (pdc_getch_win->_use_keypad)
 			return oldc;
 	}
 }
@@ -219,11 +232,11 @@ static int PDC_sysgetch(void)
 
 	PDC_LOG(("PDC_sysgetch() - called\n"));
 
-	if (_getch_win_ == (WINDOW *)NULL)
+	if (pdc_getch_win == (WINDOW *)NULL)
 		return -1;
 
-	if ((SP->delaytenths || _getch_win_->_delayms || _getch_win_->_nodelay)
-	    && !PDC_breakout())
+	if ((SP->delaytenths || pdc_getch_win->_delayms ||
+	     pdc_getch_win->_nodelay) && !PDC_breakout())
 		return -1;
 
 	for (;;)
@@ -312,7 +325,7 @@ int wgetch(WINDOW *win)
 	if (!(win->_flags & _PAD) && is_wintouched(win))
 		wrefresh(win);
 
-	_getch_win_ = win;
+	pdc_getch_win = win;
 
 	/* if ungotten char exists, remove and return it */
 
@@ -424,6 +437,19 @@ int PDC_ungetch(int ch)
 		return ERR;
 
 	c_ungch[c_ungind++] = ch;
+
+	return OK;
+}
+
+int flushinp(void)
+{
+	PDC_LOG(("flushinp() - called\n"));
+
+	PDC_flushinp();
+
+	c_gindex = 1;			/* set indices to kill buffer */
+	c_pindex = 0;
+	c_ungind = 0;			/* clear c_ungch array */
 
 	return OK;
 }

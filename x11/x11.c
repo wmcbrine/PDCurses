@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.8 2006/08/12 21:13:45 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.9 2006/08/12 22:22:05 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -3176,7 +3176,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		/* Detach and drop the current shared memory segment and 
 		   create and attach to a new segment */
 
-		memcpy(save_atrtab, atrtab, sizeof(save_atrtab));
+		memcpy(save_atrtab, pdc_atrtab, sizeof(save_atrtab));
 
 		SP->XcurscrSize = XCURSCR_SIZE;
 		shmdt((char *)Xcurscr);
@@ -3193,8 +3193,8 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 		Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
 		memset(Xcurscr, 0, SP->XcurscrSize);
-		atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-		memcpy(atrtab, save_atrtab, sizeof(save_atrtab));
+		pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+		memcpy(pdc_atrtab, save_atrtab, sizeof(save_atrtab));
 
 		XCursesContinue(); 
 		break; 
@@ -3511,7 +3511,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
 	memset(Xcurscr, 0, SP->XcurscrSize); 
-	atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
 	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",
 		XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, LINES, COLS));

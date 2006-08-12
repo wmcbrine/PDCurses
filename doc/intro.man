@@ -192,8 +192,8 @@ The virtual keypad is arranged like this:
 FUNCTIONS
 
 	The following table lists each curses routine and the name of the 
-	manual page on which it is described. This list is based on
-	X/Open and System V R4 curses:
+	manual page on which it is described. This list is based mainly 
+	on X/Open and System V R4 curses:
 
 	   Curses Function        Manual Page Name
 
@@ -243,7 +243,7 @@ FUNCTIONS
 		erasechar		termattr
 		filter			util
 		flash			beep
-		flushinp		util
+		flushinp		getch
 		getbegyx		getyx
 		getattrs		attr
 		getch			getch
@@ -409,7 +409,8 @@ FUNCTIONS
 		touchwin		touch
 		tparm			terminfo
 		tputs			terminfo
-		trace_on		pdcdebug
+		traceoff		pdcdebug
+		traceon			pdcdebug
 		typeahead		inopts
 		unctrl			util
 		ungetch			getch

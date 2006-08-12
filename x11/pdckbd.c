@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.34 2006/08/11 05:43:37 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.35 2006/08/12 22:22:05 wmcbrine Exp $");
 
 MOUSE_STATUS Trapped_Mouse_status;
 
@@ -223,8 +223,8 @@ int PDC_set_ctrl_break(bool setting)
 
   PDCurses Return Value:
 	This function returns -1 if the passed character is invalid, or
-	the WINDOW *_getch_win_ is NULL, or _getch_win_'s keypad is not 
-	active.
+	the WINDOW *pdc_getch_win is NULL, or pdc_getch_win's keypad is 
+	not active.
 
 	Otherwise, this function returns the PDCurses equivalent of the
 	passed character.  See the function key and key macros in
@@ -241,8 +241,8 @@ int PDC_validchar(int c)
 
 	/* skip special keys if !keypad mode */
 
-	if ((_getch_win_ == (WINDOW *)NULL) ||
-	    ((unsigned int)c >= 256 && !_getch_win_->_use_keypad))
+	if ((pdc_getch_win == (WINDOW *)NULL) ||
+	    ((unsigned int)c >= 256 && !pdc_getch_win->_use_keypad))
 		c = -1;
 
 	PDC_LOG(("PDC_validchar() - returned: %x\n", c));

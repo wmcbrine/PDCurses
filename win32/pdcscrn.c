@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.55 2006/08/12 21:13:45 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.56 2006/08/12 22:22:05 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -109,8 +109,8 @@ void PDC_scr_exit(void)
 {
 	if (SP)
 		free(SP);
-	if (atrtab)
-		free(atrtab);
+	if (pdc_atrtab)
+		free(pdc_atrtab);
 }
 
 /*man-start**************************************************************
@@ -140,9 +140,9 @@ int PDC_scr_open(int argc, char **argv)
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	SP = calloc(1, sizeof(SCREEN));
-	atrtab = calloc(MAX_ATRTAB, 1);
+	pdc_atrtab = calloc(MAX_ATRTAB, 1);
 
-	if (!SP || !atrtab)
+	if (!SP || !pdc_atrtab)
 		return ERR;
 
 	hConOut = GetStdHandle(STD_OUTPUT_HANDLE);

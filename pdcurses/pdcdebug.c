@@ -23,9 +23,9 @@
 
 #undef PDC_debug
 
-RCSID("$Id: pdcdebug.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: pdcdebug.c,v 1.21 2006/08/12 22:22:05 wmcbrine Exp $");
 
-bool trace_on = FALSE;
+bool pdc_trace_on = FALSE;
 
 /*man-start**************************************************************
 
@@ -46,7 +46,7 @@ void PDC_debug(const char *fmt, ...)
 	char hms[9];
 	time_t now;
 
-	if (!trace_on)
+	if (!pdc_trace_on)
 		return; 
 
 	/* open debug log file append */

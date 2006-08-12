@@ -38,7 +38,7 @@
 # undef wnoutrefresh
 #endif
 
-RCSID("$Id: initscr.c,v 1.70 2006/08/12 20:28:59 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.71 2006/08/12 22:22:05 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -51,13 +51,6 @@ int COLS = 0;				/* current terminal width */
 int TABSIZE = 8;
 
 MOUSE_STATUS Mouse_status;
-
-/* Global definitions for charget routines */
-
-int c_pindex = 0;			/* putter index */
-int c_gindex = 1;			/* getter index */
-int c_ungind = 0;			/* wungetch() push index */
-int c_ungch[NUNGETCH];			/* array of ungotten chars */
 
 #ifdef PDC_WIDE
 cchar_t _wacs_map[] = {
@@ -325,7 +318,7 @@ void delscreen(SCREEN *sp)
 	PDC_scr_exit();
 
 	SP = (SCREEN *)NULL;
-	atrtab = (unsigned char *)NULL;
+	pdc_atrtab = (unsigned char *)NULL;
 }
 
 int resize_term(int nlines, int ncols)

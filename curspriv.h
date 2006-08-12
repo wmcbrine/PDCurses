@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.116 2006/08/12 20:28:59 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.117 2006/08/12 22:22:05 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -35,16 +35,14 @@
 /*----------------------------------------------------------------------*/
 /* Miscellaneous */
 
-#define _INBUFSIZ	512	/* size of terminal input buffer	*/
 #define _NO_CHANGE	-1	/* flags line edge unchanged		*/
 
 #define _ECHAR		0x08	/* Erase char	    (^H)		*/
 #define _DWCHAR		0x17	/* Delete Word char (^W)		*/
 #define _DLCHAR		0x15	/* Delete Line char (^U)		*/
-#define  NUNGETCH	256	/* max # chars to ungetch()		*/
 
 /* tracing flag */
-extern bool trace_on;
+extern bool pdc_trace_on;
 
 /* Monitor (terminal) type information */
 enum
@@ -57,16 +55,12 @@ enum
 	_UNIX_COLOR = 0x40, _UNIX_MONO
 };
 
-extern int c_pindex;            /* putter index */
-extern int c_gindex;            /* getter index */
-extern int c_ungind;            /* ungetch() push index */
-extern int c_ungch[NUNGETCH];   /* array of ungotten chars */
-extern WINDOW *_getch_win_;
+extern WINDOW *pdc_getch_win;
 extern unsigned long pdc_key_modifiers;
 
 extern MOUSE_STATUS Trapped_Mouse_status;
 
-extern unsigned char *atrtab;
+extern unsigned char *pdc_atrtab;
 
 /*----------------------------------------------------------------------
  *	ANSI C prototypes.
@@ -103,7 +97,7 @@ int	PDC_validchar(int);
 
 #ifdef PDCDEBUG
 void PDC_debug(const char *, ...);
-# define PDC_LOG(x) if (trace_on) PDC_debug x
+# define PDC_LOG(x) if (pdc_trace_on) PDC_debug x
 # define RCSID(x) static const char *rcsid = x
 #else
 # define PDC_LOG(x)
@@ -121,7 +115,7 @@ void PDC_debug(const char *, ...);
 # define PDC_OFFSET		8
 #endif
 
-#define chtype_attr(ch)		(atrtab[(chtype)(ch) >> PDC_ATTR_SHIFT])
+#define chtype_attr(ch)		(pdc_atrtab[(chtype)(ch) >> PDC_ATTR_SHIFT])
 
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
 

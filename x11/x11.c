@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.7 2006/07/31 00:20:18 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.8 2006/08/12 21:13:45 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2242,10 +2242,9 @@ static void SelectionSet(void)
 	if (length > (int)tmpsel_length)
 	{
 		if (tmpsel_length == 0)
-			tmpsel = (chtype *)malloc(newlen * sizeof(chtype));
+			tmpsel = malloc(newlen * sizeof(chtype));
 		else
-			tmpsel = (chtype *)realloc(tmpsel,
-				newlen * sizeof(chtype));
+			tmpsel = realloc(tmpsel, newlen * sizeof(chtype));
 	}
 
 	if (!tmpsel)
@@ -3225,11 +3224,9 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		if (length > (long)tmpsel_length)
 		{
 		    if (tmpsel_length == 0)
-			tmpsel = (chtype *)malloc((length + 1) * 
-				sizeof(chtype));
+			tmpsel = malloc((length + 1) * sizeof(chtype));
 		    else
-			tmpsel = (chtype *)realloc(tmpsel, (length + 1) *
-				sizeof(chtype));
+			tmpsel = realloc(tmpsel, (length + 1) * sizeof(chtype));
 		}
 
 		if (!tmpsel)

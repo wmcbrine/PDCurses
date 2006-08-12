@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.20 2006/03/29 20:06:40 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.21 2006/08/12 21:13:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -86,7 +86,7 @@ int PDC_getclipboard(char **contents, long *length)
 	if (ulRet)
 	{
 		len = strlen((char *)ulRet);
-		*contents = (char *)malloc(len + 1);
+		*contents = malloc(len + 1);
 
 		if (!*contents)
 			rc = PDC_CLIP_MEMORY_ERROR;

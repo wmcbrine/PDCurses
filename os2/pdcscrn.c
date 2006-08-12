@@ -20,7 +20,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.41 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.42 2006/08/12 21:13:45 wmcbrine Exp $");
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -167,8 +167,10 @@ int PDC_scr_open(int argc, char **argv)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	if (!(SP = (SCREEN *)calloc(1, sizeof(SCREEN)))
-	    || !(atrtab = (unsigned char *)calloc(MAX_ATRTAB, 1)) )
+	SP = calloc(1, sizeof(SCREEN));
+	atrtab = calloc(MAX_ATRTAB, 1);
+
+	if (!SP || !atrtab)
 		return ERR;
 
 #ifdef EMXVIDEO
@@ -211,23 +213,17 @@ int PDC_scr_open(int argc, char **argv)
 	{
 		saved_lines = SP->lines;
 		saved_cols = SP->cols;
-#ifdef EMXVIDEO
-		if ((saved_screen = (unsigned char *)malloc(2 * saved_lines *
-		     saved_cols)) == NULL)
+
+		saved_screen = malloc(2 * saved_lines * saved_cols);
+
+		if (!saved_screen)
 		{
 			SP->_preserve = FALSE;
 			return OK;
 		}
-
+#ifdef EMXVIDEO
 		v_getline(saved_screen, 0, 0, saved_lines * saved_cols);
 #else
-		if ((saved_screen = (PCH)malloc(2 * saved_lines *
-		     saved_cols)) == NULL)
-		{
-			SP->_preserve = FALSE;
-			return OK;
-		}
-
 		totchars = saved_lines * saved_cols * 2;
 		VioReadCellStr((PCH)saved_screen, &totchars, 0, 0, (HVIO)NULL);
 #endif

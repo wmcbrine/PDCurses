@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcclip.c,v 1.22 2006/07/31 00:20:18 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.23 2006/08/12 21:13:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -69,7 +69,7 @@ int PDC_getclipboard(char **contents, long *length)
 
 	    if (len != 0)
 	    {
-		*contents = (char *)malloc(len + 1);
+		*contents = malloc(len + 1);
 
 		if (!*contents)
 		    XCursesExitCursesProcess(6, "exiting from "

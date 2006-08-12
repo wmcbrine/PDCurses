@@ -23,7 +23,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.22 2006/08/10 01:44:08 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.23 2006/08/12 21:13:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -261,8 +261,7 @@ static void __calculate_obscure(void)
 	    {
 		if (__panels_overlapped(pan, pan2))
 		{
-			if ((tobs = (PANELOBS *)malloc(sizeof(PANELOBS)))
-			     == NULL)
+			if ((tobs = malloc(sizeof(PANELOBS))) == NULL)
 				return;
 
 			tobs->pan = pan2;
@@ -588,7 +587,7 @@ int move_panel(PANEL *pan, int starty, int startx)
 
 PANEL *new_panel(WINDOW *win)
 {
-	PANEL *pan = (PANEL *)malloc(sizeof(PANEL));
+	PANEL *pan = malloc(sizeof(PANEL));
 
 	if (!__stdscr_pseudo_panel.win)
 	{

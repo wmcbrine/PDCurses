@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.54 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.55 2006/08/12 21:13:45 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -139,8 +139,10 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	if (!(SP = (SCREEN *)calloc(1, sizeof(SCREEN)))
-	    || !(atrtab = (unsigned char *)calloc(MAX_ATRTAB, 1)) )
+	SP = calloc(1, sizeof(SCREEN));
+	atrtab = calloc(MAX_ATRTAB, 1);
+
+	if (!SP || !atrtab)
 		return ERR;
 
 	hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -183,8 +185,10 @@ int PDC_scr_open(int argc, char **argv)
 	{
 		/* Attempt to save the complete console buffer */
 
-		if ((ciSaveBuffer = (CHAR_INFO*)malloc(orig_scr.dwSize.X *
-		    orig_scr.dwSize.Y * sizeof(CHAR_INFO))) == NULL)
+		ciSaveBuffer = malloc(orig_scr.dwSize.X * 
+		    orig_scr.dwSize.Y * sizeof(CHAR_INFO));
+
+		if (!ciSaveBuffer)
 		{
 		    PDC_LOG(("PDC_scr_open() - malloc failure (1)\n"));
 
@@ -214,8 +218,10 @@ int PDC_scr_open(int argc, char **argv)
 		    bufsize.Y = orig_scr.srWindow.Bottom - 
 			orig_scr.srWindow.Top + 1;
 
-		    if ((ciSaveBuffer = (CHAR_INFO*)malloc(bufsize.X * 
-			bufsize.Y * sizeof(CHAR_INFO))) == NULL)
+		    ciSaveBuffer = malloc(bufsize.X * bufsize.Y *
+			sizeof(CHAR_INFO));
+
+		    if (!ciSaveBuffer)
 		    {
 			PDC_LOG(("PDC_scr_open() - malloc failure (2)\n"));
 

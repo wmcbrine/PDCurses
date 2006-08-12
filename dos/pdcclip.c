@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.23 2006/07/29 06:00:54 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.24 2006/08/12 21:13:45 wmcbrine Exp $");
 
 /* global clipboard contents, should be NULL if none set */
 
@@ -62,7 +62,7 @@ int PDC_getclipboard(char **contents, long *length)
 		return PDC_CLIP_EMPTY;
 
 	len = strlen(pdc_DOS_clipboard);
-	if ((*contents = (char *)malloc(len + 1)) == NULL)
+	if ((*contents = malloc(len + 1)) == NULL)
 		return PDC_CLIP_MEMORY_ERROR;
 
 	strcpy(*contents, pdc_DOS_clipboard);
@@ -105,7 +105,7 @@ int PDC_setclipboard(const char *contents, long length)
 
 	if (contents != NULL)
 	{
-		if ((pdc_DOS_clipboard = (char *)malloc(length + 1)) == NULL)
+		if ((pdc_DOS_clipboard = malloc(length + 1)) == NULL)
 			return PDC_CLIP_MEMORY_ERROR;
 
 		strcpy(pdc_DOS_clipboard, contents);

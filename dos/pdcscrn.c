@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.46 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.47 2006/08/12 21:13:45 wmcbrine Exp $");
 
 union REGS regs;		/* used in various other modules 	*/
 
@@ -141,11 +141,13 @@ int PDC_scr_open(int argc, char **argv)
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	if (!(SP = (SCREEN *)calloc(1, sizeof(SCREEN)))
-	    || !(atrtab = (unsigned char *)calloc(MAX_ATRTAB, 1)) )
+	SP = calloc(1, sizeof(SCREEN));
+	atrtab = calloc(MAX_ATRTAB, 1);
+
+	if (!SP || !atrtab)
 		return ERR;
 
-	SP->orig_attr	 = FALSE;
+	SP->orig_attr	= FALSE;
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
@@ -155,8 +157,8 @@ int PDC_scr_open(int argc, char **argv)
 
 	pdc_adapter	= PDC_query_adapter_type();
 	pdc_scrnmode	= PDC_get_scrn_mode();
-
 	pdc_font	= PDC_get_font();
+
 	SP->lines	= PDC_get_rows();
 	SP->cols	= PDC_get_columns();
 
@@ -177,8 +179,9 @@ int PDC_scr_open(int argc, char **argv)
 		saved_lines = SP->lines;
 		saved_cols = SP->cols;
 
-		if ((saved_screen = (unsigned short *)malloc(saved_lines
-		    * saved_cols * 2)) == NULL)
+		saved_screen = malloc(saved_lines * saved_cols * 2);
+
+		if (!saved_screen)
 		{
 			SP->_preserve = FALSE;
 			return OK;

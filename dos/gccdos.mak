@@ -109,8 +109,6 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
 
 #------------------------------------------------------------------------
 

@@ -17,13 +17,11 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.35 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.36 2006/08/13 02:51:55 wmcbrine Exp $");
 
-MOUSE_STATUS Trapped_Mouse_status;
-
-#define TRAPPED_MOUSE_X_POS	  (Trapped_Mouse_status.x)
-#define TRAPPED_MOUSE_Y_POS	  (Trapped_Mouse_status.y)
-#define TRAPPED_BUTTON_STATUS(x)  (Trapped_Mouse_status.button[(x) - 1])
+#define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
+#define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
+#define TRAPPED_BUTTON_STATUS(x)  (pdc_mouse_status.button[(x) - 1])
 
 static bool PDC_kbhit(void)
 {
@@ -69,7 +67,7 @@ int PDC_get_bios_key(void)
 
 	    if (key == KEY_MOUSE)
 	    {
-		if (XC_read_socket(XC_key_sock, (char *)&Trapped_Mouse_status, 
+		if (XC_read_socket(XC_key_sock, (char *)&pdc_mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
 			    "exiting from PDC_get_bios_key");

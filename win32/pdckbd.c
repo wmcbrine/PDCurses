@@ -24,14 +24,14 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.59 2006/08/13 00:05:39 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.60 2006/08/13 02:51:55 wmcbrine Exp $");
 
-#define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
-#define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
+#define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
+#define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
 
-#define TEMP_MOUSE_X_POS	  (Temp_Mouse_status.x)
-#define TEMP_MOUSE_Y_POS	  (Temp_Mouse_status.y)
-#define TEMP_BUTTON_STATUS(x)	  (Temp_Mouse_status.button[(x) - 1])
+#define TEMP_MOUSE_X_POS	  (temp_mouse_status.x)
+#define TEMP_MOUSE_Y_POS	  (temp_mouse_status.y)
+#define TEMP_BUTTON_STATUS(x)	  (temp_mouse_status.button[(x) - 1])
 
 #define KEY_STATE TRUE
 #define MS_MOUSE_MOVED 1
@@ -336,8 +336,6 @@ static KPTAB ext_kptab[] =
 
 /* End of kptab[] */
 
-MOUSE_STATUS Trapped_Mouse_status;
-
 /*man-start**************************************************************
 
   PDC_get_input_fd() - Get file descriptor used for PDCurses input
@@ -532,9 +530,9 @@ static int processKeyEvent(void)
 
 int PDC_get_bios_key(void)
 {
-	MOUSE_STATUS Temp_Mouse_status;
+	MOUSE_STATUS temp_mouse_status;
 	static int last_button_no = 0;
-	static MOUSE_STATUS Actual_Mouse_status;
+	static MOUSE_STATUS actual_mouse_status;
 	int button_no = 0;
 	bool trap_mouse = FALSE;
 	int retval;
@@ -555,16 +553,16 @@ int PDC_get_bios_key(void)
 		return retval;
 
 	    case MOUSE_EVENT:
-		memset((char*)&Temp_Mouse_status, 0, sizeof(MOUSE_STATUS));
+		memset((char*)&temp_mouse_status, 0, sizeof(MOUSE_STATUS));
 
 		/* Wheel has been scrolled */
 
 		if (save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED)
 		{
 		    if (save_ip.Event.MouseEvent.dwButtonState & 0xFF000000)
-			Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+			temp_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
 		    else
-			Temp_Mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+			temp_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
 		}
 
 		/* button press, release or double click */
@@ -703,7 +701,7 @@ int PDC_get_bios_key(void)
 		}
 		else	/* button motion event */
 		{
-		    Temp_Mouse_status.changes |= PDC_MOUSE_MOVED;
+		    temp_mouse_status.changes |= PDC_MOUSE_MOVED;
 		    button_no = last_button_no;
 
 		    if ((button_no == 1 && SP->_trap_mbe & BUTTON1_MOVED)
@@ -739,7 +737,7 @@ int PDC_get_bios_key(void)
 		    TEMP_MOUSE_X_POS)) != 0)
 			return KEY_F(key);
 
-		Temp_Mouse_status.changes |= 1 << (button_no - 1);
+		temp_mouse_status.changes |= 1 << (button_no - 1);
 
 		if (save_ip.Event.MouseEvent.dwControlKeyState &
 		    SHIFT_PRESSED)
@@ -765,20 +763,19 @@ int PDC_get_bios_key(void)
 
 		/* We now have the current mouse status information
 		   for the last Mouse event.  We need to save this in
-		   Actual_Mouse_status so we can use that when comparing
+		   actual_mouse_status so we can use that when comparing
 		   against the next mouse event. We also need to
-		   determine if we need to set Trapped_Mouse_status
+		   determine if we need to set pdc_mouse_status
 		   based on the settings in SP->_trap_mbe. */
 
-		memcpy(&Actual_Mouse_status, &Temp_Mouse_status,
-			sizeof(MOUSE_STATUS));
+		actual_mouse_status = temp_mouse_status;
 
 		if (trap_mouse)
 			 break;
 	    }
 
-	    if ((Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN ||
-		Temp_Mouse_status.changes & PDC_MOUSE_WHEEL_UP) &&
+	    if ((temp_mouse_status.changes & PDC_MOUSE_WHEEL_DOWN ||
+		temp_mouse_status.changes & PDC_MOUSE_WHEEL_UP) &&
 		SP->_trap_mbe & MOUSE_WHEEL_SCROLL)
 	    {
 		TEMP_MOUSE_X_POS = -1;
@@ -788,9 +785,9 @@ int PDC_get_bios_key(void)
 	}
 
 	/* To get here we have a mouse event that has been trapped by 
-	   the user. Save it in the Trapped_Mouse_status structure. */
+	   the user. Save it in the pdc_mouse_status structure. */
 
-	memcpy(&Trapped_Mouse_status, &Temp_Mouse_status, sizeof(MOUSE_STATUS));
+	pdc_mouse_status = temp_mouse_status;
 
 	return KEY_MOUSE;
 }
@@ -1139,7 +1136,7 @@ static int win32_kbhit(int timeout)
 		/* To get here a recognised event has occurred; save it 
 		   and return TRUE */
 
-		memcpy(&save_ip, &ip, sizeof(INPUT_RECORD));
+		save_ip = ip;
 		rc = TRUE;
 	}
 

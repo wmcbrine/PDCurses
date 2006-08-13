@@ -33,7 +33,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.34 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.35 2006/08/13 02:51:55 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -122,8 +122,6 @@ static int kptab[] =
 /* End of kptab[] */
 
 unsigned long pdc_key_modifiers = 0L;
-
-MOUSE_STATUS Trapped_Mouse_status;
 
 /*man-start**************************************************************
 

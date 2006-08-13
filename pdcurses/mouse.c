@@ -29,7 +29,9 @@
 #undef getmouse
 #undef getbmap
 
-RCSID("$Id: mouse.c,v 1.20 2006/08/13 00:05:39 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.21 2006/08/13 02:51:55 wmcbrine Exp $");
+
+MOUSE_STATUS pdc_mouse_status;
 
 /*man-start**************************************************************
 
@@ -137,7 +139,7 @@ int request_mouse_pos(void)
 {
 	PDC_LOG(("request_mouse_pos() - called\n"));
 
-	memcpy(&Mouse_status, &Trapped_Mouse_status, sizeof(MOUSE_STATUS));
+	Mouse_status = pdc_mouse_status;
 
 	return OK;
 }

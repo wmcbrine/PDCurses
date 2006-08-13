@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.117 2006/08/12 22:22:05 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.118 2006/08/13 02:51:55 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -56,9 +56,10 @@ enum
 };
 
 extern WINDOW *pdc_getch_win;
+
 extern unsigned long pdc_key_modifiers;
 
-extern MOUSE_STATUS Trapped_Mouse_status;
+extern MOUSE_STATUS pdc_mouse_status;
 
 extern unsigned char *pdc_atrtab;
 

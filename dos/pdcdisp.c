@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.50 2006/08/12 02:44:08 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.51 2006/08/13 02:11:36 wmcbrine Exp $");
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -51,6 +51,8 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 
 void PDC_gotoyx(int row, int col)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
 	regs.h.ah = 0x02;
@@ -76,6 +78,8 @@ void PDC_gotoyx(int row, int col)
 
 static void PDC_putc(chtype ch, unsigned short count)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_putc() - called\n"));
 
 	regs.h.ah = 0x09;	/* Avoid screen wrap.  Don't advance cursor. */
@@ -109,6 +113,8 @@ static void PDC_putc(chtype ch, unsigned short count)
 
 void PDC_putctty(chtype ch)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_putctty() - called\n"));
 
 	regs.h.ah = 0x0e;	/* Write in TTY fashion, advance cursor. */

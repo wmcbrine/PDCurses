@@ -24,9 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.48 2006/08/12 22:22:05 wmcbrine Exp $");
-
-union REGS regs;		/* used in various other modules 	*/
+RCSID("$Id: pdcscrn.c,v 1.49 2006/08/13 02:11:36 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/

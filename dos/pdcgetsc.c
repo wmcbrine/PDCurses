@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.30 2006/08/12 02:44:08 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.31 2006/08/13 02:11:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -46,6 +46,8 @@ RCSID("$Id: pdcgetsc.c,v 1.30 2006/08/12 02:44:08 wmcbrine Exp $");
 
 int PDC_get_cursor_pos(int *row, int *col)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
 	regs.h.ah = 0x03;
@@ -80,8 +82,9 @@ int PDC_get_cursor_pos(int *row, int *col)
 
 int PDC_get_columns(void)
 {
+	union REGS regs;
 	int cols;
-	char *env_cols;
+	const char *env_cols;
 
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
@@ -91,9 +94,10 @@ int PDC_get_columns(void)
 	regs.h.ah = 0x0f;
 	int86(0x10, &regs, &regs);
 	cols = (int)regs.h.ah;
-	env_cols = (char *)getenv("COLS");
 
-	if (env_cols != (char *)NULL)
+	env_cols = getenv("COLS");
+
+	if (env_cols)
 		cols = min(atoi(env_cols), cols);
 
 	PDC_LOG(("PDC_get_columns() - returned: cols %d\n", cols));
@@ -263,6 +267,8 @@ int PDC_get_rows(void)
 
 int PDC_get_scrn_mode(void)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_get_scrn_mode() - called\n"));
 
 	regs.h.ah = 0x0f;
@@ -371,6 +377,7 @@ static int PDC_sanity_check(int adapter)
 
 int PDC_query_adapter_type(void)
 {
+	union REGS regs;
 	int equip;
 	int retval = _NONE;
 

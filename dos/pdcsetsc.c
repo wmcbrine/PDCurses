@@ -17,7 +17,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.24 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.25 2006/08/13 02:11:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -38,6 +38,8 @@ RCSID("$Id: pdcsetsc.c,v 1.24 2006/08/12 20:11:36 wmcbrine Exp $");
 
 int PDC_set_80x25(void)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_set_80x25() - called\n"));
 
 	switch (pdc_adapter)
@@ -88,6 +90,8 @@ int PDC_set_80x25(void)
 
 int PDC_set_font(int size)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_set_font() - called\n"));
 
 	if (pdc_bogus_adapter)
@@ -175,6 +179,8 @@ int PDC_set_font(int size)
 
 int PDC_set_scrn_mode(int new_mode)
 {
+	union REGS regs;
+
 	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
 
 	if (PDC_get_scrn_mode() != new_mode)
@@ -194,6 +200,7 @@ int PDC_set_scrn_mode(int new_mode)
 
 int PDC_curs_set(int visibility)
 {
+	union REGS regs;
 	int ret_vis, start, end = 7;
 
 	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n", visibility));

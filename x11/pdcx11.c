@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.82 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.83 2006/08/13 00:05:39 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -116,7 +116,7 @@ int XC_read_socket(int sock_num, char *buf, int len)
 			else
 				SP->resized = FALSE;
 
-			memcpy(buf, (char *)&rc, sizeof(int));
+			memcpy(buf, &rc, sizeof(int));
          
 			return 0;
 		}

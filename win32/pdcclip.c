@@ -24,7 +24,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcclip.c,v 1.17 2006/08/10 08:43:36 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.18 2006/08/13 00:05:39 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -126,7 +126,7 @@ int PDC_setclipboard(const char *contents, long length)
 
 	ptr2 = GlobalLock(ptr1);
 
-	memcpy((char *)ptr2, (char *)contents, length + 1);
+	memcpy((char *)ptr2, contents, length + 1);
 	GlobalUnlock(ptr1);
 	EmptyClipboard();
 

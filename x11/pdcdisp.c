@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.35 2006/07/30 23:57:04 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.36 2006/08/13 00:05:39 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)
@@ -36,21 +36,21 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 		/* Only send the CURSES_DISPLAY_CURSOR message, no data */
 
 		idx = CURSES_DISPLAY_CURSOR;
-		memcpy(buf, (char *)&idx, sizeof(int));
+		memcpy(buf, &idx, sizeof(int));
 		idx = sizeof(int);
 	}
 	else
 	{
 		idx = CURSES_CURSOR;
-		memcpy(buf, (char *)&idx, sizeof(int));
+		memcpy(buf, &idx, sizeof(int));
 
 		idx = sizeof(int);
 		pos = oldrow + (oldcol << 8);
-		memcpy(buf + idx, (char *)&pos, sizeof(int));
+		memcpy(buf + idx, &pos, sizeof(int));
 
 		idx += sizeof(int);
 		pos = newrow + (newcol << 8);
-		memcpy(buf + idx, (char *)&pos, sizeof(int));
+		memcpy(buf + idx, &pos, sizeof(int));
 
 		idx += sizeof(int);
 	}

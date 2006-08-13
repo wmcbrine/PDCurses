@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.9 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.10 2006/08/13 00:05:39 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -3077,12 +3077,12 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 			"XCursesProcessRequestsFromCurses");
 		}
 
-		memcpy((char *)&pos, buf, sizeof(int)); 
+		memcpy(&pos, buf, sizeof(int)); 
 
 		old_row = pos & 0xFF;
 		old_x = pos >> 8;
 		idx = sizeof(int);
-		memcpy((char *)&pos, buf + idx, sizeof(int));
+		memcpy(&pos, buf + idx, sizeof(int));
 
 		new_row = pos & 0xFF;
 		new_x = pos >> 8;

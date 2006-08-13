@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.27 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.28 2006/08/13 00:05:39 wmcbrine Exp $");
 
 #ifndef EMXVIDEO
 extern VIOMODEINFO pdc_scrnmode;
@@ -106,8 +106,7 @@ int PDC_set_scrn_mode(VIOMODEINFO new_mode)
 	if (VioSetMode(&new_mode, 0) != 0)
 	{
 		pdc_font = PDC_get_font();
-		memcpy((char *)&pdc_scrnmode, (char *)&new_mode,
-			sizeof(VIOMODEINFO));
+		memcpy(&pdc_scrnmode, &new_mode, sizeof(VIOMODEINFO));
 		LINES = PDC_get_rows();
 		COLS = PDC_get_columns();
 

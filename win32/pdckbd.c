@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.58 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.59 2006/08/13 00:05:39 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (Actual_Mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (Actual_Mouse_status.button[(x) - 1])
@@ -770,8 +770,8 @@ int PDC_get_bios_key(void)
 		   determine if we need to set Trapped_Mouse_status
 		   based on the settings in SP->_trap_mbe. */
 
-		memcpy((char*)&Actual_Mouse_status,
-			(char*)&Temp_Mouse_status, sizeof(MOUSE_STATUS));
+		memcpy(&Actual_Mouse_status, &Temp_Mouse_status,
+			sizeof(MOUSE_STATUS));
 
 		if (trap_mouse)
 			 break;
@@ -790,8 +790,7 @@ int PDC_get_bios_key(void)
 	/* To get here we have a mouse event that has been trapped by 
 	   the user. Save it in the Trapped_Mouse_status structure. */
 
-	memcpy((char*)&Trapped_Mouse_status, (char*)&Temp_Mouse_status, 
-		sizeof(MOUSE_STATUS));
+	memcpy(&Trapped_Mouse_status, &Temp_Mouse_status, sizeof(MOUSE_STATUS));
 
 	return KEY_MOUSE;
 }
@@ -1140,7 +1139,7 @@ static int win32_kbhit(int timeout)
 		/* To get here a recognised event has occurred; save it 
 		   and return TRUE */
 
-		memcpy((char*)&save_ip, (char*)&ip, sizeof(INPUT_RECORD));
+		memcpy(&save_ip, &ip, sizeof(INPUT_RECORD));
 		rc = TRUE;
 	}
 

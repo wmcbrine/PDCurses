@@ -19,12 +19,15 @@
 #ifndef EMXVIDEO
 # define INCL_DOS
 # define INCL_WIN
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
 #endif
 #include <curses.h>
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.21 2006/08/12 21:13:45 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.22 2006/08/13 05:36:52 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.216 2006/08/12 22:22:49 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.217 2006/08/13 05:36:52 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -327,12 +327,6 @@ PDCurses portable platform definitions list:
 # if !defined(CHTYPE_LONG) || !(defined(WIN32) || defined(XCURSES))
 #  undef PDC_WIDE
 # endif
-#endif
-
-#if defined(OS2) && !defined(EMXVIDEO)
-# define INCL_VIO
-# define INCL_KBD
-# include <os2.h>
 #endif
 
 #include <stdarg.h>

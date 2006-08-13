@@ -16,36 +16,66 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
-#define INCL_DOSMISC
+#ifndef EMXVIDEO
+# define INCL_DOSMISC
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
+#endif
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.43 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.44 2006/08/13 05:36:52 wmcbrine Exp $");
+
+int pdc_font;			/* default font size	*/
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
 static int saved_lines = 0;
 static int saved_cols = 0;
-
-extern int PDC_query_adapter_type(void);
 #else
-VIOMODEINFO pdc_scrnmode;	/* default screen mode	*/
-int pdc_font;			/* default font size	*/
-
 static PCH saved_screen = NULL;
 static USHORT saved_lines = 0;
 static USHORT saved_cols = 0;
 
+static VIOMODEINFO scrnmode;	/* default screen mode	*/
 static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
 
-extern int PDC_get_font(void);
 extern void PDC_get_keyboard_info(void);
-extern int PDC_get_scrn_mode(VIOMODEINFO *);
-extern int PDC_query_adapter_type(VIOCONFIGINFO *);
-extern int PDC_set_font(int);
 extern void PDC_set_keyboard_default(void);
-extern int PDC_set_scrn_mode(VIOMODEINFO);
+
+static int get_font(void)
+{
+	VIOMODEINFO modeInfo = {0};
+
+	modeInfo.cb = sizeof(modeInfo);
+
+	VioGetMode(&modeInfo, 0);
+	return (modeInfo.vres / modeInfo.row);
+}
+
+static void set_font(int size)
+{
+	VIOMODEINFO modeInfo = {0};
+
+	if (SP->sizeable && (pdc_font != size))
+	{
+		modeInfo.cb = sizeof(modeInfo);
+
+		/* set most parameters of modeInfo */
+
+		VioGetMode(&modeInfo, 0);
+		modeInfo.cb = 8;	/* ignore horiz an vert resolution */
+		modeInfo.row = modeInfo.vres / size;
+		VioSetMode(&modeInfo, 0);
+	}
+
+	curs_set(SP->visibility);
+
+	pdc_font = get_font();
+}
+
 #endif
 
 /*man-start**************************************************************
@@ -98,39 +128,6 @@ void PDC_scr_close(void)
 	PDC_gotoyx(PDC_get_rows() - 2, 0);
 }
 
-/*man-start**************************************************************
-
-  PDC_scrn_modes_equal()   - Decide if two screen modes are equal
-
-  PDCurses Description:
-	Mainly required for OS/2. It decides if two screen modes 
-	(VIOMODEINFO structure) are equal. Under DOS it just compares 
-	two integers.
-
-  PDCurses Return Value:
-	This function returns TRUE if equal else FALSE.
-
-  Portability:
-    OS2 PDCurses  int PDC_scrn_modes_equal(VIOMODEINFO mode1,
-					   VIOMODEINFO mode2);
-
-**man-end****************************************************************/
-
-#ifndef EMXVIDEO
-
-static bool PDC_scrn_modes_equal(VIOMODEINFO mode1, VIOMODEINFO mode2)
-
-{
-	PDC_LOG(("PDC_scrn_modes_equal() - called\n"));
-
-	return ((mode1.cb == mode2.cb) && (mode1.fbType == mode2.fbType)
-		&& (mode1.color == mode2.color) && (mode1.col == mode2.col)
-		&& (mode1.row == mode2.row) && (mode1.hres == mode2.vres)
-		&& (mode1.vres == mode2.vres));
-}
-
-#endif
-
 void PDC_scr_exit(void)
 {
 	if (SP)
@@ -158,7 +155,6 @@ void PDC_scr_exit(void)
 
 int PDC_scr_open(int argc, char **argv)
 {
-	char *ptr;
 #ifdef EMXVIDEO
 	int adapter;
 #else
@@ -180,20 +176,21 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
-#ifndef EMXVIDEO
-	PDC_query_adapter_type(&adapter);
-	PDC_get_scrn_mode(&pdc_scrnmode);
+#ifdef EMXVIDEO
+	adapter = v_hardware();
+	SP->mono = (adapter == V_MONOCHROME);
+
+	pdc_font = SP->mono ? 14 : (adapter == V_COLOR_8) ? 8 : 12;
+#else
+	VioGetConfig(0, &adapter, 0);
+	VioGetMode(&scrnmode, 0);
 	PDC_get_keyboard_info();
 
 	/* Now set the keyboard into binary mode */
 
 	PDC_set_keyboard_binary(TRUE);
 
-	pdc_font = PDC_get_font();
-#else
-	adapter = PDC_query_adapter_type();
-	if (adapter == _UNIX_MONO)
-		SP->mono = TRUE;
+	pdc_font = get_font();
 #endif
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
@@ -203,13 +200,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	/* This code for preserving the current screen */
 
-#ifdef EMXVIDEO
-	ptr = getenv("PDC_RESTORE_SCREEN");
-#else
-	if (DosScanEnv("PDC_RESTORE_SCREEN", (PSZ *)&ptr))
-		ptr = NULL;
-#endif
-	if (ptr != NULL)
+	if (getenv("PDC_RESTORE_SCREEN"))
 	{
 		saved_lines = SP->lines;
 		saved_cols = SP->cols;
@@ -229,13 +220,7 @@ int PDC_scr_open(int argc, char **argv)
 #endif
 	}
 
-#ifdef EMXVIDEO
-	ptr = getenv("PDC_PRESERVE_SCREEN");
-#else
-	if (DosScanEnv("PDC_PRESERVE_SCREEN", (PSZ *)&ptr))
-		ptr = NULL;
-#endif
-	SP->_preserve = (ptr != NULL);
+	SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
 	return OK;
 }
@@ -310,20 +295,41 @@ void PDC_reset_shell_mode(void)
 #endif
 }
 
+#ifndef EMXVIDEO
+
+static bool screen_mode_equals(VIOMODEINFO *oldmode)
+{
+	VIOMODEINFO current;
+
+	VioGetMode(&current, 0);
+
+	return ((current.cb == oldmode->cb) &&
+		(current.fbType == oldmode->fbType) &&
+		(current.color == oldmode->color) && 
+		(current.col == oldmode->col) &&
+		(current.row == oldmode->row) && 
+		(current.hres == oldmode->vres) &&
+		(current.vres == oldmode->vres));
+}
+
+#endif
+
 void PDC_restore_screen_mode(int i)
 {
 #ifndef EMXVIDEO
-	VIOMODEINFO modeInfo;
-
 	if (i >= 0 && i <= 2)
 	{
-		pdc_font = PDC_get_font();
-		PDC_set_font(saved_font[i]);
+		pdc_font = get_font();
+		set_font(saved_font[i]);
 
-		PDC_get_scrn_mode(&modeInfo);
-
-		if (!PDC_scrn_modes_equal(modeInfo, saved_scrnmode[i]))
-			PDC_set_scrn_mode(saved_scrnmode[i]);
+		if (!screen_mode_equals(&saved_scrnmode[i]))
+			if (VioSetMode(&saved_scrnmode[i], 0) != 0)
+			{
+				pdc_font = get_font();
+				scrnmode = saved_scrnmode[i];
+				LINES = PDC_get_rows();
+				COLS = PDC_get_columns();
+			}
 	}
 #endif
 }
@@ -334,7 +340,7 @@ void PDC_save_screen_mode(int i)
 	if (i >= 0 && i <= 2)
 	{
 		saved_font[i] = pdc_font;
-		saved_scrnmode[i] = pdc_scrnmode;
+		saved_scrnmode[i] = scrnmode;
 	}
 #endif
 }

@@ -16,10 +16,15 @@
  ************************************************************************/
 
 #define	CURSES_LIBRARY 1
+#ifndef EMXVIDEO
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
+#endif
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.34 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.35 2006/08/13 05:36:52 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

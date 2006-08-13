@@ -16,6 +16,11 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
+#ifndef EMXVIDEO
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
+#endif
 #include <curses.h>
 
 #if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
@@ -33,7 +38,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.35 2006/08/13 02:51:55 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.36 2006/08/13 05:36:52 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*

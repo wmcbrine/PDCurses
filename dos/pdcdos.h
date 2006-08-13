@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.12 2006/08/13 02:11:36 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.13 2006/08/13 05:36:52 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -102,6 +102,16 @@ void setdosmemword(int offs, unsigned short w);
 # define setdosmemword(offs,x) \
 	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
 #endif
+
+/* Monitor (terminal) type information */
+enum
+{
+	_NONE, _MDA, _CGA,
+	_EGACOLOR = 0x04, _EGAMONO,
+	_VGACOLOR = 0x07, _VGAMONO,
+	_MCGACOLOR = 0x0a, _MCGAMONO,
+	_MDS_GENIUS = 0x30
+};
 
 /* Text-mode font size information */
 enum

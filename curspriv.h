@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.118 2006/08/13 02:51:55 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.119 2006/08/13 05:36:52 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -41,26 +41,10 @@
 #define _DWCHAR		0x17	/* Delete Word char (^W)		*/
 #define _DLCHAR		0x15	/* Delete Line char (^U)		*/
 
-/* tracing flag */
-extern bool pdc_trace_on;
-
-/* Monitor (terminal) type information */
-enum
-{
-	_NONE, _MDA, _CGA,
-	_EGACOLOR = 0x04, _EGAMONO,
-	_VGACOLOR = 0x07, _VGAMONO,
-	_MCGACOLOR = 0x0a, _MCGAMONO,
-	_MDS_GENIUS = 0x30,
-	_UNIX_COLOR = 0x40, _UNIX_MONO
-};
-
+extern bool pdc_trace_on;	/* tracing flag				*/
 extern WINDOW *pdc_getch_win;
-
 extern unsigned long pdc_key_modifiers;
-
 extern MOUSE_STATUS pdc_mouse_status;
-
 extern unsigned char *pdc_atrtab;
 
 /*----------------------------------------------------------------------
@@ -117,7 +101,6 @@ void PDC_debug(const char *, ...);
 #endif
 
 #define chtype_attr(ch)		(pdc_atrtab[(chtype)(ch) >> PDC_ATTR_SHIFT])
-
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
 
 #ifdef DOS

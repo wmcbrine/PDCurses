@@ -16,10 +16,15 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
+#ifndef EMXVIDEO
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
+#endif
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.26 2006/08/12 20:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.27 2006/08/13 05:36:52 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -139,38 +144,6 @@ int PDC_get_cursor_mode(void)
 
 /*man-start**************************************************************
 
-  PDC_get_font()  - Get the current font size
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This function returns the current font size.
-
-  Portability:
-	PDCurses  int PDC_get_font(void);
-
-**man-end****************************************************************/
-
-#ifndef EMXVIDEO
-
-int PDC_get_font(void)
-{
-	VIOMODEINFO modeInfo = {0};
-
-	PDC_LOG(("PDC_get_font() - called\n"));
-
-	modeInfo.cb = sizeof(modeInfo);
-
-	/* set most parameters of modeInfo */
-
-	VioGetMode(&modeInfo, 0);
-	return (modeInfo.vres / modeInfo.row);
-}
-
-#endif
-
-/*man-start**************************************************************
-
   PDC_get_rows()  - Return number of screen rows.
 
   PDCurses Description:
@@ -217,75 +190,4 @@ int PDC_get_rows(void)
 	PDC_LOG(("PDC_get_rows() - returned: rows %d\n", rows));
 
 	return rows;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_scrn_mode()   - Return the current BIOS video mode
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-
-  PDCurses Return Value:
-	Returns the current BIOS Video Mode Number.
-
-  PDCurses Errors:
-	The EMXVIDEO version of this routine returns an ERR.
-
-  Portability:
-	PDCurses  int PDC_get_scrn_mode(void);
-
-**man-end****************************************************************/
-
-#ifdef EMXVIDEO
-int PDC_get_scrn_mode(void)
-#else
-int PDC_get_scrn_mode(VIOMODEINFO *modeinfo)
-#endif
-{
-	PDC_LOG(("PDC_get_scrn_mode() - called\n"));
-
-#ifdef EMXVIDEO
-	return ERR;
-#else
-	VioGetMode(modeinfo, 0);
-	return OK;
-#endif
-}
-
-/*man-start**************************************************************
-
-  PDC_query_adapter_type() - Determine PC video adapter type
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Thanks to Jeff Duntemann, K16RA for providing the impetus
-	(through the Dr. Dobbs Journal, March 1989 issue) for getting
-	the routines below merged into Bjorn Larsson's PDCurses 1.3...
-	-- frotz@dri.com  900730
-
-  PDCurses Return Value:
-	This function returns a macro identifier indicating the adapter
-	type.  See the list of adapter types in CURSPRIV.H.
-
-  Portability:
-	PDCurses  int PDC_query_adapter_type(void);
-
-**man-end****************************************************************/
-
-#ifdef EMXVIDEO
-int PDC_query_adapter_type(void)
-#else
-int PDC_query_adapter_type(VIOCONFIGINFO *configinfo)
-#endif
-{
-	PDC_LOG(("PDC_query_adapter_type() - called\n"));
-#ifdef EMXVIDEO
-	return (v_hardware() == V_MONOCHROME) ? _UNIX_MONO : _UNIX_COLOR;
-#else
-	VioGetConfig(0, configinfo, 0);
-	return OK;
-#endif
 }

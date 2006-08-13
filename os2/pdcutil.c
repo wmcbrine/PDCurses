@@ -16,6 +16,11 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
+#ifndef EMXVIDEO
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
+#endif
 #include <curses.h>
 
 #ifdef __EMX__
@@ -26,7 +31,7 @@
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.4 2006/07/15 15:13:40 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.5 2006/08/13 05:36:53 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

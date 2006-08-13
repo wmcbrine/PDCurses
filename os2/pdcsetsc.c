@@ -16,107 +16,17 @@
  ************************************************************************/
 
 #define CURSES_LIBRARY 1
+#ifndef EMXVIDEO
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
+#endif
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.28 2006/08/13 00:05:39 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.29 2006/08/13 05:36:53 wmcbrine Exp $");
 
-#ifndef EMXVIDEO
-extern VIOMODEINFO pdc_scrnmode;
 extern int pdc_font;
-
-extern int PDC_get_font(void);
-#endif
-
-/*man-start**************************************************************
-
-  PDC_set_font()  - sets the current font size
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	This routine sets the current font size, if the adapter allows
-	such a change.
-
-  PDCurses Return Value:
-	This function returns OK upon success otherwise ERR is returned.
-
-  PDCurses Errors:
-	It is an error to attempt to change the font size on a "bogus"
-	adapter.  The reason for this is that we have a known video
-	adapter identity problem.  e.g. Two adapters report the same
-	identifying characteristics.
-
-  Portability:
-	PDCurses  int PDC_set_font(int size);
-
-**man-end****************************************************************/
-
-#ifndef EMXVIDEO
-
-int PDC_set_font(int size)
-{
-	VIOMODEINFO modeInfo = {0};
-
-	PDC_LOG(("PDC_set_font() - called\n"));
-
-	if (SP->sizeable && (pdc_font != size))
-	{
-		modeInfo.cb = sizeof(modeInfo);
-
-		/* set most parameters of modeInfo */
-
-		VioGetMode(&modeInfo, 0);
-		modeInfo.cb = 8;	/* ignore horiz an vert resolution */
-		modeInfo.row = modeInfo.vres / size;
-		VioSetMode(&modeInfo, 0);
-	}
-
-	curs_set(SP->visibility);
-
-	pdc_font = PDC_get_font();
-
-	return OK;
-}
-
-#endif
-
-/*man-start**************************************************************
-
-  PDC_set_scrn_mode()   - Set BIOS Video Mode
-
-  PDCurses Description:
-	Sets the BIOS Video Mode Number ONLY if it is different from
-	the current video mode.  This routine is for DOS systems only.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_set_scrn_mode(int new_mode);
-
-**man-end****************************************************************/
-
-#ifndef EMXVIDEO
-
-int PDC_set_scrn_mode(VIOMODEINFO new_mode)
-{
-	PDC_LOG(("PDC_set_scrn_mode() - called\n"));
-
-	if (VioSetMode(&new_mode, 0) != 0)
-	{
-		pdc_font = PDC_get_font();
-		memcpy(&pdc_scrnmode, &new_mode, sizeof(VIOMODEINFO));
-		LINES = PDC_get_rows();
-		COLS = PDC_get_columns();
-
-		return OK;
-	}
-	else
-		return ERR;
-}
-
-#endif
 
 int PDC_curs_set(int visibility)
 {
@@ -138,8 +48,8 @@ int PDC_curs_set(int visibility)
 #else
 		start = pdc_font / 4;
 		end = pdc_font;
-#endif
 		hidden = -1;
+#endif
 		break;
 
 	case 2: 	/* highly visible */

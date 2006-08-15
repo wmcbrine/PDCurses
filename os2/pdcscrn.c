@@ -25,7 +25,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.44 2006/08/13 05:36:52 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.45 2006/08/15 19:27:27 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -158,7 +158,6 @@ int PDC_scr_open(int argc, char **argv)
 #ifdef EMXVIDEO
 	int adapter;
 #else
-	VIOCONFIGINFO adapter;
 	USHORT totchars;
 #endif
 	PDC_LOG(("PDC_scr_open() - called\n"));
@@ -182,7 +181,6 @@ int PDC_scr_open(int argc, char **argv)
 
 	pdc_font = SP->mono ? 14 : (adapter == V_COLOR_8) ? 8 : 12;
 #else
-	VioGetConfig(0, &adapter, 0);
 	VioGetMode(&scrnmode, 0);
 	PDC_get_keyboard_info();
 
@@ -299,7 +297,7 @@ void PDC_reset_shell_mode(void)
 
 static bool screen_mode_equals(VIOMODEINFO *oldmode)
 {
-	VIOMODEINFO current;
+	VIOMODEINFO current = {0};
 
 	VioGetMode(&current, 0);
 

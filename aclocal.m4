@@ -4,7 +4,6 @@ dnl ---------------------------------------------------------------------------
 dnl MH_IPC
 dnl MH_CHECK_X_INC
 dnl MH_CHECK_X_LIB
-dnl MH_PROG_CC
 dnl MH_CHECK_X_HEADERS
 dnl MH_CHECK_X_KEYDEFS
 dnl MH_CHECK_X_TYPEDEF
@@ -336,47 +335,6 @@ if test "$mh_hpux9_flag" = yes ; then
   fi
 fi
 	AC_SUBST(MH_XLIBS)
-])dnl
-
-dnl ---------------------------------------------------------------------------
-dnl Determine the best C compiler to use given a list
-dnl ---------------------------------------------------------------------------
-AC_DEFUN([MH_PROG_CC],
-[
-mh_sysv_incdir=""
-mh_sysv_libdir=""
-all_words="$CC_LIST"
-ac_dir=""
-AC_MSG_CHECKING(for one of the following C compilers: $all_words)
-AC_CACHE_VAL(ac_cv_prog_CC,[
-if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for mh_cc in $all_words; do
-    for ac_dir in $PATH; do
-      test -z "$ac_dir" && ac_dir=.
-      if test -f $ac_dir/$mh_cc; then
-        ac_cv_prog_CC="$mh_cc"
-        if test "$ac_dir" = "/usr/5bin"; then
-          mh_sysv_incdir="/usr/5include"
-          mh_sysv_libdir="/usr/5lib"
-        fi
-        break 2
-      fi
-    done
-  done
-  IFS="$ac_save_ifs"
-  test -z "$ac_cv_prog_CC" && ac_cv_prog_CC="cc"
-fi
-CC="$ac_cv_prog_CC"
-])
-AC_SUBST(CC)
-if test "$ac_dir" = ""; then
-   AC_MSG_RESULT(using $ac_cv_prog_CC specified in CC env variable)
-else
-   AC_MSG_RESULT(using $ac_dir/$ac_cv_prog_CC)
-fi
 ])dnl
 
 dnl ---------------------------------------------------------------------------

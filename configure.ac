@@ -7,7 +7,7 @@ AC_SUBST(prefix)
 dnl ---------------------- check for C compiler -----------------
 dnl Checks for one of the C compilers below - change if yours not there.
 CC_LIST="gcc acc cc c89"
-MH_PROG_CC
+AC_PROG_CC
 AC_ISC_POSIX
 
 AC_CONFIG_HEADER(config.h)

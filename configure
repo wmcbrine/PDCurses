@@ -1308,50 +1308,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 CC_LIST="gcc acc cc c89"
-
-mh_sysv_incdir=""
-mh_sysv_libdir=""
-all_words="$CC_LIST"
-ac_dir=""
-echo "$as_me:$LINENO: checking for one of the following C compilers: $all_words" >&5
-echo $ECHO_N "checking for one of the following C compilers: $all_words... $ECHO_C" >&6
-if test "${ac_cv_prog_CC+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for mh_cc in $all_words; do
-    for ac_dir in $PATH; do
-      test -z "$ac_dir" && ac_dir=.
-      if test -f $ac_dir/$mh_cc; then
-        ac_cv_prog_CC="$mh_cc"
-        if test "$ac_dir" = "/usr/5bin"; then
-          mh_sysv_incdir="/usr/5include"
-          mh_sysv_libdir="/usr/5lib"
-        fi
-        break 2
-      fi
-    done
-  done
-  IFS="$ac_save_ifs"
-  test -z "$ac_cv_prog_CC" && ac_cv_prog_CC="cc"
-fi
-CC="$ac_cv_prog_CC"
-
-fi
-
-
-if test "$ac_dir" = ""; then
-   echo "$as_me:$LINENO: result: using $ac_cv_prog_CC specified in CC env variable" >&5
-echo "${ECHO_T}using $ac_cv_prog_CC specified in CC env variable" >&6
-else
-   echo "$as_me:$LINENO: result: using $ac_dir/$ac_cv_prog_CC" >&5
-echo "${ECHO_T}using $ac_dir/$ac_cv_prog_CC" >&6
-fi
-
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -5142,7 +5098,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5145 "configure"
+#line 5101 "configure"
 int a=0
 EOF
 
@@ -5181,7 +5137,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5184 "configure"
+#line 5140 "configure"
 int foo()
 {
 return(0);

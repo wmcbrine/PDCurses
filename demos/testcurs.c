@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.60 2006/08/07 01:34:29 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.61 2006/08/16 05:36:59 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -665,7 +665,7 @@ void outputTest(WINDOW *win)
 
 	wclear(win);
 	curs_set(2);
-	mvwaddstr(win, 1, 1, "The cursor should appear as a block");
+	mvwaddstr(win, 1, 1, "The cursor should be in high-visibility mode");
 	Continue(win);
 
 	wclear(win);
@@ -675,7 +675,7 @@ void outputTest(WINDOW *win)
 
 	wclear(win);
 	curs_set(1);
-	mvwaddstr(win, 1, 1, "The cursor should be an underline");
+	mvwaddstr(win, 1, 1, "The cursor should be normal");
 	Continue(win);
 
 #ifdef A_COLOR

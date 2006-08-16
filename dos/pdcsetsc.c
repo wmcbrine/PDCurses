@@ -17,12 +17,12 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.26 2006/08/13 06:32:29 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.27 2006/08/16 17:47:49 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
 	union REGS regs;
-	int ret_vis, start, end = 7;
+	int ret_vis, start, end;
 
 	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n", visibility));
 
@@ -37,10 +37,16 @@ int PDC_curs_set(int visibility)
 			break;
 		case 2:  /* highly visible */
 			start = 0;   /* full-height block */
+			end = 7;
 			break;
 		default:  /* normal visibility */
+#ifdef PDC_OLDCURSOR
+			start = 6;
+			end = 7;
+#else
 			start = (SP->orig_cursor >> 8) & 0xff;
 			end = SP->orig_cursor & 0xff;
+#endif
 	}
 
 	/* if scrnmode is not set, some BIOSes hang */

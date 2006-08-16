@@ -24,7 +24,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.29 2006/08/13 05:36:53 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.30 2006/08/16 17:47:49 wmcbrine Exp $");
 
 extern int pdc_font;
 
@@ -58,8 +58,13 @@ int PDC_curs_set(int visibility)
 		break;
 
 	default:	/* normal visibility */
+#ifdef PDC_OLDCURSOR
+		start = pdc_font - (pdc_font / 4);
+		end = pdc_font - 1;
+#else
 		start = (SP->orig_cursor >> 8) & 0xff;
 		end = SP->orig_cursor & 0xff;
+#endif
 	}
 
 #ifdef EMXVIDEO

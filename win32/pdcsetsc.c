@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.26 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.27 2006/08/16 17:47:49 wmcbrine Exp $");
 
 extern HANDLE hConOut;
 
@@ -51,7 +51,11 @@ int PDC_curs_set(int visibility)
 		break;
 	default:			/* normal visibility */
 		cci.bVisible = TRUE;
+#ifdef PDC_OLDCURSOR
+		cci.dwSize = 25;
+#else
 		cci.dwSize = SP->orig_cursor;
+#endif
 		break;
 	}
 

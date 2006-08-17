@@ -17,7 +17,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.27 2006/08/16 17:47:49 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.28 2006/08/17 22:05:41 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -40,13 +40,8 @@ int PDC_curs_set(int visibility)
 			end = 7;
 			break;
 		default:  /* normal visibility */
-#ifdef PDC_OLDCURSOR
-			start = 6;
-			end = 7;
-#else
 			start = (SP->orig_cursor >> 8) & 0xff;
 			end = SP->orig_cursor & 0xff;
-#endif
 	}
 
 	/* if scrnmode is not set, some BIOSes hang */

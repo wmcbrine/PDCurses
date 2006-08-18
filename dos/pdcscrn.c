@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.50 2006/08/13 06:32:29 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.51 2006/08/18 20:11:05 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -33,6 +33,8 @@ bool	pdc_direct_video;	/* allow direct screen memory writes	*/
 bool	pdc_bogus_adapter;	/* TRUE if adapter has insane values	*/
 unsigned pdc_video_seg;		/* video base segment			*/
 unsigned pdc_video_ofs;		/* video base offset			*/
+
+static bool sizeable = FALSE;	/* TRUE if adapter is resizeable	*/
 
 static unsigned short *saved_screen = NULL;
 static int saved_lines = 0;
@@ -108,7 +110,7 @@ static void set_font(int size)
 
 	case _EGACOLOR:
 	case _EGAMONO:
-		if (SP->sizeable && (pdc_font != size))
+		if (sizeable && (pdc_font != size))
 		{
 			switch (size)
 			{
@@ -129,7 +131,7 @@ static void set_font(int size)
 
 	case _VGACOLOR:
 	case _VGAMONO:
-		if (SP->sizeable && (pdc_font != size))
+		if (sizeable && (pdc_font != size))
 		{
 			switch (size)
 			{
@@ -274,7 +276,7 @@ static int sanity_check(int adapter)
 
 	if (pdc_bogus_adapter)
 	{
-		SP->sizeable = FALSE;
+		sizeable = FALSE;
 		pdc_direct_video = FALSE;
 	}
 
@@ -326,7 +328,7 @@ static int query_adapter_type(void)
 			break;
 		case 4:
 			retval = _EGACOLOR;
-			SP->sizeable = TRUE;
+			sizeable = TRUE;
 			break;
 		case 5:
 			retval = _EGAMONO;
@@ -334,7 +336,7 @@ static int query_adapter_type(void)
 		case 26:			/* ...alt. VGA BIOS... */
 		case 7:
 			retval = _VGACOLOR;
-			SP->sizeable = TRUE;
+			sizeable = TRUE;
 			break;
 		case 8:
 			retval = _VGAMONO;

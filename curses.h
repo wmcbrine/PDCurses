@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.217 2006/08/13 05:36:52 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.218 2006/08/18 20:10:58 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -548,7 +548,6 @@ typedef struct
 	bool	orgcbr;		/* original MSDOS ^-BREAK setting	*/
 	bool	audible;	/* FALSE if the bell is visual		*/
 	bool	mono;		/* TRUE if current screen is mono	*/
-	bool	sizeable;	/* TRUE if adapter is resizeable	*/
 	bool	resized;	/* TRUE if TERM has been resized	*/
 	bool	orig_attr;	/* TRUE if we have the original colors	*/
 	short	orig_fore;	/* Original screen foreground color	*/

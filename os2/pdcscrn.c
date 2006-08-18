@@ -25,7 +25,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.45 2006/08/15 19:27:27 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.46 2006/08/18 20:02:04 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -59,7 +59,7 @@ static void set_font(int size)
 {
 	VIOMODEINFO modeInfo = {0};
 
-	if (SP->sizeable && (pdc_font != size))
+	if (pdc_font != size)
 	{
 		modeInfo.cb = sizeof(modeInfo);
 
@@ -194,7 +194,6 @@ int PDC_scr_open(int argc, char **argv)
 	SP->cols = PDC_get_columns();
 	SP->orig_cursor = PDC_get_cursor_mode();
 	SP->orgcbr = PDC_get_ctrl_break();
-	SP->sizeable = TRUE;
 
 	/* This code for preserving the current screen */
 

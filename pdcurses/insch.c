@@ -23,7 +23,7 @@
 #undef mvinsch
 #undef mvwinsch
 
-RCSID("$Id: insch.c,v 1.23 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.24 2006/08/20 21:51:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -54,14 +54,6 @@ RCSID("$Id: insch.c,v 1.23 2006/08/20 21:48:36 wmcbrine Exp $");
 	position and inserts the character ch into the specified
 	window.  The cursor position is advanced after the character
 	has been inserted.
-
-	The routine echochar() inserts the character ch into stdscr
-	at the current cursor position and a refresh() is called.  
-	The cursor position is advanced.
-
-	The routine wechochar() inserts the character ch into the
-	specified window at the current cursor position and a wrefresh()
-	is called. The cursor position is advanced.
 
 	All these routines are similar to putchar().  The following
 	information applies to all the routines.

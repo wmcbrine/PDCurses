@@ -22,7 +22,7 @@
 /* undefine any macros for functions defined in this module */
 #undef derwin
 
-RCSID("$Id: window.c,v 1.36 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.37 2006/08/20 22:39:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -332,9 +332,14 @@ WINDOW *dupwin(WINDOW *win)
 			return (WINDOW *)NULL;
 		}
 		else
+		{
 			for (ptr = new->_y[i], ptr1 = win->_y[i];
 			     ptr < new->_y[i] + ncols; ptr++, ptr1++)
 				*ptr = *ptr1;
+
+			new->_firstch[i] = 0;
+			new->_lastch[i] = ncols - 1;
+		}
 	}
 
 	new->_curx = win->_curx;
@@ -364,13 +369,6 @@ WINDOW *dupwin(WINDOW *win)
 	new->_pary = win->_pary;
 	new->_parent = win->_parent;
 	new->_bkgd = win->_bkgd;
-
-	for (i = 0; i < nlines; i++)
-	{
-		new->_firstch[i] = 0;
-		new->_lastch[i] = ncols - 1;
-	}
-
 	new->_flags = win->_flags;
 
 	return new;

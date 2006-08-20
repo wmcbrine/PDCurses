@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.219 2006/08/20 20:35:00 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.220 2006/08/20 20:46:43 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -45,7 +45,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2812
+#define PDC_BUILD 2813
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1687,8 +1687,8 @@ int	PDC_set_line_color(short);
 
 #if !defined(NOMACROS) && !defined(PDCDEBUG)
 
-#define COLOR_PAIR(n)		(((chtype)(n) << PDC_COLOR_SHIFT) & A_COLOR)
-#define PAIR_NUMBER(n)		(((n) & A_COLOR) >> PDC_COLOR_SHIFT)
+# define COLOR_PAIR(n)		(((chtype)(n) << PDC_COLOR_SHIFT) & A_COLOR)
+# define PAIR_NUMBER(n)		(((n) & A_COLOR) >> PDC_COLOR_SHIFT)
 
 # define addch(c)		waddch(stdscr, c)
 # define addchstr(c)		addchnstr(c, -1)

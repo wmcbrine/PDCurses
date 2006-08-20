@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.218 2006/08/18 20:10:58 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.219 2006/08/20 20:35:00 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1643,9 +1643,6 @@ int	PDC_clearclipboard(void);
 unsigned long PDC_get_input_fd(void);
 unsigned long PDC_get_key_modifiers(void);
 
-int	PDC_wunderline(WINDOW *, int, bool);
-int	PDC_wleftline(WINDOW *, int, bool);
-int	PDC_wrightline(WINDOW *, int, bool);
 int	PDC_set_line_color(short);
 
 #ifndef max

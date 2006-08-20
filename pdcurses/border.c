@@ -30,11 +30,8 @@
 #undef mvvline
 #undef mvwhline
 #undef mvwvline
-#undef PDC_wunderline
-#undef PDC_leftline
-#undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.30 2006/08/20 20:25:16 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.31 2006/08/20 20:35:00 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -54,9 +51,6 @@ RCSID("$Id: border.c,v 1.30 2006/08/20 20:25:16 wmcbrine Exp $");
 	int mvvline(int y, int x, chtype ch, int n);
 	int mvwhline(WINDOW *win, int y, int x, chtype ch, int n);
 	int mvwvline(WINDOW *win, int y, int x, chtype ch, int n);
-	int PDC_wunderline(WINDOW *win, int n, bool state);
-	int PDC_wleftline(WINDOW *win, int n, bool state);
-	int PDC_wrightline(WINDOW *win, int n, bool state);
 
   X/Open Description:
 	The border(), wborder(), and box() routines, a border is drawn
@@ -100,9 +94,6 @@ RCSID("$Id: border.c,v 1.30 2006/08/20 20:25:16 wmcbrine Exp $");
 	mvvline
 	mvwhline
 	mvwvline
-	PDC_wunderline				-	-	-
-	PDC_wleftline				-	-	-
-	PDC_wrightline				-	-	-
 
 **man-end****************************************************************/
 
@@ -340,68 +331,6 @@ int mvwvline(WINDOW *win, int y, int x, chtype ch, int n)
 		return ERR;
 
 	return wvline(win, ch, n);
-}
-
-/* PDC_lineattr() -- add the specified attribute to a line of chtypes. 
-   Used only as the core routine for the next three functions. */
-
-static int PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
-{
-	int endpos;
-
-	PDC_LOG(("PDC_lineattr() - called\n"));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	if (n < 1)
-		return ERR;
-
-	endpos = min(win->_cury + n, win->_maxy);
-
-	for (n = win->_cury; n < endpos; n++)
-	{
-		if (state) 
-			win->_y[n][win->_curx] |= attr;
-		else
-			win->_y[n][win->_curx] &= ~attr;
-
-		if (win->_firstch[n] == _NO_CHANGE)
-		{
-			win->_firstch[n] = win->_curx;
-			win->_lastch[n] = win->_curx;
-		}
-		else
-		{
-			win->_firstch[n] = min(win->_firstch[n], win->_curx);
-			win->_lastch[n] = max(win->_lastch[n], win->_curx);
-		}
-	}
-
-	PDC_sync(win);
-
-	return OK;
-}
-
-int PDC_wunderline(WINDOW *win, int n, bool state)
-{
-	PDC_LOG(("PDC_wunderline() - called\n"));
-
-	return PDC_lineattr(win, n, state, A_UNDERLINE);
-}
-
-int PDC_wleftline(WINDOW *win, int n, bool state)
-{
-	PDC_LOG(("PDC_wleftline() - called\n"));
-
-	return PDC_lineattr(win, n, state, A_LEFTLINE);
-}
-
-int PDC_wrightline(WINDOW *win, int n, bool state)
-{
-	PDC_LOG(("PDC_wrightline() - called\n"));
-
-	return PDC_lineattr(win, n, state, A_RIGHTLINE);
 }
 
 #ifdef PDC_WIDE

@@ -537,8 +537,5 @@ FUNCTIONS
 		PDC_set_title		pdcsetsc
 		PDC_setclipboard	pdcclip
 		PDC_ungetch		getch
-		PDC_wleftline		border
-		PDC_wrightline		border
-		PDC_wunderline		border
 
 **man-end****************************************************************/

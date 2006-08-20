@@ -34,7 +34,7 @@
 #undef PDC_leftline
 #undef PDC_rightline
 
-RCSID("$Id: border.c,v 1.29 2006/08/10 18:47:35 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.30 2006/08/20 20:25:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -364,7 +364,7 @@ static int PDC_lineattr(WINDOW *win, int n, bool state, chtype attr)
 		if (state) 
 			win->_y[n][win->_curx] |= attr;
 		else
-			win->_y[n][win->_curx] |= ~attr;
+			win->_y[n][win->_curx] &= ~attr;
 
 		if (win->_firstch[n] == _NO_CHANGE)
 		{

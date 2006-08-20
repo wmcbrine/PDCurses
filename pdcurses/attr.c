@@ -20,20 +20,15 @@
 
 /* undefine any macros for functions defined in this module */
 #undef attroff
-#undef wattroff
 #undef attron
-#undef wattron
 #undef attrset
-#undef wattrset
 #undef standend
 #undef standout
 #undef wstandend
 #undef wstandout
-#undef getattrs
 #undef color_set
-#undef wcolor_set
 
-RCSID("$Id: attr.c,v 1.24 2006/07/06 18:42:58 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.25 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -18,16 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef beep
-#undef flash
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef wrefresh
-#endif
-
-RCSID("$Id: beep.c,v 1.22 2006/07/28 07:28:27 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.23 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

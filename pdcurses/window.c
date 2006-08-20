@@ -20,30 +20,9 @@
 #include <stdlib.h>
 
 /* undefine any macros for functions defined in this module */
-#undef newwin
-#undef delwin
-#undef mvwin
-#undef subwin
 #undef derwin
-#undef mvderwin
-#undef dupwin
-#undef wsyncup
-#undef syncok
-#undef wcursyncup
-#undef wsyncdown
-#undef wresize
-#undef resize_window
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef touchwin
-# undef wmove
-# undef overwrite
-# undef wmove
-# undef wclrtobot
-#endif
-
-RCSID("$Id: window.c,v 1.35 2006/07/30 19:18:00 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.36 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

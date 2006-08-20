@@ -20,24 +20,14 @@
 
 /* undefine any macros for functions defined in this module */
 #undef getch
-#undef wgetch
 #undef mvgetch
 #undef mvwgetch
 #undef ungetch
-#undef flushinp
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef wrefresh
-# undef nocbreak
-# undef move
-# undef wmove
-#endif
 
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.33 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.34 2006/08/20 21:48:36 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */

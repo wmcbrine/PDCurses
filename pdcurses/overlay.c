@@ -18,18 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef overlay
-#undef overwrite
-#undef copywin
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-#endif
-
-RCSID("$Id: overlay.c,v 1.20 2006/07/31 22:28:53 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

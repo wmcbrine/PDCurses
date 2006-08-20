@@ -20,25 +20,10 @@
 #include <stdlib.h>
 
 /* undefine any macros for functions defined in this module */
-#undef initscr
-#undef endwin
 #undef isendwin
-#undef newterm
-#undef set_term
-#undef delscreen
-#undef resize_term
 #undef is_termresized
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-# undef resize_term
-# undef touchwin
-# undef wnoutrefresh
-#endif
-
-RCSID("$Id: initscr.c,v 1.71 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.72 2006/08/20 21:48:36 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 

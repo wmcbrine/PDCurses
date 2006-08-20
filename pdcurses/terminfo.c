@@ -18,12 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <term.h>
 
-/* undefine any macros for functions defined in this module */
-#undef mvcur
-#undef vidattr
-#undef vidputs
-
-RCSID("$Id: terminfo.c,v 1.24 2006/07/17 21:45:15 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.25 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

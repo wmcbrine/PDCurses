@@ -20,25 +20,18 @@
 
 /* undefine any macros for functions defined in this module */
 #undef getstr
-#undef wgetstr
 #undef mvgetstr
 #undef mvwgetstr
 #undef getnstr
-#undef wgetnstr
 #undef mvgetnstr
 #undef mvwgetnstr
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-# undef wrefresh
 # undef waddch
-# undef wgetch
-# undef cbreak
-# undef move
-# undef wmove
 #endif
 
-RCSID("$Id: getstr.c,v 1.28 2006/07/30 23:08:05 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.29 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

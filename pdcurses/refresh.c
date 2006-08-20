@@ -22,23 +22,9 @@
 
 /* undefine any macros for functions defined in this module */
 #undef refresh
-#undef wrefresh
-#undef wnoutrefresh
-#undef doupdate
 #undef redrawwin
-#undef wredrawln
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef wattrset
-# undef mvwprintw
-# undef wmove
-# undef wattrset
-# undef touchwin
-# undef reset_prog_mode
-#endif
-
-RCSID("$Id: refresh.c,v 1.36 2006/07/29 22:01:20 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.37 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

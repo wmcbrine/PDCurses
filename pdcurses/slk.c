@@ -19,21 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef slk_init
-#undef slk_set
-#undef slk_refresh
-#undef slk_noutrefresh
-#undef slk_label
-#undef slk_clear
-#undef slk_restore
-#undef slk_touch
-#undef slk_attron
-#undef slk_attrset
-#undef slk_attroff
-#undef slk_color
-
-RCSID("$Id: slk.c,v 1.27 2006/07/31 22:49:07 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.28 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

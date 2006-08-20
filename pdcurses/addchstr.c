@@ -21,21 +21,13 @@
 
 /* undefine any macros for functions defined in this module */
 #undef addchstr
-#undef addchnstr
 #undef waddchstr
-#undef waddchnstr
 #undef mvaddchstr
 #undef mvaddchnstr
 #undef mvwaddchstr
 #undef mvwaddchnstr
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-#endif
-
-RCSID("$Id: addchstr.c,v 1.28 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: addchstr.c,v 1.29 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

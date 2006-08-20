@@ -19,33 +19,9 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef cbreak
-#undef nocbreak
-#undef echo
-#undef noecho
-#undef halfdelay
-#undef intrflush
-#undef keypad
-#undef meta
-#undef nl
-#undef nonl
-#undef nodelay
-#undef notimeout
-#undef raw
-#undef noraw
-#undef noqiflush
-#undef qiflush
 #undef timeout
-#undef wtimeout
-#undef typeahead
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-#endif
-
-RCSID("$Id: inopts.c,v 1.27 2006/08/11 05:43:37 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.28 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

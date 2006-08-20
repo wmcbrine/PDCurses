@@ -20,18 +20,7 @@
 #include <string.h>
 #include <limits.h>
 
-/* undefine any macros for functions defined in this module */
-#undef baudrate
-#undef erasechar
-#undef has_ic
-#undef has_il
-#undef killchar
-#undef longname
-#undef termattrs
-#undef termname
-#undef wordchar
-
-RCSID("$Id: termattr.c,v 1.37 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.38 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

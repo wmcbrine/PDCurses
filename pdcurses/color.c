@@ -23,18 +23,11 @@
 /* undefine any macros for functions defined in this module */
 #undef COLOR_PAIR
 #undef PAIR_NUMBER
-#undef start_color
-#undef init_pair
-#undef init_color
 #undef has_colors
-#undef can_change_color
-#undef color_content
-#undef pair_content
-#undef PDC_set_line_color
 
 static void PDC_init_pair(short, short, short);
 
-RCSID("$Id: color.c,v 1.53 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.54 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

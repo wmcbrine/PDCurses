@@ -19,24 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef def_prog_mode
-#undef def_shell_mode
-#undef reset_prog_mode
-#undef reset_shell_mode
-#undef resetty
-#undef savetty
-#undef ripoffline
-#undef curs_set
-#undef napms
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-#endif
-
-RCSID("$Id: kernel.c,v 1.60 2006/08/12 20:28:59 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.61 2006/08/20 21:48:36 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;

@@ -23,20 +23,9 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef printw
-#undef wprintw
-#undef mvprintw
-#undef mvwprintw
-#undef vwprintw
 #undef vw_printw
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef waddstr
-# undef wmove
-#endif
-
-RCSID("$Id: printw.c,v 1.25 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: printw.c,v 1.26 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -21,9 +21,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-#undef PDC_debug
-
-RCSID("$Id: pdcdebug.c,v 1.21 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdcdebug.c,v 1.22 2006/08/20 21:48:36 wmcbrine Exp $");
 
 bool pdc_trace_on = FALSE;
 

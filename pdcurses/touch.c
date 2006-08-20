@@ -18,21 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef touchwin
-#undef touchline
-#undef untouchwin
-#undef wtouchln
-#undef is_linetouched
-#undef is_wintouched
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-#endif
-
-RCSID("$Id: touch.c,v 1.17 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: touch.c,v 1.18 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

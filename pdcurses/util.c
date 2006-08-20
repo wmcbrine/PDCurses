@@ -19,14 +19,9 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef unctrl
-#undef keyname
-#undef has_key
-#undef filter
-#undef use_env
 #undef delay_output
 
-RCSID("$Id: util.c,v 1.47 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.48 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

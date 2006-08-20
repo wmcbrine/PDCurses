@@ -19,17 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef mouse_set
-#undef mouse_on
-#undef mouse_off
-#undef request_mouse_pos
-#undef map_button
-#undef wmouse_position
-#undef getmouse
-#undef getbmap
-
-RCSID("$Id: mouse.c,v 1.21 2006/08/13 02:51:55 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.22 2006/08/20 21:48:36 wmcbrine Exp $");
 
 MOUSE_STATUS pdc_mouse_status;
 

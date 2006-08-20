@@ -22,7 +22,6 @@
 #undef addstr
 #undef addnstr
 #undef waddstr
-#undef waddnstr
 #undef mvaddstr
 #undef mvaddnstr
 #undef mvwaddstr
@@ -30,13 +29,11 @@
 
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-# undef move
-# undef wmove
 # undef addch
 # undef waddch
 #endif
 
-RCSID("$Id: addstr.c,v 1.26 2006/07/28 23:58:24 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.27 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

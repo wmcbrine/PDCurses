@@ -19,17 +19,10 @@
 #include <curses.h>
 
 /* undefine any macros for functions defined in this module */
-#undef clearok
-#undef idlok
-#undef idcok
-#undef immedok
-#undef leaveok
 #undef setscrreg
-#undef wsetscrreg
 #undef scrollok
-#undef raw_output
 
-RCSID("$Id: outopts.c,v 1.24 2006/07/23 18:57:14 wmcbrine Exp $");
+RCSID("$Id: outopts.c,v 1.25 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

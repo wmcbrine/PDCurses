@@ -24,11 +24,9 @@
 #undef erase
 #undef werase
 #undef clrtobot
-#undef wclrtobot
 #undef clrtoeol
-#undef wclrtoeol
 
-RCSID("$Id: clear.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: clear.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

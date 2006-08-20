@@ -20,18 +20,13 @@
 
 /* undefine any macros for functions defined in this module */
 #undef border
-#undef wborder
 #undef box
-#undef hline
-#undef vline
-#undef whline
-#undef wvline
 #undef mvhline
 #undef mvvline
 #undef mvwhline
 #undef mvwvline
 
-RCSID("$Id: border.c,v 1.31 2006/08/20 20:35:00 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.32 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

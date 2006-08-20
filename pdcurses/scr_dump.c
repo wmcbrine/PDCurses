@@ -18,15 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef getwin
-#undef putwin
-#undef scr_dump
-#undef scr_init
-#undef scr_restore
-#undef scr_set
-
-RCSID("$Id: scr_dump.c,v 1.15 2006/04/14 15:34:50 wmcbrine Exp $");
+RCSID("$Id: scr_dump.c,v 1.16 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

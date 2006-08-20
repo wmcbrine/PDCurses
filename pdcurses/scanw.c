@@ -33,21 +33,9 @@ static int PDC_vsscanf(const char *, const char *, va_list);
 #endif
 
 /* undefine any macros for functions defined in this module */
-#undef scanw
-#undef wscanw
-#undef mvscanw
-#undef mvwscanw
-#undef vwscanw
 #undef vw_scanw
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef wgetstr
-# undef wrefresh
-# undef wmove
-#endif
-
-RCSID("$Id: scanw.c,v 1.25 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.26 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

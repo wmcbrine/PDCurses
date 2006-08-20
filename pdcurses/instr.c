@@ -18,26 +18,14 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef instr
-#undef innstr
-#undef winstr
-#undef winnstr
-#undef mvinstr
-#undef mvinnstr
-#undef mvwinstr
-#undef mvwinnstr
-
 /* undefine any macros for functions called by this module if in debug mode */
 #ifdef PDCDEBUG
-# undef move
-# undef wmove
 # undef inch
 # undef winch
 # undef mvwinch
 #endif
 
-RCSID("$Id: instr.c,v 1.24 2006/07/12 16:19:57 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.25 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

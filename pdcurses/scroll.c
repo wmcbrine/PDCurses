@@ -21,9 +21,8 @@
 /* undefine any macros for functions defined in this module */
 #undef scroll
 #undef scrl
-#undef wscrl
 
-RCSID("$Id: scroll.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: scroll.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

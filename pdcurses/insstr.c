@@ -23,21 +23,12 @@
 #undef insstr
 #undef insnstr
 #undef winsstr
-#undef winsnstr
 #undef mvinsstr
 #undef mvinsnstr
 #undef mvwinsstr
 #undef mvwinsnstr
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-# undef addch
-# undef waddch
-#endif
-
-RCSID("$Id: insstr.c,v 1.27 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.28 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

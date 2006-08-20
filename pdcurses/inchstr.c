@@ -20,21 +20,13 @@
 
 /* undefine any macros for functions defined in this module */
 #undef inchstr
-#undef inchnstr
 #undef winchstr
-#undef winchnstr
 #undef mvinchstr
 #undef mvinchnstr
 #undef mvwinchstr
 #undef mvwinchnstr
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-#endif
-
-RCSID("$Id: inchstr.c,v 1.19 2006/07/12 16:19:56 wmcbrine Exp $");
+RCSID("$Id: inchstr.c,v 1.20 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

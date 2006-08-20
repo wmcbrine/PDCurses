@@ -24,13 +24,7 @@
 #undef mvinch
 #undef mvwinch
 
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef move
-# undef wmove
-#endif
-
-RCSID("$Id: inch.c,v 1.20 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

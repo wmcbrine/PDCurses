@@ -22,10 +22,8 @@
 #undef bkgd
 #undef bkgdset
 #undef getbkgd
-#undef wbkgd
-#undef wbkgdset
 
-RCSID("$Id: bkgd.c,v 1.23 2006/07/14 22:59:38 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.24 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

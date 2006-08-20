@@ -18,11 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef move
-#undef wmove
-
-RCSID("$Id: move.c,v 1.16 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: move.c,v 1.17 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

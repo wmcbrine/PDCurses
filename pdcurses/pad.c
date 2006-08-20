@@ -20,19 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef newpad
-#undef subpad
-#undef prefresh
-#undef pnoutrefresh
-#undef pechochar
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef doupdate
-#endif
-
-RCSID("$Id: pad.c,v 1.30 2006/07/24 02:10:07 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.31 2006/08/20 21:48:36 wmcbrine Exp $");
 
 /* save values for pechochar() */
 

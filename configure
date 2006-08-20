@@ -1307,7 +1307,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-CC_LIST="gcc acc cc c89"
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -5098,7 +5097,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 5101 "configure"
+#line 5100 "configure"
 int a=0
 EOF
 
@@ -5137,7 +5136,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5140 "configure"
+#line 5139 "configure"
 int foo()
 {
 return(0);

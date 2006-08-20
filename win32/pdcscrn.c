@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.56 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.57 2006/08/20 06:57:56 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -62,9 +62,6 @@ void PDC_scr_close(void)
 	SMALL_RECT rect;
 
 	PDC_LOG(("PDC_scr_close() - called\n"));
-
-	/* All of this code should probably go into DllMain() at 
-	   DLL_PROCESS_DETACH */
 
 	SetConsoleScreenBufferSize(hConOut, orig_scr.dwSize);
 	SetConsoleWindowInfo(hConOut, TRUE, &orig_scr.srWindow);

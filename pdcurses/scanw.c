@@ -27,15 +27,15 @@
 # include <ctype.h>
 # include <limits.h>
 
-static int PDC_vsscanf(const char *, const char *, va_list);
+static int _pdc_vsscanf(const char *, const char *, va_list);
 
-# define vsscanf PDC_vsscanf
+# define vsscanf _pdc_vsscanf
 #endif
 
 /* undefine any macros for functions defined in this module */
 #undef vw_scanw
 
-RCSID("$Id: scanw.c,v 1.26 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.27 2006/08/21 16:42:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -162,38 +162,18 @@ int vw_scanw(WINDOW *win, const char *fmt, va_list varglist)
 
 #ifndef HAVE_VSSCANF
 
-/* Do not compile this module unless required.  This is due to the
-   requirement of some compilers (at least Borland C++ 3.0) of having
-   to link with math libraries due to the use of floats in the code.
+/* _pdc_vsscanf() - Internal routine to parse and format an input 
+   buffer. It scans a series of input fields; each field is formatted 
+   according to a supplied format string and the formatted input is 
+   stored in the variable number of addresses passed. Returns the number 
+   of input fields or EOF on error.
 
-   This module is based on vsscanf.c and input.c from emx 0.8f library
-   source which is Copyright (c) 1990-1992 by Eberhard Mattes.
-   Eberhard Mattes has kindly agreed to allow this module to be
-   incorporated into PDCurses. */
+   Don't compile this unless required. Some compilers (at least Borland 
+   C++ 3.0) have to link with math libraries due to the use of floats.
 
-/*man-start**************************************************************
-
-  PDC_vsscanf()	- Internal routine to parse and format an input buffer.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Scan a series of input fields. Each field is formatted according 
-	to a supplied format string and the formatted input is stored in 
-	the variable number of addresses passed.
-
-  PDCurses Return Value:
-	This function returns the number of input fields or EOF on error.
-
-  PDCurses Errors:
-	If the supplied data is invalid or an incorrect number of 
-	arguments are passed, EOF is returned as an error.
-
-  Portability:
-	PDCurses  int PDC_vsscanf(const char *buf, const char *fmt,
-				  va_list arg_ptr);
-
-**man-end****************************************************************/
+   Based on vsscanf.c and input.c from emx 0.8f library source, 
+   Copyright (c) 1990-1992 by Eberhard Mattes, who has kindly agreed to 
+   its inclusion in PDCurses. */
 
 #define WHITE(x) ((x) == ' ' || (x) == '\t' || (x) == '\n')
 
@@ -210,7 +190,7 @@ int vw_scanw(WINDOW *win, const char *fmt, va_list varglist)
             --buf; --chars; \
            } while (0)
 
-static int PDC_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
+static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 {
 	int count, chars, c, width, radix, d, i;
 	int *int_ptr;
@@ -225,8 +205,6 @@ static int PDC_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 	float *flt_ptr;
 	int exp;
 	char eneg;
-
-	PDC_LOG(("PDC_vsscanf() - called\n"));
 
 	count = 0;
 	chars = 0;

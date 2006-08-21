@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.28 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.29 2006/08/21 16:42:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -102,8 +102,8 @@ static int label_fmt = 0;
 static int label_line = 0;
 
 void (*PDC_initial_slk)(void);
-static void PDC_slk_init(void);
-static void PDC_slk_calc(void);
+static void _slk_initial(void);
+static void _slk_calc(void);
 
 static struct {
 	char	label[32];
@@ -155,13 +155,13 @@ int slk_init(int fmt)
 		return ERR;
 	}
 
-	PDC_initial_slk = PDC_slk_init;
+	PDC_initial_slk = _slk_initial;
 	label_fmt = fmt;
 
 	return OK;
 }
 
-/* PDC_slk_set() Used to set a slk label to a string.
+/* _slk_set_core() Used to set a slk label to a string.
 
    label_num = 1 - 8 (or 10) (number of the label)
    label_str = string (8 or 7 bytes total), NULL chars or NULL pointer
@@ -171,12 +171,10 @@ int slk_init(int fmt)
       2 = right
    save = 1 yes or 0 no  */
 
-static int PDC_slk_set(int label_num, const char *label_str,
-		       int label_fmt, int save)
+static int _slk_set_core(int label_num, const char *label_str,
+			 int label_fmt, int save)
 {
 	int i, num, slen, llen, col;
-
-	PDC_LOG(("PDC_slk_set() - called\n"));
 
 	if (label_num < 1 || label_num > labels ||
 	    label_fmt < 0 || label_fmt > 2)
@@ -274,7 +272,7 @@ int slk_set(int label_num, const char *label_str, int label_fmt)
 {
 	PDC_LOG(("slk_set() - called\n"));
 
-	return PDC_slk_set(label_num, label_str, label_fmt, 1);
+	return _slk_set_core(label_num, label_str, label_fmt, 1);
 }
 
 int slk_refresh(void)
@@ -313,7 +311,7 @@ int slk_clear(void)
 	for (i = 0; i < labels; ++i)
 	{
 		wattrset(SP->slk_winptr, slk_attributes[i]);
-		PDC_slk_set(i + 1, "", 0, 0);
+		_slk_set_core(i + 1, "", 0, 0);
 	}
 
 	return wrefresh(SP->slk_winptr);
@@ -329,7 +327,7 @@ int slk_restore(void)
 	for (i = 0; i < labels; ++i)
 	{
 		wattrset(SP->slk_winptr, slk_attributes[i]);
-		PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
 	}
 
 	SP->slk_winptr->_attrs = attr;
@@ -353,7 +351,7 @@ int slk_attron(const chtype attrs)
 	rc = wattron(SP->slk_winptr, attrs);
 
 	for (i = 0; i < labels; ++i)
-		PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
 
 	return rc;
 }
@@ -374,7 +372,7 @@ int slk_attroff(const chtype attrs)
 	rc = wattroff(SP->slk_winptr, attrs);
 
 	for (i = 0; i < labels; ++i)
-		PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
 
 	return rc;
 }
@@ -395,7 +393,7 @@ int slk_attrset(const chtype attrs)
 	rc = wattrset(SP->slk_winptr, attrs);
 
 	for (i = 0; i < labels; ++i)
-		PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
 
 	return rc;
 }
@@ -409,7 +407,7 @@ int slk_color(short color_pair)
 	rc = wcolor_set(SP->slk_winptr, color_pair, NULL);
 
 	for (i = 0; i < labels; ++i)
-		PDC_slk_set(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
 
 	return rc;
 }
@@ -421,12 +419,10 @@ int slk_attr_set(const attr_t attrs, short color_pair, void *opts)
 	return slk_attrset(attrs | COLOR_PAIR(color_pair));
 }
 
-static void PDC_slk_init(void)
+static void _slk_initial(void)
 {
 	int i;
 	chtype save_attr;
-
-	PDC_LOG(("PDC_slk_init() - called\n"));
 
 	if (label_fmt == 3)
 	{
@@ -445,7 +441,7 @@ static void PDC_slk_init(void)
 		wattrset(SP->slk_winptr, A_REVERSE);
 	}
 
-	PDC_slk_calc();
+	_slk_calc();
 
 	/* if we have an index line, display it now */
 
@@ -466,12 +462,9 @@ static void PDC_slk_init(void)
 	touchwin(SP->slk_winptr);
 }
 
-static void PDC_slk_calc(void)
+static void _slk_calc(void)
 {
 	int i, center, col = 0;
-
-	PDC_LOG(("PDC_slk_calc() - called\n"));
-
 	label_length = COLS / labels;
 
 	/* set default attribute */

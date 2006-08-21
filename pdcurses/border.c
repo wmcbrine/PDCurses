@@ -26,7 +26,7 @@
 #undef mvwhline
 #undef mvwvline
 
-RCSID("$Id: border.c,v 1.32 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.33 2006/08/21 16:42:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -92,12 +92,12 @@ RCSID("$Id: border.c,v 1.32 2006/08/20 21:48:36 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-/* PDC_attr_passthru() -- Takes a single chtype 'ch' and checks if the 
+/* _attr_passthru() -- Takes a single chtype 'ch' and checks if the 
    current attribute of window 'win', as set by wattrset(), and/or the 
    current background of win, as set by wbkgd(), should by combined with 
    it. Attributes set explicitly in ch take precedence. */
 
-static chtype PDC_attr_passthru(WINDOW *win, chtype ch)
+static chtype _attr_passthru(WINDOW *win, chtype ch)
 {
 	chtype attr, bktmp;
 
@@ -154,14 +154,14 @@ int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
 	ymax = win->_maxy - 1;
 	xmax = win->_maxx - 1;
 
-	ls = PDC_attr_passthru(win, ls ? ls : ACS_VLINE);
-	rs = PDC_attr_passthru(win, rs ? rs : ACS_VLINE);
-	ts = PDC_attr_passthru(win, ts ? ts : ACS_HLINE);
-	bs = PDC_attr_passthru(win, bs ? bs : ACS_HLINE);
-	tl = PDC_attr_passthru(win, tl ? tl : ACS_ULCORNER);
-	tr = PDC_attr_passthru(win, tr ? tr : ACS_URCORNER);
-	bl = PDC_attr_passthru(win, bl ? bl : ACS_LLCORNER);
-	br = PDC_attr_passthru(win, br ? br : ACS_LRCORNER);
+	ls = _attr_passthru(win, ls ? ls : ACS_VLINE);
+	rs = _attr_passthru(win, rs ? rs : ACS_VLINE);
+	ts = _attr_passthru(win, ts ? ts : ACS_HLINE);
+	bs = _attr_passthru(win, bs ? bs : ACS_HLINE);
+	tl = _attr_passthru(win, tl ? tl : ACS_ULCORNER);
+	tr = _attr_passthru(win, tr ? tr : ACS_URCORNER);
+	bl = _attr_passthru(win, bl ? bl : ACS_LLCORNER);
+	br = _attr_passthru(win, br ? br : ACS_LRCORNER);
 
 	for (i = 1; i < xmax; i++)
 	{
@@ -226,7 +226,7 @@ int whline(WINDOW *win, chtype ch, int n)
 
 	endpos = min(win->_curx + n, win->_maxx);
 
-	ch = PDC_attr_passthru(win, ch ? ch : ACS_HLINE);
+	ch = _attr_passthru(win, ch ? ch : ACS_HLINE);
 
 	startpos = win->_curx;
 
@@ -265,7 +265,7 @@ int wvline(WINDOW *win, chtype ch, int n)
 
 	endpos = min(win->_cury + n, win->_maxy);
 
-	ch = PDC_attr_passthru(win, ch ? ch : ACS_VLINE);
+	ch = _attr_passthru(win, ch ? ch : ACS_VLINE);
 
 	for (n = win->_cury; n < endpos; n++)
 	{

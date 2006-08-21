@@ -18,7 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: overlay.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.22 2006/08/21 16:42:38 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -76,9 +76,9 @@ RCSID("$Id: overlay.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-static int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
-			int src_tc, int src_br, int src_bc, int dst_tr,
-			int dst_tc, bool overlay)
+static int _copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
+		     int src_tc, int src_br, int src_bc, int dst_tr,
+		     int dst_tc, bool overlay)
 {
 	int col, line, y1, fc, *minchng, *maxchng;
 	chtype *w1ptr, *w2ptr;
@@ -86,8 +86,6 @@ static int PDC_copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 	int lc = 0;
 	int xdiff = src_bc - src_tc;
 	int ydiff = src_br - src_tr;
-
-	PDC_LOG(("PDC_copy_win() - called\n"));
 
 	if ((src_w == (WINDOW *)NULL) || (dst_w == (WINDOW *)NULL))
 		return ERR;
@@ -199,7 +197,7 @@ int overlay(const WINDOW *src_w, WINDOW *dst_w)
 		src_start_y = 0;
 	}
 
-	return PDC_copy_win(src_w, dst_w, src_start_y, src_start_x,
+	return _copy_win(src_w, dst_w, src_start_y, src_start_x,
 		src_start_y + ydiff, src_start_x + xdiff, dst_start_y,
 		dst_start_x, TRUE);
 }
@@ -258,7 +256,7 @@ int overwrite(const WINDOW *src_w, WINDOW *dst_w)
 		src_start_y = 0;
 	}
 
-	return PDC_copy_win(src_w, dst_w, src_start_y, src_start_x,
+	return _copy_win(src_w, dst_w, src_start_y, src_start_x,
 		src_start_y + ydiff, src_start_x + xdiff, dst_start_y,
 		dst_start_x, FALSE);
 }
@@ -294,6 +292,6 @@ int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 	src_end_y = src_tr + min_rows;
 	src_end_x = src_tc + min_cols;
 
-	return PDC_copy_win(src_w, dst_w, src_tr, src_tc,
+	return _copy_win(src_w, dst_w, src_tr, src_tc,
 		src_end_y, src_end_x, dst_tr, dst_tc, overlay);
 }

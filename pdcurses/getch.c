@@ -27,7 +27,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.34 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.35 2006/08/21 16:42:37 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -109,28 +109,12 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 WINDOW *pdc_getch_win = NULL;
 
-/*man-start**************************************************************
+/* _breakout() - Check if input is pending, either directly from the
+   keyboard, or previously buffered. */
 
-  PDC_breakout()	- check for type-ahead
-
-  PDCurses Description:
-	Check if input is pending, either directly from the keyboard,
-	or previously buffered.
-
-  PDCurses Return Value:
-	The PDC_breakout() routine returns TRUE if keyboard input is 
-	pending otherwise FALSE is returned.
-
-  Portability:
-	PDCurses  bool PDC_breakout(void);
-
-**man-end****************************************************************/
-
-static bool PDC_breakout(void)
+static bool _breakout(void)
 {
 	bool rc;
-
-	PDC_LOG(("PDC_breakout() - called\n"));
 
 	/* ungotten or buffered char */
 	rc = (c_ungind) || (c_pindex > c_gindex);
@@ -138,45 +122,30 @@ static bool PDC_breakout(void)
 	if (!rc)
 		rc = PDC_check_bios_key();
 
-	PDC_LOG(("PDC_breakout() - rc %d c_ungind %d c_pindex %d c_gindex %d\n",
+	PDC_LOG(("_breakout() - rc %d c_ungind %d c_pindex %d c_gindex %d\n",
 		 rc, c_ungind, c_pindex, c_gindex));
 
 	return rc;
 }
 
-/*man-start**************************************************************
+/* _rawgetch() - Gets a character without any interpretation and returns 
+   it. If keypad mode is active for the designated window, function key 
+   translation will be performed.  Otherwise, function keys are ignored.  
+   If nodelay mode is active in the window, then _rawgetch() returns -1 
+   if no character is available.
 
-  PDC_rawgetch()  - Returns the next uninterpreted character (if available).
+   WARNING: It is unknown whether the FUNCTION key translation is 
+   performed at this level. --Frotz 911130 BUG */
 
-  PDCurses Description:
-	Gets a character without any interpretation at all and returns 
-	it. If keypad mode is active for the designated window, function 
-	key translation will be performed.  Otherwise, function keys are 
-	ignored.  If nodelay mode is active in the window, then 
-	PDC_rawgetch() returns -1 if no character is available.
-
-	WARNING:  It is unknown whether the FUNCTION key translation
-	is performed at this level. --Frotz 911130 BUG
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_rawgetch(void);
-
-**man-end****************************************************************/
-
-static int PDC_rawgetch(void)
+static int _rawgetch(void)
 {
 	int c, oldc;
-
-	PDC_LOG(("PDC_rawgetch() - called\n"));
 
 	if (pdc_getch_win == (WINDOW *)NULL)
 		return -1;
 
 	if ((SP->delaytenths || pdc_getch_win->_delayms ||
-	     pdc_getch_win->_nodelay) && !PDC_breakout())
+	     pdc_getch_win->_nodelay) && !_breakout())
 		return -1;
 
 	for (;;)
@@ -194,39 +163,21 @@ static int PDC_rawgetch(void)
 	}
 }
 
-/*man-start**************************************************************
+/* _sysgetch() - Gets a character without normal ^S, ^Q, ^P and ^C 
+   interpretation and returns it.  If keypad mode is active for the 
+   designated window, function key translation will be performed. 
+   Otherwise, function keys are ignored. If nodelay mode is active in 
+   the window, then sysgetch() returns -1 if no character is available. */
 
-  PDC_sysgetch()  - Return a character using default system routines.
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	Gets a character without normal ^S, ^Q, ^P and ^C interpretation
-	and returns it.  If keypad mode is active for the designated
-	window, function key translation will be performed. Otherwise,
-	function keys are ignored. If nodelay mode is active in the
-	window, then sysgetch() returns -1 if no character is
-	available.
-
-  PDCurses Return Value:
-	This function returns OK upon success otherwise ERR is returned.
-
-  Portability:
-	PDCurses  int PDC_sysgetch(void);
-
-**man-end****************************************************************/
-
-static int PDC_sysgetch(void)
+static int _sysgetch(void)
 {
 	int c;
-
-	PDC_LOG(("PDC_sysgetch() - called\n"));
 
 	if (pdc_getch_win == (WINDOW *)NULL)
 		return -1;
 
 	if ((SP->delaytenths || pdc_getch_win->_delayms ||
-	     pdc_getch_win->_nodelay) && !PDC_breakout())
+	     pdc_getch_win->_nodelay) && !_breakout())
 		return -1;
 
 	for (;;)
@@ -337,14 +288,14 @@ int wgetch(WINDOW *win)
 	for (;;)			/* loop for any buffering */
 	{
 		if (SP->raw_inp)
-			key = PDC_rawgetch();	/* get a raw character */
+			key = _rawgetch();	/* get a raw character */
 		else
 		{
 			/* get a system character if break return proper */
 
 			bool cbr = PDC_get_ctrl_break();
 			PDC_set_ctrl_break(SP->orgcbr);
-			key = PDC_sysgetch();
+			key = _sysgetch();
 			PDC_set_ctrl_break(cbr);
 		}
 

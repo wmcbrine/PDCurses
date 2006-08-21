@@ -19,7 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: kernel.c,v 1.61 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.62 2006/08/21 16:42:37 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -130,7 +130,7 @@ enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 
 **man-end****************************************************************/
 
-static void PDC_save_mode(int i)
+static void _save_mode(int i)
 {
 	ctty[i].been_set = TRUE;
 
@@ -139,7 +139,7 @@ static void PDC_save_mode(int i)
 	PDC_save_screen_mode(i);
 }
 
-static int PDC_restore_mode(int i)
+static int _restore_mode(int i)
 {
 	if (ctty[i].been_set == TRUE)
 	{
@@ -169,7 +169,7 @@ int def_prog_mode(void)
 {
 	PDC_LOG(("def_prog_mode() - called\n"));
 
-	PDC_save_mode(PDC_PR_TTY);
+	_save_mode(PDC_PR_TTY);
 
 	return OK;
 }
@@ -178,7 +178,7 @@ int def_shell_mode(void)
 {
 	PDC_LOG(("def_shell_mode() - called\n"));
 
-	PDC_save_mode(PDC_SH_TTY);
+	_save_mode(PDC_SH_TTY);
 
 	return OK;
 }
@@ -187,7 +187,7 @@ int reset_prog_mode(void)
 {
 	PDC_LOG(("reset_prog_mode() - called\n"));
 
-	PDC_restore_mode(PDC_PR_TTY);
+	_restore_mode(PDC_PR_TTY);
 	PDC_reset_prog_mode();
 
 	return OK;
@@ -197,7 +197,7 @@ int reset_shell_mode(void)
 {
 	PDC_LOG(("reset_shell_mode() - called\n"));
 
-	PDC_restore_mode(PDC_SH_TTY);
+	_restore_mode(PDC_SH_TTY);
 	PDC_reset_shell_mode();
 
 	return OK;
@@ -207,14 +207,14 @@ int resetty(void)
 {
 	PDC_LOG(("resetty() - called\n"));
 
-	return PDC_restore_mode(PDC_SAVE_TTY);
+	return _restore_mode(PDC_SAVE_TTY);
 }
 
 int savetty(void)
 {
 	PDC_LOG(("savetty() - called\n"));
 
-	PDC_save_mode(PDC_SAVE_TTY);
+	_save_mode(PDC_SAVE_TTY);
 
 	return OK;
 }

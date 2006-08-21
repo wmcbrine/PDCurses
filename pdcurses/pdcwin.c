@@ -20,9 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.50 2006/07/31 22:28:53 wmcbrine Exp $");
-
-static int PDC_newline(WINDOW *, int);
+RCSID("$Id: pdcwin.c,v 1.51 2006/08/21 16:42:39 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -141,6 +139,27 @@ void PDC_sync(WINDOW *win)
 		wrefresh(win);
 	if (win->_sync)
 		wsyncup(win);
+}
+
+/* _newline() - Does line advance and returns the new cursor line.  
+   If error, return -1. */
+
+static int _newline(WINDOW *win, int lin)
+{
+	if (win == (WINDOW *)NULL)
+		return -1;
+
+	if (++lin > win->_bmarg)
+	{
+		lin--;
+
+		if (win->_scroll)
+			scroll(win);
+		else
+			return -1;
+	}
+
+	return lin;
 }
 
 /*man-start**************************************************************
@@ -271,7 +290,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 
 			wclrtoeol(win);
 
-			if ((y = PDC_newline(win, y)) < 0)
+			if ((y = _newline(win, y)) < 0)
 			{
 				PDC_sync(win);
 				return ERR;
@@ -359,7 +378,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 
 		x = 0;
 
-		if ((y = PDC_newline(win, y)) < 0)
+		if ((y = _newline(win, y)) < 0)
 		{
 			PDC_sync(win);
 			return ERR;
@@ -434,42 +453,4 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 	/* PDC_chadd() fixes CTRL-chars too */
 
 	return PDC_chadd(win, c, xlat, FALSE);
-}
-
-/*man-start**************************************************************
-
-  PDC_newline()   - Advances 1 newline from supplied line number.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Does line advance and returns the new cursor line.  If error,
-	return -1.
-
-  PDCurses Return Value:
-	See above.
-
-  Portability:
-	PDCurses  int PDC_newline(WINDOW *win, int lin);
-
-**man-end****************************************************************/
-
-static int PDC_newline(WINDOW *win, int lin)
-{
-	PDC_LOG(("PDC_newline() - called: line %d\n", lin));
-
-	if (win == (WINDOW *)NULL)
-		return -1;
-
-	if (++lin > win->_bmarg)
-	{
-		lin--;
-
-		if (win->_scroll)
-			scroll(win);
-		else
-			return -1;
-	}
-
-	return lin;
 }

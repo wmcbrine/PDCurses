@@ -25,9 +25,7 @@
 #undef PAIR_NUMBER
 #undef has_colors
 
-static void PDC_init_pair(short, short, short);
-
-RCSID("$Id: color.c,v 1.54 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.55 2006/08/21 17:31:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -145,6 +143,33 @@ int start_color(void)
 	return OK;
 }
 
+static void _init_pair_core(short pairnum, short fg, short bg)
+{
+	unsigned char att, temp_bg;
+	chtype i;
+
+	for (i = 0; i < PDC_OFFSET; i++)
+	{
+		att = fg | (bg << 4);
+
+		if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
+			att = bg | (fg << 4);
+		if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
+			att = 1;
+		if (i & (A_INVIS >> PDC_ATTR_SHIFT))
+		{
+			temp_bg = att >> 4;
+			att = temp_bg << 4 | temp_bg;
+		}
+		if (i & (A_BOLD >> PDC_ATTR_SHIFT))
+			att |= 8;
+		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
+			att |= 128;
+
+		pdc_atrtab[(pairnum * PDC_OFFSET) + i] = att;
+	}
+}
+
 int init_pair(short colorpair, short foreground, short background)
 {
 	PDC_LOG(("init_pair() - called: colorpair %d fore %d back %d\n",
@@ -167,7 +192,7 @@ int init_pair(short colorpair, short foreground, short background)
 		curscr->_clear = TRUE;
 	}
 
-	PDC_init_pair(colorpair, foreground, background);
+	_init_pair_core(colorpair, foreground, background);
 
 	colorset[colorpair] = TRUE;
 
@@ -247,32 +272,5 @@ void PDC_init_atrtab(void)
 	}
 
 	for (i = 0; i < PDC_COLOR_PAIRS; i++)
-		PDC_init_pair(i, SP->orig_fore, SP->orig_back);
-}
-
-static void PDC_init_pair(short pairnum, short fg, short bg)
-{
-	unsigned char att, temp_bg;
-	chtype i;
-
-	for (i = 0; i < PDC_OFFSET; i++)
-	{
-		att = fg | (bg << 4);
-
-		if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
-			att = bg | (fg << 4);
-		if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
-			att = 1;
-		if (i & (A_INVIS >> PDC_ATTR_SHIFT))
-		{
-			temp_bg = att >> 4;
-			att = temp_bg << 4 | temp_bg;
-		}
-		if (i & (A_BOLD >> PDC_ATTR_SHIFT))
-			att |= 8;
-		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
-			att |= 128;
-
-		pdc_atrtab[(pairnum * PDC_OFFSET) + i] = att;
-	}
+		_init_pair_core(i, SP->orig_fore, SP->orig_back);
 }

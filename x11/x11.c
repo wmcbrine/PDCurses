@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.12 2006/08/21 04:29:46 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.13 2006/08/21 07:16:44 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -1520,29 +1520,9 @@ static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 	}
 }
 
-static void XCursesModifierPress(Widget w, XEvent *event, String *params, 
-				 Cardinal *nparams)
+static void XCursesModifierKey(KeySym keysym)
 {
-#ifdef FOREIGN
-	wchar_t buffer[120];
-#else
-	char buffer[120];
-#endif
-	int buflen = 40;
-	int count, key;
-	KeySym keysym;
-	XComposeStatus compose;
-
-	PDC_LOG(("%s:XCursesModifierPress called\n", XCLOGMSG));
-
-	buffer[0] = '\0';
-
-	count = XLookupString(&(event->xkey), buffer, buflen, &keysym, 
-		&compose);
-
-	/* Handle modifier keys first */
-
-	SP->return_key_modifiers = True;
+	int key = 0;
 
 	switch (keysym) {
 	case XK_Shift_L:
@@ -1562,13 +1542,33 @@ static void XCursesModifierPress(Widget w, XEvent *event, String *params,
 		break;
 	case XK_Alt_R:
 		key = KEY_ALT_R;
-		break;
-	default:
-		key = 0;
 	}
 
 	if (key)
 		XCursesSendKeyToCurses((unsigned long)key, NULL);
+}
+
+static void XCursesModifierPress(Widget w, XEvent *event, String *params, 
+				 Cardinal *nparams)
+{
+#ifdef FOREIGN
+	wchar_t buffer[120];
+#else
+	char buffer[120];
+#endif
+	int buflen = 40;
+	KeySym keysym;
+	XComposeStatus compose;
+
+	PDC_LOG(("%s:XCursesModifierPress called\n", XCLOGMSG));
+
+	buffer[0] = '\0';
+
+	XLookupString(&(event->xkey), buffer, buflen, &keysym, &compose);
+
+	SP->return_key_modifiers = True;
+
+	XCursesModifierKey(keysym);
 }
 
 static void XCursesKeyPress(Widget w, XEvent *event, String *params,
@@ -1616,31 +1616,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	if (event->type == KeyPress && keysym != compose_key
 	    && IsModifierKey(keysym) && SP->return_key_modifiers)
 	{
-		switch (keysym) {
-		case XK_Shift_L:
-			key = KEY_SHIFT_L;
-			break;
-		case XK_Shift_R:
-			key = KEY_SHIFT_R;
-			break;
-		case XK_Control_L:
-			key = KEY_CONTROL_L;
-			break;
-		case XK_Control_R:
-			key = KEY_CONTROL_R;
-			break;
-		case XK_Alt_L:
-			key = KEY_ALT_L;
-			break;
-		case XK_Alt_R:
-			key = KEY_ALT_R;
-			break;
-		default:
-			key = 0;
-		}
-
-		if (key)
-			XCursesSendKeyToCurses((unsigned long)key, NULL);
+		XCursesModifierKey(keysym);
 		return;
 	}
 
@@ -1809,14 +1785,10 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			   Mod2Mask: 0x10: usually, numlock modifier
 			   ShiftMask: 0x01: shift modifier */
 
-			if (XCursesKeys[i].numkeypad && (event->xkey.state &
-			    Mod2Mask || event->xkey.state & ShiftMask))
-			{
-				key = XCursesKeys[i].shifted;
-				break;
-			}
 
-			if (event->xkey.state & ShiftMask)
+			if ((event->xkey.state & ShiftMask) ||
+			    (XCursesKeys[i].numkeypad &&
+			    (event->xkey.state & Mod2Mask)))
 			{
 				key = XCursesKeys[i].shifted;
 				break;
@@ -3248,7 +3220,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 int XCursesSetupX(int argc, char *argv[])
 {
-	static char *myargv[] = {"PDCurses", NULL};
+	char *myargv[] = {"PDCurses", NULL};
 	extern bool sb_started;
 
 	int italic_font_valid;

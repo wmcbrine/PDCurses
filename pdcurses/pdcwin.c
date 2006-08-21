@@ -18,9 +18,8 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 #include <stdlib.h>
-#include <string.h>
 
-RCSID("$Id: pdcwin.c,v 1.51 2006/08/21 16:42:39 wmcbrine Exp $");
+RCSID("$Id: pdcwin.c,v 1.52 2006/08/21 17:49:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -394,63 +393,4 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 	PDC_sync(win);
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_chins()  - Low-level insert character in window
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine provides the basic functionality for the X/Open
-	[mv][w]insch() routines.  The xlat flag indicates that normal
-	character translation is performed or not.  If not, then the
-	character is output as is.
-
-	The 'xlat' flag is TRUE for the normal curses routines.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  PDCurses Errors:
-	It is an error to call this function with a NULL window pointer.
-
-  Portability:
-	PDCurses  int PDC_chins(WINDOW* win, chtype c, bool xlat);
-
-**man-end****************************************************************/
-
-int PDC_chins(WINDOW *win, chtype c, bool xlat)
-{
-	int x, y, maxx, offset;
-	chtype *temp1;
-	char ch = (c & A_CHARTEXT);
-
-	PDC_LOG(("PDC_chins() - called: win=%x ch=%x "
-		"(char=%c attr=0x%x) xlat=%d\n", win, ch,
-		ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	x = win->_curx;
-	y = win->_cury;
-	maxx = win->_maxx;
-	offset = 1;
-	temp1 = &win->_y[y][x];
-
-	if ((ch < ' ') && xlat)
-		offset++;
-
-	memmove(temp1 + offset, temp1, (maxx - x - offset) * sizeof(chtype));
-
-	win->_lastch[y] = maxx - 1;
-
-	if ((win->_firstch[y] == _NO_CHANGE) || (win->_firstch[y] > x))
-		win->_firstch[y] = x;
-
-	/* PDC_chadd() fixes CTRL-chars too */
-
-	return PDC_chadd(win, c, xlat, FALSE);
 }

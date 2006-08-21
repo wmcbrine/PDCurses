@@ -17,13 +17,14 @@
 
 #define	CURSES_LIBRARY 1
 #include <curses.h>
+#include <string.h>
 
 /* undefine any macros for functions defined in this module */
 #undef insch
 #undef mvinsch
 #undef mvwinsch
 
-RCSID("$Id: insch.c,v 1.24 2006/08/20 21:51:32 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.25 2006/08/21 17:49:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -34,6 +35,8 @@ RCSID("$Id: insch.c,v 1.24 2006/08/20 21:51:32 wmcbrine Exp $");
 	int winsch(WINDOW *win, chtype ch);
 	int mvinsch(int y, int x, chtype ch);
 	int mvwinsch(WINDOW *win, int y, int x, chtype ch);
+
+	int PDC_chins(WINDOW* win, chtype c, bool xlat);
 
   X/Open Description:
 	The routine insch() inserts the character ch into the default
@@ -88,6 +91,12 @@ RCSID("$Id: insch.c,v 1.24 2006/08/20 21:51:32 wmcbrine Exp $");
 	Depending upon the state of the raw character output, 7- or
 	8-bit characters will be output.
 
+	PDC_chins() provides the basic functionality for [mv][w]insch().  
+	The xlat flag indicates whether or not to perform normal 
+	character translation. If not, then the character is output as 
+	is. The 'xlat' flag is TRUE for the normal curses routines. This 
+	function returns OK on success and ERR on error.
+
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -97,8 +106,43 @@ RCSID("$Id: insch.c,v 1.24 2006/08/20 21:51:32 wmcbrine Exp $");
 	winsch					Y	Y	Y
 	mvinsch					Y	Y	Y
 	mvwinsch				Y	Y	Y
+	PDC_chins				-	-	-
 
 **man-end****************************************************************/
+
+int PDC_chins(WINDOW *win, chtype c, bool xlat)
+{
+	int x, y, maxx, offset;
+	chtype *temp1;
+	char ch = (c & A_CHARTEXT);
+
+	PDC_LOG(("PDC_chins() - called: win=%x ch=%x "
+		"(char=%c attr=0x%x) xlat=%d\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	x = win->_curx;
+	y = win->_cury;
+	maxx = win->_maxx;
+	offset = 1;
+	temp1 = &win->_y[y][x];
+
+	if ((ch < ' ') && xlat)
+		offset++;
+
+	memmove(temp1 + offset, temp1, (maxx - x - offset) * sizeof(chtype));
+
+	win->_lastch[y] = maxx - 1;
+
+	if ((win->_firstch[y] == _NO_CHANGE) || (win->_firstch[y] > x))
+		win->_firstch[y] = x;
+
+	/* PDC_chadd() fixes CTRL-chars too */
+
+	return PDC_chadd(win, c, xlat, FALSE);
+}
 
 int insch(chtype ch)
 {

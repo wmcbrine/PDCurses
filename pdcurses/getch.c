@@ -27,7 +27,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.35 2006/08/21 16:42:37 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.36 2006/08/21 17:01:21 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -45,6 +45,8 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	int mvwgetch(WINDOW *win, int y, int x);
 	int ungetch(int ch);
 	int flushinp(void);
+
+	int PDC_get_key_modifiers(void);
 
   X/Open Description:
 	With the getch(), wgetch(), mvgetch(), and mvwgetch() functions, 
@@ -88,6 +90,12 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	Also, note that the getch() definition will conflict  with
 	many DOS compiler's runtime libraries.
 
+	PDC_get_key_modifiers() returns the keyboard modifiers effective 
+	at the time of the last getch() call, only if 
+	PDC_save_key_modifiers(TRUE) has been called before the getch(). 
+	Use the macros; PDC_KEY_MODIFIER_* to determine which 
+	modifier(s) were set.
+
   X/Open Return Value:
 	These functions return ERR or the value of the character, meta 
 	character or function key token.
@@ -99,6 +107,7 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	mvgetch					Y	Y	Y
 	mvwgetch				Y	Y	Y
 	ungetch					Y	Y	Y
+	PDC_get_key_modifiers			-	-	-
 
 **man-end****************************************************************/
 
@@ -192,34 +201,6 @@ static int _sysgetch(void)
 		if ((c = PDC_validchar(c)) >= 0)
 			return c;
 	}
-}
-
-/*man-start**************************************************************
-
-  PDC_get_key_modifiers()  - Returns the keyboard modifier(s) at time
-			     of last getch()
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the keyboard modifiers effective at the time of the last 
-	getch() call only if PDC_save_key_modifiers(TRUE) has been 
-	called before the getch(). Use the macros; PDC_KEY_MODIFIER_* to 
-	determine which modifier(s) were set.
-
-  PDCurses Return Value:
-	This function returns the modifiers.
-
-  Portability:
-	PDCurses  int PDC_get_key_modifiers(void);
-
-**man-end****************************************************************/
-
-unsigned long PDC_get_key_modifiers(void)
-{
-	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
-
-	return pdc_key_modifiers;
 }
 
 int PDC_getch(void)
@@ -393,4 +374,11 @@ int flushinp(void)
 	c_ungind = 0;			/* clear c_ungch array */
 
 	return OK;
+}
+
+unsigned long PDC_get_key_modifiers(void)
+{
+	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
+
+	return pdc_key_modifiers;
 }

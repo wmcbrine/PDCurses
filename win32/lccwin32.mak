@@ -78,7 +78,7 @@ getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
 insch.obj insstr.obj instr.obj kernel.obj mouse.obj move.obj outopts.obj \
 overlay.obj pad.obj printw.obj refresh.obj scanw.obj scr_dump.obj \
 scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
-window.obj pdcdebug.obj pdcwin.obj
+window.obj pdcdebug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
@@ -220,9 +220,6 @@ window.obj: $(srcdir)\window.c
 
 pdcdebug.obj: $(srcdir)\pdcdebug.c
 	$(CC) $(CCFLAGS) $(srcdir)\pdcdebug.c
-
-pdcwin.obj: $(srcdir)\pdcwin.c
-	$(CC) $(CCFLAGS) $(srcdir)\pdcwin.c
 
 
 pdcclip.obj: $(osdir)\pdcclip.c

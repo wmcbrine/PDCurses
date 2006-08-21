@@ -97,7 +97,7 @@ getstr.dlo getyx.dlo inch.dlo inchstr.dlo initscr.dlo inopts.dlo \
 insch.dlo insstr.dlo instr.dlo kernel.dlo mouse.dlo move.dlo outopts.dlo \
 overlay.dlo pad.dlo printw.dlo refresh.dlo scanw.dlo scr_dump.dlo \
 scroll.dlo slk.dlo termattr.dlo terminfo.dlo touch.dlo util.dlo \
-window.dlo pdcdebug.dlo pdcwin.dlo
+window.dlo pdcdebug.dlo
 
 PDCDLOS = pdcclip.dlo pdcdisp.dlo pdcgetsc.dlo pdckbd.dlo pdcscrn.dlo \
 pdcsetsc.dlo pdcutil.dlo

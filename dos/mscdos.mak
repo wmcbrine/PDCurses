@@ -211,9 +211,6 @@ pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
 	$(CC) $(CCFLAGS) $(osdir)\pdcutil.c
 
-pdcwin.obj: $(srcdir)\pdcwin.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\pdcwin.c
-
 #------------------------------------------------------------------------
 
 panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)

@@ -22,7 +22,7 @@
 /* undefine any macros for functions defined in this module */
 #undef derwin
 
-RCSID("$Id: window.c,v 1.37 2006/08/20 22:39:03 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.38 2006/08/21 18:38:19 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -44,6 +44,9 @@ RCSID("$Id: window.c,v 1.37 2006/08/20 22:39:03 wmcbrine Exp $");
 	void wsyncdown(WINDOW *win);
 
 	WINDOW *resize_window(WINDOW *w, int lins, int cols);
+	WINDOW *PDC_makenew(int num_lines, int num_columns,
+			int begy, int begx);
+	void PDC_sync(WINDOW *win);
 
   X/Open Description:
 	newwin() creates a new window with the given number of lines, 
@@ -98,6 +101,14 @@ RCSID("$Id: window.c,v 1.37 2006/08/20 22:39:03 wmcbrine Exp $");
   PDCurses Description:
 	resize_window() allows the usrer to resize an existing window.
 
+	PDC_makenew() allocates all data for a new WINDOW* except the 
+	actual lines themselves. If it's unable to allocate memory for 
+	the window structure, it will free all allocated memory and 
+	return a NULL pointer.
+
+	PDC_sync() handles wrefresh() and wsyncup() calls when a window 
+	is changed.
+
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -125,8 +136,84 @@ RCSID("$Id: window.c,v 1.37 2006/08/20 22:39:03 wmcbrine Exp $");
 	wcursyncup				-	-      4.0
 	wsyncdown				-	-      4.0
 	resize_window				-	-	-
+	PDC_makenew				-	-	-
+	PDC_sync				-	-	-
 
 **man-end****************************************************************/
+
+WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
+{
+	int i;
+	WINDOW *win;
+
+	PDC_LOG(("PDC_makenew() - called: lines %d cols %d begy %d begx %d\n",
+		num_lines, num_columns, begy, begx));
+
+	/* allocate the window structure itself */
+
+	if ((win = calloc(1, sizeof(WINDOW))) == (WINDOW *)NULL)
+		return win;
+
+	/* allocate the line pointer array */
+
+	if ((win->_y = calloc(num_lines, sizeof(chtype *))) == NULL)
+	{
+		free(win);
+		return (WINDOW *)NULL;
+	}
+
+	/* allocate the minchng and maxchng arrays */
+
+	if ((win->_firstch = calloc(num_lines, sizeof(int))) == NULL)
+	{
+		free(win->_y);
+		free(win);
+		return (WINDOW *)NULL;
+	}
+
+	if ((win->_lastch = calloc(num_lines, sizeof(int))) == NULL)
+	{
+		free(win->_firstch);
+		free(win->_y);
+		free(win);
+		return (WINDOW *)NULL;
+	}
+
+	/* initialize window variables */
+
+	win->_maxy = num_lines;		/* real max screen size */
+	win->_maxx = num_columns;	/* real max screen size */
+	win->_pmaxy = num_lines;	/* real max window size */
+	win->_pmaxx = num_columns;	/* real max window size */
+	win->_begy = begy;
+	win->_begx = begx;
+	win->_lastsy2 = LINES - 1;
+	win->_lastsx2 = COLS - 1;
+	win->_bkgd = ' '; /* wrs 4/10/93 -- initialize background to blank */
+	win->_clear = (bool) ((num_lines == LINES) && (num_columns == COLS));
+	win->_bmarg = num_lines - 1;
+	win->_parx = win->_pary = -1;
+
+	/* init to say window all changed */
+
+	for (i = 0; i < num_lines; i++)
+	{
+		win->_firstch[i] = 0;
+		win->_lastch[i] = num_columns - 1;
+	}
+
+	return win;
+}
+
+void PDC_sync(WINDOW *win)
+{
+	PDC_LOG(("PDC_sync() - called:\n"));
+
+	if (win->_immed)
+		wrefresh(win);
+	if (win->_sync)
+		wsyncup(win);
+}
 
 WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 {

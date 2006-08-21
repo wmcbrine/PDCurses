@@ -44,5 +44,4 @@
 -+pdcscrn.obj &
 -+pdcsetsc.obj &
 -+pdcutil.obj &
--+pdcwin.obj &
 ,lib.map;

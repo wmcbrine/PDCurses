@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.38 2006/08/12 22:22:05 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.39 2006/08/21 04:29:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -125,7 +125,7 @@ int PDC_resize_screen(int nlines, int ncols)
 		SP->XcurscrSize + XCURSESSHMMIN, 0700)) < 0)
 	{
 		perror("Cannot allocate shared memory for curscr");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		return ERR;
 	}
 

@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.36 2006/08/13 02:51:55 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.37 2006/08/21 04:29:46 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
@@ -25,16 +25,17 @@ RCSID("$Id: pdckbd.c,v 1.36 2006/08/13 02:51:55 wmcbrine Exp $");
 
 static bool PDC_kbhit(void)
 {
+	struct timeval socket_timeout = {0};
 	int s;
 
 	PDC_LOG(("%s:PDC_kbhit() - called\n", XCLOGMSG));
 
 	/* Is something ready to be read on the socket ? Must be a key. */
 
-	FD_ZERO(&readfds);
-	FD_SET(XC_key_sock, &readfds);
+	FD_ZERO(&xc_readfds);
+	FD_SET(xc_key_sock, &xc_readfds);
 
-	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, 
+	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
 	    NULL, &socket_timeout)) < 0)
 		XCursesExitCursesProcess(3,
 			"child - exiting from PDC_kbhit select failed");
@@ -57,7 +58,7 @@ int PDC_get_bios_key(void)
 
 	while (1)
 	{
-	    if (XC_read_socket(XC_key_sock, (char *)&newkey,
+	    if (XC_read_socket(xc_key_sock, (char *)&newkey,
 		sizeof(unsigned long)) < 0)
 		    XCursesExitCursesProcess(2, 
 			"exiting from PDC_get_bios_key");
@@ -67,7 +68,7 @@ int PDC_get_bios_key(void)
 
 	    if (key == KEY_MOUSE)
 	    {
-		if (XC_read_socket(XC_key_sock, (char *)&pdc_mouse_status, 
+		if (XC_read_socket(xc_key_sock, (char *)&pdc_mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
 			    "exiting from PDC_get_bios_key");
@@ -124,7 +125,7 @@ unsigned long PDC_get_input_fd(void)
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
 
-	return XC_key_sock;
+	return xc_key_sock;
 }
 
 void PDC_set_keyboard_binary(bool on)

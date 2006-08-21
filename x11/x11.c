@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.11 2006/08/21 01:27:53 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.12 2006/08/21 04:29:46 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -42,7 +42,7 @@ typedef char * XPointer;
 # define MAX_PATH 256
 #endif
 
-AppData app_data;
+XCursesAppData xc_app_data;
 
 #if NeedWidePrototypes
 # define PDC_SCROLLBAR_TYPE double
@@ -54,26 +54,26 @@ AppData app_data;
 #define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2 * MAX_COLORS */
 #define COLOR_BORDER 17 /* colour of border - 2 more than 2 * MAX_COLORS */
 
-#define XCURSESNORMALFONTINFO	app_data.normalfont
-#define XCURSESITALICFONTINFO	app_data.italicfont
-#define XCURSESLINES		app_data.lines
-#define XCURSESCOLS		app_data.cols
-#define XCURSESBITMAPFILE	app_data.bitmapFile
+#define XCURSESNORMALFONTINFO	xc_app_data.normalfont
+#define XCURSESITALICFONTINFO	xc_app_data.italicfont
+#define XCURSESLINES		xc_app_data.lines
+#define XCURSESCOLS		xc_app_data.cols
+#define XCURSESBITMAPFILE	xc_app_data.bitmapFile
 #ifdef HAVE_XPM_H
-# define XCURSESPIXMAPFILE	app_data.pixmapFile
+# define XCURSESPIXMAPFILE	xc_app_data.pixmapFile
 #endif
-#define XCURSESCOMPOSEKEY	app_data.composeKey
-#define XCURSESPOINTER		app_data.pointer
-#define XCURSESPOINTERFORECOLOR app_data.pointerForeColor
-#define XCURSESPOINTERBACKCOLOR app_data.pointerBackColor
-#define XCURSESCURSORCOLOR	app_data.cursorColor
-#define XCURSESBORDERWIDTH	app_data.borderWidth
-#define XCURSESBORDERCOLOR	app_data.borderColor
-#define XCURSESDOUBLECLICKPERIOD app_data.doubleClickPeriod
-#define XCURSESCLICKPERIOD	app_data.clickPeriod
-#define XCURSESSCROLLBARWIDTH	app_data.scrollbarWidth
-#define XCURSESCURSORBLINKRATE	app_data.cursorBlinkRate
-#define XCURSESTEXTCURSOR	app_data.textCursor
+#define XCURSESCOMPOSEKEY	xc_app_data.composeKey
+#define XCURSESPOINTER		xc_app_data.pointer
+#define XCURSESPOINTERFORECOLOR xc_app_data.pointerForeColor
+#define XCURSESPOINTERBACKCOLOR xc_app_data.pointerBackColor
+#define XCURSESCURSORCOLOR	xc_app_data.cursorColor
+#define XCURSESBORDERWIDTH	xc_app_data.borderWidth
+#define XCURSESBORDERCOLOR	xc_app_data.borderColor
+#define XCURSESDOUBLECLICKPERIOD xc_app_data.doubleClickPeriod
+#define XCURSESCLICKPERIOD	xc_app_data.clickPeriod
+#define XCURSESSCROLLBARWIDTH	xc_app_data.scrollbarWidth
+#define XCURSESCURSORBLINKRATE	xc_app_data.cursorBlinkRate
+#define XCURSESTEXTCURSOR	xc_app_data.textCursor
 
 #define XCURSESDISPLAY		(XtDisplay(drawing))
 #define XCURSESWIN		(XtWindow(drawing))
@@ -497,7 +497,7 @@ static XtResource app_resources[] =
 		"Lines",
 		XtRInt,
 		sizeof(int),
-		XtOffsetOf(AppData, lines),
+		XtOffsetOf(XCursesAppData, lines),
 		XtRImmediate,
 		(XtPointer)24,
 	},
@@ -507,7 +507,7 @@ static XtResource app_resources[] =
 		"Cols",
 		XtRInt,
 		sizeof(int), 
-		XtOffsetOf(AppData, cols),
+		XtOffsetOf(XCursesAppData, cols),
 		XtRImmediate,
 		(XtPointer)80,
 	},
@@ -517,7 +517,7 @@ static XtResource app_resources[] =
 		"CursorColor",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, cursorColor),
+		XtOffsetOf(XCursesAppData, cursorColor),
 		XtRString,
 		(XtPointer)"Red",
 	},
@@ -527,7 +527,7 @@ static XtResource app_resources[] =
 		"ColorBlack",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBlack),
+		XtOffsetOf(XCursesAppData, colorBlack),
 		XtRString,
 		(XtPointer)"Black",
 	},
@@ -537,7 +537,7 @@ static XtResource app_resources[] =
 		"ColorRed",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorRed),
+		XtOffsetOf(XCursesAppData, colorRed),
 		XtRString,
 		(XtPointer)"red3",
 	},
@@ -547,7 +547,7 @@ static XtResource app_resources[] =
 		"ColorGreen",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorGreen),
+		XtOffsetOf(XCursesAppData, colorGreen),
 		XtRString,
 		(XtPointer)"green3",
 	},
@@ -557,7 +557,7 @@ static XtResource app_resources[] =
 		"ColorYellow",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorYellow),
+		XtOffsetOf(XCursesAppData, colorYellow),
 		XtRString,
 		(XtPointer)"yellow3",
 	},
@@ -567,7 +567,7 @@ static XtResource app_resources[] =
 		"ColorBlue",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBlue),
+		XtOffsetOf(XCursesAppData, colorBlue),
 		XtRString,
 		(XtPointer)"blue3",
 	},
@@ -577,7 +577,7 @@ static XtResource app_resources[] =
 		"ColorMagenta",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorMagenta),
+		XtOffsetOf(XCursesAppData, colorMagenta),
 		XtRString,
 		(XtPointer)"magenta3",
 	},
@@ -587,7 +587,7 @@ static XtResource app_resources[] =
 		"ColorCyan",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorCyan),
+		XtOffsetOf(XCursesAppData, colorCyan),
 		XtRString,
 		(XtPointer)"cyan3",
 	},
@@ -597,7 +597,7 @@ static XtResource app_resources[] =
 		"ColorWhite",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorWhite),
+		XtOffsetOf(XCursesAppData, colorWhite),
 		XtRString,
 		(XtPointer)"Grey",
 	},
@@ -607,7 +607,7 @@ static XtResource app_resources[] =
 		"ColorBoldBlack",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldBlack),
+		XtOffsetOf(XCursesAppData, colorBoldBlack),
 		XtRString,
 		(XtPointer)"grey40",
 	},
@@ -617,7 +617,7 @@ static XtResource app_resources[] =
 		"ColorBoldRed",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldRed),
+		XtOffsetOf(XCursesAppData, colorBoldRed),
 		XtRString,
 		(XtPointer)"red1",
 	},
@@ -627,7 +627,7 @@ static XtResource app_resources[] =
 		"ColorBoldGreen",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldGreen),
+		XtOffsetOf(XCursesAppData, colorBoldGreen),
 		XtRString,
 		(XtPointer)"green1",
 	},
@@ -637,7 +637,7 @@ static XtResource app_resources[] =
 		"ColorBoldYellow",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldYellow),
+		XtOffsetOf(XCursesAppData, colorBoldYellow),
 		XtRString,
 		(XtPointer)"yellow1",
 	},
@@ -647,7 +647,7 @@ static XtResource app_resources[] =
 		"ColorBoldBlue",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldBlue),
+		XtOffsetOf(XCursesAppData, colorBoldBlue),
 		XtRString,
 		(XtPointer)"blue1",
 	},
@@ -657,7 +657,7 @@ static XtResource app_resources[] =
 		"ColorBoldMagenta",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldMagenta),
+		XtOffsetOf(XCursesAppData, colorBoldMagenta),
 		XtRString,
 		(XtPointer)"magenta1",
 	},
@@ -667,7 +667,7 @@ static XtResource app_resources[] =
 		"ColorBoldCyan",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldCyan),
+		XtOffsetOf(XCursesAppData, colorBoldCyan),
 		XtRString,
 		(XtPointer)"cyan1",
 	},
@@ -677,7 +677,7 @@ static XtResource app_resources[] =
 		"ColorBoldWhite",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, colorBoldWhite),
+		XtOffsetOf(XCursesAppData, colorBoldWhite),
 		XtRString,
 		(XtPointer)"White",
 	},
@@ -687,7 +687,7 @@ static XtResource app_resources[] =
 		"NormalFont",
 		XtRFontStruct,
 		sizeof(XFontStruct),
-		XtOffsetOf(AppData, normalfont),
+		XtOffsetOf(XCursesAppData, normalfont),
 		XtRString,
 		(XtPointer)
 #ifdef PDC_WIDE
@@ -702,7 +702,7 @@ static XtResource app_resources[] =
 		"ItalicFont",
 		XtRFontStruct,
 		sizeof(XFontStruct),
-		XtOffsetOf(AppData, italicfont),
+		XtOffsetOf(XCursesAppData, italicfont),
 		XtRString,
 		(XtPointer)
 #ifdef PDC_WIDE
@@ -717,7 +717,7 @@ static XtResource app_resources[] =
 		"Bitmap",
 		XtRString,
 		MAX_PATH,
-		XtOffsetOf(AppData, bitmapFile),
+		XtOffsetOf(XCursesAppData, bitmapFile),
 		XtRString,
 		(XtPointer)"",
 	},
@@ -728,7 +728,7 @@ static XtResource app_resources[] =
 		"Pixmap",
 		XtRString,
 		MAX_PATH,
-		XtOffsetOf(AppData, pixmapFile),
+		XtOffsetOf(XCursesAppData, pixmapFile),
 		XtRString,
 		(XtPointer)"",
 	},
@@ -739,7 +739,7 @@ static XtResource app_resources[] =
 		"ComposeKey",
 		XtRString,
 		MAX_PATH,
-		XtOffsetOf(AppData, composeKey),
+		XtOffsetOf(XCursesAppData, composeKey),
 		XtRString,
 		(XtPointer)"",
 	},
@@ -749,7 +749,7 @@ static XtResource app_resources[] =
 		"Pointer",
 		XtRCursor,
 		sizeof(Cursor),
-		XtOffsetOf(AppData, pointer),
+		XtOffsetOf(XCursesAppData, pointer),
 		XtRString,
 		(XtPointer)"xterm",
 	},
@@ -759,7 +759,7 @@ static XtResource app_resources[] =
 		"PointerForeColor",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, pointerForeColor),
+		XtOffsetOf(XCursesAppData, pointerForeColor),
 		XtRString,
 		(XtPointer)"Black",
 	},
@@ -769,7 +769,7 @@ static XtResource app_resources[] =
 		"PointerBackColor",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, pointerBackColor),
+		XtOffsetOf(XCursesAppData, pointerBackColor),
 		XtRString,
 		(XtPointer)"White",
 	},
@@ -779,7 +779,7 @@ static XtResource app_resources[] =
 		"Shmmin",
 		XtRInt,
 		sizeof(int),
-		XtOffsetOf(AppData, shmmin),
+		XtOffsetOf(XCursesAppData, shmmin),
 		XtRImmediate,
 		(XtPointer)0,
 	},
@@ -789,7 +789,7 @@ static XtResource app_resources[] =
 		"BorderWidth",
 		XtRInt,
 		sizeof(int),
-		XtOffsetOf(AppData, borderWidth),
+		XtOffsetOf(XCursesAppData, borderWidth),
 		XtRImmediate,
 		(XtPointer)0,
 	},
@@ -799,7 +799,7 @@ static XtResource app_resources[] =
 		"BorderColor",
 		XtRPixel,
 		sizeof(Pixel),
-		XtOffsetOf(AppData, borderColor),
+		XtOffsetOf(XCursesAppData, borderColor),
 		XtRString,
 		(XtPointer)"Black",
 	},
@@ -809,7 +809,7 @@ static XtResource app_resources[] =
 		"DoubleClickPeriod",
 		XtRInt,
 		sizeof(int),
-		XtOffsetOf(AppData, doubleClickPeriod),
+		XtOffsetOf(XCursesAppData, doubleClickPeriod),
 		XtRImmediate,
 		(XtPointer)200,
 	},
@@ -819,7 +819,7 @@ static XtResource app_resources[] =
 		"ClickPeriod",
 		XtRInt,
 		sizeof(int),
-		XtOffsetOf(AppData, clickPeriod),
+		XtOffsetOf(XCursesAppData, clickPeriod),
 		XtRImmediate,
 		(XtPointer)100,
 	},
@@ -829,7 +829,7 @@ static XtResource app_resources[] =
 		"ScrollbarWidth",
 		XtRInt,
 		sizeof(int),
-		XtOffsetOf(AppData, scrollbarWidth),
+		XtOffsetOf(XCursesAppData, scrollbarWidth),
 		XtRImmediate,
 		(XtPointer)15,
 	},
@@ -839,7 +839,7 @@ static XtResource app_resources[] =
 		"CursorBlinkRate",
 		XtRInt,
 		sizeof(int),
-		XtOffsetOf(AppData, cursorBlinkRate),
+		XtOffsetOf(XCursesAppData, cursorBlinkRate),
 		XtRImmediate,
 		(XtPointer)0,
 	},
@@ -849,7 +849,7 @@ static XtResource app_resources[] =
 		"TextCursor",
 		XtRString,
 		MAX_PATH,
-		XtOffsetOf(AppData, textCursor),
+		XtOffsetOf(XCursesAppData, textCursor),
 		XtRString,
 		(XtPointer)"",
 	},
@@ -1182,48 +1182,42 @@ static int XCursesDisplayText(const chtype *ch, int row, int col,
 	return XCursesNewPacket(old_attr, highlight, i, col, row, text);
 }
 
-static void get_GC(Display *display, Window win, GC *gc,
-		   XFontStruct *font_info, int fore, int back, bool highlight)
+static void get_GC(GC *gc, XFontStruct *font_info, int fore, int back)
 {
 	XGCValues values;
 
         /* Create default Graphics Context */
 
-	*gc = XCreateGC(display, win, 0L, &values);
+	*gc = XCreateGC(XCURSESDISPLAY, XCURSESWIN, 0L, &values);
 
         /* specify font */
 
-	XSetFont(display, *gc, font_info->fid);
+	XSetFont(XCURSESDISPLAY, *gc, font_info->fid);
 
-        /* specify black foreground since default may be white on white */
-
-	XSetForeground(display, *gc, colors[fore]);
-	XSetBackground(display, *gc, colors[back]);
-
-	if (highlight)
-		XSetFunction(display, *gc, GXxor);
+	XSetForeground(XCURSESDISPLAY, *gc, colors[fore]);
+	XSetBackground(XCURSESDISPLAY, *gc, colors[back]);
 }
 
 static int get_colors(void)
 {
 	XC_LOG(("in get_colors\n"));
 
-	colors[0] = app_data.colorBlack;
-	colors[1] = app_data.colorRed;
-	colors[2] = app_data.colorGreen;
-	colors[3] = app_data.colorYellow;
-	colors[4] = app_data.colorBlue;
-	colors[5] = app_data.colorMagenta;
-	colors[6] = app_data.colorCyan;
-	colors[7] = app_data.colorWhite;
-	colors[8] = app_data.colorBoldBlack;
-	colors[9] = app_data.colorBoldRed;
-	colors[10] = app_data.colorBoldGreen;
-	colors[11] = app_data.colorBoldYellow;
-	colors[12] = app_data.colorBoldBlue;
-	colors[13] = app_data.colorBoldMagenta;
-	colors[14] = app_data.colorBoldCyan;
-	colors[15] = app_data.colorBoldWhite;
+	colors[0] = xc_app_data.colorBlack;
+	colors[1] = xc_app_data.colorRed;
+	colors[2] = xc_app_data.colorGreen;
+	colors[3] = xc_app_data.colorYellow;
+	colors[4] = xc_app_data.colorBlue;
+	colors[5] = xc_app_data.colorMagenta;
+	colors[6] = xc_app_data.colorCyan;
+	colors[7] = xc_app_data.colorWhite;
+	colors[8] = xc_app_data.colorBoldBlack;
+	colors[9] = xc_app_data.colorBoldRed;
+	colors[10] = xc_app_data.colorBoldGreen;
+	colors[11] = xc_app_data.colorBoldYellow;
+	colors[12] = xc_app_data.colorBoldBlue;
+	colors[13] = xc_app_data.colorBoldMagenta;
+	colors[14] = xc_app_data.colorBoldCyan;
+	colors[15] = xc_app_data.colorBoldWhite;
 	colors[COLOR_CURSOR] = XCURSESCURSORCOLOR;
 	colors[COLOR_BORDER] = XCURSESBORDERCOLOR;
 
@@ -1422,6 +1416,17 @@ static void XCursesGetIcon(void)
 		(char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
 }
 
+static void XCursesBorder(void)
+{
+	/* Draw the border if required */
+
+	if (XCURSESBORDERWIDTH)
+		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
+			XCURSESBORDERWIDTH / 2, XCURSESBORDERWIDTH / 2,
+			XCursesWindowWidth - XCURSESBORDERWIDTH,
+			XCursesWindowHeight - XCURSESBORDERWIDTH);
+}
+
 /* This function redraws the entire screen. */
 
 static void XCursesDisplayScreen(void)
@@ -1443,13 +1448,7 @@ static void XCursesDisplayScreen(void)
 	XCursesDisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, 
 		SP->curscol);
 
-	/* Draw the border if required */
-
-	if (XCURSESBORDERWIDTH)
-		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
-			XCURSESBORDERWIDTH / 2, XCURSESBORDERWIDTH / 2,
-			XCursesWindowWidth - XCURSESBORDERWIDTH,
-			XCursesWindowHeight - XCURSESBORDERWIDTH);
+	XCursesBorder();
 }
 
 /* This function draws those portions of the screen that have changed. */
@@ -1504,8 +1503,8 @@ static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 {
 	XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
-	PDC_LOG(("%s:XCursesNonmaskable called: otherpid %d event %d\n",
-		XCLOGMSG, otherpid, event->type));
+	PDC_LOG(("%s:XCursesNonmaskable called: xc_otherpid %d event %d\n",
+		XCLOGMSG, xc_otherpid, event->type));
 
 	if (event->type == ClientMessage)
 	{
@@ -2454,7 +2453,7 @@ static void XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 	PDC_LOG(("%s:XCursesSendKeyToCurses() - called: sending %d\n",
 		XCLOGMSG, key));
 
-	if (XC_write_socket(XC_key_sock,
+	if (XC_write_socket(xc_key_sock,
 	    (char *)&key, sizeof(unsigned long)) < 0)
 	{
 		XCursesExitXCursesProcess(1, SIGKILL,
@@ -2465,7 +2464,7 @@ static void XCursesSendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 	{
 		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
 
-		if (XC_write_socket(XC_key_sock,
+		if (XC_write_socket(xc_key_sock,
 		    (char *)&Mouse_status, sizeof(MOUSE_STATUS)) < 0)
 		{
 			XCursesExitXCursesProcess(1, SIGKILL,
@@ -2941,19 +2940,79 @@ static void XCursesExitXCursesProcess(int rc, int sig, char *msg)
 
 	XCursesEndwin();
 
-	shutdown(XC_display_sock, 2);
-	close(XC_display_sock);
+	shutdown(xc_display_sock, 2);
+	close(xc_display_sock);
 
-	shutdown(XC_exit_sock, 2);
-	close(XC_exit_sock);
+	shutdown(xc_exit_sock, 2);
+	close(xc_exit_sock);
 
-	shutdown(XC_key_sock, 2);
-	close(XC_key_sock);
+	shutdown(xc_key_sock, 2);
+	close(xc_key_sock);
 
 	if (sig)
-		kill(otherpid, sig);	/* to kill parent process */
+		kill(xc_otherpid, sig);	/* to kill parent process */
 
 	_exit(rc);
+}
+
+static void XCursesResize(void)
+{
+	unsigned char save_atrtab[MAX_ATRTAB]; 
+
+	after_first_curses_request = False;
+
+	SP->lines = XCursesLINES = ((resizeXCursesWindowHeight -
+		(2 * XCURSESBORDERWIDTH)) / XCursesFontHeight);
+
+	LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
+
+	SP->cols = COLS = XCursesCOLS = ((resizeXCursesWindowWidth -
+		(2 * XCURSESBORDERWIDTH)) / XCursesFontWidth);
+
+	XCursesWindowWidth = resizeXCursesWindowWidth;
+	XCursesWindowHeight = resizeXCursesWindowHeight;
+	visible_cursor = 1;
+
+	XCursesBorder();
+
+	/* Detach and drop the current shared memory segment and 
+	   create and attach to a new segment */
+
+	memcpy(save_atrtab, pdc_atrtab, sizeof(save_atrtab));
+
+	SP->XcurscrSize = XCURSCR_SIZE;
+	shmdt((char *)Xcurscr);
+	shmctl(shmid_Xcurscr, IPC_RMID, 0);
+
+	if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,
+		SP->XcurscrSize + XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
+	{ 
+		perror("Cannot allocate shared memory for curscr");
+
+		XCursesExitXCursesProcess(4, SIGKILL,
+			"exiting from XCursesProcessRequestsFromCurses");
+	} 
+
+	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
+	memset(Xcurscr, 0, SP->XcurscrSize);
+	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	memcpy(pdc_atrtab, save_atrtab, sizeof(save_atrtab));
+}
+
+static void XCursesTitle(void)
+{
+	char title[1024];	/* big enough for window title */ 
+	int pos;
+
+	if ((XC_read_socket(xc_display_sock,
+	    (char *)&pos, sizeof(int)) < 0) ||
+	    (XC_read_socket(xc_display_sock, title, pos) < 0))
+	{
+		XCursesExitXCursesProcess(5, SIGKILL,
+			"exiting from XCursesTitle");
+	}
+
+	XtVaSetValues(topLevel, XtNtitle, title, NULL);
 }
 
 static void XCursesContinue(void)
@@ -2966,7 +3025,8 @@ static void XCursesContinue(void)
 static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 					     XtInputId *id) 
 { 
-	int s, idx;
+	struct timeval socket_timeout = {0};
+	int s;
 	int old_row, new_row;
 	int old_x, new_x;
 	int pos, num_cols;
@@ -2974,19 +3034,16 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	long length;
 
 	char buf[12];		/* big enough for 2 integers */ 
-	char title[1024];	/* big enough for window title */ 
-
-	unsigned char save_atrtab[MAX_ATRTAB]; 
 
 	PDC_LOG(("%s:XCursesProcessRequestsFromCurses()\n", XCLOGMSG));
 
 	if (!ReceivedMapNotify) 
 	    return; 
 
-	FD_ZERO(&readfds); 
-	FD_SET(XC_display_sock, &readfds); 
+	FD_ZERO(&xc_readfds); 
+	FD_SET(xc_display_sock, &xc_readfds); 
 
-	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&readfds, NULL, 
+	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
 	  NULL, &socket_timeout)) < 0)
 	    XCursesExitXCursesProcess(2, SIGKILL, "exiting from "
 		"XCursesProcessRequestsFromCurses - select failed");
@@ -2994,7 +3051,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	if (s == 0)	/* no requests pending - should never happen!*/ 
 	    return; 
 
-	if (FD_ISSET(XC_display_sock, &readfds)) 
+	if (FD_ISSET(xc_display_sock, &xc_readfds)) 
 	{ 
 	    /* read first integer to determine total message has 
 	       been received */
@@ -3002,7 +3059,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    PDC_LOG(("%s:XCursesProcessRequestsFromCurses() - "
 		"before XC_read_socket()\n", XCLOGMSG));
 
-	    if (XC_read_socket(XC_display_sock,
+	    if (XC_read_socket(xc_display_sock,
 		(char *)&num_cols, sizeof(int)) < 0) 
 	    {
 		XCursesExitXCursesProcess(3, SIGKILL, "exiting from "
@@ -3042,7 +3099,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_CURSOR:
 		XC_LOG(("CURSES_CURSOR received from child\n"));
 
-		if (XC_read_socket(XC_display_sock, buf, sizeof(int) * 2) < 0)
+		if (XC_read_socket(xc_display_sock, buf, sizeof(int) * 2) < 0)
 		{
 		    XCursesExitXCursesProcess(5, SIGKILL,
 			"exiting from CURSES_CURSOR "
@@ -3050,14 +3107,13 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		}
 
 		memcpy(&pos, buf, sizeof(int)); 
-
 		old_row = pos & 0xFF;
 		old_x = pos >> 8;
-		idx = sizeof(int);
-		memcpy(&pos, buf + idx, sizeof(int));
 
+		memcpy(&pos, buf + sizeof(int), sizeof(int));
 		new_row = pos & 0xFF;
 		new_x = pos >> 8;
+
 		visible_cursor = 1;
 		XCursesDisplayCursor(old_row, old_x, new_row, new_x);
 		break;
@@ -3100,68 +3156,12 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	    case CURSES_TITLE:
 		XC_LOG(("CURSES_TITLE received from child\n"));
-
-		if ((XC_read_socket(XC_display_sock,
-		    (char *)&pos, sizeof(int)) < 0) ||
-		    (XC_read_socket(XC_display_sock, title, pos) < 0))
-		{
-		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_TITLE "
-			"XCursesProcessRequestsFromCurses");
-		}
-
-		XtVaSetValues(topLevel, XtNtitle, title, NULL);
+		XCursesTitle();
 		break;
 
 	    case CURSES_RESIZE:
-		after_first_curses_request = False;
 		XC_LOG(("CURSES_RESIZE received from child\n"));
-
-		SP->lines = XCursesLINES = ((resizeXCursesWindowHeight -
-		    (2 * XCURSESBORDERWIDTH)) / XCursesFontHeight);
-
-		LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
-
-		SP->cols = COLS = XCursesCOLS = ((resizeXCursesWindowWidth -
-		    (2 * XCURSESBORDERWIDTH)) / XCursesFontWidth);
-
-		XCursesWindowWidth = resizeXCursesWindowWidth;
-		XCursesWindowHeight = resizeXCursesWindowHeight;
-		visible_cursor = 1;
-
-		/* Draw the border if required */ 
-
-		if (XCURSESBORDERWIDTH) 
-		{
-		    XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
-			XCURSESBORDERWIDTH / 2, XCURSESBORDERWIDTH / 2,
-			XCursesWindowWidth - XCURSESBORDERWIDTH,
-			XCursesWindowHeight - XCURSESBORDERWIDTH);
-		}
-
-		/* Detach and drop the current shared memory segment and 
-		   create and attach to a new segment */
-
-		memcpy(save_atrtab, pdc_atrtab, sizeof(save_atrtab));
-
-		SP->XcurscrSize = XCURSCR_SIZE;
-		shmdt((char *)Xcurscr);
-		shmctl(shmid_Xcurscr, IPC_RMID, 0);
-
-		if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,
-		    SP->XcurscrSize + XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
-		{ 
-		    perror("Cannot allocate shared memory for curscr");
-
-		    XCursesExitXCursesProcess(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
-		} 
-
-		Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
-		memset(Xcurscr, 0, SP->XcurscrSize);
-		pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-		memcpy(pdc_atrtab, save_atrtab, sizeof(save_atrtab));
-
+		XCursesResize();
 		XCursesContinue(); 
 		break; 
 
@@ -3179,7 +3179,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_SET_SELECTION:
 		XC_LOG(("CURSES_SET_SELECTION received from child\n"));
 
-		if (XC_read_socket(XC_display_sock,
+		if (XC_read_socket(xc_display_sock,
 		    (char *)&length, sizeof(long)) < 0)
 		{
 		    XCursesExitXCursesProcess(5, SIGKILL,
@@ -3203,7 +3203,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    break;
 		}
 
-		if (XC_read_socket(XC_display_sock,
+		if (XC_read_socket(xc_display_sock,
 		    (char *)tmpsel, length * sizeof(chtype)) < 0)
 		{
 		    XCursesExitXCursesProcess(5, SIGKILL,
@@ -3275,11 +3275,11 @@ int XCursesSetupX(int argc, char *argv[])
 	   process can send a CURSES_EXIT to itself from within the 
 	   signal handler */
 
-	XC_exit_sock = display_sockets[0];
-	XC_display_sock = display_sockets[1];
+	xc_exit_sock = xc_display_sockets[0];
+	xc_display_sock = xc_display_sockets[1];
 
-	close(key_sockets[0]);
-	XC_key_sock = key_sockets[1];
+	close(xc_key_sockets[0]);
+	xc_key_sock = xc_key_sockets[1];
 
 	/* Trap all signals when XCurses is the child process, but only 
 	   if they haven't already been ignored by the application. */
@@ -3299,7 +3299,7 @@ int XCursesSetupX(int argc, char *argv[])
 	if (getenv("DISPLAY") == NULL)
 	{
 		fprintf(stderr, "Error: no DISPLAY variable set\n");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		return ERR;
 	}
 
@@ -3308,7 +3308,7 @@ int XCursesSetupX(int argc, char *argv[])
 	topLevel = XtVaAppInitialize(&app_context, XCursesClassName,
 		options, XtNumber(options), &argc, argv, NULL, NULL);
 
-	XtVaGetApplicationResources(topLevel, &app_data, app_resources,
+	XtVaGetApplicationResources(topLevel, &xc_app_data, app_resources,
 		XtNumber(app_resources), NULL);
 
 	/* Check application resource values here */
@@ -3434,7 +3434,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	if (get_colors() == ERR)
 	{
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		return ERR;
 	}
 
@@ -3453,7 +3453,7 @@ int XCursesSetupX(int argc, char *argv[])
 	    0700 | IPC_CREAT)) < 0)
 	{
 		perror("Cannot allocate shared memory for SCREEN");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		return ERR;
 	}
 
@@ -3469,7 +3469,7 @@ int XCursesSetupX(int argc, char *argv[])
 	    XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
 	{
 		perror("Cannot allocate shared memory for curscr");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		shmdt((char *)SP);
 		shmctl(shmidSP, IPC_RMID, 0);
 		return ERR;
@@ -3492,10 +3492,10 @@ int XCursesSetupX(int argc, char *argv[])
 
 	XtAddEventHandler(topLevel, 0, True, XCursesNonmaskable, NULL);
 
-	/* Add input handler from XC_display_sock (requests from curses 
+	/* Add input handler from xc_display_sock (requests from curses 
 	   program) */
 
-	XtAppAddInput(app_context, XC_display_sock, 
+	XtAppAddInput(app_context, xc_display_sock, 
 		(XtPointer)XtInputReadMask, 
 		XCursesProcessRequestsFromCurses, NULL);
 
@@ -3526,21 +3526,21 @@ int XCursesSetupX(int argc, char *argv[])
 
 	XC_LOG(("before get_GC\n"));
 
-	get_GC(XCURSESDISPLAY, XCURSESWIN, &normal_gc, 
-		XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK, FALSE);
+	get_GC(&normal_gc,
+		XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK);
 
-	get_GC(XCURSESDISPLAY, XCURSESWIN, &italic_gc, 
+	get_GC(&italic_gc, 
 		italic_font_valid ? XCURSESITALICFONTINFO : 
-		XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK, FALSE);
+		XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK);
 
-	get_GC(XCURSESDISPLAY, XCURSESWIN, &block_cursor_gc,
-		XCURSESNORMALFONTINFO, COLOR_BLACK, COLOR_CURSOR, FALSE);
+	get_GC(&block_cursor_gc,
+		XCURSESNORMALFONTINFO, COLOR_BLACK, COLOR_CURSOR);
 
-	get_GC(XCURSESDISPLAY, XCURSESWIN, &rect_cursor_gc, 
-		XCURSESNORMALFONTINFO, COLOR_CURSOR, COLOR_BLACK, FALSE);
+	get_GC(&rect_cursor_gc,
+		XCURSESNORMALFONTINFO, COLOR_CURSOR, COLOR_BLACK);
 
-	get_GC(XCURSESDISPLAY, XCURSESWIN, &border_gc, 
-		XCURSESNORMALFONTINFO, COLOR_BORDER, COLOR_BLACK, FALSE);
+	get_GC(&border_gc,
+		XCURSESNORMALFONTINFO, COLOR_BORDER, COLOR_BLACK);
 
 	XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2, LineSolid, 
 		CapButt, JoinMiter);
@@ -3622,7 +3622,7 @@ int XCursesSetupX(int argc, char *argv[])
 	if ((Xim = XOpenIM(XCURSESDISPLAY,NULL,NULL,NULL)) == NULL)
 	{
 		perror("Cannot open Input Method");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		shmdt((char *)SP);
 		shmdt((char *)Xcurscr);
 		shmctl(shmidSP, IPC_RMID, 0);
@@ -3630,13 +3630,13 @@ int XCursesSetupX(int argc, char *argv[])
 		return ERR;
 	}
 
-	XGetIMValues(Xim,XNQueryInputStyle, &im_supported_styles, NULL);
+	XGetIMValues(Xim, XNQueryInputStyle, &im_supported_styles, NULL);
 	my_style = XIMPreeditNone | XIMStatusNone;
 
 	if ((Xic = XCreateIC(Xim, XNInputStyle, my_style, NULL)) == NULL)
 	{
 		perror("ERROR: Cannot create input context");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		shmdt((char *)SP);
 		shmdt((char *)Xcurscr);
 		shmctl(shmidSP, IPC_RMID, 0);
@@ -3696,7 +3696,7 @@ static RETSIGTYPE XCursesSignalHandler(int signo)
 
 	/* Send a CURSES_EXIT to myself */
 
-	if (XC_write_socket(XC_exit_sock, (char *)&flag, sizeof(int)) < 0)
+	if (XC_write_socket(xc_exit_sock, (char *)&flag, sizeof(int)) < 0)
 		XCursesExitXCursesProcess(7, signo,
 			"exiting from XCursesSignalHandler");
 }
@@ -3722,7 +3722,7 @@ static void XCursesRequestorCallbackForGetSelection(Widget w, XtPointer data,
 
 	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
 		if (XC_write_display_socket_int((int)(*length)) >= 0)
-		    if (XC_write_socket(XC_display_sock,
+		    if (XC_write_socket(xc_display_sock,
 			(char *)value, *length) >= 0)
 			    return;
 	}
@@ -3755,7 +3755,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 #ifdef SIGWINCH
 		SP->resized = 1;
 
-		kill(otherpid, SIGWINCH);
+		kill(xc_otherpid, SIGWINCH);
 #endif
 		XCursesSendKeyToCurses((unsigned long)KEY_RESIZE, NULL);
 		break;
@@ -3765,14 +3765,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 
 		ReceivedMapNotify = 1;
 
-		/* Draw the window border */
-
-		if (XCURSESBORDERWIDTH)
-			XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, 
-				border_gc, XCURSESBORDERWIDTH / 2, 
-				XCURSESBORDERWIDTH / 2, 
-				XCursesWindowWidth - XCURSESBORDERWIDTH, 
-				XCursesWindowHeight - XCURSESBORDERWIDTH);
+		XCursesBorder();
 		break;
 
 	default:

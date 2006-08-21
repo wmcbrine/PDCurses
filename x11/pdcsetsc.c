@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.23 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.24 2006/08/21 04:29:46 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -64,7 +64,7 @@ void PDC_set_title(const char *title)
 	XCursesInstruct(CURSES_TITLE);
 
 	if (XC_write_display_socket_int(len) >= 0)
-		if (XC_write_socket(XC_display_sock, title, len) >= 0)
+		if (XC_write_socket(xc_display_sock, title, len) >= 0)
 			return;
 
 	XCursesExitCursesProcess(1, "exiting from PDC_set_title");

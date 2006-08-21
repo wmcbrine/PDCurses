@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.83 2006/08/13 00:05:39 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.84 2006/08/21 04:29:46 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -31,19 +31,16 @@ int shmidSP;
 int shmid_Xcurscr;
 int shmkeySP;
 int shmkey_Xcurscr;
-int otherpid;
+int xc_otherpid;
 int XCursesLINES = 24;
 int XCursesCOLS = 80;
-int XC_display_sock;
-int XC_key_sock;
-int display_sockets[2];
-int key_sockets[2];
-int XC_exit_sock;
+int xc_display_sock;
+int xc_key_sock;
+int xc_display_sockets[2];
+int xc_key_sockets[2];
+int xc_exit_sock;
 
-fd_set readfds;
-fd_set writefds;
-
-struct timeval socket_timeout;
+fd_set xc_readfds;
 
 static void dummy_function(void)
 {
@@ -73,7 +70,7 @@ int XC_write_socket(int sock_num, const char *buf, int len)
 		XCLOGMSG, sock_num, len));
 
 #ifdef MOUSE_DEBUG
-	if (sock_num == XC_key_sock)
+	if (sock_num == xc_key_sock)
 		printf("%s:XC_write_socket(key) len: %d\n", XCLOGMSG, len);
 #endif
 	while (1)
@@ -100,11 +97,11 @@ int XC_read_socket(int sock_num, char *buf, int len)
 		rc = read(sock_num, buf + start, length);
 
 #ifdef MOUSE_DEBUG
-		if (sock_num == XC_key_sock)
+		if (sock_num == xc_key_sock)
 		    printf("%s:XC_read_socket(key) rc %d errno %d "
 			"resized: %d\n", XCLOGMSG, rc, errno, SP->resized);
 #endif
-		if (rc < 0 && sock_num == XC_key_sock && errno == EINTR
+		if (rc < 0 && sock_num == xc_key_sock && errno == EINTR
 		    && SP->resized != FALSE)
 		{
 			MOUSE_LOG(("%s:continuing\n", XCLOGMSG));
@@ -131,7 +128,7 @@ int XC_read_socket(int sock_num, char *buf, int len)
 
 int XC_write_display_socket_int(int x)
 {
-	return XC_write_socket(XC_display_sock, (char *)&x, sizeof(int));
+	return XC_write_socket(xc_display_sock, (char *)&x, sizeof(int));
 }
 
 
@@ -161,7 +158,7 @@ int XCursesInstructAndWait(int flag)
 
 	/* wait for X to say the refresh has occurred*/
 
-	if (XC_read_socket(XC_display_sock, (char *)&result, sizeof(int)) < 0)
+	if (XC_read_socket(xc_display_sock, (char *)&result, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCursesInstructAndWait");
 
@@ -178,16 +175,15 @@ static int XCursesSetupCurses(void)
 
 	PDC_LOG(("%s:XCursesSetupCurses called\n", XCLOGMSG));
 
-	close(display_sockets[1]);
-	close(key_sockets[1]);
+	close(xc_display_sockets[1]);
+	close(xc_key_sockets[1]);
 
-	XC_display_sock = display_sockets[0];
-	XC_key_sock = key_sockets[0];
+	xc_display_sock = xc_display_sockets[0];
+	xc_key_sock = xc_key_sockets[0];
 
-	FD_ZERO(&readfds);
-	FD_ZERO(&writefds);
+	FD_ZERO(&xc_readfds);
 
-	XC_read_socket(XC_display_sock, (char *)&wait_value, sizeof(int));
+	XC_read_socket(xc_display_sock, (char *)&wait_value, sizeof(int));
 
 	if (wait_value != CURSES_CHILD)
 		return ERR;
@@ -199,7 +195,7 @@ static int XCursesSetupCurses(void)
 	    0700)) < 0)
 	{
 		perror("Cannot allocate shared memory for SCREEN");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		return ERR;
 	}
 
@@ -213,7 +209,7 @@ static int XCursesSetupCurses(void)
 	    SP->XcurscrSize + XCURSESSHMMIN, 0700)) < 0)
 	{
 		perror("Cannot allocate shared memory for curscr");
-		kill(otherpid, SIGKILL);
+		kill(xc_otherpid, SIGKILL);
 		return ERR;
 	}
 
@@ -257,15 +253,14 @@ int XCursesInitscr(int argc, char *argv[])
 		fprintf(stderr, "WARNING: Cannot set locale modifiers\n");
 #endif
 	shmkeySP = getpid();
-	memset(&socket_timeout, '\0', sizeof(socket_timeout));
             
-	if (socketpair(AF_UNIX, SOCK_STREAM, 0, display_sockets) < 0)
+	if (socketpair(AF_UNIX, SOCK_STREAM, 0, xc_display_sockets) < 0)
 	{
 		fprintf(stderr, "ERROR: cannot create display socketpair\n");
 		return ERR;
 	}
             
-	if (socketpair(AF_UNIX, SOCK_STREAM, 0, key_sockets) < 0)
+	if (socketpair(AF_UNIX, SOCK_STREAM, 0, xc_key_sockets) < 0)
 	{
 		fprintf(stderr, "ERROR: cannot create key socketpair\n");
 		return ERR;
@@ -287,7 +282,7 @@ int XCursesInitscr(int argc, char *argv[])
 		rc = XCursesSetupCurses();
 #else
 		XCursesProcess = 1;
-		otherpid = getppid();
+		xc_otherpid = getppid();
 		rc = XCursesSetupX(argc, argv);
 #endif
 		break;
@@ -296,7 +291,7 @@ int XCursesInitscr(int argc, char *argv[])
 		shmkey_Xcurscr = pid;
 #ifdef XISPARENT
 		XCursesProcess = 1;
-		otherpid = pid;
+		xc_otherpid = pid;
 		rc = XCursesSetupX(argc, argv);
 #else
 		XCursesProcess = 0;
@@ -312,11 +307,11 @@ static void XCursesCleanupCursesProcess(int rc)
 	PDC_LOG(("%s:XCursesCleanupCursesProcess() - called: %d\n",
 		XCLOGMSG, rc));
 
-	shutdown(XC_display_sock, 2);
-	close(XC_display_sock);
+	shutdown(xc_display_sock, 2);
+	close(xc_display_sock);
 
-	shutdown(XC_key_sock, 2);
-	close(XC_key_sock);
+	shutdown(xc_key_sock, 2);
+	close(xc_key_sock);
 
 	shmdt((char *)SP);
 	shmdt((char *)Xcurscr);

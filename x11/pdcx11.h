@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.48 2006/08/11 19:50:51 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.49 2006/08/21 04:29:46 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -135,11 +135,11 @@ typedef struct
 	int scrollbarWidth;
 	int cursorBlinkRate;
 	char *textCursor;
-} AppData;
+} XCursesAppData;
 
-extern AppData app_data;
+extern XCursesAppData xc_app_data;
 
-#define XCURSESSHMMIN		app_data.shmmin
+#define XCURSESSHMMIN		xc_app_data.shmmin
 
 #define XCLOGMSG		(XCursesProcess ? "     X" : "CURSES")
 
@@ -166,9 +166,7 @@ RETSIGTYPE XCursesSigwinchHandler(int signo);
 # define FD_SET_CAST fd_set *
 #endif
 
-extern fd_set readfds;
-extern fd_set writefds;
-extern struct timeval socket_timeout;
+extern fd_set xc_readfds;
 
 extern unsigned char *Xcurscr;
 extern int XCursesProcess;
@@ -176,14 +174,14 @@ extern int shmidSP;
 extern int shmid_Xcurscr;
 extern int shmkeySP;
 extern int shmkey_Xcurscr;
-extern int otherpid;
+extern int xc_otherpid;
 extern int XCursesLINES;
 extern int XCursesCOLS;
-extern int XC_display_sock;
-extern int XC_key_sock;
-extern int display_sockets[2];
-extern int key_sockets[2];
-extern int XC_exit_sock;
+extern int xc_display_sock;
+extern int xc_key_sock;
+extern int xc_display_sockets[2];
+extern int xc_key_sockets[2];
+extern int xc_exit_sock;
 
 typedef RETSIGTYPE (*signal_handler)();
 

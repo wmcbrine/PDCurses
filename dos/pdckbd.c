@@ -23,7 +23,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.36 2006/08/13 02:51:55 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.37 2006/08/21 18:51:09 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -348,8 +348,9 @@ bool PDC_get_ctrl_break(void)
 
 int PDC_set_ctrl_break(bool setting)
 {
+#ifndef __DJGPP__
 	union REGS regs;
-
+#endif
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
 #ifdef __DJGPP__

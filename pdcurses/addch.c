@@ -26,7 +26,7 @@
 #undef echochar
 #undef wechochar
 
-RCSID("$Id: addch.c,v 1.24 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.25 2006/08/21 18:19:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -39,6 +39,8 @@ RCSID("$Id: addch.c,v 1.24 2006/08/20 21:48:36 wmcbrine Exp $");
 	int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
 	int echochar(const chtype ch);
 	int wechochar(WINDOW *win, const chtype ch);
+
+	int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance);
 
   X/Open Description:
 	The routine addch() inserts the character ch into the default
@@ -101,6 +103,19 @@ RCSID("$Id: addch.c,v 1.24 2006/08/20 21:48:36 wmcbrine Exp $");
 	Depending upon the state of the raw character output, 7- or
 	8-bit characters will be output.
 
+	PDC_chadd provides the basic functionality for [mv][w]addch().
+	If 'xlat' is TRUE, PDC_chadd() will handle things in a cooked
+	manner (tabs, newlines, carriage returns, etc).  If 'xlat' is
+	FALSE, the characters are simply output directly. The normal 
+	curses routines (non-raw-output-mode) call PDC_chadd() with 
+	'xlat' TRUE. If 'advance' is TRUE, PDC_chadd() will move the 
+	current cusor position appropriately. The *addch functions call 
+	PDC_chadd() with advance TRUE, while the *insch functions call
+	PDC_chadd() with advance FALSE. If an alternate character is to 
+	be displayed, the character is displayed without translation 
+	(minus the A_ALTCHARSET of course). This function returns OK on 
+	success and ERR on error.
+
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -112,8 +127,226 @@ RCSID("$Id: addch.c,v 1.24 2006/08/20 21:48:36 wmcbrine Exp $");
 	mvwaddch				Y	Y	Y
 	echochar				-	-      3.0
 	wechochar				-	-      3.0
+	PDC_chadd				-	-	-
 
 **man-end****************************************************************/
+
+/* _newline() - Does line advance and returns the new cursor line.  
+   If error, return -1. */
+
+static int _newline(WINDOW *win, int lin)
+{
+	if (win == (WINDOW *)NULL)
+		return -1;
+
+	if (++lin > win->_bmarg)
+	{
+		lin--;
+
+		if (win->_scroll)
+			scroll(win);
+		else
+			return -1;
+	}
+
+	return lin;
+}
+
+int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
+{
+	int x, y, x2, retval;
+	chtype attr, bktmp;
+
+	PDC_LOG(("PDC_chadd() - called: win=%x ch=%x "
+		"(char=%c attr=0x%x) xlat=%d advance=%d\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat, advance));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	x  = win->_curx;
+	y  = win->_cury;
+
+	if ((y > win->_maxy) || (x > win->_maxx) || (y < 0) || (x < 0))
+		return ERR;
+
+	/* Remove any A_ALTCHARSET attribute from the ch before any
+	   further testing. If the character has A_ALTCHARSET, set xlat
+	   to FALSE. */
+
+	if (ch & A_ALTCHARSET)
+	{
+		xlat = FALSE;
+		ch = ch & (~A_ALTCHARSET);
+	}
+
+	/* If the incoming character doesn't have its own attribute, 
+	   then use the current attributes for the window. If it has 
+	   attributes but not a color component, OR the attributes to 
+	   the current attributes for the window. If it has a color 
+	   component, use the attributes solely from the incoming 
+	   character. */
+
+	if ((ch & A_ATTRIBUTES) == 0)
+		attr = win->_attrs;
+	else
+		if ((ch & A_COLOR) == 0)
+			attr = (ch & A_ATTRIBUTES) | win->_attrs;
+		else
+			attr = ch & A_ATTRIBUTES;
+
+	ch = (ch & A_CHARTEXT);
+
+	/* wrs (4/10/93): Apply the same sort of logic for the window 
+	   background, in that it only takes precedence if other color 
+	   attributes are not there and that the background character 
+	   will only print if the printing character is blank. */
+
+	if ((attr & A_COLOR) == 0)
+		attr |= win->_bkgd & A_ATTRIBUTES;
+	else
+	{
+		bktmp = win->_bkgd & A_COLOR;
+		attr |= (win->_bkgd & A_ATTRIBUTES) ^ bktmp;
+	}
+
+	if (ch == ' ')
+		ch = win->_bkgd & A_CHARTEXT;
+
+	if (xlat)
+	{
+		switch (ch)
+		{
+		case '\t':
+			for (x2 = ((x / TABSIZE) + 1) * TABSIZE; x < x2; x++)
+			{
+				if (waddch(win, ' ') == ERR)
+				{
+					PDC_sync(win);
+					return ERR;
+				}
+
+				/* if tab to next line, exit the loop */
+
+				if (win->_curx == 0)
+					break;
+			}
+			PDC_sync(win);
+			return OK;
+
+		case '\n':
+			/* if lf -> crlf */
+
+			if (!SP->raw_out)
+				x = 0;
+
+			wclrtoeol(win);
+
+			if ((y = _newline(win, y)) < 0)
+			{
+				PDC_sync(win);
+				return ERR;
+			}
+
+			if (advance)
+			{
+				win->_cury = y;
+				win->_curx = x;
+			}
+
+			PDC_sync(win);
+			return OK;
+
+		case '\r':
+			if (advance)
+				win->_curx = x = 0;
+
+			PDC_sync(win);
+			return OK;
+
+		case '\b':
+			/* don't back over left margin */
+
+			if (--x < 0)
+				x = 0;
+
+			if (advance)
+				win->_curx = x;
+
+			PDC_sync(win);
+			return OK;
+
+		case 0x7f:
+			if (waddch(win, '^') == ERR)
+			{
+				PDC_sync(win);
+				return ERR;
+			}
+			retval = waddch(win, '?');
+			PDC_sync(win);
+			return retval;
+		}
+
+		if (ch < ' ')
+		{
+			/* handle control chars */
+
+			if (waddch(win, '^') == ERR)
+         		{
+				PDC_sync(win);
+				return ERR;
+			}
+			retval = (waddch(win, ch + '@'));
+			PDC_sync(win);
+			return retval;
+		}
+	}
+
+	/* Add the attribute back into the character. */
+
+	ch |= attr;
+
+	/* Only change _firstch/_lastch if the character to be added is 
+	   different from the character/attribute that is already in 
+	   that position in the window. */
+
+	if (win->_y[y][x] != ch)
+	{
+		if (win->_firstch[y] == _NO_CHANGE)
+			win->_firstch[y] = win->_lastch[y] = x;
+		else
+			if (x < win->_firstch[y])
+				win->_firstch[y] = x;
+			else
+				if (x > win->_lastch[y])
+					win->_lastch[y] = x;
+	}
+
+	win->_y[y][x++] = ch;
+
+	if (x >= win->_maxx)
+	{
+		/* wrap around test */
+
+		x = 0;
+
+		if ((y = _newline(win, y)) < 0)
+		{
+			PDC_sync(win);
+			return ERR;
+		}
+	}
+
+	if (advance)
+	{
+		win->_curx = x;
+		win->_cury = y;
+	}
+
+	PDC_sync(win);
+
+	return OK;
+}
 
 int addch(const chtype ch)
 {

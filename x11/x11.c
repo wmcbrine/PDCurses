@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.10 2006/08/13 00:05:39 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.11 2006/08/21 01:27:53 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -1057,8 +1057,7 @@ static int XCursesNewPacket(chtype attr, bool rev, int len, int col, int row,
 	}
 
 #ifdef PDC_WIDE
-	text[len].byte1 = 0;
-	text[len].byte2 = 0;
+	text[len].byte1 = text[len].byte2 = 0;
 #else
 	text[len] = '\0';
 #endif
@@ -1176,7 +1175,7 @@ static int XCursesDisplayText(const chtype *ch, int row, int col,
 		text[i].byte1 = (curr & 0xff00) >> 8;
 		text[i++].byte2 = curr & 0x00ff;
 #else
-		text[i++] = curr & A_CHARTEXT;
+		text[i++] = curr & 0xff;
 #endif
 	}
 
@@ -2320,7 +2319,6 @@ static void XCursesDisplayCursor(int old_row, int old_x,
 				 int new_row, int new_x)
 {
 	int xpos, ypos, i;
-	char buf[2];
 	chtype *ch;
 	short fore = 0, back = 0;
 
@@ -2344,88 +2342,79 @@ static void XCursesDisplayCursor(int old_row, int old_x,
 
 	/* display the cursor at the new cursor position */
 
-	switch(SP->visibility)
+	if (!SP->visibility)
+		return;		/* cursor not displayed, no more to do */
+
+	makeXY(new_x, new_row, XCursesFontWidth, XCursesFontHeight, 
+		&xpos, &ypos);
+
+	ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) + new_x *
+		sizeof(chtype));
+
+	SetCursorColor(ch, &fore, &back);
+
+	if (vertical_cursor)
 	{
-	case 0:		/* cursor not displayed, no more to do */
-		break;
-
-	case 1:		/* cursor visibility normal */
-
-		makeXY(new_x, new_row, XCursesFontWidth, 
-			XCursesFontHeight, &xpos, &ypos);
-
-		ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) + 
-			new_x * sizeof(chtype));
-
-		SetCursorColor(ch, &fore, &back);
 		XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
 
-		if (vertical_cursor)
-			XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-				xpos + 1,
+		for (i = 1; i <= SP->visibility; i++)
+			XDrawLine(XCURSESDISPLAY, XCURSESWIN,
+				rect_cursor_gc,
+				xpos + i,
 				ypos - XCURSESNORMALFONTINFO->ascent,
-				xpos + 1, 
+				xpos + i,
 				ypos - XCURSESNORMALFONTINFO->ascent + 
 					XCursesFontHeight - 1);
-		else
-		    for (i = 0; i < XCURSESNORMALFONTINFO->descent + 2; i++)
-			XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-				xpos,
-				ypos - 2 + i,
-				xpos + XCursesFontWidth, 
-				ypos - 2 + i);
-
-		PDC_LOG(("%s:XCursesDisplayCursor() - draw line at "
-			"row %d col %d\n", XCLOGMSG, new_row, new_x));
-
-		break;
-
-	default:	/* cursor visibility high */
-
-		makeXY(new_x, new_row, XCursesFontWidth, 
-			XCursesFontHeight, &xpos, &ypos);
-
-		ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) +
-			new_x * sizeof(chtype));
-
-		SetCursorColor(ch, &fore, &back);
-
-		if (vertical_cursor)
+	}
+	else
+	{
+		if (SP->visibility == 1)
 		{
-			XSetForeground(XCURSESDISPLAY, rect_cursor_gc, 
+			/* cursor visibility normal */
+
+			XSetForeground(XCURSESDISPLAY, rect_cursor_gc,
 				colors[back]);
 
-			XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-				xpos + 1,
-				ypos - XCURSESNORMALFONTINFO->ascent,
-				xpos + 1,
-				ypos - XCURSESNORMALFONTINFO->ascent + 
-					XCursesFontHeight - 1);
-
-			XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-				xpos + 2,
-				ypos - XCURSESNORMALFONTINFO->ascent,
-				xpos + 2,
-				ypos - XCURSESNORMALFONTINFO->ascent + 
-					XCursesFontHeight - 1);
+			for (i = 0; i < XCURSESNORMALFONTINFO->descent + 2; i++)
+				XDrawLine(XCURSESDISPLAY, XCURSESWIN,
+					rect_cursor_gc,
+					xpos,
+					ypos - 2 + i,
+					xpos + XCursesFontWidth, 
+					ypos - 2 + i);
 		}
 		else
 		{
-			buf[0] =  (char)(*ch & A_CHARTEXT);
-			buf[1] = '\0';
+			/* cursor visibility high */
+#ifdef PDC_WIDE
+			XChar2b buf[2];
 
+			buf[0].byte1 = (*ch & 0xff00) >> 8;
+			buf[0].byte2 = *ch & 0x00ff;
+
+			buf[1].byte1 = buf[1].byte2 = 0;
+#else
+			char buf[2];
+
+			buf[0] = *ch & 0xff;
+			buf[1] = '\0';
+#endif
 			XSetForeground(XCURSESDISPLAY, block_cursor_gc, 
 				colors[fore]);
 			XSetBackground(XCURSESDISPLAY, block_cursor_gc, 
 				colors[back]);
-			XDrawImageString(XCURSESDISPLAY, XCURSESWIN, 
+#ifdef PDC_WIDE
+			XDrawImageString16(
+#else
+			XDrawImageString(
+#endif
+				XCURSESDISPLAY, XCURSESWIN, 
 				block_cursor_gc, xpos, ypos, buf, 1);
 		}
-
-		PDC_LOG(("%s:XCursesDisplayCursor() - draw cursor at "
-			"row: %d col %d char <%s>\n",
-			XCLOGMSG, new_row, new_x, buf));
 	}
+
+	PDC_LOG(("%s:XCursesDisplayCursor() - draw cursor at "
+		"row %d col %d\n", XCLOGMSG, new_row, new_x));
 }
 
 static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data, 
@@ -2613,15 +2602,15 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			"Height: %d\n", event->xbutton.y, event->xbutton.x, 
 			XCursesFontWidth, XCursesFontHeight));
 
+		MOUSE_X_POS = (event->xbutton.x - XCURSESBORDERWIDTH) / 
+			XCursesFontWidth;
+		MOUSE_Y_POS = (event->xbutton.y - XCURSESBORDERWIDTH) / 
+			XCursesFontHeight;
+
 		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
 		    && !(event->xbutton.state & ControlMask)
 		    && !(event->xbutton.state & Mod1Mask))
 		{
-			MOUSE_X_POS = (event->xbutton.x - 
-				XCURSESBORDERWIDTH) / XCursesFontWidth;
-			MOUSE_Y_POS = (event->xbutton.y - 
-				XCURSESBORDERWIDTH) / XCursesFontHeight;
-
 			SelectionExtend(MOUSE_X_POS, MOUSE_Y_POS);
 			send_key = FALSE;
 		}
@@ -2632,11 +2621,6 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 		   character position as the last mouse event, or if we 
 		   are currently in the middle of a double click event. */
 
-		MOUSE_X_POS = (event->xbutton.x - XCURSESBORDERWIDTH) / 
-			XCursesFontWidth;
-		MOUSE_Y_POS = (event->xbutton.y - XCURSESBORDERWIDTH) / 
-			XCursesFontHeight;
-
 		if ((MOUSE_X_POS == save_mouse_status.x &&
 		     MOUSE_Y_POS == save_mouse_status.y) || 
 		     save_mouse_status.button[button_no - 1] ==
@@ -2645,11 +2629,6 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			send_key = FALSE;
 			break;
 		}
-
-		MOUSE_X_POS = (event->xbutton.x - XCURSESBORDERWIDTH) / 
-			XCursesFontWidth;
-		MOUSE_Y_POS = (event->xbutton.y - XCURSESBORDERWIDTH) / 
-			XCursesFontHeight;
 
 		Mouse_status.changes |= 8;
 
@@ -2670,6 +2649,11 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 		}
 		else
 		{
+		    MOUSE_X_POS = (event->xbutton.x - 
+			XCURSESBORDERWIDTH) / XCursesFontWidth;
+		    MOUSE_Y_POS = (event->xbutton.y - 
+			XCURSESBORDERWIDTH) / XCursesFontHeight;
+
 		    if (!handle_real_release)
 		    {
 			if ((event->xbutton.time - 
@@ -2684,10 +2668,6 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			    MOUSE_LOG(("Release at: %ld - click\n",
 				event->xbutton.time));
 
-			    MOUSE_X_POS = (event->xbutton.x - 
-				XCURSESBORDERWIDTH) / XCursesFontWidth;
-			    MOUSE_Y_POS = (event->xbutton.y - 
-				XCURSESBORDERWIDTH) / XCursesFontHeight;
 			    BUTTON_STATUS(button_no) = BUTTON_CLICKED;
 
 			    if (!(SP->_trap_mbe & BUTTON1_RELEASED)
@@ -2733,10 +2713,6 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			    MOUSE_LOG(("Generated Release at: %ld - "
 				"press & release\n", event->xbutton.time));
 
-			    MOUSE_X_POS = (event->xbutton.x - 
-				XCURSESBORDERWIDTH) / XCursesFontWidth;
-			    MOUSE_Y_POS = (event->xbutton.y - 
-				XCURSESBORDERWIDTH) / XCursesFontHeight;
 			    BUTTON_STATUS(button_no) = BUTTON_PRESSED;
 
 			    if (!(SP->_trap_mbe & BUTTON1_PRESSED)
@@ -2773,10 +2749,6 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 		MOUSE_LOG(("\nButtonRelease\n"));
 
-		MOUSE_X_POS = (event->xbutton.x - XCURSESBORDERWIDTH) / 
-		    XCursesFontWidth;
-		MOUSE_Y_POS = (event->xbutton.y - XCURSESBORDERWIDTH) / 
-		    XCursesFontHeight;
 		BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
 		if (!(SP->_trap_mbe & BUTTON1_RELEASED) && button_no == 1)
@@ -3129,15 +3101,9 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_TITLE:
 		XC_LOG(("CURSES_TITLE received from child\n"));
 
-		if (XC_read_socket(XC_display_sock,
-		    (char *)&pos, sizeof(int)) < 0)
-		{
-		    XCursesExitXCursesProcess(5, SIGKILL,
-			"exiting from CURSES_TITLE "
-			"XCursesProcessRequestsFromCurses");
-		}
-
-		if (XC_read_socket(XC_display_sock, title, pos) < 0)
+		if ((XC_read_socket(XC_display_sock,
+		    (char *)&pos, sizeof(int)) < 0) ||
+		    (XC_read_socket(XC_display_sock, title, pos) < 0))
 		{
 		    XCursesExitXCursesProcess(5, SIGKILL,
 			"exiting from CURSES_TITLE "
@@ -3563,14 +3529,9 @@ int XCursesSetupX(int argc, char *argv[])
 	get_GC(XCURSESDISPLAY, XCURSESWIN, &normal_gc, 
 		XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK, FALSE);
 
-	if (italic_font_valid)
-		get_GC(XCURSESDISPLAY, XCURSESWIN, &italic_gc, 
-			XCURSESITALICFONTINFO, COLOR_WHITE, COLOR_BLACK, 
-			FALSE);
-	else
-		get_GC(XCURSESDISPLAY, XCURSESWIN, &italic_gc, 
-			XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK, 
-			FALSE);
+	get_GC(XCURSESDISPLAY, XCURSESWIN, &italic_gc, 
+		italic_font_valid ? XCURSESITALICFONTINFO : 
+		XCURSESNORMALFONTINFO, COLOR_WHITE, COLOR_BLACK, FALSE);
 
 	get_GC(XCURSESDISPLAY, XCURSESWIN, &block_cursor_gc,
 		XCURSESNORMALFONTINFO, COLOR_BLACK, COLOR_CURSOR, FALSE);

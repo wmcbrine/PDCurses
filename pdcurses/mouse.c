@@ -19,9 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.22 2006/08/20 21:48:36 wmcbrine Exp $");
-
-MOUSE_STATUS pdc_mouse_status;
+RCSID("$Id: mouse.c,v 1.23 2006/08/23 19:06:59 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

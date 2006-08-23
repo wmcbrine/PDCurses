@@ -23,7 +23,9 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.37 2006/08/21 18:51:09 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.38 2006/08/23 19:06:58 wmcbrine Exp $");
+
+MOUSE_STATUS pdc_mouse_status;
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*

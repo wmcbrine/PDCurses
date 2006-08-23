@@ -17,7 +17,9 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.37 2006/08/21 04:29:46 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.38 2006/08/23 19:06:59 wmcbrine Exp $");
+
+MOUSE_STATUS pdc_mouse_status;
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)

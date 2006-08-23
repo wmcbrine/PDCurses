@@ -1,11 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT
+AC_INIT(PDCurses, 3.0, wmcbrine@users.sf.net, PDCurses)
 AC_CONFIG_SRCDIR([curspriv.h])
 
 AC_SUBST(prefix)
 
 AC_PROG_CC
-AC_ISC_POSIX
 
 AC_CONFIG_HEADER(config.h)
 dnl Checks for system first
@@ -67,24 +66,17 @@ dnl Checks for libraries.
 AC_CHECK_HEADERS(fcntl.h \
 	sys/time.h \
 	sys/select.h \
-	dlfcn.h \
-	dl.h \
 	errno.h
-	)
-
+)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-dnl AC_C_CONST
-dnl AC_TYPE_SIZE_T
 AC_HEADER_TIME
-dnl AC_CHECK_TYPE(fd_set,int)
 MH_CHECK_LIB(socket nls)
 AC_SUBST(MH_EXTRA_LIBS)
 MH_CHECK_CC_O
 
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
-AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(vsscanf usleep poll vsnprintf)
 
 dnl Check for X includes and X libraries
@@ -147,7 +139,9 @@ AC_ARG_ENABLE(latin1,
 	[with_latin1=no],
 )
 if test "$with_latin1" = yes; then
-	AC_DEFINE(INCLUDE_LATIN1)
+	AC_DEFINE([INCLUDE_LATIN1], [1], 
+		[Define if you want to include LATIN1 key support]
+	)
 fi
 
 dnl --------------- check for wide character support ----------------
@@ -183,7 +177,9 @@ AC_ARG_WITH(xaw3d,
 	[with_xaw3d=no],
 )
 if test "$with_xaw3d" = yes; then
-	AC_DEFINE(USE_XAW3D)
+	AC_DEFINE([USE_XAW3D], [1],
+		[Define if you want to use Xaw3d library]
+	)
 fi
 
 dnl ---------------------- check for neXtaw library -------------------
@@ -194,7 +190,9 @@ AC_ARG_WITH(nextaw,
 	[with_nextaw=no],
 )
 if test "$with_nextaw" = yes; then
-	AC_DEFINE(USE_NEXTAW)
+	AC_DEFINE([USE_NEXTAW], [1],
+		[Define if you want to use neXtaw library]
+	)
 fi
 
 dnl --------------- Check how to make shared libraries -------------------
@@ -212,3 +210,79 @@ case "$target" in
         *)
                 ;;
 esac
+
+AC_DEFINE([PDC_MAX_SIGNALS], [],
+	[Define as the system defined limit for number of signals]
+)
+
+AC_DEFINE([HAVE_DECKEYSYM_H], [],
+	[Define if you have the <DECkeySym.h> header file]
+)
+
+AC_DEFINE([HAVE_SUNKEYSYM_H], [],
+	[Define if you have the <Sunkeysym.h> header file]
+)
+
+AC_DEFINE([HAVE_XPM_H], [],
+	[Define if you have the <xpm.h> header file]
+)
+
+AC_DEFINE([HAVE_XK_KP_DELETE], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_INSERT], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_END], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_DOWN], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_NEXT], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_LEFT], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_RIGHT], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_HOME], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_UP], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_PRIOR], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([HAVE_XK_KP_BEGIN], [],
+	[Define if you have this defined in <keysym.h>]
+)
+
+AC_DEFINE([USE_XAW3D], [],
+	[Define if you want to use Xaw3d library]
+)
+
+AC_DEFINE([USE_NEXTAW], [],
+	[Define if you want to use neXtaw library]
+)
+
+AC_DEFINE([INCLUDE_LATIN1], [],
+	[Define if you want to include LATIN1 key support]
+)
+
+AC_DEFINE([XPOINTER_TYPEDEFED], [],
+	[Define XPointer is typedefed in X11/Xlib.h]
+)

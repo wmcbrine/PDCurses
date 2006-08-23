@@ -21,22 +21,9 @@
 # include <unistd.h>
 #endif
 
-#if defined(DOS) && defined(MSC)
 #include <time.h>
-#endif
 
-#ifdef TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# ifdef HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-RCSID("$Id: pdcutil.c,v 1.8 2006/08/11 22:19:45 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.9 2006/08/23 09:06:16 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

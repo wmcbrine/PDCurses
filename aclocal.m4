@@ -389,7 +389,7 @@ CPPFLAGS="$save_CPPFLAGS"
 ])dnl
 
 dnl ---------------------------------------------------------------------------
-dnl Check for presense of various libraries
+dnl Check for presence of various libraries
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_CHECK_LIB],
 [
@@ -533,7 +533,6 @@ dnl
 dnl If compiler is gcc, then flags should be the same for all platforms
 dnl (just guessing on this)
 dnl
-OBJ="o"
 DYNAMIC_LDFLAGS=""
 AIX_DYN="no"
 BEOS_DYN="no"
@@ -543,10 +542,6 @@ RXPACKEXPORTS=""
 SHLPRE="lib"
 LD_RXLIB1=""
 LD_RXTRANSLIB1="$LD_RXLIB1"
-LIBEXE="ar"
-LIBFLAGS="cr"
-LIBPRE="lib"
-LIBPST=".a"
 
 AC_REQUIRE([AC_CANONICAL_SYSTEM])
 case "$target" in
@@ -627,22 +622,18 @@ case "$target" in
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*qnx*)
-		LIBPRE=""
-		LIBPST=".lib"
 		SHLPRE=""
 		DYN_COMP="-Q"   # force no check for dynamic loading
 		SHLFILE=""
 		EEXTRA="-mf -N0x20000 -Q"
 		;;
 	*cygwin)
-		LIBPRE="lib"
 		SHLPRE=""
 		DYN_COMP="-DDYNAMIC"
-		LIBPST=".a"
 # Only for Rexx/Trans do we produce an import library for the DLL we are
 # building
 		LD_RXLIB1="dllwrap --def ./cygwin.def --target i386-cygwin32 --dllname \$(@)"
-		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
+		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib lib\$(basename \$(@)).a --target i386-cygwin32 --dllname \$(@)"
 # cygwininstall target MUST install the shared library itself because
 # it puts it into $(bindir) not $(libdir) as all other platforms
 		;;
@@ -725,17 +716,12 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 fi
 
 AC_SUBST(EEXTRA)
-AC_SUBST(OBJ)
 AC_SUBST(DYN_COMP)
 AC_SUBST(LIBS)
 AC_SUBST(LD_RXLIB1)
 AC_SUBST(LD_RXTRANSLIB1)
 AC_SUBST(SHLPRE)
 AC_SUBST(SHLPST)
-AC_SUBST(LIBPST)
-AC_SUBST(LIBPRE)
-AC_SUBST(LIBEXE)
-AC_SUBST(LIBFLAGS)
 AC_SUBST(DYNAMIC_LDFLAGS)
 AC_SUBST(SHL_TARGETS)
 AC_SUBST(O2SAVE)
@@ -743,7 +729,6 @@ AC_SUBST(O2SHO)
 AC_SUBST(CC2O)
 AC_SUBST(SAVE2O)
 AC_SUBST(RXPACKEXPORTS)
-AC_SUBST(RXPACKEXP)
 ])dnl
 
 dnl ---------------------------------------------------------------------------

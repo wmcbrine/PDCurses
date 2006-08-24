@@ -326,10 +326,6 @@ if test "$mh_hpux9_flag" = yes ; then
       AC_MSG_WARN(The header file; Intrinsic.h, is for X11R5 while the Athena Widget)
       AC_MSG_WARN(Set library; libXaw is for X11R4.  This is a common problem with)
       AC_MSG_WARN(HP-UX 9.x.)
-      AC_MSG_WARN(A set of required X11R5 library files can be obtained from the)
-      AC_MSG_WARN(anonymous ftp sites listed on the PDCurses WWW home page:)
-      AC_MSG_WARN(http://www.lightlink.com/hessling/)
-      AC_MSG_WARN(The file is called HPUX-9.x-libXaw-libXmu.tar.Z)
       AC_MSG_ERROR(X11 installation incomplete; cannot continue)
     fi
   fi

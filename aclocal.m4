@@ -537,18 +537,13 @@ dnl
 dnl If compiler is gcc, then flags should be the same for all platforms
 dnl (just guessing on this)
 dnl
-OSAVE=".o.save"
 OBJ="o"
-EXE=""
-STATIC_LDFLAGS=""
 DYNAMIC_LDFLAGS=""
 AIX_DYN="no"
 BEOS_DYN="no"
 SHLFILE="$1"
 SHLFILES="$*"
 RXPACKEXPORTS=""
-BASE_INSTALL="installbase"
-BASE_BINARY="binarybase"
 SHLPRE="lib"
 LD_RXLIB1=""
 LD_RXTRANSLIB1="$LD_RXLIB1"
@@ -556,12 +551,6 @@ LIBEXE="ar"
 LIBFLAGS="cr"
 LIBPRE="lib"
 LIBPST=".a"
-# OTHER_INSTALLS is set to install a non-version numbered shared library
-# by default; ie. no .\$(ABI) suffix. If the regina executable is not built,
-# then there is no shared library. Set OTHER_INSTALLS="installabilib" if you
-# are building a version numbered shared library.
-OTHER_INSTALLS="installlib"
-EXTRATARGET=""
 
 AC_REQUIRE([AC_CANONICAL_SYSTEM])
 case "$target" in
@@ -576,7 +565,6 @@ case "$target" in
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
 		AIX_DYN="yes"
 		DYN_COMP="-DDYNAMIC"
-		STATIC_LDFLAGS="-bnso -bI:/lib/syscalls.exp"
 		LD_RXLIB1="ld -bnoentry -bM:SRE"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
@@ -637,9 +625,6 @@ case "$target" in
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		BEOS_DYN="yes"
-		BASE_INSTALL="beosinstall"
-		BASE_BINARY="beosbinary"
-		OTHER_INSTALLS=""
 		;;
 	*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
@@ -658,16 +643,12 @@ case "$target" in
 		SHLPRE=""
 		DYN_COMP="-DDYNAMIC"
 		LIBPST=".a"
-		EXE=".exe"
 # Only for Rexx/Trans do we produce an import library for the DLL we are
 # building
 		LD_RXLIB1="dllwrap --def ./cygwin.def --target i386-cygwin32 --dllname \$(@)"
 		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib ${LIBPRE}\$(basename \$(@))${LIBPST} --target i386-cygwin32 --dllname \$(@)"
-		BASE_INSTALL="cygwininstall"
-		BASE_BINARY="cygwinbinary"
 # cygwininstall target MUST install the shared library itself because
 # it puts it into $(bindir) not $(libdir) as all other platforms
-		OTHER_INSTALLS=""
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
@@ -748,9 +729,7 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 fi
 
 AC_SUBST(EEXTRA)
-AC_SUBST(OSAVE)
 AC_SUBST(OBJ)
-AC_SUBST(EXE)
 AC_SUBST(DYN_COMP)
 AC_SUBST(LIBS)
 AC_SUBST(LD_RXLIB1)
@@ -762,14 +741,10 @@ AC_SUBST(LIBPRE)
 AC_SUBST(LIBEXE)
 AC_SUBST(LIBFLAGS)
 AC_SUBST(DYNAMIC_LDFLAGS)
-AC_SUBST(STATIC_LDFLAGS)
 AC_SUBST(SHL_TARGETS)
 AC_SUBST(O2SAVE)
 AC_SUBST(O2SHO)
 AC_SUBST(CC2O)
-AC_SUBST(BASE_INSTALL)
-AC_SUBST(OTHER_INSTALLS)
-AC_SUBST(BASE_BINARY)
 AC_SUBST(SAVE2O)
 AC_SUBST(RXPACKEXPORTS)
 AC_SUBST(RXPACKEXP)

@@ -505,7 +505,6 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 		LD_RXLIB1="ld -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
-		LD_RXLIB2=""
 		SHLPRE="lib"
 		SHLPST=".so"
 	else
@@ -515,13 +514,11 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 			LD_RXLIB1="ld -G"
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"
-			LD_RXLIB2=""
 			SHLPRE="lib"
 			SHLPST=".so"
 		else
 			LD_RXLIB1=""
 			LD_RXTRANSLIB1="$LD_RXLIB1"
-			LD_RXLIB2=""
 			SHLPRE=""
 			SHLPST=""
 		fi
@@ -555,7 +552,6 @@ BASE_BINARY="binarybase"
 SHLPRE="lib"
 LD_RXLIB1=""
 LD_RXTRANSLIB1="$LD_RXLIB1"
-CAN_USE_ABI="no"
 LIBEXE="ar"
 LIBFLAGS="cr"
 LIBPRE="lib"
@@ -624,10 +620,6 @@ case "$target" in
 	*linux*)
 		LD_RXLIB1="${CC} -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
-		CAN_USE_ABI="yes"
-		if test "$USE_ABI" = "yes"; then
-			OTHER_INSTALLS="installabilib"
-		fi
 		;;
 	*atheos*)
 		LD_RXLIB1="${CC} -shared"
@@ -745,11 +737,7 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 	EXPS="1,2,3,4,5,6,7,8,9"
 	for a in $SHLFILES
 	do
-		if test "$USE_ABI" = "yes" -a "$CAN_USE_ABI" = "yes"; then
-			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
-		else
-			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
-		fi
+		SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
 		this=`echo $EXPS | cut -d, -f1`
 		EXPS=`echo $EXPS | cut -d, -f2-`
 		if test "$AIX_DYN" = "yes"; then
@@ -765,7 +753,6 @@ AC_SUBST(OBJ)
 AC_SUBST(EXE)
 AC_SUBST(DYN_COMP)
 AC_SUBST(LIBS)
-AC_SUBST(SHLIBS)
 AC_SUBST(LD_RXLIB1)
 AC_SUBST(LD_RXTRANSLIB1)
 AC_SUBST(SHLPRE)
@@ -786,7 +773,6 @@ AC_SUBST(BASE_BINARY)
 AC_SUBST(SAVE2O)
 AC_SUBST(RXPACKEXPORTS)
 AC_SUBST(RXPACKEXP)
-AC_SUBST(CAN_USE_ABI)
 ])dnl
 
 dnl ---------------------------------------------------------------------------

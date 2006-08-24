@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(PDCurses, 3.0, wmcbrine@users.sf.net, PDCurses)
+AC_INIT([PDCurses], [3.0], [wmcbrine@users.sf.net], [PDCurses])
 AC_CONFIG_SRCDIR([curspriv.h])
 
 AC_SUBST(prefix)
@@ -43,11 +43,6 @@ esac
 AC_SUBST(SYS_DEFS)
 
 MH_CHECK_MAX_SIGNALS(NSIG __sys_nsig)
-
-dnl Check for dynamic shared library support libraries
-MH_EXTRA_LIBS=""
-MH_CHECK_LIB(dld dl)
-SHLIBS="${MH_EXTRA_LIBS}"
 
 dnl Check for other programs.
 AC_PROG_RANLIB

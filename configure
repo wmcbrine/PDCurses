@@ -311,7 +311,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA OSAVE OBJ EXE DYN_COMP SHLIBS LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP CAN_USE_ABI LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA OSAVE OBJ EXE DYN_COMP LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE LIBPST LIBPRE LIBEXE LIBFLAGS DYNAMIC_LDFLAGS STATIC_LDFLAGS SHL_TARGETS O2SAVE O2SHO CC2O BASE_INSTALL OTHER_INSTALLS BASE_BINARY SAVE2O RXPACKEXPORTS RXPACKEXP LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -2464,94 +2464,6 @@ echo "${ECHO_T}$mh_cv_max_signals" >&6
 fi
 
 
-MH_EXTRA_LIBS=""
-
-MH_EXTRA_LIBS=''
-for mh_lib in dld dl; do
-	if test "$on_qnx" = yes; then
-		echo "$as_me:$LINENO: checking for library -l${mh_lib}" >&5
-echo $ECHO_N "checking for library -l${mh_lib}... $ECHO_C" >&6
-		if test -r /usr/lib/${mh_lib}3r.lib; then
-			echo "$as_me:$LINENO: result: found" >&5
-echo "${ECHO_T}found" >&6
-			MH_EXTRA_LIBS="${MH_EXTRA_LIBS} -l${mh_lib}"
-		else
-		echo "$as_me:$LINENO: result: not found" >&5
-echo "${ECHO_T}not found" >&6
-		fi
-	else
-		as_ac_Lib=`echo "ac_cv_lib_$mh_lib''_main" | $as_tr_sh`
-echo "$as_me:$LINENO: checking for main in -l$mh_lib" >&5
-echo $ECHO_N "checking for main in -l$mh_lib... $ECHO_C" >&6
-if eval "test \"\${$as_ac_Lib+set}\" = set"; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-l$mh_lib  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
-  (eval $ac_link) 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  eval "$as_ac_Lib=yes"
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-eval "$as_ac_Lib=no"
-fi
-rm -f conftest.err conftest.$ac_objext \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_Lib'}'`" >&5
-echo "${ECHO_T}`eval echo '${'$as_ac_Lib'}'`" >&6
-if test `eval echo '${'$as_ac_Lib'}'` = yes; then
-  mh_lib_found=yes
-else
-  mh_lib_found=no
-fi
-
-		if test "$mh_lib_found" = yes; then
-			MH_EXTRA_LIBS="${MH_EXTRA_LIBS} -l${mh_lib}"
-		fi
-	fi
-done
-
-SHLIBS="${MH_EXTRA_LIBS}"
-
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}ranlib", so it can be a program name with args.
 set dummy ${ac_tool_prefix}ranlib; ac_word=$2
@@ -3386,9 +3298,13 @@ fi
 
 
 
+
+
 for ac_header in fcntl.h \
 	sys/time.h \
 	sys/select.h \
+	dlfcn.h \
+	dl.h \
 	errno.h
 
 do
@@ -4651,7 +4567,6 @@ BASE_BINARY="binarybase"
 SHLPRE="lib"
 LD_RXLIB1=""
 LD_RXTRANSLIB1="$LD_RXLIB1"
-CAN_USE_ABI="no"
 LIBEXE="ar"
 LIBFLAGS="cr"
 LIBPRE="lib"
@@ -4720,10 +4635,6 @@ case "$target" in
 	*linux*)
 		LD_RXLIB1="${CC} -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
-		CAN_USE_ABI="yes"
-		if test "$USE_ABI" = "yes"; then
-			OTHER_INSTALLS="installabilib"
-		fi
 		;;
 	*atheos*)
 		LD_RXLIB1="${CC} -shared"
@@ -4787,7 +4698,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 4790 "configure"
+#line 4701 "configure"
 int a=0
 EOF
 
@@ -4826,7 +4737,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4829 "configure"
+#line 4740 "configure"
 int foo()
 {
 return(0);
@@ -4847,7 +4758,6 @@ if { (eval echo "$as_me:$LINENO: \"$mh_compile\"") >&5
 		LD_RXLIB1="ld -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
-		LD_RXLIB2=""
 		SHLPRE="lib"
 		SHLPST=".so"
 	else
@@ -4861,13 +4771,11 @@ if { (eval echo "$as_me:$LINENO: \"$mh_compile\"") >&5
 			LD_RXLIB1="ld -G"
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"
-			LD_RXLIB2=""
 			SHLPRE="lib"
 			SHLPST=".so"
 		else
 			LD_RXLIB1=""
 			LD_RXTRANSLIB1="$LD_RXLIB1"
-			LD_RXLIB2=""
 			SHLPRE=""
 			SHLPST=""
 		fi
@@ -4892,11 +4800,7 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 	EXPS="1,2,3,4,5,6,7,8,9"
 	for a in $SHLFILES
 	do
-		if test "$USE_ABI" = "yes" -a "$CAN_USE_ABI" = "yes"; then
-			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}.\$(ABI)"
-		else
-			SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
-		fi
+		SHL_TARGETS="${SHL_TARGETS} ${SHLPRE}${a}${SHLPST}"
 		this=`echo $EXPS | cut -d, -f1`
 		EXPS=`echo $EXPS | cut -d, -f2-`
 		if test "$AIX_DYN" = "yes"; then
@@ -4905,8 +4809,6 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 		fi
 	done
 fi
-
-
 
 
 
@@ -5591,7 +5493,6 @@ s,@OSAVE@,$OSAVE,;t t
 s,@OBJ@,$OBJ,;t t
 s,@EXE@,$EXE,;t t
 s,@DYN_COMP@,$DYN_COMP,;t t
-s,@SHLIBS@,$SHLIBS,;t t
 s,@LD_RXLIB1@,$LD_RXLIB1,;t t
 s,@LD_RXTRANSLIB1@,$LD_RXTRANSLIB1,;t t
 s,@SHLPRE@,$SHLPRE,;t t
@@ -5611,7 +5512,6 @@ s,@BASE_BINARY@,$BASE_BINARY,;t t
 s,@SAVE2O@,$SAVE2O,;t t
 s,@RXPACKEXPORTS@,$RXPACKEXPORTS,;t t
 s,@RXPACKEXP@,$RXPACKEXP,;t t
-s,@CAN_USE_ABI@,$CAN_USE_ABI,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF

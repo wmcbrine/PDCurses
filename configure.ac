@@ -66,6 +66,8 @@ dnl Checks for libraries.
 AC_CHECK_HEADERS(fcntl.h \
 	sys/time.h \
 	sys/select.h \
+	dlfcn.h \
+	dl.h \
 	errno.h
 )
 

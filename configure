@@ -833,6 +833,10 @@ _ACEOF
 
   cat <<\_ACEOF
 
+X features:
+  --x-includes=DIR    X include files are in DIR
+  --x-libraries=DIR   X library files are in DIR
+
 System types:
   --build=BUILD     configure for building on BUILD [guessed]
   --host=HOST       cross-compile to build programs to run on HOST [BUILD]
@@ -857,6 +861,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-x                use the X Window System
   --with-xaw3d            link with Xaw3d
   --with-nextaw           link with neXtaw
 
@@ -3835,52 +3840,255 @@ fi
 done
 
 
+echo "$as_me:$LINENO: checking for X" >&5
+echo $ECHO_N "checking for X... $ECHO_C" >&6
 
-echo "$as_me:$LINENO: checking for location of X headers" >&5
-echo $ECHO_N "checking for location of X headers... $ECHO_C" >&6
+ac_path_x_has_been_run=yes
+
+# Check whether --with-x or --without-x was given.
+if test "${with_x+set}" = set; then
+  withval="$with_x"
+
+fi;
+# $have_x is `yes', `no', `disabled', or empty when we do not yet know.
+if test "x$with_x" = xno; then
+  # The user explicitly disabled X.
+  have_x=disabled
+else
+  if test "x$x_includes" != xNONE && test "x$x_libraries" != xNONE; then
+    # Both variables are already set.
+    have_x=yes
+  else
+    if test "${ac_cv_have_x+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  # One or both of the vars are not set, and there is no cached value.
+ac_x_includes=no ac_x_libraries=no
+rm -fr conftest.dir
+if mkdir conftest.dir; then
+  cd conftest.dir
+  # Make sure to not put "make" in the Imakefile rules, since we grep it out.
+  cat >Imakefile <<'_ACEOF'
+acfindx:
+	@echo 'ac_im_incroot="${INCROOT}"; ac_im_usrlibdir="${USRLIBDIR}"; ac_im_libdir="${LIBDIR}"'
+_ACEOF
+  if (xmkmf) >/dev/null 2>/dev/null && test -f Makefile; then
+    # GNU make sometimes prints "make[1]: Entering...", which would confuse us.
+    eval `${MAKE-make} acfindx 2>/dev/null | grep -v make`
+    # Open Windows xmkmf reportedly sets LIBDIR instead of USRLIBDIR.
+    for ac_extension in a so sl; do
+      if test ! -f $ac_im_usrlibdir/libX11.$ac_extension &&
+	 test -f $ac_im_libdir/libX11.$ac_extension; then
+	ac_im_usrlibdir=$ac_im_libdir; break
+      fi
+    done
+    # Screen out bogus values from the imake configuration.  They are
+    # bogus both because they are the default anyway, and because
+    # using them would break gcc on systems where it needs fixed includes.
+    case $ac_im_incroot in
+	/usr/include) ;;
+	*) test -f "$ac_im_incroot/X11/Xos.h" && ac_x_includes=$ac_im_incroot;;
+    esac
+    case $ac_im_usrlibdir in
+	/usr/lib | /lib) ;;
+	*) test -d "$ac_im_usrlibdir" && ac_x_libraries=$ac_im_usrlibdir ;;
+    esac
+  fi
+  cd ..
+  rm -fr conftest.dir
+fi
+
+# Standard set of common directories for X headers.
+# Check X11 before X11Rn because it is often a symlink to the current release.
+ac_x_header_dirs='
+/usr/X11/include
+/usr/X11R6/include
+/usr/X11R5/include
+/usr/X11R4/include
+
+/usr/include/X11
+/usr/include/X11R6
+/usr/include/X11R5
+/usr/include/X11R4
+
+/usr/local/X11/include
+/usr/local/X11R6/include
+/usr/local/X11R5/include
+/usr/local/X11R4/include
+
+/usr/local/include/X11
+/usr/local/include/X11R6
+/usr/local/include/X11R5
+/usr/local/include/X11R4
+
+/usr/X386/include
+/usr/x386/include
+/usr/XFree86/include/X11
+
+/usr/include
+/usr/local/include
+/usr/unsupported/include
+/usr/athena/include
+/usr/local/x11r5/include
+/usr/lpp/Xamples/include
+
+/usr/openwin/include
+/usr/openwin/share/include'
+
+if test "$ac_x_includes" = no; then
+  # Guess where to find include files, by looking for a specified header file.
+  # First, try using that file with no special directory specified.
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <X11/Xlib.h>
+_ACEOF
+if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
+  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null; then
+  if test -s conftest.err; then
+    ac_cpp_err=$ac_c_preproc_warn_flag
+    ac_cpp_err=$ac_cpp_err$ac_c_werror_flag
+  else
+    ac_cpp_err=
+  fi
+else
+  ac_cpp_err=yes
+fi
+if test -z "$ac_cpp_err"; then
+  # We can compile using X headers with no special include directory.
+ac_x_includes=
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  for ac_dir in $ac_x_header_dirs; do
+  if test -r "$ac_dir/X11/Xlib.h"; then
+    ac_x_includes=$ac_dir
+    break
+  fi
+done
+fi
+rm -f conftest.err conftest.$ac_ext
+fi # $ac_x_includes = no
+
+if test "$ac_x_libraries" = no; then
+  # Check for the libraries.
+  # See if we find them without any special options.
+  # Don't add to $LIBS permanently.
+  ac_save_LIBS=$LIBS
+  LIBS="-lX11 $LIBS"
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <X11/Xlib.h>
+int
+main ()
+{
+XrmInitialize ()
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  LIBS=$ac_save_LIBS
+# We can link X programs with no special library path.
+ac_x_libraries=
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+LIBS=$ac_save_LIBS
+for ac_dir in `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`
+do
+  # Don't even attempt the hair of trying to link an X program!
+  for ac_extension in a so sl; do
+    if test -r $ac_dir/libX11.$ac_extension; then
+      ac_x_libraries=$ac_dir
+      break 2
+    fi
+  done
+done
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+fi # $ac_x_libraries = no
+
+if test "$ac_x_includes" = no || test "$ac_x_libraries" = no; then
+  # Didn't find X anywhere.  Cache the known absence of X.
+  ac_cv_have_x="have_x=no"
+else
+  # Record where we found X for the cache.
+  ac_cv_have_x="have_x=yes \
+		ac_x_includes=$ac_x_includes ac_x_libraries=$ac_x_libraries"
+fi
+fi
+
+  fi
+  eval "$ac_cv_have_x"
+fi # $with_x != no
+
+if test "$have_x" != yes; then
+  echo "$as_me:$LINENO: result: $have_x" >&5
+echo "${ECHO_T}$have_x" >&6
+  no_x=yes
+else
+  # If each of the values was on the command line, it overrides each guess.
+  test "x$x_includes" = xNONE && x_includes=$ac_x_includes
+  test "x$x_libraries" = xNONE && x_libraries=$ac_x_libraries
+  # Update the cache value to reflect the command line values.
+  ac_cv_have_x="have_x=yes \
+		ac_x_includes=$x_includes ac_x_libraries=$x_libraries"
+  # It might be that x_includes is empty (headers are found in the
+  # standard search path. Then output the corresponding message
+  ac_out_x_includes=$x_includes
+  test "x$x_includes" = x && ac_out_x_includes="in standard search path"
+  echo "$as_me:$LINENO: result: libraries $x_libraries, headers $ac_out_x_includes" >&5
+echo "${ECHO_T}libraries $x_libraries, headers $ac_out_x_includes" >&6
+fi
+
+
 mh_x11_dir=""
 mh_x11_xaw_dir=""
-mh_inc_dirs="\
-    $HOME/include/X11         \
-    $HOME/include             \
-    /tmp/include/X11          \
-    /tmp/include              \
-    /usr/X11R6/include        \
-    /usr/include/X11R6        \
-    /usr/local/X11R6/include  \
-    /usr/local/include/X11R6  \
 
-    /usr/X11R5/include        \
-    /usr/include/X11R5        \
-    /usr/local/X11R5/include  \
-    /usr/local/include/X11R5  \
-    /usr/local/x11r5/include  \
+mh_inc_dirs="$ac_x_header_dirs"
 
-    /usr/X11R4/include        \
-    /usr/include/X11R4        \
-    /usr/local/X11R4/include  \
-    /usr/local/include/X11R4  \
-                              \
-    /usr/X11/include          \
-    /usr/include/X11          \
-    /usr/local/X11/include    \
-    /usr/local/include/X11    \
-                              \
-    /usr/X386/include         \
-    /usr/x386/include         \
-    /usr/XFree86/include/X11  \
-                              \
-    /usr/include              \
-    /usr/local/include        \
-    /usr/unsupported/include  \
-    /usr/athena/include       \
-    /usr/lpp/Xamples/include  \
-                              \
-    /usr/openwin/include      \
-    /usr/openwin/share/include"
+
 if test "x$x_includes" != xNONE ; then
 	mh_inc_dirs="$x_includes $mh_inc_dirs"
 fi
+
 
 for ac_dir in $mh_inc_dirs ; do
   if test -r $ac_dir/Intrinsic.h; then
@@ -3892,6 +4100,7 @@ for ac_dir in $mh_inc_dirs ; do
     break
   fi
 done
+
 
 if test "$with_xaw3d" = yes; then
 	mh_xaw_dir="Xaw3d"
@@ -3915,6 +4124,7 @@ done
 
 if test "x$mh_x11_dir" != "x" ; then
 	mh_x11_dir_no_x11=`echo $mh_x11_dir | sed 's/\/X11$//'`
+
 
 	mh_solaris_gcc_usr_include="no"
 	case "$target" in
@@ -3943,8 +4153,7 @@ echo "$as_me: error: Cannot find required Xaw header file Box.h; PDCurses cannot
    { (exit 1); exit 1; }; }
 fi
 
-	echo "$as_me:$LINENO: result: found in $mh_x11_dir $mh_x11_xaw_dir" >&5
-echo "${ECHO_T}found in $mh_x11_dir $mh_x11_xaw_dir" >&6
+
 
 
 
@@ -3974,8 +4183,6 @@ case "$target" in
 		;;
 esac
 
-echo "$as_me:$LINENO: checking for location of X libraries" >&5
-echo $ECHO_N "checking for location of X libraries... $ECHO_C" >&6
 if test "$with_xaw3d" = yes; then
 	MH_X11_LIBS="Xaw3d Xmu Xt X11"
 else
@@ -3987,48 +4194,8 @@ else
 fi
 MH_X11R6_LIBS="SM ICE Xext"
 mh_x11r6=no
-mh_lib_dirs="\
-    $HOME/lib             \
-    /tmp/lib              \
-    /usr/X11R6/lib64      \
-    /usr/X11R6/lib        \
-    /usr/lib/X11R6        \
-    /usr/local/X11R6/lib64 \
-    /usr/local/X11R6/lib  \
-    /usr/local/lib/X11R6  \
 
-    /usr/X11R5/lib        \
-    /usr/lib/X11R5        \
-    /usr/local/X11R5/lib  \
-    /usr/local/lib/X11R5  \
-    /usr/local/x11r5/lib  \
-
-    /usr/X11R4/lib        \
-    /usr/lib/X11R4        \
-    /usr/local/X11R4/lib  \
-    /usr/local/lib/X11R4  \
-                          \
-    /usr/X11/lib          \
-    /usr/lib/X11          \
-    /usr/local/X11/lib    \
-    /usr/local/lib/X11    \
-                          \
-    /usr/X386/lib         \
-    /usr/x386/lib         \
-    /usr/XFree86/lib/X11  \
-                          \
-    /usr/lib64            \
-    /usr/lib              \
-    /usr/local/lib        \
-    /usr/unsupported/lib  \
-    /usr/athena/lib       \
-    /usr/lpp/Xamples/lib  \
-                          \
-    /usr/openwin/lib      \
-    /usr/openwin/share/lib"
-if test "x$x_libraries" != xNONE ; then
-	mh_lib_dirs="$x_libraries $mh_lib_dirs"
-fi
+mh_lib_dirs="$x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
 
 for ac_dir in $mh_lib_dirs ; do
 	for mh_xsm in libSM.a libSM.so libSM.sl libSM.dylib; do
@@ -4044,6 +4211,8 @@ if test "$mh_x11r6" = yes ; then
 else
 	mh_libs="$MH_X11_LIBS $extra_x_libs"
 fi
+
+
 
 mh_prev_dir=""
 mh_where_found=""
@@ -4077,8 +4246,7 @@ echo "$as_me: error: Cannot find required X library; lib$mh_lib. PDCurses cannot
    { (exit 1); exit 1; }; }
   fi
 done
-echo "$as_me:$LINENO: result: $mh_where_found" >&5
-echo "${ECHO_T}$mh_where_found" >&6
+
 mh_solaris_path=`echo $mh_solaris_path | sed 's/^://'`
 if test "$mh_solaris_flag" = yes ; then
 	MH_XLIBS="-R$mh_solaris_path $extra_ld_flags $MH_XLIBS $extra_libs $extra_ld_flags2"
@@ -4112,6 +4280,8 @@ echo "$as_me: error: X11 installation incomplete; cannot continue" >&2;}
     fi
   fi
 fi
+
+
 
 
 
@@ -4657,12 +4827,13 @@ case "$target" in
 		;;
 esac
 
+
 if test "$DYN_COMP" = ""; then
 echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 4665 "configure"
+#line 4836 "configure"
 int a=0
 EOF
 
@@ -4701,7 +4872,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4704 "configure"
+#line 4875 "configure"
 int foo()
 {
 return(0);

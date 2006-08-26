@@ -77,6 +77,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(vsscanf usleep poll vsnprintf)
 
 dnl Check for X includes and X libraries
+AC_PATH_X
 MH_CHECK_X_INC
 MH_CHECK_X_LIB
 MH_CHECK_X_HEADERS(DECkeysym.h Sunkeysym.h xpm.h)

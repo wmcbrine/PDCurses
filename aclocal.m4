@@ -33,61 +33,20 @@ dnl Set up the correct X header file location
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_CHECK_X_INC],
 [
-AC_MSG_CHECKING(for location of X headers)
 mh_x11_dir=""
 mh_x11_xaw_dir=""
-dnl
-dnl specify latest release of X directories first
-dnl
-mh_inc_dirs="\
-    $HOME/include/X11         \
-    $HOME/include             \
-    /tmp/include/X11          \
-    /tmp/include              \
-    /usr/X11R6/include        \
-    /usr/include/X11R6        \
-    /usr/local/X11R6/include  \
-    /usr/local/include/X11R6  \
 
-    /usr/X11R5/include        \
-    /usr/include/X11R5        \
-    /usr/local/X11R5/include  \
-    /usr/local/include/X11R5  \
-    /usr/local/x11r5/include  \
+mh_inc_dirs="$ac_x_header_dirs"
 
-    /usr/X11R4/include        \
-    /usr/include/X11R4        \
-    /usr/local/X11R4/include  \
-    /usr/local/include/X11R4  \
-                              \
-    /usr/X11/include          \
-    /usr/include/X11          \
-    /usr/local/X11/include    \
-    /usr/local/include/X11    \
-                              \
-    /usr/X386/include         \
-    /usr/x386/include         \
-    /usr/XFree86/include/X11  \
-                              \
-    /usr/include              \
-    /usr/local/include        \
-    /usr/unsupported/include  \
-    /usr/athena/include       \
-    /usr/lpp/Xamples/include  \
-                              \
-    /usr/openwin/include      \
-    /usr/openwin/share/include"
-dnl
 dnl Provide for user supplying directory
-dnl
+
 if test "x$x_includes" != xNONE ; then
 	mh_inc_dirs="$x_includes $mh_inc_dirs"
 fi
 
-dnl
 dnl Try to determine the directory containing X headers
 dnl We will append X11 to all the paths above as an extra check
-dnl
+
 for ac_dir in $mh_inc_dirs ; do
   if test -r $ac_dir/Intrinsic.h; then
     mh_x11_dir=$ac_dir
@@ -99,10 +58,9 @@ for ac_dir in $mh_inc_dirs ; do
   fi
 done
 
-dnl
 dnl Try to determine the directory containing Xaw headers
 dnl We will append X11 to all the paths above as an extra check
-dnl
+
 if test "$with_xaw3d" = yes; then
 	mh_xaw_dir="Xaw3d"
 else
@@ -125,7 +83,7 @@ done
 
 if test "x$mh_x11_dir" != "x" ; then
 	mh_x11_dir_no_x11=`echo $mh_x11_dir | sed 's/\/X11$//'`
-dnl
+
 dnl Test to see if $mh_x11_dir_no_x11 is /usr/include and we are using gcc
 dnl under Solaris. If so, ignore it.
 	AC_REQUIRE([AC_CANONICAL_SYSTEM])
@@ -152,8 +110,7 @@ else
 	AC_MSG_ERROR(Cannot find required Xaw header file Box.h; PDCurses cannot be configured)
 fi
 
-	AC_MSG_RESULT(found in $mh_x11_dir $mh_x11_xaw_dir)
-	AC_SUBST(MH_XINC_DIR)
+AC_SUBST(MH_XINC_DIR)
 
 ])dnl
 
@@ -162,9 +119,8 @@ dnl Set up the correct X library file location
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_CHECK_X_LIB],
 [
-dnl
 dnl Some systems require extra libraries...
-dnl
+
 mh_solaris_flag=no
 mh_hpux9_flag=no
 AC_REQUIRE([AC_CANONICAL_SYSTEM])
@@ -190,7 +146,6 @@ case "$target" in
 		;;
 esac
 
-AC_MSG_CHECKING(for location of X libraries)
 if test "$with_xaw3d" = yes; then
 	MH_X11_LIBS="Xaw3d Xmu Xt X11"
 else
@@ -202,58 +157,10 @@ else
 fi
 MH_X11R6_LIBS="SM ICE Xext"
 mh_x11r6=no
-dnl
-dnl specify latest release of X directories first
-dnl
-mh_lib_dirs="\
-    $HOME/lib             \
-    /tmp/lib              \
-    /usr/X11R6/lib64      \
-    /usr/X11R6/lib        \
-    /usr/lib/X11R6        \
-    /usr/local/X11R6/lib64 \
-    /usr/local/X11R6/lib  \
-    /usr/local/lib/X11R6  \
 
-    /usr/X11R5/lib        \
-    /usr/lib/X11R5        \
-    /usr/local/X11R5/lib  \
-    /usr/local/lib/X11R5  \
-    /usr/local/x11r5/lib  \
+mh_lib_dirs="$x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
 
-    /usr/X11R4/lib        \
-    /usr/lib/X11R4        \
-    /usr/local/X11R4/lib  \
-    /usr/local/lib/X11R4  \
-                          \
-    /usr/X11/lib          \
-    /usr/lib/X11          \
-    /usr/local/X11/lib    \
-    /usr/local/lib/X11    \
-                          \
-    /usr/X386/lib         \
-    /usr/x386/lib         \
-    /usr/XFree86/lib/X11  \
-                          \
-    /usr/lib64            \
-    /usr/lib              \
-    /usr/local/lib        \
-    /usr/unsupported/lib  \
-    /usr/athena/lib       \
-    /usr/lpp/Xamples/lib  \
-                          \
-    /usr/openwin/lib      \
-    /usr/openwin/share/lib"
-dnl
-dnl Provide for user supplying directory
-dnl
-if test "x$x_libraries" != xNONE ; then
-	mh_lib_dirs="$x_libraries $mh_lib_dirs"
-fi
-
-dnl
 dnl try to find libSM.[a,sl,so,dylib]. If we find it we are using X11R6
-dnl
 for ac_dir in $mh_lib_dirs ; do
 	for mh_xsm in libSM.a libSM.so libSM.sl libSM.dylib; do
 	  if test -r $ac_dir/$mh_xsm; then
@@ -269,9 +176,9 @@ else
 	mh_libs="$MH_X11_LIBS $extra_x_libs"
 fi
 
-dnl
+
 dnl Ensure that all required X libraries are found
-dnl
+
 mh_prev_dir=""
 mh_where_found=""
 mh_where_found_dirs=""
@@ -302,7 +209,7 @@ for mh_lib in $mh_libs; do
     AC_MSG_ERROR(Cannot find required X library; lib$mh_lib. PDCurses cannot be configured)
   fi
 done
-AC_MSG_RESULT($mh_where_found)
+
 mh_solaris_path=`echo $mh_solaris_path | sed 's/^://'`
 if test "$mh_solaris_flag" = yes ; then
 	MH_XLIBS="-R$mh_solaris_path $extra_ld_flags $MH_XLIBS $extra_libs $extra_ld_flags2"
@@ -330,7 +237,9 @@ if test "$mh_hpux9_flag" = yes ; then
     fi
   fi
 fi
-	AC_SUBST(MH_XLIBS)
+
+AC_SUBST(MH_XLIBS)
+
 ])dnl
 
 dnl ---------------------------------------------------------------------------
@@ -646,12 +555,11 @@ case "$target" in
 		;;
 esac
 
-dnl
 dnl determine what switches our compiler uses for building objects
 dnl suitable for inclusion in shared libraries
 dnl Only call this if DYN_COMP is not set. If we have set DYN_COMP
 dnl above, then we know how to compile AND link for dynamic libraries
-dnl
+
 if test "$DYN_COMP" = ""; then
 AC_MSG_CHECKING(compiler flags for a dynamic object)
 

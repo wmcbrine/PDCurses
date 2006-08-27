@@ -19,8 +19,8 @@ exec_prefix	= @exec_prefix@
 libdir		= $(exec_prefix)
 includedir	= @includedir@
 
-PDCURSES_HOME		=$(srcdir)/..
-PDCURSES_CONFIG_H	=../config.h
+PDCURSES_HOME		=$(osdir)/..
+PDCURSES_CONFIG_H	=$(PDCURSES_HOME)/config.h
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
@@ -46,8 +46,7 @@ DYNAMIC_LDFLAGS = @DYNAMIC_LDFLAGS@ $(EEXTRA)
 CC		= @CC@
 CFLAGS		= @CFLAGS@ $(DYN_COMP)
 
-INCDIR		= $(srcdir)
-CPPFLAGS	= -I$(INCDIR) -I$(srcdir)/.. -I.. @DEFS@ -DXCURSES @SYS_DEFS@ -I$(osdir)
+CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_HOME) -I$(osdir)
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 

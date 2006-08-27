@@ -84,18 +84,7 @@ done
 if test "x$mh_x11_dir" != "x" ; then
 	mh_x11_dir_no_x11=`echo $mh_x11_dir | sed 's/\/X11$//'`
 
-dnl Test to see if $mh_x11_dir_no_x11 is /usr/include and we are using gcc
-dnl under Solaris. If so, ignore it.
-	AC_REQUIRE([AC_CANONICAL_SYSTEM])
-	mh_solaris_gcc_usr_include="no"
-	case "$target" in
-		*solaris*)
-			if test "$ac_cv_prog_CC" = "gcc" -a "$mh_x11_dir_no_x11" = "/usr/include" ; then
-				mh_solaris_gcc_usr_include="yes"
-			fi
-			;;
-	esac
-	if test "$mh_x11_dir_no_x11" != "$mh_x11_dir" -a "$mh_solaris_gcc_usr_include" = "no" ; then
+	if test "$mh_x11_dir_no_x11" != "$mh_x11_dir" ; then
 		MH_XINC_DIR="-I$mh_x11_dir -I$mh_x11_dir_no_x11"
 	else
 		MH_XINC_DIR="-I$mh_x11_dir"
@@ -104,8 +93,10 @@ else
 	AC_MSG_ERROR(Cannot find required header file Intrinsic.h; PDCurses cannot be configured)
 fi
 
-if test "x$mh_x11_xaw_dir" != "x" ; then
-	MH_XINC_DIR="-I$mh_x11_xaw_dir $MH_XINC_DIR"
+if test "x$mh_x11_xaw_dir" != "x"; then
+	if test "$mh_x11_xaw_dir" != "$mh_x11_dir" ; then
+		MH_XINC_DIR="-I$mh_x11_xaw_dir $MH_XINC_DIR"
+	fi
 else
 	AC_MSG_ERROR(Cannot find required Xaw header file Box.h; PDCurses cannot be configured)
 fi

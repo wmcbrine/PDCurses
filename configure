@@ -4125,16 +4125,7 @@ done
 if test "x$mh_x11_dir" != "x" ; then
 	mh_x11_dir_no_x11=`echo $mh_x11_dir | sed 's/\/X11$//'`
 
-
-	mh_solaris_gcc_usr_include="no"
-	case "$target" in
-		*solaris*)
-			if test "$ac_cv_prog_CC" = "gcc" -a "$mh_x11_dir_no_x11" = "/usr/include" ; then
-				mh_solaris_gcc_usr_include="yes"
-			fi
-			;;
-	esac
-	if test "$mh_x11_dir_no_x11" != "$mh_x11_dir" -a "$mh_solaris_gcc_usr_include" = "no" ; then
+	if test "$mh_x11_dir_no_x11" != "$mh_x11_dir" ; then
 		MH_XINC_DIR="-I$mh_x11_dir -I$mh_x11_dir_no_x11"
 	else
 		MH_XINC_DIR="-I$mh_x11_dir"
@@ -4145,8 +4136,10 @@ echo "$as_me: error: Cannot find required header file Intrinsic.h; PDCurses cann
    { (exit 1); exit 1; }; }
 fi
 
-if test "x$mh_x11_xaw_dir" != "x" ; then
-	MH_XINC_DIR="-I$mh_x11_xaw_dir $MH_XINC_DIR"
+if test "x$mh_x11_xaw_dir" != "x"; then
+	if test "$mh_x11_xaw_dir" != "$mh_x11_dir" ; then
+		MH_XINC_DIR="-I$mh_x11_xaw_dir $MH_XINC_DIR"
+	fi
 else
 	{ { echo "$as_me:$LINENO: error: Cannot find required Xaw header file Box.h; PDCurses cannot be configured" >&5
 echo "$as_me: error: Cannot find required Xaw header file Box.h; PDCurses cannot be configured" >&2;}
@@ -4833,7 +4826,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 4836 "configure"
+#line 4829 "configure"
 int a=0
 EOF
 
@@ -4872,7 +4865,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4875 "configure"
+#line 4868 "configure"
 int foo()
 {
 return(0);

@@ -27,10 +27,7 @@ SHLPRE		= @SHLPRE@
 SHLPST		= @SHLPST@
 LD_RXLIB1	= @LD_RXLIB1@
 LD_RXLIB2	= @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
-O2SAVE		= @O2SAVE@
-O2SHO		= @O2SHO@
 CC2O		= @CC2O@
-SAVE2O		= @SAVE2O@
 DYNAMIC_LDFLAGS = @DYNAMIC_LDFLAGS@ $(EEXTRA)
 
 CC		= @CC@
@@ -277,305 +274,305 @@ panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PDCURSES_HOME)/panel.h
 #------------------------------------------------------------------------
 
 addch.sho: $(srcdir)/addch.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addch.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 addchstr.sho: $(srcdir)/addchstr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addchstr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 addstr.sho: $(srcdir)/addstr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addstr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 attr.sho: $(srcdir)/attr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/attr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 beep.sho: $(srcdir)/beep.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/beep.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 bkgd.sho: $(srcdir)/bkgd.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/bkgd.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 border.sho: $(srcdir)/border.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/border.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 clear.sho: $(srcdir)/clear.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/clear.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 color.sho: $(srcdir)/color.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/color.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 delch.sho: $(srcdir)/delch.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/delch.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 deleteln.sho: $(srcdir)/deleteln.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/deleteln.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 getch.sho: $(srcdir)/getch.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getch.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 getstr.sho: $(srcdir)/getstr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getstr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 getyx.sho: $(srcdir)/getyx.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getyx.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 inch.sho: $(srcdir)/inch.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inch.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 inchstr.sho: $(srcdir)/inchstr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inchstr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 initscr.sho: $(srcdir)/initscr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/initscr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 inopts.sho: $(srcdir)/inopts.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inopts.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 insch.sho: $(srcdir)/insch.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/insch.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 insstr.sho: $(srcdir)/insstr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/insstr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 instr.sho: $(srcdir)/instr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/instr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 kernel.sho: $(srcdir)/kernel.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/kernel.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 mouse.sho: $(srcdir)/mouse.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/mouse.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 move.sho: $(srcdir)/move.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/move.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 outopts.sho: $(srcdir)/outopts.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/outopts.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 overlay.sho: $(srcdir)/overlay.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/overlay.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pad.sho: $(srcdir)/pad.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pad.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 printw.sho: $(srcdir)/printw.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/printw.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 refresh.sho: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/refresh.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 scanw.sho: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scanw.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 scr_dump.sho: $(srcdir)/scr_dump.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scr_dump.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 scroll.sho: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scroll.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 slk.sho: $(srcdir)/slk.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/slk.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 termattr.sho: $(srcdir)/termattr.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/termattr.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 terminfo.sho: $(srcdir)/terminfo.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/terminfo.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 touch.sho: $(srcdir)/touch.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/touch.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 util.sho: $(srcdir)/util.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/util.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 window.sho: $(srcdir)/window.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/window.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 
 pdcclip.sho: $(osdir)/pdcclip.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcclip.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdcdebug.sho: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pdcdebug.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdcdisp.sho: $(osdir)/pdcdisp.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcdisp.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdcgetsc.sho: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcgetsc.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdckbd.sho: $(osdir)/pdckbd.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdckbd.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdcscrn.sho: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcscrn.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdcsetsc.sho: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcsetsc.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdcutil.sho: $(osdir)/pdcutil.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcutil.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 pdcx11.sho: $(osdir)/pdcx11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcx11.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 ScrollBox.sho: $(osdir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/ScrollBox.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 sb.sho: $(osdir)/sb.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/sb.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 x11.sho: $(osdir)/x11.c $(PDCURSES_HEADERS)
-	$(O2SAVE)
+	@O2SAVE@
 	$(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/x11.c
-	$(O2SHO)
-	$(SAVE2O)
+	@O2SHO@
+	@SAVE2O@
 
 #------------------------------------------------------------------------
 

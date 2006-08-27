@@ -1,11 +1,10 @@
-# Makefile for XCurses manext program.
+# Makefile for PDCurses manext program.
 
-SHELL		= /bin/sh
+SHELL		= @SHELL@
 
 srcdir		= @srcdir@
 pdcdir		= $(srcdir)/../x11
 
-VPATH		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= $(exec_prefix)

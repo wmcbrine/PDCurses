@@ -1,6 +1,6 @@
 # Makefile for PDCurses library for X11
 
-SHELL		= /bin/sh
+SHELL		= @SHELL@
 THIS		= Makefile
 
 @SET_MAKE@

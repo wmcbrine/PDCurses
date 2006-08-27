@@ -1,11 +1,10 @@
-# Makefile for XCurses library
+# Makefile for PDCurses library for X11
 
-SHELL = /bin/sh
+SHELL = @SHELL@
 
 @SET_MAKE@
 
 srcdir		=@srcdir@
-VPATH		=@srcdir@
 prefix		=@prefix@
 exec_prefix	=$(DESTDIR)@exec_prefix@
 libdir		=$(exec_prefix)/lib

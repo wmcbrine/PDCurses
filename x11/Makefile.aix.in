@@ -1,25 +1,16 @@
-# Makefile for XCurses library for AIX
-#
-# The variable 'srcdir' refers to the source-distribution, and can be set with
-# the configure script by "--srcdir=DIR".
-#
+# Makefile for PDCurses library for AIX/X11
 
 SHELL		= /bin/sh
 THIS		= Makefile
 
 @SET_MAKE@
 
-osdir		= @srcdir@
-srcdir		= $(osdir)/../pdcurses
-pandir		= $(osdir)/../panel
+PDCURSES_HOME	= ..
 
-VPATH		= @srcdir@
-prefix		= @prefix@
-exec_prefix	= @exec_prefix@
-libdir		= $(exec_prefix)
-includedir	= @includedir@
+osdir		= .
+srcdir		= $(PDCURSES_HOME)/pdcurses
+pandir		= $(PDCURSES_HOME)/panel
 
-PDCURSES_HOME		=$(osdir)/..
 PDCURSES_CONFIG_H	=$(PDCURSES_HOME)/config.h
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
@@ -29,24 +20,13 @@ PDCURSES_X11_H		=$(osdir)/pdcx11.h
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
 
-SHL_TARGETS	= @SHL_TARGETS@
 DYN_COMP	= @DYN_COMP@
-SHLPRE		= @SHLPRE@
-SHLPST		= @SHLPST@
-LD_RXLIB1	= @LD_RXLIB1@
-LD_RXLIB2	= # @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
-MH_XLIBS	= @MH_XLIBS@
 MH_EXTRA_LIBS	= @MH_EXTRA_LIBS@
-O2SAVE		= @O2SAVE@
-O2SHO		= @O2SHO@
-CC2O		= @CC2O@
-SAVE2O		= @SAVE2O@
-DYNAMIC_LDFLAGS = @DYNAMIC_LDFLAGS@ $(EEXTRA)
 
 CC		= @CC@
 CFLAGS		= @CFLAGS@ $(DYN_COMP)
 
-CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_HOME) -I$(osdir)
+CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_HOME)
 
 CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 

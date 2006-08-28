@@ -433,7 +433,6 @@ dnl
 dnl If compiler is gcc, then flags should be the same for all platforms
 dnl (just guessing on this)
 dnl
-DYNAMIC_LDFLAGS=""
 AIX_DYN="no"
 BEOS_DYN="no"
 SHLFILE="$1"
@@ -450,7 +449,6 @@ case "$target" in
 		EEXTRA="-Wl,-E"
 		LD_RXLIB1="ld -b -q -n"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
-		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
@@ -621,7 +619,6 @@ AC_SUBST(LD_RXLIB1)
 AC_SUBST(LD_RXTRANSLIB1)
 AC_SUBST(SHLPRE)
 AC_SUBST(SHLPST)
-AC_SUBST(DYNAMIC_LDFLAGS)
 AC_SUBST(SHL_TARGETS)
 AC_SUBST(O2SAVE)
 AC_SUBST(CC2O)

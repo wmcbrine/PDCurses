@@ -311,7 +311,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA DYN_COMP LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE DYNAMIC_LDFLAGS SHL_TARGETS O2SAVE CC2O SAVE2O RXPACKEXPORTS LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SYS_DEFS RANLIB ac_ct_RANLIB INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA SET_MAKE CPP EGREP MH_EXTRA_LIBS MH_XINC_DIR MH_XLIBS PURIFY SHLPST MODPST EEXTRA DYN_COMP LD_RXLIB1 LD_RXTRANSLIB1 SHLPRE SHL_TARGETS O2SAVE CC2O SAVE2O RXPACKEXPORTS LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -4705,7 +4705,6 @@ echo "${ECHO_T}$SHLPST/$MODPST" >&6
 
 
 
-DYNAMIC_LDFLAGS=""
 AIX_DYN="no"
 BEOS_DYN="no"
 SHLFILE="XCurses"
@@ -4722,7 +4721,6 @@ case "$target" in
 		EEXTRA="-Wl,-E"
 		LD_RXLIB1="ld -b -q -n"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
-		DYNAMIC_LDFLAGS="-Wl,+s"
 		;;
 	*ibm-aix*)
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
@@ -4824,7 +4822,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 4827 "configure"
+#line 4825 "configure"
 int a=0
 EOF
 
@@ -4863,7 +4861,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4866 "configure"
+#line 4864 "configure"
 int foo()
 {
 return(0);
@@ -4935,7 +4933,6 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 		fi
 	done
 fi
-
 
 
 
@@ -5606,7 +5603,6 @@ s,@DYN_COMP@,$DYN_COMP,;t t
 s,@LD_RXLIB1@,$LD_RXLIB1,;t t
 s,@LD_RXTRANSLIB1@,$LD_RXTRANSLIB1,;t t
 s,@SHLPRE@,$SHLPRE,;t t
-s,@DYNAMIC_LDFLAGS@,$DYNAMIC_LDFLAGS,;t t
 s,@SHL_TARGETS@,$SHL_TARGETS,;t t
 s,@O2SAVE@,$O2SAVE,;t t
 s,@CC2O@,$CC2O,;t t

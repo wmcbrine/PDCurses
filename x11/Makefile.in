@@ -23,22 +23,19 @@ INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
 
 SHL_TARGETS	= @SHL_TARGETS@
-DYN_COMP	= @DYN_COMP@
 SHLPRE		= @SHLPRE@
 SHLPST		= @SHLPST@
 LD_RXLIB1	= @LD_RXLIB1@
 LD_RXLIB2	= @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
-CC2O		= @CC2O@
-DYNAMIC_LDFLAGS = @DYNAMIC_LDFLAGS@ $(EEXTRA)
 
-CC		= @CC@
 CFLAGS		= @CFLAGS@
 
 CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_HOME)
 
-CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
+BUILD		= @CC@ -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
+DYN_BUILD	= @O2SAVE@ $(BUILD) @DYN_COMP@ @CC2O@
 
-LINK		= @PURIFY@ $(CC)
+LINK		= @PURIFY@ @CC@
 #LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 LDFLAGS		= $(LIBCURSES) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 
@@ -120,362 +117,362 @@ $(DEMOS) : $(LIBCURSES)
 terminfo.o terminfo.sho: $(TERM_HEADER)
 
 addch.o: $(srcdir)/addch.c
-	$(CC) $(CCFLAGS) $(srcdir)/addch.c
+	$(BUILD) $(srcdir)/addch.c
 
 addchstr.o: $(srcdir)/addchstr.c
-	$(CC) $(CCFLAGS) $(srcdir)/addchstr.c
+	$(BUILD) $(srcdir)/addchstr.c
 
 addstr.o: $(srcdir)/addstr.c
-	$(CC) $(CCFLAGS) $(srcdir)/addstr.c
+	$(BUILD) $(srcdir)/addstr.c
 
 attr.o: $(srcdir)/attr.c
-	$(CC) $(CCFLAGS) $(srcdir)/attr.c
+	$(BUILD) $(srcdir)/attr.c
 
 beep.o: $(srcdir)/beep.c
-	$(CC) $(CCFLAGS) $(srcdir)/beep.c
+	$(BUILD) $(srcdir)/beep.c
 
 bkgd.o: $(srcdir)/bkgd.c
-	$(CC) $(CCFLAGS) $(srcdir)/bkgd.c
+	$(BUILD) $(srcdir)/bkgd.c
 
 border.o: $(srcdir)/border.c
-	$(CC) $(CCFLAGS) $(srcdir)/border.c
+	$(BUILD) $(srcdir)/border.c
 
 clear.o: $(srcdir)/clear.c
-	$(CC) $(CCFLAGS) $(srcdir)/clear.c
+	$(BUILD) $(srcdir)/clear.c
 
 color.o: $(srcdir)/color.c
-	$(CC) $(CCFLAGS) $(srcdir)/color.c
+	$(BUILD) $(srcdir)/color.c
 
 delch.o: $(srcdir)/delch.c
-	$(CC) $(CCFLAGS) $(srcdir)/delch.c
+	$(BUILD) $(srcdir)/delch.c
 
 deleteln.o: $(srcdir)/deleteln.c
-	$(CC) $(CCFLAGS) $(srcdir)/deleteln.c
+	$(BUILD) $(srcdir)/deleteln.c
 
 getch.o: $(srcdir)/getch.c
-	$(CC) $(CCFLAGS) $(srcdir)/getch.c
+	$(BUILD) $(srcdir)/getch.c
 
 getstr.o: $(srcdir)/getstr.c
-	$(CC) $(CCFLAGS) $(srcdir)/getstr.c
+	$(BUILD) $(srcdir)/getstr.c
 
 getyx.o: $(srcdir)/getyx.c
-	$(CC) $(CCFLAGS) $(srcdir)/getyx.c
+	$(BUILD) $(srcdir)/getyx.c
 
 inch.o: $(srcdir)/inch.c
-	$(CC) $(CCFLAGS) $(srcdir)/inch.c
+	$(BUILD) $(srcdir)/inch.c
 
 inchstr.o: $(srcdir)/inchstr.c
-	$(CC) $(CCFLAGS) $(srcdir)/inchstr.c
+	$(BUILD) $(srcdir)/inchstr.c
 
 initscr.o: $(srcdir)/initscr.c
-	$(CC) $(CCFLAGS) $(srcdir)/initscr.c
+	$(BUILD) $(srcdir)/initscr.c
 
 inopts.o: $(srcdir)/inopts.c
-	$(CC) $(CCFLAGS) $(srcdir)/inopts.c
+	$(BUILD) $(srcdir)/inopts.c
 
 insch.o: $(srcdir)/insch.c
-	$(CC) $(CCFLAGS) $(srcdir)/insch.c
+	$(BUILD) $(srcdir)/insch.c
 
 insstr.o: $(srcdir)/insstr.c
-	$(CC) $(CCFLAGS) $(srcdir)/insstr.c
+	$(BUILD) $(srcdir)/insstr.c
 
 instr.o: $(srcdir)/instr.c
-	$(CC) $(CCFLAGS) $(srcdir)/instr.c
+	$(BUILD) $(srcdir)/instr.c
 
 kernel.o: $(srcdir)/kernel.c
-	$(CC) $(CCFLAGS) $(srcdir)/kernel.c
+	$(BUILD) $(srcdir)/kernel.c
 
 mouse.o: $(srcdir)/mouse.c
-	$(CC) $(CCFLAGS) $(srcdir)/mouse.c
+	$(BUILD) $(srcdir)/mouse.c
 
 move.o: $(srcdir)/move.c
-	$(CC) $(CCFLAGS) $(srcdir)/move.c
+	$(BUILD) $(srcdir)/move.c
 
 outopts.o: $(srcdir)/outopts.c
-	$(CC) $(CCFLAGS) $(srcdir)/outopts.c
+	$(BUILD) $(srcdir)/outopts.c
 
 overlay.o: $(srcdir)/overlay.c
-	$(CC) $(CCFLAGS) $(srcdir)/overlay.c
+	$(BUILD) $(srcdir)/overlay.c
 
 pad.o: $(srcdir)/pad.c
-	$(CC) $(CCFLAGS) $(srcdir)/pad.c
+	$(BUILD) $(srcdir)/pad.c
 
 printw.o: $(srcdir)/printw.c
-	$(CC) $(CCFLAGS) $(srcdir)/printw.c
+	$(BUILD) $(srcdir)/printw.c
 
 refresh.o: $(srcdir)/refresh.c
-	$(CC) $(CCFLAGS) $(srcdir)/refresh.c
+	$(BUILD) $(srcdir)/refresh.c
 
 scanw.o: $(srcdir)/scanw.c
-	$(CC) $(CCFLAGS) $(srcdir)/scanw.c
+	$(BUILD) $(srcdir)/scanw.c
 
 scr_dump.o: $(srcdir)/scr_dump.c
-	$(CC) $(CCFLAGS) $(srcdir)/scr_dump.c
+	$(BUILD) $(srcdir)/scr_dump.c
 
 scroll.o: $(srcdir)/scroll.c
-	$(CC) $(CCFLAGS) $(srcdir)/scroll.c
+	$(BUILD) $(srcdir)/scroll.c
 
 slk.o: $(srcdir)/slk.c
-	$(CC) $(CCFLAGS) $(srcdir)/slk.c
+	$(BUILD) $(srcdir)/slk.c
 
 termattr.o: $(srcdir)/termattr.c
-	$(CC) $(CCFLAGS) $(srcdir)/termattr.c
+	$(BUILD) $(srcdir)/termattr.c
 
 terminfo.o: $(srcdir)/terminfo.c
-	$(CC) $(CCFLAGS) $(srcdir)/terminfo.c
+	$(BUILD) $(srcdir)/terminfo.c
 
 touch.o: $(srcdir)/touch.c
-	$(CC) $(CCFLAGS) $(srcdir)/touch.c
+	$(BUILD) $(srcdir)/touch.c
 
 util.o: $(srcdir)/util.c
-	$(CC) $(CCFLAGS) $(srcdir)/util.c
+	$(BUILD) $(srcdir)/util.c
 
 window.o: $(srcdir)/window.c
-	$(CC) $(CCFLAGS) $(srcdir)/window.c
+	$(BUILD) $(srcdir)/window.c
 
 pdcdebug.o: $(srcdir)/pdcdebug.c
-	$(CC) $(CCFLAGS) $(srcdir)/pdcdebug.c
+	$(BUILD) $(srcdir)/pdcdebug.c
 
 
 pdcclip.o: $(osdir)/pdcclip.c
-	$(CC) $(CCFLAGS) $(osdir)/pdcclip.c
+	$(BUILD) $(osdir)/pdcclip.c
 
 pdcdisp.o: $(osdir)/pdcdisp.c
-	$(CC) $(CCFLAGS) $(osdir)/pdcdisp.c
+	$(BUILD) $(osdir)/pdcdisp.c
 
 pdcgetsc.o: $(osdir)/pdcgetsc.c
-	$(CC) $(CCFLAGS) $(osdir)/pdcgetsc.c
+	$(BUILD) $(osdir)/pdcgetsc.c
 
 pdckbd.o: $(osdir)/pdckbd.c
-	$(CC) $(CCFLAGS) $(osdir)/pdckbd.c
+	$(BUILD) $(osdir)/pdckbd.c
 
 pdcscrn.o: $(osdir)/pdcscrn.c
-	$(CC) $(CCFLAGS) $(osdir)/pdcscrn.c
+	$(BUILD) $(osdir)/pdcscrn.c
 
 pdcsetsc.o: $(osdir)/pdcsetsc.c
-	$(CC) $(CCFLAGS) $(osdir)/pdcsetsc.c
+	$(BUILD) $(osdir)/pdcsetsc.c
 
 pdcutil.o: $(osdir)/pdcutil.c
-	$(CC) $(CCFLAGS) $(osdir)/pdcutil.c
+	$(BUILD) $(osdir)/pdcutil.c
 
 pdcx11.o: $(osdir)/pdcx11.c
-	$(CC) $(CCFLAGS) $(osdir)/pdcx11.c
+	$(BUILD) $(osdir)/pdcx11.c
 
 ScrollBox.o: $(osdir)/ScrollBox.c
-	$(CC) $(CCFLAGS) $(osdir)/ScrollBox.c
+	$(BUILD) $(osdir)/ScrollBox.c
 
 sb.o: $(osdir)/sb.c
-	$(CC) $(CCFLAGS) $(osdir)/sb.c
+	$(BUILD) $(osdir)/sb.c
 
 x11.o: $(osdir)/x11.c
-	$(CC) $(CCFLAGS) $(osdir)/x11.c
+	$(BUILD) $(osdir)/x11.c
 
 #------------------------------------------------------------------------
 
 panel.o: $(pandir)/panel.c $(PDCURSES_HOME)/panel.h
-	$(CC) $(CCFLAGS) $(pandir)/panel.c
+	$(BUILD) $(pandir)/panel.c
 
 #------------------------------------------------------------------------
 
 addch.sho: $(srcdir)/addch.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addch.c
+	$(DYN_BUILD) $(srcdir)/addch.c
 	@SAVE2O@
 
 addchstr.sho: $(srcdir)/addchstr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addchstr.c
+	$(DYN_BUILD) $(srcdir)/addchstr.c
 	@SAVE2O@
 
 addstr.sho: $(srcdir)/addstr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/addstr.c
+	$(DYN_BUILD) $(srcdir)/addstr.c
 	@SAVE2O@
 
 attr.sho: $(srcdir)/attr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/attr.c
+	$(DYN_BUILD) $(srcdir)/attr.c
 	@SAVE2O@
 
 beep.sho: $(srcdir)/beep.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/beep.c
+	$(DYN_BUILD) $(srcdir)/beep.c
 	@SAVE2O@
 
 bkgd.sho: $(srcdir)/bkgd.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/bkgd.c
+	$(DYN_BUILD) $(srcdir)/bkgd.c
 	@SAVE2O@
 
 border.sho: $(srcdir)/border.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/border.c
+	$(DYN_BUILD) $(srcdir)/border.c
 	@SAVE2O@
 
 clear.sho: $(srcdir)/clear.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/clear.c
+	$(DYN_BUILD) $(srcdir)/clear.c
 	@SAVE2O@
 
 color.sho: $(srcdir)/color.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/color.c
+	$(DYN_BUILD) $(srcdir)/color.c
 	@SAVE2O@
 
 delch.sho: $(srcdir)/delch.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/delch.c
+	$(DYN_BUILD) $(srcdir)/delch.c
 	@SAVE2O@
 
 deleteln.sho: $(srcdir)/deleteln.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/deleteln.c
+	$(DYN_BUILD) $(srcdir)/deleteln.c
 	@SAVE2O@
 
 getch.sho: $(srcdir)/getch.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getch.c
+	$(DYN_BUILD) $(srcdir)/getch.c
 	@SAVE2O@
 
 getstr.sho: $(srcdir)/getstr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getstr.c
+	$(DYN_BUILD) $(srcdir)/getstr.c
 	@SAVE2O@
 
 getyx.sho: $(srcdir)/getyx.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/getyx.c
+	$(DYN_BUILD) $(srcdir)/getyx.c
 	@SAVE2O@
 
 inch.sho: $(srcdir)/inch.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inch.c
+	$(DYN_BUILD) $(srcdir)/inch.c
 	@SAVE2O@
 
 inchstr.sho: $(srcdir)/inchstr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inchstr.c
+	$(DYN_BUILD) $(srcdir)/inchstr.c
 	@SAVE2O@
 
 initscr.sho: $(srcdir)/initscr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/initscr.c
+	$(DYN_BUILD) $(srcdir)/initscr.c
 	@SAVE2O@
 
 inopts.sho: $(srcdir)/inopts.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/inopts.c
+	$(DYN_BUILD) $(srcdir)/inopts.c
 	@SAVE2O@
 
 insch.sho: $(srcdir)/insch.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/insch.c
+	$(DYN_BUILD) $(srcdir)/insch.c
 	@SAVE2O@
 
 insstr.sho: $(srcdir)/insstr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/insstr.c
+	$(DYN_BUILD) $(srcdir)/insstr.c
 	@SAVE2O@
 
 instr.sho: $(srcdir)/instr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/instr.c
+	$(DYN_BUILD) $(srcdir)/instr.c
 	@SAVE2O@
 
 kernel.sho: $(srcdir)/kernel.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/kernel.c
+	$(DYN_BUILD) $(srcdir)/kernel.c
 	@SAVE2O@
 
 mouse.sho: $(srcdir)/mouse.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/mouse.c
+	$(DYN_BUILD) $(srcdir)/mouse.c
 	@SAVE2O@
 
 move.sho: $(srcdir)/move.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/move.c
+	$(DYN_BUILD) $(srcdir)/move.c
 	@SAVE2O@
 
 outopts.sho: $(srcdir)/outopts.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/outopts.c
+	$(DYN_BUILD) $(srcdir)/outopts.c
 	@SAVE2O@
 
 overlay.sho: $(srcdir)/overlay.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/overlay.c
+	$(DYN_BUILD) $(srcdir)/overlay.c
 	@SAVE2O@
 
 pad.sho: $(srcdir)/pad.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pad.c
+	$(DYN_BUILD) $(srcdir)/pad.c
 	@SAVE2O@
 
 printw.sho: $(srcdir)/printw.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/printw.c
+	$(DYN_BUILD) $(srcdir)/printw.c
 	@SAVE2O@
 
 refresh.sho: $(srcdir)/refresh.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/refresh.c
+	$(DYN_BUILD) $(srcdir)/refresh.c
 	@SAVE2O@
 
 scanw.sho: $(srcdir)/scanw.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scanw.c
+	$(DYN_BUILD) $(srcdir)/scanw.c
 	@SAVE2O@
 
 scr_dump.sho: $(srcdir)/scr_dump.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scr_dump.c
+	$(DYN_BUILD) $(srcdir)/scr_dump.c
 	@SAVE2O@
 
 scroll.sho: $(srcdir)/scroll.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/scroll.c
+	$(DYN_BUILD) $(srcdir)/scroll.c
 	@SAVE2O@
 
 slk.sho: $(srcdir)/slk.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/slk.c
+	$(DYN_BUILD) $(srcdir)/slk.c
 	@SAVE2O@
 
 termattr.sho: $(srcdir)/termattr.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/termattr.c
+	$(DYN_BUILD) $(srcdir)/termattr.c
 	@SAVE2O@
 
 terminfo.sho: $(srcdir)/terminfo.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/terminfo.c
+	$(DYN_BUILD) $(srcdir)/terminfo.c
 	@SAVE2O@
 
 touch.sho: $(srcdir)/touch.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/touch.c
+	$(DYN_BUILD) $(srcdir)/touch.c
 	@SAVE2O@
 
 util.sho: $(srcdir)/util.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/util.c
+	$(DYN_BUILD) $(srcdir)/util.c
 	@SAVE2O@
 
 window.sho: $(srcdir)/window.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/window.c
+	$(DYN_BUILD) $(srcdir)/window.c
 	@SAVE2O@
 
 pdcdebug.sho: $(srcdir)/pdcdebug.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(srcdir)/pdcdebug.c
+	$(DYN_BUILD) $(srcdir)/pdcdebug.c
 	@SAVE2O@
 
 
 pdcclip.sho: $(osdir)/pdcclip.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcclip.c
+	$(DYN_BUILD) $(osdir)/pdcclip.c
 	@SAVE2O@
 
 pdcdisp.sho: $(osdir)/pdcdisp.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcdisp.c
+	$(DYN_BUILD) $(osdir)/pdcdisp.c
 	@SAVE2O@
 
 pdcgetsc.sho: $(osdir)/pdcgetsc.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcgetsc.c
+	$(DYN_BUILD) $(osdir)/pdcgetsc.c
 	@SAVE2O@
 
 pdckbd.sho: $(osdir)/pdckbd.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdckbd.c
+	$(DYN_BUILD) $(osdir)/pdckbd.c
 	@SAVE2O@
 
 pdcscrn.sho: $(osdir)/pdcscrn.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcscrn.c
+	$(DYN_BUILD) $(osdir)/pdcscrn.c
 	@SAVE2O@
 
 pdcsetsc.sho: $(osdir)/pdcsetsc.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcsetsc.c
+	$(DYN_BUILD) $(osdir)/pdcsetsc.c
 	@SAVE2O@
 
 pdcutil.sho: $(osdir)/pdcutil.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcutil.c
+	$(DYN_BUILD) $(osdir)/pdcutil.c
 	@SAVE2O@
 
 pdcx11.sho: $(osdir)/pdcx11.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/pdcx11.c
+	$(DYN_BUILD) $(osdir)/pdcx11.c
 	@SAVE2O@
 
 ScrollBox.sho: $(osdir)/ScrollBox.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/ScrollBox.c
+	$(DYN_BUILD) $(osdir)/ScrollBox.c
 	@SAVE2O@
 
 sb.sho: $(osdir)/sb.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/sb.c
+	$(DYN_BUILD) $(osdir)/sb.c
 	@SAVE2O@
 
 x11.sho: $(osdir)/x11.c
-	@O2SAVE@ $(CC) $(CCFLAGS) $(DYN_COMP) $(CC2O) $(osdir)/x11.c
+	$(DYN_BUILD) $(osdir)/x11.c
 	@SAVE2O@
 
 #------------------------------------------------------------------------
@@ -507,31 +504,31 @@ xmas: xmas.o
 
 
 firework.o: $(demodir)/firework.c
-	$(CC) $(CCFLAGS) $(demodir)/firework.c
+	$(BUILD) $(demodir)/firework.c
 
 newdemo.o: $(demodir)/newdemo.c
-	$(CC) $(CCFLAGS) $(demodir)/newdemo.c
+	$(BUILD) $(demodir)/newdemo.c
 
 ptest.o: $(demodir)/ptest.c $(PDCURSES_HOME)/panel.h
-	$(CC) $(CCFLAGS) $(demodir)/ptest.c
+	$(BUILD) $(demodir)/ptest.c
 
 rain.o: $(demodir)/rain.c
-	$(CC) $(CCFLAGS) $(demodir)/rain.c
+	$(BUILD) $(demodir)/rain.c
 
 testcurs.o: $(demodir)/testcurs.c
-	$(CC) $(CCFLAGS) $(demodir)/testcurs.c
+	$(BUILD) $(demodir)/testcurs.c
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
-	$(CC) $(CCFLAGS) $(demodir)/tui.c
+	$(BUILD) $(demodir)/tui.c
 
 tuidemo.o: $(demodir)/tuidemo.c
-	$(CC) $(CCFLAGS) $(demodir)/tuidemo.c
+	$(BUILD) $(demodir)/tuidemo.c
 
 worm.o: $(demodir)/worm.c
-	$(CC) $(CCFLAGS) $(demodir)/worm.c
+	$(BUILD) $(demodir)/worm.c
 
 xmas.o: $(demodir)/xmas.c
-	$(CC) $(CCFLAGS) $(demodir)/xmas.c
+	$(BUILD) $(demodir)/xmas.c
 
 #
 # This section provides for compiling and linking the
@@ -570,22 +567,22 @@ ncurses: ncurses.o $(LIBCURSES) $(LIBPANEL)
 	$(LINK) ncurses.o -o $@ $(LDFLAGS) $(LIBPANEL)
 
 bs.o: $(ncurses_testdir)/bs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) $(ncurses_testdir)/bs.c
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/bs.c
 
 gdc.o: $(ncurses_testdir)/gdc.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) $(ncurses_testdir)/gdc.c
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/gdc.c
 
 hanoi.o: $(ncurses_testdir)/hanoi.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) $(ncurses_testdir)/hanoi.c
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/hanoi.c
 
 knight.o: $(ncurses_testdir)/knight.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) $(ncurses_testdir)/knight.c
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/knight.c
 
 tclock.o: $(ncurses_testdir)/tclock.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) $(ncurses_testdir)/tclock.c
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/tclock.c
 
 view.o: $(ncurses_testdir)/view.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) $(ncurses_testdir)/view.c
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/view.c
 
 ncurses.o: $(ncurses_testdir)/ncurses.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(NCFLAGS) $(ncurses_testdir)/ncurses.c
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/ncurses.c

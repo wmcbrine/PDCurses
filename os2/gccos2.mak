@@ -91,16 +91,8 @@ demos:	$(DEMOS) #testcurs_dyn.exe
 
 #------------------------------------------------------------------------
 
-DLLOBJS = addch.dlo addchstr.dlo addstr.dlo attr.dlo beep.dlo bkgd.dlo \
-border.dlo clear.dlo color.dlo delch.dlo deleteln.dlo getch.dlo \
-getstr.dlo getyx.dlo inch.dlo inchstr.dlo initscr.dlo inopts.dlo \
-insch.dlo insstr.dlo instr.dlo kernel.dlo mouse.dlo move.dlo outopts.dlo \
-overlay.dlo pad.dlo printw.dlo refresh.dlo scanw.dlo scr_dump.dlo \
-scroll.dlo slk.dlo termattr.dlo terminfo.dlo touch.dlo util.dlo \
-window.dlo pdcdebug.dlo
-
-PDCDLOS = pdcclip.dlo pdcdisp.dlo pdcgetsc.dlo pdckbd.dlo pdcscrn.dlo \
-pdcsetsc.dlo pdcutil.dlo
+DLLOBJS = $(LIBOBJS:.o=.dlo)
+PDCDLOS = $(PDCOBJS:.o=.dlo)
 
 DEMOOBJS = testcurs.o newdemo.o xmas.o tui.o tuidemo.o firework.o \
 ptest.o rain.o worm.o

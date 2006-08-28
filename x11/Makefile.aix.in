@@ -57,22 +57,24 @@ LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
 inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
 move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
-scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o
+scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o pdcdebug.o
 
-PDCOBJS = pdcclip.o pdcdebug.o pdcdisp.o pdcgetsc.o pdckbd.o \
-pdcscrn.o pdcsetsc.o pdcutil.o
-
-X11OBJS = pdcx11.o x11.o sb.o ScrollBox.o
+PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
+pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
 
 PANOBJS = panel.o
 
 
-libXCurses.a : $(LIBOBJS) $(PDCOBJS) $(X11OBJS) curses.exp ../x11/xcurses.exp
-	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) $(LIBOBJS) $(PDCOBJS) $(X11OBJS) -o $@
+libXCurses.a : $(LIBOBJS) $(PDCOBJS) curses.exp ../x11/xcurses.exp
+	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) $(LIBOBJS) $(PDCOBJS) -o $@
 
 libpanel.a : $(PANOBJS)
         ar rv $@ $?
         -$(RANLIB) $@
+
+$(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(PDCOBJS) : $(PDCURSES_X11_H)
+terminfo.o: $(TERM_HEADER)
 
 
 curses.exp: ../win32/curses.def ../x11/xcurses.exp
@@ -80,157 +82,157 @@ curses.exp: ../win32/curses.def ../x11/xcurses.exp
 	grep ^EXPORTS ../win32/curses.def | cut -f 2 -d\ >> curses.exp
 
 
-addch.o: $(srcdir)/addch.c $(PDCURSES_HEADERS)
+addch.o: $(srcdir)/addch.c
 	$(CC) $(CCFLAGS) $(srcdir)/addch.c
 
-addchstr.o: $(srcdir)/addchstr.c $(PDCURSES_HEADERS)
+addchstr.o: $(srcdir)/addchstr.c
 	$(CC) $(CCFLAGS) $(srcdir)/addchstr.c
 
-addstr.o: $(srcdir)/addstr.c $(PDCURSES_HEADERS)
+addstr.o: $(srcdir)/addstr.c
 	$(CC) $(CCFLAGS) $(srcdir)/addstr.c
 
-attr.o: $(srcdir)/attr.c $(PDCURSES_HEADERS)
+attr.o: $(srcdir)/attr.c
 	$(CC) $(CCFLAGS) $(srcdir)/attr.c
 
-beep.o: $(srcdir)/beep.c $(PDCURSES_HEADERS)
+beep.o: $(srcdir)/beep.c
 	$(CC) $(CCFLAGS) $(srcdir)/beep.c
 
-bkgd.o: $(srcdir)/bkgd.c $(PDCURSES_HEADERS)
+bkgd.o: $(srcdir)/bkgd.c
 	$(CC) $(CCFLAGS) $(srcdir)/bkgd.c
 
-border.o: $(srcdir)/border.c $(PDCURSES_HEADERS)
+border.o: $(srcdir)/border.c
 	$(CC) $(CCFLAGS) $(srcdir)/border.c
 
-clear.o: $(srcdir)/clear.c $(PDCURSES_HEADERS)
+clear.o: $(srcdir)/clear.c
 	$(CC) $(CCFLAGS) $(srcdir)/clear.c
 
-color.o: $(srcdir)/color.c $(PDCURSES_HEADERS)
+color.o: $(srcdir)/color.c
 	$(CC) $(CCFLAGS) $(srcdir)/color.c
 
-delch.o: $(srcdir)/delch.c $(PDCURSES_HEADERS)
+delch.o: $(srcdir)/delch.c
 	$(CC) $(CCFLAGS) $(srcdir)/delch.c
 
-deleteln.o: $(srcdir)/deleteln.c $(PDCURSES_HEADERS)
+deleteln.o: $(srcdir)/deleteln.c
 	$(CC) $(CCFLAGS) $(srcdir)/deleteln.c
 
-getch.o: $(srcdir)/getch.c $(PDCURSES_HEADERS)
+getch.o: $(srcdir)/getch.c
 	$(CC) $(CCFLAGS) $(srcdir)/getch.c
 
-getstr.o: $(srcdir)/getstr.c $(PDCURSES_HEADERS)
+getstr.o: $(srcdir)/getstr.c
 	$(CC) $(CCFLAGS) $(srcdir)/getstr.c
 
-getyx.o: $(srcdir)/getyx.c $(PDCURSES_HEADERS)
+getyx.o: $(srcdir)/getyx.c
 	$(CC) $(CCFLAGS) $(srcdir)/getyx.c
 
-inch.o: $(srcdir)/inch.c $(PDCURSES_HEADERS)
+inch.o: $(srcdir)/inch.c
 	$(CC) $(CCFLAGS) $(srcdir)/inch.c
 
-inchstr.o: $(srcdir)/inchstr.c $(PDCURSES_HEADERS)
+inchstr.o: $(srcdir)/inchstr.c
 	$(CC) $(CCFLAGS) $(srcdir)/inchstr.c
 
-initscr.o: $(srcdir)/initscr.c $(PDCURSES_HEADERS)
+initscr.o: $(srcdir)/initscr.c
 	$(CC) $(CCFLAGS) $(srcdir)/initscr.c
 
-inopts.o: $(srcdir)/inopts.c $(PDCURSES_HEADERS)
+inopts.o: $(srcdir)/inopts.c
 	$(CC) $(CCFLAGS) $(srcdir)/inopts.c
 
-insch.o: $(srcdir)/insch.c $(PDCURSES_HEADERS)
+insch.o: $(srcdir)/insch.c
 	$(CC) $(CCFLAGS) $(srcdir)/insch.c
 
-insstr.o: $(srcdir)/insstr.c $(PDCURSES_HEADERS)
+insstr.o: $(srcdir)/insstr.c
 	$(CC) $(CCFLAGS) $(srcdir)/insstr.c
 
-instr.o: $(srcdir)/instr.c $(PDCURSES_HEADERS)
+instr.o: $(srcdir)/instr.c
 	$(CC) $(CCFLAGS) $(srcdir)/instr.c
 
-kernel.o: $(srcdir)/kernel.c $(PDCURSES_HEADERS)
+kernel.o: $(srcdir)/kernel.c
 	$(CC) $(CCFLAGS) $(srcdir)/kernel.c
 
-mouse.o: $(srcdir)/mouse.c $(PDCURSES_HEADERS)
+mouse.o: $(srcdir)/mouse.c
 	$(CC) $(CCFLAGS) $(srcdir)/mouse.c
 
-move.o: $(srcdir)/move.c $(PDCURSES_HEADERS)
+move.o: $(srcdir)/move.c
 	$(CC) $(CCFLAGS) $(srcdir)/move.c
 
-outopts.o: $(srcdir)/outopts.c $(PDCURSES_HEADERS)
+outopts.o: $(srcdir)/outopts.c
 	$(CC) $(CCFLAGS) $(srcdir)/outopts.c
 
-overlay.o: $(srcdir)/overlay.c $(PDCURSES_HEADERS)
+overlay.o: $(srcdir)/overlay.c
 	$(CC) $(CCFLAGS) $(srcdir)/overlay.c
 
-pad.o: $(srcdir)/pad.c $(PDCURSES_HEADERS)
+pad.o: $(srcdir)/pad.c
 	$(CC) $(CCFLAGS) $(srcdir)/pad.c
 
-printw.o: $(srcdir)/printw.c $(PDCURSES_HEADERS)
+printw.o: $(srcdir)/printw.c
 	$(CC) $(CCFLAGS) $(srcdir)/printw.c
 
-refresh.o: $(srcdir)/refresh.c $(PDCURSES_HEADERS)
+refresh.o: $(srcdir)/refresh.c
 	$(CC) $(CCFLAGS) $(srcdir)/refresh.c
 
-scanw.o: $(srcdir)/scanw.c $(PDCURSES_HEADERS)
+scanw.o: $(srcdir)/scanw.c
 	$(CC) $(CCFLAGS) $(srcdir)/scanw.c
 
-scr_dump.o: $(srcdir)/scr_dump.c $(PDCURSES_HEADERS)
+scr_dump.o: $(srcdir)/scr_dump.c
 	$(CC) $(CCFLAGS) $(srcdir)/scr_dump.c
 
-scroll.o: $(srcdir)/scroll.c $(PDCURSES_HEADERS)
+scroll.o: $(srcdir)/scroll.c
 	$(CC) $(CCFLAGS) $(srcdir)/scroll.c
 
-slk.o: $(srcdir)/slk.c $(PDCURSES_HEADERS)
+slk.o: $(srcdir)/slk.c
 	$(CC) $(CCFLAGS) $(srcdir)/slk.c
 
-termattr.o: $(srcdir)/termattr.c $(PDCURSES_HEADERS)
+termattr.o: $(srcdir)/termattr.c
 	$(CC) $(CCFLAGS) $(srcdir)/termattr.c
 
-terminfo.o: $(srcdir)/terminfo.c $(PDCURSES_HEADERS)
+terminfo.o: $(srcdir)/terminfo.c
 	$(CC) $(CCFLAGS) $(srcdir)/terminfo.c
 
-touch.o: $(srcdir)/touch.c $(PDCURSES_HEADERS)
+touch.o: $(srcdir)/touch.c
 	$(CC) $(CCFLAGS) $(srcdir)/touch.c
 
-util.o: $(srcdir)/util.c $(PDCURSES_HEADERS)
+util.o: $(srcdir)/util.c
 	$(CC) $(CCFLAGS) $(srcdir)/util.c
 
-window.o: $(srcdir)/window.c $(PDCURSES_HEADERS)
+window.o: $(srcdir)/window.c
 	$(CC) $(CCFLAGS) $(srcdir)/window.c
 
-
-pdcclip.o: $(osdir)/pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
-	$(CC) $(CCFLAGS) $(osdir)/pdcclip.c
-
-pdcdebug.o: $(srcdir)/pdcdebug.c $(PDCURSES_HEADERS)
+pdcdebug.o: $(srcdir)/pdcdebug.c
 	$(CC) $(CCFLAGS) $(srcdir)/pdcdebug.c
 
-pdcdisp.o: $(osdir)/pdcdisp.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+
+pdcclip.o: $(osdir)/pdcclip.c
+	$(CC) $(CCFLAGS) $(osdir)/pdcclip.c
+
+pdcdisp.o: $(osdir)/pdcdisp.c
 	$(CC) $(CCFLAGS) $(osdir)/pdcdisp.c
 
-pdcgetsc.o: $(osdir)/pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdcgetsc.o: $(osdir)/pdcgetsc.c
 	$(CC) $(CCFLAGS) $(osdir)/pdcgetsc.c
 
-pdckbd.o: $(osdir)/pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdckbd.o: $(osdir)/pdckbd.c
 	$(CC) $(CCFLAGS) $(osdir)/pdckbd.c
 
-pdcscrn.o: $(osdir)/pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdcscrn.o: $(osdir)/pdcscrn.c
 	$(CC) $(CCFLAGS) $(osdir)/pdcscrn.c
 
-pdcsetsc.o: $(osdir)/pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdcsetsc.o: $(osdir)/pdcsetsc.c
 	$(CC) $(CCFLAGS) $(osdir)/pdcsetsc.c
 
-pdcutil.o: $(osdir)/pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdcutil.o: $(osdir)/pdcutil.c
 	$(CC) $(CCFLAGS) $(osdir)/pdcutil.c
 
-pdcx11.o: $(osdir)/pdcx11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+pdcx11.o: $(osdir)/pdcx11.c
 	$(CC) $(CCFLAGS) $(osdir)/pdcx11.c
 
-ScrollBox.o: $(osdir)/ScrollBox.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+ScrollBox.o: $(osdir)/ScrollBox.c
 	$(CC) $(CCFLAGS) $(osdir)/ScrollBox.c
 
-sb.o: $(osdir)/sb.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+sb.o: $(osdir)/sb.c
 	$(CC) $(CCFLAGS) $(osdir)/sb.c
 
-x11.o: $(osdir)/x11.c $(PDCURSES_HEADERS) $(PDCURSES_X11_H)
+x11.o: $(osdir)/x11.c
 	$(CC) $(CCFLAGS) $(osdir)/x11.c
 
 
-panel.o: $(pandir)/panel.c $(PDCURSES_HEADERS) $(PDCURSES_HOME)/panel.h
+panel.o: $(pandir)/panel.c $(PDCURSES_HOME)/panel.h
 	$(CC) $(CCFLAGS) $(pandir)/panel.c

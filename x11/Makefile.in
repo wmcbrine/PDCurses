@@ -19,9 +19,6 @@ PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) \
 $(PDCURSES_CURSPRIV_H)
 PDCURSES_X11_H		=$(osdir)/pdcx11.h
 
-INSTALL		= @INSTALL@
-INSTALL_DATA	= @INSTALL_DATA@
-
 SHL_TARGETS	= @SHL_TARGETS@
 SHLPRE		= @SHLPRE@
 SHLPST		= @SHLPST@
@@ -85,16 +82,8 @@ pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
 
 PANOBJS = panel.o
 
-LIBSHOBJS = addch.sho addchstr.sho addstr.sho attr.sho beep.sho bkgd.sho \
-border.sho clear.sho color.sho delch.sho deleteln.sho getch.sho \
-getstr.sho getyx.sho inch.sho inchstr.sho initscr.sho inopts.sho \
-insch.sho insstr.sho instr.sho kernel.sho mouse.sho move.sho outopts.sho \
-overlay.sho pad.sho printw.sho refresh.sho scanw.sho scr_dump.sho \
-scroll.sho slk.sho termattr.sho terminfo.sho touch.sho util.sho \
-window.sho pdcdebug.sho
-
-PDCSHOBJS = pdcclip.sho pdcdisp.sho pdcgetsc.sho pdckbd.sho pdcscrn.sho \
-pdcsetsc.sho pdcutil.sho pdcx11.sho x11.sho sb.sho ScrollBox.sho
+LIBSHOBJS = $(LIBOBJS:.o=.sho)
+PDCSHOBJS = $(PDCOBJS:.o=.sho)
 
 SHOFILES = $(LIBSHOBJS) $(PDCSHOBJS)
 

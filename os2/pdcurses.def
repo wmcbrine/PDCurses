@@ -23,8 +23,6 @@ EXPORTS
             PDC_set_title
             stdscr
             curscr
-            traceoff
-            traceon
             baudrate                       
             beep                           
             border                         

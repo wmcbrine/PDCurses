@@ -624,7 +624,6 @@ AC_SUBST(SHLPST)
 AC_SUBST(DYNAMIC_LDFLAGS)
 AC_SUBST(SHL_TARGETS)
 AC_SUBST(O2SAVE)
-AC_SUBST(O2SHO)
 AC_SUBST(CC2O)
 AC_SUBST(SAVE2O)
 AC_SUBST(RXPACKEXPORTS)
@@ -657,15 +656,13 @@ fi
 rm -f conftest*
 ])dnl
 if eval "test \"`echo '$ac_cv_prog_cc_'${ac_cc}_c_o`\" = yes"; then
-	O2SHO=""
 	O2SAVE=""
 	SAVE2O=""
 	CC2O="-o $"'@'
 	AC_MSG_RESULT(yes)
 else
-	O2SHO="-mv \`basename "$'@'" .sho\`.o "$'@'
-	O2SAVE="-mv \`basename "$'@'" .sho\`.o \`basename "$'@'" .sho\`.o.save"
-	SAVE2O="-mv \`basename "$'@'" .sho\`.o.save \`basename "$'@'" .sho\`.o"
+	O2SAVE="-mv \`basename "$'@'" .sho\`.o \`basename "$'@'" .sho\`.o.save;"
+	SAVE2O="-mv \`basename "$'@'" .sho\`.o "$'@'"; mv \`basename "$'@'" .sho\`.o.save \`basename "$'@'" .sho\`.o"
 	CC2O=""
 	AC_MSG_RESULT(no)
 fi

@@ -42,7 +42,9 @@ LIBEXE		= wlib /q /n /t
 !include $(PDCURSES_HOME)\watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) $@ @$(osdir)\wccdos.lrf
+	%write wccdos.lrf $(LIBOBJS) $(PDCOBJS)
+	$(LIBEXE) $@ @wccdos.lrf
+	-del wccdos.lrf
 
 PLATFORM1	= Watcom C++ 16-bit DOS
 PLATFORM2	= Open Watcom 1.3 for 16-bit DOS

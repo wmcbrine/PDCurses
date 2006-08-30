@@ -445,7 +445,6 @@ AC_REQUIRE([AC_CANONICAL_SYSTEM])
 case "$target" in
 	*hp-hpux*)
 		SYS_DEFS="-D_HPUX_SOURCE"
-		EEXTRA="-Wl,-E"
 		LD_RXLIB1="ld -b -q -n"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
@@ -506,7 +505,6 @@ case "$target" in
 		SHLPRE=""
 		DYN_COMP="-Q"   # force no check for dynamic loading
 		SHLFILE=""
-		EEXTRA="-mf -N0x20000 -Q"
 		;;
 	*cygwin)
 		SHLPRE=""
@@ -595,7 +593,6 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 	done
 fi
 
-AC_SUBST(EEXTRA)
 AC_SUBST(DYN_COMP)
 AC_SUBST(LIBS)
 AC_SUBST(LD_RXLIB1)

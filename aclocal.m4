@@ -21,7 +21,6 @@ dnl headers.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_IPC],
 [
-AC_MSG_CHECKING(for System V IPC support)
 AC_CHECK_HEADER(sys/ipc.h)
 if test $ac_cv_header_sys_ipc_h = no; then
 	AC_MSG_ERROR(Cannot find required header file sys/ipc.h; PDCurses cannot be configured)
@@ -468,7 +467,7 @@ case "$target" in
 		LD_RXLIB1="ld -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
-	*sequent-dynix*)
+	*sequent-dynix*|*esix*|*dgux*)
 		LD_RXLIB1="ld -G"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
@@ -481,24 +480,12 @@ case "$target" in
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 		fi
 		;;
-	*esix*)
-		LD_RXLIB1="ld -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
-		;;
-	*dgux*)
-		LD_RXLIB1="ld -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
-		;;
 	sparc*sunos*)
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
 		LD_RXLIB1="ld"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
-	*linux*)
-		LD_RXLIB1="${CC} -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
-		;;
-	*atheos*)
+	*linux*|*atheos*|*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
@@ -514,10 +501,6 @@ case "$target" in
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		BEOS_DYN="yes"
-		;;
-	*nto-qnx*)
-		LD_RXLIB1="${CC} -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*qnx*)
 		SHLPRE=""

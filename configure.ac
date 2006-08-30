@@ -23,21 +23,15 @@ case "$target" in
 	*dec-osf*)
 		SYS_DEFS="-D_XOPEN_SOURCE_EXTENDED"
 		;;
-	sparc*solaris*)
-		;;
-	sparc*sunos*)
-		;;
-	*linux*)
-		;;
 	*pc-sco*)
 		SYS_DEFS="-UM_XENIX -b elf"
-		;;
-	*nto-qnx*)
 		;;
 	*qnx*)
 		on_qnx=yes
 		SYS_DEFS="-Q"
 		EEXTRA="-mf -N0x20000 -Q"
+		;;
+	*)
 		;;
 esac
 AC_SUBST(SYS_DEFS)

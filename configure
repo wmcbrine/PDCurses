@@ -2375,21 +2375,15 @@ case "$target" in
 	*dec-osf*)
 		SYS_DEFS="-D_XOPEN_SOURCE_EXTENDED"
 		;;
-	sparc*solaris*)
-		;;
-	sparc*sunos*)
-		;;
-	*linux*)
-		;;
 	*pc-sco*)
 		SYS_DEFS="-UM_XENIX -b elf"
-		;;
-	*nto-qnx*)
 		;;
 	*qnx*)
 		on_qnx=yes
 		SYS_DEFS="-Q"
 		EEXTRA="-mf -N0x20000 -Q"
+		;;
+	*)
 		;;
 esac
 
@@ -3145,8 +3139,6 @@ done
 
 
 
-echo "$as_me:$LINENO: checking for System V IPC support" >&5
-echo $ECHO_N "checking for System V IPC support... $ECHO_C" >&6
 if test "${ac_cv_header_sys_ipc_h+set}" = set; then
   echo "$as_me:$LINENO: checking for sys/ipc.h" >&5
 echo $ECHO_N "checking for sys/ipc.h... $ECHO_C" >&6
@@ -4740,7 +4732,7 @@ case "$target" in
 		LD_RXLIB1="ld -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
-	*sequent-dynix*)
+	*sequent-dynix*|*esix*|*dgux*)
 		LD_RXLIB1="ld -G"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
@@ -4753,24 +4745,12 @@ case "$target" in
 			LD_RXTRANSLIB1="$LD_RXLIB1"
 		fi
 		;;
-	*esix*)
-		LD_RXLIB1="ld -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
-		;;
-	*dgux*)
-		LD_RXLIB1="ld -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
-		;;
 	sparc*sunos*)
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
 		LD_RXLIB1="ld"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
-	*linux*)
-		LD_RXLIB1="${CC} -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
-		;;
-	*atheos*)
+	*linux*|*atheos*|*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
@@ -4786,10 +4766,6 @@ case "$target" in
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
 		LD_RXTRANSLIB1="$LD_RXLIB1"
 		BEOS_DYN="yes"
-		;;
-	*nto-qnx*)
-		LD_RXLIB1="${CC} -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*qnx*)
 		SHLPRE=""
@@ -4822,7 +4798,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 4825 "configure"
+#line 4801 "configure"
 int a=0
 EOF
 
@@ -4861,7 +4837,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4864 "configure"
+#line 4840 "configure"
 int foo()
 {
 return(0);

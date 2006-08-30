@@ -158,8 +158,8 @@ tuidemo.exe:	tuidemo.o tui.o
 	$(EMXBIND) tuidemo $(BINDFLAGS)
 
 testcurs_dyn.exe:	testcurs.obj curses.dll
-	$(LINK) $(LDFLAGS) -Zomf -Zcrtdll -o $@ testcurs.obj \
-$(DLLCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -Zlinker /PM:VIO -Zomf -Zcrtdll -o $@ \
+testcurs.obj $(DLLCURSES) $(CCLIBS)
 
 firework.o newdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \
 $(demodir)/%.c

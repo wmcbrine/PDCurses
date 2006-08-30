@@ -86,6 +86,7 @@ clean:
 	-del *.dlo
 	-del *.dll
 	-del testcurs newdemo xmas tuidemo firework ptest rain worm
+	-del *.obj
 
 demos:	$(DEMOS) #testcurs_dyn.exe
 
@@ -157,9 +158,8 @@ tuidemo.exe:	tuidemo.o tui.o
 	$(EMXBIND) tuidemo $(BINDFLAGS)
 
 testcurs_dyn.exe:	testcurs.obj curses.dll
-	$(LINK) $(LDFLAGS) $(DLLFLAGS) -o testcurs_dyn testcurs.obj \
+	$(LINK) $(LDFLAGS) -Zomf -Zcrtdll -o $@ testcurs.obj \
 $(DLLCURSES) $(CCLIBS)
-	$(EMXBIND) testcurs_dyn $(BINDFLAGS)
 
 firework.o newdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \
 $(demodir)/%.c

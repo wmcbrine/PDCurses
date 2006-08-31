@@ -23,7 +23,7 @@ O = obj
 !include $(PDCURSES_HOME)\version.mif
 !include $(PDCURSES_HOME)\libobjs.mif
 
-osdir		= $(PDCURSES_HOME)/win32
+osdir		= $(PDCURSES_HOME)\win32
 
 CC		= cl.exe -nologo
 
@@ -111,10 +111,10 @@ $(LIBPANEL) : $(PANOBJS)
 
 #------------------------------------------------------------------------
 
-ptest.exe:	ptest.obj $(LIBPANEL)
+ptest.exe: ptest.obj $(LIBPANEL)
 	$(LINK) $(LDFLAGS) $*.obj $(LIBPANEL) $(LIBCURSES) $(CCLIBS)
 
-tuidemo.exe:	tuidemo.obj tui.obj
+tuidemo.exe: tuidemo.obj tui.obj
 	$(LINK) $(LDFLAGS) $*.obj tui.obj $(LIBCURSES) $(CCLIBS)
 
 #------------------------------------------------------------------------

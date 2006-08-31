@@ -35,7 +35,7 @@ CFLAGS		= -O -w-par
 
 CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE
 
-CCFLAGS		= -c -Tpe -w32 $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) -c -Tpe -w32 $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= tlib /C /E /0
 
@@ -53,8 +53,6 @@ clean:
 	-del *.map
 	-del *.tds
 	-del *.exe
-
-demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
@@ -77,19 +75,19 @@ $(LIBPANEL) : $(PANOBJS)
 .autodepend
 
 {$(srcdir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(osdir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(pandir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(demodir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 .c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 #------------------------------------------------------------------------
 
@@ -118,10 +116,10 @@ xmas.exe:	xmas.obj $(LIBCURSES)
 	$(CC) -e$@ $**
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tui.c
+	$(BUILD) -I$(demodir) $(demodir)\tui.c
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tuidemo.c
+	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 
 PLATFORM1 = Borland C++ Win32
 PLATFORM2 = Borland C/C++ 5.5 for Win32

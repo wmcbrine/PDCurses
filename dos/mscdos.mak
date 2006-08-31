@@ -32,7 +32,7 @@ PDCURSES_DOS_H	= $(osdir)\pdcdos.h
 CC		= cl
 
 !ifdef DEBUG
-CFLAGS		= /nologo /Od /Zi /DPDCDEBUG
+CFLAGS		= /Od /Zi /DPDCDEBUG
 LDFLAGS		= /CO /NOE /SE:160 
 !else
 CFLAGS		= /Ox
@@ -41,7 +41,7 @@ LDFLAGS		= /NOE /SE:160
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS		= /J /nologo /c /D$(SIZE) /A$(MODEL) $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) /J /nologo /c /D$(SIZE) /A$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LINK		= link
 
@@ -73,148 +73,148 @@ $(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) $@ -+$(PANOBJS);
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\addch.c
+	$(BUILD) $(srcdir)\addch.c
 
 addchstr.obj: $(srcdir)\addchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\addchstr.c
+	$(BUILD) $(srcdir)\addchstr.c
 
 addstr.obj: $(srcdir)\addstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\addstr.c
+	$(BUILD) $(srcdir)\addstr.c
 
 attr.obj: $(srcdir)\attr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\attr.c
+	$(BUILD) $(srcdir)\attr.c
 
 beep.obj: $(srcdir)\beep.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\beep.c
+	$(BUILD) $(srcdir)\beep.c
 
 bkgd.obj: $(srcdir)\bkgd.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\bkgd.c
+	$(BUILD) $(srcdir)\bkgd.c
 
 border.obj: $(srcdir)\border.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\border.c
+	$(BUILD) $(srcdir)\border.c
 
 clear.obj: $(srcdir)\clear.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\clear.c
+	$(BUILD) $(srcdir)\clear.c
 
 color.obj: $(srcdir)\color.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\color.c
+	$(BUILD) $(srcdir)\color.c
 
 delch.obj: $(srcdir)\delch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\delch.c
+	$(BUILD) $(srcdir)\delch.c
 
 deleteln.obj: $(srcdir)\deleteln.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\deleteln.c
+	$(BUILD) $(srcdir)\deleteln.c
 
 getch.obj: $(srcdir)\getch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\getch.c
+	$(BUILD) $(srcdir)\getch.c
 
 getstr.obj: $(srcdir)\getstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\getstr.c
+	$(BUILD) $(srcdir)\getstr.c
 
 getyx.obj: $(srcdir)\getyx.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\getyx.c
+	$(BUILD) $(srcdir)\getyx.c
 
 inch.obj: $(srcdir)\inch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\inch.c
+	$(BUILD) $(srcdir)\inch.c
 
 inchstr.obj: $(srcdir)\inchstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\inchstr.c
+	$(BUILD) $(srcdir)\inchstr.c
 
 initscr.obj: $(srcdir)\initscr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\initscr.c
+	$(BUILD) $(srcdir)\initscr.c
 
 inopts.obj: $(srcdir)\inopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\inopts.c
+	$(BUILD) $(srcdir)\inopts.c
 
 insch.obj: $(srcdir)\insch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\insch.c
+	$(BUILD) $(srcdir)\insch.c
 
 insstr.obj: $(srcdir)\insstr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\insstr.c
+	$(BUILD) $(srcdir)\insstr.c
 
 instr.obj: $(srcdir)\instr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\instr.c
+	$(BUILD) $(srcdir)\instr.c
 
 kernel.obj: $(srcdir)\kernel.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\kernel.c
+	$(BUILD) $(srcdir)\kernel.c
 
 mouse.obj: $(srcdir)\mouse.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\mouse.c
+	$(BUILD) $(srcdir)\mouse.c
 
 move.obj: $(srcdir)\move.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\move.c
+	$(BUILD) $(srcdir)\move.c
 
 outopts.obj: $(srcdir)\outopts.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\outopts.c
+	$(BUILD) $(srcdir)\outopts.c
 
 overlay.obj: $(srcdir)\overlay.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\overlay.c
+	$(BUILD) $(srcdir)\overlay.c
 
 pad.obj: $(srcdir)\pad.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\pad.c
+	$(BUILD) $(srcdir)\pad.c
 
 printw.obj: $(srcdir)\printw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\printw.c
+	$(BUILD) $(srcdir)\printw.c
 
 refresh.obj: $(srcdir)\refresh.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\refresh.c
+	$(BUILD) $(srcdir)\refresh.c
 
 scanw.obj: $(srcdir)\scanw.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\scanw.c
+	$(BUILD) $(srcdir)\scanw.c
 
 scr_dump.obj: $(srcdir)\scr_dump.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\scr_dump.c
+	$(BUILD) $(srcdir)\scr_dump.c
 
 scroll.obj: $(srcdir)\scroll.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\scroll.c
+	$(BUILD) $(srcdir)\scroll.c
 
 slk.obj: $(srcdir)\slk.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\slk.c
+	$(BUILD) $(srcdir)\slk.c
 
 termattr.obj: $(srcdir)\termattr.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\termattr.c
+	$(BUILD) $(srcdir)\termattr.c
 
 terminfo.obj: $(srcdir)\terminfo.c $(PDCURSES_HEADERS) $(TERM_HEADER)
-	$(CC) $(CCFLAGS) $(srcdir)\terminfo.c
+	$(BUILD) $(srcdir)\terminfo.c
 
 touch.obj: $(srcdir)\touch.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\touch.c
+	$(BUILD) $(srcdir)\touch.c
 
 util.obj: $(srcdir)\util.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\util.c
+	$(BUILD) $(srcdir)\util.c
 
 window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\window.c
+	$(BUILD) $(srcdir)\window.c
 
 
 pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) $(osdir)\pdcclip.c
+	$(BUILD) $(osdir)\pdcclip.c
 
 pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
-	$(CC) $(CCFLAGS) $(srcdir)\pdcdebug.c
+	$(BUILD) $(srcdir)\pdcdebug.c
 
 pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) $(osdir)\pdcdisp.c
+	$(BUILD) $(osdir)\pdcdisp.c
 
 pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) $(osdir)\pdcgetsc.c
+	$(BUILD) $(osdir)\pdcgetsc.c
 
 pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) $(osdir)\pdckbd.c
+	$(BUILD) $(osdir)\pdckbd.c
 
 pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) $(osdir)\pdcscrn.c
+	$(BUILD) $(osdir)\pdcscrn.c
 
 pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) $(osdir)\pdcsetsc.c
+	$(BUILD) $(osdir)\pdcsetsc.c
 
 pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_DOS_H)
-	$(CC) $(CCFLAGS) $(osdir)\pdcutil.c
+	$(BUILD) $(osdir)\pdcutil.c
 
 #------------------------------------------------------------------------
 
 panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
-	$(CC) $(CCFLAGS) $(pandir)\panel.c
+	$(BUILD) $(pandir)\panel.c
 
 #------------------------------------------------------------------------
 
@@ -244,31 +244,31 @@ xmas.exe: xmas.obj $(LIBCURSES)
 
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\firework.c
+	$(BUILD) $(demodir)\firework.c
 
 newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\newdemo.c
+	$(BUILD) $(demodir)\newdemo.c
 
 ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\ptest.c
+	$(BUILD) $(demodir)\ptest.c
 
 rain.obj: $(demodir)\rain.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\rain.c
+	$(BUILD) $(demodir)\rain.c
 
 testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\testcurs.c
+	$(BUILD) $(demodir)\testcurs.c
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\tui.c
+	$(BUILD) $(demodir)\tui.c
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\tuidemo.c
+	$(BUILD) $(demodir)\tuidemo.c
 
 worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\worm.c
+	$(BUILD) $(demodir)\worm.c
 
 xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\xmas.c
+	$(BUILD) $(demodir)\xmas.c
 
 PLATFORM1 = Microsoft C
 PLATFORM2 = Microsoft C for DOS

@@ -48,12 +48,12 @@ LIBPANEL	= panel.lib
 
 # For a static build:
 
-CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 # For a DLL build:
 
-#CCFLAGS		= $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
 #PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
 
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
@@ -105,148 +105,148 @@ $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	$(SHL_LD) -o $(CURSESDLL) $(LIBOBJS) $(PDCOBJS)
 
 addch.obj: $(srcdir)\addch.c
-	$(CC) $(CCFLAGS) $(srcdir)\addch.c
+	$(BUILD) $(srcdir)\$*.c
 
 addchstr.obj: $(srcdir)\addchstr.c
-	$(CC) $(CCFLAGS) $(srcdir)\addchstr.c
+	$(BUILD) $(srcdir)\$*.c
 
 addstr.obj: $(srcdir)\addstr.c
-	$(CC) $(CCFLAGS) $(srcdir)\addstr.c
+	$(BUILD) $(srcdir)\$*.c
 
 attr.obj: $(srcdir)\attr.c
-	$(CC) $(CCFLAGS) $(srcdir)\attr.c
+	$(BUILD) $(srcdir)\$*.c
 
 beep.obj: $(srcdir)\beep.c
-	$(CC) $(CCFLAGS) $(srcdir)\beep.c
+	$(BUILD) $(srcdir)\$*.c
 
 bkgd.obj: $(srcdir)\bkgd.c
-	$(CC) $(CCFLAGS) $(srcdir)\bkgd.c
+	$(BUILD) $(srcdir)\$*.c
 
 border.obj: $(srcdir)\border.c
-	$(CC) $(CCFLAGS) $(srcdir)\border.c
+	$(BUILD) $(srcdir)\$*.c
 
 clear.obj: $(srcdir)\clear.c
-	$(CC) $(CCFLAGS) $(srcdir)\clear.c
+	$(BUILD) $(srcdir)\$*.c
 
 color.obj: $(srcdir)\color.c
-	$(CC) $(CCFLAGS) $(srcdir)\color.c
+	$(BUILD) $(srcdir)\$*.c
 
 delch.obj: $(srcdir)\delch.c
-	$(CC) $(CCFLAGS) $(srcdir)\delch.c
+	$(BUILD) $(srcdir)\$*.c
 
 deleteln.obj: $(srcdir)\deleteln.c
-	$(CC) $(CCFLAGS) $(srcdir)\deleteln.c
+	$(BUILD) $(srcdir)\$*.c
 
 getch.obj: $(srcdir)\getch.c
-	$(CC) $(CCFLAGS) $(srcdir)\getch.c
+	$(BUILD) $(srcdir)\$*.c
 
 getstr.obj: $(srcdir)\getstr.c
-	$(CC) $(CCFLAGS) $(srcdir)\getstr.c
+	$(BUILD) $(srcdir)\$*.c
 
 getyx.obj: $(srcdir)\getyx.c
-	$(CC) $(CCFLAGS) $(srcdir)\getyx.c
+	$(BUILD) $(srcdir)\$*.c
 
 inch.obj: $(srcdir)\inch.c
-	$(CC) $(CCFLAGS) $(srcdir)\inch.c
+	$(BUILD) $(srcdir)\$*.c
 
 inchstr.obj: $(srcdir)\inchstr.c
-	$(CC) $(CCFLAGS) $(srcdir)\inchstr.c
+	$(BUILD) $(srcdir)\$*.c
 
 initscr.obj: $(srcdir)\initscr.c
-	$(CC) $(CCFLAGS) $(srcdir)\initscr.c
+	$(BUILD) $(srcdir)\$*.c
 
 inopts.obj: $(srcdir)\inopts.c
-	$(CC) $(CCFLAGS) $(srcdir)\inopts.c
+	$(BUILD) $(srcdir)\$*.c
 
 insch.obj: $(srcdir)\insch.c
-	$(CC) $(CCFLAGS) $(srcdir)\insch.c
+	$(BUILD) $(srcdir)\$*.c
 
 insstr.obj: $(srcdir)\insstr.c
-	$(CC) $(CCFLAGS) $(srcdir)\insstr.c
+	$(BUILD) $(srcdir)\$*.c
 
 instr.obj: $(srcdir)\instr.c
-	$(CC) $(CCFLAGS) $(srcdir)\instr.c
+	$(BUILD) $(srcdir)\$*.c
 
 kernel.obj: $(srcdir)\kernel.c
-	$(CC) $(CCFLAGS) $(srcdir)\kernel.c
+	$(BUILD) $(srcdir)\$*.c
 
 mouse.obj: $(srcdir)\mouse.c
-	$(CC) $(CCFLAGS) $(srcdir)\mouse.c
+	$(BUILD) $(srcdir)\$*.c
 
 move.obj: $(srcdir)\move.c
-	$(CC) $(CCFLAGS) $(srcdir)\move.c
+	$(BUILD) $(srcdir)\$*.c
 
 outopts.obj: $(srcdir)\outopts.c
-	$(CC) $(CCFLAGS) $(srcdir)\outopts.c
+	$(BUILD) $(srcdir)\$*.c
 
 overlay.obj: $(srcdir)\overlay.c
-	$(CC) $(CCFLAGS) $(srcdir)\overlay.c
+	$(BUILD) $(srcdir)\$*.c
 
 pad.obj: $(srcdir)\pad.c
-	$(CC) $(CCFLAGS) $(srcdir)\pad.c
+	$(BUILD) $(srcdir)\$*.c
 
 printw.obj: $(srcdir)\printw.c
-	$(CC) $(CCFLAGS) $(srcdir)\printw.c
+	$(BUILD) $(srcdir)\$*.c
 
 refresh.obj: $(srcdir)\refresh.c
-	$(CC) $(CCFLAGS) $(srcdir)\refresh.c
+	$(BUILD) $(srcdir)\$*.c
 
 scanw.obj: $(srcdir)\scanw.c
-	$(CC) $(CCFLAGS) $(srcdir)\scanw.c
+	$(BUILD) $(srcdir)\$*.c
 
 scr_dump.obj: $(srcdir)\scr_dump.c
-	$(CC) $(CCFLAGS) $(srcdir)\scr_dump.c
+	$(BUILD) $(srcdir)\$*.c
 
 scroll.obj: $(srcdir)\scroll.c
-	$(CC) $(CCFLAGS) $(srcdir)\scroll.c
+	$(BUILD) $(srcdir)\$*.c
 
 slk.obj: $(srcdir)\slk.c
-	$(CC) $(CCFLAGS) $(srcdir)\slk.c
+	$(BUILD) $(srcdir)\$*.c
 
 termattr.obj: $(srcdir)\termattr.c
-	$(CC) $(CCFLAGS) $(srcdir)\termattr.c
+	$(BUILD) $(srcdir)\$*.c
 
 terminfo.obj: $(srcdir)\terminfo.c
-	$(CC) $(CCFLAGS) $(srcdir)\terminfo.c
+	$(BUILD) $(srcdir)\$*.c
 
 touch.obj: $(srcdir)\touch.c
-	$(CC) $(CCFLAGS) $(srcdir)\touch.c
+	$(BUILD) $(srcdir)\$*.c
 
 util.obj: $(srcdir)\util.c
-	$(CC) $(CCFLAGS) $(srcdir)\util.c
+	$(BUILD) $(srcdir)\$*.c
 
 window.obj: $(srcdir)\window.c
-	$(CC) $(CCFLAGS) $(srcdir)\window.c
+	$(BUILD) $(srcdir)\$*.c
 
 pdcdebug.obj: $(srcdir)\pdcdebug.c
-	$(CC) $(CCFLAGS) $(srcdir)\pdcdebug.c
+	$(BUILD) $(srcdir)\$*.c
 
 
 pdcclip.obj: $(osdir)\pdcclip.c
-	$(CC) $(CCFLAGS) $(osdir)\pdcclip.c
+	$(BUILD) $(osdir)\$*.c
 
 pdcdisp.obj: $(osdir)\pdcdisp.c
-	$(CC) $(CCFLAGS) $(osdir)\pdcdisp.c
+	$(BUILD) $(osdir)\$*.c
 
 pdcgetsc.obj: $(osdir)\pdcgetsc.c
-	$(CC) $(CCFLAGS) $(osdir)\pdcgetsc.c
+	$(BUILD) $(osdir)\$*.c
 
 pdckbd.obj: $(osdir)\pdckbd.c
-	$(CC) $(CCFLAGS) $(osdir)\pdckbd.c
+	$(BUILD) $(osdir)\$*.c
 
 pdcscrn.obj: $(osdir)\pdcscrn.c
-	$(CC) $(CCFLAGS) $(osdir)\pdcscrn.c
+	$(BUILD) $(osdir)\$*.c
 
 pdcsetsc.obj: $(osdir)\pdcsetsc.c
-	$(CC) $(CCFLAGS) $(osdir)\pdcsetsc.c
+	$(BUILD) $(osdir)\$*.c
 
 pdcutil.obj: $(osdir)\pdcutil.c
-	$(CC) $(CCFLAGS) $(osdir)\pdcutil.c
+	$(BUILD) $(osdir)\$*.c
 
 #------------------------------------------------------------------------
 
 panel.obj: $(pandir)\panel.c
-	$(CC) $(CCFLAGS) $(pandir)\panel.c
+	$(BUILD) $(pandir)\$*.c
 
 #------------------------------------------------------------------------
 
@@ -276,28 +276,28 @@ xmas.exe:       xmas.obj
 
 
 firework.obj: $(demodir)\firework.c
-	$(CC) $(CCFLAGS) $(demodir)\firework.c
+	$(BUILD) $(demodir)\$*.c
 
 newdemo.obj: $(demodir)\newdemo.c
-	$(CC) $(CCFLAGS) $(demodir)\newdemo.c
+	$(BUILD) $(demodir)\$*.c
 
 ptest.obj: $(demodir)\ptest.c
-	$(CC) $(CCFLAGS) $(demodir)\ptest.c
+	$(BUILD) $(demodir)\$*.c
 
 rain.obj: $(demodir)\rain.c
-	$(CC) $(CCFLAGS) $(demodir)\rain.c
+	$(BUILD) $(demodir)\$*.c
 
 testcurs.obj: $(demodir)\testcurs.c
-	$(CC) $(CCFLAGS) $(demodir)\testcurs.c
+	$(BUILD) $(demodir)\$*.c
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tui.c
+	$(BUILD) -I$(demodir) $(demodir)\$*.c
 
 tuidemo.obj: $(demodir)\tuidemo.c
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tuidemo.c
+	$(BUILD) -I$(demodir) $(demodir)\$*.c
 
 worm.obj: $(demodir)\worm.c
-	$(CC) $(CCFLAGS) $(demodir)\worm.c
+	$(BUILD) $(demodir)\$*.c
 
 xmas.obj: $(demodir)\xmas.c
-	$(CC) $(CCFLAGS) $(demodir)\xmas.c
+	$(BUILD) $(demodir)\$*.c

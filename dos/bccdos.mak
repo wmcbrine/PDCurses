@@ -36,7 +36,7 @@ CFLAGS		= -O
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS		= -1- -K -G -rd -d -w-eff -w-par -c \
+BUILD		= $(CC) -1- -K -G -rd -d -w-eff -w-par -c \
 -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= tlib /C /E
@@ -70,19 +70,19 @@ $(LIBPANEL) : $(PANOBJS)
 .autodepend
 
 {$(srcdir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(osdir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(pandir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(demodir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 .c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 #------------------------------------------------------------------------
 
@@ -111,10 +111,10 @@ xmas.exe:	xmas.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tui.c
+	$(BUILD) -I$(demodir) $(demodir)\tui.c
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tuidemo.c
+	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 
 PLATFORM1 = Borland C++ 3.1
 PLATFORM2 = Borland C/C++ 3.1 for DOS

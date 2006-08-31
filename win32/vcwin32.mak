@@ -52,14 +52,15 @@ CURSESDLL	= pdcurses.dll
 LIBPANEL	= panel.lib
 
 !ifdef DLLBUILD
-CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
 PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
 !else
-CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS)
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 !endif
 
 ################################################################################
+
 all:	$(PDCLIBS) $(DEMOS)
 
 clean:
@@ -70,12 +71,15 @@ clean:
 	-del *.exp
 	-del *.res
 
-demos:	$(DEMOS)
 #------------------------------------------------------------------------
 
+DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
+
 $(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(PANOBJS) : $(PANEL_HEADER)
 terminfo.obj: $(TERM_HEADER)
+$(DEMOS) : $(LIBCURSES)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) -out:$@ $(LIBOBJS) $(PDCOBJS)
@@ -91,74 +95,38 @@ $(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) -out:$@ $(PANOBJS)
 
 {$(srcdir)\}.c{}.obj::
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(osdir)\}.c{}.obj::
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(pandir)\}.c{}.obj::
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
+
+{$(demodir)\}.c{}.obj::
+	$(BUILD) $<
+
+.obj.exe:
+	$(LINK) $(LDFLAGS) $< $(LIBCURSES) $(CCLIBS)
 
 #------------------------------------------------------------------------
 
-firework.exe:	firework.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+ptest.exe:	ptest.obj $(LIBPANEL)
+	$(LINK) $(LDFLAGS) $*.obj $(LIBPANEL) $(LIBCURSES) $(CCLIBS)
 
-newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
-
-ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBPANEL) $(LIBCURSES) $(CCLIBS)
-
-rain.exe:	rain.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
-
-testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
-
-tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ tui.obj $*.obj $(LIBCURSES) $(CCLIBS)
-
-worm.exe:	worm.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
-
-xmas.exe:	xmas.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
-
-test.exe:	test.obj $(LIBCURSES)
-	$(LINK) $(LDFLAGS) -out:$@ $*.obj $(LIBCURSES) $(CCLIBS)
+tuidemo.exe:	tuidemo.obj tui.obj
+	$(LINK) $(LDFLAGS) $*.obj tui.obj $(LIBCURSES) $(CCLIBS)
 
 #------------------------------------------------------------------------
 
-firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\firework.c
+ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER)
+	$(BUILD) $(demodir)\ptest.c
 
-newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\newdemo.c
+tui.obj: $(demodir)\tui.c $(demodir)\tui.h
+	$(BUILD) -I$(demodir) $(demodir)\tui.c
 
-ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\ptest.c
-
-rain.obj: $(demodir)\rain.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\rain.c
-
-testcurs.obj: $(demodir)\testcurs.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\testcurs.c
-
-tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tui.c
-
-tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tuidemo.c
-
-worm.obj: $(demodir)\worm.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\worm.c
-
-xmas.obj: $(demodir)\xmas.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) $(demodir)\xmas.c
-
-test.obj: test.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) test.c
+tuidemo.obj: $(demodir)\tuidemo.c
+	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 
 #------------------------------------------------------------------------
 

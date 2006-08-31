@@ -35,7 +35,7 @@ CFLAGS		= -O
 
 CPPFLAGS	= -I$(PDCURSES_HOME)
 
-CCFLAGS		= -c $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS)
 
 LINK		= tlink
 
@@ -77,19 +77,19 @@ $(LIBPANEL) : $(PANOBJS)
 .autodepend
 
 {$(srcdir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(osdir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(pandir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 {$(demodir)\}.c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 .c.obj:
-	$(CC) $(CCFLAGS) $<
+	$(BUILD) $<
 
 #------------------------------------------------------------------------
 
@@ -118,10 +118,10 @@ xmas.exe:	xmas.obj $(LIBCURSES)
 	$(CC) -e$@ $**
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tui.c
+	$(BUILD) -I$(demodir) $(demodir)\tui.c
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) $(CCFLAGS) -I$(demodir) $(demodir)\tuidemo.c
+	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 
 PLATFORM1 = Borland C++ OS/2 1.0
 PLATFORM2 = Borland C/C++ OS/2 1.0

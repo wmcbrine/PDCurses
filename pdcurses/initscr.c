@@ -23,7 +23,7 @@
 #undef isendwin
 #undef is_termresized
 
-RCSID("$Id: initscr.c,v 1.72 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.73 2006/09/10 20:26:28 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -35,7 +35,7 @@ int LINES = 0;				/* current terminal height */
 int COLS = 0;				/* current terminal width */
 int TABSIZE = 8;
 
-MOUSE_STATUS Mouse_status;
+MOUSE_STATUS Mouse_status, pdc_mouse_status;
 
 #ifdef PDC_WIDE
 cchar_t _wacs_map[] = {

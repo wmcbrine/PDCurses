@@ -24,9 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.62 2006/08/23 19:06:59 wmcbrine Exp $");
-
-MOUSE_STATUS pdc_mouse_status;
+RCSID("$Id: pdckbd.c,v 1.63 2006/09/10 20:26:29 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])

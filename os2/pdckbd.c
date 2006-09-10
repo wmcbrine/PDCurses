@@ -38,9 +38,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.37 2006/08/23 19:06:58 wmcbrine Exp $");
-
-MOUSE_STATUS pdc_mouse_status;
+RCSID("$Id: pdckbd.c,v 1.38 2006/09/10 20:26:28 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*

@@ -19,7 +19,6 @@ PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) \
 $(PDCURSES_CURSPRIV_H)
 PDCURSES_X11_H		=$(osdir)/pdcx11.h
 
-SHL_TARGETS	= @SHL_TARGETS@
 SHLPRE		= @SHLPRE@
 SHLPST		= @SHLPST@
 LD_RXLIB1	= @LD_RXLIB1@
@@ -44,7 +43,8 @@ LIBPANEL	= libpanel.a
 LIB_DEPS        = -L$(PDCURSES_HOME)/x11 -lXCurses
 PANEL_LIB       = -L$(PDCURSES_HOME)/x11 -lpanel
 
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL) @SHL_TARGETS@
+
 DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas
 DEMOOBJS	= firework.o newdemo.o ptest.o rain.o testcurs.o tui.o \
 tuidemo.o worm.o xmas.o
@@ -52,13 +52,13 @@ tuidemo.o worm.o xmas.o
 SHLFILE		= XCurses
 
 ################################################################################
-all:	$(PDCLIBS) $(SHL_TARGETS) $(DEMOS)
+all:	$(PDCLIBS) $(DEMOS)
 
 install:
 	echo Does nothing at the moment
 
 clean:
-	-rm -rf *.o *.sho trace $(PDCLIBS) $(SHL_TARGETS) $(DEMOS)
+	-rm -rf *.o *.sho trace $(PDCLIBS) $(DEMOS)
 
 demos:	$(DEMOS)
 

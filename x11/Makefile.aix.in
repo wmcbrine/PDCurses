@@ -14,7 +14,8 @@ pandir		= $(PDCURSES_HOME)/panel
 PDCURSES_CONFIG_H	=$(PDCURSES_HOME)/config.h
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
-PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) \
+$(PDCURSES_CURSPRIV_H)
 PDCURSES_X11_H		=$(osdir)/pdcx11.h
 
 MH_EXTRA_LIBS	= @MH_EXTRA_LIBS@
@@ -28,16 +29,19 @@ BUILD		= @CC@ -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 LINK		= @CC@
 LDFLAGS		= 
 
-LIBRARIES	= libXCurses.a libpanel.a
+LIBCURSES	= libXCurses.a
+LIBPANEL	= libpanel.a
+
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all :	$(LIBRARIES)
+all :	$(PDCLIBS)
 
 install : 
 	echo Does nothing at the moment
 
 clean :
-	-rm -rf *.o *.sho trace $(LIBRARIES)
+	-rm -rf *.o *.sho trace $(PDCLIBS)
 
 distclean: clean
 	-rm -f Makefile
@@ -60,10 +64,11 @@ pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
 PANOBJS = panel.o
 
 
-libXCurses.a : $(LIBOBJS) $(PDCOBJS) curses.exp ../x11/xcurses.exp
-	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) $(LIBOBJS) $(PDCOBJS) -o $@
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) curses.exp ../x11/xcurses.exp
+	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) \
+$(LIBOBJS) $(PDCOBJS) -o $@
 
-libpanel.a : $(PANOBJS)
+$(LIBPANEL) : $(PANOBJS)
         ar rv $@ $?
         -$(RANLIB) $@
 

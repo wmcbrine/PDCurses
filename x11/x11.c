@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.14 2006/09/10 22:29:00 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.15 2006/09/11 05:38:22 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -86,7 +86,7 @@ static struct
 	int shifted;
 	int control;
 	int alt;
-} XCursesKeys[] =
+} XCKeys[] =
 {
 /* keycode	keypad	normal	     shifted	   control	alt*/
  {XK_Left,	FALSE,	KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,	ALT_LEFT},
@@ -890,8 +890,6 @@ static Bool vertical_cursor = False;
 	XIMStyle my_style = 0;
 #endif
 
-static XtTranslations XCursesTranslations;
-
 static const char *defaultTranslations =
 {
 	"<Key>: XCKeyPress() \n" \
@@ -1459,10 +1457,10 @@ static void RefreshScreen(void)
 		SelectionOff();
 }
 
-static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
+static void XCExpose(Widget w, XtPointer client_data, XEvent *event,
 			  Boolean *continue_to_dispatch)
 {
-	PDC_LOG(("%s:XCursesExpose called\n", XCLOGMSG));
+	PDC_LOG(("%s:XCExpose called\n", XCLOGMSG));
 
 	/* ignore all Exposes except last */
 
@@ -1749,9 +1747,9 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 			modifier |= PDC_KEY_MODIFIER_ALT;
 	}
 
-	for (i = 0; XCursesKeys[i].keycode != 0; i++)
+	for (i = 0; XCKeys[i].keycode != 0; i++)
 	{
-		if (XCursesKeys[i].keycode == keysym)
+		if (XCKeys[i].keycode == keysym)
 		{
 			PDC_LOG(("%s:State %x\n", XCLOGMSG, event->xkey.state));
 
@@ -1762,28 +1760,28 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 
 
 			if ((event->xkey.state & ShiftMask) ||
-			    (XCursesKeys[i].numkeypad &&
+			    (XCKeys[i].numkeypad &&
 			    (event->xkey.state & Mod2Mask)))
 			{
-				key = XCursesKeys[i].shifted;
+				key = XCKeys[i].shifted;
 				break;
 			}
 
 			if (event->xkey.state & ControlMask)
 			{
-				key = XCursesKeys[i].control;
+				key = XCKeys[i].control;
 				break;
 			}
 
 			if (event->xkey.state & Mod1Mask)
 			{
-				key = XCursesKeys[i].alt;
+				key = XCKeys[i].alt;
 				break;
 			}
 
 			/* To get here, we ignore all other modifiers */
 
-			key = XCursesKeys[i].normal;
+			key = XCKeys[i].normal;
 			break;
 		}
 	}
@@ -2389,7 +2387,7 @@ static void EnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 		break;
 
 	default:
-		PDC_LOG(("%s:XCursesEnterleaveWindow - unknown event %d\n",
+		PDC_LOG(("%s:EnterLeaveWindow - unknown event %d\n",
 			XCLOGMSG, event->type));
 	}
 }
@@ -3369,8 +3367,8 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Process any default translations */
 
-	XCursesTranslations = XtParseTranslationTable(defaultTranslations);
-	XtAugmentTranslations(drawing, XCursesTranslations);
+	XtAugmentTranslations(drawing,
+		XtParseTranslationTable(defaultTranslations));
 	XtAppAddActions(app_context, Actions, XtNumber(Actions));
 
 	/* Process the supplied colors */
@@ -3427,7 +3425,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Add Event handlers to the drawing widget */
 
-	XtAddEventHandler(drawing, ExposureMask, False, XCursesExpose, NULL);
+	XtAddEventHandler(drawing, ExposureMask, False, XCExpose, NULL);
 	XtAddEventHandler(drawing, StructureNotifyMask, False, 
 		StructureNotify, NULL);
 	XtAddEventHandler(drawing, EnterWindowMask | LeaveWindowMask, 
@@ -3649,7 +3647,7 @@ static void RequestorCallbackForGetSelection(Widget w, XtPointer data,
 					     unsigned long *length,
 					     int *format)
 {
-	PDC_LOG(("%s:XCursesRequestorCallbackForSelection() - called\n",
+	PDC_LOG(("%s:RequestorCallbackForGetSelection() - called\n",
 		XCLOGMSG));
 
 	if ((value == NULL) && (*length == 0))

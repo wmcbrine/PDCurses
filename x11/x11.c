@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.16 2006/09/11 07:32:58 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.17 2006/09/11 18:41:04 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -735,9 +735,9 @@ static void makeXY(int x, int y, int fontwidth, int fontheight,
 
 static int NewPacket(chtype attr, bool rev, int len, int col, int row,
 #ifdef PDC_WIDE
-			    XChar2b *text)
+		     XChar2b *text)
 #else
-			    char *text)
+		     char *text)
 #endif
 {
 	GC gc;
@@ -826,7 +826,7 @@ static int NewPacket(chtype attr, bool rev, int len, int col, int row,
 }
 
 static int DisplayText(const chtype *ch, int row, int col,
-			      int num_cols, bool highlight)
+		       int num_cols, bool highlight)
 {
 #ifdef PDC_WIDE
 	XChar2b text[513];
@@ -1139,14 +1139,13 @@ static void DisplayScreen(void)
 	{
 		XC_get_line_lock(row);
 
-		DisplayText((const chtype *)(Xcurscr + 
-			XCURSCR_Y_OFF(row)), row, 0, COLS, FALSE);
+		DisplayText((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
+			row, 0, COLS, FALSE);
 
 		XC_release_line_lock(row);
 	}
 
-	DisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, 
-		SP->curscol);
+	DisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
 
 	Border();
 }
@@ -1249,7 +1248,7 @@ static void ModifierKey(KeySym keysym)
 }
 
 static void ModifierPress(Widget w, XEvent *event, String *params, 
-				 Cardinal *nparams)
+			  Cardinal *nparams)
 {
 #ifdef FOREIGN
 	wchar_t buffer[120];
@@ -1381,7 +1380,6 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 			key = (int)buffer[0];
 
 		compose_index = -1;
-
          
 		for (i = 0; i < (int)strlen(compose_chars); i++)
 			if ((int)compose_chars[i] == key)
@@ -1623,8 +1621,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 
 static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 			   Atom *type_return, XtPointer *value_return,
-			   unsigned long *length_return,
-			   int *format_return)
+			   unsigned long *length_return, int *format_return)
 {
 	PDC_LOG(("%s:ConvertProc() - called\n", XCLOGMSG));
 

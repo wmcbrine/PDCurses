@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.39 2006/09/10 20:26:29 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.40 2006/09/11 19:45:17 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
@@ -28,7 +28,7 @@ static bool PDC_kbhit(void)
 	struct timeval socket_timeout = {0};
 	int s;
 
-	PDC_LOG(("%s:PDC_kbhit() - called\n", XCLOGMSG));
+	XC_LOG(("PDC_kbhit() - called\n"));
 
 	/* Is something ready to be read on the socket ? Must be a key. */
 
@@ -54,7 +54,7 @@ int PDC_get_bios_key(void)
 	unsigned long newkey = 0;
 	int key = 0;
 
-	PDC_LOG(("%s:PDC_get_bios_key() - called\n", XCLOGMSG));
+	XC_LOG(("PDC_get_bios_key() - called\n"));
 
 	while (1)
 	{

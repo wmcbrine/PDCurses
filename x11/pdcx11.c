@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.84 2006/08/21 04:29:46 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.85 2006/09/11 19:45:17 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -131,6 +131,12 @@ int XC_write_display_socket_int(int x)
 	return XC_write_socket(xc_display_sock, (char *)&x, sizeof(int));
 }
 
+#ifdef PDCDEBUG
+void XC_say(const char *msg)
+{
+	PDC_LOG(("%s:%s", XCLOGMSG, msg));
+}
+#endif
 
 /*** Functions that are called by the "curses" process ***/
 
@@ -150,7 +156,7 @@ int XCursesInstructAndWait(int flag)
 {
 	int result;
 
-	PDC_LOG(("%s:XCursesInstructAndWait() - called\n", XCLOGMSG));
+	XC_LOG(("XCursesInstructAndWait() - called\n"));
 
 	/* tell X we want to do something */
 
@@ -173,7 +179,7 @@ static int XCursesSetupCurses(void)
 {
 	int wait_value;
 
-	PDC_LOG(("%s:XCursesSetupCurses called\n", XCLOGMSG));
+	XC_LOG(("XCursesSetupCurses called\n"));
 
 	close(xc_display_sockets[1]);
 	close(xc_key_sockets[1]);
@@ -234,7 +240,7 @@ int XCursesInitscr(int argc, char *argv[])
 {
 	int pid, rc;
 
-	PDC_LOG(("%s:XCursesInitscr() - called\n", XCLOGMSG));
+	XC_LOG(("XCursesInitscr() - called\n"));
 
 #if defined FOREIGN
 	if (setlocale(LC_ALL, "") == NULL)
@@ -333,7 +339,7 @@ void XCursesExit(void)
 {
 	static bool called = FALSE;
 
-	PDC_LOG(("%s:XCursesExit() - called\n", XCLOGMSG));
+	XC_LOG(("XCursesExit() - called\n"));
 
 	if (FALSE == called)
 	{

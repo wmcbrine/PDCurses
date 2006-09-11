@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.50 2006/09/11 07:32:58 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.51 2006/09/11 19:45:17 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -188,7 +188,7 @@ typedef RETSIGTYPE (*signal_handler)();
 signal_handler XCursesSetSignal(int, signal_handler);
 
 #ifdef PDCDEBUG
-void XCsay(const char *msg);
+void XC_say(const char *msg);
 # define XC_LOG(x) XCsay x
 #else
 # define XC_LOG(x)

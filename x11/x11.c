@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.17 2006/09/11 18:41:04 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.18 2006/09/11 19:45:17 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -598,11 +598,11 @@ static XrmOptionDescRec options[] =
 
 static XtActionsRec Actions[] =
 {
-   {"Button",		(XtActionProc)Button},
-   {"XCKeyPress",	(XtActionProc)XCKeyPress},
-   {"ModifierPress",	(XtActionProc)ModifierPress},
-   {"PasteSelection",	(XtActionProc)PasteSelection},
-   {"string",		(XtActionProc)HandleString},
+	{"Button",		(XtActionProc)Button},
+	{"XCKeyPress",		(XtActionProc)XCKeyPress},
+	{"ModifierPress",	(XtActionProc)ModifierPress},
+	{"PasteSelection",	(XtActionProc)PasteSelection},
+	{"string",		(XtActionProc)HandleString},
 };
 
 static Bool after_first_curses_request = False;
@@ -635,13 +635,6 @@ static const char *defaultTranslations =
 	"<Btn5Down>: Button() \n" \
 	"<BtnMotion>: Button()"
 };
-
-#ifdef PDCDEBUG
-void XCsay(const char *msg)
-{
-	PDC_LOG(("%s:%s", XCLOGMSG, msg));
-}
-#endif
 
 #ifdef PDC_WIDE
 static int to_utf8(char *outcode, int code)
@@ -927,7 +920,7 @@ static int get_colors(void)
 
 static void Endwin(void)
 {
-	PDC_LOG(("%s:Endwin() - called\n", XCLOGMSG));
+	XC_LOG(("Endwin() - called\n"));
 
 	if (bitmap_file != NULL)
 	{
@@ -958,7 +951,7 @@ static int RefreshScrollbar(void)
 	PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
 	PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
 
-	PDC_LOG(("%s:RefreshScrollbar() - called: \n", XCLOGMSG));
+	XC_LOG(("RefreshScrollbar() - called\n"));
 
 	if (!SP->sb_on)
 		return ERR;
@@ -1013,7 +1006,7 @@ static void GetIcon(void)
 	unsigned int icon_bitmap_width = 0, icon_bitmap_height = 0,
 		file_bitmap_width = 0, file_bitmap_height = 0;
 
-	PDC_LOG(("%s:GetIcon\n", XCLOGMSG));
+	XC_LOG(("GetIcon() - called\n"));
 
 	icon_size = XAllocIconSize();
 
@@ -1133,7 +1126,7 @@ static void DisplayScreen(void)
 {
 	int row;
 
-	PDC_LOG(("%s:DisplayScreen() - called:\n", XCLOGMSG));
+	XC_LOG(("DisplayScreen() - called\n"));
 
 	for (row = 0; row < XCursesLINES; row++)
 	{
@@ -1156,7 +1149,7 @@ static void RefreshScreen(void)
 {
 	int row, start_col, num_cols;
 
-	PDC_LOG(("%s:RefreshScreen() - called:\n", XCLOGMSG));
+	XC_LOG(("RefreshScreen() - called\n"));
 
 	for (row = 0; row < XCursesLINES; row++)
 	{
@@ -1186,7 +1179,7 @@ static void RefreshScreen(void)
 static void XCExpose(Widget w, XtPointer client_data, XEvent *event,
 			  Boolean *continue_to_dispatch)
 {
-	PDC_LOG(("%s:XCExpose called\n", XCLOGMSG));
+	XC_LOG(("XCExpose() - called\n"));
 
 	/* ignore all Exposes except last */
 
@@ -1259,7 +1252,7 @@ static void ModifierPress(Widget w, XEvent *event, String *params,
 	KeySym keysym;
 	XComposeStatus compose;
 
-	PDC_LOG(("%s:ModifierPress called\n", XCLOGMSG));
+	XC_LOG(("ModifierPress() - called\n"));
 
 	buffer[0] = '\0';
 
@@ -1294,7 +1287,7 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 	short fore = 0, back = 0;
 	unsigned long modifier = 0;
 
-	PDC_LOG(("%s:XCKeyPress called\n", XCLOGMSG));
+	XC_LOG(("XCKeyPress() - called\n"));
 
 	/* ignore KeyReleases */
 
@@ -1587,7 +1580,7 @@ static void HandleString(Widget w, XEvent *event, String *params,
 
 static void PasteSelection(Widget w, XButtonEvent *button_event)
 {
-	PDC_LOG(("%s:PasteSelection() - called\n", XCLOGMSG));
+	XC_LOG(("PasteSelection() - called\n"));
 
 	XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, 
 		RequestorCallbackForPaste, 
@@ -1602,8 +1595,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 	unsigned long i, key;
 	char *string = (char *)value;
 
-	PDC_LOG(("%s:RequestorCallbackForPaste() - called\n",
-		XCLOGMSG));
+	XC_LOG(("RequestorCallbackForPaste() - called\n"));
 
 	if ((value == NULL) && (*length == 0))
 		return;
@@ -1623,7 +1615,7 @@ static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 			   Atom *type_return, XtPointer *value_return,
 			   unsigned long *length_return, int *format_return)
 {
-	PDC_LOG(("%s:ConvertProc() - called\n", XCLOGMSG));
+	XC_LOG(("ConvertProc() - called\n"));
 
 	if (*target == XA_TARGETS(XtDisplay(topLevel)))
 	{
@@ -1706,7 +1698,7 @@ static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 
 static void LoseOwnership(Widget w, Atom *type)
 {
-	PDC_LOG(("%s:LoseOwnership() - called\n", XCLOGMSG));
+	XC_LOG(("LoseOwnership() - called\n"));
 
 	if (tmpsel)
 		free(tmpsel);
@@ -1765,7 +1757,7 @@ static void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 
 static void SelectionOff(void)
 {
-	PDC_LOG(("%s:SelectionOff() - called\n", XCLOGMSG));
+	XC_LOG(("SelectionOff() - called\n"));
 
 	DisplayScreen();
 
@@ -1777,7 +1769,7 @@ static void SelectionOff(void)
 
 static void SelectionOn(int x, int y)
 {
-	PDC_LOG(("%s:SelectionOn() - called\n", XCLOGMSG));
+	XC_LOG(("SelectionOn() - called\n"));
 
 	selection_start_x = selection_end_x = x;
 	selection_start_y = selection_end_y = y;
@@ -1790,7 +1782,7 @@ static void SelectionExtend(int x, int y)
 		new_start, new_end, new_start_x, new_end_x, new_start_y, 
 		new_end_y;
 
-	PDC_LOG(("%s:SelectionExtend() - called\n", XCLOGMSG));
+	XC_LOG(("SelectionExtend() - called\n"));
 
 	mouse_selection = True;
 
@@ -1869,7 +1861,7 @@ static void SelectionSet(void)
 		start_col, row, num_chars, ch, last_nonblank, length, newlen;
 	chtype *ptr = NULL;
 
-	PDC_LOG(("%s:SelectionSet() - called\n", XCLOGMSG));
+	XC_LOG(("SelectionSet() - called\n"));
 
 	/* convert x/y coordinates into start/stop */
 
@@ -2088,7 +2080,7 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 static void EnterLeaveWindow(Widget w, XtPointer client_data, XEvent *event,
 			     Boolean *continue_to_dispatch)
 {
-	PDC_LOG(("%s:EnterLeaveWindow called\n", XCLOGMSG));
+	XC_LOG(("EnterLeaveWindow called\n"));
 
 	switch(event->type)
 	{
@@ -2142,7 +2134,7 @@ static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 
 static void CursorBlink(XtPointer unused, XtIntervalId *id)
 {
-	PDC_LOG(("%s:CursorBlink() - called:\n", XCLOGMSG));
+	XC_LOG(("CursorBlink() - called:\n"));
 
 	if (windowEntered)
 	{
@@ -2181,7 +2173,7 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 	static bool remove_release;
 	static bool handle_real_release;
 
-	PDC_LOG(("%s:Button called\n", XCLOGMSG));
+	XC_LOG(("Button() - called\n"));
 
 	save_mouse_status = Mouse_status;
 	button_no = event->xbutton.button;
@@ -2700,7 +2692,7 @@ static void ProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	char buf[12];		/* big enough for 2 integers */ 
 
-	PDC_LOG(("%s:ProcessRequestsFromCurses()\n", XCLOGMSG));
+	XC_LOG(("ProcessRequestsFromCurses() - called\n"));
 
 	if (!ReceivedMapNotify) 
 	    return; 
@@ -2721,8 +2713,8 @@ static void ProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    /* read first integer to determine total message has 
 	       been received */
 
-	    PDC_LOG(("%s:ProcessRequestsFromCurses() - "
-		"before XC_read_socket()\n", XCLOGMSG));
+	    XC_LOG(("ProcessRequestsFromCurses() - "
+		"before XC_read_socket()\n"));
 
 	    if (XC_read_socket(xc_display_sock,
 		(char *)&num_cols, sizeof(int)) < 0) 
@@ -2731,8 +2723,8 @@ static void ProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    "ProcessRequestsFromCurses - first read");
 	    }
 
-	    PDC_LOG(("%s:ProcessRequestsFromCurses() - "
-		"after XC_read_socket()\n", XCLOGMSG));
+	    XC_LOG(("ProcessRequestsFromCurses() - "
+		"after XC_read_socket()\n"));
 
 	    after_first_curses_request = True; 
 
@@ -2921,7 +2913,7 @@ int XCursesSetupX(int argc, char *argv[])
 	int i = 0;
 	int minwidth, minheight;
 
-	PDC_LOG(("%s:XCursesSetupX called\n", XCLOGMSG));
+	XC_LOG(("XCursesSetupX called\n"));
 
 	/* The following kludge is to force XtVaAppInitialize() to 
 	   recognize the name of the program.  Without it, a default 
@@ -3371,8 +3363,7 @@ static void RequestorCallbackForGetSelection(Widget w, XtPointer data,
 					     unsigned long *length,
 					     int *format)
 {
-	PDC_LOG(("%s:RequestorCallbackForGetSelection() - called\n",
-		XCLOGMSG));
+	XC_LOG(("RequestorCallbackForGetSelection() - called\n"));
 
 	if ((value == NULL) && (*length == 0))
 	{
@@ -3398,7 +3389,7 @@ static void RequestorCallbackForGetSelection(Widget w, XtPointer data,
 static void StructureNotify(Widget w, XtPointer client_data, 
 			    XEvent *event, Boolean *continue_to_dispatch)
 {
-	PDC_LOG(("%s:StructureNotify called\n", XCLOGMSG));
+	XC_LOG(("StructureNotify() - called\n"));
 
 	switch(event->type)
 	{

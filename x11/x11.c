@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.15 2006/09/11 05:38:22 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.16 2006/09/11 07:32:58 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -464,410 +464,137 @@ static int visible_cursor = 0;
 static int windowEntered = 1;
 static char *ProgramName;
 
+/* Macros just for app_resources */
+
+#ifdef PDC_WIDE
+# define DEFFONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
+#else
+# define DEFFONT "7x13"
+#endif
+
+#define APPDATAOFF(n) XtOffsetOf(XCursesAppData, n)
+
+#define RINT(name1, name2, value) { \
+		#name1, #name2, XtRInt, \
+		sizeof(int), APPDATAOFF(name1), XtRImmediate, \
+		(XtPointer)value \
+	}
+
+#define RPIXEL(name1, name2, value) { \
+		#name1, #name2, XtRPixel, \
+		sizeof(Pixel), APPDATAOFF(name1), XtRString, \
+		(XtPointer)#value \
+	}
+
+#define RCOLOR(name, value) RPIXEL(color##name, Color##name, value)
+
+#define RSTRING(name1, name2) { \
+		#name1, #name2, XtRString, \
+		MAX_PATH, APPDATAOFF(name1), XtRString, (XtPointer)"" \
+	}
+
+#define RFONT(name1, name2, value) { \
+		#name1, #name2, XtRFontStruct, \
+		sizeof(XFontStruct), APPDATAOFF(name1), XtRString, \
+		(XtPointer)value \
+	}
+
+#define RCURSOR(name1, name2, value) { \
+		#name1, #name2, XtRCursor, \
+		sizeof(Cursor), APPDATAOFF(name1), XtRString, \
+		(XtPointer)#value \
+	}
+
 static XtResource app_resources[] =
 {
-	{
-		"lines",
-		"Lines",
-		XtRInt,
-		sizeof(int),
-		XtOffsetOf(XCursesAppData, lines),
-		XtRImmediate,
-		(XtPointer)24,
-	},
+	RINT(lines, Lines, 24),
+	RINT(cols, Cols, 80),
 
-	{
-		"cols",
-		"Cols",
-		XtRInt,
-		sizeof(int), 
-		XtOffsetOf(XCursesAppData, cols),
-		XtRImmediate,
-		(XtPointer)80,
-	},
+	RPIXEL(cursorColor, CursorColor, Red),
 
-	{
-		"cursorColor",
-		"CursorColor",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, cursorColor),
-		XtRString,
-		(XtPointer)"Red",
-	},
+	RCOLOR(Black, Black),
+	RCOLOR(Red, red3),
+	RCOLOR(Green, green3),
+	RCOLOR(Yellow, yellow3),
+	RCOLOR(Blue, blue3),
+	RCOLOR(Magenta, magenta3),
+	RCOLOR(Cyan, cyan3),
+	RCOLOR(White, Grey),
 
-	{
-		"colorBlack",
-		"ColorBlack",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBlack),
-		XtRString,
-		(XtPointer)"Black",
-	},
+	RCOLOR(BoldBlack, grey40),
+	RCOLOR(BoldRed, red1),
+	RCOLOR(BoldGreen, green1),
+	RCOLOR(BoldYellow, yellow1),
+	RCOLOR(BoldBlue, blue1),
+	RCOLOR(BoldMagenta, magenta1),
+	RCOLOR(BoldCyan, cyan1),
+	RCOLOR(BoldWhite, White),
 
-	{
-		"colorRed",
-		"ColorRed",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorRed),
-		XtRString,
-		(XtPointer)"red3",
-	},
+	RFONT(normalFont, NormalFont, DEFFONT),
+	RFONT(italicFont, ItalicFont, DEFFONT),
 
-	{
-		"colorGreen",
-		"ColorGreen",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorGreen),
-		XtRString,
-		(XtPointer)"green3",
-	},
-
-	{
-		"colorYellow",
-		"ColorYellow",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorYellow),
-		XtRString,
-		(XtPointer)"yellow3",
-	},
-
-	{
-		"colorBlue",
-		"ColorBlue",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBlue),
-		XtRString,
-		(XtPointer)"blue3",
-	},
-
-	{
-		"colorMagenta",
-		"ColorMagenta",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorMagenta),
-		XtRString,
-		(XtPointer)"magenta3",
-	},
-
-	{
-		"colorCyan",
-		"ColorCyan",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorCyan),
-		XtRString,
-		(XtPointer)"cyan3",
-	},
-
-	{
-		"colorWhite",
-		"ColorWhite",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorWhite),
-		XtRString,
-		(XtPointer)"Grey",
-	},
-
-	{
-		"colorBoldBlack",
-		"ColorBoldBlack",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldBlack),
-		XtRString,
-		(XtPointer)"grey40",
-	},
-
-	{
-		"colorBoldRed",
-		"ColorBoldRed",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldRed),
-		XtRString,
-		(XtPointer)"red1",
-	},
-
-	{
-		"colorBoldGreen",
-		"ColorBoldGreen",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldGreen),
-		XtRString,
-		(XtPointer)"green1",
-	},
-
-	{
-		"colorBoldYellow",
-		"ColorBoldYellow",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldYellow),
-		XtRString,
-		(XtPointer)"yellow1",
-	},
-
-	{
-		"colorBoldBlue",
-		"ColorBoldBlue",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldBlue),
-		XtRString,
-		(XtPointer)"blue1",
-	},
-
-	{
-		"colorBoldMagenta",
-		"ColorBoldMagenta",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldMagenta),
-		XtRString,
-		(XtPointer)"magenta1",
-	},
-
-	{
-		"colorBoldCyan",
-		"ColorBoldCyan",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldCyan),
-		XtRString,
-		(XtPointer)"cyan1",
-	},
-
-	{
-		"colorBoldWhite",
-		"ColorBoldWhite",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, colorBoldWhite),
-		XtRString,
-		(XtPointer)"White",
-	},
-
-	{
-		"normalFont",
-		"NormalFont",
-		XtRFontStruct,
-		sizeof(XFontStruct),
-		XtOffsetOf(XCursesAppData, normalfont),
-		XtRString,
-		(XtPointer)
-#ifdef PDC_WIDE
-		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
-#else
-		"7x13",
-#endif
-	},
-
-	{
-		"italicFont",
-		"ItalicFont",
-		XtRFontStruct,
-		sizeof(XFontStruct),
-		XtOffsetOf(XCursesAppData, italicfont),
-		XtRString,
-		(XtPointer)
-#ifdef PDC_WIDE
-		"-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1",
-#else
-		"7x13",
-#endif
-	},
-
-	{
-		"bitmap",
-		"Bitmap",
-		XtRString,
-		MAX_PATH,
-		XtOffsetOf(XCursesAppData, bitmapFile),
-		XtRString,
-		(XtPointer)"",
-	},
-
+	RSTRING(bitmap, Bitmap),
 #ifdef HAVE_XPM_H
-	{
-		"pixmap",
-		"Pixmap",
-		XtRString,
-		MAX_PATH,
-		XtOffsetOf(XCursesAppData, pixmapFile),
-		XtRString,
-		(XtPointer)"",
-	},
+	RSTRING(pixmap, Pixmap),
 #endif
+	RSTRING(composeKey, ComposeKey),
 
-	{
-		"composeKey",
-		"ComposeKey",
-		XtRString,
-		MAX_PATH,
-		XtOffsetOf(XCursesAppData, composeKey),
-		XtRString,
-		(XtPointer)"",
-	},
+	RCURSOR(pointer, Pointer, xterm),
 
-	{
-		"pointer",
-		"Pointer",
-		XtRCursor,
-		sizeof(Cursor),
-		XtOffsetOf(XCursesAppData, pointer),
-		XtRString,
-		(XtPointer)"xterm",
-	},
+	RPIXEL(pointerForeColor, PointerForeColor, Black),
+	RPIXEL(pointerBackColor, PointerBackColor, White),
 
-	{
-		"pointerForeColor",
-		"PointerForeColor",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, pointerForeColor),
-		XtRString,
-		(XtPointer)"Black",
-	},
+	RINT(shmmin, Shmmin, 0),
+	RINT(borderWidth, BorderWidth, 0),
 
-	{
-		"pointerBackColor",
-		"PointerBackColor",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, pointerBackColor),
-		XtRString,
-		(XtPointer)"White",
-	},
+	RPIXEL(borderColor, BorderColor, Black),
 
-	{
-		"shmmin",
-		"Shmmin",
-		XtRInt,
-		sizeof(int),
-		XtOffsetOf(XCursesAppData, shmmin),
-		XtRImmediate,
-		(XtPointer)0,
-	},
+	RINT(doubleClickPeriod, DoubleClickPeriod, 200),
+	RINT(clickPeriod, ClickPeriod, 100),
+	RINT(scrollbarWidth, ScrollbarWidth, 15),
+	RINT(cursorBlinkRate, CursorBlinkRate, 0),
 
-	{
-		"borderWidth",
-		"BorderWidth",
-		XtRInt,
-		sizeof(int),
-		XtOffsetOf(XCursesAppData, borderWidth),
-		XtRImmediate,
-		(XtPointer)0,
-	},
-
-	{
-		"borderColor",
-		"BorderColor",
-		XtRPixel,
-		sizeof(Pixel),
-		XtOffsetOf(XCursesAppData, borderColor),
-		XtRString,
-		(XtPointer)"Black",
-	},
-
-	{
-		"doubleClickPeriod",
-		"DoubleClickPeriod",
-		XtRInt,
-		sizeof(int),
-		XtOffsetOf(XCursesAppData, doubleClickPeriod),
-		XtRImmediate,
-		(XtPointer)200,
-	},
-
-	{
-		"clickPeriod",
-		"ClickPeriod",
-		XtRInt,
-		sizeof(int),
-		XtOffsetOf(XCursesAppData, clickPeriod),
-		XtRImmediate,
-		(XtPointer)100,
-	},
-
-	{
-		"scrollbarWidth",
-		"ScrollbarWidth",
-		XtRInt,
-		sizeof(int),
-		XtOffsetOf(XCursesAppData, scrollbarWidth),
-		XtRImmediate,
-		(XtPointer)15,
-	},
-
-	{
-		"cursorBlinkRate",
-		"CursorBlinkRate",
-		XtRInt,
-		sizeof(int),
-		XtOffsetOf(XCursesAppData, cursorBlinkRate),
-		XtRImmediate,
-		(XtPointer)0,
-	},
-
-	{
-		"textCursor",
-		"TextCursor",
-		XtRString,
-		MAX_PATH,
-		XtOffsetOf(XCursesAppData, textCursor),
-		XtRString,
-		(XtPointer)"",
-	},
-
+	RSTRING(textCursor, TextCursor)
 };
+
+#undef RCURSOR
+#undef RFONT
+#undef RSTRING
+#undef RCOLOR
+#undef RPIXEL
+#undef RINT
+#undef APPDATAOFF
+#undef DEFFONT
+
+/* Macros for options */
+
+#define COPT(name) {"-" #name, "*" #name, XrmoptionSepArg, NULL}
+#define CCOLOR(name) COPT(color##name)
 
 static XrmOptionDescRec options[] =
 {
-   {"-lines",		  "*lines",		XrmoptionSepArg, NULL},
-   {"-cols",		  "*cols",		XrmoptionSepArg, NULL},
-   {"-normalFont",	  "*normalFont",	XrmoptionSepArg, NULL},
-   {"-italicFont",	  "*italicFont",	XrmoptionSepArg, NULL},
-   {"-bitmap",		  "*bitmap",		XrmoptionSepArg, NULL},
+	COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
+	COPT(bitmap),
 #ifdef HAVE_XPM_H
-   {"-pixmap",		  "*pixmap",		XrmoptionSepArg, NULL},
+	COPT(pixmap),
 #endif
-   {"-pointer",		  "*pointer",		XrmoptionSepArg, NULL},
-   {"-shmmin",		  "*shmmin",		XrmoptionSepArg, NULL},
-   {"-composeKey",	  "*composeKey",	XrmoptionSepArg, NULL},
-   {"-clickPeriod",	  "*clickPeriod",	XrmoptionSepArg, NULL},
-   {"-doubleClickPeriod", "*doubleClickPeriod", XrmoptionSepArg, NULL},
-   {"-scrollbarWidth",	  "*scrollbarWidth",	XrmoptionSepArg, NULL},
-   {"-pointerForeColor",  "*pointerForeColor",	XrmoptionSepArg, NULL},
-   {"-pointerBackColor",  "*pointerBackColor",	XrmoptionSepArg, NULL},
-   {"-cursorBlinkRate",   "*cursorBlinkRate",	XrmoptionSepArg, NULL},
-   {"-cursorColor",	  "*cursorColor",	XrmoptionSepArg, NULL},
-   {"-textCursor",	  "*textCursor",	XrmoptionSepArg, NULL},
-   {"-colorBlack",	  "*colorBlack",	XrmoptionSepArg, NULL},
-   {"-colorRed",	  "*colorRed",		XrmoptionSepArg, NULL},
-   {"-colorGreen",	  "*colorGreen",	XrmoptionSepArg, NULL},
-   {"-colorYellow",	  "*colorYellow",	XrmoptionSepArg, NULL},
-   {"-colorBlue",	  "*colorBlue",		XrmoptionSepArg, NULL},
-   {"-colorMagenta",	  "*colorMagenta",	XrmoptionSepArg, NULL},
-   {"-colorCyan",	  "*colorCyan",		XrmoptionSepArg, NULL},
-   {"-colorWhite",	  "*colorWhite",	XrmoptionSepArg, NULL},
-   {"-colorBoldBlack",	  "*colorBoldBlack",	XrmoptionSepArg, NULL},
-   {"-colorBoldRed",	  "*colorBoldRed",	XrmoptionSepArg, NULL},
-   {"-colorBoldGreen",	  "*colorBoldGreen",	XrmoptionSepArg, NULL},
-   {"-colorBoldYellow",   "*colorBoldYellow",	XrmoptionSepArg, NULL},
-   {"-colorBoldBlue",	  "*colorBoldBlue",	XrmoptionSepArg, NULL},
-   {"-colorBoldMagenta",  "*colorBoldMagenta",	XrmoptionSepArg, NULL},
-   {"-colorBoldCyan",	  "*colorBoldCyan",	XrmoptionSepArg, NULL},
-   {"-colorBoldWhite",	  "*colorBoldWhite",	XrmoptionSepArg, NULL},
+	COPT(pointer), COPT(shmmin), COPT(composeKey), 
+	COPT(clickPeriod), COPT(doubleClickPeriod), 
+	COPT(scrollbarWidth), COPT(pointerForeColor), 
+	COPT(pointerBackColor), COPT(cursorBlinkRate), 
+	COPT(cursorColor), COPT(textCursor),
+
+	CCOLOR(Black), CCOLOR(Red), CCOLOR(Green), 
+	CCOLOR(Yellow), CCOLOR(Blue), CCOLOR(Magenta), 
+	CCOLOR(Cyan), CCOLOR(White),
+
+	CCOLOR(BoldBlack), CCOLOR(BoldRed), CCOLOR(BoldGreen), 
+	CCOLOR(BoldYellow), CCOLOR(BoldBlue), CCOLOR(BoldMagenta), 
+	CCOLOR(BoldCyan), CCOLOR(BoldWhite)
 };
+
+#undef CCOLOR
+#undef COPT
 
 static XtActionsRec Actions[] =
 {
@@ -1002,7 +729,7 @@ static void makeXY(int x, int y, int fontwidth, int fontheight,
 		   int *xpos, int *ypos)
 {
 	*xpos = (x * fontwidth) + xc_app_data.borderWidth;
-	*ypos = xc_app_data.normalfont->ascent + (y * fontheight) + 
+	*ypos = xc_app_data.normalFont->ascent + (y * fontheight) + 
 		xc_app_data.borderWidth;
 }
 
@@ -1348,23 +1075,23 @@ static void GetIcon(void)
 	XFree((char *)icon_size);
 
 #ifdef HAVE_XPM_H
-	if (strcmp(xc_app_data.pixmapFile, "") != 0) /* supplied pixmap */
+	if (strcmp(xc_app_data.pixmap, "") != 0) /* supplied pixmap */
 	{
 		XpmReadFileToPixmap(XtDisplay(topLevel),
 			RootWindowOfScreen(XtScreen(topLevel)),
-			(char *)xc_app_data.pixmapFile,
+			(char *)xc_app_data.pixmap,
 			&icon_pixmap, &icon_pixmap_mask, NULL);
 		return;
 	}
 #endif
 
-	if (strcmp(xc_app_data.bitmapFile, "") != 0) /* supplied bitmap */
+	if (strcmp(xc_app_data.bitmap, "") != 0) /* supplied bitmap */
 	{
 		int x_hot = 0, y_hot = 0;
 
 		rc = XReadBitmapFile(XtDisplay(topLevel),
 			RootWindowOfScreen(XtScreen(topLevel)),
-			(char *)xc_app_data.bitmapFile,
+			(char *)xc_app_data.bitmap,
 			&file_bitmap_width, &file_bitmap_height,
 			&icon_bitmap, &x_hot, &y_hot);
 
@@ -1372,11 +1099,11 @@ static void GetIcon(void)
 		{
 		case BitmapOpenFailed:
 			fprintf(stderr, "bitmap file %s: not found\n",
-				xc_app_data.bitmapFile);
+				xc_app_data.bitmap);
 			break;
 		case BitmapFileInvalid:
 			fprintf(stderr, "bitmap file %s: contents invalid\n",
-				xc_app_data.bitmapFile);
+				xc_app_data.bitmap);
 			break;
 		default:
 			return;
@@ -1632,7 +1359,7 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 
 		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc, 
 			xpos + 1, ypos - FontHeight + 
-			xc_app_data.normalfont->descent + 1, 
+			xc_app_data.normalFont->descent + 1, 
 			FontWidth - 2, FontHeight - 2);
 
 		compose_state = STATE_COMPOSE;
@@ -2304,9 +2031,9 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 			XDrawLine(XCURSESDISPLAY, XCURSESWIN,
 				rect_cursor_gc,
 				xpos + i,
-				ypos - xc_app_data.normalfont->ascent,
+				ypos - xc_app_data.normalFont->ascent,
 				xpos + i,
-				ypos - xc_app_data.normalfont->ascent + 
+				ypos - xc_app_data.normalFont->ascent + 
 					FontHeight - 1);
 	}
 	else
@@ -2318,7 +2045,7 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 			XSetForeground(XCURSESDISPLAY, rect_cursor_gc,
 				colors[back]);
 
-			for (i = 0; i < xc_app_data.normalfont->descent + 2;
+			for (i = 0; i < xc_app_data.normalFont->descent + 2;
 			     i++)
 				XDrawLine(XCURSESDISPLAY, XCURSESWIN,
 					rect_cursor_gc,
@@ -3253,24 +2980,24 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Check application resource values here */
 
-	FontWidth = xc_app_data.normalfont->max_bounds.rbearing - 
-		xc_app_data.normalfont->min_bounds.lbearing;
+	FontWidth = xc_app_data.normalFont->max_bounds.rbearing - 
+		xc_app_data.normalFont->min_bounds.lbearing;
 
-	FontHeight = xc_app_data.normalfont->max_bounds.ascent + 
-		xc_app_data.normalfont->max_bounds.descent;
+	FontHeight = xc_app_data.normalFont->max_bounds.ascent + 
+		xc_app_data.normalFont->max_bounds.descent;
 
-	FontAscent = xc_app_data.normalfont->max_bounds.ascent;
-	FontDescent = xc_app_data.normalfont->max_bounds.descent;
+	FontAscent = xc_app_data.normalFont->max_bounds.ascent;
+	FontDescent = xc_app_data.normalFont->max_bounds.descent;
 
 	/* Check that the italic font and normal fonts are the same size */
 	/* This appears backwards */
 
 	italic_font_valid = FontWidth !=
-		xc_app_data.italicfont->max_bounds.rbearing -
-		xc_app_data.italicfont->min_bounds.lbearing ||
+		xc_app_data.italicFont->max_bounds.rbearing -
+		xc_app_data.italicFont->min_bounds.lbearing ||
 		FontHeight !=
-		xc_app_data.italicfont->max_bounds.ascent + 
-		xc_app_data.italicfont->max_bounds.descent;
+		xc_app_data.italicFont->max_bounds.ascent + 
+		xc_app_data.italicFont->max_bounds.descent;
 
 	/* Calculate size of display window */
 
@@ -3293,8 +3020,8 @@ int XCursesSetupX(int argc, char *argv[])
 	GetIcon();
 
 #ifdef HAVE_XPM_H
-	if (xc_app_data.pixmapFile != NULL &&
-	    strcmp(xc_app_data.pixmapFile, "") != 0)
+	if (xc_app_data.pixmap != NULL &&
+	    strcmp(xc_app_data.pixmap, "") != 0)
 		XtVaSetValues(topLevel, XtNminWidth, minwidth,
 			XtNminHeight, minheight,
 			XtNbaseWidth, xc_app_data.borderWidth * 2,
@@ -3468,20 +3195,20 @@ int XCursesSetupX(int argc, char *argv[])
 	XC_LOG(("before get_GC\n"));
 
 	get_GC(&normal_gc,
-		xc_app_data.normalfont, COLOR_WHITE, COLOR_BLACK);
+		xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
 	get_GC(&italic_gc, 
-		italic_font_valid ? xc_app_data.italicfont : 
-		xc_app_data.normalfont, COLOR_WHITE, COLOR_BLACK);
+		italic_font_valid ? xc_app_data.italicFont : 
+		xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
 	get_GC(&block_cursor_gc,
-		xc_app_data.normalfont, COLOR_BLACK, COLOR_CURSOR);
+		xc_app_data.normalFont, COLOR_BLACK, COLOR_CURSOR);
 
 	get_GC(&rect_cursor_gc,
-		xc_app_data.normalfont, COLOR_CURSOR, COLOR_BLACK);
+		xc_app_data.normalFont, COLOR_CURSOR, COLOR_BLACK);
 
 	get_GC(&border_gc,
-		xc_app_data.normalfont, COLOR_BORDER, COLOR_BLACK);
+		xc_app_data.normalFont, COLOR_BORDER, COLOR_BLACK);
 
 	XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2, LineSolid, 
 		CapButt, JoinMiter);

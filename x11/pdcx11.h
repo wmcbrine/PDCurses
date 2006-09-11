@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.49 2006/08/21 04:29:46 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.50 2006/09/11 07:32:58 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -119,11 +119,11 @@ typedef struct
 	Pixel colorBoldWhite;
 	Pixel pointerForeColor;
 	Pixel pointerBackColor;
-	XFontStruct *normalfont;
-	XFontStruct *italicfont;
-	char *bitmapFile;
+	XFontStruct *normalFont;
+	XFontStruct *italicFont;
+	char *bitmap;
 #ifdef HAVE_XPM_H
-	char *pixmapFile;
+	char *pixmap;
 #endif
 	char *composeKey;
 	Cursor pointer;

@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.18 2006/09/11 19:45:17 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.19 2006/09/11 20:02:48 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -916,34 +916,6 @@ static int get_colors(void)
 	XC_LOG(("out of get_colors\n"));
 
 	return OK;
-}
-
-static void Endwin(void)
-{
-	XC_LOG(("Endwin() - called\n"));
-
-	if (bitmap_file != NULL)
-	{
-		XFreePixmap(XCURSESDISPLAY, icon_bitmap);
-		free(bitmap_file);
-	}
-
-#ifdef HAVE_XPM_H
-	if (pixmap_file != NULL)
-	{
-		XFreePixmap(XCURSESDISPLAY, icon_pixmap);
-		XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
-		free(pixmap_file);
-	}
-#endif
-	XFreeGC(XCURSESDISPLAY, normal_gc);
-	XFreeGC(XCURSESDISPLAY, italic_gc);
-	XFreeGC(XCURSESDISPLAY, block_cursor_gc);
-	XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
-	XFreeGC(XCURSESDISPLAY, border_gc);
-#ifdef FOREIGN
-	XDestroyIC(Xic);
-#endif
 }
 
 static int RefreshScrollbar(void)
@@ -2596,7 +2568,28 @@ static void ExitProcess(int rc, int sig, char *msg)
 	shmctl(shmidSP, IPC_RMID, 0);
 	shmctl(shmid_Xcurscr, IPC_RMID, 0);
 
-	Endwin();
+	if (bitmap_file != NULL)
+	{
+		XFreePixmap(XCURSESDISPLAY, icon_bitmap);
+		free(bitmap_file);
+	}
+
+#ifdef HAVE_XPM_H
+	if (pixmap_file != NULL)
+	{
+		XFreePixmap(XCURSESDISPLAY, icon_pixmap);
+		XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
+		free(pixmap_file);
+	}
+#endif
+	XFreeGC(XCURSESDISPLAY, normal_gc);
+	XFreeGC(XCURSESDISPLAY, italic_gc);
+	XFreeGC(XCURSESDISPLAY, block_cursor_gc);
+	XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
+	XFreeGC(XCURSESDISPLAY, border_gc);
+#ifdef FOREIGN
+	XDestroyIC(Xic);
+#endif
 
 	shutdown(xc_display_sock, 2);
 	close(xc_display_sock);

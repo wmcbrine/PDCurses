@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.19 2006/09/11 20:02:48 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.20 2006/09/11 20:12:03 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -890,10 +890,8 @@ static void get_GC(GC *gc, XFontStruct *font_info, int fore, int back)
 	XSetBackground(XCURSESDISPLAY, *gc, colors[back]);
 }
 
-static int get_colors(void)
+static void get_colors(void)
 {
-	XC_LOG(("in get_colors\n"));
-
 	colors[0] = xc_app_data.colorBlack;
 	colors[1] = xc_app_data.colorRed;
 	colors[2] = xc_app_data.colorGreen;
@@ -912,33 +910,27 @@ static int get_colors(void)
 	colors[15] = xc_app_data.colorBoldWhite;
 	colors[COLOR_CURSOR] = xc_app_data.cursorColor;
 	colors[COLOR_BORDER] = xc_app_data.borderColor;
-
-	XC_LOG(("out of get_colors\n"));
-
-	return OK;
 }
 
-static int RefreshScrollbar(void)
+static void RefreshScrollbar(void)
 {
-	PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
-	PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
-
 	XC_LOG(("RefreshScrollbar() - called\n"));
 
-	if (!SP->sb_on)
-		return ERR;
+	if (SP->sb_on)
+	{
+		PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
+		PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
 
-	if (total_y != 0)
-		XawScrollbarSetThumb(scrollVert,
+		if (total_y != 0)
+		    XawScrollbarSetThumb(scrollVert,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
 
-	if (total_x != 0)
-		XawScrollbarSetThumb(scrollHoriz,
+		if (total_x != 0)
+		    XawScrollbarSetThumb(scrollHoriz,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
-
-	return OK;
+	}
 }
 
 static void SetCursorColor(chtype *ch, short *fore, short *back)
@@ -3082,11 +3074,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Process the supplied colors */
 
-	if (get_colors() == ERR)
-	{
-		kill(xc_otherpid, SIGKILL);
-		return ERR;
-	}
+	get_colors();
 
 	/* Determine text cursor alignment from resources */
 

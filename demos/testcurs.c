@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.61 2006/08/16 05:36:59 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.62 2006/09/20 08:21:40 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -894,6 +894,11 @@ void clipboardTest(WINDOW *win)
 
 void acsTest(WINDOW *win)
 {
+#ifdef ACS_S3
+# define ACSNUM 32
+#else
+# define ACSNUM 25
+#endif
 	static const char *acs_names[] =
 	{
 		"ACS_ULCORNER", "ACS_URCORNER", "ACS_LLCORNER", 
@@ -911,26 +916,7 @@ void acsTest(WINDOW *win)
 #endif
 	};
 
-	/* initscr() must be called before accessing any ACS values
-	   in implementations that define them in terms of acs_map[], 
-	   hence why this array is not static. */
-
-	chtype acs_values[] =
-	{
-		ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER, 
-		ACS_LTEE, ACS_RTEE, ACS_TTEE, ACS_BTEE, ACS_HLINE, 
-		ACS_VLINE, ACS_PLUS,
-
-		ACS_S1, ACS_S9, ACS_DIAMOND, ACS_CKBOARD, ACS_DEGREE, 
-		ACS_PLMINUS, ACS_BULLET,
-
-		ACS_LARROW, ACS_RARROW, ACS_UARROW, ACS_DARROW, 
-		ACS_BOARD, ACS_LANTERN, ACS_BLOCK
-#ifdef ACS_S3
-		, ACS_S3, ACS_S7, ACS_LEQUAL, ACS_GEQUAL, ACS_PI, 
-		ACS_NEQUAL, ACS_STERLING
-#endif
-	};
+	chtype acs_values[ACSNUM];
 
 #ifdef HAVE_WIDE
 	cchar_t *wacs_values[] =
@@ -962,11 +948,6 @@ void acsTest(WINDOW *win)
 		0x10d0, 0};
 #endif
 
-#ifdef ACS_S3
-# define ACSNUM 32
-#else
-# define ACSNUM 25
-#endif
 	int i, tmarg = (LINES - 22) / 2;
 
 	clear();
@@ -976,6 +957,27 @@ void acsTest(WINDOW *win)
 	attrset(A_NORMAL);
 
 	tmarg += 3;
+
+	acs_values[0] =	ACS_ULCORNER;	acs_values[1] = ACS_URCORNER;
+	acs_values[2] = ACS_LLCORNER;	acs_values[3] = ACS_LRCORNER;
+	acs_values[4] = ACS_LTEE;	acs_values[5] = ACS_RTEE;
+	acs_values[6] = ACS_TTEE;	acs_values[7] = ACS_BTEE;
+	acs_values[8] = ACS_HLINE;	acs_values[9] = ACS_VLINE;
+	acs_values[10] = ACS_PLUS;	acs_values[11] = ACS_S1;
+	acs_values[12] = ACS_S9;	acs_values[13] = ACS_DIAMOND;
+	acs_values[14] = ACS_CKBOARD;	acs_values[15] = ACS_DEGREE;
+	acs_values[16] = ACS_PLMINUS;	acs_values[17] = ACS_BULLET;
+
+	acs_values[18] = ACS_LARROW;	acs_values[19] = ACS_RARROW;
+	acs_values[20] = ACS_UARROW;	acs_values[21] = ACS_DARROW; 
+	acs_values[22] = ACS_BOARD;	acs_values[23] = ACS_LANTERN;
+	acs_values[24] = ACS_BLOCK;
+#ifdef ACS_S3
+	acs_values[25] = ACS_S3;	acs_values[26] = ACS_S7;
+	acs_values[27] = ACS_LEQUAL;	acs_values[28] = ACS_GEQUAL;
+	acs_values[29] = ACS_PI;	acs_values[30] = ACS_NEQUAL;
+	acs_values[31] = ACS_STERLING;
+#endif
 
 	for (i = 0; i < ACSNUM; i++)
 	{

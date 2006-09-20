@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.62 2006/09/20 08:21:40 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.63 2006/09/20 20:00:55 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -958,26 +958,22 @@ void acsTest(WINDOW *win)
 
 	tmarg += 3;
 
-	acs_values[0] =	ACS_ULCORNER;	acs_values[1] = ACS_URCORNER;
-	acs_values[2] = ACS_LLCORNER;	acs_values[3] = ACS_LRCORNER;
-	acs_values[4] = ACS_LTEE;	acs_values[5] = ACS_RTEE;
-	acs_values[6] = ACS_TTEE;	acs_values[7] = ACS_BTEE;
-	acs_values[8] = ACS_HLINE;	acs_values[9] = ACS_VLINE;
-	acs_values[10] = ACS_PLUS;	acs_values[11] = ACS_S1;
-	acs_values[12] = ACS_S9;	acs_values[13] = ACS_DIAMOND;
-	acs_values[14] = ACS_CKBOARD;	acs_values[15] = ACS_DEGREE;
-	acs_values[16] = ACS_PLMINUS;	acs_values[17] = ACS_BULLET;
+#define A(b,c) acs_values[b] = ACS_##c
 
-	acs_values[18] = ACS_LARROW;	acs_values[19] = ACS_RARROW;
-	acs_values[20] = ACS_UARROW;	acs_values[21] = ACS_DARROW; 
-	acs_values[22] = ACS_BOARD;	acs_values[23] = ACS_LANTERN;
-	acs_values[24] = ACS_BLOCK;
+	A(0,ULCORNER);	A(1,URCORNER);	A(2,LLCORNER);	A(3,LRCORNER);
+	A(4,LTEE);	A(5,RTEE);	A(6,TTEE);	A(7,BTEE);
+	A(8,HLINE);	A(9,VLINE);	A(10,PLUS);	A(11,S1);
+	A(12,S9);	A(13,DIAMOND);	A(14,CKBOARD);	A(15,DEGREE);
+
+	A(16,PLMINUS);	A(17,BULLET);	A(18,LARROW);	A(19,RARROW);
+	A(20,UARROW);	A(21,DARROW);	A(22,BOARD);	A(23,LANTERN);
+	A(24,BLOCK);
 #ifdef ACS_S3
-	acs_values[25] = ACS_S3;	acs_values[26] = ACS_S7;
-	acs_values[27] = ACS_LEQUAL;	acs_values[28] = ACS_GEQUAL;
-	acs_values[29] = ACS_PI;	acs_values[30] = ACS_NEQUAL;
-	acs_values[31] = ACS_STERLING;
+	A(25,S3);	A(26,S7);	A(27,LEQUAL);	A(28,GEQUAL);
+	A(29,PI);	A(30,NEQUAL);	A(31,STERLING);
 #endif
+
+#undef A
 
 	for (i = 0; i < ACSNUM; i++)
 	{

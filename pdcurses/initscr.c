@@ -23,7 +23,7 @@
 #undef isendwin
 #undef is_termresized
 
-RCSID("$Id: initscr.c,v 1.75 2006/09/20 07:36:03 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.76 2006/09/20 08:56:30 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -228,13 +228,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	curscr->_clear = FALSE;
 
 	PDC_init_atrtab();	/* set up default colors */
-
-#ifdef PDC_WIDE
-	/* Set the ACS_* table to the same values WACS_* */
-
-	for (i = 0; i < 32; i++)
-		pdc_acs[i] = pdc_wacs[i];
-#endif
 
 	MOUSE_X_POS = MOUSE_Y_POS = (-1);
 	BUTTON_STATUS(1) = BUTTON_RELEASED;

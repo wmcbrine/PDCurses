@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.222 2006/09/20 07:36:03 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.223 2006/09/20 08:56:30 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -743,55 +743,144 @@ currently used.)
 
 /*** Alternate character set macros ***/
 
-extern chtype pdc_acs[];
+/* Non-X/Unicode definitions are from jshumate@wrdis01.robins.af.mil --
+   these match code page 437 and compatible pages (CP850, CP852, etc.) */
 
 /* VT100-compatible symbols -- box chars */
 
-#define ACS_ULCORNER	(pdc_acs[0])
-#define ACS_LLCORNER	(pdc_acs[1])
-#define ACS_URCORNER	(pdc_acs[2])
-#define ACS_LRCORNER	(pdc_acs[3])
-#define ACS_RTEE	(pdc_acs[4])
-#define ACS_LTEE	(pdc_acs[5])
-#define ACS_BTEE	(pdc_acs[6])
-#define ACS_TTEE	(pdc_acs[7])
-#define ACS_HLINE	(pdc_acs[8])
-#define ACS_VLINE	(pdc_acs[9])
-#define ACS_PLUS	(pdc_acs[10])
+#ifdef PDC_WIDE
+# define ACS_ULCORNER	(chtype)0x250c
+# define ACS_LLCORNER	(chtype)0x2514
+# define ACS_URCORNER	(chtype)0x2510
+# define ACS_LRCORNER	(chtype)0x2518
+# define ACS_RTEE	(chtype)0x2524
+# define ACS_LTEE	(chtype)0x251c
+# define ACS_BTEE	(chtype)0x2534
+# define ACS_TTEE	(chtype)0x252c
+# define ACS_HLINE	(chtype)0x2500
+# define ACS_VLINE	(chtype)0x2502
+# define ACS_PLUS	(chtype)0x253c
+#else
+# ifdef XCURSES
+#  define ACS_ULCORNER	((chtype)13 | A_ALTCHARSET)
+#  define ACS_LLCORNER	((chtype)14 | A_ALTCHARSET)
+#  define ACS_URCORNER	((chtype)12 | A_ALTCHARSET)
+#  define ACS_LRCORNER	((chtype)11 | A_ALTCHARSET)
+#  define ACS_RTEE	((chtype)22 | A_ALTCHARSET)
+#  define ACS_LTEE	((chtype)21 | A_ALTCHARSET)
+#  define ACS_BTEE	((chtype)23 | A_ALTCHARSET)
+#  define ACS_TTEE	((chtype)24 | A_ALTCHARSET)
+#  define ACS_HLINE	((chtype)18 | A_ALTCHARSET)
+#  define ACS_VLINE	((chtype)25 | A_ALTCHARSET)
+#  define ACS_PLUS	((chtype)15 | A_ALTCHARSET)
+# else
+#  define ACS_ULCORNER	(chtype)0xda
+#  define ACS_LLCORNER	(chtype)0xc0
+#  define ACS_URCORNER	(chtype)0xbf
+#  define ACS_LRCORNER	(chtype)0xd9
+#  define ACS_RTEE	(chtype)0xb4
+#  define ACS_LTEE	(chtype)0xc3
+#  define ACS_BTEE	(chtype)0xc1
+#  define ACS_TTEE	(chtype)0xc2
+#  define ACS_HLINE	(chtype)0xc4
+#  define ACS_VLINE	(chtype)0xb3
+#  define ACS_PLUS	(chtype)0xc5
+# endif
+#endif
 
 /* VT100-compatible symbols -- other */
 
-#define ACS_S1		(pdc_acs[11])
-#define ACS_S9		(pdc_acs[12])
-#define ACS_DIAMOND	(pdc_acs[13])
-#define ACS_CKBOARD	(pdc_acs[14])
-#define ACS_DEGREE	(pdc_acs[15])
-#define ACS_PLMINUS	(pdc_acs[16])
-#define ACS_BULLET	(pdc_acs[17])
+#ifdef PDC_WIDE
+# define ACS_S1		(chtype)0x23ba
+# define ACS_S9		(chtype)0x23bd
+# define ACS_DIAMOND	(chtype)0x2666
+# define ACS_CKBOARD	(chtype)0x2592
+# define ACS_DEGREE	(chtype)0x00b0
+# define ACS_PLMINUS	(chtype)0x00b1
+# define ACS_BULLET	(chtype)0x00b7
+#else
+# ifdef XCURSES
+#  define ACS_S1	((chtype)16 | A_ALTCHARSET)
+#  define ACS_S9	((chtype)20 | A_ALTCHARSET)
+#  define ACS_DIAMOND	((chtype)1 | A_ALTCHARSET)
+#  define ACS_CKBOARD	((chtype)2 | A_ALTCHARSET)
+#  define ACS_DEGREE	((chtype)7 | A_ALTCHARSET)
+#  define ACS_PLMINUS	((chtype)8 | A_ALTCHARSET)
+#  define ACS_BULLET	(chtype)'*'
+# else
+#  define ACS_S1	(chtype)0x2d
+#  define ACS_S9	(chtype)0x5f
+#  define ACS_DIAMOND	((chtype)0x04 | A_ALTCHARSET)
+#  define ACS_CKBOARD	(chtype)0xb1
+#  define ACS_DEGREE	(chtype)0xf8
+#  define ACS_PLMINUS	(chtype)0xf1
+#  define ACS_BULLET	(chtype)0xf9
+# endif
+#endif
 
 /* Teletype 5410v1 symbols -- these are defined in SysV curses, but
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#define ACS_LARROW	(pdc_acs[18])
-#define ACS_RARROW	(pdc_acs[19])
-#define ACS_DARROW	(pdc_acs[20])
-#define ACS_UARROW	(pdc_acs[21])
-#define ACS_BOARD	(pdc_acs[22])
-#define ACS_LANTERN	(pdc_acs[23])
-#define ACS_BLOCK	(pdc_acs[24])
+#ifdef PDC_WIDE
+# define ACS_LARROW	(chtype)0x2190
+# define ACS_RARROW	(chtype)0x2192
+# define ACS_DARROW	(chtype)0x2193
+# define ACS_UARROW	(chtype)0x2191
+# define ACS_BOARD	(chtype)0x2591
+# define ACS_LANTERN	(chtype)0x00a4
+# define ACS_BLOCK	(chtype)0x2588
+#else
+# ifdef XCURSES
+#  define ACS_LARROW	(chtype)'<'
+#  define ACS_RARROW	(chtype)'>'
+#  define ACS_DARROW	(chtype)'v'
+#  define ACS_UARROW	(chtype)'^'
+#  define ACS_BOARD	(chtype)'#'
+#  define ACS_LANTERN	(chtype)'#'
+#  define ACS_BLOCK	((chtype)0 | A_ALTCHARSET)
+# else
+#  define ACS_LARROW	((chtype)0x1b | A_ALTCHARSET)
+#  define ACS_RARROW	((chtype)0x1a | A_ALTCHARSET)
+#  define ACS_DARROW	((chtype)0x19 | A_ALTCHARSET)
+#  define ACS_UARROW	((chtype)0x18 | A_ALTCHARSET)
+#  define ACS_BOARD	(chtype)0xb0
+#  define ACS_LANTERN	((chtype)0x0f | A_ALTCHARSET)
+#  define ACS_BLOCK	(chtype)0xdb
+# endif
+#endif
 
 /* That goes double for these -- undocumented SysV symbols. Don't use
    them. Also, the definitions here aren't compatible with as many
    code pages as those above. */
 
-#define ACS_S3		(pdc_acs[25])
-#define ACS_S7		(pdc_acs[26])
-#define ACS_LEQUAL	(pdc_acs[27])
-#define ACS_GEQUAL	(pdc_acs[28])
-#define ACS_PI		(pdc_acs[29])
-#define ACS_NEQUAL	(pdc_acs[30])
-#define ACS_STERLING	(pdc_acs[31])
+#ifdef PDC_WIDE
+# define ACS_S3		(chtype)0x23bb
+# define ACS_S7		(chtype)0x23bc
+# define ACS_LEQUAL	(chtype)0x2264
+# define ACS_GEQUAL	(chtype)0x2265
+# define ACS_PI		(chtype)0x03c0
+# define ACS_NEQUAL	(chtype)0x2260
+# define ACS_STERLING	(chtype)0x00a3
+#else
+# ifdef XCURSES
+#  define ACS_S3	((chtype)17 | A_ALTCHARSET)
+#  define ACS_S7	((chtype)19 | A_ALTCHARSET)
+#  define ACS_LEQUAL	((chtype)26 | A_ALTCHARSET)
+#  define ACS_GEQUAL	((chtype)27 | A_ALTCHARSET)
+#  define ACS_PI	((chtype)28 | A_ALTCHARSET)
+#  define ACS_NEQUAL	((chtype)29 | A_ALTCHARSET)
+#  define ACS_STERLING	((chtype)30 | A_ALTCHARSET)
+# else
+#  define ACS_S3	(chtype)0x2d
+#  define ACS_S7	(chtype)0x2d
+#  define ACS_LEQUAL	(chtype)0xf3
+#  define ACS_GEQUAL	(chtype)0xf2
+#  define ACS_PI	(chtype)0xe3
+#  define ACS_NEQUAL	(chtype)0xd8
+#  define ACS_STERLING	(chtype)0x9c
+# endif
+#endif
 
 /* Box char aliases */
 

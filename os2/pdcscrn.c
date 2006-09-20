@@ -25,21 +25,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.47 2006/09/20 07:36:03 wmcbrine Exp $");
-
-/* Definitions for ACS_ULCORNER through ACS_STERLING, in the order
-   listed in curses.h, from jshumate@wrdis01.robins.af.mil -- these
-   match code page 437 and compatible pages (CP850, CP852, etc.) */
-
-chtype pdc_acs[] =
-{
-	0xda, 0xc0, 0xbf, 0xd9, 0xb4, 0xc3, 0xc1, 0xc2, 0xc4, 0xb3, 
-	0xc5, 0x2d, 0x5f, (0x04 | A_ALTCHARSET), 0xb1, 0xf8, 0xf1, 0xf9, 
-	(0x1b | A_ALTCHARSET), (0x1a | A_ALTCHARSET),
-	(0x19 | A_ALTCHARSET), (0x18 | A_ALTCHARSET), 0xb0,
-	(0x0f | A_ALTCHARSET), 0xdb, 0x2d, 0x2d, 0xf3, 0xf2, 0xe3, 0xd8, 
-	0x9c
-};
+RCSID("$Id: pdcscrn.c,v 1.48 2006/09/20 08:56:30 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 

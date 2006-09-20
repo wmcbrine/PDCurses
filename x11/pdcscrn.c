@@ -17,23 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.40 2006/09/20 07:36:04 wmcbrine Exp $");
-
-/* Definitions for ACS_ULCORNER through ACS_STERLING, in the order
-   listed in curses.h */
-
-chtype pdc_acs[] =
-{
-	(13 | A_ALTCHARSET), (14 | A_ALTCHARSET), (12 | A_ALTCHARSET), 
-	(11 | A_ALTCHARSET), (22 | A_ALTCHARSET), (21 | A_ALTCHARSET), 
-	(23 | A_ALTCHARSET), (24 | A_ALTCHARSET), (18 | A_ALTCHARSET), 
-	(25 | A_ALTCHARSET), (15 | A_ALTCHARSET), (16 | A_ALTCHARSET), 
-	(20 | A_ALTCHARSET), (1 | A_ALTCHARSET), (2 | A_ALTCHARSET),
-	(7 | A_ALTCHARSET), (8 | A_ALTCHARSET), '*', '<', '>', 'v', '^', 
-	'#', '#', (0 | A_ALTCHARSET), (17 | A_ALTCHARSET),
-	(19 | A_ALTCHARSET), (26 | A_ALTCHARSET), (27 | A_ALTCHARSET),
-	(28 | A_ALTCHARSET), (29 | A_ALTCHARSET), (30 | A_ALTCHARSET)
-};
+RCSID("$Id: pdcscrn.c,v 1.41 2006/09/20 08:56:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

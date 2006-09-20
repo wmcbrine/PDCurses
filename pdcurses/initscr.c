@@ -23,7 +23,7 @@
 #undef isendwin
 #undef is_termresized
 
-RCSID("$Id: initscr.c,v 1.73 2006/09/10 20:26:28 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.74 2006/09/20 06:42:03 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -38,7 +38,7 @@ int TABSIZE = 8;
 MOUSE_STATUS Mouse_status, pdc_mouse_status;
 
 #ifdef PDC_WIDE
-cchar_t _wacs_map[] = {
+cchar_t pdc_wacs[] = {
 	ACS_ULCORNER, ACS_LLCORNER, ACS_URCORNER, ACS_LRCORNER, 
 	ACS_RTEE, ACS_LTEE, ACS_BTEE, ACS_TTEE, ACS_HLINE, ACS_VLINE, 
 	ACS_PLUS, ACS_S1, ACS_S9, ACS_DIAMOND, ACS_CKBOARD, ACS_DEGREE, 

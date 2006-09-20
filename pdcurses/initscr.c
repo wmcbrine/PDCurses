@@ -23,7 +23,7 @@
 #undef isendwin
 #undef is_termresized
 
-RCSID("$Id: initscr.c,v 1.74 2006/09/20 06:42:03 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.75 2006/09/20 07:36:03 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -38,14 +38,17 @@ int TABSIZE = 8;
 MOUSE_STATUS Mouse_status, pdc_mouse_status;
 
 #ifdef PDC_WIDE
+
+/* Unicode definitions for WACS_ULCORNER through WACS_STERLING, in the 
+   order listed in curses.h */
+
 cchar_t pdc_wacs[] = {
-	ACS_ULCORNER, ACS_LLCORNER, ACS_URCORNER, ACS_LRCORNER, 
-	ACS_RTEE, ACS_LTEE, ACS_BTEE, ACS_TTEE, ACS_HLINE, ACS_VLINE, 
-	ACS_PLUS, ACS_S1, ACS_S9, ACS_DIAMOND, ACS_CKBOARD, ACS_DEGREE, 
-	ACS_PLMINUS, ACS_BULLET, ACS_LARROW, ACS_RARROW, ACS_DARROW, 
-	ACS_UARROW, ACS_BOARD, ACS_LANTERN, ACS_BLOCK, ACS_S3, ACS_S7, 
-	ACS_LEQUAL, ACS_GEQUAL, ACS_PI, ACS_NEQUAL, ACS_STERLING
+	0x250c, 0x2514, 0x2510, 0x2518, 0x2524, 0x251c, 0x2534, 0x252c,
+	0x2500, 0x2502, 0x253c, 0x23ba, 0x23bd, 0x2666, 0x2592, 0x00b0,
+	0x00b1, 0x00b7, 0x2190, 0x2192, 0x2193, 0x2191, 0x2591, 0x00a4,
+	0x2588, 0x23bb, 0x23bc, 0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3
 };
+
 #endif
 
 extern RIPPEDOFFLINE linesripped[5];
@@ -225,6 +228,13 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	curscr->_clear = FALSE;
 
 	PDC_init_atrtab();	/* set up default colors */
+
+#ifdef PDC_WIDE
+	/* Set the ACS_* table to the same values WACS_* */
+
+	for (i = 0; i < 32; i++)
+		pdc_acs[i] = pdc_wacs[i];
+#endif
 
 	MOUSE_X_POS = MOUSE_Y_POS = (-1);
 	BUTTON_STATUS(1) = BUTTON_RELEASED;

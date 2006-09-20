@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.63 2006/09/20 20:00:55 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.64 2006/09/20 20:19:31 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -374,23 +374,22 @@ void inputTest(WINDOW *win)
 				spinner_count++;
 				if (spinner_count == 4)
 					spinner_count = 0;
-				wmove(win, 3, 3);
-				waddch(win, spinner[spinner_count]);
+				mvwaddch(win, 3, 3, spinner[spinner_count]);
 				wrefresh(win);
 			}
 			else
 				break;
 		}
 
-		wmove(win, 3, 5);
+		mvwaddstr(win, 3, 5, "Key Pressed: ");
 		wclrtoeol(win);
 
 		if (c >= KEY_MIN)
-			wprintw(win, "Key Pressed: %s", keyname(c));
+			wprintw(win, "%s", keyname(c));
 		else if (isprint(c))
-			wprintw(win, "Key Pressed: %c", c);
+			wprintw(win, "%c", c);
 		else
-			wprintw(win, "Key Pressed: %s", unctrl(c));
+			wprintw(win, "%s", unctrl(c));
 
 #ifdef PDCURSES
 		if (PDC_get_key_modifiers())

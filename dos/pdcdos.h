@@ -15,10 +15,18 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.14 2006/08/13 06:32:29 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.15 2006/09/21 16:09:34 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
+
+#if defined(_MSC_VER) || defined(_QC)
+# define MSC 1
+#endif
+
+#if defined(__HIGHC__) || MSC
+# include <bios.h>
+#endif
 
 /*----------------------------------------------------------------------
  *	MEMORY MODEL SUPPORT:
@@ -62,6 +70,7 @@ extern unsigned pdc_video_seg;
 extern unsigned pdc_video_ofs;
 
 #ifdef __DJGPP__		/* Note: works only in plain DOS... */
+# define _NAIVE_DOS_REGS
 # if DJGPP == 2
 #  define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 # else
@@ -81,6 +90,11 @@ extern unsigned pdc_video_ofs;
 # define _FP_SEGMENT(p)		(unsigned short)(((long)p) >> 4)
 #endif
 #define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
+
+#if defined(__WATCOMC__) && defined(__386__)
+# define int86 int386
+# define int86x int386x
+#endif
 
 #ifdef __DJGPP__
 unsigned char getdosmembyte(int offs);

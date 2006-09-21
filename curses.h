@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.226 2006/09/21 08:38:26 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.227 2006/09/21 16:09:33 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -32,7 +32,6 @@ PDCurses definitions list:  (Only define those needed)
 	OS2		True if compiling for OS/2.
 	WIN32		True if compiling for Windows.
 	XCURSES		True if compiling for X11.
-	MSC		True if using a Microsoft compiler.
 	NOMACROS	Don't use (most) macros in place of functions.
 
 PDCurses portable platform definitions list:
@@ -93,7 +92,6 @@ PDCurses portable platform definitions list:
 #  pragma off(prototype_override_warnings)
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
-#    include <bios.h>
 #  endif
 #endif
 
@@ -101,12 +99,10 @@ PDCurses portable platform definitions list:
  *	MICROSOFT COMPILERS	MSC
  *
  *	Microsoft definitions:
- *		MSC
  *		DOS || OS2
  */
 
 #ifdef _MSC_VER					/* defined by compiler	*/
-#  define MSC 1
 #  ifdef __OS2__		/* You will have to define in makefile	*/
 #    define USE_OS2_H 1		/* Use the os2.h for the compiler	*/
 #    define OS2 3		/* Major release of OS/2 supported	*/
@@ -118,7 +114,6 @@ PDCurses portable platform definitions list:
 #      endif
 #    else	
 #      define DOS 6		/* Major release of DOS supported	*/
-#      include <bios.h>
 #    endif
 #  endif
 #endif
@@ -129,9 +124,7 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef _QC					/* defined by compiler	*/
-#  define MSC 1
 #  define DOS 6			/* Major release of DOS supported	*/
-#  include <bios.h>
 #endif
 
 /*----------------------------------------
@@ -272,10 +265,6 @@ PDCurses portable platform definitions list:
 #ifdef __WATCOMC__
 #  if defined(__DOS__) || defined(__DOS4G__)
 #    define DOS 7		/* Major release of DOS supported	*/
-#    ifdef __386__
-#      define int86 int386
-#      define int86x int386x
-#    endif
 #  endif
 #  if defined(__OS2__) || defined(__OS2V2__)
 #    define OS2 3		/* Major release of OS/2 supported	*/

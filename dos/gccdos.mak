@@ -37,7 +37,7 @@ else
 	LDFLAGS =
 endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -D_NAIVE_DOS_REGS -funsigned-char
+CPPFLAGS	= -I$(PDCURSES_HOME) -funsigned-char
 
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 

@@ -23,7 +23,7 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.9 2006/08/23 09:06:16 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.10 2006/09/21 16:09:34 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -46,7 +46,7 @@ void PDC_napms(int ms)
 
 	delay(ms);
 
-# elif defined(MSC)
+# elif defined(_MSC_VER) || defined(_QC)
 	{
 		clock_t goal = (ms / 50) + clock();
 		while (goal > clock())

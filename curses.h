@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.225 2006/09/21 08:17:46 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.226 2006/09/21 08:38:26 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -592,38 +592,28 @@ typedef struct
 
 
 /* external variables */
+
 #ifdef PDC_DLL_BUILD
-# ifndef CURSES_LIBRARY
-__declspec(dllimport)	int		LINES;
-__declspec(dllimport)	int		COLS;
-__declspec(dllimport)	WINDOW		*stdscr;
-__declspec(dllimport)	WINDOW		*curscr;
-__declspec(dllimport)	SCREEN		*SP;
-__declspec(dllimport)	MOUSE_STATUS	Mouse_status;
-__declspec(dllimport)	int		COLORS;
-__declspec(dllimport)	int		COLOR_PAIRS;
-__declspec(dllimport)	int		TABSIZE;
+# ifdef CURSES_LIBRARY
+#  define PDCEX __declspec(dllexport) extern
 # else
-__declspec(dllexport) extern	int		LINES;
-__declspec(dllexport) extern	int		COLS;
-__declspec(dllexport) extern	WINDOW		*stdscr;
-__declspec(dllexport) extern	WINDOW		*curscr;
-__declspec(dllexport) extern	SCREEN		*SP;
-__declspec(dllexport) extern	MOUSE_STATUS	Mouse_status;
-__declspec(dllexport) extern	int 		COLORS;
-__declspec(dllexport) extern	int		COLOR_PAIRS;
-__declspec(dllexport) extern	int		TABSIZE;
+#  define PDCEX __declspec(dllimport)
 # endif
 #else
-extern	int		LINES;		/* terminal height		*/
-extern	int		COLS;		/* terminal width		*/
-extern	WINDOW		*stdscr;	/* the default screen window	*/
-extern	WINDOW		*curscr;	/* the current screen image	*/
-extern	SCREEN		*SP;		/* curses variables		*/
-extern	MOUSE_STATUS	Mouse_status;
-extern	int		COLORS, COLOR_PAIRS, TABSIZE;
+# define PDCEX extern
 #endif
 
+PDCEX	int		LINES;		/* terminal height		*/
+PDCEX	int		COLS;		/* terminal width		*/
+PDCEX	WINDOW		*stdscr;	/* the default screen window	*/
+PDCEX	WINDOW		*curscr;	/* the current screen image	*/
+PDCEX	SCREEN		*SP;		/* curses variables		*/
+PDCEX	MOUSE_STATUS	Mouse_status;
+PDCEX	int		COLORS;
+PDCEX	int		COLOR_PAIRS;
+PDCEX	int		TABSIZE;
+
+#undef PDCEX
 
 /*man-start**************************************************************
 

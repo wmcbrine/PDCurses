@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.224 2006/09/21 08:03:42 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.225 2006/09/21 08:17:46 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -743,8 +743,10 @@ currently used.)
 
 /*** Alternate character set macros ***/
 
-/* Non-X/Unicode definitions are from jshumate@wrdis01.robins.af.mil --
-   these match code page 437 and compatible pages (CP850, CP852, etc.) */
+/* 'u' = Unicode, 'x' = non-wide X11, 'd' = other ("DOS" or "default")
+
+   'd' definitions are from jshumate@wrdis01.robins.af.mil -- these 
+   match code page 437 and compatible pages (CP850, CP852, etc.) */
 
 #ifdef PDC_WIDE
 # define ACS_PICK(u,x,d) ((chtype)u)

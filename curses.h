@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.228 2006/09/22 15:39:30 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.229 2006/09/22 16:11:08 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -63,7 +63,7 @@ PDCurses portable platform definitions list:
  *		are predefined by compiler.
  */
 
-#ifdef __TURBOC__		/* Borland gives defines this as a value*/
+#ifdef __TURBOC__
 #  ifdef __MSDOS__
 #    define DOS 6		/* Major release of DOS supported	*/
 #  endif
@@ -91,7 +91,7 @@ PDCurses portable platform definitions list:
 #ifdef __HIGHC__
 #  pragma off(prototype_override_warnings)
 #  ifdef __MSDOS__
-#    define DOS 6		/* Major release of DOS supported	*/
+#    define DOS 6
 #  endif
 #endif
 
@@ -102,18 +102,18 @@ PDCurses portable platform definitions list:
  *		DOS || OS2
  */
 
-#ifdef _MSC_VER					/* defined by compiler	*/
+#ifdef _MSC_VER
 #  ifdef __OS2__		/* You will have to define in makefile	*/
 #    define USE_OS2_H 1		/* Use the os2.h for the compiler	*/
-#    define OS2 3		/* Major release of OS/2 supported	*/
+#    define OS2 3
 #    define APIRET USHORT
-#  else				/* no __OS2__ define, so assume DOS	*/
+#  else
 #    ifdef _WIN32	
 #      ifndef WIN32
 #        define WIN32
 #      endif
 #    else	
-#      define DOS 6		/* Major release of DOS supported	*/
+#      define DOS 6
 #    endif
 #  endif
 #endif
@@ -123,8 +123,8 @@ PDCurses portable platform definitions list:
  *
  */
 
-#ifdef _QC					/* defined by compiler	*/
-#  define DOS 6			/* Major release of DOS supported	*/
+#ifdef _QC
+#  define DOS 6
 #endif
 
 /*----------------------------------------
@@ -136,7 +136,7 @@ PDCurses portable platform definitions list:
 
 #ifdef __TSC__			/* You may have to define in makefile	*/
 #  ifdef __OS2__
-#    define OS2 3		/* Major release of OS/2 supported	*/
+#    define OS2 3
 #  endif
 #endif
 
@@ -149,7 +149,7 @@ PDCurses portable platform definitions list:
 
 #ifdef __IBMC__
 #  ifdef __OS2__
-#    define OS2 3		/* Major release of OS/2 supported	*/
+#    define OS2 3
 #  endif
 #endif
 
@@ -164,13 +164,13 @@ PDCurses portable platform definitions list:
 #  ifndef __OS2__
 #    define __OS2__		/* EMX does not define this :-( 	*/
 #  endif
-#  define OS2 3			/* Major release of OS/2 supported	*/
+#  define OS2 3
 #  define CURSES__32BIT__
 #  ifndef HAVE_UNISTD_H
 #    define HAVE_UNISTD_H			/* have <unistd.h> */
 #  endif
 #  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF			/* have vsscanf() */
+#    define HAVE_VSSCANF
 #  endif
 #  ifdef EMXVIDEO
 #    include <stdlib.h>
@@ -188,10 +188,10 @@ PDCurses portable platform definitions list:
 #ifdef __DJGPP__		/* You may have to define in makefile	*/
 #  define DOS 6
 #  ifndef HAVE_UNISTD_H
-#    define HAVE_UNISTD_H			/* have <unistd.h> */
+#    define HAVE_UNISTD_H
 #  endif
 #  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF			/* have vsscanf() */
+#    define HAVE_VSSCANF
 #  endif
 #  ifndef HAVE_USLEEP
 #    define HAVE_USLEEP				/* have usleep() */
@@ -211,10 +211,10 @@ PDCurses portable platform definitions list:
 #    define WIN32
 #  endif
 #  ifndef HAVE_UNISTD_H
-#    define HAVE_UNISTD_H			/* have <unistd.h> */
+#    define HAVE_UNISTD_H
 #  endif
 #  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF			/* have vsscanf() */
+#    define HAVE_VSSCANF
 #  endif
 #  ifndef HAVE_VSNPRINTF
 #    define HAVE_VSNPRINTF
@@ -233,7 +233,7 @@ PDCurses portable platform definitions list:
 #    define WIN32
 #  endif
 #  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF			/* have vsscanf() */
+#    define HAVE_VSSCANF
 #  endif
 #  ifndef HAVE_VSNPRINTF
 #    define HAVE_VSNPRINTF
@@ -245,7 +245,7 @@ PDCurses portable platform definitions list:
  *
  */
 
-#ifdef __LCC__		/* should already be defined by the compiler	*/
+#ifdef __LCC__
 #  ifndef WIN32
 #    define WIN32
 #  endif
@@ -264,10 +264,10 @@ PDCurses portable platform definitions list:
 
 #ifdef __WATCOMC__
 #  if defined(__DOS__) || defined(__DOS4G__)
-#    define DOS 7		/* Major release of DOS supported	*/
+#    define DOS 7
 #  endif
 #  if defined(__OS2__) || defined(__OS2V2__)
-#    define OS2 3		/* Major release of OS/2 supported	*/
+#    define OS2 3
 #    define CURSES__32BIT__
 #  endif
 #  if defined(__NT__)
@@ -276,7 +276,7 @@ PDCurses portable platform definitions list:
 #    endif
 #  endif
 #  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF			/* have vsscanf() */
+#    define HAVE_VSSCANF
 #  endif
 #  ifndef HAVE_VSNPRINTF
 #    define HAVE_VSNPRINTF

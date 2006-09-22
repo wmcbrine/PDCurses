@@ -21,19 +21,15 @@
 #include <string.h>
 
 /* undefine any macros for functions defined in this module */
-#undef COLOR_PAIR
-#undef PAIR_NUMBER
 #undef has_colors
 
-RCSID("$Id: color.c,v 1.55 2006/08/21 17:31:44 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.56 2006/09/22 17:12:37 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
   Name:                                                         color
 
   Synopsis:
-	chtype COLOR_PAIR(int n);
-	int PAIR_NUMBER(chtype value);
 	int start_color(void);
 	int init_pair(short pair, short fg, short bg);
 	int init_color(short color, short red, short green, short blue);
@@ -82,8 +78,7 @@ RCSID("$Id: color.c,v 1.55 2006/08/21 17:31:44 wmcbrine Exp $");
 	color of the lines drawn for the attributes: A_UNDERLINE, 
 	A_OVERLINE, A_LEFTLINE and A_RIGHTLINE.  PDCurses only feature.
 
-	NOTE: COLOR_PAIR(), PAIR_NUMBER() and has_colors() are
-	implemented as macros.
+	NOTE: COLOR_PAIR() and PAIR_NUMBER() are implemented as macros.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error except for
@@ -111,17 +106,9 @@ static bool colorstarted = FALSE;
 
 unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
+/* colorset[] tracks whether a pair has been set via init_pair() */
+
 static unsigned char colorset[PDC_COLOR_PAIRS];
-
-chtype COLOR_PAIR(int n)
-{
-	return ((chtype)n << PDC_COLOR_SHIFT) & A_COLOR;
-}
-
-int PAIR_NUMBER(chtype value)
-{
-	return (value & A_COLOR) >> PDC_COLOR_SHIFT;
-}
 
 int start_color(void)
 {

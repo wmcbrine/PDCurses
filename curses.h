@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.229 2006/09/22 16:11:08 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.230 2006/09/22 17:12:37 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1152,7 +1152,6 @@ int	clear(void);
 int	clrtobot(void);
 int	clrtoeol(void);
 int	color_content(short, short *, short *, short *);
-chtype	COLOR_PAIR(int);
 int	color_set(short, void *);
 int	copywin(const WINDOW *, WINDOW *, int, int, int, int, int, int, int);
 int	curs_set(int);
@@ -1272,7 +1271,6 @@ int	notimeout(WINDOW *, bool);
 int	overlay(const WINDOW *, WINDOW *);
 int	overwrite(const WINDOW *, WINDOW *);
 int	pair_content(short, short *, short *);
-int	PAIR_NUMBER(chtype);
 int	pechochar(WINDOW *, chtype);
 int	pnoutrefresh(WINDOW *, int, int, int, int, int, int);
 int	prefresh(WINDOW *, int, int, int, int, int, int);
@@ -1560,6 +1558,9 @@ int	PDC_set_line_color(short);
 #define getch()			wgetch(stdscr)
 #define ungetch(ch)		PDC_ungetch(ch)
 
+#define COLOR_PAIR(n)		(((chtype)(n) << PDC_COLOR_SHIFT) & A_COLOR)
+#define PAIR_NUMBER(n)		(((n) & A_COLOR) >> PDC_COLOR_SHIFT)
+
 /* These will _only_ work as macros */
 
 #define getbegyx(w, y, x)	(y = (w)->_begy, x = (w)->_begx)
@@ -1589,9 +1590,6 @@ int	PDC_set_line_color(short);
    debugging. */
 
 #if !defined(NOMACROS) && !defined(PDCDEBUG)
-
-# define COLOR_PAIR(n)		(((chtype)(n) << PDC_COLOR_SHIFT) & A_COLOR)
-# define PAIR_NUMBER(n)		(((n) & A_COLOR) >> PDC_COLOR_SHIFT)
 
 # define addch(c)		waddch(stdscr, c)
 # define addchstr(c)		addchnstr(c, -1)

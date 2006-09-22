@@ -1,4 +1,4 @@
-/* $Id: firework.c,v 1.22 2006/07/02 04:59:41 wmcbrine Exp $ */
+/* $Id: firework.c,v 1.23 2006/09/22 15:39:30 wmcbrine Exp $ */
 
 #include <stdio.h>
 #include <signal.h>
@@ -11,7 +11,7 @@
 #define DELAYSIZE 200
 
 void myrefresh(void);
-void get_colour(void);
+void get_color(void);
 void explode(int, int);
 
 int main(int argc, char **argv)
@@ -84,7 +84,7 @@ void explode(int row, int col)
 
 	--col;
 
-	get_colour();
+	get_color();
 	mvaddstr(row - 1, col, " - ");
 	mvaddstr(row,     col, "-+-");
 	mvaddstr(row + 1, col, " - ");
@@ -92,7 +92,7 @@ void explode(int row, int col)
 
 	--col;
 
-	get_colour();
+	get_color();
 	mvaddstr(row - 2, col, " --- ");
 	mvaddstr(row - 1, col, "-+++-");
 	mvaddstr(row,     col, "-+#+-");
@@ -100,7 +100,7 @@ void explode(int row, int col)
 	mvaddstr(row + 2, col, " --- ");
 	myrefresh();
 
-	get_colour();
+	get_color();
 	mvaddstr(row - 2, col, " +++ ");
 	mvaddstr(row - 1, col, "++#++");
 	mvaddstr(row,     col, "+# #+");
@@ -108,7 +108,7 @@ void explode(int row, int col)
 	mvaddstr(row + 2, col, " +++ ");
 	myrefresh();
 
-	get_colour();
+	get_color();
 	mvaddstr(row - 2, col, "  #  ");
 	mvaddstr(row - 1, col, "## ##");
 	mvaddstr(row,     col, "#   #");
@@ -116,7 +116,7 @@ void explode(int row, int col)
 	mvaddstr(row + 2, col, "  #  ");
 	myrefresh();
 
-	get_colour();
+	get_color();
 	mvaddstr(row - 2, col, " # # ");
 	mvaddstr(row - 1, col, "#   #");
 	mvaddstr(row,     col, "     ");
@@ -132,7 +132,7 @@ void myrefresh(void)
 	refresh();
 }
 
-void get_colour(void)
+void get_color(void)
 {
 	static short tbl[] =
 	{

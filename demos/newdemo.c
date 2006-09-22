@@ -1,10 +1,10 @@
 /*
  *  newdemo.c	-	A demo program using PDCurses. The program 
- *			illustrates the use of colours for text output.
+ *			illustrates the use of colors for text output.
  *
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  *
- *  $Id: newdemo.c,v 1.31 2006/07/24 22:37:04 wmcbrine Exp $
+ *  $Id: newdemo.c,v 1.32 2006/09/22 15:39:30 wmcbrine Exp $
  */
 
 #include <stdio.h>

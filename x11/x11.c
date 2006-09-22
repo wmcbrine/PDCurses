@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.20 2006/09/11 20:12:03 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.21 2006/09/22 15:39:30 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -50,9 +50,9 @@ XCursesAppData xc_app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-#define MAX_COLORS   8  /* maximum of "normal" colours */
-#define COLOR_CURSOR 16 /* colour of cursor - 1 more than 2 * MAX_COLORS */
-#define COLOR_BORDER 17 /* colour of border - 2 more than 2 * MAX_COLORS */
+#define MAX_COLORS   8  /* maximum of "normal" colors */
+#define COLOR_CURSOR 16 /* color of cursor - 1 more than 2 * MAX_COLORS */
+#define COLOR_BORDER 17 /* color of border - 2 more than 2 * MAX_COLORS */
 
 #define XCURSESDISPLAY		(XtDisplay(drawing))
 #define XCURSESWIN		(XtWindow(drawing))
@@ -754,7 +754,7 @@ static int NewPacket(chtype attr, bool rev, int len, int col, int row,
 	text[len] = '\0';
 #endif
 
-	/* Specify the colour table offsets */
+	/* Specify the color table offsets */
 
 	fore += (attr & A_BOLD) ? 8 : 0;
 	back += (attr & A_BLINK) ? 8 : 0;

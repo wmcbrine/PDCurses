@@ -864,7 +864,7 @@ OTHER NOTES:
  This will then use cause PDCurses to write directly to the CGA video 
  memory.
 
- Added System V colour support.
+ Added System V color support.
 
 COMPILER-SPECIFIC NOTES:
 

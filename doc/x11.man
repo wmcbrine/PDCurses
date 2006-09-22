@@ -102,10 +102,10 @@ italicFont:	   The name of a fixed width font to be used for
 pointer:	   The name of a valid pointer cursor.
 		   Default:	   xterm
 
-pointerForeColor:  The foreground colour of the pointer.
+pointerForeColor:  The foreground color of the pointer.
 		   Default:	   black
 
-pointerBackColor:  The background colour of the pointer.
+pointerBackColor:  The background color of the pointer.
 		   Default:	   white
 
 textCursor:	   The alignment of the text cursor; horizontal or vertical.
@@ -215,7 +215,7 @@ shmmin:		   On most systems, there are two Unix kernel parameters
 
 		   Default:	   0
 
-borderColor:	   The colour of the border around the screen.
+borderColor:	   The color of the border around the screen.
 		   Default:	   black
 
 borderWidth:	   The width in pixels of the border around the screen.

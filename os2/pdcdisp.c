@@ -24,7 +24,7 @@
 #include <curses.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.35 2006/08/13 05:36:52 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.36 2006/09/22 15:39:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -79,7 +79,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
 	/* replace the attribute part of the chtype with the 
-	   actual colour value for each chtype in the line */
+	   actual color value for each chtype in the line */
 
 	for (j = 0; j < len; j++)
 		temp_line[j] = (chtype_attr(srcp[j]) << 8) | (srcp[j] & 0xff);

@@ -26,7 +26,7 @@
 #undef mvwhline
 #undef mvwvline
 
-RCSID("$Id: border.c,v 1.33 2006/08/21 16:42:36 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.34 2006/09/22 15:39:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -103,9 +103,9 @@ static chtype _attr_passthru(WINDOW *win, chtype ch)
 
 	/* If the incoming character doesn't have its own attribute, 
 	   then use the current attributes for the window. If the 
-	   incoming character has attributes, but not a colour 
+	   incoming character has attributes, but not a color 
 	   component, OR the attributes to the current attributes for 
-	   the window. If the incoming character has a colour component, 
+	   the window. If the incoming character has a color component, 
 	   use only the attributes from the incoming character. */
 
 	if ((ch & A_ATTRIBUTES) == 0)

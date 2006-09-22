@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.51 2006/08/13 02:11:36 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.52 2006/09/22 15:39:30 wmcbrine Exp $");
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -161,7 +161,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		unsigned short temp_line[256];
 
 		/* replace the attribute part of the chtype with the 
-		   actual colour value for each chtype in the line */
+		   actual color value for each chtype in the line */
 
 		for (j = 0; j < len; j++)
 			temp_line[j] =

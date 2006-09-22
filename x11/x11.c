@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.21 2006/09/22 15:39:30 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.22 2006/09/22 18:57:38 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2647,8 +2647,7 @@ static void Title(void)
 	char title[1024];	/* big enough for window title */ 
 	int pos;
 
-	if ((XC_read_socket(xc_display_sock,
-	    (char *)&pos, sizeof(int)) < 0) ||
+	if ((XC_read_socket(xc_display_sock, (char *)&pos, sizeof(int)) < 0) ||
 	    (XC_read_socket(xc_display_sock, title, pos) < 0))
 	{
 		ExitProcess(5, SIGKILL, "exiting from Title");
@@ -2996,17 +2995,15 @@ int XCursesSetupX(int argc, char *argv[])
 #ifdef HAVE_XPM_H
 	if (xc_app_data.pixmap != NULL &&
 	    strcmp(xc_app_data.pixmap, "") != 0)
-		XtVaSetValues(topLevel, XtNminWidth, minwidth,
-			XtNminHeight, minheight,
-			XtNbaseWidth, xc_app_data.borderWidth * 2,
+		XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
+			minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
 			XtNbaseHeight, xc_app_data.borderWidth * 2,
 			XtNiconPixmap, icon_pixmap,
 			XtNiconMask, icon_pixmap_mask, NULL);
 	else
 #endif
-		XtVaSetValues(topLevel, XtNminWidth, minwidth, 
-			XtNminHeight, minheight,
-			XtNbaseWidth, xc_app_data.borderWidth * 2,
+		XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
+			minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
 			XtNbaseHeight, xc_app_data.borderWidth * 2,
 			XtNiconPixmap, icon_bitmap, NULL);
 
@@ -3017,22 +3014,18 @@ int XCursesSetupX(int argc, char *argv[])
 		scrollBox = XtVaCreateManagedWidget(ProgramName, 
 			scrollBoxWidgetClass, topLevel, XtNwidth, 
 			WindowWidth + xc_app_data.scrollbarWidth, 
-			XtNheight, WindowHeight + 
-			xc_app_data.scrollbarWidth, XtNwidthInc, 
-			FontWidth, XtNheightInc, 
-			FontHeight, NULL);
+			XtNheight, WindowHeight + xc_app_data.scrollbarWidth,
+			XtNwidthInc, FontWidth, XtNheightInc, FontHeight,
+			NULL);
 
 		drawing = XtVaCreateManagedWidget(ProgramName, 
 			boxWidgetClass, scrollBox, XtNwidth, 
-			WindowWidth, XtNheight, 
-			WindowHeight, XtNwidthInc, 
-			FontWidth, XtNheightInc, 
-			FontHeight, NULL);
+			WindowWidth, XtNheight, WindowHeight, XtNwidthInc, 
+			FontWidth, XtNheightInc, FontHeight, NULL);
 
 		scrollVert = XtVaCreateManagedWidget("scrollVert", 
 			scrollbarWidgetClass, scrollBox, XtNorientation, 
-			XtorientVertical, XtNheight, 
-			WindowHeight, XtNwidth, 
+			XtorientVertical, XtNheight, WindowHeight, XtNwidth, 
 			xc_app_data.scrollbarWidth, NULL);
 
 		XtAddCallback(scrollVert, XtNscrollProc,
@@ -3043,8 +3036,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 		scrollHoriz = XtVaCreateManagedWidget("scrollHoriz", 
 			scrollbarWidgetClass, scrollBox, XtNorientation, 
-			XtorientHorizontal, XtNwidth, 
-			WindowWidth, XtNheight, 
+			XtorientHorizontal, XtNwidth, WindowWidth, XtNheight, 
 			xc_app_data.scrollbarWidth, NULL);
 
 		XtAddCallback(scrollHoriz, XtNscrollProc, 
@@ -3057,10 +3049,8 @@ int XCursesSetupX(int argc, char *argv[])
 	{
 		drawing = XtVaCreateManagedWidget(ProgramName, 
 			boxWidgetClass, topLevel, XtNwidth, 
-			WindowWidth, XtNheight, 
-			WindowHeight, XtNwidthInc, 
-			FontWidth, XtNheightInc, 
-			FontHeight, NULL);
+			WindowWidth, XtNheight, WindowHeight, XtNwidthInc, 
+			FontWidth, XtNheightInc, FontHeight, NULL);
 
 		XtVaSetValues(topLevel, XtNwidthInc, FontWidth, 
 			XtNheightInc, FontHeight, NULL);

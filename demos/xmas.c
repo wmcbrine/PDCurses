@@ -44,11 +44,7 @@
 /*									      */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.25 2006/04/24 03:14:45 wmcbrine Exp $ */
-
-/* NOMACROS makes a big difference in the size with PDCurses */
-
-#define NOMACROS
+/* $Id: xmas.c,v 1.26 2006/09/24 21:23:43 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <signal.h>

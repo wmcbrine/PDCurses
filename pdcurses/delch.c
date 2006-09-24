@@ -19,12 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef delch
-#undef mvdelch
-#undef mvwdelch
-
-RCSID("$Id: delch.c,v 1.20 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: delch.c,v 1.21 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

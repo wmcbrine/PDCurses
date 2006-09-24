@@ -19,10 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-/* undefine any macros for functions defined in this module */
-#undef derwin
-
-RCSID("$Id: window.c,v 1.38 2006/08/21 18:38:19 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.39 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

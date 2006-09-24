@@ -18,15 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef border
-#undef box
-#undef mvhline
-#undef mvvline
-#undef mvwhline
-#undef mvwvline
-
-RCSID("$Id: border.c,v 1.34 2006/09/22 15:39:30 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.35 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

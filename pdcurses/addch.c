@@ -18,15 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef addch
-#undef waddch
-#undef mvaddch
-#undef mvwaddch
-#undef echochar
-#undef wechochar
-
-RCSID("$Id: addch.c,v 1.25 2006/08/21 18:19:46 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.26 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

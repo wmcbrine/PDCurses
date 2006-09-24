@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.119 2006/08/13 05:36:52 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.120 2006/09/24 21:22:32 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -115,6 +115,13 @@ void PDC_debug(const char *, ...);
 #   define PDC_SYSNAME "X11"
 #  endif
 # endif
+#endif
+
+#ifndef max
+# define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+#ifndef min
+# define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
 #endif /* __CURSES_INTERNALS__*/

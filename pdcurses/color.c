@@ -20,10 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef has_colors
-
-RCSID("$Id: color.c,v 1.56 2006/09/22 17:12:37 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.57 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

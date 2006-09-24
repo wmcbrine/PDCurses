@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.230 2006/09/22 17:12:37 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.231 2006/09/24 21:22:32 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -44,7 +44,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2814
+#define PDC_BUILD 2815
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1496,6 +1496,14 @@ int	unget_wch(const wchar_t);
 /* Quasi-standard */
 
 chtype	getattrs(WINDOW *);
+int	getbegx(WINDOW *);
+int	getbegy(WINDOW *);
+int	getmaxx(WINDOW *);
+int	getmaxy(WINDOW *);
+int	getparx(WINDOW *);
+int	getpary(WINDOW *);
+int	getcurx(WINDOW *);
+int	getcury(WINDOW *);
 char   *unctrl(chtype);
 
 int	mouse_set(unsigned long);
@@ -1513,6 +1521,7 @@ bool	has_key(int);
 
 /* PDCurses */
 
+bool	is_termresized(void);
 int	mvwinsertln(WINDOW *, int, int);
 int	raw_output(bool);
 int	resize_term(int, int);
@@ -1546,14 +1555,9 @@ unsigned long PDC_get_key_modifiers(void);
 
 int	PDC_set_line_color(short);
 
-#ifndef max
-# define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif
-#ifndef min
-# define min(a,b) (((a) < (b)) ? (a) : (b))
-#endif
-
 /*** Functions defined as macros ***/
+
+/* getch() and ungetch() conflict with some DOS libraries */
 
 #define getch()			wgetch(stdscr)
 #define ungetch(ch)		PDC_ungetch(ch)
@@ -1563,17 +1567,10 @@ int	PDC_set_line_color(short);
 
 /* These will _only_ work as macros */
 
-#define getbegyx(w, y, x)	(y = (w)->_begy, x = (w)->_begx)
-#define getmaxyx(w, y, x)	(y = (w)->_maxy, x = (w)->_maxx)
-#define getparyx(w, y, x)	(y = (w)->_pary, x = (w)->_parx)
-#define getyx(w, y, x)		(y = (w)->_cury, x = (w)->_curx)
-
-#define getbegx(w)		(w)->_begx
-#define getbegy(w)		(w)->_begy
-#define getmaxx(w)		(w)->_maxx
-#define getmaxy(w)		(w)->_maxy
-#define getparx(w)		(w)->_parx
-#define getpary(w)		(w)->_pary
+#define getbegyx(w, y, x)	(y = getbegy(w), x = getbegx(w))
+#define getmaxyx(w, y, x)	(y = getmaxy(w), x = getmaxx(w))
+#define getparyx(w, y, x)	(y = getpary(w), x = getparx(w))
+#define getyx(w, y, x)		(y = getcury(w), x = getcurx(w))
 
 #define getsyx(y, x)		{ if (curscr->_leaveit) (y)=(x)=-1; \
 				  else getyx(curscr,(y),(x)); }
@@ -1583,107 +1580,6 @@ int	PDC_set_line_color(short);
 					 wmove(curscr,(y),(x));} }
 
 #define wresize(w, l, c)	((w = resize_window(w, l, c)) ? OK : ERR)
-
-/* Macros mainly for those standard functions that are just wrappers for 
-   the core functions. Defining NOMACROS saves space in the compiled 
-   executable, but could slow it down slightly. It's also better for 
-   debugging. */
-
-#if !defined(NOMACROS) && !defined(PDCDEBUG)
-
-# define addch(c)		waddch(stdscr, c)
-# define addchstr(c)		addchnstr(c, -1)
-# define addstr(str)		waddstr(stdscr, str)
-# define addnstr(str, n)	waddnstr(stdscr, str, n)
-# define attroff(attr)		wattroff(stdscr, attr)
-# define attron(attr)		wattron(stdscr, attr)
-# define attrset(attr)		wattrset(stdscr, attr)
-# define bkgd(c)		wbkgd(stdscr, c)
-# define bkgdset(c)		wbkgdset(stdscr, c)
-# define border(ls,rs,ts,bs,tl,tr,bl,br) wborder(stdscr,ls,rs,ts,bs,tl,tr,bl,br)
-# define box(w, v, h)		wborder(w, v, v, h, h, 0, 0, 0, 0)
-# define clear()		wclear(stdscr)
-# define clrtobot()		wclrtobot(stdscr)
-# define clrtoeol()		wclrtoeol(stdscr)
-# define color_set(a, b)	wcolor_set(stdscr, a, b)
-# define delay_output		napms
-# define delch()		wdelch(stdscr)
-# define deleteln()		wdeleteln(stdscr)
-# define derwin(w,nl,nc,by,bx)	subwin((w), (nl), (nc),\
-					(by + (w)->_begy), (bx + (w)->_begx))
-# define echochar(c)		(addch((chtype)c)==ERR?ERR:refresh())
-# define erase()		werase(stdscr)
-# define getbkgd(w)		((w)->_bkgd)
-# define getstr(str)		wgetstr(stdscr, str)
-# define getnstr(str, num)	wgetnstr(stdscr, str, num)
-# define has_colors()           (SP->mono ? FALSE : TRUE)
-# define inch()			(stdscr->_y[stdscr->_cury][stdscr->_curx])
-# define inchstr(c)		inchnstr(c, stdscr->_maxx - stdscr->_curx)
-# define insch(c)		winsch(stdscr, c)
-# define insdelln(n)		winsdelln(stdscr, n)
-# define insertln()		winsertln(stdscr)
-# define insnstr(s, n)		winsnstr(stdscr, s, n)
-# define insstr(s)		winsnstr(stdscr, s, -1)
-# define isendwin()		(SP->alive ? FALSE : TRUE)
-# define mvaddch(y, x, c)	(move(y, x)==ERR?ERR:addch(c))
-# define mvaddchstr(y, x, c)	(move(y, x)==ERR?ERR:addchnstr(c, -1))
-# define mvaddchnstr(y,x,c,n)	(move(y, x)==ERR?ERR:addchnstr(c, n))
-# define mvaddstr(y, x, str)	(move(y, x)==ERR?ERR:addstr(str))
-# define mvaddnstr(y,x,str,n)	(move(y, x)==ERR?ERR:addnstr(str, n))
-# define mvdelch(y, x)		(move(y, x)==ERR?ERR:wdelch(stdscr))
-# define mvgetch(y, x)		(move(y, x)==ERR?ERR:wgetch(stdscr))
-# define mvgetstr(y, x, str)	(move(y, x)==ERR?ERR:wgetstr(stdscr, str))
-# define mvhline(y, x, c, n)	(move(y, x)==ERR?ERR:hline(c, n))
-# define mvinch(y, x)		(move(y, x)==ERR?((chtype)ERR):\
-					(stdscr->_y[y][x]))
-# define mvinchstr(y, x, c)	(move(y, x)==ERR?ERR:inchnstr(c,\
-					stdscr->_maxx - stdscr->_curx))
-# define mvinchnstr(y, x, c, n)	(move(y, x)==ERR?ERR:inchnstr(c, n))
-# define mvinsch(y,x,c)		(move(y, x)==ERR?ERR:winsch(stdscr, c))
-# define mvinsnstr(y, x, s, n)	(move(y, x)==ERR?ERR:winsnstr(stdscr, s, n))
-# define mvinsstr(y, x, s)	(move(y, x)==ERR?ERR:winsnstr(stdscr, s, -1))
-# define mvvline(y, x, c, n)	(move(y, x)==ERR?ERR:vline(c, n))
-# define mvwaddch(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:waddch(w, c))
-# define mvwaddchstr(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddchnstr(w, c, -1))
-# define mvwaddchnstr(w,y,x,c,n) (wmove(w, y, x)==ERR?ERR:waddchnstr(w, c, n))
-# define mvwaddstr(w,y,x,str)	(wmove(w, y, x)==ERR?ERR:waddstr(w, str))
-# define mvwdelch(w, y, x)	(wmove(w, y, x)==ERR?ERR:wdelch(w))
-# define mvwgetch(w, y, x)	(wmove(w, y, x)==ERR?ERR:wgetch(w))
-# define mvwgetstr(w,y,x,str)	(wmove(w, y, x)==ERR?ERR:wgetstr(w, str))
-# define mvwgetnstr(w,y,x,str,n) (wmove(w, y, x)==ERR?ERR:wgetnstr(w, str, n))
-# define mvwhline(w,y,x,c,n)	(wmove(w, y, x)==ERR?ERR:whline(w, c, n))
-# define mvwinch(w, y, x)	(wmove(w, y, x)==ERR?(chtype)ERR:(w)->_y[y][x])
-# define mvwinchstr(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:winchnstr(w,\
-					c, (w)->_maxx - (w)->_curx))
-# define mvwinchnstr(w,y,x,c,n)	(wmove(w, y, x)==ERR?ERR:winchnstr(w, c, n))
-# define mvwinsch(w, y, x, c)	(wmove(w, y, x)==ERR?ERR:winsch(w, c))
-# define mvwinsnstr(w,y,x,s,n)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, n))
-# define mvwinsstr(w, y, x, s)	(wmove(w, y, x)==ERR?ERR:winsnstr(w, s, -1))
-# define mvwvline(w,y,x,c,n)	(wmove(w, y, x)==ERR?ERR:wvline(w, c, n))
-# define redrawwin(w)		wredrawln(w, 0, (w)->_maxy)
-# define refresh()		wrefresh(stdscr)
-# define scrl(n)		wscrl(stdscr, n)
-# define scroll(w)		wscrl(w, 1)
-# define scrollok(w, flag)	((w)->_scroll = flag)
-# define setscrreg(top, bot)	wsetscrreg(stdscr, top, bot)
-# define standend()		wattrset(stdscr, A_NORMAL)
-# define standout()		wattrset(stdscr, A_STANDOUT)
-# define timeout(n)		wtimeout(stdscr, n)
-# define vw_printw		vwprintw
-# define vw_scanw		vwscanw
-# define waddch(w, c)		PDC_chadd(w, (chtype)c,\
-					(bool)!(SP->raw_out), TRUE)
-# define waddchstr(w, c)	waddchnstr(w, c, -1)
-# define werase(w)		(wmove(w, 0, 0), wclrtobot(w))
-# define wclear(w)		((w)->_clear = TRUE, werase(w))
-# define wechochar(w, c)	(waddch(w, (chtype)c)==ERR?ERR:wrefresh(w))
-# define winch(w)		((w)->_y[(w)->_cury][(w)->_curx])
-# define winchstr(w, c)		winchnstr(w, c, (w)->_maxx - (w)->_curx)
-# define winsstr(w, str)	winsnstr(w, str, -1)
-# define wstandend(w)		wattrset(w, A_NORMAL)
-# define wstandout(w)		wattrset(w, A_STANDOUT)
-
-#endif /* !defined(MACROS) && !defined(PDCDEBUG) */
 
 /* Some quasi-standard aliases for standard functions */
 
@@ -1696,7 +1592,6 @@ int	PDC_set_line_color(short);
 
 /* PDCurses-specific */
 
-#define is_termresized()	(SP->resized)
 #define waddrawch(w, c)		PDC_chadd(w, (chtype)c, FALSE, TRUE)
 #define winsrawch(w, c)		PDC_chins(w, (chtype)c, FALSE)
 #define addrawch(c)		waddrawch(stdscr, c)

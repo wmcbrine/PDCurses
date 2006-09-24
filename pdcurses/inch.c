@@ -18,13 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef inch
-#undef winch
-#undef mvinch
-#undef mvwinch
-
-RCSID("$Id: inch.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.22 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

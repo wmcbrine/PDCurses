@@ -18,20 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef getstr
-#undef mvgetstr
-#undef mvwgetstr
-#undef getnstr
-#undef mvgetnstr
-#undef mvwgetnstr
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef waddch
-#endif
-
-RCSID("$Id: getstr.c,v 1.29 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.30 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

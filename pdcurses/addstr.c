@@ -18,22 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef addstr
-#undef addnstr
-#undef waddstr
-#undef mvaddstr
-#undef mvaddnstr
-#undef mvwaddstr
-#undef mvwaddnstr
-
-/* undefine any macros for functions called by this module if in debug mode */
-#ifdef PDCDEBUG
-# undef addch
-# undef waddch
-#endif
-
-RCSID("$Id: addstr.c,v 1.27 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.28 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

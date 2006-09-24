@@ -20,11 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef refresh
-#undef redrawwin
-
-RCSID("$Id: refresh.c,v 1.37 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.38 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

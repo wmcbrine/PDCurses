@@ -19,11 +19,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-/* undefine any macros for functions defined in this module */
-#undef isendwin
-#undef is_termresized
-
-RCSID("$Id: initscr.c,v 1.76 2006/09/20 08:56:30 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.77 2006/09/24 21:22:33 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 

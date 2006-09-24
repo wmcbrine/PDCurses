@@ -529,7 +529,6 @@ FUNCTIONS
 		PDC_chins		pdcdisp
 		PDC_clearclipboard	pdcclip
 		PDC_freeclipboard	pdcclip
-		PDC_getch		getch
 		PDC_get_input_fd	pdckbd
 		PDC_get_key_modifiers	pdckbd
 		PDC_getclipboard	pdcclip

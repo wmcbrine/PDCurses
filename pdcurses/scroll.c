@@ -18,11 +18,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef scroll
-#undef scrl
-
-RCSID("$Id: scroll.c,v 1.21 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: scroll.c,v 1.22 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

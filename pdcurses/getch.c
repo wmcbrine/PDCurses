@@ -18,16 +18,10 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef getch
-#undef mvgetch
-#undef mvwgetch
-#undef ungetch
-
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.36 2006/08/21 17:01:21 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.37 2006/09/24 21:22:33 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -110,11 +104,6 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	PDC_get_key_modifiers			-	-	-
 
 **man-end****************************************************************/
-
-/* these defines to get around DOS library conflicts */
-
-#define getch PDC_getch
-#define ungetch PDC_ungetch
 
 WINDOW *pdc_getch_win = NULL;
 
@@ -201,13 +190,6 @@ static int _sysgetch(void)
 		if ((c = PDC_validchar(c)) >= 0)
 			return c;
 	}
-}
-
-int PDC_getch(void)
-{
-	PDC_LOG(("getch() - called\n"));
-
-	return wgetch(stdscr);
 }
 
 int wgetch(WINDOW *win)

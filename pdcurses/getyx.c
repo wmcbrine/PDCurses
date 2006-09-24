@@ -18,15 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef getbegy
-#undef getbegx
-#undef getmaxy
-#undef getmaxx
-#undef getpary
-#undef getparx
-
-RCSID("$Id: getyx.c,v 1.16 2006/07/15 15:38:24 wmcbrine Exp $");
+RCSID("$Id: getyx.c,v 1.17 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -40,6 +32,8 @@ RCSID("$Id: getyx.c,v 1.16 2006/07/15 15:38:24 wmcbrine Exp $");
 
 	int getbegy(WINDOW *win);
 	int getbegx(WINDOW *win);
+	int getcury(WINDOW *win);
+	int getcurx(WINDOW *win);
 	int getpary(WINDOW *win);
 	int getparx(WINDOW *win);
 	int getmaxy(WINDOW *win);
@@ -70,6 +64,8 @@ RCSID("$Id: getyx.c,v 1.16 2006/07/15 15:38:24 wmcbrine Exp $");
 	getmaxyx				-	-      3.0
 	getbegy					-	-	-
 	getbegx					-	-	-
+	getcury					-	-	-
+	getcurx					-	-	-
 	getpary					-	-	-
 	getparx					-	-	-
 	getmaxy					-	-	-
@@ -95,6 +91,26 @@ int getbegx(WINDOW *win)
 		return ERR;
 
 	return win->_begx;
+}
+
+int getcury(WINDOW *win)
+{
+	PDC_LOG(("getcury() - called\n"));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	return win->_cury;
+}
+
+int getcurx(WINDOW *win)
+{
+	PDC_LOG(("getcurx() - called\n"));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	return win->_curx;
 }
 
 int getpary(WINDOW *win)

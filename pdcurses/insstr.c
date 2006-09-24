@@ -19,16 +19,7 @@
 #include <curses.h>
 #include <string.h>
 
-/* undefine any macros for functions defined in this module */
-#undef insstr
-#undef insnstr
-#undef winsstr
-#undef mvinsstr
-#undef mvinsnstr
-#undef mvwinsstr
-#undef mvwinsnstr
-
-RCSID("$Id: insstr.c,v 1.28 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.29 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

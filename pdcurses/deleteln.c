@@ -18,13 +18,7 @@
 #define	CURSES_LIBRARY 1
 #include <curses.h>
 
-/* undefine any macros for functions defined in this module */
-#undef deleteln
-#undef insdelln
-#undef insertln
-#undef mvwinsertln
-
-RCSID("$Id: deleteln.c,v 1.20 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.21 2006/09/24 21:22:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

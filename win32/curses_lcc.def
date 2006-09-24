@@ -59,6 +59,14 @@ erase
 filter
 flash
 flushinp
+getbegx
+getbegy
+getcurx
+getcury
+getmaxx
+getmaxy
+getparx
+getpary
 getbkgd
 getnstr
 getstr
@@ -87,6 +95,7 @@ instr
 intrflush
 isendwin
 is_linetouched
+is_termresized
 is_wintouched
 keyname
 keypad

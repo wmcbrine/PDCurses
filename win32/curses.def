@@ -63,6 +63,14 @@ EXPORTS erase
 EXPORTS filter
 EXPORTS flash
 EXPORTS flushinp
+EXPORTS getbegx
+EXPORTS getbegy
+EXPORTS getcurx
+EXPORTS getcury
+EXPORTS getmaxx
+EXPORTS getmaxy
+EXPORTS getparx
+EXPORTS getpary
 EXPORTS getbkgd
 EXPORTS getnstr
 EXPORTS getstr
@@ -91,6 +99,7 @@ EXPORTS instr
 EXPORTS intrflush
 EXPORTS isendwin
 EXPORTS is_linetouched
+EXPORTS is_termresized
 EXPORTS is_wintouched
 EXPORTS keyname
 EXPORTS keypad

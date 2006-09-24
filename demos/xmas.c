@@ -44,7 +44,7 @@
 /*									      */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.26 2006/09/24 21:23:43 wmcbrine Exp $ */
+/* $Id: xmas.c,v 1.27 2006/09/24 23:49:15 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <signal.h>
@@ -357,32 +357,19 @@ void lil(WINDOW *win)
 
 void midtop(WINDOW *win)
 {
-	mvwaddch(win, 0, 2, (chtype) 'y');
-	mvwaddch(win, 0, 3, (chtype) 'y');
-	mvwaddch(win, 1, 2, (chtype) '0');
-	mvwaddch(win, 1, 3, (chtype) '(');
-	mvwaddch(win, 1, 4, (chtype) '=');
-	mvwaddch(win, 1, 5, (chtype) ')');
-	mvwaddch(win, 1, 6, (chtype) '~');
+	mvwaddstr(win, 0, 2, "yy");
+	mvwaddstr(win, 1, 2, "0(=)~");
 }
 
 void bigtop(WINDOW *win)
 {
-	mvwaddch(win, 0, 17, (chtype) '\\');
-	mvwaddch(win, 0, 18, (chtype) '/');
-	mvwaddch(win, 0, 20, (chtype) '\\');
-	mvwaddch(win, 0, 21, (chtype) '/');
+	mvwaddstr(win, 0, 17, "\\/");
+	mvwaddstr(win, 0, 20, "\\/");
 	mvwaddch(win, 1, 18, (chtype) '\\');
 	mvwaddch(win, 1, 20, (chtype) '/');
-	mvwaddch(win, 2, 19, (chtype) '|');
-	mvwaddch(win, 2, 20, (chtype) '_');
-	mvwaddch(win, 3, 18, (chtype) '/');
-	mvwaddch(win, 3, 19, (chtype) '^');
-	mvwaddch(win, 3, 20, (chtype) '0');
-	mvwaddch(win, 3, 21, (chtype) '\\');
-	mvwaddch(win, 4, 17, (chtype) '/');
-	mvwaddch(win, 4, 18, (chtype) '/');
-	mvwaddch(win, 4, 19, (chtype) '\\');
+	mvwaddstr(win, 2, 19, "|_");
+	mvwaddstr(win, 3, 18, "/^0\\");
+	mvwaddstr(win, 4, 17, "//\\");
 	mvwaddch(win, 4, 22, (chtype) '\\');
 	mvwaddstr(win, 5, 7, "^~~~~~~~~//  ~~U");
 }
@@ -456,26 +443,22 @@ void initdeer(void)
 	/* lildeer1 */
 	lildeer1 = newwin(2, 4, 0, 0);
 	lil(lildeer1);
-	mvwaddch(lildeer1, 1, 1, (chtype) '<');
-	mvwaddch(lildeer1, 1, 2, (chtype) '>');
+	mvwaddstr(lildeer1, 1, 1, "<>");
 
 	/* lildeer2 */
 	lildeer2 = newwin(2, 4, 0, 0);
 	lil(lildeer2);
-	mvwaddch(lildeer2, 1, 1, (chtype) '|');
-	mvwaddch(lildeer2, 1, 2, (chtype) '|');
+	mvwaddstr(lildeer2, 1, 1, "||");
 
 	/* lildeer3 */
 	lildeer3 = newwin(2, 4, 0, 0);
 	lil(lildeer3);
-	mvwaddch(lildeer3, 1, 1, (chtype) '>');
-	mvwaddch(lildeer3, 1, 2, (chtype) '<');
+	mvwaddstr(lildeer3, 1, 1, "><");
 
 	/* middeer1 */
 	middeer1 = newwin(3, 7, 0, 0);
 	midtop(middeer1);
-	mvwaddch(middeer1, 2, 3, (chtype) '\\');
-	mvwaddch(middeer1, 2, 4, (chtype) '/');
+	mvwaddstr(middeer1, 2, 3, "\\/");
 
 	/* middeer2 */
 	middeer2 = newwin(3, 7, 0, 0);
@@ -702,9 +685,7 @@ void strng1(void)
 		wattrset(treescrn2, COLOR_PAIR(10) | A_BOLD);
 	}
 #endif
-	mvwaddch(treescrn2, 3, 13, (chtype) '\'');
-	mvwaddch(treescrn2, 3, 12, (chtype) ':');
-	mvwaddch(treescrn2, 3, 11, (chtype) '.');
+	mvwaddstr(treescrn2, 3, 11, ".:'");
 
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
@@ -719,12 +700,8 @@ void strng2(void)
 		wattrset(treescrn2, COLOR_PAIR(11) | A_BOLD);
 	}
 #endif
-	mvwaddch(treescrn2, 5, 14, (chtype) '\'');
-	mvwaddch(treescrn2, 5, 13, (chtype) ':');
-	mvwaddch(treescrn2, 5, 12, (chtype) '.');
-	mvwaddch(treescrn2, 5, 11, (chtype) ',');
-	mvwaddch(treescrn2, 6, 10, (chtype) '\'');
-	mvwaddch(treescrn2, 6, 9, (chtype) ':');
+	mvwaddstr(treescrn2, 5, 11, ",.:'");
+	mvwaddstr(treescrn2, 6, 9, ":'");
 
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
@@ -739,14 +716,8 @@ void strng3(void)
 		wattrset(treescrn2, COLOR_PAIR(12) | A_BOLD);
 	}
 #endif
-	mvwaddch(treescrn2, 7, 16, (chtype) '\'');
-	mvwaddch(treescrn2, 7, 15, (chtype) ':');
-	mvwaddch(treescrn2, 7, 14, (chtype) '.');
-	mvwaddch(treescrn2, 7, 13, (chtype) ',');
-	mvwaddch(treescrn2, 8, 12, (chtype) '\'');
-	mvwaddch(treescrn2, 8, 11, (chtype) ':');
-	mvwaddch(treescrn2, 8, 10, (chtype) '.');
-	mvwaddch(treescrn2, 8, 9, (chtype) ',');
+	mvwaddstr(treescrn2, 7, 13, ",.:'");
+	mvwaddstr(treescrn2, 8, 9, ",.:'");
 
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
@@ -761,18 +732,9 @@ void strng4(void)
 		wattrset(treescrn2, COLOR_PAIR(13) | A_BOLD);
 	}
 #endif
-	mvwaddch(treescrn2, 9, 17, (chtype) '\'');
-	mvwaddch(treescrn2, 9, 16, (chtype) ':');
-	mvwaddch(treescrn2, 9, 15, (chtype) '.');
-	mvwaddch(treescrn2, 9, 14, (chtype) ',');
-	mvwaddch(treescrn2, 10, 13, (chtype) '\'');
-	mvwaddch(treescrn2, 10, 12, (chtype) ':');
-	mvwaddch(treescrn2, 10, 11, (chtype) '.');
-	mvwaddch(treescrn2, 10, 10, (chtype) ',');
-	mvwaddch(treescrn2, 11, 9, (chtype) '\'');
-	mvwaddch(treescrn2, 11, 8, (chtype) ':');
-	mvwaddch(treescrn2, 11, 7, (chtype) '.');
-	mvwaddch(treescrn2, 11, 6, (chtype) ',');
+	mvwaddstr(treescrn2, 9, 14, ",.:'");
+	mvwaddstr(treescrn2, 10, 10, ",.:'");
+	mvwaddstr(treescrn2, 11, 6, ",.:'");
 	mvwaddch(treescrn2, 12, 5, (chtype) '\'');
 
 	wrefresh(treescrn2);
@@ -788,14 +750,8 @@ void strng5(void)
 		wattrset(treescrn2, COLOR_PAIR(14) | A_BOLD);
 	}
 #endif
-	mvwaddch(treescrn2, 11, 19, (chtype) '\'');
-	mvwaddch(treescrn2, 11, 18, (chtype) ':');
-	mvwaddch(treescrn2, 11, 17, (chtype) '.');
-	mvwaddch(treescrn2, 11, 16, (chtype) ',');
-	mvwaddch(treescrn2, 12, 15, (chtype) '\'');
-	mvwaddch(treescrn2, 12, 14, (chtype) ':');
-	mvwaddch(treescrn2, 12, 13, (chtype) '.');
-	mvwaddch(treescrn2, 12, 12, (chtype) ',');
+	mvwaddstr(treescrn2, 11, 16, ",.:'");
+	mvwaddstr(treescrn2, 12, 12, ",.:'");
 
 	/* save a fully lit tree */
 	overlay(treescrn2, treescrn);
@@ -849,6 +805,12 @@ void blinkit(void)
 
 	++cycle;
 }
+
+#define TSHOW(win, pause) touchwin(win); wrefresh(win); \
+			  wrefresh(w_del_msg); napms(pause)
+
+#define SHOW(win, pause) mvwin(win, y_pos, x_pos); wrefresh(win); \
+			 wrefresh(w_del_msg); napms(pause)
 
 void reindeer(void)
 {
@@ -906,42 +868,17 @@ void reindeer(void)
 
 	for (y_pos = 2; y_pos < 5; y_pos++)
 	{
-		touchwin(lildeer0);
-		wrefresh(lildeer0);
-		wrefresh(w_del_msg);
-		napms(50);
+		TSHOW(lildeer0, 50);
 
 		for (looper = 0; looper < 4; looper++)
 		{
-			mvwin(lildeer3, y_pos, x_pos);
-			wrefresh(lildeer3);
-			wrefresh(w_del_msg);
-			napms(50);
+			SHOW(lildeer3, 50);
+			SHOW(lildeer2, 50);
+			SHOW(lildeer1, 50);
+			SHOW(lildeer2, 50);
+			SHOW(lildeer3, 50);
 
-			mvwin(lildeer2, y_pos, x_pos);
-			wrefresh(lildeer2);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			mvwin(lildeer1, y_pos, x_pos);
-			wrefresh(lildeer1);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			mvwin(lildeer2, y_pos, x_pos);
-			wrefresh(lildeer2);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			mvwin(lildeer3, y_pos, x_pos);
-			wrefresh(lildeer3);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			touchwin(lildeer0);
-			wrefresh(lildeer0);
-			wrefresh(w_del_msg);
-			napms(50);
+			TSHOW(lildeer0, 50);
 
 			x_pos -= 2;
 		}
@@ -957,35 +894,13 @@ void reindeer(void)
 
 		for (looper = 0; looper < 2; looper++)
 		{
-			mvwin(middeer3, y_pos, x_pos);
-			wrefresh(middeer3);
-			wrefresh(w_del_msg);
-			napms(50);
+			SHOW(middeer3, 50);
+			SHOW(middeer2, 50);
+			SHOW(middeer1, 50);
+			SHOW(middeer2, 50);
+			SHOW(middeer3, 50);
 
-			mvwin(middeer2, y_pos, x_pos);
-			wrefresh(middeer2);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			mvwin(middeer1, y_pos, x_pos);
-			wrefresh(middeer1);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			mvwin(middeer2, y_pos, x_pos);
-			wrefresh(middeer2);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			mvwin(middeer3, y_pos, x_pos);
-			wrefresh(middeer3);
-			wrefresh(w_del_msg);
-			napms(50);
-
-			touchwin(middeer0);
-			wrefresh(middeer0);
-			wrefresh(w_del_msg);
-			napms(50);
+			TSHOW(middeer0, 50);
 
 			x_pos -= 3;
 		}
@@ -997,136 +912,45 @@ void reindeer(void)
 
 	for (x_pos = 8; x_pos < 16; x_pos++)
 	{
-		mvwin(bigdeer4, y_pos, x_pos);
-		wrefresh(bigdeer4);
-		wrefresh(w_del_msg);
-		napms(30);
-
-		mvwin(bigdeer3, y_pos, x_pos);
-		wrefresh(bigdeer3);
-		wrefresh(w_del_msg);
-		napms(30);
-
-		mvwin(bigdeer2, y_pos, x_pos);
-		wrefresh(bigdeer2);
-		wrefresh(w_del_msg);
-		napms(30);
-
-		mvwin(bigdeer1, y_pos, x_pos);
-		wrefresh(bigdeer1);
-		wrefresh(w_del_msg);
-		napms(30);
-
-		mvwin(bigdeer2, y_pos, x_pos);
-		wrefresh(bigdeer2);
-		wrefresh(w_del_msg);
-		napms(30);
-
-		mvwin(bigdeer3, y_pos, x_pos);
-		wrefresh(bigdeer3);
-		wrefresh(w_del_msg);
-		napms(30);
-
-		mvwin(bigdeer4, y_pos, x_pos);
-		wrefresh(bigdeer4);
-		wrefresh(w_del_msg);
-		napms(30);
-
-		mvwin(bigdeer0, y_pos, x_pos);
-		wrefresh(bigdeer0);
-		wrefresh(w_del_msg);
-		napms(30);
+		SHOW(bigdeer4, 30);
+		SHOW(bigdeer3, 30);
+		SHOW(bigdeer2, 30);
+		SHOW(bigdeer1, 30);
+		SHOW(bigdeer2, 30);
+		SHOW(bigdeer3, 30);
+		SHOW(bigdeer4, 30);
+		SHOW(bigdeer0, 30);
 	}
 
 	--x_pos;
 
 	for (looper = 0; looper < 6; looper++)
 	{
-		mvwin(lookdeer4, y_pos, x_pos);
-		wrefresh(lookdeer4);
-		wrefresh(w_del_msg);
-		napms(40);
-
-		mvwin(lookdeer3, y_pos, x_pos);
-		wrefresh(lookdeer3);
-		wrefresh(w_del_msg);
-		napms(40);
-
-		mvwin(lookdeer2, y_pos, x_pos);
-		wrefresh(lookdeer2);
-		wrefresh(w_del_msg);
-		napms(40);
-
-		mvwin(lookdeer1, y_pos, x_pos);
-		wrefresh(lookdeer1);
-		wrefresh(w_del_msg);
-		napms(40);
-
-		mvwin(lookdeer2, y_pos, x_pos);
-		wrefresh(lookdeer2);
-		wrefresh(w_del_msg);
-		napms(40);
-
-		mvwin(lookdeer3, y_pos, x_pos);
-		wrefresh(lookdeer3);
-		wrefresh(w_del_msg);
-		napms(40);
-
-		mvwin(lookdeer4, y_pos, x_pos);
-		wrefresh(lookdeer4);
-		wrefresh(w_del_msg);
-		napms(40);
+		SHOW(lookdeer4, 40);
+		SHOW(lookdeer3, 40);
+		SHOW(lookdeer2, 40);
+		SHOW(lookdeer1, 40);
+		SHOW(lookdeer2, 40);
+		SHOW(lookdeer3, 40);
+		SHOW(lookdeer4, 40);
 	}
 
-	mvwin(lookdeer0, y_pos, x_pos);
-	wrefresh(lookdeer0);
-	wrefresh(w_del_msg);
-	napms(40);
+	SHOW(lookdeer0, 40);
 
 	for (; y_pos < 10; y_pos++)
 	{
 		for (looper = 0; looper < 2; looper++)
 		{
-			mvwin(bigdeer4, y_pos, x_pos);
-			wrefresh(bigdeer4);
-			wrefresh(w_del_msg);
-			napms(30);
-
-			mvwin(bigdeer3, y_pos, x_pos);
-			wrefresh(bigdeer3);
-			wrefresh(w_del_msg);
-			napms(30);
-
-			mvwin(bigdeer2, y_pos, x_pos);
-			wrefresh(bigdeer2);
-			wrefresh(w_del_msg);
-			napms(30);
-
-			mvwin(bigdeer1, y_pos, x_pos);
-			wrefresh(bigdeer1);
-			wrefresh(w_del_msg);
-			napms(30);
-
-			mvwin(bigdeer2, y_pos, x_pos);
-			wrefresh(bigdeer2);
-			wrefresh(w_del_msg);
-			napms(30);
-
-			mvwin(bigdeer3, y_pos, x_pos);
-			wrefresh(bigdeer3);
-			wrefresh(w_del_msg);
-			napms(30);
-
-			mvwin(bigdeer4, y_pos, x_pos);
-			wrefresh(bigdeer4);
-			wrefresh(w_del_msg);
-			napms(30);
+			SHOW(bigdeer4, 30);
+			SHOW(bigdeer3, 30);
+			SHOW(bigdeer2, 30);
+			SHOW(bigdeer1, 30);
+			SHOW(bigdeer2, 30);
+			SHOW(bigdeer3, 30);
+			SHOW(bigdeer4, 30);
 		}
 
-		mvwin(bigdeer0, y_pos, x_pos);
-		wrefresh(bigdeer0);
-		wrefresh(w_del_msg);
-		napms(30);
+		SHOW(bigdeer0, 30);
 	}
 
 	--y_pos;

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.231 2006/09/24 21:22:32 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.232 2006/09/24 21:24:28 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -32,7 +32,6 @@ PDCurses definitions list:  (Only define those needed)
 	OS2		True if compiling for OS/2.
 	WIN32		True if compiling for Windows.
 	XCURSES		True if compiling for X11.
-	NOMACROS	Don't use (most) macros in place of functions.
 
 PDCurses portable platform definitions list:
 

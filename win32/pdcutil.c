@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcutil.c,v 1.6 2006/08/10 08:43:36 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.7 2006/09/25 06:34:41 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -39,4 +39,9 @@ void PDC_napms(int ms)
 	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
 	Sleep(ms);
+}
+
+const char *PDC_sysname(void)
+{
+	return "Win32";
 }

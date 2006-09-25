@@ -23,7 +23,7 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.10 2006/09/21 16:09:34 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.11 2006/09/25 06:34:41 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -64,4 +64,9 @@ void PDC_napms(int ms)
 	}
 # endif
 #endif
+}
+
+const char *PDC_sysname(void)
+{
+	return "DOS";
 }

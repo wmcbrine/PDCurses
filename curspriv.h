@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.120 2006/09/24 21:22:32 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.121 2006/09/25 06:34:41 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -79,6 +79,7 @@ void	PDC_set_keyboard_binary(bool);
 void	PDC_sync(WINDOW *);
 void	PDC_transform_line(int, int, int, const chtype *);
 int	PDC_validchar(int);
+const char *PDC_sysname(void);
 
 #ifdef PDCDEBUG
 void PDC_debug(const char *, ...);
@@ -102,20 +103,6 @@ void PDC_debug(const char *, ...);
 
 #define chtype_attr(ch)		(pdc_atrtab[(chtype)(ch) >> PDC_ATTR_SHIFT])
 #define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
-
-#ifdef DOS
-# define PDC_SYSNAME "DOS"
-#else
-# ifdef OS2
-#  define PDC_SYSNAME "OS/2"
-# else
-#  ifdef WIN32
-#   define PDC_SYSNAME "Win32"
-#  else
-#   define PDC_SYSNAME "X11"
-#  endif
-# endif
-#endif
 
 #ifndef max
 # define max(a,b) (((a) > (b)) ? (a) : (b))

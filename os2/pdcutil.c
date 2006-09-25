@@ -31,7 +31,7 @@
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.5 2006/08/13 05:36:53 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.6 2006/09/25 06:34:41 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -53,4 +53,9 @@ void PDC_napms(int ms)
 #else
 	DosSleep(ms);
 #endif
+}
+
+const char *PDC_sysname(void)
+{
+	return "OS/2";
 }

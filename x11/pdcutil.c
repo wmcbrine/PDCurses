@@ -21,7 +21,7 @@
 # include <poll.h>
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.4 2006/07/15 15:13:40 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.5 2006/09/25 06:34:41 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -46,4 +46,9 @@ void PDC_napms(int ms)
 		poll(&fd, 1, ms);
 	}
 #endif
+}
+
+const char *PDC_sysname(void)
+{
+	return "X11";
 }

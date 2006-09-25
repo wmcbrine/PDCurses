@@ -20,7 +20,7 @@
 #include <string.h>
 #include <limits.h>
 
-RCSID("$Id: termattr.c,v 1.38 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.39 2006/09/25 06:34:41 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -143,14 +143,11 @@ char killchar(void)
 char *longname(void)
 {
 	static char _display[128];
-	char *p = _display;
 
 	PDC_LOG(("longname() - called\n"));
 
-	p += sprintf(_display, "PDCurses for " PDC_SYSNAME);
-
-	sprintf(p, " %s-%dx%d", SP->mono ? "MONO" : "COLOR",
-		LINES, COLS);
+	sprintf(_display, "PDCurses for %s %s-%dx%d", PDC_sysname(),
+		SP->mono ? "MONO" : "COLOR", LINES, COLS);
 
 	return _display;
 }

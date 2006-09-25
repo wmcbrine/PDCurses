@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.64 2006/09/20 20:19:31 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.65 2006/09/25 00:09:22 wmcbrine Exp $
  */
 
 #ifdef PDCDEBUG
@@ -258,7 +258,7 @@ void introTest(WINDOW *win)
 void scrollTest(WINDOW *win)
 {
 	int i, OldY;
-#ifndef getmaxy
+#ifndef PDCURSES
 	int OldX;
 #endif
 	werase(win);
@@ -275,7 +275,7 @@ void scrollTest(WINDOW *win)
 		wrefresh(win);
 	};
 
-#ifdef getmaxy
+#ifdef PDCURSES
 	OldY = getmaxy(win);
 #else
 	getmaxyx(win, OldY, OldX);

@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.24 2006/07/26 15:17:39 wmcbrine Exp $
+ * $Id: tui.c,v 1.25 2006/09/25 00:09:22 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -138,7 +138,7 @@ static void setcolor(WINDOW *win, chtype color)
 static void colorbox(WINDOW *win, chtype color, int hasbox)
 {
 	int maxy;
-#ifndef getmaxy
+#ifndef PDCURSES
 	int maxx;
 #endif
 	chtype attr = color & A_ATTR;  /* extract Bold, Reverse, Blink bits */
@@ -155,7 +155,7 @@ static void colorbox(WINDOW *win, chtype color, int hasbox)
 
 	werase(win); 
 
-#ifdef getmaxy
+#ifdef PDCURSES
 	maxy = getmaxy(win);
 #else
 	getmaxyx(win, maxy, maxx);
@@ -395,7 +395,7 @@ void clsbody(void)
 
 int bodylen(void)
 {
-#ifdef getmaxy
+#ifdef PDCURSES
 	return getmaxy(wbody);
 #else
 	int maxy, maxx;
@@ -640,12 +640,12 @@ void startmenu(menu *mp, char *mtitle)
 
 static void repainteditbox(WINDOW *win, int x, char *buf)
 {
-#ifndef getmaxx
+#ifndef PDCURSES
 	int maxy;
 #endif
 	int maxx;
 
-#ifdef getmaxx
+#ifdef PDCURSES
 	maxx = getmaxx(win);
 #else
 	getmaxyx(win, maxy, maxx);

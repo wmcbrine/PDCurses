@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.58 2006/09/25 19:25:19 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.59 2006/09/25 20:04:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -65,8 +65,7 @@ RCSID("$Id: color.c,v 1.58 2006/09/25 19:25:19 wmcbrine Exp $");
 	maniplulate color. It returns TRUE or FALSE.
 
 	can_change_color() indicates if the terminal has the capability
-	to change the definition of its colors. Although this is possible,
-	at least with VGA monitors, this function always returns FALSE.
+	to change the definition of its colors.
 
 	pair_content() is used to determine what the colors of a given
 	color-pair consist of.
@@ -194,7 +193,7 @@ int init_color(short color, short red, short green, short blue)
 {
 	PDC_LOG(("init_color() - called\n"));
 
-	if (color >= COLORS || color < 0 || !PDC_can_change_color())
+	if (color >= (COLORS * 2) || color < 0 || !PDC_can_change_color())
 		return ERR;
 
 	return PDC_init_color(color, red, green, blue);
@@ -204,20 +203,21 @@ int color_content(short color, short *red, short *green, short *blue)
 {
 	PDC_LOG(("color_content() - called\n"));
 
-	if ((color >= COLORS || color < 0) || (!red || !green || !blue))
+	if ((color >= (COLORS * 2) || color < 0) || (!red || !green || !blue))
 		return ERR;
 
 	if (PDC_can_change_color())
 		return PDC_color_content(color, red, green, blue);
 	else
 	{
-		/* A crude implementation. Does not account for
-		   intensity. ncurses uses 680 for non-A_BOLD, so let's 
-		   copy that. - WJM3 	*/
+		/* Simulated values for platforms that don't support 
+		   palette changing*/
 
-		*red = (color & COLOR_RED) ? 680 : 0;
-		*green = (color & COLOR_GREEN) ? 680 : 0;
-		*blue = (color & COLOR_BLUE) ? 680 : 0;
+		short maxval = (color >= COLORS) ? 1000 : 680;
+
+		*red = (color & COLOR_RED) ? maxval : 0;
+		*green = (color & COLOR_GREEN) ? maxval : 0;
+		*blue = (color & COLOR_BLUE) ? maxval : 0;
 
 		return OK;
 	}

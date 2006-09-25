@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.121 2006/09/25 06:34:41 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.122 2006/09/25 19:25:19 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -52,6 +52,8 @@ extern unsigned char *pdc_atrtab;
  */
 
 void	PDC_beep(void);
+bool	PDC_can_change_color(void);
+int	PDC_color_content(short, short *, short *, short *);
 bool	PDC_check_bios_key(void);
 int	PDC_curs_set(int);
 void	PDC_flushinp(void);
@@ -63,6 +65,7 @@ int	PDC_get_cursor_mode(void);
 int	PDC_get_rows(void);
 void	PDC_gotoyx(int, int);
 void	PDC_init_atrtab(void);
+int	PDC_init_color(short, short, short, short);
 WINDOW *PDC_makenew(int, int, int, int);
 int	PDC_mouse_in_slk(int, int);
 void	PDC_napms(int);

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.57 2006/09/24 21:22:33 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.58 2006/09/25 19:25:19 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -194,31 +194,40 @@ int init_color(short color, short red, short green, short blue)
 {
 	PDC_LOG(("init_color() - called\n"));
 
-	return ERR;
+	if (color >= COLORS || color < 0 || !PDC_can_change_color())
+		return ERR;
+
+	return PDC_init_color(color, red, green, blue);
 }
 
 int color_content(short color, short *red, short *green, short *blue)
 {
 	PDC_LOG(("color_content() - called\n"));
 
-	/* A crude implementation. Does not account for intensity. 
-	   ncurses uses 680 for non-A_BOLD, so let's copy that. - WJM3 	*/
-
 	if ((color >= COLORS || color < 0) || (!red || !green || !blue))
 		return ERR;
 
-	*red = (color & COLOR_RED) ? 680 : 0;
-	*green = (color & COLOR_GREEN) ? 680 : 0;
-	*blue = (color & COLOR_BLUE) ? 680 : 0;
+	if (PDC_can_change_color())
+		return PDC_color_content(color, red, green, blue);
+	else
+	{
+		/* A crude implementation. Does not account for
+		   intensity. ncurses uses 680 for non-A_BOLD, so let's 
+		   copy that. - WJM3 	*/
 
-	return OK;
+		*red = (color & COLOR_RED) ? 680 : 0;
+		*green = (color & COLOR_GREEN) ? 680 : 0;
+		*blue = (color & COLOR_BLUE) ? 680 : 0;
+
+		return OK;
+	}
 }
 
 bool can_change_color(void)
 {
 	PDC_LOG(("can_change_color() - called\n"));
 
-	return FALSE;
+	return PDC_can_change_color();
 }
 
 int pair_content(short colorpair, short *foreground, short *background)

@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdckbd.c,v 1.63 2006/09/10 20:26:29 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.64 2006/09/25 19:23:02 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -492,10 +492,9 @@ int PDC_get_bios_key(void)
 
 		if (save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED)
 		{
-		    if (save_ip.Event.MouseEvent.dwButtonState & 0xFF000000)
-			temp_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
-		    else
-			temp_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+		    temp_mouse_status.changes =
+			(save_ip.Event.MouseEvent.dwButtonState & 0xFF000000) ?
+			PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
 		}
 
 		/* button press, release or double click */
@@ -672,25 +671,18 @@ int PDC_get_bios_key(void)
 
 		temp_mouse_status.changes |= 1 << (button_no - 1);
 
-		if (save_ip.Event.MouseEvent.dwControlKeyState &
-		    SHIFT_PRESSED)
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
+#define STATUSSET(KEY, BTN) \
+		if (save_ip.Event.MouseEvent.dwControlKeyState & \
+		    KEY##_PRESSED) \
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_##BTN
 
-		if (save_ip.Event.MouseEvent.dwControlKeyState & 
-		    LEFT_CTRL_PRESSED)
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
+		STATUSSET(SHIFT, SHIFT);
+		STATUSSET(LEFT_CTRL, CONTROL);
+		STATUSSET(RIGHT_CTRL, CONTROL);
+		STATUSSET(LEFT_ALT, ALT);
+		STATUSSET(RIGHT_ALT, ALT);
 
-		if (save_ip.Event.MouseEvent.dwControlKeyState & 
-		    RIGHT_CTRL_PRESSED)
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
-
-		if (save_ip.Event.MouseEvent.dwControlKeyState & 
-		    RIGHT_ALT_PRESSED)
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
-
-		if (save_ip.Event.MouseEvent.dwControlKeyState & 
-		    LEFT_ALT_PRESSED)
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
+#undef STATUSSET
 
 		last_button_no = button_no;
 

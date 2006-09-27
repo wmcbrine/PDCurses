@@ -25,7 +25,7 @@
 #include <curses.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.49 2006/09/25 19:25:19 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.50 2006/09/27 07:21:27 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -347,12 +347,12 @@ bool PDC_can_change_color(void)
 	return FALSE;
 }
 
-int PDC_color_content(short color, short *red, short *blue, short *green)
+int PDC_color_content(short color, short *red, short *green, short *blue)
 {
 	return ERR;
 }
 
-int PDC_init_color(short color, short red, short blue, short green)
+int PDC_init_color(short color, short red, short green, short blue)
 {
 	return ERR;
 }

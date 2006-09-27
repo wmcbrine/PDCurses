@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.22 2006/09/22 18:57:38 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.23 2006/09/27 07:21:27 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -606,7 +606,7 @@ static XtActionsRec Actions[] =
 };
 
 static Bool after_first_curses_request = False;
-static int colors[(2 * MAX_COLORS) + 2];
+static Pixel colors[(2 * MAX_COLORS) + 2];
 static Bool vertical_cursor = False;
 
 #ifdef FOREIGN
@@ -2663,6 +2663,39 @@ static void Continue(void)
 			"exiting from ProcessRequestsFromCurses");
 }
 
+static void GetColor(void)
+{
+	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+	int index = tmp->pixel;
+	Colormap cmap = DefaultColormap(XCURSESDISPLAY,
+			DefaultScreen(XCURSESDISPLAY));
+
+	if (index < 0 || index >= COLORS * 2)
+		ExitProcess(4, SIGKILL, "exiting from GetColor");
+
+	tmp->pixel = colors[index];
+	XQueryColor(XCURSESDISPLAY, cmap, tmp);
+}
+
+static void SetColor(void)
+{
+	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+	int index = tmp->pixel;
+	Colormap cmap = DefaultColormap(XCURSESDISPLAY,
+			DefaultScreen(XCURSESDISPLAY));
+
+	if (index < 0 || index >= COLORS * 2)
+		ExitProcess(4, SIGKILL, "exiting from SetColor");
+
+	if (XAllocColor(XCURSESDISPLAY, cmap, tmp))
+	{
+		XFreeColors(XCURSESDISPLAY, cmap, colors + index, 1, 0);
+		colors[index] = tmp->pixel;
+
+		DisplayScreen();
+	}
+}
+
 static void ProcessRequestsFromCurses(XtPointer client_data, int *fid,
 				      XtInputId *id) 
 { 
@@ -2878,6 +2911,18 @@ static void ProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		Continue();
 
 		SelectionOff();
+		break;
+
+	    case CURSES_GET_COLOR:
+		XC_LOG(("CURSES_GET_COLOR recieved from child\n"));
+		GetColor();
+		Continue();
+		break;
+
+	    case CURSES_SET_COLOR:
+		XC_LOG(("CURSES_SET_COLOR recieved from child\n"));
+		SetColor();
+		Continue();
 		break;
 
 	    default: 

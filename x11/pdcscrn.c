@@ -17,7 +17,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.42 2006/09/25 19:25:19 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.43 2006/09/27 07:21:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -164,15 +164,35 @@ void PDC_save_screen_mode(int i)
 
 bool PDC_can_change_color(void)
 {
-	return FALSE;
+	return TRUE;
 }
 
-int PDC_color_content(short color, short *red, short *blue, short *green)
+int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-	return ERR;
+	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+
+	tmp->pixel = color;
+
+	XCursesInstructAndWait(CURSES_GET_COLOR);
+
+	*red = ((double)(tmp->red) * 1000 / 65535) + 0.5;
+	*green = ((double)(tmp->green) * 1000 / 65535) + 0.5;
+	*blue = ((double)(tmp->blue) * 1000 / 65535) + 0.5;
+
+	return OK;
 }
 
-int PDC_init_color(short color, short red, short blue, short green)
+int PDC_init_color(short color, short red, short green, short blue)
 {
-	return ERR;
+	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+
+	tmp->pixel = color;
+
+	tmp->red = ((double)red * 65535 / 1000) + 0.5;
+	tmp->green = ((double)green * 65535 / 1000) + 0.5;
+	tmp->blue = ((double)blue * 65535 / 1000) + 0.5;
+
+	XCursesInstructAndWait(CURSES_SET_COLOR);
+
+	return OK;
 }

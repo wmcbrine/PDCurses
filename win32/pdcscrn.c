@@ -24,7 +24,7 @@
 #define CURSES_LIBRARY 1
 #include <curses.h>
 
-RCSID("$Id: pdcscrn.c,v 1.60 2006/09/25 19:25:19 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.61 2006/09/27 07:21:27 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -402,12 +402,12 @@ bool PDC_can_change_color(void)
 	return FALSE;
 }
 
-int PDC_color_content(short color, short *red, short *blue, short *green)
+int PDC_color_content(short color, short *red, short *green, short *blue)
 {
 	return ERR;
 }
 
-int PDC_init_color(short color, short red, short blue, short green)
+int PDC_init_color(short color, short red, short green, short blue)
 {
 	return ERR;
 }

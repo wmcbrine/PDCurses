@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.54 2006/09/25 19:25:19 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.55 2006/09/27 07:21:27 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -728,12 +728,12 @@ bool PDC_can_change_color(void)
 	return FALSE;
 }
 
-int PDC_color_content(short color, short *red, short *blue, short *green)
+int PDC_color_content(short color, short *red, short *green, short *blue)
 {
 	return ERR;
 }
 
-int PDC_init_color(short color, short red, short blue, short green)
+int PDC_init_color(short color, short red, short green, short blue)
 {
 	return ERR;
 }

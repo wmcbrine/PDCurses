@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.51 2006/09/11 19:45:17 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.52 2006/09/27 07:21:27 wmcbrine Exp $ */
 
 #define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
@@ -88,13 +88,14 @@
 #define XCURSCR_START_SIZE  (XCursesLINES * sizeof(int))
 #define XCURSCR_LENGTH_SIZE (XCursesLINES * sizeof(int))
 #define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE + XCURSCR_START_SIZE + \
-	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + MAX_ATRTAB)
+	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + MAX_ATRTAB + sizeof(XColor))
 
 #define XCURSCR_Y_OFF(y)    ((y) * XCursesCOLS * sizeof(chtype))
 #define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0) + XCURSCR_Y_SIZE)
 #define XCURSCR_START_OFF   (XCURSCR_FLAG_OFF + XCURSCR_FLAG_SIZE)
 #define XCURSCR_LENGTH_OFF  (XCURSCR_START_OFF + XCURSCR_START_SIZE)
 #define XCURSCR_ATRTAB_OFF  (XCURSCR_LENGTH_OFF + XCURSCR_LENGTH_SIZE)
+#define XCURSCR_XCOLOR_OFF  (XCURSCR_ATRTAB_OFF + MAX_ATRTAB)
 
 typedef struct
 {
@@ -206,5 +207,5 @@ enum
 	CURSES_SET_SELECTION, CURSES_GET_SELECTION, CURSES_TITLE,
 	CURSES_REFRESH_SCROLLBAR, CURSES_RESIZE, CURSES_BELL,
 	CURSES_CONTINUE, CURSES_CURSOR, CURSES_CHILD, CURSES_REFRESH,
-	CURSES_EXIT
+	CURSES_GET_COLOR, CURSES_SET_COLOR, CURSES_EXIT
 };

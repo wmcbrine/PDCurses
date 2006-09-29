@@ -21,10 +21,11 @@
 #include <string.h>
 
 #ifdef __DJGPP__
+# include <dpmi.h>
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.55 2006/09/27 07:21:27 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.56 2006/09/29 13:47:21 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -293,8 +294,7 @@ static int query_adapter_type(void)
 
 	/* thanks to paganini@ax.apc.org for the GO32 fix */
 
-#if defined(__DJGPP__) && defined(NOW_WORKS)
-# include <dpmi.h>
+#ifdef __DJGPP__
 	_go32_dpmi_registers dpmi_regs;
 #endif
 
@@ -443,7 +443,8 @@ static int query_adapter_type(void)
 	/* Check for DESQview shadow buffer
 	   thanks to paganini@ax.apc.org for the GO32 fix */
 
-#if defined(__DJGPP__) && defined(NOW_WORKS)
+#ifdef __DJGPP__
+	memset(&dpmi_regs, 0, sizeof(dpmi_regs));
 	dpmi_regs.h.ah = 0xfe;
 	dpmi_regs.h.al = 0;
 	dpmi_regs.x.di = pdc_video_ofs;
@@ -701,7 +702,6 @@ void PDC_reset_shell_mode(void)
         PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 }
 
-
 void PDC_restore_screen_mode(int i)
 {
 	if (i >= 0 && i <= 2)
@@ -723,17 +723,80 @@ void PDC_save_screen_mode(int i)
 	}
 }
 
+#define DIVROUND(num, divisor) ((num) + ((divisor) >> 1)) / (divisor);
+
 bool PDC_can_change_color(void)
 {
-	return FALSE;
+	return (pdc_adapter == _VGACOLOR);
 }
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-	return ERR;
+	/* With int86(), DJGPP fails to report the red register; hence 
+	   the _dpmi_ stuff */
+
+	if (pdc_adapter == _VGACOLOR)
+	{
+#ifdef __DJGPP__
+		_go32_dpmi_registers regs;
+
+		memset(&regs, 0, sizeof(regs));
+#else
+		union REGS regs;
+#endif
+		regs.h.ah = 0x10;
+		regs.h.al = 0x07;
+		regs.h.bl = color;
+
+#ifdef __DJGPP__
+		_go32_dpmi_simulate_int(0x10, &regs);
+#else
+		int86(0x10, &regs, &regs);
+#endif
+		regs.h.ah = 0x10;
+		regs.h.al = 0x15;
+		regs.h.bl = regs.h.bh;
+
+#ifdef __DJGPP__
+		_go32_dpmi_simulate_int(0x10, &regs);
+#else
+		int86(0x10, &regs, &regs);
+#endif
+		*red = DIVROUND((unsigned)(regs.h.dh) * 1000, 63);
+		*green = DIVROUND((unsigned)(regs.h.ch) * 1000, 63);
+		*blue = DIVROUND((unsigned)(regs.h.cl) * 1000, 63);
+
+		return OK;
+	}
+	else
+		return ERR;
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-	return ERR;
+	if (pdc_adapter == _VGACOLOR)
+	{
+		union REGS regs;
+
+		regs.h.ah = 0x10;
+		regs.h.al = 0x07;
+		regs.h.bl = color;
+
+		int86(0x10, &regs, &regs);
+
+		regs.h.ah = 0x10;
+		regs.h.al = 0x10;
+		regs.h.bl = regs.h.bh;
+		regs.h.bh = 0;
+
+		regs.h.dh = DIVROUND((unsigned)red * 63, 1000);
+		regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
+		regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
+
+		int86(0x10, &regs, &regs);
+
+		return OK;
+	}
+	else
+		return ERR;
 }

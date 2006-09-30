@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.32 2006/08/13 06:32:29 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.33 2006/09/30 15:45:04 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -46,13 +46,13 @@ RCSID("$Id: pdcgetsc.c,v 1.32 2006/08/13 06:32:29 wmcbrine Exp $");
 
 int PDC_get_cursor_pos(int *row, int *col)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
 	regs.h.ah = 0x03;
 	regs.h.bh = 0;
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 	*row = regs.h.dh;
 	*col = regs.h.dl;
 
@@ -82,7 +82,7 @@ int PDC_get_cursor_pos(int *row, int *col)
 
 int PDC_get_columns(void)
 {
-	union REGS regs;
+	PDCREGS regs;
 	int cols;
 	const char *env_cols;
 
@@ -92,7 +92,7 @@ int PDC_get_columns(void)
  /* and use the minimum of COLS and return from int10h    MH 18-Jun-92 */
 
 	regs.h.ah = 0x0f;
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 	cols = (int)regs.h.ah;
 
 	env_cols = getenv("COLS");

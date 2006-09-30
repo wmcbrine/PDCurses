@@ -21,11 +21,10 @@
 #include <string.h>
 
 #ifdef __DJGPP__
-# include <dpmi.h>
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.56 2006/09/29 13:47:21 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.57 2006/09/30 15:45:04 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -95,7 +94,7 @@ static int get_font(void)
 
 static void set_font(int size)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	if (pdc_bogus_adapter)
 		return;
@@ -119,13 +118,13 @@ static void set_font(int size)
 				regs.h.ah = 0x11;
 				regs.h.al = 0x12;
 				regs.h.bl = 0x00;
-				int86(0x10, &regs, &regs);
+				PDCINT(0x10, regs);
 				break;
 			case _FONT14:
 				regs.h.ah = 0x11;
 				regs.h.al = 0x11;
 				regs.h.bl = 0x00;
-				int86(0x10, &regs, &regs);
+				PDCINT(0x10, regs);
 			}
 		}
 		break;
@@ -140,19 +139,19 @@ static void set_font(int size)
 				regs.h.ah = 0x11;
 				regs.h.al = 0x12;
 				regs.h.bl = 0x00;
-				int86(0x10, &regs, &regs);
+				PDCINT(0x10, regs);
 				break;
 			case _FONT14:
 				regs.h.ah = 0x11;
 				regs.h.al = 0x11;
 				regs.h.bl = 0x00;
-				int86(0x10, &regs, &regs);
+				PDCINT(0x10, regs);
 				break;
 			case _FONT16:
 				regs.h.ah = 0x11;
 				regs.h.al = 0x14;
 				regs.h.bl = 0x00;
-				int86(0x10, &regs, &regs);
+				PDCINT(0x10, regs);
 			}
 		}
 	}
@@ -167,7 +166,7 @@ static void set_font(int size)
 
 static void set_80x25(void)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	switch (pdc_adapter)
 	{
@@ -180,12 +179,12 @@ static void set_80x25(void)
 	case _MCGAMONO:
 		regs.h.ah = 0x00;
 		regs.h.al = 0x03;
-		int86(0x10, &regs, &regs);
+		PDCINT(0x10, regs);
 		break;
 	case _MDA:
 		regs.h.ah = 0x00;
 		regs.h.al = 0x07;
-		int86(0x10, &regs, &regs);
+		PDCINT(0x10, regs);
 	}
 }
 
@@ -193,10 +192,10 @@ static void set_80x25(void)
 
 static int get_scrn_mode(void)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	regs.h.ah = 0x0f;
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 
 	return (int)regs.h.al;
 }
@@ -206,13 +205,13 @@ static int get_scrn_mode(void)
 
 static void set_scrn_mode(int new_mode)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	if (get_scrn_mode() != new_mode)
 	{
 		regs.h.ah = 0;
 		regs.h.al = (unsigned char) new_mode;
-		int86(0x10, &regs, &regs);
+		PDCINT(0x10, regs);
 	}
 
 	pdc_font = get_font();
@@ -288,15 +287,10 @@ static int sanity_check(int adapter)
 
 static int query_adapter_type(void)
 {
-	union REGS regs;
-	int equip;
+	PDCREGS regs;
 	int retval = _NONE;
 
 	/* thanks to paganini@ax.apc.org for the GO32 fix */
-
-#ifdef __DJGPP__
-	_go32_dpmi_registers dpmi_regs;
-#endif
 
 #if !defined(__DJGPP__) && !defined(__WATCOMC__)
 	struct SREGS segs;
@@ -309,7 +303,7 @@ static int query_adapter_type(void)
 
 	regs.h.ah = 0x1a;
 	regs.h.al = 0;
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 
 	if ((regs.h.al == 0x1a) && (retval == _NONE))
 	{
@@ -365,7 +359,7 @@ static int query_adapter_type(void)
 # else
 		regs.x.bx = 0x10;
 # endif
-		int86(0x10, &regs, &regs);
+		PDCINT(0x10, regs);
 
 		if ((regs.h.bl != 0x10) && (retval == _NONE))
 		{
@@ -373,7 +367,7 @@ static int query_adapter_type(void)
 
 			regs.h.ah = 0x12;
 			regs.h.bl = 0x10;
-			int86(0x10, &regs, &regs);
+			PDCINT(0x10, regs);
 
 			if (regs.h.bh == 0)
 				retval = _EGACOLOR;
@@ -384,16 +378,15 @@ static int query_adapter_type(void)
 		{
 			/* Now we know we only have CGA or MDA */
 
-			int86(0x11, &regs, &regs);
-			equip = (regs.h.al & 0x30) >> 4;
+			PDCINT(0x11, regs);
 
-			switch (equip)
+			switch (regs.h.al & 0x30)
 			{
-			case 1:
-			case 2:
+			case 0x10:
+			case 0x20:
 				retval = _CGA;
 				break;
-			case 3:
+			case 0x30:
 				retval = _MDA;
 				break;
 			default:
@@ -443,25 +436,20 @@ static int query_adapter_type(void)
 	/* Check for DESQview shadow buffer
 	   thanks to paganini@ax.apc.org for the GO32 fix */
 
-#ifdef __DJGPP__
-	memset(&dpmi_regs, 0, sizeof(dpmi_regs));
-	dpmi_regs.h.ah = 0xfe;
-	dpmi_regs.h.al = 0;
-	dpmi_regs.x.di = pdc_video_ofs;
-	dpmi_regs.x.es = pdc_video_seg;
-	_go32_dpmi_simulate_int(0x10, &dpmi_regs);
-	pdc_video_ofs = dpmi_regs.x.di;
-	pdc_video_seg = dpmi_regs.x.es;
-#endif
-
-#if !defined(__DJGPP__) && !defined(__WATCOMC__)
+#ifndef __WATCOMC__
 	regs.h.ah = 0xfe;
 	regs.h.al = 0;
 	regs.x.di = pdc_video_ofs;
+# ifdef __DJGPP__
+	regs.x.es = pdc_video_seg;
+	__dpmi_int(0x10, &regs);
+	pdc_video_seg = regs.x.es;
+# else
 	segs.es   = pdc_video_seg;
 	int86x(0x10, &regs, &regs, &segs);
-	pdc_video_ofs = regs.x.di;
 	pdc_video_seg = segs.es;
+# endif
+	pdc_video_ofs = regs.x.di;
 #endif
 	if (!pdc_adapter)
 		pdc_adapter = retval;
@@ -732,36 +720,22 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-	/* With int86(), DJGPP fails to report the red register; hence 
-	   the _dpmi_ stuff */
-
 	if (pdc_adapter == _VGACOLOR)
 	{
-#ifdef __DJGPP__
-		_go32_dpmi_registers regs;
+		PDCREGS regs;
 
-		memset(&regs, 0, sizeof(regs));
-#else
-		union REGS regs;
-#endif
 		regs.h.ah = 0x10;
 		regs.h.al = 0x07;
 		regs.h.bl = color;
 
-#ifdef __DJGPP__
-		_go32_dpmi_simulate_int(0x10, &regs);
-#else
-		int86(0x10, &regs, &regs);
-#endif
+		PDCINT(0x10, regs);
+
 		regs.h.ah = 0x10;
 		regs.h.al = 0x15;
 		regs.h.bl = regs.h.bh;
 
-#ifdef __DJGPP__
-		_go32_dpmi_simulate_int(0x10, &regs);
-#else
-		int86(0x10, &regs, &regs);
-#endif
+		PDCINT(0x10, regs);
+
 		*red = DIVROUND((unsigned)(regs.h.dh) * 1000, 63);
 		*green = DIVROUND((unsigned)(regs.h.ch) * 1000, 63);
 		*blue = DIVROUND((unsigned)(regs.h.cl) * 1000, 63);
@@ -776,13 +750,13 @@ int PDC_init_color(short color, short red, short green, short blue)
 {
 	if (pdc_adapter == _VGACOLOR)
 	{
-		union REGS regs;
+		PDCREGS regs;
 
 		regs.h.ah = 0x10;
 		regs.h.al = 0x07;
 		regs.h.bl = color;
 
-		int86(0x10, &regs, &regs);
+		PDCINT(0x10, regs);
 
 		regs.h.ah = 0x10;
 		regs.h.al = 0x10;
@@ -793,7 +767,7 @@ int PDC_init_color(short color, short red, short green, short blue)
 		regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
 		regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
 
-		int86(0x10, &regs, &regs);
+		PDCINT(0x10, regs);
 
 		return OK;
 	}

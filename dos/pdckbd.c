@@ -23,7 +23,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.39 2006/09/10 20:26:28 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.40 2006/09/30 15:45:04 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -188,7 +188,7 @@ bool PDC_check_bios_key(void)
 
 int PDC_get_bios_key(void)
 {
-	union REGS regs;
+	PDCREGS regs;
 	int ascii, scan;
 	static unsigned char keyboard_function = 0xFF;
 
@@ -199,13 +199,13 @@ int PDC_get_bios_key(void)
 		/* get shift status for all keyboards */
 
 		regs.h.ah = 0x02;
-		int86(0x16, &regs, &regs);
+		PDCINT(0x16, regs);
 		scan = regs.h.al;
 
 		/* get shift status for enhanced keyboards */
 
-		regs.h.ah = 0x12;             
-		int86(0x16, &regs, &regs);
+		regs.h.ah = 0x12;
+		PDCINT(0x16, regs);
 
 		if (scan == regs.h.al && getdosmembyte(0x496) == 0x10)
 			keyboard_function = 0x10;
@@ -214,7 +214,7 @@ int PDC_get_bios_key(void)
 	}
 
 	regs.h.ah = keyboard_function;
-	int86(0x16, &regs, &regs);
+	PDCINT(0x16, regs);
 	ascii = regs.h.al;
 	scan = regs.h.ah;
 
@@ -225,7 +225,7 @@ int PDC_get_bios_key(void)
 		/* get shift status for all keyboards */
 
 		regs.h.ah = 0x02;             
-		int86(0x16, &regs, &regs);
+		PDCINT(0x16, regs);
 
 		if (regs.h.al & 0x03)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
@@ -316,13 +316,13 @@ int PDC_get_bios_key(void)
 
 bool PDC_get_ctrl_break(void)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
 
 	regs.h.ah = 0x33;
 	regs.h.al = 0x00;
-	int86(0x21, &regs, &regs);
+	PDCINT(0x21, regs);
 
 	return (bool)regs.h.dl;
 }
@@ -349,7 +349,7 @@ bool PDC_get_ctrl_break(void)
 int PDC_set_ctrl_break(bool setting)
 {
 #ifndef __DJGPP__
-	union REGS regs;
+	PDCREGS regs;
 #endif
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
@@ -361,7 +361,7 @@ int PDC_set_ctrl_break(bool setting)
 	regs.h.ah = 0x33;
 	regs.h.al = 0x00;
 	regs.h.dl = (unsigned char) (setting ? 1 : 0);
-	int86(0x21, &regs, &regs);
+	PDCINT(0x21, regs);
 #endif
 	return OK;
 }

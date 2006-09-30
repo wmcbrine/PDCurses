@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.52 2006/09/22 15:39:30 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.53 2006/09/30 15:45:04 wmcbrine Exp $");
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -51,7 +51,7 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 
 void PDC_gotoyx(int row, int col)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
@@ -59,7 +59,7 @@ void PDC_gotoyx(int row, int col)
 	regs.h.bh = 0;
 	regs.h.dh = (unsigned char) row;
 	regs.h.dl = (unsigned char) col;
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 }
 
 /*man-start**************************************************************
@@ -78,7 +78,7 @@ void PDC_gotoyx(int row, int col)
 
 static void PDC_putc(chtype ch, unsigned short count)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	PDC_LOG(("PDC_putc() - called\n"));
 
@@ -91,7 +91,7 @@ static void PDC_putc(chtype ch, unsigned short count)
 #else
 	regs.x.cx = count;
 #endif
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 }
 
 /*man-start**************************************************************
@@ -113,7 +113,7 @@ static void PDC_putc(chtype ch, unsigned short count)
 
 void PDC_putctty(chtype ch)
 {
-	union REGS regs;
+	PDCREGS regs;
 
 	PDC_LOG(("PDC_putctty() - called\n"));
 
@@ -121,7 +121,7 @@ void PDC_putctty(chtype ch)
 	regs.h.al = (unsigned char) (ch & 0xff);
 	regs.h.bh = 0;
 	regs.h.bl = chtype_attr(ch);
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 }
 
 /*man-start**************************************************************

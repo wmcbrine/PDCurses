@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.15 2006/09/21 16:09:34 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.16 2006/09/30 15:45:04 wmcbrine Exp $ */
 
 #define CURSES_LIBRARY 1
 #include <curses.h>
@@ -70,7 +70,6 @@ extern unsigned pdc_video_seg;
 extern unsigned pdc_video_ofs;
 
 #ifdef __DJGPP__		/* Note: works only in plain DOS... */
-# define _NAIVE_DOS_REGS
 # if DJGPP == 2
 #  define _FAR_POINTER(s,o)	((((int)(s)) << 4) + ((int)(o)))
 # else
@@ -91,11 +90,6 @@ extern unsigned pdc_video_ofs;
 #endif
 #define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
 
-#if defined(__WATCOMC__) && defined(__386__)
-# define int86 int386
-# define int86x int386x
-#endif
-
 #ifdef __DJGPP__
 unsigned char getdosmembyte(int offs);
 unsigned short getdosmemword(int offs);
@@ -115,6 +109,19 @@ void setdosmemword(int offs, unsigned short w);
 	(*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
 # define setdosmemword(offs,x) \
 	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+#endif
+
+#ifdef __DJGPP__
+# include <dpmi.h>
+# define PDCREGS __dpmi_regs
+# define PDCINT(vector, regs) __dpmi_int(vector, &regs)
+#else
+# define PDCREGS union REGS
+# if defined(__WATCOMC__) && defined(__386__)
+#  define PDCINT(vector, regs) int386(vector, &regs, &regs)
+# else
+#  define PDCINT(vector, regs) int86(vector, &regs, &regs)
+# endif
 #endif
 
 /* Monitor (terminal) type information */

@@ -17,11 +17,11 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.28 2006/08/17 22:05:41 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.29 2006/09/30 15:45:04 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
-	union REGS regs;
+	PDCREGS regs;
 	int ret_vis, start, end;
 
 	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n", visibility));
@@ -50,7 +50,7 @@ int PDC_curs_set(int visibility)
 	regs.h.al = (unsigned char)pdc_scrnmode; 
 	regs.h.ch = (unsigned char)start;
 	regs.h.cl = (unsigned char)end;
-	int86(0x10, &regs, &regs);
+	PDCINT(0x10, regs);
 
 	return ret_vis;
 }

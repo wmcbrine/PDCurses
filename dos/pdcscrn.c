@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.57 2006/09/30 15:45:04 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.58 2006/10/01 01:09:33 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -713,6 +713,22 @@ void PDC_save_screen_mode(int i)
 
 #define DIVROUND(num, divisor) ((num) + ((divisor) >> 1)) / (divisor);
 
+/* egapal() - Find the EGA palette value (0-63) for the color (0-15).
+   On VGA, this is an index into the DAC. */
+
+static int egapal(int color)
+{
+	PDCREGS regs;
+
+	regs.h.ah = 0x10;
+	regs.h.al = 0x07;
+	regs.h.bl = color;
+
+	PDCINT(0x10, regs);
+
+	return regs.h.bh;
+}
+
 bool PDC_can_change_color(void)
 {
 	return (pdc_adapter == _VGACOLOR);
@@ -724,17 +740,15 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 	{
 		PDCREGS regs;
 
-		regs.h.ah = 0x10;
-		regs.h.al = 0x07;
-		regs.h.bl = color;
-
-		PDCINT(0x10, regs);
+		/* Read single DAC register */
 
 		regs.h.ah = 0x10;
 		regs.h.al = 0x15;
-		regs.h.bl = regs.h.bh;
+		regs.h.bl = egapal(color);
 
 		PDCINT(0x10, regs);
+
+		/* Scale and store */
 
 		*red = DIVROUND((unsigned)(regs.h.dh) * 1000, 63);
 		*green = DIVROUND((unsigned)(regs.h.ch) * 1000, 63);
@@ -752,20 +766,18 @@ int PDC_init_color(short color, short red, short green, short blue)
 	{
 		PDCREGS regs;
 
-		regs.h.ah = 0x10;
-		regs.h.al = 0x07;
-		regs.h.bl = color;
-
-		PDCINT(0x10, regs);
-
-		regs.h.ah = 0x10;
-		regs.h.al = 0x10;
-		regs.h.bl = regs.h.bh;
-		regs.h.bh = 0;
+		/* Scale */
 
 		regs.h.dh = DIVROUND((unsigned)red * 63, 1000);
 		regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
 		regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
+
+		/* Set single DAC register */
+
+		regs.h.ah = 0x10;
+		regs.h.al = 0x10;
+		regs.h.bl = egapal(color);
+		regs.h.bh = 0;
 
 		PDCINT(0x10, regs);
 

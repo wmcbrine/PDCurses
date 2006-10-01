@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.61 2006/10/01 00:44:53 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.62 2006/10/01 18:51:50 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -213,7 +213,7 @@ int color_content(short color, short *red, short *green, short *blue)
 	else
 	{
 		/* Simulated values for platforms that don't support 
-		   palette changing*/
+		   palette changing */
 
 		short maxval = (color >= COLORS) ? 1000 : 680;
 

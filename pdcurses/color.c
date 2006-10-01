@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.60 2006/09/30 15:50:44 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.61 2006/10/01 00:44:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -205,7 +205,7 @@ int color_content(short color, short *red, short *green, short *blue)
 {
 	PDC_LOG(("color_content() - called\n"));
 
-	if ((color >= (COLORS * 2) || color < 0) || (!red || !green || !blue))
+	if (color >= (COLORS * 2) || color < 0 || !red || !green || !blue)
 		return ERR;
 
 	if (PDC_can_change_color())

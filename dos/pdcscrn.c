@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.58 2006/10/01 01:09:33 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.59 2006/10/01 18:49:10 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -734,55 +734,47 @@ bool PDC_can_change_color(void)
 	return (pdc_adapter == _VGACOLOR);
 }
 
+/* These are only valid when pdc_adapter == _vGACOLOR */
+
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-	if (pdc_adapter == _VGACOLOR)
-	{
-		PDCREGS regs;
+	PDCREGS regs;
 
-		/* Read single DAC register */
+	/* Read single DAC register */
 
-		regs.h.ah = 0x10;
-		regs.h.al = 0x15;
-		regs.h.bl = egapal(color);
+	regs.h.ah = 0x10;
+	regs.h.al = 0x15;
+	regs.h.bl = egapal(color);
 
-		PDCINT(0x10, regs);
+	PDCINT(0x10, regs);
 
-		/* Scale and store */
+	/* Scale and store */
 
-		*red = DIVROUND((unsigned)(regs.h.dh) * 1000, 63);
-		*green = DIVROUND((unsigned)(regs.h.ch) * 1000, 63);
-		*blue = DIVROUND((unsigned)(regs.h.cl) * 1000, 63);
+	*red = DIVROUND((unsigned)(regs.h.dh) * 1000, 63);
+	*green = DIVROUND((unsigned)(regs.h.ch) * 1000, 63);
+	*blue = DIVROUND((unsigned)(regs.h.cl) * 1000, 63);
 
-		return OK;
-	}
-	else
-		return ERR;
+	return OK;
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-	if (pdc_adapter == _VGACOLOR)
-	{
-		PDCREGS regs;
+	PDCREGS regs;
 
-		/* Scale */
+	/* Scale */
 
-		regs.h.dh = DIVROUND((unsigned)red * 63, 1000);
-		regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
-		regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
+	regs.h.dh = DIVROUND((unsigned)red * 63, 1000);
+	regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
+	regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
 
-		/* Set single DAC register */
+	/* Set single DAC register */
 
-		regs.h.ah = 0x10;
-		regs.h.al = 0x10;
-		regs.h.bl = egapal(color);
-		regs.h.bh = 0;
+	regs.h.ah = 0x10;
+	regs.h.al = 0x10;
+	regs.h.bl = egapal(color);
+	regs.h.bh = 0;
 
-		PDCINT(0x10, regs);
+	PDCINT(0x10, regs);
 
-		return OK;
-	}
-	else
-		return ERR;
+	return OK;
 }

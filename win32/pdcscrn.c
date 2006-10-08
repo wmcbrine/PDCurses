@@ -15,16 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef PDC_WIDE
-# define UNICODE
-#endif
+#include "pdcwin.h"
 
-#include <windows.h>
-#undef MOUSE_MOVED
-#define CURSES_LIBRARY 1
-#include <curses.h>
-
-RCSID("$Id: pdcscrn.c,v 1.61 2006/09/27 07:21:27 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.62 2006/10/08 20:54:30 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -37,8 +30,6 @@ static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
 static CHAR_INFO *ciSaveBuffer = NULL;
 static DWORD dwConsoleMode = 0;
-
-extern int PDC_get_buffer_rows(void);
 
 /*man-start**************************************************************
 

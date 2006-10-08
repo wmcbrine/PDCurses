@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.49 2006/09/24 21:22:33 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.50 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

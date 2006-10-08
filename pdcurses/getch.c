@@ -15,13 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.37 2006/09/24 21:22:33 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.38 2006/10/08 20:54:30 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */

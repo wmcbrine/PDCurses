@@ -28,6 +28,8 @@ osdir		= $(PDCURSES_HOME)\win32
 pandir		= $(PDCURSES_HOME)\panel
 demodir		= $(PDCURSES_HOME)\demos
 
+PDCURSES_WIN_H	= $(osdir)\pdcwin.h
+
 CC		= lcc
 
 #CFLAGS		= -c -g3 -A -ansic
@@ -89,6 +91,7 @@ DEMOOBJS = testcurs.obj newdemo.obj xmas.obj tuidemo.obj tui.obj \
 firework.obj ptest.obj rain.obj worm.obj
 
 $(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(PDCOBJS) : $(PDCURSES_WIN_H)
 $(PANOBJS) ptest.obj: $(PANEL_HEADER)
 terminfo.obj: $(TERM_HEADER)
 

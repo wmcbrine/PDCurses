@@ -15,7 +15,6 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
 #ifndef EMXVIDEO
 # define INCL_DOS
 # define INCL_WIN
@@ -23,11 +22,11 @@
 # define INCL_KBD
 # include <os2.h>
 #endif
-#include <curses.h>
+#include <curspriv.h>
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.22 2006/08/13 05:36:52 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.23 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

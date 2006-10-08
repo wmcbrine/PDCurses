@@ -15,12 +15,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.31 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.32 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /* save values for pechochar() */
 

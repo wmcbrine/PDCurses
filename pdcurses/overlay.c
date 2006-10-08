@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.22 2006/08/21 16:42:38 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.23 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

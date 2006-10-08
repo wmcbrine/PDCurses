@@ -25,6 +25,8 @@ O = obj
 
 osdir		= $(PDCURSES_HOME)\win32
 
+PDCURSES_WIN_H	= $(osdir)\pdcwin.h
+
 CC		= cl.exe -nologo
 
 !ifdef DEBUG
@@ -41,9 +43,9 @@ CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE
 
 LINK		= link.exe -nologo
 
-CCLIBS		= user32.lib
+CCLIBS		= user32.lib advapi32.lib
 # may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
-#CCLIBS		= msvcrt.lib user32.lib
+#CCLIBS		= msvcrt.lib user32.lib advapi32.lib
 
 LIBEXE		= lib -nologo
 
@@ -76,6 +78,7 @@ clean:
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
 $(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(PDCOBJS) : $(PDCURSES_WIN_H)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(PANOBJS) : $(PANEL_HEADER)
 terminfo.obj: $(TERM_HEADER)

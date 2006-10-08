@@ -15,14 +15,13 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
-#include <curses.h>
+#include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: printw.c,v 1.27 2006/09/24 21:22:33 wmcbrine Exp $");
+RCSID("$Id: printw.c,v 1.28 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

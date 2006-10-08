@@ -15,18 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef PDC_WIDE
-# define UNICODE
-#endif
+#include "pdcwin.h"
 
-#include <windows.h>
-#undef MOUSE_MOVED
-#define CURSES_LIBRARY 1
-#include <curses.h>
-
-RCSID("$Id: pdcsetsc.c,v 1.28 2006/08/17 22:05:41 wmcbrine Exp $");
-
-extern HANDLE hConOut;
+RCSID("$Id: pdcsetsc.c,v 1.29 2006/10/08 20:54:30 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {

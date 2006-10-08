@@ -15,16 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef PDC_WIDE
-# define UNICODE
-#endif
+#include "pdcwin.h"
 
-#include <windows.h>
-#undef MOUSE_MOVED
-#define	CURSES_LIBRARY 1
-#include <curses.h>
-
-RCSID("$Id: pdcclip.c,v 1.18 2006/08/13 00:05:39 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.19 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

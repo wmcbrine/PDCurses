@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 
-RCSID("$Id: scr_dump.c,v 1.16 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: scr_dump.c,v 1.17 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -5,12 +5,8 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.65 2006/09/25 00:09:22 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.66 2006/10/08 20:54:30 wmcbrine Exp $
  */
-
-#ifdef PDCDEBUG
-# define CURSES_LIBRARY /* needed for the prototype of PDC_debug */
-#endif
 
 #ifndef _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED 1
@@ -89,10 +85,6 @@ int main(int argc, char *argv[])
 	WINDOW *win;
 	int key, old_option = -1, new_option = 0;
 	bool quit = FALSE;
-
-#ifdef PDCDEBUG
-	PDC_debug("testcurs started\n");
-#endif
 
 #ifdef HAVE_WIDE
 	/* This is here for ncurses. PDCurses doesn't need it. */
@@ -198,16 +190,10 @@ void Continue(WINDOW *win)
 
 int initTest(WINDOW **win, int argc, char *argv[])
 {
-#ifdef PDCDEBUG
-	PDC_debug("initTest called\n");
-#endif
 #ifdef XCURSES
 	Xinitscr(argc, argv);
 #else
 	initscr();
-#endif
-#ifdef PDCDEBUG
-	PDC_debug("after initscr()\n");
 #endif
 #ifdef A_COLOR
 	if (has_colors())

@@ -15,11 +15,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
-#include <curses.h>
+#include <curspriv.h>
 #include <string.h>
 
 #ifndef HAVE_VSSCANF
@@ -35,7 +34,7 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 /* undefine any macros for functions defined in this module */
 #undef vw_scanw
 
-RCSID("$Id: scanw.c,v 1.27 2006/08/21 16:42:40 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.28 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -15,9 +15,8 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.52 2006/09/27 07:21:27 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.53 2006/10/08 20:54:30 wmcbrine Exp $ */
 
-#define	CURSES_LIBRARY 1
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -81,7 +80,7 @@
 # include <Xlocale.h>
 #endif
 
-#include <curses.h>
+#include <curspriv.h>
 
 #define XCURSCR_Y_SIZE      (XCursesLINES * XCursesCOLS * sizeof(chtype))
 #define XCURSCR_FLAG_SIZE   (XCursesLINES * sizeof(int))

@@ -23,7 +23,7 @@ O = obj
 !include $(PDCURSES_HOME)\version.mif
 !include $(PDCURSES_HOME)\libobjs.mif
 
-osdir		= $(PDCURSES_HOME)/win32
+osdir		= $(PDCURSES_HOME)\win32
 
 CC		= bcc32 -q
 

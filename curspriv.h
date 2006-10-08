@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.122 2006/09/25 19:25:19 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.123 2006/10/08 20:54:30 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -24,6 +24,9 @@
 
 #ifndef __CURSES_INTERNALS__
 #define __CURSES_INTERNALS__ 1
+
+#define CURSES_LIBRARY
+#include <curses.h>
 
 /*----------------------------------------------------------------------*/
 /* window properties */

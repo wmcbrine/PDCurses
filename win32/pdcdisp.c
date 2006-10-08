@@ -15,20 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef PDC_WIDE
-# define UNICODE
-#endif
+#include "pdcwin.h"
 
-#include <windows.h>
-#undef MOUSE_MOVED
-#define CURSES_LIBRARY 1
-#include <curses.h>
 #include <stdlib.h>
 #include <string.h>
 
-extern HANDLE hConOut;
-
-RCSID("$Id: pdcdisp.c,v 1.35 2006/08/11 19:50:51 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.36 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -15,17 +15,16 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
 #ifndef EMXVIDEO
 # define INCL_DOSMISC
 # define INCL_VIO
 # define INCL_KBD
 # include <os2.h>
 #endif
-#include <curses.h>
+#include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.50 2006/09/27 07:21:27 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.51 2006/10/08 20:54:30 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 

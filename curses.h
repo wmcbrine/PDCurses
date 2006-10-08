@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.232 2006/09/24 21:24:28 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.233 2006/10/08 20:54:30 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1612,13 +1612,6 @@ int	PDC_set_line_color(short);
 #define PDC_KEY_MODIFIER_CONTROL	2
 #define PDC_KEY_MODIFIER_ALT		4
 #define PDC_KEY_MODIFIER_NUMLOCK	8
-
-/* Load up curspriv.h. We allow anyone who defines CURSES_LIBRARY
-   to have access to our internal routines. */
-
-#ifdef CURSES_LIBRARY
-# include <curspriv.h>
-#endif
 
 #endif  /* __PDCURSES__ */
 

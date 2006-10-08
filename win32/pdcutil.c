@@ -15,23 +15,18 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef PDC_WIDE
-# define UNICODE
-#endif
+#include "pdcwin.h"
 
-#include <windows.h>
-#undef MOUSE_MOVED
-#define CURSES_LIBRARY 1
-#include <curses.h>
-
-RCSID("$Id: pdcutil.c,v 1.7 2006/09/25 06:34:41 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.8 2006/10/08 20:54:30 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
 	PDC_LOG(("PDC_beep() - called\n"));
 
+	fflush(stdout);
 /*	MessageBeep(MB_OK); */
 	MessageBeep(0XFFFFFFFF);
+	fflush(stdout);
 }
 
 void PDC_napms(int ms)

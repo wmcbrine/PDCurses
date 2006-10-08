@@ -15,10 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.16 2006/09/30 15:45:04 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.17 2006/10/08 20:54:30 wmcbrine Exp $ */
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 
 #if defined(_MSC_VER) || defined(_QC)
 # define MSC 1

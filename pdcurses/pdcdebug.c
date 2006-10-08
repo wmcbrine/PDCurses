@@ -15,13 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
 
-RCSID("$Id: pdcdebug.c,v 1.22 2006/08/20 21:48:36 wmcbrine Exp $");
+RCSID("$Id: pdcdebug.c,v 1.23 2006/10/08 20:54:30 wmcbrine Exp $");
 
 bool pdc_trace_on = FALSE;
 

@@ -15,16 +15,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef PDC_WIDE
-# define UNICODE
-#endif
+#include "pdcwin.h"
 
-#include <windows.h>
-#undef MOUSE_MOVED
-#define CURSES_LIBRARY 1
-#include <curses.h>
-
-RCSID("$Id: pdckbd.c,v 1.64 2006/09/25 19:23:02 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.65 2006/10/08 20:54:30 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -64,8 +57,6 @@ RCSID("$Id: pdckbd.c,v 1.64 2006/09/25 19:23:02 wmcbrine Exp $");
 
 static INPUT_RECORD save_ip;
 unsigned long pdc_key_modifiers = 0L;
-
-extern HANDLE hConIn;
 
 static int keyCount = 0;
 

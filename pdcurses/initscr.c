@@ -15,11 +15,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.77 2006/09/24 21:22:33 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.78 2006/10/08 20:54:30 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 

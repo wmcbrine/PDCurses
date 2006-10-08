@@ -15,12 +15,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define CURSES_LIBRARY 1
-#include <curses.h>
+#include <curspriv.h>
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: refresh.c,v 1.38 2006/09/24 21:22:33 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.39 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

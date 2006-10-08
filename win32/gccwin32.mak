@@ -25,6 +25,8 @@ include $(PDCURSES_HOME)/libobjs.mif
 
 osdir		= $(PDCURSES_HOME)/win32
 
+PDCURSES_WIN_H	= $(osdir)/pdcwin.h
+
 CC		= gcc
 
 ifeq ($(DEBUG),Y)
@@ -73,6 +75,7 @@ $(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
 
 $(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(PDCOBJS) : $(PDCURSES_WIN_H)
 $(PANOBJS) : $(PANEL_HEADER)
 $(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
 terminfo.o: $(TERM_HEADER)
@@ -96,13 +99,13 @@ ptest.exe: $(demodir)/ptest.c $(PANEL_HEADER) $(LIBPANEL)
 	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o tuidemo.exe tuidemo.o tui.o $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o $@ $<
+	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o $@ $<
+	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
 
 #------------------------------------------------------------------------
 

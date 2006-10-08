@@ -15,16 +15,15 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#define	CURSES_LIBRARY 1
 #ifndef EMXVIDEO
 # define INCL_VIO
 # define INCL_KBD
 # include <os2.h>
 #endif
-#include <curses.h>
+#include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.36 2006/09/22 15:39:30 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.37 2006/10/08 20:54:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

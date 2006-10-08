@@ -26,8 +26,6 @@ O = obj
 
 osdir		= $(PDCURSES_HOME)\dos
 
-PDCURSES_DOS_H	= $(osdir)\pdcdos.h
-
 !if $d(DEBUG)
 CFLAGS		= -N -v -y -DPDCDEBUG 
 !else

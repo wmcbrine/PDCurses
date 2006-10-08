@@ -17,11 +17,48 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.62 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.63 2006/10/08 23:46:54 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
 #define PDC_RESTORE_WINDOW   2
+
+/* Struct for storing console registry keys, and for use with the 
+   undocumented WM_SETCONSOLEINFO message. Originally by James Brown, 
+   www.catch22.net. */
+
+static struct
+{
+	ULONG		Length;
+	COORD		ScreenBufferSize;
+	COORD		WindowSize;
+	ULONG		WindowPosX;
+	ULONG		WindowPosY;
+
+	COORD		FontSize;
+	ULONG		FontFamily;
+	ULONG		FontWeight;
+	WCHAR		FaceName[32];
+
+	ULONG		CursorSize;
+	ULONG		FullScreen;
+	ULONG		QuickEdit;
+	ULONG		AutoPosition;
+	ULONG		InsertMode;
+	
+	USHORT		ScreenColors;
+	USHORT		PopupColors;
+	ULONG		HistoryNoDup;
+	ULONG		HistoryBufferSize;
+	ULONG		NumberOfHistoryBuffers;
+	
+	COLORREF	ColorTable[16];
+
+	ULONG		CodePage;
+	HWND		Hwnd;
+
+	WCHAR		ConsoleTitle[0x100];
+} console_info;
 
 HANDLE hConOut = INVALID_HANDLE_VALUE;
 HANDLE hConIn = INVALID_HANDLE_VALUE;
@@ -30,6 +67,156 @@ static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
 static CHAR_INFO *ciSaveBuffer = NULL;
 static DWORD dwConsoleMode = 0;
+
+static bool isNT;
+
+static HWND FindConsoleHandle(void)
+{
+	TCHAR orgtitle[1024], temptitle[1024];
+	HWND wnd;
+
+	GetConsoleTitle(orgtitle, 1024);
+
+	wsprintf(temptitle, TEXT("%d/%d"),
+		GetTickCount(), GetCurrentProcessId());
+	SetConsoleTitle(temptitle);
+
+	Sleep(40);
+
+	wnd = FindWindow(NULL, temptitle);
+
+	SetConsoleTitle(orgtitle);
+
+	return wnd;
+}
+
+/* Undocumented console message */
+
+#define WM_SETCONSOLEINFO	(WM_USER + 201)
+
+/* Wrapper around WM_SETCONSOLEINFO. We need to create the necessary 
+   section (file-mapping) object in the context of the process which 
+   owns the console, before posting the message. Originally by JB. */
+
+static void SetConsoleInfo(void)
+{
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+        CONSOLE_CURSOR_INFO cci;
+	DWORD   dwConsoleOwnerPid;
+	HANDLE  hProcess;
+	HANDLE	hSection, hDupSection;
+	PVOID   ptrView = 0;
+	
+	/* Each-time initialization for console_info */
+
+	GetConsoleCursorInfo(hConOut, &cci);
+	console_info.CursorSize = cci.dwSize;
+
+	GetConsoleScreenBufferInfo(hConOut, &csbi);
+	console_info.ScreenBufferSize = csbi.dwSize;
+
+	console_info.WindowSize.X = csbi.srWindow.Right - 
+		csbi.srWindow.Left + 1;
+
+	console_info.WindowSize.Y = csbi.srWindow.Bottom - 
+		csbi.srWindow.Top + 1;
+
+	console_info.WindowPosX = csbi.srWindow.Left;
+	console_info.WindowPosY = csbi.srWindow.Top;
+
+	/* Open the process which "owns" the console */
+
+	GetWindowThreadProcessId(console_info.Hwnd, &dwConsoleOwnerPid);
+	
+	hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwConsoleOwnerPid);
+
+	/* Create a SECTION object backed by page-file, then map a view 
+	   of this section into the owner process so we can write the 
+	   contents of the CONSOLE_INFO buffer into it */
+
+	hSection = CreateFileMapping(INVALID_HANDLE_VALUE, 0,
+		PAGE_READWRITE, 0, sizeof(console_info), 0);
+
+	/* Copy our console structure into the section-object */
+
+	ptrView = MapViewOfFile(hSection, FILE_MAP_WRITE|FILE_MAP_READ,
+		0, 0, sizeof(console_info));
+
+	memcpy(ptrView, &console_info, sizeof(console_info));
+
+	UnmapViewOfFile(ptrView);
+
+	/* Map the memory into owner process */
+
+	DuplicateHandle(GetCurrentProcess(), hSection, hProcess,
+		&hDupSection, 0, FALSE, DUPLICATE_SAME_ACCESS);
+
+	/* Send console window the "update" message */
+
+	SendMessage(console_info.Hwnd, WM_SETCONSOLEINFO, 
+		(WPARAM)hDupSection, 0);
+
+	CloseHandle(hSection);
+	CloseHandle(hProcess);
+}
+
+/* One-time initialization for console_info -- color table and font 
+   info from the registry; other values from functions. */
+
+static void init_console_info(void)
+{
+	DWORD scrnmode, len;
+	HKEY reghnd;
+	int i;
+
+	console_info.Length = sizeof(console_info);
+
+	GetConsoleMode(hConIn, &scrnmode);
+	console_info.QuickEdit = !!(scrnmode & 0x0040);
+	console_info.InsertMode = !!(scrnmode & 0x0020);
+
+	console_info.FullScreen = FALSE;
+	console_info.AutoPosition = 0x10000;
+	console_info.ScreenColors = MAKEWORD(SP->orig_fore, SP->orig_back);
+	console_info.PopupColors = MAKEWORD(0x5, 0xf);
+	
+	console_info.HistoryNoDup = FALSE;
+	console_info.HistoryBufferSize = 50;
+	console_info.NumberOfHistoryBuffers = 4;
+
+	console_info.CodePage = GetConsoleOutputCP();
+
+	RegOpenKeyEx(HKEY_CURRENT_USER, TEXT("Console"), 0, 
+		KEY_QUERY_VALUE, &reghnd);
+
+	len = sizeof(DWORD);
+
+	/* Default color table */
+
+	for (i = 0; i < 16; i++)
+	{
+		char tname[13];
+
+		sprintf(tname, "ColorTable%02d", i);
+		RegQueryValueExA(reghnd, tname, NULL, NULL,
+			(LPBYTE)(&(console_info.ColorTable[i])), &len);
+	}
+
+	/* Font info */
+
+	RegQueryValueEx(reghnd, TEXT("FontSize"), NULL, NULL,
+		(LPBYTE)(&console_info.FontSize), &len);
+	RegQueryValueEx(reghnd, TEXT("FontFamily"), NULL, NULL,
+		(LPBYTE)(&console_info.FontFamily), &len);
+	RegQueryValueEx(reghnd, TEXT("FontWeight"), NULL, NULL,
+		(LPBYTE)(&console_info.FontWeight), &len);
+
+	len = sizeof(WCHAR) * 32;
+	RegQueryValueExW(reghnd, L"FaceName", NULL, NULL,
+		(LPBYTE)(console_info.FaceName), &len);
+
+	RegCloseKey(reghnd);
+}
 
 /*man-start**************************************************************
 
@@ -135,6 +322,8 @@ int PDC_scr_open(int argc, char **argv)
 
 	hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	hConIn = GetStdHandle(STD_INPUT_HANDLE);
+
+	isNT = !(GetVersion() & 0x80000000);
 
 	GetConsoleScreenBufferInfo(hConOut, &csbi);
 	GetConsoleScreenBufferInfo(hConOut, &orig_scr);
@@ -257,7 +446,7 @@ int PDC_scr_open(int argc, char **argv)
 	rect.Right = bufsize.X - 1;
 
 	SetConsoleScreenBufferSize(hConOut, bufsize);
-	SetConsoleWindowInfo(hConOut,TRUE, &rect);
+	SetConsoleWindowInfo(hConOut, TRUE, &rect);
 	SetConsoleScreenBufferSize(hConOut, bufsize);
 	SetConsoleActiveScreenBuffer(hConOut);
 
@@ -270,6 +459,12 @@ int PDC_scr_open(int argc, char **argv)
 	SP->orig_cursor = PDC_get_cursor_mode();
 
 	SP->orgcbr = PDC_get_ctrl_break();
+
+	if (isNT)
+	{
+		console_info.Hwnd = FindConsoleHandle();
+		init_console_info();
+	}
 
 	return OK;
 }
@@ -390,17 +585,30 @@ void PDC_save_screen_mode(int i)
 
 bool PDC_can_change_color(void)
 {
-	return FALSE;
+	return isNT;
 }
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-	return ERR;
+	DWORD col = console_info.ColorTable[color];
+
+	*red = (double)GetRValue(col) * 1000 / 255 + 0.5;
+	*green = (double)GetGValue(col) * 1000 / 255 + 0.5;
+	*blue = (double)GetBValue(col) * 1000 / 255 + 0.5;
+
+	return OK;
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-	return ERR;
+	console_info.ColorTable[color] =
+		RGB((double)red * 255 / 1000 + 0.5,
+		    (double)green * 255 / 1000 + 0.5,
+		    (double)blue * 255 / 1000 + 0.5);
+
+	SetConsoleInfo();
+
+	return OK;
 }
 
 #ifdef PDC_DLL_BUILD

@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcwin.h,v 1.1 2006/10/08 23:39:41 wmcbrine Exp $ */
+/* $Id: pdcwin.h,v 1.2 2006/10/09 14:08:46 wmcbrine Exp $ */
 
 #ifdef PDC_WIDE
 # define UNICODE
@@ -25,6 +25,6 @@
 #undef MOUSE_MOVED
 #include <curspriv.h>
 
-extern HANDLE hConOut, hConIn;
+extern HANDLE pdc_con_out, pdc_con_in;
 
 extern int PDC_get_buffer_rows(void);

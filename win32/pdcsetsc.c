@@ -17,7 +17,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.29 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.30 2006/10/09 14:08:46 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -28,7 +28,7 @@ int PDC_curs_set(int visibility)
 
 	ret_vis = SP->visibility;
 
-	if (GetConsoleCursorInfo(hConOut,&cci) == FALSE)
+	if (GetConsoleCursorInfo(pdc_con_out, &cci) == FALSE)
 		return ERR;
 
 	switch(visibility)
@@ -46,7 +46,7 @@ int PDC_curs_set(int visibility)
 		break;
 	}
 
-	if (SetConsoleCursorInfo(hConOut,&cci) == FALSE)
+	if (SetConsoleCursorInfo(pdc_con_out, &cci) == FALSE)
 		return ERR;
 
 	SP->visibility = visibility;

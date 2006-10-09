@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.36 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.37 2006/10/09 14:08:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -48,7 +48,7 @@ void PDC_gotoyx(int row, int col)
 	coord.X = col;
 	coord.Y = row;
 
-	SetConsoleCursorPosition(hConOut, coord);
+	SetConsoleCursorPosition(pdc_con_out, coord);
 }
 
 /*man-start**************************************************************
@@ -96,5 +96,5 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		ci[j].Attributes = chtype_attr(srcp[j]);
 	}
 
-	WriteConsoleOutput(hConOut, ci, bufSize, bufPos, &sr);
+	WriteConsoleOutput(pdc_con_out, ci, bufSize, bufPos, &sr);
 }

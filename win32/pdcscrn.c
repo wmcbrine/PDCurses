@@ -17,7 +17,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.65 2006/10/09 04:51:41 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.66 2006/10/09 14:08:46 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -60,17 +60,17 @@ static struct
 	WCHAR		ConsoleTitle[0x100];
 } console_info;
 
-HANDLE hConOut = INVALID_HANDLE_VALUE;
-HANDLE hConIn = INVALID_HANDLE_VALUE;
+HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
+HANDLE pdc_con_in = INVALID_HANDLE_VALUE;
 
 static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
-static CHAR_INFO *ciSaveBuffer = NULL;
-static DWORD dwConsoleMode = 0;
+static CHAR_INFO *ci_save = NULL;
+static DWORD old_console_mode = 0;
 
-static bool isNT;
+static bool is_nt;
 
-static HWND FindConsoleHandle(void)
+static HWND _find_console_handle(void)
 {
 	TCHAR orgtitle[1024], temptitle[1024];
 	HWND wnd;
@@ -98,7 +98,7 @@ static HWND FindConsoleHandle(void)
    section (file-mapping) object in the context of the process which 
    owns the console, before posting the message. Originally by JB. */
 
-static void SetConsoleInfo(void)
+static void _set_console_info(void)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
         CONSOLE_CURSOR_INFO cci;
@@ -109,10 +109,10 @@ static void SetConsoleInfo(void)
 
 	/* Each-time initialization for console_info */
 
-	GetConsoleCursorInfo(hConOut, &cci);
+	GetConsoleCursorInfo(pdc_con_out, &cci);
 	console_info.CursorSize = cci.dwSize;
 
-	GetConsoleScreenBufferInfo(hConOut, &csbi);
+	GetConsoleScreenBufferInfo(pdc_con_out, &csbi);
 	console_info.ScreenBufferSize = csbi.dwSize;
 
 	console_info.WindowSize.X = csbi.srWindow.Right - 
@@ -163,7 +163,7 @@ static void SetConsoleInfo(void)
 /* One-time initialization for console_info -- color table and font 
    info from the registry; other values from functions. */
 
-static void init_console_info(void)
+static void _init_console_info(void)
 {
 	DWORD scrnmode, len;
 	HKEY reghnd;
@@ -171,7 +171,7 @@ static void init_console_info(void)
 
 	console_info.Length = sizeof(console_info);
 
-	GetConsoleMode(hConIn, &scrnmode);
+	GetConsoleMode(pdc_con_in, &scrnmode);
 	console_info.QuickEdit = !!(scrnmode & 0x0040);
 	console_info.InsertMode = !!(scrnmode & 0x0020);
 
@@ -241,10 +241,10 @@ void PDC_scr_close(void)
 
 	PDC_LOG(("PDC_scr_close() - called\n"));
 
-	SetConsoleScreenBufferSize(hConOut, orig_scr.dwSize);
-	SetConsoleWindowInfo(hConOut, TRUE, &orig_scr.srWindow);
-	SetConsoleScreenBufferSize(hConOut, orig_scr.dwSize);
-	SetConsoleWindowInfo(hConOut, TRUE, &orig_scr.srWindow);
+	SetConsoleScreenBufferSize(pdc_con_out, orig_scr.dwSize);
+	SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);
+	SetConsoleScreenBufferSize(pdc_con_out, orig_scr.dwSize);
+	SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);
 
 	if (SP->_restore != PDC_RESTORE_NONE)
 	{
@@ -264,13 +264,13 @@ void PDC_scr_close(void)
 
 		origin.X = origin.Y = 0;
 
-		if (!WriteConsoleOutput(hConOut, ciSaveBuffer, 
+		if (!WriteConsoleOutput(pdc_con_out, ci_save, 
 		    orig_scr.dwSize, origin, &rect))
 			return;
 	}
 
-	SetConsoleActiveScreenBuffer(hConOut);
-	SetConsoleMode(hConIn, dwConsoleMode);
+	SetConsoleActiveScreenBuffer(pdc_con_out);
+	SetConsoleMode(pdc_con_in, old_console_mode);
 
 	if (SP->visibility != 1)
 		curs_set(1);
@@ -320,14 +320,14 @@ int PDC_scr_open(int argc, char **argv)
 	if (!SP || !pdc_atrtab)
 		return ERR;
 
-	hConOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	hConIn = GetStdHandle(STD_INPUT_HANDLE);
+	pdc_con_out = GetStdHandle(STD_OUTPUT_HANDLE);
+	pdc_con_in = GetStdHandle(STD_INPUT_HANDLE);
 
-	isNT = !(GetVersion() & 0x80000000);
+	is_nt = !(GetVersion() & 0x80000000);
 
-	GetConsoleScreenBufferInfo(hConOut, &csbi);
-	GetConsoleScreenBufferInfo(hConOut, &orig_scr);
-	GetConsoleMode(hConIn, &dwConsoleMode);
+	GetConsoleScreenBufferInfo(pdc_con_out, &csbi);
+	GetConsoleScreenBufferInfo(pdc_con_out, &orig_scr);
+	GetConsoleMode(pdc_con_in, &old_console_mode);
 
 	SP->lines = ((str = getenv("LINES")) != NULL) ?
 		atoi(str) : PDC_get_rows();
@@ -362,10 +362,10 @@ int PDC_scr_open(int argc, char **argv)
 	{
 		/* Attempt to save the complete console buffer */
 
-		ciSaveBuffer = malloc(orig_scr.dwSize.X * 
+		ci_save = malloc(orig_scr.dwSize.X * 
 		    orig_scr.dwSize.Y * sizeof(CHAR_INFO));
 
-		if (!ciSaveBuffer)
+		if (!ci_save)
 		{
 		    PDC_LOG(("PDC_scr_open() - malloc failure (1)\n"));
 
@@ -381,24 +381,24 @@ int PDC_scr_open(int argc, char **argv)
 		rect.Bottom = orig_scr.dwSize.Y  - 1;
 		rect.Right = orig_scr.dwSize.X - 1;
 
-		if (!ReadConsoleOutput(hConOut, ciSaveBuffer, bufsize, 
+		if (!ReadConsoleOutput(pdc_con_out, ci_save, bufsize, 
 		    origin, &rect))
 		{
 		    /* We can't save the complete buffer, so try and 
 		       save just the displayed window */
 
-		    free(ciSaveBuffer);
-		    ciSaveBuffer = NULL;
+		    free(ci_save);
+		    ci_save = NULL;
 
 		    bufsize.X = orig_scr.srWindow.Right - 
 			orig_scr.srWindow.Left + 1;
 		    bufsize.Y = orig_scr.srWindow.Bottom - 
 			orig_scr.srWindow.Top + 1;
 
-		    ciSaveBuffer = malloc(bufsize.X * bufsize.Y *
+		    ci_save = malloc(bufsize.X * bufsize.Y *
 			sizeof(CHAR_INFO));
 
-		    if (!ciSaveBuffer)
+		    if (!ci_save)
 		    {
 			PDC_LOG(("PDC_scr_open() - malloc failure (2)\n"));
 
@@ -412,7 +412,7 @@ int PDC_scr_open(int argc, char **argv)
 		    rect.Bottom = orig_scr.srWindow.Bottom;
 		    rect.Right = orig_scr.srWindow.Right;
 
-		    if (!ReadConsoleOutput(hConOut, ciSaveBuffer, 
+		    if (!ReadConsoleOutput(pdc_con_out, ci_save, 
 			bufsize, origin, &rect))
 		    {
 #ifdef PDCDEBUG
@@ -424,8 +424,8 @@ int PDC_scr_open(int argc, char **argv)
 
 			PDC_LOG(("PDC_scr_open() - %s\n", LastError));
 #endif
-			free(ciSaveBuffer);
-			ciSaveBuffer = NULL;
+			free(ci_save);
+			ci_save = NULL;
 
 			return ERR;
 		    }
@@ -445,10 +445,10 @@ int PDC_scr_open(int argc, char **argv)
 	rect.Bottom = bufsize.Y - 1;
 	rect.Right = bufsize.X - 1;
 
-	SetConsoleScreenBufferSize(hConOut, bufsize);
-	SetConsoleWindowInfo(hConOut, TRUE, &rect);
-	SetConsoleScreenBufferSize(hConOut, bufsize);
-	SetConsoleActiveScreenBuffer(hConOut);
+	SetConsoleScreenBufferSize(pdc_con_out, bufsize);
+	SetConsoleWindowInfo(pdc_con_out, TRUE, &rect);
+	SetConsoleScreenBufferSize(pdc_con_out, bufsize);
+	SetConsoleActiveScreenBuffer(pdc_con_out);
 
 	PDC_reset_prog_mode();
 
@@ -460,10 +460,10 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->orgcbr = PDC_get_ctrl_break();
 
-	if (isNT)
+	if (is_nt)
 	{
-		console_info.Hwnd = FindConsoleHandle();
-		init_console_info();
+		console_info.Hwnd = _find_console_handle();
+		_init_console_info();
 	}
 
 	return OK;
@@ -473,12 +473,12 @@ int PDC_scr_open(int argc, char **argv)
     if a scoll bar shrinks the maximum possible value. The rectangle 
     must at least fit in a half-sized window. */
 
-static BOOL FitConsoleWindow(HANDLE hConOut, CONST SMALL_RECT *rect)
+static BOOL _fit_console_window(HANDLE con_out, CONST SMALL_RECT *rect)
 {
 	SMALL_RECT run;
 	SHORT mx, my;
 
-	if (SetConsoleWindowInfo(hConOut, TRUE, rect))
+	if (SetConsoleWindowInfo(con_out, TRUE, rect))
 		return TRUE;
 
 	run = *rect;
@@ -488,18 +488,18 @@ static BOOL FitConsoleWindow(HANDLE hConOut, CONST SMALL_RECT *rect)
 	mx = run.Right;
 	my = run.Bottom;
 
-	if (!SetConsoleWindowInfo(hConOut, TRUE, &run))
+	if (!SetConsoleWindowInfo(con_out, TRUE, &run))
 		return FALSE;
 
 	for (run.Right = rect->Right; run.Right >= mx; run.Right--)
-		if (SetConsoleWindowInfo(hConOut, TRUE, &run))
+		if (SetConsoleWindowInfo(con_out, TRUE, &run))
 			break;
 
 	if (run.Right < mx)
 		return FALSE;
 
 	for (run.Bottom = rect->Bottom; run.Bottom >= my; run.Bottom--)
-		if (SetConsoleWindowInfo(hConOut, TRUE, &run))
+		if (SetConsoleWindowInfo(con_out, TRUE, &run))
 			return TRUE;
 
 	return FALSE;
@@ -536,7 +536,7 @@ int PDC_resize_screen(int nlines, int ncols)
 	if (nlines < 2 || ncols < 2)
 		return ERR;
 
-	max = GetLargestConsoleWindowSize(hConOut);
+	max = GetLargestConsoleWindowSize(pdc_con_out);
 
 	rect.Left = rect.Top = 0;
 	rect.Right = ncols - 1;
@@ -552,11 +552,11 @@ int PDC_resize_screen(int nlines, int ncols)
 	size.X = rect.Right + 1;
 	size.Y = rect.Bottom + 1;
 
-	FitConsoleWindow(hConOut, &rect);
-	SetConsoleScreenBufferSize(hConOut, size);
-	FitConsoleWindow(hConOut, &rect);
-	SetConsoleScreenBufferSize(hConOut, size);
-	SetConsoleActiveScreenBuffer(hConOut);
+	_fit_console_window(pdc_con_out, &rect);
+	SetConsoleScreenBufferSize(pdc_con_out, size);
+	_fit_console_window(pdc_con_out, &rect);
+	SetConsoleScreenBufferSize(pdc_con_out, size);
+	SetConsoleActiveScreenBuffer(pdc_con_out);
 
 	return OK;
 }
@@ -565,14 +565,14 @@ void PDC_reset_prog_mode(void)
 {
 	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
 
-	SetConsoleMode(hConIn, ENABLE_MOUSE_INPUT);
+	SetConsoleMode(pdc_con_in, ENABLE_MOUSE_INPUT);
 }
 
 void PDC_reset_shell_mode(void)
 {
 	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 
-	SetConsoleMode(hConIn, dwConsoleMode);
+	SetConsoleMode(pdc_con_in, old_console_mode);
 }
 
 void PDC_restore_screen_mode(int i)
@@ -585,7 +585,7 @@ void PDC_save_screen_mode(int i)
 
 bool PDC_can_change_color(void)
 {
-	return isNT;
+	return is_nt;
 }
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
@@ -606,7 +606,7 @@ int PDC_init_color(short color, short red, short green, short blue)
 		    DIVROUND(green * 255, 1000),
 		    DIVROUND(blue * 255, 1000));
 
-	SetConsoleInfo();
+	_set_console_info();
 
 	return OK;
 }

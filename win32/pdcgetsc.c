@@ -17,7 +17,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.27 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.28 2006/10/09 14:08:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -48,7 +48,7 @@ int PDC_get_cursor_pos(int *row, int *col)
 
 	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
 
-	GetConsoleScreenBufferInfo(hConOut, &scr);
+	GetConsoleScreenBufferInfo(pdc_con_out, &scr);
 
 	*col = scr.dwCursorPosition.X;
 	*row = scr.dwCursorPosition.Y;
@@ -74,7 +74,7 @@ int PDC_get_cursor_mode(void)
     
 	PDC_LOG(("PDC_get_cursor_mode() - called\n"));
 
-	GetConsoleCursorInfo(hConOut, &ci);
+	GetConsoleCursorInfo(pdc_con_out, &ci);
 
 	return ci.dwSize;
 }
@@ -103,7 +103,7 @@ int PDC_get_rows(void)
 
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
-	GetConsoleScreenBufferInfo(hConOut, &scr);
+	GetConsoleScreenBufferInfo(pdc_con_out, &scr);
 
 	return scr.srWindow.Bottom - scr.srWindow.Top + 1;
 }
@@ -129,7 +129,7 @@ int PDC_get_buffer_rows(void)
 
 	PDC_LOG(("PDC_get_buffer_rows() - called\n"));
 
-	GetConsoleScreenBufferInfo(hConOut, &scr);
+	GetConsoleScreenBufferInfo(pdc_con_out, &scr);
 
 	return scr.dwSize.Y;
 }
@@ -161,7 +161,7 @@ int PDC_get_columns(void)
 
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
-	GetConsoleScreenBufferInfo(hConOut, &scr);
+	GetConsoleScreenBufferInfo(pdc_con_out, &scr);
 
 	return scr.srWindow.Right - scr.srWindow.Left + 1;
 }

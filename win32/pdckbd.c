@@ -17,7 +17,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.65 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.66 2006/10/09 14:08:46 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -58,10 +58,10 @@ RCSID("$Id: pdckbd.c,v 1.65 2006/10/08 20:54:30 wmcbrine Exp $");
 static INPUT_RECORD save_ip;
 unsigned long pdc_key_modifiers = 0L;
 
-static int keyCount = 0;
+static int key_count = 0;
 
-static void win32_getch(void);
-static int win32_kbhit(int);
+static void _win32_getch(void);
+static int _win32_kbhit(int);
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*  
@@ -310,17 +310,17 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_bios_key(void)
 {
-	return win32_kbhit(0);
+	return _win32_kbhit(0);
 }
 
-/* processKeyEvent returns -1 if the key in save_ip should be ignored 
+/* _process_key_event returns -1 if the key in save_ip should be ignored 
    for some reasons. Otherwise the keycode is returned which should be 
    returned by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
 
    The Unicode support has been disabled. See below for the reason.
    CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
-static int processKeyEvent(void)
+static int _process_key_event(void)
 {
 	CHAR ascii = save_ip.Event.KeyEvent.uChar.AsciiChar;
 #if 0
@@ -465,12 +465,12 @@ int PDC_get_bios_key(void)
 
 	while (1)
 	{
-	    win32_getch();
+	    _win32_getch();
 
 	    switch (save_ip.EventType)
 	    {
 	    case KEY_EVENT:
-		retval = processKeyEvent();
+		retval = _process_key_event();
 		if (retval == -1)	/* ignore key? */
 			continue;
 
@@ -799,7 +799,7 @@ int PDC_validchar(int c)
 	return c;
 }
 
-/* GetInterestingEvent returns 0 if *ip doesn't contain an event which
+/* _get_interesting_event returns 0 if *ip doesn't contain an event which
    should be passed back to the user. This function filters "useless"
    events.
 
@@ -829,7 +829,7 @@ int PDC_validchar(int c)
 	     a pressed mouse key are ignored.
 */
 
-static int GetInterestingEvent(INPUT_RECORD *ip)
+static int _get_interesting_event(INPUT_RECORD *ip)
 {
 	int numKeys = 0, vk;
 	static int save_press;
@@ -838,7 +838,7 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 #ifdef PDCDEBUG
 	char *ptr = "";
 
-	PDC_LOG(("GetInterestingEvent() - called\n"));
+	PDC_LOG(("_get_interesting_event() - called\n"));
 
 # define PTR(x) ptr = x
 #else
@@ -1019,35 +1019,35 @@ static int GetInterestingEvent(INPUT_RECORD *ip)
 
 #undef PTR
 
-	PDC_LOG(("GetInterestingEvent() - returning: numKeys %d "
+	PDC_LOG(("_get_interesting_event() - returning: numKeys %d "
 		"type %d: %s\n", numKeys, ip->EventType, ptr));
 
 	return numKeys;
 }
 
-static int win32_kbhit(int timeout)
+static int _win32_kbhit(int timeout)
 {
 	INPUT_RECORD ip;
 	DWORD read;
 	int rc = FALSE;
 
-	PDC_LOG(("win32_kbhit() - called: timeout %d keyCount %d\n",
-		timeout, keyCount));
+	PDC_LOG(("_win32_kbhit() - called: timeout %d key_count %d\n",
+		timeout, key_count));
 
-	if (keyCount > 0)
+	if (key_count > 0)
 		return TRUE;
 
-	if (WaitForSingleObject(hConIn, timeout) != WAIT_OBJECT_0)
+	if (WaitForSingleObject(pdc_con_in, timeout) != WAIT_OBJECT_0)
 		return FALSE;
 
-	PeekConsoleInput(hConIn, &ip, 1, &read);
+	PeekConsoleInput(pdc_con_in, &ip, 1, &read);
 	if (read == 0)
 		return FALSE;
 
-	ReadConsoleInput(hConIn, &ip, 1, &read);
+	ReadConsoleInput(pdc_con_in, &ip, 1, &read);
 
-	keyCount = GetInterestingEvent(&ip);
-	if (keyCount)
+	key_count = _get_interesting_event(&ip);
+	if (key_count)
 	{
 		/* To get here a recognised event has occurred; save it 
 		   and return TRUE */
@@ -1059,12 +1059,12 @@ static int win32_kbhit(int timeout)
 	return rc;
 }
 
-static void win32_getch(void)
+static void _win32_getch(void)
 {
-	while (win32_kbhit(INFINITE) == FALSE)
+	while (_win32_kbhit(INFINITE) == FALSE)
 	;
 
-	keyCount--;
+	key_count--;
 }
 
 /*man-start**************************************************************
@@ -1086,5 +1086,5 @@ void PDC_flushinp(void)
 {
 	PDC_LOG(("PDC_flushinp() - called\n"));
 
-	FlushConsoleInputBuffer(hConIn);
+	FlushConsoleInputBuffer(pdc_con_in);
 }

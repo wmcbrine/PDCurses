@@ -17,7 +17,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.63 2006/10/08 23:46:54 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.64 2006/10/09 04:36:10 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -105,8 +105,8 @@ static void SetConsoleInfo(void)
 	DWORD   dwConsoleOwnerPid;
 	HANDLE  hProcess;
 	HANDLE	hSection, hDupSection;
-	PVOID   ptrView = 0;
-	
+	PVOID   ptrView;
+
 	/* Each-time initialization for console_info */
 
 	GetConsoleCursorInfo(hConOut, &cci);

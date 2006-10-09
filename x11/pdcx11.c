@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.85 2006/09/11 19:45:17 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.86 2006/10/09 14:35:58 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -42,7 +42,7 @@ int xc_exit_sock;
 
 fd_set xc_readfds;
 
-static void dummy_function(void)
+static void _dummy_function(void)
 {
 }
 
@@ -52,7 +52,7 @@ void XC_get_line_lock(int row)
 	   Georg Fuchs, georg.fuchs@rz.uni-regensburg.de */
 
 	while (*(Xcurscr + XCURSCR_FLAG_OFF + row))
-		dummy_function();
+		_dummy_function();
 
 	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 1;
 }
@@ -175,11 +175,11 @@ int XCursesInstructAndWait(int flag)
 	return OK;
 }
 
-static int XCursesSetupCurses(void)
+static int _setup_curses(void)
 {
 	int wait_value;
 
-	XC_LOG(("XCursesSetupCurses called\n"));
+	XC_LOG(("_setup_curses called\n"));
 
 	close(xc_display_sockets[1]);
 	close(xc_key_sockets[1]);
@@ -285,7 +285,7 @@ int XCursesInitscr(int argc, char *argv[])
 		shmkey_Xcurscr = getpid();
 #ifdef XISPARENT
 		XCursesProcess = 0;
-		rc = XCursesSetupCurses();
+		rc = _setup_curses();
 #else
 		XCursesProcess = 1;
 		xc_otherpid = getppid();
@@ -301,16 +301,16 @@ int XCursesInitscr(int argc, char *argv[])
 		rc = XCursesSetupX(argc, argv);
 #else
 		XCursesProcess = 0;
-		rc = XCursesSetupCurses();
+		rc = _setup_curses();
 #endif
 	}
 
 	return rc;
 }
 
-static void XCursesCleanupCursesProcess(int rc)
+static void _cleanup_curses_process(int rc)
 {
-	PDC_LOG(("%s:XCursesCleanupCursesProcess() - called: %d\n",
+	PDC_LOG(("%s:_cleanup_curses_process() - called: %d\n",
 		XCLOGMSG, rc));
 
 	shutdown(xc_display_sock, 2);
@@ -332,7 +332,7 @@ void XCursesExitCursesProcess(int rc, char *msg)
 		XCLOGMSG, rc, msg));
 
 	endwin();
-	XCursesCleanupCursesProcess(rc);
+	_cleanup_curses_process(rc);
 }
 
 void XCursesExit(void)
@@ -344,7 +344,7 @@ void XCursesExit(void)
 	if (FALSE == called)
 	{
 		XCursesInstruct(CURSES_EXIT);
-		XCursesCleanupCursesProcess(0);
+		_cleanup_curses_process(0);
 
 		called = TRUE;
 	}

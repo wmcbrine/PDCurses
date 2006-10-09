@@ -15,12 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifndef EMXVIDEO
-# define INCL_VIO
-# define INCL_KBD
-# include <os2.h>
-#endif
-#include <curspriv.h>
+#include "pdcos2.h"
 
 #if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
 # include <signal.h>
@@ -37,7 +32,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.39 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.40 2006/10/09 00:11:14 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*

@@ -15,41 +15,19 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include "pdcos2.h"
+/* $Id: pdcos2.h,v 1.1 2006/10/09 00:11:14 wmcbrine Exp $ */
 
-#ifdef __EMX__
-# include <stdlib.h>
+#ifndef EMXVIDEO
+# define INCL_DOS
+# define INCL_DOSMISC
+# define INCL_WIN
+# define INCL_VIO
+# define INCL_KBD
+# include <os2.h>
 #endif
+#include <curspriv.h>
 
-#if defined(OS2) && !defined(__EMX__)
-APIRET APIENTRY DosSleep(ULONG ulTime);
-#endif
+extern int pdc_font;
 
-RCSID("$Id: pdcutil.c,v 1.8 2006/10/09 00:11:14 wmcbrine Exp $");
-
-void PDC_beep(void)
-{
-	PDC_LOG(("PDC_beep() - called\n"));
-
-#ifdef EMXVIDEO
-	putchar('\007');
-#else
-	DosBeep(1380, 100);
-#endif
-}
-
-void PDC_napms(int ms)
-{
-	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
-
-#ifdef __EMX__
-	_sleep2(ms);
-#else
-	DosSleep(ms);
-#endif
-}
-
-const char *PDC_sysname(void)
-{
-	return "OS/2";
-}
+extern void PDC_get_keyboard_info(void);
+extern void PDC_set_keyboard_default(void);

@@ -15,18 +15,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifndef EMXVIDEO
-# define INCL_DOS
-# define INCL_WIN
-# define INCL_VIO
-# define INCL_KBD
-# include <os2.h>
-#endif
-#include <curspriv.h>
+#include "pdcos2.h"
+
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.23 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.24 2006/10/09 00:11:14 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

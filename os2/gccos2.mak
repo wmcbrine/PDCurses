@@ -28,6 +28,8 @@ include $(PDCURSES_HOME)/libobjs.mif
 
 osdir		= $(PDCURSES_HOME)/os2
 
+PDCURSES_OS2_H	= $(osdir)/pdcos2.h
+
 CC		= gcc
 
 ifeq ($(EMXVIDEO),Y)
@@ -121,11 +123,9 @@ panel.lib: panel.a
 
 $(LIBOBJS) $(DLLOBJS) $(PDCOBJS) $(PDCDLOS) $(PANOBJS) $(DEMOOBJS) : \
 $(PDCURSES_HEADERS)
-
+$(PDCOBJS) : $(PDCURSES_OS2_H)
 $(PANOBJS) ptest.o: $(PANEL_HEADER)
-
 $(DEMOS) : $(LIBCURSES)
-
 terminfo.o terminfo.dlo: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c

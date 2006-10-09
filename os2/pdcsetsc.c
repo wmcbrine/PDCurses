@@ -15,15 +15,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifndef EMXVIDEO
-# define INCL_VIO
-# define INCL_KBD
-# include <os2.h>
-#endif
-#include <curspriv.h>
+#include "pdcos2.h"
+
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.32 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.33 2006/10/09 00:11:14 wmcbrine Exp $");
 
 extern int pdc_font;
 

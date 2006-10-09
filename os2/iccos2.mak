@@ -25,6 +25,8 @@ O = obj
 
 osdir		= $(PDCURSES_HOME)\os2
 
+PDCURSES_OS2_H	= $(osdir)\pdcos2.h
+
 CC		= icc
 
 !ifdef DEBUG
@@ -180,29 +182,29 @@ util.obj: $(srcdir)\util.c $(PDCURSES_HEADERS)
 window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\window.c
 
-
-pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS)
-	$(BUILD) $(osdir)\pdcclip.c
-
 pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\pdcdebug.c
 
-pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS)
+
+pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
+	$(BUILD) $(osdir)\pdcclip.c
+
+pdcdisp.obj: $(osdir)\pdcdisp.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdcdisp.c
 
-pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS)
+pdcgetsc.obj: $(osdir)\pdcgetsc.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdcgetsc.c
 
-pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS)
+pdckbd.obj: $(osdir)\pdckbd.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdckbd.c
 
-pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS)
+pdcscrn.obj: $(osdir)\pdcscrn.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdcscrn.c
 
-pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS)
+pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdcsetsc.c
 
-pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS)
+pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdcutil.c
 
 #------------------------------------------------------------------------

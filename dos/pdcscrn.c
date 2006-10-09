@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.60 2006/10/09 04:51:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.61 2006/10/09 14:18:12 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -48,9 +48,9 @@ static int saved_font[3];
    the routines below merged into Bjorn Larsson's PDCurses 1.3...
 	-- frotz@dri.com	900730 */
 
-/* get_font() - Get the current font size */
+/* _get_font() - Get the current font size */
 
-static int get_font(void)
+static int _get_font(void)
 {
 	int retval;
 
@@ -86,13 +86,13 @@ static int get_font(void)
 	return retval;
 }
 
-/* set_font() - Sets the current font size, if the adapter allows such a 
+/* _set_font() - Sets the current font size, if the adapter allows such a 
    change. It is an error to attempt to change the font size on a 
    "bogus" adapter. The reason for this is that we have a known video 
    adapter identity problem. e.g. Two adapters report the same identifying 
    characteristics. */
 
-static void set_font(int size)
+static void _set_font(int size)
 {
 	PDCREGS regs;
 
@@ -158,13 +158,13 @@ static void set_font(int size)
 
 	curs_set(SP->visibility);
 
-	pdc_font = get_font();
+	pdc_font = _get_font();
 }
 
-/* set_80x25() - force a known screen state: 80x25 text mode. Forces the 
+/* _set_80x25() - force a known screen state: 80x25 text mode. Forces the 
    appropriate 80x25 alpha mode given the display adapter. */
 
-static void set_80x25(void)
+static void _set_80x25(void)
 {
 	PDCREGS regs;
 
@@ -188,9 +188,9 @@ static void set_80x25(void)
 	}
 }
 
-/* get_scrn_mode() - Return the current BIOS video mode */
+/* _get_scrn_mode() - Return the current BIOS video mode */
 
-static int get_scrn_mode(void)
+static int _get_scrn_mode(void)
 {
 	PDCREGS regs;
 
@@ -200,35 +200,35 @@ static int get_scrn_mode(void)
 	return (int)regs.h.al;
 }
 
-/* set_scrn_mode() - Sets the BIOS Video Mode Number only if it is 
+/* _set_scrn_mode() - Sets the BIOS Video Mode Number only if it is 
    different from the current video mode. */
 
-static void set_scrn_mode(int new_mode)
+static void _set_scrn_mode(int new_mode)
 {
 	PDCREGS regs;
 
-	if (get_scrn_mode() != new_mode)
+	if (_get_scrn_mode() != new_mode)
 	{
 		regs.h.ah = 0;
 		regs.h.al = (unsigned char) new_mode;
 		PDCINT(0x10, regs);
 	}
 
-	pdc_font = get_font();
+	pdc_font = _get_font();
 	pdc_scrnmode = new_mode;
 	LINES = PDC_get_rows();
 	COLS = PDC_get_columns();
 }
 
-/* sanity_check() - A video adapter identification sanity check. This 
+/* _sanity_check() - A video adapter identification sanity check. This 
    routine will force sane values for various control flags. */
 
-static int sanity_check(int adapter)
+static int _sanity_check(int adapter)
 {
-	int fontsize = get_font();
+	int fontsize = _get_font();
 	int rows = PDC_get_rows();
 
-	PDC_LOG(("PDC_sanity_check() - called: Adapter %d\n", adapter));
+	PDC_LOG(("_sanity_check() - called: Adapter %d\n", adapter));
 
 	switch (adapter)
 	{
@@ -283,9 +283,9 @@ static int sanity_check(int adapter)
 	return adapter;
 }
 
-/* query_adapter_type() - Determine PC video adapter type. */
+/* _query_adapter_type() - Determine PC video adapter type. */
 
-static int query_adapter_type(void)
+static int _query_adapter_type(void)
 {
 	PDCREGS regs;
 	int retval = _NONE;
@@ -297,7 +297,7 @@ static int query_adapter_type(void)
 #endif
 	short video_base = getdosmemword(0x463);
 
-	PDC_LOG(("PDC_query_adapter_type() - called\n"));
+	PDC_LOG(("_query_adapter_type() - called\n"));
 
 	/* attempt to call VGA Identify Adapter Function */
 
@@ -454,7 +454,7 @@ static int query_adapter_type(void)
 	if (!pdc_adapter)
 		pdc_adapter = retval;
 
-	return sanity_check(retval);
+	return _sanity_check(retval);
 }
 
 /*man-start**************************************************************
@@ -569,9 +569,9 @@ int PDC_scr_open(int argc, char **argv)
 	pdc_video_seg	= 0xb000;	/* Base screen segment addr   */
 	pdc_video_ofs	= 0x0;		/* Base screen segment ofs    */
 
-	pdc_adapter	= query_adapter_type();
-	pdc_scrnmode	= get_scrn_mode();
-	pdc_font	= get_font();
+	pdc_adapter	= _query_adapter_type();
+	pdc_scrnmode	= _get_scrn_mode();
+	pdc_font	= _get_font();
 
 	SP->lines	= PDC_get_rows();
 	SP->cols	= PDC_get_columns();
@@ -662,19 +662,19 @@ int PDC_resize_screen(int nlines, int ncols)
 	{
 	case _EGACOLOR:
 		if (nlines >= 43)
-			set_font(_FONT8);
+			_set_font(_FONT8);
 		else
-			set_80x25();
+			_set_80x25();
 		break;
 
 	case _VGACOLOR:
 		if (nlines > 28)
-			set_font(_FONT8);
+			_set_font(_FONT8);
 		else
 			if (nlines > 25)
-				set_font(_FONT14);
+				_set_font(_FONT14);
 			else
-				set_80x25();
+				_set_80x25();
 	}
 
 	return OK;
@@ -694,11 +694,11 @@ void PDC_restore_screen_mode(int i)
 {
 	if (i >= 0 && i <= 2)
 	{
-		pdc_font = get_font();
-		set_font(saved_font[i]);
+		pdc_font = _get_font();
+		_set_font(saved_font[i]);
 
-		if (get_scrn_mode() != saved_scrnmode[i])
-			set_scrn_mode(saved_scrnmode[i]);
+		if (_get_scrn_mode() != saved_scrnmode[i])
+			_set_scrn_mode(saved_scrnmode[i]);
 	}
 }
 
@@ -711,10 +711,10 @@ void PDC_save_screen_mode(int i)
 	}
 }
 
-/* egapal() - Find the EGA palette value (0-63) for the color (0-15).
+/* _egapal() - Find the EGA palette value (0-63) for the color (0-15).
    On VGA, this is an index into the DAC. */
 
-static int egapal(int color)
+static int _egapal(int color)
 {
 	PDCREGS regs;
 
@@ -742,7 +742,7 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 	regs.h.ah = 0x10;
 	regs.h.al = 0x15;
-	regs.h.bl = egapal(color);
+	regs.h.bl = _egapal(color);
 
 	PDCINT(0x10, regs);
 
@@ -769,7 +769,7 @@ int PDC_init_color(short color, short red, short green, short blue)
 
 	regs.h.ah = 0x10;
 	regs.h.al = 0x10;
-	regs.h.bl = egapal(color);
+	regs.h.bl = _egapal(color);
 	regs.h.bh = 0;
 
 	PDCINT(0x10, regs);

@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.53 2006/10/09 00:12:41 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.54 2006/10/09 14:18:12 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -36,7 +36,10 @@ static VIOMODEINFO scrnmode;	/* default screen mode	*/
 static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
 
-static int get_font(void)
+extern void PDC_get_keyboard_info(void);
+extern void PDC_set_keyboard_default(void);
+
+static int _get_font(void)
 {
 	VIOMODEINFO modeInfo = {0};
 
@@ -46,7 +49,7 @@ static int get_font(void)
 	return (modeInfo.vres / modeInfo.row);
 }
 
-static void set_font(int size)
+static void _set_font(int size)
 {
 	VIOMODEINFO modeInfo = {0};
 
@@ -64,7 +67,7 @@ static void set_font(int size)
 
 	curs_set(SP->visibility);
 
-	pdc_font = get_font();
+	pdc_font = _get_font();
 }
 
 #endif
@@ -179,7 +182,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_set_keyboard_binary(TRUE);
 
-	pdc_font = get_font();
+	pdc_font = _get_font();
 #endif
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
@@ -285,7 +288,7 @@ void PDC_reset_shell_mode(void)
 
 #ifndef EMXVIDEO
 
-static bool screen_mode_equals(VIOMODEINFO *oldmode)
+static bool _screen_mode_equals(VIOMODEINFO *oldmode)
 {
 	VIOMODEINFO current = {0};
 
@@ -307,13 +310,13 @@ void PDC_restore_screen_mode(int i)
 #ifndef EMXVIDEO
 	if (i >= 0 && i <= 2)
 	{
-		pdc_font = get_font();
-		set_font(saved_font[i]);
+		pdc_font = _get_font();
+		_set_font(saved_font[i]);
 
-		if (!screen_mode_equals(&saved_scrnmode[i]))
+		if (!_screen_mode_equals(&saved_scrnmode[i]))
 			if (VioSetMode(&saved_scrnmode[i], 0) != 0)
 			{
-				pdc_font = get_font();
+				pdc_font = _get_font();
 				scrnmode = saved_scrnmode[i];
 				LINES = PDC_get_rows();
 				COLS = PDC_get_columns();

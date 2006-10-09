@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.59 2006/10/01 18:49:10 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.60 2006/10/09 04:51:40 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -710,8 +710,6 @@ void PDC_save_screen_mode(int i)
 		saved_scrnmode[i] = pdc_scrnmode;
 	}
 }
-
-#define DIVROUND(num, divisor) ((num) + ((divisor) >> 1)) / (divisor);
 
 /* egapal() - Find the EGA palette value (0-63) for the color (0-15).
    On VGA, this is an index into the DAC. */

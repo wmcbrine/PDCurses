@@ -17,7 +17,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.64 2006/10/09 04:36:10 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.65 2006/10/09 04:51:41 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -592,9 +592,9 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 {
 	DWORD col = console_info.ColorTable[color];
 
-	*red = (double)GetRValue(col) * 1000 / 255 + 0.5;
-	*green = (double)GetGValue(col) * 1000 / 255 + 0.5;
-	*blue = (double)GetBValue(col) * 1000 / 255 + 0.5;
+	*red = DIVROUND(GetRValue(col) * 1000, 255);
+	*green = DIVROUND(GetGValue(col) * 1000, 255);
+	*blue = DIVROUND(GetBValue(col) * 1000, 255);
 
 	return OK;
 }
@@ -602,9 +602,9 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 int PDC_init_color(short color, short red, short green, short blue)
 {
 	console_info.ColorTable[color] =
-		RGB((double)red * 255 / 1000 + 0.5,
-		    (double)green * 255 / 1000 + 0.5,
-		    (double)blue * 255 / 1000 + 0.5);
+		RGB(DIVROUND(red * 255, 1000),
+		    DIVROUND(green * 255, 1000),
+		    DIVROUND(blue * 255, 1000));
 
 	SetConsoleInfo();
 

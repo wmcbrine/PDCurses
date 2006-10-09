@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.123 2006/10/08 20:54:30 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.124 2006/10/09 04:51:40 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -116,5 +116,7 @@ void PDC_debug(const char *, ...);
 #ifndef min
 # define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
+
+#define DIVROUND(num, divisor) ((num) + ((divisor) >> 1)) / (divisor)
 
 #endif /* __CURSES_INTERNALS__*/

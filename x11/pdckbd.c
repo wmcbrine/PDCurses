@@ -17,18 +17,36 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.40 2006/09/11 19:45:17 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.41 2006/10/09 14:30:47 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
 #define TRAPPED_BUTTON_STATUS(x)  (pdc_mouse_status.button[(x) - 1])
 
-static bool PDC_kbhit(void)
+/*man-start**************************************************************
+
+  PDC_check_bios_key()	- Check BIOS key data area for input
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	This routine will check the BIOS for any indication that
+	keystrokes are pending.
+
+  PDCurses Return Value:
+	Returns 1 if a keyboard character is available, 0 otherwise.
+
+  Portability:
+	PDCurses  bool PDC_check_bios_key(void);
+
+**man-end****************************************************************/
+
+bool PDC_check_bios_key(void)
 {
 	struct timeval socket_timeout = {0};
 	int s;
 
-	XC_LOG(("PDC_kbhit() - called\n"));
+	XC_LOG(("PDC_check_bios_key() - called\n"));
 
 	/* Is something ready to be read on the socket ? Must be a key. */
 
@@ -37,10 +55,10 @@ static bool PDC_kbhit(void)
 
 	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
 	    NULL, &socket_timeout)) < 0)
-		XCursesExitCursesProcess(3,
-			"child - exiting from PDC_kbhit select failed");
+		XCursesExitCursesProcess(3, "child - exiting from "
+			"PDC_check_bios_key select failed");
 
-	PDC_LOG(("%s:PDC_kbhit() - returning %s\n", XCLOGMSG,
+	PDC_LOG(("%s:PDC_check_bios_key() - returning %s\n", XCLOGMSG,
 		(s == 0) ? "FALSE" : "TRUE"));
 
 	if (s == 0)
@@ -132,31 +150,6 @@ void PDC_set_keyboard_binary(bool on)
 {
         PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 }
-
-/*man-start**************************************************************
-
-  PDC_check_bios_key()	- Check BIOS key data area for input
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine will check the BIOS for any indication that
-	keystrokes are pending.
-
-  PDCurses Return Value:
-	Returns 1 if a keyboard character is available, 0 otherwise.
-
-  Portability:
-	PDCurses  bool PDC_check_bios_key(void);
-
-**man-end****************************************************************/
-
-bool PDC_check_bios_key(void)
-{
-	PDC_LOG(("PDC_check_bios_key() - called\n"));
-
-	return PDC_kbhit();
-}         
 
 /*man-start**************************************************************
 
@@ -268,6 +261,6 @@ void PDC_flushinp(void)
 {
 	PDC_LOG(("PDC_flushinp() - called\n"));
 
-	while (PDC_kbhit())
+	while (PDC_check_bios_key())
 		PDC_get_bios_key();
 }

@@ -75,7 +75,7 @@ $(ZIPFILE):
 	curspriv.h panel.h term.h maintain.er pdcurses/README \
 	pdcurses/*.c demos/README demos/*.c demos/*.h panel/README \
 	panel/*.c dos/README dos/*.c dos/*.h dos/*.mak dos/*.lrf \
-	os2/README os2/*.c os2/*.mak os2/*.lrf os2/*.def \
+	os2/README os2/*.c os2/*.h os2/*.mak os2/*.lrf os2/*.def \
 	x11/README x11/*.c x11/*.xbm x11/*.h win32/README win32/*.c \
 	win32/*.h win32/*.mak win32/*.def win32/*.ico win32/*.rc \
 	doc/*.man tools/manext.c x11/Makefile.* tools/Makefile.in
@@ -96,8 +96,8 @@ zip: $(ZIPFILE)
 	$(PDC_DIR)/demos/*.h $(PDC_DIR)/doc/*.man \
 	$(PDC_DIR)/panel/README $(PDC_DIR)/panel/*.c \
 	$(PDC_DIR)/dos/README $(PDC_DIR)/dos/*.c $(PDC_DIR)/dos/*.h \
-	$(PDC_DIR)/dos/*.mak $(PDC_DIR)/dos/*.lrf \
-	$(PDC_DIR)/os2/README $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.mak \
+	$(PDC_DIR)/dos/*.mak $(PDC_DIR)/dos/*.lrf $(PDC_DIR)/os2/README \
+	$(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.h $(PDC_DIR)/os2/*.mak \
 	$(PDC_DIR)/os2/*.lrf $(PDC_DIR)/os2/*.def $(PDC_DIR)/x11/README \
 	$(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.h \
 	$(PDC_DIR)/x11/Makefile.* $(PDC_DIR)/win32/README \

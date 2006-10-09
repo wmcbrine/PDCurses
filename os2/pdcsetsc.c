@@ -19,9 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.33 2006/10/09 00:11:14 wmcbrine Exp $");
-
-extern int pdc_font;
+RCSID("$Id: pdcsetsc.c,v 1.34 2006/10/09 00:12:41 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {

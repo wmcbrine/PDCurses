@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.124 2006/10/09 04:51:40 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.125 2006/10/11 06:21:20 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -95,8 +95,6 @@ void PDC_debug(const char *, ...);
 # define PDC_LOG(x)
 # define RCSID(x)
 #endif
-
-#define PDC_COLORS		8
 
 /* Internal macros for attributes */
 #ifdef CHTYPE_LONG

@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.63 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.64 2006/10/11 06:21:21 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -92,7 +92,7 @@ RCSID("$Id: color.c,v 1.63 2006/10/08 20:54:30 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int COLORS = PDC_COLORS;
+int COLORS = 8;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
 static bool colorstarted = FALSE;

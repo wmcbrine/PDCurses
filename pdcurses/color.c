@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.64 2006/10/11 06:21:21 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.65 2006/10/11 07:29:10 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -92,18 +92,18 @@ RCSID("$Id: color.c,v 1.64 2006/10/11 06:21:21 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int COLORS = 8;
+int COLORS = 16;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
-static bool colorstarted = FALSE;
+static bool color_started = FALSE;
 
 /* COLOR_PAIR to attribute encoding table. */
 
 unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
-/* colorset[] tracks whether a pair has been set via init_pair() */
+/* pair_set[] tracks whether a pair has been set via init_pair() */
 
-static unsigned char colorset[PDC_COLOR_PAIRS];
+static bool pair_set[PDC_COLOR_PAIRS];
 
 int start_color(void)
 {
@@ -118,14 +118,14 @@ int start_color(void)
 		PDC_init_atrtab();
 	}
 
-	memset(colorset, 0, PDC_COLOR_PAIRS);
+	memset(pair_set, 0, PDC_COLOR_PAIRS);
 
-	colorstarted = TRUE;
+	color_started = TRUE;
 
 	return OK;
 }
 
-static void _init_pair_core(short pairnum, short fg, short bg)
+static void _init_pair_core(short pair, short fg, short bg)
 {
 	unsigned char att, temp_bg;
 	chtype i;
@@ -148,35 +148,35 @@ static void _init_pair_core(short pairnum, short fg, short bg)
 		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
 			att |= 128;
 
-		pdc_atrtab[(pairnum * PDC_OFFSET) + i] = att;
+		pdc_atrtab[(pair * PDC_OFFSET) + i] = att;
 	}
 }
 
-int init_pair(short colorpair, short foreground, short background)
+int init_pair(short pair, short fg, short bg)
 {
-	PDC_LOG(("init_pair() - called: colorpair %d fore %d back %d\n",
-		colorpair, foreground, background));
+	PDC_LOG(("init_pair() - called: pair %d fg %d bg %d\n", pair, fg, bg));
 
-	if (!colorstarted || colorpair >= COLOR_PAIRS || colorpair < 1)
+	if (!color_started || pair < 1 || pair >= COLOR_PAIRS ||
+	    fg < 0 || fg >= COLORS || bg < 0 || bg >= COLORS)
 		return ERR;
 
 	/* To allow the PDC_PRESERVE_SCREEN option to work, we only 
 	   reset curscr if this call to init_pair() alters a color pair 
 	   created by the user. */
 
-	if (colorset[colorpair])
+	if (pair_set[pair])
 	{
-	    short oldforeground, oldbackground;
+		short oldfg, oldbg;
 
-	    pair_content(colorpair, &oldforeground, &oldbackground);
+		pair_content(pair, &oldfg, &oldbg);
 
-	    if (oldforeground != foreground || oldbackground != background)
-		curscr->_clear = TRUE;
+		if (oldfg != fg || oldbg != bg)
+			curscr->_clear = TRUE;
 	}
 
-	_init_pair_core(colorpair, foreground, background);
+	_init_pair_core(pair, fg, bg);
 
-	colorset[colorpair] = TRUE;
+	pair_set[pair] = TRUE;
 
 	return OK;
 }
@@ -192,7 +192,7 @@ int init_color(short color, short red, short green, short blue)
 {
 	PDC_LOG(("init_color() - called\n"));
 
-	if (color >= (COLORS * 2) || color < 0 || !PDC_can_change_color() ||
+	if (color < 0 || color >= COLORS || !PDC_can_change_color() ||
 	    red < 0 || red > 1000 || green < 0 || green > 1000 ||
 	    blue < 0 || blue > 1000)
 		return ERR;
@@ -204,7 +204,7 @@ int color_content(short color, short *red, short *green, short *blue)
 {
 	PDC_LOG(("color_content() - called\n"));
 
-	if (color >= (COLORS * 2) || color < 0 || !red || !green || !blue)
+	if (color < 0 || color >= COLORS || !red || !green || !blue)
 		return ERR;
 
 	if (PDC_can_change_color())
@@ -214,7 +214,7 @@ int color_content(short color, short *red, short *green, short *blue)
 		/* Simulated values for platforms that don't support 
 		   palette changing */
 
-		short maxval = (color >= COLORS) ? 1000 : 680;
+		short maxval = (color & 8) ? 1000 : 680;
 
 		*red = (color & COLOR_RED) ? maxval : 0;
 		*green = (color & COLOR_GREEN) ? maxval : 0;
@@ -231,23 +231,22 @@ bool can_change_color(void)
 	return PDC_can_change_color();
 }
 
-int pair_content(short colorpair, short *foreground, short *background)
+int pair_content(short pair, short *fg, short *bg)
 {
 	PDC_LOG(("pair_content() - called\n"));
 
-	if ((colorpair >= COLOR_PAIRS || colorpair < 1) ||
-	    (!foreground || !background))
+	if (pair < 1 || pair >= COLOR_PAIRS || !fg || !bg)
 		return ERR;
 
-	*foreground = (short)(pdc_atrtab[colorpair * PDC_OFFSET] & 0x0F);
-	*background = (short)((pdc_atrtab[colorpair * PDC_OFFSET] & 0xF0) >> 4);
+	*fg = (short)(pdc_atrtab[pair * PDC_OFFSET] & 0x0F);
+	*bg = (short)((pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4);
 
 	return OK;
 }
 
 int PDC_set_line_color(short color)
 {
-	if (color >= COLORS || color < 0)
+	if (color < 0 || color >= COLORS)
 		return ERR;
 
 	SP->line_color = color;

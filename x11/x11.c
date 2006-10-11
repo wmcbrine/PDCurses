@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.23 2006/09/27 07:21:27 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.24 2006/10/11 07:29:10 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -756,8 +756,8 @@ static int NewPacket(chtype attr, bool rev, int len, int col, int row,
 
 	/* Specify the color table offsets */
 
-	fore += (attr & A_BOLD) ? 8 : 0;
-	back += (attr & A_BLINK) ? 8 : 0;
+	fore |= (attr & A_BOLD) ? 8 : 0;
+	back |= (attr & A_BLINK) ? 8 : 0;
 
 	/* Reverse flag = highlighted selection XOR A_REVERSE set */
 

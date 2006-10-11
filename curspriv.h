@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.125 2006/10/11 06:21:20 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.126 2006/10/11 08:07:58 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -98,7 +98,7 @@ void PDC_debug(const char *, ...);
 
 /* Internal macros for attributes */
 #ifdef CHTYPE_LONG
-# define PDC_COLOR_PAIRS	64
+# define PDC_COLOR_PAIRS	256
 # define PDC_OFFSET		32
 #else
 # define PDC_COLOR_PAIRS	32

@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.67 2006/10/12 11:05:43 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.68 2006/10/12 18:14:46 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -1076,7 +1076,12 @@ void colorTest(WINDOW *win)
 			short red, green, blue;
 		} orgcolors[16];
 
-		for (i = 0; i < COLORS; i++)
+		int MAXCOL = (COLORS >= 16) ? 16 : 8;
+
+		if (MAXCOL < 8)
+			return;
+
+		for (i = 0; i < MAXCOL; i++)
 			color_content(i, &(orgcolors[i].red),
 				&(orgcolors[i].green),
 				&(orgcolors[i].blue));
@@ -1091,14 +1096,14 @@ void colorTest(WINDOW *win)
 		{
 			init_color(colors[i], i * 125, 0, i * 125);
 
-			if (COLORS >= 16)
+			if (MAXCOL == 16)
 				init_color(colors[i] + 8, 0, i * 125, 0);
 		}
 
 		mvaddstr(tmarg + 19, 3, "Press any key to continue");
 		getch();
 
-		for (i = 0; i < COLORS; i++)
+		for (i = 0; i < MAXCOL; i++)
 			init_color(i, orgcolors[i].red,
 				orgcolors[i].green,
 				orgcolors[i].blue);

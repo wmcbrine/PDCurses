@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.66 2006/10/12 02:24:19 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.67 2006/10/12 02:26:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -114,7 +114,7 @@ int start_color(void)
 
 	pdc_color_started = TRUE;
 
-	PDC_set_blink(FALSE);	/* Also sets COLORS, to 8, 16 or 256 */
+	PDC_set_blink(FALSE);	/* Also sets COLORS, to 8 or 16 */
 
 	if (SP->orig_attr && !getenv("PDC_ORIGINAL_COLORS"))
 	{

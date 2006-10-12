@@ -24,7 +24,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.61 2006/10/09 14:18:12 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.62 2006/10/12 02:26:01 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -769,8 +769,8 @@ int PDC_init_color(short color, short red, short green, short blue)
 
 	regs.h.ah = 0x10;
 	regs.h.al = 0x10;
-	regs.h.bl = _egapal(color);
 	regs.h.bh = 0;
+	regs.h.bl = _egapal(color);
 
 	PDCINT(0x10, regs);
 

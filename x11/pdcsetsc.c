@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.24 2006/08/21 04:29:46 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.25 2006/10/12 02:24:19 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -68,4 +68,12 @@ void PDC_set_title(const char *title)
 			return;
 
 	XCursesExitCursesProcess(1, "exiting from PDC_set_title");
+}
+
+int PDC_set_blink(bool blinkon)
+{
+	if (pdc_color_started)
+		COLORS = 16;
+
+	return blinkon ? ERR : OK;
 }

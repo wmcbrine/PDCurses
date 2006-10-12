@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.65 2006/10/11 07:29:10 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.66 2006/10/12 02:24:19 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -92,10 +92,10 @@ RCSID("$Id: color.c,v 1.65 2006/10/11 07:29:10 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int COLORS = 16;
+int COLORS = 0;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
-static bool color_started = FALSE;
+bool pdc_color_started = FALSE;
 
 /* COLOR_PAIR to attribute encoding table. */
 
@@ -112,6 +112,10 @@ int start_color(void)
 	if (SP->mono)
 		return ERR;
 
+	pdc_color_started = TRUE;
+
+	PDC_set_blink(FALSE);	/* Also sets COLORS, to 8, 16 or 256 */
+
 	if (SP->orig_attr && !getenv("PDC_ORIGINAL_COLORS"))
 	{
 		SP->orig_attr = FALSE;
@@ -119,8 +123,6 @@ int start_color(void)
 	}
 
 	memset(pair_set, 0, PDC_COLOR_PAIRS);
-
-	color_started = TRUE;
 
 	return OK;
 }
@@ -148,7 +150,7 @@ static void _init_pair_core(short pair, short fg, short bg)
 		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
 			att |= 128;
 
-		pdc_atrtab[(pair * PDC_OFFSET) + i] = att;
+		pdc_atrtab[pair * PDC_OFFSET + i] = att;
 	}
 }
 
@@ -156,7 +158,7 @@ int init_pair(short pair, short fg, short bg)
 {
 	PDC_LOG(("init_pair() - called: pair %d fg %d bg %d\n", pair, fg, bg));
 
-	if (!color_started || pair < 1 || pair >= COLOR_PAIRS ||
+	if (!pdc_color_started || pair < 1 || pair >= COLOR_PAIRS ||
 	    fg < 0 || fg >= COLORS || bg < 0 || bg >= COLORS)
 		return ERR;
 

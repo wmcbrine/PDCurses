@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.24 2006/10/11 07:29:10 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.25 2006/10/12 02:24:19 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -50,9 +50,9 @@ XCursesAppData xc_app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-#define MAX_COLORS   8  /* maximum of "normal" colors */
-#define COLOR_CURSOR 16 /* color of cursor - 1 more than 2 * MAX_COLORS */
-#define COLOR_BORDER 17 /* color of border - 2 more than 2 * MAX_COLORS */
+#define MAX_COLORS   16  /* maximum of "normal" colors */
+#define COLOR_CURSOR MAX_COLORS /* color of cursor */
+#define COLOR_BORDER MAX_COLORS + 1 /* color of border */
 
 #define XCURSESDISPLAY		(XtDisplay(drawing))
 #define XCURSESWIN		(XtWindow(drawing))
@@ -606,7 +606,7 @@ static XtActionsRec Actions[] =
 };
 
 static Bool after_first_curses_request = False;
-static Pixel colors[(2 * MAX_COLORS) + 2];
+static Pixel colors[MAX_COLORS + 2];
 static Bool vertical_cursor = False;
 
 #ifdef FOREIGN
@@ -908,6 +908,7 @@ static void get_colors(void)
 	colors[13] = xc_app_data.colorBoldMagenta;
 	colors[14] = xc_app_data.colorBoldCyan;
 	colors[15] = xc_app_data.colorBoldWhite;
+
 	colors[COLOR_CURSOR] = xc_app_data.cursorColor;
 	colors[COLOR_BORDER] = xc_app_data.borderColor;
 }
@@ -943,8 +944,8 @@ static void SetCursorColor(chtype *ch, short *fore, short *back)
 	if (attr)
 	{
 		pair_content(attr, &f, &b);
-		*fore = 7 - f;
-		*back = 7 - b;
+		*fore = 7 - (f % 8);
+		*back = 7 - (b % 8);
 	}
 	else
 	{

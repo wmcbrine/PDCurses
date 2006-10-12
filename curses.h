@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.235 2006/10/11 08:07:58 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.236 2006/10/12 02:24:18 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -43,7 +43,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2817
+#define PDC_BUILD 2818
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -575,7 +575,6 @@ typedef struct
 	int	sb_cur_x;
 #endif
 	short	line_color;	/* Color of line attributes - default white */
-
 } SCREEN;
 
 
@@ -1541,16 +1540,17 @@ int	sb_refresh(void);
 int	PDC_chadd(WINDOW *, chtype, bool, bool);
 int	PDC_chins(WINDOW *, chtype, bool);
 int	PDC_ungetch(int);
+int	PDC_set_blink(bool);
+int	PDC_set_line_color(short);
 void	PDC_set_title(const char *);
+
+int	PDC_clearclipboard(void);
+int	PDC_freeclipboard(char *);
 int	PDC_getclipboard(char **, long *);
 int	PDC_setclipboard(const char *, long);
-int	PDC_freeclipboard(char *);
-int	PDC_clearclipboard(void);
 
 unsigned long PDC_get_input_fd(void);
 unsigned long PDC_get_key_modifiers(void);
-
-int	PDC_set_line_color(short);
 
 /*** Functions defined as macros ***/
 

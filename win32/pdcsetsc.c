@@ -17,7 +17,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.30 2006/10/09 14:08:46 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.31 2006/10/12 02:24:19 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -72,4 +72,12 @@ void PDC_set_title(const char *title)
 
 	SetConsoleTitleA(title);
 	return;
+}
+
+int PDC_set_blink(bool blinkon)
+{
+	if (pdc_color_started)
+		COLORS = 16;
+
+	return blinkon ? ERR : OK;
 }

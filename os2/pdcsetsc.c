@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.34 2006/10/09 00:12:41 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.35 2006/10/12 02:24:19 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -89,4 +89,28 @@ int PDC_curs_set(int visibility)
 void PDC_set_title(const char *title)
 {
 	PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
+}
+
+int PDC_set_blink(bool blinkon)
+{
+#ifndef EMXVIDEO
+	USHORT statebuf[3], result;
+
+	statebuf[0] = 6;	/* length */
+	statebuf[1] = 2;	/* blink/intensity */
+	statebuf[2] = !blinkon;
+
+	result = VioSetState(&statebuf, 0);
+	VioGetState(&statebuf, 0);	/* needed? */
+
+	if (pdc_color_started)
+		COLORS = statebuf[2] ? 16 : 8;
+
+	return (result == 0) ? OK : ERR;
+#else
+	if (pdc_color_started)
+		COLORS = 16;
+
+	return blinkon ? ERR : OK;
+#endif
 }

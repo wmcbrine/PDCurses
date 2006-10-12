@@ -17,7 +17,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.29 2006/09/30 15:45:04 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.30 2006/10/12 02:24:18 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -74,4 +74,32 @@ int PDC_curs_set(int visibility)
 void PDC_set_title(const char *title)
 {
 	PDC_LOG(("PDC_set_title() - called: <%s>\n", title));
+}
+
+int PDC_set_blink(bool blinkon)
+{
+	PDCREGS regs;
+
+	switch (pdc_adapter)
+	{
+	case _EGACOLOR:
+	case _EGAMONO:
+	case _VGACOLOR:
+	case _VGAMONO:
+		regs.h.ah = 0x10;
+		regs.h.al = 0x03;
+		regs.h.bh = 0;
+		regs.h.bl = blinkon;
+
+		PDCINT(0x10, regs);
+
+		if (pdc_color_started)
+			COLORS = blinkon ? 8 : 16;
+
+		break;
+	default:
+		COLORS = 8;
+	}
+
+	return (COLORS - (blinkon * 8) != 8) ? OK : ERR;
 }

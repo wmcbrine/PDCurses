@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.126 2006/10/11 08:07:58 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.127 2006/10/12 02:24:18 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -45,6 +45,7 @@
 #define _DLCHAR		0x15	/* Delete Line char (^U)		*/
 
 extern bool pdc_trace_on;	/* tracing flag				*/
+extern bool pdc_color_started;
 extern WINDOW *pdc_getch_win;
 extern unsigned long pdc_key_modifiers;
 extern MOUSE_STATUS pdc_mouse_status;

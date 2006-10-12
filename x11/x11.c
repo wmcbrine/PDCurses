@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.25 2006/10/12 02:24:19 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.26 2006/10/12 11:04:56 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2671,7 +2671,7 @@ static void GetColor(void)
 	Colormap cmap = DefaultColormap(XCURSESDISPLAY,
 			DefaultScreen(XCURSESDISPLAY));
 
-	if (index < 0 || index >= COLORS * 2)
+	if (index < 0 || index >= MAX_COLORS)
 		ExitProcess(4, SIGKILL, "exiting from GetColor");
 
 	tmp->pixel = colors[index];
@@ -2685,7 +2685,7 @@ static void SetColor(void)
 	Colormap cmap = DefaultColormap(XCURSESDISPLAY,
 			DefaultScreen(XCURSESDISPLAY));
 
-	if (index < 0 || index >= COLORS * 2)
+	if (index < 0 || index >= MAX_COLORS)
 		ExitProcess(4, SIGKILL, "exiting from SetColor");
 
 	if (XAllocColor(XCURSESDISPLAY, cmap, tmp))

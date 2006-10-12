@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.66 2006/10/08 20:54:30 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.67 2006/10/12 11:05:43 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -31,6 +31,12 @@
 # define HAVE_RESIZE 0
 #endif
 
+#ifdef A_COLOR
+# define HAVE_COLOR 1
+#else
+# define HAVE_COLOR 0
+#endif
+
 /* Set to non-zero if you want to test the PDCurses clipboard */
 
 #define HAVE_CLIPBOARD 0
@@ -42,7 +48,10 @@ int initTest(WINDOW **, int, char **);
 void outputTest(WINDOW *);
 void padTest(WINDOW *);
 void acsTest(WINDOW *);
-void display_menu(int, int);
+
+#if HAVE_COLOR
+void colorTest(WINDOW *);
+#endif
 
 #if HAVE_RESIZE
 void resizeTest(WINDOW *);
@@ -52,6 +61,8 @@ void resizeTest(WINDOW *);
 void clipboardTest(WINDOW *);
 #endif
 
+void display_menu(int, int);
+
 struct commands
 {
 	const char *text;
@@ -60,7 +71,7 @@ struct commands
 
 typedef struct commands COMMAND;
 
-#define MAX_OPTIONS (6 + HAVE_RESIZE + HAVE_CLIPBOARD)
+#define MAX_OPTIONS (6 + HAVE_COLOR + HAVE_RESIZE + HAVE_CLIPBOARD)
 
 COMMAND command[MAX_OPTIONS] =
 {
@@ -73,6 +84,9 @@ COMMAND command[MAX_OPTIONS] =
 	{"Input Test", inputTest},
 	{"Output Test", outputTest},
 	{"ACS Test", acsTest},
+#if HAVE_COLOR
+	{"Color Test", colorTest},
+#endif
 #if HAVE_CLIPBOARD
 	{"Clipboard Test", clipboardTest},
 #endif
@@ -999,6 +1013,98 @@ void acsTest(WINDOW *win)
 	getch();
 #endif
 }
+
+#if HAVE_COLOR
+void colorTest(WINDOW *win)
+{
+	static const short colors[] =
+	{
+		COLOR_BLACK, COLOR_RED, COLOR_GREEN, COLOR_BLUE, 
+		COLOR_CYAN, COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE
+	};
+
+	static const char *colornames[] =
+	{
+		"COLOR_BLACK", "COLOR_RED", "COLOR_GREEN", "COLOR_BLUE", 
+		"COLOR_CYAN", "COLOR_MAGENTA", "COLOR_YELLOW", "COLOR_WHITE"
+	};
+
+	chtype fill = ACS_BLOCK;
+
+	int i, j, tmarg, col1, col2, col3;
+
+	if (!has_colors())
+		return;
+
+	tmarg = (LINES - 19) / 2;
+	col1 = (COLS - 60) / 2;
+	col2 = col1 + 20;
+	col3 = col2 + 20;
+
+	attrset(A_BOLD);
+	mvaddstr(tmarg, (COLS - 22) / 2, "Color Attribute Macros");
+	attrset(A_NORMAL);
+
+	mvaddstr(tmarg + 3, col2 + 4, "A_NORMAL");
+	mvaddstr(tmarg + 3, col3 + 5, "A_BOLD");
+
+	for (i = 0; i < 8; i++)
+	{
+		init_pair(i + 4, colors[i], COLOR_BLACK);
+
+		mvaddstr(tmarg + i + 5, col1, colornames[i]);
+
+		for (j = 0; j < 16; j++)
+		{
+			mvaddch(tmarg + i + 5, col2 + j,
+				fill | COLOR_PAIR(i + 4));
+			mvaddch(tmarg + i + 5, col3 + j,
+				fill | COLOR_PAIR(i + 4) | A_BOLD);
+		}
+	}
+
+	mvprintw(tmarg + 15, col1, "COLORS = %d", COLORS);
+	mvprintw(tmarg + 16, col1, "COLOR_PAIRS = %d", COLOR_PAIRS);
+
+	mvaddstr(tmarg + 19, 3, "Press any key to continue");
+	getch();
+
+	if (can_change_color())
+	{
+		struct
+		{
+			short red, green, blue;
+		} orgcolors[16];
+
+		for (i = 0; i < COLORS; i++)
+			color_content(i, &(orgcolors[i].red),
+				&(orgcolors[i].green),
+				&(orgcolors[i].blue));
+
+		attrset(A_BOLD);
+		mvaddstr(tmarg, (COLS - 22) / 2, " init_color() Example ");
+		attrset(A_NORMAL);
+
+		refresh();
+
+		for (i = 0; i < 8; i++)
+		{
+			init_color(colors[i], i * 125, 0, i * 125);
+
+			if (COLORS >= 16)
+				init_color(colors[i] + 8, 0, i * 125, 0);
+		}
+
+		mvaddstr(tmarg + 19, 3, "Press any key to continue");
+		getch();
+
+		for (i = 0; i < COLORS; i++)
+			init_color(i, orgcolors[i].red,
+				orgcolors[i].green,
+				orgcolors[i].blue);
+	}
+}
+#endif
 
 void display_menu(int old_option, int new_option)
 {

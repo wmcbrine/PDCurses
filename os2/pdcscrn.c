@@ -17,9 +17,7 @@
 
 #include "pdcos2.h"
 
-#include <stdlib.h>
-
-RCSID("$Id: pdcscrn.c,v 1.54 2006/10/09 14:18:12 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.55 2006/10/13 23:29:27 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 

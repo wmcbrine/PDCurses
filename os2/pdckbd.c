@@ -17,7 +17,9 @@
 
 #include "pdcos2.h"
 
-#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
+#if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
+    defined(__TURBOC__)
+# define HAVE_SIGNAL
 # include <signal.h>
 #else
 # define INCL_DOSSIGNALS
@@ -32,7 +34,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.40 2006/10/09 00:11:14 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.41 2006/10/13 23:29:27 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -390,7 +392,7 @@ int PDC_get_bios_key(void)
 
 bool PDC_get_ctrl_break(void)
 {
-#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
+#ifdef HAVE_SIGNAL
 # ifdef __TURBOC__
 	void __cdecl (*oldAction) (int);
 # else
@@ -399,7 +401,7 @@ bool PDC_get_ctrl_break(void)
 #endif
 	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
 
-#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
+#ifdef HAVE_SIGNAL
 
 	oldAction = signal(SIGINT, SIG_DFL);
 
@@ -450,7 +452,7 @@ int PDC_set_ctrl_break(bool setting)
 {
 	PDC_LOG(("PDC_set_ctrl_break() - called. Setting: %d\n", setting));
 
-#if defined(CURSES__32BIT__) || defined(__IBMC__) || defined(__TURBOC__)
+#ifdef HAVE_SIGNAL
 	signal(SIGINT, setting ? SIG_DFL : SIG_IGN);
 	signal(SIGBREAK, setting ? SIG_DFL : SIG_IGN);
 #else

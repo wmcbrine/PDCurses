@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.127 2006/10/12 02:24:18 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.128 2006/10/13 23:29:27 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -27,6 +27,21 @@
 
 #define CURSES_LIBRARY
 #include <curses.h>
+
+#if defined(__TURBOC__) || defined(__EMX__) || defined(__DJGPP__) || \
+    defined(__CYGWIN32__) || defined(__MINGW32__) || \
+    defined(__WATCOMC__) || defined(__PACIFIC__)
+#  ifndef HAVE_VSSCANF
+#    define HAVE_VSSCANF	/* have vsscanf() */
+#  endif
+#endif
+
+#if defined(__CYGWIN32__) || defined(__MINGW32__) || \
+    defined(__LCC__) || defined(__WATCOMC__)
+#  ifndef HAVE_VSNPRINTF
+#    define HAVE_VSNPRINTF	/* have vsnprintf() */
+#  endif
+#endif
 
 /*----------------------------------------------------------------------*/
 /* window properties */

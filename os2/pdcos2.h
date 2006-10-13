@@ -15,9 +15,13 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcos2.h,v 1.1 2006/10/09 00:11:14 wmcbrine Exp $ */
+/* $Id: pdcos2.h,v 1.2 2006/10/13 23:29:27 wmcbrine Exp $ */
 
-#ifndef EMXVIDEO
+#include <stdlib.h>
+
+#ifdef EMXVIDEO
+# include <sys/video.h>
+#else
 # define INCL_DOS
 # define INCL_DOSMISC
 # define INCL_WIN
@@ -25,6 +29,7 @@
 # define INCL_KBD
 # include <os2.h>
 #endif
+
 #include <curspriv.h>
 
 extern int pdc_font;

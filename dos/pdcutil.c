@@ -17,13 +17,13 @@
 
 #include "pdcdos.h"
 
-#ifdef HAVE_UNISTD_H
+#ifdef __DJGPP__
 # include <unistd.h>
 #endif
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.11 2006/09/25 06:34:41 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.12 2006/10/13 23:29:27 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -36,7 +36,7 @@ void PDC_napms(int ms)
 {
 	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-#if defined(HAVE_USLEEP)
+#if defined(__DJGPP__)
 
 	usleep(1000 * ms);
 

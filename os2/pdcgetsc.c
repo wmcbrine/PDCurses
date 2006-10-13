@@ -17,9 +17,7 @@
 
 #include "pdcos2.h"
 
-#include <stdlib.h>
-
-RCSID("$Id: pdcgetsc.c,v 1.29 2006/10/09 00:11:14 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.30 2006/10/13 23:29:27 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

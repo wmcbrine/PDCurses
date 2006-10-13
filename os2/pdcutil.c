@@ -17,15 +17,11 @@
 
 #include "pdcos2.h"
 
-#ifdef __EMX__
-# include <stdlib.h>
-#endif
-
 #if defined(OS2) && !defined(__EMX__)
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.8 2006/10/09 00:11:14 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.9 2006/10/13 23:29:27 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

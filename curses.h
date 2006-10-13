@@ -15,7 +15,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.236 2006/10/12 02:24:18 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.237 2006/10/13 23:29:27 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -43,7 +43,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2818
+#define PDC_BUILD 2819
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -74,11 +74,7 @@ PDCurses portable platform definitions list:
 #      define WIN32 1
 #    endif
 #  endif
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF			/* have vsscanf() */
-#  endif
 #endif
-
 
 /*----------------------------------------
  *	METAWARE COMPILERS	High C
@@ -164,17 +160,6 @@ PDCurses portable platform definitions list:
 #    define __OS2__		/* EMX does not define this :-( 	*/
 #  endif
 #  define OS2 3
-#  define CURSES__32BIT__
-#  ifndef HAVE_UNISTD_H
-#    define HAVE_UNISTD_H			/* have <unistd.h> */
-#  endif
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF
-#  endif
-#  ifdef EMXVIDEO
-#    include <stdlib.h>
-#    include <sys/video.h>
-#  endif
 #endif
 
 /*----------------------------------------
@@ -186,17 +171,7 @@ PDCurses portable platform definitions list:
 
 #ifdef __DJGPP__		/* You may have to define in makefile	*/
 #  define DOS 6
-#  ifndef HAVE_UNISTD_H
-#    define HAVE_UNISTD_H
-#  endif
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF
-#  endif
-#  ifndef HAVE_USLEEP
-#    define HAVE_USLEEP				/* have usleep() */
-#  endif
 #endif
-
 
 /*----------------------------------------
  *	GNU compilers	Cygnus Win32
@@ -208,15 +183,6 @@ PDCurses portable platform definitions list:
 #ifdef __CYGWIN32__		/* You may have to define in makefile	*/
 #  if !defined(WIN32) && !defined(XCURSES)
 #    define WIN32
-#  endif
-#  ifndef HAVE_UNISTD_H
-#    define HAVE_UNISTD_H
-#  endif
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF
-#  endif
-#  ifndef HAVE_VSNPRINTF
-#    define HAVE_VSNPRINTF
 #  endif
 #endif
 
@@ -231,12 +197,6 @@ PDCurses portable platform definitions list:
 #  ifndef WIN32
 #    define WIN32
 #  endif
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF
-#  endif
-#  ifndef HAVE_VSNPRINTF
-#    define HAVE_VSNPRINTF
-#  endif
 #endif
 
 /*----------------------------------------
@@ -247,9 +207,6 @@ PDCurses portable platform definitions list:
 #ifdef __LCC__
 #  ifndef WIN32
 #    define WIN32
-#  endif
-#  ifndef HAVE_VSNPRINTF
-#    define HAVE_VSNPRINTF
 #  endif
 #endif
 
@@ -267,18 +224,11 @@ PDCurses portable platform definitions list:
 #  endif
 #  if defined(__OS2__) || defined(__OS2V2__)
 #    define OS2 3
-#    define CURSES__32BIT__
 #  endif
 #  if defined(__NT__)
 #    ifndef WIN32
 #      define WIN32
 #    endif
-#  endif
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF
-#  endif
-#  ifndef HAVE_VSNPRINTF
-#    define HAVE_VSNPRINTF
 #  endif
 #endif
 
@@ -295,9 +245,6 @@ PDCurses portable platform definitions list:
 #  include <ctype.h>
 #  ifndef __SMALL__
 #    define __SMALL__
-#  endif
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF
 #  endif
 #endif
 

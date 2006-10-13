@@ -20,7 +20,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.38 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.39 2006/10/13 20:54:53 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -127,46 +127,11 @@ static bool _breakout(void)
 
 /* _rawgetch() - Gets a character without any interpretation and returns 
    it. If keypad mode is active for the designated window, function key 
-   translation will be performed.  Otherwise, function keys are ignored.  
+   translation will be performed. Otherwise, function keys are ignored. 
    If nodelay mode is active in the window, then _rawgetch() returns -1 
-   if no character is available.
-
-   WARNING: It is unknown whether the FUNCTION key translation is 
-   performed at this level. --Frotz 911130 BUG */
+   if no character is available. */
 
 static int _rawgetch(void)
-{
-	int c, oldc;
-
-	if (pdc_getch_win == (WINDOW *)NULL)
-		return -1;
-
-	if ((SP->delaytenths || pdc_getch_win->_delayms ||
-	     pdc_getch_win->_nodelay) && !_breakout())
-		return -1;
-
-	for (;;)
-	{
-		c = PDC_get_bios_key();
-		oldc = c;
-
-		/* return the key if it is not a special key */
-
-		if (c != KEY_MOUSE && (c = PDC_validchar(c)) >= 0)
-			return c;
-
-		if (pdc_getch_win->_use_keypad)
-			return oldc;
-	}
-}
-
-/* _sysgetch() - Gets a character without normal ^S, ^Q, ^P and ^C 
-   interpretation and returns it.  If keypad mode is active for the 
-   designated window, function key translation will be performed. 
-   Otherwise, function keys are ignored. If nodelay mode is active in 
-   the window, then sysgetch() returns -1 if no character is available. */
-
-static int _sysgetch(void)
 {
 	int c;
 
@@ -182,9 +147,6 @@ static int _sysgetch(void)
 		c = PDC_get_bios_key();
 
 		/* return the key if it is not a special key */
-
-		if ((unsigned int)c < 256)
-			return c;
 
 		if ((c = PDC_validchar(c)) >= 0)
 			return c;
@@ -249,17 +211,7 @@ int wgetch(WINDOW *win)
 
 	for (;;)			/* loop for any buffering */
 	{
-		if (SP->raw_inp)
-			key = _rawgetch();	/* get a raw character */
-		else
-		{
-			/* get a system character if break return proper */
-
-			bool cbr = PDC_get_ctrl_break();
-			PDC_set_ctrl_break(SP->orgcbr);
-			key = _sysgetch();
-			PDC_set_ctrl_break(cbr);
-		}
+		key = _rawgetch();	/* get a raw character */
 
 		/* Handle timeout() and halfdelay() */
 

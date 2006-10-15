@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -19,7 +15,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.35 2006/10/12 02:24:19 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.36 2006/10/15 02:42:25 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {

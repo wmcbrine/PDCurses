@@ -8,16 +8,12 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcgo32.c,v 1.11 2006/07/14 16:00:52 wmcbrine Exp $");
+RCSID("$Id: pdcgo32.c,v 1.12 2006/10/15 02:42:25 wmcbrine Exp $");
 
 #include <pc.h>    
 #include <sys/movedata.h> /* prototypes of dosmemget() and dosmemput() */

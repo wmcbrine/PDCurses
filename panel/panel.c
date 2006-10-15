@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -23,7 +19,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.23 2006/08/12 21:13:45 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

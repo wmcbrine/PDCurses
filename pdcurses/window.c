@@ -8,17 +8,13 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.40 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.41 2006/10/15 02:42:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

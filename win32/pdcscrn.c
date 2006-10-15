@@ -8,16 +8,12 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.66 2006/10/09 14:08:46 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.67 2006/10/15 02:42:26 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1

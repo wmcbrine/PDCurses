@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -19,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.32 2006/10/08 20:54:30 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.33 2006/10/15 02:42:25 wmcbrine Exp $");
 
 /* save values for pechochar() */
 

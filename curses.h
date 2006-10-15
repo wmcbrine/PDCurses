@@ -8,14 +8,10 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.237 2006/10/13 23:29:27 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.238 2006/10/15 02:42:24 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*

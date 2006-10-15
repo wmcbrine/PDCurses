@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -21,7 +17,7 @@
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.9 2006/10/13 23:29:27 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.10 2006/10/15 02:42:25 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

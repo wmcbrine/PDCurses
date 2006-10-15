@@ -8,14 +8,10 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.53 2006/10/08 20:54:30 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.54 2006/10/15 02:42:26 wmcbrine Exp $ */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>

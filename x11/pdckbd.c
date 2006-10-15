@@ -8,16 +8,12 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.41 2006/10/09 14:30:47 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.42 2006/10/15 02:42:26 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)

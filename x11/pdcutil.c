@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -21,7 +17,7 @@
 # include <poll.h>
 #endif
 
-RCSID("$Id: pdcutil.c,v 1.5 2006/09/25 06:34:41 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.6 2006/10/15 02:42:26 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

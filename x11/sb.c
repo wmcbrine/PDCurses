@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -25,7 +21,7 @@
 #undef sb_get_vert
 #undef sb_refresh
 
-RCSID("$Id: sb.c,v 1.19 2006/09/27 07:21:27 wmcbrine Exp $");
+RCSID("$Id: sb.c,v 1.20 2006/10/15 02:42:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

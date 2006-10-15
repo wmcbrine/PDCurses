@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -19,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.86 2006/10/09 14:35:58 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.87 2006/10/15 02:42:26 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/

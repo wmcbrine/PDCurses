@@ -8,10 +8,6 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
@@ -19,7 +15,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.37 2006/08/21 04:29:46 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.38 2006/10/15 02:42:26 wmcbrine Exp $");
 
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 			   int visibility)

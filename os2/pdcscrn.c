@@ -8,16 +8,12 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.55 2006/10/13 23:29:27 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.56 2006/10/15 02:42:25 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 

@@ -8,14 +8,10 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: panel.h,v 1.14 2006/02/23 01:49:12 wmcbrine Exp $ */
+/* $Id: panel.h,v 1.15 2006/10/15 02:42:24 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *			   Panels for PDCurses				*

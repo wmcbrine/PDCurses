@@ -8,16 +8,12 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.18 2006/08/11 22:10:36 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.19 2006/10/15 02:42:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

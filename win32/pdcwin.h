@@ -8,14 +8,10 @@
  * enhancements to PDCurses, please forward them to the current		*
  * maintainer for the benefit of other users.				*
  *									*
- * No distribution of modified PDCurses code may be made under the name	*
- * "PDCurses", except by the current maintainer. (Although PDCurses is	*
- * public domain, the name is a trademark.)				*
- *									*
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcwin.h,v 1.2 2006/10/09 14:08:46 wmcbrine Exp $ */
+/* $Id: pdcwin.h,v 1.3 2006/10/15 02:42:26 wmcbrine Exp $ */
 
 #ifdef PDC_WIDE
 # define UNICODE

@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.41 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.42 2006/10/18 22:35:11 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -355,8 +355,8 @@ int PDC_set_ctrl_break(bool setting)
 	setcbrk(setting);
 #else
 	regs.h.ah = 0x33;
-	regs.h.al = 0x00;
-	regs.h.dl = (unsigned char) (setting ? 1 : 0);
+	regs.h.al = 0x01;
+	regs.h.dl = setting;
 	PDCINT(0x21, regs);
 #endif
 	return OK;

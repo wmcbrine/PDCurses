@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.18 2006/10/15 02:42:25 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.19 2006/10/18 22:35:11 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -117,6 +117,13 @@ void setdosmemword(int offs, unsigned short w);
 # else
 #  define PDCINT(vector, regs) int86(vector, &regs, &regs)
 # endif
+#endif
+
+/* Wide registers in REGS: w or x? */
+#ifdef __WATCOMC__
+# define W w
+#else
+# define W x
 #endif
 
 /* Monitor (terminal) type information */

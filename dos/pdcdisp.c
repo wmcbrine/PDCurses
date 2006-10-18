@@ -15,7 +15,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.54 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.55 2006/10/18 22:35:11 wmcbrine Exp $");
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -82,11 +82,7 @@ static void PDC_putc(chtype ch, unsigned short count)
 	regs.h.al = (unsigned char) (ch & 0xff);
 	regs.h.bh = 0;
 	regs.h.bl = chtype_attr(ch);
-#ifdef __WATCOMC__
-	regs.w.cx = count;
-#else
-	regs.x.cx = count;
-#endif
+	regs.W.cx = count;
 	PDCINT(0x10, regs);
 }
 

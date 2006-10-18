@@ -13,7 +13,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.31 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.32 2006/10/18 22:35:11 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -82,10 +82,8 @@ int PDC_set_blink(bool blinkon)
 	case _EGAMONO:
 	case _VGACOLOR:
 	case _VGAMONO:
-		regs.h.ah = 0x10;
-		regs.h.al = 0x03;
-		regs.h.bh = 0;
-		regs.h.bl = blinkon;
+		regs.W.ax = 0x1003;
+		regs.W.bx = blinkon;
 
 		PDCINT(0x10, regs);
 

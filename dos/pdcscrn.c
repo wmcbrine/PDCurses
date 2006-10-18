@@ -20,7 +20,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.63 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.64 2006/10/18 22:35:11 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -111,14 +111,12 @@ static void _set_font(int size)
 			switch (size)
 			{
 			case _FONT8:
-				regs.h.ah = 0x11;
-				regs.h.al = 0x12;
+				regs.W.ax = 0x1112;
 				regs.h.bl = 0x00;
 				PDCINT(0x10, regs);
 				break;
 			case _FONT14:
-				regs.h.ah = 0x11;
-				regs.h.al = 0x11;
+				regs.W.ax = 0x1111;
 				regs.h.bl = 0x00;
 				PDCINT(0x10, regs);
 			}
@@ -132,20 +130,17 @@ static void _set_font(int size)
 			switch (size)
 			{
 			case _FONT8:
-				regs.h.ah = 0x11;
-				regs.h.al = 0x12;
+				regs.W.ax = 0x1112;
 				regs.h.bl = 0x00;
 				PDCINT(0x10, regs);
 				break;
 			case _FONT14:
-				regs.h.ah = 0x11;
-				regs.h.al = 0x11;
+				regs.W.ax = 0x1111;
 				regs.h.bl = 0x00;
 				PDCINT(0x10, regs);
 				break;
 			case _FONT16:
-				regs.h.ah = 0x11;
-				regs.h.al = 0x14;
+				regs.W.ax = 0x1114;
 				regs.h.bl = 0x00;
 				PDCINT(0x10, regs);
 			}
@@ -297,8 +292,7 @@ static int _query_adapter_type(void)
 
 	/* attempt to call VGA Identify Adapter Function */
 
-	regs.h.ah = 0x1a;
-	regs.h.al = 0;
+	regs.W.ax = 0x1a00;
 	PDCINT(0x10, regs);
 
 	if ((regs.h.al == 0x1a) && (retval == _NONE))
@@ -350,11 +344,7 @@ static int _query_adapter_type(void)
 		   bx == 0x0010 --> return EGA information */
 
 		regs.h.ah = 0x12;
-# ifdef __WATCOMC__
-		regs.w.bx = 0x10;
-# else
-		regs.x.bx = 0x10;
-# endif
+		regs.W.bx = 0x10;
 		PDCINT(0x10, regs);
 
 		if ((regs.h.bl != 0x10) && (retval == _NONE))
@@ -714,8 +704,7 @@ static int _egapal(int color)
 {
 	PDCREGS regs;
 
-	regs.h.ah = 0x10;
-	regs.h.al = 0x07;
+	regs.W.ax = 0x1007;
 	regs.h.bl = color;
 
 	PDCINT(0x10, regs);
@@ -736,8 +725,7 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 	/* Read single DAC register */
 
-	regs.h.ah = 0x10;
-	regs.h.al = 0x15;
+	regs.W.ax = 0x1015;
 	regs.h.bl = _egapal(color);
 
 	PDCINT(0x10, regs);
@@ -763,10 +751,8 @@ int PDC_init_color(short color, short red, short green, short blue)
 
 	/* Set single DAC register */
 
-	regs.h.ah = 0x10;
-	regs.h.al = 0x10;
-	regs.h.bh = 0;
-	regs.h.bl = _egapal(color);
+	regs.W.ax = 0x1010;
+	regs.W.bx = _egapal(color);
 
 	PDCINT(0x10, regs);
 

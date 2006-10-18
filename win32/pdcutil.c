@@ -13,16 +13,14 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcutil.c,v 1.9 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.10 2006/10/18 23:11:41 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
 	PDC_LOG(("PDC_beep() - called\n"));
 
-	fflush(stdout);
 /*	MessageBeep(MB_OK); */
 	MessageBeep(0XFFFFFFFF);
-	fflush(stdout);
 }
 
 void PDC_napms(int ms)

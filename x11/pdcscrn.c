@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.44 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.45 2006/10/18 23:09:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -70,9 +70,7 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 
 	SP->cursrow = SP->curscol = 0;
-	SP->orig_cursor = 0;
 	SP->orig_attr = FALSE;
-	SP->orgcbr = 0;
 	SP->sb_on = sb_started;
 	SP->sb_total_y = 0;
 	SP->sb_viewport_y = 0;

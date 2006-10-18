@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.67 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.68 2006/10/18 23:09:16 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -451,10 +451,6 @@ int PDC_scr_open(int argc, char **argv)
 	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
 	SP->mono = FALSE;
-
-	SP->orig_cursor = PDC_get_cursor_mode();
-
-	SP->orgcbr = PDC_get_ctrl_break();
 
 	if (is_nt)
 	{

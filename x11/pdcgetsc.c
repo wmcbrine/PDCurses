@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.19 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.20 2006/10/18 23:09:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,6 +41,11 @@ int PDC_get_columns(void)
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
 	return XCursesCOLS;
+}
+
+int PDC_get_cursor_mode(void)
+{
+	return 0;
 }
 
 /*man-start**************************************************************

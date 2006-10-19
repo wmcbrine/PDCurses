@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.42 2006/10/18 22:35:11 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.43 2006/10/19 01:54:47 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -161,7 +161,7 @@ bool PDC_check_bios_key(void)
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 	return kbhit();
-}         
+}
 
 /*man-start**************************************************************
 

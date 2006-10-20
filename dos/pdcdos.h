@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.19 2006/10/18 22:35:11 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.20 2006/10/20 19:39:31 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -111,11 +111,16 @@ void setdosmemword(int offs, unsigned short w);
 # define PDCREGS __dpmi_regs
 # define PDCINT(vector, regs) __dpmi_int(vector, &regs)
 #else
-# define PDCREGS union REGS
-# if defined(__WATCOMC__) && defined(__386__)
-#  define PDCINT(vector, regs) int386(vector, &regs, &regs)
+# if defined(__WATCOMC__) && !defined(__386__)
+#  define PDCREGS union REGPACK
+#  define PDCINT(vector, regs) intr(vector, &regs)
 # else
-#  define PDCINT(vector, regs) int86(vector, &regs, &regs)
+#  define PDCREGS union REGS
+#  if defined(__WATCOMC__) && defined(__386__)
+#   define PDCINT(vector, regs) int386(vector, &regs, &regs)
+#  else
+#   define PDCINT(vector, regs) int86(vector, &regs, &regs)
+#  endif
 # endif
 #endif
 

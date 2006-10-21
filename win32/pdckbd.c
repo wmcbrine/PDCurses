@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.67 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.68 2006/10/21 19:39:51 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -56,7 +56,6 @@ unsigned long pdc_key_modifiers = 0L;
 
 static int key_count = 0;
 
-static void _win32_getch(void);
 static int _win32_kbhit(int);
 
 /************************************************************************
@@ -461,7 +460,10 @@ int PDC_get_bios_key(void)
 
 	while (1)
 	{
-	    _win32_getch();
+	    while (_win32_kbhit(INFINITE) == FALSE)
+	    ;
+
+	    key_count--;
 
 	    switch (save_ip.EventType)
 	    {
@@ -1033,6 +1035,12 @@ static int _win32_kbhit(int timeout)
 	if (key_count > 0)
 		return TRUE;
 
+	if (GetFileType(pdc_con_in) != FILE_TYPE_CHAR)
+	{
+		fprintf(stderr, "\n\nRedirection not supported\n");
+		exit(1);
+	}
+
 	if (WaitForSingleObject(pdc_con_in, timeout) != WAIT_OBJECT_0)
 		return FALSE;
 
@@ -1053,14 +1061,6 @@ static int _win32_kbhit(int timeout)
 	}
 
 	return rc;
-}
-
-static void _win32_getch(void)
-{
-	while (_win32_kbhit(INFINITE) == FALSE)
-	;
-
-	key_count--;
 }
 
 /*man-start**************************************************************

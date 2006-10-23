@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.81 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.82 2006/10/23 05:46:32 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 

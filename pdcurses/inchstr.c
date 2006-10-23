@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inchstr.c,v 1.24 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: inchstr.c,v 1.25 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -28,6 +28,15 @@ RCSID("$Id: inchstr.c,v 1.24 2006/10/23 05:03:31 wmcbrine Exp $");
 	int mvinchnstr(int y, int x, chtype *ch, int n);
 	int mvwinchstr(WINDOW *, int y, int x, chtype *ch);
 	int mvwinchnstr(WINDOW *, int y, int x, chtype *ch, int n);
+
+	int in_wchstr(cchar_t *wch);
+	int in_wchnstr(cchar_t *wch, int n);
+	int win_wchstr(WINDOW *win, cchar_t *wch);
+	int win_wchnstr(WINDOW *win, cchar_t *wch, int n);
+	int mvin_wchstr(int y, int x, cchar_t *wch);
+	int mvin_wchnstr(int y, int x, cchar_t *wch, int n);
+	int mvwin_wchstr(WINDOW *win, int y, int x, cchar_t *wch);
+	int mvwin_wchnstr(WINDOW *win, int y, int x, cchar_t *wch, int n);
 
   X/Open Description:
 	These routines read a chtype string directly from the window 
@@ -52,6 +61,14 @@ RCSID("$Id: inchstr.c,v 1.24 2006/10/23 05:03:31 wmcbrine Exp $");
 	winchnstr				Y	-      4.0
 	mvinchnstr				Y	-      4.0
 	mvwinchnstr				Y	-      4.0
+	in_wchstr				Y
+	win_wchstr				Y
+	mvin_wchstr				Y
+	mvwin_wchstr				Y
+	in_wchnstr				Y
+	win_wchnstr				Y
+	mvin_wchnstr				Y
+	mvwin_wchnstr				Y
 
 **man-end****************************************************************/
 

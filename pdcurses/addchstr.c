@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: addchstr.c,v 1.33 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: addchstr.c,v 1.34 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -29,6 +29,16 @@ RCSID("$Id: addchstr.c,v 1.33 2006/10/23 05:03:30 wmcbrine Exp $");
 	int mvaddchnstr(int y, int x, const chtype *ch, int n);
 	int mvwaddchstr(WINDOW *, int y, int x, const chtype *ch);
 	int mvwaddchnstr(WINDOW *, int y, int x, const chtype *ch, int n);
+
+	int add_wchstr(const cchar_t *wch);
+	int add_wchnstr(const cchar_t *wch, int n);
+	int wadd_wchstr(WINDOW *win, const cchar_t *wch);
+	int wadd_wchnstr(WINDOW *win, const cchar_t *wch, int n);
+	int mvadd_wchstr(int y, int x, const cchar_t *wch);
+	int mvadd_wchnstr(int y, int x, const cchar_t *wch, int n);
+	int mvwadd_wchstr(WINDOW *win, int y, int x, const cchar_t *wch);
+	int mvwadd_wchnstr(WINDOW *win, int y, int x, const cchar_t *wch,
+		int n);
 
   X/Open Description:
 	These routines write a chtype directly into the window structure 
@@ -53,6 +63,14 @@ RCSID("$Id: addchstr.c,v 1.33 2006/10/23 05:03:30 wmcbrine Exp $");
 	waddchnstr				Y	-      4.0
 	mvaddchnstr				Y	-      4.0
 	mvwaddchnstr				Y	-      4.0
+	add_wchstr				Y
+	wadd_wchstr				Y
+	mvadd_wchstr				Y
+	mvwadd_wchstr				Y
+	add_wchnstr				Y
+	wadd_wchnstr				Y
+	mvadd_wchnstr				Y
+	mvwadd_wchnstr				Y
 
 **man-end****************************************************************/
 

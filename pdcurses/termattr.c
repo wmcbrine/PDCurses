@@ -15,7 +15,7 @@
 #include <string.h>
 #include <limits.h>
 
-RCSID("$Id: termattr.c,v 1.42 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.43 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -32,10 +32,10 @@ RCSID("$Id: termattr.c,v 1.42 2006/10/23 05:03:31 wmcbrine Exp $");
 	attr_t term_attrs(void);
 	char *termname(void);
 
-	char wordchar(void);
-
 	int erasewchar(wchar_t *ch);
 	int killwchar(wchar_t *ch);
+
+	char wordchar(void);
 
   X/Open Description:
 	baudrate() returns the output speed of the terminal.  The number 
@@ -95,6 +95,8 @@ RCSID("$Id: termattr.c,v 1.42 2006/10/23 05:03:31 wmcbrine Exp $");
 	longname				Y	Y	Y
 	termattrs				Y	Y	Y
 	termname				Y	Y	Y
+	erasewchar				Y
+	killwchar				Y
 	wordchar				-	-	-
 
 **man-end****************************************************************/

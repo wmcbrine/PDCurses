@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -26,6 +26,13 @@ RCSID("$Id: addch.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
 	int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
 	int echochar(const chtype ch);
 	int wechochar(WINDOW *win, const chtype ch);
+
+	int add_wch(const cchar_t *wch);
+	int wadd_wch(WINDOW *win, const cchar_t *wch);
+	int mvadd_wch(int y, int x, const cchar_t *wch);
+	int mvwadd_wch(WINDOW *win, int y, int x, const cchar_t *wch);
+	int echo_wchar(const cchar_t *wch);
+	int wecho_wchar(WINDOW *win, const cchar_t *wch);
 
 	int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance);
 
@@ -111,6 +118,12 @@ RCSID("$Id: addch.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
 	mvwaddch				Y	Y	Y
 	echochar				Y	-      3.0
 	wechochar				Y	-      3.0
+	add_wch					Y
+	wadd_wch				Y
+	mvadd_wch				Y
+	mvwadd_wch				Y
+	echo_wchar				Y
+	wecho_wchar				Y
 	PDC_chadd				-	-	-
 
 **man-end****************************************************************/

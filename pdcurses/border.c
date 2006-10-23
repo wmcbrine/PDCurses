@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.38 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.39 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,6 +33,24 @@ RCSID("$Id: border.c,v 1.38 2006/10/23 05:03:30 wmcbrine Exp $");
 	int mvvline(int y, int x, chtype ch, int n);
 	int mvwhline(WINDOW *win, int y, int x, chtype ch, int n);
 	int mvwvline(WINDOW *win, int y, int x, chtype ch, int n);
+
+	int border_set(const cchar_t *ls, const cchar_t *rs,
+		       const cchar_t *ts, const cchar_t *bs,
+		       const cchar_t *tl, const cchar_t *tr,
+		       const cchar_t *bl, const cchar_t *br);
+	int wborder_set(WINDOW *win, const cchar_t *ls, const cchar_t *rs,
+			const cchar_t *ts, const cchar_t *bs,
+			const cchar_t *tl, const cchar_t *tr,
+			const cchar_t *bl, const cchar_t *br);
+	int box_set(WINDOW *win, const cchar_t *verch, const cchar_t *horch);
+	int hline_set(const cchar_t *wch, int n);
+	int vline_set(const cchar_t *wch, int n);
+	int whline_set(WINDOW *win, const cchar_t *wch, int n);
+	int wvline_set(WINDOW *win, const cchar_t *wch, int n);
+	int mvhline_set(int y, int x, const cchar_t *wch, int n);
+	int mvvline_set(int y, int x, const cchar_t *wch, int n);
+	int mvwhline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
+	int mvwvline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
 
   X/Open Description:
 	The border(), wborder(), and box() routines, a border is drawn
@@ -73,6 +91,17 @@ RCSID("$Id: border.c,v 1.38 2006/10/23 05:03:30 wmcbrine Exp $");
 	mvvline					Y
 	mvwhline				Y
 	mvwvline				Y
+	border_set				Y
+	wborder_set				Y
+	box_set					Y
+	hline_set				Y
+	vline_set				Y
+	whline_set				Y
+	wvline_set				Y
+	mvhline_set				Y
+	mvvline_set				Y
+	mvwhline_set				Y
+	mvwvline_set				Y
 
 **man-end****************************************************************/
 

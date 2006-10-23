@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: bkgd.c,v 1.28 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.29 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -25,6 +25,13 @@ RCSID("$Id: bkgd.c,v 1.28 2006/10/23 05:03:30 wmcbrine Exp $");
 	chtype getbkgd(WINDOW *win);
 	int wbkgd(WINDOW *win, chtype ch);
 	void wbkgdset(WINDOW *win, chtype ch);
+
+	int bkgrnd(const cchar_t *wch);
+	void bkgrndset(const cchar_t *wch);
+	int getbkgrnd(cchar_t *wch);
+	int wbkgrnd(WINDOW *win, const cchar_t *wch);
+	void wbkgrndset(WINDOW *win, const cchar_t *wch);
+	int wgetbkgrnd(WINDOW *win, cchar_t *wch);
 
   UNIX System V (Rel 3.2 or 4) Description:
 	The bkgdset() and wbkgdset() routines manipulate the backgound 
@@ -67,6 +74,12 @@ RCSID("$Id: bkgd.c,v 1.28 2006/10/23 05:03:30 wmcbrine Exp $");
 	getbkgd					Y
 	wbkgd					Y	-      4.0
 	wbkgdset				Y	-      4.0
+	bkgrnd					Y
+	bkgrndset				Y
+	getbkgrnd				Y
+	wbkgrnd					Y
+	wbkgrndset				Y
+	wgetbkgrnd				Y
 
 **man-end****************************************************************/
 

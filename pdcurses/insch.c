@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -25,6 +25,11 @@ RCSID("$Id: insch.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
 	int winsch(WINDOW *win, chtype ch);
 	int mvinsch(int y, int x, chtype ch);
 	int mvwinsch(WINDOW *win, int y, int x, chtype ch);
+
+	int ins_wch(const cchar_t *wch);
+	int wins_wch(WINDOW *win, const cchar_t *wch);
+	int mvins_wch(int y, int x, const cchar_t *wch);
+	int mvwins_wch(WINDOW *win, int y, int x, const cchar_t *wch);
 
 	int PDC_chins(WINDOW* win, chtype c, bool xlat);
 
@@ -93,6 +98,10 @@ RCSID("$Id: insch.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
 	winsch					Y	Y	Y
 	mvinsch					Y	Y	Y
 	mvwinsch				Y	Y	Y
+	ins_wch					Y
+	wins_wch				Y
+	mvins_wch				Y
+	mvwins_wch				Y
 	PDC_chins				-	-	-
 
 **man-end****************************************************************/

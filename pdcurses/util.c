@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.52 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.53 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -25,6 +25,12 @@ RCSID("$Id: util.c,v 1.52 2006/10/23 05:03:31 wmcbrine Exp $");
 	void filter(void);
 	void use_env(bool x);
 	int delay_output(int ms);
+	int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
+		     short *color_pair, void *opts);
+	int setcchar(cchar_t *wcval, const wchar_t *wch, const attr_t attrs,
+		     short color_pair, const void *opts);
+	wchar_t *wunctrl(cchar_t *wc);
+	char *key_name(wchar_t c);
 
   X/Open Description:
 	The unctrl() routine expands the character c into a character
@@ -59,7 +65,10 @@ RCSID("$Id: util.c,v 1.52 2006/10/23 05:03:31 wmcbrine Exp $");
 	filter					Y	-      3.0
 	use_env					Y	-      4.0
 	delay_output				Y	Y	Y
-	flushinp				Y	Y	Y
+	getcchar				Y
+	setcchar				Y
+	wunctrl					Y
+	key_name				Y
 
 **man-end****************************************************************/
 

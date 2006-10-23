@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inch.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.26 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -24,6 +24,11 @@ RCSID("$Id: inch.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
 	chtype winch(WINDOW *win);
 	chtype mvinch(int y, int x);
 	chtype mvwinch(WINDOW *win, int y, int x);
+
+	int in_wch(cchar_t *wcval);
+	int win_wch(WINDOW *win, cchar_t *wcval);
+	int mvin_wch(int y, int x, cchar_t *wcval);
+	int mvwin_wch(WINDOW *win, int y, int x, cchar_t *wcval);
 
   X/Open Description:
 	Depending upon the state of the raw character output, 7- or
@@ -37,6 +42,10 @@ RCSID("$Id: inch.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
 	winch					Y	Y	Y
 	mvinch					Y	Y	Y
 	mvwinch					Y	Y	Y
+	in_wch					Y
+	win_wch					Y
+	mvin_wch				Y
+	mvwin_wch				Y
 
 **man-end****************************************************************/
 

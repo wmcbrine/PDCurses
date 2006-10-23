@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.34 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.35 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -35,6 +35,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
 			 int sy2, int sx2);
 	int pechochar(WINDOW *pad, chtype ch);
+	int pecho_wchar(WINDOW *pad, const cchar_t *wch);
 
   X/Open Description:
 	newpad() creates a new pad data structure.  A pad is a special 
@@ -90,6 +91,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	prefresh				Y	-	Y
 	pnoutrefresh				Y	-	Y
 	pechochar				Y	-      3.0
+	pecho_wchar				Y
 
 **man-end****************************************************************/
 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: instr.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -60,6 +60,14 @@ RCSID("$Id: instr.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
 	winnstr					Y	-      4.0
 	mvinnstr				Y	-      4.0
 	mvwinnstr				Y	-      4.0
+	inwstr					Y
+	winwstr					Y
+	mvinwstr				Y
+	mvwinwstr				Y
+	innwstr					Y
+	winnwstr				Y
+	mvinnwstr				Y
+	mvwinnwstr				Y
 
 **man-end****************************************************************/
 

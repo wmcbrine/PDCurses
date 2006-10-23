@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.23 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.24 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,17 +37,14 @@ RCSID("$Id: deleteln.c,v 1.23 2006/10/15 02:42:25 wmcbrine Exp $");
 	With the insertln() and winsertn() functions, a blank line is 
 	inserted above the current line and the bottom line is lost.
 
-	NOTE: deleteln() and insertln() are implemented as macros.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	deleteln				Y	Y	Y
 	wdeleteln				Y	Y	Y
-	insdelln				-	-      4.0
-	winsdelln				-	-      4.0
+	insdelln				Y	-      4.0
+	winsdelln				Y	-      4.0
 	insertln				Y	Y	Y
 	winsertln				Y	Y	Y
 	mvwinsertln				-	-	-

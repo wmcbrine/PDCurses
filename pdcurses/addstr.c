@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addstr.c,v 1.30 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.31 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -46,22 +46,18 @@ RCSID("$Id: addstr.c,v 1.30 2006/10/15 02:42:25 wmcbrine Exp $");
 	characters.  If n is negative, then the entire string will be 
 	added.
 
-	NOTE: addstr(), addnstr(), mvaddstr(), mvaddnstr(), mvwaddstr(), 
-	and mvwaddnstr() are implemented as macros.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	addstr					Y	Y	Y
 	waddstr					Y	Y	Y
 	mvaddstr				Y	Y	Y
 	mvwaddstr				Y	Y	Y
-	addnstr					-	-      4.0
-	waddnstr				-	-      4.0
-	mvaddnstr				-	-      4.0
-	mvwaddnstr				-	-      4.0
+	addnstr					Y	-      4.0
+	waddnstr				Y	-      4.0
+	mvaddnstr				Y	-      4.0
+	mvwaddnstr				Y	-      4.0
 
 **man-end****************************************************************/
 

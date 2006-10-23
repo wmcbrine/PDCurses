@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -80,9 +80,6 @@ RCSID("$Id: attr.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
 	The standend() function is the same as attrset(A_NORMAL); that 
 	is, it turns off all attributes.
 
-	NOTE:	attroff(), attron(), attrset(), standend(), standout(),
- 		wstandend(), and wstandout() are defined as macros.
-
   PDCurses Description:
 	System V compatible color support is included.
 	See <curses.h> for further details.
@@ -94,7 +91,6 @@ RCSID("$Id: attr.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
 	It is an error to call this function with a NULL window pointer.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	attroff					Y	Y	Y
 	wattroff				Y	Y	Y
 	attron					Y	Y	Y

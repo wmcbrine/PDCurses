@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.51 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.52 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -54,11 +54,10 @@ RCSID("$Id: util.c,v 1.51 2006/10/15 02:42:26 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	unctrl					Y	Y	Y
 	keyname					Y	-      3.0
 	filter					Y	-      3.0
-	use_env					-	-      4.0
+	use_env					Y	-      4.0
 	delay_output				Y	Y	Y
 	flushinp				Y	Y	Y
 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.32 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.33 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -43,9 +43,6 @@ RCSID("$Id: getstr.c,v 1.32 2006/10/15 02:42:25 wmcbrine Exp $");
 	wgetstr() in that the number of characters read is limited by a 
 	passed argument.
 
-	NOTE: getstr(), getnstr(), mvgetstr(), mvwgetstr(), mvgetnstr() 
-	and mvwgetnstr() are implemented as macros.
-
 	WARNING: There is no way to know how long the buffer passed to 
 	wgetstr() is, so it is possible to overwrite wrong memory or 
 	code!! This is the reason for the wgetnstr() function :-)
@@ -55,14 +52,14 @@ RCSID("$Id: getstr.c,v 1.32 2006/10/15 02:42:25 wmcbrine Exp $");
 	success.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	getstr					Y	Y	Y
 	wgetstr					Y	Y	Y
 	mvgetstr				Y	Y	Y
 	mvwgetstr				Y	Y	Y
-	getnstr					-	-      4.0
-	wgetnstr				-	-      4.0
-	mvwgetnstr				-	-     ncurses
+	getnstr					Y	-      4.0
+	wgetnstr				Y	-      4.0
+	mvgetnstr				Y	-       -
+	mvwgetnstr				Y	-       -
 
 **man-end****************************************************************/
 

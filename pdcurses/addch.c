@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -84,8 +84,6 @@ RCSID("$Id: addch.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
 	attributes, can be copied from one place to another using inch()
 	and addch().
 
-	NOTE: All these functions are implemented as macros.
-
   PDCurses Description:
 	Depending upon the state of the raw character output, 7- or
 	8-bit characters will be output.
@@ -107,13 +105,12 @@ RCSID("$Id: addch.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	addch					Y	Y	Y
 	waddch					Y	Y	Y
 	mvaddch					Y	Y	Y
 	mvwaddch				Y	Y	Y
-	echochar				-	-      3.0
-	wechochar				-	-      3.0
+	echochar				Y	-      3.0
+	wechochar				Y	-      3.0
 	PDC_chadd				-	-	-
 
 **man-end****************************************************************/

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inch.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -26,10 +26,6 @@ RCSID("$Id: inch.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
 	chtype mvwinch(WINDOW *win, int y, int x);
 
   X/Open Description:
-
-	NOTE: All these functions are implemented as macros.
-
-  PDCurses Description:
 	Depending upon the state of the raw character output, 7- or
 	8-bit characters will be output.
 
@@ -37,7 +33,6 @@ RCSID("$Id: inch.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	inch					Y	Y	Y
 	winch					Y	Y	Y
 	mvinch					Y	Y	Y

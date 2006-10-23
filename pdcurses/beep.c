@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: beep.c,v 1.25 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.26 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -36,7 +36,6 @@ RCSID("$Id: beep.c,v 1.25 2006/10/15 02:42:25 wmcbrine Exp $");
 	These functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	beep					Y	Y	Y
 	flash					Y	Y	Y
 

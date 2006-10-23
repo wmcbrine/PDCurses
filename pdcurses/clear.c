@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: clear.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: clear.c,v 1.25 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -45,16 +45,12 @@ RCSID("$Id: clear.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
 	The clrtoeol() and wclrtoeol() functions clear the screen from
 	the current cursor position to the end of the current line only.
 
-	NOTE: clear(), wclear(), erase(), clrtobot(), and clrtoeol()
-	are implemented as macros
-
   PDCurses Description:
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	clear					Y	Y	Y
 	wclear					Y	Y	Y
 	erase					Y	Y	Y

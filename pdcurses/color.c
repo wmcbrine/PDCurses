@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.68 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.69 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -76,14 +76,13 @@ RCSID("$Id: color.c,v 1.68 2006/10/15 02:42:25 wmcbrine Exp $");
 	has_colors() and can_change_colors() which return TRUE or FALSE.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
-	start_color				-	-      3.2
-	init_pair				-	-      3.2
-	init_color				-	-      3.2
-	has_colors				-	-      3.2
-	can_change_color			-	-      3.2
-	color_content				-	-      3.2
-	pair_content				-	-      3.2
+	start_color				Y	-      3.2
+	init_pair				Y	-      3.2
+	init_color				Y	-      3.2
+	has_colors				Y	-      3.2
+	can_change_color			Y	-      3.2
+	color_content				Y	-      3.2
+	pair_content				Y	-      3.2
 	PDC_set_line_color			-	-       -
 
 **man-end****************************************************************/

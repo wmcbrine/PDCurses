@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: refresh.c,v 1.40 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.41 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -62,13 +62,12 @@ RCSID("$Id: refresh.c,v 1.40 2006/10/15 02:42:25 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	refresh					Y	Y	Y
 	wrefresh				Y	Y	Y
 	wnoutrefresh				Y	Y	Y
 	doupdate				Y	Y	Y
-	redrawwin				-	-      4.0
-	wredrawln				-	-      4.0
+	redrawwin				Y	-      4.0
+	wredrawln				Y	-      4.0
 
 **man-end****************************************************************/
 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: outopts.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -91,11 +91,10 @@ RCSID("$Id: outopts.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	clearok					Y	Y	Y
 	idlok					Y	Y	Y
-	idcok					-	-      4.0
-	immedok					-	-      4.0
+	idcok					Y	-      4.0
+	immedok					Y	-      4.0
 	leaveok					Y	Y	Y
 	setscrreg				Y	Y	Y
 	wsetscrreg				Y	Y	Y

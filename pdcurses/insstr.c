@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insstr.c,v 1.31 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.32 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -49,22 +49,18 @@ RCSID("$Id: insstr.c,v 1.31 2006/10/15 02:42:25 wmcbrine Exp $");
 	the last argument insert at most n characters.  If n<=0, then 
 	the entire string is inserted.
 
-	NOTE: insstr(), insnstr(), mvinsstr(), mvinsnstr(), mvwinsstr() 
-	and mvwinsnstr() are implemented as macros.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
-	insstr					-	-      4.0
-	winsstr					-	-      4.0
-	mvinsstr				-	-      4.0
-	mvwinsstr				-	-      4.0
-	insnstr					-	-      4.0
-	winsnstr				-	-      4.0
-	mvinsnstr				-	-      4.0
-	mvwinsnstr				-	-      4.0
+	insstr					Y	-      4.0
+	winsstr					Y	-      4.0
+	mvinsstr				Y	-      4.0
+	mvwinsstr				Y	-      4.0
+	insnstr					Y	-      4.0
+	winsnstr				Y	-      4.0
+	mvinsnstr				Y	-      4.0
+	mvwinsnstr				Y	-      4.0
 
 **man-end****************************************************************/
 

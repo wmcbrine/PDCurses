@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.24 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: scroll.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -35,8 +35,6 @@ RCSID("$Id: scroll.c,v 1.24 2006/10/15 02:42:26 wmcbrine Exp $");
 	For these functions to work, scrolling must be enabled via 
 	scrollok().
  
-	Note that scrl() and scroll() may be macros.
- 
 	Note also that scrolling is not allowed if the supplied window 
 	is a PAD.
 
@@ -44,10 +42,9 @@ RCSID("$Id: scroll.c,v 1.24 2006/10/15 02:42:26 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	scroll					Y	Y	Y
-	scrl					-	-      4.0
-	wscrl					-	-      4.0
+	scrl					Y	-      4.0
+	wscrl					Y	-      4.0
 
 **man-end****************************************************************/
 

@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.25 2006/09/25 00:09:22 wmcbrine Exp $
+ * $Id: tui.c,v 1.26 2006/10/23 05:03:30 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -632,9 +632,6 @@ void startmenu(menu *mp, char *mtitle)
   Portability:
         
 	PDCurses	int weditstr(WINDOW *win, char *str, int field);
-	X/Open Dec '88 
-	BSD Curses    
-	SYS V Curses 
 
 **man-end**********************************************************************/
 

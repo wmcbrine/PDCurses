@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: move.c,v 1.19 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: move.c,v 1.20 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -29,13 +29,10 @@ RCSID("$Id: move.c,v 1.19 2006/10/15 02:42:25 wmcbrine Exp $");
 	terminal until refresh() is called.  The position specified is
 	relative to the upper left corner of the window, which is (0,0).
 
-	NOTE: move() is a macro.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	move					Y	Y	Y
 	wmove					Y	Y	Y
 

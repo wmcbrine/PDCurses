@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.25 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.26 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -69,7 +69,6 @@ RCSID("$Id: mouse.c,v 1.25 2006/10/15 02:42:25 wmcbrine Exp $");
 	None.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	mouse_set				-	-      4.0
 	mouse_on				-	-      4.0
 	mouse_off				-	-      4.0

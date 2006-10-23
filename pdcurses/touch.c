@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: touch.c,v 1.20 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: touch.c,v 1.21 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -56,13 +56,12 @@ RCSID("$Id: touch.c,v 1.20 2006/10/15 02:42:26 wmcbrine Exp $");
 	is_wintouched() and is_linetouched().
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	touchwin				Y	Y	Y
 	touchline				Y	-      3.0
-	untouchwin				-	-      4.0
+	untouchwin				Y	-      4.0
 	wtouchln				Y	Y	Y
-	is_linetouched				-	-      4.0
-	is_wintouched				-	-      4.0
+	is_linetouched				Y	-      4.0
+	is_wintouched				Y	-      4.0
 
 **man-end****************************************************************/
 

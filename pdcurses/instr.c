@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: instr.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -52,15 +52,14 @@ RCSID("$Id: instr.c,v 1.28 2006/10/15 02:42:25 wmcbrine Exp $");
 	OK. Otherwise, all these functions return ERR.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
-	instr					-	-      4.0
-	winstr					-	-      4.0
-	mvinstr					-	-      4.0
-	mvwinstr				-	-      4.0
-	innstr					-	-      4.0
-	winnstr					-	-      4.0
-	mvinnstr				-	-      4.0
-	mvwinnstr				-	-      4.0
+	instr					Y	-      4.0
+	winstr					Y	-      4.0
+	mvinstr					Y	-      4.0
+	mvwinstr				Y	-      4.0
+	innstr					Y	-      4.0
+	winnstr					Y	-      4.0
+	mvinnstr				Y	-      4.0
+	mvwinnstr				Y	-      4.0
 
 **man-end****************************************************************/
 

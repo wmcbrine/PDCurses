@@ -17,7 +17,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: printw.c,v 1.29 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: printw.c,v 1.30 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -60,12 +60,12 @@ RCSID("$Id: printw.c,v 1.29 2006/10/15 02:42:25 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	printw					Y	Y	Y
 	wprintw					Y	Y	Y
 	mvprintw				Y	Y	Y
 	mvwprintw				Y	Y	Y
-	vwprintw				-	-      4.0
+	vwprintw				Y	-      4.0
+	vw_printw				Y
 
 **man-end****************************************************************/
 

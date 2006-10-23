@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: kernel.c,v 1.64 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.65 2006/10/23 05:03:31 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -110,7 +110,6 @@ enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 	curs_set(), which returns the previous visibility.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	def_prog_mode				Y	Y	Y
 	def_shell_mode				Y	Y	Y
 	reset_prog_mode				Y	Y	Y
@@ -119,8 +118,8 @@ enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 	savetty					Y	Y	Y
 	getsyx					-	-      3.0
 	setsyx					-	-      3.0
-	ripoffline				-	-      3.0
-	curs_set				-	-      3.0
+	ripoffline				Y	-      3.0
+	curs_set				Y	-      3.0
 	napms					Y	Y	Y
 
 **man-end****************************************************************/

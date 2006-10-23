@@ -15,7 +15,7 @@
 #include <string.h>
 #include <limits.h>
 
-RCSID("$Id: termattr.c,v 1.41 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.42 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -87,7 +87,6 @@ RCSID("$Id: termattr.c,v 1.41 2006/10/15 02:42:26 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	baudrate				Y	Y	Y
 	erasechar				Y	Y	Y
 	has_ic					Y	Y	Y

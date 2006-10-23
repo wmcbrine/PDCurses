@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getyx.c,v 1.19 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: getyx.c,v 1.20 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -49,10 +49,9 @@ RCSID("$Id: getyx.c,v 1.19 2006/10/15 02:42:25 wmcbrine Exp $");
 	The functions getbegy(), getbegx(), getmaxy(), getmaxx() ,
 	getpary(), and getparx() do return the beginning coordinate or 
 	size values, so they can be specified on the right-hand side of 
-	an assignment statement. They are, however, implemented as macros.
+	an assignment statement.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	getyx					Y	Y	Y
 	getparyx				-	-      4.0
 	getbegyx				-	-      3.0

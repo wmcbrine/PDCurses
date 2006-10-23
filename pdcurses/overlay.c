@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -64,10 +64,9 @@ RCSID("$Id: overlay.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	overlay					Y	Y	Y
 	overwrite				Y	Y	Y
-	copywin					-	-      3.0
+	copywin					Y	-      3.0
 
 **man-end****************************************************************/
 

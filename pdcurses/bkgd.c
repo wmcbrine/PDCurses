@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: bkgd.c,v 1.27 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.28 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -61,16 +61,12 @@ RCSID("$Id: bkgd.c,v 1.27 2006/10/15 02:42:25 wmcbrine Exp $");
 	bkgd() and wbkgd() return the integer OK, unless the window is 
 	NULL, in which case they return ERR.
 
-  System V Notes:
-	Note that bkgdset() and bkgd() may be macros.
-
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
-	bkgd					-	-      4.0
-	bkgdset					-	-      4.0
-	getbkgd
-	wbkgd					-	-      4.0
-	wbkgdset				-	-      4.0
+	bkgd					Y	-      4.0
+	bkgdset					Y	-      4.0
+	getbkgd					Y
+	wbkgd					Y	-      4.0
+	wbkgdset				Y	-      4.0
 
 **man-end****************************************************************/
 

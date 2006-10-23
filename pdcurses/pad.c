@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.33 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.34 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -85,12 +85,11 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	newpad					Y	-	Y
 	subpad					Y	-	Y
 	prefresh				Y	-	Y
 	pnoutrefresh				Y	-	Y
-	pechochar				-	-      3.0
+	pechochar				Y	-      3.0
 
 **man-end****************************************************************/
 

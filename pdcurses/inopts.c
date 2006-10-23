@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inopts.c,v 1.31 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.32 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -139,25 +139,24 @@ RCSID("$Id: inopts.c,v 1.31 2006/10/15 02:42:25 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	cbreak					Y	Y	Y
 	nocbreak				Y	Y	Y
 	echo					Y	Y	Y
 	noecho					Y	Y	Y
-	halfdelay				-	-	Y
+	halfdelay				Y	-	Y
 	intrflush				Y	-	Y
 	keypad					Y	-	Y
-	meta					-	-	Y
+	meta					Y	-	Y
 	nl					Y	Y	Y
 	nonl					Y	Y	Y
 	nodelay					Y	-	Y
-	notimeout				-	-	Y
+	notimeout				Y	-	Y
 	raw					Y	Y	Y
 	noraw					Y	Y	Y
-	noqiflush				-	-	Y
-	qiflush					-	-	Y
-	timeout					-	-	Y
-	wtimeout				-	-	Y
+	noqiflush				Y	-	Y
+	qiflush					Y	-	Y
+	timeout					Y	-	Y
+	wtimeout				Y	-	Y
 	typeahead				Y	-	Y
 
 **man-end****************************************************************/

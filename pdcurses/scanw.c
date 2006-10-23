@@ -27,10 +27,7 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 # define vsscanf _pdc_vsscanf
 #endif
 
-/* undefine any macros for functions defined in this module */
-#undef vw_scanw
-
-RCSID("$Id: scanw.c,v 1.29 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.30 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -65,12 +62,11 @@ RCSID("$Id: scanw.c,v 1.29 2006/10/15 02:42:25 wmcbrine Exp $");
 	return ERR.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	scanw					Y	Y	Y
 	wscanw					Y	Y	Y
 	mvscanw					Y	Y	Y
 	mvwscanw				Y	Y	Y
-	vwscanw					-	-      4.0
+	vwscanw					Y	-      4.0
 
 **man-end****************************************************************/
 

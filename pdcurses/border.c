@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.37 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.38 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -58,24 +58,21 @@ RCSID("$Id: border.c,v 1.37 2006/10/15 02:42:25 wmcbrine Exp $");
 	position does not change. The line is at most n characters long
 	or as many as will fit in the window.
 
-	border(), box(), hline(), and vline() are implemented as macros.
-
   X/Open Return Value:
 	These functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
-	border					-	-      4.0
-	wborder					-	-      4.0
+	border					Y	-      4.0
+	wborder					Y	-      4.0
 	box					Y	Y	Y
-	hline					-	-      4.0
-	vline					-	-      4.0
-	whline					-	-      4.0
-	wvline					-	-      4.0
-	mvhline
-	mvvline
-	mvwhline
-	mvwvline
+	hline					Y	-      4.0
+	vline					Y	-      4.0
+	whline					Y	-      4.0
+	wvline					Y	-      4.0
+	mvhline					Y
+	mvvline					Y
+	mvwhline				Y
+	mvwvline				Y
 
 **man-end****************************************************************/
 

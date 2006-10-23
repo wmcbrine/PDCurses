@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.80 2006/10/18 23:09:16 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.81 2006/10/23 05:03:31 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -114,13 +114,12 @@ extern void (*PDC_initial_slk)(void);
 	returns ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	initscr					Y	Y	Y
 	endwin					Y	Y	Y
-	isendwin				-	-      3.0
-	newterm					-	-	Y
-	set_term				-	-	Y
-	delscreen				-	-      4.0
+	isendwin				Y	-      3.0
+	newterm					Y	-	Y
+	set_term				Y	-	Y
+	delscreen				Y	-      4.0
 	resize_term				-	-	-
 	is_termresized				-	-	-
 

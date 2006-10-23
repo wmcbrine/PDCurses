@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <term.h>
 
-RCSID("$Id: terminfo.c,v 1.27 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.28 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -55,7 +55,6 @@ RCSID("$Id: terminfo.c,v 1.27 2006/10/15 02:42:26 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	mvcur					Y	Y	Y
 
 **man-end****************************************************************/

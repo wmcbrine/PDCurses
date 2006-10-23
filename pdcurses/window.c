@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.41 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.42 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -115,18 +115,17 @@ RCSID("$Id: window.c,v 1.41 2006/10/15 02:42:26 wmcbrine Exp $");
 	those windows.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	newwin					Y	Y	Y
 	delwin					Y	Y	Y
 	mvwin					Y	Y	Y
 	subwin					Y	Y	Y
 	derwin					Y	-	Y
 	mvderwin				Y	-	Y
-	dupwin					-	-      4.0
-	wsyncup					-	-      4.0
-	syncok					-	-      4.0
-	wcursyncup				-	-      4.0
-	wsyncdown				-	-      4.0
+	dupwin					Y	-      4.0
+	wsyncup					Y	-      4.0
+	syncok					Y	-      4.0
+	wcursyncup				Y	-      4.0
+	wsyncdown				Y	-      4.0
 	resize_window				-	-	-
 	PDC_makenew				-	-	-
 	PDC_sync				-	-	-

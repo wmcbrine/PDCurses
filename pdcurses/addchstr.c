@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: addchstr.c,v 1.32 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: addchstr.c,v 1.33 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,22 +41,18 @@ RCSID("$Id: addchstr.c,v 1.32 2006/10/15 02:42:25 wmcbrine Exp $");
 	for newline or other special characters, nor does any line 
 	wrapping occur.
 
-	NOTE: addchstr(), mvaddchstr(), mvwaddchstr() addchnstr(), 
-	mvaddchnstr(), and mvwaddchnstr() are implemented as macros.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
-	addchstr				-	-      4.0
-	waddchstr				-	-      4.0
-	mvaddchstr				-	-      4.0
-	mvwaddchstr				-	-      4.0
-	addchnstr				-	-      4.0
-	waddchnstr				-	-      4.0
-	mvaddchnstr				-	-      4.0
-	mvwaddchnstr				-	-      4.0
+	addchstr				Y	-      4.0
+	waddchstr				Y	-      4.0
+	mvaddchstr				Y	-      4.0
+	mvwaddchstr				Y	-      4.0
+	addchnstr				Y	-      4.0
+	waddchnstr				Y	-      4.0
+	mvaddchnstr				Y	-      4.0
+	mvwaddchnstr				Y	-      4.0
 
 **man-end****************************************************************/
 

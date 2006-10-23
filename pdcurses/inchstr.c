@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inchstr.c,v 1.23 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: inchstr.c,v 1.24 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -35,9 +35,6 @@ RCSID("$Id: inchstr.c,v 1.23 2006/10/15 02:42:25 wmcbrine Exp $");
 	right margin. The four routines with n as the last argument copy 
 	at most n elements, but no more than will fit on the line.
 
-	NOTE:	inchstr(), mvinchstr(), mvwinchstr() inchnstr(), 
-		mvinchnstr(), and mvwinchnstr() are implemented as macros.
-
   X/Open Return Value:
 	All functions return ERR on error and an integer value other 
 	than ERR on success. 
@@ -47,15 +44,14 @@ RCSID("$Id: inchstr.c,v 1.23 2006/10/15 02:42:25 wmcbrine Exp $");
 	returned.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
-	inchstr					-	-      4.0
-	winchstr				-	-      4.0
-	mvinchstr				-	-      4.0
-	mvwinchstr				-	-      4.0
-	inchnstr				-	-      4.0
-	winchnstr				-	-      4.0
-	mvinchnstr				-	-      4.0
-	mvwinchnstr				-	-      4.0
+	inchstr					Y	-      4.0
+	winchstr				Y	-      4.0
+	mvinchstr				Y	-      4.0
+	mvwinchstr				Y	-      4.0
+	inchnstr				Y	-      4.0
+	winchnstr				Y	-      4.0
+	mvinchnstr				Y	-      4.0
+	mvwinchnstr				Y	-      4.0
 
 **man-end****************************************************************/
 

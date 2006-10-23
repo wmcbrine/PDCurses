@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scr_dump.c,v 1.18 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: scr_dump.c,v 1.19 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -71,6 +71,14 @@ RCSID("$Id: scr_dump.c,v 1.18 2006/10/15 02:42:25 wmcbrine Exp $");
 	On successful completion, getwin() returns a pointer to the 
 	window it created. Otherwise, it returns a null pointer. Other 
 	functions return OK or ERR.
+
+  Portability				     X/Open    BSD    Sys V
+	putwin					Y
+	getwin					Y
+	scr_dump				Y
+	scr_init				Y
+	scr_restore				Y
+	scr_set					Y
 
 **man-end****************************************************************/
 

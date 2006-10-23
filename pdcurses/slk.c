@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.31 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.32 2006/10/23 05:03:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -67,7 +67,6 @@ RCSID("$Id: slk.c,v 1.31 2006/10/15 02:42:26 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	slk_init				Y	-	Y
 	slk_set					Y	-	Y
 	slk_refresh				Y	-	Y

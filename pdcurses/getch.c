@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.40 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.41 2006/10/23 05:03:30 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -69,14 +69,14 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	The flushinp() routine throws away any type-ahead that has been
 	typed by the user and has not yet been read by the program.
 
-	NOTE: getch(), mvgetch() and mvwgetch() are implemented as macros.
+	NOTE: getch() and ungetch() are implemented as macros.
 
   PDCurses Description:
 	Given the nature of the PC, there is no such timer set for an
 	incoming ESCAPE value, because function keys generate unique
 	scan codes that are not prefixed with the ESCAPE character.
 
-	Also, note that the getch() definition will conflict  with
+	Also, note that the getch() definition will conflict with
 	many DOS compiler's runtime libraries.
 
 	PDC_get_key_modifiers() returns the keyboard modifiers effective 
@@ -90,7 +90,6 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	character or function key token.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	getch					Y	Y	Y
 	wgetch					Y	Y	Y
 	mvgetch					Y	Y	Y

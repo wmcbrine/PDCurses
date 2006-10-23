@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: delch.c,v 1.23 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: delch.c,v 1.24 2006/10/23 05:03:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,13 +33,10 @@ RCSID("$Id: delch.c,v 1.23 2006/10/15 02:42:25 wmcbrine Exp $");
 	a blank.  The cursor position does not change (after moving to
 	y, x if coordinates are specified).
 
-	NOTE: delch(), mvdelch(), and mvwdelch() are implemented as macros.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	delch					Y	Y	Y
 	wdelch					Y	Y	Y
 	mvdelch					Y	Y	Y

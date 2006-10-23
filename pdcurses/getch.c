@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.41 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.42 2006/10/23 05:47:34 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -95,6 +95,7 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	mvgetch					Y	Y	Y
 	mvwgetch				Y	Y	Y
 	ungetch					Y	Y	Y
+	flushinp				Y	Y	Y
 	PDC_get_key_modifiers			-	-	-
 
 **man-end****************************************************************/

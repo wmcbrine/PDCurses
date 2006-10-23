@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.30 2006/10/23 06:09:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -30,7 +30,7 @@ RCSID("$Id: attr.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
 	int wstandend(WINDOW *win);
 	int standout(void);
 	int wstandout(WINDOW *win);
-	chtype getattrs(WINDOW *win);
+
 	int color_set(short color_pair, void *opts);
 	int wcolor_set(WINDOW *win, short color_pair, void *opts);
 
@@ -52,6 +52,8 @@ RCSID("$Id: attr.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
 		short color, const void *opts);
 	int wchgat(WINDOW *win, int n, attr_t attr, short color,
 		const void *opts);
+
+	chtype getattrs(WINDOW *win);
 
   X/Open Description:
 	These functions manipulate the current attributes and/or colors 
@@ -101,6 +103,21 @@ RCSID("$Id: attr.c,v 1.29 2006/10/23 05:03:30 wmcbrine Exp $");
 	wstandend				Y	Y	Y
 	standout				Y	Y	Y
 	wstandout				Y	Y	Y
+	color_set				Y
+	wcolor_set				Y
+	attr_get				Y
+	wattr_get				Y
+	attr_on					Y
+	wattr_on				Y
+	attr_off				Y
+	wattr_off				Y
+	attr_set				Y
+	wattr_set				Y
+	chgat					Y
+	wchgat					Y
+	mvchgat					Y
+	mvwchgat				Y
+	getattrs				-
 
 **man-end****************************************************************/
 

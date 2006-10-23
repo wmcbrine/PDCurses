@@ -15,7 +15,7 @@
 #include <string.h>
 #include <limits.h>
 
-RCSID("$Id: termattr.c,v 1.43 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.44 2006/10/23 06:09:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -97,6 +97,7 @@ RCSID("$Id: termattr.c,v 1.43 2006/10/23 05:46:32 wmcbrine Exp $");
 	termname				Y	Y	Y
 	erasewchar				Y
 	killwchar				Y
+	term_attrs				Y
 	wordchar				-	-	-
 
 **man-end****************************************************************/

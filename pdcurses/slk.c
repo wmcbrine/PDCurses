@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.32 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.33 2006/10/23 06:09:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -78,6 +78,9 @@ RCSID("$Id: slk.c,v 1.32 2006/10/23 05:03:31 wmcbrine Exp $");
 	slk_attron				Y	-	Y
 	slk_attrset				Y	-	Y
 	slk_attroff				Y	-	Y
+	slk_attr_on				Y
+	slk_attr_set				Y
+	slk_attr_off				Y
 
 **man-end****************************************************************/
 

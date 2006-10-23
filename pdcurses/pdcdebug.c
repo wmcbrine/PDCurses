@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-RCSID("$Id: pdcdebug.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcdebug.c,v 1.25 2006/10/23 05:55:01 wmcbrine Exp $");
 
 bool pdc_trace_on = FALSE;
 
@@ -61,4 +61,18 @@ void PDC_debug(const char *fmt, ...)
 	va_end(args);
 
 	fclose(dbfp);
+}
+
+void traceon(void)
+{
+	PDC_LOG(("traceon() - called\n"));
+
+	pdc_trace_on = TRUE;
+}
+
+void traceoff(void)
+{
+	PDC_LOG(("traceoff() - called\n"));
+
+	pdc_trace_on = FALSE;
 }

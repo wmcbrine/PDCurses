@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.53 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.54 2006/10/23 05:55:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -279,20 +279,3 @@ char *key_name(wchar_t c)
 	return keyname((int)c);
 }
 #endif
-
-#undef traceon
-#undef traceoff
-
-void traceon(void)
-{
-	PDC_LOG(("traceon() - called\n"));
-
-	pdc_trace_on = TRUE;
-}
-
-void traceoff(void)
-{
-	PDC_LOG(("traceoff() - called\n"));
-
-	pdc_trace_on = FALSE;
-}

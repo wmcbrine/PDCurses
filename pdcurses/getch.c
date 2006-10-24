@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.43 2006/10/24 00:12:31 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.44 2006/10/24 01:49:25 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -100,40 +100,23 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 **man-end****************************************************************/
 
-static WINDOW *_getch_win = NULL;
-
-/* _breakout() - Check if input is pending, either directly from the
-   keyboard, or previously buffered. */
-
-static bool _breakout(void)
-{
-	bool rc;
-
-	/* ungotten or buffered char */
-	rc = (c_ungind) || (c_pindex > c_gindex);
-
-	if (!rc)
-		rc = PDC_check_bios_key();
-
-	PDC_LOG(("_breakout() - rc %d c_ungind %d c_pindex %d c_gindex %d\n",
-		 rc, c_ungind, c_pindex, c_gindex));
-
-	return rc;
-}
-
 /* _rawgetch() - Gets a character without any interpretation and returns 
    it. If keypad mode is active for the designated window, function key 
    translation will be performed. Otherwise, function keys are ignored. 
    If nodelay mode is active in the window, then _rawgetch() returns -1 
    if no character is available. */
 
-static int _rawgetch(void)
+static int _rawgetch(WINDOW *win)
 {
 	int c;
 
-	if ((SP->delaytenths || _getch_win->_delayms ||
-	     _getch_win->_nodelay) && !_breakout())
+	/* return immediately if no key available, in no/half delay mode */
+
+	if ((SP->delaytenths || win->_delayms || win->_nodelay)
+	     && !(c_ungind || c_pindex > c_gindex || PDC_check_bios_key()))
 		return -1;
+
+	/* otherwise, wait for a "valid" key */
 
 	for (;;)
 	{
@@ -141,7 +124,7 @@ static int _rawgetch(void)
 
 		/* return the key if it is not a special key */
 
-		if ((unsigned int)c < 256 || _getch_win->_use_keypad)
+		if ((unsigned int)c < 256 || win->_use_keypad)
 			return c;
 	}
 }
@@ -183,8 +166,6 @@ int wgetch(WINDOW *win)
 	if (!(win->_flags & _PAD) && is_wintouched(win))
 		wrefresh(win);
 
-	_getch_win = win;
-
 	/* if ungotten char exists, remove and return it */
 
 	if (c_ungind)
@@ -204,7 +185,7 @@ int wgetch(WINDOW *win)
 
 	for (;;)			/* loop for any buffering */
 	{
-		key = _rawgetch();	/* get a raw character */
+		key = _rawgetch(win);	/* get a raw character */
 
 		/* Handle timeout() and halfdelay() */
 

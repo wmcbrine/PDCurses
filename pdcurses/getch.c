@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.46 2006/10/24 04:11:46 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.47 2006/10/24 11:16:22 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -154,7 +154,7 @@ int wgetch(WINDOW *win)
 	for (;;)			/* loop for any buffering */
 	{
 		if ((SP->delaytenths || win->_delayms || win->_nodelay)
-		     && !(c_pindex > c_gindex || PDC_check_bios_key()))
+		     && !PDC_check_bios_key())
 		{
 			key = -1;
 		}
@@ -206,8 +206,14 @@ int wgetch(WINDOW *win)
 
 		/* if no overflow, put data in buffer */
 
-		if (c_pindex < _INBUFSIZ - 2)
-			buffer[c_pindex++] = key;
+		if (key == '\b')
+		{
+			if (c_pindex > c_gindex)
+				c_pindex--;
+		}
+		else
+			if (c_pindex < _INBUFSIZ - 2)
+				buffer[c_pindex++] = key;
 
 		/* if we got a line */
 

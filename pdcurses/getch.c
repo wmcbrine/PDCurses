@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.44 2006/10/24 01:49:25 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.45 2006/10/24 03:07:27 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -157,9 +157,6 @@ int wgetch(WINDOW *win)
 				waitcount = 1;
 		}
 
-	PDC_LOG(("initial: %d delaytenths %d delayms %d\n",
-		waitcount, SP->delaytenths, win->_delayms));
-
 	/* wrs (7/31/93) -- System V curses refreshes window when wgetch 
 	   is called if there have been changes to it and it is not a pad */
 
@@ -189,24 +186,21 @@ int wgetch(WINDOW *win)
 
 		/* Handle timeout() and halfdelay() */
 
-		if (SP->delaytenths || win->_delayms)
+		if (key == -1)
 		{
-			PDC_LOG(("waitcount: %d delaytenths %d delayms %d\n",
-			    waitcount, SP->delaytenths, win->_delayms));
-
-			if (waitcount == 0 && key == -1)
-				return ERR;
-
-			if (key == -1)
+			if (SP->delaytenths || win->_delayms)
 			{
+				if (waitcount == 0)
+					return ERR;
+
 				waitcount--;
 				napms(50);	/* sleep for 1/20th second */
 				continue;
 			}
+			else
+				if (win->_nodelay)
+					return ERR;
 		}
-		else
-			if ((win->_nodelay) && (key == -1))
-				return ERR;
 
 		/* translate CR */
 

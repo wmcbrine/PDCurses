@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.42 2006/10/23 05:47:34 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.43 2006/10/24 00:12:31 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -100,7 +100,7 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 **man-end****************************************************************/
 
-WINDOW *pdc_getch_win = NULL;
+static WINDOW *_getch_win = NULL;
 
 /* _breakout() - Check if input is pending, either directly from the
    keyboard, or previously buffered. */
@@ -131,11 +131,8 @@ static int _rawgetch(void)
 {
 	int c;
 
-	if (pdc_getch_win == (WINDOW *)NULL)
-		return -1;
-
-	if ((SP->delaytenths || pdc_getch_win->_delayms ||
-	     pdc_getch_win->_nodelay) && !_breakout())
+	if ((SP->delaytenths || _getch_win->_delayms ||
+	     _getch_win->_nodelay) && !_breakout())
 		return -1;
 
 	for (;;)
@@ -144,7 +141,7 @@ static int _rawgetch(void)
 
 		/* return the key if it is not a special key */
 
-		if ((c = PDC_validchar(c)) >= 0)
+		if ((unsigned int)c < 256 || _getch_win->_use_keypad)
 			return c;
 	}
 }
@@ -186,7 +183,7 @@ int wgetch(WINDOW *win)
 	if (!(win->_flags & _PAD) && is_wintouched(win))
 		wrefresh(win);
 
-	pdc_getch_win = win;
+	_getch_win = win;
 
 	/* if ungotten char exists, remove and return it */
 

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.129 2006/10/15 02:42:24 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.130 2006/10/24 00:12:31 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -57,7 +57,6 @@
 
 extern bool pdc_trace_on;	/* tracing flag				*/
 extern bool pdc_color_started;
-extern WINDOW *pdc_getch_win;
 extern unsigned long pdc_key_modifiers;
 extern MOUSE_STATUS pdc_mouse_status;
 extern unsigned char *pdc_atrtab;
@@ -96,7 +95,6 @@ int	PDC_set_ctrl_break(bool);
 void	PDC_set_keyboard_binary(bool);
 void	PDC_sync(WINDOW *);
 void	PDC_transform_line(int, int, int, const chtype *);
-int	PDC_validchar(int);
 const char *PDC_sysname(void);
 
 #ifdef PDCDEBUG

@@ -30,7 +30,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.42 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.43 2006/10/24 00:12:31 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -249,26 +249,7 @@ bool PDC_check_bios_key(void)
 #endif
 }         
 
-/*man-start**************************************************************
-
-  PDC_get_bios_key() - Returns the next key available from the BIOS.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the next key code struck at the keyboard. If the low 8
-	bits are 0, the upper bits contain the extended character
-	code. If bit 0-7 are non-zero, the upper bits = 0.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_get_bios_key(void);
-
-**man-end****************************************************************/
-
-int PDC_get_bios_key(void)
+static int _key_core(void)
 {
 	int ascii, scan, key;
 #ifndef EMXVIDEO
@@ -472,46 +453,30 @@ int PDC_set_ctrl_break(bool setting)
 
 /*man-start**************************************************************
 
-  PDC_validchar() - validate/translate passed character
-  
+  PDC_get_bios_key() - Returns the next key available.
+
   PDCurses Description:
-	This is a private PDCurses function.
-  
-	Checks that 'c' is a valid character, and if so returns it,
-	with function key translation applied if 'w' has keypad mode
-	set.  If char is invalid, returns -1.
-  
-  PDCurses Return Value:
-	This function returns -1 if the passed character is invalid, or
-	the WINDOW* 'w' is NULL, or 'w's keypad is not active.
-  
-	Otherwise, this function returns the PDCurses equivalent of the
-	passed character.  See the function key and key macros in
-	<curses.h>
-  
+	This is a private PDCurses routine.
+
+	Returns the next key code struck at the keyboard.
+
   Portability:
-	PDCurses  int PDC_validchar(int c);
+	PDCurses  int PDC_get_bios_key(void);
 
 **man-end****************************************************************/
 
-int PDC_validchar(int c)
+int PDC_get_bios_key(void)
 {
-	int *scanp;
+	int c, *scanp;
 
-	PDC_LOG(("PDC_validchar() - called. c: %d\n", c));
+	PDC_LOG(("PDC_get_bios_key()\n"));
 
-	if (pdc_getch_win == (WINDOW *)NULL)
-		return -1;
+	c = _key_core();
 
 	/* normal character */
 
 	if ((unsigned int)c < 256)
 		return c;
-
-	/* skip if keys if !keypad mode */
-
-	if (!pdc_getch_win->_use_keypad)
-		return -1;
 
 	/* Under DOS, extended keys are in the upper byte.  Shift down 
 	   for a comparison. */

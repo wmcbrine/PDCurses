@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.42 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.43 2006/10/24 00:12:32 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
@@ -196,46 +196,6 @@ int PDC_set_ctrl_break(bool setting)
 	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
 
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_validchar() - validate/translate passed character
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	Checks that 'c' is a valid character, and if so returns it,
-	with function key translation applied if 'w' has keypad mode
-	set.  If char is invalid, returns -1.
-
-  PDCurses Return Value:
-	This function returns -1 if the passed character is invalid, or
-	the WINDOW *pdc_getch_win is NULL, or pdc_getch_win's keypad is 
-	not active.
-
-	Otherwise, this function returns the PDCurses equivalent of the
-	passed character.  See the function key and key macros in
-	<curses.h>.
-
-  Portability:
-	PDCurses  int PDC_validchar(int c);
-
-**man-end****************************************************************/
-
-int PDC_validchar(int c)
-{
-	PDC_LOG(("PDC_validchar() - called\n"));
-
-	/* skip special keys if !keypad mode */
-
-	if ((pdc_getch_win == (WINDOW *)NULL) ||
-	    ((unsigned int)c >= 256 && !pdc_getch_win->_use_keypad))
-		c = -1;
-
-	PDC_LOG(("PDC_validchar() - returned: %x\n", c));
-
-	return c;
 }
 
 /*man-start**************************************************************

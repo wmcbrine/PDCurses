@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.43 2006/10/24 00:12:32 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.44 2006/10/24 01:50:32 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
@@ -70,18 +70,15 @@ int PDC_get_bios_key(void)
 
 	XC_LOG(("PDC_get_bios_key() - called\n"));
 
-	while (1)
+	if (XC_read_socket(xc_key_sock, (char *)&newkey,
+	    sizeof(unsigned long)) < 0)
+		XCursesExitCursesProcess(2, "exiting from PDC_get_bios_key");
+
+	pdc_key_modifiers = (newkey >> 24) & 0xFF;
+	key = (int)(newkey & 0x00FFFFFF);
+
+	if (key == KEY_MOUSE)
 	{
-	    if (XC_read_socket(xc_key_sock, (char *)&newkey,
-		sizeof(unsigned long)) < 0)
-		    XCursesExitCursesProcess(2, 
-			"exiting from PDC_get_bios_key");
-
-	    pdc_key_modifiers = (newkey >> 24) & 0xFF;
-	    key = (int)(newkey & 0x00FFFFFF);
-
-	    if (key == KEY_MOUSE)
-	    {
 		if (XC_read_socket(xc_key_sock, (char *)&pdc_mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
@@ -91,25 +88,15 @@ int PDC_get_bios_key(void)
 		   the return value is > 0 (indicating the label number), 
 		   return with the KEY_F(key) value. */
 
-		if ((newkey = PDC_mouse_in_slk(TRAPPED_MOUSE_Y_POS,
-		    TRAPPED_MOUSE_X_POS)))
-		{
-		    if (TRAPPED_BUTTON_STATUS(1) & BUTTON_PRESSED)
-		    {
+		if ((newkey = PDC_mouse_in_slk(TRAPPED_MOUSE_Y_POS, 
+		    TRAPPED_MOUSE_X_POS)) &&
+		    (TRAPPED_BUTTON_STATUS(1) & BUTTON_PRESSED))
 			key = KEY_F(newkey);
-			break;
-		    }
-		}
-
-		break;
 
 		MOUSE_LOG(("rawgetch-x: %d y: %d Mouse status: %x\n",
 		    MOUSE_X_POS, MOUSE_Y_POS, Mouse_status.changes));
 		MOUSE_LOG(("rawgetch-Button1: %x Button2: %x Button3: %x\n",
 		    BUTTON_STATUS(1), BUTTON_STATUS(2), BUTTON_STATUS(3)));
-	    }
-	    else
-		break;
 	}
 
 	PDC_LOG(("%s:PDC_get_bios_key() - key %d returned\n", XCLOGMSG, key));

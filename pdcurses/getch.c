@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.45 2006/10/24 03:07:27 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.46 2006/10/24 04:11:46 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -100,35 +100,6 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 **man-end****************************************************************/
 
-/* _rawgetch() - Gets a character without any interpretation and returns 
-   it. If keypad mode is active for the designated window, function key 
-   translation will be performed. Otherwise, function keys are ignored. 
-   If nodelay mode is active in the window, then _rawgetch() returns -1 
-   if no character is available. */
-
-static int _rawgetch(WINDOW *win)
-{
-	int c;
-
-	/* return immediately if no key available, in no/half delay mode */
-
-	if ((SP->delaytenths || win->_delayms || win->_nodelay)
-	     && !(c_ungind || c_pindex > c_gindex || PDC_check_bios_key()))
-		return -1;
-
-	/* otherwise, wait for a "valid" key */
-
-	for (;;)
-	{
-		c = PDC_get_bios_key();
-
-		/* return the key if it is not a special key */
-
-		if ((unsigned int)c < 256 || win->_use_keypad)
-			return c;
-	}
-}
-
 int wgetch(WINDOW *win)
 {
 	static int buffer[_INBUFSIZ];	/* character buffer */
@@ -182,7 +153,20 @@ int wgetch(WINDOW *win)
 
 	for (;;)			/* loop for any buffering */
 	{
-		key = _rawgetch(win);	/* get a raw character */
+		if ((SP->delaytenths || win->_delayms || win->_nodelay)
+		     && !(c_pindex > c_gindex || PDC_check_bios_key()))
+		{
+			key = -1;
+		}
+		else
+		{
+			key = PDC_get_bios_key();
+
+			/* Filter special keys if not in keypad mode */
+
+			if ((unsigned int)key >= 256 && !win->_use_keypad)
+				key = -1;
+		}
 
 		/* Handle timeout() and halfdelay() */
 
@@ -195,11 +179,11 @@ int wgetch(WINDOW *win)
 
 				waitcount--;
 				napms(50);	/* sleep for 1/20th second */
-				continue;
 			}
 			else
 				if (win->_nodelay)
 					return ERR;
+			continue;
 		}
 
 		/* translate CR */

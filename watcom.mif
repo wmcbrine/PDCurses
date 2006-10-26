@@ -44,8 +44,15 @@ $(LIBPANEL) : $(PANOBJS)
 .c.obj: .autodepend
 	$(CC) $(CCFLAGS) $<
 
-.obj.exe: .autodepend
-	$(LINK) $(LDFLAGS) n $@ f $< l $(LIBCURSES)
+.obj.exe:
+	$(LINK) $(LDFLAGS) n $@ f $*.obj l $(LIBCURSES)
+
+testcurs.exe:	testcurs.obj $(LIBCURSES)
+newdemo.exe:	newdemo.obj $(LIBCURSES)
+xmas.exe:	xmas.obj $(LIBCURSES)
+firework.exe:	firework.obj $(LIBCURSES)
+rain.exe:	rain.obj $(LIBCURSES)
+worm.exe:	worm.obj $(LIBCURSES)
 
 ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
 	$(LINK) $(LDFLAGS) n $@ f ptest.obj l $(LIBCURSES) l $(LIBPANEL)

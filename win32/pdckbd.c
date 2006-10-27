@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.69 2006/10/24 00:12:32 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.70 2006/10/27 12:31:20 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -56,7 +56,7 @@ unsigned long pdc_key_modifiers = 0L;
 
 static int key_count = 0;
 
-static int _win32_kbhit(int);
+static bool _win32_kbhit(void);
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*  
@@ -305,7 +305,16 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_bios_key(void)
 {
-	return _win32_kbhit(0);
+	DWORD events;
+
+	if (key_count > 0)
+		return TRUE;
+
+	GetNumberOfConsoleInputEvents(pdc_con_in, &events);
+	if (!events)
+		return FALSE;
+
+	return _win32_kbhit();
 }
 
 /* _process_key_event returns -1 if the key in save_ip should be ignored 
@@ -460,7 +469,7 @@ int PDC_get_bios_key(void)
 
 	while (1)
 	{
-	    while (_win32_kbhit(INFINITE) == FALSE)
+	    while (_win32_kbhit() == FALSE)
 	    ;
 
 	    key_count--;
@@ -983,31 +992,23 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 	return numKeys;
 }
 
-static int _win32_kbhit(int timeout)
+static bool _win32_kbhit(void)
 {
 	INPUT_RECORD ip;
 	DWORD read;
 	int rc = FALSE;
 
-	PDC_LOG(("_win32_kbhit() - called: timeout %d key_count %d\n",
-		timeout, key_count));
+	PDC_LOG(("_win32_kbhit() - called: key_count %d\n", key_count));
 
 	if (key_count > 0)
 		return TRUE;
-
+#if 0
 	if (GetFileType(pdc_con_in) != FILE_TYPE_CHAR)
 	{
 		fprintf(stderr, "\n\nRedirection not supported\n");
 		exit(1);
 	}
-
-	if (WaitForSingleObject(pdc_con_in, timeout) != WAIT_OBJECT_0)
-		return FALSE;
-
-	PeekConsoleInput(pdc_con_in, &ip, 1, &read);
-	if (read == 0)
-		return FALSE;
-
+#endif
 	ReadConsoleInput(pdc_con_in, &ip, 1, &read);
 
 	key_count = _get_interesting_event(&ip);

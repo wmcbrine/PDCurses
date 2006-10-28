@@ -20,7 +20,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.65 2006/10/18 23:09:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.66 2006/10/28 13:26:01 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -414,7 +414,7 @@ static int _query_adapter_type(void)
 	)
 		pdc_direct_video = FALSE;
 
-	if ((unsigned int) pdc_video_seg == 0xb000)
+	if ((unsigned)pdc_video_seg == 0xb000)
 		SP->mono = TRUE;
 	else
 		SP->mono = FALSE;

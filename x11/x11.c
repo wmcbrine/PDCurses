@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.27 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.28 2006/10/28 13:26:01 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -964,7 +964,7 @@ static void GetIcon(void)
 	int size_count = 0;
 	Status rc;
 	unsigned char *bitmap_bits = NULL;
-	unsigned int icon_bitmap_width = 0, icon_bitmap_height = 0,
+	unsigned icon_bitmap_width = 0, icon_bitmap_height = 0,
 		file_bitmap_width = 0, file_bitmap_height = 0;
 
 	XC_LOG(("GetIcon() - called\n"));

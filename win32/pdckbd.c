@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.70 2006/10/27 12:31:20 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.71 2006/10/28 13:22:02 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -321,14 +321,14 @@ bool PDC_check_bios_key(void)
    for some reasons. Otherwise the keycode is returned which should be 
    returned by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
 
-   The Unicode support has been disabled. See below for the reason.
    CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
 static int _process_key_event(void)
 {
-	CHAR ascii = save_ip.Event.KeyEvent.uChar.AsciiChar;
-#if 0
-	WCHAR unicode = save_ip.Event.KeyEvent.uChar.UnicodeChar;
+#ifdef UNICODE
+	int ascii = (unsigned short)save_ip.Event.KeyEvent.uChar.UnicodeChar;
+#else
+	int ascii = (unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar;
 #endif
 	WORD vk = save_ip.Event.KeyEvent.wVirtualKeyCode;
 	DWORD state = save_ip.Event.KeyEvent.dwControlKeyState;
@@ -338,6 +338,7 @@ static int _process_key_event(void)
 	BOOL enhanced;
 
 	pdc_key_modifiers = 0L;
+	SP->key_code = TRUE;
 
 	/* Must calculate the key modifiers so that Alt keys work! Save 
 	   the key modifiers if required. Do this first to allow to 
@@ -384,11 +385,7 @@ static int _process_key_event(void)
 	}
 
 	/* The system may emit Ascii or Unicode characters depending on 
-	   whether ReadConsoleInputA or ReadConsoleInputW is used. We 
-	   use ReadConsoleInputA in all cases currently, so we just 
-	   check Ascii. Unicode characters are very hard to implement, 
-	   because our "special keys" like KEY_F(1) is one of the 
-	   unicode range.
+	   whether ReadConsoleInputA or ReadConsoleInputW is used.
 
 	   Now the ridiculous part of the processing. Normally, if ascii 
 	   != 0 then the system did the translation successfully. But 
@@ -405,10 +402,12 @@ static int _process_key_event(void)
 		   return extended keycodes for keypad codes. Test for 
 		   it and don't return an ascii code in case. */
 
+		SP->key_code = FALSE;
+
 #ifndef NUMKEYPAD
 		if (kptab[vk].extended == 0)
 #endif
-			return (unsigned char) ascii;
+			return ascii;
 	}
 
 	/* This case happens if a functional key has been entered. */
@@ -847,9 +846,11 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 		}
 		else if (vk == VK_MENU && numpadChar)
 		{
-		    ip->Event.KeyEvent.uChar.AsciiChar =
-			(CHAR) (unsigned char) numpadChar;
-
+#ifdef UNICODE
+		    ip->Event.KeyEvent.uChar.UnicodeChar = numpadChar;
+#else
+		    ip->Event.KeyEvent.uChar.AsciiChar = numpadChar;
+#endif
 		    ip->Event.KeyEvent.dwControlKeyState &= 
 			~LEFT_ALT_PRESSED;
 
@@ -880,7 +881,7 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 		    break;	/* throw away key press */
 		}
 
-#ifdef NUMPAD_CHARS
+#if 1 /*def NUMPAD_CHARS*/
 		if ((ip->Event.KeyEvent.dwControlKeyState & 
 		    (LEFT_ALT_PRESSED | ENHANCED_KEY)) == LEFT_ALT_PRESSED)
 		{

@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.44 2006/10/24 01:50:32 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.45 2006/10/28 13:22:03 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
@@ -100,6 +100,8 @@ int PDC_get_bios_key(void)
 	}
 
 	PDC_LOG(("%s:PDC_get_bios_key() - key %d returned\n", XCLOGMSG, key));
+
+	SP->key_code = ((unsigned)key > 256);	/* temporary */
 
 	return key;
 }

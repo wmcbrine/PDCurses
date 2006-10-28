@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.47 2006/10/24 11:16:22 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.48 2006/10/28 13:22:02 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -164,7 +164,7 @@ int wgetch(WINDOW *win)
 
 			/* Filter special keys if not in keypad mode */
 
-			if ((unsigned int)key >= 256 && !win->_use_keypad)
+			if (SP->key_code && !win->_use_keypad)
 				key = -1;
 		}
 

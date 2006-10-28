@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.238 2006/10/15 02:42:24 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.239 2006/10/28 13:22:02 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2819
+#define PDC_BUILD 2820
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -507,6 +507,9 @@ typedef struct
 					   with each key press		*/
 	bool	return_key_modifiers;	/* TRUE if modifier keys are
 					   returned as "real" keys	*/
+	bool	key_code;		/* TRUE if last key is a 
+					   special key; used internally 
+					   by get_wch() */
 #ifdef XCURSES
 	int	XcurscrSize;	/* size of Xcurscr shared memory block	*/
 	bool	sb_on;

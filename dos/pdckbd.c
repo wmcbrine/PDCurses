@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.44 2006/10/24 00:12:31 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.45 2006/10/28 13:22:02 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -370,7 +370,9 @@ int PDC_get_bios_key()
 
 	/* normal character */
 
-	if ((unsigned int)c < 256)
+	SP->key_code = ((unsigned)c >= 256);
+
+	if (!SP->key_code)
 		return c;
 
 	/* Under DOS, extended keys are in the upper byte.  Shift down 

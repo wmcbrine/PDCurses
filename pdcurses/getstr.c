@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.35 2006/10/29 13:59:39 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.36 2006/10/29 15:22:39 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -188,9 +188,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 			break;
 
 		default:
-			ch &= 0xff;
-
-			if (chars < n && !SP->key_code)
+			if (chars < n && !SP->key_code && ch < 0x100)
 			{
 				*p++ = ch;
 				if (oldecho) 

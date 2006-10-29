@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.48 2006/10/28 13:22:02 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.49 2006/10/29 12:05:13 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -34,6 +34,12 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	int mvwgetch(WINDOW *win, int y, int x);
 	int ungetch(int ch);
 	int flushinp(void);
+
+	int get_wch(wint_t *wch);
+	int wget_wch(WINDOW *win, wint_t *wch);
+	int mvget_wch(int y, int x, wint_t *wch);
+	int mvwget_wch(WINDOW *win, int y, int x, wint_t *wch);
+	int unget_wch(const wchar_t wch);
 
 	int PDC_get_key_modifiers(void);
 
@@ -96,6 +102,11 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	mvwgetch				Y	Y	Y
 	ungetch					Y	Y	Y
 	flushinp				Y	Y	Y
+	get_wch					Y
+	wget_wch				Y
+	mvget_wch				Y
+	mvwget_wch				Y
+	unget_wch				Y
 	PDC_get_key_modifiers			-	-	-
 
 **man-end****************************************************************/
@@ -103,14 +114,13 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 int wgetch(WINDOW *win)
 {
 	static int buffer[_INBUFSIZ];	/* character buffer */
-	int key, display_key, waitcount;
+	int key, waitcount;
 
 	PDC_LOG(("wgetch() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-	display_key = 0x100;
 	waitcount = 0;
 
 	 /* set the number of 1/20th second napms() calls */
@@ -188,12 +198,12 @@ int wgetch(WINDOW *win)
 
 		/* translate CR */
 
-		if ((key == '\r') && (SP->autocr) && (!SP->raw_inp))
+		if (key == '\r' && SP->autocr && !SP->raw_inp)
 			key = '\n';
 
 		/* if echo is enabled */
 
-		if (SP->echo && (key < display_key))
+		if (SP->echo && !SP->key_code)
 		{
 			waddch(win, key);
 			wrefresh(win);
@@ -201,7 +211,7 @@ int wgetch(WINDOW *win)
 
 		/* if no buffering */
 
-		if ((SP->raw_inp || SP->cbreak))
+		if (SP->raw_inp || SP->cbreak)
 			return key;
 
 		/* if no overflow, put data in buffer */
@@ -217,7 +227,7 @@ int wgetch(WINDOW *win)
 
 		/* if we got a line */
 
-		if ((key == '\n') || (key == '\r'))
+		if (key == '\n' || key == '\r')
 			return buffer[c_gindex++];
 	}
 }
@@ -273,3 +283,56 @@ unsigned long PDC_get_key_modifiers(void)
 
 	return pdc_key_modifiers;
 }
+
+#ifdef PDC_WIDE
+int wget_wch(WINDOW *win, wint_t *wch)
+{
+	int key;
+
+	PDC_LOG(("wget_wch() - called\n"));
+
+	if (!wch)
+		return ERR;
+
+	key = wgetch(win);
+
+	if (key == ERR)
+		return ERR;
+
+	*wch = key;
+
+	return SP->key_code ? KEY_CODE_YES : OK;
+}
+
+int get_wch(wint_t *wch)
+{
+	PDC_LOG(("get_wch() - called\n"));
+
+	return wget_wch(stdscr, wch);
+}
+
+int mvget_wch(int y, int x, wint_t *wch)
+{
+	PDC_LOG(("mvget_wch() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wget_wch(stdscr, wch);
+}
+
+int mvwget_wch(WINDOW *win, int y, int x, wint_t *wch)
+{
+	PDC_LOG(("mvwget_wch() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wget_wch(win, wch);
+}
+
+int unget_wch(const wchar_t wch)
+{
+	return PDC_ungetch(wch);
+}
+#endif

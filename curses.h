@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.239 2006/10/28 13:22:02 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.240 2006/10/29 12:05:13 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1348,6 +1348,7 @@ int	echo_wchar(const cchar_t *);
 int	erasewchar(wchar_t *);
 int	getbkgrnd(cchar_t *);
 int	getcchar(const cchar_t *, wchar_t *, attr_t *, short *, void *);
+int	get_wch(wint_t *);
 int	hline_set(const cchar_t *, int);
 int	innwstr(wchar_t *, int);
 int	ins_nwstr(const wchar_t *, int);
@@ -1364,6 +1365,7 @@ int	mvaddwstr(int, int, const wchar_t *);
 int	mvadd_wch(int, int, const cchar_t *);
 int	mvadd_wchnstr(int, int, const cchar_t *, int);
 int	mvadd_wchstr(int, int, const cchar_t *);
+int	mvget_wch(int, int, wint_t *);
 int	mvhline_set(int, int, const cchar_t *, int);
 int	mvinnwstr(int, int, wchar_t *, int);
 int	mvins_nwstr(int, int, const wchar_t *, int);
@@ -1379,6 +1381,7 @@ int	mvwaddwstr(WINDOW *, int, int, const wchar_t *);
 int	mvwadd_wch(WINDOW *, int, int, const cchar_t *);
 int	mvwadd_wchnstr(WINDOW *, int, int, const cchar_t *, int);
 int	mvwadd_wchstr(WINDOW *, int, int, const cchar_t *);
+int	mvwget_wch(WINDOW *, int, int, wint_t *);
 int	mvwhline_set(WINDOW *, int, int, const cchar_t *, int);
 int	mvwinnwstr(WINDOW *, int, int, wchar_t *, int);
 int	mvwins_nwstr(WINDOW *, int, int, const wchar_t *, int);
@@ -1391,6 +1394,7 @@ int	mvwinwstr(WINDOW *, int, int, wchar_t *);
 int	mvwvline_set(WINDOW *, int, int, const cchar_t *, int);
 int	pecho_wchar(WINDOW *, const cchar_t*);
 int	setcchar(cchar_t*, const wchar_t*, const attr_t, short, const void*);
+int	unget_wch(const wchar_t);
 int	vline_set(const cchar_t *, int);
 int	waddnwstr(WINDOW *, const wchar_t *, int);
 int	waddwstr(WINDOW *, const wchar_t *);
@@ -1404,6 +1408,7 @@ int	wborder_set(WINDOW *, const cchar_t *, const cchar_t *,
 		    const cchar_t *, const cchar_t *, const cchar_t *);
 int	wecho_wchar(WINDOW *, const cchar_t *);
 int	wgetbkgrnd(WINDOW *, cchar_t *);
+int	wget_wch(WINDOW *, wint_t *);
 int	whline_set(WINDOW *, const cchar_t *, int);
 int	winnwstr(WINDOW *, wchar_t *, int);
 int	wins_nwstr(WINDOW *, const wchar_t *, int);
@@ -1419,20 +1424,15 @@ int	wvline_set(WINDOW *, const cchar_t *, int);
 /* Not implemented yet */
 
 int	getn_wstr(wint_t *, int);
-int	get_wch(wint_t *);
 int	get_wstr(wint_t *);
 int	mvgetn_wstr(int, int, wint_t *, int);
-int	mvget_wch(int, int, wint_t *);
 int	mvget_wstr(int, int, wint_t *);
 int	mvwgetn_wstr(WINDOW *, int, int, wint_t *, int);
-int	mvwget_wch(WINDOW *, int, int, wint_t *);
 int	mvwget_wstr(WINDOW *, int, int, wint_t *);
 int	wgetn_wstr(WINDOW *, wint_t *, int);
-int	wget_wch(WINDOW *, wint_t *);
 int	wget_wstr(WINDOW *, wint_t *);
 
 int	slk_wset(int, const wchar_t *, int);
-int	unget_wch(const wchar_t);
 #endif
 
 /* Quasi-standard */

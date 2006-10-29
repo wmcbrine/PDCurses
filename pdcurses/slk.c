@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.34 2006/10/29 13:46:06 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.35 2006/10/29 16:02:22 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -239,12 +239,10 @@ static int _slk_set_core(int label_num, const char *label_str,
 	for (i = 0; i < label_length; ++i)
 		waddch(SP->slk_winptr, ' ');
 
-	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
-
 	switch (label_fmt)
 	{
 	case 0:  /* LEFT */
-		waddchstr(SP->slk_winptr, slk_temp_string);
+		col = 0;
 		break;
 
 	case 1:  /* CENTER */
@@ -253,18 +251,14 @@ static int _slk_set_core(int label_num, const char *label_str,
 
 		if (col + slen > label_length)
 			--col;
-
-		mvwaddchstr(SP->slk_winptr, label_line,
-			slk_start_col[num] + col, slk_temp_string);
 		break;
 
 	default:  /* RIGHT */
 		col = label_length - slen;
-
-		mvwaddchstr(SP->slk_winptr, label_line,
-			slk_start_col[num] + col, slk_temp_string);
-		break;
 	}
+
+	mvwaddchstr(SP->slk_winptr, label_line,
+		slk_start_col[num] + col, slk_temp_string);
 
 	wmove(SP->slk_winptr, label_line, 0);	/* park it */
 
@@ -653,12 +647,10 @@ int slk_wset(int label_num, const wchar_t *label_str, int label_fmt)
 	for (i = 0; i < label_length; ++i)
 		waddch(SP->slk_winptr, ' ');
 
-	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
-
 	switch (label_fmt)
 	{
 	case 0:  /* LEFT */
-		waddchstr(SP->slk_winptr, slk_temp_string);
+		col = 0;
 		break;
 
 	case 1:  /* CENTER */
@@ -667,18 +659,14 @@ int slk_wset(int label_num, const wchar_t *label_str, int label_fmt)
 
 		if (col + slen > label_length)
 			--col;
-
-		mvwaddchstr(SP->slk_winptr, label_line,
-			slk_start_col[num] + col, slk_temp_string);
 		break;
 
 	default:  /* RIGHT */
 		col = label_length - slen;
-
-		mvwaddchstr(SP->slk_winptr, label_line,
-			slk_start_col[num] + col, slk_temp_string);
-		break;
 	}
+
+	mvwaddchstr(SP->slk_winptr, label_line,
+		slk_start_col[num] + col, slk_temp_string);
 
 	wmove(SP->slk_winptr, label_line, 0);	/* park it */
 

@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.35 2006/10/29 16:02:22 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.36 2006/10/29 16:17:48 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -265,7 +265,17 @@ static int _slk_set_core(int label_num, const char *label_str,
 	return OK;
 }
 
-/*  slk_set() Used to set a slk label to a string.
+/* redraw each button */
+
+static void _redraw(void)
+{
+	int i;
+
+	for (i = 0; i < labels; ++i)
+		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
+}
+
+/* slk_set() Used to set a slk label to a string.
 
    label_num = 1 - 8 (or 10) (number of the label)
    label_str = string (8 or 7 bytes total), NULL chars or NULL pointer
@@ -356,14 +366,12 @@ int slk_touch(void)
 
 int slk_attron(const chtype attrs)
 {
-	int i, rc;
+	int rc;
 
 	PDC_LOG(("slk_attron() - called\n"));
 
 	rc = wattron(SP->slk_winptr, attrs);
-
-	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
+	_redraw();
 
 	return rc;
 }
@@ -377,14 +385,12 @@ int slk_attr_on(const attr_t attrs, void *opts)
 
 int slk_attroff(const chtype attrs)
 {
-	int i, rc;
+	int rc;
 
 	PDC_LOG(("slk_attroff() - called\n"));
 
 	rc = wattroff(SP->slk_winptr, attrs);
-
-	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
+	_redraw();
 
 	return rc;
 }
@@ -398,28 +404,24 @@ int slk_attr_off(const attr_t attrs, void *opts)
 
 int slk_attrset(const chtype attrs)
 {
-	int i, rc;
+	int rc;
 
 	PDC_LOG(("slk_attrset() - called\n"));
 
 	rc = wattrset(SP->slk_winptr, attrs);
-
-	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
+	_redraw();
 
 	return rc;
 }
 
 int slk_color(short color_pair)
 {
-	int i, rc;
+	int rc;
 
 	PDC_LOG(("slk_color() - called\n"));
 
 	rc = wcolor_set(SP->slk_winptr, color_pair, NULL);
-
-	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
+	_redraw();
 
 	return rc;
 }

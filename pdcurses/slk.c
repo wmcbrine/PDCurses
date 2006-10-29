@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.33 2006/10/23 06:09:36 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.34 2006/10/29 13:46:06 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -36,6 +36,8 @@ RCSID("$Id: slk.c,v 1.33 2006/10/23 06:09:36 wmcbrine Exp $");
 	int slk_attroff(const chtype attrs);
 	int slk_attr_off(const attr_t attrs, void *opts);
 	int slk_color(short color_pair);
+
+	int slk_wset(int labnum, const wchar_t *label, int fmt);
 
   X/Open Description:
 	These functions manipulate a window that contain Soft Label Keys 
@@ -81,6 +83,7 @@ RCSID("$Id: slk.c,v 1.33 2006/10/23 06:09:36 wmcbrine Exp $");
 	slk_attr_on				Y
 	slk_attr_set				Y
 	slk_attr_off				Y
+	slk_wset				Y
 
 **man-end****************************************************************/
 
@@ -89,7 +92,7 @@ RCSID("$Id: slk.c,v 1.33 2006/10/23 06:09:36 wmcbrine Exp $");
 #define LABEL_EXTENDED	10
 #define LABEL_NCURSES_EXTENDED	12
 
-static char slk_temp_string[64];
+static chtype slk_temp_string[64];
 
 static int slk_start_col[LABEL_NCURSES_EXTENDED];
 static chtype slk_attributes[LABEL_NCURSES_EXTENDED];
@@ -103,7 +106,7 @@ static void _slk_initial(void);
 static void _slk_calc(void);
 
 static struct {
-	char	label[32];
+	chtype	label[32];
 	int	format;
 } slk_save[LABEL_NCURSES_EXTENDED];
 
@@ -194,7 +197,7 @@ static int _slk_set_core(int label_num, const char *label_str,
 
 		if (save)
 		{
-			*slk_save[num].label = '\0';
+			*slk_save[num].label = 0;
 			slk_save[num].format = 0;
 		}
 
@@ -205,14 +208,28 @@ static int _slk_set_core(int label_num, const char *label_str,
 
 	/* Otherwise, format the character and put in position. */
 
-	memset(slk_temp_string, 0, sizeof(slk_temp_string));
-	strncpy(slk_temp_string, label_str, label_length);
+	for (i = 0; i < label_length; i++)
+	{
+		chtype ch = label_str[i];
+		if (ch)
+			ch |= slk_attributes[num];
+
+		slk_temp_string[i] = ch;
+		if (save)
+			slk_save[num].label[i] = ch;
+
+		if (!ch)
+			break;
+	}
+
+	slen = i;
+	slk_temp_string[label_length] = 0;
 
 	/* Save the string and attribute */
 
 	if (save)
 	{
-		strcpy(slk_save[num].label, slk_temp_string);
+		slk_save[num].label[label_length] = 0;
 		slk_save[num].format = label_fmt;
 	}
 
@@ -227,26 +244,24 @@ static int _slk_set_core(int label_num, const char *label_str,
 	switch (label_fmt)
 	{
 	case 0:  /* LEFT */
-		waddstr(SP->slk_winptr, slk_temp_string);
+		waddchstr(SP->slk_winptr, slk_temp_string);
 		break;
 
 	case 1:  /* CENTER */
-		slen = strlen(slk_temp_string);
 		llen = label_length / 2;
 		col = llen - slen / 2;
 
 		if (col + slen > label_length)
 			--col;
 
-		mvwaddstr(SP->slk_winptr, label_line,
+		mvwaddchstr(SP->slk_winptr, label_line,
 			slk_start_col[num] + col, slk_temp_string);
 		break;
 
 	default:  /* RIGHT */
-		slen = strlen(slk_temp_string);
 		col = label_length - slen;
 
-		mvwaddstr(SP->slk_winptr, label_line,
+		mvwaddchstr(SP->slk_winptr, label_line,
 			slk_start_col[num] + col, slk_temp_string);
 		break;
 	}
@@ -288,15 +303,21 @@ int slk_noutrefresh(void)
 
 char *slk_label(int labnum)
 {
+	static char temp[64];
+	chtype *p;
+	int i;
+
 	PDC_LOG(("slk_label() - called\n"));
 
 	if (labnum < 0 || labnum > labels)
 		return (char *)0;
 
-	memset(slk_temp_string, 0, sizeof (slk_temp_string));
-	strcpy(slk_temp_string, slk_save[labnum - 1].label);
+	for (i = 0, p = slk_save[labnum - 1].label; *p; i++)
+		temp[i] = *p++;
 
-	return slk_temp_string;	/* only good temporarily */
+	temp[i] = '\0';
+
+	return temp;
 }
 
 int slk_clear(void)
@@ -324,7 +345,7 @@ int slk_restore(void)
 	for (i = 0; i < labels; ++i)
 	{
 		wattrset(SP->slk_winptr, slk_attributes[i]);
-		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
 	}
 
 	SP->slk_winptr->_attrs = attr;
@@ -348,7 +369,7 @@ int slk_attron(const chtype attrs)
 	rc = wattron(SP->slk_winptr, attrs);
 
 	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
 
 	return rc;
 }
@@ -369,7 +390,7 @@ int slk_attroff(const chtype attrs)
 	rc = wattroff(SP->slk_winptr, attrs);
 
 	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
 
 	return rc;
 }
@@ -390,7 +411,7 @@ int slk_attrset(const chtype attrs)
 	rc = wattrset(SP->slk_winptr, attrs);
 
 	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
 
 	return rc;
 }
@@ -404,7 +425,7 @@ int slk_color(short color_pair)
 	rc = wcolor_set(SP->slk_winptr, color_pair, NULL);
 
 	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_save[i].label, slk_save[i].format, 0);
+		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
 
 	return rc;
 }
@@ -445,7 +466,7 @@ static void _slk_initial(void)
 	if (label_fmt == 3)
 	{
 		save_attr = SP->slk_winptr->_attrs;
-		wattrset(SP->slk_winptr,A_NORMAL);
+		wattrset(SP->slk_winptr, A_NORMAL);
 		wmove(SP->slk_winptr, 0, 0);
 		whline(SP->slk_winptr, 0, COLS);
 
@@ -547,7 +568,7 @@ static void _slk_calc(void)
 	/* make sure labels are all in window */
 
 	for (i = 0; i < labels; ++i)
-		slk_set(i + 1, slk_save[i].label, slk_save[i].format);
+		slk_set(i + 1, slk_label(i + 1), slk_save[i].format);
 }
 
 int PDC_mouse_in_slk(int y, int x)
@@ -570,3 +591,97 @@ int PDC_mouse_in_slk(int y, int x)
 
 	return 0;
 }
+
+#ifdef PDC_WIDE
+int slk_wset(int label_num, const wchar_t *label_str, int label_fmt)
+{
+	int i, num, slen, llen, col;
+
+	if (label_num < 1 || label_num > labels ||
+	    label_fmt < 0 || label_fmt > 2)
+		return ERR;
+
+	num = label_num - 1;
+
+	/* A NULL in either the first byte or pointer
+	   indicates a clearing of the label. */
+
+	if (!label_str || !(*label_str)) 
+	{
+		slk_attributes[num] = SP->slk_winptr->_attrs;
+		wmove(SP->slk_winptr, label_line, slk_start_col[num]);
+
+		for (i = 0; i < label_length; ++i)
+			waddch(SP->slk_winptr, ' ');
+
+		/* Save the string and attribute */
+
+		*slk_save[num].label = 0;
+		slk_save[num].format = 0;
+
+		wmove(SP->slk_winptr, label_line, 0);   /* park it */
+
+		return OK;
+	}
+
+	/* Otherwise, format the character and put in position. */
+
+	for (i = 0; i < label_length; i++)
+	{
+		chtype ch = label_str[i];
+		if (ch)
+			ch |= slk_attributes[num];
+
+		slk_temp_string[i] = ch;
+		slk_save[num].label[i] = ch;
+
+		if (!ch)
+			break;
+	}
+
+	slen = i;
+	slk_temp_string[label_length] = 0;
+
+	/* Save the string and attribute */
+
+	slk_save[num].label[label_length] = 0;
+	slk_save[num].format = label_fmt;
+
+	slk_attributes[num] = SP->slk_winptr->_attrs;
+	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
+
+	for (i = 0; i < label_length; ++i)
+		waddch(SP->slk_winptr, ' ');
+
+	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
+
+	switch (label_fmt)
+	{
+	case 0:  /* LEFT */
+		waddchstr(SP->slk_winptr, slk_temp_string);
+		break;
+
+	case 1:  /* CENTER */
+		llen = label_length / 2;
+		col = llen - slen / 2;
+
+		if (col + slen > label_length)
+			--col;
+
+		mvwaddchstr(SP->slk_winptr, label_line,
+			slk_start_col[num] + col, slk_temp_string);
+		break;
+
+	default:  /* RIGHT */
+		col = label_length - slen;
+
+		mvwaddchstr(SP->slk_winptr, label_line,
+			slk_start_col[num] + col, slk_temp_string);
+		break;
+	}
+
+	wmove(SP->slk_winptr, label_line, 0);	/* park it */
+
+	return OK;
+}
+#endif

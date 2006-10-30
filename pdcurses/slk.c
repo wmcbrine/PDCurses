@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.37 2006/10/30 09:08:15 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.38 2006/10/30 09:23:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -91,8 +91,6 @@ RCSID("$Id: slk.c,v 1.37 2006/10/30 09:08:15 wmcbrine Exp $");
 #define LABEL_NORMAL	8
 #define LABEL_EXTENDED	10
 #define LABEL_NCURSES_EXTENDED	12
-
-static chtype slk_temp_string[64];
 
 static int slk_start_col[LABEL_NCURSES_EXTENDED];
 static int label_length = 0;

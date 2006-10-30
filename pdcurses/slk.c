@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.36 2006/10/29 16:17:48 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.37 2006/10/30 09:08:15 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -95,11 +95,11 @@ RCSID("$Id: slk.c,v 1.36 2006/10/29 16:17:48 wmcbrine Exp $");
 static chtype slk_temp_string[64];
 
 static int slk_start_col[LABEL_NCURSES_EXTENDED];
-static chtype slk_attributes[LABEL_NCURSES_EXTENDED];
 static int label_length = 0;
 static int labels = 0;
 static int label_fmt = 0;
 static int label_line = 0;
+static bool hidden = FALSE;
 
 void (*PDC_initial_slk)(void);
 static void _slk_initial(void);
@@ -107,6 +107,7 @@ static void _slk_calc(void);
 
 static struct {
 	chtype	label[32];
+	int	len;
 	int	format;
 } slk_save[LABEL_NCURSES_EXTENDED];
 
@@ -161,93 +162,25 @@ int slk_init(int fmt)
 	return OK;
 }
 
-/* _slk_set_core() Used to set a slk label to a string.
+/* draw a single button */
 
-   label_num = 1 - 8 (or 10) (number of the label)
-   label_str = string (8 or 7 bytes total), NULL chars or NULL pointer
-   label_fmt =  justification
-      0 = left
-      1 = center
-      2 = right
-   save = 1 yes or 0 no  */
-
-static int _slk_set_core(int label_num, const char *label_str,
-			 int label_fmt, int save)
+static void _drawone(int num)
 {
-	int i, num, slen, llen, col;
+	int i, col, slen;
 
-	if (label_num < 1 || label_num > labels ||
-	    label_fmt < 0 || label_fmt > 2)
-		return ERR;
+	if (hidden)
+		return;
 
-	num = label_num - 1;
+	slen = slk_save[num].len;
 
-	/* A NULL in either the first byte or pointer
-	   indicates a clearing of the label. */
-
-	if (label_str == (char *)0 || *label_str == '\0') 
-	{
-		slk_attributes[num] = SP->slk_winptr->_attrs;
-		wmove(SP->slk_winptr, label_line, slk_start_col[num]);
-
-		for (i = 0; i < label_length; ++i)
-			waddch(SP->slk_winptr, ' ');
-
-		/* Save the string and attribute */
-
-		if (save)
-		{
-			*slk_save[num].label = 0;
-			slk_save[num].format = 0;
-		}
-
-		wmove(SP->slk_winptr, label_line, 0);   /* park it */
-
-		return OK;
-	}
-
-	/* Otherwise, format the character and put in position. */
-
-	for (i = 0; i < label_length; i++)
-	{
-		chtype ch = label_str[i];
-		if (ch)
-			ch |= slk_attributes[num];
-
-		slk_temp_string[i] = ch;
-		if (save)
-			slk_save[num].label[i] = ch;
-
-		if (!ch)
-			break;
-	}
-
-	slen = i;
-	slk_temp_string[label_length] = 0;
-
-	/* Save the string and attribute */
-
-	if (save)
-	{
-		slk_save[num].label[label_length] = 0;
-		slk_save[num].format = label_fmt;
-	}
-
-	slk_attributes[num] = SP->slk_winptr->_attrs;
-	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
-
-	for (i = 0; i < label_length; ++i)
-		waddch(SP->slk_winptr, ' ');
-
-	switch (label_fmt)
+	switch (slk_save[num].format)
 	{
 	case 0:  /* LEFT */
 		col = 0;
 		break;
 
 	case 1:  /* CENTER */
-		llen = label_length / 2;
-		col = llen - slen / 2;
+		col = (label_length - slen) / 2;
 
 		if (col + slen > label_length)
 			--col;
@@ -257,12 +190,11 @@ static int _slk_set_core(int label_num, const char *label_str,
 		col = label_length - slen;
 	}
 
-	mvwaddchstr(SP->slk_winptr, label_line,
-		slk_start_col[num] + col, slk_temp_string);
+	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
 
-	wmove(SP->slk_winptr, label_line, 0);	/* park it */
-
-	return OK;
+	for (i = 0; i < label_length; ++i)
+		waddch(SP->slk_winptr, (i >= col && i < (col + slen)) ?
+			slk_save[num].label[i - col] : ' ');
 }
 
 /* redraw each button */
@@ -272,7 +204,7 @@ static void _redraw(void)
 	int i;
 
 	for (i = 0; i < labels; ++i)
-		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
+		_drawone(i);
 }
 
 /* slk_set() Used to set a slk label to a string.
@@ -288,7 +220,50 @@ int slk_set(int label_num, const char *label_str, int label_fmt)
 {
 	PDC_LOG(("slk_set() - called\n"));
 
-	return _slk_set_core(label_num, label_str, label_fmt, 1);
+	int i;
+
+	if (label_num < 1 || label_num > labels ||
+	    label_fmt < 0 || label_fmt > 2)
+		return ERR;
+
+	label_num--;
+
+	/* A NULL in either the first byte or pointer
+	   indicates a clearing of the label. */
+
+	if (label_str == (char *)0 || *label_str == '\0') 
+	{
+		/* Save the string and attribute */
+
+		*slk_save[label_num].label = 0;
+		slk_save[label_num].format = 0;
+		slk_save[label_num].len = 0;
+	}
+	else
+	{
+
+		/* Otherwise, format the character and put in position */
+
+		for (i = 0; i < label_length; i++)
+		{
+			chtype ch = label_str[i];
+
+			slk_save[label_num].label[i] = ch;
+
+			if (!ch)
+				break;
+		}
+
+		/* Save the string and attribute */
+
+		slk_save[label_num].label[label_length] = 0;
+		slk_save[label_num].format = label_fmt;
+		slk_save[label_num].len = i;
+	}
+
+	_drawone(label_num);
+
+	return OK;
 }
 
 int slk_refresh(void)
@@ -326,34 +301,19 @@ char *slk_label(int labnum)
 
 int slk_clear(void)
 {
-	int i;
-
 	PDC_LOG(("slk_clear() - called\n"));
 
-	for (i = 0; i < labels; ++i)
-	{
-		wattrset(SP->slk_winptr, slk_attributes[i]);
-		_slk_set_core(i + 1, "", 0, 0);
-	}
-
+	hidden = TRUE;
+	werase(SP->slk_winptr);
 	return wrefresh(SP->slk_winptr);
 }
 
 int slk_restore(void)
 {
-	int i;
-	chtype attr = SP->slk_winptr->_attrs;
-
 	PDC_LOG(("slk_restore() - called\n"));
 
-	for (i = 0; i < labels; ++i)
-	{
-		wattrset(SP->slk_winptr, slk_attributes[i]);
-		_slk_set_core(i + 1, slk_label(i + 1), slk_save[i].format, 0);
-	}
-
-	SP->slk_winptr->_attrs = attr;
-
+	hidden = FALSE;
+	_redraw();
 	return wrefresh(SP->slk_winptr);
 }
 
@@ -481,10 +441,8 @@ static void _slk_calc(void)
 	int i, center, col = 0;
 	label_length = COLS / labels;
 
-	/* set default attribute */
-
-	for (i = 0; i < labels; ++i)
-		slk_attributes[i] = A_REVERSE;
+	if (label_length > 31)
+		label_length = 31;
 
 	switch (label_fmt)
 	{
@@ -563,8 +521,7 @@ static void _slk_calc(void)
 
 	/* make sure labels are all in window */
 
-	for (i = 0; i < labels; ++i)
-		slk_set(i + 1, slk_label(i + 1), slk_save[i].format);
+	_redraw();
 }
 
 int PDC_mouse_in_slk(int y, int x)
@@ -591,86 +548,50 @@ int PDC_mouse_in_slk(int y, int x)
 #ifdef PDC_WIDE
 int slk_wset(int label_num, const wchar_t *label_str, int label_fmt)
 {
-	int i, num, slen, llen, col;
+	PDC_LOG(("slk_set() - called\n"));
+
+	int i;
 
 	if (label_num < 1 || label_num > labels ||
 	    label_fmt < 0 || label_fmt > 2)
 		return ERR;
 
-	num = label_num - 1;
+	label_num--;
 
 	/* A NULL in either the first byte or pointer
 	   indicates a clearing of the label. */
 
 	if (!label_str || !(*label_str)) 
 	{
-		slk_attributes[num] = SP->slk_winptr->_attrs;
-		wmove(SP->slk_winptr, label_line, slk_start_col[num]);
+		/* Save the string and attribute */
 
-		for (i = 0; i < label_length; ++i)
-			waddch(SP->slk_winptr, ' ');
+		*slk_save[label_num].label = 0;
+		slk_save[label_num].format = 0;
+		slk_save[label_num].len = 0;
+	}
+	else
+	{
+
+		/* Otherwise, format the character and put in position */
+
+		for (i = 0; i < label_length; i++)
+		{
+			chtype ch = label_str[i];
+
+			slk_save[label_num].label[i] = ch;
+
+			if (!ch)
+				break;
+		}
 
 		/* Save the string and attribute */
 
-		*slk_save[num].label = 0;
-		slk_save[num].format = 0;
-
-		wmove(SP->slk_winptr, label_line, 0);   /* park it */
-
-		return OK;
+		slk_save[label_num].label[label_length] = 0;
+		slk_save[label_num].format = label_fmt;
+		slk_save[label_num].len = i;
 	}
 
-	/* Otherwise, format the character and put in position. */
-
-	for (i = 0; i < label_length; i++)
-	{
-		chtype ch = label_str[i];
-		if (ch)
-			ch |= slk_attributes[num];
-
-		slk_temp_string[i] = ch;
-		slk_save[num].label[i] = ch;
-
-		if (!ch)
-			break;
-	}
-
-	slen = i;
-	slk_temp_string[label_length] = 0;
-
-	/* Save the string and attribute */
-
-	slk_save[num].label[label_length] = 0;
-	slk_save[num].format = label_fmt;
-
-	slk_attributes[num] = SP->slk_winptr->_attrs;
-	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
-
-	for (i = 0; i < label_length; ++i)
-		waddch(SP->slk_winptr, ' ');
-
-	switch (label_fmt)
-	{
-	case 0:  /* LEFT */
-		col = 0;
-		break;
-
-	case 1:  /* CENTER */
-		llen = label_length / 2;
-		col = llen - slen / 2;
-
-		if (col + slen > label_length)
-			--col;
-		break;
-
-	default:  /* RIGHT */
-		col = label_length - slen;
-	}
-
-	mvwaddchstr(SP->slk_winptr, label_line,
-		slk_start_col[num] + col, slk_temp_string);
-
-	wmove(SP->slk_winptr, label_line, 0);	/* park it */
+	_drawone(label_num);
 
 	return OK;
 }

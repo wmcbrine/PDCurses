@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.38 2006/10/30 09:23:53 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.39 2006/10/30 10:36:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -22,7 +22,7 @@ RCSID("$Id: slk.c,v 1.38 2006/10/30 09:23:53 wmcbrine Exp $");
 
   Synopsis:
 	int slk_init(int fmt);
-	int slk_set(int labnum, const char *label, int fmt);
+	int slk_set(int labnum, const char *label, int justify);
 	int slk_refresh(void);
 	int slk_noutrefresh(void);
 	char *slk_label(int labnum);
@@ -37,7 +37,7 @@ RCSID("$Id: slk.c,v 1.38 2006/10/30 09:23:53 wmcbrine Exp $");
 	int slk_attr_off(const attr_t attrs, void *opts);
 	int slk_color(short color_pair);
 
-	int slk_wset(int labnum, const wchar_t *label, int fmt);
+	int slk_wset(int labnum, const wchar_t *label, int justify);
 
   X/Open Description:
 	These functions manipulate a window that contain Soft Label Keys 
@@ -207,59 +207,49 @@ static void _redraw(void)
 
 /* slk_set() Used to set a slk label to a string.
 
-   label_num = 1 - 8 (or 10) (number of the label)
-   label_str = string (8 or 7 bytes total), NULL chars or NULL pointer
-   label_fmt =  justification
-      0 = left
-      1 = center
-      2 = right  */
+   labnum  = 1 - 8 (or 10) (number of the label)
+   label   = string (8 or 7 bytes total), or NULL
+   justify = 0 : left, 1 : center, 2 : right  */
 
-int slk_set(int label_num, const char *label_str, int label_fmt)
+int slk_set(int labnum, const char *label, int justify)
 {
 	PDC_LOG(("slk_set() - called\n"));
 
 	int i;
 
-	if (label_num < 1 || label_num > labels ||
-	    label_fmt < 0 || label_fmt > 2)
+	if (labnum < 1 || labnum > labels || justify < 0 || justify > 2)
 		return ERR;
 
-	label_num--;
+	labnum--;
 
-	/* A NULL in either the first byte or pointer
-	   indicates a clearing of the label. */
-
-	if (label_str == (char *)0 || *label_str == '\0') 
+	if (!label || !(*label)) 
 	{
-		/* Save the string and attribute */
+		/* Clear the label */
 
-		*slk_save[label_num].label = 0;
-		slk_save[label_num].format = 0;
-		slk_save[label_num].len = 0;
+		*slk_save[labnum].label = 0;
+		slk_save[labnum].format = 0;
+		slk_save[labnum].len = 0;
 	}
 	else
 	{
-
-		/* Otherwise, format the character and put in position */
+		/* Copy it */
 
 		for (i = 0; i < label_length; i++)
 		{
-			chtype ch = label_str[i];
+			chtype ch = label[i];
 
-			slk_save[label_num].label[i] = ch;
+			slk_save[labnum].label[i] = ch;
 
 			if (!ch)
 				break;
 		}
 
-		/* Save the string and attribute */
-
-		slk_save[label_num].label[label_length] = 0;
-		slk_save[label_num].format = label_fmt;
-		slk_save[label_num].len = i;
+		slk_save[labnum].label[label_length] = 0;
+		slk_save[labnum].format = justify;
+		slk_save[labnum].len = i;
 	}
 
-	_drawone(label_num);
+	_drawone(labnum);
 
 	return OK;
 }
@@ -544,52 +534,45 @@ int PDC_mouse_in_slk(int y, int x)
 }
 
 #ifdef PDC_WIDE
-int slk_wset(int label_num, const wchar_t *label_str, int label_fmt)
+int slk_wset(int labnum, const wchar_t *label, int justify)
 {
-	PDC_LOG(("slk_set() - called\n"));
+	PDC_LOG(("slk_wset() - called\n"));
 
 	int i;
 
-	if (label_num < 1 || label_num > labels ||
-	    label_fmt < 0 || label_fmt > 2)
+	if (labnum < 1 || labnum > labels || justify < 0 || justify > 2)
 		return ERR;
 
-	label_num--;
+	labnum--;
 
-	/* A NULL in either the first byte or pointer
-	   indicates a clearing of the label. */
-
-	if (!label_str || !(*label_str)) 
+	if (!label || !(*label)) 
 	{
-		/* Save the string and attribute */
+		/* Clear the label */
 
-		*slk_save[label_num].label = 0;
-		slk_save[label_num].format = 0;
-		slk_save[label_num].len = 0;
+		*slk_save[labnum].label = 0;
+		slk_save[labnum].format = 0;
+		slk_save[labnum].len = 0;
 	}
 	else
 	{
-
-		/* Otherwise, format the character and put in position */
+		/* Copy it */
 
 		for (i = 0; i < label_length; i++)
 		{
-			chtype ch = label_str[i];
+			chtype ch = label[i];
 
-			slk_save[label_num].label[i] = ch;
+			slk_save[labnum].label[i] = ch;
 
 			if (!ch)
 				break;
 		}
 
-		/* Save the string and attribute */
-
-		slk_save[label_num].label[label_length] = 0;
-		slk_save[label_num].format = label_fmt;
-		slk_save[label_num].len = i;
+		slk_save[labnum].label[label_length] = 0;
+		slk_save[labnum].format = justify;
+		slk_save[labnum].len = i;
 	}
 
-	_drawone(label_num);
+	_drawone(labnum);
 
 	return OK;
 }

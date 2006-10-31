@@ -12,9 +12,9 @@
  ************************************************************************/
 
 #include <curspriv.h>
-#include <string.h>
+#include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.42 2006/10/31 14:59:00 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.43 2006/10/31 15:33:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -218,9 +218,9 @@ static void _redraw(void)
 
 int slk_set(int labnum, const char *label, int justify)
 {
-	PDC_LOG(("slk_set() - called\n"));
-
 	int i;
+
+	PDC_LOG(("slk_set() - called\n"));
 
 	if (labnum < 1 || labnum > labels || justify < 0 || justify > 2)
 		return ERR;
@@ -275,7 +275,7 @@ int slk_noutrefresh(void)
 
 char *slk_label(int labnum)
 {
-	static char temp[64];
+	static char temp[33];
 	chtype *p;
 	int i;
 
@@ -562,9 +562,9 @@ int PDC_mouse_in_slk(int y, int x)
 #ifdef PDC_WIDE
 int slk_wset(int labnum, const wchar_t *label, int justify)
 {
-	PDC_LOG(("slk_wset() - called\n"));
-
 	int i;
+
+	PDC_LOG(("slk_wset() - called\n"));
 
 	if (labnum < 1 || labnum > labels || justify < 0 || justify > 2)
 		return ERR;

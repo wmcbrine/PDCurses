@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.41 2006/10/31 14:37:58 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.42 2006/10/31 14:59:00 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -281,7 +281,7 @@ char *slk_label(int labnum)
 
 	PDC_LOG(("slk_label() - called\n"));
 
-	if (labnum < 0 || labnum > labels)
+	if (labnum < 1 || labnum > labels)
 		return (char *)0;
 
 	for (i = 0, p = slk[labnum - 1].label; *p; i++)
@@ -547,7 +547,8 @@ int PDC_mouse_in_slk(int y, int x)
 	/* If the line on which the mouse was clicked is NOT the last 
 	   line of the screen, we are not interested in it. */
 
-	if (!SP->slk_winptr || (y != SP->slk_winptr->_begy + label_line))
+	if (!slk || !SP->slk_winptr ||
+	   (y != SP->slk_winptr->_begy + label_line))
 		return 0;
 
 	for (i = 0; i < labels; i++)

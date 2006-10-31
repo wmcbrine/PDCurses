@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.39 2006/10/30 10:36:23 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.40 2006/10/31 13:48:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -87,12 +87,10 @@ RCSID("$Id: slk.c,v 1.39 2006/10/30 10:36:23 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-
 #define LABEL_NORMAL	8
 #define LABEL_EXTENDED	10
 #define LABEL_NCURSES_EXTENDED	12
 
-static int slk_start_col[LABEL_NCURSES_EXTENDED];
 static int label_length = 0;
 static int labels = 0;
 static int label_fmt = 0;
@@ -107,8 +105,8 @@ static struct {
 	chtype	label[32];
 	int	len;
 	int	format;
-} slk_save[LABEL_NCURSES_EXTENDED];
-
+	int	start_col;
+} slk[LABEL_NCURSES_EXTENDED];
 
 /* slk_init() is the slk initialization routine.
    This must be called before initscr().
@@ -169,9 +167,9 @@ static void _drawone(int num)
 	if (hidden)
 		return;
 
-	slen = slk_save[num].len;
+	slen = slk[num].len;
 
-	switch (slk_save[num].format)
+	switch (slk[num].format)
 	{
 	case 0:  /* LEFT */
 		col = 0;
@@ -188,11 +186,11 @@ static void _drawone(int num)
 		col = label_length - slen;
 	}
 
-	wmove(SP->slk_winptr, label_line, slk_start_col[num]);
+	wmove(SP->slk_winptr, label_line, slk[num].start_col);
 
 	for (i = 0; i < label_length; ++i)
 		waddch(SP->slk_winptr, (i >= col && i < (col + slen)) ?
-			slk_save[num].label[i - col] : ' ');
+			slk[num].label[i - col] : ' ');
 }
 
 /* redraw each button */
@@ -226,9 +224,9 @@ int slk_set(int labnum, const char *label, int justify)
 	{
 		/* Clear the label */
 
-		*slk_save[labnum].label = 0;
-		slk_save[labnum].format = 0;
-		slk_save[labnum].len = 0;
+		*slk[labnum].label = 0;
+		slk[labnum].format = 0;
+		slk[labnum].len = 0;
 	}
 	else
 	{
@@ -238,15 +236,15 @@ int slk_set(int labnum, const char *label, int justify)
 		{
 			chtype ch = label[i];
 
-			slk_save[labnum].label[i] = ch;
+			slk[labnum].label[i] = ch;
 
 			if (!ch)
 				break;
 		}
 
-		slk_save[labnum].label[label_length] = 0;
-		slk_save[labnum].format = justify;
-		slk_save[labnum].len = i;
+		slk[labnum].label[label_length] = 0;
+		slk[labnum].format = justify;
+		slk[labnum].len = i;
 	}
 
 	_drawone(labnum);
@@ -279,7 +277,7 @@ char *slk_label(int labnum)
 	if (labnum < 0 || labnum > labels)
 		return (char *)0;
 
-	for (i = 0, p = slk_save[labnum - 1].label; *p; i++)
+	for (i = 0, p = slk[labnum - 1].label; *p; i++)
 		temp[i] = *p++;
 
 	temp[i] = '\0';
@@ -415,7 +413,7 @@ static void _slk_initial(void)
 		whline(SP->slk_winptr, 0, COLS);
 
 		for (i = 0; i < labels; i++)
-			mvwprintw(SP->slk_winptr, 0, slk_start_col[i], 
+			mvwprintw(SP->slk_winptr, 0, slk[i].start_col, 
 				"F%d", i + 1);
 
 		SP->slk_winptr->_attrs = save_attr;
@@ -438,27 +436,27 @@ static void _slk_calc(void)
 
 		--label_length;
 
-		slk_start_col[0] = col;
-		slk_start_col[1] = (col += label_length);
-		slk_start_col[2] = (col += label_length);
+		slk[0].start_col = col;
+		slk[1].start_col = (col += label_length);
+		slk[2].start_col = (col += label_length);
 
 		center = COLS / 2;
 
-		slk_start_col[3] = center - label_length + 1;
-		slk_start_col[4] = center + 1;
+		slk[3].start_col = center - label_length + 1;
+		slk[4].start_col = center + 1;
 
 		col = COLS - (label_length * 3) + 1;
 
-		slk_start_col[5] = col;
-		slk_start_col[6] = (col += label_length);
-		slk_start_col[7] = (col += label_length);
+		slk[5].start_col = col;
+		slk[6].start_col = (col += label_length);
+		slk[7].start_col = (col += label_length);
 		break;
 
 	case 1:     /* 4 - 4 F-Key layout */
 
 		for (i = 0; i < 8; i++)
 		{
-			slk_start_col[i] = col;
+			slk[i].start_col = col;
 			col += label_length;
 
 			if (i == 3)
@@ -472,22 +470,22 @@ static void _slk_calc(void)
 
 		for (i = 0; i < 4; i++)
 		{
-			slk_start_col[i] = col;
+			slk[i].start_col = col;
 			col += label_length;
 		}
 
 		center = COLS/2;
 
-		slk_start_col[4] = center - (label_length * 2) + 1;
-		slk_start_col[5] = center - label_length - 1;
-		slk_start_col[6] = center + 1;
-		slk_start_col[7] = center + label_length + 1;
+		slk[4].start_col = center - (label_length * 2) + 1;
+		slk[5].start_col = center - label_length - 1;
+		slk[6].start_col = center + 1;
+		slk[7].start_col = center + label_length + 1;
 
 		col = COLS - (label_length * 4) + 1;
 
 		for (i = 8; i < 12; i++)
 		{
-			slk_start_col[i] = col;
+			slk[i].start_col = col;
 			col += label_length;
 		}
 
@@ -497,7 +495,7 @@ static void _slk_calc(void)
 
 		for (i = 0; i < 10; i++)
 		{
-			slk_start_col[i] = col;
+			slk[i].start_col = col;
 			col += label_length;
 
 			if (i == 4)
@@ -521,13 +519,12 @@ int PDC_mouse_in_slk(int y, int x)
 	/* If the line on which the mouse was clicked is NOT the last 
 	   line of the screen, we are not interested in it. */
 
-	if ((SP->slk_winptr == NULL) ||
-	    (y != SP->slk_winptr->_begy + label_line))
+	if (!SP->slk_winptr || (y != SP->slk_winptr->_begy + label_line))
 		return 0;
 
 	for (i = 0; i < labels; i++)
-		if (x >= slk_start_col[i]
-		 && x < slk_start_col[i] + label_length)
+		if (x >= slk[i].start_col &&
+		    x < (slk[i].start_col + label_length))
 			return i + 1;
 
 	return 0;
@@ -549,9 +546,9 @@ int slk_wset(int labnum, const wchar_t *label, int justify)
 	{
 		/* Clear the label */
 
-		*slk_save[labnum].label = 0;
-		slk_save[labnum].format = 0;
-		slk_save[labnum].len = 0;
+		*slk[labnum].label = 0;
+		slk[labnum].format = 0;
+		slk[labnum].len = 0;
 	}
 	else
 	{
@@ -561,15 +558,15 @@ int slk_wset(int labnum, const wchar_t *label, int justify)
 		{
 			chtype ch = label[i];
 
-			slk_save[labnum].label[i] = ch;
+			slk[labnum].label[i] = ch;
 
 			if (!ch)
 				break;
 		}
 
-		slk_save[labnum].label[label_length] = 0;
-		slk_save[labnum].format = justify;
-		slk_save[labnum].len = i;
+		slk[labnum].label[label_length] = 0;
+		slk[labnum].format = justify;
+		slk[labnum].len = i;
 	}
 
 	_drawone(labnum);

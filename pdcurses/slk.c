@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: slk.c,v 1.40 2006/10/31 13:48:46 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.41 2006/10/31 14:37:58 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -38,6 +38,9 @@ RCSID("$Id: slk.c,v 1.40 2006/10/31 13:48:46 wmcbrine Exp $");
 	int slk_color(short color_pair);
 
 	int slk_wset(int labnum, const wchar_t *label, int justify);
+
+	int PDC_mouse_in_slk(int y, int x);
+	void PDC_slk_free(void);
 
   X/Open Description:
 	These functions manipulate a window that contain Soft Label Keys 
@@ -84,6 +87,8 @@ RCSID("$Id: slk.c,v 1.40 2006/10/31 13:48:46 wmcbrine Exp $");
 	slk_attr_set				Y
 	slk_attr_off				Y
 	slk_wset				Y
+	PDC_mouse_in_slk			-	-	-
+	PDC_slk_free				-	-	-
 
 **man-end****************************************************************/
 
@@ -101,12 +106,12 @@ void (*PDC_initial_slk)(void);
 static void _slk_initial(void);
 static void _slk_calc(void);
 
-static struct {
+static struct SLK {
 	chtype	label[32];
 	int	len;
 	int	format;
 	int	start_col;
-} slk[LABEL_NCURSES_EXTENDED];
+} *slk = (struct SLK *)NULL;
 
 /* slk_init() is the slk initialization routine.
    This must be called before initscr().
@@ -154,6 +159,8 @@ int slk_init(int fmt)
 
 	PDC_initial_slk = _slk_initial;
 	label_fmt = fmt;
+
+	slk = calloc(labels, sizeof(struct SLK));
 
 	return OK;
 }
@@ -508,6 +515,27 @@ static void _slk_calc(void)
 	/* make sure labels are all in window */
 
 	_redraw();
+}
+
+void PDC_slk_free(void)
+{
+	if (slk)
+	{
+		if (SP->slk_winptr)
+		{
+			delwin(SP->slk_winptr);
+			SP->slk_winptr = (WINDOW *)NULL;
+		}
+
+		free(slk);
+		slk = (struct SLK *)NULL;
+
+		label_length = 0;
+		labels = 0;
+		label_fmt = 0;
+		label_line = 0;
+		hidden = FALSE;
+	}
 }
 
 int PDC_mouse_in_slk(int y, int x)

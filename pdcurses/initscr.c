@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.84 2006/10/31 14:37:58 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.85 2006/11/01 16:12:35 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -44,8 +44,6 @@ cchar_t pdc_wacs[] = {
 
 extern RIPPEDOFFLINE linesripped[5];
 extern char linesrippedoff;
-
-extern void (*PDC_initial_slk)(void);
 
 /*man-start**************************************************************
 
@@ -176,11 +174,8 @@ WINDOW *Xinitscr(int argc, char *argv[])
 		exit(2);
 	}
 
-	if (PDC_initial_slk)
-	{
-		(*PDC_initial_slk)();
-		LINES -= SP->slklines;
-	}
+	PDC_slk_initialize();
+	LINES -= SP->slklines;
 
 	/* We have to sort out ripped off lines here, and reduce the
 	   height of stdscr by the number of lines ripped off */
@@ -332,7 +327,7 @@ int resize_term(int nlines, int ncols)
 
 		wmove(SP->slk_winptr, 0, 0);
 		wclrtobot(SP->slk_winptr);
-		(*PDC_initial_slk)();
+		PDC_slk_initialize();
 		slk_noutrefresh();
 	}
 

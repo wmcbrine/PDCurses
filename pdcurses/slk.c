@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.43 2006/10/31 15:33:30 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.44 2006/11/01 16:12:35 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,6 +41,7 @@ RCSID("$Id: slk.c,v 1.43 2006/10/31 15:33:30 wmcbrine Exp $");
 
 	int PDC_mouse_in_slk(int y, int x);
 	void PDC_slk_free(void);
+	void PDC_slk_initialize(void);
 
   X/Open Description:
 	These functions manipulate a window that contain Soft Label Keys 
@@ -89,6 +90,7 @@ RCSID("$Id: slk.c,v 1.43 2006/10/31 15:33:30 wmcbrine Exp $");
 	slk_wset				Y
 	PDC_mouse_in_slk			-	-	-
 	PDC_slk_free				-	-	-
+	PDC_slk_initialize			-	-	-
 
 **man-end****************************************************************/
 
@@ -101,10 +103,6 @@ static int labels = 0;
 static int label_fmt = 0;
 static int label_line = 0;
 static bool hidden = FALSE;
-
-void (*PDC_initial_slk)(void);
-static void _slk_initial(void);
-static void _slk_calc(void);
 
 static struct SLK {
 	chtype	label[32];
@@ -157,7 +155,6 @@ int slk_init(int fmt)
 		return ERR;
 	}
 
-	PDC_initial_slk = _slk_initial;
 	label_fmt = fmt;
 
 	slk = calloc(labels, sizeof(struct SLK));
@@ -386,49 +383,6 @@ int slk_attr_set(const attr_t attrs, short color_pair, void *opts)
 	return slk_attrset(attrs | COLOR_PAIR(color_pair));
 }
 
-static void _slk_initial(void)
-{
-	int i;
-	chtype save_attr;
-
-	if (label_fmt == 3)
-	{
-		SP->slklines = 2;
-		label_line = 1;
-	}
-	else
-		SP->slklines = 1;
-
-	if (!SP->slk_winptr)
-	{
-		if ((SP->slk_winptr = newwin(SP->slklines, COLS, 
-		     LINES-SP->slklines, 0)) == (WINDOW *)0)
-			return;
-
-		wattrset(SP->slk_winptr, A_REVERSE);
-	}
-
-	_slk_calc();
-
-	/* if we have an index line, display it now */
-
-	if (label_fmt == 3)
-	{
-		save_attr = SP->slk_winptr->_attrs;
-		wattrset(SP->slk_winptr, A_NORMAL);
-		wmove(SP->slk_winptr, 0, 0);
-		whline(SP->slk_winptr, 0, COLS);
-
-		for (i = 0; i < labels; i++)
-			mvwprintw(SP->slk_winptr, 0, slk[i].start_col, 
-				"F%d", i + 1);
-
-		SP->slk_winptr->_attrs = save_attr;
-	}
-
-	touchwin(SP->slk_winptr);
-}
-
 static void _slk_calc(void)
 {
 	int i, center, col = 0;
@@ -515,6 +469,52 @@ static void _slk_calc(void)
 	/* make sure labels are all in window */
 
 	_redraw();
+}
+
+void PDC_slk_initialize(void)
+{
+	if (slk)
+	{
+		if (label_fmt == 3)
+		{
+			SP->slklines = 2;
+			label_line = 1;
+		}
+		else
+			SP->slklines = 1;
+
+		if (!SP->slk_winptr)
+		{
+			if ((SP->slk_winptr = newwin(SP->slklines, COLS, 
+			     LINES - SP->slklines, 0)) == (WINDOW *)0)
+				return;
+
+			wattrset(SP->slk_winptr, A_REVERSE);
+		}
+
+		_slk_calc();
+
+		/* if we have an index line, display it now */
+
+		if (label_fmt == 3)
+		{
+			chtype save_attr;
+			int i;
+
+			save_attr = SP->slk_winptr->_attrs;
+			wattrset(SP->slk_winptr, A_NORMAL);
+			wmove(SP->slk_winptr, 0, 0);
+			whline(SP->slk_winptr, 0, COLS);
+
+			for (i = 0; i < labels; i++)
+				mvwprintw(SP->slk_winptr, 0, 
+					slk[i].start_col, "F%d", i + 1);
+
+			SP->slk_winptr->_attrs = save_attr;
+		}
+
+		touchwin(SP->slk_winptr);
+	}
 }
 
 void PDC_slk_free(void)

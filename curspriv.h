@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.132 2006/11/01 16:12:35 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.133 2006/11/01 16:36:31 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -40,13 +40,13 @@
 #endif
 
 /*----------------------------------------------------------------------*/
-/* window properties */
+
+/* Window properties */
 
 #define _SUBWIN		0x01	/* window is a subwindow		*/
 #define _PAD		0x10	/* X/Open Pad.				*/
 #define _SUBPAD		0x20	/* X/Open subpad.			*/
 
-/*----------------------------------------------------------------------*/
 /* Miscellaneous */
 
 #define _NO_CHANGE	-1	/* flags line edge unchanged		*/
@@ -61,9 +61,9 @@ extern unsigned long pdc_key_modifiers;
 extern MOUSE_STATUS pdc_mouse_status;
 extern unsigned char *pdc_atrtab;
 
-/*----------------------------------------------------------------------
- *	ANSI C prototypes.
- */
+/*----------------------------------------------------------------------*/
+
+/* Platform implementation functions */
 
 void	PDC_beep(void);
 bool	PDC_can_change_color(void);
@@ -80,8 +80,6 @@ int	PDC_get_rows(void);
 void	PDC_gotoyx(int, int);
 void	PDC_init_atrtab(void);
 int	PDC_init_color(short, short, short, short);
-WINDOW *PDC_makenew(int, int, int, int);
-int	PDC_mouse_in_slk(int, int);
 void	PDC_napms(int);
 void	PDC_reset_prog_mode(void);
 void	PDC_reset_shell_mode(void);
@@ -93,11 +91,16 @@ void	PDC_scr_exit(void);
 int	PDC_scr_open(int, char **);
 int	PDC_set_ctrl_break(bool);
 void	PDC_set_keyboard_binary(bool);
+void	PDC_transform_line(int, int, int, const chtype *);
+const char *PDC_sysname(void);
+
+/* Internal cross-module functions */
+
+WINDOW *PDC_makenew(int, int, int, int);
+int	PDC_mouse_in_slk(int, int);
 void	PDC_slk_free(void);
 void	PDC_slk_initialize(void);
 void	PDC_sync(WINDOW *);
-void	PDC_transform_line(int, int, int, const chtype *);
-const char *PDC_sysname(void);
 
 #ifdef PDCDEBUG
 void PDC_debug(const char *, ...);
@@ -109,6 +112,7 @@ void PDC_debug(const char *, ...);
 #endif
 
 /* Internal macros for attributes */
+
 #ifdef CHTYPE_LONG
 # define PDC_COLOR_PAIRS	256
 # define PDC_OFFSET		32

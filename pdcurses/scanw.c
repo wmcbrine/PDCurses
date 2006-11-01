@@ -27,7 +27,7 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 # define vsscanf _pdc_vsscanf
 #endif
 
-RCSID("$Id: scanw.c,v 1.30 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.31 2006/11/01 15:22:37 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -67,6 +67,7 @@ RCSID("$Id: scanw.c,v 1.30 2006/10/23 05:03:31 wmcbrine Exp $");
 	mvscanw					Y	Y	Y
 	mvwscanw				Y	Y	Y
 	vwscanw					Y	-      4.0
+	vw_scanw				Y
 
 **man-end****************************************************************/
 

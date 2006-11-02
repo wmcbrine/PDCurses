@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.44 2006/11/01 16:12:35 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.45 2006/11/02 16:07:18 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -159,7 +159,10 @@ int slk_init(int fmt)
 
 	slk = calloc(labels, sizeof(struct SLK));
 
-	return OK;
+	if (!slk)
+		labels = 0;
+
+	return slk ? OK : ERR;
 }
 
 /* draw a single button */

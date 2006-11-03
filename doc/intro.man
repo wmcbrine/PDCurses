@@ -525,8 +525,6 @@ FUNCTIONS
 
 	   Curses Function        Manual Page Name
 
-		PDC_chadd		pdcdisp
-		PDC_chins		pdcdisp
 		PDC_clearclipboard	pdcclip
 		PDC_freeclipboard	pdcclip
 		PDC_get_input_fd	pdckbd

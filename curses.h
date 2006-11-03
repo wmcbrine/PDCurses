@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.242 2006/10/29 13:47:39 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.243 2006/11/03 13:41:14 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1479,8 +1479,6 @@ int	sb_get_vert(int *, int *, int *);
 int	sb_refresh(void);
 #endif
 
-int	PDC_chadd(WINDOW *, chtype, bool, bool);
-int	PDC_chins(WINDOW *, chtype, bool);
 int	PDC_ungetch(int);
 int	PDC_set_blink(bool);
 int	PDC_set_line_color(short);
@@ -1531,8 +1529,8 @@ unsigned long PDC_get_key_modifiers(void);
 
 /* PDCurses-specific */
 
-#define waddrawch(w, c)		PDC_chadd(w, (chtype)c, FALSE, TRUE)
-#define winsrawch(w, c)		PDC_chins(w, (chtype)c, FALSE)
+#define waddrawch(w, c)		waddch(w, ((chtype)(c) | A_ALTCHARSET))
+#define winsrawch(w, c)		winsch(w, ((chtype)(c) | A_ALTCHARSET))
 #define addrawch(c)		waddrawch(stdscr, c)
 #define insrawch(c)		winsrawch(stdscr, c)
 #define mvwaddrawch(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddrawch(w, c))

@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.31 2006/11/03 13:41:14 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -30,8 +30,6 @@ RCSID("$Id: insch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 	int wins_wch(WINDOW *win, const cchar_t *wch);
 	int mvins_wch(int y, int x, const cchar_t *wch);
 	int mvwins_wch(WINDOW *win, int y, int x, const cchar_t *wch);
-
-	int PDC_chins(WINDOW* win, chtype c, bool xlat);
 
   X/Open Description:
 	The routine insch() inserts the character ch into the default
@@ -84,12 +82,6 @@ RCSID("$Id: insch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 	Depending upon the state of the raw character output, 7- or
 	8-bit characters will be output.
 
-	PDC_chins() provides the basic functionality for [mv][w]insch().  
-	The xlat flag indicates whether or not to perform normal 
-	character translation. If not, then the character is output as 
-	is. The 'xlat' flag is TRUE for the normal curses routines. This 
-	function returns OK on success and ERR on error.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -102,33 +94,32 @@ RCSID("$Id: insch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 	wins_wch				Y
 	mvins_wch				Y
 	mvwins_wch				Y
-	PDC_chins				-	-	-
 
 **man-end****************************************************************/
 
-int PDC_chins(WINDOW *win, chtype c, bool xlat)
+int winsch(WINDOW *win, chtype ch)
 {
 	int x, y, maxx, offset;
-	chtype *temp1;
-	char ch = (c & A_CHARTEXT);
+	chtype *temp;
+	bool xlat;
 
-	PDC_LOG(("PDC_chins() - called: win=%x ch=%x "
-		"(char=%c attr=0x%x) xlat=%d\n", win, ch,
-		ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat));
+	PDC_LOG(("winsch() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
+	xlat = !(SP->raw_out) && !(ch & A_ALTCHARSET);
+
 	x = win->_curx;
 	y = win->_cury;
 	maxx = win->_maxx;
+	temp = &win->_y[y][x];
 	offset = 1;
-	temp1 = &win->_y[y][x];
 
-	if ((ch < ' ') && xlat)
+	if (((ch & A_CHARTEXT) < ' ') && xlat)
 		offset++;
 
-	memmove(temp1 + offset, temp1, (maxx - x - offset) * sizeof(chtype));
+	memmove(temp + offset, temp, (maxx - x - offset) * sizeof(chtype));
 
 	win->_lastch[y] = maxx - 1;
 
@@ -137,7 +128,7 @@ int PDC_chins(WINDOW *win, chtype c, bool xlat)
 
 	/* PDC_chadd() fixes CTRL-chars too */
 
-	return PDC_chadd(win, c, xlat, FALSE);
+	return PDC_chadd(win, ch, xlat, FALSE);
 }
 
 int insch(chtype ch)
@@ -145,13 +136,6 @@ int insch(chtype ch)
 	PDC_LOG(("insch() - called\n"));
 
 	return winsch(stdscr, ch);
-}
-
-int winsch(WINDOW *win, chtype ch)
-{
-	PDC_LOG(("winsch() - called\n"));
-
-	return PDC_chins(win, ch, (bool)(!(SP->raw_out)));
 }
 
 int mvinsch(int y, int x, chtype ch)
@@ -175,18 +159,18 @@ int mvwinsch(WINDOW *win, int y, int x, chtype ch)
 }
 
 #ifdef PDC_WIDE
+int wins_wch(WINDOW *win, const cchar_t *wch)
+{
+	PDC_LOG(("wins_wch() - called\n"));
+
+	return wch ? winsch(win, *wch) : ERR;
+}
+
 int ins_wch(const cchar_t *wch)
 {
 	PDC_LOG(("ins_wch() - called\n"));
 
 	return wins_wch(stdscr, wch);
-}
-
-int wins_wch(WINDOW *win, const cchar_t *wch)
-{
-	PDC_LOG(("wins_wch() - called\n"));
-
-	return wch ? PDC_chins(win, *wch, (bool)(!(SP->raw_out))) : ERR;
 }
 
 int mvins_wch(int y, int x, const cchar_t *wch)

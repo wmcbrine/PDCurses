@@ -302,8 +302,6 @@ resize_window
 traceoff
 traceon
 wordchar
-PDC_chadd
-PDC_chins
 PDC_ungetch
 PDC_set_title
 PDC_getclipboard

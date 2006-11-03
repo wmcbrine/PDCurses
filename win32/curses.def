@@ -306,8 +306,6 @@ EXPORTS resize_window
 EXPORTS traceoff
 EXPORTS traceon
 EXPORTS wordchar
-EXPORTS PDC_chadd
-EXPORTS PDC_chins
 EXPORTS PDC_ungetch
 EXPORTS PDC_set_title
 EXPORTS PDC_getclipboard

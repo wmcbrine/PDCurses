@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.37 2006/11/03 13:36:47 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.38 2006/11/03 14:06:02 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -108,6 +108,8 @@ int wgetnstr(WINDOW *win, char *str, int n)
 					   immediately */
 	win->_nodelay = FALSE;		/* don't return -1 */
 
+	wrefresh(win);
+
 	while (!stop)
 	{
 		ch = wgetch(win);
@@ -199,9 +201,9 @@ int wgetnstr(WINDOW *win, char *str, int n)
 			break;
       
 		}
-	}
 
-	wrefresh(win);
+		wrefresh(win);
+	}
 
 	*p = '\0';
 
@@ -300,6 +302,8 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
 					   immediately */
 	win->_nodelay = FALSE;		/* don't return -1 */
 
+	wrefresh(win);
+
 	while (!stop)
 	{
 		ch = wgetch(win);
@@ -391,9 +395,9 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
 			break;
       
 		}
-	}
 
-	wrefresh(win);
+		wrefresh(win);
+	}
 
 	*p = '\0';
 

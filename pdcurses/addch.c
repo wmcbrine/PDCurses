@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.31 2006/11/03 14:08:10 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.32 2006/11/03 14:52:20 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -157,8 +157,8 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	if (win == (WINDOW *)NULL)
 		return ERR;
 
-	x  = win->_curx;
-	y  = win->_cury;
+	x = win->_curx;
+	y = win->_cury;
 
 	if ((y > win->_maxy) || (x > win->_maxx) || (y < 0) || (x < 0))
 		return ERR;
@@ -305,11 +305,11 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 			else
 				if (x > win->_lastch[y])
 					win->_lastch[y] = x;
+
+		win->_y[y][x] = ch;
 	}
 
-	win->_y[y][x++] = ch;
-
-	if (x >= win->_maxx)
+	if (++x >= win->_maxx)
 	{
 		/* wrap around test */
 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.31 2006/11/03 14:08:10 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -34,7 +34,7 @@ RCSID("$Id: addch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 	int echo_wchar(const cchar_t *wch);
 	int wecho_wchar(WINDOW *win, const cchar_t *wch);
 
-	int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance);
+	int PDC_chadd(WINDOW *win, chtype ch, bool advance);
 
   X/Open Description:
 	The routine addch() inserts the character ch into the default
@@ -96,17 +96,12 @@ RCSID("$Id: addch.c,v 1.30 2006/10/23 05:46:32 wmcbrine Exp $");
 	8-bit characters will be output.
 
 	PDC_chadd provides the basic functionality for [mv][w]addch().
-	If 'xlat' is TRUE, PDC_chadd() will handle things in a cooked
-	manner (tabs, newlines, carriage returns, etc).  If 'xlat' is
-	FALSE, the characters are simply output directly. The normal 
-	curses routines (non-raw-output-mode) call PDC_chadd() with 
-	'xlat' TRUE. If 'advance' is TRUE, PDC_chadd() will move the 
-	current cusor position appropriately. The *addch functions call 
-	PDC_chadd() with advance TRUE, while the *insch functions call
-	PDC_chadd() with advance FALSE. If an alternate character is to 
-	be displayed, the character is displayed without translation 
-	(minus the A_ALTCHARSET of course). This function returns OK on 
-	success and ERR on error.
+	If 'advance' is TRUE, PDC_chadd() will move the current cusor 
+	position appropriately. The *addch functions call PDC_chadd() 
+	with advance TRUE, while the *insch functions call PDC_chadd() 
+	with advance FALSE. If an alternate character is to be 
+	displayed, the character is displayed without translation. This 
+	function returns OK on success and ERR on error.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -149,14 +144,15 @@ static int _newline(WINDOW *win, int lin)
 	return lin;
 }
 
-int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
+int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 {
 	int x, y, x2, retval;
 	chtype attr, bktmp;
+	bool xlat;
 
 	PDC_LOG(("PDC_chadd() - called: win=%x ch=%x "
-		"(char=%c attr=0x%x) xlat=%d advance=%d\n", win, ch,
-		ch & A_CHARTEXT, ch & A_ATTRIBUTES, xlat, advance));
+		"(char=%c attr=0x%x) advance=%d\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES, advance));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
@@ -167,15 +163,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 	if ((y > win->_maxy) || (x > win->_maxx) || (y < 0) || (x < 0))
 		return ERR;
 
-	/* Remove any A_ALTCHARSET attribute from the ch before any
-	   further testing. If the character has A_ALTCHARSET, set xlat
-	   to FALSE. */
-
-	if (ch & A_ALTCHARSET)
-	{
-		xlat = FALSE;
-		ch = ch & (~A_ALTCHARSET);
-	}
+	xlat = !(SP->raw_out) && !(ch & A_ALTCHARSET);
 
 	/* If the incoming character doesn't have its own attribute, 
 	   then use the current attributes for the window. If it has 
@@ -192,7 +180,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool xlat, bool advance)
 		else
 			attr = ch & A_ATTRIBUTES;
 
-	ch = (ch & A_CHARTEXT);
+	ch &= A_CHARTEXT;
 
 	/* wrs (4/10/93): Apply the same sort of logic for the window 
 	   background, in that it only takes precedence if other color 
@@ -356,7 +344,7 @@ int waddch(WINDOW *win, const chtype ch)
 {
 	PDC_LOG(("waddch() - called: win=%x ch=%x\n", win, ch));
 
-	return PDC_chadd(win, ch, (bool)(!(SP->raw_out)), TRUE);
+	return PDC_chadd(win, ch, TRUE);
 }
 
 int mvaddch(int y, int x, const chtype ch)
@@ -409,7 +397,7 @@ int wadd_wch(WINDOW *win, const cchar_t *wch)
 {
 	PDC_LOG(("wadd_wch() - called: win=%x wch=%x\n", win, *wch));
 
-	return wch ? PDC_chadd(win, *wch, (bool)(!(SP->raw_out)), TRUE) : ERR;
+	return wch ? PDC_chadd(win, *wch, TRUE) : ERR;
 }
 
 int mvadd_wch(int y, int x, const cchar_t *wch)

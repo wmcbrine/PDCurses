@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.31 2006/11/03 13:41:14 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.32 2006/11/03 14:08:10 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -128,7 +128,7 @@ int winsch(WINDOW *win, chtype ch)
 
 	/* PDC_chadd() fixes CTRL-chars too */
 
-	return PDC_chadd(win, ch, xlat, FALSE);
+	return PDC_chadd(win, ch, FALSE);
 }
 
 int insch(chtype ch)

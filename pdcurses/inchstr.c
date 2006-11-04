@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inchstr.c,v 1.25 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: inchstr.c,v 1.26 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -72,27 +72,6 @@ RCSID("$Id: inchstr.c,v 1.25 2006/10/23 05:46:32 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int inchstr(chtype *ch)
-{
-	PDC_LOG(("inchstr() - called\n"));
-
-	return winchnstr(stdscr, ch, stdscr->_maxx - stdscr->_curx);
-}
-
-int inchnstr(chtype *ch, int n)
-{
-	PDC_LOG(("inchnstr() - called\n"));
-
-	return winchnstr(stdscr, ch, n);
-}
-
-int winchstr(WINDOW *win, chtype *ch)
-{
-	PDC_LOG(("winchstr() - called\n"));
-
-	return winchnstr(win, ch, win->_maxx - win->_curx);
-}
-
 int winchnstr(WINDOW *win, chtype *ch, int n)
 {
 	int i;
@@ -116,6 +95,20 @@ int winchnstr(WINDOW *win, chtype *ch, int n)
 	return OK;
 }
 
+int inchstr(chtype *ch)
+{
+	PDC_LOG(("inchstr() - called\n"));
+
+	return winchnstr(stdscr, ch, stdscr->_maxx - stdscr->_curx);
+}
+
+int winchstr(WINDOW *win, chtype *ch)
+{
+	PDC_LOG(("winchstr() - called\n"));
+
+	return winchnstr(win, ch, win->_maxx - win->_curx);
+}
+
 int mvinchstr(int y, int x, chtype *ch)
 {
 	PDC_LOG(("mvinchstr() - called: y %d x %d\n", y, x));
@@ -126,16 +119,6 @@ int mvinchstr(int y, int x, chtype *ch)
 	return winchnstr(stdscr, ch, stdscr->_maxx - stdscr->_curx);
 }
 
-int mvinchnstr(int y, int x, chtype *ch, int n)
-{
-	PDC_LOG(("mvinchnstr() - called: y %d x %d n %d\n", y, x, n));
-
-	if (move(y, x) == ERR)
-		return ERR;
-
-	return winchnstr(stdscr, ch, n);
-}
-
 int mvwinchstr(WINDOW *win, int y, int x, chtype *ch)
 {
 	PDC_LOG(("mvwinchstr() - called:\n"));
@@ -144,6 +127,23 @@ int mvwinchstr(WINDOW *win, int y, int x, chtype *ch)
 		return ERR;
 
 	return winchnstr(win, ch, win->_maxx - win->_curx);
+}
+
+int inchnstr(chtype *ch, int n)
+{
+	PDC_LOG(("inchnstr() - called\n"));
+
+	return winchnstr(stdscr, ch, n);
+}
+
+int mvinchnstr(int y, int x, chtype *ch, int n)
+{
+	PDC_LOG(("mvinchnstr() - called: y %d x %d n %d\n", y, x, n));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return winchnstr(stdscr, ch, n);
 }
 
 int mvwinchnstr(WINDOW *win, int y, int x, chtype *ch, int n)
@@ -157,6 +157,13 @@ int mvwinchnstr(WINDOW *win, int y, int x, chtype *ch, int n)
 }
 
 #ifdef PDC_WIDE
+int win_wchnstr(WINDOW *win, cchar_t *wch, int n)
+{
+	PDC_LOG(("win_wchnstr() - called\n"));
+
+	return winchnstr(win, wch, n);
+}
+
 int in_wchstr(cchar_t *wch)
 {
 	PDC_LOG(("in_wchstr() - called\n"));
@@ -164,25 +171,11 @@ int in_wchstr(cchar_t *wch)
 	return win_wchnstr(stdscr, wch, stdscr->_maxx - stdscr->_curx);
 }
 
-int in_wchnstr(cchar_t *wch, int n)
-{
-	PDC_LOG(("in_wchnstr() - called\n"));
-
-	return win_wchnstr(stdscr, wch, n);
-}
-
 int win_wchstr(WINDOW *win, cchar_t *wch)
 {
 	PDC_LOG(("win_wchstr() - called\n"));
 
 	return win_wchnstr(win, wch, win->_maxx - win->_curx);
-}
-
-int win_wchnstr(WINDOW *win, cchar_t *wch, int n)
-{
-	PDC_LOG(("win_wchnstr() - called\n"));
-
-	return winchnstr(win, wch, n);
 }
 
 int mvin_wchstr(int y, int x, cchar_t *wch)
@@ -195,16 +188,6 @@ int mvin_wchstr(int y, int x, cchar_t *wch)
 	return win_wchnstr(stdscr, wch, stdscr->_maxx - stdscr->_curx);
 }
 
-int mvin_wchnstr(int y, int x, cchar_t *wch, int n)
-{
-	PDC_LOG(("mvin_wchnstr() - called: y %d x %d n %d\n", y, x, n));
-
-	if (move(y, x) == ERR)
-		return ERR;
-
-	return win_wchnstr(stdscr, wch, n);
-}
-
 int mvwin_wchstr(WINDOW *win, int y, int x, cchar_t *wch)
 {
 	PDC_LOG(("mvwin_wchstr() - called:\n"));
@@ -213,6 +196,23 @@ int mvwin_wchstr(WINDOW *win, int y, int x, cchar_t *wch)
 		return ERR;
 
 	return win_wchnstr(win, wch, win->_maxx - win->_curx);
+}
+
+int in_wchnstr(cchar_t *wch, int n)
+{
+	PDC_LOG(("in_wchnstr() - called\n"));
+
+	return win_wchnstr(stdscr, wch, n);
+}
+
+int mvin_wchnstr(int y, int x, cchar_t *wch, int n)
+{
+	PDC_LOG(("mvin_wchnstr() - called: y %d x %d n %d\n", y, x, n));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return win_wchnstr(stdscr, wch, n);
 }
 
 int mvwin_wchnstr(WINDOW *win, int y, int x, cchar_t *wch, int n)

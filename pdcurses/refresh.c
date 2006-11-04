@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: refresh.c,v 1.41 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.42 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -71,36 +71,6 @@ RCSID("$Id: refresh.c,v 1.41 2006/10/23 05:03:31 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int refresh(void)
-{
-	PDC_LOG(("refresh() - called\n"));
-
-	return wrefresh(stdscr);
-}
-
-int wrefresh(WINDOW *win)
-{
-	bool save_clear;
-
-	PDC_LOG(("wrefresh() - called\n"));
-
-	if ( (win == (WINDOW *)NULL) || (win->_flags & (_PAD|_SUBPAD)) )
-		return ERR;
-
-	save_clear = win->_clear;
-
-	if (win == curscr)
-		curscr->_clear = TRUE;
-	else
-		wnoutrefresh(win);
-
-	if (save_clear && win->_maxy == SP->lines && win->_maxx == SP->cols)
-		curscr->_clear = TRUE;
-
-	doupdate();
-	return OK;
-}
-
 int wnoutrefresh(WINDOW *win)
 {
 	int first;		/* first changed char on line */
@@ -108,7 +78,7 @@ int wnoutrefresh(WINDOW *win)
 	int begy, begx;		/* window's place on screen   */
 	int i, j;
 
-	PDC_LOG(("wnoutrefresh() - called: win=%x\n", win));
+	PDC_LOG(("wnoutrefresh() - called: win=%p\n", win));
 
 	if ( (win == (WINDOW *)NULL) || (win->_flags & (_PAD|_SUBPAD)) )
 		return ERR;
@@ -209,21 +179,40 @@ int doupdate(void)
 	return OK;
 }
 
-int redrawwin(WINDOW *win)
+int wrefresh(WINDOW *win)
 {
-	PDC_LOG(("redrawwin() - called: win=%x\n", win));
+	bool save_clear;
 
-	if (win == (WINDOW *)NULL)
+	PDC_LOG(("wrefresh() - called\n"));
+
+	if ( (win == (WINDOW *)NULL) || (win->_flags & (_PAD|_SUBPAD)) )
 		return ERR;
 
-	return wredrawln(win, 0, win->_maxy);
+	save_clear = win->_clear;
+
+	if (win == curscr)
+		curscr->_clear = TRUE;
+	else
+		wnoutrefresh(win);
+
+	if (save_clear && win->_maxy == SP->lines && win->_maxx == SP->cols)
+		curscr->_clear = TRUE;
+
+	return doupdate();
+}
+
+int refresh(void)
+{
+	PDC_LOG(("refresh() - called\n"));
+
+	return wrefresh(stdscr);
 }
 
 int wredrawln(WINDOW *win, int start, int num)
 {
 	int i;
 
-	PDC_LOG(("wredrawln() - called: win=%x start=%d num=%d\n",
+	PDC_LOG(("wredrawln() - called: win=%p start=%d num=%d\n",
 		win, start, num));
 
 	if ((win == (WINDOW *)NULL) ||
@@ -237,4 +226,14 @@ int wredrawln(WINDOW *win, int start, int num)
 	}
 
 	return OK;
+}
+
+int redrawwin(WINDOW *win)
+{
+	PDC_LOG(("redrawwin() - called: win=%p\n", win));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	return wredrawln(win, 0, win->_maxy);
 }

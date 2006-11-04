@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addstr.c,v 1.32 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.33 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -26,8 +26,8 @@ RCSID("$Id: addstr.c,v 1.32 2006/10/23 05:46:32 wmcbrine Exp $");
 	int waddnstr(WINDOW *win, const char *str, int n);
 	int mvaddstr(int y, int x, const char *str);
 	int mvaddnstr(int y, int x, const char *str, int n);
-	int mvwaddstr(WINDOW *, int y, int x, const char *str);
-	int mvwaddnstr(WINDOW *, int y, int x, const char *str, int n);
+	int mvwaddstr(WINDOW *win, int y, int x, const char *str);
+	int mvwaddnstr(WINDOW *win, int y, int x, const char *str, int n);
 
 	int addwstr(const wchar_t *wstr);
 	int addnwstr(const wchar_t *wstr, int n);
@@ -69,6 +69,24 @@ RCSID("$Id: addstr.c,v 1.32 2006/10/23 05:46:32 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
+int waddnstr(WINDOW *win, const char *str, int n)
+{
+	int ic;
+
+	PDC_LOG(("waddnstr() - called: string=\"%s\" n %d \n", str, n));
+
+	if (win == (WINDOW *)NULL || str == (const char *)NULL)
+		return ERR;
+
+	for (ic = 0; *str && (ic < n || n < 0); ic++)
+	{
+		if (waddch(win, (unsigned char)(*str++)) == ERR)
+			return ERR;
+	}
+
+	return OK;
+}
+
 int addstr(const char *str)
 {
 	PDC_LOG(("addstr() - called: string=\"%s\"\n", str));
@@ -88,24 +106,6 @@ int waddstr(WINDOW *win, const char *str)
 	PDC_LOG(("waddstr() - called: string=\"%s\"\n", str));
 
 	return waddnstr(win, str, -1);
-}
-
-int waddnstr(WINDOW *win, const char *str, int n)
-{
-	int ic;
-
-	PDC_LOG(("waddnstr() - called: string=\"%s\" n %d \n", str, n));
-
-	if (win == (WINDOW *)NULL || str == (const char *)NULL)
-		return ERR;
-
-	for (ic = 0; *str && (ic < n || n < 0); ic++)
-	{
-		if (waddch(win, (unsigned char)(*str++)) == ERR)
-			return ERR;
-	}
-
-	return OK;
 }
 
 int mvaddstr(int y, int x, const char *str)
@@ -151,27 +151,6 @@ int mvwaddnstr(WINDOW *win, int y, int x, const char *str, int n)
 }
 
 #ifdef PDC_WIDE
-int addwstr(const wchar_t *wstr)
-{
-	PDC_LOG(("addwstr() - called\n"));
-
-	return waddnwstr(stdscr, wstr, -1);
-}
-
-int addnwstr(const wchar_t *wstr, int n)
-{
-	PDC_LOG(("addnwstr() - called\n"));
-
-	return waddnwstr(stdscr, wstr, n);
-}
-
-int waddwstr(WINDOW *win, const wchar_t *wstr)
-{
-	PDC_LOG(("waddwstr() - called\n"));
-
-	return waddnwstr(win, wstr, -1);
-}
-
 int waddnwstr(WINDOW *win, const wchar_t *wstr, int n)
 {
 	chtype cn;
@@ -191,6 +170,27 @@ int waddnwstr(WINDOW *win, const wchar_t *wstr, int n)
 	}
 
 	return OK;
+}
+
+int addwstr(const wchar_t *wstr)
+{
+	PDC_LOG(("addwstr() - called\n"));
+
+	return waddnwstr(stdscr, wstr, -1);
+}
+
+int addnwstr(const wchar_t *wstr, int n)
+{
+	PDC_LOG(("addnwstr() - called\n"));
+
+	return waddnwstr(stdscr, wstr, n);
+}
+
+int waddwstr(WINDOW *win, const wchar_t *wstr)
+{
+	PDC_LOG(("waddwstr() - called\n"));
+
+	return waddnwstr(win, wstr, -1);
 }
 
 int mvaddwstr(int y, int x, const wchar_t *wstr)

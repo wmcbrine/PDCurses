@@ -17,7 +17,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: printw.c,v 1.30 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: printw.c,v 1.31 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -68,6 +68,21 @@ RCSID("$Id: printw.c,v 1.30 2006/10/23 05:03:31 wmcbrine Exp $");
 	vw_printw				Y
 
 **man-end****************************************************************/
+
+int vwprintw(WINDOW *win, const char *fmt, va_list varglist)
+{
+	char printbuf[513];
+	int len;
+
+	PDC_LOG(("vwprintw() - called\n"));
+
+#ifdef HAVE_VSNPRINTF
+	len = vsnprintf(printbuf, 512, fmt, varglist);
+#else
+	len = vsprintf(printbuf, fmt, varglist);
+#endif
+	return (waddstr(win, printbuf) == ERR) ? ERR : len;
+}
 
 int printw(const char *fmt, ...)
 {
@@ -129,21 +144,6 @@ int mvwprintw(WINDOW *win, int y, int x, const char *fmt, ...)
 	va_end(args);
 
 	return retval;
-}
-
-int vwprintw(WINDOW *win, const char *fmt, va_list varglist)
-{
-	char printbuf[513];
-	int len;
-
-	PDC_LOG(("vwprintw() - called\n"));
-
-#ifdef HAVE_VSNPRINTF
-	len = vsnprintf(printbuf, 512, fmt, varglist);
-#else
-	len = vsprintf(printbuf, fmt, varglist);
-#endif
-	return (waddstr(win, printbuf) == ERR) ? ERR : len;
 }
 
 int vw_printw(WINDOW *win, const char *fmt, va_list varglist)

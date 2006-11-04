@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: touch.c,v 1.21 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: touch.c,v 1.22 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -87,7 +87,7 @@ int touchline(WINDOW *win, int start, int count)
 {
 	int i;
 
-	PDC_LOG(("touchline() - called: win=%x start %d count %d\n",
+	PDC_LOG(("touchline() - called: win=%p start %d count %d\n",
 		win, start, count));
 
 	if ((win == (WINDOW *)NULL) ||
@@ -107,7 +107,7 @@ int untouchwin(WINDOW *win)
 {
 	int i;
 
-	PDC_LOG(("untouchwin() - called: win=%x", win));
+	PDC_LOG(("untouchwin() - called: win=%p", win));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;
@@ -125,7 +125,7 @@ int wtouchln(WINDOW *win, int y, int n, int changed)
 {
 	int i;
 
-	PDC_LOG(("wtouchln() - called: win=%x y=%d n=%d changed=%d\n",
+	PDC_LOG(("wtouchln() - called: win=%p y=%d n=%d changed=%d\n",
 		win, y, n, changed));
 
 	if ((win == (WINDOW *)NULL) || (y > win->_maxy || y + n > win->_maxy))
@@ -150,7 +150,7 @@ int wtouchln(WINDOW *win, int y, int n, int changed)
 
 bool is_linetouched(WINDOW *win, int line)
 {
-	PDC_LOG(("is_linetouched() - called: win=%x line=%d\n", win, line));
+	PDC_LOG(("is_linetouched() - called: win=%p line=%d\n", win, line));
 
 	if ((win == NULL) || (line > win->_maxy || line < 0))
 		return FALSE;
@@ -162,7 +162,7 @@ bool is_wintouched(WINDOW *win)
 {
 	int i;
 
-	PDC_LOG(("is_wintouched() - called: win=%x\n", win));
+	PDC_LOG(("is_wintouched() - called: win=%p\n", win));
 
 	if (win != NULL)
 		for (i = 0; i < win->_maxy; i++)

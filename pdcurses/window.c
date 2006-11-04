@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.42 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.43 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -35,7 +35,7 @@ RCSID("$Id: window.c,v 1.42 2006/10/23 05:03:31 wmcbrine Exp $");
 	void wcursyncup(WINDOW *win);
 	void wsyncdown(WINDOW *win);
 
-	WINDOW *resize_window(WINDOW *w, int lins, int cols);
+	WINDOW *resize_window(WINDOW *win, int lins, int cols);
 	WINDOW *PDC_makenew(int num_lines, int num_columns,
 			int begy, int begx);
 	void PDC_sync(WINDOW *win);

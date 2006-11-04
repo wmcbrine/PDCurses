@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.24 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.25 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -51,13 +51,6 @@ RCSID("$Id: deleteln.c,v 1.24 2006/10/23 05:03:30 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int deleteln(void)
-{
-	PDC_LOG(("deleteln() - called\n"));
-
-	return wdeleteln(stdscr);
-}
-
 int wdeleteln(WINDOW *win)
 {
 	chtype blank, *temp, *ptr;
@@ -94,11 +87,11 @@ int wdeleteln(WINDOW *win)
 	return OK;
 }
 
-int insdelln(int n)
+int deleteln(void)
 {
-	PDC_LOG(("insdelln() - called\n"));
+	PDC_LOG(("deleteln() - called\n"));
 
-	return winsdelln(stdscr, n);
+	return wdeleteln(stdscr);
 }
 
 int winsdelln(WINDOW *win, int n)
@@ -125,6 +118,13 @@ int winsdelln(WINDOW *win, int n)
 	}
 
 	return OK;
+}
+
+int insdelln(int n)
+{
+	PDC_LOG(("insdelln() - called\n"));
+
+	return winsdelln(stdscr, n);
 }
 
 int winsertln(WINDOW *win)

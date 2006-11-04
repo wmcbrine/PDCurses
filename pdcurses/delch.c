@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: delch.c,v 1.24 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: delch.c,v 1.25 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -43,13 +43,6 @@ RCSID("$Id: delch.c,v 1.24 2006/10/23 05:03:30 wmcbrine Exp $");
 	mvwdelch				Y	Y	Y
 
 **man-end****************************************************************/
-
-int delch(void)
-{
-	PDC_LOG(("delch() - called\n"));
-
-	return wdelch(stdscr);
-}
 
 int wdelch(WINDOW *win)
 {
@@ -80,6 +73,13 @@ int wdelch(WINDOW *win)
 	PDC_sync(win);
 
 	return OK;
+}
+
+int delch(void)
+{
+	PDC_LOG(("delch() - called\n"));
+
+	return wdelch(stdscr);
 }
 
 int mvdelch(int y, int x)

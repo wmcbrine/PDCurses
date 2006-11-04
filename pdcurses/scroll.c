@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: scroll.c,v 1.26 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -47,13 +47,6 @@ RCSID("$Id: scroll.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
 	wscrl					Y	-      4.0
 
 **man-end****************************************************************/
-
-int scroll(WINDOW *win)
-{
-	PDC_LOG(("scroll() - called\n"));
-
-	return wscrl(win, 1);
-}
 
 int wscrl(WINDOW *win, int n)
 {
@@ -133,4 +126,11 @@ int scrl(int n)
 	PDC_LOG(("scrl() - called\n"));
 
 	return wscrl(stdscr, n);
+}
+
+int scroll(WINDOW *win)
+{
+	PDC_LOG(("scroll() - called\n"));
+
+	return wscrl(win, 1);
 }

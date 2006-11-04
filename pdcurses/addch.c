@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.32 2006/11/03 14:52:20 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.33 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -150,7 +150,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	chtype attr, bktmp;
 	bool xlat;
 
-	PDC_LOG(("PDC_chadd() - called: win=%x ch=%x "
+	PDC_LOG(("PDC_chadd() - called: win=%p ch=%x "
 		"(char=%c attr=0x%x) advance=%d\n", win, ch,
 		ch & A_CHARTEXT, ch & A_ATTRIBUTES, advance));
 
@@ -333,18 +333,18 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	return OK;
 }
 
+int waddch(WINDOW *win, const chtype ch)
+{
+	PDC_LOG(("waddch() - called: win=%p ch=%x\n", win, ch));
+
+	return PDC_chadd(win, ch, TRUE);
+}
+
 int addch(const chtype ch)
 {
 	PDC_LOG(("addch() - called: ch=%x\n", ch));
 
 	return waddch(stdscr, ch);
-}
-
-int waddch(WINDOW *win, const chtype ch)
-{
-	PDC_LOG(("waddch() - called: win=%x ch=%x\n", win, ch));
-
-	return PDC_chadd(win, ch, TRUE);
 }
 
 int mvaddch(int y, int x, const chtype ch)
@@ -359,7 +359,7 @@ int mvaddch(int y, int x, const chtype ch)
 
 int mvwaddch(WINDOW *win, int y, int x, const chtype ch)
 {
-	PDC_LOG(("mvwaddch() - called: win=%x y=%d x=%d ch=%d\n",
+	PDC_LOG(("mvwaddch() - called: win=%p y=%d x=%d ch=%d\n",
 		win, y, x, ch));
 
 	if (wmove(win, y, x) == ERR)
@@ -377,7 +377,7 @@ int echochar(const chtype ch)
 
 int wechochar(WINDOW *win, const chtype ch)
 {
-	PDC_LOG(("wechochar() - called: win=%x ch=%x\n", win, ch));
+	PDC_LOG(("wechochar() - called: win=%p ch=%x\n", win, ch));
 
 	if (waddch(win, ch) == ERR)
 		return ERR;
@@ -386,18 +386,18 @@ int wechochar(WINDOW *win, const chtype ch)
 }
 
 #ifdef PDC_WIDE
+int wadd_wch(WINDOW *win, const cchar_t *wch)
+{
+	PDC_LOG(("wadd_wch() - called: win=%p wch=%x\n", win, *wch));
+
+	return wch ? PDC_chadd(win, *wch, TRUE) : ERR;
+}
+
 int add_wch(const cchar_t *wch)
 {
 	PDC_LOG(("add_wch() - called: wch=%x\n", *wch));
 
 	return wadd_wch(stdscr, wch);
-}
-
-int wadd_wch(WINDOW *win, const cchar_t *wch)
-{
-	PDC_LOG(("wadd_wch() - called: win=%x wch=%x\n", win, *wch));
-
-	return wch ? PDC_chadd(win, *wch, TRUE) : ERR;
 }
 
 int mvadd_wch(int y, int x, const cchar_t *wch)
@@ -412,7 +412,7 @@ int mvadd_wch(int y, int x, const cchar_t *wch)
 
 int mvwadd_wch(WINDOW *win, int y, int x, const cchar_t *wch)
 {
-	PDC_LOG(("mvwaddch() - called: win=%x y=%d x=%d wch=%d\n",
+	PDC_LOG(("mvwaddch() - called: win=%p y=%d x=%d wch=%d\n",
 		win, y, x, *wch));
 
 	if (wmove(win, y, x) == ERR)
@@ -430,7 +430,7 @@ int echo_wchar(const cchar_t *wch)
 
 int wecho_wchar(WINDOW *win, const cchar_t *wch)
 {
-	PDC_LOG(("wecho_wchar() - called: win=%x wch=%x\n", win, *wch));
+	PDC_LOG(("wecho_wchar() - called: win=%p wch=%x\n", win, *wch));
 
 	if (!wch || (wadd_wch(win, wch) == ERR))
 		return ERR;

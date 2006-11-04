@@ -27,7 +27,7 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 # define vsscanf _pdc_vsscanf
 #endif
 
-RCSID("$Id: scanw.c,v 1.31 2006/11/01 15:22:37 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.32 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -70,6 +70,18 @@ RCSID("$Id: scanw.c,v 1.31 2006/11/01 15:22:37 wmcbrine Exp $");
 	vw_scanw				Y
 
 **man-end****************************************************************/
+
+int vwscanw(WINDOW *win, const char *fmt, va_list varglist)
+{
+	char scanbuf[256];
+
+	PDC_LOG(("vwscanw() - called\n"));
+
+	if (wgetnstr(win, scanbuf, 255) == ERR)
+		return ERR;
+
+	return vsscanf(scanbuf, fmt, varglist);
+}
 
 int scanw(const char *fmt, ...)
 {
@@ -131,18 +143,6 @@ int mvwscanw(WINDOW *win, int y, int x, const char *fmt, ...)
 	va_end(args);
 
 	return retval;
-}
-
-int vwscanw(WINDOW *win, const char *fmt, va_list varglist)
-{
-	char scanbuf[256];
-
-	PDC_LOG(("vwscanw() - called\n"));
-
-	if (wgetnstr(win, scanbuf, 255) == ERR)
-		return ERR;
-
-	return vsscanf(scanbuf, fmt, varglist);
 }
 
 int vw_scanw(WINDOW *win, const char *fmt, va_list varglist)

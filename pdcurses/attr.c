@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.30 2006/10/23 06:09:36 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.31 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -316,7 +316,7 @@ int wattr_set(WINDOW *win, attr_t attrs, short color_pair, void *opts)
 
 int chgat(int n, attr_t attr, short color, const void *opts)
 {
-	PDC_LOG(("wchgat() - called\n"));
+	PDC_LOG(("chgat() - called\n"));
 
 	return wchgat(stdscr, n, attr, color, opts);
 }
@@ -346,6 +346,8 @@ int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
 {
 	chtype newattr, tmp;
         int basey, basex, imax, ic;
+
+	PDC_LOG(("wchgat() - called\n"));
 
 	if (win == (WINDOW *)NULL)
 		return ERR;

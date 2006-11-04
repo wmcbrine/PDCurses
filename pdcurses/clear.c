@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: clear.c,v 1.25 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: clear.c,v 1.26 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -62,81 +62,6 @@ RCSID("$Id: clear.c,v 1.25 2006/10/23 05:03:30 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int clear(void)
-{
-	PDC_LOG(("clear() - called\n"));
-
-	if  (stdscr == (WINDOW *)NULL)
-		return ERR;
-
-	stdscr->_clear = TRUE;
-	return erase();
-}
-
-int wclear(WINDOW *win)
-{
-	PDC_LOG(("wclear() - called\n"));
-
-	if  (win == (WINDOW *)NULL)
-		return ERR;
-
-	win->_clear = TRUE;
-	return werase(win);
-}
-
-int erase(void)
-{
-	return werase(stdscr);
-}
-
-int werase(WINDOW *win)
-{
-	PDC_LOG(("werase() - called\n"));
-
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	wmove(win, 0, 0);
-	return wclrtobot(win);
-}
-
-int clrtobot(void)
-{
-	return wclrtobot(stdscr);
-}
-
-int wclrtobot(WINDOW *win)
-{
-	int savey = win->_cury;
-	int savex = win->_curx;
-
-	PDC_LOG(("wclrtobot() - called\n"));
-
-	if  (win == (WINDOW *)NULL)
-		return ERR;
-
-	/* should this involve scrolling region somehow ? */
-
-	if (win->_cury + 1 < win->_maxy)
-	{
-		win->_curx = 0;
-		win->_cury++;
-		for (; win->_maxy > win->_cury; win->_cury++)
-			wclrtoeol(win);
-		win->_cury = savey;
-		win->_curx = savex;
-	}
-	wclrtoeol(win);
-
-	PDC_sync(win);
-	return OK;
-}
-
-int clrtoeol(void)
-{
-	return wclrtoeol(stdscr);
-}
-
 int wclrtoeol(WINDOW *win)
 {
 	int x, y, minx;
@@ -164,4 +89,80 @@ int wclrtoeol(WINDOW *win)
 
 	PDC_sync(win);
 	return OK;
+}
+
+int clrtoeol(void)
+{
+	PDC_LOG(("clrtoeol() - called\n"));
+
+	return wclrtoeol(stdscr);
+}
+
+int wclrtobot(WINDOW *win)
+{
+	int savey = win->_cury;
+	int savex = win->_curx;
+
+	PDC_LOG(("wclrtobot() - called\n"));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	/* should this involve scrolling region somehow ? */
+
+	if (win->_cury + 1 < win->_maxy)
+	{
+		win->_curx = 0;
+		win->_cury++;
+		for (; win->_maxy > win->_cury; win->_cury++)
+			wclrtoeol(win);
+		win->_cury = savey;
+		win->_curx = savex;
+	}
+	wclrtoeol(win);
+
+	PDC_sync(win);
+	return OK;
+}
+
+int clrtobot(void)
+{
+	PDC_LOG(("clrtobot() - called\n"));
+
+	return wclrtobot(stdscr);
+}
+
+int werase(WINDOW *win)
+{
+	PDC_LOG(("werase() - called\n"));
+
+	if (wmove(win, 0, 0) == ERR)
+		return ERR;
+
+	return wclrtobot(win);
+}
+
+int erase(void)
+{
+	PDC_LOG(("erase() - called\n"));
+
+	return werase(stdscr);
+}
+
+int wclear(WINDOW *win)
+{
+	PDC_LOG(("wclear() - called\n"));
+
+	if (win == (WINDOW *)NULL)
+		return ERR;
+
+	win->_clear = TRUE;
+	return werase(win);
+}
+
+int clear(void)
+{
+	PDC_LOG(("clear() - called\n"));
+
+	return wclear(stdscr);
 }

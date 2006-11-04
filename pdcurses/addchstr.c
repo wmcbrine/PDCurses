@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: addchstr.c,v 1.34 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: addchstr.c,v 1.35 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -74,33 +74,12 @@ RCSID("$Id: addchstr.c,v 1.34 2006/10/23 05:46:32 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int addchstr(const chtype *ch)
-{
-	PDC_LOG(("addchstr() - called\n"));
-
-	return waddchnstr(stdscr, ch, -1);
-}
-
-int addchnstr(const chtype *ch, int n)
-{
-	PDC_LOG(("addchnstr() - called\n"));
-
-	return waddchnstr(stdscr, ch, n);
-}
-
-int waddchstr(WINDOW *win, const chtype *ch)
-{
-	PDC_LOG(("waddchstr() - called: win=%x\n", win));
-
-	return waddchnstr(win, ch, -1);
-}
-
 int waddchnstr(WINDOW *win, const chtype *ch, int n)
 {
 	int y, x, maxx, minx;
 	chtype *ptr;
 
-	PDC_LOG(("waddchnstr() - called: win=%x n=%d\n", win, n));
+	PDC_LOG(("waddchnstr() - called: win=%p n=%d\n", win, n));
 
 	if (!win || !ch || !n || n < -1)
 		return ERR;
@@ -138,6 +117,27 @@ int waddchnstr(WINDOW *win, const chtype *ch, int n)
 	win->_lastch[y] = maxx;
 
 	return OK;
+}
+
+int addchstr(const chtype *ch)
+{
+	PDC_LOG(("addchstr() - called\n"));
+
+	return waddchnstr(stdscr, ch, -1);
+}
+
+int addchnstr(const chtype *ch, int n)
+{
+	PDC_LOG(("addchnstr() - called\n"));
+
+	return waddchnstr(stdscr, ch, n);
+}
+
+int waddchstr(WINDOW *win, const chtype *ch)
+{
+	PDC_LOG(("waddchstr() - called: win=%p\n", win));
+
+	return waddchnstr(win, ch, -1);
 }
 
 int mvaddchstr(int y, int x, const chtype *ch)
@@ -181,6 +181,13 @@ int mvwaddchnstr(WINDOW *win, int y, int x, const chtype *ch, int n)
 }
 
 #ifdef PDC_WIDE
+int wadd_wchnstr(WINDOW *win, const cchar_t *wch, int n)
+{
+	PDC_LOG(("wadd_wchnstr() - called: win=%p n=%d\n", win, n));
+
+	return waddchnstr(win, wch, n);
+}
+
 int add_wchstr(const cchar_t *wch)
 {
 	PDC_LOG(("add_wchstr() - called\n"));
@@ -197,16 +204,9 @@ int add_wchnstr(const cchar_t *wch, int n)
 
 int wadd_wchstr(WINDOW *win, const cchar_t *wch)
 {
-	PDC_LOG(("wadd_wchstr() - called: win=%x\n", win));
+	PDC_LOG(("wadd_wchstr() - called: win=%p\n", win));
 
 	return wadd_wchnstr(win, wch, -1);
-}
-
-int wadd_wchnstr(WINDOW *win, const cchar_t *wch, int n)
-{
-	PDC_LOG(("wadd_wchnstr() - called: win=%x n=%d\n", win, n));
-
-	return waddchnstr(win, wch, n);
 }
 
 int mvadd_wchstr(int y, int x, const cchar_t *wch)

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: bkgd.c,v 1.29 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.30 2006/11/04 12:59:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -82,27 +82,6 @@ RCSID("$Id: bkgd.c,v 1.29 2006/10/23 05:46:32 wmcbrine Exp $");
 	wgetbkgrnd				Y
 
 **man-end****************************************************************/
-
-int bkgd(chtype ch)
-{
-	PDC_LOG(("bkgd() - called\n"));
-
-	return wbkgd(stdscr, ch);
-}
-
-void bkgdset(chtype ch)
-{
-	PDC_LOG(("bkgdset() - called\n"));
-
-	wbkgdset(stdscr, ch);
-}
-
-chtype getbkgd(WINDOW *win)
-{
-	PDC_LOG(("getbkgd() - called\n"));
-
-        return win ? win->_bkgd : (chtype)ERR;
-}
 
 int wbkgd(WINDOW *win, chtype ch)
 {
@@ -183,6 +162,13 @@ int wbkgd(WINDOW *win, chtype ch)
 	return OK;
 }
 
+int bkgd(chtype ch)
+{
+	PDC_LOG(("bkgd() - called\n"));
+
+	return wbkgd(stdscr, ch);
+}
+
 void wbkgdset(WINDOW *win, chtype ch)
 {
 	chtype bkgdattr;
@@ -208,33 +194,33 @@ void wbkgdset(WINDOW *win, chtype ch)
 	win->_bkgd = (ch | bkgdattr);
 }
 
+void bkgdset(chtype ch)
+{
+	PDC_LOG(("bkgdset() - called\n"));
+
+	wbkgdset(stdscr, ch);
+}
+
+chtype getbkgd(WINDOW *win)
+{
+	PDC_LOG(("getbkgd() - called\n"));
+
+        return win ? win->_bkgd : (chtype)ERR;
+}
+
 #ifdef PDC_WIDE
-int bkgrnd(const cchar_t *wch)
-{
-	PDC_LOG(("bkgrnd() - called\n"));
-
-	return wbkgrnd(stdscr, wch);
-}
-
-void bkgrndset(const cchar_t *wch)
-{
-	PDC_LOG(("bkgrndset() - called\n"));
-
-	wbkgrndset(stdscr, wch);
-}
-
-int getbkgrnd(cchar_t *wch)
-{
-	PDC_LOG(("getbkgrnd() - called\n"));
-
-        return wgetbkgrnd(stdscr, wch);
-}
-
 int wbkgrnd(WINDOW *win, const cchar_t *wch)
 {
 	PDC_LOG(("wbkgrnd() - called\n"));
 
 	return wch ? wbkgd(win, *wch) : ERR;
+}
+
+int bkgrnd(const cchar_t *wch)
+{
+	PDC_LOG(("bkgrnd() - called\n"));
+
+	return wbkgrnd(stdscr, wch);
 }
 
 void wbkgrndset(WINDOW *win, const cchar_t *wch)
@@ -243,6 +229,13 @@ void wbkgrndset(WINDOW *win, const cchar_t *wch)
 
 	if (wch)
 		wbkgdset(win, *wch);
+}
+
+void bkgrndset(const cchar_t *wch)
+{
+	PDC_LOG(("bkgrndset() - called\n"));
+
+	wbkgrndset(stdscr, wch);
 }
 
 int wgetbkgrnd(WINDOW *win, cchar_t *wch)
@@ -255,5 +248,12 @@ int wgetbkgrnd(WINDOW *win, cchar_t *wch)
 	*wch = win->_bkgd;
 
 	return OK;
+}
+
+int getbkgrnd(cchar_t *wch)
+{
+	PDC_LOG(("getbkgrnd() - called\n"));
+
+        return wgetbkgrnd(stdscr, wch);
 }
 #endif

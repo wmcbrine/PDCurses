@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.45 2006/10/18 23:09:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.46 2006/11/05 05:37:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -66,7 +66,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
-	if ((XCursesInitscr(argc, argv) == ERR) || (SP == (SCREEN *)NULL))
+	if ((XCursesInitscr(argc, argv) == ERR) || !SP)
 		return ERR;
 
 	SP->cursrow = SP->curscol = 0;

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.68 2006/10/18 23:09:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.69 2006/11/05 05:37:40 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -354,7 +354,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->_restore = PDC_RESTORE_NONE;
 
-	if (getenv("PDC_RESTORE_SCREEN") != NULL)
+	if (getenv("PDC_RESTORE_SCREEN"))
 	{
 		/* Attempt to save the complete console buffer */
 

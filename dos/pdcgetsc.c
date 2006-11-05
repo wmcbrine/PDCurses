@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.34 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.35 2006/11/05 05:37:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -140,7 +140,7 @@ int PDC_get_cursor_mode(void)
 
 int PDC_get_rows(void)
 {
-	char *env_rows;
+	const char *env_rows;
 	int rows;
 
 	PDC_LOG(("PDC_get_rows() - called\n"));
@@ -149,14 +149,14 @@ int PDC_get_rows(void)
  /* and use the minimum of LINES and *ROWS.                MH 18-Jun-92 */
 
 	rows = getdosmembyte(0x484) + 1;
-	env_rows = (char *)getenv("LINES");
+	env_rows = getenv("LINES");
 
-	if (env_rows != (char *)NULL)
+	if (env_rows)
 		rows = min(atoi(env_rows), rows);
 
-	if ((rows == 1) && (pdc_adapter == _MDS_GENIUS))
+	if (rows == 1 && pdc_adapter == _MDS_GENIUS)
 		rows = 66;
-	if ((rows == 1) && (pdc_adapter == _MDA))
+	if (rows == 1 && pdc_adapter == _MDA)
 		rows = 25;
 
 	if (rows == 1)

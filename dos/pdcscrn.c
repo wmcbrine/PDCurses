@@ -20,7 +20,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.66 2006/10/28 13:26:01 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.67 2006/11/05 05:37:40 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -470,7 +470,7 @@ void PDC_scr_close(void)
 #endif
 	PDC_LOG(("PDC_scr_close() - called\n"));
 
-	if ((getenv("PDC_RESTORE_SCREEN") != NULL) && (saved_screen != NULL))
+	if (getenv("PDC_RESTORE_SCREEN") && saved_screen)
 	{
 #ifdef __DJGPP__
 		dosmemput(saved_screen, saved_lines * saved_cols * 2,
@@ -566,12 +566,12 @@ int PDC_scr_open(int argc, char **argv)
 	   int10() BIOS calls are used in place of direct video memory 
 	   access. */
 
-	if (getenv("PDCURSES_BIOS") != NULL)
+	if (getenv("PDCURSES_BIOS"))
 		pdc_direct_video = FALSE;
 
 	/* This code for preserving the current screen. */
 
-	if (getenv("PDC_RESTORE_SCREEN") != NULL)
+	if (getenv("PDC_RESTORE_SCREEN"))
 	{
 		saved_lines = SP->lines;
 		saved_cols = SP->cols;

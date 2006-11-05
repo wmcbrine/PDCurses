@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.87 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.88 2006/11/05 05:37:40 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -239,7 +239,7 @@ int XCursesInitscr(int argc, char *argv[])
 	XC_LOG(("XCursesInitscr() - called\n"));
 
 #if defined FOREIGN
-	if (setlocale(LC_ALL, "") == NULL)
+	if (!setlocale(LC_ALL, ""))
 	{
 		fprintf(stderr, "ERROR: cannot set locale\n");
 		return ERR;
@@ -251,7 +251,7 @@ int XCursesInitscr(int argc, char *argv[])
 		return ERR;
 	}
 
-	if (XSetLocaleModifiers("") == NULL)
+	if (!XSetLocaleModifiers(""))
 		fprintf(stderr, "WARNING: Cannot set locale modifiers\n");
 #endif
 	shmkeySP = getpid();

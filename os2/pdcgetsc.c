@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.31 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.32 2006/11/05 05:37:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -79,7 +79,7 @@ int PDC_get_columns(void)
 	VIOMODEINFO modeInfo = {0};
 #endif
 	int cols = 0;
-	char *env_cols = NULL;
+	const char *env_cols;
 
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
@@ -90,9 +90,9 @@ int PDC_get_columns(void)
 	VioGetMode(&modeInfo, 0);
 	cols = modeInfo.col;
 #endif
-	env_cols = (char *)getenv("COLS");
+	env_cols = getenv("COLS");
 
-	if (env_cols != (char *)NULL)
+	if (env_cols)
 		cols = min(atoi(env_cols), cols);
 
 	PDC_LOG(("PDC_get_columns() - returned: cols %d\n", cols));
@@ -157,7 +157,7 @@ int PDC_get_rows(void)
 	VIOMODEINFO modeInfo = {0};
 #endif
 	int rows = 0;
-	char *env_rows = NULL;
+	const char *env_rows;
 
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
@@ -171,9 +171,9 @@ int PDC_get_rows(void)
 	VioGetMode(&modeInfo, 0);
 	rows = modeInfo.row;
 #endif
-	env_rows = (char *)getenv("LINES");
+	env_rows = getenv("LINES");
 
-	if (env_rows != (char *)NULL)
+	if (env_rows)
 		rows = min(atoi(env_rows), rows);
 
 	PDC_LOG(("PDC_get_rows() - returned: rows %d\n", rows));

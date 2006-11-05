@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.28 2006/10/28 13:26:01 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.29 2006/11/05 05:37:40 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -661,7 +661,7 @@ static Atom XA_UTF8_STRING(Display *dpy)
 {
 	static AtomPtr p = NULL;
 
-	if (p == NULL)
+	if (!p)
 		p = XmuMakeAtom("UTF8_STRING");
 
 	return XmuInternAtom(dpy, p);
@@ -1029,7 +1029,7 @@ static void GetIcon(void)
 	XFree((char *)icon_size);
 
 #ifdef HAVE_XPM_H
-	if (strcmp(xc_app_data.pixmap, "") != 0) /* supplied pixmap */
+	if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
 	{
 		XpmReadFileToPixmap(XtDisplay(topLevel),
 			RootWindowOfScreen(XtScreen(topLevel)),
@@ -1039,7 +1039,7 @@ static void GetIcon(void)
 	}
 #endif
 
-	if (strcmp(xc_app_data.bitmap, "") != 0) /* supplied bitmap */
+	if (xc_app_data.bitmap && xc_app_data.bitmap[0]) /* supplied bitmap */
 	{
 		int x_hot = 0, y_hot = 0;
 
@@ -1558,7 +1558,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 
 	XC_LOG(("RequestorCallbackForPaste() - called\n"));
 
-	if ((value == NULL) && (*length == 0))
+	if (!string)
 		return;
 
 	for (i = 0; i < (*length); i++)
@@ -2080,7 +2080,7 @@ static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 		ExitProcess(1, SIGKILL, "exiting from SendKeyToCurses");
 	}
 
-	if (ms != NULL)
+	if (ms)
 	{
 		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
 
@@ -2557,14 +2557,14 @@ static void ExitProcess(int rc, int sig, char *msg)
 	shmctl(shmidSP, IPC_RMID, 0);
 	shmctl(shmid_Xcurscr, IPC_RMID, 0);
 
-	if (bitmap_file != NULL)
+	if (bitmap_file)
 	{
 		XFreePixmap(XCURSESDISPLAY, icon_bitmap);
 		free(bitmap_file);
 	}
 
 #ifdef HAVE_XPM_H
-	if (pixmap_file != NULL)
+	if (pixmap_file)
 	{
 		XFreePixmap(XCURSESDISPLAY, icon_pixmap);
 		XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
@@ -2978,7 +2978,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Exit if no DISPLAY variable set */
 
-	if (getenv("DISPLAY") == NULL)
+	if (!getenv("DISPLAY"))
 	{
 		fprintf(stderr, "Error: no DISPLAY variable set\n");
 		kill(xc_otherpid, SIGKILL);
@@ -3035,8 +3035,7 @@ int XCursesSetupX(int argc, char *argv[])
 	GetIcon();
 
 #ifdef HAVE_XPM_H
-	if (xc_app_data.pixmap != NULL &&
-	    strcmp(xc_app_data.pixmap, "") != 0)
+	if (xc_app_data.pixmap && xc_app_data.pixmap[0])
 		XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
 			minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
 			XtNbaseHeight, xc_app_data.borderWidth * 2,
@@ -3378,7 +3377,7 @@ static void RequestorCallbackForGetSelection(Widget w, XtPointer data,
 {
 	XC_LOG(("RequestorCallbackForGetSelection() - called\n"));
 
-	if ((value == NULL) && (*length == 0))
+	if (!value && !(*length))
 	{
 	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
 		return;

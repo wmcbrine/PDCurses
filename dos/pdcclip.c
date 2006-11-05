@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.25 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.26 2006/11/05 05:37:40 wmcbrine Exp $");
 
 /* global clipboard contents, should be NULL if none set */
 
@@ -54,7 +54,7 @@ int PDC_getclipboard(char **contents, long *length)
 
 	PDC_LOG(("PDC_getclipboard() - called\n"));
 
-	if (pdc_DOS_clipboard == NULL)
+	if (!pdc_DOS_clipboard)
 		return PDC_CLIP_EMPTY;
 
 	len = strlen(pdc_DOS_clipboard);
@@ -93,13 +93,13 @@ int PDC_setclipboard(const char *contents, long length)
 {
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
-	if (pdc_DOS_clipboard != NULL) 
+	if (pdc_DOS_clipboard)
 	{
 		free(pdc_DOS_clipboard);
 		pdc_DOS_clipboard = NULL;
 	}
 
-	if (contents != NULL)
+	if (contents)
 	{
 		if ((pdc_DOS_clipboard = malloc(length + 1)) == NULL)
 			return PDC_CLIP_MEMORY_ERROR;
@@ -134,7 +134,7 @@ int PDC_freeclipboard(char *contents)
 
 	/* should we also free empty the system clipboard? probably not */
 
-	if (contents != NULL)
+	if (contents)
 	{
 		/* NOTE: We free the memory, but we can not set caller's 
 		   pointer to NULL, so if caller calls again then will 
@@ -174,7 +174,7 @@ int PDC_clearclipboard(void)
 {
 	PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-	if (pdc_DOS_clipboard != NULL) 
+	if (pdc_DOS_clipboard) 
 	{
 		free(pdc_DOS_clipboard);
 		pdc_DOS_clipboard = NULL;

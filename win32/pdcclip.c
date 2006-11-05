@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcclip.c,v 1.20 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.21 2006/11/05 05:37:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -49,12 +49,10 @@ int PDC_getclipboard(char **contents, long *length)
 
 	PDC_LOG(("PDC_getclipboard() - called\n"));
 
-	if (OpenClipboard(NULL) == 0)
+	if (!OpenClipboard(NULL))
 		return PDC_CLIP_ACCESS_ERROR;
 
-	handle = GetClipboardData(CF_TEXT);
-
-	if (handle == NULL)
+	if ((handle = GetClipboardData(CF_TEXT)) == NULL)
 	{
 		CloseClipboard();
 		return PDC_CLIP_EMPTY;
@@ -104,7 +102,7 @@ int PDC_setclipboard(const char *contents, long length)
 
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
-	if (OpenClipboard(NULL) == 0)
+	if (!OpenClipboard(NULL))
 		return PDC_CLIP_ACCESS_ERROR;
 
 	ptr1 = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, 
@@ -119,7 +117,7 @@ int PDC_setclipboard(const char *contents, long length)
 	GlobalUnlock(ptr1);
 	EmptyClipboard();
 
-	if (SetClipboardData(CF_TEXT, ptr1) == NULL)
+	if (!SetClipboardData(CF_TEXT, ptr1))
 	{
 		GlobalFree(ptr1);
 		return PDC_CLIP_ACCESS_ERROR;

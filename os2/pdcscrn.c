@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.57 2006/10/18 23:09:16 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.58 2006/11/05 05:37:40 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -94,7 +94,7 @@ void PDC_scr_close(void)
 	if (DosScanEnv("PDC_RESTORE_SCREEN", (PSZ *)&ptr))
 		ptr = NULL;
 #endif
-	if ((ptr != NULL) && (saved_screen != NULL))
+	if (ptr && saved_screen)
 	{
 #ifdef EMXVIDEO
 		v_putline(saved_screen, 0, 0, saved_lines * saved_cols);

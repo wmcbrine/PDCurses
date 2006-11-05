@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: beep.c,v 1.26 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.27 2006/11/05 04:33:00 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,7 +33,7 @@ RCSID("$Id: beep.c,v 1.26 2006/10/23 05:03:30 wmcbrine Exp $");
 	audible signal (bell or beep), but only some can flash the screen.
 
   X/Open Return Value:
-	These functions return OK on success and ERR on error.
+	These functions return OK.
 
   Portability				     X/Open    BSD    SYS V
 	beep					Y	Y	Y
@@ -45,13 +45,10 @@ int beep(void)
 {
 	PDC_LOG(("beep() - called\n"));
 
-	if (!SP->audible)
-	{
+	if (SP->audible)
+		PDC_beep();
+	else
 		flash();
-		return ERR;		/* We try to flash instead...*/
-	}
-
-	PDC_beep();
 
 	return OK;
 }

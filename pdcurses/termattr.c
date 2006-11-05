@@ -15,7 +15,7 @@
 #include <string.h>
 #include <limits.h>
 
-RCSID("$Id: termattr.c,v 1.45 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.46 2006/11/05 05:38:47 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -139,14 +139,14 @@ char killchar(void)
 
 char *longname(void)
 {
-	static char _display[128];
+	static char display[128];
 
 	PDC_LOG(("longname() - called\n"));
 
-	sprintf(_display, "PDCurses for %s %s-%dx%d", PDC_sysname(),
+	sprintf(display, "PDCurses for %s %s-%dx%d", PDC_sysname(),
 		SP->mono ? "MONO" : "COLOR", LINES, COLS);
 
-	return _display;
+	return display;
 }
 
 chtype termattrs(void)

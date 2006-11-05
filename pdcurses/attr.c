@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.31 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.32 2006/11/05 02:40:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -121,13 +121,6 @@ RCSID("$Id: attr.c,v 1.31 2006/11/04 12:59:03 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int attroff(chtype attrs)
-{
-	PDC_LOG(("attroff() - called\n"));
-
-	return wattroff(stdscr, attrs);
-}
-
 int wattroff(WINDOW *win, chtype attrs)
 {
 	PDC_LOG(("wattroff() - called\n"));
@@ -140,11 +133,11 @@ int wattroff(WINDOW *win, chtype attrs)
 	return OK;
 }
 
-int attron(chtype attrs)
+int attroff(chtype attrs)
 {
-	PDC_LOG(("attron() - called\n"));
+	PDC_LOG(("attroff() - called\n"));
 
-	return wattron(stdscr, attrs);
+	return wattroff(stdscr, attrs);
 }
 
 int wattron(WINDOW *win, chtype attrs)
@@ -172,11 +165,11 @@ int wattron(WINDOW *win, chtype attrs)
 	return OK;
 }
 
-int attrset(chtype attrs)
+int attron(chtype attrs)
 {
-	PDC_LOG(("attrset() - called\n"));
+	PDC_LOG(("attron() - called\n"));
 
-	return wattrset(stdscr, attrs);
+	return wattron(stdscr, attrs);
 }
 
 int wattrset(WINDOW *win, chtype attrs)
@@ -189,6 +182,13 @@ int wattrset(WINDOW *win, chtype attrs)
 	win->_attrs = attrs & A_ATTRIBUTES;
 
 	return OK;
+}
+
+int attrset(chtype attrs)
+{
+	PDC_LOG(("attrset() - called\n"));
+
+	return wattrset(stdscr, attrs);
 }
 
 int standend(void)
@@ -224,13 +224,6 @@ chtype getattrs(WINDOW *win)
 	return win ? win->_attrs : 0;
 }
 
-int color_set(short color_pair, void *opts)
-{
-	PDC_LOG(("color_set() - called\n"));
-
-	return wcolor_set(stdscr, color_pair, opts);
-}
-
 int wcolor_set(WINDOW *win, short color_pair, void *opts)
 {
 	PDC_LOG(("wcolor_set() - called\n"));
@@ -243,32 +236,11 @@ int wcolor_set(WINDOW *win, short color_pair, void *opts)
 	return OK;
 }
 
-int attr_get(attr_t *attrs, short *color_pair, void *opts)
+int color_set(short color_pair, void *opts)
 {
-	PDC_LOG(("attr_get() - called\n"));
+	PDC_LOG(("color_set() - called\n"));
 
-	return wattr_get(stdscr, attrs, color_pair, opts);
-}
-
-int attr_off(attr_t attrs, void *opts)
-{
-	PDC_LOG(("attr_off() - called\n"));
-
-	return wattroff(stdscr, attrs);
-}
-
-int attr_on(attr_t attrs, void *opts)
-{
-	PDC_LOG(("attr_on() - called\n"));
-
-	return wattron(stdscr, attrs);
-}
-
-int attr_set(attr_t attrs, short color_pair, void *opts)
-{
-	PDC_LOG(("attr_get() - called\n"));
-
-	return wattr_set(stdscr, attrs, color_pair, opts);
+	return wcolor_set(stdscr, color_pair, opts);
 }
 
 int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair, void *opts)
@@ -287,6 +259,13 @@ int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair, void *opts)
 	return OK;
 }
 
+int attr_get(attr_t *attrs, short *color_pair, void *opts)
+{
+	PDC_LOG(("attr_get() - called\n"));
+
+	return wattr_get(stdscr, attrs, color_pair, opts);
+}
+
 int wattr_off(WINDOW *win, attr_t attrs, void *opts)
 {
 	PDC_LOG(("wattr_off() - called\n"));
@@ -294,11 +273,25 @@ int wattr_off(WINDOW *win, attr_t attrs, void *opts)
 	return wattroff(win, attrs);
 }
 
+int attr_off(attr_t attrs, void *opts)
+{
+	PDC_LOG(("attr_off() - called\n"));
+
+	return wattroff(stdscr, attrs);
+}
+
 int wattr_on(WINDOW *win, attr_t attrs, void *opts)
 {
 	PDC_LOG(("wattr_off() - called\n"));
 
 	return wattron(win, attrs);
+}
+
+int attr_on(attr_t attrs, void *opts)
+{
+	PDC_LOG(("attr_on() - called\n"));
+
+	return wattron(stdscr, attrs);
 }
 
 int wattr_set(WINDOW *win, attr_t attrs, short color_pair, void *opts)
@@ -314,32 +307,11 @@ int wattr_set(WINDOW *win, attr_t attrs, short color_pair, void *opts)
 	return OK;
 }
 
-int chgat(int n, attr_t attr, short color, const void *opts)
+int attr_set(attr_t attrs, short color_pair, void *opts)
 {
-	PDC_LOG(("chgat() - called\n"));
+	PDC_LOG(("attr_get() - called\n"));
 
-	return wchgat(stdscr, n, attr, color, opts);
-}
-
-int mvchgat(int y, int x, int n, attr_t attr, short color, const void *opts)
-{
-	PDC_LOG(("mvchgat() - called\n"));
-
-	if (move(y, x) == ERR)
-		return ERR;
-
-	return wchgat(stdscr, n, attr, color, opts);
-}
-
-int mvwchgat(WINDOW *win, int y, int x, int n, attr_t attr,
-	     short color, const void *opts)
-{
-	PDC_LOG(("mvwchgat() - called\n"));
-
-	if (wmove(win, y, x) == ERR)
-		return ERR;
-
-	return wchgat(win, n, attr, color, opts);
+	return wattr_set(stdscr, attrs, color_pair, opts);
 }
 
 int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
@@ -382,4 +354,32 @@ int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
 	PDC_sync(win);
 
 	return OK;
+}
+
+int chgat(int n, attr_t attr, short color, const void *opts)
+{
+	PDC_LOG(("chgat() - called\n"));
+
+	return wchgat(stdscr, n, attr, color, opts);
+}
+
+int mvchgat(int y, int x, int n, attr_t attr, short color, const void *opts)
+{
+	PDC_LOG(("mvchgat() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wchgat(stdscr, n, attr, color, opts);
+}
+
+int mvwchgat(WINDOW *win, int y, int x, int n, attr_t attr,
+	     short color, const void *opts)
+{
+	PDC_LOG(("mvwchgat() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wchgat(win, n, attr, color, opts);
 }

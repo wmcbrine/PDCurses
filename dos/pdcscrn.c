@@ -20,7 +20,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.67 2006/11/05 05:37:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.68 2006/11/05 07:40:06 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -659,6 +659,8 @@ int PDC_resize_screen(int nlines, int ncols)
 			else
 				_set_80x25();
 	}
+
+	PDC_set_blink(COLORS == 8);
 
 	return OK;
 }

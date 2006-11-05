@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getyx.c,v 1.20 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: getyx.c,v 1.21 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -71,78 +71,54 @@ int getbegy(WINDOW *win)
 {
 	PDC_LOG(("getbegy() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_begy;
+	return win ? win->_begy : ERR;
 }
 
 int getbegx(WINDOW *win)
 {
 	PDC_LOG(("getbegx() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_begx;
+	return win ? win->_begx : ERR;
 }
 
 int getcury(WINDOW *win)
 {
 	PDC_LOG(("getcury() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_cury;
+	return win ? win->_cury : ERR;
 }
 
 int getcurx(WINDOW *win)
 {
 	PDC_LOG(("getcurx() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_curx;
+	return win ? win->_curx : ERR;
 }
 
 int getpary(WINDOW *win)
 {
 	PDC_LOG(("getpary() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_pary;
+	return win ? win->_pary : ERR;
 }
 
 int getparx(WINDOW *win)
 {
 	PDC_LOG(("getparx() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_parx;
+	return win ? win->_parx : ERR;
 }
 
 int getmaxy(WINDOW *win)
 {
 	PDC_LOG(("getmaxy() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_maxy;
+	return win ? win->_maxy : ERR;
 }
 
 int getmaxx(WINDOW *win)
 {
 	PDC_LOG(("getmaxx() - called\n"));
 
-	if (win == (WINDOW *)NULL)
-		return ERR;
-
-	return win->_maxx;
+	return win ? win->_maxx : ERR;
 }

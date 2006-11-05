@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inch.c,v 1.26 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -53,7 +53,7 @@ chtype winch(WINDOW *win)
 {
 	PDC_LOG(("winch() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return (chtype)ERR;
 
 	return win->_y[win->_cury][win->_curx];

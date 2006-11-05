@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: instr.c,v 1.31 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.32 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -78,7 +78,7 @@ int winnstr(WINDOW *win, char *str, int n)
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	oldy = win->_cury;
@@ -177,7 +177,7 @@ int winnwstr(WINDOW *win, wchar_t *wstr, int n)
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	oldy = win->_cury;

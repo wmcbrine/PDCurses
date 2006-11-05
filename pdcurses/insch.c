@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.32 2006/11/03 14:08:10 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -105,7 +105,7 @@ int winsch(WINDOW *win, chtype ch)
 
 	PDC_LOG(("winsch() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	xlat = !(SP->raw_out) && !(ch & A_ALTCHARSET);

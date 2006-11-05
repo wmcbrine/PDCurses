@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.43 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.44 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -260,14 +260,14 @@ int delwin(WINDOW *win)
 
 	PDC_LOG(("delwin() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	/* subwindows use parents' lines */
 
 	if (!(win->_flags & (_SUBWIN|_SUBPAD)))
 		for (i = 0; i < win->_pmaxy && win->_y[i]; i++)
-			if (win->_y[i] != NULL)
+			if (win->_y[i])
 				free(win->_y[i]);
 
 	free(win->_firstch);
@@ -282,7 +282,7 @@ int mvwin(WINDOW *win, int y, int x)
 {
 	PDC_LOG(("mvwin() - called\n"));
 
-	if ((win == (WINDOW *)NULL)
+	if (!win
 	   || (y + win->_maxy > LINES || y < 0)
 	   || (x + win->_maxx > COLS || x < 0))
 		return ERR;
@@ -353,7 +353,7 @@ int mvderwin(WINDOW *win, int par_y, int par_x)
 	int i, j;
 	WINDOW *mypar;
 
-	if ((win == (WINDOW *)NULL) || (win->_parent == NULL))
+	if (!win || !(win->_parent))
 		return ERR;
 
 	mypar = win->_parent;
@@ -461,7 +461,7 @@ WINDOW *resize_window(WINDOW *win, int lins, int cols)
 
 	PDC_LOG(("resize_window() - called: lins %d cols %d\n", lins, cols));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return (WINDOW *)NULL;
 
 	if (win == SP->slk_winptr)
@@ -554,7 +554,7 @@ int syncok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("syncok() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_sync = bf;

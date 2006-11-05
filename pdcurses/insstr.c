@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insstr.c,v 1.34 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.35 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -78,7 +78,7 @@ int winsnstr(WINDOW *win, const char *str, int n)
 
 	PDC_LOG(("winsnstr() - called: string=\"%s\" n %d \n", str, n));
 
-	if (win == (WINDOW *)NULL || str == (const char *)NULL)
+	if (!win || !str)
 		return ERR;
 
 	ic = strlen(str);
@@ -167,7 +167,7 @@ int wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 
 	PDC_LOG(("wins_nwstr() - called\n"));
 
-	if (win == (WINDOW *)NULL || wstr == (const wchar_t *)NULL)
+	if (!win || !wstr)
 		return ERR;
 
 	for (ic = 0, p = wstr; *p != L'\0'; p++)

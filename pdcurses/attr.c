@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.32 2006/11/05 02:40:26 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -125,7 +125,7 @@ int wattroff(WINDOW *win, chtype attrs)
 {
 	PDC_LOG(("wattroff() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_attrs &= (~attrs & A_ATTRIBUTES);
@@ -147,7 +147,7 @@ int wattron(WINDOW *win, chtype attrs)
 
 	PDC_LOG(("wattron() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	if ((win->_attrs & A_COLOR) && (attrs & A_COLOR)) 
@@ -176,7 +176,7 @@ int wattrset(WINDOW *win, chtype attrs)
 {
 	PDC_LOG(("wattrset() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_attrs = attrs & A_ATTRIBUTES;
@@ -228,7 +228,7 @@ int wcolor_set(WINDOW *win, short color_pair, void *opts)
 {
 	PDC_LOG(("wcolor_set() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_attrs = (win->_attrs & ~A_COLOR) | COLOR_PAIR(color_pair);
@@ -247,13 +247,13 @@ int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair, void *opts)
 {
 	PDC_LOG(("wattr_get() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
-	if (attrs != (attr_t *)NULL)
+	if (attrs)
 		*attrs = win->_attrs & (A_ATTRIBUTES & ~A_COLOR);
 
-	if (color_pair != (short *)NULL)
+	if (color_pair)
 		*color_pair = PAIR_NUMBER(win->_attrs);
 
 	return OK;
@@ -298,7 +298,7 @@ int wattr_set(WINDOW *win, attr_t attrs, short color_pair, void *opts)
 {
 	PDC_LOG(("wattr_set() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_attrs = (attrs & (A_ATTRIBUTES & ~A_COLOR)) |
@@ -321,7 +321,7 @@ int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
 
 	PDC_LOG(("wchgat() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	newattr = (attr & A_ATTRIBUTES) | COLOR_PAIR(color);

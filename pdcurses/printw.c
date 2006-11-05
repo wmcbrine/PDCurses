@@ -17,7 +17,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: printw.c,v 1.31 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: printw.c,v 1.32 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

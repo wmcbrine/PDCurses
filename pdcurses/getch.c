@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.49 2006/10/29 12:05:13 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.50 2006/11/05 03:57:26 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -118,7 +118,7 @@ int wgetch(WINDOW *win)
 
 	PDC_LOG(("wgetch() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	waitcount = 0;

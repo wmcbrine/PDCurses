@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.38 2006/11/03 14:06:02 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.39 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -90,7 +90,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 
 	PDC_LOG(("wgetnstr() - called\n"));
 
-	if (win == (WINDOW *)NULL || str == (char *)NULL)
+	if (!win || !str)
 		return ERR;
 
 	chars = 0;
@@ -284,7 +284,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
 
 	PDC_LOG(("wgetn_wstr() - called\n"));
 
-	if (win == (WINDOW *)NULL || wstr == (wint_t *)NULL)
+	if (!win || !wstr)
 		return ERR;
 
 	chars = 0;

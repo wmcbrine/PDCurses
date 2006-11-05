@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.26 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -133,7 +133,7 @@ void wmouse_position(WINDOW *win, int *y, int *x)
 	/* if the current mouse position is outside the provided window, 
 	   put -1 in x and y */
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 	{
 		*y = *x = -1;
 		return;

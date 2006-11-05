@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.35 2006/10/23 05:46:32 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.36 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -221,7 +221,7 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 
 	PDC_LOG(("pnoutrefresh() - called\n"));
 
-	if ((w == (WINDOW *)NULL) || !(w->_flags & (_PAD|_SUBPAD)) ||
+	if (!w || !(w->_flags & (_PAD|_SUBPAD)) ||
 	    (sy2 >= LINES) || (sy2 >= COLS))
 		return ERR;
 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: clear.c,v 1.26 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: clear.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -70,7 +70,7 @@ int wclrtoeol(WINDOW *win)
 	PDC_LOG(("wclrtoeol() - called: Row: %d Col: %d\n",
 		win->_cury, win->_curx));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	y = win->_cury;
@@ -105,7 +105,7 @@ int wclrtobot(WINDOW *win)
 
 	PDC_LOG(("wclrtobot() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	/* should this involve scrolling region somehow ? */
@@ -153,7 +153,7 @@ int wclear(WINDOW *win)
 {
 	PDC_LOG(("wclear() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_clear = TRUE;

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.26 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: scroll.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -55,7 +55,7 @@ int wscrl(WINDOW *win, int n)
 
 	/* Check if window scrolls. Valid for window AND pad */
 
-	if ((win == (WINDOW *)NULL) || !win->_scroll)
+	if (!win || !win->_scroll)
 		return ERR;
 
 	/* wrs (4/10/93) account for window background */

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.25 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -58,7 +58,7 @@ int wdeleteln(WINDOW *win)
 
 	PDC_LOG(("wdeleteln() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	/* wrs (4/10/93) account for window background */
@@ -100,7 +100,7 @@ int winsdelln(WINDOW *win, int n)
 
 	PDC_LOG(("winsdelln() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	if (n > 0)
@@ -134,7 +134,7 @@ int winsertln(WINDOW *win)
 
 	PDC_LOG(("winsertln() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	/* wrs (4/10/93) account for window background */

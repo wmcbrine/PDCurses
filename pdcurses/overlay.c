@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.25 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -81,7 +81,7 @@ static int _copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 	int xdiff = src_bc - src_tc;
 	int ydiff = src_br - src_tr;
 
-	if ((src_w == (WINDOW *)NULL) || (dst_w == (WINDOW *)NULL))
+	if (!src_w || !dst_w)
 		return ERR;
 
 	minchng = dst_w->_firstch;
@@ -145,7 +145,7 @@ int overlay(const WINDOW *src_w, WINDOW *dst_w)
 
 	PDC_LOG(("overlay() - called\n"));
 
-	if ((src_w == (WINDOW *)NULL) || (dst_w == (WINDOW *)NULL))
+	if (!src_w || !dst_w)
 		return ERR;
 
 	first_col  = max(dst_w->_begx, src_w->_begx);
@@ -204,7 +204,7 @@ int overwrite(const WINDOW *src_w, WINDOW *dst_w)
 
 	PDC_LOG(("overwrite() - called\n"));
 
-	if ((src_w == (WINDOW *)NULL) || (dst_w == (WINDOW *)NULL))
+	if (!src_w || !dst_w)
 		return ERR;
 
 	first_col  = max(dst_w->_begx, src_w->_begx);
@@ -265,10 +265,7 @@ int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 
 	PDC_LOG(("copywin() - called\n"));
 
-	if (src_w == (WINDOW *)NULL || dst_w == (WINDOW *)NULL)
-		return ERR;
-
-	if (dst_w == curscr)
+	if (!src_w || !dst_w || dst_w == curscr)
 		return ERR;
 
 	if (dst_br > dst_w->_maxy || dst_bc > dst_w->_maxx ||

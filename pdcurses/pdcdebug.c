@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-RCSID("$Id: pdcdebug.c,v 1.25 2006/10/23 05:55:01 wmcbrine Exp $");
+RCSID("$Id: pdcdebug.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
 
 bool pdc_trace_on = FALSE;
 
@@ -45,7 +45,7 @@ void PDC_debug(const char *fmt, ...)
 	/* open debug log file append */
 
 	dbfp = fopen("trace", "a");
-	if (dbfp == NULL)
+	if (!dbfp)
 	{
 		fprintf(stderr,
 			"PDC_debug(): Unable to open debug log file\n");

@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: refresh.c,v 1.42 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.43 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -80,7 +80,7 @@ int wnoutrefresh(WINDOW *win)
 
 	PDC_LOG(("wnoutrefresh() - called: win=%p\n", win));
 
-	if ( (win == (WINDOW *)NULL) || (win->_flags & (_PAD|_SUBPAD)) )
+	if ( !win || (win->_flags & (_PAD|_SUBPAD)) )
 		return ERR;
 
 	begy = win->_begy;
@@ -138,7 +138,7 @@ int doupdate(void)
 		SP->alive = TRUE;	/* so isendwin() result is correct */
 	}
 
-	if (curscr == (WINDOW *)NULL)
+	if (!curscr)
 		return ERR;
 
 	for (y = 0; y < SP->lines; y++)
@@ -185,7 +185,7 @@ int wrefresh(WINDOW *win)
 
 	PDC_LOG(("wrefresh() - called\n"));
 
-	if ( (win == (WINDOW *)NULL) || (win->_flags & (_PAD|_SUBPAD)) )
+	if ( !win || (win->_flags & (_PAD|_SUBPAD)) )
 		return ERR;
 
 	save_clear = win->_clear;
@@ -215,8 +215,7 @@ int wredrawln(WINDOW *win, int start, int num)
 	PDC_LOG(("wredrawln() - called: win=%p start=%d num=%d\n",
 		win, start, num));
 
-	if ((win == (WINDOW *)NULL) ||
-	    (start > win->_maxy || start + num > win->_maxy))
+	if (!win || start > win->_maxy || start + num > win->_maxy)
 		return ERR;
 
 	for (i = start; i < start + num; i++)
@@ -232,7 +231,7 @@ int redrawwin(WINDOW *win)
 {
 	PDC_LOG(("redrawwin() - called: win=%p\n", win));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	return wredrawln(win, 0, win->_maxy);

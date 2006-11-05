@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: bkgd.c,v 1.30 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.31 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -92,7 +92,7 @@ int wbkgd(WINDOW *win, chtype ch)
 
 	PDC_LOG(("wbkgd() - called\n"));
 
-	if (win == NULL)
+	if (!win)
 		return ERR;
 
 	if (win->_bkgd == ch)
@@ -175,7 +175,7 @@ void wbkgdset(WINDOW *win, chtype ch)
 
 	PDC_LOG(("wbkgdset() - called\n"));
 
-	if (win == NULL)
+	if (!win)
 		return;
 
 	if (win->_bkgd == ch)

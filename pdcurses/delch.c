@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: delch.c,v 1.25 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: delch.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -51,7 +51,7 @@ int wdelch(WINDOW *win)
 
 	PDC_LOG(("wdelch() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	y	= win->_cury;

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inopts.c,v 1.32 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -221,7 +221,7 @@ int keypad(WINDOW *win, bool bf)
 {
 	PDC_LOG(("keypad() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_use_keypad = bf;
@@ -260,7 +260,7 @@ int nodelay(WINDOW *win, bool flag)
 {
 	PDC_LOG(("nodelay() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_nodelay = flag;
@@ -318,7 +318,7 @@ void wtimeout(WINDOW *win, int delay)
 {
 	PDC_LOG(("wtimeout() - called\n"));
 
-	if (win == NULL)
+	if (!win)
 		return;
 
 	if (delay < 0)

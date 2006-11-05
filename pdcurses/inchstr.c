@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inchstr.c,v 1.26 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: inchstr.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

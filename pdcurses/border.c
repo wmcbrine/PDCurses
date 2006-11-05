@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.40 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.41 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -153,7 +153,7 @@ int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
 
 	PDC_LOG(("wborder() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	ymax = win->_maxy - 1;
@@ -217,7 +217,7 @@ int whline(WINDOW *win, chtype ch, int n)
 
 	PDC_LOG(("whline() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	if (n < 1)
@@ -283,7 +283,7 @@ int wvline(WINDOW *win, chtype ch, int n)
 
 	PDC_LOG(("wvline() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	if (n < 1)

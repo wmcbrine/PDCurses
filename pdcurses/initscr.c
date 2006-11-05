@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.85 2006/11/01 16:12:35 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.86 2006/11/05 03:57:26 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -129,7 +129,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
 
 	PDC_LOG(("Xinitscr() - called\n"));
 
-	if (SP != (SCREEN *)NULL && SP->alive)
+	if (SP && SP->alive)
 		return NULL;
 
 	if (PDC_scr_open(argc, argv) == ERR)
@@ -303,7 +303,7 @@ int resize_term(int nlines, int ncols)
 {
 	PDC_LOG(("resize_term() - called: nlines %d\n", nlines));
 
-	if (stdscr == (WINDOW *)NULL)
+	if (!stdscr)
 		return ERR;
 
 	if (PDC_resize_screen(nlines, ncols) == ERR)

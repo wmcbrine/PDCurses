@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.29 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: outopts.c,v 1.30 2006/11/05 03:57:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -107,7 +107,7 @@ int clearok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("clearok() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_clear = bf;
@@ -131,7 +131,7 @@ void immedok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("immedok() - called\n"));
 
-	if (win != (WINDOW *)NULL)
+	if (win)
 		win->_immed = bf;
 }
 
@@ -139,7 +139,7 @@ int leaveok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("leaveok() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_leaveit = bf;
@@ -160,7 +160,7 @@ int wsetscrreg(WINDOW *win, int top, int bottom)
 {
 	PDC_LOG(("wsetscrreg() - called: top %d bottom %d\n", top, bottom));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	if ((0 <= top) && (top <= win->_cury) &&
@@ -179,7 +179,7 @@ int scrollok(WINDOW *win, bool bf)
 {
 	PDC_LOG(("scrollok() - called\n"));
 
-	if (win == (WINDOW *)NULL)
+	if (!win)
 		return ERR;
 
 	win->_scroll = bf;

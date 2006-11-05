@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inopts.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.34 2006/11/05 07:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -329,7 +329,7 @@ void wtimeout(WINDOW *win, int delay)
 		win->_nodelay = FALSE;
 		win->_delayms = 0;
 	}
-	else if (delay == 0)
+	else if (!delay)
 	{
 		/* This causes a non-blocking read on the window
 		   so turn off delay mode */

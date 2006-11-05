@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.44 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.45 2006/11/05 07:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -215,9 +215,9 @@ WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 	PDC_LOG(("newwin() - called:lines=%d cols=%d begy=%d begx=%d\n",
 		nlines, ncols, begy, begx));
 
-	if (nlines == 0)
+	if (!nlines)
 		nlines = LINES - begy;
-	if (ncols  == 0)
+	if (!ncols)
 		ncols  = COLS  - begx;
 
 	if (begy + nlines > SP->lines || begx + ncols > SP->cols)

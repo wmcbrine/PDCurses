@@ -27,7 +27,7 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 # define vsscanf _pdc_vsscanf
 #endif
 
-RCSID("$Id: scanw.c,v 1.32 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.33 2006/11/05 07:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -172,8 +172,8 @@ int vw_scanw(WINDOW *win, const char *fmt, va_list varglist)
 #define NEXT(x) \
         do { \
             x = *buf++; \
-            if (x == '\0') \
-               return (count == 0 ? EOF : count); \
+            if (!x) \
+               return (count ? count : EOF); \
             ++chars; \
            } while (0)
 
@@ -214,9 +214,9 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 			do
 			{
 				c = *buf++;
-				if (c == '\0')
+				if (!c)
 				{
-					if (f == 0 || count != 0)
+					if (!f || count)
 						return count;
 					else
 						return EOF;
@@ -247,7 +247,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 				width = 0;
 				while (isdigit(*fmt))
 					width = width * 10 + (*fmt++ - '0');
-				if (width == 0)
+				if (!width)
 					width = INT_MAX;
 			}
 			size = 0;
@@ -300,7 +300,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 						}
 						/* no break */
 					default:
-						if (fmt[1] == '-' && fmt[2] != 0
+						if (fmt[1] == '-' && fmt[2]
 						    && f <
 						    (unsigned char) fmt[2])
 						{
@@ -337,7 +337,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 					if (assign)
 						*char_ptr++ = (char) c;
 					c = *buf++;
-					if (c == '\0')
+					if (!c)
 						break;
 					else
 						++chars;
@@ -347,7 +347,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 					*char_ptr = 0;
 					++count;
 				}
-				if (c == '\0')
+				if (!c)
 					return count;
 				else
 					UNGETC();
@@ -380,7 +380,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 					dx = dx * 10.0 + (double) (c - '0');
 					ok = TRUE;
 					c = *buf++;
-					if (c == '\0')
+					if (!c)
 						break;
 					else
 						++chars;
@@ -397,7 +397,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 						dd *= 10.0;
 						ok = TRUE;
 						c = *buf++;
-						if (c == '\0')
+						if (!c)
 							break;
 						else
 							++chars;
@@ -431,7 +431,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 						--width;
 						exp = exp * 10 + (c - '0');
 						c = *buf++;
-						if (c == '\0')
+						if (!c)
 							break;
 						else
 							++chars;
@@ -466,7 +466,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 					}
 					++count;
 				}
-				if (c == '\0')
+				if (!c)
 					return count;
 				else
 					UNGETC();
@@ -545,7 +545,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 					ok = TRUE;
 					n = n * radix + d;
 					c = *buf++;
-					if (c == '\0')
+					if (!c)
 						break;
 					else
 						++chars;
@@ -575,7 +575,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 					}
 					++count;
 				}
-				if (c == '\0')
+				if (!c)
 					return count;
 				else
 					UNGETC();
@@ -589,7 +589,7 @@ static int _pdc_vsscanf(const char *buf, const char *fmt, va_list arg_ptr)
 				}
 				break;
 			default:
-				if (f == 0)	/* % at end of string */
+				if (!f)	/* % at end of string */
 					return count;
 				NEXT(c);
 				if (c != f)

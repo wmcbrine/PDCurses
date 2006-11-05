@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insstr.c,v 1.35 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.36 2006/11/05 07:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -170,7 +170,7 @@ int wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 	if (!win || !wstr)
 		return ERR;
 
-	for (ic = 0, p = wstr; *p != L'\0'; p++)
+	for (ic = 0, p = wstr; *p; p++)
 		ic++;
 
 	if (n > 0)

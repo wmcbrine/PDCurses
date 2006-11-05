@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.50 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.51 2006/11/05 07:13:40 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -134,7 +134,7 @@ int wgetch(WINDOW *win)
 			   delay in 1/20ths of a second (50ms) */
 
 			waitcount = win->_delayms / 50;
-			if (waitcount == 0)
+			if (!waitcount)
 				waitcount = 1;
 		}
 
@@ -184,7 +184,7 @@ int wgetch(WINDOW *win)
 		{
 			if (SP->delaytenths || win->_delayms)
 			{
-				if (waitcount == 0)
+				if (!waitcount)
 					return ERR;
 
 				waitcount--;

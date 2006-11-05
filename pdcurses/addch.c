@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.34 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.35 2006/11/05 07:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -172,10 +172,10 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	   component, use the attributes solely from the incoming 
 	   character. */
 
-	if ((ch & A_ATTRIBUTES) == 0)
+	if (!(ch & A_ATTRIBUTES))
 		attr = win->_attrs;
 	else
-		if ((ch & A_COLOR) == 0)
+		if (!(ch & A_COLOR))
 			attr = (ch & A_ATTRIBUTES) | win->_attrs;
 		else
 			attr = ch & A_ATTRIBUTES;
@@ -187,7 +187,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	   attributes are not there and that the background character 
 	   will only print if the printing character is blank. */
 
-	if ((attr & A_COLOR) == 0)
+	if (!(attr & A_COLOR))
 		attr |= win->_bkgd & A_ATTRIBUTES;
 	else
 	{
@@ -213,7 +213,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 
 				/* if tab to next line, exit the loop */
 
-				if (win->_curx == 0)
+				if (!win->_curx)
 					break;
 			}
 			PDC_sync(win);

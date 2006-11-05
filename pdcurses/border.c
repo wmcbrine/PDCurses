@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.42 2006/11/05 04:23:36 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.43 2006/11/05 07:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -121,10 +121,10 @@ static chtype _attr_passthru(WINDOW *win, chtype ch)
 	   the window. If the incoming character has a color component, 
 	   use only the attributes from the incoming character. */
 
-	if ((ch & A_ATTRIBUTES) == 0)
+	if (!(ch & A_ATTRIBUTES))
 		attr = win->_attrs;
 	else
-		if ((ch & A_COLOR) == 0)
+		if (!(ch & A_COLOR))
 			attr = (ch & A_ATTRIBUTES) | win->_attrs;
 		else
 			attr = ch & A_ATTRIBUTES;
@@ -133,7 +133,7 @@ static chtype _attr_passthru(WINDOW *win, chtype ch)
 	   background, in that it only takes precedence if other color 
 	   attributes are not there. */
 
-	if ((attr & A_COLOR) == 0)
+	if (!(attr & A_COLOR))
 		attr |= win->_bkgd & A_ATTRIBUTES;
 	else
 	{

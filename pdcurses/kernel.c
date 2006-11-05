@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: kernel.c,v 1.65 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.66 2006/11/05 07:13:40 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -246,7 +246,7 @@ int ripoffline(int line, int (*init)(WINDOW *, int))
 {
 	PDC_LOG(("ripoffline() - called: line=%d\n", line));
 
-	if (linesrippedoff < 5 && line != 0)
+	if (linesrippedoff < 5 && line)
 	{
 		linesripped[(int)linesrippedoff].line = line;
 		linesripped[(int)linesrippedoff++].init = init;

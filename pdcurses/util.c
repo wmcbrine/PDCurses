@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.54 2006/10/23 05:55:01 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.55 2006/11/05 07:13:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -225,7 +225,7 @@ int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
 		*attrs = (*wcval & (A_ATTRIBUTES & ~A_COLOR));
 		*color_pair = PAIR_NUMBER(*wcval & A_COLOR);
 
-		if (*wch != L'\0')
+		if (*wch)
 			*++wch = L'\0';
 
 		return OK;
@@ -258,7 +258,7 @@ wchar_t *wunctrl(cchar_t *wc)
 	if (ic >= 0x20 && ic != 0x7f)		/* normal characters */
 	{
 		strbuf[0] = (wchar_t)ic;
-		strbuf[1] = '\0';
+		strbuf[1] = L'\0';
 		return strbuf;
 	}
 

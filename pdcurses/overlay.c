@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.27 2006/11/05 04:23:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -152,9 +152,9 @@ int overlay(const WINDOW *src_w, WINDOW *dst_w)
 	first_line = max(dst_w->_begy, src_w->_begy);
 
 	last_col   = min(src_w->_begx + src_w->_maxx,
-		dst_w->_begx + dst_w->_maxx);
+			 dst_w->_begx + dst_w->_maxx);
 	last_line  = min(src_w->_begy + src_w->_maxy,
-		dst_w->_begy + dst_w->_maxy);
+			 dst_w->_begy + dst_w->_maxy);
 
 	/* determine the overlapping region of the two windows in real 
 	   coordinates */
@@ -265,10 +265,8 @@ int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 
 	PDC_LOG(("copywin() - called\n"));
 
-	if (!src_w || !dst_w || dst_w == curscr)
-		return ERR;
-
-	if (dst_br > dst_w->_maxy || dst_bc > dst_w->_maxx ||
+	if (!src_w || !dst_w || dst_w == curscr ||
+	    dst_br > dst_w->_maxy || dst_bc > dst_w->_maxx ||
 	    dst_tr < 0 || dst_tc < 0)
 		return ERR;
 

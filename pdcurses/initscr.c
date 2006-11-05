@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.86 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.87 2006/11/05 04:23:36 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -303,20 +303,15 @@ int resize_term(int nlines, int ncols)
 {
 	PDC_LOG(("resize_term() - called: nlines %d\n", nlines));
 
-	if (!stdscr)
-		return ERR;
-
-	if (PDC_resize_screen(nlines, ncols) == ERR)
+	if (!stdscr || PDC_resize_screen(nlines, ncols) == ERR)
 		return ERR;
 
 	SP->lines = PDC_get_rows();
 	LINES = SP->lines - SP->linesrippedoff - SP->slklines;
 	SP->cols = COLS = PDC_get_columns();
 
-	if ((curscr = resize_window(curscr, SP->lines, SP->cols)) == NULL)
-		return ERR;
-
-	if ((stdscr = resize_window(stdscr, LINES, COLS)) == NULL)
+	if ((curscr = resize_window(curscr, SP->lines, SP->cols)) == NULL
+	 || (stdscr = resize_window(stdscr, LINES, COLS)) == NULL)
 		return ERR;
 
 	if (SP->slk_winptr)

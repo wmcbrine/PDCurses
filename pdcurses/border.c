@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.41 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.42 2006/11/05 04:23:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -217,10 +217,7 @@ int whline(WINDOW *win, chtype ch, int n)
 
 	PDC_LOG(("whline() - called\n"));
 
-	if (!win)
-		return ERR;
-
-	if (n < 1)
+	if (!win || n < 1)
 		return ERR;
 
 	endpos = min(win->_curx + n, win->_maxx);
@@ -283,10 +280,7 @@ int wvline(WINDOW *win, chtype ch, int n)
 
 	PDC_LOG(("wvline() - called\n"));
 
-	if (!win)
-		return ERR;
-
-	if (n < 1)
+	if (!win || n < 1)
 		return ERR;
 
 	endpos = min(win->_cury + n, win->_maxy);

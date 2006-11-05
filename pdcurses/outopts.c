@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.30 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: outopts.c,v 1.31 2006/11/05 04:23:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -160,11 +160,8 @@ int wsetscrreg(WINDOW *win, int top, int bottom)
 {
 	PDC_LOG(("wsetscrreg() - called: top %d bottom %d\n", top, bottom));
 
-	if (!win)
-		return ERR;
-
-	if ((0 <= top) && (top <= win->_cury) &&
-	    (win->_cury <= bottom) && (bottom < win->_maxy))
+	if (win && 0 <= top && top <= win->_cury &&
+	    win->_cury <= bottom && bottom < win->_maxy)
 	{
 		win->_tmarg = top;
 		win->_bmarg = bottom;

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: move.c,v 1.21 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: move.c,v 1.22 2006/11/05 04:24:15 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -43,7 +43,7 @@ int move(int y, int x)
 	PDC_LOG(("move() - called: y=%d x=%d\n", y, x));
 
 	if (!stdscr
-	    || x < 0 || y < 0 || x >= stdscr->_maxx || y >= stdscr->_maxy)
+	   || x < 0 || y < 0 || x >= stdscr->_maxx || y >= stdscr->_maxy)
 		return ERR;
 
 	stdscr->_curx = x;
@@ -57,7 +57,7 @@ int wmove(WINDOW *win, int y, int x)
 	PDC_LOG(("wmove() - called: y=%d x=%d\n", y, x));
 
 	if (!win
-	    || x < 0 || y < 0 || x >= win->_maxx || y >= win->_maxy)
+	   || x < 0 || y < 0 || x >= win->_maxx || y >= win->_maxy)
 		return ERR;
 
 	win->_curx = x;

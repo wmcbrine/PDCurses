@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.36 2006/11/06 11:26:21 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.37 2006/11/06 13:24:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -123,27 +123,6 @@ RCSID("$Id: addch.c,v 1.36 2006/11/06 11:26:21 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-/* _newline() - Does line advance and returns the new cursor line.  
-   If error, return -1. */
-
-static int _newline(WINDOW *win, int lin)
-{
-	if (!win)
-		return -1;
-
-	if (++lin > win->_bmarg)
-	{
-		lin--;
-
-		if (win->_scroll)
-			scroll(win);
-		else
-			return -1;
-	}
-
-	return lin;
-}
-
 int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 {
 	int x, y, x2, retval;
@@ -220,10 +199,15 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 
 			wclrtoeol(win);
 
-			if ((y = _newline(win, y)) < 0)
+			if (++y > win->_bmarg)
 			{
-				PDC_sync(win);
-				return ERR;
+				y--;
+
+				if (wscrl(win, 1) == ERR)
+				{
+					PDC_sync(win);
+					return ERR;
+				}
 			}
 
 			if (advance)
@@ -308,10 +292,15 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 
 		x = 0;
 
-		if ((y = _newline(win, y)) < 0)
+		if (++y > win->_bmarg)
 		{
-			PDC_sync(win);
-			return ERR;
+			y--;
+
+			if (wscrl(win, 1) == ERR)
+			{
+				PDC_sync(win);
+				return ERR;
+			}
 		}
 	}
 

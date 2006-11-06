@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.68 2006/10/12 18:14:46 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.69 2006/11/06 11:30:19 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -632,8 +632,8 @@ void outputTest(WINDOW *win)
 	winsdelln(win, -1);
 	Continue(win);
 
-	wmove (win, 5, 9);
-	ch = winch (win);
+	wmove(win, 5, 9);
+	ch = winch(win);
 
 	wclear(win);
 	wmove(win, 6, 2);

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.37 2006/11/06 13:24:01 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.38 2006/11/06 14:09:49 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -125,7 +125,7 @@ RCSID("$Id: addch.c,v 1.37 2006/11/06 13:24:01 wmcbrine Exp $");
 
 int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 {
-	int x, y, x2, retval;
+	int x, y, x2;
 	chtype attr;
 	bool xlat;
 
@@ -178,17 +178,13 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 			for (x2 = ((x / TABSIZE) + 1) * TABSIZE; x < x2; x++)
 			{
 				if (waddch(win, ' ') == ERR)
-				{
-					PDC_sync(win);
 					return ERR;
-				}
 
 				/* if tab to next line, exit the loop */
 
 				if (!win->_curx)
 					break;
 			}
-			PDC_sync(win);
 			return OK;
 
 		case '\n':
@@ -204,10 +200,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 				y--;
 
 				if (wscrl(win, 1) == ERR)
-				{
-					PDC_sync(win);
 					return ERR;
-				}
 			}
 
 			if (advance)
@@ -221,7 +214,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 
 		case '\r':
 			if (advance)
-				win->_curx = x = 0;
+				win->_curx = 0;
 
 			PDC_sync(win);
 			return OK;
@@ -240,13 +233,9 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 
 		case 0x7f:
 			if (waddch(win, '^') == ERR)
-			{
-				PDC_sync(win);
 				return ERR;
-			}
-			retval = waddch(win, '?');
-			PDC_sync(win);
-			return retval;
+
+			return waddch(win, '?');
 		}
 
 		if (ch < ' ')
@@ -254,13 +243,9 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 			/* handle control chars */
 
 			if (waddch(win, '^') == ERR)
-         		{
-				PDC_sync(win);
 				return ERR;
-			}
-			retval = waddch(win, ch + '@');
-			PDC_sync(win);
-			return retval;
+
+			return waddch(win, ch + '@');
 		}
 	}
 

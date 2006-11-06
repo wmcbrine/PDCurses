@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.39 2006/11/06 20:45:02 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.40 2006/11/06 21:46:58 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -92,9 +92,6 @@ RCSID("$Id: addch.c,v 1.39 2006/11/06 20:45:02 wmcbrine Exp $");
 	and addch().
 
   PDCurses Description:
-	Depending upon the state of the raw character output, 7- or
-	8-bit characters will be output.
-
 	PDC_chadd provides the basic functionality for [mv][w]addch().
 	If 'advance' is TRUE, PDC_chadd() will move the current cusor 
 	position appropriately. The *addch functions call PDC_chadd() 

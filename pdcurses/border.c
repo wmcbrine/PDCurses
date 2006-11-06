@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.43 2006/11/05 07:13:40 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.44 2006/11/06 11:26:21 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -112,7 +112,7 @@ RCSID("$Id: border.c,v 1.43 2006/11/05 07:13:40 wmcbrine Exp $");
 
 static chtype _attr_passthru(WINDOW *win, chtype ch)
 {
-	chtype attr, bktmp;
+	chtype attr;
 
 	/* If the incoming character doesn't have its own attribute, 
 	   then use the current attributes for the window. If the 
@@ -121,13 +121,9 @@ static chtype _attr_passthru(WINDOW *win, chtype ch)
 	   the window. If the incoming character has a color component, 
 	   use only the attributes from the incoming character. */
 
-	if (!(ch & A_ATTRIBUTES))
-		attr = win->_attrs;
-	else
-		if (!(ch & A_COLOR))
-			attr = (ch & A_ATTRIBUTES) | win->_attrs;
-		else
-			attr = ch & A_ATTRIBUTES;
+	attr = ch & A_ATTRIBUTES;
+	if (!(attr & A_COLOR))
+		attr |= win->_attrs;
 
 	/* wrs (4/10/93) -- Apply the same sort of logic for the window 
 	   background, in that it only takes precedence if other color 
@@ -136,10 +132,7 @@ static chtype _attr_passthru(WINDOW *win, chtype ch)
 	if (!(attr & A_COLOR))
 		attr |= win->_bkgd & A_ATTRIBUTES;
 	else
-	{
-		bktmp = win->_bkgd & A_COLOR;
-		attr |= (win->_bkgd & A_ATTRIBUTES) ^ bktmp;
-	}
+		attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
 
 	ch = (ch & A_CHARTEXT) | attr;
 

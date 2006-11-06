@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.35 2006/11/05 07:13:40 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.36 2006/11/06 11:26:21 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -147,7 +147,7 @@ static int _newline(WINDOW *win, int lin)
 int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 {
 	int x, y, x2, retval;
-	chtype attr, bktmp;
+	chtype attr;
 	bool xlat;
 
 	PDC_LOG(("PDC_chadd() - called: win=%p ch=%x "
@@ -160,10 +160,10 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	x = win->_curx;
 	y = win->_cury;
 
-	if ((y > win->_maxy) || (x > win->_maxx) || (y < 0) || (x < 0))
+	if (y > win->_maxy || x > win->_maxx || y < 0 || x < 0)
 		return ERR;
 
-	xlat = !(SP->raw_out) && !(ch & A_ALTCHARSET);
+	xlat = !SP->raw_out && !(ch & A_ALTCHARSET);
 
 	/* If the incoming character doesn't have its own attribute, 
 	   then use the current attributes for the window. If it has 
@@ -172,15 +172,9 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	   component, use the attributes solely from the incoming 
 	   character. */
 
-	if (!(ch & A_ATTRIBUTES))
-		attr = win->_attrs;
-	else
-		if (!(ch & A_COLOR))
-			attr = (ch & A_ATTRIBUTES) | win->_attrs;
-		else
-			attr = ch & A_ATTRIBUTES;
-
-	ch &= A_CHARTEXT;
+	attr = ch & A_ATTRIBUTES;
+	if (!(attr & A_COLOR))
+		attr |= win->_attrs;
 
 	/* wrs (4/10/93): Apply the same sort of logic for the window 
 	   background, in that it only takes precedence if other color 
@@ -190,10 +184,9 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	if (!(attr & A_COLOR))
 		attr |= win->_bkgd & A_ATTRIBUTES;
 	else
-	{
-		bktmp = win->_bkgd & A_COLOR;
-		attr |= (win->_bkgd & A_ATTRIBUTES) ^ bktmp;
-	}
+		attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
+
+	ch &= A_CHARTEXT;
 
 	if (ch == ' ')
 		ch = win->_bkgd & A_CHARTEXT;
@@ -281,7 +274,7 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 				PDC_sync(win);
 				return ERR;
 			}
-			retval = (waddch(win, ch + '@'));
+			retval = waddch(win, ch + '@');
 			PDC_sync(win);
 			return retval;
 		}

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.38 2006/11/06 14:09:49 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.39 2006/11/06 20:45:02 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -125,7 +125,7 @@ RCSID("$Id: addch.c,v 1.38 2006/11/06 14:09:49 wmcbrine Exp $");
 
 int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 {
-	int x, y, x2;
+	int x, y;
 	chtype attr;
 	bool xlat;
 
@@ -141,8 +141,6 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 
 	if (y > win->_maxy || x > win->_maxx || y < 0 || x < 0)
 		return ERR;
-
-	xlat = !SP->raw_out && !(ch & A_ALTCHARSET);
 
 	/* If the incoming character doesn't have its own attribute, 
 	   then use the current attributes for the window. If it has 
@@ -165,13 +163,17 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	else
 		attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
 
+	xlat = !SP->raw_out && !(ch & A_ALTCHARSET);
+
 	ch &= A_CHARTEXT;
 
 	if (ch == ' ')
 		ch = win->_bkgd & A_CHARTEXT;
 
-	if (xlat)
+	if (xlat && (ch < ' ' || ch == 0x7f))
 	{
+		int x2;
+
 		switch (ch)
 		{
 		case '\t':
@@ -236,10 +238,8 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 				return ERR;
 
 			return waddch(win, '?');
-		}
 
-		if (ch < ' ')
-		{
+		default:
 			/* handle control chars */
 
 			if (waddch(win, '^') == ERR)

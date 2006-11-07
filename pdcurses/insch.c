@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.34 2006/11/07 16:32:14 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -78,10 +78,6 @@ RCSID("$Id: insch.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
 	attributes, can be copied from one place to another using inch()
 	and insch().
 
-  PDCurses Description:
-	Depending upon the state of the raw character output, 7- or
-	8-bit characters will be output.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -99,36 +95,110 @@ RCSID("$Id: insch.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
 
 int winsch(WINDOW *win, chtype ch)
 {
-	int x, y, maxx, offset;
-	chtype *temp;
+	int x, y;
+	chtype attr;
 	bool xlat;
 
-	PDC_LOG(("winsch() - called\n"));
+	PDC_LOG(("winsch() - called: win=%p ch=%x "
+		"(char=%c attr=0x%x)\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES));
 
 	if (!win)
 		return ERR;
 
-	xlat = !(SP->raw_out) && !(ch & A_ALTCHARSET);
-
 	x = win->_curx;
 	y = win->_cury;
-	maxx = win->_maxx;
-	temp = &win->_y[y][x];
-	offset = 1;
 
-	if (((ch & A_CHARTEXT) < ' ') && xlat)
-		offset++;
+	if (y > win->_maxy || x > win->_maxx || y < 0 || x < 0)
+		return ERR;
 
-	memmove(temp + offset, temp, (maxx - x - offset) * sizeof(chtype));
+	xlat = !SP->raw_out && !(ch & A_ALTCHARSET);
+	attr = ch & A_ATTRIBUTES;
+	ch &= A_CHARTEXT;
 
-	win->_lastch[y] = maxx - 1;
+	if (xlat && (ch < ' ' || ch == 0x7f))
+	{
+		int x2;
 
-	if ((win->_firstch[y] == _NO_CHANGE) || (win->_firstch[y] > x))
-		win->_firstch[y] = x;
+		switch (ch)
+		{
+		case '\t':
+			for (x2 = ((x / TABSIZE) + 1) * TABSIZE; x < x2; x++)
+			{
+				if (winsch(win, ' ') == ERR)
+					return ERR;
+			}
+			return OK;
 
-	/* PDC_chadd() fixes CTRL-chars too */
+		case '\n':
+			wclrtoeol(win);
+			break;
 
-	return PDC_chadd(win, ch, FALSE);
+		case 0x7f:
+			if (winsch(win, '?') == ERR)
+				return ERR;
+
+			return winsch(win, '^');
+
+		default:
+			/* handle control chars */
+
+			if (winsch(win, ch + '@') == ERR)
+				return ERR;
+
+			return winsch(win, '^');
+		}
+	}
+	else
+	{
+		int maxx;
+		chtype *temp;
+
+		/* If the incoming character doesn't have its own
+		   attribute, then use the current attributes for
+		   the window. If it has attributes but not a color
+		   component, OR the attributes to the current
+		   attributes for the window. If it has a color
+		   component, use the attributes solely from the
+		   incoming character. */
+
+		if (!(attr & A_COLOR))
+			attr |= win->_attrs;
+
+		/* wrs (4/10/93): Apply the same sort of logic for the
+		   window background, in that it only takes precedence
+		   if other color attributes are not there and that the
+		   background character will only print if the printing
+		   character is blank. */
+
+		if (!(attr & A_COLOR))
+			attr |= win->_bkgd & A_ATTRIBUTES;
+		else
+			attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
+
+		if (ch == ' ')
+			ch = win->_bkgd & A_CHARTEXT;
+
+		/* Add the attribute back into the character. */
+
+		ch |= attr;
+
+		maxx = win->_maxx;
+		temp = &win->_y[y][x];
+
+		memmove(temp + 1, temp, (maxx - x - 1) * sizeof(chtype));
+
+		win->_lastch[y] = maxx - 1;
+
+		if ((win->_firstch[y] == _NO_CHANGE) || (win->_firstch[y] > x))
+			win->_firstch[y] = x;
+
+		*temp = ch;
+	}
+
+	PDC_sync(win);
+
+	return OK;
 }
 
 int insch(chtype ch)

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.42 2006/11/07 01:36:11 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.43 2006/11/07 16:32:14 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,8 +33,6 @@ RCSID("$Id: addch.c,v 1.42 2006/11/07 01:36:11 wmcbrine Exp $");
 	int mvwadd_wch(WINDOW *win, int y, int x, const cchar_t *wch);
 	int echo_wchar(const cchar_t *wch);
 	int wecho_wchar(WINDOW *win, const cchar_t *wch);
-
-	int PDC_chadd(WINDOW *win, chtype ch, bool advance);
 
   X/Open Description:
 	The routine addch() inserts the character ch into the default
@@ -91,15 +89,6 @@ RCSID("$Id: addch.c,v 1.42 2006/11/07 01:36:11 wmcbrine Exp $");
 	attributes, can be copied from one place to another using inch()
 	and addch().
 
-  PDCurses Description:
-	PDC_chadd provides the basic functionality for [mv][w]addch().
-	If 'advance' is TRUE, PDC_chadd() will move the current cusor 
-	position appropriately. The *addch functions call PDC_chadd() 
-	with advance TRUE, while the *insch functions call PDC_chadd() 
-	with advance FALSE. If an alternate character is to be 
-	displayed, the character is displayed without translation. This 
-	function returns OK on success and ERR on error.
-
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -116,19 +105,18 @@ RCSID("$Id: addch.c,v 1.42 2006/11/07 01:36:11 wmcbrine Exp $");
 	mvwadd_wch				Y
 	echo_wchar				Y
 	wecho_wchar				Y
-	PDC_chadd				-	-	-
 
 **man-end****************************************************************/
 
-int PDC_chadd(WINDOW *win, chtype ch, bool advance)
+int waddch(WINDOW *win, chtype ch)
 {
 	int x, y;
 	chtype attr;
 	bool xlat;
 
-	PDC_LOG(("PDC_chadd() - called: win=%p ch=%x "
-		"(char=%c attr=0x%x) advance=%d\n", win, ch,
-		ch & A_CHARTEXT, ch & A_ATTRIBUTES, advance));
+	PDC_LOG(("waddch() - called: win=%p ch=%x "
+		"(char=%c attr=0x%x)\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES));
 
 	if (!win)
 		return ERR;
@@ -272,11 +260,8 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 		}
 	}
 
-	if (advance)
-	{
-		win->_curx = x;
-		win->_cury = y;
-	}
+	win->_curx = x;
+	win->_cury = y;
 
 	if (win->_immed)
 		wrefresh(win);
@@ -284,13 +269,6 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 		wsyncup(win);
 
 	return OK;
-}
-
-int waddch(WINDOW *win, const chtype ch)
-{
-	PDC_LOG(("waddch() - called: win=%p ch=%x\n", win, ch));
-
-	return PDC_chadd(win, ch, TRUE);
 }
 
 int addch(const chtype ch)
@@ -343,7 +321,7 @@ int wadd_wch(WINDOW *win, const cchar_t *wch)
 {
 	PDC_LOG(("wadd_wch() - called: win=%p wch=%x\n", win, *wch));
 
-	return wch ? PDC_chadd(win, *wch, TRUE) : ERR;
+	return wch ? waddch(win, *wch) : ERR;
 }
 
 int add_wch(const cchar_t *wch)

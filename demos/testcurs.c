@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.69 2006/11/06 11:30:19 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.70 2006/11/07 01:53:21 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -645,7 +645,7 @@ void outputTest(WINDOW *win)
 	Continue(win);
 
 	wmove(win, 5, 1);
-	winsdelln (win,1);
+	winsdelln(win, 1);
 	mvwaddstr(win, 5, 2, "The lines below should have moved down");
 	Continue(win);
 
@@ -701,11 +701,11 @@ void outputTest(WINDOW *win)
 		mvwaddstr(win, 5, 1,
 			"This terminal does NOT support blinking.");
 
-	mvwaddnstr(win, 7,5, "Have a nice day!ok", 16);
+	mvwaddnstr(win, 7, 5, "Have a nice day!ok", 16);
 	wrefresh(win);
 
-	mvwinnstr(win, 7,5, Buffer, 18);
-	mvaddstr(LINES-2, 10, Buffer);
+	mvwinnstr(win, 7, 5, Buffer, 18);
+	mvaddstr(LINES - 2, 10, Buffer);
 	refresh();
 	Continue(win);
 }

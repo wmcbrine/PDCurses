@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.40 2006/11/06 21:46:58 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.41 2006/11/07 01:13:57 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -139,29 +139,8 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	if (y > win->_maxy || x > win->_maxx || y < 0 || x < 0)
 		return ERR;
 
-	/* If the incoming character doesn't have its own attribute, 
-	   then use the current attributes for the window. If it has 
-	   attributes but not a color component, OR the attributes to 
-	   the current attributes for the window. If it has a color 
-	   component, use the attributes solely from the incoming 
-	   character. */
-
-	attr = ch & A_ATTRIBUTES;
-	if (!(attr & A_COLOR))
-		attr |= win->_attrs;
-
-	/* wrs (4/10/93): Apply the same sort of logic for the window 
-	   background, in that it only takes precedence if other color 
-	   attributes are not there and that the background character 
-	   will only print if the printing character is blank. */
-
-	if (!(attr & A_COLOR))
-		attr |= win->_bkgd & A_ATTRIBUTES;
-	else
-		attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
-
 	xlat = !SP->raw_out && !(ch & A_ALTCHARSET);
-
+	attr = ch & A_ATTRIBUTES;
 	ch &= A_CHARTEXT;
 
 	if (ch == ' ')
@@ -202,33 +181,16 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 					return ERR;
 			}
 
-			if (advance)
-			{
-				win->_cury = y;
-				win->_curx = x;
-			}
-
-			PDC_sync(win);
-			return OK;
-
-		case '\r':
-			if (advance)
-				win->_curx = 0;
-
-			PDC_sync(win);
-			return OK;
+			break;
 
 		case '\b':
 			/* don't back over left margin */
 
 			if (--x < 0)
+		case '\r':
 				x = 0;
 
-			if (advance)
-				win->_curx = x;
-
-			PDC_sync(win);
-			return OK;
+			break;
 
 		case 0x7f:
 			if (waddch(win, '^') == ERR)
@@ -245,43 +207,67 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 			return waddch(win, ch + '@');
 		}
 	}
-
-	/* Add the attribute back into the character. */
-
-	ch |= attr;
-
-	/* Only change _firstch/_lastch if the character to be added is 
-	   different from the character/attribute that is already in 
-	   that position in the window. */
-
-	if (win->_y[y][x] != ch)
+	else
 	{
-		if (win->_firstch[y] == _NO_CHANGE)
-			win->_firstch[y] = win->_lastch[y] = x;
+		/* If the incoming character doesn't have its own
+		   attribute, then use the current attributes for
+		   the window. If it has attributes but not a color
+		   component, OR the attributes to the current
+		   attributes for the window. If it has a color
+		   component, use the attributes solely from the
+		   incoming character. */
+
+		if (!(attr & A_COLOR))
+			attr |= win->_attrs;
+
+		/* wrs (4/10/93): Apply the same sort of logic for the
+		   window background, in that it only takes precedence
+		   if other color attributes are not there and that the
+		   background character will only print if the printing
+		   character is blank. */
+
+		if (!(attr & A_COLOR))
+			attr |= win->_bkgd & A_ATTRIBUTES;
 		else
-			if (x < win->_firstch[y])
-				win->_firstch[y] = x;
-			else
-				if (x > win->_lastch[y])
-					win->_lastch[y] = x;
+			attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
 
-		win->_y[y][x] = ch;
-	}
+		/* Add the attribute back into the character. */
 
-	if (++x >= win->_maxx)
-	{
-		/* wrap around test */
+		ch |= attr;
 
-		x = 0;
+		/* Only change _firstch/_lastch if the character to be
+		   added is different from the character/attribute that
+		   is already in that position in the window. */
 
-		if (++y > win->_bmarg)
+		if (win->_y[y][x] != ch)
 		{
-			y--;
+			if (win->_firstch[y] == _NO_CHANGE)
+				win->_firstch[y] = win->_lastch[y] = x;
+			else
+				if (x < win->_firstch[y])
+					win->_firstch[y] = x;
+				else
+					if (x > win->_lastch[y])
+						win->_lastch[y] = x;
 
-			if (wscrl(win, 1) == ERR)
+			win->_y[y][x] = ch;
+		}
+
+		if (++x >= win->_maxx)
+		{
+			/* wrap around test */
+
+			x = 0;
+
+			if (++y > win->_bmarg)
 			{
-				PDC_sync(win);
-				return ERR;
+				y--;
+
+				if (wscrl(win, 1) == ERR)
+				{
+					PDC_sync(win);
+					return ERR;
+				}
 			}
 		}
 	}
@@ -292,7 +278,10 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 		win->_cury = y;
 	}
 
-	PDC_sync(win);
+	if (win->_immed)
+		wrefresh(win);
+	if (win->_sync)
+		wsyncup(win);
 
 	return OK;
 }

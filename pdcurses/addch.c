@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.41 2006/11/07 01:13:57 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.42 2006/11/07 01:36:11 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -143,9 +143,6 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 	attr = ch & A_ATTRIBUTES;
 	ch &= A_CHARTEXT;
 
-	if (ch == ' ')
-		ch = win->_bkgd & A_CHARTEXT;
-
 	if (xlat && (ch < ' ' || ch == 0x7f))
 	{
 		int x2;
@@ -230,6 +227,9 @@ int PDC_chadd(WINDOW *win, chtype ch, bool advance)
 			attr |= win->_bkgd & A_ATTRIBUTES;
 		else
 			attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
+
+		if (ch == ' ')
+			ch = win->_bkgd & A_CHARTEXT;
 
 		/* Add the attribute back into the character. */
 

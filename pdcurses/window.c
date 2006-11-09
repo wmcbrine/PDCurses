@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.45 2006/11/05 07:13:40 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.46 2006/11/09 08:52:37 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -174,12 +174,8 @@ WINDOW *PDC_makenew(int num_lines, int num_columns, int begy, int begx)
 
 	win->_maxy = num_lines;		/* real max screen size */
 	win->_maxx = num_columns;	/* real max screen size */
-	win->_pmaxy = num_lines;	/* real max window size */
-	win->_pmaxx = num_columns;	/* real max window size */
 	win->_begy = begy;
 	win->_begx = begx;
-	win->_lastsy2 = LINES - 1;
-	win->_lastsx2 = COLS - 1;
 	win->_bkgd = ' '; /* wrs 4/10/93 -- initialize background to blank */
 	win->_clear = (bool) ((num_lines == LINES) && (num_columns == COLS));
 	win->_bmarg = num_lines - 1;
@@ -266,7 +262,7 @@ int delwin(WINDOW *win)
 	/* subwindows use parents' lines */
 
 	if (!(win->_flags & (_SUBWIN|_SUBPAD)))
-		for (i = 0; i < win->_pmaxy && win->_y[i]; i++)
+		for (i = 0; i < win->_maxy && win->_y[i]; i++)
 			if (win->_y[i])
 				free(win->_y[i]);
 
@@ -424,16 +420,8 @@ WINDOW *dupwin(WINDOW *win)
 	new->_cury = win->_cury;
 	new->_maxy = win->_maxy;
 	new->_maxx = win->_maxx;
-	new->_pmaxy = win->_pmaxy;
-	new->_pmaxx = win->_pmaxx;
 	new->_begy = win->_begy;
 	new->_begx = win->_begx;
-	new->_lastpy = win->_lastpy;
-	new->_lastpx = win->_lastpx;
-	new->_lastsy1 = win->_lastsy1;
-	new->_lastsx1 = win->_lastsx1;
-	new->_lastsy2 = win->_lastsy2;
-	new->_lastsx2 = win->_lastsx2;
 	new->_flags = win->_flags;
 	new->_attrs = win->_attrs;
 	new->_clear = win->_clear;

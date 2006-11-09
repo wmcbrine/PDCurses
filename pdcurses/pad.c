@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.36 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.37 2006/11/09 08:52:37 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -260,13 +260,6 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 		sline++;
 		pline++;
 	}
-
-	w->_lastpy = py;
-	w->_lastpx = px;
-	w->_lastsy1 = sy1;
-	w->_lastsx1 = sx1;
-	w->_lastsy2 = sy2;
-	w->_lastsx2 = sx2;
 
 	if (w->_clear)
 	{

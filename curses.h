@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.243 2006/11/03 13:41:14 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.244 2006/11/09 08:52:36 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2821
+#define PDC_BUILD 2822
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -416,22 +416,8 @@ typedef struct _win		/* definition of a window	*/
 	int	_curx;
 	int	_maxy;		/* max window coordinates	*/
 	int	_maxx;
-	int	_pmaxy;		/* max physical size		*/
-	int	_pmaxx;
 	int	_begy;		/* origin on screen		*/
 	int	_begx;
-	int	_lastpy;	/* last y coordinate of upper left
-				   pad display area */
-	int	_lastpx;	/* last x coordinate of upper left
-				   pad display area */
-	int	_lastsy1;	/* last upper y coordinate of screen
-				   window for pad */
-	int	_lastsx1;	/* last upper x coordinate of screen
-				   window for pad */
-	int	_lastsy2;	/* last lower y coordinate of screen
-				   window for pad */
-	int	_lastsx2;	/* last lower x coordinate of screen
-				   window for pad */
 	int	_flags;		/* window properties		*/
 	chtype	_attrs;		/* standard attributes and colors */
 	chtype	_bkgd;		/* background, normally blank	*/

@@ -1,4 +1,4 @@
-/* $Id: ncurses_cfg.h,v 1.1 2006/07/05 06:36:57 wmcbrine Exp $
+/* $Id: ncurses_cfg.h,v 1.2 2006/11/10 11:45:08 wmcbrine Exp $
  *
  * This file is only used with the ncurses test programs.
  *
@@ -22,6 +22,9 @@
 #define HAVE_GETTIMEOFDAY 1
 #define HAVE_PANEL_H 1
 #define HAVE_LIBPANEL 1
+#define HAVE_GETCURX 1
+#define HAVE_GETBEGX 1
+#define HAVE_GETMAXX 1
 
 /* Fool ncurses.c so it gives us all the tests, and doesn't redefine 
    ACS_ chars

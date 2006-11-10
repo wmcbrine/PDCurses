@@ -532,7 +532,7 @@ ncurses_tests: $(NCURSES_TESTS)
 ncurses_clean:
 	-rm -f *.o trace $(NCURSES_TESTS)
 
-NCFLAGS=-I$(ncurses_testdir)
+NCFLAGS		= -I. -I$(ncurses_testdir)
 
 bs: bs.o $(LIBCURSES)
 	$(LINK) bs.o -o $@ $(LDFLAGS)
@@ -553,7 +553,7 @@ view: view.o $(LIBCURSES)
 	$(LINK) view.o -o $@ $(LDFLAGS)
 
 ncurses: ncurses.o $(LIBCURSES) $(LIBPANEL)
-	$(LINK) ncurses.o -o $@ $(LDFLAGS) $(LIBPANEL)
+	$(LINK) ncurses.o -o $@ $(LIBPANEL) $(LDFLAGS)
 
 bs.o: $(ncurses_testdir)/bs.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/bs.c

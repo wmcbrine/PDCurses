@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.29 2006/11/05 05:37:40 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.30 2006/11/11 20:27:21 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -3029,7 +3029,7 @@ int XCursesSetupX(int argc, char *argv[])
 	minheight = FontHeight * 2 + xc_app_data.borderWidth * 2;
 
 	/* Set up the icon for the application; the default is an
-	   internal one for XCurses. Then set various application level
+	   internal one for PDCurses. Then set various application level
 	   resources. */
 
 	GetIcon();
@@ -3413,8 +3413,8 @@ static void StructureNotify(Widget w, XtPointer client_data,
 		   Also will need to kill (SIGWINCH) curses process if 
 		   screen size changes. */
 
-		resizeWindowWidth = (event->xconfigure.width);
-		resizeWindowHeight = (event->xconfigure.height);
+		resizeWindowWidth = event->xconfigure.width;
+		resizeWindowHeight = event->xconfigure.height;
 
 		after_first_curses_request = False;
 

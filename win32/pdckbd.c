@@ -13,13 +13,11 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.72 2006/11/11 17:49:48 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.73 2006/11/11 19:54:56 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
 
-#define TEMP_MOUSE_X_POS	  (temp_mouse_status.x)
-#define TEMP_MOUSE_Y_POS	  (temp_mouse_status.y)
 #define TEMP_BUTTON_STATUS(x)	  (temp_mouse_status.button[(x) - 1])
 
 #define KEY_STATE TRUE
@@ -512,13 +510,13 @@ int PDC_get_bios_key(void)
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
 			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_PRESSED && (SP->_trap_mbe) &
-			    BUTTON1_PRESSED)
+			    BUTTON_PRESSED && (SP->_trap_mbe &
+			    BUTTON1_PRESSED))
 				trap_mouse = TRUE;
 
 			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe) & 
-			    BUTTON1_DOUBLE_CLICKED)
+			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe & 
+			    BUTTON1_DOUBLE_CLICKED))
 				trap_mouse = TRUE;
 
 			break;
@@ -537,13 +535,13 @@ int PDC_get_bios_key(void)
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
 			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_PRESSED && (SP->_trap_mbe) & 
-			    BUTTON3_PRESSED)
+			    BUTTON_PRESSED && (SP->_trap_mbe & 
+			    BUTTON3_PRESSED))
 				trap_mouse = TRUE;
 
 			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe) & 
-			    BUTTON3_DOUBLE_CLICKED)
+			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe & 
+			    BUTTON3_DOUBLE_CLICKED))
 				trap_mouse = TRUE;
 
 			break;
@@ -564,7 +562,7 @@ int PDC_get_bios_key(void)
 			button_no = 1;
 			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
-			if ((SP->_trap_mbe) & BUTTON1_RELEASED)
+			if (SP->_trap_mbe & BUTTON1_RELEASED)
 				trap_mouse = TRUE;
 			break;
 		    }
@@ -598,12 +596,12 @@ int PDC_get_bios_key(void)
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
 			if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
-			    && (SP->_trap_mbe) & BUTTON2_PRESSED)
+			    && (SP->_trap_mbe & BUTTON2_PRESSED))
 				trap_mouse = TRUE;
 
 			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe) & 
-			    BUTTON2_DOUBLE_CLICKED)
+			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe & 
+			    BUTTON2_DOUBLE_CLICKED))
 				trap_mouse = TRUE;
 
 			break;
@@ -618,7 +616,7 @@ int PDC_get_bios_key(void)
 			button_no = 2;
 			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
-			if ((SP->_trap_mbe) & BUTTON2_RELEASED)
+			if (SP->_trap_mbe & BUTTON2_RELEASED)
 				trap_mouse = TRUE;
 			break;
 		    }
@@ -654,16 +652,18 @@ int PDC_get_bios_key(void)
 		/* We have a button action, rather than a mouse movement 
 		   or wheel action */
 
-		TEMP_MOUSE_X_POS = save_ip.Event.MouseEvent.dwMousePosition.X;
-		TEMP_MOUSE_Y_POS = save_ip.Event.MouseEvent.dwMousePosition.Y;
+		temp_mouse_status.x =
+			save_ip.Event.MouseEvent.dwMousePosition.X;
+		temp_mouse_status.y =
+			save_ip.Event.MouseEvent.dwMousePosition.Y;
 
 		/* First thing is to check if the mouse has been clicked 
 		   on a slk area. If the return value is > 0 (indicating 
 		   the label number), return with the KEY_F(key) value. 
 		   Only call this if we have set trap_mouse to TRUE above. */
 
-		if (trap_mouse && (key = PDC_mouse_in_slk(TEMP_MOUSE_Y_POS,
-		    TEMP_MOUSE_X_POS)) != 0)
+		if (trap_mouse && (key = PDC_mouse_in_slk(temp_mouse_status.y,
+		    temp_mouse_status.x)) != 0)
 			return KEY_F(key);
 
 		temp_mouse_status.changes |= 1 << (button_no - 1);
@@ -700,8 +700,8 @@ int PDC_get_bios_key(void)
 		temp_mouse_status.changes & PDC_MOUSE_WHEEL_UP) &&
 		SP->_trap_mbe & MOUSE_WHEEL_SCROLL)
 	    {
-		TEMP_MOUSE_X_POS = -1;
-		TEMP_MOUSE_Y_POS = -1;
+		temp_mouse_status.x = -1;
+		temp_mouse_status.y = -1;
 		break;
 	    }
 	}
@@ -791,8 +791,7 @@ int PDC_set_ctrl_break(bool setting)
 	     feature can be built in by replacing "#ifdef NUMPAD_CHARS" 
 	     with an intelligent code.
 
-   Mouse:    Returns > 0 only if SP->_trap_mbe is set. MOUSE_MOVE without
-	     a pressed mouse key are ignored.
+   Mouse:    MOUSE_MOVE without a pressed mouse key are ignored.
 */
 
 static int _get_interesting_event(INPUT_RECORD *ip)
@@ -960,15 +959,6 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 	    break;
 
 	case MOUSE_EVENT:
-	    /* If we aren't trapping mouse events, then the "keyboard" 
-	       hasn't been hit. Fix from stepheng@clearspeed.com */
-
-	    if (!SP->_trap_mbe)
-	    {
-		PTR("MOUSE - NOT TRAPPED");
-		break;
-	    }
-
 	    if (ip->Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED
 		&& ip->Event.MouseEvent.dwButtonState == 0)
 	    {

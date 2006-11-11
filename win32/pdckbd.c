@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.73 2006/11/11 19:54:56 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.74 2006/11/11 20:24:36 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -1037,7 +1037,9 @@ void PDC_flushinp(void)
 	FlushConsoleInputBuffer(pdc_con_in);
 }
 
-void PDC_mouse_set(void)
+int PDC_mouse_set(void)
 {
 	SetConsoleMode(pdc_con_in, (SP->_trap_mbe ? ENABLE_MOUSE_INPUT : 0));
+
+	return OK;
 }

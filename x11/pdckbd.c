@@ -13,11 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.46 2006/11/11 17:49:48 wmcbrine Exp $");
-
-#define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
-#define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
-#define TRAPPED_BUTTON_STATUS(x)  (pdc_mouse_status.button[(x) - 1])
+RCSID("$Id: pdckbd.c,v 1.47 2006/11/11 20:24:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -88,9 +84,9 @@ int PDC_get_bios_key(void)
 		   the return value is > 0 (indicating the label number), 
 		   return with the KEY_F(key) value. */
 
-		if ((newkey = PDC_mouse_in_slk(TRAPPED_MOUSE_Y_POS, 
-		    TRAPPED_MOUSE_X_POS)) &&
-		    (TRAPPED_BUTTON_STATUS(1) & BUTTON_PRESSED))
+		if ((newkey = PDC_mouse_in_slk(pdc_mouse_status.y,
+		    pdc_mouse_status.x)) &&
+		    (pdc_mouse_status.button[0] & BUTTON_PRESSED))
 			key = KEY_F(newkey);
 
 		MOUSE_LOG(("rawgetch-x: %d y: %d Mouse status: %x\n",
@@ -101,7 +97,7 @@ int PDC_get_bios_key(void)
 
 	PDC_LOG(("%s:PDC_get_bios_key() - key %d returned\n", XCLOGMSG, key));
 
-	SP->key_code = ((unsigned)key > 256);	/* temporary */
+	SP->key_code = ((unsigned)key >= 256);	/* temporary */
 
 	return key;
 }
@@ -210,6 +206,7 @@ void PDC_flushinp(void)
 		PDC_get_bios_key();
 }
 
-void PDC_mouse_set(void)
+int PDC_mouse_set(void)
 {
+	return OK;
 }

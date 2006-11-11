@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.138 2006/11/11 17:49:48 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.139 2006/11/11 20:24:36 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -80,7 +80,7 @@ int	PDC_get_rows(void);
 void	PDC_gotoyx(int, int);
 void	PDC_init_atrtab(void);
 int	PDC_init_color(short, short, short, short);
-void	PDC_mouse_set(void);
+int	PDC_mouse_set(void);
 void	PDC_napms(int);
 void	PDC_reset_prog_mode(void);
 void	PDC_reset_shell_mode(void);

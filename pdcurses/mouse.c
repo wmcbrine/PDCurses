@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.28 2006/11/11 17:49:48 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.29 2006/11/11 20:24:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -85,9 +85,7 @@ int mouse_set(unsigned long mbe)
 	PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
 	SP->_trap_mbe = mbe;
-	PDC_mouse_set();
-
-	return OK;
+	return PDC_mouse_set();
 }
 
 int mouse_on(unsigned long mbe)
@@ -95,9 +93,7 @@ int mouse_on(unsigned long mbe)
 	PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
 	SP->_trap_mbe |= mbe;
-	PDC_mouse_set();
-
-	return OK;
+	return PDC_mouse_set();
 }
 
 int mouse_off(unsigned long mbe)
@@ -105,9 +101,7 @@ int mouse_off(unsigned long mbe)
 	PDC_LOG(("mouse_off() - called: event %x\n", mbe));
 
 	SP->_trap_mbe &= ~mbe;
-	PDC_mouse_set();
-
-	return OK;
+	return PDC_mouse_set();
 }
 
 int map_button(unsigned long button)

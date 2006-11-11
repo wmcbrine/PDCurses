@@ -30,7 +30,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.44 2006/10/28 13:22:02 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.45 2006/11/11 17:49:48 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -516,4 +516,8 @@ void PDC_flushinp(void)
 #else
 	KbdFlushBuffer(0);
 #endif
+}
+
+void PDC_mouse_set(void)
+{
 }

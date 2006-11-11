@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.45 2006/10/28 13:22:02 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.46 2006/11/11 17:49:48 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -410,4 +410,8 @@ void PDC_flushinp(void)
 	   the same...  Real nasty trick... */
 
 	setdosmemword(0x41a, getdosmemword(0x41c));
+}
+
+void PDC_mouse_set(void)
+{
 }

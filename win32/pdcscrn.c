@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.70 2006/11/11 16:36:08 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.71 2006/11/11 17:49:48 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -557,7 +557,7 @@ void PDC_reset_prog_mode(void)
 {
 	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
 
-	SetConsoleMode(pdc_con_in, ENABLE_MOUSE_INPUT);
+	PDC_mouse_set();
 }
 
 void PDC_reset_shell_mode(void)

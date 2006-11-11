@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.28 2006/11/11 17:49:48 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -32,8 +32,8 @@ RCSID("$Id: mouse.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
 	unsigned long getbmap(void);
 
   PDCurses Description:
-	ALL DESCRIPTIONS ARE GUESSES. I DON'T KNOW ANYONE WHO KNOWS
-	EXACTLY WHAT THESE FUNCTIONS DO!
+	These functions are intended to be based on Sys V mouse 
+	functions; however, those are undocumented.
 
 	The mouse_set(), mouse_on() and mouse_off() functions are 
 	analagous to the attrset(), attron() and attroff() functions.  
@@ -59,7 +59,7 @@ RCSID("$Id: mouse.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
 	y and x.
 
 	The getmouse() function returns the current status of the trapped
-	mouse buttons as set by mouse_set(), mouse_on();
+	mouse buttons as set by mouse_set() or mouse_on().
 
 	The getbmap() function returns the current status of the button 
 	action used to map a mouse action to the Soft Label Keys as set 
@@ -85,6 +85,7 @@ int mouse_set(unsigned long mbe)
 	PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
 	SP->_trap_mbe = mbe;
+	PDC_mouse_set();
 
 	return OK;
 }
@@ -94,6 +95,7 @@ int mouse_on(unsigned long mbe)
 	PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
 	SP->_trap_mbe |= mbe;
+	PDC_mouse_set();
 
 	return OK;
 }
@@ -103,6 +105,7 @@ int mouse_off(unsigned long mbe)
 	PDC_LOG(("mouse_off() - called: event %x\n", mbe));
 
 	SP->_trap_mbe &= ~mbe;
+	PDC_mouse_set();
 
 	return OK;
 }

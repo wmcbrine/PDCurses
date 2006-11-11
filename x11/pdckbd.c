@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.45 2006/10/28 13:22:03 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.46 2006/11/11 17:49:48 wmcbrine Exp $");
 
 #define TRAPPED_MOUSE_X_POS	  (pdc_mouse_status.x)
 #define TRAPPED_MOUSE_Y_POS	  (pdc_mouse_status.y)
@@ -208,4 +208,8 @@ void PDC_flushinp(void)
 
 	while (PDC_check_bios_key())
 		PDC_get_bios_key();
+}
+
+void PDC_mouse_set(void)
+{
 }

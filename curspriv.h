@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.136 2006/11/07 16:32:13 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.137 2006/11/11 16:36:07 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -87,7 +87,7 @@ int	PDC_resize_screen(int, int);
 void	PDC_restore_screen_mode(int);
 void	PDC_save_screen_mode(int);
 void	PDC_scr_close(void);
-void	PDC_scr_exit(void);
+void	PDC_scr_free(void);
 int	PDC_scr_open(int, char **);
 int	PDC_set_ctrl_break(bool);
 void	PDC_set_keyboard_binary(bool);

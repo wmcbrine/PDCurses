@@ -20,7 +20,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.68 2006/11/05 07:40:06 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.69 2006/11/11 16:36:07 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -505,7 +505,7 @@ void PDC_scr_close(void)
 	PDC_gotoyx(PDC_get_rows() - 2, 0);
 }
 
-void PDC_scr_exit(void)
+void PDC_scr_free(void)
 {
 	if (SP)
 		free(SP);

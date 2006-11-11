@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.46 2006/11/05 05:37:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.47 2006/11/11 16:36:08 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,7 +37,7 @@ void PDC_scr_close(void)
 	PDC_LOG(("PDC_scr_close() - called\n"));
 }
 
-void PDC_scr_exit(void)
+void PDC_scr_free(void)
 {
 	XCursesExit();
 }

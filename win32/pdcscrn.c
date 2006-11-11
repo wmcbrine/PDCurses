@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.69 2006/11/05 05:37:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.70 2006/11/11 16:36:08 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -276,7 +276,7 @@ void PDC_scr_close(void)
 	PDC_gotoyx(PDC_get_buffer_rows() - 2, 0);
 }
 
-void PDC_scr_exit(void)
+void PDC_scr_free(void)
 {
 	if (SP)
 		free(SP);

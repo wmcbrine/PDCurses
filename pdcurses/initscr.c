@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.87 2006/11/05 04:23:36 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.88 2006/11/11 16:36:08 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -293,7 +293,7 @@ void delscreen(SCREEN *sp)
 
 	SP->alive = FALSE;
 
-	PDC_scr_exit();		/* must free the screen structure SP */
+	PDC_scr_free();		/* free SP and pdc_atrtab */
 
 	SP = (SCREEN *)NULL;
 	pdc_atrtab = (unsigned char *)NULL;

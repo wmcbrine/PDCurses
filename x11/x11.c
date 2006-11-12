@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.31 2006/11/12 10:26:14 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.32 2006/11/12 23:55:17 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2181,7 +2181,7 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 
 		MOUSE_LOG(("\nButtonPress\n"));
 
-		if ((int)(event->xbutton.time - last_button_press_time) <
+		if ((event->xbutton.time - last_button_press_time) <
 		    xc_app_data.doubleClickPeriod)
 		{
 			MOUSE_X_POS = save_mouse_status.x;

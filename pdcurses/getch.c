@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.53 2006/11/12 20:38:00 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.54 2006/11/12 20:54:07 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -180,7 +180,7 @@ int wgetch(WINDOW *win)
 		/* translate mouse clicks in the slk area to function 
 		   keys */
 
-		if (key == KEY_MOUSE)
+		if (key == KEY_MOUSE && SP->key_code)
 		{
 			int fn = PDC_mouse_in_slk(pdc_mouse_status.y, 
 				pdc_mouse_status.x);

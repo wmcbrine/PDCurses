@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.75 2006/11/12 20:38:00 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.76 2006/11/12 20:54:07 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -699,6 +699,7 @@ int PDC_get_bios_key(void)
 	   the user. Save it in the pdc_mouse_status structure. */
 
 	pdc_mouse_status = temp_mouse_status;
+	SP->key_code = TRUE;
 
 	return KEY_MOUSE;
 }

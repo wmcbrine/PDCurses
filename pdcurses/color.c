@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.69 2006/10/23 05:03:30 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.70 2006/11/12 10:26:14 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -65,9 +65,12 @@ RCSID("$Id: color.c,v 1.69 2006/10/23 05:03:30 wmcbrine Exp $");
 	pair_content() is used to determine what the colors of a given
 	color-pair consist of.
 
+  PDCurses Description:
 	PDC_set_line_color() is used to set the color, globally, for the 
 	color of the lines drawn for the attributes: A_UNDERLINE, 
-	A_OVERLINE, A_LEFTLINE and A_RIGHTLINE.  PDCurses only feature.
+	A_OVERLINE, A_LEFTLINE and A_RIGHTLINE. A value of -1 (the 
+	default) indicates that the current foreground color should be 
+	used.
 
 	NOTE: COLOR_PAIR() and PAIR_NUMBER() are implemented as macros.
 
@@ -243,7 +246,7 @@ int pair_content(short pair, short *fg, short *bg)
 
 int PDC_set_line_color(short color)
 {
-	if (color < 0 || color >= COLORS)
+	if (color < -1 || color >= COLORS)
 		return ERR;
 
 	SP->line_color = color;

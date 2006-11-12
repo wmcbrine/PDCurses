@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.88 2006/11/11 16:36:08 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.89 2006/11/12 10:26:14 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -154,6 +154,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	SP->linesrippedoff = 0;
 	SP->linesrippedoffontop = 0;
 	SP->delaytenths	= 0;
+	SP->line_color	= -1;
 
 	SP->orgcbr	= PDC_get_ctrl_break();
 	SP->orig_cursor = PDC_get_cursor_mode();

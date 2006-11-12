@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.30 2006/11/11 20:27:21 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.31 2006/11/12 10:26:14 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -783,7 +783,9 @@ static int NewPacket(chtype attr, bool rev, int len, int col, int row,
 	{
 		int k;
 
-		XSetForeground(XCURSESDISPLAY, gc, colors[SP->line_color]);
+		if (SP->line_color != -1)
+			XSetForeground(XCURSESDISPLAY, gc,
+				colors[SP->line_color]);
 
 		if (attr & A_UNDERLINE)		/* UNDER */
 			XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,

@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.47 2006/11/11 16:36:08 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.48 2006/11/12 10:26:14 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -78,7 +78,6 @@ int PDC_scr_open(int argc, char **argv)
 	SP->sb_total_x = 0;
 	SP->sb_viewport_x = 0;
 	SP->sb_cur_x = 0;
-	SP->line_color = COLOR_WHITE;
 
 	return OK;
 }

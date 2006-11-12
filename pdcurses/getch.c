@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.51 2006/11/05 07:13:40 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.52 2006/11/12 16:18:09 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -163,8 +163,7 @@ int wgetch(WINDOW *win)
 
 	for (;;)			/* loop for any buffering */
 	{
-		if ((SP->delaytenths || win->_delayms || win->_nodelay)
-		     && !PDC_check_bios_key())
+		if (!PDC_check_bios_key())
 		{
 			key = -1;
 		}
@@ -188,11 +187,12 @@ int wgetch(WINDOW *win)
 					return ERR;
 
 				waitcount--;
-				napms(50);	/* sleep for 1/20th second */
 			}
 			else
 				if (win->_nodelay)
 					return ERR;
+
+			napms(50);	/* sleep for 1/20th second */
 			continue;
 		}
 

@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.54 2006/11/12 20:54:07 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.55 2006/11/12 21:49:08 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -188,7 +188,7 @@ int wgetch(WINDOW *win)
 			if (fn)
 			{
 				if (pdc_mouse_status.button[0] &
-				    BUTTON_PRESSED)
+				    (BUTTON_PRESSED|BUTTON_CLICKED))
 					key = KEY_F(fn);
 				else
 					key = -1;

@@ -30,7 +30,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.49 2006/11/12 12:28:10 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.50 2006/11/12 21:13:19 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -265,7 +265,7 @@ bool PDC_check_bios_key(void)
 
 int PDC_get_bios_key(void)
 {
-	int ascii, scan, key, *scanp;
+	int key, scan, *scanp;
 #ifndef EMXVIDEO
 	KBDKEYINFO keyInfo = {0};
 #endif
@@ -282,15 +282,15 @@ int PDC_get_bios_key(void)
 			tahead = _read_kbd(0, 1, 0) << 8;
 	}
 
-	ascii = tahead & 0xff;
-	scan  = tahead >> 8;
+	key = tahead & 0xff;
+	scan = tahead >> 8;
 	pdc_key_modifiers = 0L;
 
 	tahead = -1;
 #else
 	KbdCharIn(&keyInfo, IO_WAIT, 0);	/* get a character */
 
-	ascii = keyInfo.chChar;
+	key = keyInfo.chChar;
 	scan = keyInfo.chScan;
 	pdc_key_modifiers = 0L;
 
@@ -310,18 +310,18 @@ int PDC_get_bios_key(void)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 	}
 #endif
-	if (scan == 0x1c && ascii == 0x0a)  /* ^Enter */
+	if (scan == 0x1c && key == 0x0a)  /* ^Enter */
 		key = (int)0xfc00;
-	else if ((scan == 0x03 && ascii == 0x00)  /* ^@ - Null */
-		|| (scan == 0xe0 && ascii == 0x0d)  /* PadEnter */
-		|| (scan == 0xe0 && ascii == 0x0a)) /* ^PadEnter */
-			key = ascii << 8;
-	else if ((scan == 0x37 && ascii == 0x2a)  /* Star */
-		|| (scan == 0x4a && ascii == 0x2d)  /* Minus */
-		|| (scan == 0x4e && ascii == 0x2b)  /* Plus */
-		|| (scan == 0xe0 && ascii == 0x2f)) /* Slash */
-			key = ((ascii & 0x0f) | 0xf0) << 8;
-	else if (ascii == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+	else if ((scan == 0x03 && key == 0x00)  /* ^@ - Null */
+		|| (scan == 0xe0 && key == 0x0d)  /* PadEnter */
+		|| (scan == 0xe0 && key == 0x0a)) /* ^PadEnter */
+			key = key << 8;
+	else if ((scan == 0x37 && key == 0x2a)  /* Star */
+		|| (scan == 0x4a && key == 0x2d)  /* Minus */
+		|| (scan == 0x4e && key == 0x2b)  /* Plus */
+		|| (scan == 0xe0 && key == 0x2f)) /* Slash */
+			key = ((key & 0x0f) | 0xf0) << 8;
+	else if (key == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
 	{
 		switch (scan)
 		{
@@ -356,14 +356,8 @@ int PDC_get_bios_key(void)
 			key = (int)0xb900;
 		}
 	}
-	else if (ascii == 0x00 || (ascii == 0xe0 && scan > 53 && scan != 86))
+	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
 		key = scan << 8;
-	else
-		key = ascii;
-
-	PDC_LOG(("PDC_get_bios_key() - key: %d(0x%x), "
-		"ascii: %d(0x%x) scan: %d(0x%x)\n",
-		key, key, ascii, ascii, scan, scan));
 
 	/* normal character */
 

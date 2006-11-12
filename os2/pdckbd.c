@@ -30,7 +30,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.47 2006/11/12 11:10:11 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.48 2006/11/12 11:57:00 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -313,31 +313,31 @@ static int _key_core(void)
 		{
 		case 0x47: /* Shift Home */
 			key = (int)0xb000;
-
+			break;
 		case 0x48: /* Shift Up */
 			key = (int)0xb100;
-
+			break;
 		case 0x49: /* Shift PgUp */
 			key = (int)0xb200;
-
+			break;
 		case 0x4b: /* Shift Left */
 			key = (int)0xb300;
-
+			break;
 		case 0x4d: /* Shift Right */
 			key = (int)0xb400;
-
+			break;
 		case 0x4f: /* Shift End */
 			key = (int)0xb500;
-
+			break;
 		case 0x50: /* Shift Down */
 			key = (int)0xb600;
-
+			break;
 		case 0x51: /* Shift PgDn */
 			key = (int)0xb700;
-
+			break;
 		case 0x52: /* Shift Ins */
 			key = (int)0xb800;
-
+			break;
 		case 0x53: /* Shift Del */
 			key = (int)0xb900;
 		}

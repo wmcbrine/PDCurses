@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.52 2006/11/12 16:18:09 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.53 2006/11/12 20:38:00 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -177,7 +177,25 @@ int wgetch(WINDOW *win)
 				key = -1;
 		}
 
-		/* Handle timeout() and halfdelay() */
+		/* translate mouse clicks in the slk area to function 
+		   keys */
+
+		if (key == KEY_MOUSE)
+		{
+			int fn = PDC_mouse_in_slk(pdc_mouse_status.y, 
+				pdc_mouse_status.x);
+
+			if (fn)
+			{
+				if (pdc_mouse_status.button[0] &
+				    BUTTON_PRESSED)
+					key = KEY_F(fn);
+				else
+					key = -1;
+			}
+		}
+
+		/* handle timeout() and halfdelay() */
 
 		if (key == -1)
 		{

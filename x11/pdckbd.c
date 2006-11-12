@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.47 2006/11/11 20:24:36 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.48 2006/11/12 20:38:00 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -79,15 +79,6 @@ int PDC_get_bios_key(void)
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
 			    "exiting from PDC_get_bios_key");
-
-		/* Check if the mouse has been clicked on a slk area. If 
-		   the return value is > 0 (indicating the label number), 
-		   return with the KEY_F(key) value. */
-
-		if ((newkey = PDC_mouse_in_slk(pdc_mouse_status.y,
-		    pdc_mouse_status.x)) &&
-		    (pdc_mouse_status.button[0] & BUTTON_PRESSED))
-			key = KEY_F(newkey);
 
 		MOUSE_LOG(("rawgetch-x: %d y: %d Mouse status: %x\n",
 		    MOUSE_X_POS, MOUSE_Y_POS, Mouse_status.changes));

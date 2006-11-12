@@ -30,7 +30,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.46 2006/11/11 20:24:36 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.47 2006/11/12 11:10:11 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -307,36 +307,41 @@ static int _key_core(void)
 		|| (scan == 0x4e && ascii == 0x2b)  /* Plus */
 		|| (scan == 0xe0 && ascii == 0x2f)) /* Slash */
 			key = ((ascii & 0x0f) | 0xf0) << 8;
-	else if (ascii == 0xe0 && scan == 0x47 && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift Home */
+	else if (ascii == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+	{
+		switch (scan)
+		{
+		case 0x47: /* Shift Home */
 			key = (int)0xb000;
-	else if (ascii == 0xe0 && scan == 0x48 && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift Up */
+
+		case 0x48: /* Shift Up */
 			key = (int)0xb100;
-	else if (ascii == 0xe0 && scan == 0x49 && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift PgUp */
+
+		case 0x49: /* Shift PgUp */
 			key = (int)0xb200;
-	else if (ascii == 0xe0 && scan == 0x4b && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift Left */
+
+		case 0x4b: /* Shift Left */
 			key = (int)0xb300;
-	else if (ascii == 0xe0 && scan == 0x4d && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift Right */
+
+		case 0x4d: /* Shift Right */
 			key = (int)0xb400;
-	else if (ascii == 0xe0 && scan == 0x4f && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift End */
+
+		case 0x4f: /* Shift End */
 			key = (int)0xb500;
-	else if (ascii == 0xe0 && scan == 0x50 && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift Down */
+
+		case 0x50: /* Shift Down */
 			key = (int)0xb600;
-	else if (ascii == 0xe0 && scan == 0x51 && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift PgDn */
+
+		case 0x51: /* Shift PgDn */
 			key = (int)0xb700;
-	else if (ascii == 0xe0 && scan == 0x52 && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift Ins */
+
+		case 0x52: /* Shift Ins */
 			key = (int)0xb800;
-	else if (ascii == 0xe0 && scan == 0x53 && pdc_key_modifiers & 
-		PDC_KEY_MODIFIER_SHIFT) /* Shift Del */
+
+		case 0x53: /* Shift Del */
 			key = (int)0xb900;
+		}
+	}
 	else if (ascii == 0x00 || ascii == 0xe0)
 		key = scan << 8;
 	else

@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.47 2006/11/11 20:24:36 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.48 2006/11/12 12:28:10 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -163,15 +163,24 @@ bool PDC_check_bios_key(void)
 	return kbhit();
 }
 
-/* Formerly PDC_get_bios_key() -- this returns the next key available 
-   from the BIOS. If the low 8 bits are 0, the upper bits contain the 
-   extended character code. If bit 0-7 are non-zero, the upper bits = 0. 
-*/
+/*man-start**************************************************************
 
-static int _key_core(void)
+  PDC_get_bios_key()	- Returns the next key available.
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	Returns the next key code struck at the keyboard.
+
+  Portability:
+	PDCurses  int PDC_get_bios_key(void);
+
+**man-end****************************************************************/
+
+int PDC_get_bios_key(void)
 {
 	PDCREGS regs;
-	int ascii, scan;
+	int ascii, scan, key, *scanp;
 	static unsigned char keyboard_function = 0xFF;
 
 	if (keyboard_function == 0xFF)
@@ -218,62 +227,77 @@ static int _key_core(void)
 	}
 
 	if (scan == 0x1c && ascii == 0x0a)  /* ^Enter */
-		return (int)0xfc00;
-
-	if ((scan == 0x03 && ascii == 0x00)  /* ^@ - Null */
-	||  (scan == 0xe0 && ascii == 0x0d)  /* PadEnter */
-	||  (scan == 0xe0 && ascii == 0x0a)) /* ^PadEnter */
-		return ascii << 8;
-
-	if ((scan == 0x37 && ascii == 0x2a)  /* Star */
-	||  (scan == 0x4a && ascii == 0x2d)  /* Minus */
-	||  (scan == 0x4e && ascii == 0x2b)  /* Plus */
-	||  (scan == 0xe0 && ascii == 0x2f)) /* Slash */
-		return ((ascii & 0x0f) | 0xf0) << 8;
-
-	if (ascii == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+		key = (int)0xfc00;
+	else if ((scan == 0x03 && ascii == 0x00)  /* ^@ - Null */
+		|| (scan == 0xe0 && ascii == 0x0d)  /* PadEnter */
+		|| (scan == 0xe0 && ascii == 0x0a)) /* ^PadEnter */
+			key = ascii << 8;
+	else if ((scan == 0x37 && ascii == 0x2a)  /* Star */
+		|| (scan == 0x4a && ascii == 0x2d)  /* Minus */
+		|| (scan == 0x4e && ascii == 0x2b)  /* Plus */
+		|| (scan == 0xe0 && ascii == 0x2f)) /* Slash */
+			key = ((ascii & 0x0f) | 0xf0) << 8;
+	else if (ascii == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
 	{
 		switch (scan)
 		{
 		case 0x47: /* Shift Home */
-			return (int)0xb000;
-
+			key = (int)0xb000;
+			break;
 		case 0x48: /* Shift Up */
-			return (int)0xb100;
-
+			key = (int)0xb100;
+			break;
 		case 0x49: /* Shift PgUp */
-			return (int)0xb200;
-
+			key = (int)0xb200;
+			break;
 		case 0x4b: /* Shift Left */
-			return (int)0xb300;
-
+			key = (int)0xb300;
+			break;
 		case 0x4d: /* Shift Right */
-			return (int)0xb400;
-
+			key = (int)0xb400;
+			break;
 		case 0x4f: /* Shift End */
-			return (int)0xb500;
-
+			key = (int)0xb500;
+			break;
 		case 0x50: /* Shift Down */
-			return (int)0xb600;
-
+			key = (int)0xb600;
+			break;
 		case 0x51: /* Shift PgDn */
-			return (int)0xb700;
-
+			key = (int)0xb700;
+			break;
 		case 0x52: /* Shift Ins */
-			return (int)0xb800;
-
+			key = (int)0xb800;
+			break;
 		case 0x53: /* Shift Del */
-			return (int)0xb900;
-
+			key = (int)0xb900;
 		}
 	}
+	else if (ascii == 0x00 || (ascii == 0xe0 && scan > 53 && scan != 86))
+		key = scan << 8;
+	else
+		key = ascii;
 
-	/* some NLS use 0xe0 as real character - Ruslan Fedyarov */
+	PDC_LOG(("PDC_get_bios_key() - key: %d(0x%x), "
+		"ascii: %d(0x%x) scan: %d(0x%x)\n",
+		key, key, ascii, ascii, scan, scan));
 
-	if (ascii == 0x00 || (ascii == 0xe0 && scan > 53 && scan != 86))
-		return scan << 8;
+	/* normal character */
 
-	return ascii;
+	SP->key_code = ((unsigned)key >= 256);
+
+	if (!SP->key_code)
+		return key;
+
+	/* Extended keys are in the upper byte.  Shift down for a 
+	   comparison. */
+
+	key = (key >> 8) & 0xFF;
+
+	for (scanp = kptab; *scanp > 0; scanp++)
+		if (*scanp++ == key)
+			return *scanp;
+
+	return -1;		/* not found, invalid */
 }
 
 /*man-start**************************************************************
@@ -344,47 +368,6 @@ int PDC_set_ctrl_break(bool setting)
 	PDCINT(0x21, regs);
 #endif
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_bios_key()	- Returns the next key available.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the next key code struck at the keyboard.
-
-  Portability:
-	PDCurses  int PDC_get_bios_key(void);
-
-**man-end****************************************************************/
-
-int PDC_get_bios_key()
-{
-	int c, *scanp;
-
-	PDC_LOG(("PDC_get_bios_key() - called\n"));
-
-	c = _key_core();
-
-	/* normal character */
-
-	SP->key_code = ((unsigned)c >= 256);
-
-	if (!SP->key_code)
-		return c;
-
-	/* Under DOS, extended keys are in the upper byte.  Shift down 
-	   for a comparison. */
-
-	c = (c >> 8) & 0xFF;
-
-	for (scanp = kptab; *scanp > 0; scanp++)
-		if (*scanp++ == c)
-			return *scanp;
-
-	return -1;
 }
 
 /*man-start**************************************************************

@@ -30,7 +30,7 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.48 2006/11/12 11:57:00 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.49 2006/11/12 12:28:10 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -249,9 +249,23 @@ bool PDC_check_bios_key(void)
 #endif
 }         
 
-static int _key_core(void)
+/*man-start**************************************************************
+
+  PDC_get_bios_key() - Returns the next key available.
+
+  PDCurses Description:
+	This is a private PDCurses routine.
+
+	Returns the next key code struck at the keyboard.
+
+  Portability:
+	PDCurses  int PDC_get_bios_key(void);
+
+**man-end****************************************************************/
+
+int PDC_get_bios_key(void)
 {
-	int ascii, scan, key;
+	int ascii, scan, key, *scanp;
 #ifndef EMXVIDEO
 	KBDKEYINFO keyInfo = {0};
 #endif
@@ -342,16 +356,32 @@ static int _key_core(void)
 			key = (int)0xb900;
 		}
 	}
-	else if (ascii == 0x00 || ascii == 0xe0)
+	else if (ascii == 0x00 || (ascii == 0xe0 && scan > 53 && scan != 86))
 		key = scan << 8;
 	else
 		key = ascii;
 
-	PDC_LOG(("PDC_get_bios_key() - returned: %d(0x%x), "
+	PDC_LOG(("PDC_get_bios_key() - key: %d(0x%x), "
 		"ascii: %d(0x%x) scan: %d(0x%x)\n",
 		key, key, ascii, ascii, scan, scan));
 
-	return key;
+	/* normal character */
+
+	SP->key_code = ((unsigned)key >= 256);
+
+	if (!SP->key_code)
+		return key;
+
+	/* Extended keys are in the upper byte.  Shift down for a 
+	   comparison. */
+
+	key = (key >> 8) & 0xFF;
+
+	for (scanp = kptab; *scanp > 0; scanp++)	
+		if (*scanp++ == key)
+			return *scanp;
+
+	return -1;		/* not found, invalid */
 }
 
 /*man-start**************************************************************
@@ -454,47 +484,6 @@ int PDC_set_ctrl_break(bool setting)
 		Action, SIG_CTRLC);
 #endif
 	return OK;
-}
-
-/*man-start**************************************************************
-
-  PDC_get_bios_key() - Returns the next key available.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the next key code struck at the keyboard.
-
-  Portability:
-	PDCurses  int PDC_get_bios_key(void);
-
-**man-end****************************************************************/
-
-int PDC_get_bios_key(void)
-{
-	int c, *scanp;
-
-	PDC_LOG(("PDC_get_bios_key()\n"));
-
-	c = _key_core();
-
-	/* normal character */
-
-	SP->key_code = ((unsigned)c >= 256);
-
-	if (!SP->key_code)
-		return c;
-
-	/* Under DOS, extended keys are in the upper byte.  Shift down 
-	   for a comparison. */
-
-	c = (c >> 8) & 0xFF;
-
-	for (scanp = kptab; *scanp > 0; scanp++)	
-		if (*scanp++ == c)
-			return *scanp;
-
-	return -1;		/* not found, invalid */
 }
 
 /*man-start**************************************************************

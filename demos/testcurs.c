@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.70 2006/11/07 01:53:21 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.71 2006/11/13 21:23:17 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -439,6 +439,7 @@ void inputTest(WINDOW *win)
 			}
 
 			wmove(win, 4, 18);
+			wclrtoeol(win);
 			wprintw(win, "Button %d: ", button);
 
 			if (MOUSE_MOVED)

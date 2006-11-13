@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.49 2006/11/12 21:13:19 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.50 2006/11/13 00:07:24 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -304,8 +304,8 @@ int PDC_get_bios_key(void)
 	Returns the current OS Control Break Check state.
 
   PDCurses Return Value:
-	This function returns TRUE on if the Control Break
-	Check is enabled otherwise FALSE is returned.
+	This function returns TRUE if the Control Break Check is enabled 
+	otherwise FALSE is returned.
 
   Portability:
 	PDCurses  bool PDC_get_ctrl_break(void);

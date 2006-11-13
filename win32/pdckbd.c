@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.76 2006/11/12 20:54:07 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.77 2006/11/13 17:49:48 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -506,7 +506,7 @@ int PDC_get_bios_key(void)
 			button_no = 1;
 
 			TEMP_BUTTON_STATUS(button_no) = 
-			    (save_ip.Event.MouseEvent.dwEventFlags) ?
+			    save_ip.Event.MouseEvent.dwEventFlags ?
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
 			if (TEMP_BUTTON_STATUS(button_no) == 
@@ -531,7 +531,7 @@ int PDC_get_bios_key(void)
 			button_no = 3;
 
 			TEMP_BUTTON_STATUS(button_no) = 
-			    (save_ip.Event.MouseEvent.dwEventFlags) ? 
+			    save_ip.Event.MouseEvent.dwEventFlags ? 
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
 			if (TEMP_BUTTON_STATUS(button_no) == 
@@ -592,7 +592,7 @@ int PDC_get_bios_key(void)
 		    {
 			button_no = 2;
 			TEMP_BUTTON_STATUS(button_no) = 
-			    (save_ip.Event.MouseEvent.dwEventFlags) ? 
+			    save_ip.Event.MouseEvent.dwEventFlags ? 
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
 			if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED

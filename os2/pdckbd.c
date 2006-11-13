@@ -28,9 +28,11 @@
 static int tahead = -1;
 #else
 static KBDINFO kbdinfo;		/* default keyboard mode */
+static HMOU mouse_handle = 0;
+static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.50 2006/11/12 21:13:19 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.51 2006/11/13 21:22:21 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -241,6 +243,15 @@ bool PDC_check_bios_key(void)
 	return (tahead != -1);
 #else
 # ifndef _MSC_VER
+	if (mouse_handle)
+	{
+		MOUQUEINFO queue;
+
+		MouGetNumQueEl(&queue, mouse_handle);
+		if (queue.cEvents)
+			return TRUE;
+	}
+
 	KbdPeek(&keyInfo, 0);   /* peek at keyboard  */
 	return (keyInfo.fbStatus != 0);
 # else
@@ -288,6 +299,69 @@ int PDC_get_bios_key(void)
 
 	tahead = -1;
 #else
+	if (mouse_handle)
+	{
+		MOUQUEINFO queue;
+
+		MouGetNumQueEl(&queue, mouse_handle);
+		if (queue.cEvents)
+		{
+			MOUEVENTINFO event;
+			USHORT wait = 1;
+			unsigned long mbe = SP->_trap_mbe;
+
+			MouReadEventQue(&event, &wait, mouse_handle);
+
+			pdc_mouse_status.button[0] =
+				((event.fs & 2) ? BUTTON_MOVED : 0) |
+				((event.fs & 4) ? BUTTON_PRESSED : 0);
+			pdc_mouse_status.button[2] =
+				((event.fs & 8) ? BUTTON_MOVED : 0) |
+				((event.fs & 16) ? BUTTON_PRESSED : 0);
+			pdc_mouse_status.button[1] =
+				((event.fs & 32) ? BUTTON_MOVED : 0) |
+				((event.fs & 64) ? BUTTON_PRESSED : 0);
+
+			pdc_mouse_status.x = event.col;
+			pdc_mouse_status.y = event.row;
+
+			pdc_mouse_status.changes = PDC_MOUSE_POSITION |
+				(((old_mouse_status.button[0] != 
+				pdc_mouse_status.button[0])
+				|| (event.fs & 2)) ? 1 : 0) |
+				(((old_mouse_status.button[1] != 
+				pdc_mouse_status.button[1])
+				|| (event.fs & 32)) ? 2 : 0) |
+				(((old_mouse_status.button[2] != 
+				pdc_mouse_status.button[2])
+				|| (event.fs & 8)) ? 4 : 0) |
+				((event.fs & 42) ? PDC_MOUSE_MOVED : 0);
+
+			old_mouse_status = pdc_mouse_status;
+
+			if (!(mbe & BUTTON1_PRESSED) &&
+			    (pdc_mouse_status.changes & 1) && 
+			    (pdc_mouse_status.button[0] == BUTTON_PRESSED))
+				pdc_mouse_status.changes ^= 1;
+
+			if (!(mbe & BUTTON2_PRESSED) &&
+			    (pdc_mouse_status.changes & 2) && 
+			    (pdc_mouse_status.button[1] == BUTTON_PRESSED))
+				pdc_mouse_status.changes ^= 2;
+
+			if (!(mbe & BUTTON3_PRESSED) &&
+			    (pdc_mouse_status.changes & 4) && 
+			    (pdc_mouse_status.button[2] == BUTTON_PRESSED))
+				pdc_mouse_status.changes ^= 4;
+
+			if (!(pdc_mouse_status.changes & 7))
+				return -1;
+
+			SP->key_code = TRUE;
+			return KEY_MOUSE;
+		}
+	}
+
 	KbdCharIn(&keyInfo, IO_WAIT, 0);	/* get a character */
 
 	key = keyInfo.chChar;
@@ -508,7 +582,33 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
-	unsigned long old_mbe = SP->_trap_mbe;
-	SP->_trap_mbe = 0;
-	return old_mbe ? ERR : OK;
+	if (SP->_trap_mbe && !mouse_handle)
+	{
+		memset(&old_mouse_status, 0, sizeof(MOUSE_STATUS));
+		MouOpen(NULL, &mouse_handle);
+		if (mouse_handle)
+			MouDrawPtr(mouse_handle);
+	}
+	else if (!SP->_trap_mbe && mouse_handle)
+	{
+		MouClose(mouse_handle);
+		mouse_handle = 0;
+	}
+
+	if (SP->_trap_mbe)
+	{
+		USHORT mask;
+		unsigned long mbe = SP->_trap_mbe;
+
+		mask = ((mbe & (BUTTON1_PRESSED|BUTTON1_CLICKED)) ? 4 : 0) |
+			((mbe & BUTTON1_MOVED) ? 2 : 0) |
+			((mbe & (BUTTON3_PRESSED|BUTTON3_CLICKED)) ? 16 : 0) |
+			((mbe & BUTTON3_MOVED) ? 8 : 0) |
+			((mbe & (BUTTON2_PRESSED|BUTTON2_CLICKED)) ? 64 : 0) |
+			((mbe & BUTTON2_MOVED) ? 32 : 0);
+
+		MouSetEventMask(&mask, mouse_handle);
+	}
+
+	return OK;
 }

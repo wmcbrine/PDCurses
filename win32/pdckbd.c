@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.77 2006/11/13 17:49:48 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.78 2006/11/13 21:23:47 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -481,7 +481,7 @@ int PDC_get_bios_key(void)
 		return retval;
 
 	    case MOUSE_EVENT:
-		memset((char*)&temp_mouse_status, 0, sizeof(MOUSE_STATUS));
+		memset(&temp_mouse_status, 0, sizeof(MOUSE_STATUS));
 
 		/* Wheel has been scrolled */
 

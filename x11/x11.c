@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.32 2006/11/12 23:55:17 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.33 2006/11/13 00:07:02 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -1245,7 +1245,7 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 	static int compose_index = 0;
 	int save_visibility = 0;
 	int char_idx = 0;
-	int xpos,ypos;
+	int xpos, ypos;
 	chtype *ch;
 	short fore = 0, back = 0;
 	unsigned long modifier = 0;

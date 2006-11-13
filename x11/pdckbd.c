@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.48 2006/11/12 20:38:00 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.49 2006/11/13 17:50:08 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -79,11 +79,6 @@ int PDC_get_bios_key(void)
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
 			    "exiting from PDC_get_bios_key");
-
-		MOUSE_LOG(("rawgetch-x: %d y: %d Mouse status: %x\n",
-		    MOUSE_X_POS, MOUSE_Y_POS, Mouse_status.changes));
-		MOUSE_LOG(("rawgetch-Button1: %x Button2: %x Button3: %x\n",
-		    BUTTON_STATUS(1), BUTTON_STATUS(2), BUTTON_STATUS(3)));
 	}
 
 	PDC_LOG(("%s:PDC_get_bios_key() - key %d returned\n", XCLOGMSG, key));

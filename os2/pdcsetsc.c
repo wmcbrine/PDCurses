@@ -13,9 +13,7 @@
 
 #include "pdcos2.h"
 
-#include <string.h>
-
-RCSID("$Id: pdcsetsc.c,v 1.36 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.37 2006/11/13 21:17:54 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {

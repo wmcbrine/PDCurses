@@ -11,9 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcos2.h,v 1.3 2006/10/15 02:42:25 wmcbrine Exp $ */
+/* $Id: pdcos2.h,v 1.4 2006/11/13 21:17:54 wmcbrine Exp $ */
 
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef EMXVIDEO
 # include <sys/video.h>
@@ -23,6 +24,7 @@
 # define INCL_WIN
 # define INCL_VIO
 # define INCL_KBD
+# define INCL_MOU
 # include <os2.h>
 #endif
 

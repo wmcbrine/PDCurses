@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.52 2006/11/14 14:51:57 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.53 2006/11/14 18:11:47 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -307,9 +307,9 @@ int PDC_get_bios_key(void)
 		if (queue.cEvents)
 		{
 			MOUEVENTINFO event;
-			USHORT wait = 1;
+			USHORT i = 1;
 
-			MouReadEventQue(&event, &wait, mouse_handle);
+			MouReadEventQue(&event, &i, mouse_handle);
 
 			pdc_mouse_status.button[0] =
 				((event.fs & 2) ? BUTTON_MOVED : 0) |
@@ -321,8 +321,24 @@ int PDC_get_bios_key(void)
 				((event.fs & 32) ? BUTTON_MOVED : 0) |
 				((event.fs & 64) ? BUTTON_PRESSED : 0);
 
+			/* PRESS events are sometimes mistakenly 
+			   reported as MOVE events. A MOVE should always 
+			   follow a PRESS, so treat a MOVE immediately 
+			   after a RELEASE as a PRESS. */
+
+			for (i = 0; i < 3; i++)
+			{
+			    if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
+				(old_mouse_status.button[i] == BUTTON_RELEASED))
+			    {
+				pdc_mouse_status.button[i] = BUTTON_PRESSED;
+			    }
+			}
+
 			pdc_mouse_status.x = event.col;
 			pdc_mouse_status.y = event.row;
+
+			/* Motion events always flag the button as changed */
 
 			pdc_mouse_status.changes =
 				(((old_mouse_status.button[0] != 
@@ -333,8 +349,16 @@ int PDC_get_bios_key(void)
 				|| (event.fs & 32)) ? 2 : 0) |
 				(((old_mouse_status.button[2] != 
 				pdc_mouse_status.button[2])
-				|| (event.fs & 8)) ? 4 : 0) |
-				((event.fs & 42) ? PDC_MOUSE_MOVED : 0);
+				|| (event.fs & 8)) ? 4 : 0);
+
+			for (i = 0; i < 3; i++)
+			{
+			    if (pdc_mouse_status.button[i] == BUTTON_MOVED)
+			    {
+				pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+				break;
+			    }
+			}
 
 			old_mouse_status = pdc_mouse_status;
 
@@ -563,6 +587,7 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
+#ifndef EMXVIDEO
 	if (SP->_trap_mbe && !mouse_handle)
 	{
 		memset(&old_mouse_status, 0, sizeof(MOUSE_STATUS));
@@ -581,15 +606,17 @@ int PDC_mouse_set(void)
 		USHORT mask;
 		unsigned long mbe = SP->_trap_mbe;
 
-		mask = ((mbe & (BUTTON1_PRESSED|BUTTON1_CLICKED)) ? 4 : 0) |
-			((mbe & BUTTON1_MOVED) ? 2 : 0) |
-			((mbe & (BUTTON3_PRESSED|BUTTON3_CLICKED)) ? 16 : 0) |
-			((mbe & BUTTON3_MOVED) ? 8 : 0) |
-			((mbe & (BUTTON2_PRESSED|BUTTON2_CLICKED)) ? 64 : 0) |
-			((mbe & BUTTON2_MOVED) ? 32 : 0);
+		mask =  ((mbe & (BUTTON1_PRESSED | BUTTON1_CLICKED | 
+			BUTTON1_MOVED)) ? 6 : 0) |
+
+			((mbe & (BUTTON3_PRESSED | BUTTON3_CLICKED | 
+			BUTTON3_MOVED)) ? 24 : 0) |
+
+			((mbe & (BUTTON2_PRESSED | BUTTON2_CLICKED | 
+			BUTTON2_MOVED)) ? 96 : 0);
 
 		MouSetEventMask(&mask, mouse_handle);
 	}
-
+#endif
 	return OK;
 }

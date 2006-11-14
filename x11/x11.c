@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.33 2006/11/13 00:07:02 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.34 2006/11/14 14:51:58 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2156,8 +2156,7 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 	/* Handle button 4 and 5, which are normally mapped to 
 	   the wheel mouse scroll up and down */
 
-	if ((SP->_trap_mbe & MOUSE_WHEEL_SCROLL)
-	    && (button_no == 4 || button_no == 5))
+	if (button_no == 4 || button_no == 5)
 	{
 		/* Send the KEY_MOUSE to curses program */
 
@@ -2189,19 +2188,7 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 			BUTTON_STATUS(button_no) = BUTTON_DOUBLE_CLICKED;
 
 			SelectionOff();
-
-			if (!(SP->_trap_mbe & BUTTON1_DOUBLE_CLICKED)
-			    && button_no == 1)
-				send_key = FALSE;
-			if (!(SP->_trap_mbe & BUTTON2_DOUBLE_CLICKED)
-			    && button_no == 2)
-				send_key = FALSE;
-			if (!(SP->_trap_mbe & BUTTON3_DOUBLE_CLICKED)
-			    && button_no == 3)
-				send_key = FALSE;
-
-			if (send_key)
-				remove_release = True;
+			remove_release = True;
 		}
 		else
 		{
@@ -2251,13 +2238,6 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 		}
 
 		Mouse_status.changes |= 8;
-
-		if (!(SP->_trap_mbe & BUTTON1_MOVED) && button_no == 1)
-			send_key = FALSE;
-		if (!(SP->_trap_mbe & BUTTON2_MOVED) && button_no == 2)
-			send_key = FALSE;
-		if (!(SP->_trap_mbe & BUTTON3_MOVED) && button_no == 3)
-			send_key = FALSE;
 		break;
 
       case ButtonRelease:
@@ -2289,18 +2269,6 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 				event->xbutton.time));
 
 			    BUTTON_STATUS(button_no) = BUTTON_CLICKED;
-
-			    if (!(SP->_trap_mbe & BUTTON1_RELEASED)
-				&& button_no == 1)
-				    send_key = FALSE;
-
-			    if (!(SP->_trap_mbe & BUTTON2_RELEASED)
-				&& button_no == 2)
-				    send_key = FALSE;
-
-			    if (!(SP->_trap_mbe & BUTTON3_RELEASED)
-				&& button_no == 3)
-				    send_key = FALSE;
 
 			    if (button_no == 1
 				&& !(event->xbutton.state & ShiftMask)
@@ -2335,18 +2303,6 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 
 			    BUTTON_STATUS(button_no) = BUTTON_PRESSED;
 
-			    if (!(SP->_trap_mbe & BUTTON1_PRESSED)
-				&& button_no == 1)
-				    send_key = FALSE;
-
-			    if (!(SP->_trap_mbe & BUTTON2_PRESSED)
-				&& button_no == 2)
-				    send_key = FALSE;
-
-			    if (!(SP->_trap_mbe & BUTTON3_PRESSED)
-				&& button_no == 3)
-				    send_key = FALSE;
-
 			    if (button_no == 1
 				&& !(event->xbutton.state & ShiftMask)
 				&& !(event->xbutton.state & ControlMask)
@@ -2370,15 +2326,6 @@ static void Button(Widget w, XEvent *event, String *params, Cardinal *nparams)
 		MOUSE_LOG(("\nButtonRelease\n"));
 
 		BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-
-		if (!(SP->_trap_mbe & BUTTON1_RELEASED) && button_no == 1)
-		    send_key = FALSE;
-
-		if (!(SP->_trap_mbe & BUTTON2_RELEASED) && button_no == 2)
-		    send_key = FALSE;
-
-		if (!(SP->_trap_mbe & BUTTON3_RELEASED) && button_no == 3)
-		    send_key = FALSE;
 
 		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
 		    && !(event->xbutton.state & ControlMask)

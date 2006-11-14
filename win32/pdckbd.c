@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.78 2006/11/13 21:23:47 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.79 2006/11/14 14:51:57 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -509,16 +509,7 @@ int PDC_get_bios_key(void)
 			    save_ip.Event.MouseEvent.dwEventFlags ?
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
-			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_PRESSED && (SP->_trap_mbe &
-			    BUTTON1_PRESSED))
-				trap_mouse = TRUE;
-
-			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe & 
-			    BUTTON1_DOUBLE_CLICKED))
-				trap_mouse = TRUE;
-
+			trap_mouse = TRUE;
 			break;
 		    }
 
@@ -534,16 +525,7 @@ int PDC_get_bios_key(void)
 			    save_ip.Event.MouseEvent.dwEventFlags ? 
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
-			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_PRESSED && (SP->_trap_mbe & 
-			    BUTTON3_PRESSED))
-				trap_mouse = TRUE;
-
-			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe & 
-			    BUTTON3_DOUBLE_CLICKED))
-				trap_mouse = TRUE;
-
+			trap_mouse = TRUE;
 			break;
 		    }
 
@@ -562,8 +544,7 @@ int PDC_get_bios_key(void)
 			button_no = 1;
 			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
-			if (SP->_trap_mbe & BUTTON1_RELEASED)
-				trap_mouse = TRUE;
+			trap_mouse = TRUE;
 			break;
 		    }
 
@@ -578,8 +559,7 @@ int PDC_get_bios_key(void)
 			button_no = 3;
 			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
-			if ((SP->_trap_mbe) & BUTTON3_RELEASED)
-				trap_mouse = TRUE;
+			trap_mouse = TRUE;
 			break;
 		    }
 
@@ -595,15 +575,7 @@ int PDC_get_bios_key(void)
 			    save_ip.Event.MouseEvent.dwEventFlags ? 
 			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 
-			if (TEMP_BUTTON_STATUS(button_no) == BUTTON_PRESSED
-			    && (SP->_trap_mbe & BUTTON2_PRESSED))
-				trap_mouse = TRUE;
-
-			if (TEMP_BUTTON_STATUS(button_no) == 
-			    BUTTON_DOUBLE_CLICKED && (SP->_trap_mbe & 
-			    BUTTON2_DOUBLE_CLICKED))
-				trap_mouse = TRUE;
-
+			trap_mouse = TRUE;
 			break;
 		    }
 
@@ -616,8 +588,7 @@ int PDC_get_bios_key(void)
 			button_no = 2;
 			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
-			if (SP->_trap_mbe & BUTTON2_RELEASED)
-				trap_mouse = TRUE;
+			trap_mouse = TRUE;
 			break;
 		    }
 
@@ -631,11 +602,7 @@ int PDC_get_bios_key(void)
 		    temp_mouse_status.changes |= PDC_MOUSE_MOVED;
 		    button_no = last_button_no;
 
-		    if ((button_no == 1 && SP->_trap_mbe & BUTTON1_MOVED)
-		     || (button_no == 2 && SP->_trap_mbe & BUTTON2_MOVED)
-		     || (button_no == 3 && SP->_trap_mbe & BUTTON3_MOVED))
-			trap_mouse = TRUE;
-
+		    trap_mouse = TRUE;
 		    break;
 		}
 
@@ -686,8 +653,7 @@ int PDC_get_bios_key(void)
 	    }
 
 	    if ((temp_mouse_status.changes & PDC_MOUSE_WHEEL_DOWN ||
-		temp_mouse_status.changes & PDC_MOUSE_WHEEL_UP) &&
-		SP->_trap_mbe & MOUSE_WHEEL_SCROLL)
+		temp_mouse_status.changes & PDC_MOUSE_WHEEL_UP))
 	    {
 		temp_mouse_status.x = -1;
 		temp_mouse_status.y = -1;

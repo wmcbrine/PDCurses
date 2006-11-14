@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.51 2006/11/13 21:22:21 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.52 2006/11/14 14:51:57 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -308,7 +308,6 @@ int PDC_get_bios_key(void)
 		{
 			MOUEVENTINFO event;
 			USHORT wait = 1;
-			unsigned long mbe = SP->_trap_mbe;
 
 			MouReadEventQue(&event, &wait, mouse_handle);
 
@@ -325,7 +324,7 @@ int PDC_get_bios_key(void)
 			pdc_mouse_status.x = event.col;
 			pdc_mouse_status.y = event.row;
 
-			pdc_mouse_status.changes = PDC_MOUSE_POSITION |
+			pdc_mouse_status.changes =
 				(((old_mouse_status.button[0] != 
 				pdc_mouse_status.button[0])
 				|| (event.fs & 2)) ? 1 : 0) |
@@ -338,24 +337,6 @@ int PDC_get_bios_key(void)
 				((event.fs & 42) ? PDC_MOUSE_MOVED : 0);
 
 			old_mouse_status = pdc_mouse_status;
-
-			if (!(mbe & BUTTON1_PRESSED) &&
-			    (pdc_mouse_status.changes & 1) && 
-			    (pdc_mouse_status.button[0] == BUTTON_PRESSED))
-				pdc_mouse_status.changes ^= 1;
-
-			if (!(mbe & BUTTON2_PRESSED) &&
-			    (pdc_mouse_status.changes & 2) && 
-			    (pdc_mouse_status.button[1] == BUTTON_PRESSED))
-				pdc_mouse_status.changes ^= 2;
-
-			if (!(mbe & BUTTON3_PRESSED) &&
-			    (pdc_mouse_status.changes & 4) && 
-			    (pdc_mouse_status.button[2] == BUTTON_PRESSED))
-				pdc_mouse_status.changes ^= 4;
-
-			if (!(pdc_mouse_status.changes & 7))
-				return -1;
 
 			SP->key_code = TRUE;
 			return KEY_MOUSE;

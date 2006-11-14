@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.55 2006/11/12 21:49:08 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.56 2006/11/14 14:51:57 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -111,6 +111,106 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 **man-end****************************************************************/
 
+static int _mouse_key(WINDOW *win)
+{
+	int fn, key = KEY_MOUSE;
+	unsigned long mbe = SP->_trap_mbe;
+
+	/* Filter unwanted mouse events */
+
+	if (pdc_mouse_status.changes & 1)
+	{
+		if (	(!(mbe & BUTTON1_PRESSED) &&
+			(pdc_mouse_status.button[0] == BUTTON_PRESSED))
+
+			|| (!(mbe & BUTTON1_CLICKED) &&
+			(pdc_mouse_status.button[0] == BUTTON_CLICKED))
+
+			|| (!(mbe & BUTTON1_DOUBLE_CLICKED) &&
+			(pdc_mouse_status.button[0] == BUTTON_DOUBLE_CLICKED))
+
+			|| (!(mbe & BUTTON1_MOVED) &&
+			(pdc_mouse_status.button[0] == BUTTON_MOVED))
+
+			|| (!(mbe & BUTTON1_RELEASED) &&
+			(pdc_mouse_status.button[0] == BUTTON_RELEASED))
+		)
+			pdc_mouse_status.changes ^= 1;
+	}
+
+	if (pdc_mouse_status.changes & 2)
+	{
+		if (	(!(mbe & BUTTON2_PRESSED) &&
+			(pdc_mouse_status.button[1] == BUTTON_PRESSED))
+
+			|| (!(mbe & BUTTON2_CLICKED) &&
+			(pdc_mouse_status.button[1] == BUTTON_CLICKED))
+
+			|| (!(mbe & BUTTON2_DOUBLE_CLICKED) &&
+			(pdc_mouse_status.button[1] == BUTTON_DOUBLE_CLICKED))
+
+			|| (!(mbe & BUTTON2_MOVED) &&
+			(pdc_mouse_status.button[1] == BUTTON_MOVED))
+
+			|| (!(mbe & BUTTON2_RELEASED) &&
+			(pdc_mouse_status.button[1] == BUTTON_RELEASED))
+		)
+			pdc_mouse_status.changes ^= 2;
+	}
+
+	if (pdc_mouse_status.changes & 4)
+	{
+		if (	(!(mbe & BUTTON3_PRESSED) &&
+			(pdc_mouse_status.button[2] == BUTTON_PRESSED))
+
+			|| (!(mbe & BUTTON3_CLICKED) &&
+			(pdc_mouse_status.button[2] == BUTTON_CLICKED))
+
+			|| (!(mbe & BUTTON3_DOUBLE_CLICKED) &&
+			(pdc_mouse_status.button[2] == BUTTON_DOUBLE_CLICKED))
+
+			|| (!(mbe & BUTTON3_MOVED) &&
+			(pdc_mouse_status.button[2] == BUTTON_MOVED))
+
+			|| (!(mbe & BUTTON3_RELEASED) &&
+			(pdc_mouse_status.button[2] == BUTTON_RELEASED))
+		)
+			pdc_mouse_status.changes ^= 4;
+	}
+
+	if (pdc_mouse_status.changes & PDC_MOUSE_MOVED)
+	{
+		if (!(mbe & (BUTTON1_MOVED|BUTTON2_MOVED|BUTTON3_MOVED)))
+			pdc_mouse_status.changes ^= PDC_MOUSE_MOVED;
+	}
+
+	if (pdc_mouse_status.changes &
+		(PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN))
+	{
+		if (!(mbe & MOUSE_WHEEL_SCROLL))
+			pdc_mouse_status.changes &=
+				~(PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN);
+	}
+
+	if (!pdc_mouse_status.changes)
+		return -1;
+
+	/* Check for click in slk area */
+
+	fn = PDC_mouse_in_slk(pdc_mouse_status.y, pdc_mouse_status.x);
+
+	if (fn)
+	{
+		if (pdc_mouse_status.button[0] &
+		    (BUTTON_PRESSED|BUTTON_CLICKED))
+			key = KEY_F(fn);
+		else
+			key = -1;
+	}
+
+	return key;
+}
+
 int wgetch(WINDOW *win)
 {
 	static int buffer[_INBUFSIZ];	/* character buffer */
@@ -164,9 +264,7 @@ int wgetch(WINDOW *win)
 	for (;;)			/* loop for any buffering */
 	{
 		if (!PDC_check_bios_key())
-		{
 			key = -1;
-		}
 		else
 		{
 			key = PDC_get_bios_key();
@@ -177,23 +275,11 @@ int wgetch(WINDOW *win)
 				key = -1;
 		}
 
-		/* translate mouse clicks in the slk area to function 
-		   keys */
+		/* filter mouse events; translate mouse clicks in the 
+		   slk area to function keys */
 
 		if (key == KEY_MOUSE && SP->key_code)
-		{
-			int fn = PDC_mouse_in_slk(pdc_mouse_status.y, 
-				pdc_mouse_status.x);
-
-			if (fn)
-			{
-				if (pdc_mouse_status.button[0] &
-				    (BUTTON_PRESSED|BUTTON_CLICKED))
-					key = KEY_F(fn);
-				else
-					key = -1;
-			}
-		}
+			key = _mouse_key(win);
 
 		/* handle timeout() and halfdelay() */
 

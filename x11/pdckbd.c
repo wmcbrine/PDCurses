@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.49 2006/11/13 17:50:08 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.50 2006/11/15 16:26:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -193,6 +193,11 @@ void PDC_flushinp(void)
 }
 
 int PDC_mouse_set(void)
+{
+	return OK;
+}
+
+int PDC_modifiers_set(void)
 {
 	return OK;
 }

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.244 2006/11/09 08:52:36 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.245 2006/11/15 16:26:44 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1477,6 +1477,9 @@ int	PDC_setclipboard(const char *, long);
 
 unsigned long PDC_get_input_fd(void);
 unsigned long PDC_get_key_modifiers(void);
+int PDC_save_key_modifiers(bool);
+int PDC_return_key_modifiers(bool);
+
 
 /*** Functions defined as macros ***/
 
@@ -1520,8 +1523,6 @@ unsigned long PDC_get_key_modifiers(void);
 #define addrawch(c)		waddrawch(stdscr, c)
 #define insrawch(c)		winsrawch(stdscr, c)
 #define mvwaddrawch(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddrawch(w, c))
-#define PDC_save_key_modifiers(flag) (SP->save_key_modifiers = flag)
-#define PDC_return_key_modifiers(flag) (SP->return_key_modifiers = flag)
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

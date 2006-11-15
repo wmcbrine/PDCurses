@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.54 2006/11/15 01:09:31 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.55 2006/11/15 16:26:45 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -621,4 +621,9 @@ int PDC_mouse_set(void)
 	}
 #endif
 	return OK;
+}
+
+int PDC_modifiers_set(void)
+{
+	return SP->return_key_modifers ? ERR : OK;
 }

@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.56 2006/11/14 14:51:57 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.57 2006/11/15 16:26:45 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -41,7 +41,9 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	int mvwget_wch(WINDOW *win, int y, int x, wint_t *wch);
 	int unget_wch(const wchar_t wch);
 
-	int PDC_get_key_modifiers(void);
+	unsigned long PDC_get_key_modifiers(void);
+	int PDC_save_key_modifiers(bool flag);
+	int PDC_return_key_modifiers(bool flag);
 
   X/Open Description:
 	With the getch(), wgetch(), mvgetch(), and mvwgetch() functions, 
@@ -85,11 +87,13 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	Also, note that the getch() definition will conflict with
 	many DOS compiler's runtime libraries.
 
-	PDC_get_key_modifiers() returns the keyboard modifiers effective 
-	at the time of the last getch() call, only if 
-	PDC_save_key_modifiers(TRUE) has been called before the getch(). 
-	Use the macros; PDC_KEY_MODIFIER_* to determine which 
-	modifier(s) were set.
+	PDC_get_key_modifiers() returns the keyboard modifiers (shift, 
+	control, alt, numlock) effective at the time of the last getch() 
+	call, if PDC_save_key_modifiers(TRUE) has been called before the 
+	getch(). Use the macros PDC_KEY_MODIFIER_* to determine which 
+	modifier(s) were set. PDC_return_key_modifiers() tells getch() 
+	to return modifier keys pressed alone as keystrokes (KEY_ALT_L, 
+	etc.). These may not work on all platforms.
 
   X/Open Return Value:
 	These functions return ERR or the value of the character, meta 
@@ -386,6 +390,22 @@ unsigned long PDC_get_key_modifiers(void)
 	PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
 	return pdc_key_modifiers;
+}
+
+int PDC_save_key_modifiers(bool flag)
+{
+	PDC_LOG(("PDC_save_key_modifiers() - called\n"));
+
+	SP->save_key_modifiers = flag;
+	return OK;
+}
+
+int PDC_return_key_modifiers(bool flag)
+{
+	PDC_LOG(("PDC_return_key_modifiers() - called\n"));
+
+	SP->return_key_modifiers = flag;
+	return PDC_modifiers_set();
 }
 
 #ifdef PDC_WIDE

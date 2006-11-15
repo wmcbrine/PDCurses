@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.56 2006/11/15 17:16:23 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.57 2006/11/15 18:25:00 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -308,6 +308,7 @@ int PDC_get_bios_key(void)
 		{
 			MOUEVENTINFO event;
 			USHORT i = 1;
+			short shift_flags = 0;
 
 			MouReadEventQue(&event, &i, mouse_handle);
 
@@ -335,8 +336,26 @@ int PDC_get_bios_key(void)
 			    }
 			}
 
-			pdc_mouse_status.x = event.col;
-			pdc_mouse_status.y = event.row;
+			/* Check for SHIFT/CONTROL/ALT */
+
+			KbdGetStatus(&kbdinfo, 0);
+
+			if (kbdinfo.fsState & KBDSTF_ALT)
+				shift_flags |= BUTTON_ALT;
+
+			if (kbdinfo.fsState & KBDSTF_CONTROL)
+				shift_flags |= BUTTON_CONTROL;
+
+			if (kbdinfo.fsState &
+			   (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
+				shift_flags |= BUTTON_SHIFT;
+
+			for (i = 0; i < 3; i++)
+			{
+				if (pdc_mouse_status.button[i])
+					pdc_mouse_status.button[i] |= 
+						shift_flags;
+			}
 
 			/* Motion events always flag the button as changed */
 
@@ -359,6 +378,9 @@ int PDC_get_bios_key(void)
 				break;
 			    }
 			}
+
+			pdc_mouse_status.x = event.col;
+			pdc_mouse_status.y = event.row;
 
 			old_mouse_status = pdc_mouse_status;
 
@@ -384,8 +406,7 @@ int PDC_get_bios_key(void)
 		if (keyInfo.fsState & KBDSTF_NUMLOCK_ON)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
-		if (keyInfo.fsState & KBDSTF_LEFTSHIFT
-		    || keyInfo.fsState & KBDSTF_RIGHTSHIFT)
+		if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 	}
 

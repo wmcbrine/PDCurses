@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.57 2006/11/15 18:25:00 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.58 2006/11/15 19:30:24 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -260,6 +260,122 @@ bool PDC_check_bios_key(void)
 #endif
 }         
 
+#ifndef EMXVIDEO
+
+static int _process_mouse_events(int eventnum)
+{
+	MOUEVENTINFO event;
+	USHORT i = 1;
+	short shift_flags = 0;
+
+	MouReadEventQue(&event, &i, mouse_handle);
+
+	pdc_mouse_status.button[0] =
+		((event.fs & 2) ? BUTTON_MOVED : 0) |
+		((event.fs & 4) ? BUTTON_PRESSED : 0);
+
+	pdc_mouse_status.button[2] =
+		((event.fs & 8) ? BUTTON_MOVED : 0) |
+		((event.fs & 16) ? BUTTON_PRESSED : 0);
+
+	pdc_mouse_status.button[1] =
+		((event.fs & 32) ? BUTTON_MOVED : 0) |
+		((event.fs & 64) ? BUTTON_PRESSED : 0);
+
+	/* PRESS events are sometimes mistakenly reported as MOVE 
+	   events. A MOVE should always follow a PRESS, so treat a MOVE 
+	   immediately after a RELEASE or CLICK as a PRESS. */
+
+	for (i = 0; i < 3; i++)
+	{
+	    if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
+		(old_mouse_status.button[i] == BUTTON_RELEASED ||
+		 old_mouse_status.button[i] == BUTTON_CLICKED))
+	    {
+		pdc_mouse_status.button[i] = BUTTON_PRESSED;
+	    }
+	}
+
+	/* Check for a click -- a PRESS followed immediately by a 
+	   release */
+
+	if (eventnum > 1)
+	{
+		i = 1;
+		MouReadEventQue(&event, &i, mouse_handle);
+
+		if (pdc_mouse_status.button[0] == BUTTON_PRESSED && 
+		    !(event.fs & 6))
+			pdc_mouse_status.button[0] = BUTTON_CLICKED;
+
+		if (pdc_mouse_status.button[1] == BUTTON_PRESSED && 
+		    !(event.fs & 96))
+			pdc_mouse_status.button[1] = BUTTON_CLICKED;
+
+		if (pdc_mouse_status.button[2] == BUTTON_PRESSED && 
+		    !(event.fs & 24))
+			pdc_mouse_status.button[2] = BUTTON_CLICKED;
+	}
+
+	/* Check for SHIFT/CONTROL/ALT */
+
+	KbdGetStatus(&kbdinfo, 0);
+
+	if (kbdinfo.fsState & KBDSTF_ALT)
+		shift_flags |= BUTTON_ALT;
+
+	if (kbdinfo.fsState & KBDSTF_CONTROL)
+		shift_flags |= BUTTON_CONTROL;
+
+	if (kbdinfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
+		shift_flags |= BUTTON_SHIFT;
+
+	for (i = 0; i < 3; i++)
+	{
+		if (pdc_mouse_status.button[i])
+			pdc_mouse_status.button[i] |= shift_flags;
+	}
+
+	/* Motion events always flag the button as changed */
+
+	pdc_mouse_status.changes =
+		(((old_mouse_status.button[0] != pdc_mouse_status.button[0])
+		|| (pdc_mouse_status.button[0] == BUTTON_MOVED)) ? 1 : 0) |
+
+		(((old_mouse_status.button[1] != pdc_mouse_status.button[1])
+		|| (pdc_mouse_status.button[1] == BUTTON_MOVED)) ? 2 : 0) |
+
+		(((old_mouse_status.button[2] != pdc_mouse_status.button[2])
+		|| (pdc_mouse_status.button[2] == BUTTON_MOVED)) ? 4 : 0);
+
+	for (i = 0; i < 3; i++)
+	{
+	    if (pdc_mouse_status.button[i] == BUTTON_MOVED)
+	    {
+		pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+		break;
+	    }
+	}
+
+	pdc_mouse_status.x = event.col;
+	pdc_mouse_status.y = event.row;
+
+	old_mouse_status = pdc_mouse_status;
+
+	/* Treat click events as release events for comparison purposes */
+
+	for (i = 0; i < 3; i++)
+	{
+		if (old_mouse_status.button[i] == BUTTON_CLICKED)
+			old_mouse_status.button[i] = BUTTON_RELEASED;
+	}
+
+	SP->key_code = TRUE;
+	return KEY_MOUSE;
+}
+
+#endif
+
 /*man-start**************************************************************
 
   PDC_get_bios_key() - Returns the next key available.
@@ -305,88 +421,7 @@ int PDC_get_bios_key(void)
 
 		MouGetNumQueEl(&queue, mouse_handle);
 		if (queue.cEvents)
-		{
-			MOUEVENTINFO event;
-			USHORT i = 1;
-			short shift_flags = 0;
-
-			MouReadEventQue(&event, &i, mouse_handle);
-
-			pdc_mouse_status.button[0] =
-				((event.fs & 2) ? BUTTON_MOVED : 0) |
-				((event.fs & 4) ? BUTTON_PRESSED : 0);
-			pdc_mouse_status.button[2] =
-				((event.fs & 8) ? BUTTON_MOVED : 0) |
-				((event.fs & 16) ? BUTTON_PRESSED : 0);
-			pdc_mouse_status.button[1] =
-				((event.fs & 32) ? BUTTON_MOVED : 0) |
-				((event.fs & 64) ? BUTTON_PRESSED : 0);
-
-			/* PRESS events are sometimes mistakenly 
-			   reported as MOVE events. A MOVE should always 
-			   follow a PRESS, so treat a MOVE immediately 
-			   after a RELEASE as a PRESS. */
-
-			for (i = 0; i < 3; i++)
-			{
-			    if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
-				(old_mouse_status.button[i] == BUTTON_RELEASED))
-			    {
-				pdc_mouse_status.button[i] = BUTTON_PRESSED;
-			    }
-			}
-
-			/* Check for SHIFT/CONTROL/ALT */
-
-			KbdGetStatus(&kbdinfo, 0);
-
-			if (kbdinfo.fsState & KBDSTF_ALT)
-				shift_flags |= BUTTON_ALT;
-
-			if (kbdinfo.fsState & KBDSTF_CONTROL)
-				shift_flags |= BUTTON_CONTROL;
-
-			if (kbdinfo.fsState &
-			   (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
-				shift_flags |= BUTTON_SHIFT;
-
-			for (i = 0; i < 3; i++)
-			{
-				if (pdc_mouse_status.button[i])
-					pdc_mouse_status.button[i] |= 
-						shift_flags;
-			}
-
-			/* Motion events always flag the button as changed */
-
-			pdc_mouse_status.changes =
-				(((old_mouse_status.button[0] != 
-				pdc_mouse_status.button[0])
-				|| (event.fs & 2)) ? 1 : 0) |
-				(((old_mouse_status.button[1] != 
-				pdc_mouse_status.button[1])
-				|| (event.fs & 32)) ? 2 : 0) |
-				(((old_mouse_status.button[2] != 
-				pdc_mouse_status.button[2])
-				|| (event.fs & 8)) ? 4 : 0);
-
-			for (i = 0; i < 3; i++)
-			{
-			    if (pdc_mouse_status.button[i] == BUTTON_MOVED)
-			    {
-				pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
-				break;
-			    }
-			}
-
-			pdc_mouse_status.x = event.col;
-			pdc_mouse_status.y = event.row;
-
-			old_mouse_status = pdc_mouse_status;
-
-			SP->key_code = TRUE;
-			return KEY_MOUSE;
-		}
+			return _process_mouse_events(queue.cEvents);
 	}
 
 	KbdCharIn(&keyInfo, IO_WAIT, 0);	/* get a character */
@@ -641,6 +676,9 @@ void PDC_flushinp(void)
 #ifdef EMXVIDEO
 	tcflush(0, TCIFLUSH);
 #else
+	if (mouse_handle)
+		MouFlushQue(mouse_handle);
+
 	KbdFlushBuffer(0);
 #endif
 }

@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.55 2006/11/15 16:26:45 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.56 2006/11/15 17:16:23 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -186,12 +186,12 @@ void PDC_set_keyboard_binary(bool on)
 
 	if (on)
 	{
-		kbdinfo.fsMask &= ~KEYBOARD_ASCII_MODE;
+		kbdinfo.fsMask &= ~(KEYBOARD_ASCII_MODE);
 		kbdinfo.fsMask |= KEYBOARD_BINARY_MODE;
 	}
 	else
 	{
-		kbdinfo.fsMask &= ~KEYBOARD_BINARY_MODE;
+		kbdinfo.fsMask &= ~(KEYBOARD_BINARY_MODE);
 		kbdinfo.fsMask |= KEYBOARD_ASCII_MODE;
 	}
 
@@ -387,6 +387,45 @@ int PDC_get_bios_key(void)
 		if (keyInfo.fsState & KBDSTF_LEFTSHIFT
 		    || keyInfo.fsState & KBDSTF_RIGHTSHIFT)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+	}
+
+	if (keyInfo.fbStatus & KBDTRF_SHIFT_KEY_IN)
+	{
+		key = -1;
+		SP->key_code = TRUE;
+
+		if (keyInfo.fsState & KBDSTF_LEFTALT)
+		{
+			key = KEY_ALT_L;
+			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_ALT);
+		}
+		else if (keyInfo.fsState & KBDSTF_RIGHTALT)
+		{
+			key = KEY_ALT_R;
+			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_ALT);
+		}
+		else if (keyInfo.fsState & KBDSTF_LEFTCONTROL)
+		{
+			key = KEY_CONTROL_L;
+			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_CONTROL);
+		}
+		else if (keyInfo.fsState & KBDSTF_RIGHTCONTROL)
+		{
+			key = KEY_CONTROL_R;
+			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_CONTROL);
+		}
+		else if (keyInfo.fsState & KBDSTF_LEFTSHIFT)
+		{
+			key = KEY_SHIFT_L;
+			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_SHIFT);
+		}
+		else if (keyInfo.fsState & KBDSTF_RIGHTSHIFT)
+		{
+			key = KEY_SHIFT_R;
+			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_SHIFT);
+		}
+
+		return key;
 	}
 #endif
 	if (scan == 0x1c && key == 0x0a)  /* ^Enter */
@@ -625,5 +664,16 @@ int PDC_mouse_set(void)
 
 int PDC_modifiers_set(void)
 {
-	return SP->return_key_modifers ? ERR : OK;
+	if (SP->return_key_modifiers)
+	{
+		kbdinfo.fsMask |= KEYBOARD_SHIFT_REPORT;
+		PDC_set_keyboard_binary(TRUE);
+	}
+	else
+	{
+		kbdinfo.fsMask &= ~(KEYBOARD_SHIFT_REPORT);
+		KbdSetStatus(&kbdinfo, 0);
+	}
+
+	return OK;
 }

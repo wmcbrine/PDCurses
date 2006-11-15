@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.71 2006/11/13 21:23:17 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.72 2006/11/15 18:26:59 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -425,16 +425,13 @@ void inputTest(WINDOW *win)
 			{
 				waddstr(win, " Modifier(s):");
              
-				if ((BUTTON_STATUS(button) &
-				    BUTTON_MODIFIER_MASK) == BUTTON_SHIFT)
+				if (BUTTON_STATUS(button) & BUTTON_SHIFT)
 					waddstr(win, " SHIFT");
 
-				if ((BUTTON_STATUS(button) & 
-				    BUTTON_MODIFIER_MASK) == BUTTON_CONTROL)
+				if (BUTTON_STATUS(button) & BUTTON_CONTROL)
 					waddstr(win, " CONTROL");
 
-				if ((BUTTON_STATUS(button) & 
-				    BUTTON_MODIFIER_MASK) == BUTTON_ALT)
+				if (BUTTON_STATUS(button) & BUTTON_ALT)
 					waddstr(win, " ALT");
 			}
 

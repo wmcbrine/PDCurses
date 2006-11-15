@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.53 2006/11/14 18:11:47 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.54 2006/11/15 01:09:31 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -588,25 +588,27 @@ void PDC_flushinp(void)
 int PDC_mouse_set(void)
 {
 #ifndef EMXVIDEO
-	if (SP->_trap_mbe && !mouse_handle)
+
+	unsigned long mbe = SP->_trap_mbe;
+
+	if (mbe && !mouse_handle)
 	{
 		memset(&old_mouse_status, 0, sizeof(MOUSE_STATUS));
 		MouOpen(NULL, &mouse_handle);
 		if (mouse_handle)
 			MouDrawPtr(mouse_handle);
 	}
-	else if (!SP->_trap_mbe && mouse_handle)
+	else if (!mbe && mouse_handle)
 	{
 		MouClose(mouse_handle);
 		mouse_handle = 0;
 	}
 
-	if (SP->_trap_mbe)
+	if (mbe)
 	{
-		USHORT mask;
-		unsigned long mbe = SP->_trap_mbe;
+		USHORT mask =
 
-		mask =  ((mbe & (BUTTON1_PRESSED | BUTTON1_CLICKED | 
+			((mbe & (BUTTON1_PRESSED | BUTTON1_CLICKED | 
 			BUTTON1_MOVED)) ? 6 : 0) |
 
 			((mbe & (BUTTON3_PRESSED | BUTTON3_CLICKED | 

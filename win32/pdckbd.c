@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.80 2006/11/15 16:26:45 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.81 2006/11/15 19:59:42 wmcbrine Exp $");
 
 #define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
 #define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
@@ -342,13 +342,13 @@ static int _process_key_event(void)
 	   the key modifiers if required. Do this first to allow to 
 	   detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
 
-	if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
+	if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
 		local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
 	if (state & SHIFT_PRESSED)
 		local_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-	if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
+	if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
 		local_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
 	if (state & NUMLOCK_ON)
@@ -391,8 +391,8 @@ static int _process_key_event(void)
 	   case of LEFT_ALT we get we get ascii != 0. So check for this 
 	   first. */
 
-	if ((ascii != 0) && (((state & LEFT_ALT_PRESSED) == 0) ||
-	    (state & RIGHT_ALT_PRESSED)))
+	if (ascii && ( !(state & LEFT_ALT_PRESSED) ||
+	    (state & RIGHT_ALT_PRESSED) ))
 	{
 		/* This code should catch all keys returning a printable 
 		   character. Characters above 0x7F should be returned 
@@ -424,10 +424,10 @@ static int _process_key_event(void)
 	if (state & SHIFT_PRESSED)
 		return enhanced ? ext_kptab[idx].shift : kptab[idx].shift;
 
-	if (state & LEFT_CTRL_PRESSED || state & RIGHT_CTRL_PRESSED)
+	if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
 		return enhanced ? ext_kptab[idx].control : kptab[idx].control;
 
-	if (state & LEFT_ALT_PRESSED || state & RIGHT_ALT_PRESSED)
+	if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
 		return enhanced ? ext_kptab[idx].alt : kptab[idx].alt;
 
 	return enhanced ? ext_kptab[idx].normal : kptab[idx].normal;
@@ -624,18 +624,17 @@ int PDC_get_bios_key(void)
 
 		temp_mouse_status.changes |= 1 << (button_no - 1);
 
-#define STATUSSET(KEY, BTN) \
-		if (save_ip.Event.MouseEvent.dwControlKeyState & \
-		    KEY##_PRESSED) \
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_##BTN
+		if (save_ip.Event.MouseEvent.dwControlKeyState &
+		    SHIFT_PRESSED)
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
 
-		STATUSSET(SHIFT, SHIFT);
-		STATUSSET(LEFT_CTRL, CONTROL);
-		STATUSSET(RIGHT_CTRL, CONTROL);
-		STATUSSET(LEFT_ALT, ALT);
-		STATUSSET(RIGHT_ALT, ALT);
+		if (save_ip.Event.MouseEvent.dwControlKeyState &
+		    (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
 
-#undef STATUSSET
+		if (save_ip.Event.MouseEvent.dwControlKeyState &
+		    (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
 
 		last_button_no = button_no;
 
@@ -652,8 +651,8 @@ int PDC_get_bios_key(void)
 			 break;
 	    }
 
-	    if ((temp_mouse_status.changes & PDC_MOUSE_WHEEL_DOWN ||
-		temp_mouse_status.changes & PDC_MOUSE_WHEEL_UP))
+	    if (temp_mouse_status.changes &
+		(PDC_MOUSE_WHEEL_DOWN|PDC_MOUSE_WHEEL_UP))
 	    {
 		temp_mouse_status.x = -1;
 		temp_mouse_status.y = -1;

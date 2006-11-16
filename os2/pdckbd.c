@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.59 2006/11/16 00:40:47 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.60 2006/11/16 19:26:20 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -705,7 +705,7 @@ int PDC_mouse_set(void)
 		mouse_handle = 0;
 	}
 
-	if (mbe)
+	if (mbe && mouse_handle)
 	{
 		USHORT mask =
 

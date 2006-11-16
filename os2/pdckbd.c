@@ -32,7 +32,7 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.58 2006/11/15 19:30:24 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.59 2006/11/16 00:40:47 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -284,13 +284,12 @@ static int _process_mouse_events(int eventnum)
 
 	/* PRESS events are sometimes mistakenly reported as MOVE 
 	   events. A MOVE should always follow a PRESS, so treat a MOVE 
-	   immediately after a RELEASE or CLICK as a PRESS. */
+	   immediately after a RELEASE as a PRESS. */
 
 	for (i = 0; i < 3; i++)
 	{
 	    if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
-		(old_mouse_status.button[i] == BUTTON_RELEASED ||
-		 old_mouse_status.button[i] == BUTTON_CLICKED))
+		(old_mouse_status.button[i] == BUTTON_RELEASED))
 	    {
 		pdc_mouse_status.button[i] = BUTTON_PRESSED;
 	    }
@@ -315,25 +314,6 @@ static int _process_mouse_events(int eventnum)
 		if (pdc_mouse_status.button[2] == BUTTON_PRESSED && 
 		    !(event.fs & 24))
 			pdc_mouse_status.button[2] = BUTTON_CLICKED;
-	}
-
-	/* Check for SHIFT/CONTROL/ALT */
-
-	KbdGetStatus(&kbdinfo, 0);
-
-	if (kbdinfo.fsState & KBDSTF_ALT)
-		shift_flags |= BUTTON_ALT;
-
-	if (kbdinfo.fsState & KBDSTF_CONTROL)
-		shift_flags |= BUTTON_CONTROL;
-
-	if (kbdinfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
-		shift_flags |= BUTTON_SHIFT;
-
-	for (i = 0; i < 3; i++)
-	{
-		if (pdc_mouse_status.button[i])
-			pdc_mouse_status.button[i] |= shift_flags;
 	}
 
 	/* Motion events always flag the button as changed */
@@ -369,6 +349,28 @@ static int _process_mouse_events(int eventnum)
 		if (old_mouse_status.button[i] == BUTTON_CLICKED)
 			old_mouse_status.button[i] = BUTTON_RELEASED;
 	}
+
+	/* Check for SHIFT/CONTROL/ALT */
+
+	KbdGetStatus(&kbdinfo, 0);
+
+	if (kbdinfo.fsState & KBDSTF_ALT)
+		shift_flags |= BUTTON_ALT;
+
+	if (kbdinfo.fsState & KBDSTF_CONTROL)
+		shift_flags |= BUTTON_CONTROL;
+
+	if (kbdinfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
+		shift_flags |= BUTTON_SHIFT;
+
+	if (pdc_mouse_status.changes & 1)
+		pdc_mouse_status.button[0] |= shift_flags;
+
+	if (pdc_mouse_status.changes & 2)
+		pdc_mouse_status.button[1] |= shift_flags;
+
+	if (pdc_mouse_status.changes & 4)
+		pdc_mouse_status.button[2] |= shift_flags;
 
 	SP->key_code = TRUE;
 	return KEY_MOUSE;
@@ -415,6 +417,8 @@ int PDC_get_bios_key(void)
 
 	tahead = -1;
 #else
+	pdc_key_modifiers = 0L;
+
 	if (mouse_handle)
 	{
 		MOUQUEINFO queue;
@@ -428,7 +432,6 @@ int PDC_get_bios_key(void)
 
 	key = keyInfo.chChar;
 	scan = keyInfo.chScan;
-	pdc_key_modifiers = 0L;
 
 	if (SP->save_key_modifiers)
 	{

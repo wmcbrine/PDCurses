@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.72 2006/11/15 18:26:59 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.73 2006/11/16 13:41:00 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -392,22 +392,6 @@ void inputTest(WINDOW *win)
 			wprintw(win, "%s", unctrl(c));
 
 #ifdef PDCURSES
-		if (PDC_get_key_modifiers())
-		{
-			waddstr(win, " Modifier(s):");
-			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_SHIFT)
-				waddstr(win, " SHIFT");
-
-			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_CONTROL)
-				waddstr(win, " CONTROL");
-
-			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_ALT)
-				waddstr(win, " ALT");
-
-			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_NUMLOCK)
-				waddstr(win, " NUMLOCK");
-		}
-
 		if (c == KEY_MOUSE)
 		{
 			int button = 0;
@@ -460,6 +444,22 @@ void inputTest(WINDOW *win)
 			wprintw(win, " Position: Y: %d X: %d", 
 				MOUSE_Y_POS, MOUSE_X_POS);
 		}
+		else if (PDC_get_key_modifiers())
+		{
+			waddstr(win, " Modifier(s):");
+			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_SHIFT)
+				waddstr(win, " SHIFT");
+
+			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_CONTROL)
+				waddstr(win, " CONTROL");
+
+			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_ALT)
+				waddstr(win, " ALT");
+
+			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_NUMLOCK)
+				waddstr(win, " NUMLOCK");
+		}
+
 #endif
 		wrefresh(win);
 

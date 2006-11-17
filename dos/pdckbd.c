@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.55 2006/11/17 14:44:10 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.56 2006/11/17 14:47:18 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -583,5 +583,7 @@ int PDC_mouse_set(void)
 
 int PDC_modifiers_set(void)
 {
+	key_pressed = FALSE;
+
 	return OK;
 }

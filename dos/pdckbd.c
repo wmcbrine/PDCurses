@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.54 2006/11/17 12:10:20 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.55 2006/11/17 14:44:10 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -108,8 +108,12 @@ static int kptab[] =
 
 unsigned long pdc_key_modifiers = 0L;
 
-static bool mouse_avail = FALSE, mouse_vis = FALSE, mouse_moved = FALSE;
+static bool mouse_avail = FALSE, mouse_vis = FALSE, mouse_moved = FALSE,
+	key_pressed = FALSE;
+
 static PDCREGS ms_regs, old_ms;
+static unsigned short shift_status, old_shift = 0;
+static unsigned char keyboard_function = 0xff, shift_function = 0xff;
 
 /*man-start**************************************************************
 
@@ -161,7 +165,41 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_bios_key(void)
 {
+	PDCREGS regs;
+
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
+
+	if (shift_function == 0xff)
+	{
+		int scan;
+
+		/* get shift status for all keyboards */
+
+		regs.h.ah = 0x02;
+		PDCINT(0x16, regs);
+		scan = regs.h.al;
+
+		/* get shift status for enhanced keyboards */
+
+		regs.h.ah = 0x12;
+		PDCINT(0x16, regs);
+
+		if (scan == regs.h.al && getdosmembyte(0x496) == 0x10)
+		{
+			keyboard_function = 0x10;
+			shift_function = 0x12;
+		}
+		else
+		{
+			keyboard_function = 0;
+			shift_function = 2;
+		}
+	}
+
+	regs.h.ah = shift_function;
+	PDCINT(0x16, regs);
+
+	shift_status = regs.W.ax;
 
 	if (mouse_vis)
 	{
@@ -176,6 +214,16 @@ bool PDC_check_bios_key(void)
 		if (ms_regs.W.bx != old_ms.W.bx || mouse_moved)
 			return TRUE;
 	}
+
+	if (old_shift && !shift_status)
+	{
+		if (!key_pressed && SP->return_key_modifiers)
+			return TRUE;
+
+		key_pressed = FALSE;
+	}
+
+	old_shift = shift_status;
 
 	return kbhit();
 }
@@ -198,7 +246,6 @@ int PDC_get_bios_key(void)
 {
 	PDCREGS regs;
 	int key, scan, *scanp;
-	static unsigned char keyboard_function = 0xFF;
 
 	pdc_key_modifiers = 0;
 
@@ -242,18 +289,15 @@ int PDC_get_bios_key(void)
 
 			old_ms = ms_regs;
 
-			/* get shift status for all keyboards */
+			/* Set shift modifiers */
 
-			regs.h.ah = 0x02;             
-			PDCINT(0x16, regs);
-
-			if (regs.h.al & 0x03)
+			if (shift_status & 3)
 				shift_flags |= BUTTON_SHIFT;
 
-			if (regs.h.al & 0x04)
+			if (shift_status & 4)
 				shift_flags |= BUTTON_CONTROL;
 
-			if (regs.h.al & 0x8)
+			if (shift_status & 8)
 				shift_flags |= BUTTON_ALT;
 
 			if (pdc_mouse_status.changes & 1)
@@ -265,28 +309,52 @@ int PDC_get_bios_key(void)
 			if (pdc_mouse_status.changes & 4)
 				pdc_mouse_status.button[2] |= shift_flags;
 
+			key_pressed = TRUE;
+			old_shift = shift_status;
+
 			SP->key_code = TRUE;
 			return KEY_MOUSE;
 		}
 	}
 
-	if (keyboard_function == 0xFF)
+	if (old_shift && !shift_status)
 	{
-		/* get shift status for all keyboards */
+		key = -1;
 
-		regs.h.ah = 0x02;
-		PDCINT(0x16, regs);
-		scan = regs.h.al;
+		if (old_shift & 1)
+			key = KEY_SHIFT_R;
 
-		/* get shift status for enhanced keyboards */
+		if (old_shift & 2)
+			key = KEY_SHIFT_L;
 
-		regs.h.ah = 0x12;
-		PDCINT(0x16, regs);
+		if (shift_function == 0x12)
+		{
+			if (old_shift & 0x400)
+				key = KEY_CONTROL_R;
 
-		if (scan == regs.h.al && getdosmembyte(0x496) == 0x10)
-			keyboard_function = 0x10;
+			if (old_shift & 0x100)
+				key = KEY_CONTROL_L;
+
+			if (old_shift & 0x800)
+				key = KEY_ALT_R;
+
+			if (old_shift & 0x200)
+				key = KEY_ALT_L;
+		}
 		else
-			keyboard_function = 0;
+		{
+			if (old_shift & 4)
+				key = KEY_CONTROL_R;
+
+			if (old_shift & 8)
+				key = KEY_ALT_R;
+		}
+
+		key_pressed = FALSE;
+		old_shift = shift_status;
+
+		SP->key_code = TRUE;
+		return key;
 	}
 
 	regs.h.ah = keyboard_function;
@@ -296,21 +364,16 @@ int PDC_get_bios_key(void)
 
 	if (SP->save_key_modifiers)
 	{
-		/* get shift status for all keyboards */
-
-		regs.h.ah = 0x02;             
-		PDCINT(0x16, regs);
-
-		if (regs.h.al & 0x03)
+		if (shift_status & 3)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-		if (regs.h.al & 0x04)
+		if (shift_status & 4)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-		if (regs.h.al & 0x08)
+		if (shift_status & 8)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-		if (regs.h.al & 0x20)
+		if (shift_status & 0x20)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 	}
 
@@ -362,6 +425,8 @@ int PDC_get_bios_key(void)
 	}
 	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
 		key = scan << 8;
+
+	key_pressed = TRUE;
 
 	/* normal character */
 
@@ -518,7 +583,5 @@ int PDC_mouse_set(void)
 
 int PDC_modifiers_set(void)
 {
-	bool old_rkm = SP->return_key_modifiers;
-	SP->return_key_modifiers = FALSE;
-	return old_rkm ? ERR : OK;
+	return OK;
 }

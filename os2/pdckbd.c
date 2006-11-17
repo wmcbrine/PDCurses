@@ -30,9 +30,11 @@ static int tahead = -1;
 static KBDINFO kbdinfo;		/* default keyboard mode */
 static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
+static USHORT old_shift = 0;
+static bool key_pressed = FALSE;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.60 2006/11/16 19:26:20 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.61 2006/11/17 15:47:11 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -243,6 +245,9 @@ bool PDC_check_bios_key(void)
 	return (tahead != -1);
 #else
 # ifndef _MSC_VER
+
+	KbdGetStatus(&kbdinfo, 0);
+
 	if (mouse_handle)
 	{
 		MOUQUEINFO queue;
@@ -251,6 +256,16 @@ bool PDC_check_bios_key(void)
 		if (queue.cEvents)
 			return TRUE;
 	}
+
+	if (old_shift && !kbdinfo.fsState)
+	{
+		if (!key_pressed && SP->return_key_modifiers)
+			return TRUE;
+
+		key_pressed = FALSE;
+	}
+
+	old_shift = kbdinfo.fsState;
 
 	KbdPeek(&keyInfo, 0);   /* peek at keyboard  */
 	return (keyInfo.fbStatus != 0);
@@ -352,8 +367,6 @@ static int _process_mouse_events(int eventnum)
 
 	/* Check for SHIFT/CONTROL/ALT */
 
-	KbdGetStatus(&kbdinfo, 0);
-
 	if (kbdinfo.fsState & KBDSTF_ALT)
 		shift_flags |= BUTTON_ALT;
 
@@ -371,6 +384,9 @@ static int _process_mouse_events(int eventnum)
 
 	if (pdc_mouse_status.changes & 4)
 		pdc_mouse_status.button[2] |= shift_flags;
+
+	old_shift = kbdinfo.fsState;
+	key_pressed = TRUE;
 
 	SP->key_code = TRUE;
 	return KEY_MOUSE;
@@ -428,6 +444,42 @@ int PDC_get_bios_key(void)
 			return _process_mouse_events(queue.cEvents);
 	}
 
+	if (old_shift && !kbdinfo.fsState)
+	{
+		key = -1;
+
+		if (old_shift & KBDSTF_LEFTALT)
+		{
+			key = KEY_ALT_L;
+		}
+		else if (old_shift & KBDSTF_RIGHTALT)
+		{
+			key = KEY_ALT_R;
+		}
+		else if (old_shift & KBDSTF_LEFTCONTROL)
+		{
+			key = KEY_CONTROL_L;
+		}
+		else if (old_shift & KBDSTF_RIGHTCONTROL)
+		{
+			key = KEY_CONTROL_R;
+		}
+		else if (old_shift & KBDSTF_LEFTSHIFT)
+		{
+			key = KEY_SHIFT_L;
+		}
+		else if (old_shift & KBDSTF_RIGHTSHIFT)
+		{
+			key = KEY_SHIFT_R;
+		}
+
+		key_pressed = FALSE;
+		old_shift = kbdinfo.fsState;
+
+		SP->key_code = TRUE;
+		return key;
+	}
+
 	KbdCharIn(&keyInfo, IO_WAIT, 0);	/* get a character */
 
 	key = keyInfo.chChar;
@@ -446,45 +498,6 @@ int PDC_get_bios_key(void)
 
 		if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
-	}
-
-	if (keyInfo.fbStatus & KBDTRF_SHIFT_KEY_IN)
-	{
-		key = -1;
-		SP->key_code = TRUE;
-
-		if (keyInfo.fsState & KBDSTF_LEFTALT)
-		{
-			key = KEY_ALT_L;
-			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_ALT);
-		}
-		else if (keyInfo.fsState & KBDSTF_RIGHTALT)
-		{
-			key = KEY_ALT_R;
-			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_ALT);
-		}
-		else if (keyInfo.fsState & KBDSTF_LEFTCONTROL)
-		{
-			key = KEY_CONTROL_L;
-			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_CONTROL);
-		}
-		else if (keyInfo.fsState & KBDSTF_RIGHTCONTROL)
-		{
-			key = KEY_CONTROL_R;
-			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_CONTROL);
-		}
-		else if (keyInfo.fsState & KBDSTF_LEFTSHIFT)
-		{
-			key = KEY_SHIFT_L;
-			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_SHIFT);
-		}
-		else if (keyInfo.fsState & KBDSTF_RIGHTSHIFT)
-		{
-			key = KEY_SHIFT_R;
-			pdc_key_modifiers &= ~(PDC_KEY_MODIFIER_SHIFT);
-		}
-
-		return key;
 	}
 #endif
 	if (scan == 0x1c && key == 0x0a)  /* ^Enter */
@@ -535,6 +548,8 @@ int PDC_get_bios_key(void)
 	}
 	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
 		key = scan << 8;
+
+	key_pressed = TRUE;
 
 	/* normal character */
 
@@ -726,16 +741,7 @@ int PDC_mouse_set(void)
 
 int PDC_modifiers_set(void)
 {
-	if (SP->return_key_modifiers)
-	{
-		kbdinfo.fsMask |= KEYBOARD_SHIFT_REPORT;
-		PDC_set_keyboard_binary(TRUE);
-	}
-	else
-	{
-		kbdinfo.fsMask &= ~(KEYBOARD_SHIFT_REPORT);
-		KbdSetStatus(&kbdinfo, 0);
-	}
+	key_pressed = FALSE;
 
 	return OK;
 }

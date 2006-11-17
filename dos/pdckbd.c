@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.53 2006/11/17 03:39:15 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.54 2006/11/17 12:10:20 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -108,8 +108,8 @@ static int kptab[] =
 
 unsigned long pdc_key_modifiers = 0L;
 
-static bool mouse_avail = FALSE, mouse_vis = FALSE;
-static PDCREGS old_ms;
+static bool mouse_avail = FALSE, mouse_vis = FALSE, mouse_moved = FALSE;
+static PDCREGS ms_regs, old_ms;
 
 /*man-start**************************************************************
 
@@ -161,18 +161,19 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_bios_key(void)
 {
-	PDCREGS regs;
-
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 	if (mouse_vis)
 	{
-		regs.W.ax = 3;
-		PDCINT(0x33, regs);
+		ms_regs.W.ax = 3;
+		PDCINT(0x33, ms_regs);
 
-		if (regs.W.bx != old_ms.W.bx ||
-		   (regs.W.bx && regs.W.bx == old_ms.W.bx &&
-		   (regs.W.cx != old_ms.W.cx || regs.W.dx != old_ms.W.dx)))
+		mouse_moved = ms_regs.W.bx &&
+			ms_regs.W.bx == old_ms.W.bx &&
+			(ms_regs.W.cx != old_ms.W.cx ||
+			ms_regs.W.dx != old_ms.W.dx);
+
+		if (ms_regs.W.bx != old_ms.W.bx || mouse_moved)
 			return TRUE;
 	}
 
@@ -203,51 +204,43 @@ int PDC_get_bios_key(void)
 
 	if (mouse_vis)
 	{
-		bool moved;
-
-		regs.W.ax = 3;
-		PDCINT(0x33, regs);
-
-		moved = regs.W.bx && regs.W.bx == old_ms.W.bx && 
-			(regs.W.cx != old_ms.W.cx || regs.W.dx != old_ms.W.dx);
-
-		if (regs.W.bx != old_ms.W.bx || moved)
+		if (ms_regs.W.bx != old_ms.W.bx || mouse_moved)
 		{
 			short shift_flags = 0;
 
-			pdc_mouse_status.changes = moved ? 
+			pdc_mouse_status.changes = mouse_moved ? 
 				PDC_MOUSE_MOVED : 0;
 
-			pdc_mouse_status.button[0] = (regs.W.bx & 1) ?
-				(moved ? BUTTON_MOVED : BUTTON_PRESSED) 
+			pdc_mouse_status.button[0] = (ms_regs.W.bx & 1) ?
+				(mouse_moved ? BUTTON_MOVED : BUTTON_PRESSED)
 				: BUTTON_RELEASED;
 
-			pdc_mouse_status.button[1] = (regs.W.bx & 4) ?
-				(moved ? BUTTON_MOVED : BUTTON_PRESSED) 
+			pdc_mouse_status.button[1] = (ms_regs.W.bx & 4) ?
+				(mouse_moved ? BUTTON_MOVED : BUTTON_PRESSED)
 				: BUTTON_RELEASED;
 
-			pdc_mouse_status.button[2] = (regs.W.bx & 2) ?
-				(moved ? BUTTON_MOVED : BUTTON_PRESSED) 
+			pdc_mouse_status.button[2] = (ms_regs.W.bx & 2) ?
+				(mouse_moved ? BUTTON_MOVED : BUTTON_PRESSED)
 				: BUTTON_RELEASED;
 
 			/* moves always flag the button as changed */
 
-			if (((regs.W.bx & 1) ^ (old_ms.W.bx & 1)) ||
+			if (((ms_regs.W.bx & 1) ^ (old_ms.W.bx & 1)) ||
 			    (pdc_mouse_status.button[0] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 1;
 
-			if (((regs.W.bx & 4) ^ (old_ms.W.bx & 4)) ||
+			if (((ms_regs.W.bx & 4) ^ (old_ms.W.bx & 4)) ||
 			    (pdc_mouse_status.button[1] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 2;
 
-			if (((regs.W.bx & 2) ^ (old_ms.W.bx & 2)) ||
+			if (((ms_regs.W.bx & 2) ^ (old_ms.W.bx & 2)) ||
 			    (pdc_mouse_status.button[2] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 4;
 
-			pdc_mouse_status.x = regs.W.cx >> 3;
-			pdc_mouse_status.y = regs.W.dx >> 3;
+			pdc_mouse_status.x = ms_regs.W.cx >> 3;
+			pdc_mouse_status.y = ms_regs.W.dx >> 3;
 
-			old_ms = regs;
+			old_ms = ms_regs;
 
 			/* get shift status for all keyboards */
 

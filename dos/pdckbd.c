@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.51 2006/11/15 16:26:45 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.52 2006/11/17 03:21:01 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -108,6 +108,9 @@ static int kptab[] =
 
 unsigned long pdc_key_modifiers = 0L;
 
+static bool mouse_avail = FALSE, mouse_vis = FALSE;
+static PDCREGS old_ms;
+
 /*man-start**************************************************************
 
   PDC_get_input_fd()	- Get file descriptor used for PDCurses input
@@ -158,7 +161,20 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_bios_key(void)
 {
+	PDCREGS regs;
+
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
+
+	if (mouse_vis)
+	{
+		regs.W.ax = 3;
+		PDCINT(0x33, regs);
+
+		if (regs.W.bx != old_ms.W.bx ||
+		   (regs.W.bx && regs.W.bx == old_ms.W.bx &&
+		   (regs.W.cx != old_ms.W.cx || regs.W.dx != old_ms.W.dx)))
+			return TRUE;
+	}
 
 	return kbhit();
 }
@@ -182,6 +198,81 @@ int PDC_get_bios_key(void)
 	PDCREGS regs;
 	int key, scan, *scanp;
 	static unsigned char keyboard_function = 0xFF;
+
+	pdc_key_modifiers = 0;
+
+	if (mouse_vis)
+	{
+		bool moved;
+
+		regs.W.ax = 3;
+		PDCINT(0x33, regs);
+
+		moved = regs.W.bx && regs.W.bx == old_ms.W.bx && 
+			(regs.W.cx != old_ms.W.cx || regs.W.dx != old_ms.W.dx);
+
+		if (regs.W.bx != old_ms.W.bx || moved)
+		{
+			short shift_flags = 0;
+
+			pdc_mouse_status.changes = moved ? 
+				PDC_MOUSE_MOVED : 0;
+
+			pdc_mouse_status.button[0] = (regs.W.bx & 1) ?
+				(moved ? BUTTON_MOVED : BUTTON_PRESSED) 
+				: BUTTON_RELEASED;
+
+			pdc_mouse_status.button[1] = (regs.W.bx & 4) ?
+				(moved ? BUTTON_MOVED : BUTTON_PRESSED) 
+				: BUTTON_RELEASED;
+
+			pdc_mouse_status.button[2] = (regs.W.bx & 2) ?
+				(moved ? BUTTON_MOVED : BUTTON_PRESSED) 
+				: BUTTON_RELEASED;
+
+			/* moves always flag the button as changed */
+
+			if (((regs.W.bx & 1) ^ (old_ms.W.bx & 1)) || moved)
+				pdc_mouse_status.changes |= 1;
+
+			if (((regs.W.bx & 4) ^ (old_ms.W.bx & 4)) || moved)
+				pdc_mouse_status.changes |= 2;
+
+			if (((regs.W.bx & 2) ^ (old_ms.W.bx & 2)) || moved)
+				pdc_mouse_status.changes |= 4;
+
+			pdc_mouse_status.x = regs.W.cx >> 3;
+			pdc_mouse_status.y = regs.W.dx >> 3;
+
+			old_ms = regs;
+
+			/* get shift status for all keyboards */
+
+			regs.h.ah = 0x02;             
+			PDCINT(0x16, regs);
+
+			if (regs.h.al & 0x03)
+				shift_flags |= BUTTON_SHIFT;
+
+			if (regs.h.al & 0x04)
+				shift_flags |= BUTTON_CONTROL;
+
+			if (regs.h.al & 0x8)
+				shift_flags |= BUTTON_ALT;
+
+			if (pdc_mouse_status.changes & 1)
+				pdc_mouse_status.button[0] |= shift_flags;
+
+			if (pdc_mouse_status.changes & 2)
+				pdc_mouse_status.button[1] |= shift_flags;
+
+			if (pdc_mouse_status.changes & 4)
+				pdc_mouse_status.button[2] |= shift_flags;
+
+			SP->key_code = TRUE;
+			return KEY_MOUSE;
+		}
+	}
 
 	if (keyboard_function == 0xFF)
 	{
@@ -207,8 +298,6 @@ int PDC_get_bios_key(void)
 	key = regs.h.al;
 	scan = regs.h.ah;
 
-	pdc_key_modifiers = 0;
-
 	if (SP->save_key_modifiers)
 	{
 		/* get shift status for all keyboards */
@@ -218,10 +307,13 @@ int PDC_get_bios_key(void)
 
 		if (regs.h.al & 0x03)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+
 		if (regs.h.al & 0x04)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+
 		if (regs.h.al & 0x08)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+
 		if (regs.h.al & 0x20)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 	}
@@ -391,12 +483,46 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
-	unsigned long old_mbe = SP->_trap_mbe;
-	SP->_trap_mbe = 0;
-	return old_mbe ? ERR : OK;
+	PDCREGS regs;
+	unsigned long mbe = SP->_trap_mbe;
+
+	if (mbe && !mouse_avail)
+	{
+		regs.W.ax = 0;
+		PDCINT(0x33, regs);
+
+		mouse_avail = !!(regs.W.ax);
+	}
+
+	if (mbe)
+	{
+		if (mouse_avail && !mouse_vis)
+		{
+			memset(&old_ms, 0, sizeof(old_ms));
+
+			regs.W.ax = 1;
+			PDCINT(0x33, regs);
+
+			mouse_vis = TRUE;
+		}
+	}
+	else
+	{
+		if (mouse_avail && mouse_vis)
+		{
+			regs.W.ax = 2;
+			PDCINT(0x33, regs);
+
+			mouse_vis = FALSE;
+		}
+	}
+
+	return (mouse_avail || !mbe) ? OK : ERR;
 }
 
 int PDC_modifiers_set(void)
 {
-	return SP->return_key_modifers ? ERR : OK;
+	bool old_rkm = SP->return_key_modifiers;
+	SP->return_key_modifiers = FALSE;
+	return old_rkm ? ERR : OK;
 }

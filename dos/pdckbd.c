@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.52 2006/11/17 03:21:01 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.53 2006/11/17 03:39:15 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -232,13 +232,16 @@ int PDC_get_bios_key(void)
 
 			/* moves always flag the button as changed */
 
-			if (((regs.W.bx & 1) ^ (old_ms.W.bx & 1)) || moved)
+			if (((regs.W.bx & 1) ^ (old_ms.W.bx & 1)) ||
+			    (pdc_mouse_status.button[0] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 1;
 
-			if (((regs.W.bx & 4) ^ (old_ms.W.bx & 4)) || moved)
+			if (((regs.W.bx & 4) ^ (old_ms.W.bx & 4)) ||
+			    (pdc_mouse_status.button[1] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 2;
 
-			if (((regs.W.bx & 2) ^ (old_ms.W.bx & 2)) || moved)
+			if (((regs.W.bx & 2) ^ (old_ms.W.bx & 2)) ||
+			    (pdc_mouse_status.button[2] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 4;
 
 			pdc_mouse_status.x = regs.W.cx >> 3;

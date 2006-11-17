@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.39 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.40 2006/11/17 15:26:54 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -188,12 +188,15 @@ int wgetnstr(WINDOW *win, char *str, int n)
 			break;
 
 		default:
-			if (chars < n && !SP->key_code && ch < 0x100)
+			if (chars < n)
 			{
-				*p++ = ch;
-				if (oldecho) 
-					waddch(win, ch);
-				chars++;
+				if (!SP->key_code && ch < 0x100)
+				{
+					*p++ = ch;
+					if (oldecho) 
+						waddch(win, ch);
+					chars++;
+				}
 			}
 			else
 				beep();
@@ -382,12 +385,15 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
 			break;
 
 		default:
-			if (chars < n && !SP->key_code)
+			if (chars < n)
 			{
-				*p++ = ch;
-				if (oldecho)
-					waddch(win, ch);
-				chars++;
+				if (!SP->key_code)
+				{
+					*p++ = ch;
+					if (oldecho)
+						waddch(win, ch);
+					chars++;
+				}
 			}
 			else
 				beep();

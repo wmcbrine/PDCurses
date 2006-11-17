@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.34 2006/11/14 14:51:58 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.35 2006/11/17 22:21:50 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -616,6 +616,7 @@ static Bool vertical_cursor = False;
 static const char *defaultTranslations =
 {
 	"<Key>: XCKeyPress() \n" \
+	"<KeyUp>: XCKeyPress() \n" \
 	"<Btn1Down>: Button() \n" \
 	"!Ctrl <Btn2Down>: Button() \n" \
 	"!Shift <Btn2Down>: Button() \n" \
@@ -1239,7 +1240,7 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 #endif
 	int buflen = 40;
 	int count, key, i;
-	KeySym keysym;
+	static KeySym keysym = 0;
 	XComposeStatus compose;
 	static int compose_state = STATE_NORMAL;
 	static int compose_index = 0;
@@ -1252,10 +1253,18 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 
 	XC_LOG(("XCKeyPress() - called\n"));
 
-	/* ignore KeyReleases */
+	/* Handle modifier keys first; ignore other KeyReleases */
 
 	if (event->type == KeyRelease)
+	{
+		if (SP->return_key_modifiers && keysym != compose_key && 
+		    IsModifierKey(keysym))
+		{
+			ModifierKey(keysym);
+		}
+
 		return;
+	}
 
 	buffer[0] = '\0';
 
@@ -1266,14 +1275,6 @@ static void XCKeyPress(Widget w, XEvent *event, String *params,
 	count = XLookupString(&(event->xkey), buffer, buflen, &keysym, 
 		&compose);
 #endif
-	/* Handle modifier keys first */
-
-	if (event->type == KeyPress && keysym != compose_key
-	    && IsModifierKey(keysym) && SP->return_key_modifiers)
-	{
-		ModifierKey(keysym);
-		return;
-	}
 
 	/* translate keysym into curses key code */
 

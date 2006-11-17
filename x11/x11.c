@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.36 2006/11/17 22:51:39 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.37 2006/11/17 23:07:37 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -66,7 +66,6 @@ static void SendKeyToCurses(unsigned long, MOUSE_STATUS *);
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
 static void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
-static void XCursesModifierPress(Widget, XEvent *, String *, Cardinal *);
 static void XCursesPasteSelection(Widget, XButtonEvent *);
 static void RequestorCallbackForGetSelection(Widget, XtPointer, 
 	Atom *, Atom *, XtPointer, unsigned long *, int *);
@@ -597,7 +596,6 @@ static XtActionsRec Actions[] =
 {
 	{"XCursesButton",		(XtActionProc)XCursesButton},
 	{"XCursesKeyPress",		(XtActionProc)XCursesKeyPress},
-	{"XCursesModifierPress",	(XtActionProc)XCursesModifierPress},
 	{"XCursesPasteSelection",	(XtActionProc)XCursesPasteSelection},
 	{"string",			(XtActionProc)XCursesHandleString},
 };
@@ -1203,29 +1201,6 @@ static void ModifierKey(KeySym keysym)
 
 	if (key)
 		SendKeyToCurses((unsigned long)key, NULL);
-}
-
-static void XCursesModifierPress(Widget w, XEvent *event, String *params, 
-			  Cardinal *nparams)
-{
-#ifdef FOREIGN
-	wchar_t buffer[120];
-#else
-	char buffer[120];
-#endif
-	int buflen = 40;
-	KeySym keysym;
-	XComposeStatus compose;
-
-	XC_LOG(("XCursesModifierPress() - called\n"));
-
-	buffer[0] = '\0';
-
-	XLookupString(&(event->xkey), buffer, buflen, &keysym, &compose);
-
-	SP->return_key_modifiers = True;
-
-	ModifierKey(keysym);
 }
 
 static void XCursesKeyPress(Widget w, XEvent *event, String *params,

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.71 2006/11/11 17:49:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.72 2006/11/18 14:04:27 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -318,6 +318,12 @@ int PDC_scr_open(int argc, char **argv)
 
 	pdc_con_out = GetStdHandle(STD_OUTPUT_HANDLE);
 	pdc_con_in = GetStdHandle(STD_INPUT_HANDLE);
+
+	if (GetFileType(pdc_con_in) != FILE_TYPE_CHAR)
+        {
+                fprintf(stderr, "\nRedirection is not supported.\n");
+                exit(1);
+        }
 
 	is_nt = !(GetVersion() & 0x80000000);
 

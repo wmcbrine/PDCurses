@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.83 2006/11/18 13:30:02 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.84 2006/11/18 14:04:27 wmcbrine Exp $");
 
 #define OLD_MOUSE_MOVED		(old_mouse_status.changes & 8)
 #define OLD_BUTTON_STATUS(x)	(old_mouse_status.button[(x) - 1])
@@ -488,9 +488,10 @@ static int _process_mouse_event(void)
 		   from the previous mouse event to determine which 
 		   button was released. */
 
-		else if (last_button_no == 1 && (OLD_BUTTON_STATUS(1) &
-			 BUTTON_PRESSED || OLD_BUTTON_STATUS(1) & 
-			 BUTTON_DOUBLE_CLICKED || OLD_MOUSE_MOVED) &&
+		else if (last_button_no == 1 &&
+			 (OLD_BUTTON_STATUS(1) & BUTTON_PRESSED ||
+			 OLD_BUTTON_STATUS(1) & BUTTON_DOUBLE_CLICKED ||
+			 OLD_MOUSE_MOVED) &&
 			 !(save_ip.Event.MouseEvent.dwButtonState & 
 			 FROM_LEFT_1ST_BUTTON_PRESSED))
 		{
@@ -500,9 +501,10 @@ static int _process_mouse_event(void)
 
 		/* Check for Right-most button - always button 3 */
 
-		else if (last_button_no == 3 && (OLD_BUTTON_STATUS(3) &
-			 BUTTON_PRESSED || OLD_BUTTON_STATUS(3) & 
-			 BUTTON_DOUBLE_CLICKED || OLD_MOUSE_MOVED) &&
+		else if (last_button_no == 3 &&
+			 (OLD_BUTTON_STATUS(3) & BUTTON_PRESSED ||
+			 OLD_BUTTON_STATUS(3) & BUTTON_DOUBLE_CLICKED ||
+			 OLD_MOUSE_MOVED) &&
 			 !(save_ip.Event.MouseEvent.dwButtonState & 
 			 RIGHTMOST_BUTTON_PRESSED))
 		{
@@ -523,9 +525,10 @@ static int _process_mouse_event(void)
 				BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
 		}
 
-		else if (last_button_no == 2 && (OLD_BUTTON_STATUS(2) &
-			 BUTTON_PRESSED || OLD_BUTTON_STATUS(2) & 
-			 BUTTON_DOUBLE_CLICKED || OLD_MOUSE_MOVED) &&
+		else if (last_button_no == 2 &&
+			 (OLD_BUTTON_STATUS(2) & BUTTON_PRESSED ||
+			 OLD_BUTTON_STATUS(2) & BUTTON_DOUBLE_CLICKED ||
+			 OLD_MOUSE_MOVED) &&
 			 !(save_ip.Event.MouseEvent.dwButtonState & 
 			 FROM_LEFT_2ND_BUTTON_PRESSED))
 		{
@@ -899,13 +902,7 @@ static bool _win32_kbhit(void)
 
 	if (key_count > 0)
 		return TRUE;
-#if 0
-	if (GetFileType(pdc_con_in) != FILE_TYPE_CHAR)
-	{
-		fprintf(stderr, "\n\nRedirection not supported\n");
-		exit(1);
-	}
-#endif
+
 	ReadConsoleInput(pdc_con_in, &ip, 1, &read);
 
 	key_count = _get_interesting_event(&ip);

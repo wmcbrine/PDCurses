@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.82 2006/11/18 13:00:26 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.83 2006/11/18 13:30:02 wmcbrine Exp $");
 
 #define OLD_MOUSE_MOVED		(old_mouse_status.changes & 8)
 #define OLD_BUTTON_STATUS(x)	(old_mouse_status.button[(x) - 1])
@@ -52,6 +52,7 @@ static INPUT_RECORD save_ip;
 unsigned long pdc_key_modifiers = 0L;
 
 static int key_count = 0;
+static int save_press = 0;
 
 static bool _win32_kbhit(void);
 
@@ -314,9 +315,9 @@ bool PDC_check_bios_key(void)
 	return _win32_kbhit();
 }
 
-/* _process_key_event returns -1 if the key in save_ip should be ignored 
-   for some reasons. Otherwise the keycode is returned which should be 
-   returned by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
+/* _process_key_event returns -1 if the key in save_ip should be 
+   ignored. Otherwise the keycode is returned which should be returned 
+   by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
 
    CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
@@ -334,11 +335,9 @@ static int _process_key_event(void)
 	int idx;
 	BOOL enhanced;
 
-	pdc_key_modifiers = 0L;
 	SP->key_code = TRUE;
 
-	/* Must calculate the key modifiers so that Alt keys work! Save 
-	   the key modifiers if required. Do this first to allow to 
+	/* Save the key modifiers if required. Do this first to allow to
 	   detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
 
 	if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
@@ -574,6 +573,8 @@ static int _process_mouse_event(void)
 		old_mouse_status = pdc_mouse_status;
 	}
 
+	save_press = 0;		/* suppress any modifier key return */
+
 	SP->key_code = TRUE;
 	return KEY_MOUSE;
 }
@@ -600,6 +601,8 @@ static int _process_mouse_event(void)
 int PDC_get_bios_key(void)
 {
 	PDC_LOG(("PDC_get_bios_key() - called\n"));
+
+	pdc_key_modifiers = 0L;
 
 	while (_win32_kbhit() == FALSE)
 	;
@@ -701,7 +704,6 @@ int PDC_set_ctrl_break(bool setting)
 static int _get_interesting_event(INPUT_RECORD *ip)
 {
 	int numKeys = 0, vk;
-	static int save_press;
 	static unsigned numpadChar = 0;
 
 #ifdef PDCDEBUG

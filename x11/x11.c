@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.40 2006/11/18 10:17:01 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.41 2006/11/18 12:03:01 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -61,7 +61,7 @@ XCursesAppData xc_app_data;
 static void SelectionOff(void);
 static void DisplayCursor(int, int, int, int);
 static void ExitProcess(int, int, char *);
-static void SendKeyToCurses(unsigned long, MOUSE_STATUS *);
+static void SendKeyToCurses(unsigned long, MOUSE_STATUS *, bool);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
@@ -1193,6 +1193,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	static int compose_index = 0;
 	int char_idx = 0;
 	unsigned long modifier = 0;
+	bool key_code = FALSE;
 
 	XC_LOG(("XCursesKeyPress() - called\n"));
 
@@ -1224,7 +1225,8 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			}
 
 			if (key)
-				SendKeyToCurses((unsigned long)key, NULL);
+				SendKeyToCurses((unsigned long)key,
+					NULL, TRUE);
 		}
 
 		return;
@@ -1355,7 +1357,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 		SendKeyToCurses(
 			(unsigned long)compose_keys[compose_index][char_idx],
-			NULL);
+			NULL, FALSE);
 
 		compose_state = STATE_NORMAL;
 		compose_index = 0;
@@ -1406,30 +1408,27 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			   Mod2Mask: 0x10: usually, numlock modifier
 			   ShiftMask: 0x01: shift modifier */
 
-
 			if ((event->xkey.state & ShiftMask) ||
 			    (XCKeys[i].numkeypad &&
 			    (event->xkey.state & Mod2Mask)))
 			{
 				key = XCKeys[i].shifted;
-				break;
 			}
-
-			if (event->xkey.state & ControlMask)
+			else if (event->xkey.state & ControlMask)
 			{
 				key = XCKeys[i].control;
-				break;
 			}
-
-			if (event->xkey.state & Mod1Mask)
+			else if (event->xkey.state & Mod1Mask)
 			{
 				key = XCKeys[i].alt;
-				break;
 			}
 
 			/* To get here, we ignore all other modifiers */
 
-			key = XCKeys[i].normal;
+			else
+				key = XCKeys[i].normal;
+
+			key_code = (key > 0x100);
 			break;
 		}
 	}
@@ -1445,13 +1444,22 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	if (event->xkey.state == Mod1Mask)
 	{
 		if (key >= (int)'A' && key <= (int)'Z')
+		{
 			key = ALT_A + (key - (int)('A'));
+			key_code = TRUE;
+		}
 
 		if (key >= (int)'a' && key <= (int)'z')
+		{
 			key = ALT_A + (key - (int)('a'));
+			key_code = TRUE;
+		}
 
 		if (key >= (int)'0' && key <= (int)'9')
+		{
 			key = ALT_0 + (key - (int)('0'));
+			key_code = TRUE;
+		}
 	}
 
 	/* After all that, send the key back to the application if is 
@@ -1461,7 +1469,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	{
 		key = key | modifier << 24;
 
-		SendKeyToCurses((unsigned long)key, NULL);
+		SendKeyToCurses((unsigned long)key, NULL, key_code);
 	}
 }
 
@@ -1497,14 +1505,16 @@ static void XCursesHandleString(Widget w, XEvent *event, String *params,
 		}
 
 		if (c == '\0')
-			SendKeyToCurses((unsigned long)total, NULL);
+			SendKeyToCurses((unsigned long)total, NULL, 
+				FALSE);
 	}
 	else
 	{
 		ptr = (unsigned char *)*params;
 
 		for (i = 0; i < (int)strlen((char *)ptr); i++)
-			SendKeyToCurses((unsigned long)(ptr[i]), NULL);
+			SendKeyToCurses((unsigned long)(ptr[i]), NULL, 
+				FALSE);
 	}
 }
 
@@ -1537,7 +1547,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 		if (key == 10)		/* new line - convert to ^M */
 			key = 13;
 
-		SendKeyToCurses(key, NULL);
+		SendKeyToCurses(key, NULL, FALSE);
 	}
 }
 
@@ -2039,10 +2049,13 @@ static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data,
 	}
 }
 
-static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
+static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms,
+			    bool key_code)
 {
 	PDC_LOG(("%s:SendKeyToCurses() - called: sending %d\n",
 		XCLOGMSG, key));
+
+	SP->key_code = key_code;
 
 	if (XC_write_socket(xc_key_sock,
 	    (char *)&key, sizeof(unsigned long)) < 0)
@@ -2055,7 +2068,7 @@ static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms)
 		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
 
 		if (XC_write_socket(xc_key_sock,
-		    (char *)&Mouse_status, sizeof(MOUSE_STATUS)) < 0)
+		    (char *)ms, sizeof(MOUSE_STATUS)) < 0)
 		{
 			ExitProcess(1, SIGKILL,
 				"exiting from SendKeyToCurses");
@@ -2138,8 +2151,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 		MOUSE_X_POS = MOUSE_Y_POS = -1;
 
-		SendKeyToCurses((unsigned long)KEY_MOUSE, 
-			&Mouse_status);
+		SendKeyToCurses((unsigned long)KEY_MOUSE, &Mouse_status, 
+			TRUE);
 		return;
 	}
 
@@ -2346,7 +2359,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 	/* Send the KEY_MOUSE to curses program */
 
-	SendKeyToCurses((unsigned long)KEY_MOUSE, &Mouse_status);
+	SendKeyToCurses((unsigned long)KEY_MOUSE, &Mouse_status, TRUE);
 }
 
 static void Scroll_up_down(Widget w, XtPointer client_data,
@@ -2378,7 +2391,7 @@ static void Scroll_up_down(Widget w, XtPointer client_data,
 
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SF, NULL);
+	SendKeyToCurses((unsigned long)KEY_SF, NULL, TRUE);
 }
 
 static void Scroll_left_right(Widget w, XtPointer client_data,
@@ -2410,7 +2423,7 @@ static void Scroll_left_right(Widget w, XtPointer client_data,
 
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SR, NULL);
+	SendKeyToCurses((unsigned long)KEY_SR, NULL, TRUE);
 }
 
 static void Thumb_up_down(Widget w, XtPointer client_data,
@@ -2436,7 +2449,7 @@ static void Thumb_up_down(Widget w, XtPointer client_data,
 
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SF, NULL);
+	SendKeyToCurses((unsigned long)KEY_SF, NULL, TRUE);
 }
 
 static void Thumb_left_right(Widget w, XtPointer client_data,
@@ -2462,7 +2475,7 @@ static void Thumb_left_right(Widget w, XtPointer client_data,
     
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SR, NULL);
+	SendKeyToCurses((unsigned long)KEY_SR, NULL, TRUE);
 }
 
 static void ExitProcess(int rc, int sig, char *msg)
@@ -3343,7 +3356,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 
 		kill(xc_otherpid, SIGWINCH);
 #endif
-		SendKeyToCurses((unsigned long)KEY_RESIZE, NULL);
+		SendKeyToCurses((unsigned long)KEY_RESIZE, NULL, TRUE);
 		break;
 
 	case MapNotify:

@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.51 2006/11/18 10:17:01 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.52 2006/11/18 12:03:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -70,7 +70,7 @@ int PDC_get_bios_key(void)
 	pdc_key_modifiers = (newkey >> 24) & 0xFF;
 	key = (int)(newkey & 0x00FFFFFF);
 
-	if (key == KEY_MOUSE)
+	if (key == KEY_MOUSE && SP->key_code)
 	{
 		if (XC_read_socket(xc_key_sock, (char *)&pdc_mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
@@ -79,8 +79,6 @@ int PDC_get_bios_key(void)
 	}
 
 	PDC_LOG(("%s:PDC_get_bios_key() - key %d returned\n", XCLOGMSG, key));
-
-	SP->key_code = ((unsigned)key >= 256);	/* temporary */
 
 	return key;
 }

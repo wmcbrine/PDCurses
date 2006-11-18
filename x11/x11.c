@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.37 2006/11/17 23:07:37 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.38 2006/11/18 09:31:24 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -426,7 +426,7 @@ static char *bitmap_file = NULL;
 #ifdef HAVE_XPM_H
 static char *pixmap_file = NULL;
 #endif
-static KeySym compose_key = 0;
+static KeySym compose_key = 0, keysym = 0;
 static int compose_mask = 0;
 
 static int state_mask[8] =
@@ -1175,34 +1175,6 @@ static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 	}
 }
 
-static void ModifierKey(KeySym keysym)
-{
-	int key = 0;
-
-	switch (keysym) {
-	case XK_Shift_L:
-		key = KEY_SHIFT_L;
-		break;
-	case XK_Shift_R:
-		key = KEY_SHIFT_R;
-		break;
-	case XK_Control_L:
-		key = KEY_CONTROL_L;
-		break;
-	case XK_Control_R:
-		key = KEY_CONTROL_R;
-		break;
-	case XK_Alt_L:
-		key = KEY_ALT_L;
-		break;
-	case XK_Alt_R:
-		key = KEY_ALT_R;
-	}
-
-	if (key)
-		SendKeyToCurses((unsigned long)key, NULL);
-}
-
 static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			    Cardinal *nparams)
 {
@@ -1216,7 +1188,6 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 #endif
 	int buflen = 40;
 	int count, key, i;
-	static KeySym keysym = 0;
 	XComposeStatus compose;
 	static int compose_state = STATE_NORMAL;
 	static int compose_index = 0;
@@ -1236,7 +1207,30 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		if (SP->return_key_modifiers && keysym != compose_key && 
 		    IsModifierKey(keysym))
 		{
-			ModifierKey(keysym);
+			int key = 0;
+
+			switch (keysym) {
+			case XK_Shift_L:
+				key = KEY_SHIFT_L;
+				break;
+			case XK_Shift_R:
+				key = KEY_SHIFT_R;
+				break;
+			case XK_Control_L:
+				key = KEY_CONTROL_L;
+				break;
+			case XK_Control_R:
+				key = KEY_CONTROL_R;
+				break;
+			case XK_Alt_L:
+				key = KEY_ALT_L;
+				break;
+			case XK_Alt_R:
+				key = KEY_ALT_R;
+			}
+
+			if (key)
+				SendKeyToCurses((unsigned long)key, NULL);
 		}
 
 		return;
@@ -2116,6 +2110,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 	static bool handle_real_release;
 
 	XC_LOG(("XCursesButton() - called\n"));
+
+	keysym = 0;	/* supress any modifier key return */
 
 	save_mouse_status = Mouse_status;
 	button_no = event->xbutton.button;

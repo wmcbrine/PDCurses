@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.38 2006/11/18 09:31:24 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.39 2006/11/18 09:41:55 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -1187,7 +1187,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	char buffer[120];
 #endif
 	int buflen = 40;
-	int count, key, i;
+	int i, count, key = 0;
 	XComposeStatus compose;
 	static int compose_state = STATE_NORMAL;
 	static int compose_index = 0;
@@ -1207,8 +1207,6 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		if (SP->return_key_modifiers && keysym != compose_key && 
 		    IsModifierKey(keysym))
 		{
-			int key = 0;
-
 			switch (keysym) {
 			case XK_Shift_L:
 				key = KEY_SHIFT_L;
@@ -1251,12 +1249,11 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	PDC_LOG(("%s:Key mask: %x\n", XCLOGMSG, event->xkey.state));
 
 #ifdef PDCDEBUG
-	for (key = 0; key < 4; key++)
+	for (i = 0; i < 4; i++)
 		PDC_debug("%s:Keysym %x %d\n", XCLOGMSG,
 			XKeycodeToKeysym(XCURSESDISPLAY, 
-			event->xkey.keycode, key), key);
+			event->xkey.keycode, i), i);
 #endif
-	key = 0;
 
 	/* Check if the key just pressed is the user-specified compose 
 	   key; if it is, set the compose state and exit. */

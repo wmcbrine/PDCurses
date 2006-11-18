@@ -11,9 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.20 2006/10/20 19:39:31 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.21 2006/11/18 12:00:04 wmcbrine Exp $ */
 
 #include <curspriv.h>
+#include <string.h>
 
 #if defined(_MSC_VER) || defined(_QC)
 # define MSC 1

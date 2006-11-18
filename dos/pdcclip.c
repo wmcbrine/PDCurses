@@ -14,9 +14,8 @@
 #include "pdcdos.h"
 
 #include <stdlib.h>
-#include <string.h>
 
-RCSID("$Id: pdcclip.c,v 1.26 2006/11/05 05:37:40 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.27 2006/11/18 12:00:04 wmcbrine Exp $");
 
 /* global clipboard contents, should be NULL if none set */
 

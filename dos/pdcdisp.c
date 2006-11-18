@@ -13,9 +13,7 @@
 
 #include "pdcdos.h"
 
-#include <string.h>
-
-RCSID("$Id: pdcdisp.c,v 1.55 2006/10/18 22:35:11 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.56 2006/11/18 12:00:04 wmcbrine Exp $");
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,

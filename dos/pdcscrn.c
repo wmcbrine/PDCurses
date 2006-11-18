@@ -14,13 +14,12 @@
 #include "pdcdos.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 #ifdef __DJGPP__
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.69 2006/11/11 16:36:07 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.70 2006/11/18 12:00:04 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/

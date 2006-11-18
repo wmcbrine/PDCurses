@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.41 2006/11/18 12:03:01 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.42 2006/11/18 13:26:57 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2120,7 +2120,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 	XC_LOG(("XCursesButton() - called\n"));
 
-	keysym = 0;	/* supress any modifier key return */
+	keysym = 0;	/* suppress any modifier key return */
 
 	save_mouse_status = Mouse_status;
 	button_no = event->xbutton.button;

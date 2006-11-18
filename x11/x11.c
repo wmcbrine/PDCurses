@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.39 2006/11/18 09:41:55 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.40 2006/11/18 10:17:01 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -687,7 +687,7 @@ signal_handler XCursesSetSignal(int signo, signal_handler action)
 # endif
 	sigemptyset(&sigact.sa_mask);
 
-	if (sigaction(signo, &sigact, &osigact) != 0)
+	if (sigaction(signo, &sigact, &osigact))
 		return SIG_ERR;
 
 	return osigact.sa_handler;
@@ -830,7 +830,7 @@ static int DisplayText(const chtype *ch, int row, int col,
 	PDC_LOG(("%s:DisplayText() - called: row: %d col: %d "
 		"num_cols: %d\n", XCLOGMSG, row, col, num_cols));
 
-	if (num_cols == 0)
+	if (!num_cols)
 		return OK;
 
 	old_attr = *ch & A_ATTRIBUTES;
@@ -920,12 +920,12 @@ static void RefreshScrollbar(void)
 		PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
 		PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
 
-		if (total_y != 0)
+		if (total_y)
 		    XawScrollbarSetThumb(scrollVert,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
 
-		if (total_x != 0)
+		if (total_x)
 		    XawScrollbarSetThumb(scrollHoriz,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
 			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
@@ -1118,7 +1118,7 @@ static void RefreshScreen(void)
 	{
 		num_cols = (int)*(Xcurscr + XCURSCR_LENGTH_OFF + row);
 
-		if (num_cols != 0)
+		if (num_cols)
 		{
 			XC_get_line_lock(row);
 
@@ -1146,7 +1146,7 @@ static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 
 	/* ignore all Exposes except last */
 
-	if (event->xexpose.count != 0)
+	if (event->xexpose.count)
 		return;
 
 	if (after_first_curses_request && ReceivedMapNotify)
@@ -1191,11 +1191,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	XComposeStatus compose;
 	static int compose_state = STATE_NORMAL;
 	static int compose_index = 0;
-	int save_visibility = 0;
 	int char_idx = 0;
-	int xpos, ypos;
-	chtype *ch;
-	short fore = 0, back = 0;
 	unsigned long modifier = 0;
 
 	XC_LOG(("XCursesKeyPress() - called\n"));
@@ -1260,10 +1256,13 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 	if (keysym == compose_key)
 	{
+		chtype *ch;
+		int xpos, ypos, save_visibility = SP->visibility;
+		short fore = 0, back = 0;
+
 		/* Change the shape of the cursor to an outline 
 		   rectangle to indicate we are in "compose" status */
 
-		save_visibility = SP->visibility;
 		SP->visibility = 0;
 
 		DisplayCursor(SP->cursrow, SP->curscol, 
@@ -1300,7 +1299,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			break;
 		}
 
-		if (buffer[0] != 0 && count == 1)
+		if (buffer[0] && count == 1)
 			key = (int)buffer[0];
 
 		compose_index = -1;
@@ -1333,7 +1332,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			break;
 		}
 
-		if (buffer[0] != 0 && count == 1)
+		if (buffer[0] && count == 1)
 			key = (int)buffer[0];
 
 		char_idx = -1;
@@ -1396,7 +1395,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			modifier |= PDC_KEY_MODIFIER_ALT;
 	}
 
-	for (i = 0; XCKeys[i].keycode != 0; i++)
+	for (i = 0; XCKeys[i].keycode; i++)
 	{
 		if (XCKeys[i].keycode == keysym)
 		{
@@ -1435,7 +1434,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		}
 	}
 
-	if (key == 0 && buffer[0] != 0 && count == 1)
+	if (!key && buffer[0] && count == 1)
 		key = (int)buffer[0];
 
 	PDC_LOG(("%s:Key: %s pressed - %x Mod: %x\n", XCLOGMSG,
@@ -1657,7 +1656,7 @@ static void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 			num_cols = end_x - start_x + 1;
 			row = start_y;
 		}
-		else if (i == 0)		/* first line */
+		else if (!i)			/* first line */
 		{
 			start_col = start_x;
 			num_cols = COLS - start_x;
@@ -1831,7 +1830,7 @@ static void SelectionSet(void)
 
 	if (length > (int)tmpsel_length)
 	{
-		if (tmpsel_length == 0)
+		if (!tmpsel_length)
 			tmpsel = malloc(newlen * sizeof(chtype));
 		else
 			tmpsel = realloc(tmpsel, newlen * sizeof(chtype));
@@ -1855,7 +1854,7 @@ static void SelectionSet(void)
 			num_cols = end_x - start_x + 1;
 			row = start_y;
 		}
-		else if (i == 0)		/* first line */
+		else if (!i)			/* first line */
 		{
 			start_col = start_x;
 			num_cols = COLS - start_x;
@@ -2118,7 +2117,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 	   in the event. The following code is designed to cater for 
 	   this situation. */
 
-	if (button_no == 0)
+	if (!button_no)
 		button_no = last_button_no;
 
 	last_button_no = button_no;
@@ -2640,7 +2639,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    ExitProcess(2, SIGKILL, "exiting from "
 		"XCursesProcessRequestsFromCurses - select failed");
 
-	if (s == 0)	/* no requests pending - should never happen!*/ 
+	if (!s)		/* no requests pending - should never happen! */ 
 	    return; 
 
 	if (FD_ISSET(xc_display_sock, &xc_readfds)) 
@@ -2780,7 +2779,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 		if (length > (long)tmpsel_length)
 		{
-		    if (tmpsel_length == 0)
+		    if (!tmpsel_length)
 			tmpsel = malloc((length + 1) * sizeof(chtype));
 		    else
 			tmpsel = realloc(tmpsel, (length + 1) * sizeof(chtype));
@@ -2971,7 +2970,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Create a BOX widget in which to draw */
 
-	if (xc_app_data.scrollbarWidth != 0 && sb_started)
+	if (xc_app_data.scrollbarWidth && sb_started)
 	{
 		scrollBox = XtVaCreateManagedWidget(ProgramName, 
 			scrollBoxWidgetClass, topLevel, XtNwidth, 
@@ -3030,7 +3029,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Determine text cursor alignment from resources */
 
-	if (strcmp(xc_app_data.textCursor, "vertical") == 0)
+	if (!strcmp(xc_app_data.textCursor, "vertical"))
 		vertical_cursor = True;
 
 	/* Now have LINES and COLS. Set these in the shared SP so the 

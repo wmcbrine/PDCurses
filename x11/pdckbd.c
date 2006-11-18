@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.50 2006/11/15 16:26:45 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.51 2006/11/18 10:17:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -51,12 +51,9 @@ bool PDC_check_bios_key(void)
 			"PDC_check_bios_key select failed");
 
 	PDC_LOG(("%s:PDC_check_bios_key() - returning %s\n", XCLOGMSG,
-		(s == 0) ? "FALSE" : "TRUE"));
+		s ? "TRUE" : "FALSE"));
 
-	if (s == 0)
-		return FALSE;
-
-	return TRUE;
+	return !!s;
 }
 
 int PDC_get_bios_key(void)

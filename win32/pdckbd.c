@@ -13,14 +13,13 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.81 2006/11/15 19:59:42 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.82 2006/11/18 13:00:26 wmcbrine Exp $");
 
-#define ACTUAL_MOUSE_MOVED	  (actual_mouse_status.changes & 8)
-#define ACTUAL_BUTTON_STATUS(x)   (actual_mouse_status.button[(x) - 1])
+#define OLD_MOUSE_MOVED		(old_mouse_status.changes & 8)
+#define OLD_BUTTON_STATUS(x)	(old_mouse_status.button[(x) - 1])
 
-#define TEMP_BUTTON_STATUS(x)	  (temp_mouse_status.button[(x) - 1])
+#define TEMP_BUTTON_STATUS(x)	(pdc_mouse_status.button[(x) - 1])
 
-#define KEY_STATE TRUE
 #define MS_MOUSE_MOVED 1
 
 /* MingW32 header files are missing the following in some versions
@@ -433,6 +432,151 @@ static int _process_key_event(void)
 	return enhanced ? ext_kptab[idx].normal : kptab[idx].normal;
 }
 
+static int _process_mouse_event(void)
+{
+	static MOUSE_STATUS old_mouse_status;
+	static int last_button_no = 0;
+	int button_no = 0;
+
+	memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
+
+	/* Wheel has been scrolled */
+
+	if (save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED)
+	{
+		pdc_mouse_status.changes =
+			(save_ip.Event.MouseEvent.dwButtonState & 0xFF000000) ?
+			PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+
+		pdc_mouse_status.x = -1;
+		pdc_mouse_status.y = -1;
+	}
+
+	/* button press, release or double click */
+
+	else if (save_ip.Event.MouseEvent.dwEventFlags == 0 ||
+		 save_ip.Event.MouseEvent.dwEventFlags == DOUBLE_CLICK)
+	{
+		/* Check for Left-most button - always button 1 */
+
+		if (save_ip.Event.MouseEvent.dwButtonState &
+		    FROM_LEFT_1ST_BUTTON_PRESSED && 
+		    !(OLD_BUTTON_STATUS(1) & BUTTON_RELEASED))
+		{
+			button_no = 1;
+
+			TEMP_BUTTON_STATUS(button_no) = 
+				save_ip.Event.MouseEvent.dwEventFlags ?
+				BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
+		}
+
+		/* Check for Right-most button - always button 3 */
+
+		else if (save_ip.Event.MouseEvent.dwButtonState & 
+			 RIGHTMOST_BUTTON_PRESSED && 
+			 !(OLD_BUTTON_STATUS(3) & BUTTON_RELEASED))
+		{
+			button_no = 3;
+
+			TEMP_BUTTON_STATUS(button_no) = 
+				save_ip.Event.MouseEvent.dwEventFlags ? 
+				BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
+		}
+
+		/* To get here we have a button release event or another 
+		   button press while a current button is pressed. The 
+		   latter, we throw away. We have to use the information 
+		   from the previous mouse event to determine which 
+		   button was released. */
+
+		else if (last_button_no == 1 && (OLD_BUTTON_STATUS(1) &
+			 BUTTON_PRESSED || OLD_BUTTON_STATUS(1) & 
+			 BUTTON_DOUBLE_CLICKED || OLD_MOUSE_MOVED) &&
+			 !(save_ip.Event.MouseEvent.dwButtonState & 
+			 FROM_LEFT_1ST_BUTTON_PRESSED))
+		{
+			button_no = 1;
+			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+		}
+
+		/* Check for Right-most button - always button 3 */
+
+		else if (last_button_no == 3 && (OLD_BUTTON_STATUS(3) &
+			 BUTTON_PRESSED || OLD_BUTTON_STATUS(3) & 
+			 BUTTON_DOUBLE_CLICKED || OLD_MOUSE_MOVED) &&
+			 !(save_ip.Event.MouseEvent.dwButtonState & 
+			 RIGHTMOST_BUTTON_PRESSED))
+		{
+			button_no = 3;
+			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+		}
+
+		/* Check for Middle button - button 2 only for 3 button 
+		   mice */
+
+		else if (save_ip.Event.MouseEvent.dwButtonState & 
+			 FROM_LEFT_2ND_BUTTON_PRESSED &&
+			 !(OLD_BUTTON_STATUS(2) & BUTTON_RELEASED))
+		{
+			button_no = 2;
+			TEMP_BUTTON_STATUS(button_no) = 
+				save_ip.Event.MouseEvent.dwEventFlags ? 
+				BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
+		}
+
+		else if (last_button_no == 2 && (OLD_BUTTON_STATUS(2) &
+			 BUTTON_PRESSED || OLD_BUTTON_STATUS(2) & 
+			 BUTTON_DOUBLE_CLICKED || OLD_MOUSE_MOVED) &&
+			 !(save_ip.Event.MouseEvent.dwButtonState & 
+			 FROM_LEFT_2ND_BUTTON_PRESSED))
+		{
+			button_no = 2;
+			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+		}
+	}
+	else	/* button motion event */
+	{
+		pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+		button_no = last_button_no;
+	}
+
+	if (button_no)
+	{
+		/* We have a button action, rather than a mouse movement 
+		   or wheel action */
+
+		pdc_mouse_status.x =
+			save_ip.Event.MouseEvent.dwMousePosition.X;
+		pdc_mouse_status.y =
+			save_ip.Event.MouseEvent.dwMousePosition.Y;
+
+		pdc_mouse_status.changes |= 1 << (button_no - 1);
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState & 
+		    SHIFT_PRESSED)
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState &
+		    (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
+
+		if (save_ip.Event.MouseEvent.dwControlKeyState &
+		    (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
+			TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
+
+		last_button_no = button_no;
+
+		/* We now have the current mouse status information
+		   for the last Mouse event.  We need to save this in
+		   old_mouse_status so we can use that when comparing
+		   against the next mouse event. */
+
+		old_mouse_status = pdc_mouse_status;
+	}
+
+	SP->key_code = TRUE;
+	return KEY_MOUSE;
+}
 
 /*man-start**************************************************************
 
@@ -455,218 +599,23 @@ static int _process_key_event(void)
 
 int PDC_get_bios_key(void)
 {
-	MOUSE_STATUS temp_mouse_status;
-	static int last_button_no = 0;
-	static MOUSE_STATUS actual_mouse_status;
-	int button_no = 0;
-	bool trap_mouse = FALSE;
-	int retval;
-
 	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
-	while (1)
+	while (_win32_kbhit() == FALSE)
+	;
+
+	key_count--;
+
+	switch (save_ip.EventType)
 	{
-	    while (_win32_kbhit() == FALSE)
-	    ;
+	case KEY_EVENT:
+		return _process_key_event();
 
-	    key_count--;
-
-	    switch (save_ip.EventType)
-	    {
-	    case KEY_EVENT:
-		retval = _process_key_event();
-		if (retval == -1)	/* ignore key? */
-			continue;
-
-		return retval;
-
-	    case MOUSE_EVENT:
-		memset(&temp_mouse_status, 0, sizeof(MOUSE_STATUS));
-
-		/* Wheel has been scrolled */
-
-		if (save_ip.Event.MouseEvent.dwEventFlags == MOUSE_WHEELED)
-		{
-		    temp_mouse_status.changes =
-			(save_ip.Event.MouseEvent.dwButtonState & 0xFF000000) ?
-			PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
-		}
-
-		/* button press, release or double click */
-
-		else if (save_ip.Event.MouseEvent.dwEventFlags == 0 ||
-			 save_ip.Event.MouseEvent.dwEventFlags == DOUBLE_CLICK)
-		{
-		    /* Check for Left-most button - always button 1 */
-
-		    if (save_ip.Event.MouseEvent.dwButtonState &
-			FROM_LEFT_1ST_BUTTON_PRESSED && 
-			!(ACTUAL_BUTTON_STATUS(1) & BUTTON_RELEASED))
-		    {
-			button_no = 1;
-
-			TEMP_BUTTON_STATUS(button_no) = 
-			    save_ip.Event.MouseEvent.dwEventFlags ?
-			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
-
-			trap_mouse = TRUE;
-			break;
-		    }
-
-		    /* Check for Right-most button - always button 3 */
-
-		    if (save_ip.Event.MouseEvent.dwButtonState & 
-			RIGHTMOST_BUTTON_PRESSED && 
-			!(ACTUAL_BUTTON_STATUS(3) & BUTTON_RELEASED))
-		    {
-			button_no = 3;
-
-			TEMP_BUTTON_STATUS(button_no) = 
-			    save_ip.Event.MouseEvent.dwEventFlags ? 
-			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
-
-			trap_mouse = TRUE;
-			break;
-		    }
-
-		    /* To get here we have a button release event or 
-		       another button press while a current button is 
-		       pressed. The latter, we throw away. We have to 
-		       use the information from the previous mouse event 
-		       to determine which button was released. */
-
-		    if (last_button_no == 1 && (ACTUAL_BUTTON_STATUS(1) &
-			BUTTON_PRESSED || ACTUAL_BUTTON_STATUS(1) & 
-			BUTTON_DOUBLE_CLICKED || ACTUAL_MOUSE_MOVED) &&
-			!(save_ip.Event.MouseEvent.dwButtonState & 
-			FROM_LEFT_1ST_BUTTON_PRESSED))
-		    {
-			button_no = 1;
-			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-
-			trap_mouse = TRUE;
-			break;
-		    }
-
-		    /* Check for Right-most button - always button 3 */
-
-		    if (last_button_no == 3 && (ACTUAL_BUTTON_STATUS(3) &
-			BUTTON_PRESSED || ACTUAL_BUTTON_STATUS(3) & 
-			BUTTON_DOUBLE_CLICKED || ACTUAL_MOUSE_MOVED) &&
-			!(save_ip.Event.MouseEvent.dwButtonState & 
-			RIGHTMOST_BUTTON_PRESSED))
-		    {
-			button_no = 3;
-			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-
-			trap_mouse = TRUE;
-			break;
-		    }
-
-		    /* Check for Middle button - button 2 only for 3 
-		       button mice */
-
-		    if (save_ip.Event.MouseEvent.dwButtonState & 
-			FROM_LEFT_2ND_BUTTON_PRESSED &&
-			!(ACTUAL_BUTTON_STATUS(2) & BUTTON_RELEASED))
-		    {
-			button_no = 2;
-			TEMP_BUTTON_STATUS(button_no) = 
-			    save_ip.Event.MouseEvent.dwEventFlags ? 
-			    BUTTON_DOUBLE_CLICKED : BUTTON_PRESSED;
-
-			trap_mouse = TRUE;
-			break;
-		    }
-
-		    if (last_button_no == 2 && (ACTUAL_BUTTON_STATUS(2) &
-			BUTTON_PRESSED || ACTUAL_BUTTON_STATUS(2) & 
-			BUTTON_DOUBLE_CLICKED || ACTUAL_MOUSE_MOVED) &&
-			!(save_ip.Event.MouseEvent.dwButtonState & 
-			FROM_LEFT_2ND_BUTTON_PRESSED))
-		    {
-			button_no = 2;
-			TEMP_BUTTON_STATUS(button_no) = BUTTON_RELEASED;
-
-			trap_mouse = TRUE;
-			break;
-		    }
-
-		    /* If we get here, then we don't know how to handle 
-		       the event, so dispose of it */
-
-		    break;
-		}
-		else	/* button motion event */
-		{
-		    temp_mouse_status.changes |= PDC_MOUSE_MOVED;
-		    button_no = last_button_no;
-
-		    trap_mouse = TRUE;
-		    break;
-		}
-
-		break;
-
-	    case WINDOW_BUFFER_SIZE_EVENT:
-		return -1;
-	    }
-
-	    if (button_no != 0)
-	    {
-		/* We have a button action, rather than a mouse movement 
-		   or wheel action */
-
-		temp_mouse_status.x =
-			save_ip.Event.MouseEvent.dwMousePosition.X;
-		temp_mouse_status.y =
-			save_ip.Event.MouseEvent.dwMousePosition.Y;
-
-		temp_mouse_status.changes |= 1 << (button_no - 1);
-
-		if (save_ip.Event.MouseEvent.dwControlKeyState &
-		    SHIFT_PRESSED)
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
-
-		if (save_ip.Event.MouseEvent.dwControlKeyState &
-		    (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
-
-		if (save_ip.Event.MouseEvent.dwControlKeyState &
-		    (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
-			TEMP_BUTTON_STATUS(button_no) |= BUTTON_ALT;
-
-		last_button_no = button_no;
-
-		/* We now have the current mouse status information
-		   for the last Mouse event.  We need to save this in
-		   actual_mouse_status so we can use that when comparing
-		   against the next mouse event. We also need to
-		   determine if we need to set pdc_mouse_status
-		   based on the settings in SP->_trap_mbe. */
-
-		actual_mouse_status = temp_mouse_status;
-
-		if (trap_mouse)
-			 break;
-	    }
-
-	    if (temp_mouse_status.changes &
-		(PDC_MOUSE_WHEEL_DOWN|PDC_MOUSE_WHEEL_UP))
-	    {
-		temp_mouse_status.x = -1;
-		temp_mouse_status.y = -1;
-		break;
-	    }
+	case MOUSE_EVENT:
+		return _process_mouse_event();
 	}
 
-	/* To get here we have a mouse event that has been trapped by 
-	   the user. Save it in the pdc_mouse_status structure. */
-
-	pdc_mouse_status = temp_mouse_status;
-	SP->key_code = TRUE;
-
-	return KEY_MOUSE;
+	return -1;
 }
 
 /*man-start**************************************************************

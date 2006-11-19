@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.56 2006/11/17 14:47:18 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.57 2006/11/19 23:13:04 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -208,8 +208,8 @@ bool PDC_check_bios_key(void)
 
 		mouse_moved = ms_regs.W.bx &&
 			ms_regs.W.bx == old_ms.W.bx &&
-			(ms_regs.W.cx != old_ms.W.cx ||
-			ms_regs.W.dx != old_ms.W.dx);
+			(((ms_regs.W.cx ^ old_ms.W.cx) >> 3) ||
+			 ((ms_regs.W.dx ^ old_ms.W.dx) >> 3));
 
 		if (ms_regs.W.bx != old_ms.W.bx || mouse_moved)
 			return TRUE;

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.84 2006/11/18 14:04:27 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.85 2006/11/19 14:47:43 wmcbrine Exp $");
 
 #define OLD_MOUSE_MOVED		(old_mouse_status.changes & 8)
 #define OLD_BUTTON_STATUS(x)	(old_mouse_status.button[(x) - 1])
@@ -53,8 +53,6 @@ unsigned long pdc_key_modifiers = 0L;
 
 static int key_count = 0;
 static int save_press = 0;
-
-static bool _win32_kbhit(void);
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*  
@@ -283,6 +281,8 @@ void PDC_set_keyboard_binary(bool on)
         PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 }
 
+static int _get_interesting_key(INPUT_RECORD *);
+
 /*man-start**************************************************************
 
   PDC_check_bios_key()  - Check BIOS key data area for input
@@ -303,16 +303,39 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_bios_key(void)
 {
-	DWORD events;
+	DWORD count;
+
+	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 	if (key_count > 0)
 		return TRUE;
 
-	GetNumberOfConsoleInputEvents(pdc_con_in, &events);
-	if (!events)
-		return FALSE;
+	GetNumberOfConsoleInputEvents(pdc_con_in, &count);
 
-	return _win32_kbhit();
+	if (count)
+	{
+		INPUT_RECORD ip;
+
+		ReadConsoleInput(pdc_con_in, &ip, 1, &count);
+
+		if (ip.EventType == MOUSE_EVENT)
+			key_count = 1;
+		else if (ip.EventType == KEY_EVENT)
+			key_count = _get_interesting_key(&ip);
+		else
+			key_count = 0;
+
+		if (key_count)
+		{
+			/* To get here a recognised event has occurred; 
+			   save it and return TRUE */
+
+			save_ip = ip;
+			return TRUE;
+		}
+	}
+
+	return FALSE;
 }
 
 /* _process_key_event returns -1 if the key in save_ip should be 
@@ -436,6 +459,10 @@ static int _process_mouse_event(void)
 	static MOUSE_STATUS old_mouse_status;
 	static int last_button_no = 0;
 	int button_no = 0;
+
+	if (save_ip.Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED &&
+	    save_ip.Event.MouseEvent.dwButtonState == 0)
+		return -1;
 
 	memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
 
@@ -606,10 +633,6 @@ int PDC_get_bios_key(void)
 	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
 	pdc_key_modifiers = 0L;
-
-	while (_win32_kbhit() == FALSE)
-	;
-
 	key_count--;
 
 	switch (save_ip.EventType)
@@ -675,7 +698,7 @@ int PDC_set_ctrl_break(bool setting)
 	return OK;
 }
 
-/* _get_interesting_event returns 0 if *ip doesn't contain an event which
+/* _get_interesting_key returns 0 if *ip doesn't contain an event which
    should be passed back to the user. This function filters "useless"
    events.
 
@@ -704,20 +727,12 @@ int PDC_set_ctrl_break(bool setting)
    Mouse:    MOUSE_MOVE without a pressed mouse key are ignored.
 */
 
-static int _get_interesting_event(INPUT_RECORD *ip)
+static int _get_interesting_key(INPUT_RECORD *ip)
 {
-	int numKeys = 0, vk;
-	static unsigned numpadChar = 0;
+	int num_keys = 0, vk;
+	static unsigned numpad_char = 0;
 
-#ifdef PDCDEBUG
-	char *ptr = "";
-
-	PDC_LOG(("_get_interesting_event() - called\n"));
-
-# define PTR(x) ptr = x
-#else
-# define PTR(x)
-#endif
+	PDC_LOG(("_get_interesting_key() - called\n"));
 
 	switch(ip->EventType)
 	{
@@ -728,9 +743,7 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 
 	    if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
 	    {
-		PTR("KEY MODIFIERS");
-
-		numpadChar = 0;
+		numpad_char = 0;
 		save_press = 0;
 		break;
 	    }
@@ -743,8 +756,6 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 		if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
 		    && vk == save_press && SP->return_key_modifiers)
 		{
-		    PTR("KEYUP WANTED");
-
 		    /* Fall through and return this key. Still have to 
 		       check the dead key condition. */
 
@@ -752,12 +763,12 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 
 		    ip->Event.KeyEvent.wRepeatCount = 1;
 		}
-		else if (vk == VK_MENU && numpadChar)
+		else if (vk == VK_MENU && numpad_char)
 		{
 #ifdef UNICODE
-		    ip->Event.KeyEvent.uChar.UnicodeChar = numpadChar;
+		    ip->Event.KeyEvent.uChar.UnicodeChar = numpad_char;
 #else
-		    ip->Event.KeyEvent.uChar.AsciiChar = numpadChar;
+		    ip->Event.KeyEvent.uChar.AsciiChar = numpad_char;
 #endif
 		    ip->Event.KeyEvent.dwControlKeyState &= 
 			~LEFT_ALT_PRESSED;
@@ -768,11 +779,10 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 
 		    ip->Event.KeyEvent.wVirtualKeyCode = VK_NUMPAD0;
 
-		    numpadChar = 0;
+		    numpad_char = 0;
 		}
 		else
 		{
-		    PTR("KEYUP IGNORED");
 		    break;		/* throw away other KeyUp events */
 		}
 	    }
@@ -783,9 +793,8 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 		    /* These keys are returned on keyup only. */
 
 		    save_press = (SP->return_key_modifiers) ? vk : 0;
-		    numpadChar = 0;
+		    numpad_char = 0;
 
-		    PTR("KEYDOWN SAVED");
 		    break;	/* throw away key press */
 		}
 
@@ -831,17 +840,15 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 		if ((vk >= VK_NUMPAD0 && vk <= VK_NUMPAD9) &&
                     ip->Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
 		{
-		    PTR("NUMPAD ALTERNATE INPUT");
-
-		    numpadChar *= 10;
-		    numpadChar += vk - VK_NUMPAD0;
+		    numpad_char *= 10;
+		    numpad_char += vk - VK_NUMPAD0;
 		    break;
 		}
 		else
-		    numpadChar = 0;
+		    numpad_char = 0;
 
 #else /* NUMPAD_CHARS */
-		numpadChar = 0;
+		numpad_char = 0;
 #endif
 	    }
 
@@ -858,64 +865,16 @@ static int _get_interesting_event(INPUT_RECORD *ip)
 		(MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode, 2) &
 		0x80000000))
 	    {
-		PTR("DIACRITIC IGNORED");
 		break;		/* Diacritic characters, ignore them */
 	    }
 
-	    PTR("KEY WANTED");
-
-	    numKeys = ip->Event.KeyEvent.wRepeatCount;
-	    break;
-
-	case MOUSE_EVENT:
-	    if (ip->Event.MouseEvent.dwEventFlags == MS_MOUSE_MOVED
-		&& ip->Event.MouseEvent.dwButtonState == 0)
-	    {
-		PTR("MOUSE MOVE IGNORED");
-		break;		/* throw away plain MOUSE_MOVE events */
-	    }
-
-	    PTR("MOUSE MOVE WANTED");
-	    numKeys = 1;
-	    break;
-
-	default:
-	    PTR("UNKNOWN");
-	    break;
+	    num_keys = ip->Event.KeyEvent.wRepeatCount;
 	}
 
-#undef PTR
+	PDC_LOG(("_get_interesting_key() - returning: num_keys %d "
+		"type %d\n", num_keys, ip->EventType));
 
-	PDC_LOG(("_get_interesting_event() - returning: numKeys %d "
-		"type %d: %s\n", numKeys, ip->EventType, ptr));
-
-	return numKeys;
-}
-
-static bool _win32_kbhit(void)
-{
-	INPUT_RECORD ip;
-	DWORD read;
-	int rc = FALSE;
-
-	PDC_LOG(("_win32_kbhit() - called: key_count %d\n", key_count));
-
-	if (key_count > 0)
-		return TRUE;
-
-	ReadConsoleInput(pdc_con_in, &ip, 1, &read);
-
-	key_count = _get_interesting_event(&ip);
-	if (key_count)
-	{
-		/* To get here a recognised event has occurred; save it 
-		   and return TRUE */
-
-		save_ip = ip;
-		rc = TRUE;
-	}
-
-	return rc;
+	return num_keys;
 }
 
 /*man-start**************************************************************

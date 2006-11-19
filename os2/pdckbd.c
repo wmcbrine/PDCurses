@@ -34,7 +34,7 @@ static USHORT old_shift = 0;
 static bool key_pressed = FALSE;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.61 2006/11/17 15:47:11 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.62 2006/11/19 22:59:10 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -303,11 +303,11 @@ static int _process_mouse_events(int eventnum)
 
 	for (i = 0; i < 3; i++)
 	{
-	    if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
-		(old_mouse_status.button[i] == BUTTON_RELEASED))
-	    {
-		pdc_mouse_status.button[i] = BUTTON_PRESSED;
-	    }
+		if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
+		    (old_mouse_status.button[i] == BUTTON_RELEASED))
+		{
+			pdc_mouse_status.button[i] = BUTTON_PRESSED;
+		}
 	}
 
 	/* Check for a click -- a PRESS followed immediately by a 
@@ -343,17 +343,23 @@ static int _process_mouse_events(int eventnum)
 		(((old_mouse_status.button[2] != pdc_mouse_status.button[2])
 		|| (pdc_mouse_status.button[2] == BUTTON_MOVED)) ? 4 : 0);
 
-	for (i = 0; i < 3; i++)
-	{
-	    if (pdc_mouse_status.button[i] == BUTTON_MOVED)
-	    {
-		pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
-		break;
-	    }
-	}
-
 	pdc_mouse_status.x = event.col;
 	pdc_mouse_status.y = event.row;
+
+	for (i = 0; i < 3; i++)
+	{
+		if (pdc_mouse_status.button[i] == BUTTON_MOVED)
+		{
+			/* Discard non-moved "moves" */
+
+			if (pdc_mouse_status.x == old_mouse_status.x &&
+			    pdc_mouse_status.y == old_mouse_status.y)
+				return -1;
+
+			pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+			break;
+		}
+	}
 
 	old_mouse_status = pdc_mouse_status;
 

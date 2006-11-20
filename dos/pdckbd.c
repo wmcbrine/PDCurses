@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.57 2006/11/19 23:13:04 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.58 2006/11/20 02:37:33 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -206,12 +206,12 @@ bool PDC_check_bios_key(void)
 		ms_regs.W.ax = 3;
 		PDCINT(0x33, ms_regs);
 
-		mouse_moved = ms_regs.W.bx &&
-			ms_regs.W.bx == old_ms.W.bx &&
+		mouse_moved = ms_regs.h.bl &&
+			ms_regs.h.bl == old_ms.h.bl &&
 			(((ms_regs.W.cx ^ old_ms.W.cx) >> 3) ||
 			 ((ms_regs.W.dx ^ old_ms.W.dx) >> 3));
 
-		if (ms_regs.W.bx != old_ms.W.bx || mouse_moved)
+		if (ms_regs.h.bl != old_ms.h.bl || mouse_moved || ms_regs.h.bh)
 			return TRUE;
 	}
 
@@ -251,36 +251,55 @@ int PDC_get_bios_key(void)
 
 	if (mouse_vis)
 	{
-		if (ms_regs.W.bx != old_ms.W.bx || mouse_moved)
+		/* Scroll wheel support for CuteMouse */
+
+		if (ms_regs.h.bh)
+		{
+			memset(&pdc_mouse_status, 0, sizeof(pdc_mouse_status));
+
+			pdc_mouse_status.changes = ms_regs.h.bh & 0x80 ?
+				PDC_MOUSE_WHEEL_UP : PDC_MOUSE_WHEEL_DOWN;
+
+			pdc_mouse_status.x = -1;
+			pdc_mouse_status.y = -1;
+
+			key_pressed = TRUE;
+			old_shift = shift_status;
+
+			SP->key_code = TRUE;
+			return KEY_MOUSE;
+		}
+
+		if (ms_regs.h.bl != old_ms.h.bl || mouse_moved)
 		{
 			short shift_flags = 0;
 
 			pdc_mouse_status.changes = mouse_moved ? 
 				PDC_MOUSE_MOVED : 0;
 
-			pdc_mouse_status.button[0] = (ms_regs.W.bx & 1) ?
+			pdc_mouse_status.button[0] = (ms_regs.h.bl & 1) ?
 				(mouse_moved ? BUTTON_MOVED : BUTTON_PRESSED)
 				: BUTTON_RELEASED;
 
-			pdc_mouse_status.button[1] = (ms_regs.W.bx & 4) ?
+			pdc_mouse_status.button[1] = (ms_regs.h.bl & 4) ?
 				(mouse_moved ? BUTTON_MOVED : BUTTON_PRESSED)
 				: BUTTON_RELEASED;
 
-			pdc_mouse_status.button[2] = (ms_regs.W.bx & 2) ?
+			pdc_mouse_status.button[2] = (ms_regs.h.bl & 2) ?
 				(mouse_moved ? BUTTON_MOVED : BUTTON_PRESSED)
 				: BUTTON_RELEASED;
 
 			/* moves always flag the button as changed */
 
-			if (((ms_regs.W.bx & 1) ^ (old_ms.W.bx & 1)) ||
+			if (((ms_regs.h.bl & 1) ^ (old_ms.h.bl & 1)) ||
 			    (pdc_mouse_status.button[0] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 1;
 
-			if (((ms_regs.W.bx & 4) ^ (old_ms.W.bx & 4)) ||
+			if (((ms_regs.h.bl & 4) ^ (old_ms.h.bl & 4)) ||
 			    (pdc_mouse_status.button[1] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 2;
 
-			if (((ms_regs.W.bx & 2) ^ (old_ms.W.bx & 2)) ||
+			if (((ms_regs.h.bl & 2) ^ (old_ms.h.bl & 2)) ||
 			    (pdc_mouse_status.button[2] == BUTTON_MOVED))
 				pdc_mouse_status.changes |= 4;
 
@@ -316,6 +335,8 @@ int PDC_get_bios_key(void)
 			return KEY_MOUSE;
 		}
 	}
+
+	/* Return modifiers as keys? */
 
 	if (old_shift && !shift_status)
 	{

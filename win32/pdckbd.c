@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.86 2006/11/20 04:03:40 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.87 2006/11/20 13:35:35 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -459,43 +459,47 @@ static int _process_mouse_event(void)
 	pdc_mouse_status.button[2] = (EV.dwButtonState & 2) ? action : 0;
 	pdc_mouse_status.button[1] = (EV.dwButtonState & 4) ? action : 0;
 
-	/* Check for a click -- a PRESS followed immediately by a 
-	   release */
-
-	GetNumberOfConsoleInputEvents(pdc_con_in, &i);
-
-	if (i)
+	if (action == BUTTON_PRESSED && EV.dwButtonState & 7)
 	{
-		INPUT_RECORD ip;
-		bool have_click = FALSE;
+		/* Check for a click -- a PRESS followed immediately by 
+		   a release */
 
-		PeekConsoleInput(pdc_con_in, &ip, 1, &i);
+		napms(100);
+		GetNumberOfConsoleInputEvents(pdc_con_in, &i);
 
-		if (pdc_mouse_status.button[0] == BUTTON_PRESSED && 
-		    !(ip.Event.MouseEvent.dwButtonState & 1))
+		if (i)
 		{
-			pdc_mouse_status.button[0] = BUTTON_CLICKED;
-			have_click = TRUE;
+			INPUT_RECORD ip;
+			bool have_click = FALSE;
+
+			PeekConsoleInput(pdc_con_in, &ip, 1, &i);
+
+			if (pdc_mouse_status.button[0] == BUTTON_PRESSED &&
+			    !(ip.Event.MouseEvent.dwButtonState & 1))
+			{
+				pdc_mouse_status.button[0] = BUTTON_CLICKED;
+				have_click = TRUE;
+			}
+
+			if (pdc_mouse_status.button[2] == BUTTON_PRESSED &&
+			    !(ip.Event.MouseEvent.dwButtonState & 2))
+			{
+				pdc_mouse_status.button[2] = BUTTON_CLICKED;
+				have_click = TRUE;
+			}
+
+			if (pdc_mouse_status.button[1] == BUTTON_PRESSED &&
+			    !(ip.Event.MouseEvent.dwButtonState & 4))
+			{
+				pdc_mouse_status.button[1] = BUTTON_CLICKED;
+				have_click = TRUE;
+			}
+
+			/* If a click was found, throw out the event */
+
+			if (have_click)
+				ReadConsoleInput(pdc_con_in, &ip, 1, &i);
 		}
-
-		if (pdc_mouse_status.button[2] == BUTTON_PRESSED && 
-		    !(ip.Event.MouseEvent.dwButtonState & 2))
-		{
-			pdc_mouse_status.button[2] = BUTTON_CLICKED;
-			have_click = TRUE;
-		}
-
-		if (pdc_mouse_status.button[1] == BUTTON_PRESSED && 
-		    !(ip.Event.MouseEvent.dwButtonState & 4))
-		{
-			pdc_mouse_status.button[1] = BUTTON_CLICKED;
-			have_click = TRUE;
-		}
-
-		/* If a click was found, throw out the event */
-
-		if (have_click)
-			ReadConsoleInput(pdc_con_in, &ip, 1, &i);
 	}
 
 	/* Motion events always flag the button as changed */

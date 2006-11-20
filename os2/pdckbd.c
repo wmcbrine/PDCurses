@@ -32,9 +32,10 @@ static HMOU mouse_handle = 0;
 static MOUSE_STATUS old_mouse_status;
 static USHORT old_shift = 0;
 static bool key_pressed = FALSE;
+static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.62 2006/11/19 22:59:10 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.63 2006/11/20 15:18:30 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -253,7 +254,9 @@ bool PDC_check_bios_key(void)
 		MOUQUEINFO queue;
 
 		MouGetNumQueEl(&queue, mouse_handle);
-		if (queue.cEvents)
+		mouse_events = queue.cEvents;
+
+		if (mouse_events)
 			return TRUE;
 	}
 
@@ -277,13 +280,14 @@ bool PDC_check_bios_key(void)
 
 #ifndef EMXVIDEO
 
-static int _process_mouse_events(int eventnum)
+static int _process_mouse_events()
 {
 	MOUEVENTINFO event;
 	USHORT i = 1;
 	short shift_flags = 0;
 
 	MouReadEventQue(&event, &i, mouse_handle);
+	mouse_events--;
 
 	pdc_mouse_status.button[0] =
 		((event.fs & 2) ? BUTTON_MOVED : 0) |
@@ -310,25 +314,40 @@ static int _process_mouse_events(int eventnum)
 		}
 	}
 
-	/* Check for a click -- a PRESS followed immediately by a 
-	   release */
-
-	if (eventnum > 1)
+	if (pdc_mouse_status.button[0] == BUTTON_PRESSED ||
+	    pdc_mouse_status.button[1] == BUTTON_PRESSED ||
+	    pdc_mouse_status.button[2] == BUTTON_PRESSED)
 	{
-		i = 1;
-		MouReadEventQue(&event, &i, mouse_handle);
+		/* Check for a click -- a PRESS followed immediately by 
+		   a release */
 
-		if (pdc_mouse_status.button[0] == BUTTON_PRESSED && 
-		    !(event.fs & 6))
-			pdc_mouse_status.button[0] = BUTTON_CLICKED;
+		if (!mouse_events)
+		{
+			MOUQUEINFO queue;
 
-		if (pdc_mouse_status.button[1] == BUTTON_PRESSED && 
-		    !(event.fs & 96))
-			pdc_mouse_status.button[1] = BUTTON_CLICKED;
+			napms(100);
 
-		if (pdc_mouse_status.button[2] == BUTTON_PRESSED && 
-		    !(event.fs & 24))
-			pdc_mouse_status.button[2] = BUTTON_CLICKED;
+			MouGetNumQueEl(&queue, mouse_handle);
+			mouse_events = queue.cEvents;
+		}
+
+		if (mouse_events)
+		{
+			i = 1;
+			MouReadEventQue(&event, &i, mouse_handle);
+
+			if (pdc_mouse_status.button[0] == BUTTON_PRESSED &&
+			    !(event.fs & 6))
+				pdc_mouse_status.button[0] = BUTTON_CLICKED;
+
+			if (pdc_mouse_status.button[1] == BUTTON_PRESSED &&
+			    !(event.fs & 96))
+				pdc_mouse_status.button[1] = BUTTON_CLICKED;
+
+			if (pdc_mouse_status.button[2] == BUTTON_PRESSED &&
+			    !(event.fs & 24))
+				pdc_mouse_status.button[2] = BUTTON_CLICKED;
+		}
 	}
 
 	/* Motion events always flag the button as changed */
@@ -441,14 +460,8 @@ int PDC_get_bios_key(void)
 #else
 	pdc_key_modifiers = 0L;
 
-	if (mouse_handle)
-	{
-		MOUQUEINFO queue;
-
-		MouGetNumQueEl(&queue, mouse_handle);
-		if (queue.cEvents)
-			return _process_mouse_events(queue.cEvents);
-	}
+	if (mouse_handle && mouse_events)
+		return _process_mouse_events();
 
 	if (old_shift && !kbdinfo.fsState)
 	{

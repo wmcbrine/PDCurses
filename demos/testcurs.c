@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.73 2006/11/16 13:41:00 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.74 2006/11/20 13:32:28 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -380,7 +380,10 @@ void inputTest(WINDOW *win)
 			else
 				break;
 		}
-
+#ifdef PDCURSES
+		wmove(win, 4, 18);
+		wclrtoeol(win);
+#endif
 		mvwaddstr(win, 3, 5, "Key Pressed: ");
 		wclrtoeol(win);
 
@@ -390,7 +393,6 @@ void inputTest(WINDOW *win)
 			wprintw(win, "%c", c);
 		else
 			wprintw(win, "%s", unctrl(c));
-
 #ifdef PDCURSES
 		if (c == KEY_MOUSE)
 		{
@@ -428,7 +430,7 @@ void inputTest(WINDOW *win)
 			else if (MOUSE_WHEEL_UP)
 				waddstr(win, "wheel up: ");
 			else if (MOUSE_WHEEL_DOWN)
-				waddstr(win, "wheel down: ");
+				waddstr(win, "wheel dn: ");
 			else if ((BUTTON_STATUS(button) & 
 			    BUTTON_ACTION_MASK) == BUTTON_PRESSED)
 				waddstr(win, "pressed: ");
@@ -441,7 +443,7 @@ void inputTest(WINDOW *win)
 			else
 				waddstr(win, "released: ");
 
-			wprintw(win, " Position: Y: %d X: %d", 
+			wprintw(win, "Position: Y: %d X: %d", 
 				MOUSE_Y_POS, MOUSE_X_POS);
 		}
 		else if (PDC_get_key_modifiers())
@@ -459,7 +461,6 @@ void inputTest(WINDOW *win)
 			if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_NUMLOCK)
 				waddstr(win, " NUMLOCK");
 		}
-
 #endif
 		wrefresh(win);
 
@@ -475,7 +476,6 @@ void inputTest(WINDOW *win)
 	PDC_save_key_modifiers(FALSE);
 	PDC_return_key_modifiers(FALSE);
 #endif
-
 	wclear(win);
 	mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
 	mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.87 2006/11/20 13:35:35 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.88 2006/11/20 15:34:28 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -22,6 +22,7 @@ unsigned long pdc_key_modifiers = 0L;
 
 static INPUT_RECORD save_ip;
 static MOUSE_STATUS old_mouse_status;
+static DWORD event_count = 0;
 static int key_count = 0;
 static int save_press = 0;
 
@@ -274,20 +275,20 @@ static int _get_interesting_key(INPUT_RECORD *);
 
 bool PDC_check_bios_key(void)
 {
-	DWORD count;
-
 	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 	if (key_count > 0)
 		return TRUE;
 
-	GetNumberOfConsoleInputEvents(pdc_con_in, &count);
+	GetNumberOfConsoleInputEvents(pdc_con_in, &event_count);
 
-	if (count)
+	if (event_count)
 	{
 		INPUT_RECORD ip;
+		DWORD count;
 
 		ReadConsoleInput(pdc_con_in, &ip, 1, &count);
+		event_count--;
 
 		if (ip.EventType == MOUSE_EVENT)
 			key_count = 1;
@@ -429,7 +430,7 @@ static int _process_key_event(void)
 
 static int _process_mouse_event(void)
 {
-	DWORD i;
+	int i;
 	short action, shift_flags = 0;
 
 	save_press = 0;
@@ -464,15 +465,21 @@ static int _process_mouse_event(void)
 		/* Check for a click -- a PRESS followed immediately by 
 		   a release */
 
-		napms(100);
-		GetNumberOfConsoleInputEvents(pdc_con_in, &i);
+		if (!event_count)
+		{
+			napms(100);
 
-		if (i)
+			GetNumberOfConsoleInputEvents(pdc_con_in,
+				&event_count);
+		}
+
+		if (event_count)
 		{
 			INPUT_RECORD ip;
+			DWORD count;
 			bool have_click = FALSE;
 
-			PeekConsoleInput(pdc_con_in, &ip, 1, &i);
+			PeekConsoleInput(pdc_con_in, &ip, 1, &count);
 
 			if (pdc_mouse_status.button[0] == BUTTON_PRESSED &&
 			    !(ip.Event.MouseEvent.dwButtonState & 1))
@@ -498,7 +505,7 @@ static int _process_mouse_event(void)
 			/* If a click was found, throw out the event */
 
 			if (have_click)
-				ReadConsoleInput(pdc_con_in, &ip, 1, &i);
+				ReadConsoleInput(pdc_con_in, &ip, 1, &count);
 		}
 	}
 

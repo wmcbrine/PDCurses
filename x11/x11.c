@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.42 2006/11/18 13:26:57 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.43 2006/11/20 02:10:15 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2137,28 +2137,31 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 	Mouse_status.changes = 0;
 
-	/* Handle button 4 and 5, which are normally mapped to 
-	   the wheel mouse scroll up and down */
-
-	if (button_no == 4 || button_no == 5)
-	{
-		/* Send the KEY_MOUSE to curses program */
-
-		memset(&Mouse_status, 0, sizeof(Mouse_status));
-
-		Mouse_status.changes = (button_no == 5) ? 
-			PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
-
-		MOUSE_X_POS = MOUSE_Y_POS = -1;
-
-		SendKeyToCurses((unsigned long)KEY_MOUSE, &Mouse_status, 
-			TRUE);
-		return;
-	}
-
 	switch(event->type)
 	{
 	case ButtonPress:
+		/* Handle button 4 and 5, which are normally mapped to 
+		   the wheel mouse scroll up and down */
+
+		if (button_no == 4 || button_no == 5)
+		{
+			/* Send the KEY_MOUSE to curses program */
+
+			memset(&Mouse_status, 0, sizeof(Mouse_status));
+
+			Mouse_status.changes = (button_no == 5) ? 
+				PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+
+			MOUSE_X_POS = MOUSE_Y_POS = -1;
+
+			SendKeyToCurses((unsigned long)KEY_MOUSE, 
+				&Mouse_status, TRUE);
+
+			remove_release = TRUE;
+
+			return;
+		}
+
 		remove_release = False;
 		handle_real_release = False;
 

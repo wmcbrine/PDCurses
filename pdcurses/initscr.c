@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.90 2006/11/20 04:06:00 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.91 2006/11/20 04:22:50 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -244,6 +244,7 @@ int endwin(void)
 
 	/* Allow temporary exit from curses using endwin() */
 
+	def_prog_mode();
 	PDC_scr_close();
 
 	SP->alive = FALSE;

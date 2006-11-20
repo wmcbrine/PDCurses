@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.89 2006/11/12 10:26:14 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.90 2006/11/20 04:06:00 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -169,7 +169,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
 		exit(4);
 	}
 
-	if ((curscr = newwin(LINES, COLS, 0, 0)) == (WINDOW *) NULL)
+	if ((curscr = newwin(LINES, COLS, 0, 0)) == (WINDOW *)NULL)
 	{
 		fprintf(stderr, "initscr(): Unable to create curscr.\n");
 		exit(2);
@@ -218,7 +218,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
 
 	PDC_init_atrtab();	/* set up default colors */
 
-	MOUSE_X_POS = MOUSE_Y_POS = (-1);
+	MOUSE_X_POS = MOUSE_Y_POS = -1;
 	BUTTON_STATUS(1) = BUTTON_RELEASED;
 	BUTTON_STATUS(2) = BUTTON_RELEASED;
 	BUTTON_STATUS(3) = BUTTON_RELEASED;

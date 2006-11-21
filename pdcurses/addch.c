@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.43 2006/11/07 16:32:14 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.44 2006/11/21 20:46:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -108,15 +108,14 @@ RCSID("$Id: addch.c,v 1.43 2006/11/07 16:32:14 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-int waddch(WINDOW *win, chtype ch)
+int waddch(WINDOW *win, const chtype ch)
 {
 	int x, y;
-	chtype attr;
+	chtype text, attr;
 	bool xlat;
 
-	PDC_LOG(("waddch() - called: win=%p ch=%x "
-		"(char=%c attr=0x%x)\n", win, ch,
-		ch & A_CHARTEXT, ch & A_ATTRIBUTES));
+	PDC_LOG(("waddch() - called: win=%p ch=%x (text=%c attr=0x%x)\n",
+		win, ch, ch & A_CHARTEXT, ch & A_ATTRIBUTES));
 
 	if (!win)
 		return ERR;
@@ -128,19 +127,19 @@ int waddch(WINDOW *win, chtype ch)
 		return ERR;
 
 	xlat = !SP->raw_out && !(ch & A_ALTCHARSET);
+	text = ch & A_CHARTEXT;
 	attr = ch & A_ATTRIBUTES;
-	ch &= A_CHARTEXT;
 
-	if (xlat && (ch < ' ' || ch == 0x7f))
+	if (xlat && (text < ' ' || text == 0x7f))
 	{
 		int x2;
 
-		switch (ch)
+		switch (text)
 		{
 		case '\t':
 			for (x2 = ((x / TABSIZE) + 1) * TABSIZE; x < x2; x++)
 			{
-				if (waddch(win, ' ') == ERR)
+				if (waddch(win, attr | ' ') == ERR)
 					return ERR;
 
 				/* if tab to next line, exit the loop */
@@ -178,15 +177,15 @@ int waddch(WINDOW *win, chtype ch)
 			break;
 
 		case 0x7f:
-			if (waddch(win, '^') == ERR)
+			if (waddch(win, attr | '^') == ERR)
 				return ERR;
 
-			return waddch(win, '?');
+			return waddch(win, attr | '?');
 
 		default:
 			/* handle control chars */
 
-			if (waddch(win, '^') == ERR)
+			if (waddch(win, attr | '^') == ERR)
 				return ERR;
 
 			return waddch(win, ch + '@');
@@ -216,18 +215,18 @@ int waddch(WINDOW *win, chtype ch)
 		else
 			attr |= win->_bkgd & (A_ATTRIBUTES ^ A_COLOR);
 
-		if (ch == ' ')
-			ch = win->_bkgd & A_CHARTEXT;
+		if (text == ' ')
+			text = win->_bkgd & A_CHARTEXT;
 
 		/* Add the attribute back into the character. */
 
-		ch |= attr;
+		text |= attr;
 
 		/* Only change _firstch/_lastch if the character to be
 		   added is different from the character/attribute that
 		   is already in that position in the window. */
 
-		if (win->_y[y][x] != ch)
+		if (win->_y[y][x] != text)
 		{
 			if (win->_firstch[y] == _NO_CHANGE)
 				win->_firstch[y] = win->_lastch[y] = x;
@@ -238,7 +237,7 @@ int waddch(WINDOW *win, chtype ch)
 					if (x > win->_lastch[y])
 						win->_lastch[y] = x;
 
-			win->_y[y][x] = ch;
+			win->_y[y][x] = text;
 		}
 
 		if (++x >= win->_maxx)

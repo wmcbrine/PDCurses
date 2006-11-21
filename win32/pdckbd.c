@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.88 2006/11/20 15:34:28 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.89 2006/11/21 22:46:46 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -23,6 +23,7 @@ unsigned long pdc_key_modifiers = 0L;
 static INPUT_RECORD save_ip;
 static MOUSE_STATUS old_mouse_status;
 static DWORD event_count = 0;
+static SHORT left_key;
 static int key_count = 0;
 static int save_press = 0;
 
@@ -358,21 +359,19 @@ static int _process_key_event(void)
 		if (!SP->return_key_modifiers)
 			return -1;
 
-		return KEY_SHIFT_R;
+		return (left_key & 0x8000) ? KEY_SHIFT_L : KEY_SHIFT_R;
 
 	case VK_CONTROL: /* control */
 		if (!SP->return_key_modifiers)
 			return -1;
 
-		return (state & LEFT_CTRL_PRESSED) ?
-			KEY_CONTROL_L : KEY_CONTROL_R;
+		return (left_key & 0x8000) ? KEY_CONTROL_L : KEY_CONTROL_R;
 
 	case VK_MENU: /* alt */
 		if (!SP->return_key_modifiers)
 			return -1;
 
-		return (state & LEFT_ALT_PRESSED) ?
-			KEY_ALT_L : KEY_ALT_R;
+		return (left_key & 0x8000) ? KEY_ALT_L : KEY_ALT_R;
 	}
 
 	/* The system may emit Ascii or Unicode characters depending on 
@@ -758,7 +757,24 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 		{
 		    /* These keys are returned on keyup only. */
 
-		    save_press = SP->return_key_modifiers ? vk : 0;
+		    if (SP->return_key_modifiers)
+		    {
+			save_press = vk;
+			switch (vk)
+			{
+			case VK_SHIFT:
+			    left_key = GetKeyState(VK_LSHIFT);
+			    break;
+			case VK_CONTROL:
+			    left_key = GetKeyState(VK_LCONTROL);
+			    break;
+			case VK_MENU:
+			    left_key = GetKeyState(VK_LMENU);
+			}
+		    }
+		    else
+			save_press = 0;
+
 		    numpad_char = 0;
 
 		    break;	/* throw away key press */

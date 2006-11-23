@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.89 2006/11/21 22:46:46 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.90 2006/11/23 20:27:23 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -319,11 +319,7 @@ bool PDC_check_bios_key(void)
 
 static int _process_key_event(void)
 {
-#ifdef UNICODE
 	int ascii = (unsigned short)save_ip.Event.KeyEvent.uChar.UnicodeChar;
-#else
-	int ascii = (unsigned char)save_ip.Event.KeyEvent.uChar.AsciiChar;
-#endif
 	WORD vk = save_ip.Event.KeyEvent.wVirtualKeyCode;
 	DWORD state = save_ip.Event.KeyEvent.dwControlKeyState;
 
@@ -368,10 +364,13 @@ static int _process_key_event(void)
 		return (left_key & 0x8000) ? KEY_CONTROL_L : KEY_CONTROL_R;
 
 	case VK_MENU: /* alt */
-		if (!SP->return_key_modifiers)
-			return -1;
+		if (!ascii)
+		{
+			if (!SP->return_key_modifiers)
+				return -1;
 
-		return (left_key & 0x8000) ? KEY_ALT_L : KEY_ALT_R;
+			return (left_key & 0x8000) ? KEY_ALT_L : KEY_ALT_R;
+		}
 	}
 
 	/* The system may emit Ascii or Unicode characters depending on 
@@ -695,7 +694,6 @@ int PDC_set_ctrl_break(bool setting)
 static int _get_interesting_key(INPUT_RECORD *ip)
 {
 	int num_keys = 0, vk;
-	static unsigned numpad_char = 0;
 
 	PDC_LOG(("_get_interesting_key() - called\n"));
 
@@ -708,17 +706,22 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 
 	    if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
 	    {
-		numpad_char = 0;
 		save_press = 0;
 		break;
 	    }
 
 	    if (ip->Event.KeyEvent.bKeyDown == FALSE)
 	    {
-		/* key up, the following check for VK_??? is paranoid 
-		   hopefully */
+		/* key up */
 
-		if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
+		if (vk == VK_MENU && ip->Event.KeyEvent.uChar.UnicodeChar)
+		{
+			return 1;
+		}
+
+		/* the following check for VK_??? is paranoid hopefully */
+
+		else if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
 		    && vk == save_press && SP->return_key_modifiers)
 		{
 		    /* Fall through and return this key. Still have to 
@@ -727,24 +730,6 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 		    /* always limited */
 
 		    ip->Event.KeyEvent.wRepeatCount = 1;
-		}
-		else if (vk == VK_MENU && numpad_char)
-		{
-#ifdef UNICODE
-		    ip->Event.KeyEvent.uChar.UnicodeChar = numpad_char;
-#else
-		    ip->Event.KeyEvent.uChar.AsciiChar = numpad_char;
-#endif
-		    ip->Event.KeyEvent.dwControlKeyState &= 
-			~LEFT_ALT_PRESSED;
-
-		    ip->Event.KeyEvent.wRepeatCount = 1; /* always limited */
-
-		    /* change ALT to something else */
-
-		    ip->Event.KeyEvent.wVirtualKeyCode = VK_NUMPAD0;
-
-		    numpad_char = 0;
 		}
 		else
 		{
@@ -775,63 +760,8 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 		    else
 			save_press = 0;
 
-		    numpad_char = 0;
-
 		    break;	/* throw away key press */
 		}
-
-#if 1 /*def NUMPAD_CHARS*/
-		if ((ip->Event.KeyEvent.dwControlKeyState & 
-		    (LEFT_ALT_PRESSED | ENHANCED_KEY)) == LEFT_ALT_PRESSED)
-		{
-		    switch (vk)
-		    {
-		    case VK_CLEAR:
-			vk = VK_NUMPAD5;
-			break;
-		    case VK_PRIOR:
-			vk = VK_NUMPAD9;
-			break;
-		    case VK_NEXT:
-			vk = VK_NUMPAD3;
-			break;
-		    case VK_END:
-			vk = VK_NUMPAD1;
-			break;
-		    case VK_HOME:
-			vk = VK_NUMPAD7;
-			break;
-		    case VK_LEFT:
-			vk = VK_NUMPAD4;
-			break;
-		    case VK_UP:
-			vk = VK_NUMPAD8;
-			break;
-		    case VK_RIGHT:
-			vk = VK_NUMPAD6;
-			break;
-		    case VK_DOWN:
-			vk = VK_NUMPAD2;
-			break;
-		    case VK_INSERT:
-			vk = VK_NUMPAD0;
-		    }
-               
-		}
-
-		if ((vk >= VK_NUMPAD0 && vk <= VK_NUMPAD9) &&
-                    ip->Event.KeyEvent.dwControlKeyState & LEFT_ALT_PRESSED)
-		{
-		    numpad_char *= 10;
-		    numpad_char += vk - VK_NUMPAD0;
-		    break;
-		}
-		else
-		    numpad_char = 0;
-
-#else /* NUMPAD_CHARS */
-		numpad_char = 0;
-#endif
 	    }
 
 	    save_press = 0;

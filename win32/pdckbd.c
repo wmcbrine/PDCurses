@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.90 2006/11/23 20:27:23 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.91 2006/11/24 03:21:59 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -773,7 +773,7 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 	       "a" to get a composed umlaut-a. The special key may have 
 	       a normal meaning with different modifiers. */
 
-	    if (ip->Event.KeyEvent.uChar.AsciiChar == 0 &&
+	    if (ip->Event.KeyEvent.uChar.UnicodeChar == 0 &&
 		(MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode, 2) &
 		0x80000000))
 	    {

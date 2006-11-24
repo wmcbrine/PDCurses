@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.91 2006/11/24 03:21:59 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.92 2006/11/24 04:43:04 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -669,26 +669,15 @@ int PDC_set_ctrl_break(bool setting)
    The function returns the number of events waiting. This may be > 1
    if the repeation of real keys pressed so far are > 1.
 
-   Keyboard: Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
+   Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
 
-	     Returns 1 for SHIFT, ALT, CTRL only if no other key has been
-	     pressed in between; these are returned on keyup in opposite 
-	     to normal keys. The overall flags for processing of SHIFT, ALT,
-	     CTRL (SP->return_key_modifiers) must have been set.
+   Returns 1 for SHIFT, ALT, CTRL only if no other key has been pressed 
+   in between, and SP->return_key_modifiers is set; these are returned 
+   on keyup.
 
-	     FGC: CHANGED BEHAVIOUR: In previous version SHIFT etc had a
-	     chance to be returned on the first keydown, too. This was a 
-	     bug, because return_key_modifiers were 0.
-
-	     Normal keys are returned on keydown only. The number of 
-	     repetitions are returned. Dead keys (diacritics) are 
-	     omitted. See below for a description.
-
-	     The keypad entering of special keys is not supported. This 
-	     feature can be built in by replacing "#ifdef NUMPAD_CHARS" 
-	     with an intelligent code.
-
-   Mouse:    MOUSE_MOVE without a pressed mouse key are ignored.
+   Normal keys are returned on keydown only. The number of repetitions 
+   are returned. Dead keys (diacritics) are omitted. See below for a 
+   description.
 */
 
 static int _get_interesting_key(INPUT_RECORD *ip)
@@ -697,90 +686,65 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 
 	PDC_LOG(("_get_interesting_key() - called\n"));
 
-	switch(ip->EventType)
+	vk = ip->Event.KeyEvent.wVirtualKeyCode;
+
+	if (ip->Event.KeyEvent.bKeyDown)
 	{
-	case KEY_EVENT:
-	    vk = ip->Event.KeyEvent.wVirtualKeyCode;
+		/* key down */
 
-	    /* throw away some modifiers */
-
-	    if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
-	    {
 		save_press = 0;
-		break;
-	    }
 
-	    if (ip->Event.KeyEvent.bKeyDown == FALSE)
-	    {
-		/* key up */
-
-		if (vk == VK_MENU && ip->Event.KeyEvent.uChar.UnicodeChar)
+		if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
 		{
-			return 1;
+			/* throw away these modifiers */
 		}
-
-		/* the following check for VK_??? is paranoid hopefully */
-
-		else if ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
-		    && vk == save_press && SP->return_key_modifiers)
+		else if (vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
 		{
-		    /* Fall through and return this key. Still have to 
-		       check the dead key condition. */
+			/* These keys are returned on keyup only. */
 
-		    /* always limited */
-
-		    ip->Event.KeyEvent.wRepeatCount = 1;
-		}
-		else
-		{
-		    break;		/* throw away other KeyUp events */
-		}
-	    }
-	    else
-	    {
-		if (vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
-		{
-		    /* These keys are returned on keyup only. */
-
-		    if (SP->return_key_modifiers)
-		    {
 			save_press = vk;
 			switch (vk)
 			{
 			case VK_SHIFT:
-			    left_key = GetKeyState(VK_LSHIFT);
-			    break;
+				left_key = GetKeyState(VK_LSHIFT);
+				break;
 			case VK_CONTROL:
-			    left_key = GetKeyState(VK_LCONTROL);
-			    break;
+				left_key = GetKeyState(VK_LCONTROL);
+				break;
 			case VK_MENU:
-			    left_key = GetKeyState(VK_LMENU);
+				left_key = GetKeyState(VK_LMENU);
 			}
-		    }
-		    else
-			save_press = 0;
-
-		    break;	/* throw away key press */
 		}
-	    }
+		else
+		{
+			/* Check for diacritics. These are dead keys. 
+			   Some locale have modified characters like 
+			   umlaut-a, which is an "a" with two dots on 
+			   it. In some locales you have to press a 
+			   special key (the dead key) immediately 
+			   followed by the "a" to get a composed 
+			   umlaut-a. The special key may have a normal 
+			   meaning with different modifiers. */
 
-	    save_press = 0;
+			if (ip->Event.KeyEvent.uChar.UnicodeChar ||
+			    !(MapVirtualKey(vk, 2) & 0x80000000))
+				num_keys = ip->Event.KeyEvent.wRepeatCount;
+		}
+	}
+	else
+	{
+		/* key up */
 
-	    /* Check for diacritics. These are dead keys. Some locale 
-	       have modified characters like umlaut-a, which is an "a" 
-	       with two dots on it. In some locales you have to press a 
-	       special key (the dead key) immediately followed by the 
-	       "a" to get a composed umlaut-a. The special key may have 
-	       a normal meaning with different modifiers. */
+		/* Only modifier keys or the results of ALT-numpad entry 
+		   are returned on keyup */
 
-	    if (ip->Event.KeyEvent.uChar.UnicodeChar == 0 &&
-		(MapVirtualKey(ip->Event.KeyEvent.wVirtualKeyCode, 2) &
-		0x80000000))
-	    {
-		break;		/* Diacritic characters, ignore them */
-	    }
-
-	    num_keys = ip->Event.KeyEvent.wRepeatCount;
+		if ((vk == VK_MENU && ip->Event.KeyEvent.uChar.UnicodeChar) ||
+		   ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
+		    && vk == save_press))
+		{
+			save_press = 0;
+			num_keys = 1;
+		}
 	}
 
 	PDC_LOG(("_get_interesting_key() - returning: num_keys %d "

@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.58 2006/11/24 05:05:40 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.59 2006/11/24 13:47:21 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -267,9 +267,11 @@ int wgetch(WINDOW *win)
 
 	for (;;)			/* loop for any buffering */
 	{
+		/* is there a keystroke ready? */
+
 		if (!PDC_check_bios_key())
 		{
-			/* handle timeout() and halfdelay() */
+			/* if not, handle timeout() and halfdelay() */
 
 			if (SP->delaytenths || win->_delayms)
 			{
@@ -283,25 +285,28 @@ int wgetch(WINDOW *win)
 					return ERR;
 
 			napms(50);	/* sleep for 1/20th second */
-			continue;
+			continue;	/* then check again */
 		}
-		else
+
+		/* if there is, fetch it */
+
+		key = PDC_get_bios_key();
+
+		if (SP->key_code)
 		{
-			key = PDC_get_bios_key();
+			/* filter special keys if not in keypad mode */
 
-			/* Filter special keys if not in keypad mode */
-
-			if (SP->key_code && !win->_use_keypad)
+			if (!win->_use_keypad)
 				key = -1;
+
+			/* filter mouse events; translate mouse clicks 
+			   in the slk area to function keys */
+
+			else if (key == KEY_MOUSE)
+				key = _mouse_key(win);
 		}
 
-		/* filter mouse events; translate mouse clicks in the 
-		   slk area to function keys */
-
-		if (key == KEY_MOUSE && SP->key_code)
-			key = _mouse_key(win);
-
-		/* unwanted results from PDC_get_bios_key()? */
+		/* unwanted key? loop back */
 
 		if (key == -1)
 			continue;

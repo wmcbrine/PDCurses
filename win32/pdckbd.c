@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.92 2006/11/24 04:43:04 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.93 2006/11/24 05:02:17 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -283,32 +283,7 @@ bool PDC_check_bios_key(void)
 
 	GetNumberOfConsoleInputEvents(pdc_con_in, &event_count);
 
-	if (event_count)
-	{
-		INPUT_RECORD ip;
-		DWORD count;
-
-		ReadConsoleInput(pdc_con_in, &ip, 1, &count);
-		event_count--;
-
-		if (ip.EventType == MOUSE_EVENT)
-			key_count = 1;
-		else if (ip.EventType == KEY_EVENT)
-			key_count = _get_interesting_key(&ip);
-		else
-			key_count = 0;
-
-		if (key_count)
-		{
-			/* To get here a recognised event has occurred; 
-			   save it and return TRUE */
-
-			save_ip = ip;
-			return TRUE;
-		}
-	}
-
-	return FALSE;
+	return (event_count != 0);
 }
 
 /* _process_key_event returns -1 if the key in save_ip should be 
@@ -597,15 +572,43 @@ int PDC_get_bios_key(void)
 	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
 	pdc_key_modifiers = 0L;
-	key_count--;
 
-	switch (save_ip.EventType)
+	if (!key_count)
 	{
-	case KEY_EVENT:
-		return _process_key_event();
+		INPUT_RECORD ip;
+		DWORD count;
 
-	case MOUSE_EVENT:
-		return _process_mouse_event();
+		ReadConsoleInput(pdc_con_in, &ip, 1, &count);
+		event_count--;
+
+		if (ip.EventType == MOUSE_EVENT)
+			key_count = 1;
+		else if (ip.EventType == KEY_EVENT)
+			key_count = _get_interesting_key(&ip);
+		else
+			key_count = 0;
+
+		if (key_count)
+		{
+			/* To get here a recognised event has occurred; 
+			   save it */
+
+			save_ip = ip;
+		}
+	}
+
+	if (key_count)
+	{
+		key_count--;
+
+		switch (save_ip.EventType)
+		{
+		case KEY_EVENT:
+			return _process_key_event();
+
+		case MOUSE_EVENT:
+			return _process_mouse_event();
+		}
 	}
 
 	return -1;

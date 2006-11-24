@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.57 2006/11/15 16:26:45 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.58 2006/11/24 05:05:40 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -268,7 +268,23 @@ int wgetch(WINDOW *win)
 	for (;;)			/* loop for any buffering */
 	{
 		if (!PDC_check_bios_key())
-			key = -1;
+		{
+			/* handle timeout() and halfdelay() */
+
+			if (SP->delaytenths || win->_delayms)
+			{
+				if (!waitcount)
+					return ERR;
+
+				waitcount--;
+			}
+			else
+				if (win->_nodelay)
+					return ERR;
+
+			napms(50);	/* sleep for 1/20th second */
+			continue;
+		}
 		else
 		{
 			key = PDC_get_bios_key();
@@ -285,24 +301,10 @@ int wgetch(WINDOW *win)
 		if (key == KEY_MOUSE && SP->key_code)
 			key = _mouse_key(win);
 
-		/* handle timeout() and halfdelay() */
+		/* unwanted results from PDC_get_bios_key()? */
 
 		if (key == -1)
-		{
-			if (SP->delaytenths || win->_delayms)
-			{
-				if (!waitcount)
-					return ERR;
-
-				waitcount--;
-			}
-			else
-				if (win->_nodelay)
-					return ERR;
-
-			napms(50);	/* sleep for 1/20th second */
 			continue;
-		}
 
 		/* translate CR */
 

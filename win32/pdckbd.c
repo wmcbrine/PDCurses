@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.93 2006/11/24 05:02:17 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.94 2006/11/24 14:04:56 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -366,12 +366,13 @@ static int _process_key_event(void)
 		   return extended keycodes for keypad codes. Test for 
 		   it and don't return an ascii code in case. */
 
-		SP->key_code = FALSE;
-
 #ifndef NUMKEYPAD
 		if (kptab[vk].extended == 0)
 #endif
+		{
+			SP->key_code = FALSE;
 			return ascii;
+		}
 	}
 
 	/* This case happens if a functional key has been entered. */

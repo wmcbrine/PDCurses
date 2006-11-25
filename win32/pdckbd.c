@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.95 2006/11/25 06:06:15 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.96 2006/11/25 17:18:27 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -257,8 +257,6 @@ void PDC_set_keyboard_binary(bool on)
         PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 }
 
-static int _get_key_count(void);
-
 /*man-start**************************************************************
 
   PDC_check_bios_key()  - Check BIOS key data area for input
@@ -289,9 +287,100 @@ bool PDC_check_bios_key(void)
 	return (event_count != 0);
 }
 
-/* _process_key_event returns -1 if the key in save_ip should be 
-   ignored. Otherwise the keycode is returned which should be returned 
-   by PDC_get_bios_key. save_ip must be a key event.
+/* _get_key_count returns 0 if save_ip doesn't contain an event which
+   should be passed back to the user. This function filters "useless"
+   events.
+
+   The function returns the number of keys waiting. This may be > 1
+   if the repetition of real keys pressed so far are > 1.
+
+   Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
+
+   Returns 1 for SHIFT, ALT, CTRL only if no other key has been pressed
+   in between, and SP->return_key_modifiers is set; these are returned
+   on keyup.
+
+   Normal keys are returned on keydown only. The number of repetitions
+   are returned. Dead keys (diacritics) are omitted. See below for a
+   description.
+*/
+
+static int _get_key_count(void)
+{
+	int num_keys = 0, vk;
+
+	PDC_LOG(("_get_key_count() - called\n"));
+
+	vk = KEV.wVirtualKeyCode;
+
+	if (KEV.bKeyDown)
+	{
+		/* key down */
+
+		save_press = 0;
+
+		if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
+		{
+			/* throw away these modifiers */
+		}
+		else if (vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
+		{
+			/* These keys are returned on keyup only. */
+
+			save_press = vk;
+			switch (vk)
+			{
+			case VK_SHIFT:
+				left_key = GetKeyState(VK_LSHIFT);
+				break;
+			case VK_CONTROL:
+				left_key = GetKeyState(VK_LCONTROL);
+				break;
+			case VK_MENU:
+				left_key = GetKeyState(VK_LMENU);
+			}
+		}
+		else
+		{
+			/* Check for diacritics. These are dead keys.
+			   Some locale have modified characters like
+			   umlaut-a, which is an "a" with two dots on
+			   it. In some locales you have to press a
+			   special key (the dead key) immediately
+			   followed by the "a" to get a composed
+			   umlaut-a. The special key may have a normal
+			   meaning with different modifiers. */
+
+			if (KEV.uChar.UnicodeChar ||
+			    !(MapVirtualKey(vk, 2) & 0x80000000))
+				num_keys = KEV.wRepeatCount;
+		}
+	}
+	else
+	{
+		/* key up */
+
+		/* Only modifier keys or the results of ALT-numpad entry
+		   are returned on keyup */
+
+		if ((vk == VK_MENU && KEV.uChar.UnicodeChar) ||
+		   ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU) &&
+		     vk == save_press))
+		{
+			save_press = 0;
+			num_keys = 1;
+		}
+	}
+
+	PDC_LOG(("_get_key_count() - returning: num_keys %d "
+		"type %d\n", num_keys, ip->EventType));
+
+	return num_keys;
+}
+
+/* _process_key_event returns -1 if the key in save_ip should be
+   ignored. Otherwise it returns the keycode which should be returned
+   by PDC_get_bios_key(). save_ip must be a key event.
 
    CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
@@ -350,21 +439,21 @@ static int _process_key_event(void)
 		}
 	}
 
-	/* The system may emit Ascii or Unicode characters depending on 
+	/* The system may emit Ascii or Unicode characters depending on
 	   whether ReadConsoleInputA or ReadConsoleInputW is used.
 
-	   Normally, if ascii != 0 then the system did the translation 
-	   successfully. But this is not true for LEFT_ALT (different to 
-	   RIGHT_ALT). In case of LEFT_ALT we can get ascii != 0. So 
+	   Normally, if ascii != 0 then the system did the translation
+	   successfully. But this is not true for LEFT_ALT (different to
+	   RIGHT_ALT). In case of LEFT_ALT we can get ascii != 0. So
 	   check for this first. */
 
 	if (ascii && ( !(state & LEFT_ALT_PRESSED) ||
 	    (state & RIGHT_ALT_PRESSED) ))
 	{
-		/* This code should catch all keys returning a printable 
-		   character. Characters above 0x7F should be returned 
-		   as positive codes. But if'ndef NUMKEYPAD we have to 
-		   return extended keycodes for keypad codes. Test for 
+		/* This code should catch all keys returning a printable
+		   character. Characters above 0x7F should be returned
+		   as positive codes. But if'ndef NUMKEYPAD we have to
+		   return extended keycodes for keypad codes. Test for
 		   it and don't return an ascii code in case. */
 
 #ifndef NUMKEYPAD
@@ -435,7 +524,7 @@ static int _process_mouse_event(void)
 
 	if (action == BUTTON_PRESSED && MEV.dwButtonState & 7)
 	{
-		/* Check for a click -- a PRESS followed immediately by 
+		/* Check for a click -- a PRESS followed immediately by
 		   a release */
 
 		if (!event_count)
@@ -652,97 +741,6 @@ int PDC_set_ctrl_break(bool setting)
 	return OK;
 }
 
-/* _get_key_count returns 0 if *ip doesn't contain an event which
-   should be passed back to the user. This function filters "useless"
-   events.
-
-   The function returns the number of events waiting. This may be > 1
-   if the repeation of real keys pressed so far are > 1.
-
-   Returns 0 on NUMLOCK, CAPSLOCK, SCROLLLOCK.
-
-   Returns 1 for SHIFT, ALT, CTRL only if no other key has been pressed 
-   in between, and SP->return_key_modifiers is set; these are returned 
-   on keyup.
-
-   Normal keys are returned on keydown only. The number of repetitions 
-   are returned. Dead keys (diacritics) are omitted. See below for a 
-   description.
-*/
-
-static int _get_key_count(void)
-{
-	int num_keys = 0, vk;
-
-	PDC_LOG(("_get_key_count() - called\n"));
-
-	vk = KEV.wVirtualKeyCode;
-
-	if (KEV.bKeyDown)
-	{
-		/* key down */
-
-		save_press = 0;
-
-		if (vk == VK_CAPITAL || vk == VK_NUMLOCK || vk == VK_SCROLL)
-		{
-			/* throw away these modifiers */
-		}
-		else if (vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
-		{
-			/* These keys are returned on keyup only. */
-
-			save_press = vk;
-			switch (vk)
-			{
-			case VK_SHIFT:
-				left_key = GetKeyState(VK_LSHIFT);
-				break;
-			case VK_CONTROL:
-				left_key = GetKeyState(VK_LCONTROL);
-				break;
-			case VK_MENU:
-				left_key = GetKeyState(VK_LMENU);
-			}
-		}
-		else
-		{
-			/* Check for diacritics. These are dead keys. 
-			   Some locale have modified characters like 
-			   umlaut-a, which is an "a" with two dots on 
-			   it. In some locales you have to press a 
-			   special key (the dead key) immediately 
-			   followed by the "a" to get a composed 
-			   umlaut-a. The special key may have a normal 
-			   meaning with different modifiers. */
-
-			if (KEV.uChar.UnicodeChar ||
-			    !(MapVirtualKey(vk, 2) & 0x80000000))
-				num_keys = KEV.wRepeatCount;
-		}
-	}
-	else
-	{
-		/* key up */
-
-		/* Only modifier keys or the results of ALT-numpad entry 
-		   are returned on keyup */
-
-		if ((vk == VK_MENU && KEV.uChar.UnicodeChar) ||
-		   ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU) &&
-		     vk == save_press))
-		{
-			save_press = 0;
-			num_keys = 1;
-		}
-	}
-
-	PDC_LOG(("_get_key_count() - returning: num_keys %d "
-		"type %d\n", num_keys, ip->EventType));
-
-	return num_keys;
-}
-
 /*man-start**************************************************************
 
   PDC_flushinp()		- Low-level input flush
@@ -767,7 +765,7 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
-	SetConsoleMode(pdc_con_in, (SP->_trap_mbe ? ENABLE_MOUSE_INPUT : 0));
+	SetConsoleMode(pdc_con_in, SP->_trap_mbe ? ENABLE_MOUSE_INPUT : 0);
 	memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 
 	return OK;

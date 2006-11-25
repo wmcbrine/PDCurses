@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.245 2006/11/15 16:26:44 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.246 2006/11/25 19:09:56 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -556,11 +556,10 @@ short form:
 -------------------------------------------------
   color number |  attrs |   character eg 'a'
 
-The available attribute enhancers are bold, reverse and blink. All other 
-Unix attributes have no effect. The high order char is an index into an 
-array of physical colors (defined in INITPAIR.c). 32 (5 bits) 
-foreground/background color combinations combined with 8 (3 bits) 
-attribute modifiers are available.
+The available non-color attributes are bold, reverse and blink. Others 
+have no effect. The high order char is an index into an array of 
+physical colors (defined in color.c) -- 32 foreground/background color 
+pairs (5 bits) plus 3 bits for other attributes.
 
 long form:
 
@@ -568,11 +567,10 @@ long form:
 |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|12|..| 3| 2| 1| 0|
 ----------------------------------------------------------------------------
       color number      |     modifiers         |      character eg 'a'
-						     (potential for DBCS)
 
-The available attribute modifiers are bold, underline, invisible, 
-protect, reverse and blink. 256 (8 bits) color pairs, 8 bits for 
-modifiers, and 16 bits for character data.
+The available non-color attributes are bold, underline, invisible, 
+right-line, left-line, protect, reverse and blink. 256 color pairs (8 
+bits), 8 bits for other attributes, and 16 bits for character data.
 
 **man-end****************************************************************/
 

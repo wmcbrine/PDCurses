@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.94 2006/11/24 14:04:56 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.95 2006/11/25 06:06:15 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -26,6 +26,9 @@ static DWORD event_count = 0;
 static SHORT left_key;
 static int key_count = 0;
 static int save_press = 0;
+
+#define KEV save_ip.Event.KeyEvent
+#define MEV save_ip.Event.MouseEvent
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*  
@@ -254,7 +257,7 @@ void PDC_set_keyboard_binary(bool on)
         PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 }
 
-static int _get_interesting_key(INPUT_RECORD *);
+static int _get_key_count(void);
 
 /*man-start**************************************************************
 
@@ -288,17 +291,16 @@ bool PDC_check_bios_key(void)
 
 /* _process_key_event returns -1 if the key in save_ip should be 
    ignored. Otherwise the keycode is returned which should be returned 
-   by PDC_get_bios_code. save_ip MUST BE A KEY_EVENT!
+   by PDC_get_bios_key. save_ip must be a key event.
 
    CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
 static int _process_key_event(void)
 {
-	int ascii = (unsigned short)save_ip.Event.KeyEvent.uChar.UnicodeChar;
-	WORD vk = save_ip.Event.KeyEvent.wVirtualKeyCode;
-	DWORD state = save_ip.Event.KeyEvent.dwControlKeyState;
+	int ascii = (unsigned short)KEV.uChar.UnicodeChar;
+	WORD vk = KEV.wVirtualKeyCode;
+	DWORD state = KEV.dwControlKeyState;
 
-	unsigned long local_key_modifiers = 0L;
 	int idx;
 	BOOL enhanced;
 
@@ -307,20 +309,20 @@ static int _process_key_event(void)
 	/* Save the key modifiers if required. Do this first to allow to
 	   detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
 
-	if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
-		local_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+	if (SP->save_key_modifiers)
+	{
+		if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
+			pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-	if (state & SHIFT_PRESSED)
-		local_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+		if (state & SHIFT_PRESSED)
+			pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-	if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
-		local_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+		if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
+			pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-	if (state & NUMLOCK_ON)
-		local_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-
-	pdc_key_modifiers = SP->save_key_modifiers ? local_key_modifiers : 0;
-
+		if (state & NUMLOCK_ON)
+			pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+	}
 
 	/* Handle modifier keys hit by themselves */
 
@@ -351,11 +353,10 @@ static int _process_key_event(void)
 	/* The system may emit Ascii or Unicode characters depending on 
 	   whether ReadConsoleInputA or ReadConsoleInputW is used.
 
-	   Now the ridiculous part of the processing. Normally, if ascii 
-	   != 0 then the system did the translation successfully. But 
-	   this is not true for LEFT_ALT (different to RIGHT_ALT). In 
-	   case of LEFT_ALT we get we get ascii != 0. So check for this 
-	   first. */
+	   Normally, if ascii != 0 then the system did the translation 
+	   successfully. But this is not true for LEFT_ALT (different to 
+	   RIGHT_ALT). In case of LEFT_ALT we can get ascii != 0. So 
+	   check for this first. */
 
 	if (ascii && ( !(state & LEFT_ALT_PRESSED) ||
 	    (state & RIGHT_ALT_PRESSED) ))
@@ -400,8 +401,6 @@ static int _process_key_event(void)
 	return enhanced ? ext_kptab[idx].normal : kptab[idx].normal;
 }
 
-#define EV save_ip.Event.MouseEvent
-
 static int _process_mouse_event(void)
 {
 	int i;
@@ -414,9 +413,9 @@ static int _process_mouse_event(void)
 
 	/* Handle scroll wheel */
 
-	if (EV.dwEventFlags == 4)
+	if (MEV.dwEventFlags == 4)
 	{
-		pdc_mouse_status.changes = (EV.dwButtonState & 0xFF000000) ?
+		pdc_mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
 			PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
 
 		pdc_mouse_status.x = -1;
@@ -427,14 +426,14 @@ static int _process_mouse_event(void)
 		return KEY_MOUSE;
 	}
 
-	action = (EV.dwEventFlags == 2) ? BUTTON_DOUBLE_CLICKED :
-		((EV.dwEventFlags == 1) ? BUTTON_MOVED : BUTTON_PRESSED);
+	action = (MEV.dwEventFlags == 2) ? BUTTON_DOUBLE_CLICKED :
+		((MEV.dwEventFlags == 1) ? BUTTON_MOVED : BUTTON_PRESSED);
 
-	pdc_mouse_status.button[0] = (EV.dwButtonState & 1) ? action : 0;
-	pdc_mouse_status.button[2] = (EV.dwButtonState & 2) ? action : 0;
-	pdc_mouse_status.button[1] = (EV.dwButtonState & 4) ? action : 0;
+	pdc_mouse_status.button[0] = (MEV.dwButtonState & 1) ? action : 0;
+	pdc_mouse_status.button[2] = (MEV.dwButtonState & 2) ? action : 0;
+	pdc_mouse_status.button[1] = (MEV.dwButtonState & 4) ? action : 0;
 
-	if (action == BUTTON_PRESSED && EV.dwButtonState & 7)
+	if (action == BUTTON_PRESSED && MEV.dwButtonState & 7)
 	{
 		/* Check for a click -- a PRESS followed immediately by 
 		   a release */
@@ -495,8 +494,8 @@ static int _process_mouse_event(void)
 		(((old_mouse_status.button[2] != pdc_mouse_status.button[2])
 		|| (pdc_mouse_status.button[2] == BUTTON_MOVED)) ? 4 : 0);
 
-	pdc_mouse_status.x = EV.dwMousePosition.X;
-	pdc_mouse_status.y = EV.dwMousePosition.Y;
+	pdc_mouse_status.x = MEV.dwMousePosition.X;
+	pdc_mouse_status.y = MEV.dwMousePosition.Y;
 
 	for (i = 0; i < 3; i++)
 	{
@@ -526,13 +525,13 @@ static int _process_mouse_event(void)
 
 	/* Check for SHIFT/CONTROL/ALT */
 
-	if (EV.dwControlKeyState & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
+	if (MEV.dwControlKeyState & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
 		shift_flags |= BUTTON_ALT;
 
-	if (EV.dwControlKeyState & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
+	if (MEV.dwControlKeyState & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
 		shift_flags |= BUTTON_CONTROL;
 
-	if (EV.dwControlKeyState & SHIFT_PRESSED)
+	if (MEV.dwControlKeyState & SHIFT_PRESSED)
 		shift_flags |= BUTTON_SHIFT;
 
 	if (pdc_mouse_status.changes & 1)
@@ -546,8 +545,6 @@ static int _process_mouse_event(void)
 
 	return KEY_MOUSE;
 }
-
-#undef EV
 
 /*man-start**************************************************************
 
@@ -576,26 +573,15 @@ int PDC_get_bios_key(void)
 
 	if (!key_count)
 	{
-		INPUT_RECORD ip;
 		DWORD count;
 
-		ReadConsoleInput(pdc_con_in, &ip, 1, &count);
+		ReadConsoleInput(pdc_con_in, &save_ip, 1, &count);
 		event_count--;
 
-		if (ip.EventType == MOUSE_EVENT)
+		if (save_ip.EventType == MOUSE_EVENT)
 			key_count = 1;
-		else if (ip.EventType == KEY_EVENT)
-			key_count = _get_interesting_key(&ip);
-		else
-			key_count = 0;
-
-		if (key_count)
-		{
-			/* To get here a recognised event has occurred; 
-			   save it */
-
-			save_ip = ip;
-		}
+		else if (save_ip.EventType == KEY_EVENT)
+			key_count = _get_key_count();
 	}
 
 	if (key_count)
@@ -666,7 +652,7 @@ int PDC_set_ctrl_break(bool setting)
 	return OK;
 }
 
-/* _get_interesting_key returns 0 if *ip doesn't contain an event which
+/* _get_key_count returns 0 if *ip doesn't contain an event which
    should be passed back to the user. This function filters "useless"
    events.
 
@@ -684,15 +670,15 @@ int PDC_set_ctrl_break(bool setting)
    description.
 */
 
-static int _get_interesting_key(INPUT_RECORD *ip)
+static int _get_key_count(void)
 {
 	int num_keys = 0, vk;
 
-	PDC_LOG(("_get_interesting_key() - called\n"));
+	PDC_LOG(("_get_key_count() - called\n"));
 
-	vk = ip->Event.KeyEvent.wVirtualKeyCode;
+	vk = KEV.wVirtualKeyCode;
 
-	if (ip->Event.KeyEvent.bKeyDown)
+	if (KEV.bKeyDown)
 	{
 		/* key down */
 
@@ -730,9 +716,9 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 			   umlaut-a. The special key may have a normal 
 			   meaning with different modifiers. */
 
-			if (ip->Event.KeyEvent.uChar.UnicodeChar ||
+			if (KEV.uChar.UnicodeChar ||
 			    !(MapVirtualKey(vk, 2) & 0x80000000))
-				num_keys = ip->Event.KeyEvent.wRepeatCount;
+				num_keys = KEV.wRepeatCount;
 		}
 	}
 	else
@@ -742,16 +728,16 @@ static int _get_interesting_key(INPUT_RECORD *ip)
 		/* Only modifier keys or the results of ALT-numpad entry 
 		   are returned on keyup */
 
-		if ((vk == VK_MENU && ip->Event.KeyEvent.uChar.UnicodeChar) ||
-		   ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU)
-		    && vk == save_press))
+		if ((vk == VK_MENU && KEV.uChar.UnicodeChar) ||
+		   ((vk == VK_SHIFT || vk == VK_CONTROL || vk == VK_MENU) &&
+		     vk == save_press))
 		{
 			save_press = 0;
 			num_keys = 1;
 		}
 	}
 
-	PDC_LOG(("_get_interesting_key() - returning: num_keys %d "
+	PDC_LOG(("_get_key_count() - returning: num_keys %d "
 		"type %d\n", num_keys, ip->EventType));
 
 	return num_keys;

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.96 2006/11/25 17:18:27 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.97 2006/11/27 17:06:00 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -386,7 +386,7 @@ static int _get_key_count(void)
 
 static int _process_key_event(void)
 {
-	int ascii = (unsigned short)KEV.uChar.UnicodeChar;
+	int key = (unsigned short)KEV.uChar.UnicodeChar;
 	WORD vk = KEV.wVirtualKeyCode;
 	DWORD state = KEV.dwControlKeyState;
 
@@ -430,7 +430,7 @@ static int _process_key_event(void)
 		return (left_key & 0x8000) ? KEY_CONTROL_L : KEY_CONTROL_R;
 
 	case VK_MENU: /* alt */
-		if (!ascii)
+		if (!key)
 		{
 			if (!SP->return_key_modifiers)
 				return -1;
@@ -442,26 +442,25 @@ static int _process_key_event(void)
 	/* The system may emit Ascii or Unicode characters depending on
 	   whether ReadConsoleInputA or ReadConsoleInputW is used.
 
-	   Normally, if ascii != 0 then the system did the translation
+	   Normally, if key != 0 then the system did the translation
 	   successfully. But this is not true for LEFT_ALT (different to
-	   RIGHT_ALT). In case of LEFT_ALT we can get ascii != 0. So
+	   RIGHT_ALT). In case of LEFT_ALT we can get key != 0. So
 	   check for this first. */
 
-	if (ascii && ( !(state & LEFT_ALT_PRESSED) ||
+	if (key && ( !(state & LEFT_ALT_PRESSED) ||
 	    (state & RIGHT_ALT_PRESSED) ))
 	{
 		/* This code should catch all keys returning a printable
 		   character. Characters above 0x7F should be returned
 		   as positive codes. But if'ndef NUMKEYPAD we have to
-		   return extended keycodes for keypad codes. Test for
-		   it and don't return an ascii code in case. */
+		   return extended keycodes for keypad codes. */
 
 #ifndef NUMKEYPAD
 		if (kptab[vk].extended == 0)
 #endif
 		{
 			SP->key_code = FALSE;
-			return ascii;
+			return key;
 		}
 	}
 
@@ -479,15 +478,21 @@ static int _process_key_event(void)
 	}
 
 	if (state & SHIFT_PRESSED)
-		return enhanced ? ext_kptab[idx].shift : kptab[idx].shift;
+		key = enhanced ? ext_kptab[idx].shift : kptab[idx].shift;
 
-	if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
-		return enhanced ? ext_kptab[idx].control : kptab[idx].control;
+	else if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
+		key = enhanced ? ext_kptab[idx].control : kptab[idx].control;
 
-	if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
-		return enhanced ? ext_kptab[idx].alt : kptab[idx].alt;
+	else if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
+		key = enhanced ? ext_kptab[idx].alt : kptab[idx].alt;
 
-	return enhanced ? ext_kptab[idx].normal : kptab[idx].normal;
+	else
+		key = enhanced ? ext_kptab[idx].normal : kptab[idx].normal;
+
+	if (key < KEY_CODE_YES)
+		SP->key_code = FALSE;
+
+	return key;
 }
 
 static int _process_mouse_event(void)

@@ -19,14 +19,14 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.58 2006/11/20 02:37:33 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.59 2006/11/27 21:08:23 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
  *    These values are for strict IBM keyboard compatibles only	  	*
  ************************************************************************/
 
-static int kptab[] =
+static unsigned short kptab[] =
 {
 	/* Normal Function Keys */
 	0x3b, KEY_F(1), 0x3c, KEY_F(2), 0x3d, KEY_F(3), 0x3e, KEY_F(4),
@@ -72,14 +72,14 @@ static int kptab[] =
 	0x03, 0, /* NULL */
 
 #ifdef NUMKEYPAD
-	0xff, (int)'/',     0x0d, (int)'\n',
-	0xfa, (int)'*',     0xfd, (int)'-',      0xfb, (int)'+',
+	0xff, '/',	    0x0d, '\n',
+	0xfa, '*',	    0xfd, '-',		 0xfb, '+',
 #else
 	0xff, PADSLASH,     0x0d, PADENTER,      
-	0xfa, PADSTAR,      0xfd, PADMINUS,      0xfb, PADPLUS,
+	0xfa, PADSTAR,      0xfd, PADMINUS,	 0xfb, PADPLUS,
 #endif
 	0x0a, CTL_PADENTER,
-	0xa6, ALT_PADENTER, 0x53, (int)'.',      0xfc, CTL_ENTER,
+	0xa6, ALT_PADENTER, 0x53, '.',		 0xfc, CTL_ENTER,
 	0x93, CTL_DEL,      0x8f, CTL_PADCENTER, 0x90, CTL_PADPLUS,
 	0x8e, CTL_PADMINUS, 0x95, CTL_PADSLASH,  0x96, CTL_PADSTAR,
 	0x4e, ALT_PADPLUS,  0x4a, ALT_PADMINUS,  0xa4, ALT_PADSLASH,
@@ -101,7 +101,7 @@ static int kptab[] =
 	0x32, ALT_M, 0x31, ALT_N, 0x18, ALT_O, 0x19, ALT_P,
 	0x10, ALT_Q, 0x13, ALT_R, 0x1f, ALT_S, 0x14, ALT_T,
 	0x16, ALT_U, 0x2f, ALT_V, 0x11, ALT_W, 0x2d, ALT_X,
-	0x15, ALT_Y, 0x2c, ALT_Z, 0x0f, KEY_BTAB, 0x100, -1
+	0x15, ALT_Y, 0x2c, ALT_Z, 0x0f, KEY_BTAB, 0, 0
 };
 
 /* End of kptab[] */
@@ -245,7 +245,8 @@ bool PDC_check_bios_key(void)
 int PDC_get_bios_key(void)
 {
 	PDCREGS regs;
-	int key, scan, *scanp;
+	int key, scan;
+	unsigned short *scanp;
 
 	pdc_key_modifiers = 0;
 
@@ -461,7 +462,7 @@ int PDC_get_bios_key(void)
 
 	key = (key >> 8) & 0xFF;
 
-	for (scanp = kptab; *scanp > 0; scanp++)
+	for (scanp = kptab; *scanp; scanp++)
 		if (*scanp++ == key)
 			return *scanp;
 

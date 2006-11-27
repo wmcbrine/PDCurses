@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.97 2006/11/27 17:06:00 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.98 2006/11/27 21:08:23 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -37,11 +37,11 @@ static int save_press = 0;
 
 typedef struct
 {
-	int normal;
-	int shift;
-	int control;
-	int alt;
-	int extended;
+	unsigned short normal;
+	unsigned short shift;
+	unsigned short control;
+	unsigned short alt;
+	unsigned short extended;
 } KPTAB;
 
 static KPTAB kptab[] =

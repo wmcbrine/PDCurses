@@ -35,14 +35,14 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.63 2006/11/20 15:18:30 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.64 2006/11/27 21:08:23 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
  *   These values are for strict IBM keyboard compatibles only		*
  ************************************************************************/
 
-static int kptab[] =
+static unsigned short kptab[] =
 {
 	/* Normal Function Keys */
 	0x3b, KEY_F(1), 0x3c, KEY_F(2), 0x3d, KEY_F(3), 0x3e, KEY_F(4),
@@ -52,7 +52,7 @@ static int kptab[] =
 	/* Normal Keypad */
 	0x47, KEY_HOME,  0x48, KEY_UP,    0x49, KEY_PPAGE, 0x4b, KEY_LEFT, 
 	0x4c, KEY_B2,    0x4d, KEY_RIGHT, 0x4f, KEY_END,   0x50, KEY_DOWN, 
-	0x51, KEY_NPAGE, 0x52, KEY_IC,   0x53, KEY_DC,
+	0x51, KEY_NPAGE, 0x52, KEY_IC,    0x53, KEY_DC,
 
 	/* Shifted Keypad */
 	0xb0, KEY_SHOME, 0xb1, KEY_SUP,    0xb2, KEY_SPREVIOUS,
@@ -88,11 +88,11 @@ static int kptab[] =
 	0x03, 0, /* NULL */
 
 #ifdef NUMKEYPAD
-	0xff, (int)'/',     0x0d, (int)'\n',
-	0xfa, (int)'*',     0xfd, (int)'-',      0xfb, (int)'+',
+	0xff, '/',	    0x0d, '\n',
+	0xfa, '*',	    0xfd, '-',		 0xfb, '+',
 #else
-	0xff, PADSLASH,     0x0d, PADENTER,      
-	0xfa, PADSTAR,      0xfd, PADMINUS,      0xfb, PADPLUS,
+	0xff, PADSLASH,	    0x0d, PADENTER,      
+	0xfa, PADSTAR,	    0xfd, PADMINUS,	 0xfb, PADPLUS,
 #endif
 
 	0x0a, CTL_PADENTER,
@@ -118,7 +118,7 @@ static int kptab[] =
 	0x32, ALT_M, 0x31, ALT_N, 0x18, ALT_O, 0x19, ALT_P,
 	0x10, ALT_Q, 0x13, ALT_R, 0x1f, ALT_S, 0x14, ALT_T,
 	0x16, ALT_U, 0x2f, ALT_V, 0x11, ALT_W, 0x2d, ALT_X,
-	0x15, ALT_Y, 0x2c, ALT_Z, 0x0f, KEY_BTAB, 0x100, -1
+	0x15, ALT_Y, 0x2c, ALT_Z, 0x0f, KEY_BTAB, 0, 0
 };
 
 /* End of kptab[] */
@@ -435,7 +435,8 @@ static int _process_mouse_events()
 
 int PDC_get_bios_key(void)
 {
-	int key, scan, *scanp;
+	int key, scan;
+	unsigned short *scanp;
 #ifndef EMXVIDEO
 	KBDKEYINFO keyInfo = {0};
 #endif
@@ -582,7 +583,7 @@ int PDC_get_bios_key(void)
 
 	key = (key >> 8) & 0xFF;
 
-	for (scanp = kptab; *scanp > 0; scanp++)	
+	for (scanp = kptab; *scanp; scanp++)
 		if (*scanp++ == key)
 			return *scanp;
 

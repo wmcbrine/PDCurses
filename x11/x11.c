@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.45 2006/11/27 17:14:43 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.46 2006/11/27 17:37:34 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -76,12 +76,12 @@ static void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
 
 static struct
 {
-	int keycode;
-	int numkeypad;
-	int normal;
-	int shifted;
-	int control;
-	int alt;
+	KeySym keycode;
+	bool numkeypad;
+	unsigned short normal;
+	unsigned short shifted;
+	unsigned short control;
+	unsigned short alt;
 } XCKeys[] =
 {
 /* keycode	keypad	normal	     shifted	   control	alt*/
@@ -351,7 +351,7 @@ static const char compose_lookups[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 /* v */ {'b',000,000,000,000,000,000,000,000,000,000,000,000,000},
 };
 
-static const int compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
+static const unsigned char compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 {
 /* ` */ {192,200,204,210,217,224,232,236,242,249,000,000,000,000},
 /* ' */ {180,193,201,205,211,218,221,225,233,237,243,250,253,180},
@@ -1184,10 +1184,11 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	Status status;
 	wchar_t buffer[120];
 #else
-	char buffer[120];
+	unsigned char buffer[120];
 #endif
+	unsigned long key = 0;
 	int buflen = 40;
-	int i, count, key = 0;
+	int i, count;
 	XComposeStatus compose;
 	static int compose_state = STATE_NORMAL;
 	static int compose_index = 0;
@@ -1225,8 +1226,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			}
 
 			if (key)
-				SendKeyToCurses((unsigned long)key,
-					NULL, TRUE);
+				SendKeyToCurses(key, NULL, TRUE);
 		}
 
 		return;
@@ -1235,11 +1235,11 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	buffer[0] = '\0';
 
 #ifdef FOREIGN
-	count = XwcLookupString(Xic, &(event->xkey), buffer, buflen, 
+	count = XwcLookupString(Xic, &(event->xkey), buffer, buflen,
 		&keysym, &status);
 #else
-	count = XLookupString(&(event->xkey), buffer, buflen, &keysym, 
-		&compose);
+	count = XLookupString(&(event->xkey), (char *)buffer, buflen,
+		&keysym, &compose);
 #endif
 
 	/* translate keysym into curses key code */
@@ -1302,12 +1302,12 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		}
 
 		if (buffer[0] && count == 1)
-			key = (int)buffer[0];
+			key = buffer[0];
 
 		compose_index = -1;
          
 		for (i = 0; i < (int)strlen(compose_chars); i++)
-			if ((int)compose_chars[i] == key)
+			if (compose_chars[i] == key)
 			{
 				compose_index = i;
 				break;
@@ -1335,7 +1335,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		}
 
 		if (buffer[0] && count == 1)
-			key = (int)buffer[0];
+			key = buffer[0];
 
 		char_idx = -1;
 
@@ -1355,8 +1355,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			break;
 		}
 
-		SendKeyToCurses(
-			(unsigned long)compose_keys[compose_index][char_idx],
+		SendKeyToCurses(compose_keys[compose_index][char_idx],
 			NULL, FALSE);
 
 		compose_state = STATE_NORMAL;
@@ -1434,7 +1433,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	}
 
 	if (!key && buffer[0] && count == 1)
-		key = (int)buffer[0];
+		key = buffer[0];
 
 	PDC_LOG(("%s:Key: %s pressed - %x Mod: %x\n", XCLOGMSG,
 		XKeysymToString(keysym), key, event->xkey.state));
@@ -1443,21 +1442,21 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 	if (event->xkey.state == Mod1Mask)
 	{
-		if (key >= (int)'A' && key <= (int)'Z')
+		if (key >= 'A' && key <= 'Z')
 		{
-			key = ALT_A + (key - (int)('A'));
+			key += ALT_A - 'A';
 			key_code = TRUE;
 		}
 
-		if (key >= (int)'a' && key <= (int)'z')
+		if (key >= 'a' && key <= 'z')
 		{
-			key = ALT_A + (key - (int)('a'));
+			key += ALT_A - 'a';
 			key_code = TRUE;
 		}
 
-		if (key >= (int)'0' && key <= (int)'9')
+		if (key >= '0' && key <= '9')
 		{
-			key = ALT_0 + (key - (int)('0'));
+			key += ALT_0 - '0';
 			key_code = TRUE;
 		}
 	}
@@ -1467,9 +1466,9 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 	if (key)
 	{
-		key = key | modifier << 24;
+		key |= (modifier << 24);
 
-		SendKeyToCurses((unsigned long)key, NULL, key_code);
+		SendKeyToCurses(key, NULL, key_code);
 	}
 }
 

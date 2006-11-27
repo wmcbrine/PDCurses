@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcx11.c,v 1.88 2006/11/05 05:37:40 wmcbrine Exp $");
+RCSID("$Id: pdcx11.c,v 1.89 2006/11/27 04:23:26 wmcbrine Exp $");
 
 
 /*** Functions that are called by both processes ***/
@@ -58,7 +58,7 @@ void XC_release_line_lock(int row)
 	*(Xcurscr + XCURSCR_FLAG_OFF + row) = 0;
 }
 
-int XC_write_socket(int sock_num, const char *buf, int len)
+int XC_write_socket(int sock_num, const void *buf, int len)
 {
 	int start = 0, rc;
 
@@ -81,7 +81,7 @@ int XC_write_socket(int sock_num, const char *buf, int len)
 	}
 }
 
-int XC_read_socket(int sock_num, char *buf, int len)
+int XC_read_socket(int sock_num, void *buf, int len)
 {
 	int start = 0, length = len, rc;
 
@@ -124,7 +124,7 @@ int XC_read_socket(int sock_num, char *buf, int len)
 
 int XC_write_display_socket_int(int x)
 {
-	return XC_write_socket(xc_display_sock, (char *)&x, sizeof(int));
+	return XC_write_socket(xc_display_sock, &x, sizeof(int));
 }
 
 #ifdef PDCDEBUG
@@ -160,7 +160,7 @@ int XCursesInstructAndWait(int flag)
 
 	/* wait for X to say the refresh has occurred*/
 
-	if (XC_read_socket(xc_display_sock, (char *)&result, sizeof(int)) < 0)
+	if (XC_read_socket(xc_display_sock, &result, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 			"exiting from XCursesInstructAndWait");
 
@@ -185,7 +185,7 @@ static int _setup_curses(void)
 
 	FD_ZERO(&xc_readfds);
 
-	XC_read_socket(xc_display_sock, (char *)&wait_value, sizeof(int));
+	XC_read_socket(xc_display_sock, &wait_value, sizeof(int));
 
 	if (wait_value != CURSES_CHILD)
 		return ERR;

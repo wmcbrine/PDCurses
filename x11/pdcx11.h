@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.54 2006/10/15 02:42:26 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.55 2006/11/27 04:23:26 wmcbrine Exp $ */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -149,8 +149,8 @@ int XCursesInstruct(int);
 int XCursesInstructAndWait(int);
 int XCursesInitscr(int, char **);
 
-int XC_write_socket(int, const char *, int);
-int XC_read_socket(int, char *, int);
+int XC_write_socket(int, const void *, int);
+int XC_read_socket(int, void *, int);
 int XC_write_display_socket_int(int);
 
 int XCursesSetupX(int argc, char *argv[]);

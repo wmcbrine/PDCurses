@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.43 2006/11/20 02:10:15 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.44 2006/11/27 04:23:26 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2057,8 +2057,7 @@ static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms,
 
 	SP->key_code = key_code;
 
-	if (XC_write_socket(xc_key_sock,
-	    (char *)&key, sizeof(unsigned long)) < 0)
+	if (XC_write_socket(xc_key_sock, &key, sizeof(unsigned long)) < 0)
 	{
 		ExitProcess(1, SIGKILL, "exiting from SendKeyToCurses");
 	}
@@ -2067,8 +2066,7 @@ static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms,
 	{
 		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
 
-		if (XC_write_socket(xc_key_sock,
-		    (char *)ms, sizeof(MOUSE_STATUS)) < 0)
+		if (XC_write_socket(xc_key_sock, ms, sizeof(MOUSE_STATUS)) < 0)
 		{
 			ExitProcess(1, SIGKILL,
 				"exiting from SendKeyToCurses");
@@ -2580,7 +2578,7 @@ static void Title(void)
 	char title[1024];	/* big enough for window title */ 
 	int pos;
 
-	if ((XC_read_socket(xc_display_sock, (char *)&pos, sizeof(int)) < 0) ||
+	if ((XC_read_socket(xc_display_sock, &pos, sizeof(int)) < 0) ||
 	    (XC_read_socket(xc_display_sock, title, pos) < 0))
 	{
 		ExitProcess(5, SIGKILL, "exiting from Title");
@@ -2666,8 +2664,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    XC_LOG(("XCursesProcessRequestsFromCurses() - "
 		"before XC_read_socket()\n"));
 
-	    if (XC_read_socket(xc_display_sock,
-		(char *)&num_cols, sizeof(int)) < 0) 
+	    if (XC_read_socket(xc_display_sock, &num_cols, sizeof(int)) < 0) 
 	    {
 		ExitProcess(3, SIGKILL, "exiting from "
 		    "XCursesProcessRequestsFromCurses - first read");
@@ -2785,8 +2782,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    case CURSES_SET_SELECTION:
 		XC_LOG(("CURSES_SET_SELECTION received from child\n"));
 
-		if (XC_read_socket(xc_display_sock,
-		    (char *)&length, sizeof(long)) < 0)
+		if (XC_read_socket(xc_display_sock, &length, sizeof(long)) < 0)
 		{
 		    ExitProcess(5, SIGKILL,
 			"exiting from CURSES_SET_SELECTION "
@@ -2809,8 +2805,8 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    break;
 		}
 
-		if (XC_read_socket(xc_display_sock,
-		    (char *)tmpsel, length * sizeof(chtype)) < 0)
+		if (XC_read_socket(xc_display_sock, tmpsel,
+		    length * sizeof(chtype)) < 0)
 		{
 		    ExitProcess(5, SIGKILL,
 			"exiting from CURSES_SET_SELECTION "
@@ -3301,7 +3297,7 @@ static RETSIGTYPE XCursesSignalHandler(int signo)
 
 	/* Send a CURSES_EXIT to myself */
 
-	if (XC_write_socket(xc_exit_sock, (char *)&flag, sizeof(int)) < 0)
+	if (XC_write_socket(xc_exit_sock, &flag, sizeof(int)) < 0)
 		ExitProcess(7, signo, "exiting from XCursesSignalHandler");
 }
 
@@ -3325,9 +3321,8 @@ static void RequestorCallbackForGetSelection(Widget w, XtPointer data,
 
 	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
 		if (XC_write_display_socket_int((int)(*length)) >= 0)
-		    if (XC_write_socket(xc_display_sock,
-			(char *)value, *length) >= 0)
-			    return;
+		    if (XC_write_socket(xc_display_sock, value, *length) >= 0)
+			return;
 	}
 
 	ExitProcess(4, SIGKILL,

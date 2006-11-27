@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcclip.c,v 1.26 2006/11/18 10:17:01 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.27 2006/11/27 04:23:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -53,13 +53,13 @@ int PDC_getclipboard(char **contents, long *length)
 
 	XCursesInstructAndWait(CURSES_GET_SELECTION);
 
-	if (XC_read_socket(xc_display_sock, (char *)&result, sizeof(int)) < 0)
+	if (XC_read_socket(xc_display_sock, &result, sizeof(int)) < 0)
 	    XCursesExitCursesProcess(5,
 		"exiting from PDC_getclipboard");
 
 	if (result == PDC_CLIP_SUCCESS)
 	{
-	    if (XC_read_socket(xc_display_sock, (char *)&len, sizeof(int)) < 0)
+	    if (XC_read_socket(xc_display_sock, &len, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 		    "exiting from PDC_getclipboard");
 
@@ -113,14 +113,12 @@ int PDC_setclipboard(const char *contents, long length)
 
 	/* Write, then wait for X to do its stuff; expect return code. */
 
-	if (XC_write_socket(xc_display_sock,
-	    (char *)&length, sizeof(long)) >= 0)
+	if (XC_write_socket(xc_display_sock, &length, sizeof(long)) >= 0)
 	{
-		if (XC_write_socket(xc_display_sock,
-		    contents, length) >= 0)
+		if (XC_write_socket(xc_display_sock, contents, length) >= 0)
 		{
 			if (XC_read_socket(xc_display_sock,
-			    (char *)&rc, sizeof(int)) >= 0)
+			    &rc, sizeof(int)) >= 0)
 			{
 				return rc;
 			}
@@ -186,8 +184,8 @@ int PDC_clearclipboard(void)
 
 	/* Write, then wait for X to do its stuff; expect return code. */
 
-	if (XC_write_socket(xc_display_sock, (char *)&len, sizeof(long)) >= 0)
-	    if (XC_read_socket(xc_display_sock, (char *)&rc, sizeof(int)) >= 0)
+	if (XC_write_socket(xc_display_sock, &len, sizeof(long)) >= 0)
+	    if (XC_read_socket(xc_display_sock, &rc, sizeof(int)) >= 0)
 		return rc;
 
 	XCursesExitCursesProcess(5, "exiting from PDC_clearclipboard");

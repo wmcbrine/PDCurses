@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.44 2006/11/27 04:23:26 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.45 2006/11/27 17:14:43 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -1533,7 +1533,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 				      unsigned long *length, int *format)
 {
 	unsigned long i, key;
-	char *string = (char *)value;
+	unsigned char *string = value;
 
 	XC_LOG(("RequestorCallbackForPaste() - called\n"));
 
@@ -1542,7 +1542,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 
 	for (i = 0; i < (*length); i++)
 	{
-		key = (unsigned long)(string[i]);
+		key = string[i];
 
 		if (key == 10)		/* new line - convert to ^M */
 			key = 13;

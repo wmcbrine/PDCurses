@@ -35,93 +35,117 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.64 2006/11/27 21:08:23 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.65 2006/11/28 19:15:04 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
  *   These values are for strict IBM keyboard compatibles only		*
  ************************************************************************/
 
-static unsigned short kptab[] =
+static unsigned char key_index[] =
 {
 	/* Normal Function Keys */
-	0x3b, KEY_F(1), 0x3c, KEY_F(2), 0x3d, KEY_F(3), 0x3e, KEY_F(4),
-	0x3f, KEY_F(5), 0x40, KEY_F(6), 0x41, KEY_F(7), 0x42, KEY_F(8),
-	0x43, KEY_F(9), 0x44, KEY_F(10),
+	0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42, 0x43, 0x44,
 
 	/* Normal Keypad */
-	0x47, KEY_HOME,  0x48, KEY_UP,    0x49, KEY_PPAGE, 0x4b, KEY_LEFT, 
-	0x4c, KEY_B2,    0x4d, KEY_RIGHT, 0x4f, KEY_END,   0x50, KEY_DOWN, 
-	0x51, KEY_NPAGE, 0x52, KEY_IC,    0x53, KEY_DC,
+	0x47, 0x48, 0x49, 0x4b, 0x4c, 0x4d, 0x4f, 0x50, 0x51, 0x52, 
+	0x53,
 
 	/* Shifted Keypad */
-	0xb0, KEY_SHOME, 0xb1, KEY_SUP,    0xb2, KEY_SPREVIOUS,
-	0xb3, KEY_SLEFT, 0xb4, KEY_SRIGHT, 0xb5, KEY_SEND,
-	0xb6, KEY_SDOWN, 0xb7, KEY_SNEXT,  0xb8, KEY_SIC,  0xb9, KEY_SDC,
+	0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9,
 
 	/* Shft-Function Keys */
-	0x54, KEY_F(13), 0x55, KEY_F(14), 0x56, KEY_F(15), 0x57, KEY_F(16),
-	0x58, KEY_F(17), 0x59, KEY_F(18), 0x5a, KEY_F(19), 0x5b, KEY_F(20),
-	0x5c, KEY_F(21), 0x5d, KEY_F(22),
+	0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d,
 
 	/* Ctl-Function Keys */
-	0x5e, KEY_F(25), 0x5f, KEY_F(26), 0x60, KEY_F(27), 0x61, KEY_F(28),
-	0x62, KEY_F(29), 0x63, KEY_F(30), 0x64, KEY_F(31), 0x65, KEY_F(32),
-	0x66, KEY_F(33), 0x67, KEY_F(34),
+	0x5e, 0x5f, 0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
 
 	/* Alt-Function Keys */
-	0x68, KEY_F(37), 0x69, KEY_F(38), 0x6a, KEY_F(39), 0x6b, KEY_F(40),
-	0x6c, KEY_F(41), 0x6d, KEY_F(42), 0x6e, KEY_F(43), 0x6f, KEY_F(44),
-	0x70, KEY_F(45), 0x71, KEY_F(46),
+	0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71,
 
 	/* Control-Keypad */
-	0x77, CTL_HOME,  0x84, CTL_PGUP,  0x73, CTL_LEFT,
-	0x74, CTL_RIGHT, 0x75, CTL_END,   0x76, CTL_PGDN,
+	0x77, 0x84, 0x73, 0x74, 0x75, 0x76,
 
 	/* Alt-Numbers */
-	0x78, ALT_1, 0x79, ALT_2, 0x7a, ALT_3, 0x7b, ALT_4, 0x7c, ALT_5,
-	0x7d, ALT_6, 0x7e, ALT_7, 0x7f, ALT_8, 0x80, ALT_9, 0x81, ALT_0,
+	0x78, 0x79, 0x7a, 0x7b, 0x7c, 0x7d, 0x7e, 0x7f, 0x80, 0x81,
 
 	/* Extended codes */
-	0x85, KEY_F(11), 0x86, KEY_F(12), 0x87, KEY_F(23), 0x88, KEY_F(24),
-	0x89, KEY_F(35), 0x8a, KEY_F(36), 0x8b, KEY_F(47), 0x8c, KEY_F(48),
-	0x03, 0, /* NULL */
+	0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x03,
 
-#ifdef NUMKEYPAD
-	0xff, '/',	    0x0d, '\n',
-	0xfa, '*',	    0xfd, '-',		 0xfb, '+',
-#else
-	0xff, PADSLASH,	    0x0d, PADENTER,      
-	0xfa, PADSTAR,	    0xfd, PADMINUS,	 0xfb, PADPLUS,
-#endif
+	0xff, 0x0d, 0xfa, 0xfd, 0xfb,
 
-	0x0a, CTL_PADENTER,
-	0xa6, ALT_PADENTER, 0x53, (int)'.',      0xfc, CTL_ENTER,
-	0x93, CTL_DEL,      0x8f, CTL_PADCENTER, 0x90, CTL_PADPLUS,
-	0x8e, CTL_PADMINUS, 0x95, CTL_PADSLASH,  0x96, CTL_PADSTAR,
-	0x4e, ALT_PADPLUS,  0x4a, ALT_PADMINUS,  0xa4, ALT_PADSLASH,
-	0x37, ALT_PADSTAR,  0x92, CTL_INS,       0xa2, ALT_INS,
-	0xa3, ALT_DEL,      0x8d, CTL_UP,        0x91, CTL_DOWN,
-	0x94, CTL_TAB,      0xa5, ALT_TAB,       0x82, ALT_MINUS,
-	0x83, ALT_EQUAL,    0x99, ALT_PGUP,      0xa1, ALT_PGDN,
-	0x9f, ALT_END,      0x98, ALT_UP,        0xa0, ALT_DOWN,
-	0x9d, ALT_RIGHT,    0x9b, ALT_LEFT,      0x1c, ALT_ENTER,
-	0x97, ALT_HOME,     0x01, ALT_ESC,       0x0e, ALT_BKSP,
-	0x29, ALT_BQUOTE,   0x1a, ALT_LBRACKET,  0x1b, ALT_RBRACKET,
-	0x27, ALT_SEMICOLON,0x28, ALT_FQUOTE,    0x33, ALT_COMMA,
-	0x34, ALT_STOP,     0x35, ALT_FSLASH,    0x2b, ALT_BSLASH,
+	0x0a, 0xa6, 0x53, 0xfc, 0x93, 0x8f, 0x90, 0x8e, 0x95, 0x96, 
+	0x4e, 0x4a, 0xa4, 0x37, 0x92, 0xa2, 0xa3, 0x8d, 0x91, 0x94, 
+	0xa5, 0x82, 0x83, 0x99, 0xa1, 0x9f, 0x98, 0xa0, 0x9d, 0x9b, 
+	0x1c, 0x97, 0x01, 0x0e, 0x29, 0x1a, 0x1b, 0x27, 0x28, 0x33, 
+	0x34, 0x35, 0x2b,
 
 	/* Alt-Alphabet */
-	0x1e, ALT_A, 0x30, ALT_B, 0x2e, ALT_C, 0x20, ALT_D,
-	0x12, ALT_E, 0x21, ALT_F, 0x22, ALT_G, 0x23, ALT_H,
-	0x17, ALT_I, 0x24, ALT_J, 0x25, ALT_K, 0x26, ALT_L,
-	0x32, ALT_M, 0x31, ALT_N, 0x18, ALT_O, 0x19, ALT_P,
-	0x10, ALT_Q, 0x13, ALT_R, 0x1f, ALT_S, 0x14, ALT_T,
-	0x16, ALT_U, 0x2f, ALT_V, 0x11, ALT_W, 0x2d, ALT_X,
-	0x15, ALT_Y, 0x2c, ALT_Z, 0x0f, KEY_BTAB, 0, 0
+	0x1e, 0x30, 0x2e, 0x20, 0x12, 0x21, 0x22, 0x23, 0x17, 0x24, 
+	0x25, 0x26, 0x32, 0x31, 0x18, 0x19, 0x10, 0x13, 0x1f, 0x14, 
+	0x16, 0x2f, 0x11, 0x2d, 0x15, 0x2c, 0x0f, 0
 };
 
-/* End of kptab[] */
+static unsigned short key_table[] =
+{
+	/* Normal Function Keys */
+	KEY_F(1), KEY_F(2), KEY_F(3), KEY_F(4), KEY_F(5),
+	KEY_F(6), KEY_F(7), KEY_F(8), KEY_F(9), KEY_F(10),
+
+	/* Normal Keypad */
+	KEY_HOME, KEY_UP,   KEY_PPAGE, KEY_LEFT, KEY_B2, KEY_RIGHT,
+	KEY_END,  KEY_DOWN, KEY_NPAGE, KEY_IC,   KEY_DC,
+
+	/* Shifted Keypad */
+	KEY_SHOME, KEY_SUP,   KEY_SPREVIOUS, KEY_SLEFT, KEY_SRIGHT,
+	KEY_SEND,  KEY_SDOWN, KEY_SNEXT,     KEY_SIC,   KEY_SDC,
+
+	/* Shft-Function Keys */
+	KEY_F(13), KEY_F(14), KEY_F(15), KEY_F(16), KEY_F(17),
+	KEY_F(18), KEY_F(19), KEY_F(20), KEY_F(21), KEY_F(22),
+
+	/* Ctl-Function Keys */
+	KEY_F(25), KEY_F(26), KEY_F(27), KEY_F(28), KEY_F(29),
+	KEY_F(30), KEY_F(31), KEY_F(32), KEY_F(33), KEY_F(34),
+
+	/* Alt-Function Keys */
+	KEY_F(37), KEY_F(38), KEY_F(39), KEY_F(40), KEY_F(41),
+	KEY_F(42), KEY_F(43), KEY_F(44), KEY_F(45), KEY_F(46),
+
+	/* Control-Keypad */
+	CTL_HOME, CTL_PGUP, CTL_LEFT, CTL_RIGHT, CTL_END, CTL_PGDN,
+
+	/* Alt-Numbers */
+	ALT_1, ALT_2, ALT_3, ALT_4, ALT_5,
+	ALT_6, ALT_7, ALT_8, ALT_9, ALT_0,
+
+	/* Extended codes */
+	KEY_F(11), KEY_F(12), KEY_F(23), KEY_F(24),
+	KEY_F(35), KEY_F(36), KEY_F(47), KEY_F(48), 0,
+
+#ifdef NUMKEYPAD
+	'/', '\n', '*', '-', '+',
+#else
+	PADSLASH, PADENTER, PADSTAR, PADMINUS, PADPLUS,
+#endif
+	CTL_PADENTER,	ALT_PADENTER,	'.',		CTL_ENTER,
+	CTL_DEL,	CTL_PADCENTER,	CTL_PADPLUS,	CTL_PADMINUS,
+	CTL_PADSLASH,	CTL_PADSTAR,	ALT_PADPLUS,	ALT_PADMINUS,
+	ALT_PADSLASH,	ALT_PADSTAR,	CTL_INS,	ALT_INS,
+	ALT_DEL,	CTL_UP,		CTL_DOWN,	CTL_TAB,
+	ALT_TAB,	ALT_MINUS,	ALT_EQUAL,	ALT_PGUP,
+	ALT_PGDN,	ALT_END,	ALT_UP,		ALT_DOWN,
+	ALT_RIGHT,	ALT_LEFT,	ALT_ENTER,	ALT_HOME,
+	ALT_ESC,	ALT_BKSP,	ALT_BQUOTE,	ALT_LBRACKET,
+	ALT_RBRACKET,	ALT_SEMICOLON,	ALT_FQUOTE,	ALT_COMMA,
+	ALT_STOP,	ALT_FSLASH,	ALT_BSLASH,
+
+	/* Alt-Alphabet */
+	ALT_A, ALT_B, ALT_C, ALT_D, ALT_E, ALT_F, ALT_G, ALT_H,
+	ALT_I, ALT_J, ALT_K, ALT_L, ALT_M, ALT_N, ALT_O, ALT_P,
+	ALT_Q, ALT_R, ALT_S, ALT_T, ALT_U, ALT_V, ALT_W, ALT_X,
+	ALT_Y, ALT_Z, KEY_BTAB, 0
+};
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -436,7 +460,6 @@ static int _process_mouse_events()
 int PDC_get_bios_key(void)
 {
 	int key, scan;
-	unsigned short *scanp;
 #ifndef EMXVIDEO
 	KBDKEYINFO keyInfo = {0};
 #endif
@@ -583,9 +606,9 @@ int PDC_get_bios_key(void)
 
 	key = (key >> 8) & 0xFF;
 
-	for (scanp = kptab; *scanp; scanp++)
-		if (*scanp++ == key)
-			return *scanp;
+	for (scan = 0; key_index[scan]; scan++)
+		if (key_index[scan] == key)
+			return key_table[scan];
 
 	return -1;		/* not found, invalid */
 }

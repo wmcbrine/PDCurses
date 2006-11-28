@@ -35,7 +35,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.65 2006/11/28 19:15:04 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.66 2006/11/28 20:50:07 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -284,13 +284,13 @@ bool PDC_check_bios_key(void)
 			return TRUE;
 	}
 
-	if (old_shift && !kbdinfo.fsState)
+	if (old_shift && !kbdinfo.fsState)	/* modifier released */
 	{
 		if (!key_pressed && SP->return_key_modifiers)
 			return TRUE;
-
-		key_pressed = FALSE;
 	}
+	else if (!old_shift && kbdinfo.fsState)	/* modifier pressed */
+		key_pressed = FALSE;
 
 	old_shift = kbdinfo.fsState;
 

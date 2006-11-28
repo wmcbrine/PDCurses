@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.60 2006/11/28 19:15:03 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.61 2006/11/28 20:50:07 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -240,13 +240,13 @@ bool PDC_check_bios_key(void)
 			return TRUE;
 	}
 
-	if (old_shift && !shift_status)
+	if (old_shift && !shift_status)		/* modifier released */
 	{
 		if (!key_pressed && SP->return_key_modifiers)
 			return TRUE;
-
-		key_pressed = FALSE;
 	}
+	else if (!old_shift && shift_status)	/* modifier pressed */
+		key_pressed = FALSE;
 
 	old_shift = shift_status;
 

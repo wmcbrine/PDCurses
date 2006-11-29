@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.47 2006/11/29 02:36:15 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.48 2006/11/29 02:52:43 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -632,7 +632,6 @@ static const char *defaultTranslations =
 	"<BtnMotion>: XCursesButton()"
 };
 
-#ifdef PDC_WIDE
 static int to_utf8(char *outcode, int code)
 {
 	if (code < 0x80)
@@ -656,7 +655,7 @@ static int to_utf8(char *outcode, int code)
 		}
 }
 
-# ifndef X_HAVE_UTF8_STRING
+#ifndef X_HAVE_UTF8_STRING
 static Atom XA_UTF8_STRING(Display *dpy)
 {
 	static AtomPtr p = NULL;
@@ -666,7 +665,6 @@ static Atom XA_UTF8_STRING(Display *dpy)
 
 	return XmuInternAtom(dpy, p);
 }
-# endif
 #endif
 
 signal_handler XCursesSetSignal(int signo, signal_handler action)
@@ -1521,15 +1519,9 @@ static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
 {
 	XC_LOG(("XCursesPasteSelection() - called\n"));
 
-#ifdef PDC_WIDE
 	XtGetSelectionValue(w, XA_PRIMARY, XA_UTF8_STRING(XtDisplay(w)),
 		RequestorCallbackForPaste,
 		(XtPointer)button_event, button_event->time);
-#else
-	XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
-		RequestorCallbackForPaste,
-		(XtPointer)button_event, button_event->time);
-#endif
 }
 
 static void RequestorCallbackForPaste(Widget w, XtPointer data,
@@ -1539,14 +1531,11 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 {
 	unsigned long i, key;
 	unsigned char *string = value;
-#ifdef PDC_WIDE
 	bool utf8;
-#endif
+
 	XC_LOG(("RequestorCallbackForPaste() - called\n"));
 
-#ifdef PDC_WIDE
 	if (!*type || !*length)
-#endif
 	{
 		XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
 			RequestorCallbackForPaste, NULL, 0);
@@ -1556,15 +1545,15 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 	if (!string)
 		return;
 
-#ifdef PDC_WIDE
 	utf8 = !(*type == XA_STRING);
-#endif
 
 	for (i = 0; string[i] && (i < (*length)); i++)
 	{
 		key = string[i];
 
-#ifdef PDC_WIDE
+		/* Simplistic UTF-8 decoder -- only does the BMP,
+		   minimal validation */
+
 		if (utf8 && (key & 0x80))
 		{
 			if ((key & 0xe0) == 0xc0)
@@ -1593,7 +1582,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 			else
 				continue;
 		}
-#endif
+
 		if (key == 10)		/* new line - convert to ^M */
 			key = 13;
 
@@ -1620,19 +1609,12 @@ static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 			selection, target, type_return, &std_targets, 
 			&std_length, format_return);
 
-		*length_return = std_length +
-#ifdef PDC_WIDE
-			2;
-#else
-			1;
-#endif
+		*length_return = std_length + 2;
 		*value_return = XtMalloc(sizeof(Atom) * (*length_return));
 
 		targetP = *(Atom**)value_return;
 		*targetP++ = XA_STRING;
-#ifdef PDC_WIDE
 		*targetP++ = XA_UTF8_STRING(XtDisplay(topLevel));
-#endif
 
 		memmove((void *)targetP, (const void *)std_targets,
 			sizeof(Atom) * std_length);
@@ -1643,25 +1625,14 @@ static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 
 		return True;
 	}
-	else if (
-#ifdef PDC_WIDE
-		 *target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
-#endif
+	else if (*target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
 		 *target == XA_STRING)
 	{
-#ifdef PDC_WIDE
-		bool utf8 = (*target == XA_UTF8_STRING(XtDisplay(topLevel)));
-#endif
-		char *data = XtMalloc(tmpsel_length
-#ifdef PDC_WIDE
-			* 3
-#endif
-			+ 1);
-
+		bool utf8 = !(*target == XA_STRING);
+		char *data = XtMalloc(tmpsel_length * 3 + 1);
 		chtype *tmp = tmpsel;
 		int ret_length = 0;
 
-#ifdef PDC_WIDE
 		if (utf8)
 		{
 			while (*tmp)
@@ -1669,7 +1640,6 @@ static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 					(int)(*tmp++ & A_CHARTEXT));
 		}
 		else
-#endif
 			while (*tmp)
 				data[ret_length++] = *tmp++ & 0xff;
 

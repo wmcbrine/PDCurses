@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.46 2006/11/27 17:37:34 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.47 2006/11/29 02:36:15 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -1521,9 +1521,15 @@ static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
 {
 	XC_LOG(("XCursesPasteSelection() - called\n"));
 
-	XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, 
-		RequestorCallbackForPaste, 
+#ifdef PDC_WIDE
+	XtGetSelectionValue(w, XA_PRIMARY, XA_UTF8_STRING(XtDisplay(w)),
+		RequestorCallbackForPaste,
 		(XtPointer)button_event, button_event->time);
+#else
+	XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
+		RequestorCallbackForPaste,
+		(XtPointer)button_event, button_event->time);
+#endif
 }
 
 static void RequestorCallbackForPaste(Widget w, XtPointer data,
@@ -1533,16 +1539,61 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 {
 	unsigned long i, key;
 	unsigned char *string = value;
-
+#ifdef PDC_WIDE
+	bool utf8;
+#endif
 	XC_LOG(("RequestorCallbackForPaste() - called\n"));
+
+#ifdef PDC_WIDE
+	if (!*type || !*length)
+#endif
+	{
+		XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
+			RequestorCallbackForPaste, NULL, 0);
+		return;
+	}
 
 	if (!string)
 		return;
 
-	for (i = 0; i < (*length); i++)
+#ifdef PDC_WIDE
+	utf8 = !(*type == XA_STRING);
+#endif
+
+	for (i = 0; string[i] && (i < (*length)); i++)
 	{
 		key = string[i];
 
+#ifdef PDC_WIDE
+		if (utf8 && (key & 0x80))
+		{
+			if ((key & 0xe0) == 0xc0)
+			{
+				if ((i + 1) < *length)
+				{
+					key = ((key & 0x1f) << 6) |
+						(string[i + 1] & 0x3f);
+					i++;
+				}
+				else
+					continue;
+			}
+			else if ((key & 0xe0) == 0xe0)
+			{
+				if ((i + 2) < *length)
+				{
+					key = ((key & 0x0f) << 12) |
+						((string[i + 1] & 0x3f) << 6) |
+						(string[i + 2] & 0x3f);
+					i += 2;
+				}
+				else
+					continue;
+			}
+			else
+				continue;
+		}
+#endif
 		if (key == 10)		/* new line - convert to ^M */
 			key = 13;
 

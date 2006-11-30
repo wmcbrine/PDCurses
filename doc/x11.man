@@ -165,7 +165,7 @@ bitmap:		   The name of a valid bitmap file of depth 1 (black and white)
 				   window manager
 
 pixmap:		   The name of a valid pixmap file of any depth 
-		   supported by the window manager 9color) for the 
+		   supported by the window manager (color) for the 
 		   application's icon, The file is an X11 pixmap. This 
 		   resource is only available if the libXpm package has 
 		   been installed (most systems have this by default). 

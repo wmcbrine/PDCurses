@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.48 2006/11/29 02:52:43 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.49 2006/11/30 02:11:11 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -69,8 +69,6 @@ static void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
 static void XCursesPasteSelection(Widget, XButtonEvent *);
 static void RequestorCallbackForGetSelection(Widget, XtPointer, 
 	Atom *, Atom *, XtPointer, unsigned long *, int *);
-static void RequestorCallbackForPaste(Widget, XtPointer, Atom *, 
-	Atom *, XtPointer, unsigned long *, int *);
 static RETSIGTYPE XCursesSignalHandler(int);
 static void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
 
@@ -1515,37 +1513,47 @@ static void XCursesHandleString(Widget w, XEvent *event, String *params,
 	}
 }
 
-static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
-{
-	XC_LOG(("XCursesPasteSelection() - called\n"));
-
-	XtGetSelectionValue(w, XA_PRIMARY, XA_UTF8_STRING(XtDisplay(w)),
-		RequestorCallbackForPaste,
-		(XtPointer)button_event, button_event->time);
-}
-
-static void RequestorCallbackForPaste(Widget w, XtPointer data,
-				      Atom *selection, Atom *type, 
-				      XtPointer value,
-				      unsigned long *length, int *format)
+static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,
+			  XtPointer value, unsigned long *length, int *format)
 {
 	unsigned long i, key;
 	unsigned char *string = value;
-	bool utf8;
 
-	XC_LOG(("RequestorCallbackForPaste() - called\n"));
+	XC_LOG(("_paste_string() - called\n"));
+
+	if (!*type || !*length || !string)
+		return;
+
+	for (i = 0; string[i] && (i < (*length)); i++)
+	{
+		key = string[i];
+
+		if (key == 10)		/* new line - convert to ^M */
+			key = 13;
+
+		SendKeyToCurses(key, NULL, FALSE);
+	}
+
+	XtFree(value);
+}
+
+static void _paste_utf8(Widget w, XtPointer event, Atom *selection, Atom *type,
+			XtPointer value, unsigned long *length, int *format)
+{
+	unsigned long i, key;
+	unsigned char *string = value;
+
+	XC_LOG(("_paste_utf8() - called\n"));
 
 	if (!*type || !*length)
 	{
 		XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
-			RequestorCallbackForPaste, NULL, 0);
+			_paste_string, event, ((XButtonEvent *)event)->time);
 		return;
 	}
 
 	if (!string)
 		return;
-
-	utf8 = !(*type == XA_STRING);
 
 	for (i = 0; string[i] && (i < (*length)); i++)
 	{
@@ -1554,7 +1562,7 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 		/* Simplistic UTF-8 decoder -- only does the BMP,
 		   minimal validation */
 
-		if (utf8 && (key & 0x80))
+		if (key & 0x80)
 		{
 			if ((key & 0xe0) == 0xc0)
 			{
@@ -1588,6 +1596,16 @@ static void RequestorCallbackForPaste(Widget w, XtPointer data,
 
 		SendKeyToCurses(key, NULL, FALSE);
 	}
+
+	XtFree(value);
+}
+
+static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
+{
+	XC_LOG(("XCursesPasteSelection() - called\n"));
+
+	XtGetSelectionValue(w, XA_PRIMARY, XA_UTF8_STRING(XtDisplay(w)),
+		_paste_utf8, (XtPointer)button_event, button_event->time);
 }
 
 static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,

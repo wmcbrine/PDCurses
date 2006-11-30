@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.50 2006/11/30 02:16:43 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.51 2006/11/30 03:44:14 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -58,16 +58,14 @@ XCursesAppData xc_app_data;
 #include "big_icon.xbm"
 #include "little_icon.xbm"
 
-static void SelectionOff(void);
-static void DisplayCursor(int, int, int, int);
-static void ExitProcess(int, int, char *);
-static void SendKeyToCurses(unsigned long, MOUSE_STATUS *, bool);
+static void _selection_off(void);
+static void _display_cursor(int, int, int, int);
+static void _exit_process(int, int, char *);
+static void _send_key_to_curses(unsigned long, MOUSE_STATUS *, bool);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 static void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
 static void XCursesPasteSelection(Widget, XButtonEvent *);
-static void RequestorCallbackForGetSelection(Widget, XtPointer, 
-	Atom *, Atom *, XtPointer, unsigned long *, int *);
 static RETSIGTYPE XCursesSignalHandler(int);
 static void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
 
@@ -79,7 +77,7 @@ static struct
 	unsigned short shifted;
 	unsigned short control;
 	unsigned short alt;
-} XCKeys[] =
+} xc_keys[] =
 {
 /* keycode	keypad	normal	     shifted	   control	alt*/
  {XK_Left,	FALSE,	KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,	ALT_LEFT},
@@ -143,71 +141,71 @@ static struct
 #endif
  {XK_Escape,	FALSE,	0x1B,        0x1B,	   0x1B,	ALT_ESC},
  {XK_KP_Enter,	TRUE,	PADENTER,    PADENTER,	   CTL_PADENTER,ALT_PADENTER},
- {XK_KP_Add,	TRUE,	PADPLUS,     (int)'+',	   CTL_PADPLUS, ALT_PADPLUS},
- {XK_KP_Subtract,TRUE,	PADMINUS,    (int)'-',	   CTL_PADMINUS,ALT_PADMINUS},
- {XK_KP_Multiply,TRUE,	PADSTAR,     (int)'*',	   CTL_PADSTAR, ALT_PADSTAR},
+ {XK_KP_Add,	TRUE,	PADPLUS,     '+',	   CTL_PADPLUS, ALT_PADPLUS},
+ {XK_KP_Subtract,TRUE,	PADMINUS,    '-',	   CTL_PADMINUS,ALT_PADMINUS},
+ {XK_KP_Multiply,TRUE,	PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
 /* Sun Type 4 keyboard */
- {XK_R6,	TRUE,	PADSTAR,     (int)'*',	   CTL_PADSTAR, ALT_PADSTAR},
- {XK_KP_Divide, TRUE,	PADSLASH,    (int)'/',	   CTL_PADSLASH,ALT_PADSLASH},
+ {XK_R6,	TRUE,	PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
+ {XK_KP_Divide, TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
 /* Sun Type 4 keyboard */
- {XK_R5,	TRUE,	PADSLASH,    (int)'/',	   CTL_PADSLASH,ALT_PADSLASH},
- {XK_KP_Decimal,TRUE,	PADSTOP,     (int)'.',	   CTL_PADSTOP, ALT_PADSTOP},
- {XK_KP_0,	TRUE,	PAD0,	     (int)'0',	   CTL_PAD0,	ALT_PAD0},
- {XK_KP_1,	TRUE,	KEY_C1,      (int)'1',	   CTL_PAD1,	ALT_PAD1},
- {XK_KP_2,	TRUE,	KEY_C2,      (int)'2',	   CTL_PAD2,	ALT_PAD2},
- {XK_KP_3,	TRUE,	KEY_C3,      (int)'3',	   CTL_PAD3,	ALT_PAD3},
- {XK_KP_4,	TRUE,	KEY_B1,      (int)'4',	   CTL_PAD4,	ALT_PAD4},
- {XK_KP_5,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_R5,	TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
+ {XK_KP_Decimal,TRUE,	PADSTOP,     '.',	   CTL_PADSTOP, ALT_PADSTOP},
+ {XK_KP_0,	TRUE,	PAD0,	     '0',	   CTL_PAD0,	ALT_PAD0},
+ {XK_KP_1,	TRUE,	KEY_C1,      '1',	   CTL_PAD1,	ALT_PAD1},
+ {XK_KP_2,	TRUE,	KEY_C2,      '2',	   CTL_PAD2,	ALT_PAD2},
+ {XK_KP_3,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
+ {XK_KP_4,	TRUE,	KEY_B1,      '4',	   CTL_PAD4,	ALT_PAD4},
+ {XK_KP_5,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
 /* Sun Type 4 keyboard */
- {XK_R11,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
- {XK_KP_6,	TRUE,	KEY_B3,      (int)'6',	   CTL_PAD6,	ALT_PAD6},
- {XK_KP_7,	TRUE,	KEY_A1,      (int)'7',	   CTL_PAD7,	ALT_PAD7},
- {XK_KP_8,	TRUE,	KEY_A2,      (int)'8',	   CTL_PAD8,	ALT_PAD8},
- {XK_KP_9,	TRUE,	KEY_A3,      (int)'9',	   CTL_PAD9,	ALT_PAD9},
+ {XK_R11,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_KP_6,	TRUE,	KEY_B3,      '6',	   CTL_PAD6,	ALT_PAD6},
+ {XK_KP_7,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
+ {XK_KP_8,	TRUE,	KEY_A2,      '8',	   CTL_PAD8,	ALT_PAD8},
+ {XK_KP_9,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
 /* the following added to support Sun Type 5 keyboards */
  {XK_F21,	FALSE,	KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
  {XK_F22,	FALSE,	KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,	KEY_PRINT},
- {XK_F24,	TRUE,	PADMINUS,    (int)'-',	   CTL_PADMINUS,ALT_PADMINUS},
+ {XK_F24,	TRUE,	PADMINUS,    '-',	   CTL_PADMINUS,ALT_PADMINUS},
 /* Sun Type 4 keyboard */
- {XK_F25,	TRUE,	PADSLASH,    (int)'/',	   CTL_PADSLASH,ALT_PADSLASH},
+ {XK_F25,	TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
 /* Sun Type 4 keyboard */
- {XK_F26,	TRUE,	PADSTAR,     (int)'*',	   CTL_PADSTAR, ALT_PADSTAR},
- {XK_F27,	TRUE,	KEY_A1,      (int)'7',	   CTL_PAD7,	ALT_PAD7},
- {XK_F29,	TRUE,	KEY_A3,      (int)'9',	   CTL_PAD9,	ALT_PAD9},
- {XK_F31,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
- {XK_F35,	TRUE,	KEY_C3,      (int)'3',	   CTL_PAD3,	ALT_PAD3},
+ {XK_F26,	TRUE,	PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
+ {XK_F27,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
+ {XK_F29,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
+ {XK_F31,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_F35,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
 #ifdef HAVE_XK_KP_DELETE
- {XK_KP_Delete, TRUE,	PADSTOP,     (int)'.',	   CTL_PADSTOP, ALT_PADSTOP},
+ {XK_KP_Delete, TRUE,	PADSTOP,     '.',	   CTL_PADSTOP, ALT_PADSTOP},
 #endif
 #ifdef HAVE_XK_KP_INSERT
- {XK_KP_Insert, TRUE,	PAD0,	     (int)'0',	   CTL_PAD0,	ALT_PAD0},
+ {XK_KP_Insert, TRUE,	PAD0,	     '0',	   CTL_PAD0,	ALT_PAD0},
 #endif
 #ifdef HAVE_XK_KP_END
- {XK_KP_End,	TRUE,	KEY_C1,      (int)'1',	   CTL_PAD1,	ALT_PAD1},
+ {XK_KP_End,	TRUE,	KEY_C1,      '1',	   CTL_PAD1,	ALT_PAD1},
 #endif
 #ifdef HAVE_XK_KP_DOWN
- {XK_KP_Down,	TRUE,	KEY_C2,      (int)'2',	   CTL_PAD2,	ALT_PAD2},
+ {XK_KP_Down,	TRUE,	KEY_C2,      '2',	   CTL_PAD2,	ALT_PAD2},
 #endif
 #ifdef HAVE_XK_KP_NEXT
- {XK_KP_Next,	TRUE,	KEY_C3,      (int)'3',	   CTL_PAD3,	ALT_PAD3},
+ {XK_KP_Next,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
 #endif
 #ifdef HAVE_XK_KP_LEFT
- {XK_KP_Left,	TRUE,	KEY_B1,      (int)'4',	   CTL_PAD4,	ALT_PAD4},
+ {XK_KP_Left,	TRUE,	KEY_B1,      '4',	   CTL_PAD4,	ALT_PAD4},
 #endif
 #ifdef HAVE_XK_KP_BEGIN
- {XK_KP_Begin,	TRUE,	KEY_B2,      (int)'5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_KP_Begin,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
 #endif
 #ifdef HAVE_XK_KP_RIGHT
- {XK_KP_Right,	TRUE,	KEY_B3,      (int)'6',	   CTL_PAD6,	ALT_PAD6},
+ {XK_KP_Right,	TRUE,	KEY_B3,      '6',	   CTL_PAD6,	ALT_PAD6},
 #endif
 #ifdef HAVE_XK_KP_HOME
- {XK_KP_Home,	TRUE,	KEY_A1,      (int)'7',	   CTL_PAD7,	ALT_PAD7},
+ {XK_KP_Home,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
 #endif
 #ifdef HAVE_XK_KP_UP
- {XK_KP_Up,	TRUE,	KEY_A2,      (int)'8',	   CTL_PAD8,	ALT_PAD8},
+ {XK_KP_Up,	TRUE,	KEY_A2,      '8',	   CTL_PAD8,	ALT_PAD8},
 #endif
 #ifdef HAVE_XK_KP_PRIOR
- {XK_KP_Prior,	TRUE,	KEY_A3,      (int)'9',	   CTL_PAD9,	ALT_PAD9},
+ {XK_KP_Prior,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
 #endif
 
 #ifdef INCLUDE_LATIN1
@@ -416,9 +414,9 @@ static const unsigned char compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 unsigned long pdc_key_modifiers = 0L;
 
 static GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
-static int FontHeight, FontWidth, FontAscent, FontDescent,
-	WindowWidth, WindowHeight;
-static int resizeWindowWidth = 0,resizeWindowHeight = 0;
+static int font_height, font_width, font_ascent, font_descent,
+	window_width, window_height;
+static int resize_window_width = 0, resize_window_height = 0;
 static char *bitmap_file = NULL;
 #ifdef HAVE_XPM_H
 static char *pixmap_file = NULL;
@@ -628,7 +626,7 @@ static const char *defaultTranslations =
 	"<BtnMotion>: XCursesButton()"
 };
 
-static int to_utf8(char *outcode, int code)
+static int _to_utf8(char *outcode, int code)
 {
 	if (code < 0x80)
 	{
@@ -708,19 +706,21 @@ RETSIGTYPE XCursesSigwinchHandler(int signo)
 #endif
 }
 
-static void makeXY(int x, int y, int fontwidth, int fontheight,
-		   int *xpos, int *ypos)
+/* Convert character positions x and y to pixel positions, stored in 
+   xpos and ypos */
+
+static void _make_xy(int x, int y, int *xpos, int *ypos)
 {
-	*xpos = (x * fontwidth) + xc_app_data.borderWidth;
-	*ypos = xc_app_data.normalFont->ascent + (y * fontheight) + 
+	*xpos = (x * font_width) + xc_app_data.borderWidth;
+	*ypos = xc_app_data.normalFont->ascent + (y * font_height) + 
 		xc_app_data.borderWidth;
 }
 
-static int NewPacket(chtype attr, bool rev, int len, int col, int row,
+static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 #ifdef PDC_WIDE
-		     XChar2b *text)
+		       XChar2b *text)
 #else
-		     char *text)
+		       char *text)
 #endif
 {
 	GC gc;
@@ -762,7 +762,7 @@ static int NewPacket(chtype attr, bool rev, int len, int col, int row,
 	XSetForeground(XCURSESDISPLAY, gc, colors[rev ? back : fore]);
 	XSetBackground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
 
-	makeXY(col, row, FontWidth, FontHeight, &xpos, &ypos);
+	_make_xy(col, row, &xpos, &ypos);
 
 #ifdef PDC_WIDE
 	XDrawImageString16(
@@ -784,34 +784,34 @@ static int NewPacket(chtype attr, bool rev, int len, int col, int row,
 		if (attr & A_UNDERLINE)		/* UNDER */
 			XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
 				xpos, ypos + 1,
-				xpos + FontWidth * len, ypos + 1);
+				xpos + font_width * len, ypos + 1);
 
 		if (attr & A_LEFTLINE)		/* LEFT */
 			for (k = 0; k < len; k++)
 				XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-					xpos + FontWidth * k - 1,
-					ypos - FontAscent,
-					xpos + FontWidth * k - 1,
-					ypos + FontDescent);
+					xpos + font_width * k - 1,
+					ypos - font_ascent,
+					xpos + font_width * k - 1,
+					ypos + font_descent);
 
 		if (attr & A_RIGHTLINE)		/* RIGHT */
 			for (k = 0; k < len; k++)
 				XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-					xpos + FontWidth * (k + 1) - 1,
-					ypos - FontAscent,
-					xpos + FontWidth * (k + 1) - 1,
-					ypos + FontDescent);
+					xpos + font_width * (k + 1) - 1,
+					ypos - font_ascent,
+					xpos + font_width * (k + 1) - 1,
+					ypos + font_descent);
 	}
 
-	PDC_LOG(("%s:NewPacket() - row: %d col: %d "
+	PDC_LOG(("%s:_new_packet() - row: %d col: %d "
 		"num_cols: %d fore: %d back: %d text:<%s>\n",
 		XCLOGMSG, row, col, len, fore, back, text));
 
 	return OK;
 }
 
-static int DisplayText(const chtype *ch, int row, int col,
-		       int num_cols, bool highlight)
+static int _display_text(const chtype *ch, int row, int col,
+			 int num_cols, bool highlight)
 {
 #ifdef PDC_WIDE
 	XChar2b text[513];
@@ -821,7 +821,7 @@ static int DisplayText(const chtype *ch, int row, int col,
 	chtype old_attr, attr;
 	int i, j;
 
-	PDC_LOG(("%s:DisplayText() - called: row: %d col: %d "
+	PDC_LOG(("%s:_display_text() - called: row: %d col: %d "
 		"num_cols: %d\n", XCLOGMSG, row, col, num_cols));
 
 	if (!num_cols)
@@ -846,7 +846,7 @@ static int DisplayText(const chtype *ch, int row, int col,
 
 		if (attr != old_attr)
 		{
-			if (NewPacket(old_attr, highlight, i, 
+			if (_new_packet(old_attr, highlight, i, 
 			    col, row, text) == ERR)
 				return ERR;
 
@@ -863,10 +863,10 @@ static int DisplayText(const chtype *ch, int row, int col,
 #endif
 	}
 
-	return NewPacket(old_attr, highlight, i, col, row, text);
+	return _new_packet(old_attr, highlight, i, col, row, text);
 }
 
-static void get_GC(GC *gc, XFontStruct *font_info, int fore, int back)
+static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 {
 	XGCValues values;
 
@@ -882,7 +882,7 @@ static void get_GC(GC *gc, XFontStruct *font_info, int fore, int back)
 	XSetBackground(XCURSESDISPLAY, *gc, colors[back]);
 }
 
-static void get_colors(void)
+static void _initialize_colors(void)
 {
 	colors[0] = xc_app_data.colorBlack;
 	colors[1] = xc_app_data.colorRed;
@@ -905,9 +905,9 @@ static void get_colors(void)
 	colors[COLOR_BORDER] = xc_app_data.borderColor;
 }
 
-static void RefreshScrollbar(void)
+static void _refresh_scrollbar(void)
 {
-	XC_LOG(("RefreshScrollbar() - called\n"));
+	XC_LOG(("_refresh_scrollbar() - called\n"));
 
 	if (SP->sb_on)
 	{
@@ -926,7 +926,7 @@ static void RefreshScrollbar(void)
 	}
 }
 
-static void SetCursorColor(chtype *ch, short *fore, short *back)
+static void _set_cursor_color(chtype *ch, short *fore, short *back)
 {
 	int attr;
 	short f, b;
@@ -954,7 +954,7 @@ static void SetCursorColor(chtype *ch, short *fore, short *back)
 	}
 }
 
-static void GetIcon(void)
+static void _get_icon(void)
 {
 	XIconSize *icon_size;
 	int size_count = 0;
@@ -963,7 +963,7 @@ static void GetIcon(void)
 	unsigned icon_bitmap_width = 0, icon_bitmap_height = 0,
 		file_bitmap_width = 0, file_bitmap_height = 0;
 
-	XC_LOG(("GetIcon() - called\n"));
+	XC_LOG(("_get_icon() - called\n"));
 
 	icon_size = XAllocIconSize();
 
@@ -1065,7 +1065,7 @@ static void GetIcon(void)
 		(char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
 }
 
-static void Border(void)
+static void _draw_border(void)
 {
 	/* Draw the border if required */
 
@@ -1073,40 +1073,40 @@ static void Border(void)
 		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
 			xc_app_data.borderWidth / 2,
 			xc_app_data.borderWidth / 2,
-			WindowWidth - xc_app_data.borderWidth,
-			WindowHeight - xc_app_data.borderWidth);
+			window_width - xc_app_data.borderWidth,
+			window_height - xc_app_data.borderWidth);
 }
 
-/* This function redraws the entire screen. */
+/* Redraw the entire screen */
 
-static void DisplayScreen(void)
+static void _display_screen(void)
 {
 	int row;
 
-	XC_LOG(("DisplayScreen() - called\n"));
+	XC_LOG(("_display_screen() - called\n"));
 
 	for (row = 0; row < XCursesLINES; row++)
 	{
 		XC_get_line_lock(row);
 
-		DisplayText((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
+		_display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
 			row, 0, COLS, FALSE);
 
 		XC_release_line_lock(row);
 	}
 
-	DisplayCursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+	_display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
 
-	Border();
+	_draw_border();
 }
 
-/* This function draws those portions of the screen that have changed. */
+/* Draw changed portions of the screen */
 
-static void RefreshScreen(void)
+static void _refresh_screen(void)
 {
 	int row, start_col, num_cols;
 
-	XC_LOG(("RefreshScreen() - called\n"));
+	XC_LOG(("_refresh_screen() - called\n"));
 
 	for (row = 0; row < XCursesLINES; row++)
 	{
@@ -1118,7 +1118,7 @@ static void RefreshScreen(void)
 
 			start_col = (int)*(Xcurscr + XCURSCR_START_OFF + row);
 
-			DisplayText((const chtype *)(Xcurscr + 
+			_display_text((const chtype *)(Xcurscr + 
 				XCURSCR_Y_OFF(row) + (start_col * 
 				sizeof(chtype))), row, start_col, 
 				num_cols, FALSE);
@@ -1130,7 +1130,7 @@ static void RefreshScreen(void)
 	}
 
 	if (mouse_selection)
-		SelectionOff();
+		_selection_off();
 }
 
 static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
@@ -1144,7 +1144,7 @@ static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 		return;
 
 	if (after_first_curses_request && ReceivedMapNotify)
-		DisplayScreen();
+		_display_screen();
 }
 
 static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
@@ -1165,7 +1165,7 @@ static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
 		   3-3-2001. Now only exits on WM_DELETE_WINDOW. */
 
 		if ((Atom)client_event->data.s[0] == wm_atom[0])
-			ExitProcess(0, SIGKILL, "");
+			_exit_process(0, SIGKILL, "");
 	}
 }
 
@@ -1220,7 +1220,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			}
 
 			if (key)
-				SendKeyToCurses(key, NULL, TRUE);
+				_send_key_to_curses(key, NULL, TRUE);
 		}
 
 		return;
@@ -1261,24 +1261,23 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 		SP->visibility = 0;
 
-		DisplayCursor(SP->cursrow, SP->curscol, 
+		_display_cursor(SP->cursrow, SP->curscol, 
 			SP->cursrow, SP->curscol);
 
 		SP->visibility = save_visibility;
-		makeXY(SP->curscol, SP->cursrow, FontWidth, 
-			FontHeight, &xpos, &ypos);
+		_make_xy(SP->curscol, SP->cursrow, &xpos, &ypos);
 
 		ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(SP->cursrow) + 
 			(SP->curscol * sizeof(chtype)));
 
-		SetCursorColor(ch, &fore, &back);
+		_set_cursor_color(ch, &fore, &back);
 
 		XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
 
 		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc, 
-			xpos + 1, ypos - FontHeight + 
+			xpos + 1, ypos - font_height + 
 			xc_app_data.normalFont->descent + 1, 
-			FontWidth - 2, FontHeight - 2);
+			font_width - 2, font_height - 2);
 
 		compose_state = STATE_COMPOSE;
 		return;
@@ -1290,7 +1289,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		if (event->xkey.state & compose_mask)
 		{
 			compose_state = STATE_NORMAL;
-			DisplayCursor(SP->cursrow, SP->curscol,
+			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
 			break;
 		}
@@ -1311,7 +1310,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		{
 			compose_state = STATE_NORMAL;
 			compose_index = 0;
-			DisplayCursor(SP->cursrow, SP->curscol,
+			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
 			break;
 		}
@@ -1323,7 +1322,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		if (event->xkey.state & compose_mask)
 		{
 			compose_state = STATE_NORMAL;
-			DisplayCursor(SP->cursrow, SP->curscol,
+			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
 			break;
 		}
@@ -1344,18 +1343,18 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		{
 			compose_state = STATE_NORMAL;
 			compose_index = 0;
-			DisplayCursor(SP->cursrow, SP->curscol,
+			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
 			break;
 		}
 
-		SendKeyToCurses(compose_keys[compose_index][char_idx],
+		_send_key_to_curses(compose_keys[compose_index][char_idx],
 			NULL, FALSE);
 
 		compose_state = STATE_NORMAL;
 		compose_index = 0;
          
-		DisplayCursor(SP->cursrow, SP->curscol,
+		_display_cursor(SP->cursrow, SP->curscol,
 			SP->cursrow, SP->curscol);
 
 		return;
@@ -1390,9 +1389,9 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			modifier |= PDC_KEY_MODIFIER_ALT;
 	}
 
-	for (i = 0; XCKeys[i].keycode; i++)
+	for (i = 0; xc_keys[i].keycode; i++)
 	{
-		if (XCKeys[i].keycode == keysym)
+		if (xc_keys[i].keycode == keysym)
 		{
 			PDC_LOG(("%s:State %x\n", XCLOGMSG, event->xkey.state));
 
@@ -1402,24 +1401,24 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			   ShiftMask: 0x01: shift modifier */
 
 			if ((event->xkey.state & ShiftMask) ||
-			    (XCKeys[i].numkeypad &&
+			    (xc_keys[i].numkeypad &&
 			    (event->xkey.state & Mod2Mask)))
 			{
-				key = XCKeys[i].shifted;
+				key = xc_keys[i].shifted;
 			}
 			else if (event->xkey.state & ControlMask)
 			{
-				key = XCKeys[i].control;
+				key = xc_keys[i].control;
 			}
 			else if (event->xkey.state & Mod1Mask)
 			{
-				key = XCKeys[i].alt;
+				key = xc_keys[i].alt;
 			}
 
 			/* To get here, we ignore all other modifiers */
 
 			else
-				key = XCKeys[i].normal;
+				key = xc_keys[i].normal;
 
 			key_code = (key > 0x100);
 			break;
@@ -1462,7 +1461,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	{
 		key |= (modifier << 24);
 
-		SendKeyToCurses(key, NULL, key_code);
+		_send_key_to_curses(key, NULL, key_code);
 	}
 }
 
@@ -1484,7 +1483,7 @@ static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,
 		if (key == 10)		/* new line - convert to ^M */
 			key = 13;
 
-		SendKeyToCurses(key, NULL, FALSE);
+		_send_key_to_curses(key, NULL, FALSE);
 	}
 
 	XtFree(value);
@@ -1547,7 +1546,7 @@ static void _paste_utf8(Widget w, XtPointer event, Atom *selection, Atom *type,
 		if (key == 10)		/* new line - convert to ^M */
 			key = 13;
 
-		SendKeyToCurses(key, NULL, FALSE);
+		_send_key_to_curses(key, NULL, FALSE);
 	}
 
 	XtFree(value);
@@ -1561,11 +1560,11 @@ static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
 		_paste_utf8, (XtPointer)button_event, button_event->time);
 }
 
-static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
-			   Atom *type_return, XtPointer *value_return,
-			   unsigned long *length_return, int *format_return)
+static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
+			     Atom *type_return, XtPointer *value_return,
+			     unsigned long *length_return, int *format_return)
 {
-	XC_LOG(("ConvertProc() - called\n"));
+	XC_LOG(("_convert_proc() - called\n"));
 
 	if (*target == XA_TARGETS(XtDisplay(topLevel)))
 	{
@@ -1607,7 +1606,7 @@ static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 		if (utf8)
 		{
 			while (*tmp)
-				ret_length += to_utf8(data + ret_length,
+				ret_length += _to_utf8(data + ret_length,
 					(int)(*tmp++ & A_CHARTEXT));
 		}
 		else
@@ -1627,24 +1626,24 @@ static Boolean ConvertProc(Widget w, Atom *selection, Atom *target,
 		    length_return, format_return);
 }
 
-static void LoseOwnership(Widget w, Atom *type)
+static void _lose_ownership(Widget w, Atom *type)
 {
-	XC_LOG(("LoseOwnership() - called\n"));
+	XC_LOG(("_lose_ownership() - called\n"));
 
 	if (tmpsel)
 		free(tmpsel);
 
 	tmpsel = NULL;
 	tmpsel_length = 0;
-	SelectionOff();
+	_selection_off();
 }
 
-static void ShowSelection(int start_x, int start_y, int end_x, int end_y,
+static void _show_selection(int start_x, int start_y, int end_x, int end_y,
 			  bool highlight)
 {
 	int i, num_cols, start_col, row;
 
-	PDC_LOG(("%s:ShowSelection() - called StartX: %d StartY: %d "
+	PDC_LOG(("%s:_show_selection() - called StartX: %d StartY: %d "
 		"EndX: %d EndY: %d Highlight: %d\n", XCLOGMSG,
 		start_x, start_y, end_x, end_y, highlight));
 
@@ -1678,7 +1677,7 @@ static void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 
 		XC_get_line_lock(row);
 
-		DisplayText((const chtype *)(Xcurscr + 
+		_display_text((const chtype *)(Xcurscr + 
 			XCURSCR_Y_OFF(row) + (start_col * sizeof(chtype))),
 			row, start_col, num_cols, highlight);
 
@@ -1686,11 +1685,11 @@ static void ShowSelection(int start_x, int start_y, int end_x, int end_y,
 	}
 }
 
-static void SelectionOff(void)
+static void _selection_off(void)
 {
-	XC_LOG(("SelectionOff() - called\n"));
+	XC_LOG(("_selection_off() - called\n"));
 
-	DisplayScreen();
+	_display_screen();
 
 	selection_start_x = selection_start_y = selection_end_x = 
 		selection_end_y = 0;
@@ -1698,22 +1697,22 @@ static void SelectionOff(void)
 	mouse_selection = False;
 }
 
-static void SelectionOn(int x, int y)
+static void _selection_on(int x, int y)
 {
-	XC_LOG(("SelectionOn() - called\n"));
+	XC_LOG(("_selection_on() - called\n"));
 
 	selection_start_x = selection_end_x = x;
 	selection_start_y = selection_end_y = y;
 }
 
-static void SelectionExtend(int x, int y)
+static void _selection_extend(int x, int y)
 {
 	int temp, current_start, current_end, current_start_x, 
 		current_end_x, current_start_y, current_end_y,
 		new_start, new_end, new_start_x, new_end_x, new_start_y, 
 		new_end_y;
 
-	XC_LOG(("SelectionExtend() - called\n"));
+	XC_LOG(("_selection_extend() - called\n"));
 
 	mouse_selection = True;
 
@@ -1770,29 +1769,29 @@ static void SelectionExtend(int x, int y)
 	}
 
 	if (new_end > current_end)
-		ShowSelection(current_end_x, current_end_y, new_end_x, 
+		_show_selection(current_end_x, current_end_y, new_end_x, 
 			new_end_y, TRUE);
 	else if (new_end < current_end)
-		ShowSelection(new_end_x, new_end_y, current_end_x, 
+		_show_selection(new_end_x, new_end_y, current_end_x, 
 			current_end_y, FALSE);
 	else if (new_start < current_start)
-		ShowSelection(new_start_x, new_start_y, current_start_x, 
+		_show_selection(new_start_x, new_start_y, current_start_x, 
 			current_start_y, TRUE);
 	else if (new_start > current_start)
-		ShowSelection(current_start_x, current_start_y, 
+		_show_selection(current_start_x, current_start_y, 
 			new_start_x, new_start_y, FALSE);
 	else
-		ShowSelection(current_start_x, current_start_y, 
+		_show_selection(current_start_x, current_start_y, 
 			new_start_x, new_start_y, TRUE);
 }
 
-static void SelectionSet(void)
+static void _selection_set(void)
 {
 	int i, j, start, end, start_x, end_x, start_y, end_y, num_cols, 
 		start_col, row, num_chars, ch, last_nonblank, length, newlen;
 	chtype *ptr = NULL;
 
-	XC_LOG(("SelectionSet() - called\n"));
+	XC_LOG(("_selection_set() - called\n"));
 
 	/* convert x/y coordinates into start/stop */
 
@@ -1906,13 +1905,13 @@ static void SelectionSet(void)
 	tmpsel_length = num_chars;
 }
 
-static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
+static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 {
 	int xpos, ypos, i;
 	chtype *ch;
 	short fore = 0, back = 0;
 
-	PDC_LOG(("%s:DisplayCursor() - draw char at row: %d col %d\n",
+	PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
 		XCLOGMSG, old_row, old_x));
 
 	/* if the cursor position is outside the boundary of the screen, 
@@ -1924,10 +1923,10 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 
 	/* display the character at the current cursor position */
 
-	PDC_LOG(("%s:DisplayCursor() - draw char at row: %d col %d\n",
+	PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
 		XCLOGMSG, old_row, old_x));
 
-	DisplayText((const chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) 
+	_display_text((const chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) 
 		+ (old_x * sizeof(chtype)))), old_row, old_x, 1, FALSE);
 
 	/* display the cursor at the new cursor position */
@@ -1935,13 +1934,12 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 	if (!SP->visibility)
 		return;		/* cursor not displayed, no more to do */
 
-	makeXY(new_x, new_row, FontWidth, FontHeight, 
-		&xpos, &ypos);
+	_make_xy(new_x, new_row, &xpos, &ypos);
 
 	ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) + new_x *
 		sizeof(chtype));
 
-	SetCursorColor(ch, &fore, &back);
+	_set_cursor_color(ch, &fore, &back);
 
 	if (vertical_cursor)
 	{
@@ -1954,7 +1952,7 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 				ypos - xc_app_data.normalFont->ascent,
 				xpos + i,
 				ypos - xc_app_data.normalFont->ascent + 
-					FontHeight - 1);
+					font_height - 1);
 	}
 	else
 	{
@@ -1971,7 +1969,7 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 					rect_cursor_gc,
 					xpos,
 					ypos - 2 + i,
-					xpos + FontWidth, 
+					xpos + font_width, 
 					ypos - 2 + i);
 		}
 		else
@@ -2004,7 +2002,7 @@ static void DisplayCursor(int old_row, int old_x, int new_row, int new_x)
 		}
 	}
 
-	PDC_LOG(("%s:DisplayCursor() - draw cursor at "
+	PDC_LOG(("%s:_display_cursor() - draw cursor at "
 		"row %d col %d\n", XCLOGMSG, new_row, new_x));
 }
 
@@ -2030,7 +2028,7 @@ static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data,
 		/* Display the cursor so it stays on while the window is 
 		   not current */
 
-		DisplayCursor(SP->cursrow, SP->curscol, 
+		_display_cursor(SP->cursrow, SP->curscol, 
 			SP->cursrow, SP->curscol);
 		break;
 
@@ -2040,17 +2038,17 @@ static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data,
 	}
 }
 
-static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms,
+static void _send_key_to_curses(unsigned long key, MOUSE_STATUS *ms,
 			    bool key_code)
 {
-	PDC_LOG(("%s:SendKeyToCurses() - called: sending %d\n",
+	PDC_LOG(("%s:_send_key_to_curses() - called: sending %d\n",
 		XCLOGMSG, key));
 
 	SP->key_code = key_code;
 
 	if (XC_write_socket(xc_key_sock, &key, sizeof(unsigned long)) < 0)
 	{
-		ExitProcess(1, SIGKILL, "exiting from SendKeyToCurses");
+		_exit_process(1, SIGKILL, "exiting from _send_key_to_curses");
 	}
 
 	if (ms)
@@ -2059,8 +2057,8 @@ static void SendKeyToCurses(unsigned long key, MOUSE_STATUS *ms,
 
 		if (XC_write_socket(xc_key_sock, ms, sizeof(MOUSE_STATUS)) < 0)
 		{
-			ExitProcess(1, SIGKILL,
-				"exiting from SendKeyToCurses");
+			_exit_process(1, SIGKILL,
+				"exiting from _send_key_to_curses");
 		}
 	}
 }
@@ -2077,7 +2075,7 @@ static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 
 			int save_visibility = SP->visibility;
 			SP->visibility = 0;
-			DisplayCursor(SP->cursrow, SP->curscol,
+			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
 			SP->visibility = save_visibility;
 			visible_cursor = 0;
@@ -2086,7 +2084,7 @@ static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 		{
 			/* Cursor currently OFF, turn it on */
 
-			DisplayCursor(SP->cursrow, SP->curscol,
+			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
 			visible_cursor = 1;
 		}
@@ -2143,8 +2141,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 			MOUSE_X_POS = MOUSE_Y_POS = -1;
 
-			SendKeyToCurses((unsigned long)KEY_MOUSE, 
-				&Mouse_status, TRUE);
+			_send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
 
 			remove_release = TRUE;
 
@@ -2163,7 +2160,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			MOUSE_Y_POS = save_mouse_status.y;
 			BUTTON_STATUS(button_no) = BUTTON_DOUBLE_CLICKED;
 
-			SelectionOff();
+			_selection_off();
 			remove_release = True;
 		}
 		else
@@ -2183,22 +2180,22 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 	case MotionNotify:
 		MOUSE_LOG(("\nMotionNotify: y: %d x: %d Width: %d "
 			"Height: %d\n", event->xbutton.y, event->xbutton.x, 
-			FontWidth, FontHeight));
+			font_width, font_height));
 
 		MOUSE_X_POS = (event->xbutton.x - xc_app_data.borderWidth) / 
-			FontWidth;
+			font_width;
 		MOUSE_Y_POS = (event->xbutton.y - xc_app_data.borderWidth) / 
-			FontHeight;
+			font_height;
 
 		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
 		    && !(event->xbutton.state & ControlMask)
 		    && !(event->xbutton.state & Mod1Mask))
 		{
-			SelectionExtend(MOUSE_X_POS, MOUSE_Y_POS);
+			_selection_extend(MOUSE_X_POS, MOUSE_Y_POS);
 			send_key = FALSE;
 		}
 		else
-			SelectionOff();
+			_selection_off();
 
 		/* Throw away mouse movements if they are in the same 
 		   character position as the last mouse event, or if we 
@@ -2226,9 +2223,9 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 		else
 		{
 		    MOUSE_X_POS = (event->xbutton.x - 
-			xc_app_data.borderWidth) / FontWidth;
+			xc_app_data.borderWidth) / font_width;
 		    MOUSE_Y_POS = (event->xbutton.y - 
-			xc_app_data.borderWidth) / FontHeight;
+			xc_app_data.borderWidth) / font_height;
 
 		    if (!handle_real_release)
 		    {
@@ -2255,12 +2252,12 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 				send_key = FALSE;
 
 				if (XtOwnSelection(topLevel, XA_PRIMARY, 
-				    event->xbutton.time, ConvertProc,
-				    LoseOwnership, NULL) == False)
-					SelectionOff();
+				    event->xbutton.time, _convert_proc,
+				    _lose_ownership, NULL) == False)
+					_selection_off();
 			    }
 			    else
-				SelectionOff();
+				_selection_off();
 
 			    /* Ensure the "pseudo" release event is ignored */
 
@@ -2284,8 +2281,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 				&& !(event->xbutton.state & ControlMask)
 				&& !(event->xbutton.state & Mod1Mask))
 			    {
-				SelectionOff();
-				SelectionOn(MOUSE_X_POS, MOUSE_Y_POS);
+				_selection_off();
+				_selection_on(MOUSE_X_POS, MOUSE_Y_POS);
 			    }
 
 			    handle_real_release = True;
@@ -2310,14 +2307,14 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 		    send_key = FALSE;
 
 		    if (XtOwnSelection(topLevel, XA_PRIMARY, 
-			event->xbutton.time, ConvertProc, 
-			LoseOwnership, NULL) == False)
-			    SelectionOff();
+			event->xbutton.time, _convert_proc, 
+			_lose_ownership, NULL) == False)
+			    _selection_off();
 
-		    SelectionSet();
+		    _selection_set();
 		}
 		else
-		    SelectionOff();
+		    _selection_off();
 
 		break;
 	}
@@ -2351,16 +2348,16 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 	/* Send the KEY_MOUSE to curses program */
 
-	SendKeyToCurses((unsigned long)KEY_MOUSE, &Mouse_status, TRUE);
+	_send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
 }
 
-static void Scroll_up_down(Widget w, XtPointer client_data,
-			   XtPointer call_data)
+static void _scroll_up_down(Widget w, XtPointer client_data,
+			    XtPointer call_data)
 {
 	int pixels = (long) call_data;
-	int total_y = SP->sb_total_y * FontHeight;
-	int viewport_y = SP->sb_viewport_y * FontHeight;
-	int cur_y = SP->sb_cur_y * FontHeight;
+	int total_y = SP->sb_total_y * font_height;
+	int viewport_y = SP->sb_viewport_y * font_height;
+	int cur_y = SP->sb_cur_y * font_height;
 
 	/* When pixels is negative, right button pressed, move data 
 	   down, thumb moves up.  Otherwise, left button pressed, pixels 
@@ -2376,23 +2373,23 @@ static void Scroll_up_down(Widget w, XtPointer client_data,
 		if (cur_y > (total_y - viewport_y))
 			cur_y = total_y - viewport_y;
 
-	SP->sb_cur_y = cur_y / FontHeight;
+	SP->sb_cur_y = cur_y / font_height;
 
 	XawScrollbarSetThumb(w, (double)((double)cur_y / (double)total_y),
 		(double)((double)viewport_y / (double)total_y));
 
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SF, NULL, TRUE);
+	_send_key_to_curses(KEY_SF, NULL, TRUE);
 }
 
-static void Scroll_left_right(Widget w, XtPointer client_data,
-			      XtPointer call_data)
+static void _scroll_left_right(Widget w, XtPointer client_data,
+			       XtPointer call_data)
 {
 	int pixels = (long) call_data;
-	int total_x = SP->sb_total_x * FontWidth;
-	int viewport_x = SP->sb_viewport_x * FontWidth;
-	int cur_x = SP->sb_cur_x * FontWidth;
+	int total_x = SP->sb_total_x * font_width;
+	int viewport_x = SP->sb_viewport_x * font_width;
+	int cur_x = SP->sb_cur_x * font_width;
 
 	/* When pixels is negative, right button pressed, move data 
 	   down, thumb moves up.  Otherwise, left button pressed, pixels 
@@ -2408,18 +2405,18 @@ static void Scroll_left_right(Widget w, XtPointer client_data,
 		if (cur_x > (total_x - viewport_x))
 			cur_x = total_x - viewport_x;
 
-	SP->sb_cur_x = cur_x / FontWidth;
+	SP->sb_cur_x = cur_x / font_width;
 
 	XawScrollbarSetThumb(w, (double)((double)cur_x / (double)total_x),
 		(double)((double)viewport_x / (double)total_x));
 
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SR, NULL, TRUE);
+	_send_key_to_curses(KEY_SR, NULL, TRUE);
 }
 
-static void Thumb_up_down(Widget w, XtPointer client_data,
-			  XtPointer call_data)
+static void _thumb_up_down(Widget w, XtPointer client_data,
+			   XtPointer call_data)
 {
 	double percent = *(double *) call_data;
 	double total_y = (double)SP->sb_total_y;
@@ -2441,11 +2438,11 @@ static void Thumb_up_down(Widget w, XtPointer client_data,
 
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SF, NULL, TRUE);
+	_send_key_to_curses(KEY_SF, NULL, TRUE);
 }
 
-static void Thumb_left_right(Widget w, XtPointer client_data,
-			     XtPointer call_data)
+static void _thumb_left_right(Widget w, XtPointer client_data,
+			      XtPointer call_data)
 {
 	double percent = *(double *) call_data;
 	double total_x = (double)SP->sb_total_x;
@@ -2467,14 +2464,14 @@ static void Thumb_left_right(Widget w, XtPointer client_data,
     
 	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	SendKeyToCurses((unsigned long)KEY_SR, NULL, TRUE);
+	_send_key_to_curses(KEY_SR, NULL, TRUE);
 }
 
-static void ExitProcess(int rc, int sig, char *msg)
+static void _exit_process(int rc, int sig, char *msg)
 {
 	if (rc || sig)
 	    fprintf(stderr,
-		"%s:ExitProcess() - called: rc:%d sig:%d <%s>\n",
+		"%s:_exit_process() - called: rc:%d sig:%d <%s>\n",
 		XCLOGMSG, rc, sig, msg);
 
 	shmdt((char *)SP);
@@ -2520,25 +2517,25 @@ static void ExitProcess(int rc, int sig, char *msg)
 	_exit(rc);
 }
 
-static void Resize(void)
+static void _resize(void)
 {
 	unsigned char save_atrtab[MAX_ATRTAB]; 
 
 	after_first_curses_request = False;
 
-	SP->lines = XCursesLINES = ((resizeWindowHeight -
-		(2 * xc_app_data.borderWidth)) / FontHeight);
+	SP->lines = XCursesLINES = ((resize_window_height -
+		(2 * xc_app_data.borderWidth)) / font_height);
 
 	LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
 
-	SP->cols = COLS = XCursesCOLS = ((resizeWindowWidth -
-		(2 * xc_app_data.borderWidth)) / FontWidth);
+	SP->cols = COLS = XCursesCOLS = ((resize_window_width -
+		(2 * xc_app_data.borderWidth)) / font_width);
 
-	WindowWidth = resizeWindowWidth;
-	WindowHeight = resizeWindowHeight;
+	window_width = resize_window_width;
+	window_height = resize_window_height;
 	visible_cursor = 1;
 
-	Border();
+	_draw_border();
 
 	/* Detach and drop the current shared memory segment and 
 	   create and attach to a new segment */
@@ -2554,7 +2551,7 @@ static void Resize(void)
 	{ 
 		perror("Cannot allocate shared memory for curscr");
 
-		ExitProcess(4, SIGKILL,
+		_exit_process(4, SIGKILL,
 			"exiting from XCursesProcessRequestsFromCurses");
 	} 
 
@@ -2564,7 +2561,9 @@ static void Resize(void)
 	memcpy(pdc_atrtab, save_atrtab, sizeof(save_atrtab));
 }
 
-static void Title(void)
+/* For PDC_set_title() */
+
+static void _set_title(void)
 {
 	char title[1024];	/* big enough for window title */ 
 	int pos;
@@ -2572,20 +2571,15 @@ static void Title(void)
 	if ((XC_read_socket(xc_display_sock, &pos, sizeof(int)) < 0) ||
 	    (XC_read_socket(xc_display_sock, title, pos) < 0))
 	{
-		ExitProcess(5, SIGKILL, "exiting from Title");
+		_exit_process(5, SIGKILL, "exiting from _set_title");
 	}
 
 	XtVaSetValues(topLevel, XtNtitle, title, NULL);
 }
 
-static void Continue(void)
-{
-	if (XC_write_display_socket_int(CURSES_CONTINUE) < 0)
-		ExitProcess(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
-}
+/* For color_content() */
 
-static void GetColor(void)
+static void _get_color(void)
 {
 	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
 	int index = tmp->pixel;
@@ -2593,13 +2587,15 @@ static void GetColor(void)
 			DefaultScreen(XCURSESDISPLAY));
 
 	if (index < 0 || index >= MAX_COLORS)
-		ExitProcess(4, SIGKILL, "exiting from GetColor");
+		_exit_process(4, SIGKILL, "exiting from _get_color");
 
 	tmp->pixel = colors[index];
 	XQueryColor(XCURSESDISPLAY, cmap, tmp);
 }
 
-static void SetColor(void)
+/* For init_color() */
+
+static void _set_color(void)
 {
 	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
 	int index = tmp->pixel;
@@ -2607,15 +2603,51 @@ static void SetColor(void)
 			DefaultScreen(XCURSESDISPLAY));
 
 	if (index < 0 || index >= MAX_COLORS)
-		ExitProcess(4, SIGKILL, "exiting from SetColor");
+		_exit_process(4, SIGKILL, "exiting from _set_color");
 
 	if (XAllocColor(XCURSESDISPLAY, cmap, tmp))
 	{
 		XFreeColors(XCURSESDISPLAY, cmap, colors + index, 1, 0);
 		colors[index] = tmp->pixel;
 
-		DisplayScreen();
+		_display_screen();
 	}
+}
+
+/* For PDC_getclipboard() */
+
+static void _get_selection(Widget w, XtPointer data, Atom *selection,
+			   Atom *type, XtPointer value,
+			   unsigned long *length, int *format)
+{
+	XC_LOG(("_get_selection() - called\n"));
+
+	if (!value && !(*length))
+	{
+	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
+		return;
+	}
+	else
+	{
+	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
+	       contents */
+
+	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
+		if (XC_write_display_socket_int((int)(*length)) >= 0)
+		    if (XC_write_socket(xc_display_sock, value, *length) >= 0)
+			return;
+	}
+
+	_exit_process(4, SIGKILL, "exiting from _get_selection");
+}
+
+/* The curses process is waiting; tell it to continue */
+
+static void _resume_curses(void)
+{
+	if (XC_write_display_socket_int(CURSES_CONTINUE) < 0)
+		_exit_process(4, SIGKILL,
+			"exiting from XCursesProcessRequestsFromCurses");
 }
 
 static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
@@ -2641,7 +2673,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
 	  NULL, &socket_timeout)) < 0)
-	    ExitProcess(2, SIGKILL, "exiting from "
+	    _exit_process(2, SIGKILL, "exiting from "
 		"XCursesProcessRequestsFromCurses - select failed");
 
 	if (!s)		/* no requests pending - should never happen! */ 
@@ -2657,7 +2689,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	    if (XC_read_socket(xc_display_sock, &num_cols, sizeof(int)) < 0) 
 	    {
-		ExitProcess(3, SIGKILL, "exiting from "
+		_exit_process(3, SIGKILL, "exiting from "
 		    "XCursesProcessRequestsFromCurses - first read");
 	    }
 
@@ -2670,7 +2702,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    { 
 	    case CURSES_EXIT:	/* request from curses to stop */
 		XC_LOG(("CURSES_EXIT received from child\n"));
-		ExitProcess(0, 0,
+		_exit_process(0, 0,
 		    "XCursesProcess requested to exit by child");
 		break;
 
@@ -2683,12 +2715,12 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	    case CURSES_REFRESH:
 		XC_LOG(("CURSES_REFRESH received from child\n"));
-		RefreshScreen(); 
-		Continue();
+		_refresh_screen(); 
+		_resume_curses();
 		break;
 
 	    case CURSES_REFRESH_SCROLLBAR:
-		RefreshScrollbar();
+		_refresh_scrollbar();
 		break;
 
 	    case CURSES_CURSOR:
@@ -2696,7 +2728,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 		if (XC_read_socket(xc_display_sock, buf, sizeof(int) * 2) < 0)
 		{
-		    ExitProcess(5, SIGKILL, "exiting from CURSES_CURSOR "
+		    _exit_process(5, SIGKILL, "exiting from CURSES_CURSOR "
 			"XCursesProcessRequestsFromCurses");
 		}
 
@@ -2709,7 +2741,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		new_x = pos >> 8;
 
 		visible_cursor = 1;
-		DisplayCursor(old_row, old_x, new_row, new_x);
+		_display_cursor(old_row, old_x, new_row, new_x);
 		break;
 
 	    case CURSES_DISPLAY_CURSOR:
@@ -2729,7 +2761,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 			int save_visibility = SP->visibility;
 			SP->visibility = 0;
 
-			DisplayCursor(SP->cursrow, SP->curscol, 
+			_display_cursor(SP->cursrow, SP->curscol, 
 			    SP->cursrow, SP->curscol);
 
 			SP->visibility = save_visibility;
@@ -2739,7 +2771,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		    { 
 			/* Cursor currently OFF, turn it on */ 
 
-			DisplayCursor(SP->cursrow, SP->curscol,
+			_display_cursor(SP->cursrow, SP->curscol,
 			    SP->cursrow, SP->curscol);
 
 			visible_cursor = 1; 
@@ -2750,23 +2782,22 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	    case CURSES_TITLE:
 		XC_LOG(("CURSES_TITLE received from child\n"));
-		Title();
+		_set_title();
 		break;
 
 	    case CURSES_RESIZE:
 		XC_LOG(("CURSES_RESIZE received from child\n"));
-		Resize();
-		Continue(); 
+		_resize();
+		_resume_curses(); 
 		break; 
 
 	    case CURSES_GET_SELECTION:
 		XC_LOG(("CURSES_GET_SELECTION received from child\n"));
 
-		Continue();
+		_resume_curses();
 
 		XtGetSelectionValue(topLevel, XA_PRIMARY, XA_STRING,
-		    RequestorCallbackForGetSelection,
-		    (XtPointer)NULL, 0);
+		    _get_selection, (XtPointer)NULL, 0);
 
 		break;
 
@@ -2775,7 +2806,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 		if (XC_read_socket(xc_display_sock, &length, sizeof(long)) < 0)
 		{
-		    ExitProcess(5, SIGKILL,
+		    _exit_process(5, SIGKILL,
 			"exiting from CURSES_SET_SELECTION "
 			"XCursesProcessRequestsFromCurses");
 		}
@@ -2791,7 +2822,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		if (!tmpsel)
 		{
 		    if (XC_write_display_socket_int(PDC_CLIP_MEMORY_ERROR) < 0)
-			ExitProcess(4, SIGKILL,
+			_exit_process(4, SIGKILL,
 			    "exiting from XCursesProcessRequestsFromCurses");
 		    break;
 		}
@@ -2799,7 +2830,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		if (XC_read_socket(xc_display_sock, tmpsel,
 		    length * sizeof(chtype)) < 0)
 		{
-		    ExitProcess(5, SIGKILL,
+		    _exit_process(5, SIGKILL,
 			"exiting from CURSES_SET_SELECTION "
 			"XCursesProcessRequestsFromCurses");
 		}
@@ -2808,7 +2839,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		tmpsel[length] = '\0';
 
 		if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
-		    ConvertProc, LoseOwnership, NULL) == False)
+		    _convert_proc, _lose_ownership, NULL) == False)
 		{
 		    old_x = PDC_CLIP_ACCESS_ERROR;
 		    free(tmpsel);
@@ -2818,31 +2849,31 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		else
 		    old_x = PDC_CLIP_SUCCESS;
 
-		SelectionOff();
+		_selection_off();
 
 		if (XC_write_display_socket_int(old_x) < 0)
-		    ExitProcess(4, SIGKILL,
+		    _exit_process(4, SIGKILL,
 			"exiting from XCursesProcessRequestsFromCurses");
 		break;
 
 	    case CURSES_CLEAR_SELECTION:
 		XC_LOG(("CURSES_CLEAR_SELECTION received from child\n"));
 
-		Continue();
+		_resume_curses();
 
-		SelectionOff();
+		_selection_off();
 		break;
 
 	    case CURSES_GET_COLOR:
 		XC_LOG(("CURSES_GET_COLOR recieved from child\n"));
-		GetColor();
-		Continue();
+		_get_color();
+		_resume_curses();
 		break;
 
 	    case CURSES_SET_COLOR:
 		XC_LOG(("CURSES_SET_COLOR recieved from child\n"));
-		SetColor();
-		Continue();
+		_set_color();
+		_resume_curses();
 		break;
 
 	    default: 
@@ -2918,22 +2949,22 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Check application resource values here */
 
-	FontWidth = xc_app_data.normalFont->max_bounds.rbearing - 
+	font_width = xc_app_data.normalFont->max_bounds.rbearing - 
 		xc_app_data.normalFont->min_bounds.lbearing;
 
-	FontHeight = xc_app_data.normalFont->max_bounds.ascent + 
+	font_height = xc_app_data.normalFont->max_bounds.ascent + 
 		xc_app_data.normalFont->max_bounds.descent;
 
-	FontAscent = xc_app_data.normalFont->max_bounds.ascent;
-	FontDescent = xc_app_data.normalFont->max_bounds.descent;
+	font_ascent = xc_app_data.normalFont->max_bounds.ascent;
+	font_descent = xc_app_data.normalFont->max_bounds.descent;
 
 	/* Check that the italic font and normal fonts are the same size */
 	/* This appears backwards */
 
-	italic_font_valid = FontWidth !=
+	italic_font_valid = font_width !=
 		xc_app_data.italicFont->max_bounds.rbearing -
 		xc_app_data.italicFont->min_bounds.lbearing ||
-		FontHeight !=
+		font_height !=
 		xc_app_data.italicFont->max_bounds.ascent + 
 		xc_app_data.italicFont->max_bounds.descent;
 
@@ -2942,20 +2973,20 @@ int XCursesSetupX(int argc, char *argv[])
 	XCursesCOLS = xc_app_data.cols;
 	XCursesLINES = xc_app_data.lines;
 
-	WindowWidth = FontWidth * XCursesCOLS +
+	window_width = font_width * XCursesCOLS +
 		2 * xc_app_data.borderWidth;
 
-	WindowHeight = FontHeight * XCursesLINES +
+	window_height = font_height * XCursesLINES +
 		2 * xc_app_data.borderWidth;
 
-	minwidth = FontWidth * 2 + xc_app_data.borderWidth * 2;
-	minheight = FontHeight * 2 + xc_app_data.borderWidth * 2;
+	minwidth = font_width * 2 + xc_app_data.borderWidth * 2;
+	minheight = font_height * 2 + xc_app_data.borderWidth * 2;
 
 	/* Set up the icon for the application; the default is an
 	   internal one for PDCurses. Then set various application level
 	   resources. */
 
-	GetIcon();
+	_get_icon();
 
 #ifdef HAVE_XPM_H
 	if (xc_app_data.pixmap && xc_app_data.pixmap[0])
@@ -2977,47 +3008,47 @@ int XCursesSetupX(int argc, char *argv[])
 	{
 		scrollBox = XtVaCreateManagedWidget(ProgramName, 
 			scrollBoxWidgetClass, topLevel, XtNwidth, 
-			WindowWidth + xc_app_data.scrollbarWidth, 
-			XtNheight, WindowHeight + xc_app_data.scrollbarWidth,
-			XtNwidthInc, FontWidth, XtNheightInc, FontHeight,
+			window_width + xc_app_data.scrollbarWidth, 
+			XtNheight, window_height + xc_app_data.scrollbarWidth,
+			XtNwidthInc, font_width, XtNheightInc, font_height,
 			NULL);
 
 		drawing = XtVaCreateManagedWidget(ProgramName, 
 			boxWidgetClass, scrollBox, XtNwidth, 
-			WindowWidth, XtNheight, WindowHeight, XtNwidthInc, 
-			FontWidth, XtNheightInc, FontHeight, NULL);
+			window_width, XtNheight, window_height, XtNwidthInc, 
+			font_width, XtNheightInc, font_height, NULL);
 
 		scrollVert = XtVaCreateManagedWidget("scrollVert", 
 			scrollbarWidgetClass, scrollBox, XtNorientation, 
-			XtorientVertical, XtNheight, WindowHeight, XtNwidth, 
+			XtorientVertical, XtNheight, window_height, XtNwidth, 
 			xc_app_data.scrollbarWidth, NULL);
 
 		XtAddCallback(scrollVert, XtNscrollProc,
-			Scroll_up_down, drawing);
+			_scroll_up_down, drawing);
 
 		XtAddCallback(scrollVert, XtNjumpProc,
-			Thumb_up_down, drawing);
+			_thumb_up_down, drawing);
 
 		scrollHoriz = XtVaCreateManagedWidget("scrollHoriz", 
 			scrollbarWidgetClass, scrollBox, XtNorientation, 
-			XtorientHorizontal, XtNwidth, WindowWidth, XtNheight, 
+			XtorientHorizontal, XtNwidth, window_width, XtNheight, 
 			xc_app_data.scrollbarWidth, NULL);
 
 		XtAddCallback(scrollHoriz, XtNscrollProc, 
-			Scroll_left_right, drawing);
+			_scroll_left_right, drawing);
 
 		XtAddCallback(scrollHoriz, XtNjumpProc, 
-			Thumb_left_right, drawing);
+			_thumb_left_right, drawing);
 	}
 	else
 	{
 		drawing = XtVaCreateManagedWidget(ProgramName, 
 			boxWidgetClass, topLevel, XtNwidth, 
-			WindowWidth, XtNheight, WindowHeight, XtNwidthInc, 
-			FontWidth, XtNheightInc, FontHeight, NULL);
+			window_width, XtNheight, window_height, XtNwidthInc, 
+			font_width, XtNheightInc, font_height, NULL);
 
-		XtVaSetValues(topLevel, XtNwidthInc, FontWidth, 
-			XtNheightInc, FontHeight, NULL);
+		XtVaSetValues(topLevel, XtNwidthInc, font_width, 
+			XtNheightInc, font_height, NULL);
 	}
 
 	/* Process any default translations */
@@ -3028,7 +3059,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Process the supplied colors */
 
-	get_colors();
+	_initialize_colors();
 
 	/* Determine text cursor alignment from resources */
 
@@ -3116,22 +3147,22 @@ int XCursesSetupX(int argc, char *argv[])
 	/* Create the Graphics Context for drawing. This MUST be done 
 	   AFTER the associated widget has been realized. */
 
-	XC_LOG(("before get_GC\n"));
+	XC_LOG(("before _get_gc\n"));
 
-	get_GC(&normal_gc,
+	_get_gc(&normal_gc,
 		xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
-	get_GC(&italic_gc, 
+	_get_gc(&italic_gc, 
 		italic_font_valid ? xc_app_data.italicFont : 
 		xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
-	get_GC(&block_cursor_gc,
+	_get_gc(&block_cursor_gc,
 		xc_app_data.normalFont, COLOR_BLACK, COLOR_CURSOR);
 
-	get_GC(&rect_cursor_gc,
+	_get_gc(&rect_cursor_gc,
 		xc_app_data.normalFont, COLOR_CURSOR, COLOR_BLACK);
 
-	get_GC(&border_gc,
+	_get_gc(&border_gc,
 		xc_app_data.normalFont, COLOR_BORDER, COLOR_BLACK);
 
 	XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2, LineSolid, 
@@ -3211,7 +3242,7 @@ int XCursesSetupX(int argc, char *argv[])
 #ifdef FOREIGN
 	sleep(20);
 
-	if ((Xim = XOpenIM(XCURSESDISPLAY,NULL,NULL,NULL)) == NULL)
+	if ((Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL)) == NULL)
 	{
 		perror("Cannot open Input Method");
 		kill(xc_otherpid, SIGKILL);
@@ -3289,35 +3320,7 @@ static RETSIGTYPE XCursesSignalHandler(int signo)
 	/* Send a CURSES_EXIT to myself */
 
 	if (XC_write_socket(xc_exit_sock, &flag, sizeof(int)) < 0)
-		ExitProcess(7, signo, "exiting from XCursesSignalHandler");
-}
-
-static void RequestorCallbackForGetSelection(Widget w, XtPointer data,
-					     Atom *selection, Atom *type,
-					     XtPointer value,
-					     unsigned long *length,
-					     int *format)
-{
-	XC_LOG(("RequestorCallbackForGetSelection() - called\n"));
-
-	if (!value && !(*length))
-	{
-	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
-		return;
-	}
-	else
-	{
-	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
-	       contents */
-
-	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
-		if (XC_write_display_socket_int((int)(*length)) >= 0)
-		    if (XC_write_socket(xc_display_sock, value, *length) >= 0)
-			return;
-	}
-
-	ExitProcess(4, SIGKILL,
-		"exiting from RequestorCallbackForGetSelection");
+		_exit_process(7, signo, "exiting from XCursesSignalHandler");
 }
 
 static void XCursesStructureNotify(Widget w, XtPointer client_data, 
@@ -3335,8 +3338,8 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 		   Also will need to kill (SIGWINCH) curses process if 
 		   screen size changes. */
 
-		resizeWindowWidth = event->xconfigure.width;
-		resizeWindowHeight = event->xconfigure.height;
+		resize_window_width = event->xconfigure.width;
+		resize_window_height = event->xconfigure.height;
 
 		after_first_curses_request = False;
 
@@ -3345,7 +3348,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 
 		kill(xc_otherpid, SIGWINCH);
 #endif
-		SendKeyToCurses((unsigned long)KEY_RESIZE, NULL, TRUE);
+		_send_key_to_curses(KEY_RESIZE, NULL, TRUE);
 		break;
 
 	case MapNotify:
@@ -3353,7 +3356,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 
 		ReceivedMapNotify = 1;
 
-		Border();
+		_draw_border();
 		break;
 
 	default:

@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.53 2006/11/30 17:12:51 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.54 2006/11/30 17:37:38 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2931,10 +2931,6 @@ int XCursesSetupX(int argc, char *argv[])
 	int minwidth, minheight;
 
 	XC_LOG(("XCursesSetupX called\n"));
-
-	/* The following kludge is to force XtVaAppInitialize() to 
-	   recognize the name of the program.  Without it, a default 
-	   value of "PDCurses" is used. */
 
 	if (!argv)
 	{

@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.51 2006/11/30 03:44:14 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.52 2006/11/30 04:47:45 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -440,8 +440,8 @@ static Atom wm_atom[2];
 static char *ClassName = "XCurses";
 static XtAppContext app_context;
 static Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
-static int ReceivedMapNotify = 0;
-static Boolean mouse_selection = False;
+static int received_map_notify = 0;
+static bool mouse_selection = FALSE;
 static chtype *tmpsel = NULL;
 static unsigned long tmpsel_length = 0;
 static int selection_start_x = 0, selection_start_y = 0,
@@ -451,8 +451,8 @@ static Pixmap icon_bitmap;
 static Pixmap icon_pixmap;
 static Pixmap icon_pixmap_mask;
 #endif
-static int visible_cursor = 0;
-static int windowEntered = 1;
+static bool visible_cursor = FALSE;
+static bool window_entered = TRUE;
 static char *ProgramName;
 
 /* Macros just for app_resources */
@@ -594,9 +594,9 @@ static XtActionsRec Actions[] =
 	{"XCursesPasteSelection",	(XtActionProc)XCursesPasteSelection},
 };
 
-static Bool after_first_curses_request = False;
+static bool after_first_curses_request = FALSE;
 static Pixel colors[MAX_COLORS + 2];
-static Bool vertical_cursor = False;
+static bool vertical_cursor = FALSE;
 
 #ifdef FOREIGN
 	XIM Xim;
@@ -1134,7 +1134,7 @@ static void _refresh_screen(void)
 }
 
 static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
-			  Boolean *continue_to_dispatch)
+			  Boolean *unused)
 {
 	XC_LOG(("XCursesExpose() - called\n"));
 
@@ -1143,12 +1143,12 @@ static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
 	if (event->xexpose.count)
 		return;
 
-	if (after_first_curses_request && ReceivedMapNotify)
+	if (after_first_curses_request && received_map_notify)
 		_display_screen();
 }
 
 static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
-			       Boolean *continue_to_dispatch)
+			       Boolean *unused)
 {
 	XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
@@ -1694,7 +1694,7 @@ static void _selection_off(void)
 	selection_start_x = selection_start_y = selection_end_x = 
 		selection_end_y = 0;
 
-	mouse_selection = False;
+	mouse_selection = FALSE;
 }
 
 static void _selection_on(int x, int y)
@@ -1714,7 +1714,7 @@ static void _selection_extend(int x, int y)
 
 	XC_LOG(("_selection_extend() - called\n"));
 
-	mouse_selection = True;
+	mouse_selection = TRUE;
 
 	/* convert x/y coordinates into start/stop */
 
@@ -2007,8 +2007,7 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 }
 
 static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data,
-				    XEvent *event,
-				    Boolean *continue_to_dispatch)
+				    XEvent *event, Boolean *unused)
 {
 	XC_LOG(("XCursesEnterLeaveWindow called\n"));
 
@@ -2017,13 +2016,13 @@ static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data,
 	case EnterNotify:
 		XC_LOG(("EnterNotify received\n"));
 
-		windowEntered = TRUE;
+		window_entered = TRUE;
 		break;
 
 	case LeaveNotify:
 		XC_LOG(("LeaveNotify received\n"));
 
-		windowEntered = FALSE;
+		window_entered = FALSE;
 
 		/* Display the cursor so it stays on while the window is 
 		   not current */
@@ -2067,7 +2066,7 @@ static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 {
 	XC_LOG(("XCursesCursorBlink() - called:\n"));
 
-	if (windowEntered)
+	if (window_entered)
 	{
 		if (visible_cursor)
 		{
@@ -2078,7 +2077,7 @@ static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
 			SP->visibility = save_visibility;
-			visible_cursor = 0;
+			visible_cursor = FALSE;
 		}
 		else
 		{
@@ -2086,7 +2085,7 @@ static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 
 			_display_cursor(SP->cursrow, SP->curscol,
 				SP->cursrow, SP->curscol);
-			visible_cursor = 1;
+			visible_cursor = TRUE;
 		}
 	}
 
@@ -2521,7 +2520,7 @@ static void _resize(void)
 {
 	unsigned char save_atrtab[MAX_ATRTAB]; 
 
-	after_first_curses_request = False;
+	after_first_curses_request = FALSE;
 
 	SP->lines = XCursesLINES = ((resize_window_height -
 		(2 * xc_app_data.borderWidth)) / font_height);
@@ -2533,7 +2532,7 @@ static void _resize(void)
 
 	window_width = resize_window_width;
 	window_height = resize_window_height;
-	visible_cursor = 1;
+	visible_cursor = TRUE;
 
 	_draw_border();
 
@@ -2665,7 +2664,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	XC_LOG(("XCursesProcessRequestsFromCurses() - called\n"));
 
-	if (!ReceivedMapNotify) 
+	if (!received_map_notify) 
 	    return; 
 
 	FD_ZERO(&xc_readfds); 
@@ -2696,7 +2695,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    XC_LOG(("XCursesProcessRequestsFromCurses() - "
 		"after XC_read_socket()\n"));
 
-	    after_first_curses_request = True; 
+	    after_first_curses_request = TRUE;
 
 	    switch(num_cols) 
 	    { 
@@ -2740,7 +2739,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		new_row = pos & 0xFF;
 		new_x = pos >> 8;
 
-		visible_cursor = 1;
+		visible_cursor = TRUE;
 		_display_cursor(old_row, old_x, new_row, new_x);
 		break;
 
@@ -2752,7 +2751,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		/* If the window is not active, ignore this 
 		   command. The cursor will stay solid. */
 
-		if (windowEntered) 
+		if (window_entered)
 		{ 
 		    if (visible_cursor) 
 		    { 
@@ -2765,7 +2764,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 			    SP->cursrow, SP->curscol);
 
 			SP->visibility = save_visibility;
-			visible_cursor = 0;
+			visible_cursor = FALSE;
 		    } 
 		    else 
 		    { 
@@ -2774,7 +2773,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 			_display_cursor(SP->cursrow, SP->curscol,
 			    SP->cursrow, SP->curscol);
 
-			visible_cursor = 1; 
+			visible_cursor = TRUE;
 		    } 
 		} 
 
@@ -3064,7 +3063,7 @@ int XCursesSetupX(int argc, char *argv[])
 	/* Determine text cursor alignment from resources */
 
 	if (!strcmp(xc_app_data.textCursor, "vertical"))
-		vertical_cursor = True;
+		vertical_cursor = TRUE;
 
 	/* Now have LINES and COLS. Set these in the shared SP so the 
 	   curses program can find them. */
@@ -3324,7 +3323,7 @@ static RETSIGTYPE XCursesSignalHandler(int signo)
 }
 
 static void XCursesStructureNotify(Widget w, XtPointer client_data, 
-				   XEvent *event, Boolean *continue_to_dispatch)
+				   XEvent *event, Boolean *unused)
 {
 	XC_LOG(("XCursesStructureNotify() - called\n"));
 
@@ -3341,7 +3340,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 		resize_window_width = event->xconfigure.width;
 		resize_window_height = event->xconfigure.height;
 
-		after_first_curses_request = False;
+		after_first_curses_request = FALSE;
 
 #ifdef SIGWINCH
 		SP->resized = 1;
@@ -3354,7 +3353,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 	case MapNotify:
 		XC_LOG(("MapNotify received\n"));
 
-		ReceivedMapNotify = 1;
+		received_map_notify = 1;
 
 		_draw_border();
 		break;

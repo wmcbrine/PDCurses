@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.52 2006/11/30 04:47:45 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.53 2006/11/30 17:12:51 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -64,6 +64,7 @@ static void _exit_process(int, int, char *);
 static void _send_key_to_curses(unsigned long, MOUSE_STATUS *, bool);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
+static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
 static void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
 static void XCursesPasteSelection(Widget, XButtonEvent *);
 static RETSIGTYPE XCursesSignalHandler(int);
@@ -592,6 +593,7 @@ static XtActionsRec Actions[] =
 	{"XCursesButton",		(XtActionProc)XCursesButton},
 	{"XCursesKeyPress",		(XtActionProc)XCursesKeyPress},
 	{"XCursesPasteSelection",	(XtActionProc)XCursesPasteSelection},
+	{"string",			(XtActionProc)XCursesHandleString}
 };
 
 static bool after_first_curses_request = FALSE;
@@ -1463,6 +1465,42 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 		_send_key_to_curses(key, NULL, key_code);
 	}
+}
+
+static void XCursesHandleString(Widget w, XEvent *event, String *params,
+				Cardinal *nparams)
+{
+	unsigned char *ptr;
+
+	if (*nparams != 1)
+		return;
+
+	ptr = (unsigned char *)*params;
+
+	if (ptr[0] == '0' && ptr[1] == 'x' && ptr[2] != '\0')
+	{ 	 
+		unsigned char c;
+		unsigned long total = 0;
+
+		for (ptr += 2; (c = tolower(*ptr)); ptr++)
+		{
+			total <<= 4;
+
+			if (c >= '0' && c <= '9')
+				total += c - '0';
+			else
+				if (c >= 'a' && c <= 'f')	 
+					total += c - 'a' + 10;
+				else
+					break;
+		}
+
+		if (c == '\0')
+			_send_key_to_curses(total, NULL, FALSE);
+	}
+	else
+		for (; *ptr; ptr++)
+			_send_key_to_curses((unsigned long)*ptr, NULL, FALSE);
 }
 
 static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,

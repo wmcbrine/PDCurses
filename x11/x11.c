@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.54 2006/11/30 17:37:38 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.55 2006/12/01 01:27:12 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -62,13 +62,13 @@ static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
 static void _exit_process(int, int, char *);
 static void _send_key_to_curses(unsigned long, MOUSE_STATUS *, bool);
+static void _handle_structure_notify(Widget, XtPointer, XEvent *, Boolean *);
+static RETSIGTYPE _handle_signals(int);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
 static void XCursesKeyPress(Widget, XEvent *, String *, Cardinal *);
 static void XCursesPasteSelection(Widget, XButtonEvent *);
-static RETSIGTYPE XCursesSignalHandler(int);
-static void XCursesStructureNotify(Widget, XtPointer, XEvent *, Boolean *);
 
 static struct
 {
@@ -78,7 +78,7 @@ static struct
 	unsigned short shifted;
 	unsigned short control;
 	unsigned short alt;
-} xc_keys[] =
+} key_table[] =
 {
 /* keycode	keypad	normal	     shifted	   control	alt*/
  {XK_Left,	FALSE,	KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,	ALT_LEFT},
@@ -438,7 +438,7 @@ static int state_mask[8] =
 };
 
 static Atom wm_atom[2];
-static char *ClassName = "XCurses";
+static String class_name = "XCurses";
 static XtAppContext app_context;
 static Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
 static int received_map_notify = 0;
@@ -454,7 +454,7 @@ static Pixmap icon_pixmap_mask;
 #endif
 static bool visible_cursor = FALSE;
 static bool window_entered = TRUE;
-static char *ProgramName;
+static char *program_name;
 
 /* Macros just for app_resources */
 
@@ -608,7 +608,7 @@ static bool vertical_cursor = FALSE;
 	XIMStyle my_style = 0;
 #endif
 
-static const char *defaultTranslations =
+static const char *default_translations =
 {
 	"<Key>: XCursesKeyPress() \n" \
 	"<KeyUp>: XCursesKeyPress() \n" \
@@ -670,14 +670,15 @@ signal_handler XCursesSetSignal(int signo, signal_handler action)
 
 	sigact.sa_handler = action;
 
+	sigact.sa_flags =
 # ifdef SA_INTERRUPT
 #  ifdef SA_RESTART
-	sigact.sa_flags = SA_INTERRUPT | SA_RESTART;
+		SA_INTERRUPT | SA_RESTART;
 #  else
-	sigact.sa_flags = SA_INTERRUPT;
+		SA_INTERRUPT;
 #  endif
 # else	/* must be SA_RESTART */
-	sigact.sa_flags = SA_RESTART;
+		SA_RESTART;
 # endif
 	sigemptyset(&sigact.sa_mask);
 
@@ -717,6 +718,8 @@ static void _make_xy(int x, int y, int *xpos, int *ypos)
 	*ypos = xc_app_data.normalFont->ascent + (y * font_height) + 
 		xc_app_data.borderWidth;
 }
+
+/* Output a block of characters with common attributes */
 
 static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 #ifdef PDC_WIDE
@@ -811,6 +814,8 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
 	return OK;
 }
+
+/* The core display routine -- update one line of text */
 
 static int _display_text(const chtype *ch, int row, int col,
 			 int num_cols, bool highlight)
@@ -1024,7 +1029,7 @@ static void _get_icon(void)
 		bitmap_bits = (unsigned char *)little_icon_bits;
 	}
 
-	XFree((char *)icon_size);
+	XFree(icon_size);
 
 #ifdef HAVE_XPM_H
 	if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
@@ -1135,10 +1140,10 @@ static void _refresh_screen(void)
 		_selection_off();
 }
 
-static void XCursesExpose(Widget w, XtPointer client_data, XEvent *event,
-			  Boolean *unused)
+static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
+			   Boolean *unused)
 {
-	XC_LOG(("XCursesExpose() - called\n"));
+	XC_LOG(("_handle_expose() - called\n"));
 
 	/* ignore all Exposes except last */
 
@@ -1391,9 +1396,9 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			modifier |= PDC_KEY_MODIFIER_ALT;
 	}
 
-	for (i = 0; xc_keys[i].keycode; i++)
+	for (i = 0; key_table[i].keycode; i++)
 	{
-		if (xc_keys[i].keycode == keysym)
+		if (key_table[i].keycode == keysym)
 		{
 			PDC_LOG(("%s:State %x\n", XCLOGMSG, event->xkey.state));
 
@@ -1403,24 +1408,24 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			   ShiftMask: 0x01: shift modifier */
 
 			if ((event->xkey.state & ShiftMask) ||
-			    (xc_keys[i].numkeypad &&
+			    (key_table[i].numkeypad &&
 			    (event->xkey.state & Mod2Mask)))
 			{
-				key = xc_keys[i].shifted;
+				key = key_table[i].shifted;
 			}
 			else if (event->xkey.state & ControlMask)
 			{
-				key = xc_keys[i].control;
+				key = key_table[i].control;
 			}
 			else if (event->xkey.state & Mod1Mask)
 			{
-				key = xc_keys[i].alt;
+				key = key_table[i].alt;
 			}
 
 			/* To get here, we ignore all other modifiers */
 
 			else
-				key = xc_keys[i].normal;
+				key = key_table[i].normal;
 
 			key_code = (key > 0x100);
 			break;
@@ -2044,10 +2049,10 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 		"row %d col %d\n", XCLOGMSG, new_row, new_x));
 }
 
-static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data,
-				    XEvent *event, Boolean *unused)
+static void _handle_enter_leave(Widget w, XtPointer client_data,
+				XEvent *event, Boolean *unused)
 {
-	XC_LOG(("XCursesEnterLeaveWindow called\n"));
+	XC_LOG(("_handle_enter_leave called\n"));
 
 	switch(event->type)
 	{
@@ -2070,13 +2075,13 @@ static void XCursesEnterLeaveWindow(Widget w, XtPointer client_data,
 		break;
 
 	default:
-		PDC_LOG(("%s:XCursesEnterLeaveWindow - unknown event %d\n",
+		PDC_LOG(("%s:_handle_enter_leave - unknown event %d\n",
 			XCLOGMSG, event->type));
 	}
 }
 
 static void _send_key_to_curses(unsigned long key, MOUSE_STATUS *ms,
-			    bool key_code)
+				bool key_code)
 {
 	PDC_LOG(("%s:_send_key_to_curses() - called: sending %d\n",
 		XCLOGMSG, key));
@@ -2100,9 +2105,9 @@ static void _send_key_to_curses(unsigned long key, MOUSE_STATUS *ms,
 	}
 }
 
-static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
+static void _blink_cursor(XtPointer unused, XtIntervalId *id)
 {
-	XC_LOG(("XCursesCursorBlink() - called:\n"));
+	XC_LOG(("_blink_cursor() - called:\n"));
 
 	if (window_entered)
 	{
@@ -2128,7 +2133,7 @@ static void XCursesCursorBlink(XtPointer unused, XtIntervalId *id)
 	}
 
 	XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
-		XCursesCursorBlink, NULL);
+		_blink_cursor, NULL);
 }
 
 static void XCursesButton(Widget w, XEvent *event, String *params,
@@ -2589,7 +2594,7 @@ static void _resize(void)
 		perror("Cannot allocate shared memory for curscr");
 
 		_exit_process(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
+			"exiting from _process_curses_requests");
 	} 
 
 	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
@@ -2684,11 +2689,13 @@ static void _resume_curses(void)
 {
 	if (XC_write_display_socket_int(CURSES_CONTINUE) < 0)
 		_exit_process(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
+			"exiting from _process_curses_requests");
 }
 
-static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
-					     XtInputId *id) 
+/* The curses process sent us a message */
+
+static void _process_curses_requests(XtPointer client_data, int *fid,
+				     XtInputId *id) 
 { 
 	struct timeval socket_timeout = {0};
 	int s;
@@ -2700,7 +2707,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 	char buf[12];		/* big enough for 2 integers */ 
 
-	XC_LOG(("XCursesProcessRequestsFromCurses() - called\n"));
+	XC_LOG(("_process_curses_requests() - called\n"));
 
 	if (!received_map_notify) 
 	    return; 
@@ -2711,7 +2718,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
 	  NULL, &socket_timeout)) < 0)
 	    _exit_process(2, SIGKILL, "exiting from "
-		"XCursesProcessRequestsFromCurses - select failed");
+		"_process_curses_requests - select failed");
 
 	if (!s)		/* no requests pending - should never happen! */ 
 	    return; 
@@ -2721,16 +2728,16 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 	    /* read first integer to determine total message has 
 	       been received */
 
-	    XC_LOG(("XCursesProcessRequestsFromCurses() - "
+	    XC_LOG(("_process_curses_requests() - "
 		"before XC_read_socket()\n"));
 
 	    if (XC_read_socket(xc_display_sock, &num_cols, sizeof(int)) < 0) 
 	    {
 		_exit_process(3, SIGKILL, "exiting from "
-		    "XCursesProcessRequestsFromCurses - first read");
+		    "_process_curses_requests - first read");
 	    }
 
-	    XC_LOG(("XCursesProcessRequestsFromCurses() - "
+	    XC_LOG(("_process_curses_requests() - "
 		"after XC_read_socket()\n"));
 
 	    after_first_curses_request = TRUE;
@@ -2766,7 +2773,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		if (XC_read_socket(xc_display_sock, buf, sizeof(int) * 2) < 0)
 		{
 		    _exit_process(5, SIGKILL, "exiting from CURSES_CURSOR "
-			"XCursesProcessRequestsFromCurses");
+			"_process_curses_requests");
 		}
 
 		memcpy(&pos, buf, sizeof(int)); 
@@ -2845,7 +2852,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		{
 		    _exit_process(5, SIGKILL,
 			"exiting from CURSES_SET_SELECTION "
-			"XCursesProcessRequestsFromCurses");
+			"_process_curses_requests");
 		}
 
 		if (length > (long)tmpsel_length)
@@ -2860,7 +2867,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		{
 		    if (XC_write_display_socket_int(PDC_CLIP_MEMORY_ERROR) < 0)
 			_exit_process(4, SIGKILL,
-			    "exiting from XCursesProcessRequestsFromCurses");
+			    "exiting from _process_curses_requests");
 		    break;
 		}
 
@@ -2869,7 +2876,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 		{
 		    _exit_process(5, SIGKILL,
 			"exiting from CURSES_SET_SELECTION "
-			"XCursesProcessRequestsFromCurses");
+			"_process_curses_requests");
 		}
 
 		tmpsel_length = length;
@@ -2890,7 +2897,7 @@ static void XCursesProcessRequestsFromCurses(XtPointer client_data, int *fid,
 
 		if (XC_write_display_socket_int(old_x) < 0)
 		    _exit_process(4, SIGKILL,
-			"exiting from XCursesProcessRequestsFromCurses");
+			"exiting from _process_curses_requests");
 		break;
 
 	    case CURSES_CLEAR_SELECTION:
@@ -2938,7 +2945,7 @@ int XCursesSetupX(int argc, char *argv[])
 		argc = 1;
 	}
 
-	ProgramName = argv[0];
+	program_name = argv[0];
 
 	/* Keep open the 'write' end of the socket so the XCurses 
 	   process can send a CURSES_EXIT to itself from within the 
@@ -2954,7 +2961,7 @@ int XCursesSetupX(int argc, char *argv[])
 	   if they haven't already been ignored by the application. */
 
 	for (i = 0; i < PDC_MAX_SIGNALS; i++)
-		if (XCursesSetSignal(i, XCursesSignalHandler) == SIG_IGN)
+		if (XCursesSetSignal(i, _handle_signals) == SIG_IGN)
 			XCursesSetSignal(i, SIG_IGN);
 
 	/* Start defining X Toolkit things */
@@ -2974,7 +2981,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Initialise the top level widget */
 
-	topLevel = XtVaAppInitialize(&app_context, ClassName,
+	topLevel = XtVaAppInitialize(&app_context, class_name,
 		options, XtNumber(options), &argc, argv, NULL, NULL);
 
 	XtVaGetApplicationResources(topLevel, &xc_app_data, app_resources,
@@ -3039,14 +3046,14 @@ int XCursesSetupX(int argc, char *argv[])
 
 	if (xc_app_data.scrollbarWidth && sb_started)
 	{
-		scrollBox = XtVaCreateManagedWidget(ProgramName, 
+		scrollBox = XtVaCreateManagedWidget(program_name, 
 			scrollBoxWidgetClass, topLevel, XtNwidth, 
 			window_width + xc_app_data.scrollbarWidth, 
 			XtNheight, window_height + xc_app_data.scrollbarWidth,
 			XtNwidthInc, font_width, XtNheightInc, font_height,
 			NULL);
 
-		drawing = XtVaCreateManagedWidget(ProgramName, 
+		drawing = XtVaCreateManagedWidget(program_name, 
 			boxWidgetClass, scrollBox, XtNwidth, 
 			window_width, XtNheight, window_height, XtNwidthInc, 
 			font_width, XtNheightInc, font_height, NULL);
@@ -3075,7 +3082,7 @@ int XCursesSetupX(int argc, char *argv[])
 	}
 	else
 	{
-		drawing = XtVaCreateManagedWidget(ProgramName, 
+		drawing = XtVaCreateManagedWidget(program_name, 
 			boxWidgetClass, topLevel, XtNwidth, 
 			window_width, XtNheight, window_height, XtNwidthInc, 
 			font_width, XtNheightInc, font_height, NULL);
@@ -3087,7 +3094,7 @@ int XCursesSetupX(int argc, char *argv[])
 	/* Process any default translations */
 
 	XtAugmentTranslations(drawing,
-		XtParseTranslationTable(defaultTranslations));
+		XtParseTranslationTable(default_translations));
 	XtAppAddActions(app_context, Actions, XtNumber(Actions));
 
 	/* Process the supplied colors */
@@ -3140,11 +3147,11 @@ int XCursesSetupX(int argc, char *argv[])
 
 	/* Add Event handlers to the drawing widget */
 
-	XtAddEventHandler(drawing, ExposureMask, False, XCursesExpose, NULL);
+	XtAddEventHandler(drawing, ExposureMask, False, _handle_expose, NULL);
 	XtAddEventHandler(drawing, StructureNotifyMask, False, 
-		XCursesStructureNotify, NULL);
+		_handle_structure_notify, NULL);
 	XtAddEventHandler(drawing, EnterWindowMask | LeaveWindowMask, 
-		False, XCursesEnterLeaveWindow, NULL);
+		False, _handle_enter_leave, NULL);
 
 	XtAddEventHandler(topLevel, 0, True, XCursesNonmaskable, NULL);
 
@@ -3153,13 +3160,13 @@ int XCursesSetupX(int argc, char *argv[])
 
 	XtAppAddInput(app_context, xc_display_sock, 
 		(XtPointer)XtInputReadMask, 
-		XCursesProcessRequestsFromCurses, NULL);
+		_process_curses_requests, NULL);
 
 	/* If there is a cursorBlink resource, start the Timeout event */
 
 	if (xc_app_data.cursorBlinkRate)
 		XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
-			XCursesCursorBlink, NULL);
+			_blink_cursor, NULL);
 
 	/* Leave telling the curses process that it can start to here so 
 	   that when the curses process makes a request, the Xcurses 
@@ -3312,15 +3319,15 @@ int XCursesSetupX(int argc, char *argv[])
 	return OK;			/* won't get here */
 }
 
-static RETSIGTYPE XCursesSignalHandler(int signo)
+static RETSIGTYPE _handle_signals(int signo)
 {
 	int flag = CURSES_EXIT;
 
-	PDC_LOG(("%s:XCursesSignalHandler() - called: %d\n", XCLOGMSG, signo));
+	PDC_LOG(("%s:_handle_signals() - called: %d\n", XCLOGMSG, signo));
 
 	/* Patch by: Georg Fuchs */
 
-	XCursesSetSignal(signo, XCursesSignalHandler);
+	XCursesSetSignal(signo, _handle_signals);
 
 #ifdef SIGTSTP
 	if (signo == SIGTSTP)
@@ -3353,13 +3360,13 @@ static RETSIGTYPE XCursesSignalHandler(int signo)
 	/* Send a CURSES_EXIT to myself */
 
 	if (XC_write_socket(xc_exit_sock, &flag, sizeof(int)) < 0)
-		_exit_process(7, signo, "exiting from XCursesSignalHandler");
+		_exit_process(7, signo, "exiting from _handle_signals");
 }
 
-static void XCursesStructureNotify(Widget w, XtPointer client_data, 
-				   XEvent *event, Boolean *unused)
+static void _handle_structure_notify(Widget w, XtPointer client_data, 
+				     XEvent *event, Boolean *unused)
 {
-	XC_LOG(("XCursesStructureNotify() - called\n"));
+	XC_LOG(("_handle_structure_notify() - called\n"));
 
 	switch(event->type)
 	{
@@ -3393,7 +3400,7 @@ static void XCursesStructureNotify(Widget w, XtPointer client_data,
 		break;
 
 	default:
-		PDC_LOG(("%s:XCursesStructureNotify - unknown event %d\n",
+		PDC_LOG(("%s:_handle_structure_notify - unknown event %d\n",
 			XCLOGMSG, event->type));
 	}
 }

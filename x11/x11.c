@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.55 2006/12/01 01:27:12 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.56 2006/12/01 02:20:27 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -588,7 +588,7 @@ static XrmOptionDescRec options[] =
 #undef CCOLOR
 #undef COPT
 
-static XtActionsRec Actions[] =
+static XtActionsRec action_table[] =
 {
 	{"XCursesButton",		(XtActionProc)XCursesButton},
 	{"XCursesKeyPress",		(XtActionProc)XCursesKeyPress},
@@ -1154,12 +1154,12 @@ static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
 		_display_screen();
 }
 
-static void XCursesNonmaskable(Widget w, XtPointer client_data, XEvent *event,
-			       Boolean *unused)
+static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
+				Boolean *unused)
 {
 	XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
-	PDC_LOG(("%s:XCursesNonmaskable called: xc_otherpid %d event %d\n",
+	PDC_LOG(("%s:_handle_nonmaskable called: xc_otherpid %d event %d\n",
 		XCLOGMSG, xc_otherpid, event->type));
 
 	if (event->type == ClientMessage)
@@ -1494,8 +1494,8 @@ static void XCursesHandleString(Widget w, XEvent *event, String *params,
 			if (c >= '0' && c <= '9')
 				total += c - '0';
 			else
-				if (c >= 'a' && c <= 'f')	 
-					total += c - 'a' + 10;
+				if (c >= 'a' && c <= 'f')
+					total += c - ('a' - 10);
 				else
 					break;
 		}
@@ -1692,7 +1692,6 @@ static void _show_selection(int start_x, int start_y, int end_x, int end_y,
 
 	for (i = 0; i < end_y - start_y + 1; i++)
 	{
-
 		if (start_y == end_y)		/* only one line */
 		{
 			start_col = start_x;
@@ -3095,7 +3094,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	XtAugmentTranslations(drawing,
 		XtParseTranslationTable(default_translations));
-	XtAppAddActions(app_context, Actions, XtNumber(Actions));
+	XtAppAddActions(app_context, action_table, XtNumber(action_table));
 
 	/* Process the supplied colors */
 
@@ -3153,7 +3152,7 @@ int XCursesSetupX(int argc, char *argv[])
 	XtAddEventHandler(drawing, EnterWindowMask | LeaveWindowMask, 
 		False, _handle_enter_leave, NULL);
 
-	XtAddEventHandler(topLevel, 0, True, XCursesNonmaskable, NULL);
+	XtAddEventHandler(topLevel, 0, True, _handle_nonmaskable, NULL);
 
 	/* Add input handler from xc_display_sock (requests from curses 
 	   program) */

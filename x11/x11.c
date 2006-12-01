@@ -25,10 +25,14 @@
 # include <xpm.h>
 #endif
 
+#if defined FOREIGN
+# include <Xlocale.h>
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.56 2006/12/01 02:20:27 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.57 2006/12/01 07:56:03 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;

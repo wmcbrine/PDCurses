@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.55 2006/11/27 04:23:26 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.56 2006/12/01 07:56:03 wmcbrine Exp $ */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -72,9 +72,6 @@
 
 #include <keysym.h>
 #include <Xatom.h>
-#if defined FOREIGN
-# include <Xlocale.h>
-#endif
 
 #include <curspriv.h>
 

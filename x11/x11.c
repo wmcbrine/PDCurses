@@ -13,6 +13,8 @@
 
 #include "pdcx11.h"
 
+#define PDC_XIM
+
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
 #endif
@@ -25,14 +27,14 @@
 # include <xpm.h>
 #endif
 
-#if defined FOREIGN
+#if defined PDC_XIM
 # include <Xlocale.h>
 #endif
 
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.57 2006/12/01 07:56:03 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.58 2006/12/01 22:10:02 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -604,12 +606,12 @@ static bool after_first_curses_request = FALSE;
 static Pixel colors[MAX_COLORS + 2];
 static bool vertical_cursor = FALSE;
 
-#ifdef FOREIGN
-	XIM Xim;
-	XIC Xic;
-	long im_event_mask;
-	XIMStyles *im_supported_styles = NULL;
-	XIMStyle my_style = 0;
+#ifdef PDC_XIM
+static XIM Xim;
+static XIC Xic;
+static long im_event_mask;
+static XIMStyles *im_supported_styles = NULL;
+static XIMStyle my_style = 0;
 #endif
 
 static const char *default_translations =
@@ -1185,7 +1187,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 {
 	enum { STATE_NORMAL, STATE_COMPOSE, STATE_CHAR };
 
-#ifdef FOREIGN
+#ifdef PDC_XIM
 	Status status;
 	wchar_t buffer[120];
 #else
@@ -1207,6 +1209,10 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 	if (event->type == KeyRelease)
 	{
+		/* The keysym value was set by a previous call to this 
+		   function with a KeyPress event (or reset by the 
+		   mouse event handler) */
+
 		if (SP->return_key_modifiers && keysym != compose_key && 
 		    IsModifierKey(keysym))
 		{
@@ -1239,7 +1245,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 	buffer[0] = '\0';
 
-#ifdef FOREIGN
+#ifdef PDC_XIM
 	count = XwcLookupString(Xic, &(event->xkey), buffer, buflen,
 		&keysym, &status);
 #else
@@ -2543,7 +2549,7 @@ static void _exit_process(int rc, int sig, char *msg)
 	XFreeGC(XCURSESDISPLAY, block_cursor_gc);
 	XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
 	XFreeGC(XCURSESDISPLAY, border_gc);
-#ifdef FOREIGN
+#ifdef PDC_XIM
 	XDestroyIC(Xic);
 #endif
 
@@ -2929,6 +2935,13 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 	} 
 } 
 
+#ifdef PDC_XIM
+static void _dummy_handler(Widget w, XtPointer client_data,
+			   XEvent *event, Boolean *unused)
+{
+}
+#endif
+
 int XCursesSetupX(int argc, char *argv[])
 {
 	char *myargv[] = {"PDCurses", NULL};
@@ -3282,9 +3295,7 @@ int XCursesSetupX(int argc, char *argv[])
 		XFreeModifiermap(map);
 	}
 
-#ifdef FOREIGN
-	sleep(20);
-
+#ifdef PDC_XIM
 	if ((Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL)) == NULL)
 	{
 		perror("Cannot open Input Method");
@@ -3312,7 +3323,8 @@ int XCursesSetupX(int argc, char *argv[])
 
 	XFree(im_supported_styles);
 	XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
-	XtAddEventHandler(drawing, im_event_mask, False, NULL, NULL);
+	XtAddEventHandler(drawing, im_event_mask, False,
+		_dummy_handler, NULL);
 	XSetICFocus(Xic);
 #endif
 

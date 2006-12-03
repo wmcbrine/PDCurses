@@ -35,7 +35,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.67 2006/12/01 23:22:42 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.68 2006/12/03 15:11:10 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -507,69 +507,58 @@ int PDC_get_bios_key(void)
 	}
 #endif
 	if (scan == 0x1c && key == 0x0a)  /* ^Enter */
-		key = (int)0xfc00;
+		key = CTL_ENTER;
 	else if ((scan == 0x03 && key == 0x00)  /* ^@ - Null */
 		|| (scan == 0xe0 && key == 0x0d)  /* PadEnter */
 		|| (scan == 0xe0 && key == 0x0a)) /* ^PadEnter */
-			key = key << 8;
+			key = key_table[key];
 	else if ((scan == 0x37 && key == 0x2a)  /* Star */
 		|| (scan == 0x4a && key == 0x2d)  /* Minus */
 		|| (scan == 0x4e && key == 0x2b)  /* Plus */
 		|| (scan == 0xe0 && key == 0x2f)) /* Slash */
-			key = ((key & 0x0f) | 0xf0) << 8;
+			key = key_table[(key & 0x0f) | 0xf0];
 	else if (key == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
 	{
 		switch (scan)
 		{
 		case 0x47: /* Shift Home */
-			key = (int)0xb000;
+			key = KEY_SHOME;
 			break;
 		case 0x48: /* Shift Up */
-			key = (int)0xb100;
+			key = KEY_SUP;
 			break;
 		case 0x49: /* Shift PgUp */
-			key = (int)0xb200;
+			key = KEY_SPREVIOUS;
 			break;
 		case 0x4b: /* Shift Left */
-			key = (int)0xb300;
+			key = KEY_SLEFT;
 			break;
 		case 0x4d: /* Shift Right */
-			key = (int)0xb400;
+			key = KEY_SRIGHT;
 			break;
 		case 0x4f: /* Shift End */
-			key = (int)0xb500;
+			key = KEY_SEND;
 			break;
 		case 0x50: /* Shift Down */
-			key = (int)0xb600;
+			key = KEY_SDOWN;
 			break;
 		case 0x51: /* Shift PgDn */
-			key = (int)0xb700;
+			key = KEY_SNEXT;
 			break;
 		case 0x52: /* Shift Ins */
-			key = (int)0xb800;
+			key = KEY_SIC;
 			break;
 		case 0x53: /* Shift Del */
-			key = (int)0xb900;
+			key = KEY_SDC;
 		}
 	}
 	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
-		key = scan << 8;
+		key = key_table[scan];
 
 	key_pressed = TRUE;
-
-	/* normal character */
-
 	SP->key_code = ((unsigned)key >= 256);
 
-	if (!SP->key_code)
-		return key;
-
-	/* Extended keys are in the upper byte.  Shift down for a 
-	   comparison. */
-
-	key = (key >> 8) & 0xFF;
-
-	return key_table[key];
+	return key;
 }
 
 /*man-start**************************************************************

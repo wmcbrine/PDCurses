@@ -35,7 +35,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.68 2006/12/03 15:11:10 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.69 2006/12/04 05:35:51 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -508,8 +508,7 @@ int PDC_get_bios_key(void)
 #endif
 	if (scan == 0x1c && key == 0x0a)  /* ^Enter */
 		key = CTL_ENTER;
-	else if ((scan == 0x03 && key == 0x00)  /* ^@ - Null */
-		|| (scan == 0xe0 && key == 0x0d)  /* PadEnter */
+	else if ((scan == 0xe0 && key == 0x0d)  /* PadEnter */
 		|| (scan == 0xe0 && key == 0x0a)) /* ^PadEnter */
 			key = key_table[key];
 	else if ((scan == 0x37 && key == 0x2a)  /* Star */

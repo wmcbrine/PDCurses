@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.65 2006/12/05 09:56:59 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.66 2006/12/05 10:04:22 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -379,7 +379,7 @@ int PDC_get_bios_key(void)
 	else if (scan == 0xe0 && key == 0x2f)	/* Slash */
 		key = PADSLASH;
 	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
-		key = key_table[scan & 0x7f];
+		key = (scan & 0x80) ? -1 : key_table[scan];
 
 	if (shift_status & 3)
 	{

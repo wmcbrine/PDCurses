@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.69 2006/12/05 21:12:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.70 2006/12/05 23:11:43 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -285,6 +285,9 @@ static int _process_mouse_events(void)
 		{
 			if (button[i].pressed)
 			{
+				/* Check for a click -- a PRESS followed 
+				   immediately by a release */
+
 				if (!button[i].released)
 				{
 					PDCREGS regs;

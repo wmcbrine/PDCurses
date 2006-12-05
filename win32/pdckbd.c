@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.98 2006/11/27 21:08:23 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.99 2006/12/05 23:46:46 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -497,8 +497,9 @@ static int _process_key_event(void)
 
 static int _process_mouse_event(void)
 {
-	int i;
+	static const DWORD button_mask[] = {1, 4, 2};
 	short action, shift_flags = 0;
+	int i;
 
 	save_press = 0;
 	SP->key_code = TRUE;
@@ -523,9 +524,9 @@ static int _process_mouse_event(void)
 	action = (MEV.dwEventFlags == 2) ? BUTTON_DOUBLE_CLICKED :
 		((MEV.dwEventFlags == 1) ? BUTTON_MOVED : BUTTON_PRESSED);
 
-	pdc_mouse_status.button[0] = (MEV.dwButtonState & 1) ? action : 0;
-	pdc_mouse_status.button[2] = (MEV.dwButtonState & 2) ? action : 0;
-	pdc_mouse_status.button[1] = (MEV.dwButtonState & 4) ? action : 0;
+	for (i = 0; i < 3; i++)
+		pdc_mouse_status.button[i] =
+			(MEV.dwButtonState & button_mask[i]) ? action : 0;
 
 	if (action == BUTTON_PRESSED && MEV.dwButtonState & 7)
 	{
@@ -548,25 +549,15 @@ static int _process_mouse_event(void)
 
 			PeekConsoleInput(pdc_con_in, &ip, 1, &count);
 
-			if (pdc_mouse_status.button[0] == BUTTON_PRESSED &&
-			    !(ip.Event.MouseEvent.dwButtonState & 1))
+			for (i = 0; i < 3; i++)
 			{
-				pdc_mouse_status.button[0] = BUTTON_CLICKED;
+			    if (pdc_mouse_status.button[i] == BUTTON_PRESSED &&
+				!(ip.Event.MouseEvent.dwButtonState &
+				button_mask[i]))
+			    {
+				pdc_mouse_status.button[i] = BUTTON_CLICKED;
 				have_click = TRUE;
-			}
-
-			if (pdc_mouse_status.button[2] == BUTTON_PRESSED &&
-			    !(ip.Event.MouseEvent.dwButtonState & 2))
-			{
-				pdc_mouse_status.button[2] = BUTTON_CLICKED;
-				have_click = TRUE;
-			}
-
-			if (pdc_mouse_status.button[1] == BUTTON_PRESSED &&
-			    !(ip.Event.MouseEvent.dwButtonState & 4))
-			{
-				pdc_mouse_status.button[1] = BUTTON_CLICKED;
-				have_click = TRUE;
+			    }
 			}
 
 			/* If a click was found, throw out the event */
@@ -576,34 +567,30 @@ static int _process_mouse_event(void)
 		}
 	}
 
-	/* Motion events always flag the button as changed */
-
-	pdc_mouse_status.changes =
-		(((old_mouse_status.button[0] != pdc_mouse_status.button[0])
-		|| (pdc_mouse_status.button[0] == BUTTON_MOVED)) ? 1 : 0) |
-
-		(((old_mouse_status.button[1] != pdc_mouse_status.button[1])
-		|| (pdc_mouse_status.button[1] == BUTTON_MOVED)) ? 2 : 0) |
-
-		(((old_mouse_status.button[2] != pdc_mouse_status.button[2])
-		|| (pdc_mouse_status.button[2] == BUTTON_MOVED)) ? 4 : 0);
-
 	pdc_mouse_status.x = MEV.dwMousePosition.X;
 	pdc_mouse_status.y = MEV.dwMousePosition.Y;
 
+	pdc_mouse_status.changes = 0;
+
 	for (i = 0; i < 3; i++)
 	{
-	    if (pdc_mouse_status.button[i] == BUTTON_MOVED)
-	    {
-		/* Discard non-moved "moves" */
+		if (old_mouse_status.button[i] != pdc_mouse_status.button[i])
+			pdc_mouse_status.changes |= (1 << i);
 
-		if (pdc_mouse_status.x == old_mouse_status.x &&
-		    pdc_mouse_status.y == old_mouse_status.y)
-			return -1;
+		if (pdc_mouse_status.button[i] == BUTTON_MOVED)
+		{
+			/* Discard non-moved "moves" */
 
-		pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
-		break;
-	    }
+			if (pdc_mouse_status.x == old_mouse_status.x &&
+			    pdc_mouse_status.y == old_mouse_status.y)
+				return -1;
+
+			/* Motion events always flag the button as changed */
+
+			pdc_mouse_status.changes |= (1 << i);
+			pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+			break;
+		}
 	}
 
 	old_mouse_status = pdc_mouse_status;
@@ -628,14 +615,11 @@ static int _process_mouse_event(void)
 	if (MEV.dwControlKeyState & SHIFT_PRESSED)
 		shift_flags |= BUTTON_SHIFT;
 
-	if (pdc_mouse_status.changes & 1)
-		pdc_mouse_status.button[0] |= shift_flags;
-
-	if (pdc_mouse_status.changes & 2)
-		pdc_mouse_status.button[1] |= shift_flags;
-
-	if (pdc_mouse_status.changes & 4)
-		pdc_mouse_status.button[2] |= shift_flags;
+	for (i = 0; i < 3; i++)
+	{
+		if (pdc_mouse_status.changes & (1 << i))
+			pdc_mouse_status.button[i] |= shift_flags;
+	}
 
 	return KEY_MOUSE;
 }

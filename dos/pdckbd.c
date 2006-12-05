@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.64 2006/12/04 05:35:50 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.65 2006/12/05 09:56:59 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -30,8 +30,8 @@ static short key_table[]=
 {
 	-1,		ALT_ESC,	-1,		0,
 	-1,		-1,		-1,		-1,
-	-1,		-1,		CTL_PADENTER,	-1,
-	-1,		PADENTER,	ALT_BKSP,	KEY_BTAB,
+	-1,		-1,		-1,		-1,
+	-1,		-1,		ALT_BKSP,	KEY_BTAB,
 	ALT_Q,		ALT_W,		ALT_E,		ALT_R,
 	ALT_T,		ALT_Y,		ALT_U,		ALT_I,
 	ALT_O,		ALT_P,		ALT_LBRACKET,	ALT_RBRACKET,
@@ -69,29 +69,7 @@ static short key_table[]=
 	ALT_UP,		ALT_PGUP,	-1,		ALT_LEFT,
 	-1,		ALT_RIGHT,	-1,		ALT_END,
 	ALT_DOWN,	ALT_PGDN,	ALT_INS,	ALT_DEL,
-	ALT_PADSLASH,	ALT_TAB,	ALT_PADENTER,	-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	KEY_SHOME,	KEY_SUP,	KEY_SPREVIOUS,	KEY_SLEFT,
-	KEY_SRIGHT,	KEY_SEND,	KEY_SDOWN,	KEY_SNEXT,
-	KEY_SIC,	KEY_SDC,	-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		-1,		-1,
-	-1,		-1,		PADSTAR,	PADPLUS,
-	CTL_ENTER,	PADMINUS,	-1,		PADSLASH
+	ALT_PADSLASH,	ALT_TAB,	ALT_PADENTER,	-1
 };
 
 unsigned long pdc_key_modifiers = 0L;
@@ -386,53 +364,58 @@ int PDC_get_bios_key(void)
 			pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 	}
 
-	if (scan == 0x1c && key == 0x0a)  /* ^Enter */
+	if (scan == 0x1c && key == 0x0a)	/* ^Enter */
 		key = CTL_ENTER;
-	else if ((scan == 0xe0 && key == 0x0d)  /* PadEnter */
-		|| (scan == 0xe0 && key == 0x0a)) /* ^PadEnter */
-			key = key_table[key];
-	else if ((scan == 0x37 && key == 0x2a)  /* Star */
-		|| (scan == 0x4a && key == 0x2d)  /* Minus */
-		|| (scan == 0x4e && key == 0x2b)  /* Plus */
-		|| (scan == 0xe0 && key == 0x2f)) /* Slash */
-			key = key_table[(key & 0x0f) | 0xf0];
-	else if (key == 0xe0 && pdc_key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+	else if (scan == 0xe0 && key == 0x0d)	/* PadEnter */
+		key = PADENTER;
+	else if (scan == 0xe0 && key == 0x0a)	/* ^PadEnter */
+		key = CTL_PADENTER;
+	else if (scan == 0x37 && key == 0x2a)	/* Star */
+		key = PADSTAR;
+	else if (scan == 0x4a && key == 0x2d)	/* Minus */
+		key = PADMINUS;
+	else if (scan == 0x4e && key == 0x2b)	/* Plus */
+		key = PADPLUS;
+	else if (scan == 0xe0 && key == 0x2f)	/* Slash */
+		key = PADSLASH;
+	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
+		key = key_table[scan & 0x7f];
+
+	if (shift_status & 3)
 	{
-		switch (scan)
+		switch (key)
 		{
-		case 0x47: /* Shift Home */
+		case KEY_HOME:	/* Shift Home */
 			key = KEY_SHOME;
 			break;
-		case 0x48: /* Shift Up */
+		case KEY_UP:	/* Shift Up */
 			key = KEY_SUP;
 			break;
-		case 0x49: /* Shift PgUp */
+		case KEY_PPAGE: /* Shift PgUp */
 			key = KEY_SPREVIOUS;
 			break;
-		case 0x4b: /* Shift Left */
+		case KEY_LEFT:	/* Shift Left */
 			key = KEY_SLEFT;
 			break;
-		case 0x4d: /* Shift Right */
+		case KEY_RIGHT: /* Shift Right */
 			key = KEY_SRIGHT;
 			break;
-		case 0x4f: /* Shift End */
+		case KEY_END:	/* Shift End */
 			key = KEY_SEND;
 			break;
-		case 0x50: /* Shift Down */
+		case KEY_DOWN:	/* Shift Down */
 			key = KEY_SDOWN;
 			break;
-		case 0x51: /* Shift PgDn */
+		case KEY_NPAGE: /* Shift PgDn */
 			key = KEY_SNEXT;
 			break;
-		case 0x52: /* Shift Ins */
+		case KEY_IC:	/* Shift Ins */
 			key = KEY_SIC;
 			break;
-		case 0x53: /* Shift Del */
+		case KEY_DC:	/* Shift Del */
 			key = KEY_SDC;
 		}
 	}
-	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
-		key = key_table[scan];
 
 	key_pressed = TRUE;
 	SP->key_code = ((unsigned)key >= 256);

@@ -35,7 +35,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.72 2006/12/05 19:55:16 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.73 2006/12/05 23:10:31 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -248,90 +248,67 @@ bool PDC_check_bios_key(void)
 static int _process_mouse_events(void)
 {
 	MOUEVENTINFO event;
-	USHORT i = 1;
+	static const USHORT button_mask[] = {6, 96, 24},
+		move_mask[] = {2, 32, 8}, press_mask[] = {4, 64, 16};
+	USHORT count = 1;
 	short shift_flags = 0;
+	int i;
 
-	MouReadEventQue(&event, &i, mouse_handle);
+	MouReadEventQue(&event, &count, mouse_handle);
 	mouse_events--;
-
-	pdc_mouse_status.button[0] =
-		((event.fs & 2) ? BUTTON_MOVED : 0) |
-		((event.fs & 4) ? BUTTON_PRESSED : 0);
-
-	pdc_mouse_status.button[2] =
-		((event.fs & 8) ? BUTTON_MOVED : 0) |
-		((event.fs & 16) ? BUTTON_PRESSED : 0);
-
-	pdc_mouse_status.button[1] =
-		((event.fs & 32) ? BUTTON_MOVED : 0) |
-		((event.fs & 64) ? BUTTON_PRESSED : 0);
-
-	/* PRESS events are sometimes mistakenly reported as MOVE 
-	   events. A MOVE should always follow a PRESS, so treat a MOVE 
-	   immediately after a RELEASE as a PRESS. */
 
 	for (i = 0; i < 3; i++)
 	{
+		pdc_mouse_status.button[i] =
+			((event.fs & move_mask[i]) ? BUTTON_MOVED : 0) |
+			((event.fs & press_mask[i]) ? BUTTON_PRESSED : 0);
+
+		/* PRESS events are sometimes mistakenly reported as 
+		   MOVE events. A MOVE should always follow a PRESS, so 
+		   treat a MOVE immediately after a RELEASE as a PRESS. */
+
 		if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
 		    (old_mouse_status.button[i] == BUTTON_RELEASED))
 		{
 			pdc_mouse_status.button[i] = BUTTON_PRESSED;
 		}
-	}
 
-	if (pdc_mouse_status.button[0] == BUTTON_PRESSED ||
-	    pdc_mouse_status.button[1] == BUTTON_PRESSED ||
-	    pdc_mouse_status.button[2] == BUTTON_PRESSED)
-	{
-		/* Check for a click -- a PRESS followed immediately by 
-		   a release */
-
-		if (!mouse_events)
+		if (pdc_mouse_status.button[i] == BUTTON_PRESSED)
 		{
-			MOUQUEINFO queue;
+			/* Check for a click -- a PRESS followed 
+			   immediately by a release */
 
-			napms(100);
+			if (!mouse_events)
+			{
+				MOUQUEINFO queue;
 
-			MouGetNumQueEl(&queue, mouse_handle);
-			mouse_events = queue.cEvents;
-		}
+				napms(100);
 
-		if (mouse_events)
-		{
-			i = 1;
-			MouReadEventQue(&event, &i, mouse_handle);
+				MouGetNumQueEl(&queue, mouse_handle);
+				mouse_events = queue.cEvents;
+			}
 
-			if (pdc_mouse_status.button[0] == BUTTON_PRESSED &&
-			    !(event.fs & 6))
-				pdc_mouse_status.button[0] = BUTTON_CLICKED;
+			if (mouse_events)
+			{
+				MouReadEventQue(&event, &count, mouse_handle);
 
-			if (pdc_mouse_status.button[1] == BUTTON_PRESSED &&
-			    !(event.fs & 96))
-				pdc_mouse_status.button[1] = BUTTON_CLICKED;
-
-			if (pdc_mouse_status.button[2] == BUTTON_PRESSED &&
-			    !(event.fs & 24))
-				pdc_mouse_status.button[2] = BUTTON_CLICKED;
+				if (!(event.fs & button_mask[i]))
+					pdc_mouse_status.button[i] = 
+						BUTTON_CLICKED;
+			}
 		}
 	}
-
-	/* Motion events always flag the button as changed */
-
-	pdc_mouse_status.changes =
-		(((old_mouse_status.button[0] != pdc_mouse_status.button[0])
-		|| (pdc_mouse_status.button[0] == BUTTON_MOVED)) ? 1 : 0) |
-
-		(((old_mouse_status.button[1] != pdc_mouse_status.button[1])
-		|| (pdc_mouse_status.button[1] == BUTTON_MOVED)) ? 2 : 0) |
-
-		(((old_mouse_status.button[2] != pdc_mouse_status.button[2])
-		|| (pdc_mouse_status.button[2] == BUTTON_MOVED)) ? 4 : 0);
 
 	pdc_mouse_status.x = event.col;
 	pdc_mouse_status.y = event.row;
 
+	pdc_mouse_status.changes = 0;
+
 	for (i = 0; i < 3; i++)
 	{
+		if (old_mouse_status.button[i] != pdc_mouse_status.button[i])
+			pdc_mouse_status.changes |= (1 << i);
+
 		if (pdc_mouse_status.button[i] == BUTTON_MOVED)
 		{
 			/* Discard non-moved "moves" */
@@ -340,6 +317,9 @@ static int _process_mouse_events(void)
 			    pdc_mouse_status.y == old_mouse_status.y)
 				return -1;
 
+			/* Motion events always flag the button as changed */
+
+			pdc_mouse_status.changes |= (1 << i);
 			pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
 			break;
 		}
@@ -366,14 +346,11 @@ static int _process_mouse_events(void)
 	if (kbdinfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
 		shift_flags |= BUTTON_SHIFT;
 
-	if (pdc_mouse_status.changes & 1)
-		pdc_mouse_status.button[0] |= shift_flags;
-
-	if (pdc_mouse_status.changes & 2)
-		pdc_mouse_status.button[1] |= shift_flags;
-
-	if (pdc_mouse_status.changes & 4)
-		pdc_mouse_status.button[2] |= shift_flags;
+	for (i = 0; i < 3; i++)
+	{
+		if (pdc_mouse_status.changes & (1 << i))
+			pdc_mouse_status.button[i] |= shift_flags;
+	}
 
 	old_shift = kbdinfo.fsState;
 	key_pressed = TRUE;

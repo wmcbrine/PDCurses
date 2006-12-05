@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.67 2006/12/05 20:37:18 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.68 2006/12/05 20:51:56 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -275,23 +275,26 @@ static int _process_mouse_events(void)
 	{
 		for (i = 0; i < 3; i++)
 		{
-			if (button[i].pressed == 2 && button[i].released == 2)
-				pdc_mouse_status.button[i] =
-					BUTTON_DOUBLE_CLICKED;
-			else if (button[i].pressed == button[i].released)
-				pdc_mouse_status.button[i] = BUTTON_CLICKED;
-			else if (button[i].pressed > button[i].released)
+			if (button[i].pressed)
 			{
-				PDCREGS regs;
+				if (!button[i].released)
+				{
+					PDCREGS regs;
 
-				napms(100);
+					napms(100);
 
-				regs.W.ax = 6;
-				regs.W.bx = button_map[i];
-				PDCINT(0x33, regs);
+					regs.W.ax = 6;
+					regs.W.bx = button_map[i];
+					PDCINT(0x33, regs);
 
-				pdc_mouse_status.button[i] = regs.W.bx ?
-					BUTTON_CLICKED : BUTTON_PRESSED;
+					pdc_mouse_status.button[i] = 
+						regs.W.bx ?
+						BUTTON_CLICKED : 
+						BUTTON_PRESSED;
+				}
+				else
+					pdc_mouse_status.button[i] = 
+						BUTTON_CLICKED;
 			}
 
 			if (button[i].pressed || button[i].released)

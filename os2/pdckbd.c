@@ -35,14 +35,14 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.71 2006/12/05 10:04:22 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.72 2006/12/05 19:55:16 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
  *   These values are for strict IBM keyboard compatibles only		*
  ************************************************************************/
 
-static short key_table[]=
+static short key_table[] =
 {
 	-1,		ALT_ESC,	-1,		0,
 	-1,		-1,		-1,		-1,
@@ -245,7 +245,7 @@ bool PDC_check_bios_key(void)
 
 #ifndef EMXVIDEO
 
-static int _process_mouse_events()
+static int _process_mouse_events(void)
 {
 	MOUEVENTINFO event;
 	USHORT i = 1;

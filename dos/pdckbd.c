@@ -19,7 +19,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.68 2006/12/05 20:51:56 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.69 2006/12/05 21:12:25 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -183,19 +183,27 @@ bool PDC_check_bios_key(void)
 
 		for (i = 0; i < 3; i++)
 		{
-			regs.W.ax = 5;
-			regs.W.bx = button_map[i];
-			PDCINT(0x33, regs);
-			button[i].pressed = regs.W.bx;
-			if (regs.W.bx)
-				mouse_button = TRUE;
-
 			regs.W.ax = 6;
 			regs.W.bx = button_map[i];
 			PDCINT(0x33, regs);
 			button[i].released = regs.W.bx;
 			if (regs.W.bx)
+			{
+				ms_regs.W.cx = regs.W.cx;
+				ms_regs.W.dx = regs.W.dx;
 				mouse_button = TRUE;
+			}
+
+			regs.W.ax = 5;
+			regs.W.bx = button_map[i];
+			PDCINT(0x33, regs);
+			button[i].pressed = regs.W.bx;
+			if (regs.W.bx)
+			{
+				ms_regs.W.cx = regs.W.cx;
+				ms_regs.W.dx = regs.W.dx;
+				mouse_button = TRUE;
+			}
 		}
 
 		mouse_scroll = ms_regs.h.bh;
@@ -271,7 +279,7 @@ static int _process_mouse_events(void)
 			}
 		}
 	}
-	else
+	else	/* button event */
 	{
 		for (i = 0; i < 3; i++)
 		{

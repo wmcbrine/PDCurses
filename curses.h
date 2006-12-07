@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.247 2006/12/07 21:29:30 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.248 2006/12/07 22:09:42 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1439,6 +1439,7 @@ unsigned long getbmap(void);
 /* NCurses */
 
 bool	has_key(int);
+int	wresize(WINDOW *, int, int);
 
 /* PDCurses */
 
@@ -1501,8 +1502,6 @@ int PDC_return_key_modifiers(bool);
 #define setsyx(y, x)		{ if((y)==-1 && (x)==-1) curscr->_leaveit=TRUE;\
 				  else { curscr->_leaveit=FALSE; \
 					 wmove(curscr,(y),(x));} }
-
-#define wresize(w, l, c)	((w = resize_window(w, l, c)) ? OK : ERR)
 
 /* Some quasi-standard aliases for standard functions */
 

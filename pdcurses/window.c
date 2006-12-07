@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.47 2006/12/07 21:29:30 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.48 2006/12/07 22:09:42 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -36,6 +36,7 @@ RCSID("$Id: window.c,v 1.47 2006/12/07 21:29:30 wmcbrine Exp $");
 	void wsyncdown(WINDOW *win);
 
 	WINDOW *resize_window(WINDOW *win, int nlines, int ncols);
+	int wresize(WINDOW *win, int nlines, int ncols);
 	WINDOW *PDC_makelines(WINDOW *win, int nlines, int ncols);
 	WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx);
 	void PDC_sync(WINDOW *win);
@@ -91,7 +92,9 @@ RCSID("$Id: window.c,v 1.47 2006/12/07 21:29:30 wmcbrine Exp $");
 	its parent's windows have been touched.
 
   PDCurses Description:
-	resize_window() allows the user to resize an existing window.
+	resize_window() allows the user to resize an existing window. 
+
+	wresize() is an ncurses-compatible wrapper for resize_window().
 
 	PDC_makenew() allocates all data for a new WINDOW * except the 
 	actual lines themselves. If it's unable to allocate memory for 
@@ -109,12 +112,10 @@ RCSID("$Id: window.c,v 1.47 2006/12/07 21:29:30 wmcbrine Exp $");
   PDCurses Errors:
 	It is an error to call resize_window() before calling initscr().
 	Also, an error will be generated if we fail to create a newly
-	sized replacement window for curscr, or stdscr.
-	This will typically happen when increasing the window size.
-
-	NOTE:  If this happens, the previously successfully allocated
-	windows are left alone.  i.e. The resize is NOT cancelled for
-	those windows.
+	sized replacement window for curscr, or stdscr. This will 
+	typically happen when increasing the window size. NOTE: If this 
+	happens, the previously successfully allocated windows are left 
+	alone; i.e., the resize is NOT cancelled for those windows.
 
   Portability				     X/Open    BSD    SYS V
 	newwin					Y	Y	Y
@@ -129,6 +130,7 @@ RCSID("$Id: window.c,v 1.47 2006/12/07 21:29:30 wmcbrine Exp $");
 	wcursyncup				Y	-      4.0
 	wsyncdown				Y	-      4.0
 	resize_window				-	-	-
+	wresize					-	-	-
 	PDC_makelines				-	-	-
 	PDC_makenew				-	-	-
 	PDC_sync				-	-	-
@@ -435,12 +437,12 @@ WINDOW *dupwin(WINDOW *win)
 WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 {
 	WINDOW *new;
-	int save_cury, save_curx, new_begy, new_begx;
+	int i, save_cury, save_curx, new_begy, new_begx;
 
 	PDC_LOG(("resize_window() - called: nlines %d ncols %d\n",
 		nlines, ncols));
 
-	if (!win)
+	if (!win || (win->_flags & (_SUBWIN|_SUBPAD)))
 		return (WINDOW *)NULL;
 
 	if (win == SP->slk_winptr)
@@ -487,9 +489,23 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 	new->_curx = save_curx;
 	new->_cury = save_cury;
 
-	delwin(win);
+	for (i = 0; i < win->_maxy && win->_y[i]; i++)
+		if (win->_y[i])
+			free(win->_y[i]);
 
-	return new;
+	free(win->_firstch);
+	free(win->_lastch);
+	free(win->_y);
+
+	*win = *new;
+	free(new);
+
+	return win;
+}
+
+int wresize(WINDOW *win, int nlines, int ncols)
+{
+	return (resize_window(win, nlines, ncols) ? OK : ERR);
 }
 
 void wsyncup(WINDOW *win)

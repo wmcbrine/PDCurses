@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.91 2006/11/20 04:22:50 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.92 2006/12/07 21:29:30 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -147,7 +147,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	SP->echo	= FALSE;
 	SP->visibility	= 1;
 	SP->audible	= TRUE;
-	SP->blank	= ' ';
 	SP->resized	= FALSE;
 	SP->_trap_mbe	= 0L;
 	SP->_map_mbe_to_key = 0L;

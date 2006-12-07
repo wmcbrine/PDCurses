@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.37 2006/11/09 08:52:37 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.38 2006/12/07 21:29:30 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -98,37 +98,14 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 WINDOW *newpad(int nlines, int ncols)
 {
 	WINDOW *win;
-	chtype *ptr;
-	int i, j;
 
 	PDC_LOG(("newpad() - called: lines=%d cols=%d\n", nlines, ncols));
 
-	if ((win = PDC_makenew( nlines, ncols, -1, -1 )) == (WINDOW *)NULL)
+	if ((win = PDC_makenew(nlines, ncols, -1, -1)) == (WINDOW *)NULL
+	 || (win = PDC_makelines(win, nlines, ncols)) == (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 
-	for (i = 0; i < nlines; i++)
-	{
-		/* make and clear the lines */
-
-		if ((win->_y[i] = calloc(ncols, sizeof(chtype))) == NULL)
-		{
-			/* if error, free all the data */
-
-			for (j = 0; j < i; j++)
-				free(win->_y[j]);
-
-			free(win->_firstch);
-			free(win->_lastch);
-			free(win->_y);
-			free(win);
-
-			return (WINDOW *)NULL;
-		}
-		else	/* retain the original screen attributes */
-
-			for (ptr = win->_y[i]; ptr < win->_y[i] + ncols; ptr++)
-				*ptr = SP->blank;
-	}
+	werase(win);
 
 	win->_flags = _PAD;
 
@@ -171,8 +148,8 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begin_y, int begin_x)
 	if (!ncols) 
 		ncols = orig->_maxx - 1 - k;
 
-	if ((win = PDC_makenew(nlines, ncols, begin_y, begin_x))
-	    == (WINDOW *) NULL)
+	if ((win = PDC_makenew(nlines, ncols, begin_y, begin_x)) ==
+	    (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 
 	/* initialize window variables */

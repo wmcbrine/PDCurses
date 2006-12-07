@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.246 2006/11/25 19:09:56 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.247 2006/12/07 21:29:30 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2822
+#define PDC_BUILD 2823
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -469,7 +469,6 @@ typedef struct
 	bool	orig_attr;	/* TRUE if we have the original colors	*/
 	short	orig_fore;	/* Original screen foreground color	*/
 	short	orig_back;	/* Original screen foreground color	*/
-	chtype	blank;		/* Background character			*/
 	int	cursrow;	/* position of physical cursor		*/
 	int	curscol;	/* position of physical cursor		*/
 	int	visibility;	/* Visibility of cursor			*/

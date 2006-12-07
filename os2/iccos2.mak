@@ -134,6 +134,9 @@ instr.obj: $(srcdir)\instr.c $(PDCURSES_HEADERS)
 kernel.obj: $(srcdir)\kernel.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\kernel.c
 
+keyname.obj: $(srcdir)\keyname.c $(PDCURSES_HEADERS)
+	$(BUILD) $(srcdir)\keyname.c
+
 mouse.obj: $(srcdir)\mouse.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\mouse.c
 

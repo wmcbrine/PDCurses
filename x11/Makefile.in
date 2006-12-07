@@ -73,9 +73,10 @@ realclean: distclean
 
 LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
-inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o mouse.o \
-move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o scr_dump.o \
-scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o pdcdebug.o
+inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o keyname.o \
+mouse.o move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o \
+scr_dump.o scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o \
+pdcdebug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
 pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
@@ -170,6 +171,9 @@ instr.o: $(srcdir)/instr.c
 
 kernel.o: $(srcdir)/kernel.c
 	$(BUILD) $(srcdir)/kernel.c
+
+keyname.o: $(srcdir)/keyname.c
+	$(BUILD) $(srcdir)/keyname.c
 
 mouse.o: $(srcdir)/mouse.c
 	$(BUILD) $(srcdir)/mouse.c
@@ -349,6 +353,10 @@ instr.sho: $(srcdir)/instr.c
 
 kernel.sho: $(srcdir)/kernel.c
 	$(DYN_BUILD) $(srcdir)/kernel.c
+	@SAVE2O@
+
+keyname.sho: $(srcdir)/keyname.c
+	$(DYN_BUILD) $(srcdir)/keyname.c
 	@SAVE2O@
 
 mouse.sho: $(srcdir)/mouse.c

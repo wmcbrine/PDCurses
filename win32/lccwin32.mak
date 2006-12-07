@@ -77,9 +77,9 @@ clean:
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
 border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj \
 getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
-insch.obj insstr.obj instr.obj kernel.obj mouse.obj move.obj outopts.obj \
-overlay.obj pad.obj printw.obj refresh.obj scanw.obj scr_dump.obj \
-scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
+insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj \
+outopts.obj overlay.obj pad.obj printw.obj refresh.obj scanw.obj \
+scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
 window.obj pdcdebug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
@@ -171,6 +171,9 @@ instr.obj: $(srcdir)\instr.c
 	$(BUILD) $(srcdir)\$*.c
 
 kernel.obj: $(srcdir)\kernel.c
+	$(BUILD) $(srcdir)\$*.c
+
+keyname.obj: $(srcdir)\keyname.c
 	$(BUILD) $(srcdir)\$*.c
 
 mouse.obj: $(srcdir)\mouse.c

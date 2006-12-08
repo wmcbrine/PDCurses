@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: scr_dump.c,v 1.20 2006/12/08 01:04:21 uid27921 Exp $");
+RCSID("$Id: scr_dump.c,v 1.21 2006/12/08 01:28:01 uid27921 Exp $");
 
 /*man-start**************************************************************
 
@@ -53,7 +53,7 @@ RCSID("$Id: scr_dump.c,v 1.20 2006/12/08 01:04:21 uid27921 Exp $");
 	either of the following conditions is true:
 
 	* The terminal has been written to since the virtual screen was 
-	  dumped to filename
+	  dumped to filename.
 
 	* The terminfo capabilities rmcup and nrrmc are defined for the 
 	  current terminal.
@@ -65,8 +65,11 @@ RCSID("$Id: scr_dump.c,v 1.20 2006/12/08 01:04:21 uid27921 Exp $");
 	of as a screen inheritance function.
 
   PDCurses Description:
-	These functions are not yet meaningfully implemented in 
-	PDCurses. This file is a placeholder.
+	scr_init() does nothing; scr_dump() and scr_restore() save and 
+	load from curscr; scr_set() is a synonym for scr_restore(). This 
+	differs from some other implementations, where scr_init() works 
+	with curscr, and scr_restore() works with newscr; but the effect 
+	should be the same. (PDCurses has no newscr.)
 
   X/Open Return Value:
 	On successful completion, getwin() returns a pointer to the 

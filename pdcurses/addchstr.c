@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: addchstr.c,v 1.35 2006/11/04 12:59:03 wmcbrine Exp $");
+RCSID("$Id: addchstr.c,v 1.36 2006/12/08 06:21:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,18 +41,19 @@ RCSID("$Id: addchstr.c,v 1.35 2006/11/04 12:59:03 wmcbrine Exp $");
 		int n);
 
   X/Open Description:
-	These routines write a chtype directly into the window structure 
-	starting at the current position. The four routines with n as 
-	the last argument copy at most n elements, but no more than will 
-	fit on the line. If n = -1 then the whole string is copied, to 
-	the maximum number that will fit on the line.
+	These routines write a chtype or cchar_t string directly into 
+	the window structure, starting at the current position. The four 
+	routines with n as the last argument copy at most n elements, 
+	but no more than will fit on the line. If n = -1 then the whole 
+	string is copied, to the maximum number that will fit on the 
+	line.
 
 	The cursor position is not advanced. These routines do not check 
 	for newline or other special characters, nor does any line 
 	wrapping occur.
 
   X/Open Return Value:
-	All functions return OK on success and ERR on error.
+	All functions return OK or ERR.
 
   Portability				     X/Open    BSD    SYS V
 	addchstr				Y	-      4.0

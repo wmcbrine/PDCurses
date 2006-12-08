@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.44 2006/11/21 20:46:23 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.45 2006/12/08 06:21:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -35,59 +35,64 @@ RCSID("$Id: addch.c,v 1.44 2006/11/21 20:46:23 wmcbrine Exp $");
 	int wecho_wchar(WINDOW *win, const cchar_t *wch);
 
   X/Open Description:
-	The routine addch() inserts the character ch into the default
-	window at the current cursor position and the window cursor is
-	advanced.  The character is of the type chtype as containing
-	both data and attributes.
+	addch() inserts the character ch into the default window
+	(stdscr) at the current cursor position, and the window cursor
+	is advanced.  The character is of the type chtype, containing
+	both data and attributes.  add_wch() is the wide-character
+	version, taking a pointer to a cchar_t.
 
-	The routine waddch() inserts the character ch into the specified
-	window at the current cursor position.  The cursor position is
-	advanced.
+	waddch() is like addch(), but also lets you specify the window.
+	(This is in fact the core output routine.) wadd_wch() is the
+	wide version.
 
-	The routine mvaddch() moves the cursor to the specified (y, x)
-	position and inserts the character ch into the default window.
-	The cursor position is advanced after the character has been
-	inserted.
+	mvaddch() moves the cursor to the specified (y, x) position, and
+	inserts the character ch into stdscr. mvadd_wch() is the
+	wide version.
 
-	The routine mvwaddch() moves the cursor to the specified (y, x)
-	position and inserts the character ch into the specified
-	window.  The cursor position is advanced after the character
-	has been inserted.
+	mvwaddch() moves the cursor to the specified position and
+	inserts the character ch into the specified window. mvwadd_wch()
+	is the wide version.
 
-	The routine echochar() inserts the character ch into stdscr
-	at the current cursor position and a refresh() is called.  
-	The cursor position is advanced.
+	echochar() inserts the character ch into stdscr at the current
+	cursor position and calls refresh(). echo_wchar() is the wide
+	version.
 
-	The routine wechochar() inserts the character ch into the
-	specified window at the current cursor position and a wrefresh() 
-	is called. The cursor position is advanced.
+	wechochar() inserts the character ch into the specified window
+	and calls wrefresh(). wecho_wchar() is the wide version.
 
 	All these routines are similar to putchar().  The following
-	information applies to all the routines.
+	applies to all:
 
-	If the cursor moves on to the right margin, an automatic
-	newline is performed.  If scrollok is enabled, and a character
-	is added to the bottom right corner of the screen, the
-	scrolling region will be scrolled up one line.  If scrolling
-	is not allowed, ERR will be returned.
+	If the cursor moves on to the right margin, an automatic newline 
+	is performed.  If scrollok is enabled, and a character is added 
+	to the bottom right corner of the screen, the scrolling region 
+	will be scrolled up one line.  If scrolling is not allowed, ERR 
+	will be returned.
 
-	If ch is a tab, newline, or backspace, the cursor will be
-	moved appropriately within the window.  If ch is a newline,
-	the clrtoeol routine is called before the cursor is moved to
-	the beginning of the next line.  If newline mapping is off,
-	the cursor will be moved to the next line, but the x
-	coordinate will be unchanged.  If ch is a tab the cursor is
-	moved to the next tab position within the window.  If ch is
-	another control character, it will be drawn in the ^X
-	notation.  Calling the inch() routine after adding a control
-	character returns the representation of the control character,
-	not the control character.
+	If ch is a tab, newline, or backspace, the cursor will be moved 
+	appropriately within the window.  If ch is a newline, the 
+	clrtoeol routine is called before the cursor is moved to the 
+	beginning of the next line.  If newline mapping is off, the 
+	cursor will be moved to the next line, but the x coordinate will 
+	be unchanged.  If ch is a tab the cursor is moved to the next 
+	tab position within the window.  If ch is another control 
+	character, it will be drawn in the ^X notation.  Calling the 
+	inch() routine after adding a control character returns the 
+	representation of the control character, not the control 
+	character.
 
-	Video attributes can be combined with a character by ORing
-	them into the parameter.  This will result in these attributes
-	being set.  The intent here is that text, including
-	attributes, can be copied from one place to another using inch()
-	and addch().
+	Video attributes can be combined with a character by ORing them 
+	into the parameter.  This will result in these attributes being 
+	set.  The intent here is that text, including attributes, can be 
+	copied from one place to another using inch() and addch().
+
+  PDCurses Description:
+	Note that in PDCurses, for now, a cchar_t and a chtype are the 
+	same. The text field is 16 bits wide, and is treated as Unicode 
+	(UCS-2) when PDCurses is built with wide-character support 
+	(define PDC_WIDE). So, in functions that take a chtype, like 
+	addch(), both the wide and narrow versions will handle Unicode. 
+	But for portability, you should use the wide functions.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.

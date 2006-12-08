@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.56 2006/12/07 18:39:00 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.57 2006/12/08 06:21:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -24,6 +24,7 @@ RCSID("$Id: util.c,v 1.56 2006/12/07 18:39:00 wmcbrine Exp $");
 	void filter(void);
 	void use_env(bool x);
 	int delay_output(int ms);
+
 	int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
 		     short *color_pair, void *opts);
 	int setcchar(cchar_t *wcval, const wchar_t *wch, const attr_t attrs,
@@ -31,27 +32,48 @@ RCSID("$Id: util.c,v 1.56 2006/12/07 18:39:00 wmcbrine Exp $");
 	wchar_t *wunctrl(cchar_t *wc);
 
   X/Open Description:
-	The unctrl() routine expands the character c into a character
-	string which is a printable representation of the character.
-	Control characters are displayed in the ^X notation.  Printing
-	characters are displayed normally.
+	unctrl() expands the text portion of the chtype c into a 
+	printable string. Control characters are changed to the "^X" 
+	notation; others are passed through. wunctrl() is the wide- 
+	character version of the function.
 
-	The delay_output() function inserts ms millisecond pause in output.
-	On some systems, this has no effect.
+	delay_output() inserts an ms millisecond pause in output. On 
+	some systems, this has no effect.
+
+	getcchar() works in two modes: When wch is not NULL, it reads 
+	the cchar_t pointed to by wcval and stores the attributes in 
+	attrs, the color pair in color_pair, and the text in the
+	wide-character string wch. When wch is NULL, getcchar() merely 
+	returns the number of wide characters in wcval. In either mode, 
+	the opts argument is unused.
+
+	setcchar constructs a cchar_t at wcval from the wide-character 
+	text at wch, the attributes in attr and the color pair in 
+	color_pair. The opts argument is unused.
 
   PDCurses Description:
-	The conversion from a control character to a two-character
-	sequence is done by the unctrl() function. In the BSD version
-	of curses it is done by a macro, which uses a publicly
+	In BSD curses, unctrl() is a macro, which uses a publicly
 	available translation table. Some ill-behaved application
-	programs use the table directly, and since it does not exist
-	in this curses version such application will link with an
-	error message complaining about undefined symbols.
+	programs use the table directly, and since it does not exist in
+	PDCurses, such an application will link with an error message
+	complaining about undefined symbols.
 
 	filter() and use_env() are no-ops on PDCurses.
 
+	Currently, the length returned by getcchar() is always 1 or 0.
+	Similarly, setcchar() will only take the first wide character
+	from wch, and ignore any others that it "should" take (i.e.,
+	combining characters). Nor will it correctly handle any 
+	character outside the basic multilingual plane (UCS-2).
+
   X/Open Return Value:
-	FIXME
+	unctrl() and wunctrl() return NULL on failure. delay_output() 
+	always returns OK.
+
+	getcchar() returns the number of wide characters wcval points to 
+	when wch is NULL; when it's not, getcchar() returns OK or ERR. 
+
+	setcchar() returns OK or ERR.
 
   Portability				     X/Open    BSD    SYS V
 	unctrl					Y	Y	Y

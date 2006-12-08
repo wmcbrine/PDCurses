@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addstr.c,v 1.34 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.35 2006/12/08 06:21:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -40,14 +40,14 @@ RCSID("$Id: addstr.c,v 1.34 2006/11/05 03:57:26 wmcbrine Exp $");
 
   X/Open Description:
 	These routines write all the characters of the null-terminated 
-	string str on the given window.  The functionality is equivalent 
-	to calling waddch() once for each character in the string.  The 
-	four routines with n as the last argument write at most n 
-	characters.  If n is negative, then the entire string will be 
+	string str or wstr on the given window.  The functionality is 
+	equivalent to calling waddch() once for each character in the 
+	string.  The routines with n as the last argument write at most 
+	n characters; if n is negative, then the entire string will be 
 	added.
 
   X/Open Return Value:
-	All functions return OK on success and ERR on error.
+	All functions return OK or ERR.
 
   Portability				     X/Open    BSD    SYS V
 	addstr					Y	Y	Y

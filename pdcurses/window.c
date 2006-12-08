@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.48 2006/12/07 22:09:42 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.49 2006/12/08 01:04:21 uid27921 Exp $");
 
 /*man-start**************************************************************
 
@@ -37,7 +37,7 @@ RCSID("$Id: window.c,v 1.48 2006/12/07 22:09:42 wmcbrine Exp $");
 
 	WINDOW *resize_window(WINDOW *win, int nlines, int ncols);
 	int wresize(WINDOW *win, int nlines, int ncols);
-	WINDOW *PDC_makelines(WINDOW *win, int nlines, int ncols);
+	WINDOW *PDC_makelines(WINDOW *win);
 	WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx);
 	void PDC_sync(WINDOW *win);
 
@@ -152,7 +152,7 @@ WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx)
 
 	/* allocate the line pointer array */
 
-	if ((win->_y = calloc(nlines, sizeof(chtype *))) == NULL)
+	if ((win->_y = malloc(nlines * sizeof(chtype *))) == NULL)
 	{
 		free(win);
 		return (WINDOW *)NULL;
@@ -160,14 +160,14 @@ WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx)
 
 	/* allocate the minchng and maxchng arrays */
 
-	if ((win->_firstch = calloc(nlines, sizeof(int))) == NULL)
+	if ((win->_firstch = malloc(nlines * sizeof(int))) == NULL)
 	{
 		free(win->_y);
 		free(win);
 		return (WINDOW *)NULL;
 	}
 
-	if ((win->_lastch = calloc(nlines, sizeof(int))) == NULL)
+	if ((win->_lastch = malloc(nlines * sizeof(int))) == NULL)
 	{
 		free(win->_firstch);
 		free(win->_y);
@@ -188,24 +188,23 @@ WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx)
 
 	/* init to say window all changed */
 
-	for (i = 0; i < nlines; i++)
-	{
-		win->_firstch[i] = 0;
-		win->_lastch[i] = ncols - 1;
-	}
+	touchwin(win);
 
 	return win;
 }
 
-WINDOW *PDC_makelines(WINDOW *win, int nlines, int ncols)
+WINDOW *PDC_makelines(WINDOW *win)
 {
-	int i, j;
+	int i, j, nlines, ncols;
 
 	PDC_LOG(("PDC_makelines() - called: lines %d cols %d\n",
 		nlines, ncols));
 
 	if (!win)
 		return (WINDOW *)NULL;
+
+	nlines = win->_maxy;
+	ncols = win->_maxx;
 
 	for (i = 0; i < nlines; i++)
 	{
@@ -252,7 +251,7 @@ WINDOW *newwin(int nlines, int ncols, int begy, int begx)
 
 	if ((begy + nlines > SP->lines || begx + ncols > SP->cols)
 	 || (win = PDC_makenew(nlines, ncols, begy, begx)) == (WINDOW *)NULL
-	 || (win = PDC_makelines(win, nlines, ncols)) == (WINDOW *)NULL)
+	 || (win = PDC_makelines(win)) == (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 
 	werase(win);
@@ -394,7 +393,7 @@ WINDOW *dupwin(WINDOW *win)
 	begx	= win->_begx;
 
 	if ((new = PDC_makenew(nlines, ncols, begy, begx)) == (WINDOW *)NULL
-	 || (new = PDC_makelines(new, nlines, ncols)) == (WINDOW *)NULL)
+	 || (new = PDC_makelines(new)) == (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 
 	/* copy the contents of win into new */
@@ -478,7 +477,7 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 	new->_sync = win->_sync;
 	new->_bkgd = win->_bkgd;
 
-	if ((new = PDC_makelines(new, nlines, ncols)) == (WINDOW *)NULL)
+	if ((new = PDC_makelines(new)) == (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 
 	werase(new);

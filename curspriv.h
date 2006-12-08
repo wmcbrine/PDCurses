@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.141 2006/12/07 21:29:30 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.142 2006/12/08 01:04:21 uid27921 Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -98,7 +98,7 @@ const char *PDC_sysname(void);
 
 /* Internal cross-module functions */
 
-WINDOW *PDC_makelines(WINDOW *, int, int);
+WINDOW *PDC_makelines(WINDOW *);
 WINDOW *PDC_makenew(int, int, int, int);
 int	PDC_mouse_in_slk(int, int);
 void	PDC_slk_free(void);

@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.38 2006/12/07 21:29:30 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.39 2006/12/08 01:04:21 uid27921 Exp $");
 
 /* save values for pechochar() */
 
@@ -102,7 +102,7 @@ WINDOW *newpad(int nlines, int ncols)
 	PDC_LOG(("newpad() - called: lines=%d cols=%d\n", nlines, ncols));
 
 	if ((win = PDC_makenew(nlines, ncols, -1, -1)) == (WINDOW *)NULL
-	 || (win = PDC_makelines(win, nlines, ncols)) == (WINDOW *)NULL)
+	 || (win = PDC_makelines(win)) == (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 
 	werase(win);

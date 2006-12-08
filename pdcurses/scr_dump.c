@@ -12,8 +12,9 @@
  ************************************************************************/
 
 #include <curspriv.h>
+#include <string.h>
 
-RCSID("$Id: scr_dump.c,v 1.19 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: scr_dump.c,v 1.20 2006/12/08 01:04:21 uid27921 Exp $");
 
 /*man-start**************************************************************
 
@@ -82,23 +83,119 @@ RCSID("$Id: scr_dump.c,v 1.19 2006/10/23 05:03:31 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
+#define DUMPVER 1	/* Should be updated whenever the WINDOW struct 
+			   is changed */
+
 int putwin(WINDOW *win, FILE *filep)
 {
+	static const char *marker = "PDC";
+	static const unsigned char version = DUMPVER;
+
         PDC_LOG(("putwin() - called\n"));
+
+	/* write the marker and the WINDOW struct */
+
+	if (filep && fwrite(marker, strlen(marker), 1, filep) &&
+	    fwrite(&version, 1, 1, filep) &&
+	    fwrite(win, sizeof(*win), 1, filep))
+	{
+		int i;
+
+		/* write each line */
+
+		for (i = 0; i < win->_maxy && win->_y[i]; i++)
+			if (!fwrite(win->_y[i], win->_maxx *
+			    sizeof(chtype), 1, filep))
+				return ERR;
+
+		return OK;
+	}
 
         return ERR;
 }
 
 WINDOW *getwin(FILE *filep)
 {
+	WINDOW *win;
+	char marker[4];
+	int i, nlines, ncols;
+
         PDC_LOG(("getwin() - called\n"));
 
-        return (WINDOW *)NULL;
+	if ((win = malloc(sizeof(*win))) == (WINDOW *)NULL)
+		return (WINDOW *)NULL;
+
+	/* check for the marker, and load the WINDOW struct */
+
+	if (!filep || !fread(marker, 4, 1, filep) ||
+	    strncmp(marker, "PDC", 3) || marker[3] != DUMPVER ||
+	    !fread(win, sizeof(*win), 1, filep))
+	{
+		free(win);
+		return (WINDOW *)NULL;
+	}
+
+	nlines = win->_maxy;
+	ncols = win->_maxx;
+
+	/* allocate the line pointer array */
+        	
+	if ((win->_y = malloc(nlines * sizeof(chtype *))) == NULL)
+	{
+		free(win);
+		return (WINDOW *)NULL;
+	}
+
+	/* allocate the minchng and maxchng arrays */
+
+	if ((win->_firstch = malloc(nlines * sizeof(int))) == NULL)
+	{
+		free(win->_y);
+		free(win);
+		return (WINDOW *)NULL;
+	}
+
+	if ((win->_lastch = malloc(nlines * sizeof(int))) == NULL)
+	{
+		free(win->_firstch);
+		free(win->_y);
+		free(win);
+		return (WINDOW *)NULL;
+	}
+
+	/* allocate the lines */
+
+	if ((win = PDC_makelines(win)) == (WINDOW *)NULL)
+		return (WINDOW *)NULL;
+
+	/* read them */
+
+	for (i = 0; i < nlines; i++)
+	{
+		if (!fread(win->_y[i], ncols * sizeof(chtype), 1, filep))
+		{
+			delwin(win);
+			return (WINDOW *)NULL;
+		}
+	}
+
+	touchwin(win);
+
+	return win;
 }
 
 int scr_dump(const char *filename)
 {
+	FILE *filep;
+
 	PDC_LOG(("scr_dump() - called: filename %s\n", filename));
+
+	if (filename && (filep = fopen(filename, "wb")) != NULL)
+	{
+		int result = putwin(curscr, filep);
+		fclose(filep);
+		return result;
+	}
 
 	return ERR;
 }
@@ -107,12 +204,27 @@ int scr_init(const char *filename)
 {
 	PDC_LOG(("scr_init() - called: filename %s\n", filename));
 
-	return ERR;
+	return OK;
 }
 
 int scr_restore(const char *filename)
 {
+	FILE *filep;
+
 	PDC_LOG(("scr_restore() - called: filename %s\n", filename));
+
+	if (filename && (filep = fopen(filename, "rb")) != NULL)
+	{
+		WINDOW *replacement = getwin(filep);
+		fclose(filep);
+
+		if (replacement)
+		{
+			int result = overwrite(replacement, curscr);
+			delwin(replacement);
+			return result;
+		}
+	}
 
 	return ERR;
 }
@@ -121,5 +233,5 @@ int scr_set(const char *filename)
 {
 	PDC_LOG(("scr_set() - called: filename %s\n", filename));
 
-	return ERR;
+	return scr_restore(filename);
 }

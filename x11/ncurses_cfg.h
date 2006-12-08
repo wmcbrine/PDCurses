@@ -1,4 +1,4 @@
-/* $Id: ncurses_cfg.h,v 1.3 2006/12/08 01:04:21 uid27921 Exp $
+/* $Id: ncurses_cfg.h,v 1.4 2006/12/08 02:44:53 wmcbrine Exp $
  *
  * This file is only used with the ncurses test programs.
  *
@@ -27,6 +27,7 @@
 #define HAVE_GETMAXX 1
 #define HAVE_GETWIN 1
 #define HAVE_PUTWIN 1
+#define HAVE_WRESIZE 1
 
 /* Fool ncurses.c so it gives us all the tests, and doesn't redefine 
    ACS_ chars

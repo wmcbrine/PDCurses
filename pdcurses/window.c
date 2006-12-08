@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.50 2006/12/08 01:51:18 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.51 2006/12/08 02:44:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -435,31 +435,61 @@ WINDOW *dupwin(WINDOW *win)
 WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 {
 	WINDOW *new;
-	int i, save_cury, save_curx, new_begy, new_begx;
+	int i, save_cury = 0, save_curx = 0, new_begy, new_begx;
 
 	PDC_LOG(("resize_window() - called: nlines %d ncols %d\n",
 		nlines, ncols));
 
-	if (!win || (win->_flags & (_SUBWIN|_SUBPAD)))
+	if (!win)
 		return (WINDOW *)NULL;
 
-	if (win == SP->slk_winptr)
+	if (win->_flags & _SUBPAD)
 	{
-		new_begy = SP->lines - SP->slklines;
-		new_begx = 0;
+		if ((new = subpad(win->_parent, nlines, ncols,
+		     win->_begy, win->_begx)) == (WINDOW *)NULL)
+			return (WINDOW *)NULL;
+	}
+	else if (win->_flags & _SUBWIN)
+	{
+		if ((new = subwin(win->_parent, nlines, ncols,
+		     win->_begy, win->_begx)) == (WINDOW *)NULL)
+			return (WINDOW *)NULL;
 	}
 	else
 	{
-		new_begy = win->_begy;
-		new_begx = win->_begx;
-	}
+		if (win == SP->slk_winptr)
+		{
+			new_begy = SP->lines - SP->slklines;
+			new_begx = 0;
+		}
+		else
+		{
+			new_begy = win->_begy;
+			new_begx = win->_begx;
+		}
 
-	if ((new = PDC_makenew(nlines, ncols, new_begy, new_begx)) ==
-	    (WINDOW *)NULL)
-		return (WINDOW *)NULL;
+		if ((new = PDC_makenew(nlines, ncols, new_begy, 
+		     new_begx)) == (WINDOW *)NULL)
+			return (WINDOW *)NULL;
+	}
 
 	save_curx = min(win->_curx, new->_maxx);
 	save_cury = min(win->_cury, new->_maxy);
+
+	if (!(win->_flags & (_SUBPAD|_SUBWIN)))
+	{
+		if ((new = PDC_makelines(new)) == (WINDOW *)NULL)
+			return (WINDOW *)NULL;
+
+		werase(new);
+
+		copywin(win, new, 0, 0, 0, 0, min(win->_maxy, new->_maxy),
+			min(win->_maxx, new->_maxx), FALSE);
+
+		for (i = 0; i < win->_maxy && win->_y[i]; i++)
+			if (win->_y[i])
+				free(win->_y[i]);
+	}
 
 	new->_flags = win->_flags;
 	new->_attrs = win->_attrs;
@@ -476,20 +506,8 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 	new->_sync = win->_sync;
 	new->_bkgd = win->_bkgd;
 
-	if ((new = PDC_makelines(new)) == (WINDOW *)NULL)
-		return (WINDOW *)NULL;
-
-	werase(new);
-
-	copywin(win, new, 0, 0, 0, 0, min(win->_maxy, new->_maxy),
-		min(win->_maxx, new->_maxx), FALSE);
-
 	new->_curx = save_curx;
 	new->_cury = save_cury;
-
-	for (i = 0; i < win->_maxy && win->_y[i]; i++)
-		if (win->_y[i])
-			free(win->_y[i]);
 
 	free(win->_firstch);
 	free(win->_lastch);

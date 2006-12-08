@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.39 2006/12/08 01:04:21 uid27921 Exp $");
+RCSID("$Id: pad.c,v 1.40 2006/12/08 03:04:41 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -29,7 +29,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
   Synopsis:
 	WINDOW *newpad(int nlines, int ncols);
 	WINDOW *subpad(WINDOW *orig, int nlines, int ncols,
-		       int begin_y, int begin_x);
+		       int begy, int begx);
 	int prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
 		     int sy2, int sx2);
 	int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
@@ -52,7 +52,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
 	The subpad() routine creates a new sub-pad within a pad.  The 
 	dimensions of the sub-pad are nlines lines and ncols columns.  
-	The sub-pad is at position (begin_y, begin_x) in the the parent 
+	The sub-pad is at position (begy, begx) in the the parent 
 	pad.  This position is relative to the pad, and not to the 
 	screen like with subwin. The sub-pad is made in the middle of 
 	the pad orig, so that changes made to either pad will affect 
@@ -122,24 +122,24 @@ WINDOW *newpad(int nlines, int ncols)
 	return win;
 }
 
-WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begin_y, int begin_x)
+WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begy, int begx)
 {
 	WINDOW *win;
 	int i;
-	int j = begin_y;
-	int k = begin_x;
+	int j = begy;
+	int k = begx;
 
 	PDC_LOG(("subpad() - called: lines=%d cols=%d begy=%d begx=%d\n",
-		nlines, ncols, begin_y, begin_x));
+		nlines, ncols, begy, begx));
 
 	if (!orig || !(orig->_flags & _PAD))
 		return (WINDOW *)NULL;
 
 	/* make sure window fits inside the original one */
 
-	if ((begin_y < orig->_begy) || (begin_x < orig->_begx) ||
-	    (begin_y + nlines) > (orig->_begy + orig->_maxy) ||
-	    (begin_x + ncols)  > (orig->_begx + orig->_maxx))
+	if ((begy < orig->_begy) || (begx < orig->_begx) ||
+	    (begy + nlines) > (orig->_begy + orig->_maxy) ||
+	    (begx + ncols)  > (orig->_begx + orig->_maxx))
 		return (WINDOW *)NULL;
 
 	if (!nlines) 
@@ -148,7 +148,7 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begin_y, int begin_x)
 	if (!ncols) 
 		ncols = orig->_maxx - 1 - k;
 
-	if ((win = PDC_makenew(nlines, ncols, begin_y, begin_x)) ==
+	if ((win = PDC_makenew(nlines, ncols, begy, begx)) ==
 	    (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 

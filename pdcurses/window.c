@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.49 2006/12/08 01:04:21 uid27921 Exp $");
+RCSID("$Id: window.c,v 1.50 2006/12/08 01:51:18 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -139,7 +139,6 @@ RCSID("$Id: window.c,v 1.49 2006/12/08 01:04:21 uid27921 Exp $");
 
 WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx)
 {
-	int i;
 	WINDOW *win;
 
 	PDC_LOG(("PDC_makenew() - called: lines %d cols %d begy %d begx %d\n",

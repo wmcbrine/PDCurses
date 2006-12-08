@@ -12,9 +12,10 @@
  ************************************************************************/
 
 #include <curspriv.h>
+#include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: scr_dump.c,v 1.21 2006/12/08 01:28:01 uid27921 Exp $");
+RCSID("$Id: scr_dump.c,v 1.22 2006/12/08 01:51:18 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -100,7 +101,7 @@ int putwin(WINDOW *win, FILE *filep)
 
 	if (filep && fwrite(marker, strlen(marker), 1, filep) &&
 	    fwrite(&version, 1, 1, filep) &&
-	    fwrite(win, sizeof(*win), 1, filep))
+	    fwrite(win, sizeof(WINDOW), 1, filep))
 	{
 		int i;
 
@@ -125,14 +126,14 @@ WINDOW *getwin(FILE *filep)
 
         PDC_LOG(("getwin() - called\n"));
 
-	if ((win = malloc(sizeof(*win))) == (WINDOW *)NULL)
+	if ((win = malloc(sizeof(WINDOW))) == (WINDOW *)NULL)
 		return (WINDOW *)NULL;
 
 	/* check for the marker, and load the WINDOW struct */
 
 	if (!filep || !fread(marker, 4, 1, filep) ||
 	    strncmp(marker, "PDC", 3) || marker[3] != DUMPVER ||
-	    !fread(win, sizeof(*win), 1, filep))
+	    !fread(win, sizeof(WINDOW), 1, filep))
 	{
 		free(win);
 		return (WINDOW *)NULL;

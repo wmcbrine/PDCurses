@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.52 2006/12/08 06:21:26 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.53 2006/12/09 09:14:46 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -442,7 +442,7 @@ WINDOW *dupwin(WINDOW *win)
 WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 {
 	WINDOW *new;
-	int i, save_cury = 0, save_curx = 0, new_begy, new_begx;
+	int i, save_cury, save_curx, new_begy, new_begx;
 
 	PDC_LOG(("resize_window() - called: nlines %d ncols %d\n",
 		nlines, ncols));

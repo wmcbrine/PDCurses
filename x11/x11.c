@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.58 2006/12/01 22:10:02 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.59 2006/12/09 17:59:55 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -1303,6 +1303,9 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	switch(compose_state)
 	{
 	case STATE_COMPOSE:
+		if (IsModifierKey(keysym))
+			return;
+
 		if (event->xkey.state & compose_mask)
 		{
 			compose_state = STATE_NORMAL;
@@ -1336,6 +1339,9 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		return;
 
 	case STATE_CHAR:
+		if (IsModifierKey(keysym))
+			return;
+
 		if (event->xkey.state & compose_mask)
 		{
 			compose_state = STATE_NORMAL;

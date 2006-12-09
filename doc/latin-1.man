@@ -35,16 +35,16 @@ followed by the spacebar.
 | AD | 173 | ­ | SOFT HYPHEN			 | -   --		     |
 | AE | 174 | ® | REGISTERED SIGN		 | RO  ro  OR		     |
 | AF | 175 | ¯ | MACRON				 | -^  _^  __		     |
-| B0 | 176 | ° | DEGREE SIGN			 | o   0^  0*  de  DE	     |
+| B0 | 176 | ° | DEGREE SIGN			 | o   0^  0*  de  DE  ^0    |
 | B1 | 177 | ± | PLUS-MINUS SIGN		 | -+  +-		     |
-| B2 | 178 | ² | SUPERSCRIPT TWO		 | 2   2^  s2		     |
-| B3 | 179 | ³ | SUPERSCRIPT THREE		 | 3   3^  s3		     |
+| B2 | 178 | ² | SUPERSCRIPT TWO		 | 2   2^  s2  ^2	     |
+| B3 | 179 | ³ | SUPERSCRIPT THREE		 | 3   3^  s3  ^3	     |
 | B4 | 180 | ´ | ACUTE ACCENT			 | '   ''		     |
 | B5 | 181 | µ | MICRO SIGN			 | u   /u  /U  *m  *M	     |
 | B6 | 182 | ¶ | PILCROW SIGN			 | p!  P!  pg  PG	     |
 | B7 | 183 | · | MIDDLE DOT			 | .   .^  ..		     |
 | B8 | 184 | ¸ | CEDILLA			 | ,   ,,		     |
-| B9 | 185 | ¹ | SUPERSCRIPT ONE		 | 1   1^  s1		     |
+| B9 | 185 | ¹ | SUPERSCRIPT ONE		 | 1   1^  s1  ^1	     |
 | BA | 186 | º | MASCULINE ORDINAL INDICATOR	 | o_  s0  S0		     |
 | BB | 187 | » | RIGHT DOUBLE ANGLE QUOTES	 | >>			     |
 | BC | 188 | ¼ | VULGAR FRACTION ONE QUARTER	 | 14			     |

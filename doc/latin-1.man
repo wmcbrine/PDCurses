@@ -22,7 +22,7 @@ followed by the spacebar.
 | A0 | 160 |   | NO-BREAK SPACE			 |			     |
 | A1 | 161 | ¡ | INVERTED EXCLAMATION MARK	 | !   !!		     |
 | A2 | 162 | ¢ | CENT SIGN			 | c|  |c  c/  c$  C$  C|    |
-| A3 | 163 | £ | POUND SIGN			 | L-  L$  L=  l- l$  l=     |
+| A3 | 163 | £ | POUND SIGN			 | L-  L$  L=  l-  l$  l=  |-|
 | A4 | 164 | ¤ | CURRENCY SIGN			 | xo  ox  XO  g$	     |
 | A5 | 165 | ¥ | YEN SIGN			 | =y  y=  =Y  Y=  Y-  y$  y-|
 | A6 | 166 | ¦ | BROKEN BAR			 | |   ||  vb  VB  |^	     |

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.40 2006/11/17 15:26:54 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.41 2006/12/11 20:41:30 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -139,7 +139,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 			{
 				if (oldecho) 
 					waddstr(win, "\b \b");
-				ch = *--p;
+				ch = (unsigned char)(*--p);
 				if ((ch < ' ') && (oldecho))
 					waddstr(win, "\b \b");
 				chars--;
@@ -151,7 +151,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 			{
 				if (oldecho) 
 					waddstr(win, "\b \b");
-				ch = *--p;
+				ch = (unsigned char)(*--p);
 				if ((ch < ' ') && (oldecho))
 					waddstr(win, "\b \b");
 			}
@@ -173,7 +173,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 				if (oldecho) 
 					waddstr(win, "\b \b");
 
-				ch = *--p;
+				ch = (unsigned char)(*--p);
 				if ((ch < ' ') && (oldecho))
 					waddstr(win, "\b \b");
 				chars--;

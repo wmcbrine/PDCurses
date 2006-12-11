@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.248 2006/12/07 22:09:42 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.249 2006/12/11 04:24:24 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1438,6 +1438,7 @@ unsigned long getbmap(void);
 
 /* NCurses */
 
+const char *curses_version(void);
 bool	has_key(int);
 int	wresize(WINDOW *, int, int);
 
@@ -1475,8 +1476,8 @@ int	PDC_setclipboard(const char *, long);
 
 unsigned long PDC_get_input_fd(void);
 unsigned long PDC_get_key_modifiers(void);
-int PDC_save_key_modifiers(bool);
-int PDC_return_key_modifiers(bool);
+int	PDC_save_key_modifiers(bool);
+int	PDC_return_key_modifiers(bool);
 
 
 /*** Functions defined as macros ***/

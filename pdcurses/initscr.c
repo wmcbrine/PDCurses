@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.92 2006/12/07 21:29:30 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.93 2006/12/11 04:24:24 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -60,6 +60,7 @@ extern char linesrippedoff;
 
 	int resize_term(int nlines, int ncols);
 	bool is_termresized(void);
+	const char *curses_version(void);
 
   X/Open Description:
 	The first curses routine called should be initscr().  This will 
@@ -83,7 +84,7 @@ extern char linesrippedoff;
 	A program which outputs to more than one terminal should use
 	newterm() for each terminal instead of initscr().  The newterm()
 	function should be called once for each terminal.  It returns a
-	value of type SCREEN* which should be saved as a reference to 
+	value of type SCREEN * which should be saved as a reference to 
 	that terminal. The arguments are the type of terminal to be 
 	used in place of TERM (environment variable), a file pointer for 
 	output to the terminal and another file pointer for input from 
@@ -97,12 +98,27 @@ extern char linesrippedoff;
 	other routines affect only the current terminal.
 
   PDCurses Description:
-	The resize_term() function is used to have PDCurses change its
-	internal structures to the new, specified size.
+	resize_term() is effectively two functions: When called with 
+	nonzero values for nlines and ncols, it attempts to resize the 
+	screen to the given size. When called with (0, 0), it merely 
+	adjusts the internal structures to match the current size after 
+	the screen is resized by the user. On the currently supported 
+	platforms, this functionality is mutually exclusive: X11 allows 
+	user resizing, while DOS, OS/2 and Win32 allow programmatic 
+	resizing. If you want to support user resizing, you should check 
+	for getch() returning KEY_RESIZE, and/or call is_termresized() 
+	at appropriate times; if either condition occurs, call 
+	resize_term(0, 0). Then, with either user or programmatic 
+	resizing, you'll have to resize any windows you've created, as 
+	appropriate; resize_term() only handles stdscr and curscr.
 
-	The is_termresized() function returns TRUE if the Curses screen 
-	has been resized by external means, and requires a call to 
-	resize_term().
+	is_termresized() returns TRUE if the curses screen has been
+	resized by the user, and a call to resize_term() is needed. 
+	Checking for KEY_RESIZE is generally preferable, unless you're 
+	not handling the keyboard.
+
+	curses_version() returns a string describing the version of 
+	PDCurses.
 
 	PDCurses supports only one terminal via newterm() or set_term(), 
 	and the parameters are ignored.
@@ -120,6 +136,7 @@ extern char linesrippedoff;
 	delscreen				Y	-      4.0
 	resize_term				-	-	-
 	is_termresized				-	-	-
+	curses_version				-	-	-
 
 **man-end****************************************************************/
 
@@ -338,4 +355,9 @@ bool is_termresized(void)
 	PDC_LOG(("is_termresized() - called\n"));
 
 	return SP->resized;
+}
+
+const char *curses_version(void)
+{
+	return _curses_notice;
 }

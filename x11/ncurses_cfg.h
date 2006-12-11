@@ -1,4 +1,4 @@
-/* $Id: ncurses_cfg.h,v 1.5 2006/12/11 03:04:33 wmcbrine Exp $
+/* $Id: ncurses_cfg.h,v 1.6 2006/12/11 04:34:48 wmcbrine Exp $
  *
  * This file is only used with the ncurses test programs.
  *
@@ -18,6 +18,7 @@
 
 #define ExitProgram exit
 
+#define HAVE_CURSES_VERSION 1
 #define HAVE_GETBEGX 1
 #define HAVE_GETCURX 1
 #define HAVE_GETMAXX 1

@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.25 2006/12/12 10:09:46 wmcbrine Exp $
+dnl $Id: configure.ac,v 1.26 2006/12/12 11:39:26 wmcbrine Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([PDCurses], [3.0], [wmcbrine@users.sf.net], [PDCurses])
@@ -122,19 +122,6 @@ if test "$on_qnx" = yes; then
 	else
 		CFLAGS="-Otax"
 	fi
-fi
-
-dnl ----------------- check for LATIN1 key support -------------------
-dnl allow --enable-latin1 to include LATIN1 key support
-AC_ARG_ENABLE(latin1,
-	[  --enable-latin1         include support for LATIN1 keys],
-	[with_latin1=$enableval],
-	[with_latin1=no],
-)
-if test "$with_latin1" = yes; then
-	AC_DEFINE([INCLUDE_LATIN1], [1], 
-		[Define if you want to include LATIN1 key support]
-	)
 fi
 
 dnl --------------- check for wide character support ----------------
@@ -281,10 +268,6 @@ AC_DEFINE([USE_XAW3D], [],
 
 AC_DEFINE([USE_NEXTAW], [],
 	[Define if you want to use neXtaw library]
-)
-
-AC_DEFINE([INCLUDE_LATIN1], [],
-	[Define if you want to include LATIN1 key support]
 )
 
 AC_DEFINE([XPOINTER_TYPEDEFED], [],

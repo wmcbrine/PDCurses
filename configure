@@ -854,7 +854,6 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-debug          turn on debugging
-  --enable-latin1         include support for LATIN1 keys
   --enable-widec          include support for wide characters
   --enable-xim            include support for XIM
   --enable-purify         link with Purify (TM)
@@ -4590,21 +4589,6 @@ if test "$on_qnx" = yes; then
 	fi
 fi
 
-# Check whether --enable-latin1 or --disable-latin1 was given.
-if test "${enable_latin1+set}" = set; then
-  enableval="$enable_latin1"
-  with_latin1=$enableval
-else
-  with_latin1=no
-fi;
-if test "$with_latin1" = yes; then
-
-cat >>confdefs.h <<\_ACEOF
-#define INCLUDE_LATIN1 1
-_ACEOF
-
-fi
-
 # Check whether --enable-widec or --disable-widec was given.
 if test "${enable_widec+set}" = set; then
   enableval="$enable_widec"
@@ -4807,7 +4791,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 4810 "configure"
+#line 4794 "configure"
 int a=0
 EOF
 
@@ -4846,7 +4830,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4849 "configure"
+#line 4833 "configure"
 int foo()
 {
 return(0);
@@ -6195,12 +6179,6 @@ _ACEOF
 
 cat >>confdefs.h <<\_ACEOF
 #define USE_NEXTAW
-_ACEOF
-
-
-
-cat >>confdefs.h <<\_ACEOF
-#define INCLUDE_LATIN1
 _ACEOF
 
 

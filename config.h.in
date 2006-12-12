@@ -99,9 +99,6 @@
 /* Define if you have the <xpm.h> header file */
 #undef HAVE_XPM_H
 
-/* Define if you want to include LATIN1 key support */
-#undef INCLUDE_LATIN1
-
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 

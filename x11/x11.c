@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.67 2006/12/12 09:55:36 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.68 2006/12/12 11:39:26 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -210,12 +210,7 @@ static struct
 #ifdef HAVE_XK_KP_PRIOR
  {XK_KP_Prior,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
 #endif
-
-#ifdef INCLUDE_LATIN1
-# include "latin1kbd.h"
-#endif
-
- {0,		0,	0,	     0,		   0,		0},
+ {0,		0,	0,	     0,		   0,		0}
 };
 
 #ifndef PDC_XIM

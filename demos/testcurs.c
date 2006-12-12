@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.74 2006/11/20 13:32:28 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.75 2006/12/12 19:17:45 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -23,6 +23,7 @@
 
 #ifdef HAVE_WIDE
 # include <locale.h>
+# include <wchar.h>
 #endif
 
 #if defined(PDCURSES) && !defined(XCURSES)
@@ -61,6 +62,10 @@ void resizeTest(WINDOW *);
 void clipboardTest(WINDOW *);
 #endif
 
+#if HAVE_WIDE
+void wideTest(WINDOW *);
+#endif
+
 void display_menu(int, int);
 
 struct commands
@@ -71,7 +76,7 @@ struct commands
 
 typedef struct commands COMMAND;
 
-#define MAX_OPTIONS (6 + HAVE_COLOR + HAVE_RESIZE + HAVE_CLIPBOARD)
+#define MAX_OPTIONS (6 + HAVE_COLOR + HAVE_RESIZE + HAVE_CLIPBOARD + HAVE_WIDE)
 
 COMMAND command[MAX_OPTIONS] =
 {
@@ -89,6 +94,9 @@ COMMAND command[MAX_OPTIONS] =
 #endif
 #if HAVE_CLIPBOARD
 	{"Clipboard Test", clipboardTest},
+#endif
+#if HAVE_WIDE
+	{"Wide Input", wideTest}
 #endif
 };
 
@@ -200,6 +208,16 @@ void Continue(WINDOW *win)
 	wrefresh(win);
 	raw();
 	wgetch(win);
+}
+
+void Continue2(void)
+{
+	move(LINES - 1, 1);
+	clrtoeol();
+	mvaddstr(LINES - 2, 1, " Press any key to continue");
+	refresh();
+	raw();
+	getch();
 }
 
 int initTest(WINDOW **win, int argc, char *argv[])
@@ -804,18 +822,10 @@ void clipboardTest(WINDOW *win)
 	char *ptr = NULL;
 	long i, length = 0;
 
-	clear();
 	mvaddstr(1, 1,
 		"This test will display the contents of the system clipboard");
-	refresh();
 
-	move(LINES -1, 1);
-	clrtoeol();
-	mvaddstr(LINES - 1, 1, " Press any key to continue");
-	refresh();
-
-	raw();
-	getch();
+	Continue2();
 
 	scrollok(stdscr, TRUE);
 	i = PDC_getclipboard(&ptr, &length);
@@ -848,18 +858,12 @@ void clipboardTest(WINDOW *win)
 		addch('\n');
 	}
 
-	move(LINES - 1, 1);
-	clrtoeol();
-	mvaddstr(LINES - 1, 1, " Press any key to continue");
-	refresh();
-	raw();
-	getch();
+	Continue2();
 
 	clear();
 	mvaddstr(1, 1,
 	"This test will place the following string in the system clipboard:");
 	mvaddstr(2, 1, text);
-	refresh();
 
 	i = PDC_setclipboard(text, strlen(text));
 
@@ -867,7 +871,6 @@ void clipboardTest(WINDOW *win)
 	{
 	case PDC_CLIP_ACCESS_ERROR:
 		mvaddstr(3, 1, "There was an error accessing the clipboard");
-		refresh();
 		break;
 
 	case PDC_CLIP_MEMORY_ERROR:
@@ -880,12 +883,7 @@ void clipboardTest(WINDOW *win)
 			"The string was placed in the clipboard successfully");
 	}
 
-	move(LINES - 1, 1);
-	clrtoeol();
-	mvaddstr(LINES - 1, 1, " Press any key to continue");
-	refresh();
-	raw();
-	getch();
+	Continue2();
 }
 #endif /* HAVE_CLIPBOARD */
 
@@ -946,8 +944,6 @@ void acsTest(WINDOW *win)
 #endif
 
 	int i, tmarg = (LINES - 22) / 2;
-
-	clear();
 
 	attrset(A_BOLD);
 	mvaddstr(tmarg, (COLS - 23) / 2, "Alternate Character Set");
@@ -1106,6 +1102,38 @@ void colorTest(WINDOW *win)
 				orgcolors[i].green,
 				orgcolors[i].blue);
 	}
+}
+#endif
+
+#ifdef HAVE_WIDE
+void wideTest(WINDOW *win)
+{
+	wchar_t tmp[513];
+	int i;
+
+	attrset(A_BOLD);
+	mvaddstr(1, (COLS - 25) / 2, "Wide Character Input Test");
+	attrset(A_NORMAL);
+
+	mvaddstr(4, 1, "Enter a string: ");
+
+	echo();
+
+	get_wstr(tmp);
+	addstr("\n\n String:\n\n ");
+	addwstr(tmp);
+	addstr("\n\n\n Hex:\n\n ");
+
+	for (i = 0; i < wcslen(tmp); i++)
+	{
+		printw("%04x ", tmp[i]);
+		addnwstr(tmp + i, 1);
+		addstr("  ");
+	}
+
+	noecho();
+
+	Continue2();
 }
 #endif
 

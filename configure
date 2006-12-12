@@ -856,6 +856,7 @@ Optional Features:
   --enable-debug          turn on debugging
   --enable-latin1         include support for LATIN1 keys
   --enable-widec          include support for wide characters
+  --enable-xim            include support for XIM
   --enable-purify         link with Purify (TM)
 
 Optional Packages:
@@ -4615,6 +4616,17 @@ if test "$with_widec" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_WIDE"
 fi
 
+# Check whether --enable-xim or --disable-xim was given.
+if test "${enable_xim+set}" = set; then
+  enableval="$enable_xim"
+  with_xim=$enableval
+else
+  with_xim=no
+fi;
+if test "$with_xim" = yes; then
+	SYS_DEFS="$SYS_DEFS -DPDC_XIM"
+fi
+
 # Check whether --enable-purify or --disable-purify was given.
 if test "${enable_purify+set}" = set; then
   enableval="$enable_purify"
@@ -4795,7 +4807,7 @@ echo "$as_me:$LINENO: checking compiler flags for a dynamic object" >&5
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6
 
 cat > conftest.$ac_ext <<EOF
-#line 4798 "configure"
+#line 4810 "configure"
 int a=0
 EOF
 
@@ -4834,7 +4846,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4837 "configure"
+#line 4849 "configure"
 int foo()
 {
 return(0);

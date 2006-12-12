@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.24 2006/08/31 10:38:59 wmcbrine Exp $
+dnl $Id: configure.ac,v 1.25 2006/12/12 10:09:46 wmcbrine Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([PDCurses], [3.0], [wmcbrine@users.sf.net], [PDCurses])
@@ -146,6 +146,17 @@ AC_ARG_ENABLE(widec,
 )
 if test "$with_widec" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_WIDE"
+fi
+
+dnl -------------------- check for XIM support ----------------------
+dnl allow --enable-xim to include XIM support
+AC_ARG_ENABLE(xim,
+	[  --enable-xim            include support for XIM],
+	[with_xim=$enableval],
+	[with_xim=no],
+)
+if test "$with_xim" = yes; then
+	SYS_DEFS="$SYS_DEFS -DPDC_XIM"
 fi
 
 dnl ----------------- check for Purify support -----------------------

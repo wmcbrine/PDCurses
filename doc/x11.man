@@ -247,7 +247,7 @@ composeKey:	   The name of the X key that defines the "compose key"
 		   "compose key" mode, the text cursor will appear as a 
 		   hollow rectangle. See the file latin-1.man for 
 		   details on compose key usage.
-		   Default:	   Multi_key
+		   Default:	   No key is defined
 
 
 Using Resources

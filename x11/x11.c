@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.62 2006/12/09 21:43:50 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.63 2006/12/12 01:30:20 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -536,7 +536,7 @@ static XtResource app_resources[] =
 #ifdef HAVE_XPM_H
 	RSTRING(pixmap, Pixmap),
 #endif
-	RSTRINGP(composeKey, ComposeKey, "Multi_key"),
+	RSTRING(composeKey, ComposeKey),
 
 	RCURSOR(pointer, Pointer, xterm),
 

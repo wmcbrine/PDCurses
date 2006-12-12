@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.63 2006/12/12 01:30:20 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.64 2006/12/12 07:11:18 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -66,8 +66,6 @@ static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
 static void _exit_process(int, int, char *);
 static void _send_key_to_curses(unsigned long, MOUSE_STATUS *, bool);
-static void _handle_structure_notify(Widget, XtPointer, XEvent *, Boolean *);
-static RETSIGTYPE _handle_signals(int);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
@@ -219,6 +217,8 @@ static struct
 
  {0,		0,	0,	     0,		   0,		0},
 };
+
+#ifndef PDC_XIM
 
 #define MAX_COMPOSE_CHARS 14
 #define MAX_COMPOSE_PRE 60
@@ -413,6 +413,8 @@ static const unsigned char compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 /* V */ {166,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* v */ {166,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 };
+
+#endif /* PDC_XIM */
 
 #define BITMAPDEPTH 1
 
@@ -1193,14 +1195,14 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 	wchar_t buffer[120];
 #else
 	unsigned char buffer[120];
-#endif
-	unsigned long key = 0;
-	int buflen = 40;
-	int i, count;
 	XComposeStatus compose;
 	static int compose_state = STATE_NORMAL;
 	static int compose_index = 0;
 	int char_idx = 0;
+#endif
+	unsigned long key = 0;
+	int buflen = 40;
+	int i, count;
 	unsigned long modifier = 0;
 	bool key_code = FALSE;
 
@@ -1264,6 +1266,8 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 			XKeycodeToKeysym(XCURSESDISPLAY, 
 			event->xkey.keycode, i), i);
 #endif
+
+#ifndef PDC_XIM
 
 	/* Check if the key just pressed is the user-specified compose 
 	   key; if it is, set the compose state and exit. */
@@ -1383,6 +1387,8 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
 		return;
 	}
+
+#endif /* PDC_XIM */
 
 	/* To get here we are procesing "normal" keys */
 
@@ -2942,6 +2948,92 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 	} 
 } 
 
+static void _handle_structure_notify(Widget w, XtPointer client_data, 
+				     XEvent *event, Boolean *unused)
+{
+	XC_LOG(("_handle_structure_notify() - called\n"));
+
+	switch(event->type)
+	{
+	case ConfigureNotify:
+		XC_LOG(("ConfigureNotify received\n"));
+
+		/* Window has been resized, change width and height to 
+		   send to place_text and place_graphics in next Expose. 
+		   Also will need to kill (SIGWINCH) curses process if 
+		   screen size changes. */
+
+		resize_window_width = event->xconfigure.width;
+		resize_window_height = event->xconfigure.height;
+
+		after_first_curses_request = FALSE;
+
+#ifdef SIGWINCH
+		SP->resized = 1;
+
+		kill(xc_otherpid, SIGWINCH);
+#endif
+		_send_key_to_curses(KEY_RESIZE, NULL, TRUE);
+		break;
+
+	case MapNotify:
+		XC_LOG(("MapNotify received\n"));
+
+		received_map_notify = 1;
+
+		_draw_border();
+		break;
+
+	default:
+		PDC_LOG(("%s:_handle_structure_notify - unknown event %d\n",
+			XCLOGMSG, event->type));
+	}
+}
+
+static RETSIGTYPE _handle_signals(int signo)
+{
+	int flag = CURSES_EXIT;
+
+	PDC_LOG(("%s:_handle_signals() - called: %d\n", XCLOGMSG, signo));
+
+	/* Patch by: Georg Fuchs */
+
+	XCursesSetSignal(signo, _handle_signals);
+
+#ifdef SIGTSTP
+	if (signo == SIGTSTP)
+	{
+		pause();
+		return;
+	}
+#endif
+#ifdef SIGCONT
+	if (signo == SIGCONT)
+		return;
+#endif
+#ifdef SIGCLD
+	if (signo == SIGCLD)
+		return;
+#endif
+#ifdef SIGTTIN
+	if (signo == SIGTTIN)
+		return;
+#endif
+#ifdef SIGWINCH
+	if (signo == SIGWINCH)
+		return;
+#endif
+
+	/* End of patch by: Georg Fuchs */
+
+	XCursesSetSignal(signo, SIG_IGN);
+
+	/* Send a CURSES_EXIT to myself */
+
+	if (XC_write_socket(xc_exit_sock, &flag, sizeof(int)) < 0)
+		_exit_process(7, signo, "exiting from _handle_signals");
+}
+
 #ifdef PDC_XIM
 static void _dummy_handler(Widget w, XtPointer client_data,
 			   XEvent *event, Boolean *unused)
@@ -3315,9 +3407,11 @@ int XCursesSetupX(int argc, char *argv[])
 	}
 
 	XGetIMValues(Xim, XNQueryInputStyle, &im_supported_styles, NULL);
-	my_style = XIMPreeditNone | XIMStatusNone;
+	my_style = XIMPreeditNothing | XIMStatusNothing;
 
-	if ((Xic = XCreateIC(Xim, XNInputStyle, my_style, NULL)) == NULL)
+	if ((Xic = XCreateIC(Xim, XNInputStyle, my_style, 
+		XNClientWindow, XCURSESWIN, XNFocusWindow, XCURSESWIN,
+		NULL)) == NULL)
 	{
 		perror("ERROR: Cannot create input context");
 		kill(xc_otherpid, SIGKILL);
@@ -3329,9 +3423,12 @@ int XCursesSetupX(int argc, char *argv[])
 	}
 
 	XFree(im_supported_styles);
+
 	XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
-	XtAddEventHandler(drawing, im_event_mask, False,
-		_dummy_handler, NULL);
+	if (im_event_mask)
+		XtAddEventHandler(drawing, im_event_mask, False,
+			_dummy_handler, NULL);
+
 	XSetICFocus(Xic);
 #endif
 
@@ -3339,90 +3436,4 @@ int XCursesSetupX(int argc, char *argv[])
 
 	XtAppMainLoop(app_context);
 	return OK;			/* won't get here */
-}
-
-static RETSIGTYPE _handle_signals(int signo)
-{
-	int flag = CURSES_EXIT;
-
-	PDC_LOG(("%s:_handle_signals() - called: %d\n", XCLOGMSG, signo));
-
-	/* Patch by: Georg Fuchs */
-
-	XCursesSetSignal(signo, _handle_signals);
-
-#ifdef SIGTSTP
-	if (signo == SIGTSTP)
-	{
-		pause();
-		return;
-	}
-#endif
-#ifdef SIGCONT
-	if (signo == SIGCONT)
-		return;
-#endif
-#ifdef SIGCLD
-	if (signo == SIGCLD)
-		return;
-#endif
-#ifdef SIGTTIN
-	if (signo == SIGTTIN)
-		return;
-#endif
-#ifdef SIGWINCH
-	if (signo == SIGWINCH)
-		return;
-#endif
-
-	/* End of patch by: Georg Fuchs */
-
-	XCursesSetSignal(signo, SIG_IGN);
-
-	/* Send a CURSES_EXIT to myself */
-
-	if (XC_write_socket(xc_exit_sock, &flag, sizeof(int)) < 0)
-		_exit_process(7, signo, "exiting from _handle_signals");
-}
-
-static void _handle_structure_notify(Widget w, XtPointer client_data, 
-				     XEvent *event, Boolean *unused)
-{
-	XC_LOG(("_handle_structure_notify() - called\n"));
-
-	switch(event->type)
-	{
-	case ConfigureNotify:
-		XC_LOG(("ConfigureNotify received\n"));
-
-		/* Window has been resized, change width and height to 
-		   send to place_text and place_graphics in next Expose. 
-		   Also will need to kill (SIGWINCH) curses process if 
-		   screen size changes. */
-
-		resize_window_width = event->xconfigure.width;
-		resize_window_height = event->xconfigure.height;
-
-		after_first_curses_request = FALSE;
-
-#ifdef SIGWINCH
-		SP->resized = 1;
-
-		kill(xc_otherpid, SIGWINCH);
-#endif
-		_send_key_to_curses(KEY_RESIZE, NULL, TRUE);
-		break;
-
-	case MapNotify:
-		XC_LOG(("MapNotify received\n"));
-
-		received_map_notify = 1;
-
-		_draw_border();
-		break;
-
-	default:
-		PDC_LOG(("%s:_handle_structure_notify - unknown event %d\n",
-			XCLOGMSG, event->type));
-	}
 }

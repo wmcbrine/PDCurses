@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.65 2006/12/12 09:27:52 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.66 2006/12/12 09:35:23 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -540,7 +540,7 @@ static XtResource app_resources[] =
 #ifdef HAVE_XPM_H
 	RSTRING(pixmap, Pixmap),
 #endif
-	RSTRING(composeKey, ComposeKey),
+	RSTRINGP(composeKey, ComposeKey, "Multi_key"),
 
 	RCURSOR(pointer, Pointer, xterm),
 
@@ -3417,8 +3417,7 @@ int XCursesSetupX(int argc, char *argv[])
 	my_style = XIMPreeditNothing | XIMStatusNothing;
 
 	if ((Xic = XCreateIC(Xim, XNInputStyle, my_style, 
-		XNClientWindow, XCURSESWIN, XNFocusWindow, XCURSESWIN,
-		NULL)) == NULL)
+		XNClientWindow, XCURSESWIN, NULL)) == NULL)
 	{
 		perror("ERROR: Cannot create input context");
 		kill(xc_otherpid, SIGKILL);

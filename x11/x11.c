@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.64 2006/12/12 07:11:18 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.65 2006/12/12 09:27:52 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -414,6 +414,9 @@ static const unsigned char compose_keys[MAX_COMPOSE_PRE][MAX_COMPOSE_CHARS] =
 /* v */ {166,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 };
 
+static KeySym compose_key = 0;
+static int compose_mask = 0;
+
 #endif /* PDC_XIM */
 
 #define BITMAPDEPTH 1
@@ -428,8 +431,7 @@ static char *bitmap_file = NULL;
 #ifdef HAVE_XPM_H
 static char *pixmap_file = NULL;
 #endif
-static KeySym compose_key = 0, keysym = 0;
-static int compose_mask = 0;
+static KeySym keysym = 0;
 
 static int state_mask[8] =
 {
@@ -1216,7 +1218,10 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		   function with a KeyPress event (or reset by the 
 		   mouse event handler) */
 
-		if (SP->return_key_modifiers && keysym != compose_key && 
+		if (SP->return_key_modifiers &&
+#ifndef PDC_XIM
+		    keysym != compose_key && 
+#endif
 		    IsModifierKey(keysym))
 		{
 			switch (keysym) {
@@ -1305,7 +1310,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 		return;
 	}
 
-	switch(compose_state)
+	switch (compose_state)
 	{
 	case STATE_COMPOSE:
 		if (IsModifierKey(keysym))
@@ -3358,6 +3363,8 @@ int XCursesSetupX(int argc, char *argv[])
 	XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
 		&pointerforecolor, &pointerbackcolor);
 
+#ifndef PDC_XIM
+
 	/* Convert the supplied compose key to a Keysym */
 
 	compose_key = XStringToKeysym(xc_app_data.composeKey);
@@ -3394,7 +3401,7 @@ int XCursesSetupX(int argc, char *argv[])
 		XFreeModifiermap(map);
 	}
 
-#ifdef PDC_XIM
+#else
 	if ((Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL)) == NULL)
 	{
 		perror("Cannot open Input Method");

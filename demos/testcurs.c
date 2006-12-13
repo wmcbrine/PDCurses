@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.76 2006/12/13 07:33:44 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.77 2006/12/13 20:13:07 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -23,7 +23,7 @@
 # define HAVE_WIDE 0
 #endif
 
-#ifdef HAVE_WIDE
+#if HAVE_WIDE
 # include <locale.h>
 # include <wchar.h>
 #endif

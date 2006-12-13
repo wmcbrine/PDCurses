@@ -13,13 +13,20 @@
                           
 #ifdef __DJGPP__
 # include <signal.h>
-#else
+#endif
+
+/* MS C and Watcom don't return flags from int86() */
+#if defined(MSC) || (defined(__WATCOMC__) && defined(__386__))
+# define USE_KBHIT
+#endif
+
+#ifdef USE_KBHIT
 # include <conio.h>
 #endif
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.70 2006/12/05 23:11:43 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.71 2006/12/13 20:40:50 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -82,7 +89,8 @@ static bool mouse_avail = FALSE, mouse_vis = FALSE, mouse_moved = FALSE,
 static unsigned char mouse_scroll = 0;
 static PDCREGS ms_regs, old_ms;
 static unsigned short shift_status, old_shift = 0;
-static unsigned char keyboard_function = 0xff, shift_function = 0xff;
+static unsigned char keyboard_function = 0xff, shift_function = 0xff,
+	check_function = 0xff;
 
 static const unsigned short button_map[3] = {0, 2, 1};
 
@@ -158,11 +166,13 @@ bool PDC_check_bios_key(void)
 		if (scan == regs.h.al && getdosmembyte(0x496) == 0x10)
 		{
 			keyboard_function = 0x10;
+			check_function = 0x11;
 			shift_function = 0x12;
 		}
 		else
 		{
 			keyboard_function = 0;
+			check_function = 1;
 			shift_function = 2;
 		}
 	}
@@ -227,7 +237,14 @@ bool PDC_check_bios_key(void)
 
 	old_shift = shift_status;
 
+#ifndef USE_KBHIT
+	regs.h.ah = check_function;
+	PDCINT(0x16, regs);
+
+	return !(regs.W.flags & 64);
+#else
 	return kbhit();
+#endif
 }
 
 static int _process_mouse_events(void)

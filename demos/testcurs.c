@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.75 2006/12/12 19:17:45 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.76 2006/12/13 07:33:44 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -19,6 +19,8 @@
 
 #ifdef WACS_S1
 # define HAVE_WIDE 1
+#else
+# define HAVE_WIDE 0
 #endif
 
 #ifdef HAVE_WIDE
@@ -108,7 +110,7 @@ int main(int argc, char *argv[])
 	int key, old_option = -1, new_option = 0;
 	bool quit = FALSE;
 
-#ifdef HAVE_WIDE
+#if HAVE_WIDE
 	/* This is here for ncurses. PDCurses doesn't need it. */
 
 	setlocale(LC_ALL, "");
@@ -913,7 +915,7 @@ void acsTest(WINDOW *win)
 
 	chtype acs_values[ACSNUM];
 
-#ifdef HAVE_WIDE
+#if HAVE_WIDE
 	cchar_t *wacs_values[] =
 	{
 		WACS_ULCORNER, WACS_URCORNER, WACS_LLCORNER, WACS_LRCORNER, 
@@ -980,7 +982,7 @@ void acsTest(WINDOW *win)
 	mvaddstr(tmarg + 18, 3, "Press any key to continue");
 	getch();
 
-#ifdef HAVE_WIDE
+#if HAVE_WIDE
 	clear();
 
 	attrset(A_BOLD);
@@ -1105,7 +1107,7 @@ void colorTest(WINDOW *win)
 }
 #endif
 
-#ifdef HAVE_WIDE
+#if HAVE_WIDE
 void wideTest(WINDOW *win)
 {
 	wchar_t tmp[513];

@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.77 2006/12/13 20:13:07 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.78 2006/12/14 01:57:23 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -1121,7 +1121,7 @@ void wideTest(WINDOW *win)
 
 	echo();
 
-	get_wstr(tmp);
+	get_wstr((wint_t *)tmp);
 	addstr("\n\n String:\n\n ");
 	addwstr(tmp);
 	addstr("\n\n\n Hex:\n\n ");

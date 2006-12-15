@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.68 2006/12/12 11:39:26 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.69 2006/12/15 10:08:39 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -410,11 +410,8 @@ static Pixel colors[MAX_COLORS + 2];
 static bool vertical_cursor = FALSE;
 
 #ifdef PDC_XIM
-static XIM Xim;
-static XIC Xic;
-static long im_event_mask;
-static XIMStyles *im_supported_styles = NULL;
-static XIMStyle my_style = 0;
+static XIM Xim = NULL;
+static XIC Xic = NULL;
 #endif
 
 static const char *default_translations =
@@ -3200,22 +3197,27 @@ int XCursesSetupX(int argc, char *argv[])
 	}
 
 #else
-	if ((Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL)) == NULL)
+	Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
+
+	if (Xim)
 	{
-		perror("Cannot open Input Method");
-		kill(xc_otherpid, SIGKILL);
-		shmdt((char *)SP);
-		shmdt((char *)Xcurscr);
-		shmctl(shmidSP, IPC_RMID, 0);
-		shmctl(shmid_Xcurscr, IPC_RMID, 0);
-		return ERR;
+		Xic = XCreateIC(Xim,
+			XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
+			XNClientWindow, XCURSESWIN, NULL);
 	}
 
-	XGetIMValues(Xim, XNQueryInputStyle, &im_supported_styles, NULL);
-	my_style = XIMPreeditNothing | XIMStatusNothing;
+	if (Xic)
+	{
+		long im_event_mask;
 
-	if ((Xic = XCreateIC(Xim, XNInputStyle, my_style, 
-		XNClientWindow, XCURSESWIN, NULL)) == NULL)
+		XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
+		if (im_event_mask)
+			XtAddEventHandler(drawing, im_event_mask, False,
+				_dummy_handler, NULL);
+
+		XSetICFocus(Xic);
+	}
+	else
 	{
 		perror("ERROR: Cannot create input context");
 		kill(xc_otherpid, SIGKILL);
@@ -3226,14 +3228,6 @@ int XCursesSetupX(int argc, char *argv[])
 		return ERR;
 	}
 
-	XFree(im_supported_styles);
-
-	XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
-	if (im_event_mask)
-		XtAddEventHandler(drawing, im_event_mask, False,
-			_dummy_handler, NULL);
-
-	XSetICFocus(Xic);
 #endif
 
 	/* Wait for events */

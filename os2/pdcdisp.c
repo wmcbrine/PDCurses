@@ -13,13 +13,14 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcdisp.c,v 1.41 2006/12/16 17:14:54 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.42 2006/12/16 21:53:17 wmcbrine Exp $");
 
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these 
    match code page 437 and compatible pages (CP850, CP852, etc.) */
 
-/* in case a value from acs_map[] is passed back to waddch() */
-#define A(x) ((chtype)x | A_ALTCHARSET)
+#ifdef CHTYPE_LONG
+
+# define A(x) ((chtype)x | A_ALTCHARSET)
 
 chtype acs_map[128] =
 {
@@ -51,7 +52,9 @@ chtype acs_map[128] =
 	A(127)
 };
 
-#undef A
+# undef A
+
+#endif
 
 /*man-start**************************************************************
 
@@ -114,9 +117,10 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 		temp_line[j].attr = chtype_attr(ch);
 
+#ifdef CHTYPE_LONG
 		if (ch & A_ALTCHARSET && !(ch & 0xff80))
 			ch = acs_map[ch & 0x7f];
-
+#endif
 		temp_line[j].text = ch & 0xff;
 	}
 

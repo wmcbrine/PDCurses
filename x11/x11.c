@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.70 2006/12/16 17:14:54 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.71 2006/12/16 21:53:18 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -654,11 +654,13 @@ static int _display_text(const chtype *ch, int row, int col,
 
 		attr = curr & A_ATTRIBUTES;
 
+#ifdef CHTYPE_LONG
 		if (attr & A_ALTCHARSET && !(curr & 0xff80))
 		{
 			attr ^= A_ALTCHARSET;
 			curr = acs_map[curr & 0x7f];
 		}
+#endif
 
 #ifndef PDC_WIDE
 		/* Special handling for ACS_BLOCK */

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.250 2006/12/16 17:14:54 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.251 2006/12/16 21:53:17 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2823
+#define PDC_BUILD 2824
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -648,15 +648,17 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 /*** Alternate character set macros ***/
 
 /* 'w' = 32-bit chtype; acs_map[] index | A_ALTCHARSET
-   'n' = 16-bit chtype; ascii fallback */
+   'n' = 16-bit chtype; it gets the fallback set because no bit is 
+	 available for A_ALTCHARSET */
 
 #ifdef CHTYPE_LONG
+
+extern chtype acs_map[];
+
 # define ACS_PICK(w, n)	((chtype)w | A_ALTCHARSET)
 #else
 # define ACS_PICK(w, n)	((chtype)n)
 #endif
-
-extern chtype acs_map[];
 
 /* VT100-compatible symbols -- box chars */
 

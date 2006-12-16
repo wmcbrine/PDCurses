@@ -13,13 +13,14 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcdisp.c,v 1.57 2006/12/16 17:14:54 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.58 2006/12/16 21:53:17 wmcbrine Exp $");
 
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
    match code page 437 and compatible pages (CP850, CP852, etc.) */
 
-/* in case a value from acs_map[] is passed back to waddch() */
-#define A(x) ((chtype)x | A_ALTCHARSET)
+#ifdef CHTYPE_LONG
+
+# define A(x) ((chtype)x | A_ALTCHARSET)
 
 chtype acs_map[128] =
 {
@@ -51,7 +52,9 @@ chtype acs_map[128] =
 	A(127)
 };
 
-#undef A
+# undef A
+
+#endif
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -137,10 +140,10 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 			chtype ch = srcp[j];
 
 			temp_line[j].attr = chtype_attr(ch);
-
+#ifdef CHTYPE_LONG
 			if (ch & A_ALTCHARSET && !(ch & 0xff80))
 				ch = acs_map[ch & 0x7f];
-
+#endif
 			temp_line[j].text = ch & 0xff;
 		}
 
@@ -182,10 +185,10 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 			regs.h.ah = 0x09;
 			regs.W.bx = chtype_attr(ch);
 			regs.W.cx = count;
-
+#ifdef CHTYPE_LONG
 			if (ch & A_ALTCHARSET && !(ch & 0xff80))
 				ch = acs_map[ch & 0x7f];
-
+#endif
 			regs.h.al = (unsigned char) (ch & 0xff);
 
 			PDCINT(0x10, regs);

@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.69 2006/12/15 10:08:39 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.70 2006/12/16 17:14:54 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -434,8 +434,14 @@ static const char *default_translations =
 	"<BtnMotion>: XCursesButton()"
 };
 
-static int _to_utf8(char *outcode, int code)
+static int _to_utf8(char *outcode, chtype code)
 {
+#ifdef PDC_WIDE
+	if (code & A_ALTCHARSET && !(code & 0xff80))
+		code = acs_map[code & 0x7f];
+#endif
+	code &= A_CHARTEXT;
+
 	if (code < 0x80)
 	{
 		outcode[0] = code;
@@ -646,17 +652,23 @@ static int _display_text(const chtype *ch, int row, int col,
 	{
 		chtype curr = ch[j];
 
+		attr = curr & A_ATTRIBUTES;
+
+		if (attr & A_ALTCHARSET && !(curr & 0xff80))
+		{
+			attr ^= A_ALTCHARSET;
+			curr = acs_map[curr & 0x7f];
+		}
+
 #ifndef PDC_WIDE
 		/* Special handling for ACS_BLOCK */
 
 		if (!(curr & A_CHARTEXT))
 		{
 			curr |= ' ';
-			curr ^= A_REVERSE;
+			attr ^= A_REVERSE;
 		}
 #endif
-		attr = curr & A_ATTRIBUTES;
-
 		if (attr != old_attr)
 		{
 			if (_new_packet(old_attr, highlight, i, 
@@ -1473,7 +1485,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
 		{
 			while (*tmp)
 				ret_length += _to_utf8(data + ret_length,
-					(int)(*tmp++ & A_CHARTEXT));
+					*tmp++);
 		}
 		else
 			while (*tmp)

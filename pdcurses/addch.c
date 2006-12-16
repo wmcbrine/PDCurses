@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.45 2006/12/08 06:21:26 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.46 2006/12/16 17:14:54 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -26,6 +26,10 @@ RCSID("$Id: addch.c,v 1.45 2006/12/08 06:21:26 wmcbrine Exp $");
 	int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
 	int echochar(const chtype ch);
 	int wechochar(WINDOW *win, const chtype ch);
+
+	int addrawch(chtype ch);
+	int waddrawch(WINDOW *win, chtype ch);
+	int mvwaddrawch(WINDOW *win, int y, int x, chtype ch);
 
 	int add_wch(const cchar_t *wch);
 	int wadd_wch(WINDOW *win, const cchar_t *wch);
@@ -87,6 +91,9 @@ RCSID("$Id: addch.c,v 1.45 2006/12/08 06:21:26 wmcbrine Exp $");
 	copied from one place to another using inch() and addch().
 
   PDCurses Description:
+	addrawch(), waddrawch() and mvwaddrawch() are wrappers for 
+	addch() etc. that disable the translation of control characters.
+
 	Note that in PDCurses, for now, a cchar_t and a chtype are the 
 	same. The text field is 16 bits wide, and is treated as Unicode 
 	(UCS-2) when PDCurses is built with wide-character support 
@@ -104,6 +111,9 @@ RCSID("$Id: addch.c,v 1.45 2006/12/08 06:21:26 wmcbrine Exp $");
 	mvwaddch				Y	Y	Y
 	echochar				Y	-      3.0
 	wechochar				Y	-      3.0
+	addrawch				-	-	-
+	waddrawch				-	-	-
+	mvwaddrawch				-	-	-
 	add_wch					Y
 	wadd_wch				Y
 	mvadd_wch				Y
@@ -318,6 +328,35 @@ int wechochar(WINDOW *win, const chtype ch)
 		return ERR;
 
 	return wrefresh(win);
+}
+
+int waddrawch(WINDOW *win, chtype ch)
+{
+	PDC_LOG(("waddrawch() - called: win=%p ch=%x (text=%c attr=0x%x)\n",
+		win, ch, ch & A_CHARTEXT, ch & A_ATTRIBUTES));
+
+	if ((ch & A_CHARTEXT) < ' ' || (ch & A_CHARTEXT) == 0x7f)
+		ch |= A_ALTCHARSET;
+
+	return waddch(win, ch);
+}
+
+int addrawch(chtype ch)
+{
+	PDC_LOG(("addrawch() - called: ch=%x\n", ch));
+
+	return waddrawch(stdscr, ch);
+}
+
+int mvwaddrawch(WINDOW *win, int y, int x, chtype ch)
+{
+	PDC_LOG(("mvwaddrawch() - called: win=%p y=%d x=%d ch=%d\n",
+		win, y, x, ch));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return waddrawch(win, ch);
 }
 
 #ifdef PDC_WIDE

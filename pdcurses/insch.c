@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.34 2006/11/07 16:32:14 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.35 2006/12/16 17:14:54 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -25,6 +25,9 @@ RCSID("$Id: insch.c,v 1.34 2006/11/07 16:32:14 wmcbrine Exp $");
 	int winsch(WINDOW *win, chtype ch);
 	int mvinsch(int y, int x, chtype ch);
 	int mvwinsch(WINDOW *win, int y, int x, chtype ch);
+
+	int insrawch(chtype ch);
+	int winsrawch(WINDOW *win, chtype ch);
 
 	int ins_wch(const cchar_t *wch);
 	int wins_wch(WINDOW *win, const cchar_t *wch);
@@ -78,6 +81,10 @@ RCSID("$Id: insch.c,v 1.34 2006/11/07 16:32:14 wmcbrine Exp $");
 	attributes, can be copied from one place to another using inch()
 	and insch().
 
+  PDCurses Description:
+	insrawch() and winsrawch() are wrappers for insch() etc. that 
+	disable the translation of control characters.
+
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -86,6 +93,8 @@ RCSID("$Id: insch.c,v 1.34 2006/11/07 16:32:14 wmcbrine Exp $");
 	winsch					Y	Y	Y
 	mvinsch					Y	Y	Y
 	mvwinsch				Y	Y	Y
+	insrawch				-	-	-
+	winsrawch				-	-	-
 	ins_wch					Y
 	wins_wch				Y
 	mvins_wch				Y
@@ -226,6 +235,25 @@ int mvwinsch(WINDOW *win, int y, int x, chtype ch)
 		return ERR;
 
 	return winsch(win, ch);
+}
+
+int winsrawch(WINDOW *win, chtype ch)
+{
+	PDC_LOG(("winsrawch() - called: win=%p ch=%x "
+		"(char=%c attr=0x%x)\n", win, ch,
+		ch & A_CHARTEXT, ch & A_ATTRIBUTES));
+
+	if ((ch & A_CHARTEXT) < ' ' || (ch & A_CHARTEXT) == 0x7f)
+		ch |= A_ALTCHARSET;
+
+	return winsch(win, ch);
+}
+
+int insrawch(chtype ch)
+{
+	PDC_LOG(("insrawch() - called\n"));
+
+	return winsrawch(stdscr, ch);
 }
 
 #ifdef PDC_WIDE

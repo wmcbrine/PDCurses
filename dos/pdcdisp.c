@@ -13,7 +13,45 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcdisp.c,v 1.56 2006/11/18 12:00:04 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.57 2006/12/16 17:14:54 wmcbrine Exp $");
+
+/* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
+   match code page 437 and compatible pages (CP850, CP852, etc.) */
+
+/* in case a value from acs_map[] is passed back to waddch() */
+#define A(x) ((chtype)x | A_ALTCHARSET)
+
+chtype acs_map[128] =
+{
+	A(0), A(1), A(2), A(3), A(4), A(5), A(6), A(7), A(8), A(9),
+	A(10), A(11), A(12), A(13), A(14), A(15), A(16), A(17), A(18),
+	A(19), A(20), A(21), A(22), A(23), A(24), A(25), A(26), A(27),
+	A(28), A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&',
+	'\'', '(', ')', '*',
+
+	A(0x1a), A(0x1b), A(0x18), A(0x19),
+
+	'/',
+
+	0xdb,
+
+	'1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=',
+	'>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+	'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
+
+	A(0x04), 0xb1,
+
+	'b', 'c', 'd', 'e',
+
+	0xf8, 0xf1, 0xb0, A(0x0f), 0xd9, 0xbf, 0xda, 0xc0, 0xc5, 0x2d,
+	0x2d, 0xc4, 0x2d, 0x5f, 0xc3, 0xb4, 0xc1, 0xc2, 0xb3, 0xf3,
+	0xf2, 0xe3, 0xd8, 0x9c, 0xf9,
+
+	A(127)
+};
+
+#undef A
 
 #ifdef __PACIFIC__
 void movedata(unsigned sseg, unsigned soff, unsigned dseg,
@@ -58,64 +96,6 @@ void PDC_gotoyx(int row, int col)
 
 /*man-start**************************************************************
 
-  PDC_putc()	- Output a character and attribute.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Outputs 'ch' to screen, 'count' times.
-
-  Portability:
-	PDCurses  void PDC_putc(chtype ch, unsigned short count);
-
-**man-end****************************************************************/
-
-static void PDC_putc(chtype ch, unsigned short count)
-{
-	PDCREGS regs;
-
-	PDC_LOG(("PDC_putc() - called\n"));
-
-	regs.h.ah = 0x09;	/* Avoid screen wrap.  Don't advance cursor. */
-	regs.h.al = (unsigned char) (ch & 0xff);
-	regs.h.bh = 0;
-	regs.h.bl = chtype_attr(ch);
-	regs.W.cx = count;
-	PDCINT(0x10, regs);
-}
-
-/*man-start**************************************************************
-
-  PDC_putctty()	- Output a character and attribute in TTY fashion.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Outputs 'ch' to screen in tty fashion.
-
-	This function moves the physical cursor after writing so the
-	screen will scroll if necessary.
-
-  Portability:
-	PDCurses  void PDC_putctty(chtype ch);
-
-**man-end****************************************************************/
-
-void PDC_putctty(chtype ch)
-{
-	PDCREGS regs;
-
-	PDC_LOG(("PDC_putctty() - called\n"));
-
-	regs.h.ah = 0x0e;	/* Write in TTY fashion, advance cursor. */
-	regs.h.al = (unsigned char) (ch & 0xff);
-	regs.h.bh = 0;
-	regs.h.bl = chtype_attr(ch);
-	PDCINT(0x10, regs);
-}
-
-/*man-start**************************************************************
-
   PDC_transform_line()	- display a physical line of the screen
 
   PDCurses Description:
@@ -134,28 +114,35 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	int j;
 
-#if SMALL || MEDIUM
-# ifndef __PACIFIC__
-	struct SREGS segregs;
-# endif
-	int ds;
-#endif
-
 	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
 	if (pdc_direct_video)
 	{
+#if SMALL || MEDIUM
+# ifndef __PACIFIC__
+		struct SREGS segregs;
+# endif
+		int ds;
+#endif
 		/* this should be enough for the maximum width of a 
 		   screen */
 
-		unsigned short temp_line[256];
+		struct {unsigned char text, attr;} temp_line[256];
 
 		/* replace the attribute part of the chtype with the 
 		   actual color value for each chtype in the line */
 
 		for (j = 0; j < len; j++)
-			temp_line[j] =
-				(chtype_attr(srcp[j]) << 8) | (srcp[j] & 0xff);
+		{
+			chtype ch = srcp[j];
+
+			temp_line[j].attr = chtype_attr(ch);
+
+			if (ch & A_ALTCHARSET && !(ch & 0xff80))
+				ch = acs_map[ch & 0x7f];
+
+			temp_line[j].text = ch & 0xff;
+		}
 
 #ifdef __DJGPP__
 		dosmemput(temp_line, len * 2,
@@ -183,14 +170,25 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	else
 		for (j = 0; j < len;)
 		{
+			PDCREGS regs;
 			unsigned short count = 1;
+			chtype ch = srcp[j];
 
-			while ((j + count < len) &&
-				(srcp[j] == srcp[j + count]))
-					count++;
+			while ((j + count < len) && (ch == srcp[j + count]))
+				count++;
 
 			PDC_gotoyx(lineno, j + x);
-			PDC_putc(srcp[j], count);
+
+			regs.h.ah = 0x09;
+			regs.W.bx = chtype_attr(ch);
+			regs.W.cx = count;
+
+			if (ch & A_ALTCHARSET && !(ch & 0xff80))
+				ch = acs_map[ch & 0x7f];
+
+			regs.h.al = (unsigned char) (ch & 0xff);
+
+			PDCINT(0x10, regs);
 
 			j += count;
 		}

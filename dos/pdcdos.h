@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.21 2006/11/18 12:00:04 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.22 2006/12/16 17:14:54 wmcbrine Exp $ */
 
 #include <curspriv.h>
 #include <string.h>
@@ -154,5 +154,3 @@ enum
 #ifdef __PACIFIC__
 void	movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
 #endif
-
-void	PDC_putctty(chtype);

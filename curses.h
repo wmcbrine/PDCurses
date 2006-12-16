@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.249 2006/12/11 04:24:24 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.250 2006/12/16 17:14:54 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -578,14 +578,14 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 #define A_NORMAL	(chtype)0
 
 #ifdef CHTYPE_LONG
+# define A_ALTCHARSET	(chtype)0x00010000
+# define A_RIGHTLINE	(chtype)0x00020000
+# define A_LEFTLINE	(chtype)0x00040000
+# define A_INVIS	(chtype)0x00080000
 # define A_UNDERLINE	(chtype)0x00100000
 # define A_REVERSE	(chtype)0x00200000
 # define A_BLINK	(chtype)0x00400000
 # define A_BOLD		(chtype)0x00800000
-# define A_RIGHTLINE	(chtype)0x00010000
-# define A_LEFTLINE	(chtype)0x00020000
-# define A_ALTCHARSET	(chtype)0x00040000
-# define A_INVIS	(chtype)0x00080000
 
 # define A_ATTRIBUTES	(chtype)0xFFFF0000
 # define A_CHARTEXT	(chtype)0x0000FFFF
@@ -647,68 +647,63 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 
 /*** Alternate character set macros ***/
 
-/* 'u' = Unicode, 'x' = non-wide X11, 'd' = other ("DOS" or "default")
+/* 'w' = 32-bit chtype; acs_map[] index | A_ALTCHARSET
+   'n' = 16-bit chtype; ascii fallback */
 
-   'd' definitions are from jshumate@wrdis01.robins.af.mil -- these 
-   match code page 437 and compatible pages (CP850, CP852, etc.) */
-
-#ifdef PDC_WIDE
-# define ACS_PICK(u,x,d) ((chtype)u)
+#ifdef CHTYPE_LONG
+# define ACS_PICK(w, n)	((chtype)w | A_ALTCHARSET)
 #else
-# ifdef XCURSES
-#  define ACS_PICK(u,x,d) ((chtype)x | A_ALTCHARSET)
-# else
-#  define ACS_PICK(u,x,d) ((chtype)d | A_ALTCHARSET)
-# endif
+# define ACS_PICK(w, n)	((chtype)n)
 #endif
+
+extern chtype acs_map[];
 
 /* VT100-compatible symbols -- box chars */
 
-#define ACS_ULCORNER	ACS_PICK(0x250c, 13, 0xda)
-#define ACS_LLCORNER	ACS_PICK(0x2514, 14, 0xc0)
-#define ACS_URCORNER	ACS_PICK(0x2510, 12, 0xbf)
-#define ACS_LRCORNER	ACS_PICK(0x2518, 11, 0xd9)
-#define ACS_RTEE	ACS_PICK(0x2524, 22, 0xb4)
-#define ACS_LTEE	ACS_PICK(0x251c, 21, 0xc3)
-#define ACS_BTEE	ACS_PICK(0x2534, 23, 0xc1)
-#define ACS_TTEE	ACS_PICK(0x252c, 24, 0xc2)
-#define ACS_HLINE	ACS_PICK(0x2500, 18, 0xc4)
-#define ACS_VLINE	ACS_PICK(0x2502, 25, 0xb3)
-#define ACS_PLUS	ACS_PICK(0x253c, 15, 0xc5)
+#define ACS_ULCORNER	ACS_PICK('l', '+')
+#define ACS_LLCORNER	ACS_PICK('m', '+')
+#define ACS_URCORNER	ACS_PICK('k', '+')
+#define ACS_LRCORNER	ACS_PICK('j', '+')
+#define ACS_RTEE	ACS_PICK('u', '+')
+#define ACS_LTEE	ACS_PICK('t', '+')
+#define ACS_BTEE	ACS_PICK('v', '+')
+#define ACS_TTEE	ACS_PICK('w', '+')
+#define ACS_HLINE	ACS_PICK('q', '-')
+#define ACS_VLINE	ACS_PICK('x', '|')
+#define ACS_PLUS	ACS_PICK('n', '+')
 
 /* VT100-compatible symbols -- other */
 
-#define ACS_S1		ACS_PICK(0x23ba, 16, 0x2d)
-#define ACS_S9		ACS_PICK(0x23bd, 20, 0x5f)
-#define ACS_DIAMOND	ACS_PICK(0x2666, 1, 0x04)
-#define ACS_CKBOARD	ACS_PICK(0x2592, 2, 0xb1)
-#define ACS_DEGREE	ACS_PICK(0x00b0, 7, 0xf8)
-#define ACS_PLMINUS	ACS_PICK(0x00b1, 8, 0xf1)
-#define ACS_BULLET	ACS_PICK(0x00b7, '*', 0xf9)
+#define ACS_S1		ACS_PICK('o', '-')
+#define ACS_S9		ACS_PICK('s', '_')
+#define ACS_DIAMOND	ACS_PICK('`', '+')
+#define ACS_CKBOARD	ACS_PICK('a', ':')
+#define ACS_DEGREE	ACS_PICK('f', '\'')
+#define ACS_PLMINUS	ACS_PICK('g', '#')
+#define ACS_BULLET	ACS_PICK('~', 'o')
 
 /* Teletype 5410v1 symbols -- these are defined in SysV curses, but
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#define ACS_LARROW	ACS_PICK(0x2190, '<', 0x1b)
-#define ACS_RARROW	ACS_PICK(0x2192, '>', 0x1a)
-#define ACS_DARROW	ACS_PICK(0x2193, 'v', 0x19)
-#define ACS_UARROW	ACS_PICK(0x2191, '^', 0x18)
-#define ACS_BOARD	ACS_PICK(0x2591, '#', 0xb0)
-#define ACS_LANTERN	ACS_PICK(0x00a4, '#', 0x0f)
-#define ACS_BLOCK	ACS_PICK(0x2588, 0, 0xdb)
+#define ACS_LARROW	ACS_PICK(',', '<')
+#define ACS_RARROW	ACS_PICK('+', '>')
+#define ACS_DARROW	ACS_PICK('.', 'v')
+#define ACS_UARROW	ACS_PICK('-', '^')
+#define ACS_BOARD	ACS_PICK('h', '#')
+#define ACS_LANTERN	ACS_PICK('i', '*')
+#define ACS_BLOCK	ACS_PICK('0', '#')
 
 /* That goes double for these -- undocumented SysV symbols. Don't use
-   them. Also, the definitions here aren't compatible with as many
-   code pages as those above. */
+   them. */
 
-#define ACS_S3		ACS_PICK(0x23bb, 17, 0x2d)
-#define ACS_S7		ACS_PICK(0x23bc, 19, 0x2d)
-#define ACS_LEQUAL	ACS_PICK(0x2264, 26, 0xf3)
-#define ACS_GEQUAL	ACS_PICK(0x2265, 27, 0xf2)
-#define ACS_PI		ACS_PICK(0x03c0, 28, 0xe3)
-#define ACS_NEQUAL	ACS_PICK(0x2260, 29, 0xd8)
-#define ACS_STERLING	ACS_PICK(0x00a3, 30, 0x9c)
+#define ACS_S3		ACS_PICK('p', '-')
+#define ACS_S7		ACS_PICK('r', '-')
+#define ACS_LEQUAL	ACS_PICK('y', '<')
+#define ACS_GEQUAL	ACS_PICK('z', '>')
+#define ACS_PI		ACS_PICK('{', 'n')
+#define ACS_NEQUAL	ACS_PICK('|', '+')
+#define ACS_STERLING	ACS_PICK('}', 'L')
 
 /* Box char aliases */
 
@@ -1444,13 +1439,18 @@ int	wresize(WINDOW *, int, int);
 
 /* PDCurses */
 
+int	addrawch(chtype);
+int	insrawch(chtype);
 bool	is_termresized(void);
+int	mvwaddrawch(WINDOW *, int, int, chtype);
 int	mvwinsertln(WINDOW *, int, int);
 int	raw_output(bool);
 int	resize_term(int, int);
 WINDOW *resize_window(WINDOW *, int, int);
 void	traceoff(void);
 void	traceon(void);
+int	waddrawch(WINDOW *, chtype);
+int	winsrawch(WINDOW *, chtype);
 char	wordchar(void);
 
 #ifdef XCURSES
@@ -1512,14 +1512,6 @@ int	PDC_return_key_modifiers(bool);
 #define resetterm		reset_shell_mode
 #define fixterm			reset_prog_mode
 #define saveterm		def_prog_mode
-
-/* PDCurses-specific */
-
-#define waddrawch(w, c)		waddch(w, ((chtype)(c) | A_ALTCHARSET))
-#define winsrawch(w, c)		winsch(w, ((chtype)(c) | A_ALTCHARSET))
-#define addrawch(c)		waddrawch(stdscr, c)
-#define insrawch(c)		winsrawch(stdscr, c)
-#define mvwaddrawch(w,y,x,c)	(wmove(w, y, x)==ERR?ERR:waddrawch(w, c))
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

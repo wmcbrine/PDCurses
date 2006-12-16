@@ -19,13 +19,17 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.13 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.14 2006/12/16 17:14:54 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
+	PDCREGS regs;
+
 	PDC_LOG(("PDC_beep() - called\n"));
 
-	PDC_putctty((chtype) '\007');
+	regs.W.ax = 0x0e07;       /* Write ^G in TTY fashion */
+	regs.W.bx = 0;
+	PDCINT(0x10, regs);
 }
 
 void PDC_napms(int ms)

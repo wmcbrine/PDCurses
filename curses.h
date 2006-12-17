@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.252 2006/12/17 03:44:59 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.253 2006/12/17 08:11:33 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -759,6 +759,18 @@ extern chtype acs_map[];
 # define WACS_PI	(&(acs_map['{']))
 # define WACS_NEQUAL	(&(acs_map['|']))
 # define WACS_STERLING	(&(acs_map['}']))
+
+# define WACS_BSSB	WACS_ULCORNER
+# define WACS_SSBB	WACS_LLCORNER
+# define WACS_BBSS	WACS_URCORNER
+# define WACS_SBBS	WACS_LRCORNER
+# define WACS_SBSS	WACS_RTEE
+# define WACS_SSSB	WACS_LTEE
+# define WACS_SSBS	WACS_BTEE
+# define WACS_BSSS	WACS_TTEE
+# define WACS_BSBS	WACS_HLINE
+# define WACS_SBSB	WACS_VLINE
+# define WACS_SSSS	WACS_PLUS
 #endif
 
 /*** Color macros ***/

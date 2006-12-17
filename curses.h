@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.251 2006/12/16 21:53:17 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.252 2006/12/17 03:44:59 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -724,44 +724,41 @@ extern chtype acs_map[];
 /* cchar_t aliases */
 
 #ifdef PDC_WIDE
+# define WACS_ULCORNER	(&(acs_map['l']))
+# define WACS_LLCORNER	(&(acs_map['m']))
+# define WACS_URCORNER	(&(acs_map['k']))
+# define WACS_LRCORNER	(&(acs_map['j']))
+# define WACS_RTEE	(&(acs_map['u']))
+# define WACS_LTEE	(&(acs_map['t']))
+# define WACS_BTEE	(&(acs_map['v']))
+# define WACS_TTEE	(&(acs_map['w']))
+# define WACS_HLINE	(&(acs_map['q']))
+# define WACS_VLINE	(&(acs_map['x']))
+# define WACS_PLUS	(&(acs_map['n']))
 
-extern cchar_t pdc_wacs[];
+# define WACS_S1	(&(acs_map['o']))
+# define WACS_S9	(&(acs_map['s']))
+# define WACS_DIAMOND	(&(acs_map['`']))
+# define WACS_CKBOARD	(&(acs_map['a']))
+# define WACS_DEGREE	(&(acs_map['f']))
+# define WACS_PLMINUS	(&(acs_map['g']))
+# define WACS_BULLET	(&(acs_map['~']))
 
-# define WACS_ULCORNER	(&(pdc_wacs[0]))
-# define WACS_LLCORNER	(&(pdc_wacs[1]))
-# define WACS_URCORNER	(&(pdc_wacs[2]))
-# define WACS_LRCORNER	(&(pdc_wacs[3]))
-# define WACS_RTEE	(&(pdc_wacs[4]))
-# define WACS_LTEE	(&(pdc_wacs[5]))
-# define WACS_BTEE	(&(pdc_wacs[6]))
-# define WACS_TTEE	(&(pdc_wacs[7]))
-# define WACS_HLINE	(&(pdc_wacs[8]))
-# define WACS_VLINE	(&(pdc_wacs[9]))
-# define WACS_PLUS	(&(pdc_wacs[10]))
+# define WACS_LARROW	(&(acs_map[',']))
+# define WACS_RARROW	(&(acs_map['+']))
+# define WACS_DARROW	(&(acs_map['.']))
+# define WACS_UARROW	(&(acs_map['-']))
+# define WACS_BOARD	(&(acs_map['h']))
+# define WACS_LANTERN	(&(acs_map['i']))
+# define WACS_BLOCK	(&(acs_map['0']))
 
-# define WACS_S1	(&(pdc_wacs[11]))
-# define WACS_S9	(&(pdc_wacs[12]))
-# define WACS_DIAMOND	(&(pdc_wacs[13]))
-# define WACS_CKBOARD	(&(pdc_wacs[14]))
-# define WACS_DEGREE	(&(pdc_wacs[15]))
-# define WACS_PLMINUS	(&(pdc_wacs[16]))
-# define WACS_BULLET	(&(pdc_wacs[17]))
-
-# define WACS_LARROW	(&(pdc_wacs[18]))
-# define WACS_RARROW	(&(pdc_wacs[19]))
-# define WACS_DARROW	(&(pdc_wacs[20]))
-# define WACS_UARROW	(&(pdc_wacs[21]))
-# define WACS_BOARD	(&(pdc_wacs[22]))
-# define WACS_LANTERN	(&(pdc_wacs[23]))
-# define WACS_BLOCK	(&(pdc_wacs[24]))
-
-# define WACS_S3	(&(pdc_wacs[25]))
-# define WACS_S7	(&(pdc_wacs[26]))
-# define WACS_LEQUAL	(&(pdc_wacs[27]))
-# define WACS_GEQUAL	(&(pdc_wacs[28]))
-# define WACS_PI	(&(pdc_wacs[29]))
-# define WACS_NEQUAL	(&(pdc_wacs[30]))
-# define WACS_STERLING	(&(pdc_wacs[31]))
+# define WACS_S3	(&(acs_map['p']))
+# define WACS_S7	(&(acs_map['r']))
+# define WACS_LEQUAL	(&(acs_map['y']))
+# define WACS_GEQUAL	(&(acs_map['z']))
+# define WACS_PI	(&(acs_map['{']))
+# define WACS_NEQUAL	(&(acs_map['|']))
+# define WACS_STERLING	(&(acs_map['}']))
 #endif
 
 /*** Color macros ***/

@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.93 2006/12/11 04:24:24 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.94 2006/12/17 03:44:59 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -27,20 +27,6 @@ int COLS = 0;				/* current terminal width */
 int TABSIZE = 8;
 
 MOUSE_STATUS Mouse_status, pdc_mouse_status;
-
-#ifdef PDC_WIDE
-
-/* Unicode definitions for WACS_ULCORNER through WACS_STERLING, in the 
-   order listed in curses.h */
-
-cchar_t pdc_wacs[] = {
-	0x250c, 0x2514, 0x2510, 0x2518, 0x2524, 0x251c, 0x2534, 0x252c,
-	0x2500, 0x2502, 0x253c, 0x23ba, 0x23bd, 0x2666, 0x2592, 0x00b0,
-	0x00b1, 0x00b7, 0x2190, 0x2192, 0x2193, 0x2191, 0x2591, 0x00a4,
-	0x2588, 0x23bb, 0x23bc, 0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3
-};
-
-#endif
 
 extern RIPPEDOFFLINE linesripped[5];
 extern char linesrippedoff;

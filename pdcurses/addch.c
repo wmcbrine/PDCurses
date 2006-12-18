@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.46 2006/12/16 17:14:54 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.47 2006/12/18 21:06:35 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -29,6 +29,7 @@ RCSID("$Id: addch.c,v 1.46 2006/12/16 17:14:54 wmcbrine Exp $");
 
 	int addrawch(chtype ch);
 	int waddrawch(WINDOW *win, chtype ch);
+	int mvaddrawch(int y, int x, chtype ch);
 	int mvwaddrawch(WINDOW *win, int y, int x, chtype ch);
 
 	int add_wch(const cchar_t *wch);
@@ -91,14 +92,15 @@ RCSID("$Id: addch.c,v 1.46 2006/12/16 17:14:54 wmcbrine Exp $");
 	copied from one place to another using inch() and addch().
 
   PDCurses Description:
-	addrawch(), waddrawch() and mvwaddrawch() are wrappers for 
-	addch() etc. that disable the translation of control characters.
+	addrawch(), waddrawch(), mvaddrawch() and mvwaddrawch() are
+	wrappers for addch() etc. that disable the translation of
+	control characters.
 
-	Note that in PDCurses, for now, a cchar_t and a chtype are the 
-	same. The text field is 16 bits wide, and is treated as Unicode 
-	(UCS-2) when PDCurses is built with wide-character support 
-	(define PDC_WIDE). So, in functions that take a chtype, like 
-	addch(), both the wide and narrow versions will handle Unicode. 
+	Note that in PDCurses, for now, a cchar_t and a chtype are the
+	same. The text field is 16 bits wide, and is treated as Unicode
+	(UCS-2) when PDCurses is built with wide-character support
+	(define PDC_WIDE). So, in functions that take a chtype, like
+	addch(), both the wide and narrow versions will handle Unicode.
 	But for portability, you should use the wide functions.
 
   X/Open Return Value:
@@ -113,6 +115,7 @@ RCSID("$Id: addch.c,v 1.46 2006/12/16 17:14:54 wmcbrine Exp $");
 	wechochar				Y	-      3.0
 	addrawch				-	-	-
 	waddrawch				-	-	-
+	mvaddrawch				-	-	-
 	mvwaddrawch				-	-	-
 	add_wch					Y
 	wadd_wch				Y
@@ -344,6 +347,16 @@ int waddrawch(WINDOW *win, chtype ch)
 int addrawch(chtype ch)
 {
 	PDC_LOG(("addrawch() - called: ch=%x\n", ch));
+
+	return waddrawch(stdscr, ch);
+}
+
+int mvaddrawch(int y, int x, chtype ch)
+{
+	PDC_LOG(("mvaddrawch() - called: y=%d x=%d ch=%d\n", y, x, ch));
+
+	if (move(y, x) == ERR)
+		return ERR;
 
 	return waddrawch(stdscr, ch);
 }

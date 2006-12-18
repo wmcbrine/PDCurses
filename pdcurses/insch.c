@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.35 2006/12/16 17:14:54 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.36 2006/12/18 21:47:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -28,6 +28,8 @@ RCSID("$Id: insch.c,v 1.35 2006/12/16 17:14:54 wmcbrine Exp $");
 
 	int insrawch(chtype ch);
 	int winsrawch(WINDOW *win, chtype ch);
+	int mvinsrawch(int y, int x, chtype ch);
+	int mvwinsrawch(WINDOW *win, int y, int x, chtype ch);
 
 	int ins_wch(const cchar_t *wch);
 	int wins_wch(WINDOW *win, const cchar_t *wch);
@@ -254,6 +256,26 @@ int insrawch(chtype ch)
 	PDC_LOG(("insrawch() - called\n"));
 
 	return winsrawch(stdscr, ch);
+}
+
+int mvinsrawch(int y, int x, chtype ch)
+{
+	PDC_LOG(("mvinsrawch() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return winsrawch(stdscr, ch);
+}
+
+int mvwinsrawch(WINDOW *win, int y, int x, chtype ch)
+{
+	PDC_LOG(("mvwinsrawch() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return winsrawch(win, ch);
 }
 
 #ifdef PDC_WIDE

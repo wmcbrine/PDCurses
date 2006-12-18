@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.28 2006/12/18 21:34:40 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.29 2006/12/18 21:37:57 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,13 +33,17 @@ RCSID("$Id: deleteln.c,v 1.28 2006/12/18 21:34:40 wmcbrine Exp $");
 	int mvwinsertln(WINDOW *win, int y, int x);
 
   X/Open Description:
-	With the deleteln() and wdelteln() functions, the line under the 
-	cursor in the window is deleted.  All lines below the current 
-	line are moved up one line.  The bottom line of the window is 
-	cleared.  The cursor position does not change.
+	With the deleteln() and wdeleteln() functions, the line under
+	the cursor in the window is deleted.  All lines below the
+	current line are moved up one line.  The bottom line of the
+	window is cleared.  The cursor position does not change.
 
 	With the insertln() and winsertn() functions, a blank line is 
 	inserted above the current line and the bottom line is lost.
+
+  PDCurses Description:
+	mvdeleteln(), mvwdeleteln(), mvinsertln() and mvwinsertln() 
+	allow moving the cursor and inserting/deleting in one call.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.

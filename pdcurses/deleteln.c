@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.27 2006/12/18 21:21:06 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -26,6 +26,8 @@ RCSID("$Id: deleteln.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
 	int winsdelln(WINDOW *win, int n);
 	int insertln(void);
 	int winsertln(WINDOW *win);
+
+	int mvinsertln(int y, int x);
 	int mvwinsertln(WINDOW *win, int y, int x);
 
   X/Open Description:
@@ -164,6 +166,16 @@ int winsertln(WINDOW *win)
 int insertln(void)
 {
 	PDC_LOG(("insertln() - called\n"));
+
+	return winsertln(stdscr);
+}
+
+int mvinsertln(int y, int x)
+{
+	PDC_LOG(("mvinsertln() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
 
 	return winsertln(stdscr);
 }

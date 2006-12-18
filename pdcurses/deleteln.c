@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.27 2006/12/18 21:21:06 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.28 2006/12/18 21:34:40 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -27,6 +27,8 @@ RCSID("$Id: deleteln.c,v 1.27 2006/12/18 21:21:06 wmcbrine Exp $");
 	int insertln(void);
 	int winsertln(WINDOW *win);
 
+	int mvdeleteln(int y, int x);
+	int mvwdeleteln(WINDOW *win, int y, int x);
 	int mvinsertln(int y, int x);
 	int mvwinsertln(WINDOW *win, int y, int x);
 
@@ -45,10 +47,13 @@ RCSID("$Id: deleteln.c,v 1.27 2006/12/18 21:21:06 wmcbrine Exp $");
   Portability				     X/Open    BSD    SYS V
 	deleteln				Y	Y	Y
 	wdeleteln				Y	Y	Y
+	mvdeleteln				-	-	-
+	mvwdeleteln				-	-	-
 	insdelln				Y	-      4.0
 	winsdelln				Y	-      4.0
 	insertln				Y	Y	Y
 	winsertln				Y	Y	Y
+	mvinsertln				-	-	-
 	mvwinsertln				-	-	-
 
 **man-end****************************************************************/
@@ -94,6 +99,26 @@ int deleteln(void)
 	PDC_LOG(("deleteln() - called\n"));
 
 	return wdeleteln(stdscr);
+}
+
+int mvdeleteln(int y, int x)
+{
+	PDC_LOG(("mvdeleteln() - called\n"));
+
+	if (move(y, x) == ERR)
+		return ERR;
+
+	return wdeleteln(stdscr);
+}
+
+int mvwdeleteln(WINDOW *win, int y, int x)
+{
+	PDC_LOG(("mvwdeleteln() - called\n"));
+
+	if (wmove(win, y, x) == ERR)
+		return ERR;
+
+	return wdeleteln(win);
 }
 
 int winsdelln(WINDOW *win, int n)

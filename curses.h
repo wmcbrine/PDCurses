@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.255 2006/12/18 21:21:05 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.256 2006/12/18 21:34:40 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1454,8 +1454,10 @@ int	addrawch(chtype);
 int	insrawch(chtype);
 bool	is_termresized(void);
 int	mvaddrawch(int, int, chtype);
+int	mvdeleteln(int, int);
 int	mvinsertln(int, int);
 int	mvwaddrawch(WINDOW *, int, int, chtype);
+int	mvwdeleteln(WINDOW *, int, int);
 int	mvwinsertln(WINDOW *, int, int);
 int	raw_output(bool);
 int	resize_term(int, int);

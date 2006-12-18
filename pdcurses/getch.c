@@ -16,11 +16,11 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.59 2006/11/24 13:47:21 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.60 2006/12/18 22:07:57 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
-static int c_ungind = 0;	/* wungetch() push index */
+static int c_ungind = 0;	/* ungetch() push index */
 static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 /*man-start**************************************************************

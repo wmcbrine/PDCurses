@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.71 2006/12/20 02:34:17 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.72 2006/12/20 03:27:10 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -252,7 +252,7 @@ int pair_content(short pair, short *fg, short *bg)
 {
 	PDC_LOG(("pair_content() - called\n"));
 
-	if (pair < 1 || pair >= COLOR_PAIRS || !fg || !bg)
+	if (pair < 0 || pair >= COLOR_PAIRS || !fg || !bg)
 		return ERR;
 
 	*fg = (short)(pdc_atrtab[pair * PDC_OFFSET] & 0x0F);

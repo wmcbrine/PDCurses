@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.71 2006/12/16 21:53:18 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.72 2006/12/20 03:27:10 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -541,19 +541,11 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 #endif
 {
 	GC gc;
-	int pair_num, xpos, ypos;
+	int xpos, ypos;
 	short fore, back;
 
-	if ((pair_num = PAIR_NUMBER(attr)) != 0)
-	{
-		if (pair_content(pair_num, &fore, &back) == ERR)
-			return ERR;
-	}
-	else
-	{
-		fore = COLOR_WHITE;
-		back = COLOR_BLACK;
-	}
+	if (pair_content(PAIR_NUMBER(attr), &fore, &back) == ERR)
+		return ERR;
 
 #ifdef PDC_WIDE
 	text[len].byte1 = text[len].byte2 = 0;

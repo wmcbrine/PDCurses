@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.72 2006/12/20 03:27:10 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.73 2006/12/20 03:52:43 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -36,27 +36,27 @@ RCSID("$Id: color.c,v 1.72 2006/12/20 03:27:10 wmcbrine Exp $");
 	int PDC_set_line_color(short color);
 
   X/Open Description:
-	To use these routines, start_color() must be called, usually 
-	immediately after initscr(). Colors are always used in pairs 
-	refered to as color-pairs. A color-pair consists of a foreground 
-	color and a background color. A color-pair is initialized with 
-	init_pair(). After it has been initialized, COLOR_PAIR(n) can be 
+	To use these routines, start_color() must be called, usually
+	immediately after initscr(). Colors are always used in pairs
+	refered to as color-pairs. A color-pair consists of a foreground
+	color and a background color. A color-pair is initialized with
+	init_pair(). After it has been initialized, COLOR_PAIR(n) can be
 	used like any other video attribute.
 
-	start_color() initializes eight basic colors (black, red, green, 
-	yellow, blue, magenta, cyan, and white), and two global 
-	variables; COLORS and COLOR_PAIRS (respectively defining the 
-	maximum number of colors and color-pairs the terminal is capable 
+	start_color() initializes eight basic colors (black, red, green,
+	yellow, blue, magenta, cyan, and white), and two global
+	variables; COLORS and COLOR_PAIRS (respectively defining the
+	maximum number of colors and color-pairs the terminal is capable
 	of displaying).
 
-	init_pair() changes the definitions of a color-pair. The routine 
-	takes three arguments: the number of the color-pair to be 
-	redefined, and the new values of the foreground and background 
-	colors. The value of color-pair must be between 0 and 
-	COLOR_PAIRS - 1, inclusive. The values of foreground and 
-	background must be between 0 and COLORS - 1, inclusive. If the 
-	color pair was previously initialized, the screen is refreshed 
-	and all occurrences of that color-pair are changed to the new 
+	init_pair() changes the definitions of a color-pair. The routine
+	takes three arguments: the number of the color-pair to be
+	redefined, and the new values of the foreground and background
+	colors. The value of color-pair must be between 0 and
+	COLOR_PAIRS - 1, inclusive. The values of foreground and
+	background must be between 0 and COLORS - 1, inclusive. If the
+	color pair was previously initialized, the screen is refreshed
+	and all occurrences of that color-pair are changed to the new
 	definition.
 
 	has_colors() indicates if the terminal supports, and can 
@@ -69,10 +69,21 @@ RCSID("$Id: color.c,v 1.72 2006/12/20 03:27:10 wmcbrine Exp $");
 	color-pair consist of.
 
   PDCurses Description:
-	PDC_set_line_color() is used to set the color, globally, for the 
-	color of the lines drawn for the attributes: A_UNDERLINE, 
-	A_OVERLINE, A_LEFTLINE and A_RIGHTLINE. A value of -1 (the 
-	default) indicates that the current foreground color should be 
+	assume_default_colors() and use_default_colors() emulate the
+	ncurses extensions of the same names. assume_default_colors(f,
+	b) is essentially the same as init_pair(0, f, b) (which isn't
+	allowed); it redefines the default colors. use_default_colors()
+	allows the use of -1 as a foreground or background color with
+	init_pair(), and calls assume_default_colors(-1, -1); -1
+	represents the foreground or background color that the terminal
+	had at startup. If the environment variable PDC_ORIGINAL_COLORS
+	is set at the time start_color() is called, that's equivalent to
+	calling use_default_colors().
+
+	PDC_set_line_color() is used to set the color, globally, for
+	the color of the lines drawn for the attributes: A_UNDERLINE,
+	A_OVERLINE, A_LEFTLINE and A_RIGHTLINE. A value of -1 (the
+	default) indicates that the current foreground color should be
 	used.
 
 	NOTE: COLOR_PAIR() and PAIR_NUMBER() are implemented as macros.
@@ -277,8 +288,7 @@ int assume_default_colors(int f, int b)
 
 		_normalize(&fg, &bg);
 
-		oldfg = (short)(pdc_atrtab[0] & 0x0F);
-		oldbg = (short)((pdc_atrtab[0] & 0xF0) >> 4);
+		pair_content(0, &oldfg, &oldbg);
 
 		if (oldfg != fg || oldbg != bg)
 			curscr->_clear = TRUE;

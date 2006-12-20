@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.72 2006/11/18 14:04:27 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.73 2006/12/20 02:35:48 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -173,8 +173,8 @@ static void _init_console_info(void)
 
 	console_info.FullScreen = FALSE;
 	console_info.AutoPosition = 0x10000;
-	console_info.ScreenColors = MAKEWORD(SP->orig_fore, SP->orig_back);
-	console_info.PopupColors = MAKEWORD(0x5, 0xf);
+	console_info.ScreenColors = SP->orig_back << 4 | SP->orig_fore;
+	console_info.PopupColors = 0xf5;
 	
 	console_info.HistoryNoDup = FALSE;
 	console_info.HistoryBufferSize = 50;

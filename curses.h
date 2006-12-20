@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.257 2006/12/18 21:47:40 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.258 2006/12/20 02:34:17 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2824
+#define PDC_BUILD 2825
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1444,8 +1444,10 @@ unsigned long getbmap(void);
 
 /* NCurses */
 
+int	assume_default_colors(int, int);
 const char *curses_version(void);
 bool	has_key(int);
+int	use_default_colors(void);
 int	wresize(WINDOW *, int, int);
 
 /* PDCurses */

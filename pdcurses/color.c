@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.70 2006/11/12 10:26:14 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.71 2006/12/20 02:34:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -27,9 +27,12 @@ RCSID("$Id: color.c,v 1.70 2006/11/12 10:26:14 wmcbrine Exp $");
 	int init_color(short color, short red, short green, short blue);
 	bool has_colors(void);
 	bool can_change_color(void);
-	int color_content(short color, short *redp, short *greenp,
-			  short *bluep);
-	int pair_content(short pair, short *fgp, short *bgp);
+	int color_content(short color, short *red, short *green, short *blue);
+	int pair_content(short pair, short *fg, short *bg);
+
+	int assume_default_colors(int f, int b);
+	int use_default_colors(void);
+
 	int PDC_set_line_color(short color);
 
   X/Open Description:
@@ -86,6 +89,8 @@ RCSID("$Id: color.c,v 1.70 2006/11/12 10:26:14 wmcbrine Exp $");
 	can_change_color			Y	-      3.2
 	color_content				Y	-      3.2
 	pair_content				Y	-      3.2
+	assume_default_colors			-	-	-
+	use_default_colors			-	-	-
 	PDC_set_line_color			-	-       -
 
 **man-end****************************************************************/
@@ -102,6 +107,8 @@ unsigned char *pdc_atrtab = (unsigned char *)NULL;
 /* pair_set[] tracks whether a pair has been set via init_pair() */
 
 static bool pair_set[PDC_COLOR_PAIRS];
+static bool default_colors = FALSE;
+static short first_col = 0;
 
 int start_color(void)
 {
@@ -114,15 +121,23 @@ int start_color(void)
 
 	PDC_set_blink(FALSE);	/* Also sets COLORS, to 8 or 16 */
 
-	if (SP->orig_attr && !getenv("PDC_ORIGINAL_COLORS"))
-	{
-		SP->orig_attr = FALSE;
-		PDC_init_atrtab();
-	}
+	if (!default_colors && SP->orig_attr && getenv("PDC_ORIGINAL_COLORS"))
+		default_colors = TRUE;
+
+	PDC_init_atrtab();
 
 	memset(pair_set, 0, PDC_COLOR_PAIRS);
 
 	return OK;
+}
+
+static void _normalize(short *fg, short *bg)
+{
+	if (*fg == -1)
+		*fg = SP->orig_attr ? SP->orig_fore : COLOR_WHITE;
+
+	if (*bg == -1)
+		*bg = SP->orig_attr ? SP->orig_back : COLOR_BLACK;
 }
 
 static void _init_pair_core(short pair, short fg, short bg)
@@ -157,8 +172,10 @@ int init_pair(short pair, short fg, short bg)
 	PDC_LOG(("init_pair() - called: pair %d fg %d bg %d\n", pair, fg, bg));
 
 	if (!pdc_color_started || pair < 1 || pair >= COLOR_PAIRS ||
-	    fg < 0 || fg >= COLORS || bg < 0 || bg >= COLORS)
+	    fg < first_col || fg >= COLORS || bg < first_col || bg >= COLORS)
 		return ERR;
+
+	_normalize(&fg, &bg);
 
 	/* To allow the PDC_PRESERVE_SCREEN option to work, we only 
 	   reset curscr if this call to init_pair() alters a color pair 
@@ -244,8 +261,48 @@ int pair_content(short pair, short *fg, short *bg)
 	return OK;
 }
 
+int assume_default_colors(int f, int b)
+{
+	PDC_LOG(("assume_default_colors() - called: f %d b %d\n", f, b));
+
+	if (f < -1 || f >= COLORS || b < -1 || b >= COLORS)
+		return ERR;
+
+	if (pdc_color_started)
+	{
+		short fg, bg, oldfg, oldbg;
+
+		fg = f;
+		bg = b;
+
+		_normalize(&fg, &bg);
+
+		oldfg = (short)(pdc_atrtab[0] & 0x0F);
+		oldbg = (short)((pdc_atrtab[0] & 0xF0) >> 4);
+
+		if (oldfg != fg || oldbg != bg)
+			curscr->_clear = TRUE;
+
+		_init_pair_core(0, fg, bg);
+	}
+
+	return OK;
+}
+
+int use_default_colors(void)
+{
+	PDC_LOG(("use_default_colors() - called\n"));
+
+	default_colors = TRUE;
+	first_col = -1;
+
+	return assume_default_colors(-1, -1);
+}
+
 int PDC_set_line_color(short color)
 {
+	PDC_LOG(("PDC_set_line_color() - called: %d\n", color));
+
 	if (color < -1 || color >= COLORS)
 		return ERR;
 
@@ -257,13 +314,18 @@ int PDC_set_line_color(short color)
 void PDC_init_atrtab(void)
 {
 	int i;
+	short fg, bg;
 
-	if (!SP->orig_attr)
+	if (pdc_color_started && !default_colors)
 	{
-		SP->orig_fore = COLOR_WHITE;
-		SP->orig_back = COLOR_BLACK;
+		fg = COLOR_WHITE;
+		bg = COLOR_BLACK;
 	}
+	else
+		fg = bg = -1;
+
+	_normalize(&fg, &bg);
 
 	for (i = 0; i < PDC_COLOR_PAIRS; i++)
-		_init_pair_core(i, SP->orig_fore, SP->orig_back);
+		_init_pair_core(i, fg, bg);
 }

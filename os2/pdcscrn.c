@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.60 2006/11/15 01:09:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.61 2006/12/22 14:46:54 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -22,13 +22,46 @@ static unsigned char *saved_screen = NULL;
 static int saved_lines = 0;
 static int saved_cols = 0;
 #else
+
+# ifdef __WATCOMC__
+#  define PDCTHUNK(x) ((ptr_16)(x))
+# else
+#  ifdef __EMX__
+#   define PDCTHUNK(x) ((PCH)_emx_32to16(x))
+#  endif
+# endif
+
+# if defined(__WATCOMC__) && defined(__386__)
+#  define SEG16 _Seg16
+# else
+#  define SEG16
+# endif
+
+# ifdef PDCTHUNK
+
+#  ifdef __EMX__
+#   define THUNKEDVIO VIOCOLORREG
+#  else
+
+typedef void * SEG16 ptr_16;
+typedef struct {
+	USHORT cb;
+	USHORT type;
+	USHORT firstcolorreg;
+	USHORT numcolorregs;
+	ptr_16 colorregaddr;
+} THUNKEDVIO;
+
+#  endif
+# endif
+
 static PCH saved_screen = NULL;
 static USHORT saved_lines = 0;
 static USHORT saved_cols = 0;
-
 static VIOMODEINFO scrnmode;	/* default screen mode	*/
 static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
+static bool can_change = FALSE;
 
 extern void PDC_get_keyboard_info(void);
 extern void PDC_set_keyboard_default(void);
@@ -140,6 +173,8 @@ int PDC_scr_open(int argc, char **argv)
 #else
 	USHORT totchars;
 #endif
+	short r, g, b;
+
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	SP = calloc(1, sizeof(SCREEN));
@@ -196,6 +231,8 @@ int PDC_scr_open(int argc, char **argv)
 	}
 
 	SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
+
+	can_change = (PDC_color_content(0, &r, &g, &b) == OK);
 
 	return OK;
 }
@@ -322,15 +359,83 @@ void PDC_save_screen_mode(int i)
 
 bool PDC_can_change_color(void)
 {
-	return FALSE;
+	return can_change;
 }
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
+#ifdef PDCTHUNK
+	THUNKEDVIO vcr;
+	USHORT palbuf[4];
+	unsigned char pal[3];
+	int rc;
+
+	/* Read single DAC register */
+
+	palbuf[0] = 8;
+	palbuf[1] = 0;
+	palbuf[2] = color;
+
+	rc = VioGetState(&palbuf, 0);
+	if (rc)
+		return ERR;
+
+	vcr.cb = sizeof(vcr);
+	vcr.type = 3;
+	vcr.firstcolorreg = palbuf[3];
+	vcr.numcolorregs = 1;
+	vcr.colorregaddr = PDCTHUNK(pal);
+
+	rc = VioGetState(&vcr, 0);
+	if (rc)
+		return ERR;
+
+	/* Scale and store */
+
+	*red = DIVROUND((unsigned)(pal[0]) * 1000, 63);
+	*green = DIVROUND((unsigned)(pal[1]) * 1000, 63);
+	*blue = DIVROUND((unsigned)(pal[2]) * 1000, 63);
+
+	return OK;
+#else
 	return ERR;
+#endif
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
+#ifdef PDCTHUNK
+	THUNKEDVIO vcr;
+	USHORT palbuf[4];
+	unsigned char pal[3];
+	int rc;
+
+	/* Scale */
+
+	pal[0] = DIVROUND((unsigned)red * 63, 1000);
+	pal[1] = DIVROUND((unsigned)green * 63, 1000);
+	pal[2] = DIVROUND((unsigned)blue * 63, 1000);
+
+	/* Set single DAC register */
+
+	palbuf[0] = 8;
+	palbuf[1] = 0;
+	palbuf[2] = color;
+
+	rc = VioGetState(&palbuf, 0);
+	if (rc)
+		return ERR;
+
+	vcr.cb = sizeof(vcr);
+	vcr.type = 3;
+	vcr.firstcolorreg = palbuf[3];
+	vcr.numcolorregs = 1;
+	vcr.colorregaddr = PDCTHUNK(pal);
+
+	rc = VioSetState(&vcr, 0);
+
+	return rc ? ERR : OK;
+#else
 	return ERR;
+#endif
 }

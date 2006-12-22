@@ -19,7 +19,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.70 2006/11/18 12:00:04 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.71 2006/12/22 14:47:26 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -715,7 +715,7 @@ bool PDC_can_change_color(void)
 	return (pdc_adapter == _VGACOLOR);
 }
 
-/* These are only valid when pdc_adapter == _vGACOLOR */
+/* These are only valid when pdc_adapter == _VGACOLOR */
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {

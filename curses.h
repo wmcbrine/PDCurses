@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.258 2006/12/20 02:34:17 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.259 2006/12/23 17:54:13 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -339,18 +339,19 @@ typedef struct
 } MOUSE_STATUS;
 
 
-#define BUTTON_RELEASED		0000
-#define BUTTON_PRESSED		0001
-#define BUTTON_CLICKED		0002
-#define BUTTON_DOUBLE_CLICKED	0003
-#define BUTTON_TRIPLE_CLICKED	0004
-#define BUTTON_MOVED		0005	/* PDCurses enhancement */
-#define WHEEL_SCROLLED		0006	/* PDCurses enhancement */
-#define BUTTON_ACTION_MASK	0007	/* PDCurses enhancement */
-#define BUTTON_SHIFT		0010	/* PDCurses enhancement */
-#define BUTTON_CONTROL		0020	/* PDCurses enhancement */
-#define BUTTON_ALT		0040	/* PDCurses enhancement */
-#define BUTTON_MODIFIER_MASK	0070	/* PDCurses enhancement */
+#define BUTTON_RELEASED		0x0000
+#define BUTTON_PRESSED		0x0001
+#define BUTTON_CLICKED		0x0002
+#define BUTTON_DOUBLE_CLICKED	0x0003
+#define BUTTON_TRIPLE_CLICKED	0x0004
+#define BUTTON_MOVED		0x0005	/* PDCurses */
+#define WHEEL_SCROLLED		0x0006	/* PDCurses */
+#define BUTTON_ACTION_MASK	0x0007	/* PDCurses */
+
+#define BUTTON_SHIFT		0x0008	/* PDCurses */
+#define BUTTON_CONTROL		0x0010	/* PDCurses */
+#define BUTTON_ALT		0x0020	/* PDCurses */
+#define BUTTON_MODIFIER_MASK	0x0038	/* PDCurses */
 
 #define MOUSE_X_POS		(Mouse_status.x)
 #define MOUSE_Y_POS		(Mouse_status.y)
@@ -366,10 +367,10 @@ typedef struct
  *                            100000 <- mouse wheel up
  *                           1000000 <- mouse wheel down
  */
-#define PDC_MOUSE_MOVED		 8
-#define PDC_MOUSE_POSITION	16
-#define PDC_MOUSE_WHEEL_UP	32
-#define PDC_MOUSE_WHEEL_DOWN	64
+#define PDC_MOUSE_MOVED		0x0008
+#define PDC_MOUSE_POSITION	0x0010
+#define PDC_MOUSE_WHEEL_UP	0x0020
+#define PDC_MOUSE_WHEEL_DOWN	0x0040
 #define A_BUTTON_CHANGED	(Mouse_status.changes & 7)
 #define MOUSE_MOVED		(Mouse_status.changes & PDC_MOUSE_MOVED)
 #define MOUSE_POS_REPORT	(Mouse_status.changes & PDC_MOUSE_POSITION)
@@ -379,30 +380,30 @@ typedef struct
 #define MOUSE_WHEEL_DOWN	(Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN)
 
 /* mouse bit-masks */
-#define BUTTON1_RELEASED	000000000001L
-#define BUTTON1_PRESSED		000000000002L
-#define BUTTON1_CLICKED		000000000004L
-#define BUTTON1_DOUBLE_CLICKED	000000000010L
-#define BUTTON1_TRIPLE_CLICKED	000000000020L
-#define BUTTON1_MOVED		000000000020L /* PDCurses enhancement */
-#define BUTTON2_RELEASED	000000000040L
-#define BUTTON2_PRESSED		000000000100L
-#define BUTTON2_CLICKED		000000000200L
-#define BUTTON2_DOUBLE_CLICKED	000000000400L
-#define BUTTON2_TRIPLE_CLICKED	000000001000L
-#define BUTTON2_MOVED		000000001000L /* PDCurses enhancement */
-#define BUTTON3_RELEASED	000000002000L
-#define BUTTON3_PRESSED		000000004000L
-#define BUTTON3_CLICKED		000000010000L
-#define BUTTON3_DOUBLE_CLICKED	000000020000L
-#define BUTTON3_TRIPLE_CLICKED	000000040000L
-#define BUTTON3_MOVED		000000040000L /* PDCurses enhancement */
-#define MOUSE_WHEEL_SCROLL	000000100000L /* PDCurses enhancement */
-#define ALL_MOUSE_EVENTS	000000777777L
-#define BUTTON_MODIFIER_SHIFT	000001000000L /* PDCurses enhancement */
-#define BUTTON_MODIFIER_CONTROL 000002000000L /* PDCurses enhancement */
-#define BUTTON_MODIFIER_ALT	000004000000L /* PDCurses enhancement */
-#define REPORT_MOUSE_POSITION	000010000000L
+#define BUTTON1_RELEASED	0x00000001L
+#define BUTTON1_PRESSED		0x00000002L
+#define BUTTON1_CLICKED		0x00000004L
+#define BUTTON1_DOUBLE_CLICKED	0x00000008L
+#define BUTTON1_TRIPLE_CLICKED	0x00000010L
+#define BUTTON1_MOVED		0x00000010L /* PDCurses */
+#define BUTTON2_RELEASED	0x00000020L
+#define BUTTON2_PRESSED		0x00000040L
+#define BUTTON2_CLICKED		0x00000080L
+#define BUTTON2_DOUBLE_CLICKED	0x00000100L
+#define BUTTON2_TRIPLE_CLICKED	0x00000200L
+#define BUTTON2_MOVED		0x00000200L /* PDCurses */
+#define BUTTON3_RELEASED	0x00000400L
+#define BUTTON3_PRESSED		0x00000800L
+#define BUTTON3_CLICKED		0x00001000L
+#define BUTTON3_DOUBLE_CLICKED	0x00002000L
+#define BUTTON3_TRIPLE_CLICKED	0x00004000L
+#define BUTTON3_MOVED		0x00004000L /* PDCurses */
+#define MOUSE_WHEEL_SCROLL	0x00008000L /* PDCurses */
+#define ALL_MOUSE_EVENTS	0x0000ffffL
+#define BUTTON_MODIFIER_SHIFT	0x00010000L /* PDCurses */
+#define BUTTON_MODIFIER_CONTROL 0x00020000L /* PDCurses */
+#define BUTTON_MODIFIER_ALT	0x00040000L /* PDCurses */
+#define REPORT_MOUSE_POSITION	0x00080000L
 
 /*----------------------------------------------------------------------
  *
@@ -587,9 +588,9 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_BLINK	(chtype)0x00400000
 # define A_BOLD		(chtype)0x00800000
 
-# define A_ATTRIBUTES	(chtype)0xFFFF0000
-# define A_CHARTEXT	(chtype)0x0000FFFF
-# define A_COLOR	(chtype)0xFF000000
+# define A_ATTRIBUTES	(chtype)0xffff0000
+# define A_CHARTEXT	(chtype)0x0000ffff
+# define A_COLOR	(chtype)0xff000000
 
 # define A_ITALIC	A_INVIS
 # define A_PROTECT	(A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
@@ -601,9 +602,9 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_REVERSE	(chtype)0x0200			/* X/Open   */
 # define A_BLINK	(chtype)0x0400			/* X/Open   */
 
-# define A_ATTRIBUTES	(chtype)0xFF00			/* X/Open   */
-# define A_CHARTEXT	(chtype)0x00FF			/* X/Open   */
-# define A_COLOR	(chtype)0xF800			/* System V */
+# define A_ATTRIBUTES	(chtype)0xff00			/* X/Open   */
+# define A_CHARTEXT	(chtype)0x00ff			/* X/Open   */
+# define A_COLOR	(chtype)0xf800			/* System V */
 
 # define A_ALTCHARSET	A_NORMAL			/* X/Open   */
 # define A_PROTECT	A_NORMAL			/* X/Open   */
@@ -1431,6 +1432,8 @@ int	getparx(WINDOW *);
 int	getpary(WINDOW *);
 int	getcurx(WINDOW *);
 int	getcury(WINDOW *);
+void	traceoff(void);
+void	traceon(void);
 char   *unctrl(chtype);
 
 int	mouse_set(unsigned long);
@@ -1466,8 +1469,6 @@ int	mvwinsrawch(WINDOW *, int, int, chtype);
 int	raw_output(bool);
 int	resize_term(int, int);
 WINDOW *resize_window(WINDOW *, int, int);
-void	traceoff(void);
-void	traceon(void);
 int	waddrawch(WINDOW *, chtype);
 int	winsrawch(WINDOW *, chtype);
 char	wordchar(void);

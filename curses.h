@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.260 2006/12/24 04:32:21 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.261 2006/12/24 16:48:52 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1454,6 +1454,7 @@ int	use_default_colors(void);
 int	wresize(WINDOW *, int, int);
 
 int	mouseinterval(int);
+bool	wenclose(const WINDOW *, int, int);
 
 /* PDCurses */
 

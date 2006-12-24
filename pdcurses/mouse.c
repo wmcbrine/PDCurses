@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.31 2006/12/24 04:49:53 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.32 2006/12/24 16:48:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -32,40 +32,39 @@ RCSID("$Id: mouse.c,v 1.31 2006/12/24 04:49:53 wmcbrine Exp $");
 	unsigned long getbmap(void);
 
 	int mouseinterval(int wait);
+	bool wenclose(const WINDOW *win, int y, int x);
 
   PDCurses Description:
 	These functions are intended to be based on Sys V mouse 
 	functions; however, those are undocumented.
 
-	The mouse_set(), mouse_on() and mouse_off() functions are 
-	analagous to the attrset(), attron() and attroff() functions.  
-	These functions set the mouse button events to trap.  The button 
-	masks used in these functions are defined in curses.h and can be 
-	or'ed together. They are the group of masks starting with 
-	BUTTON1_RELEASED.
+	mouse_set(), mouse_on() and mouse_off() are analagous to 
+	attrset(), attron() and attroff().  These functions set the 
+	mouse button events to trap.  The button masks used in these 
+	functions are defined in curses.h and can be or'ed together. 
+	They are the group of masks starting with BUTTON1_RELEASED.
 
-	The request_mouse_pos() function requests curses to fill in the
-	Mouse_status structure with the current state of the mouse.
+	request_mouse_pos() requests curses to fill in the Mouse_status 
+	structure with the current state of the mouse.
 
-	The map_button() function enables the mouse requested mouse 
-	action to activate the Soft Label Keys if the mouse action 
-	occurs over the area of the screen where the Soft Label Keys are 
-	displayed.  The mouse actions are defined in curses.h and are 
-	the group that start with BUTTON_RELEASED.
+	map_button() enables the specified mouse action to activate the 
+	Soft Label Keys if the action occurs over the area of the screen 
+	where the Soft Label Keys are displayed.  The mouse actions are 
+	defined in curses.h in the group that starts with BUTTON_RELEASED.
 
-	The wmouse_position() function determines if the current mouse 
-	position is within the window passed as an argument.  If the 
-	mouse is outside the current window, -1 is returned in the y and 
-	x arguments otherwise the y and x coordinates of the mouse 
+	wmouse_position() determines if the current mouse position is 
+	within the window passed as an argument.  If the mouse is 
+	outside the current window, -1 is returned in the y and x 
+	arguments otherwise the y and x coordinates of the mouse 
 	(relative to the top left corner of the window) are returned in 
 	y and x.
 
-	The getmouse() function returns the current status of the trapped
-	mouse buttons as set by mouse_set() or mouse_on().
+	getmouse() returns the current status of the trapped mouse 
+	buttons as set by mouse_set() or mouse_on().
 
-	The getbmap() function returns the current status of the button 
-	action used to map a mouse action to the Soft Label Keys as set 
-	by the map_button() function.
+	getbmap() returns the current status of the button action used 
+	to map a mouse action to the Soft Label Keys as set by the 
+	map_button() function.
 
 	Functions from ncurses: mouseinterval().
 
@@ -83,6 +82,9 @@ RCSID("$Id: mouse.c,v 1.31 2006/12/24 04:49:53 wmcbrine Exp $");
 	mouseinterval() is the old timeout. To check the old value
 	without setting a new one, call it with a parameter of -1.
 
+	wenclose() reports whether the given screen-relative y, x 
+	coordinates fall within the given window.
+
   Portability				     X/Open    BSD    SYS V
 	mouse_set				-	-      4.0
 	mouse_on				-	-      4.0
@@ -93,6 +95,7 @@ RCSID("$Id: mouse.c,v 1.31 2006/12/24 04:49:53 wmcbrine Exp $");
 	getmouse				-	-      4.0
 	getbmap					-	-      4.0
 	mouseinterval				-	-	-
+	wenclose				-	-	-
 
 **man-end****************************************************************/
 
@@ -152,16 +155,14 @@ void wmouse_position(WINDOW *win, int *y, int *x)
 		return;
 	}
 
-	if (win->_begy > MOUSE_Y_POS || win->_begx > MOUSE_X_POS 
-	    || win->_begy + win->_maxy <= MOUSE_Y_POS
-	    || win->_begx + win->_maxx <= MOUSE_X_POS)
-	{
-		*x = *y = -1;
-	}
-	else
+	if (wenclose(win, MOUSE_Y_POS, MOUSE_X_POS))
 	{
 		*x = MOUSE_X_POS - win->_begx;
 		*y = MOUSE_Y_POS - win->_begy;
+	}
+	else
+	{
+		*x = *y = -1;
 	}
 }
 
@@ -198,4 +199,15 @@ int mouseinterval(int wait)
 		old_wait = 100;
 
 	return old_wait;
+}
+
+bool wenclose(const WINDOW *win, int y, int x)
+{
+	if (!win)
+		return FALSE;
+
+	return (y >= win->_begy &&
+		x >= win->_begx &&
+		y < win->_begy + win->_maxy &&
+		x < win->_begx + win->_maxx);
 }

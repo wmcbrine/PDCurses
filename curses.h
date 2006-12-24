@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.259 2006/12/23 17:54:13 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.260 2006/12/24 04:32:21 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -319,15 +319,12 @@ typedef unsigned short chtype;	/* 8-bit attr + 8-bit char	*/
 typedef chtype cchar_t;
 #endif
 
-/*----------------------------------------------------------------------
- * This defines a new type for attributes.
- *
- */
-
 typedef chtype attr_t;
 
 /*----------------------------------------------------------------------
- * Define our mouse interface - same as SYSVR4 (with extensions)
+ *
+ *	PDCurses Mouse Interface -- SYSVR4, with extensions
+ *
  */
 
 typedef struct
@@ -407,7 +404,7 @@ typedef struct
 
 /*----------------------------------------------------------------------
  *
- *	PDCurses Structure Definitions:
+ *	PDCurses Structure Definitions
  *
  */
 
@@ -468,20 +465,23 @@ typedef struct
 	bool	mono;		/* TRUE if current screen is mono	*/
 	bool	resized;	/* TRUE if TERM has been resized	*/
 	bool	orig_attr;	/* TRUE if we have the original colors	*/
-	short	orig_fore;	/* Original screen foreground color	*/
-	short	orig_back;	/* Original screen foreground color	*/
+	short	orig_fore;	/* original screen foreground color	*/
+	short	orig_back;	/* original screen foreground color	*/
 	int	cursrow;	/* position of physical cursor		*/
 	int	curscol;	/* position of physical cursor		*/
-	int	visibility;	/* Visibility of cursor			*/
-	int	orig_cursor;	/* Original cursor size			*/
-	int	lines;		/* New value for LINES			*/
-	int	cols;		/* New value for COLS			*/
+	int	visibility;	/* visibility of cursor			*/
+	int	orig_cursor;	/* original cursor size			*/
+	int	lines;		/* new value for LINES			*/
+	int	cols;		/* new value for COLS			*/
 	unsigned long _trap_mbe;	/* trap these mouse button events */
 	unsigned long _map_mbe_to_key;	/* map mouse buttons to slk	*/
-	int	slklines;		/* Lines in use by slk_init()	*/
+	int	mouse_wait;		/* time to wait (in ms) for a
+					   button release after a press, in 
+					   order to count it as a click	*/
+	int	slklines;		/* lines in use by slk_init()	*/
 	WINDOW *slk_winptr;		/* window for slk		*/
-	int	linesrippedoff;		/* Lines ripped off via ripoffline() */
-	int	linesrippedoffontop;	/* Lines ripped off on 
+	int	linesrippedoff;		/* lines ripped off via ripoffline() */
+	int	linesrippedoffontop;	/* lines ripped off on 
 					   top via ripoffline()		*/
 	int	delaytenths;		/* 1/10ths second to wait block
 					   getch() for			*/
@@ -506,7 +506,7 @@ typedef struct
 	int	sb_cur_y;
 	int	sb_cur_x;
 #endif
-	short	line_color;	/* Color of line attributes - default white */
+	short	line_color;	/* color of line attributes - default -1 */
 } SCREEN;
 
 
@@ -1052,7 +1052,7 @@ extern chtype acs_map[];
 
 /*----------------------------------------------------------------------
  *
- *	PDCurses function declarations
+ *	PDCurses Function Declarations
  *
  */
 
@@ -1452,6 +1452,8 @@ const char *curses_version(void);
 bool	has_key(int);
 int	use_default_colors(void);
 int	wresize(WINDOW *, int, int);
+
+int	mouseinterval(int);
 
 /* PDCurses */
 

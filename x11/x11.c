@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.72 2006/12/20 03:27:10 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.73 2006/12/24 04:32:22 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2035,7 +2035,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 		}
 		else
 		{
-			napms(xc_app_data.clickPeriod);
+			napms(SP->mouse_wait);
 			event->type = ButtonRelease;
 			XSendEvent(event->xbutton.display, 
 				event->xbutton.window, True, 0, event);
@@ -3046,6 +3046,8 @@ int XCursesSetupX(int argc, char *argv[])
 	SP->XcurscrSize = XCURSCR_SIZE;
 	SP->lines = XCursesLINES;
 	SP->cols = XCursesCOLS;
+
+	SP->mouse_wait = xc_app_data.clickPeriod;
 
 	PDC_LOG(("%s:SHM size for curscr %d\n", XCLOGMSG, SP->XcurscrSize));
 

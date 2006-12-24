@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.61 2006/12/22 14:46:54 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.62 2006/12/24 04:32:22 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -207,6 +207,8 @@ int PDC_scr_open(int argc, char **argv)
 #endif
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
+
+	SP->mouse_wait = 100;
 
 	/* This code for preserving the current screen */
 

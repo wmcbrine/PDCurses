@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.99 2006/12/05 23:46:46 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.100 2006/12/24 04:32:22 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -535,7 +535,7 @@ static int _process_mouse_event(void)
 
 		if (!event_count)
 		{
-			napms(100);
+			napms(SP->mouse_wait);
 
 			GetNumberOfConsoleInputEvents(pdc_con_in,
 				&event_count);

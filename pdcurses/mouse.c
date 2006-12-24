@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.29 2006/11/11 20:24:36 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.30 2006/12/24 04:32:22 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -22,14 +22,16 @@ RCSID("$Id: mouse.c,v 1.29 2006/11/11 20:24:36 wmcbrine Exp $");
 
   Synopsis:
 
-	int mouse_set(long);
-	int mouse_on(long);
-	int mouse_off(long);
+	int mouse_set(unsigned long mbe);
+	int mouse_on(unsigned long mbe);
+	int mouse_off(unsigned long mbe);
 	int request_mouse_pos(void);
-	int map_button(unsigned long);
-	void wmouse_position(WINDOW *, int *, int *);
+	int map_button(unsigned long button);
+	void wmouse_position(WINDOW *win, int *y, int *x);
 	unsigned long getmouse(void);
 	unsigned long getbmap(void);
+
+	int mouseinterval(int wait);
 
   PDCurses Description:
 	These functions are intended to be based on Sys V mouse 
@@ -161,4 +163,25 @@ unsigned long getbmap(void)
 	PDC_LOG(("getbmap() - called\n"));
 
 	return SP->_map_mbe_to_key;
+}
+
+/* ncurses mouse interface */
+
+int mouseinterval(int wait)
+{
+	int old_wait;
+
+	PDC_LOG(("mouseinterval() - called: %d\n", wait));
+
+	if (SP)
+	{
+		old_wait = SP->mouse_wait;
+
+		if (wait >= 0 && wait <= 1000)
+			SP->mouse_wait = wait;
+	}
+	else
+		old_wait = 100;
+
+	return old_wait;
 }

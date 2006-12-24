@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.73 2006/12/20 02:35:48 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.74 2006/12/24 04:32:22 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -336,6 +336,8 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->cols = ((str = getenv("COLS")) != NULL) ?
 		atoi(str) : PDC_get_columns();
+
+	SP->mouse_wait = 100;
 
 	if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
 	{

@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.32 2006/12/24 16:48:53 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.33 2006/12/24 21:08:06 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -55,7 +55,7 @@ RCSID("$Id: mouse.c,v 1.32 2006/12/24 16:48:53 wmcbrine Exp $");
 	wmouse_position() determines if the current mouse position is 
 	within the window passed as an argument.  If the mouse is 
 	outside the current window, -1 is returned in the y and x 
-	arguments otherwise the y and x coordinates of the mouse 
+	arguments; otherwise the y and x coordinates of the mouse 
 	(relative to the top left corner of the window) are returned in 
 	y and x.
 
@@ -66,7 +66,7 @@ RCSID("$Id: mouse.c,v 1.32 2006/12/24 16:48:53 wmcbrine Exp $");
 	to map a mouse action to the Soft Label Keys as set by the 
 	map_button() function.
 
-	Functions from ncurses: mouseinterval().
+	Functions from ncurses: mouseinterval(), wenclose().
 
 	mouseinterval() sets the timeout for a mouse click. On all
 	current platforms, PDCurses receives mouse button press and
@@ -146,23 +146,19 @@ void wmouse_position(WINDOW *win, int *y, int *x)
 {
 	PDC_LOG(("wmouse_position() - called\n"));
 
-	/* if the current mouse position is outside the provided window, 
-	   put -1 in x and y */
-
-	if (!win)
+	if (win && wenclose(win, MOUSE_Y_POS, MOUSE_X_POS))
 	{
-		*y = *x = -1;
-		return;
-	}
-
-	if (wenclose(win, MOUSE_Y_POS, MOUSE_X_POS))
-	{
-		*x = MOUSE_X_POS - win->_begx;
-		*y = MOUSE_Y_POS - win->_begy;
+		if (y)
+			*y = MOUSE_Y_POS - win->_begy;
+		if (x)
+			*x = MOUSE_X_POS - win->_begx;
 	}
 	else
 	{
-		*x = *y = -1;
+		if (y)
+			*y = -1;
+		if (x)
+			*x = -1;
 	}
 }
 
@@ -203,11 +199,11 @@ int mouseinterval(int wait)
 
 bool wenclose(const WINDOW *win, int y, int x)
 {
+	PDC_LOG(("wenclose() - called: %p %d %d\n", win, y, x));
+
 	if (!win)
 		return FALSE;
 
-	return (y >= win->_begy &&
-		x >= win->_begx &&
-		y < win->_begy + win->_maxy &&
-		x < win->_begx + win->_maxx);
+	return (y >= win->_begy && y < win->_begy + win->_maxy &&
+		x >= win->_begx && x < win->_begx + win->_maxx);
 }

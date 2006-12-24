@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.30 2006/12/24 04:32:22 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.31 2006/12/24 04:49:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -67,8 +67,21 @@ RCSID("$Id: mouse.c,v 1.30 2006/12/24 04:32:22 wmcbrine Exp $");
 	action used to map a mouse action to the Soft Label Keys as set 
 	by the map_button() function.
 
-  PDCurses Errors:
-	None.
+	Functions from ncurses: mouseinterval().
+
+	mouseinterval() sets the timeout for a mouse click. On all
+	current platforms, PDCurses receives mouse button press and
+	release events, but must synthesize click events. It does this
+	by checking whether a release event is queued up after a press
+	event. If it gets a press event, and there are no more events
+	waiting, it will wait for the timeout interval, then check again
+	for a release. A press followed by a release is reported as
+	BUTTON_CLICKED; otherwise it's passed through as BUTTON_PRESSED.
+	The default timeout is 100ms; valid values are 0 (no clicks
+	reported) through 1000ms. In x11, the timeout can also be set
+	via the clickPeriod resource. The return value from
+	mouseinterval() is the old timeout. To check the old value
+	without setting a new one, call it with a parameter of -1.
 
   Portability				     X/Open    BSD    SYS V
 	mouse_set				-	-      4.0
@@ -79,6 +92,7 @@ RCSID("$Id: mouse.c,v 1.30 2006/12/24 04:32:22 wmcbrine Exp $");
 	wmouse_position				-	-      4.0
 	getmouse				-	-      4.0
 	getbmap					-	-      4.0
+	mouseinterval				-	-	-
 
 **man-end****************************************************************/
 

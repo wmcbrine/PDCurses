@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: kernel.c,v 1.66 2006/11/05 07:13:40 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.67 2006/12/24 04:33:29 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -237,7 +237,8 @@ int napms(int ms)
 {
 	PDC_LOG(("napms() - called: ms=%d\n", ms));
 
-	PDC_napms(ms);
+	if (ms)
+		PDC_napms(ms);
 
 	return OK;
 }

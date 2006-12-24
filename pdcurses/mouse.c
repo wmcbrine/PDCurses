@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.33 2006/12/24 21:08:06 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.34 2006/12/24 23:31:37 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,6 +33,8 @@ RCSID("$Id: mouse.c,v 1.33 2006/12/24 21:08:06 wmcbrine Exp $");
 
 	int mouseinterval(int wait);
 	bool wenclose(const WINDOW *win, int y, int x);
+	bool wmouse_trafo(const WINDOW *win, int *y, int *x, bool to_screen);
+	bool mouse_trafo(int *y, int *x, bool to_screen);
 
   PDCurses Description:
 	These functions are intended to be based on Sys V mouse 
@@ -66,7 +68,8 @@ RCSID("$Id: mouse.c,v 1.33 2006/12/24 21:08:06 wmcbrine Exp $");
 	to map a mouse action to the Soft Label Keys as set by the 
 	map_button() function.
 
-	Functions from ncurses: mouseinterval(), wenclose().
+	Functions emulating ncurses: mouseinterval(), wenclose(),
+	wmouse_trafo(), mouse_trafo().
 
 	mouseinterval() sets the timeout for a mouse click. On all
 	current platforms, PDCurses receives mouse button press and
@@ -85,6 +88,15 @@ RCSID("$Id: mouse.c,v 1.33 2006/12/24 21:08:06 wmcbrine Exp $");
 	wenclose() reports whether the given screen-relative y, x 
 	coordinates fall within the given window.
 
+	wmouse_trafo() converts between screen-relative and window- 
+	relative coordinates. A to_screen parameter of TRUE means to 
+	convert from window to screen; otherwise the reverse. The 
+	function returns FALSE if the coordinates aren't within the 
+	window, or if any of the parameters are NULL. The coordinates 
+	have been converted when the function returns TRUE.
+
+	mouse_trafo() is the stdscr version of wmouse_trafo().
+
   Portability				     X/Open    BSD    SYS V
 	mouse_set				-	-      4.0
 	mouse_on				-	-      4.0
@@ -96,6 +108,8 @@ RCSID("$Id: mouse.c,v 1.33 2006/12/24 21:08:06 wmcbrine Exp $");
 	getbmap					-	-      4.0
 	mouseinterval				-	-	-
 	wenclose				-	-	-
+	wmouse_trafo				-	-	-
+	mouse_trafo				-	-	-
 
 **man-end****************************************************************/
 
@@ -184,15 +198,10 @@ int mouseinterval(int wait)
 
 	PDC_LOG(("mouseinterval() - called: %d\n", wait));
 
-	if (SP)
-	{
-		old_wait = SP->mouse_wait;
+	old_wait = SP->mouse_wait;
 
-		if (wait >= 0 && wait <= 1000)
-			SP->mouse_wait = wait;
-	}
-	else
-		old_wait = 100;
+	if (wait >= 0 && wait <= 1000)
+		SP->mouse_wait = wait;
 
 	return old_wait;
 }
@@ -201,9 +210,51 @@ bool wenclose(const WINDOW *win, int y, int x)
 {
 	PDC_LOG(("wenclose() - called: %p %d %d\n", win, y, x));
 
-	if (!win)
+	return (win &&
+		y >= win->_begy && y < win->_begy + win->_maxy &&
+		x >= win->_begx && x < win->_begx + win->_maxx);
+}
+
+bool wmouse_trafo(const WINDOW *win, int *y, int *x, bool to_screen)
+{
+	int newy, newx;
+
+	PDC_LOG(("wmouse_trafo() - called\n"));
+
+	if (!win || !y || !x)
 		return FALSE;
 
-	return (y >= win->_begy && y < win->_begy + win->_maxy &&
-		x >= win->_begx && x < win->_begx + win->_maxx);
+	newy = *y;
+	newx = *x;
+
+	if (to_screen)
+	{
+		newy += win->_begy;
+		newx += win->_begx;
+
+		if (!wenclose(win, newy, newx))
+			return FALSE;
+	}
+	else
+	{
+		if (wenclose(win, newy, newx))
+		{
+			newy -= win->_begy;
+			newx -= win->_begx;
+		}
+		else
+			return FALSE;
+	}
+
+	*y = newy;
+	*x = newx;
+
+	return TRUE;
+}
+
+bool mouse_trafo(int *y, int *x, bool to_screen)
+{
+	PDC_LOG(("mouse_trafo() - called\n"));
+
+	return wmouse_trafo(stdscr, y, x, to_screen);
 }

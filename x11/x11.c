@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.73 2006/12/24 04:32:22 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.74 2006/12/24 06:07:25 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2100,7 +2100,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 		    if (!handle_real_release)
 		    {
 			if ((event->xbutton.time - 
-			    last_button_press_time) < 100 && 
+			    last_button_press_time) < SP->mouse_wait && 
 			    (event->xbutton.time != 
 			    last_button_press_time))
 			{

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.100 2006/12/24 04:32:22 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.101 2006/12/24 06:07:25 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -528,7 +528,8 @@ static int _process_mouse_event(void)
 		pdc_mouse_status.button[i] =
 			(MEV.dwButtonState & button_mask[i]) ? action : 0;
 
-	if (action == BUTTON_PRESSED && MEV.dwButtonState & 7)
+	if (action == BUTTON_PRESSED && MEV.dwButtonState & 7 &&
+	    SP->mouse_wait)
 	{
 		/* Check for a click -- a PRESS followed immediately by
 		   a release */

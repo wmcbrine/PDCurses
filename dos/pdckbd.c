@@ -26,7 +26,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.72 2006/12/24 04:32:21 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.73 2006/12/24 06:07:25 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*
@@ -307,18 +307,24 @@ static int _process_mouse_events(void)
 
 				if (!button[i].released)
 				{
-					PDCREGS regs;
+					if (SP->mouse_wait)
+					{
+						PDCREGS regs;
 
-					napms(SP->mouse_wait);
+						napms(SP->mouse_wait);
 
-					regs.W.ax = 6;
-					regs.W.bx = button_map[i];
-					PDCINT(0x33, regs);
+						regs.W.ax = 6;
+						regs.W.bx = button_map[i];
+						PDCINT(0x33, regs);
 
-					pdc_mouse_status.button[i] = 
-						regs.W.bx ?
-						BUTTON_CLICKED : 
-						BUTTON_PRESSED;
+						pdc_mouse_status.button[i] = 
+							regs.W.bx ?
+							BUTTON_CLICKED : 
+							BUTTON_PRESSED;
+					}
+					else
+						pdc_mouse_status.button[i] =
+							BUTTON_PRESSED;
 				}
 				else
 					pdc_mouse_status.button[i] = 

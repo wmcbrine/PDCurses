@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.75 2006/12/25 17:43:04 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.76 2006/12/25 18:28:16 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2147,6 +2147,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			    {
 				_selection_off();
 				_selection_on(MOUSE_X_POS, MOUSE_Y_POS);
+				remove_release = True;
+				send_key = FALSE;
 			    }
 
 			    handle_real_release = True;

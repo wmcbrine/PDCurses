@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: move.c,v 1.22 2006/11/05 04:24:15 wmcbrine Exp $");
+RCSID("$Id: move.c,v 1.23 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                          move
+  Name:								move
 
   Synopsis:
 	int move(int y, int x);

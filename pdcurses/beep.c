@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: beep.c,v 1.27 2006/11/05 04:33:00 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                          beep
+  Name:								beep
 
   Synopsis:
 	int beep(void);

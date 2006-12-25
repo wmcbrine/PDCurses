@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.27 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: scroll.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                        scroll
+  Name:								scroll
 
   Synopsis:
 	int scroll(WINDOW *win);

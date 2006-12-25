@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.44 2006/11/06 11:26:21 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.45 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                        border
+  Name:								border
 
   Synopsis:
 	int border(chtype ls, chtype rs, chtype ts, chtype bs, chtype tl, 

@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.27 2006/11/05 04:23:36 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                       overlay
+  Name:								overlay
 
   Synopsis:
 	int overlay(const WINDOW *src_w, WINDOW *dst_w)

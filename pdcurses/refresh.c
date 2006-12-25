@@ -15,11 +15,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: refresh.c,v 1.43 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.44 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                       refresh
+  Name:								refresh
 
   Synopsis:
 	int refresh(void);

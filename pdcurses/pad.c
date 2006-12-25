@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.40 2006/12/08 03:04:41 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.41 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -24,7 +24,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
 /*man-start**************************************************************
 
-  Name:                                                           pad
+  Name:								pad
 
   Synopsis:
 	WINDOW *newpad(int nlines, int ncols);

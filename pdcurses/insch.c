@@ -14,11 +14,11 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.36 2006/12/18 21:47:40 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.37 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                         insch
+  Name:								insch
 
   Synopsis:
 	int insch(chtype ch);

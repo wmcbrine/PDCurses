@@ -14,11 +14,11 @@
 #include <curspriv.h>
 #include <term.h>
 
-RCSID("$Id: terminfo.c,v 1.28 2006/10/23 05:03:31 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.29 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                      terminfo
+  Name:								terminfo
 
   Synopsis:
 	int mvcur(int oldrow, int oldcol, int newrow, int newcol);

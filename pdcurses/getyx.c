@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getyx.c,v 1.21 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: getyx.c,v 1.22 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                         getyx
+  Name:								getyx
 
   Synopsis:
 	void getyx(WINDOW *win, int y, int x);

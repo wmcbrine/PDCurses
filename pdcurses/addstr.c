@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addstr.c,v 1.35 2006/12/08 06:21:26 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.36 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                        addstr
+  Name:								addstr
 
   Synopsis:
 	int addstr(const char *str);

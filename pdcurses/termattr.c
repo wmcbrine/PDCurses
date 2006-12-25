@@ -15,11 +15,11 @@
 #include <string.h>
 #include <limits.h>
 
-RCSID("$Id: termattr.c,v 1.46 2006/11/05 05:38:47 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.47 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                     termattr
+  Name:								termattr
 
   Synopsis:
 	int baudrate(void);

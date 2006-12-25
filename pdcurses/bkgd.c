@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: bkgd.c,v 1.32 2006/11/05 07:27:16 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.33 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                          bkgd
+  Name:								bkgd
 
   Synopsis:
 	int bkgd(chtype ch);

@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: keyname.c,v 1.1 2006/12/07 18:39:31 wmcbrine Exp $");
+RCSID("$Id: keyname.c,v 1.2 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                          util
+  Name:								util
 
   Synopsis:
 	char *keyname(int key);

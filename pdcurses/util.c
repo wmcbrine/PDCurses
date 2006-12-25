@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.57 2006/12/08 06:21:26 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.58 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                          util
+  Name:								util
 
   Synopsis:
 	char *unctrl(chtype c);

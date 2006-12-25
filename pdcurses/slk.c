@@ -14,11 +14,11 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.45 2006/11/02 16:07:18 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.46 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                          slk
+  Name:								slk
 
   Synopsis:
 	int slk_init(int fmt);

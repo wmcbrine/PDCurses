@@ -15,11 +15,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: scr_dump.c,v 1.22 2006/12/08 01:51:18 wmcbrine Exp $");
+RCSID("$Id: scr_dump.c,v 1.23 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                       scr_dump
+  Name:								scr_dump
 
   Synopsis:
 	int putwin(WINDOW *win, FILE *filep);

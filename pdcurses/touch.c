@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: touch.c,v 1.23 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: touch.c,v 1.24 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                         touch
+  Name:								touch
 
   Synopsis:
 	int touchwin(WINDOW *win);

@@ -14,11 +14,11 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.53 2006/12/09 09:14:46 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.54 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                        window
+  Name:								window
 
   Synopsis:
 	WINDOW *newwin(int nlines, int ncols, int begy, int begx);

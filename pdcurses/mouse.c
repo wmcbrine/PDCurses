@@ -14,11 +14,11 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.35 2006/12/25 14:04:52 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.36 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                         mouse
+  Name:								mouse
 
   Synopsis:
 

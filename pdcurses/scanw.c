@@ -27,11 +27,11 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 # define vsscanf _pdc_vsscanf
 #endif
 
-RCSID("$Id: scanw.c,v 1.33 2006/11/05 07:13:40 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.34 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                         scanw
+  Name:								scanw
 
   Synopsis:
 	int scanw(const char *fmt, ...);

@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: kernel.c,v 1.67 2006/12/24 04:33:29 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.68 2006/12/25 14:27:12 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -29,7 +29,7 @@ enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 
 /*man-start**************************************************************
 
-  Name:                                                        kernel
+  Name:								kernel
 
   Synopsis:
 	int def_prog_mode(void);

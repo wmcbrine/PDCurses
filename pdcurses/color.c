@@ -15,11 +15,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.73 2006/12/20 03:52:43 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.74 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                         color
+  Name:								color
 
   Synopsis:
 	int start_color(void);

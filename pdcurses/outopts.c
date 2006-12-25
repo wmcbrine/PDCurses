@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.31 2006/11/05 04:23:36 wmcbrine Exp $");
+RCSID("$Id: outopts.c,v 1.32 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                       outopts
+  Name:								outopts
 
   Synopsis:
 	int clearok(WINDOW *win, bool bf);

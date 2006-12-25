@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.29 2006/12/18 21:37:57 wmcbrine Exp $");
+RCSID("$Id: deleteln.c,v 1.30 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                      deleteln
+  Name:								deleteln
 
   Synopsis:
 	int deleteln(void);

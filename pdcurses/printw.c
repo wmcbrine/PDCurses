@@ -17,11 +17,11 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: printw.c,v 1.32 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: printw.c,v 1.33 2006/12/25 14:27:13 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                        printw
+  Name:								printw
 
   Synopsis:
 	int printw(const char *fmt, ...);

@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.94 2006/12/17 03:44:59 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.95 2006/12/25 14:27:12 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
 
@@ -33,7 +33,7 @@ extern char linesrippedoff;
 
 /*man-start**************************************************************
 
-  Name:                                                       initscr
+  Name:								initscr
 
   Synopsis:
 	WINDOW *initscr(void);

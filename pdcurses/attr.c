@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.33 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.34 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                          attr
+  Name:								attr
 
   Synopsis:
 	int attroff(chtype attrs);

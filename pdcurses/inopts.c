@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inopts.c,v 1.34 2006/11/05 07:13:40 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.35 2006/12/25 14:27:12 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:                                                        inopts
+  Name:								inopts
 
   Synopsis:
 	int cbreak(void);

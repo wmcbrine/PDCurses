@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.262 2006/12/24 23:31:37 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.263 2006/12/25 14:12:18 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1489,6 +1489,7 @@ int	sb_get_vert(int *, int *, int *);
 int	sb_refresh(void);
 #endif
 
+void	PDC_debug(const char *, ...);
 int	PDC_ungetch(int);
 int	PDC_set_blink(bool);
 int	PDC_set_line_color(short);

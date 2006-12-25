@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.142 2006/12/08 01:04:21 uid27921 Exp $ */
+/* $Id: curspriv.h,v 1.143 2006/12/25 14:12:18 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -106,7 +106,6 @@ void	PDC_slk_initialize(void);
 void	PDC_sync(WINDOW *);
 
 #ifdef PDCDEBUG
-void PDC_debug(const char *, ...);
 # define PDC_LOG(x) if (pdc_trace_on) PDC_debug x
 # define RCSID(x) static const char *rcsid = x
 #else

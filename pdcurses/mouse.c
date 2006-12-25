@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.34 2006/12/24 23:31:37 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.35 2006/12/25 14:04:52 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,8 +37,11 @@ RCSID("$Id: mouse.c,v 1.34 2006/12/24 23:31:37 wmcbrine Exp $");
 	bool mouse_trafo(int *y, int *x, bool to_screen);
 
   PDCurses Description:
-	These functions are intended to be based on Sys V mouse 
-	functions; however, those are undocumented.
+	Classic PDCurses mouse interface: mouse_set(), mouse_on(), 
+	mouse_off(), request_mouse_pos(), map_button(), 
+	wmouse_position(), getmouse(), and getbmap(). These functions 
+	are intended to be based on Sys V mouse functions; however, 
+	those are undocumented.
 
 	mouse_set(), mouse_on() and mouse_off() are analagous to 
 	attrset(), attron() and attroff().  These functions set the 

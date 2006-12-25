@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.74 2006/12/24 06:07:25 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.75 2006/12/25 17:43:04 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -418,19 +418,8 @@ static const char *default_translations =
 {
 	"<Key>: XCursesKeyPress() \n" \
 	"<KeyUp>: XCursesKeyPress() \n" \
-	"<Btn1Down>: XCursesButton() \n" \
-	"!Ctrl <Btn2Down>: XCursesButton() \n" \
-	"!Shift <Btn2Down>: XCursesButton() \n" \
-	"!Ctrl <Btn2Up>: XCursesButton() \n" \
-	"!Shift <Btn2Up>: XCursesButton() \n" \
-	"<Btn1Up>: XCursesButton() \n" \
-	"<Btn2Down>,<Btn2Up>: XCursesPasteSelection() \n" \
-	"<Btn3Up>: XCursesButton() \n" \
-	"<Btn3Down>: XCursesButton() \n" \
-	"<Btn4Up>: XCursesButton() \n" \
-	"<Btn4Down>: XCursesButton() \n" \
-	"<Btn5Up>: XCursesButton() \n" \
-	"<Btn5Down>: XCursesButton() \n" \
+	"<BtnDown>: XCursesButton() \n" \
+	"<BtnUp>: XCursesButton() \n" \
 	"<BtnMotion>: XCursesButton()"
 };
 
@@ -2018,6 +2007,16 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			return;
 		}
 
+		if (button_no == 2 &&
+		    (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
+		{
+			XCursesPasteSelection(drawing, (XButtonEvent *)event);
+
+			remove_release = TRUE;
+
+			return;
+		}
+
 		remove_release = False;
 		handle_real_release = False;
 
@@ -2057,9 +2056,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 		MOUSE_Y_POS = (event->xbutton.y - xc_app_data.borderWidth) / 
 			font_height;
 
-		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
-		    && !(event->xbutton.state & ControlMask)
-		    && !(event->xbutton.state & Mod1Mask))
+		if (button_no == 1 &&
+		    (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
 		{
 			_selection_extend(MOUSE_X_POS, MOUSE_Y_POS);
 			send_key = FALSE;
@@ -2113,11 +2111,9 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 			    BUTTON_STATUS(button_no) = BUTTON_CLICKED;
 
-			    if (button_no == 1
-				&& !(event->xbutton.state & ShiftMask)
-				&& !(event->xbutton.state & ControlMask)
-				&& !(event->xbutton.state & Mod1Mask)
-				&& mouse_selection)
+			    if (button_no == 1 && mouse_selection &&
+				(!SP->_trap_mbe ||
+				(event->xbutton.state & ShiftMask)))
 			    {
 				send_key = FALSE;
 
@@ -2146,10 +2142,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 			    BUTTON_STATUS(button_no) = BUTTON_PRESSED;
 
-			    if (button_no == 1
-				&& !(event->xbutton.state & ShiftMask)
-				&& !(event->xbutton.state & ControlMask)
-				&& !(event->xbutton.state & Mod1Mask))
+			    if (button_no == 1 && (!SP->_trap_mbe || 
+				(event->xbutton.state & ShiftMask)))
 			    {
 				_selection_off();
 				_selection_on(MOUSE_X_POS, MOUSE_Y_POS);
@@ -2170,9 +2164,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
 		BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
-		if (button_no == 1 && !(event->xbutton.state & ShiftMask)
-		    && !(event->xbutton.state & ControlMask)
-		    && !(event->xbutton.state & Mod1Mask) && mouse_selection)
+		if (button_no == 1 && mouse_selection &&
+		    (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
 		{
 		    send_key = FALSE;
 

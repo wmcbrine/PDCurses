@@ -177,22 +177,11 @@ translations:      Translations enable the user to customise the action
 		   button is pressed.  The translations are similar to
 		   those used by xterm.
 		   Defaults:
-			<Key>:			XCursesKeyPress()
-			<KeyUp>:		XCursesKeyPress()
-			<Btn1Down>:		XCursesButton()
-			!Ctrl <Btn2Down>:	XCursesButton()
-			!Shift <Btn2Down>:	XCursesButton()
-			!Ctrl <Btn2Up>:		XCursesButton()
-			!Shift <Btn2Up>:	XCursesButton()
-			<Btn1Up>:		XCursesButton()
-			<Btn2Down>,<Btn2Up>:	XCursesPasteSelection()
-			<Btn3Up>:		XCursesButton()
-			<Btn3Down>:		XCursesButton()
-			<Btn4Up>:		XCursesButton()
-			<Btn4Down>:		XCursesButton()
-			<Btn5Up>:		XCursesButton()
-			<Btn5Down>:		XCursesButton()
-			<BtnMotion>:		XCursesButton()
+			<Key>:		XCursesKeyPress()
+			<KeyUp>:	XCursesKeyPress()
+			<BtnDown>:	XCursesButton()
+			<BtnUp>:	XCursesButton()
+			<BtnMotion>:	XCursesButton()
 
 		   The most useful action for KeyPress translations is 
 		   string(). The argument to the string() action can be 

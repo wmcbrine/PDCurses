@@ -57,7 +57,7 @@ clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
 inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o keyname.o \
 mouse.o move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o \
 scr_dump.o scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o \
-pdcdebug.o
+debug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
 pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
@@ -200,8 +200,8 @@ util.o: $(srcdir)/util.c
 window.o: $(srcdir)/window.c
 	$(BUILD) $(srcdir)/window.c
 
-pdcdebug.o: $(srcdir)/pdcdebug.c
-	$(BUILD) $(srcdir)/pdcdebug.c
+debug.o: $(srcdir)/debug.c
+	$(BUILD) $(srcdir)/debug.c
 
 
 pdcclip.o: $(osdir)/pdcclip.c

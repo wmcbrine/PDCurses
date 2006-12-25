@@ -185,8 +185,8 @@ util.obj: $(srcdir)\util.c $(PDCURSES_HEADERS)
 window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\window.c
 
-pdcdebug.obj: $(srcdir)\pdcdebug.c $(PDCURSES_HEADERS)
-	$(BUILD) $(srcdir)\pdcdebug.c
+debug.obj: $(srcdir)\debug.c $(PDCURSES_HEADERS)
+	$(BUILD) $(srcdir)\debug.c
 
 
 pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)

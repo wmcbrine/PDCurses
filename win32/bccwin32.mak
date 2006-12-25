@@ -65,7 +65,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 +insch.obj +insstr.obj +instr.obj +kernel.obj +keyname.obj +mouse.obj \
 +move.obj +outopts.obj +overlay.obj +pad.obj +printw.obj +refresh.obj \
 +scanw.obj +scr_dump.obj +scroll.obj +slk.obj +termattr.obj +terminfo.obj \
-+touch.obj +util.obj +window.obj +pdcdebug.obj +pdcclip.obj +pdcdisp.obj \
++touch.obj +util.obj +window.obj +debug.obj +pdcclip.obj +pdcdisp.obj \
 +pdcgetsc.obj +pdckbd.obj +pdcscrn.obj +pdcsetsc.obj +pdcutil.obj ,lib.map
 
 $(LIBPANEL) : $(PANOBJS)

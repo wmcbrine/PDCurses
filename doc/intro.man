@@ -409,8 +409,8 @@ FUNCTIONS
 		touchwin		touch
 		tparm			terminfo
 		tputs			terminfo
-		traceoff		pdcdebug
-		traceon			pdcdebug
+		traceoff		debug
+		traceon			debug
 		typeahead		inopts
 		unctrl			util
 		ungetch			getch
@@ -526,9 +526,10 @@ FUNCTIONS
 	   Curses Function        Manual Page Name
 
 		PDC_clearclipboard	pdcclip
+		PDC_debug		debug
 		PDC_freeclipboard	pdcclip
 		PDC_get_input_fd	pdckbd
-		PDC_get_key_modifiers	pdckbd
+		PDC_get_key_modifiers	getch
 		PDC_getclipboard	pdcclip
 		PDC_set_line_color	color
 		PDC_set_title		pdcsetsc

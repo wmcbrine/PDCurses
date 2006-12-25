@@ -16,19 +16,32 @@
 #include <sys/types.h>
 #include <time.h>
 
-RCSID("$Id: pdcdebug.c,v 1.26 2006/11/05 03:57:26 wmcbrine Exp $");
+RCSID("$Id: debug.c,v 1.1 2006/12/25 14:45:51 wmcbrine Exp $");
 
 bool pdc_trace_on = FALSE;
 
 /*man-start**************************************************************
 
-  PDC_debug()  - Write debugging info to log file.
+  Name:								debug
+
+  Synopsis:
+	void traceon(void);
+	void traceoff(void);
+	void PDC_debug(const char *, ...);
 
   PDCurses Description:
-	This is a private PDCurses routine.
+	traceon() and traceoff() toggle the recording of debugging 
+	information to the file "trace". Although not standard, similar 
+	functions are in some other curses implementations.
 
-  Portability:
-	PDCurses void PDC_debug(const char *, ...);
+	PDC_debug() is the function that writes to the file, based on 
+	whether traceon() has been called. It's used from the PDC_LOG() 
+	macro.
+
+  Portability				     X/Open    BSD    SYS V
+	traceon					-	-	-
+	traceoff				-	-	-
+	PDC_debug				-	-	-
 
 **man-end****************************************************************/
 

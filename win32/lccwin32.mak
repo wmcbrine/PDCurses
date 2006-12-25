@@ -80,7 +80,7 @@ getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
 insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj \
 outopts.obj overlay.obj pad.obj printw.obj refresh.obj scanw.obj \
 scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
-window.obj pdcdebug.obj
+window.obj debug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
@@ -224,7 +224,7 @@ util.obj: $(srcdir)\util.c
 window.obj: $(srcdir)\window.c
 	$(BUILD) $(srcdir)\$*.c
 
-pdcdebug.obj: $(srcdir)\pdcdebug.c
+debug.obj: $(srcdir)\debug.c
 	$(BUILD) $(srcdir)\$*.c
 
 

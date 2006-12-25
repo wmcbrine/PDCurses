@@ -37,7 +37,7 @@
 -+touch.obj &
 -+util.obj & 
 -+window.obj &
--+pdcdebug.obj &
+-+debug.obj &
 -+pdcclip.obj &
 -+pdcdisp.obj &
 -+pdcgetsc.obj &

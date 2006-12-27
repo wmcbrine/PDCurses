@@ -1,8 +1,8 @@
-/* $Id: ncurses_cfg.h,v 1.6 2006/12/11 04:34:48 wmcbrine Exp $
+/* $Id: ncurses_cfg.h,v 1.7 2006/12/27 20:15:35 wmcbrine Exp $
  *
  * This file is only used with the ncurses test programs.
  *
- * Have ncurses-5.5 unpacked in your $(HOME) (you don't need to build 
+ * Have ncurses-5.6 unpacked in your $(HOME) (you don't need to build 
  * it), or edit ncurses_testdir appropriately in the Makefile. Configure 
  * and build PDCurses for X11. (Sorry, other ports won't work yet.) 
  * Change to this directory, and:

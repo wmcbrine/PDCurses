@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.76 2006/12/25 18:28:16 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.77 2006/12/28 09:35:32 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2078,7 +2078,7 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 			break;
 		}
 
-		Mouse_status.changes |= 8;
+		Mouse_status.changes |= PDC_MOUSE_MOVED;
 		break;
 
       case ButtonRelease:
@@ -2187,6 +2187,10 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 	/* Set up the mouse status fields in preparation for sending */
 
 	Mouse_status.changes |= 1 << (button_no - 1);
+
+	if (Mouse_status.changes & PDC_MOUSE_MOVED &&
+	    BUTTON_STATUS(button_no) == BUTTON_PRESSED)
+		BUTTON_STATUS(button_no) = BUTTON_MOVED;
 
 	if (event->xbutton.state & ShiftMask)
 		BUTTON_STATUS(button_no) |= BUTTON_SHIFT;

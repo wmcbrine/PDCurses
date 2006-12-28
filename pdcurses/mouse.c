@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.36 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.37 2006/12/28 01:02:03 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -35,6 +35,9 @@ RCSID("$Id: mouse.c,v 1.36 2006/12/25 14:27:12 wmcbrine Exp $");
 	bool wenclose(const WINDOW *win, int y, int x);
 	bool wmouse_trafo(const WINDOW *win, int *y, int *x, bool to_screen);
 	bool mouse_trafo(int *y, int *x, bool to_screen);
+	mmask_t mousemask(mmask_t mask, mmask_t *oldmask);
+	int nc_getmouse(MEVENT *event);
+	int ungetmouse(MEVENT *event);
 
   PDCurses Description:
 	Classic PDCurses mouse interface: mouse_set(), mouse_on(), 
@@ -115,6 +118,8 @@ RCSID("$Id: mouse.c,v 1.36 2006/12/25 14:27:12 wmcbrine Exp $");
 	mouse_trafo				-	-	-
 
 **man-end****************************************************************/
+
+static bool ungot = FALSE;
 
 int mouse_set(unsigned long mbe)
 {
@@ -260,4 +265,129 @@ bool mouse_trafo(int *y, int *x, bool to_screen)
 	PDC_LOG(("mouse_trafo() - called\n"));
 
 	return wmouse_trafo(stdscr, y, x, to_screen);
+}
+
+mmask_t mousemask(mmask_t mask, mmask_t *oldmask)
+{
+	PDC_LOG(("mousemask() - called\n"));
+
+	if (oldmask)
+		*oldmask = SP->_trap_mbe;
+
+	mouse_set(mask);
+
+	return SP->_trap_mbe;
+}
+
+int nc_getmouse(MEVENT *event)
+{
+	int i;
+	mmask_t bstate = 0;
+
+	PDC_LOG(("nc_getmouse() - called\n"));
+
+	if (!event)
+		return ERR;
+
+	ungot = FALSE;
+
+	request_mouse_pos();
+
+	event->id = 0;
+
+	event->x = Mouse_status.x;
+	event->y = Mouse_status.y;
+	event->z = 0;
+
+	for (i = 0; i < 3; i++)
+	{
+		if (Mouse_status.changes & (1 << i))
+		{
+			int shf = i * 5;
+			short button = Mouse_status.button[i] &
+				BUTTON_ACTION_MASK;
+
+			if (button == BUTTON_RELEASED)
+				bstate |= (BUTTON1_RELEASED << shf);
+			else if (button == BUTTON_PRESSED)
+				bstate |= (BUTTON1_PRESSED << shf);
+			else if (button == BUTTON_CLICKED)
+				bstate |= (BUTTON1_CLICKED << shf);
+			else if (button == BUTTON_DOUBLE_CLICKED)
+				bstate |= (BUTTON1_DOUBLE_CLICKED << shf);
+
+			button = Mouse_status.button[i] &
+				BUTTON_MODIFIER_MASK;
+
+			if (button & PDC_BUTTON_SHIFT)
+				bstate |= BUTTON_MODIFIER_SHIFT;
+			if (button & PDC_BUTTON_CONTROL)
+				bstate |= BUTTON_MODIFIER_CONTROL;
+			if (button & PDC_BUTTON_ALT)
+				bstate |= BUTTON_MODIFIER_ALT;
+		}
+	}
+
+	if (MOUSE_WHEEL_UP)
+		bstate |= BUTTON4_PRESSED;
+	else if (MOUSE_WHEEL_DOWN)
+		bstate |= BUTTON5_PRESSED;
+
+	event->bstate = bstate;
+
+	return OK;
+}
+
+int ungetmouse(MEVENT *event)
+{
+	int i;
+	unsigned long bstate;
+
+	PDC_LOG(("ungetmouse() - called\n"));
+
+	if (!event || ungot)
+		return ERR;
+
+	ungot = TRUE;
+
+	pdc_mouse_status.x = event->x;
+	pdc_mouse_status.y = event->y;
+
+	pdc_mouse_status.changes = 0;
+	bstate = event->bstate;
+
+	for (i = 0; i < 3; i++)
+	{
+		int shf = i * 5;
+		short button = 0;
+
+		if (bstate & ((BUTTON1_RELEASED | BUTTON1_PRESSED | 
+		    BUTTON1_CLICKED | BUTTON1_DOUBLE_CLICKED) << shf))
+		{
+			pdc_mouse_status.changes |= 1 << i;
+
+			if (bstate & (BUTTON1_PRESSED << shf))
+				button = BUTTON_PRESSED;
+			if (bstate & (BUTTON1_CLICKED << shf))
+				button = BUTTON_CLICKED;
+			if (bstate & (BUTTON1_DOUBLE_CLICKED << shf))
+				button = BUTTON_DOUBLE_CLICKED;
+
+			if (bstate & BUTTON_MODIFIER_SHIFT)
+				button |= PDC_BUTTON_SHIFT;
+			if (bstate & BUTTON_MODIFIER_CONTROL)
+				button |= PDC_BUTTON_CONTROL;
+			if (bstate & BUTTON_MODIFIER_ALT)
+				button |= PDC_BUTTON_ALT;
+		}
+
+		pdc_mouse_status.button[i] = button;
+	}
+
+	if (bstate & BUTTON4_PRESSED)
+		pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_UP;
+	else if (bstate & BUTTON5_PRESSED)
+		pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_DOWN;
+
+	return ungetch(KEY_MOUSE);
 }

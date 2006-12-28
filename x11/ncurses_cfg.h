@@ -1,4 +1,4 @@
-/* $Id: ncurses_cfg.h,v 1.7 2006/12/27 20:15:35 wmcbrine Exp $
+/* $Id: ncurses_cfg.h,v 1.8 2006/12/28 01:02:03 wmcbrine Exp $
  *
  * This file is only used with the ncurses test programs.
  *
@@ -12,6 +12,8 @@
  *
  * Builds: bs gdc hanoi knight tclock ncurses
  */
+
+#define NCURSES_MOUSE_VERSION 2
 
 #include "../config.h"
 #include <curses.h>

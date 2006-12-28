@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.263 2006/12/25 14:12:18 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.264 2006/12/28 01:02:02 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 2825
+#define PDC_BUILD 2826
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -296,7 +296,6 @@ extern "C"
 #  define	OK	0		/* general OK flag	 */
 #endif
 
-
 /*----------------------------------------------------------------------
  *
  *	PDCurses Type Declarations
@@ -335,7 +334,6 @@ typedef struct
 	int changes;     /* flags indicating what has changed with the mouse */
 } MOUSE_STATUS;
 
-
 #define BUTTON_RELEASED		0x0000
 #define BUTTON_PRESSED		0x0001
 #define BUTTON_CLICKED		0x0002
@@ -345,13 +343,14 @@ typedef struct
 #define WHEEL_SCROLLED		0x0006	/* PDCurses */
 #define BUTTON_ACTION_MASK	0x0007	/* PDCurses */
 
-#define BUTTON_SHIFT		0x0008	/* PDCurses */
-#define BUTTON_CONTROL		0x0010	/* PDCurses */
-#define BUTTON_ALT		0x0020	/* PDCurses */
+#define PDC_BUTTON_SHIFT	0x0008	/* PDCurses */
+#define PDC_BUTTON_CONTROL	0x0010	/* PDCurses */
+#define PDC_BUTTON_ALT		0x0020	/* PDCurses */
 #define BUTTON_MODIFIER_MASK	0x0038	/* PDCurses */
 
 #define MOUSE_X_POS		(Mouse_status.x)
 #define MOUSE_Y_POS		(Mouse_status.y)
+
 /*
  * Bits associated with the .changes field:
  *   3         2         1         0
@@ -364,10 +363,12 @@ typedef struct
  *                            100000 <- mouse wheel up
  *                           1000000 <- mouse wheel down
  */
+
 #define PDC_MOUSE_MOVED		0x0008
 #define PDC_MOUSE_POSITION	0x0010
 #define PDC_MOUSE_WHEEL_UP	0x0020
 #define PDC_MOUSE_WHEEL_DOWN	0x0040
+
 #define A_BUTTON_CHANGED	(Mouse_status.changes & 7)
 #define MOUSE_MOVED		(Mouse_status.changes & PDC_MOUSE_MOVED)
 #define MOUSE_POS_REPORT	(Mouse_status.changes & PDC_MOUSE_POSITION)
@@ -377,30 +378,73 @@ typedef struct
 #define MOUSE_WHEEL_DOWN	(Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN)
 
 /* mouse bit-masks */
+
 #define BUTTON1_RELEASED	0x00000001L
 #define BUTTON1_PRESSED		0x00000002L
 #define BUTTON1_CLICKED		0x00000004L
 #define BUTTON1_DOUBLE_CLICKED	0x00000008L
 #define BUTTON1_TRIPLE_CLICKED	0x00000010L
 #define BUTTON1_MOVED		0x00000010L /* PDCurses */
+
 #define BUTTON2_RELEASED	0x00000020L
 #define BUTTON2_PRESSED		0x00000040L
 #define BUTTON2_CLICKED		0x00000080L
 #define BUTTON2_DOUBLE_CLICKED	0x00000100L
 #define BUTTON2_TRIPLE_CLICKED	0x00000200L
 #define BUTTON2_MOVED		0x00000200L /* PDCurses */
+
 #define BUTTON3_RELEASED	0x00000400L
 #define BUTTON3_PRESSED		0x00000800L
 #define BUTTON3_CLICKED		0x00001000L
 #define BUTTON3_DOUBLE_CLICKED	0x00002000L
 #define BUTTON3_TRIPLE_CLICKED	0x00004000L
 #define BUTTON3_MOVED		0x00004000L /* PDCurses */
+
+/* For the NCurses-compatible functions only, BUTTON4_PRESSED and 
+   BUTTON5_PRESSED are returned for mouse scroll wheel up and down; 
+   otherwise PDCurses doesn't support buttons 4 and 5 */
+
+#define BUTTON4_RELEASED	0x00100000L
+#define BUTTON4_PRESSED		0x00200000L
+#define BUTTON4_CLICKED		0x00400000L
+#define BUTTON4_DOUBLE_CLICKED	0x00800000L
+#define BUTTON4_TRIPLE_CLICKED	0x01000000L
+
+#define BUTTON5_RELEASED	0x02000000L
+#define BUTTON5_PRESSED		0x04000000L
+#define BUTTON5_CLICKED		0x08000000L
+#define BUTTON5_DOUBLE_CLICKED	0x10000000L
+#define BUTTON5_TRIPLE_CLICKED	0x20000000L
+
 #define MOUSE_WHEEL_SCROLL	0x00008000L /* PDCurses */
-#define ALL_MOUSE_EVENTS	0x0000ffffL
 #define BUTTON_MODIFIER_SHIFT	0x00010000L /* PDCurses */
 #define BUTTON_MODIFIER_CONTROL 0x00020000L /* PDCurses */
 #define BUTTON_MODIFIER_ALT	0x00040000L /* PDCurses */
+#define ALL_MOUSE_EVENTS	0x0007ffffL
 #define REPORT_MOUSE_POSITION	0x00080000L
+
+/* NCurses mouse interface */
+
+typedef unsigned long mmask_t;
+
+typedef struct
+{
+	short id;	/* unused, always 0 */
+	int x, y, z;	/* x, y same as MOUSE_STATUS; z unused */
+	mmask_t bstate;	/* equivalent to changes + button[], but
+			   in the same format as used for mousemask() */
+} MEVENT;
+
+#ifdef NCURSES_MOUSE_VERSION
+# define BUTTON_SHIFT	BUTTON_MODIFIER_SHIFT
+# define BUTTON_CONTROL	BUTTON_MODIFIER_CONTROL
+# define BUTTON_CTRL	BUTTON_MODIFIER_CONTROL
+# define BUTTON_ALT	BUTTON_MODIFIER_ALT
+#else
+# define BUTTON_SHIFT	PDC_BUTTON_SHIFT
+# define BUTTON_CONTROL	PDC_BUTTON_CONTROL
+# define BUTTON_ALT	PDC_BUTTON_ALT
+#endif
 
 /*----------------------------------------------------------------------
  *
@@ -436,8 +480,6 @@ typedef struct _win		/* definition of a window	*/
 	struct	_win *_parent;	/* subwin's pointer to parent win  */
 } WINDOW;
 
-
-
 /*----------------------------------------------------------------------
  *
  *	Private structures that are necessary for correct
@@ -450,7 +492,6 @@ typedef struct			/* structure for ripped off lines */
 	int line;
 	int (*init)(WINDOW *, int);
 } RIPPEDOFFLINE;
-
 
 typedef struct
 {
@@ -508,7 +549,6 @@ typedef struct
 #endif
 	short	line_color;	/* color of line attributes - default -1 */
 } SCREEN;
-
 
 /* external variables */
 
@@ -1454,7 +1494,10 @@ int	use_default_colors(void);
 int	wresize(WINDOW *, int, int);
 
 int	mouseinterval(int);
+mmask_t mousemask(mmask_t, mmask_t *);
 bool	mouse_trafo(int *, int *, bool);
+int	nc_getmouse(MEVENT *);
+int	ungetmouse(MEVENT *);
 bool	wenclose(const WINDOW *, int, int);
 bool	wmouse_trafo(const WINDOW *, int *, int *, bool);
 
@@ -1505,7 +1548,6 @@ unsigned long PDC_get_key_modifiers(void);
 int	PDC_save_key_modifiers(bool);
 int	PDC_return_key_modifiers(bool);
 
-
 /*** Functions defined as macros ***/
 
 /* getch() and ungetch() conflict with some DOS libraries */
@@ -1538,6 +1580,10 @@ int	PDC_return_key_modifiers(bool);
 #define resetterm		reset_shell_mode
 #define fixterm			reset_prog_mode
 #define saveterm		def_prog_mode
+
+#ifdef NCURSES_MOUSE_VERSION
+# define getmouse(x) nc_getmouse(x)
+#endif
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

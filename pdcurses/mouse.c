@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.37 2006/12/28 01:02:03 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.38 2006/12/28 09:39:55 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -274,6 +274,11 @@ mmask_t mousemask(mmask_t mask, mmask_t *oldmask)
 	if (oldmask)
 		*oldmask = SP->_trap_mbe;
 
+	/* The ncurses interface doesn't work with our move events, so 
+	   filter them here */
+
+	mask &= ~(BUTTON1_MOVED | BUTTON2_MOVED | BUTTON3_MOVED);
+
 	mouse_set(mask);
 
 	return SP->_trap_mbe;
@@ -333,7 +338,9 @@ int nc_getmouse(MEVENT *event)
 	else if (MOUSE_WHEEL_DOWN)
 		bstate |= BUTTON5_PRESSED;
 
-	event->bstate = bstate;
+	/* extra filter pass -- mainly for button modifiers */
+
+	event->bstate = bstate & SP->_trap_mbe;
 
 	return OK;
 }

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.264 2006/12/28 01:02:02 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.265 2006/12/28 09:39:55 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -404,24 +404,25 @@ typedef struct
    BUTTON5_PRESSED are returned for mouse scroll wheel up and down; 
    otherwise PDCurses doesn't support buttons 4 and 5 */
 
-#define BUTTON4_RELEASED	0x00100000L
-#define BUTTON4_PRESSED		0x00200000L
-#define BUTTON4_CLICKED		0x00400000L
-#define BUTTON4_DOUBLE_CLICKED	0x00800000L
-#define BUTTON4_TRIPLE_CLICKED	0x01000000L
+#define BUTTON4_RELEASED	0x00008000L
+#define BUTTON4_PRESSED		0x00010000L
+#define BUTTON4_CLICKED		0x00020000L
+#define BUTTON4_DOUBLE_CLICKED	0x00040000L
+#define BUTTON4_TRIPLE_CLICKED	0x00080000L
 
-#define BUTTON5_RELEASED	0x02000000L
-#define BUTTON5_PRESSED		0x04000000L
-#define BUTTON5_CLICKED		0x08000000L
-#define BUTTON5_DOUBLE_CLICKED	0x10000000L
-#define BUTTON5_TRIPLE_CLICKED	0x20000000L
+#define BUTTON5_RELEASED	0x00100000L
+#define BUTTON5_PRESSED		0x00200000L
+#define BUTTON5_CLICKED		0x00400000L
+#define BUTTON5_DOUBLE_CLICKED	0x00800000L
+#define BUTTON5_TRIPLE_CLICKED	0x01000000L
 
-#define MOUSE_WHEEL_SCROLL	0x00008000L /* PDCurses */
-#define BUTTON_MODIFIER_SHIFT	0x00010000L /* PDCurses */
-#define BUTTON_MODIFIER_CONTROL 0x00020000L /* PDCurses */
-#define BUTTON_MODIFIER_ALT	0x00040000L /* PDCurses */
-#define ALL_MOUSE_EVENTS	0x0007ffffL
-#define REPORT_MOUSE_POSITION	0x00080000L
+#define MOUSE_WHEEL_SCROLL	0x02000000L /* PDCurses */
+#define BUTTON_MODIFIER_SHIFT	0x04000000L /* PDCurses */
+#define BUTTON_MODIFIER_CONTROL 0x08000000L /* PDCurses */
+#define BUTTON_MODIFIER_ALT	0x10000000L /* PDCurses */
+
+#define ALL_MOUSE_EVENTS	0x1fffffffL
+#define REPORT_MOUSE_POSITION	0x20000000L
 
 /* NCurses mouse interface */
 

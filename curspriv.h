@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.143 2006/12/25 14:12:18 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.144 2006/12/28 09:51:31 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -134,5 +134,8 @@ void	PDC_sync(WINDOW *);
 #endif
 
 #define DIVROUND(num, divisor) ((num) + ((divisor) >> 1)) / (divisor)
+
+#define PDC_CLICK_PERIOD	150	/* time to wait for a click, if
+					   not set by mouseinterval() */
 
 #endif /* __CURSES_INTERNALS__*/

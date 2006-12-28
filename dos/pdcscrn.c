@@ -19,7 +19,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.72 2006/12/24 04:32:21 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.73 2006/12/28 09:51:31 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -561,7 +561,7 @@ int PDC_scr_open(int argc, char **argv)
 	SP->lines	= PDC_get_rows();
 	SP->cols	= PDC_get_columns();
 
-	SP->mouse_wait	= 100;
+	SP->mouse_wait	= PDC_CLICK_PERIOD;
 
 	/* If the environment variable PDCURSES_BIOS is set, the DOS 
 	   int10() BIOS calls are used in place of direct video memory 

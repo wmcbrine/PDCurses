@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.77 2006/12/28 09:35:32 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.78 2006/12/28 09:51:31 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -350,8 +350,8 @@ static XtResource app_resources[] =
 
 	RPIXEL(borderColor, BorderColor, Black),
 
-	RINT(doubleClickPeriod, DoubleClickPeriod, 200),
-	RINT(clickPeriod, ClickPeriod, 100),
+	RINT(doubleClickPeriod, DoubleClickPeriod, (PDC_CLICK_PERIOD * 2)),
+	RINT(clickPeriod, ClickPeriod, PDC_CLICK_PERIOD),
 	RINT(scrollbarWidth, ScrollbarWidth, 15),
 	RINT(cursorBlinkRate, CursorBlinkRate, 0),
 

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.25 2006/12/29 18:36:35 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.26 2006/12/29 21:16:32 wmcbrine Exp $ */
 
 #include <curspriv.h>
 #include <string.h>
@@ -90,6 +90,7 @@ extern unsigned pdc_video_ofs;
 # include <sys/movedata.h>
 unsigned char getdosmembyte(int offs);
 unsigned short getdosmemword(int offs);
+unsigned long getdosmemdword(int offs);
 void setdosmembyte(int offs, unsigned char b);
 void setdosmemword(int offs, unsigned short w);
 #else
@@ -102,6 +103,8 @@ void setdosmemword(int offs, unsigned short w);
 	(*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)))
 # define getdosmemword(offs) \
 	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)))
+# define getdosmemdword(offs) \
+	(*((unsigned long PDC_FAR *) _FAR_POINTER(0,offs)))
 # define setdosmembyte(offs,x) \
 	(*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
 # define setdosmemword(offs,x) \

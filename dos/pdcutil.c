@@ -19,7 +19,7 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.16 2006/12/29 18:36:35 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.17 2006/12/29 21:16:32 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -34,36 +34,25 @@ void PDC_beep(void)
 
 void PDC_napms(int ms)
 {
+	PDCREGS regs;
+	long goal;
+
 	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-#if defined(__DJGPP__)
+	goal = ms / 50;
+	if (!goal)
+		goal = 1;
 
-	usleep(1000 * ms);
+	/* get number of ticks since startup from address 0040:006ch
+	   1 sec. = 18.2065  */
 
-#elif defined(DOS)
+	goal += getdosmemdword(0x46c);
 
-# if defined(__TURBOC__) || defined(__WATCOMC__)
-
-	delay(ms);
-
-# elif defined(_MSC_VER) || defined(_QC)
+	while (goal > getdosmemdword(0x46c))
 	{
-		clock_t goal = (ms / 50) + clock();
-		while (goal > clock())
-		;
+		regs.W.ax = 0x1680;
+		PDCINT(0x2f, regs);
 	}
-# elif defined(__PACIFIC__)
-	{
-		/* get number of ticks since startup from address 0040:006ch
-		   1 sec. = 18.2065  */
-
-		volatile far long *ticks = MK_FP(0x0040, 0x006c);
-		long goal = (ms / 50) + *ticks;
-		while (goal > *ticks)
-		;
-	}
-# endif
-#endif
 }
 
 const char *PDC_sysname(void)
@@ -89,6 +78,14 @@ unsigned short getdosmemword(int offset)
 	return w;
 }
 
+unsigned long getdosmemdword(int offset)
+{
+	unsigned long dw;
+
+	dosmemget(offset, sizeof(unsigned long), &dw);
+	return dw;
+}
+
 void setdosmembyte(int offset, unsigned char b)
 {
 	dosmemput(&b, sizeof(unsigned char), offset);
@@ -107,10 +104,14 @@ void PDC_dpmi_int(int vector, pdc_dpmi_regs *rmregs)
 {
 	union REGPACK regs = {0};
 
-	regs.w.ax  = 0x300;
-	regs.h.bl  = vector;
+	rmregs->w.ss = 0;
+	rmregs->w.sp = 0;
+	rmregs->w.flags = 0;
+
+	regs.w.ax = 0x300;
+	regs.h.bl = vector;
 	regs.x.edi = FP_OFF(rmregs);
-	regs.x.es  = FP_SEG(rmregs);
+	regs.x.es = FP_SEG(rmregs);
 
 	intr(0x31, &regs);
 }

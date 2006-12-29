@@ -19,7 +19,7 @@
 # include <sys/movedata.h>
 #endif
 
-RCSID("$Id: pdcscrn.c,v 1.74 2006/12/29 17:08:21 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.75 2006/12/29 17:41:53 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -761,7 +761,7 @@ int PDC_init_color(short color, short red, short green, short blue)
 
 #if defined(__WATCOMC__) && defined(__386__)
 
-void __dpmi_int(int vector, __dpmi_regs *rmregs)
+void PDC_dpmi_int(int vector, pdc_dpmi_regs *rmregs)
 {
 	union REGPACK regs = {0};
 

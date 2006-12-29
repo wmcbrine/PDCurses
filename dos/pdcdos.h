@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.23 2006/12/29 17:08:21 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.24 2006/12/29 17:41:53 wmcbrine Exp $ */
 
 #include <curspriv.h>
 #include <string.h>
@@ -129,9 +129,9 @@ typedef union
 			bl, bh, ebx_b2, ebx_b3, dl, dh, edx_b2, edx_b3,
 			cl, ch, ecx_b2, ecx_b3, al, ah, eax_b2, eax_b3;
 	} h;
-} __dpmi_regs;
+} pdc_dpmi_regs;
 
-void __dpmi_int(int, __dpmi_regs *);
+void PDC_dpmi_int(int, pdc_dpmi_regs *);
 
 #endif
 
@@ -142,8 +142,8 @@ void __dpmi_int(int, __dpmi_regs *);
 #else
 # ifdef __WATCOMC__
 #  ifdef __386__
-#   define PDCREGS __dpmi_regs
-#   define PDCINT(vector, regs) __dpmi_int(vector, &regs)
+#   define PDCREGS pdc_dpmi_regs
+#   define PDCINT(vector, regs) PDC_dpmi_int(vector, &regs)
 #  else
 #   define PDCREGS union REGPACK
 #   define PDCINT(vector, regs) intr(vector, &regs)

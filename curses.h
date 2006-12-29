@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.265 2006/12/28 09:39:55 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.266 2006/12/29 11:21:32 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -557,7 +557,7 @@ typedef struct
 # ifdef CURSES_LIBRARY
 #  define PDCEX __declspec(dllexport) extern
 # else
-#  define PDCEX __declspec(dllimport)
+#  define PDCEX __declspec(dllimport) extern
 # endif
 #else
 # define PDCEX extern
@@ -572,6 +572,7 @@ PDCEX	MOUSE_STATUS	Mouse_status;
 PDCEX	int		COLORS;
 PDCEX	int		COLOR_PAIRS;
 PDCEX	int		TABSIZE;
+PDCEX	chtype		acs_map[];
 
 #undef PDCEX
 
@@ -694,9 +695,6 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 	 available for A_ALTCHARSET */
 
 #ifdef CHTYPE_LONG
-
-extern chtype acs_map[];
-
 # define ACS_PICK(w, n)	((chtype)w | A_ALTCHARSET)
 #else
 # define ACS_PICK(w, n)	((chtype)n)

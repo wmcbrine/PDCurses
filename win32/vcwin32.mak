@@ -2,7 +2,7 @@
 #
 # Visual C++ NMakefile for PDCurses library - Win32 VC++ 2.0+
 #
-# Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [DLLBUILD=] [target]
+# Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [DLL=] [WIDE=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
@@ -33,13 +33,19 @@ CC		= cl.exe -nologo
 CFLAGS		= -Z7 -DPDCDEBUG
 LDFLAGS		= -debug -pdb:none
 !else
-CFLAGS		=  -Ox
+CFLAGS		= -Ox
 LDFLAGS		=
 !endif
 
-SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll /DEF:$(osdir)\curses.def
+!ifdef WIDE
+DEFFILE		= $(osdir)\cursesw.def
+CPPFLAGS	= -I$(PDCURSES_HOME) -DPDC_WIDE
+!else
+DEFFILE		= $(osdir)\curses.def
+CPPFLAGS	= -I$(PDCURSES_HOME)
+!endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE
+SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll /DEF:$(DEFFILE)
 
 LINK		= link.exe -nologo
 
@@ -53,7 +59,7 @@ LIBCURSES	= pdcurses.lib
 CURSESDLL	= pdcurses.dll
 LIBPANEL	= panel.lib
 
-!ifdef DLLBUILD
+!ifdef DLL
 BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
 PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
 !else
@@ -84,8 +90,10 @@ $(PANOBJS) : $(PANEL_HEADER)
 terminfo.obj: $(TERM_HEADER)
 $(DEMOS) : $(LIBCURSES)
 
+!ifndef DLL
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) -out:$@ $(LIBOBJS) $(PDCOBJS)
+!endif
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(osdir)\curses.def pdcurses.obj
 	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)

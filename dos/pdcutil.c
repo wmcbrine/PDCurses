@@ -19,7 +19,7 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.15 2006/12/29 18:19:37 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.16 2006/12/29 18:36:35 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -70,6 +70,36 @@ const char *PDC_sysname(void)
 {
 	return "DOS";
 }
+
+#ifdef __DJGPP__
+
+unsigned char getdosmembyte(int offset)
+{
+	unsigned char b;
+
+	dosmemget(offset, sizeof(unsigned char), &b);
+	return b;
+}
+
+unsigned short getdosmemword(int offset)
+{
+	unsigned short w;
+
+	dosmemget(offset, sizeof(unsigned short), &w);
+	return w;
+}
+
+void setdosmembyte(int offset, unsigned char b)
+{
+	dosmemput(&b, sizeof(unsigned char), offset);
+}
+
+void setdosmemword(int offset, unsigned short w)
+{
+	dosmemput(&w, sizeof(unsigned short), offset);
+}
+
+#endif
 
 #if defined(__WATCOMC__) && defined(__386__)
 

@@ -69,8 +69,6 @@ demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
 
-PDCOBJS += pdcgo32.o
-
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
 

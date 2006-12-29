@@ -15,11 +15,7 @@
 
 #include <stdlib.h>
 
-#ifdef __DJGPP__
-# include <sys/movedata.h>
-#endif
-
-RCSID("$Id: pdcscrn.c,v 1.76 2006/12/29 18:19:37 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.77 2006/12/29 18:36:35 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/

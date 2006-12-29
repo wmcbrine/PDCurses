@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.24 2006/12/29 17:41:53 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.25 2006/12/29 18:36:35 wmcbrine Exp $ */
 
 #include <curspriv.h>
 #include <string.h>
@@ -87,6 +87,7 @@ extern unsigned pdc_video_ofs;
 #define _FP_OFFSET(p)		((unsigned short)p & 0x000f)
 
 #ifdef __DJGPP__
+# include <sys/movedata.h>
 unsigned char getdosmembyte(int offs);
 unsigned short getdosmemword(int offs);
 void setdosmembyte(int offs, unsigned char b);

@@ -18,6 +18,7 @@ EXPORTS
 		COLORS
 		COLOR_PAIRS
 		TABSIZE
+		acs_map
 		addch
 		addchnstr
 		addchstr
@@ -44,7 +45,6 @@ EXPORTS
 		clrtobot
 		clrtoeol
 		color_content
-		COLOR_PAIR
 		color_set
 		copywin
 		curs_set
@@ -66,14 +66,6 @@ EXPORTS
 		filter
 		flash
 		flushinp
-		getbegx
-		getbegy
-		getcurx
-		getcury
-		getmaxx
-		getmaxy
-		getparx
-		getpary
 		getbkgd
 		getnstr
 		getstr
@@ -102,7 +94,6 @@ EXPORTS
 		intrflush
 		isendwin
 		is_linetouched
-		is_termresized
 		is_wintouched
 		keyname
 		keypad
@@ -173,7 +164,6 @@ EXPORTS
 		overlay
 		overwrite
 		pair_content
-		PAIR_NUMBER
 		pechochar
 		pnoutrefresh
 		prefresh
@@ -292,6 +282,16 @@ EXPORTS
 		wtouchln
 		wvline
 		getattrs
+		getbegx
+		getbegy
+		getmaxx
+		getmaxy
+		getparx
+		getpary
+		getcurx
+		getcury
+		traceoff
+		traceon
 		unctrl
 		mouse_set
 		mouse_on
@@ -301,20 +301,45 @@ EXPORTS
 		wmouse_position
 		getmouse
 		getbmap
+		assume_default_colors
+		curses_version
 		has_key
+		use_default_colors
+		wresize
+		mouseinterval
+		mousemask
+		mouse_trafo
+		nc_getmouse
+		ungetmouse
+		wenclose
+		wmouse_trafo
+		addrawch
+		insrawch
+		is_termresized
+		mvaddrawch
+		mvdeleteln
+		mvinsertln
+		mvinsrawch
+		mvwaddrawch
+		mvwdeleteln
 		mvwinsertln
+		mvwinsrawch
 		raw_output
 		resize_term
 		resize_window
-		traceoff
-		traceon
+		waddrawch
+		winsrawch
 		wordchar
+		PDC_debug
 		PDC_ungetch
+		PDC_set_blink
+		PDC_set_line_color
 		PDC_set_title
+		PDC_clearclipboard
+		PDC_freeclipboard
 		PDC_getclipboard
 		PDC_setclipboard
-		PDC_freeclipboard
-		PDC_clearclipboard
 		PDC_get_input_fd
 		PDC_get_key_modifiers
-		PDC_set_line_color
+		PDC_save_key_modifiers
+		PDC_return_key_modifiers

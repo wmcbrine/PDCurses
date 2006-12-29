@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.266 2006/12/29 11:21:32 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.267 2006/12/29 11:53:20 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -557,7 +557,7 @@ typedef struct
 # ifdef CURSES_LIBRARY
 #  define PDCEX __declspec(dllexport) extern
 # else
-#  define PDCEX __declspec(dllimport) extern
+#  define PDCEX __declspec(dllimport)
 # endif
 #else
 # define PDCEX extern

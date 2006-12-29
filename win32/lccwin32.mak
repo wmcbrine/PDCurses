@@ -40,6 +40,7 @@ CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE
 LINK		= lcclnk
 
 DEFFILE		= $(osdir)\curses_lcc.def
+#DEFFILE		= $(osdir)\cursesw_lcc.def
 SHL_LD		= lcclnk -DLL $(DEFFILE)
 
 LIBEXE		= lcclib
@@ -50,13 +51,13 @@ LIBPANEL	= panel.lib
 
 # For a static build:
 
-BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
+#PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 # For a DLL build:
 
-#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
-#PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
+BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
 
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
@@ -98,8 +99,10 @@ terminfo.obj: $(TERM_HEADER)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
+# Uncomment for a static build:
+
+#$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+#	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
 
 $(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) /out:$@ $(PANOBJS)

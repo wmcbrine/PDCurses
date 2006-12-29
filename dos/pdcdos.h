@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.22 2006/12/16 17:14:54 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.23 2006/12/29 17:08:21 wmcbrine Exp $ */
 
 #include <curspriv.h>
 #include <string.h>
@@ -107,25 +107,55 @@ void setdosmemword(int offs, unsigned short w);
 	(*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
 #endif
 
+#if defined(__WATCOMC__) && defined(__386__)
+
+typedef union
+{
+	struct
+	{
+		unsigned long edi, esi, ebp, res, ebx, edx, ecx, eax;
+	} d;
+
+	struct
+	{
+		unsigned short di, di_hi, si, si_hi, bp, bp_hi, res, res_hi,
+			bx, bx_hi, dx, dx_hi, cx, cx_hi, ax, ax_hi, flags,
+			es, ds, fs, gs, ip, cs, sp, ss;
+	} w;
+
+	struct
+	{
+		unsigned char edi[4], esi[4], ebp[4], res[4],
+			bl, bh, ebx_b2, ebx_b3, dl, dh, edx_b2, edx_b3,
+			cl, ch, ecx_b2, ecx_b3, al, ah, eax_b2, eax_b3;
+	} h;
+} __dpmi_regs;
+
+void __dpmi_int(int, __dpmi_regs *);
+
+#endif
+
 #ifdef __DJGPP__
 # include <dpmi.h>
 # define PDCREGS __dpmi_regs
 # define PDCINT(vector, regs) __dpmi_int(vector, &regs)
 #else
-# if defined(__WATCOMC__) && !defined(__386__)
-#  define PDCREGS union REGPACK
-#  define PDCINT(vector, regs) intr(vector, &regs)
+# ifdef __WATCOMC__
+#  ifdef __386__
+#   define PDCREGS __dpmi_regs
+#   define PDCINT(vector, regs) __dpmi_int(vector, &regs)
+#  else
+#   define PDCREGS union REGPACK
+#   define PDCINT(vector, regs) intr(vector, &regs)
+#  endif
 # else
 #  define PDCREGS union REGS
-#  if defined(__WATCOMC__) && defined(__386__)
-#   define PDCINT(vector, regs) int386(vector, &regs, &regs)
-#  else
-#   define PDCINT(vector, regs) int86(vector, &regs, &regs)
-#  endif
+#  define PDCINT(vector, regs) int86(vector, &regs, &regs)
 # endif
 #endif
 
 /* Wide registers in REGS: w or x? */
+
 #ifdef __WATCOMC__
 # define W w
 #else
@@ -133,6 +163,7 @@ void setdosmemword(int offs, unsigned short w);
 #endif
 
 /* Monitor (terminal) type information */
+
 enum
 {
 	_NONE, _MDA, _CGA,
@@ -143,6 +174,7 @@ enum
 };
 
 /* Text-mode font size information */
+
 enum
 {
 	_FONT8 = 8,

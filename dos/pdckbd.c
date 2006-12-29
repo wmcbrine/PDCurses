@@ -15,8 +15,8 @@
 # include <signal.h>
 #endif
 
-/* MS C and Watcom don't return flags from int86() */
-#if defined(MSC) || (defined(__WATCOMC__) && defined(__386__))
+/* MS C doesn't return flags from int86() */
+#ifdef MSC
 # define USE_KBHIT
 #endif
 
@@ -26,7 +26,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.73 2006/12/24 06:07:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.74 2006/12/29 17:08:21 wmcbrine Exp $");
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*

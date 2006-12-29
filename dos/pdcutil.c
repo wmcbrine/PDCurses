@@ -19,7 +19,7 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.14 2006/12/16 17:14:54 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.15 2006/12/29 18:19:37 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -70,3 +70,19 @@ const char *PDC_sysname(void)
 {
 	return "DOS";
 }
+
+#if defined(__WATCOMC__) && defined(__386__)
+
+void PDC_dpmi_int(int vector, pdc_dpmi_regs *rmregs)
+{
+	union REGPACK regs = {0};
+
+	regs.w.ax  = 0x300;
+	regs.h.bl  = vector;
+	regs.x.edi = FP_OFF(rmregs);
+	regs.x.es  = FP_SEG(rmregs);
+
+	intr(0x31, &regs);
+}
+
+#endif

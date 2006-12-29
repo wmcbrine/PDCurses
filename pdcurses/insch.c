@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.37 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.38 2006/12/29 08:50:51 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -84,8 +84,8 @@ RCSID("$Id: insch.c,v 1.37 2006/12/25 14:27:12 wmcbrine Exp $");
 	and insch().
 
   PDCurses Description:
-	insrawch() and winsrawch() are wrappers for insch() etc. that 
-	disable the translation of control characters.
+	insrawch() etc. are wrappers for insch() etc. that disable the 
+	translation of control characters.
 
   X/Open Return Value:
 	All functions return OK on success and ERR on error.
@@ -110,9 +110,8 @@ int winsch(WINDOW *win, chtype ch)
 	chtype attr;
 	bool xlat;
 
-	PDC_LOG(("winsch() - called: win=%p ch=%x "
-		"(char=%c attr=0x%x)\n", win, ch,
-		ch & A_CHARTEXT, ch & A_ATTRIBUTES));
+	PDC_LOG(("winsch() - called: win=%p ch=%x (text=%c attr=0x%x)\n",
+		win, ch, ch & A_CHARTEXT, ch & A_ATTRIBUTES));
 
 	if (!win)
 		return ERR;
@@ -136,7 +135,7 @@ int winsch(WINDOW *win, chtype ch)
 		case '\t':
 			for (x2 = ((x / TABSIZE) + 1) * TABSIZE; x < x2; x++)
 			{
-				if (winsch(win, ' ') == ERR)
+				if (winsch(win, attr | ' ') == ERR)
 					return ERR;
 			}
 			return OK;
@@ -146,18 +145,18 @@ int winsch(WINDOW *win, chtype ch)
 			break;
 
 		case 0x7f:
-			if (winsch(win, '?') == ERR)
+			if (winsch(win, attr | '?') == ERR)
 				return ERR;
 
-			return winsch(win, '^');
+			return winsch(win, attr | '^');
 
 		default:
 			/* handle control chars */
 
-			if (winsch(win, ch + '@') == ERR)
+			if (winsch(win, attr | (ch + '@')) == ERR)
 				return ERR;
 
-			return winsch(win, '^');
+			return winsch(win, attr | '^');
 		}
 	}
 	else

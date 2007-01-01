@@ -19,7 +19,7 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.18 2007/01/01 20:40:24 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.19 2007/01/01 21:04:27 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -43,7 +43,7 @@ void PDC_beep(void)
 void PDC_napms(int ms)
 {
 	PDCREGS regs;
-	PDCCLOCK_T goal;
+	PDCCLOCK_T goal, start, current;
 
 	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
@@ -55,10 +55,15 @@ void PDC_napms(int ms)
 	if (!goal)
 		goal++;
 
-	goal += PDCCLOCK();
+	start = PDCCLOCK();
 
-	while (goal > PDCCLOCK())
+	goal += start;
+
+	while (goal > (current = PDCCLOCK()))
 	{
+		if (current < start)	/* in case of midnight reset */
+			return;
+
 		regs.W.ax = 0x1680;
 		PDCINT(0x2f, regs);
 		PDCINT(0x28, regs);

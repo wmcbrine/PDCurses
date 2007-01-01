@@ -19,7 +19,7 @@
 
 #include <time.h>
 
-RCSID("$Id: pdcutil.c,v 1.17 2006/12/29 21:16:32 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.18 2007/01/01 20:40:24 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -32,26 +32,36 @@ void PDC_beep(void)
 	PDCINT(0x10, regs);
 }
 
+#ifdef __DJGPP__
+# define PDCCLOCK_T uclock_t
+# define PDCCLOCK() uclock()
+#else
+# define PDCCLOCK_T long
+# define PDCCLOCK() getdosmemdword(0x46c)
+#endif
+
 void PDC_napms(int ms)
 {
 	PDCREGS regs;
-	long goal;
+	PDCCLOCK_T goal;
 
 	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-	goal = ms / 50;
+#ifdef __DJGPP__
+	goal = (PDCCLOCK_T)ms * UCLOCKS_PER_SEC / 1000;
+#else
+	goal = DIVROUND((PDCCLOCK_T)ms, 50);
+#endif
 	if (!goal)
-		goal = 1;
+		goal++;
 
-	/* get number of ticks since startup from address 0040:006ch
-	   1 sec. = 18.2065  */
+	goal += PDCCLOCK();
 
-	goal += getdosmemdword(0x46c);
-
-	while (goal > getdosmemdword(0x46c))
+	while (goal > PDCCLOCK())
 	{
 		regs.W.ax = 0x1680;
 		PDCINT(0x2f, regs);
+		PDCINT(0x28, regs);
 	}
 }
 

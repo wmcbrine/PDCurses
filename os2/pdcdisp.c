@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcdisp.c,v 1.43 2007/01/02 14:19:43 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.44 2007/01/02 15:57:57 wmcbrine Exp $");
 
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these 
    match code page 437 and compatible pages (CP850, CP852, etc.) */
@@ -56,18 +56,7 @@ chtype acs_map[128] =
 
 #endif
 
-/*man-start**************************************************************
-
-  PDC_gotoyx()	- position hardware cursor at (y, x)
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Moves the physical cursor to the desired address on the screen. 
-	We don't optimize here -- on a PC, it takes more time to 
-	optimize than to do things directly.
-
-**man-end****************************************************************/
+/* position hardware cursor at (y, x) */
 
 void PDC_gotoyx(int row, int col)
 {
@@ -80,17 +69,8 @@ void PDC_gotoyx(int row, int col)
 #endif
 }
 
-/*man-start**************************************************************
-
-  PDC_transform_line()	- display a physical line of the screen
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	Updates the given physical line to look like the corresponding
-	line in _curscr.
-
-**man-end****************************************************************/
+/* update the given physical line to look like the corresponding line in
+   curscr */
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {

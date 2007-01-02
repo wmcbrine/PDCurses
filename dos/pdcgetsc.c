@@ -15,24 +15,9 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.36 2007/01/02 14:19:43 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.37 2007/01/02 15:57:57 wmcbrine Exp $");
 
-/*man-start**************************************************************
-
-  PDC_get_cursor_pos()	- return current cursor position
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	Gets the cursor position in video page 0.  'row' and 'column'
-	are the cursor address.  At this time, there is no support for
-	use of multiple screen pages.
-
-  PDCurses Return Value:
-	This routine will return OK upon success and otherwise ERR will 
-	be returned.
-
-**man-end****************************************************************/
+/* return current cursor position */
 
 int PDC_get_cursor_pos(int *row, int *col)
 {
@@ -49,16 +34,7 @@ int PDC_get_cursor_pos(int *row, int *col)
 	return OK;
 }
 
-/*man-start**************************************************************
-
-  PDC_get_columns()	- return width of screen/viewport.
-
-  PDCurses Description:
-	This is a private PDCurses function
-
-	This function will return the width of the current screen.
-
-**man-end****************************************************************/
+/* return width of screen/viewport */
 
 int PDC_get_columns(void)
 {
@@ -85,14 +61,7 @@ int PDC_get_columns(void)
 	return cols;
 }
 
-/*man-start**************************************************************
-
-  PDC_get_cursor_mode()	- Get the cursor start and stop scan lines.
-
-  PDCurses Description:
-	Gets the cursor size.
-
-**man-end****************************************************************/
+/* get the cursor size/shape */
 
 int PDC_get_cursor_mode(void)
 {
@@ -101,17 +70,7 @@ int PDC_get_cursor_mode(void)
 	return getdosmemword(0x460);
 }
 
-/*man-start**************************************************************
-
-  PDC_get_rows()	- Return number of screen rows.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the maximum number of rows supported by the display.
-	e.g. 25, 28, 43, 50, 60, 66...
-
-**man-end****************************************************************/
+/* return number of screen rows */
 
 int PDC_get_rows(void)
 {

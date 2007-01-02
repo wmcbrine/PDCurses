@@ -15,7 +15,34 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.27 2007/01/02 14:19:43 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.28 2007/01/02 15:57:57 wmcbrine Exp $");
+
+/*man-start**************************************************************
+
+  Name:								pdcsetsc
+
+  Synopsis:
+	int PDC_set_blink(bool blinkon);
+	void PDC_set_title(const char *title);
+
+  PDCurses Description:
+	PDC_set_blink() toggles whether the A_BLINK attribute sets an
+	actual blink mode (TRUE), or sets the background color to high
+	intensity (FALSE). The default is platform-dependent (FALSE in
+	most cases). It returns OK if it could set the state to match 
+	the given parameter, ERR otherwise. Current platforms also 
+	adjust the value of COLORS according to this function -- 16 for 
+	FALSE, and 8 for TRUE.
+
+	PDC_set_title() sets the title of the window in which the curses
+	program is running. This function may not do anything on some
+	platforms. (Currently it only works in Win32 and X11.)
+
+  Portability				     X/Open    BSD    SYS V
+	PDC_set_blink				-	-	-
+	PDC_set_title				-	-	-
+
+**man-end****************************************************************/
 
 int PDC_curs_set(int visibility)
 {
@@ -32,16 +59,6 @@ int PDC_curs_set(int visibility)
 
 	return ret_vis;
 }
-
-/*man-start**************************************************************
-
-  PDC_set_title()	- Set window title
-
-  PDCurses Description:
-	Sets the title of the window in which the curses program is 
-	running. This function may not do anything on some platforms.
-
-**man-end****************************************************************/
 
 void PDC_set_title(const char *title)
 {

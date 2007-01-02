@@ -35,7 +35,23 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.76 2007/01/02 14:19:43 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.77 2007/01/02 15:57:57 wmcbrine Exp $");
+
+/*man-start**************************************************************
+
+  Name:								pdckbd
+
+  Synopsis:
+	unsigned long PDC_get_input_fd(void);
+
+  PDCurses Description:
+	PDC_get_input_fd() returns the file descriptor that PDCurses 
+	reads its input from. It can be used for select().
+
+  Portability				     X/Open    BSD    SYS V
+	PDC_get_input_fd			-	-	-
+
+**man-end****************************************************************/
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -89,18 +105,6 @@ static short key_table[] =
 };
 
 unsigned long pdc_key_modifiers = 0L;
-
-/*man-start**************************************************************
-
-  PDC_get_input_fd()    - Get file descriptor used for PDCurses input
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine will return the file descriptor that PDCurses reads
-	its input from. It can be used for select().
-
-**man-end****************************************************************/
 
 unsigned long PDC_get_input_fd(void)
 {
@@ -166,21 +170,7 @@ void PDC_set_keyboard_binary(bool on)
 #endif
 }
 
-/*man-start**************************************************************
-
-  PDC_check_bios_key()  - Check BIOS key data area for input
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	This routine will check the BIOS for any indication that
-	keystrokes are pending.
-
-  PDCurses Return Value:
-	Returns TRUE if a keyboard character is available, FALSE 
-	otherwise.
-
-**man-end****************************************************************/
+/* check if a key or mouse event is waiting */
 
 bool PDC_check_bios_key(void)
 {
@@ -354,16 +344,7 @@ static int _process_mouse_events(void)
 
 #endif
 
-/*man-start**************************************************************
-
-  PDC_get_bios_key() - Returns the next key available.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the next key code struck at the keyboard.
-
-**man-end****************************************************************/
+/* return the next available key or mouse event */
 
 int PDC_get_bios_key(void)
 {
@@ -510,20 +491,7 @@ int PDC_get_bios_key(void)
 	return key;
 }
 
-/*man-start**************************************************************
-
-  PDC_get_ctrl_break()  - return OS control break state
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Returns the current OS Control Break Check state.
-
-  PDCurses Return Value:
-	This function returns TRUE if the Control Break Check is enabled 
-	otherwise FALSE is returned.
-
-**man-end****************************************************************/
+/* return OS control break state */
 
 bool PDC_get_ctrl_break(void)
 {
@@ -564,21 +532,7 @@ bool PDC_get_ctrl_break(void)
 #endif
 }
 
-/*man-start**************************************************************
-
-  PDC_set_ctrl_break()  - Enables/Disables the host OS BREAK key check.
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Enables/Disables the host OS BREAK key check. If the supplied 
-	setting is TRUE, this enables CTRL/C and CTRL/BREAK to abort the 
-	process. If FALSE, CTRL/C and CTRL/BREAK are ignored.
-
-  PDCurses Return Value:
-	This function returns OK on success and ERR on error.
-
-**man-end****************************************************************/
+/* enable/disable the host OS BREAK key check */
 
 int PDC_set_ctrl_break(bool setting)
 {
@@ -606,17 +560,8 @@ int PDC_set_ctrl_break(bool setting)
 	return OK;
 }
 
-/*man-start**************************************************************
-
-  PDC_flushinp()		- Low-level input flush
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Discards any pending keyboard and mouse input. Called by 
-	flushinp().
-
-**man-end****************************************************************/
+/* discard any pending keyboard or mouse input -- this is the core
+   routine for flushinp() */
 
 void PDC_flushinp(void)
 {

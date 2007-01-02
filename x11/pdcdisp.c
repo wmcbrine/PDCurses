@@ -15,7 +15,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.41 2007/01/02 14:19:43 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.42 2007/01/02 15:57:57 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -115,18 +115,7 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
 	return OK;
 }
 
-/*man-start**************************************************************
-
-  PDC_gotoyx()	- position hardware cursor at (y, x)
-
-  PDCurses Description:
-	This is a private PDCurses routine.
-
-	Moves the physical cursor to the desired address on the
-	screen. We don't optimize here -- on a PC, it takes more time
-	to optimize than to do things directly.
-
-**man-end****************************************************************/
+/* position hardware cursor at (y, x) */
 
 void PDC_gotoyx(int row, int col)
 {
@@ -136,17 +125,8 @@ void PDC_gotoyx(int row, int col)
 		SP->visibility);
 }
 
-/*man-start**************************************************************
-
-  PDC_transform_line()	- display a physical line of the screen
-
-  PDCurses Description:
-	This is a private PDCurses function.
-
-	Updates the given physical line to look like the corresponding
-	line in _curscr.
-
-**man-end****************************************************************/
+/* update the given physical line to look like the corresponding line in
+   curscr */
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {

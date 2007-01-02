@@ -21,7 +21,7 @@
 #undef sb_get_vert
 #undef sb_refresh
 
-RCSID("$Id: sb.c,v 1.20 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: sb.c,v 1.21 2007/01/02 15:57:57 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -42,7 +42,6 @@ RCSID("$Id: sb.c,v 1.20 2006/10/15 02:42:26 wmcbrine Exp $");
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
-					     Dec '88
 	sb_init					-	-	-
 	sb_set_horz				-	-	-
 	sb_set_vert				-	-	-

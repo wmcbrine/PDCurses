@@ -518,13 +518,6 @@ FUNCTIONS
 		wins_wstr		insstr
 		winwstr			instr
 
-	The following table lists each private curses routine and the 
-	name of the manual page on which it is described. These routines 
-	should not be used directly if avoidable. They are not portable, 
-	and are subject to change at any time.
-
-	   Curses Function        Manual Page Name
-
 		PDC_clearclipboard	pdcclip
 		PDC_debug		debug
 		PDC_freeclipboard	pdcclip

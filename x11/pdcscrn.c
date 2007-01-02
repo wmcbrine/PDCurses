@@ -13,18 +13,9 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.49 2007/01/02 14:19:43 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.50 2007/01/02 15:57:57 wmcbrine Exp $");
 
-/*man-start**************************************************************
-
-  PDC_scr_close()	- Internal low-level binding to close the
-			  physical screen
-
-  PDCurses Description:
-	May restore the screen to its state before PDC_scr_open();
-	miscellaneous cleanup.
-
-**man-end****************************************************************/
+/* close the physical screen */
 
 void PDC_scr_close(void)
 {
@@ -36,20 +27,7 @@ void PDC_scr_free(void)
 	XCursesExit();
 }
 
-/*man-start**************************************************************
-
-  PDC_scr_open()	- Internal low-level binding to open the physical
-			  screen
-
-  PDCurses Description:
-	The platform-specific part of initscr() -- allocates SP, does
-	miscellaneous intialization, and may save the existing screen
-	for later restoration.
-
-  PDCurses Return Value:
-	This function returns OK on success, otherwise an ERR is returned.
-
-**man-end****************************************************************/
+/* open the physical screen -- allocate SP, miscellaneous intialization */
 
 int PDC_scr_open(int argc, char **argv)
 {
@@ -73,21 +51,7 @@ int PDC_scr_open(int argc, char **argv)
 	return OK;
 }
 
-/*man-start**************************************************************
-
-  PDC_resize_screen()	- Internal low-level function to resize screen
-
-  PDCurses Description:
-	This function provides a means for the application program to
-	resize the overall dimensions of the screen.  Under DOS and OS/2
-	the application can tell PDCurses what size to make the screen;
-	under X11, resizing is done by the user and this function simply
-	adjusts its internal structures to fit the new size.
-
-  PDCurses Return Value:
-	This function returns OK on success, otherwise an ERR is returned.
-
-**man-end****************************************************************/
+/* the core of resize_term() */
 
 int PDC_resize_screen(int nlines, int ncols)
 {

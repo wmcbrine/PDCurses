@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.101 2006/12/24 06:07:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.102 2007/01/02 14:19:43 wmcbrine Exp $");
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -236,12 +236,6 @@ static KPTAB ext_kptab[] =
 
 	This routine will return the file descriptor that PDCurses reads
 	its input from. It can be used for WaitForMulitpleObjects().
-
-  PDCurses Return Value:
-	Returns a HANDLE.
-
-  Portability:
-	PDCurses  int PDC_get_input_fd(void);
 
 **man-end****************************************************************/
 
@@ -636,12 +630,6 @@ static int _process_mouse_event(void)
 	bits are 0, the upper bits contain the extended character
 	code. If bit 0-7 are non-zero, the upper bits = 0.
 
-  PDCurses Return Value:
-	See above.
-
-  Portability:
-	PDCurses  int PDC_get_bios_key(void);
-
 **man-end****************************************************************/
 
 int PDC_get_bios_key(void)
@@ -693,9 +681,6 @@ int PDC_get_bios_key(void)
 	This function returns TRUE if the Control Break Check is 
 	enabled; otherwise, FALSE is returned.
 
-  Portability:
-	PDCurses  bool PDC_get_ctrl_break(void);
-
 **man-end****************************************************************/
 
 bool PDC_get_ctrl_break(void)
@@ -719,9 +704,6 @@ bool PDC_get_ctrl_break(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  Portability:
-	PDCurses  int PDC_set_ctrl_break(bool setting);
-
 **man-end****************************************************************/
 
 int PDC_set_ctrl_break(bool setting)
@@ -740,9 +722,6 @@ int PDC_set_ctrl_break(bool setting)
 
 	Discards any pending keyboard and mouse input. Called by 
 	flushinp().
-
-  Portability:
-	PDCurses  void PDC_flushinp(void);
 
 **man-end****************************************************************/
 

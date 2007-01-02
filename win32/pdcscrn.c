@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.75 2006/12/28 09:51:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.76 2007/01/02 14:19:43 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -222,12 +222,6 @@ static void _init_console_info(void)
 	May restore the screen to its state before PDC_scr_open();
 	miscellaneous cleanup.
 
-  PDCurses Return Value:
-	This function returns OK on success, otherwise an ERR is returned.
-
-  Portability:
-	PDCurses  void PDC_scr_close(void);
-
 **man-end****************************************************************/
 
 void PDC_scr_close(void)
@@ -295,9 +289,6 @@ void PDC_scr_free(void)
 
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is returned.
-
-  Portability:
-	PDCurses  int PDC_scr_open(int argc, char **argv);
 
 **man-end****************************************************************/
 
@@ -522,9 +513,6 @@ static BOOL _fit_console_window(HANDLE con_out, CONST SMALL_RECT *rect)
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is 
 	returned.
-
-  Portability:
-	PDCurses  int PDC_resize_screen(int, int);
 
 **man-end****************************************************************/
 

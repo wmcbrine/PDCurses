@@ -15,7 +15,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.26 2006/10/15 02:42:26 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.27 2007/01/02 14:19:43 wmcbrine Exp $");
 
 int PDC_curs_set(int visibility)
 {
@@ -40,12 +40,6 @@ int PDC_curs_set(int visibility)
   PDCurses Description:
 	Sets the title of the window in which the curses program is 
 	running. This function may not do anything on some platforms.
-
-  PDCurses Return Value:
-	N/A
-
-  Portability:
-	PDCurses  void PDC_set_title(const char *title);
 
 **man-end****************************************************************/
 

@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.40 2006/12/16 21:53:17 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.41 2007/01/02 14:19:43 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -86,9 +86,6 @@ chtype acs_map[128] =
 	We don't optimize here -- on a PC, it takes more time to 
 	optimize than to do things directly.
 
-  Portability:
-	PDCurses  void PDC_gotoyx(int row, int col);
-
 **man-end****************************************************************/
 
 void PDC_gotoyx(int row, int col)
@@ -113,10 +110,6 @@ void PDC_gotoyx(int row, int col)
 
 	Updates the given physical line to look like the corresponding
 	line in _curscr.
-
-  Portability:
-	PDCurses  void PDC_transform_line(int lineno, int x, int len, 
-					  const chtype *srcp);
 
 **man-end****************************************************************/
 

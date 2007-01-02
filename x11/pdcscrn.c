@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.48 2006/11/12 10:26:14 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.49 2007/01/02 14:19:43 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -23,12 +23,6 @@ RCSID("$Id: pdcscrn.c,v 1.48 2006/11/12 10:26:14 wmcbrine Exp $");
   PDCurses Description:
 	May restore the screen to its state before PDC_scr_open();
 	miscellaneous cleanup.
-
-  PDCurses Return Value:
-	This function returns OK on success, otherwise an ERR is returned.
-
-  Portability:
-	PDCurses  void PDC_scr_close(void);
 
 **man-end****************************************************************/
 
@@ -54,9 +48,6 @@ void PDC_scr_free(void)
 
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is returned.
-
-  Portability:
-	PDCurses  int PDC_scr_open(int argc, char **argv);
 
 **man-end****************************************************************/
 
@@ -95,11 +86,6 @@ int PDC_scr_open(int argc, char **argv)
 
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is returned.
-
-  PDCurses Errors:
-
-  Portability:
-	PDCurses  int PDC_resize_screen(int, int);
 
 **man-end****************************************************************/
 

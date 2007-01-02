@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.32 2006/11/05 05:37:40 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.33 2007/01/02 14:19:43 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -29,12 +29,6 @@ RCSID("$Id: pdcgetsc.c,v 1.32 2006/11/05 05:37:40 wmcbrine Exp $");
   PDCurses Return Value:
 	This routine will return OK upon success and otherwise ERR will 
 	be returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_cursor_pos(int *row, int *col);
 
 **man-end****************************************************************/
 
@@ -62,12 +56,6 @@ int PDC_get_cursor_pos(int *row, int *col)
   PDCurses Return Value:
 	This routine will return OK upon success and otherwise ERR will 
 	be returned.
-
-  PDCurses Errors:
-	There are no defined errors for this routine.
-
-  Portability:
-	PDCurses  int PDC_get_columns(void);
 
 **man-end****************************************************************/
 
@@ -107,9 +95,6 @@ int PDC_get_columns(void)
   PDCurses Description:
 	Gets the cursor size.
 
-  Portability:
-	PDCurses  int PDC_get_cursor_mode(void);
-
 **man-end****************************************************************/
 
 int PDC_get_cursor_mode(void)
@@ -143,9 +128,6 @@ int PDC_get_cursor_mode(void)
 
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
-
-  Portability:
-	PDCurses  int PDC_get_rows(void);
 
 **man-end****************************************************************/
 

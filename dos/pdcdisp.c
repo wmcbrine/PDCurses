@@ -13,7 +13,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcdisp.c,v 1.58 2006/12/16 21:53:17 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.59 2007/01/02 14:19:43 wmcbrine Exp $");
 
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
    match code page 437 and compatible pages (CP850, CP852, etc.) */
@@ -79,9 +79,6 @@ void movedata(unsigned sseg, unsigned soff, unsigned dseg,
 	screen. We don't optimize here -- on a PC, it takes more time
 	to optimize than to do things directly.
 
-  Portability:
-	PDCurses  void PDC_gotoyx(int row, int col);
-
 **man-end****************************************************************/
 
 void PDC_gotoyx(int row, int col)
@@ -106,10 +103,6 @@ void PDC_gotoyx(int row, int col)
 
 	Updates the given physical line to look like the corresponding
 	line in _curscr.
-
-  Portability:
-	PDCurses  void PDC_transform_line(int lineno, int x, int len, 
-					  const chtype *srcp);
 
 **man-end****************************************************************/
 

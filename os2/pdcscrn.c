@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.63 2006/12/28 09:51:31 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.64 2007/01/02 14:19:43 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -107,12 +107,6 @@ static void _set_font(int size)
 	May restore the screen to its state before PDC_scr_open();
 	miscellaneous cleanup.
 
-  PDCurses Return Value:
-	This function returns OK on success, otherwise an ERR is returned.
-
-  Portability:
-	PDCurses  void PDC_scr_close(void);
-
 **man-end****************************************************************/
 
 void PDC_scr_close(void)
@@ -160,9 +154,6 @@ void PDC_scr_free(void)
 
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is returned.
-
-  Portability:
-	PDCurses  int PDC_scr_open(int argc, char **argv);
 
 **man-end****************************************************************/
 
@@ -253,11 +244,6 @@ int PDC_scr_open(int argc, char **argv)
   PDCurses Return Value:
 	This function returns OK on success, otherwise an ERR is 
 	returned.
-
-  PDCurses Errors:
-
-  Portability:
-	PDCurses  int PDC_resize_screen(int, int);
 
 **man-end****************************************************************/
 

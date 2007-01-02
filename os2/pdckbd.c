@@ -35,7 +35,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.75 2006/12/24 06:07:25 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.76 2007/01/02 14:19:43 wmcbrine Exp $");
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*
@@ -99,12 +99,6 @@ unsigned long pdc_key_modifiers = 0L;
 
 	This routine will return the file descriptor that PDCurses reads
 	its input from. It can be used for select().
-
-  PDCurses Return Value:
-	Returns a file descriptor.
-
-  Portability:
-	PDCurses  int PDC_get_input_fd(void);
 
 **man-end****************************************************************/
 
@@ -183,10 +177,8 @@ void PDC_set_keyboard_binary(bool on)
 	keystrokes are pending.
 
   PDCurses Return Value:
-	Returns 1 if a keyboard character is available, 0 otherwise.
-
-  Portability:
-	PDCurses  bool PDC_check_bios_key(void);
+	Returns TRUE if a keyboard character is available, FALSE 
+	otherwise.
 
 **man-end****************************************************************/
 
@@ -371,9 +363,6 @@ static int _process_mouse_events(void)
 
 	Returns the next key code struck at the keyboard.
 
-  Portability:
-	PDCurses  int PDC_get_bios_key(void);
-
 **man-end****************************************************************/
 
 int PDC_get_bios_key(void)
@@ -534,9 +523,6 @@ int PDC_get_bios_key(void)
 	This function returns TRUE if the Control Break Check is enabled 
 	otherwise FALSE is returned.
 
-  Portability:
-	PDCurses  bool PDC_get_ctrl_break(void);
-
 **man-end****************************************************************/
 
 bool PDC_get_ctrl_break(void)
@@ -592,9 +578,6 @@ bool PDC_get_ctrl_break(void)
   PDCurses Return Value:
 	This function returns OK on success and ERR on error.
 
-  Portability:
-	PDCurses  int PDC_set_ctrl_break(bool setting);
-
 **man-end****************************************************************/
 
 int PDC_set_ctrl_break(bool setting)
@@ -632,9 +615,6 @@ int PDC_set_ctrl_break(bool setting)
 
 	Discards any pending keyboard and mouse input. Called by 
 	flushinp().
-
-  Portability:
-	PDCurses  void PDC_flushinp(void);
 
 **man-end****************************************************************/
 

@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.79 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.80 2007/01/03 14:10:46 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -514,8 +514,6 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 
 	SP->orig_attr	= FALSE;
-
-	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
 	pdc_direct_video = TRUE;	/* Assume that we can	      */
 	pdc_video_seg	= 0xb000;	/* Base screen segment addr   */

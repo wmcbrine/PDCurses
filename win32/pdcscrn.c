@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.77 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.78 2007/01/03 14:10:47 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -428,8 +428,6 @@ int PDC_scr_open(int argc, char **argv)
 	SetConsoleActiveScreenBuffer(pdc_con_out);
 
 	PDC_reset_prog_mode();
-
-	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
 	SP->mono = FALSE;
 

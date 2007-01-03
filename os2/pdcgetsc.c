@@ -13,21 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.34 2007/01/02 15:57:57 wmcbrine Exp $");
-
-/* return current cursor position */
-
-int PDC_get_cursor_pos(int *row, int *col)
-{
-	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
-
-#ifdef EMXVIDEO
-	v_getxy(col, row);
-#else
-	VioGetCurPos((PUSHORT)row, (PUSHORT)col, 0);
-#endif
-	return OK;
-}
+RCSID("$Id: pdcgetsc.c,v 1.35 2007/01/03 14:10:46 wmcbrine Exp $");
 
 /* return width of screen/viewport */
 

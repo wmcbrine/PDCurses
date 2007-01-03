@@ -15,24 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcgetsc.c,v 1.37 2007/01/02 15:57:57 wmcbrine Exp $");
-
-/* return current cursor position */
-
-int PDC_get_cursor_pos(int *row, int *col)
-{
-	PDCREGS regs;
-
-	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
-
-	regs.h.ah = 0x03;
-	regs.h.bh = 0;
-	PDCINT(0x10, regs);
-	*row = regs.h.dh;
-	*col = regs.h.dl;
-
-	return OK;
-}
+RCSID("$Id: pdcgetsc.c,v 1.38 2007/01/03 14:10:46 wmcbrine Exp $");
 
 /* return width of screen/viewport */
 

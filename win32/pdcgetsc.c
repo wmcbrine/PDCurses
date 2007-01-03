@@ -13,23 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.31 2007/01/02 15:57:57 wmcbrine Exp $");
-
-/* return current cursor position */
-
-int PDC_get_cursor_pos(int *row, int *col)
-{
-	CONSOLE_SCREEN_BUFFER_INFO scr;
-
-	PDC_LOG(("PDC_get_cursor_pos() - called\n"));
-
-	GetConsoleScreenBufferInfo(pdc_con_out, &scr);
-
-	*col = scr.dwCursorPosition.X;
-	*row = scr.dwCursorPosition.Y;
-
-	return OK;
-}
+RCSID("$Id: pdcgetsc.c,v 1.32 2007/01/03 14:10:47 wmcbrine Exp $");
 
 /* get the cursor size/shape */
 

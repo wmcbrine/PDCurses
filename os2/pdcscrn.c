@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.65 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.66 2007/01/03 14:10:46 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -160,8 +160,6 @@ int PDC_scr_open(int argc, char **argv)
         v_init();
 #endif
 	SP->orig_attr = FALSE;
-
-	PDC_get_cursor_pos(&SP->cursrow, &SP->curscol);
 
 #ifdef EMXVIDEO
 	adapter = v_hardware();

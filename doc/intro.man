@@ -142,10 +142,10 @@ Normally, attributres are a property of the character.
 
 INPUT VALUES
 
-The following constants might be returned by getch() if keypad() has 
-been enabled.  Note that not all of these may be supported on a 
-particular terminal if the terminal does not transmit a unique code when 
-the key is pressed or the definition for the key is not present in the 
+The following constants might be returned by getch() if keypad() has
+been enabled.  Note that not all of these may be supported on a
+particular terminal if the terminal does not transmit a unique code when
+the key is pressed or the definition for the key is not present in the
 underlying table of terminal capabilities.
 
 	KEY_BREAK	break key
@@ -191,9 +191,12 @@ The virtual keypad is arranged like this:
 
 FUNCTIONS
 
-	The following table lists each curses routine and the name of the 
-	manual page on which it is described. This list is based mainly 
-	on X/Open and System V R4 curses:
+	The following table lists each curses routine and the name of the
+	manual page on which it is described.
+
+	Functions from the X/Open curses standard -- complete, except
+	for getch() and ungetch(), which are implemented as macros for
+	DOS compatibility:
 
 	   Curses Function        Manual Page Name
 
@@ -204,6 +207,7 @@ FUNCTIONS
 		addstr			addstr
 		attroff			attr
 		attron			attr
+		attrset			attr
 		attr_get		attr
 		attr_off		attr
 		attr_on			attr
@@ -217,8 +221,8 @@ FUNCTIONS
 		can_change_color	color
 		cbreak			inopts
 		chgat			attr
-		clear			clear
 		clearok			outopts
+		clear			clear
 		clrtobot		clear
 		clrtoeol		clear
 		color_content		color
@@ -236,35 +240,29 @@ FUNCTIONS
 		derwin			window
 		doupdate		refresh
 		dupwin			window
-		echo			inopts
 		echochar		addch
+		echo			inopts
 		endwin			initscr
-		erase			clear
 		erasechar		termattr
+		erase			clear
 		filter			util
 		flash			beep
 		flushinp		getch
-		getbegyx		getyx
-		getattrs		attr
-		getch			getch
-		getmaxyx		getyx
-		getparyx		getyx
+		getbkgd			bkgd
+		getnstr			getstr
 		getstr			getstr
-		getsyx			kernel
 		getwin			scr_dump
-		getyx			getyx
 		halfdelay		inopts
 		has_colors		color
 		has_ic			termattr
 		has_il			termattr
-		has_key			util
 		hline			border
 		idcok			outopts
 		idlok			outopts
 		immedok			outopts
-		inch			inch
 		inchnstr		inchstr
 		inchstr			inchstr
+		inch			inch
 		init_color		color
 		init_pair		color
 		initscr			initscr
@@ -276,10 +274,10 @@ FUNCTIONS
 		insstr			innstr
 		instr			instr
 		intrflush		inopts
+		isendwin		initscr
 		is_linetouched		touch
 		is_wintouched		touch
-		isendwin		initscr
-		keyname			util
+		keyname			keyname
 		keypad			inopts
 		killchar		termattr
 		leaveok			outopts
@@ -296,7 +294,9 @@ FUNCTIONS
 		mvdelch			delch
 		mvderwin		window
 		mvgetch			getch
+		mvgetnstr		getstr
 		mvgetstr		getstr
+		mvhline			border
 		mvinch			inch
 		mvinchnstr		inchstr
 		mvinchstr		inchstr
@@ -307,26 +307,30 @@ FUNCTIONS
 		mvinstr			instr
 		mvprintw		printw
 		mvscanw			scanw
-		mvwaddch		addch
+		mvvline			border
 		mvwaddchnstr		addchstr
 		mvwaddchstr		addchstr
+		mvwaddch		addch
 		mvwaddnstr		addstr
 		mvwaddstr		addstr
 		mvwchgat		attr
 		mvwdelch		delch
 		mvwgetch		getch
 		mvwgetnstr		getstr
-		mvwin			window
-		mvwinch			inch
+		mvwgetstr		getstr
+		mvwhline		border
 		mvwinchnstr		inchstr
 		mvwinchstr		inchstr
+		mvwinch			inch
 		mvwinnstr		instr
 		mvwinsch		insch
 		mvwinsnstr		insstr
 		mvwinsstr		insstr
 		mvwinstr		instr
+		mvwin			window
 		mvwprintw		printw
 		mvwscanw		scanw
+		mvwvline		border
 		napms			kernel
 		newpad			pad
 		newterm			initscr
@@ -350,7 +354,6 @@ FUNCTIONS
 		putwin			scr_dump
 		qiflush			inopts
 		raw			inopts
-		raw_output		outopts
 		redrawwin		refresh
 		refresh			refresh
 		reset_prog_mode		kernel
@@ -369,7 +372,6 @@ FUNCTIONS
 		scrollok		outopts
 		set_term		initscr
 		setscrreg		outopts
-		setsyx			kernel
 		setterm			terminfo
 		setupterm		terminfo
 		slk_attroff		slk
@@ -409,11 +411,7 @@ FUNCTIONS
 		touchwin		touch
 		tparm			terminfo
 		tputs			terminfo
-		traceoff		debug
-		traceon			debug
 		typeahead		inopts
-		unctrl			util
-		ungetch			getch
 		untouchwin		touch
 		use_env			util
 		vidattr			terminfo
@@ -421,11 +419,13 @@ FUNCTIONS
 		vidputs			terminfo
 		vid_puts		terminfo
 		vline			border
+		vw_printw		printw
 		vwprintw		printw
+		vw_scanw		scanw
 		vwscanw			scanw
-		waddch			addch
 		waddchnstr		addchstr
 		waddchstr		addchstr
+		waddch			addch
 		waddnstr		addstr
 		waddstr			addstr
 		wattroff		attr
@@ -435,9 +435,10 @@ FUNCTIONS
 		wattr_off		attr
 		wattr_on		attr
 		wattr_set		attr
-		wbkgd			bkgd
 		wbkgdset		bkgd
+		wbkgd			bkgd
 		wborder			border
+		wchgat			attr
 		wclear			clear
 		wclrtobot		clear
 		wclrtoeol		clear
@@ -447,14 +448,13 @@ FUNCTIONS
 		wdeleteln		deleteln
 		wechochar		addch
 		werase			clear
-		wchgat			attr
 		wgetch			getch
 		wgetnstr		getstr
 		wgetstr			getstr
 		whline			border
-		winch			inch
 		winchnstr		inchstr
 		winchstr		inchstr
+		winch			inch
 		winnstr			instr
 		winsch			insch
 		winsdelln		deleteln
@@ -464,11 +464,9 @@ FUNCTIONS
 		winstr			instr
 		wmove			move
 		wnoutrefresh		refresh
-		wordchar		termattr
 		wprintw			printw
 		wredrawln		refresh
 		wrefresh		refresh
-		wresize			window
 		wscanw			scanw
 		wscrl			scroll
 		wsetscrreg		outopts
@@ -480,6 +478,113 @@ FUNCTIONS
 		wtouchln		touch
 		wvline			border
 
+	Wide-character functions from the X/Open standard -- these are
+	only available when PDCurses is built with PDC_WIDE defined, and
+	the prototypes are only available from curses.h when PDC_WIDE is
+	defined before its inclusion in your app:
+
+		addnwstr		addstr
+		addwstr			addstr
+		add_wch			addch
+		add_wchnstr		addchstr
+		add_wchstr		addchstr
+		border_set		border
+		box_set			border
+		echo_wchar		addch
+		erasewchar		termattr
+		getbkgrnd		bkgd
+		getcchar		util
+		getn_wstr		getstr
+		get_wch			getch
+		get_wstr		getstr
+		hline_set		border
+		innwstr			instr
+		ins_nwstr		insstr
+		ins_wch			insch
+		ins_wstr		insstr
+		inwstr			instr
+		in_wch			inch
+		in_wchnstr		inchstr
+		in_wchstr		inchstr
+		key_name		keyname
+		killwchar		termattr
+		mvaddnwstr		addstr
+		mvaddwstr		addstr
+		mvadd_wch		addch
+		mvadd_wchnstr		addchstr
+		mvadd_wchstr		addchstr
+		mvgetn_wstr		getstr
+		mvget_wch		getch
+		mvget_wstr		getstr
+		mvhline_set		border
+		mvinnwstr		instr
+		mvins_nwstr		insstr
+		mvins_wch		insch
+		mvins_wstr		insstr
+		mvinwstr		instr
+		mvwaddnwstr		addstr
+		mvwaddwstr		addstr
+		mvwadd_wch		addch
+		mvwadd_wchnstr		addchstr
+		mvwadd_wchstr		addchstr
+		mvwgetn_wstr		getstr
+		mvwget_wch		getch
+		mvwget_wstr		getstr
+		mvwhline_set		border
+		mvwinnwstr		instr
+		mvwins_nwstr		insstr
+		mvwins_wch		insch
+		mvwins_wstr		insstr
+		mvwin_wch		inch
+		mvwin_wchnstr		inchstr
+		mvwin_wchstr		inchstr
+		mvwinwstr		instr
+		mvwvline_set		border
+		pecho_wchar		pad
+		setcchar		util
+		slk_wset		slk
+		unget_wch		getch
+		vline_set		border
+		waddnwstr		addstr
+		waddwstr		addstr
+		wadd_wch		addch
+		wadd_wchnstr		addchstr
+		wadd_wchstr		addchstr
+		wbkgrnd			bkgd
+		wbkgrndset		bkgd
+		wborder_set		border
+		wecho_wchar		addch
+		wgetbkgrnd		bkgd
+		wgetn_wstr		getstr
+		wget_wch		getch
+		wget_wstr		getstr
+		whline_set		border
+		winnwstr		instr
+		wins_nwstr		insstr
+		wins_wch		insch
+		wins_wstr		insstr
+		winwstr			instr
+		win_wch			inch
+		win_wchnstr		inchstr
+		win_wchstr		inchstr
+		wunctrl			util
+		wvline_set		border
+
+	Quasi-standard functions, from Sys V or BSD curses:
+
+		getattrs		attr
+		getbegx			getyx
+		getbegy			getyx
+		getmaxx			getyx
+		getmaxy			getyx
+		getparx			getyx
+		getparx			getyx
+		traceoff		debug
+		traceon			debug
+		unctrl			util
+
+	Classic PDCurses mouse functions, based on Sys V:
+
 		mouse_set		mouse
 		mouse_on		mouse
 		mouse_off		mouse
@@ -488,45 +593,69 @@ FUNCTIONS
 		wmouse_position		mouse
 		getmouse		mouse
 		getbmap			mouse
-                           
+
+	Functions from ncurses:
+
+		assume_default_colors	color
+		curses_version		initscr
+		has_key			util
+		use_default_colors	color
+		wresize			window
+
+		mouseinterval		mouse
+		mousemask		mouse
+		mouse_trafo		mouse
+		nc_getmouse		mouse
+		ungetmouse		mouse
+		wenclose		mouse
+		wmouse_trafo		mouse
+
+	PDCurses-specific functions -- avoid these in code that's 
+	intended to be portable:
+
+		addrawch		addch
+		insrawch		insch
+		is_termresized		initscr
+		mvaddrawch		addch
+		mvdeleteln		deleteln
+		mvinsertln		deleteln
+		mvinsrawch		insch
+		mvwaddrawch		addch
+		mvwdeleteln		deleteln
+		mvwinsertln		deleteln
+		mvwinsrawch		insch
+		raw_output		outopts
 		resize_term		initscr
+		resize_window		window
+		waddrawch		addch
+		winsrawch		insch
+		wordchar		termattr
 
-		addnwstr		addstr
-		addwstr			addstr
-		erasewchar		termattr
-		innwstr			instr
-		ins_nwstr		insstr
-		ins_wstr		insstr
-		inwstr			instr
-		killwchar		termattr
-		mvaddnwstr		addstr
-		mvaddwstr		addstr
-		mvinnwstr		instr
-		mvins_nwstr		insstr
-		mvins_wstr		insstr
-		mvinwstr		instr
-		mvwaddnwstr		addstr
-		mvwaddwstr		addstr
-		mvwinnwstr		instr
-		mvwins_nwstr		insstr
-		mvwins_wstr		insstr
-		mvwinwstr		instr
-		waddnwstr		addstr
-		waddwstr		addstr
-		winnwstr		instr
-		wins_nwstr		insstr
-		wins_wstr		insstr
-		winwstr			instr
-
-		PDC_clearclipboard	pdcclip
 		PDC_debug		debug
-		PDC_freeclipboard	pdcclip
-		PDC_get_input_fd	pdckbd
-		PDC_get_key_modifiers	getch
-		PDC_getclipboard	pdcclip
+		PDC_ungetch		getch
+		PDC_set_blink		pdcsetsc
 		PDC_set_line_color	color
 		PDC_set_title		pdcsetsc
+
+		PDC_clearclipboard	pdcclip
+		PDC_freeclipboard	pdcclip
+		PDC_getclipboard	pdcclip
 		PDC_setclipboard	pdcclip
-		PDC_ungetch		getch
+
+		PDC_get_input_fd	pdckbd
+		PDC_get_key_modifiers	getch
+		PDC_return_key_modifiers getch
+		PDC_save_key_modifiers	getch
+
+	Functions specific to the X11 port of PDCurses:
+
+		Xinitscr		initscr
+		XCursesExit		-
+		sb_init			sb
+		sb_set_horz		sb
+		sb_set_vert		sb
+		sb_get_horz		sb
+		sb_get_vert		sb
+		sb_refresh		sb
 
 **man-end****************************************************************/

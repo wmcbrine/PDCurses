@@ -14,9 +14,9 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.95 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.96 2007/01/03 14:11:32 wmcbrine Exp $");
 
-const char *_curses_notice = "PDCurses 3.0 - Public Domain 2006";
+const char *_curses_notice = "PDCurses 3.0 - Public Domain 2007";
 
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */

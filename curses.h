@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.267 2006/12/29 11:53:20 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.268 2007/01/03 14:12:50 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -1259,13 +1259,13 @@ int	savetty(void);
 int	scanw(const char *, ...);
 int	scr_dump(const char *);
 int	scr_init(const char *);
-int	scrl(int);
-int	scrollok(WINDOW *, bool);
-int	scroll(WINDOW *);
 int	scr_restore(const char *);
 int	scr_set(const char *);
-int	setscrreg(int, int);
+int	scrl(int);
+int	scroll(WINDOW *);
+int	scrollok(WINDOW *, bool);
 SCREEN *set_term(SCREEN *);
+int	setscrreg(int, int);
 int	slk_attroff(const chtype);
 int	slk_attr_off(const attr_t, void *);
 int	slk_attron(const chtype);
@@ -1520,17 +1520,6 @@ int	waddrawch(WINDOW *, chtype);
 int	winsrawch(WINDOW *, chtype);
 char	wordchar(void);
 
-#ifdef XCURSES
-WINDOW *Xinitscr(int, char **);
-void	XCursesExit(void);
-int	sb_init(void);
-int	sb_set_horz(int, int, int);
-int	sb_set_vert(int, int, int);
-int	sb_get_horz(int *, int *, int *);
-int	sb_get_vert(int *, int *, int *);
-int	sb_refresh(void);
-#endif
-
 void	PDC_debug(const char *, ...);
 int	PDC_ungetch(int);
 int	PDC_set_blink(bool);
@@ -1544,8 +1533,19 @@ int	PDC_setclipboard(const char *, long);
 
 unsigned long PDC_get_input_fd(void);
 unsigned long PDC_get_key_modifiers(void);
-int	PDC_save_key_modifiers(bool);
 int	PDC_return_key_modifiers(bool);
+int	PDC_save_key_modifiers(bool);
+
+#ifdef XCURSES
+WINDOW *Xinitscr(int, char **);
+void	XCursesExit(void);
+int	sb_init(void);
+int	sb_set_horz(int, int, int);
+int	sb_set_vert(int, int, int);
+int	sb_get_horz(int *, int *, int *);
+int	sb_get_vert(int *, int *, int *);
+int	sb_refresh(void);
+#endif
 
 /*** Functions defined as macros ***/
 

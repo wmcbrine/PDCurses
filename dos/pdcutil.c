@@ -13,13 +13,7 @@
 
 #include "pdcdos.h"
 
-#ifdef __DJGPP__
-# include <unistd.h>
-#endif
-
-#include <time.h>
-
-RCSID("$Id: pdcutil.c,v 1.19 2007/01/01 21:04:27 wmcbrine Exp $");
+RCSID("$Id: pdcutil.c,v 1.20 2007/01/04 15:27:38 wmcbrine Exp $");
 
 void PDC_beep(void)
 {
@@ -32,34 +26,22 @@ void PDC_beep(void)
 	PDCINT(0x10, regs);
 }
 
-#ifdef __DJGPP__
-# define PDCCLOCK_T uclock_t
-# define PDCCLOCK() uclock()
-#else
-# define PDCCLOCK_T long
-# define PDCCLOCK() getdosmemdword(0x46c)
-#endif
-
 void PDC_napms(int ms)
 {
 	PDCREGS regs;
-	PDCCLOCK_T goal, start, current;
+	long goal, start, current;
 
 	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-#ifdef __DJGPP__
-	goal = (PDCCLOCK_T)ms * UCLOCKS_PER_SEC / 1000;
-#else
-	goal = DIVROUND((PDCCLOCK_T)ms, 50);
-#endif
+	goal = DIVROUND((long)ms, 50);
 	if (!goal)
 		goal++;
 
-	start = PDCCLOCK();
+	start = getdosmemdword(0x46c);
 
 	goal += start;
 
-	while (goal > (current = PDCCLOCK()))
+	while (goal > (current = getdosmemdword(0x46c)))
 	{
 		if (current < start)	/* in case of midnight reset */
 			return;

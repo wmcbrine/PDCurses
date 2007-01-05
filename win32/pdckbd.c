@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.103 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.104 2007/01/05 12:01:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -643,24 +643,6 @@ int PDC_get_bios_key(void)
 	}
 
 	return -1;
-}
-
-/* return OS control break state */
-
-bool PDC_get_ctrl_break(void)
-{
-	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
-
-	return FALSE;
-}
-
-/* enable/disable the host OS BREAK key check */
-
-int PDC_set_ctrl_break(bool setting)
-{
-	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
-
-	return OK;
 }
 
 /* discard any pending keyboard or mouse input -- this is the core

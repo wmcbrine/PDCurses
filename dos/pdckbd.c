@@ -11,10 +11,6 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
                           
-#ifdef __DJGPP__
-# include <signal.h>
-#endif
-
 /* MS C doesn't return flags from int86() */
 #ifdef MSC
 # define USE_KBHIT
@@ -26,7 +22,12 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.76 2007/01/02 15:57:57 wmcbrine Exp $");
+#ifdef __DJGPP__
+# include <fcntl.h>
+# include <io.h>
+#endif
+
+RCSID("$Id: pdckbd.c,v 1.77 2007/01/05 12:01:22 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -120,6 +121,11 @@ unsigned long PDC_get_input_fd(void)
 void PDC_set_keyboard_binary(bool on)
 {
 	PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
+
+#ifdef __DJGPP__
+	setmode(fileno(stdin), on ? O_BINARY : O_TEXT);
+	setcbrk(!on);
+#endif
 }
 
 /* check if a key or mouse event is waiting */
@@ -460,43 +466,6 @@ int PDC_get_bios_key(void)
 	SP->key_code = ((unsigned)key >= 256);
 
 	return key;
-}
-
-/* return OS control break state */
-
-bool PDC_get_ctrl_break(void)
-{
-	PDCREGS regs;
-
-	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
-
-	regs.h.ah = 0x33;
-	regs.h.al = 0x00;
-	PDCINT(0x21, regs);
-
-	return (bool)regs.h.dl;
-}
-
-/* enable/disable the host OS BREAK key check */
-
-int PDC_set_ctrl_break(bool setting)
-{
-#ifndef __DJGPP__
-	PDCREGS regs;
-#endif
-	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
-
-#ifdef __DJGPP__
-	signal(SIGINT, setting ? SIG_DFL : SIG_IGN);
-/*	__djgpp_set_ctrl_c(setting);*/
-	setcbrk(setting);
-#else
-	regs.h.ah = 0x33;
-	regs.h.al = 0x01;
-	regs.h.dl = setting;
-	PDCINT(0x21, regs);
-#endif
-	return OK;
 }
 
 /* discard any pending keyboard or mouse input -- this is the core 

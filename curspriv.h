@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.146 2007/01/03 15:32:05 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.147 2007/01/05 12:01:22 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -73,7 +73,6 @@ int	PDC_curs_set(int);
 void	PDC_flushinp(void);
 int	PDC_get_bios_key(void);
 int	PDC_get_columns(void);
-bool	PDC_get_ctrl_break(void);
 int	PDC_get_cursor_mode(void);
 int	PDC_get_rows(void);
 void	PDC_gotoyx(int, int);
@@ -89,7 +88,6 @@ void	PDC_save_screen_mode(int);
 void	PDC_scr_close(void);
 void	PDC_scr_free(void);
 int	PDC_scr_open(int, char **);
-int	PDC_set_ctrl_break(bool);
 void	PDC_set_keyboard_binary(bool);
 void	PDC_transform_line(int, int, int, const chtype *);
 const char *PDC_sysname(void);

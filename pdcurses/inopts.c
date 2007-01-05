@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inopts.c,v 1.35 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.36 2007/01/05 12:01:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -281,7 +281,6 @@ int raw(void)
 
 	PDC_set_keyboard_binary(TRUE);
 	SP->raw_inp = TRUE;
-	PDC_set_ctrl_break(FALSE);
 
 	return OK;
 }
@@ -292,7 +291,6 @@ int noraw(void)
 
 	PDC_set_keyboard_binary(FALSE);
 	SP->raw_inp = FALSE;
-	PDC_set_ctrl_break(TRUE);
 
 	return OK;
 }

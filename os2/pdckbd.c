@@ -13,16 +13,6 @@
 
 #include "pdcos2.h"
 
-#if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
-    defined(__TURBOC__)
-# define HAVE_SIGNAL
-# include <signal.h>
-#else
-# define INCL_DOSSIGNALS
-# define INCL_NOCOMMON
-# include <bsedos.h>
-#endif
-
 #ifdef EMXVIDEO
 # include <termios.h>
 static int tahead = -1;
@@ -35,7 +25,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.77 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.78 2007/01/05 12:01:22 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -489,75 +479,6 @@ int PDC_get_bios_key(void)
 	SP->key_code = ((unsigned)key >= 256);
 
 	return key;
-}
-
-/* return OS control break state */
-
-bool PDC_get_ctrl_break(void)
-{
-#ifdef HAVE_SIGNAL
-# ifdef __TURBOC__
-	void __cdecl (*oldAction) (int);
-# else
-	void (*oldAction) (int);
-# endif
-#endif
-	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
-
-#ifdef HAVE_SIGNAL
-
-	oldAction = signal(SIGINT, SIG_DFL);
-
-	if (oldAction == SIG_ERR)
-		return FALSE;
-	else
-		signal(SIGINT, oldAction);
-
-	return (oldAction != SIG_IGN);
-#else
-	PFNSIGHANDLER oldHandler, oldHandler1;
-	USHORT oldAction, oldAction1;
-
-	/* get the current state, and set to ignore */
-
-	DosSetSigHandler((PFNSIGHANDLER) NULL, &oldHandler, &oldAction,
-		SIGA_IGNORE, SIG_CTRLBREAK);
-
-	/* restore the previous state */
-
-	DosSetSigHandler(oldHandler, &oldHandler1, &oldAction1,
-		oldAction, SIG_CTRLBREAK);
-
-	return (oldAction != SIGA_IGNORE);
-#endif
-}
-
-/* enable/disable the host OS BREAK key check */
-
-int PDC_set_ctrl_break(bool setting)
-{
-	PDC_LOG(("PDC_set_ctrl_break() - called. Setting: %d\n", setting));
-
-#ifdef HAVE_SIGNAL
-	signal(SIGINT, setting ? SIG_DFL : SIG_IGN);
-	signal(SIGBREAK, setting ? SIG_DFL : SIG_IGN);
-#else
-	PFNSIGHANDLER oldHandler;
-	USHORT oldAction, Action;
-
-	/* turn off control C checking */
-
-	if (setting)
-		Action = SIGA_KILL;
-	else
-		Action = SIGA_IGNORE;
-
-	DosSetSigHandler((PFNSIGHANDLER) NULL, &oldHandler, &oldAction,
-		Action, SIG_CTRLBREAK);
-	DosSetSigHandler((PFNSIGHANDLER) NULL, &oldHandler, &oldAction,
-		Action, SIG_CTRLC);
-#endif
-	return OK;
 }
 
 /* discard any pending keyboard or mouse input -- this is the core

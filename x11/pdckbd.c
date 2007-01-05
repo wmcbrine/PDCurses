@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.55 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.56 2007/01/05 12:01:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -94,24 +94,6 @@ unsigned long PDC_get_input_fd(void)
 void PDC_set_keyboard_binary(bool on)
 {
         PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
-}
-
-/* return OS control break state */
-
-bool PDC_get_ctrl_break(void)
-{
-	PDC_LOG(("PDC_get_ctrl_break() - called\n"));
-
-	return FALSE;
-}
-
-/* enable/disable the host OS BREAK key check */
-
-int PDC_set_ctrl_break(bool setting)
-{
-	PDC_LOG(("PDC_set_ctrl_break() - called\n"));
-
-	return OK;
 }
 
 /* discard any pending keyboard or mouse input -- this is the core

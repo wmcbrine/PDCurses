@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: kernel.c,v 1.68 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.69 2007/01/05 12:01:23 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -138,9 +138,6 @@ static int _restore_mode(int i)
 	if (ctty[i].been_set == TRUE)
 	{
 		memcpy(SP, &(ctty[i].saved), sizeof(SCREEN));
-
-		if (PDC_get_ctrl_break() != ctty[i].saved.orgcbr)
-			PDC_set_ctrl_break(ctty[i].saved.orgcbr);
 
 		if (ctty[i].saved.raw_out)
 			raw();

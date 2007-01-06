@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.66 2007/01/03 14:10:46 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.67 2007/01/06 18:01:04 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -22,28 +22,11 @@ static unsigned char *saved_screen = NULL;
 static int saved_lines = 0;
 static int saved_cols = 0;
 #else
-
-# ifdef __WATCOMC__
-#  define PDCTHUNK(x) ((ptr_16)(x))
-# else
-#  ifdef __EMX__
-#   define PDCTHUNK(x) ((PCH)_emx_32to16(x))
-#  endif
-# endif
-
-# if defined(__WATCOMC__) && defined(__386__)
-#  define SEG16 _Seg16
-# else
-#  define SEG16
-# endif
-
 # ifdef PDCTHUNK
-
 #  ifdef __EMX__
 #   define THUNKEDVIO VIOCOLORREG
 #  else
 
-typedef void * SEG16 ptr_16;
 typedef struct {
 	USHORT cb;
 	USHORT type;

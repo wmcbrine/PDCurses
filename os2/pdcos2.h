@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcos2.h,v 1.4 2006/11/13 21:17:54 wmcbrine Exp $ */
+/* $Id: pdcos2.h,v 1.5 2007/01/06 18:01:04 wmcbrine Exp $ */
 
 #include <stdlib.h>
 #include <string.h>
@@ -29,6 +29,22 @@
 #endif
 
 #include <curspriv.h>
+
+#ifdef __WATCOMC__
+# define PDCTHUNK(x) ((ptr_16)(x))
+# ifdef __386__
+#  define SEG16 _Seg16
+# else
+#  define SEG16
+# endif
+
+typedef void * SEG16 ptr_16;
+
+#else
+# ifdef __EMX__
+#  define PDCTHUNK(x) ((PCH)_emx_32to16(x))
+# endif
+#endif
 
 extern int pdc_font;
 

@@ -9,6 +9,7 @@
 -+color.obj &
 -+delch.obj &
 -+deleteln.obj &
+-+deprec.obj &
 -+getch.obj &
 -+getstr.obj &
 -+getyx.obj &

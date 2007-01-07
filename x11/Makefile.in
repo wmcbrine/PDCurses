@@ -72,11 +72,11 @@ realclean: distclean
 #------------------------------------------------------------------------
 
 LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
-clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o inch.o \
-inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o keyname.o \
-mouse.o move.o outopts.o overlay.o pad.o printw.o refresh.o scanw.o \
-scr_dump.o scroll.o slk.o termattr.o terminfo.o touch.o util.o window.o \
-debug.o
+clear.o color.o delch.o deleteln.o deprec.o getch.o getstr.o getyx.o \
+inch.o inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o \
+keyname.o mouse.o move.o outopts.o overlay.o pad.o printw.o refresh.o \
+scanw.o scr_dump.o scroll.o slk.o termattr.o terminfo.o touch.o util.o \
+window.o debug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
 pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
@@ -138,6 +138,9 @@ delch.o: $(srcdir)/delch.c
 
 deleteln.o: $(srcdir)/deleteln.c
 	$(BUILD) $(srcdir)/deleteln.c
+
+deprec.o: $(srcdir)/deprec.c
+	$(BUILD) $(srcdir)/deprec.c
 
 getch.o: $(srcdir)/getch.c
 	$(BUILD) $(srcdir)/getch.c

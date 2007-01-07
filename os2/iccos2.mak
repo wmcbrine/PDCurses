@@ -101,6 +101,9 @@ delch.obj: $(srcdir)\delch.c $(PDCURSES_HEADERS)
 deleteln.obj: $(srcdir)\deleteln.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\deleteln.c
 
+deprec.obj: $(srcdir)\deprec.c $(PDCURSES_HEADERS)
+	$(BUILD) $(srcdir)\deprec.c
+
 getch.obj: $(srcdir)\getch.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\getch.c
 

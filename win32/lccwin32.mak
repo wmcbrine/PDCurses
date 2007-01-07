@@ -76,7 +76,7 @@ clean:
 #------------------------------------------------------------------------
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
-border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj \
+border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj getch.obj \
 getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
 insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj \
 outopts.obj overlay.obj pad.obj printw.obj refresh.obj scanw.obj \
@@ -141,6 +141,9 @@ delch.obj: $(srcdir)\delch.c
 	$(BUILD) $(srcdir)\$*.c
 
 deleteln.obj: $(srcdir)\deleteln.c
+	$(BUILD) $(srcdir)\$*.c
+
+deprec.obj: $(srcdir)\deprec.c
 	$(BUILD) $(srcdir)\$*.c
 
 getch.obj: $(srcdir)\getch.c

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.104 2007/01/05 12:01:23 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.105 2007/01/07 21:31:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -257,10 +257,8 @@ void PDC_set_keyboard_binary(bool on)
 
 /* check if a key or mouse event is waiting */
 
-bool PDC_check_bios_key(void)
+bool PDC_check_key(void)
 {
-	PDC_LOG(("PDC_check_bios_key() - called\n"));
-
 	if (key_count > 0)
 		return TRUE;
 
@@ -362,7 +360,7 @@ static int _get_key_count(void)
 
 /* _process_key_event returns -1 if the key in save_ip should be
    ignored. Otherwise it returns the keycode which should be returned
-   by PDC_get_bios_key(). save_ip must be a key event.
+   by PDC_get_key(). save_ip must be a key event.
 
    CTRL-ALT support has been disabled, when is it emitted plainly?  */
 
@@ -609,10 +607,8 @@ static int _process_mouse_event(void)
 
 /* return the next available key or mouse event */
 
-int PDC_get_bios_key(void)
+int PDC_get_key(void)
 {
-	PDC_LOG(("PDC_get_bios_key() - called\n"));
-
 	pdc_key_modifiers = 0L;
 
 	if (!key_count)

@@ -27,7 +27,7 @@
 # include <io.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.77 2007/01/05 12:01:22 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.78 2007/01/07 21:31:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -124,17 +124,14 @@ void PDC_set_keyboard_binary(bool on)
 
 #ifdef __DJGPP__
 	setmode(fileno(stdin), on ? O_BINARY : O_TEXT);
-	setcbrk(!on);
 #endif
 }
 
 /* check if a key or mouse event is waiting */
 
-bool PDC_check_bios_key(void)
+bool PDC_check_key(void)
 {
 	PDCREGS regs;
-
-	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 	if (shift_function == 0xff)
 	{
@@ -337,7 +334,7 @@ static int _process_mouse_events(void)
 
 /* return the next available key or mouse event */
 
-int PDC_get_bios_key(void)
+int PDC_get_key(void)
 {
 	PDCREGS regs;
 	int key, scan;

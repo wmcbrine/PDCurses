@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.62 2006/12/28 09:37:35 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.63 2007/01/07 21:31:17 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -236,7 +236,7 @@ int wgetch(WINDOW *win)
 	{
 		/* is there a keystroke ready? */
 
-		if (!PDC_check_bios_key())
+		if (!PDC_check_key())
 		{
 			/* if not, handle timeout() and halfdelay() */
 
@@ -257,7 +257,7 @@ int wgetch(WINDOW *win)
 
 		/* if there is, fetch it */
 
-		key = PDC_get_bios_key();
+		key = PDC_get_key();
 
 		if (SP->key_code)
 		{

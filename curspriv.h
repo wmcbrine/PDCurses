@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.147 2007/01/05 12:01:22 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.148 2007/01/07 21:31:17 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -68,12 +68,12 @@ extern unsigned char *pdc_atrtab;
 void	PDC_beep(void);
 bool	PDC_can_change_color(void);
 int	PDC_color_content(short, short *, short *, short *);
-bool	PDC_check_bios_key(void);
+bool	PDC_check_key(void);
 int	PDC_curs_set(int);
 void	PDC_flushinp(void);
-int	PDC_get_bios_key(void);
 int	PDC_get_columns(void);
 int	PDC_get_cursor_mode(void);
+int	PDC_get_key(void);
 int	PDC_get_rows(void);
 void	PDC_gotoyx(int, int);
 int	PDC_init_color(short, short, short, short);

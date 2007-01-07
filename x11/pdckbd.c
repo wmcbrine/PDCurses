@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.56 2007/01/05 12:01:23 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.57 2007/01/07 21:31:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,12 +33,10 @@ RCSID("$Id: pdckbd.c,v 1.56 2007/01/05 12:01:23 wmcbrine Exp $");
 
 /* check if a key or mouse event is waiting */
 
-bool PDC_check_bios_key(void)
+bool PDC_check_key(void)
 {
 	struct timeval socket_timeout = {0};
 	int s;
-
-	XC_LOG(("PDC_check_bios_key() - called\n"));
 
 	/* Is something ready to be read on the socket ? Must be a key. */
 
@@ -48,9 +46,9 @@ bool PDC_check_bios_key(void)
 	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
 	    NULL, &socket_timeout)) < 0)
 		XCursesExitCursesProcess(3, "child - exiting from "
-			"PDC_check_bios_key select failed");
+			"PDC_check_key select failed");
 
-	PDC_LOG(("%s:PDC_check_bios_key() - returning %s\n", XCLOGMSG,
+	PDC_LOG(("%s:PDC_check_key() - returning %s\n", XCLOGMSG,
 		s ? "TRUE" : "FALSE"));
 
 	return !!s;
@@ -58,15 +56,13 @@ bool PDC_check_bios_key(void)
 
 /* return the next available key or mouse event */
 
-int PDC_get_bios_key(void)
+int PDC_get_key(void)
 {
 	unsigned long newkey = 0;
 	int key = 0;
 
-	XC_LOG(("PDC_get_bios_key() - called\n"));
-
 	if (XC_read_socket(xc_key_sock, &newkey, sizeof(unsigned long)) < 0)
-		XCursesExitCursesProcess(2, "exiting from PDC_get_bios_key");
+		XCursesExitCursesProcess(2, "exiting from PDC_get_key");
 
 	pdc_key_modifiers = (newkey >> 24) & 0xFF;
 	key = (int)(newkey & 0x00FFFFFF);
@@ -76,10 +72,10 @@ int PDC_get_bios_key(void)
 		if (XC_read_socket(xc_key_sock, &pdc_mouse_status, 
 		    sizeof(MOUSE_STATUS)) < 0)
 			XCursesExitCursesProcess(2,
-			    "exiting from PDC_get_bios_key");
+			    "exiting from PDC_get_key");
 	}
 
-	PDC_LOG(("%s:PDC_get_bios_key() - key %d returned\n", XCLOGMSG, key));
+	PDC_LOG(("%s:PDC_get_key() - key %d returned\n", XCLOGMSG, key));
 
 	return key;
 }
@@ -103,8 +99,8 @@ void PDC_flushinp(void)
 {
 	PDC_LOG(("PDC_flushinp() - called\n"));
 
-	while (PDC_check_bios_key())
-		PDC_get_bios_key();
+	while (PDC_check_key())
+		PDC_get_key();
 }
 
 int PDC_mouse_set(void)

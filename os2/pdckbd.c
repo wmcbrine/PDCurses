@@ -25,7 +25,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.78 2007/01/05 12:01:22 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.79 2007/01/07 21:31:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -162,12 +162,11 @@ void PDC_set_keyboard_binary(bool on)
 
 /* check if a key or mouse event is waiting */
 
-bool PDC_check_bios_key(void)
+bool PDC_check_key(void)
 {
 #if !defined(_MSC_VER) && !defined(EMXVIDEO)
 	KBDKEYINFO keyInfo = {0};
 #endif
-	PDC_LOG(("PDC_check_bios_key() - called\n"));
 
 #ifdef EMXVIDEO
 	if (tahead == -1)		/* Nothing typed yet */
@@ -336,13 +335,12 @@ static int _process_mouse_events(void)
 
 /* return the next available key or mouse event */
 
-int PDC_get_bios_key(void)
+int PDC_get_key(void)
 {
 	int key, scan;
 #ifndef EMXVIDEO
 	KBDKEYINFO keyInfo = {0};
 #endif
-	PDC_LOG(("PDC_get_bios_key() - called\n"));
 
 #ifdef EMXVIDEO
 	if (tahead == -1)

@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.67 2007/01/06 18:01:04 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.68 2007/01/07 21:43:14 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -152,10 +152,6 @@ int PDC_scr_open(int argc, char **argv)
 #else
 	VioGetMode(&scrnmode, 0);
 	PDC_get_keyboard_info();
-
-	/* Now set the keyboard into binary mode */
-
-	PDC_set_keyboard_binary(TRUE);
 
 	pdc_font = _get_font();
 #endif

@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.81 2007/01/05 12:01:22 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.82 2007/01/07 21:43:14 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -514,10 +514,6 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 
 	SP->orig_attr	= FALSE;
-
-	/* Now set the keyboard into binary mode */
-
-	PDC_set_keyboard_binary(TRUE);
 
 	pdc_direct_video = TRUE;	/* Assume that we can	      */
 	pdc_video_seg	= 0xb000;	/* Base screen segment addr   */

@@ -19,7 +19,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.25 2007/01/08 19:20:36 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -80,32 +80,32 @@ RCSID("$Id: panel.c,v 1.24 2006/10/15 02:42:25 wmcbrine Exp $");
 	Touchline(pan, start, count)
 	Touchpan(pan)
 	Wnoutrefresh(pan)
-	__calculate_obscure()
-	__free_obscure(pan)
-	__override(pan,show)
-	__panel_is_linked(pan)
-	__panel_link_bottom(pan)
-	__panel_link_top(pan)
-	__panel_unlink(pan)
-	__panels_overlapped(pan1, pan2)
+	_calculate_obscure()
+	_free_obscure(pan)
+	_override(pan,show)
+	_panel_is_linked(pan)
+	_panel_link_bottom(pan)
+	_panel_link_top(pan)
+	_panel_unlink(pan)
+	_panels_overlapped(pan1, pan2)
 	dPanel(text, pan)
 	dStack(fmt, num, pan)
 	open_dfp()
 
 ------------------------------------------------------------------------*/
 
-PANEL *__bottom_panel = (PANEL *)0;
-PANEL *__top_panel = (PANEL *)0;
-PANEL __stdscr_pseudo_panel = { (WINDOW *)0 };
+PANEL *_bottom_panel = (PANEL *)0;
+PANEL *_top_panel = (PANEL *)0;
+PANEL _stdscr_pseudo_panel = { (WINDOW *)0 };
 
-static void __calculate_obscure(void);
-static void __free_obscure(PANEL *);
-static void __override(PANEL *, int);
-static bool __panel_is_linked(const PANEL *);
-static void __panel_link_bottom(PANEL *);
-static void __panel_link_top(PANEL *);
-static bool __panels_overlapped(PANEL *, PANEL *);
-static void __panel_unlink(PANEL *);
+static void _calculate_obscure(void);
+static void _free_obscure(PANEL *);
+static void _override(PANEL *, int);
+static bool _panel_is_linked(const PANEL *);
+static void _panel_link_bottom(PANEL *);
+static void _panel_link_top(PANEL *);
+static bool _panels_overlapped(PANEL *, PANEL *);
+static void _panel_unlink(PANEL *);
 
 #ifdef PANEL_DEBUG
 
@@ -124,13 +124,13 @@ static void dStack(char *fmt, int num, PANEL *pan)
 
 	sprintf(s80, fmt, num, pan);
 	_tracef("%s b=%s t=%s", s80,
-		__bottom_panel ? __bottom_panel->user : "--",
-		__top_panel    ? __top_panel->user    : "--");
+		_bottom_panel ? _bottom_panel->user : "--",
+		_top_panel    ? _top_panel->user    : "--");
 
 	if (pan)
 		_tracef("pan id=%s", pan->user);
 
-	pan = __bottom_panel;
+	pan = _bottom_panel;
 
 	while (pan)
 	{
@@ -175,10 +175,10 @@ static void Touchline(PANEL *pan, int start, int count)
 #endif	/* PANEL_DEBUG */
 
 /*----------------------------------------------------------------------*
- *	__panels_overlapped(pan1, pan2) - check panel overlapped	*
+ *	_panels_overlapped(pan1, pan2) - check panel overlapped	*
  *----------------------------------------------------------------------*/
 
-static bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
+static bool _panels_overlapped(PANEL *pan1, PANEL *pan2)
 {
 	if (!pan1 || !pan2)
 		return FALSE;
@@ -191,7 +191,7 @@ static bool __panels_overlapped(PANEL *pan1, PANEL *pan2)
 		pan1->wendx));
 }
 
-static void __free_obscure(PANEL *pan)
+static void _free_obscure(PANEL *pan)
 {
 	PANELOBS *tobs = pan->obscure;		/* "this" one */
 	PANELOBS *nobs;				/* "next" one */
@@ -205,7 +205,7 @@ static void __free_obscure(PANEL *pan)
 	pan->obscure = (PANELOBS *)0;
 }
 
-static void __override(PANEL *pan, int show)
+static void _override(PANEL *pan, int show)
 {
 	int y;
 	PANEL *pan2;
@@ -217,7 +217,7 @@ static void __override(PANEL *pan, int show)
 	else if (!show)
 	{
 	    Touchpan(pan);
-	    Touchpan(&__stdscr_pseudo_panel);
+	    Touchpan(&_stdscr_pseudo_panel);
 	}
 	else if (show == -1)
 	    while (tobs && (tobs->pan != pan))
@@ -236,26 +236,26 @@ static void __override(PANEL *pan, int show)
 	}
 }
 
-static void __calculate_obscure(void)
+static void _calculate_obscure(void)
 {
 	PANEL *pan;
 	PANEL *pan2;
 	PANELOBS *tobs;			/* "this" one */
 	PANELOBS *lobs;
 
-	pan = __bottom_panel;
+	pan = _bottom_panel;
 
 	while (pan)
 	{
 	    if (pan->obscure)
-		__free_obscure(pan);
+		_free_obscure(pan);
 
 	    lobs = (PANELOBS *)0;		/* last one */
-	    pan2 = __bottom_panel;
+	    pan2 = _bottom_panel;
 
 	    while (pan2)
 	    {
-		if (__panels_overlapped(pan, pan2))
+		if (_panels_overlapped(pan, pan2))
 		{
 			if ((tobs = malloc(sizeof(PANELOBS))) == NULL)
 				return;
@@ -275,18 +275,18 @@ static void __calculate_obscure(void)
 		pan2 = pan2->above;
 	    }
 
-	    __override(pan, 1);
+	    _override(pan, 1);
 	    pan = pan->above;
 	}
 }
 
 /*----------------------------------------------------------------------*
- *	__panel_is_linked(pan) - check to see if panel is in the stack	*
+ *	_panel_is_linked(pan) - check to see if panel is in the stack	*
  *----------------------------------------------------------------------*/
 
-static bool __panel_is_linked(const PANEL *pan)
+static bool _panel_is_linked(const PANEL *pan)
 {
-	PANEL *pan2 = __bottom_panel;
+	PANEL *pan2 = _bottom_panel;
 
 	while (pan2)
 	{
@@ -300,79 +300,79 @@ static bool __panel_is_linked(const PANEL *pan)
 }
 
 /*----------------------------------------------------------------------*
- *	__panel_link_top(pan) - link panel into stack at top		*
+ *	_panel_link_top(pan) - link panel into stack at top		*
  *----------------------------------------------------------------------*/
 
-static void __panel_link_top(PANEL *pan)
+static void _panel_link_top(PANEL *pan)
 {
 #ifdef PANEL_DEBUG
 	dStack("<lt%d>", 1, pan);
-	if (__panel_is_linked(pan))
+	if (_panel_is_linked(pan))
 		return;
 #endif
 	pan->above = (PANEL *)0;
 	pan->below = (PANEL *)0;
 
-	if (__top_panel)
+	if (_top_panel)
 	{
-		__top_panel->above = pan;
-		pan->below = __top_panel;
+		_top_panel->above = pan;
+		pan->below = _top_panel;
 	}
 
-	__top_panel = pan;
+	_top_panel = pan;
 
-	if (!__bottom_panel)
-		__bottom_panel = pan;
+	if (!_bottom_panel)
+		_bottom_panel = pan;
 
-	__calculate_obscure();
+	_calculate_obscure();
 	dStack("<lt%d>", 9, pan);
 }
 
 /*----------------------------------------------------------------------*
- *	__panel_link_bottom(pan) - link panel into stack at bottom	*
+ *	_panel_link_bottom(pan) - link panel into stack at bottom	*
  *----------------------------------------------------------------------*/
 
-static void __panel_link_bottom(PANEL *pan)
+static void _panel_link_bottom(PANEL *pan)
 {
 #ifdef PANEL_DEBUG
 	dStack("<lb%d>", 1, pan);
-	if (__panel_is_linked(pan))
+	if (_panel_is_linked(pan))
 		return;
 #endif
 	pan->above = (PANEL *)0;
 	pan->below = (PANEL *)0;
 
-	if (__bottom_panel)
+	if (_bottom_panel)
 	{
-		__bottom_panel->below = pan;
-		pan->above = __bottom_panel;
+		_bottom_panel->below = pan;
+		pan->above = _bottom_panel;
 	}
 
-	__bottom_panel = pan;
+	_bottom_panel = pan;
 
-	if (!__top_panel)
-		__top_panel = pan;
+	if (!_top_panel)
+		_top_panel = pan;
 
-	__calculate_obscure();
+	_calculate_obscure();
 	dStack("<lb%d>", 9, pan);
 }
 
 /*----------------------------------------------------------------------*
- *	__panel_unlink(pan) - unlink panel from stack			*
+ *	_panel_unlink(pan) - unlink panel from stack			*
  *----------------------------------------------------------------------*/
 
-static void __panel_unlink(PANEL *pan)
+static void _panel_unlink(PANEL *pan)
 {
 	PANEL *prev;
 	PANEL *next;
 
 #ifdef PANEL_DEBUG
 	dStack("<u%d>", 1, pan);
-	if (!__panel_is_linked(pan))
+	if (!_panel_is_linked(pan))
 		return;
 #endif
-	__override(pan, 0);
-	__free_obscure(pan);
+	_override(pan, 0);
+	_free_obscure(pan);
 
 	prev = pan->below;
 	next = pan->above;
@@ -388,13 +388,13 @@ static void __panel_unlink(PANEL *pan)
 	else if (next)
 		next->below = prev;
 
-	if (pan == __bottom_panel)
-		__bottom_panel = next;
+	if (pan == _bottom_panel)
+		_bottom_panel = next;
 
-	if (pan == __top_panel)
-		__top_panel = prev;
+	if (pan == _top_panel)
+		_top_panel = prev;
 
-	__calculate_obscure();
+	_calculate_obscure();
 
 	pan->above = (PANEL *)0;
 	pan->below = (PANEL *)0;
@@ -431,13 +431,13 @@ int bottom_panel(PANEL *pan)
 	if (!pan)
 		return ERR;
 
-	if (pan == __bottom_panel)
+	if (pan == _bottom_panel)
 		return OK;
 
-	if (__panel_is_linked(pan))
+	if (_panel_is_linked(pan))
 		hide_panel(pan);
 
-	__panel_link_bottom(pan);
+	_panel_link_bottom(pan);
 
 	return OK;
 }
@@ -465,7 +465,7 @@ int del_panel(PANEL *pan)
 {
 	if (pan)
 	{
-		if (__panel_is_linked(pan))
+		if (_panel_is_linked(pan))
 			hide_panel(pan);
 
 		free((char *)pan);
@@ -500,14 +500,14 @@ int hide_panel(PANEL *pan)
 	if (!pan)
 		return ERR;
 
-	if (!__panel_is_linked(pan))
+	if (!_panel_is_linked(pan))
 	{
 		pan->above = (PANEL *)0;
 		pan->below = (PANEL *)0;
 		return ERR;
 	}
 
-	__panel_unlink(pan);
+	_panel_unlink(pan);
 
 	return OK;
 }
@@ -542,8 +542,8 @@ int move_panel(PANEL *pan, int starty, int startx)
 	if (!pan)
 		return ERR;
 
-	if (__panel_is_linked(pan))
-		__override(pan, 0);
+	if (_panel_is_linked(pan))
+		_override(pan, 0);
 
 	win = pan->win;
 
@@ -555,8 +555,8 @@ int move_panel(PANEL *pan, int starty, int startx)
 	pan->wendy = pan->wstarty + maxy;
 	pan->wendx = pan->wstartx + maxx;
 
-	if (__panel_is_linked(pan))
-		__calculate_obscure();
+	if (_panel_is_linked(pan))
+		_calculate_obscure();
 
 	return OK;
 }
@@ -585,15 +585,15 @@ PANEL *new_panel(WINDOW *win)
 {
 	PANEL *pan = malloc(sizeof(PANEL));
 
-	if (!__stdscr_pseudo_panel.win)
+	if (!_stdscr_pseudo_panel.win)
 	{
-		__stdscr_pseudo_panel.win = stdscr;
-		__stdscr_pseudo_panel.wstarty = 0;
-		__stdscr_pseudo_panel.wstartx = 0;
-		__stdscr_pseudo_panel.wendy = LINES;
-		__stdscr_pseudo_panel.wendx = COLS;
-		__stdscr_pseudo_panel.user = "stdscr";
-		__stdscr_pseudo_panel.obscure = (PANELOBS *)0;
+		_stdscr_pseudo_panel.win = stdscr;
+		_stdscr_pseudo_panel.wstarty = 0;
+		_stdscr_pseudo_panel.wstartx = 0;
+		_stdscr_pseudo_panel.wendy = LINES;
+		_stdscr_pseudo_panel.wendx = COLS;
+		_stdscr_pseudo_panel.user = "stdscr";
+		_stdscr_pseudo_panel.obscure = (PANELOBS *)0;
 	}
 
 	if (pan)
@@ -643,7 +643,7 @@ PANEL *new_panel(WINDOW *win)
 
 PANEL *panel_above(const PANEL *pan)
 {
-	return pan ? pan->above : __bottom_panel;
+	return pan ? pan->above : _bottom_panel;
 }
 
 /*man-start**************************************************************
@@ -670,7 +670,7 @@ PANEL *panel_above(const PANEL *pan)
 
 PANEL *panel_below(const PANEL *pan)
 {
-	return pan ? pan->below : __top_panel;
+	return pan ? pan->below : _top_panel;
 }
 
 /*man-start**************************************************************
@@ -697,7 +697,7 @@ int panel_hidden(const PANEL *pan)
 	if (!pan)
 		return ERR;
 
-	return __panel_is_linked(pan) ? ERR : OK;
+	return _panel_is_linked(pan) ? ERR : OK;
 }
 
 /*man-start**************************************************************
@@ -779,8 +779,8 @@ int replace_panel(PANEL *pan, WINDOW *win)
 	if (!pan)
 		return ERR;
 
-	if (__panel_is_linked(pan))
-		__override(pan, 0);
+	if (_panel_is_linked(pan))
+		_override(pan, 0);
 
 	pan->win = win;
 	getbegyx(win, pan->wstarty, pan->wstartx);
@@ -788,8 +788,8 @@ int replace_panel(PANEL *pan, WINDOW *win)
 	pan->wendy = pan->wstarty + maxy;
 	pan->wendx = pan->wstartx + maxx;
 
-	if (__panel_is_linked(pan))
-		__calculate_obscure();
+	if (_panel_is_linked(pan))
+		_calculate_obscure();
 
 	return OK;
 }
@@ -848,13 +848,13 @@ int show_panel(PANEL *pan)
 	if (!pan)
 		return ERR;
 
-	if (pan == __top_panel)
+	if (pan == _top_panel)
 		return OK;
 
-	if (__panel_is_linked(pan))
+	if (_panel_is_linked(pan))
 		hide_panel(pan);
 
-	__panel_link_top(pan);
+	_panel_link_top(pan);
 
 	return OK;
 }
@@ -911,18 +911,18 @@ void update_panels(void)
 
 	PDC_LOG(("update_panels() - called\n"));
 
-	pan = __bottom_panel;
+	pan = _bottom_panel;
 
 	while (pan)
 	{
-		__override(pan, -1);
+		_override(pan, -1);
 		pan = pan->above;
 	}
 
 	if (is_wintouched(stdscr))
-		Wnoutrefresh(&__stdscr_pseudo_panel);
+		Wnoutrefresh(&_stdscr_pseudo_panel);
 	
-	pan = __bottom_panel;
+	pan = _bottom_panel;
 
 	while (pan)
 	{

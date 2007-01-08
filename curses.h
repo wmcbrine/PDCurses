@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.269 2007/01/05 12:01:22 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.270 2007/01/08 13:53:18 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -102,6 +102,9 @@ PDCurses portable platform definitions list:
 #    ifdef _WIN32	
 #      ifndef WIN32
 #        define WIN32
+#      endif
+#      ifndef _CRT_SECURE_NO_DEPRECATE
+#        define _CRT_SECURE_NO_DEPRECATE 1     /* kill nonsense warnings */
 #      endif
 #    else	
 #      define DOS 6

@@ -314,6 +314,10 @@ deleteln.sho: $(srcdir)/deleteln.c
 	$(DYN_BUILD) $(srcdir)/deleteln.c
 	@SAVE2O@
 
+deprec.sho: $(srcdir)/deprec.c
+	$(DYN_BUILD) $(srcdir)/deprec.c
+	@SAVE2O@
+
 getch.sho: $(srcdir)/getch.c
 	$(DYN_BUILD) $(srcdir)/getch.c
 	@SAVE2O@

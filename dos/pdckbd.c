@@ -25,9 +25,10 @@
 #ifdef __DJGPP__
 # include <fcntl.h>
 # include <io.h>
+# include <signal.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.78 2007/01/07 21:31:17 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.79 2007/01/08 02:52:32 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -124,6 +125,7 @@ void PDC_set_keyboard_binary(bool on)
 
 #ifdef __DJGPP__
 	setmode(fileno(stdin), on ? O_BINARY : O_TEXT);
+	signal(SIGINT, on ? SIG_IGN : SIG_DFL);
 #endif
 }
 

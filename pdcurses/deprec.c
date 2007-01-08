@@ -13,11 +13,11 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deprec.c,v 1.1 2007/01/07 22:20:06 wmcbrine Exp $");
+RCSID("$Id: deprec.c,v 1.2 2007/01/08 02:52:33 wmcbrine Exp $");
 
-/* Deprecated functions. These should not be used, and will be removed
-   in the future. They're here solely for the benefit of certain
-   applications that linked to them in older versions of PDCurses. */
+/* Deprecated functions. These should not be used, and will eventually 
+   be removed. They're here solely for the benefit of applications that 
+   linked to them in older versions of PDCurses. */
 
 bool PDC_check_bios_key(void)
 {
@@ -31,10 +31,10 @@ int PDC_get_bios_key(void)
 
 bool PDC_get_ctrl_break(void)
 {
-	return FALSE;
+	return !SP->raw_inp;
 }
 
 int PDC_set_ctrl_break(bool setting)
 {
-	return OK;
+	return setting ? noraw() : raw();
 }

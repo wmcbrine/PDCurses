@@ -11,6 +11,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+#if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
+defined(__TURBOC__)
+# define HAVE_SIGNAL
+# include <signal.h>
+#endif
+
 #include "pdcos2.h"
 
 #ifdef EMXVIDEO
@@ -25,7 +31,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.79 2007/01/07 21:31:17 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.80 2007/01/08 02:52:33 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -107,24 +113,12 @@ unsigned long PDC_get_input_fd(void)
 
 void PDC_get_keyboard_info(void)
 {
-	PDC_LOG(("PDC_get_keyboard_info() - called\n"));
-
 	kbdinfo.cb = sizeof(kbdinfo);
 	KbdGetStatus(&kbdinfo, 0);
-
-	PDC_LOG(("PDC_get_keyboard_info(). cb: %x, fsMask: %x, "
-		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
-		kbdinfo.fsInterim, kbdinfo.fsState));
 }
 
 void PDC_set_keyboard_default(void)
 {
-	PDC_LOG(("PDC_set_keyboard_default(). cb: %x, fsMask: %x, "
-		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
-		kbdinfo.fsInterim, kbdinfo.fsState));
-
 	KbdSetStatus(&kbdinfo, 0);
 }
 
@@ -135,11 +129,6 @@ void PDC_set_keyboard_binary(bool on)
 	PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
 
 #ifndef EMXVIDEO
-	PDC_LOG(("PDC_set_keyboard_binary() - before. cb: %x, fsMask: %x, "
-		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
-		kbdinfo.fsInterim, kbdinfo.fsState));
-
 	if (on)
 	{
 		kbdinfo.fsMask &= ~(KEYBOARD_ASCII_MODE);
@@ -152,11 +141,10 @@ void PDC_set_keyboard_binary(bool on)
 	}
 
 	KbdSetStatus(&kbdinfo, 0);
+#endif
 
-	PDC_LOG(("PDC_set_keyboard_binary() - after. cb: %x, fsMask: %x, "
-		"chTurnAround: %x, fsInterim: %x, fsState: %x\n",
-		kbdinfo.cb, kbdinfo.fsMask, kbdinfo.chTurnAround, 
-		kbdinfo.fsInterim, kbdinfo.fsState));
+#ifdef HAVE_SIGNAL
+	signal(SIGBREAK, on ? SIG_IGN : SIG_DFL);
 #endif
 }
 

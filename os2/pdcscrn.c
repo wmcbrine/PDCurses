@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.68 2007/01/07 21:43:14 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.69 2007/01/08 02:52:33 wmcbrine Exp $");
 
 int pdc_font;			/* default font size	*/
 
@@ -45,9 +45,6 @@ static VIOMODEINFO scrnmode;	/* default screen mode	*/
 static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
 static bool can_change = FALSE;
-
-extern void PDC_get_keyboard_info(void);
-extern void PDC_set_keyboard_default(void);
 
 static int _get_font(void)
 {

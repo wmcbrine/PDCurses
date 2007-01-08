@@ -1,9 +1,8 @@
-; curses.def
-; used for Win32 port as well as AIX port
+; curses.def for Win32 port
 ; each entry point MUST be on a seperate line prefixed
 ; by EXPORTS in column 1
 ;
-LIBRARY pdcurses INITINSTANCE BASE=0x01000000
+LIBRARY pdcurses
 HEAPSIZE 40960
 STACKSIZE 10240
 EXPORTS LINES

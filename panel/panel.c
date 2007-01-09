@@ -19,47 +19,13 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.25 2007/01/08 19:20:36 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.26 2007/01/09 15:04:20 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  panels	- panel package for curses
+  Name:								panel
 
-  PDCurses Description:
-	The panel library is built using the curses library and any 
-	program using panels routines must call one of the curses 
-	initialization routines such as initscr(). A program using these 
-	routines must be linked with the panels and curses libraries.
-
-	The panels package gives the applications programmer a way to 
-	have depth relationships between curses windows; a curses window 
-	is associated with every panel. The panels routines allow curses 
-	windows to overlap without making visible the overlapped 
-	portions of underlying windows. The initial curses window, 
-	stdscr, lies beneath all panels. The set of currently visible 
-	panels is the 'deck' of panels.
-
-	The panels package allows the applications programmer to create 
-	panels, fetch and set their associated windows, shuffle panels 
-	in the deck, and manipulate panels in other ways.
-
-  PDCurses Return Value:
-	Each panels routine that returns a pointer to an object returns 
-	NULL if an error occurs. Each panel routine that returns an 
-	integer, returns OK if it executes successfully and ERR if it 
-	does not.
-
-  Notes
-	The header <panel.h> includes the header <curses.h>.
-
-  Credits
-	Original Author - Warren Tucker N4HGF
-	{gatech,emory}!n4hgf!wht -or- wht@n4hgf.Mt-Park.GA.US
-
-**man-end****************************************************************/
-
-/*
-  Public functions:
+  Synopsis:
 	int bottom_panel(PANEL *pan);
 	int del_panel(PANEL *pan);
 	int hide_panel(PANEL *pan);
@@ -76,23 +42,104 @@ RCSID("$Id: panel.c,v 1.25 2007/01/08 19:20:36 wmcbrine Exp $");
 	int top_panel(PANEL *pan);
 	void update_panels(void);
 
-  Private functions:
-	Touchline(pan, start, count)
-	Touchpan(pan)
-	Wnoutrefresh(pan)
-	_calculate_obscure()
-	_free_obscure(pan)
-	_override(pan,show)
-	_panel_is_linked(pan)
-	_panel_link_bottom(pan)
-	_panel_link_top(pan)
-	_panel_unlink(pan)
-	_panels_overlapped(pan1, pan2)
-	dPanel(text, pan)
-	dStack(fmt, num, pan)
-	open_dfp()
+  Description:
+	The panel library is built using the curses library, and any
+	program using panels routines must call one of the curses
+	initialization routines such as initscr(). A program using these
+	routines must be linked with the panels and curses libraries.
+	The header <panel.h> includes the header <curses.h>.
 
-------------------------------------------------------------------------*/
+	The panels package gives the applications programmer a way to
+	have depth relationships between curses windows; a curses window
+	is associated with every panel. The panels routines allow curses
+	windows to overlap without making visible the overlapped
+	portions of underlying windows. The initial curses window,
+	stdscr, lies beneath all panels. The set of currently visible
+	panels is the 'deck' of panels.
+
+	The panels package allows the applications programmer to create
+	panels, fetch and set their associated windows, shuffle panels
+	in the deck, and manipulate panels in other ways.
+
+	bottom_panel() places pan at the bottom of the deck. The size, 
+	location and contents of the panel are unchanged.
+
+	del_panel() deletes pan, but not its associated winwow.
+
+	hide_panel() removes a panel from the deck and thus hides it 
+	from view.
+
+	move_panel() move() the curses window associated with pan, so 
+	that its upper lefthand corner is at the supplied coordinates. 
+	(Do not use mvwin() on the window.)
+
+	new_panel() creates a new panel associated with win and returns 
+	the panel pointer. The new panel is placed at the top of the 
+	deck.
+
+	panel_above() returns a pointer to the panel in the deck above 
+	pan, or NULL if pan is the top panel. If the value of pan passed 
+	is NULL, this function returns a pointer to the bottom panel in 
+	the deck.
+
+	panel_below() returns a pointer to the panel in the deck below 
+	pan, or NULL if pan is the bottom panel. If the value of pan 
+	passed is NULL, this function returns a pointer to the top panel 
+	in the deck.
+
+	panel_hidden() returns OK if pan is hidden and ERR if it is not.
+
+	panel_userptr() - Each panel has a user pointer available for 
+	maintaining relevant information. This function returns a 
+	pointer to that information previously set up by 
+	set_panel_userptr().
+
+	panel_window() returns a pointer to the curses window associated 
+	with the panel.
+
+	replace_panel() replaces the current window of pan with win.
+
+	set_panel_userptr() - Each panel has a user pointer available 
+	for maintaining relevant information. This function sets the 
+	value of that information.
+
+	show_panel() makes a previously hidden panel visible and places 
+	it back in the deck on top.
+
+	top_panel() places pan on the top of the deck. The size, 
+	location and contents of the panel are unchanged.
+
+	update_panels() refreshes the virtual screen to reflect the 
+	depth relationships between the panels in the deck. The user 
+	must use doupdate() to refresh the physical screen.
+
+  Return Value:
+	Each routine that returns a pointer to an object returns NULL if 
+	an error occurs. Each panel routine that returns an integer, 
+	returns OK if it executes successfully and ERR if it does not.
+
+  Portability				     X/Open    BSD    SYS V
+	bottom_panel				-	-	Y
+	del_panel				-	-	Y
+	hide_panel				-	-	Y
+	move_panel				-	-	Y
+	new_panel				-	-	Y
+	panel_above				-	-	Y
+	panel_below				-	-	Y
+	panel_hidden				-	-	Y
+	panel_userptr				-	-	Y
+	panel_window				-	-	Y
+	replace_panel				-	-	Y
+	set_panel_userptr			-	-	Y
+	show_panel				-	-	Y
+	top_panel				-	-	Y
+	update_panels				-	-	Y
+
+  Credits:
+	Original Author - Warren Tucker N4HGF
+	{gatech,emory}!n4hgf!wht -or- wht@n4hgf.Mt-Park.GA.US
+
+**man-end****************************************************************/
 
 PANEL *_bottom_panel = (PANEL *)0;
 PANEL *_top_panel = (PANEL *)0;
@@ -139,9 +186,7 @@ static void dStack(char *fmt, int num, PANEL *pan)
 	}
 }
 
-/*----------------------------------------------------------------------*
- *	Wnoutrefresh(pan) - debugging hook for wnoutrefresh		*
- *----------------------------------------------------------------------*/
+/* debugging hook for wnoutrefresh */
 
 static void Wnoutrefresh(PANEL *pan)
 {
@@ -173,10 +218,6 @@ static void Touchline(PANEL *pan, int start, int count)
 #define Touchline(pan, start, count) touchline((pan)->win, start, count)
 
 #endif	/* PANEL_DEBUG */
-
-/*----------------------------------------------------------------------*
- *	_panels_overlapped(pan1, pan2) - check panel overlapped	*
- *----------------------------------------------------------------------*/
 
 static bool _panels_overlapped(PANEL *pan1, PANEL *pan2)
 {
@@ -280,9 +321,7 @@ static void _calculate_obscure(void)
 	}
 }
 
-/*----------------------------------------------------------------------*
- *	_panel_is_linked(pan) - check to see if panel is in the stack	*
- *----------------------------------------------------------------------*/
+/* check to see if panel is in the stack */
 
 static bool _panel_is_linked(const PANEL *pan)
 {
@@ -299,9 +338,7 @@ static bool _panel_is_linked(const PANEL *pan)
 	return FALSE;
 }
 
-/*----------------------------------------------------------------------*
- *	_panel_link_top(pan) - link panel into stack at top		*
- *----------------------------------------------------------------------*/
+/* link panel into stack at top */
 
 static void _panel_link_top(PANEL *pan)
 {
@@ -328,9 +365,7 @@ static void _panel_link_top(PANEL *pan)
 	dStack("<lt%d>", 9, pan);
 }
 
-/*----------------------------------------------------------------------*
- *	_panel_link_bottom(pan) - link panel into stack at bottom	*
- *----------------------------------------------------------------------*/
+/* link panel into stack at bottom */
 
 static void _panel_link_bottom(PANEL *pan)
 {
@@ -356,10 +391,6 @@ static void _panel_link_bottom(PANEL *pan)
 	_calculate_obscure();
 	dStack("<lb%d>", 9, pan);
 }
-
-/*----------------------------------------------------------------------*
- *	_panel_unlink(pan) - unlink panel from stack			*
- *----------------------------------------------------------------------*/
 
 static void _panel_unlink(PANEL *pan)
 {
@@ -406,26 +437,6 @@ static void _panel_unlink(PANEL *pan)
  *   The following are the public functions for the panels library.     *
  ************************************************************************/
 
-/*man-start**************************************************************
-
-  bottom_panel	- puts panel at bottom of deck
-
-  PDCurses Description:
-	This function places pan at the bottom of the deck. The size, 
-	location and contents of the panel are unchanged.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int bottom_panel(PANEL *pan);
-	SYS V Curses	int bottom_panel(PANEL *pan);
-
-**man-end****************************************************************/
-
 int bottom_panel(PANEL *pan)
 {
 	if (!pan)
@@ -442,25 +453,6 @@ int bottom_panel(PANEL *pan)
 	return OK;
 }
 
-/*man-start**************************************************************
-
-  del_panel	- deletes a panel
-
-  PDCurses Description:
-	This function deletes pan but not its associated winwow.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int del_panel(PANEL *pan);
-	SYS V Curses	int del_panel(PANEL *pan);
-
-**man-end****************************************************************/
-
 int del_panel(PANEL *pan)
 {
 	if (pan)
@@ -474,26 +466,6 @@ int del_panel(PANEL *pan)
 
 	return ERR;
 }
-
-/*man-start**************************************************************
-
-  hide_panel	- removes a panel from the deck
-
-  PDCurses Description:
-	This function removes a panel from the deck and thus hides it 
-	from view.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int hide_panel(PANEL *pan);
-	SYS V Curses	int hide_panel(PANEL *pan);
-
-**man-end****************************************************************/
 
 int hide_panel(PANEL *pan)
 {
@@ -511,28 +483,6 @@ int hide_panel(PANEL *pan)
 
 	return OK;
 }
-
-/*man-start**************************************************************
-
-  move_panel	- move a window on the virtual screen
-
-  PDCurses Description:
-	This function move the curses window associated with pan so that
-	its upper lefthand corner is at the supplied coordinates. Do not
-	use mvwin() on the window.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL or an error occurs when trying to
-	move the curses window.
-
-  Portability:
-	PDCurses	int move_panel(PANEL *pan, int starty, int startx);
-	SYS V Curses	int move_panel(PANEL *pan, int starty, int startx);
-
-**man-end****************************************************************/
 
 int move_panel(PANEL *pan, int starty, int startx)
 {
@@ -560,26 +510,6 @@ int move_panel(PANEL *pan, int starty, int startx)
 
 	return OK;
 }
-
-/*man-start**************************************************************
-
-  new_panel	- create a new panel
-
-  PDCurses Description:
-	This function creates a new panel associated with win and returns
-	the panel pointer. The new panel is placed at the top of the deck.
-
-  PDCurses Return Value:
-	Returns pointer to new panel, or NULL if an error occurs.
-
-  PDCurses Errors:
-	Returns NULL if an error occurs.
-
-  Portability:
-	PDCurses	PANEL *new_panel(WINDOW *win);
-	SYS V Curses	PANEL *new_panel(WINDOW *win);
-
-**man-end****************************************************************/
 
 PANEL *new_panel(WINDOW *win)
 {
@@ -619,78 +549,15 @@ PANEL *new_panel(WINDOW *win)
 	return pan;
 }
 
-/*man-start**************************************************************
-
-  panel_above	- return pointer to panel above
-
-  PDCurses Description:
-	This function returns a pointer to the panel in the deck above
-	pan. If the value of pan passed is NULL, this function returns
-	a pointer to the bottom panel in the deck.
-
-  PDCurses Return Value:
-	Returns pointer to panel above pan, or NULL if pan is the top
-	panel.
-
-  PDCurses Errors:
-	Returns NULL if an error occurs.
-
-  Portability:
-	PDCurses	PANEL *panel_above(const PANEL *pan);
-	SYS V Curses	PANEL *panel_above(const PANEL *pan);
-
-**man-end****************************************************************/
-
 PANEL *panel_above(const PANEL *pan)
 {
 	return pan ? pan->above : _bottom_panel;
 }
 
-/*man-start**************************************************************
-
-  panel_below	- return pointer to panel below
-
-  PDCurses Description:
-	This function returns a pointer to the panel in the deck below
-	pan. If the value of pan passed is NULL, this function returns
-	a pointer to the top panel in the deck.
-
-  PDCurses Return Value:
-	Returns pointer to panel below pan, or NULL if pan is the bottom
-	panel.
-
-  PDCurses Errors:
-	Returns NULL if an error occurs.
-
-  Portability:
-	PDCurses	PANEL *panel_below(const PANEL *pan);
-	SYS V Curses	PANEL *panel_below(const PANEL *pan);
-
-**man-end****************************************************************/
-
 PANEL *panel_below(const PANEL *pan)
 {
 	return pan ? pan->below : _top_panel;
 }
-
-/*man-start**************************************************************
-
-  panel_hidden	- indicates if panel is hidden
-
-  PDCurses Description:
-	This function returns OK if pan is hidden and ERR if it is not.
-
-  PDCurses Return Value:
-	OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int panel_hidden(const PANEL *pan);
-	SYS V Curses	int panel_hidden(const PANEL *pan);
-
-**man-end****************************************************************/
 
 int panel_hidden(const PANEL *pan)
 {
@@ -700,51 +567,10 @@ int panel_hidden(const PANEL *pan)
 	return _panel_is_linked(pan) ? ERR : OK;
 }
 
-/*man-start**************************************************************
-
-  panel_userptr	- return user information
-
-  PDCurses Description:
-	Each panel has a user pointer available for maintaining relevant
-	information. This function returns a pointer to that information
-	previously set up by set_panel_userptr().
-
-  PDCurses Return Value:
-	Returns pointer to user information.
-
-  PDCurses Errors:
-	Returns NULL if pan is NULL or no user information exists.
-
-  Portability:
-	PDCurses	const void *panel_userptr(const PANEL *pan);
-	SYS V Curses	const void *panel_userptr(const PANEL *pan);
-
-**man-end****************************************************************/
-
 const void *panel_userptr(const PANEL *pan)
 {
 	return pan ? pan->user : NULL;
 }
-
-/*man-start**************************************************************
-
-  panel_window	- returns pointer to curses window
-
-  PDCurses Description:
-	This function returns a pointer to the curses window associated
-	with the panel.
-
-  PDCurses Return Value:
-	Pointer to panel's window.
-
-  PDCurses Errors:
-	Return NULL on error.
-
-  Portability:
-	PDCurses	WINDOW *panel_window(const PANEL *);
-	SYS V Curses	WINDOW *panel_window(const PANEL *);
-
-**man-end****************************************************************/
 
 WINDOW *panel_window(const PANEL *pan)
 {
@@ -752,25 +578,6 @@ WINDOW *panel_window(const PANEL *pan)
 
 	return pan->win;
 }
-
-/*man-start**************************************************************
-
-  replace_panel	- set curses window contents
-
-  PDCurses Description:
-	This function replaces the current window of pan with win.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int replace_panel(PANEL *pan, WINDOW *win);
-	SYS V Curses	int replace_panel(PANEL *pan, WINDOW *win);
-
-**man-end****************************************************************/
 
 int replace_panel(PANEL *pan, WINDOW *win)
 {
@@ -794,26 +601,6 @@ int replace_panel(PANEL *pan, WINDOW *win)
 	return OK;
 }
 
-/*man-start**************************************************************
-
-  set_panel_userptr	- sets user information for a panel
-
-  PDCurses Description:
-	Each panel has a user pointer available for maintaining relevant
-	information. This function sets the value of that information.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int set_panel_userptr(PANEL *pan, const void *uptr);
-	SYS V Curses	int set_panel_userptr(PANEL *pan, const void *uptr);
-
-**man-end****************************************************************/
-
 int set_panel_userptr(PANEL *pan, const void *uptr)
 {
 	if (!pan)
@@ -822,26 +609,6 @@ int set_panel_userptr(PANEL *pan, const void *uptr)
 	pan->user = uptr;
 	return OK;
 }
-
-/*man-start**************************************************************
-
-  show_panel	- displays a panel
-
-  PDCurses Description:
-	This function makes a previously hidden panel visible and places
-	it back in the deck on top.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int show_panel(PANEL *pan);
-	SYS V Curses	int show_panel(PANEL *pan);
-
-**man-end****************************************************************/
 
 int show_panel(PANEL *pan)
 {
@@ -859,51 +626,10 @@ int show_panel(PANEL *pan)
 	return OK;
 }
 
-/*man-start**************************************************************
-
-  top_panel	- puts panel on top of deck
-
-  PDCurses Description:
-	This function places pan on the top of the deck. The size, 
-	location and contents of the panel are unchanged.
-
-  PDCurses Return Value:
-	Returns OK or ERR.
-
-  PDCurses Errors:
-	Returns ERR if pan is NULL.
-
-  Portability:
-	PDCurses	int top_panel(PANEL *pan);
-	SYS V Curses	int top_panel(PANEL *pan);
-
-**man-end****************************************************************/
-
 int top_panel(PANEL *pan)
 {
 	return show_panel(pan);
 }
-
-/*man-start**************************************************************
-
-  update_panels	- panels virtual screen refresh routine
-
-  PDCurses Description:
-	This function refreshes the virtual screen to reflect the depth
-	relationships between the panels in the deck. The user must use
-	doupdate() to refresh the physical screen.
-
-  PDCurses Return Value:
-	None
-
-  PDCurses Errors:
-	None
-
-  Portability:
-	PDCurses	void update_panels(void)
-	SYS V Curses	void update_panels(void)
-
-**man-end****************************************************************/
 
 void update_panels(void)
 {

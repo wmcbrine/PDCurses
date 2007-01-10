@@ -69,7 +69,7 @@ manual:
 	cd tools; $(MAKE) $(MFLAGS) $@
 
 $(ZIPFILE):
-	zip -9y $(ZIPFILE) README HISTORY INSTALL *.spec *.mif \
+	zip -9y $(ZIPFILE) README HISTORY IMPLEMNT INSTALL *.spec *.mif \
 	Makefile.in config.h.in configure configure.ac config.guess \
 	config.sub x11/xcurses-config.in install-sh aclocal.m4 curses.h \
 	curspriv.h panel.h term.h maintain.er pdcurses/README \
@@ -84,7 +84,7 @@ zip: $(ZIPFILE)
 
 ../$(TARBALL):
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/HISTORY \
-	$(PDC_DIR)/INSTALL $(PDC_DIR)/*.spec \
+	$(PDC_DIR)/IMPLEMNT $(PDC_DIR)/INSTALL $(PDC_DIR)/*.spec \
 	$(PDC_DIR)/*.mif $(PDC_DIR)/Makefile.in $(PDC_DIR)/aclocal.m4 \
 	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure \
 	$(PDC_DIR)/config.guess $(PDC_DIR)/x11/xcurses-config.in \

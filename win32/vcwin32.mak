@@ -33,7 +33,7 @@ CC		= cl.exe -nologo
 CFLAGS		= -Z7 -DPDCDEBUG
 LDFLAGS		= -debug -pdb:none
 !else
-CFLAGS		= -O2
+CFLAGS		= -O1
 LDFLAGS		=
 !endif
 

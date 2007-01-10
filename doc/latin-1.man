@@ -2,19 +2,20 @@
        Entering High-Order Characters of the Latin-1 Character Set
        -----------------------------------------------------------
 
-The following table shows the high-order characters of the Latin-1 
-character set and how to generate these characters using any keyboard 
-and the user-specified "compose" key.
+When built without XIM support, PDCurses for X11 provides its own, 
+limited compose key system for Latin-1 characters. The available 
+combinations are listed here. For a given character, any of the 
+combinations shown in the last column may be used. To generate a 
+character, press the "compose" key followed by one of the pairs of 
+keystrokes. Where no key is evident, the spacebar is used.  Thus, to 
+generate the NO-BREAK SPACE, press the "compose" key followed by two 
+hits of the spacebar.
 
-The last column shows all possible key combinations to generate the 
-equivalent Latin-1 character.  There are up to 7 pairs of keys used per 
-character, and these are listed in columns under the "Compose Key 
-Combinations" heading.  To generate a character, press the "compose" key 
-followed by one of the pairs of keystrokes.
+With a typical modern X server, you can get many more compose key 
+combinations by using XIM instead. Configure PDCurses with --enable-xim 
+to use XIM support.
 
-Where no key is evident, the spacebar is used.  Thus, to generate the 
-NO-BREAK SPACE, press the "compose" key followed by the spacebar, 
-followed by the spacebar.
+This document is encoded in UTF-8.
 
 +----+-----+---+---------------------------------+---------------------------+
 |Hex | Dec |Chr| Description ISO 10646-1:1993(E) | Compose key combinations  |

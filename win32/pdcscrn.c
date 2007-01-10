@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.78 2007/01/03 14:10:47 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.79 2007/01/10 15:57:35 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -560,27 +560,3 @@ int PDC_init_color(short color, short red, short green, short blue)
 
 	return OK;
 }
-
-#ifdef PDC_DLL_BUILD
-
-BOOL WINAPI DllMain(HINSTANCE hDLL, DWORD dwReason, LPVOID pReserved)
-{
-	switch(dwReason)
-	{
-	case DLL_PROCESS_ATTACH:
-/*		fprintf(stderr, "DLL_PROCESS_ATTACH\n"); */
-		break;
-	case DLL_PROCESS_DETACH:
-/*		fprintf(stderr, "DLL_PROCESS_DETACH\n"); */
-		break;
-	case DLL_THREAD_ATTACH:
-/*		fprintf(stderr, "DLL_THREAD_ATTACH\n"); */
-		break;
-	case DLL_THREAD_DETACH:
-/*		fprintf(stderr, "DLL_THREAD_DETACH\n"); */
-		;
-	}
-	return TRUE;
-}
-
-#endif

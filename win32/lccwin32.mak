@@ -51,13 +51,13 @@ LIBPANEL	= panel.lib
 
 # For a static build:
 
-#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
-#PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
+PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 # For a DLL build:
 
-BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
-PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
+#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+#PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
 
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
@@ -99,10 +99,9 @@ terminfo.obj: $(TERM_HEADER)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 
-# Uncomment for a static build:
-
-#$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-#	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
+# Remove the next two lines for a DLL build:
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
 
 $(LIBPANEL) : $(PANOBJS)
 	$(LIBEXE) /out:$@ $(PANOBJS)

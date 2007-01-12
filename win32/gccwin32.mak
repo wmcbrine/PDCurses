@@ -2,7 +2,7 @@
 #
 # GNU MAKE Makefile for PDCurses library - WIN32 Cygnus GCC
 #
-# Usage: make -f [path\]gccwin32.mak [-DDEBUG] [target]
+# Usage: make -f [path\]gccwin32.mak [DEBUG=Y] [WIDE=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.a|panel.a|testcurs.exe...]
@@ -37,7 +37,11 @@ else
 	LDFLAGS =
 endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE
+ifeq ($(WIDE),Y)
+	CPPFLAGS = -I$(PDCURSES_HOME) -DPDC_WIDE
+else
+	CPPFLAGS = -I$(PDCURSES_HOME)
+endif
 
 CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
 

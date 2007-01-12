@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.105 2007/01/07 21:31:17 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.106 2007/01/12 00:38:26 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -352,8 +352,7 @@ static int _get_key_count(void)
 		}
 	}
 
-	PDC_LOG(("_get_key_count() - returning: num_keys %d "
-		"type %d\n", num_keys, ip->EventType));
+	PDC_LOG(("_get_key_count() - returning: num_keys %d\n", num_keys));
 
 	return num_keys;
 }

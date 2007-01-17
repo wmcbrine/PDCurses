@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.78 2006/12/14 01:57:23 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.79 2007/01/17 20:49:08 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -111,8 +111,6 @@ int main(int argc, char *argv[])
 	bool quit = FALSE;
 
 #if HAVE_WIDE
-	/* This is here for ncurses. PDCurses doesn't need it. */
-
 	setlocale(LC_ALL, "");
 #endif
 	if (initTest(&win, argc, argv))

@@ -12,8 +12,11 @@
  ************************************************************************/
 
 #include <curspriv.h>
+#ifdef PDC_WIDE
+# include <stdlib.h>
+#endif
 
-RCSID("$Id: instr.c,v 1.33 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.34 2007/01/18 01:42:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -73,8 +76,19 @@ RCSID("$Id: instr.c,v 1.33 2006/12/25 14:27:12 wmcbrine Exp $");
 
 int winnstr(WINDOW *win, char *str, int n)
 {
+#ifdef PDC_WIDE
+	wchar_t wstr[513];
+
+	if (n < 0 || n > 512)
+		n = 512;
+
+	if (winnwstr(win, wstr, n) == ERR)
+		return ERR;
+
+	return wcstombs(str, wstr, n);
+#else
 	chtype tmp;
-	int oldy, oldx, imax, ic;
+	int oldy, oldx, imax, i;
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
@@ -88,24 +102,25 @@ int winnstr(WINDOW *win, char *str, int n)
 	if (n > 0)
 		imax = ((imax < n) ? imax : n);
 
-	for (ic = 0; ic < imax; ic++)
+	for (i = 0; i < imax; i++)
 	{
-		tmp = mvwinch(win, oldy, oldx + ic);
+		tmp = mvwinch(win, oldy, oldx + i);
 
 		if (tmp == (chtype)ERR) 
 		{
-			str[ic] = '\0';
+			str[i] = '\0';
 			return ERR;
 		}
 
-		str[ic] = tmp & A_CHARTEXT;
+		str[i] = tmp & A_CHARTEXT;
 	}
 
-	str[ic] = '\0';
+	str[i] = '\0';
 
 	win->_curx = oldx;
 
-	return ic;
+	return i;
+#endif
 }
 
 int instr(char *str)
@@ -173,7 +188,7 @@ int mvwinnstr(WINDOW *win, int y, int x, char *str, int n)
 int winnwstr(WINDOW *win, wchar_t *wstr, int n)
 {
 	chtype tmp;
-	int oldy, oldx, imax, ic;
+	int oldy, oldx, imax, i;
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
@@ -187,24 +202,24 @@ int winnwstr(WINDOW *win, wchar_t *wstr, int n)
 	if (n > 0)
 		imax = ((imax < n) ? imax : n);
 
-	for (ic = 0; ic < imax; ic++)
+	for (i = 0; i < imax; i++)
 	{
-		tmp = mvwinch(win, oldy, oldx + ic);
+		tmp = mvwinch(win, oldy, oldx + i);
 
 		if (tmp == (chtype)ERR) 
 		{
-			wstr[ic] = L'\0';
+			wstr[i] = L'\0';
 			return ERR;
 		}
 
-		wstr[ic] = tmp & A_CHARTEXT;
+		wstr[i] = tmp & A_CHARTEXT;
 	}
 
-	wstr[ic] = L'\0';
+	wstr[i] = L'\0';
 
 	win->_curx = oldx;
 
-	return ic;
+	return i;
 }
 
 int inwstr(wchar_t *wstr)

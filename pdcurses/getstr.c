@@ -12,8 +12,11 @@
  ************************************************************************/
 
 #include <curspriv.h>
+#ifdef PDC_WIDE
+# include <stdlib.h>
+#endif
 
-RCSID("$Id: getstr.c,v 1.42 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.43 2007/01/18 01:42:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -84,6 +87,17 @@ RCSID("$Id: getstr.c,v 1.42 2006/12/25 14:27:12 wmcbrine Exp $");
 
 int wgetnstr(WINDOW *win, char *str, int n)
 {
+#ifdef PDC_WIDE
+	wchar_t wstr[MAXLINE + 1];
+
+	if (n < 0 || n > MAXLINE)
+		n = MAXLINE;
+
+	if (wgetn_wstr(win, (wint_t *)wstr, n) == ERR)
+		return ERR;
+
+	return wcstombs(str, wstr, n);
+#else
 	int ch, i, num, x, chars;
 	char *p;
 	bool stop, oldecho, oldcbreak, oldnodelay;
@@ -215,6 +229,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 	win->_nodelay = oldnodelay;
 
 	return OK;
+#endif
 }
 
 int getstr(char *str)

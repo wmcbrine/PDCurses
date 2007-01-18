@@ -12,9 +12,12 @@
  ************************************************************************/
 
 #include <curspriv.h>
+#ifdef PDC_WIDE
+# include <stdlib.h>
+#endif
 #include <string.h>
 
-RCSID("$Id: insstr.c,v 1.37 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.38 2007/01/18 01:42:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -74,22 +77,45 @@ RCSID("$Id: insstr.c,v 1.37 2006/12/25 14:27:12 wmcbrine Exp $");
 
 int winsnstr(WINDOW *win, const char *str, int n)
 {
-	int ic;
+#ifdef PDC_WIDE
+	wchar_t wstr[513], *p;
+	int i;
+#endif
+	int len;
 
 	PDC_LOG(("winsnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (!win || !str)
 		return ERR;
 
-	ic = strlen(str);
+	len = strlen(str);
 
-	if (n > 0)
-		ic = ((ic < n) ? ic : n) - 1;
-	else
-		--ic;
+	if (n < 0 || n < len)
+		n = len;
 
-	for (; ic >= 0; ic--)
-		if (winsch(win, str[ic]) == ERR)
+#ifdef PDC_WIDE
+	if (n > 512)
+		n = 512;
+
+	p = wstr;
+	i = 0;
+
+	while (str[i] && i < n)
+	{
+		int retval = mbtowc(p, str + i, n - i);
+
+		if (retval <= 0)
+			break;
+		p++;
+		i += retval;
+	}
+
+	while (p > wstr)
+		if (winsch(win, *--p) == ERR)
+#else
+	while (n)
+		if (winsch(win, (unsigned char)(str[--n])) == ERR)
+#endif
 			return ERR;
 
 	return OK;
@@ -163,23 +189,21 @@ int mvwinsnstr(WINDOW *win, int y, int x, const char *str, int n)
 int wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 {
 	const wchar_t *p;
-	int ic;
+	int len;
 
 	PDC_LOG(("wins_nwstr() - called\n"));
 
 	if (!win || !wstr)
 		return ERR;
 
-	for (ic = 0, p = wstr; *p; p++)
-		ic++;
+	for (len = 0, p = wstr; *p; p++)
+		len++;
 
-	if (n > 0)
-		ic = ((ic < n) ? ic : n) - 1;
-	else
-		--ic;
+	if (n < 0 || n < len)
+		n = len;
 
-	for (; ic >= 0; ic--)
-		if (winsch(win, wstr[ic]) == ERR)
+	while (n)
+		if (winsch(win, wstr[--n]) == ERR)
 			return ERR;
 
 	return OK;

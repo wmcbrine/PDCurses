@@ -12,8 +12,11 @@
  ************************************************************************/
 
 #include <curspriv.h>
+#ifdef PDC_WIDE
+# include <stdlib.h>
+#endif
 
-RCSID("$Id: addstr.c,v 1.36 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.37 2007/01/18 01:42:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -71,16 +74,27 @@ RCSID("$Id: addstr.c,v 1.36 2006/12/25 14:27:12 wmcbrine Exp $");
 
 int waddnstr(WINDOW *win, const char *str, int n)
 {
-	int ic;
+	int i = 0;
 
 	PDC_LOG(("waddnstr() - called: string=\"%s\" n %d \n", str, n));
 
 	if (!win || !str)
 		return ERR;
 
-	for (ic = 0; *str && (ic < n || n < 0); ic++)
+	while (str[i] && (i < n || n < 0))
 	{
-		if (waddch(win, (unsigned char)(*str++)) == ERR)
+#ifdef PDC_WIDE
+		wchar_t wch;
+		int retval = mbtowc(&wch, str + i, n >= 0 ? n - i : 6);
+
+		if (retval <= 0)
+			return OK;
+
+		i += retval;
+#else
+		chtype wch = (unsigned char)(str[i++]);
+#endif
+		if (waddch(win, wch) == ERR)
 			return ERR;
 	}
 
@@ -153,19 +167,18 @@ int mvwaddnstr(WINDOW *win, int y, int x, const char *str, int n)
 #ifdef PDC_WIDE
 int waddnwstr(WINDOW *win, const wchar_t *wstr, int n)
 {
-	chtype cn;
-	int ic;
+	int i = 0;
 
 	PDC_LOG(("waddnwstr() - called\n"));
 
 	if (!win || !wstr)
 		return ERR;
 
-	for (ic = 0; *wstr && (ic < n || n < 0); ic++)
+	while (wstr[i] && (i < n || n < 0))
 	{
-		cn = *wstr++;
+		chtype wch = wstr[i++];
 
-		if (waddch(win, cn) == ERR)
+		if (waddch(win, wch) == ERR)
 			return ERR;
 	}
 

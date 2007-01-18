@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.46 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.47 2007/01/18 05:33:23 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -218,6 +218,12 @@ static void _redraw(void)
 
 int slk_set(int labnum, const char *label, int justify)
 {
+#ifdef PDC_WIDE
+	wchar_t wlabel[32];
+
+	mbstowcs(wlabel, label, 31);
+	return slk_wset(labnum, wlabel, justify);
+#else
 	int i;
 
 	PDC_LOG(("slk_set() - called\n"));
@@ -257,6 +263,7 @@ int slk_set(int labnum, const char *label, int justify)
 	_drawone(labnum);
 
 	return OK;
+#endif
 }
 
 int slk_refresh(void)
@@ -276,6 +283,12 @@ int slk_noutrefresh(void)
 char *slk_label(int labnum)
 {
 	static char temp[33];
+#ifdef PDC_WIDE
+	wchar_t *wtemp = slk_wlabel(labnum);
+
+	wcstombs(temp, wtemp, 32);
+	temp[32] = '\0';
+#else
 	chtype *p;
 	int i;
 
@@ -288,7 +301,7 @@ char *slk_label(int labnum)
 		temp[i] = *p++;
 
 	temp[i] = '\0';
-
+#endif
 	return temp;
 }
 
@@ -604,5 +617,24 @@ int slk_wset(int labnum, const wchar_t *label, int justify)
 	_drawone(labnum);
 
 	return OK;
+}
+
+wchar_t *slk_wlabel(int labnum)
+{
+	static wchar_t temp[33];
+	chtype *p;
+	int i;
+
+	PDC_LOG(("slk_wlabel() - called\n"));
+
+	if (labnum < 1 || labnum > labels)
+		return (wchar_t *)0;
+
+	for (i = 0, p = slk[labnum - 1].label; *p; i++)
+		temp[i] = *p++;
+
+	temp[i] = '\0';
+
+	return temp;
 }
 #endif

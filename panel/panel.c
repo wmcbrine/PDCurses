@@ -19,7 +19,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.26 2007/01/09 15:04:20 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.27 2007/03/09 20:53:25 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -144,15 +144,6 @@ RCSID("$Id: panel.c,v 1.26 2007/01/09 15:04:20 wmcbrine Exp $");
 PANEL *_bottom_panel = (PANEL *)0;
 PANEL *_top_panel = (PANEL *)0;
 PANEL _stdscr_pseudo_panel = { (WINDOW *)0 };
-
-static void _calculate_obscure(void);
-static void _free_obscure(PANEL *);
-static void _override(PANEL *, int);
-static bool _panel_is_linked(const PANEL *);
-static void _panel_link_bottom(PANEL *);
-static void _panel_link_top(PANEL *);
-static bool _panels_overlapped(PANEL *, PANEL *);
-static void _panel_unlink(PANEL *);
 
 #ifdef PANEL_DEBUG
 

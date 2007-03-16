@@ -15,7 +15,7 @@
 
 #include <string.h>
 
-RCSID("$Id: pdcsetsc.c,v 1.28 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.29 2007/03/16 06:33:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -25,7 +25,7 @@ RCSID("$Id: pdcsetsc.c,v 1.28 2007/01/02 15:57:57 wmcbrine Exp $");
 	int PDC_set_blink(bool blinkon);
 	void PDC_set_title(const char *title);
 
-  PDCurses Description:
+  Description:
 	PDC_set_blink() toggles whether the A_BLINK attribute sets an
 	actual blink mode (TRUE), or sets the background color to high
 	intensity (FALSE). The default is platform-dependent (FALSE in

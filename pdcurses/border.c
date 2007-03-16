@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.45 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: border.c,v 1.46 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -52,11 +52,11 @@ RCSID("$Id: border.c,v 1.45 2006/12/25 14:27:12 wmcbrine Exp $");
 	int mvwhline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
 	int mvwvline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
 
-  X/Open Description:
-	The border(), wborder(), and box() routines, a border is drawn
-	around the edge of the window. If any of the arguments is zero,
-	an appropriate default is used. These default values are specified
-	in <curses.h>. The arguments and defaults to these functions are:
+  Description:
+	border(), wborder(), and box() draw a border around the edge of 
+	the window. If any argument is zero, an appropriate default is 
+	used:
+
 		ls	left side of border		ACS_VLINE
 		rs	right side of border		ACS_VLINE
 		ts	top side of border		ACS_HLINE
@@ -66,17 +66,17 @@ RCSID("$Id: border.c,v 1.45 2006/12/25 14:27:12 wmcbrine Exp $");
 		bl	bottom left corner of border	ACS_BLCORNER
 		br	bottom right corner of border	ACS_BLCORNER
 
-	The hline() and whline() functions draw a left to right line
-	using ch starting from the current cursor position. The cursor
-	position does not change. The line is at most n characters long
-	or as many as will fit in the window.
+	hline() and whline() draw a horizontal line, using ch, starting 
+	from the current cursor position. The cursor position does not 
+	change. The line is at most n characters long, or as many as 
+	will fit in the window.
 
-	The vline() and wvline() functions draw a top to bottom line
-	using ch starting from the current cursor position. The cursor
-	position does not change. The line is at most n characters long
-	or as many as will fit in the window.
+	vline() and wvline() draw a vertical line, using ch, starting 
+	from the current cursor position. The cursor position does not 
+	change. The line is at most n characters long, or as many as 
+	will fit in the window.
 
-  X/Open Return Value:
+  Return Value:
 	These functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

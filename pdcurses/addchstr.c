@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: addchstr.c,v 1.37 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: addchstr.c,v 1.38 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -40,19 +40,19 @@ RCSID("$Id: addchstr.c,v 1.37 2006/12/25 14:27:12 wmcbrine Exp $");
 	int mvwadd_wchnstr(WINDOW *win, int y, int x, const cchar_t *wch,
 		int n);
 
-  X/Open Description:
+  Description:
 	These routines write a chtype or cchar_t string directly into 
-	the window structure, starting at the current position. The four 
-	routines with n as the last argument copy at most n elements, 
-	but no more than will fit on the line. If n = -1 then the whole 
-	string is copied, to the maximum number that will fit on the 
-	line.
+	the window structure, starting at the current or specified 
+	position. The four routines with n as the last argument copy at 
+	most n elements, but no more than will fit on the line. If n = 
+	-1 then the whole string is copied, up to the maximum number 
+	that will fit on the line.
 
 	The cursor position is not advanced. These routines do not check 
 	for newline or other special characters, nor does any line 
 	wrapping occur.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK or ERR.
 
   Portability				     X/Open    BSD    SYS V

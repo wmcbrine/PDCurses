@@ -17,7 +17,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: printw.c,v 1.33 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: printw.c,v 1.34 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -31,33 +31,15 @@ RCSID("$Id: printw.c,v 1.33 2006/12/25 14:27:13 wmcbrine Exp $");
 	int vwprintw(WINDOW *win, const char *fmt, va_list varglist);
 	int vw_printw(WINDOW *win, const char *fmt, va_list varglist);
 
-  X/Open Description:
-	The printw() routine adds a string to the default window
-	starting at the current cursor position.  This routine causes
-	the string that would normally be output by printf() to be
-	output by addstr().
+  Description:
+	The printw() functions add a formatted string to the window at 
+	the current or specified cursor position. The format strings are 
+	the same as used in the standard C library's printf(). (printw() 
+	can be used as a drop-in replacement for printf().)
 
-	The routine wprintw() adds a string to the specified window
-	starting at the current cursor position.  This routine causes
-	the string that would normally be output by printf() to be
-	output by waddstr().
-
-	The routine mvprintw() adds a string to the default window
-	starting at the specified cursor position.  This routine
-	causes the string that would normally be output by printf() to
-	be output by addstr().
-
-	The routine mvwprintw() adds a string to the specified window
-	starting at the specified cursor position.  This routine
-	causes the string that would normally be output by printf() to
-	be output by waddstr().
-
-	All these routines are analogous to printf().  It is advisable
-	to use the field width options of printf() to avoid leaving
-	unwanted characters on the screen from earlier calls.
-
-  X/Open Return Value:
-	All functions return OK on success and ERR on error.
+  Return Value:
+	All functions return the number of characters printed, or 
+	ERR on error.
 
   Portability				     X/Open    BSD    SYS V
 	printw					Y	Y	Y

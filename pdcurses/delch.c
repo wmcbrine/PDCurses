@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: delch.c,v 1.27 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: delch.c,v 1.28 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -26,14 +26,14 @@ RCSID("$Id: delch.c,v 1.27 2006/12/25 14:27:12 wmcbrine Exp $");
 	int mvdelch(int y, int x);
 	int mvwdelch(WINDOW *win, int y, int x);
 
-  X/Open Description:
+  Description:
 	The character under the cursor in the window is deleted.  All
 	characters to the right on the same line are moved to the left
 	one position and the last character on the line is filled with
 	a blank.  The cursor position does not change (after moving to
 	y, x if coordinates are specified).
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

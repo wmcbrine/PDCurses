@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.26 2006/10/23 05:03:30 wmcbrine Exp $
+ * $Id: tui.c,v 1.27 2007/03/16 06:33:43 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -607,34 +607,6 @@ void startmenu(menu *mp, char *mtitle)
 	cleanup();
 }
 
-
-/*man-start*********************************************************************
-
-  weditstr()     - edit string
-
-  PDCurses Description:
-	The initial value of 'str' with a maximum length of 'field'-1,
-	which is supplied by the calling routine, is editted. The user's 
-	erase (^H), kill (^U) and delete word (^W) chars are interpreted. 
-	The PC insert or Tab keys toggle between insert and edit mode.
-	Escape aborts the edit session, leaving 'str' unchanged.
-	Enter, Up or Down Arrow are used to accept the changes to 'str'.
-	NOTE: editstr(), mveditstr(), and mvweditstr() are macros.
-
-  PDCurses Return Value:
-	These functions return the input terminating character on 
-	success (Escape, Enter, Up or Down Arrow) and ERR on error.
-
-  PDCurses Errors:
-	It is an error to call this function with a NULL window pointer.
-	The length of the initial 'str' must not exceed 'field'-1.
-
-  Portability:
-        
-	PDCurses	int weditstr(WINDOW *win, char *str, int field);
-
-**man-end**********************************************************************/
-
 static void repainteditbox(WINDOW *win, int x, char *buf)
 {
 #ifndef PDCURSES
@@ -652,6 +624,29 @@ static void repainteditbox(WINDOW *win, int x, char *buf)
 	wmove(win, 0, x);
 	wrefresh(win); 
 }
+
+/*
+
+  weditstr()     - edit string
+
+  Description:
+	The initial value of 'str' with a maximum length of 'field'-1,
+	which is supplied by the calling routine, is editted. The user's 
+	erase (^H), kill (^U) and delete word (^W) chars are interpreted. 
+	The PC insert or Tab keys toggle between insert and edit mode.
+	Escape aborts the edit session, leaving 'str' unchanged.
+	Enter, Up or Down Arrow are used to accept the changes to 'str'.
+	NOTE: editstr(), mveditstr(), and mvweditstr() are macros.
+
+  Return Value:
+	Returns the input terminating character on success (Escape, 
+	Enter, Up or Down Arrow) and ERR on error.
+
+  Errors:
+	It is an error to call this function with a NULL window pointer.
+	The length of the initial 'str' must not exceed 'field'-1.
+
+*/
 
 int weditstr(WINDOW *win, char *buf, int field)
 {

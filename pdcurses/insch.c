@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: insch.c,v 1.38 2006/12/29 08:50:51 wmcbrine Exp $");
+RCSID("$Id: insch.c,v 1.39 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -36,58 +36,24 @@ RCSID("$Id: insch.c,v 1.38 2006/12/29 08:50:51 wmcbrine Exp $");
 	int mvins_wch(int y, int x, const cchar_t *wch);
 	int mvwins_wch(WINDOW *win, int y, int x, const cchar_t *wch);
 
-  X/Open Description:
-	The routine insch() inserts the character ch into the default
-	window at the current cursor position and the window cursor is
-	advanced.  The character is of the type chtype as containing
-	both data and attributes.
+  Description:
+	The insch() functions insert a chtype into the window at the 
+	current or specified cursor position. The cursor is NOT 
+	advanced. A newline is equivalent to clrtoeol(); tabs are 
+	expanded; other control characters are converted as with 
+	unctrl().
 
-	The routine winsch() inserts the character ch into the specified
-	window at the current cursor position.  The cursor position is
-	advanced.
-
-	The routine mvinsch() moves the cursor to the specified (y, x)
-	position and inserts the character ch into the default window.
-	The cursor position is advanced after the character has been
-	inserted.
-
-	The routine mvwinsch() moves the cursor to the specified (y, x)
-	position and inserts the character ch into the specified
-	window.  The cursor position is advanced after the character
-	has been inserted.
-
-	All these routines are similar to putchar().  The following
-	information applies to all the routines.
-
-	If the cursor moves on to the right margin, an automatic
-	newline is performed.  If scrollok is enabled, and a character
-	is added to the bottom right corner of the screen, the
-	scrolling region will be scrolled up one line.  If scrolling
-	is not allowed, ERR will be returned.
-
-	If ch is a tab, newline, or backspace, the cursor will be
-	moved appropriately within the window.  If ch is a newline,
-	the clrtoeol routine is called before the cursor is moved to
-	the beginning of the next line.  If newline mapping is off,
-	the cursor will be moved to the next line, but the x
-	coordinate will be unchanged.  If ch is a tab the cursor is
-	moved to the next tab position within the window.  If ch is
-	another control character, it will be drawn in the ^X
-	notation.  Calling the inch() routine after adding a control
-	character returns the representation of the control character,
-	not the control character.
+	The ins_wch() functions are the wide-character
+	equivalents, taking cchar_t pointers rather than chtypes.
 
 	Video attributes can be combined with a character by ORing
-	them into the parameter.  This will result in these attributes
-	being set.  The intent here is that text, including
-	attributes, can be copied from one place to another using inch()
-	and insch().
+	them into the parameter. Text, including attributes, can be 
+	copied from one place to another using inch() and insch().
 
-  PDCurses Description:
-	insrawch() etc. are wrappers for insch() etc. that disable the 
-	translation of control characters.
+	insrawch() etc. are PDCurses-specific wrappers for insch() etc. 
+	that disable the translation of control characters.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

@@ -17,7 +17,7 @@
 #endif
 #include <string.h>
 
-RCSID("$Id: insstr.c,v 1.38 2007/01/18 01:42:31 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.39 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -42,17 +42,17 @@ RCSID("$Id: insstr.c,v 1.38 2007/01/18 01:42:31 wmcbrine Exp $");
 	int mvwins_wstr(WINDOW *win, int y, int x, const wchar_t *wstr);
 	int mvwins_nwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
 
-  System V Curses Description:
+  Description:
 	With these routines, a character string (as many characters as 
 	will fit on the line) is inserted before the character under 
 	the cursor.  All characters to the right of the cursor are moved 
 	to the right, with the possibility of the rightmost characters 
 	on the line being lost.  The cursor position does not change 
-	(after moving to y,x if specified).  The four routines with n as 
-	the last argument insert at most n characters.  If n<=0, then 
-	the entire string is inserted.
+	(after moving to y, x, if specified).  The routines with n as 
+	the last argument insert at most n characters; if n is 
+	negative, then the entire string is inserted.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

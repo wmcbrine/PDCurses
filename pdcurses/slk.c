@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.47 2007/01/18 05:33:23 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.48 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -43,7 +43,7 @@ RCSID("$Id: slk.c,v 1.47 2007/01/18 05:33:23 wmcbrine Exp $");
 	void PDC_slk_free(void);
 	void PDC_slk_initialize(void);
 
-  X/Open Description:
+  Description:
 	These functions manipulate a window that contain Soft Label Keys 
 	(SLK). To use the SLK functions, a call to slk_init() must be 
 	made BEFORE initscr() or newterm(). slk_init() removes 1 or 2 
@@ -65,11 +65,7 @@ RCSID("$Id: slk.c,v 1.47 2007/01/18 05:33:23 wmcbrine Exp $");
 	The functions slk_refresh(), slk_noutrefresh() and slk_touch() 
 	are analagous to refresh(), noutrefresh() and touch() functions.
 
-  PDCurses Description:
-	System V compatible color support is included.
-	See <curses.h> for further details.
-
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

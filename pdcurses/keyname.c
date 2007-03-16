@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: keyname.c,v 1.2 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: keyname.c,v 1.3 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -23,10 +23,9 @@ RCSID("$Id: keyname.c,v 1.2 2006/12/25 14:27:12 wmcbrine Exp $");
 	char *keyname(int key);
 	char *key_name(wchar_t c);
 
-  X/Open Description:
-	The keyname() function returns a pointer to a character string 
-	containing a symbolic name corresponding to that specified in 
-	the argument key. key may be any key returned by wgetch().
+  Description:
+	keyname() returns a string corresponding to the argument key. 
+	key may be any key returned by wgetch().
 
 	key_name() is the wide-character version. It takes a wchar_t 
 	parameter, but still returns a char *.

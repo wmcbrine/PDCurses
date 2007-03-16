@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.48 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: addch.c,v 1.49 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -39,7 +39,7 @@ RCSID("$Id: addch.c,v 1.48 2006/12/25 14:27:12 wmcbrine Exp $");
 	int echo_wchar(const cchar_t *wch);
 	int wecho_wchar(WINDOW *win, const cchar_t *wch);
 
-  X/Open Description:
+  Description:
 	addch() inserts the character ch into the default window
 	(stdscr) at the current cursor position, and the window cursor
 	is advanced.  The character is of the type chtype, containing
@@ -65,6 +65,10 @@ RCSID("$Id: addch.c,v 1.48 2006/12/25 14:27:12 wmcbrine Exp $");
 	wechochar() inserts the character ch into the specified window
 	and calls wrefresh(). wecho_wchar() is the wide version.
 
+	addrawch(), waddrawch(), mvaddrawch() and mvwaddrawch() are
+	PDCurses-specific wrappers for addch() etc. that disable the 
+	translation of control characters.
+
 	All these routines are similar to putchar().  The following
 	applies to all:
 
@@ -87,14 +91,8 @@ RCSID("$Id: addch.c,v 1.48 2006/12/25 14:27:12 wmcbrine Exp $");
 	character.
 
 	Video attributes can be combined with a character by ORing them 
-	into the parameter.  This will result in these attributes being 
-	set.  The intent here is that text, including attributes, can be 
-	copied from one place to another using inch() and addch().
-
-  PDCurses Description:
-	addrawch(), waddrawch(), mvaddrawch() and mvwaddrawch() are
-	wrappers for addch() etc. that disable the translation of
-	control characters.
+	into the parameter. Text, including attributes, can be copied 
+	from one place to another by using inch() and addch().
 
 	Note that in PDCurses, for now, a cchar_t and a chtype are the
 	same. The text field is 16 bits wide, and is treated as Unicode
@@ -103,7 +101,7 @@ RCSID("$Id: addch.c,v 1.48 2006/12/25 14:27:12 wmcbrine Exp $");
 	addch(), both the wide and narrow versions will handle Unicode.
 	But for portability, you should use the wide functions.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

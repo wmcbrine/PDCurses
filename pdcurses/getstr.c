@@ -16,7 +16,7 @@
 # include <stdlib.h>
 #endif
 
-RCSID("$Id: getstr.c,v 1.43 2007/01/18 01:42:31 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.44 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,25 +41,24 @@ RCSID("$Id: getstr.c,v 1.43 2007/01/18 01:42:31 wmcbrine Exp $");
 	int mvgetn_wstr(int y, int x, wint_t *wstr, int n);
 	int mvwgetn_wstr(WINDOW *win, int y, int x, wint_t *wstr, int n);
 
-  X/Open Description:
+  Description:
 	The effect of getstr() is as though a series of calls to getch()
 	were made, until a newline or carriage return is received. The
 	resulting value is placed in the area pointed to by *str. The 
-	user's erase and kill characters are interpreted, as well as any 
-	special keys; such as function keys.
+	erase and kill characters are interpreted, as well as any 
+	special keys, such as function keys.
 
 	With wgetnstr(), a series of characters are read until a newline 
 	or carriage return is received.  The resulting value is placed 
-	in the area pointed to by the character pointer str.  The user's 
-	erase and kill characters are interpreted.  This differs from 
+	in the area pointed to by the character pointer str.  The erase 
+	and kill characters are interpreted.  This differs from 
 	wgetstr() in that the number of characters read is limited by a 
 	passed argument.
 
 	WARNING: There is no way to know how long the buffer passed to 
-	wgetstr() is, so it is possible to overwrite wrong memory or 
-	code!! This is the reason for the wgetnstr() function :-)
+	wgetstr() is, so use wgetnstr() to avoid buffer overflows.
 
-  X/Open Return Value:
+  Return Value:
 	This functions return ERR on failure or any other value on 
 	success.
 

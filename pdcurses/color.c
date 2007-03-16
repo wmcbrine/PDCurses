@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: color.c,v 1.74 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: color.c,v 1.75 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -35,7 +35,7 @@ RCSID("$Id: color.c,v 1.74 2006/12/25 14:27:12 wmcbrine Exp $");
 
 	int PDC_set_line_color(short color);
 
-  X/Open Description:
+  Description:
 	To use these routines, start_color() must be called, usually
 	immediately after initscr(). Colors are always used in pairs
 	refered to as color-pairs. A color-pair consists of a foreground
@@ -68,7 +68,6 @@ RCSID("$Id: color.c,v 1.74 2006/12/25 14:27:12 wmcbrine Exp $");
 	pair_content() is used to determine what the colors of a given
 	color-pair consist of.
 
-  PDCurses Description:
 	assume_default_colors() and use_default_colors() emulate the
 	ncurses extensions of the same names. assume_default_colors(f,
 	b) is essentially the same as init_pair(0, f, b) (which isn't
@@ -88,9 +87,9 @@ RCSID("$Id: color.c,v 1.74 2006/12/25 14:27:12 wmcbrine Exp $");
 
 	NOTE: COLOR_PAIR() and PAIR_NUMBER() are implemented as macros.
 
-  X/Open Return Value:
-	All functions return OK on success and ERR on error except for
-	has_colors() and can_change_colors() which return TRUE or FALSE.
+  Return Value:
+	All functions return OK on success and ERR on error, except for
+	has_colors() and can_change_colors(), which return TRUE or FALSE.
 
   Portability				     X/Open    BSD    SYS V
 	start_color				Y	-      3.2

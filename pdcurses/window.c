@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.54 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.55 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,7 +41,7 @@ RCSID("$Id: window.c,v 1.54 2006/12/25 14:27:13 wmcbrine Exp $");
 	WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx);
 	void PDC_sync(WINDOW *win);
 
-  X/Open Description:
+  Description:
 	newwin() creates a new window with the given number of lines,
 	nlines and columns, ncols. The upper left corner of the window
 	is at line begy, column begx. If either nlines or ncols is zero,
@@ -91,7 +91,6 @@ RCSID("$Id: window.c,v 1.54 2006/12/25 14:27:13 wmcbrine Exp $");
 	wsyncdown() causes a touchwin() of the current window if any of
 	its parent's windows have been touched.
 
-  PDCurses Description:
 	resize_window() allows the user to resize an existing window. It 
 	returns the pointer to the new window, or NULL on failure.
 
@@ -110,13 +109,13 @@ RCSID("$Id: window.c,v 1.54 2006/12/25 14:27:13 wmcbrine Exp $");
 	PDC_sync() handles wrefresh() and wsyncup() calls when a window
 	is changed.
 
-  X/Open Return Value:
+  Return Value:
 	newwin(), subwin(), derwin() and dupwin() return a pointer
 	to the new window, or NULL on failure. delwin(), mvwin(),
 	mvderwin() and syncok() return OK or ERR. wsyncup(),
 	wcursyncup() and wsyncdown() return nothing.
 
-  PDCurses Errors:
+  Errors:
 	It is an error to call resize_window() before calling initscr().
 	Also, an error will be generated if we fail to create a newly
 	sized replacement window for curscr, or stdscr. This could

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inch.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: inch.c,v 1.29 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -30,12 +30,16 @@ RCSID("$Id: inch.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
 	int mvin_wch(int y, int x, cchar_t *wcval);
 	int mvwin_wch(WINDOW *win, int y, int x, cchar_t *wcval);
 
-  X/Open Description:
-	Depending upon the state of the raw character output, 7- or
-	8-bit characters will be output.
+  Description:
+	The inch() functions retrieve the character and attribute from 
+	the current or specified window position, in the form of a 
+	chtype. If a NULL window is specified, (chtype)ERR is returned.
 
-  X/Open Return Value:
-	All functions return OK on success and ERR on error.
+	The in_wch() functions are the wide-character versions; instead 
+	of returning a chtype, they store a cchar_t at the address 
+	specified by wcval, and return OK or ERR. (No value is stored 
+	when ERR is returned.) Note that in PDCurses, chtype and cchar_t 
+	are the same.
 
   Portability				     X/Open    BSD    SYS V
 	inch					Y	Y	Y

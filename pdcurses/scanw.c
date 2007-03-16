@@ -27,7 +27,7 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 # define vsscanf _pdc_vsscanf
 #endif
 
-RCSID("$Id: scanw.c,v 1.34 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: scanw.c,v 1.35 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,21 +41,18 @@ RCSID("$Id: scanw.c,v 1.34 2006/12/25 14:27:13 wmcbrine Exp $");
 	int vwscanw(WINDOW *win, const char *fmt, va_list varglist);
 	int vw_scanw(WINDOW *win, const char *fmt, va_list varglist);
 
-  X/Open Description:
-	These routines correspond to scanf(). The function scanw() reads
-	input from the default window. The function wscanw() reads
-	input from the specified window. The function mvscanw() moves
-	the cursor to the specified position and then reads input from
-	the default window. The function mvwscanw() moves the cursor to
-	the specified position and then reads input from the specified
-	window.
+  Description:
+	These routines correspond to scanf(). scanw() reads input from
+	the default window; wscanw() from the specified window.
+	mvscanw() and mvwscanw() move the cursor to the specified
+	position before reading.
 
-	For all the functions, the routine wgetstr() is called to get a
-	string from the window, and the resulting line is used as
-	input for the scan.  All character interpretation is carried
-	out according to the scanf function rules.
+	wgetstr() is called to get a string from the window, and the 
+	resulting line is used as input for the scan.  All character 
+	interpretation is carried out according to the scanf() function 
+	rules.
 
-  X/Open Return Value:
+  Return Value:
 	Upon successful completion, the scanw, mvscanw, mvwscanw and
 	wscanw functions return the number of items successfully
 	matched.  On end-of-file, they return EOF.  Otherwise they

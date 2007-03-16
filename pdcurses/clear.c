@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: clear.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: clear.c,v 1.29 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -29,25 +29,21 @@ RCSID("$Id: clear.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
 	int clrtoeol(void);
 	int wclrtoeol(WINDOW *win);
 
-  X/Open Description:
-	The erase() and werase() functions copy blanks to every position
-	of the window.
-
-	The clear() and wclear() functions are similar to erase() and
-	werase() except they also call clearok() to ensure that the
-	the screen is cleared on the next call to wrefresh() for that
+  Description:
+	erase() and werase() copy blanks to every position of the 
 	window.
 
-	The clrtobot() and wclrtobot() functions clear the screen from
-	the current cursor position to the end of the current line and
-	all remaining lines in the window.
+	clear() and wclear() are similar to erase() and werase(), except 
+	they also call clearok() to ensure that the the screen is 
+	cleared on the next call to wrefresh() for that window.
 
-	The clrtoeol() and wclrtoeol() functions clear the screen from
-	the current cursor position to the end of the current line only.
+	clrtobot() and wclrtobot() clear the screen from the current 
+	cursor position to the end of the window.
 
-  PDCurses Description:
+	clrtoeol() and wclrtoeol() clear the screen from the current 
+	cursor position to the end of the current line.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

@@ -16,7 +16,7 @@
 # include <stdlib.h>
 #endif
 
-RCSID("$Id: addstr.c,v 1.37 2007/01/18 01:42:31 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.38 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,7 +41,7 @@ RCSID("$Id: addstr.c,v 1.37 2007/01/18 01:42:31 wmcbrine Exp $");
 	int mvwaddwstr(WINDOW *win, int y, int x, const wchar_t *wstr);
 	int mvwaddnwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
 
-  X/Open Description:
+  Description:
 	These routines write all the characters of the null-terminated 
 	string str or wstr on the given window.  The functionality is 
 	equivalent to calling waddch() once for each character in the 
@@ -49,7 +49,7 @@ RCSID("$Id: addstr.c,v 1.37 2007/01/18 01:42:31 wmcbrine Exp $");
 	n characters; if n is negative, then the entire string will be 
 	added.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK or ERR.
 
   Portability				     X/Open    BSD    SYS V

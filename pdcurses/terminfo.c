@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <term.h>
 
-RCSID("$Id: terminfo.c,v 1.29 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.30 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -44,15 +44,12 @@ RCSID("$Id: terminfo.c,v 1.29 2006/12/25 14:27:13 wmcbrine Exp $");
 	int vid_puts(attr_t attr, short color_pair, void *opt,
 		int (*putfunc)(int));
 
-  X/Open Description:
-	The mvcur() function controls low-level cursor motion with 
-	optimization.
+  Description:
+	mvcur() lets you move the physical cursor without updating any 
+	window cursor positions. It returns OK or ERR.
 
-	NOTE: The remainer of the terminfo functions have not been
-	implemented.
-
-  X/Open Return Value:
-	All functions return OK on success and ERR on error.
+	The rest of these functions are currently implemented as stubs, 
+	returning the appropriate errors and doing nothing else.
 
   Portability				     X/Open    BSD    SYS V
 	mvcur					Y	Y	Y

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcclip.c,v 1.22 2007/01/02 13:48:31 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.23 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -25,7 +25,7 @@ RCSID("$Id: pdcclip.c,v 1.22 2007/01/02 13:48:31 wmcbrine Exp $");
 	int PDC_freeclipboard(char *contents);
 	int PDC_clearclipboard(void);
 
-  PDCurses Description:
+  Description:
 	PDC_getclipboard() gets the textual contents of the system's 
 	clipboard. This function returns the contents of the clipboard 
 	in the contents argument. It is the responsibilitiy of the 
@@ -38,7 +38,7 @@ RCSID("$Id: pdcclip.c,v 1.22 2007/01/02 13:48:31 wmcbrine Exp $");
 
 	PDC_clearclipboard() clears the internal clipboard.
 
-  PDCurses Return Values:
+  Return Values:
 	indicator of success/failure of call.
 	PDC_CLIP_SUCCESS	the call was successful
 	PDC_CLIP_MEMORY_ERROR	unable to allocate sufficient memory for 

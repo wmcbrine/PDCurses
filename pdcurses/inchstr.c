@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inchstr.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: inchstr.c,v 1.29 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -38,19 +38,14 @@ RCSID("$Id: inchstr.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
 	int mvwin_wchstr(WINDOW *win, int y, int x, cchar_t *wch);
 	int mvwin_wchnstr(WINDOW *win, int y, int x, cchar_t *wch, int n);
 
-  X/Open Description:
-	These routines read a chtype string directly from the window 
-	structure starting at the current position and ending at the 
-	right margin. The four routines with n as the last argument copy 
-	at most n elements, but no more than will fit on the line.
+  Description:
+	These routines read a chtype or cchar_t string from the window, 
+	starting at the current or specified position, and ending at the 
+	right margin, or after n elements, whichever is less.
 
-  X/Open Return Value:
-	All functions return ERR on error and an integer value other 
-	than ERR on success. 
-
-  X/Open Errors:
-	Normally the value returned indicates the number of chtypes
-	returned.
+  Return Value:
+	All functions return the number of elements read, or ERR on 
+	error.
 
   Portability				     X/Open    BSD    SYS V
 	inchstr					Y	-      4.0

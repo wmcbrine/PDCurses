@@ -21,7 +21,7 @@
 #undef sb_get_vert
 #undef sb_refresh
 
-RCSID("$Id: sb.c,v 1.21 2007/01/02 15:57:57 wmcbrine Exp $");
+RCSID("$Id: sb.c,v 1.22 2007/03/16 06:33:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -35,10 +35,10 @@ RCSID("$Id: sb.c,v 1.21 2007/01/02 15:57:57 wmcbrine Exp $");
 	int sb_get_vert(int *total, int *viewport, int *cur)
 	int sb_refresh(void);
 
-  PDCurses Description:
+  Description:
 	These functions manipulate the scrollbar.
 
-  PDCurses Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

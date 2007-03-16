@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.97 2007/01/05 12:01:23 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.98 2007/03/16 06:33:44 wmcbrine Exp $");
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2007";
 
@@ -48,14 +48,13 @@ extern char linesrippedoff;
 	bool is_termresized(void);
 	const char *curses_version(void);
 
-  X/Open Description:
+  Description:
 	The first curses routine called should be initscr().  This will 
 	determine the terminal type and initialize all curses data 
 	structures.  The initscr() function also arranges that the first 
 	call to refresh() will clear the screen.  If errors occur, 
 	initscr() will write an appropriate error message to standard 
-	error and exit.  If the program wants an indication of error 
-	conditions, newterm() should be used instead of initscr().
+	error and exit.
 
 	A program should always call endwin() before exiting or
 	escaping from curses mode temporarily.  This routine will
@@ -67,23 +66,13 @@ extern char linesrippedoff;
 	The isendwin() function returns TRUE if endwin() has been called
 	without any subsequent calls to wrefresh(), and FALSE otherwise.
 
-	A program which outputs to more than one terminal should use
-	newterm() for each terminal instead of initscr().  The newterm()
-	function should be called once for each terminal.  It returns a
-	value of type SCREEN * which should be saved as a reference to 
-	that terminal. The arguments are the type of terminal to be 
-	used in place of TERM (environment variable), a file pointer for 
-	output to the terminal and another file pointer for input from 
-	the terminal. The program must also call endwin() for each 
-	terminal no longer being used.
+	In some implementations of curses, newterm() allows the use of 
+	multiple terminals. Here, it's just an alternative interface for 
+	initscr(). It always returns SP, or NULL.
 
-	The set_term() function is used to switch between different 
-	terminals. The screen reference 'new' becomes the new current 
-	terminal. The previous terminal is returned by the routine.  
-	This is the only routine which manipulates SCREEN pointers; all 
-	other routines affect only the current terminal.
+	set_term() does nothing meaningful in PDCurses, but is included 
+	for compatibility with other curses implementations.
 
-  PDCurses Description:
 	resize_term() is effectively two functions: When called with 
 	nonzero values for nlines and ncols, it attempts to resize the 
 	screen to the given size. When called with (0, 0), it merely 
@@ -106,10 +95,7 @@ extern char linesrippedoff;
 	curses_version() returns a string describing the version of 
 	PDCurses.
 
-	PDCurses supports only one terminal via newterm() or set_term(), 
-	and the parameters are ignored.
-
-  X/Open Return Value:
+  Return Value:
 	All functions return NULL on error, except endwin(), which
 	returns ERR on error.
 

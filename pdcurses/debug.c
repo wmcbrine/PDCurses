@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-RCSID("$Id: debug.c,v 1.1 2006/12/25 14:45:51 wmcbrine Exp $");
+RCSID("$Id: debug.c,v 1.2 2007/03/16 06:33:44 wmcbrine Exp $");
 
 bool pdc_trace_on = FALSE;
 
@@ -29,7 +29,7 @@ bool pdc_trace_on = FALSE;
 	void traceoff(void);
 	void PDC_debug(const char *, ...);
 
-  PDCurses Description:
+  Description:
 	traceon() and traceoff() toggle the recording of debugging 
 	information to the file "trace". Although not standard, similar 
 	functions are in some other curses implementations.

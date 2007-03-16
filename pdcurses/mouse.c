@@ -14,14 +14,13 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: mouse.c,v 1.39 2006/12/28 10:35:05 wmcbrine Exp $");
+RCSID("$Id: mouse.c,v 1.40 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
   Name:								mouse
 
   Synopsis:
-
 	int mouse_set(unsigned long mbe);
 	int mouse_on(unsigned long mbe);
 	int mouse_off(unsigned long mbe);
@@ -39,7 +38,7 @@ RCSID("$Id: mouse.c,v 1.39 2006/12/28 10:35:05 wmcbrine Exp $");
 	int nc_getmouse(MEVENT *event);
 	int ungetmouse(MEVENT *event);
 
-  PDCurses Description:
+  Description:
 	As of PDCurses 3.0, there are two separate mouse interfaces: the
 	classic interface, which is based on the undocumented Sys V
 	mouse functions; and an ncurses-compatible interface. Both are

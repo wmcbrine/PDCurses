@@ -15,7 +15,7 @@
 #include <string.h>
 #include <limits.h>
 
-RCSID("$Id: termattr.c,v 1.47 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: termattr.c,v 1.48 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,29 +37,23 @@ RCSID("$Id: termattr.c,v 1.47 2006/12/25 14:27:13 wmcbrine Exp $");
 
 	char wordchar(void);
 
-  X/Open Description:
-	baudrate() returns the output speed of the terminal.  The number 
-	returned is bits per second, for example 9600, and is an integer.
+  Description:
+	baudrate() is supposed to return the output speed of the 
+	terminal. In PDCurses, it simply returns INT_MAX.
 
-	The user's current ERASE character is returned from a call to
-	erasechar();
+	has_ic and has_il() return TRUE. These functions have meaning in 
+	some other implementations of curses.
 
-	The has_ic function will return TRUE if the terminal has insert 
-	character and delete character capabilities.
-
-	The has_il() function will return TRUE if the terminal has insert
-	line and delete line capabilities.
-
-	The user's current KILL character is returned from a call to
-	killchar();
+	erasechar() and killchar() return ^H and ^U, respectively -- the 
+	ERASE and KILL characters. In other curses implementations, 
+	these may vary by terminal type. erasewchar() and killwchar() 
+	are the wide-character versions; they take a pointer to a 
+	location in which to store the character, and return OK or ERR.
 
 	longname() returns a pointer to a static area containing a
-	verbose description of the current terminal.  The maximum length
+	verbose description of the current terminal. The maximum length
 	of the string is 128 characters.  It is defined only after the
-	call to initscr() or newterm().  The area is overwritten by each
-	call to newterm() and is not restored by set_term().  The value
-	should therefore be saved between calls to newterm(), if
-	longname() is going to be used with multiple terminals.
+	call to initscr() or newterm().
 
 	termname() returns a pointer to a static area containing a
 	short description of the current terminal (14 characters).
@@ -67,24 +61,9 @@ RCSID("$Id: termattr.c,v 1.47 2006/12/25 14:27:13 wmcbrine Exp $");
 	termattrs() returns a logical OR of all video attributes
 	supported by the terminal.
 
-  PDCurses Description:
-	baudrate() returns the largest possible (portable) int value 
-	(INT_MAX from limits.h).
-
-	erasechar(), killchar() and wordchar() all return values that 
-	are hardcoded at this time.  There may be future development to 
-	allow applications an easy way to specify these value.
-
-	has_ic() and has_il() always return TRUE.
-
-	In addition to the above definition for longname(), the form of 
-	this string includes the text resolution.
-
-	The user's current WORD character is returned from a call to
-	wordchar().
-
-  X/Open Return Value:
-	All functions return OK on success and ERR on error.
+	wordchar() is a PDCurses extension of the concept behind the 
+	functions erasechar() and killchar(), returning the "delete 
+	word" character, ^W.
 
   Portability				     X/Open    BSD    SYS V
 	baudrate				Y	Y	Y

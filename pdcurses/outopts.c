@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.32 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: outopts.c,v 1.33 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -31,25 +31,10 @@ RCSID("$Id: outopts.c,v 1.32 2006/12/25 14:27:12 wmcbrine Exp $");
 
 	int raw_output(bool bf);
 
-  X/Open Description:
-	With the clearok() routine, if bf is TRUE, the next call to 
-	wrefresh() with this window will clear the screen completely 
-	and redraw the entire screen.
-
-	If idlok() is enabled (bf is TRUE), curses will use the 
-	insert/delete line feature of terminals so equipped.  If 
-	disabled, curses will not use this feature.  (The insert/delete 
-	character feature is always used.)  This option should be 
-	enabled only if the application needs insert/delete line; for 
-	example, for a screen editor.  It is disabled by default because 
-	insert/delete line tends to be visually annoying when used in 
-	applications where it isn't really needed.  If insert/delete 
-	line cannot be used, curses will redraw the changed portions of 
-	all lines.
-
-	With the idcok() routine, if enabled (bf is TRUE), curses 
-	considers using the hardware insert/delete character feature of 
-	terminals so equipped. This is enabled by default.
+  Description:
+	With clearok(), if bf is TRUE, the next call to wrefresh() with 
+	this window will clear the screen completely and redraw the 
+	entire screen.
 
 	The immedok() routine, called with a second argument of TRUE, 
 	causes an automatic wrefrsh() to be called on the window every 
@@ -73,21 +58,14 @@ RCSID("$Id: outopts.c,v 1.32 2006/12/25 14:27:12 wmcbrine Exp $");
 	region to scroll up one line.  Only the text of the window is 
 	scrolled.
 
-  PDCurses Description:
-	idlok() and idcok() are provided for portability.  
+	idlok() and idcok() do nothing in PDCurses, but are provided for 
+	compatibility with other curses implementations.
 
-	Though not explicitly stated, the cursor will be made visible
-	again, if leaveok() is passed a FALSE value.
- 			(Frotz:911226 Comments?)
+	raw_output() enables the output of raw characters using the 
+	'standard' *add* and *ins* curses functions (that is, it 
+	disables translation of control characters).
 
-	The raw_output() routine enables the output of raw characters 
-	using the 'standard' *add* and *ins* curses functions. To force 
-	8 bit output and no translation of control characters, invoke 
-	raw_output() with bf as TRUE.  To force 7 bit output and 
-	translation of control characters, invoke raw_output() with bf 
-	as FALSE.
-
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

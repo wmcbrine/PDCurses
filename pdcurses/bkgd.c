@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: bkgd.c,v 1.33 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: bkgd.c,v 1.34 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -33,7 +33,7 @@ RCSID("$Id: bkgd.c,v 1.33 2006/12/25 14:27:12 wmcbrine Exp $");
 	void wbkgrndset(WINDOW *win, const cchar_t *wch);
 	int wgetbkgrnd(WINDOW *win, cchar_t *wch);
 
-  UNIX System V (Rel 3.2 or 4) Description:
+  Description:
 	The bkgdset() and wbkgdset() routines manipulate the backgound 
 	of the named window.  Background is a chtype consisting of any 
 	combination of attributes and non-blank characters that are 
@@ -55,18 +55,13 @@ RCSID("$Id: bkgd.c,v 1.33 2006/12/25 14:27:12 wmcbrine Exp $");
 	background is displayed as the graphic rendition of the 
 	character put on the screen.
 
-  PDCurses Description:
 	The attributes that are defined with the attrset()/attron() set 
 	of functions take precedence over the background attributes if 
 	there is a conflict (e.g., different color pairs).
 
-  System V Return Value:
-	bkgd() and wbkgd() return the integer OK, or a non-negative 
-	integer, if immedok() is set.
-
-  PDCurses Return Value:
-	bkgd() and wbkgd() return the integer OK, unless the window is 
-	NULL, in which case they return ERR.
+  Return Value:
+	bkgd() and wbkgd() return OK, unless the window is NULL, in 
+	which case they return ERR.
 
   Portability				     X/Open    BSD    SYS V
 	bkgd					Y	-      4.0

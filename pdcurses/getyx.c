@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getyx.c,v 1.22 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: getyx.c,v 1.23 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -34,22 +34,19 @@ RCSID("$Id: getyx.c,v 1.22 2006/12/25 14:27:12 wmcbrine Exp $");
 	int getmaxy(WINDOW *win);
 	int getmaxx(WINDOW *win);
 
-  X/Open Description:
-	With the getyx() macro, the cursor position of the window is placed
-	in the two integer variables y and x. getbegyx() and getmaxyx()
-	return the current beginning coordinates and size of the specified
-	window respectively. getparyx() returns the beginning coordinates 
-	of the parent's window if the specified window is a sub-window
-	otherwise -1 is returned.
+  Description:
+	With the getyx() macro, the cursor position of the window is 
+	placed in the two integer variables y and x. getbegyx() and 
+	getmaxyx() return the current beginning coordinates and size of 
+	the specified window respectively. getparyx() returns the 
+	beginning coordinates of the parent's window if the specified 
+	window is a sub-window otherwise -1 is returned. These functions 
+	are implemented as macros.
 
-	These functions are implemented as macros, so their return values
-	are undefined. Also as these functions are implemented as macros,
-	no '&' is required before the variables y and x.
-
-	The functions getbegy(), getbegx(), getmaxy(), getmaxx() ,
-	getpary(), and getparx() do return the beginning coordinate or 
-	size values, so they can be specified on the right-hand side of 
-	an assignment statement.
+	The functions getbegy(), getbegx(), getcurx(), getcury(), 
+	getmaxy(), getmaxx(), getpary(), and getparx() return the 
+	appropriate coordinate or size values, or ERR in the case of a 
+	NULL window.
 
   Portability				     X/Open    BSD    SYS V
 	getyx					Y	Y	Y

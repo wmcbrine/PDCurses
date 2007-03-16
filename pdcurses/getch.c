@@ -16,7 +16,7 @@
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */
 
-RCSID("$Id: getch.c,v 1.63 2007/01/07 21:31:17 wmcbrine Exp $");
+RCSID("$Id: getch.c,v 1.64 2007/03/16 06:33:44 wmcbrine Exp $");
 
 static int c_pindex = 0;	/* putter index */
 static int c_gindex = 1;	/* getter index */
@@ -45,7 +45,7 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	int PDC_save_key_modifiers(bool flag);
 	int PDC_return_key_modifiers(bool flag);
 
-  X/Open Description:
+  Description:
 	With the getch(), wgetch(), mvgetch(), and mvwgetch() functions, 
 	a character is read from the terminal associated with the window. 
 	In nodelay mode, if there is no input waiting, the value ERR is 
@@ -58,17 +58,9 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	If keypad() is TRUE, and a function key is pressed, the token for
 	that function key will be returned instead of the raw characters.
 	Possible function keys are defined in <curses.h> with integers
-	beginning with 0401, whose names begin with KEY_.  If a character
-	is received that could be the beginning of a function key (such as
-	escape), curses will set a timer.  If the remainder of the sequence
-	does not come in within the designated time, the character will be
-	passed through, otherwise the function key value will be returned.
-	For this reason, on many terminals, there will be a delay after a
-	user presses the escape key before the escape is returned to the
-	program.  (Use by a programmer of the escape key for a single
-	character function is discouraged.)
+	beginning with 0401, whose names begin with KEY_.
 
-	If nodelay(win,TRUE) has been called on the window and no input
+	If nodelay(win, TRUE) has been called on the window and no input
 	is waiting, the value ERR is returned.
 
 	The ungetch() function places ch back onto the input queue to be
@@ -76,16 +68,6 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 	The flushinp() routine throws away any type-ahead that has been
 	typed by the user and has not yet been read by the program.
-
-	NOTE: getch() and ungetch() are implemented as macros.
-
-  PDCurses Description:
-	Given the nature of the PC, there is no such timer set for an
-	incoming ESCAPE value, because function keys generate unique
-	scan codes that are not prefixed with the ESCAPE character.
-
-	Also, note that the getch() definition will conflict with
-	many DOS compiler's runtime libraries.
 
 	PDC_get_key_modifiers() returns the keyboard modifiers (shift, 
 	control, alt, numlock) effective at the time of the last getch() 
@@ -95,7 +77,10 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	to return modifier keys pressed alone as keystrokes (KEY_ALT_L, 
 	etc.). These may not work on all platforms.
 
-  X/Open Return Value:
+	NOTE: getch() and ungetch() are implemented as macros, to avoid 
+	conflict with many DOS compiler's runtime libraries.
+
+  Return Value:
 	These functions return ERR or the value of the character, meta 
 	character or function key token.
 

@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.57 2007/01/07 21:31:17 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.58 2007/03/16 06:33:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -22,7 +22,7 @@ RCSID("$Id: pdckbd.c,v 1.57 2007/01/07 21:31:17 wmcbrine Exp $");
   Synopsis:
 	unsigned long PDC_get_input_fd(void);
 
-  PDCurses Description:
+  Description:
 	PDC_get_input_fd() returns the file descriptor that PDCurses 
 	reads its input from. It can be used for select().
 

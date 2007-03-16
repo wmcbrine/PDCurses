@@ -28,7 +28,7 @@
 # include <signal.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.79 2007/01/08 02:52:32 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.80 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,7 +37,7 @@ RCSID("$Id: pdckbd.c,v 1.79 2007/01/08 02:52:32 wmcbrine Exp $");
   Synopsis:
 	unsigned long PDC_get_input_fd(void);
 
-  PDCurses Description:
+  Description:
 	PDC_get_input_fd() returns the file descriptor that PDCurses 
 	reads its input from. It can be used for select().
 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inopts.c,v 1.36 2007/01/05 12:01:23 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.37 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -40,8 +40,8 @@ RCSID("$Id: inopts.c,v 1.36 2007/01/05 12:01:23 wmcbrine Exp $");
 	void wtimeout(WINDOW *win, int delay);
 	int typeahead(int fildes);
 
-  X/Open Description:
-	cbreak() and nocbreak() puts the terminal into and out of cbreak
+  Description:
+	cbreak() and nocbreak() put the terminal into and out of cbreak
 	mode. In cbreak mode, characters typed by the user are 
 	immediately available to the program and erase/kill character 
 	processing is not performed.  When out of cbreak mode, the 
@@ -50,40 +50,20 @@ RCSID("$Id: inopts.c,v 1.36 2007/01/05 12:01:23 wmcbrine Exp $");
 	are unaffected by this mode.  Initially the terminal may or may 
 	not need be in cbreak mode.
 
-	echo() and noecho() control whether characters typed by the user
-	are echoed by the input routine.  Initially, input characters
-	are echoed.  Subsequent calls to echo() and noecho() do not
-	flush type-ahead.
+	echo() and noecho() control whether typed characters are echoed 
+	by the input routine.  Initially, input characters are echoed.  
+	Subsequent calls to echo() and noecho() do not flush type-ahead.
 
-	halfdelay is similar to cbreak() but allows for a specified time 
-	limit to be specified (in 1/10thes of a second). This causes 
-	getch() to block for that period before returning ERR if no key 
-	has been received.  tenths must be between 1 and 255.
-
-	If the intrflush() option is enabled (bf is TRUE), and an
-	interrupt is pressed on the keyboard (INTR, BREAK, or QUIT) all
-	output in the terminal driver queue will be flushed, giving the
-	effect of faster response to the interrupt but causing curses to
-	have the wrong idea of what is on the screen.  Disabling the
-	option prevents the flush.  The default for the option is
-	inherited from the terminal driver settings.  The window
-	argument is ignored.
+	halfdelay() is similar to cbreak(), but allows for a time limit 
+	to be specified, in tenths of a second. This causes getch() to 
+	block for that period before returning ERR if no key has been 
+	received.  tenths must be between 1 and 255.
 
 	The keypad() function changes the keypad option of the user's
 	terminal. If enabled (bf is TRUE), the user can press a function 
 	key (such as the left arrow key) and getch() will return a 
-	single value that represents the KEY_LEFT function key.  (See 
-	Section 11.3.3, Input Values.)  If disabled, curses will not 
-	treat function keys as special keys and the program has to 
-	interpret the escape sequences itself.  If the keypad is 
-	enabled, the terminal keypad is turned on before input begins.
-
-	The meta() function forces the user's terminal to return 7 or 8
-	significant bits on input.  To force 8 bits to be returned,
-	invoke meta() with bf as TRUE.  To force 7 bits to be returned,
-	invoke meta() with bf as FALSE. The window argument is always 
-	ignored, but it must still be a valid window to avoid compiler 
-	errors.
+	single value that represents the KEY_LEFT function key.
+	If disabled, nothing will be returned.
 
 	The nodelay() function controls whether wgetch() is a 
 	non-blocking call. If the option is enabled, and no input is 
@@ -94,12 +74,6 @@ RCSID("$Id: inopts.c,v 1.36 2007/01/05 12:01:23 wmcbrine Exp $");
 	into a newline on input. The nonl() function disables it. 
 	Initially, the translation does occur.
 
-	While interpreting an input escape sequence, wgetch sets a timer 
-	while waiting for the next character.  If notimeout(win, TRUE) 
-	is called, then wgetch does not set a timer.  The purpose of the 
-	timeout is to differentiate between sequences received from a 
-	function key and those typed by a user.
-
 	With raw() and noraw(), the terminal in placed into or out of 
 	raw mode.  Raw mode is similar to cbreak mode, in that 
 	characters typed are immediately passed through to the user 
@@ -109,33 +83,21 @@ RCSID("$Id: inopts.c,v 1.36 2007/01/05 12:01:23 wmcbrine Exp $");
 	the BREAK key depends on other parameters of the terminal drive 
 	that are not set by curses.
 
+	In PDCurses, the meta() function sets raw mode on or off.
+
 	The timeout() and wtimeout() functions set blocking or 
-	non-blocking reads for the specified window. "delay" is measured 
-	in milliseconds. If "delay" is negative a blocking read is used. 
-	If "delay" is zero then non-blocking reads are done. If no input 
-	is waiting, ERR is returned immediately. If "delay" is positive, 
-	the read blocks for the "delay" period. If the period expires, 
-	ERR is returned.
-
-	The curses package does the "line-breakout optimisation" by
-	looking for type-ahead periodically while updating the screen.
-	If input is found, the current update will be postponed until
-	refresh() or doupdate() are called again.  This allows faster
-	response to commands typed in advance.  Normally, the input FILE
-	pointer passed to newterm(), or stdin in the case when initscr()
-	was called, will be used to do this type-ahead checking.  The
-	typeahead() routine specified that the file descriptor fd is to
-	be used to check for type-ahead instead.  If fd is -1, then no
-	type-ahead checking will be done.
-
-  PDCurses Description:
-	The meta() function is provided for portability.  By default, 8 
-	bits are returned.
+	non-blocking reads for the specified window. The delay is 
+	measured in milliseconds. If it's negative, a blocking read is 
+	used; if zero, then non-blocking reads are done -- if no input 
+	is waiting, ERR is returned immediately. If the delay is 
+	positive, the read blocks for the delay period; if the period 
+	expires, ERR is returned.
 
 	intrflush(), notimeout(), noqiflush(), qiflush() and typeahead()
-	are no-ops in PDCurses.
+	do nothing in PDCurses, but are included for compatibility with 
+	other curses implementations.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

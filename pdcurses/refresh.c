@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: refresh.c,v 1.44 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: refresh.c,v 1.45 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -29,36 +29,32 @@ RCSID("$Id: refresh.c,v 1.44 2006/12/25 14:27:13 wmcbrine Exp $");
 	int redrawwin(WINDOW *win);
 	int wredrawln(WINDOW *win, int beg_line, int num_lines);
 
-  X/Open Description:
-	The routine wrefresh() copies the named window to the physical 
-	terminal screen, taking into account what is already there in 
-	order to optimize cursor movement. The routine refresh() does 
-	the same, using stdscr as a default screen. These routines must 
-	be called to get any output on the terminal, as other routines 
-	only manipulate data structures. Unless leaveok has been 
-	enabled, the physical cursor of the terminal is left at the 
-	location of the window's cursor.
+  Description:
+	wrefresh() copies the named window to the physical terminal 
+	screen, taking into account what is already there in order to 
+	optimize cursor movement. refresh() does the same, using stdscr. 
+	These routines must be called to get any output on the terminal, 
+	as other routines only manipulate data structures. Unless 
+	leaveok() has been enabled, the physical cursor of the terminal 
+	is left at the location of the window's cursor.
 
-	The wnoutrefresh() and doupdate() routines allow multiple 
-	updates with more efficiency than wrefresh() alone.  In addition 
-	to all of the window structures representing the terminal 
-	screen: a physical screen, describing what is actually on the 
-	screen and a virtual screen, describing what the programmer 
-	wants to have on the screen.
+	wnoutrefresh() and doupdate() allow multiple updates with more 
+	efficiency than wrefresh() alone. wrefresh() works by first 
+	calling wnoutrefresh(), which copies the named window to the 
+	virtual screen.  It then calls doupdate(), which compares the 
+	virtual screen to the physical screen and does the actual 
+	update. A series of calls to wrefresh() will result in 
+	alternating calls to wnoutrefresh() and doupdate(), causing 
+	several bursts of output to the screen.  By first calling 
+	wnoutrefresh() for each window, it is then possible to call 
+	doupdate() only once.
 
-	The wrefresh() function works by first calling wnoutrefresh(), 
-	which copies the named window to the virtual screen.  It then 
-	calls doupdate(), which compares the virtual screen to the 
-	physical screen and does the actual update.  If the programmer 
-	wishes to output several windows at once, a series of cals to 
-	wrefresh() will result in alternating calls to wnoutrefresh() 
-	and doupdate(), causing several bursts of output to the screen.  
-	By first calling wnoutrefresh() for each window, it is then 
-	possible to call doupdate() once.  This results in only one 
-	burst of output, with probably fewer total characters 
-	transmitted and certainly less CPU time used.
+	In PDCurses, redrawwin() is equivalent to touchwin(), and 
+	wredrawln() is the same as touchline(). In some other curses 
+	implementations, there's a subtle distinction, but it has no 
+	meaning in PDCurses.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

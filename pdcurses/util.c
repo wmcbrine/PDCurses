@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.58 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.59 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -31,7 +31,7 @@ RCSID("$Id: util.c,v 1.58 2006/12/25 14:27:13 wmcbrine Exp $");
 		     short color_pair, const void *opts);
 	wchar_t *wunctrl(cchar_t *wc);
 
-  X/Open Description:
+  Description:
 	unctrl() expands the text portion of the chtype c into a 
 	printable string. Control characters are changed to the "^X" 
 	notation; others are passed through. wunctrl() is the wide- 
@@ -51,13 +51,6 @@ RCSID("$Id: util.c,v 1.58 2006/12/25 14:27:13 wmcbrine Exp $");
 	text at wch, the attributes in attr and the color pair in 
 	color_pair. The opts argument is unused.
 
-  PDCurses Description:
-	In BSD curses, unctrl() is a macro, which uses a publicly
-	available translation table. Some ill-behaved application
-	programs use the table directly, and since it does not exist in
-	PDCurses, such an application will link with an error message
-	complaining about undefined symbols.
-
 	filter() and use_env() are no-ops on PDCurses.
 
 	Currently, the length returned by getcchar() is always 1 or 0.
@@ -66,7 +59,7 @@ RCSID("$Id: util.c,v 1.58 2006/12/25 14:27:13 wmcbrine Exp $");
 	combining characters). Nor will it correctly handle any 
 	character outside the basic multilingual plane (UCS-2).
 
-  X/Open Return Value:
+  Return Value:
 	unctrl() and wunctrl() return NULL on failure. delay_output() 
 	always returns OK.
 

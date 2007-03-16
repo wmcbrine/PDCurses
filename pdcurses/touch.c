@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: touch.c,v 1.24 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: touch.c,v 1.25 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -27,31 +27,30 @@ RCSID("$Id: touch.c,v 1.24 2006/12/25 14:27:13 wmcbrine Exp $");
 	bool is_linetouched(WINDOW *win, int line);
 	bool is_wintouched(WINDOW *win);
 
-  X/Open Description:
-	The touchwin() and touchline() functions throw away all 
-	optimisation information about which parts of the window have 
-	been touched, by pretending that the entire window has been 
-	drawn on.  This is sometimes necessary when using overlapping 
-	windows, since a change to one window will affect the other 
-	window, but the records of which lines have been changed in the 
-	other window will not reflect the change.
+  Description:
+	touchwin() and touchline() throw away all information about 
+	which parts of the window have been touched, pretending that the 
+	entire window has been drawn on.  This is sometimes necessary 
+	when using overlapping windows, since a change to one window 
+	will affect the other window, but the records of which lines 
+	have been changed in the other window will not reflect the 
+	change.
 
-	The untouchwin() routine marks all lines in the window as 
-	unchanged since the last call to wrefresh().
+	untouchwin() marks all lines in the window as unchanged since 
+	the last call to wrefresh().
 
-	The wtouchln() routine makes n lines in the window, starting at 
-	line y, look as if they have (changed=1) or have not (changed=0) 
-	been changed since the last call to wrefresh().
+	wtouchln() makes n lines in the window, starting at line y, look 
+	as if they have (changed == 1) or have not (changed == 0) been 
+	changed since the last call to wrefresh().
 
-	The is_linetouched() routine returns TRUE if the specified line 
-	in the specified window has been changed since the last call to 
-	wrefresh(). If the line has not changed, FALSE is returned.
+	is_linetouched() returns TRUE if the specified line in the 
+	specified window has been changed since the last call to 
+	wrefresh().
 
-	The is_wintouched() routine returns TRUE if the specified window 
-	has been changed since the last call to wrefresh(). If the 
-	window has not changed, FALSE is returned.
+	is_wintouched() returns TRUE if the specified window 
+	has been changed since the last call to wrefresh().
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error except
 	is_wintouched() and is_linetouched().
 

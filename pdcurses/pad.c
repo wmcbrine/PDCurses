@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pad.c,v 1.41 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: pad.c,v 1.42 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /* save values for pechochar() */
 
@@ -37,7 +37,7 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	int pechochar(WINDOW *pad, chtype ch);
 	int pecho_wchar(WINDOW *pad, const cchar_t *wch);
 
-  X/Open Description:
+  Description:
 	newpad() creates a new pad data structure.  A pad is a special 
 	case of a window, which is not restricted by the screen size, 
 	and is not necessarily associated with a particular part of the 
@@ -50,28 +50,27 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	additional parameters to specify the part of the pad to be 
 	displayed and the location on the screen to be used for display.
 
-	The subpad() routine creates a new sub-pad within a pad.  The 
-	dimensions of the sub-pad are nlines lines and ncols columns.  
-	The sub-pad is at position (begy, begx) in the the parent 
-	pad.  This position is relative to the pad, and not to the 
-	screen like with subwin. The sub-pad is made in the middle of 
-	the pad orig, so that changes made to either pad will affect 
-	both.  When using this routine, it will often be necessary to 
-	call touchwin before calling prefresh.
+	subpad() creates a new sub-pad within a pad.  The dimensions of 
+	the sub-pad are nlines lines and ncols columns.  The sub-pad is 
+	at position (begy, begx) in the the parent pad.  This position 
+	is relative to the pad, and not to the screen as with subwin. 
+	The sub-pad is made in the middle of the pad orig, so that 
+	changes made to either pad will affect both.  When using this 
+	routine, it will often be necessary to call touchwin() before 
+	calling prefresh().
 
-	The prefresh() routine copies the specified pad to the physical 
-	terminal screen.  It takes account of what is already displayed 
-	on the screen to optimize cursor movement. The pnoutrefresh() 
-	routine copies the named pad to the virtual screen. It then 
-	compares the virtual screen with the physical screen and 
-	performs the actual update. These routines are analogous to the 
-	routines wrefresh() and wnoutrefresh() except that pads, instead 
-	of windows, are involved.  Additional parameters are also needed 
-	to indicate what part of the pad and screen are involved. The 
-	upper left corner of the part of the pad to be displayed is 
-	specified by py and px.  The coordinates sy1, sx1, sy2, and sx2 
-	specify the edges of the screen rectangle that will contain the 
-	selected part of the pad.
+	prefresh() copies the specified pad to the physical terminal 
+	screen.  It takes account of what is already displayed on the 
+	screen to optimize cursor movement. pnoutrefresh() copies the 
+	named pad to the virtual screen. It then compares the virtual 
+	screen with the physical screen and performs the actual update. 
+	These routines are analogous to wrefresh() and wnoutrefresh(), 
+	just with pads instead of windows. Additional parameters are 
+	also needed to indicate what part of the pad and screen are 
+	involved. The upper left corner of the part of the pad to be 
+	displayed is specified by py and px.  The coordinates sy1, sx1, 
+	sy2, and sx2 specify the edges of the screen rectangle that will 
+	contain the selected part of the pad.
 
 	The lower right corner of the pad rectangle to be displayed is 
 	calculated from the screen co-ordinates.  This ensures that the 
@@ -79,10 +78,10 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	rectangles must be entirely contained within their respective 
 	structures.
 
-	The pechochar() is functionally equivalent to adch() followed by 
-	a call to refresh().
+	pechochar() is functionally equivalent to addch() followed by 
+	a call to prefresh().
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

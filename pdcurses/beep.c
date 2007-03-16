@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: beep.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: beep.c,v 1.29 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -23,16 +23,14 @@ RCSID("$Id: beep.c,v 1.28 2006/12/25 14:27:12 wmcbrine Exp $");
 	int beep(void);
 	int flash(void);
 
-  X/Open Description:
+  Description:
 	These routines are used to signal the terminal user.  The beep()
 	function will sound the audible bell on the terminal, if possible
-	and if not, will flash the screen (visible bell), if possible.
-	The flash() function will flash the screen, and if that is not
-	possible, will sound the audible signal.  If neither signal is
-	possible, nothing will happen.  Nearly all terminals have an
-	audible signal (bell or beep), but only some can flash the screen.
+	and if not, will flash the screen (visible bell).
 
-  X/Open Return Value:
+	The flash() function will flash the screen.
+
+  Return Value:
 	These functions return OK.
 
   Portability				     X/Open    BSD    SYS V

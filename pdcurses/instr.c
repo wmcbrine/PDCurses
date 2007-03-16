@@ -16,7 +16,7 @@
 # include <stdlib.h>
 #endif
 
-RCSID("$Id: instr.c,v 1.34 2007/01/18 01:42:31 wmcbrine Exp $");
+RCSID("$Id: instr.c,v 1.35 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -41,14 +41,14 @@ RCSID("$Id: instr.c,v 1.34 2007/01/18 01:42:31 wmcbrine Exp $");
 	int mvwinwstr(WINDOW *win, int y, int x, wchar_t *wstr);
 	int mvwinnwstr(WINDOW *win, int y, int x, wchar_t *wstr, int n);
 
-  System V Curses Description:
-	These routines return a string of characters in str, starting at 
-	the current cursor position in the named window and ending at 
-	the right margin of the window.  Attributes are stripped from 
-	the characters. The four functions with n as the last argument 
-	return the string at most n characters long.
+  Description:
+	These functions take characters (or wide characters) from the 
+	current or specified position in the window, and return them as 
+	a string in str (or wstr). Attributes are ignored. The functions 
+	with n as the last argument return a string at most n characters 
+	long.
 
-  X/Open Return Value:
+  Return Value:
 	Upon successful completion, innstr(), mvinnstr(), mvwinnstr() 
 	and winnstr() return the number of characters actually read into
 	the string; instr(), mvinstr(), mvwinstr() and winstr() return 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: move.c,v 1.23 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: move.c,v 1.24 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -23,13 +23,13 @@ RCSID("$Id: move.c,v 1.23 2006/12/25 14:27:12 wmcbrine Exp $");
 	int move(int y, int x);
 	int wmove(WINDOW *win, int y, int x);
 
-  X/Open Description:
+  Description:
 	The cursor associated with the window is moved to the given
 	location.  This does not move the physical cursor of the
 	terminal until refresh() is called.  The position specified is
 	relative to the upper left corner of the window, which is (0,0).
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

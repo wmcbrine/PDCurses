@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <string.h>
 
-RCSID("$Id: kernel.c,v 1.69 2007/01/05 12:01:23 wmcbrine Exp $");
+RCSID("$Id: kernel.c,v 1.70 2007/03/16 06:33:44 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
@@ -44,68 +44,61 @@ enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 	int curs_set(int visibility);
 	int napms(int ms);
 
-  X/Open Description:
-	The def_prog_mode() and def_shell_mode() functions save the 
-	current terminal modes as the "program" (in curses) or "shell" 
-	(not in curses) state for use by the reset_prog_mode() and 
-	reset_shell_mode() functions.  This is done automatically by 
-	initscr().
+  Description:
+	def_prog_mode() and def_shell_mode() save the current terminal 
+	modes as the "program" (in curses) or "shell" (not in curses) 
+	state for use by the reset_prog_mode() and reset_shell_mode() 
+	functions.  This is done automatically by initscr().
 
-	The reset_prog_mode() and reset_shell_mode() functions restore
-	the terminal to "program" (in curses) or "shell" (not in curses)
-	state.  These are done automatically by endwin() and doupdate() 
-	after an endwin(), so they would normally not be called before 
-	these functions.
+	reset_prog_mode() and reset_shell_mode() restore the terminal to 
+	"program" (in curses) or "shell" (not in curses) state.  These 
+	are done automatically by endwin() and doupdate() after an 
+	endwin(), so they would normally not be called before these 
+	functions.
 
-	The savetty() and resetty() routines save and restore the state 
-	of the terminal modes. The savetty() function saves the current 
-	state in a buffer and resetty() restores the state to what it 
-	was at the last call to savetty().
+	savetty() and resetty() save and restore the state of the 
+	terminal modes. savetty() saves the current state in a buffer, 
+	and resetty() restores the state to what it was at the last call 
+	to savetty().
 
-	The getsyx() routine obtains the coordinates of the virtual 
-	screen cursor. If leaveok() is currently TRUE, then -1, -1 is 
-	returned. If lines have been removed from the top of the screen 
-	with ripoffline() then getsyx() includes those lines, so y and x 
-	should only be used by setyx(). The setyx() routine sets the 
-	cursor position of the virtual screen to the y,x coordinates. If 
-	y,x are -1,-1, leaveok() is set TRUE. The getsyx() and setsyx() 
-	routines are designed to be used by a library routine that 
-	manipulates curses windows, but does not want to change the 
-	position of the cursor.
+	getsyx() obtains the coordinates of the virtual screen cursor. 
+	If leaveok() is currently TRUE, then -1, -1 is returned. If 
+	lines have been removed from the top of the screen with 
+	ripoffline(), then getsyx() includes those lines, so y and x 
+	should only be used by setyx(). setyx() sets the cursor position 
+	of the virtual screen to the y,x coordinates. If y, x are -1, 
+	-1, leaveok() is set TRUE. The getsyx() and setsyx() routines 
+	are designed to be used by a library routine that manipulates 
+	curses windows, but does not want to change the position of the 
+	cursor.
 
 	Note that getsyx() and setsyx() are defined as macros only. 
-	System VR4 defines these as having a return type of int, but 
-	that is misleading as there is no documented sematics for the 
-	return value.
 
-	The curs_set() function enables the appearance of the text 
-	cursor to be altered. A value of 0 for visibility makes the 
-	cursor disappear; a value of 1 makes the cursor appear "normal" 
-	(usually an underline) and 2 makes the cursor "highly visible"; 
-	a block.
+	curs_set() alters the appearance of the text cursor. A value of 
+	0 for visibility makes the cursor disappear; a value of 1 makes 
+	the cursor appear "normal" (usually an underline) and 2 makes 
+	the cursor "highly visible" (usually a block).
 
-	The ripoffline() function allows the user to reduce the size of 
-	stdscr by 1 line.  If the value of line is positive, the line is 
-	removed from the top of the screen; negative from the bottom. Up 
-	to 5 lines can be ripped off stdscr by calling ripoffline() 
+	ripoffline() allows the user to reduce the size of stdscr by 1 
+	line.  If the value of line is positive, the line is removed 
+	from the top of the screen; negative from the bottom. Up to 5 
+	lines can be ripped off stdscr by calling ripoffline() 
 	consecutively. The function argument, init, is called from 
 	within initscr() or newterm(), so ripoffline() must be called 
 	before either of these functions.  The init function is passed a 
-	pointer to a 1 line WINDOW and the width of the window. Calling 
+	pointer to a 1 line WINDOW, and the width of the window. Calling 
 	ripoffline() with a NULL initialise function pointer is not 
 	advised.
 
 	The napms() function suspends the program for the specified
 	number of milliseconds.
 
-  PDCurses Description:
-	FYI: It is very unclear whether savetty() and resetty() 
-	functions are a duplication of the reset_prog_mode() and 
-	reset_shell_mode() functions or whether this is a backing store 
-	type of operation. At this time, they are implemented similar to 
-	the reset_*_mode() routines.
+	FYI: It is unclear whether savetty() and resetty() are meant to 
+	duplicate reset_prog_mode() and reset_shell_mode(), or be a 
+	backing store type of operation. At this time, they're 
+	implemented similarly to the reset_*_mode() routines.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error, except 
 	curs_set(), which returns the previous visibility.
 

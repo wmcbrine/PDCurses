@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.29 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -26,16 +26,18 @@ RCSID("$Id: overlay.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
 		    int src_tc, int dst_tr, int dst_tc, int dst_br,
 		    int dst_bc, bool overlay)
 
-  X/Open Description:
-	The overlay() and overwrite() functions overlay src_w on top of 
-	dst_w; that is, all text in src_w is copied into dst_w. The 
-	windows src_w and dst_w are not required to be the same size. 
-	The copy starts at (0, 0) on each window. The difference between 
-	the two functions is that overlay() is non-destructive (blanks 
-	are not copied) while overwrite() is destructive (blanks are 
-	copied).
+  Description:
+	overlay() and overwrite() overlay src_w on top of dst_w; that
+	is, all text in src_w is copied into dst_w. The windows src_w 
+	and dst_w are not required to be the same size. Those characters 
+	in the source window that intersect with characters in the 
+	destination window are copied to the destination window, so that 
+	the characters appear in the same physical position on the 
+	screen. The difference between the two functions is that 
+	overlay() is non-destructive (blanks are not copied) while 
+	overwrite() is destructive (blanks are copied).
 
-	copywin() is similar to overwrite() and overlay() but copywin() 
+	copywin() is similar to overwrite() and overlay(), but copywin() 
 	does not require that the two windows overlap. The arguments 
 	src_tc and src_tr specify the top left corner of the region to 
 	be copied to the destination window. The arguments dst_tc, 
@@ -47,20 +49,7 @@ RCSID("$Id: overlay.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
 	the copy is destructive; blanks are copied to the destination 
 	window.
 
-  PDCurses Description:
-	The above description for overlay() and overwrite() is misleading 
-	in the actual behaviour exhibited by both SysV and BSD curses. 
-	The above implies that the character in 0,0 of the source window 
-	is copied to 0,0 of the destination window. What actually happens 
-	is that those characters in the source window that intersect with 
-	characters in the destination window RELATIVE TO ABSOLUTE 0,0 ON 
-	THE SCREEN, are copied to the destination window so that the 
-	characters appear in the same physical position on the screen.
-
-	Thanks to Andreas Otte (venn@@uni-paderborn.de) for the correction
-	and code changes.
-
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V
@@ -69,6 +58,9 @@ RCSID("$Id: overlay.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
 	copywin					Y	-      3.0
 
 **man-end****************************************************************/
+
+/* Thanks to Andreas Otte (venn@@uni-paderborn.de) for the 
+   corrected overlay()/overwrite() behavior. */
 
 static int _copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 		     int src_tc, int src_br, int src_bc, int dst_tr,

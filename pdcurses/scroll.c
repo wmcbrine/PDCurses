@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
+RCSID("$Id: scroll.c,v 1.29 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -24,21 +24,19 @@ RCSID("$Id: scroll.c,v 1.28 2006/12/25 14:27:13 wmcbrine Exp $");
 	int scrl(int n);
 	int wscrl(WINDOW *win, int n);
 
-  X/Open Description:
+  Description:
 	scroll() causes the window to scroll up one line.  This involves 
 	moving the lines in the window data strcture.
  
-	With the scrl() and wscrl() routines, for positive n scroll the 
-	window up n lines (line i+n becomes i); otherwise scroll the 
-	window down n lines.
+	With a positive n, scrl() and wscrl() scroll the window up n 
+	lines (line i + n becomes i); otherwise they scroll the window 
+	down n lines.
  
 	For these functions to work, scrolling must be enabled via 
-	scrollok().
- 
-	Note also that scrolling is not allowed if the supplied window 
-	is a PAD.
+	scrollok(). Note also that scrolling is not allowed if the 
+	supplied window is a pad.
 
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
 
   Portability				     X/Open    BSD    SYS V

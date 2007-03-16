@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.34 2006/12/25 14:27:12 wmcbrine Exp $");
+RCSID("$Id: attr.c,v 1.35 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -55,7 +55,7 @@ RCSID("$Id: attr.c,v 1.34 2006/12/25 14:27:12 wmcbrine Exp $");
 
 	chtype getattrs(WINDOW *win);
 
-  X/Open Description:
+  Description:
 	These functions manipulate the current attributes and/or colors 
 	of the named window.  These attributes can be any combination 
 	of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
@@ -82,15 +82,8 @@ RCSID("$Id: attr.c,v 1.34 2006/12/25 14:27:12 wmcbrine Exp $");
 	The standend() function is the same as attrset(A_NORMAL); that 
 	is, it turns off all attributes.
 
-  PDCurses Description:
-	System V compatible color support is included.
-	See <curses.h> for further details.
-
-  X/Open Return Value:
+  Return Value:
 	All functions return OK on success and ERR on error.
-
-  X/Open Errors:
-	It is an error to call this function with a NULL window pointer.
 
   Portability				     X/Open    BSD    SYS V
 	attroff					Y	Y	Y

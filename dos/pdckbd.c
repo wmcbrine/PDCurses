@@ -28,7 +28,7 @@
 # include <signal.h>
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.80 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.81 2007/03/23 01:53:21 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -423,7 +423,7 @@ int PDC_get_key(void)
 	else if (scan == 0xe0 && key == 0x2f)	/* Slash */
 		key = PADSLASH;
 	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
-		key = (scan & 0x80) ? -1 : key_table[scan];
+		key = (scan > 0xa3) ? -1 : key_table[scan];
 
 	if (shift_status & 3)
 	{

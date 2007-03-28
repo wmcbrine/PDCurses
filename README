@@ -1,10 +1,12 @@
 
                         Welcome to PDCurses
 
-PDCurses is a reimplementation of System VR4 curses for multiple 
-platforms. The latest version can be found at:
+PDCurses is an implementation of X/Open curses for multiple platforms. 
+The latest version can be found at:
 
    http://pdcurses.sourceforge.net/
+
+For more information, please read the HISTORY and INSTALL files.
 
 
 Legal Stuff
@@ -23,7 +25,7 @@ in the documentation of packages linked with it is greatly appreciated.
 Ports
 -----
 
-PDCurses has been ported to DOS, OS/2, WIN32 and X11. A directory 
+PDCurses has been ported to DOS, OS/2, Win32 and X11. A directory 
 containing the port-specific source files exists for each of these 
 platforms.
 

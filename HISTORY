@@ -1,3 +1,146 @@
+PDCurses 3.0 - 2007/??/??
+=========================
+
+The focuses for this release are X/Open conformance, i18n, better color 
+support, cleaner code, and more consistency across platforms.
+
+This is only a brief summary of the changes. For more details, consult 
+the CVS log.
+
+New features:
+
+- An almost complete implementation of X/Open curses, including the
+  wide-character and attr_t functions (but excluding terminfo). The
+  wide-character functions work only in Win32 and X11, for now, and
+  require building the library with the appropriate options (see
+  INSTALL).
+
+- Multibyte character support in the non-wide string handling functions, 
+  per X/Open. This only works when the library is built with wide- 
+  character support enabled.
+
+- Mouse support for DOS and OS/2. The DOS version includes untested 
+  support for scroll wheels, via the "CuteMouse" driver.
+
+- An ncurses-compatible mouse interface, which can work in parallel with 
+  the traditional PDCurses mouse interface. See the man page (or 
+  mouse.c) for details.
+
+- DOS and OS/2 can now return modifiers as keys, as in Win32 and X11.
+
+- COLORS, which had been fixed at 8, is now either 8 or 16, depending on
+  the terminal -- usually 16. When it's 8, blinking mode is enabled 
+  (controlled as before by the A_BLINK attribute); when it's 16, bright 
+  background colors are used instead. On platforms where it can be 
+  changed, the mode is toggled by the new function PDC_set_blink(). 
+  PDCurses tries to set PDC_set_blink(FALSE) at startup. Also, COLORS is 
+  now set to 0 until start_color() is called.
+
+- Corresponding to the change in COLORS, COLOR_PAIRS is now 256.
+
+- Working init_color() and color_content(). The OS/2 version of
+  init_color() works only in a full-screen session; the Win32 version
+  works only in windowed mode, and only in NT-family OSes; the DOS
+  version works only with VGA adapters (real or simulated). The Win32
+  version is based mostly on James Brown's setconsoleinfo.c
+  (www.catch22.net).
+
+- use_default_colors(), assume_default_colors(), and curses_version(),
+  after ncurses.
+
+- A non-macro implementation of ncurses' wresize().
+
+- Working putwin(), getwin(), scr_dump() and scr_restore().
+
+- A working acs_map[]. Characters from the ACS are now stored in window
+  structures as a regular character plus the A_ALTCHARSET attribute, and
+  rendered to the ACS only when displayed. (This allows, for example,
+  the correct display on one platform of windows saved from another.)
+
+- A new document, IMPLEMNT, describing PDCurses' internal functions for
+  those wishing to port it to new platforms.
+
+- The testcurs demo now includes a color chart and init_color() test, a 
+  wide character input test, a display of wide ACS characters with 
+  sample Unicode text, and a specific test of flash().
+
+Bug fixes and such:
+
+- Most of the macros have been removed (along with the NOMACROS ifdef).
+  The only remaining ones are those which have to be macros to work, and
+  those that are required by X/Open to be macros. There were numerous
+  problems with the macros, and no apparent reason to keep them, except
+  tradition -- although it was Pccurses 1.x that first omitted them.
+
+- Clean separation of platform-specific code from the rest. Outside of
+  the platform directories, there remain only a few ifdefs in curses.h
+  and curspriv.h.
+
+- flash() was not implemented for Win32 or X. A portable implementation
+  is now used for all platforms. Note that it's much slower than the
+  old (DOS and OS/2) version, but this is only apparent on an extremely
+  slow machine, such as an XT.
+
+- In X11, the first reported mouse event after startup always read as a 
+  double-click at position 0, 0. (This bug was introduced in 2.8.)
+
+- Single mouse clicks are now reportable on all platforms (not just
+  double-clicks). And in general, mouse event reporting is more
+  consistent across platforms.
+
+- The mouse cursor no longer appears in full-screen mode in Win32 unless
+  a nonzero mouse event mask is used.
+
+- In X11, don't return selection start as a press event. (Shift-click on 
+  button 1 is still returned.)
+
+- In X11, BUTTON_MOVED was never returned, although PDC_MOUSE_MOVED was 
+  set.
+
+- The fix in 2.8 for the scroll wheel in X11 wasn't very good -- it did
+  report the events as scroll wheel events, but it doubled them. Here is
+  a proper fix.
+
+- Changed mouse handling in X11: Simpler translation table, with
+  XCursesPasteSelection() called from XCursesButton() instead of the
+  translation table; require shift with button 1 or 2 for select or
+  paste when mouse events are being reported (as with ncurses), allowing
+  passthrough of simple button 2 events. This fixes the previously
+  unreliable button 2 behavior.
+
+- Modifier keys are now returned on key up in X11, as in Win32. And in
+  general, modifier key reporting is more consistent across platforms.
+
+- Modifiers are not returned as keys when a mouse click has occurred
+  since the key press.
+
+- napms(0) now returns immediately.
+
+- pair_content(0, ...) is valid.
+
+- In BIOS mode (in DOS), count successive identical bytes, and make only 
+  one BIOS call for all of them. This dramatically improves performance.
+
+- The cursor position was not always updated correctly in BIOS mode.
+
+- Better reporting of mouse events in testcurs.
+
+- Separate left/right modifier keys are now reported properly in Win32.
+  (Everything was being reported as _R.)
+
+- Fixes for errors and warnings when building with Visual C++ 2005.
+
+- The X11 port now builds in the x11 directory (including the demos), as
+  with other ports.
+
+- Some modules renamed, rearranged.
+
+- Dropped support for the Microway NDP compiler.
+
+- Removed non-macro implementations of COLOR_PAIR() and PAIR_NUMBER().
+
+------------------------------------------------------------------------
+
 PDCurses 2.8 - 2006/04/01
 =========================
 
@@ -558,7 +701,6 @@ NEW COMPILER SUPPORT:
 - two EMX ports have been provided:
   - OS/2 only using OS/2 APIs
   - OS/2 and DOS using EMX video support routines
-
 
 EXTRA OPTIONS:
 

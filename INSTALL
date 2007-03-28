@@ -52,11 +52,31 @@
    (pdcurses.lib or .a, depending on your compiler; and panel.lib or .a),
    the demos (*.exe), and a lot of object files.
 
+   For Windows (except with LCC), you can also give the optional
+   parameter "WIDE=Y", to build the library with wide-character
+   (Unicode) support:
+
+	make -f mingwin32.mak WIDE=Y
+
+   Note that when built this way, the library is not compatible with
+   Windows 9x, unless you also link with the Microsoft Layer for Unicode
+   (not tested).
+
+   You can also use the optional paramter "DLL=Y" with Visual C++, to
+   build the library as a DLL:
+
+	nmake -f vcwin32.mak WIDE=Y DLL=Y
 
  X11
  ---
  . Run the configure script in the PDCurses-x.x directory. This will
    check for the dependencies libXCurses requires.
+
+   To build the wide-character version of the library, specify
+   "--enable-widec" as a parameter. To use X Input Methods, add
+   "--enable-xim". I recommend these options, but I haven't yet made
+   them the defaults, for the sake of backwards compatibility and due to
+   their new and relatively untested status.
 
    If configure can't find your X include files or X libraries, you can
    specify the paths with the arguments "--x-includes=inc_path" or
@@ -70,9 +90,8 @@
  . Run "make". This should make libXCurses, the panels library and all
    demo programs in the demos directory.
 
- . Alternately, you can cd to "pdcurses" directory, and run "make" from
-   here. This will build libXCurses only.
-
  . Optionally, run "make install". curses.h, panel.h and the panel lib
    will be renamed when installed (xcurses.h, xpanel.h and libXpanel),
-   to avoid conflicts with any existing curses installations.
+   to avoid conflicts with any existing curses installations. Unrenamed 
+   copies of curses.h and panel.h are installed in (by default) 
+   /usr/local/include/xcurses.

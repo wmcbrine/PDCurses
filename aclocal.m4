@@ -8,7 +8,6 @@ dnl MH_CHECK_X_HEADERS
 dnl MH_CHECK_X_KEYDEFS
 dnl MH_CHECK_X_TYPEDEF
 dnl MH_CHECK_LIB
-dnl MH_HOWTO_SHARED_LIBRARY
 dnl MH_SHARED_LIBRARY
 dnl MH_HOWTO_DYN_LINK
 dnl MH_CHECK_CC_O
@@ -310,74 +309,6 @@ for mh_lib in $1; do
 	fi
 done
 ])dnl
-
-dnl ---------------------------------------------------------------------------
-dnl Work out how to create a shared library
-dnl ---------------------------------------------------------------------------
-AC_DEFUN([MH_HOWTO_SHARED_LIBRARY],
-[
-AC_MSG_CHECKING(how to create a shared library)
-mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&AC_FD_CC'
-cat > conftest.$ac_ext <<EOF
-dnl [#]line __oline__ "[$]0"
-[#]line __oline__ "configure"
-int foo()
-{
-return(0);
-}
-EOF
-if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
-	mh_dyn_link='ld -shared -o conftest.so.1.0 conftest.o -lc 1>&AC_FD_CC'
-#	mh_dyn_link='${CC} -Wl,-shared -o conftest.so.1.0 conftest.o -lc 1>&AC_FD_CC'
-	if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.so.1.0; then
-		SHL_LD="ld -shared -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'" -lc"
-#		SHL_LD="${CC} -Wl,-shared -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'" -lc"
-	else
-		mh_dyn_link='ld -G -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-#		mh_dyn_link='${CC} -Wl,-G -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-		if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.so.1.0; then
-			SHL_LD="ld -G -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-#			SHL_LD="${CC} -Wl,-G -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-		else
-			mh_dyn_link='ld -o conftest.so.1.0 -shared -no_archive conftest.o  -lc 1>&AC_FD_CC'
-#			mh_dyn_link='${CC} -o conftest.so.1.0 -Wl,-shared,-no_archive conftest.o  -lc 1>&AC_FD_CC'
-			if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.so.1.0; then
-				SHL_LD="ld -o ${SHLPRE}${SHLFILE}${SHLPST} -shared -no_archive "'$('SHOFILES')'" -lc"
-#				SHL_LD="${CC} -o ${SHLPRE}${LIBFILE}${SHLPST} -Wl,-shared,-no_archive "'$('SHOFILES')'" -lc"
-			else
-				mh_dyn_link='ld -b -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-#				mh_dyn_link='${CC} -Wl,-b -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-				if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.so.1.0; then
-					SHL_LD="ld -b -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-#					SHL_LD="${CC} -Wl,-b -o ${SHLPRE}${SHLFILE}.${SHLPST} "'$('SHOFILES')'
-				else
-					mh_dyn_link='ld -Bshareable -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-#					mh_dyn_link='${CC} -Wl,-Bshareable -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-					if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.so.1.0; then
-						SHL_LD="ld -Bshareable -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-#						SHL_LD="${CC} -Wl,-Bshareable -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-					else
-						mh_dyn_link='ld -assert pure-text -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-#						mh_dyn_link='${CC} -Wl,-assert pure-text -o conftest.so.1.0 conftest.o 1>&AC_FD_CC'
-						if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.so.1.0; then
-							SHL_LD="ld -assert pure-text -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-#							SHL_LD="${CC} -Wl,-assert pure-text -o ${SHLPRE}${SHLFILE}${SHLPST} "'$('SHOFILES')'
-						else
-							SHL_LD=""
-						fi
-					fi
-				fi
-			fi
-		fi
-	fi
-fi
-if test "$SHL_LD" = ""; then
-	AC_MSG_RESULT(unknown)
-else
-	AC_MSG_RESULT(found)
-fi
-rm -f conftest*
-])
 
 dnl ---------------------------------------------------------------------------
 dnl Work out how to create a dynamically loaded module

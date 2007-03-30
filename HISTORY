@@ -29,12 +29,13 @@ New features:
 - DOS and OS/2 can now return modifiers as keys, as in Win32 and X11.
 
 - COLORS, which had been fixed at 8, is now either 8 or 16, depending on
-  the terminal -- usually 16. When it's 8, blinking mode is enabled 
-  (controlled as before by the A_BLINK attribute); when it's 16, bright 
-  background colors are used instead. On platforms where it can be 
-  changed, the mode is toggled by the new function PDC_set_blink(). 
-  PDCurses tries to set PDC_set_blink(FALSE) at startup. Also, COLORS is 
-  now set to 0 until start_color() is called.
+  the terminal -- usually 16. When it's 8, blinking mode is enabled
+  (controlled as before by the A_BLINK attribute); when it's 16, bright
+  background colors are used instead. On platforms where it can be
+  changed, the mode is toggled by the new function PDC_set_blink().
+  PDCurses tries to set PDC_set_blink(FALSE) at startup. (In Win32, it's
+  always set to FALSE; in DOS, with other than an EGA or VGA card, it 
+  can't be.) Also, COLORS is now set to 0 until start_color() is called.
 
 - Corresponding to the change in COLORS, COLOR_PAIRS is now 256.
 
@@ -48,6 +49,9 @@ New features:
 - use_default_colors(), assume_default_colors(), and curses_version(),
   after ncurses.
 
+- Added global int TABSIZE, after ncurses and Solaris curses; removed
+  window-specific _tabsize.
+
 - A non-macro implementation of ncurses' wresize().
 
 - Working putwin(), getwin(), scr_dump() and scr_restore().
@@ -57,12 +61,19 @@ New features:
   rendered to the ACS only when displayed. (This allows, for example,
   the correct display on one platform of windows saved from another.)
 
-- A new document, IMPLEMNT, describing PDCurses' internal functions for
-  those wishing to port it to new platforms.
+- In X11, allow selection and paste of UTF8_STRING.
 
 - The testcurs demo now includes a color chart and init_color() test, a 
   wide character input test, a display of wide ACS characters with 
-  sample Unicode text, and a specific test of flash().
+  sample Unicode text, a specific test of flash(), more info in the 
+  resize test, and attempts to change the width as well as the height.
+
+- A new document, IMPLEMNT, describing PDCurses' internal functions for
+  those wishing to port it to new platforms.
+
+- Mark Hessling has released the X11 port to the public domain. 
+  (However, x11/ScrollBox* retain their separate copyright and MIT-like 
+  license.)
 
 Bug fixes and such:
 
@@ -76,13 +87,73 @@ Bug fixes and such:
   the platform directories, there remain only a few ifdefs in curses.h
   and curspriv.h.
 
+- General reorganization and simplification.
+
+- Documentation revisions.
+
+- When expanding control characters in addch() or insch(), retain the 
+  attributes from the chtype.
+
+- Preserve the A_ALTCHARSET attribute in addch() and insch().
+
+- Per X/Open, beep() should always return OK.
+
 - flash() was not implemented for Win32 or X. A portable implementation
   is now used for all platforms. Note that it's much slower than the
   old (DOS and OS/2) version, but this is only apparent on an extremely
   slow machine, such as an XT.
 
-- In X11, the first reported mouse event after startup always read as a 
-  double-click at position 0, 0. (This bug was introduced in 2.8.)
+- In getstr(), backspacing on high-bit characters caused a double 
+  backspace.
+
+- hline() and vline() used an incorrect (off by one) interpretation of 
+  _maxx and _maxy. If values of n greater than the max were specified, 
+  these functions could access unallocated memory.
+
+- innstr() is supposed to return the number of characters read, not just 
+  OK or ERR. Reported by Mike Aubury.
+
+- A proper implementation of insch() -- the PDC_chadd()-based version 
+  wasn't handling the "special" characters correctly.
+
+- Return ASCII and control key names from keyname() (problem revealed by
+  ncurses' movewindow test); also, per X/Open, return "UNKNOWN KEY" when 
+  appropriate, rather than "NO KEY NAME".
+
+- napms(0) now returns immediately.
+
+- Allow backspace editing of nocbreak() buffer.
+
+- pair_content(0, ...) is valid.
+
+- slk_clear() now removes the buttons completely, as in ncurses.
+
+- Use the current foreground color for the line attributes (underline,
+  left, right), unless PDC_set_line_color() is explicitly called. After 
+  setting the line color, you can reset it to this mode via 
+  "PDC_set_line_color(-1)".
+
+- Removed non-macro implementations of COLOR_PAIR() and PAIR_NUMBER().
+
+- Dispensed with PDC_chadd() and PDC_chins() -- waddch() and winsch() 
+  are now (again) the core functions.
+
+- Dropped or made static many obsolete, unused, and/or broken functions,
+  including PDC_chg_attrs(), PDC_cursor_on() and _off(), 
+  PDC_fix_cursor(), PDC_get_attribute(), PDC_get_cur_col() and _row(), 
+  PDC_set_80x25(), PDC_set_cursor_mode(), PDC_set_rows(), 
+  PDC_wunderline(), PDC_wleftline() and PDC_wrightline().
+
+- Obsolete/unused defines: _BCHAR, _GOCHAR, _STOPCHAR, _PRINTCHAR 
+  _ENDLINE, _FULLWIN and _SCROLLWIN.
+
+- Obsolete/unused elements of the WINDOW struct: _pmax*, _lastp*, 
+  _lasts*.
+
+- Removed all the EMALLOC stuff. It was more or less broken, since 
+  straight malloc calls were used elsewhere; it was undocumented outside 
+  of comments in curspriv.h; and there are better ways to use a 
+  substitute malloc().
 
 - Single mouse clicks are now reportable on all platforms (not just
   double-clicks). And in general, mouse event reporting is more
@@ -91,10 +162,20 @@ Bug fixes and such:
 - The mouse cursor no longer appears in full-screen mode in Win32 unless
   a nonzero mouse event mask is used.
 
-- In X11, don't return selection start as a press event. (Shift-click on 
+- In Win32, SetConsoleMode(ENABLE_WINDOW_INPUT) is not useful, and 
+  appears to be the source of a four-year-old bug report (hanging in 
+  THE) by Phil Smith.
+
+- In X11, the first reported mouse event after startup always read as a
+  double-click at position 0, 0. (This bug was introduced in 2.8.)
+
+- In X11, don't return selection start as a press event. (Shift-click on
   button 1 is still returned.)
 
-- In X11, BUTTON_MOVED was never returned, although PDC_MOUSE_MOVED was 
+- In X11, properly handle pasting of high-bit chars. (It was doing an
+  unwanted sign extension.)
+
+- In X11, BUTTON_MOVED was never returned, although PDC_MOUSE_MOVED was
   set.
 
 - The fix in 2.8 for the scroll wheel in X11 wasn't very good -- it did
@@ -114,30 +195,58 @@ Bug fixes and such:
 - Modifiers are not returned as keys when a mouse click has occurred
   since the key press.
 
-- napms(0) now returns immediately.
-
-- pair_content(0, ...) is valid.
-
 - In BIOS mode (in DOS), count successive identical bytes, and make only 
   one BIOS call for all of them. This dramatically improves performance.
 
 - The cursor position was not always updated correctly in BIOS mode.
 
+- In testcurs, the way the ACS test was written, it would really only
+  work with a) PDCurses (with any compiler), or b) gcc (with any
+  curses). Here's a more portable implementation.
+
 - Better reporting of mouse events in testcurs.
+
+- Blank out buffer and num before the scanw() test in testcurs, in case 
+  the user just hits enter or etc.
+
+- Allow tuidemo to use the last line.
 
 - Separate left/right modifier keys are now reported properly in Win32.
   (Everything was being reported as _R.)
 
+- Attempts to redirect input in Win32 now cause program exit and an 
+  error message, instead of hanging.
+
+- Dropped support for the Microway NDP compiler.
+
+- Some modules renamed, rearranged.
+
 - Fixes for errors and warnings when building with Visual C++ 2005.
+
+- Simplified makefiles; moved common elements to .mif files.
+
+- Strip demos when possible.
+
+- Changed makefile targets of "pdcurses.a/lib" and "panel.a/lib" to 
+  $(LIBCURSES) and $(LIBPANEL) Suggestion of Doug Kaufman.
+
+- Changed "install" target in the makefile to a double-colon rule, to 
+  get around a conflict with INSTALL on non-case-sensitive filesystems, 
+  such as Mac OS X's HFS+. Reported (indirectly) by Douglas Godfrey.
+
+- Make PDCurses.man dependent on manext. Suggestion of Tiziano Mueller.
+
+- Set up configure.ac so autoheader works; removed some obsolescent 
+  macros. Partly the suggestion of T.M.
 
 - The X11 port now builds in the x11 directory (including the demos), as
   with other ports.
 
-- Some modules renamed, rearranged.
+- The X11 port should now build on more 64-bit systems. Partly due to 
+  M.H.
 
-- Dropped support for the Microway NDP compiler.
-
-- Removed non-macro implementations of COLOR_PAIR() and PAIR_NUMBER().
+- The default window title and icons for the X11 port are now "PDCurses"
+  instead of "XCurses".
 
 ------------------------------------------------------------------------
 

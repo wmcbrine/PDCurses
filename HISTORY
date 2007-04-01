@@ -386,7 +386,7 @@ New features:
 - New installation method for XCurses: the header files are placed in a 
   subdirectory "xcurses" within the include directory, rather than being 
   renamed. (But the renamed xcurses.h and xpanel.h are also installed, 
-  for backwards compatiblity.) curspriv.h and term.h are now available,
+  for backwards compatibility.) curspriv.h and term.h are now available,
   and existing curses-based code need no longer be edited to use 
   XCurses' curses.h. And with no more need for explicit XCursesExit() 
   calls (see below), your code need not be changed at all to move from 

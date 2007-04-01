@@ -13,7 +13,13 @@ New features:
   wide-character and attr_t functions (but excluding terminfo). The
   wide-character functions work only in Win32 and X11, for now, and
   require building the library with the appropriate options (see
-  INSTALL).
+  INSTALL). Note that this is a simplistic implementation, with exactly
+  one wchar_t per cchar_t; the only characters it handles properly are
+  those that are one column wide.
+
+- Support for X Input Methods in the X11 port (see INSTALL). When built
+  this way, the internal compose key support is disabled in favor of
+  XIM's, which is a lot more complete, although you lose the box cursor.
 
 - Multibyte character support in the non-wide string handling functions, 
   per X/Open. This only works when the library is built with wide- 
@@ -52,6 +58,9 @@ New features:
 - Added global int TABSIZE, after ncurses and Solaris curses; removed
   window-specific _tabsize.
 
+- Logical extension to the wide-character slk_ funcs: slk_wlabel(), for 
+  retrieving the label as a wide-character string.
+
 - A non-macro implementation of ncurses' wresize().
 
 - Working putwin(), getwin(), scr_dump() and scr_restore().
@@ -63,10 +72,21 @@ New features:
 
 - In X11, allow selection and paste of UTF8_STRING.
 
-- The testcurs demo now includes a color chart and init_color() test, a 
-  wide character input test, a display of wide ACS characters with 
-  sample Unicode text, a specific test of flash(), more info in the 
+- The testcurs demo now includes a color chart and init_color() test, a
+  wide character input test, a display of wide ACS characters with
+  sample Unicode text, a specific test of flash(), more info in the
   resize test, and attempts to change the width as well as the height.
+
+- Command-line option for MSVC to build DLLs (see INSTALL). Also, the
+  naming distinction for DLLs ("curses" vs. "pdcurses") is abandoned,
+  and either the static lib or DLL is built, not both at once (except
+  for X11).
+
+- For backwards compatibility, a special module just for deprecated
+  functions -- currently PDC_check_bios_key(), PDC_get_bios_key(),
+  PDC_get_ctrl_break() and PDC_set_ctrl_break(). These shouldn't be used
+  in applications, but currently are... in fact, all the "private"
+  functions (in curspriv.h) are subject to change and should be avoided. 
 
 - A new document, IMPLEMNT, describing PDCurses' internal functions for
   those wishing to port it to new platforms.
@@ -98,6 +118,21 @@ Bug fixes and such:
 
 - Per X/Open, beep() should always return OK.
 
+- On platforms with a controlling terminal (i.e., not X11), curs_set(1)
+  now sets the cursor to the shape it had at the time of initscr(),
+  rather than always making it small. (Exception for DOS: If the video
+  mode has been changed by PDC_resize_screen(), curs_set(1) reverts to
+  line 6/7.) The shape is taken from SP->orig_cursor (the meaning of
+  which is platform-specific).
+
+- Stop updating the cursor position when the cursor is invisible (this 
+  gives a huge performance boost in Win 9x); update the cursor position 
+  from curs_set() if changing from invisible to visible.
+
+- Some tweaking of the behavior of def_prog_mode(), def_shell_mode(), 
+  savetty(), reset_prog_mode(), reset_shell_mode() and resetty()... 
+  still not quite right.
+
 - flash() was not implemented for Win32 or X. A portable implementation
   is now used for all platforms. Note that it's much slower than the
   old (DOS and OS/2) version, but this is only apparent on an extremely
@@ -114,17 +149,37 @@ Bug fixes and such:
   OK or ERR. Reported by Mike Aubury.
 
 - A proper implementation of insch() -- the PDC_chadd()-based version 
-  wasn't handling the "special" characters correctly.
+  wasn't handling the control characters correctly.
 
 - Return ASCII and control key names from keyname() (problem revealed by
   ncurses' movewindow test); also, per X/Open, return "UNKNOWN KEY" when 
   appropriate, rather than "NO KEY NAME".
 
+- Turn off the cursor from leaveok(TRUE), even in X11; leaveok(FALSE)
+  now calls curs_set(1), regardless of the previous state of the cursor.
+
+- In the slk area, BUTTON_CLICKED events now translate to function keys,
+  along with the previously recognized BUTTON_PRESSED events. Of course,
+  it should really be checking the events specified by map_button(),
+  which still doesn't work.
+
 - napms(0) now returns immediately.
 
-- Allow backspace editing of nocbreak() buffer.
+- A unified napms() implementation for DOS -- no longer throttles the
+  CPU when built with any compiler.
+
+- Allow backspace editing of the nocbreak() buffer.
 
 - pair_content(0, ...) is valid.
+
+- There was no check to ensure that the pnoutrefresh() window fit within 
+  the screen. It now returns an ERR if it doesn't.
+
+- In X11, resize_term() must be called with parameters (0, 0), and only 
+  when SP->resized is set, else it returns ERR.
+
+- Copy _bkgd in resize_window(). Patch found on Frederic L. W. Meunier's 
+  web site.
 
 - slk_clear() now removes the buttons completely, as in ncurses.
 
@@ -139,10 +194,11 @@ Bug fixes and such:
   are now (again) the core functions.
 
 - Dropped or made static many obsolete, unused, and/or broken functions,
-  including PDC_chg_attrs(), PDC_cursor_on() and _off(), 
-  PDC_fix_cursor(), PDC_get_attribute(), PDC_get_cur_col() and _row(), 
-  PDC_set_80x25(), PDC_set_cursor_mode(), PDC_set_rows(), 
-  PDC_wunderline(), PDC_wleftline() and PDC_wrightline().
+  including PDC_chg_attrs(), PDC_cursor_on() and _off(),
+  PDC_fix_cursor(), PDC_get_attribute(), PDC_get_cur_col() and _row(),
+  PDC_set_80x25(), PDC_set_cursor_mode(), PDC_set_rows(),
+  PDC_wunderline(), PDC_wleftline(), PDC_wrightline(),
+  XCursesModifierPress() and XCurses_refresh_scrollbar().
 
 - Obsolete/unused defines: _BCHAR, _GOCHAR, _STOPCHAR, _PRINTCHAR 
   _ENDLINE, _FULLWIN and _SCROLLWIN.
@@ -150,10 +206,16 @@ Bug fixes and such:
 - Obsolete/unused elements of the WINDOW struct: _pmax*, _lastp*, 
   _lasts*.
 
-- Removed all the EMALLOC stuff. It was more or less broken, since 
-  straight malloc calls were used elsewhere; it was undocumented outside 
-  of comments in curspriv.h; and there are better ways to use a 
-  substitute malloc().
+- Obsolete/unused elements of the SCREEN struct: orgcbr, visible_cursor,
+  sizeable, shell, blank, cursor, orig_emulation, font, orig_font,
+  tahead, adapter, scrnmode, kbdinfo, direct_video, video_page,
+  video_seg, video_ofs, bogus_adapter. (Some of these persist outside
+  the SCREEN struct, in the platform directories.) Added mouse_wait and 
+  key_code.
+
+- Removed all the EMALLOC stuff. Straight malloc calls were used 
+  elsewhere; it was undocumented outside of comments in curspriv.h; and 
+  there are better ways to use a substitute malloc().
 
 - Single mouse clicks are now reportable on all platforms (not just
   double-clicks). And in general, mouse event reporting is more
@@ -162,9 +224,21 @@ Bug fixes and such:
 - The mouse cursor no longer appears in full-screen mode in Win32 unless
   a nonzero mouse event mask is used.
 
+- ALT-keypad input now works in Win32.
+
 - In Win32, SetConsoleMode(ENABLE_WINDOW_INPUT) is not useful, and 
   appears to be the source of a four-year-old bug report (hanging in 
   THE) by Phil Smith.
+
+- Removed the PDC_THREAD_BUILD stuff, which has never worked. For the
+  record: PDCurses is not thread-safe. Neither is ncurses; and the
+  X/Open curses spec explicitly makes it a non-requirement.
+
+- With the internal compose key system in the X11 port, modifier keys
+  were breaking out of the compose state, making it impossible to type
+  accented capitals, etc. Also, Multi_key is now the default compose
+  key, instead of leaving it undefined by default; and a few more combos
+  are supported.
 
 - In X11, the first reported mouse event after startup always read as a
   double-click at position 0, 0. (This bug was introduced in 2.8.)
@@ -179,7 +253,7 @@ Bug fixes and such:
   set.
 
 - The fix in 2.8 for the scroll wheel in X11 wasn't very good -- it did
-  report the events as scroll wheel events, but it doubled them. Here is
+  report the events as scroll wheel events, but it doubled them. Here's
   a proper fix.
 
 - Changed mouse handling in X11: Simpler translation table, with
@@ -195,8 +269,9 @@ Bug fixes and such:
 - Modifiers are not returned as keys when a mouse click has occurred
   since the key press.
 
-- In BIOS mode (in DOS), count successive identical bytes, and make only 
-  one BIOS call for all of them. This dramatically improves performance.
+- In BIOS mode (in DOS), count successive identical output bytes, and
+  make only one BIOS call for all of them. This dramatically improves 
+  performance.
 
 - The cursor position was not always updated correctly in BIOS mode.
 
@@ -207,7 +282,7 @@ Bug fixes and such:
 - Better reporting of mouse events in testcurs.
 
 - Blank out buffer and num before the scanw() test in testcurs, in case 
-  the user just hits enter or etc.
+  the user just hits enter or etc.; clear the screen after resizing.
 
 - Allow tuidemo to use the last line.
 
@@ -223,16 +298,19 @@ Bug fixes and such:
 
 - Fixes for errors and warnings when building with Visual C++ 2005.
 
-- Simplified makefiles; moved common elements to .mif files.
+- In MSVC, the panel library didn't work with the DLL.
 
-- Strip demos when possible.
+- Complete export lists for DLLs.
+
+- Simplified makefiles; moved common elements to .mif files; better 
+  optimization; strip demos when possible.
 
 - Changed makefile targets of "pdcurses.a/lib" and "panel.a/lib" to 
-  $(LIBCURSES) and $(LIBPANEL) Suggestion of Doug Kaufman.
+  $(LIBCURSES) and $(LIBPANEL). Suggestion of Doug Kaufman.
 
 - Changed "install" target in the makefile to a double-colon rule, to 
   get around a conflict with INSTALL on non-case-sensitive filesystems, 
-  such as Mac OS X's HFS+. Reported (indirectly) by Douglas Godfrey.
+  such as Mac OS X's HFS+. Reported by Douglas Godfrey et al.
 
 - Make PDCurses.man dependent on manext. Suggestion of Tiziano Mueller.
 
@@ -247,6 +325,18 @@ Bug fixes and such:
 
 - The default window title and icons for the X11 port are now "PDCurses"
   instead of "XCurses".
+
+- Internal functions and variables made static where possible.
+
+- Adopted a somewhat more consistent naming style: Internal functions
+  with external linkage, and only those, have the prefix "PDC_";
+  external variables that aren't part of the API use "pdc_"; static
+  functions use "_"; and "XC_" and "xc_" prefixes are used for functions
+  and variables, respectively, that are shared between both processes in
+  the X11 port. Also eliminated camel casing, where possible.
+
+- Changed the encoding for non-ASCII characters in comments and
+  documentation from Latin-1 to UTF-8.
 
 ------------------------------------------------------------------------
 

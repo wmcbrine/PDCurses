@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.273 2007/04/01 06:20:53 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.274 2007/04/04 17:39:01 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3001
+#define PDC_BUILD 3002
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1604,9 +1604,9 @@ int	sb_refresh(void);
 #define PDC_KEY_MODIFIER_ALT		4
 #define PDC_KEY_MODIFIER_NUMLOCK	8
 
-#endif  /* __PDCURSES__ */
-
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 # undef bool
 }
 #endif
+
+#endif  /* __PDCURSES__ */

@@ -21,7 +21,7 @@ value in the range 0-127, it must render it using the A_CHARTEXT portion
 of the corresponding value from this table, instead of the original 
 value. Also, values may be read from this table by apps, and passed 
 through functions such as waddch(), which does no special processing on 
-control characters (0-31 and 127) when the the A_ALTCHARSET flag set. 
+control characters (0-31 and 127) when the A_ALTCHARSET flag is set. 
 Thus, any control characters used in acs_map[] should also have the 
 A_ALTCHARSET flag set. Implementations should provide suitable values 
 for all the ACS_ macros defined in curses.h; other values in the table 

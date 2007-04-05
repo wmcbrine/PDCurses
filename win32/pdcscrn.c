@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.79 2007/01/10 15:57:35 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.80 2007/04/05 08:06:15 wmcbrine Exp $");
 
 #define PDC_RESTORE_NONE     0
 #define PDC_RESTORE_BUFFER   1
@@ -415,18 +415,6 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
-	bufsize.X = orig_scr.srWindow.Right - orig_scr.srWindow.Left + 1;
-	bufsize.Y = orig_scr.srWindow.Bottom - orig_scr.srWindow.Top + 1;
-
-	rect.Top = rect.Left = 0;
-	rect.Bottom = bufsize.Y - 1;
-	rect.Right = bufsize.X - 1;
-
-	SetConsoleScreenBufferSize(pdc_con_out, bufsize);
-	SetConsoleWindowInfo(pdc_con_out, TRUE, &rect);
-	SetConsoleScreenBufferSize(pdc_con_out, bufsize);
-	SetConsoleActiveScreenBuffer(pdc_con_out);
-
 	PDC_reset_prog_mode();
 
 	SP->mono = FALSE;
@@ -514,6 +502,26 @@ int PDC_resize_screen(int nlines, int ncols)
 void PDC_reset_prog_mode(void)
 {
 	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+
+	if (is_nt)
+	{
+		COORD bufsize;
+		SMALL_RECT rect;
+
+		bufsize.X = orig_scr.srWindow.Right - 
+			orig_scr.srWindow.Left + 1;
+		bufsize.Y = orig_scr.srWindow.Bottom - 
+			orig_scr.srWindow.Top + 1;
+
+		rect.Top = rect.Left = 0;
+		rect.Bottom = bufsize.Y - 1;
+		rect.Right = bufsize.X - 1;
+
+		SetConsoleScreenBufferSize(pdc_con_out, bufsize);
+		SetConsoleWindowInfo(pdc_con_out, TRUE, &rect);
+		SetConsoleScreenBufferSize(pdc_con_out, bufsize);
+		SetConsoleActiveScreenBuffer(pdc_con_out);
+	}
 
 	PDC_mouse_set();
 }

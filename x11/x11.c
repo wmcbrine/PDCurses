@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.78 2006/12/28 09:51:31 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.79 2007/04/07 22:02:36 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2698,12 +2698,18 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 		    break;
 		}
 
-		if (XC_read_socket(xc_display_sock, tmpsel,
-		    length * sizeof(chtype)) < 0)
+		for (pos = 0; (long)pos < length; pos++)
 		{
-		    _exit_process(5, SIGKILL,
-			"exiting from CURSES_SET_SELECTION "
-			"_process_curses_requests");
+			unsigned char c;
+
+			if (XC_read_socket(xc_display_sock, &c, 1) < 0)
+			{
+			    _exit_process(5, SIGKILL,
+				"exiting from CURSES_SET_SELECTION "
+				"_process_curses_requests");
+			}
+
+			tmpsel[pos] = c;
 		}
 
 		tmpsel_length = length;

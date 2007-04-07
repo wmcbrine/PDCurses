@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.56 2006/12/01 07:56:03 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.57 2007/04/07 19:07:02 wmcbrine Exp $ */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -182,7 +182,7 @@ signal_handler XCursesSetSignal(int, signal_handler);
 
 #ifdef PDCDEBUG
 void XC_say(const char *msg);
-# define XC_LOG(x) XCsay x
+# define XC_LOG(x) XC_say x
 #else
 # define XC_LOG(x)
 #endif

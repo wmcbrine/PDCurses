@@ -44,7 +44,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
 
 PLATFORM1	= Watcom C++ OS/2
-PLATFORM2	= Open Watcom 1.3 for OS/2
+PLATFORM2	= Open Watcom 1.6 for OS/2
 ARCNAME		= pdc$(VER)_wcc_os2
 
 !include $(PDCURSES_HOME)\makedist.mif

@@ -47,7 +47,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del wccdos.lrf
 
 PLATFORM1	= Watcom C++ 16-bit DOS
-PLATFORM2	= Open Watcom 1.3 for 16-bit DOS
+PLATFORM2	= Open Watcom 1.6 for 16-bit DOS
 ARCNAME		= pdc$(VER)16w
 
 !include $(PDCURSES_HOME)\makedist.mif

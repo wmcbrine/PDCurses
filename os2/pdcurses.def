@@ -1,6 +1,6 @@
 LIBRARY		CURSES
 
-DESCRIPTION	'PDCurses 3.0 Dynamic Linking library'
+DESCRIPTION	'PDCurses 3.1 Dynamic Linking library'
 
 PROTMODE
 
@@ -294,6 +294,12 @@ EXPORTS
 		traceoff
 		traceon
 		unctrl
+		crmode
+		nocrmode
+		draino
+		resetterm
+		fixterm
+		saveterm
 		mouse_set
 		mouse_on
 		mouse_off

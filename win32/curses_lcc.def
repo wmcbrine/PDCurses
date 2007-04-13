@@ -285,6 +285,12 @@ getcury
 traceoff
 traceon
 unctrl
+crmode
+nocrmode
+draino
+resetterm
+fixterm
+saveterm
 mouse_set
 mouse_on
 mouse_off

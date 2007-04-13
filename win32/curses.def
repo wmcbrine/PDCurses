@@ -290,6 +290,12 @@ EXPORTS getcury
 EXPORTS traceoff
 EXPORTS traceon
 EXPORTS unctrl
+EXPORTS crmode
+EXPORTS nocrmode
+EXPORTS draino
+EXPORTS resetterm
+EXPORTS fixterm
+EXPORTS saveterm
 EXPORTS mouse_set
 EXPORTS mouse_on
 EXPORTS mouse_off

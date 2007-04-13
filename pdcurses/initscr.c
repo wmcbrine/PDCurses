@@ -14,7 +14,9 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.98 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.99 2007/04/13 04:28:52 wmcbrine Exp $");
+
+char ttytype[128];
 
 const char *_curses_notice = "PDCurses 3.0 - Public Domain 2007";
 
@@ -214,6 +216,8 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	SP->alive = TRUE;
 
 	def_shell_mode();
+
+	sprintf(ttytype, "pdcurses|PDCurses for %s", PDC_sysname());
 
 	return stdscr;
 }

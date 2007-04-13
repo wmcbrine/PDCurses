@@ -10,6 +10,7 @@ COLORS
 COLOR_PAIRS
 TABSIZE
 acs_map
+ttytype
 addch
 addchnstr
 addchstr

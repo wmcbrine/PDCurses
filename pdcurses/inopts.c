@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inopts.c,v 1.37 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: inopts.c,v 1.38 2007/04/13 08:24:20 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -39,6 +39,9 @@ RCSID("$Id: inopts.c,v 1.37 2007/03/16 06:33:44 wmcbrine Exp $");
 	void timeout(int delay);
 	void wtimeout(WINDOW *win, int delay);
 	int typeahead(int fildes);
+
+	int crmode(void);
+	int nocrmode(void);
 
   Description:
 	cbreak() and nocbreak() put the terminal into and out of cbreak
@@ -97,6 +100,9 @@ RCSID("$Id: inopts.c,v 1.37 2007/03/16 06:33:44 wmcbrine Exp $");
 	do nothing in PDCurses, but are included for compatibility with 
 	other curses implementations.
 
+	crmode() and nocrmode() are archaic equivalents to cbreak() and 
+	nocbreak(), respectively.
+
   Return Value:
 	All functions return OK on success and ERR on error.
 
@@ -120,6 +126,8 @@ RCSID("$Id: inopts.c,v 1.37 2007/03/16 06:33:44 wmcbrine Exp $");
 	timeout					Y	-	Y
 	wtimeout				Y	-	Y
 	typeahead				Y	-	Y
+	crmode					-
+	nocrmode				-
 
 **man-end****************************************************************/
 
@@ -313,4 +321,18 @@ void timeout(int delay)
 	PDC_LOG(("timeout() - called\n"));
 
 	wtimeout(stdscr, delay);
+}
+
+int crmode(void)
+{
+	PDC_LOG(("crmode() - called\n"));
+
+	return cbreak();
+}
+
+int nocrmode(void)
+{
+	PDC_LOG(("nocrmode() - called\n"));
+
+	return nocbreak();
 }

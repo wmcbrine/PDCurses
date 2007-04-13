@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.275 2007/04/13 04:28:52 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.276 2007/04/13 08:24:20 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3003
+#define PDC_BUILD 3004
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1478,6 +1478,13 @@ void	traceoff(void);
 void	traceon(void);
 char   *unctrl(chtype);
 
+int	crmode(void);
+int	nocrmode(void);
+int	draino(int);
+int	resetterm(void);
+int	fixterm(void);
+int	saveterm(void);
+
 int	mouse_set(unsigned long);
 int	mouse_on(unsigned long);
 int	mouse_off(unsigned long);
@@ -1577,15 +1584,6 @@ int	sb_refresh(void);
 #define setsyx(y, x)		{ if((y)==-1 && (x)==-1) curscr->_leaveit=TRUE;\
 				  else { curscr->_leaveit=FALSE; \
 					 wmove(curscr,(y),(x));} }
-
-/* Some quasi-standard aliases for standard functions */
-
-#define crmode			cbreak
-#define nocrmode		nocbreak
-#define draino			napms
-#define resetterm		reset_shell_mode
-#define fixterm			reset_prog_mode
-#define saveterm		def_prog_mode
 
 #ifdef NCURSES_MOUSE_VERSION
 # define getmouse(x) nc_getmouse(x)

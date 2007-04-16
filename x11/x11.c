@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.80 2007/04/11 17:43:55 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.81 2007/04/16 06:03:05 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -3143,28 +3143,16 @@ int XCursesSetupX(int argc, char *argv[])
 	rmfrom.size = sizeof(Pixel);
 	rmto.size = sizeof(XColor);
 
-#if XtSpecificationRelease > 4
 	rmto.addr = (XPointer)&pointerforecolor;
 	rmfrom.addr = (XPointer)&(xc_app_data.pointerForeColor);
 	XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-#else
-	rmto.addr = (char *)&pointerforecolor;
-	rmfrom.addr = (char *)&(xc_app_data.pointerForeColor);
-	XtConvert(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-#endif
 
 	rmfrom.size = sizeof(Pixel);
 	rmto.size = sizeof(XColor);
 
-#if XtSpecificationRelease > 4
 	rmfrom.addr = (XPointer)&(xc_app_data.pointerBackColor);
 	rmto.addr = (XPointer)&pointerbackcolor;
 	XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-#else
-	rmfrom.addr = (char *)&(xc_app_data.pointerBackColor);
-	rmto.addr = (char *)&pointerbackcolor;
-	XtConvert(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-#endif
 
 	XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
 		&pointerforecolor, &pointerbackcolor);

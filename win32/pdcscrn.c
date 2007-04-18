@@ -13,11 +13,9 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.80 2007/04/05 08:06:15 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.81 2007/04/18 02:26:19 wmcbrine Exp $");
 
-#define PDC_RESTORE_NONE     0
-#define PDC_RESTORE_BUFFER   1
-#define PDC_RESTORE_WINDOW   2
+enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER, PDC_RESTORE_WINDOW };
 
 /* Struct for storing console registry keys, and for use with the 
    undocumented WM_SETCONSOLEINFO message. Originally by James Brown, 

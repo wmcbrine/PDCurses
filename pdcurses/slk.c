@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.48 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.49 2007/04/18 02:26:18 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -90,9 +90,7 @@ RCSID("$Id: slk.c,v 1.48 2007/03/16 06:33:44 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
-#define LABEL_NORMAL	8
-#define LABEL_EXTENDED	10
-#define LABEL_NCURSES_EXTENDED	12
+enum { LABEL_NORMAL = 8, LABEL_EXTENDED = 10, LABEL_NCURSES_EXTENDED = 12 };
 
 static int label_length = 0;
 static int labels = 0;

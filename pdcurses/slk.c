@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.49 2007/04/18 02:26:18 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.50 2007/04/19 18:03:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -218,8 +218,6 @@ int slk_set(int labnum, const char *label, int justify)
 	mbstowcs(wlabel, label, 31);
 	return slk_wset(labnum, wlabel, justify);
 #else
-	int i;
-
 	PDC_LOG(("slk_set() - called\n"));
 
 	if (labnum < 1 || labnum > labels || justify < 0 || justify > 2)
@@ -237,11 +235,17 @@ int slk_set(int labnum, const char *label, int justify)
 	}
 	else
 	{
+		int i, j;
+
+		/* Skip leading spaces */
+
+		for (j = 0; label[j] == ' '; j++);
+
 		/* Copy it */
 
 		for (i = 0; i < label_length; i++)
 		{
-			chtype ch = label[i];
+			chtype ch = label[i + j];
 
 			slk[labnum].label[i] = ch;
 
@@ -249,7 +253,12 @@ int slk_set(int labnum, const char *label, int justify)
 				break;
 		}
 
-		slk[labnum].label[label_length] = 0;
+		/* Drop trailing spaces */
+
+		while (label[i + j - 1] == ' ')
+			i--;
+
+		slk[labnum].label[i] = 0;
 		slk[labnum].format = justify;
 		slk[labnum].len = i;
 	}
@@ -572,8 +581,6 @@ int PDC_mouse_in_slk(int y, int x)
 #ifdef PDC_WIDE
 int slk_wset(int labnum, const wchar_t *label, int justify)
 {
-	int i;
-
 	PDC_LOG(("slk_wset() - called\n"));
 
 	if (labnum < 1 || labnum > labels || justify < 0 || justify > 2)
@@ -591,11 +598,17 @@ int slk_wset(int labnum, const wchar_t *label, int justify)
 	}
 	else
 	{
+		int i, j;
+
+		/* Skip leading spaces */
+
+		for (j = 0; label[j] == L' '; j++);
+
 		/* Copy it */
 
 		for (i = 0; i < label_length; i++)
 		{
-			chtype ch = label[i];
+			chtype ch = label[i + j];
 
 			slk[labnum].label[i] = ch;
 
@@ -603,7 +616,12 @@ int slk_wset(int labnum, const wchar_t *label, int justify)
 				break;
 		}
 
-		slk[labnum].label[label_length] = 0;
+		/* Drop trailing spaces */
+
+		while (label[i + j - 1] == L' ')
+			i--;
+
+		slk[labnum].label[i] = 0;
 		slk[labnum].format = justify;
 		slk[labnum].len = i;
 	}

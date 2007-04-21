@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.50 2007/04/19 18:03:16 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.51 2007/04/21 01:52:53 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -255,7 +255,7 @@ int slk_set(int labnum, const char *label, int justify)
 
 		/* Drop trailing spaces */
 
-		while (label[i + j - 1] == ' ')
+		while ((i + j) && (label[i + j - 1] == ' '))
 			i--;
 
 		slk[labnum].label[i] = 0;
@@ -618,7 +618,7 @@ int slk_wset(int labnum, const wchar_t *label, int justify)
 
 		/* Drop trailing spaces */
 
-		while (label[i + j - 1] == L' ')
+		while ((i + j) && (label[i + j - 1] == L' '))
 			i--;
 
 		slk[labnum].label[i] = 0;

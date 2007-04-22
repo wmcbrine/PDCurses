@@ -14,11 +14,11 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.99 2007/04/13 04:28:52 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.100 2007/04/22 23:01:28 wmcbrine Exp $");
 
 char ttytype[128];
 
-const char *_curses_notice = "PDCurses 3.0 - Public Domain 2007";
+const char *_curses_notice = "PDCurses 3.1 - Public Domain 2007";
 
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */
@@ -135,7 +135,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	SP->cbreak	= TRUE;
 	SP->save_key_modifiers = FALSE;
 	SP->return_key_modifiers = FALSE;
-	SP->echo	= FALSE;
+	SP->echo	= TRUE;
 	SP->visibility	= 1;
 	SP->audible	= TRUE;
 	SP->resized	= FALSE;

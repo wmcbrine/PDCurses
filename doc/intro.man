@@ -598,7 +598,7 @@ FUNCTIONS
 
 		assume_default_colors	color
 		curses_version		initscr
-		has_key			util
+		has_key			keyname
 		use_default_colors	color
 		wresize			window
 

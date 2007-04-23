@@ -13,15 +13,18 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: keyname.c,v 1.3 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: keyname.c,v 1.4 2007/04/23 21:35:49 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
-  Name:								util
+  Name:								keyname
 
   Synopsis:
 	char *keyname(int key);
+
 	char *key_name(wchar_t c);
+
+	bool has_key(int key);
 
   Description:
 	keyname() returns a string corresponding to the argument key. 
@@ -30,9 +33,13 @@ RCSID("$Id: keyname.c,v 1.3 2007/03/16 06:33:44 wmcbrine Exp $");
 	key_name() is the wide-character version. It takes a wchar_t 
 	parameter, but still returns a char *.
 
+	has_key() returns TRUE for recognized keys, FALSE otherwise. 
+	This function is an ncurses extension.
+
   Portability				     X/Open    BSD    SYS V
 	keyname					Y	-      3.0
 	key_name				Y
+	has_key					-	-	-
 
 **man-end****************************************************************/
 
@@ -120,6 +127,13 @@ char *keyname(int key)
 		return unctrl((chtype)key);
 
 	return has_key(key) ? key_name[key - KEY_MIN] : "UNKNOWN KEY";
+}
+
+bool has_key(int key)
+{
+	PDC_LOG(("has_key() - called: key %d\n", key));
+
+	return (key >= KEY_MIN && key <= KEY_MAX);
 }
 
 #ifdef PDC_WIDE

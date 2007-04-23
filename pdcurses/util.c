@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.59 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.60 2007/04/23 21:35:49 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -37,8 +37,9 @@ RCSID("$Id: util.c,v 1.59 2007/03/16 06:33:44 wmcbrine Exp $");
 	notation; others are passed through. wunctrl() is the wide- 
 	character version of the function.
 
-	delay_output() inserts an ms millisecond pause in output. On 
-	some systems, this has no effect.
+	filter() and use_env() are no-ops in PDCurses.
+
+	delay_output() inserts an ms millisecond pause in output.
 
 	getcchar() works in two modes: When wch is not NULL, it reads 
 	the cchar_t pointed to by wcval and stores the attributes in 
@@ -50,8 +51,6 @@ RCSID("$Id: util.c,v 1.59 2007/03/16 06:33:44 wmcbrine Exp $");
 	setcchar constructs a cchar_t at wcval from the wide-character 
 	text at wch, the attributes in attr and the color pair in 
 	color_pair. The opts argument is unused.
-
-	filter() and use_env() are no-ops on PDCurses.
 
 	Currently, the length returned by getcchar() is always 1 or 0.
 	Similarly, setcchar() will only take the first wide character
@@ -104,13 +103,6 @@ char *unctrl(chtype c)
 		strbuf[1] = (char)(ic + '@');
 
 	return strbuf;
-}
-
-bool has_key(int key)
-{
-	PDC_LOG(("has_key() - called: key %d\n",key));
-
-	return (key >= KEY_MIN && key <= KEY_MAX);
 }
 
 void filter(void)

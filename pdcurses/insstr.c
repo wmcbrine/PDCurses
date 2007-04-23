@@ -12,12 +12,9 @@
  ************************************************************************/
 
 #include <curspriv.h>
-#ifdef PDC_WIDE
-# include <stdlib.h>
-#endif
 #include <string.h>
 
-RCSID("$Id: insstr.c,v 1.39 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: insstr.c,v 1.40 2007/04/23 23:55:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -102,7 +99,7 @@ int winsnstr(WINDOW *win, const char *str, int n)
 
 	while (str[i] && i < n)
 	{
-		int retval = mbtowc(p, str + i, n - i);
+		int retval = PDC_mbtowc(p, str + i, n - i);
 
 		if (retval <= 0)
 			break;

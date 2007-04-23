@@ -12,11 +12,8 @@
  ************************************************************************/
 
 #include <curspriv.h>
-#ifdef PDC_WIDE
-# include <stdlib.h>
-#endif
 
-RCSID("$Id: addstr.c,v 1.38 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: addstr.c,v 1.39 2007/04/23 23:55:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -85,7 +82,7 @@ int waddnstr(WINDOW *win, const char *str, int n)
 	{
 #ifdef PDC_WIDE
 		wchar_t wch;
-		int retval = mbtowc(&wch, str + i, n >= 0 ? n - i : 6);
+		int retval = PDC_mbtowc(&wch, str + i, n >= 0 ? n - i : 6);
 
 		if (retval <= 0)
 			return OK;

@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: slk.c,v 1.51 2007/04/21 01:52:53 wmcbrine Exp $");
+RCSID("$Id: slk.c,v 1.52 2007/04/23 23:55:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -215,7 +215,7 @@ int slk_set(int labnum, const char *label, int justify)
 #ifdef PDC_WIDE
 	wchar_t wlabel[32];
 
-	mbstowcs(wlabel, label, 31);
+	PDC_mbstowcs(wlabel, label, 31);
 	return slk_wset(labnum, wlabel, justify);
 #else
 	PDC_LOG(("slk_set() - called\n"));
@@ -289,7 +289,7 @@ char *slk_label(int labnum)
 #ifdef PDC_WIDE
 	wchar_t *wtemp = slk_wlabel(labnum);
 
-	wcstombs(temp, wtemp, 32);
+	PDC_wcstombs(temp, wtemp, 32);
 	temp[32] = '\0';
 #else
 	chtype *p;

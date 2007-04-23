@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.149 2007/04/23 00:29:14 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.150 2007/04/23 23:55:15 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -107,6 +107,12 @@ int	PDC_mouse_in_slk(int, int);
 void	PDC_slk_free(void);
 void	PDC_slk_initialize(void);
 void	PDC_sync(WINDOW *);
+
+#ifdef PDC_WIDE
+int	PDC_mbtowc(wchar_t *, const char *, size_t);
+size_t	PDC_mbstowcs(wchar_t *, const char *, size_t);
+size_t	PDC_wcstombs(char *, const wchar_t *, size_t);
+#endif
 
 #ifdef PDCDEBUG
 # define PDC_LOG(x) if (pdc_trace_on) PDC_debug x

@@ -12,8 +12,15 @@
  ************************************************************************/
 
 #include <curspriv.h>
+#ifdef PDC_WIDE
+# ifdef PDC_FORCE_UTF8
+#  include <string.h>
+# else
+#  include <stdlib.h>
+# endif
+#endif
 
-RCSID("$Id: util.c,v 1.60 2007/04/23 21:35:49 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.61 2007/04/23 23:55:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -30,6 +37,10 @@ RCSID("$Id: util.c,v 1.60 2007/04/23 21:35:49 wmcbrine Exp $");
 	int setcchar(cchar_t *wcval, const wchar_t *wch, const attr_t attrs,
 		     short color_pair, const void *opts);
 	wchar_t *wunctrl(cchar_t *wc);
+
+	int PDC_mbtowc(wchar_t *pwc, const char *s, size_t n);
+	size_t PDC_mbstowcs(wchar_t *dest, const char *src, size_t n);
+	size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n);
 
   Description:
 	unctrl() expands the text portion of the chtype c into a 
@@ -75,6 +86,9 @@ RCSID("$Id: util.c,v 1.60 2007/04/23 21:35:49 wmcbrine Exp $");
 	getcchar				Y
 	setcchar				Y
 	wunctrl					Y
+	PDC_mbtowc				-	-	-
+	PDC_mbstowcs				-	-	-
+	PDC_wcstombs				-	-	-
 
 **man-end****************************************************************/
 
@@ -183,5 +197,124 @@ wchar_t *wunctrl(cchar_t *wc)
 		strbuf[1] = (wchar_t)(ic + '@');
 
 	return strbuf;
+}
+
+int PDC_mbtowc(wchar_t *pwc, const char *s, size_t n)
+{
+# ifdef PDC_FORCE_UTF8
+	wchar_t key;
+	int i = -1;
+	const unsigned char *string = s;
+
+	if (!s || (n < 1))
+		return -1;
+
+	if (!*s)
+		return 0;
+
+	key = string[0];
+
+	/* Simplistic UTF-8 decoder -- only does the BMP, minimal 
+	   validation */
+
+	if (key & 0x80)
+	{
+		if ((key & 0xe0) == 0xc0)
+		{
+			if (1 < n)
+			{
+				key = ((key & 0x1f) << 6) |
+					(string[1] & 0x3f);
+				i = 2;
+			}
+		}
+		else if ((key & 0xe0) == 0xe0)
+		{
+			if (2 < n)
+			{
+				key = ((key & 0x0f) << 12) |
+					((string[1] & 0x3f) << 6) |
+					 (string[2] & 0x3f);
+				i = 3;
+			}
+		}
+	}
+	else
+		i = 1;
+
+	if (i)
+		*pwc = key;
+
+	return i;
+# else
+	return mbtowc(pwc, s, n);
+# endif
+}
+
+size_t PDC_mbstowcs(wchar_t *dest, const char *src, size_t n)
+{
+# ifdef PDC_FORCE_UTF8
+	size_t i = 0, len;
+
+	if (!src || !dest)
+		return 0;
+
+	len = strlen(src);
+
+	while (*src && i < n)
+	{
+		int retval = PDC_mbtowc(dest + i, src, len);
+
+		if (retval < 1)
+			return -1;
+
+		src += retval;
+		len -= retval;
+		i++;
+	}
+
+	return i;
+# else
+	return mbstowcs(dest, src, n);
+# endif
+}
+
+size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
+{
+# ifdef PDC_FORCE_UTF8
+	size_t i = 0;
+
+	if (!src || !dest)
+		return 0;
+
+	while (*src && i < n)
+	{
+		wchar_t code = *src++;
+
+		if (code < 0x80)
+		{
+			dest[i] = code;
+			i++;
+		}
+		else
+			if (code < 0x800)
+			{
+				dest[i] = ((code & 0x07c0) >> 6) | 0xc0;
+				dest[i + 1] = (code & 0x003f) | 0x80;
+				i += 2;
+			}
+			else
+			{
+				dest[i] = ((code & 0xf000) >> 12) | 0xe0;
+				dest[i + 1] = ((code & 0x0fc0) >> 6) | 0x80;
+				dest[i + 2] = (code & 0x003f) | 0x80;
+				i += 3;
+			}
+	}
+
+	return i;
+# else
+	return wcstombs(dest, src, n);
+# endif
 }
 #endif

@@ -12,11 +12,8 @@
  ************************************************************************/
 
 #include <curspriv.h>
-#ifdef PDC_WIDE
-# include <stdlib.h>
-#endif
 
-RCSID("$Id: getstr.c,v 1.44 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: getstr.c,v 1.45 2007/04/23 23:55:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -95,7 +92,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 	if (wgetn_wstr(win, (wint_t *)wstr, n) == ERR)
 		return ERR;
 
-	return wcstombs(str, wstr, n);
+	return PDC_wcstombs(str, wstr, n);
 #else
 	int ch, i, num, x, chars;
 	char *p;

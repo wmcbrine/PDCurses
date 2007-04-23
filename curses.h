@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.276 2007/04/13 08:24:20 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.277 2007/04/23 00:29:14 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3004
+#define PDC_BUILD 3005
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -490,12 +490,6 @@ typedef struct _win		/* definition of a window	*/
  *	macro construction.
  *
  */
-
-typedef struct			/* structure for ripped off lines */
-{
-	int line;
-	int (*init)(WINDOW *, int);
-} RIPPEDOFFLINE;
 
 typedef struct
 {

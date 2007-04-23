@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.148 2007/01/07 21:31:17 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.149 2007/04/23 00:29:14 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -40,6 +40,12 @@
 #endif
 
 /*----------------------------------------------------------------------*/
+
+typedef struct			/* structure for ripped off lines */
+{
+	int line;
+	int (*init)(WINDOW *, int);
+} RIPPEDOFFLINE;
 
 /* Window properties */
 

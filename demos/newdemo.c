@@ -4,7 +4,7 @@
  *
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  *
- *  $Id: newdemo.c,v 1.33 2007/04/14 13:26:41 wmcbrine Exp $
+ *  $Id: newdemo.c,v 1.34 2007/04/23 20:33:42 wmcbrine Exp $
  */
 
 #include <stdio.h>
@@ -390,7 +390,7 @@ int main(int argc, char **argv)
 
 		/* Put a message up; wait for a key */
 
-		i = height-2;
+		i = height - 2;
 		wattrset(win, COLOR_PAIR(5));
 		mvwaddstr(win, i, 3,
 			"   Type a key to continue or ESC to quit  ");

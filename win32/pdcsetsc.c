@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.35 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.36 2007/04/27 07:30:08 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -78,10 +78,17 @@ int PDC_curs_set(int visibility)
 
 void PDC_set_title(const char *title)
 {
+#ifdef PDC_WIDE
+	wchar_t wtitle[512];
+#endif
 	PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
 
+#ifdef PDC_WIDE
+	PDC_mbstowcs(wtitle, title, 511);
+	SetConsoleTitleW(wtitle);
+#else
 	SetConsoleTitleA(title);
-	return;
+#endif
 }
 
 int PDC_set_blink(bool blinkon)

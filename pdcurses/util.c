@@ -20,7 +20,7 @@
 # endif
 #endif
 
-RCSID("$Id: util.c,v 1.61 2007/04/23 23:55:16 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.62 2007/04/27 07:27:05 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -273,6 +273,7 @@ size_t PDC_mbstowcs(wchar_t *dest, const char *src, size_t n)
 		i++;
 	}
 
+	dest[i] = 0;
 	return i;
 # else
 	return mbstowcs(dest, src, n);
@@ -312,6 +313,7 @@ size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
 			}
 	}
 
+	dest[i] = 0;
 	return i;
 # else
 	return wcstombs(dest, src, n);

@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.79 2007/01/17 20:49:08 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.80 2007/04/28 01:13:38 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -850,12 +850,7 @@ void clipboardTest(WINDOW *win)
 		wsetscrreg(stdscr, 0, LINES - 1);
 		clear();
 		mvaddstr(1, 1, "Clipboard contents...");
-		move(2, 0);
-
-		for (i = 0; i < length; i++)
-			addch(ptr[i]);
-          
-		addch('\n');
+		mvprintw(2, 1, "%s\n", ptr);
 	}
 
 	Continue2();

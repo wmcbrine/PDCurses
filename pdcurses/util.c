@@ -20,7 +20,7 @@
 # endif
 #endif
 
-RCSID("$Id: util.c,v 1.62 2007/04/27 07:27:05 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.63 2007/04/28 01:09:54 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -290,7 +290,7 @@ size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
 
 	while (*src && i < n)
 	{
-		wchar_t code = *src++;
+		chtype code = *src++;
 
 		if (code < 0x80)
 		{

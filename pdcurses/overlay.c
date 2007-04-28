@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.29 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: overlay.c,v 1.30 2007/04/28 23:41:01 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -264,8 +264,8 @@ int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
 
 	src_rows = src_w->_maxy - src_tr;
 	src_cols = src_w->_maxx - src_tc;
-	dst_rows = dst_br - dst_tr;
-	dst_cols = dst_bc - dst_tc;
+	dst_rows = dst_br - dst_tr + 1;
+	dst_cols = dst_bc - dst_tc + 1;
 
 	min_rows = min(src_rows, dst_rows);
 	min_cols = min(src_cols, dst_cols);

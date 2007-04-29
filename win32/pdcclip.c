@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcclip.c,v 1.24 2007/04/28 01:08:40 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.25 2007/04/29 02:19:47 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -54,6 +54,12 @@ RCSID("$Id: pdcclip.c,v 1.24 2007/04/28 01:08:40 wmcbrine Exp $");
 
 **man-end****************************************************************/
 
+#ifdef PDC_WIDE
+# define PDC_TEXT CF_UNICODETEXT
+#else
+# define PDC_TEXT CF_OEMTEXT
+#endif
+
 int PDC_getclipboard(char **contents, long *length)
 {
 	HANDLE handle;
@@ -64,11 +70,7 @@ int PDC_getclipboard(char **contents, long *length)
 	if (!OpenClipboard(NULL))
 		return PDC_CLIP_ACCESS_ERROR;
 
-#ifdef PDC_WIDE
-	if ((handle = GetClipboardData(CF_UNICODETEXT)) == NULL)
-#else
-	if ((handle = GetClipboardData(CF_TEXT)) == NULL)
-#endif
+	if ((handle = GetClipboardData(PDC_TEXT)) == NULL)
 	{
 		CloseClipboard();
 		return PDC_CLIP_EMPTY;
@@ -76,11 +78,11 @@ int PDC_getclipboard(char **contents, long *length)
 
 #ifdef PDC_WIDE
 	len = wcslen((wchar_t *)handle);
+	*contents = (char *)GlobalAlloc(GMEM_FIXED, len * 3 + 1);
 #else
 	len = strlen((char *)handle);
+	*contents = (char *)GlobalAlloc(GMEM_FIXED, len + 1);
 #endif
-	*contents = (char *)GlobalAlloc(GMEM_FIXED,
-		(len + 1) * sizeof(TCHAR));
 
 	if (!*contents)
 	{
@@ -89,7 +91,7 @@ int PDC_getclipboard(char **contents, long *length)
 	}
 
 #ifdef PDC_WIDE
-	PDC_wcstombs((char *)*contents, (wchar_t *)handle, len * 2);
+	PDC_wcstombs((char *)*contents, (wchar_t *)handle, len * 3);
 	*length = strlen((char *)*contents);
 #else
 	strcpy((char *)*contents, (char *)handle);
@@ -126,11 +128,7 @@ int PDC_setclipboard(const char *contents, long length)
 	GlobalUnlock(ptr1);
 	EmptyClipboard();
 
-#ifdef PDC_WIDE
-	if (!SetClipboardData(CF_UNICODETEXT, ptr1))
-#else
-	if (!SetClipboardData(CF_TEXT, ptr1))
-#endif
+	if (!SetClipboardData(PDC_TEXT, ptr1))
 	{
 		GlobalFree(ptr1);
 		return PDC_CLIP_ACCESS_ERROR;

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcclip.c,v 1.25 2007/04/29 02:19:47 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.26 2007/04/29 06:43:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -77,12 +77,11 @@ int PDC_getclipboard(char **contents, long *length)
 	}
 
 #ifdef PDC_WIDE
-	len = wcslen((wchar_t *)handle);
-	*contents = (char *)GlobalAlloc(GMEM_FIXED, len * 3 + 1);
+	len = wcslen((wchar_t *)handle) * 3;
 #else
 	len = strlen((char *)handle);
-	*contents = (char *)GlobalAlloc(GMEM_FIXED, len + 1);
 #endif
+	*contents = (char *)GlobalAlloc(GMEM_FIXED, len + 1);
 
 	if (!*contents)
 	{
@@ -91,12 +90,11 @@ int PDC_getclipboard(char **contents, long *length)
 	}
 
 #ifdef PDC_WIDE
-	PDC_wcstombs((char *)*contents, (wchar_t *)handle, len * 3);
-	*length = strlen((char *)*contents);
+	len = PDC_wcstombs((char *)*contents, (wchar_t *)handle, len);
 #else
 	strcpy((char *)*contents, (char *)handle);
-	*length = len;
 #endif
+	*length = len;
 	CloseClipboard();
 
 	return PDC_CLIP_SUCCESS;

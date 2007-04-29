@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcclip.c,v 1.29 2007/03/16 06:33:45 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.30 2007/04/29 06:53:10 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -96,17 +96,28 @@ int PDC_getclipboard(char **contents, long *length)
 
 int PDC_setclipboard(const char *contents, long length)
 {
+#ifdef PDC_WIDE
+	wchar_t wcontents[512];
+#endif
 	int rc;
 
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
+#ifdef PDC_WIDE
+	length = PDC_mbstowcs(wcontents, contents, 511);
+#endif
 	XCursesInstruct(CURSES_SET_SELECTION);
 
 	/* Write, then wait for X to do its stuff; expect return code. */
 
 	if (XC_write_socket(xc_display_sock, &length, sizeof(long)) >= 0)
 	{
+#ifdef PDC_WIDE
+		if (XC_write_socket(xc_display_sock, wcontents,
+		    length * sizeof(wchar_t)) >= 0)
+#else
 		if (XC_write_socket(xc_display_sock, contents, length) >= 0)
+#endif
 		{
 			if (XC_read_socket(xc_display_sock,
 			    &rc, sizeof(int)) >= 0)

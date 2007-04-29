@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.81 2007/04/16 06:03:05 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.82 2007/04/29 06:53:10 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2508,6 +2508,73 @@ static void _get_selection(Widget w, XtPointer data, Atom *selection,
 	_exit_process(4, SIGKILL, "exiting from _get_selection");
 }
 
+/* For PDC_setclipboard() */
+
+static void _set_selection(void)
+{
+	long length, pos;
+	int status;
+
+	if (XC_read_socket(xc_display_sock, &length, sizeof(long)) < 0)
+	{
+		_exit_process(5, SIGKILL, "exiting from _set_selection");
+	}
+
+	if (length > (long)tmpsel_length)
+	{
+		if (!tmpsel_length)
+			tmpsel = malloc((length + 1) * sizeof(chtype));
+		else
+			tmpsel = realloc(tmpsel,
+				(length + 1) * sizeof(chtype));
+	}
+
+	if (!tmpsel)
+	{
+		if (XC_write_display_socket_int(PDC_CLIP_MEMORY_ERROR) < 0)
+			_exit_process(4, SIGKILL,
+				"exiting from _set_selection");
+	}
+
+	for (pos = 0; pos < length; pos++)
+	{
+#ifdef PDC_WIDE
+		wchar_t c;
+
+		if (XC_read_socket(xc_display_sock, &c, sizeof(wchar_t)) < 0)
+#else
+		unsigned char c;
+
+		if (XC_read_socket(xc_display_sock, &c, 1) < 0)
+#endif
+		{
+			_exit_process(5, SIGKILL,
+				"exiting from _set_selection");
+		}
+
+		tmpsel[pos] = c;
+	}
+
+	tmpsel_length = length;
+	tmpsel[length] = '\0';
+
+	if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
+	    _convert_proc, _lose_ownership, NULL) == False)
+	{
+		status = PDC_CLIP_ACCESS_ERROR;
+		free(tmpsel);
+		tmpsel = NULL;
+		tmpsel_length = 0;
+	}
+	else
+		status = PDC_CLIP_SUCCESS;
+
+	_selection_off();
+
+	if (XC_write_display_socket_int(status) < 0)
+		_exit_process(4, SIGKILL, "exiting from _set_selection");
+}
+
 /* The curses process is waiting; tell it to continue */
 
 static void _resume_curses(void)
@@ -2527,8 +2594,6 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 	int old_row, new_row;
 	int old_x, new_x;
 	int pos, num_cols;
-
-	long length;
 
 	char buf[12];		/* big enough for 2 integers */ 
 
@@ -2672,63 +2737,7 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 
 	    case CURSES_SET_SELECTION:
 		XC_LOG(("CURSES_SET_SELECTION received from child\n"));
-
-		if (XC_read_socket(xc_display_sock, &length, sizeof(long)) < 0)
-		{
-		    _exit_process(5, SIGKILL,
-			"exiting from CURSES_SET_SELECTION "
-			"_process_curses_requests");
-		}
-
-		if (length > (long)tmpsel_length)
-		{
-		    if (!tmpsel_length)
-			tmpsel = malloc((length + 1) * sizeof(chtype));
-		    else
-			tmpsel = realloc(tmpsel, (length + 1) * sizeof(chtype));
-		}
-
-		if (!tmpsel)
-		{
-		    if (XC_write_display_socket_int(PDC_CLIP_MEMORY_ERROR) < 0)
-			_exit_process(4, SIGKILL,
-			    "exiting from _process_curses_requests");
-		    break;
-		}
-
-		for (pos = 0; (long)pos < length; pos++)
-		{
-			unsigned char c;
-
-			if (XC_read_socket(xc_display_sock, &c, 1) < 0)
-			{
-			    _exit_process(5, SIGKILL,
-				"exiting from CURSES_SET_SELECTION "
-				"_process_curses_requests");
-			}
-
-			tmpsel[pos] = c;
-		}
-
-		tmpsel_length = length;
-		tmpsel[length] = '\0';
-
-		if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
-		    _convert_proc, _lose_ownership, NULL) == False)
-		{
-		    old_x = PDC_CLIP_ACCESS_ERROR;
-		    free(tmpsel);
-		    tmpsel = NULL;
-		    tmpsel_length = 0;
-		}
-		else
-		    old_x = PDC_CLIP_SUCCESS;
-
-		_selection_off();
-
-		if (XC_write_display_socket_int(old_x) < 0)
-		    _exit_process(4, SIGKILL,
-			"exiting from _process_curses_requests");
+		_set_selection();
 		break;
 
 	    case CURSES_CLEAR_SELECTION:

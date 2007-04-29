@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcclip.c,v 1.30 2007/04/29 06:53:10 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.31 2007/04/29 22:23:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -58,6 +58,9 @@ RCSID("$Id: pdcclip.c,v 1.30 2007/04/29 06:53:10 wmcbrine Exp $");
 
 int PDC_getclipboard(char **contents, long *length)
 {
+#ifdef PDC_WIDE
+	wchar_t *wcontents;
+#endif
 	int result = 0;
 	int len;
 
@@ -74,21 +77,38 @@ int PDC_getclipboard(char **contents, long *length)
 	    if (XC_read_socket(xc_display_sock, &len, sizeof(int)) < 0)
 		XCursesExitCursesProcess(5,
 		    "exiting from PDC_getclipboard");
+#ifdef PDC_WIDE
+	    wcontents = malloc((len + 1) * sizeof(wchar_t));
+	    *contents = malloc(len * 3 + 1);
+
+	    if (!wcontents || !*contents)
+#else
+	    *contents = malloc(len + 1);
+
+	    if (!*contents)
+#endif
+		XCursesExitCursesProcess(6, "exiting from "
+		    "PDC_getclipboard - synchronization error");
 
 	    if (len)
 	    {
-		*contents = malloc(len + 1);
-
-		if (!*contents)
-		    XCursesExitCursesProcess(6, "exiting from "
-			"PDC_getclipboard - synchronization error");
-
-		if (XC_read_socket(xc_display_sock, *contents, len) < 0)
+		if (XC_read_socket(xc_display_sock,
+#ifdef PDC_WIDE
+		    wcontents, len * sizeof(wchar_t)) < 0)
+#else
+		    *contents, len) < 0)
+#endif
 		    XCursesExitCursesProcess(5,
 			"exiting from PDC_getclipboard");
-
-		*length = len;
 	    }
+
+#ifdef PDC_WIDE
+	    wcontents[len] = 0;
+	    len = PDC_wcstombs(*contents, wcontents, len * 3);
+	    free(wcontents);
+#endif
+	    (*contents)[len] = '\0';
+	    *length = len;
 	}
 
 	return result;
@@ -97,14 +117,18 @@ int PDC_getclipboard(char **contents, long *length)
 int PDC_setclipboard(const char *contents, long length)
 {
 #ifdef PDC_WIDE
-	wchar_t wcontents[512];
+	wchar_t *wcontents;
 #endif
 	int rc;
 
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
 #ifdef PDC_WIDE
-	length = PDC_mbstowcs(wcontents, contents, 511);
+	wcontents = malloc((length + 1) * sizeof(wchar_t));
+	if (!wcontents)
+		return PDC_CLIP_MEMORY_ERROR;
+
+	length = PDC_mbstowcs(wcontents, contents, length);
 #endif
 	XCursesInstruct(CURSES_SET_SELECTION);
 
@@ -112,13 +136,15 @@ int PDC_setclipboard(const char *contents, long length)
 
 	if (XC_write_socket(xc_display_sock, &length, sizeof(long)) >= 0)
 	{
+		if (XC_write_socket(xc_display_sock,
 #ifdef PDC_WIDE
-		if (XC_write_socket(xc_display_sock, wcontents,
-		    length * sizeof(wchar_t)) >= 0)
-#else
-		if (XC_write_socket(xc_display_sock, contents, length) >= 0)
-#endif
+			wcontents, length * sizeof(wchar_t)) >= 0)
 		{
+			free(wcontents);
+#else
+			contents, length) >= 0)
+		{
+#endif
 			if (XC_read_socket(xc_display_sock,
 			    &rc, sizeof(int)) >= 0)
 			{
@@ -129,7 +155,7 @@ int PDC_setclipboard(const char *contents, long length)
 
 	XCursesExitCursesProcess(5, "exiting from PDC_setclipboard");
 
-	return ERR;	/* not reached */
+	return PDC_CLIP_ACCESS_ERROR;	/* not reached */
 }
 
 int PDC_freeclipboard(char *contents)
@@ -157,5 +183,5 @@ int PDC_clearclipboard(void)
 
 	XCursesExitCursesProcess(5, "exiting from PDC_clearclipboard");
 
-	return ERR;	/* not reached */
+	return PDC_CLIP_ACCESS_ERROR;	/* not reached */
 }

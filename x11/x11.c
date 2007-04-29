@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.82 2007/04/29 06:53:10 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.83 2007/04/29 22:23:17 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -450,6 +450,54 @@ static int _to_utf8(char *outcode, chtype code)
 			outcode[2] = (code & 0x003f) | 0x80;
 			return 3;
 		}
+}
+
+static int _from_utf8(wchar_t *pwc, const char *s, size_t n)
+{
+	wchar_t key;
+	int i = -1;
+	const unsigned char *string = s;
+
+	if (!s || (n < 1))
+		return -1;
+
+	if (!*s)
+		return 0;
+
+	key = string[0];
+
+	/* Simplistic UTF-8 decoder -- only does the BMP, minimal 
+	   validation */
+
+	if (key & 0x80)
+	{
+		if ((key & 0xe0) == 0xc0)
+		{
+			if (1 < n)
+			{
+				key = ((key & 0x1f) << 6) |
+					(string[1] & 0x3f);
+				i = 2;
+			}
+		}
+		else if ((key & 0xe0) == 0xe0)
+		{
+			if (2 < n)
+			{
+				key = ((key & 0x0f) << 12) |
+					((string[1] & 0x3f) << 6) |
+					 (string[2] & 0x3f);
+				i = 3;
+			}
+		}
+	}
+	else
+		i = 1;
+
+	if (i)
+		*pwc = key;
+
+	return i;
 }
 
 #ifndef X_HAVE_UTF8_STRING
@@ -1353,8 +1401,9 @@ static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,
 static void _paste_utf8(Widget w, XtPointer event, Atom *selection, Atom *type,
 			XtPointer value, unsigned long *length, int *format)
 {
-	unsigned long i, key;
-	unsigned char *string = value;
+	wchar_t key;
+	size_t i = 0, len;
+	char *string = value;
 
 	XC_LOG(("_paste_utf8() - called\n"));
 
@@ -1365,49 +1414,24 @@ static void _paste_utf8(Widget w, XtPointer event, Atom *selection, Atom *type,
 		return;
 	}
 
+	len = *length;
+
 	if (!string)
 		return;
 
-	for (i = 0; string[i] && (i < (*length)); i++)
+	while (string[i] && (i < len))
 	{
-		key = string[i];
+		int retval = _from_utf8(&key, string + i, len - i);
 
-		/* Simplistic UTF-8 decoder -- only does the BMP,
-		   minimal validation */
-
-		if (key & 0x80)
-		{
-			if ((key & 0xe0) == 0xc0)
-			{
-				if ((i + 1) < *length)
-				{
-					key = ((key & 0x1f) << 6) |
-						(string[i + 1] & 0x3f);
-					i++;
-				}
-				else
-					continue;
-			}
-			else if ((key & 0xe0) == 0xe0)
-			{
-				if ((i + 2) < *length)
-				{
-					key = ((key & 0x0f) << 12) |
-						((string[i + 1] & 0x3f) << 6) |
-						(string[i + 2] & 0x3f);
-					i += 2;
-				}
-				else
-					continue;
-			}
-			else
-				continue;
-		}
+		if (retval < 1)
+			return;
 
 		if (key == 10)		/* new line - convert to ^M */
 			key = 13;
 
 		_send_key_to_curses(key, NULL, FALSE);
+
+		i += retval;
 	}
 
 	XtFree(value);
@@ -1473,6 +1497,8 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
 		else
 			while (*tmp)
 				data[ret_length++] = *tmp++ & 0xff;
+
+		data[ret_length++] = '\0';
 
 		*value_return = data;
 		*length_return = ret_length;
@@ -2487,22 +2513,52 @@ static void _get_selection(Widget w, XtPointer data, Atom *selection,
 			   Atom *type, XtPointer value,
 			   unsigned long *length, int *format)
 {
+	int len;
+
 	XC_LOG(("_get_selection() - called\n"));
 
-	if (!value && !(*length))
+	len = *length;
+
+	if (!value && !len)
 	{
 	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
 		return;
 	}
 	else
 	{
+#ifdef PDC_WIDE
+	    wchar_t *wcontents = malloc((len + 1) * sizeof(wchar_t));
+	    char *src = value;
+	    int i = 0;
+
+	    while (*src && i < (*length))
+	    {
+		int retval = _from_utf8(wcontents + i, src, len);
+
+		src += retval;
+		len -= retval;
+		i++;
+	    }
+
+	    wcontents[i] = 0;
+	    len = i;
+#endif
 	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
 	       contents */
 
 	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
-		if (XC_write_display_socket_int((int)(*length)) >= 0)
-		    if (XC_write_socket(xc_display_sock, value, *length) >= 0)
+		if (XC_write_display_socket_int(len) >= 0)
+		    if (XC_write_socket(xc_display_sock, 
+#ifdef PDC_WIDE
+			wcontents, len * sizeof(wchar_t)) >= 0)
+		    {
+			free(wcontents);
+#else
+			value, len) >= 0)
+		    {
+#endif
 			return;
+		    }
 	}
 
 	_exit_process(4, SIGKILL, "exiting from _get_selection");
@@ -2556,7 +2612,7 @@ static void _set_selection(void)
 	}
 
 	tmpsel_length = length;
-	tmpsel[length] = '\0';
+	tmpsel[length] = 0;
 
 	if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
 	    _convert_proc, _lose_ownership, NULL) == False)
@@ -2730,8 +2786,13 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 
 		_resume_curses();
 
-		XtGetSelectionValue(topLevel, XA_PRIMARY, XA_STRING,
-		    _get_selection, (XtPointer)NULL, 0);
+		XtGetSelectionValue(topLevel, XA_PRIMARY,
+#ifdef PDC_WIDE
+			XA_UTF8_STRING(XtDisplay(topLevel)),
+#else
+			XA_STRING,
+#endif
+			_get_selection, (XtPointer)NULL, 0);
 
 		break;
 

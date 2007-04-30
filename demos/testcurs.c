@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.81 2007/04/30 03:12:29 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.82 2007/04/30 03:21:17 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -23,8 +23,9 @@
 # define HAVE_WIDE 0
 #endif
 
+#include <locale.h>
+
 #if HAVE_WIDE
-# include <locale.h>
 # include <wchar.h>
 #endif
 
@@ -110,9 +111,8 @@ int main(int argc, char *argv[])
 	int key, old_option = -1, new_option = 0;
 	bool quit = FALSE;
 
-#if HAVE_WIDE
 	setlocale(LC_ALL, "");
-#endif
+
 	if (initTest(&win, argc, argv))
 		return 1;
 

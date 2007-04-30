@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.83 2007/04/29 22:23:17 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.84 2007/04/30 21:14:03 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2509,16 +2509,65 @@ static void _set_color(void)
 
 /* For PDC_getclipboard() */
 
+#ifdef PDC_WIDE
+static void _get_selection_fallback(Widget w, XtPointer data, Atom *selection,
+				    Atom *type, XtPointer value,
+				    unsigned long *length, int *format)
+{
+	int len = *length;
+
+	XC_LOG(("_get_selection() - called\n"));
+
+	if (!value && !len)
+	{
+	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
+		return;
+	}
+	else
+	{
+	    wchar_t *wcontents = malloc((len + 1) * sizeof(wchar_t));
+	    unsigned char *src = value;
+	    int i = 0;
+
+	    while (src[i] && i < (*length))
+		wcontents[i] = src[i++];
+
+	    wcontents[i] = 0;
+	    len = i;
+
+	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
+	       contents */
+
+	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
+		if (XC_write_display_socket_int(len) >= 0)
+		    if (XC_write_socket(xc_display_sock, 
+			wcontents, len * sizeof(wchar_t)) >= 0)
+		    {
+			free(wcontents);
+			return;
+		    }
+	}
+
+	_exit_process(4, SIGKILL, "exiting from _get_selection_fallback");
+}
+#endif
+
 static void _get_selection(Widget w, XtPointer data, Atom *selection,
 			   Atom *type, XtPointer value,
 			   unsigned long *length, int *format)
 {
-	int len;
+	int len = *length;
 
 	XC_LOG(("_get_selection() - called\n"));
 
-	len = *length;
-
+#ifdef PDC_WIDE
+	if (!*type || !*length)
+	{
+		XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
+			_get_selection_fallback, (XtPointer)NULL, 0);
+		return;
+	}
+#endif
 	if (!value && !len)
 	{
 	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
@@ -2596,13 +2645,10 @@ static void _set_selection(void)
 	{
 #ifdef PDC_WIDE
 		wchar_t c;
-
-		if (XC_read_socket(xc_display_sock, &c, sizeof(wchar_t)) < 0)
 #else
 		unsigned char c;
-
-		if (XC_read_socket(xc_display_sock, &c, 1) < 0)
 #endif
+		if (XC_read_socket(xc_display_sock, &c, sizeof(c)) < 0)
 		{
 			_exit_process(5, SIGKILL,
 				"exiting from _set_selection");

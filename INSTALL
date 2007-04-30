@@ -62,6 +62,13 @@
    Windows 9x, unless you also link with the Microsoft Layer for Unicode
    (not tested).
 
+   Another option for Windows, "UTF8=Y", makes PDCurses ignore the
+   system locale, and treat all narrow-character strings as UTF-8. This
+   option has no effect unless WIDE=Y is also set. Use it to get around 
+   the poor support for UTF-8 in the Win32 console:
+
+	make -f mingwin32.mak WIDE=Y UTF8=Y
+
    You can also use the optional paramter "DLL=Y" with Visual C++, to
    build the library as a DLL:
 
@@ -77,6 +84,10 @@
    "--enable-xim". I recommend these options, but I haven't yet made
    them the defaults, for the sake of backwards compatibility and due to
    their new and relatively untested status.
+
+   If your system is lacking in UTF-8 support, you can force the use of 
+   UTF-8 instead of the system locale via "--enable-force-utf8". This is 
+   generally more useful in Windows.
 
    If configure can't find your X include files or X libraries, you can
    specify the paths with the arguments "--x-includes=inc_path" or

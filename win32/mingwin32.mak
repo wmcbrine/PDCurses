@@ -2,7 +2,7 @@
 #
 # GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
-# Usage: make -f [path\]gccwin32.mak [DEBUG=Y] [WIDE=Y] [target]
+# Usage: make -f [path\]gccwin32.mak [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.a|panel.a|testcurs.exe...]
@@ -37,13 +37,15 @@ else
 	LDFLAGS =
 endif
 
+CFLAGS += -I$(PDCURSES_HOME)
+
 ifeq ($(WIDE),Y)
-	CPPFLAGS = -I$(PDCURSES_HOME) -DPDC_WIDE
-else
-	CPPFLAGS = -I$(PDCURSES_HOME)
+	CFLAGS += -DPDC_WIDE
 endif
 
-CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
+ifeq ($(UTF8),Y)
+	CFLAGS += -DPDC_FORCE_UTF8
+endif
 
 LINK		= gcc
 
@@ -85,31 +87,31 @@ $(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
 terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 $(PANOBJS) : %.o: $(pandir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 #------------------------------------------------------------------------
 
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe: \
 %.exe: $(demodir)/%.c
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
+	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
 
 ptest.exe: $(demodir)/ptest.c $(PANEL_HEADER) $(LIBPANEL)
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
+	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
 
 tuidemo.exe: tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
+	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
+	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
 #------------------------------------------------------------------------
 

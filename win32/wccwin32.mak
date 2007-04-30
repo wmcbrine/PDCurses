@@ -2,7 +2,7 @@
 #
 # Watcom WMAKE Makefile for PDCurses library - Win32 Watcom C/C++ 10.6+
 #
-# Usage: wmake -f [win32\]wccwin32.mak [DEBUG=Y] [WIDE=Y] [target]
+# Usage: wmake -f [win32\]wccwin32.mak [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
@@ -25,21 +25,23 @@ osdir		= $(PDCURSES_HOME)\win32
 CC		= wcc386
 TARGET		= nt
 
+CFLAGS		= /ei /zq /wx /i=$(PDCURSES_HOME)
+
 !ifeq DEBUG Y
-CFLAGS		= /d2 /DPDCDEBUG
+CFLAGS		+= /d2 /DPDCDEBUG
 LDFLAGS		= D W A op q sys $(TARGET)
 !else
-CFLAGS		= /oneatx
+CFLAGS		+= /oneatx
 LDFLAGS		= op q sys $(TARGET)
 !endif
 
 !ifeq WIDE Y
-CPPFLAGS	= /i=$(PDCURSES_HOME) /DPDC_WIDE
-!else
-CPPFLAGS	= /i=$(PDCURSES_HOME)
+CFLAGS		+= /DPDC_WIDE
 !endif
 
-CCFLAGS		= /ei /zq /wx $(CFLAGS) $(CPPFLAGS)
+!ifeq UTF8 Y
+CFLAGS		+= /DPDC_FORCE_UTF8
+!endif
 
 LIBEXE		= wlib /q /n /t
 

@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.80 2007/04/28 01:13:38 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.81 2007/04/30 03:12:29 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -1104,7 +1104,7 @@ void colorTest(WINDOW *win)
 void wideTest(WINDOW *win)
 {
 	wchar_t tmp[513];
-	int i;
+	size_t i;
 
 	attrset(A_BOLD);
 	mvaddstr(1, (COLS - 25) / 2, "Wide Character Input Test");

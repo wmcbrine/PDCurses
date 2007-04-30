@@ -32,38 +32,32 @@ PDCURSES_OS2_H	= $(osdir)/pdcos2.h
 
 CC		= gcc
 
+CFLAGS = -I$(PDCURSES_HOME) -c -Wall -fomit-frame-pointer
+
 ifeq ($(EMXVIDEO),Y)
-	EMXVID = -DEMXVIDEO
-	VIDLIB = -lvideo
+	CFLAGS += -DEMXVIDEO
+	CCLIBS = -lvideo
 	BINDFLAGS = -acm
-	DLLTARGET = 
 else
-	EMXVID =
-	VIDLIB =
+	CCLIBS =
 	BINDFLAGS = 
-	DLLTARGET = curses.dll
 endif
 
 ifeq ($(DEBUG),Y)
-	CFLAGS  = -c -g -Wall -fomit-frame-pointer -DPDCDEBUG
+	CFLAGS  += -g -DPDCDEBUG
 	LDFLAGS = -g
 else
-	CFLAGS  = -c -O2 -Wall -fomit-frame-pointer
+	CFLAGS  += -O2
 	LDFLAGS =
 endif
 
-DLLFLAGS 	= -Zdll -Zcrtdll -Zomf
+DLLTARGET	= curses.dll
 DLLCURSES	= curses.lib
-
-CPPFLAGS	= -I$(PDCURSES_HOME) $(EMXVID)
-
-CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
+DLLFLAGS 	= -Zdll -Zcrtdll -Zomf
 
 LINK		= gcc
 EMXBIND		= emxbind 
 EMXOMF		= emxomf
-
-CCLIBS		= $(VIDLIB)
 
 LIBEXE		= ar
 LIBFLAGS	= rcv
@@ -129,19 +123,19 @@ $(DEMOS) : $(LIBCURSES)
 terminfo.o terminfo.dlo: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 $(DLLOBJS) : %.dlo: $(srcdir)/%.c
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
+	$(CC) $(CFLAGS) $(DLLFLAGS) -o$@ $<
 
 $(PDCDLOS) : %.dlo: $(osdir)/%.c
-	$(CC) $(CCFLAGS) $(DLLFLAGS) -o$@ $<
+	$(CC) $(CFLAGS) $(DLLFLAGS) -o$@ $<
 
 $(PANOBJS) : %.o: $(pandir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 #------------------------------------------------------------------------
 
@@ -163,16 +157,16 @@ testcurs.obj $(DLLCURSES) $(CCLIBS)
 
 firework.o newdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \
 $(demodir)/%.c
-	$(CC) $(CCFLAGS) -o$@ $<
+	$(CC) $(CFLAGS) -o$@ $<
 
 testcurs.obj: $(demodir)\testcurs.c
-	$(CC) $(CCFLAGS) -Zomf -o$@ $<
+	$(CC) $(CFLAGS) -Zomf -o$@ $<
 
 tui.o: $(demodir)\tui.c $(demodir)\tui.h
-	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $<
+	$(CC) $(CFLAGS) -I$(demodir) -o $@ $<
 
 tuidemo.o: $(demodir)\tuidemo.c
-	$(CC) $(CCFLAGS) -I$(demodir) -o $@ $<
+	$(CC) $(CFLAGS) -I$(demodir) -o $@ $<
 
 PLATFORM1 = EMX OS/2
 PLATFORM2 = EMX 0.9d for OS/2

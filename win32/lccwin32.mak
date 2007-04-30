@@ -35,7 +35,7 @@ CC		= lcc
 #CFLAGS		= -c -g3 -A -ansic
 CFLAGS		= -c -O -A -ansic
 
-CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE
+CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE -DPDC_FORCE_UTF8
 
 LINK		= lcclnk
 

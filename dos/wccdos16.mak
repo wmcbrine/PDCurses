@@ -26,16 +26,15 @@ osdir		= $(PDCURSES_HOME)\dos
 CC		= wcc
 TARGET		= dos
 
+CFLAGS		= /bt=$(TARGET) /zq /wx /m$(MODEL) /i=$(PDCURSES_HOME)
+
 !ifeq DEBUG Y
-CFLAGS  	= /d2 /DPDCDEBUG
+CFLAGS  	+= /d2 /DPDCDEBUG
 LDFLAGS 	= D W A op q sys $(TARGET)
 !else
-CFLAGS  	= /oneatx
+CFLAGS  	+= /oneatx
 LDFLAGS 	= op q sys $(TARGET)
 !endif
-
-CPPFLAGS	= /i=$(PDCURSES_HOME)
-CCFLAGS		= /bt=$(TARGET) /zq /wx /m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= wlib /q /n /t
 

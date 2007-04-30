@@ -42,7 +42,7 @@ $(LIBPANEL) : $(PANOBJS)
 
 .c: $(srcdir);$(osdir);$(pandir);$(demodir)
 .c.obj: .autodepend
-	$(CC) $(CCFLAGS) $<
+	$(CC) $(CFLAGS) $<
 
 .obj.exe:
 	$(LINK) $(LDFLAGS) n $@ f $*.obj l $(LIBCURSES)

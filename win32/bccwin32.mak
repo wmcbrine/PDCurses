@@ -2,7 +2,7 @@
 #
 # Borland MAKE Makefile for PDCurses library - Win32 BC++ 4.0+
 #
-# Usage: make -f [path\]bccwin32.mak [DEBUG=] [WIDE=] [target]
+# Usage: make -f [path\]bccwin32.mak [DEBUG=] [WIDE=] [UTF8=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
@@ -28,18 +28,21 @@ osdir		= $(PDCURSES_HOME)\win32
 CC		= bcc32 -q
 
 !if $d(DEBUG)
-CFLAGS		= -N -v -y -DPDCDEBUG -w-par
+CFLAGS		= -N -v -y -DPDCDEBUG
 !else
-CFLAGS		= -O -w-par
+CFLAGS		= -O
 !endif
 
 !if $d(WIDE)
-CPPFLAGS	= -I$(PDCURSES_HOME) -DPDC_WIDE
-!else
-CPPFLAGS	= -I$(PDCURSES_HOME)
+WIDEOPT		= -DPDC_WIDE
 !endif
 
-BUILD		= $(CC) -c -Tpe -w32 $(CFLAGS) $(CPPFLAGS)
+!if $d(UTF8)
+UTF8OPT		= -DPDC_FORCE_UTF8
+!endif
+
+BUILD		= $(CC) -I$(PDCURSES_HOME) -c -Tpe -w32 $(CFLAGS) -w-par \
+$(WIDEOPT) $(UTF8OPT)
 
 LIBEXE		= tlib /C /E /0
 

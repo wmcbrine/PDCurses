@@ -2,7 +2,7 @@
 #
 # Visual C++ NMakefile for PDCurses library - Win32 VC++ 2.0+
 #
-# Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [DLL=] [WIDE=] [target]
+# Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [DLL=] [WIDE=] [UTF8=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
@@ -39,10 +39,13 @@ LDFLAGS		=
 
 !ifdef WIDE
 DEFFILE		= $(osdir)\cursesw.def
-CPPFLAGS	= -I$(PDCURSES_HOME) -DPDC_WIDE
+WIDEOPT		= -DPDC_WIDE
 !else
 DEFFILE		= $(osdir)\curses.def
-CPPFLAGS	= -I$(PDCURSES_HOME)
+!endif
+
+!ifdef UTF8
+UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
 SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll /DEF:$(DEFFILE)
@@ -60,12 +63,14 @@ CURSESDLL	= pdcurses.dll
 LIBPANEL	= panel.lib
 
 !ifdef DLL
-BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+DLLOPT		= -DPDC_DLL_BUILD
 PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
 !else
-BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS)
 PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 !endif
+
+BUILD		= $(CC) -I$(PDCURSES_HOME) -c $(CFLAGS) $(DLLOPT) \
+$(WIDEOPT) $(UTF8OPT)
 
 ################################################################################
 

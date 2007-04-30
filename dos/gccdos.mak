@@ -37,9 +37,7 @@ else
 	LDFLAGS =
 endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME) -funsigned-char
-
-CCFLAGS		= $(CFLAGS) $(CPPFLAGS)
+CFLAGS += -I$(PDCURSES_HOME)
 
 LINK		= gcc
 
@@ -82,31 +80,31 @@ $(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
 terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 $(PANOBJS) : %.o: $(pandir)/%.c
-	$(CC) -c $(CCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 #------------------------------------------------------------------------
 
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe: \
 %.exe: $(demodir)/%.c
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES)
+	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
 
 ptest.exe: $(demodir)/ptest.c $(PANEL_HEADER) $(LIBPANEL)
-	$(CC) $(CCFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
+	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
 
 tuidemo.exe: tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
+	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
-	$(CC) -c $(CCFLAGS) -I$(demodir) -o$@ $<
+	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
 #------------------------------------------------------------------------
 

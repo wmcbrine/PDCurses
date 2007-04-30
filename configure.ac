@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.27 2007/04/14 13:26:41 wmcbrine Exp $
+dnl $Id: configure.ac,v 1.28 2007/04/30 03:39:36 wmcbrine Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([PDCurses], [3.1], [wmcbrine@users.sf.net], [PDCurses])
@@ -144,6 +144,17 @@ AC_ARG_ENABLE(xim,
 )
 if test "$with_xim" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_XIM"
+fi
+
+dnl ------------------------ force UTF-8? ---------------------------
+dnl allow --enable-force-utf8 to override locale settings
+AC_ARG_ENABLE(force-utf8,
+	[  --enable-force-utf8     override locale settings; use UTF-8],
+	[force_utf8=$enableval],
+	[force_utf8=no],
+)
+if test "$force_utf8" = yes; then
+	SYS_DEFS="$SYS_DEFS -DPDC_FORCE_UTF8"
 fi
 
 dnl ----------------- check for Purify support -----------------------

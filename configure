@@ -1291,6 +1291,7 @@ Optional Features:
   --enable-debug          turn on debugging
   --enable-widec          include support for wide characters
   --enable-xim            include support for XIM
+  --enable-force-utf8     override locale settings; use UTF-8
   --enable-purify         link with Purify (TM)
 
 Optional Packages:
@@ -5200,6 +5201,17 @@ if test "$with_xim" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_XIM"
 fi
 
+# Check whether --enable-force-utf8 was given.
+if test "${enable_force_utf8+set}" = set; then
+  enableval=$enable_force_utf8; force_utf8=$enableval
+else
+  force_utf8=no
+fi
+
+if test "$force_utf8" = yes; then
+	SYS_DEFS="$SYS_DEFS -DPDC_FORCE_UTF8"
+fi
+
 # Check whether --enable-purify was given.
 if test "${enable_purify+set}" = set; then
   enableval=$enable_purify; with_purify=$enableval
@@ -5380,7 +5392,7 @@ if test "$DYN_COMP" = ""; then
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 5383 "configure"
+#line 5395 "configure"
 int a=0
 EOF
 
@@ -5419,7 +5431,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5422 "configure"
+#line 5434 "configure"
 int foo()
 {
 return(0);

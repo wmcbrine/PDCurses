@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.84 2007/04/30 21:14:03 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.85 2007/05/01 01:31:27 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -2509,65 +2509,65 @@ static void _set_color(void)
 
 /* For PDC_getclipboard() */
 
-#ifdef PDC_WIDE
-static void _get_selection_fallback(Widget w, XtPointer data, Atom *selection,
-				    Atom *type, XtPointer value,
-				    unsigned long *length, int *format)
-{
-	int len = *length;
-
-	XC_LOG(("_get_selection() - called\n"));
-
-	if (!value && !len)
-	{
-	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
-		return;
-	}
-	else
-	{
-	    wchar_t *wcontents = malloc((len + 1) * sizeof(wchar_t));
-	    unsigned char *src = value;
-	    int i = 0;
-
-	    while (src[i] && i < (*length))
-		wcontents[i] = src[i++];
-
-	    wcontents[i] = 0;
-	    len = i;
-
-	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
-	       contents */
-
-	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
-		if (XC_write_display_socket_int(len) >= 0)
-		    if (XC_write_socket(xc_display_sock, 
-			wcontents, len * sizeof(wchar_t)) >= 0)
-		    {
-			free(wcontents);
-			return;
-		    }
-	}
-
-	_exit_process(4, SIGKILL, "exiting from _get_selection_fallback");
-}
-#endif
-
 static void _get_selection(Widget w, XtPointer data, Atom *selection,
 			   Atom *type, XtPointer value,
 			   unsigned long *length, int *format)
 {
-	int len = *length;
+	unsigned char *src = value;
+	int pos, len = *length;
 
 	XC_LOG(("_get_selection() - called\n"));
 
+	if (!value && !len)
+	{
+	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) < 0)
+		_exit_process(4, SIGKILL, "exiting from _get_selection");
+	}
+	else
+	{
+	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
+	       contents */
+
+	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) < 0)
+		_exit_process(4, SIGKILL, "exiting from _get_selection");
+
+	    if (XC_write_display_socket_int(len) < 0)
+		_exit_process(4, SIGKILL, "exiting from _get_selection");
+
+	    for (pos = 0; pos < len; pos++)
+	    {
 #ifdef PDC_WIDE
+		wchar_t c;
+#else
+		unsigned char c;
+#endif
+		c = *src++;
+
+		if (XC_write_socket(xc_display_sock, &c, sizeof(c)) < 0)
+		{
+			_exit_process(4, SIGKILL,
+				"exiting from _get_selection");
+		}
+	    }
+	}
+}
+
+#ifdef PDC_WIDE
+static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
+				Atom *type, XtPointer value,
+				unsigned long *length, int *format)
+{
+	int len = *length;
+
+	XC_LOG(("_get_selection_utf8() - called\n"));
+
 	if (!*type || !*length)
 	{
 		XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
-			_get_selection_fallback, (XtPointer)NULL, 0);
+			_get_selection, (XtPointer)NULL, 0);
 		return;
 	}
-#endif
+
 	if (!value && !len)
 	{
 	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
@@ -2575,7 +2575,6 @@ static void _get_selection(Widget w, XtPointer data, Atom *selection,
 	}
 	else
 	{
-#ifdef PDC_WIDE
 	    wchar_t *wcontents = malloc((len + 1) * sizeof(wchar_t));
 	    char *src = value;
 	    int i = 0;
@@ -2591,27 +2590,23 @@ static void _get_selection(Widget w, XtPointer data, Atom *selection,
 
 	    wcontents[i] = 0;
 	    len = i;
-#endif
+
 	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
 	       contents */
 
 	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
 		if (XC_write_display_socket_int(len) >= 0)
 		    if (XC_write_socket(xc_display_sock, 
-#ifdef PDC_WIDE
 			wcontents, len * sizeof(wchar_t)) >= 0)
 		    {
 			free(wcontents);
-#else
-			value, len) >= 0)
-		    {
-#endif
 			return;
 		    }
 	}
 
-	_exit_process(4, SIGKILL, "exiting from _get_selection");
+	_exit_process(4, SIGKILL, "exiting from _get_selection_utf8");
 }
+#endif
 
 /* For PDC_setclipboard() */
 
@@ -2835,10 +2830,11 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 		XtGetSelectionValue(topLevel, XA_PRIMARY,
 #ifdef PDC_WIDE
 			XA_UTF8_STRING(XtDisplay(topLevel)),
+			_get_selection_utf8,
 #else
-			XA_STRING,
+			XA_STRING, _get_selection,
 #endif
-			_get_selection, (XtPointer)NULL, 0);
+			(XtPointer)NULL, 0);
 
 		break;
 

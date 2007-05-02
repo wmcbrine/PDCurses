@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: window.c,v 1.55 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: window.c,v 1.56 2007/05/02 00:35:35 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -489,8 +489,8 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 
 		werase(new);
 
-		copywin(win, new, 0, 0, 0, 0, min(win->_maxy, new->_maxy),
-			min(win->_maxx, new->_maxx), FALSE);
+		copywin(win, new, 0, 0, 0, 0, min(win->_maxy, new->_maxy) - 1,
+			min(win->_maxx, new->_maxx) - 1, FALSE);
 
 		for (i = 0; i < win->_maxy && win->_y[i]; i++)
 			if (win->_y[i])

@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.81 2007/04/18 02:26:19 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.82 2007/05/02 01:31:38 wmcbrine Exp $");
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER, PDC_RESTORE_WINDOW };
 
@@ -222,10 +222,7 @@ void PDC_scr_close(void)
 
 	PDC_LOG(("PDC_scr_close() - called\n"));
 
-	SetConsoleScreenBufferSize(pdc_con_out, orig_scr.dwSize);
-	SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);
-	SetConsoleScreenBufferSize(pdc_con_out, orig_scr.dwSize);
-	SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);
+	PDC_reset_shell_mode();
 
 	if (SP->_restore != PDC_RESTORE_NONE)
 	{
@@ -249,9 +246,6 @@ void PDC_scr_close(void)
 		    orig_scr.dwSize, origin, &rect))
 			return;
 	}
-
-	SetConsoleActiveScreenBuffer(pdc_con_out);
-	SetConsoleMode(pdc_con_in, old_console_mode);
 
 	if (SP->visibility != 1)
 		curs_set(1);
@@ -527,6 +521,15 @@ void PDC_reset_prog_mode(void)
 void PDC_reset_shell_mode(void)
 {
 	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
+
+	if (is_nt)
+	{
+		SetConsoleScreenBufferSize(pdc_con_out, orig_scr.dwSize);
+		SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);
+		SetConsoleScreenBufferSize(pdc_con_out, orig_scr.dwSize);
+		SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);
+		SetConsoleActiveScreenBuffer(pdc_con_out);
+	}
 
 	SetConsoleMode(pdc_con_in, old_console_mode);
 }

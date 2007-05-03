@@ -1,3 +1,72 @@
+PDCurses 3.1 - 2007/??/??
+=========================
+
+New features:
+
+- "Force UTF-8" mode, a compile-time option to force the use of UTF-8
+  for multibyte strings, instead of the system locale. (Mainly for
+  Windows, where UTF-8 doesn't work well in the console.) See INSTALL.
+
+- Multibyte string support in PDC_*clipboard() functions, and in Win32's
+  PDC_set_title().
+
+- Added the global string "ttytype", per other curses implementations,
+  for compatibility with old BSD curses.
+
+- Real functions for the "quasi-standard aliases" -- crmode(),
+  nocrmode(), draino(), resetterm(), fixterm() and saveterm().
+  (Corresponding macros removed.)
+
+Bug fixes and such:
+
+- In Win32, under NT-family OSes, the scrollback buffer would be
+  restored by endwin(), but would not be turned off again when resuming
+  curses after an endwin(). The result was an odd, partly-scrolled-up
+  display. Now, the buffer is toggled by PDC_reset_prog_mode() and
+  PDC_reset_shell_mode(), so it's properly turned off when returning
+  from an endwin().
+
+- In 3.0, selection in X11 didn't work. (Well, the selecting worked, but 
+  the pasting elsewhere didn't.) This was due to the attempted fix 
+  "don't return selection start as a press event," so that's been 
+  reverted for now.
+
+- PDC_setclipboard() was locking up in X11. Reported by Mark Hessling.
+
+- Missing underscore in the declaration of XC_say() prevented
+  compilation with PDCDEBUG defined.  Reported by M.H.
+
+- Off-by-one error in copywin() -- the maximum coordinates for the
+  destination window should be inclusive. Reported by Tiago Dionizio.
+
+- Start in echo mode, per X/Open. Reported by T.D.
+
+- Strip leading and trailing spaces from slk labels, per a literal
+  reading of X/Open. Suggested by Alexey Miheev (about ncurses, but it
+  also applies here).
+
+- The #endif for __PDCURSES__ needs to come _after_ the closing of the
+  extern "C". This has been broken since June 2005. Fortunately (?), it
+  only shows up if the file is included multiple times, and then only in
+  C++. Reported on the DOSBox forums.
+
+- Use CF_OEMTEXT instead of CF_TEXT in the narrow versions of the 
+  clipboard functions in Win32, to match the console.
+
+- Changed the format of the string returned from longname().
+
+- In the clipboard test in the testcurs demo, use a single mvprintw() to
+  display the return from PDC_getclipboard(), instead of a loop of
+  addch(), which was incompatible with multibyte strings.
+
+- Moved has_key() into the keyname module, and documented it.
+
+- Moved RIPPEDOFFLINE to curspriv.h.
+
+- Typos in IMPLEMNT.
+
+------------------------------------------------------------------------
+
 PDCurses 3.0 - 2007/04/01
 =========================
 

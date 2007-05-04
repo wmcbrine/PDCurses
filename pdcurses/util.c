@@ -20,7 +20,7 @@
 # endif
 #endif
 
-RCSID("$Id: util.c,v 1.63 2007/04/28 01:09:54 wmcbrine Exp $");
+RCSID("$Id: util.c,v 1.64 2007/05/04 01:38:34 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -204,13 +204,15 @@ int PDC_mbtowc(wchar_t *pwc, const char *s, size_t n)
 # ifdef PDC_FORCE_UTF8
 	wchar_t key;
 	int i = -1;
-	const unsigned char *string = s;
+	const unsigned char *string;
 
 	if (!s || (n < 1))
 		return -1;
 
 	if (!*s)
 		return 0;
+
+	string = (const unsigned char *)s;
 
 	key = string[0];
 

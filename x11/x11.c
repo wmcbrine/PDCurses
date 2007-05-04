@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.85 2007/05/01 01:31:27 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.86 2007/05/04 01:38:34 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -456,13 +456,15 @@ static int _from_utf8(wchar_t *pwc, const char *s, size_t n)
 {
 	wchar_t key;
 	int i = -1;
-	const unsigned char *string = s;
+	const unsigned char *string;
 
 	if (!s || (n < 1))
 		return -1;
 
 	if (!*s)
 		return 0;
+
+	string = (const unsigned char *)s;
 
 	key = string[0];
 

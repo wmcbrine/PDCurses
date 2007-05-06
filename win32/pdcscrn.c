@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.82 2007/05/02 01:31:38 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.83 2007/05/06 23:40:34 wmcbrine Exp $");
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER, PDC_RESTORE_WINDOW };
 
@@ -163,6 +163,7 @@ static void _init_console_info(void)
 	HKEY reghnd;
 	int i;
 
+	console_info.Hwnd = _find_console_handle();
 	console_info.Length = sizeof(console_info);
 
 	GetConsoleMode(pdc_con_in, &scrnmode);
@@ -411,12 +412,6 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->mono = FALSE;
 
-	if (is_nt)
-	{
-		console_info.Hwnd = _find_console_handle();
-		_init_console_info();
-	}
-
 	return OK;
 }
 
@@ -549,7 +544,12 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-	DWORD col = console_info.ColorTable[color];
+	DWORD col;
+
+	if (!console_info.Hwnd)
+		_init_console_info();
+
+	col = console_info.ColorTable[color];
 
 	*red = DIVROUND(GetRValue(col) * 1000, 255);
 	*green = DIVROUND(GetGValue(col) * 1000, 255);
@@ -560,6 +560,9 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
+	if (!console_info.Hwnd)
+		_init_console_info();
+
 	console_info.ColorTable[color] =
 		RGB(DIVROUND(red * 255, 1000),
 		    DIVROUND(green * 255, 1000),

@@ -1,7 +1,7 @@
-# $Id: PDCurses.spec,v 1.13 2007/04/14 13:26:41 wmcbrine Exp $
+# $Id: PDCurses.spec,v 1.14 2007/05/07 02:31:15 wmcbrine Exp $
 
-%define ver 31
-%define verdot 3.1
+%define ver 32
+%define verdot 3.2
 %define base /usr
 
 Summary: Public Domain Curses for X11

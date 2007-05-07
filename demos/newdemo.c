@@ -4,7 +4,7 @@
  *
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  *
- *  $Id: newdemo.c,v 1.34 2007/04/23 20:33:42 wmcbrine Exp $
+ *  $Id: newdemo.c,v 1.35 2007/05/07 02:31:15 wmcbrine Exp $
  */
 
 #include <stdio.h>
@@ -326,7 +326,7 @@ int main(int argc, char **argv)
 		init_pair(5, COLOR_BLUE, COLOR_WHITE);
 		wattrset(win, COLOR_PAIR(5) | A_BLINK);
 		mvwaddstr(win, height - 2, 3,
-			" PDCurses 3.1 for DOS, OS/2, Win32 and X11");
+			" PDCurses 3.2 for DOS, OS/2, Win32 and X11");
 		wrefresh(win);
 
 		/* Draw running messages */

@@ -1,4 +1,4 @@
 # Version number macros for inclusion from makefiles
 
-VER = 31
-VERDOT = 3.1
+VER = 32
+VERDOT = 3.2

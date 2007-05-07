@@ -14,11 +14,11 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.100 2007/04/22 23:01:28 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.101 2007/05/07 02:31:16 wmcbrine Exp $");
 
 char ttytype[128];
 
-const char *_curses_notice = "PDCurses 3.1 - Public Domain 2007";
+const char *_curses_notice = "PDCurses 3.2 - Public Domain 2007";
 
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */

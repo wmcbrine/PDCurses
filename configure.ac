@@ -1,7 +1,7 @@
-dnl $Id: configure.ac,v 1.28 2007/04/30 03:39:36 wmcbrine Exp $
+dnl $Id: configure.ac,v 1.29 2007/05/07 02:31:15 wmcbrine Exp $
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([PDCurses], [3.1], [wmcbrine@users.sf.net], [PDCurses])
+AC_INIT([PDCurses], [3.2], [wmcbrine@users.sf.net], [PDCurses])
 AC_CONFIG_SRCDIR([curspriv.h])
 
 AC_SUBST(prefix)

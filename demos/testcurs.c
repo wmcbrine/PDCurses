@@ -5,7 +5,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with
  *                  either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.82 2007/04/30 03:21:17 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.83 2007/05/15 20:10:49 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -993,7 +993,7 @@ void acsTest(WINDOW *win)
 
 	/* Spanish, Russian, Greek, Georgian */
 
-	mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\x00f1ol");
+	mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\xf1ol");
 	mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5, russian);
 	mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5, greek);
 	mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, georgian);

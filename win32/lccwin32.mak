@@ -109,150 +109,153 @@ $(LIBPANEL) : $(PANOBJS)
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	$(SHL_LD) -o $(CURSESDLL) $(LIBOBJS) $(PDCOBJS)
 
+SRCBUILD = $(BUILD) $(srcdir)\$*.c
+OSBUILD = $(BUILD) $(osdir)\$*.c
+
 addch.obj: $(srcdir)\addch.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 addchstr.obj: $(srcdir)\addchstr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 addstr.obj: $(srcdir)\addstr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 attr.obj: $(srcdir)\attr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 beep.obj: $(srcdir)\beep.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 bkgd.obj: $(srcdir)\bkgd.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 border.obj: $(srcdir)\border.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 clear.obj: $(srcdir)\clear.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 color.obj: $(srcdir)\color.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 delch.obj: $(srcdir)\delch.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 deleteln.obj: $(srcdir)\deleteln.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 deprec.obj: $(srcdir)\deprec.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 getch.obj: $(srcdir)\getch.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 getstr.obj: $(srcdir)\getstr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 getyx.obj: $(srcdir)\getyx.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 inch.obj: $(srcdir)\inch.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 inchstr.obj: $(srcdir)\inchstr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 initscr.obj: $(srcdir)\initscr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 inopts.obj: $(srcdir)\inopts.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 insch.obj: $(srcdir)\insch.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 insstr.obj: $(srcdir)\insstr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 instr.obj: $(srcdir)\instr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 kernel.obj: $(srcdir)\kernel.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 keyname.obj: $(srcdir)\keyname.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 mouse.obj: $(srcdir)\mouse.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 move.obj: $(srcdir)\move.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 outopts.obj: $(srcdir)\outopts.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 overlay.obj: $(srcdir)\overlay.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 pad.obj: $(srcdir)\pad.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 printw.obj: $(srcdir)\printw.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 refresh.obj: $(srcdir)\refresh.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 scanw.obj: $(srcdir)\scanw.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 scr_dump.obj: $(srcdir)\scr_dump.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 scroll.obj: $(srcdir)\scroll.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 slk.obj: $(srcdir)\slk.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 termattr.obj: $(srcdir)\termattr.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 terminfo.obj: $(srcdir)\terminfo.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 touch.obj: $(srcdir)\touch.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 util.obj: $(srcdir)\util.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 window.obj: $(srcdir)\window.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 debug.obj: $(srcdir)\debug.c
-	$(BUILD) $(srcdir)\$*.c
+	$(SRCBUILD)
 
 
 pdcclip.obj: $(osdir)\pdcclip.c
-	$(BUILD) $(osdir)\$*.c
+	$(OSBUILD)
 
 pdcdisp.obj: $(osdir)\pdcdisp.c
-	$(BUILD) $(osdir)\$*.c
+	$(OSBUILD)
 
 pdcgetsc.obj: $(osdir)\pdcgetsc.c
-	$(BUILD) $(osdir)\$*.c
+	$(OSBUILD)
 
 pdckbd.obj: $(osdir)\pdckbd.c
-	$(BUILD) $(osdir)\$*.c
+	$(OSBUILD)
 
 pdcscrn.obj: $(osdir)\pdcscrn.c
-	$(BUILD) $(osdir)\$*.c
+	$(OSBUILD)
 
 pdcsetsc.obj: $(osdir)\pdcsetsc.c
-	$(BUILD) $(osdir)\$*.c
+	$(OSBUILD)
 
 pdcutil.obj: $(osdir)\pdcutil.c
-	$(BUILD) $(osdir)\$*.c
+	$(OSBUILD)
 
 #------------------------------------------------------------------------
 

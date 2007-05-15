@@ -12,7 +12,7 @@
 # Edit the line below for your environment.
 #
 ###############################################################################
-PDCURSES_HOME	= \pdcurses
+PDCURSES_HOME	= $(PDCURSES_SRCDIR)
 ###############################################################################
 # Nothing below here should require changing.
 ###############################################################################

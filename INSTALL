@@ -30,6 +30,7 @@
 
    Windows:
 	bccwin32.mak	- Borland C++ 4.0.2+
+	dmcwin32.mak	- Digital Mars
 	gccwin32.mak	- Cygnus GNU Compiler
 	lccwin32.mak	- LCC-Win32
 	mingwin32.mak	- MinGW
@@ -52,8 +53,8 @@
    (pdcurses.lib or .a, depending on your compiler; and panel.lib or .a),
    the demos (*.exe), and a lot of object files.
 
-   For Windows (except with LCC), you can also give the optional
-   parameter "WIDE=Y", to build the library with wide-character
+   For Windows (except with LCC or Digital Mars), you can also give the
+   optional parameter "WIDE=Y", to build the library with wide-character
    (Unicode) support:
 
 	make -f mingwin32.mak WIDE=Y

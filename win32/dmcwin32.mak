@@ -32,7 +32,7 @@ PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 
 CC		= dmc
 
-CFLAGS		= -c
+CFLAGS		= -c -o+space -Nc
 
 CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE -DPDC_FORCE_UTF8
 
@@ -93,7 +93,7 @@ $(LIBPANEL) : $(PANOBJS)
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c
 OSBUILD = $(BUILD) $(osdir)\$*.c
-DEMOBUILD = $(LINK) $(CPPFLAGS) -o $@ $** advapi32.lib
+DEMOBUILD = $(LINK) $(CPPFLAGS) -o+space -Nc $@ $** advapi32.lib
 
 addch.obj: $(srcdir)\addch.c
 	$(SRCBUILD)

@@ -93,7 +93,7 @@ $(LIBPANEL) : $(PANOBJS)
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c
 OSBUILD = $(BUILD) $(osdir)\$*.c
-DEMOBUILD = $(LINK) $(CPPFLAGS) -o+space -Nc $@ $** advapi32.lib
+DEMOBUILD = $(LINK) $(CPPFLAGS) -o+space $@ $**
 
 addch.obj: $(srcdir)\addch.c
 	$(SRCBUILD)
@@ -260,7 +260,7 @@ rain.exe:       $(demodir)\rain.c
 	$(DEMOBUILD)
 
 testcurs.exe:   $(demodir)\testcurs.c
-	$(DEMOBUILD)
+	$(DEMOBUILD) advapi32.lib
 
 tuidemo.exe:    tuidemo.obj tui.obj
 	$(DEMOBUILD)

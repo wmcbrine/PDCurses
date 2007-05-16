@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <term.h>
 
-RCSID("$Id: terminfo.c,v 1.30 2007/03/16 06:33:44 wmcbrine Exp $");
+RCSID("$Id: terminfo.c,v 1.31 2007/05/16 07:16:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -24,19 +24,20 @@ RCSID("$Id: terminfo.c,v 1.30 2007/03/16 06:33:44 wmcbrine Exp $");
 	int mvcur(int oldrow, int oldcol, int newrow, int newcol);
 	int del_curterm(TERMINAL *);
 	int putp(const char *);
-	int restartterm(char *, int, int *);
+	int restartterm(const char *, int, int *);
 	TERMINAL *set_curterm(TERMINAL *);
-	int setupterm(char *, int, int *);
+	int setterm(const char *term);
+	int setupterm(const char *, int, int *);
 	int tgetent(char *, const char *);
-	int tgetflag(char *);
-	int tgetnum(char *);
-	char *tgetstr(char *, char **);
-	char *tgoto(char *, int, int);
-	int tigetflag(char *);
-	int tigetnum(char *);
-	char *tigetstr(char *);
-	char *tparm(char *,long, long, long, long, long, long, long, 
-		long, long);
+	int tgetflag(const char *);
+	int tgetnum(const char *);
+	char *tgetstr(const char *, char **);
+	char *tgoto(const char *, int, int);
+	int tigetflag(const char *);
+	int tigetnum(const char *);
+	char *tigetstr(const char *);
+	char *tparm(const char *,long, long, long, long, long, long,
+		long, long, long);
 	int tputs(const char *, int, int (*)(int));
 	int vidattr(chtype attr);
 	int vid_attr(attr_t attr, short color_pair, void *opt);
@@ -88,7 +89,7 @@ int putp(const char *str)
 	return ERR;
 }
 
-int restartterm(char *term, int filedes, int *errret)
+int restartterm(const char *term, int filedes, int *errret)
 {
 	PDC_LOG(("restartterm() - called\n"));
 
@@ -105,14 +106,14 @@ TERMINAL *set_curterm(TERMINAL *nterm)
 	return (TERMINAL *)NULL;
 }
 
-int setterm(char *term)
+int setterm(const char *term)
 {
 	PDC_LOG(("setterm() - called\n"));
 
 	return ERR;
 }
 
-int setupterm(char *term, int filedes, int *errret)
+int setupterm(const char *term, int filedes, int *errret)
 {
 	PDC_LOG(("setupterm() - called\n"));
 
@@ -131,57 +132,57 @@ int tgetent(char *bp, const char *name)
 	return ERR;
 }
 
-int tgetflag(char *id)
+int tgetflag(const char *id)
 {
 	PDC_LOG(("tgetflag() - called: id %s\n", id));
 
 	return ERR;
 }
 
-int tgetnum(char *id)
+int tgetnum(const char *id)
 {
 	PDC_LOG(("tgetnum() - called: id %s\n", id));
 
 	return ERR;
 }
 
-char *tgetstr(char *id, char **area)
+char *tgetstr(const char *id, char **area)
 {
 	PDC_LOG(("tgetstr() - called: id %s\n", id));
 
 	return (char *)NULL;
 }
 
-char *tgoto(char *cap, int col, int row)
+char *tgoto(const char *cap, int col, int row)
 {
 	PDC_LOG(("tgoto() - called\n"));
 
 	return (char *)NULL;
 }
 
-int tigetflag(char *capname)
+int tigetflag(const char *capname)
 {
 	PDC_LOG(("tigetflag() - called: capname %s\n", capname));
 
 	return -1;
 }
 
-int tigetnum(char *capname)
+int tigetnum(const char *capname)
 {
 	PDC_LOG(("tigetnum() - called: capname %s\n", capname));
 
 	return -2;
 }
 
-char *tigetstr(char *capname)
+char *tigetstr(const char *capname)
 {
 	PDC_LOG(("tigetstr() - called: capname %s\n", capname));
 
 	return (char *)(-1);
 }
 
-char *tparm(char *cap, long p1, long p2, long p3, long p4, 
-			long p5, long p6, long p7, long p8, long p9)
+char *tparm(const char *cap, long p1, long p2, long p3, long p4, 
+		long p5, long p6, long p7, long p8, long p9)
 {
 	PDC_LOG(("tparm() - called: cap %s\n", cap));
 

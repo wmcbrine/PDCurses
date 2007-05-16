@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: term.h,v 1.12 2006/10/15 02:42:24 wmcbrine Exp $ */
+/* $Id: term.h,v 1.13 2007/05/16 07:16:31 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
@@ -45,20 +45,20 @@ extern TERMINAL *cur_term;
 
 int	del_curterm(TERMINAL *);
 int	putp(const char *);
-int	restartterm(char *, int, int *);
+int	restartterm(const char *, int, int *);
 TERMINAL *set_curterm(TERMINAL *);
-int	setterm(char *);
-int	setupterm(char *, int, int *);
+int	setterm(const char *);
+int	setupterm(const char *, int, int *);
 int	tgetent(char *, const char *);
-int	tgetflag(char *);
-int	tgetnum(char *);
-char   *tgetstr(char *, char **);
-char   *tgoto(char *, int, int);
-int	tigetflag(char *);
-int	tigetnum(char *);
-char   *tigetstr(char *);
-char   *tparm(char *,long, long, long, long, long, 
-				long, long, long, long);
+int	tgetflag(const char *);
+int	tgetnum(const char *);
+char   *tgetstr(const char *, char **);
+char   *tgoto(const char *, int, int);
+int	tigetflag(const char *);
+int	tigetnum(const char *);
+char   *tigetstr(const char *);
+char   *tparm(const char *, long, long, long, long, long, 
+		long, long, long, long);
 int	tputs(const char *, int, int (*)(int));
 
 #endif /* __PDCURSES_TERM_H__ */

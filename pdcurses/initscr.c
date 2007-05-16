@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.101 2007/05/07 02:31:16 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.102 2007/05/16 07:16:31 wmcbrine Exp $");
 
 char ttytype[128];
 
@@ -42,7 +42,7 @@ extern char linesrippedoff;
 	WINDOW *Xinitscr(int argc, char *argv[]);
 	int endwin(void);
 	bool isendwin(void);
-	SCREEN *newterm(char *type, FILE *outfd, FILE *infd);
+	SCREEN *newterm(const char *type, FILE *outfd, FILE *infd);
 	SCREEN *set_term(SCREEN *new);
 	void delscreen(SCREEN *sp);
 
@@ -250,7 +250,7 @@ bool isendwin(void)
 	return !(SP->alive);
 }
 
-SCREEN *newterm(char *type, FILE *outfd, FILE *infd)
+SCREEN *newterm(const char *type, FILE *outfd, FILE *infd)
 {
 	WINDOW *result;
 

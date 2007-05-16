@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.279 2007/05/06 23:40:33 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.280 2007/05/16 07:16:31 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3101
+#define PDC_BUILD 3102
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -1226,7 +1226,7 @@ int	mvwscanw(WINDOW *, int, int, const char *, ...);
 int	mvwvline(WINDOW *, int, int, chtype, int);
 int	napms(int);
 WINDOW *newpad(int, int);
-SCREEN *newterm(char *, FILE *, FILE *);
+SCREEN *newterm(const char *, FILE *, FILE *);
 WINDOW *newwin(int, int, int, int);
 int	nl(void);
 int	nocbreak(void);

@@ -27,23 +27,23 @@ PANEL_DIR=$(srcdir)/../panel
 
 all: manual
 
-manual: PDCurses.man
+manual: PDCurses.txt
 
-PDCurses.man: manext
-	cat $(DOC_DIR)/intro.man > PDCurses.man
-	echo PDCurses Definitions and Variables >> PDCurses.man
-	echo ================================== >> PDCurses.man
-	./manext $(INC_DIR)/curses.h >> PDCurses.man
-	echo PDCurses Functions >> PDCurses.man
-	echo ================== >> PDCurses.man
-	./manext $(PDCURSES_DIR)/*.c >> PDCurses.man
-	echo PDCurses Private Functions >> PDCurses.man
-	echo ========================== >> PDCurses.man
-	./manext $(pdcdir)/*.c >> PDCurses.man
-	echo PDCurses Panel Functions >> PDCurses.man
-	echo ======================== >> PDCurses.man
-	./manext $(PANEL_DIR)/*.c >> PDCurses.man
-	cat $(DOC_DIR)/x11.man >> PDCurses.man
+PDCurses.txt: manext
+	cat $(DOC_DIR)/intro.txt > PDCurses.txt
+	echo PDCurses Definitions and Variables >> PDCurses.txt
+	echo ================================== >> PDCurses.txt
+	./manext $(INC_DIR)/curses.h >> PDCurses.txt
+	echo PDCurses Functions >> PDCurses.txt
+	echo ================== >> PDCurses.txt
+	./manext $(PDCURSES_DIR)/*.c >> PDCurses.txt
+	echo PDCurses Private Functions >> PDCurses.txt
+	echo ========================== >> PDCurses.txt
+	./manext $(pdcdir)/*.c >> PDCurses.txt
+	echo PDCurses Panel Functions >> PDCurses.txt
+	echo ======================== >> PDCurses.txt
+	./manext $(PANEL_DIR)/*.c >> PDCurses.txt
+	cat $(DOC_DIR)/x11.txt >> PDCurses.txt
 
 manext: manext.o 
 	$(LINK) manext.o -o $@ $(LDFLAGS)
@@ -55,7 +55,7 @@ install:
 	echo Does nothing at the moment
 
 clean:
-	-rm -rf *.o manext PDCurses.man
+	-rm -rf *.o manext PDCurses.txt
 
 distclean: clean
 	-rm -f Makefile

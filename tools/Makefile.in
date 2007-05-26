@@ -43,8 +43,6 @@ PDCurses.man: manext
 	echo PDCurses Panel Functions >> PDCurses.man
 	echo ======================== >> PDCurses.man
 	./manext $(PANEL_DIR)/*.c >> PDCurses.man
-	echo X11 considerations >> PDCurses.man
-	echo ================== >> PDCurses.man
 	./manext $(DOC_DIR)/x11.man >> PDCurses.man
 
 manext: manext.o 

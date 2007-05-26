@@ -1,7 +1,7 @@
 /*man-start**************************************************************
 
-Introduction
-------------
+X11 Considerations
+==================
 
 PDCurses for X11 uses the System V IPC shared memory facility, along 
 with sockets, to share data between the curses program and the child 

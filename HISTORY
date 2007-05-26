@@ -1,3 +1,23 @@
+PDCurses 3.2 - 200?/??/??
+=========================
+
+New features:
+
+- Support for the Digital Mars compiler.
+
+Bug fixes and such:
+
+- Documentation cleanup -- removed some content that didn't apply to 
+  PDCurses; moved the doc-building tool to the doc directory; changed 
+  *.man to *.txt.
+
+- In Win32, read the registry only when needed: when init_color() or 
+  color_content() is called, instead of at startup.
+
+- A few additional consts in declarations.
+
+------------------------------------------------------------------------
+
 PDCurses 3.1 - 2007/05/03
 =========================
 

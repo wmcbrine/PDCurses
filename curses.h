@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.281 2007/05/26 03:17:26 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.282 2007/05/26 07:31:54 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -484,13 +484,6 @@ typedef struct _win		/* definition of a window	*/
 	struct	_win *_parent;	/* subwin's pointer to parent win  */
 } WINDOW;
 
-/*----------------------------------------------------------------------
- *
- *	Private structures that are necessary for correct
- *	macro construction.
- *
- */
-
 typedef struct
 {
 	bool	alive;		/* if initscr() called, and not endwin() */
@@ -547,7 +540,11 @@ typedef struct
 	short	line_color;	/* color of line attributes - default -1 */
 } SCREEN;
 
-/* external variables */
+/*----------------------------------------------------------------------
+ *
+ *	PDCurses External Variables
+ *
+ */
 
 #ifdef PDC_DLL_BUILD
 # ifdef CURSES_LIBRARY

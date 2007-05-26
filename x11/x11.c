@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.86 2007/05/04 01:38:34 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.87 2007/05/26 17:41:11 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -742,22 +742,23 @@ static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 
 static void _initialize_colors(void)
 {
-	colors[0] = xc_app_data.colorBlack;
-	colors[1] = xc_app_data.colorRed;
-	colors[2] = xc_app_data.colorGreen;
-	colors[3] = xc_app_data.colorYellow;
-	colors[4] = xc_app_data.colorBlue;
-	colors[5] = xc_app_data.colorMagenta;
-	colors[6] = xc_app_data.colorCyan;
-	colors[7] = xc_app_data.colorWhite;
-	colors[8] = xc_app_data.colorBoldBlack;
-	colors[9] = xc_app_data.colorBoldRed;
-	colors[10] = xc_app_data.colorBoldGreen;
-	colors[11] = xc_app_data.colorBoldYellow;
-	colors[12] = xc_app_data.colorBoldBlue;
-	colors[13] = xc_app_data.colorBoldMagenta;
-	colors[14] = xc_app_data.colorBoldCyan;
-	colors[15] = xc_app_data.colorBoldWhite;
+	colors[COLOR_BLACK]	= xc_app_data.colorBlack;
+	colors[COLOR_RED]	= xc_app_data.colorRed;
+	colors[COLOR_GREEN]	= xc_app_data.colorGreen;
+	colors[COLOR_YELLOW]	= xc_app_data.colorYellow;
+	colors[COLOR_BLUE]	= xc_app_data.colorBlue;
+	colors[COLOR_MAGENTA]	= xc_app_data.colorMagenta;
+	colors[COLOR_CYAN]	= xc_app_data.colorCyan;
+	colors[COLOR_WHITE]	= xc_app_data.colorWhite;
+
+	colors[COLOR_BLACK + 8]	  = xc_app_data.colorBoldBlack;
+	colors[COLOR_RED + 8]	  = xc_app_data.colorBoldRed;
+	colors[COLOR_GREEN + 8]	  = xc_app_data.colorBoldGreen;
+	colors[COLOR_YELLOW + 8]  = xc_app_data.colorBoldYellow;
+	colors[COLOR_BLUE + 8]	  = xc_app_data.colorBoldBlue;
+	colors[COLOR_MAGENTA + 8] = xc_app_data.colorBoldMagenta;
+	colors[COLOR_CYAN + 8]	  = xc_app_data.colorBoldCyan;
+	colors[COLOR_WHITE + 8]	  = xc_app_data.colorBoldWhite;
 
 	colors[COLOR_CURSOR] = xc_app_data.cursorColor;
 	colors[COLOR_BORDER] = xc_app_data.borderColor;

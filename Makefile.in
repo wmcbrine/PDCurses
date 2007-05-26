@@ -32,7 +32,7 @@ distclean \
 mostlyclean \
 realclean ::
 	cd x11; $(MAKE) $(MFLAGS) $@
-	cd tools; $(MAKE) $(MFLAGS) $@
+	cd doc; $(MAKE) $(MFLAGS) $@
 
 install ::
 	$(INSTALL) -d -m 755 $(libdir)
@@ -66,7 +66,7 @@ distclean ::
 	rm -f config.h Makefile x11/xcurses-config
 
 manual:
-	cd tools; $(MAKE) $(MFLAGS) $@
+	cd doc; $(MAKE) $(MFLAGS) $@
 
 $(ZIPFILE):
 	zip -9y $(ZIPFILE) README HISTORY IMPLEMNT INSTALL *.spec *.mif \
@@ -78,7 +78,7 @@ $(ZIPFILE):
 	os2/README os2/*.c os2/*.h os2/*.mak os2/*.lrf os2/*.def \
 	x11/README x11/*.c x11/*.xbm x11/*.h win32/README win32/*.c \
 	win32/*.h win32/*.mak win32/*.def win32/*.ico win32/*.rc \
-	doc/*.man tools/manext.c x11/Makefile.* tools/Makefile.in
+	doc/*.man doc/manext.c x11/Makefile.* doc/Makefile.in
 
 zip: $(ZIPFILE)
 
@@ -103,8 +103,8 @@ zip: $(ZIPFILE)
 	$(PDC_DIR)/x11/Makefile.* $(PDC_DIR)/win32/README \
 	$(PDC_DIR)/win32/*.c $(PDC_DIR)/win32/*.h $(PDC_DIR)/win32/*.mak \
 	$(PDC_DIR)/win32/*.def $(PDC_DIR)/win32/*.ico \
-	$(PDC_DIR)/win32/*.rc $(PDC_DIR)/tools/manext.c \
-	$(PDC_DIR)/tools/Makefile.in | gzip -9 > $(TARBALL))
+	$(PDC_DIR)/win32/*.rc $(PDC_DIR)/doc/manext.c \
+	$(PDC_DIR)/doc/Makefile.in | gzip -9 > $(TARBALL))
 
 dist: ../$(TARBALL)
 

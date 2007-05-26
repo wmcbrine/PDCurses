@@ -45,7 +45,7 @@
 void display_info()
 {
 	fprintf(stderr,
-		"\nMANEXT 1.01 Copyright (C) 1991-1996 Mark Hessling\n"
+		"\nMANEXT 1.02 Copyright (C) 1991-1996 Mark Hessling\n"
 		"All rights reserved.\n"
 		"MANEXT is distributed under the terms of the GNU\n"
 		"General Public License and comes with NO WARRANTY.\n"
@@ -121,8 +121,8 @@ int main(int argc, char **argv)
 		    printf("%s", s);
 		}
 
-		printf("\n\n\n-----------------------------------"
-			"---------------------------------------\n");
+		printf("\n\n-----------------------------------"
+			"---------------------------------------\n\n");
 
 		/* check if end of file */
 
@@ -133,6 +133,5 @@ int main(int argc, char **argv)
 	    fclose(fp);
 	}
 
-	printf("\n\n\n\n\n");
 	return 0;
 }

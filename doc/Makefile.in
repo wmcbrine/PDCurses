@@ -30,7 +30,7 @@ all: manual
 manual: PDCurses.man
 
 PDCurses.man: manext
-	./manext $(DOC_DIR)/intro.man > PDCurses.man
+	cat $(DOC_DIR)/intro.man > PDCurses.man
 	echo PDCurses Definitions and Variables >> PDCurses.man
 	echo ================================== >> PDCurses.man
 	./manext $(INC_DIR)/curses.h >> PDCurses.man
@@ -43,7 +43,7 @@ PDCurses.man: manext
 	echo PDCurses Panel Functions >> PDCurses.man
 	echo ======================== >> PDCurses.man
 	./manext $(PANEL_DIR)/*.c >> PDCurses.man
-	./manext $(DOC_DIR)/x11.man >> PDCurses.man
+	cat $(DOC_DIR)/x11.man >> PDCurses.man
 
 manext: manext.o 
 	$(LINK) manext.o -o $@ $(LDFLAGS)

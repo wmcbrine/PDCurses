@@ -1,5 +1,3 @@
-/*man-start**************************************************************
-
 X11 Considerations
 ==================
 
@@ -301,5 +299,3 @@ already added it for previous versions of PDCurses.)
 
 It is no longer necessary to explicitly define XCURSES, except if 
 building under Cygwin. (It's defined automatically.)
-
-**man-end****************************************************************/

@@ -19,15 +19,15 @@ An application may use these routines to add data to the window in any
 convenient order.  Once all data have been added, the routine
 refresh() is called.  The package then determines what changes have
 been made which affect the screen.  The screen contents are then
-changed to reflect those characters now in the window. using a
-sequence of operations optimised for the type of terminal in use. 
+changed to reflect those characters now in the window, using a
+sequence of operations optimized for the type of terminal in use. 
 
 At a higher level routines combining the actions of move() and addch()
 are defined, as are routines to add whole strings and to perform
 format conversions in the manner of printf(). 
 
-Interfaces are alse defined to erase the entire window and to specify
-the attributes of individual characters in the winodw.  Attributes
+Interfaces are also defined to erase the entire window and to specify
+the attributes of individual characters in the window.  Attributes
 such as inverse video, underline and blink can be used on a
 per-character basis. 
 
@@ -45,11 +45,6 @@ possible to create smaller windows, and also to indicate that the
 window is only partially visible on the screen.  Furthermore, large
 windows or pads, which are bigger than the actual screen size, may be
 created. 
-
-The routine newterm() may be called to "open" additional terminals by
-large applications wishing to manipulate several terminals at once.
-The set_term() function is used to select the terminal whose screen is
-to be updated by the next refresh(). 
 
 Interfaces are also defined to allow input character manipulation and
 to disable and enable many input attributes: character echo, single
@@ -112,7 +107,7 @@ VIDEO ATTRIBUTES
 	A_ATTRIBUTES	bit-mask to extract attributes
 	A_CHARTEXT	bit-mask to extract a character
 
-Normally, attributres are a property of the character. 
+Normally, attributes are a property of the character. 
 
 
 INPUT VALUES
@@ -154,7 +149,7 @@ underlying table of terminal capabilities.
 	KEY_LL		home down or bottom (lower left)
 	KEY_A1		upper left of virtual keypad
 	KEY_A3		upper right of virtual keypad
-	KEY_B2		centre of virtual keypad
+	KEY_B2		center of virtual keypad
 	KEY_C1		lower left of virtual keypad
 	KEY_C3		lower right of virtual keypad
 

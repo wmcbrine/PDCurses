@@ -40,7 +40,7 @@ around this.
 X Resources
 -----------
 
-PDCurses for X11 recognises the following resources:
+PDCurses for X11 recognizes the following resources:
 
     lines
     cols
@@ -170,7 +170,7 @@ pixmap:		   The name of a valid pixmap file of any depth
 		   This resource overrides the "bitmap" resource.
                    Default:        none, uses default bitmap above
 
-translations:      Translations enable the user to customise the action
+translations:      Translations enable the user to customize the action
 		   that occurs when a key, combination of keys, or a
 		   button is pressed.  The translations are similar to
 		   those used by xterm.
@@ -186,7 +186,7 @@ translations:      Translations enable the user to customise the action
 		   either a string or a hex representation of a 
 		   character; e.g., string(0x1b) will send the ASCII
 		   escape character to the application; string("[11~") 
-		   will send [ 1 1 ~ , as separate keystokes.
+		   will send [ 1 1 ~ , as separate keystrokes.
 
 shmmin:		   On most systems, there are two Unix kernel parameters
 		   that determine the allowable size of a shared memory

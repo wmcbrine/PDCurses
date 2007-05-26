@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.280 2007/05/16 07:16:31 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.281 2007/05/26 03:17:26 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -39,7 +39,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3102
+#define PDC_BUILD 3103
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -575,7 +575,8 @@ PDCEX	char		ttytype[];	/* terminal name/description	*/
 
 /*man-start**************************************************************
 
-PDCurses Text Attributes:
+PDCurses Text Attributes
+========================
 
 Originally, PDCurses used a short (16 bits) for its chtype. To include 
 color, a number of things had to be sacrificed from the strict Unix and 

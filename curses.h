@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.283 2007/05/28 17:11:32 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.284 2007/05/28 19:47:16 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -80,7 +80,6 @@ PDCurses portable platform definitions list:
  */
 
 #ifdef __HIGHC__
-#  pragma off(prototype_override_warnings)
 #  ifdef __MSDOS__
 #    define DOS 6
 #  endif
@@ -223,22 +222,6 @@ PDCurses portable platform definitions list:
 #    ifndef WIN32
 #      define WIN32
 #    endif
-#  endif
-#endif
-
-/*----------------------------------------
- *	HI-TECH COMPILERS Pacific C
- *
- *	Hi-Tech definitions:
- *
- *		__PACIFIC__, DOS
- *		are predefined by compiler.
- */
-
-#ifdef __PACIFIC__
-#  include <ctype.h>
-#  ifndef __SMALL__
-#    define __SMALL__
 #  endif
 #endif
 

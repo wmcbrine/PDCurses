@@ -11,13 +11,17 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.26 2006/12/29 21:16:32 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.27 2007/05/28 19:47:16 wmcbrine Exp $ */
 
 #include <curspriv.h>
 #include <string.h>
 
 #if defined(_MSC_VER) || defined(_QC)
 # define MSC 1
+#endif
+
+#if defined(__PACIFIC__) && !defined(__SMALL__)
+# define __SMALL__
 #endif
 
 #if defined(__HIGHC__) || MSC
@@ -94,7 +98,7 @@ unsigned long getdosmemdword(int offs);
 void setdosmembyte(int offs, unsigned char b);
 void setdosmemword(int offs, unsigned short w);
 #else
-# if SMALL || MEDIUM || MSC || defined(__PACIFIC__)
+# if SMALL || MEDIUM || MSC
 #  define PDC_FAR far
 # else
 #  define PDC_FAR

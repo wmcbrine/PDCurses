@@ -11,7 +11,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcos2.h,v 1.5 2007/01/06 18:01:04 wmcbrine Exp $ */
+/* $Id: pdcos2.h,v 1.6 2007/05/28 17:11:32 wmcbrine Exp $ */
+
+#ifdef _MSC_VER
+# define USE_OS2_H 1         /* Use the os2.h for the compiler       */
+# define APIRET USHORT
+#endif
 
 #include <stdlib.h>
 #include <string.h>

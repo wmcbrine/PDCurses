@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.150 2007/04/23 23:55:15 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.151 2007/05/28 17:11:32 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -37,6 +37,10 @@
 #  ifndef HAVE_VSNPRINTF
 #    define HAVE_VSNPRINTF	/* have vsnprintf() */
 #  endif
+#endif
+
+#if defined(_MSC_VER) && defined(_WIN32) && !defined(_CRT_SECURE_NO_DEPRECATE)
+# define _CRT_SECURE_NO_DEPRECATE 1	/* kill nonsense warnings */
 #endif
 
 /*----------------------------------------------------------------------*/

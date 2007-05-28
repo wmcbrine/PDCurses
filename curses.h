@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.282 2007/05/26 07:31:54 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.283 2007/05/28 17:11:32 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -95,16 +95,11 @@ PDCurses portable platform definitions list:
 
 #ifdef _MSC_VER
 #  ifdef __OS2__		/* You will have to define in makefile	*/
-#    define USE_OS2_H 1		/* Use the os2.h for the compiler	*/
 #    define OS2 3
-#    define APIRET USHORT
 #  else
 #    ifdef _WIN32	
 #      ifndef WIN32
 #        define WIN32
-#      endif
-#      ifndef _CRT_SECURE_NO_DEPRECATE
-#        define _CRT_SECURE_NO_DEPRECATE 1     /* kill nonsense warnings */
 #      endif
 #    else	
 #      define DOS 6

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.284 2007/05/28 19:47:16 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.285 2007/05/29 07:02:29 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -24,9 +24,6 @@
 
 PDCurses definitions list:  (Only define those needed)
 
-	DOS		True if compiling for DOS.
-	OS2		True if compiling for OS/2.
-	WIN32		True if compiling for Windows.
 	XCURSES		True if compiling for X11.
 
 PDCurses portable platform definitions list:
@@ -39,207 +36,14 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3103
+#define PDC_BUILD 3104
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
 #define	BSDcurses	1	/* BSD Curses routines		*/
 #define	CHTYPE_LONG	1	/* size of chtype; long		*/
 
-/*----------------------------------------
- *	BORLAND COMPILERS	Turbo C[++], Borland C[++]
- *
- *	Borland definitions:
- *		DOS
- *		OS2
- *
- *		__TURBOC__, __MSDOS__,
- *		__OS2__ and __WIN32__
- *		are predefined by compiler.
- */
-
-#ifdef __TURBOC__
-#  ifdef __MSDOS__
-#    define DOS 6		/* Major release of DOS supported	*/
-#  endif
-#  ifdef __OS2__
-#    define OS2 3		/* Major release of OS/2 supported	*/
-#  endif
-#  ifdef __WIN32__
-#    ifndef WIN32
-#      define WIN32 1
-#    endif
-#  endif
-#endif
-
-/*----------------------------------------
- *	METAWARE COMPILERS	High C
- *
- *	Metaware definitions:
- *		DOS
- */
-
-#ifdef __HIGHC__
-#  ifdef __MSDOS__
-#    define DOS 6
-#  endif
-#endif
-
-/*----------------------------------------
- *	MICROSOFT COMPILERS	MSC
- *
- *	Microsoft definitions:
- *		DOS || OS2
- */
-
-#ifdef _MSC_VER
-#  ifdef __OS2__		/* You will have to define in makefile	*/
-#    define OS2 3
-#  else
-#    ifdef _WIN32	
-#      ifndef WIN32
-#        define WIN32
-#      endif
-#    else	
-#      define DOS 6
-#    endif
-#  endif
-#endif
-
-/*----------------------------------------
- *	MICROSOFT QUICK C COMPILERS	QC
- *
- */
-
-#ifdef _QC
-#  define DOS 6
-#endif
-
-/*----------------------------------------
- *	TOPSPEED compilers	TSC
- *
- *	TOPSPEED definitions:
- *		DOS || OS2
- */
-
-#ifdef __TSC__			/* You may have to define in makefile	*/
-#  ifdef __OS2__
-#    define OS2 3
-#  endif
-#endif
-
-/*----------------------------------------
- *	IBM C Set/2 Compiler	CSET2
- *
- *	IBM definitions:
- *		OS2
- */
-
-#ifdef __IBMC__
-#  ifdef __OS2__
-#    define OS2 3
-#  endif
-#endif
-
-/*----------------------------------------
- *	GNU compilers		emx
- *
- *	emx definitions:
- *		OS2
- */
-
-#ifdef __EMX__			/* You may have to define in makefile	*/
-#  ifndef __OS2__
-#    define __OS2__		/* EMX does not define this :-( 	*/
-#  endif
-#  define OS2 3
-#endif
-
-/*----------------------------------------
- *	GNU compilers		djgpp
- *
- *	djgpp definitions:
- *		DOS
- */
-
-#ifdef __DJGPP__		/* You may have to define in makefile	*/
-#  define DOS 6
-#endif
-
-/*----------------------------------------
- *	GNU compilers	Cygnus Win32
- *
- *	cygnus definitions:
- *		WIN32
- */
-
-#ifdef __CYGWIN32__		/* You may have to define in makefile	*/
-#  if !defined(WIN32) && !defined(XCURSES)
-#    define WIN32
-#  endif
-#endif
-
-/*----------------------------------------
- *	GNU compilers	Ming Win32
- *
- *	Ming definitions:
- *		WIN32
- */
-
-#ifdef __MINGW32__
-#  ifndef WIN32
-#    define WIN32
-#  endif
-#endif
-
-/*----------------------------------------
- *	LCC WIN32
- *
- */
-
-#ifdef __LCC__
-#  ifndef WIN32
-#    define WIN32
-#  endif
-#endif
-
-/*----------------------------------------
- *	Watcom C/C++ 10.6 compiler
- *
- *	WATCOM definitions:
- *		OS2
- *		WIN32
- */
-
-#ifdef __WATCOMC__
-#  if defined(__DOS__) || defined(__DOS4G__)
-#    define DOS 7
-#  endif
-#  if defined(__OS2__) || defined(__OS2V2__)
-#    define OS2 3
-#  endif
-#  if defined(__NT__)
-#    ifndef WIN32
-#      define WIN32
-#    endif
-#  endif
-#endif
-
 /*----------------------------------------------------------------------*/
-
-/* If it's not DOS, or OS/2, or Windows, it must be XCurses */
-
-#if !defined(DOS) && !defined(OS2) && !defined(WIN32)
-# ifndef XCURSES
-#  define XCURSES
-# endif
-#endif
-
-#ifdef PDC_WIDE
-# if !defined(CHTYPE_LONG) || !(defined(WIN32) || defined(XCURSES))
-#  undef PDC_WIDE
-# endif
-#endif
 
 #include <stdarg.h>
 #include <stddef.h>
@@ -461,6 +265,9 @@ typedef struct _win		/* definition of a window	*/
 	int	_parx, _pary;	/* coords relative to parent (0,0) */
 	struct	_win *_parent;	/* subwin's pointer to parent win  */
 } WINDOW;
+
+/* Avoid using the SCREEN struct directly -- use the corresponding 
+   functions if possible. This struct may eventually be made private. */
 
 typedef struct
 {
@@ -790,7 +597,7 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 
 #define COLOR_BLACK	0
 
-#ifdef XCURSES		/* RGB */
+#ifdef PDC_RGB		/* RGB */
 # define COLOR_RED	1
 # define COLOR_GREEN	2
 # define COLOR_BLUE	4

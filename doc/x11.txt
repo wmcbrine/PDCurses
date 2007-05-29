@@ -297,5 +297,6 @@ The XCursesExit() function is now called automatically via atexit().
 (Multiple calls to it are OK, so you don't need to remove it if you've 
 already added it for previous versions of PDCurses.)
 
-It is no longer necessary to explicitly define XCURSES, except if 
-building under Cygwin. (It's defined automatically.)
+XCURSES is no longer defined automatically, but need not be defined, 
+unless you want the X11-specific prototypes. (Normal curses programs 
+won't need it.)

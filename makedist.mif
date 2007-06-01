@@ -16,7 +16,6 @@ dist: $(PDCLIBS)
 	echo $(PDCURSES_HOME)\panel.h >> flist
 	echo $(PDCURSES_HOME)\term.h >> flist
 	echo $(LIBCURSES) >> flist
-	echo $(LIBPANEL) >> flist
 	echo file_id.diz >> flist
 	zip -9jX $(ARCNAME) -@ <flist
 	del flist

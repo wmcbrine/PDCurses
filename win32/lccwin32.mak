@@ -5,7 +5,7 @@
 # Usage: make -f lccwin32.mak [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
+# [all|demos|pdcurses.lib|testcurs.exe...]
 #
 ###############################################################################
 #
@@ -25,7 +25,6 @@ TERM_HEADER	= $(PDCURSES_HOME)\term.h
 
 srcdir		= $(PDCURSES_HOME)\pdcurses
 osdir		= $(PDCURSES_HOME)\win32
-pandir		= $(PDCURSES_HOME)\panel
 demodir		= $(PDCURSES_HOME)\demos
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h
@@ -47,17 +46,16 @@ LIBEXE		= lcclib
 
 LIBCURSES	= pdcurses.lib
 CURSESDLL	= pdcurses.dll
-LIBPANEL	= panel.lib
 
 # For a static build:
 
 BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+PDCLIBS		= $(LIBCURSES)
 
 # For a DLL build:
 
 #BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
-#PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
+#PDCLIBS		= $(CURSESDLL)
 
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
@@ -79,21 +77,19 @@ LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj getch.obj \
 getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
 insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj \
-outopts.obj overlay.obj pad.obj printw.obj refresh.obj scanw.obj \
-scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj touch.obj util.obj \
-window.obj debug.obj
+outopts.obj overlay.obj pad.obj panel.obj printw.obj refresh.obj \
+scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj \
+touch.obj util.obj window.obj debug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
 
-PANOBJS = panel.obj
-
 DEMOOBJS = testcurs.obj newdemo.obj xmas.obj tuidemo.obj tui.obj \
 firework.obj ptest.obj rain.obj worm.obj
 
-$(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)
-$(PANOBJS) ptest.obj: $(PANEL_HEADER)
+panel.obj ptest.obj: $(PANEL_HEADER)
 terminfo.obj: $(TERM_HEADER)
 
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
@@ -102,9 +98,6 @@ $(DEMOS) : $(LIBCURSES)
 # Remove the next two lines for a DLL build:
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
-
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) /out:$@ $(PANOBJS)
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	$(SHL_LD) -o $(CURSESDLL) $(LIBOBJS) $(PDCOBJS)
@@ -199,6 +192,9 @@ overlay.obj: $(srcdir)\overlay.c
 pad.obj: $(srcdir)\pad.c
 	$(SRCBUILD)
 
+panel.obj: $(srcdir)\panel.c
+	$(SRCBUILD)
+
 printw.obj: $(srcdir)\printw.c
 	$(SRCBUILD)
 
@@ -259,19 +255,14 @@ pdcutil.obj: $(osdir)\pdcutil.c
 
 #------------------------------------------------------------------------
 
-panel.obj: $(pandir)\panel.c
-	$(BUILD) $(pandir)\$*.c
-
-#------------------------------------------------------------------------
-
 firework.exe:   firework.obj
 	$(LINK) -o $@ firework.obj $(LIBCURSES)
 
 newdemo.exe:    newdemo.obj
 	$(LINK) -o $@ newdemo.obj $(LIBCURSES)
 
-ptest.exe:      ptest.obj $(LIBPANEL)
-	$(LINK) -o $@ ptest.obj $(LIBPANEL) $(LIBCURSES)
+ptest.exe:      ptest.obj
+	$(LINK) -o $@ ptest.obj $(LIBCURSES)
 
 rain.exe:       rain.obj
 	$(LINK) -o $@ rain.obj $(LIBCURSES)

@@ -5,7 +5,7 @@
 # Usage: nmake -f [path\]iccos2.mak [DEBUG=1] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
+# [all|demos|pdcurses.lib|testcurs.exe...]
 #
 ################################################################################
 #
@@ -46,12 +46,9 @@ LINK		= link386
 LIBEXE		= lib
 
 LIBCURSES	= pdcurses.lib
-LIBPANEL	= panel.lib
-
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(LIBCURSES) $(DEMOS)
 
 clean:
 	-del *.obj
@@ -64,9 +61,6 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\iccos2.lrf
-
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $@ -+$(PANOBJS);
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\addch.c
@@ -155,6 +149,9 @@ overlay.obj: $(srcdir)\overlay.c $(PDCURSES_HEADERS)
 pad.obj: $(srcdir)\pad.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\pad.c
 
+panel.obj: $(srcdir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
+	$(BUILD) $(srcdir)\panel.c
+
 printw.obj: $(srcdir)\printw.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\printw.c
 
@@ -215,19 +212,14 @@ pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 
 #------------------------------------------------------------------------
 
-panel.obj: $(pandir)\panel.c $(PDCURSES_HEADERS) $(PANEL_HEADER)
-	$(BUILD) $(pandir)\panel.c
-
-#------------------------------------------------------------------------
-
 firework.exe: firework.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
 newdemo.exe: newdemo.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
-ptest.exe: ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES)+$(LIBPANEL);
+ptest.exe: ptest.obj $(LIBCURSES)
+	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
 rain.exe: rain.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);

@@ -5,7 +5,7 @@
 # Usage: make -f [path\]bccwin32.mak [DEBUG=] [WIDE=] [UTF8=] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
+# [all|demos|pdcurses.lib|testcurs.exe...]
 #
 ################################################################################
 #
@@ -47,12 +47,9 @@ $(WIDEOPT) $(UTF8OPT)
 LIBEXE		= tlib /C /E /0
 
 LIBCURSES	= pdcurses.lib
-LIBPANEL	= panel.lib
-
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(LIBCURSES) $(DEMOS)
 
 clean:
 	-del *.obj
@@ -70,15 +67,11 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 +border.obj +clear.obj +color.obj +delch.obj +deleteln.obj +deprec.obj \
 +getch.obj +getstr.obj +getyx.obj +inch.obj +inchstr.obj +initscr.obj \
 +inopts.obj +insch.obj +insstr.obj +instr.obj +kernel.obj +keyname.obj \
-+mouse.obj +move.obj +outopts.obj +overlay.obj +pad.obj +printw.obj \
-+refresh.obj +scanw.obj +scr_dump.obj +scroll.obj +slk.obj +termattr.obj \
-+terminfo.obj +touch.obj +util.obj +window.obj +debug.obj +pdcclip.obj \
-+pdcdisp.obj +pdcgetsc.obj +pdckbd.obj +pdcscrn.obj +pdcsetsc.obj \
-+pdcutil.obj ,lib.map
-
-$(LIBPANEL) : $(PANOBJS)
-	-del $@
-	$(LIBEXE) $@ +$(PANOBJS)
++mouse.obj +move.obj +outopts.obj +overlay.obj +pad.obj +panel.obj \
++printw.obj +refresh.obj +scanw.obj +scr_dump.obj +scroll.obj +slk.obj \
++termattr.obj +terminfo.obj +touch.obj +util.obj +window.obj +debug.obj \
++pdcclip.obj +pdcdisp.obj +pdcgetsc.obj +pdckbd.obj +pdcscrn.obj \
++pdcsetsc.obj +pdcutil.obj ,lib.map
 
 .autodepend
 
@@ -86,9 +79,6 @@ $(LIBPANEL) : $(PANOBJS)
 	$(BUILD) $<
 
 {$(osdir)\}.c.obj:
-	$(BUILD) $<
-
-{$(pandir)\}.c.obj:
 	$(BUILD) $<
 
 {$(demodir)\}.c.obj:
@@ -105,7 +95,7 @@ firework.exe:	firework.obj $(LIBCURSES)
 newdemo.exe:	newdemo.obj $(LIBCURSES)
 	$(CC) -e$@ $**
 
-ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
+ptest.exe:	ptest.obj $(LIBCURSES)
 	$(CC) -e$@ $**
 
 rain.exe:	rain.obj $(LIBCURSES)

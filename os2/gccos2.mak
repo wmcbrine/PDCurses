@@ -5,7 +5,7 @@
 # Usage: make -f [path\]gccos2.mak [DEBUG=Y] [EMXVIDEO=Y] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.a|panel.a|testcurs.exe...]
+# [all|demos|pdcurses.a|testcurs.exe...]
 #
 # The EMXVIDEO option compiles with the emx video library, which
 # enables a PDCurses program to run under OS/2 and DOS.
@@ -63,9 +63,8 @@ LIBEXE		= ar
 LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
-LIBPANEL	= panel.a
 
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL) #$(DLLTARGET) pdcurses.lib panel.lib
+PDCLIBS		= $(LIBCURSES) #$(DLLTARGET) pdcurses.lib
 
 ################################################################################
 .PHONY: all libs clean demos dist
@@ -109,17 +108,11 @@ $(osdir)\pdcurses.def
 	emximp -o curses.lib $(osdir)\pdcurses.def
 	emximp -o curses.a curses.lib
 
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
-
-panel.lib: panel.a
-	$(EMXOMF) -o panel.lib panel.a
-
-$(LIBOBJS) $(DLLOBJS) $(PDCOBJS) $(PDCDLOS) $(PANOBJS) $(DEMOOBJS) : \
+$(LIBOBJS) $(DLLOBJS) $(PDCOBJS) $(PDCDLOS) $(DEMOOBJS) : \
 $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_OS2_H)
-$(PANOBJS) ptest.o: $(PANEL_HEADER)
 $(DEMOS) : $(LIBCURSES)
+panel.o panel.dlo ptest.o: $(PANEL_HEADER)
 terminfo.o terminfo.dlo: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
@@ -134,18 +127,12 @@ $(DLLOBJS) : %.dlo: $(srcdir)/%.c
 $(PDCDLOS) : %.dlo: $(osdir)/%.c
 	$(CC) $(CFLAGS) $(DLLFLAGS) -o$@ $<
 
-$(PANOBJS) : %.o: $(pandir)/%.c
-	$(CC) -c $(CFLAGS) $<
-
 #------------------------------------------------------------------------
 
-firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe: %.exe: %.o
+firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
+ptest.exe: %.exe: %.o
 	$(LINK) $(LDFLAGS) -o $* $< $(LIBCURSES) $(CCLIBS)
 	$(EMXBIND) $* $(BINDFLAGS)
-
-ptest.exe:	ptest.o $(LIBPANEL)
-	$(LINK) $(LDFLAGS) -o ptest ptest.o $(LIBCURSES) $(LIBPANEL) $(CCLIBS)
-	$(EMXBIND) ptest $(BINDFLAGS)
 
 tuidemo.exe:	tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES) $(CCLIBS)

@@ -27,6 +27,7 @@
 -+outopts.obj &
 -+overlay.obj &
 -+pad.obj &  
+-+panel.obj &
 -+printw.obj &
 -+refresh.obj &
 -+scanw.obj &

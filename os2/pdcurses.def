@@ -337,6 +337,21 @@ EXPORTS
 		waddrawch
 		winsrawch
 		wordchar
+		panel_window
+		update_panels
+		hide_panel
+		show_panel
+		del_panel
+		top_panel
+		bottom_panel
+		new_panel
+		panel_above
+		panel_below
+		panel_hidden
+		set_panel_userptr
+		panel_userptr
+		move_panel
+		replace_panel
 		PDC_debug
 		PDC_ungetch
 		PDC_set_blink

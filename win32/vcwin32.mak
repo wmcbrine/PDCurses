@@ -5,7 +5,7 @@
 # Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [DLL=] [WIDE=] [UTF8=] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
+# [all|demos|pdcurses.lib|testcurs.exe...]
 #
 ################################################################################
 #
@@ -60,13 +60,12 @@ LIBEXE		= lib -nologo
 
 LIBCURSES	= pdcurses.lib
 CURSESDLL	= pdcurses.dll
-LIBPANEL	= panel.lib
 
 !ifdef DLL
 DLLOPT		= -DPDC_DLL_BUILD
-PDCLIBS		= $(CURSESDLL) $(LIBPANEL)
+PDCLIBS		= $(CURSESDLL)
 !else
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
+PDCLIBS		= $(LIBCURSES)
 !endif
 
 BUILD		= $(CC) -I$(PDCURSES_HOME) -c $(CFLAGS) $(DLLOPT) \
@@ -88,12 +87,12 @@ clean:
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
-$(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
-$(PANOBJS) : $(PANEL_HEADER)
-terminfo.obj: $(TERM_HEADER)
 $(DEMOS) : $(LIBCURSES)
+panel.obj : $(PANEL_HEADER)
+terminfo.obj: $(TERM_HEADER)
 
 !ifndef DLL
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
@@ -107,16 +106,10 @@ pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
 	rc /r /fopdcurses.res $(osdir)\pdcurses.rc
 	cvtres /MACHINE:IX86 /NOLOGO /OUT:pdcurses.obj pdcurses.res
 
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) -out:$@ $(PANOBJS)
-
 {$(srcdir)\}.c{}.obj::
 	$(BUILD) $<
 
 {$(osdir)\}.c{}.obj::
-	$(BUILD) $<
-
-{$(pandir)\}.c{}.obj::
 	$(BUILD) $<
 
 {$(demodir)\}.c{}.obj::
@@ -127,16 +120,8 @@ $(LIBPANEL) : $(PANOBJS)
 
 #------------------------------------------------------------------------
 
-ptest.exe: ptest.obj $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $*.obj $(LIBPANEL) $(LIBCURSES) $(CCLIBS)
-
 tuidemo.exe: tuidemo.obj tui.obj
 	$(LINK) $(LDFLAGS) $*.obj tui.obj $(LIBCURSES) $(CCLIBS)
-
-#------------------------------------------------------------------------
-
-ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER)
-	$(BUILD) $(demodir)\ptest.c
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 	$(BUILD) -I$(demodir) $(demodir)\tui.c

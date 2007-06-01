@@ -8,7 +8,6 @@ PANEL_HEADER		= $(PDCURSES_HOME)/panel.h
 TERM_HEADER		= $(PDCURSES_HOME)/term.h
 
 srcdir	= $(PDCURSES_HOME)/pdcurses
-pandir	= $(PDCURSES_HOME)/panel
 demodir	= $(PDCURSES_HOME)/demos
 
 LIBOBJS = addch.$(O) addchstr.$(O) addstr.$(O) attr.$(O) beep.$(O) \
@@ -16,13 +15,12 @@ bkgd.$(O) border.$(O) clear.$(O) color.$(O) delch.$(O) deleteln.$(O) \
 deprec.$(O) getch.$(O) getstr.$(O) getyx.$(O) inch.$(O) inchstr.$(O) \
 initscr.$(O) inopts.$(O) insch.$(O) insstr.$(O) instr.$(O) kernel.$(O) \
 keyname.$(O) mouse.$(O) move.$(O) outopts.$(O) overlay.$(O) pad.$(O) \
-printw.$(O) refresh.$(O) scanw.$(O) scr_dump.$(O) scroll.$(O) slk.$(O) \
-termattr.$(O) terminfo.$(O) touch.$(O) util.$(O) window.$(O) debug.$(O)
+panel.$(O) printw.$(O) refresh.$(O) scanw.$(O) scr_dump.$(O) scroll.$(O) \
+slk.$(O) termattr.$(O) terminfo.$(O) touch.$(O) util.$(O) window.$(O) \
+debug.$(O)
 
 PDCOBJS = pdcclip.$(O) pdcdisp.$(O) pdcgetsc.$(O) pdckbd.$(O) pdcscrn.$(O) \
 pdcsetsc.$(O) pdcutil.$(O)
-
-PANOBJS = panel.$(O)
 
 DEMOS = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe \
 ptest.exe rain.exe worm.exe

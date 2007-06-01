@@ -5,7 +5,7 @@
 # Usage: make -f [path\]gccdos.mak [-DDEBUG] [target]
 #
 # where target can be any of:
-# [all|libs|demos|dist|pdcurses.a|panel.a|testcurs.exe...]
+# [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
 #
 ################################################################################
 #
@@ -45,21 +45,17 @@ LIBEXE		= ar
 LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
-LIBPANEL	= panel.a
-
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
 .PHONY: all libs clean demos dist
 
 all:	libs demos
 
-libs:	$(PDCLIBS)
+libs:	$(LIBCURSES)
 
 clean:
 	-del *.o
 	-del $(LIBCURSES)
-	-del $(LIBPANEL)
 	-del *.exe
 
 demos:	$(DEMOS)
@@ -70,13 +66,10 @@ demos:	$(DEMOS)
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
 
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $(LIBFLAGS) $@ $(PANOBJS)
-
-$(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)
-$(PANOBJS) : $(PANEL_HEADER)
 $(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
+panel.o : $(PANEL_HEADER)
 terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
@@ -85,17 +78,11 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
-$(PANOBJS) : %.o: $(pandir)/%.c
-	$(CC) -c $(CFLAGS) $<
-
 #------------------------------------------------------------------------
 
-firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe: \
-%.exe: $(demodir)/%.c
+firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
+ptest.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
-
-ptest.exe: $(demodir)/ptest.c $(PANEL_HEADER) $(LIBPANEL)
-	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES) $(LIBPANEL)
 
 tuidemo.exe: tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)

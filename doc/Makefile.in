@@ -23,7 +23,6 @@ LDFLAGS		= @LDFLAGS@ @LIBS@
 DOC_DIR=$(srcdir)/../doc
 INC_DIR=$(srcdir)/..
 PDCURSES_DIR=$(srcdir)/../pdcurses
-PANEL_DIR=$(srcdir)/../panel
 
 all: manual
 
@@ -40,9 +39,6 @@ PDCurses.txt: manext
 	echo PDCurses Private Functions >> PDCurses.txt
 	echo ========================== >> PDCurses.txt
 	./manext $(pdcdir)/*.c >> PDCurses.txt
-	echo PDCurses Panel Functions >> PDCurses.txt
-	echo ======================== >> PDCurses.txt
-	./manext $(PANEL_DIR)/*.c >> PDCurses.txt
 	cat $(DOC_DIR)/x11.txt >> PDCurses.txt
 
 manext: manext.o 

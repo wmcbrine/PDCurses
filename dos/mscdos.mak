@@ -5,7 +5,7 @@
 # Usage: nmake -f [path\]dosmsc.mak [DEBUG=1] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
+# [all|demos|pdcurses.lib|testcurs.exe...]
 #
 ################################################################################
 #
@@ -50,12 +50,9 @@ CCLIBS		=
 LIBEXE		= lib
 
 LIBCURSES	= pdcurses.lib
-LIBPANEL	= panel.lib
-
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(LIBCURSES) $(DEMOS)
 
 clean:
 	-del *.obj
@@ -68,25 +65,19 @@ demos:	$(DEMOS)
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
-$(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
-$(PANOBJS) : $(PANEL_HEADER)
-terminfo.obj: $(TERM_HEADER)
 $(DEMOS) : $(LIBCURSES)
+panel.obj : $(PANEL_HEADER)
+terminfo.obj: $(TERM_HEADER)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\mscdos.lrf
-
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $@ -+$(PANOBJS);
 
 {$(srcdir)\}.c{}.obj:
 	$(BUILD) $<
 
 {$(osdir)\}.c{}.obj:
-	$(BUILD) $<
-
-{$(pandir)\}.c{}.obj:
 	$(BUILD) $<
 
 {$(demodir)\}.c{}.obj:
@@ -100,8 +91,8 @@ firework.exe: firework.obj
 newdemo.exe: newdemo.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
-ptest.exe: ptest.obj $(LIBPANEL)
-	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBPANEL)+$(LIBCURSES);
+ptest.exe: ptest.obj
+	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
 rain.exe: rain.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);

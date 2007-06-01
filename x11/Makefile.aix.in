@@ -9,7 +9,6 @@ PDCURSES_HOME	= ..
 
 osdir		= .
 srcdir		= $(PDCURSES_HOME)/pdcurses
-pandir		= $(PDCURSES_HOME)/panel
 
 PDCURSES_CONFIG_H	=$(PDCURSES_HOME)/config.h
 PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
@@ -30,18 +29,15 @@ LINK		= @CC@
 LDFLAGS		= 
 
 LIBCURSES	= libXCurses.a
-LIBPANEL	= libpanel.a
-
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all :	$(PDCLIBS)
+all :	$(LIBCURSES)
 
 install : 
 	echo Does nothing at the moment
 
 clean :
-	-rm -rf *.o *.sho trace $(PDCLIBS)
+	-rm -rf *.o *.sho trace $(LIBCURSES)
 
 distclean: clean
 	-rm -f Makefile
@@ -55,25 +51,19 @@ realclean: distclean
 LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o deprec.o getch.o getstr.o getyx.o \
 inch.o inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o \
-keyname.o mouse.o move.o outopts.o overlay.o pad.o printw.o refresh.o \
-scanw.o scr_dump.o scroll.o slk.o termattr.o terminfo.o touch.o util.o \
-window.o debug.o
+keyname.o mouse.o move.o outopts.o overlay.o pad.o panel.o printw.o \
+refresh.o scanw.o scr_dump.o scroll.o slk.o termattr.o terminfo.o \
+touch.o util.o window.o debug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
 pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
-
-PANOBJS = panel.o
 
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) curses.exp ../x11/xcurses.exp
 	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) \
 $(LIBOBJS) $(PDCOBJS) -o $@
 
-$(LIBPANEL) : $(PANOBJS)
-        ar rv $@ $?
-        -$(RANLIB) $@
-
-$(LIBOBJS) $(PDCOBJS) $(PANOBJS) : $(PDCURSES_HEADERS)
+$(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_X11_H)
 terminfo.o: $(TERM_HEADER)
 
@@ -170,6 +160,9 @@ overlay.o: $(srcdir)/overlay.c
 pad.o: $(srcdir)/pad.c
 	$(BUILD) $(srcdir)/pad.c
 
+panel.o: $(srcdir)/panel.c $(PDCURSES_HOME)/panel.h
+	$(BUILD) $(srcdir)/panel.c
+
 printw.o: $(srcdir)/printw.c
 	$(BUILD) $(srcdir)/printw.c
 
@@ -239,7 +232,3 @@ sb.o: $(osdir)/sb.c
 
 x11.o: $(osdir)/x11.c
 	$(BUILD) $(osdir)/x11.c
-
-
-panel.o: $(pandir)/panel.c $(PDCURSES_HOME)/panel.h
-	$(BUILD) $(pandir)/panel.c

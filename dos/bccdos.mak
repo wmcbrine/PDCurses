@@ -5,7 +5,7 @@
 # Usage: make -f [path\]bccdos.mak [-DDEBUG] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
+# [all|demos|pdcurses.lib|testcurs.exe...]
 #
 ################################################################################
 #
@@ -40,12 +40,9 @@ BUILD		= $(CC) -1- -K -G -rd -d -w-eff -w-par -c \
 LIBEXE		= tlib /C /E
 
 LIBCURSES	= pdcurses.lib
-LIBPANEL	= panel.lib
-
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL)
 
 ################################################################################
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(LIBCURSES) $(DEMOS)
 
 clean:
 	-del *.obj
@@ -61,19 +58,12 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
 	$(LIBEXE) $@ @$(osdir)\bccdos.lrf
 
-$(LIBPANEL) : $(PANOBJS)
-	-del $@
-	$(LIBEXE) $@ +$(PANOBJS)
-
 .autodepend
 
 {$(srcdir)\}.c.obj:
 	$(BUILD) $<
 
 {$(osdir)\}.c.obj:
-	$(BUILD) $<
-
-{$(pandir)\}.c.obj:
 	$(BUILD) $<
 
 {$(demodir)\}.c.obj:
@@ -90,7 +80,7 @@ firework.exe:	firework.obj $(LIBCURSES)
 newdemo.exe:	newdemo.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**
 
-ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
+ptest.exe:	ptest.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**
 
 rain.exe:	rain.obj $(LIBCURSES)

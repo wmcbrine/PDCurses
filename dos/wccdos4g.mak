@@ -5,7 +5,7 @@
 # Usage: wmake -f [path\]wccdos4g.mak [DEBUG=Y] [target]
 #
 # where target can be any of:
-# [all|demos|pdcurses.lib|panel.lib|testcurs.exe...]
+# [all|demos|pdcurses.lib|testcurs.exe...]
 #
 ################################################################################
 #

@@ -9,7 +9,6 @@ PDCURSES_HOME	= ..
 
 osdir		= .
 srcdir		= $(PDCURSES_HOME)/pdcurses
-pandir		= $(PDCURSES_HOME)/panel
 demodir		= $(PDCURSES_HOME)/demos
 
 PDCURSES_CONFIG_H	=$(PDCURSES_HOME)/config.h
@@ -38,12 +37,10 @@ LDFLAGS		= $(LIBCURSES) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 RANLIB		= @RANLIB@
 
 LIBCURSES	= libXCurses.a
-LIBPANEL	= libpanel.a
 
 LIB_DEPS        = -L$(PDCURSES_HOME)/x11 -lXCurses
-PANEL_LIB       = -L$(PDCURSES_HOME)/x11 -lpanel
 
-PDCLIBS		= $(LIBCURSES) $(LIBPANEL) @SHL_TARGETS@
+PDCLIBS		= $(LIBCURSES) @SHL_TARGETS@
 
 DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas
 DEMOOBJS	= firework.o newdemo.o ptest.o rain.o testcurs.o tui.o \
@@ -74,14 +71,12 @@ realclean: distclean
 LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o deprec.o getch.o getstr.o getyx.o \
 inch.o inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o \
-keyname.o mouse.o move.o outopts.o overlay.o pad.o printw.o refresh.o \
-scanw.o scr_dump.o scroll.o slk.o termattr.o terminfo.o touch.o util.o \
-window.o debug.o
+keyname.o mouse.o move.o outopts.o overlay.o pad.o panel.o printw.o \
+refresh.o scanw.o scr_dump.o scroll.o slk.o termattr.o terminfo.o \
+touch.o util.o window.o debug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
 pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
-
-PANOBJS = panel.o
 
 LIBSHOBJS = $(LIBOBJS:.o=.sho)
 PDCSHOBJS = $(PDCOBJS:.o=.sho)
@@ -92,15 +87,11 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	ar rv $@ $?
 	-$(RANLIB) $@
 
-$(LIBPANEL) : $(PANOBJS)
-	ar rv $@ $?
-	-$(RANLIB) $@
-
 $(SHLPRE)$(SHLFILE)$(SHLPST) : $(SHOFILES)
 #	cp $(srcdir)/../win32/curses.def ./cygwin.def
 	$(LD_RXLIB1) $(RXPACKEXPORTS) -o $@ $(SHOFILES) $(LD_RXLIB2)
 
-$(LIBOBJS) $(PDCOBJS) $(PANOBJS) $(SHOFILES) : $(PDCURSES_HEADERS)
+$(LIBOBJS) $(PDCOBJS) $(SHOFILES) : $(PDCURSES_HEADERS)
 $(PDCOBJS) $(PDCSHOBJS) : $(PDCURSES_X11_H)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
@@ -193,6 +184,9 @@ overlay.o: $(srcdir)/overlay.c
 pad.o: $(srcdir)/pad.c
 	$(BUILD) $(srcdir)/pad.c
 
+panel.o: $(srcdir)/panel.c $(PDCURSES_HOME)/panel.h
+	$(BUILD) $(srcdir)/panel.c
+
 printw.o: $(srcdir)/printw.c
 	$(BUILD) $(srcdir)/printw.c
 
@@ -262,11 +256,6 @@ sb.o: $(osdir)/sb.c
 
 x11.o: $(osdir)/x11.c
 	$(BUILD) $(osdir)/x11.c
-
-#------------------------------------------------------------------------
-
-panel.o: $(pandir)/panel.c $(PDCURSES_HOME)/panel.h
-	$(BUILD) $(pandir)/panel.c
 
 #------------------------------------------------------------------------
 
@@ -386,6 +375,10 @@ pad.sho: $(srcdir)/pad.c
 	$(DYN_BUILD) $(srcdir)/pad.c
 	@SAVE2O@
 
+panel.sho: $(srcdir)/panel.c $(PDCURSES_HOME)/panel.h
+	$(DYN_BUILD) $(srcdir)/panel.c
+	@SAVE2O@
+
 printw.sho: $(srcdir)/printw.c
 	$(DYN_BUILD) $(srcdir)/printw.c
 	@SAVE2O@
@@ -487,9 +480,8 @@ firework: firework.o
 newdemo: newdemo.o
 	$(LINK) newdemo.o -o $@ $(LDFLAGS)
 
-ptest: ptest.o $(LIBPANEL)
-#	$(LINK) ptest.o -o $@ $(PANEL_LIB) $(LDFLAGS)
-	$(LINK) ptest.o -o $@ $(LIBPANEL) $(LDFLAGS)
+ptest: ptest.o
+	$(LINK) ptest.o -o $@ $(LDFLAGS)
 
 rain: rain.o
 	$(LINK) rain.o -o $@ $(LDFLAGS)
@@ -567,8 +559,8 @@ tclock: tclock.o $(LIBCURSES)
 view: view.o $(LIBCURSES)
 	$(LINK) view.o -o $@ $(LDFLAGS)
 
-ncurses: ncurses.o $(LIBCURSES) $(LIBPANEL)
-	$(LINK) ncurses.o -o $@ $(LIBPANEL) $(LDFLAGS)
+ncurses: ncurses.o $(LIBCURSES)
+	$(LINK) ncurses.o -o $@ $(LDFLAGS)
 
 bs.o: $(ncurses_testdir)/bs.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/bs.c

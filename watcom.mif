@@ -1,33 +1,27 @@
 # Common elements for the Watcom makefiles
 
 srcdir = $(PDCURSES_HOME)\pdcurses
-pandir = $(PDCURSES_HOME)\panel
 demodir = $(PDCURSES_HOME)\demos
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj &
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj &
 getch.obj getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj &
 insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj &
-outopts.obj overlay.obj pad.obj printw.obj refresh.obj scanw.obj &
-scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj touch.obj &
-util.obj window.obj debug.obj
+outopts.obj overlay.obj pad.obj panel.obj printw.obj refresh.obj &
+scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj &
+touch.obj util.obj window.obj debug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj &
 pdcsetsc.obj pdcutil.obj
-
-PANOBJS = panel.obj
 
 DEMOS = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe &
 ptest.exe rain.exe worm.exe
 
 LIBCURSES = pdcurses.lib
-LIBPANEL = panel.lib
-
-PDCLIBS = $(LIBCURSES) $(LIBPANEL)
 
 LINK = wlink
 
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(LIBCURSES) $(DEMOS)
 
 clean
 	-del *.obj
@@ -37,10 +31,7 @@ clean
 
 demos:	$(DEMOS)
 
-$(LIBPANEL) : $(PANOBJS)
-	$(LIBEXE) $@ $(PANOBJS)
-
-.c: $(srcdir);$(osdir);$(pandir);$(demodir)
+.c: $(srcdir);$(osdir);$(demodir)
 .c.obj: .autodepend
 	$(CC) $(CFLAGS) $<
 
@@ -53,9 +44,7 @@ xmas.exe:	xmas.obj $(LIBCURSES)
 firework.exe:	firework.obj $(LIBCURSES)
 rain.exe:	rain.obj $(LIBCURSES)
 worm.exe:	worm.obj $(LIBCURSES)
-
-ptest.exe:	ptest.obj $(LIBCURSES) $(LIBPANEL)
-	$(LINK) $(LDFLAGS) n $@ f ptest.obj l $(LIBCURSES) l $(LIBPANEL)
+ptest.exe:	ptest.obj $(LIBCURSES)
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) n $@ f tuidemo.obj f tui.obj l $(LIBCURSES)

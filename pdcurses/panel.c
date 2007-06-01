@@ -14,12 +14,11 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
-
-#include <panel.h>
 #include <curspriv.h>
+#include <panel.h>
 #include <stdlib.h>
 
-RCSID("$Id: panel.c,v 1.27 2007/03/09 20:53:25 wmcbrine Exp $");
+RCSID("$Id: panel.c,v 1.1 2007/06/01 08:25:29 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

@@ -67,6 +67,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 +termattr.obj +terminfo.obj +touch.obj +util.obj +window.obj +debug.obj \
 +pdcclip.obj +pdcdisp.obj +pdcgetsc.obj +pdckbd.obj +pdcscrn.obj \
 +pdcsetsc.obj +pdcutil.obj ,lib.map
+	-copy $(LIBCURSES) panel.lib
 
 .autodepend
 

@@ -73,6 +73,7 @@ terminfo.obj: $(TERM_HEADER)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\mscdos.lrf
+	-copy $(LIBCURSES) panel.lib
 
 {$(srcdir)\}.c{}.obj:
 	$(BUILD) $<

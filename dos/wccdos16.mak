@@ -44,6 +44,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	%write wccdos.lrf $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @wccdos.lrf
 	-del wccdos.lrf
+	-copy $(LIBCURSES) panel.lib
 
 PLATFORM1	= Watcom C++ 16-bit DOS
 PLATFORM2	= Open Watcom 1.6 for 16-bit DOS

@@ -57,6 +57,7 @@ demos:	$(DEMOS)
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
 	$(LIBEXE) $@ @$(osdir)\bccdos.lrf
+	-copy $(LIBCURSES) panel.lib
 
 .autodepend
 

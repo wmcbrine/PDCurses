@@ -49,6 +49,7 @@ LIBEXE		= wlib /q /n /t
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
+	-copy $(LIBCURSES) panel.lib
 
 PLATFORM1	= Watcom C++ Win32
 PLATFORM2	= Open Watcom 1.6 for Win32

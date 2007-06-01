@@ -95,12 +95,14 @@ terminfo.obj: $(TERM_HEADER)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 
-# Remove the next two lines for a DLL build:
+# Remove the next three lines for a DLL build:
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
+	-copy $(LIBCURSES) panel.lib
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	$(SHL_LD) -o $(CURSESDLL) $(LIBOBJS) $(PDCOBJS)
+	-copy $(LIBCURSES) panel.lib
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c
 OSBUILD = $(BUILD) $(osdir)\$*.c

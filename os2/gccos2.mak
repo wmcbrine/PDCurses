@@ -97,6 +97,7 @@ ptest.o rain.o worm.o
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
+	-copy $(LIBCURSES) panel.a
 
 pdcurses.lib: pdcurses.a
 	$(EMXOMF) -o pdcurses.lib pdcurses.a

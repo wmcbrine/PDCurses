@@ -55,7 +55,7 @@ libs:	$(LIBCURSES)
 
 clean:
 	-del *.o
-	-del $(LIBCURSES)
+	-del *.a
 	-del *.exe
 
 demos:	$(DEMOS)
@@ -65,6 +65,7 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
+	-copy $(LIBCURSES) panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)

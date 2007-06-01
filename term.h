@@ -11,12 +11,15 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: term.h,v 1.13 2007/05/16 07:16:31 wmcbrine Exp $ */
+/* $Id: term.h,v 1.14 2007/06/01 02:38:52 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
    other languages) to be compiled. Anyone who tries to actually _use_ 
    them will be disappointed, since they only return ERR. */
+
+#ifndef __PDCURSES_TERM_H__
+#define __PDCURSES_TERM_H__ 1
 
 #include <curses.h>
 
@@ -24,9 +27,6 @@
 extern "C"
 {
 #endif
-
-#ifndef __PDCURSES_TERM_H__
-#define __PDCURSES_TERM_H__ 1
 
 typedef struct
 {
@@ -61,8 +61,8 @@ char   *tparm(const char *, long, long, long, long, long,
 		long, long, long, long);
 int	tputs(const char *, int, int (*)(int));
 
-#endif /* __PDCURSES_TERM_H__ */
-
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 }
 #endif
+
+#endif /* __PDCURSES_TERM_H__ */

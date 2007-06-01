@@ -11,11 +11,14 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: panel.h,v 1.15 2006/10/15 02:42:24 wmcbrine Exp $ */
+/* $Id: panel.h,v 1.16 2007/06/01 02:38:52 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *			   Panels for PDCurses				*
  *----------------------------------------------------------------------*/
+
+#ifndef __PDCURSES_PANEL_H__
+#define __PDCURSES_PANEL_H__ 1
 
 #include <curses.h>
 
@@ -23,9 +26,6 @@
 extern "C"
 {
 #endif
-
-#ifndef __PDCURSES_PANEL_H__
-#define __PDCURSES_PANEL_H__ 1
 
 typedef struct panelobs
 {
@@ -62,8 +62,8 @@ const void *panel_userptr(const PANEL *pan);
 int	move_panel(PANEL *pan, int starty, int startx);
 int	replace_panel(PANEL *pan, WINDOW *win);
 
-#endif /* __PDCURSES_PANEL_H__ */
-
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 }
 #endif
+
+#endif /* __PDCURSES_PANEL_H__ */

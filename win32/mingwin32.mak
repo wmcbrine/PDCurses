@@ -2,9 +2,9 @@
 #
 # GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
-# Usage: make -f [path\]gccwin32.mak [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: make -f [path\]mingwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
 #
-# where target can be any of:
+# where tgt can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
 #
 ################################################################################
@@ -41,6 +41,7 @@ CFLAGS += -I$(PDCURSES_HOME)
 
 ifeq ($(WIDE),Y)
 	CFLAGS += -DPDC_WIDE
+	W = w
 endif
 
 ifeq ($(UTF8),Y)
@@ -49,10 +50,17 @@ endif
 
 LINK		= gcc
 
-LIBEXE		= ar
-LIBFLAGS	= rcv
-
-LIBCURSES	= pdcurses.a
+ifeq ($(DLL),Y)
+	CFLAGS += -DPDC_DLL_BUILD
+	LIBEXE = gcc curses$(W).def
+	LIBFLAGS = -shared -o
+	LIBCURSES = pdcurses.dll
+else
+	LIBEXE = ar
+	LIBFLAGS = rcv
+	LIBCURSES = pdcurses.a
+	POST = -copy pdcurses.a panel.a
+endif
 
 ################################################################################
 .PHONY: all libs clean demos dist
@@ -65,6 +73,7 @@ clean:
 	-del *.o
 	-del *.a
 	-del *.exe
+	-del *.dll
 
 demos:	$(DEMOS)
 	strip *.exe
@@ -73,7 +82,7 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
-	-copy $(LIBCURSES) panel.a
+	$(POST)
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

@@ -38,8 +38,8 @@ CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE -DPDC_FORCE_UTF8
 
 LINK		= lcclnk
 
-DEFFILE		= $(osdir)\curses_lcc.def
-#DEFFILE		= $(osdir)\cursesw_lcc.def
+DEFFILE		= $(osdir)\pdcurses_lcc.def
+#DEFFILE		= $(osdir)\pdcursesw_lcc.def
 SHL_LD		= lcclnk -DLL $(DEFFILE)
 
 LIBEXE		= lcclib

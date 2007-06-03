@@ -68,9 +68,9 @@ $(PDCOBJS) : $(PDCURSES_X11_H)
 terminfo.o: $(TERM_HEADER)
 
 
-curses.exp: ../win32/curses.def ../x11/xcurses.exp
+curses.exp: ../win32/pdcurses.def ../x11/xcurses.exp
 	cp ../x11/xcurses.exp ./curses.exp
-	grep ^EXPORTS ../win32/curses.def | cut -f 2 -d\ >> curses.exp
+	grep ^EXPORTS ../win32/pdcurses.def | cut -f 2 -d\ >> curses.exp
 
 
 addch.o: $(srcdir)/addch.c

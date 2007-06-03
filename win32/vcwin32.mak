@@ -38,10 +38,10 @@ LDFLAGS		=
 !endif
 
 !ifdef WIDE
-DEFFILE		= $(osdir)\cursesw.def
+DEFFILE		= $(osdir)\pdcursesw.def
 WIDEOPT		= -DPDC_WIDE
 !else
-DEFFILE		= $(osdir)\curses.def
+DEFFILE		= $(osdir)\pdcurses.def
 !endif
 
 !ifdef UTF8
@@ -100,7 +100,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.lib
 !endif
 
-$(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(osdir)\curses.def pdcurses.obj
+$(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE) pdcurses.obj
 	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
 	-copy $(LIBCURSES) panel.lib
 

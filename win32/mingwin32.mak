@@ -52,7 +52,7 @@ LINK		= gcc
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = gcc curses$(W).def
+	LIBEXE = gcc pdcurses$(W).def
 	LIBFLAGS = -shared -o
 	LIBCURSES = pdcurses.dll
 else

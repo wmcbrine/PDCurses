@@ -1,4 +1,4 @@
-; curses.def for Win32 port
+; pdcurses.def for Win32 port
 ; each entry point MUST be on a seperate line prefixed
 ; by EXPORTS in column 1
 ;

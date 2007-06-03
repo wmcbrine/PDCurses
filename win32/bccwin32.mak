@@ -44,7 +44,7 @@ UTF8OPT		= -DPDC_FORCE_UTF8
 BUILD		= $(CC) -I$(PDCURSES_HOME) -c -Tpe -w32 $(CFLAGS) -w-par \
 $(WIDEOPT) $(UTF8OPT)
 
-LIBEXE		= tlib /C /E /0
+LIBEXE		= tlib /C /E /0 /a
 
 LIBCURSES	= pdcurses.lib
 
@@ -54,7 +54,6 @@ all:	$(LIBCURSES) $(DEMOS)
 clean:
 	-del *.obj
 	-del *.lib
-	-del *.map
 	-del *.tds
 	-del *.exe
 
@@ -62,16 +61,7 @@ clean:
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
-	$(LIBEXE) $@ \
-+addch.obj +addchstr.obj +addstr.obj +attr.obj +beep.obj +bkgd.obj \
-+border.obj +clear.obj +color.obj +delch.obj +deleteln.obj +deprec.obj \
-+getch.obj +getstr.obj +getyx.obj +inch.obj +inchstr.obj +initscr.obj \
-+inopts.obj +insch.obj +insstr.obj +instr.obj +kernel.obj +keyname.obj \
-+mouse.obj +move.obj +outopts.obj +overlay.obj +pad.obj +panel.obj \
-+printw.obj +refresh.obj +scanw.obj +scr_dump.obj +scroll.obj +slk.obj \
-+termattr.obj +terminfo.obj +touch.obj +util.obj +window.obj +debug.obj \
-+pdcclip.obj +pdcdisp.obj +pdcgetsc.obj +pdckbd.obj +pdcscrn.obj \
-+pdcsetsc.obj +pdcutil.obj ,lib.map
+	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.lib
 
 .autodepend
@@ -88,30 +78,12 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 .c.obj:
 	$(BUILD) $<
 
+.obj.exe:
+	$(CC) -e$@ $** $(LIBCURSES)
+
 #------------------------------------------------------------------------
 
-firework.exe:	firework.obj $(LIBCURSES)
-	$(CC) -e$@ $**
-
-newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(CC) -e$@ $**
-
-ptest.exe:	ptest.obj $(LIBCURSES)
-	$(CC) -e$@ $**
-
-rain.exe:	rain.obj $(LIBCURSES)
-	$(CC) -e$@ $**
-
-testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(CC) -e$@ $**
-
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(CC) -e$@ $**
-
-worm.exe:	worm.obj $(LIBCURSES)
-	$(CC) -e$@ $**
-
-xmas.exe:	xmas.obj $(LIBCURSES)
 	$(CC) -e$@ $**
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)

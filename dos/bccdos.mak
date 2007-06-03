@@ -73,30 +73,12 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 .c.obj:
 	$(BUILD) $<
 
+.obj.exe:
+	$(CC) -m$(MODEL) -e$@ $** $(LIBCURSES)
+
 #------------------------------------------------------------------------
 
-firework.exe:	firework.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
-
-newdemo.exe:	newdemo.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
-
-ptest.exe:	ptest.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
-
-rain.exe:	rain.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
-
-testcurs.exe:	testcurs.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
-
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
-
-worm.exe:	worm.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
-
-xmas.exe:	xmas.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)

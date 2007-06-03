@@ -1,453 +1,448 @@
-; pdcurses.def for Win32 port
-; each entry point MUST be on a seperate line prefixed
-; by EXPORTS in column 1
-;
 LIBRARY pdcurses
-HEAPSIZE 40960
-STACKSIZE 10240
-EXPORTS LINES
-EXPORTS COLS
-EXPORTS stdscr
-EXPORTS curscr
-EXPORTS SP
-EXPORTS Mouse_status
-EXPORTS COLORS
-EXPORTS COLOR_PAIRS
-EXPORTS TABSIZE
-EXPORTS acs_map
-EXPORTS ttytype
-EXPORTS addch
-EXPORTS addchnstr
-EXPORTS addchstr
-EXPORTS addnstr
-EXPORTS addstr
-EXPORTS attroff
-EXPORTS attron
-EXPORTS attrset
-EXPORTS attr_get
-EXPORTS attr_off
-EXPORTS attr_on
-EXPORTS attr_set
-EXPORTS baudrate
-EXPORTS beep
-EXPORTS bkgd
-EXPORTS bkgdset
-EXPORTS border
-EXPORTS box
-EXPORTS can_change_color
-EXPORTS cbreak
-EXPORTS chgat
-EXPORTS clearok
-EXPORTS clear
-EXPORTS clrtobot
-EXPORTS clrtoeol
-EXPORTS color_content
-EXPORTS color_set
-EXPORTS copywin
-EXPORTS curs_set
-EXPORTS def_prog_mode
-EXPORTS def_shell_mode
-EXPORTS delay_output
-EXPORTS delch
-EXPORTS deleteln
-EXPORTS delscreen
-EXPORTS delwin
-EXPORTS derwin
-EXPORTS doupdate
-EXPORTS dupwin
-EXPORTS echochar
-EXPORTS echo
-EXPORTS endwin
-EXPORTS erasechar
-EXPORTS erase
-EXPORTS filter
-EXPORTS flash
-EXPORTS flushinp
-EXPORTS getbkgd
-EXPORTS getnstr
-EXPORTS getstr
-EXPORTS getwin
-EXPORTS halfdelay
-EXPORTS has_colors
-EXPORTS has_ic
-EXPORTS has_il
-EXPORTS hline
-EXPORTS idcok
-EXPORTS idlok
-EXPORTS immedok
-EXPORTS inchnstr
-EXPORTS inchstr
-EXPORTS inch
-EXPORTS init_color
-EXPORTS init_pair
-EXPORTS initscr
-EXPORTS innstr
-EXPORTS insch
-EXPORTS insdelln
-EXPORTS insertln
-EXPORTS insnstr
-EXPORTS insstr
-EXPORTS instr
-EXPORTS intrflush
-EXPORTS isendwin
-EXPORTS is_linetouched
-EXPORTS is_wintouched
-EXPORTS keyname
-EXPORTS keypad
-EXPORTS killchar
-EXPORTS leaveok
-EXPORTS longname
-EXPORTS meta
-EXPORTS move
-EXPORTS mvaddch
-EXPORTS mvaddchnstr
-EXPORTS mvaddchstr
-EXPORTS mvaddnstr
-EXPORTS mvaddstr
-EXPORTS mvchgat
-EXPORTS mvcur
-EXPORTS mvdelch
-EXPORTS mvderwin
-EXPORTS mvgetch
-EXPORTS mvgetnstr
-EXPORTS mvgetstr
-EXPORTS mvhline
-EXPORTS mvinch
-EXPORTS mvinchnstr
-EXPORTS mvinchstr
-EXPORTS mvinnstr
-EXPORTS mvinsch
-EXPORTS mvinsnstr
-EXPORTS mvinsstr
-EXPORTS mvinstr
-EXPORTS mvprintw
-EXPORTS mvscanw
-EXPORTS mvvline
-EXPORTS mvwaddchnstr
-EXPORTS mvwaddchstr
-EXPORTS mvwaddch
-EXPORTS mvwaddnstr
-EXPORTS mvwaddstr
-EXPORTS mvwchgat
-EXPORTS mvwdelch
-EXPORTS mvwgetch
-EXPORTS mvwgetnstr
-EXPORTS mvwgetstr
-EXPORTS mvwhline
-EXPORTS mvwinchnstr
-EXPORTS mvwinchstr
-EXPORTS mvwinch
-EXPORTS mvwinnstr
-EXPORTS mvwinsch
-EXPORTS mvwinsnstr
-EXPORTS mvwinsstr
-EXPORTS mvwinstr
-EXPORTS mvwin
-EXPORTS mvwprintw
-EXPORTS mvwscanw
-EXPORTS mvwvline
-EXPORTS napms
-EXPORTS newpad
-EXPORTS newterm
-EXPORTS newwin
-EXPORTS nl
-EXPORTS nocbreak
-EXPORTS nodelay
-EXPORTS noecho
-EXPORTS nonl
-EXPORTS noqiflush
-EXPORTS noraw
-EXPORTS notimeout
-EXPORTS overlay
-EXPORTS overwrite
-EXPORTS pair_content
-EXPORTS pechochar
-EXPORTS pnoutrefresh
-EXPORTS prefresh
-EXPORTS printw
-EXPORTS putwin
-EXPORTS qiflush
-EXPORTS raw
-EXPORTS redrawwin
-EXPORTS refresh
-EXPORTS reset_prog_mode
-EXPORTS reset_shell_mode
-EXPORTS resetty
-EXPORTS ripoffline
-EXPORTS savetty
-EXPORTS scanw
-EXPORTS scr_dump
-EXPORTS scr_init
-EXPORTS scrl
-EXPORTS scrollok
-EXPORTS scroll
-EXPORTS scr_restore
-EXPORTS scr_set
-EXPORTS setscrreg
-EXPORTS set_term
-EXPORTS slk_attroff
-EXPORTS slk_attr_off
-EXPORTS slk_attron
-EXPORTS slk_attr_on
-EXPORTS slk_attrset
-EXPORTS slk_attr_set
-EXPORTS slk_clear
-EXPORTS slk_color
-EXPORTS slk_init
-EXPORTS slk_label
-EXPORTS slk_noutrefresh
-EXPORTS slk_refresh
-EXPORTS slk_restore
-EXPORTS slk_set
-EXPORTS slk_touch
-EXPORTS standend
-EXPORTS standout
-EXPORTS start_color
-EXPORTS subpad
-EXPORTS subwin
-EXPORTS syncok
-EXPORTS termattrs
-EXPORTS term_attrs
-EXPORTS termname
-EXPORTS timeout
-EXPORTS touchline
-EXPORTS touchwin
-EXPORTS typeahead
-EXPORTS untouchwin
-EXPORTS use_env
-EXPORTS vidattr
-EXPORTS vid_attr
-EXPORTS vidputs
-EXPORTS vid_puts
-EXPORTS vline
-EXPORTS vw_printw
-EXPORTS vwprintw
-EXPORTS vw_scanw
-EXPORTS vwscanw
-EXPORTS waddchnstr
-EXPORTS waddchstr
-EXPORTS waddch
-EXPORTS waddnstr
-EXPORTS waddstr
-EXPORTS wattroff
-EXPORTS wattron
-EXPORTS wattrset
-EXPORTS wattr_get
-EXPORTS wattr_off
-EXPORTS wattr_on
-EXPORTS wattr_set
-EXPORTS wbkgdset
-EXPORTS wbkgd
-EXPORTS wborder
-EXPORTS wchgat
-EXPORTS wclear
-EXPORTS wclrtobot
-EXPORTS wclrtoeol
-EXPORTS wcolor_set
-EXPORTS wcursyncup
-EXPORTS wdelch
-EXPORTS wdeleteln
-EXPORTS wechochar
-EXPORTS werase
-EXPORTS wgetch
-EXPORTS wgetnstr
-EXPORTS wgetstr
-EXPORTS whline
-EXPORTS winchnstr
-EXPORTS winchstr
-EXPORTS winch
-EXPORTS winnstr
-EXPORTS winsch
-EXPORTS winsdelln
-EXPORTS winsertln
-EXPORTS winsnstr
-EXPORTS winsstr
-EXPORTS winstr
-EXPORTS wmove
-EXPORTS wnoutrefresh
-EXPORTS wprintw
-EXPORTS wredrawln
-EXPORTS wrefresh
-EXPORTS wscanw
-EXPORTS wscrl
-EXPORTS wsetscrreg
-EXPORTS wstandend
-EXPORTS wstandout
-EXPORTS wsyncdown
-EXPORTS wsyncup
-EXPORTS wtimeout
-EXPORTS wtouchln
-EXPORTS wvline
-EXPORTS addnwstr
-EXPORTS addwstr
-EXPORTS add_wch
-EXPORTS add_wchnstr
-EXPORTS add_wchstr
-EXPORTS border_set
-EXPORTS box_set
-EXPORTS echo_wchar
-EXPORTS erasewchar
-EXPORTS getbkgrnd
-EXPORTS getcchar
-EXPORTS getn_wstr
-EXPORTS get_wch
-EXPORTS get_wstr
-EXPORTS hline_set
-EXPORTS innwstr
-EXPORTS ins_nwstr
-EXPORTS ins_wch
-EXPORTS ins_wstr
-EXPORTS inwstr
-EXPORTS in_wch
-EXPORTS in_wchnstr
-EXPORTS in_wchstr
-EXPORTS key_name
-EXPORTS killwchar
-EXPORTS mvaddnwstr
-EXPORTS mvaddwstr
-EXPORTS mvadd_wch
-EXPORTS mvadd_wchnstr
-EXPORTS mvadd_wchstr
-EXPORTS mvgetn_wstr
-EXPORTS mvget_wch
-EXPORTS mvget_wstr
-EXPORTS mvhline_set
-EXPORTS mvinnwstr
-EXPORTS mvins_nwstr
-EXPORTS mvins_wch
-EXPORTS mvins_wstr
-EXPORTS mvinwstr
-EXPORTS mvin_wch
-EXPORTS mvin_wchnstr
-EXPORTS mvin_wchstr
-EXPORTS mvvline_set
-EXPORTS mvwaddnwstr
-EXPORTS mvwaddwstr
-EXPORTS mvwadd_wch
-EXPORTS mvwadd_wchnstr
-EXPORTS mvwadd_wchstr
-EXPORTS mvwgetn_wstr
-EXPORTS mvwget_wch
-EXPORTS mvwget_wstr
-EXPORTS mvwhline_set
-EXPORTS mvwinnwstr
-EXPORTS mvwins_nwstr
-EXPORTS mvwins_wch
-EXPORTS mvwins_wstr
-EXPORTS mvwin_wch
-EXPORTS mvwin_wchnstr
-EXPORTS mvwin_wchstr
-EXPORTS mvwinwstr
-EXPORTS mvwvline_set
-EXPORTS pecho_wchar
-EXPORTS setcchar
-EXPORTS slk_wset
-EXPORTS unget_wch
-EXPORTS vline_set
-EXPORTS waddnwstr
-EXPORTS waddwstr
-EXPORTS wadd_wch
-EXPORTS wadd_wchnstr
-EXPORTS wadd_wchstr
-EXPORTS wbkgrnd
-EXPORTS wbkgrndset
-EXPORTS wborder_set
-EXPORTS wecho_wchar
-EXPORTS wgetbkgrnd
-EXPORTS wgetn_wstr
-EXPORTS wget_wch
-EXPORTS wget_wstr
-EXPORTS whline_set
-EXPORTS winnwstr
-EXPORTS wins_nwstr
-EXPORTS wins_wch
-EXPORTS wins_wstr
-EXPORTS winwstr
-EXPORTS win_wch
-EXPORTS win_wchnstr
-EXPORTS win_wchstr
-EXPORTS wunctrl
-EXPORTS wvline_set
-EXPORTS getattrs
-EXPORTS getbegx
-EXPORTS getbegy
-EXPORTS getmaxx
-EXPORTS getmaxy
-EXPORTS getparx
-EXPORTS getpary
-EXPORTS getcurx
-EXPORTS getcury
-EXPORTS traceoff
-EXPORTS traceon
-EXPORTS unctrl
-EXPORTS crmode
-EXPORTS nocrmode
-EXPORTS draino
-EXPORTS resetterm
-EXPORTS fixterm
-EXPORTS saveterm
-EXPORTS mouse_set
-EXPORTS mouse_on
-EXPORTS mouse_off
-EXPORTS request_mouse_pos
-EXPORTS map_button
-EXPORTS wmouse_position
-EXPORTS getmouse
-EXPORTS getbmap
-EXPORTS assume_default_colors
-EXPORTS curses_version
-EXPORTS has_key
-EXPORTS use_default_colors
-EXPORTS wresize
-EXPORTS mouseinterval
-EXPORTS mousemask
-EXPORTS mouse_trafo
-EXPORTS nc_getmouse
-EXPORTS ungetmouse
-EXPORTS wenclose
-EXPORTS wmouse_trafo
-EXPORTS addrawch
-EXPORTS insrawch
-EXPORTS is_termresized
-EXPORTS mvaddrawch
-EXPORTS mvdeleteln
-EXPORTS mvinsertln
-EXPORTS mvinsrawch
-EXPORTS mvwaddrawch
-EXPORTS mvwdeleteln
-EXPORTS mvwinsertln
-EXPORTS mvwinsrawch
-EXPORTS raw_output
-EXPORTS resize_term
-EXPORTS resize_window
-EXPORTS waddrawch
-EXPORTS winsrawch
-EXPORTS wordchar
-EXPORTS panel_window
-EXPORTS update_panels
-EXPORTS hide_panel
-EXPORTS show_panel
-EXPORTS del_panel
-EXPORTS top_panel
-EXPORTS bottom_panel
-EXPORTS new_panel
-EXPORTS panel_above
-EXPORTS panel_below
-EXPORTS panel_hidden
-EXPORTS set_panel_userptr
-EXPORTS panel_userptr
-EXPORTS move_panel
-EXPORTS replace_panel
-EXPORTS PDC_debug
-EXPORTS PDC_ungetch
-EXPORTS PDC_set_blink
-EXPORTS PDC_set_line_color
-EXPORTS PDC_set_title
-EXPORTS PDC_clearclipboard
-EXPORTS PDC_freeclipboard
-EXPORTS PDC_getclipboard
-EXPORTS PDC_setclipboard
-EXPORTS PDC_get_input_fd
-EXPORTS PDC_get_key_modifiers
-EXPORTS PDC_save_key_modifiers
-EXPORTS PDC_return_key_modifiers
+EXPORTS
+LINES
+COLS
+stdscr
+curscr
+SP
+Mouse_status
+COLORS
+COLOR_PAIRS
+TABSIZE
+acs_map
+ttytype
+addch
+addchnstr
+addchstr
+addnstr
+addstr
+attroff
+attron
+attrset
+attr_get
+attr_off
+attr_on
+attr_set
+baudrate
+beep
+bkgd
+bkgdset
+border
+box
+can_change_color
+cbreak
+chgat
+clearok
+clear
+clrtobot
+clrtoeol
+color_content
+color_set
+copywin
+curs_set
+def_prog_mode
+def_shell_mode
+delay_output
+delch
+deleteln
+delscreen
+delwin
+derwin
+doupdate
+dupwin
+echochar
+echo
+endwin
+erasechar
+erase
+filter
+flash
+flushinp
+getbkgd
+getnstr
+getstr
+getwin
+halfdelay
+has_colors
+has_ic
+has_il
+hline
+idcok
+idlok
+immedok
+inchnstr
+inchstr
+inch
+init_color
+init_pair
+initscr
+innstr
+insch
+insdelln
+insertln
+insnstr
+insstr
+instr
+intrflush
+isendwin
+is_linetouched
+is_wintouched
+keyname
+keypad
+killchar
+leaveok
+longname
+meta
+move
+mvaddch
+mvaddchnstr
+mvaddchstr
+mvaddnstr
+mvaddstr
+mvchgat
+mvcur
+mvdelch
+mvderwin
+mvgetch
+mvgetnstr
+mvgetstr
+mvhline
+mvinch
+mvinchnstr
+mvinchstr
+mvinnstr
+mvinsch
+mvinsnstr
+mvinsstr
+mvinstr
+mvprintw
+mvscanw
+mvvline
+mvwaddchnstr
+mvwaddchstr
+mvwaddch
+mvwaddnstr
+mvwaddstr
+mvwchgat
+mvwdelch
+mvwgetch
+mvwgetnstr
+mvwgetstr
+mvwhline
+mvwinchnstr
+mvwinchstr
+mvwinch
+mvwinnstr
+mvwinsch
+mvwinsnstr
+mvwinsstr
+mvwinstr
+mvwin
+mvwprintw
+mvwscanw
+mvwvline
+napms
+newpad
+newterm
+newwin
+nl
+nocbreak
+nodelay
+noecho
+nonl
+noqiflush
+noraw
+notimeout
+overlay
+overwrite
+pair_content
+pechochar
+pnoutrefresh
+prefresh
+printw
+putwin
+qiflush
+raw
+redrawwin
+refresh
+reset_prog_mode
+reset_shell_mode
+resetty
+ripoffline
+savetty
+scanw
+scr_dump
+scr_init
+scrl
+scrollok
+scroll
+scr_restore
+scr_set
+setscrreg
+set_term
+slk_attroff
+slk_attr_off
+slk_attron
+slk_attr_on
+slk_attrset
+slk_attr_set
+slk_clear
+slk_color
+slk_init
+slk_label
+slk_noutrefresh
+slk_refresh
+slk_restore
+slk_set
+slk_touch
+standend
+standout
+start_color
+subpad
+subwin
+syncok
+termattrs
+term_attrs
+termname
+timeout
+touchline
+touchwin
+typeahead
+untouchwin
+use_env
+vidattr
+vid_attr
+vidputs
+vid_puts
+vline
+vw_printw
+vwprintw
+vw_scanw
+vwscanw
+waddchnstr
+waddchstr
+waddch
+waddnstr
+waddstr
+wattroff
+wattron
+wattrset
+wattr_get
+wattr_off
+wattr_on
+wattr_set
+wbkgdset
+wbkgd
+wborder
+wchgat
+wclear
+wclrtobot
+wclrtoeol
+wcolor_set
+wcursyncup
+wdelch
+wdeleteln
+wechochar
+werase
+wgetch
+wgetnstr
+wgetstr
+whline
+winchnstr
+winchstr
+winch
+winnstr
+winsch
+winsdelln
+winsertln
+winsnstr
+winsstr
+winstr
+wmove
+wnoutrefresh
+wprintw
+wredrawln
+wrefresh
+wscanw
+wscrl
+wsetscrreg
+wstandend
+wstandout
+wsyncdown
+wsyncup
+wtimeout
+wtouchln
+wvline
+addnwstr
+addwstr
+add_wch
+add_wchnstr
+add_wchstr
+border_set
+box_set
+echo_wchar
+erasewchar
+getbkgrnd
+getcchar
+getn_wstr
+get_wch
+get_wstr
+hline_set
+innwstr
+ins_nwstr
+ins_wch
+ins_wstr
+inwstr
+in_wch
+in_wchnstr
+in_wchstr
+key_name
+killwchar
+mvaddnwstr
+mvaddwstr
+mvadd_wch
+mvadd_wchnstr
+mvadd_wchstr
+mvgetn_wstr
+mvget_wch
+mvget_wstr
+mvhline_set
+mvinnwstr
+mvins_nwstr
+mvins_wch
+mvins_wstr
+mvinwstr
+mvin_wch
+mvin_wchnstr
+mvin_wchstr
+mvvline_set
+mvwaddnwstr
+mvwaddwstr
+mvwadd_wch
+mvwadd_wchnstr
+mvwadd_wchstr
+mvwgetn_wstr
+mvwget_wch
+mvwget_wstr
+mvwhline_set
+mvwinnwstr
+mvwins_nwstr
+mvwins_wch
+mvwins_wstr
+mvwin_wch
+mvwin_wchnstr
+mvwin_wchstr
+mvwinwstr
+mvwvline_set
+pecho_wchar
+setcchar
+slk_wset
+unget_wch
+vline_set
+waddnwstr
+waddwstr
+wadd_wch
+wadd_wchnstr
+wadd_wchstr
+wbkgrnd
+wbkgrndset
+wborder_set
+wecho_wchar
+wgetbkgrnd
+wgetn_wstr
+wget_wch
+wget_wstr
+whline_set
+winnwstr
+wins_nwstr
+wins_wch
+wins_wstr
+winwstr
+win_wch
+win_wchnstr
+win_wchstr
+wunctrl
+wvline_set
+getattrs
+getbegx
+getbegy
+getmaxx
+getmaxy
+getparx
+getpary
+getcurx
+getcury
+traceoff
+traceon
+unctrl
+crmode
+nocrmode
+draino
+resetterm
+fixterm
+saveterm
+mouse_set
+mouse_on
+mouse_off
+request_mouse_pos
+map_button
+wmouse_position
+getmouse
+getbmap
+assume_default_colors
+curses_version
+has_key
+use_default_colors
+wresize
+mouseinterval
+mousemask
+mouse_trafo
+nc_getmouse
+ungetmouse
+wenclose
+wmouse_trafo
+addrawch
+insrawch
+is_termresized
+mvaddrawch
+mvdeleteln
+mvinsertln
+mvinsrawch
+mvwaddrawch
+mvwdeleteln
+mvwinsertln
+mvwinsrawch
+raw_output
+resize_term
+resize_window
+waddrawch
+winsrawch
+wordchar
+panel_window
+update_panels
+hide_panel
+show_panel
+del_panel
+top_panel
+bottom_panel
+new_panel
+panel_above
+panel_below
+panel_hidden
+set_panel_userptr
+panel_userptr
+move_panel
+replace_panel
+PDC_debug
+PDC_ungetch
+PDC_set_blink
+PDC_set_line_color
+PDC_set_title
+PDC_clearclipboard
+PDC_freeclipboard
+PDC_getclipboard
+PDC_setclipboard
+PDC_get_input_fd
+PDC_get_key_modifiers
+PDC_save_key_modifiers
+PDC_return_key_modifiers

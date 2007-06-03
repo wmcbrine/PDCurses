@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.151 2007/05/28 17:11:32 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.152 2007/06/03 02:15:19 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -27,16 +27,16 @@
 #if defined(__TURBOC__) || defined(__EMX__) || defined(__DJGPP__) || \
     defined(__CYGWIN32__) || defined(__MINGW32__) || \
     defined(__WATCOMC__) || defined(__PACIFIC__)
-#  ifndef HAVE_VSSCANF
-#    define HAVE_VSSCANF	/* have vsscanf() */
-#  endif
+# ifndef HAVE_VSSCANF
+#  define HAVE_VSSCANF		/* have vsscanf() */
+# endif
 #endif
 
 #if defined(__CYGWIN32__) || defined(__MINGW32__) || \
     defined(__LCC__) || defined(__WATCOMC__)
-#  ifndef HAVE_VSNPRINTF
-#    define HAVE_VSNPRINTF	/* have vsnprintf() */
-#  endif
+# ifndef HAVE_VSNPRINTF
+#  define HAVE_VSNPRINTF	/* have vsnprintf() */
+# endif
 #endif
 
 #if defined(_MSC_VER) && defined(_WIN32) && !defined(_CRT_SECURE_NO_DEPRECATE)

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.285 2007/05/29 07:02:29 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.286 2007/06/03 02:15:19 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -66,19 +66,19 @@ extern "C"
  */
 
 #ifndef FALSE			/* booleans		 */
-#  define	FALSE	0
+# define	FALSE	0
 #endif
 #ifndef	TRUE			/* booleans		 */
-#  define	TRUE	1
+# define	TRUE	1
 #endif
 #ifndef	NULL
-#  define	NULL	(void *)0	/* Null pointer		 */
+# define	NULL	(void *)0	/* Null pointer		 */
 #endif
 #ifndef	ERR
-#  define	ERR	(-1)		/* general error flag	 */
+# define	ERR	(-1)		/* general error flag	 */
 #endif
 #ifndef	OK
-#  define	OK	0		/* general OK flag	 */
+# define	OK	0		/* general OK flag	 */
 #endif
 
 /*----------------------------------------------------------------------

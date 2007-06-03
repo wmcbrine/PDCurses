@@ -1,11 +1,14 @@
+
 			Welcome to PDCurses !
 
  This file provides information on building PDCurses for DOS, OS/2,
  Windows or X11. After unpacking the archive, go to the section below
  for the platform you intend to build on.
 
+
  DOS, OS/2, or Windows
  ---------------------
+
  . Set the environment variable PDCURSES_SRCDIR to point to the
    directory where you unpacked PDCurses. (Skip this step if you're
    using LCC-Win32.) For example:
@@ -70,13 +73,15 @@
 
 	make -f mingwin32.mak WIDE=Y UTF8=Y
 
-   You can also use the optional paramter "DLL=Y" with Visual C++, to
-   build the library as a DLL:
+   You can also use the optional paramter "DLL=Y" with Visual C++, MinGW 
+   or Cygwin, to build the library as a DLL:
 
 	nmake -f vcwin32.mak WIDE=Y DLL=Y
 
+
  X11
  ---
+
  . Run the configure script in the PDCurses-x.x directory. This will
    check for the dependencies libXCurses requires.
 

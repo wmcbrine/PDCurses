@@ -1,4 +1,4 @@
-LIBRARY		CURSES
+LIBRARY		PDCURSES
 
 DESCRIPTION	'PDCurses 3.2 Dynamic Linking library'
 

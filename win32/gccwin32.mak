@@ -10,7 +10,7 @@
 ################################################################################
 #
 # First, set the environment variable PDCURSES_SRCDIR, or edit the line
-# below; for example, "export PDCURSES_SRCDIR=c:/pdcurses". 
+# below; for example, "export PDCURSES_SRCDIR=/cygdrive/c/pdcurses".
 #
 ################################################################################
 PDCURSES_HOME	= $(PDCURSES_SRCDIR)
@@ -55,11 +55,14 @@ ifeq ($(DLL),Y)
 	LIBEXE = gcc pdcurses$(W).def
 	LIBFLAGS = -shared -o
 	LIBCURSES = pdcurses.dll
+	LIBPOST =
+	CLEAN = $(LIBCURSES)
 else
 	LIBEXE = ar
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
-	POST = -cp pdcurses.a panel.a
+	LIBPOST = -cp pdcurses.a panel.a
+	CLEAN = *.a
 endif
 
 ################################################################################
@@ -71,9 +74,8 @@ libs:	$(LIBCURSES)
 
 clean:
 	-rm -f *.o
-	-rm -f *.a
 	-rm -f *.exe
-	-rm -f *.dll
+	-rm -f $(CLEAN)
 
 demos:	$(DEMOS)
 	strip *.exe
@@ -82,7 +84,7 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
-	$(POST)
+	$(LIBPOST)
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

@@ -55,11 +55,14 @@ ifeq ($(DLL),Y)
 	LIBEXE = gcc pdcurses$(W).def
 	LIBFLAGS = -shared -o
 	LIBCURSES = pdcurses.dll
+	LIBPOST =
+	CLEAN = $(LIBCURSES)
 else
 	LIBEXE = ar
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
-	POST = -copy pdcurses.a panel.a
+	LIBPOST = -copy pdcurses.a panel.a
+	CLEAN = *.a
 endif
 
 ################################################################################
@@ -71,9 +74,8 @@ libs:	$(LIBCURSES)
 
 clean:
 	-del *.o
-	-del *.a
 	-del *.exe
-	-del *.dll
+	-del $(CLEAN)
 
 demos:	$(DEMOS)
 	strip *.exe
@@ -82,7 +84,7 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
-	$(POST)
+	$(LIBPOST)
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

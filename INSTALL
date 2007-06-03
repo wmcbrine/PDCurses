@@ -73,8 +73,8 @@
 
 	make -f mingwin32.mak WIDE=Y UTF8=Y
 
-   You can also use the optional paramter "DLL=Y" with Visual C++, MinGW 
-   or Cygwin, to build the library as a DLL:
+   You can also use the optional paramter "DLL=Y" with Visual C++,
+   MinGW, Cygwin or EMX, to build the library as a DLL:
 
 	nmake -f vcwin32.mak WIDE=Y DLL=Y
 

@@ -32,7 +32,7 @@ PDCURSES_OS2_H	= $(osdir)/pdcos2.h
 
 CC		= gcc
 
-CFLAGS = -I$(PDCURSES_HOME) -c -Wall -fomit-frame-pointer
+CFLAGS = -I$(PDCURSES_HOME) -c -Wall
 
 ifeq ($(EMXVIDEO),Y)
 	CFLAGS += -DEMXVIDEO
@@ -51,8 +51,7 @@ else
 	LDFLAGS =
 endif
 
-DLLTARGET	= curses.dll
-DLLCURSES	= curses.lib
+DLLTARGET	= pdcurses.dll
 DLLFLAGS 	= -Zdll -Zcrtdll -Zomf
 
 LINK		= gcc
@@ -62,9 +61,21 @@ EMXOMF		= emxomf
 LIBEXE		= ar
 LIBFLAGS	= rcv
 
-LIBCURSES	= pdcurses.a
-
-PDCLIBS		= $(LIBCURSES) #$(DLLTARGET) pdcurses.lib
+ifeq ($(DLL),Y)
+	CFLAGS += -Zdll -Zcrtdll -Zomf
+	LDFLAGS += -Zlinker /PM:VIO -Zomf -Zcrtdll
+	LIBCURSES = pdcurses.lib
+	PDCLIBS = $(DLLTARGET)
+	EXEPOST =
+	TUIPOST =
+	CLEAN = *.dll *.lib
+else
+	LIBCURSES = pdcurses.a
+	PDCLIBS = $(LIBCURSES)
+	EXEPOST = $(EMXBIND) $* $(BINDFLAGS)
+	TUIPOST = $(EMXBIND) tuidemo $(BINDFLAGS)
+	CLEAN = *.a testcurs newdemo xmas tuidemo firework ptest rain worm
+endif
 
 ################################################################################
 .PHONY: all libs clean demos dist
@@ -75,20 +86,12 @@ libs:	$(PDCLIBS)
 
 clean:
 	-del *.o
-	-del *.a
 	-del *.exe
-	-del *.lib
-	-del *.dlo
-	-del *.dll
-	-del testcurs newdemo xmas tuidemo firework ptest rain worm
-	-del *.obj
+	-del $(CLEAN)
 
-demos:	$(DEMOS) #testcurs_dyn.exe
+demos:	$(DEMOS)
 
 #------------------------------------------------------------------------
-
-DLLOBJS = $(LIBOBJS:.o=.dlo)
-PDCDLOS = $(PDCOBJS:.o=.dlo)
 
 DEMOOBJS = testcurs.o newdemo.o xmas.o tui.o tuidemo.o firework.o \
 ptest.o rain.o worm.o
@@ -99,56 +102,38 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.a
 
-pdcurses.lib: pdcurses.a
-	$(EMXOMF) -o pdcurses.lib pdcurses.a
-
-curses.dll: $(DLLOBJS) $(PDCDLOS)
-	$(LINK) $(DLLFLAGS) -o curses.dll $(DLLOBJS) $(PDCDLOS) \
+$(DLLTARGET): $(LIBOBJS) $(PDCOBJS)
+	$(LINK) $(DLLFLAGS) -o $(DLLTARGET) $(LIBOBJS) $(PDCOBJS) \
 $(osdir)\pdcurses.def
-#	lxlite curses.dll
-	emximp -o curses.lib $(osdir)\pdcurses.def
-	emximp -o curses.a curses.lib
+#	lxlite $(DLLTARGET)
+	emximp -o $(LIBCURSES) $(osdir)\pdcurses.def
 
-$(LIBOBJS) $(DLLOBJS) $(PDCOBJS) $(PDCDLOS) $(DEMOOBJS) : \
-$(PDCURSES_HEADERS)
+$(LIBOBJS) $(PDCOBJS) $(DEMOOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_OS2_H)
 $(DEMOS) : $(LIBCURSES)
-panel.o panel.dlo ptest.o: $(PANEL_HEADER)
-terminfo.o terminfo.dlo: $(TERM_HEADER)
+panel.o ptest.o: $(PANEL_HEADER)
+terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(CC) -c $(CFLAGS) $<
+	$(CC) -c $(CFLAGS) -o$@ $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(CC) -c $(CFLAGS) $<
-
-$(DLLOBJS) : %.dlo: $(srcdir)/%.c
-	$(CC) $(CFLAGS) $(DLLFLAGS) -o$@ $<
-
-$(PDCDLOS) : %.dlo: $(osdir)/%.c
-	$(CC) $(CFLAGS) $(DLLFLAGS) -o$@ $<
+	$(CC) -c $(CFLAGS) -o$@ $<
 
 #------------------------------------------------------------------------
 
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: %.o
 	$(LINK) $(LDFLAGS) -o $* $< $(LIBCURSES) $(CCLIBS)
-	$(EMXBIND) $* $(BINDFLAGS)
+	$(EXEPOST)
 
 tuidemo.exe:	tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES) $(CCLIBS)
-	$(EMXBIND) tuidemo $(BINDFLAGS)
-
-testcurs_dyn.exe:	testcurs.obj curses.dll
-	$(LINK) $(LDFLAGS) -Zlinker /PM:VIO -Zomf -Zcrtdll -o $@ \
-testcurs.obj $(DLLCURSES) $(CCLIBS)
+	$(TUIPOST)
 
 firework.o newdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \
 $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $<
-
-testcurs.obj: $(demodir)\testcurs.c
-	$(CC) $(CFLAGS) -Zomf -o$@ $<
 
 tui.o: $(demodir)\tui.c $(demodir)\tui.h
 	$(CC) $(CFLAGS) -I$(demodir) -o $@ $<

@@ -9,9 +9,9 @@
  DOS, OS/2, or Windows
  ---------------------
 
- . Set the environment variable PDCURSES_SRCDIR to point to the
-   directory where you unpacked PDCurses. (Skip this step if you're
-   using LCC-Win32.) For example:
+ . Optional, except for Digital Mars: Set the environment variable
+   PDCURSES_SRCDIR to point to the directory where you unpacked
+   PDCurses. (Skip this step if you're using LCC-Win32.) For example:
 
 	set PDCURSES_SRCDIR=c:\pdcurses
 

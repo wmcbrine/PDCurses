@@ -9,7 +9,11 @@
 #
 #########################################################################
 
+!ifdef %PDCURSES_SRCDIR
 PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
+!else
+PDCURSES_HOME	= ..
+!endif
 
 !include $(PDCURSES_HOME)\version.mif
 

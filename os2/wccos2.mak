@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # Watcom WMAKE Makefile for PDCurses library - OS/2 Open Watcom 1.1+
 #
@@ -7,16 +7,9 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, and/or edit the
-# lines below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
+#########################################################################
+
 PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
-################################################################################
-# Nothing below here should require changing.
-################################################################################
 
 !include $(PDCURSES_HOME)\version.mif
 

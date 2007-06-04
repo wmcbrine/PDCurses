@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
 #
@@ -7,18 +7,15 @@
 # where target can be any of:
 # [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, or edit the line 
-# below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
+#########################################################################
+
 PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-################################################################################
-# Nothing below here should require changing.
-################################################################################
 
 O = o
+
+ifeq ("$(PDCURSES_HOME)","")
+	PDCURSES_HOME = ..
+endif
 
 include $(PDCURSES_HOME)/version.mif
 include $(PDCURSES_HOME)/libobjs.mif
@@ -46,7 +43,7 @@ LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
 
-################################################################################
+#########################################################################
 .PHONY: all libs clean demos dist
 
 all:	libs demos

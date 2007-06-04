@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
@@ -7,18 +7,15 @@
 # where tgt can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, or edit the line
-# below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
+#########################################################################
+
 PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-################################################################################
-# Nothing below here should require changing.
-################################################################################
 
 O = o
+
+ifeq ("$(PDCURSES_HOME)","")
+	PDCURSES_HOME = ..
+endif
 
 include $(PDCURSES_HOME)/version.mif
 include $(PDCURSES_HOME)/libobjs.mif
@@ -63,7 +60,7 @@ else
 	CLEAN = *.a
 endif
 
-################################################################################
+#########################################################################
 .PHONY: all libs clean demos dist
 
 all:	libs demos

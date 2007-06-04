@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # NMAKE Makefile for PDCurses library - Microsoft C for DOS
 #
@@ -7,20 +7,19 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, and/or edit the
-# lines below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
-PDCURSES_HOME	= $(PDCURSES_SRCDIR)
+#########################################################################
+
+# Change the memory MODEL here, if desired
 MODEL		= L       # one of L, S, M, T, H, C
 SIZE		= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
-################################################################################
-# Nothing below here should require changing.
-################################################################################
 
 O = obj
+
+!ifdef PDCURSES_SRCDIR
+PDCURSES_HOME = $(PDCURSES_SRCDIR)
+!else
+PDCURSES_HOME = ..
+!endif
 
 !include $(PDCURSES_HOME)\version.mif
 !include $(PDCURSES_HOME)\libobjs.mif
@@ -51,7 +50,7 @@ LIBEXE		= lib
 
 LIBCURSES	= pdcurses.lib
 
-################################################################################
+#########################################################################
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:

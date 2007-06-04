@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # Borland MAKE Makefile for PDCurses library - OS/2 BC++ 1.0+
 #
@@ -7,18 +7,15 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, or edit the line
-# below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
-PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-################################################################################
-# Nothing below here should require changing.
-################################################################################
+#########################################################################
 
 O = obj
+
+!if $d(PDCURSES_SRCDIR)
+PDCURSES_HOME = $(PDCURSES_SRCDIR)
+!else
+PDCURSES_HOME = ..
+!endif
 
 !include $(PDCURSES_HOME)\version.mif
 !include $(PDCURSES_HOME)\libobjs.mif
@@ -43,7 +40,7 @@ LIBEXE		= tlib /C /E
 
 LIBCURSES	= pdcurses.lib
 
-################################################################################
+#########################################################################
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:

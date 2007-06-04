@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Watcom C/C++ 10.6+
 #
@@ -7,17 +7,12 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, and/or edit the 
-# lines below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
-PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
+#########################################################################
+
+# Change the memory MODEL here, if desired
 MODEL		= l
-################################################################################
-# Nothing below here should require changing.
-################################################################################
+
+PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
 
 !include $(PDCURSES_HOME)\version.mif
 

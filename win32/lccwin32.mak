@@ -1,4 +1,4 @@
-###############################################################################
+#########################################################################
 #
 # Makefile for PDCurses library - WIN32 LCC-Win32
 #
@@ -7,15 +7,11 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-###############################################################################
-#
+#########################################################################
+
 # Edit the line below for your environment.
-#
-###############################################################################
 PDCURSES_HOME	= \pdcurses
-###############################################################################
-# Nothing below here should require changing.
-###############################################################################
+
 PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h
 PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
@@ -60,7 +56,7 @@ PDCLIBS		= $(CURSESDLL)
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
-###############################################################################
+#########################################################################
 
 all:    $(PDCLIBS) $(DEMOS)
 

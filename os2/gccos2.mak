@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c+
 #
@@ -10,18 +10,15 @@
 # The EMXVIDEO option compiles with the emx video library, which
 # enables a PDCurses program to run under OS/2 and DOS.
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, or edit the line
-# below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
+#########################################################################
+
 PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-################################################################################
-# Nothing below here should require changing.
-################################################################################
 
 O = o
+
+ifeq ("$(PDCURSES_HOME)","")
+	PDCURSES_HOME = ..
+endif
 
 include $(PDCURSES_HOME)/version.mif
 include $(PDCURSES_HOME)/libobjs.mif
@@ -77,7 +74,7 @@ else
 	CLEAN = *.a testcurs newdemo xmas tuidemo firework ptest rain worm
 endif
 
-################################################################################
+#########################################################################
 .PHONY: all libs clean demos dist
 
 all:	libs demos

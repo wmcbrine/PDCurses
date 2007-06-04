@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # Visual C++ NMakefile for PDCurses library - Win32 VC++ 2.0+
 #
@@ -7,18 +7,15 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, or edit the line 
-# below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
-PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-################################################################################
-# Nothing below here should require changing.
-################################################################################
+#########################################################################
 
 O = obj
+
+!ifdef PDCURSES_SRCDIR
+PDCURSES_HOME = $(PDCURSES_SRCDIR)
+else
+PDCURSES_HOME = ..
+!endif
 
 !include $(PDCURSES_HOME)\version.mif
 !include $(PDCURSES_HOME)\libobjs.mif
@@ -71,7 +68,7 @@ PDCLIBS		= $(LIBCURSES)
 BUILD		= $(CC) -I$(PDCURSES_HOME) -c $(CFLAGS) $(DLLOPT) \
 $(WIDEOPT) $(UTF8OPT)
 
-################################################################################
+#########################################################################
 
 all:	$(PDCLIBS) $(DEMOS)
 

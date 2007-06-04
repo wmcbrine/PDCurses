@@ -1,4 +1,4 @@
-################################################################################
+#########################################################################
 #
 # NMAKE Makefile for PDCurses library - OS/2 C Set/2
 #
@@ -7,18 +7,15 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-################################################################################
-#
-# First, set the environment variable PDCURSES_SRCDIR, or edit the line
-# below; for example, "set PDCURSES_SRCDIR=c:\pdcurses".
-#
-################################################################################
-PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-################################################################################
-# Nothing below here should require changing.
-################################################################################
+#########################################################################
 
 O = obj
+
+!ifdef PDCURSES_SRCDIR
+PDCURSES_HOME = $(PDCURSES_SRCDIR)
+else
+PDCURSES_HOME = ..
+!endif
 
 !include $(PDCURSES_HOME)\version.mif
 !include $(PDCURSES_HOME)\libobjs.mif
@@ -47,7 +44,7 @@ LIBEXE		= lib
 
 LIBCURSES	= pdcurses.lib
 
-################################################################################
+#########################################################################
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:

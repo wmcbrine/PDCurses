@@ -59,7 +59,7 @@ PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
 pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
 
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) curses.exp ../x11/xcurses.exp
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) curses.exp
 	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) \
 $(LIBOBJS) $(PDCOBJS) -o $@
 
@@ -68,9 +68,16 @@ $(PDCOBJS) : $(PDCURSES_X11_H)
 terminfo.o: $(TERM_HEADER)
 
 
-curses.exp: ../win32/pdcurses.def ../x11/xcurses.exp
-	cp ../x11/xcurses.exp ./curses.exp
-	grep ^EXPORTS ../win32/pdcurses.def | cut -f 2 -d\ >> curses.exp
+curses.exp: ../win32/pdcurses.def
+	tail -n +3 ../win32/pdcurses.def > curses.exp
+	echo Xinitscr >> curses.exp
+	echo XCursesExit >> curses.exp
+	echo sb_init >> curses.exp
+	echo sb_set_horz >> curses.exp
+	echo sb_set_vert >> curses.exp
+	echo sb_get_horz >> curses.exp
+	echo sb_get_vert >> curses.exp
+	echo sb_refresh >> curses.exp
 
 
 addch.o: $(srcdir)/addch.c

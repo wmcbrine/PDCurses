@@ -53,15 +53,13 @@ LINK		= gcc
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
 	LIBEXE = gcc pdcurses$(W).def
-	LIBFLAGS = -shared -o
+	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	LIBPOST =
-	CLEAN = $(LIBCURSES)
+	CLEAN = $(LIBCURSES) *.a
 else
 	LIBEXE = ar
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
-	LIBPOST = -copy pdcurses.a panel.a
 	CLEAN = *.a
 endif
 
@@ -84,7 +82,7 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
-	$(LIBPOST)
+	-copy pdcurses.a panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

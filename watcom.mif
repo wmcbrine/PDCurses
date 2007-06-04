@@ -21,6 +21,13 @@ LIBCURSES = pdcurses.lib
 
 LINK = wlink
 
+!ifdef __LOADDLL__
+! loaddll wcc    wccd
+! loaddll wcc386 wccd386
+! loaddll wlink  wlink
+! loaddll wlib   wlibd
+!endif
+
 all:	$(LIBCURSES) $(DEMOS)
 
 clean

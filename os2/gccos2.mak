@@ -12,11 +12,11 @@
 #
 #########################################################################
 
-PDCURSES_HOME	= $(PDCURSES_SRCDIR)
-
 O = o
 
-ifeq ("$(PDCURSES_HOME)","")
+ifdef PDCURSES_SRCDIR
+	PDCURSES_HOME = $(PDCURSES_SRCDIR)
+else
 	PDCURSES_HOME = ..
 endif
 

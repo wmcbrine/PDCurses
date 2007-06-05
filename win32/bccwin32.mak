@@ -11,34 +11,32 @@
 
 O = obj
 
-!if $d(PDCURSES_SRCDIR)
-PDCURSES_HOME = $(PDCURSES_SRCDIR)
-!else
-PDCURSES_HOME = ..
+!ifndef PDCURSES_SRCDIR
+PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_HOME)\version.mif
-!include $(PDCURSES_HOME)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\version.mif
+!include $(PDCURSES_SRCDIR)\libobjs.mif
 
-osdir		= $(PDCURSES_HOME)\win32
+osdir		= $(PDCURSES_SRCDIR)\win32
 
 CC		= bcc32 -q
 
-!if $d(DEBUG)
+!ifdef DEBUG
 CFLAGS		= -N -v -y -DPDCDEBUG
 !else
 CFLAGS		= -O
 !endif
 
-!if $d(WIDE)
+!ifdef WIDE
 WIDEOPT		= -DPDC_WIDE
 !endif
 
-!if $d(UTF8)
+!ifdef UTF8
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
-BUILD		= $(CC) -I$(PDCURSES_HOME) -c -Tpe -w32 $(CFLAGS) -w-par \
+BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe -w32 $(CFLAGS) -w-par \
 $(WIDEOPT) $(UTF8OPT)
 
 LIBEXE		= tlib /C /E /0 /a
@@ -93,4 +91,4 @@ PLATFORM1 = Borland C++ Win32
 PLATFORM2 = Borland C/C++ 5.5 for Win32
 ARCNAME = pdc$(VER)_bcc_w32
 
-!include $(PDCURSES_HOME)\makedist.mif
+!include $(PDCURSES_SRCDIR)\makedist.mif

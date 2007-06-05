@@ -11,16 +11,14 @@
 
 O = o
 
-ifdef PDCURSES_SRCDIR
-	PDCURSES_HOME = $(PDCURSES_SRCDIR)
-else
-	PDCURSES_HOME = ..
+ifndef PDCURSES_SRCDIR
+	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_HOME)/version.mif
-include $(PDCURSES_HOME)/libobjs.mif
+include $(PDCURSES_SRCDIR)/version.mif
+include $(PDCURSES_SRCDIR)/libobjs.mif
 
-osdir		= $(PDCURSES_HOME)/win32
+osdir		= $(PDCURSES_SRCDIR)/win32
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
@@ -34,7 +32,7 @@ else
 	LDFLAGS =
 endif
 
-CFLAGS += -I$(PDCURSES_HOME)
+CFLAGS += -I$(PDCURSES_SRCDIR)
 
 ifeq ($(WIDE),Y)
 	CFLAGS += -DPDC_WIDE
@@ -118,9 +116,9 @@ dist: $(PDCLIBS)
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
 	zip -9jX pdc$(VER)_cyg_w32 \
-	$(PDCURSES_HOME)/README $(PDCURSES_HOME)/HISTORY \
-	$(PDCURSES_HOME)/maintain.er \
-	$(PDCURSES_HOME)/curses.h $(PDCURSES_HOME)/curspriv.h \
-	$(PDCURSES_HOME)/panel.h $(PDCURSES_HOME)/term.h \
+	$(PDCURSES_SRCDIR)/README $(PDCURSES_SRCDIR)/HISTORY \
+	$(PDCURSES_SRCDIR)/maintain.er \
+	$(PDCURSES_SRCDIR)/curses.h $(PDCURSES_SRCDIR)/curspriv.h \
+	$(PDCURSES_SRCDIR)/panel.h $(PDCURSES_SRCDIR)/term.h \
 	$(LIBCURSES) $(LIBPANEL) file_id.diz
 	rm file_id.diz

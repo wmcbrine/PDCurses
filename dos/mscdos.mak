@@ -15,16 +15,14 @@ SIZE		= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 
 O = obj
 
-!ifdef PDCURSES_SRCDIR
-PDCURSES_HOME = $(PDCURSES_SRCDIR)
-!else
-PDCURSES_HOME = ..
+!ifndef PDCURSES_SRCDIR
+PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_HOME)\version.mif
-!include $(PDCURSES_HOME)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\version.mif
+!include $(PDCURSES_SRCDIR)\libobjs.mif
 
-osdir		= $(PDCURSES_HOME)\dos
+osdir		= $(PDCURSES_SRCDIR)\dos
 
 PDCURSES_DOS_H	= $(osdir)\pdcdos.h
 
@@ -38,7 +36,7 @@ CFLAGS		= /Ox
 LDFLAGS		= /NOE /SE:160
 !endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME)
+CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 
 BUILD		= $(CC) /J /nologo /c /D$(SIZE) /A$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
@@ -126,4 +124,4 @@ PLATFORM1 = Microsoft C
 PLATFORM2 = Microsoft C for DOS
 ARCNAME = pdc$(VER)msc
 
-!include $(PDCURSES_HOME)\makedist.mif
+!include $(PDCURSES_SRCDIR)\makedist.mif

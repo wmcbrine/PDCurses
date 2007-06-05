@@ -9,18 +9,18 @@
 #
 #########################################################################
 
-PDCURSES_HOME	= ..
+PDCURSES_SRCDIR	= ..
 
-PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
-PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h
+PDCURSES_CURSES_H	= $(PDCURSES_SRCDIR)\curses.h
+PDCURSES_CURSPRIV_H	= $(PDCURSES_SRCDIR)\curspriv.h
 PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 
-PANEL_HEADER	= $(PDCURSES_HOME)\panel.h
-TERM_HEADER	= $(PDCURSES_HOME)\term.h
+PANEL_HEADER	= $(PDCURSES_SRCDIR)\panel.h
+TERM_HEADER	= $(PDCURSES_SRCDIR)\term.h
 
-srcdir		= $(PDCURSES_HOME)\pdcurses
-osdir		= $(PDCURSES_HOME)\win32
-demodir		= $(PDCURSES_HOME)\demos
+srcdir		= $(PDCURSES_SRCDIR)\pdcurses
+osdir		= $(PDCURSES_SRCDIR)\win32
+demodir		= $(PDCURSES_SRCDIR)\demos
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 
@@ -28,7 +28,7 @@ CC		= dmc
 
 CFLAGS		= -c -o+space -Nc
 
-CPPFLAGS	= -I$(PDCURSES_HOME) #-DPDC_WIDE -DPDC_FORCE_UTF8
+CPPFLAGS	= -I$(PDCURSES_SRCDIR) #-DPDC_WIDE -DPDC_FORCE_UTF8
 
 LINK		= dmc
 LIBEXE		= lib

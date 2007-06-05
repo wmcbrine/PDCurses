@@ -10,19 +10,19 @@
 #########################################################################
 
 !ifdef %PDCURSES_SRCDIR
-PDCURSES_HOME	= $(%PDCURSES_SRCDIR)
+PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 !else
-PDCURSES_HOME	= ..
+PDCURSES_SRCDIR	= ..
 !endif
 
-!include $(PDCURSES_HOME)\version.mif
+!include $(PDCURSES_SRCDIR)\version.mif
 
-osdir		= $(PDCURSES_HOME)\win32
+osdir		= $(PDCURSES_SRCDIR)\win32
 
 CC		= wcc386
 TARGET		= nt
 
-CFLAGS		= /ei /zq /wx /i=$(PDCURSES_HOME)
+CFLAGS		= /ei /zq /wx /i=$(PDCURSES_SRCDIR)
 
 !ifeq DEBUG Y
 CFLAGS		+= /d2 /DPDCDEBUG
@@ -42,7 +42,7 @@ CFLAGS		+= /DPDC_FORCE_UTF8
 
 LIBEXE		= wlib /q /n /t
 
-!include $(PDCURSES_HOME)\watcom.mif
+!include $(PDCURSES_SRCDIR)\watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
@@ -52,4 +52,4 @@ PLATFORM1	= Watcom C++ Win32
 PLATFORM2	= Open Watcom 1.6 for Win32
 ARCNAME		= pdc$(VER)_wcc_w32
 
-!include $(PDCURSES_HOME)\makedist.mif
+!include $(PDCURSES_SRCDIR)\makedist.mif

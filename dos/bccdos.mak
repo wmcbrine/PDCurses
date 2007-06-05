@@ -14,24 +14,22 @@ MODEL = l
 
 O = obj
 
-!if $d(PDCURSES_SRCDIR)
-PDCURSES_HOME = $(PDCURSES_SRCDIR)
-!else
-PDCURSES_HOME = ..
+!ifndef PDCURSES_SRCDIR
+PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_HOME)\version.mif
-!include $(PDCURSES_HOME)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\version.mif
+!include $(PDCURSES_SRCDIR)\libobjs.mif
 
-osdir		= $(PDCURSES_HOME)\dos
+osdir		= $(PDCURSES_SRCDIR)\dos
 
-!if $d(DEBUG)
+!ifdef DEBUG
 CFLAGS		= -N -v -y -DPDCDEBUG 
 !else
 CFLAGS		= -O 
 !endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME)
+CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 
 BUILD		= $(CC) -1- -K -G -rd -d -w-eff -w-par -c \
 -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
@@ -90,4 +88,4 @@ PLATFORM1 = Borland C++ 3.1
 PLATFORM2 = Borland C/C++ 3.1 for DOS
 ARCNAME = pdc$(VER)bcc
 
-!include $(PDCURSES_HOME)\makedist.mif
+!include $(PDCURSES_SRCDIR)\makedist.mif

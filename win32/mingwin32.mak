@@ -11,16 +11,14 @@
 
 O = o
 
-ifdef PDCURSES_SRCDIR
-	PDCURSES_HOME = $(PDCURSES_SRCDIR)
-else
-	PDCURSES_HOME = ..
+ifndef PDCURSES_SRCDIR
+	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_HOME)/version.mif
-include $(PDCURSES_HOME)/libobjs.mif
+include $(PDCURSES_SRCDIR)/version.mif
+include $(PDCURSES_SRCDIR)/libobjs.mif
 
-osdir		= $(PDCURSES_HOME)/win32
+osdir		= $(PDCURSES_SRCDIR)/win32
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
@@ -34,7 +32,7 @@ else
 	LDFLAGS =
 endif
 
-CFLAGS += -I$(PDCURSES_HOME)
+CFLAGS += -I$(PDCURSES_SRCDIR)
 
 ifeq ($(WIDE),Y)
 	CFLAGS += -DPDC_WIDE
@@ -114,4 +112,4 @@ PLATFORM1 = MinGW Win32
 PLATFORM2 = MinGW for Win32
 ARCNAME = pdc$(VER)_ming_w32
 
-include $(PDCURSES_HOME)/makedist.mif
+include $(PDCURSES_SRCDIR)/makedist.mif

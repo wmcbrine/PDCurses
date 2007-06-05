@@ -5,14 +5,14 @@ THIS		= Makefile
 
 @SET_MAKE@
 
-PDCURSES_HOME	= ..
+PDCURSES_SRCDIR	= ..
 
 osdir		= .
-srcdir		= $(PDCURSES_HOME)/pdcurses
+srcdir		= $(PDCURSES_SRCDIR)/pdcurses
 
-PDCURSES_CONFIG_H	=$(PDCURSES_HOME)/config.h
-PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
-PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
+PDCURSES_CONFIG_H	=$(PDCURSES_SRCDIR)/config.h
+PDCURSES_CURSES_H	=$(PDCURSES_SRCDIR)/curses.h
+PDCURSES_CURSPRIV_H	=$(PDCURSES_SRCDIR)/curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) \
 $(PDCURSES_CURSPRIV_H)
 PDCURSES_X11_H		=$(osdir)/pdcx11.h
@@ -21,7 +21,7 @@ MH_EXTRA_LIBS	= @MH_EXTRA_LIBS@
 
 CFLAGS		= @CFLAGS@ @DYN_COMP@
 
-CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_HOME)
+CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_SRCDIR)
 
 BUILD		= @CC@ -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 
@@ -167,7 +167,7 @@ overlay.o: $(srcdir)/overlay.c
 pad.o: $(srcdir)/pad.c
 	$(BUILD) $(srcdir)/pad.c
 
-panel.o: $(srcdir)/panel.c $(PDCURSES_HOME)/panel.h
+panel.o: $(srcdir)/panel.c $(PDCURSES_SRCDIR)/panel.h
 	$(BUILD) $(srcdir)/panel.c
 
 printw.o: $(srcdir)/printw.c

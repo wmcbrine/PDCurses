@@ -11,16 +11,14 @@
 
 O = o
 
-ifdef PDCURSES_SRCDIR
-	PDCURSES_HOME = $(PDCURSES_SRCDIR)
-else
-	PDCURSES_HOME = ..
+ifndef PDCURSES_SRCDIR
+	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_HOME)/version.mif
-include $(PDCURSES_HOME)/libobjs.mif
+include $(PDCURSES_SRCDIR)/version.mif
+include $(PDCURSES_SRCDIR)/libobjs.mif
 
-osdir		= $(PDCURSES_HOME)/dos
+osdir		= $(PDCURSES_SRCDIR)/dos
 
 PDCURSES_DOS_H	= $(osdir)/pdcdos.h
 
@@ -34,7 +32,7 @@ else
 	LDFLAGS =
 endif
 
-CFLAGS += -I$(PDCURSES_HOME)
+CFLAGS += -I$(PDCURSES_SRCDIR)
 
 LINK		= gcc
 
@@ -97,4 +95,4 @@ PLATFORM1 = DJGPP 2.03
 PLATFORM2 = DJGPP 2.03 for DOS
 ARCNAME = pdc$(VER)djg
 
-include $(PDCURSES_HOME)/makedist.mif
+include $(PDCURSES_SRCDIR)/makedist.mif

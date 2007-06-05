@@ -14,22 +14,20 @@
 
 O = o
 
-ifdef PDCURSES_SRCDIR
-	PDCURSES_HOME = $(PDCURSES_SRCDIR)
-else
-	PDCURSES_HOME = ..
+ifndef PDCURSES_SRCDIR
+	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_HOME)/version.mif
-include $(PDCURSES_HOME)/libobjs.mif
+include $(PDCURSES_SRCDIR)/version.mif
+include $(PDCURSES_SRCDIR)/libobjs.mif
 
-osdir		= $(PDCURSES_HOME)/os2
+osdir		= $(PDCURSES_SRCDIR)/os2
 
 PDCURSES_OS2_H	= $(osdir)/pdcos2.h
 
 CC		= gcc
 
-CFLAGS = -I$(PDCURSES_HOME) -c -Wall
+CFLAGS = -I$(PDCURSES_SRCDIR) -c -Wall
 
 ifeq ($(EMXVIDEO),Y)
 	CFLAGS += -DEMXVIDEO
@@ -142,4 +140,4 @@ PLATFORM1 = EMX OS/2
 PLATFORM2 = EMX 0.9d for OS/2
 ARCNAME = pdc$(VER)_emx_os2
 
-include $(PDCURSES_HOME)/makedist.mif
+include $(PDCURSES_SRCDIR)/makedist.mif

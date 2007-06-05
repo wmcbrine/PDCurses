@@ -5,15 +5,15 @@ THIS		= Makefile
 
 @SET_MAKE@
 
-PDCURSES_HOME	= ..
+PDCURSES_SRCDIR	= ..
 
 osdir		= .
-srcdir		= $(PDCURSES_HOME)/pdcurses
-demodir		= $(PDCURSES_HOME)/demos
+srcdir		= $(PDCURSES_SRCDIR)/pdcurses
+demodir		= $(PDCURSES_SRCDIR)/demos
 
-PDCURSES_CONFIG_H	=$(PDCURSES_HOME)/config.h
-PDCURSES_CURSES_H	=$(PDCURSES_HOME)/curses.h
-PDCURSES_CURSPRIV_H	=$(PDCURSES_HOME)/curspriv.h
+PDCURSES_CONFIG_H	=$(PDCURSES_SRCDIR)/config.h
+PDCURSES_CURSES_H	=$(PDCURSES_SRCDIR)/curses.h
+PDCURSES_CURSPRIV_H	=$(PDCURSES_SRCDIR)/curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) \
 $(PDCURSES_CURSPRIV_H)
 PDCURSES_X11_H		=$(osdir)/pdcx11.h
@@ -25,7 +25,7 @@ LD_RXLIB2	= @MH_XLIBS@ @MH_EXTRA_LIBS@ -lc
 
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_HOME)
+CPPFLAGS	= @DEFS@ -DXCURSES @SYS_DEFS@ -I$(PDCURSES_SRCDIR)
 
 BUILD		= @CC@ -c $(CFLAGS) $(CPPFLAGS) @MH_XINC_DIR@
 DYN_BUILD	= @O2SAVE@ $(BUILD) @DYN_COMP@ @CC2O@
@@ -38,7 +38,7 @@ RANLIB		= @RANLIB@
 
 LIBCURSES	= libXCurses.a
 
-LIB_DEPS        = -L$(PDCURSES_HOME)/x11 -lXCurses
+LIB_DEPS        = -L$(PDCURSES_SRCDIR)/x11 -lXCurses
 
 PDCLIBS		= $(LIBCURSES) @SHL_TARGETS@
 
@@ -184,7 +184,7 @@ overlay.o: $(srcdir)/overlay.c
 pad.o: $(srcdir)/pad.c
 	$(BUILD) $(srcdir)/pad.c
 
-panel.o: $(srcdir)/panel.c $(PDCURSES_HOME)/panel.h
+panel.o: $(srcdir)/panel.c $(PDCURSES_SRCDIR)/panel.h
 	$(BUILD) $(srcdir)/panel.c
 
 printw.o: $(srcdir)/printw.c
@@ -375,7 +375,7 @@ pad.sho: $(srcdir)/pad.c
 	$(DYN_BUILD) $(srcdir)/pad.c
 	@SAVE2O@
 
-panel.sho: $(srcdir)/panel.c $(PDCURSES_HOME)/panel.h
+panel.sho: $(srcdir)/panel.c $(PDCURSES_SRCDIR)/panel.h
 	$(DYN_BUILD) $(srcdir)/panel.c
 	@SAVE2O@
 
@@ -505,7 +505,7 @@ firework.o: $(demodir)/firework.c
 newdemo.o: $(demodir)/newdemo.c
 	$(BUILD) $(demodir)/newdemo.c
 
-ptest.o: $(demodir)/ptest.c $(PDCURSES_HOME)/panel.h
+ptest.o: $(demodir)/ptest.c $(PDCURSES_SRCDIR)/panel.h
 	$(BUILD) $(demodir)/ptest.c
 
 rain.o: $(demodir)/rain.c

@@ -11,16 +11,14 @@
 
 O = obj
 
-!ifdef PDCURSES_SRCDIR
-PDCURSES_HOME = $(PDCURSES_SRCDIR)
-else
-PDCURSES_HOME = ..
+!ifndef PDCURSES_SRCDIR
+PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_HOME)\version.mif
-!include $(PDCURSES_HOME)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\version.mif
+!include $(PDCURSES_SRCDIR)\libobjs.mif
 
-osdir		= $(PDCURSES_HOME)\os2
+osdir		= $(PDCURSES_SRCDIR)\os2
 
 PDCURSES_OS2_H	= $(osdir)\pdcos2.h
 
@@ -34,7 +32,7 @@ CFLAGS  	= /Sm /Ti- /O+ /Q+
 LDFLAGS 	= /NOLOGO /NOE /EXEPACK /PACKCODE /PACKDATA /PMTYPE:VIO
 !endif
 
-CPPFLAGS	= -I$(PDCURSES_HOME)
+CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 
 BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS)
 
@@ -266,4 +264,4 @@ PLATFORM1 = C Set/2 OS/2
 PLATFORM2 = C Set/2 for OS/2
 ARCNAME = pdc$(VER)_icc_os2
 
-!include $(PDCURSES_HOME)\makedist.mif
+!include $(PDCURSES_SRCDIR)\makedist.mif

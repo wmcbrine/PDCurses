@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: panel.h,v 1.16 2007/06/01 02:38:52 wmcbrine Exp $ */
+/* $Id: panel.h,v 1.17 2007/06/05 07:37:06 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *			   Panels for PDCurses				*
@@ -46,21 +46,21 @@ typedef struct panel
 	struct panelobs *obscure;
 } PANEL;
 
-WINDOW *panel_window(const PANEL *pan);
-void	update_panels(void);
-int	hide_panel(PANEL *pan);
-int	show_panel(PANEL *pan);
-int	del_panel(PANEL *pan);
-int	top_panel(PANEL *pan);
 int	bottom_panel(PANEL *pan);
+int	del_panel(PANEL *pan);
+int	hide_panel(PANEL *pan);
+int	move_panel(PANEL *pan, int starty, int startx);
 PANEL  *new_panel(WINDOW *win);
 PANEL  *panel_above(const PANEL *pan);
 PANEL  *panel_below(const PANEL *pan);
 int	panel_hidden(const PANEL *pan);
-int	set_panel_userptr(PANEL *pan, const void *uptr);
 const void *panel_userptr(const PANEL *pan);
-int	move_panel(PANEL *pan, int starty, int startx);
+WINDOW *panel_window(const PANEL *pan);
 int	replace_panel(PANEL *pan, WINDOW *win);
+int	set_panel_userptr(PANEL *pan, const void *uptr);
+int	show_panel(PANEL *pan);
+int	top_panel(PANEL *pan);
+void	update_panels(void);
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 }

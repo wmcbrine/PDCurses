@@ -61,9 +61,9 @@ DOS, OS/2, or Windows
 
 	make -f mingwin32.mak WIDE=Y
 
-  Note that when built this way, the library is not compatible with
-  Windows 9x, unless you also link with the Microsoft Layer for Unicode
-  (not tested).
+  When built this way, the library is not compatible with Windows 9x,
+  unless you also link with the Microsoft Layer for Unicode (not
+  tested).
 
   Another option for Windows, "UTF8=Y", makes PDCurses ignore the
   system locale, and treat all narrow-character strings as UTF-8. This
@@ -72,7 +72,7 @@ DOS, OS/2, or Windows
 
 	make -f mingwin32.mak WIDE=Y UTF8=Y
 
-  You can also use the optional paramter "DLL=Y" with Visual C++,
+  You can also use the optional parameter "DLL=Y" with Visual C++,
   MinGW, Cygwin or EMX, to build the library as a DLL:
 
 	nmake -f vcwin32.mak WIDE=Y DLL=Y
@@ -86,8 +86,7 @@ DOS, OS/2, or Windows
 X11
 ---
 
-. Run the configure script in the PDCurses-x.x directory. This will
-  check for the dependencies libXCurses requires.
+. Run "./configure" in the PDCurses-x.x directory.
 
   To build the wide-character version of the library, specify
   "--enable-widec" as a parameter. To use X Input Methods, add
@@ -100,21 +99,19 @@ X11
   generally more useful in Windows.
 
   If configure can't find your X include files or X libraries, you can
-  specify the paths with the arguments "--x-includes=inc_path" or
+  specify the paths with the arguments "--x-includes=inc_path" and/or
   "--x-libraries=lib_path".
 
-  configure also recognises the "--with-debug[=yes|no]" switch. By
-  default, the library and demo programs are built with the optimizer
-  switch -O2. You can turn this off, and turn on debugging (-g), by
+  By default, the library and demo programs are built with the optimizer 
+  switch -O2. You can turn this off, and turn on debugging (-g), by 
   adding "--with-debug" to the configure command.
 
-. Run "make". This should make libXCurses and all demo programs in the
-  demos directory.
+. Run "make". This should build libXCurses and all the demo programs.
 
-. Optionally, run "make install". curses.h, panel.h will be renamed when
-  installed (xcurses.h, xpanel.h), to avoid conflicts with any existing
-  curses installations. Unrenamed copies of curses.h and panel.h are
-  installed in (by default) /usr/local/include/xcurses.
+. Optionally, run "make install". curses.h and panel.h will be renamed 
+  when installed (to xcurses.h and xpanel.h), to avoid conflicts with 
+  any existing curses installations. Unrenamed copies of curses.h and 
+  panel.h are installed in (by default) /usr/local/include/xcurses.
 
   As of 3.2, libXpanel is just a symlink to libXCurses. Both curses and
   panel functions are in the main library.

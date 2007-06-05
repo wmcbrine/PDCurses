@@ -9,8 +9,7 @@
 #
 #########################################################################
 
-# Edit the line below for your environment.
-PDCURSES_HOME	= \pdcurses
+PDCURSES_HOME	= ..
 
 PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h

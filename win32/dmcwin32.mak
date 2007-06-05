@@ -9,7 +9,7 @@
 #
 #########################################################################
 
-PDCURSES_HOME	= $(PDCURSES_SRCDIR)
+PDCURSES_HOME	= ..
 
 PDCURSES_CURSES_H	= $(PDCURSES_HOME)\curses.h
 PDCURSES_CURSPRIV_H	= $(PDCURSES_HOME)\curspriv.h

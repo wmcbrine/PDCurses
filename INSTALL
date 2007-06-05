@@ -32,10 +32,8 @@ DOS, OS/2, or Windows
 	vcwin32.mak	- Microsoft Visual C++ 2.0+
 	wccwin32.mak	- Watcom 10.6+
 
-. In some cases, you may have to edit the makefile. LCC-Win32 users
-  must point PDCURSES_HOME to the PDCurses directory. For 16-bit
-  compilers, some might want to change the memory MODEL. (Large model
-  is the default, and recommended.)
+. For 16-bit compilers, you can change the memory MODEL in the makefile.
+  (Large model is the default, and recommended.)
 
 . Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where
@@ -43,8 +41,8 @@ DOS, OS/2, or Windows
 
 	set PDCURSES_SRCDIR=c:\pdcurses
 
-  This step is no longer required when building in the platform 
-  directory, except with the Digital Mars makefile.
+  This step is no longer required when building in the platform
+  directory, and won't work with the LCC or Digital Mars makefiles.
 
 . Build it:
 

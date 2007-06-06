@@ -1,5 +1,5 @@
 PDCurses Implementor's Guide
-----------------------------
+============================
 
 This document is for those wishing to port PDCurses to a new platform, 
 or just wanting to better understand how it works. Nothing here should 

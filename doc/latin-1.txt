@@ -1,6 +1,5 @@
-
-       Entering High-Order Characters of the Latin-1 Character Set
-       -----------------------------------------------------------
+Entering High-Order Characters of the Latin-1 Character Set
+===========================================================
 
 When built without XIM support, PDCurses for X11 provides its own, 
 limited compose key system for Latin-1 characters. The available 

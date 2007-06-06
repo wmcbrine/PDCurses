@@ -44,13 +44,13 @@ CURSESDLL	= pdcurses.dll
 
 # For a static build:
 
-#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
-#PDCLIBS		= $(LIBCURSES)
+BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
+PDCLIBS		= $(LIBCURSES)
 
 # For a DLL build:
 
-BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
-PDCLIBS		= $(CURSESDLL)
+#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
+#PDCLIBS		= $(CURSESDLL)
 
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
@@ -91,9 +91,9 @@ $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 
 # Remove the next three lines for a DLL build:
-#$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-#	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
-#	-copy $(LIBCURSES) panel.lib
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
+	-copy $(LIBCURSES) panel.lib
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	$(SHL_LD) -o $(CURSESDLL) $(LIBOBJS) $(PDCOBJS)

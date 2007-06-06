@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.286 2007/06/03 02:15:19 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.287 2007/06/06 23:17:09 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -36,7 +36,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3104
+#define PDC_BUILD 3201
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -864,10 +864,10 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 #define KEY_SUP		0x223	/* Shifted up arrow		*/
 #define KEY_SDOWN	0x224	/* Shifted down arrow		*/
 
-#define KEY_MIN         KEY_BREAK       /* Minimum curses key value     */
-#define KEY_MAX         KEY_SDOWN       /* Maximum curses key           */
+#define KEY_MIN		KEY_BREAK	/* Minimum curses key value	*/
+#define KEY_MAX		KEY_SDOWN	/* Maximum curses key		*/
 
-#define KEY_F(n)        (KEY_F0 + (n))
+#define KEY_F(n)	(KEY_F0 + (n))
 
 /*----------------------------------------------------------------------
  *

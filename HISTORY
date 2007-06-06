@@ -1,4 +1,4 @@
-PDCurses 3.2 - 200?/??/??
+PDCurses 3.2 - 2007/06/06
 =========================
 
 This release mainly covers changes to the build process, along with a 
@@ -36,9 +36,9 @@ Bug fixes and such:
   PDCurses to determine the platform it's building on will have to make
   other arrangements.
 
-- Documentation cleanup -- removed some content that didn't apply to
-  PDCurses; moved the doc-building tool to the doc directory; changed
-  *.man to *.txt.
+- Documentation cleanup -- added more details; removed some content that
+  didn't apply to PDCurses; moved the doc-building tool to the doc
+  directory; changed *.man to *.txt.
 
 - The EMX makefile now accepts "DLL=Y", builds pdcurses.dll instead of
   curses.dll, builds either the static library or the DLL (not both at

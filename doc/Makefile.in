@@ -36,8 +36,6 @@ PDCurses.txt: manext
 	echo PDCurses Functions >> PDCurses.txt
 	echo ================== >> PDCurses.txt
 	./manext $(PDCURSES_DIR)/*.c >> PDCurses.txt
-	echo PDCurses Private Functions >> PDCurses.txt
-	echo ========================== >> PDCurses.txt
 	./manext $(pdcdir)/*.c >> PDCurses.txt
 	cat $(DOC_DIR)/x11.txt >> PDCurses.txt
 

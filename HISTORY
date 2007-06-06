@@ -1,20 +1,64 @@
 PDCurses 3.2 - 200?/??/??
 =========================
 
+This release mainly covers changes to the build process, along with a 
+few structural changes.
+
 New features:
+
+- The panel library has been folded into the main library. What this
+  means is that you no longer need to specify "-lpanel" or equivalent
+  when linking programs that use panel functionality with PDCurses;
+  however, panel.lib/.a is still provided (as a copy of pdcurses.lib/.a)
+  so that you can, optionally, build your projects with no changes. It
+  also means that panel functionality is available with the DLL or
+  shared library. Note that panel.h remains separate from curses.h.
+
+- Setting the PDCURSES_SRCDIR environment variable is no longer required
+  before building, unless you want to build in a location other than the
+  platform directory. (See INSTALL.)
+
+- MinGW and Cygwin makefiles support building DLLs, via the "DLL=Y"
+  option. Partly due to Timofei Shatrov.
 
 - Support for the Digital Mars compiler.
 
+- Watcom makefiles now use the "loaddll" feature.
+
 Bug fixes and such:
 
-- Documentation cleanup -- removed some content that didn't apply to 
-  PDCurses; moved the doc-building tool to the doc directory; changed 
+- Eliminated the platform defines (DOS, WIN32, OS2, XCURSES) from
+  curses.h, except for X11-specific SCREEN elements and functions.
+  Dynamically-linked X11 apps built against an old version will have
+  their red and blue swapped until rebuilt. (You can define PDC_RGB to
+  build the library with the old color scheme, but it would also have to
+  be defined when building any new app.) Any app that depends on
+  PDCurses to determine the platform it's building on will have to make
+  other arrangements.
+
+- Documentation cleanup -- removed some content that didn't apply to
+  PDCurses; moved the doc-building tool to the doc directory; changed
   *.man to *.txt.
+
+- The EMX makefile now accepts "DLL=Y", builds pdcurses.dll instead of
+  curses.dll, builds either the static library or the DLL (not both at
+  once), and links all the demos with the DLL when building it.
 
 - In Win32, read the registry only when needed: when init_color() or 
   color_content() is called, instead of at startup.
 
 - A few additional consts in declarations.
+
+- The Win32 compilers that build DLLs now use common .def files.
+
+- panel.h functions sorted by name, as with other .h files; curses.h is
+  no longer included by repeated inclusions of panel.h or term.h.
+
+- Simplified Borland makefiles.
+
+- Makefile.aix.in depended on a file, xcurses.exp, that was never there.
+  This problem was fixed as part of the change to common .def files; 
+  however, I still haven't been able to test building on AIX.
 
 ------------------------------------------------------------------------
 
@@ -900,7 +944,7 @@ INTRODUCTION:
 
 - Fixed bug with resizing the terminal when slk were on.
 
-- Changed behaviour of slk_attrset(), slk_attron() slk_attroff()
+- Changed behavior of slk_attrset(), slk_attron() slk_attroff()
   functions to work more like ncurses.
 
 BUGS FIXED:
@@ -994,8 +1038,8 @@ NEW COMPILER SUPPORT:
 
 EXTRA OPTIONS:
 
- PDCurses recognises two environment variables which determines the
- initialisation and finalisation behaviour.  These environment variables
+ PDCurses recognizes two environment variables which determines the
+ initialization and finalization behavior.  These environment variables
  do not apply to the X11 port.
 
  PDC_PRESERVE_SCREEN
@@ -1081,7 +1125,7 @@ COMPILER SUPPORT:
 
 EXTRA OPTIONS:
 
- One difference between the behaviour of PDCurses and Unix curses is the 
+ One difference between the behavior of PDCurses and Unix curses is the 
  attributes that are displayed when a character is cleared. Under Unix 
  curses, no attributes are displayed, so the result is always black. 
  Under PDCurses, these functions clear with the current attributes in 
@@ -1150,7 +1194,7 @@ OTHER NOTES:
  Added OS/2 DLL support.
 
  A few curses functions have been fixed to exhibit their correct 
- behaviour and make them more functionally portable with System V 
+ behavior and make them more functionally portable with System V 
  curses. The functions that have changed are overlay(), overwrite() and 
  typeahead.
 
@@ -1159,7 +1203,7 @@ OTHER NOTES:
  Both of theses functions in PDCurses 2.0 allowed for one window to be 
  effectively placed on top of another, and the characters in the first 
  window were overlaid or overwritten starting at 0,0 in both windows. 
- This behaviour of these functions was not correct. These functions only 
+ This behavior of these functions was not correct. These functions only 
  operate on windows that physically overlap with respect to the 
  displayed screen. To achieve the same functionality as before, use the 
  new function copywin(). See the manual page for further details.
@@ -1168,7 +1212,7 @@ OTHER NOTES:
 
  This function in PDCurses 2.0 effectively checked to see if there were 
  any characters remaining in the keyboard buffer. This is not the 
- behaviour exhibited by System V curses. This function is intended 
+ behavior exhibited by System V curses. This function is intended 
  purely to set a flag so that curses can check while updating the 
  physical screen if any keyboard input is pending. To achieve the same 
  effect with typeahead() under PDCurses 2.1 the following code should be 
@@ -1224,7 +1268,7 @@ INTRODUCTION:
  more bugs will be fixed more quickly.
 
  I have included just 1 makefile which is suitable for dmake 3.8 for 
- both DOS and OS/2. The makefile does not rely on customisation of the 
+ both DOS and OS/2. The makefile does not rely on customization of the 
  dmake.ini file.
 
  If you discover bugs, and especially if you have fixes, please let me 
@@ -1253,7 +1297,7 @@ DIRECTIONS:
 
 	OS (host operating system)
 	COMP (compiler)
-	OPT (optimised version or debug version) - optional. default Y
+	OPT (optimized version or debug version) - optional. default Y
 	TOS (target operating system) - optional. default OS
 
     see the makefile for valid combinations
@@ -1465,7 +1509,7 @@ different curses versions say different things. I think the choice made
 is the most reasonable.
 
   The border() and wborder() functions were changed to actually draw a 
-border, since this seems to be the correct behaviour of these functions. 
+border, since this seems to be the correct behavior of these functions. 
 They used to just set the border characters to be used by box(). These 
 functions are not present in standard BSD UNIX curses.
 
@@ -1515,7 +1559,7 @@ PCCurses 1.2 - 1988/10/02
   The changes from v.1.1 to v.1.2 are minor. The biggest change is that 
 there was a bug related to limiting the cursor movement if the 
 application tried to move it outside the screen (something that should 
-not be done anyway). Such erroneous application behaviour is now handled 
+not be done anyway). Such erroneous application behavior is now handled 
 appropriately.
 
   All modules have been changed to have a revision string in them, which 

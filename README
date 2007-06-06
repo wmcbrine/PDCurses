@@ -1,5 +1,5 @@
-
-                        Welcome to PDCurses
+Welcome to PDCurses!
+====================
 
 PDCurses is an implementation of X/Open curses for multiple platforms. 
 The latest version can be found at:
@@ -33,8 +33,10 @@ platforms.
 Distribution Status
 -------------------
 
-The files in this directory contain core PDCurses functionality; 
-therefore all files are released to the Public Domain.
+All files in this directory except configure, config.guess and 
+config.sub are released to the Public Domain. config.guess and 
+config.sub are under the GPL; configure is under a free license 
+described within it.
 
 
 Maintainer

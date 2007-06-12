@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.2 2007/06/12 07:59:50 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.3 2007/06/12 17:02:17 wmcbrine Exp $");
 
 static SDL_Event event;
 static SDLKey oldkey;
@@ -196,7 +196,12 @@ static int _process_key_event(void)
 	}
 
 	if (!key)
+	{
 		key = event.key.keysym.unicode;
+
+		if (key > 0x7f)
+			key = 0;
+	}
 
 	/* Handle ALT letters and numbers */
 

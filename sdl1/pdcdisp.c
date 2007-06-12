@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.2 2007/06/12 07:37:29 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.3 2007/06/12 07:44:13 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -73,7 +73,7 @@ void PDC_gotoyx(int row, int col)
 
 	ch = curscr->_y[row][col] & A_ATTRIBUTES;
 
-	ch |= (SP->visibility == 1) ? 95 : 219;
+	ch |= (SP->visibility == 1) ? '_' : acs_map['0'];
 
 	PDC_transform_line(row, col, 1, &ch);
 }

@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.2 2007/06/12 07:37:29 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -60,8 +60,22 @@ chtype acs_map[128] =
 
 void PDC_gotoyx(int row, int col)
 {
+	chtype ch;
+
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
 		row, col, SP->cursrow, SP->curscol));
+
+	PDC_transform_line(SP->cursrow, SP->curscol, 1, 
+		curscr->_y[SP->cursrow] + SP->curscol);
+
+	if (!SP->visibility)
+		return;
+
+	ch = curscr->_y[row][col] & A_ATTRIBUTES;
+
+	ch |= (SP->visibility == 1) ? 95 : 219;
+
+	PDC_transform_line(row, col, 1, &ch);
 }
 
 void _setattr(chtype ch)

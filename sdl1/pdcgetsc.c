@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.2 2007/06/12 17:28:34 wmcbrine Exp $");
 
 /* get the cursor size/shape */
 
@@ -28,7 +28,7 @@ int PDC_get_rows(void)
 {
 	PDC_LOG(("PDC_get_rows() - called\n"));
 
-	return 25;
+	return pdc_screen ? pdc_screen->h / pdc_fheight : 25;
 }
 
 /* return width of screen/viewport */
@@ -37,5 +37,5 @@ int PDC_get_columns(void)
 {
 	PDC_LOG(("PDC_get_columns() - called\n"));
 
-	return 80;
+	return pdc_screen ? pdc_screen->w / pdc_fwidth : 80;
 }

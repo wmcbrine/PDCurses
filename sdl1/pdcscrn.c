@@ -14,9 +14,9 @@
 #include "pdcsdl.h"
 #include "deffont.h"
 
-RCSID("$Id: pdcscrn.c,v 1.2 2007/06/12 17:14:54 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.3 2007/06/12 17:28:34 wmcbrine Exp $");
 
-SDL_Surface *pdc_screen, *pdc_font;
+SDL_Surface *pdc_screen = NULL, *pdc_font = NULL;
 SDL_Color pdc_color[16];
 int pdc_fheight, pdc_fwidth;
 
@@ -51,15 +51,20 @@ int PDC_scr_open(int argc, char **argv)
 	if (!SP || !pdc_atrtab)
 		return ERR;
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (!pdc_screen)
 	{
-		fprintf(stderr, "Could not start SDL: %s\n", SDL_GetError());
-		return ERR;
+		if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		{
+			fprintf(stderr, "Could not start SDL: %s\n", 
+				SDL_GetError());
+			return ERR;
+		}
+
+	        atexit(SDL_Quit);
 	}
 
-        atexit(SDL_Quit);
-
-	pdc_font = SDL_LoadBMP("pdcfont.bmp");
+	if (!pdc_font)
+		pdc_font = SDL_LoadBMP("pdcfont.bmp");
 
 	if (!pdc_font)
 		pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(deffont,
@@ -77,8 +82,10 @@ int PDC_scr_open(int argc, char **argv)
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
 
-	pdc_screen = SDL_SetVideoMode(SP->cols * pdc_fwidth, SP->lines * 
-		pdc_fheight, 0, SDL_SWSURFACE|SDL_ANYFORMAT);
+	if (!pdc_screen)
+		pdc_screen = SDL_SetVideoMode(SP->cols * pdc_fwidth,
+			SP->lines * pdc_fheight, 0,
+			SDL_SWSURFACE|SDL_ANYFORMAT);
 
 	if (!pdc_screen)
 	{

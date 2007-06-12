@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.3 2007/06/12 07:44:13 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.4 2007/06/12 08:05:41 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -78,7 +78,7 @@ void PDC_gotoyx(int row, int col)
 	PDC_transform_line(row, col, 1, &ch);
 }
 
-void _setattr(chtype ch)
+static void _setattr(chtype ch)
 {
 	SDL_Color attr[2];
 	short fg, bg;

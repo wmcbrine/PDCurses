@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.2 2007/06/12 10:29:58 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.3 2007/06/12 20:22:16 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -49,16 +49,6 @@ int PDC_curs_set(int visibility)
 	PDC_LOG(("PDC_curs_set() - called: visibility=%d\n", visibility));
 
 	ret_vis = SP->visibility;
-
-	switch(visibility)
-	{
-	case 0:				/* invisible */
-		break;
-	case 2:				/* highly visible */
-		break;
-	default:			/* normal visibility */
-		break;
-	}
 
 	SP->visibility = visibility;
 

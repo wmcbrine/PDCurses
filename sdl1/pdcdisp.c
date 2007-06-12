@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.4 2007/06/12 08:05:41 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.5 2007/06/12 10:29:58 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -60,7 +60,10 @@ chtype acs_map[128] =
 
 void PDC_gotoyx(int row, int col)
 {
+	SDL_Rect dest;
+	Uint32 curcol;
 	chtype ch;
+	short fg, bg;
 
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
 		row, col, SP->cursrow, SP->curscol));
@@ -71,14 +74,27 @@ void PDC_gotoyx(int row, int col)
 	if (!SP->visibility)
 		return;
 
-	ch = curscr->_y[row][col] & A_ATTRIBUTES;
+	ch = curscr->_y[row][col];
+	pair_content(PAIR_NUMBER(ch), &fg, &bg);
 
-	ch |= (SP->visibility == 1) ? '_' : acs_map['0'];
+	if (ch & A_REVERSE)
+		fg = bg;
 
-	PDC_transform_line(row, col, 1, &ch);
+	curcol = SDL_MapRGB(pdc_screen->format, pdc_color[fg].r, 
+		pdc_color[fg].g, pdc_color[fg].b);
+
+	dest.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
+
+	dest.y = (row + 1) * pdc_fheight - dest.h;
+	dest.x = col * pdc_fwidth;
+
+	dest.w = pdc_fwidth;
+
+	SDL_FillRect(pdc_screen, &dest, curcol);
+	SDL_UpdateRect(pdc_screen, dest.x, dest.y, dest.w, dest.h);
 }
 
-static void _setattr(chtype ch)
+static void _set_attr(chtype ch)
 {
 	SDL_Color attr[2];
 	short fg, bg;
@@ -127,7 +143,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 		if (!j || ((ch & A_ATTRIBUTES) != oldch))
 		{
-			_setattr(ch);
+			_set_attr(ch);
 			oldch = ch & A_ATTRIBUTES;
 		}
 

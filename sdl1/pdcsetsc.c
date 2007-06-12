@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $");
+RCSID("$Id: pdcsetsc.c,v 1.2 2007/06/12 10:29:58 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -61,6 +61,9 @@ int PDC_curs_set(int visibility)
 	}
 
 	SP->visibility = visibility;
+
+	PDC_gotoyx(SP->cursrow, SP->curscol);
+
 	return ret_vis;
 }
 

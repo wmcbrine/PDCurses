@@ -14,7 +14,7 @@
 #include "pdcsdl.h"
 #include "deffont.h"
 
-RCSID("$Id: pdcscrn.c,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.2 2007/06/12 17:14:54 wmcbrine Exp $");
 
 SDL_Surface *pdc_screen, *pdc_font;
 SDL_Color pdc_color[16];
@@ -59,7 +59,11 @@ int PDC_scr_open(int argc, char **argv)
 
         atexit(SDL_Quit);
 
-	pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(deffont, sizeof(deffont)), 0);
+	pdc_font = SDL_LoadBMP("pdcfont.bmp");
+
+	if (!pdc_font)
+		pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(deffont,
+			sizeof(deffont)), 0);
 
 	if (!pdc_font)
 	{

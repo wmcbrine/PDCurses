@@ -14,7 +14,7 @@
 #include <curspriv.h>
 #include <stdlib.h>
 
-RCSID("$Id: initscr.c,v 1.102 2007/05/16 07:16:31 wmcbrine Exp $");
+RCSID("$Id: initscr.c,v 1.103 2007/06/12 05:41:22 wmcbrine Exp $");
 
 char ttytype[128];
 
@@ -137,7 +137,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
 	SP->return_key_modifiers = FALSE;
 	SP->echo	= TRUE;
 	SP->visibility	= 1;
-	SP->audible	= TRUE;
 	SP->resized	= FALSE;
 	SP->_trap_mbe	= 0L;
 	SP->_map_mbe_to_key = 0L;

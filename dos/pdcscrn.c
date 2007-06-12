@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcscrn.c,v 1.82 2007/01/07 21:43:14 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.83 2007/06/12 05:41:21 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/
@@ -527,6 +527,7 @@ int PDC_scr_open(int argc, char **argv)
 	SP->cols	= PDC_get_columns();
 
 	SP->mouse_wait	= PDC_CLICK_PERIOD;
+	SP->audible	= TRUE;
 
 	/* If the environment variable PDCURSES_BIOS is set, the DOS 
 	   int10() BIOS calls are used in place of direct video memory 

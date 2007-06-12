@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.83 2007/05/06 23:40:34 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.84 2007/06/12 05:41:22 wmcbrine Exp $");
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER, PDC_RESTORE_WINDOW };
 
@@ -304,6 +304,7 @@ int PDC_scr_open(int argc, char **argv)
 		atoi(str) : PDC_get_columns();
 
 	SP->mouse_wait = PDC_CLICK_PERIOD;
+	SP->audible = TRUE;
 
 	if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
 	{

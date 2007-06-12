@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: x11.c,v 1.87 2007/05/26 17:41:11 wmcbrine Exp $");
+RCSID("$Id: x11.c,v 1.88 2007/06/12 05:41:22 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;
@@ -3166,6 +3166,7 @@ int XCursesSetupX(int argc, char *argv[])
 	SP->cols = XCursesCOLS;
 
 	SP->mouse_wait = xc_app_data.clickPeriod;
+	SP->audible = TRUE;
 
 	PDC_LOG(("%s:SHM size for curscr %d\n", XCLOGMSG, SP->XcurscrSize));
 

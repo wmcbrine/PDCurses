@@ -13,9 +13,10 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.2 2007/06/12 07:59:50 wmcbrine Exp $");
 
 static SDL_Event event;
+static SDLKey oldkey;
 
 /*man-start**************************************************************
 
@@ -123,6 +124,33 @@ static int _process_key_event(void)
 	pdc_key_modifiers = 0L;
 	SP->key_code = FALSE;
 
+	if (event.type == SDL_KEYUP)
+	{
+		if (SP->return_key_modifiers &&
+			event.key.keysym.sym == oldkey)
+		{
+			switch (oldkey)
+			{
+			case SDLK_RSHIFT:
+				return KEY_SHIFT_R;
+			case SDLK_LSHIFT:
+				return KEY_SHIFT_L;
+			case SDLK_RCTRL:
+				return KEY_CONTROL_R;
+			case SDLK_LCTRL:
+				return KEY_CONTROL_L;
+			case SDLK_RALT:
+				return KEY_ALT_R;
+			case SDLK_LALT:
+				return KEY_ALT_L;
+			}
+		}
+
+		return -1;
+	}
+
+	oldkey = event.key.keysym.sym;
+
 	if (SP->save_key_modifiers)
 	{
 		if (event.key.keysym.mod & KMOD_NUM)
@@ -205,7 +233,6 @@ int PDC_get_key(void)
 	case SDL_QUIT:
 		exit(1);
 	case SDL_KEYUP:
-		break;
 	case SDL_KEYDOWN:
 		return _process_key_event();
 	}

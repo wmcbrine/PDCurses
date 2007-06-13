@@ -14,7 +14,7 @@
 #include "pdcsdl.h"
 #include "deffont.h"
 
-RCSID("$Id: pdcscrn.c,v 1.3 2007/06/12 17:28:34 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.4 2007/06/13 15:51:14 wmcbrine Exp $");
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL;
 SDL_Color pdc_color[16];
@@ -109,7 +109,9 @@ int PDC_scr_open(int argc, char **argv)
 		SDL_DEFAULT_REPEAT_INTERVAL);
 	SDL_EnableUNICODE(1);
 
+	PDC_mouse_set();
 	PDC_set_title(argc ? argv[1] : "PDCurses");
+	PDC_flushinp();
 
 	SP->mouse_wait = PDC_CLICK_PERIOD;
 	SP->audible = FALSE;

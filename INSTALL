@@ -115,3 +115,13 @@ X11
 
   As of 3.2, libXpanel is just a symlink to libXCurses. Both curses and
   panel functions are in the main library.
+
+
+SDL
+---
+
+. On *nix, run "make". This assumes a working sdl-config, and is 
+  currently hardwired to use gcc.
+
+. With MinGW, run "make -f Makefile.mng". This assumes SDL is installed 
+  in the standard directories.

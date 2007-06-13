@@ -25,7 +25,7 @@ in the documentation of packages linked with it is greatly appreciated.
 Ports
 -----
 
-PDCurses has been ported to DOS, OS/2, Win32 and X11. A directory 
+PDCurses has been ported to DOS, OS/2, Win32, X11 and SDL. A directory 
 containing the port-specific source files exists for each of these 
 platforms.
 

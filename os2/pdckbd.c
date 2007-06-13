@@ -31,7 +31,7 @@ static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
 
-RCSID("$Id: pdckbd.c,v 1.82 2007/03/23 01:53:21 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.83 2007/06/13 15:57:11 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -306,10 +306,13 @@ static int _process_mouse_events(void)
 	if (kbdinfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
 		shift_flags |= BUTTON_SHIFT;
 
-	for (i = 0; i < 3; i++)
+	if (shift_flags)
 	{
-		if (pdc_mouse_status.changes & (1 << i))
-			pdc_mouse_status.button[i] |= shift_flags;
+		for (i = 0; i < 3; i++)
+		{
+			if (pdc_mouse_status.changes & (1 << i))
+				pdc_mouse_status.button[i] |= shift_flags;
+		}
 	}
 
 	old_shift = kbdinfo.fsState;

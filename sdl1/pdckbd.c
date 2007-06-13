@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.6 2007/06/13 17:43:31 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.7 2007/06/13 18:45:34 wmcbrine Exp $");
 
 static SDL_Event event;
 static SDLKey oldkey;
@@ -104,6 +104,8 @@ static struct
 unsigned long PDC_get_input_fd(void)
 {
 	PDC_LOG(("PDC_get_input_fd() - called\n"));
+
+	return 0L;	/* test this */
 }
 
 void PDC_set_keyboard_binary(bool on)
@@ -358,8 +360,11 @@ void PDC_flushinp(void)
 int PDC_mouse_set(void)
 {
 	SDL_ShowCursor(SP->_trap_mbe ? SDL_ENABLE : SDL_DISABLE);
+
+	return OK;
 }
 
 int PDC_modifiers_set(void)
 {
+	return OK;
 }

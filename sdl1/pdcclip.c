@@ -15,7 +15,7 @@
 
 #include <stdlib.h>
 
-RCSID("$Id: pdcclip.c,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $");
+RCSID("$Id: pdcclip.c,v 1.2 2007/06/13 18:45:34 wmcbrine Exp $");
 
 /*man-start**************************************************************
 
@@ -58,7 +58,7 @@ RCSID("$Id: pdcclip.c,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $");
 
 /* global clipboard contents, should be NULL if none set */
 
-static char *pdc_FOO_clipboard = NULL;
+static char *pdc_SDL_clipboard = NULL;
 
 int PDC_getclipboard(char **contents, long *length)
 {
@@ -66,14 +66,14 @@ int PDC_getclipboard(char **contents, long *length)
 
 	PDC_LOG(("PDC_getclipboard() - called\n"));
 
-	if (!pdc_FOO_clipboard)
+	if (!pdc_SDL_clipboard)
 		return PDC_CLIP_EMPTY;
 
-	len = strlen(pdc_FOO_clipboard);
+	len = strlen(pdc_SDL_clipboard);
 	if ((*contents = malloc(len + 1)) == NULL)
 		return PDC_CLIP_MEMORY_ERROR;
 
-	strcpy(*contents, pdc_FOO_clipboard);
+	strcpy(*contents, pdc_SDL_clipboard);
 	*length = len;
 
 	return PDC_CLIP_SUCCESS;
@@ -83,18 +83,18 @@ int PDC_setclipboard(const char *contents, long length)
 {
 	PDC_LOG(("PDC_setclipboard() - called\n"));
 
-	if (pdc_FOO_clipboard)
+	if (pdc_SDL_clipboard)
 	{
-		free(pdc_FOO_clipboard);
-		pdc_FOO_clipboard = NULL;
+		free(pdc_SDL_clipboard);
+		pdc_SDL_clipboard = NULL;
 	}
 
 	if (contents)
 	{
-		if ((pdc_FOO_clipboard = malloc(length + 1)) == NULL)
+		if ((pdc_SDL_clipboard = malloc(length + 1)) == NULL)
 			return PDC_CLIP_MEMORY_ERROR;
 
-		strcpy(pdc_FOO_clipboard, contents);
+		strcpy(pdc_SDL_clipboard, contents);
 	}
 
 	return PDC_CLIP_SUCCESS;
@@ -129,10 +129,10 @@ int PDC_clearclipboard(void)
 {
 	PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-	if (pdc_FOO_clipboard) 
+	if (pdc_SDL_clipboard) 
 	{
-		free(pdc_FOO_clipboard);
-		pdc_FOO_clipboard = NULL;
+		free(pdc_SDL_clipboard);
+		pdc_SDL_clipboard = NULL;
 	}
 
 	return PDC_CLIP_SUCCESS;

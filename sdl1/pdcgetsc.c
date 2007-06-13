@@ -13,13 +13,15 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.2 2007/06/12 17:28:34 wmcbrine Exp $");
+RCSID("$Id: pdcgetsc.c,v 1.3 2007/06/13 18:45:34 wmcbrine Exp $");
 
 /* get the cursor size/shape */
 
 int PDC_get_cursor_mode(void)
 {
 	PDC_LOG(("PDC_get_cursor_mode() - called\n"));
+
+	return 0;
 }
 
 /* return number of screen rows */

@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.6 2007/06/13 19:53:36 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.7 2007/06/13 20:34:19 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -118,6 +118,61 @@ static void _set_attr(chtype ch)
 	SDL_SetColors(pdc_font, attr, 0, 2);
 }
 
+static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
+{
+	if (oldch & A_UNDERLINE)
+	{
+		short col = SP->line_color;
+
+		if (col != -1)
+		{
+			SDL_Color attr;
+
+			attr.r = pdc_color[col].r;
+			attr.g = pdc_color[col].g;
+			attr.b = pdc_color[col].b;
+
+			SDL_SetColors(pdc_font, &attr, 0, 1);
+		}
+
+		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 1);
+
+		src->x = '_' % 32 * pdc_fwidth;
+		src->y = '_' / 32 * pdc_fheight;
+
+		SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
+		SDL_SetColorKey(pdc_font, 0, 0);
+
+		if (col != -1)
+			_set_attr(oldch);
+	}
+
+	if (oldch & (A_LEFTLINE|A_RIGHTLINE))
+	{
+		short fg = SP->line_color;
+
+		if (fg == -1)
+		{
+			short bg;
+
+			pair_content(PAIR_NUMBER(oldch), &fg, &bg);
+			if (oldch & A_REVERSE)
+				fg = bg;
+		}
+
+		dest->w = 1;
+
+		if (oldch & A_LEFTLINE)
+			SDL_FillRect(pdc_screen, dest, pdc_mapped[fg]);
+
+		if (oldch & A_RIGHTLINE)
+		{
+			dest->x += pdc_fwidth - 1;
+			SDL_FillRect(pdc_screen, dest, pdc_mapped[fg]);
+		}
+	}
+}
+
 /* update the given physical line to look like the corresponding line in
    curscr */
 
@@ -153,16 +208,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 		SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
 
-		if (oldch & A_UNDERLINE)
-		{
-			SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 1);
-
-			src.x = '_' % 32 * pdc_fwidth;
-			src.y = '_' / 32 * pdc_fheight;
-
-			SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
-			SDL_SetColorKey(pdc_font, 0, 0);
-		}
+		if (oldch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
+			_highlight(&src, &dest, oldch);
 	}
 
 	SDL_UpdateRect(pdc_screen, x * pdc_fwidth, lineno * pdc_fheight,

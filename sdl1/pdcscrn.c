@@ -14,11 +14,13 @@
 #include "pdcsdl.h"
 #include "deffont.h"
 
-RCSID("$Id: pdcscrn.c,v 1.4 2007/06/13 15:51:14 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.5 2007/06/13 17:43:31 wmcbrine Exp $");
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL;
 SDL_Color pdc_color[16];
-int pdc_fheight, pdc_fwidth;
+int pdc_fheight, pdc_fwidth, pdc_sheight, pdc_swidth;
+
+static bool own_screen;
 
 /* close the physical screen -- may restore the screen to its state
    before PDC_scr_open(); miscellaneous cleanup */
@@ -51,7 +53,9 @@ int PDC_scr_open(int argc, char **argv)
 	if (!SP || !pdc_atrtab)
 		return ERR;
 
-	if (!pdc_screen)
+	own_screen = !pdc_screen;
+
+	if (own_screen)
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
@@ -82,10 +86,10 @@ int PDC_scr_open(int argc, char **argv)
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
 
-	if (!pdc_screen)
+	if (own_screen)
 		pdc_screen = SDL_SetVideoMode(SP->cols * pdc_fwidth,
 			SP->lines * pdc_fheight, 0,
-			SDL_SWSURFACE|SDL_ANYFORMAT);
+			SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);
 
 	if (!pdc_screen)
 	{
@@ -110,7 +114,10 @@ int PDC_scr_open(int argc, char **argv)
 	SDL_EnableUNICODE(1);
 
 	PDC_mouse_set();
-	PDC_set_title(argc ? argv[1] : "PDCurses");
+
+	if (own_screen)
+		PDC_set_title(argc ? argv[1] : "PDCurses");
+
 	PDC_flushinp();
 
 	SP->mouse_wait = PDC_CLICK_PERIOD;
@@ -125,6 +132,21 @@ int PDC_scr_open(int argc, char **argv)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
+	if (!own_screen)
+		return ERR;
+
+	if (nlines && ncols)
+	{
+		pdc_sheight = nlines * pdc_fheight;
+		pdc_swidth = ncols * pdc_fwidth;
+	}
+
+	SDL_FreeSurface(pdc_screen);
+
+	pdc_screen = SDL_SetVideoMode(pdc_swidth, pdc_sheight, 0,
+		SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);
+
+	return OK;
 }
 
 void PDC_reset_prog_mode(void)

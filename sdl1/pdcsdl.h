@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcsdl.h,v 1.1 2007/06/12 07:02:53 wmcbrine Exp $ */
+/* $Id: pdcsdl.h,v 1.2 2007/06/13 17:43:31 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -19,4 +19,4 @@
 
 extern SDL_Surface *pdc_screen, *pdc_font;
 extern SDL_Color pdc_color[16];
-extern int pdc_fheight, pdc_fwidth;
+extern int pdc_fheight, pdc_fwidth, pdc_sheight, pdc_swidth;

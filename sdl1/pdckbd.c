@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.5 2007/06/13 16:07:31 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.6 2007/06/13 17:43:31 wmcbrine Exp $");
 
 static SDL_Event event;
 static SDLKey oldkey;
@@ -324,6 +324,10 @@ int PDC_get_key(void)
 	{
 	case SDL_QUIT:
 		exit(1);
+	case SDL_VIDEORESIZE:
+		pdc_sheight = event.resize.h;
+		pdc_swidth = event.resize.w;
+		return KEY_RESIZE;
 	case SDL_MOUSEMOTION:
 		SDL_ShowCursor(SDL_ENABLE);
 	case SDL_MOUSEBUTTONUP:

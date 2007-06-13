@@ -15,10 +15,11 @@
 #include "deffont.h"
 #include "deficon.h"
 
-RCSID("$Id: pdcscrn.c,v 1.7 2007/06/13 18:34:40 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.8 2007/06/13 19:53:36 wmcbrine Exp $");
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL;
 SDL_Color pdc_color[16];
+Uint32 pdc_mapped[16];
 int pdc_fheight, pdc_fwidth, pdc_sheight, pdc_swidth;
 
 static bool own_screen;
@@ -122,6 +123,10 @@ int PDC_scr_open(int argc, char **argv)
 		pdc_color[i + 8].b = (i & COLOR_BLUE) ? 0xff : 0x40;
 	}
 
+	for (i = 0; i < 16; i++)
+		pdc_mapped[i] = SDL_MapRGB(pdc_screen->format,
+			pdc_color[i].r, pdc_color[i].g, pdc_color[i].b);
+
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
 		SDL_DEFAULT_REPEAT_INTERVAL);
 	SDL_EnableUNICODE(1);
@@ -199,6 +204,9 @@ int PDC_init_color(short color, short red, short green, short blue)
 	pdc_color[color].r = DIVROUND(red * 255, 1000);
 	pdc_color[color].g = DIVROUND(green * 255, 1000);
 	pdc_color[color].b = DIVROUND(blue * 255, 1000);
+
+	pdc_mapped[color] = SDL_MapRGB(pdc_screen->format,
+		pdc_color[color].r, pdc_color[color].g, pdc_color[color].b);
 
 	wrefresh(curscr);
 

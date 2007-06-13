@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.4 2007/06/13 15:51:14 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.5 2007/06/13 16:07:31 wmcbrine Exp $");
 
 static SDL_Event event;
 static SDLKey oldkey;
@@ -236,6 +236,17 @@ static int _process_mouse_event(void)
 	int i;
 	short shift_flags = 0;
 
+	keymods = SDL_GetModState();
+
+	if (keymods & KMOD_SHIFT)
+		shift_flags |= BUTTON_SHIFT;
+
+	if (keymods & KMOD_CTRL)
+		shift_flags |= BUTTON_CONTROL;
+
+	if (keymods & KMOD_ALT)
+		shift_flags |= BUTTON_ALT;
+
 	if (event.type == SDL_MOUSEMOTION)
 	{
 		pdc_mouse_status.x = event.motion.x / pdc_fwidth;
@@ -252,7 +263,9 @@ static int _process_mouse_event(void)
 		{
 			if (event.motion.state & SDL_BUTTON(i + 1))
 			{
-				pdc_mouse_status.button[i] = BUTTON_MOVED;
+				pdc_mouse_status.button[i] =
+					BUTTON_MOVED | shift_flags;
+
 				pdc_mouse_status.changes |= (1 << i);
 			}
 			else
@@ -287,33 +300,15 @@ static int _process_mouse_event(void)
 		{
 			if (event.button.button == i + 1)
 			{
-				pdc_mouse_status.button[i] = action;
+				pdc_mouse_status.button[i] =
+					action | shift_flags;
+
 				pdc_mouse_status.changes = (1 << i);
 			}
 			else
 				pdc_mouse_status.button[i] == BUTTON_RELEASED;
 		}
 
-	}
-
-	keymods = SDL_GetModState();
-
-	if (keymods & KMOD_SHIFT)
-		shift_flags |= BUTTON_SHIFT;
-
-	if (keymods & KMOD_CTRL)
-		shift_flags |= BUTTON_CONTROL;
-
-	if (keymods & KMOD_ALT)
-		shift_flags |= BUTTON_ALT;
-
-	if (shift_flags)
-	{
-		for (i = 0; i < 3; i++)
-		{
-			if (pdc_mouse_status.changes & (1 << i))
-				pdc_mouse_status.button[i] |= shift_flags;
-		}
 	}
 
 	old_mouse_status = pdc_mouse_status;

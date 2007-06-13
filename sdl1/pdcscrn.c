@@ -15,7 +15,7 @@
 #include "deffont.h"
 #include "deficon.h"
 
-RCSID("$Id: pdcscrn.c,v 1.6 2007/06/13 18:29:54 wmcbrine Exp $");
+RCSID("$Id: pdcscrn.c,v 1.7 2007/06/13 18:34:40 wmcbrine Exp $");
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL;
 SDL_Color pdc_color[16];
@@ -89,8 +89,11 @@ int PDC_scr_open(int argc, char **argv)
 
 	if (own_screen && !pdc_icon)
 	{
-		pdc_icon = SDL_LoadBMP_RW(SDL_RWFromMem(deficon,
-			sizeof(deficon)), 0);
+		pdc_icon = SDL_LoadBMP("pdcicon.bmp");
+
+		if (!pdc_icon)
+			pdc_icon = SDL_LoadBMP_RW(SDL_RWFromMem(deficon,
+				sizeof(deficon)), 0);
 
 		if (pdc_icon)
 			SDL_WM_SetIcon(pdc_icon, NULL);

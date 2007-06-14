@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-RCSID("$Id: pdcdisp.c,v 1.7 2007/06/13 20:34:19 wmcbrine Exp $");
+RCSID("$Id: pdcdisp.c,v 1.8 2007/06/14 13:11:35 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 
@@ -56,40 +56,6 @@ chtype acs_map[128] =
 
 #endif
 
-/* position hardware cursor at (y, x) */
-
-void PDC_gotoyx(int row, int col)
-{
-	SDL_Rect dest;
-	chtype ch;
-	short fg, bg;
-
-	PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
-		row, col, SP->cursrow, SP->curscol));
-
-	PDC_transform_line(SP->cursrow, SP->curscol, 1, 
-		curscr->_y[SP->cursrow] + SP->curscol);
-
-	if (!SP->visibility)
-		return;
-
-	ch = curscr->_y[row][col];
-	pair_content(PAIR_NUMBER(ch), &fg, &bg);
-
-	if (ch & A_REVERSE)
-		fg = bg;
-
-	dest.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
-
-	dest.y = (row + 1) * pdc_fheight - dest.h;
-	dest.x = col * pdc_fwidth;
-
-	dest.w = pdc_fwidth;
-
-	SDL_FillRect(pdc_screen, &dest, pdc_mapped[fg]);
-	SDL_UpdateRect(pdc_screen, dest.x, dest.y, dest.w, dest.h);
-}
-
 static void _set_attr(chtype ch)
 {
 	SDL_Color attr[2];
@@ -102,20 +68,53 @@ static void _set_attr(chtype ch)
 
 	if (ch & A_REVERSE)
 	{
-		short tmp = fg;
-		fg = bg;
-		bg = tmp;
+		attr[0] = pdc_color[bg];
+		attr[1] = pdc_color[fg];
+	}
+	else
+	{
+		attr[0] = pdc_color[fg];
+		attr[1] = pdc_color[bg];
 	}
 
-	attr[0].r = pdc_color[fg].r;
-	attr[0].g = pdc_color[fg].g;
-	attr[0].b = pdc_color[fg].b;
-
-	attr[1].r = pdc_color[bg].r;
-	attr[1].g = pdc_color[bg].g;
-	attr[1].b = pdc_color[bg].b;
-
 	SDL_SetColors(pdc_font, attr, 0, 2);
+}
+
+/* position hardware cursor at (y, x) */
+
+void PDC_gotoyx(int row, int col)
+{
+	SDL_Rect src, dest;
+	chtype ch;
+
+	PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
+		row, col, SP->cursrow, SP->curscol));
+
+	PDC_transform_line(SP->cursrow, SP->curscol, 1, 
+		curscr->_y[SP->cursrow] + SP->curscol);
+
+	if (!SP->visibility)
+		return;
+
+	ch = curscr->_y[row][col] ^ A_REVERSE;
+
+	_set_attr(ch);
+
+#ifdef CHTYPE_LONG
+	if (ch & A_ALTCHARSET && !(ch & 0xff80))
+		ch = acs_map[ch & 0x7f];
+#endif
+	src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
+	src.w = pdc_fwidth;
+
+	dest.y = (row + 1) * pdc_fheight - src.h;
+	dest.x = col * pdc_fwidth;
+
+	src.x = (ch & 0xff) % 32 * pdc_fwidth;
+	src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
+
+	SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+	SDL_UpdateRect(pdc_screen, dest.x, dest.y, src.w, src.h);
 }
 
 static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
@@ -125,21 +124,12 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 		short col = SP->line_color;
 
 		if (col != -1)
-		{
-			SDL_Color attr;
-
-			attr.r = pdc_color[col].r;
-			attr.g = pdc_color[col].g;
-			attr.b = pdc_color[col].b;
-
-			SDL_SetColors(pdc_font, &attr, 0, 1);
-		}
-
-		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 1);
+			SDL_SetColors(pdc_font, pdc_color + col, 0, 1);
 
 		src->x = '_' % 32 * pdc_fwidth;
 		src->y = '_' / 32 * pdc_fheight;
 
+		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 1);
 		SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
 		SDL_SetColorKey(pdc_font, 0, 0);
 
@@ -179,7 +169,7 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	SDL_Rect src, dest;
-	chtype oldch;
+	chtype oldch = 0;
 	int j;
 
 	PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
@@ -187,6 +177,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	src.w = pdc_fwidth;
 	src.h = pdc_fheight;
 	dest.y = pdc_fheight * lineno;
+	dest.x = pdc_fwidth * x;
 
 	for (j = 0; j < len; j++)
 	{
@@ -202,7 +193,6 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		if (ch & A_ALTCHARSET && !(ch & 0xff80))
 			ch = acs_map[ch & 0x7f];
 #endif
-		dest.x = (x + j) * pdc_fwidth;
 		src.x = (ch & 0xff) % 32 * pdc_fwidth;
 		src.y = (ch & 0xff) / 32 * pdc_fheight;
 
@@ -210,6 +200,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 		if (oldch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
 			_highlight(&src, &dest, oldch);
+
+		dest.x += pdc_fwidth;
 	}
 
 	SDL_UpdateRect(pdc_screen, x * pdc_fwidth, lineno * pdc_fheight,

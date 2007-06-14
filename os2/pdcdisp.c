@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcdisp.c,v 1.45 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include "pdcos2.h"
+
+RCSID("$Id: pdcdisp.c,v 1.46 2007/06/14 13:50:26 wmcbrine Exp $")
 
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these 
    match code page 437 and compatible pages (CP850, CP852, etc.) */

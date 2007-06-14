@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcscrn.c,v 1.85 2007/06/14 13:36:35 wmcbrine Exp $")
-
 #include "pdcwin.h"
+
+RCSID("$Id: pdcscrn.c,v 1.86 2007/06/14 13:50:28 wmcbrine Exp $")
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER, PDC_RESTORE_WINDOW };
 

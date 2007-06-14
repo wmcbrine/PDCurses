@@ -11,9 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: debug.c,v 1.3 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: debug.c,v 1.4 2007/06/14 13:50:27 wmcbrine Exp $")
+
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>

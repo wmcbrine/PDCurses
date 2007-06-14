@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcscrn.c,v 1.84 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include "pdcdos.h"
+
+RCSID("$Id: pdcscrn.c,v 1.85 2007/06/14 13:50:26 wmcbrine Exp $")
 
 #include <stdlib.h>
 

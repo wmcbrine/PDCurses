@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcutil.c,v 1.11 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include "pdcos2.h"
+
+RCSID("$Id: pdcutil.c,v 1.12 2007/06/14 13:50:26 wmcbrine Exp $")
 
 #if defined(OS2) && !defined(__EMX__)
 APIRET APIENTRY DosSleep(ULONG ulTime);

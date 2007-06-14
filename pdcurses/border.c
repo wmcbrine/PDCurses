@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: border.c,v 1.47 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: border.c,v 1.48 2007/06/14 13:50:27 wmcbrine Exp $")
 
 /*man-start**************************************************************
 

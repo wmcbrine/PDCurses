@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcutil.c,v 1.2 2007/06/14 13:36:35 wmcbrine Exp $")
-
 #include "pdcsdl.h"
+
+RCSID("$Id: pdcutil.c,v 1.3 2007/06/14 13:50:27 wmcbrine Exp $")
 
 void PDC_beep(void)
 {

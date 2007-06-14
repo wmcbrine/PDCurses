@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: beep.c,v 1.30 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: beep.c,v 1.31 2007/06/14 13:50:26 wmcbrine Exp $")
 
 /*man-start**************************************************************
 

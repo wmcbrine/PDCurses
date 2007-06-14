@@ -11,8 +11,6 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
                           
-RCSID("$Id: pdckbd.c,v 1.82 2007/06/14 13:36:34 wmcbrine Exp $")
-
 /* MS C doesn't return flags from int86() */
 #ifdef MSC
 # define USE_KBHIT
@@ -23,6 +21,8 @@ RCSID("$Id: pdckbd.c,v 1.82 2007/06/14 13:36:34 wmcbrine Exp $")
 #endif
 
 #include "pdcdos.h"
+
+RCSID("$Id: pdckbd.c,v 1.83 2007/06/14 13:50:26 wmcbrine Exp $")
 
 #ifdef __DJGPP__
 # include <fcntl.h>

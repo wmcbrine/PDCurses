@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: sb.c,v 1.23 2007/06/14 13:36:36 wmcbrine Exp $")
-
 #include "pdcx11.h"
+
+RCSID("$Id: sb.c,v 1.24 2007/06/14 13:50:28 wmcbrine Exp $")
 
 /* undefine any macros for functions defined in this module */
 #undef sb_init

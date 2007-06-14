@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: getch.c,v 1.65 2007/06/14 13:36:35 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: getch.c,v 1.66 2007/06/14 13:50:27 wmcbrine Exp $")
 
 #define _INBUFSIZ	512	/* size of terminal input buffer */
 #define NUNGETCH	256	/* max # chars to ungetch() */

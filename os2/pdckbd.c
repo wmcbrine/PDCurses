@@ -11,8 +11,6 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdckbd.c,v 1.84 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
 defined(__TURBOC__)
 # define HAVE_SIGNAL
@@ -20,6 +18,8 @@ defined(__TURBOC__)
 #endif
 
 #include "pdcos2.h"
+
+RCSID("$Id: pdckbd.c,v 1.85 2007/06/14 13:50:26 wmcbrine Exp $")
 
 #ifdef EMXVIDEO
 # include <termios.h>

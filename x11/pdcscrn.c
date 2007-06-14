@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcscrn.c,v 1.51 2007/06/14 13:36:36 wmcbrine Exp $")
-
 #include "pdcx11.h"
+
+RCSID("$Id: pdcscrn.c,v 1.52 2007/06/14 13:50:28 wmcbrine Exp $")
 
 /* close the physical screen */
 

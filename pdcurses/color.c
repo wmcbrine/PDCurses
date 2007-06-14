@@ -11,9 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: color.c,v 1.76 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: color.c,v 1.77 2007/06/14 13:50:27 wmcbrine Exp $")
+
 #include <stdlib.h>
 #include <string.h>
 

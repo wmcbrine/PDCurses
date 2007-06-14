@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcutil.c,v 1.7 2007/06/14 13:36:36 wmcbrine Exp $")
-
 #include "pdcx11.h"
+
+RCSID("$Id: pdcutil.c,v 1.8 2007/06/14 13:50:28 wmcbrine Exp $")
 
 #if defined(HAVE_POLL) && !defined(HAVE_USLEEP)
 # include <poll.h>

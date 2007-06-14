@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: pdcscrn.c,v 1.71 2007/06/14 13:36:34 wmcbrine Exp $")
-
 #include "pdcos2.h"
+
+RCSID("$Id: pdcscrn.c,v 1.72 2007/06/14 13:50:26 wmcbrine Exp $")
 
 int pdc_font;			/* default font size	*/
 

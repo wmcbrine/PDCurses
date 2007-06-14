@@ -11,9 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: util.c,v 1.65 2007/06/14 13:36:35 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: util.c,v 1.66 2007/06/14 13:50:27 wmcbrine Exp $")
+
 #ifdef PDC_WIDE
 # ifdef PDC_FORCE_UTF8
 #  include <string.h>

@@ -11,12 +11,13 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: panel.c,v 1.2 2007/06/14 13:36:35 wmcbrine Exp $")
-
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 #include <curspriv.h>
+
+RCSID("$Id: panel.c,v 1.3 2007/06/14 13:50:27 wmcbrine Exp $")
+
 #include <panel.h>
 #include <stdlib.h>
 

@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: deprec.c,v 1.3 2007/06/14 13:36:35 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: deprec.c,v 1.4 2007/06/14 13:50:27 wmcbrine Exp $")
 
 /* Deprecated functions. These should not be used, and will eventually 
    be removed. They're here solely for the benefit of applications that 

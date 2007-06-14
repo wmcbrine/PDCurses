@@ -11,9 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-RCSID("$Id: scr_dump.c,v 1.25 2007/06/14 13:36:35 wmcbrine Exp $")
-
 #include <curspriv.h>
+
+RCSID("$Id: scr_dump.c,v 1.26 2007/06/14 13:50:27 wmcbrine Exp $")
+
 #include <stdlib.h>
 #include <string.h>
 

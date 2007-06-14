@@ -16,9 +16,7 @@
 #endif
 #include <curspriv.h>
 
-RCSID("$Id: printw.c,v 1.36 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
+RCSID("$Id: printw.c,v 1.37 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -51,6 +49,8 @@ RCSID("$Id: printw.c,v 1.36 2007/06/14 13:50:27 wmcbrine Exp $")
 	vw_printw				Y
 
 **man-end****************************************************************/
+
+#include <string.h>
 
 int vwprintw(WINDOW *win, const char *fmt, va_list varglist)
 {

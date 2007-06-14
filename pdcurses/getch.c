@@ -13,15 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getch.c,v 1.66 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#define _INBUFSIZ	512	/* size of terminal input buffer */
-#define NUNGETCH	256	/* max # chars to ungetch() */
-
-static int c_pindex = 0;	/* putter index */
-static int c_gindex = 1;	/* getter index */
-static int c_ungind = 0;	/* ungetch() push index */
-static int c_ungch[NUNGETCH];	/* array of ungotten chars */
+RCSID("$Id: getch.c,v 1.67 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -99,6 +91,14 @@ static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 	PDC_get_key_modifiers			-	-	-
 
 **man-end****************************************************************/
+
+#define _INBUFSIZ	512	/* size of terminal input buffer */
+#define NUNGETCH	256	/* max # chars to ungetch() */
+
+static int c_pindex = 0;	/* putter index */
+static int c_gindex = 1;	/* getter index */
+static int c_ungind = 0;	/* ungetch() push index */
+static int c_ungch[NUNGETCH];	/* array of ungotten chars */
 
 static int _mouse_key(WINDOW *win)
 {

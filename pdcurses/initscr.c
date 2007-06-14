@@ -13,26 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: initscr.c,v 1.105 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <stdlib.h>
-
-char ttytype[128];
-
-const char *_curses_notice = "PDCurses 3.2 - Public Domain 2007";
-
-SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
-WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */
-WINDOW *stdscr = (WINDOW *)NULL;	/* the default screen window */
-
-int LINES = 0;				/* current terminal height */
-int COLS = 0;				/* current terminal width */
-int TABSIZE = 8;
-
-MOUSE_STATUS Mouse_status, pdc_mouse_status;
-
-extern RIPPEDOFFLINE linesripped[5];
-extern char linesrippedoff;
+RCSID("$Id: initscr.c,v 1.106 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -114,6 +95,25 @@ extern char linesrippedoff;
 	curses_version				-	-	-
 
 **man-end****************************************************************/
+
+#include <stdlib.h>
+
+char ttytype[128];
+
+const char *_curses_notice = "PDCurses 3.2 - Public Domain 2007";
+
+SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
+WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */
+WINDOW *stdscr = (WINDOW *)NULL;	/* the default screen window */
+
+int LINES = 0;				/* current terminal height */
+int COLS = 0;				/* current terminal width */
+int TABSIZE = 8;
+
+MOUSE_STATUS Mouse_status, pdc_mouse_status;
+
+extern RIPPEDOFFLINE linesripped[5];
+extern char linesrippedoff;
 
 WINDOW *Xinitscr(int argc, char *argv[])
 {

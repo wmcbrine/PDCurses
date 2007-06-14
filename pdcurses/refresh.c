@@ -13,10 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: refresh.c,v 1.47 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <stdlib.h>
-#include <string.h>
+RCSID("$Id: refresh.c,v 1.48 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -67,6 +64,9 @@ RCSID("$Id: refresh.c,v 1.47 2007/06/14 13:50:27 wmcbrine Exp $")
 	wredrawln				Y	-      4.0
 
 **man-end****************************************************************/
+
+#include <stdlib.h>
+#include <string.h>
 
 int wnoutrefresh(WINDOW *win)
 {

@@ -19,19 +19,7 @@ defined(__TURBOC__)
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdckbd.c,v 1.85 2007/06/14 13:50:26 wmcbrine Exp $")
-
-#ifdef EMXVIDEO
-# include <termios.h>
-static int tahead = -1;
-#else
-static KBDINFO kbdinfo;		/* default keyboard mode */
-static HMOU mouse_handle = 0;
-static MOUSE_STATUS old_mouse_status;
-static USHORT old_shift = 0;
-static bool key_pressed = FALSE;
-static int mouse_events = 0;
-#endif
+RCSID("$Id: pdckbd.c,v 1.86 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -48,6 +36,18 @@ static int mouse_events = 0;
 	PDC_get_input_fd			-	-	-
 
 **man-end****************************************************************/
+
+#ifdef EMXVIDEO
+# include <termios.h>
+static int tahead = -1;
+#else
+static KBDINFO kbdinfo;		/* default keyboard mode */
+static HMOU mouse_handle = 0;
+static MOUSE_STATUS old_mouse_status;
+static USHORT old_shift = 0;
+static bool key_pressed = FALSE;
+static int mouse_events = 0;
+#endif
 
 /************************************************************************
  *   Table for key code translation of function keys in keypad mode	*

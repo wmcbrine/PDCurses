@@ -16,10 +16,7 @@
 #endif
 #include <curspriv.h>
 
-RCSID("$Id: panel.c,v 1.3 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <panel.h>
-#include <stdlib.h>
+RCSID("$Id: panel.c,v 1.4 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -140,6 +137,9 @@ RCSID("$Id: panel.c,v 1.3 2007/06/14 13:50:27 wmcbrine Exp $")
 	{gatech,emory}!n4hgf!wht -or- wht@n4hgf.Mt-Park.GA.US
 
 **man-end****************************************************************/
+
+#include <panel.h>
+#include <stdlib.h>
 
 PANEL *_bottom_panel = (PANEL *)0;
 PANEL *_top_panel = (PANEL *)0;

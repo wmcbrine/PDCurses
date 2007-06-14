@@ -13,9 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: insstr.c,v 1.42 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
+RCSID("$Id: insstr.c,v 1.43 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -72,6 +70,8 @@ RCSID("$Id: insstr.c,v 1.42 2007/06/14 13:50:27 wmcbrine Exp $")
 	mvwins_nwstr				Y
 
 **man-end****************************************************************/
+
+#include <string.h>
 
 int winsnstr(WINDOW *win, const char *str, int n)
 {

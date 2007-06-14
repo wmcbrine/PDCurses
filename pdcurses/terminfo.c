@@ -13,9 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: terminfo.c,v 1.33 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <term.h>
+RCSID("$Id: terminfo.c,v 1.34 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -57,6 +55,8 @@ RCSID("$Id: terminfo.c,v 1.33 2007/06/14 13:50:27 wmcbrine Exp $")
 	mvcur					Y	Y	Y
 
 **man-end****************************************************************/
+
+#include <term.h>
 
 TERMINAL *cur_term = NULL;
 

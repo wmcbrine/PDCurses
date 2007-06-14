@@ -13,10 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: termattr.c,v 1.51 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
-#include <limits.h>
+RCSID("$Id: termattr.c,v 1.52 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -81,6 +78,9 @@ RCSID("$Id: termattr.c,v 1.51 2007/06/14 13:50:27 wmcbrine Exp $")
 	wordchar				-	-	-
 
 **man-end****************************************************************/
+
+#include <string.h>
+#include <limits.h>
 
 int baudrate(void)
 {

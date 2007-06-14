@@ -13,9 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: window.c,v 1.58 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <stdlib.h>
+RCSID("$Id: window.c,v 1.59 2007/06/14 14:11:31 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -143,6 +141,8 @@ RCSID("$Id: window.c,v 1.58 2007/06/14 13:50:27 wmcbrine Exp $")
 	PDC_sync				-	-	-
 
 **man-end****************************************************************/
+
+#include <stdlib.h>
 
 WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx)
 {

@@ -22,13 +22,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdckbd.c,v 1.83 2007/06/14 13:50:26 wmcbrine Exp $")
-
-#ifdef __DJGPP__
-# include <fcntl.h>
-# include <io.h>
-# include <signal.h>
-#endif
+RCSID("$Id: pdckbd.c,v 1.84 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -45,6 +39,12 @@ RCSID("$Id: pdckbd.c,v 1.83 2007/06/14 13:50:26 wmcbrine Exp $")
 	PDC_get_input_fd			-	-	-
 
 **man-end****************************************************************/
+
+#ifdef __DJGPP__
+# include <fcntl.h>
+# include <io.h>
+# include <signal.h>
+#endif
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode	*

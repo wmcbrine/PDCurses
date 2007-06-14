@@ -13,13 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: debug.c,v 1.4 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
-#include <sys/types.h>
-#include <time.h>
-
-bool pdc_trace_on = FALSE;
+RCSID("$Id: debug.c,v 1.5 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -45,6 +39,12 @@ bool pdc_trace_on = FALSE;
 	PDC_debug				-	-	-
 
 **man-end****************************************************************/
+
+#include <string.h>
+#include <sys/types.h>
+#include <time.h>
+
+bool pdc_trace_on = FALSE;
 
 void PDC_debug(const char *fmt, ...)
 {

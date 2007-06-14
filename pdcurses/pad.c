@@ -13,15 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: pad.c,v 1.44 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <stdlib.h>
-#include <string.h>
-
-/* save values for pechochar() */
-
-static int save_pminrow, save_pmincol;
-static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
+RCSID("$Id: pad.c,v 1.45 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -94,6 +86,14 @@ static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 	pecho_wchar				Y
 
 **man-end****************************************************************/
+
+#include <stdlib.h>
+#include <string.h>
+
+/* save values for pechochar() */
+
+static int save_pminrow, save_pmincol;
+static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
 
 WINDOW *newpad(int nlines, int ncols)
 {

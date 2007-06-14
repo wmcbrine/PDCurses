@@ -13,9 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: insch.c,v 1.41 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
+RCSID("$Id: insch.c,v 1.42 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -70,6 +68,8 @@ RCSID("$Id: insch.c,v 1.41 2007/06/14 13:50:27 wmcbrine Exp $")
 	mvwins_wch				Y
 
 **man-end****************************************************************/
+
+#include <string.h>
 
 int winsch(WINDOW *win, chtype ch)
 {

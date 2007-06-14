@@ -13,11 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.10 2007/06/14 13:50:27 wmcbrine Exp $")
-
-static SDL_Event event;
-static SDLKey oldkey;
-static MOUSE_STATUS old_mouse_status;
+RCSID("$Id: pdckbd.c,v 1.11 2007/06/14 14:11:31 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -36,6 +32,10 @@ static MOUSE_STATUS old_mouse_status;
 **man-end****************************************************************/
 
 unsigned long pdc_key_modifiers = 0L;
+
+static SDL_Event event;
+static SDLKey oldkey;
+static MOUSE_STATUS old_mouse_status;
 
 static struct
 {

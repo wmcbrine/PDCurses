@@ -13,9 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: mouse.c,v 1.42 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
+RCSID("$Id: mouse.c,v 1.43 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -161,6 +159,8 @@ RCSID("$Id: mouse.c,v 1.42 2007/06/14 13:50:27 wmcbrine Exp $")
 	ungetmouse				-	-	-
 
 **man-end****************************************************************/
+
+#include <string.h>
 
 static bool ungot = FALSE;
 

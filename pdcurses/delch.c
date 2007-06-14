@@ -13,9 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: delch.c,v 1.30 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
+RCSID("$Id: delch.c,v 1.31 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -44,6 +42,8 @@ RCSID("$Id: delch.c,v 1.30 2007/06/14 13:50:27 wmcbrine Exp $")
 	mvwdelch				Y	Y	Y
 
 **man-end****************************************************************/
+
+#include <string.h>
 
 int wdelch(WINDOW *win)
 {

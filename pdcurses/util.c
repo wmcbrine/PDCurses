@@ -13,15 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.66 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#ifdef PDC_WIDE
-# ifdef PDC_FORCE_UTF8
-#  include <string.h>
-# else
-#  include <stdlib.h>
-# endif
-#endif
+RCSID("$Id: util.c,v 1.67 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -92,6 +84,14 @@ RCSID("$Id: util.c,v 1.66 2007/06/14 13:50:27 wmcbrine Exp $")
 	PDC_wcstombs				-	-	-
 
 **man-end****************************************************************/
+
+#ifdef PDC_WIDE
+# ifdef PDC_FORCE_UTF8
+#  include <string.h>
+# else
+#  include <stdlib.h>
+# endif
+#endif
 
 char *unctrl(chtype c)
 {

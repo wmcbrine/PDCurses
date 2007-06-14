@@ -16,19 +16,7 @@
 #endif
 #include <curspriv.h>
 
-RCSID("$Id: scanw.c,v 1.37 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
-
-#ifndef HAVE_VSSCANF
-# include <stdlib.h>
-# include <ctype.h>
-# include <limits.h>
-
-static int _pdc_vsscanf(const char *, const char *, va_list);
-
-# define vsscanf _pdc_vsscanf
-#endif
+RCSID("$Id: scanw.c,v 1.38 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -68,6 +56,18 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 	vw_scanw				Y
 
 **man-end****************************************************************/
+
+#include <string.h>
+
+#ifndef HAVE_VSSCANF
+# include <stdlib.h>
+# include <ctype.h>
+# include <limits.h>
+
+static int _pdc_vsscanf(const char *, const char *, va_list);
+
+# define vsscanf _pdc_vsscanf
+#endif
 
 int vwscanw(WINDOW *win, const char *fmt, va_list varglist)
 {

@@ -13,15 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: sb.c,v 1.24 2007/06/14 13:50:28 wmcbrine Exp $")
-
-/* undefine any macros for functions defined in this module */
-#undef sb_init
-#undef sb_set_horz
-#undef sb_set_vert
-#undef sb_get_horz
-#undef sb_get_vert
-#undef sb_refresh
+RCSID("$Id: sb.c,v 1.25 2007/06/14 14:11:31 wmcbrine Exp $")
 
 /*man-start**************************************************************
 

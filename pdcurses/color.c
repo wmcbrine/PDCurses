@@ -13,10 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: color.c,v 1.77 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <stdlib.h>
-#include <string.h>
+RCSID("$Id: color.c,v 1.78 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -105,6 +102,9 @@ RCSID("$Id: color.c,v 1.77 2007/06/14 13:50:27 wmcbrine Exp $")
 	PDC_set_line_color			-	-       -
 
 **man-end****************************************************************/
+
+#include <stdlib.h>
+#include <string.h>
 
 int COLORS = 0;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;

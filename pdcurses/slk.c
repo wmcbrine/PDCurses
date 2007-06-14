@@ -13,9 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: slk.c,v 1.55 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <stdlib.h>
+RCSID("$Id: slk.c,v 1.56 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -90,6 +88,8 @@ RCSID("$Id: slk.c,v 1.55 2007/06/14 13:50:27 wmcbrine Exp $")
 	PDC_slk_initialize			-	-	-
 
 **man-end****************************************************************/
+
+#include <stdlib.h>
 
 enum { LABEL_NORMAL = 8, LABEL_EXTENDED = 10, LABEL_NCURSES_EXTENDED = 12 };
 

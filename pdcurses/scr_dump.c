@@ -13,10 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scr_dump.c,v 1.26 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <stdlib.h>
-#include <string.h>
+RCSID("$Id: scr_dump.c,v 1.27 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -68,6 +65,9 @@ RCSID("$Id: scr_dump.c,v 1.26 2007/06/14 13:50:27 wmcbrine Exp $")
 	scr_set					Y
 
 **man-end****************************************************************/
+
+#include <stdlib.h>
+#include <string.h>
 
 #define DUMPVER 1	/* Should be updated whenever the WINDOW struct 
 			   is changed */

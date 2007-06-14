@@ -13,20 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: kernel.c,v 1.73 2007/06/14 13:50:27 wmcbrine Exp $")
-
-#include <string.h>
-
-RIPPEDOFFLINE linesripped[5];
-char linesrippedoff = 0;
-
-static struct cttyset
-{
-        bool    been_set;
-        SCREEN  saved;
-} ctty[3];
-
-enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
+RCSID("$Id: kernel.c,v 1.74 2007/06/14 14:11:30 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -130,6 +117,19 @@ enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 	saveterm				-
 
 **man-end****************************************************************/
+
+#include <string.h>
+
+RIPPEDOFFLINE linesripped[5];
+char linesrippedoff = 0;
+
+static struct cttyset
+{
+        bool    been_set;
+        SCREEN  saved;
+} ctty[3];
+
+enum { PDC_SH_TTY, PDC_PR_TTY, PDC_SAVE_TTY };
 
 static void _save_mode(int i)
 {

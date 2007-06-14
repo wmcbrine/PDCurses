@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.10 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.11 2007/06/14 14:43:53 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -56,6 +56,8 @@ chtype acs_map[128] =
 
 #endif
 
+/* set the font colors to match the chtype's attribute */
+
 static void _set_attr(chtype ch)
 {
 	SDL_Color attr[2];
@@ -80,7 +82,7 @@ static void _set_attr(chtype ch)
 	SDL_SetColors(pdc_font, attr, 0, 2);
 }
 
-/* position hardware cursor at (y, x) */
+/* draw a cursor at (y, x) */
 
 void PDC_gotoyx(int row, int col)
 {
@@ -90,11 +92,17 @@ void PDC_gotoyx(int row, int col)
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
 		row, col, SP->cursrow, SP->curscol));
 
+	/* clear the old cursor */
+
 	PDC_transform_line(SP->cursrow, SP->curscol, 1, 
 		curscr->_y[SP->cursrow] + SP->curscol);
 
 	if (!SP->visibility)
 		return;
+
+	/* draw a new cursor by overprinting the existing character in 
+	   reverse, either the full cell (when visibility == 2) or the 
+	   lowest quarter of it (when visibility == 1) */
 
 	ch = curscr->_y[row][col] ^ A_REVERSE;
 
@@ -116,6 +124,8 @@ void PDC_gotoyx(int row, int col)
 	SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
 	SDL_UpdateRect(pdc_screen, dest.x, dest.y, src.w, src.h);
 }
+
+/* handle the A_*LINE attributes */
 
 static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 {

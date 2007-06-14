@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.11 2007/06/14 14:11:31 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.12 2007/06/14 14:43:53 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -280,6 +280,9 @@ static int _process_mouse_event(void)
 	{
 		short action = (event.button.state == SDL_PRESSED) ?
 			BUTTON_PRESSED : BUTTON_RELEASED;
+
+		/* check for a click -- a press followed immediately by 
+		   a release */
 
 		if (action == BUTTON_PRESSED && SP->mouse_wait)
 		{

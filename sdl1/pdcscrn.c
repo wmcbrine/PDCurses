@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.10 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.11 2007/06/14 14:43:53 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -24,9 +24,6 @@ Uint32 pdc_mapped[16];
 int pdc_fheight, pdc_fwidth, pdc_sheight, pdc_swidth;
 
 static bool own_screen;
-
-/* close the physical screen -- may restore the screen to its state
-   before PDC_scr_open(); miscellaneous cleanup */
 
 void PDC_scr_close(void)
 {
@@ -41,8 +38,7 @@ void PDC_scr_free(void)
 		free(pdc_atrtab);
 }
 
-/* open the physical screen -- allocate SP, miscellaneous intialization,
-   and may save the existing screen for later restoration */
+/* open the physical screen -- allocate SP, miscellaneous intialization */
 
 int PDC_scr_open(int argc, char **argv)
 {

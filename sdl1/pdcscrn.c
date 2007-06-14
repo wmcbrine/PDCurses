@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.11 2007/06/14 14:43:53 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.12 2007/06/14 15:58:20 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -22,8 +22,7 @@ SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL;
 SDL_Color pdc_color[16];
 Uint32 pdc_mapped[16];
 int pdc_fheight, pdc_fwidth, pdc_sheight, pdc_swidth;
-
-static bool own_screen;
+bool pdc_own_screen;
 
 void PDC_scr_close(void)
 {
@@ -52,9 +51,9 @@ int PDC_scr_open(int argc, char **argv)
 	if (!SP || !pdc_atrtab)
 		return ERR;
 
-	own_screen = !pdc_screen;
+	pdc_own_screen = !pdc_screen;
 
-	if (own_screen)
+	if (pdc_own_screen)
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
@@ -85,7 +84,7 @@ int PDC_scr_open(int argc, char **argv)
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();
 
-	if (own_screen && !pdc_icon)
+	if (pdc_own_screen && !pdc_icon)
 	{
 		pdc_icon = SDL_LoadBMP("pdcicon.bmp");
 
@@ -97,7 +96,7 @@ int PDC_scr_open(int argc, char **argv)
 			SDL_WM_SetIcon(pdc_icon, NULL);
 	}
 
-	if (own_screen)
+	if (pdc_own_screen)
 		pdc_screen = SDL_SetVideoMode(SP->cols * pdc_fwidth,
 			SP->lines * pdc_fheight, 0,
 			SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);
@@ -130,7 +129,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	PDC_mouse_set();
 
-	if (own_screen)
+	if (pdc_own_screen)
 		PDC_set_title(argc ? argv[1] : "PDCurses");
 
 	PDC_flushinp();
@@ -147,7 +146,7 @@ int PDC_scr_open(int argc, char **argv)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
-	if (!own_screen)
+	if (!pdc_own_screen)
 		return ERR;
 
 	if (nlines && ncols)
@@ -160,6 +159,9 @@ int PDC_resize_screen(int nlines, int ncols)
 
 	pdc_screen = SDL_SetVideoMode(pdc_swidth, pdc_sheight, 0,
 		SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);
+
+	SP->resized = FALSE;
+	SP->cursrow = SP->curscol = 0;
 
 	return OK;
 }

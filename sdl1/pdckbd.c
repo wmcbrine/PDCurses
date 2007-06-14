@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.7 2007/06/13 18:45:34 wmcbrine Exp $");
+RCSID("$Id: pdckbd.c,v 1.8 2007/06/14 13:14:18 wmcbrine Exp $");
 
 static SDL_Event event;
 static SDLKey oldkey;
@@ -146,6 +146,8 @@ static int _process_key_event(void)
 				return KEY_ALT_R;
 			case SDLK_LALT:
 				return KEY_ALT_L;
+			default:
+				break;
 			}
 		}
 
@@ -308,7 +310,7 @@ static int _process_mouse_event(void)
 				pdc_mouse_status.changes = (1 << i);
 			}
 			else
-				pdc_mouse_status.button[i] == BUTTON_RELEASED;
+				pdc_mouse_status.button[i] = BUTTON_RELEASED;
 		}
 
 	}

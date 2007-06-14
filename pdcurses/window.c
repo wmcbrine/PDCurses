@@ -11,10 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: window.c,v 1.57 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <stdlib.h>
-
-RCSID("$Id: window.c,v 1.56 2007/05/02 00:35:35 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

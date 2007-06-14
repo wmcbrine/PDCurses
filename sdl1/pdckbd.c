@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include "pdcsdl.h"
+RCSID("$Id: pdckbd.c,v 1.9 2007/06/14 13:36:35 wmcbrine Exp $")
 
-RCSID("$Id: pdckbd.c,v 1.8 2007/06/14 13:14:18 wmcbrine Exp $");
+#include "pdcsdl.h"
 
 static SDL_Event event;
 static SDLKey oldkey;

@@ -11,6 +11,8 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdckbd.c,v 1.84 2007/06/14 13:36:34 wmcbrine Exp $")
+
 #if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
 defined(__TURBOC__)
 # define HAVE_SIGNAL
@@ -30,8 +32,6 @@ static USHORT old_shift = 0;
 static bool key_pressed = FALSE;
 static int mouse_events = 0;
 #endif
-
-RCSID("$Id: pdckbd.c,v 1.83 2007/06/13 15:57:11 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

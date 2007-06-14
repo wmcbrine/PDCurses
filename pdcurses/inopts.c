@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include <curspriv.h>
+RCSID("$Id: inopts.c,v 1.39 2007/06/14 13:36:35 wmcbrine Exp $")
 
-RCSID("$Id: inopts.c,v 1.38 2007/04/13 08:24:20 wmcbrine Exp $");
+#include <curspriv.h>
 
 /*man-start**************************************************************
 

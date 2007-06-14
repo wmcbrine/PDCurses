@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcdisp.c,v 1.43 2007/06/14 13:36:36 wmcbrine Exp $")
+
 #include "pdcx11.h"
 
 #include <string.h>
-
-RCSID("$Id: pdcdisp.c,v 1.42 2007/01/02 15:57:57 wmcbrine Exp $");
 
 #ifdef CHTYPE_LONG
 

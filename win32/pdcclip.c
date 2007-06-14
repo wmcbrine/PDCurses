@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include "pdcwin.h"
+RCSID("$Id: pdcclip.c,v 1.27 2007/06/14 13:36:35 wmcbrine Exp $")
 
-RCSID("$Id: pdcclip.c,v 1.26 2007/04/29 06:43:16 wmcbrine Exp $");
+#include "pdcwin.h"
 
 /*man-start**************************************************************
 

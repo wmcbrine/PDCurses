@@ -11,12 +11,12 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: debug.c,v 1.3 2007/06/14 13:36:34 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
-
-RCSID("$Id: debug.c,v 1.2 2007/03/16 06:33:44 wmcbrine Exp $");
 
 bool pdc_trace_on = FALSE;
 

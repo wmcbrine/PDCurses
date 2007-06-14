@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include "pdcos2.h"
+RCSID("$Id: pdcgetsc.c,v 1.36 2007/06/14 13:36:34 wmcbrine Exp $")
 
-RCSID("$Id: pdcgetsc.c,v 1.35 2007/01/03 14:10:46 wmcbrine Exp $");
+#include "pdcos2.h"
 
 /* return width of screen/viewport */
 

@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcscrn.c,v 1.9 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #include "pdcsdl.h"
 #include "deffont.h"
 #include "deficon.h"
-
-RCSID("$Id: pdcscrn.c,v 1.8 2007/06/13 19:53:36 wmcbrine Exp $");
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL;
 SDL_Color pdc_color[16];

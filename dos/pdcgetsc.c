@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcgetsc.c,v 1.39 2007/06/14 13:36:34 wmcbrine Exp $")
+
 #include "pdcdos.h"
 
 #include <stdlib.h>
-
-RCSID("$Id: pdcgetsc.c,v 1.38 2007/01/03 14:10:46 wmcbrine Exp $");
 
 /* return width of screen/viewport */
 

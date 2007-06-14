@@ -11,12 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcx11.c,v 1.91 2007/06/14 13:36:36 wmcbrine Exp $")
+
 #include "pdcx11.h"
 
 #include <stdlib.h>
-
-RCSID("$Id: pdcx11.c,v 1.90 2006/12/01 07:56:03 wmcbrine Exp $");
-
 
 /*** Functions that are called by both processes ***/
 

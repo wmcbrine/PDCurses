@@ -11,10 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: initscr.c,v 1.104 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <stdlib.h>
-
-RCSID("$Id: initscr.c,v 1.103 2007/06/12 05:41:22 wmcbrine Exp $");
 
 char ttytype[128];
 

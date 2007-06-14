@@ -11,10 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: kernel.c,v 1.72 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <string.h>
-
-RCSID("$Id: kernel.c,v 1.71 2007/04/13 08:24:20 wmcbrine Exp $");
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;

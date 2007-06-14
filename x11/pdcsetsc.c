@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcsetsc.c,v 1.30 2007/06/14 13:36:36 wmcbrine Exp $")
+
 #include "pdcx11.h"
 
 #include <string.h>
-
-RCSID("$Id: pdcsetsc.c,v 1.29 2007/03/16 06:33:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

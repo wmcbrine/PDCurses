@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcclip.c,v 1.32 2007/06/14 13:36:36 wmcbrine Exp $")
+
 #include "pdcx11.h"
 
 #include <stdlib.h>
-
-RCSID("$Id: pdcclip.c,v 1.31 2007/04/29 22:23:17 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

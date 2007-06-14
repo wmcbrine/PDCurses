@@ -11,10 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: terminfo.c,v 1.32 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <term.h>
-
-RCSID("$Id: terminfo.c,v 1.31 2007/05/16 07:16:31 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

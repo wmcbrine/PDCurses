@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include "pdcx11.h"
+RCSID("$Id: pdckbd.c,v 1.59 2007/06/14 13:36:36 wmcbrine Exp $")
 
-RCSID("$Id: pdckbd.c,v 1.58 2007/03/16 06:33:45 wmcbrine Exp $");
+#include "pdcx11.h"
 
 /*man-start**************************************************************
 

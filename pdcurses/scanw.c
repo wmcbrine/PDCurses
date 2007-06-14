@@ -11,6 +11,8 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: scanw.c,v 1.36 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -26,8 +28,6 @@ static int _pdc_vsscanf(const char *, const char *, va_list);
 
 # define vsscanf _pdc_vsscanf
 #endif
-
-RCSID("$Id: scanw.c,v 1.35 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

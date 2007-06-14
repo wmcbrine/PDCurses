@@ -11,6 +11,8 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
                           
+RCSID("$Id: pdckbd.c,v 1.82 2007/06/14 13:36:34 wmcbrine Exp $")
+
 /* MS C doesn't return flags from int86() */
 #ifdef MSC
 # define USE_KBHIT
@@ -27,8 +29,6 @@
 # include <io.h>
 # include <signal.h>
 #endif
-
-RCSID("$Id: pdckbd.c,v 1.81 2007/03/23 01:53:21 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

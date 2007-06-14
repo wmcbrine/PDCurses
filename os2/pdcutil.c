@@ -11,13 +11,13 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcutil.c,v 1.11 2007/06/14 13:36:34 wmcbrine Exp $")
+
 #include "pdcos2.h"
 
 #if defined(OS2) && !defined(__EMX__)
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif
-
-RCSID("$Id: pdcutil.c,v 1.10 2006/10/15 02:42:25 wmcbrine Exp $");
 
 void PDC_beep(void)
 {

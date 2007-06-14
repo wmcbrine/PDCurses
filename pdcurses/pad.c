@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pad.c,v 1.43 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <stdlib.h>
 #include <string.h>
-
-RCSID("$Id: pad.c,v 1.42 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /* save values for pechochar() */
 

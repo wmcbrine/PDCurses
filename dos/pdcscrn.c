@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: pdcscrn.c,v 1.84 2007/06/14 13:36:34 wmcbrine Exp $")
+
 #include "pdcdos.h"
 
 #include <stdlib.h>
-
-RCSID("$Id: pdcscrn.c,v 1.83 2007/06/12 05:41:21 wmcbrine Exp $");
 
 int	pdc_adapter;		/* screen type				*/
 int	pdc_scrnmode;		/* default screen mode			*/

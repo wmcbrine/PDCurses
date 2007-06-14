@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include <curspriv.h>
+RCSID("$Id: touch.c,v 1.26 2007/06/14 13:36:35 wmcbrine Exp $")
 
-RCSID("$Id: touch.c,v 1.25 2007/03/16 06:33:44 wmcbrine Exp $");
+#include <curspriv.h>
 
 /*man-start**************************************************************
 

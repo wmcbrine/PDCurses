@@ -11,6 +11,8 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: sb.c,v 1.23 2007/06/14 13:36:36 wmcbrine Exp $")
+
 #include "pdcx11.h"
 
 /* undefine any macros for functions defined in this module */
@@ -20,8 +22,6 @@
 #undef sb_get_horz
 #undef sb_get_vert
 #undef sb_refresh
-
-RCSID("$Id: sb.c,v 1.22 2007/03/16 06:33:45 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

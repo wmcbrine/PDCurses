@@ -11,10 +11,10 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: addchstr.c,v 1.39 2007/06/14 13:36:34 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <string.h>
-
-RCSID("$Id: addchstr.c,v 1.38 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

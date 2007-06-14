@@ -11,6 +11,8 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: x11.c,v 1.89 2007/06/14 13:36:36 wmcbrine Exp $")
+
 #include "pdcx11.h"
 
 #ifdef HAVE_DECKEYSYM_H
@@ -31,8 +33,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-RCSID("$Id: x11.c,v 1.88 2007/06/12 05:41:22 wmcbrine Exp $");
 
 #ifndef XPOINTER_TYPEDEFED
 typedef char * XPointer;

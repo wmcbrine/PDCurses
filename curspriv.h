@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.152 2007/06/03 02:15:19 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.153 2007/06/14 13:36:33 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -120,7 +120,7 @@ size_t	PDC_wcstombs(char *, const wchar_t *, size_t);
 
 #ifdef PDCDEBUG
 # define PDC_LOG(x) if (pdc_trace_on) PDC_debug x
-# define RCSID(x) static const char *rcsid = x
+# define RCSID(x) static const char *rcsid = x;
 #else
 # define PDC_LOG(x)
 # define RCSID(x)

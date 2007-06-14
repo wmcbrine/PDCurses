@@ -11,13 +11,13 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: printw.c,v 1.35 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 #include <curspriv.h>
 #include <string.h>
-
-RCSID("$Id: printw.c,v 1.34 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

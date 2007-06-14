@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include <curspriv.h>
+RCSID("$Id: overlay.c,v 1.31 2007/06/14 13:36:35 wmcbrine Exp $")
 
-RCSID("$Id: overlay.c,v 1.30 2007/04/28 23:41:01 wmcbrine Exp $");
+#include <curspriv.h>
 
 /*man-start**************************************************************
 

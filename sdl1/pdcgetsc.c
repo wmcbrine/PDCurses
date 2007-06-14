@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include "pdcsdl.h"
+RCSID("$Id: pdcgetsc.c,v 1.4 2007/06/14 13:36:35 wmcbrine Exp $")
 
-RCSID("$Id: pdcgetsc.c,v 1.3 2007/06/13 18:45:34 wmcbrine Exp $");
+#include "pdcsdl.h"
 
 /* get the cursor size/shape */
 

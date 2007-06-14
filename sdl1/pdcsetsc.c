@@ -11,9 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#include "pdcsdl.h"
+RCSID("$Id: pdcsetsc.c,v 1.4 2007/06/14 13:36:35 wmcbrine Exp $")
 
-RCSID("$Id: pdcsetsc.c,v 1.3 2007/06/12 20:22:16 wmcbrine Exp $");
+#include "pdcsdl.h"
 
 /*man-start**************************************************************
 

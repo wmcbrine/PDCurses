@@ -11,11 +11,11 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
+RCSID("$Id: refresh.c,v 1.46 2007/06/14 13:36:35 wmcbrine Exp $")
+
 #include <curspriv.h>
 #include <stdlib.h>
 #include <string.h>
-
-RCSID("$Id: refresh.c,v 1.45 2007/03/16 06:33:44 wmcbrine Exp $");
 
 /*man-start**************************************************************
 

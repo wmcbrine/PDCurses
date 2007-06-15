@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.13 2007/06/14 15:58:20 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.14 2007/06/15 21:06:40 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -30,6 +30,8 @@ RCSID("$Id: pdckbd.c,v 1.13 2007/06/14 15:58:20 wmcbrine Exp $")
 	PDC_get_input_fd			-	-	-
 
 **man-end****************************************************************/
+
+#include <string.h>
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -237,8 +239,9 @@ static int _process_key_event(void)
 static int _process_mouse_event(void)
 {
 	SDLMod keymods;
-	int i;
 	short shift_flags = 0;
+
+	memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
 
 	keymods = SDL_GetModState();
 
@@ -253,6 +256,8 @@ static int _process_mouse_event(void)
 
 	if (event.type == SDL_MOUSEMOTION)
 	{
+		int i;
+
 		pdc_mouse_status.x = event.motion.x / pdc_fwidth;
 		pdc_mouse_status.y = event.motion.y / pdc_fheight;
 
@@ -272,14 +277,28 @@ static int _process_mouse_event(void)
 
 				pdc_mouse_status.changes |= (1 << i);
 			}
-			else
-				pdc_mouse_status.button[i] = BUTTON_RELEASED;
 		}
 	}
 	else
 	{
 		short action = (event.button.state == SDL_PRESSED) ?
 			BUTTON_PRESSED : BUTTON_RELEASED;
+		Uint8 btn = event.button.button;
+
+		/* handle scroll wheel */
+
+		if ((btn == 4 || btn == 5) && action == BUTTON_RELEASED)
+		{
+			pdc_mouse_status.x = pdc_mouse_status.y = -1;
+
+			pdc_mouse_status.changes = (btn == 5) ?
+	                        PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+
+			return KEY_MOUSE;
+		}
+
+		if (btn < 1 || btn > 3)
+			return -1;
 
 		/* check for a click -- a press followed immediately by 
 		   a release */
@@ -293,7 +312,7 @@ static int _process_mouse_event(void)
 			if (SDL_PollEvent(&rel))
 			{
 				if (rel.type == SDL_MOUSEBUTTONUP &&
-				    rel.button.button == event.button.button)
+				    rel.button.button == btn)
 					action = BUTTON_CLICKED;
 				else
 					SDL_PushEvent(&rel);
@@ -303,19 +322,10 @@ static int _process_mouse_event(void)
 		pdc_mouse_status.x = event.button.x / pdc_fwidth;
 		pdc_mouse_status.y = event.button.y / pdc_fheight;
 
-		for (i = 0; i < 3; i++)
-		{
-			if (event.button.button == i + 1)
-			{
-				pdc_mouse_status.button[i] =
-					action | shift_flags;
+		btn--;
 
-				pdc_mouse_status.changes = (1 << i);
-			}
-			else
-				pdc_mouse_status.button[i] = BUTTON_RELEASED;
-		}
-
+		pdc_mouse_status.button[btn] = action | shift_flags;
+		pdc_mouse_status.changes = (1 << btn);
 	}
 
 	old_mouse_status = pdc_mouse_status;

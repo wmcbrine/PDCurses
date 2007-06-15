@@ -24,19 +24,15 @@ RANLIB		= ranlib
 
 LIBCURSES	= libpdcurses.a
 
-LIB_DEPS        = -L$(PDCURSES_SRCDIR)/sdl1 -lpdcurses
-
-PDCLIBS		= $(LIBCURSES)
-
 DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas
 DEMOOBJS	= firework.o newdemo.o ptest.o rain.o testcurs.o tui.o \
 tuidemo.o worm.o xmas.o
 
 #########################################################################
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(LIBCURSES) $(DEMOS)
 
 clean:
-	-rm -rf *.o trace $(PDCLIBS) $(DEMOS)
+	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
 

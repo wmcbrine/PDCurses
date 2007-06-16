@@ -15,7 +15,12 @@ CFLAGS		= -O2 -Wall
 
 CPPFLAGS	= -I$(PDCURSES_SRCDIR) `sdl-config --cflags`
 
+ifeq ($(shell uname),Darwin)
+	DEMOFLAGS	= -Dmain=SDL_main
+endif
+
 BUILD		= gcc -c $(CFLAGS) $(CPPFLAGS)
+DEMOBUILD	= $(BUILD) $(DEMOFLAGS)
 
 LINK		= gcc
 LDFLAGS		= $(LIBCURSES) `sdl-config --libs`
@@ -234,28 +239,28 @@ xmas: xmas.o
 
 
 firework.o: $(demodir)/firework.c
-	$(BUILD) $(demodir)/firework.c
+	$(DEMOBUILD) $(demodir)/firework.c
 
 newdemo.o: $(demodir)/newdemo.c
-	$(BUILD) $(demodir)/newdemo.c
+	$(DEMOBUILD) $(demodir)/newdemo.c
 
 ptest.o: $(demodir)/ptest.c $(PDCURSES_SRCDIR)/panel.h
-	$(BUILD) $(demodir)/ptest.c
+	$(DEMOBUILD) $(demodir)/ptest.c
 
 rain.o: $(demodir)/rain.c
-	$(BUILD) $(demodir)/rain.c
+	$(DEMOBUILD) $(demodir)/rain.c
 
 testcurs.o: $(demodir)/testcurs.c
-	$(BUILD) $(demodir)/testcurs.c
+	$(DEMOBUILD) $(demodir)/testcurs.c
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
-	$(BUILD) $(demodir)/tui.c
+	$(DEMOBUILD) $(demodir)/tui.c
 
 tuidemo.o: $(demodir)/tuidemo.c
-	$(BUILD) $(demodir)/tuidemo.c
+	$(DEMOBUILD) $(demodir)/tuidemo.c
 
 worm.o: $(demodir)/worm.c
-	$(BUILD) $(demodir)/worm.c
+	$(DEMOBUILD) $(demodir)/worm.c
 
 xmas.o: $(demodir)/xmas.c
-	$(BUILD) $(demodir)/xmas.c
+	$(DEMOBUILD) $(demodir)/xmas.c

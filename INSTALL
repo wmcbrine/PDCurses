@@ -120,8 +120,8 @@ X11
 SDL
 ---
 
-. On *nix, run "make". This assumes a working sdl-config, and is 
-  currently hardwired to use gcc.
+. On *nix (including Linux and Mac OS X), run "make". This assumes a 
+  working sdl-config. GNU make may be required on some systems.
 
 . With MinGW, run "make -f Makefile.mng". This assumes SDL is installed 
   in the standard directories.

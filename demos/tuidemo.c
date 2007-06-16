@@ -1,6 +1,6 @@
 /********************************* tuidemo.c ********************************/
 /*
- * $Id: tuidemo.c,v 1.17 2006/08/12 21:13:45 wmcbrine Exp $
+ * $Id: tuidemo.c,v 1.18 2007/06/16 01:10:34 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -222,7 +222,7 @@ void subsub(void)
 
 /***************************** start main menu  ***************************/
 
-int main(void)
+int main(int argc, char **argv)
 {
 	startmenu(MainMenu,
 		"TUI - 'textual user interface' demonstration program");

@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.11 2007/06/14 14:43:53 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.12 2007/06/16 05:16:44 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -55,6 +55,22 @@ chtype acs_map[128] =
 # undef A
 
 #endif
+
+#define MAXRECT 200
+
+static SDL_Rect uprect[MAXRECT];
+static int rectcount = 0;
+
+/* do the real updates on a delay */
+
+void PDC_update_rects(void)
+{
+	if (rectcount)
+	{
+		SDL_UpdateRects(pdc_screen, rectcount, uprect);
+		rectcount = 0;
+	}
+}
 
 /* set the font colors to match the chtype's attribute */
 
@@ -184,6 +200,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 	PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
+	if (rectcount == MAXRECT)
+		PDC_update_rects();
+
 	src.w = pdc_fwidth;
 	src.h = pdc_fheight;
 	dest.y = pdc_fheight * lineno;
@@ -214,6 +233,10 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		dest.x += pdc_fwidth;
 	}
 
-	SDL_UpdateRect(pdc_screen, x * pdc_fwidth, lineno * pdc_fheight,
-		len * pdc_fwidth, pdc_fheight);
+	uprect[rectcount].x = x * pdc_fwidth;
+	uprect[rectcount].y = lineno * pdc_fheight;
+	uprect[rectcount].w = len * pdc_fwidth;
+	uprect[rectcount].h = pdc_fheight;
+
+	rectcount++;
 }

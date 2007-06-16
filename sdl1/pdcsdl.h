@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcsdl.h,v 1.4 2007/06/14 15:58:20 wmcbrine Exp $ */
+/* $Id: pdcsdl.h,v 1.5 2007/06/16 05:16:44 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -22,3 +22,5 @@ extern SDL_Color pdc_color[16];
 extern Uint32 pdc_mapped[16];
 extern int pdc_fheight, pdc_fwidth, pdc_sheight, pdc_swidth;
 extern bool pdc_own_screen;
+
+void PDC_update_rects(void);

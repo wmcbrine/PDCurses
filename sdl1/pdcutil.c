@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcutil.c,v 1.3 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: pdcutil.c,v 1.4 2007/06/16 05:16:44 wmcbrine Exp $")
 
 void PDC_beep(void)
 {
@@ -24,6 +24,7 @@ void PDC_napms(int ms)
 {
 	PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
+	PDC_update_rects();
 	SDL_Delay(ms);
 }
 

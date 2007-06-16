@@ -18,7 +18,7 @@ CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 BUILD		= gcc -c $(CFLAGS) $(CPPFLAGS)
 
 LINK		= gcc
-LDFLAGS		= $(LIBCURSES) -mwindows -lmingw32 -lSDLmain -lSDL
+LDFLAGS		= $(LIBCURSES) -mwindows -lSDL
 
 RANLIB		= ranlib
 

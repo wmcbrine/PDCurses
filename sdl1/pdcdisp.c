@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.12 2007/06/16 05:16:44 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.13 2007/06/17 06:55:52 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -60,6 +60,7 @@ chtype acs_map[128] =
 
 static SDL_Rect uprect[MAXRECT];
 static int rectcount = 0;
+static short foregr, backgr;
 
 /* do the real updates on a delay */
 
@@ -77,22 +78,21 @@ void PDC_update_rects(void)
 static void _set_attr(chtype ch)
 {
 	SDL_Color attr[2];
-	short fg, bg;
 
-	pair_content(PAIR_NUMBER(ch), &fg, &bg);
+	pair_content(PAIR_NUMBER(ch), &foregr, &backgr);
 
-	fg |= (ch & A_BOLD) ? 8 : 0;
-	bg |= (ch & A_BLINK) ? 8 : 0;
+	foregr |= (ch & A_BOLD) ? 8 : 0;
+	backgr |= (ch & A_BLINK) ? 8 : 0;
 
 	if (ch & A_REVERSE)
 	{
-		attr[0] = pdc_color[bg];
-		attr[1] = pdc_color[fg];
+		attr[0] = pdc_color[backgr];
+		attr[1] = pdc_color[foregr];
 	}
 	else
 	{
-		attr[0] = pdc_color[fg];
-		attr[1] = pdc_color[bg];
+		attr[0] = pdc_color[foregr];
+		attr[1] = pdc_color[backgr];
 	}
 
 	SDL_SetColors(pdc_font, attr, 0, 2);
@@ -145,10 +145,10 @@ void PDC_gotoyx(int row, int col)
 
 static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 {
+	short col = SP->line_color;
+
 	if (oldch & A_UNDERLINE)
 	{
-		short col = SP->line_color;
-
 		if (col != -1)
 			SDL_SetColors(pdc_font, pdc_color + col, 0, 1);
 
@@ -165,26 +165,18 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 
 	if (oldch & (A_LEFTLINE|A_RIGHTLINE))
 	{
-		short fg = SP->line_color;
-
-		if (fg == -1)
-		{
-			short bg;
-
-			pair_content(PAIR_NUMBER(oldch), &fg, &bg);
-			if (oldch & A_REVERSE)
-				fg = bg;
-		}
+		if (col == -1)
+			col = (oldch & A_REVERSE) ? backgr : foregr;
 
 		dest->w = 1;
 
 		if (oldch & A_LEFTLINE)
-			SDL_FillRect(pdc_screen, dest, pdc_mapped[fg]);
+			SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
 
 		if (oldch & A_RIGHTLINE)
 		{
 			dest->x += pdc_fwidth - 1;
-			SDL_FillRect(pdc_screen, dest, pdc_mapped[fg]);
+			SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
 		}
 	}
 }

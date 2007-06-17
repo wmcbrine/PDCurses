@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.15 2007/06/17 20:37:29 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.16 2007/06/17 21:15:59 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -59,6 +59,7 @@ chtype acs_map[128] =
 #define MAXRECT 200
 
 static SDL_Rect uprect[MAXRECT];
+static chtype oldch = (chtype)(-1);
 static int rectcount = 0;
 static short foregr, backgr;
 
@@ -77,25 +78,32 @@ void PDC_update_rects(void)
 
 static void _set_attr(chtype ch)
 {
-	SDL_Color attr[2];
+	ch &= (A_ATTRIBUTES ^ A_ALTCHARSET);
 
-	pair_content(PAIR_NUMBER(ch), &foregr, &backgr);
-
-	foregr |= (ch & A_BOLD) ? 8 : 0;
-	backgr |= (ch & A_BLINK) ? 8 : 0;
-
-	if (ch & A_REVERSE)
+	if ((oldch == (chtype)(-1)) || (oldch != ch))
 	{
-		attr[0] = pdc_color[backgr];
-		attr[1] = pdc_color[foregr];
-	}
-	else
-	{
-		attr[0] = pdc_color[foregr];
-		attr[1] = pdc_color[backgr];
-	}
+		SDL_Color attr[2];
 
-	SDL_SetColors(pdc_font, attr, 0, 2);
+		pair_content(PAIR_NUMBER(ch), &foregr, &backgr);
+
+		foregr |= (ch & A_BOLD) ? 8 : 0;
+		backgr |= (ch & A_BLINK) ? 8 : 0;
+
+		if (ch & A_REVERSE)
+		{
+			attr[0] = pdc_color[backgr];
+			attr[1] = pdc_color[foregr];
+		}
+		else
+		{
+			attr[0] = pdc_color[foregr];
+			attr[1] = pdc_color[backgr];
+		}
+
+		SDL_SetPalette(pdc_font, SDL_LOGPAL, attr, 0, 2);
+
+		oldch = ch;
+	}
 }
 
 /* draw a cursor at (y, x) */
@@ -143,14 +151,15 @@ void PDC_gotoyx(int row, int col)
 
 /* handle the A_*LINE attributes */
 
-static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
+static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 {
 	short col = SP->line_color;
 
-	if (oldch & A_UNDERLINE)
+	if (ch & A_UNDERLINE)
 	{
 		if (col != -1)
-			SDL_SetColors(pdc_font, pdc_color + col, 0, 1);
+			SDL_SetPalette(pdc_font, SDL_LOGPAL,
+				pdc_color + col, 0, 1);
 
 		src->x = '_' % 32 * pdc_fwidth;
 		src->y = '_' / 32 * pdc_fheight;
@@ -160,23 +169,27 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 		SDL_SetColorKey(pdc_font, 0, 0);
 
 		if (col != -1)
-			_set_attr(oldch);
+		{
+			oldch = (chtype)(-1);	/* force update */
+			_set_attr(ch);
+		}
 	}
 
-	if (oldch & (A_LEFTLINE|A_RIGHTLINE))
+	if (ch & (A_LEFTLINE|A_RIGHTLINE))
 	{
 		if (col == -1)
-			col = (oldch & A_REVERSE) ? backgr : foregr;
+			col = (ch & A_REVERSE) ? backgr : foregr;
 
 		dest->w = 1;
 
-		if (oldch & A_LEFTLINE)
+		if (ch & A_LEFTLINE)
 			SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
 
-		if (oldch & A_RIGHTLINE)
+		if (ch & A_RIGHTLINE)
 		{
 			dest->x += pdc_fwidth - 1;
 			SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
+			dest->x -= pdc_fwidth - 1;
 		}
 	}
 }
@@ -187,7 +200,6 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	SDL_Rect src, dest, lastrect;
-	chtype oldch = 0;
 	int j;
 
 	PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
@@ -219,23 +231,20 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	{
 		chtype ch = srcp[j];
 
-		if (!j || ((ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) != oldch))
-		{
-			_set_attr(ch);
-			oldch = ch & (A_ATTRIBUTES ^ A_ALTCHARSET);
-		}
+		_set_attr(ch);
 
 #ifdef CHTYPE_LONG
 		if (ch & A_ALTCHARSET && !(ch & 0xff80))
-			ch = acs_map[ch & 0x7f];
+			ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) |
+				acs_map[ch & 0x7f];
 #endif
 		src.x = (ch & 0xff) % 32 * pdc_fwidth;
 		src.y = (ch & 0xff) / 32 * pdc_fheight;
 
 		SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
 
-		if (oldch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
-			_highlight(&src, &dest, oldch);
+		if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
+			_highlight(&src, &dest, ch);
 
 		dest.x += pdc_fwidth;
 	}

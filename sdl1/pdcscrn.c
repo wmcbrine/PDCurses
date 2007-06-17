@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.13 2007/06/17 00:12:51 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.14 2007/06/17 18:34:14 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -131,8 +131,6 @@ int PDC_scr_open(int argc, char **argv)
 	if (pdc_own_screen)
 		PDC_set_title(argc ? argv[1] : "PDCurses");
 
-	PDC_flushinp();
-
 	SP->mouse_wait = PDC_CLICK_PERIOD;
 	SP->audible = FALSE;
 
@@ -168,11 +166,15 @@ int PDC_resize_screen(int nlines, int ncols)
 void PDC_reset_prog_mode(void)
 {
 	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+
+	PDC_flushinp();
 }
 
 void PDC_reset_shell_mode(void)
 {
 	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
+
+	PDC_flushinp();
 }
 
 void PDC_restore_screen_mode(int i)

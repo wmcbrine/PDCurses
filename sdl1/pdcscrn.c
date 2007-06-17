@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.12 2007/06/14 15:58:20 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.13 2007/06/17 00:12:51 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -123,8 +123,7 @@ int PDC_scr_open(int argc, char **argv)
 		pdc_mapped[i] = SDL_MapRGB(pdc_screen->format,
 			pdc_color[i].r, pdc_color[i].g, pdc_color[i].b);
 
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
-		SDL_DEFAULT_REPEAT_INTERVAL);
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, 50);
 	SDL_EnableUNICODE(1);
 
 	PDC_mouse_set();

@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.14 2007/06/17 19:30:42 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.15 2007/06/17 20:37:29 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -186,7 +186,7 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype oldch)
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
-	SDL_Rect src, dest;
+	SDL_Rect src, dest, lastrect;
 	chtype oldch = 0;
 	int j;
 
@@ -200,13 +200,20 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 	dest.y = pdc_fheight * lineno + pdc_yoffset;
 	dest.x = pdc_fwidth * x + pdc_xoffset;
+	dest.h = pdc_fheight;
+	dest.w = pdc_fwidth * len;
 
-	uprect[rectcount].y = dest.y;
-	uprect[rectcount].x = dest.x;
-	uprect[rectcount].h = pdc_fheight;
-	uprect[rectcount].w = len * pdc_fwidth;
+	/* merge rects that are vertically adjacent and have the same
+	   width -- mainly useful for full-screen updates */
 
-	rectcount++;
+	if (rectcount)
+		lastrect = uprect[rectcount - 1];
+
+	if (rectcount && (lastrect.x == dest.x) &&
+	   (lastrect.w == dest.w) && (lastrect.y == dest.y - pdc_fheight))
+		uprect[rectcount - 1].h += pdc_fheight;
+	else
+		uprect[rectcount++] = dest;
 
 	for (j = 0; j < len; j++)
 	{

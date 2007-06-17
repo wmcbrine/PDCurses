@@ -12,10 +12,29 @@ osdir		= $(PDCURSES_SRCDIR)/sdl1
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
-BUILD		= $(CC) -O2 -Wall -I$(PDCURSES_SRCDIR)
-LDFLAGS		= $(LIBCURSES) -mwindows -lSDL
-RANLIB		= ranlib
-LIBCURSES	= libpdcurses.a
+ifeq ($(DEBUG),Y)
+        CFLAGS  = -g -Wall -DPDCDEBUG
+else
+        CFLAGS  = -O2 -Wall
+endif
+
+BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
+LDFLAGS		= -mwindows $(LIBCURSES)
+
+ifeq ($(DLL),Y)
+	BUILD += -DPDC_DLL_BUILD
+	LIBEXE = gcc $(PDCURSES_SRCDIR)/win32/pdcurses.def
+	LIBFLAGS = -Wl,--out-implib,libpdcurses.a -shared -o
+	LIBCURSES = pdcurses.dll
+	CLEAN = $(LIBCURSES) *.a
+	POST = -lSDL
+else
+	LIBEXE = ar
+	LIBFLAGS = rcv
+	LIBCURSES = libpdcurses.a
+	CLEAN = *.a
+	LDFLAGS += -lSDL
+endif
 
 #########################################################################
 .PHONY: all libs clean demos
@@ -25,7 +44,7 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-del *.o $(LIBCURSES) *.exe
+	-del *.o $(CLEAN) *.exe
 
 demos:	$(DEMOS)
 	strip *.exe
@@ -33,8 +52,7 @@ demos:	$(DEMOS)
 #------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	ar rv $@ $?
-	-$(RANLIB) $@
+	$(LIBEXE) $(LIBFLAGS) $@ $? $(POST)
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_SDL_H)
@@ -55,7 +73,7 @@ ptest.exe: %.exe: $(demodir)/%.c
 	$(BUILD) -o $@ $< $(LDFLAGS)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(CC) -o $@ tui.o tuidemo.o $(LDFLAGS)
+	$(CC) -o $@ $? $(LDFLAGS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
 	$(BUILD) -c $<

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: initscr.c,v 1.106 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: initscr.c,v 1.107 2007/06/17 18:48:54 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -100,7 +100,7 @@ RCSID("$Id: initscr.c,v 1.106 2007/06/14 14:11:30 wmcbrine Exp $")
 
 char ttytype[128];
 
-const char *_curses_notice = "PDCurses 3.2 - Public Domain 2007";
+const char *_curses_notice = "PDCurses 3.3 - Public Domain 2007";
 
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */

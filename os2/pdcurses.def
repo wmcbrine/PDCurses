@@ -1,6 +1,6 @@
 LIBRARY		PDCURSES
 
-DESCRIPTION	'PDCurses 3.2 Dynamic Linking library'
+DESCRIPTION	'PDCurses 3.3 Dynamic Linking library'
 
 PROTMODE
 

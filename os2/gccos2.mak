@@ -94,12 +94,11 @@ ptest.o rain.o worm.o
 #------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
+	$(LIBEXE) $(LIBFLAGS) $@ $?
 	-copy $(LIBCURSES) panel.a
 
 $(DLLTARGET): $(LIBOBJS) $(PDCOBJS)
-	$(LINK) $(DLLFLAGS) -o $(DLLTARGET) $(LIBOBJS) $(PDCOBJS) \
-$(osdir)\pdcurses.def
+	$(LINK) $(DLLFLAGS) -o $(DLLTARGET) $? $(osdir)\pdcurses.def
 #	lxlite $(DLLTARGET)
 	emximp -o $(LIBCURSES) $(osdir)\pdcurses.def
 
@@ -123,7 +122,7 @@ ptest.exe: %.exe: %.o
 	$(EXEPOST)
 
 tuidemo.exe:	tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o tuidemo $? $(LIBCURSES) $(CCLIBS)
 	$(TUIPOST)
 
 firework.o newdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \

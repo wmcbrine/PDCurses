@@ -76,7 +76,7 @@ demos:	$(DEMOS)
 #------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) $(LIBFLAGS) $@ $(LIBOBJS) $(PDCOBJS)
+	$(LIBEXE) $(LIBFLAGS) $@ $?
 	-cp pdcurses.a panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
@@ -98,7 +98,7 @@ ptest.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o$@ $? $(LIBCURSES)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<

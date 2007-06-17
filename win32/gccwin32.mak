@@ -47,7 +47,7 @@ LINK		= gcc
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = gcc pdcurses$(W).def
+	LIBEXE = gcc $(osdir)/pdcurses$(W).def
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
 	CLEAN = $(LIBCURSES) *.a

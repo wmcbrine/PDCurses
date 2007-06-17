@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.13 2007/06/17 06:55:52 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.14 2007/06/17 19:30:42 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -131,8 +131,8 @@ void PDC_gotoyx(int row, int col)
 	src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
 	src.w = pdc_fwidth;
 
-	dest.y = (row + 1) * pdc_fheight - src.h;
-	dest.x = col * pdc_fwidth;
+	dest.y = (row + 1) * pdc_fheight - src.h + pdc_yoffset;
+	dest.x = col * pdc_fwidth + pdc_xoffset;
 
 	src.x = (ch & 0xff) % 32 * pdc_fwidth;
 	src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
@@ -195,10 +195,18 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	if (rectcount == MAXRECT)
 		PDC_update_rects();
 
-	src.w = pdc_fwidth;
 	src.h = pdc_fheight;
-	dest.y = pdc_fheight * lineno;
-	dest.x = pdc_fwidth * x;
+	src.w = pdc_fwidth;
+
+	dest.y = pdc_fheight * lineno + pdc_yoffset;
+	dest.x = pdc_fwidth * x + pdc_xoffset;
+
+	uprect[rectcount].y = dest.y;
+	uprect[rectcount].x = dest.x;
+	uprect[rectcount].h = pdc_fheight;
+	uprect[rectcount].w = len * pdc_fwidth;
+
+	rectcount++;
 
 	for (j = 0; j < len; j++)
 	{
@@ -224,11 +232,4 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 		dest.x += pdc_fwidth;
 	}
-
-	uprect[rectcount].x = x * pdc_fwidth;
-	uprect[rectcount].y = lineno * pdc_fheight;
-	uprect[rectcount].w = len * pdc_fwidth;
-	uprect[rectcount].h = pdc_fheight;
-
-	rectcount++;
 }

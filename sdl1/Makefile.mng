@@ -73,7 +73,7 @@ ptest.exe: %.exe: $(demodir)/%.c
 	$(BUILD) -o $@ $< $(LDFLAGS)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(CC) -o $@ $? $(LDFLAGS)
+	$(CC) -o $@ tuidemo.o tui.o $(LDFLAGS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
 	$(BUILD) -c $<

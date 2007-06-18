@@ -686,10 +686,8 @@ MH_XINC_DIR
 MH_XLIBS
 PURIFY
 SHLPST
-MODPST
 DYN_COMP
 LD_RXLIB1
-LD_RXTRANSLIB1
 SHLPRE
 SHL_TARGETS
 O2SAVE
@@ -5259,37 +5257,30 @@ _ACEOF
 fi
 
 
-{ echo "$as_me:$LINENO: checking shared library/external function extensions" >&5
-echo $ECHO_N "checking shared library/external function extensions... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking shared library extension" >&5
+echo $ECHO_N "checking shared library extension... $ECHO_C" >&6; }
 SHLPST=".so"
-MODPST=".so"
 
 case "$target" in
         *hp-hpux*)
                 SHLPST=".sl"
-                MODPST=".sl"
                 ;;
         *ibm-aix*)
                 SHLPST=".a"
-                MODPST=".a"
                 ;;
         *qnx*)
                 SHLPST=""
-                MODPST=""
                 ;;
         *cygwin*)
                 SHLPST=".dll"
-                MODPST=".dll"
                 ;;
         *darwin*)
                 SHLPST=".dylib"
-                MODPST=".dylib"
                 ;;
 esac
 
-
-{ echo "$as_me:$LINENO: result: $SHLPST/$MODPST" >&5
-echo "${ECHO_T}$SHLPST/$MODPST" >&6; }
+{ echo "$as_me:$LINENO: result: $SHLPST" >&5
+echo "${ECHO_T}$SHLPST" >&6; }
 
 
 
@@ -5300,21 +5291,18 @@ SHLFILES="XCurses"
 RXPACKEXPORTS=""
 SHLPRE="lib"
 LD_RXLIB1=""
-LD_RXTRANSLIB1="$LD_RXLIB1"
 
 
 case "$target" in
 	*hp-hpux*)
 		SYS_DEFS="-D_HPUX_SOURCE"
 		LD_RXLIB1="ld -b -q -n"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*ibm-aix*)
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
 		AIX_DYN="yes"
 		DYN_COMP="-DDYNAMIC"
 		LD_RXLIB1="ld -bnoentry -bM:SRE"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
 		RXPACKEXP="$SHLFILE.exp"
 		;;
@@ -5325,41 +5313,32 @@ case "$target" in
 			SYS_DEFS="-D_POSIX_SOURCE -D_XOPEN_SOURCE -Olimit 800"
 		fi
 		LD_RXLIB1="ld -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*sequent-dynix*|*esix*|*dgux*)
 		LD_RXLIB1="ld -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*solaris*)
 		if test "$ac_cv_prog_CC" = "gcc"; then
 			LD_RXLIB1="gcc -shared"
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 		else
 			LD_RXLIB1="ld -G"
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 		fi
 		;;
 	sparc*sunos*)
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
 		LD_RXLIB1="ld"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*linux*|*atheos*|*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*freebsd*)
 		LD_RXLIB1="ld -Bdynamic -Bshareable"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*pc-sco*)
 		LD_RXLIB1="ld -dy -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*beos*)
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		BEOS_DYN="yes"
 		;;
 	*qnx*)
@@ -5370,17 +5349,13 @@ case "$target" in
 	*cygwin)
 		SHLPRE=""
 		DYN_COMP="-DDYNAMIC"
-# Only for Rexx/Trans do we produce an import library for the DLL we are
-# building
 		LD_RXLIB1="dllwrap --def \$(srcdir)/../win32/pdcurses.def --target i386-cygwin32 --dllname \$(@)"
-		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib lib\$(basename \$(@)).a --target i386-cygwin32 --dllname \$(@)"
 # cygwininstall target MUST install the shared library itself because
 # it puts it into $(bindir) not $(libdir) as all other platforms
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
 		LD_RXLIB1="${CC} -flat_namespace -undefined suppress -dynamiclib -install_name=\$(@)"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*)
 		;;
@@ -5392,7 +5367,7 @@ if test "$DYN_COMP" = ""; then
 echo $ECHO_N "checking compiler flags for a dynamic object... $ECHO_C" >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 5395 "configure"
+#line 5370 "configure"
 int a=0
 EOF
 
@@ -5431,7 +5406,7 @@ echo "${ECHO_T}none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 5434 "configure"
+#line 5409 "configure"
 int foo()
 {
 return(0);
@@ -5450,7 +5425,6 @@ if { (eval echo "$as_me:$LINENO: \"$mh_compile\"") >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } && test -s conftest.rxlib; then
 		LD_RXLIB1="ld -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
 		SHLPRE="lib"
 		SHLPST=".so"
@@ -5463,13 +5437,11 @@ if { (eval echo "$as_me:$LINENO: \"$mh_compile\"") >&5
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); } && test -s conftest.rxlib; then
 			LD_RXLIB1="ld -G"
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"
 			SHLPRE="lib"
 			SHLPST=".so"
 		else
 			LD_RXLIB1=""
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 			SHLPRE=""
 			SHLPST=""
 		fi
@@ -5503,7 +5475,6 @@ if test "$ac_cv_header_dl_h" = "yes" -o "$ac_cv_header_dlfcn_h" = "yes" -o "$AIX
 		fi
 	done
 fi
-
 
 
 
@@ -6209,10 +6180,8 @@ MH_XINC_DIR!$MH_XINC_DIR$ac_delim
 MH_XLIBS!$MH_XLIBS$ac_delim
 PURIFY!$PURIFY$ac_delim
 SHLPST!$SHLPST$ac_delim
-MODPST!$MODPST$ac_delim
 DYN_COMP!$DYN_COMP$ac_delim
 LD_RXLIB1!$LD_RXLIB1$ac_delim
-LD_RXTRANSLIB1!$LD_RXTRANSLIB1$ac_delim
 SHLPRE!$SHLPRE$ac_delim
 SHL_TARGETS!$SHL_TARGETS$ac_delim
 O2SAVE!$O2SAVE$ac_delim
@@ -6223,7 +6192,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 83; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 81; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

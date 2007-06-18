@@ -329,7 +329,6 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 #	mh_dyn_link='${CC} -Wl,-shared -o conftest.rxlib conftest.o -lc 1>&AC_FD_CC'
 	if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
 		LD_RXLIB1="ld -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 #		LD_RXLIB1="${CC} -Wl,-shared"
 		SHLPRE="lib"
 		SHLPST=".so"
@@ -338,13 +337,11 @@ if AC_TRY_EVAL(mh_compile) && test -s conftest.o; then
 #		mh_dyn_link='${CC} -Wl,-G -o conftest.rxlib conftest.o 1>&AC_FD_CC'
 		if AC_TRY_EVAL(mh_dyn_link) && test -s conftest.rxlib; then
 			LD_RXLIB1="ld -G"
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 #			LD_RXLIB1="${CC} -Wl,-G"
 			SHLPRE="lib"
 			SHLPST=".so"
 		else
 			LD_RXLIB1=""
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 			SHLPRE=""
 			SHLPST=""
 		fi
@@ -370,21 +367,18 @@ SHLFILES="$*"
 RXPACKEXPORTS=""
 SHLPRE="lib"
 LD_RXLIB1=""
-LD_RXTRANSLIB1="$LD_RXLIB1"
 
 AC_REQUIRE([AC_CANONICAL_SYSTEM])
 case "$target" in
 	*hp-hpux*)
 		SYS_DEFS="-D_HPUX_SOURCE"
 		LD_RXLIB1="ld -b -q -n"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*ibm-aix*)
 		SYS_DEFS="-D_ALL_SOURCE -DAIX"
 		AIX_DYN="yes"
 		DYN_COMP="-DDYNAMIC"
 		LD_RXLIB1="ld -bnoentry -bM:SRE"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		RXPACKEXPORTS="-bE:$SHLFILE.exp"
 		RXPACKEXP="$SHLFILE.exp"
 		;;
@@ -395,41 +389,32 @@ case "$target" in
 			SYS_DEFS="-D_POSIX_SOURCE -D_XOPEN_SOURCE -Olimit 800"
 		fi
 		LD_RXLIB1="ld -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*sequent-dynix*|*esix*|*dgux*)
 		LD_RXLIB1="ld -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*solaris*)
 		if test "$ac_cv_prog_CC" = "gcc"; then
 			LD_RXLIB1="gcc -shared"
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 		else
 			LD_RXLIB1="ld -G"
-			LD_RXTRANSLIB1="$LD_RXLIB1"
 		fi
 		;;
 	sparc*sunos*)
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
 		LD_RXLIB1="ld"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*linux*|*atheos*|*nto-qnx*)
 		LD_RXLIB1="${CC} -shared"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*freebsd*)
 		LD_RXLIB1="ld -Bdynamic -Bshareable"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*pc-sco*)
 		LD_RXLIB1="ld -dy -G"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*beos*)
 		LD_RXLIB1="${CC} -Wl,-shared -nostart -Xlinker -soname=\$(@)"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		BEOS_DYN="yes"
 		;;
 	*qnx*)
@@ -440,17 +425,13 @@ case "$target" in
 	*cygwin)
 		SHLPRE=""
 		DYN_COMP="-DDYNAMIC"
-# Only for Rexx/Trans do we produce an import library for the DLL we are
-# building
 		LD_RXLIB1="dllwrap --def \$(srcdir)/../win32/pdcurses.def --target i386-cygwin32 --dllname \$(@)"
-		LD_RXTRANSLIB1="dllwrap --def \$(srcdir)/\$(basename \$(@))w32.def --output-lib lib\$(basename \$(@)).a --target i386-cygwin32 --dllname \$(@)"
 # cygwininstall target MUST install the shared library itself because
 # it puts it into $(bindir) not $(libdir) as all other platforms
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
 		LD_RXLIB1="${CC} -flat_namespace -undefined suppress -dynamiclib -install_name=\$(@)"
-		LD_RXTRANSLIB1="$LD_RXLIB1"
 		;;
 	*)
 		;;
@@ -527,7 +508,6 @@ fi
 AC_SUBST(DYN_COMP)
 AC_SUBST(LIBS)
 AC_SUBST(LD_RXLIB1)
-AC_SUBST(LD_RXTRANSLIB1)
 AC_SUBST(SHLPRE)
 AC_SUBST(SHLPST)
 AC_SUBST(SHL_TARGETS)
@@ -581,35 +561,28 @@ dnl Determines the file extension for shared libraries
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([MH_SHLPST],
 [
-AC_MSG_CHECKING(shared library/external function extensions)
+AC_MSG_CHECKING(shared library extension)
 SHLPST=".so"
-MODPST=".so"
 AC_REQUIRE([AC_CANONICAL_SYSTEM])
 case "$target" in
         *hp-hpux*)
                 SHLPST=".sl"
-                MODPST=".sl"
                 ;;
         *ibm-aix*)
                 SHLPST=".a"
-                MODPST=".a"
                 ;;
         *qnx*)
                 SHLPST=""
-                MODPST=""
                 ;;
         *cygwin*)
                 SHLPST=".dll"
-                MODPST=".dll"
                 ;;
         *darwin*)
                 SHLPST=".dylib"
-                MODPST=".dylib"
                 ;;
 esac
 AC_SUBST(SHLPST)
-AC_SUBST(MODPST)
-AC_MSG_RESULT($SHLPST/$MODPST)
+AC_MSG_RESULT($SHLPST)
 ])
 
 dnl ---------------------------------------------------------------------------

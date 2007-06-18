@@ -88,7 +88,6 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-$(RANLIB) $@
 
 $(SHLPRE)$(SHLFILE)$(SHLPST) : $(SHOFILES)
-#	cp $(srcdir)/../win32/pdcurses.def ./cygwin.def
 	$(LD_RXLIB1) $(RXPACKEXPORTS) -o $@ $(SHOFILES) $(LD_RXLIB2)
 
 $(LIBOBJS) $(PDCOBJS) $(SHOFILES) : $(PDCURSES_HEADERS)

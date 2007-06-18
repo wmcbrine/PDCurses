@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.16 2007/06/18 00:50:10 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.17 2007/06/18 09:36:44 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -135,8 +135,6 @@ int PDC_scr_open(int argc, char **argv)
 		pdc_mapped[i] = SDL_MapRGB(pdc_screen->format,
 			pdc_color[i].r, pdc_color[i].g, pdc_color[i].b);
 
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, 
-		SDL_DEFAULT_REPEAT_INTERVAL);
 	SDL_EnableUNICODE(1);
 
 	PDC_mouse_set();
@@ -149,6 +147,8 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->mouse_wait = PDC_CLICK_PERIOD;
 	SP->audible = FALSE;
+
+	PDC_reset_prog_mode();
 
 	SP->mono = FALSE;
 
@@ -184,12 +184,15 @@ void PDC_reset_prog_mode(void)
 	PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
 
 	PDC_flushinp();
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, 
+		SDL_DEFAULT_REPEAT_INTERVAL);
 }
 
 void PDC_reset_shell_mode(void)
 {
 	PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 
+	SDL_EnableKeyRepeat(0, 0);
 	PDC_flushinp();
 }
 

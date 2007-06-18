@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.16 2007/06/17 21:15:59 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.17 2007/06/18 00:41:42 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -78,9 +78,9 @@ void PDC_update_rects(void)
 
 static void _set_attr(chtype ch)
 {
-	ch &= (A_ATTRIBUTES ^ A_ALTCHARSET);
+	ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE);
 
-	if ((oldch == (chtype)(-1)) || (oldch != ch))
+	if (oldch != ch)
 	{
 		SDL_Color attr[2];
 
@@ -146,7 +146,11 @@ void PDC_gotoyx(int row, int col)
 	src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
 
 	SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
-	SDL_UpdateRect(pdc_screen, dest.x, dest.y, src.w, src.h);
+
+	if (rectcount == MAXRECT)
+		PDC_update_rects();
+
+	uprect[rectcount++] = dest;
 }
 
 /* handle the A_*LINE attributes */
@@ -215,15 +219,16 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	dest.h = pdc_fheight;
 	dest.w = pdc_fwidth * len;
 
-	/* merge rects that are vertically adjacent and have the same
-	   width -- mainly useful for full-screen updates */
+	/* if the previous rect was just above this one, with the same 
+	   width and horizontal position, then merge the new one with it 
+	   instead of adding a new entry */
 
 	if (rectcount)
 		lastrect = uprect[rectcount - 1];
 
 	if (rectcount && (lastrect.x == dest.x) &&
 	   (lastrect.w == dest.w) && (lastrect.y == dest.y - pdc_fheight))
-		uprect[rectcount - 1].h += pdc_fheight;
+		uprect[rectcount - 1].h = lastrect.h + pdc_fheight;
 	else
 		uprect[rectcount++] = dest;
 

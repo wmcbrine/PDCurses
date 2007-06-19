@@ -23,10 +23,10 @@ LDFLAGS		= -mwindows $(LIBCURSES)
 
 ifeq ($(DLL),Y)
 	BUILD += -DPDC_DLL_BUILD
-	LIBEXE = gcc $(PDCURSES_SRCDIR)/win32/pdcurses.def
+	LIBEXE = gcc pdcurses.def
 	LIBFLAGS = -Wl,--out-implib,libpdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	CLEAN = $(LIBCURSES) *.a
+	CLEAN = $(LIBCURSES) *.a pdcurses.def
 	POST = -lSDL
 else
 	LIBEXE = ar
@@ -48,6 +48,18 @@ clean:
 
 demos:	$(DEMOS)
 	strip *.exe
+
+pdcurses.dll: pdcurses.def
+
+pdcurses.def: $(PDCURSES_SRCDIR)\win32\pdcurses.def
+	copy $? $@
+	echo pdc_screen >> $@
+	echo pdc_font >> $@
+	echo pdc_icon >> $@
+	echo pdc_sheight >> $@
+	echo pdc_swidth >> $@
+	echo pdc_yoffset >> $@
+	echo pdc_xoffset >> $@
 
 #------------------------------------------------------------------------
 

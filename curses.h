@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.287 2007/06/06 23:17:09 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.288 2007/06/19 04:28:12 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -36,7 +36,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3201
+#define PDC_BUILD 3301
 #define	PDCURSES	1	/* PDCurses-only routines	*/
 #define	XOPEN		1	/* X/Open Curses routines	*/
 #define	SYSVcurses	1	/* System V Curses routines	*/
@@ -352,8 +352,6 @@ PDCEX	int		COLOR_PAIRS;
 PDCEX	int		TABSIZE;
 PDCEX	chtype		acs_map[];	/* alternate character set map	*/
 PDCEX	char		ttytype[];	/* terminal name/description	*/
-
-#undef PDCEX
 
 /*man-start**************************************************************
 

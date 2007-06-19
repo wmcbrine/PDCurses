@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.18 2007/06/19 01:49:02 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.19 2007/06/19 05:09:27 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -69,7 +69,11 @@ void PDC_update_rects(void)
 {
 	if (rectcount)
 	{
-		SDL_UpdateRects(pdc_screen, rectcount, uprect);
+		if (rectcount == MAXRECT)
+			SDL_Flip(pdc_screen);
+		else
+			SDL_UpdateRects(pdc_screen, rectcount, uprect);
+
 		rectcount = 0;
 	}
 }

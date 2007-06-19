@@ -67,7 +67,7 @@ DOS, OS/2, or Windows
 
   Another option for Windows, "UTF8=Y", makes PDCurses ignore the
   system locale, and treat all narrow-character strings as UTF-8. This
-  option has no effect unless WIDE=Y is also set. Use it to get around 
+  option has no effect unless WIDE=Y is also set. Use it to get around
   the poor support for UTF-8 in the Win32 console:
 
 	make -f mingwin32.mak WIDE=Y UTF8=Y
@@ -77,9 +77,9 @@ DOS, OS/2, or Windows
 
 	nmake -f vcwin32.mak WIDE=Y DLL=Y
 
-  When you build the library as a Windows DLL, you must always define 
-  PDCURSES_DLL_BUILD when linking against it. (Or, if you only want to 
-  use the DLL, you could add this definition to your curses.h.) This is 
+  When you build the library as a Windows DLL, you must always define
+  PDCURSES_DLL_BUILD when linking against it. (Or, if you only want to
+  use the DLL, you could add this definition to your curses.h.) This is
   not true for OS/2.
 
 
@@ -94,23 +94,23 @@ X11
   them the defaults, for the sake of backwards compatibility and due to
   their new and relatively untested status.
 
-  If your system is lacking in UTF-8 support, you can force the use of 
-  UTF-8 instead of the system locale via "--enable-force-utf8". This is 
+  If your system is lacking in UTF-8 support, you can force the use of
+  UTF-8 instead of the system locale via "--enable-force-utf8". This is
   generally more useful in Windows.
 
   If configure can't find your X include files or X libraries, you can
   specify the paths with the arguments "--x-includes=inc_path" and/or
   "--x-libraries=lib_path".
 
-  By default, the library and demo programs are built with the optimizer 
-  switch -O2. You can turn this off, and turn on debugging (-g), by 
+  By default, the library and demo programs are built with the optimizer
+  switch -O2. You can turn this off, and turn on debugging (-g), by
   adding "--with-debug" to the configure command.
 
 . Run "make". This should build libXCurses and all the demo programs.
 
-. Optionally, run "make install". curses.h and panel.h will be renamed 
-  when installed (to xcurses.h and xpanel.h), to avoid conflicts with 
-  any existing curses installations. Unrenamed copies of curses.h and 
+. Optionally, run "make install". curses.h and panel.h will be renamed
+  when installed (to xcurses.h and xpanel.h), to avoid conflicts with
+  any existing curses installations. Unrenamed copies of curses.h and
   panel.h are installed in (by default) /usr/local/include/xcurses.
 
   As of 3.2, libXpanel is just a symlink to libXCurses. Both curses and
@@ -120,8 +120,9 @@ X11
 SDL
 ---
 
-. On *nix (including Linux and Mac OS X), run "make". This assumes a 
-  working sdl-config. GNU make may be required on some systems.
+. On *nix (including Linux and Mac OS X), run "make" in the sdl1
+  directory. (There is no configure script for this port.) This assumes
+  a working sdl-config, and GNU make.
 
-. With MinGW, run "make -f Makefile.mng". This assumes SDL is installed 
+. With MinGW, run "make -f Makefile.mng". This assumes SDL is installed
   in the standard directories.

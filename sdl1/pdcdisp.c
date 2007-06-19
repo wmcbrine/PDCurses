@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.17 2007/06/18 00:41:42 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.18 2007/06/19 01:49:02 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -195,6 +195,8 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 			SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
 			dest->x -= pdc_fwidth - 1;
 		}
+
+		dest->w = pdc_fwidth;
 	}
 }
 
@@ -232,6 +234,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	else
 		uprect[rectcount++] = dest;
 
+	dest.w = pdc_fwidth;
+
 	for (j = 0; j < len; j++)
 	{
 		chtype ch = srcp[j];
@@ -246,7 +250,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		src.x = (ch & 0xff) % 32 * pdc_fwidth;
 		src.y = (ch & 0xff) / 32 * pdc_fheight;
 
-		SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+		SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 
 		if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
 			_highlight(&src, &dest, ch);

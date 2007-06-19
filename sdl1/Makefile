@@ -12,14 +12,20 @@ osdir		= $(PDCURSES_SRCDIR)/sdl1
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
-BUILD		= $(CC) -O2 -Wall -I$(PDCURSES_SRCDIR) `sdl-config --cflags`
+SFLAGS		= $(shell sdl-config --cflags)
+SLIBS		= $(shell sdl-config --libs)
+
+# If your system doesn't have these, remove the defines here
+SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
+
+BUILD		= $(CC) -O2 -Wall -I$(PDCURSES_SRCDIR) $(SFLAGS)
 
 ifeq ($(shell uname),Darwin)
 	DEMOFLAGS = -Dmain=SDL_main
 endif
 
 LINK		= $(CC)
-LDFLAGS		= $(LIBCURSES) `sdl-config --libs`
+LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 

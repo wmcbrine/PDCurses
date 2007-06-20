@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.288 2007/06/19 04:28:12 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.289 2007/06/20 23:03:19 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -113,10 +113,10 @@ typedef chtype attr_t;
 
 typedef struct
 {
-	int x;           /* absolute column, 0 based, measured in characters */
-	int y;           /* absolute row, 0 based, measured in characters */
+	int x;		 /* absolute column, 0 based, measured in characters */
+	int y;		 /* absolute row, 0 based, measured in characters */
 	short button[3]; /* state of each button */
-	int changes;     /* flags indicating what has changed with the mouse */
+	int changes;	 /* flags indicating what has changed with the mouse */
 } MOUSE_STATUS;
 
 #define BUTTON_RELEASED		0x0000

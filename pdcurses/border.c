@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.48 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: border.c,v 1.49 2007/06/21 04:51:29 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -206,6 +206,7 @@ int box(WINDOW *win, chtype verch, chtype horch)
 
 int whline(WINDOW *win, chtype ch, int n)
 {
+	chtype *dest;
 	int startpos, endpos;
 
 	PDC_LOG(("whline() - called\n"));
@@ -213,27 +214,21 @@ int whline(WINDOW *win, chtype ch, int n)
 	if (!win || n < 1)
 		return ERR;
 
-	endpos = min(win->_curx + n, win->_maxx);
-
+	startpos = win->_curx;
+	endpos = min(win->_curx + n, win->_maxx) - 1;
+	dest = win->_y[win->_cury];
 	ch = _attr_passthru(win, ch ? ch : ACS_HLINE);
 
-	startpos = win->_curx;
-
-	for (n = startpos; n < endpos; n++)
-		win->_y[win->_cury][n] = ch;
+	for (n = startpos; n <= endpos; n++)
+		dest[n] = ch;
 
 	n = win->_cury;
 
-	if (win->_firstch[n] == _NO_CHANGE)
-	{
+	if (startpos < win->_firstch[n] || win->_firstch[n] == _NO_CHANGE)
 		win->_firstch[n] = startpos;
-		win->_lastch[n] = endpos - 1;
-	}
-	else
-	{
-		win->_firstch[n] = min(win->_firstch[n], startpos);
-		win->_lastch[n] = max(win->_lastch[n], endpos - 1);
-	}
+
+	if (endpos > win->_lastch[n])
+		win->_lastch[n] = endpos;
 
 	PDC_sync(win);
 
@@ -269,7 +264,7 @@ int mvwhline(WINDOW *win, int y, int x, chtype ch, int n)
 
 int wvline(WINDOW *win, chtype ch, int n)
 {
-	int endpos;
+	int endpos, x;
 
 	PDC_LOG(("wvline() - called\n"));
 
@@ -277,23 +272,19 @@ int wvline(WINDOW *win, chtype ch, int n)
 		return ERR;
 
 	endpos = min(win->_cury + n, win->_maxy);
+	x = win->_curx;
 
 	ch = _attr_passthru(win, ch ? ch : ACS_VLINE);
 
 	for (n = win->_cury; n < endpos; n++)
 	{
-		win->_y[n][win->_curx] = ch;
+		win->_y[n][x] = ch;
 
-		if (win->_firstch[n] == _NO_CHANGE)
-		{
-			win->_firstch[n] = win->_curx;
-			win->_lastch[n] = win->_curx;
-		}
-		else
-		{
-			win->_firstch[n] = min(win->_firstch[n], win->_curx);
-			win->_lastch[n] = max(win->_lastch[n], win->_curx);
-		}
+		if (x < win->_firstch[n] || win->_firstch[n] == _NO_CHANGE)
+			win->_firstch[n] = x;
+
+		if (x > win->_lastch[n])
+			win->_lastch[n] = x;
 	}
 
 	PDC_sync(win);

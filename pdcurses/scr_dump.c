@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scr_dump.c,v 1.27 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: scr_dump.c,v 1.28 2007/06/21 07:14:58 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -56,7 +56,7 @@ RCSID("$Id: scr_dump.c,v 1.27 2007/06/14 14:11:30 wmcbrine Exp $")
 	window it created. Otherwise, it returns a null pointer. Other 
 	functions return OK or ERR.
 
-  Portability				     X/Open    BSD    Sys V
+  Portability				     X/Open    BSD    SYS V
 	putwin					Y
 	getwin					Y
 	scr_dump				Y

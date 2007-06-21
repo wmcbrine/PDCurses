@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: refresh.c,v 1.48 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: refresh.c,v 1.49 2007/06/21 02:04:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -70,8 +70,6 @@ RCSID("$Id: refresh.c,v 1.48 2007/06/14 14:11:30 wmcbrine Exp $")
 
 int wnoutrefresh(WINDOW *win)
 {
-	int first;		/* first changed char on line */
-	int last;		/* last changed char on line  */
 	int begy, begx;		/* window's place on screen   */
 	int i, j;
 
@@ -87,26 +85,42 @@ int wnoutrefresh(WINDOW *win)
 	{
 		if (win->_firstch[i] != _NO_CHANGE)
 		{
-			first = win->_firstch[i];
-			last = win->_lastch[i];
+			chtype *src = win->_y[i];
+			chtype *dest = curscr->_y[j] + begx;
 
-			memcpy(&(curscr->_y[j][begx + first]),
-				&(win->_y[i][first]),
-				(last - first + 1) * sizeof(chtype));
+			int first = win->_firstch[i];	/* first changed */
+			int last = win->_lastch[i];	/* last changed  */
 
-			first += begx; 
-			last += begx;
+			/* ignore areas on the outside that are marked 
+			   as changed, but really aren't */
 
-			if (curscr->_firstch[j] != _NO_CHANGE)
-				curscr->_firstch[j] =
-					min(curscr->_firstch[j], first);
-			else
-				curscr->_firstch[j] = first;
+			while (first <= last && src[first] == dest[first])
+				first++;
 
-			curscr->_lastch[j] = max(curscr->_lastch[j], last);
+			while (last >= first && src[last] == dest[last])
+				last--;
+
+			/* if any have really changed... */
+
+			if (first <= last)
+			{
+				memcpy(dest + first, src + first,
+					(last - first + 1) * sizeof(chtype));
+
+				first += begx; 
+				last += begx;
+
+				if (first < curscr->_firstch[j] ||
+				    curscr->_firstch[j] == _NO_CHANGE)
+					curscr->_firstch[j] = first;
+
+				if (last > curscr->_lastch[j])
+					curscr->_lastch[j] = last;
+			}
 
 			win->_firstch[i] = _NO_CHANGE;	/* updated now */
 		}
+
 		win->_lastch[i] = _NO_CHANGE;		/* updated now */
 	}
 

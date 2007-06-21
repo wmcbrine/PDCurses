@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: clear.c,v 1.31 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: clear.c,v 1.32 2007/06/21 02:32:17 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -79,9 +79,10 @@ int wclrtoeol(WINDOW *win)
 	for (minx = x, ptr = &win->_y[y][x]; minx < win->_maxx; minx++, ptr++)
 		*ptr = blank;
 
-	win->_firstch[y] = (win->_firstch[y] == _NO_CHANGE) ?
-		x : min(x, win->_firstch[y]);
-	win->_lastch[y] = max(win->_lastch[y], win->_maxx - 1);
+	if (x < win->_firstch[y] || win->_firstch[y] == _NO_CHANGE)
+		win->_firstch[y] = x;
+
+	win->_lastch[y] = win->_maxx - 1;
 
 	PDC_sync(win);
 	return OK;

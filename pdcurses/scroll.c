@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.32 2007/06/21 07:48:25 wmcbrine Exp $")
+RCSID("$Id: scroll.c,v 1.33 2007/06/21 23:22:32 wmcbrine Exp $")
 
 /*man-start**************************************************************
 

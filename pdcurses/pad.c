@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: pad.c,v 1.46 2007/06/21 22:01:12 wmcbrine Exp $")
+RCSID("$Id: pad.c,v 1.47 2007/06/21 23:23:50 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -87,7 +87,6 @@ RCSID("$Id: pad.c,v 1.46 2007/06/21 22:01:12 wmcbrine Exp $")
 
 **man-end****************************************************************/
 
-#include <stdlib.h>
 #include <string.h>
 
 /* save values for pechochar() */

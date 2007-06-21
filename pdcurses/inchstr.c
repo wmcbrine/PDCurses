@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: inchstr.c,v 1.31 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: inchstr.c,v 1.32 2007/06/21 21:50:48 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -69,21 +69,21 @@ RCSID("$Id: inchstr.c,v 1.31 2007/06/14 13:50:27 wmcbrine Exp $")
 
 int winchnstr(WINDOW *win, chtype *ch, int n)
 {
+	chtype *src;
 	int i;
-	chtype *ptr;
 
 	PDC_LOG(("winchnstr() - called\n"));
 
-	if (!win || !ch || (n < 0))
+	if (!win || !ch || n < 0)
 		return ERR;
-
-	ptr = &(win->_y[win->_cury][win->_curx]);
 
 	if ((win->_curx + n) > win->_maxx)
 		n = win->_maxx - win->_curx;
 
+	src = win->_y[win->_cury] + win->_curx;
+
 	for (i = 0; i < n; i++)
-		*ch++ = *ptr++;
+		*ch++ = *src++;
 
 	*ch = (chtype)0;
 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: instr.c,v 1.40 2007/06/21 09:59:36 wmcbrine Exp $")
+RCSID("$Id: instr.c,v 1.41 2007/06/21 21:50:15 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -85,27 +85,24 @@ int winnstr(WINDOW *win, char *str, int n)
 	return PDC_wcstombs(str, wstr, n);
 #else
 	chtype *src;
-	int oldx, imax;
+	int i;
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
 	if (!win || !str)
 		return ERR;
 
-	oldx = win->_curx;
-	imax = win->_maxx - win->_curx;
+	if (n < 0 || (win->_curx + n) > win->_maxx)
+		n = win->_maxx - win->_curx;
 
-	if (n > 0)
-		imax = ((imax < n) ? imax : n);
+	src = win->_y[win->_cury] + win->_curx;
 
-	src = win->_y[win->_cury];
+	for (i = 0; i < n; i++)
+		str[i] = src[i] & A_CHARTEXT;
 
-	for (n = 0; n < imax; n++)
-		str[n] = src[oldx + n] & A_CHARTEXT;
+	str[i] = '\0';
 
-	str[n] = '\0';
-
-	return n;
+	return i;
 #endif
 }
 
@@ -174,27 +171,24 @@ int mvwinnstr(WINDOW *win, int y, int x, char *str, int n)
 int winnwstr(WINDOW *win, wchar_t *wstr, int n)
 {
 	chtype *src;
-	int oldx, imax;
+	int i;
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
 	if (!win || !str)
 		return ERR;
 
-	oldx = win->_curx;
-	imax = win->_maxx - win->_curx;
+	if (n < 0 || (win->_curx + n) > win->_maxx)
+		n = win->_maxx - win->_curx;
 
-	if (n > 0)
-		imax = ((imax < n) ? imax : n);
+	src = win->_y[win->_cury] + win->_curx;
 
-	src = win->_y[win->_cury];
+	for (i = 0; i < n; i++)
+		wstr[i] = src[i] & A_CHARTEXT;
 
-	for (n = 0; n < imax; n++)
-		wstr[n] = src[oldx + n] & A_CHARTEXT;
+	wstr[i] = L'\0';
 
-	wstr[n] = L'\0';
-
-	return n;
+	return i;
 }
 
 int inwstr(wchar_t *wstr)

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getch.c,v 1.67 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: getch.c,v 1.68 2007/06/21 06:54:50 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -194,10 +194,11 @@ int wgetch(WINDOW *win)
 				waitcount = 1;
 		}
 
-	/* wrs (7/31/93) -- System V curses refreshes window when wgetch 
-	   is called if there have been changes to it and it is not a pad */
+	/* refresh window when wgetch is called if there have been 
+	   changes to it and it is not a pad */
 
-	if (!(win->_flags & _PAD) && is_wintouched(win))
+	if (!(win->_flags & _PAD) && ((!win->_leaveit && (win->_curx !=
+	    SP->curscol || win->_cury != SP->cursrow)) || is_wintouched(win)))
 		wrefresh(win);
 
 	/* if ungotten char exists, remove and return it */

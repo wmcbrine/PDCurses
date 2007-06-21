@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.37 2007/06/14 13:50:26 wmcbrine Exp $")
+RCSID("$Id: attr.c,v 1.38 2007/06/21 05:38:07 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -309,8 +309,8 @@ int attr_set(attr_t attrs, short color_pair, void *opts)
 
 int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
 {
-	chtype newattr, tmp;
-        int basey, basex, imax, ic;
+	chtype *dest, newattr;
+	int startpos, endpos;
 
 	PDC_LOG(("wchgat() - called\n"));
 
@@ -319,30 +319,20 @@ int wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts)
 
 	newattr = (attr & A_ATTRIBUTES) | COLOR_PAIR(color);
 
-        basey = win->_cury;
-        basex = win->_curx;
-        imax = win->_maxx - win->_curx;
+	startpos = win->_curx;
+	endpos = ((n < 0) ? win->_maxx : min(startpos + n, win->_maxx)) - 1;
+	dest = win->_y[win->_cury];
 
-        if (n > 0)
-                imax = ((imax < n) ? imax : n);
+        for (n = startpos; n <= endpos; n++)
+		dest[n] = (dest[n] & A_CHARTEXT) | newattr;
 
-        for (ic = 0; ic < imax; ic++)
-	{
-		tmp = (win->_y[basey][basex + ic] & A_CHARTEXT) | newattr;
-		win->_y[basey][basex + ic] = tmp;
-	}
+	n = win->_cury;
 
-	if (win->_firstch[basey] == _NO_CHANGE)
-	{
-		win->_firstch[basey] = basex;
-		win->_lastch[basey] = basex + imax - 1;
-	}
-	else
-	{
-		win->_firstch[basey] = min(win->_firstch[basey], basex);
-		win->_lastch[basey] = max(win->_lastch[basey],
-			basex + imax - 1);
-	}
+	if (startpos < win->_firstch[n] || win->_firstch[n] == _NO_CHANGE)
+		win->_firstch[n] = startpos;
+
+	if (endpos > win->_lastch[n])
+		win->_lastch[n] = endpos;
 
 	PDC_sync(win);
 

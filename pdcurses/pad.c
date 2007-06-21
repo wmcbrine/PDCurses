@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: pad.c,v 1.45 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: pad.c,v 1.46 2007/06/21 22:01:12 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -220,8 +220,8 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 	{
 		if (pline < w->_maxy)
 		{
-			memcpy(&(curscr->_y[sline][sx1]), &(w->_y[pline][px]),
-				(num_cols) * sizeof(chtype));
+			memcpy(curscr->_y[sline] + sx1, w->_y[pline] + px,
+				num_cols * sizeof(chtype));
 
 			if ((curscr->_firstch[sline] == _NO_CHANGE) 
 			    || (curscr->_firstch[sline] > sx1))

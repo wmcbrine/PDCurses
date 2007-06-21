@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.31 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: scroll.c,v 1.32 2007/06/21 07:48:25 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -73,11 +73,7 @@ int wscrl(WINDOW *win, int n)
 			/* re-arrange line pointers */
 
 			for (i = win->_tmarg; i < win->_bmarg; i++)
-			{
 				win->_y[i] = win->_y[i + 1];
-				win->_firstch[i] = 0;
-				win->_lastch[i] = win->_maxx - 1;
-			}
 
 			/* make a blank line */
 
@@ -85,8 +81,6 @@ int wscrl(WINDOW *win, int n)
 				*ptr = blank;
 
 			win->_y[win->_bmarg] = temp;
-			win->_firstch[win->_bmarg] = 0;
-			win->_lastch[win->_bmarg] = win->_maxx - 1;
 		}
 	}
 	else 
@@ -98,11 +92,7 @@ int wscrl(WINDOW *win, int n)
 			/* re-arrange line pointers */
 
 			for (i = win->_bmarg; i > win->_tmarg; i--)
-			{
 				win->_y[i] = win->_y[i - 1];
-				win->_firstch[i] = 0;
-				win->_lastch[i] = win->_maxx - 1;
-			}
 
 			/* make a blank line */
 
@@ -110,10 +100,10 @@ int wscrl(WINDOW *win, int n)
 				*ptr = blank;
 
 			win->_y[win->_tmarg] = temp;
-			win->_firstch[win->_tmarg] = 0;
-			win->_lastch[win->_tmarg] = win->_maxx - 1;
 		}
 	}
+
+	touchline(win, win->_tmarg, win->_bmarg - win->_tmarg + 1);
 
 	PDC_sync(win);
 	return OK;

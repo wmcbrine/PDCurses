@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.49 2007/06/21 04:51:29 wmcbrine Exp $")
+RCSID("$Id: border.c,v 1.50 2007/06/21 05:41:56 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -215,7 +215,7 @@ int whline(WINDOW *win, chtype ch, int n)
 		return ERR;
 
 	startpos = win->_curx;
-	endpos = min(win->_curx + n, win->_maxx) - 1;
+	endpos = min(startpos + n, win->_maxx) - 1;
 	dest = win->_y[win->_cury];
 	ch = _attr_passthru(win, ch ? ch : ACS_HLINE);
 

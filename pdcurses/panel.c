@@ -11,12 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curspriv.h>
 
-RCSID("$Id: panel.c,v 1.4 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: panel.c,v 1.5 2007/06/22 23:38:46 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -149,11 +146,11 @@ PANEL _stdscr_pseudo_panel = { (WINDOW *)0 };
 
 static void dPanel(char *text, PANEL *pan)
 {
-	_tracef("%s id=%s b=%s a=%s y=%d x=%d",
+	PDC_LOG(("%s id=%s b=%s a=%s y=%d x=%d",
 		text, pan->user,
 		pan->below ? pan->below->user : "--",
 		pan->above ? pan->above->user : "--",
-		pan->wstarty, pan->wstartx);
+		pan->wstarty, pan->wstartx));
 }
 
 static void dStack(char *fmt, int num, PANEL *pan)
@@ -161,12 +158,12 @@ static void dStack(char *fmt, int num, PANEL *pan)
 	char s80[80];
 
 	sprintf(s80, fmt, num, pan);
-	_tracef("%s b=%s t=%s", s80,
+	PDC_LOG(("%s b=%s t=%s", s80,
 		_bottom_panel ? _bottom_panel->user : "--",
-		_top_panel    ? _top_panel->user    : "--");
+		_top_panel    ? _top_panel->user    : "--"));
 
 	if (pan)
-		_tracef("pan id=%s", pan->user);
+		PDC_LOG(("pan id=%s", pan->user));
 
 	pan = _bottom_panel;
 

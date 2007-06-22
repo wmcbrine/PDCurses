@@ -1,6 +1,6 @@
 /********************************* tuidemo.c ********************************/
 /*
- * $Id: tuidemo.c,v 1.18 2007/06/16 01:10:34 wmcbrine Exp $
+ * $Id: tuidemo.c,v 1.19 2007/06/22 10:09:42 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -19,10 +19,12 @@
 #include <string.h>
 #include "tui.h"
 
+/* change this if source at other location */
+
 #ifdef XCURSES
-# define FNAME  "demos/tui.c"	/* change this if source at other location */
+# define FNAME  "../demos/tui.c"
 #else
-# define FNAME  "demos\\tui.c"	/* change this if source at other location */
+# define FNAME  "..\\demos\\tui.c"
 #endif
 
 /**************************** strings entry box ***************************/

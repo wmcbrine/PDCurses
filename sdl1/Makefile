@@ -18,7 +18,7 @@ SLIBS		= $(shell sdl-config --libs)
 # If your system doesn't have these, remove the defines here
 SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
-BUILD		= $(CC) -O2 -Wall -I$(PDCURSES_SRCDIR) $(SFLAGS)
+BUILD		= $(CC) -O2 -Wall -I$(PDCURSES_SRCDIR)
 
 ifeq ($(shell uname),Darwin)
 	DEMOFLAGS = -Dmain=SDL_main
@@ -58,10 +58,10 @@ terminfo.o: $(TERM_HEADER)
 panel.o ptest.o: $(PANEL_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(BUILD) -c $<
+	$(BUILD) $(SFLAGS) -c $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(BUILD) -c $<
+	$(BUILD) $(SFLAGS) -c $<
 
 #------------------------------------------------------------------------
 

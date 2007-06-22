@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------*
- *	$Id: ptest.c,v 1.20 2006/06/02 02:52:54 wmcbrine Exp $		*
+ *	$Id: ptest.c,v 1.21 2007/06/22 10:37:54 wmcbrine Exp $		*
  *----------------------------------------------------------------------*/
 
 #include <curses.h>
@@ -18,7 +18,9 @@ char *mod[] =
 
 void wait_a_while(long msec)
 {
-	/* timeout(msec); */
+	if (msec != 1)
+		timeout(msec);
+
 	getch();
 }
 
@@ -85,7 +87,7 @@ int main(int argc, char **argv)
 {
 	int itmp, y,x;
 
-	if ((argc > 1) && atol(argv[1]))
+	if (argc > 1 && atol(argv[1]))
 		nap_msec = atol(argv[1]);
 
 #ifdef XCURSES

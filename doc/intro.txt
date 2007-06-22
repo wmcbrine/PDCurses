@@ -798,6 +798,7 @@ portable:
 	raw_output		outopts
 	resize_term		initscr
 	resize_window		window
+	slk_wlabel		slk
 	waddrawch		addch
 	winsrawch		insch
 	wordchar		termattr

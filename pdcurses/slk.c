@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: slk.c,v 1.56 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: slk.c,v 1.57 2007/06/22 10:01:10 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -41,6 +41,8 @@ RCSID("$Id: slk.c,v 1.56 2007/06/14 14:11:30 wmcbrine Exp $")
 	int PDC_mouse_in_slk(int y, int x);
 	void PDC_slk_free(void);
 	void PDC_slk_initialize(void);
+
+	wchar_t *slk_wlabel(int labnum)
 
   Description:
 	These functions manipulate a window that contain Soft Label Keys 
@@ -86,6 +88,7 @@ RCSID("$Id: slk.c,v 1.56 2007/06/14 14:11:30 wmcbrine Exp $")
 	PDC_mouse_in_slk			-	-	-
 	PDC_slk_free				-	-	-
 	PDC_slk_initialize			-	-	-
+	slk_wlabel				-	-	-
 
 **man-end****************************************************************/
 

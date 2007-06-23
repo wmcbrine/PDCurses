@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.17 2007/06/18 09:36:44 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.18 2007/06/23 23:27:55 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -140,7 +140,7 @@ int PDC_scr_open(int argc, char **argv)
 	PDC_mouse_set();
 
 	if (pdc_own_screen)
-		PDC_set_title(argc ? argv[1] : "PDCurses");
+		PDC_set_title(argc ? argv[0] : "PDCurses");
 
 	SP->lines = PDC_get_rows();
 	SP->cols = PDC_get_columns();

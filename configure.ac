@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.31 2007/06/17 18:48:53 wmcbrine Exp $
+dnl $Id: configure.ac,v 1.32 2007/06/23 22:59:13 wmcbrine Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([PDCurses], [3.3], [wmcbrine@users.sf.net], [PDCurses])
@@ -57,8 +57,7 @@ AC_CHECK_HEADERS(fcntl.h \
 	sys/time.h \
 	sys/select.h \
 	dlfcn.h \
-	dl.h \
-	errno.h
+	dl.h
 )
 
 dnl Checks for typedefs, structures, and compiler characteristics.

@@ -13,8 +13,9 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcx11.c,v 1.92 2007/06/14 13:50:28 wmcbrine Exp $")
+RCSID("$Id: pdcx11.c,v 1.93 2007/06/23 23:02:12 wmcbrine Exp $")
 
+#include <errno.h>
 #include <stdlib.h>
 
 /*** Functions that are called by both processes ***/

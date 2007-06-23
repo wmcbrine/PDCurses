@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.58 2007/06/23 22:59:13 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.59 2007/06/23 23:02:12 wmcbrine Exp $ */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -46,8 +46,6 @@
 #  include <time.h>
 # endif
 #endif
-
-#include <errno.h>
 
 #include <Intrinsic.h>
 #include <StringDefs.h>

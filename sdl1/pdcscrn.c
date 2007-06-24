@@ -13,16 +13,17 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.18 2007/06/23 23:27:55 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.19 2007/06/24 09:55:36 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL;
+int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
+
 SDL_Color pdc_color[16];
 Uint32 pdc_mapped[16];
-int pdc_fheight, pdc_fwidth, pdc_sheight = 0, pdc_swidth = 0;
-int pdc_yoffset = 0, pdc_xoffset = 0;
+int pdc_fheight, pdc_fwidth;
 bool pdc_own_screen;
 
 void PDC_scr_close(void)

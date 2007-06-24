@@ -11,17 +11,18 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcsdl.h,v 1.7 2007/06/19 04:28:12 wmcbrine Exp $ */
+/* $Id: pdcsdl.h,v 1.8 2007/06/24 09:55:36 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
 #include <SDL/SDL.h>
 
-PDCEX SDL_Surface *pdc_screen, *pdc_font;
-PDCEX SDL_Color pdc_color[16];
-PDCEX Uint32 pdc_mapped[16];
-PDCEX int pdc_fheight, pdc_fwidth, pdc_sheight, pdc_swidth;
-PDCEX int pdc_yoffset, pdc_xoffset;
-PDCEX bool pdc_own_screen;
+PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon;
+PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
+
+extern SDL_Color pdc_color[16];
+extern Uint32 pdc_mapped[16];
+extern int pdc_fheight, pdc_fwidth;
+extern bool pdc_own_screen;
 
 void PDC_update_rects(void);

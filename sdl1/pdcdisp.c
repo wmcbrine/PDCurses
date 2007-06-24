@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.19 2007/06/19 05:09:27 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.20 2007/06/24 16:35:33 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -116,14 +116,18 @@ void PDC_gotoyx(int row, int col)
 {
 	SDL_Rect src, dest;
 	chtype ch;
+	int oldrow, oldcol;
 
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
 		row, col, SP->cursrow, SP->curscol));
 
+	oldrow = SP->cursrow;
+	oldcol = SP->curscol;
+
 	/* clear the old cursor */
 
-	PDC_transform_line(SP->cursrow, SP->curscol, 1, 
-		curscr->_y[SP->cursrow] + SP->curscol);
+	pdc_lastscr->_y[oldrow][oldcol] = (chtype)(-1);
+	PDC_transform_line(oldrow, oldcol, 1, curscr->_y[oldrow] + oldcol);
 
 	if (!SP->visibility)
 		return;
@@ -210,7 +214,9 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	SDL_Rect src, dest, lastrect;
+	chtype *dstp;
 	int j;
+	bool clearall;
 
 	PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
@@ -240,24 +246,31 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 	dest.w = pdc_fwidth;
 
+	dstp = pdc_lastscr->_y[lineno] + x;
+	clearall = curscr->_clear;
+
 	for (j = 0; j < len; j++)
 	{
 		chtype ch = srcp[j];
 
-		_set_attr(ch);
+		if (clearall || ch != dstp[j])
+		{
+			dstp[j] = ch;
 
+			_set_attr(ch);
 #ifdef CHTYPE_LONG
-		if (ch & A_ALTCHARSET && !(ch & 0xff80))
-			ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) |
-				acs_map[ch & 0x7f];
+			if (ch & A_ALTCHARSET && !(ch & 0xff80))
+				ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) |
+					acs_map[ch & 0x7f];
 #endif
-		src.x = (ch & 0xff) % 32 * pdc_fwidth;
-		src.y = (ch & 0xff) / 32 * pdc_fheight;
+			src.x = (ch & 0xff) % 32 * pdc_fwidth;
+			src.y = (ch & 0xff) / 32 * pdc_fheight;
 
-		SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
+			SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 
-		if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
-			_highlight(&src, &dest, ch);
+			if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
+				_highlight(&src, &dest, ch);
+		}
 
 		dest.x += pdc_fwidth;
 	}

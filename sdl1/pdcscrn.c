@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.19 2007/06/24 09:55:36 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.20 2007/06/24 16:35:33 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -25,6 +25,7 @@ SDL_Color pdc_color[16];
 Uint32 pdc_mapped[16];
 int pdc_fheight, pdc_fwidth;
 bool pdc_own_screen;
+WINDOW *pdc_lastscr;
 
 void PDC_scr_close(void)
 {
@@ -33,6 +34,8 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
+	delwin(pdc_lastscr);
+
 	if (SP)
 		free(SP);
 	if (pdc_atrtab)
@@ -153,6 +156,10 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->mono = FALSE;
 
+	pdc_lastscr = newwin(SP->lines, SP->cols, 0, 0);
+	wattrset(pdc_lastscr, (chtype)(-1));
+	werase(pdc_lastscr);
+
 	return OK;
 }
 
@@ -176,6 +183,9 @@ int PDC_resize_screen(int nlines, int ncols)
 
 	SP->resized = FALSE;
 	SP->cursrow = SP->curscol = 0;
+
+	wresize(pdc_lastscr, PDC_get_rows(), PDC_get_columns());
+	werase(pdc_lastscr);
 
 	return OK;
 }

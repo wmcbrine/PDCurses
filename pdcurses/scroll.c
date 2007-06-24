@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.33 2007/06/21 23:22:32 wmcbrine Exp $")
+RCSID("$Id: scroll.c,v 1.34 2007/06/24 00:50:34 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -48,59 +48,44 @@ RCSID("$Id: scroll.c,v 1.33 2007/06/21 23:22:32 wmcbrine Exp $")
 
 int wscrl(WINDOW *win, int n)
 {
-	int i, l;
-	chtype blank, *ptr, *temp;
+	int i, l, dir, start, end;
+	chtype blank, *temp;
 
 	/* Check if window scrolls. Valid for window AND pad */
 
-	if (!win || !win->_scroll)
+	if (!win || !win->_scroll || !n)
 		return ERR;
-
-	/* wrs (4/10/93) account for window background */
 
 	blank = win->_bkgd;
 
-	/* wrs -- 7/11/93 -- quick add to original scroll() routine to 
-	   implement scrolling for a specified number of lines (not very 
-	   efficient for more than 1 line) */
-
-	if (n >= 0)
+	if (n > 0)
 	{
-		for (l = 0; l < n; l++) 
-		{
-			temp = win->_y[win->_tmarg];
-
-			/* re-arrange line pointers */
-
-			for (i = win->_tmarg; i < win->_bmarg; i++)
-				win->_y[i] = win->_y[i + 1];
-
-			/* make a blank line */
-
-			for (ptr = temp; (ptr - temp) < win->_maxx; ptr++)
-				*ptr = blank;
-
-			win->_y[win->_bmarg] = temp;
-		}
+		start = win->_tmarg;
+		end = win->_bmarg;
+		dir = 1;
 	}
-	else 
+	else
 	{
-		for (l = n; l < 0; l++)
-		{
-			temp = win->_y[win->_bmarg];
+		start = win->_bmarg;
+		end = win->_tmarg;
+		dir = -1;
+	}
 
-			/* re-arrange line pointers */
+	for (l = 0; l < (n * dir); l++) 
+	{
+		temp = win->_y[start];
 
-			for (i = win->_bmarg; i > win->_tmarg; i--)
-				win->_y[i] = win->_y[i - 1];
+		/* re-arrange line pointers */
 
-			/* make a blank line */
+		for (i = start; i != end; i += dir)
+			win->_y[i] = win->_y[i + dir];
 
-			for (ptr = temp; (ptr - temp) < win->_maxx; ptr++)
-				*ptr = blank;
+		win->_y[end] = temp;
 
-			win->_y[win->_tmarg] = temp;
-		}
+		/* make a blank line */
+
+		for (i = 0; i < win->_maxx; i++)
+			*temp++ = blank;
 	}
 
 	touchline(win, win->_tmarg, win->_bmarg - win->_tmarg + 1);

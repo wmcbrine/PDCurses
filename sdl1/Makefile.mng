@@ -36,6 +36,8 @@ else
 	LDFLAGS += -lSDL
 endif
 
+DEMOS += sdltest.exe
+
 #########################################################################
 .PHONY: all libs clean demos
 
@@ -92,3 +94,6 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h
 
 tuidemo.o: $(demodir)/tuidemo.c $(demodir)/tui.h
 	$(BUILD) -c $<
+
+sdltest.exe: $(osdir)/sdltest.c
+	$(BUILD) -o $@ $< -mwindows $(LIBCURSES) -lmingw32 -lSDLmain -lSDL

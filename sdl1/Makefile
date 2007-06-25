@@ -29,7 +29,8 @@ LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas
+DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas \
+sdltest
 
 #########################################################################
 .PHONY: all libs clean demos
@@ -89,6 +90,8 @@ worm: $(demodir)/worm.c
 xmas: $(demodir)/xmas.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
+sdltest: $(osdir)/sdltest.c
+	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tui.c

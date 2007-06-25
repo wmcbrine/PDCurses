@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.20 2007/06/24 16:35:33 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.21 2007/06/25 12:47:13 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -109,12 +109,10 @@ int PDC_scr_open(int argc, char **argv)
 	else
 	{
 		if (!pdc_sheight)
-			pdc_sheight = (pdc_screen->h - pdc_yoffset) / 
-				pdc_fheight;
+			pdc_sheight = pdc_screen->h - pdc_yoffset;
 
 		if (!pdc_swidth)
-			pdc_swidth = (pdc_screen->w - pdc_xoffset) / 
-				pdc_fwidth;
+			pdc_swidth = pdc_screen->w - pdc_xoffset;
 	}
 
 	if (!pdc_screen)

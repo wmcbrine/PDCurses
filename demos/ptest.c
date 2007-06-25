@@ -1,4 +1,4 @@
-/* $Id: ptest.c,v 1.22 2007/06/25 14:20:33 wmcbrine Exp $ */
+/* $Id: ptest.c,v 1.23 2007/06/25 15:33:32 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <panel.h>
@@ -14,12 +14,37 @@ char *mod[] =
 	"test ", "TEST ", "(**) ", "*()* ", "<--> ", "LAST "
 };
 
+void pflush(void)
+{
+	update_panels();
+	doupdate();
+}
+
+void backfill(void)
+{
+	int y, x;
+
+	erase();
+
+	for (y = 0; y < LINES - 1; y++)
+		for (x = 0; x < COLS; x++)
+			printw("%d", (y + x) % 10);
+}
+
 void wait_a_while(long msec)
 {
+	int c;
+
 	if (msec != 1)
 		timeout(msec);
 
-	getch();
+	c = getch();
+
+	if (c == 'q')
+	{
+		endwin();
+		exit(1);
+	}
 }
 
 void saywhat(const char *text)
@@ -53,12 +78,6 @@ void rmpanel(PANEL *pan)
 	delwin(win);
 }
 
-void pflush(void)
-{
-	update_panels();
-	doupdate();
-}
-
 void fill_panel(PANEL *pan)
 {
 	WINDOW *win = pan->win;
@@ -76,7 +95,7 @@ void fill_panel(PANEL *pan)
 
 int main(int argc, char **argv)
 {
-	int itmp, y, x;
+	int itmp, y;
 
 	if (argc > 1 && atol(argv[1]))
 		nap_msec = atol(argv[1]);
@@ -86,10 +105,7 @@ int main(int argc, char **argv)
 #else
 	initscr();
 #endif
-
-	for (y = 0; y < LINES - 1; y++)
-		for (x = 0; x < COLS; x++)
-			printw("%d", (y + x) % 10);
+	backfill();
 
 	for (y = 0; y < 5; y++)
 	{

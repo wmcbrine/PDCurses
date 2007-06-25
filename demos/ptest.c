@@ -1,13 +1,11 @@
-/*----------------------------------------------------------------------*
- *	$Id: ptest.c,v 1.21 2007/06/22 10:37:54 wmcbrine Exp $		*
- *----------------------------------------------------------------------*/
+/* $Id: ptest.c,v 1.22 2007/06/25 14:20:33 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <panel.h>
 #include <stdlib.h>
 
 PANEL *p1, *p2, *p3, *p4, *p5;
-WINDOW *w1, *w2, *w3, *w4, *w5;
+WINDOW *w4, *w5;
 
 long nap_msec = 1;
 
@@ -26,13 +24,10 @@ void wait_a_while(long msec)
 
 void saywhat(const char *text)
 {
-	wmove(stdscr, LINES - 1, 0);
-	wprintw(stdscr, "%-20.20s", text);
+	mvprintw(LINES - 1, 0, "%-20.20s", text);
 }
 
-/*----------------------------------------------------------------------*
- *	mkpanel - alloc a win and panel and associate them		*
- *----------------------------------------------------------------------*/
+/* mkpanel - alloc a win and panel and associate them */
 
 PANEL *mkpanel(int rows, int cols, int tly, int tlx)
 {
@@ -71,21 +66,17 @@ void fill_panel(PANEL *pan)
 	int y, x, maxy, maxx;
 
 	box(win, 0, 0);  
-	wmove(win, 1, 1);
-	wprintw(win, "-pan%c-", num);
+	mvwprintw(win, 1, 1, "-pan%c-", num);
 	getmaxyx(win, maxy, maxx);
 
 	for (y = 2; y < maxy - 1; y++)
 		for (x = 1; x < maxx - 1; x++)
-		{
-			wmove(win, y, x);
-			waddch(win, num);
-		}
+			mvwaddch(win, y, x, num);
 }
 
 int main(int argc, char **argv)
 {
-	int itmp, y,x;
+	int itmp, y, x;
 
 	if (argc > 1 && atol(argv[1]))
 		nap_msec = atol(argv[1]);
@@ -98,20 +89,17 @@ int main(int argc, char **argv)
 
 	for (y = 0; y < LINES - 1; y++)
 		for (x = 0; x < COLS; x++)
-			wprintw(stdscr, "%d", (y + x) % 10);
+			printw("%d", (y + x) % 10);
 
 	for (y = 0; y < 5; y++)
 	{
 		p1 = mkpanel(10, 10, 0, 0);
-		w1 = panel_window(p1);
 		set_panel_userptr(p1, "p1");
 
 		p2 = mkpanel(14, 14, 5, 5);
-		w2 = panel_window(p2);
 		set_panel_userptr(p2, "p2");
 
 		p3 = mkpanel(6, 8, 12, 12);
-		w3 = panel_window(p3);
 		set_panel_userptr(p3, "p3");
 
 		p4 = mkpanel(10, 10, 10, 30);
@@ -210,19 +198,16 @@ int main(int argc, char **argv)
 		for (itmp = 0; itmp < 6; itmp++)
 		{
 			saywhat("m4;");
-			wmove(w4, 3, 1);
-			waddstr(w4, mod[itmp]);
+			mvwaddstr(w4, 3, 1, mod[itmp]);
 			move_panel(p4, 4, itmp * 10);
-			wmove(w5, 4, 1);
-			waddstr(w5, mod[itmp]);
+			mvwaddstr(w5, 4, 1, mod[itmp]);
 			pflush();
 			wait_a_while(nap_msec);
+
 			saywhat("m5;");
-			wmove(w4, 4, 1);
-			waddstr(w4, mod[itmp]);
+			mvwaddstr(w4, 4, 1, mod[itmp]);
 			move_panel(p5, 7, itmp * 10 + 6);
-			wmove(w5, 3, 1);
-			waddstr(w5, mod[itmp]);
+			mvwaddstr(w5, 3, 1, mod[itmp]);
 			pflush();
 			wait_a_while(nap_msec);
 		}

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: instr.c,v 1.41 2007/06/21 21:50:15 wmcbrine Exp $")
+RCSID("$Id: instr.c,v 1.42 2007/06/25 07:36:45 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -175,7 +175,7 @@ int winnwstr(WINDOW *win, wchar_t *wstr, int n)
 
 	PDC_LOG(("winnstr() - called: n %d \n", n));
 
-	if (!win || !str)
+	if (!win || !wstr)
 		return ERR;
 
 	if (n < 0 || (win->_curx + n) > win->_maxx)

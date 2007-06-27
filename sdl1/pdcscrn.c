@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.21 2007/06/25 12:47:13 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.22 2007/06/27 02:51:09 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -23,7 +23,7 @@ int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
 SDL_Color pdc_color[16];
 Uint32 pdc_mapped[16];
-int pdc_fheight, pdc_fwidth;
+int pdc_fheight, pdc_fwidth, pdc_flastc;
 bool pdc_own_screen;
 WINDOW *pdc_lastscr;
 
@@ -83,8 +83,15 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 	}
 
+	if (!pdc_font->format->palette)
+	{
+		fprintf(stderr, "Font must have a palette\n");
+		return ERR;
+	}
+
 	pdc_fheight = pdc_font->h / 8;
 	pdc_fwidth = pdc_font->w / 32;
+	pdc_flastc = pdc_font->format->palette->ncolors - 1;
 
 	if (pdc_own_screen && !pdc_icon)
 	{

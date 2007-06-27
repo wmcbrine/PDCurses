@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcsdl.h,v 1.9 2007/06/24 16:35:33 wmcbrine Exp $ */
+/* $Id: pdcsdl.h,v 1.10 2007/06/27 02:51:09 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -22,7 +22,7 @@ PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
 extern SDL_Color pdc_color[16];
 extern Uint32 pdc_mapped[16];
-extern int pdc_fheight, pdc_fwidth;
+extern int pdc_fheight, pdc_fwidth, pdc_flastc;
 extern bool pdc_own_screen;
 extern WINDOW *pdc_lastscr;
 

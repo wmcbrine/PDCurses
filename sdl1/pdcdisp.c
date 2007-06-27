@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.20 2007/06/24 16:35:33 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.21 2007/06/27 02:51:09 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -61,7 +61,7 @@ chtype acs_map[128] =
 static SDL_Rect uprect[MAXRECT];
 static chtype oldch = (chtype)(-1);
 static int rectcount = 0;
-static short foregr, backgr;
+static short foregr = -1, backgr = -1;
 
 /* do the real updates on a delay */
 
@@ -86,25 +86,33 @@ static void _set_attr(chtype ch)
 
 	if (oldch != ch)
 	{
-		SDL_Color attr[2];
+		short newfg, newbg;
 
-		pair_content(PAIR_NUMBER(ch), &foregr, &backgr);
+		pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
 
-		foregr |= (ch & A_BOLD) ? 8 : 0;
-		backgr |= (ch & A_BLINK) ? 8 : 0;
+		newfg |= (ch & A_BOLD) ? 8 : 0;
+		newbg |= (ch & A_BLINK) ? 8 : 0;
 
 		if (ch & A_REVERSE)
 		{
-			attr[0] = pdc_color[backgr];
-			attr[1] = pdc_color[foregr];
-		}
-		else
-		{
-			attr[0] = pdc_color[foregr];
-			attr[1] = pdc_color[backgr];
+			short tmp = newfg;
+			newfg = newbg;
+			newbg = tmp;
 		}
 
-		SDL_SetPalette(pdc_font, SDL_LOGPAL, attr, 0, 2);
+		if (newfg != foregr)
+		{
+			SDL_SetPalette(pdc_font, SDL_LOGPAL, 
+				pdc_color + newfg, 0, 1);
+			foregr = newfg;
+		}
+
+		if (newbg != backgr)
+		{
+			SDL_SetPalette(pdc_font, SDL_LOGPAL, 
+				pdc_color + newbg, pdc_flastc, 1);
+			backgr = newbg;
+		}
 
 		oldch = ch;
 	}
@@ -176,7 +184,7 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 		src->x = '_' % 32 * pdc_fwidth;
 		src->y = '_' / 32 * pdc_fheight;
 
-		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 1);
+		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, (Uint32)pdc_flastc);
 		SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
 		SDL_SetColorKey(pdc_font, 0, 0);
 
@@ -190,7 +198,7 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 	if (ch & (A_LEFTLINE|A_RIGHTLINE))
 	{
 		if (col == -1)
-			col = (ch & A_REVERSE) ? backgr : foregr;
+			col = foregr;
 
 		dest->w = 1;
 

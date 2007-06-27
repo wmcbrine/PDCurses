@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.21 2007/06/27 02:51:09 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.22 2007/06/27 07:17:33 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -103,14 +103,14 @@ static void _set_attr(chtype ch)
 		if (newfg != foregr)
 		{
 			SDL_SetPalette(pdc_font, SDL_LOGPAL, 
-				pdc_color + newfg, 0, 1);
+				pdc_color + newfg, pdc_flastc, 1);
 			foregr = newfg;
 		}
 
 		if (newbg != backgr)
 		{
 			SDL_SetPalette(pdc_font, SDL_LOGPAL, 
-				pdc_color + newbg, pdc_flastc, 1);
+				pdc_color + newbg, 0, 1);
 			backgr = newbg;
 		}
 
@@ -179,12 +179,12 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 	{
 		if (col != -1)
 			SDL_SetPalette(pdc_font, SDL_LOGPAL,
-				pdc_color + col, 0, 1);
+				pdc_color + col, pdc_flastc, 1);
 
 		src->x = '_' % 32 * pdc_fwidth;
 		src->y = '_' / 32 * pdc_fheight;
 
-		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, (Uint32)pdc_flastc);
+		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
 		SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
 		SDL_SetColorKey(pdc_font, 0, 0);
 

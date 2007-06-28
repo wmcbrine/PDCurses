@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.14 2007/06/15 21:06:40 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.15 2007/06/28 02:25:37 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -342,7 +342,9 @@ int PDC_get_key(void)
 	case SDL_QUIT:
 		exit(1);
 	case SDL_VIDEORESIZE:
-		if (pdc_own_screen)
+		if (pdc_own_screen &&
+		   (event.resize.h / pdc_fheight != LINES ||
+		    event.resize.w / pdc_fwidth != COLS))
 		{
 			pdc_sheight = event.resize.h;
 			pdc_swidth = event.resize.w;

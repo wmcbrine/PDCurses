@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.15 2007/06/28 02:25:37 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.16 2007/06/28 18:41:46 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -348,8 +348,12 @@ int PDC_get_key(void)
 		{
 			pdc_sheight = event.resize.h;
 			pdc_swidth = event.resize.w;
-			SP->resized = TRUE;
-			return KEY_RESIZE;
+
+			if (!SP->resized)
+			{
+				SP->resized = TRUE;
+				return KEY_RESIZE;
+			}
 		}
 		break;
 	case SDL_MOUSEMOTION:

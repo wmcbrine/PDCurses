@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.23 2007/06/29 06:54:18 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.24 2007/06/29 10:57:28 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -163,10 +163,13 @@ void PDC_gotoyx(int row, int col)
 
 	SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
 
-	if (rectcount == MAXRECT)
-		PDC_update_rects();
+	if (oldrow != row || oldcol != col)
+	{
+		if (rectcount == MAXRECT)
+			PDC_update_rects();
 
-	uprect[rectcount++] = dest;
+		uprect[rectcount++] = dest;
+	}
 }
 
 /* handle the A_*LINE attributes */
@@ -246,9 +249,14 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 	if (rectcount)
 		lastrect = uprect[rectcount - 1];
 
-	if (rectcount && (lastrect.x == dest.x) &&
-	   (lastrect.w == dest.w) && (lastrect.y + lastrect.h == dest.y))
-		uprect[rectcount - 1].h = lastrect.h + pdc_fheight;
+	if (rectcount && lastrect.x == dest.x && lastrect.w == dest.w)
+	{
+		if (lastrect.y + lastrect.h == dest.y)
+			uprect[rectcount - 1].h = lastrect.h + pdc_fheight;
+		else
+			if (lastrect.y != dest.y)
+				uprect[rectcount++] = dest;
+	} 
 	else
 		uprect[rectcount++] = dest;
 

@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.30 2007/06/29 21:04:52 wmcbrine Exp $
+ * $Id: tui.c,v 1.31 2007/06/29 21:40:07 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -240,7 +240,8 @@ static void repaintmainmenu(int width, menu *mp)
 		mvwaddstr(wmain, 0, i * width,
 			prepad(padstr(p->name, width - 1), 1));
 
-	touchwin (wmain); wrefresh (wmain);
+	touchwin(wmain);
+	wrefresh(wmain);
 }
 
 static void mainhelp(void)
@@ -249,27 +250,6 @@ static void mainhelp(void)
 	statusmsg("Use arrow keys and Enter to select (Alt-X to quit)");
 #else
 	statusmsg("Use arrow keys and Enter to select");
-#endif
-}
-
-static void hidecursor(void)
-{
-#if defined(PDCURSES) || defined(SYSV)
-	curs_set(0);
-#endif
-}
-
-static void normalcursor(void)
-{
-#if defined(PDCURSES) || defined(SYSV)
-	curs_set(1);
-#endif
-}
-
-static void insertcursor(void)
-{
-#if defined(PDCURSES) || defined(SYSV)
-	curs_set(2);
 #endif
 }
 
@@ -313,9 +293,9 @@ static void mainmenu(menu *mp)
 			wrefresh(wbody);
 			rmerror();
 			setmenupos(th + mh, cur * barlen);
-			normalcursor();
+			curs_set(1);
 			(mp[cur].func)();	/* perform function */
-			hidecursor();
+			curs_set(0);
 
 			switch (key)
 			{
@@ -378,7 +358,7 @@ static void cleanup(void)	/* cleanup curses settings */
 		delwin(wmain);
 		delwin(wbody);
 		delwin(wstat);
-		normalcursor();
+		curs_set(1);
 		endwin();
 		incurses = FALSE;
 	}
@@ -480,7 +460,7 @@ void domenu(menu *mp)
 	bool stop = FALSE;
 	WINDOW *wmenu;
 
-	hidecursor();
+	curs_set(0);
 	getmenupos(&y, &x);
 	menudim(mp, &nitems, &barlen);
 	mheight = nitems + 2;
@@ -520,9 +500,9 @@ void domenu(menu *mp)
 			rmerror();
 
 			key = ERR;
-			normalcursor();
+			curs_set(1);
 			(mp[cur].func)();	/* perform function */
-			hidecursor();
+			curs_set(0);
 
 			repaintmenu(wmenu, mp);
 
@@ -591,7 +571,7 @@ void startmenu(menu *mp, char *mtitle)
 
 	cbreak();		/* direct input (no newline required)... */
 	noecho();		/* ... without echoing */
-	hidecursor();		/* hide cursor (if possible) */
+	curs_set(0);		/* hide cursor (if possible) */
 	nodelay(wbody, TRUE);	/* don't wait for input... */
 	halfdelay(10);		/* ...well, no more than a second, anyway */
 	keypad(wbody, TRUE);	/* enable cursor keys */
@@ -671,7 +651,7 @@ int weditstr(WINDOW *win, char *buf, int field)
 	colorbox(wedit, EDITBOXCOLOR, 0);
 
 	keypad(wedit, TRUE);
-	normalcursor();
+	curs_set(1);
 
 	while (!stop)
 	{
@@ -712,10 +692,7 @@ int weditstr(WINDOW *win, char *buf, int field)
 			defdisp = FALSE;
 			insert = !insert;
 
-			if (insert)
-				insertcursor();
-			else
-				normalcursor();
+			curs_set(insert ? 2 : 1);
 			break;
 
 		default:
@@ -779,7 +756,7 @@ int weditstr(WINDOW *win, char *buf, int field)
 		}
 	}
 
-	hidecursor();
+	curs_set(0);
 
 	wattrset(wedit, oldattr);
 	repainteditbox(wedit, bp - buf, buf);

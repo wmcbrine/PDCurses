@@ -44,7 +44,7 @@
 /*									      */
 /******************************************************************************/
 
-/* $Id: xmas.c,v 1.27 2006/09/24 23:49:15 wmcbrine Exp $ */
+/* $Id: xmas.c,v 1.28 2007/06/29 21:40:07 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <signal.h>
@@ -103,10 +103,8 @@ int main(int argc, char **argv)
 	if (has_colors())
 		start_color();
 #endif
-
-#ifdef PDCURSES
 	curs_set(0);
-#endif
+
 	treescrn = newwin(16, 27, 3, 53);
 	treescrn2 = newwin(16, 27, 3, 53);
 	treescrn3 = newwin(16, 27, 3, 53);

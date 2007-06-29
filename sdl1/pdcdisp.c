@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.22 2007/06/27 07:17:33 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.23 2007/06/29 06:54:18 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -247,7 +247,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		lastrect = uprect[rectcount - 1];
 
 	if (rectcount && (lastrect.x == dest.x) &&
-	   (lastrect.w == dest.w) && (lastrect.y == dest.y - pdc_fheight))
+	   (lastrect.w == dest.w) && (lastrect.y + lastrect.h == dest.y))
 		uprect[rectcount - 1].h = lastrect.h + pdc_fheight;
 	else
 		uprect[rectcount++] = dest;

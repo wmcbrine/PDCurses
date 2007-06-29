@@ -1,4 +1,4 @@
-/* The PDCurses logo, in #include'able form */
+/* The PDCurses logo as #include'able BMP (from ../x11/little_icon.xbm) */
 
 unsigned char deficon[] =
 {

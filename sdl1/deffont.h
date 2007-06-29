@@ -1,5 +1,6 @@
 /* Default font -- this is simply a 256x128x1 BMP, in #include'able form.
-   The font is 8x16, code page 437. */
+   The font is 8x16, code page 437, and is based on the pc8x16s.bdf font
+   from the vgafonts.tar.gz package, by "Myrlin". */
 
 unsigned char deffont[] =
 {

@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.28 2007/06/29 20:41:03 wmcbrine Exp $
+ * $Id: tui.c,v 1.29 2007/06/29 20:51:39 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -670,14 +670,19 @@ int weditstr(WINDOW *win, char *buf, int field)
 	oldattr = wedit->_attrs;
 	colorbox(wedit, EDITBOXCOLOR, 0);
 
+	keypad(wedit, TRUE);
 	normalcursor();
 
 	while (!stop)
 	{
+		idle();
 		repainteditbox(wedit, bp - buf, buf);
 
 		switch (c = wgetch(wedit))
 		{
+		case ERR:
+			break;
+
 		case KEY_ESC:
 			strcpy(buf, org);	/* restore original */
 			stop = TRUE;

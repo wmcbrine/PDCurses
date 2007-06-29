@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.29 2007/06/29 20:51:39 wmcbrine Exp $
+ * $Id: tui.c,v 1.30 2007/06/29 21:04:52 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -778,6 +778,8 @@ int weditstr(WINDOW *win, char *buf, int field)
 			}
 		}
 	}
+
+	hidecursor();
 
 	wattrset(wedit, oldattr);
 	repainteditbox(wedit, bp - buf, buf);

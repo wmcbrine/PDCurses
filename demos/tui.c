@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.27 2007/03/16 06:33:43 wmcbrine Exp $
+ * $Id: tui.c,v 1.28 2007/06/29 20:41:03 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -676,7 +676,7 @@ int weditstr(WINDOW *win, char *buf, int field)
 	{
 		repainteditbox(wedit, bp - buf, buf);
 
-		switch (c = waitforkey())
+		switch (c = wgetch(wedit))
 		{
 		case KEY_ESC:
 			strcpy(buf, org);	/* restore original */

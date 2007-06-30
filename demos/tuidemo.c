@@ -1,6 +1,6 @@
 /********************************* tuidemo.c ********************************/
 /*
- * $Id: tuidemo.c,v 1.19 2007/06/22 10:09:42 wmcbrine Exp $
+ * $Id: tuidemo.c,v 1.20 2007/06/30 00:29:32 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 #include "tui.h"
 
 /* change this if source at other location */
@@ -226,6 +227,8 @@ void subsub(void)
 
 int main(int argc, char **argv)
 {
+	setlocale(LC_ALL, "");
+
 	startmenu(MainMenu,
 		"TUI - 'textual user interface' demonstration program");
 

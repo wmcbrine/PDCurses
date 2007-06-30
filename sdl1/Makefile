@@ -53,10 +53,10 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_SDL_H)
-$(DEMOOBJS) : $(PDCURSES_CURSES_H)
-$(DEMOS) : $(LIBCURSES)
+$(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
+tui.o tuidemo.o : $(PDCURSES_CURSES_H)
 terminfo.o: $(TERM_HEADER)
-panel.o ptest.o: $(PANEL_HEADER)
+panel.o ptest: $(PANEL_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
 	$(BUILD) $(SFLAGS) -c $<

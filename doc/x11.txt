@@ -23,18 +23,14 @@ title of the X window, and for defining X resources specific to your
 program.
 
 
-Here be Dragons!
-----------------
+Interaction with stdio
+----------------------
 
 Be aware that curses programs that expect to have a normal tty 
 underneath them will be very disappointed! Output directed to stdout 
-after a call to system() (maybe even exec()) will go to the xterm that 
-invoked the PDCurses application, or to the console if not invoked 
-directly from an xterm. Similarly, stdin will expect its input from the 
-same place as stdout.
-
-This situation is not desirable, but I know of no simple way to get 
-around this.
+will go to the xterm that invoked the PDCurses application, or to the 
+console if not invoked directly from an xterm. Similarly, stdin will 
+expect its input from the same place as stdout.
 
 
 X Resources

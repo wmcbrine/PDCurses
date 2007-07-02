@@ -222,14 +222,12 @@ doubleClickPeriod: The period (in milliseconds) between two button
 		   of a button has occurred.
 		   Default:	   200
 
-composeKey:	   The name of the X key that defines the "compose key"
+composeKey:	   The name of the X key that defines the "compose key",
 		   which is used to enter characters in the Latin-1 
-		   character set above 0xA0. Generally this key will be 
-		   one of the X "modifier" keys, like Alt_L, Meta_R etc. 
-		   but can be a "normal" key like F1.  While in 
-		   "compose key" mode, the text cursor will appear as a 
-		   hollow rectangle. See the file latin-1.man for 
-		   details on compose key usage.
+		   character set above 0xA0. (See "Compose Keys for 
+		   Latin-1" below.) This is used only when PDCurses is 
+		   built without XIM support. While in compose mode, the 
+		   text cursor will appear as a hollow rectangle.
 		   Default:	   Multi_key
 
 

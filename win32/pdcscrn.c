@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.87 2007/07/03 00:11:46 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.88 2007/07/03 01:51:45 wmcbrine Exp $")
 
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
@@ -27,6 +27,14 @@ unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_in = INVALID_HANDLE_VALUE;
+
+static short curstoreal[16], realtocurs[16] =
+{
+	COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
+	COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK + 8,
+	COLOR_BLUE + 8, COLOR_GREEN + 8, COLOR_CYAN + 8, COLOR_RED + 8,
+	COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
+};
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER, PDC_RESTORE_WINDOW };
 
@@ -285,6 +293,7 @@ int PDC_scr_open(int argc, char **argv)
 	SMALL_RECT rect;
 	const char *str;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	int i;
 
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
@@ -293,6 +302,9 @@ int PDC_scr_open(int argc, char **argv)
 
 	if (!SP || !pdc_atrtab)
 		return ERR;
+
+	for (i = 0; i < 16; i++)
+		curstoreal[realtocurs[i]] = i;
 
 	pdc_con_out = GetStdHandle(STD_OUTPUT_HANDLE);
 	pdc_con_in = GetStdHandle(STD_INPUT_HANDLE);
@@ -555,6 +567,9 @@ void PDC_init_pair(short pair, short fg, short bg)
 	unsigned char att, temp_bg;
 	chtype i;
 
+	fg = curstoreal[fg];
+	bg = curstoreal[bg];
+
 	for (i = 0; i < PDC_OFFSET; i++)
 	{
 		att = fg | (bg << 4);
@@ -579,8 +594,8 @@ void PDC_init_pair(short pair, short fg, short bg)
 
 int PDC_pair_content(short pair, short *fg, short *bg)
 {
-	*fg = (short)(pdc_atrtab[pair * PDC_OFFSET] & 0x0F);
-	*bg = (short)((pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4);
+	*fg = realtocurs[pdc_atrtab[pair * PDC_OFFSET] & 0x0F];
+	*bg = realtocurs[(pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4];
 
 	return OK;
 }
@@ -597,7 +612,7 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 	if (!console_info.Hwnd)
 		_init_console_info();
 
-	col = console_info.ColorTable[color];
+	col = console_info.ColorTable[curstoreal[color]];
 
 	*red = DIVROUND(GetRValue(col) * 1000, 255);
 	*green = DIVROUND(GetGValue(col) * 1000, 255);
@@ -611,7 +626,7 @@ int PDC_init_color(short color, short red, short green, short blue)
 	if (!console_info.Hwnd)
 		_init_console_info();
 
-	console_info.ColorTable[color] =
+	console_info.ColorTable[curstoreal[color]] =
 		RGB(DIVROUND(red * 255, 1000),
 		    DIVROUND(green * 255, 1000),
 		    DIVROUND(blue * 255, 1000));

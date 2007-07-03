@@ -13,7 +13,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.73 2007/07/03 00:11:45 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.74 2007/07/03 01:51:44 wmcbrine Exp $")
 
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
@@ -26,6 +26,14 @@ RCSID("$Id: pdcscrn.c,v 1.73 2007/07/03 00:11:45 wmcbrine Exp $")
 unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
 int pdc_font;			/* default font size	*/
+
+static short curstoreal[16], realtocurs[16] =
+{
+	COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
+	COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK + 8,
+	COLOR_BLUE + 8, COLOR_GREEN + 8, COLOR_CYAN + 8, COLOR_RED + 8,
+	COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
+};
 
 #ifdef EMXVIDEO
 static unsigned char *saved_screen = NULL;
@@ -138,6 +146,7 @@ int PDC_scr_open(int argc, char **argv)
 #else
 	USHORT totchars;
 #endif
+	int i;
 	short r, g, b;
 
 	PDC_LOG(("PDC_scr_open() - called\n"));
@@ -147,6 +156,9 @@ int PDC_scr_open(int argc, char **argv)
 
 	if (!SP || !pdc_atrtab)
 		return ERR;
+
+	for (i = 0; i < 16; i++)
+		curstoreal[realtocurs[i]] = i;
 
 #ifdef EMXVIDEO
         v_init();
@@ -304,6 +316,9 @@ void PDC_init_pair(short pair, short fg, short bg)
 	unsigned char att, temp_bg;
 	chtype i;
 
+	fg = curstoreal[fg];
+	bg = curstoreal[bg];
+
 	for (i = 0; i < PDC_OFFSET; i++)
 	{
 		att = fg | (bg << 4);
@@ -328,8 +343,8 @@ void PDC_init_pair(short pair, short fg, short bg)
 
 int PDC_pair_content(short pair, short *fg, short *bg)
 {
-	*fg = (short)(pdc_atrtab[pair * PDC_OFFSET] & 0x0F);
-	*bg = (short)((pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4);
+	*fg = realtocurs[pdc_atrtab[pair * PDC_OFFSET] & 0x0F];
+	*bg = realtocurs[(pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4];
 
 	return OK;
 }
@@ -351,7 +366,7 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 	palbuf[0] = 8;
 	palbuf[1] = 0;
-	palbuf[2] = color;
+	palbuf[2] = curstoreal[color];
 
 	rc = VioGetState(&palbuf, 0);
 	if (rc)
@@ -397,7 +412,7 @@ int PDC_init_color(short color, short red, short green, short blue)
 
 	palbuf[0] = 8;
 	palbuf[1] = 0;
-	palbuf[2] = color;
+	palbuf[2] = curstoreal[color];
 
 	rc = VioGetState(&palbuf, 0);
 	if (rc)

@@ -13,7 +13,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcscrn.c,v 1.86 2007/07/03 00:11:45 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.87 2007/07/03 01:51:44 wmcbrine Exp $")
 
 #include <stdlib.h>
 
@@ -34,6 +34,14 @@ bool	pdc_direct_video;	/* allow direct screen memory writes	*/
 bool	pdc_bogus_adapter;	/* TRUE if adapter has insane values	*/
 unsigned pdc_video_seg;		/* video base segment			*/
 unsigned pdc_video_ofs;		/* video base offset			*/
+
+static short curstoreal[16], realtocurs[16] =
+{
+	COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
+	COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK + 8,
+	COLOR_BLUE + 8, COLOR_GREEN + 8, COLOR_CYAN + 8, COLOR_RED + 8,
+	COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
+};
 
 static bool sizeable = FALSE;	/* TRUE if adapter is resizeable	*/
 
@@ -517,6 +525,8 @@ int PDC_scr_open(int argc, char **argv)
 # endif
 	int ds;
 #endif
+	int i;
+
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	SP = calloc(1, sizeof(SCREEN));
@@ -524,6 +534,9 @@ int PDC_scr_open(int argc, char **argv)
 
 	if (!SP || !pdc_atrtab)
 		return ERR;
+
+	for (i = 0; i < 16; i++)
+		curstoreal[realtocurs[i]] = i;
 
 	SP->orig_attr	= FALSE;
 
@@ -661,6 +674,9 @@ void PDC_init_pair(short pair, short fg, short bg)
 	unsigned char att, temp_bg;
 	chtype i;
 
+	fg = curstoreal[fg];
+	bg = curstoreal[bg];
+
 	for (i = 0; i < PDC_OFFSET; i++)
 	{
 		att = fg | (bg << 4);
@@ -685,8 +701,8 @@ void PDC_init_pair(short pair, short fg, short bg)
 
 int PDC_pair_content(short pair, short *fg, short *bg)
 {
-	*fg = (short)(pdc_atrtab[pair * PDC_OFFSET] & 0x0F);
-	*bg = (short)((pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4);
+	*fg = realtocurs[pdc_atrtab[pair * PDC_OFFSET] & 0x0F];
+	*bg = realtocurs[(pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4];
 
 	return OK;
 }
@@ -694,12 +710,12 @@ int PDC_pair_content(short pair, short *fg, short *bg)
 /* _egapal() - Find the EGA palette value (0-63) for the color (0-15).
    On VGA, this is an index into the DAC. */
 
-static int _egapal(int color)
+static short _egapal(short color)
 {
 	PDCREGS regs;
 
 	regs.W.ax = 0x1007;
-	regs.h.bl = color;
+	regs.h.bl = curstoreal[color];
 
 	PDCINT(0x10, regs);
 

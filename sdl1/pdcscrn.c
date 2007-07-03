@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.23 2007/07/03 00:11:46 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.24 2007/07/03 18:39:28 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -29,7 +29,7 @@ WINDOW *pdc_lastscr;
 
 /* COLOR_PAIR to attribute encoding table. */
 
-static short *atrtab = (short *)NULL;
+static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 void PDC_scr_close(void)
 {
@@ -42,10 +42,6 @@ void PDC_scr_free(void)
 
 	if (SP)
 		free(SP);
-	if (atrtab)
-		free(atrtab);
-
-	atrtab = (short *)NULL;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */
@@ -57,9 +53,8 @@ int PDC_scr_open(int argc, char **argv)
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	SP = calloc(1, sizeof(SCREEN));
-	atrtab = calloc(PDC_COLOR_PAIRS * 2 * sizeof(short), 1);
 
-	if (!SP || !atrtab)
+	if (!SP)
 		return ERR;
 
 	pdc_own_screen = !pdc_screen;
@@ -228,14 +223,14 @@ void PDC_save_screen_mode(int i)
 
 void PDC_init_pair(short pair, short fg, short bg)
 {
-	atrtab[pair * 2] = fg;
-	atrtab[pair * 2 + 1] = bg;
+	atrtab[pair].f = fg;
+	atrtab[pair].b = bg;
 }
 
 int PDC_pair_content(short pair, short *fg, short *bg)
 {
-	*fg = atrtab[pair * 2];
-	*bg = atrtab[pair * 2 + 1];
+	*fg = atrtab[pair].f;
+	*bg = atrtab[pair].b;
 
 	return OK;
 }

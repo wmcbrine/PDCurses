@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.22 2007/06/27 02:51:09 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.23 2007/07/03 00:11:46 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -27,6 +27,10 @@ int pdc_fheight, pdc_fwidth, pdc_flastc;
 bool pdc_own_screen;
 WINDOW *pdc_lastscr;
 
+/* COLOR_PAIR to attribute encoding table. */
+
+static short *atrtab = (short *)NULL;
+
 void PDC_scr_close(void)
 {
 	PDC_LOG(("PDC_scr_close() - called\n"));
@@ -38,8 +42,10 @@ void PDC_scr_free(void)
 
 	if (SP)
 		free(SP);
-	if (pdc_atrtab)
-		free(pdc_atrtab);
+	if (atrtab)
+		free(atrtab);
+
+	atrtab = (short *)NULL;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */
@@ -51,9 +57,9 @@ int PDC_scr_open(int argc, char **argv)
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	SP = calloc(1, sizeof(SCREEN));
-	pdc_atrtab = calloc(MAX_ATRTAB, 1);
+	atrtab = calloc(PDC_COLOR_PAIRS * 2 * sizeof(short), 1);
 
-	if (!SP || !pdc_atrtab)
+	if (!SP || !atrtab)
 		return ERR;
 
 	pdc_own_screen = !pdc_screen;
@@ -218,6 +224,20 @@ void PDC_restore_screen_mode(int i)
 
 void PDC_save_screen_mode(int i)
 {
+}
+
+void PDC_init_pair(short pair, short fg, short bg)
+{
+	atrtab[pair * 2] = fg;
+	atrtab[pair * 2 + 1] = bg;
+}
+
+int PDC_pair_content(short pair, short *fg, short *bg)
+{
+	*fg = atrtab[pair * 2];
+	*bg = atrtab[pair * 2 + 1];
+
+	return OK;
 }
 
 bool PDC_can_change_color(void)

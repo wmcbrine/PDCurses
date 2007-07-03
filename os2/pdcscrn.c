@@ -13,7 +13,17 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.72 2007/06/14 13:50:26 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.73 2007/07/03 00:11:45 wmcbrine Exp $")
+
+#ifdef CHTYPE_LONG
+# define PDC_OFFSET 32
+#else
+# define PDC_OFFSET  8
+#endif
+
+/* COLOR_PAIR to attribute encoding table. */
+
+unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
 int pdc_font;			/* default font size	*/
 
@@ -114,6 +124,8 @@ void PDC_scr_free(void)
 		free(SP);
 	if (pdc_atrtab)
 		free(pdc_atrtab);
+
+	pdc_atrtab = (unsigned char *)NULL;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization,
@@ -131,7 +143,7 @@ int PDC_scr_open(int argc, char **argv)
 	PDC_LOG(("PDC_scr_open() - called\n"));
 
 	SP = calloc(1, sizeof(SCREEN));
-	pdc_atrtab = calloc(MAX_ATRTAB, 1);
+	pdc_atrtab = calloc(PDC_COLOR_PAIRS * PDC_OFFSET, 1);
 
 	if (!SP || !pdc_atrtab)
 		return ERR;
@@ -285,6 +297,41 @@ void PDC_save_screen_mode(int i)
 		saved_scrnmode[i] = scrnmode;
 	}
 #endif
+}
+
+void PDC_init_pair(short pair, short fg, short bg)
+{
+	unsigned char att, temp_bg;
+	chtype i;
+
+	for (i = 0; i < PDC_OFFSET; i++)
+	{
+		att = fg | (bg << 4);
+
+		if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
+			att = bg | (fg << 4);
+		if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
+			att = 1;
+		if (i & (A_INVIS >> PDC_ATTR_SHIFT))
+		{
+			temp_bg = att >> 4;
+			att = temp_bg << 4 | temp_bg;
+		}
+		if (i & (A_BOLD >> PDC_ATTR_SHIFT))
+			att |= 8;
+		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
+			att |= 128;
+
+		pdc_atrtab[pair * PDC_OFFSET + i] = att;
+	}
+}
+
+int PDC_pair_content(short pair, short *fg, short *bg)
+{
+	*fg = (short)(pdc_atrtab[pair * PDC_OFFSET] & 0x0F);
+	*bg = (short)((pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4);
+
+	return OK;
 }
 
 bool PDC_can_change_color(void)

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.153 2007/06/14 13:36:33 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.154 2007/07/03 00:11:43 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -69,7 +69,6 @@ extern bool pdc_trace_on;	/* tracing flag				*/
 extern bool pdc_color_started;
 extern unsigned long pdc_key_modifiers;
 extern MOUSE_STATUS pdc_mouse_status;
-extern unsigned char *pdc_atrtab;
 
 /*----------------------------------------------------------------------*/
 
@@ -87,9 +86,11 @@ int	PDC_get_key(void);
 int	PDC_get_rows(void);
 void	PDC_gotoyx(int, int);
 int	PDC_init_color(short, short, short, short);
+void	PDC_init_pair(short, short, short);
 int	PDC_modifiers_set(void);
 int	PDC_mouse_set(void);
 void	PDC_napms(int);
+int	PDC_pair_content(short, short *, short *);
 void	PDC_reset_prog_mode(void);
 void	PDC_reset_shell_mode(void);
 int	PDC_resize_screen(int, int);
@@ -130,14 +131,9 @@ size_t	PDC_wcstombs(char *, const wchar_t *, size_t);
 
 #ifdef CHTYPE_LONG
 # define PDC_COLOR_PAIRS	256
-# define PDC_OFFSET		32
 #else
 # define PDC_COLOR_PAIRS	32
-# define PDC_OFFSET		8
 #endif
-
-#define chtype_attr(ch)		(pdc_atrtab[(chtype)(ch) >> PDC_ATTR_SHIFT])
-#define MAX_ATRTAB		(PDC_COLOR_PAIRS * PDC_OFFSET)
 
 #ifndef max
 # define max(a,b) (((a) > (b)) ? (a) : (b))

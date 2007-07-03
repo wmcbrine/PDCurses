@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcx11.c,v 1.93 2007/06/23 23:02:12 wmcbrine Exp $")
+RCSID("$Id: pdcx11.c,v 1.94 2007/07/03 00:11:47 wmcbrine Exp $")
 
 #include <errno.h>
 #include <stdlib.h>
@@ -219,7 +219,7 @@ static int _setup_curses(void)
 		XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, LINES, COLS));
 
 	Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
-	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
 	XC_LOG(("cursesprocess exiting from Xinitscr\n"));
 

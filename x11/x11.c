@@ -13,7 +13,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11.c,v 1.90 2007/06/14 13:50:28 wmcbrine Exp $")
+RCSID("$Id: x11.c,v 1.91 2007/07/03 00:11:47 wmcbrine Exp $")
 
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
@@ -583,8 +583,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 	int xpos, ypos;
 	short fore, back;
 
-	if (pair_content(PAIR_NUMBER(attr), &fore, &back) == ERR)
-		return ERR;
+	PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
 
 #ifdef PDC_WIDE
 	text[len].byte1 = text[len].byte2 = 0;
@@ -794,7 +793,7 @@ static void _set_cursor_color(chtype *ch, short *fore, short *back)
 
 	if (attr)
 	{
-		pair_content(attr, &f, &b);
+		PDC_pair_content(attr, &f, &b);
 		*fore = 7 - (f % 8);
 		*back = 7 - (b % 8);
 	}
@@ -2415,7 +2414,7 @@ static void _exit_process(int rc, int sig, char *msg)
 
 static void _resize(void)
 {
-	unsigned char save_atrtab[MAX_ATRTAB]; 
+	short save_atrtab[PDC_COLOR_PAIRS * 2]; 
 
 	after_first_curses_request = FALSE;
 
@@ -2436,7 +2435,7 @@ static void _resize(void)
 	/* Detach and drop the current shared memory segment and 
 	   create and attach to a new segment */
 
-	memcpy(save_atrtab, pdc_atrtab, sizeof(save_atrtab));
+	memcpy(save_atrtab, xc_atrtab, sizeof(save_atrtab));
 
 	SP->XcurscrSize = XCURSCR_SIZE;
 	shmdt((char *)Xcurscr);
@@ -2453,8 +2452,8 @@ static void _resize(void)
 
 	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
 	memset(Xcurscr, 0, SP->XcurscrSize);
-	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-	memcpy(pdc_atrtab, save_atrtab, sizeof(save_atrtab));
+	xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	memcpy(xc_atrtab, save_atrtab, sizeof(save_atrtab));
 }
 
 /* For PDC_set_title() */
@@ -3182,7 +3181,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 	Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
 	memset(Xcurscr, 0, SP->XcurscrSize); 
-	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
 	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",
 		XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, LINES, COLS));

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcos2.h,v 1.6 2007/05/28 17:11:32 wmcbrine Exp $ */
+/* $Id: pdcos2.h,v 1.7 2007/07/03 00:11:45 wmcbrine Exp $ */
 
 #ifdef _MSC_VER
 # define USE_OS2_H 1         /* Use the os2.h for the compiler       */
@@ -51,6 +51,7 @@ typedef void * SEG16 ptr_16;
 # endif
 #endif
 
+extern unsigned char *pdc_atrtab;
 extern int pdc_font;
 
 extern void PDC_get_keyboard_info(void);

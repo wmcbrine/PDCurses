@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: color.c,v 1.78 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: color.c,v 1.79 2007/07/03 00:11:45 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -111,10 +111,6 @@ int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
 bool pdc_color_started = FALSE;
 
-/* COLOR_PAIR to attribute encoding table. */
-
-unsigned char *pdc_atrtab = (unsigned char *)NULL;
-
 /* pair_set[] tracks whether a pair has been set via init_pair() */
 
 static bool pair_set[PDC_COLOR_PAIRS];
@@ -151,33 +147,6 @@ static void _normalize(short *fg, short *bg)
 		*bg = SP->orig_attr ? SP->orig_back : COLOR_BLACK;
 }
 
-static void _init_pair_core(short pair, short fg, short bg)
-{
-	unsigned char att, temp_bg;
-	chtype i;
-
-	for (i = 0; i < PDC_OFFSET; i++)
-	{
-		att = fg | (bg << 4);
-
-		if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
-			att = bg | (fg << 4);
-		if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
-			att = 1;
-		if (i & (A_INVIS >> PDC_ATTR_SHIFT))
-		{
-			temp_bg = att >> 4;
-			att = temp_bg << 4 | temp_bg;
-		}
-		if (i & (A_BOLD >> PDC_ATTR_SHIFT))
-			att |= 8;
-		if (i & (A_BLINK >> PDC_ATTR_SHIFT))
-			att |= 128;
-
-		pdc_atrtab[pair * PDC_OFFSET + i] = att;
-	}
-}
-
 int init_pair(short pair, short fg, short bg)
 {
 	PDC_LOG(("init_pair() - called: pair %d fg %d bg %d\n", pair, fg, bg));
@@ -202,7 +171,7 @@ int init_pair(short pair, short fg, short bg)
 			curscr->_clear = TRUE;
 	}
 
-	_init_pair_core(pair, fg, bg);
+	PDC_init_pair(pair, fg, bg);
 
 	pair_set[pair] = TRUE;
 
@@ -266,10 +235,7 @@ int pair_content(short pair, short *fg, short *bg)
 	if (pair < 0 || pair >= COLOR_PAIRS || !fg || !bg)
 		return ERR;
 
-	*fg = (short)(pdc_atrtab[pair * PDC_OFFSET] & 0x0F);
-	*bg = (short)((pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4);
-
-	return OK;
+	return PDC_pair_content(pair, fg, bg);
 }
 
 int assume_default_colors(int f, int b)
@@ -293,7 +259,7 @@ int assume_default_colors(int f, int b)
 		if (oldfg != fg || oldbg != bg)
 			curscr->_clear = TRUE;
 
-		_init_pair_core(0, fg, bg);
+		PDC_init_pair(0, fg, bg);
 	}
 
 	return OK;
@@ -337,5 +303,5 @@ void PDC_init_atrtab(void)
 	_normalize(&fg, &bg);
 
 	for (i = 0; i < PDC_COLOR_PAIRS; i++)
-		_init_pair_core(i, fg, bg);
+		PDC_init_pair(i, fg, bg);
 }

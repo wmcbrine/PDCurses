@@ -13,7 +13,11 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.52 2007/06/14 13:50:28 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.53 2007/07/03 00:11:47 wmcbrine Exp $")
+
+/* COLOR_PAIR to attribute encoding table. */
+
+short *xc_atrtab = (short *)NULL;
 
 /* close the physical screen */
 
@@ -25,6 +29,8 @@ void PDC_scr_close(void)
 void PDC_scr_free(void)
 {
 	XCursesExit();
+
+	xc_atrtab = (short *)NULL;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */
@@ -80,7 +86,7 @@ int PDC_resize_screen(int nlines, int ncols)
 		shmkey_Xcurscr, SP->lines, SP->cols));
 
 	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
-	pdc_atrtab = (unsigned char *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+	xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
 	SP->resized = FALSE;
 
@@ -103,6 +109,20 @@ void PDC_restore_screen_mode(int i)
 
 void PDC_save_screen_mode(int i)
 {
+}
+
+void PDC_init_pair(short pair, short fg, short bg)
+{
+	xc_atrtab[pair * 2] = fg;
+	xc_atrtab[pair * 2 + 1] = bg;
+}
+
+int PDC_pair_content(short pair, short *fg, short *bg)
+{
+	*fg = xc_atrtab[pair * 2];
+	*bg = xc_atrtab[pair * 2 + 1];
+
+	return OK;
 }
 
 bool PDC_can_change_color(void)

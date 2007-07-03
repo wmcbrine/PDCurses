@@ -1,6 +1,11 @@
 PDCurses Implementor's Guide
 ============================
 
+Version 1.2 - 2007/??/?? - added PDC_init_pair(), PDC_pair_content(), 
+			   version history
+Version 1.1 - 2007/06/06 - minor cosmetic change
+Version 1.0 - 2007/04/01 - initial revision
+
 This document is for those wishing to port PDCurses to a new platform, 
 or just wanting to better understand how it works. Nothing here should 
 be needed for application programming; for that, refer to PDCurses.man, 
@@ -167,6 +172,16 @@ int	PDC_init_color(short color, short red, short green, short blue);
 The core of init_color(). This does all the work of that function, 
 except checking for values out of range.
 
+void	PDC_init_pair(short pair, short fg, short bg);
+
+The core of init_color(). This does all the work of that function, 
+except checking for values out of range.
+
+int	PDC_pair_content(short pair, short *fg, short *bg);
+
+The core of color_content(). This does all the work of that function, 
+except checking for values out of range and null pointers.
+
 void	PDC_reset_prog_mode(void);
 
 The non-portable functionality of reset_prog_mode() is handled here -- 
@@ -208,8 +223,8 @@ the cursor to the lower left corner. (The X11 port does nothing.)
 
 void	PDC_scr_free(void);
 
-Frees the memory for SP and pdc_atrtab allocated by PDC_scr_open(). 
-Called by delscreen().
+Frees the memory for SP allocated by PDC_scr_open(). Called by 
+delscreen().
 
 int	PDC_scr_open(int argc, char **argv);
 
@@ -217,15 +232,15 @@ The platform-specific part of initscr(). It's actually called from
 Xinitscr(); the arguments, if present, correspond to those used with 
 main(), and may be used to set the title of the terminal window, or for 
 other, platform-specific purposes. (The arguments are currently used 
-only in X11.) PDC_scr_open() must allocate memory for SP and pdc_atrtab, 
-and must initialize acs_map[] (unless it's preset) and several members 
-of SP, including lines, cols, mouse_wait, orig_attr (and if orig_attr is 
-TRUE, orig_fore and orig_back), mono, _restore and _preserve. (Although 
-SP and pdc_atrtab are used the same way in all ports, they're allocated 
-here in order to allow the X11 port to map them to a block of shared 
-memory.) If using an existing terminal, and the environment variable 
-PDC_RESTORE_SCREEN is set, this function may also store the existing 
-screen image for later restoration by PDC_scr_close().
+only in X11.) PDC_scr_open() must allocate memory for SP, and must 
+initialize acs_map[] (unless it's preset) and several members of SP, 
+including lines, cols, mouse_wait, orig_attr (and if orig_attr is TRUE, 
+orig_fore and orig_back), mono, _restore and _preserve. (Although SP is 
+used the same way in all ports, it's allocated here in order to allow 
+the X11 port to map it to a block of shared memory.) If using an 
+existing terminal, and the environment variable PDC_RESTORE_SCREEN is 
+set, this function may also store the existing screen image for later 
+restoration by PDC_scr_close().
 
 
 pdcsetsc.c:

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: initscr.c,v 1.107 2007/06/17 18:48:54 wmcbrine Exp $")
+RCSID("$Id: initscr.c,v 1.108 2007/07/03 00:11:45 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -289,7 +289,6 @@ void delscreen(SCREEN *sp)
 	PDC_scr_free();		/* free SP and pdc_atrtab */
 
 	SP = (SCREEN *)NULL;
-	pdc_atrtab = (unsigned char *)NULL;
 }
 
 int resize_term(int nlines, int ncols)

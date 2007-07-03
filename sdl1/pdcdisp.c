@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.24 2007/06/29 10:57:28 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.25 2007/07/03 00:11:46 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -88,7 +88,7 @@ static void _set_attr(chtype ch)
 	{
 		short newfg, newbg;
 
-		pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
+		PDC_pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
 
 		newfg |= (ch & A_BOLD) ? 8 : 0;
 		newbg |= (ch & A_BLINK) ? 8 : 0;

@@ -13,7 +13,7 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcdisp.c,v 1.62 2007/06/14 13:50:26 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.63 2007/07/03 00:11:45 wmcbrine Exp $")
 
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
    match code page 437 and compatible pages (CP850, CP852, etc.) */
@@ -112,7 +112,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 		{
 			chtype ch = srcp[j];
 
-			temp_line[j].attr = chtype_attr(ch);
+			temp_line[j].attr = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
 #ifdef CHTYPE_LONG
 			if (ch & A_ALTCHARSET && !(ch & 0xff80))
 				ch = acs_map[ch & 0x7f];
@@ -156,7 +156,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 			PDC_gotoyx(lineno, j + x);
 
 			regs.h.ah = 0x09;
-			regs.W.bx = chtype_attr(ch);
+			regs.W.bx = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
 			regs.W.cx = count;
 #ifdef CHTYPE_LONG
 			if (ch & A_ALTCHARSET && !(ch & 0xff80))

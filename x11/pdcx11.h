@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.59 2007/06/23 23:02:12 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.60 2007/07/03 00:11:47 wmcbrine Exp $ */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -76,14 +76,15 @@
 #define XCURSCR_START_SIZE  (XCursesLINES * sizeof(int))
 #define XCURSCR_LENGTH_SIZE (XCursesLINES * sizeof(int))
 #define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE + XCURSCR_START_SIZE + \
-	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + MAX_ATRTAB + sizeof(XColor))
+	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + (PDC_COLOR_PAIRS * 2) + \
+	sizeof(XColor))
 
 #define XCURSCR_Y_OFF(y)    ((y) * XCursesCOLS * sizeof(chtype))
 #define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0) + XCURSCR_Y_SIZE)
 #define XCURSCR_START_OFF   (XCURSCR_FLAG_OFF + XCURSCR_FLAG_SIZE)
 #define XCURSCR_LENGTH_OFF  (XCURSCR_START_OFF + XCURSCR_START_SIZE)
 #define XCURSCR_ATRTAB_OFF  (XCURSCR_LENGTH_OFF + XCURSCR_LENGTH_SIZE)
-#define XCURSCR_XCOLOR_OFF  (XCURSCR_ATRTAB_OFF + MAX_ATRTAB)
+#define XCURSCR_XCOLOR_OFF  (XCURSCR_ATRTAB_OFF + (PDC_COLOR_PAIRS * 2))
 
 typedef struct
 {
@@ -197,3 +198,5 @@ enum
 	CURSES_CONTINUE, CURSES_CURSOR, CURSES_CHILD, CURSES_REFRESH,
 	CURSES_GET_COLOR, CURSES_SET_COLOR, CURSES_EXIT
 };
+
+extern short *xc_atrtab;

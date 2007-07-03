@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcdos.h,v 1.27 2007/05/28 19:47:16 wmcbrine Exp $ */
+/* $Id: pdcdos.h,v 1.28 2007/07/03 00:11:45 wmcbrine Exp $ */
 
 #include <curspriv.h>
 #include <string.h>
@@ -61,6 +61,7 @@
 
 #include <dos.h>
 
+extern unsigned char *pdc_atrtab;
 extern int	pdc_adapter;
 extern int	pdc_scrnmode;
 extern int	pdc_font;

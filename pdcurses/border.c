@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.50 2007/06/21 05:41:56 wmcbrine Exp $")
+RCSID("$Id: border.c,v 1.51 2007/07/04 22:24:17 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -63,8 +63,8 @@ RCSID("$Id: border.c,v 1.50 2007/06/21 05:41:56 wmcbrine Exp $")
 		bs	bottom side of border		ACS_HLINE
 		tl	top left corner of border	ACS_ULCORNER
 		tr	top right corner of border	ACS_URCORNER
-		bl	bottom left corner of border	ACS_BLCORNER
-		br	bottom right corner of border	ACS_BLCORNER
+		bl	bottom left corner of border	ACS_LLCORNER
+		br	bottom right corner of border	ACS_LRCORNER
 
 	hline() and whline() draw a horizontal line, using ch, starting 
 	from the current cursor position. The cursor position does not 

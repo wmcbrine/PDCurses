@@ -26,7 +26,7 @@
  * authorization.							    *
  ****************************************************************************/
 
-/* $Id: rain.c,v 1.9 2006/03/29 00:21:50 wmcbrine Exp $ */
+/* $Id: rain.c,v 1.10 2007/07/05 23:30:17 wmcbrine Exp $ */
 
 #include <curses.h>
 #include <stdlib.h>
@@ -73,6 +73,11 @@ int main(int argc, char *argv[])
 		int bg = COLOR_BLACK;
 
 		start_color();
+
+#if defined(NCURSES_VERSION) || (defined(PDC_BUILD) && PDC_BUILD > 3000)
+		if (use_default_colors() == OK)
+			bg = -1;
+#endif
 		init_pair(1, COLOR_BLUE, bg);
 		init_pair(2, COLOR_CYAN, bg);
 	}

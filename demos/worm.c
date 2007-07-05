@@ -51,7 +51,7 @@ Options:
 	-n <n>			set number of worms
 	-t			make worms leave droppings
 
-  $Id: worm.c,v 1.14 2006/03/29 00:21:50 wmcbrine Exp $
+  $Id: worm.c,v 1.15 2007/07/05 23:30:17 wmcbrine Exp $
 */
 
 #include <curses.h>
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 	initscr();
 #endif
 	seed = time((time_t *)0);
-        srand(seed);
+	srand(seed);
 
 	noecho();
 	cbreak();
@@ -227,6 +227,11 @@ int main(int argc, char *argv[])
 	{
 		int bg = COLOR_BLACK;
 		start_color();
+
+# if defined(NCURSES_VERSION) || (defined(PDC_BUILD) && PDC_BUILD > 3000)
+		if (use_default_colors() == OK)
+			bg = -1;
+# endif
 
 # define SET_COLOR(num, fg) \
 	    init_pair(num + 1, fg, bg); \
@@ -351,7 +356,7 @@ int main(int argc, char *argv[])
 
 #endif /* KEY_RESIZE */
 
-		    /* Make it simple to put this into single-step mode, 
+		    /* Make it simple to put this into single-step mode,
 		       or resume normal operation - T. Dickey */
 
 		    if (ch == 'q')

@@ -2,7 +2,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.31 2007/06/29 21:40:07 wmcbrine Exp $
+ * $Id: tui.c,v 1.32 2007/07/05 01:18:43 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -151,7 +151,7 @@ static void colorbox(WINDOW *win, chtype color, int hasbox)
 			COLOR_PAIR(color & A_CHARTEXT) | (attr & ~A_REVERSE));
 	else
 #endif
-		wbkgd(win, color);
+		wbkgd(win, attr);
 
 	werase(win); 
 

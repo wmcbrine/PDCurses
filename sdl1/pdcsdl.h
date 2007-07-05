@@ -11,15 +11,16 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcsdl.h,v 1.10 2007/06/27 02:51:09 wmcbrine Exp $ */
+/* $Id: pdcsdl.h,v 1.11 2007/07/05 23:37:45 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
 #include <SDL/SDL.h>
 
-PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon;
+PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
 PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
+extern SDL_Surface *pdc_tileback;
 extern SDL_Color pdc_color[16];
 extern Uint32 pdc_mapped[16];
 extern int pdc_fheight, pdc_fwidth, pdc_flastc;

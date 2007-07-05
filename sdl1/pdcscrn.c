@@ -13,12 +13,13 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.25 2007/07/05 01:21:03 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.26 2007/07/05 23:37:45 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
 
-SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL;
+SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
+	*pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
 SDL_Color pdc_color[16];
@@ -30,6 +31,34 @@ WINDOW *pdc_lastscr;
 /* COLOR_PAIR to attribute encoding table. */
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
+
+void _retile(void)
+{
+	pdc_tileback = SDL_DisplayFormat(pdc_screen);
+
+	if (pdc_back)
+	{
+		SDL_Rect dest;
+
+		dest.y = 0;
+
+		while (dest.y < pdc_tileback->h)
+		{
+			dest.x = 0;
+
+			while (dest.x < pdc_tileback->w)
+			{
+				SDL_BlitSurface(pdc_back, 0, 
+					pdc_tileback, &dest);
+				dest.x += pdc_back->w;
+			}
+
+			dest.y += pdc_back->h;
+		}
+
+		SDL_BlitSurface(pdc_tileback, 0, pdc_screen, 0);
+	}
+}
 
 void PDC_scr_close(void)
 {
@@ -86,6 +115,18 @@ int PDC_scr_open(int argc, char **argv)
 
 	SP->mono = !pdc_font->format->palette;
 
+	if (!SP->mono && !pdc_back)
+		pdc_back = SDL_LoadBMP("pdcback.bmp");
+
+	if (!SP->mono && (pdc_back || !pdc_own_screen))
+	{
+		SP->orig_attr = TRUE;
+		SP->orig_fore = COLOR_WHITE;
+		SP->orig_back = -1;
+	}
+	else
+		SP->orig_attr = FALSE;
+
 	pdc_fheight = pdc_font->h / 8;
 	pdc_fwidth = pdc_font->w / 32;
 
@@ -127,6 +168,9 @@ int PDC_scr_open(int argc, char **argv)
 			SDL_GetError());
 		return ERR;
 	}
+
+	if (SP->orig_attr)
+		_retile();
 
 	for (i = 0; i < 8; i++)
 	{
@@ -182,6 +226,12 @@ int PDC_resize_screen(int nlines, int ncols)
 
 	pdc_screen = SDL_SetVideoMode(pdc_swidth, pdc_sheight, 0,
 		SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);
+
+	if (pdc_tileback)
+	{
+		SDL_FreeSurface(pdc_tileback);
+		_retile();
+	}
 
 	SP->resized = FALSE;
 	SP->cursrow = SP->curscol = 0;

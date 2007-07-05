@@ -58,6 +58,7 @@ pdcurses.def: $(PDCURSES_SRCDIR)\win32\pdcurses.def
 	echo pdc_screen >> $@
 	echo pdc_font >> $@
 	echo pdc_icon >> $@
+	echo pdc_back >> $@
 	echo pdc_sheight >> $@
 	echo pdc_swidth >> $@
 	echo pdc_yoffset >> $@

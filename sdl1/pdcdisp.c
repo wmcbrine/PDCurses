@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.26 2007/07/05 01:21:03 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.27 2007/07/05 23:37:45 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -61,7 +61,7 @@ chtype acs_map[128] =
 static SDL_Rect uprect[MAXRECT];
 static chtype oldch = (chtype)(-1);
 static int rectcount = 0;
-static short foregr = -1, backgr = -1;
+static short foregr = -2, backgr = -2;
 
 /* do the real updates on a delay */
 
@@ -112,8 +112,18 @@ static void _set_attr(chtype ch)
 
 		if (newbg != backgr)
 		{
-			SDL_SetPalette(pdc_font, SDL_LOGPAL, 
-				pdc_color + newbg, 0, 1);
+			if (newbg == -1)
+				SDL_SetColorKey(pdc_font, 
+					SDL_SRCCOLORKEY, 0);
+			else
+			{
+				if (backgr == -1)
+					SDL_SetColorKey(pdc_font, 0, 0);
+
+				SDL_SetPalette(pdc_font, SDL_LOGPAL, 
+					pdc_color + newbg, 0, 1);
+			}
+
 			backgr = newbg;
 		}
 
@@ -196,9 +206,13 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 		src->x = '_' % 32 * pdc_fwidth;
 		src->y = '_' / 32 * pdc_fheight;
 
-		SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
+		if (backgr != -1)
+			SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
+
 		SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-		SDL_SetColorKey(pdc_font, 0, 0);
+
+		if (backgr != -1)
+			SDL_SetColorKey(pdc_font, 0, 0);
 
 		if (col != -1)
 		{
@@ -288,6 +302,10 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 				ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) |
 					acs_map[ch & 0x7f];
 #endif
+			if (backgr == -1)
+				SDL_LowerBlit(pdc_tileback, &dest,
+					pdc_screen, &dest);
+
 			src.x = (ch & 0xff) % 32 * pdc_fwidth;
 			src.y = (ch & 0xff) / 32 * pdc_fheight;
 

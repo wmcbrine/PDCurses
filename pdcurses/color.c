@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: color.c,v 1.79 2007/07/03 00:11:45 wmcbrine Exp $")
+RCSID("$Id: color.c,v 1.80 2007/07/05 20:57:55 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -165,7 +165,7 @@ int init_pair(short pair, short fg, short bg)
 	{
 		short oldfg, oldbg;
 
-		pair_content(pair, &oldfg, &oldbg);
+		PDC_pair_content(pair, &oldfg, &oldbg);
 
 		if (oldfg != fg || oldbg != bg)
 			curscr->_clear = TRUE;
@@ -254,7 +254,7 @@ int assume_default_colors(int f, int b)
 
 		_normalize(&fg, &bg);
 
-		pair_content(0, &oldfg, &oldbg);
+		PDC_pair_content(0, &oldfg, &oldbg);
 
 		if (oldfg != fg || oldbg != bg)
 			curscr->_clear = TRUE;

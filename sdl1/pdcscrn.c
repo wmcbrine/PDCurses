@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.24 2007/07/03 18:39:28 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.25 2007/07/05 01:21:03 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -84,15 +84,13 @@ int PDC_scr_open(int argc, char **argv)
 		return ERR;
 	}
 
-	if (!pdc_font->format->palette)
-	{
-		fprintf(stderr, "Font must have a palette\n");
-		return ERR;
-	}
+	SP->mono = !pdc_font->format->palette;
 
 	pdc_fheight = pdc_font->h / 8;
 	pdc_fwidth = pdc_font->w / 32;
-	pdc_flastc = pdc_font->format->palette->ncolors - 1;
+
+	if (!SP->mono)
+		pdc_flastc = pdc_font->format->palette->ncolors - 1;
 
 	if (pdc_own_screen && !pdc_icon)
 	{
@@ -159,8 +157,6 @@ int PDC_scr_open(int argc, char **argv)
 	SP->audible = FALSE;
 
 	PDC_reset_prog_mode();
-
-	SP->mono = FALSE;
 
 	pdc_lastscr = newwin(SP->lines, SP->cols, 0, 0);
 	wattrset(pdc_lastscr, (chtype)(-1));

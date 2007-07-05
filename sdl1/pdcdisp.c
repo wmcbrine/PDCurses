@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.25 2007/07/03 00:11:46 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.26 2007/07/05 01:21:03 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -88,6 +88,9 @@ static void _set_attr(chtype ch)
 	{
 		short newfg, newbg;
 
+		if (SP->mono)
+			return;
+
 		PDC_pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
 
 		newfg |= (ch & A_BOLD) ? 8 : 0;
@@ -128,6 +131,9 @@ void PDC_gotoyx(int row, int col)
 
 	PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
 		row, col, SP->cursrow, SP->curscol));
+
+	if (SP->mono)
+		return;
 
 	oldrow = SP->cursrow;
 	oldcol = SP->curscol;
@@ -177,6 +183,9 @@ void PDC_gotoyx(int row, int col)
 static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 {
 	short col = SP->line_color;
+
+	if (SP->mono)
+		return;
 
 	if (ch & A_UNDERLINE)
 	{

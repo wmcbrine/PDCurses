@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.26 2007/07/05 23:37:45 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.27 2007/07/06 02:23:20 wmcbrine Exp $")
 
 #include "deffont.h"
 #include "deficon.h"
@@ -32,7 +32,7 @@ WINDOW *pdc_lastscr;
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
-void _retile(void)
+void PDC_retile(void)
 {
 	pdc_tileback = SDL_DisplayFormat(pdc_screen);
 
@@ -170,7 +170,7 @@ int PDC_scr_open(int argc, char **argv)
 	}
 
 	if (SP->orig_attr)
-		_retile();
+		PDC_retile();
 
 	for (i = 0; i < 8; i++)
 	{
@@ -230,7 +230,7 @@ int PDC_resize_screen(int nlines, int ncols)
 	if (pdc_tileback)
 	{
 		SDL_FreeSurface(pdc_tileback);
-		_retile();
+		PDC_retile();
 	}
 
 	SP->resized = FALSE;

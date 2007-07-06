@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.27 2007/07/05 23:37:45 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.28 2007/07/06 17:26:17 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -56,12 +56,14 @@ chtype acs_map[128] =
 
 #endif
 
-#define MAXRECT 200
+#define MAXRECT 200	/* maximum number of rects to queue up before */
+			/* an update is forced; the number was chosen */
+			/* arbitrarily */
 
-static SDL_Rect uprect[MAXRECT];
-static chtype oldch = (chtype)(-1);
-static int rectcount = 0;
-static short foregr = -2, backgr = -2;
+static SDL_Rect uprect[MAXRECT];	/* table of rects to update */
+static chtype oldch = (chtype)(-1);	/* current attribute */
+static int rectcount = 0;		/* index into uprect */
+static short foregr = -2, backgr = -2;	/* current foreground, background */
 
 /* do the real updates on a delay */
 
@@ -69,6 +71,9 @@ void PDC_update_rects(void)
 {
 	if (rectcount)
 	{
+		/* if the maximum number of rects has been reached, 
+		   we're probably better off doing a full screen update */
+
 		if (rectcount == MAXRECT)
 			SDL_Flip(pdc_screen);
 		else

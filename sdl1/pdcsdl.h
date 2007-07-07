@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcsdl.h,v 1.13 2007/07/07 05:18:00 wmcbrine Exp $ */
+/* $Id: pdcsdl.h,v 1.14 2007/07/07 14:48:37 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -33,6 +33,7 @@ extern bool pdc_own_screen;		/* if pdc_screen was not set
 					   responsible for (owns) it */
 extern WINDOW *pdc_lastscr;		/* how curscr looked when last
 					   updated -- only blit changes */
+extern Uint32 pdc_lastupdate;		/* time of last update, in ticks */
 
 void PDC_update_rects(void);
 void PDC_retile(void);

@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.29 2007/07/07 06:51:31 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.30 2007/07/07 14:48:37 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include "deffont.h"
@@ -91,7 +91,7 @@ int PDC_scr_open(int argc, char **argv)
 
 	if (pdc_own_screen)
 	{
-		if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0)
 		{
 			fprintf(stderr, "Could not start SDL: %s\n", 
 				SDL_GetError());

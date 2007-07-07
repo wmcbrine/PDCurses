@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.29 2007/07/07 05:17:38 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.30 2007/07/07 14:48:37 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -56,6 +56,8 @@ chtype acs_map[128] =
 
 #endif
 
+Uint32 pdc_lastupdate = 0;
+
 #define MAXRECT 200	/* maximum number of rects to queue up before
 			   an update is forced; the number was chosen
 			   arbitrarily */
@@ -79,6 +81,7 @@ void PDC_update_rects(void)
 		else
 			SDL_UpdateRects(pdc_screen, rectcount, uprect);
 
+		pdc_lastupdate = SDL_GetTicks();
 		rectcount = 0;
 	}
 }

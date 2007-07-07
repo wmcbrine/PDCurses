@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.28 2007/07/06 17:26:17 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.29 2007/07/07 05:17:38 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -56,9 +56,9 @@ chtype acs_map[128] =
 
 #endif
 
-#define MAXRECT 200	/* maximum number of rects to queue up before */
-			/* an update is forced; the number was chosen */
-			/* arbitrarily */
+#define MAXRECT 200	/* maximum number of rects to queue up before
+			   an update is forced; the number was chosen
+			   arbitrarily */
 
 static SDL_Rect uprect[MAXRECT];	/* table of rects to update */
 static chtype oldch = (chtype)(-1);	/* current attribute */
@@ -220,10 +220,8 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 			SDL_SetColorKey(pdc_font, 0, 0);
 
 		if (col != -1)
-		{
-			oldch = (chtype)(-1);	/* force update */
-			_set_attr(ch);
-		}
+			SDL_SetPalette(pdc_font, SDL_LOGPAL,
+				pdc_color + foregr, pdc_flastc, 1);
 	}
 
 	if (ch & (A_LEFTLINE|A_RIGHTLINE))

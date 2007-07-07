@@ -13,8 +13,9 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.27 2007/07/06 02:23:20 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.28 2007/07/07 06:23:18 wmcbrine Exp $")
 
+#include <stdlib.h>
 #include "deffont.h"
 #include "deficon.h"
 
@@ -101,7 +102,10 @@ int PDC_scr_open(int argc, char **argv)
 	}
 
 	if (!pdc_font)
-		pdc_font = SDL_LoadBMP("pdcfont.bmp");
+	{
+		const char *fname = getenv("PDC_FONT");
+		pdc_font = SDL_LoadBMP(fname ? fname : "pdcfont.bmp");
+	}
 
 	if (!pdc_font)
 		pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(deffont,
@@ -116,7 +120,10 @@ int PDC_scr_open(int argc, char **argv)
 	SP->mono = !pdc_font->format->palette;
 
 	if (!SP->mono && !pdc_back)
-		pdc_back = SDL_LoadBMP("pdcback.bmp");
+	{
+		const char *bname = getenv("PDC_BACKGROUND");
+		pdc_back = SDL_LoadBMP(bname ? bname : "pdcback.bmp");
+	}
 
 	if (!SP->mono && (pdc_back || !pdc_own_screen))
 	{
@@ -135,7 +142,8 @@ int PDC_scr_open(int argc, char **argv)
 
 	if (pdc_own_screen && !pdc_icon)
 	{
-		pdc_icon = SDL_LoadBMP("pdcicon.bmp");
+		const char *iname = getenv("PDC_ICON");
+		pdc_icon = SDL_LoadBMP(iname ? iname : "pdcicon.bmp");
 
 		if (!pdc_icon)
 			pdc_icon = SDL_LoadBMP_RW(SDL_RWFromMem(deficon,

@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.28 2007/07/07 06:23:18 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.29 2007/07/07 06:51:31 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include "deffont.h"
@@ -155,8 +155,11 @@ int PDC_scr_open(int argc, char **argv)
 
 	if (pdc_own_screen)
 	{
-		pdc_sheight = 25 * pdc_fheight;
-		pdc_swidth = 80 * pdc_fwidth;
+		const char *env = getenv("PDC_LINES");
+		pdc_sheight = (env ? atoi(env) : 25) * pdc_fheight;
+
+		env = getenv("PDC_COLS");
+		pdc_swidth = (env ? atoi(env) : 80) * pdc_fwidth;
 
 		pdc_screen = SDL_SetVideoMode(pdc_swidth, pdc_sheight, 0,
 			SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);

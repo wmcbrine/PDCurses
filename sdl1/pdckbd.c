@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.17 2007/07/07 14:48:37 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.18 2007/07/07 14:54:02 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -120,14 +120,16 @@ void PDC_set_keyboard_binary(bool on)
 bool PDC_check_key(void)
 {
 	Uint32 current = SDL_GetTicks();
+	int haveevent = SDL_PollEvent(&event);
 
-	/* if 30 ms have passed without a screen update, or the timer
-	   has wrapped, update now */
+	/* if we have an event, or 30 ms have passed without a screen 
+	   update, or the timer has wrapped, update now */
 
-	if (current < pdc_lastupdate || ((current - pdc_lastupdate) > 30))
+	if (haveevent ||
+	    current < pdc_lastupdate || ((current - pdc_lastupdate) > 30))
 		PDC_update_rects();
 
-	return SDL_PollEvent(&event);
+	return haveevent;
 }
 
 static int _process_key_event(void)

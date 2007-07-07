@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcsdl.h,v 1.12 2007/07/06 02:23:20 wmcbrine Exp $ */
+/* $Id: pdcsdl.h,v 1.13 2007/07/07 05:18:00 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -20,12 +20,19 @@
 PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
 PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
-extern SDL_Surface *pdc_tileback;
-extern SDL_Color pdc_color[16];
-extern Uint32 pdc_mapped[16];
-extern int pdc_fheight, pdc_fwidth, pdc_flastc;
-extern bool pdc_own_screen;
-extern WINDOW *pdc_lastscr;
+extern SDL_Surface *pdc_tileback;	/* used to regenerate the background
+					   of "transparent" cells */
+extern SDL_Color pdc_color[16];		/* colors for font palette */
+extern Uint32 pdc_mapped[16];		/* colors for FillRect(), as
+					   used in _highlight() */
+extern int pdc_fheight, pdc_fwidth;	/* font height and width */
+extern int pdc_flastc;			/* font palette's last color
+					   (treated as the foreground) */
+extern bool pdc_own_screen;		/* if pdc_screen was not set
+					   before initscr(), PDCurses is
+					   responsible for (owns) it */
+extern WINDOW *pdc_lastscr;		/* how curscr looked when last
+					   updated -- only blit changes */
 
 void PDC_update_rects(void);
 void PDC_retile(void);

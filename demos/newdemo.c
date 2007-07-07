@@ -4,7 +4,7 @@
  *
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  *
- *  $Id: newdemo.c,v 1.36 2007/06/17 09:28:58 wmcbrine Exp $
+ *  $Id: newdemo.c,v 1.37 2007/07/07 17:12:18 wmcbrine Exp $
  */
 
 #include <stdio.h>
@@ -225,6 +225,9 @@ int main(int argc, char **argv)
         srand(seed);
 
 	start_color();
+# if defined(NCURSES_VERSION) || (defined(PDC_BUILD) && PDC_BUILD > 3000)
+	use_default_colors();
+# endif
 	cbreak();
 	noecho();
 

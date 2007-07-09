@@ -38,6 +38,7 @@ PDCurses.txt: manext
 	./manext $(PDCURSES_DIR)/*.c >> PDCurses.txt
 	./manext $(pdcdir)/*.c >> PDCurses.txt
 	cat $(DOC_DIR)/x11.txt >> PDCurses.txt
+	cat $(DOC_DIR)/sdl.txt >> PDCurses.txt
 
 manext: manext.o 
 	$(LINK) manext.o -o $@ $(LDFLAGS)

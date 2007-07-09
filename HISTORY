@@ -1,3 +1,84 @@
+PDCurses 3.3 - 2007/07/??
+=========================
+
+This release adds an SDL backend, boosts performance, and refines the 
+demos.
+
+New features:
+
+- SDL port. See INSTALL, docs/sdl.txt and sdl1/* for details.
+
+- Minimize screen writes by checking, in wnoutrefresh(), whether the
+  changes to curscr would be real changes. In most cases, this makes no
+  difference (writes were already limited to areas marked as changed),
+  but it can greatly reduce the overhead from touchwin().
+
+- The PDC_RGB colors can now be used, or not, with any platform (as long
+  as the same options are used when compiling both the library and
+  apps). This may help if you have apps that are hardwired to assume
+  certain definitions.
+
+- Restored the use_default_colors() stuff from the ncurses versions of
+  the rain and worm demos, to make them "transparent" (this is useful
+  now, with the SDL port); added transparency to newdemo.
+
+- Added setlocale() to tuidemo, to make it easier to browse files with
+  non-ASCII characters.
+
+- Allow exit from ptest demo by typing 'q'.
+
+- New functions for implementors: PDC_pair_content() and PDC_init_pair()
+  (the old pdc_atrtab stuff was arguably the last remnant of code in the
+  pdcurses directory that was based on platform details).
+
+Bug fixes and such:
+
+- Implicit wrefresh() needs to be called from wgetch() when the window's 
+  cursor position is changed, even if there are no other changes.
+
+- Set SP->audible on a per-platform basis, as was documented in
+  IMPLEMNT, but not actually being done.
+
+- Minor tweaks for efficiency and readability, notably with wscrl().
+
+- tuidemo didn't work correctly on monochrome screens when A_COLOR was
+  defined -- the color pair numbers appeared as the corresponding
+  character; also, the input box was (I now realize) broken with ncurses
+  since our 2.7, and broke more subtly with PDCurses' new implicit
+  refresh handling; also, the path to the default file for the Browse
+  function was a bit off.
+
+- Assume in the demos that curs_set() is always available -- there's no
+  good test for this, and the existing tests were bogus.
+
+- Made the command-line parameter for ptest work. (If given an argument,
+  it delays that number of milliseconds between changes, instead of
+  waiting for a key, and automatically loops five times.)
+
+- Building the Win32 DLL with MinGW or Cygwin wouldn't work from outside
+  the platform directory.
+
+- Building the X11 port with Cygwin required manually editing the 
+  Makefile after configuring; no longer. Reported by Warren W. Gay.
+
+- Minor tightening of configure and makefiles.
+
+- Bogus references to "ACS_BLCORNER" in the border man page. Reported by
+  "Walrii".
+
+- slk_wlabel() was not documented.
+
+- Spelling cleanup.
+
+- Changed RCSIDs to not end with a semicolon -- avoids warnings when
+  compiling with the -pedantic option.
+
+- Merged latin-1.txt into x11.txt.
+
+- Updated config.guess and config.sub to more recent versions.
+
+------------------------------------------------------------------------
+
 PDCurses 3.2 - 2007/06/06
 =========================
 

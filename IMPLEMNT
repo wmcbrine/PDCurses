@@ -1,7 +1,7 @@
 PDCurses Implementor's Guide
 ============================
 
-Version 1.2 - 2007/??/?? - added PDC_init_pair(), PDC_pair_content(), 
+Version 1.2 - 2007/07/?? - added PDC_init_pair(), PDC_pair_content(), 
 			   version history; removed pdc_atrtab
 Version 1.1 - 2007/06/06 - minor cosmetic change
 Version 1.0 - 2007/04/01 - initial revision

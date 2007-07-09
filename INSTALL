@@ -1,11 +1,12 @@
 How to build PDCurses
 =====================
 
-Unpack the source archive, then go to the appropriate section below.
+Unpack the source archive, then go to the appropriate section below, for 
+native console, X11 or SDL.
 
 
-DOS, OS/2, or Windows
----------------------
+DOS, OS/2, or Windows console
+-----------------------------
 
 . In the subdirectory for each OS, you'll find a number of ".mak"
   files, one for each supported compiler:
@@ -121,8 +122,14 @@ SDL
 ---
 
 . On *nix (including Linux and Mac OS X), run "make" in the sdl1
-  directory. (There is no configure script for this port.) This assumes
-  a working sdl-config, and GNU make.
+  directory. There is no configure script (yet?) for this port. This
+  assumes a working sdl-config, and GNU make. It builds the library 
+  libpdcurses.a (dynamic lib not implemented).
 
-. With MinGW, run "make -f Makefile.mng". This assumes SDL is installed
-  in the standard directories.
+  With MinGW, run "make -f Makefile.mng". This assumes SDL is installed
+  in the standard directories. The MinGW makefile accepts the optional
+  parameters "DLL=Y" and "DEBUG=Y", as with the console version. (Wide-
+  character support is not yet implemented for SDL.) Both makefiles
+  recognize the optional PDCURSES_SRCDIR environment variable, as with
+  the console ports. Makefile.mng builds libpdcurses.a, along with 
+  pdcurses.dll, if specified.

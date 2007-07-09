@@ -1,0 +1,31 @@
+SDL Considerations
+==================
+
+PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
+PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
+
+void PDC_update_rects(void);
+void PDC_retile(void);
+
+The font can be set via the environment variable PDC_FONT. If it's not 
+set, PDCurses looks for a file named "pdcfont.bmp" in the current 
+directory at the time of initscr(). If neither is found, it uses the 
+built-in default font, loaded from the BMP file encoded in deffont.h.
+
+As with the font, the icon (used with SDL_WM_SetIcon() -- not used for 
+the executable file) can be set via the environment variable PDC_ICON, 
+and falls back to "pdcicon.bmp", and then to the built-in icon from 
+deficon.h.
+
+PDC_BACKGROUND pdcback.bmp
+
+PDC_COLS
+PDC_LINES
+
+Interaction with stdio
+----------------------
+
+As with X11, it's a bad idea to mix curses and stdio calls. (In fact, 
+that's true for PDCurses on any platform; but especially these two, 
+which don't run under terminals.) Depending on how SDL is built, stdout 
+and stderr may be redirected to files.

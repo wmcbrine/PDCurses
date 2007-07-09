@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: initscr.c,v 1.108 2007/07/03 00:11:45 wmcbrine Exp $")
+RCSID("$Id: initscr.c,v 1.109 2007/07/09 06:24:42 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -105,6 +105,7 @@ const char *_curses_notice = "PDCurses 3.3 - Public Domain 2007";
 SCREEN *SP = (SCREEN*)NULL;		/* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;	/* the current screen image */
 WINDOW *stdscr = (WINDOW *)NULL;	/* the default screen window */
+WINDOW *pdc_lastscr = (WINDOW *)NULL;	/* the last screen image */
 
 int LINES = 0;				/* current terminal height */
 int COLS = 0;				/* current terminal width */
@@ -164,6 +165,15 @@ WINDOW *Xinitscr(int argc, char *argv[])
 		exit(2);
 	}
 
+	if ((pdc_lastscr = newwin(LINES, COLS, 0, 0)) == (WINDOW *)NULL)
+	{
+		fprintf(stderr, "initscr(): Unable to create pdc_lastscr.\n");
+		exit(2);
+	}
+
+        wattrset(pdc_lastscr, (chtype)(-1));
+        werase(pdc_lastscr);
+
 	PDC_slk_initialize();
 	LINES -= SP->slklines;
 
@@ -201,9 +211,10 @@ WINDOW *Xinitscr(int argc, char *argv[])
 		untouchwin(curscr);
 		untouchwin(stdscr);
 		stdscr->_clear = FALSE;
+		curscr->_clear = FALSE;
 	}
-
-	curscr->_clear = FALSE;
+	else
+		curscr->_clear = TRUE;
 
 	PDC_init_atrtab();	/* set up default colors */
 
@@ -281,8 +292,10 @@ void delscreen(SCREEN *sp)
 
 	delwin(stdscr);
 	delwin(curscr);
+	delwin(pdc_lastscr);
 	stdscr = (WINDOW *)NULL;
 	curscr = (WINDOW *)NULL;
+	pdc_lastscr = (WINDOW *)NULL;
 
 	SP->alive = FALSE;
 
@@ -302,14 +315,17 @@ int resize_term(int nlines, int ncols)
 	LINES = SP->lines - SP->linesrippedoff - SP->slklines;
 	SP->cols = COLS = PDC_get_columns();
 
-	if ((curscr = resize_window(curscr, SP->lines, SP->cols)) == NULL
-	 || (stdscr = resize_window(stdscr, LINES, COLS)) == NULL)
+	if (wresize(curscr, SP->lines, SP->cols) == ERR ||
+	    wresize(stdscr, LINES, COLS) == ERR ||
+	    wresize(pdc_lastscr, SP->lines, SP->cols) == ERR)
 		return ERR;
+
+        werase(pdc_lastscr);
+	curscr->_clear = TRUE;
 
 	if (SP->slk_winptr)
 	{
-		if ((SP->slk_winptr = resize_window(SP->slk_winptr,
-		     SP->slklines, COLS)) == NULL)
+		if (wresize(SP->slk_winptr, SP->slklines, COLS) == ERR)
 			return ERR;
 
 		wmove(SP->slk_winptr, 0, 0);

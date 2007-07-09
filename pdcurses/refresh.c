@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: refresh.c,v 1.50 2007/06/21 23:22:32 wmcbrine Exp $")
+RCSID("$Id: refresh.c,v 1.51 2007/07/09 06:24:42 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -138,18 +138,21 @@ int wnoutrefresh(WINDOW *win)
 int doupdate(void)
 {
 	int y;
+	bool clearall;
 
 	PDC_LOG(("doupdate() - called\n"));
+
+	if (!curscr)
+		return ERR;
 
 	if (isendwin())			/* coming back after endwin() called */
 	{
 		reset_prog_mode();
-		curscr->_clear = TRUE;
+		clearall = TRUE;
 		SP->alive = TRUE;	/* so isendwin() result is correct */
 	}
-
-	if (!curscr)
-		return ERR;
+	else
+		clearall = curscr->_clear;
 
 	for (y = 0; y < SP->lines; y++)
 	{
@@ -157,21 +160,49 @@ int doupdate(void)
 			y, SP->lines, (curscr->_firstch[y] != _NO_CHANGE) ?
 			"Yes" : "No"));
 
-		if (curscr->_clear)
+		if (clearall || curscr->_firstch[y] != _NO_CHANGE)
 		{
-			curscr->_firstch[y] = 0;
-			curscr->_lastch[y] = COLS - 1;
-		}
+			int first, last;
 
-		if (curscr->_firstch[y] != _NO_CHANGE)
-		{
-			int x = curscr->_firstch[y];
+			chtype *src = curscr->_y[y];
+			chtype *dest = pdc_lastscr->_y[y];
 
-			/* coordinates, length, starting pointer */
+			if (clearall)
+			{
+				first = 0;
+				last = COLS - 1;
+			}
+			else
+			{
+				first = curscr->_firstch[y];
+				last = curscr->_lastch[y];
 
-			PDC_transform_line(y, x,
-				curscr->_lastch[y] - x + 1,
-				curscr->_y[y] + x);
+				/* ignore areas on the outside that are
+				   marked as changed, but really aren't */
+
+				while (first <= last &&
+					src[first] == dest[first])
+						first++;
+
+				while (last >= first &&
+					src[last] == dest[last])
+						last--;
+			}
+
+			/* if any have really changed... */
+
+			if (first <= last)
+			{
+				int len = last - first + 1;
+
+				/* coordinates, length, starting pointer */
+
+				PDC_transform_line(y, first, len,
+					src + first);
+
+				memcpy(dest + first, src + first,
+					len * sizeof(chtype));
+			}
 
 			curscr->_firstch[y] = _NO_CHANGE;
 			curscr->_lastch[y] = _NO_CHANGE;

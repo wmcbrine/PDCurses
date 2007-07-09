@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.30 2007/07/07 14:48:37 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.31 2007/07/09 06:24:42 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -300,8 +300,6 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 		if (clearall || ch != dstp[j])
 		{
-			dstp[j] = ch;
-
 			_set_attr(ch);
 #ifdef CHTYPE_LONG
 			if (ch & A_ALTCHARSET && !(ch & 0xff80))

@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.154 2007/07/03 00:11:43 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.155 2007/07/09 06:24:42 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -65,6 +65,7 @@ typedef struct			/* structure for ripped off lines */
 #define _DWCHAR		0x17	/* Delete Word char (^W)		*/
 #define _DLCHAR		0x15	/* Delete Line char (^U)		*/
 
+extern WINDOW *pdc_lastscr;
 extern bool pdc_trace_on;	/* tracing flag				*/
 extern bool pdc_color_started;
 extern unsigned long pdc_key_modifiers;

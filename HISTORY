@@ -8,10 +8,10 @@ New features:
 
 - SDL port. See INSTALL, docs/sdl.txt and sdl1/* for details.
 
-- Minimize screen writes by checking, in wnoutrefresh(), whether the
-  changes to curscr would be real changes. In most cases, this makes no
-  difference (writes were already limited to areas marked as changed),
-  but it can greatly reduce the overhead from touchwin().
+- Minimize screen writes by checking, in wnoutrefresh() and doupdate(),
+  whether the changes to curscr would be real changes. In most cases,
+  this makes no difference (writes were already limited to areas marked
+  as changed), but it can greatly reduce the overhead from touchwin().
 
 - The PDC_RGB colors can now be used, or not, with any platform (as long
   as the same options are used when compiling both the library and

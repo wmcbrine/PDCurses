@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: refresh.c,v 1.53 2007/07/10 17:31:29 wmcbrine Exp $")
+RCSID("$Id: refresh.c,v 1.54 2007/07/10 20:56:03 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -182,9 +182,25 @@ int doupdate(void)
 			{
 				int len = 0;
 
-				while (first + len <= last && (clearall ||
-					src[first + len] != dest[first + len]))
-						len++;
+				/* build up a run of changed cells; if 
+				   two runs are separated by a single 
+				   unchanged cell, ignore the break */
+
+				if (clearall)
+					len = last - first + 1;
+				else
+					while (first + len <= last &&
+
+						(src[first + len] !=
+						dest[first + len] ||
+
+						(len && first + len < last &&
+						 src[first + len + 1] !=
+						dest[first + len + 1]) ))
+
+							len++;
+
+				/* update the screen, and pdc_lastscr */
 
 				if (len)
 				{
@@ -196,6 +212,8 @@ int doupdate(void)
 
 					first += len;
 				}
+
+				/* skip over runs of unchanged cells */
 
 				while (first <= last &&
 					src[first] == dest[first])

@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.32 2007/07/10 16:40:34 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.33 2007/07/10 17:33:06 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -158,7 +158,6 @@ void PDC_gotoyx(int row, int col)
 
 	/* clear the old cursor */
 
-	pdc_lastscr->_y[oldrow][oldcol] = (chtype)(-1);
 	PDC_transform_line(oldrow, oldcol, 1, curscr->_y[oldrow] + oldcol);
 
 	if (!SP->visibility)

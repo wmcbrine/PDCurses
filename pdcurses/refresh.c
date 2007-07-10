@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: refresh.c,v 1.52 2007/07/10 16:13:09 wmcbrine Exp $")
+RCSID("$Id: refresh.c,v 1.53 2007/07/10 17:31:29 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -176,20 +176,7 @@ int doupdate(void)
 			{
 				first = curscr->_firstch[y];
 				last = curscr->_lastch[y];
-
-				/* ignore areas on the outside that are
-				   marked as changed, but really aren't */
-
-				while (first <= last &&
-					src[first] == dest[first])
-						first++;
-
-				while (last >= first &&
-					src[last] == dest[last])
-						last--;
 			}
-
-			/* if any have really changed... */
 
 			while (first <= last)
 			{
@@ -199,13 +186,16 @@ int doupdate(void)
 					src[first + len] != dest[first + len]))
 						len++;
 
-				PDC_transform_line(y, first, len,
-					src + first);
+				if (len)
+				{
+					PDC_transform_line(y, first, len,
+						src + first);
 
-				memcpy(dest + first, src + first,
-					len * sizeof(chtype));
+					memcpy(dest + first, src + first,
+						len * sizeof(chtype));
 
-				first += len;
+					first += len;
+				}
 
 				while (first <= last &&
 					src[first] == dest[first])

@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.31 2007/07/09 06:24:42 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.32 2007/07/10 16:40:34 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include <string.h>
@@ -254,9 +254,7 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
 	SDL_Rect src, dest, lastrect;
-	chtype *dstp;
 	int j;
-	bool clearall;
 
 	PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
@@ -291,33 +289,27 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 	dest.w = pdc_fwidth;
 
-	dstp = pdc_lastscr->_y[lineno] + x;
-	clearall = curscr->_clear;
-
 	for (j = 0; j < len; j++)
 	{
 		chtype ch = srcp[j];
 
-		if (clearall || ch != dstp[j])
-		{
-			_set_attr(ch);
+		_set_attr(ch);
 #ifdef CHTYPE_LONG
-			if (ch & A_ALTCHARSET && !(ch & 0xff80))
-				ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) |
-					acs_map[ch & 0x7f];
+		if (ch & A_ALTCHARSET && !(ch & 0xff80))
+			ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) |
+				acs_map[ch & 0x7f];
 #endif
-			if (backgr == -1)
-				SDL_LowerBlit(pdc_tileback, &dest,
-					pdc_screen, &dest);
+		if (backgr == -1)
+			SDL_LowerBlit(pdc_tileback, &dest,
+				pdc_screen, &dest);
 
-			src.x = (ch & 0xff) % 32 * pdc_fwidth;
-			src.y = (ch & 0xff) / 32 * pdc_fheight;
+		src.x = (ch & 0xff) % 32 * pdc_fwidth;
+		src.y = (ch & 0xff) / 32 * pdc_fheight;
 
-			SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
+		SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 
-			if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
-				_highlight(&src, &dest, ch);
-		}
+		if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
+			_highlight(&src, &dest, ch);
 
 		dest.x += pdc_fwidth;
 	}

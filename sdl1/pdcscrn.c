@@ -13,7 +13,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.31 2007/07/09 06:24:42 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.32 2007/07/11 21:01:09 wmcbrine Exp $")
 
 #include <stdlib.h>
 #include "deffont.h"
@@ -34,6 +34,9 @@ static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 void PDC_retile(void)
 {
+	if (pdc_tileback)
+		SDL_FreeSurface(pdc_tileback);
+
 	pdc_tileback = SDL_DisplayFormat(pdc_screen);
 
 	if (pdc_back)
@@ -232,10 +235,7 @@ int PDC_resize_screen(int nlines, int ncols)
 		SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);
 
 	if (pdc_tileback)
-	{
-		SDL_FreeSurface(pdc_tileback);
 		PDC_retile();
-	}
 
 	SP->resized = FALSE;
 	SP->cursrow = SP->curscol = 0;

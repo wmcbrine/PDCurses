@@ -1,8 +1,8 @@
-PDCurses 3.3 - 2007/07/??
+PDCurses 3.3 - 2007/07/11
 =========================
 
-This release adds an SDL backend, boosts performance, and refines the 
-demos.
+This release adds an SDL backend, refines the demos, and is faster in 
+some cases.
 
 New features:
 
@@ -13,8 +13,7 @@ New features:
   In most cases, this makes no difference (writes were already limited
   to areas marked as changed), but it can greatly reduce the overhead
   from touchwin(). It also helps if you have small, separated updates on
-  the same line, or if you're repeatedly writing the same text to the
-  same area (which you shouldn't).
+  the same line.
 
 - The PDC_RGB colors can now be used, or not, with any platform (as long
   as the same options are used when compiling both the library and

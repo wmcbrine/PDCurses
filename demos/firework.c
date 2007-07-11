@@ -1,4 +1,4 @@
-/* $Id: firework.c,v 1.23 2006/09/22 15:39:30 wmcbrine Exp $ */
+/* $Id: firework.c,v 1.24 2007/07/11 01:01:08 wmcbrine Exp $ */
 
 #include <stdio.h>
 #include <signal.h>
@@ -14,9 +14,15 @@ void myrefresh(void);
 void get_color(void);
 void explode(int, int);
 
+short color_table[] =
+{
+	COLOR_RED, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN,
+	COLOR_RED, COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE
+};
+
 int main(int argc, char **argv)
 {
-	int start, end, row, diff, flag, direction, seed;
+	int i, start, end, row, diff, flag, direction, seed;
 
 #ifdef XCURSES
 	Xinitscr(argc, argv);
@@ -29,6 +35,9 @@ int main(int argc, char **argv)
 	if (has_colors())
 		start_color();
 
+	for (i = 0; i < 8; i++)
+		init_pair(i, color_table[i], COLOR_BLACK);
+
 	seed = time((time_t *)0);
 	srand(seed);
 	flag = 0;
@@ -36,7 +45,7 @@ int main(int argc, char **argv)
 	while (getch() == ERR)		/* loop until a key is hit */
 	{
 		do {
-			start = rand() % (COLS -3);
+			start = rand() % (COLS - 3);
 			end = rand() % (COLS - 3);
 			start = (start < 2) ? 2 : start;
 			end = (end < 2) ? 2 : end;
@@ -55,7 +64,7 @@ int main(int argc, char **argv)
 			if (flag++)
 			{
 				myrefresh();
-				clear();
+				erase();
 				flag = 0;
 			}
 		}
@@ -67,7 +76,7 @@ int main(int argc, char **argv)
 		}
 
 		explode(LINES - row, diff * direction + start);
-		clear();
+		erase();
 		myrefresh();
 	}
 
@@ -78,7 +87,7 @@ int main(int argc, char **argv)
 
 void explode(int row, int col)
 {
-	clear();
+	erase();
 	mvaddstr(row, col, "-");
 	myrefresh();
 
@@ -134,13 +143,6 @@ void myrefresh(void)
 
 void get_color(void)
 {
-	static short tbl[] =
-	{
-		COLOR_RED, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN,
-		COLOR_RED, COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE
-	};
-
 	chtype bold = (rand() % 2) ? A_BOLD : A_NORMAL;
-	init_pair(1, tbl[rand() % 8], COLOR_BLACK);
-	attrset(COLOR_PAIR(1) | bold);
+	attrset(COLOR_PAIR(rand() % 8) | bold);
 }

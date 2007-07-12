@@ -6,7 +6,7 @@ some cases.
 
 New features:
 
-- SDL port. See INSTALL, docs/sdl.txt and sdl1/* for details.
+- SDL port. See INSTALL, doc/sdl.txt and sdl1/* for details.
 
 - Double-buffering -- minimize screen writes by checking, in doupdate()
   and wnoutrefresh(), whether the changes to curscr are really changes.

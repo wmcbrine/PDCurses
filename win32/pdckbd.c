@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.110 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.111 2007/07/22 21:48:18 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -655,7 +655,10 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
-	SetConsoleMode(pdc_con_in, SP->_trap_mbe ? ENABLE_MOUSE_INPUT : 0);
+	SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
+		(ENABLE_MOUSE_INPUT|ENABLE_EXTENDED_FLAGS) :
+		(pdc_quick_edit|ENABLE_EXTENDED_FLAGS));
+
 	memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 
 	return OK;

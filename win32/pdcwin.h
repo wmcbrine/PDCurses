@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcwin.h,v 1.4 2007/07/03 00:11:46 wmcbrine Exp $ */
+/* $Id: pdcwin.h,v 1.5 2007/07/22 21:48:18 wmcbrine Exp $ */
 
 #ifdef PDC_WIDE
 # define UNICODE
@@ -23,5 +23,6 @@
 
 extern unsigned char *pdc_atrtab;
 extern HANDLE pdc_con_out, pdc_con_in;
+extern DWORD pdc_quick_edit;
 
 extern int PDC_get_buffer_rows(void);

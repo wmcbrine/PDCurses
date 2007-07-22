@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.88 2007/07/03 01:51:45 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.89 2007/07/22 21:48:18 wmcbrine Exp $")
 
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
@@ -27,6 +27,8 @@ unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_in = INVALID_HANDLE_VALUE;
+
+DWORD pdc_quick_edit;
 
 static short curstoreal[16], realtocurs[16] =
 {
@@ -320,6 +322,12 @@ int PDC_scr_open(int argc, char **argv)
 	GetConsoleScreenBufferInfo(pdc_con_out, &csbi);
 	GetConsoleScreenBufferInfo(pdc_con_out, &orig_scr);
 	GetConsoleMode(pdc_con_in, &old_console_mode);
+
+	/* preserve QuickEdit Mode setting for use in PDC_mouse_set() 
+	   when the mouse is not enabled -- other console input settings 
+	   are cleared */
+
+	pdc_quick_edit = old_console_mode & ENABLE_QUICK_EDIT_MODE;
 
 	SP->lines = ((str = getenv("LINES")) != NULL) ?
 		atoi(str) : PDC_get_rows();

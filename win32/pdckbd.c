@@ -13,7 +13,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.111 2007/07/22 21:48:18 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.112 2007/07/22 23:42:58 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -655,6 +655,11 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
+	/* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear 
+	   all other flags, including the extended flags;
+	   If turning off the mouse: Set QuickEdit Mode to the status it 
+	   had on startup, and clear all other flags */
+
 	SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
 		(ENABLE_MOUSE_INPUT|ENABLE_EXTENDED_FLAGS) :
 		(pdc_quick_edit|ENABLE_EXTENDED_FLAGS));

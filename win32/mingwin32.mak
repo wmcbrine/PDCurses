@@ -98,7 +98,7 @@ ptest.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o$@ $? $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<

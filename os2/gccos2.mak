@@ -122,7 +122,7 @@ ptest.exe: %.exe: %.o
 	$(EXEPOST)
 
 tuidemo.exe:	tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o tuidemo $? $(LIBCURSES) $(CCLIBS)
+	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES) $(CCLIBS)
 	$(TUIPOST)
 
 firework.o newdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \

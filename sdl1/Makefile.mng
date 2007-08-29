@@ -18,6 +18,7 @@ else
         CFLAGS  = -O2 -Wall
 endif
 
+CC		= gcc
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 LDFLAGS		= -mwindows $(LIBCURSES)
 

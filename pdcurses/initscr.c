@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: initscr.c,v 1.109 2007/07/09 06:24:42 wmcbrine Exp $")
+RCSID("$Id: initscr.c,v 1.110 2007/10/13 19:53:49 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -33,26 +33,29 @@ RCSID("$Id: initscr.c,v 1.109 2007/07/09 06:24:42 wmcbrine Exp $")
 	const char *curses_version(void);
 
   Description:
-	The first curses routine called should be initscr().  This will 
+	initscr() should be the first curses routine called.  This will
 	determine the terminal type and initialize all curses data 
-	structures.  The initscr() function also arranges that the first 
-	call to refresh() will clear the screen.  If errors occur, 
-	initscr() will write an appropriate error message to standard 
-	error and exit.
+	structures.  initscr() also arranges that the first call to 
+	refresh() will clear the screen.  If errors occur, initscr() 
+	will write a message to standard error and end the program.
+	
+	endwin() should be called before exiting or escaping from curses 
+	mode temporarily.  It will restore tty modes, move the cursor to 
+	the lower left corner of the screen and reset the terminal into 
+	the proper non-visual mode.  To resume curses after a temporary 
+	escape, call refresh() or doupdate().
 
-	A program should always call endwin() before exiting or
-	escaping from curses mode temporarily.  This routine will
-	restore tty modes, move the cursor to the lower left corner
-	of the screen and reset the terminal into the proper non-visual
-	mode.  To resume curses after a temporary escape, call refresh() 
-	or doupdate().
-
-	The isendwin() function returns TRUE if endwin() has been called
-	without any subsequent calls to wrefresh(), and FALSE otherwise.
+	isendwin() returns TRUE if endwin() has been called without a 
+	subsequent refresh, unless SP is NULL.
 
 	In some implementations of curses, newterm() allows the use of 
 	multiple terminals. Here, it's just an alternative interface for 
 	initscr(). It always returns SP, or NULL.
+
+	delscreen() frees the memory allocated by newterm() or
+	initscr(), since it's not freed by endwin(). This function is
+	usually not needed. In PDCurses, the parameter must be the
+	value of SP, and delscreen() sets SP to NULL.
 
 	set_term() does nothing meaningful in PDCurses, but is included 
 	for compatibility with other curses implementations.
@@ -257,8 +260,8 @@ int endwin(void)
 bool isendwin(void)
 {
 	PDC_LOG(("isendwin() - called\n"));
-
-	return !(SP->alive);
+	
+	return SP ? !(SP->alive) : FALSE;
 }
 
 SCREEN *newterm(const char *type, FILE *outfd, FILE *infd)

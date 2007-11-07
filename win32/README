@@ -1,11 +1,8 @@
+PDCurses for Win32
+==================
 
-                        Welcome to PDCurses
-
-Contents
---------
-
-This directory contains core PDCurses source code files specific to the 
-Win32 platform - console mode (Win9x/Me/NT/2k/XP).
+This directory contains PDCurses source code files specific to Win32 
+console mode (Win9x/Me/NT/2k/XP/Vista).
 
 
 Building

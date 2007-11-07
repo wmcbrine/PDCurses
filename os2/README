@@ -1,11 +1,7 @@
+PDCurses for OS/2
+=================
 
-                        Welcome to PDCurses
-
-Contents
---------
-
-This directory contains core PDCurses source code files specific to
-the OS/2 platform.
+This directory contains PDCurses source code files specific to OS/2.
 
 
 Building

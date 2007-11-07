@@ -1,8 +1,5 @@
-
-                        Welcome to PDCurses
-
-Contents
---------
+PDCurses portable core
+======================
 
 This directory contains core PDCurses source code files common to all 
 platforms.

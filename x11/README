@@ -1,8 +1,5 @@
-
-                        Welcome to PDCurses
-
-Contents
---------
+PDCurses for X11
+================
 
 This is a port of PDCurses for X11, aka XCurses.  It is designed to 
 allow existing curses programs to be re-compiled with PDCurses, 

@@ -1,11 +1,7 @@
+PDCurses for DOS
+================
 
-                        Welcome to PDCurses
-
-Contents
---------
-
-This directory contains core PDCurses source code files specific to
-the DOS platform.
+This directory contains PDCurses source code files specific to DOS.
 
 
 Building

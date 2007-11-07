@@ -1,8 +1,5 @@
-
-                        Welcome to PDCurses
-
-Contents
---------
+PDCurses demos
+==============
 
 This directory contains demonstration programs to show and test the 
 capabilities of curses libraries. Some of them predate PDCurses, 

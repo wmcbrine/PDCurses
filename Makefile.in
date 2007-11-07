@@ -11,7 +11,6 @@ libdir		=$(exec_prefix)/lib
 bindir		=$(exec_prefix)/bin
 includedir	=$(exec_prefix)/include
 pdcursesdir	=./x11
-paneldir	=./x11
 
 INSTALL		=$(srcdir)/install-sh
 RANLIB		=@RANLIB@

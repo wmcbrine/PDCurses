@@ -11,12 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
 #include <curspriv.h>
 
-RCSID("$Id: scanw.c,v 1.38 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: scanw.c,v 1.39 2007/11/07 04:55:21 wmcbrine Exp $")
 
 /*man-start**************************************************************
 

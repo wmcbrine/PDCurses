@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curspriv.h,v 1.155 2007/07/09 06:24:42 wmcbrine Exp $ */
+/* $Id: curspriv.h,v 1.156 2007/11/07 04:55:21 wmcbrine Exp $ */
 
 /*                         CURSPRIV.H
 
@@ -20,6 +20,10 @@
 
 #ifndef __CURSES_INTERNALS__
 #define __CURSES_INTERNALS__ 1
+
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #define CURSES_LIBRARY
 #include <curses.h>

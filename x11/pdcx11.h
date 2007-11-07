@@ -11,11 +11,9 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: pdcx11.h,v 1.61 2007/10/28 23:27:34 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.62 2007/11/07 04:55:21 wmcbrine Exp $ */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <curspriv.h>
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
@@ -68,8 +66,6 @@
 
 #include <keysym.h>
 #include <Xatom.h>
-
-#include <curspriv.h>
 
 #define XCURSCR_Y_SIZE      (XCursesLINES * XCursesCOLS * sizeof(chtype))
 #define XCURSCR_FLAG_SIZE   (XCursesLINES * sizeof(int))

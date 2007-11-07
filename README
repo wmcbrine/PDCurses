@@ -6,7 +6,7 @@ The latest version can be found at:
 
    http://pdcurses.sourceforge.net/
 
-For more information, please read the HISTORY and INSTALL files.
+For more information, please read the HISTORY file.
 
 
 Legal Stuff
@@ -27,7 +27,7 @@ Ports
 
 PDCurses has been ported to DOS, OS/2, Win32, X11 and SDL. A directory 
 containing the port-specific source files exists for each of these 
-platforms.
+platforms. Build instructions are in the README file for each platform.
 
 
 Distribution Status

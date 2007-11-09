@@ -28,9 +28,6 @@ PDCurses distribution, please follow these guidelines:
  - Release all your code to the public domain -- no copyright. Code 
    under GPL, BSD, etc. will not be accepted.
 
-Although some of the existing ports violate these guidelines, I don't 
-want to make the problem any worse.
-
 
 DATA STRUCTURES
 ---------------

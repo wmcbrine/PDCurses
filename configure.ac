@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.33 2007/11/07 23:33:05 wmcbrine Exp $
+dnl $Id: configure.ac,v 1.34 2007/11/09 08:40:07 wmcbrine Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([PDCurses], [3.4], [wmcbrine@users.sf.net], [PDCurses])
@@ -200,7 +200,7 @@ dnl --------------- Check how to make shared libraries -------------------
 dnl Force the ability of shared library usage
 MH_SHARED_LIBRARY(XCurses)
 
-AC_CONFIG_FILES([Makefile x11/$mymakefile doc/Makefile x11/xcurses-config])
+AC_CONFIG_FILES([Makefile x11/$mymakefile x11/xcurses-config])
 AC_OUTPUT
 
 case "$target" in

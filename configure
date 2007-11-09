@@ -5486,7 +5486,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile x11/$mymakefile doc/Makefile x11/xcurses-config"
+ac_config_files="$ac_config_files Makefile x11/$mymakefile x11/xcurses-config"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6044,7 +6044,6 @@ do
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "x11/$mymakefile") CONFIG_FILES="$CONFIG_FILES x11/$mymakefile" ;;
-    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
     "x11/xcurses-config") CONFIG_FILES="$CONFIG_FILES x11/xcurses-config" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5

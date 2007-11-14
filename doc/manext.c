@@ -15,25 +15,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to:
- *
- *    The Free Software Foundation, Inc.
- *    675 Mass Ave,
- *    Cambridge, MA 02139 USA.
- *
- *
  * If you make modifications to this software that you feel increases
  * it usefulness for the rest of the community, please email the
  * changes, enhancements, bug fixes as well as any and all ideas to me.
  * This software is going to be maintained and enhanced as deemed
  * necessary by the community.
  *
- * Mark Hessling                 Email:             M.Hessling@qut.edu.au
- * PO Box 203                    Phone:                    +617 3849 7731
- * Bellara
- * QLD 4507                      **** Maintainer PDCurses & REXX/SQL ****
- * Australia                     ************* Author of THE ************
+ * Mark Hessling <mark@rexx.org>
  */
 
 #include <stdio.h>
@@ -45,7 +33,7 @@
 void display_info()
 {
 	fprintf(stderr,
-		"\nMANEXT 1.02 Copyright (C) 1991-1996 Mark Hessling\n"
+		"\nMANEXT 1.03 Copyright (C) 1991-1996 Mark Hessling\n"
 		"All rights reserved.\n"
 		"MANEXT is distributed under the terms of the GNU\n"
 		"General Public License and comes with NO WARRANTY.\n"
@@ -76,7 +64,7 @@ int main(int argc, char **argv)
 		continue;
 	    }
 
-	    while (1)
+	    while (!feof(fp))
 	    {
 		if (fgets(s, (int)sizeof(s), fp) == NULL)
 		{
@@ -123,11 +111,6 @@ int main(int argc, char **argv)
 
 		printf("\n\n-----------------------------------"
 			"---------------------------------------\n\n");
-
-		/* check if end of file */
-
-		if (feof(fp) != 0)
-			break;
 	    }
 
 	    fclose(fp);

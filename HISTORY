@@ -322,7 +322,7 @@ Bug fixes and such:
   The only remaining ones are those which have to be macros to work, and
   those that are required by X/Open to be macros. There were numerous
   problems with the macros, and no apparent reason to keep them, except
-  tradition -- although it was Pccurses 1.x that first omitted them.
+  tradition -- although it was PCcurses 1.x that first omitted them.
 
 - Clean separation of platform-specific code from the rest. Outside of
   the platform directories, there remain only a few ifdefs in curses.h
@@ -615,7 +615,7 @@ New features:
   -I/usr/local/include/xcurses -lXCurses -oprogname progname.c".
 
 - Combined readme.* into this HISTORY file, and incorporated the old 1.x
-  (PCCurses) history.
+  (PCcurses) history.
 
 - New functionality for the testcurs demo: ACS character display; menu 
   support for PgUp, PgDn, Home and End; centered menu; and it can now 
@@ -1337,7 +1337,7 @@ INTRODUCTION:
 
  Well, here it finally is; PDCurses v2.0.
 
- PDCurses v2.0 is an almost total rewrite of PCCurses 1.4 done by John 
+ PDCurses v2.0 is an almost total rewrite of PCcurses 1.4 done by John 
  'Frotz' Fa'atuai, the previous maintainer. It adds support for OS/2 as 
  well as DOS.
 
@@ -1513,10 +1513,10 @@ specification.
 
 ------------------------------------------------------------------------
 
-PCCurses 1.4 - 1990/01/14
+PCcurses 1.4 - 1990/01/14
 =========================
 
-  In PCCurses v.1.4, both portability improvements and bugfixes have 
+  In PCcurses v.1.4, both portability improvements and bugfixes have 
 been made. The files have been changed to allow lint-free compilation 
 with Microsoft C v.5.1, and with Turbo C v.2.0. The source should still 
 compile without problems on older compilers, although this has not been 
@@ -1526,7 +1526,7 @@ verified.
 the author, who maintains a special kind of libraries for himself. In 
 the case of Microsoft C, changes were done in the makefile to lower the 
 warning level to 2 (was 3). This was to avoid ANSI warnings which are 
-abundant because PCCurses does not attempt to follow strict ANSI C 
+abundant because PCcurses does not attempt to follow strict ANSI C 
 standard.
 
   BUG FIXES FROM V.1.3 TO V.1.4:
@@ -1550,7 +1550,7 @@ a shell escape, for example) to be placed at the wrong screen position.
 This happened even if the normal precautions (clear / touch / refresh) 
 were taken. The problem has now been fixed.
 
-  PCCurses is currently also being used on a 68000 system with 
+  PCcurses is currently also being used on a 68000 system with 
 hard-coded ESCape sequences for ANSI terminals. However, ints used by 
 the 68000 C compiler are 32 bits. Therefore ints have been turned into 
 shorts wherever possible in the code (otherwise all window structures 
@@ -1565,7 +1565,7 @@ commands when building the 68000 version. These files are probably
 useful to no-one but the author, since it is very specific for its 
 special hardware environment. Still in an effort to keep all 
 curses-related sources in one place they are included. Note however that 
-PCCurses will not officially support a non-PC environment.
+PCcurses will not officially support a non-PC environment.
 
   The file cursesio.c, which was included in the package at revision 
 level 1.2, and which was to be an alternative to the cursesio.asm file, 
@@ -1579,7 +1579,7 @@ makefile to select which version he wanted to use. The makefiles in
 v.1.4 have removed this possibility forcing the use of the ASM file, and 
 cursesio.c has been dropped from the distribution.
 
-  A bug in the wgetstr() function caused PCCurses to echo characters 
+  A bug in the wgetstr() function caused PCcurses to echo characters 
 when reading a keyboard string, even if the echo had been turned off. 
 Thanks to Per Foreby at Lund University, Sweden, for this. Per also 
 reported bugs concerning the handling of characters with bit 8 set. 
@@ -1612,7 +1612,7 @@ harmless) parameter in a function call at one place.
 
 ------------------------------------------------------------------------
 
-PCCurses 1.3 - 1988/10/05
+PCcurses 1.3 - 1988/10/05
 =========================
 
   The file 'border.c' is now included. It allows you to explicitly 
@@ -1623,7 +1623,7 @@ understanding, this functionality is required for AT&T UNIX sV.3
 compatibility. Thanks for this goes to Tony L. Hansen 
 (hansen@pegasus.UUCP) for posting an article about it on Usenet 
 (newsgroup comp.unix.questions; his posting was not related at all to 
-PCCurses).
+PCcurses).
 
   The only other difference between v.1.2 and v.1.3 is that the latter 
 has been changed to avoid warning diagnostics if the source files are 
@@ -1639,7 +1639,7 @@ warning messages as part of normal compilation.
 
 ------------------------------------------------------------------------
 
-PCCurses 1.2 - 1988/10/02
+PCcurses 1.2 - 1988/10/02
 =========================
 
   The changes from v.1.1 to v.1.2 are minor. The biggest change is that 
@@ -1668,7 +1668,7 @@ savetty()/resetty() or the new functions only - and not mix the both
 ways unless one really knows what one does.
 
   Diff lists vs v.1.0 are no longer included in the distribution. The 
-make utility still is. PCCurses v.1.2 still compiles with Microsoft C 
+make utility still is. PCcurses v.1.2 still compiles with Microsoft C 
 v.4.0, and with Borland Turbo C v.1.0. There is as far as I know no 
 reason to believe that it does not compile under Microsoft C v.3.0 and 
 5.x, or Turbo C v.1.5, but this has not been tested.
@@ -1718,15 +1718,15 @@ cursesio).
   Finally, Jeff Dean (parcvax,hplabs}!cdp!jeff)
   		     (jeff@ads.arpa)
 	has had a shareware version of curses deliverable since
-	about half a year before I released PCCurses 1.0 on Use-
+	about half a year before I released PCcurses 1.0 on Use-
 	Net. He is very concerned about confusion between the two
 	packages, and therefore any references on the network
-	should make clear whether they reference Dean's PCCurses
-	or Larsson's PCCurses.
+	should make clear whether they reference Dean's PCcurses
+	or Larsson's PCcurses.
 
 ------------------------------------------------------------------------
 
-PCCurses 1.1 - 1988/03/06
+PCcurses 1.1 - 1988/03/06
 =========================
 
   The changes from v.1.0 to v.1.1 are minor. There are a few bug fixes, 
@@ -1742,7 +1742,7 @@ and v.4.0. On the release disk there is a make.exe utility which is very
 similar to UNIX make (If the package was mailed to you, the make utility 
 will be in uuencoded format - in make.uu - and must be uudecoded first). 
 It is much more powerful than Microsoft's different MAKEs; the latter 
-ones will NOT generate libraries properly if used with the PCCurses 
+ones will NOT generate libraries properly if used with the PCcurses 
 makefiles.
 
   There are three makefiles:
@@ -1763,13 +1763,13 @@ read what is said about installation below!
 
 ------------------------------------------------------------------------
 
-PCCurses 1.0 - 1987/08/24
+PCcurses 1.0 - 1987/08/24
 =========================
 
-  This is the release notes for the PCCurses v.1.0 cursor/window control 
-package. PCCurses offers the functionality of UNIX curses, plus some 
+  This is the release notes for the PCcurses v.1.0 cursor/window control 
+package. PCcurses offers the functionality of UNIX curses, plus some 
 extras. Normally it should be possible to port curses-based programs 
-from UNIX curses to PCCurses on the IBM PC without changes. PCCurses is 
+from UNIX curses to PCcurses on the IBM PC without changes. PCcurses is 
 a port/ rewrite of Pavel Curtis' public domain 'ncurses' package. All 
 the code has been re-written - it is not just an edit of ncurses (or 
 UNIX curses). I mention this to clarify any copyright violation claims. 
@@ -1789,10 +1789,10 @@ function is preceded by a rather thorough description of what the
 function does. I didn't have time to write a nice manual/tutorial - 
 sorry.
 
-  PCCurses is released as a number of source files, a man page, and a 
+  PCcurses is released as a number of source files, a man page, and a 
 make file. A uuencoded copy of a 'make' utility, and a manpage for the 
-'make' is also provided to make it easier to put together PCCurses 
-libraries. Even if you are not interested in PCCurses, it may be 
+'make' is also provided to make it easier to put together PCcurses 
+libraries. Even if you are not interested in PCcurses, it may be 
 worthwhile to grab the make.
 
   The makefile assumes the presence of the Microsoft C compiler (3.0 or 
@@ -1814,24 +1814,24 @@ the parameter passing scheme. I think Turbo C will work right away - as
 far as I understand, all its conventions are compatible with Microsoft 
 C.
 
-  There are some parts left out between ncurses and PCCurses. One is the 
+  There are some parts left out between ncurses and PCcurses. One is the 
 support for multiple terminals - not very interesting on a PC anyway. 
 Because we KNOW what terminal we have, there is no need for a termcap or 
-terminfo library. PCCurses also has some things that neither curses nor 
-ncurses have. Compared to the original UNIX curses, PCCurses has lots of 
+terminfo library. PCcurses also has some things that neither curses nor 
+ncurses have. Compared to the original UNIX curses, PCcurses has lots of 
 extras.
 
   The BIOS routines are used directly, which gives fast screen updates.
-PCCurses does not do direct writes to screen RAM - in my opinion it is
+PCcurses does not do direct writes to screen RAM - in my opinion it is
 a bit ugly to rely that much on hardware compatibility. Anyone could fix
 that, of course...
 
-  One of the more serious problems with PCCurses is the way in which 
+  One of the more serious problems with PCcurses is the way in which 
 normal, cbreak, and raw input modes are done. All those details are in 
 the 'charget' module - I do raw I/O via the BIOS, and perform any 
-buffering myself. If an application program uses PCCurses, it should do 
-ALL its I/O via PCCurses calls, otherwise the mix of normal and 
-PCCurses I/O may mess up the display. I think my code is reasonable... 
+buffering myself. If an application program uses PCcurses, it should do 
+ALL its I/O via PCcurses calls, otherwise the mix of normal and 
+PCcurses I/O may mess up the display. I think my code is reasonable... 
 comments are welcome, provided you express them nicely...
 
   To install, copy all files to a work directory, edit 'makefile' to 

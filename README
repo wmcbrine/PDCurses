@@ -12,14 +12,13 @@ For changes, see the HISTORY file.
 Legal Stuff
 -----------
 
-The core curses package is Public Domain, but small portions of this 
-package are subject to various copyright conditions.  Each directory in 
-this package contains a README file. In each of these README files is a 
-section titled "Distribution Status" which describes the distribution 
-status of the files within that directory.
+The core package is Public Domain, but portions of PDCurses are subject 
+to copyright under various licenses.  Each directory contains a README 
+file, with a section titled "Distribution Status" which describes the 
+status of the files in that directory.
 
-Although the core PDCurses package is Public Domain, mention of PDCurses 
-in the documentation of packages linked with it is greatly appreciated.
+Although PDCurses is Public Domain, mention of PDCurses in the 
+documentation of packages linked with it is greatly appreciated.
 
 
 Ports

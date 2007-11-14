@@ -11,7 +11,7 @@
  * See the file maintain.er for details of the current maintainer.	*
  ************************************************************************/
 
-/* $Id: curses.h,v 1.290 2007/11/07 23:33:05 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.291 2007/11/14 21:06:45 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *				PDCurses				*
@@ -185,7 +185,7 @@ typedef struct
 #define BUTTON3_TRIPLE_CLICKED	0x00004000L
 #define BUTTON3_MOVED		0x00004000L /* PDCurses */
 
-/* For the NCurses-compatible functions only, BUTTON4_PRESSED and 
+/* For the ncurses-compatible functions only, BUTTON4_PRESSED and 
    BUTTON5_PRESSED are returned for mouse scroll wheel up and down; 
    otherwise PDCurses doesn't support buttons 4 and 5 */
 
@@ -209,7 +209,7 @@ typedef struct
 #define ALL_MOUSE_EVENTS	0x1fffffffL
 #define REPORT_MOUSE_POSITION	0x20000000L
 
-/* NCurses mouse interface */
+/* ncurses mouse interface */
 
 typedef unsigned long mmask_t;
 
@@ -1269,7 +1269,7 @@ void	wmouse_position(WINDOW *, int *, int *);
 unsigned long getmouse(void);
 unsigned long getbmap(void);
 
-/* NCurses */
+/* ncurses */
 
 int	assume_default_colors(int, int);
 const char *curses_version(void);

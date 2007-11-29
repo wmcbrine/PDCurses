@@ -19,7 +19,7 @@ defined(__TURBOC__)
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdckbd.c,v 1.86 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.87 2007/11/29 21:54:12 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -426,7 +426,7 @@ int PDC_get_key(void)
 	else if (scan == 0xe0 && key == 0x2f)	/* Slash */
 		key = PADSLASH;
 	else if (key == 0x00 || (key == 0xe0 && scan > 53 && scan != 86))
-		key = (scan > 0xa3) ? -1 : key_table[scan];
+		key = (scan > 0xa7) ? -1 : key_table[scan];
 
 	if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
 	{

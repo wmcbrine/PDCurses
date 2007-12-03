@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getch.c,v 1.68 2007/06/21 06:54:50 wmcbrine Exp $")
+RCSID("$Id: getch.c,v 1.69 2007/12/03 02:27:04 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -197,8 +197,9 @@ int wgetch(WINDOW *win)
 	/* refresh window when wgetch is called if there have been 
 	   changes to it and it is not a pad */
 
-	if (!(win->_flags & _PAD) && ((!win->_leaveit && (win->_curx !=
-	    SP->curscol || win->_cury != SP->cursrow)) || is_wintouched(win)))
+	if (!(win->_flags & _PAD) && ((!win->_leaveit &&
+             (win->_begx + win->_curx != SP->curscol ||
+              win->_begy + win->_cury != SP->cursrow)) || is_wintouched(win)))
 		wrefresh(win);
 
 	/* if ungotten char exists, remove and return it */

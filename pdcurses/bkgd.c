@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: bkgd.c,v 1.36 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: bkgd.c,v 1.37 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -34,29 +34,19 @@ RCSID("$Id: bkgd.c,v 1.36 2007/06/14 13:50:27 wmcbrine Exp $")
 	int wgetbkgrnd(WINDOW *win, cchar_t *wch);
 
   Description:
-	The bkgdset() and wbkgdset() routines manipulate the backgound 
-	of the named window.  Background is a chtype consisting of any 
-	combination of attributes and non-blank characters that are 
-	written into the window with waddch().  Both the character and 
-	attribute parts of the background are combined with the blank 
-	characters.  The background becomes a property of the character 
-	and moves with the character through any scrolling and 
-	insert/delete line/character operations.  To the extent possible 
-	on a particular terminal, the attribute part of the background 
-	is displayed as the graphic rendition of the character put on 
-	the screen.
+	bkgdset() and wbkgdset() manipulate the background of a window.
+	The background is a chtype consisting of any combination of
+	attributes and a character; it is combined with each chtype
+	added or inserted to the window by waddch() or winsch(). Only
+	the attribute part is used to set the background of non-blank
+	characters, while both character and attributes are used for
+	blank positions.
 
-	The bkgd() and wbkgd() routines combine the new background with 
-	every position in the window.  Background is any combination of 
-	attributes and a character.  Only the attribute part is used to 
-	set the background of non-blank characters, while both character 
-	and attributes are used for blank positions.  To the extent 
-	possible on a particular terminal, the attribute part of the 
-	background is displayed as the graphic rendition of the 
-	character put on the screen.
+	bkgd() and wbkgd() not only change the background, but apply it
+	immediately to every cell in the window.
 
-	The attributes that are defined with the attrset()/attron() set 
-	of functions take precedence over the background attributes if 
+	The attributes that are defined with the attrset()/attron() set
+	of functions take precedence over the background attributes if
 	there is a conflict (e.g., different color pairs).
 
   Return Value:

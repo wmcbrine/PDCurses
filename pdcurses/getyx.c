@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getyx.c,v 1.25 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: getyx.c,v 1.26 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -35,13 +35,13 @@ RCSID("$Id: getyx.c,v 1.25 2007/06/14 13:50:27 wmcbrine Exp $")
 	int getmaxx(WINDOW *win);
 
   Description:
-	With the getyx() macro, the cursor position of the window is 
-	placed in the two integer variables y and x. getbegyx() and 
-	getmaxyx() return the current beginning coordinates and size of 
-	the specified window respectively. getparyx() returns the 
-	beginning coordinates of the parent's window if the specified 
-	window is a sub-window otherwise -1 is returned. These functions 
-	are implemented as macros.
+	The getyx() macro (defined in curses.h -- the prototypes here 
+	are merely illustrative) puts the current cursor position of the 
+	specified window into y and x. getbegyx() and getmaxyx() return 
+	the starting coordinates and size of the specified window, 
+	respectively. getparyx() returns the starting coordinates of the 
+	parent's window, if the specified window is a subwindow; 
+	otherwise it sets y and x to -1. These are all macros.
 
 	The functions getbegy(), getbegx(), getcurx(), getcury(), 
 	getmaxy(), getmaxx(), getpary(), and getparx() return the 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.38 2007/06/21 05:38:07 wmcbrine Exp $")
+RCSID("$Id: attr.c,v 1.39 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -63,24 +63,18 @@ RCSID("$Id: attr.c,v 1.38 2007/06/21 05:38:07 wmcbrine Exp $")
 	These constants are defined in <curses.h> and can be combined
 	with the bitwise-OR operator (|).
 
-	The current attributes of a window are applied to all characters
-	that are written into the window with waddch().  Attributes are
-	a property of the character, and move with the character
-	through any scrolling and insert/delete line/character operations.
-	To the extent possible on the particular terminal, they will be
-	displayed as the graphic rendition of characters put on the
-	screen.
+	The current attributes of a window are applied to all chtypes 
+	that are written into the window with waddch(). Attributes are 
+	a property of the chtype, and move with the character through 
+	any scrolling or insert/delete operations.
 
-	The attrset() function sets the current attributes of the given
-	window to attrs.  The attroff() function turns off the named
-	attributes without turning on or off any other attributes.  The
-	attron() function turns on the named attributes without affecting
-	any others.  The color_set() function sets the window color to 
-	the value of color_pair.
+	attrset() sets the current attributes of the given window to 
+	attrs. attroff() turns off the named attributes without 
+	affecting any other attributes; attron() turns them on. 
+	color_set() sets the window color to the value of color_pair.
 
-	The standout() function is the same as attron(A_STANDOUT).  
-	The standend() function is the same as attrset(A_NORMAL); that 
-	is, it turns off all attributes.
+	standout() is the same as attron(A_STANDOUT). standend() is the 
+	same as attrset(A_NORMAL); that is, it turns off all attributes.
 
   Return Value:
 	All functions return OK on success and ERR on error.

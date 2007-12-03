@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: color.c,v 1.80 2007/07/05 20:57:55 wmcbrine Exp $")
+RCSID("$Id: color.c,v 1.81 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -35,11 +35,11 @@ RCSID("$Id: color.c,v 1.80 2007/07/05 20:57:55 wmcbrine Exp $")
 
   Description:
 	To use these routines, start_color() must be called, usually
-	immediately after initscr(). Colors are always used in pairs
-	refered to as color-pairs. A color-pair consists of a foreground
-	color and a background color. A color-pair is initialized with
-	init_pair(). After it has been initialized, COLOR_PAIR(n) can be
-	used like any other video attribute.
+	immediately after initscr(). Colors are always used in pairs, 
+	referred to as color-pairs. A color-pair consists of a 
+	foreground color and a background color. A color-pair is 
+	initialized via init_pair(). After initialization, COLOR_PAIR(n) 
+	can be used like any other video attribute.
 
 	start_color() initializes eight basic colors (black, red, green,
 	yellow, blue, magenta, cyan, and white), and two global
@@ -47,15 +47,14 @@ RCSID("$Id: color.c,v 1.80 2007/07/05 20:57:55 wmcbrine Exp $")
 	maximum number of colors and color-pairs the terminal is capable
 	of displaying).
 
-	init_pair() changes the definitions of a color-pair. The routine
-	takes three arguments: the number of the color-pair to be
-	redefined, and the new values of the foreground and background
-	colors. The value of color-pair must be between 0 and
-	COLOR_PAIRS - 1, inclusive. The values of foreground and
-	background must be between 0 and COLORS - 1, inclusive. If the
-	color pair was previously initialized, the screen is refreshed
-	and all occurrences of that color-pair are changed to the new
-	definition.
+	init_pair() changes the definition of a color-pair. It takes 
+	three arguments: the number of the color-pair to be redefined, 
+	and the new values of the foreground and background colors. The 
+	pair number must be between 0 and COLOR_PAIRS - 1, inclusive. 
+	The foreground and background must be between 0 and COLORS - 1, 
+	inclusive. If the color pair was previously initialized, the 
+	screen is refreshed, and all occurrences of that color-pair are 
+	changed to the new definition.
 
 	has_colors() indicates if the terminal supports, and can 
 	maniplulate color. It returns TRUE or FALSE.

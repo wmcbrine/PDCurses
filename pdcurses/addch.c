@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addch.c,v 1.51 2007/06/14 13:50:26 wmcbrine Exp $")
+RCSID("$Id: addch.c,v 1.52 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -40,41 +40,38 @@ RCSID("$Id: addch.c,v 1.51 2007/06/14 13:50:26 wmcbrine Exp $")
 	int wecho_wchar(WINDOW *win, const cchar_t *wch);
 
   Description:
-	addch() inserts the character ch into the default window
-	(stdscr) at the current cursor position, and the window cursor
-	is advanced.  The character is of the type chtype, containing
-	both data and attributes.  add_wch() is the wide-character
-	version, taking a pointer to a cchar_t.
+	addch() adds the chtype ch to the default window (stdscr) at the
+	current cursor position, and advances the cursor. Note that
+	chtypes can convey both text (a single character) and
+	attributes, including a color pair. add_wch() is the wide-
+	character version of this function, taking a pointer to a
+	cchar_t instead of a chtype.
 
 	waddch() is like addch(), but also lets you specify the window.
 	(This is in fact the core output routine.) wadd_wch() is the
 	wide version.
 
 	mvaddch() moves the cursor to the specified (y, x) position, and
-	inserts the character ch into stdscr. mvadd_wch() is the
-	wide version.
+	adds ch to stdscr. mvadd_wch() is the wide version.
 
-	mvwaddch() moves the cursor to the specified position and
-	inserts the character ch into the specified window. mvwadd_wch()
-	is the wide version.
+	mvwaddch() moves the cursor to the specified position and adds 
+	ch to the specified window. mvwadd_wch() is the wide version.
 
-	echochar() inserts the character ch into stdscr at the current
-	cursor position and calls refresh(). echo_wchar() is the wide
-	version.
+	echochar() adds ch to stdscr at the current cursor position and 
+	calls refresh(). echo_wchar() is the wide version.
 
-	wechochar() inserts the character ch into the specified window
-	and calls wrefresh(). wecho_wchar() is the wide version.
+	wechochar() adds ch to the specified window and calls 
+	wrefresh(). wecho_wchar() is the wide version.
 
 	addrawch(), waddrawch(), mvaddrawch() and mvwaddrawch() are
 	PDCurses-specific wrappers for addch() etc. that disable the 
 	translation of control characters.
 
-	All these routines are similar to putchar().  The following
-	applies to all:
+	The following applies to all these functions:
 
 	If the cursor moves on to the right margin, an automatic newline 
 	is performed.  If scrollok is enabled, and a character is added 
-	to the bottom right corner of the screen, the scrolling region 
+	to the bottom right corner of the window, the scrolling region 
 	will be scrolled up one line.  If scrolling is not allowed, ERR 
 	will be returned.
 

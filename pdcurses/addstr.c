@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addstr.c,v 1.41 2007/06/14 13:50:26 wmcbrine Exp $")
+RCSID("$Id: addstr.c,v 1.42 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -39,12 +39,15 @@ RCSID("$Id: addstr.c,v 1.41 2007/06/14 13:50:26 wmcbrine Exp $")
 	int mvwaddnwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
 
   Description:
-	These routines write all the characters of the null-terminated 
-	string str or wstr on the given window.  The functionality is 
-	equivalent to calling waddch() once for each character in the 
-	string.  The routines with n as the last argument write at most 
-	n characters; if n is negative, then the entire string will be 
-	added.
+	These routines write all the characters of the null-terminated
+	string str or wide-character string wstr to the given window.
+	The functionality is similar to calling waddch() once for each
+	character in the string; except that, when PDCurses is built
+	with wide-character support enabled, the narrow-character
+	functions treat the string as a multibyte string in the current
+	locale, and convert it. The routines with n as the last
+	argument write at most n characters; if n is negative, then the
+	entire string will be added.
 
   Return Value:
 	All functions return OK or ERR.

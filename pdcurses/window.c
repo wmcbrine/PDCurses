@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: window.c,v 1.59 2007/06/14 14:11:31 wmcbrine Exp $")
+RCSID("$Id: window.c,v 1.60 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -43,27 +43,26 @@ RCSID("$Id: window.c,v 1.59 2007/06/14 14:11:31 wmcbrine Exp $")
   Description:
 	newwin() creates a new window with the given number of lines,
 	nlines and columns, ncols. The upper left corner of the window
-	is at line begy, column begx. If either nlines or ncols is zero,
-	they will be defaulted to LINES - begy and COLS - begx. A new
-	full-screen window is created by calling newwin(0, 0, 0, 0).
+	is at line begy, column begx. If nlines is zero, it defaults to
+	LINES - begy; ncols to COLS - begx. Create a new full-screen
+	window by calling newwin(0, 0, 0, 0).
 
-	delwin() deletes the named window, freeing all memory associated
-	with it. In the case of overlapping windows, subwindows should
-	be deleted before the main window.
+	delwin() deletes the named window, freeing all associated 
+	memory. In the case of overlapping windows, subwindows should be 
+	deleted before the main window.
 
 	mvwin() moves the window so that the upper left-hand corner is
 	at position (y,x). If the move would cause the window to be off
 	the screen, it is an error and the window is not moved. Moving
-	subwindows is allowed, but should be avoided. (I don't know why?)
+	subwindows is allowed.
 
-	subwin() creates a new sub-window within a window.  The
-	dimensions of the sub-window are nlines lines and ncols columns.
-	The sub-window is at position (begy, begx) on the screen.  This
+	subwin() creates a new subwindow within a window.  The
+	dimensions of the subwindow are nlines lines and ncols columns.
+	The subwindow is at position (begy, begx) on the screen.  This
 	position is relative to the screen, and not to the window orig.
-	The sub-window is made in the middle of the window orig, so that
-	changes made to either window will affect both.  When using this
-	routine, it will often be necessary to call touchwin() before
-	calling wrefresh().
+	Changes made to either window will affect both.  When using this
+	routine, you will often need to call touchwin() before calling
+	wrefresh().
 
 	derwin() is the same as subwin(), except that begy and begx are
 	relative to the origin of the window orig rather than the

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: beep.c,v 1.31 2007/06/14 13:50:26 wmcbrine Exp $")
+RCSID("$Id: beep.c,v 1.32 2007/12/03 20:01:06 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -24,11 +24,12 @@ RCSID("$Id: beep.c,v 1.31 2007/06/14 13:50:26 wmcbrine Exp $")
 	int flash(void);
 
   Description:
-	These routines are used to signal the terminal user.  The beep()
-	function will sound the audible bell on the terminal, if possible
-	and if not, will flash the screen (visible bell).
+	beep() sounds the audible bell on the terminal, if possible;
+	if not, it calls flash().
 
-	The flash() function will flash the screen.
+	flash() "flashes" the screen, by inverting the foreground and
+	background of every cell, pausing, and then restoring the
+	original attributes.
 
   Return Value:
 	These functions return OK.

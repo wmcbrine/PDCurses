@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: slk.c,v 1.57 2007/06/22 10:01:10 wmcbrine Exp $")
+RCSID("$Id: slk.c,v 1.58 2007/12/05 19:30:34 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -63,8 +63,8 @@ RCSID("$Id: slk.c,v 1.57 2007/06/22 10:01:10 wmcbrine Exp $")
 			2 lines used
  		55	5-5 format (pdcurses format)
 
-	The functions slk_refresh(), slk_noutrefresh() and slk_touch() 
-	are analagous to refresh(), noutrefresh() and touch() functions.
+	slk_refresh(), slk_noutrefresh() and slk_touch() are analogous
+	to refresh(), noutrefresh() and touch().
 
   Return Value:
 	All functions return OK on success and ERR on error.

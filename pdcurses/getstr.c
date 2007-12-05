@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.47 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: getstr.c,v 1.48 2007/12/05 19:30:34 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -39,20 +39,16 @@ RCSID("$Id: getstr.c,v 1.47 2007/06/14 13:50:27 wmcbrine Exp $")
 	int mvwgetn_wstr(WINDOW *win, int y, int x, wint_t *wstr, int n);
 
   Description:
-	The effect of getstr() is as though a series of calls to getch()
-	were made, until a newline or carriage return is received. The
-	resulting value is placed in the area pointed to by *str. The 
-	erase and kill characters are interpreted, as well as any 
-	special keys, such as function keys.
+	These routines call wgetch() repeatedly to build a string, 
+	interpreting erase and kill characters along the way, until a 
+	newline or carriage return is received. When PDCurses is built 
+	with wide-character support enabled, the narrow-character 
+	functions convert the wgetch()'d values into a multibyte string 
+	in the current locale before returning it. The resulting string 
+	is placed in the area pointed to by *str. The routines with n as 
+	the last argument read at most n characters.
 
-	With wgetnstr(), a series of characters are read until a newline 
-	or carriage return is received.  The resulting value is placed 
-	in the area pointed to by the character pointer str.  The erase 
-	and kill characters are interpreted.  This differs from 
-	wgetstr() in that the number of characters read is limited by a 
-	passed argument.
-
-	WARNING: There is no way to know how long the buffer passed to 
+	Note that there's no way to know how long the buffer passed to 
 	wgetstr() is, so use wgetnstr() to avoid buffer overflows.
 
   Return Value:

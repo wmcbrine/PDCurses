@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getch.c,v 1.69 2007/12/03 02:27:04 wmcbrine Exp $")
+RCSID("$Id: getch.c,v 1.70 2007/12/05 19:30:34 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -55,11 +55,11 @@ RCSID("$Id: getch.c,v 1.69 2007/12/03 02:27:04 wmcbrine Exp $")
 	If nodelay(win, TRUE) has been called on the window and no input
 	is waiting, the value ERR is returned.
 
-	The ungetch() function places ch back onto the input queue to be
-	returned by the next call to wgetch().
+	ungetch() places ch back onto the input queue to be returned by 
+	the next call to wgetch().
 
-	The flushinp() routine throws away any type-ahead that has been
-	typed by the user and has not yet been read by the program.
+	flushinp() throws away any type-ahead that has been typed by the 
+	user and has not yet been read by the program.
 
 	PDC_get_key_modifiers() returns the keyboard modifiers (shift, 
 	control, alt, numlock) effective at the time of the last getch() 

@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: insstr.c,v 1.43 2007/06/14 14:11:30 wmcbrine Exp $")
+RCSID("$Id: insstr.c,v 1.44 2007/12/05 19:30:34 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -39,14 +39,17 @@ RCSID("$Id: insstr.c,v 1.43 2007/06/14 14:11:30 wmcbrine Exp $")
 	int mvwins_nwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
 
   Description:
-	With these routines, a character string (as many characters as 
-	will fit on the line) is inserted before the character under 
-	the cursor.  All characters to the right of the cursor are moved 
-	to the right, with the possibility of the rightmost characters 
-	on the line being lost.  The cursor position does not change 
-	(after moving to y, x, if specified).  The routines with n as 
-	the last argument insert at most n characters; if n is 
-	negative, then the entire string is inserted.
+	The insstr() functions insert a character string into a window
+	at the current cursor position, by repeatedly calling winsch().
+	When PDCurses is built with wide-character support enabled, the
+	narrow-character functions treat the string as a multibyte
+	string in the current locale, and convert it first. All 
+	characters to the right of the cursor are moved to the right, 
+	with the possibility of the rightmost characters on the line 
+	being lost.  The cursor position does not change (after moving 
+	to y, x, if specified).  The routines with n as the last 
+	argument insert at most n characters; if n is negative, then the 
+	entire string is inserted.
 
   Return Value:
 	All functions return OK on success and ERR on error.

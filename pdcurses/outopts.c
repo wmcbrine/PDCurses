@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.35 2007/06/14 13:50:27 wmcbrine Exp $")
+RCSID("$Id: outopts.c,v 1.36 2007/12/05 19:30:34 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -36,11 +36,9 @@ RCSID("$Id: outopts.c,v 1.35 2007/06/14 13:50:27 wmcbrine Exp $")
 	this window will clear the screen completely and redraw the 
 	entire screen.
 
-	The immedok() routine, called with a second argument of TRUE, 
-	causes an automatic wrefrsh() to be called on the window every 
-	time a change is made to that window, due to calls like; 
-	waddch(), wclrtoeol(), etc... Not surprisingly, this causes a 
-	severe performance overhead.
+	immedok(), called with a second argument of TRUE, causes an 
+	automatic wrefresh() every time a change is made to the 
+	specified window.
 
 	Normally, the hardware cursor is left at the location of the
 	window being refreshed.  leaveok() allows the cursor to be
@@ -49,14 +47,11 @@ RCSID("$Id: outopts.c,v 1.35 2007/06/14 13:50:27 wmcbrine Exp $")
 	the need for cursor motions.  If possible, the cursor is made
 	invisible when this option is enabled.
 
-	The setscrreg() and wsetscrreg() functions allow the user to set 
-	a software scrolling region in a window.  The parameters 'top' 
-	and 'bot' are the line numbers of the top and bottom margin of 
-	the scrolling region.  (Line 0 is the top line of the window.)  
-	If this option and scrollok() are enabled, an attempt to move 
-	off the bottom margin will cause all lines in the scrolling 
-	region to scroll up one line.  Only the text of the window is 
-	scrolled.
+	wsetscrreg() sets a scrolling region in a window; 'top' and 
+	'bot' are the line numbers for the top and bottom margins. If 
+	this option and scrollok() are enabled, any attempt to move off 
+	the bottom margin will cause all lines in the scrolling region 
+	to scroll up one line. setscrreg() is the stdscr version.
 
 	idlok() and idcok() do nothing in PDCurses, but are provided for 
 	compatibility with other curses implementations.

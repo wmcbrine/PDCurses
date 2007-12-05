@@ -13,7 +13,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: initscr.c,v 1.111 2007/11/07 23:33:06 wmcbrine Exp $")
+RCSID("$Id: initscr.c,v 1.112 2007/12/05 19:30:34 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -33,12 +33,12 @@ RCSID("$Id: initscr.c,v 1.111 2007/11/07 23:33:06 wmcbrine Exp $")
 	const char *curses_version(void);
 
   Description:
-	initscr() should be the first curses routine called.  This will
-	determine the terminal type and initialize all curses data 
-	structures.  initscr() also arranges that the first call to 
-	refresh() will clear the screen.  If errors occur, initscr() 
-	will write a message to standard error and end the program.
-	
+	initscr() should be the first curses routine called.  It will 
+	initialize all curses data structures, and arrange that the 
+	first call to refresh() will clear the screen.  In case of 
+	error, initscr() will write a message to standard error and end 
+	the program.
+
 	endwin() should be called before exiting or escaping from curses 
 	mode temporarily.  It will restore tty modes, move the cursor to 
 	the lower left corner of the screen and reset the terminal into 

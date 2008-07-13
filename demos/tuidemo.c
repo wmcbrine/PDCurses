@@ -1,6 +1,5 @@
-/********************************* tuidemo.c ********************************/
 /*
- * $Id: tuidemo.c,v 1.20 2007/06/30 00:29:32 wmcbrine Exp $
+ * $Id: tuidemo.c,v 1.21 2008/07/13 16:08:17 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -32,90 +31,89 @@
 
 void address(void)
 {
-	char *fieldname[6] = 
-	{
-		"Name", "Street", "City", "State", "Country", (char *)0
-	};
+    char *fieldname[6] = 
+    {
+        "Name", "Street", "City", "State", "Country", (char *)0
+    };
 
-	char *fieldbuf[5];
-	WINDOW *wbody = bodywin();
-	int i, field = 50;
+    char *fieldbuf[5];
+    WINDOW *wbody = bodywin();
+    int i, field = 50;
 
-	for (i = 0; i < 5; i++)
-		fieldbuf[i] = calloc(1, field + 1);
+    for (i = 0; i < 5; i++)
+        fieldbuf[i] = calloc(1, field + 1);
 
-	if (getstrings(fieldname, fieldbuf, field) != KEY_ESC)
-	{
-		for (i = 0; fieldname[i]; i++)
-			wprintw(wbody, "%10s : %s\n",
-				fieldname[i], fieldbuf[i]);
+    if (getstrings(fieldname, fieldbuf, field) != KEY_ESC)
+    {
+        for (i = 0; fieldname[i]; i++)
+            wprintw(wbody, "%10s : %s\n",
+                fieldname[i], fieldbuf[i]);
 
-		wrefresh(wbody);
-	}
+        wrefresh(wbody);
+    }
 
-	for (i = 0; i < 5; i++)
-		free(fieldbuf[i]);
+    for (i = 0; i < 5; i++)
+        free(fieldbuf[i]);
 }
 
 /**************************** string entry box ****************************/
 
 char *getfname(char *desc, char *fname, int field)
 {
-	char *fieldname[2];
-	char *fieldbuf[1];
+    char *fieldname[2];
+    char *fieldbuf[1];
 
-	fieldname[0] = desc;
-	fieldname[1] = 0;
-	fieldbuf[0] = fname;
+    fieldname[0] = desc;
+    fieldname[1] = 0;
+    fieldbuf[0] = fname;
 
-	return (getstrings(fieldname, fieldbuf, field) == KEY_ESC) ? 
-		NULL : fname;
+    return (getstrings(fieldname, fieldbuf, field) == KEY_ESC) ? NULL : fname;
 }
 
 /**************************** a very simple file browser ******************/
 
 void showfile(char *fname)
 {
-	int i, bh = bodylen();
-	FILE *fp;
-	char buf[MAXSTRLEN];
-	bool ateof = FALSE;
+    int i, bh = bodylen();
+    FILE *fp;
+    char buf[MAXSTRLEN];
+    bool ateof = FALSE;
 
-	statusmsg("FileBrowser: Hit key to continue, Q to quit");
+    statusmsg("FileBrowser: Hit key to continue, Q to quit");
 
-	if ((fp = fopen(fname, "r")) != NULL)	/* file available? */
-	{
-		while (!ateof)
-		{
-			clsbody();
+    if ((fp = fopen(fname, "r")) != NULL)   /* file available? */
+    {
+        while (!ateof)
+        {
+            clsbody();
 
-			for (i = 0; i < bh - 1 && !ateof; i++)
-			{
-				buf[0] = '\0';
-				fgets(buf, MAXSTRLEN, fp);
+            for (i = 0; i < bh - 1 && !ateof; i++)
+            {
+                buf[0] = '\0';
+                fgets(buf, MAXSTRLEN, fp);
 
-				if (strlen(buf))
-					bodymsg(buf);
-				else
-					ateof = TRUE;
-			}
+                if (strlen(buf))
+                    bodymsg(buf);
+                else
+                    ateof = TRUE;
+            }
 
-			switch (waitforkey())
-			{
-			case 'Q':
-			case 'q':
-			case 0x1b:
-				ateof = TRUE;
-			}
-		}
+            switch (waitforkey())
+            {
+            case 'Q':
+            case 'q':
+            case 0x1b:
+                ateof = TRUE;
+            }
+        }
 
-		fclose(fp);
-	}
-	else
-	{
-		sprintf(buf, "ERROR: file '%s' not found", fname);
-		errormsg(buf);
-	}
+        fclose(fp);
+    }
+    else
+    {
+        sprintf(buf, "ERROR: file '%s' not found", fname);
+        errormsg(buf);
+    }
 }
 
 /***************************** forward declarations ***********************/
@@ -129,110 +127,107 @@ void subsub(void);
 
 menu MainMenu[] =
 {
-	{ "Asub",  sub0,     "Go inside first submenu" },
-	{ "Bsub",  sub1,     "Go inside second submenu" },
-	{ "Csub",  sub2,     "Go inside third submenu" },
-	{ "Dsub",  sub3,     "Go inside fourth submenu" },
-	{ "",      (FUNC)0,  "" }   /* always add this as the last item! */
+    { "Asub", sub0, "Go inside first submenu" },
+    { "Bsub", sub1, "Go inside second submenu" },
+    { "Csub", sub2, "Go inside third submenu" },
+    { "Dsub", sub3, "Go inside fourth submenu" },
+    { "", (FUNC)0, "" }   /* always add this as the last item! */
 };
 
 menu SubMenu0[] =
 {
-	{ "Exit",  DoExit,   "Terminate program" },
-	{ "",      (FUNC)0,  "" }
+    { "Exit", DoExit, "Terminate program" },
+    { "", (FUNC)0, "" }
 };
 
 menu SubMenu1[] =
 {
-	{ "OneBeep",  func1,    "Sound one beep" },
-	{ "TwoBeeps", func2,    "Sound two beeps" },
-	{ "",         (FUNC)0,  "" }
+    { "OneBeep", func1, "Sound one beep" },
+    { "TwoBeeps", func2, "Sound two beeps" },
+    { "", (FUNC)0, "" }
 };
 
 menu SubMenu2[] =
 {
-	{ "Browse",   subfunc1, "Source file lister" },
-	{ "Input",    subfunc2, "Interactive file lister" },
-	{ "Address",  address,  "Get address data" },
-	{ "",         (FUNC)0,  "" }
+    { "Browse", subfunc1, "Source file lister" },
+    { "Input", subfunc2, "Interactive file lister" },
+    { "Address", address, "Get address data" },
+    { "", (FUNC)0, "" }
 };
 
 menu SubMenu3[] =
 {
-	{ "SubSub",   subsub,   "Go inside sub-submenu" },
-	{ "",         (FUNC)0,  "" }
+    { "SubSub", subsub, "Go inside sub-submenu" },
+    { "", (FUNC)0, "" }
 };
 
 /***************************** main menu functions ************************/
 
 void sub0(void)
 {
-	domenu(SubMenu0);
+    domenu(SubMenu0);
 }
 
 void sub1(void)
 {
-	domenu(SubMenu1);
+    domenu(SubMenu1);
 }
 
 void sub2(void)
 {
-	domenu(SubMenu2);
+    domenu(SubMenu2);
 }
 
 void sub3(void)
 {
-	domenu(SubMenu3);
+    domenu(SubMenu3);
 }
 
 /***************************** submenu1 functions *************************/
 
 void func1(void)
 {
-	beep();
-	bodymsg("One beep! ");
+    beep();
+    bodymsg("One beep! ");
 }
 
 void func2(void)
 {
-	beep();
-	bodymsg("Two beeps! ");
-	beep();
+    beep();
+    bodymsg("Two beeps! ");
+    beep();
 }
 
 /***************************** submenu2 functions *************************/
 
 void subfunc1(void)
 {
-	showfile(FNAME);
+    showfile(FNAME);
 }
 
 void subfunc2(void)
 {
-	char fname[MAXSTRLEN];
+    char fname[MAXSTRLEN];
 
-	strcpy(fname, FNAME);
-	if (getfname ("File to browse:", fname, 50))
-		showfile(fname);
+    strcpy(fname, FNAME);
+    if (getfname ("File to browse:", fname, 50))
+        showfile(fname);
 }
 
 /***************************** submenu3 functions *************************/
 
 void subsub(void)
 {
-	domenu(SubMenu2);
+    domenu(SubMenu2);
 }
 
 /***************************** start main menu  ***************************/
 
 int main(int argc, char **argv)
 {
-	setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "");
 
-	startmenu(MainMenu,
-		"TUI - 'textual user interface' demonstration program");
+    startmenu(MainMenu, "TUI - 'textual user interface' demonstration program");
 
-	return 0;
+    return 0;
 }
-
-/********************************* tuidemo.c ********************************/

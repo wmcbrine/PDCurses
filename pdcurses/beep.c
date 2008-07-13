@@ -2,64 +2,64 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: beep.c,v 1.33 2008/07/13 06:36:32 wmcbrine Exp $")
+RCSID("$Id: beep.c,v 1.34 2008/07/13 16:08:17 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
-  Name:								beep
+  Name:                                                         beep
 
   Synopsis:
-	int beep(void);
-	int flash(void);
+        int beep(void);
+        int flash(void);
 
   Description:
-	beep() sounds the audible bell on the terminal, if possible;
-	if not, it calls flash().
+        beep() sounds the audible bell on the terminal, if possible;
+        if not, it calls flash().
 
-	flash() "flashes" the screen, by inverting the foreground and
-	background of every cell, pausing, and then restoring the
-	original attributes.
+        flash() "flashes" the screen, by inverting the foreground and
+        background of every cell, pausing, and then restoring the
+        original attributes.
 
   Return Value:
-	These functions return OK.
+        These functions return OK.
 
-  Portability				     X/Open    BSD    SYS V
-	beep					Y	Y	Y
-	flash					Y	Y	Y
+  Portability                                X/Open    BSD    SYS V
+        beep                                    Y       Y       Y
+        flash                                   Y       Y       Y
 
 **man-end****************************************************************/
 
 int beep(void)
 {
-	PDC_LOG(("beep() - called\n"));
+    PDC_LOG(("beep() - called\n"));
 
-	if (SP->audible)
-		PDC_beep();
-	else
-		flash();
+    if (SP->audible)
+        PDC_beep();
+    else
+        flash();
 
-	return OK;
+    return OK;
 }
 
 int flash(void)
 {
-	int z, y, x;
+    int z, y, x;
 
-	PDC_LOG(("flash() - called\n"));
+    PDC_LOG(("flash() - called\n"));
 
-	/* Reverse each cell; wait; restore the screen */
+    /* Reverse each cell; wait; restore the screen */
 
-	for (z = 0; z < 2; z++) {
+    for (z = 0; z < 2; z++)
+    {
+        for (y = 0; y < LINES; y++)
+            for (x = 0; x < COLS; x++)
+                curscr->_y[y][x] ^= A_REVERSE;
 
-		for (y = 0; y < LINES; y++)
-			for (x = 0; x < COLS; x++)
-				curscr->_y[y][x] ^= A_REVERSE;
+        wrefresh(curscr);
 
-		wrefresh(curscr);
+        if (!z)
+            napms(50);
+    }
 
-		if (!z)
-			napms(50);
-	}
-
-	return OK;
+    return OK;
 }

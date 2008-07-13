@@ -1,7 +1,7 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.h,v 1.9 2006/03/29 19:50:14 wmcbrine Exp $
+ * $Id: tui.h,v 1.10 2008/07/13 16:08:17 wmcbrine Exp $
  *
  * Author : P.J. Kunst  (kunst@prl.philips.nl)
  * Date   : 25-02-93
@@ -19,15 +19,15 @@
 #endif
 
 #define MAXSTRLEN  256
-#define KEY_ESC    0x1b		/* Escape */
+#define KEY_ESC    0x1b     /* Escape */
 
 typedef void (*FUNC)(void);
 
 typedef struct 
 {
-	char *name;	/* item label */
-	FUNC  func;	/* (pointer to) function */
-	char *desc;	/* function description */
+    char *name; /* item label */
+    FUNC  func; /* (pointer to) function */
+    char *desc; /* function description */
 } menu;
 
 /* ANSI C function prototypes: */

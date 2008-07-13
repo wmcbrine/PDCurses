@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: term.h,v 1.15 2008/07/13 06:36:31 wmcbrine Exp $ */
+/* $Id: term.h,v 1.16 2008/07/13 16:08:16 wmcbrine Exp $ */
 
 /* PDCurses doesn't operate with terminfo, but we need these functions for 
    compatibility, to allow some things (notably, interface libraries for 
@@ -19,7 +19,7 @@ extern "C"
 
 typedef struct
 {
-	const char *_termname;
+    const char *_termname;
 } TERMINAL;
 
 #ifdef PDC_DLL_BUILD
@@ -32,23 +32,23 @@ __declspec(dllexport) extern TERMINAL *cur_term;
 extern TERMINAL *cur_term;
 #endif
 
-int	del_curterm(TERMINAL *);
-int	putp(const char *);
-int	restartterm(const char *, int, int *);
+int     del_curterm(TERMINAL *);
+int     putp(const char *);
+int     restartterm(const char *, int, int *);
 TERMINAL *set_curterm(TERMINAL *);
-int	setterm(const char *);
-int	setupterm(const char *, int, int *);
-int	tgetent(char *, const char *);
-int	tgetflag(const char *);
-int	tgetnum(const char *);
+int     setterm(const char *);
+int     setupterm(const char *, int, int *);
+int     tgetent(char *, const char *);
+int     tgetflag(const char *);
+int     tgetnum(const char *);
 char   *tgetstr(const char *, char **);
 char   *tgoto(const char *, int, int);
-int	tigetflag(const char *);
-int	tigetnum(const char *);
+int     tigetflag(const char *);
+int     tigetnum(const char *);
 char   *tigetstr(const char *);
 char   *tparm(const char *, long, long, long, long, long, 
-		long, long, long, long);
-int	tputs(const char *, int, int (*)(int));
+              long, long, long, long);
+int     tputs(const char *, int, int (*)(int));
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 }

@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: slk.c,v 1.59 2008/07/13 06:36:32 wmcbrine Exp $")
+RCSID("$Id: slk.c,v 1.60 2008/07/13 09:07:24 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -284,7 +284,6 @@ char *slk_label(int labnum)
 	wchar_t *wtemp = slk_wlabel(labnum);
 
 	PDC_wcstombs(temp, wtemp, 32);
-	temp[32] = '\0';
 #else
 	chtype *p;
 	int i;

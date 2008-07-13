@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.68 2008/07/13 06:36:32 wmcbrine Exp $")
+RCSID("$Id: util.c,v 1.69 2008/07/13 09:07:24 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -308,7 +308,9 @@ size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
 	dest[i] = 0;
 	return i;
 # else
-	return wcstombs(dest, src, n);
+	n = wcstombs(dest, src, n);
+        dest[n] = '\0';
+        return n;
 # endif
 }
 #endif

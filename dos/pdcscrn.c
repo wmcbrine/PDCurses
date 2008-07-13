@@ -1,19 +1,8 @@
-/************************************************************************ 
- * This file is part of PDCurses. PDCurses is public domain software;	*
- * you may use it for any purpose. This software is provided AS IS with	*
- * NO WARRANTY whatsoever.						*
- *									*
- * If you use PDCurses in an application, an acknowledgement would be	*
- * appreciated, but is not mandatory. If you make corrections or	*
- * enhancements to PDCurses, please forward them to the current		*
- * maintainer for the benefit of other users.				*
- *									*
- * See the file maintain.er for details of the current maintainer.	*
- ************************************************************************/
+/* Public Domain Curses */
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcscrn.c,v 1.87 2007/07/03 01:51:44 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.88 2008/07/13 06:36:31 wmcbrine Exp $")
 
 #include <stdlib.h>
 

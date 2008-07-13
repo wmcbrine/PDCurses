@@ -1,19 +1,8 @@
-/************************************************************************ 
- * This file is part of PDCurses. PDCurses is public domain software;	*
- * you may use it for any purpose. This software is provided AS IS with	*
- * NO WARRANTY whatsoever.						*
- *									*
- * If you use PDCurses in an application, an acknowledgement would be	*
- * appreciated, but is not mandatory. If you make corrections or	*
- * enhancements to PDCurses, please forward them to the current		*
- * maintainer for the benefit of other users.				*
- *									*
- * See the file maintain.er for details of the current maintainer.	*
- ************************************************************************/
+/* Public Domain Curses */
 
 #include "pdcx11.h"
 
-RCSID("$Id: sb.c,v 1.25 2007/06/14 14:11:31 wmcbrine Exp $")
+RCSID("$Id: sb.c,v 1.26 2008/07/13 06:36:32 wmcbrine Exp $")
 
 /*man-start**************************************************************
 

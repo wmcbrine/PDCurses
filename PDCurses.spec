@@ -1,4 +1,4 @@
-# $Id: PDCurses.spec,v 1.16 2007/11/07 23:33:05 wmcbrine Exp $
+# $Id: PDCurses.spec,v 1.17 2008/07/13 06:36:31 wmcbrine Exp $
 
 %define ver 34
 %define verdot 3.4
@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 
 %files
 %defattr(-,root,root)
-%doc README HISTORY maintain.er
+%doc README HISTORY
 %{base}/bin/xcurses-config
 %{base}/lib/libXCurses.a
 %{base}/lib/libXpanel.a

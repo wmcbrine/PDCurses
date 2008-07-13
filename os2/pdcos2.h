@@ -1,17 +1,6 @@
-/************************************************************************ 
- * This file is part of PDCurses. PDCurses is public domain software;	*
- * you may use it for any purpose. This software is provided AS IS with	*
- * NO WARRANTY whatsoever.						*
- *									*
- * If you use PDCurses in an application, an acknowledgement would be	*
- * appreciated, but is not mandatory. If you make corrections or	*
- * enhancements to PDCurses, please forward them to the current		*
- * maintainer for the benefit of other users.				*
- *									*
- * See the file maintain.er for details of the current maintainer.	*
- ************************************************************************/
+/* Public Domain Curses */
 
-/* $Id: pdcos2.h,v 1.7 2007/07/03 00:11:45 wmcbrine Exp $ */
+/* $Id: pdcos2.h,v 1.8 2008/07/13 06:36:31 wmcbrine Exp $ */
 
 #ifdef _MSC_VER
 # define USE_OS2_H 1         /* Use the os2.h for the compiler       */

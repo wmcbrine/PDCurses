@@ -1,15 +1,4 @@
-/************************************************************************ 
- * This file is part of PDCurses. PDCurses is public domain software;	*
- * you may use it for any purpose. This software is provided AS IS with	*
- * NO WARRANTY whatsoever.						*
- *									*
- * If you use PDCurses in an application, an acknowledgement would be	*
- * appreciated, but is not mandatory. If you make corrections or	*
- * enhancements to PDCurses, please forward them to the current		*
- * maintainer for the benefit of other users.				*
- *									*
- * See the file maintain.er for details of the current maintainer.	*
- ************************************************************************/
+/* Public Domain Curses */
 
 #if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
 defined(__TURBOC__)
@@ -19,7 +8,7 @@ defined(__TURBOC__)
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdckbd.c,v 1.87 2007/11/29 21:54:12 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.88 2008/07/13 06:36:31 wmcbrine Exp $")
 
 /*man-start**************************************************************
 

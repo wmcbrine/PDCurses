@@ -1,17 +1,6 @@
-/************************************************************************ 
- * This file is part of PDCurses. PDCurses is public domain software;	*
- * you may use it for any purpose. This software is provided AS IS with	*
- * NO WARRANTY whatsoever.						*
- *									*
- * If you use PDCurses in an application, an acknowledgement would be	*
- * appreciated, but is not mandatory. If you make corrections or	*
- * enhancements to PDCurses, please forward them to the current		*
- * maintainer for the benefit of other users.				*
- *									*
- * See the file maintain.er for details of the current maintainer.	*
- ************************************************************************/
+/* Public Domain Curses */
 
-/* $Id: compose.h,v 1.1 2006/12/12 09:55:35 wmcbrine Exp $ */
+/* $Id: compose.h,v 1.2 2008/07/13 06:36:32 wmcbrine Exp $ */
 
 /* Tables and variables for the built-in compose key system. This file 
    is not included when PDCurses is built with XIM support. */

@@ -117,7 +117,6 @@ dist: $(PDCLIBS)
 	echo Public Domain. >> file_id.diz
 	zip -9jX pdc$(VER)_cyg_w32 \
 	$(PDCURSES_SRCDIR)/README $(PDCURSES_SRCDIR)/HISTORY \
-	$(PDCURSES_SRCDIR)/maintain.er \
 	$(PDCURSES_SRCDIR)/curses.h $(PDCURSES_SRCDIR)/curspriv.h \
 	$(PDCURSES_SRCDIR)/panel.h $(PDCURSES_SRCDIR)/term.h \
 	$(LIBCURSES) $(LIBPANEL) file_id.diz

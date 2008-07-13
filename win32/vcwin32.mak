@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Visual C++ NMakefile for PDCurses library - Win32 VC++ 2.0+
 #
 # Usage: nmake -f [path\]vcwin32.mak [DEBUG=] [DLL=] [WIDE=] [UTF8=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 O = obj
 
@@ -66,8 +62,6 @@ PDCLIBS		= $(LIBCURSES)
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c $(CFLAGS) $(DLLOPT) \
 $(WIDEOPT) $(UTF8OPT)
 
-#########################################################################
-
 all:	$(PDCLIBS) $(DEMOS)
 
 clean:
@@ -77,8 +71,6 @@ clean:
 	-del *.dll
 	-del *.exp
 	-del *.res
-
-#------------------------------------------------------------------------
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
@@ -115,8 +107,6 @@ pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
 .obj.exe:
 	$(LINK) $(LDFLAGS) $< $(LIBCURSES) $(CCLIBS)
 
-#------------------------------------------------------------------------
-
 tuidemo.exe: tuidemo.obj tui.obj
 	$(LINK) $(LDFLAGS) $*.obj tui.obj $(LIBCURSES) $(CCLIBS)
 
@@ -125,8 +115,6 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.obj: $(demodir)\tuidemo.c
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
-
-#------------------------------------------------------------------------
 
 PLATFORM1 = Visual C++
 PLATFORM2 = Microsoft Visual C/C++ for Win32

@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Watcom C/C++ 10.6+
 #
 # Usage: wmake -f [path\]wccdos16.mak [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 # Change the memory MODEL here, if desired
 MODEL		= l

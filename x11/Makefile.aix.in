@@ -30,7 +30,6 @@ LDFLAGS		=
 
 LIBCURSES	= libXCurses.a
 
-#########################################################################
 all :	$(LIBCURSES)
 
 install : 
@@ -46,8 +45,6 @@ mostlyclean: clean
 
 realclean: distclean
 
-#------------------------------------------------------------------------
-
 LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o deprec.o getch.o getstr.o getyx.o \
 inch.o inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o \
@@ -58,7 +55,6 @@ touch.o util.o window.o debug.o
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
 pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
 
-
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) curses.exp
 	ld -bnoentry -bM:SRE -bE:curses.exp $(MH_LIBS) $(MH_EXTRA_LIBS) \
 $(LIBOBJS) $(PDCOBJS) -o $@
@@ -66,7 +62,6 @@ $(LIBOBJS) $(PDCOBJS) -o $@
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_X11_H)
 terminfo.o: $(TERM_HEADER)
-
 
 curses.exp: ../win32/pdcurses.def
 	tail -n +3 ../win32/pdcurses.def > curses.exp
@@ -78,7 +73,6 @@ curses.exp: ../win32/pdcurses.def
 	echo sb_get_horz >> curses.exp
 	echo sb_get_vert >> curses.exp
 	echo sb_refresh >> curses.exp
-
 
 addch.o: $(srcdir)/addch.c
 	$(BUILD) $(srcdir)/addch.c
@@ -205,7 +199,6 @@ window.o: $(srcdir)/window.c
 
 debug.o: $(srcdir)/debug.c
 	$(BUILD) $(srcdir)/debug.c
-
 
 pdcclip.o: $(osdir)/pdcclip.c
 	$(BUILD) $(osdir)/pdcclip.c

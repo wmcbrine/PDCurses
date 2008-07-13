@@ -1,13 +1,9 @@
-#########################################################################
-#
 # GNU MAKE Makefile for PDCurses library - WIN32 Cygnus GCC
 #
 # Usage: make -f [path\]gccwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
 #
 # where tgt can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
-#
-#########################################################################
 
 O = o
 
@@ -58,7 +54,6 @@ else
 	CLEAN = *.a
 endif
 
-#########################################################################
 .PHONY: all libs clean demos dist
 
 all:	libs demos
@@ -72,8 +67,6 @@ clean:
 
 demos:	$(DEMOS)
 	strip *.exe
-
-#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
@@ -91,8 +84,6 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
-#------------------------------------------------------------------------
-
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
@@ -105,8 +96,6 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
-
-#------------------------------------------------------------------------
 
 dist: $(PDCLIBS)
 	echo PDCurses $(VERDOT) for Cygnus Win32 > file_id.diz

@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Borland MAKE Makefile for PDCurses library - DOS BC++ 3.0+
 #
 # Usage: make -f [path\]bccdos.mak [-DDEBUG] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 # Change the memory MODEL here, if desired
 MODEL = l
@@ -38,7 +34,6 @@ LIBEXE		= tlib /C /E
 
 LIBCURSES	= pdcurses.lib
 
-#########################################################################
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:
@@ -48,8 +43,6 @@ clean:
 	-del *.exe
 
 demos:	$(DEMOS)
-
-#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
@@ -72,8 +65,6 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 
 .obj.exe:
 	$(CC) -m$(MODEL) -e$@ $** $(LIBCURSES)
-
-#------------------------------------------------------------------------
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
 	$(CC) -m$(MODEL) -e$@ $**

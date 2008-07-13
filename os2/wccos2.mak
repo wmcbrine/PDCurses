@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Watcom WMAKE Makefile for PDCurses library - OS/2 Open Watcom 1.1+
 #
 # Usage: wmake -f [path\]wccos2.mak [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)

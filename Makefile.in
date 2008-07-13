@@ -110,6 +110,3 @@ dist: ../$(TARBALL)
 
 rpm: ../$(TARBALL)
 	rpmbuild -ba $(srcdir)/PDCurses.spec
-#
-# End of makefile
-#

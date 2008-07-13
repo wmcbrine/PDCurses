@@ -1,5 +1,3 @@
-#########################################################################
-#
 # GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c+
 #
 # Usage: make -f [path\]gccos2.mak [DEBUG=Y] [EMXVIDEO=Y] [target]
@@ -9,8 +7,6 @@
 #
 # The EMXVIDEO option compiles with the emx video library, which
 # enables a PDCurses program to run under OS/2 and DOS.
-#
-#########################################################################
 
 O = o
 
@@ -72,7 +68,6 @@ else
 	CLEAN = *.a testcurs newdemo xmas tuidemo firework ptest rain worm
 endif
 
-#########################################################################
 .PHONY: all libs clean demos dist
 
 all:	libs demos
@@ -86,12 +81,8 @@ clean:
 
 demos:	$(DEMOS)
 
-#------------------------------------------------------------------------
-
 DEMOOBJS = testcurs.o newdemo.o xmas.o tui.o tuidemo.o firework.o \
 ptest.o rain.o worm.o
-
-#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
@@ -113,8 +104,6 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) -o$@ $<
-
-#------------------------------------------------------------------------
 
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: %.o

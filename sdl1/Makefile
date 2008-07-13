@@ -32,7 +32,6 @@ LIBCURSES	= libpdcurses.a
 DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas \
 sdltest
 
-#########################################################################
 .PHONY: all libs clean demos
 
 all:	libs demos
@@ -44,8 +43,6 @@ clean:
 
 demos:	$(DEMOS)
 	strip $(DEMOS)
-
-#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	ar rv $@ $?
@@ -63,8 +60,6 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) $(SFLAGS) -c $<
-
-#------------------------------------------------------------------------
 
 firework: $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)

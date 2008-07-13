@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Makefile for PDCurses library - WIN32 Digital Mars
 #
 # Usage: make -f dmcwin32.mak [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 PDCURSES_SRCDIR	= ..
 
@@ -40,8 +36,6 @@ BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
-#########################################################################
-
 all:    $(LIBCURSES) $(DEMOS)
 
 clean:
@@ -50,8 +44,6 @@ clean:
 	-del *.exe
 	-del *.map
 	-del advapi32.def
-
-#------------------------------------------------------------------------
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj getch.obj \
@@ -209,7 +201,6 @@ window.obj: $(srcdir)\window.c
 debug.obj: $(srcdir)\debug.c
 	$(SRCBUILD)
 
-
 pdcclip.obj: $(osdir)\pdcclip.c
 	$(OSBUILD)
 
@@ -230,8 +221,6 @@ pdcsetsc.obj: $(osdir)\pdcsetsc.c
 
 pdcutil.obj: $(osdir)\pdcutil.c
 	$(OSBUILD)
-
-#------------------------------------------------------------------------
 
 firework.exe:   $(demodir)\firework.c
 	$(DEMOBUILD)
@@ -256,7 +245,6 @@ worm.exe:       $(demodir)\worm.c
 
 xmas.exe:       $(demodir)\xmas.c
 	$(DEMOBUILD)
-
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 	$(BUILD) -I$(demodir) $(demodir)\$*.c

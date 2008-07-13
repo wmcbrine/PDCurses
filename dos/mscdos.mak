@@ -1,17 +1,13 @@
-#########################################################################
-#
 # NMAKE Makefile for PDCurses library - Microsoft C for DOS
 #
 # Usage: nmake -f [path\]dosmsc.mak [DEBUG=1] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 # Change the memory MODEL here, if desired
-MODEL		= L       # one of L, S, M, T, H, C
-SIZE		= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
+MODEL	= L       # one of L, S, M, T, H, C
+SIZE	= LARGE    # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 
 O = obj
 
@@ -48,7 +44,6 @@ LIBEXE		= lib
 
 LIBCURSES	= pdcurses.lib
 
-#########################################################################
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:
@@ -57,8 +52,6 @@ clean:
 	-del *.exe
 
 demos:	$(DEMOS)
-
-#------------------------------------------------------------------------
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
@@ -80,8 +73,6 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 
 {$(demodir)\}.c{}.obj:
 	$(BUILD) $<
-
-#------------------------------------------------------------------------
 
 firework.exe: firework.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
@@ -107,8 +98,6 @@ worm.exe: worm.obj
 xmas.exe: xmas.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
-#------------------------------------------------------------------------
-
 ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER)
 	$(BUILD) $(demodir)\ptest.c
 
@@ -117,8 +106,6 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.obj: $(demodir)\tuidemo.c
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
-
-#------------------------------------------------------------------------
 
 PLATFORM1 = Microsoft C
 PLATFORM2 = Microsoft C for DOS

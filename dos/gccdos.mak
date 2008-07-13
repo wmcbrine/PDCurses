@@ -1,13 +1,9 @@
-#########################################################################
-#
 # GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
 #
 # Usage: make -f [path\]gccdos.mak [-DDEBUG] [target]
 #
 # where target can be any of:
 # [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
-#
-#########################################################################
 
 O = o
 
@@ -41,7 +37,6 @@ LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
 
-#########################################################################
 .PHONY: all libs clean demos dist
 
 all:	libs demos
@@ -55,8 +50,6 @@ clean:
 
 demos:	$(DEMOS)
 	strip *.exe
-
-#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
@@ -74,8 +67,6 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
-#------------------------------------------------------------------------
-
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
@@ -88,8 +79,6 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
-
-#------------------------------------------------------------------------
 
 PLATFORM1 = DJGPP 2.03
 PLATFORM2 = DJGPP 2.03 for DOS

@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Borland MAKE Makefile for PDCurses library - Win32 BC++ 4.0+
 #
 # Usage: make -f [path\]bccwin32.mak [DEBUG=] [WIDE=] [UTF8=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 O = obj
 
@@ -43,7 +39,6 @@ LIBEXE		= tlib /C /E /0 /a
 
 LIBCURSES	= pdcurses.lib
 
-#########################################################################
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:
@@ -51,8 +46,6 @@ clean:
 	-del *.lib
 	-del *.tds
 	-del *.exe
-
-#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
@@ -75,8 +68,6 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 
 .obj.exe:
 	$(CC) -e$@ $** $(LIBCURSES)
-
-#------------------------------------------------------------------------
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
 	$(CC) -e$@ $**

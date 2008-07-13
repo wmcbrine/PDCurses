@@ -39,7 +39,6 @@ endif
 
 DEMOS += sdltest.exe
 
-#########################################################################
 .PHONY: all libs clean demos
 
 all:	libs demos
@@ -65,8 +64,6 @@ pdcurses.def: $(PDCURSES_SRCDIR)\win32\pdcurses.def
 	echo pdc_yoffset >> $@
 	echo pdc_xoffset >> $@
 
-#------------------------------------------------------------------------
-
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $? $(POST)
 
@@ -82,8 +79,6 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) -c $<
-
-#------------------------------------------------------------------------
 
 firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: $(demodir)/%.c

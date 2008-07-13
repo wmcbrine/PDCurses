@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Makefile for PDCurses library - WIN32 LCC-Win32
 #
 # Usage: make -f lccwin32.mak [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 PDCURSES_SRCDIR	= ..
 
@@ -55,8 +51,6 @@ PDCLIBS		= $(LIBCURSES)
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
-#########################################################################
-
 all:    $(PDCLIBS) $(DEMOS)
 
 clean:
@@ -65,8 +59,6 @@ clean:
 	-del *.dll
 	-del *.exp
 	-del *.exe
-
-#------------------------------------------------------------------------
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj getch.obj \
@@ -228,7 +220,6 @@ window.obj: $(srcdir)\window.c
 debug.obj: $(srcdir)\debug.c
 	$(SRCBUILD)
 
-
 pdcclip.obj: $(osdir)\pdcclip.c
 	$(OSBUILD)
 
@@ -249,8 +240,6 @@ pdcsetsc.obj: $(osdir)\pdcsetsc.c
 
 pdcutil.obj: $(osdir)\pdcutil.c
 	$(OSBUILD)
-
-#------------------------------------------------------------------------
 
 firework.exe:   firework.obj
 	$(LINK) -o $@ firework.obj $(LIBCURSES)
@@ -275,7 +264,6 @@ worm.exe:       worm.obj
 
 xmas.exe:       xmas.obj
 	$(LINK) -o $@ xmas.obj $(LIBCURSES)
-
 
 firework.obj: $(demodir)\firework.c
 	$(BUILD) $(demodir)\$*.c

@@ -1,13 +1,9 @@
-#########################################################################
-#
 # NMAKE Makefile for PDCurses library - OS/2 C Set/2
 #
 # Usage: nmake -f [path\]iccos2.mak [DEBUG=1] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 O = obj
 
@@ -42,7 +38,6 @@ LIBEXE		= lib
 
 LIBCURSES	= pdcurses.lib
 
-#########################################################################
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:
@@ -51,8 +46,6 @@ clean:
 	-del *.exe
 
 demos:	$(DEMOS)
-
-#------------------------------------------------------------------------
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\iccos2.lrf
@@ -184,7 +177,6 @@ window.obj: $(srcdir)\window.c $(PDCURSES_HEADERS)
 debug.obj: $(srcdir)\debug.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\debug.c
 
-
 pdcclip.obj: $(osdir)\pdcclip.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdcclip.c
 
@@ -205,8 +197,6 @@ pdcsetsc.obj: $(osdir)\pdcsetsc.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 
 pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 	$(BUILD) $(osdir)\pdcutil.c
-
-#------------------------------------------------------------------------
 
 firework.exe: firework.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
@@ -231,7 +221,6 @@ worm.exe: worm.obj $(LIBCURSES)
 
 xmas.exe: xmas.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
-
 
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(demodir)\firework.c

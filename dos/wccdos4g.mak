@@ -1,13 +1,9 @@
-#########################################################################
-#
 # Watcom WMAKE Makefile for PDCurses library - DOS/4GW Watcom C/C++ 10.6+
 #
 # Usage: wmake -f [path\]wccdos4g.mak [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
-#
-#########################################################################
 
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)

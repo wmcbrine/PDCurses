@@ -48,7 +48,6 @@ tuidemo.o worm.o xmas.o
 
 SHLFILE		= XCurses
 
-#########################################################################
 all:	$(PDCLIBS) $(DEMOS)
 
 install:
@@ -65,8 +64,6 @@ distclean: clean
 mostlyclean: clean
 
 realclean: distclean
-
-#------------------------------------------------------------------------
 
 LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o deprec.o getch.o getstr.o getyx.o \
@@ -222,7 +219,6 @@ window.o: $(srcdir)/window.c
 debug.o: $(srcdir)/debug.c
 	$(BUILD) $(srcdir)/debug.c
 
-
 pdcclip.o: $(osdir)/pdcclip.c
 	$(BUILD) $(osdir)/pdcclip.c
 
@@ -255,8 +251,6 @@ sb.o: $(osdir)/sb.c
 
 x11.o: $(osdir)/x11.c
 	$(BUILD) $(osdir)/x11.c
-
-#------------------------------------------------------------------------
 
 addch.sho: $(srcdir)/addch.c
 	$(DYN_BUILD) $(srcdir)/addch.c
@@ -426,7 +420,6 @@ debug.sho: $(srcdir)/debug.c
 	$(DYN_BUILD) $(srcdir)/debug.c
 	@SAVE2O@
 
-
 pdcclip.sho: $(osdir)/pdcclip.c
 	$(DYN_BUILD) $(osdir)/pdcclip.c
 	@SAVE2O@
@@ -471,8 +464,6 @@ x11.sho: $(osdir)/x11.c
 	$(DYN_BUILD) $(osdir)/x11.c
 	@SAVE2O@
 
-#------------------------------------------------------------------------
-
 firework: firework.o
 	$(LINK) firework.o -o $@ $(LDFLAGS)
 
@@ -496,7 +487,6 @@ worm: worm.o
 
 xmas: xmas.o
 	$(LINK) xmas.o -o $@ $(LDFLAGS)
-
 
 firework.o: $(demodir)/firework.c
 	$(BUILD) $(demodir)/firework.c
@@ -525,10 +515,9 @@ worm.o: $(demodir)/worm.c
 xmas.o: $(demodir)/xmas.c
 	$(BUILD) $(demodir)/xmas.c
 
-#
 # This section provides for compiling and linking the
 # ncurses test programs.
-#
+
 ncurses_testdir	= $(HOME)/ncurses-5.6/test
 
 NCURSES_TESTS	= bs gdc hanoi knight tclock ncurses

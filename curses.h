@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: curses.h,v 1.292 2008/07/13 06:36:31 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.293 2008/07/13 07:09:31 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *                              PDCurses                                *
@@ -14,8 +14,12 @@
 PDCurses definitions list:  (Only define those needed)
 
 	XCURSES		True if compiling for X11.
-        PDC_RGB         True if you want to use RGB color definitions
-                        (Red = 1, Green = 2, Blue = 4) instead of BGR.
+	PDC_RGB		True if you want to use RGB color definitions
+			(Red = 1, Green = 2, Blue = 4) instead of BGR.
+	PDC_WIDE	True if building wide-character support.
+	PDC_DLL_BUILD	True if building a Win32 DLL.
+	NCURSES_MOUSE_VERSION	Use the ncurses mouse API instead
+				of PDCurses' traditional mouse API.
 
 PDCurses portable platform definitions list:
 

@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.69 2008/07/13 09:07:24 wmcbrine Exp $")
+RCSID("$Id: util.c,v 1.70 2008/07/13 09:38:35 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -264,12 +264,11 @@ size_t PDC_mbstowcs(wchar_t *dest, const char *src, size_t n)
 		len -= retval;
 		i++;
 	}
-
+# else
+	size_t i = mbstowcs(dest, src, n);
+# endif
 	dest[i] = 0;
 	return i;
-# else
-	return mbstowcs(dest, src, n);
-# endif
 }
 
 size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
@@ -304,13 +303,10 @@ size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
 				i += 3;
 			}
 	}
-
-	dest[i] = 0;
-	return i;
 # else
-	n = wcstombs(dest, src, n);
-        dest[n] = '\0';
-        return n;
+	size_t i = wcstombs(dest, src, n);
 # endif
+	dest[i] = '\0';
+	return i;
 }
 #endif

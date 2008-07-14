@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: kernel.c,v 1.76 2008/07/13 16:08:18 wmcbrine Exp $")
+RCSID("$Id: kernel.c,v 1.77 2008/07/14 12:22:13 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -43,42 +43,35 @@ RCSID("$Id: kernel.c,v 1.76 2008/07/13 16:08:18 wmcbrine Exp $")
         and resetty() restores the state to what it was at the last call
         to savetty().
 
-        getsyx() obtains the coordinates of the virtual screen cursor.
-        If leaveok() is currently TRUE, then -1, -1 is returned. If
-        lines have been removed from the top of the screen with
-        ripoffline(), then getsyx() includes those lines, so y and x
-        should only be used by setyx(). setyx() sets the cursor position
-        of the virtual screen to the y,x coordinates. If y, x are -1,
-        -1, leaveok() is set TRUE. The getsyx() and setsyx() routines
-        are designed to be used by a library routine that manipulates
-        curses windows, but does not want to change the position of the
-        cursor.
+        getsyx() gets the coordinates of the virtual screen cursor, and
+        stores them in y and x. If leaveok() is TRUE, it returns -1, -1.
+        If lines have been removed with ripoffline(), then getsyx()
+        includes these lines in its count; so, the returned y and x
+        values should only be used with setsyx().
 
-        Note that getsyx() and setsyx() are defined as macros only.
+        setsyx() sets the virtual screen cursor to the y, x coordinates.
+        If y, x are -1, -1, leaveok() is set TRUE.
 
-        curs_set() alters the appearance of the text cursor. A value of
-        0 for visibility makes the cursor disappear; a value of 1 makes
-        the cursor appear "normal" (usually an underline) and 2 makes
-        the cursor "highly visible" (usually a block).
+        getsyx() and setsyx() are meant to be used by a library routine
+        that manipulates curses windows without altering the position of
+        the cursor. Note that they're defined only as macros.
 
-        ripoffline() allows the user to reduce the size of stdscr by 1
-        line.  If the value of line is positive, the line is removed
-        from the top of the screen; negative from the bottom. Up to 5
-        lines can be ripped off stdscr by calling ripoffline()
-        consecutively. The function argument, init, is called from
-        within initscr() or newterm(), so ripoffline() must be called
-        before either of these functions.  The init function is passed a
-        pointer to a 1 line WINDOW, and the width of the window. Calling
-        ripoffline() with a NULL initialise function pointer is not
-        advised.
+        curs_set() alters the appearance of the cursor. A visibility of
+        0 makes it disappear; 1 makes it appear "normal" (usually an
+        underline) and 2 makes it "highly visible" (usually a block).
 
-        The napms() function suspends the program for the specified
-        number of milliseconds. draino() is an archaic equivalent.
+        ripoffline() reduces the size of stdscr by one line.  If the 
+        "line" parameter is positive, the line is removed from the top 
+        of the screen; if negative, from the bottom. Up to 5 lines can 
+        be ripped off stdscr by calling ripoffline() repeatedly. The 
+        function argument, init, is called from within initscr() or 
+        newterm(), so ripoffline() must be called before either of these 
+        functions.  The init function receives a pointer to a one-line 
+        WINDOW, and the width of the window. Calling ripoffline() with a 
+        NULL init function pointer is an error.
 
-        FYI: It is unclear whether savetty() and resetty() are meant to
-        duplicate reset_prog_mode() and reset_shell_mode(), or be a
-        backing store type of operation. At this time, they're
-        implemented similarly to the reset_*_mode() routines.
+        napms() suspends the program for the specified number of 
+        milliseconds. draino() is an archaic equivalent.
 
         resetterm(), fixterm() and saveterm() are archaic equivalents
         for reset_shell_mode(), reset_prog_mode() and def_prog_mode(),
@@ -240,13 +233,15 @@ int ripoffline(int line, int (*init)(WINDOW *, int))
 {
     PDC_LOG(("ripoffline() - called: line=%d\n", line));
 
-    if (linesrippedoff < 5 && line)
+    if (linesrippedoff < 5 && line && init)
     {
         linesripped[(int)linesrippedoff].line = line;
         linesripped[(int)linesrippedoff++].init = init;
+
+        return OK;
     }
 
-    return OK;
+    return ERR;
 }
 
 int draino(int ms)

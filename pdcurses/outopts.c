@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.38 2008/07/13 16:08:18 wmcbrine Exp $")
+RCSID("$Id: outopts.c,v 1.39 2008/07/14 12:22:13 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -31,13 +31,13 @@ RCSID("$Id: outopts.c,v 1.38 2008/07/13 16:08:18 wmcbrine Exp $")
 
         Normally, the hardware cursor is left at the location of the
         window being refreshed.  leaveok() allows the cursor to be
-        left wherever the update happens to leave it.  It is useful
+        left wherever the update happens to leave it.  It's useful
         for applications where the cursor is not used, since it reduces
         the need for cursor motions.  If possible, the cursor is made
         invisible when this option is enabled.
 
-        wsetscrreg() sets a scrolling region in a window; 'top' and 
-        'bot' are the line numbers for the top and bottom margins. If 
+        wsetscrreg() sets a scrolling region in a window; "top" and 
+        "bot" are the line numbers for the top and bottom margins. If 
         this option and scrollok() are enabled, any attempt to move off 
         the bottom margin will cause all lines in the scrolling region 
         to scroll up one line. setscrreg() is the stdscr version.
@@ -46,8 +46,8 @@ RCSID("$Id: outopts.c,v 1.38 2008/07/13 16:08:18 wmcbrine Exp $")
         compatibility with other curses implementations.
 
         raw_output() enables the output of raw characters using the 
-        'standard' *add* and *ins* curses functions (that is, it 
-        disables translation of control characters).
+        standard *add* and *ins* curses functions (that is, it disables 
+        translation of control characters).
 
   Return Value:
         All functions return OK on success and ERR on error.

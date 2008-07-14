@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scanw.c,v 1.41 2008/07/13 16:08:18 wmcbrine Exp $")
+RCSID("$Id: scanw.c,v 1.42 2008/07/14 12:22:13 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -17,21 +17,13 @@ RCSID("$Id: scanw.c,v 1.41 2008/07/13 16:08:18 wmcbrine Exp $")
         int vw_scanw(WINDOW *win, const char *fmt, va_list varglist);
 
   Description:
-        These routines correspond to scanf(). scanw() reads input from
-        the default window; wscanw() from the specified window.
-        mvscanw() and mvwscanw() move the cursor to the specified
-        position before reading.
-
-        wgetstr() is called to get a string from the window, and the 
-        resulting line is used as input for the scan.  All character 
-        interpretation is carried out according to the scanf() function 
-        rules.
+        These routines correspond to the standard C library's scanf()
+        family. Each gets a string from the window via wgetnstr(), and
+        uses the resulting line as input for the scan.
 
   Return Value:
-        Upon successful completion, the scanw, mvscanw, mvwscanw and
-        wscanw functions return the number of items successfully
-        matched.  On end-of-file, they return EOF.  Otherwise they
-        return ERR.
+        On successful completion, these functions return the number of
+        items successfully matched.  Otherwise they return ERR.
 
   Portability                                X/Open    BSD    SYS V
         scanw                                   Y       Y       Y

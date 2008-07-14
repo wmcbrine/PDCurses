@@ -2,7 +2,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11.c,v 1.92 2008/07/13 06:36:32 wmcbrine Exp $")
+RCSID("$Id: x11.c,v 1.93 2008/07/14 04:24:52 wmcbrine Exp $")
 
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
@@ -39,12 +39,12 @@ XCursesAppData xc_app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-#define MAX_COLORS   16  /* maximum of "normal" colors */
-#define COLOR_CURSOR MAX_COLORS /* color of cursor */
+#define MAX_COLORS   16             /* maximum of "normal" colors */
+#define COLOR_CURSOR MAX_COLORS     /* color of cursor */
 #define COLOR_BORDER MAX_COLORS + 1 /* color of border */
 
-#define XCURSESDISPLAY		(XtDisplay(drawing))
-#define XCURSESWIN		(XtWindow(drawing))
+#define XCURSESDISPLAY (XtDisplay(drawing))
+#define XCURSESWIN     (XtWindow(drawing))
 
 /* Default icons for XCurses applications.  */
 
@@ -63,143 +63,143 @@ static void XCursesPasteSelection(Widget, XButtonEvent *);
 
 static struct
 {
-	KeySym keycode;
-	bool numkeypad;
-	unsigned short normal;
-	unsigned short shifted;
-	unsigned short control;
-	unsigned short alt;
+    KeySym keycode;
+    bool numkeypad;
+    unsigned short normal;
+    unsigned short shifted;
+    unsigned short control;
+    unsigned short alt;
 } key_table[] =
 {
-/* keycode	keypad	normal	     shifted	   control	alt*/
- {XK_Left,	FALSE,	KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,	ALT_LEFT},
- {XK_Right,	FALSE,	KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,	ALT_RIGHT},
- {XK_Up,	FALSE,	KEY_UP,      KEY_SUP,	   CTL_UP,	ALT_UP},
- {XK_Down,	FALSE,	KEY_DOWN,    KEY_SDOWN,    CTL_DOWN,	ALT_DOWN},
- {XK_Home,	FALSE,	KEY_HOME,    KEY_SHOME,    CTL_HOME,	ALT_HOME},
+/* keycode      keypad  normal       shifted       control      alt*/
+ {XK_Left,      FALSE,  KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,    ALT_LEFT},
+ {XK_Right,     FALSE,  KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,   ALT_RIGHT},
+ {XK_Up,        FALSE,  KEY_UP,      KEY_SUP,      CTL_UP,      ALT_UP},
+ {XK_Down,      FALSE,  KEY_DOWN,    KEY_SDOWN,    CTL_DOWN,    ALT_DOWN},
+ {XK_Home,      FALSE,  KEY_HOME,    KEY_SHOME,    CTL_HOME,    ALT_HOME},
 /* Sun Type 4 keyboard */
- {XK_R7,	FALSE,	KEY_HOME,    KEY_SHOME,    CTL_HOME,	ALT_HOME},
- {XK_End,	FALSE,	KEY_END,     KEY_SEND,	   CTL_END,	ALT_END},
+ {XK_R7,        FALSE,  KEY_HOME,    KEY_SHOME,    CTL_HOME,    ALT_HOME},
+ {XK_End,       FALSE,  KEY_END,     KEY_SEND,     CTL_END,     ALT_END},
 /* Sun Type 4 keyboard */
- {XK_R13,	FALSE,	KEY_END,     KEY_SEND,	   CTL_END,	ALT_END},
- {XK_Prior,	FALSE,	KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,	ALT_PGUP},
+ {XK_R13,       FALSE,  KEY_END,     KEY_SEND,     CTL_END,     ALT_END},
+ {XK_Prior,     FALSE,  KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,    ALT_PGUP},
 /* Sun Type 4 keyboard */
- {XK_R9,	FALSE,	KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,	ALT_PGUP},
- {XK_Next,	FALSE,	KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,	ALT_PGDN},
+ {XK_R9,        FALSE,  KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,    ALT_PGUP},
+ {XK_Next,      FALSE,  KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,    ALT_PGDN},
 /* Sun Type 4 keyboard */
- {XK_R15,	FALSE,	KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,	ALT_PGDN},
- {XK_Insert,	FALSE,	KEY_IC,      KEY_SIC,	   CTL_INS,	ALT_INS},
- {XK_Delete,	FALSE,	KEY_DC,      KEY_SDC,	   CTL_DEL,	ALT_DEL},
- {XK_F1,	FALSE,	KEY_F(1),    KEY_F(13),    KEY_F(25),	KEY_F(37)},
- {XK_F2,	FALSE,	KEY_F(2),    KEY_F(14),    KEY_F(26),	KEY_F(38)},
- {XK_F3,	FALSE,	KEY_F(3),    KEY_F(15),    KEY_F(27),	KEY_F(39)},
- {XK_F4,	FALSE,	KEY_F(4),    KEY_F(16),    KEY_F(28),	KEY_F(40)},
- {XK_F5,	FALSE,	KEY_F(5),    KEY_F(17),    KEY_F(29),	KEY_F(41)},
- {XK_F6,	FALSE,	KEY_F(6),    KEY_F(18),    KEY_F(30),	KEY_F(42)},
- {XK_F7,	FALSE,	KEY_F(7),    KEY_F(19),    KEY_F(31),	KEY_F(43)},
- {XK_F8,	FALSE,	KEY_F(8),    KEY_F(20),    KEY_F(32),	KEY_F(44)},
- {XK_F9,	FALSE,	KEY_F(9),    KEY_F(21),    KEY_F(33),	KEY_F(45)},
- {XK_F10,	FALSE,	KEY_F(10),   KEY_F(22),    KEY_F(34),	KEY_F(46)},
- {XK_F11,	FALSE,	KEY_F(11),   KEY_F(23),    KEY_F(35),	KEY_F(47)},
- {XK_F12,	FALSE,	KEY_F(12),   KEY_F(24),    KEY_F(36),	KEY_F(48)},
- {XK_F13,	FALSE,	KEY_F(13),   KEY_F(25),    KEY_F(37),	KEY_F(49)},
- {XK_F14,	FALSE,	KEY_F(14),   KEY_F(26),    KEY_F(38),	KEY_F(50)},
- {XK_F15,	FALSE,	KEY_F(15),   KEY_F(27),    KEY_F(39),	KEY_F(51)},
- {XK_F16,	FALSE,	KEY_F(16),   KEY_F(28),    KEY_F(40),	KEY_F(52)},
- {XK_F17,	FALSE,	KEY_F(17),   KEY_F(29),    KEY_F(41),	KEY_F(53)},
- {XK_F18,	FALSE,	KEY_F(18),   KEY_F(30),    KEY_F(42),	KEY_F(54)},
- {XK_F19,	FALSE,	KEY_F(19),   KEY_F(31),    KEY_F(43),	KEY_F(55)},
- {XK_F20,	FALSE,	KEY_F(20),   KEY_F(32),    KEY_F(44),	KEY_F(56)},
- {XK_BackSpace, FALSE,	0x08,        0x08,	   CTL_BKSP,	ALT_BKSP},
- {XK_Tab,	FALSE,	0x09,        KEY_BTAB,	   CTL_TAB,	ALT_TAB},
- {XK_Select,	FALSE,	KEY_SELECT,  KEY_SELECT,   KEY_SELECT,	KEY_SELECT},
- {XK_Print,	FALSE,	KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,	KEY_PRINT},
- {XK_Find,	FALSE,	KEY_FIND,    KEY_SFIND,    KEY_FIND,	KEY_FIND},
- {XK_Pause,	FALSE,	KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
- {XK_Clear,	FALSE,	KEY_CLEAR,   KEY_CLEAR,    KEY_CLEAR,	KEY_CLEAR},
- {XK_Cancel,	FALSE,	KEY_CANCEL,  KEY_SCANCEL,  KEY_CANCEL,	KEY_CANCEL},
- {XK_Break,	FALSE,	KEY_BREAK,   KEY_BREAK,    KEY_BREAK,	KEY_BREAK},
- {XK_Help,	FALSE,	KEY_HELP,    KEY_SHELP,    KEY_LHELP,	KEY_HELP},
- {XK_L4,	FALSE,	KEY_UNDO,    KEY_SUNDO,    KEY_UNDO,	KEY_UNDO},
- {XK_L6,	FALSE,	KEY_COPY,    KEY_SCOPY,    KEY_COPY,	KEY_COPY},
- {XK_L9,	FALSE,	KEY_FIND,    KEY_SFIND,    KEY_FIND,	KEY_FIND},
- {XK_Menu,	FALSE,	KEY_OPTIONS, KEY_SOPTIONS, KEY_OPTIONS, KEY_OPTIONS},
+ {XK_R15,       FALSE,  KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,    ALT_PGDN},
+ {XK_Insert,    FALSE,  KEY_IC,      KEY_SIC,      CTL_INS,     ALT_INS},
+ {XK_Delete,    FALSE,  KEY_DC,      KEY_SDC,      CTL_DEL,     ALT_DEL},
+ {XK_F1,        FALSE,  KEY_F(1),    KEY_F(13),    KEY_F(25),   KEY_F(37)},
+ {XK_F2,        FALSE,  KEY_F(2),    KEY_F(14),    KEY_F(26),   KEY_F(38)},
+ {XK_F3,        FALSE,  KEY_F(3),    KEY_F(15),    KEY_F(27),   KEY_F(39)},
+ {XK_F4,        FALSE,  KEY_F(4),    KEY_F(16),    KEY_F(28),   KEY_F(40)},
+ {XK_F5,        FALSE,  KEY_F(5),    KEY_F(17),    KEY_F(29),   KEY_F(41)},
+ {XK_F6,        FALSE,  KEY_F(6),    KEY_F(18),    KEY_F(30),   KEY_F(42)},
+ {XK_F7,        FALSE,  KEY_F(7),    KEY_F(19),    KEY_F(31),   KEY_F(43)},
+ {XK_F8,        FALSE,  KEY_F(8),    KEY_F(20),    KEY_F(32),   KEY_F(44)},
+ {XK_F9,        FALSE,  KEY_F(9),    KEY_F(21),    KEY_F(33),   KEY_F(45)},
+ {XK_F10,       FALSE,  KEY_F(10),   KEY_F(22),    KEY_F(34),   KEY_F(46)},
+ {XK_F11,       FALSE,  KEY_F(11),   KEY_F(23),    KEY_F(35),   KEY_F(47)},
+ {XK_F12,       FALSE,  KEY_F(12),   KEY_F(24),    KEY_F(36),   KEY_F(48)},
+ {XK_F13,       FALSE,  KEY_F(13),   KEY_F(25),    KEY_F(37),   KEY_F(49)},
+ {XK_F14,       FALSE,  KEY_F(14),   KEY_F(26),    KEY_F(38),   KEY_F(50)},
+ {XK_F15,       FALSE,  KEY_F(15),   KEY_F(27),    KEY_F(39),   KEY_F(51)},
+ {XK_F16,       FALSE,  KEY_F(16),   KEY_F(28),    KEY_F(40),   KEY_F(52)},
+ {XK_F17,       FALSE,  KEY_F(17),   KEY_F(29),    KEY_F(41),   KEY_F(53)},
+ {XK_F18,       FALSE,  KEY_F(18),   KEY_F(30),    KEY_F(42),   KEY_F(54)},
+ {XK_F19,       FALSE,  KEY_F(19),   KEY_F(31),    KEY_F(43),   KEY_F(55)},
+ {XK_F20,       FALSE,  KEY_F(20),   KEY_F(32),    KEY_F(44),   KEY_F(56)},
+ {XK_BackSpace, FALSE,  0x08,        0x08,         CTL_BKSP,    ALT_BKSP},
+ {XK_Tab,       FALSE,  0x09,        KEY_BTAB,     CTL_TAB,     ALT_TAB},
+ {XK_Select,    FALSE,  KEY_SELECT,  KEY_SELECT,   KEY_SELECT,  KEY_SELECT},
+ {XK_Print,     FALSE,  KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,   KEY_PRINT},
+ {XK_Find,      FALSE,  KEY_FIND,    KEY_SFIND,    KEY_FIND,    KEY_FIND},
+ {XK_Pause,     FALSE,  KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
+ {XK_Clear,     FALSE,  KEY_CLEAR,   KEY_CLEAR,    KEY_CLEAR,   KEY_CLEAR},
+ {XK_Cancel,    FALSE,  KEY_CANCEL,  KEY_SCANCEL,  KEY_CANCEL,  KEY_CANCEL},
+ {XK_Break,     FALSE,  KEY_BREAK,   KEY_BREAK,    KEY_BREAK,   KEY_BREAK},
+ {XK_Help,      FALSE,  KEY_HELP,    KEY_SHELP,    KEY_LHELP,   KEY_HELP},
+ {XK_L4,        FALSE,  KEY_UNDO,    KEY_SUNDO,    KEY_UNDO,    KEY_UNDO},
+ {XK_L6,        FALSE,  KEY_COPY,    KEY_SCOPY,    KEY_COPY,    KEY_COPY},
+ {XK_L9,        FALSE,  KEY_FIND,    KEY_SFIND,    KEY_FIND,    KEY_FIND},
+ {XK_Menu,      FALSE,  KEY_OPTIONS, KEY_SOPTIONS, KEY_OPTIONS, KEY_OPTIONS},
 #ifdef HAVE_SUNKEYSYM_H
- {SunXK_F36,	FALSE,	KEY_F(41),   KEY_F(43),    KEY_F(45),	KEY_F(47)},
- {SunXK_F37,	FALSE,	KEY_F(42),   KEY_F(44),    KEY_F(46),	KEY_F(48)},
+ {SunXK_F36,    FALSE,  KEY_F(41),   KEY_F(43),    KEY_F(45),   KEY_F(47)},
+ {SunXK_F37,    FALSE,  KEY_F(42),   KEY_F(44),    KEY_F(46),   KEY_F(48)},
 #endif
 #ifdef HAVE_DECKEYSYM_H
- {DXK_Remove,	FALSE,	KEY_DC,      KEY_SDC,	   CTL_DEL,	ALT_DEL},
+ {DXK_Remove,   FALSE,  KEY_DC,      KEY_SDC,      CTL_DEL,     ALT_DEL},
 #endif
- {XK_Escape,	FALSE,	0x1B,        0x1B,	   0x1B,	ALT_ESC},
- {XK_KP_Enter,	TRUE,	PADENTER,    PADENTER,	   CTL_PADENTER,ALT_PADENTER},
- {XK_KP_Add,	TRUE,	PADPLUS,     '+',	   CTL_PADPLUS, ALT_PADPLUS},
- {XK_KP_Subtract,TRUE,	PADMINUS,    '-',	   CTL_PADMINUS,ALT_PADMINUS},
- {XK_KP_Multiply,TRUE,	PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
+ {XK_Escape,    FALSE,  0x1B,        0x1B,         0x1B,        ALT_ESC},
+ {XK_KP_Enter,  TRUE,   PADENTER,    PADENTER,     CTL_PADENTER,ALT_PADENTER},
+ {XK_KP_Add,    TRUE,   PADPLUS,     '+',          CTL_PADPLUS, ALT_PADPLUS},
+ {XK_KP_Subtract,TRUE,  PADMINUS,    '-',          CTL_PADMINUS,ALT_PADMINUS},
+ {XK_KP_Multiply,TRUE,  PADSTAR,     '*',          CTL_PADSTAR, ALT_PADSTAR},
 /* Sun Type 4 keyboard */
- {XK_R6,	TRUE,	PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
- {XK_KP_Divide, TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
+ {XK_R6,        TRUE,   PADSTAR,     '*',          CTL_PADSTAR, ALT_PADSTAR},
+ {XK_KP_Divide, TRUE,   PADSLASH,    '/',          CTL_PADSLASH,ALT_PADSLASH},
 /* Sun Type 4 keyboard */
- {XK_R5,	TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
- {XK_KP_Decimal,TRUE,	PADSTOP,     '.',	   CTL_PADSTOP, ALT_PADSTOP},
- {XK_KP_0,	TRUE,	PAD0,	     '0',	   CTL_PAD0,	ALT_PAD0},
- {XK_KP_1,	TRUE,	KEY_C1,      '1',	   CTL_PAD1,	ALT_PAD1},
- {XK_KP_2,	TRUE,	KEY_C2,      '2',	   CTL_PAD2,	ALT_PAD2},
- {XK_KP_3,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
- {XK_KP_4,	TRUE,	KEY_B1,      '4',	   CTL_PAD4,	ALT_PAD4},
- {XK_KP_5,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_R5,        TRUE,   PADSLASH,    '/',          CTL_PADSLASH,ALT_PADSLASH},
+ {XK_KP_Decimal,TRUE,   PADSTOP,     '.',          CTL_PADSTOP, ALT_PADSTOP},
+ {XK_KP_0,      TRUE,   PAD0,        '0',          CTL_PAD0,    ALT_PAD0},
+ {XK_KP_1,      TRUE,   KEY_C1,      '1',          CTL_PAD1,    ALT_PAD1},
+ {XK_KP_2,      TRUE,   KEY_C2,      '2',          CTL_PAD2,    ALT_PAD2},
+ {XK_KP_3,      TRUE,   KEY_C3,      '3',          CTL_PAD3,    ALT_PAD3},
+ {XK_KP_4,      TRUE,   KEY_B1,      '4',          CTL_PAD4,    ALT_PAD4},
+ {XK_KP_5,      TRUE,   KEY_B2,      '5',          CTL_PAD5,    ALT_PAD5},
 /* Sun Type 4 keyboard */
- {XK_R11,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
- {XK_KP_6,	TRUE,	KEY_B3,      '6',	   CTL_PAD6,	ALT_PAD6},
- {XK_KP_7,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
- {XK_KP_8,	TRUE,	KEY_A2,      '8',	   CTL_PAD8,	ALT_PAD8},
- {XK_KP_9,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
+ {XK_R11,       TRUE,   KEY_B2,      '5',          CTL_PAD5,    ALT_PAD5},
+ {XK_KP_6,      TRUE,   KEY_B3,      '6',          CTL_PAD6,    ALT_PAD6},
+ {XK_KP_7,      TRUE,   KEY_A1,      '7',          CTL_PAD7,    ALT_PAD7},
+ {XK_KP_8,      TRUE,   KEY_A2,      '8',          CTL_PAD8,    ALT_PAD8},
+ {XK_KP_9,      TRUE,   KEY_A3,      '9',          CTL_PAD9,    ALT_PAD9},
 /* the following added to support Sun Type 5 keyboards */
- {XK_F21,	FALSE,	KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
- {XK_F22,	FALSE,	KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,	KEY_PRINT},
- {XK_F24,	TRUE,	PADMINUS,    '-',	   CTL_PADMINUS,ALT_PADMINUS},
+ {XK_F21,       FALSE,  KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
+ {XK_F22,       FALSE,  KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,   KEY_PRINT},
+ {XK_F24,       TRUE,   PADMINUS,    '-',          CTL_PADMINUS,ALT_PADMINUS},
 /* Sun Type 4 keyboard */
- {XK_F25,	TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
+ {XK_F25,       TRUE,   PADSLASH,    '/',          CTL_PADSLASH,ALT_PADSLASH},
 /* Sun Type 4 keyboard */
- {XK_F26,	TRUE,	PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
- {XK_F27,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
- {XK_F29,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
- {XK_F31,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
- {XK_F35,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
+ {XK_F26,       TRUE,   PADSTAR,     '*',          CTL_PADSTAR, ALT_PADSTAR},
+ {XK_F27,       TRUE,   KEY_A1,      '7',          CTL_PAD7,    ALT_PAD7},
+ {XK_F29,       TRUE,   KEY_A3,      '9',          CTL_PAD9,    ALT_PAD9},
+ {XK_F31,       TRUE,   KEY_B2,      '5',          CTL_PAD5,    ALT_PAD5},
+ {XK_F35,       TRUE,   KEY_C3,      '3',          CTL_PAD3,    ALT_PAD3},
 #ifdef HAVE_XK_KP_DELETE
- {XK_KP_Delete, TRUE,	PADSTOP,     '.',	   CTL_PADSTOP, ALT_PADSTOP},
+ {XK_KP_Delete, TRUE,   PADSTOP,     '.',          CTL_PADSTOP, ALT_PADSTOP},
 #endif
 #ifdef HAVE_XK_KP_INSERT
- {XK_KP_Insert, TRUE,	PAD0,	     '0',	   CTL_PAD0,	ALT_PAD0},
+ {XK_KP_Insert, TRUE,   PAD0,        '0',          CTL_PAD0,    ALT_PAD0},
 #endif
 #ifdef HAVE_XK_KP_END
- {XK_KP_End,	TRUE,	KEY_C1,      '1',	   CTL_PAD1,	ALT_PAD1},
+ {XK_KP_End,    TRUE,   KEY_C1,      '1',          CTL_PAD1,    ALT_PAD1},
 #endif
 #ifdef HAVE_XK_KP_DOWN
- {XK_KP_Down,	TRUE,	KEY_C2,      '2',	   CTL_PAD2,	ALT_PAD2},
+ {XK_KP_Down,   TRUE,   KEY_C2,      '2',          CTL_PAD2,    ALT_PAD2},
 #endif
 #ifdef HAVE_XK_KP_NEXT
- {XK_KP_Next,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
+ {XK_KP_Next,   TRUE,   KEY_C3,      '3',          CTL_PAD3,    ALT_PAD3},
 #endif
 #ifdef HAVE_XK_KP_LEFT
- {XK_KP_Left,	TRUE,	KEY_B1,      '4',	   CTL_PAD4,	ALT_PAD4},
+ {XK_KP_Left,   TRUE,   KEY_B1,      '4',          CTL_PAD4,    ALT_PAD4},
 #endif
 #ifdef HAVE_XK_KP_BEGIN
- {XK_KP_Begin,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
+ {XK_KP_Begin,  TRUE,   KEY_B2,      '5',          CTL_PAD5,    ALT_PAD5},
 #endif
 #ifdef HAVE_XK_KP_RIGHT
- {XK_KP_Right,	TRUE,	KEY_B3,      '6',	   CTL_PAD6,	ALT_PAD6},
+ {XK_KP_Right,  TRUE,   KEY_B3,      '6',          CTL_PAD6,    ALT_PAD6},
 #endif
 #ifdef HAVE_XK_KP_HOME
- {XK_KP_Home,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
+ {XK_KP_Home,   TRUE,   KEY_A1,      '7',          CTL_PAD7,    ALT_PAD7},
 #endif
 #ifdef HAVE_XK_KP_UP
- {XK_KP_Up,	TRUE,	KEY_A2,      '8',	   CTL_PAD8,	ALT_PAD8},
+ {XK_KP_Up,     TRUE,   KEY_A2,      '8',          CTL_PAD8,    ALT_PAD8},
 #endif
 #ifdef HAVE_XK_KP_PRIOR
- {XK_KP_Prior,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
+ {XK_KP_Prior,  TRUE,   KEY_A3,      '9',          CTL_PAD9,    ALT_PAD9},
 #endif
- {0,		0,	0,	     0,		   0,		0}
+ {0,            0,      0,           0,            0,           0}
 };
 
 #ifndef PDC_XIM
@@ -212,7 +212,7 @@ unsigned long pdc_key_modifiers = 0L;
 
 static GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
-	window_width, window_height;
+           window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
 static char *bitmap_file = NULL;
 #ifdef HAVE_XPM_H
@@ -222,14 +222,14 @@ static KeySym keysym = 0;
 
 static int state_mask[8] =
 {
-	ShiftMask,
-	LockMask,
-	ControlMask,
-	Mod1Mask,
-	Mod2Mask,
-	Mod3Mask,
-	Mod4Mask,
-	Mod5Mask
+    ShiftMask,
+    LockMask,
+    ControlMask,
+    Mod1Mask,
+    Mod2Mask,
+    Mod3Mask,
+    Mod4Mask,
+    Mod5Mask
 };
 
 static Atom wm_atom[2];
@@ -241,7 +241,7 @@ static bool mouse_selection = FALSE;
 static chtype *tmpsel = NULL;
 static unsigned long tmpsel_length = 0;
 static int selection_start_x = 0, selection_start_y = 0,
-	selection_end_x = 0, selection_end_y = 0;
+           selection_end_x = 0, selection_end_y = 0;
 static Pixmap icon_bitmap;
 #ifdef HAVE_XPM_H
 static Pixmap icon_pixmap;
@@ -262,89 +262,89 @@ static char *program_name;
 #define APPDATAOFF(n) XtOffsetOf(XCursesAppData, n)
 
 #define RINT(name1, name2, value) { \
-		#name1, #name2, XtRInt, \
-		sizeof(int), APPDATAOFF(name1), XtRImmediate, \
-		(XtPointer)value \
-	}
+                #name1, #name2, XtRInt, \
+                sizeof(int), APPDATAOFF(name1), XtRImmediate, \
+                (XtPointer)value \
+        }
 
 #define RPIXEL(name1, name2, value) { \
-		#name1, #name2, XtRPixel, \
-		sizeof(Pixel), APPDATAOFF(name1), XtRString, \
-		(XtPointer)#value \
-	}
+                #name1, #name2, XtRPixel, \
+                sizeof(Pixel), APPDATAOFF(name1), XtRString, \
+                (XtPointer)#value \
+        }
 
 #define RCOLOR(name, value) RPIXEL(color##name, Color##name, value)
 
 
 #define RSTRINGP(name1, name2, param) { \
-		#name1, #name2, XtRString, \
-		MAX_PATH, APPDATAOFF(name1), XtRString, (XtPointer)param \
-	}
+                #name1, #name2, XtRString, \
+                MAX_PATH, APPDATAOFF(name1), XtRString, (XtPointer)param \
+        }
 
 #define RSTRING(name1, name2) RSTRINGP(name1, name2, "")
 
 #define RFONT(name1, name2, value) { \
-		#name1, #name2, XtRFontStruct, \
-		sizeof(XFontStruct), APPDATAOFF(name1), XtRString, \
-		(XtPointer)value \
-	}
+                #name1, #name2, XtRFontStruct, \
+                sizeof(XFontStruct), APPDATAOFF(name1), XtRString, \
+                (XtPointer)value \
+        }
 
 #define RCURSOR(name1, name2, value) { \
-		#name1, #name2, XtRCursor, \
-		sizeof(Cursor), APPDATAOFF(name1), XtRString, \
-		(XtPointer)#value \
-	}
+                #name1, #name2, XtRCursor, \
+                sizeof(Cursor), APPDATAOFF(name1), XtRString, \
+                (XtPointer)#value \
+        }
 
 static XtResource app_resources[] =
 {
-	RINT(lines, Lines, 24),
-	RINT(cols, Cols, 80),
+    RINT(lines, Lines, 24),
+    RINT(cols, Cols, 80),
 
-	RPIXEL(cursorColor, CursorColor, Red),
+    RPIXEL(cursorColor, CursorColor, Red),
 
-	RCOLOR(Black, Black),
-	RCOLOR(Red, red3),
-	RCOLOR(Green, green3),
-	RCOLOR(Yellow, yellow3),
-	RCOLOR(Blue, blue3),
-	RCOLOR(Magenta, magenta3),
-	RCOLOR(Cyan, cyan3),
-	RCOLOR(White, Grey),
+    RCOLOR(Black, Black),
+    RCOLOR(Red, red3),
+    RCOLOR(Green, green3),
+    RCOLOR(Yellow, yellow3),
+    RCOLOR(Blue, blue3),
+    RCOLOR(Magenta, magenta3),
+    RCOLOR(Cyan, cyan3),
+    RCOLOR(White, Grey),
 
-	RCOLOR(BoldBlack, grey40),
-	RCOLOR(BoldRed, red1),
-	RCOLOR(BoldGreen, green1),
-	RCOLOR(BoldYellow, yellow1),
-	RCOLOR(BoldBlue, blue1),
-	RCOLOR(BoldMagenta, magenta1),
-	RCOLOR(BoldCyan, cyan1),
-	RCOLOR(BoldWhite, White),
+    RCOLOR(BoldBlack, grey40),
+    RCOLOR(BoldRed, red1),
+    RCOLOR(BoldGreen, green1),
+    RCOLOR(BoldYellow, yellow1),
+    RCOLOR(BoldBlue, blue1),
+    RCOLOR(BoldMagenta, magenta1),
+    RCOLOR(BoldCyan, cyan1),
+    RCOLOR(BoldWhite, White),
 
-	RFONT(normalFont, NormalFont, DEFFONT),
-	RFONT(italicFont, ItalicFont, DEFFONT),
+    RFONT(normalFont, NormalFont, DEFFONT),
+    RFONT(italicFont, ItalicFont, DEFFONT),
 
-	RSTRING(bitmap, Bitmap),
+    RSTRING(bitmap, Bitmap),
 #ifdef HAVE_XPM_H
-	RSTRING(pixmap, Pixmap),
+    RSTRING(pixmap, Pixmap),
 #endif
-	RSTRINGP(composeKey, ComposeKey, "Multi_key"),
+    RSTRINGP(composeKey, ComposeKey, "Multi_key"),
 
-	RCURSOR(pointer, Pointer, xterm),
+    RCURSOR(pointer, Pointer, xterm),
 
-	RPIXEL(pointerForeColor, PointerForeColor, Black),
-	RPIXEL(pointerBackColor, PointerBackColor, White),
+    RPIXEL(pointerForeColor, PointerForeColor, Black),
+    RPIXEL(pointerBackColor, PointerBackColor, White),
 
-	RINT(shmmin, Shmmin, 0),
-	RINT(borderWidth, BorderWidth, 0),
+    RINT(shmmin, Shmmin, 0),
+    RINT(borderWidth, BorderWidth, 0),
 
-	RPIXEL(borderColor, BorderColor, Black),
+    RPIXEL(borderColor, BorderColor, Black),
 
-	RINT(doubleClickPeriod, DoubleClickPeriod, (PDC_CLICK_PERIOD * 2)),
-	RINT(clickPeriod, ClickPeriod, PDC_CLICK_PERIOD),
-	RINT(scrollbarWidth, ScrollbarWidth, 15),
-	RINT(cursorBlinkRate, CursorBlinkRate, 0),
+    RINT(doubleClickPeriod, DoubleClickPeriod, (PDC_CLICK_PERIOD * 2)),
+    RINT(clickPeriod, ClickPeriod, PDC_CLICK_PERIOD),
+    RINT(scrollbarWidth, ScrollbarWidth, 15),
+    RINT(cursorBlinkRate, CursorBlinkRate, 0),
 
-	RSTRING(textCursor, TextCursor)
+    RSTRING(textCursor, TextCursor)
 };
 
 #undef RCURSOR
@@ -363,24 +363,22 @@ static XtResource app_resources[] =
 
 static XrmOptionDescRec options[] =
 {
-	COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
-	COPT(bitmap),
+    COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
+    COPT(bitmap),
 #ifdef HAVE_XPM_H
-	COPT(pixmap),
+    COPT(pixmap),
 #endif
-	COPT(pointer), COPT(shmmin), COPT(composeKey), 
-	COPT(clickPeriod), COPT(doubleClickPeriod), 
-	COPT(scrollbarWidth), COPT(pointerForeColor), 
-	COPT(pointerBackColor), COPT(cursorBlinkRate), 
-	COPT(cursorColor), COPT(textCursor),
+    COPT(pointer), COPT(shmmin), COPT(composeKey), COPT(clickPeriod),
+    COPT(doubleClickPeriod), COPT(scrollbarWidth),
+    COPT(pointerForeColor), COPT(pointerBackColor),
+    COPT(cursorBlinkRate), COPT(cursorColor), COPT(textCursor),
 
-	CCOLOR(Black), CCOLOR(Red), CCOLOR(Green), 
-	CCOLOR(Yellow), CCOLOR(Blue), CCOLOR(Magenta), 
-	CCOLOR(Cyan), CCOLOR(White),
+    CCOLOR(Black), CCOLOR(Red), CCOLOR(Green), CCOLOR(Yellow),
+    CCOLOR(Blue), CCOLOR(Magenta), CCOLOR(Cyan), CCOLOR(White),
 
-	CCOLOR(BoldBlack), CCOLOR(BoldRed), CCOLOR(BoldGreen), 
-	CCOLOR(BoldYellow), CCOLOR(BoldBlue), CCOLOR(BoldMagenta), 
-	CCOLOR(BoldCyan), CCOLOR(BoldWhite)
+    CCOLOR(BoldBlack), CCOLOR(BoldRed), CCOLOR(BoldGreen), 
+    CCOLOR(BoldYellow), CCOLOR(BoldBlue), CCOLOR(BoldMagenta), 
+    CCOLOR(BoldCyan), CCOLOR(BoldWhite)
 };
 
 #undef CCOLOR
@@ -388,10 +386,10 @@ static XrmOptionDescRec options[] =
 
 static XtActionsRec action_table[] =
 {
-	{"XCursesButton",		(XtActionProc)XCursesButton},
-	{"XCursesKeyPress",		(XtActionProc)XCursesKeyPress},
-	{"XCursesPasteSelection",	(XtActionProc)XCursesPasteSelection},
-	{"string",			(XtActionProc)XCursesHandleString}
+    {"XCursesButton",         (XtActionProc)XCursesButton},
+    {"XCursesKeyPress",       (XtActionProc)XCursesKeyPress},
+    {"XCursesPasteSelection", (XtActionProc)XCursesPasteSelection},
+    {"string",                (XtActionProc)XCursesHandleString}
 };
 
 static bool after_first_curses_request = FALSE;
@@ -405,147 +403,144 @@ static XIC Xic = NULL;
 
 static const char *default_translations =
 {
-	"<Key>: XCursesKeyPress() \n" \
-	"<KeyUp>: XCursesKeyPress() \n" \
-	"<BtnDown>: XCursesButton() \n" \
-	"<BtnUp>: XCursesButton() \n" \
-	"<BtnMotion>: XCursesButton()"
+    "<Key>: XCursesKeyPress() \n" \
+    "<KeyUp>: XCursesKeyPress() \n" \
+    "<BtnDown>: XCursesButton() \n" \
+    "<BtnUp>: XCursesButton() \n" \
+    "<BtnMotion>: XCursesButton()"
 };
 
 static int _to_utf8(char *outcode, chtype code)
 {
 #ifdef PDC_WIDE
-	if (code & A_ALTCHARSET && !(code & 0xff80))
-		code = acs_map[code & 0x7f];
+    if (code & A_ALTCHARSET && !(code & 0xff80))
+        code = acs_map[code & 0x7f];
 #endif
-	code &= A_CHARTEXT;
+    code &= A_CHARTEXT;
 
-	if (code < 0x80)
-	{
-		outcode[0] = code;
-		return 1;
-	}
-	else
-		if (code < 0x800)
-		{
-			outcode[0] = ((code & 0x07c0) >> 6) | 0xc0;
-			outcode[1] = (code & 0x003f) | 0x80;
-			return 2;
-		}
-		else
-		{
-			outcode[0] = ((code & 0xf000) >> 12) | 0xe0;
-			outcode[1] = ((code & 0x0fc0) >> 6) | 0x80;
-			outcode[2] = (code & 0x003f) | 0x80;
-			return 3;
-		}
+    if (code < 0x80)
+    {
+        outcode[0] = code;
+        return 1;
+    }
+    else
+        if (code < 0x800)
+        {
+            outcode[0] = ((code & 0x07c0) >> 6) | 0xc0;
+            outcode[1] = (code & 0x003f) | 0x80;
+            return 2;
+        }
+        else
+        {
+            outcode[0] = ((code & 0xf000) >> 12) | 0xe0;
+            outcode[1] = ((code & 0x0fc0) >> 6) | 0x80;
+            outcode[2] = (code & 0x003f) | 0x80;
+            return 3;
+        }
 }
 
 static int _from_utf8(wchar_t *pwc, const char *s, size_t n)
 {
-	wchar_t key;
-	int i = -1;
-	const unsigned char *string;
+    wchar_t key;
+    int i = -1;
+    const unsigned char *string;
 
-	if (!s || (n < 1))
-		return -1;
+    if (!s || (n < 1))
+        return -1;
 
-	if (!*s)
-		return 0;
+    if (!*s)
+        return 0;
 
-	string = (const unsigned char *)s;
+    string = (const unsigned char *)s;
 
-	key = string[0];
+    key = string[0];
 
-	/* Simplistic UTF-8 decoder -- only does the BMP, minimal 
-	   validation */
+    /* Simplistic UTF-8 decoder -- only does the BMP, minimal validation */
 
-	if (key & 0x80)
-	{
-		if ((key & 0xe0) == 0xc0)
-		{
-			if (1 < n)
-			{
-				key = ((key & 0x1f) << 6) |
-					(string[1] & 0x3f);
-				i = 2;
-			}
-		}
-		else if ((key & 0xe0) == 0xe0)
-		{
-			if (2 < n)
-			{
-				key = ((key & 0x0f) << 12) |
-					((string[1] & 0x3f) << 6) |
-					 (string[2] & 0x3f);
-				i = 3;
-			}
-		}
-	}
-	else
-		i = 1;
+    if (key & 0x80)
+    {
+        if ((key & 0xe0) == 0xc0)
+        {
+            if (1 < n)
+            {
+                key = ((key & 0x1f) << 6) | (string[1] & 0x3f);
+                i = 2;
+            }
+        }
+        else if ((key & 0xe0) == 0xe0)
+        {
+            if (2 < n)
+            {
+                key = ((key & 0x0f) << 12) |
+                      ((string[1] & 0x3f) << 6) | (string[2] & 0x3f);
+                i = 3;
+            }
+        }
+    }
+    else
+        i = 1;
 
-	if (i)
-		*pwc = key;
+    if (i)
+        *pwc = key;
 
-	return i;
+    return i;
 }
 
 #ifndef X_HAVE_UTF8_STRING
 static Atom XA_UTF8_STRING(Display *dpy)
 {
-	static AtomPtr p = NULL;
+    static AtomPtr p = NULL;
 
-	if (!p)
-		p = XmuMakeAtom("UTF8_STRING");
+    if (!p)
+        p = XmuMakeAtom("UTF8_STRING");
 
-	return XmuInternAtom(dpy, p);
+    return XmuInternAtom(dpy, p);
 }
 #endif
 
 signal_handler XCursesSetSignal(int signo, signal_handler action)
 {
 #if defined(SA_INTERRUPT) || defined(SA_RESTART)
-	struct sigaction sigact, osigact;
+    struct sigaction sigact, osigact;
 
-	sigact.sa_handler = action;
+    sigact.sa_handler = action;
 
-	sigact.sa_flags =
+    sigact.sa_flags =
 # ifdef SA_INTERRUPT
 #  ifdef SA_RESTART
-		SA_INTERRUPT | SA_RESTART;
+        SA_INTERRUPT | SA_RESTART;
 #  else
-		SA_INTERRUPT;
+        SA_INTERRUPT;
 #  endif
-# else	/* must be SA_RESTART */
-		SA_RESTART;
+# else  /* must be SA_RESTART */
+        SA_RESTART;
 # endif
-	sigemptyset(&sigact.sa_mask);
+    sigemptyset(&sigact.sa_mask);
 
-	if (sigaction(signo, &sigact, &osigact))
-		return SIG_ERR;
+    if (sigaction(signo, &sigact, &osigact))
+        return SIG_ERR;
 
-	return osigact.sa_handler;
+    return osigact.sa_handler;
 
-#else	/* not SA_INTERRUPT or SA_RESTART, use plain signal */
-	return signal(signo, action);
+#else   /* not SA_INTERRUPT or SA_RESTART, use plain signal */
+    return signal(signo, action);
 #endif
 }
 
 RETSIGTYPE XCursesSigwinchHandler(int signo)
 {
-	PDC_LOG(("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",
-		XCLOGMSG, signo));
+    PDC_LOG(("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",
+             XCLOGMSG, signo));
 
-	/* Patch by: Georg Fuchs, georg.fuchs@rz.uni-regensburg.de 
-	   02-Feb-1999 */
+    /* Patch by: Georg Fuchs, georg.fuchs@rz.uni-regensburg.de 
+       02-Feb-1999 */
 
-	SP->resized += 1;
+    SP->resized += 1;
 
-	/* Always trap SIGWINCH if the C library supports SIGWINCH */
+    /* Always trap SIGWINCH if the C library supports SIGWINCH */
 
 #ifdef SIGWINCH
-	XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);
+    XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);
 #endif
 }
 
@@ -554,2048 +549,1980 @@ RETSIGTYPE XCursesSigwinchHandler(int signo)
 
 static void _make_xy(int x, int y, int *xpos, int *ypos)
 {
-	*xpos = (x * font_width) + xc_app_data.borderWidth;
-	*ypos = xc_app_data.normalFont->ascent + (y * font_height) + 
-		xc_app_data.borderWidth;
+    *xpos = (x * font_width) + xc_app_data.borderWidth;
+    *ypos = xc_app_data.normalFont->ascent + (y * font_height) + 
+            xc_app_data.borderWidth;
 }
 
 /* Output a block of characters with common attributes */
 
 static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 #ifdef PDC_WIDE
-		       XChar2b *text)
+                       XChar2b *text)
 #else
-		       char *text)
+                       char *text)
 #endif
 {
-	GC gc;
-	int xpos, ypos;
-	short fore, back;
+    GC gc;
+    int xpos, ypos;
+    short fore, back;
 
-	PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
-
-#ifdef PDC_WIDE
-	text[len].byte1 = text[len].byte2 = 0;
-#else
-	text[len] = '\0';
-#endif
-
-	/* Specify the color table offsets */
-
-	fore |= (attr & A_BOLD) ? 8 : 0;
-	back |= (attr & A_BLINK) ? 8 : 0;
-
-	/* Reverse flag = highlighted selection XOR A_REVERSE set */
-
-	rev ^= !!(attr & A_REVERSE);
-
-	/* Determine which GC to use - normal or italic */
-
-	gc = (attr & A_ITALIC) ? italic_gc : normal_gc;
-
-	/* Draw it */
-
-	XSetForeground(XCURSESDISPLAY, gc, colors[rev ? back : fore]);
-	XSetBackground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
-
-	_make_xy(col, row, &xpos, &ypos);
+    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
 
 #ifdef PDC_WIDE
-	XDrawImageString16(
+    text[len].byte1 = text[len].byte2 = 0;
 #else
-	XDrawImageString(
+    text[len] = '\0';
 #endif
-		XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
 
-	/* Underline, etc. */
+    /* Specify the color table offsets */
 
-	if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
-	{
-		int k;
+    fore |= (attr & A_BOLD) ? 8 : 0;
+    back |= (attr & A_BLINK) ? 8 : 0;
 
-		if (SP->line_color != -1)
-			XSetForeground(XCURSESDISPLAY, gc,
-				colors[SP->line_color]);
+    /* Reverse flag = highlighted selection XOR A_REVERSE set */
 
-		if (attr & A_UNDERLINE)		/* UNDER */
-			XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-				xpos, ypos + 1,
-				xpos + font_width * len, ypos + 1);
+    rev ^= !!(attr & A_REVERSE);
 
-		if (attr & A_LEFTLINE)		/* LEFT */
-			for (k = 0; k < len; k++)
-				XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-					xpos + font_width * k - 1,
-					ypos - font_ascent,
-					xpos + font_width * k - 1,
-					ypos + font_descent);
+    /* Determine which GC to use - normal or italic */
 
-		if (attr & A_RIGHTLINE)		/* RIGHT */
-			for (k = 0; k < len; k++)
-				XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-					xpos + font_width * (k + 1) - 1,
-					ypos - font_ascent,
-					xpos + font_width * (k + 1) - 1,
-					ypos + font_descent);
-	}
+    gc = (attr & A_ITALIC) ? italic_gc : normal_gc;
 
-	PDC_LOG(("%s:_new_packet() - row: %d col: %d "
-		"num_cols: %d fore: %d back: %d text:<%s>\n",
-		XCLOGMSG, row, col, len, fore, back, text));
+    /* Draw it */
 
-	return OK;
+    XSetForeground(XCURSESDISPLAY, gc, colors[rev ? back : fore]);
+    XSetBackground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
+
+    _make_xy(col, row, &xpos, &ypos);
+
+#ifdef PDC_WIDE
+    XDrawImageString16(
+#else
+    XDrawImageString(
+#endif
+                     XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
+
+    /* Underline, etc. */
+
+    if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
+    {
+        int k;
+
+        if (SP->line_color != -1)
+            XSetForeground(XCURSESDISPLAY, gc, colors[SP->line_color]);
+
+        if (attr & A_UNDERLINE)     /* UNDER */
+            XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
+                      xpos, ypos + 1, xpos + font_width * len, ypos + 1);
+
+        if (attr & A_LEFTLINE)      /* LEFT */
+            for (k = 0; k < len; k++)
+            {
+                int x = xpos + font_width * k - 1;
+                XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
+                          x, ypos - font_ascent, x, ypos + font_descent);
+            }
+
+        if (attr & A_RIGHTLINE)     /* RIGHT */
+            for (k = 0; k < len; k++)
+            {
+                int x = xpos + font_width * (k + 1) - 1;
+                XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
+                          x, ypos - font_ascent, x, ypos + font_descent);
+            }
+    }
+
+    PDC_LOG(("%s:_new_packet() - row: %d col: %d "
+             "num_cols: %d fore: %d back: %d text:<%s>\n",
+             XCLOGMSG, row, col, len, fore, back, text));
+
+    return OK;
 }
 
 /* The core display routine -- update one line of text */
 
 static int _display_text(const chtype *ch, int row, int col,
-			 int num_cols, bool highlight)
+                         int num_cols, bool highlight)
 {
 #ifdef PDC_WIDE
-	XChar2b text[513];
+    XChar2b text[513];
 #else
-	char text[513];
+    char text[513];
 #endif
-	chtype old_attr, attr;
-	int i, j;
+    chtype old_attr, attr;
+    int i, j;
 
-	PDC_LOG(("%s:_display_text() - called: row: %d col: %d "
-		"num_cols: %d\n", XCLOGMSG, row, col, num_cols));
+    PDC_LOG(("%s:_display_text() - called: row: %d col: %d "
+             "num_cols: %d\n", XCLOGMSG, row, col, num_cols));
 
-	if (!num_cols)
-		return OK;
+    if (!num_cols)
+        return OK;
 
-	old_attr = *ch & A_ATTRIBUTES;
+    old_attr = *ch & A_ATTRIBUTES;
 
-	for (i = 0, j = 0; j < num_cols; j++)
-	{
-		chtype curr = ch[j];
+    for (i = 0, j = 0; j < num_cols; j++)
+    {
+        chtype curr = ch[j];
 
-		attr = curr & A_ATTRIBUTES;
+        attr = curr & A_ATTRIBUTES;
 
 #ifdef CHTYPE_LONG
-		if (attr & A_ALTCHARSET && !(curr & 0xff80))
-		{
-			attr ^= A_ALTCHARSET;
-			curr = acs_map[curr & 0x7f];
-		}
+        if (attr & A_ALTCHARSET && !(curr & 0xff80))
+        {
+            attr ^= A_ALTCHARSET;
+            curr = acs_map[curr & 0x7f];
+        }
 #endif
 
 #ifndef PDC_WIDE
-		/* Special handling for ACS_BLOCK */
+        /* Special handling for ACS_BLOCK */
 
-		if (!(curr & A_CHARTEXT))
-		{
-			curr |= ' ';
-			attr ^= A_REVERSE;
-		}
+        if (!(curr & A_CHARTEXT))
+        {
+            curr |= ' ';
+            attr ^= A_REVERSE;
+        }
 #endif
-		if (attr != old_attr)
-		{
-			if (_new_packet(old_attr, highlight, i, 
-			    col, row, text) == ERR)
-				return ERR;
+        if (attr != old_attr)
+        {
+            if (_new_packet(old_attr, highlight, i, col, row, text) == ERR)
+                return ERR;
 
-			old_attr = attr;
-			col += i;
-			i = 0;
-		}
+            old_attr = attr;
+            col += i;
+            i = 0;
+        }
 
 #ifdef PDC_WIDE
-		text[i].byte1 = (curr & 0xff00) >> 8;
-		text[i++].byte2 = curr & 0x00ff;
+        text[i].byte1 = (curr & 0xff00) >> 8;
+        text[i++].byte2 = curr & 0x00ff;
 #else
-		text[i++] = curr & 0xff;
+        text[i++] = curr & 0xff;
 #endif
-	}
+    }
 
-	return _new_packet(old_attr, highlight, i, col, row, text);
+    return _new_packet(old_attr, highlight, i, col, row, text);
 }
 
 static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 {
-	XGCValues values;
+    XGCValues values;
 
-        /* Create default Graphics Context */
+    /* Create default Graphics Context */
 
-	*gc = XCreateGC(XCURSESDISPLAY, XCURSESWIN, 0L, &values);
+    *gc = XCreateGC(XCURSESDISPLAY, XCURSESWIN, 0L, &values);
 
-        /* specify font */
+    /* specify font */
 
-	XSetFont(XCURSESDISPLAY, *gc, font_info->fid);
+    XSetFont(XCURSESDISPLAY, *gc, font_info->fid);
 
-	XSetForeground(XCURSESDISPLAY, *gc, colors[fore]);
-	XSetBackground(XCURSESDISPLAY, *gc, colors[back]);
+    XSetForeground(XCURSESDISPLAY, *gc, colors[fore]);
+    XSetBackground(XCURSESDISPLAY, *gc, colors[back]);
 }
 
 static void _initialize_colors(void)
 {
-	colors[COLOR_BLACK]	= xc_app_data.colorBlack;
-	colors[COLOR_RED]	= xc_app_data.colorRed;
-	colors[COLOR_GREEN]	= xc_app_data.colorGreen;
-	colors[COLOR_YELLOW]	= xc_app_data.colorYellow;
-	colors[COLOR_BLUE]	= xc_app_data.colorBlue;
-	colors[COLOR_MAGENTA]	= xc_app_data.colorMagenta;
-	colors[COLOR_CYAN]	= xc_app_data.colorCyan;
-	colors[COLOR_WHITE]	= xc_app_data.colorWhite;
+    colors[COLOR_BLACK]   = xc_app_data.colorBlack;
+    colors[COLOR_RED]     = xc_app_data.colorRed;
+    colors[COLOR_GREEN]   = xc_app_data.colorGreen;
+    colors[COLOR_YELLOW]  = xc_app_data.colorYellow;
+    colors[COLOR_BLUE]    = xc_app_data.colorBlue;
+    colors[COLOR_MAGENTA] = xc_app_data.colorMagenta;
+    colors[COLOR_CYAN]    = xc_app_data.colorCyan;
+    colors[COLOR_WHITE]   = xc_app_data.colorWhite;
 
-	colors[COLOR_BLACK + 8]	  = xc_app_data.colorBoldBlack;
-	colors[COLOR_RED + 8]	  = xc_app_data.colorBoldRed;
-	colors[COLOR_GREEN + 8]	  = xc_app_data.colorBoldGreen;
-	colors[COLOR_YELLOW + 8]  = xc_app_data.colorBoldYellow;
-	colors[COLOR_BLUE + 8]	  = xc_app_data.colorBoldBlue;
-	colors[COLOR_MAGENTA + 8] = xc_app_data.colorBoldMagenta;
-	colors[COLOR_CYAN + 8]	  = xc_app_data.colorBoldCyan;
-	colors[COLOR_WHITE + 8]	  = xc_app_data.colorBoldWhite;
+    colors[COLOR_BLACK + 8]   = xc_app_data.colorBoldBlack;
+    colors[COLOR_RED + 8]     = xc_app_data.colorBoldRed;
+    colors[COLOR_GREEN + 8]   = xc_app_data.colorBoldGreen;
+    colors[COLOR_YELLOW + 8]  = xc_app_data.colorBoldYellow;
+    colors[COLOR_BLUE + 8]    = xc_app_data.colorBoldBlue;
+    colors[COLOR_MAGENTA + 8] = xc_app_data.colorBoldMagenta;
+    colors[COLOR_CYAN + 8]    = xc_app_data.colorBoldCyan;
+    colors[COLOR_WHITE + 8]   = xc_app_data.colorBoldWhite;
 
-	colors[COLOR_CURSOR] = xc_app_data.cursorColor;
-	colors[COLOR_BORDER] = xc_app_data.borderColor;
+    colors[COLOR_CURSOR] = xc_app_data.cursorColor;
+    colors[COLOR_BORDER] = xc_app_data.borderColor;
 }
 
 static void _refresh_scrollbar(void)
 {
-	XC_LOG(("_refresh_scrollbar() - called\n"));
+    XC_LOG(("_refresh_scrollbar() - called\n"));
 
-	if (SP->sb_on)
-	{
-		PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
-		PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
+    if (SP->sb_on)
+    {
+        PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
+        PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
 
-		if (total_y)
-		    XawScrollbarSetThumb(scrollVert,
-			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
-			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
+        if (total_y)
+            XawScrollbarSetThumb(scrollVert,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
 
-		if (total_x)
-		    XawScrollbarSetThumb(scrollHoriz,
-			(PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
-			(PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
-	}
+        if (total_x)
+            XawScrollbarSetThumb(scrollHoriz,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
+    }
 }
 
 static void _set_cursor_color(chtype *ch, short *fore, short *back)
 {
-	int attr;
-	short f, b;
+    int attr;
+    short f, b;
 
-	attr = PAIR_NUMBER(*ch);
+    attr = PAIR_NUMBER(*ch);
 
-	if (attr)
-	{
-		PDC_pair_content(attr, &f, &b);
-		*fore = 7 - (f % 8);
-		*back = 7 - (b % 8);
-	}
-	else
-	{
-		if (*ch & A_REVERSE)
-		{
-			*back = COLOR_BLACK;
-			*fore = COLOR_WHITE;
-		}
-		else
-		{
-			*back = COLOR_WHITE;
-			*fore = COLOR_BLACK;
-		}
-	}
+    if (attr)
+    {
+        PDC_pair_content(attr, &f, &b);
+        *fore = 7 - (f % 8);
+        *back = 7 - (b % 8);
+    }
+    else
+    {
+        if (*ch & A_REVERSE)
+        {
+            *back = COLOR_BLACK;
+            *fore = COLOR_WHITE;
+        }
+        else
+        {
+            *back = COLOR_WHITE;
+            *fore = COLOR_BLACK;
+        }
+    }
 }
 
 static void _get_icon(void)
 {
-	XIconSize *icon_size;
-	int size_count = 0;
-	Status rc;
-	unsigned char *bitmap_bits = NULL;
-	unsigned icon_bitmap_width = 0, icon_bitmap_height = 0,
-		file_bitmap_width = 0, file_bitmap_height = 0;
+    XIconSize *icon_size;
+    int size_count = 0;
+    Status rc;
+    unsigned char *bitmap_bits = NULL;
+    unsigned icon_bitmap_width = 0, icon_bitmap_height = 0,
+             file_bitmap_width = 0, file_bitmap_height = 0;
 
-	XC_LOG(("_get_icon() - called\n"));
+    XC_LOG(("_get_icon() - called\n"));
 
-	icon_size = XAllocIconSize();
+    icon_size = XAllocIconSize();
 
-	rc = XGetIconSizes(XtDisplay(topLevel), 
-		RootWindowOfScreen(XtScreen(topLevel)),
-		&icon_size, &size_count);
+    rc = XGetIconSizes(XtDisplay(topLevel),
+                       RootWindowOfScreen(XtScreen(topLevel)),
+                       &icon_size, &size_count);
 
-	/* if the WM can advise on icon sizes... */
+    /* if the WM can advise on icon sizes... */
 
-	if (rc && size_count)
-	{
-		int i, max_height = 0, max_width = 0;
+    if (rc && size_count)
+    {
+        int i, max_height = 0, max_width = 0;
 
-		PDC_LOG(("%s:size_count: %d rc: %d\n",
-			XCLOGMSG, size_count, rc));
+        PDC_LOG(("%s:size_count: %d rc: %d\n", XCLOGMSG, size_count, rc));
 
-		for (i = 0; i < size_count; i++)
-		{
-			if (icon_size[i].max_width > max_width)
-				max_width = icon_size[i].max_width;
-			if (icon_size[i].max_height > max_height)
-				max_height = icon_size[i].max_height;
+        for (i = 0; i < size_count; i++)
+        {
+            if (icon_size[i].max_width > max_width)
+                max_width = icon_size[i].max_width;
+            if (icon_size[i].max_height > max_height)
+                max_height = icon_size[i].max_height;
 
-			PDC_LOG(("%s:min: %d %d\n", XCLOGMSG,
-				icon_size[i].min_width,
-				icon_size[i].min_height));
+            PDC_LOG(("%s:min: %d %d\n", XCLOGMSG,
+                     icon_size[i].min_width, icon_size[i].min_height));
 
-			PDC_LOG(("%s:max: %d %d\n", XCLOGMSG,
-				icon_size[i].max_width,
-				icon_size[i].max_height));
+            PDC_LOG(("%s:max: %d %d\n", XCLOGMSG,
+                     icon_size[i].max_width, icon_size[i].max_height));
 
-			PDC_LOG(("%s:inc: %d %d\n", XCLOGMSG,
-				icon_size[i].width_inc,
-				icon_size[i].height_inc));
-		}
+            PDC_LOG(("%s:inc: %d %d\n", XCLOGMSG,
+                     icon_size[i].width_inc, icon_size[i].height_inc));
+        }
 
-		if (max_width >= big_icon_width &&
-		    max_height >= big_icon_height)
-		{
-			icon_bitmap_width = big_icon_width;
-			icon_bitmap_height = big_icon_height;
-			bitmap_bits = (unsigned char *)big_icon_bits;
-		}
-		else
-		{
-			icon_bitmap_width = little_icon_width;
-			icon_bitmap_height = little_icon_height;
-			bitmap_bits = (unsigned char *)little_icon_bits;
-		}
+        if (max_width >= big_icon_width && max_height >= big_icon_height)
+        {
+            icon_bitmap_width = big_icon_width;
+            icon_bitmap_height = big_icon_height;
+            bitmap_bits = (unsigned char *)big_icon_bits;
+        }
+        else
+        {
+            icon_bitmap_width = little_icon_width;
+            icon_bitmap_height = little_icon_height;
+            bitmap_bits = (unsigned char *)little_icon_bits;
+        }
 
-	}
-	else  /* use small icon */
-	{
-		icon_bitmap_width = little_icon_width;
-		icon_bitmap_height = little_icon_height;
-		bitmap_bits = (unsigned char *)little_icon_bits;
-	}
+    }
+    else  /* use small icon */
+    {
+        icon_bitmap_width = little_icon_width;
+        icon_bitmap_height = little_icon_height;
+        bitmap_bits = (unsigned char *)little_icon_bits;
+    }
 
-	XFree(icon_size);
+    XFree(icon_size);
 
 #ifdef HAVE_XPM_H
-	if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
-	{
-		XpmReadFileToPixmap(XtDisplay(topLevel),
-			RootWindowOfScreen(XtScreen(topLevel)),
-			(char *)xc_app_data.pixmap,
-			&icon_pixmap, &icon_pixmap_mask, NULL);
-		return;
-	}
+    if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
+    {
+        XpmReadFileToPixmap(XtDisplay(topLevel),
+                            RootWindowOfScreen(XtScreen(topLevel)),
+                            (char *)xc_app_data.pixmap,
+                            &icon_pixmap, &icon_pixmap_mask, NULL);
+        return;
+    }
 #endif
 
-	if (xc_app_data.bitmap && xc_app_data.bitmap[0]) /* supplied bitmap */
-	{
-		int x_hot = 0, y_hot = 0;
+    if (xc_app_data.bitmap && xc_app_data.bitmap[0]) /* supplied bitmap */
+    {
+        int x_hot = 0, y_hot = 0;
 
-		rc = XReadBitmapFile(XtDisplay(topLevel),
-			RootWindowOfScreen(XtScreen(topLevel)),
-			(char *)xc_app_data.bitmap,
-			&file_bitmap_width, &file_bitmap_height,
-			&icon_bitmap, &x_hot, &y_hot);
+        rc = XReadBitmapFile(XtDisplay(topLevel),
+                             RootWindowOfScreen(XtScreen(topLevel)),
+                             (char *)xc_app_data.bitmap,
+                             &file_bitmap_width, &file_bitmap_height,
+                             &icon_bitmap, &x_hot, &y_hot);
 
-		switch(rc)
-		{
-		case BitmapOpenFailed:
-			fprintf(stderr, "bitmap file %s: not found\n",
-				xc_app_data.bitmap);
-			break;
-		case BitmapFileInvalid:
-			fprintf(stderr, "bitmap file %s: contents invalid\n",
-				xc_app_data.bitmap);
-			break;
-		default:
-			return;
-		}
-	}
+        switch(rc)
+        {
+        case BitmapOpenFailed:
+            fprintf(stderr, "bitmap file %s: not found\n",
+                    xc_app_data.bitmap);
+            break;
+        case BitmapFileInvalid:
+            fprintf(stderr, "bitmap file %s: contents invalid\n",
+                    xc_app_data.bitmap);
+            break;
+        default:
+            return;
+        }
+    }
 
-	icon_bitmap = XCreateBitmapFromData(XtDisplay(topLevel),
-		RootWindowOfScreen(XtScreen(topLevel)),
-		(char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
+    icon_bitmap = XCreateBitmapFromData(XtDisplay(topLevel),
+        RootWindowOfScreen(XtScreen(topLevel)),
+        (char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
 }
 
 static void _draw_border(void)
 {
-	/* Draw the border if required */
+    /* Draw the border if required */
 
-	if (xc_app_data.borderWidth)
-		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
-			xc_app_data.borderWidth / 2,
-			xc_app_data.borderWidth / 2,
-			window_width - xc_app_data.borderWidth,
-			window_height - xc_app_data.borderWidth);
+    if (xc_app_data.borderWidth)
+        XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
+                       xc_app_data.borderWidth / 2,
+                       xc_app_data.borderWidth / 2,
+                       window_width - xc_app_data.borderWidth,
+                       window_height - xc_app_data.borderWidth);
 }
 
 /* Redraw the entire screen */
 
 static void _display_screen(void)
 {
-	int row;
+    int row;
 
-	XC_LOG(("_display_screen() - called\n"));
+    XC_LOG(("_display_screen() - called\n"));
 
-	for (row = 0; row < XCursesLINES; row++)
-	{
-		XC_get_line_lock(row);
+    for (row = 0; row < XCursesLINES; row++)
+    {
+        XC_get_line_lock(row);
 
-		_display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
-			row, 0, COLS, FALSE);
+        _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
+                      row, 0, COLS, FALSE);
 
-		XC_release_line_lock(row);
-	}
+        XC_release_line_lock(row);
+    }
 
-	_display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
-
-	_draw_border();
+    _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+    _draw_border();
 }
 
 /* Draw changed portions of the screen */
 
 static void _refresh_screen(void)
 {
-	int row, start_col, num_cols;
+    int row, start_col, num_cols;
 
-	XC_LOG(("_refresh_screen() - called\n"));
+    XC_LOG(("_refresh_screen() - called\n"));
 
-	for (row = 0; row < XCursesLINES; row++)
-	{
-		num_cols = (int)*(Xcurscr + XCURSCR_LENGTH_OFF + row);
+    for (row = 0; row < XCursesLINES; row++)
+    {
+        num_cols = (int)*(Xcurscr + XCURSCR_LENGTH_OFF + row);
 
-		if (num_cols)
-		{
-			XC_get_line_lock(row);
+        if (num_cols)
+        {
+            XC_get_line_lock(row);
 
-			start_col = (int)*(Xcurscr + XCURSCR_START_OFF + row);
+            start_col = (int)*(Xcurscr + XCURSCR_START_OFF + row);
 
-			_display_text((const chtype *)(Xcurscr + 
-				XCURSCR_Y_OFF(row) + (start_col * 
-				sizeof(chtype))), row, start_col, 
-				num_cols, FALSE);
+            _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
+                          (start_col * sizeof(chtype))), row, start_col, 
+                          num_cols, FALSE);
 
-			*(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
+            *(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
 
-			XC_release_line_lock(row);
-		}
-	}
+            XC_release_line_lock(row);
+        }
+    }
 
-	if (mouse_selection)
-		_selection_off();
+    if (mouse_selection)
+        _selection_off();
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
-			   Boolean *unused)
+                           Boolean *unused)
 {
-	XC_LOG(("_handle_expose() - called\n"));
+    XC_LOG(("_handle_expose() - called\n"));
 
-	/* ignore all Exposes except last */
+    /* ignore all Exposes except last */
 
-	if (event->xexpose.count)
-		return;
+    if (event->xexpose.count)
+        return;
 
-	if (after_first_curses_request && received_map_notify)
-		_display_screen();
+    if (after_first_curses_request && received_map_notify)
+        _display_screen();
 }
 
 static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
-				Boolean *unused)
+                                Boolean *unused)
 {
-	XClientMessageEvent *client_event = (XClientMessageEvent *)event;
+    XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
-	PDC_LOG(("%s:_handle_nonmaskable called: xc_otherpid %d event %d\n",
-		XCLOGMSG, xc_otherpid, event->type));
+    PDC_LOG(("%s:_handle_nonmaskable called: xc_otherpid %d event %d\n",
+             XCLOGMSG, xc_otherpid, event->type));
 
-	if (event->type == ClientMessage)
-	{
-		XC_LOG(("ClientMessage received\n"));
+    if (event->type == ClientMessage)
+    {
+        XC_LOG(("ClientMessage received\n"));
 
-		/* This code used to include handling of 
-		   WM_SAVE_YOURSELF, but it resulted in continual 
-		   failure of THE on my Toshiba laptop. Removed on 
-		   3-3-2001. Now only exits on WM_DELETE_WINDOW. */
+        /* This code used to include handling of WM_SAVE_YOURSELF, but 
+           it resulted in continual failure of THE on my Toshiba laptop. 
+           Removed on 3-3-2001. Now only exits on WM_DELETE_WINDOW. */
 
-		if ((Atom)client_event->data.s[0] == wm_atom[0])
-			_exit_process(0, SIGKILL, "");
-	}
+        if ((Atom)client_event->data.s[0] == wm_atom[0])
+            _exit_process(0, SIGKILL, "");
+    }
 }
 
 static void XCursesKeyPress(Widget w, XEvent *event, String *params,
-			    Cardinal *nparams)
+                            Cardinal *nparams)
 {
-	enum { STATE_NORMAL, STATE_COMPOSE, STATE_CHAR };
+    enum { STATE_NORMAL, STATE_COMPOSE, STATE_CHAR };
 
 #ifdef PDC_XIM
-	Status status;
-	wchar_t buffer[120];
+    Status status;
+    wchar_t buffer[120];
 #else
-	unsigned char buffer[120];
-	XComposeStatus compose;
-	static int compose_state = STATE_NORMAL;
-	static int compose_index = 0;
-	int char_idx = 0;
+    unsigned char buffer[120];
+    XComposeStatus compose;
+    static int compose_state = STATE_NORMAL;
+    static int compose_index = 0;
+    int char_idx = 0;
 #endif
-	unsigned long key = 0;
-	int buflen = 40;
-	int i, count;
-	unsigned long modifier = 0;
-	bool key_code = FALSE;
+    unsigned long key = 0;
+    int buflen = 40;
+    int i, count;
+    unsigned long modifier = 0;
+    bool key_code = FALSE;
 
-	XC_LOG(("XCursesKeyPress() - called\n"));
+    XC_LOG(("XCursesKeyPress() - called\n"));
 
-	/* Handle modifier keys first; ignore other KeyReleases */
+    /* Handle modifier keys first; ignore other KeyReleases */
 
-	if (event->type == KeyRelease)
-	{
-		/* The keysym value was set by a previous call to this 
-		   function with a KeyPress event (or reset by the 
-		   mouse event handler) */
+    if (event->type == KeyRelease)
+    {
+        /* The keysym value was set by a previous call to this function 
+           with a KeyPress event (or reset by the mouse event handler) */
 
-		if (SP->return_key_modifiers &&
+        if (SP->return_key_modifiers &&
 #ifndef PDC_XIM
-		    keysym != compose_key && 
+            keysym != compose_key && 
 #endif
-		    IsModifierKey(keysym))
-		{
-			switch (keysym) {
-			case XK_Shift_L:
-				key = KEY_SHIFT_L;
-				break;
-			case XK_Shift_R:
-				key = KEY_SHIFT_R;
-				break;
-			case XK_Control_L:
-				key = KEY_CONTROL_L;
-				break;
-			case XK_Control_R:
-				key = KEY_CONTROL_R;
-				break;
-			case XK_Alt_L:
-				key = KEY_ALT_L;
-				break;
-			case XK_Alt_R:
-				key = KEY_ALT_R;
-			}
+            IsModifierKey(keysym))
+        {
+            switch (keysym) {
+            case XK_Shift_L:
+                key = KEY_SHIFT_L;
+                break;
+            case XK_Shift_R:
+                key = KEY_SHIFT_R;
+                break;
+            case XK_Control_L:
+                key = KEY_CONTROL_L;
+                break;
+            case XK_Control_R:
+                key = KEY_CONTROL_R;
+                break;
+            case XK_Alt_L:
+                key = KEY_ALT_L;
+                break;
+            case XK_Alt_R:
+                key = KEY_ALT_R;
+            }
 
-			if (key)
-				_send_key_to_curses(key, NULL, TRUE);
-		}
+            if (key)
+                _send_key_to_curses(key, NULL, TRUE);
+        }
 
-		return;
-	}
+        return;
+    }
 
-	buffer[0] = '\0';
+    buffer[0] = '\0';
 
 #ifdef PDC_XIM
-	count = XwcLookupString(Xic, &(event->xkey), buffer, buflen,
-		&keysym, &status);
+    count = XwcLookupString(Xic, &(event->xkey), buffer, buflen,
+                            &keysym, &status);
 #else
-	count = XLookupString(&(event->xkey), (char *)buffer, buflen,
-		&keysym, &compose);
+    count = XLookupString(&(event->xkey), (char *)buffer, buflen,
+                          &keysym, &compose);
 #endif
 
-	/* translate keysym into curses key code */
+    /* translate keysym into curses key code */
 
-	PDC_LOG(("%s:Key mask: %x\n", XCLOGMSG, event->xkey.state));
+    PDC_LOG(("%s:Key mask: %x\n", XCLOGMSG, event->xkey.state));
 
 #ifdef PDCDEBUG
-	for (i = 0; i < 4; i++)
-		PDC_debug("%s:Keysym %x %d\n", XCLOGMSG,
-			XKeycodeToKeysym(XCURSESDISPLAY, 
-			event->xkey.keycode, i), i);
+    for (i = 0; i < 4; i++)
+        PDC_debug("%s:Keysym %x %d\n", XCLOGMSG,
+                  XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, i), i);
 #endif
 
 #ifndef PDC_XIM
 
-	/* Check if the key just pressed is the user-specified compose 
-	   key; if it is, set the compose state and exit. */
+    /* Check if the key just pressed is the user-specified compose 
+       key; if it is, set the compose state and exit. */
 
-	if (keysym == compose_key)
-	{
-		chtype *ch;
-		int xpos, ypos, save_visibility = SP->visibility;
-		short fore = 0, back = 0;
+    if (keysym == compose_key)
+    {
+        chtype *ch;
+        int xpos, ypos, save_visibility = SP->visibility;
+        short fore = 0, back = 0;
 
-		/* Change the shape of the cursor to an outline 
-		   rectangle to indicate we are in "compose" status */
+        /* Change the shape of the cursor to an outline rectangle to
+           indicate we are in "compose" status */
 
-		SP->visibility = 0;
+        SP->visibility = 0;
 
-		_display_cursor(SP->cursrow, SP->curscol, 
-			SP->cursrow, SP->curscol);
+        _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
 
-		SP->visibility = save_visibility;
-		_make_xy(SP->curscol, SP->cursrow, &xpos, &ypos);
+        SP->visibility = save_visibility;
+        _make_xy(SP->curscol, SP->cursrow, &xpos, &ypos);
 
-		ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(SP->cursrow) + 
-			(SP->curscol * sizeof(chtype)));
+        ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(SP->cursrow) + 
+             (SP->curscol * sizeof(chtype)));
 
-		_set_cursor_color(ch, &fore, &back);
+        _set_cursor_color(ch, &fore, &back);
 
-		XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
+        XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
 
-		XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc, 
-			xpos + 1, ypos - font_height + 
-			xc_app_data.normalFont->descent + 1, 
-			font_width - 2, font_height - 2);
+        XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc, 
+                       xpos + 1, ypos - font_height + 
+                       xc_app_data.normalFont->descent + 1, 
+                       font_width - 2, font_height - 2);
 
-		compose_state = STATE_COMPOSE;
-		return;
-	}
+        compose_state = STATE_COMPOSE;
+        return;
+    }
 
-	switch (compose_state)
-	{
-	case STATE_COMPOSE:
-		if (IsModifierKey(keysym))
-			return;
+    switch (compose_state)
+    {
+    case STATE_COMPOSE:
+        if (IsModifierKey(keysym))
+            return;
 
-		if (event->xkey.state & compose_mask)
-		{
-			compose_state = STATE_NORMAL;
-			_display_cursor(SP->cursrow, SP->curscol,
-				SP->cursrow, SP->curscol);
-			break;
-		}
+        if (event->xkey.state & compose_mask)
+        {
+            compose_state = STATE_NORMAL;
+            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            break;
+        }
 
-		if (buffer[0] && count == 1)
-			key = buffer[0];
+        if (buffer[0] && count == 1)
+            key = buffer[0];
 
-		compose_index = -1;
+        compose_index = -1;
          
-		for (i = 0; i < (int)strlen(compose_chars); i++)
-			if (compose_chars[i] == key)
-			{
-				compose_index = i;
-				break;
-			}
+        for (i = 0; i < (int)strlen(compose_chars); i++)
+            if (compose_chars[i] == key)
+            {
+                compose_index = i;
+                break;
+            }
 
-		if (compose_index == -1)
-		{
-			compose_state = STATE_NORMAL;
-			compose_index = 0;
-			_display_cursor(SP->cursrow, SP->curscol,
-				SP->cursrow, SP->curscol);
-			break;
-		}
+        if (compose_index == -1)
+        {
+            compose_state = STATE_NORMAL;
+            compose_index = 0;
+            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            break;
+        }
 
-		compose_state = STATE_CHAR;
-		return;
+        compose_state = STATE_CHAR;
+        return;
 
-	case STATE_CHAR:
-		if (IsModifierKey(keysym))
-			return;
+    case STATE_CHAR:
+        if (IsModifierKey(keysym))
+            return;
 
-		if (event->xkey.state & compose_mask)
-		{
-			compose_state = STATE_NORMAL;
-			_display_cursor(SP->cursrow, SP->curscol,
-				SP->cursrow, SP->curscol);
-			break;
-		}
+        if (event->xkey.state & compose_mask)
+        {
+            compose_state = STATE_NORMAL;
+            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            break;
+        }
 
-		if (buffer[0] && count == 1)
-			key = buffer[0];
+        if (buffer[0] && count == 1)
+            key = buffer[0];
 
-		char_idx = -1;
+        char_idx = -1;
 
-		for (i = 0; i < MAX_COMPOSE_CHARS; i++)
-			if (compose_lookups[compose_index][i] == key)
-			{
-				char_idx = i;
-				break;
-			}
+        for (i = 0; i < MAX_COMPOSE_CHARS; i++)
+            if (compose_lookups[compose_index][i] == key)
+            {
+                char_idx = i;
+                break;
+            }
 
-		if (char_idx == -1)
-		{
-			compose_state = STATE_NORMAL;
-			compose_index = 0;
-			_display_cursor(SP->cursrow, SP->curscol,
-				SP->cursrow, SP->curscol);
-			break;
-		}
+        if (char_idx == -1)
+        {
+            compose_state = STATE_NORMAL;
+            compose_index = 0;
+            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            break;
+        }
 
-		_send_key_to_curses(compose_keys[compose_index][char_idx],
-			NULL, FALSE);
+        _send_key_to_curses(compose_keys[compose_index][char_idx],
+            NULL, FALSE);
 
-		compose_state = STATE_NORMAL;
-		compose_index = 0;
+        compose_state = STATE_NORMAL;
+        compose_index = 0;
          
-		_display_cursor(SP->cursrow, SP->curscol,
-			SP->cursrow, SP->curscol);
+        _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
 
-		return;
-	}
+        return;
+    }
 
 #endif /* PDC_XIM */
 
-	/* To get here we are procesing "normal" keys */
+    /* To get here we are procesing "normal" keys */
 
-	PDC_LOG(("%s:Keysym %x %d\n", XCLOGMSG,
-		XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, key),
-		key));
+    PDC_LOG(("%s:Keysym %x %d\n", XCLOGMSG,
+             XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, key), key));
 
-	if (SP->save_key_modifiers)
-	{
-		/* 0x10: usually, numlock modifier */
+    if (SP->save_key_modifiers)
+    {
+        /* 0x10: usually, numlock modifier */
 
-		if (event->xkey.state & Mod2Mask)
-			modifier |= PDC_KEY_MODIFIER_NUMLOCK;
+        if (event->xkey.state & Mod2Mask)
+            modifier |= PDC_KEY_MODIFIER_NUMLOCK;
 
-		/* 0x01: shift modifier */
+        /* 0x01: shift modifier */
 
-		if (event->xkey.state & ShiftMask)
-			modifier |= PDC_KEY_MODIFIER_SHIFT;
+        if (event->xkey.state & ShiftMask)
+            modifier |= PDC_KEY_MODIFIER_SHIFT;
 
-		/* 0x04: control modifier */
+        /* 0x04: control modifier */
 
-		if (event->xkey.state & ControlMask)
-			modifier |= PDC_KEY_MODIFIER_CONTROL;
+        if (event->xkey.state & ControlMask)
+            modifier |= PDC_KEY_MODIFIER_CONTROL;
 
-		/* 0x08: usually, alt modifier */
+        /* 0x08: usually, alt modifier */
 
-		if (event->xkey.state & Mod1Mask)
-			modifier |= PDC_KEY_MODIFIER_ALT;
-	}
+        if (event->xkey.state & Mod1Mask)
+            modifier |= PDC_KEY_MODIFIER_ALT;
+    }
 
-	for (i = 0; key_table[i].keycode; i++)
-	{
-		if (key_table[i].keycode == keysym)
-		{
-			PDC_LOG(("%s:State %x\n", XCLOGMSG, event->xkey.state));
+    for (i = 0; key_table[i].keycode; i++)
+    {
+        if (key_table[i].keycode == keysym)
+        {
+            PDC_LOG(("%s:State %x\n", XCLOGMSG, event->xkey.state));
 
-			/* ControlMask: 0x04: control modifier
-			   Mod1Mask: 0x08: usually, alt modifier
-			   Mod2Mask: 0x10: usually, numlock modifier
-			   ShiftMask: 0x01: shift modifier */
+            /* ControlMask: 0x04: control modifier
+               Mod1Mask: 0x08: usually, alt modifier
+               Mod2Mask: 0x10: usually, numlock modifier
+               ShiftMask: 0x01: shift modifier */
 
-			if ((event->xkey.state & ShiftMask) ||
-			    (key_table[i].numkeypad &&
-			    (event->xkey.state & Mod2Mask)))
-			{
-				key = key_table[i].shifted;
-			}
-			else if (event->xkey.state & ControlMask)
-			{
-				key = key_table[i].control;
-			}
-			else if (event->xkey.state & Mod1Mask)
-			{
-				key = key_table[i].alt;
-			}
+            if ((event->xkey.state & ShiftMask) ||
+                (key_table[i].numkeypad &&
+                (event->xkey.state & Mod2Mask)))
+            {
+                key = key_table[i].shifted;
+            }
+            else if (event->xkey.state & ControlMask)
+            {
+                key = key_table[i].control;
+            }
+            else if (event->xkey.state & Mod1Mask)
+            {
+                key = key_table[i].alt;
+            }
 
-			/* To get here, we ignore all other modifiers */
+            /* To get here, we ignore all other modifiers */
 
-			else
-				key = key_table[i].normal;
+            else
+                key = key_table[i].normal;
 
-			key_code = (key > 0x100);
-			break;
-		}
-	}
+            key_code = (key > 0x100);
+            break;
+        }
+    }
 
-	if (!key && buffer[0] && count == 1)
-		key = buffer[0];
+    if (!key && buffer[0] && count == 1)
+        key = buffer[0];
 
-	PDC_LOG(("%s:Key: %s pressed - %x Mod: %x\n", XCLOGMSG,
-		XKeysymToString(keysym), key, event->xkey.state));
+    PDC_LOG(("%s:Key: %s pressed - %x Mod: %x\n", XCLOGMSG,
+             XKeysymToString(keysym), key, event->xkey.state));
 
-	/* Handle ALT letters and numbers */
+    /* Handle ALT letters and numbers */
 
-	if (event->xkey.state == Mod1Mask)
-	{
-		if (key >= 'A' && key <= 'Z')
-		{
-			key += ALT_A - 'A';
-			key_code = TRUE;
-		}
+    if (event->xkey.state == Mod1Mask)
+    {
+        if (key >= 'A' && key <= 'Z')
+        {
+            key += ALT_A - 'A';
+            key_code = TRUE;
+        }
 
-		if (key >= 'a' && key <= 'z')
-		{
-			key += ALT_A - 'a';
-			key_code = TRUE;
-		}
+        if (key >= 'a' && key <= 'z')
+        {
+            key += ALT_A - 'a';
+            key_code = TRUE;
+        }
 
-		if (key >= '0' && key <= '9')
-		{
-			key += ALT_0 - '0';
-			key_code = TRUE;
-		}
-	}
+        if (key >= '0' && key <= '9')
+        {
+            key += ALT_0 - '0';
+            key_code = TRUE;
+        }
+    }
 
-	/* After all that, send the key back to the application if is 
-	   NOT zero. */
+    /* After all that, send the key back to the application if is 
+       NOT zero. */
 
-	if (key)
-	{
-		key |= (modifier << 24);
+    if (key)
+    {
+        key |= (modifier << 24);
 
-		_send_key_to_curses(key, NULL, key_code);
-	}
+        _send_key_to_curses(key, NULL, key_code);
+    }
 }
 
 static void XCursesHandleString(Widget w, XEvent *event, String *params,
-				Cardinal *nparams)
+                                Cardinal *nparams)
 {
-	unsigned char *ptr;
+    unsigned char *ptr;
 
-	if (*nparams != 1)
-		return;
+    if (*nparams != 1)
+        return;
 
-	ptr = (unsigned char *)*params;
+    ptr = (unsigned char *)*params;
 
-	if (ptr[0] == '0' && ptr[1] == 'x' && ptr[2] != '\0')
-	{ 	 
-		unsigned char c;
-		unsigned long total = 0;
+    if (ptr[0] == '0' && ptr[1] == 'x' && ptr[2] != '\0')
+    {    
+        unsigned char c;
+        unsigned long total = 0;
 
-		for (ptr += 2; (c = tolower(*ptr)); ptr++)
-		{
-			total <<= 4;
+        for (ptr += 2; (c = tolower(*ptr)); ptr++)
+        {
+            total <<= 4;
 
-			if (c >= '0' && c <= '9')
-				total += c - '0';
-			else
-				if (c >= 'a' && c <= 'f')
-					total += c - ('a' - 10);
-				else
-					break;
-		}
+            if (c >= '0' && c <= '9')
+                total += c - '0';
+            else
+                if (c >= 'a' && c <= 'f')
+                    total += c - ('a' - 10);
+                else
+                    break;
+        }
 
-		if (c == '\0')
-			_send_key_to_curses(total, NULL, FALSE);
-	}
-	else
-		for (; *ptr; ptr++)
-			_send_key_to_curses((unsigned long)*ptr, NULL, FALSE);
+        if (c == '\0')
+            _send_key_to_curses(total, NULL, FALSE);
+    }
+    else
+        for (; *ptr; ptr++)
+            _send_key_to_curses((unsigned long)*ptr, NULL, FALSE);
 }
 
 static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,
-			  XtPointer value, unsigned long *length, int *format)
+                          XtPointer value, unsigned long *length, int *format)
 {
-	unsigned long i, key;
-	unsigned char *string = value;
+    unsigned long i, key;
+    unsigned char *string = value;
 
-	XC_LOG(("_paste_string() - called\n"));
+    XC_LOG(("_paste_string() - called\n"));
 
-	if (!*type || !*length || !string)
-		return;
+    if (!*type || !*length || !string)
+        return;
 
-	for (i = 0; string[i] && (i < (*length)); i++)
-	{
-		key = string[i];
+    for (i = 0; string[i] && (i < (*length)); i++)
+    {
+        key = string[i];
 
-		if (key == 10)		/* new line - convert to ^M */
-			key = 13;
+        if (key == 10)      /* new line - convert to ^M */
+            key = 13;
 
-		_send_key_to_curses(key, NULL, FALSE);
-	}
+        _send_key_to_curses(key, NULL, FALSE);
+    }
 
-	XtFree(value);
+    XtFree(value);
 }
 
 static void _paste_utf8(Widget w, XtPointer event, Atom *selection, Atom *type,
-			XtPointer value, unsigned long *length, int *format)
+                        XtPointer value, unsigned long *length, int *format)
 {
-	wchar_t key;
-	size_t i = 0, len;
-	char *string = value;
+    wchar_t key;
+    size_t i = 0, len;
+    char *string = value;
 
-	XC_LOG(("_paste_utf8() - called\n"));
+    XC_LOG(("_paste_utf8() - called\n"));
 
-	if (!*type || !*length)
-	{
-		XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
-			_paste_string, event, ((XButtonEvent *)event)->time);
-		return;
-	}
+    if (!*type || !*length)
+    {
+        XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, _paste_string, 
+                            event, ((XButtonEvent *)event)->time);
+        return;
+    }
 
-	len = *length;
+    len = *length;
 
-	if (!string)
-		return;
+    if (!string)
+        return;
 
-	while (string[i] && (i < len))
-	{
-		int retval = _from_utf8(&key, string + i, len - i);
+    while (string[i] && (i < len))
+    {
+        int retval = _from_utf8(&key, string + i, len - i);
 
-		if (retval < 1)
-			return;
+        if (retval < 1)
+            return;
 
-		if (key == 10)		/* new line - convert to ^M */
-			key = 13;
+        if (key == 10)      /* new line - convert to ^M */
+            key = 13;
 
-		_send_key_to_curses(key, NULL, FALSE);
+        _send_key_to_curses(key, NULL, FALSE);
 
-		i += retval;
-	}
+        i += retval;
+    }
 
-	XtFree(value);
+    XtFree(value);
 }
 
 static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
 {
-	XC_LOG(("XCursesPasteSelection() - called\n"));
+    XC_LOG(("XCursesPasteSelection() - called\n"));
 
-	XtGetSelectionValue(w, XA_PRIMARY, XA_UTF8_STRING(XtDisplay(w)),
-		_paste_utf8, (XtPointer)button_event, button_event->time);
+    XtGetSelectionValue(w, XA_PRIMARY, XA_UTF8_STRING(XtDisplay(w)),
+                        _paste_utf8, (XtPointer)button_event,
+                        button_event->time);
 }
 
 static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
-			     Atom *type_return, XtPointer *value_return,
-			     unsigned long *length_return, int *format_return)
+                             Atom *type_return, XtPointer *value_return,
+                             unsigned long *length_return, int *format_return)
 {
-	XC_LOG(("_convert_proc() - called\n"));
+    XC_LOG(("_convert_proc() - called\n"));
 
-	if (*target == XA_TARGETS(XtDisplay(topLevel)))
-	{
-		XSelectionRequestEvent *req = XtGetSelectionRequest(w, 
-			*selection, (XtRequestId)NULL);
+    if (*target == XA_TARGETS(XtDisplay(topLevel)))
+    {
+        XSelectionRequestEvent *req = XtGetSelectionRequest(w, 
+            *selection, (XtRequestId)NULL);
 
-		Atom *targetP;
-		XPointer std_targets;
-		unsigned long std_length;
+        Atom *targetP;
+        XPointer std_targets;
+        unsigned long std_length;
 
-		XmuConvertStandardSelection(topLevel, req->time, 
-			selection, target, type_return, &std_targets, 
-			&std_length, format_return);
+        XmuConvertStandardSelection(topLevel, req->time, selection, 
+                                    target, type_return, &std_targets,
+                                    &std_length, format_return);
 
-		*length_return = std_length + 2;
-		*value_return = XtMalloc(sizeof(Atom) * (*length_return));
+        *length_return = std_length + 2;
+        *value_return = XtMalloc(sizeof(Atom) * (*length_return));
 
-		targetP = *(Atom**)value_return;
-		*targetP++ = XA_STRING;
-		*targetP++ = XA_UTF8_STRING(XtDisplay(topLevel));
+        targetP = *(Atom**)value_return;
+        *targetP++ = XA_STRING;
+        *targetP++ = XA_UTF8_STRING(XtDisplay(topLevel));
 
-		memmove((void *)targetP, (const void *)std_targets,
-			sizeof(Atom) * std_length);
+        memmove((void *)targetP, (const void *)std_targets,
+                sizeof(Atom) * std_length);
 
-		XtFree((char *)std_targets);
-		*type_return = XA_ATOM;
-		*format_return = sizeof(Atom) * 8;
+        XtFree((char *)std_targets);
+        *type_return = XA_ATOM;
+        *format_return = sizeof(Atom) * 8;
 
-		return True;
-	}
-	else if (*target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
-		 *target == XA_STRING)
-	{
-		bool utf8 = !(*target == XA_STRING);
-		char *data = XtMalloc(tmpsel_length * 3 + 1);
-		chtype *tmp = tmpsel;
-		int ret_length = 0;
+        return True;
+    }
+    else if (*target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
+             *target == XA_STRING)
+    {
+        bool utf8 = !(*target == XA_STRING);
+        char *data = XtMalloc(tmpsel_length * 3 + 1);
+        chtype *tmp = tmpsel;
+        int ret_length = 0;
 
-		if (utf8)
-		{
-			while (*tmp)
-				ret_length += _to_utf8(data + ret_length,
-					*tmp++);
-		}
-		else
-			while (*tmp)
-				data[ret_length++] = *tmp++ & 0xff;
+        if (utf8)
+        {
+            while (*tmp)
+                ret_length += _to_utf8(data + ret_length, *tmp++);
+        }
+        else
+            while (*tmp)
+                data[ret_length++] = *tmp++ & 0xff;
 
-		data[ret_length++] = '\0';
+        data[ret_length++] = '\0';
 
-		*value_return = data;
-		*length_return = ret_length;
-		*format_return = 8;
-		*type_return = *target;
+        *value_return = data;
+        *length_return = ret_length;
+        *format_return = 8;
+        *type_return = *target;
 
-		return True;
-	}
-	else
-		return XmuConvertStandardSelection(topLevel, CurrentTime, 
-		    selection, target, type_return, (XPointer*)value_return,
-		    length_return, format_return);
+        return True;
+    }
+    else
+        return XmuConvertStandardSelection(topLevel, CurrentTime, 
+            selection, target, type_return, (XPointer*)value_return,
+            length_return, format_return);
 }
 
 static void _lose_ownership(Widget w, Atom *type)
 {
-	XC_LOG(("_lose_ownership() - called\n"));
+    XC_LOG(("_lose_ownership() - called\n"));
 
-	if (tmpsel)
-		free(tmpsel);
+    if (tmpsel)
+        free(tmpsel);
 
-	tmpsel = NULL;
-	tmpsel_length = 0;
-	_selection_off();
+    tmpsel = NULL;
+    tmpsel_length = 0;
+    _selection_off();
 }
 
 static void _show_selection(int start_x, int start_y, int end_x, int end_y,
-			  bool highlight)
+                            bool highlight)
 {
-	int i, num_cols, start_col, row;
+    int i, num_cols, start_col, row;
 
-	PDC_LOG(("%s:_show_selection() - called StartX: %d StartY: %d "
-		"EndX: %d EndY: %d Highlight: %d\n", XCLOGMSG,
-		start_x, start_y, end_x, end_y, highlight));
+    PDC_LOG(("%s:_show_selection() - called StartX: %d StartY: %d "
+             "EndX: %d EndY: %d Highlight: %d\n", XCLOGMSG,
+             start_x, start_y, end_x, end_y, highlight));
 
-	for (i = 0; i < end_y - start_y + 1; i++)
-	{
-		if (start_y == end_y)		/* only one line */
-		{
-			start_col = start_x;
-			num_cols = end_x - start_x + 1;
-			row = start_y;
-		}
-		else if (!i)			/* first line */
-		{
-			start_col = start_x;
-			num_cols = COLS - start_x;
-			row = start_y;
-		}
-		else if (start_y + i == end_y)	/* last line */
-		{
-			start_col = 0;
-			num_cols = end_x + 1;
-			row = end_y;
-		}
-		else				/* full line */
-		{
-			start_col = 0;
-			num_cols = COLS;
-			row = start_y + i;
-		}
+    for (i = 0; i < end_y - start_y + 1; i++)
+    {
+        if (start_y == end_y)       /* only one line */
+        {
+            start_col = start_x;
+            num_cols = end_x - start_x + 1;
+            row = start_y;
+        }
+        else if (!i)            /* first line */
+        {
+            start_col = start_x;
+            num_cols = COLS - start_x;
+            row = start_y;
+        }
+        else if (start_y + i == end_y)  /* last line */
+        {
+            start_col = 0;
+            num_cols = end_x + 1;
+            row = end_y;
+        }
+        else                /* full line */
+        {
+            start_col = 0;
+            num_cols = COLS;
+            row = start_y + i;
+        }
 
-		XC_get_line_lock(row);
+        XC_get_line_lock(row);
 
-		_display_text((const chtype *)(Xcurscr + 
-			XCURSCR_Y_OFF(row) + (start_col * sizeof(chtype))),
-			row, start_col, num_cols, highlight);
+        _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
+                      (start_col * sizeof(chtype))), row, start_col,
+                      num_cols, highlight);
 
-		XC_release_line_lock(row);
-	}
+        XC_release_line_lock(row);
+    }
 }
 
 static void _selection_off(void)
 {
-	XC_LOG(("_selection_off() - called\n"));
+    XC_LOG(("_selection_off() - called\n"));
 
-	_display_screen();
+    _display_screen();
 
-	selection_start_x = selection_start_y = selection_end_x = 
-		selection_end_y = 0;
+    selection_start_x = selection_start_y = selection_end_x = 
+        selection_end_y = 0;
 
-	mouse_selection = FALSE;
+    mouse_selection = FALSE;
 }
 
 static void _selection_on(int x, int y)
 {
-	XC_LOG(("_selection_on() - called\n"));
+    XC_LOG(("_selection_on() - called\n"));
 
-	selection_start_x = selection_end_x = x;
-	selection_start_y = selection_end_y = y;
+    selection_start_x = selection_end_x = x;
+    selection_start_y = selection_end_y = y;
 }
 
 static void _selection_extend(int x, int y)
 {
-	int temp, current_start, current_end, current_start_x, 
-		current_end_x, current_start_y, current_end_y,
-		new_start, new_end, new_start_x, new_end_x, new_start_y, 
-		new_end_y;
+    int temp, current_start, current_end, current_start_x, 
+        current_end_x, current_start_y, current_end_y, new_start, 
+        new_end, new_start_x, new_end_x, new_start_y, new_end_y;
 
-	XC_LOG(("_selection_extend() - called\n"));
+    XC_LOG(("_selection_extend() - called\n"));
 
-	mouse_selection = TRUE;
+    mouse_selection = TRUE;
 
-	/* convert x/y coordinates into start/stop */
+    /* convert x/y coordinates into start/stop */
 
-	current_start = (selection_start_y * COLS) + selection_start_x;
-	current_end = (selection_end_y * COLS) + selection_end_x;
+    current_start = (selection_start_y * COLS) + selection_start_x;
+    current_end = (selection_end_y * COLS) + selection_end_x;
 
-	if (current_start > current_end)
-	{
-		current_start_x = selection_end_x;
-		current_start_y = selection_end_y;
-		current_end_x = selection_start_x;
-		current_end_y = selection_start_y;
-		temp = current_start;
-		current_start = current_end;
-		current_end = temp;
-	}
-	else
-	{
-		current_end_x = selection_end_x;
-		current_end_y = selection_end_y;
-		current_start_x = selection_start_x;
-		current_start_y = selection_start_y;
-	}
+    if (current_start > current_end)
+    {
+        current_start_x = selection_end_x;
+        current_start_y = selection_end_y;
+        current_end_x = selection_start_x;
+        current_end_y = selection_start_y;
+        temp = current_start;
+        current_start = current_end;
+        current_end = temp;
+    }
+    else
+    {
+        current_end_x = selection_end_x;
+        current_end_y = selection_end_y;
+        current_start_x = selection_start_x;
+        current_start_y = selection_start_y;
+    }
 
-	/* Now we have the current selection as a linear expression. 
-	   Convert the new position to a linear expression. */
+    /* Now we have the current selection as a linear expression. 
+       Convert the new position to a linear expression. */
 
-	selection_end_x = x;
-	selection_end_y = y;
+    selection_end_x = x;
+    selection_end_y = y;
 
-	/* convert x/y coordinates into start/stop */
+    /* convert x/y coordinates into start/stop */
 
-	new_start = (selection_start_y * COLS) + selection_start_x;
-	new_end = (selection_end_y * COLS) + selection_end_x;
+    new_start = (selection_start_y * COLS) + selection_start_x;
+    new_end = (selection_end_y * COLS) + selection_end_x;
 
-	if (new_start > new_end)
-	{
-		new_start_x = selection_end_x;
-		new_start_y = selection_end_y;
-		new_end_x = selection_start_x;
-		new_end_y = selection_start_y;
-		temp = new_start;
-		new_start = new_end;
-		new_end = temp;
-	}
-	else
-	{
-		new_end_x = selection_end_x;
-		new_end_y = selection_end_y;
-		new_start_x = selection_start_x;
-		new_start_y = selection_start_y;
-	}
+    if (new_start > new_end)
+    {
+        new_start_x = selection_end_x;
+        new_start_y = selection_end_y;
+        new_end_x = selection_start_x;
+        new_end_y = selection_start_y;
+        temp = new_start;
+        new_start = new_end;
+        new_end = temp;
+    }
+    else
+    {
+        new_end_x = selection_end_x;
+        new_end_y = selection_end_y;
+        new_start_x = selection_start_x;
+        new_start_y = selection_start_y;
+    }
 
-	if (new_end > current_end)
-		_show_selection(current_end_x, current_end_y, new_end_x, 
-			new_end_y, TRUE);
-	else if (new_end < current_end)
-		_show_selection(new_end_x, new_end_y, current_end_x, 
-			current_end_y, FALSE);
-	else if (new_start < current_start)
-		_show_selection(new_start_x, new_start_y, current_start_x, 
-			current_start_y, TRUE);
-	else if (new_start > current_start)
-		_show_selection(current_start_x, current_start_y, 
-			new_start_x, new_start_y, FALSE);
-	else
-		_show_selection(current_start_x, current_start_y, 
-			new_start_x, new_start_y, TRUE);
+    if (new_end > current_end)
+        _show_selection(current_end_x, current_end_y, new_end_x, 
+                        new_end_y, TRUE);
+    else if (new_end < current_end)
+        _show_selection(new_end_x, new_end_y, current_end_x, 
+                        current_end_y, FALSE);
+    else if (new_start < current_start)
+        _show_selection(new_start_x, new_start_y, current_start_x, 
+                        current_start_y, TRUE);
+    else if (new_start > current_start)
+        _show_selection(current_start_x, current_start_y, 
+                        new_start_x, new_start_y, FALSE);
+    else
+        _show_selection(current_start_x, current_start_y, 
+                        new_start_x, new_start_y, TRUE);
 }
 
 static void _selection_set(void)
 {
-	int i, j, start, end, start_x, end_x, start_y, end_y, num_cols, 
-		start_col, row, num_chars, ch, last_nonblank, length, newlen;
-	chtype *ptr = NULL;
+    int i, j, start, end, start_x, end_x, start_y, end_y, num_cols, 
+        start_col, row, num_chars, ch, last_nonblank, length, newlen;
+    chtype *ptr = NULL;
 
-	XC_LOG(("_selection_set() - called\n"));
+    XC_LOG(("_selection_set() - called\n"));
 
-	/* convert x/y coordinates into start/stop */
+    /* convert x/y coordinates into start/stop */
 
-	start = (selection_start_y * COLS) + selection_start_x;
-	end = (selection_end_y * COLS) + selection_end_x;
+    start = (selection_start_y * COLS) + selection_start_x;
+    end = (selection_end_y * COLS) + selection_end_x;
 
-	if (start == end)
-	{
-		if (tmpsel)
-			free(tmpsel);
+    if (start == end)
+    {
+        if (tmpsel)
+            free(tmpsel);
 
-		tmpsel = NULL;
-		tmpsel_length = 0;
+        tmpsel = NULL;
+        tmpsel_length = 0;
 
-		return;
-	}
+        return;
+    }
 
-	if (start > end)
-	{
-		start_x = selection_end_x;
-		start_y = selection_end_y;
-		end_x = selection_start_x;
-		end_y = selection_start_y;
-		length = start - end + 1;
-	}
-	else
-	{
-		end_x = selection_end_x;
-		end_y = selection_end_y;
-		start_x = selection_start_x;
-		start_y = selection_start_y;
-		length = end - start + 1;
-	}
+    if (start > end)
+    {
+        start_x = selection_end_x;
+        start_y = selection_end_y;
+        end_x = selection_start_x;
+        end_y = selection_start_y;
+        length = start - end + 1;
+    }
+    else
+    {
+        end_x = selection_end_x;
+        end_y = selection_end_y;
+        start_x = selection_start_x;
+        start_y = selection_start_y;
+        length = end - start + 1;
+    }
 
-	newlen = length + end_y - start_y + 2;
+    newlen = length + end_y - start_y + 2;
 
-	if (length > (int)tmpsel_length)
-	{
-		if (!tmpsel_length)
-			tmpsel = malloc(newlen * sizeof(chtype));
-		else
-			tmpsel = realloc(tmpsel, newlen * sizeof(chtype));
-	}
+    if (length > (int)tmpsel_length)
+    {
+        if (!tmpsel_length)
+            tmpsel = malloc(newlen * sizeof(chtype));
+        else
+            tmpsel = realloc(tmpsel, newlen * sizeof(chtype));
+    }
 
-	if (!tmpsel)
-	{
-		tmpsel_length = 0;
-		return;
-	}
+    if (!tmpsel)
+    {
+        tmpsel_length = 0;
+        return;
+    }
 
-	tmpsel_length = length;
-	num_chars = 0;
+    tmpsel_length = length;
+    num_chars = 0;
 
-	for (i = 0; i < end_y - start_y + 1; i++)
-	{
+    for (i = 0; i < end_y - start_y + 1; i++)
+    {
 
-		if (start_y == end_y)		/* only one line */
-		{
-			start_col = start_x;
-			num_cols = end_x - start_x + 1;
-			row = start_y;
-		}
-		else if (!i)			/* first line */
-		{
-			start_col = start_x;
-			num_cols = COLS - start_x;
-			row = start_y;
-		}
-		else if (start_y + i == end_y)	/* last line */
-		{
-			start_col = 0;
-			num_cols = end_x + 1;
-			row = end_y;
-		}
-		else				/* full line */
-		{
-			start_col = 0;
-			num_cols = COLS;
-			row = start_y + i;
-		}
+        if (start_y == end_y)       /* only one line */
+        {
+            start_col = start_x;
+            num_cols = end_x - start_x + 1;
+            row = start_y;
+        }
+        else if (!i)            /* first line */
+        {
+            start_col = start_x;
+            num_cols = COLS - start_x;
+            row = start_y;
+        }
+        else if (start_y + i == end_y)  /* last line */
+        {
+            start_col = 0;
+            num_cols = end_x + 1;
+            row = end_y;
+        }
+        else                /* full line */
+        {
+            start_col = 0;
+            num_cols = COLS;
+            row = start_y + i;
+        }
 
-		XC_get_line_lock(row);
+        XC_get_line_lock(row);
 
-		ptr = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
-			start_col * sizeof(chtype));
+        ptr = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
+              start_col * sizeof(chtype));
 
-		if (i < end_y - start_y)
-		{
-			last_nonblank = 0;
+        if (i < end_y - start_y)
+        {
+            last_nonblank = 0;
 
-			for (j = 0; j < num_cols; j++)
-			{
-				ch = (int)(ptr[j] & A_CHARTEXT);
-				if (ch != (int)' ')
-					last_nonblank = j;
-			}
-		}
-		else
-			last_nonblank = num_cols - 1;
+            for (j = 0; j < num_cols; j++)
+            {
+                ch = (int)(ptr[j] & A_CHARTEXT);
+                if (ch != (int)' ')
+                    last_nonblank = j;
+            }
+        }
+        else
+            last_nonblank = num_cols - 1;
 
-		for (j = 0; j <= last_nonblank; j++)
-			tmpsel[num_chars++] = ptr[j];
+        for (j = 0; j <= last_nonblank; j++)
+            tmpsel[num_chars++] = ptr[j];
 
-		XC_release_line_lock(row);
+        XC_release_line_lock(row);
 
-		if (i < end_y - start_y)
-			tmpsel[num_chars++] = '\n';
-	}
+        if (i < end_y - start_y)
+            tmpsel[num_chars++] = '\n';
+    }
 
-	tmpsel[num_chars] = '\0';
-	tmpsel_length = num_chars;
+    tmpsel[num_chars] = '\0';
+    tmpsel_length = num_chars;
 }
 
 static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 {
-	int xpos, ypos, i;
-	chtype *ch;
-	short fore = 0, back = 0;
+    int xpos, ypos, i;
+    chtype *ch;
+    short fore = 0, back = 0;
 
-	PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
-		XCLOGMSG, old_row, old_x));
+    PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
+             XCLOGMSG, old_row, old_x));
 
-	/* if the cursor position is outside the boundary of the screen, 
-	   ignore the request */
+    /* if the cursor position is outside the boundary of the screen, 
+       ignore the request */
 
-	if (old_row >= XCursesLINES || old_x >= COLS ||
-	    new_row >= XCursesLINES || new_x >= COLS)
-		return;
+    if (old_row >= XCursesLINES || old_x >= COLS ||
+        new_row >= XCursesLINES || new_x >= COLS)
+        return;
 
-	/* display the character at the current cursor position */
+    /* display the character at the current cursor position */
 
-	PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
-		XCLOGMSG, old_row, old_x));
+    PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
+             XCLOGMSG, old_row, old_x));
 
-	_display_text((const chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) 
-		+ (old_x * sizeof(chtype)))), old_row, old_x, 1, FALSE);
+    _display_text((const chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) +
+                  (old_x * sizeof(chtype)))), old_row, old_x, 1, FALSE);
 
-	/* display the cursor at the new cursor position */
+    /* display the cursor at the new cursor position */
 
-	if (!SP->visibility)
-		return;		/* cursor not displayed, no more to do */
+    if (!SP->visibility)
+        return;     /* cursor not displayed, no more to do */
 
-	_make_xy(new_x, new_row, &xpos, &ypos);
+    _make_xy(new_x, new_row, &xpos, &ypos);
 
-	ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) + new_x *
-		sizeof(chtype));
+    ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) + new_x * sizeof(chtype));
 
-	_set_cursor_color(ch, &fore, &back);
+    _set_cursor_color(ch, &fore, &back);
 
-	if (vertical_cursor)
-	{
-		XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
+    if (vertical_cursor)
+    {
+        XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
 
-		for (i = 1; i <= SP->visibility; i++)
-			XDrawLine(XCURSESDISPLAY, XCURSESWIN,
-				rect_cursor_gc,
-				xpos + i,
-				ypos - xc_app_data.normalFont->ascent,
-				xpos + i,
-				ypos - xc_app_data.normalFont->ascent + 
-					font_height - 1);
-	}
-	else
-	{
-		if (SP->visibility == 1)
-		{
-			/* cursor visibility normal */
+        for (i = 1; i <= SP->visibility; i++)
+            XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+                      xpos + i, ypos - xc_app_data.normalFont->ascent,
+                      xpos + i, ypos - xc_app_data.normalFont->ascent + 
+                      font_height - 1);
+    }
+    else
+    {
+        if (SP->visibility == 1)
+        {
+            /* cursor visibility normal */
 
-			XSetForeground(XCURSESDISPLAY, rect_cursor_gc,
-				colors[back]);
+            XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
 
-			for (i = 0; i < xc_app_data.normalFont->descent + 2;
-			     i++)
-				XDrawLine(XCURSESDISPLAY, XCURSESWIN,
-					rect_cursor_gc,
-					xpos,
-					ypos - 2 + i,
-					xpos + font_width, 
-					ypos - 2 + i);
-		}
-		else
-		{
-			/* cursor visibility high */
+            for (i = 0; i < xc_app_data.normalFont->descent + 2; i++)
+                XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+                          xpos, ypos - 2 + i, xpos + font_width, ypos - 2 + i);
+        }
+        else
+        {
+            /* cursor visibility high */
 #ifdef PDC_WIDE
-			XChar2b buf[2];
+            XChar2b buf[2];
 
-			buf[0].byte1 = (*ch & 0xff00) >> 8;
-			buf[0].byte2 = *ch & 0x00ff;
+            buf[0].byte1 = (*ch & 0xff00) >> 8;
+            buf[0].byte2 = *ch & 0x00ff;
 
-			buf[1].byte1 = buf[1].byte2 = 0;
+            buf[1].byte1 = buf[1].byte2 = 0;
 #else
-			char buf[2];
+            char buf[2];
 
-			buf[0] = *ch & 0xff;
-			buf[1] = '\0';
+            buf[0] = *ch & 0xff;
+            buf[1] = '\0';
 #endif
-			XSetForeground(XCURSESDISPLAY, block_cursor_gc, 
-				colors[fore]);
-			XSetBackground(XCURSESDISPLAY, block_cursor_gc, 
-				colors[back]);
+            XSetForeground(XCURSESDISPLAY, block_cursor_gc, colors[fore]);
+            XSetBackground(XCURSESDISPLAY, block_cursor_gc, colors[back]);
 #ifdef PDC_WIDE
-			XDrawImageString16(
+            XDrawImageString16(
 #else
-			XDrawImageString(
+            XDrawImageString(
 #endif
-				XCURSESDISPLAY, XCURSESWIN, 
-				block_cursor_gc, xpos, ypos, buf, 1);
-		}
-	}
+                             XCURSESDISPLAY, XCURSESWIN, block_cursor_gc,
+                             xpos, ypos, buf, 1);
+        }
+    }
 
-	PDC_LOG(("%s:_display_cursor() - draw cursor at "
-		"row %d col %d\n", XCLOGMSG, new_row, new_x));
+    PDC_LOG(("%s:_display_cursor() - draw cursor at row %d col %d\n",
+             XCLOGMSG, new_row, new_x));
 }
 
 static void _handle_enter_leave(Widget w, XtPointer client_data,
-				XEvent *event, Boolean *unused)
+                                XEvent *event, Boolean *unused)
 {
-	XC_LOG(("_handle_enter_leave called\n"));
+    XC_LOG(("_handle_enter_leave called\n"));
 
-	switch(event->type)
-	{
-	case EnterNotify:
-		XC_LOG(("EnterNotify received\n"));
+    switch(event->type)
+    {
+    case EnterNotify:
+        XC_LOG(("EnterNotify received\n"));
 
-		window_entered = TRUE;
-		break;
+        window_entered = TRUE;
+        break;
 
-	case LeaveNotify:
-		XC_LOG(("LeaveNotify received\n"));
+    case LeaveNotify:
+        XC_LOG(("LeaveNotify received\n"));
 
-		window_entered = FALSE;
+        window_entered = FALSE;
 
-		/* Display the cursor so it stays on while the window is 
-		   not current */
+        /* Display the cursor so it stays on while the window is 
+           not current */
 
-		_display_cursor(SP->cursrow, SP->curscol, 
-			SP->cursrow, SP->curscol);
-		break;
+        _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+        break;
 
-	default:
-		PDC_LOG(("%s:_handle_enter_leave - unknown event %d\n",
-			XCLOGMSG, event->type));
-	}
+    default:
+        PDC_LOG(("%s:_handle_enter_leave - unknown event %d\n",
+                 XCLOGMSG, event->type));
+    }
 }
 
 static void _send_key_to_curses(unsigned long key, MOUSE_STATUS *ms,
-				bool key_code)
+                                bool key_code)
 {
-	PDC_LOG(("%s:_send_key_to_curses() - called: sending %d\n",
-		XCLOGMSG, key));
+    PDC_LOG(("%s:_send_key_to_curses() - called: sending %d\n",
+             XCLOGMSG, key));
 
-	SP->key_code = key_code;
+    SP->key_code = key_code;
 
-	if (XC_write_socket(xc_key_sock, &key, sizeof(unsigned long)) < 0)
-	{
-		_exit_process(1, SIGKILL, "exiting from _send_key_to_curses");
-	}
+    if (XC_write_socket(xc_key_sock, &key, sizeof(unsigned long)) < 0)
+        _exit_process(1, SIGKILL, "exiting from _send_key_to_curses");
 
-	if (ms)
-	{
-		MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
+    if (ms)
+    {
+        MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
 
-		if (XC_write_socket(xc_key_sock, ms, sizeof(MOUSE_STATUS)) < 0)
-		{
-			_exit_process(1, SIGKILL,
-				"exiting from _send_key_to_curses");
-		}
-	}
+        if (XC_write_socket(xc_key_sock, ms, sizeof(MOUSE_STATUS)) < 0)
+            _exit_process(1, SIGKILL, "exiting from _send_key_to_curses");
+    }
 }
 
 static void _blink_cursor(XtPointer unused, XtIntervalId *id)
 {
-	XC_LOG(("_blink_cursor() - called:\n"));
+    XC_LOG(("_blink_cursor() - called:\n"));
 
-	if (window_entered)
-	{
-		if (visible_cursor)
-		{
-			/* Cursor currently ON, turn it off */
+    if (window_entered)
+    {
+        if (visible_cursor)
+        {
+            /* Cursor currently ON, turn it off */
 
-			int save_visibility = SP->visibility;
-			SP->visibility = 0;
-			_display_cursor(SP->cursrow, SP->curscol,
-				SP->cursrow, SP->curscol);
-			SP->visibility = save_visibility;
-			visible_cursor = FALSE;
-		}
-		else
-		{
-			/* Cursor currently OFF, turn it on */
+            int save_visibility = SP->visibility;
+            SP->visibility = 0;
+            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            SP->visibility = save_visibility;
+            visible_cursor = FALSE;
+        }
+        else
+        {
+            /* Cursor currently OFF, turn it on */
 
-			_display_cursor(SP->cursrow, SP->curscol,
-				SP->cursrow, SP->curscol);
-			visible_cursor = TRUE;
-		}
-	}
+            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            visible_cursor = TRUE;
+        }
+    }
 
-	XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
-		_blink_cursor, NULL);
+    XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
+                    _blink_cursor, NULL);
 }
 
 static void XCursesButton(Widget w, XEvent *event, String *params,
-			  Cardinal *nparams)
+                          Cardinal *nparams)
 {
-	int button_no;
-	static int last_button_no = 0;
-	static Time last_button_press_time = 0;
-	MOUSE_STATUS save_mouse_status;
-	bool send_key = TRUE;
-	static bool remove_release;
-	static bool handle_real_release;
+    int button_no;
+    static int last_button_no = 0;
+    static Time last_button_press_time = 0;
+    MOUSE_STATUS save_mouse_status;
+    bool send_key = TRUE;
+    static bool remove_release;
+    static bool handle_real_release;
 
-	XC_LOG(("XCursesButton() - called\n"));
+    XC_LOG(("XCursesButton() - called\n"));
 
-	keysym = 0;	/* suppress any modifier key return */
+    keysym = 0; /* suppress any modifier key return */
 
-	save_mouse_status = Mouse_status;
-	button_no = event->xbutton.button;
+    save_mouse_status = Mouse_status;
+    button_no = event->xbutton.button;
 
-	/* It appears that under X11R6 (at least on Linux), that an 
-	   event_type of ButtonMotion does not include the mouse button 
-	   in the event. The following code is designed to cater for 
-	   this situation. */
+    /* It appears that under X11R6 (at least on Linux), that an
+       event_type of ButtonMotion does not include the mouse button in
+       the event. The following code is designed to cater for this
+       situation. */
 
-	if (!button_no)
-		button_no = last_button_no;
+    if (!button_no)
+        button_no = last_button_no;
 
-	last_button_no = button_no;
+    last_button_no = button_no;
 
-	Mouse_status.changes = 0;
+    Mouse_status.changes = 0;
 
-	switch(event->type)
-	{
-	case ButtonPress:
-		/* Handle button 4 and 5, which are normally mapped to 
-		   the wheel mouse scroll up and down */
+    switch(event->type)
+    {
+    case ButtonPress:
+        /* Handle button 4 and 5, which are normally mapped to the wheel
+           mouse scroll up and down */
 
-		if (button_no == 4 || button_no == 5)
-		{
-			/* Send the KEY_MOUSE to curses program */
+        if (button_no == 4 || button_no == 5)
+        {
+            /* Send the KEY_MOUSE to curses program */
 
-			memset(&Mouse_status, 0, sizeof(Mouse_status));
+            memset(&Mouse_status, 0, sizeof(Mouse_status));
 
-			Mouse_status.changes = (button_no == 5) ? 
-				PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+            Mouse_status.changes = (button_no == 5) ? 
+                PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
 
-			MOUSE_X_POS = MOUSE_Y_POS = -1;
+            MOUSE_X_POS = MOUSE_Y_POS = -1;
+            _send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
+            remove_release = TRUE;
 
-			_send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
+            return;
+        }
 
-			remove_release = TRUE;
+        if (button_no == 2 &&
+            (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
+        {
+            XCursesPasteSelection(drawing, (XButtonEvent *)event);
+            remove_release = TRUE;
 
-			return;
-		}
+            return;
+        }
 
-		if (button_no == 2 &&
-		    (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
-		{
-			XCursesPasteSelection(drawing, (XButtonEvent *)event);
+        remove_release = False;
+        handle_real_release = False;
 
-			remove_release = TRUE;
+        MOUSE_LOG(("\nButtonPress\n"));
 
-			return;
-		}
+        if ((event->xbutton.time - last_button_press_time) <
+            xc_app_data.doubleClickPeriod)
+        {
+            MOUSE_X_POS = save_mouse_status.x;
+            MOUSE_Y_POS = save_mouse_status.y;
+            BUTTON_STATUS(button_no) = BUTTON_DOUBLE_CLICKED;
 
-		remove_release = False;
-		handle_real_release = False;
+            _selection_off();
+            remove_release = True;
+        }
+        else
+        {
+            napms(SP->mouse_wait);
+            event->type = ButtonRelease;
+            XSendEvent(event->xbutton.display, event->xbutton.window,
+                       True, 0, event);
+            last_button_press_time = event->xbutton.time;
 
-		MOUSE_LOG(("\nButtonPress\n"));
+            return;
+        }
 
-		if ((event->xbutton.time - last_button_press_time) <
-		    xc_app_data.doubleClickPeriod)
-		{
-			MOUSE_X_POS = save_mouse_status.x;
-			MOUSE_Y_POS = save_mouse_status.y;
-			BUTTON_STATUS(button_no) = BUTTON_DOUBLE_CLICKED;
+        last_button_press_time = event->xbutton.time;
+        break;
 
-			_selection_off();
-			remove_release = True;
-		}
-		else
-		{
-			napms(SP->mouse_wait);
-			event->type = ButtonRelease;
-			XSendEvent(event->xbutton.display, 
-				event->xbutton.window, True, 0, event);
-			last_button_press_time = event->xbutton.time;
+    case MotionNotify:
+        MOUSE_LOG(("\nMotionNotify: y: %d x: %d Width: %d "
+                   "Height: %d\n", event->xbutton.y, event->xbutton.x, 
+                   font_width, font_height));
 
-			return;
-		}
+        MOUSE_X_POS = (event->xbutton.x - xc_app_data.borderWidth) /
+                      font_width;
+        MOUSE_Y_POS = (event->xbutton.y - xc_app_data.borderWidth) /
+                      font_height;
 
-		last_button_press_time = event->xbutton.time;
-		break;
+        if (button_no == 1 &&
+            (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
+        {
+            _selection_extend(MOUSE_X_POS, MOUSE_Y_POS);
+            send_key = FALSE;
+        }
+        else
+            _selection_off();
 
-	case MotionNotify:
-		MOUSE_LOG(("\nMotionNotify: y: %d x: %d Width: %d "
-			"Height: %d\n", event->xbutton.y, event->xbutton.x, 
-			font_width, font_height));
+        /* Throw away mouse movements if they are in the same character 
+           position as the last mouse event, or if we are currently in 
+           the middle of a double click event. */
 
-		MOUSE_X_POS = (event->xbutton.x - xc_app_data.borderWidth) / 
-			font_width;
-		MOUSE_Y_POS = (event->xbutton.y - xc_app_data.borderWidth) / 
-			font_height;
+        if ((MOUSE_X_POS == save_mouse_status.x &&
+             MOUSE_Y_POS == save_mouse_status.y) || 
+             save_mouse_status.button[button_no - 1] == BUTTON_DOUBLE_CLICKED)
+        {
+            send_key = FALSE;
+            break;
+        }
 
-		if (button_no == 1 &&
-		    (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
-		{
-			_selection_extend(MOUSE_X_POS, MOUSE_Y_POS);
-			send_key = FALSE;
-		}
-		else
-			_selection_off();
+        Mouse_status.changes |= PDC_MOUSE_MOVED;
+        break;
 
-		/* Throw away mouse movements if they are in the same 
-		   character position as the last mouse event, or if we 
-		   are currently in the middle of a double click event. */
+    case ButtonRelease:
+        if (remove_release)
+        {
+            MOUSE_LOG(("Release at: %ld - removed\n", event->xbutton.time));
+            return;
+        }
+        else
+        {
+            MOUSE_X_POS = (event->xbutton.x - xc_app_data.borderWidth) /
+                          font_width;
+            MOUSE_Y_POS = (event->xbutton.y - xc_app_data.borderWidth) /
+                          font_height;
 
-		if ((MOUSE_X_POS == save_mouse_status.x &&
-		     MOUSE_Y_POS == save_mouse_status.y) || 
-		     save_mouse_status.button[button_no - 1] ==
-			BUTTON_DOUBLE_CLICKED)
-		{
-			send_key = FALSE;
-			break;
-		}
+            if (!handle_real_release)
+            {
+                if ((event->xbutton.time - last_button_press_time) <
+                    SP->mouse_wait && 
+                    (event->xbutton.time != last_button_press_time))
+                {
+                    /* The "real" release was shorter than usleep() time;
+                       therefore generate a click event */
 
-		Mouse_status.changes |= PDC_MOUSE_MOVED;
-		break;
+                    MOUSE_LOG(("Release at: %ld - click\n",
+                               event->xbutton.time));
 
-      case ButtonRelease:
-		if (remove_release)
-		{
-			MOUSE_LOG(("Release at: %ld - removed\n",
-				event->xbutton.time));
-			return;
-		}
-		else
-		{
-		    MOUSE_X_POS = (event->xbutton.x - 
-			xc_app_data.borderWidth) / font_width;
-		    MOUSE_Y_POS = (event->xbutton.y - 
-			xc_app_data.borderWidth) / font_height;
+                    BUTTON_STATUS(button_no) = BUTTON_CLICKED;
 
-		    if (!handle_real_release)
-		    {
-			if ((event->xbutton.time - 
-			    last_button_press_time) < SP->mouse_wait && 
-			    (event->xbutton.time != 
-			    last_button_press_time))
-			{
-			    /* The "real" release was shorter than 
-			       usleep() time therefore generate a click 
-			       event */
+                    if (button_no == 1 && mouse_selection &&
+                        (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
+                    {
+                        send_key = FALSE;
 
-			    MOUSE_LOG(("Release at: %ld - click\n",
-				event->xbutton.time));
+                        if (XtOwnSelection(topLevel, XA_PRIMARY, 
+                                           event->xbutton.time, _convert_proc,
+                                           _lose_ownership, NULL) == False)
+                            _selection_off();
+                    }
+                    else
+                        _selection_off();
 
-			    BUTTON_STATUS(button_no) = BUTTON_CLICKED;
+                    /* Ensure the "pseudo" release event is ignored */
 
-			    if (button_no == 1 && mouse_selection &&
-				(!SP->_trap_mbe ||
-				(event->xbutton.state & ShiftMask)))
-			    {
-				send_key = FALSE;
+                    remove_release = True;
+                    handle_real_release = False;
+                    break;
+                }
+                else
+                {
+                    /* Button release longer than usleep() time; 
+                       therefore generate a press and wait for the real 
+                       release to occur later. */
 
-				if (XtOwnSelection(topLevel, XA_PRIMARY, 
-				    event->xbutton.time, _convert_proc,
-				    _lose_ownership, NULL) == False)
-					_selection_off();
-			    }
-			    else
-				_selection_off();
+                    MOUSE_LOG(("Generated Release at: %ld - "
+                               "press & release\n", event->xbutton.time));
 
-			    /* Ensure the "pseudo" release event is ignored */
+                    BUTTON_STATUS(button_no) = BUTTON_PRESSED;
 
-			    remove_release = True;
-			    handle_real_release = False;
-			    break;
-			}
-			else
-			{
-			    /* Button release longer than usleep() time 
-			       therefore generate a press and wait for 
-			       the real release to occur later. */
+                    if (button_no == 1 &&
+                        (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
+                    {
+                        _selection_off();
+                        _selection_on(MOUSE_X_POS, MOUSE_Y_POS);
+                    }
 
-			    MOUSE_LOG(("Generated Release at: %ld - "
-				"press & release\n", event->xbutton.time));
+                    handle_real_release = True;
+                    break;
+                }
+            }
+            else
+            {
+                MOUSE_LOG(("Release at: %ld - released\n",
+                           event->xbutton.time));
+            }
+        }
 
-			    BUTTON_STATUS(button_no) = BUTTON_PRESSED;
+        MOUSE_LOG(("\nButtonRelease\n"));
 
-			    if (button_no == 1 && (!SP->_trap_mbe || 
-				(event->xbutton.state & ShiftMask)))
-			    {
-				_selection_off();
-				_selection_on(MOUSE_X_POS, MOUSE_Y_POS);
-			    }
+        BUTTON_STATUS(button_no) = BUTTON_RELEASED;
 
-			    handle_real_release = True;
-			    break;
-			}
-		    }
-		    else
-		    {
-			MOUSE_LOG(("Release at: %ld - released\n",
-			    event->xbutton.time));
-		    }
-		}
+        if (button_no == 1 && mouse_selection &&
+            (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
+        {
+            send_key = FALSE;
 
-		MOUSE_LOG(("\nButtonRelease\n"));
+            if (XtOwnSelection(topLevel, XA_PRIMARY, 
+                               event->xbutton.time, _convert_proc, 
+                               _lose_ownership, NULL) == False)
+                _selection_off();
 
-		BUTTON_STATUS(button_no) = BUTTON_RELEASED;
+            _selection_set();
+        }
+        else
+            _selection_off();
 
-		if (button_no == 1 && mouse_selection &&
-		    (!SP->_trap_mbe || (event->xbutton.state & ShiftMask)))
-		{
-		    send_key = FALSE;
+        break;
+    }
 
-		    if (XtOwnSelection(topLevel, XA_PRIMARY, 
-			event->xbutton.time, _convert_proc, 
-			_lose_ownership, NULL) == False)
-			    _selection_off();
+    /* Set up the mouse status fields in preparation for sending */
 
-		    _selection_set();
-		}
-		else
-		    _selection_off();
+    Mouse_status.changes |= 1 << (button_no - 1);
 
-		break;
-	}
+    if (Mouse_status.changes & PDC_MOUSE_MOVED &&
+        BUTTON_STATUS(button_no) == BUTTON_PRESSED)
+        BUTTON_STATUS(button_no) = BUTTON_MOVED;
 
-	/* Set up the mouse status fields in preparation for sending */
+    if (event->xbutton.state & ShiftMask)
+        BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
+    if (event->xbutton.state & ControlMask)
+        BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
+    if (event->xbutton.state & Mod1Mask)
+        BUTTON_STATUS(button_no) |= BUTTON_ALT;
 
-	Mouse_status.changes |= 1 << (button_no - 1);
+    /* If we are ignoring the event, or the mouse position is outside
+       the bounds of the screen (because of the border), return here */
 
-	if (Mouse_status.changes & PDC_MOUSE_MOVED &&
-	    BUTTON_STATUS(button_no) == BUTTON_PRESSED)
-		BUTTON_STATUS(button_no) = BUTTON_MOVED;
+    MOUSE_LOG(("Button: %d x: %d y: %d Button status: %x "
+        "Mouse status: %x\n", button_no, MOUSE_X_POS, MOUSE_Y_POS,
+        BUTTON_STATUS(button_no), Mouse_status.changes));
 
-	if (event->xbutton.state & ShiftMask)
-		BUTTON_STATUS(button_no) |= BUTTON_SHIFT;
-	if (event->xbutton.state & ControlMask)
-		BUTTON_STATUS(button_no) |= BUTTON_CONTROL;
-	if (event->xbutton.state & Mod1Mask)
-		BUTTON_STATUS(button_no) |= BUTTON_ALT;
+    MOUSE_LOG(("Send: %d Button1: %x Button2: %x Button3: %x %d %d\n",
+        send_key, BUTTON_STATUS(1), BUTTON_STATUS(2), 
+        BUTTON_STATUS(3), XCursesLINES, XCursesCOLS));
 
-	/* If we are ignoring the event, or the mouse position is 
-	   outside the bounds of the screen (because of the border), 
-	   return here */
+    if (!send_key || MOUSE_X_POS < 0 || MOUSE_X_POS >= XCursesCOLS ||
+        MOUSE_Y_POS < 0 || MOUSE_Y_POS >= XCursesLINES)
+        return;
 
-	MOUSE_LOG(("Button: %d x: %d y: %d Button status: %x "
-		"Mouse status: %x\n", button_no, MOUSE_X_POS, MOUSE_Y_POS,
-		BUTTON_STATUS(button_no), Mouse_status.changes));
+    /* Send the KEY_MOUSE to curses program */
 
-	MOUSE_LOG(("Send: %d Button1: %x Button2: %x Button3: %x %d %d\n",
-		send_key, BUTTON_STATUS(1), BUTTON_STATUS(2), 
-		BUTTON_STATUS(3), XCursesLINES, XCursesCOLS));
-
-	if (!send_key || MOUSE_X_POS < 0 || MOUSE_X_POS >= XCursesCOLS ||
-	    MOUSE_Y_POS < 0 || MOUSE_Y_POS >= XCursesLINES)
-		return;
-
-	/* Send the KEY_MOUSE to curses program */
-
-	_send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
+    _send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
 }
 
 static void _scroll_up_down(Widget w, XtPointer client_data,
-			    XtPointer call_data)
+                            XtPointer call_data)
 {
-	int pixels = (long) call_data;
-	int total_y = SP->sb_total_y * font_height;
-	int viewport_y = SP->sb_viewport_y * font_height;
-	int cur_y = SP->sb_cur_y * font_height;
+    int pixels = (long) call_data;
+    int total_y = SP->sb_total_y * font_height;
+    int viewport_y = SP->sb_viewport_y * font_height;
+    int cur_y = SP->sb_cur_y * font_height;
 
-	/* When pixels is negative, right button pressed, move data 
-	   down, thumb moves up.  Otherwise, left button pressed, pixels 
-	   positive, move data up, thumb down. */
+    /* When pixels is negative, right button pressed, move data down,
+       thumb moves up.  Otherwise, left button pressed, pixels positive,
+       move data up, thumb down. */
 
-	cur_y += pixels;
+    cur_y += pixels;
 
-	/* limit panning to size of overall */
+    /* limit panning to size of overall */
 
-	if (cur_y < 0)
-		cur_y = 0;
-	else
-		if (cur_y > (total_y - viewport_y))
-			cur_y = total_y - viewport_y;
+    if (cur_y < 0)
+        cur_y = 0;
+    else
+        if (cur_y > (total_y - viewport_y))
+            cur_y = total_y - viewport_y;
 
-	SP->sb_cur_y = cur_y / font_height;
+    SP->sb_cur_y = cur_y / font_height;
 
-	XawScrollbarSetThumb(w, (double)((double)cur_y / (double)total_y),
-		(double)((double)viewport_y / (double)total_y));
+    XawScrollbarSetThumb(w, (double)((double)cur_y / (double)total_y),
+                         (double)((double)viewport_y / (double)total_y));
 
-	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
+    /* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-	_send_key_to_curses(KEY_SF, NULL, TRUE);
+    _send_key_to_curses(KEY_SF, NULL, TRUE);
 }
 
 static void _scroll_left_right(Widget w, XtPointer client_data,
-			       XtPointer call_data)
+                               XtPointer call_data)
 {
-	int pixels = (long) call_data;
-	int total_x = SP->sb_total_x * font_width;
-	int viewport_x = SP->sb_viewport_x * font_width;
-	int cur_x = SP->sb_cur_x * font_width;
+    int pixels = (long) call_data;
+    int total_x = SP->sb_total_x * font_width;
+    int viewport_x = SP->sb_viewport_x * font_width;
+    int cur_x = SP->sb_cur_x * font_width;
 
-	/* When pixels is negative, right button pressed, move data 
-	   down, thumb moves up.  Otherwise, left button pressed, pixels 
-	   positive, move data up, thumb down. */
+    cur_x += pixels;
 
-	cur_x += pixels;
+    /* limit panning to size of overall */
 
-	/* limit panning to size of overall */
+    if (cur_x < 0)
+        cur_x = 0;
+    else
+        if (cur_x > (total_x - viewport_x))
+            cur_x = total_x - viewport_x;
 
-	if (cur_x < 0)
-		cur_x = 0;
-	else
-		if (cur_x > (total_x - viewport_x))
-			cur_x = total_x - viewport_x;
+    SP->sb_cur_x = cur_x / font_width;
 
-	SP->sb_cur_x = cur_x / font_width;
+    XawScrollbarSetThumb(w, (double)((double)cur_x / (double)total_x),
+                         (double)((double)viewport_x / (double)total_x));
 
-	XawScrollbarSetThumb(w, (double)((double)cur_x / (double)total_x),
-		(double)((double)viewport_x / (double)total_x));
-
-	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
-
-	_send_key_to_curses(KEY_SR, NULL, TRUE);
+    _send_key_to_curses(KEY_SR, NULL, TRUE);
 }
 
 static void _thumb_up_down(Widget w, XtPointer client_data,
-			   XtPointer call_data)
+                           XtPointer call_data)
 {
-	double percent = *(double *) call_data;
-	double total_y = (double)SP->sb_total_y;
-	double viewport_y = (double)SP->sb_viewport_y;
-	int cur_y = SP->sb_cur_y;
+    double percent = *(double *) call_data;
+    double total_y = (double)SP->sb_total_y;
+    double viewport_y = (double)SP->sb_viewport_y;
+    int cur_y = SP->sb_cur_y;
 
-	/* If the size of the viewport is > overall area simply return, 
-	   as no scrolling is permitted. */
+    /* If the size of the viewport is > overall area simply return, 
+       as no scrolling is permitted. */
 
-	if (SP->sb_viewport_y >= SP->sb_total_y)
-		return;
+    if (SP->sb_viewport_y >= SP->sb_total_y)
+        return;
 
-	if ((SP->sb_cur_y = (int)((double)total_y * percent)) >=
-	    (total_y - viewport_y))
-		SP->sb_cur_y = total_y - viewport_y;
+    if ((SP->sb_cur_y = (int)((double)total_y * percent)) >=
+        (total_y - viewport_y))
+        SP->sb_cur_y = total_y - viewport_y;
 
-	XawScrollbarSetThumb(w, (double)(cur_y / total_y),
-		(double)(viewport_y / total_y));
+    XawScrollbarSetThumb(w, (double)(cur_y / total_y),
+                         (double)(viewport_y / total_y));
 
-	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
-
-	_send_key_to_curses(KEY_SF, NULL, TRUE);
+    _send_key_to_curses(KEY_SF, NULL, TRUE);
 }
 
 static void _thumb_left_right(Widget w, XtPointer client_data,
-			      XtPointer call_data)
+                  XtPointer call_data)
 {
-	double percent = *(double *) call_data;
-	double total_x = (double)SP->sb_total_x;
-	double viewport_x = (double)SP->sb_viewport_x;
-	int cur_x = SP->sb_cur_x;
+    double percent = *(double *) call_data;
+    double total_x = (double)SP->sb_total_x;
+    double viewport_x = (double)SP->sb_viewport_x;
+    int cur_x = SP->sb_cur_x;
 
-	/* If the size of the viewport is > overall area simply return, 
-	   as no scrolling is permitted. */
+    if (SP->sb_viewport_x >= SP->sb_total_x)
+        return;
 
-	if (SP->sb_viewport_x >= SP->sb_total_x)
-		return;
+    if ((SP->sb_cur_x = (int)((float)total_x * percent)) >=
+        (total_x - viewport_x))
+        SP->sb_cur_x = total_x - viewport_x;
 
-	if ((SP->sb_cur_x = (int)((float)total_x * percent)) >=
-	    (total_x - viewport_x))
-		SP->sb_cur_x = total_x - viewport_x;
-
-	XawScrollbarSetThumb(w, (double)(cur_x / total_x),
-		(double)(viewport_x / total_x));
+    XawScrollbarSetThumb(w, (double)(cur_x / total_x),
+                         (double)(viewport_x / total_x));
     
-	/* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
-
-	_send_key_to_curses(KEY_SR, NULL, TRUE);
+    _send_key_to_curses(KEY_SR, NULL, TRUE);
 }
 
 static void _exit_process(int rc, int sig, char *msg)
 {
-	if (rc || sig)
-	    fprintf(stderr,
-		"%s:_exit_process() - called: rc:%d sig:%d <%s>\n",
-		XCLOGMSG, rc, sig, msg);
+    if (rc || sig)
+        fprintf(stderr, "%s:_exit_process() - called: rc:%d sig:%d <%s>\n",
+                XCLOGMSG, rc, sig, msg);
 
-	shmdt((char *)SP);
-	shmdt((char *)Xcurscr);
-	shmctl(shmidSP, IPC_RMID, 0);
-	shmctl(shmid_Xcurscr, IPC_RMID, 0);
+    shmdt((char *)SP);
+    shmdt((char *)Xcurscr);
+    shmctl(shmidSP, IPC_RMID, 0);
+    shmctl(shmid_Xcurscr, IPC_RMID, 0);
 
-	if (bitmap_file)
-	{
-		XFreePixmap(XCURSESDISPLAY, icon_bitmap);
-		free(bitmap_file);
-	}
+    if (bitmap_file)
+    {
+        XFreePixmap(XCURSESDISPLAY, icon_bitmap);
+        free(bitmap_file);
+    }
 
 #ifdef HAVE_XPM_H
-	if (pixmap_file)
-	{
-		XFreePixmap(XCURSESDISPLAY, icon_pixmap);
-		XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
-		free(pixmap_file);
-	}
+    if (pixmap_file)
+    {
+        XFreePixmap(XCURSESDISPLAY, icon_pixmap);
+        XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
+        free(pixmap_file);
+    }
 #endif
-	XFreeGC(XCURSESDISPLAY, normal_gc);
-	XFreeGC(XCURSESDISPLAY, italic_gc);
-	XFreeGC(XCURSESDISPLAY, block_cursor_gc);
-	XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
-	XFreeGC(XCURSESDISPLAY, border_gc);
+    XFreeGC(XCURSESDISPLAY, normal_gc);
+    XFreeGC(XCURSESDISPLAY, italic_gc);
+    XFreeGC(XCURSESDISPLAY, block_cursor_gc);
+    XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
+    XFreeGC(XCURSESDISPLAY, border_gc);
 #ifdef PDC_XIM
-	XDestroyIC(Xic);
+    XDestroyIC(Xic);
 #endif
 
-	shutdown(xc_display_sock, 2);
-	close(xc_display_sock);
+    shutdown(xc_display_sock, 2);
+    close(xc_display_sock);
 
-	shutdown(xc_exit_sock, 2);
-	close(xc_exit_sock);
+    shutdown(xc_exit_sock, 2);
+    close(xc_exit_sock);
 
-	shutdown(xc_key_sock, 2);
-	close(xc_key_sock);
+    shutdown(xc_key_sock, 2);
+    close(xc_key_sock);
 
-	if (sig)
-		kill(xc_otherpid, sig);	/* to kill parent process */
+    if (sig)
+        kill(xc_otherpid, sig); /* to kill parent process */
 
-	_exit(rc);
+    _exit(rc);
 }
 
 static void _resize(void)
 {
-	short save_atrtab[PDC_COLOR_PAIRS * 2]; 
+    short save_atrtab[PDC_COLOR_PAIRS * 2]; 
 
-	after_first_curses_request = FALSE;
+    after_first_curses_request = FALSE;
 
-	SP->lines = XCursesLINES = ((resize_window_height -
-		(2 * xc_app_data.borderWidth)) / font_height);
+    SP->lines = XCursesLINES = ((resize_window_height -
+        (2 * xc_app_data.borderWidth)) / font_height);
 
-	LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
+    LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
 
-	SP->cols = COLS = XCursesCOLS = ((resize_window_width -
-		(2 * xc_app_data.borderWidth)) / font_width);
+    SP->cols = COLS = XCursesCOLS = ((resize_window_width -
+        (2 * xc_app_data.borderWidth)) / font_width);
 
-	window_width = resize_window_width;
-	window_height = resize_window_height;
-	visible_cursor = TRUE;
+    window_width = resize_window_width;
+    window_height = resize_window_height;
+    visible_cursor = TRUE;
 
-	_draw_border();
+    _draw_border();
 
-	/* Detach and drop the current shared memory segment and 
-	   create and attach to a new segment */
+    /* Detach and drop the current shared memory segment and create and
+       attach to a new segment */
 
-	memcpy(save_atrtab, xc_atrtab, sizeof(save_atrtab));
+    memcpy(save_atrtab, xc_atrtab, sizeof(save_atrtab));
 
-	SP->XcurscrSize = XCURSCR_SIZE;
-	shmdt((char *)Xcurscr);
-	shmctl(shmid_Xcurscr, IPC_RMID, 0);
+    SP->XcurscrSize = XCURSCR_SIZE;
+    shmdt((char *)Xcurscr);
+    shmctl(shmid_Xcurscr, IPC_RMID, 0);
 
-	if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,
-		SP->XcurscrSize + XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
-	{ 
-		perror("Cannot allocate shared memory for curscr");
+    if ((shmid_Xcurscr = shmget(shmkey_Xcurscr,
+        SP->XcurscrSize + XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
+    { 
+        perror("Cannot allocate shared memory for curscr");
 
-		_exit_process(4, SIGKILL,
-			"exiting from _process_curses_requests");
-	} 
+        _exit_process(4, SIGKILL, "exiting from _process_curses_requests");
+    } 
 
-	Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
-	memset(Xcurscr, 0, SP->XcurscrSize);
-	xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-	memcpy(xc_atrtab, save_atrtab, sizeof(save_atrtab));
+    Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
+    memset(Xcurscr, 0, SP->XcurscrSize);
+    xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+    memcpy(xc_atrtab, save_atrtab, sizeof(save_atrtab));
 }
 
 /* For PDC_set_title() */
 
 static void _set_title(void)
 {
-	char title[1024];	/* big enough for window title */ 
-	int pos;
+    char title[1024];   /* big enough for window title */ 
+    int pos;
 
-	if ((XC_read_socket(xc_display_sock, &pos, sizeof(int)) < 0) ||
-	    (XC_read_socket(xc_display_sock, title, pos) < 0))
-	{
-		_exit_process(5, SIGKILL, "exiting from _set_title");
-	}
+    if ((XC_read_socket(xc_display_sock, &pos, sizeof(int)) < 0) ||
+        (XC_read_socket(xc_display_sock, title, pos) < 0))
+    {
+        _exit_process(5, SIGKILL, "exiting from _set_title");
+    }
 
-	XtVaSetValues(topLevel, XtNtitle, title, NULL);
+    XtVaSetValues(topLevel, XtNtitle, title, NULL);
 }
 
 /* For color_content() */
 
 static void _get_color(void)
 {
-	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
-	int index = tmp->pixel;
-	Colormap cmap = DefaultColormap(XCURSESDISPLAY,
-			DefaultScreen(XCURSESDISPLAY));
+    XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+    int index = tmp->pixel;
+    Colormap cmap = DefaultColormap(XCURSESDISPLAY,
+                                    DefaultScreen(XCURSESDISPLAY));
 
-	if (index < 0 || index >= MAX_COLORS)
-		_exit_process(4, SIGKILL, "exiting from _get_color");
+    if (index < 0 || index >= MAX_COLORS)
+        _exit_process(4, SIGKILL, "exiting from _get_color");
 
-	tmp->pixel = colors[index];
-	XQueryColor(XCURSESDISPLAY, cmap, tmp);
+    tmp->pixel = colors[index];
+    XQueryColor(XCURSESDISPLAY, cmap, tmp);
 }
 
 /* For init_color() */
 
 static void _set_color(void)
 {
-	XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
-	int index = tmp->pixel;
-	Colormap cmap = DefaultColormap(XCURSESDISPLAY,
-			DefaultScreen(XCURSESDISPLAY));
+    XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+    int index = tmp->pixel;
+    Colormap cmap = DefaultColormap(XCURSESDISPLAY,
+                                    DefaultScreen(XCURSESDISPLAY));
 
-	if (index < 0 || index >= MAX_COLORS)
-		_exit_process(4, SIGKILL, "exiting from _set_color");
+    if (index < 0 || index >= MAX_COLORS)
+        _exit_process(4, SIGKILL, "exiting from _set_color");
 
-	if (XAllocColor(XCURSESDISPLAY, cmap, tmp))
-	{
-		XFreeColors(XCURSESDISPLAY, cmap, colors + index, 1, 0);
-		colors[index] = tmp->pixel;
+    if (XAllocColor(XCURSESDISPLAY, cmap, tmp))
+    {
+        XFreeColors(XCURSESDISPLAY, cmap, colors + index, 1, 0);
+        colors[index] = tmp->pixel;
 
-		_display_screen();
-	}
+        _display_screen();
+    }
 }
 
 /* For PDC_getclipboard() */
 
 static void _get_selection(Widget w, XtPointer data, Atom *selection,
-			   Atom *type, XtPointer value,
-			   unsigned long *length, int *format)
+                           Atom *type, XtPointer value,
+                           unsigned long *length, int *format)
 {
-	unsigned char *src = value;
-	int pos, len = *length;
+    unsigned char *src = value;
+    int pos, len = *length;
 
-	XC_LOG(("_get_selection() - called\n"));
+    XC_LOG(("_get_selection() - called\n"));
 
-	if (!value && !len)
-	{
-	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) < 0)
-		_exit_process(4, SIGKILL, "exiting from _get_selection");
-	}
-	else
-	{
-	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
-	       contents */
+    if (!value && !len)
+    {
+        if (XC_write_display_socket_int(PDC_CLIP_EMPTY) < 0)
+            _exit_process(4, SIGKILL, "exiting from _get_selection");
+    }
+    else
+    {
+        /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
+           contents */
 
-	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) < 0)
-		_exit_process(4, SIGKILL, "exiting from _get_selection");
+        if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) < 0)
+            _exit_process(4, SIGKILL, "exiting from _get_selection");
 
-	    if (XC_write_display_socket_int(len) < 0)
-		_exit_process(4, SIGKILL, "exiting from _get_selection");
+        if (XC_write_display_socket_int(len) < 0)
+            _exit_process(4, SIGKILL, "exiting from _get_selection");
 
-	    for (pos = 0; pos < len; pos++)
-	    {
+        for (pos = 0; pos < len; pos++)
+        {
 #ifdef PDC_WIDE
-		wchar_t c;
+            wchar_t c;
 #else
-		unsigned char c;
+            unsigned char c;
 #endif
-		c = *src++;
+            c = *src++;
 
-		if (XC_write_socket(xc_display_sock, &c, sizeof(c)) < 0)
-		{
-			_exit_process(4, SIGKILL,
-				"exiting from _get_selection");
-		}
-	    }
-	}
+            if (XC_write_socket(xc_display_sock, &c, sizeof(c)) < 0)
+                _exit_process(4, SIGKILL, "exiting from _get_selection");
+        }
+    }
 }
 
 #ifdef PDC_WIDE
 static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
-				Atom *type, XtPointer value,
-				unsigned long *length, int *format)
+                                Atom *type, XtPointer value,
+                                unsigned long *length, int *format)
 {
-	int len = *length;
+    int len = *length;
 
-	XC_LOG(("_get_selection_utf8() - called\n"));
+    XC_LOG(("_get_selection_utf8() - called\n"));
 
-	if (!*type || !*length)
-	{
-		XtGetSelectionValue(w, XA_PRIMARY, XA_STRING,
-			_get_selection, (XtPointer)NULL, 0);
-		return;
-	}
+    if (!*type || !*length)
+    {
+        XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, _get_selection,
+                            (XtPointer)NULL, 0);
+        return;
+    }
 
-	if (!value && !len)
-	{
-	    if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
-		return;
-	}
-	else
-	{
-	    wchar_t *wcontents = malloc((len + 1) * sizeof(wchar_t));
-	    char *src = value;
-	    int i = 0;
+    if (!value && !len)
+    {
+        if (XC_write_display_socket_int(PDC_CLIP_EMPTY) >= 0)
+            return;
+    }
+    else
+    {
+        wchar_t *wcontents = malloc((len + 1) * sizeof(wchar_t));
+        char *src = value;
+        int i = 0;
 
-	    while (*src && i < (*length))
-	    {
-		int retval = _from_utf8(wcontents + i, src, len);
+        while (*src && i < (*length))
+        {
+            int retval = _from_utf8(wcontents + i, src, len);
 
-		src += retval;
-		len -= retval;
-		i++;
-	    }
+            src += retval;
+            len -= retval;
+            i++;
+        }
 
-	    wcontents[i] = 0;
-	    len = i;
+        wcontents[i] = 0;
+        len = i;
 
-	    /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
-	       contents */
+        /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then 
+           contents */
 
-	    if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
-		if (XC_write_display_socket_int(len) >= 0)
-		    if (XC_write_socket(xc_display_sock, 
-			wcontents, len * sizeof(wchar_t)) >= 0)
-		    {
-			free(wcontents);
-			return;
-		    }
-	}
+        if (XC_write_display_socket_int(PDC_CLIP_SUCCESS) >= 0)
+            if (XC_write_display_socket_int(len) >= 0)
+                if (XC_write_socket(xc_display_sock, 
+                    wcontents, len * sizeof(wchar_t)) >= 0)
+                {
+                    free(wcontents);
+                    return;
+                }
+    }
 
-	_exit_process(4, SIGKILL, "exiting from _get_selection_utf8");
+    _exit_process(4, SIGKILL, "exiting from _get_selection_utf8");
 }
 #endif
 
@@ -2603,738 +2530,699 @@ static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
 
 static void _set_selection(void)
 {
-	long length, pos;
-	int status;
+    long length, pos;
+    int status;
 
-	if (XC_read_socket(xc_display_sock, &length, sizeof(long)) < 0)
-	{
-		_exit_process(5, SIGKILL, "exiting from _set_selection");
-	}
+    if (XC_read_socket(xc_display_sock, &length, sizeof(long)) < 0)
+        _exit_process(5, SIGKILL, "exiting from _set_selection");
 
-	if (length > (long)tmpsel_length)
-	{
-		if (!tmpsel_length)
-			tmpsel = malloc((length + 1) * sizeof(chtype));
-		else
-			tmpsel = realloc(tmpsel,
-				(length + 1) * sizeof(chtype));
-	}
+    if (length > (long)tmpsel_length)
+    {
+        if (!tmpsel_length)
+            tmpsel = malloc((length + 1) * sizeof(chtype));
+        else
+            tmpsel = realloc(tmpsel, (length + 1) * sizeof(chtype));
+    }
 
-	if (!tmpsel)
-	{
-		if (XC_write_display_socket_int(PDC_CLIP_MEMORY_ERROR) < 0)
-			_exit_process(4, SIGKILL,
-				"exiting from _set_selection");
-	}
+    if (!tmpsel)
+        if (XC_write_display_socket_int(PDC_CLIP_MEMORY_ERROR) < 0)
+            _exit_process(4, SIGKILL, "exiting from _set_selection");
 
-	for (pos = 0; pos < length; pos++)
-	{
+    for (pos = 0; pos < length; pos++)
+    {
 #ifdef PDC_WIDE
-		wchar_t c;
+        wchar_t c;
 #else
-		unsigned char c;
+        unsigned char c;
 #endif
-		if (XC_read_socket(xc_display_sock, &c, sizeof(c)) < 0)
-		{
-			_exit_process(5, SIGKILL,
-				"exiting from _set_selection");
-		}
+        if (XC_read_socket(xc_display_sock, &c, sizeof(c)) < 0)
+            _exit_process(5, SIGKILL, "exiting from _set_selection");
 
-		tmpsel[pos] = c;
-	}
+        tmpsel[pos] = c;
+    }
 
-	tmpsel_length = length;
-	tmpsel[length] = 0;
+    tmpsel_length = length;
+    tmpsel[length] = 0;
 
-	if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
-	    _convert_proc, _lose_ownership, NULL) == False)
-	{
-		status = PDC_CLIP_ACCESS_ERROR;
-		free(tmpsel);
-		tmpsel = NULL;
-		tmpsel_length = 0;
-	}
-	else
-		status = PDC_CLIP_SUCCESS;
+    if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
+                       _convert_proc, _lose_ownership, NULL) == False)
+    {
+        status = PDC_CLIP_ACCESS_ERROR;
+        free(tmpsel);
+        tmpsel = NULL;
+        tmpsel_length = 0;
+    }
+    else
+        status = PDC_CLIP_SUCCESS;
 
-	_selection_off();
+    _selection_off();
 
-	if (XC_write_display_socket_int(status) < 0)
-		_exit_process(4, SIGKILL, "exiting from _set_selection");
+    if (XC_write_display_socket_int(status) < 0)
+        _exit_process(4, SIGKILL, "exiting from _set_selection");
 }
 
 /* The curses process is waiting; tell it to continue */
 
 static void _resume_curses(void)
 {
-	if (XC_write_display_socket_int(CURSES_CONTINUE) < 0)
-		_exit_process(4, SIGKILL,
-			"exiting from _process_curses_requests");
+    if (XC_write_display_socket_int(CURSES_CONTINUE) < 0)
+        _exit_process(4, SIGKILL, "exiting from _process_curses_requests");
 }
 
 /* The curses process sent us a message */
 
 static void _process_curses_requests(XtPointer client_data, int *fid,
-				     XtInputId *id) 
+                                     XtInputId *id) 
 { 
-	struct timeval socket_timeout = {0};
-	int s;
-	int old_row, new_row;
-	int old_x, new_x;
-	int pos, num_cols;
+    struct timeval socket_timeout = {0};
+    int s;
+    int old_row, new_row;
+    int old_x, new_x;
+    int pos, num_cols;
 
-	char buf[12];		/* big enough for 2 integers */ 
+    char buf[12];       /* big enough for 2 integers */ 
 
-	XC_LOG(("_process_curses_requests() - called\n"));
+    XC_LOG(("_process_curses_requests() - called\n"));
 
-	if (!received_map_notify) 
-	    return; 
+    if (!received_map_notify) 
+        return; 
 
-	FD_ZERO(&xc_readfds); 
-	FD_SET(xc_display_sock, &xc_readfds); 
+    FD_ZERO(&xc_readfds); 
+    FD_SET(xc_display_sock, &xc_readfds); 
 
-	if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
-	  NULL, &socket_timeout)) < 0)
-	    _exit_process(2, SIGKILL, "exiting from "
-		"_process_curses_requests - select failed");
+    if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
+                    NULL, &socket_timeout)) < 0)
+        _exit_process(2, SIGKILL, "exiting from _process_curses_requests"
+                                  " - select failed");
 
-	if (!s)		/* no requests pending - should never happen! */ 
-	    return; 
+    if (!s)     /* no requests pending - should never happen! */ 
+        return; 
 
-	if (FD_ISSET(xc_display_sock, &xc_readfds)) 
-	{ 
-	    /* read first integer to determine total message has 
-	       been received */
+    if (FD_ISSET(xc_display_sock, &xc_readfds)) 
+    { 
+        /* read first integer to determine total message has been
+           received */
 
-	    XC_LOG(("_process_curses_requests() - "
-		"before XC_read_socket()\n"));
+        XC_LOG(("_process_curses_requests() - before XC_read_socket()\n"));
 
-	    if (XC_read_socket(xc_display_sock, &num_cols, sizeof(int)) < 0) 
-	    {
-		_exit_process(3, SIGKILL, "exiting from "
-		    "_process_curses_requests - first read");
-	    }
+        if (XC_read_socket(xc_display_sock, &num_cols, sizeof(int)) < 0) 
+            _exit_process(3, SIGKILL, "exiting from _process_curses_requests"
+                                      " - first read");
 
-	    XC_LOG(("_process_curses_requests() - "
-		"after XC_read_socket()\n"));
+        XC_LOG(("_process_curses_requests() - after XC_read_socket()\n"));
 
-	    after_first_curses_request = TRUE;
+        after_first_curses_request = TRUE;
 
-	    switch(num_cols) 
-	    { 
-	    case CURSES_EXIT:	/* request from curses to stop */
-		XC_LOG(("CURSES_EXIT received from child\n"));
-		_exit_process(0, 0,
-		    "XCursesProcess requested to exit by child");
-		break;
+        switch(num_cols) 
+        { 
+        case CURSES_EXIT:   /* request from curses to stop */
+            XC_LOG(("CURSES_EXIT received from child\n"));
+            _exit_process(0, 0, "XCursesProcess requested to exit by child");
+            break;
 
-	    case CURSES_BELL:
-		XC_LOG(("CURSES_BELL received from child\n"));
-		XBell(XCURSESDISPLAY, 50);
-		break;
+        case CURSES_BELL:
+            XC_LOG(("CURSES_BELL received from child\n"));
+            XBell(XCURSESDISPLAY, 50);
+            break;
 
-	    /* request from curses to confirm completion of display */ 
+        /* request from curses to confirm completion of display */ 
 
-	    case CURSES_REFRESH:
-		XC_LOG(("CURSES_REFRESH received from child\n"));
-		_refresh_screen(); 
-		_resume_curses();
-		break;
+        case CURSES_REFRESH:
+            XC_LOG(("CURSES_REFRESH received from child\n"));
+            _refresh_screen(); 
+            _resume_curses();
+            break;
 
-	    case CURSES_REFRESH_SCROLLBAR:
-		_refresh_scrollbar();
-		break;
+        case CURSES_REFRESH_SCROLLBAR:
+            _refresh_scrollbar();
+            break;
 
-	    case CURSES_CURSOR:
-		XC_LOG(("CURSES_CURSOR received from child\n"));
+        case CURSES_CURSOR:
+            XC_LOG(("CURSES_CURSOR received from child\n"));
 
-		if (XC_read_socket(xc_display_sock, buf, sizeof(int) * 2) < 0)
-		{
-		    _exit_process(5, SIGKILL, "exiting from CURSES_CURSOR "
-			"_process_curses_requests");
-		}
+            if (XC_read_socket(xc_display_sock, buf, sizeof(int) * 2) < 0)
+                _exit_process(5, SIGKILL, "exiting from CURSES_CURSOR "
+                                          "_process_curses_requests");
 
-		memcpy(&pos, buf, sizeof(int)); 
-		old_row = pos & 0xFF;
-		old_x = pos >> 8;
+            memcpy(&pos, buf, sizeof(int)); 
+            old_row = pos & 0xFF;
+            old_x = pos >> 8;
 
-		memcpy(&pos, buf + sizeof(int), sizeof(int));
-		new_row = pos & 0xFF;
-		new_x = pos >> 8;
+            memcpy(&pos, buf + sizeof(int), sizeof(int));
+            new_row = pos & 0xFF;
+            new_x = pos >> 8;
 
-		visible_cursor = TRUE;
-		_display_cursor(old_row, old_x, new_row, new_x);
-		break;
+            visible_cursor = TRUE;
+            _display_cursor(old_row, old_x, new_row, new_x);
+            break;
 
-	    case CURSES_DISPLAY_CURSOR:
-		XC_LOG(("CURSES_DISPLAY_CURSOR received from child. "
-			"Vis now: "));
-		XC_LOG((visible_cursor ? "1\n" : "0\n"));
+        case CURSES_DISPLAY_CURSOR:
+            XC_LOG(("CURSES_DISPLAY_CURSOR received from child. Vis now: "));
+            XC_LOG((visible_cursor ? "1\n" : "0\n"));
 
-		/* If the window is not active, ignore this 
-		   command. The cursor will stay solid. */
+            /* If the window is not active, ignore this command. The
+               cursor will stay solid. */
 
-		if (window_entered)
-		{ 
-		    if (visible_cursor) 
-		    { 
-			/* Cursor currently ON, turn it off */
+            if (window_entered)
+            { 
+                if (visible_cursor) 
+                { 
+                    /* Cursor currently ON, turn it off */
 
-			int save_visibility = SP->visibility;
-			SP->visibility = 0;
+                    int save_visibility = SP->visibility;
+                    SP->visibility = 0;
 
-			_display_cursor(SP->cursrow, SP->curscol, 
-			    SP->cursrow, SP->curscol);
+                    _display_cursor(SP->cursrow, SP->curscol,
+                                    SP->cursrow, SP->curscol);
 
-			SP->visibility = save_visibility;
-			visible_cursor = FALSE;
-		    } 
-		    else 
-		    { 
-			/* Cursor currently OFF, turn it on */ 
+                    SP->visibility = save_visibility;
+                    visible_cursor = FALSE;
+                }
+                else 
+                { 
+                    /* Cursor currently OFF, turn it on */ 
 
-			_display_cursor(SP->cursrow, SP->curscol,
-			    SP->cursrow, SP->curscol);
+                    _display_cursor(SP->cursrow, SP->curscol,
+                                    SP->cursrow, SP->curscol);
 
-			visible_cursor = TRUE;
-		    } 
-		} 
+                    visible_cursor = TRUE;
+                } 
+            } 
 
-		break; 
+            break; 
 
-	    case CURSES_TITLE:
-		XC_LOG(("CURSES_TITLE received from child\n"));
-		_set_title();
-		break;
+        case CURSES_TITLE:
+            XC_LOG(("CURSES_TITLE received from child\n"));
+            _set_title();
+            break;
 
-	    case CURSES_RESIZE:
-		XC_LOG(("CURSES_RESIZE received from child\n"));
-		_resize();
-		_resume_curses(); 
-		break; 
+        case CURSES_RESIZE:
+            XC_LOG(("CURSES_RESIZE received from child\n"));
+            _resize();
+            _resume_curses(); 
+            break; 
 
-	    case CURSES_GET_SELECTION:
-		XC_LOG(("CURSES_GET_SELECTION received from child\n"));
+        case CURSES_GET_SELECTION:
+            XC_LOG(("CURSES_GET_SELECTION received from child\n"));
 
-		_resume_curses();
+            _resume_curses();
 
-		XtGetSelectionValue(topLevel, XA_PRIMARY,
+            XtGetSelectionValue(topLevel, XA_PRIMARY,
 #ifdef PDC_WIDE
-			XA_UTF8_STRING(XtDisplay(topLevel)),
-			_get_selection_utf8,
+                                XA_UTF8_STRING(XtDisplay(topLevel)),
+                                _get_selection_utf8,
 #else
-			XA_STRING, _get_selection,
+                                XA_STRING, _get_selection,
 #endif
-			(XtPointer)NULL, 0);
+                                (XtPointer)NULL, 0);
 
-		break;
+            break;
 
-	    case CURSES_SET_SELECTION:
-		XC_LOG(("CURSES_SET_SELECTION received from child\n"));
-		_set_selection();
-		break;
+        case CURSES_SET_SELECTION:
+            XC_LOG(("CURSES_SET_SELECTION received from child\n"));
+            _set_selection();
+            break;
 
-	    case CURSES_CLEAR_SELECTION:
-		XC_LOG(("CURSES_CLEAR_SELECTION received from child\n"));
+        case CURSES_CLEAR_SELECTION:
+            XC_LOG(("CURSES_CLEAR_SELECTION received from child\n"));
+            _resume_curses();
+            _selection_off();
+            break;
 
-		_resume_curses();
+        case CURSES_GET_COLOR:
+            XC_LOG(("CURSES_GET_COLOR recieved from child\n"));
+            _get_color();
+            _resume_curses();
+            break;
 
-		_selection_off();
-		break;
+        case CURSES_SET_COLOR:
+            XC_LOG(("CURSES_SET_COLOR recieved from child\n"));
+            _set_color();
+            _resume_curses();
+            break;
 
-	    case CURSES_GET_COLOR:
-		XC_LOG(("CURSES_GET_COLOR recieved from child\n"));
-		_get_color();
-		_resume_curses();
-		break;
-
-	    case CURSES_SET_COLOR:
-		XC_LOG(("CURSES_SET_COLOR recieved from child\n"));
-		_set_color();
-		_resume_curses();
-		break;
-
-	    default: 
-		PDC_LOG(("%s:Unknown request %d\n", XCLOGMSG, num_cols));
-	    } 
-	} 
+        default: 
+            PDC_LOG(("%s:Unknown request %d\n", XCLOGMSG, num_cols));
+        } 
+    } 
 } 
 
 static void _handle_structure_notify(Widget w, XtPointer client_data, 
-				     XEvent *event, Boolean *unused)
+                                     XEvent *event, Boolean *unused)
 {
-	XC_LOG(("_handle_structure_notify() - called\n"));
+    XC_LOG(("_handle_structure_notify() - called\n"));
 
-	switch(event->type)
-	{
-	case ConfigureNotify:
-		XC_LOG(("ConfigureNotify received\n"));
+    switch(event->type)
+    {
+    case ConfigureNotify:
+        XC_LOG(("ConfigureNotify received\n"));
 
-		/* Window has been resized, change width and height to 
-		   send to place_text and place_graphics in next Expose. 
-		   Also will need to kill (SIGWINCH) curses process if 
-		   screen size changes. */
+        /* Window has been resized, change width and height to send to
+           place_text and place_graphics in next Expose. Also will need
+           to kill (SIGWINCH) curses process if screen size changes. */
 
-		resize_window_width = event->xconfigure.width;
-		resize_window_height = event->xconfigure.height;
+        resize_window_width = event->xconfigure.width;
+        resize_window_height = event->xconfigure.height;
 
-		after_first_curses_request = FALSE;
+        after_first_curses_request = FALSE;
 
 #ifdef SIGWINCH
-		SP->resized = 1;
+        SP->resized = 1;
 
-		kill(xc_otherpid, SIGWINCH);
+        kill(xc_otherpid, SIGWINCH);
 #endif
-		_send_key_to_curses(KEY_RESIZE, NULL, TRUE);
-		break;
+        _send_key_to_curses(KEY_RESIZE, NULL, TRUE);
+        break;
 
-	case MapNotify:
-		XC_LOG(("MapNotify received\n"));
+    case MapNotify:
+        XC_LOG(("MapNotify received\n"));
 
-		received_map_notify = 1;
+        received_map_notify = 1;
 
-		_draw_border();
-		break;
+        _draw_border();
+        break;
 
-	default:
-		PDC_LOG(("%s:_handle_structure_notify - unknown event %d\n",
-			XCLOGMSG, event->type));
-	}
+    default:
+        PDC_LOG(("%s:_handle_structure_notify - unknown event %d\n",
+                 XCLOGMSG, event->type));
+    }
 }
 
 static RETSIGTYPE _handle_signals(int signo)
 {
-	int flag = CURSES_EXIT;
+    int flag = CURSES_EXIT;
 
-	PDC_LOG(("%s:_handle_signals() - called: %d\n", XCLOGMSG, signo));
+    PDC_LOG(("%s:_handle_signals() - called: %d\n", XCLOGMSG, signo));
 
-	/* Patch by: Georg Fuchs */
+    /* Patch by: Georg Fuchs */
 
-	XCursesSetSignal(signo, _handle_signals);
+    XCursesSetSignal(signo, _handle_signals);
 
 #ifdef SIGTSTP
-	if (signo == SIGTSTP)
-	{
-		pause();
-		return;
-	}
+    if (signo == SIGTSTP)
+    {
+        pause();
+        return;
+    }
 #endif
 #ifdef SIGCONT
-	if (signo == SIGCONT)
-		return;
+    if (signo == SIGCONT)
+        return;
 #endif
 #ifdef SIGCLD
-	if (signo == SIGCLD)
-		return;
+    if (signo == SIGCLD)
+        return;
 #endif
 #ifdef SIGTTIN
-	if (signo == SIGTTIN)
-		return;
+    if (signo == SIGTTIN)
+        return;
 #endif
 #ifdef SIGWINCH
-	if (signo == SIGWINCH)
-		return;
+    if (signo == SIGWINCH)
+        return;
 #endif
 
-	/* End of patch by: Georg Fuchs */
+    /* End of patch by: Georg Fuchs */
 
-	XCursesSetSignal(signo, SIG_IGN);
+    XCursesSetSignal(signo, SIG_IGN);
 
-	/* Send a CURSES_EXIT to myself */
+    /* Send a CURSES_EXIT to myself */
 
-	if (XC_write_socket(xc_exit_sock, &flag, sizeof(int)) < 0)
-		_exit_process(7, signo, "exiting from _handle_signals");
+    if (XC_write_socket(xc_exit_sock, &flag, sizeof(int)) < 0)
+        _exit_process(7, signo, "exiting from _handle_signals");
 }
 
 #ifdef PDC_XIM
 static void _dummy_handler(Widget w, XtPointer client_data,
-			   XEvent *event, Boolean *unused)
+                           XEvent *event, Boolean *unused)
 {
 }
 #endif
 
 int XCursesSetupX(int argc, char *argv[])
 {
-	char *myargv[] = {"PDCurses", NULL};
-	extern bool sb_started;
+    char *myargv[] = {"PDCurses", NULL};
+    extern bool sb_started;
 
-	int italic_font_valid;
-	XColor pointerforecolor, pointerbackcolor;
-	XrmValue rmfrom, rmto;
-	int i = 0;
-	int minwidth, minheight;
+    int italic_font_valid;
+    XColor pointerforecolor, pointerbackcolor;
+    XrmValue rmfrom, rmto;
+    int i = 0;
+    int minwidth, minheight;
 
-	XC_LOG(("XCursesSetupX called\n"));
+    XC_LOG(("XCursesSetupX called\n"));
 
-	if (!argv)
-	{
-		argv = myargv;
-		argc = 1;
-	}
+    if (!argv)
+    {
+        argv = myargv;
+        argc = 1;
+    }
 
-	program_name = argv[0];
+    program_name = argv[0];
 
-	/* Keep open the 'write' end of the socket so the XCurses 
-	   process can send a CURSES_EXIT to itself from within the 
-	   signal handler */
+    /* Keep open the 'write' end of the socket so the XCurses process
+       can send a CURSES_EXIT to itself from within the signal handler */
 
-	xc_exit_sock = xc_display_sockets[0];
-	xc_display_sock = xc_display_sockets[1];
+    xc_exit_sock = xc_display_sockets[0];
+    xc_display_sock = xc_display_sockets[1];
 
-	close(xc_key_sockets[0]);
-	xc_key_sock = xc_key_sockets[1];
+    close(xc_key_sockets[0]);
+    xc_key_sock = xc_key_sockets[1];
 
-	/* Trap all signals when XCurses is the child process, but only 
-	   if they haven't already been ignored by the application. */
+    /* Trap all signals when XCurses is the child process, but only if
+       they haven't already been ignored by the application. */
 
-	for (i = 0; i < PDC_MAX_SIGNALS; i++)
-		if (XCursesSetSignal(i, _handle_signals) == SIG_IGN)
-			XCursesSetSignal(i, SIG_IGN);
+    for (i = 0; i < PDC_MAX_SIGNALS; i++)
+        if (XCursesSetSignal(i, _handle_signals) == SIG_IGN)
+            XCursesSetSignal(i, SIG_IGN);
 
-	/* Start defining X Toolkit things */
+    /* Start defining X Toolkit things */
 
 #if XtSpecificationRelease > 4
-	XtSetLanguageProc(NULL, (XtLanguageProc)NULL, NULL);
+    XtSetLanguageProc(NULL, (XtLanguageProc)NULL, NULL);
 #endif
 
-	/* Exit if no DISPLAY variable set */
+    /* Exit if no DISPLAY variable set */
 
-	if (!getenv("DISPLAY"))
-	{
-		fprintf(stderr, "Error: no DISPLAY variable set\n");
-		kill(xc_otherpid, SIGKILL);
-		return ERR;
-	}
+    if (!getenv("DISPLAY"))
+    {
+        fprintf(stderr, "Error: no DISPLAY variable set\n");
+        kill(xc_otherpid, SIGKILL);
+        return ERR;
+    }
 
-	/* Initialise the top level widget */
+    /* Initialise the top level widget */
 
-	topLevel = XtVaAppInitialize(&app_context, class_name,
-		options, XtNumber(options), &argc, argv, NULL, NULL);
+    topLevel = XtVaAppInitialize(&app_context, class_name, options,
+                                 XtNumber(options), &argc, argv, NULL, NULL);
 
-	XtVaGetApplicationResources(topLevel, &xc_app_data, app_resources,
-		XtNumber(app_resources), NULL);
+    XtVaGetApplicationResources(topLevel, &xc_app_data, app_resources,
+                                XtNumber(app_resources), NULL);
 
-	/* Check application resource values here */
+    /* Check application resource values here */
 
-	font_width = xc_app_data.normalFont->max_bounds.rbearing - 
-		xc_app_data.normalFont->min_bounds.lbearing;
+    font_width = xc_app_data.normalFont->max_bounds.rbearing - 
+                 xc_app_data.normalFont->min_bounds.lbearing;
 
-	font_height = xc_app_data.normalFont->max_bounds.ascent + 
-		xc_app_data.normalFont->max_bounds.descent;
+    font_height = xc_app_data.normalFont->max_bounds.ascent + 
+                  xc_app_data.normalFont->max_bounds.descent;
 
-	font_ascent = xc_app_data.normalFont->max_bounds.ascent;
-	font_descent = xc_app_data.normalFont->max_bounds.descent;
+    font_ascent = xc_app_data.normalFont->max_bounds.ascent;
+    font_descent = xc_app_data.normalFont->max_bounds.descent;
 
-	/* Check that the italic font and normal fonts are the same size */
-	/* This appears backwards */
+    /* Check that the italic font and normal fonts are the same size */
+    /* This appears backwards */
 
-	italic_font_valid = font_width !=
-		xc_app_data.italicFont->max_bounds.rbearing -
-		xc_app_data.italicFont->min_bounds.lbearing ||
-		font_height !=
-		xc_app_data.italicFont->max_bounds.ascent + 
-		xc_app_data.italicFont->max_bounds.descent;
+    italic_font_valid = font_width !=
+        xc_app_data.italicFont->max_bounds.rbearing -
+        xc_app_data.italicFont->min_bounds.lbearing ||
+        font_height !=
+        xc_app_data.italicFont->max_bounds.ascent + 
+        xc_app_data.italicFont->max_bounds.descent;
 
-	/* Calculate size of display window */
+    /* Calculate size of display window */
 
-	XCursesCOLS = xc_app_data.cols;
-	XCursesLINES = xc_app_data.lines;
+    XCursesCOLS = xc_app_data.cols;
+    XCursesLINES = xc_app_data.lines;
 
-	window_width = font_width * XCursesCOLS +
-		2 * xc_app_data.borderWidth;
+    window_width = font_width * XCursesCOLS +
+                   2 * xc_app_data.borderWidth;
 
-	window_height = font_height * XCursesLINES +
-		2 * xc_app_data.borderWidth;
+    window_height = font_height * XCursesLINES +
+                    2 * xc_app_data.borderWidth;
 
-	minwidth = font_width * 2 + xc_app_data.borderWidth * 2;
-	minheight = font_height * 2 + xc_app_data.borderWidth * 2;
+    minwidth = font_width * 2 + xc_app_data.borderWidth * 2;
+    minheight = font_height * 2 + xc_app_data.borderWidth * 2;
 
-	/* Set up the icon for the application; the default is an
-	   internal one for PDCurses. Then set various application level
-	   resources. */
+    /* Set up the icon for the application; the default is an internal
+       one for PDCurses. Then set various application level resources. */
 
-	_get_icon();
+    _get_icon();
 
 #ifdef HAVE_XPM_H
-	if (xc_app_data.pixmap && xc_app_data.pixmap[0])
-		XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
-			minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
-			XtNbaseHeight, xc_app_data.borderWidth * 2,
-			XtNiconPixmap, icon_pixmap,
-			XtNiconMask, icon_pixmap_mask, NULL);
-	else
+    if (xc_app_data.pixmap && xc_app_data.pixmap[0])
+        XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
+                      minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
+                      XtNbaseHeight, xc_app_data.borderWidth * 2,
+                      XtNiconPixmap, icon_pixmap,
+                      XtNiconMask, icon_pixmap_mask, NULL);
+    else
 #endif
-		XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
-			minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
-			XtNbaseHeight, xc_app_data.borderWidth * 2,
-			XtNiconPixmap, icon_bitmap, NULL);
+        XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
+                      minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
+                      XtNbaseHeight, xc_app_data.borderWidth * 2,
+                      XtNiconPixmap, icon_bitmap, NULL);
 
-	/* Create a BOX widget in which to draw */
+    /* Create a BOX widget in which to draw */
 
-	if (xc_app_data.scrollbarWidth && sb_started)
-	{
-		scrollBox = XtVaCreateManagedWidget(program_name, 
-			scrollBoxWidgetClass, topLevel, XtNwidth, 
-			window_width + xc_app_data.scrollbarWidth, 
-			XtNheight, window_height + xc_app_data.scrollbarWidth,
-			XtNwidthInc, font_width, XtNheightInc, font_height,
-			NULL);
+    if (xc_app_data.scrollbarWidth && sb_started)
+    {
+        scrollBox = XtVaCreateManagedWidget(program_name, 
+            scrollBoxWidgetClass, topLevel, XtNwidth, 
+            window_width + xc_app_data.scrollbarWidth, 
+            XtNheight, window_height + xc_app_data.scrollbarWidth,
+            XtNwidthInc, font_width, XtNheightInc, font_height, NULL);
 
-		drawing = XtVaCreateManagedWidget(program_name, 
-			boxWidgetClass, scrollBox, XtNwidth, 
-			window_width, XtNheight, window_height, XtNwidthInc, 
-			font_width, XtNheightInc, font_height, NULL);
+        drawing = XtVaCreateManagedWidget(program_name, 
+            boxWidgetClass, scrollBox, XtNwidth, 
+            window_width, XtNheight, window_height, XtNwidthInc, 
+            font_width, XtNheightInc, font_height, NULL);
 
-		scrollVert = XtVaCreateManagedWidget("scrollVert", 
-			scrollbarWidgetClass, scrollBox, XtNorientation, 
-			XtorientVertical, XtNheight, window_height, XtNwidth, 
-			xc_app_data.scrollbarWidth, NULL);
+        scrollVert = XtVaCreateManagedWidget("scrollVert", 
+            scrollbarWidgetClass, scrollBox, XtNorientation, 
+            XtorientVertical, XtNheight, window_height, XtNwidth, 
+            xc_app_data.scrollbarWidth, NULL);
 
-		XtAddCallback(scrollVert, XtNscrollProc,
-			_scroll_up_down, drawing);
+        XtAddCallback(scrollVert, XtNscrollProc, _scroll_up_down, drawing);
+        XtAddCallback(scrollVert, XtNjumpProc, _thumb_up_down, drawing);
 
-		XtAddCallback(scrollVert, XtNjumpProc,
-			_thumb_up_down, drawing);
+        scrollHoriz = XtVaCreateManagedWidget("scrollHoriz", 
+            scrollbarWidgetClass, scrollBox, XtNorientation, 
+            XtorientHorizontal, XtNwidth, window_width, XtNheight, 
+            xc_app_data.scrollbarWidth, NULL);
 
-		scrollHoriz = XtVaCreateManagedWidget("scrollHoriz", 
-			scrollbarWidgetClass, scrollBox, XtNorientation, 
-			XtorientHorizontal, XtNwidth, window_width, XtNheight, 
-			xc_app_data.scrollbarWidth, NULL);
+        XtAddCallback(scrollHoriz, XtNscrollProc, _scroll_left_right, drawing);
+        XtAddCallback(scrollHoriz, XtNjumpProc, _thumb_left_right, drawing);
+    }
+    else
+    {
+        drawing = XtVaCreateManagedWidget(program_name, boxWidgetClass,
+            topLevel, XtNwidth, window_width, XtNheight, window_height,
+            XtNwidthInc, font_width, XtNheightInc, font_height, NULL);
 
-		XtAddCallback(scrollHoriz, XtNscrollProc, 
-			_scroll_left_right, drawing);
+        XtVaSetValues(topLevel, XtNwidthInc, font_width, XtNheightInc,
+                      font_height, NULL);
+    }
 
-		XtAddCallback(scrollHoriz, XtNjumpProc, 
-			_thumb_left_right, drawing);
-	}
-	else
-	{
-		drawing = XtVaCreateManagedWidget(program_name, 
-			boxWidgetClass, topLevel, XtNwidth, 
-			window_width, XtNheight, window_height, XtNwidthInc, 
-			font_width, XtNheightInc, font_height, NULL);
+    /* Process any default translations */
 
-		XtVaSetValues(topLevel, XtNwidthInc, font_width, 
-			XtNheightInc, font_height, NULL);
-	}
+    XtAugmentTranslations(drawing,
+                          XtParseTranslationTable(default_translations));
+    XtAppAddActions(app_context, action_table, XtNumber(action_table));
 
-	/* Process any default translations */
+    /* Process the supplied colors */
 
-	XtAugmentTranslations(drawing,
-		XtParseTranslationTable(default_translations));
-	XtAppAddActions(app_context, action_table, XtNumber(action_table));
+    _initialize_colors();
 
-	/* Process the supplied colors */
+    /* Determine text cursor alignment from resources */
 
-	_initialize_colors();
+    if (!strcmp(xc_app_data.textCursor, "vertical"))
+        vertical_cursor = TRUE;
 
-	/* Determine text cursor alignment from resources */
+    /* Now have LINES and COLS. Set these in the shared SP so the curses
+       program can find them. */
 
-	if (!strcmp(xc_app_data.textCursor, "vertical"))
-		vertical_cursor = TRUE;
+    LINES = XCursesLINES;
+    COLS = XCursesCOLS;
 
-	/* Now have LINES and COLS. Set these in the shared SP so the 
-	   curses program can find them. */
+    if ((shmidSP = shmget(shmkeySP, sizeof(SCREEN) + XCURSESSHMMIN, 
+        0700 | IPC_CREAT)) < 0)
+    {
+        perror("Cannot allocate shared memory for SCREEN");
+        kill(xc_otherpid, SIGKILL);
+        return ERR;
+    }
 
-	LINES = XCursesLINES;
-	COLS = XCursesCOLS;
+    SP = (SCREEN*)shmat(shmidSP, 0, 0);
+    memset(SP, 0, sizeof(SCREEN));
+    SP->XcurscrSize = XCURSCR_SIZE;
+    SP->lines = XCursesLINES;
+    SP->cols = XCursesCOLS;
 
-	if ((shmidSP = shmget(shmkeySP, sizeof(SCREEN) + XCURSESSHMMIN, 
-	    0700 | IPC_CREAT)) < 0)
-	{
-		perror("Cannot allocate shared memory for SCREEN");
-		kill(xc_otherpid, SIGKILL);
-		return ERR;
-	}
+    SP->mouse_wait = xc_app_data.clickPeriod;
+    SP->audible = TRUE;
 
-	SP = (SCREEN*)shmat(shmidSP, 0, 0);
-	memset(SP, 0, sizeof(SCREEN));
-	SP->XcurscrSize = XCURSCR_SIZE;
-	SP->lines = XCursesLINES;
-	SP->cols = XCursesCOLS;
+    PDC_LOG(("%s:SHM size for curscr %d\n", XCLOGMSG, SP->XcurscrSize));
 
-	SP->mouse_wait = xc_app_data.clickPeriod;
-	SP->audible = TRUE;
+    if ((shmid_Xcurscr = shmget(shmkey_Xcurscr, SP->XcurscrSize + 
+        XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
+    {
+        perror("Cannot allocate shared memory for curscr");
+        kill(xc_otherpid, SIGKILL);
+        shmdt((char *)SP);
+        shmctl(shmidSP, IPC_RMID, 0);
+        return ERR;
+    }
 
-	PDC_LOG(("%s:SHM size for curscr %d\n", XCLOGMSG, SP->XcurscrSize));
+    Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
+    memset(Xcurscr, 0, SP->XcurscrSize); 
+    xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
-	if ((shmid_Xcurscr = shmget(shmkey_Xcurscr, SP->XcurscrSize + 
-	    XCURSESSHMMIN, 0700 | IPC_CREAT)) < 0)
-	{
-		perror("Cannot allocate shared memory for curscr");
-		kill(xc_otherpid, SIGKILL);
-		shmdt((char *)SP);
-		shmctl(shmidSP, IPC_RMID, 0);
-		return ERR;
-	}
+    PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",
+             XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, LINES, COLS));
 
-	Xcurscr = (unsigned char *)shmat(shmid_Xcurscr, 0, 0);
-	memset(Xcurscr, 0, SP->XcurscrSize); 
-	xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
+    /* Add Event handlers to the drawing widget */
 
-	PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d LINES %d COLS %d\n",
-		XCLOGMSG, shmid_Xcurscr, shmkey_Xcurscr, LINES, COLS));
+    XtAddEventHandler(drawing, ExposureMask, False, _handle_expose, NULL);
+    XtAddEventHandler(drawing, StructureNotifyMask, False, 
+                      _handle_structure_notify, NULL);
+    XtAddEventHandler(drawing, EnterWindowMask | LeaveWindowMask, False,
+                      _handle_enter_leave, NULL);
+    XtAddEventHandler(topLevel, 0, True, _handle_nonmaskable, NULL);
 
-	/* Add Event handlers to the drawing widget */
+    /* Add input handler from xc_display_sock (requests from curses 
+       program) */
 
-	XtAddEventHandler(drawing, ExposureMask, False, _handle_expose, NULL);
-	XtAddEventHandler(drawing, StructureNotifyMask, False, 
-		_handle_structure_notify, NULL);
-	XtAddEventHandler(drawing, EnterWindowMask | LeaveWindowMask, 
-		False, _handle_enter_leave, NULL);
+    XtAppAddInput(app_context, xc_display_sock, (XtPointer)XtInputReadMask, 
+                  _process_curses_requests, NULL);
 
-	XtAddEventHandler(topLevel, 0, True, _handle_nonmaskable, NULL);
+    /* If there is a cursorBlink resource, start the Timeout event */
 
-	/* Add input handler from xc_display_sock (requests from curses 
-	   program) */
+    if (xc_app_data.cursorBlinkRate)
+        XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
+                        _blink_cursor, NULL);
 
-	XtAppAddInput(app_context, xc_display_sock, 
-		(XtPointer)XtInputReadMask, 
-		_process_curses_requests, NULL);
+    /* Leave telling the curses process that it can start to here so 
+       that when the curses process makes a request, the Xcurses 
+       process can service the request. */
 
-	/* If there is a cursorBlink resource, start the Timeout event */
+    XC_write_display_socket_int(CURSES_CHILD);
 
-	if (xc_app_data.cursorBlinkRate)
-		XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
-			_blink_cursor, NULL);
+    XtRealizeWidget(topLevel);
 
-	/* Leave telling the curses process that it can start to here so 
-	   that when the curses process makes a request, the Xcurses 
-	   process can service the request.*/
+    /* Handle trapping of the WM_DELETE_WINDOW property */
 
-	XC_write_display_socket_int(CURSES_CHILD);
+    wm_atom[0] = XInternAtom(XtDisplay(topLevel), "WM_DELETE_WINDOW", False);
 
-	XtRealizeWidget(topLevel);
+    XSetWMProtocols(XtDisplay(topLevel), XtWindow(topLevel), wm_atom, 1);
 
-	/* Handle trapping of the WM_DELETE_WINDOW property */
+    /* Create the Graphics Context for drawing. This MUST be done AFTER
+       the associated widget has been realized. */
 
-	wm_atom[0] = XInternAtom(XtDisplay(topLevel), 
-		"WM_DELETE_WINDOW", False);
+    XC_LOG(("before _get_gc\n"));
 
-	XSetWMProtocols(XtDisplay(topLevel), XtWindow(topLevel), 
-		wm_atom, 1);
+    _get_gc(&normal_gc, xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
-	/* Create the Graphics Context for drawing. This MUST be done 
-	   AFTER the associated widget has been realized. */
+    _get_gc(&italic_gc, italic_font_valid ? xc_app_data.italicFont : 
+            xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
-	XC_LOG(("before _get_gc\n"));
+    _get_gc(&block_cursor_gc, xc_app_data.normalFont,
+            COLOR_BLACK, COLOR_CURSOR);
 
-	_get_gc(&normal_gc,
-		xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
+    _get_gc(&rect_cursor_gc, xc_app_data.normalFont,
+            COLOR_CURSOR, COLOR_BLACK);
 
-	_get_gc(&italic_gc, 
-		italic_font_valid ? xc_app_data.italicFont : 
-		xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
+    _get_gc(&border_gc, xc_app_data.normalFont, COLOR_BORDER, COLOR_BLACK);
 
-	_get_gc(&block_cursor_gc,
-		xc_app_data.normalFont, COLOR_BLACK, COLOR_CURSOR);
+    XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2,
+                       LineSolid, CapButt, JoinMiter);
 
-	_get_gc(&rect_cursor_gc,
-		xc_app_data.normalFont, COLOR_CURSOR, COLOR_BLACK);
+    XSetLineAttributes(XCURSESDISPLAY, border_gc, xc_app_data.borderWidth,
+                       LineSolid, CapButt, JoinMiter);
 
-	_get_gc(&border_gc,
-		xc_app_data.normalFont, COLOR_BORDER, COLOR_BLACK);
+    /* Set the cursor for the application */
 
-	XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2, LineSolid, 
-		CapButt, JoinMiter);
+    XDefineCursor(XCURSESDISPLAY, XCURSESWIN, xc_app_data.pointer);
+    rmfrom.size = sizeof(Pixel);
+    rmto.size = sizeof(XColor);
 
-	XSetLineAttributes(XCURSESDISPLAY, border_gc, 
-		xc_app_data.borderWidth, LineSolid, CapButt, JoinMiter);
+    rmto.addr = (XPointer)&pointerforecolor;
+    rmfrom.addr = (XPointer)&(xc_app_data.pointerForeColor);
+    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
 
-	/* Set the cursor for the application */
+    rmfrom.size = sizeof(Pixel);
+    rmto.size = sizeof(XColor);
 
-	XDefineCursor(XCURSESDISPLAY, XCURSESWIN, xc_app_data.pointer);
-	rmfrom.size = sizeof(Pixel);
-	rmto.size = sizeof(XColor);
+    rmfrom.addr = (XPointer)&(xc_app_data.pointerBackColor);
+    rmto.addr = (XPointer)&pointerbackcolor;
+    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
 
-	rmto.addr = (XPointer)&pointerforecolor;
-	rmfrom.addr = (XPointer)&(xc_app_data.pointerForeColor);
-	XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-
-	rmfrom.size = sizeof(Pixel);
-	rmto.size = sizeof(XColor);
-
-	rmfrom.addr = (XPointer)&(xc_app_data.pointerBackColor);
-	rmto.addr = (XPointer)&pointerbackcolor;
-	XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-
-	XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
-		&pointerforecolor, &pointerbackcolor);
+    XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
+                   &pointerforecolor, &pointerbackcolor);
 
 #ifndef PDC_XIM
 
-	/* Convert the supplied compose key to a Keysym */
+    /* Convert the supplied compose key to a Keysym */
 
-	compose_key = XStringToKeysym(xc_app_data.composeKey);
+    compose_key = XStringToKeysym(xc_app_data.composeKey);
 
-	if (compose_key && IsModifierKey(compose_key))
-	{
-		int i, j;
-		KeyCode *kcp;
-		XModifierKeymap *map;
-		KeyCode compose_keycode = 
-			XKeysymToKeycode(XCURSESDISPLAY, compose_key);
+    if (compose_key && IsModifierKey(compose_key))
+    {
+        int i, j;
+        KeyCode *kcp;
+        XModifierKeymap *map;
+        KeyCode compose_keycode = XKeysymToKeycode(XCURSESDISPLAY, compose_key);
 
-		map = XGetModifierMapping(XCURSESDISPLAY);
-		kcp = map->modifiermap;
+        map = XGetModifierMapping(XCURSESDISPLAY);
+        kcp = map->modifiermap;
 
-		for (i = 0; i < 8; i++)
-		{
-			for (j = 0; j < map->max_keypermod; j++, kcp++)
-			{
-				if (!*kcp)
-					continue;
+        for (i = 0; i < 8; i++)
+        {
+            for (j = 0; j < map->max_keypermod; j++, kcp++)
+            {
+                if (!*kcp)
+                    continue;
 
-				if (compose_keycode == *kcp)
-				{
-					compose_mask = state_mask[i];
-					break;
-				}
-			}
+                if (compose_keycode == *kcp)
+                {
+                    compose_mask = state_mask[i];
+                    break;
+                }
+            }
 
-			if (compose_mask)
-				break;
-		}
+            if (compose_mask)
+                break;
+        }
 
-		XFreeModifiermap(map);
-	}
+        XFreeModifiermap(map);
+    }
 
 #else
-	Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
+    Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
 
-	if (Xim)
-	{
-		Xic = XCreateIC(Xim,
-			XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
-			XNClientWindow, XCURSESWIN, NULL);
-	}
+    if (Xim)
+    {
+        Xic = XCreateIC(Xim, XNInputStyle,
+                        XIMPreeditNothing | XIMStatusNothing,
+                        XNClientWindow, XCURSESWIN, NULL);
+    }
 
-	if (Xic)
-	{
-		long im_event_mask;
+    if (Xic)
+    {
+        long im_event_mask;
 
-		XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
-		if (im_event_mask)
-			XtAddEventHandler(drawing, im_event_mask, False,
-				_dummy_handler, NULL);
+        XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
+        if (im_event_mask)
+            XtAddEventHandler(drawing, im_event_mask, False,
+                              _dummy_handler, NULL);
 
-		XSetICFocus(Xic);
-	}
-	else
-	{
-		perror("ERROR: Cannot create input context");
-		kill(xc_otherpid, SIGKILL);
-		shmdt((char *)SP);
-		shmdt((char *)Xcurscr);
-		shmctl(shmidSP, IPC_RMID, 0);
-		shmctl(shmid_Xcurscr, IPC_RMID, 0);
-		return ERR;
-	}
+        XSetICFocus(Xic);
+    }
+    else
+    {
+        perror("ERROR: Cannot create input context");
+        kill(xc_otherpid, SIGKILL);
+        shmdt((char *)SP);
+        shmdt((char *)Xcurscr);
+        shmctl(shmidSP, IPC_RMID, 0);
+        shmctl(shmid_Xcurscr, IPC_RMID, 0);
+        return ERR;
+    }
 
 #endif
 
-	/* Wait for events */
+    /* Wait for events */
 
-	XtAppMainLoop(app_context);
-	return OK;			/* won't get here */
+    XtAppMainLoop(app_context);
+    return OK;          /* won't get here */
 }

@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: pdcx11.h,v 1.63 2008/07/13 06:36:32 wmcbrine Exp $ */
+/* $Id: pdcx11.h,v 1.64 2008/07/14 04:24:52 wmcbrine Exp $ */
 
 #include <curspriv.h>
 
@@ -62,8 +62,8 @@
 #define XCURSCR_LENGTH_SIZE (XCursesLINES * sizeof(int))
 #define XCURSCR_ATRTAB_SIZE (PDC_COLOR_PAIRS * 2 * sizeof(short))
 #define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE + XCURSCR_START_SIZE + \
-	XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + XCURSCR_ATRTAB_SIZE + \
-	sizeof(XColor))
+        XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + XCURSCR_ATRTAB_SIZE + \
+        sizeof(XColor))
 
 #define XCURSCR_Y_OFF(y)    ((y) * XCursesCOLS * sizeof(chtype))
 #define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0) + XCURSCR_Y_SIZE)
@@ -74,50 +74,50 @@
 
 typedef struct
 {
-	int lines;
-	int cols;
-	Pixel cursorColor;
-	Pixel colorBlack;
-	Pixel colorRed;
-	Pixel colorGreen;
-	Pixel colorYellow;
-	Pixel colorBlue;
-	Pixel colorMagenta;
-	Pixel colorCyan;
-	Pixel colorWhite;
-	Pixel colorBoldBlack;
-	Pixel colorBoldRed;
-	Pixel colorBoldGreen;
-	Pixel colorBoldYellow;
-	Pixel colorBoldBlue;
-	Pixel colorBoldMagenta;
-	Pixel colorBoldCyan;
-	Pixel colorBoldWhite;
-	Pixel pointerForeColor;
-	Pixel pointerBackColor;
-	XFontStruct *normalFont;
-	XFontStruct *italicFont;
-	char *bitmap;
+    int lines;
+    int cols;
+    Pixel cursorColor;
+    Pixel colorBlack;
+    Pixel colorRed;
+    Pixel colorGreen;
+    Pixel colorYellow;
+    Pixel colorBlue;
+    Pixel colorMagenta;
+    Pixel colorCyan;
+    Pixel colorWhite;
+    Pixel colorBoldBlack;
+    Pixel colorBoldRed;
+    Pixel colorBoldGreen;
+    Pixel colorBoldYellow;
+    Pixel colorBoldBlue;
+    Pixel colorBoldMagenta;
+    Pixel colorBoldCyan;
+    Pixel colorBoldWhite;
+    Pixel pointerForeColor;
+    Pixel pointerBackColor;
+    XFontStruct *normalFont;
+    XFontStruct *italicFont;
+    char *bitmap;
 #ifdef HAVE_XPM_H
-	char *pixmap;
+    char *pixmap;
 #endif
-	char *composeKey;
-	Cursor pointer;
-	int shmmin;
-	int borderWidth;
-	int borderColor;
-	int clickPeriod;
-	int doubleClickPeriod;
-	int scrollbarWidth;
-	int cursorBlinkRate;
-	char *textCursor;
+    char *composeKey;
+    Cursor pointer;
+    int shmmin;
+    int borderWidth;
+    int borderColor;
+    int clickPeriod;
+    int doubleClickPeriod;
+    int scrollbarWidth;
+    int cursorBlinkRate;
+    char *textCursor;
 } XCursesAppData;
 
 extern XCursesAppData xc_app_data;
 
-#define XCURSESSHMMIN		xc_app_data.shmmin
+#define XCURSESSHMMIN xc_app_data.shmmin
 
-#define XCLOGMSG		(XCursesProcess ? "     X" : "CURSES")
+#define XCLOGMSG (XCursesProcess ? "     X" : "CURSES")
 
 void XC_get_line_lock(int);
 void XC_release_line_lock(int);
@@ -178,11 +178,11 @@ void XC_say(const char *msg);
 
 enum
 {
-	CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR,
-	CURSES_SET_SELECTION, CURSES_GET_SELECTION, CURSES_TITLE,
-	CURSES_REFRESH_SCROLLBAR, CURSES_RESIZE, CURSES_BELL,
-	CURSES_CONTINUE, CURSES_CURSOR, CURSES_CHILD, CURSES_REFRESH,
-	CURSES_GET_COLOR, CURSES_SET_COLOR, CURSES_EXIT
+    CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR, CURSES_SET_SELECTION, 
+    CURSES_GET_SELECTION, CURSES_TITLE, CURSES_REFRESH_SCROLLBAR, 
+    CURSES_RESIZE, CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, 
+    CURSES_CHILD, CURSES_REFRESH, CURSES_GET_COLOR, CURSES_SET_COLOR, 
+    CURSES_EXIT
 };
 
 extern short *xc_atrtab;

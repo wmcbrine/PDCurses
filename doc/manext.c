@@ -32,89 +32,88 @@
 
 void display_info()
 {
-	fprintf(stderr,
-		"\nMANEXT 1.03 Copyright (C) 1991-1996 Mark Hessling\n"
-		"All rights reserved.\n"
-		"MANEXT is distributed under the terms of the GNU\n"
-		"General Public License and comes with NO WARRANTY.\n"
-		"See the file COPYING for details.\n"
-		"\nUsage: manext sourcefile [...]\n\n");
+    fprintf(stderr, "\nMANEXT 1.03 Copyright (C) 1991-1996 Mark Hessling\n"
+                    "All rights reserved.\n"
+                    "MANEXT is distributed under the terms of the GNU\n"
+                    "General Public License and comes with NO WARRANTY.\n"
+                    "See the file COPYING for details.\n"
+                    "\nUsage: manext sourcefile [...]\n\n");
 }
 
 int main(int argc, char **argv)
 {
-	char s[MAX_LINE + 1];		/* input line */
-	int i;
-	FILE *fp;
+    char s[MAX_LINE + 1];       /* input line */
+    int i;
+    FILE *fp;
 
 #ifdef __EMX__
-	_wildcard(&argc, &argv);
+    _wildcard(&argc, &argv);
 #endif
-	if (strcmp(argv[1], "-h") == 0)
-	{
-	    display_info();
-	    exit(1);
-	}
+    if (strcmp(argv[1], "-h") == 0)
+    {
+        display_info();
+        exit(1);
+    }
 
-	for (i = 1; i < argc; i++)
-	{
-	    if ((fp = fopen(argv[i], "r")) == NULL)
-	    {
-		fprintf(stderr, "\nCould not open %s\n", argv[i]);
-		continue;
-	    }
+    for (i = 1; i < argc; i++)
+    {
+        if ((fp = fopen(argv[i], "r")) == NULL)
+        {
+            fprintf(stderr, "\nCould not open %s\n", argv[i]);
+            continue;
+        }
 
-	    while (!feof(fp))
-	    {
-		if (fgets(s, (int)sizeof(s), fp) == NULL)
-		{
-		    if (ferror(fp) != 0)
-		    {
-			fprintf(stderr, "*** Error reading %s.  Exiting.\n",
-			    argv[i]);
-			exit(1);
-		    }
+        while (!feof(fp))
+        {
+            if (fgets(s, (int)sizeof(s), fp) == NULL)
+            {
+                if (ferror(fp) != 0)
+                {
+                    fprintf(stderr, "*** Error reading %s.  Exiting.\n",
+                            argv[i]);
+                    exit(1);
+                }
 
-		    break;
-		}
+                break;
+            }
 
-		/* check for manual entry marker at beginning of line */
+            /* check for manual entry marker at beginning of line */
 
-		if (strncmp(s, "/*man-start*", 12) != 0)
-			continue;
+            if (strncmp(s, "/*man-start*", 12) != 0)
+                continue;
 
-		/* inner loop */
+            /* inner loop */
 
-		for (;;)
-		{
-		    /* read next line of manual entry */
+            for (;;)
+            {
+                /* read next line of manual entry */
 
-		    if (fgets(s, (int)sizeof(s), fp) == NULL)
-		    {
-			if (ferror(fp) != 0)
-			{
-			    fprintf(stderr, "*** Error reading %s.  Exiting.\n",
-				argv[i]);
-			    exit(1);
-			}
+                if (fgets(s, (int)sizeof(s), fp) == NULL)
+                {
+                    if (ferror(fp) != 0)
+                    {
+                        fprintf(stderr, "*** Error reading %s.  Exiting.\n",
+                                argv[i]);
+                        exit(1);
+                    }
 
-			break;
-		    }
+                    break;
+                }
 
-		    /* check for end of entry marker */
+                /* check for end of entry marker */
 
-		    if (strncmp(s, "**man-end", 9) == 0)
-			break;
+                if (strncmp(s, "**man-end", 9) == 0)
+                    break;
 
-		    printf("%s", s);
-		}
+                printf("%s", s);
+            }
 
-		printf("\n\n-----------------------------------"
-			"---------------------------------------\n\n");
-	    }
+            printf("\n\n-----------------------------------"
+                   "---------------------------------------\n\n");
+        }
 
-	    fclose(fp);
-	}
+        fclose(fp);
+    }
 
-	return 0;
+    return 0;
 }

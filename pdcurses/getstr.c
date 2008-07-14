@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.50 2008/07/13 16:08:18 wmcbrine Exp $")
+RCSID("$Id: getstr.c,v 1.51 2008/07/14 04:24:51 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -296,7 +296,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
     oldnodelay = win->_nodelay;
 
     SP->echo = FALSE;       /* we do echo ourselves */
-    cbreak();               /* ensure each key is returned  immediately */
+    cbreak();               /* ensure each key is returned immediately */
     win->_nodelay = FALSE;  /* don't return -1 */
 
     wrefresh(win);

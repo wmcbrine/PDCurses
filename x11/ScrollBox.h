@@ -12,33 +12,33 @@
      limitation a license to do the foregoing actions under any patents of
      the party supplying this software to the X Consortium.
 
-     $Id: ScrollBox.h,v 1.3 2006/03/29 20:06:41 wmcbrine Exp $
+     $Id: ScrollBox.h,v 1.4 2008/07/14 04:24:52 wmcbrine Exp $
  */
 
 #ifndef _XORAscrollBox_h
 #define _XORAscrollBox_h
 
 /************************************************************************
- *									*
- * scrollBox Widget (subclass of CompositeClass)			*
- *									*
+ *                                                                      *
+ * scrollBox Widget (subclass of CompositeClass)                        *
+ *                                                                      *
  ************************************************************************/
 
 /* Parameters:
 
- Name		     Class		RepType		Default Value
- ----		     -----		-------		-------------
- background	     Background		Pixel		XtDefaultBackground
- border		     BorderColor	Pixel		XtDefaultForeground
- borderWidth	     BorderWidth	Dimension	1
- destroyCallback     Callback		Pointer		NULL
- hSpace 	     HSpace		Dimension	4
- height		     Height		Dimension	0
- mappedWhenManaged   MappedWhenManaged	Boolean		True
- vSpace 	     VSpace		Dimension	4
- width		     Width		Dimension	0
- x		     Position		Position	0
- y		     Position		Position	0
+ Name               Class              RepType      Default Value
+ ----               -----              -------      -------------
+ background         Background         Pixel        XtDefaultBackground
+ border             BorderColor        Pixel        XtDefaultForeground
+ borderWidth        BorderWidth        Dimension    1
+ destroyCallback    Callback           Pointer      NULL
+ hSpace             HSpace             Dimension    4
+ height             Height             Dimension    0
+ mappedWhenManaged  MappedWhenManaged  Boolean      True
+ vSpace             VSpace             Dimension    4
+ width              Width              Dimension    0
+ x                  Position           Position     0
+ y                  Position           Position     0
 
 */
 

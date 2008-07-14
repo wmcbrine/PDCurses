@@ -2,7 +2,7 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcdisp.c,v 1.48 2008/07/13 06:36:31 wmcbrine Exp $")
+RCSID("$Id: pdcdisp.c,v 1.49 2008/07/14 04:24:51 wmcbrine Exp $")
 
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these 
    match code page 437 and compatible pages (CP850, CP852, etc.) */
@@ -13,32 +13,32 @@ RCSID("$Id: pdcdisp.c,v 1.48 2008/07/13 06:36:31 wmcbrine Exp $")
 
 chtype acs_map[128] =
 {
-	A(0), A(1), A(2), A(3), A(4), A(5), A(6), A(7), A(8), A(9),
-	A(10), A(11), A(12), A(13), A(14), A(15), A(16), A(17), A(18),
-	A(19), A(20), A(21), A(22), A(23), A(24), A(25), A(26), A(27),
-	A(28), A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&',
-	'\'', '(', ')', '*',
+    A(0), A(1), A(2), A(3), A(4), A(5), A(6), A(7), A(8), A(9),
+    A(10), A(11), A(12), A(13), A(14), A(15), A(16), A(17), A(18),
+    A(19), A(20), A(21), A(22), A(23), A(24), A(25), A(26), A(27),
+    A(28), A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&',
+    '\'', '(', ')', '*',
 
-	A(0x1a), A(0x1b), A(0x18), A(0x19),
+    A(0x1a), A(0x1b), A(0x18), A(0x19),
 
-	'/',
+    '/',
 
-	0xdb,
+    0xdb,
 
-	'1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=',
-	'>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-	'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
+    '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=',
+    '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+    'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
 
-	A(0x04), 0xb1,
+    A(0x04), 0xb1,
 
-	'b', 'c', 'd', 'e',
+    'b', 'c', 'd', 'e',
 
-	0xf8, 0xf1, 0xb0, A(0x0f), 0xd9, 0xbf, 0xda, 0xc0, 0xc5, 0x2d,
-	0x2d, 0xc4, 0x2d, 0x5f, 0xc3, 0xb4, 0xc1, 0xc2, 0xb3, 0xf3,
-	0xf2, 0xe3, 0xd8, 0x9c, 0xf9,
+    0xf8, 0xf1, 0xb0, A(0x0f), 0xd9, 0xbf, 0xda, 0xc0, 0xc5, 0x2d,
+    0x2d, 0xc4, 0x2d, 0x5f, 0xc3, 0xb4, 0xc1, 0xc2, 0xb3, 0xf3,
+    0xf2, 0xe3, 0xd8, 0x9c, 0xf9,
 
-	A(127)
+    A(127)
 };
 
 # undef A
@@ -49,12 +49,12 @@ chtype acs_map[128] =
 
 void PDC_gotoyx(int row, int col)
 {
-	PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
+    PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
 #ifdef EMXVIDEO
-	v_gotoxy(col, row);
+    v_gotoxy(col, row);
 #else
-	VioSetCurPos(row, col, 0);
+    VioSetCurPos(row, col, 0);
 #endif
 }
 
@@ -63,33 +63,33 @@ void PDC_gotoyx(int row, int col)
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
-	/* this should be enough for the maximum width of a screen. */
+    /* this should be enough for the maximum width of a screen. */
 
-	struct {unsigned char text, attr;} temp_line[256];
-	int j;
+    struct {unsigned char text, attr;} temp_line[256];
+    int j;
 
-	PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
+    PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
-	/* replace the attribute part of the chtype with the 
-	   actual color value for each chtype in the line */
+    /* replace the attribute part of the chtype with the 
+       actual color value for each chtype in the line */
 
-	for (j = 0; j < len; j++)
-	{
-		chtype ch = srcp[j];
+    for (j = 0; j < len; j++)
+    {
+        chtype ch = srcp[j];
 
-		temp_line[j].attr = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
+        temp_line[j].attr = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
 
 #ifdef CHTYPE_LONG
-		if (ch & A_ALTCHARSET && !(ch & 0xff80))
-			ch = acs_map[ch & 0x7f];
+        if (ch & A_ALTCHARSET && !(ch & 0xff80))
+            ch = acs_map[ch & 0x7f];
 #endif
-		temp_line[j].text = ch & 0xff;
-	}
+        temp_line[j].text = ch & 0xff;
+    }
 
 #ifdef EMXVIDEO
-	v_putline((char *)temp_line, x, lineno, len);
+    v_putline((char *)temp_line, x, lineno, len);
 #else
-	VioWrtCellStr((PCH)temp_line, (USHORT)(len * sizeof(unsigned short)),
-		(USHORT)lineno, (USHORT)x, 0);
+    VioWrtCellStr((PCH)temp_line, (USHORT)(len * sizeof(unsigned short)),
+                  (USHORT)lineno, (USHORT)x, 0);
 #endif
 }

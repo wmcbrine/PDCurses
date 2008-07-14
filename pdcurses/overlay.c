@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.35 2008/07/14 12:22:13 wmcbrine Exp $")
+RCSID("$Id: overlay.c,v 1.36 2008/07/14 12:35:23 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -43,7 +43,7 @@ RCSID("$Id: overlay.c,v 1.35 2008/07/14 12:22:13 wmcbrine Exp $")
 
 **man-end****************************************************************/
 
-/* Thanks to Andreas Otte (venn@@uni-paderborn.de) for the 
+/* Thanks to Andreas Otte <venn@@uni-paderborn.de> for the 
    corrected overlay()/overwrite() behavior. */
 
 static int _copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,

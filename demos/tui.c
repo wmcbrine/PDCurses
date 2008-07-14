@@ -2,9 +2,9 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.c,v 1.33 2008/07/13 16:08:17 wmcbrine Exp $
+ * $Id: tui.c,v 1.34 2008/07/14 12:35:23 wmcbrine Exp $
  *
- * Author : P.J. Kunst  (kunst@prl.philips.nl)
+ * Author : P.J. Kunst <kunst@prl.philips.nl>
  * Date   : 25-02-93
  */
 

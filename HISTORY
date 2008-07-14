@@ -1241,7 +1241,7 @@ INTRODUCTION:
  you avoid the Unix port at this stage.
 
  The other major addition to PDCurses is the support for DJGPP (the DOS 
- port of GNU C++). Thanks to David Nugent (davidn@csource.oz.au).
+ port of GNU C++). Thanks to David Nugent <davidn@csource.oz.au>.
 
  Other additions are copywin() function, function debugging support and 
  getting the small and medium memory models to work. The testcurs.c demo 
@@ -1464,7 +1464,7 @@ ACKNOWLEDGEMENTS:
 
  John 'Frotz' Fa'atuai, the previous maintainer for providing an
  excellent base for further development.
- John Burnell (johnb@kea.am.dsir.govt.nz), for the OS/2 port.
+ John Burnell <johnb@kea.am.dsir.govt.nz>, for the OS/2 port.
  John Steele, Jason (finally NOT a John) Shumate....
  for various fixes and suggestions.
  Eberhardt Mattes (author of emx) for allowing code based on his
@@ -1620,7 +1620,7 @@ specify what characters should be used as box borders when the box()
 functions are called. If the new border characters are non-0, they 
 override the border characters specified in the box() call. In my 
 understanding, this functionality is required for AT&T UNIX sV.3 
-compatibility. Thanks for this goes to Tony L. Hansen 
+compatibility. Thanks for this goes to Tony L. Hansen
 (hansen@pegasus.UUCP) for posting an article about it on Usenet 
 (newsgroup comp.unix.questions; his posting was not related at all to 
 PCcurses).

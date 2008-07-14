@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: panel.c,v 1.7 2008/07/13 16:08:18 wmcbrine Exp $")
+RCSID("$Id: panel.c,v 1.8 2008/07/14 12:35:23 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -52,7 +52,7 @@ RCSID("$Id: panel.c,v 1.7 2008/07/13 16:08:18 wmcbrine Exp $")
         hide_panel() removes a panel from the deck and thus hides it 
         from view.
 
-        move_panel() move() the curses window associated with pan, so 
+        move_panel() moves the curses window associated with pan, so 
         that its upper lefthand corner is at the supplied coordinates. 
         (Do not use mvwin() on the window.)
 
@@ -119,8 +119,7 @@ RCSID("$Id: panel.c,v 1.7 2008/07/13 16:08:18 wmcbrine Exp $")
         update_panels                           -       -       Y
 
   Credits:
-        Original Author - Warren Tucker N4HGF
-        {gatech,emory}!n4hgf!wht -or- wht@n4hgf.Mt-Park.GA.US
+        Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
 
 **man-end****************************************************************/
 

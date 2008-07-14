@@ -1,7 +1,7 @@
 /*
- * $Id: tuidemo.c,v 1.21 2008/07/13 16:08:17 wmcbrine Exp $
+ * $Id: tuidemo.c,v 1.22 2008/07/14 12:35:23 wmcbrine Exp $
  *
- * Author : P.J. Kunst  (kunst@prl.philips.nl)
+ * Author : P.J. Kunst <kunst@prl.philips.nl>
  * Date   : 25-02-93
  *
  * Purpose: This program demonstrates the use of the 'curses' library

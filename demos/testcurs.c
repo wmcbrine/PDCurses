@@ -1,11 +1,11 @@
 /*
- * This is a test program for PDCurses. Originally by John Burnell 
- * (johnb@kea.am.dsir.govt.nz).
+ * This is a test program for PDCurses. Originally by
+ * John Burnell <johnb@kea.am.dsir.govt.nz>
  *
- *  wrs(5/28/93) -- modified to be consistent (perform identically) with
- *                  either PDCurses or under Unix System V, R4
+ *  wrs(5/28/93) -- modified to be consistent (perform identically)
+ *                  with either PDCurses or under Unix System V, R4
  *
- *  $Id: testcurs.c,v 1.84 2008/07/13 16:08:17 wmcbrine Exp $
+ *  $Id: testcurs.c,v 1.85 2008/07/14 12:35:23 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED

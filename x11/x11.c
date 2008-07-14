@@ -2,7 +2,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11.c,v 1.93 2008/07/14 04:24:52 wmcbrine Exp $")
+RCSID("$Id: x11.c,v 1.94 2008/07/14 04:33:26 wmcbrine Exp $")
 
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
@@ -53,6 +53,7 @@ XCursesAppData xc_app_data;
 
 static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
+static void _redraw_cursor(void);
 static void _exit_process(int, int, char *);
 static void _send_key_to_curses(unsigned long, MOUSE_STATUS *, bool);
 
@@ -929,7 +930,7 @@ static void _display_screen(void)
         XC_release_line_lock(row);
     }
 
-    _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+    _redraw_cursor();
     _draw_border();
 }
 
@@ -1099,7 +1100,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
         SP->visibility = 0;
 
-        _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+        _redraw_cursor();
 
         SP->visibility = save_visibility;
         _make_xy(SP->curscol, SP->cursrow, &xpos, &ypos);
@@ -1129,7 +1130,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         if (event->xkey.state & compose_mask)
         {
             compose_state = STATE_NORMAL;
-            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            _redraw_cursor();
             break;
         }
 
@@ -1149,7 +1150,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         {
             compose_state = STATE_NORMAL;
             compose_index = 0;
-            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            _redraw_cursor();
             break;
         }
 
@@ -1163,7 +1164,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         if (event->xkey.state & compose_mask)
         {
             compose_state = STATE_NORMAL;
-            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            _redraw_cursor();
             break;
         }
 
@@ -1183,7 +1184,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         {
             compose_state = STATE_NORMAL;
             compose_index = 0;
-            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            _redraw_cursor();
             break;
         }
 
@@ -1193,7 +1194,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         compose_state = STATE_NORMAL;
         compose_index = 0;
          
-        _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+        _redraw_cursor();
 
         return;
     }
@@ -1845,6 +1846,11 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
              XCLOGMSG, new_row, new_x));
 }
 
+static void _redraw_cursor(void)
+{
+    _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+}
+
 static void _handle_enter_leave(Widget w, XtPointer client_data,
                                 XEvent *event, Boolean *unused)
 {
@@ -1866,7 +1872,7 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
         /* Display the cursor so it stays on while the window is 
            not current */
 
-        _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+        _redraw_cursor();
         break;
 
     default:
@@ -1907,7 +1913,7 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
 
             int save_visibility = SP->visibility;
             SP->visibility = 0;
-            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            _redraw_cursor();
             SP->visibility = save_visibility;
             visible_cursor = FALSE;
         }
@@ -1915,7 +1921,7 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
         {
             /* Cursor currently OFF, turn it on */
 
-            _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
+            _redraw_cursor();
             visible_cursor = TRUE;
         }
     }
@@ -2691,10 +2697,7 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 
                     int save_visibility = SP->visibility;
                     SP->visibility = 0;
-
-                    _display_cursor(SP->cursrow, SP->curscol,
-                                    SP->cursrow, SP->curscol);
-
+                    _redraw_cursor();
                     SP->visibility = save_visibility;
                     visible_cursor = FALSE;
                 }
@@ -2702,9 +2705,7 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
                 { 
                     /* Cursor currently OFF, turn it on */ 
 
-                    _display_cursor(SP->cursrow, SP->curscol,
-                                    SP->cursrow, SP->curscol);
-
+                    _redraw_cursor();
                     visible_cursor = TRUE;
                 } 
             } 

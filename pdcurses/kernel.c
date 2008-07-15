@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: kernel.c,v 1.77 2008/07/14 12:22:13 wmcbrine Exp $")
+RCSID("$Id: kernel.c,v 1.78 2008/07/15 17:13:26 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -15,8 +15,6 @@ RCSID("$Id: kernel.c,v 1.77 2008/07/14 12:22:13 wmcbrine Exp $")
         int reset_shell_mode(void);
         int resetty(void);
         int savetty(void);
-        void getsyx(int y, int x);
-        void setsyx(int y, int x);
         int ripoffline(int line, int (*init)(WINDOW *, int));
         int curs_set(int visibility);
         int napms(int ms);
@@ -42,19 +40,6 @@ RCSID("$Id: kernel.c,v 1.77 2008/07/14 12:22:13 wmcbrine Exp $")
         terminal modes. savetty() saves the current state in a buffer,
         and resetty() restores the state to what it was at the last call
         to savetty().
-
-        getsyx() gets the coordinates of the virtual screen cursor, and
-        stores them in y and x. If leaveok() is TRUE, it returns -1, -1.
-        If lines have been removed with ripoffline(), then getsyx()
-        includes these lines in its count; so, the returned y and x
-        values should only be used with setsyx().
-
-        setsyx() sets the virtual screen cursor to the y, x coordinates.
-        If y, x are -1, -1, leaveok() is set TRUE.
-
-        getsyx() and setsyx() are meant to be used by a library routine
-        that manipulates curses windows without altering the position of
-        the cursor. Note that they're defined only as macros.
 
         curs_set() alters the appearance of the cursor. A visibility of
         0 makes it disappear; 1 makes it appear "normal" (usually an
@@ -88,8 +73,6 @@ RCSID("$Id: kernel.c,v 1.77 2008/07/14 12:22:13 wmcbrine Exp $")
         reset_shell_mode                        Y       Y       Y
         resetty                                 Y       Y       Y
         savetty                                 Y       Y       Y
-        getsyx                                  -       -      3.0
-        setsyx                                  -       -      3.0
         ripoffline                              Y       -      3.0
         curs_set                                Y       -      3.0
         napms                                   Y       Y       Y

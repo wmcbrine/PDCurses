@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: curses.h,v 1.294 2008/07/13 16:08:16 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.295 2008/07/15 17:13:25 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *                              PDCurses                                *
@@ -1253,6 +1253,7 @@ int     draino(int);
 int     resetterm(void);
 int     fixterm(void);
 int     saveterm(void);
+int     setsyx(int, int);
 
 int     mouse_set(unsigned long);
 int     mouse_on(unsigned long);
@@ -1349,10 +1350,6 @@ int     sb_refresh(void);
 
 #define getsyx(y, x)       { if (curscr->_leaveit) (y)=(x)=-1; \
                              else getyx(curscr,(y),(x)); }
-
-#define setsyx(y, x)       { if((y)==-1 && (x)==-1) curscr->_leaveit=TRUE;\
-                             else { curscr->_leaveit=FALSE; \
-                                    wmove(curscr,(y),(x));} }
 
 #ifdef NCURSES_MOUSE_VERSION
 # define getmouse(x) nc_getmouse(x)

@@ -188,6 +188,7 @@ EXPORTS
 		scr_restore
 		scr_set
 		setscrreg
+		setsyx
 		set_term
 		slk_attroff
 		slk_attr_off

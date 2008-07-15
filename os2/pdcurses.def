@@ -20,6 +20,7 @@ EXPORTS
 		TABSIZE
 		acs_map
 		ttytype
+		TERMINAL
 		addch
 		addchnstr
 		addchstr
@@ -353,6 +354,22 @@ EXPORTS
 		show_panel
 		top_panel
 		update_panels
+		del_curterm
+		putp
+		restartterm
+		set_curterm
+		setterm
+		setupterm
+		tgetent
+		tgetflag
+		tgetnum
+		tgetstr
+		tgoto
+		tigetflag
+		tigetnum
+		tigetstr
+		tparm
+		tputs
 		PDC_debug
 		PDC_ungetch
 		PDC_set_blink

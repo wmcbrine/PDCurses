@@ -2,7 +2,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.114 2008/07/14 04:24:52 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.115 2008/07/20 20:12:04 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -643,8 +643,7 @@ int PDC_mouse_set(void)
        had on startup, and clear all other flags */
 
     SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
-                   (ENABLE_MOUSE_INPUT|ENABLE_EXTENDED_FLAGS) :
-                   (pdc_quick_edit|ENABLE_EXTENDED_FLAGS));
+                   (ENABLE_MOUSE_INPUT|0x0080) : (pdc_quick_edit|0x0080));
 
     memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 

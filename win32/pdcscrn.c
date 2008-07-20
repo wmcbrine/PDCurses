@@ -2,7 +2,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.91 2008/07/14 04:24:52 wmcbrine Exp $")
+RCSID("$Id: pdcscrn.c,v 1.92 2008/07/20 20:12:04 wmcbrine Exp $")
 
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
@@ -311,7 +311,7 @@ int PDC_scr_open(int argc, char **argv)
        the mouse is not enabled -- other console input settings are
        cleared */
 
-    pdc_quick_edit = old_console_mode & ENABLE_QUICK_EDIT_MODE;
+    pdc_quick_edit = old_console_mode & 0x0040;
 
     SP->lines = (str = getenv("LINES")) ? atoi(str) : PDC_get_rows();
     SP->cols = (str = getenv("COLS")) ? atoi(str) : PDC_get_columns();

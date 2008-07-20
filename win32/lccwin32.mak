@@ -28,25 +28,12 @@ CFLAGS		= -c -O -A -ansic
 CPPFLAGS	= -I$(PDCURSES_SRCDIR) #-DPDC_WIDE -DPDC_FORCE_UTF8
 
 LINK		= lcclnk
-
-DEFFILE		= $(osdir)\pdcurses.def
-#DEFFILE		= $(osdir)\pdcursesw.def
-SHL_LD		= lcclnk -DLL $(DEFFILE)
-
 LIBEXE		= lcclib
 
 LIBCURSES	= pdcurses.lib
-CURSESDLL	= pdcurses.dll
-
-# For a static build:
 
 BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
 PDCLIBS		= $(LIBCURSES)
-
-# For a DLL build:
-
-#BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS) -DPDC_DLL_BUILD
-#PDCLIBS		= $(CURSESDLL)
 
 DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
@@ -56,8 +43,6 @@ all:    $(PDCLIBS) $(DEMOS)
 clean:
 	-del *.obj
 	-del *.lib
-	-del *.dll
-	-del *.exp
 	-del *.exe
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
@@ -82,13 +67,8 @@ terminfo.obj: $(TERM_HEADER)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 
-# Remove the next three lines for a DLL build:
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
-	-copy $(LIBCURSES) panel.lib
-
-$(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
-	$(SHL_LD) -o $(CURSESDLL) $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.lib
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c

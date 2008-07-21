@@ -1,6 +1,6 @@
 # Borland MAKE Makefile for PDCurses library - DOS BC++ 3.0+
 #
-# Usage: make -f [path\]bccdos.mak [-DDEBUG] [target]
+# Usage: make -f [path\]bccdos.mak [DEBUG=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

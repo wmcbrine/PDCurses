@@ -1,6 +1,6 @@
 # NMAKE Makefile for PDCurses library - OS/2 C Set/2
 #
-# Usage: nmake -f [path\]iccos2.mak [DEBUG=1] [target]
+# Usage: nmake -f [path\]iccos2.mak [DEBUG=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

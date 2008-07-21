@@ -1,6 +1,6 @@
 # Borland MAKE Makefile for PDCurses library - OS/2 BC++ 1.0+
 #
-# Usage: make -f [path\]bccos2.mak [-DDEBUG] [target]
+# Usage: make -f [path\]bccos2.mak [DEBUG=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

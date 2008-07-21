@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.34 2007/11/09 08:40:07 wmcbrine Exp $
+dnl $Id: configure.ac,v 1.35 2008/07/21 12:19:21 wmcbrine Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([PDCurses], [3.4], [wmcbrine@users.sf.net], [PDCurses])
@@ -83,7 +83,7 @@ dnl extra for xpm library
 if test $ac_cv_header_xpm_h = yes; then
 	MH_XLIBS="$MH_XLIBS -lXpm"
 fi
-dnl --------------- allow --enable-debug to compile in debug mode --------
+dnl ---------- allow --enable-debug to compile in debug mode ---------
 AC_ARG_ENABLE(debug,
 	[  --enable-debug          turn on debugging],
 	[with_debug=$enableval],
@@ -123,7 +123,7 @@ if test "$on_qnx" = yes; then
 	fi
 fi
 
-dnl --------------- check for wide character support ----------------
+dnl --------------- check for wide character support -----------------
 dnl allow --enable-widec to include wide character support
 AC_ARG_ENABLE(widec,
 	[  --enable-widec          include support for wide characters],
@@ -134,7 +134,7 @@ if test "$with_widec" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_WIDE"
 fi
 
-dnl -------------------- check for XIM support ----------------------
+dnl -------------------- check for XIM support -----------------------
 dnl allow --enable-xim to include XIM support
 AC_ARG_ENABLE(xim,
 	[  --enable-xim            include support for XIM],
@@ -145,7 +145,7 @@ if test "$with_xim" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_XIM"
 fi
 
-dnl ------------------------ force UTF-8? ---------------------------
+dnl ------------------------ force UTF-8? ----------------------------
 dnl allow --enable-force-utf8 to override locale settings
 AC_ARG_ENABLE(force-utf8,
 	[  --enable-force-utf8     override locale settings; use UTF-8],
@@ -170,7 +170,7 @@ else
 fi
 AC_SUBST(PURIFY)
 
-dnl ---------------------- check for Xaw3d library -------------------
+dnl --------------------- check for Xaw3d library --------------------
 dnl allow --with-xaw3d to link with PDCurses
 AC_ARG_WITH(xaw3d,
 	[  --with-xaw3d            link with Xaw3d],
@@ -183,7 +183,7 @@ if test "$with_xaw3d" = yes; then
 	)
 fi
 
-dnl ---------------------- check for neXtaw library -------------------
+dnl --------------------- check for neXtaw library -------------------
 dnl allow --with-nextaw to link with PDCurses
 AC_ARG_WITH(nextaw,
 	[  --with-nextaw           link with neXtaw],
@@ -196,7 +196,7 @@ if test "$with_nextaw" = yes; then
 	)
 fi
 
-dnl --------------- Check how to make shared libraries -------------------
+dnl -------------- check how to make shared libraries ----------------
 dnl Force the ability of shared library usage
 MH_SHARED_LIBRARY(XCurses)
 

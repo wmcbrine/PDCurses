@@ -1,4 +1,4 @@
-# $Id: PDCurses.spec,v 1.17 2008/07/13 06:36:31 wmcbrine Exp $
+# $Id: PDCurses.spec,v 1.18 2008/07/21 12:25:20 wmcbrine Exp $
 
 %define ver 34
 %define verdot 3.4
@@ -48,6 +48,5 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 %{base}/include/xcurses.h
 %{base}/include/xpanel.h
 %{base}/include/xcurses/curses.h
-%{base}/include/xcurses/curspriv.h
 %{base}/include/xcurses/panel.h
 %{base}/include/xcurses/term.h

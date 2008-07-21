@@ -43,12 +43,8 @@ install ::
 	sed -e 's/#include <curses.h>/#include <xcurses.h>/' \
 		< $(srcdir)/panel.h > ./xpanel.h
 	$(INSTALL) -m 644 ./xpanel.h $(includedir)/xpanel.h
-	$(INSTALL) -c -m 644 $(srcdir)/panel.h \
-		$(includedir)/xcurses/panel.h
-	$(INSTALL) -c -m 644 $(srcdir)/term.h \
-		$(includedir)/xcurses/term.h
-	$(INSTALL) -c -m 644 $(srcdir)/curspriv.h \
-		$(includedir)/xcurses/curspriv.h
+	$(INSTALL) -c -m 644 $(srcdir)/panel.h $(includedir)/xcurses/panel.h
+	$(INSTALL) -c -m 644 $(srcdir)/term.h $(includedir)/xcurses/term.h
 	$(INSTALL) -c -m 644 $(pdcursesdir)/libXCurses.a $(libdir)/libXCurses.a
 	-$(RANLIB) $(libdir)/libXCurses.a
 	-$(INSTALL) -c -m 755 $(pdcursesdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) \

@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: terminfo.c,v 1.36 2008/07/13 16:08:18 wmcbrine Exp $")
+RCSID("$Id: terminfo.c,v 1.37 2008/07/21 12:29:20 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -10,6 +10,12 @@ RCSID("$Id: terminfo.c,v 1.36 2008/07/13 16:08:18 wmcbrine Exp $")
 
   Synopsis:
         int mvcur(int oldrow, int oldcol, int newrow, int newcol);
+        int vidattr(chtype attr);
+        int vid_attr(attr_t attr, short color_pair, void *opt);
+        int vidputs(chtype attr, int (*putfunc)(int));
+        int vid_puts(attr_t attr, short color_pair, void *opt,
+                int (*putfunc)(int));
+
         int del_curterm(TERMINAL *);
         int putp(const char *);
         int restartterm(const char *, int, int *);
@@ -27,11 +33,6 @@ RCSID("$Id: terminfo.c,v 1.36 2008/07/13 16:08:18 wmcbrine Exp $")
         char *tparm(const char *,long, long, long, long, long, long,
                 long, long, long);
         int tputs(const char *, int, int (*)(int));
-        int vidattr(chtype attr);
-        int vid_attr(attr_t attr, short color_pair, void *opt);
-        int vidputs(chtype attr, int (*putfunc)(int));
-        int vid_puts(attr_t attr, short color_pair, void *opt,
-                int (*putfunc)(int));
 
   Description:
         mvcur() lets you move the physical cursor without updating any 
@@ -62,6 +63,34 @@ int mvcur(int oldrow, int oldcol, int newrow, int newcol)
     SP->curscol = newcol;
 
     return OK;
+}
+
+int vidattr(chtype attr)
+{
+    PDC_LOG(("vidattr() - called: attr %d\n", attr));
+
+    return ERR;
+}
+
+int vid_attr(attr_t attr, short color_pair, void *opt)
+{
+    PDC_LOG(("vid_attr() - called\n"));
+
+    return ERR;
+}
+
+int vidputs(chtype attr, int (*putfunc)(int))
+{
+    PDC_LOG(("vidputs() - called: attr %d\n", attr));
+
+    return ERR;
+}
+
+int vid_puts(attr_t attr, short color_pair, void *opt, int (*putfunc)(int))
+{
+    PDC_LOG(("vid_puts() - called\n"));
+
+    return ERR;
 }
 
 int del_curterm(TERMINAL *oterm)
@@ -181,34 +210,6 @@ char *tparm(const char *cap, long p1, long p2, long p3, long p4,
 int tputs(const char *str, int affcnt, int (*putfunc)(int))
 {
     PDC_LOG(("tputs() - called\n"));
-
-    return ERR;
-}
-
-int vidattr(chtype attr)
-{
-    PDC_LOG(("vidattr() - called: attr %d\n", attr));
-
-    return ERR;
-}
-
-int vid_attr(attr_t attr, short color_pair, void *opt)
-{
-    PDC_LOG(("vid_attr() - called\n"));
-
-    return ERR;
-}
-
-int vidputs(chtype attr, int (*putfunc)(int))
-{
-    PDC_LOG(("vidputs() - called: attr %d\n", attr));
-
-    return ERR;
-}
-
-int vid_puts(attr_t attr, short color_pair, void *opt, int (*putfunc)(int))
-{
-    PDC_LOG(("vid_puts() - called\n"));
 
     return ERR;
 }

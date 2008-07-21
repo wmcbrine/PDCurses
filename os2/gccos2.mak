@@ -42,6 +42,12 @@ else
 	LDFLAGS =
 endif
 
+BASEDEF		= $(PDCURSES_SRCDIR)\exp-base.def
+
+DEFDEPS		= $(BASEDEF)
+
+DEFFILE		= pdcurses.def
+
 DLLTARGET	= pdcurses.dll
 DLLFLAGS 	= -Zdll -Zcrtdll -Zomf
 
@@ -56,12 +62,14 @@ ifeq ($(DLL),Y)
 	CFLAGS += -Zdll -Zcrtdll -Zomf
 	LDFLAGS += -Zlinker /PM:VIO -Zomf -Zcrtdll
 	LIBCURSES = pdcurses.lib
+	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	PDCLIBS = $(DLLTARGET)
 	EXEPOST =
 	TUIPOST =
-	CLEAN = *.dll *.lib
+	CLEAN = *.dll *.lib $(DEFFILE)
 else
 	LIBCURSES = pdcurses.a
+	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	PDCLIBS = $(LIBCURSES)
 	EXEPOST = $(EMXBIND) $* $(BINDFLAGS)
 	TUIPOST = $(EMXBIND) tuidemo $(BINDFLAGS)
@@ -84,14 +92,23 @@ demos:	$(DEMOS)
 DEMOOBJS = testcurs.o newdemo.o xmas.o tui.o tuidemo.o firework.o \
 ptest.o rain.o worm.o
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+$(DEFFILE) : $(DEFDEPS)
+	echo LIBRARY PDCURSES > $@
+	echo DESCRIPTION 'PDCurses 3.4 Dynamic Linking library' >> $@
+	echo PROTMODE >>$@
+	echo DATA MULTIPLE READWRITE LOADONCALL >> $@
+	echo CODE LOADONCALL >> $@
+	echo EXPORTS >> $@
+	type $(BASEDEF) >> $@
+
+$(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 	-copy $(LIBCURSES) panel.a
 
-$(DLLTARGET): $(LIBOBJS) $(PDCOBJS)
-	$(LINK) $(DLLFLAGS) -o $(DLLTARGET) $? $(osdir)\pdcurses.def
+$(DLLTARGET) : $(LIBDEPS)
+	$(LINK) $(DLLFLAGS) -o $(DLLTARGET) $? $(DEFFILE)
 #	lxlite $(DLLTARGET)
-	emximp -o $(LIBCURSES) $(osdir)\pdcurses.def
+	emximp -o $(LIBCURSES) $(DEFFILE)
 
 $(LIBOBJS) $(PDCOBJS) $(DEMOOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_OS2_H)

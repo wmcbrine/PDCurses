@@ -18,7 +18,13 @@ SLIBS		= $(shell sdl-config --libs)
 # If your system doesn't have these, remove the defines here
 SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
-BUILD		= $(CC) -O2 -Wall -I$(PDCURSES_SRCDIR)
+ifeq ($(DEBUG),Y)
+	CFLAGS  = -g -Wall -DPDCDEBUG
+else
+	CFLAGS  = -O2 -Wall
+endif
+
+BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 ifeq ($(shell uname),Darwin)
 	DEMOFLAGS = -Dmain=SDL_main

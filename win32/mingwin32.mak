@@ -30,27 +30,36 @@ endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
+BASEDEF		= $(PDCURSES_SRCDIR)\exp-base.def
+WIDEDEF		= $(PDCURSES_SRCDIR)\exp-wide.def
+
+DEFDEPS		= $(BASEDEF)
+
 ifeq ($(WIDE),Y)
 	CFLAGS += -DPDC_WIDE
-	W = w
+	DEFDEPS += $(WIDEDEF)
 endif
 
 ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
+DEFFILE		= pdcurses.def
+
 LINK		= gcc
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = gcc $(osdir)/pdcurses$(W).def
+	LIBEXE = gcc $(DEFFILE)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	CLEAN = $(LIBCURSES) *.a
+	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
+	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
 else
 	LIBEXE = ar
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
+	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	CLEAN = *.a
 endif
 
@@ -68,7 +77,15 @@ clean:
 demos:	$(DEMOS)
 	strip *.exe
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+$(DEFFILE): $(DEFDEPS)
+	echo LIBRARY pdcurses > $@
+	echo EXPORTS >> $@
+	type $(BASEDEF) >> $@
+ifeq ($(WIDE),Y)
+	type $(WIDEDEF) >> $@
+endif
+
+$(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 	-copy pdcurses.a panel.a
 

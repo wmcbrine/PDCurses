@@ -63,8 +63,8 @@ $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_X11_H)
 terminfo.o: $(TERM_HEADER)
 
-curses.exp: ../win32/pdcurses.def
-	tail -n +3 ../win32/pdcurses.def > curses.exp
+curses.exp: ../exp-base.def
+	cat ../exp-base.def > curses.exp
 	echo Xinitscr >> curses.exp
 	echo XCursesExit >> curses.exp
 	echo sb_init >> curses.exp

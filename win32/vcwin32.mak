@@ -28,17 +28,21 @@ CFLAGS		= -O1
 LDFLAGS		=
 !endif
 
+BASEDEF		= $(PDCURSES_SRCDIR)\exp-base.def
+WIDEDEF		= $(PDCURSES_SRCDIR)\exp-wide.def
+
+DEFDEPS		= $(BASEDEF)
+
 !ifdef WIDE
-DEFFILE		= $(osdir)\pdcursesw.def
 WIDEOPT		= -DPDC_WIDE
-!else
-DEFFILE		= $(osdir)\pdcurses.def
+DEFDEPS		= $(DEFDEPS) $(WIDEDEF)
 !endif
 
 !ifdef UTF8
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
+DEFFILE		= pdcurses.def
 SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll /DEF:$(DEFFILE)
 
 LINK		= link.exe -nologo
@@ -71,6 +75,7 @@ clean:
 	-del *.dll
 	-del *.exp
 	-del *.res
+	-del *.def
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
@@ -85,6 +90,14 @@ terminfo.obj: $(TERM_HEADER)
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) -out:$@ $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.lib
+!endif
+
+$(DEFFILE) : $(DEFDEPS)
+	echo LIBRARY pdcurses > $(DEFFILE)
+	echo EXPORTS >> $(DEFFILE)
+	type $(BASEDEF) >> $(DEFFILE)
+!ifdef WIDE
+	type $(WIDEDEF) >> $(DEFFILE)
 !endif
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE) pdcurses.obj

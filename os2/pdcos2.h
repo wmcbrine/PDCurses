@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: pdcos2.h,v 1.8 2008/07/13 06:36:31 wmcbrine Exp $ */
+/* $Id: pdcos2.h,v 1.9 2008/08/14 06:38:35 wmcbrine Exp $ */
 
 #ifdef _MSC_VER
 # define USE_OS2_H 1         /* Use the os2.h for the compiler       */
@@ -36,7 +36,11 @@ typedef void * SEG16 ptr_16;
 
 #else
 # ifdef __EMX__
-#  define PDCTHUNK(x) ((PCH)_emx_32to16(x))
+#  ifdef __INNOTEK_LIBC__
+#   define PDCTHUNK(x) ((PCH)_libc_32to16(x))
+#  else
+#   define PDCTHUNK(x) ((PCH)_emx_32to16(x))
+#  endif
 # endif
 #endif
 

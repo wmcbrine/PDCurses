@@ -1,6 +1,6 @@
 # GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c+
 #
-# Usage: make -f [path\]gccos2.mak [DEBUG=Y] [EMXVIDEO=Y] [target]
+# Usage: make -f [path\]gccos2.mak [DEBUG=Y] [EMXVIDEO=Y] [DLL=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]

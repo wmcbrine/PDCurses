@@ -1,3 +1,66 @@
+PDCurses 3.4 - 2008/09/08
+=========================
+
+Nothing much new this time, but I've been sitting on some bug fixes for 
+almost a year, so it's overdue. Apart from bugs, the main changes are in 
+the documentation.
+
+New features:
+
+- setsyx() is now a function rather than a macro.
+
+Bug fixes and such:
+
+- In x11, the xc_atrtab table size was under-calculated by half, 
+  resulting in crashes at (oddly) certain line counts. (It should've 
+  crashed a lot more.) Reported by Mark Hessling.
+
+- Test for moved cursor was omitting the window origin offset. Reported 
+  by Carey Evans.
+
+- Is DOS and OS/2, the value for max items in key_table was still wrong.
+  Reported by C.E.
+
+- Changed isendwin() so it won't crash after delscreen().
+
+- Ensure zero-termination in PDC_mbstowcs() and PDC_wcstombs(). 
+
+- Disable QuickEdit Mode when enabling mouse input for the Win32 
+  console; reported by "Zalapkrakna".
+
+- Fix for building under Innotek C (I hope). Report by Elbert Pol, fix
+  courtesy of Paul Smedley.
+
+- Unified exports list with no duplicates -- pdcurses.def is now built
+  from components at compile time.
+
+- Don't install curspriv.h, and don't include it with binary
+  distributions.
+
+- Building DLLs with LCC is no longer supported, due to the primitive
+  nature of its make.exe.
+
+- Export the terminfo stub functions from the DLLs, too.
+
+- Added support for Apple's ".dylib" in configure. Suggested by Marc 
+  Vaillant (who says it's needed with OS 10.5.)
+
+- In sdl1/Makefile.mng, ensure that CC is set.
+
+- In the gcc makefiles, "$?" didn't really have the desired effect --
+  _all_ the dependencies showed up on the command line, including
+  curses.h, and pdcurses.a twice.  And apparently, this can mess up some
+  old version (?) of MinGW. So, revert to spelling out "tuidemo.o
+  tui.o". Reported by "Howard L."
+
+- Extensive documentation revision and reorganizing. More to do here. 
+  For example, I moved the build instructions from INSTALL (which never 
+  really described installation) to the platform-specific READMEs. 
+
+- New indentation standard: four spaces, no tabs.
+
+------------------------------------------------------------------------
+
 PDCurses 3.3 - 2007/07/11
 =========================
 

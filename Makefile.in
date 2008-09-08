@@ -66,14 +66,14 @@ manual:
 	cd doc; $(MAKE) $(MFLAGS) $@
 
 $(ZIPFILE):
-	zip -9y $(ZIPFILE) README HISTORY IMPLEMNT *.spec *.mif \
+	zip -9y $(ZIPFILE) README HISTORY IMPLEMNT *.spec *.mif *.def \
 	Makefile.in config.h.in configure configure.ac config.guess \
 	config.sub x11/xcurses-config.in install-sh aclocal.m4 curses.h \
 	curspriv.h panel.h term.h pdcurses/README \
 	pdcurses/*.c demos/README demos/*.c demos/*.h dos/README dos/*.c \
 	dos/*.h dos/*.mak dos/*.lrf os2/README os2/*.c os2/*.h os2/*.mak \
-	os2/*.lrf os2/*.def sdl1/README sdl1/*.c sdl1/*.h sdl1/Make* \
-	win32/README win32/*.c win32/*.h win32/*.mak win32/*.def \
+	os2/*.lrf sdl1/README sdl1/*.c sdl1/*.h sdl1/Make* \
+	win32/README win32/*.c win32/*.h win32/*.mak \
 	win32/*.ico win32/*.rc x11/README x11/*.c x11/*.h x11/Makefile.* \
 	x11/*.xbm doc/*.txt doc/manext.c doc/Makefile
 
@@ -81,8 +81,8 @@ zip: $(ZIPFILE)
 
 ../$(TARBALL):
 	(cd ..; tar cvf - $(PDC_DIR)/README $(PDC_DIR)/HISTORY \
-	$(PDC_DIR)/IMPLEMNT $(PDC_DIR)/*.spec \
-	$(PDC_DIR)/*.mif $(PDC_DIR)/Makefile.in $(PDC_DIR)/aclocal.m4 \
+	$(PDC_DIR)/IMPLEMNT $(PDC_DIR)/*.spec $(PDC_DIR)/*.mif \
+	$(PDC_DIR)/*.def $(PDC_DIR)/Makefile.in $(PDC_DIR)/aclocal.m4 \
 	$(PDC_DIR)/config.h.in $(PDC_DIR)/configure \
 	$(PDC_DIR)/config.guess $(PDC_DIR)/x11/xcurses-config.in \
 	$(PDC_DIR)/config.sub $(PDC_DIR)/configure.ac \
@@ -93,10 +93,10 @@ zip: $(ZIPFILE)
 	$(PDC_DIR)/doc/*.txt $(PDC_DIR)/dos/README $(PDC_DIR)/dos/*.c \
 	$(PDC_DIR)/dos/*.h $(PDC_DIR)/dos/*.mak $(PDC_DIR)/dos/*.lrf \
 	$(PDC_DIR)/os2/README $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.h \
-	$(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf $(PDC_DIR)/os2/*.def \
+	$(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf \
 	$(PDC_DIR)/sdl1/README $(PDC_DIR)/sdl1/*.c $(PDC_DIR)/sdl1/*.h \
 	$(PDC_DIR)/sdl1/Make* $(PDC_DIR)/win32/README $(PDC_DIR)/win32/*.c \
-	$(PDC_DIR)/win32/*.h $(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.def \
+	$(PDC_DIR)/win32/*.h $(PDC_DIR)/win32/*.mak \
 	$(PDC_DIR)/win32/*.ico $(PDC_DIR)/win32/*.rc $(PDC_DIR)/x11/README \
 	$(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.h \
 	$(PDC_DIR)/x11/Makefile.* $(PDC_DIR)/doc/manext.c \

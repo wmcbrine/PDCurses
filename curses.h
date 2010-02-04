@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: curses.h,v 1.295 2008/07/15 17:13:25 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.296 2010/02/04 05:09:27 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *                              PDCurses                                *
@@ -443,6 +443,8 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 /* For use with attr_t -- X/Open says, "these shall be distinct", so 
    this is a non-conforming implementation. */
 
+#define WA_NORMAL     A_NORMAL
+
 #define WA_ALTCHARSET A_ALTCHARSET
 #define WA_BLINK      A_BLINK
 #define WA_BOLD       A_BOLD
@@ -459,6 +461,8 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 #define WA_LOW        A_NORMAL
 #define WA_TOP        A_NORMAL
 #define WA_VERTICAL   A_NORMAL
+
+#define WA_ATTRIBUTES A_ATTRIBUTES
 
 /*** Alternate character set macros ***/
 

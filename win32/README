@@ -60,8 +60,8 @@ Building
 	nmake -f vcwin32.mak WIDE=Y DLL=Y
 
   When you build the library as a Windows DLL, you must always define
-  PDCURSES_DLL_BUILD when linking against it. (Or, if you only want to
-  use the DLL, you could add this definition to your curses.h.)
+  PDC_DLL_BUILD when linking against it. (Or, if you only want to use
+  the DLL, you could add this definition to your curses.h.)
 
 
 Distribution Status

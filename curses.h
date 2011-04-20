@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: curses.h,v 1.296 2010/02/04 05:09:27 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.297 2011/04/20 22:13:33 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *                              PDCurses                                *
@@ -142,12 +142,16 @@ typedef struct
  *                             10000 <- mouse position report
  *                            100000 <- mouse wheel up
  *                           1000000 <- mouse wheel down
+ *                          10000000 <- mouse wheel left
+ *                         100000000 <- mouse wheel right
  */
 
 #define PDC_MOUSE_MOVED         0x0008
 #define PDC_MOUSE_POSITION      0x0010
 #define PDC_MOUSE_WHEEL_UP      0x0020
 #define PDC_MOUSE_WHEEL_DOWN    0x0040
+#define PDC_MOUSE_WHEEL_LEFT    0x0080
+#define PDC_MOUSE_WHEEL_RIGHT   0x0100
 
 #define A_BUTTON_CHANGED        (Mouse_status.changes & 7)
 #define MOUSE_MOVED             (Mouse_status.changes & PDC_MOUSE_MOVED)
@@ -156,6 +160,8 @@ typedef struct
 #define BUTTON_STATUS(x)        (Mouse_status.button[(x) - 1])
 #define MOUSE_WHEEL_UP          (Mouse_status.changes & PDC_MOUSE_WHEEL_UP)
 #define MOUSE_WHEEL_DOWN        (Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN)
+#define MOUSE_WHEEL_LEFT        (Mouse_status.changes & PDC_MOUSE_WHEEL_LEFT)
+#define MOUSE_WHEEL_RIGHT       (Mouse_status.changes & PDC_MOUSE_WHEEL_RIGHT)
 
 /* mouse bit-masks */
 

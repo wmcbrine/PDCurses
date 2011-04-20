@@ -2,7 +2,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11.c,v 1.94 2008/07/14 04:33:26 wmcbrine Exp $")
+RCSID("$Id: x11.c,v 1.95 2011/04/20 22:13:34 wmcbrine Exp $")
 
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
@@ -1964,16 +1964,29 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
     {
     case ButtonPress:
         /* Handle button 4 and 5, which are normally mapped to the wheel
-           mouse scroll up and down */
+           mouse scroll up and down, and button 6 and 7, which are
+           normally mapped to the wheel mouse scroll left and right */
 
-        if (button_no == 4 || button_no == 5)
+        if (button_no >= 4 && button_no <= 7)
         {
             /* Send the KEY_MOUSE to curses program */
 
             memset(&Mouse_status, 0, sizeof(Mouse_status));
 
-            Mouse_status.changes = (button_no == 5) ? 
-                PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+            switch(button_no)
+            {
+               case 4:
+                  Mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+                  break;
+               case 5:
+                  Mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+                  break;
+               case 6:
+                  Mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
+                  break;
+               case 7:
+                  Mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
+            }
 
             MOUSE_X_POS = MOUSE_Y_POS = -1;
             _send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);

@@ -2,7 +2,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.115 2008/07/20 20:12:04 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.116 2011/04/23 06:50:03 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -477,6 +477,19 @@ static int _process_mouse_event(void)
     {
         pdc_mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
             PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+
+        pdc_mouse_status.x = -1;
+        pdc_mouse_status.y = -1;
+
+        memset(&old_mouse_status, 0, sizeof(old_mouse_status));
+
+        return KEY_MOUSE;
+    }
+
+    if (MEV.dwEventFlags == 8)
+    {
+        pdc_mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
+            PDC_MOUSE_WHEEL_RIGHT : PDC_MOUSE_WHEEL_LEFT;
 
         pdc_mouse_status.x = -1;
         pdc_mouse_status.y = -1;

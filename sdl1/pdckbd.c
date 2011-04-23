@@ -2,7 +2,7 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.20 2008/07/14 04:24:52 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.21 2011/04/23 06:50:02 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -282,12 +282,24 @@ static int _process_mouse_event(void)
 
         /* handle scroll wheel */
 
-        if ((btn == 4 || btn == 5) && action == BUTTON_RELEASED)
+        if ((btn >= 4 && btn <= 7) && action == BUTTON_RELEASED)
         {
             pdc_mouse_status.x = pdc_mouse_status.y = -1;
 
-            pdc_mouse_status.changes = (btn == 5) ?
-                PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+            switch (btn)
+            {
+            case 4:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+                break;
+            case 5:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+                break;
+            case 6:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
+                break;
+            case 7:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
+            }
 
             return KEY_MOUSE;
         }

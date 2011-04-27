@@ -1,8 +1,9 @@
 PDCurses Implementor's Guide
 ============================
 
-Version 1.3 - 200?/??/?? - notes about official ports
-Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(), 
+Version 1.3 - 20??/??/?? - notes about official ports, new indentation
+                           style
+Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(),
 			   version history; removed pdc_atrtab
 Version 1.1 - 2007/06/06 - minor cosmetic change
 Version 1.0 - 2007/04/01 - initial revision
@@ -65,9 +66,8 @@ an application's choices.
 
 Current PDCurses style also uses a single leading underscore with the 
 name of any static function; and modified BSD/Allman-style indentation, 
-approximately equivalent to "indent -kr -i8 -bl -bli0", with adjustments 
-to keep every line under 80 columns. This isn't essential, but a 
-consistent style helps readability.
+approximately equivalent to "indent -kr -nut -bl -bli0", with 
+adjustments to keep every line under 80 columns.
 
 
 pdcdisp.c:

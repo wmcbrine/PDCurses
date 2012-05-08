@@ -2,7 +2,7 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.116 2011/04/23 06:50:03 wmcbrine Exp $")
+RCSID("$Id: pdckbd.c,v 1.117 2012/05/08 07:00:59 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -417,12 +417,9 @@ static int _process_key_event(void)
     {
         /* This code should catch all keys returning a printable
            character. Characters above 0x7F should be returned as
-           positive codes. But if'ndef NUMKEYPAD we have to return
-           extended keycodes for keypad codes. */
+           positive codes. */
 
-#ifndef NUMKEYPAD
         if (kptab[vk].extended == 0)
-#endif
         {
             SP->key_code = FALSE;
             return key;

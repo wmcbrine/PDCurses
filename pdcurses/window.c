@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: window.c,v 1.62 2008/07/13 16:08:18 wmcbrine Exp $")
+RCSID("$Id: window.c,v 1.63 2012/05/11 16:48:28 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -323,6 +323,7 @@ WINDOW *subwin(WINDOW *orig, int nlines, int ncols, int begy, int begx)
     win->_leaveit = orig->_leaveit;
     win->_scroll = orig->_scroll;
     win->_nodelay = orig->_nodelay;
+    win->_delayms = orig->_delayms;
     win->_use_keypad = orig->_use_keypad;
     win->_immed = orig->_immed;
     win->_sync = orig->_sync;
@@ -410,6 +411,7 @@ WINDOW *dupwin(WINDOW *win)
     new->_leaveit = win->_leaveit;
     new->_scroll = win->_scroll;
     new->_nodelay = win->_nodelay;
+    new->_delayms = win->_delayms;
     new->_use_keypad = win->_use_keypad;
     new->_tmarg = win->_tmarg;
     new->_bmarg = win->_bmarg;
@@ -486,6 +488,7 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
     new->_leaveit = win->_leaveit;
     new->_scroll = win->_scroll;
     new->_nodelay = win->_nodelay;
+    new->_delayms = win->_delayms;
     new->_use_keypad = win->_use_keypad;
     new->_tmarg = (win->_tmarg > new->_maxy - 1) ? 0 : win->_tmarg;
     new->_bmarg = (win->_bmarg == win->_maxy - 1) ?

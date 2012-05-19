@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: curses.h,v 1.297 2011/04/20 22:13:33 wmcbrine Exp $ */
+/* $Id: curses.h,v 1.298 2012/05/19 05:19:43 wmcbrine Exp $ */
 
 /*----------------------------------------------------------------------*
  *                              PDCurses                                *
@@ -415,7 +415,6 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_ITALIC     A_INVIS
 # define A_PROTECT    (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
 
-# define PDC_ATTR_SHIFT  19
 # define PDC_COLOR_SHIFT 24
 #else
 # define A_BOLD       (chtype)0x0100  /* X/Open */
@@ -435,7 +434,6 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_ITALIC     A_NORMAL
 # define A_INVIS      A_NORMAL
 
-# define PDC_ATTR_SHIFT   8
 # define PDC_COLOR_SHIFT 11
 #endif
 

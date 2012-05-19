@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* $Id: pdcwin.h,v 1.6 2008/07/13 06:36:32 wmcbrine Exp $ */
+/* $Id: pdcwin.h,v 1.7 2012/05/19 05:19:44 wmcbrine Exp $ */
 
 #ifdef PDC_WIDE
 # define UNICODE
@@ -9,6 +9,12 @@
 #include <windows.h>
 #undef MOUSE_MOVED
 #include <curspriv.h>
+
+#ifdef CHTYPE_LONG
+# define PDC_ATTR_SHIFT 19
+#else
+# define PDC_ATTR_SHIFT 8
+#endif
 
 extern unsigned char *pdc_atrtab;
 extern HANDLE pdc_con_out, pdc_con_in;

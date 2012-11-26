@@ -2,7 +2,7 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11.c,v 1.95 2011/04/20 22:13:34 wmcbrine Exp $")
+RCSID("$Id: x11.c,v 1.96 2012/11/26 08:22:50 wmcbrine Exp $")
 
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
@@ -3236,7 +3236,15 @@ int XCursesSetupX(int argc, char *argv[])
 #endif
 
     /* Wait for events */
+    {
+        XEvent event;
 
-    XtAppMainLoop(app_context);
+        for (;;) /* forever */
+        {
+             XtAppNextEvent(app_context, &event);
+             XtDispatchEvent(&event);
+        }
+    }
+
     return OK;          /* won't get here */
 }

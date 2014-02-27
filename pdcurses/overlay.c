@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.36 2008/07/14 12:35:23 wmcbrine Exp $")
+RCSID("$Id: overlay.c,v 1.37 2014/02/27 18:42:16 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -236,8 +236,8 @@ int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr, int src_tc,
 
     PDC_LOG(("copywin() - called\n"));
 
-    if (!src_w || !dst_w || dst_w == curscr || dst_br > dst_w->_maxy
-        || dst_bc > dst_w->_maxx || dst_tr < 0 || dst_tc < 0)
+    if (!src_w || !dst_w || dst_w == curscr || dst_br >= dst_w->_maxy
+        || dst_bc >= dst_w->_maxx || dst_tr < 0 || dst_tc < 0)
         return ERR;
 
     src_rows = src_w->_maxy - src_tr;

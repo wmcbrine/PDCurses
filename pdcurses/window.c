@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: window.c,v 1.63 2012/05/11 16:48:28 wmcbrine Exp $")
+RCSID("$Id: window.c,v 1.64 2014/02/28 17:35:45 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -464,8 +464,8 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
             return (WINDOW *)NULL;
     }
 
-    save_curx = min(win->_curx, new->_maxx);
-    save_cury = min(win->_cury, new->_maxy);
+    save_curx = min(win->_curx, (new->_maxx - 1));
+    save_cury = min(win->_cury, (new->_maxy - 1));
 
     if (!(win->_flags & (_SUBPAD|_SUBWIN)))
     {

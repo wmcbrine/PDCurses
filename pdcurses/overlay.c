@@ -2,7 +2,7 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.37 2014/02/27 18:42:16 wmcbrine Exp $")
+RCSID("$Id: overlay.c,v 1.38 2014/02/28 19:29:17 wmcbrine Exp $")
 
 /*man-start**************************************************************
 
@@ -113,13 +113,11 @@ static int _copy_win(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
     return OK;
 }
 
-int overlay(const WINDOW *src_w, WINDOW *dst_w)
+int _copy_overlap(const WINDOW *src_w, WINDOW *dst_w, bool overlay)
 {
     int first_line, first_col, last_line, last_col;
     int src_start_x, src_start_y, dst_start_x, dst_start_y;
     int xdiff, ydiff;
-
-    PDC_LOG(("overlay() - called\n"));
 
     if (!src_w || !dst_w)
         return ERR;
@@ -167,64 +165,21 @@ int overlay(const WINDOW *src_w, WINDOW *dst_w)
 
     return _copy_win(src_w, dst_w, src_start_y, src_start_x,
                      src_start_y + ydiff, src_start_x + xdiff,
-                     dst_start_y, dst_start_x, TRUE);
+                     dst_start_y, dst_start_x, overlay);
+}
+
+int overlay(const WINDOW *src_w, WINDOW *dst_w)
+{
+    PDC_LOG(("overlay() - called\n"));
+
+    return _copy_overlap(src_w, dst_w, TRUE);
 }
 
 int overwrite(const WINDOW *src_w, WINDOW *dst_w)
 {
-    int first_line, first_col, last_line, last_col;
-    int src_start_x, src_start_y, dst_start_x, dst_start_y;
-    int xdiff, ydiff;
-
     PDC_LOG(("overwrite() - called\n"));
 
-    if (!src_w || !dst_w)
-        return ERR;
-
-    first_col = max(dst_w->_begx, src_w->_begx);
-    first_line = max(dst_w->_begy, src_w->_begy);
-
-    last_col = min(src_w->_begx + src_w->_maxx, dst_w->_begx + dst_w->_maxx);
-    last_line = min(src_w->_begy + src_w->_maxy, dst_w->_begy + dst_w->_maxy);
-
-    /* determine the overlapping region of the two windows in real 
-       coordinates */
-
-    /* if no overlapping region, do nothing */
-
-    if ((last_col < first_col) || (last_line < first_line))
-        return OK;
-
-    /* size of overlapping region */
-
-    xdiff = last_col - first_col;
-    ydiff = last_line - first_line;
-
-    if (src_w->_begx <= dst_w->_begx)
-    {
-        src_start_x = dst_w->_begx - src_w->_begx;
-        dst_start_x = 0;
-    }
-    else
-    {
-        dst_start_x = src_w->_begx - dst_w->_begx;
-        src_start_x = 0;
-    }
-
-    if (src_w->_begy <= dst_w->_begy)
-    {
-        src_start_y = dst_w->_begy - src_w->_begy;
-        dst_start_y = 0;
-    }
-    else
-    {
-        dst_start_y = src_w->_begy - dst_w->_begy;
-        src_start_y = 0;
-    }
-
-    return _copy_win(src_w, dst_w, src_start_y, src_start_x,
-                     src_start_y + ydiff, src_start_x + xdiff,
-                     dst_start_y, dst_start_x, FALSE);
+    return _copy_overlap(src_w, dst_w, FALSE);
 }
 
 int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr, int src_tc,

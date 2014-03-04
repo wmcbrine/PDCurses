@@ -2,10 +2,10 @@
    The top portion of the window is devoted to SDL, with a four-line
    (assuming the default 8x16 font) stdscr at the bottom.
 
-   $Id: sdltest.c,v 1.2 2008/07/14 04:24:52 wmcbrine Exp $
+   $Id: sdltest.c,v 1.3 2014/03/04 18:55:46 wmcbrine Exp $
 */
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <curses.h>
 #include <stdlib.h>
 #include <time.h>

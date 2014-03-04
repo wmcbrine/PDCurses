@@ -92,7 +92,7 @@ xmas: $(demodir)/xmas.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 sdltest: $(osdir)/sdltest.c
-	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(DEMOFLAGS) $(SFLAGS) -o $@ $< $(LDFLAGS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tui.c

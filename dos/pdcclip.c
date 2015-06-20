@@ -2,8 +2,6 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcclip.c,v 1.33 2008/07/13 16:08:17 wmcbrine Exp $")
-
 #include <stdlib.h>
 
 /*man-start**************************************************************

@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: panel.c,v 1.8 2008/07/14 12:35:23 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         panel

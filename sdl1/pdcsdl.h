@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: pdcsdl.h,v 1.18 2014/03/04 18:55:46 wmcbrine Exp $ */
-
 #include <curspriv.h>
 
 #include <SDL.h>

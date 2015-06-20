@@ -2,8 +2,6 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.34 2008/07/14 04:24:52 wmcbrine Exp $")
-
 #include <stdlib.h>
 #include "deffont.h"
 #include "deficon.h"

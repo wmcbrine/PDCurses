@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: window.c,v 1.64 2014/02/28 17:35:45 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         window

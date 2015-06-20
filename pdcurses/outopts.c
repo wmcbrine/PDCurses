@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.39 2008/07/14 12:22:13 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         outopts

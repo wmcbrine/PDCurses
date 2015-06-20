@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.51 2008/07/14 04:24:51 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         getstr

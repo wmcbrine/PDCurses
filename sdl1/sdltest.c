@@ -1,8 +1,6 @@
 /* Here's a simple example of combining SDL and PDCurses functionality.
    The top portion of the window is devoted to SDL, with a four-line
    (assuming the default 8x16 font) stdscr at the bottom.
-
-   $Id: sdltest.c,v 1.3 2014/03/04 18:55:46 wmcbrine Exp $
 */
 
 #include <SDL.h>

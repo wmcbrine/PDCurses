@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: overlay.c,v 1.38 2014/02/28 19:29:17 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         overlay

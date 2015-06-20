@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: pdcwin.h,v 1.7 2012/05/19 05:19:44 wmcbrine Exp $ */
-
 #ifdef PDC_WIDE
 # define UNICODE
 #endif

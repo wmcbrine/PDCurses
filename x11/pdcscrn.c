@@ -2,8 +2,6 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.55 2008/07/14 04:24:52 wmcbrine Exp $")
-
 /* COLOR_PAIR to attribute encoding table. */
 
 short *xc_atrtab = (short *)NULL;

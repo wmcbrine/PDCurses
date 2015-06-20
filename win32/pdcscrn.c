@@ -2,8 +2,6 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcscrn.c,v 1.92 2008/07/20 20:12:04 wmcbrine Exp $")
-
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
 #else

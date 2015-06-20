@@ -2,8 +2,6 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcdisp.c,v 1.46 2008/07/14 04:24:52 wmcbrine Exp $")
-
 #include <string.h>
 
 #ifdef CHTYPE_LONG

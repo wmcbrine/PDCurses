@@ -2,8 +2,6 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcx11.c,v 1.96 2008/07/14 04:24:52 wmcbrine Exp $")
-
 #include <errno.h>
 #include <stdlib.h>
 

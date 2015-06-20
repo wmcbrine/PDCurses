@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: pdcos2.h,v 1.10 2012/05/19 05:19:44 wmcbrine Exp $ */
-
 #ifdef _MSC_VER
 # define USE_OS2_H 1         /* Use the os2.h for the compiler       */
 # define APIRET USHORT

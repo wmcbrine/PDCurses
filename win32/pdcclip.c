@@ -2,8 +2,6 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdcclip.c,v 1.30 2008/07/14 04:24:52 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         clipboard

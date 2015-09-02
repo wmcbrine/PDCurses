@@ -1,0 +1,19 @@
+Status
+======
+
+Currently the CMake build system only supports the win32 flavor of PDCurses.
+Furthermore it was only tested with MSVC and MinGW whereby the dlls produced
+by MinGW are for some unknown reason corrupted and cause a segfault very
+quickly.
+
+
+Usage
+=====
+
+Windows
+-------
+Use CMake to generate your project files. Compile and install PDCurses
+using the generated files.
+The install project creates a config-file package; so in order to use it
+from your CMake project, you only have to setup an enviroment variable
+PDCurses_DIR pointing to the install directory and call find_package(PDCurses).

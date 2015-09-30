@@ -2,8 +2,6 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcdisp.c,v 1.35 2008/07/14 04:24:52 wmcbrine Exp $")
-
 #include <stdlib.h>
 #include <string.h>
 

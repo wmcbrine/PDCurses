@@ -8,8 +8,6 @@ defined(__TURBOC__)
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdckbd.c,v 1.89 2008/07/14 04:24:51 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         pdckbd

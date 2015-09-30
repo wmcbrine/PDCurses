@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: pdcdos.h,v 1.31 2012/05/19 05:19:44 wmcbrine Exp $ */
-
 #include <curspriv.h>
 #include <string.h>
 

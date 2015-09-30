@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: slk.c,v 1.61 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         slk

@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: pdcx11.h,v 1.64 2008/07/14 04:24:52 wmcbrine Exp $ */
-
 #include <curspriv.h>
 
 #ifdef HAVE_UNISTD_H

@@ -4,8 +4,6 @@
  *
  *  wrs(5/28/93) -- modified to be consistent (perform identically)
  *                  with either PDCurses or under Unix System V, R4
- *
- *  $Id: testcurs.c,v 1.86 2011/04/20 22:13:34 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED

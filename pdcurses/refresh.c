@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: refresh.c,v 1.56 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         refresh

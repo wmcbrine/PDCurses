@@ -2,8 +2,6 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcutil.c,v 1.24 2008/07/13 16:08:17 wmcbrine Exp $")
-
 void PDC_beep(void)
 {
     PDCREGS regs;

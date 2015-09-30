@@ -2,8 +2,6 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.26 2008/07/14 04:24:52 wmcbrine Exp $")
-
 /* return width of screen/viewport */
 
 int PDC_get_columns(void)

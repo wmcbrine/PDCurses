@@ -2,8 +2,6 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.42 2008/07/13 16:08:17 wmcbrine Exp $")
-
 #include <stdlib.h>
 
 /* return width of screen/viewport */

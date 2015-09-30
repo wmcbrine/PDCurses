@@ -3,8 +3,6 @@
  *          illustrates the use of colors for text output.
  *
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
- *
- *  $Id: newdemo.c,v 1.39 2008/07/13 16:08:17 wmcbrine Exp $
  */
 
 #include <stdio.h>

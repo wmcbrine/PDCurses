@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.41 2008/07/13 16:08:17 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         attr

@@ -1,8 +1,6 @@
 /*
  * 'textual user interface'
  *
- * $Id: tui.h,v 1.11 2008/07/14 12:35:23 wmcbrine Exp $
- *
  * Author : P.J. Kunst <kunst@prl.philips.nl>
  * Date   : 25-02-93
  */

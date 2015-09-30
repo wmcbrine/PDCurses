@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scr_dump.c,v 1.30 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         scr_dump

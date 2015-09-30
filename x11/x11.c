@@ -2,8 +2,6 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: x11.c,v 1.96 2012/11/26 08:22:50 wmcbrine Exp $")
-
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
 #endif

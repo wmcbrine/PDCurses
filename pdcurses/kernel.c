@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: kernel.c,v 1.78 2008/07/15 17:13:26 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         kernel

@@ -2,8 +2,6 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.117 2012/05/08 07:00:59 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         pdckbd

@@ -2,8 +2,6 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.39 2008/07/13 16:08:17 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         pdcsetsc

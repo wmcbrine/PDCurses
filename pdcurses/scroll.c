@@ -2,8 +2,6 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.36 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         scroll

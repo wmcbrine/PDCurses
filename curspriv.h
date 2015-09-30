@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: curspriv.h,v 1.158 2008/07/13 16:08:16 wmcbrine Exp $ */
-
 /* Private definitions and declarations for use within PDCurses.
    These should generally not be referenced by applications. */
 
@@ -113,10 +111,8 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 
 #ifdef PDCDEBUG
 # define PDC_LOG(x) if (pdc_trace_on) PDC_debug x
-# define RCSID(x) static const char *rcsid = x;
 #else
 # define PDC_LOG(x)
-# define RCSID(x)
 #endif
 
 /* Internal macros for attributes */

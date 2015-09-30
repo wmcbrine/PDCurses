@@ -2,8 +2,6 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcsetsc.c,v 1.33 2008/07/14 04:24:52 wmcbrine Exp $")
-
 #include <string.h>
 
 /*man-start**************************************************************

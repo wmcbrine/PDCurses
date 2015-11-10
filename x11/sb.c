@@ -148,4 +148,3 @@ int sb_refresh(void)
 
     return OK;
 }
-

@@ -30,11 +30,15 @@
 
 **man-end****************************************************************/
 
+#include <string.h>
+
 char *keyname(int key)
 {
+    static char _keyname[14];
+
     /* Key names must be in exactly the same order as in curses.h */
 
-    static char *key_name[] =
+    static char *key_names[] =
     {
         "KEY_BREAK", "KEY_DOWN", "KEY_UP", "KEY_LEFT", "KEY_RIGHT",
         "KEY_HOME", "KEY_BACKSPACE", "KEY_F0", "KEY_F(1)", "KEY_F(2)",
@@ -100,10 +104,10 @@ char *keyname(int key)
 
     PDC_LOG(("keyname() - called: key %d\n", key));
 
-    if ((key >= 0) && (key < 0x80))
-        return unctrl((chtype)key);
+    strcpy(_keyname, ((key >= 0) && (key < 0x80)) ? unctrl((chtype)key) :
+           has_key(key) ? key_names[key - KEY_MIN] : "UNKNOWN KEY");
 
-    return has_key(key) ? key_name[key - KEY_MIN] : "UNKNOWN KEY";
+    return _keyname;
 }
 
 bool has_key(int key)

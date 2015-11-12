@@ -135,9 +135,11 @@ attr_t term_attrs(void)
 
 char *termname(void)
 {
+    static char _termname[14] = "pdcurses";
+
     PDC_LOG(("termname() - called\n"));
 
-    return "pdcurses";
+    return _termname;
 }
 
 char wordchar(void)

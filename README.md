@@ -6,7 +6,7 @@ curses for multiple platforms. The latest version can be found at:
 
    http://pdcurses.org/
 
-For changes, see the HISTORY file.
+For changes, see the [HISTORY](HISTORY) file.
 
 
 Legal Stuff
@@ -30,8 +30,15 @@ Ports
 
 PDCurses has been ported to DOS, OS/2, Win32, X11 and SDL. A directory 
 containing the port-specific source files exists for each of these 
-platforms. Build instructions are in the README file for each platform.
+platforms.
 
+Build instructions are in the README file for each platform:
+
+-  [DOS](dos/README)
+-  [OS/2](os2/README)
+-  [SDL](sdl1/README)
+-  [Win32](win32/README)
+-  [X11](x11/README)
 
 Distribution Status
 -------------------

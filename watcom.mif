@@ -24,7 +24,7 @@ LINK = wlink
 !ifdef __LOADDLL__
 ! loaddll wcc    wccd
 ! loaddll wcc386 wccd386
-! loaddll wlink  wlink
+! loaddll wlink  wlinkd
 ! loaddll wlib   wlibd
 !endif
 

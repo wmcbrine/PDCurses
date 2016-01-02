@@ -12,6 +12,7 @@
 
 unsigned char *pdc_atrtab = (unsigned char *)NULL;
 
+HANDLE std_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_in = INVALID_HANDLE_VALUE;
 
@@ -25,7 +26,7 @@ static short curstoreal[16], realtocurs[16] =
     COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
 };
 
-enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER, PDC_RESTORE_WINDOW };
+enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER };
 
 /* Struct for storing console registry keys, and for use with the 
    undocumented WM_SETCONSOLEINFO message. Originally by James Brown, 
@@ -66,7 +67,8 @@ static struct
 
 static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
-static CHAR_INFO *ci_save = NULL;
+static LPTOP_LEVEL_EXCEPTION_FILTER xcpt_filter;
+
 static DWORD old_console_mode = 0;
 
 static bool is_nt;
@@ -215,47 +217,51 @@ static void _init_console_info(void)
     RegCloseKey(reghnd);
 }
 
+/* restore the original console buffer in the event of a crash */
+
+static LONG WINAPI _restore_console(LPEXCEPTION_POINTERS ep)
+{
+    PDC_scr_close();
+
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
+/* restore the original console buffer on Ctrl+Break (or Ctrl+C,
+   if it gets re-enabled) */
+
+static BOOL WINAPI _ctrl_break(DWORD dwCtrlType)
+{
+    if (dwCtrlType == CTRL_BREAK_EVENT || dwCtrlType == CTRL_C_EVENT)
+        PDC_scr_close();
+
+    return FALSE;
+}
+
 /* close the physical screen -- may restore the screen to its state
    before PDC_scr_open(); miscellaneous cleanup */
 
 void PDC_scr_close(void)
 {
-    COORD origin;
-    SMALL_RECT rect;
-
     PDC_LOG(("PDC_scr_close() - called\n"));
-
-    PDC_reset_shell_mode();
-
-    if (SP->_restore != PDC_RESTORE_NONE)
-    {
-        if (SP->_restore == PDC_RESTORE_WINDOW)
-        {
-            rect.Top = orig_scr.srWindow.Top;
-            rect.Left = orig_scr.srWindow.Left;
-            rect.Bottom = orig_scr.srWindow.Bottom;
-            rect.Right = orig_scr.srWindow.Right;
-        }
-        else    /* PDC_RESTORE_BUFFER */
-        {
-            rect.Top = rect.Left = 0;
-            rect.Bottom = orig_scr.dwSize.Y - 1;
-            rect.Right = orig_scr.dwSize.X - 1;
-        }
-
-        origin.X = origin.Y = 0;
-
-        if (!WriteConsoleOutput(pdc_con_out, ci_save, orig_scr.dwSize, 
-                                origin, &rect))
-            return;
-    }
 
     if (SP->visibility != 1)
         curs_set(1);
 
+    PDC_reset_shell_mode();
+
     /* Position cursor to the bottom left of the screen. */
 
-    PDC_gotoyx(PDC_get_buffer_rows() - 2, 0);
+    if (SP->_restore == PDC_RESTORE_NONE)
+    {
+        SMALL_RECT win;
+
+        win.Left = orig_scr.srWindow.Left;
+        win.Right = orig_scr.srWindow.Right;
+        win.Top = 0;
+        win.Bottom = orig_scr.srWindow.Bottom - orig_scr.srWindow.Top;
+        SetConsoleWindowInfo(pdc_con_out, TRUE, &win);
+        PDC_gotoyx(win.Bottom, 0);
+    }
 }
 
 void PDC_scr_free(void)
@@ -266,6 +272,15 @@ void PDC_scr_free(void)
         free(pdc_atrtab);
 
     pdc_atrtab = (unsigned char *)NULL;
+
+    if (pdc_con_out != std_con_out)
+    {
+        CloseHandle(pdc_con_out);
+        pdc_con_out = std_con_out;
+    }
+
+    SetUnhandledExceptionFilter(xcpt_filter);
+    SetConsoleCtrlHandler(_ctrl_break, FALSE);
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization,
@@ -273,8 +288,6 @@ void PDC_scr_free(void)
 
 int PDC_scr_open(int argc, char **argv)
 {
-    COORD bufsize, origin;
-    SMALL_RECT rect;
     const char *str;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     int i;
@@ -290,6 +303,7 @@ int PDC_scr_open(int argc, char **argv)
     for (i = 0; i < 16; i++)
         curstoreal[realtocurs[i]] = i;
 
+    std_con_out =
     pdc_con_out = GetStdHandle(STD_OUTPUT_HANDLE);
     pdc_con_in = GetStdHandle(STD_INPUT_HANDLE);
 
@@ -340,79 +354,27 @@ int PDC_scr_open(int argc, char **argv)
 
     SP->_restore = PDC_RESTORE_NONE;
 
-    if (getenv("PDC_RESTORE_SCREEN"))
+    if ((str = getenv("PDC_RESTORE_SCREEN")) == NULL || *str != '0')
     {
-        /* Attempt to save the complete console buffer */
+        /* Create a new console buffer */
 
-        ci_save = malloc(orig_scr.dwSize.X * orig_scr.dwSize.Y *
-                         sizeof(CHAR_INFO));
+        pdc_con_out =
+            CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
+                                      FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                      NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 
-        if (!ci_save)
+        if (pdc_con_out == INVALID_HANDLE_VALUE)
         {
-            PDC_LOG(("PDC_scr_open() - malloc failure (1)\n"));
+            PDC_LOG(("PDC_scr_open() - screen buffer failure\n"));
 
-            return ERR;
-        }
-
-        bufsize.X = orig_scr.dwSize.X;
-        bufsize.Y = orig_scr.dwSize.Y;
-
-        origin.X = origin.Y = 0;
-
-        rect.Top = rect.Left = 0;
-        rect.Bottom = orig_scr.dwSize.Y  - 1;
-        rect.Right = orig_scr.dwSize.X - 1;
-
-        if (!ReadConsoleOutput(pdc_con_out, ci_save, bufsize, origin, &rect))
-        {
-            /* We can't save the complete buffer, so try and save just 
-               the displayed window */
-
-            free(ci_save);
-            ci_save = NULL;
-
-            bufsize.X = orig_scr.srWindow.Right - orig_scr.srWindow.Left + 1;
-            bufsize.Y = orig_scr.srWindow.Bottom - orig_scr.srWindow.Top + 1;
-
-            ci_save = malloc(bufsize.X * bufsize.Y * sizeof(CHAR_INFO));
-
-            if (!ci_save)
-            {
-                PDC_LOG(("PDC_scr_open() - malloc failure (2)\n"));
-
-                return ERR;
-            }
-
-            origin.X = origin.Y = 0;
-
-            rect.Top = orig_scr.srWindow.Top;
-            rect.Left = orig_scr.srWindow.Left;
-            rect.Bottom = orig_scr.srWindow.Bottom;
-            rect.Right = orig_scr.srWindow.Right;
-
-            if (!ReadConsoleOutput(pdc_con_out, ci_save, bufsize, 
-                                   origin, &rect))
-            {
-#ifdef PDCDEBUG
-                CHAR LastError[256];
-
-                FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, 
-                              GetLastError(), MAKELANGID(LANG_NEUTRAL, 
-                              SUBLANG_DEFAULT), LastError, 256, NULL);
-
-                PDC_LOG(("PDC_scr_open() - %s\n", LastError));
-#endif
-                free(ci_save);
-                ci_save = NULL;
-
-                return ERR;
-            }
-
-            SP->_restore = PDC_RESTORE_WINDOW;
+            pdc_con_out = std_con_out;
         }
         else
             SP->_restore = PDC_RESTORE_BUFFER;
     }
+
+    xcpt_filter = SetUnhandledExceptionFilter(_restore_console);
+    SetConsoleCtrlHandler(_ctrl_break, TRUE);
 
     SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
@@ -498,7 +460,9 @@ void PDC_reset_prog_mode(void)
 {
     PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
 
-    if (is_nt)
+    if (pdc_con_out != std_con_out)
+        SetConsoleActiveScreenBuffer(pdc_con_out);
+    else if (is_nt)
     {
         COORD bufsize;
         SMALL_RECT rect;
@@ -523,7 +487,9 @@ void PDC_reset_shell_mode(void)
 {
     PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 
-    if (is_nt)
+    if (pdc_con_out != std_con_out)
+        SetConsoleActiveScreenBuffer(std_con_out);
+    else if (is_nt)
     {
         SetConsoleScreenBufferSize(pdc_con_out, orig_scr.dwSize);
         SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);

@@ -602,17 +602,60 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
     return OK;
 }
 
+typedef BOOL (WINAPI *SetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
+    PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
+typedef BOOL (WINAPI *GetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
+    PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
+
 int PDC_init_color(short color, short red, short green, short blue)
 {
-    if (!console_info.Hwnd)
-        _init_console_info();
+    static SetConsoleScreenBufferInfoExFn pSetConsoleScreenBufferInfoEx = NULL;
+    static GetConsoleScreenBufferInfoExFn pGetConsoleScreenBufferInfoEx = NULL;
+    static BOOL bOnce = TRUE;
 
-    console_info.ColorTable[curstoreal[color]] =
+    if (bOnce)
+    {
+        HMODULE hKernel = GetModuleHandleA("kernel32.dll");
+        pGetConsoleScreenBufferInfoEx =
+            (GetConsoleScreenBufferInfoExFn)GetProcAddress(hKernel,
+            "GetConsoleScreenBufferInfoEx");
+        pSetConsoleScreenBufferInfoEx =
+            (SetConsoleScreenBufferInfoExFn)GetProcAddress(hKernel,
+            "SetConsoleScreenBufferInfoEx");
+        bOnce = FALSE;
+    }
+
+    if (pGetConsoleScreenBufferInfoEx && pSetConsoleScreenBufferInfoEx)
+    {
+        CONSOLE_SCREEN_BUFFER_INFOEX screenBufferInfo;
+        screenBufferInfo.cbSize = sizeof(screenBufferInfo);
+
+        if (!pGetConsoleScreenBufferInfoEx(pdc_con_out, &screenBufferInfo))
+            return ERR;
+
+        screenBufferInfo.srWindow.Right++;
+        screenBufferInfo.srWindow.Bottom++;
+
+        screenBufferInfo.ColorTable[curstoreal[color]] =
         RGB(DIVROUND(red * 255, 1000),
             DIVROUND(green * 255, 1000),
             DIVROUND(blue * 255, 1000));
 
-    _set_console_info();
+        if (!pSetConsoleScreenBufferInfoEx(pdc_con_out, &screenBufferInfo))
+            return ERR;
+    }
+    else
+    {
+        if (!console_info.Hwnd)
+            _init_console_info();
+
+        console_info.ColorTable[curstoreal[color]] =
+        RGB(DIVROUND(red * 255, 1000),
+            DIVROUND(green * 255, 1000),
+            DIVROUND(blue * 255, 1000));
+
+        _set_console_info();
+    }
 
     return OK;
 }

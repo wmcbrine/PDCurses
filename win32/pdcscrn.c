@@ -1,6 +1,9 @@
 /* Public Domain Curses */
 
-#include "pdcwin.h"
+#include "pdcwin.h" 
+#if _WIN32_WINNT >= _WIN32_WINNT_WINBLUE
+#include <VersionHelpers.h>
+#endif
 
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
@@ -299,7 +302,13 @@ int PDC_scr_open(int argc, char **argv)
         exit(1);
     }
 
-    is_nt = !(GetVersion() & 0x80000000);
+    
+#if _WIN32_WINNT >= _WIN32_WINNT_WINBLUE
+    is_nt = IsWindowsVersionOrGreater( HIBYTE( _WIN32_WINNT_WIN2K ), LOBYTE( _WIN32_WINNT_WIN2K ), 0 );
+#else 
+    is_nt = !(GetVersion( ) & 0x80000000);
+#endif
+
 
     GetConsoleScreenBufferInfo(pdc_con_out, &csbi);
     GetConsoleScreenBufferInfo(pdc_con_out, &orig_scr);
@@ -396,7 +405,7 @@ int PDC_scr_open(int argc, char **argv)
 #ifdef PDCDEBUG
                 CHAR LastError[256];
 
-                FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, 
+                FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, 
                               GetLastError(), MAKELANGID(LANG_NEUTRAL, 
                               SUBLANG_DEFAULT), LastError, 256, NULL);
 

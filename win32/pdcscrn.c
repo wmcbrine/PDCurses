@@ -281,13 +281,14 @@ static COLORREF *_get_colors(void)
         int status = OK;
         if (!console_infoex.cbSize)
             status = _init_console_infoex();
-        return (status == ERR) ? NULL : &(console_infoex.ColorTable);
+        return (status == ERR) ? NULL :
+            (COLORREF *)(&(console_infoex.ColorTable));
     }
     else
     {
         if (!console_info.Hwnd)
             _init_console_info();
-        return &(console_info.ColorTable);
+        return (COLORREF *)(&(console_info.ColorTable));
     }
 }
 

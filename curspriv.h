@@ -32,7 +32,8 @@
 # define _CRT_SECURE_NO_DEPRECATE 1   /* kill nonsense warnings */
 #endif
 
-#if defined(_WIN32) && !defined(__TURBOC__) && !defined(HAVE_INFOEX)
+#if defined(_WIN32) && !defined(__TURBOC__) && !defined(__LCC__) && \
+    !defined(HAVE_INFOEX)
 # define HAVE_INFOEX
 #endif
 

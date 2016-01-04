@@ -81,7 +81,16 @@ typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX {
 typedef CONSOLE_SCREEN_BUFFER_INFOEX    *PCONSOLE_SCREEN_BUFFER_INFOEX;
 #endif
 
+typedef BOOL (WINAPI *SetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
+    PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
+typedef BOOL (WINAPI *GetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
+    PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
+
+static SetConsoleScreenBufferInfoExFn pSetConsoleScreenBufferInfoEx = NULL;
+static GetConsoleScreenBufferInfoExFn pGetConsoleScreenBufferInfoEx = NULL;
+
 static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
+static CONSOLE_SCREEN_BUFFER_INFOEX console_infoex;
 
 static LPTOP_LEVEL_EXCEPTION_FILTER xcpt_filter;
 
@@ -174,6 +183,25 @@ static void _set_console_info(void)
     CloseHandle(hProcess);
 }
 
+static int _set_console_infoex(void)
+{
+    if (!pSetConsoleScreenBufferInfoEx(pdc_con_out, &console_infoex))
+        return ERR;
+
+    return OK;
+}
+
+static int _set_colors(void)
+{
+    if (pSetConsoleScreenBufferInfoEx)
+        return _set_console_infoex();
+    else
+    {
+        _set_console_info();
+        return OK;
+    }
+}
+
 /* One-time initialization for console_info -- color table and font info
    from the registry; other values from functions. */
 
@@ -231,6 +259,36 @@ static void _init_console_info(void)
                      (LPBYTE)(console_info.FaceName), &len);
 
     RegCloseKey(reghnd);
+}
+
+static int _init_console_infoex(void)
+{
+    console_infoex.cbSize = sizeof(console_infoex);
+
+    if (!pGetConsoleScreenBufferInfoEx(pdc_con_out, &console_infoex))
+        return ERR;
+
+    console_infoex.srWindow.Right++;
+    console_infoex.srWindow.Bottom++;
+
+    return OK;
+}
+
+static COLORREF *_get_colors(void)
+{
+    if (pGetConsoleScreenBufferInfoEx)
+    {
+        int status = OK;
+        if (!console_infoex.cbSize)
+            status = _init_console_infoex();
+        return (status == ERR) ? NULL : &(console_infoex.ColorTable);
+    }
+    else
+    {
+        if (!console_info.Hwnd)
+            _init_console_info();
+        return &(console_info.ColorTable);
+    }
 }
 
 /* restore the original console buffer in the event of a crash */
@@ -306,6 +364,7 @@ int PDC_scr_open(int argc, char **argv)
 {
     const char *str;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
+    HMODULE h_kernel;
     int i;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
@@ -397,6 +456,14 @@ int PDC_scr_open(int argc, char **argv)
     PDC_reset_prog_mode();
 
     SP->mono = FALSE;
+
+    h_kernel = GetModuleHandleA("kernel32.dll");
+    pGetConsoleScreenBufferInfoEx =
+        (GetConsoleScreenBufferInfoExFn)GetProcAddress(h_kernel,
+        "GetConsoleScreenBufferInfoEx");
+    pSetConsoleScreenBufferInfoEx =
+        (SetConsoleScreenBufferInfoExFn)GetProcAddress(h_kernel,
+        "SetConsoleScreenBufferInfoEx");
 
     return OK;
 }
@@ -570,74 +637,35 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-    DWORD col;
+    COLORREF *color_table = _get_colors();
 
-    if (!console_info.Hwnd)
-        _init_console_info();
+    if (color_table)
+    {
+        DWORD col = color_table[curstoreal[color]];
 
-    col = console_info.ColorTable[curstoreal[color]];
+        *red = DIVROUND(GetRValue(col) * 1000, 255);
+        *green = DIVROUND(GetGValue(col) * 1000, 255);
+        *blue = DIVROUND(GetBValue(col) * 1000, 255);
 
-    *red = DIVROUND(GetRValue(col) * 1000, 255);
-    *green = DIVROUND(GetGValue(col) * 1000, 255);
-    *blue = DIVROUND(GetBValue(col) * 1000, 255);
+        return OK;
+    }
 
-    return OK;
+    return ERR;
 }
-
-typedef BOOL (WINAPI *SetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
-    PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
-typedef BOOL (WINAPI *GetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
-    PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-    static SetConsoleScreenBufferInfoExFn pSetConsoleScreenBufferInfoEx = NULL;
-    static GetConsoleScreenBufferInfoExFn pGetConsoleScreenBufferInfoEx = NULL;
-    static BOOL bOnce = TRUE;
+    COLORREF *color_table = _get_colors();
 
-    if (bOnce)
+    if (color_table)
     {
-        HMODULE hKernel = GetModuleHandleA("kernel32.dll");
-        pGetConsoleScreenBufferInfoEx =
-            (GetConsoleScreenBufferInfoExFn)GetProcAddress(hKernel,
-            "GetConsoleScreenBufferInfoEx");
-        pSetConsoleScreenBufferInfoEx =
-            (SetConsoleScreenBufferInfoExFn)GetProcAddress(hKernel,
-            "SetConsoleScreenBufferInfoEx");
-        bOnce = FALSE;
+        color_table[curstoreal[color]] =
+            RGB(DIVROUND(red * 255, 1000),
+                DIVROUND(green * 255, 1000),
+                DIVROUND(blue * 255, 1000));
+
+        return _set_colors();
     }
 
-    if (pGetConsoleScreenBufferInfoEx && pSetConsoleScreenBufferInfoEx)
-    {
-        CONSOLE_SCREEN_BUFFER_INFOEX screenBufferInfo;
-        screenBufferInfo.cbSize = sizeof(screenBufferInfo);
-
-        if (!pGetConsoleScreenBufferInfoEx(pdc_con_out, &screenBufferInfo))
-            return ERR;
-
-        screenBufferInfo.srWindow.Right++;
-        screenBufferInfo.srWindow.Bottom++;
-
-        screenBufferInfo.ColorTable[curstoreal[color]] =
-        RGB(DIVROUND(red * 255, 1000),
-            DIVROUND(green * 255, 1000),
-            DIVROUND(blue * 255, 1000));
-
-        if (!pSetConsoleScreenBufferInfoEx(pdc_con_out, &screenBufferInfo))
-            return ERR;
-    }
-    else
-    {
-        if (!console_info.Hwnd)
-            _init_console_info();
-
-        console_info.ColorTable[curstoreal[color]] =
-        RGB(DIVROUND(red * 255, 1000),
-            DIVROUND(green * 255, 1000),
-            DIVROUND(blue * 255, 1000));
-
-        _set_console_info();
-    }
-
-    return OK;
+    return ERR;
 }

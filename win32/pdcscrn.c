@@ -65,6 +65,22 @@ static struct
     WCHAR    ConsoleTitle[0x100];
 } console_info;
 
+#ifndef HAVE_INFOEX
+/* Console screen buffer information (extended version) */
+typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX {
+    ULONG       cbSize;
+    COORD       dwSize;
+    COORD       dwCursorPosition;
+    WORD        wAttributes;
+    SMALL_RECT  srWindow;
+    COORD       dwMaximumWindowSize;
+    WORD        wPopupAttributes;
+    BOOL        bFullscreenSupported;
+    COLORREF    ColorTable[16];
+} CONSOLE_SCREEN_BUFFER_INFOEX;
+typedef CONSOLE_SCREEN_BUFFER_INFOEX    *PCONSOLE_SCREEN_BUFFER_INFOEX;
+#endif
+
 static CONSOLE_SCREEN_BUFFER_INFO orig_scr;
 
 static LPTOP_LEVEL_EXCEPTION_FILTER xcpt_filter;

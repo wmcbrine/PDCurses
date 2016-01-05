@@ -7,22 +7,22 @@ This directory contains PDCurses source code files specific to OS/2.
 Building
 --------
 
-. Choose the appropriate makefile for your compiler:
+- Choose the appropriate makefile for your compiler:
 
-	bccos2.mak	- Borland C++ 2.0
-	gccos2.mak	- EMX 0.9b+
-	iccos2.mak	- C Set/2
-	wccos2.mak	- Watcom 10.6+ (32-bit)
+        bccos2.mak - Borland C++ 2.0
+        gccos2.mak - EMX 0.9b+
+        iccos2.mak - C Set/2
+        wccos2.mak - Open Watcom 1.8+
 
-. Optionally, you can build in a different directory than the platform
+- Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where
   you unpacked PDCurses, and changing to your target directory:
 
-	set PDCURSES_SRCDIR=c:\pdcurses
+        set PDCURSES_SRCDIR=c:\pdcurses
 
-. Build it:
+- Build it:
 
-	make -f makefilename
+        make -f makefilename
 
   (For Watcom, use "wmake" instead of "make"; for MSVC or C Set/2,
   "nmake".) You'll get the libraries (pdcurses.lib or .a, depending on
@@ -34,7 +34,7 @@ Building
   You can also use the optional parameter "DLL=Y" with EMX, to build the 
   library as a DLL:
 
-	make -f gccos2.mak DLL=Y
+        make -f gccos2.mak DLL=Y
 
 
 Distribution Status

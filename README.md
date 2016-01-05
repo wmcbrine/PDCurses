@@ -34,11 +34,11 @@ platforms.
 
 Build instructions are in the README file for each platform:
 
--  [DOS](dos/README)
--  [OS/2](os2/README)
--  [SDL](sdl1/README)
--  [Win32](win32/README)
--  [X11](x11/README)
+-  [DOS](dos/README.md)
+-  [OS/2](os2/README.md)
+-  [SDL](sdl1/README.md)
+-  [Win32](win32/README.md)
+-  [X11](x11/README.md)
 
 Distribution Status
 -------------------

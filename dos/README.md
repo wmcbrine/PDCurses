@@ -7,26 +7,26 @@ This directory contains PDCurses source code files specific to DOS.
 Building
 --------
 
-. Choose the appropriate makefile for your compiler:
+- Choose the appropriate makefile for your compiler:
 
-	bccdos.mak	- Borland C++ 3.0+
-	gccdos.mak	- DJGPP V2
-	mscdos.mak	- Microsoft C
-	wccdos16.mak	- Watcom 10.6+ (16-bit)
-	wccdos4g.mak	- Watcom 10.6+ (32-bit)
+        bccdos.mak   - Borland C++ 3.0+
+        gccdos.mak   - DJGPP V2
+        mscdos.mak   - Microsoft C
+        wccdos16.mak - Open Watcom 1.8+ (16-bit)
+        wccdos4g.mak - Open Watcom 1.8+ (32-bit)
 
-. For 16-bit compilers, you can change the memory MODEL in the makefile.
+- For 16-bit compilers, you can change the memory MODEL in the makefile.
   (Large model is the default, and recommended.)
 
-. Optionally, you can build in a different directory than the platform
+- Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where
   you unpacked PDCurses, and changing to your target directory:
 
-	set PDCURSES_SRCDIR=c:\pdcurses
+        set PDCURSES_SRCDIR=c:\pdcurses
 
-. Build it:
+- Build it:
 
-	make -f makefile
+        make -f makefile
 
   (For Watcom, use "wmake" instead of "make"; for MSVC, "nmake".) You'll
   get the libraries (pdcurses.lib or .a, depending on your compiler; and
@@ -46,4 +46,5 @@ Acknowledgements
 ----------------
 
 Watcom C port was provided by Pieter Kunst <kunst@prl.philips.nl>
+
 DJGPP 1.x port was provided by David Nugent <davidn@csource.oz.au>

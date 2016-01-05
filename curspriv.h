@@ -32,12 +32,6 @@
 # define _CRT_SECURE_NO_DEPRECATE 1   /* kill nonsense warnings */
 #endif
 
-#if (defined(__CYGWIN32__) || defined(_WIN32)) && !defined(__TURBOC__) && \
-    !defined(__LCC__) && !defined(__DMC__) && !defined(__MINGW32__) && \
-    !defined(HAVE_INFOEX)
-# define HAVE_INFOEX
-#endif
-
 /*----------------------------------------------------------------------*/
 
 typedef struct           /* structure for ripped off lines */

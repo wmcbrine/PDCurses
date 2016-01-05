@@ -33,7 +33,8 @@
 #endif
 
 #if (defined(__CYGWIN32__) || defined(_WIN32)) && !defined(__TURBOC__) && \
-    !defined(__LCC__) && !defined(__DMC__) && !defined(HAVE_INFOEX)
+    !defined(__LCC__) && !defined(__DMC__) && !defined(__MINGW32__) && \
+    !defined(HAVE_INFOEX)
 # define HAVE_INFOEX
 #endif
 

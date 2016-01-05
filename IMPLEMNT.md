@@ -1,12 +1,12 @@
 PDCurses Implementor's Guide
 ============================
 
-Version 1.3 - 20??/??/?? - notes about official ports, new indentation
-                           style
-Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(),
-			   version history; removed pdc_atrtab
-Version 1.1 - 2007/06/06 - minor cosmetic change
-Version 1.0 - 2007/04/01 - initial revision
+- Version 1.3 - 20??/??/?? - notes about official ports, new indentation
+                             style; markdown
+- Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(),
+                             version history; removed pdc_atrtab
+- Version 1.1 - 2007/06/06 - minor cosmetic change
+- Version 1.0 - 2007/04/01 - initial revision
 
 This document is for those wishing to port PDCurses to a new platform, 
 or just wanting to better understand how it works. Nothing here should 
@@ -30,8 +30,8 @@ PDCurses distribution, please follow these guidelines:
    under GPL, BSD, etc. will not be accepted.
 
 
-DATA STRUCTURES
----------------
+Data Structures
+===============
 
 A port of PDCurses must provide acs_map[], a 128-element array of 
 chtypes, with values laid out based on the Alternate Character Set of 
@@ -50,8 +50,8 @@ table can be either hardwired, or filled by PDC_scr_open(). Existing
 ports define it in pdcdisp.c, but this is not required.
 
 
-FUNCTIONS
----------
+Functions
+=========
 
 A port of PDCurses must implement the following functions, with extern 
 scope. These functions are traditionally divided into several modules, 
@@ -73,14 +73,14 @@ adjustments to keep every line under 80 columns.
 pdcdisp.c:
 ----------
 
-void	PDC_gotoyx(int y, int x);
+### void PDC_gotoyx(int y, int x);
 
 Move the physical cursor (as opposed to the logical cursor affected by 
 wmove()) to the given location. This is called mainly from doupdate(). 
 In general, this function need not compare the old location with the new 
 one, and should just move the cursor unconditionally.
 
-void	PDC_transform_line(int lineno, int x, int len, const chtype *srcp);
+### void PDC_transform_line(int lineno, int x, int len, const chtype *srcp);
 
 The core output routine. It takes len chtype entities from srcp (a 
 pointer into curscr) and renders them to the physical screen at line 
@@ -92,13 +92,13 @@ chtype.
 pdcgetsc.c:
 -----------
 
-int	PDC_get_columns(void);
+### int PDC_get_columns(void);
 
 Returns the size of the screen in columns. It's used in resize_term() to 
 set the new value of COLS. (Some existing implementations also call it 
 internally from PDC_scr_open(), but this is not required.)
 
-int	PDC_get_cursor_mode(void);
+### int PDC_get_cursor_mode(void);
 
 Returns the size/shape of the cursor. The format of the result is 
 unspecified, except that it must be returned as an int. This function is 
@@ -106,7 +106,7 @@ called from initscr(), and the result is stored in SP->orig_cursor,
 which is used by PDC_curs_set() to determine the size/shape of the 
 cursor in normal visibility mode (curs_set(1)).
 
-int	PDC_get_rows(void);
+### int PDC_get_rows(void);
 
 Returns the size of the screen in rows. It's used in resize_term() to 
 set the new value of LINES. (Some existing implementations also call it 
@@ -116,18 +116,18 @@ internally from PDC_scr_open(), but this is not required.)
 pdckbd.c:
 ---------
 
-bool	PDC_check_key(void);
+### bool PDC_check_key(void);
 
 Keyboard/mouse event check, called from wgetch(). Returns TRUE if
 there's an event ready to process. This function must be non-blocking.
 
-void	PDC_flushinp(void);
+### void PDC_flushinp(void);
 
 This is the core of flushinp(). It discards any pending key or mouse
 events, removing them from any internal queue and from the OS queue, if
 applicable.
 
-int	PDC_get_key(void);
+### int PDC_get_key(void);
 
 Get the next available key, or mouse event (indicated by a return of
 KEY_MOUSE), and remove it from the OS' input queue, if applicable. This
@@ -146,13 +146,13 @@ happen on key up. But if this is not possible, it may return the
 modifier keys on key down (if and only if SP->return_key_modifiers is
 TRUE).
 
-int	PDC_modifiers_set(void);
+### int PDC_modifiers_set(void);
 
 Called from PDC_return_key_modifiers(). If your platform needs to do 
 anything in response to a change in SP->return_key_modifiers, do it 
 here. Returns OK or ERR, which is passed on by the caller.
 
-int	PDC_mouse_set(void);
+### int PDC_mouse_set(void);
 
 Called by mouse_set(), mouse_on(), and mouse_off() -- all the functions 
 that modify SP->_trap_mbe. If your platform needs to do anything in 
@@ -160,7 +160,7 @@ response to a change in SP->_trap_mbe (for example, turning the mouse
 cursor on or off), do it here. Returns OK or ERR, which is passed on by 
 the caller.
 
-void	PDC_set_keyboard_binary(bool on);
+### void PDC_set_keyboard_binary(bool on);
 
 Set keyboard input to "binary" mode. If you need to do something to keep 
 the OS from processing ^C, etc. on your platform, do it here. TRUE turns 
@@ -171,22 +171,22 @@ noraw().
 pdcscrn.c:
 ----------
 
-bool	PDC_can_change_color(void);
+### bool PDC_can_change_color(void);
 
 Returns TRUE if init_color() and color_content() give meaningful 
 results, FALSE otherwise. Called from can_change_color().
 
-int	PDC_color_content(short color, short *red, short *green, short *blue);
+### int PDC_color_content(short color, short *red, short *green, short *blue);
 
 The core of color_content(). This does all the work of that function, 
 except checking for values out of range and null pointers.
 
-int	PDC_init_color(short color, short red, short green, short blue);
+### int PDC_init_color(short color, short red, short green, short blue);
 
 The core of init_color(). This does all the work of that function, 
 except checking for values out of range.
 
-void	PDC_init_pair(short pair, short fg, short bg);
+### void PDC_init_pair(short pair, short fg, short bg);
 
 The core of init_pair(). This does all the work of that function, except 
 checking for values out of range. The values passed to this function 
@@ -194,24 +194,24 @@ should be returned by a call to PDC_pair_content() with the same pair
 number. PDC_transform_line() should use the specified colors when 
 rendering a chtype with the given pair number.
 
-int	PDC_pair_content(short pair, short *fg, short *bg);
+### int PDC_pair_content(short pair, short *fg, short *bg);
 
 The core of pair_content(). This does all the work of that function, 
 except checking for values out of range and null pointers.
 
-void	PDC_reset_prog_mode(void);
+### void PDC_reset_prog_mode(void);
 
 The non-portable functionality of reset_prog_mode() is handled here -- 
 whatever's not done in _restore_mode(). In current ports: In OS/2, this 
 sets the keyboard to binary mode; in Win32, it enables or disables the 
 mouse pointer to match the saved mode; in others it does nothing.
 
-void	PDC_reset_shell_mode(void);
+### void PDC_reset_shell_mode(void);
 
 The same thing, for reset_shell_mode(). In OS/2 and Win32, it restores 
 the default console mode; in others it does nothing.
 
-int	PDC_resize_screen(int nlines, int ncols);
+### int PDC_resize_screen(int nlines, int ncols);
 
 This does the main work of resize_term(). It may respond to non-zero 
 parameters, by setting the screen to the specified size; to zero 
@@ -220,17 +220,17 @@ runtime, in an unspecified way (e.g., by dragging the edges of the
 window); or both. It may also do nothing, if there's no appropriate 
 action for the platform.
 
-void	PDC_restore_screen_mode(int i);
+### void PDC_restore_screen_mode(int i);
 
 Called from _restore_mode() in kernel.c, this function does the actual 
 mode changing, if applicable. Currently used only in DOS and OS/2.
 
-void	PDC_save_screen_mode(int i);
+### void PDC_save_screen_mode(int i);
 
 Called from _save_mode() in kernel.c, this function saves the actual 
 screen mode, if applicable. Currently used only in DOS and OS/2.
 
-void	PDC_scr_close(void);
+### void PDC_scr_close(void);
 
 The platform-specific part of endwin(). It may restore the image of the 
 original screen saved by PDC_scr_open(), if the PDC_RESTORE_SCREEN 
@@ -238,12 +238,12 @@ environment variable is set; either way, if using an existing terminal,
 this function should restore it to the mode it had at startup, and move 
 the cursor to the lower left corner. (The X11 port does nothing.)
 
-void	PDC_scr_free(void);
+### void PDC_scr_free(void);
 
 Frees the memory for SP allocated by PDC_scr_open(). Called by 
 delscreen().
 
-int	PDC_scr_open(int argc, char **argv);
+### int PDC_scr_open(int argc, char **argv);
 
 The platform-specific part of initscr(). It's actually called from 
 Xinitscr(); the arguments, if present, correspond to those used with 
@@ -263,7 +263,7 @@ restoration by PDC_scr_close().
 pdcsetsc.c:
 -----------
 
-int	PDC_curs_set(int visibility);
+### int PDC_curs_set(int visibility);
 
 Called from curs_set(). Changes the appearance of the cursor -- 0 turns 
 it off, 1 is normal (the terminal's default, if applicable, as 
@@ -274,14 +274,14 @@ appearance of these modes is not specified.
 pdcutil.c:
 ----------
 
-void	PDC_beep(void);
+### void PDC_beep(void);
 
 Emits a short audible beep. If this is not possible on your platform, 
 you must set SP->audible to FALSE during initialization (i.e., from 
 PDC_scr_open() -- not here); otherwise, set it to TRUE. This function is 
 called from beep().
 
-void	PDC_napms(int ms);
+### void PDC_napms(int ms);
 
 This is the core delay routine, called by napms(). It pauses for about 
 (the X/Open spec says "at least") ms milliseconds, then returns. High 
@@ -290,13 +290,15 @@ you can achieve them). More important is that this function gives back
 the process' time slice to the OS, so that PDCurses idles at low CPU 
 usage.
 
-const char *PDC_sysname(void);
+### const char *PDC_sysname(void);
 
 Returns a short string describing the platform, such as "DOS" or "X11". 
 This is used by longname(). It must be no more than 100 characters; it 
 should be much, much shorter (existing platforms use no more than 5).
 
---------------------------------------------------------------------------
+
+More functions
+==============
 
 The following functions are implemented in the platform directories, but 
 are accessed directly by apps. Refer to the user documentation for their 
@@ -306,20 +308,20 @@ descriptions:
 pdcclip.c:
 ----------
 
-int     PDC_clearclipboard(void);
-int     PDC_freeclipboard(char *contents);
-int     PDC_getclipboard(char **contents, long *length);
-int     PDC_setclipboard(const char *contents, long length);
+### int PDC_clearclipboard(void);
+### int PDC_freeclipboard(char *contents);
+### int PDC_getclipboard(char **contents, long *length);
+### int PDC_setclipboard(const char *contents, long length);
 
 
 pdckbd.c:
 ---------
 
-unsigned long PDC_get_input_fd(void);
+### unsigned long PDC_get_input_fd(void);
 
 
 pdcsetsc.c:
 -----------
 
-int     PDC_set_blink(bool blinkon);
-void    PDC_set_title(const char *title);
+### int PDC_set_blink(bool blinkon);
+### void PDC_set_title(const char *title);

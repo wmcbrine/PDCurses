@@ -6,7 +6,7 @@ curses for multiple platforms. The latest version can be found at:
 
    http://pdcurses.org/
 
-For changes, see the [HISTORY](HISTORY) file.
+For changes, see the [HISTORY](HISTORY.md) file.
 
 
 Legal Stuff

@@ -794,9 +794,9 @@ PDCurses 2.7 - 2005/12/30
 
 INTRODUCTION:
 
- Hello all. As of a few weeks ago, I'm the new maintainer for PDCurses.
- Here's a brief summary of changes in this release. (More details are
- available in the CVS log and trackers on SourceForge.)
+Hello all. As of a few weeks ago, I'm the new maintainer for PDCurses.
+Here's a brief summary of changes in this release. (More details are
+available in the CVS log and trackers on SourceForge.)
 
 NEW FEATURES:
 
@@ -902,27 +902,27 @@ BUGS FIXED:
 
 ACKNOWLEDGEMENTS:
 
- Walter Briscoe
- Jean-Pierre Demailly
- Ruslan Fedyarov
- Warren Gay
- Florian Grosse-Coosmann
- Vladimir Kokovic
- Matt Maloy
- K.H. Man
- Michael Ryazanov
- Ron Thibodeau
- Alexandr Zamaraev
+ - Walter Briscoe
+ - Jean-Pierre Demailly
+ - Ruslan Fedyarov
+ - Warren Gay
+ - Florian Grosse-Coosmann
+ - Vladimir Kokovic
+ - Matt Maloy
+ - K.H. Man
+ - Michael Ryazanov
+ - Ron Thibodeau
+ - Alexandr Zamaraev
 
- and of course, MARK HESSLING, for his over 13 years of service as the
- maintainer of PDCurses. Plus, thanks to all who've reported bugs or
- requested features. Apologies to anyone I've forgotten.
+and of course, MARK HESSLING, for his over 13 years of service as the
+maintainer of PDCurses. Plus, thanks to all who've reported bugs or
+requested features. Apologies to anyone I've forgotten.
 
- I've tested this version on Turbo C++ 3.0 and Borland C++ 3.1 for DOS;
- DJGPP 2.X; Open Watcom 1.3 for DOS (16 and 32-bit), Windows and OS/2;
- EMX 0.9d and the "newgcc" version of EMX; Borland C++ 5.5 for Windows;
- recent versions of MinGW, Cygwin, LCC-Win32 and Microsoft Visual C++;
- and gcc under several flavors of Linux, Mac OS X, *BSD and Solaris.
+I've tested this version on Turbo C++ 3.0 and Borland C++ 3.1 for DOS;
+DJGPP 2.X; Open Watcom 1.3 for DOS (16 and 32-bit), Windows and OS/2;
+EMX 0.9d and the "newgcc" version of EMX; Borland C++ 5.5 for Windows;
+recent versions of MinGW, Cygwin, LCC-Win32 and Microsoft Visual C++;
+and gcc under several flavors of Linux, Mac OS X, *BSD and Solaris.
 
 -- William McBrine
 
@@ -1128,15 +1128,15 @@ NEW COMPILER SUPPORT:
 
 ACKNOWLEDGEMENTS: (for this release)
 
- Georg Fuchs for various changes.
- Juan David Palomar for pointing out getnstr() was not implemented.
- William McBrine for fix to allow black/black as valid color pair.
- Peter Preus for pointing out the missing bccos2.mak file.
- Laura Michaels for a couple of bug fixes and changes required to 
- support Mingw32 compiler.
- Frank Heckenbach for PDC_get_input_fd() and some portability fixes and
- the fixes for panel library.
- Matthias Burian for the lcc-win32 compiler support.
+- Georg Fuchs for various changes.
+- Juan David Palomar for pointing out getnstr() was not implemented.
+- William McBrine for fix to allow black/black as valid color pair.
+- Peter Preus for pointing out the missing bccos2.mak file.
+- Laura Michaels for a couple of bug fixes and changes required to 
+  support Mingw32 compiler.
+- Frank Heckenbach for PDC_get_input_fd() and some portability fixes and
+  the fixes for panel library.
+- Matthias Burian for the lcc-win32 compiler support.
 
 ------------------------------------------------------------------------
 
@@ -1145,7 +1145,7 @@ PDCurses 2.3 - 1998/07/09
 
 INTRODUCTION:
 
- This release of PDCurses includes the following changes:
+This release of PDCurses includes the following changes:
 
 - added more System V R4 functions
 
@@ -1163,9 +1163,9 @@ INTRODUCTION:
 
 - long chtype extended to non-Unix ports
 
- The name of the statically built library is pdcurses.lib (or 
- pdcurses.a). The name of the DLL import library (where applicable) is 
- curses.lib.
+The name of the statically built library is pdcurses.lib (or 
+pdcurses.a). The name of the DLL import library (where applicable) is 
+curses.lib.
 
 BUGS FIXED:
 
@@ -1187,30 +1187,30 @@ NEW COMPILER SUPPORT:
 
 EXTRA OPTIONS:
 
- PDCurses recognizes two environment variables which determines the
- initialization and finalization behavior.  These environment variables
- do not apply to the X11 port.
+PDCurses recognizes two environment variables which determines the
+initialization and finalization behavior.  These environment variables
+do not apply to the X11 port.
 
- PDC_PRESERVE_SCREEN
- If this environment variable is set, PDCurses will not clear the screen
- to the default white on black on startup.  This allows you to overlay
- a window over the top of the existing screen background.
+PDC_PRESERVE_SCREEN -
+If this environment variable is set, PDCurses will not clear the screen
+to the default white on black on startup.  This allows you to overlay
+a window over the top of the existing screen background.
 
- PDC_RESTORE_SCREEN
- If this environment variable is set, PDCurses will take a copy of the
- contents of the screen at the time that PDCurses is started; initscr(),
- and when endwin() is called, the screen will be restored.
+PDC_RESTORE_SCREEN -
+If this environment variable is set, PDCurses will take a copy of the
+contents of the screen at the time that PDCurses is started; initscr(),
+and when endwin() is called, the screen will be restored.
 
 
 ACKNOWLEDGEMENTS: (for this release)
 
- Chris Szurgot for original Win32 port.
- Gurusamy Sarathy for some updates to the Win32 port.
- Kim Huron for the slk..() functions.
- Florian Grosse Coosmann for some bug fixes.
- Esa Peuha for reducing compiler warnings.
- Augustin Martin Domingo for patches to X11 port to enable accented 
- characters.
+- Chris Szurgot for original Win32 port.
+- Gurusamy Sarathy for some updates to the Win32 port.
+- Kim Huron for the slk..() functions.
+- Florian Grosse Coosmann for some bug fixes.
+- Esa Peuha for reducing compiler warnings.
+- Augustin Martin Domingo for patches to X11 port to enable accented 
+  characters.
 
 ------------------------------------------------------------------------
 
@@ -1242,7 +1242,7 @@ BUGS FIXED:
 - mvwin() checked the wrong coordinates
 
 - removed DESQview shadow memory buffer checking bug in curses.h in 
-  #define for wstandout()
+  \#define for wstandout()
 
 - lots of others I can't remember
 
@@ -1444,10 +1444,10 @@ DIRECTIONS:
 
     where environment_options are:
 
-	OS (host operating system)
-	COMP (compiler)
-	OPT (optimized version or debug version) - optional. default Y
-	TOS (target operating system) - optional. default OS
+        OS (host operating system)
+        COMP (compiler)
+        OPT (optimized version or debug version) - optional. default Y
+        TOS (target operating system) - optional. default OS
 
     see the makefile for valid combinations
 
@@ -1525,14 +1525,14 @@ BUGS and UNFINISHED BUSINESS:
 
 ACKNOWLEDGEMENTS:
 
- John 'Frotz' Fa'atuai, the previous maintainer for providing an
- excellent base for further development.
- John Burnell <johnb@kea.am.dsir.govt.nz>, for the OS/2 port.
- John Steele, Jason (finally NOT a John) Shumate....
- for various fixes and suggestions.
- Eberhardt Mattes (author of emx) for allowing code based on his
- C library to be included with PDCurses.
- Several others for their support, moral and actual.
+- John 'Frotz' Fa'atuai, the previous maintainer for providing an
+  excellent base for further development.
+- John Burnell <johnb@kea.am.dsir.govt.nz>, for the OS/2 port.
+- John Steele, Jason (finally NOT a John) Shumate....
+  for various fixes and suggestions.
+- Eberhardt Mattes (author of emx) for allowing code based on his
+  C library to be included with PDCurses.
+- Several others for their support, moral and actual.
 
 -- Mark Hessling
 

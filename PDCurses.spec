@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 
 %files
 %defattr(-,root,root)
-%doc README HISTORY
+%doc README.md HISTORY.md
 %{base}/bin/xcurses-config
 %{base}/lib/libXCurses.a
 %{base}/lib/libXpanel.a

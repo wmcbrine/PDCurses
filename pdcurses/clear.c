@@ -4,44 +4,49 @@
 
 /*man-start**************************************************************
 
-  Name:                                                         clear
+clear
+-----
 
-  Synopsis:
-        int clear(void);
-        int wclear(WINDOW *win);
-        int erase(void);
-        int werase(WINDOW *win);
-        int clrtobot(void);
-        int wclrtobot(WINDOW *win);
-        int clrtoeol(void);
-        int wclrtoeol(WINDOW *win);
+### Synopsis
 
-  Description:
-        erase() and werase() copy blanks (i.e. the background chtype) to 
-        every cell of the window.
+    int clear(void);
+    int wclear(WINDOW *win);
+    int erase(void);
+    int werase(WINDOW *win);
+    int clrtobot(void);
+    int wclrtobot(WINDOW *win);
+    int clrtoeol(void);
+    int wclrtoeol(WINDOW *win);
 
-        clear() and wclear() are similar to erase() and werase(), but
-        they also call clearok() to ensure that the the window is 
-        cleared on the next wrefresh().
+### Description
 
-        clrtobot() and wclrtobot() clear the window from the current 
-        cursor position to the end of the window.
+   erase() and werase() copy blanks (i.e. the background chtype) to
+   every cell of the window.
 
-        clrtoeol() and wclrtoeol() clear the window from the current
-        cursor position to the end of the current line.
+   clear() and wclear() are similar to erase() and werase(), but
+   they also call clearok() to ensure that the the window is
+   cleared on the next wrefresh().
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+   clrtobot() and wclrtobot() clear the window from the current
+   cursor position to the end of the window.
 
-  Portability                                X/Open    BSD    SYS V
-        clear                                   Y       Y       Y
-        wclear                                  Y       Y       Y
-        erase                                   Y       Y       Y
-        werase                                  Y       Y       Y
-        clrtobot                                Y       Y       Y
-        wclrtobot                               Y       Y       Y
-        clrtoeol                                Y       Y       Y
-        wclrtoeol                               Y       Y       Y
+   clrtoeol() and wclrtoeol() clear the window from the current
+   cursor position to the end of the current line.
+
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    clear                       Y       Y       Y
+    wclear                      Y       Y       Y
+    erase                       Y       Y       Y
+    werase                      Y       Y       Y
+    clrtobot                    Y       Y       Y
+    wclrtobot                   Y       Y       Y
+    clrtoeol                    Y       Y       Y
+    wclrtoeol                   Y       Y       Y
 
 **man-end****************************************************************/
 

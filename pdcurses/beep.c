@@ -4,26 +4,31 @@
 
 /*man-start**************************************************************
 
-  Name:                                                         beep
+beep
+----
 
-  Synopsis:
-        int beep(void);
-        int flash(void);
+### Synopsis
 
-  Description:
-        beep() sounds the audible bell on the terminal, if possible;
-        if not, it calls flash().
+    int beep(void);
+    int flash(void);
 
-        flash() "flashes" the screen, by inverting the foreground and
-        background of every cell, pausing, and then restoring the
-        original attributes.
+### Description
 
-  Return Value:
-        These functions return OK.
+   beep() sounds the audible bell on the terminal, if possible;
+   if not, it calls flash().
 
-  Portability                                X/Open    BSD    SYS V
-        beep                                    Y       Y       Y
-        flash                                   Y       Y       Y
+   flash() "flashes" the screen, by inverting the foreground and
+   background of every cell, pausing, and then restoring the
+   original attributes.
+
+### Return Value
+
+   These functions return OK.
+
+### Portability
+                             X/Open    BSD    SYS V
+    beep                        Y       Y       Y
+    flash                       Y       Y       Y
 
 **man-end****************************************************************/
 

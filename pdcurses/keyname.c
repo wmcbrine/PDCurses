@@ -4,29 +4,33 @@
 
 /*man-start**************************************************************
 
-  Name:                                                         keyname
+keyname
+-------
 
-  Synopsis:
-        char *keyname(int key);
+### Synopsis
 
-        char *key_name(wchar_t c);
+    char *keyname(int key);
 
-        bool has_key(int key);
+    char *key_name(wchar_t c);
 
-  Description:
-        keyname() returns a string corresponding to the argument key. 
-        key may be any key returned by wgetch().
+    bool has_key(int key);
 
-        key_name() is the wide-character version. It takes a wchar_t 
-        parameter, but still returns a char *.
+### Description
 
-        has_key() returns TRUE for recognized keys, FALSE otherwise. 
-        This function is an ncurses extension.
+   keyname() returns a string corresponding to the argument key.
+   key may be any key returned by wgetch().
 
-  Portability                                X/Open    BSD    SYS V
-        keyname                                 Y       -      3.0
-        key_name                                Y
-        has_key                                 -       -       -
+   key_name() is the wide-character version. It takes a wchar_t
+   parameter, but still returns a char *.
+
+   has_key() returns TRUE for recognized keys, FALSE otherwise.
+   This function is an ncurses extension.
+
+### Portability
+                             X/Open    BSD    SYS V
+    keyname                     Y       -      3.0
+    key_name                    Y
+    has_key                     -       -       -
 
 **man-end****************************************************************/
 

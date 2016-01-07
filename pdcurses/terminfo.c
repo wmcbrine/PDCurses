@@ -31,7 +31,7 @@ terminfo
     int tigetnum(const char *);
     char *tigetstr(const char *);
     char *tparm(const char *,long, long, long, long, long, long,
-    long, long, long);
+                long, long, long);
     int tputs(const char *, int, int (*)(int));
 
 ### Description

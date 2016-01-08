@@ -9,7 +9,7 @@ resulting in native X11 programs.
 Building
 --------
 
-. Run "./configure" in the top-level directory.
+- Run "./configure" in the top-level directory.
 
   To build the wide-character version of the library, specify
   "--enable-widec" as a parameter. To use X Input Methods, add
@@ -29,9 +29,9 @@ Building
   switch -O2. You can turn this off, and turn on debugging (-g), by
   adding "--with-debug" to the configure command.
 
-. Run "make". This should build libXCurses and all the demo programs.
+- Run "make". This should build libXCurses and all the demo programs.
 
-. Optionally, run "make install". curses.h and panel.h will be renamed
+- Optionally, run "make install". curses.h and panel.h will be renamed
   when installed (to xcurses.h and xpanel.h), to avoid conflicts with
   any existing curses installations. Unrenamed copies of curses.h and
   panel.h are installed in (by default) /usr/local/include/xcurses.

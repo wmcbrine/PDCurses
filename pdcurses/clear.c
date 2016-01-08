@@ -84,13 +84,15 @@ int clrtoeol(void)
 
 int wclrtobot(WINDOW *win)
 {
-    int savey = win->_cury;
-    int savex = win->_curx;
+    int savey, savex;
 
     PDC_LOG(("wclrtobot() - called\n"));
 
     if (!win)
         return ERR;
+
+    savey = win->_cury;
+    savex = win->_curx;
 
     /* should this involve scrolling region somehow ? */
 

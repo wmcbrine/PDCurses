@@ -369,10 +369,10 @@ The following is the structure of a win->_attrs chtype:
 
 short form:
 
--------------------------------------------------
-|15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
--------------------------------------------------
-  color number |  attrs |   character eg 'a'
+    +-----------------------------------------------+
+    |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
+    +-----------------------------------------------+
+      color number |  attrs |   character eg 'a'
 
 The available non-color attributes are bold, reverse and blink. Others 
 have no effect. The high order char is an index into an array of 
@@ -381,10 +381,10 @@ pairs (5 bits) plus 3 bits for other attributes.
 
 long form:
 
-----------------------------------------------------------------------------
-|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|12|..| 3| 2| 1| 0|
-----------------------------------------------------------------------------
-      color number      |     modifiers         |      character eg 'a'
+    +--------------------------------------------------------------------+
+    |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|..| 2| 1| 0|
+    +--------------------------------------------------------------------+
+          color number      |     modifiers         |   character eg 'a'
 
 The available non-color attributes are bold, underline, invisible, 
 right-line, left-line, protect, reverse and blink. 256 color pairs (8 

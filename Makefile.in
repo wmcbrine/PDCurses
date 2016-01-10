@@ -75,7 +75,7 @@ $(ZIPFILE):
 	os2/*.lrf sdl1/README.md sdl1/*.c sdl1/*.h sdl1/Make* \
 	win32/README.md win32/*.c win32/*.h win32/*.mak \
 	win32/*.ico win32/*.rc x11/README.md x11/*.c x11/*.h x11/Makefile.* \
-	x11/*.xbm doc/*.txt doc/manext.c doc/Makefile
+	x11/*.xbm doc/*.md doc/manext.c doc/Makefile
 
 zip: $(ZIPFILE)
 
@@ -90,7 +90,7 @@ zip: $(ZIPFILE)
 	$(PDC_DIR)/panel.h $(PDC_DIR)/term.h \
 	$(PDC_DIR)/pdcurses/README.md $(PDC_DIR)/pdcurses/*.c \
 	$(PDC_DIR)/demos/README.md $(PDC_DIR)/demos/*.c $(PDC_DIR)/demos/*.h \
-	$(PDC_DIR)/doc/*.txt $(PDC_DIR)/dos/README.md $(PDC_DIR)/dos/*.c \
+	$(PDC_DIR)/doc/*.md $(PDC_DIR)/dos/README.md $(PDC_DIR)/dos/*.c \
 	$(PDC_DIR)/dos/*.h $(PDC_DIR)/dos/*.mak $(PDC_DIR)/dos/*.lrf \
 	$(PDC_DIR)/os2/README.md $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.h \
 	$(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf \

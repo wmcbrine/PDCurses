@@ -10,7 +10,7 @@ PDCurses Implementor's Guide
 
 This document is for those wishing to port PDCurses to a new platform, 
 or just wanting to better understand how it works. Nothing here should 
-be needed for application programming; for that, refer to PDCurses.txt, 
+be needed for application programming; for that, refer to PDCurses.md, 
 as built in doc/, or distributed as a file separate from this source 
 package. This document assumes that you've read the user-level 
 documentation and are very familiar with application-level curses 

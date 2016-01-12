@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([PDCurses], [3.4], [wmcbrine@gmail.com], [PDCurses])
-AC_CONFIG_SRCDIR([curspriv.h])
+AC_CONFIG_SRCDIR([pdcx11.h])
 
 AC_SUBST(prefix)
 
@@ -11,15 +11,10 @@ AC_CONFIG_HEADER(config.h)
 dnl Checks for system first
 AC_CANONICAL_SYSTEM([])
 
-mymakefile="Makefile"
 on_qnx=no
 case "$target" in
 	*hp-hpux*) 
 		SYS_DEFS="-D_HPUX_SOURCE"
-		;;
-	*ibm-aix*)
-		SYS_DEFS="-D_ALL_SOURCE"
-		mymakefile="Makefile.aix"
 		;;
 	*dec-osf*)
 		SYS_DEFS="-D_XOPEN_SOURCE_EXTENDED"
@@ -54,9 +49,7 @@ dnl Checks for libraries.
 
 AC_CHECK_HEADERS(fcntl.h \
 	sys/time.h \
-	sys/select.h \
-	dlfcn.h \
-	dl.h
+	sys/select.h
 )
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -199,17 +192,8 @@ dnl -------------- check how to make shared libraries ----------------
 dnl Force the ability of shared library usage
 MH_SHARED_LIBRARY(XCurses)
 
-AC_CONFIG_FILES([Makefile x11/$mymakefile x11/xcurses-config])
+AC_CONFIG_FILES([Makefile xcurses-config])
 AC_OUTPUT
-
-case "$target" in
-        *ibm-aix*)
-                mv x11/Makefile.aix x11/Makefile
-                AC_MSG_RESULT(renaming x11/Makefile.aix to x11/Makefile)
-                ;;
-        *)
-                ;;
-esac
 
 AC_DEFINE([PDC_MAX_SIGNALS], [],
 	[Define as the system defined limit for number of signals]

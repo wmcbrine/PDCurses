@@ -128,7 +128,7 @@ int wattron(WINDOW *win, chtype attrs)
     if (!win)
         return ERR;
 
-    if ((win->_attrs & A_COLOR) && (attrs & A_COLOR)) 
+    if ((win->_attrs & A_COLOR) && (attrs & A_COLOR))
     {
         oldcolr = win->_attrs & A_COLOR;
         oldattr = win->_attrs ^ oldcolr;
@@ -232,7 +232,7 @@ int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair, void *opts)
         *attrs = win->_attrs & (A_ATTRIBUTES & ~A_COLOR);
 
     if (color_pair)
-        *color_pair = PAIR_NUMBER(win->_attrs);
+        *color_pair = (short)PAIR_NUMBER(win->_attrs);
 
     return OK;
 }

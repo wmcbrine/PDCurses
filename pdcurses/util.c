@@ -141,9 +141,9 @@ int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
         if (!attrs || !color_pair)
             return ERR;
 
-        *wch = (*wcval & A_CHARTEXT);
+        *wch = (wchar_t)(*wcval & A_CHARTEXT);
         *attrs = (*wcval & (A_ATTRIBUTES & ~A_COLOR));
-        *color_pair = PAIR_NUMBER(*wcval & A_COLOR);
+        *color_pair = (short)( PAIR_NUMBER(*wcval & A_COLOR));
 
         if (*wch)
             *++wch = L'\0';
@@ -285,21 +285,21 @@ size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
 
         if (code < 0x80)
         {
-            dest[i] = code;
+            dest[i] = (char)code;
             i++;
         }
         else
             if (code < 0x800)
             {
-                dest[i] = ((code & 0x07c0) >> 6) | 0xc0;
-                dest[i + 1] = (code & 0x003f) | 0x80;
+                dest[i] = (char)((code & 0x07c0) >> 6) | 0xc0;
+                dest[i + 1] = (char)( (code & 0x003f) | 0x80);
                 i += 2;
             }
             else
             {
-                dest[i] = ((code & 0xf000) >> 12) | 0xe0;
-                dest[i + 1] = ((code & 0x0fc0) >> 6) | 0x80;
-                dest[i + 2] = (code & 0x003f) | 0x80;
+                dest[i] = (char)( ((code & 0xf000) >> 12) | 0xe0);
+                dest[i + 1] = (char)((code & 0x0fc0) >> 6) | 0x80;
+                dest[i + 2] = (char)( (code & 0x003f) | 0x80);
                 i += 3;
             }
     }

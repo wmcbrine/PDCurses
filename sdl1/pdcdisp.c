@@ -60,7 +60,7 @@ void PDC_update_rects(void)
 {
     if (rectcount)
     {
-        /* if the maximum number of rects has been reached, we're 
+        /* if the maximum number of rects has been reached, we're
            probably better off doing a full screen update */
 
         if (rectcount == MAXRECT)
@@ -100,7 +100,7 @@ static void _set_attr(chtype ch)
 
         if (newfg != foregr)
         {
-            SDL_SetPalette(pdc_font, SDL_LOGPAL, 
+            SDL_SetPalette(pdc_font, SDL_LOGPAL,
                            pdc_color + newfg, pdc_flastc, 1);
             foregr = newfg;
         }
@@ -149,8 +149,8 @@ void PDC_gotoyx(int row, int col)
     if (!SP->visibility)
         return;
 
-    /* draw a new cursor by overprinting the existing character in 
-       reverse, either the full cell (when visibility == 2) or the 
+    /* draw a new cursor by overprinting the existing character in
+       reverse, either the full cell (when visibility == 2) or the
        lowest quarter of it (when visibility == 1) */
 
     ch = curscr->_y[row][col] ^ A_REVERSE;
@@ -190,7 +190,7 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
     if (SP->mono)
         return;
 
-    if (ch & A_UNDERLINE)
+    if (ch & (A_UNDERLINE | A_OVERLINE | A_STRIKEOUT))
     {
         if (col != -1)
             SDL_SetPalette(pdc_font, SDL_LOGPAL,
@@ -202,7 +202,20 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
         if (backgr != -1)
             SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
 
-        SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
+        if( ch & A_UNDERLINE)
+           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
+        if( ch & A_OVERLINE)
+        {
+           dest->y -= pdc_fheight - 1;
+           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
+           dest->y += pdc_fheight - 1;
+        }
+        if( ch & A_STRIKEOUT)
+        {
+           dest->y -= pdc_fheight / 2;
+           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
+           dest->y += pdc_fheight / 2;
+        }
 
         if (backgr != -1)
             SDL_SetColorKey(pdc_font, 0, 0);
@@ -268,7 +281,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         else
             if (lastrect.y != dest.y)
                 uprect[rectcount++] = dest;
-    } 
+    }
     else
         uprect[rectcount++] = dest;
 
@@ -291,7 +304,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
         SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 
-        if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
+        if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE|A_OVERLINE|A_STRIKEOUT))
             _highlight(&src, &dest, ch);
 
         dest.x += pdc_fwidth;

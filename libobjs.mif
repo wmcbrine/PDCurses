@@ -1,14 +1,14 @@
 # Common elements for most of the DOS, OS/2 and Win32
 # makefiles (not Watcom or LCC)
 
-PDCURSES_CURSES_H	= $(PDCURSES_SRCDIR)/curses.h
-PDCURSES_CURSPRIV_H	= $(PDCURSES_SRCDIR)/curspriv.h
-PDCURSES_HEADERS	= $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
-PANEL_HEADER		= $(PDCURSES_SRCDIR)/panel.h
-TERM_HEADER		= $(PDCURSES_SRCDIR)/term.h
+PDCURSES_CURSES_H   = $(PDCURSES_SRCDIR)/curses.h
+PDCURSES_CURSPRIV_H   = $(PDCURSES_SRCDIR)/curspriv.h
+PDCURSES_HEADERS   = $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
+PANEL_HEADER      = $(PDCURSES_SRCDIR)/panel.h
+TERM_HEADER      = $(PDCURSES_SRCDIR)/term.h
 
-srcdir	= $(PDCURSES_SRCDIR)/pdcurses
-demodir	= $(PDCURSES_SRCDIR)/demos
+srcdir   = $(PDCURSES_SRCDIR)/pdcurses
+demodir   = $(PDCURSES_SRCDIR)/demos
 
 LIBOBJS = addch.$(O) addchstr.$(O) addstr.$(O) attr.$(O) beep.$(O) \
 bkgd.$(O) border.$(O) clear.$(O) color.$(O) delch.$(O) deleteln.$(O) \
@@ -23,4 +23,4 @@ PDCOBJS = pdcclip.$(O) pdcdisp.$(O) pdcgetsc.$(O) pdckbd.$(O) pdcscrn.$(O) \
 pdcsetsc.$(O) pdcutil.$(O)
 
 DEMOS = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe \
-ptest.exe rain.exe worm.exe
+newtest.exe ptest.exe rain.exe worm.exe

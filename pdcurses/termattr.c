@@ -117,7 +117,8 @@ char *longname(void)
 
 chtype termattrs(void)
 {
-    chtype temp = A_BLINK | A_BOLD | A_INVIS | A_REVERSE | A_UNDERLINE;
+    chtype temp = A_BLINK | A_BOLD | A_INVIS | A_REVERSE | A_UNDERLINE
+          | A_LEFTLINE | A_RIGHTLINE | A_ITALIC;
 
     /* note: blink is bold background on some platforms */
 
@@ -133,7 +134,7 @@ attr_t term_attrs(void)
 {
     PDC_LOG(("term_attrs() - called\n"));
 
-    return WA_BLINK | WA_BOLD | WA_INVIS | WA_LEFT | WA_REVERSE | 
+    return WA_BLINK | WA_BOLD | WA_INVIS | WA_LEFT | WA_REVERSE |
            WA_RIGHT | WA_UNDERLINE;
 }
 

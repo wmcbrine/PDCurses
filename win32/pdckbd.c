@@ -38,7 +38,7 @@ static int save_press = 0;
 #define MEV save_ip.Event.MouseEvent
 
 /************************************************************************
- *    Table for key code translation of function keys in keypad mode    *  
+ *    Table for key code translation of function keys in keypad mode    *
  *    These values are for strict IBM keyboard compatibles only         *
  ************************************************************************/
 
@@ -183,8 +183,8 @@ static KPTAB kptab[] =
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
-   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, 
-   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, 
+   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
+   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
@@ -313,11 +313,11 @@ static int _get_key_count(void)
         }
         else
         {
-            /* Check for diacritics. These are dead keys. Some locales 
-               have modified characters like umlaut-a, which is an "a" 
-               with two dots on it. In some locales you have to press a 
-               special key (the dead key) immediately followed by the 
-               "a" to get a composed umlaut-a. The special key may have 
+            /* Check for diacritics. These are dead keys. Some locales
+               have modified characters like umlaut-a, which is an "a"
+               with two dots on it. In some locales you have to press a
+               special key (the dead key) immediately followed by the
+               "a" to get a composed umlaut-a. The special key may have
                a normal meaning with different modifiers. */
 
             if (KEV.uChar.UnicodeChar || !(MapVirtualKey(vk, 2) & 0x80000000))
@@ -649,9 +649,9 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
-    /* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear 
+    /* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear
        all other flags, including the extended flags;
-       If turning off the mouse: Set QuickEdit Mode to the status it 
+       If turning off the mouse: Set QuickEdit Mode to the status it
        had on startup, and clear all other flags */
 
     SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
@@ -665,4 +665,21 @@ int PDC_mouse_set(void)
 int PDC_modifiers_set(void)
 {
     return OK;
+}
+
+#define MAX_FUNCTION_KEYS 2
+#define FUNCTION_KEY_SHUT_DOWN 0
+#define FUNCTION_KEY_PASTE     1
+
+int PDC_set_function_key( const unsigned function, const int new_key)
+{
+    static int PDC_shutdown_key[MAX_FUNCTION_KEYS];
+    int old_key = -1;
+
+    if( function < MAX_FUNCTION_KEYS)
+    {
+         old_key = PDC_shutdown_key[function];
+         PDC_shutdown_key[function] = new_key;
+    }
+    return( old_key);
 }

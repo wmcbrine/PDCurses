@@ -10,8 +10,8 @@ SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
-SDL_Color pdc_color[16];
-Uint32 pdc_mapped[16];
+SDL_Color pdc_color[256];
+Uint32 pdc_mapped[256];
 int pdc_fheight, pdc_fwidth, pdc_flastc;
 bool pdc_own_screen;
 
@@ -177,7 +177,13 @@ int PDC_scr_open(int argc, char **argv)
         pdc_color[i + 8].b = (i & COLOR_BLUE) ? 0xff : 0x40;
     }
 
-    for (i = 0; i < 16; i++)
+    for( i = 16; i < 256; i++)
+    {
+        pdc_color[i].r = (i * 71) & 0xff;     /* semi-random palette,  just */
+        pdc_color[i].g = (i * 171) & 0xff;    /* to fill colors 16-255 with */
+        pdc_color[i].b = (i * 47) & 0xff;     /* visible (non-black) defaults */
+    }
+    for (i = 0; i < 256; i++)
         pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
                                    pdc_color[i].g, pdc_color[i].b);
 

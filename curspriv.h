@@ -6,10 +6,6 @@
 #ifndef __CURSES_INTERNALS__
 #define __CURSES_INTERNALS__ 1
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #define CURSES_LIBRARY
 #include <curses.h>
 

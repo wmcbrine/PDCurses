@@ -9,10 +9,8 @@ resulting in native X11 programs.
 Building
 --------
 
-- Run "./configure" in the top-level directory.
-
-  To build the wide-character version of the library, specify
-  "--enable-widec" as a parameter. To use X Input Methods, add
+- Run "./configure". To build the wide-character version of the library,
+  specify "--enable-widec" as a parameter. To use X Input Methods, add
   "--enable-xim". I recommend these options, but I haven't yet made
   them the defaults, for the sake of backwards compatibility and due to
   their new and relatively untested status.

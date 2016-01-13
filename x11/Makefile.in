@@ -11,7 +11,7 @@ osdir		= .
 srcdir		= $(PDCURSES_SRCDIR)/pdcurses
 demodir		= $(PDCURSES_SRCDIR)/demos
 
-PDCURSES_CONFIG_H	=$(PDCURSES_SRCDIR)/config.h
+PDCURSES_CONFIG_H	=$(osdir)/config.h
 PDCURSES_CURSES_H	=$(PDCURSES_SRCDIR)/curses.h
 PDCURSES_CURSPRIV_H	=$(PDCURSES_SRCDIR)/curspriv.h
 PDCURSES_HEADERS	=$(PDCURSES_CONFIG_H) $(PDCURSES_CURSES_H) \
@@ -34,6 +34,7 @@ LINK		= @PURIFY@ @CC@
 #LDFLAGS	= $(LIB_DEPS) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 LDFLAGS		= $(LIBCURSES) @LDFLAGS@ @LIBS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
 
+INSTALL		= $(osdir)/install-sh
 RANLIB		= @RANLIB@
 
 LIBCURSES	= libXCurses.a
@@ -51,15 +52,35 @@ SHLFILE		= XCurses
 all:	$(PDCLIBS) $(DEMOS)
 
 install:
-	echo Does nothing at the moment
+	$(INSTALL) -d -m 755 $(libdir)
+	$(INSTALL) -d -m 755 $(bindir)
+	$(INSTALL) -d -m 755 $(includedir)
+	$(INSTALL) -d -m 755 $(includedir)/xcurses
+	$(INSTALL) -c -m 644 $(srcdir)/curses.h $(includedir)/xcurses.h
+	$(INSTALL) -c -m 644 $(srcdir)/curses.h $(includedir)/xcurses/curses.h
+	sed -e 's/#include <curses.h>/#include <xcurses.h>/' \
+		< $(srcdir)/panel.h > ./xpanel.h
+	$(INSTALL) -m 644 ./xpanel.h $(includedir)/xpanel.h
+	$(INSTALL) -c -m 644 $(srcdir)/panel.h $(includedir)/xcurses/panel.h
+	$(INSTALL) -c -m 644 $(srcdir)/term.h $(includedir)/xcurses/term.h
+	$(INSTALL) -c -m 644 $(osdir)/libXCurses.a $(libdir)/libXCurses.a
+	-$(RANLIB) $(libdir)/libXCurses.a
+	-$(INSTALL) -c -m 755 $(osdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) \
+		$(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST)
+	ln -f -s $(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) \
+		$(libdir)/$(SHLPRE)Xpanel$(SHLPST)
+	ln -f -s $(libdir)/libXCurses.a $(libdir)/libXpanel.a
+	-$(RANLIB) $(libdir)/libXpanel.a
+	$(INSTALL) -c -m 755 $(osdir)/xcurses-config $(bindir)/xcurses-config
 
 clean:
-	-rm -rf *.o *.sho trace $(PDCLIBS) $(DEMOS)
+	-rm -rf *.o *.sho trace $(PDCLIBS) $(DEMOS) config.log \
+		config.cache config.status
 
 demos:	$(DEMOS)
 
 distclean: clean
-	-rm -f Makefile
+	-rm -f Makefile config.h xcurses-config
 
 mostlyclean: clean
 

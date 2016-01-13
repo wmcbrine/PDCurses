@@ -7,7 +7,7 @@ This is a port of PDCurses for SDL.
 Building
 --------
 
-. On *nix (including Linux and Mac OS X), run "make" in the sdl1
+- On *nix (including Linux and Mac OS X), run "make" in the sdl1
   directory. There is no configure script (yet?) for this port. This
   assumes a working sdl-config, and GNU make. It builds the library 
   libpdcurses.a (dynamic lib not implemented).

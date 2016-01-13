@@ -122,7 +122,7 @@ dist: $(PDCLIBS)
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
 	zip -9jX pdc$(VER)_cyg_w32 \
-	$(PDCURSES_SRCDIR)/README $(PDCURSES_SRCDIR)/HISTORY \
+	$(PDCURSES_SRCDIR)/README.md $(PDCURSES_SRCDIR)/HISTORY.md \
 	$(PDCURSES_SRCDIR)/curses.h $(PDCURSES_SRCDIR)/panel.h \
 	$(LIBCURSES) $(LIBPANEL) file_id.diz
 	rm file_id.diz

@@ -1,43 +1,43 @@
 SDL Considerations
 ==================
 
-There are no special requirements to use PDCurses for SDL -- all 
-PDCurses-compatible code should work fine. (In fact, you can even build 
-against the Win32 console pdcurses.dll, and then swap in the SDL 
-pdcurses.dll.) Nothing extra is needed beyond the base SDL library. 
+There are no special requirements to use PDCurses for SDL -- all
+PDCurses-compatible code should work fine. (In fact, you can even build
+against the Win32 console pdcurses.dll, and then swap in the SDL
+pdcurses.dll.) Nothing extra is needed beyond the base SDL library.
 However, there are some optional special features, described here.
 
-The principal limitation of this port is that input is currently 
-restricted to ASCII (i.e., 0-127), plus the special keys like KEY_LEFT. 
-(You could have Unicode input, but then the input wouldn't match the 
-output, which is in Code Page 437.) Also, see the note about the 
+The principal limitation of this port is that input is currently
+restricted to ASCII (i.e., 0-127), plus the special keys like KEY_LEFT.
+(You could have Unicode input, but then the input wouldn't match the
+output, which is in Code Page 437.) Also, see the note about the
 potential for incomplete output under "PDC_update_rects()", below.
 
 
 Fonts
 -----
 
-The font is a simple BMP, 32 characters wide by 8 characters tall, 
-preferably with a palette. (BMPs without palettes still work, but in 
-that case, no attributes will be available, nor will the cursor work.) 
-The first entry in the palette (usually black) is treated as the 
-background color; the last entry (usually white) is treated as the 
-foreground. These are changed or made transparent as appropriate; any 
-other colors in the palette are passed through unchanged. So -- although 
-a one-bit depth is sufficient for a normal font -- you could redraw some 
+The font is a simple BMP, 32 characters wide by 8 characters tall,
+preferably with a palette. (BMPs without palettes still work, but in
+that case, no attributes will be available, nor will the cursor work.)
+The first entry in the palette (usually black) is treated as the
+background color; the last entry (usually white) is treated as the
+foreground. These are changed or made transparent as appropriate; any
+other colors in the palette are passed through unchanged. So -- although
+a one-bit depth is sufficient for a normal font -- you could redraw some
 characters as multi-colored tiles.
 
-The font must be monospaced. The size of each character is derived by 
-dividing the width of the BMP by 32 and the height by 8. There is no 
+The font must be monospaced. The size of each character is derived by
+dividing the width of the BMP by 32 and the height by 8. There is no
 constraint on the dimensions.
 
-As provided in the default font and expected by acs_map[], the font is 
-in Code Page 437 form. But you can of course use any layout if you're 
+As provided in the default font and expected by acs_map[], the font is
+in Code Page 437 form. But you can of course use any layout if you're
 not relying on correct values for the ACS_* macros.
 
-The font can be set via the environment variable PDC_FONT. If it's not 
-set, PDCurses looks for a file named "pdcfont.bmp" in the current 
-directory at the time of initscr(). If neither is found, it uses the 
+The font can be set via the environment variable PDC_FONT. If it's not
+set, PDCurses looks for a file named "pdcfont.bmp" in the current
+directory at the time of initscr(). If neither is found, it uses the
 built-in default font encoded in deffont.h.
 
 
@@ -90,11 +90,11 @@ course this is extremely non-portable!) To aid you, there are several
 external variables and functions specific to the SDL port; you could 
 include pdcsdl.h, or just add the declarations you need in your code:
 
- PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
- PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
+    PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
+    PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
- void PDC_update_rects(void);
- void PDC_retile(void);
+    void PDC_update_rects(void);
+    void PDC_retile(void);
 
 pdc_screen is the main surface, created by SDL_SetVideoMode(), unless 
 it's preset before initscr(). You can perform normal SDL operations on 

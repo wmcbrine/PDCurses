@@ -4,63 +4,68 @@
 
 /*man-start**************************************************************
 
-  Name:                                                         pad
+pad
+---
 
-  Synopsis:
-        WINDOW *newpad(int nlines, int ncols);
-        WINDOW *subpad(WINDOW *orig, int nlines, int ncols,
-                       int begy, int begx);
-        int prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
-                     int sy2, int sx2);
-        int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
-                         int sy2, int sx2);
-        int pechochar(WINDOW *pad, chtype ch);
-        int pecho_wchar(WINDOW *pad, const cchar_t *wch);
+### Synopsis
 
-  Description:
-        A pad is a special kind of window, which is not restricted by
-        the screen size, and is not necessarily associated with a
-        particular part of the screen.  You can use a pad when you need
-        a large window, and only a part of the window will be on the
-        screen at one time.  Pads are not refreshed automatically (e.g.,
-        from scrolling or echoing of input).  You can't call wrefresh()
-        with a pad as an argument; use prefresh() or pnoutrefresh()
-        instead.  Note that these routines require additional parameters
-        to specify the part of the pad to be displayed, and the location
-        to use on the screen.
+    WINDOW *newpad(int nlines, int ncols);
+    WINDOW *subpad(WINDOW *orig, int nlines, int ncols,
+    int begy, int begx);
+    int prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
+    int sy2, int sx2);
+    int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
+    int sy2, int sx2);
+    int pechochar(WINDOW *pad, chtype ch);
+    int pecho_wchar(WINDOW *pad, const cchar_t *wch);
 
-        newpad() creates a new pad data structure.  
+### Description
 
-        subpad() creates a new sub-pad within a pad, at position (begy,
-        begx), with dimensions of nlines lines and ncols columns. This 
-        position is relative to the pad, and not to the screen as with 
-        subwin.  Changes to either the parent pad or sub-pad will affect 
-        both.  When using sub-pads, you may need to call touchwin() 
-        before calling prefresh().
+   A pad is a special kind of window, which is not restricted by
+   the screen size, and is not necessarily associated with a
+   particular part of the screen.  You can use a pad when you need
+   a large window, and only a part of the window will be on the
+   screen at one time.  Pads are not refreshed automatically (e.g.,
+   from scrolling or echoing of input).  You can't call wrefresh()
+   with a pad as an argument; use prefresh() or pnoutrefresh()
+   instead.  Note that these routines require additional parameters
+   to specify the part of the pad to be displayed, and the location
+   to use on the screen.
 
-        pnoutrefresh() copies the specified pad to the virtual screen.
+   newpad() creates a new pad data structure.
 
-        prefresh() calls pnoutrefresh(), followed by doupdate().
+   subpad() creates a new sub-pad within a pad, at position (begy,
+   begx), with dimensions of nlines lines and ncols columns. This
+   position is relative to the pad, and not to the screen as with
+   subwin.  Changes to either the parent pad or sub-pad will affect
+   both.  When using sub-pads, you may need to call touchwin()
+   before calling prefresh().
 
-        These routines are analogous to wnoutrefresh() and wrefresh().
-        (py, px) specifies the upper left corner of the part of the pad
-        to be displayed; (sy1, sx1) and (sy2, sx2) describe the screen 
-        rectangle that will contain the selected part of the pad.
+   pnoutrefresh() copies the specified pad to the virtual screen.
 
-        pechochar() is functionally equivalent to addch() followed by
-        a call to prefresh(), with the last-used coordinates and
-        dimensions. pecho_wchar() is the wide-character version.
+   prefresh() calls pnoutrefresh(), followed by doupdate().
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+   These routines are analogous to wnoutrefresh() and wrefresh().
+   (py, px) specifies the upper left corner of the part of the pad
+   to be displayed; (sy1, sx1) and (sy2, sx2) describe the screen
+   rectangle that will contain the selected part of the pad.
 
-  Portability                                X/Open    BSD    SYS V
-        newpad                                  Y       -       Y
-        subpad                                  Y       -       Y
-        prefresh                                Y       -       Y
-        pnoutrefresh                            Y       -       Y
-        pechochar                               Y       -      3.0
-        pecho_wchar                             Y
+   pechochar() is functionally equivalent to addch() followed by
+   a call to prefresh(), with the last-used coordinates and
+   dimensions. pecho_wchar() is the wide-character version.
+
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    newpad                      Y       -       Y
+    subpad                      Y       -       Y
+    prefresh                    Y       -       Y
+    pnoutrefresh                Y       -       Y
+    pechochar                   Y       -      3.0
+    pecho_wchar                 Y
 
 **man-end****************************************************************/
 

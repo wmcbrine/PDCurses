@@ -80,7 +80,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
     if (wgetn_wstr(win, (wint_t *)wstr, n) == ERR)
         return ERR;
 
-    return PDC_wcstombs(str, wstr, n);
+    return (int)PDC_wcstombs(str, wstr, n);
 #else
     int ch, i, num, x, chars;
     char *p;
@@ -121,9 +121,9 @@ int wgetnstr(WINDOW *win, char *str, int n)
             {
                 if (chars < n)
                 {
-                    if (oldecho) 
+                    if (oldecho)
                         waddch(win, ch);
-                    *p++ = ch;
+                    *p++ = (char)ch;
                     ++chars;
                 }
                 else
@@ -134,7 +134,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
         case _ECHAR:        /* CTRL-H -- Delete character */
             if (p > str)
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
                 ch = (unsigned char)(*--p);
                 if ((ch < ' ') && (oldecho))
@@ -146,7 +146,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
         case _DLCHAR:       /* CTRL-U -- Delete line */
             while (p > str)
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
                 ch = (unsigned char)(*--p);
                 if ((ch < ' ') && (oldecho))
@@ -159,7 +159,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
 
             while ((p > str) && (*(p - 1) == ' '))
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
 
                 --p;        /* remove space */
@@ -167,7 +167,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
             }
             while ((p > str) && (*(p - 1) != ' '))
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
 
                 ch = (unsigned char)(*--p);
@@ -180,7 +180,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
         case '\n':
         case '\r':
             stop = TRUE;
-            if (oldecho) 
+            if (oldecho)
                 waddch(win, '\n');
             break;
 
@@ -189,8 +189,8 @@ int wgetnstr(WINDOW *win, char *str, int n)
             {
                 if (!SP->key_code && ch < 0x100)
                 {
-                    *p++ = ch;
-                    if (oldecho) 
+                    *p++ = (char)ch;
+                    if (oldecho)
                         waddch(win, ch);
                     chars++;
                 }
@@ -199,7 +199,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
                 beep();
 
             break;
-      
+
         }
 
         wrefresh(win);
@@ -318,7 +318,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
             {
                 if (chars < n)
                 {
-                    if (oldecho) 
+                    if (oldecho)
                         waddch(win, ch);
                     *p++ = ch;
                     ++chars;
@@ -331,7 +331,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
         case _ECHAR:        /* CTRL-H -- Delete character */
             if (p > wstr)
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
                 ch = *--p;
                 if ((ch < ' ') && (oldecho))
@@ -343,7 +343,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
         case _DLCHAR:       /* CTRL-U -- Delete line */
             while (p > wstr)
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
                 ch = *--p;
                 if ((ch < ' ') && (oldecho))
@@ -356,7 +356,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
 
             while ((p > wstr) && (*(p - 1) == ' '))
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
 
                 --p;        /* remove space */
@@ -364,7 +364,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
             }
             while ((p > wstr) && (*(p - 1) != ' '))
             {
-                if (oldecho) 
+                if (oldecho)
                     waddstr(win, "\b \b");
 
                 ch = *--p;
@@ -377,7 +377,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
         case '\n':
         case '\r':
             stop = TRUE;
-            if (oldecho) 
+            if (oldecho)
                 waddch(win, '\n');
             break;
 
@@ -396,7 +396,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
                 beep();
 
             break;
-      
+
         }
 
         wrefresh(win);

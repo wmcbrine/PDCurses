@@ -8,10 +8,14 @@
 #undef MOUSE_MOVED
 #include <curspriv.h>
 
-#ifdef CHTYPE_LONG
-# define PDC_ATTR_SHIFT 19
-#else
-# define PDC_ATTR_SHIFT 8
+# if(CHTYPE_LONG >= 2)     /* 64-bit chtypes */
+    # define PDC_ATTR_SHIFT  23
+# else
+#ifdef CHTYPE_LONG         /* 32-bit chtypes */
+    # define PDC_ATTR_SHIFT  19
+#else                      /* 16-bit chtypes */
+    # define PDC_ATTR_SHIFT  8
+#endif
 #endif
 
 #if (defined(__CYGWIN32__) || defined(__WATCOMC__) || defined(_MSC_VER)) && \

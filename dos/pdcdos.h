@@ -3,10 +3,14 @@
 #include <curspriv.h>
 #include <string.h>
 
-#ifdef CHTYPE_LONG
-# define PDC_ATTR_SHIFT 19
-#else
-# define PDC_ATTR_SHIFT 8
+# if(CHTYPE_LONG >= 2)     /* 64-bit chtypes */
+    # define PDC_ATTR_SHIFT  23
+# else
+#ifdef CHTYPE_LONG         /* 32-bit chtypes */
+    # define PDC_ATTR_SHIFT  19
+#else                      /* 16-bit chtypes */
+    # define PDC_ATTR_SHIFT  8
+#endif
 #endif
 
 #if defined(_MSC_VER) || defined(_QC)
@@ -121,7 +125,7 @@ typedef union
     struct
     {
         unsigned short di, di_hi, si, si_hi, bp, bp_hi, res, res_hi,
-                       bx, bx_hi, dx, dx_hi, cx, cx_hi, ax, ax_hi, 
+                       bx, bx_hi, dx, dx_hi, cx, cx_hi, ax, ax_hi,
                        flags, es, ds, fs, gs, ip, cs, sp, ss;
     } w;
 

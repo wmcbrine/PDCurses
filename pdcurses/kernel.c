@@ -191,12 +191,12 @@ int curs_set(int visibility)
 
     PDC_LOG(("curs_set() - called: visibility=%d\n", visibility));
 
-    if ((visibility < 0) || (visibility > 2))
+    if ((visibility < 0) || (visibility > 0x10000))
         return ERR;
 
     ret_vis = PDC_curs_set(visibility);
 
-    /* If the cursor is changing from invisible to visible, update 
+    /* If the cursor is changing from invisible to visible, update
        its position */
 
     if (visibility && !ret_vis)

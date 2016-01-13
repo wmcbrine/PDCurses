@@ -307,7 +307,7 @@ mmask_t mousemask(mmask_t mask, mmask_t *oldmask)
     if (oldmask)
         *oldmask = SP->_trap_mbe;
 
-    /* The ncurses interface doesn't work with our move events, so 
+    /* The ncurses interface doesn't work with our move events, so
        filter them here */
 
     mask &= ~(BUTTON1_MOVED | BUTTON2_MOVED | BUTTON3_MOVED);
@@ -352,6 +352,8 @@ int nc_getmouse(MEVENT *event)
                 bstate |= (BUTTON1_CLICKED << shf);
             else if (button == BUTTON_DOUBLE_CLICKED)
                 bstate |= (BUTTON1_DOUBLE_CLICKED << shf);
+            else if (button == BUTTON_TRIPLE_CLICKED)
+                bstate |= (BUTTON1_TRIPLE_CLICKED << shf);
 
             button = Mouse_status.button[i] & BUTTON_MODIFIER_MASK;
 
@@ -399,7 +401,8 @@ int ungetmouse(MEVENT *event)
         int shf = i * 5;
         short button = 0;
 
-        if (bstate & ((BUTTON1_RELEASED | BUTTON1_PRESSED | 
+        if (bstate & ((BUTTON1_RELEASED | BUTTON1_PRESSED |
+            BUTTON1_TRIPLE_CLICKED |
             BUTTON1_CLICKED | BUTTON1_DOUBLE_CLICKED) << shf))
         {
             pdc_mouse_status.changes |= 1 << i;
@@ -410,6 +413,8 @@ int ungetmouse(MEVENT *event)
                 button = BUTTON_CLICKED;
             if (bstate & (BUTTON1_DOUBLE_CLICKED << shf))
                 button = BUTTON_DOUBLE_CLICKED;
+            if (bstate & (BUTTON1_TRIPLE_CLICKED << shf))
+                button = BUTTON_TRIPLE_CLICKED;
 
             if (bstate & BUTTON_MODIFIER_SHIFT)
                 button |= PDC_BUTTON_SHIFT;

@@ -67,11 +67,31 @@ void PDC_set_title(const char *title)
     XCursesExitCursesProcess(1, "exiting from PDC_set_title");
 }
 
+        /* If PDC_really_blinking is TRUE,  then text with the A_BLINK   */
+        /* attribute will actually blink.  Otherwise,  such text will    */
+        /* be shown with higher color intensity (the R, G, and B values  */
+        /* are averaged with pure white).  See pdcdisp.c for details of  */
+        /* how this is done.                                             */
+        /*     Unlike on other PDCurses platforms,  this doesn't require */
+        /* decreasing the number of colors by half.  Also,  the choice   */
+        /* indicated by 'blinkon' will actually be respected,  so OK is  */
+        /* always returned (most platforms don't actually support        */
+        /* blinking).                                                    */
+        /*      The default behavior is to not show A_BLINK text as      */
+        /* blinking,  i.e.,  PDC_really_blinking = FALSE.  Blinking text */
+        /* can be pretty annoying to some people.  You should probably   */
+        /* call PDC_set_blink( TRUE) only if there is something to which */
+        /* the user _must_ pay attention;  say,  "the nuclear reactor    */
+        /* is about to melt down".  Otherwise,  the bolder,  brighter    */
+        /* text should be attention-getting enough.                      */
+
+int PDC_really_blinking = FALSE;
+
 int PDC_set_blink(bool blinkon)
 {
-    if (pdc_color_started)
+    if (pdc_color_started)       /* We've got 256 colors in this version */
         COLORS = 256;
-//      COLORS = 16;
 
-    return blinkon ? ERR : OK;
+    PDC_really_blinking = blinkon;
+    return OK;
 }

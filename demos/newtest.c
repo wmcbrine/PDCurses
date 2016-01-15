@@ -218,6 +218,7 @@ int main( int argc, char **argv)
     {
         char buff[40];
         const int xmax = getmaxx( stdscr);
+        const int ymax = getmaxy( stdscr);
         int color_block_start = 54, c;
         int color_block_cols = (xmax - color_block_start) / 2;
         const int color_block_lines = 19;
@@ -309,7 +310,7 @@ int main( int argc, char **argv)
             }
 
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
-            for( i = 0; i < 3; i++)
+            for( i = 0; i < 3 && i + 21 < ymax; i++)
             {                 /* Demonstrate full RGB color control: */
                 int j;
                 const char *output_text[3] = {
@@ -319,7 +320,7 @@ int main( int argc, char **argv)
                 const int len = (int)strlen( output_text[i]);
 
                 move( 21 + i, 1);
-                for( j = 0; j < len; j++)
+                for( j = 0; j < len && j + 1 < xmax; j++)
                 {
                     attr_t output_color;
                     const int oval = j * 31 / len;
@@ -342,13 +343,14 @@ int main( int argc, char **argv)
 #endif         /* #if(CHTYPE_LONG >= 2) */
             redraw = 0;
             attrset( COLOR_PAIR( 1));
-            if( extra_character_to_show)
+            if( extra_character_to_show && ymax > 23)
                 mvaddch( 23, 63, (chtype)extra_character_to_show);
 
 #ifdef PDC_WIDE
             for( i = 0; i < 6; i++)
             {
                 static const wchar_t spanish[] = L"Espa\xf1ol";
+                int line = 24 + i / 3;
 
                 static const wchar_t russian[] = {0x0420, 0x0443, 0x0441, 0x0441,
                    0x043a, 0x0438, 0x0439, L' ', 0x044f, 0x0437, 0x044b, 0x043a, 0};
@@ -371,7 +373,8 @@ int main( int argc, char **argv)
                 static const wchar_t *texts[6] = { spanish, russian, greek,
                                 georgian, fullwidth, combining_marks};
 
-                mvaddwstr( 24 + i / 3, 5 + 25 * (i % 3), texts[i]);
+                if( line < ymax)
+                   mvaddwstr( line, 5 + 25 * (i % 3), texts[i]);
             }
 #endif
 
@@ -385,19 +388,10 @@ int main( int argc, char **argv)
 #endif
         }
 
-#ifdef NOT_USED
-        column = xmax - strlen( cursor_state_text[0]);
-        for( i = 19; i <= 20; i++)
-        {
-            int j = column - 40;
-
-            move( i, 40);
-            while( j-- >= 0)
-                addch( ' ');
-        }
-#endif
-        mvaddstr( 19, color_block_start, cursor_state_text[cursor_state_1]);
-        mvaddstr( 20, color_block_start, cursor_state_text[cursor_state_2]);
+        mvaddnstr( 19, color_block_start, cursor_state_text[cursor_state_1],
+                                 xmax - color_block_start);
+        mvaddnstr( 20, color_block_start, cursor_state_text[cursor_state_2],
+                                 xmax - color_block_start);
         curs_set( (cursor_state_1 << 8) | cursor_state_2);
         for( i = 0; i < color_block_cols * color_block_lines; i++)
         {

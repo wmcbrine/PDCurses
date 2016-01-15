@@ -13,7 +13,7 @@ AC_CANONICAL_SYSTEM([])
 
 on_qnx=no
 case "$target" in
-	*hp-hpux*) 
+	*hp-hpux*)
 		SYS_DEFS="-D_HPUX_SOURCE"
 		;;
 	*dec-osf*)
@@ -66,7 +66,7 @@ dnl Check for X includes and X libraries
 AC_PATH_X
 MH_CHECK_X_INC
 MH_CHECK_X_LIB
-MH_CHECK_X_HEADERS(DECkeysym.h Sunkeysym.h xpm.h)
+MH_CHECK_X_HEADERS(DECkeysym.h Sunkeysym.h xpm.h XF86keysym.h)
 MH_CHECK_X_KEYDEFS(XK_KP_Delete XK_KP_Insert XK_KP_End XK_KP_Down XK_KP_Next \
 	XK_KP_Left XK_KP_Right XK_KP_Home XK_KP_Up XK_KP_Prior XK_KP_Begin)
 MH_CHECK_X_TYPEDEF(XPointer)
@@ -205,6 +205,10 @@ AC_DEFINE([HAVE_DECKEYSYM_H], [],
 
 AC_DEFINE([HAVE_SUNKEYSYM_H], [],
 	[Define if you have the <Sunkeysym.h> header file]
+)
+
+AC_DEFINE([HAVE_XF86KEYSYM_H], [],
+	[Define if you have the <XF86keysym.h> header file]
 )
 
 AC_DEFINE([HAVE_XPM_H], [],

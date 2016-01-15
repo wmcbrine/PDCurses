@@ -49,6 +49,9 @@ XCursesAppData xc_app_data;
 #include "big_icon.xbm"
 #include "little_icon.xbm"
 
+#define CURSOR_BLINK_RATE 500
+         /* Used to be set in xc_app_data.cursorBlinkRate */
+
 static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
 static void _redraw_cursor(void);
@@ -218,6 +221,7 @@ static char *bitmap_file = NULL;
 static char *pixmap_file = NULL;
 #endif
 static KeySym keysym = 0;
+int PDC_blink_state = 1;
 
 static int state_mask[8] =
 {
@@ -553,20 +557,133 @@ static void _make_xy(int x, int y, int *xpos, int *ypos)
             xc_app_data.borderWidth;
 }
 
+    /* This function 'intensifies' a color by shifting it toward white. */
+    /* It used to average the input color with white.  Then it did a    */
+    /* weighted average:  2/3 of the input color,  1/3 white,   for a   */
+    /* lower "intensification" level.                                   */
+    /*    Then Mark Hessling suggested that the output level should     */
+    /* remap zero to 85 (= 255 / 3, so one-third intensity),  and input */
+    /* of 192 or greater should be remapped to 255 (full intensity).    */
+    /* Assuming we want a linear response between zero and 192,  that   */
+    /* leads to output = 85 + input * (255-85)/192.                     */
+    /*    This should lead to proper handling of bold text in legacy    */
+    /* apps,  where "bold" means "high intensity".                      */
+
+static Pixel intensified_color( Pixel ival)
+{
+    int rgb, i;
+    Pixel oval = 0;
+
+    for( i = 0; i < 3; i++, ival >>= 8)
+    {
+        rgb = (int)( ival & 0xff);
+        if( rgb >= 192)
+            rgb = 255;
+        else
+            rgb = 85 + rgb * (255 - 85) / 192;
+        oval |= ((Pixel)rgb << (i * 8));
+    }
+    return( oval);
+}
+
+   /* For use in adjusting colors for A_DIMmed characters.  Just */
+   /* knocks down the intensity of R, G, and B by 1/3.           */
+
+static Pixel dimmed_color( Pixel ival)
+{
+    unsigned i;
+    Pixel oval = 0;
+
+    for( i = 0; i < 3; i++, ival >>= 8)
+    {
+        unsigned rgb = (unsigned)( ival & 0xff);
+
+        rgb -= (rgb / 3);
+        oval |= ((Pixel)rgb << (i * 8));
+    }
+    return( oval);
+}
+
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
+            /* PDCurses stores RGBs in fifteen bits,  five bits each */
+            /* for red, green, blue.  A Pixel uses eight bits per    */
+            /* channel.  Hence the following.                        */
+static Pixel extract_packed_rgb( const chtype color)
+{
+    const int red   = (int)( (color << 3) & 0xf8);
+    const int green = (int)( (color >> 2) & 0xf8);
+    const int blue  = (int)( (color >> 7) & 0xf8);
+
+    return( ((Pixel)red << 16) | ((Pixel)green << 8) | (Pixel)blue);
+}
+#endif
+
+
+void PDC_get_rgb_values( const chtype srcp,
+            Pixel *foreground_rgb, Pixel *background_rgb)
+{
+    const int color = (int)(( srcp & A_COLOR) >> PDC_COLOR_SHIFT);
+    bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
+    bool intensify_backgnd = FALSE;
+
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
+    if( srcp & A_RGB_COLOR)
+    {
+        /* Extract RGB from 30 bits of the color field */
+        *background_rgb = extract_packed_rgb( srcp >> PDC_COLOR_SHIFT);
+        *foreground_rgb = extract_packed_rgb( srcp >> (PDC_COLOR_SHIFT + 15));
+    }
+    else
+#endif
+    {
+        short foreground_index, background_index;
+
+        PDC_pair_content( PAIR_NUMBER( srcp), &foreground_index, &background_index);
+        *foreground_rgb = colors[foreground_index];
+        *background_rgb = colors[background_index];
+    }
+
+    if( srcp & A_BLINK)
+    {
+        extern int PDC_really_blinking;          /* see 'pdcsetsc.c' */
+        extern int PDC_blink_state;
+
+        if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
+            intensify_backgnd = TRUE;
+        else if( PDC_blink_state)
+            reverse_colors = !reverse_colors;
+    }
+    if( reverse_colors)
+    {
+        const Pixel temp = *foreground_rgb;
+
+        *foreground_rgb = *background_rgb;
+        *background_rgb = temp;
+    }
+
+    if( srcp & A_BOLD)
+        *foreground_rgb = intensified_color( *foreground_rgb);
+    if( intensify_backgnd)
+        *background_rgb = intensified_color( *background_rgb);
+    if( srcp & A_DIM)
+        *foreground_rgb = dimmed_color( *foreground_rgb);
+    if( srcp & A_DIM)
+        *background_rgb = dimmed_color( *background_rgb);
+}
+
 /* Output a block of characters with common attributes */
 
-static int _new_packet(chtype attr, bool rev, int len, int col, int row,
+static int _new_packet( const chtype attr, const bool rev, const int len,
+                        const int col, const int row,
 #ifdef PDC_WIDE
-                       XChar2b *text)
+                            XChar2b *text)
 #else
-                       char *text)
+                            char *text)
 #endif
 {
     GC gc;
     int xpos, ypos;
-    short fore, back;
-
-    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
+    Pixel foreground_rgb, background_rgb;
 
 #ifdef PDC_WIDE
     text[len].byte1 = text[len].byte2 = 0;
@@ -574,23 +691,22 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
     text[len] = '\0';
 #endif
 
-    /* Specify the color table offsets */
-
-    fore |= (attr & A_BOLD) ? 8 : 0;
-    back |= (attr & A_BLINK) ? 8 : 0;
-
-    /* Reverse flag = highlighted selection XOR A_REVERSE set */
-
-    rev ^= !!(attr & A_REVERSE);
-
     /* Determine which GC to use - normal or italic */
 
     gc = (attr & A_ITALIC) ? italic_gc : normal_gc;
 
     /* Draw it */
 
-    XSetForeground(XCURSESDISPLAY, gc, colors[rev ? back : fore]);
-    XSetBackground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
+    PDC_get_rgb_values( attr, &foreground_rgb, &background_rgb);
+    if( rev)
+      {
+      const Pixel swap_val = foreground_rgb;
+
+      foreground_rgb = background_rgb;
+      background_rgb = swap_val;
+      }
+    XSetForeground(XCURSESDISPLAY, gc, foreground_rgb);
+    XSetBackground(XCURSESDISPLAY, gc, background_rgb);
 
     _make_xy(col, row, &xpos, &ypos);
 
@@ -691,7 +807,7 @@ static int _display_text(const chtype *ch, int row, int col,
             attr ^= A_REVERSE;
         }
 #endif
-        if (attr != old_attr)
+        if (attr != old_attr || i > 100)
         {
             if (_new_packet(old_attr, highlight, i, col, row, text) == ERR)
                 return ERR;
@@ -702,8 +818,18 @@ static int _display_text(const chtype *ch, int row, int col,
         }
 
 #ifdef PDC_WIDE
-        text[i].byte1 = (curr & 0xff00) >> 8;
-        text[i++].byte2 = curr & 0x00ff;
+        curr &= A_CHARTEXT;
+        if( curr <= 0xffff)      /* BMP Unicode */
+        {
+           text[i].byte1 = (curr & 0xff00) >> 8;
+           text[i++].byte2 = curr & 0x00ff;
+        }
+        else     /* SMP & combining chars */
+        {
+/*          printf( "%lx not handled\n", (unsigned long)curr); */
+            text[i].byte1 = 0;
+            text[i++].byte2 = '?';
+        }
 #else
         text[i++] = curr & 0xff;
 #endif
@@ -1942,7 +2068,7 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
         }
     }
 
-    XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
+    XtAppAddTimeOut(app_context, CURSOR_BLINK_RATE,
                     _blink_cursor, NULL);
 }
 
@@ -2028,9 +2154,15 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
         if ((event->xbutton.time - last_button_press_time) <
             xc_app_data.doubleClickPeriod)
         {
+            const short curr_status = BUTTON_STATUS( button_no);
+
             MOUSE_X_POS = save_mouse_status.x;
             MOUSE_Y_POS = save_mouse_status.y;
-            BUTTON_STATUS(button_no) = BUTTON_DOUBLE_CLICKED;
+            if( curr_status == BUTTON_DOUBLE_CLICKED
+                     || curr_status == BUTTON_TRIPLE_CLICKED)
+               BUTTON_STATUS(button_no) = BUTTON_TRIPLE_CLICKED;
+            else
+               BUTTON_STATUS(button_no) = BUTTON_DOUBLE_CLICKED;
 
             _selection_off();
             remove_release = True;
@@ -3116,10 +3248,9 @@ int XCursesSetupX(int argc, char *argv[])
     XtAppAddInput(app_context, xc_display_sock, (XtPointer)XtInputReadMask,
                   _process_curses_requests, NULL);
 
-    /* If there is a cursorBlink resource, start the Timeout event */
+    /* start the Timeout event for blinking the cursor (and blinking text) */
 
-    if (xc_app_data.cursorBlinkRate)
-        XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
+    XtAppAddTimeOut(app_context, CURSOR_BLINK_RATE,
                         _blink_cursor, NULL);
 
     /* Leave telling the curses process that it can start to here so

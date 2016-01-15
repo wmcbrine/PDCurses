@@ -34,10 +34,10 @@ PDCurses portable platform definitions list:
 #define XOPEN           1      /* X/Open Curses routines */
 #define SYSVcurses      1      /* System V Curses routines */
 #define BSDcurses       1      /* BSD Curses routines */
-#if defined( CHTYPE_64)
-   #define CHTYPE_LONG     2      /* chtypes will be 64 bits */
+#if defined( CHTYPE_32)
+   #define CHTYPE_LONG     1      /* chtypes will be 32 bits */
 #elif !defined( CHTYPE_16)
-   #define CHTYPE_LONG     1      /* chtypes will be (default) 32 bits */
+   #define CHTYPE_LONG     2      /* chtypes will be (default) 64 bits */
 #endif
 
 /*----------------------------------------------------------------------*/

@@ -51,8 +51,8 @@ endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
-ifdef CHTYPE_64
-	CFLAGS += -DCHTYPE_64
+ifdef CHTYPE_32
+	CFLAGS += -DCHTYPE_32
 endif
 
 ifdef CHTYPE_16

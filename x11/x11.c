@@ -18,6 +18,10 @@
 # include <Xlocale.h>
 #endif
 
+#ifdef HAVE_XF86KEYSYM_H
+# include <XF86keysym.h>
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -73,6 +77,15 @@ static struct
     unsigned short alt;
 } key_table[] =
 {
+/* keycode  keypad  normal   shifted       control      alt*/
+ {';',      FALSE,  ';',     ':',   CTL_SEMICOLON,  ALT_SEMICOLON },
+ {'=',      FALSE,  '=',     '+',   CTL_EQUAL,      ALT_EQUAL },
+ {',',      FALSE,  ',',     '<',   CTL_COMMA,      ALT_COMMA },
+ {'-',      FALSE,  '-',     '_',   CTL_MINUS,      ALT_MINUS },
+ {'.',      FALSE,  '.',     '>',   CTL_STOP,       ALT_STOP  },
+ {'/',      FALSE,  '/',     '?',   CTL_FSLASH,     ALT_FSLASH },
+ {'`',      FALSE,  '`',     '~',   CTL_BQUOTE,     ALT_BQUOTE },
+
 /* keycode      keypad  normal       shifted       control      alt*/
  {XK_Left,      FALSE,  KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,    ALT_LEFT},
  {XK_Right,     FALSE,  KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,   ALT_RIGHT},
@@ -201,6 +214,52 @@ static struct
 #ifdef HAVE_XK_KP_PRIOR
  {XK_KP_Prior,  TRUE,   KEY_A3,      '9',          CTL_PAD9,    ALT_PAD9},
 #endif
+
+#ifdef XF86XK_Back
+ {XF86XK_Back,  FALSE,  KEY_BROWSER_BACK, KEY_SBROWSER_BACK,
+                        KEY_CBROWSER_BACK, KEY_ABROWSER_BACK },
+#endif
+
+#ifdef XF86XK_Forward
+ {XF86XK_Forward, FALSE,  KEY_BROWSER_FWD, KEY_SBROWSER_FWD,
+                        KEY_CBROWSER_FWD, KEY_ABROWSER_FWD },
+#endif
+
+#ifdef XF86XK_Reload
+ {XF86XK_Reload, FALSE,  KEY_BROWSER_REF, KEY_SBROWSER_REF,
+                        KEY_CBROWSER_REF, KEY_ABROWSER_REF },
+#endif
+
+#ifdef XF86XK_Search
+ {XF86XK_Search, FALSE,  KEY_SEARCH, KEY_SSEARCH,
+                        KEY_CSEARCH, KEY_ASEARCH },
+#endif
+
+#ifdef XF86XK_Favorites
+ {XF86XK_Favorites, FALSE,  KEY_FAVORITES, KEY_SFAVORITES,
+                        KEY_CFAVORITES, KEY_AFAVORITES },
+#endif
+
+#ifdef XF86XK_AudioPlay
+ {XF86XK_AudioPlay, FALSE,  KEY_PLAY_PAUSE, KEY_SPLAY_PAUSE,
+                        KEY_CPLAY_PAUSE, KEY_APLAY_PAUSE },
+#endif
+
+#ifdef XF86XK_AudioStop
+ {XF86XK_AudioStop, FALSE,  KEY_MEDIA_STOP, KEY_SMEDIA_STOP,
+                        KEY_CMEDIA_STOP, KEY_AMEDIA_STOP },
+#endif
+
+#ifdef XF86XK_AudioPrev
+ {XF86XK_AudioPrev, FALSE,  KEY_PREV_TRACK, KEY_SPREV_TRACK,
+                        KEY_CPREV_TRACK, KEY_APREV_TRACK },
+#endif
+
+#ifdef XF86XK_AudioNext
+ {XF86XK_AudioNext, FALSE,  KEY_NEXT_TRACK, KEY_SNEXT_TRACK,
+                        KEY_CNEXT_TRACK, KEY_ANEXT_TRACK },
+#endif
+
  {0,            0,      0,           0,            0,           0}
 };
 
@@ -1410,8 +1469,8 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
     if (!key && buffer[0] && count == 1)
         key = buffer[0];
 
-    PDC_LOG(("%s:Key: %s pressed - %x Mod: %x\n", XCLOGMSG,
-             XKeysymToString(keysym), key, event->xkey.state));
+    PDC_LOG(("%s:Key: %s (%lx) pressed - %lx Mod: %x\n", XCLOGMSG,
+             XKeysymToString(keysym), keysym, key, event->xkey.state));
 
     /* Handle ALT letters and numbers */
 

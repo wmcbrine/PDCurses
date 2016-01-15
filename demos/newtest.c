@@ -350,7 +350,8 @@ int main( int argc, char **argv)
             for( i = 0; i < 6; i++)
             {
                 static const wchar_t spanish[] = L"Espa\xf1ol";
-                int line = 24 + i / 3;
+                const int line = 24 + i / 3;
+                const int col = 5 + 25 * (i % 3);
 
                 static const wchar_t russian[] = {0x0420, 0x0443, 0x0441, 0x0441,
                    0x043a, 0x0438, 0x0439, L' ', 0x044f, 0x0437, 0x044b, 0x043a, 0};
@@ -373,8 +374,8 @@ int main( int argc, char **argv)
                 static const wchar_t *texts[6] = { spanish, russian, greek,
                                 georgian, fullwidth, combining_marks};
 
-                if( line < ymax)
-                   mvaddwstr( line, 5 + 25 * (i % 3), texts[i]);
+                if( line < ymax && col < xmax)
+                   mvaddnwstr( line, 5 + 25 * (i % 3), texts[i], xmax - col);
             }
 #endif
 

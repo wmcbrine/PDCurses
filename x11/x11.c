@@ -817,7 +817,7 @@ static int _new_packet( const chtype attr, const bool rev, const int len,
 
     PDC_LOG(("%s:_new_packet() - row: %d col: %d "
              "num_cols: %d fore: %d back: %d text:<%s>\n",
-             XCLOGMSG, row, col, len, fore, back, text));
+             XCLOGMSG, row, col, len, foreground_rgb, background_rgb, text));
 
     return OK;
 }

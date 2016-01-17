@@ -1,0 +1,6 @@
+pdcurses (3.4-1) unstable; urgency=low
+
+  * Initial deb package
+  * See HISTORY file for full changelog
+
+ -- Mark Hessling <mark@rexx.org>  Mon, 22 Jul 2013 12:00:00 +1000

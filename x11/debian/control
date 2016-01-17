@@ -1,0 +1,11 @@
+Source: pdcurses
+Section: devel
+Priority: optional
+Maintainer: Mark Hessling <mark@rexx.org>
+Build-Depends: debhelper (>= 5), autotools-dev
+Standards-Version: 3.7.2
+
+Package: pdcurses
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Public Domand CUrses library for multiple platforms.

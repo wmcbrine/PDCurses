@@ -409,13 +409,14 @@ static XtResource app_resources[] =
     RSTRING(textCursor, TextCursor)
 };
 
+
 #undef RCURSOR
 #undef RFONT
 #undef RSTRING
 #undef RCOLOR
 #undef RPIXEL
-#undef RINT
-#undef APPDATAOFF
+/* #undef RINT          */
+/* #undef APPDATAOFF    */
 #undef DEFFONT
 
 /* Macros for options */
@@ -663,7 +664,17 @@ static Pixel dimmed_color( Pixel ival)
     return( oval);
 }
 
+/* see 'addch.c' for an explanation of how combining chars are handled. */
+/* Though note that right now,  it doesn't work at all;  we'll have to  */
+/* arrange shared memory or communication between the X process and the */
+/* "host" process... to be done later.                                  */
+
 #if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
+   #ifdef PDC_WIDE
+      #define USING_COMBINING_CHARACTER_SCHEME
+      int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
+   #endif
+
             /* PDCurses stores RGBs in fifteen bits,  five bits each */
             /* for red, green, blue.  A Pixel uses eight bits per    */
             /* channel.  Hence the following.                        */
@@ -681,7 +692,6 @@ static Pixel extract_packed_rgb( const chtype color)
 void PDC_get_rgb_values( const chtype srcp,
             Pixel *foreground_rgb, Pixel *background_rgb)
 {
-    const int color = (int)(( srcp & A_COLOR) >> PDC_COLOR_SHIFT);
     bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
     bool intensify_backgnd = FALSE;
 
@@ -880,16 +890,57 @@ static int _display_text(const chtype *ch, int row, int col,
         curr &= A_CHARTEXT;
         if( curr <= 0xffff)      /* BMP Unicode */
         {
-           text[i].byte1 = (curr & 0xff00) >> 8;
-           text[i++].byte2 = curr & 0x00ff;
+            if( !curr)
+                curr = ' ';
+            text[i].byte1 = (curr & 0xff00) >> 8;
+            text[i++].byte2 = curr & 0x00ff;
         }
         else     /* SMP & combining chars */
         {
-/*          printf( "%lx not handled\n", (unsigned long)curr); */
+            const chtype MAX_UNICODE = 0x110000;
+
+            if( curr < MAX_UNICODE)    /* Supplemental Multilingual Plane */
+            {                          /* (SMP);  store w/surrogates      */
+                const unsigned short part1 = (unsigned short)
+                        (0xd800 | ((curr - 0x10000) >> 10));
+                const unsigned short part2 = (unsigned short)
+                        (0xdc00 | (curr & 0x3ff));
+
+                text[i].byte1 = part1 >> 8;
+                text[i++].byte2 = part1 & 0xff;
+                text[i].byte1 = part2 >> 8;
+                text[i++].byte2 = part2 & 0xff;
+            }
+#ifdef USING_COMBINING_CHARACTER_SCHEME
+            else if( curr > MAX_UNICODE)
+            {
+#ifdef GOT_COMBINING_CHARS_IN_X
+                cchar_t added[10];
+                int n_combined = 0;
+
+                printf( "curr = %x\n", curr);
+                while( (curr = PDC_expand_combined_characters( curr,
+                                   &added[n_combined])) > MAX_UNICODE)
+//                  n_combined++;
+                {
+                    printf( "iter %d: new root %x, added %x\n",
+                        n_combined, (unsigned)curr, (unsigned)added[n_combined]);
+                    n_combined++;
+                }
+                while( n_combined >= 0)
+                {
+                    text[i].byte1   = added[n_combined] >> 8;
+                    text[i++].byte2 = added[n_combined] & 0xff;
+                    n_combined--;
+                }
+#else
             text[i].byte1 = 0;
             text[i++].byte2 = '?';
+#endif
+            }
+#endif
         }
-#else
+#else                /* non-wide case */
         text[i++] = curr & 0xff;
 #endif
     }
@@ -3136,6 +3187,10 @@ int XCursesSetupX(int argc, char *argv[])
 
     topLevel = XtVaAppInitialize(&app_context, class_name, options,
                                  XtNumber(options), &argc, argv, NULL, NULL);
+
+
+    app_resources[0] = (XtResource)RINT(lines, Lines, XCursesLINES);
+    app_resources[1] = (XtResource)RINT(cols, Cols, XCursesCOLS);
 
     XtVaGetApplicationResources(topLevel, &xc_app_data, app_resources,
                                 XtNumber(app_resources), NULL);

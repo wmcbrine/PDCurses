@@ -9,7 +9,7 @@ Release: 1
 License: Public Domain
 Group: Development/Libraries
 Source: %{name}-%{version}.tar.gz
-URL: http://pdcurses.sourceforge.net
+URL: http://pdcurses.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Prefix: %base
 BuildRequires: libXaw-devel
@@ -24,14 +24,14 @@ PDCurses for X11 is an implementation of the curses library that lets
 you build text-mode curses programs as native X11 applications.
 This package contains the runtime library.
 
-For more information, visit http://pdcurses.sourceforge.net/
+For more information, visit http://pdcurses.org
 
 %description devel
 PDCurses for X11 is an implementation of the curses library that lets
 you build text-mode curses programs as native X11 applications.
 This package contains the development files.
 
-For more information, visit http://pdcurses.sourceforge.net/
+For more information, visit http://pdcurses.org
 
 %prep
 %setup -q

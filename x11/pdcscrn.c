@@ -2,6 +2,10 @@
 
 #include "pdcx11.h"
 
+/* special purpose function keys */
+
+static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
+
 /* COLOR_PAIR to attribute encoding table. */
 
 short *xc_atrtab = (short *)NULL;
@@ -69,7 +73,7 @@ int PDC_resize_screen(int nlines, int ncols)
     XCursesCOLS = SP->cols;
 
     PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d "
-             "SP->cols %d\n", XCLOGMSG, shmid_Xcurscr, 
+             "SP->cols %d\n", XCLOGMSG, shmid_Xcurscr,
              shmkey_Xcurscr, SP->lines, SP->cols));
 
     Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
@@ -145,4 +149,20 @@ int PDC_init_color(short color, short red, short green, short blue)
     XCursesInstructAndWait(CURSES_SET_COLOR);
 
     return OK;
+}
+
+int PDC_set_function_key( const unsigned function, const int new_key)
+{
+    int old_key = -1;
+
+    if (function < PDC_MAX_FUNCTION_KEYS)
+    {
+         old_key = PDC_shutdown_key[function];
+         PDC_shutdown_key[function] = new_key;
+    }
+    if (function == FUNCTION_KEY_SHUT_DOWN)
+    {
+        SP->exit_key = new_key;
+    }
+    return(old_key);
 }

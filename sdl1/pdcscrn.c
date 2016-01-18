@@ -15,6 +15,9 @@ Uint32 pdc_mapped[256];
 int pdc_fheight, pdc_fwidth, pdc_flastc;
 bool pdc_own_screen;
 
+/* special purpose function keys */
+static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
+
 /* COLOR_PAIR to attribute encoding table. */
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
@@ -296,4 +299,17 @@ int PDC_init_color(short color, short red, short green, short blue)
     wrefresh(curscr);
 
     return OK;
+}
+
+/* PDC_set_function_key() does nothing on this platform */
+int PDC_set_function_key( const unsigned function, const int new_key)
+{
+    int old_key = -1;
+
+    if( function < MAX_FUNCTION_KEYS)
+    {
+         old_key = PDC_shutdown_key[function];
+         PDC_shutdown_key[function] = new_key;
+    }
+    return( old_key);
 }

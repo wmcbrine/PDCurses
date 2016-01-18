@@ -51,6 +51,9 @@ static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
 static bool can_change = FALSE;
 
+/* special purpose function keys */
+static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
+
 static int _get_font(void)
 {
     VIOMODEINFO modeInfo = {0};
@@ -258,9 +261,9 @@ static bool _screen_mode_equals(VIOMODEINFO *oldmode)
 
     return ((current.cb == oldmode->cb) &&
             (current.fbType == oldmode->fbType) &&
-            (current.color == oldmode->color) && 
+            (current.color == oldmode->color) &&
             (current.col == oldmode->col) &&
-            (current.row == oldmode->row) && 
+            (current.row == oldmode->row) &&
             (current.hres == oldmode->vres) &&
             (current.vres == oldmode->vres));
 }
@@ -417,4 +420,17 @@ int PDC_init_color(short color, short red, short green, short blue)
 #else
     return ERR;
 #endif
+}
+
+/* PDC_set_function_key() does nothing on this platform */
+int PDC_set_function_key( const unsigned function, const int new_key)
+{
+    int old_key = -1;
+
+    if( function < MAX_FUNCTION_KEYS)
+    {
+         old_key = PDC_shutdown_key[function];
+         PDC_shutdown_key[function] = new_key;
+    }
+    return( old_key);
 }

@@ -127,6 +127,7 @@ static struct
  {XK_F20,       FALSE,  KEY_F(20),   KEY_F(32),    KEY_F(44),   KEY_F(56)},
  {XK_BackSpace, FALSE,  0x08,        0x08,         CTL_BKSP,    ALT_BKSP},
  {XK_Tab,       FALSE,  0x09,        KEY_BTAB,     CTL_TAB,     ALT_TAB},
+ {XK_ISO_Left_Tab, FALSE,  0x09,        KEY_BTAB,     CTL_TAB,     ALT_TAB},
  {XK_Select,    FALSE,  KEY_SELECT,  KEY_SELECT,   KEY_SELECT,  KEY_SELECT},
  {XK_Print,     FALSE,  KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,   KEY_PRINT},
  {XK_Find,      FALSE,  KEY_FIND,    KEY_SFIND,    KEY_FIND,    KEY_FIND},
@@ -271,7 +272,7 @@ static struct
 
 unsigned long pdc_key_modifiers = 0L;
 
-static GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
+static GC normal_gc, bold_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
@@ -316,9 +317,13 @@ static char *program_name;
 /* Macros just for app_resources */
 
 #ifdef PDC_WIDE
-# define DEFFONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
+# define DEFFONT "-misc-fixed-medium-r-normal--13-120-75-75-c-70-iso10646-1"
+# define DEFBOLDFONT "-misc-fixed-bold-r-normal--13-120-75-75-c-70-iso10646-1"
+# define DEFITALICFONT "-misc-fixed-medium-o-normal--13-120-75-75-c-70-iso10646-1"
 #else
-# define DEFFONT "7x13"
+# define DEFFONT "-misc-fixed-medium-r-normal--13-120-75-75-c-70-iso8859-1"
+# define DEFBOLDFONT "-misc-fixed-bold-r-normal--13-120-75-75-c-70-iso8859-1"
+# define DEFITALICFONT "-misc-fixed-medium-o-normal--13-120-75-75-c-70-iso8859-1"
 #endif
 
 #define APPDATAOFF(n) XtOffsetOf(XCursesAppData, n)
@@ -383,7 +388,8 @@ static XtResource app_resources[] =
     RCOLOR(BoldWhite, White),
 
     RFONT(normalFont, NormalFont, DEFFONT),
-    RFONT(italicFont, ItalicFont, DEFFONT),
+    RFONT(italicFont, ItalicFont, DEFITALICFONT),
+    RFONT(boldFont, BoldFont, DEFBOLDFONT),
 
     RSTRING(bitmap, Bitmap),
 #ifdef HAVE_XPM_H
@@ -418,6 +424,8 @@ static XtResource app_resources[] =
 /* #undef RINT          */
 /* #undef APPDATAOFF    */
 #undef DEFFONT
+#undef DEFBOLDFONT
+#undef DEFITALICFONT
 
 /* Macros for options */
 
@@ -427,7 +435,7 @@ static XtResource app_resources[] =
 static XrmOptionDescRec options[] =
 {
     COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
-    COPT(bitmap),
+    COPT(bitmap), COPT(boldFont),
 #ifdef HAVE_XPM_H
     COPT(pixmap),
 #endif
@@ -761,8 +769,18 @@ static int _new_packet( const chtype attr, const bool rev, const int len,
 #endif
 
     /* Determine which GC to use - normal or italic */
-
-    gc = (attr & A_ITALIC) ? italic_gc : normal_gc;
+    if ( attr & A_ITALIC )
+    {
+       gc = italic_gc;
+    }
+    else if ( attr & A_BOLD )
+    {
+       gc = bold_gc;
+    }
+    else
+    {
+       gc = normal_gc;
+    }
 
     /* Draw it */
 
@@ -797,7 +815,8 @@ static int _new_packet( const chtype attr, const bool rev, const int len,
 
         if (attr & A_UNDERLINE)     /* UNDER */
             XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-                      xpos, ypos + 1, xpos + font_width * len, ypos + 1);
+                      xpos, ypos + xc_app_data.normalFont->descent-1, xpos + font_width * len, ypos + xc_app_data.normalFont->descent-1);
+/*                      xpos, ypos + 1, xpos + font_width * len, ypos + 1);*/
 
         if (attr & A_OVERLINE)
             XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
@@ -827,7 +846,7 @@ static int _new_packet( const chtype attr, const bool rev, const int len,
 
     PDC_LOG(("%s:_new_packet() - row: %d col: %d "
              "num_cols: %d fore: %d back: %d text:<%s>\n",
-             XCLOGMSG, row, col, len, fore, back, text));
+             XCLOGMSG, row, col, len, foreground_rgb, background_rgb, text));
 
     return OK;
 }
@@ -1249,7 +1268,13 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
            Removed on 3-3-2001. Now only exits on WM_DELETE_WINDOW. */
 
         if ((Atom)client_event->data.s[0] == wm_atom[0])
-            _exit_process(0, SIGKILL, "");
+        {
+            /* if we specified an exit key return it, otherwise exit the process */
+            if ( SP->exit_key )
+                _send_key_to_curses(SP->exit_key, NULL, TRUE);
+            else
+                _exit_process(0, SIGKILL, "");
+        }
     }
 }
 
@@ -1525,7 +1550,8 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
     /* Handle ALT letters and numbers */
 
-    if (event->xkey.state == Mod1Mask)
+    /* enable Alt key without numlock on */
+    if (event->xkey.state & Mod1Mask)
     {
         if (key >= 'A' && key <= 'Z')
         {
@@ -1727,9 +1753,11 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
         return True;
     }
     else
+    {
         return XmuConvertStandardSelection(topLevel, CurrentTime,
             selection, target, type_return, (XPointer*)value_return,
             length_return, format_return);
+    }
 }
 
 static void _lose_ownership(Widget w, Atom *type)
@@ -2587,6 +2615,7 @@ static void _exit_process(int rc, int sig, char *msg)
 #endif
     XFreeGC(XCURSESDISPLAY, normal_gc);
     XFreeGC(XCURSESDISPLAY, italic_gc);
+    XFreeGC(XCURSESDISPLAY, bold_gc);
     XFreeGC(XCURSESDISPLAY, block_cursor_gc);
     XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
     XFreeGC(XCURSESDISPLAY, border_gc);
@@ -3136,7 +3165,9 @@ int XCursesSetupX(int argc, char *argv[])
     char *myargv[] = {"PDCurses", NULL};
     extern bool sb_started;
 
-    int italic_font_valid;
+    int italic_font_valid, bold_font_valid;
+    int italic_font_width, italic_font_height;
+    int bold_font_width, bold_font_height;
     XColor pointerforecolor, pointerbackcolor;
     XrmValue rmfrom, rmto;
     int i = 0;
@@ -3207,14 +3238,21 @@ int XCursesSetupX(int argc, char *argv[])
     font_descent = xc_app_data.normalFont->max_bounds.descent;
 
     /* Check that the italic font and normal fonts are the same size */
-    /* This appears backwards */
+    /* italic fonts can have negative lbearings! */
+    if ( xc_app_data.italicFont->min_bounds.lbearing < 0 )
+       italic_font_width = xc_app_data.italicFont->max_bounds.rbearing + xc_app_data.italicFont->min_bounds.lbearing;
+    else
+       italic_font_width = xc_app_data.italicFont->max_bounds.rbearing - xc_app_data.italicFont->min_bounds.lbearing;
+    italic_font_height = xc_app_data.italicFont->max_bounds.ascent + xc_app_data.italicFont->max_bounds.descent;
+    italic_font_valid = (font_width == italic_font_width) && (font_height == italic_font_height);
 
-    italic_font_valid = font_width !=
-        xc_app_data.italicFont->max_bounds.rbearing -
-        xc_app_data.italicFont->min_bounds.lbearing ||
-        font_height !=
-        xc_app_data.italicFont->max_bounds.ascent +
-        xc_app_data.italicFont->max_bounds.descent;
+    /* Check that the bold font and normal fonts are the same size */
+    if ( xc_app_data.boldFont->min_bounds.lbearing < 0 )
+       bold_font_width = xc_app_data.boldFont->max_bounds.rbearing + xc_app_data.boldFont->min_bounds.lbearing;
+    else
+       bold_font_width = xc_app_data.boldFont->max_bounds.rbearing - xc_app_data.boldFont->min_bounds.lbearing;
+    bold_font_height = xc_app_data.boldFont->max_bounds.ascent + xc_app_data.boldFont->max_bounds.descent;
+    bold_font_valid = (font_width == bold_font_width) && (font_height == bold_font_height);
 
     /* Calculate size of display window */
 
@@ -3389,6 +3427,9 @@ int XCursesSetupX(int argc, char *argv[])
     _get_gc(&normal_gc, xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
     _get_gc(&italic_gc, italic_font_valid ? xc_app_data.italicFont :
+            xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
+
+    _get_gc(&bold_gc, bold_font_valid ? xc_app_data.boldFont :
             xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
     _get_gc(&block_cursor_gc, xc_app_data.normalFont,

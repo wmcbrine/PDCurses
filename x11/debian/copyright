@@ -1,0 +1,27 @@
+This package was debianized by Mark Hessling <mark@rexx.org> on
+Mon, 22 Jul 2013 13:18:35 +1000.
+
+Upstream Author:
+
+    William Mcbrine <wmcbrine@users.sf.net>
+
+Copyright:
+
+    Public Domain
+
+License:
+
+    The core package is in the public domain, but small portions of PDCurses
+    are subject to copyright under various licenses.  Each directory
+    contains a README file, with a section titled "Distribution Status"
+    which describes the status of the files in that directory.
+
+    If you use PDCurses in an application, an acknowledgement would be
+    appreciated, but is not mandatory. If you make corrections or
+    enhancements to PDCurses, please forward them to the current maintainer
+    for the benefit of other users.
+
+    This software is provided AS IS with NO WARRANTY whatsoever.
+
+The Debian packaging is Public Domain
+

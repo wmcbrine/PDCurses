@@ -347,6 +347,7 @@ typedef struct
     int   sb_total_x;
     int   sb_cur_y;
     int   sb_cur_x;
+    int   exit_key;
 #endif
     short line_color;     /* color of line attributes - default -1 */
 } SCREEN;
@@ -1529,6 +1530,15 @@ void    PDC_set_resize_limits( const int new_min_lines,
                                const int new_max_lines,
                                const int new_min_cols,
                                const int new_max_cols);
+
+#define FUNCTION_KEY_SHUT_DOWN        0
+#define FUNCTION_KEY_PASTE            1
+#define FUNCTION_KEY_ENLARGE_FONT     2
+#define FUNCTION_KEY_SHRINK_FONT      3
+#define FUNCTION_KEY_CHOOSE_FONT      4
+#define PDC_MAX_FUNCTION_KEYS         5
+int     PDC_set_function_key( const unsigned function,
+                              const int new_key);
 
 WINDOW *Xinitscr(int, char **);
 #ifdef XCURSES

@@ -161,6 +161,9 @@ int main(int argc, char *argv[])
 #endif
         wbkgd(win, A_REVERSE);
 
+    /* for x11, sdl1, and win32a, treat the close of the windows as KEY_EXIT */
+    PDC_set_function_key( FUNCTION_KEY_SHUT_DOWN,        KEY_EXIT );
+
     erase();
     display_menu(old_option, new_option);
 

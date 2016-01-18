@@ -667,19 +667,3 @@ int PDC_modifiers_set(void)
     return OK;
 }
 
-#define MAX_FUNCTION_KEYS 2
-#define FUNCTION_KEY_SHUT_DOWN 0
-#define FUNCTION_KEY_PASTE     1
-
-int PDC_set_function_key( const unsigned function, const int new_key)
-{
-    static int PDC_shutdown_key[MAX_FUNCTION_KEYS];
-    int old_key = -1;
-
-    if( function < MAX_FUNCTION_KEYS)
-    {
-         old_key = PDC_shutdown_key[function];
-         PDC_shutdown_key[function] = new_key;
-    }
-    return( old_key);
-}

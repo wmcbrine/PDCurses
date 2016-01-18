@@ -37,10 +37,12 @@ For more information, visit http://pdcurses.sourceforge.net/
 %setup -q
 
 %build
+cd x11
 ./configure --prefix=%{base} --libdir=%{_libdir} --enable-libdir-change=no
 make
 
 %install
+cd x11
 make DESTDIR=$RPM_BUILD_ROOT install
 
 %clean
@@ -54,7 +56,6 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 
 %files devel
 %defattr(-,root,root)
-%doc README HISTORY
 %{_bindir}/xcurses-config
 %{_libdir}/libXCurses.a
 %{_libdir}/libXpanel.a

@@ -1,5 +1,3 @@
-# $Id: PDCurses.spec,v 1.18 2008/07/21 12:25:20 wmcbrine Exp $
-
 %define ver 34
 %define verdot 3.4
 %define base /usr

@@ -4,6 +4,6 @@ before_install:
   - sudo apt-get install -y libxaw7-dev
 script:
   - cd x11
-  - ./configure
+  - ./configure --x-libraries=/usr/lib/x86_64-linux-gnu
   - make
 

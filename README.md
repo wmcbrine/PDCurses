@@ -8,6 +8,8 @@ curses for multiple platforms. The latest version can be found at:
 
 For changes, see the [HISTORY](HISTORY.md) file.
 
+Automatic buils status:
+[![Travis](https://img.shields.io/travis/techtonik/PDCurses.svg?style=flat-square)]()
 
 Legal Stuff
 -----------

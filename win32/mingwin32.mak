@@ -19,6 +19,7 @@ osdir		= $(PDCURSES_SRCDIR)/win32
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
 CC		= gcc
+STRIP		= strip
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -30,8 +31,8 @@ endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
-BASEDEF		= $(PDCURSES_SRCDIR)\exp-base.def
-WIDEDEF		= $(PDCURSES_SRCDIR)\exp-wide.def
+BASEDEF		= $(PDCURSES_SRCDIR)/exp-base.def
+WIDEDEF		= $(PDCURSES_SRCDIR)/exp-wide.def
 
 DEFDEPS		= $(BASEDEF)
 
@@ -44,13 +45,18 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
+ifeq ($(findstring w64-mingw32,$(shell $(CC) -dumpmachine)),w64-mingw32)
+# Mingw-w64
+CFLAGS += -DHAVE_INFOEX=1
+endif
+
 DEFFILE		= pdcurses.def
 
-LINK		= gcc
+LINK		= $(CC)
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = gcc $(DEFFILE)
+	LIBEXE = $(CC) $(DEFFILE)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
@@ -70,24 +76,24 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-del *.o
-	-del *.exe
-	-del $(CLEAN)
+	-rm *.o
+	-rm *.exe
+	-rm $(CLEAN)
 
 demos:	$(DEMOS)
-	strip *.exe
+	$(STRIP) *.exe
 
 $(DEFFILE): $(DEFDEPS)
 	echo LIBRARY pdcurses > $@
 	echo EXPORTS >> $@
-	type $(BASEDEF) >> $@
+	cat $(BASEDEF) >> $@
 ifeq ($(WIDE),Y)
-	type $(WIDEDEF) >> $@
+	cat $(WIDEDEF) >> $@
 endif
 
 $(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-copy pdcurses.a panel.a
+	-cp pdcurses.a panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

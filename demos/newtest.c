@@ -466,10 +466,13 @@ int main( int argc, char **argv)
             }
             else if( mouse_event.x >= color_block_start)
             {
+                int shift = ((mouse_event.bstate & BUTTON_MODIFIER_SHIFT) ?
+                           N_CURSORS - 1 : 1);
+
                 if( mouse_event.y == 19)  /* blink/non-blink toggle */
-                    cursor_state_1 = (cursor_state_1 + 1) % N_CURSORS;
+                    cursor_state_1 = (cursor_state_1 + shift) % N_CURSORS;
                 else if( mouse_event.y == 20)  /* cycle cursor state */
-                    cursor_state_2 = (cursor_state_2 + 1) % N_CURSORS;
+                    cursor_state_2 = (cursor_state_2 + shift) % N_CURSORS;
             }
 #ifdef PDC_WIDE
             else if( mouse_event.x >= 40 && mouse_event.x < 40 + 10)

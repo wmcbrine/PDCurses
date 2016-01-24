@@ -29,7 +29,7 @@
 
 void address(void)
 {
-    char *fieldname[6] = 
+    char *fieldname[6] =
     {
         "Name", "Street", "City", "State", "Country", (char *)0
     };
@@ -88,10 +88,16 @@ void showfile(char *fname)
             for (i = 0; i < bh - 1 && !ateof; i++)
             {
                 buf[0] = '\0';
-                fgets(buf, MAXSTRLEN, fp);
+                if( fgets(buf, MAXSTRLEN, fp))
+                {
+                    size_t j = 0;
 
-                if (strlen(buf))
+                    while( buf[j] >= ' ')
+                        j++;
+                    buf[j] = '\0';
                     bodymsg(buf);
+                    bodymsg( "\n");
+                }
                 else
                     ateof = TRUE;
             }

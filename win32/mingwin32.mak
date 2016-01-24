@@ -33,6 +33,15 @@ CFLAGS += -I$(PDCURSES_SRCDIR)
 
 BASEDEF		= $(PDCURSES_SRCDIR)/exp-base.def
 WIDEDEF		= $(PDCURSES_SRCDIR)/exp-wide.def
+ifneq ($(MSYSTEM),)
+CAT = cat
+CP = cp
+RM = rm -f
+else
+CAT = type
+CP = copy
+RM = del
+endif
 
 DEFDEPS		= $(BASEDEF)
 
@@ -76,9 +85,9 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-rm *.o
-	-rm *.exe
-	-rm $(CLEAN)
+	-$(RM) *.o
+	-$(RM) *.exe
+	-$(RM) $(CLEAN)
 
 demos:	$(DEMOS)
 	$(STRIP) *.exe
@@ -86,14 +95,14 @@ demos:	$(DEMOS)
 $(DEFFILE): $(DEFDEPS)
 	echo LIBRARY pdcurses > $@
 	echo EXPORTS >> $@
-	cat $(BASEDEF) >> $@
+	$(CAT) $(BASEDEF) >> $@
 ifeq ($(WIDE),Y)
-	cat $(WIDEDEF) >> $@
+	$(CAT) $(WIDEDEF) >> $@
 endif
 
 $(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-cp pdcurses.a panel.a
+	-$(CP) pdcurses.a panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

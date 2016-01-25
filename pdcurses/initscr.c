@@ -172,7 +172,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     PDC_slk_initialize();
     LINES -= SP->slklines;
 
-    /* We have to sort out ripped off lines here, and reduce the height 
+    /* We have to sort out ripped off lines here, and reduce the height
        of stdscr by the number of lines ripped off */
 
     for (i = 0; i < linesrippedoff; i++)
@@ -250,7 +250,7 @@ int endwin(void)
 bool isendwin(void)
 {
     PDC_LOG(("isendwin() - called\n"));
-    
+
     return SP ? !(SP->alive) : FALSE;
 }
 
@@ -297,8 +297,11 @@ int resize_term(int nlines, int ncols)
 {
     PDC_LOG(("resize_term() - called: nlines %d\n", nlines));
 
-    if (!stdscr || PDC_resize_screen(nlines, ncols) == ERR)
+    if( PDC_resize_screen(nlines, ncols) == ERR)
         return ERR;
+
+    if (!stdscr)
+        return OK;
 
     SP->lines = PDC_get_rows();
     LINES = SP->lines - SP->linesrippedoff - SP->slklines;

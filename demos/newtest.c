@@ -181,6 +181,15 @@ int main( int argc, char **argv)
                         }
                     }
                     break;
+                case 'd':     /* set window size before initscr */
+                    {
+                        int n_lines, n_cols;
+
+                        if( sscanf( argv[i] + 2, "%d,%d", &n_lines,
+                                    &n_cols) == 2)
+                            resize_term( n_lines, n_cols);
+                    }
+                    break;
 #ifdef PDC_WIDE
                 case 'u':
                     sscanf( argv[i] + 2, "%x", &unicode_offset);

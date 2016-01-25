@@ -212,6 +212,11 @@ int PDC_scr_open(int argc, char **argv)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
+    if( !stdscr)      /* window hasn't been created yet;  we're */
+    {                 /* specifying its size before doing so    */
+        return OK;    /* ...which doesn't work (yet) on SDL1    */
+    }
+
     if (!pdc_own_screen)
         return ERR;
 

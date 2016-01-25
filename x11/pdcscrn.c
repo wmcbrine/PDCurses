@@ -55,6 +55,13 @@ int PDC_resize_screen(int nlines, int ncols)
     PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
              nlines, ncols));
 
+    if( !stdscr)      /* window hasn't been created yet;  we're */
+    {                 /* specifying its size before doing so    */
+        XCursesLINES = nlines;
+        XCursesCOLS = ncols;
+        return OK;
+    }
+
     if (nlines || ncols || !SP->resized)
         return ERR;
 

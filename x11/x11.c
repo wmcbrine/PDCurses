@@ -3165,6 +3165,8 @@ static void _dummy_handler(Widget w, XtPointer client_data,
 int XCursesSetupX(int argc, char *argv[])
 {
     char *myargv[] = {"PDCurses", NULL};
+    char override_text[2][10];
+    char **new_argv = NULL;
     extern bool sb_started;
 
     int italic_font_valid, bold_font_valid;
@@ -3172,7 +3174,7 @@ int XCursesSetupX(int argc, char *argv[])
     int bold_font_width, bold_font_height;
     XColor pointerforecolor, pointerbackcolor;
     XrmValue rmfrom, rmto;
-    int i = 0;
+    int i;
     int minwidth, minheight;
 
     XC_LOG(("XCursesSetupX called\n"));
@@ -3184,6 +3186,29 @@ int XCursesSetupX(int argc, char *argv[])
     }
 
     program_name = argv[0];
+    if( XCursesLINES != 24 || XCursesCOLS != 80)
+    {                      /* a call to resize() was made before initscr() */
+        int pass;
+
+        new_argv = (char **)calloc( argc + 5, sizeof( char *));
+        for( i = 0; i < argc; i++)
+            new_argv[i] = argv[i];
+        argv = new_argv;
+        for( pass = 0; pass < 2; pass++)
+        {
+            const char *override = (pass ? "-cols" : "-lines");
+
+            i = 0;
+            while( i < argc && strcmp( argv[i], override))
+               i++;
+            argv[i] = override;
+            argv[i + 1] = override_text[pass];
+            sprintf( override_text[pass], "%d",
+                        (pass ? XCursesCOLS : XCursesLINES));
+            if( i == argc)    /* this is new (usual case) */
+               argc += 2;
+        }
+    }
 
     /* Keep open the 'write' end of the socket so the XCurses process
        can send a CURSES_EXIT to itself from within the signal handler */
@@ -3220,10 +3245,8 @@ int XCursesSetupX(int argc, char *argv[])
 
     topLevel = XtVaAppInitialize(&app_context, class_name, options,
                                  XtNumber(options), &argc, argv, NULL, NULL);
-
-
-    app_resources[0] = (XtResource)RINT(lines, Lines, XCursesLINES);
-    app_resources[1] = (XtResource)RINT(cols, Cols, XCursesCOLS);
+    if( new_argv)
+        free( new_argv);
 
     XtVaGetApplicationResources(topLevel, &xc_app_data, app_resources,
                                 XtNumber(app_resources), NULL);

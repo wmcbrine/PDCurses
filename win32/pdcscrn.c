@@ -518,6 +518,11 @@ int PDC_resize_screen(int nlines, int ncols)
     if (nlines < 2 || ncols < 2)
         return ERR;
 
+    if( !stdscr)      /* window hasn't been created yet;  we're */
+    {                 /* specifying its size before doing so    */
+        return OK;    /* ...which doesn't work (yet) on Win32   */
+    }
+
     max = GetLargestConsoleWindowSize(pdc_con_out);
 
     rect.Left = rect.Top = 0;

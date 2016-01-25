@@ -2183,6 +2183,11 @@ INLINE int set_up_window( void)
 
     get_default_sizes_from_registry( &n_default_columns, &n_default_rows, &xloc, &yloc,
                      &menu_shown);
+    if( PDC_n_rows > 2 && PDC_n_cols > 2)
+    {
+        n_default_columns = PDC_n_cols;
+        n_default_rows    = PDC_n_rows;
+    }
     if( ttytype[1])
         PDC_set_resize_limits( (unsigned char)ttytype[0],
                                (unsigned char)ttytype[1],
@@ -2330,6 +2335,12 @@ int PDC_scr_open( int argc, char **argv)
 
 int PDC_resize_screen( int nlines, int ncols)
 {
+    if( !stdscr)        /* window hasn't been created yet;  we're */
+    {                   /* specifying its size before doing so    */
+        PDC_n_rows = nlines;
+        PDC_n_cols = ncols;
+        return OK;
+    }
     SP->resized = FALSE;
     debug_printf( "Incoming: %d %d\n", nlines, ncols);
     if( nlines >= 2 && ncols >= 2 && PDC_cxChar && PDC_cyChar && PDC_hWnd &&

@@ -375,4 +375,3 @@ tputs
 PDC_set_function_key
 Xinitscr
 PDC_set_resize_limits
-PDC_get_rgb_values

@@ -692,7 +692,7 @@ int PDC_set_function_key( const unsigned function, const int new_key)
 {
     int old_key = -1;
 
-    if( function < MAX_FUNCTION_KEYS)
+    if( function < PDC_MAX_FUNCTION_KEYS)
     {
          old_key = PDC_shutdown_key[function];
          PDC_shutdown_key[function] = new_key;

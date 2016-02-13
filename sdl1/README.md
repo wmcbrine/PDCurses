@@ -12,7 +12,7 @@ Building
   assumes a working sdl-config, and GNU make. It builds the library 
   libpdcurses.a (dynamic lib not implemented).
 
-  With MinGW, run "make -f Makefile.mng". This assumes SDL is installed
+- With MinGW, run "make -f Makefile.mng". This assumes SDL is installed
   in the standard directories. The MinGW makefile accepts the optional
   parameters "DLL=Y" and "DEBUG=Y", as with the console version. (Wide-
   character support is not yet implemented for SDL.) Both makefiles

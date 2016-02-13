@@ -3,8 +3,24 @@
 #include "pdcsdl.h"
 
 #include <stdlib.h>
+#ifndef PDC_WIDE
 #include "deffont.h"
+#endif
 #include "deficon.h"
+
+#ifdef PDC_WIDE
+# ifndef PDC_FONT_PATH
+#  ifdef _WIN32
+#define PDC_FONT_PATH "C:/Windows/Fonts/lucon.ttf"
+#  elif defined(__APPLE__)
+#define PDC_FONT_PATH "/Library/Fonts/Courier New.ttf"
+#  else
+#define PDC_FONT_PATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
+#  endif
+# endif
+TTF_Font *pdc_ttffont = NULL;
+int pdc_font_size = 18;
+#endif
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
@@ -19,12 +35,31 @@ bool pdc_own_screen;
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
+static void _clean(void)
+{
+#ifdef PDC_WIDE
+    if (pdc_ttffont)
+    {
+        TTF_CloseFont(pdc_ttffont);
+        TTF_Quit();
+    }
+#endif
+    SDL_FreeSurface(pdc_tileback);
+    SDL_FreeSurface(pdc_back);
+    SDL_FreeSurface(pdc_icon);
+    SDL_FreeSurface(pdc_font);
+
+    SDL_Quit();
+}
+
 void PDC_retile(void)
 {
     if (pdc_tileback)
         SDL_FreeSurface(pdc_tileback);
 
     pdc_tileback = SDL_DisplayFormat(pdc_screen);
+    if (pdc_tileback == NULL)
+        return;
 
     if (pdc_back)
     {
@@ -83,9 +118,42 @@ int PDC_scr_open(int argc, char **argv)
             return ERR;
         }
 
-        atexit(SDL_Quit);
+        atexit(_clean);
     }
 
+#ifdef PDC_WIDE
+    if (!pdc_ttffont)
+    {
+        const char *ptsz, *fname;
+
+        if (TTF_Init() == -1)
+        {
+            fprintf(stderr, "Could not start SDL_TTF: %s\n", SDL_GetError());
+            return ERR;
+        }
+
+        ptsz = getenv("PDC_FONT_SIZE");
+        if (ptsz != NULL)
+           pdc_font_size = atoi(ptsz);
+        if (pdc_font_size <= 0)
+           pdc_font_size = 18;
+
+        fname = getenv("PDC_FONT");
+        pdc_ttffont = TTF_OpenFont(fname ? fname : PDC_FONT_PATH,
+                                   pdc_font_size);
+    }
+
+    if (!pdc_ttffont)
+    {
+        fprintf(stderr, "Could not load font\n");
+        return ERR;
+    }
+
+    TTF_SetFontKerning(pdc_ttffont, 0);
+    TTF_SetFontHinting(pdc_ttffont, TTF_HINTING_MONO);
+
+    SP->mono = FALSE;
+#else
     if (!pdc_font)
     {
         const char *fname = getenv("PDC_FONT");
@@ -102,6 +170,7 @@ int PDC_scr_open(int argc, char **argv)
     }
 
     SP->mono = !pdc_font->format->palette;
+#endif
 
     if (!SP->mono && !pdc_back)
     {
@@ -118,11 +187,15 @@ int PDC_scr_open(int argc, char **argv)
     else
         SP->orig_attr = FALSE;
 
+#ifdef PDC_WIDE
+    TTF_SizeText(pdc_ttffont, "W", &pdc_fwidth, &pdc_fheight);
+#else
     pdc_fheight = pdc_font->h / 8;
     pdc_fwidth = pdc_font->w / 32;
 
     if (!SP->mono)
         pdc_flastc = pdc_font->format->palette->ncolors - 1;
+#endif
 
     if (pdc_own_screen && !pdc_icon)
     {

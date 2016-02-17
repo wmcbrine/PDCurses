@@ -1,6 +1,6 @@
 # GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
-# Usage: make -f [path\]mingwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [TARGET=i686|x86_64] [tgt]
+# Usage: make -f [path\]mingwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
 #
 # where tgt can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
@@ -18,16 +18,8 @@ osdir		= $(PDCURSES_SRCDIR)/win32
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
-# Set TARGET for cross compilation
-ifeq ($(TARGET),x86_64)
-	CROSS_COMPILE = x86_64-w64-mingw32-
-endif
-ifeq ($(TARGET),i686)
-	CROSS_COMPILE = i686-w64-mingw32-
-endif
-
-CC		= $(CROSS_COMPILE)gcc
-STRIP		= $(CROSS_COMPILE)strip
+CC		= gcc
+STRIP		= strip
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -39,11 +31,11 @@ endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
-BASEDEF		= $(PDCURSES_SRCDIR)/exp-base.def
-WIDEDEF		= $(PDCURSES_SRCDIR)/exp-wide.def
-CAT = cat
-CP = cp
-RM = rm -f
+BASEDEF		= $(PDCURSES_SRCDIR)\exp-base.def
+WIDEDEF		= $(PDCURSES_SRCDIR)\exp-wide.def
+CAT = type
+CP = copy
+RM = del
 
 DEFDEPS		= $(BASEDEF)
 
@@ -73,12 +65,8 @@ ifeq ($(DLL),Y)
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
 else
-	LIBEXE = $(CROSS_COMPILE)ar
-ifeq ($(CROSS_COMPILE),)
+	LIBEXE = ar
 	LIBFLAGS = rcv
-else
-	LIBFLAGS = rv
-endif
 	LIBCURSES = pdcurses.a
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	CLEAN = *.a

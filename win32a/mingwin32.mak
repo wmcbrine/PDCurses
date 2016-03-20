@@ -14,24 +14,32 @@ endif
 include $(PDCURSES_SRCDIR)/version.mif
 include $(PDCURSES_SRCDIR)/libobjs.mif
 
-# When using this in Windows,  the commands should be 'type' and 'copy';
-# in Linux, 'cat' and 'cp'.  And in Windows,  the slash must be a backslash
-# in order to avoid having it treated as a flag.  I think the following will
-# make sure the proper lines are selected, but lack a Linux/MinGW platform.
+# For cross-compiling from Linux,  use _linux_w64 to compile 64-bit Windows
+# code,  or _linux_w32 to compile 32-bit Windows code.
 
-ifdef _linux
+ifdef _linux_w64
+	PREFIX  = x86_64-w64-mingw32-
 	CAT = cat
-	CP = -cp
+endif
+
+ifdef _linux_w32
+	PREFIX  = i686-w64-mingw32-
+	CAT = cat
+endif
+
+# For either of the above cross-compiles,  we use 'cat' and 'cp;  in Windows,
+# the commands should be 'type' and 'copy',  and the slash goes backwards.
+
+ifeq ($(CAT),cat)
+	CP =  cp
 	BASEDEF      = $(PDCURSES_SRCDIR)/exp-base.def
 	WIDEDEF      = $(PDCURSES_SRCDIR)/exp-wide.def
-	PREFIX  = x86_64-w64-mingw32-
-	DELETE	= -rm
+	DELETE   = -rm
 else
 	CAT = type
-	CP  = -copy
+	CP  = copy
 	BASEDEF      = $(PDCURSES_SRCDIR)\exp-base.def
 	WIDEDEF      = $(PDCURSES_SRCDIR)\exp-wide.def
-	PREFIX  =
 	DELETE = -del
 endif
 
@@ -86,10 +94,10 @@ ifeq ($(DLL),Y)
 	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
 else
 	LIBEXE = $(PREFIX)ar
-ifdef _linux
-	LIBFLAGS = rv
+ifeq ($(PREFIX),)
+	LIBFLAGS = rcv
 else
-	LIBFLAGS	= rcv
+	LIBFLAGS   = rv
 endif
 	LIBCURSES = pdcurses.a
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)

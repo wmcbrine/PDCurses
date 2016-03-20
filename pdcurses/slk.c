@@ -140,9 +140,6 @@ int slk_init(int fmt)
 
     PDC_LOG(("slk_init() - called\n"));
 
-//  if (SP)
-//      return ERR;
-
     switch (fmt)
     {
     case 0:  /* 3 - 2 - 3 */

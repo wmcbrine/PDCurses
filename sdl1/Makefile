@@ -21,7 +21,7 @@ SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
 else
-	CFLAGS  = -O2 -Wall
+	CFLAGS  = -O2 -Wall -fPIC
 endif
 
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
@@ -35,7 +35,7 @@ LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas \
+DEMOS		= firework newdemo newtest ptest rain testcurs tuidemo worm xmas \
 sdltest
 
 .PHONY: all libs clean demos
@@ -71,6 +71,9 @@ firework: $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 newdemo: $(demodir)/newdemo.c
+	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+
+newtest: $(demodir)/newtest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 ptest: $(demodir)/ptest.c

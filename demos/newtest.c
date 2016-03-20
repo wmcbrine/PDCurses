@@ -405,7 +405,7 @@ int main( int argc, char **argv)
         curs_set( (cursor_state_1 << 8) | cursor_state_2);
         for( i = 0; i < color_block_cols * color_block_lines; i++)
         {
-            const int n_color_blocks = 256;
+            const int n_color_blocks = (COLOR_PAIRS < 256 ? COLOR_PAIRS : 256);
 
             attrset( COLOR_PAIR( i >= n_color_blocks ? 2 : i));
             if( i > 2 && i < n_color_blocks)

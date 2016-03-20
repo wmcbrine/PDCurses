@@ -218,8 +218,6 @@ static void redraw_cursor( const HDC hdc)
 
 void PDC_gotoyx(int row, int col)
 {
-    extern int PDC_blink_state;
-
     PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
              row, col, SP->cursrow, SP->curscol));
 
@@ -238,7 +236,6 @@ void PDC_gotoyx(int row, int col)
                /* ...then draw the new (assuming it's actually visible).    */
                /* This used to require some logic.  Now the redraw_cursor() */
                /* function figures out what cursor should be drawn, if any. */
-    PDC_blink_state = 1;
     if( SP->visibility)
     {
         extern HWND PDC_hWnd;

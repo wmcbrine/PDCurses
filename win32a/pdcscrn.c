@@ -26,7 +26,7 @@ functions.        */
 #ifdef _MSC_VER
 #define INLINE static
 #else
-#define INLINE inline
+#define INLINE static inline
 #endif
 
 static int keep_size_within_bounds( int *lines, int *cols);

@@ -283,7 +283,8 @@ static char *bitmap_file = NULL;
 static char *pixmap_file = NULL;
 #endif
 static KeySym keysym = 0;
-int PDC_blink_state = 1;
+static int PDC_blink_state = 1;
+static int PDC_really_blinking = FALSE;     /* see 'pdcsetsc.c' */
 
 static int state_mask[8] =
 {
@@ -638,6 +639,8 @@ static void _make_xy(int x, int y, int *xpos, int *ypos)
     /* leads to output = 85 + input * (255-85)/192.                     */
     /*    This should lead to proper handling of bold text in legacy    */
     /* apps,  where "bold" means "high intensity".                      */
+    /*   NOTE that this is basically a clone of code in win32a/pdcdisp.c. */
+    /* The same basic logic should eventually be used in SDL,  I think. */
 
 static Pixel intensified_color( Pixel ival)
 {
@@ -724,9 +727,6 @@ void PDC_get_rgb_values( const chtype srcp,
 
     if( srcp & A_BLINK)
     {
-        extern int PDC_really_blinking;          /* see 'pdcsetsc.c' */
-        extern int PDC_blink_state;
-
         if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
             intensify_backgnd = TRUE;
         else if( PDC_blink_state)
@@ -2183,9 +2183,55 @@ static void _send_key_to_curses(unsigned long key, MOUSE_STATUS *ms,
     }
 }
 
+#ifdef A_OVERLINE
+#define A_ALL_LINES (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE | A_OVERLINE | A_STRIKEOUT)
+#else
+#define A_ALL_LINES (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
+#endif
+
+/* Note that the logic used to avoid unnecessary drawing is heavily
+borrowed from the HandleTimer function in win32a/pdcscrn.c.  The
+comments there may be helpful. */
+
 static void _blink_cursor(XtPointer unused, XtIntervalId *id)
 {
     XC_LOG(("_blink_cursor() - called:\n"));
+
+    int i;
+    static int previously_really_blinking = 0;
+    static int prev_line_color = -1;
+    chtype attr_to_seek = 0;
+
+    if( prev_line_color != SP->line_color)
+        attr_to_seek = A_ALL_LINES;
+    if( PDC_really_blinking || previously_really_blinking)
+        attr_to_seek |= A_BLINK;
+    prev_line_color = SP->line_color;
+    previously_really_blinking = PDC_really_blinking;
+    PDC_blink_state ^= 1;
+    if( attr_to_seek)
+        for( i = 0; i < SP->lines; i++)
+        {
+            const chtype *line;
+            int j = 0, n_chars;
+
+            XC_get_line_lock( i);
+            line = (const chtype *)(Xcurscr + XCURSCR_Y_OFF( i));
+
+               /* skip over starting text that isn't blinking: */
+            while( j < SP->cols && !(*line & attr_to_seek))
+            {
+                j++;
+                line++;
+            }
+            n_chars = SP->cols - j;
+            /* then skip over text at the end that's not blinking: */
+            while( n_chars && !(line[n_chars - 1] & attr_to_seek))
+                n_chars--;
+            if( n_chars)
+               _display_text( line, i, j, n_chars, 0);
+            XC_release_line_lock( i);
+        }
 
     if (window_entered)
     {
@@ -2963,6 +3009,14 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
 
         case CURSES_REFRESH_SCROLLBAR:
             _refresh_scrollbar();
+            break;
+
+        case CURSES_BLINK_ON:
+            PDC_really_blinking = TRUE;
+            break;
+
+        case CURSES_BLINK_OFF:
+            PDC_really_blinking = FALSE;
             break;
 
         case CURSES_CURSOR:

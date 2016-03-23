@@ -195,7 +195,7 @@ WINDOW *PDC_makelines(WINDOW *win)
 {
     int i, j, nlines, ncols;
 
-    PDC_LOG(("PDC_makelines() - called: lines %d cols %d\n", nlines, ncols));
+    PDC_LOG(("PDC_makelines() - called\n"));
 
     if (!win)
         return (WINDOW *)NULL;

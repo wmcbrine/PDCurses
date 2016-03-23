@@ -91,14 +91,10 @@ typedef unsigned char bool;    /* PDCurses Boolean type */
     #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
         typedef uint64_t chtype;
     #else                        /* "Standard" CHTYPE_LONG case,  32-bit: */
-        # if _LP64
-            typedef unsigned int chtype;
-        # else
-            typedef unsigned long chtype;  /* 16-bit attr + 16-bit char */
-        # endif
+        typedef uint32_t chtype;
     # endif
 #else
-typedef unsigned short chtype; /* 8-bit attr + 8-bit char */
+typedef uint16_t chtype; /* 8-bit attr + 8-bit char */
 #endif
 
 #ifdef PDC_WIDE

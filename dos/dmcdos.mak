@@ -22,9 +22,11 @@ PDCURSES_DOS_H   = $(osdir)\pdcdos.h
 
 CC      = dmc
 
-CFLAGS      = -c -o+space -Nc -msd -DCHTYPE_16
+CHTYPE = -DCHTYPE_32
 
-CPPFLAGS   = -I$(PDCURSES_SRCDIR) -msd -DCHTYPE_16 #-DPDC_WIDE -DPDC_FORCE_UTF8
+CFLAGS      = -c -o+space -Nc -msd
+
+CPPFLAGS   = -I$(PDCURSES_SRCDIR) -msd $(CHTYPE)
 
 LINK      = dmc
 LIBEXE      = lib

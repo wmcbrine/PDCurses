@@ -426,8 +426,8 @@ defining CHTYPE_LONG to be 2:
 
    We take five more bits for the character (thus allowing Unicode values
 past 64K;  UTF-16 can go up to 0x10ffff,  requiring 21 bits total),  and
-four more bits for attributes.  Two are currently used as A_OVERLINE and
-A_STRIKEOUT;  two more are reserved for future use.  31 bits are then used
+four more bits for attributes.  Three are currently used as A_OVERLINE, A_DIM,
+and A_STRIKEOUT;  one more is reserved for future use.  31 bits are then used
 for color.  These are usually just treated as the usual palette
 indices,  and range from 0 to 255.   However,  if bit 63 is
 set,  the remaining 30 bits are interpreted as foreground RGB (first

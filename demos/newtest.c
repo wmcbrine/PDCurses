@@ -80,7 +80,9 @@ void text_in_a_box( const char *istr)
       /* Default is between "underline" and "invisible".  Set both states */
       /* to the same value to get an unblinking cursor.                   */
 
-// #define PURE_WINDOWS_VERSION  1
+#ifdef _WIN32
+#define PURE_WINDOWS_VERSION  1
+#endif
 
 /* Among other things,  'newtest' demonstrates how to make a Win32a
 PDCurses app that is a for-real,  "pure Windows" version (instead of

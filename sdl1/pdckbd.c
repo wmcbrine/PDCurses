@@ -113,7 +113,7 @@ bool PDC_check_key(void)
     Uint32 current = SDL_GetTicks();
     int haveevent = SDL_PollEvent(&event);
 
-    /* if we have an event, or 30 ms have passed without a screen 
+    /* if we have an event, or 30 ms have passed without a screen
        update, or the timer has wrapped, update now */
 
     if (haveevent ||
@@ -303,6 +303,7 @@ static int _process_mouse_event(void)
                 pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
             }
 
+            SP->key_code = TRUE;
             return KEY_MOUSE;
         }
 
@@ -337,6 +338,7 @@ static int _process_mouse_event(void)
 
     old_mouse_status = pdc_mouse_status;
 
+    SP->key_code = TRUE;
     return KEY_MOUSE;
 }
 

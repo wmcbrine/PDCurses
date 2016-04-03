@@ -924,11 +924,6 @@ void clipboardTest(WINDOW *win)
 
 void acsTest(WINDOW *win)
 {
-#ifdef ACS_S3
-# define ACSNUM 32
-#else
-# define ACSNUM 25
-#endif
     static const char *acs_names[] =
     {
         "ACS_ULCORNER", "ACS_URCORNER", "ACS_LLCORNER", "ACS_LRCORNER",
@@ -939,17 +934,32 @@ void acsTest(WINDOW *win)
         "ACS_PLMINUS", "ACS_BULLET",
 
         "ACS_LARROW", "ACS_RARROW", "ACS_UARROW", "ACS_DARROW",
-        "ACS_BOARD", "ACS_LANTERN", "ACS_BLOCK"
+        "ACS_BOARD", "ACS_LANTERN", "ACS_BLOCK",
 #ifdef ACS_S3
-        , "ACS_S3", "ACS_S7", "ACS_LEQUAL", "ACS_GEQUAL",
-        "ACS_PI", "ACS_NEQUAL", "ACS_STERLING"
+        "ACS_S3", "ACS_S7", "ACS_LEQUAL", "ACS_GEQUAL",
+        "ACS_PI", "ACS_NEQUAL", "ACS_STERLING",
 #endif
     };
 
-    chtype acs_values[ACSNUM];
+    const chtype acs_values[] =
+    {
+        ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER,
+        ACS_LTEE, ACS_RTEE, ACS_TTEE, ACS_BTEE, ACS_HLINE,
+        ACS_VLINE, ACS_PLUS,
+
+        ACS_S1, ACS_S9, ACS_DIAMOND, ACS_CKBOARD, ACS_DEGREE,
+        ACS_PLMINUS, ACS_BULLET,
+
+        ACS_LARROW, ACS_RARROW, ACS_UARROW, ACS_DARROW, ACS_BOARD,
+        ACS_LANTERN, ACS_BLOCK
+# ifdef ACS_S3
+        , ACS_S3, ACS_S7, ACS_LEQUAL, ACS_GEQUAL, ACS_PI,
+        ACS_NEQUAL, ACS_STERLING
+# endif
+    };
 
 #if HAVE_WIDE
-    cchar_t *wacs_values[] =
+    const cchar_t *wacs_values[] =
     {
         WACS_ULCORNER, WACS_URCORNER, WACS_LLCORNER, WACS_LRCORNER,
         WACS_LTEE, WACS_RTEE, WACS_TTEE, WACS_BTEE, WACS_HLINE,
@@ -987,24 +997,7 @@ void acsTest(WINDOW *win)
 
     tmarg += 3;
 
-#define A(b,c) acs_values[b] = ACS_##c
-
-    A(0,ULCORNER); A(1,URCORNER); A(2,LLCORNER); A(3,LRCORNER);
-    A(4,LTEE);     A(5,RTEE);     A(6,TTEE);     A(7,BTEE);
-    A(8,HLINE);    A(9,VLINE);    A(10,PLUS);    A(11,S1);
-    A(12,S9);      A(13,DIAMOND); A(14,CKBOARD); A(15,DEGREE);
-
-    A(16,PLMINUS); A(17,BULLET);  A(18,LARROW);  A(19,RARROW);
-    A(20,UARROW);  A(21,DARROW);  A(22,BOARD);   A(23,LANTERN);
-    A(24,BLOCK);
-#ifdef ACS_S3
-    A(25,S3);      A(26,S7);      A(27,LEQUAL);  A(28,GEQUAL);
-    A(29,PI);      A(30,NEQUAL);  A(31,STERLING);
-#endif
-
-#undef A
-
-    for (i = 0; i < ACSNUM; i++)
+    for (i = 0; i < sizeof( acs_names) / sizeof( acs_names[0]); i++)
     {
         move((i % 8) * 2 + tmarg, (i / 8) * (COLS / 4) + (COLS / 8 - 7));
         addch(acs_values[i]);
@@ -1021,7 +1014,7 @@ void acsTest(WINDOW *win)
     mvaddstr(tmarg - 3, (COLS - 28) / 2, "Wide Alternate Character Set");
     attrset(A_NORMAL);
 
-    for (i = 0; i < ACSNUM; i++)
+    for (i = 0; i < sizeof( acs_names) / sizeof( acs_names[0]); i++)
     {
         move((i % 8) * 2 + tmarg, (i / 8) * (COLS / 4) + (COLS / 8 - 7));
         add_wch(wacs_values[i]);

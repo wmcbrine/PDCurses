@@ -1485,28 +1485,25 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
     PDC_LOG(("%s:Keysym %x %d\n", XCLOGMSG,
              XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, key), key));
 
-    if (SP->save_key_modifiers)
-    {
         /* 0x10: usually, numlock modifier */
 
-        if (event->xkey.state & Mod2Mask)
-            modifier |= PDC_KEY_MODIFIER_NUMLOCK;
+    if (event->xkey.state & Mod2Mask)
+        modifier |= PDC_KEY_MODIFIER_NUMLOCK;
 
         /* 0x01: shift modifier */
 
-        if (event->xkey.state & ShiftMask)
-            modifier |= PDC_KEY_MODIFIER_SHIFT;
+    if (event->xkey.state & ShiftMask)
+        modifier |= PDC_KEY_MODIFIER_SHIFT;
 
         /* 0x04: control modifier */
 
-        if (event->xkey.state & ControlMask)
-            modifier |= PDC_KEY_MODIFIER_CONTROL;
+    if (event->xkey.state & ControlMask)
+        modifier |= PDC_KEY_MODIFIER_CONTROL;
 
         /* 0x08: usually, alt modifier */
 
-        if (event->xkey.state & Mod1Mask)
-            modifier |= PDC_KEY_MODIFIER_ALT;
-    }
+    if (event->xkey.state & Mod1Mask)
+        modifier |= PDC_KEY_MODIFIER_ALT;
 
     for (i = 0; key_table[i].keycode; i++)
     {
@@ -1579,7 +1576,39 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
     if (key)
     {
-        key |= (modifier << 24);
+        static long unicode_value = -1L;
+
+        if( key == 21 && modifier ==    /* Ctrl-Shift-U hit: Unicode entry */
+                 (PDC_KEY_MODIFIER_SHIFT | PDC_KEY_MODIFIER_CONTROL))
+            unicode_value = 0L;
+        if( unicode_value >= 0L)
+        {
+            int offset = 0;
+
+            if( key >= '0' && key <= '9')
+                offset = '0';
+            if( key >= 'a' && key <= 'f')
+                offset = 'a' - 10;
+            if( key >= 'A' && key <= 'F')
+                offset = 'A' - 10;
+            if( offset)
+            {
+                unicode_value <<= 4;
+                unicode_value |= (long)( key - offset);
+            }
+            if( key == 13 || key == PADENTER)
+            {
+                key = unicode_value;
+                unicode_value = -1L;
+                modifier = 0;
+                key_code = FALSE;
+            }
+            else     /* still in unicode entry mode */
+                return;
+        }
+
+        if (SP->save_key_modifiers)
+            key |= (modifier << 24);
 
         _send_key_to_curses(key, NULL, key_code);
     }
@@ -3255,7 +3284,7 @@ int XCursesSetupX(int argc, char *argv[])
             i = 0;
             while( i < argc && strcmp( argv[i], override))
                i++;
-            argv[i] = override;
+            argv[i] = (char *)override;
             argv[i + 1] = override_text[pass];
             sprintf( override_text[pass], "%d",
                         (pass ? XCursesCOLS : XCursesLINES));

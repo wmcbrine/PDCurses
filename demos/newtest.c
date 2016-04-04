@@ -227,7 +227,7 @@ int main( int argc, char **argv)
     attrset( COLOR_PAIR( 1));
     while( !quit)
     {
-        char buff[40];
+        char buff[80];
         const int xmax = getmaxx( stdscr);
         const int ymax = getmaxy( stdscr);
         int color_block_start = 54, c;
@@ -249,9 +249,10 @@ int main( int argc, char **argv)
         if( redraw)
         {
             mvaddstr( 1, COL1, "'Normal' white-on-black");
+            mvaddstr( 2, COL1, longname( ));
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
             attron( A_DIM);
-            mvaddstr( 2, COL1, "Dimmed text");
+            mvaddstr( 15, 41, "Dimmed text");
             attroff( A_DIM);
 #endif
 #ifdef PDC_WIDE
@@ -447,11 +448,13 @@ int main( int argc, char **argv)
             if( use_slk)
                 slk_setup( show_slk_index_line ? -fmt : fmt);
         }
-//      else if( c == 'w')
-//          PDC_write_screen_to_file( "scrdump.htm", curscr);
         if( c != KEY_MOUSE)
         {
-            sprintf( buff, "Key %s hit          ", keyname( c));
+            sprintf( buff, "Key %s", keyname( c));
+            if( !memcmp( buff + 4, "UNKNOWN", 7))
+                sprintf( buff + 11, " (%x)", c);
+            strcat( buff, " hit                 ");
+            buff[COL2 - COL1] = '\0';
             mvaddstr( 0, COL1, buff);
         }
         else

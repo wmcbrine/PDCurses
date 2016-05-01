@@ -16,8 +16,11 @@
 acs_map definition.  In this "real Windows" version,  though,  we
 _always_ want to use the wide versions,  so I've changed all four to read
 USE_WIDE_ALWAYS, and then defined that to be true.  One could, of course,
-just lop out the non-wide versions,  but this way,  the code doesn't
-actually change all that much,  which may make maintenance easier. */
+just lop out the non-wide versions (which are for code page 437 and
+compatible pages (CP850, CP852, etc.);  see the DOS and OS/2 versions
+of 'pdcdisp.c' for comment and comparison.)  But this way,  the Win32a
+and Win32 console versions look almost identical,  simplifying maintenance.
+*/
 
 #define USE_WIDE_ALWAYS
 

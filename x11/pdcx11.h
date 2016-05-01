@@ -113,6 +113,8 @@ typedef struct
     int scrollbarWidth;
     int cursorBlinkRate;
     char *textCursor;
+    int textBlinkRate;
+    Boolean showBlinkAsBold;
 } XCursesAppData;
 
 extern XCursesAppData xc_app_data;

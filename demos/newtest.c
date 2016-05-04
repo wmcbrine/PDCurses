@@ -137,7 +137,7 @@ int main( int argc, char **argv)
     int quit = 0, i,  use_slk = 1;
     int fmt = 0xa;
     bool blink_state = FALSE;
-    int cursor_state_1 = 2, cursor_state_2 = 3;
+    int cursor_state_1 = 0, cursor_state_2 = 1;
     int show_slk_index_line = 0;
     int redraw = 1;
     unsigned extra_character_to_show = 0;
@@ -465,7 +465,7 @@ int main( int argc, char **argv)
 #else
             getmouse( &mouse_event);
 #endif
-            sprintf( buff, "Mouse at %d x %d: %x  ", mouse_event.x,
+            sprintf( buff, "Mouse at %d x %d: %x     ", mouse_event.x,
                               mouse_event.y, (unsigned)mouse_event.bstate);
             mvaddstr( 0, COL1, buff);
             if( mouse_event.x >= color_block_start

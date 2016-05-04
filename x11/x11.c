@@ -286,6 +286,7 @@ static KeySym keysym = 0;
 static int PDC_blink_state = 1;
 static int PDC_really_blinking = FALSE;     /* see 'pdcsetsc.c' */
 
+#ifndef PDC_XIM
 static int state_mask[8] =
 {
     ShiftMask,
@@ -297,6 +298,7 @@ static int state_mask[8] =
     Mod4Mask,
     Mod5Mask
 };
+#endif
 
 static Atom wm_atom[2];
 static String class_name = "XCurses";
@@ -313,7 +315,6 @@ static Pixmap icon_bitmap;
 static Pixmap icon_pixmap;
 static Pixmap icon_pixmap_mask;
 #endif
-static bool visible_cursor = FALSE;
 static bool window_entered = TRUE;
 static char *program_name;
 
@@ -468,7 +469,6 @@ static XtActionsRec action_table[] =
 
 static bool after_first_curses_request = FALSE;
 static Pixel colors[MAX_COLORS + 2];
-static bool vertical_cursor = FALSE;
 
 #ifdef PDC_XIM
 static XIM Xim = NULL;
@@ -939,15 +939,9 @@ static int _display_text(const chtype *ch, int row, int col,
                 cchar_t added[10];
                 int n_combined = 0;
 
-                printf( "curr = %x\n", curr);
                 while( (curr = PDC_expand_combined_characters( curr,
                                    &added[n_combined])) > MAX_UNICODE)
-//                  n_combined++;
-                {
-                    printf( "iter %d: new root %x, added %x\n",
-                        n_combined, (unsigned)curr, (unsigned)added[n_combined]);
                     n_combined++;
-                }
                 while( n_combined >= 0)
                 {
                     text[i].byte1   = added[n_combined] >> 8;
@@ -1201,9 +1195,10 @@ static void _display_screen(void)
                       row, 0, COLS, FALSE);
 
         XC_release_line_lock(row);
+        if( row == SP->cursrow && SP->visibility)
+            _redraw_cursor();
     }
 
-    _redraw_cursor();
     _draw_border();
 }
 
@@ -1232,6 +1227,8 @@ static void _refresh_screen(void)
             *(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
 
             XC_release_line_lock(row);
+            if( row == SP->cursrow && SP->visibility)
+                _redraw_cursor();
         }
     }
 
@@ -1279,6 +1276,10 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
         }
     }
 }
+
+static int override_cursor = -1;
+
+#define CURSOR_UNBLINKING_RECTANGLE 0x303
 
 static void XCursesKeyPress(Widget w, XEvent *event, String *params,
                             Cardinal *nparams)
@@ -1370,32 +1371,10 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
     if (keysym == compose_key)
     {
-        chtype *ch;
-        int xpos, ypos, save_visibility = SP->visibility;
-        short fore = 0, back = 0;
-
         /* Change the shape of the cursor to an outline rectangle to
            indicate we are in "compose" status */
 
-        SP->visibility = 0;
-
-        _redraw_cursor();
-
-        SP->visibility = save_visibility;
-        _make_xy(SP->curscol, SP->cursrow, &xpos, &ypos);
-
-        ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(SP->cursrow) +
-             (SP->curscol * sizeof(chtype)));
-
-        _set_cursor_color(ch, &fore, &back);
-
-        XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
-
-        XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-                       xpos + 1, ypos - font_height +
-                       xc_app_data.normalFont->descent + 1,
-                       font_width - 2, font_height - 2);
-
+        override_cursor = CURSOR_UNBLINKING_RECTANGLE;
         compose_state = STATE_COMPOSE;
         return;
     }
@@ -1409,7 +1388,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         if (event->xkey.state & compose_mask)
         {
             compose_state = STATE_NORMAL;
-            _redraw_cursor();
+            override_cursor = -1;
             break;
         }
 
@@ -1429,7 +1408,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         {
             compose_state = STATE_NORMAL;
             compose_index = 0;
-            _redraw_cursor();
+            override_cursor = -1;
             break;
         }
 
@@ -1443,7 +1422,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         if (event->xkey.state & compose_mask)
         {
             compose_state = STATE_NORMAL;
-            _redraw_cursor();
+            override_cursor = -1;
             break;
         }
 
@@ -1463,7 +1442,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         {
             compose_state = STATE_NORMAL;
             compose_index = 0;
-            _redraw_cursor();
+            override_cursor = -1;
             break;
         }
 
@@ -1472,8 +1451,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
         compose_state = STATE_NORMAL;
         compose_index = 0;
-
-        _redraw_cursor();
+        override_cursor = -1;
 
         return;
     }
@@ -1585,6 +1563,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         {
             int offset = 0;
 
+            override_cursor = CURSOR_UNBLINKING_RECTANGLE;
             if( key >= '0' && key <= '9')
                 offset = '0';
             if( key >= 'a' && key <= 'f')
@@ -1602,6 +1581,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
                 unicode_value = -1L;
                 modifier = 0;
                 key_code = FALSE;
+                override_cursor = -1;
             }
             else     /* still in unicode entry mode */
                 return;
@@ -2068,9 +2048,16 @@ static void _selection_set(void)
     tmpsel_length = num_chars;
 }
 
+#define CURSOR_INVISIBLE  0
+#define CURSOR_NORMAL     1
+#define CURSOR_BLOCK      2
+#define CURSOR_RECTANGLE  3
+#define CURSOR_VLINE      4
+#define CURSOR_HALF_BLOCK 5
+
 static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 {
-    int xpos, ypos, i;
+    int xpos, ypos, i, cursor_to_show;
     chtype *ch;
     short fore = 0, back = 0;
 
@@ -2085,7 +2072,6 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
         return;
 
     /* display the character at the current cursor position */
-
     PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
              XCLOGMSG, old_row, old_x));
 
@@ -2094,7 +2080,15 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 
     /* display the cursor at the new cursor position */
 
-    if (!SP->visibility)
+                  /* use lower 8 bits for 1/2 cycle (or if not in window) */
+    if( PDC_blink_state || !window_entered)
+        cursor_to_show = (SP->visibility & 0xff);
+    else                  /* ...& upper 8 bits on other 1/2 cycle */
+        cursor_to_show = (SP->visibility >> 8);
+    if( override_cursor >= 0)
+        cursor_to_show = (PDC_blink_state ? override_cursor & 0xff
+                                          : override_cursor >> 8);
+    if( !cursor_to_show)
         return;     /* cursor not displayed, no more to do */
 
     _make_xy(new_x, new_row, &xpos, &ypos);
@@ -2102,30 +2096,40 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
     ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) + new_x * sizeof(chtype));
 
     _set_cursor_color(ch, &fore, &back);
+    XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
 
-    if (vertical_cursor)
+    switch( cursor_to_show)
     {
-        XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
-
-        for (i = 1; i <= SP->visibility; i++)
-            XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+        case CURSOR_VLINE:
+            for (i = 1; i <= 2; i++)
+                XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
                       xpos + i, ypos - xc_app_data.normalFont->ascent,
                       xpos + i, ypos - xc_app_data.normalFont->ascent +
                       font_height - 1);
-    }
-    else
-    {
-        if (SP->visibility == 1)
+            break;
+        case CURSOR_NORMAL:
+        case CURSOR_HALF_BLOCK:
         {
-            /* cursor visibility normal */
+            int n_lines = xc_app_data.normalFont->descent;
 
-            XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
-
-            for (i = 0; i < xc_app_data.normalFont->descent + 2; i++)
+            ypos += n_lines - 1;
+            if( cursor_to_show == CURSOR_HALF_BLOCK)
+               n_lines += xc_app_data.normalFont->ascent / 2;
+            else
+               n_lines += 2;
+            for( i = 0; i < n_lines; i++, ypos--)
                 XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-                          xpos, ypos - 2 + i, xpos + font_width, ypos - 2 + i);
+                          xpos, ypos, xpos + font_width, ypos);
+            break;
         }
-        else
+        case CURSOR_RECTANGLE:
+            XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+                       xpos + 1, ypos - font_height +
+                       xc_app_data.normalFont->descent + 1,
+                       font_width - 2, font_height - 2);
+            break;
+        case CURSOR_BLOCK:
+        default:
         {
             /* cursor visibility high */
 #ifdef PDC_WIDE
@@ -2148,9 +2152,10 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 #else
             XDrawImageString(
 #endif
-                             XCURSESDISPLAY, XCURSESWIN, block_cursor_gc,
-                             xpos, ypos, buf, 1);
+                         XCURSESDISPLAY, XCURSESWIN, block_cursor_gc,
+                         xpos, ypos, buf, 1);
         }
+        break;
     }
 
     PDC_LOG(("%s:_display_cursor() - draw cursor at row %d col %d\n",
@@ -2183,7 +2188,7 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
         /* Display the cursor so it stays on while the window is
            not current */
 
-        _redraw_cursor();
+//      _redraw_cursor();
         break;
 
     default:
@@ -2262,26 +2267,7 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
             XC_release_line_lock( i);
         }
 
-    if (window_entered)
-    {
-        if (visible_cursor)
-        {
-            /* Cursor currently ON, turn it off */
-
-            int save_visibility = SP->visibility;
-            SP->visibility = 0;
-            _redraw_cursor();
-            SP->visibility = save_visibility;
-            visible_cursor = FALSE;
-        }
-        else
-        {
-            /* Cursor currently OFF, turn it on */
-
-            _redraw_cursor();
-            visible_cursor = TRUE;
-        }
-    }
+    _redraw_cursor();
 
     XtAppAddTimeOut(app_context, CURSOR_BLINK_RATE,
                     _blink_cursor, NULL);
@@ -2731,7 +2717,6 @@ static void _resize(void)
 
     window_width = resize_window_width;
     window_height = resize_window_height;
-    visible_cursor = TRUE;
 
     _draw_border();
 
@@ -3063,38 +3048,15 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
             new_row = pos & 0xFF;
             new_x = pos >> 8;
 
-            visible_cursor = TRUE;
-            _display_cursor(old_row, old_x, new_row, new_x);
+                  /* Only redraw the cursor if it's actually moved. */
+                  /* Otherwise,  it'll get refreshed at the next cycle. */
+            if( old_row != new_row || old_x != new_x)
+               _display_cursor(old_row, old_x, new_row, new_x);
             break;
 
         case CURSES_DISPLAY_CURSOR:
-            XC_LOG(("CURSES_DISPLAY_CURSOR received from child. Vis now: "));
-            XC_LOG((visible_cursor ? "1\n" : "0\n"));
-
-            /* If the window is not active, ignore this command. The
-               cursor will stay solid. */
-
-            if (window_entered)
-            {
-                if (visible_cursor)
-                {
-                    /* Cursor currently ON, turn it off */
-
-                    int save_visibility = SP->visibility;
-                    SP->visibility = 0;
-                    _redraw_cursor();
-                    SP->visibility = save_visibility;
-                    visible_cursor = FALSE;
-                }
-                else
-                {
-                    /* Cursor currently OFF, turn it on */
-
-                    _redraw_cursor();
-                    visible_cursor = TRUE;
-                }
-            }
-
+            XC_LOG(("CURSES_DISPLAY_CURSOR received from child.  Vis. now: %d\n",
+                     PDC_blink_state));
             break;
 
         case CURSES_TITLE:
@@ -3445,11 +3407,6 @@ int XCursesSetupX(int argc, char *argv[])
     /* Process the supplied colors */
 
     _initialize_colors();
-
-    /* Determine text cursor alignment from resources */
-
-    if (!strcmp(xc_app_data.textCursor, "vertical"))
-        vertical_cursor = TRUE;
 
     /* Now have LINES and COLS. Set these in the shared SP so the curses
        program can find them. */

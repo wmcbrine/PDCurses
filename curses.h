@@ -38,9 +38,16 @@ PDCurses portable platform definitions list:
 
 /*----------------------------------------------------------------------*/
 
+#ifndef PDC_STDBOOL
+#define PDC_STDBOOL 1
+#endif
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>             /* Required by X/Open usage below */
+#if PDC_STDBOOL
+#include <stdbool.h>
+#endif
 
 #ifdef PDC_WIDE
 # include <wchar.h>
@@ -49,7 +56,9 @@ PDCurses portable platform definitions list:
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 extern "C"
 {
+#if !PDC_STDBOOL
 # define bool _bool
+#endif
 #endif
 
 /*----------------------------------------------------------------------
@@ -80,7 +89,9 @@ extern "C"
  *
  */
 
+#if !PDC_STDBOOL
 typedef unsigned char bool;    /* PDCurses Boolean type */
+#endif
 
 #ifdef CHTYPE_LONG
 # if _LP64
@@ -1376,7 +1387,9 @@ int     sb_refresh(void);
 #define PDC_KEY_MODIFIER_NUMLOCK 8
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+#if !PDC_STDBOOL
 # undef bool
+#endif
 }
 #endif
 

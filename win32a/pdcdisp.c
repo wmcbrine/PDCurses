@@ -5,7 +5,6 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <tchar.h>
 
 // #ifdef CHTYPE_LONG
@@ -464,21 +463,21 @@ static bool character_is_in_font( chtype ichar)
 
     ichar &= A_CHARTEXT;
     if( ichar > MAX_UNICODE)  /* assume combining chars won't be */
-       return( false);        /* supported;  they rarely are     */
+       return( FALSE);        /* supported;  they rarely are     */
     if( ichar > 0xffff)     /* see above comments */
-       return( true);
+       return( TRUE);
     for( i = PDC_unicode_range_data->cRanges; i; i--, wptr++)
       if( wptr->wcLow > ichar)
-         return( false);
+         return( FALSE);
       else if( wptr->wcLow + wptr->cGlyphs > ichar)
-         return( true);
+         return( TRUE);
                /* Didn't find it in any range;  it must not be in the font */
-    return( false);
+    return( FALSE);
 }
 #else
 static bool character_is_in_font( chtype ichar)
 {
-   return( true);
+   return( TRUE);
 }
 #endif         /* #ifdef USE_FALLBACK_FONT */
 

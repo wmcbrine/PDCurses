@@ -71,9 +71,9 @@ demos:	$(DEMOS)
 pdcurses.dll: $(DEFFILE)
 
 $(DEFFILE): $(DEFDEPS)
-	echo LIBRARY pdcurses > $@        
-	echo EXPORTS >> $@        
-	type $(BASEDEF) >> $@ 
+	echo LIBRARY pdcurses > $@
+	echo EXPORTS >> $@
+	type $(BASEDEF) >> $@
 	echo pdc_screen >> $@
 	echo pdc_font >> $@
 	echo pdc_icon >> $@
@@ -99,7 +99,7 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) -c $<
 
-firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
+firework.exe newdemo.exe newtest.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: $(demodir)/%.c
 	$(BUILD) -o $@ $< $(LDFLAGS)
 

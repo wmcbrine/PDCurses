@@ -1,7 +1,5 @@
 Welcome to PDCurses!
 ====================
-### Modified by jackmott to make KEY_SIZE and is_termresize work in win32
-### and mott.mak will build it in win10 with visual studio 2015
 
 Public Domain Curses, aka PDCurses, is an implementation of X/Open 
 curses for multiple platforms. The latest version can be found at:

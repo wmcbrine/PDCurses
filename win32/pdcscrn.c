@@ -258,7 +258,7 @@ static void _init_console_info(void)
     RegQueryValueExW(reghnd, L"FaceName", NULL, NULL,
                      (LPBYTE)(console_info.FaceName), &len);
 
-    RegCloseKey(reghnd);
+    RegCloseKey(reghnd);	
 }
 
 static int _init_console_infoex(void)
@@ -394,7 +394,7 @@ int PDC_scr_open(int argc, char **argv)
     GetConsoleScreenBufferInfo(pdc_con_out, &csbi);
     GetConsoleScreenBufferInfo(pdc_con_out, &orig_scr);
     GetConsoleMode(pdc_con_in, &old_console_mode);
-
+	SetConsoleMode(pdc_con_in,0x0080 | ENABLE_WINDOW_INPUT);
     /* preserve QuickEdit Mode setting for use in PDC_mouse_set() when
        the mouse is not enabled -- other console input settings are
        cleared */
@@ -581,7 +581,7 @@ void PDC_reset_shell_mode(void)
         SetConsoleWindowInfo(pdc_con_out, TRUE, &orig_scr.srWindow);
         SetConsoleActiveScreenBuffer(pdc_con_out);
     }
-
+	
     SetConsoleMode(pdc_con_in, old_console_mode);
 }
 

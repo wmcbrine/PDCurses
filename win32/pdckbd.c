@@ -601,16 +601,28 @@ static int _process_mouse_event(void)
     return KEY_MOUSE;
 }
 
+int _process_window_event()
+{
+		PDC_LOG(("WINDOW EVENT!"));
+		WINDOW_BUFFER_SIZE_RECORD wRecord = save_ip.Event.WindowBufferSizeEvent;
+		SP->resizeX = wRecord.dwSize.X;
+		SP->resizeY = wRecord.dwSize.Y;
+		SP->resized = TRUE;
+		return KEY_RESIZE;
+		
+}
+
 /* return the next available key or mouse event */
 
 int PDC_get_key(void)
 {
+	PDC_LOG(("GET KEY"));
     pdc_key_modifiers = 0L;
 
     if (!key_count)
     {
         DWORD count;
-
+		PDC_LOG(("READ INPUT"));
         ReadConsoleInput(pdc_con_in, &save_ip, 1, &count);
         event_count--;
 
@@ -618,6 +630,8 @@ int PDC_get_key(void)
             key_count = 1;
         else if (save_ip.EventType == KEY_EVENT)
             key_count = _get_key_count();
+		else if (save_ip.EventType == WINDOW_BUFFER_SIZE_EVENT)
+			key_count = 1;
     }
 
     if (key_count)
@@ -628,9 +642,10 @@ int PDC_get_key(void)
         {
         case KEY_EVENT:
             return _process_key_event();
-
         case MOUSE_EVENT:
-            return _process_mouse_event();
+            return _process_mouse_event();			
+		case WINDOW_BUFFER_SIZE_EVENT:
+			return _process_window_event();
         }
     }
 
@@ -654,8 +669,9 @@ int PDC_mouse_set(void)
        If turning off the mouse: Set QuickEdit Mode to the status it 
        had on startup, and clear all other flags */
 
+	PDC_LOG(("SCREWED"));
     SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
-                   (ENABLE_MOUSE_INPUT|0x0080) : (pdc_quick_edit|0x0080));
+                   (ENABLE_WINDOW_INPUT|ENABLE_MOUSE_INPUT|0x0080) : (ENABLE_WINDOW_INPUT|pdc_quick_edit|0x0080));
 
     memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 

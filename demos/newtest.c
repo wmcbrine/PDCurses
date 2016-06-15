@@ -203,7 +203,11 @@ int main( int argc, char **argv)
             }
     if( use_slk)
        slk_init( show_slk_index_line ? 3 : 0);
+#ifdef XCURSES
     Xinitscr(argc, argv);
+#else
+    initscr();
+#endif
     if( use_slk)
        slk_setup( show_slk_index_line ? -fmt : fmt);
 
@@ -429,11 +433,13 @@ int main( int argc, char **argv)
         }
         else if( c == KEY_F(1) || c == 27)
             quit = 1;
+#ifdef PDCURSES
         else if( c == KEY_F(2))
         {
             blink_state ^= 1;
             PDC_set_blink( blink_state);
         }
+#endif
         else if( c == KEY_F(3))   /* toggle SLKs */
         {
             use_slk ^= 1;
@@ -476,8 +482,11 @@ int main( int argc, char **argv)
 
                 if( new_color >= 256)
                     new_color = -1;
+#ifdef PDCURSES
                 PDC_set_line_color( (short)new_color);
+#endif
             }
+#ifdef PDCURSES
             else if( mouse_event.x >= color_block_start)
             {
                 int shift = ((mouse_event.bstate & BUTTON_MODIFIER_SHIFT) ?
@@ -488,6 +497,7 @@ int main( int argc, char **argv)
                 else if( mouse_event.y == 20)  /* cycle cursor state */
                     cursor_state_2 = (cursor_state_2 + shift) % N_CURSORS;
             }
+#endif
 #ifdef PDC_WIDE
             else if( mouse_event.x >= 40 && mouse_event.x < 40 + 10)
                {

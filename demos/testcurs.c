@@ -120,14 +120,15 @@ int main(int argc, char *argv[])
         if( argv[i][0] == '-')
             switch( argv[i][1])
             {
-                case 'b': case 'B':
-                    PDC_set_blink( TRUE);
-                    break;
                 case 'l': case 'L':
                     setlocale( LC_ALL, argv[i] + 2);
                     break;
                 case 'i': case 'I':
                     background_index = (short)atoi( argv[i] + 2);
+                    break;
+#ifdef PDCURSES
+                case 'b': case 'B':
+                    PDC_set_blink( TRUE);
                     break;
                 case 'm': case 'M':
                     PDC_return_key_modifiers( TRUE);
@@ -147,6 +148,7 @@ int main(int argc, char *argv[])
                         }
                     }
                     break;
+#endif
                 default:
                     break;
             }
@@ -161,8 +163,10 @@ int main(int argc, char *argv[])
 #endif
         wbkgd(win, A_REVERSE);
 
+#ifdef PDCURSES
     /* for x11, sdl1, and win32a, treat the close of the windows as KEY_EXIT */
     PDC_set_function_key( FUNCTION_KEY_SHUT_DOWN,        KEY_EXIT );
+#endif
 
     erase();
     display_menu(old_option, new_option);
@@ -172,11 +176,34 @@ int main(int argc, char *argv[])
         noecho();
         keypad(stdscr, TRUE);
         raw();
+#ifdef PDCURSES
+        mouse_set(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION);
+#endif
 
         key = getch();
 
         switch(key)
         {
+#ifdef PDCURSES
+        case KEY_MOUSE:
+            {
+               const int tmarg = (LINES - (MAX_OPTIONS + 2)) / 2;
+               int selected_opt;
+
+               request_mouse_pos();
+               selected_opt = MOUSE_Y_POS - tmarg;
+               if( selected_opt >= 0 && selected_opt < MAX_OPTIONS)
+               {
+                  old_option = new_option;
+                  new_option = selected_opt;
+                  display_menu( old_option, new_option);
+               }
+            }
+            if( (Mouse_status.button[0] & BUTTON_ACTION_MASK) == BUTTON_DOUBLE_CLICKED)
+               key = 10;
+            else
+               break;
+#endif
         case 10:
         case 13:
         case KEY_ENTER:
@@ -587,7 +614,7 @@ void inputTest(WINDOW *win)
     mvwaddstr(win, 3, 2, "The window should have moved");
     mvwaddstr(win, 4, 2,
               "This text should have appeared without you pressing a key");
-    mvwaddstr(win, 6, 2, "Enter a number then a string seperated by space");
+    mvwaddstr(win, 6, 2, "Enter a number then a string separated by space");
     mvwin(win, 2, 1);
     wrefresh(win);
     mvwscanw(win, 7, 6, "%d %s", &num, buffer);
@@ -1186,12 +1213,18 @@ void colorTest(WINDOW *win)
            sprintf( tbuff, "%02x ", i);
            mvaddstr( tmarg + i / 16, col + (i % 16) * 3, tbuff);
            }
+#ifdef A_LEFTLINE
        attrset( A_LEFTLINE);
        mvaddstr( tmarg + 17, col1, "A_LEFTLINE");
+#endif
+#ifdef A_UNDERLINE
        attrset( A_UNDERLINE);
        mvaddstr( tmarg + 18, col1, "A_UNDERLINE");
+#endif
+#ifdef A_RIGHTLINE
        attrset( A_RIGHTLINE);
        mvaddstr( tmarg + 19, col1, "A_RIGHTLINE");
+#endif
 # if(CHTYPE_LONG >= 2)        /* following types don't exist otherwise: */
        attrset( A_OVERLINE);
        mvaddstr( tmarg + 17, col2, "A_OVERLINE");

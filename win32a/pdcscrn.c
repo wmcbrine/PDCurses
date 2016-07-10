@@ -34,6 +34,8 @@ INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
                const int xloc, const int yloc, const int menu_shown);
 void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                              int x, int len, const chtype *srcp);
+static void clip_or_center_window_to_monitor( HWND hwnd, UINT flags);
+static void clip_or_center_rect_to_monitor( LPRECT prc, UINT flags);
 
 #define N_COLORS 256
 
@@ -2108,6 +2110,54 @@ int PDC_set_function_key( const unsigned function, const int new_key)
     return( old_key);
 }
 
+#define MONITOR_CENTER   0x0001   /* center rect to monitor */
+#define MONITOR_CLIP     0x0000   /* clip rect to monitor */
+#define MONITOR_WORKAREA 0x0002   /* use monitor work area */
+#define MONITOR_AREA     0x0000   /* use monitor entire area */
+
+/* https://msdn.microsoft.com/en-us/library/windows/desktop/dd162826(v=vs.85).aspx */
+void clip_or_center_rect_to_monitor(LPRECT prc, UINT flags)
+{
+    HMONITOR hMonitor;
+    MONITORINFO mi;
+    RECT        rc;
+    int         w = prc->right  - prc->left;
+    int         h = prc->bottom - prc->top;
+
+    hMonitor = MonitorFromRect(prc, MONITOR_DEFAULTTONEAREST);
+
+    mi.cbSize = sizeof(mi);
+    GetMonitorInfo(hMonitor, &mi);
+
+    if (flags & MONITOR_WORKAREA)
+        rc = mi.rcWork;
+    else
+        rc = mi.rcMonitor;
+
+    if (flags & MONITOR_CENTER)
+    {
+        prc->left   = rc.left + (rc.right  - rc.left - w) / 2;
+        prc->top    = rc.top  + (rc.bottom - rc.top  - h) / 2;
+        prc->right  = prc->left + w;
+        prc->bottom = prc->top  + h;
+    }
+    else
+    {
+        prc->left   = max(rc.left, min(rc.right-w,  prc->left));
+        prc->top    = max(rc.top,  min(rc.bottom-h, prc->top));
+        prc->right  = prc->left + w;
+        prc->bottom = prc->top  + h;
+    }
+}
+
+void clip_or_center_window_to_monitor(HWND hwnd, UINT flags)
+{
+    RECT rc;
+    GetWindowRect(hwnd, &rc);
+    clip_or_center_rect_to_monitor(&rc, flags);
+    SetWindowPos(hwnd, NULL, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+}
+
 /* By default,  the user cannot resize the window.  This is because
 many apps don't handle KEY_RESIZE,  and one can get odd behavior
 in such cases.  There are two ways around this.  If you call
@@ -2241,6 +2291,10 @@ INLINE int set_up_window( void)
     debug_printf( "window updated\n");
     SetTimer( PDC_hWnd, TIMER_ID_FOR_BLINKING, 500, NULL);
     debug_printf( "timer set\n");
+
+    /* if the window is off-screen, move it on screen. */
+    clip_or_center_window_to_monitor( PDC_hWnd, MONITOR_WORKAREA);
+
     return( 0);
 }
 

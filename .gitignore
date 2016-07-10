@@ -1,0 +1,6 @@
+**/none
+**/trace
+**/*.exe
+**/*.obj
+**/*.lib
+**/*.ilk

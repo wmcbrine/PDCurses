@@ -11,7 +11,9 @@
      /* lack the necessary functions from the Win32 API).  Comment  */
      /* out the following line if you're dealing with a really old  */
      /* system,  or just don't want to use a fallback font.         */
-#define USE_FALLBACK_FONT
+   #if defined( _WIN32_WINNT) && (_WIN32_WINNT >= 0x0500)
+   #define USE_FALLBACK_FONT
+   #endif
 #endif
 
 #include <windows.h>

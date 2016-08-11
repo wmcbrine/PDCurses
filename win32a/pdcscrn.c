@@ -2108,6 +2108,48 @@ int PDC_set_function_key( const unsigned function, const int new_key)
     return( old_key);
 }
 
+/* https://msdn.microsoft.com/en-us/library/windows/desktop/dd162826(v=vs.85).aspx
+The code at the above link provides general methods for positioning a window
+on a multiple-display setup.  The only instance we're using is the
+MONITOR_WORKAREA one,  which ensures that even if monitor geometry changes,
+the window will still be entirely on-screen.
+
+These functions entered the Win32 API with Windows 2000.  If
+MONITOR_DEFAULTTONEAREST isn't defined,  we shouldn't try to do this.  */
+
+#ifdef MONITOR_DEFAULTTONEAREST
+
+static void clip_or_center_rect_to_monitor( LPRECT prc)
+{
+    HMONITOR hMonitor;
+    MONITORINFO mi;
+    RECT        rc;
+    const int   w = prc->right  - prc->left;
+    const int   h = prc->bottom - prc->top;
+
+    hMonitor = MonitorFromRect(prc, MONITOR_DEFAULTTONEAREST);
+
+    mi.cbSize = sizeof(mi);
+    GetMonitorInfo(hMonitor, &mi);
+
+    rc = mi.rcMonitor;
+
+    prc->left   = max(rc.left, min(rc.right-w,  prc->left));
+    prc->top    = max(rc.top,  min(rc.bottom-h, prc->top));
+    prc->right  = prc->left + w;
+    prc->bottom = prc->top  + h;
+}
+
+static void clip_or_center_window_to_monitor( HWND hwnd)
+{
+    RECT rc;
+
+    GetWindowRect(hwnd, &rc);
+    clip_or_center_rect_to_monitor(&rc);
+    SetWindowPos(hwnd, NULL, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+}
+#endif
+
 /* By default,  the user cannot resize the window.  This is because
 many apps don't handle KEY_RESIZE,  and one can get odd behavior
 in such cases.  There are two ways around this.  If you call
@@ -2241,6 +2283,12 @@ INLINE int set_up_window( void)
     debug_printf( "window updated\n");
     SetTimer( PDC_hWnd, TIMER_ID_FOR_BLINKING, 500, NULL);
     debug_printf( "timer set\n");
+
+#ifdef MONITOR_DEFAULTTONEAREST
+    /* if the window is off-screen, move it on screen. */
+    clip_or_center_window_to_monitor( PDC_hWnd);
+#endif
+
     return( 0);
 }
 

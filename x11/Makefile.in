@@ -681,16 +681,16 @@ manual:
 
 $(ZIPFILE):
 	(cd $(basedir); \
-	zip -9y $(ZIPFILE) README HISTORY IMPLEMNT *.spec *.mif *.def \
-	curses.h curspriv.h panel.h term.h pdcurses/README \
+	zip -9y $(ZIPFILE) README.md HISTORY.md IMPLEMNT *.spec *.mif *.def \
+	curses.h curspriv.h panel.h term.h pdcurses/README.md \
 	pdcurses/*.c \
-	demos/README demos/*.c demos/*.h \
-	dos/README dos/*.c dos/*.h dos/*.mak dos/*.lrf \
-	os2/README os2/*.c os2/*.h os2/*.mak os2/*.lrf \
-	sdl1/README sdl1/*.c sdl1/*.h sdl1/Make* \
-	win32/README win32/*.c win32/*.h win32/*.mak win32/*.ico win32/*.rc \
-	win32a/README win32a/*.c win32a/*.h win32a/*.mak win32a/*.ico win32a/*.rc \
-	x11/README x11/*.c x11/*.h x11/Makefile.* x11/*.xbm \
+	demos/README.md demos/*.c demos/*.h \
+	dos/README.md dos/*.c dos/*.h dos/*.mak dos/*.lrf \
+	os2/README.md os2/*.c os2/*.h os2/*.mak os2/*.lrf \
+	sdl1/README.md sdl1/*.c sdl1/*.h sdl1/Make* \
+	win32/README.md win32/*.c win32/*.h win32/*.mak win32/*.ico win32/*.rc \
+	win32a/README.md win32a/*.c win32a/*.h win32a/*.mak win32a/*.ico win32a/*.rc \
+	x11/README.md x11/*.c x11/*.h x11/Makefile.* x11/*.xbm \
 	x11/Makefile.in x11/config.h.in x11/configure x11/configure.ac x11/config.guess \
 	x11/config.sub x11/xcurses-config.in x11/install-sh x11/aclocal.m4 \
 	doc/*.txt doc/manext.c doc/Makefile)
@@ -701,7 +701,7 @@ tar:
 	(cd $(basedir)/..;rm -f $(PDC_DIR))
 	(cd $(basedir)/..;ln -sf $(abs_basedir) $(PDC_DIR))
 	(cd $(basedir)/..; `pwd`;ls -l $(PDC_DIR);tar cvf - \
-	$(PDC_DIR)/README $(PDC_DIR)/HISTORY \
+	$(PDC_DIR)/README.md $(PDC_DIR)/HISTORY.md \
 	$(PDC_DIR)/IMPLEMNT $(PDC_DIR)/*.spec $(PDC_DIR)/*.mif \
 	$(PDC_DIR)/*.def $(PDC_DIR)/x11/Makefile.in $(PDC_DIR)/x11/aclocal.m4 \
 	$(PDC_DIR)/x11/config.h.in $(PDC_DIR)/x11/configure \
@@ -709,16 +709,16 @@ tar:
 	$(PDC_DIR)/x11/config.sub $(PDC_DIR)/x11/configure.ac \
 	$(PDC_DIR)/x11/install-sh $(PDC_DIR)/curses.h $(PDC_DIR)/curspriv.h \
 	$(PDC_DIR)/panel.h $(PDC_DIR)/term.h \
-	$(PDC_DIR)/pdcurses/README $(PDC_DIR)/pdcurses/*.c \
-	$(PDC_DIR)/demos/README $(PDC_DIR)/demos/*.c $(PDC_DIR)/demos/*.h \
-	$(PDC_DIR)/doc/*.txt $(PDC_DIR)/dos/README $(PDC_DIR)/dos/*.c \
+	$(PDC_DIR)/pdcurses/README.md $(PDC_DIR)/pdcurses/*.c \
+	$(PDC_DIR)/demos/README.md $(PDC_DIR)/demos/*.c $(PDC_DIR)/demos/*.h \
+	$(PDC_DIR)/doc/*.txt $(PDC_DIR)/dos/README.md $(PDC_DIR)/dos/*.c \
 	$(PDC_DIR)/doc/manext.c $(PDC_DIR)/doc/Makefile \
 	$(PDC_DIR)/dos/*.h $(PDC_DIR)/dos/*.mak $(PDC_DIR)/dos/*.lrf \
-	$(PDC_DIR)/os2/README $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.h $(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf \
-	$(PDC_DIR)/sdl1/README $(PDC_DIR)/sdl1/*.c $(PDC_DIR)/sdl1/*.h $(PDC_DIR)/sdl1/Make* \
-	$(PDC_DIR)/win32/README $(PDC_DIR)/win32/*.c $(PDC_DIR)/win32/*.h $(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.ico $(PDC_DIR)/win32/*.rc \
-	$(PDC_DIR)/win32a/README $(PDC_DIR)/win32a/*.c $(PDC_DIR)/win32a/*.h $(PDC_DIR)/win32a/*.mak $(PDC_DIR)/win32a/*.ico $(PDC_DIR)/win32a/*.rc \
-	$(PDC_DIR)/x11/README $(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.h $(PDC_DIR)/x11/Makefile.* \
+	$(PDC_DIR)/os2/README.md $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.h $(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf \
+	$(PDC_DIR)/sdl1/README.md $(PDC_DIR)/sdl1/*.c $(PDC_DIR)/sdl1/*.h $(PDC_DIR)/sdl1/Make* \
+	$(PDC_DIR)/win32/README.md $(PDC_DIR)/win32/*.c $(PDC_DIR)/win32/*.h $(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.ico $(PDC_DIR)/win32/*.rc \
+	$(PDC_DIR)/win32a/README.md $(PDC_DIR)/win32a/*.c $(PDC_DIR)/win32a/*.h $(PDC_DIR)/win32a/*.mak $(PDC_DIR)/win32a/*.ico $(PDC_DIR)/win32a/*.rc \
+	$(PDC_DIR)/x11/README.md $(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.h $(PDC_DIR)/x11/Makefile.* \
 	$(PDC_DIR)/x11/debian/rules $(PDC_DIR)/x11/debian/changelog $(PDC_DIR)/x11/debian/compat $(PDC_DIR)/x11/debian/control $(PDC_DIR)/x11/debian/copyright $(PDC_DIR)/x11/debian/rules \
 	| gzip -9 > $(TARBALL))
 	(cd $(basedir)/..;rm -f $(PDC_DIR))

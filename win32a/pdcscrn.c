@@ -2184,6 +2184,7 @@ INLINE int set_up_window( void)
     TCHAR WindowTitle[_MAX_PATH];
     const TCHAR *AppName = _T( "Curses_App");
     HICON icon;
+    static bool wndclass_has_been_registered = FALSE;
 
     if( !hInstance)
         debug_printf( "No instance: %d\n", GetLastError( ));
@@ -2193,7 +2194,7 @@ INLINE int set_up_window( void)
     icon = get_app_icon();
     if( !icon )
        icon = LoadIcon( NULL, IDI_APPLICATION);
-/*  if( !hPrevInstance) */
+    if( !wndclass_has_been_registered)
     {
         ATOM rval;
 
@@ -2216,6 +2217,7 @@ INLINE int set_up_window( void)
             debug_printf( "RegisterClass failed: GetLastError = %lx\n", last_error);
             return( -1);
         }
+        wndclass_has_been_registered = TRUE;
     }
 
     get_app_name( WindowTitle, TRUE);
@@ -2345,7 +2347,7 @@ int PDC_scr_open( int argc, char **argv)
         PDC_argv = (char **)calloc( argc + 1, sizeof( char *));
         for( i = 0; i < argc; i++)
         {
-            PDC_argv[i] = (char *)malloc( strlen( argv[i] + 1));
+            PDC_argv[i] = (char *)malloc( strlen( argv[i]) + 1);
             strcpy( PDC_argv[i], argv[i]);
         }
     }
@@ -2419,6 +2421,13 @@ int PDC_resize_screen( int nlines, int ncols)
 void PDC_reset_prog_mode(void)
 {
     PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+#ifdef NOT_CURRENTLY_IN_USE
+    if( PDC_bDone == FALSE && PDC_hWnd)
+    {
+        PDC_bDone = TRUE;
+        SetForegroundWindow( PDC_hWnd);
+    }
+#endif
 }
 
 void PDC_reset_shell_mode(void)

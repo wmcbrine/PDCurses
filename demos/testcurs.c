@@ -966,6 +966,27 @@ void acsTest(WINDOW *win)
         "ACS_S3", "ACS_S7", "ACS_LEQUAL", "ACS_GEQUAL",
         "ACS_PI", "ACS_NEQUAL", "ACS_STERLING",
 #endif
+#ifdef ACS_D_ULCORNER
+        "ACS_D_ULCORNER", "ACS_D_URCORNER", "ACS_D_LLCORNER", "ACS_D_LRCORNER",
+        "ACS_D_LTEE", "ACS_D_RTEE", "ACS_D_TTEE", "ACS_D_BTEE", "ACS_D_HLINE",
+        "ACS_D_VLINE", "ACS_D_PLUS",
+        "ACS_SUP2", "ACS_ALPHA", "ACS_BETA", "ACS_GAMMA", "ACS_UP_SIGMA",
+        "ACS_LO_SIGMA", "ACS_MU", "ACS_TAU", "ACS_UP_PHI", "ACS_THETA",
+        "ACS_OMEGA", "ACS_DELTA", "ACS_INFINITY", "ACS_LO_PHI", "ACS_EPSILON",
+        "ACS_INTERSECT", "ACS_TRIPLE_BAR", "ACS_DIVISION", "ACS_APPROX_EQ",
+        "ACS_SM_BULLET", "ACS_SQUARE_ROOT", "ACS_UBLOCK", "ACS_BBLOCK",
+        "ACS_LBLOCK", "ACS_RBLOCK",
+        "ACS_A_ORDINAL", "ACS_O_ORDINAL", "ACS_INV_QUERY", "ACS_REV_NOT",
+        "ACS_NOT", "ACS_HALF", "ACS_QUARTER", "ACS_INV_BANG",
+        "ACS_LEFT_ANG_QU", "ACS_RIGHT_ANG_QU", "ACS_UP_INTEGRAL",
+        "ACS_LO_INTEGRAL", "ACS_SUP_N", "ACS_CENTER_SQU", "ACS_PESETA",
+        "ACS_F_WITH_HOOK", "ACS_SD_ULCORNER", "ACS_SD_URCORNER",
+        "ACS_SD_LLCORNER", "ACS_SD_LRCORNER", "ACS_SD_RTEE",
+        "ACS_SD_LTEE", "ACS_SD_BTEE", "ACS_SD_TTEE", "ACS_SD_PLUS",
+        "ACS_DS_ULCORNER", "ACS_DS_URCORNER", "ACS_DS_LLCORNER",
+        "ACS_DS_LRCORNER", "ACS_DS_RTEE", "ACS_DS_LTEE", "ACS_DS_BTEE",
+        "ACS_DS_TTEE", "ACS_DS_PLUS",
+#endif
     };
 
     const chtype acs_values[] =
@@ -983,6 +1004,27 @@ void acsTest(WINDOW *win)
         , ACS_S3, ACS_S7, ACS_LEQUAL, ACS_GEQUAL, ACS_PI,
         ACS_NEQUAL, ACS_STERLING
 # endif
+#ifdef ACS_D_ULCORNER
+        , ACS_D_ULCORNER, ACS_D_URCORNER, ACS_D_LLCORNER, ACS_D_LRCORNER,
+        ACS_D_LTEE, ACS_D_RTEE, ACS_D_TTEE, ACS_D_BTEE, ACS_D_HLINE,
+        ACS_D_VLINE, ACS_D_PLUS,
+        ACS_SUP2, ACS_ALPHA, ACS_BETA, ACS_GAMMA, ACS_UP_SIGMA,
+        ACS_LO_SIGMA, ACS_MU, ACS_TAU, ACS_UP_PHI, ACS_THETA,
+        ACS_OMEGA, ACS_DELTA, ACS_INFINITY, ACS_LO_PHI, ACS_EPSILON,
+        ACS_INTERSECT, ACS_TRIPLE_BAR, ACS_DIVISION, ACS_APPROX_EQ,
+        ACS_SM_BULLET, ACS_SQUARE_ROOT, ACS_UBLOCK, ACS_BBLOCK,
+        ACS_LBLOCK, ACS_RBLOCK,
+        ACS_A_ORDINAL, ACS_O_ORDINAL, ACS_INV_QUERY, ACS_REV_NOT,
+        ACS_NOT, ACS_HALF, ACS_QUARTER, ACS_INV_BANG,
+        ACS_LEFT_ANG_QU, ACS_RIGHT_ANG_QU, ACS_UP_INTEGRAL,
+        ACS_LO_INTEGRAL, ACS_SUP_N, ACS_CENTER_SQU, ACS_PESETA,
+        ACS_F_WITH_HOOK, ACS_SD_ULCORNER, ACS_SD_URCORNER,
+        ACS_SD_LLCORNER, ACS_SD_LRCORNER, ACS_SD_RTEE,
+        ACS_SD_LTEE, ACS_SD_BTEE, ACS_SD_TTEE, ACS_SD_PLUS,
+        ACS_DS_ULCORNER, ACS_DS_URCORNER, ACS_DS_LLCORNER,
+        ACS_DS_LRCORNER, ACS_DS_RTEE, ACS_DS_LTEE, ACS_DS_BTEE,
+        ACS_DS_TTEE, ACS_DS_PLUS,
+#endif
     };
 
 #if HAVE_WIDE
@@ -1001,6 +1043,27 @@ void acsTest(WINDOW *win)
         , WACS_S3, WACS_S7, WACS_LEQUAL, WACS_GEQUAL, WACS_PI,
         WACS_NEQUAL, WACS_STERLING
 # endif
+# ifdef WACS_D_ULCORNER
+        , WACS_D_ULCORNER, WACS_D_URCORNER, WACS_D_LLCORNER, WACS_D_LRCORNER,
+        WACS_D_LTEE, WACS_D_RTEE, WACS_D_TTEE, WACS_D_BTEE, WACS_D_HLINE,
+        WACS_D_VLINE, WACS_D_PLUS,
+        WACS_SUP2, WACS_ALPHA, WACS_BETA, WACS_GAMMA, WACS_UP_SIGMA,
+        WACS_LO_SIGMA, WACS_MU, WACS_TAU, WACS_UP_PHI, WACS_THETA,
+        WACS_OMEGA, WACS_DELTA, WACS_INFINITY, WACS_LO_PHI, WACS_EPSILON,
+        WACS_INTERSECT, WACS_TRIPLE_BAR, WACS_DIVISION, WACS_APPROX_EQ,
+        WACS_SM_BULLET, WACS_SQUARE_ROOT, WACS_UBLOCK, WACS_BBLOCK,
+        WACS_LBLOCK, WACS_RBLOCK,
+        WACS_A_ORDINAL, WACS_O_ORDINAL, WACS_INV_QUERY, WACS_REV_NOT,
+        WACS_NOT, WACS_HALF, WACS_QUARTER, WACS_INV_BANG,
+        WACS_LEFT_ANG_QU, WACS_RIGHT_ANG_QU, WACS_UP_INTEGRAL,
+        WACS_LO_INTEGRAL, WACS_SUP_N, WACS_CENTER_SQU, WACS_PESETA,
+        WACS_F_WITH_HOOK, WACS_SD_ULCORNER, WACS_SD_URCORNER,
+        WACS_SD_LLCORNER, WACS_SD_LRCORNER, WACS_SD_RTEE,
+        WACS_SD_LTEE, WACS_SD_BTEE, WACS_SD_TTEE, WACS_SD_PLUS,
+        WACS_DS_ULCORNER, WACS_DS_URCORNER, WACS_DS_LLCORNER,
+        WACS_DS_LRCORNER, WACS_DS_RTEE, WACS_DS_LTEE, WACS_DS_BTEE,
+        WACS_DS_TTEE, WACS_DS_PLUS,
+#endif
     };
 
     static const wchar_t russian[] = {0x0420, 0x0443, 0x0441, 0x0441,
@@ -1016,52 +1079,71 @@ void acsTest(WINDOW *win)
         0xff57, 0xff49, 0xff44, 0xff54, 0xff48, 0 };  /* "Fullwidth" */
 #endif
 
-    int i, tmarg = (LINES - 22) / 2;
+    int i, tmarg = 1, ncols = COLS / 19;
+    int n_items = sizeof( acs_names) / sizeof( acs_names[0]);
+    int n_rows = (n_items + ncols - 1) / ncols;
+    int col_size = COLS / ncols;
 
-    attrset(A_BOLD);
-    mvaddstr(tmarg, (COLS - 23) / 2, "Alternate Character Set");
-    attrset(A_NORMAL);
-
-    tmarg += 3;
-
-    for (i = 0; i < sizeof( acs_names) / sizeof( acs_names[0]); i++)
+    i = 0;
+    if( n_rows > LINES / 2 - 4)
+        n_rows = LINES / 2 - 4;
+    while( i < n_items)
     {
-        move((i % 8) * 2 + tmarg, (i / 8) * (COLS / 4) + (COLS / 8 - 7));
-        addch(acs_values[i]);
-        printw(" %s", acs_names[i]);
-    }
+        int j;
 
-    mvaddstr(tmarg + 18, 3, "Press any key to continue");
-    getch();
+        attrset(A_BOLD);
+        mvaddstr( 1, (COLS - 23) / 2, "Alternate Character Set");
+        attrset(A_NORMAL);
+        tmarg = 4;
+        for( j = 0; i + j < n_items && j < n_rows * ncols; j++)
+        {
+            move((j % n_rows) * 2 + tmarg,
+                  (j / n_rows) * col_size + col_size / 2 - 7);
+            addch(acs_values[i + j]);
+            printw(" %s", acs_names[i + j]);
+        }
+
+        mvaddstr(tmarg + n_rows * 2 + 2, 3, "Press any key to continue");
+        getch();
+        i += j;
+        clear( );
+    }
 
 #if HAVE_WIDE
-    clear();
-
-    attrset(A_BOLD);
-    mvaddstr(tmarg - 3, (COLS - 28) / 2, "Wide Alternate Character Set");
-    attrset(A_NORMAL);
-
-    for (i = 0; i < sizeof( acs_names) / sizeof( acs_names[0]); i++)
+    i = 0;
+    while( i < n_items)
     {
-        move((i % 8) * 2 + tmarg, (i / 8) * (COLS / 4) + (COLS / 8 - 7));
-        add_wch(wacs_values[i]);
-        printw(" W%s", acs_names[i]);
-    }
+        int j;
 
+        attrset(A_BOLD);
+        mvaddstr( 1, (COLS - 28) / 2, "Wide Alternate Character Set");
+        attrset(A_NORMAL);
+        tmarg = 4;
+        for( j = 0; i + j < n_items && j < n_rows * ncols; j++)
+        {
+            move((j % n_rows) * 2 + tmarg,
+                  (j / n_rows) * col_size + col_size / 2 - 7);
+            add_wch(wacs_values[i + j]);
+            printw(" W%s", acs_names[i + j]);
+        }
     /* Spanish, Russian, Greek, Georgian, fullwidth */
 
-    mvaddwstr(tmarg + 16, COLS / 8 - 5, L"Espa\xf1ol");
-    mvaddwstr(tmarg + 16, 3 * (COLS / 8) - 5, russian);
-    mvaddwstr(tmarg + 16, 5 * (COLS / 8) - 5, greek);
-    mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, georgian);
-    mvaddwstr(tmarg + 17, COLS / 8 - 5, fullwidth);
+        tmarg += n_rows * 2;
+        mvaddwstr(tmarg, COLS / 8 - 5, L"Espa\xf1ol");
+        mvaddwstr(tmarg, 3 * (COLS / 8) - 5, russian);
+        mvaddwstr(tmarg, 5 * (COLS / 8) - 5, greek);
+        mvaddwstr(tmarg, 7 * (COLS / 8) - 5, georgian);
+        mvaddwstr(tmarg + 1, COLS / 8 - 5, fullwidth);
 
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
-    mvaddch( tmarg + 17, 7 * (COLS / 8) - 5, (chtype)0x1d11e);
+        mvaddch( tmarg + 1, 7 * (COLS / 8) - 5, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
 
-    mvaddstr(tmarg + 18, 3, "Press any key to continue");
-    getch();
+        mvaddstr(tmarg + 2, 3, "Press any key to continue");
+        getch();
+        i += j;
+        clear( );
+    }
 #endif
 }
 

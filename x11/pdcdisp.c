@@ -8,51 +8,66 @@
 
 # define A(x) ((chtype)x | A_ALTCHARSET)
 
+#ifdef PDC_WIDE
+   #define USE_UNICODE_ACS_CHARS 1
+#else
+   #define USE_ISO8859_CHARSET
+#endif
+
+#include "acs_defs.h"
+
 chtype acs_map[128] =
 {
-    A(0), A(1), A(2), A(3), A(4), A(5), A(6), A(7), A(8), A(9), A(10),
-    A(11), A(12), A(13), A(14), A(15), A(16), A(17), A(18), A(19),
-    A(20), A(21), A(22), A(23), A(24), A(25), A(26), A(27), A(28),
-    A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&', '\'', '(',
+   A_ORDINAL, O_ORDINAL, INVERTED_QUESTION_MARK,                /* 0 1 2 */
+   REVERSED_NOT_SIGN, NOT_SIGN, VULGAR_HALF,                    /* 3 4 5 */
+   VULGAR_QUARTER, INVERTED_EXCLAMATION_MARK,                   /* 6 7   */
+   LEFT_ANGLE_QUOTE_MARK, RIGHT_ANGLE_QUOTE_MARK,               /* 8 9   */
+   UPPER_HALF_INTEGRAL_SIGN, LOWER_HALF_INTEGRAL_SIGN,          /* 10 11 */
+   SUPERSCRIPT_N, CENTERED_SQUARE, PESETA_SIGN, F_WITH_HOOK,    /* 12-15 */
+   RIGHT_SINGLE_DOWN_DOUBLE, RIGHT_SINGLE_UP_DOUBLE,            /* 16 17 */
+   DOWN_DOUBLE_LEFT_SINGLE, UP_DOUBLE_LEFT_SINGLE,              /* 18 19 */
+   VERTICAL_DOUBLE_RIGHT_SINGLE, VERTICAL_DOUBLE_LEFT_SINGLE,   /* 20 21 */
+   HORIZONTAL_SINGLE_DOWN_DOUBLE, HORIZONTAL_SINGLE_UP_DOUBLE,  /* 22 23 */
+   HORIZONTAL_SINGLE_VERTICAL_DOUBLE,                           /* 24    */
+   RIGHT_DOUBLE_DOWN_SINGLE, RIGHT_DOUBLE_UP_SINGLE,            /* 25 26 */
+   LEFT_DOUBLE_DOWN_SINGLE, UP_SINGLE_LEFT_DOUBLE,              /* 27 28 */
+   VERTICAL_SINGLE_RIGHT_DOUBLE, VERTICAL_SINGLE_LEFT_DOUBLE,   /* 29 30 */
+   HORIZONTAL_DOUBLE_DOWN_SINGLE, HORIZONTAL_DOUBLE_UP_SINGLE,  /* 31 ' ' */
+   HORIZONTAL_DOUBLE_VERTICAL_SINGLE,                           /* !     */
+
+    '"', '#', '$', '%', '&', '\'', '(',
     ')', '*',
 
-# ifdef PDC_WIDE
-    0x2192, 0x2190, 0x2191, 0x2193,
-# else
-    '>', '<', '^', 'v',
-# endif
+   RIGHT_ARROW, LEFT_ARROW, UP_ARROW, DOWN_ARROW,                   /* +,-.  */
+   '/', FULL_BLOCK,                                                 /* /0    */
+   CENT_SIGN, YEN_SIGN, PESETA_SIGN, VULGAR_HALF, VULGAR_QUARTER,   /* 12345 */
+   LEFT_ANGLE_QUOTE_MARK, RIGHT_ANGLE_QUOTE_MARK, DARK_SHADE,       /* 678 */
+   BOX_DBL_DOWN_RIGHT, BOX_DBL_UP_RIGHT,                            /* 9: */
+   BOX_DBL_DOWN_LEFT, BOX_DBL_UP_LEFT,                              /* ;< */
+   BOX_DBL_TEE_LEFT, BOX_DBL_TEE_RIGHT,                             /* => */
+   BOX_DBL_TEE_UP, BOX_DBL_TEE_DOWN,                                /* ?@ */
+   BOX_DBL_HORIZONTAL, BOX_DBL_VERTICAL,                            /* AB */
+   BOX_DBL_CROSS, SUPERSCRIPT_2,                                    /* CD */
+   ALPHA, BETA, GAMMA, UPPERCASE_SIGMA, LOWERCASE_SIGMA,         /* EFGHI */
+   MU, TAU, UPPERCASE_PHI, THETA, OMEGA, DELTA, INFINITY,       /* JKLMNOP */
+   LOWERCASE_PHI, EPSILON, INTERSECTION, TRIPLE_BAR,            /* QRST */
+   DIVISION_SIGN, APPROXIMATELY_EQUALS_SIGN, SMALL_BULLET,      /* UVW */
+   SQUARE_ROOT, UPPER_HALF_BLOCK, LOWER_HALF_BLOCK,             /* XYZ */
+   LEFT_HALF_BLOCK, RIGHT_HALF_BLOCK,                           /* [\ */
 
-    '/',
-
-# ifdef PDC_WIDE
-    0x2588,
-# else
-    A(0),
-# endif
-
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=',
-    '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-    'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
-
-# ifdef PDC_WIDE
-    0x2666, 0x2592,
-# else
-    A(1), A(2),
-# endif
+   ']', '^', '_',
+    DIAMOND, MEDIUM_SHADE,          /* `a */
 
     'b', 'c', 'd', 'e',
 
-# ifdef PDC_WIDE
-    0x00b0, 0x00b1, 0x2591, 0x00a4, 0x2518, 0x2510, 0x250c, 0x2514,
-    0x253c, 0x23ba, 0x23bb, 0x2500, 0x23bc, 0x23bd, 0x251c, 0x2524,
-    0x2534, 0x252c, 0x2502, 0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3,
-    0x00b7,
-# else
-    A(7), A(8), '#', 0xa4, A(11), A(12), A(13), A(14), A(15), A(16), 
-    A(17), A(18), A(19), A(20), A(21), A(22), A(23), A(24), A(25), 
-    A(26), A(27), A(28), A(29), A(30), 0xb7,
-# endif
+   DEGREE_SIGN, PLUS_OR_MINUS, LIGHT_SHADE, SPLAT,          /* fghi */
+   LEFT_UP, DOWN_LEFT, RIGHT_DOWN, UP_RIGHT,                /* jklm */
+   HORIZONTAL_VERTICAL, HORIZ_SCAN_LINE_1, HORIZ_SCAN_LINE_3,  /* nop */
+   HORIZONTAL, HORIZ_SCAN_LINE_7, HORIZ_SCAN_LINE_9,        /* qrs */
+   RIGHT_VERTICAL, VERTICAL_LEFT, UP_HORIZONTAL,            /* tuv */
+   DOWN_HORIZONTAL, VERTICAL, LESSER_THAN_OR_EQUAL_TO,      /* wxy */
+   GREATER_THAN_OR_EQUAL_TO, PI, NOT_EQUALS_SIGN,           /* z{| */
+   STERLING_SIGN, LARGE_BULLET,                             /* }~  */
 
     A(127)
 };

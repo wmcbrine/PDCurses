@@ -33,6 +33,15 @@ ifeq ($(UTF8),Y)
 	CFLAGS	+= -DPDC_FORCE_UTF8
 endif
 
+ifdef CHTYPE_32
+	CFLAGS += -DCHTYPE_32
+endif
+
+ifdef CHTYPE_16
+	CFLAGS += -DCHTYPE_16
+endif
+
+
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 ifeq ($(shell uname),Darwin)

@@ -389,7 +389,9 @@ void PDC_get_rgb_values( const chtype srcp,
         *background_rgb = dimmed_color( *background_rgb);
 }
 
+#ifdef PDC_WIDE
 const chtype MAX_UNICODE = 0x110000;
+#endif
 
 #ifdef USE_FALLBACK_FONT
 GLYPHSET *PDC_unicode_range_data = NULL;
@@ -408,8 +410,10 @@ static bool character_is_in_font( chtype ichar)
     if( (ichar & A_ALTCHARSET) && (ichar & A_CHARTEXT) < 0x80)
        ichar = acs_map[ichar & 0x7f];
     ichar &= A_CHARTEXT;
+#ifdef PDC_WIDE
     if( ichar > MAX_UNICODE)  /* assume combining chars won't be */
        return( FALSE);        /* supported;  they rarely are     */
+#endif
     if( ichar > 0xffff)     /* see above comments */
        return( TRUE);
     for( i = PDC_unicode_range_data->cRanges; i; i--, wptr++)
@@ -487,7 +491,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
 #endif
         return;
     }
-//  printf( "Drawing %d chars at %d, %d\n", len, x, lineno);
                      /* Seems to me as if the input text to this function */
     if( x < 0)       /* should _never_ be off-screen.  But it sometimes is. */
     {                /* Clipping is therefore necessary. */
@@ -521,12 +524,15 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
         wchar_t buff[BUFFSIZE];
         int lpDx[BUFFSIZE + 1];
         int olen = 0;
-//      int funny_chars = 0;
         const bool in_font = character_is_in_font( *srcp);
 
         for( i = 0; i < len && olen < BUFFSIZE - 1
+#ifdef PDC_WIDE
                   && (in_font == character_is_in_font( srcp[i])
                               || (srcp[i] & A_CHARTEXT) == MAX_UNICODE)
+#else
+                  && (in_font == character_is_in_font( srcp[i]))
+#endif
                   && attrib == (attr_t)( srcp[i] >> PDC_REAL_ATTR_SHIFT); i++)
         {
             chtype ch = srcp[i] & A_CHARTEXT;
@@ -539,8 +545,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                 lpDx[olen] = 0;                   /* ^ upper 10 bits */
                 olen++;
                 ch = (wchar_t)( 0xdc00 | (ch & 0x3ff));  /* lower 10 bits */
-//              funny_chars = 1;
-//              printf( "Stored as %x, %x\n", buff[olen-1], (unsigned)ch);
             }
 #if( CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes;  combining */
             if( ch > MAX_UNICODE)      /* chars & fullwidth supported */
@@ -551,8 +555,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                 while( (root = PDC_expand_combined_characters( root,
                                    &added[n_combined])) > MAX_UNICODE)
                 {
-//                  printf( "iter %d: new root %x, added %x\n",
-//                      n_combined, (unsigned)root, (unsigned)added[n_combined]);
                     n_combined++;
                 }
                 buff[olen] = (wchar_t)root;
@@ -584,7 +586,7 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
             }
             assert( "We should never get here");
 #endif
-            buff[olen] = (wchar_t)( ch & A_CHARTEXT);
+            buff[olen] = (wchar_t)ch;
             lpDx[olen] = PDC_cxChar;
 #ifdef PDC_WIDE
             if( ch != MAX_UNICODE)

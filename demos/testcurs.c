@@ -1198,6 +1198,13 @@ void acsTest(WINDOW *win)
 }
 
 #if HAVE_COLOR
+
+#if CHTYPE_LONG >= 2 || (CHTYPE_LONG == 1 && !defined( PDC_WIDE))
+   #define GOT_DIM
+   #define GOT_OVERLINE
+   #define GOT_STRIKEOUT
+#endif
+
 void colorTest(WINDOW *win)
 {
     static const short colors[] =
@@ -1259,7 +1266,6 @@ void colorTest(WINDOW *win)
         mvprintw(tmarg + 16, col1, "COLOR_PAIRS = %d", COLOR_PAIRS);
 
 #ifdef CHTYPE_LONG
-#if( CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
         attrset(A_ITALIC);
         mvprintw( tmarg + 15, col3, "Italic");
         attrset(A_ITALIC | A_BLINK);
@@ -1268,7 +1274,6 @@ void colorTest(WINDOW *win)
         mvprintw( tmarg + 17, col4, "Italic Bold");
         attrset(A_BOLD | A_ITALIC | A_BLINK);
         mvprintw( tmarg + 18, col4, "Italic Blink Bold");
-#endif
 #endif
         attrset(A_BOLD);
         mvprintw( tmarg + 16, col3, "Bold");
@@ -1330,11 +1335,11 @@ void colorTest(WINDOW *win)
                                  orgcolors[i].blue);
     }
 /* BJG additions: */
-    if( COLORS == 256 && LINES >= 18) do  /* show off all 256 colors */
+    if( LINES >= 18) do  /* show off all 256 colors */
     {
        tmarg = LINES / 2 - 8;
        erase( );
-       for( i = 0; i < 256; i++)
+       for( i = 0; i < COLOR_PAIRS; i++)
            {
            char tbuff[4];
            const int col = COLS / 2 - 24;
@@ -1345,19 +1350,15 @@ void colorTest(WINDOW *win)
            sprintf( tbuff, "%02x ", i);
            mvaddstr( tmarg + i / 16, col + (i % 16) * 3, tbuff);
            }
-#ifdef A_LEFTLINE
+#ifdef CHTYPE_LONG
        attrset( A_LEFTLINE);
        mvaddstr( tmarg + 17, col1, "A_LEFTLINE");
-#endif
-#ifdef A_UNDERLINE
        attrset( A_UNDERLINE);
        mvaddstr( tmarg + 18, col1, "A_UNDERLINE");
-#endif
-#ifdef A_RIGHTLINE
        attrset( A_RIGHTLINE);
        mvaddstr( tmarg + 19, col1, "A_RIGHTLINE");
 #endif
-# if(CHTYPE_LONG >= 2)        /* following types don't exist otherwise: */
+#ifdef GOT_OVERLINE
        attrset( A_OVERLINE);
        mvaddstr( tmarg + 17, col2, "A_OVERLINE");
        attrset( A_STRIKEOUT);

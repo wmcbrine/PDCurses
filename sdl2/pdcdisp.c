@@ -174,22 +174,22 @@ static void _set_attr(chtype ch)
 
         if (newfg != foregr)
         {
-            SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                           pdc_color + newfg, pdc_flastc, 1);
+            SDL_SetPaletteColors(pdc_font->format->palette,
+                                 pdc_color + newfg, pdc_flastc, 1);
             foregr = newfg;
         }
 
         if (newbg != backgr)
         {
             if (newbg == -1)
-                SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
+                SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
             else
             {
                 if (backgr == -1)
-                    SDL_SetColorKey(pdc_font, 0, 0);
+                    SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
 
-                SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                               pdc_color + newbg, 0, 1);
+                SDL_SetPaletteColors(pdc_font->format->palette,
+                                     pdc_color + newbg, 0, 1);
             }
 
             backgr = newbg;
@@ -316,29 +316,29 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
             SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
 
            if (backgr != -1)
-               SDL_SetColorKey(pdc_font, 0, 0);
+               SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
            SDL_FreeSurface(pdc_font);
            pdc_font = NULL;
         }
 #else
         if (col != -1)
-            SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                           pdc_color + col, pdc_flastc, 1);
+            SDL_SetPaletteColors(pdc_font->format->palette,
+                                 pdc_color + col, pdc_flastc, 1);
 
         src->x = '_' % 32 * pdc_fwidth;
         src->y = '_' / 32 * pdc_fheight;
 
         if (backgr != -1)
-            SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
+            SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
 
         SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
 
         if (backgr != -1)
-            SDL_SetColorKey(pdc_font, 0, 0);
+            SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
 
         if (col != -1)
-            SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                           pdc_color + foregr, pdc_flastc, 1);
+            SDL_SetPaletteColors(pdc_font->format->palette,
+                                 pdc_color + foregr, pdc_flastc, 1);
 #endif
     }
 

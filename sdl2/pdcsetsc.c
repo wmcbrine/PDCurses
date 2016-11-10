@@ -50,7 +50,7 @@ void PDC_set_title(const char *title)
 {
     PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
 
-   void SDL_SetWindowTitle(sdl_window, title);
+    SDL_SetWindowTitle(pdc_window, title);
 }
 
 int PDC_set_blink(bool blinkon)

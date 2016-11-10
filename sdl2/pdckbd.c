@@ -466,8 +466,7 @@ int PDC_get_key(void)
             break;
         case SDL_WINDOWEVENT_RESTORED:
         case SDL_WINDOWEVENT_EXPOSED:
-             SDL_RenderPresent(pdc_render);
-/*             SDL_UpdateWindowSurface(pdc_window);  */
+            SDL_UpdateWindowSurface(pdc_window);
             break;
         }
         break;

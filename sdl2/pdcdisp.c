@@ -85,19 +85,9 @@ void PDC_update_rects(void)
            probably better off doing a full screen update */
 
         if (rectcount == MAXRECT)
-        {
-           SDL_UpdateTexture(pdc_texture, NULL, pdc_screen->pixels, pdc_screen->pitch);
-           SDL_RenderClear(pdc_render);
-           SDL_RenderCopy(pdc_render, pdc_texture, NULL, NULL);
-           SDL_RenderPresent(pdc_render);
-        }
+            SDL_UpdateWindowSurface(pdc_window);
         else
-        {
-           SDL_UpdateTexture(pdc_texture, NULL, pdc_screen->pixels, pdc_screen->pitch);
-           SDL_RenderClear(pdc_render);
-           SDL_RenderCopy(pdc_render, pdc_texture, NULL, NULL);
-           SDL_RenderPresent(pdc_render);
-        }
+            SDL_UpdateWindowSurfaceRects(pdc_window, uprect, rectcount);
 
         pdc_lastupdate = SDL_GetTicks();
         rectcount = 0;

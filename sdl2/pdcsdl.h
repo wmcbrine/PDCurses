@@ -8,8 +8,6 @@
 #include <SDL_ttf.h>
 
 PDCEX SDL_Window *pdc_window;
-PDCEX SDL_Renderer *pdc_render;
-PDCEX SDL_Texture *pdc_texture;
 PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
 PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 

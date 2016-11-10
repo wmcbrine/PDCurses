@@ -9,8 +9,6 @@ RCSID("$Id: pdcscrn.c,v 1.34 2008/07/14 04:24:52 wmcbrine Exp $")
 #include "deficon.h"
 
 SDL_Window *pdc_window = NULL;
-SDL_Renderer *pdc_render = NULL;
-SDL_Texture *pdc_texture = NULL;
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
@@ -63,16 +61,6 @@ void PDC_clean(void)
     {
         SDL_FreeSurface(pdc_font);
         pdc_font = NULL;
-    }
-    if (pdc_texture != NULL)
-    {
-       SDL_DestroyTexture (pdc_texture);
-       pdc_texture = NULL;
-    }
-    if (pdc_render != NULL)
-    {
-       SDL_DestroyRenderer (pdc_render);
-       pdc_render = NULL;
     }
     if (pdc_window != NULL)
     {
@@ -261,18 +249,6 @@ int PDC_scr_open(int argc, char **argv)
             fprintf(stderr, "Could not open SDL window surface: %s\n", SDL_GetError());
             return ERR;
         }
-        pdc_render = SDL_CreateRenderer(pdc_window, -1, 0);
-        if (pdc_render == NULL)
-        {
-           fprintf(stderr, "Could not open SDL window renderer: %s\n", SDL_GetError());
-           return ERR;
-        }
-        pdc_texture = SDL_CreateTexture(pdc_render, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, pdc_swidth, pdc_sheight);
-        if (pdc_texture == NULL)
-        {
-           fprintf(stderr, "Could not open SDL texture: %s\n", SDL_GetError());
-           return ERR;
-        }
     }
     else
     {
@@ -338,10 +314,6 @@ int PDC_resize_screen(int nlines, int ncols)
 
     SDL_SetWindowSize(pdc_window, pdc_swidth, pdc_sheight);
     pdc_screen = SDL_GetWindowSurface(pdc_window);
-    if (pdc_texture != NULL)
-       SDL_DestroyTexture (pdc_texture);
-    SDL_RenderClear(pdc_render);
-    pdc_texture = SDL_CreateTexture(pdc_render, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, pdc_swidth, pdc_sheight);
 
     if (pdc_tileback)
         PDC_retile();

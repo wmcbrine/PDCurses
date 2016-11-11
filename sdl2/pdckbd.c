@@ -450,7 +450,7 @@ int PDC_get_key(void)
         {
         case SDL_WINDOWEVENT_SIZE_CHANGED:
         case SDL_WINDOWEVENT_RESIZED:
-            if (pdc_own_screen &&
+            if (pdc_own_window &&
                (event.window.data2 / pdc_fheight != LINES ||
                 event.window.data1 / pdc_fwidth != COLS))
             {

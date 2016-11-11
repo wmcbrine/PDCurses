@@ -27,7 +27,7 @@ int pdc_ttffont_hint = TTF_HINTING_MONO;
 SDL_Color pdc_color[16];
 Uint32 pdc_mapped[16];
 int pdc_fheight, pdc_fwidth, pdc_flastc;
-bool pdc_own_screen;
+bool pdc_own_window;
 
 /* COLOR_PAIR to attribute encoding table. */
 
@@ -131,9 +131,9 @@ int PDC_scr_open(int argc, char **argv)
     if (!SP)
         return ERR;
 
-    pdc_own_screen = !pdc_screen;
+    pdc_own_window = !pdc_window;
 
-    if (pdc_own_screen)
+    if (pdc_own_window)
     {
         if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) < 0)
         {
@@ -199,7 +199,7 @@ int PDC_scr_open(int argc, char **argv)
         pdc_back = SDL_LoadBMP(bname ? bname : "pdcback.bmp");
     }
 
-    if (!SP->mono && (pdc_back || !pdc_own_screen))
+    if (!SP->mono && (pdc_back || !pdc_own_window))
     {
         SP->orig_attr = TRUE;
         SP->orig_fore = COLOR_WHITE;
@@ -218,7 +218,7 @@ int PDC_scr_open(int argc, char **argv)
         pdc_flastc = pdc_font->format->palette->ncolors - 1;
 #endif
 
-    if (pdc_own_screen && !pdc_icon)
+    if (pdc_own_window && !pdc_icon)
     {
         const char *iname = getenv("PDC_ICON");
         pdc_icon = SDL_LoadBMP(iname ? iname : "pdcicon.bmp");
@@ -228,7 +228,7 @@ int PDC_scr_open(int argc, char **argv)
                                                     sizeof(deficon)), 0);
     }
 
-    if (pdc_own_screen)
+    if (pdc_own_window)
     {
         const char *env = getenv("PDC_LINES");
         pdc_sheight = (env ? atoi(env) : 25) * pdc_fheight;
@@ -252,6 +252,9 @@ int PDC_scr_open(int argc, char **argv)
     }
     else
     {
+        if (!pdc_screen)
+            pdc_screen = SDL_GetWindowSurface(pdc_window);
+
         if (!pdc_sheight)
             pdc_sheight = pdc_screen->h - pdc_yoffset;
 
@@ -285,7 +288,7 @@ int PDC_scr_open(int argc, char **argv)
 
     PDC_mouse_set();
 
-    if (pdc_own_screen)
+    if (pdc_own_window)
         PDC_set_title(argc ? argv[0] : "PDCurses");
 
     SP->lines = PDC_get_rows();
@@ -303,7 +306,7 @@ int PDC_scr_open(int argc, char **argv)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
-    if (!pdc_own_screen)
+    if (!pdc_own_window)
         return ERR;
 
     if (nlines && ncols)

@@ -27,7 +27,7 @@ extern Uint32 pdc_mapped[16];        /* colors for FillRect(), as
 extern int pdc_fheight, pdc_fwidth;  /* font height and width */
 extern int pdc_flastc;               /* font palette's last color
                                         (treated as the foreground) */
-extern bool pdc_own_screen;          /* if pdc_screen was not set
+extern bool pdc_own_window;          /* if pdc_window was not set
                                         before initscr(), PDCurses is
                                         responsible for (owns) it */
 extern Uint32 pdc_lastupdate;        /* time of last update, in ticks */

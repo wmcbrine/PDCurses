@@ -275,35 +275,28 @@ static int _process_mouse_event(void)
             }
         }
     }
+    else if (event.type == SDL_MOUSEWHEEL)
+    {
+        pdc_mouse_status.x = pdc_mouse_status.y = -1;
+
+        if (event.wheel.y > 0)
+            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+        else if (event.wheel.y < 0)
+            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+        else if (event.wheel.x > 0)
+            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
+        else if (event.wheel.x < 0)
+            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
+        else
+            return -1;
+
+        return KEY_MOUSE;
+    }
     else
     {
         short action = (event.button.state == SDL_PRESSED) ?
                        BUTTON_PRESSED : BUTTON_RELEASED;
         Uint8 btn = event.button.button;
-
-        /* handle scroll wheel */
-
-        if ((btn >= 4 && btn <= 7) && action == BUTTON_RELEASED)
-        {
-            pdc_mouse_status.x = pdc_mouse_status.y = -1;
-
-            switch (btn)
-            {
-            case 4:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
-                break;
-            case 5:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
-                break;
-            case 6:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
-                break;
-            case 7:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
-            }
-
-            return KEY_MOUSE;
-        }
 
         if (btn < 1 || btn > 3)
             return -1;
@@ -376,6 +369,7 @@ int PDC_get_key(void)
         SDL_ShowCursor(SDL_ENABLE);
     case SDL_MOUSEBUTTONUP:
     case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEWHEEL:
         oldkey = SDLK_SPACE;
         if (SP->_trap_mbe)
             return _process_mouse_event();

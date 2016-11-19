@@ -33,6 +33,15 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
+ifdef CHTYPE_32
+	CFLAGS += -DCHTYPE_32
+endif
+
+ifdef CHTYPE_16
+	CFLAGS += -DCHTYPE_16
+endif
+
+
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 ifeq ($(shell uname),Darwin)
@@ -44,7 +53,7 @@ LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework$(EXE_EXTENSION) newdemo$(EXE_EXTENSION) ptest$(EXE_EXTENSION) rain$(EXE_EXTENSION) testcurs$(EXE_EXTENSION) tuidemo$(EXE_EXTENSION) worm$(EXE_EXTENSION) xmas$(EXE_EXTENSION) \
+DEMOS		= firework$(EXE_EXTENSION) newdemo$(EXE_EXTENSION) newtest$(EXE_EXTENSION) ptest$(EXE_EXTENSION) rain$(EXE_EXTENSION) testcurs$(EXE_EXTENSION) tuidemo$(EXE_EXTENSION) worm$(EXE_EXTENSION) xmas$(EXE_EXTENSION) \
 sdltest$(EXE_EXTENSION)
 
 .PHONY: all libs clean demos install
@@ -80,6 +89,9 @@ firework$(EXE_EXTENSION): $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 newdemo$(EXE_EXTENSION): $(demodir)/newdemo.c
+	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+
+newtest$(EXE_EXTENSION): $(demodir)/newtest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 ptest$(EXE_EXTENSION): $(demodir)/ptest.c

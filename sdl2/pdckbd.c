@@ -387,6 +387,7 @@ static int _process_mouse_event(void)
 
     old_mouse_status = pdc_mouse_status;
 
+    SP->key_code = TRUE;
     return KEY_MOUSE;
 }
 

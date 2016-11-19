@@ -2,27 +2,30 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcscrn.c,v 1.34 2008/07/14 04:24:52 wmcbrine Exp $")
-
 #include <stdlib.h>
-#include "deffont.h"
+#ifndef PDC_WIDE
+# include "deffont.h"
+#endif
 #include "deficon.h"
+
+#ifdef PDC_WIDE
+# ifndef PDC_FONT_PATH
+#  ifdef _WIN32
+#   define PDC_FONT_PATH "C:/Windows/Fonts/lucon.ttf"
+#  elif defined(__APPLE__)
+#   define PDC_FONT_PATH "/Library/Fonts/Courier New.ttf"
+#  else
+#   define PDC_FONT_PATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
+#  endif
+# endif
+TTF_Font *pdc_ttffont = NULL;
+int pdc_font_size = 18;
+#endif
 
 SDL_Window *pdc_window = NULL;
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
-
-#ifdef PDC_WIDE
-# ifndef PDC_FONT_PATH
-#  define PDC_FONT_PATH "/usr/local/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
-# endif
-TTF_Font *pdc_ttffont = NULL;
-SDL_Color *pdc_ttffont_foregroundcolor = NULL;
-SDL_Color *pdc_ttffont_backgroundcolor = NULL;
-int pdc_ttffont_spointsz = 12;
-int pdc_ttffont_hint = TTF_HINTING_MONO;
-#endif
 
 SDL_Color pdc_color[16];
 Uint32 pdc_mapped[16];
@@ -33,54 +36,29 @@ bool pdc_own_window;
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
-#ifdef PDC_WIDE
-void PDC_clean(void)
+static void _clean(void)
 {
+#ifdef PDC_WIDE
     if (pdc_ttffont)
     {
         TTF_CloseFont(pdc_ttffont);
-        pdc_ttffont = NULL;
         TTF_Quit();
     }
-    if (pdc_tileback != NULL)
-    {
-        SDL_FreeSurface(pdc_tileback);
-        pdc_tileback = NULL;
-    }
-    if (pdc_back != NULL)
-    {
-        SDL_FreeSurface(pdc_back);
-        pdc_back = NULL;
-    }
-    if (pdc_icon != NULL)
-    {
-        SDL_FreeSurface(pdc_icon);
-        pdc_icon = NULL;
-    }
-    if (pdc_font != NULL)
-    {
-        SDL_FreeSurface(pdc_font);
-        pdc_font = NULL;
-    }
-    if (pdc_window != NULL)
-    {
-        SDL_DestroyWindow(pdc_window);
-        pdc_window = NULL;
-    }
+#endif
+    SDL_FreeSurface(pdc_tileback);
+    SDL_FreeSurface(pdc_back);
+    SDL_FreeSurface(pdc_icon);
+    SDL_FreeSurface(pdc_font);
+    SDL_DestroyWindow(pdc_window);
     SDL_Quit();
 }
-#endif
 
 void PDC_retile(void)
 {
-    Uint32 pixel_format;
     if (pdc_tileback)
         SDL_FreeSurface(pdc_tileback);
 
-    pixel_format = SDL_GetWindowPixelFormat(pdc_window);
-    if (pixel_format == SDL_PIXELFORMAT_UNKNOWN)
-        return;
-    pdc_tileback = SDL_ConvertSurfaceFormat(pdc_screen, pixel_format, 0);
+    pdc_tileback = SDL_ConvertSurface(pdc_screen, pdc_screen->format, 0);
     if (pdc_tileback == NULL)
         return;
 
@@ -141,30 +119,29 @@ int PDC_scr_open(int argc, char **argv)
             return ERR;
         }
 
-#ifdef PDC_WIDE
-        atexit(PDC_clean);
-#else
-        atexit(SDL_Quit);
-#endif
+        atexit(_clean);
     }
 
 #ifdef PDC_WIDE
     if (!pdc_ttffont)
     {
+        const char *ptsz, *fname;
+
         if (TTF_Init() == -1)
         {
             fprintf(stderr, "Could not start SDL_TTF: %s\n", SDL_GetError());
             return ERR;
         }
-        const char *ptsz = getenv("PDC_FONT_POINT_SIZE");
+
+        ptsz = getenv("PDC_FONT_SIZE");
         if (ptsz != NULL)
-            pdc_ttffont_spointsz = atoi(ptsz);
-        if (pdc_ttffont_spointsz <= 0)
-            pdc_ttffont_spointsz = 12;
-        const char *fname = getenv("PDC_FONT");
-        pdc_ttffont = TTF_OpenFont(fname ? fname : PDC_FONT_PATH, pdc_ttffont_spointsz);
-        TTF_SetFontKerning (pdc_ttffont, 0);
-        TTF_SetFontHinting(pdc_ttffont, pdc_ttffont_hint);
+            pdc_font_size = atoi(ptsz);
+        if (pdc_font_size <= 0)
+            pdc_font_size = 18;
+
+        fname = getenv("PDC_FONT");
+        pdc_ttffont = TTF_OpenFont(fname ? fname : PDC_FONT_PATH,
+                                   pdc_font_size);
     }
 
     if (!pdc_ttffont)
@@ -172,6 +149,9 @@ int PDC_scr_open(int argc, char **argv)
         fprintf(stderr, "Could not load font\n");
         return ERR;
     }
+
+    TTF_SetFontKerning(pdc_ttffont, 0);
+    TTF_SetFontHinting(pdc_ttffont, TTF_HINTING_MONO);
 
     SP->mono = FALSE;
 #else

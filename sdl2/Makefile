@@ -5,13 +5,6 @@ O = o
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
 endif
-prefix		=$(DESTDIR)$(PREFIX)
-exec_prefix	=$(prefix)
-libdir		=$(exec_prefix)/lib
-bindir		=$(exec_prefix)/bin
-includedir	=$(exec_prefix)/include
-docdir		=$(exec_prefix)/share/doc/pdcurses
-mandir		=../doc
 
 include $(PDCURSES_SRCDIR)/libobjs.mif
 
@@ -19,22 +12,21 @@ osdir		= $(PDCURSES_SRCDIR)/sdl2
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
-SFLAGS		= $(shell pkg-config --cflags SDL2_ttf sdl2)
-SLIBS		= $(shell pkg-config --libs SDL2_ttf sdl2)
+SFLAGS		= $(shell pkg-config --cflags sdl2)
+SLIBS		= $(shell pkg-config --libs sdl2)
 
 # If your system doesn't have these, remove the defines here
 SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
 ifeq ($(DEBUG),Y)
-	CFLAGS  = -g -Wall -DPDCDEBUG
+	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
 else
-	CFLAGS:= $(CFLAGS)
-	CFLAGS  += -O2 -Wall
-	LDFLAGS:= $(LDFLAGS)
+	CFLAGS  += -O2 -Wall -fPIC
 endif
 
 ifeq ($(WIDE),Y)
-	CFLAGS += -DPDC_WIDE
+	CFLAGS += -DPDC_WIDE $(shell pkg-config --cflags SDL2_ttf)
+	SLIBS  += $(shell pkg-config --libs SDL2_ttf)
 endif
 
 ifeq ($(UTF8),Y)
@@ -65,7 +57,7 @@ clean:
 	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
-#	strip $(DEMOS)
+	strip $(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	ar rv $@ $?
@@ -116,15 +108,3 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h
 
 tuidemo.o: $(demodir)/tuidemo.c
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tuidemo.c
-
-install:
-	if ( test ! -d $(bindir) ) ; then mkdir -p $(bindir) ; fi
-	cp $(DEMOS) $(bindir)
-	if ( test ! -d $(libdir) ) ; then mkdir -p $(libdir) ; fi
-	cp *.a $(libdir)
-	if ( test ! -d $(includedir) ) ; then mkdir -p $(includedir) ; fi
-	cp ../curses.h $(includedir)
-	cp ../panel.h $(includedir)
-	cp ../term.h $(includedir)
-	if ( test ! -d $(docdir) ) ; then mkdir -p $(docdir) ; fi
-	cp $(mandir)/*.txt $(docdir)

@@ -123,9 +123,48 @@ bool PDC_check_key(void)
     return haveevent;
 }
 
+#ifdef PDC_WIDE
+static int _utf8_to_unicode(char *chstr)
+{
+    int i, bytes, unicode;
+    unsigned char byte = chstr[0];
+
+    if (byte > 0xf0)
+    {
+        bytes = 4;
+        unicode = byte & 0x7;
+    }
+    else if (byte > 0xe0)
+    {
+        bytes = 3;
+        unicode = byte & 0xf;
+    }
+    else if (byte > 0xc0)
+    {
+        bytes = 2;
+        unicode = byte & 0x1f;
+    }
+    else if (byte > 0x80) {
+        /* starts with a continuation byte; invalid character */
+        return -1;
+    }
+    else
+    {
+        bytes = 1;
+        unicode = byte;
+    }
+
+    for (i = 1; i < bytes; i++)
+        unicode = (unicode << 6) + (chstr[i] & 0x3f);
+
+    return unicode;
+}
+#endif
+
 static int _process_key_event(void)
 {
     int i, key = 0;
+    unsigned long old_modifiers = pdc_key_modifiers;
 
     pdc_key_modifiers = 0L;
     SP->key_code = FALSE;
@@ -154,6 +193,16 @@ static int _process_key_event(void)
         }
 
         return -1;
+    }
+    else if (event.type == SDL_TEXTINPUT)
+    {
+        pdc_key_modifiers = old_modifiers;
+#ifdef PDC_WIDE
+        return _utf8_to_unicode(event.text.text);
+#else
+        key = (unsigned char)event.text.text[0];
+        return key > 0x7f ? -1 : key;
+#endif
     }
 
     oldkey = event.key.keysym.sym;
@@ -233,6 +282,11 @@ static int _process_key_event(void)
             key += ALT_0 - '0';
             SP->key_code = TRUE;
         }
+    }
+
+    /* Textual input is handled by the SDL_TEXTINPUT event */
+    if (' ' <= key && key <= '~') {
+        return -1;
     }
 
     return key ? key : -1;
@@ -380,6 +434,7 @@ int PDC_get_key(void)
         break;
     case SDL_KEYUP:
     case SDL_KEYDOWN:
+    case SDL_TEXTINPUT:
         PDC_mouse_set();
         return _process_key_event();
     }

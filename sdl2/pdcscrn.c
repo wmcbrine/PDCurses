@@ -223,6 +223,11 @@ int PDC_scr_open(int argc, char **argv)
             return ERR;
         }
         SDL_SetWindowIcon(pdc_window, pdc_icon);
+
+        /* Events must be pumped before calling SDL_GetWindowSurface, or
+           initial modifiers (e.g. numlock) will be ignored and out-of-sync. */
+        SDL_PumpEvents();
+
         pdc_screen = SDL_GetWindowSurface(pdc_window);
         if (pdc_screen == NULL)
         {
@@ -265,6 +270,8 @@ int PDC_scr_open(int argc, char **argv)
     for (i = 0; i < 16; i++)
         pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
                                    pdc_color[i].g, pdc_color[i].b);
+
+    SDL_StartTextInput();
 
     PDC_mouse_set();
 

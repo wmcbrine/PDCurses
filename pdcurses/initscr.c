@@ -2,89 +2,92 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: initscr.c,v 1.114 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         initscr
+initscr
+-------
 
-  Synopsis:
-        WINDOW *initscr(void);
-        WINDOW *Xinitscr(int argc, char *argv[]);
-        int endwin(void);
-        bool isendwin(void);
-        SCREEN *newterm(const char *type, FILE *outfd, FILE *infd);
-        SCREEN *set_term(SCREEN *new);
-        void delscreen(SCREEN *sp);
+### Synopsis
 
-        int resize_term(int nlines, int ncols);
-        bool is_termresized(void);
-        const char *curses_version(void);
+    WINDOW *initscr(void);
+    WINDOW *Xinitscr(int argc, char *argv[]);
+    int endwin(void);
+    bool isendwin(void);
+    SCREEN *newterm(const char *type, FILE *outfd, FILE *infd);
+    SCREEN *set_term(SCREEN *new);
+    void delscreen(SCREEN *sp);
 
-  Description:
-        initscr() should be the first curses routine called.  It will 
-        initialize all curses data structures, and arrange that the 
-        first call to refresh() will clear the screen.  In case of 
-        error, initscr() will write a message to standard error and end 
-        the program.
+    int resize_term(int nlines, int ncols);
+    bool is_termresized(void);
+    const char *curses_version(void);
 
-        endwin() should be called before exiting or escaping from curses 
-        mode temporarily.  It will restore tty modes, move the cursor to 
-        the lower left corner of the screen and reset the terminal into 
-        the proper non-visual mode.  To resume curses after a temporary 
-        escape, call refresh() or doupdate().
+### Description
 
-        isendwin() returns TRUE if endwin() has been called without a 
-        subsequent refresh, unless SP is NULL.
+   initscr() should be the first curses routine called.  It will
+   initialize all curses data structures, and arrange that the
+   first call to refresh() will clear the screen.  In case of
+   error, initscr() will write a message to standard error and end
+   the program.
 
-        In some implementations of curses, newterm() allows the use of 
-        multiple terminals. Here, it's just an alternative interface for 
-        initscr(). It always returns SP, or NULL.
+   endwin() should be called before exiting or escaping from curses
+   mode temporarily.  It will restore tty modes, move the cursor to
+   the lower left corner of the screen and reset the terminal into
+   the proper non-visual mode.  To resume curses after a temporary
+   escape, call refresh() or doupdate().
 
-        delscreen() frees the memory allocated by newterm() or
-        initscr(), since it's not freed by endwin(). This function is
-        usually not needed. In PDCurses, the parameter must be the
-        value of SP, and delscreen() sets SP to NULL.
+   isendwin() returns TRUE if endwin() has been called without a
+   subsequent refresh, unless SP is NULL.
 
-        set_term() does nothing meaningful in PDCurses, but is included 
-        for compatibility with other curses implementations.
+   In some implementations of curses, newterm() allows the use of
+   multiple terminals. Here, it's just an alternative interface for
+   initscr(). It always returns SP, or NULL.
 
-        resize_term() is effectively two functions: When called with 
-        nonzero values for nlines and ncols, it attempts to resize the 
-        screen to the given size. When called with (0, 0), it merely 
-        adjusts the internal structures to match the current size after 
-        the screen is resized by the user. On the currently supported 
-        platforms, this functionality is mutually exclusive: X11 allows 
-        user resizing, while DOS, OS/2 and Win32 allow programmatic 
-        resizing. If you want to support user resizing, you should check 
-        for getch() returning KEY_RESIZE, and/or call is_termresized() 
-        at appropriate times; if either condition occurs, call 
-        resize_term(0, 0). Then, with either user or programmatic 
-        resizing, you'll have to resize any windows you've created, as 
-        appropriate; resize_term() only handles stdscr and curscr.
+   delscreen() frees the memory allocated by newterm() or
+   initscr(), since it's not freed by endwin(). This function is
+   usually not needed. In PDCurses, the parameter must be the
+   value of SP, and delscreen() sets SP to NULL.
 
-        is_termresized() returns TRUE if the curses screen has been
-        resized by the user, and a call to resize_term() is needed. 
-        Checking for KEY_RESIZE is generally preferable, unless you're 
-        not handling the keyboard.
+   set_term() does nothing meaningful in PDCurses, but is included
+   for compatibility with other curses implementations.
 
-        curses_version() returns a string describing the version of 
-        PDCurses.
+   resize_term() is effectively two functions: When called with
+   nonzero values for nlines and ncols, it attempts to resize the
+   screen to the given size. When called with (0, 0), it merely
+   adjusts the internal structures to match the current size after
+   the screen is resized by the user. On the currently supported
+   platforms, this functionality is mutually exclusive: X11 allows
+   user resizing, while DOS, OS/2 and Win32 allow programmatic
+   resizing. If you want to support user resizing, you should check
+   for getch() returning KEY_RESIZE, and/or call is_termresized()
+   at appropriate times; if either condition occurs, call
+   resize_term(0, 0). Then, with either user or programmatic
+   resizing, you'll have to resize any windows you've created, as
+   appropriate; resize_term() only handles stdscr and curscr.
 
-  Return Value:
-        All functions return NULL on error, except endwin(), which
-        returns ERR on error.
+   is_termresized() returns TRUE if the curses screen has been
+   resized by the user, and a call to resize_term() is needed.
+   Checking for KEY_RESIZE is generally preferable, unless you're
+   not handling the keyboard.
 
-  Portability                                X/Open    BSD    SYS V
-        initscr                                 Y       Y       Y
-        endwin                                  Y       Y       Y
-        isendwin                                Y       -      3.0
-        newterm                                 Y       -       Y
-        set_term                                Y       -       Y
-        delscreen                               Y       -      4.0
-        resize_term                             -       -       -
-        is_termresized                          -       -       -
-        curses_version                          -       -       -
+   curses_version() returns a string describing the version of
+   PDCurses.
+
+### Return Value
+
+   All functions return NULL on error, except endwin(), which
+   returns ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    initscr                     Y       Y       Y
+    endwin                      Y       Y       Y
+    isendwin                    Y       -      3.0
+    newterm                     Y       -       Y
+    set_term                    Y       -       Y
+    delscreen                   Y       -      4.0
+    resize_term                 -       -       -
+    is_termresized              -       -       -
+    curses_version              -       -       -
 
 **man-end****************************************************************/
 
@@ -169,7 +172,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     PDC_slk_initialize();
     LINES -= SP->slklines;
 
-    /* We have to sort out ripped off lines here, and reduce the height 
+    /* We have to sort out ripped off lines here, and reduce the height
        of stdscr by the number of lines ripped off */
 
     for (i = 0; i < linesrippedoff; i++)
@@ -247,7 +250,7 @@ int endwin(void)
 bool isendwin(void)
 {
     PDC_LOG(("isendwin() - called\n"));
-    
+
     return SP ? !(SP->alive) : FALSE;
 }
 
@@ -294,8 +297,11 @@ int resize_term(int nlines, int ncols)
 {
     PDC_LOG(("resize_term() - called: nlines %d\n", nlines));
 
-    if (!stdscr || PDC_resize_screen(nlines, ncols) == ERR)
+    if( PDC_resize_screen(nlines, ncols) == ERR)
         return ERR;
+
+    if (!stdscr)
+        return OK;
 
     SP->lines = PDC_get_rows();
     LINES = SP->lines - SP->linesrippedoff - SP->slklines;

@@ -2,8 +2,6 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.76 2008/07/14 04:24:51 wmcbrine Exp $")
-
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
 #else
@@ -52,6 +50,9 @@ static VIOMODEINFO scrnmode;    /* default screen mode  */
 static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
 static bool can_change = FALSE;
+
+/* special purpose function keys */
+static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
 
 static int _get_font(void)
 {
@@ -212,6 +213,10 @@ int PDC_resize_screen(int nlines, int ncols)
     PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
               nlines, ncols));
 
+    if( !stdscr)      /* window hasn't been created yet;  we're */
+    {                 /* specifying its size before doing so    */
+        return OK;    /* ...which doesn't work (yet) on Win32   */
+    }
 #ifdef EMXVIDEO
     return ERR;
 #else
@@ -260,9 +265,9 @@ static bool _screen_mode_equals(VIOMODEINFO *oldmode)
 
     return ((current.cb == oldmode->cb) &&
             (current.fbType == oldmode->fbType) &&
-            (current.color == oldmode->color) && 
+            (current.color == oldmode->color) &&
             (current.col == oldmode->col) &&
-            (current.row == oldmode->row) && 
+            (current.row == oldmode->row) &&
             (current.hres == oldmode->vres) &&
             (current.vres == oldmode->vres));
 }
@@ -419,4 +424,17 @@ int PDC_init_color(short color, short red, short green, short blue)
 #else
     return ERR;
 #endif
+}
+
+/* PDC_set_function_key() does nothing on this platform */
+int PDC_set_function_key( const unsigned function, const int new_key)
+{
+    int old_key = -1;
+
+    if( function < MAX_FUNCTION_KEYS)
+    {
+         old_key = PDC_shutdown_key[function];
+         PDC_shutdown_key[function] = new_key;
+    }
+    return( old_key);
 }

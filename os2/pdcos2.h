@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: pdcos2.h,v 1.9 2008/08/14 06:38:35 wmcbrine Exp $ */
-
 #ifdef _MSC_VER
 # define USE_OS2_H 1         /* Use the os2.h for the compiler       */
 # define APIRET USHORT
@@ -23,6 +21,12 @@
 #endif
 
 #include <curspriv.h>
+
+#ifdef CHTYPE_LONG
+# define PDC_ATTR_SHIFT 19
+#else
+# define PDC_ATTR_SHIFT 8
+#endif
 
 #ifdef __WATCOMC__
 # define PDCTHUNK(x) ((ptr_16)(x))

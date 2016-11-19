@@ -2,61 +2,64 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: instr.c,v 1.44 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         instr
+instr
+-----
 
-  Synopsis:
-        int instr(char *str);
-        int innstr(char *str, int n);
-        int winstr(WINDOW *win, char *str);
-        int winnstr(WINDOW *win, char *str, int n);
-        int mvinstr(int y, int x, char *str);
-        int mvinnstr(int y, int x, char *str, int n);
-        int mvwinstr(WINDOW *win, int y, int x, char *str);
-        int mvwinnstr(WINDOW *win, int y, int x, char *str, int n);
+### Synopsis
 
-        int inwstr(wchar_t *wstr);
-        int innwstr(wchar_t *wstr, int n);
-        int winwstr(WINDOW *win, wchar_t *wstr);
-        int winnwstr(WINDOW *win, wchar_t *wstr, int n);
-        int mvinwstr(int y, int x, wchar_t *wstr);
-        int mvinnwstr(int y, int x, wchar_t *wstr, int n);
-        int mvwinwstr(WINDOW *win, int y, int x, wchar_t *wstr);
-        int mvwinnwstr(WINDOW *win, int y, int x, wchar_t *wstr, int n);
+    int instr(char *str);
+    int innstr(char *str, int n);
+    int winstr(WINDOW *win, char *str);
+    int winnstr(WINDOW *win, char *str, int n);
+    int mvinstr(int y, int x, char *str);
+    int mvinnstr(int y, int x, char *str, int n);
+    int mvwinstr(WINDOW *win, int y, int x, char *str);
+    int mvwinnstr(WINDOW *win, int y, int x, char *str, int n);
 
-  Description:
-        These functions take characters (or wide characters) from the 
-        current or specified position in the window, and return them as 
-        a string in str (or wstr). Attributes are ignored. The functions 
-        with n as the last argument return a string at most n characters 
-        long.
+    int inwstr(wchar_t *wstr);
+    int innwstr(wchar_t *wstr, int n);
+    int winwstr(WINDOW *win, wchar_t *wstr);
+    int winnwstr(WINDOW *win, wchar_t *wstr, int n);
+    int mvinwstr(int y, int x, wchar_t *wstr);
+    int mvinnwstr(int y, int x, wchar_t *wstr, int n);
+    int mvwinwstr(WINDOW *win, int y, int x, wchar_t *wstr);
+    int mvwinnwstr(WINDOW *win, int y, int x, wchar_t *wstr, int n);
 
-  Return Value:
-        Upon successful completion, innstr(), mvinnstr(), mvwinnstr() 
-        and winnstr() return the number of characters actually read into
-        the string; instr(), mvinstr(), mvwinstr() and winstr() return 
-        OK. Otherwise, all these functions return ERR.
+### Description
 
-  Portability                                X/Open    BSD    SYS V
-        instr                                   Y       -      4.0
-        winstr                                  Y       -      4.0
-        mvinstr                                 Y       -      4.0
-        mvwinstr                                Y       -      4.0
-        innstr                                  Y       -      4.0
-        winnstr                                 Y       -      4.0
-        mvinnstr                                Y       -      4.0
-        mvwinnstr                               Y       -      4.0
-        inwstr                                  Y
-        winwstr                                 Y
-        mvinwstr                                Y
-        mvwinwstr                               Y
-        innwstr                                 Y
-        winnwstr                                Y
-        mvinnwstr                               Y
-        mvwinnwstr                              Y
+   These functions take characters (or wide characters) from the
+   current or specified position in the window, and return them as
+   a string in str (or wstr). Attributes are ignored. The functions
+   with n as the last argument return a string at most n characters
+   long.
+
+### Return Value
+
+   Upon successful completion, innstr(), mvinnstr(), mvwinnstr()
+   and winnstr() return the number of characters actually read into
+   the string; instr(), mvinstr(), mvwinstr() and winstr() return
+   OK. Otherwise, all these functions return ERR.
+
+### Portability
+                             X/Open    BSD    SYS V
+    instr                       Y       -      4.0
+    winstr                      Y       -      4.0
+    mvinstr                     Y       -      4.0
+    mvwinstr                    Y       -      4.0
+    innstr                      Y       -      4.0
+    winnstr                     Y       -      4.0
+    mvinnstr                    Y       -      4.0
+    mvwinnstr                   Y       -      4.0
+    inwstr                      Y
+    winwstr                     Y
+    mvinwstr                    Y
+    mvwinwstr                   Y
+    innwstr                     Y
+    winnwstr                    Y
+    mvinnwstr                   Y
+    mvwinnwstr                  Y
 
 **man-end****************************************************************/
 

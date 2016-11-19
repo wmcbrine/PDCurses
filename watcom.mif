@@ -15,7 +15,7 @@ PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj &
 pdcsetsc.obj pdcutil.obj
 
 DEMOS = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe &
-ptest.exe rain.exe worm.exe
+newtest.exe ptest.exe rain.exe worm.exe
 
 LIBCURSES = pdcurses.lib
 
@@ -24,7 +24,7 @@ LINK = wlink
 !ifdef __LOADDLL__
 ! loaddll wcc    wccd
 ! loaddll wcc386 wccd386
-! loaddll wlink  wlink
+! loaddll wlink  wlinkd
 ! loaddll wlib   wlibd
 !endif
 
@@ -47,6 +47,7 @@ demos:	$(DEMOS)
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
 newdemo.exe:	newdemo.obj $(LIBCURSES)
+newtest.exe:	newtest.obj $(LIBCURSES)
 xmas.exe:	xmas.obj $(LIBCURSES)
 firework.exe:	firework.obj $(LIBCURSES)
 rain.exe:	rain.obj $(LIBCURSES)

@@ -2,47 +2,49 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: terminfo.c,v 1.37 2008/07/21 12:29:20 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         terminfo
+terminfo
+--------
 
-  Synopsis:
-        int mvcur(int oldrow, int oldcol, int newrow, int newcol);
-        int vidattr(chtype attr);
-        int vid_attr(attr_t attr, short color_pair, void *opt);
-        int vidputs(chtype attr, int (*putfunc)(int));
-        int vid_puts(attr_t attr, short color_pair, void *opt,
-                int (*putfunc)(int));
+### Synopsis
 
-        int del_curterm(TERMINAL *);
-        int putp(const char *);
-        int restartterm(const char *, int, int *);
-        TERMINAL *set_curterm(TERMINAL *);
-        int setterm(const char *term);
-        int setupterm(const char *, int, int *);
-        int tgetent(char *, const char *);
-        int tgetflag(const char *);
-        int tgetnum(const char *);
-        char *tgetstr(const char *, char **);
-        char *tgoto(const char *, int, int);
-        int tigetflag(const char *);
-        int tigetnum(const char *);
-        char *tigetstr(const char *);
-        char *tparm(const char *,long, long, long, long, long, long,
+    int mvcur(int oldrow, int oldcol, int newrow, int newcol);
+    int vidattr(chtype attr);
+    int vid_attr(attr_t attr, short color_pair, void *opt);
+    int vidputs(chtype attr, int (*putfunc)(int));
+    int vid_puts(attr_t attr, short color_pair, void *opt,
+    int (*putfunc)(int));
+
+    int del_curterm(TERMINAL *);
+    int putp(const char *);
+    int restartterm(const char *, int, int *);
+    TERMINAL *set_curterm(TERMINAL *);
+    int setterm(const char *term);
+    int setupterm(const char *, int, int *);
+    int tgetent(char *, const char *);
+    int tgetflag(const char *);
+    int tgetnum(const char *);
+    char *tgetstr(const char *, char **);
+    char *tgoto(const char *, int, int);
+    int tigetflag(const char *);
+    int tigetnum(const char *);
+    char *tigetstr(const char *);
+    char *tparm(const char *,long, long, long, long, long, long,
                 long, long, long);
-        int tputs(const char *, int, int (*)(int));
+    int tputs(const char *, int, int (*)(int));
 
-  Description:
-        mvcur() lets you move the physical cursor without updating any 
-        window cursor positions. It returns OK or ERR.
+### Description
 
-        The rest of these functions are currently implemented as stubs, 
-        returning the appropriate errors and doing nothing else.
+   mvcur() lets you move the physical cursor without updating any
+   window cursor positions. It returns OK or ERR.
 
-  Portability                                X/Open    BSD    SYS V
-        mvcur                                   Y       Y       Y
+   The rest of these functions are currently implemented as stubs,
+   returning the appropriate errors and doing nothing else.
+
+### Portability
+                             X/Open    BSD    SYS V
+    mvcur                       Y       Y       Y
 
 **man-end****************************************************************/
 

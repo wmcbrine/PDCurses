@@ -2,7 +2,9 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdcscrn.c,v 1.55 2008/07/14 04:24:52 wmcbrine Exp $")
+/* special purpose function keys */
+
+static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
 
 /* COLOR_PAIR to attribute encoding table. */
 
@@ -53,6 +55,13 @@ int PDC_resize_screen(int nlines, int ncols)
     PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
              nlines, ncols));
 
+    if( !stdscr)      /* window hasn't been created yet;  we're */
+    {                 /* specifying its size before doing so    */
+        XCursesLINES = nlines;
+        XCursesCOLS = ncols;
+        return OK;
+    }
+
     if (nlines || ncols || !SP->resized)
         return ERR;
 
@@ -71,7 +80,7 @@ int PDC_resize_screen(int nlines, int ncols)
     XCursesCOLS = SP->cols;
 
     PDC_LOG(("%s:shmid_Xcurscr %d shmkey_Xcurscr %d SP->lines %d "
-             "SP->cols %d\n", XCLOGMSG, shmid_Xcurscr, 
+             "SP->cols %d\n", XCLOGMSG, shmid_Xcurscr,
              shmkey_Xcurscr, SP->lines, SP->cols));
 
     Xcurscr = (unsigned char*)shmat(shmid_Xcurscr, 0, 0);
@@ -147,4 +156,20 @@ int PDC_init_color(short color, short red, short green, short blue)
     XCursesInstructAndWait(CURSES_SET_COLOR);
 
     return OK;
+}
+
+int PDC_set_function_key( const unsigned function, const int new_key)
+{
+    int old_key = -1;
+
+    if (function < PDC_MAX_FUNCTION_KEYS)
+    {
+         old_key = PDC_shutdown_key[function];
+         PDC_shutdown_key[function] = new_key;
+    }
+    if (function == FUNCTION_KEY_SHUT_DOWN)
+    {
+        SP->exit_key = new_key;
+    }
+    return(old_key);
 }

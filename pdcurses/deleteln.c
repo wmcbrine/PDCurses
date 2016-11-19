@@ -2,51 +2,54 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: deleteln.c,v 1.35 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         deleteln
+deleteln
+--------
 
-  Synopsis:
-        int deleteln(void);
-        int wdeleteln(WINDOW *win);
-        int insdelln(int n);
-        int winsdelln(WINDOW *win, int n);
-        int insertln(void);
-        int winsertln(WINDOW *win);
+### Synopsis
 
-        int mvdeleteln(int y, int x);
-        int mvwdeleteln(WINDOW *win, int y, int x);
-        int mvinsertln(int y, int x);
-        int mvwinsertln(WINDOW *win, int y, int x);
+    int deleteln(void);
+    int wdeleteln(WINDOW *win);
+    int insdelln(int n);
+    int winsdelln(WINDOW *win, int n);
+    int insertln(void);
+    int winsertln(WINDOW *win);
 
-  Description:
-        With the deleteln() and wdeleteln() functions, the line under
-        the cursor in the window is deleted.  All lines below the
-        current line are moved up one line.  The bottom line of the
-        window is cleared.  The cursor position does not change.
+    int mvdeleteln(int y, int x);
+    int mvwdeleteln(WINDOW *win, int y, int x);
+    int mvinsertln(int y, int x);
+    int mvwinsertln(WINDOW *win, int y, int x);
 
-        With the insertln() and winsertn() functions, a blank line is 
-        inserted above the current line and the bottom line is lost.
+### Description
 
-        mvdeleteln(), mvwdeleteln(), mvinsertln() and mvwinsertln() 
-        allow moving the cursor and inserting/deleting in one call.
+   With the deleteln() and wdeleteln() functions, the line under
+   the cursor in the window is deleted.  All lines below the
+   current line are moved up one line.  The bottom line of the
+   window is cleared.  The cursor position does not change.
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+   With the insertln() and winsertn() functions, a blank line is
+   inserted above the current line and the bottom line is lost.
 
-  Portability                                X/Open    BSD    SYS V
-        deleteln                                Y       Y       Y
-        wdeleteln                               Y       Y       Y
-        mvdeleteln                              -       -       -
-        mvwdeleteln                             -       -       -
-        insdelln                                Y       -      4.0
-        winsdelln                               Y       -      4.0
-        insertln                                Y       Y       Y
-        winsertln                               Y       Y       Y
-        mvinsertln                              -       -       -
-        mvwinsertln                             -       -       -
+   mvdeleteln(), mvwdeleteln(), mvinsertln() and mvwinsertln()
+   allow moving the cursor and inserting/deleting in one call.
+
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    deleteln                    Y       Y       Y
+    wdeleteln                   Y       Y       Y
+    mvdeleteln                  -       -       -
+    mvwdeleteln                 -       -       -
+    insdelln                    Y       -      4.0
+    winsdelln                   Y       -      4.0
+    insertln                    Y       Y       Y
+    winsertln                   Y       Y       Y
+    mvinsertln                  -       -       -
+    mvwinsertln                 -       -       -
 
 **man-end****************************************************************/
 

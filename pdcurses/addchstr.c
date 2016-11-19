@@ -2,64 +2,67 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addchstr.c,v 1.43 2008/07/13 16:08:17 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         addchstr
+addchstr
+--------
 
-  Synopsis:
-        int addchstr(const chtype *ch);
-        int addchnstr(const chtype *ch, int n);
-        int waddchstr(WINDOW *win, const chtype *ch);
-        int waddchnstr(WINDOW *win, const chtype *ch, int n);
-        int mvaddchstr(int y, int x, const chtype *ch);
-        int mvaddchnstr(int y, int x, const chtype *ch, int n);
-        int mvwaddchstr(WINDOW *, int y, int x, const chtype *ch);
-        int mvwaddchnstr(WINDOW *, int y, int x, const chtype *ch, int n);
+### Synopsis
 
-        int add_wchstr(const cchar_t *wch);
-        int add_wchnstr(const cchar_t *wch, int n);
-        int wadd_wchstr(WINDOW *win, const cchar_t *wch);
-        int wadd_wchnstr(WINDOW *win, const cchar_t *wch, int n);
-        int mvadd_wchstr(int y, int x, const cchar_t *wch);
-        int mvadd_wchnstr(int y, int x, const cchar_t *wch, int n);
-        int mvwadd_wchstr(WINDOW *win, int y, int x, const cchar_t *wch);
-        int mvwadd_wchnstr(WINDOW *win, int y, int x, const cchar_t *wch,
-                int n);
+    int addchstr(const chtype *ch);
+    int addchnstr(const chtype *ch, int n);
+    int waddchstr(WINDOW *win, const chtype *ch);
+    int waddchnstr(WINDOW *win, const chtype *ch, int n);
+    int mvaddchstr(int y, int x, const chtype *ch);
+    int mvaddchnstr(int y, int x, const chtype *ch, int n);
+    int mvwaddchstr(WINDOW *, int y, int x, const chtype *ch);
+    int mvwaddchnstr(WINDOW *, int y, int x, const chtype *ch, int n);
 
-  Description:
-        These routines write a chtype or cchar_t string directly into 
-        the window structure, starting at the current or specified 
-        position. The four routines with n as the last argument copy at 
-        most n elements, but no more than will fit on the line. If n = 
-        -1 then the whole string is copied, up to the maximum number 
-        that will fit on the line.
+    int add_wchstr(const cchar_t *wch);
+    int add_wchnstr(const cchar_t *wch, int n);
+    int wadd_wchstr(WINDOW *win, const cchar_t *wch);
+    int wadd_wchnstr(WINDOW *win, const cchar_t *wch, int n);
+    int mvadd_wchstr(int y, int x, const cchar_t *wch);
+    int mvadd_wchnstr(int y, int x, const cchar_t *wch, int n);
+    int mvwadd_wchstr(WINDOW *win, int y, int x, const cchar_t *wch);
+    int mvwadd_wchnstr(WINDOW *win, int y, int x, const cchar_t *wch,
+                       int n);
 
-        The cursor position is not advanced. These routines do not check 
-        for newline or other special characters, nor does any line 
-        wrapping occur.
+### Description
 
-  Return Value:
-        All functions return OK or ERR.
+   These routines write a chtype or cchar_t string directly into
+   the window structure, starting at the current or specified
+   position. The four routines with n as the last argument copy at
+   most n elements, but no more than will fit on the line. If n =
+   -1 then the whole string is copied, up to the maximum number
+   that will fit on the line.
 
-  Portability                                X/Open    BSD    SYS V
-        addchstr                                Y       -      4.0
-        waddchstr                               Y       -      4.0
-        mvaddchstr                              Y       -      4.0
-        mvwaddchstr                             Y       -      4.0
-        addchnstr                               Y       -      4.0
-        waddchnstr                              Y       -      4.0
-        mvaddchnstr                             Y       -      4.0
-        mvwaddchnstr                            Y       -      4.0
-        add_wchstr                              Y
-        wadd_wchstr                             Y
-        mvadd_wchstr                            Y
-        mvwadd_wchstr                           Y
-        add_wchnstr                             Y
-        wadd_wchnstr                            Y
-        mvadd_wchnstr                           Y
-        mvwadd_wchnstr                          Y
+   The cursor position is not advanced. These routines do not check
+   for newline or other special characters, nor does any line
+   wrapping occur.
+
+### Return Value
+
+   All functions return OK or ERR.
+
+### Portability
+                             X/Open    BSD    SYS V
+    addchstr                    Y       -      4.0
+    waddchstr                   Y       -      4.0
+    mvaddchstr                  Y       -      4.0
+    mvwaddchstr                 Y       -      4.0
+    addchnstr                   Y       -      4.0
+    waddchnstr                  Y       -      4.0
+    mvaddchnstr                 Y       -      4.0
+    mvwaddchnstr                Y       -      4.0
+    add_wchstr                  Y
+    wadd_wchstr                 Y
+    mvadd_wchstr                Y
+    mvwadd_wchstr               Y
+    add_wchnstr                 Y
+    wadd_wchnstr                Y
+    mvadd_wchnstr               Y
+    mvwadd_wchnstr              Y
 
 **man-end****************************************************************/
 

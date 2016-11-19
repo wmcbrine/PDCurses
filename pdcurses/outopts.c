@@ -2,66 +2,69 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: outopts.c,v 1.39 2008/07/14 12:22:13 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         outopts
+outopts
+-------
 
-  Synopsis:
-        int clearok(WINDOW *win, bool bf);
-        int idlok(WINDOW *win, bool bf);
-        void idcok(WINDOW *win, bool bf);
-        void immedok(WINDOW *win, bool bf);
-        int leaveok(WINDOW *win, bool bf);
-        int setscrreg(int top, int bot);
-        int wsetscrreg(WINDOW *win, int top, int bot);
-        int scrollok(WINDOW *win, bool bf);
+### Synopsis
 
-        int raw_output(bool bf);
+    int clearok(WINDOW *win, bool bf);
+    int idlok(WINDOW *win, bool bf);
+    void idcok(WINDOW *win, bool bf);
+    void immedok(WINDOW *win, bool bf);
+    int leaveok(WINDOW *win, bool bf);
+    int setscrreg(int top, int bot);
+    int wsetscrreg(WINDOW *win, int top, int bot);
+    int scrollok(WINDOW *win, bool bf);
 
-  Description:
-        With clearok(), if bf is TRUE, the next call to wrefresh() with 
-        this window will clear the screen completely and redraw the 
-        entire screen.
+    int raw_output(bool bf);
 
-        immedok(), called with a second argument of TRUE, causes an 
-        automatic wrefresh() every time a change is made to the 
-        specified window.
+### Description
 
-        Normally, the hardware cursor is left at the location of the
-        window being refreshed.  leaveok() allows the cursor to be
-        left wherever the update happens to leave it.  It's useful
-        for applications where the cursor is not used, since it reduces
-        the need for cursor motions.  If possible, the cursor is made
-        invisible when this option is enabled.
+   With clearok(), if bf is TRUE, the next call to wrefresh() with
+   this window will clear the screen completely and redraw the
+   entire screen.
 
-        wsetscrreg() sets a scrolling region in a window; "top" and 
-        "bot" are the line numbers for the top and bottom margins. If 
-        this option and scrollok() are enabled, any attempt to move off 
-        the bottom margin will cause all lines in the scrolling region 
-        to scroll up one line. setscrreg() is the stdscr version.
+   immedok(), called with a second argument of TRUE, causes an
+   automatic wrefresh() every time a change is made to the
+   specified window.
 
-        idlok() and idcok() do nothing in PDCurses, but are provided for 
-        compatibility with other curses implementations.
+   Normally, the hardware cursor is left at the location of the
+   window being refreshed.  leaveok() allows the cursor to be
+   left wherever the update happens to leave it.  It's useful
+   for applications where the cursor is not used, since it reduces
+   the need for cursor motions.  If possible, the cursor is made
+   invisible when this option is enabled.
 
-        raw_output() enables the output of raw characters using the 
-        standard *add* and *ins* curses functions (that is, it disables 
-        translation of control characters).
+   wsetscrreg() sets a scrolling region in a window; "top" and
+   "bot" are the line numbers for the top and bottom margins. If
+   this option and scrollok() are enabled, any attempt to move off
+   the bottom margin will cause all lines in the scrolling region
+   to scroll up one line. setscrreg() is the stdscr version.
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+   idlok() and idcok() do nothing in PDCurses, but are provided for
+   compatibility with other curses implementations.
 
-  Portability                                X/Open    BSD    SYS V
-        clearok                                 Y       Y       Y
-        idlok                                   Y       Y       Y
-        idcok                                   Y       -      4.0
-        immedok                                 Y       -      4.0
-        leaveok                                 Y       Y       Y
-        setscrreg                               Y       Y       Y
-        wsetscrreg                              Y       Y       Y
-        scrollok                                Y       Y       Y
-        raw_output                              -       -       -
+   raw_output() enables the output of raw characters using the
+   standard *add* and *ins* curses functions (that is, it disables
+   translation of control characters).
+
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    clearok                     Y       Y       Y
+    idlok                       Y       Y       Y
+    idcok                       Y       -      4.0
+    immedok                     Y       -      4.0
+    leaveok                     Y       Y       Y
+    setscrreg                   Y       Y       Y
+    wsetscrreg                  Y       Y       Y
+    scrollok                    Y       Y       Y
+    raw_output                  -       -       -
 
 **man-end****************************************************************/
 

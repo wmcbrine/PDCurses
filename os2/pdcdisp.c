@@ -2,8 +2,6 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcdisp.c,v 1.49 2008/07/14 04:24:51 wmcbrine Exp $")
-
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these 
    match code page 437 and compatible pages (CP850, CP852, etc.) */
 

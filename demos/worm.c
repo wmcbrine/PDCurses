@@ -50,8 +50,6 @@ Options:
         -l <n>                  set worm length
         -n <n>                  set number of worms
         -t                      make worms leave droppings
-
-  $Id: worm.c,v 1.16 2008/07/13 16:08:17 wmcbrine Exp $
 */
 
 #include <curses.h>

@@ -14,50 +14,83 @@ endif
 include $(PDCURSES_SRCDIR)/version.mif
 include $(PDCURSES_SRCDIR)/libobjs.mif
 
-osdir		= $(PDCURSES_SRCDIR)/win32
+# When using this in Windows,  the commands should be 'type' and 'copy';
+# in Linux, 'cat' and 'cp'.  And in Windows,  the slash must be a backslash
+# in order to avoid having it treated as a flag.  I think the following will
+# make sure the proper lines are selected, but lack a Linux/MinGW platform.
 
-PDCURSES_WIN_H	= $(osdir)/pdcwin.h
+ifdef _linux
+	CAT = cat
+	CP = -cp
+	BASEDEF      = $(PDCURSES_SRCDIR)/exp-base.def
+	WIDEDEF      = $(PDCURSES_SRCDIR)/exp-wide.def
+	PREFIX  = x86_64-w64-mingw32-
+	EXTRA_CFLAGS = -DHAVE_INFOEX
+	DELETE	= -rm
+else
+	CAT = type
+	CP  = -copy
+	BASEDEF      = $(PDCURSES_SRCDIR)\exp-base.def
+	WIDEDEF      = $(PDCURSES_SRCDIR)\exp-wide.def
+	PREFIX  =
+	EXTRA_CFLAGS =
+	DELETE = -del
+endif
 
-CC		= gcc
+osdir      = $(PDCURSES_SRCDIR)/win32
+
+PDCURSES_WIN_H   = $(osdir)/pdcwin.h
+
+CC      = $(PREFIX)gcc
 
 ifeq ($(DEBUG),Y)
-	CFLAGS  = -g -Wall -DPDCDEBUG
+	CFLAGS  = -g -Wall -DPDCDEBUG $(EXTRA_CFLAGS)
 	LDFLAGS = -g
 else
-	CFLAGS  = -O2 -Wall
+	CFLAGS  = -O4 -Wall $(EXTRA_CFLAGS)
 	LDFLAGS =
 endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
-BASEDEF		= $(PDCURSES_SRCDIR)\exp-base.def
-WIDEDEF		= $(PDCURSES_SRCDIR)\exp-wide.def
+ifdef CHTYPE_32
+	CFLAGS += -DCHTYPE_32
+endif
 
-DEFDEPS		= $(BASEDEF)
+ifdef CHTYPE_16
+	CFLAGS += -DCHTYPE_16
+endif
+
+DEFDEPS      = $(BASEDEF)
 
 ifeq ($(WIDE),Y)
 	CFLAGS += -DPDC_WIDE
 	DEFDEPS += $(WIDEDEF)
+	DEFFILE      = pdcursew.def
+else
+	DEFFILE      = pdcurses.def
 endif
 
 ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
-DEFFILE		= pdcurses.def
-
-LINK		= gcc
+LINK      = $(PREFIX)gcc
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = gcc $(DEFFILE)
+	LIBEXE = $(PREFIX)gcc $(DEFFILE)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
 	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
 else
-	LIBEXE = ar
-	LIBFLAGS = rcv
+	LIBEXE = $(PREFIX)ar
+ifdef _linux
+	LIBFLAGS = rv
+else
+	LIBFLAGS	= rcv
+endif
 	LIBCURSES = pdcurses.a
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	CLEAN = *.a
@@ -65,29 +98,31 @@ endif
 
 .PHONY: all libs clean demos dist
 
-all:	libs demos
+all:   libs demos
 
-libs:	$(LIBCURSES)
+libs:   $(LIBCURSES)
 
 clean:
-	-del *.o
-	-del *.exe
-	-del $(CLEAN)
+	$(DELETE) *.o
+	$(DELETE) *.exe
+	$(DELETE) *.dll
+	$(DELETE) *.def
+	$(DELETE) $(CLEAN)
 
-demos:	$(DEMOS)
+demos:   $(DEMOS)
 	strip *.exe
 
 $(DEFFILE): $(DEFDEPS)
 	echo LIBRARY pdcurses > $@
 	echo EXPORTS >> $@
-	type $(BASEDEF) >> $@
+	$(CAT) $(BASEDEF) >> $@
 ifeq ($(WIDE),Y)
-	type $(WIDEDEF) >> $@
+	$(CAT) $(WIDEDEF) >> $@
 endif
 
 $(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-copy pdcurses.a panel.a
+	$(CP) pdcurses.a panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)
@@ -101,9 +136,9 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
-firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
-ptest.exe: %.exe: $(demodir)/%.c
-	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
+firework.exe newdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
+worm.exe xmas.exe: %.exe: $(demodir)/%.c
+	$(CC) $(CFLAGS) -mwindows -o$@ $< $(LIBCURSES)
 
 tuidemo.exe: tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)

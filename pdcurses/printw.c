@@ -2,37 +2,40 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: printw.c,v 1.40 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         printw
+printw
+------
 
-  Synopsis:
-        int printw(const char *fmt, ...);
-        int wprintw(WINDOW *win, const char *fmt, ...);
-        int mvprintw(int y, int x, const char *fmt, ...);
-        int mvwprintw(WINDOW *win, int y, int x, const char *fmt,...);
-        int vwprintw(WINDOW *win, const char *fmt, va_list varglist);
-        int vw_printw(WINDOW *win, const char *fmt, va_list varglist);
+### Synopsis
 
-  Description:
-        The printw() functions add a formatted string to the window at 
-        the current or specified cursor position. The format strings are 
-        the same as used in the standard C library's printf(). (printw() 
-        can be used as a drop-in replacement for printf().)
+    int printw(const char *fmt, ...);
+    int wprintw(WINDOW *win, const char *fmt, ...);
+    int mvprintw(int y, int x, const char *fmt, ...);
+    int mvwprintw(WINDOW *win, int y, int x, const char *fmt,...);
+    int vwprintw(WINDOW *win, const char *fmt, va_list varglist);
+    int vw_printw(WINDOW *win, const char *fmt, va_list varglist);
 
-  Return Value:
-        All functions return the number of characters printed, or 
-        ERR on error.
+### Description
 
-  Portability                                X/Open    BSD    SYS V
-        printw                                  Y       Y       Y
-        wprintw                                 Y       Y       Y
-        mvprintw                                Y       Y       Y
-        mvwprintw                               Y       Y       Y
-        vwprintw                                Y       -      4.0
-        vw_printw                               Y
+   The printw() functions add a formatted string to the window at
+   the current or specified cursor position. The format strings are
+   the same as used in the standard C library's printf(). (printw()
+   can be used as a drop-in replacement for printf().)
+
+### Return Value
+
+   All functions return the number of characters printed, or
+   ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    printw                      Y       Y       Y
+    wprintw                     Y       Y       Y
+    mvprintw                    Y       Y       Y
+    mvwprintw                   Y       Y       Y
+    vwprintw                    Y       -      4.0
+    vw_printw                   Y
 
 **man-end****************************************************************/
 

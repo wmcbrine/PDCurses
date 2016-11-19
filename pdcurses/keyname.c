@@ -2,41 +2,47 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: keyname.c,v 1.8 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         keyname
+keyname
+-------
 
-  Synopsis:
-        char *keyname(int key);
+### Synopsis
 
-        char *key_name(wchar_t c);
+    char *keyname(int key);
 
-        bool has_key(int key);
+    char *key_name(wchar_t c);
 
-  Description:
-        keyname() returns a string corresponding to the argument key. 
-        key may be any key returned by wgetch().
+    bool has_key(int key);
 
-        key_name() is the wide-character version. It takes a wchar_t 
-        parameter, but still returns a char *.
+### Description
 
-        has_key() returns TRUE for recognized keys, FALSE otherwise. 
-        This function is an ncurses extension.
+   keyname() returns a string corresponding to the argument key.
+   key may be any key returned by wgetch().
 
-  Portability                                X/Open    BSD    SYS V
-        keyname                                 Y       -      3.0
-        key_name                                Y
-        has_key                                 -       -       -
+   key_name() is the wide-character version. It takes a wchar_t
+   parameter, but still returns a char *.
+
+   has_key() returns TRUE for recognized keys, FALSE otherwise.
+   This function is an ncurses extension.
+
+### Portability
+                             X/Open    BSD    SYS V
+    keyname                     Y       -      3.0
+    key_name                    Y
+    has_key                     -       -       -
 
 **man-end****************************************************************/
 
+#include <string.h>
+
 char *keyname(int key)
 {
+    static char _keyname[14];
+
     /* Key names must be in exactly the same order as in curses.h */
 
-    static char *key_name[] =
+    static char *key_names[] =
     {
         "KEY_BREAK", "KEY_DOWN", "KEY_UP", "KEY_LEFT", "KEY_RIGHT",
         "KEY_HOME", "KEY_BACKSPACE", "KEY_F0", "KEY_F(1)", "KEY_F(2)",
@@ -97,15 +103,41 @@ char *keyname(int key)
         "SHF_PADMINUS", "SHF_UP", "SHF_DOWN", "SHF_IC", "SHF_DC",
         "KEY_MOUSE", "KEY_SHIFT_L", "KEY_SHIFT_R", "KEY_CONTROL_L",
         "KEY_CONTROL_R", "KEY_ALT_L", "KEY_ALT_R", "KEY_RESIZE",
-        "KEY_SUP", "KEY_SDOWN"
-    };
+        "KEY_SUP", "KEY_SDOWN",
+                  /* Win32a extras: */
+              "CTL_SEMICOLON", "CTL_EQUAL", "CTL_COMMA",
+              "CTL_MINUS", "CTL_STOP", "CTL_FSLASH",
+              "CTL_BQUOTE", "KEY_APPS", "KEY_SAPPS", "CTL_APPS",
+              "ALT_APPS", "KEY_PAUSE", "KEY_SPAUSE",
+              "CTL_PAUSE", "KEY_PRINTSCREEN", "ALT_PRINTSCREEN",
+              "KEY_SCROLLLOCK", "ALT_SCROLLLOCK",
+              "CTL_0", "CTL_1", "CTL_2", "CTL_3", "CTL_4",
+              "CTL_5", "CTL_6", "CTL_7", "CTL_8", "CTL_9",
+              "BROWSER_BACK", "SBROWSER_BACK", "CBROWSER_BACK", "ABROWSER_BACK",
+              "BROWSER_FWD",  "SBROWSER_FWD",  "CBROWSER_FWD",  "ABROWSER_FWD",
+              "BROWSER_REF",  "SBROWSER_REF",  "CBROWSER_REF",  "ABROWSER_REF",
+              "BROWSER_STOP", "SBROWSER_STOP", "CBROWSER_STOP", "ABROWSER_STOP",
+              "SEARCH",       "SSEARCH",       "CSEARCH",       "ASEARCH",
+              "FAVORITES",    "SFAVORITES",    "CFAVORITES",    "AFAVORITES",
+              "BROWSER_HOME", "SBROWSER_HOME", "CBROWSER_HOME", "ABROWSER_HOME",
+              "VOLUME_MUTE",  "SVOLUME_MUTE",  "CVOLUME_MUTE",  "AVOLUME_MUTE",
+              "VOLUME_DOWN",  "SVOLUME_DOWN",  "CVOLUME_DOWN",  "AVOLUME_DOWN",
+              "VOLUME_UP",    "SVOLUME_UP",    "CVOLUME_UP",    "AVOLUME_UP",
+              "NEXT_TRACK",   "SNEXT_TRACK",   "CNEXT_TRACK",   "ANEXT_TRACK",
+              "PREV_TRACK",   "SPREV_TRACK",   "CPREV_TRACK",   "APREV_TRACK",
+              "MEDIA_STOP",   "SMEDIA_STOP",   "CMEDIA_STOP",   "AMEDIA_STOP",
+              "PLAY_PAUSE",   "SPLAY_PAUSE",   "CPLAY_PAUSE",   "APLAY_PAUSE",
+              "LAUNCH_MAIL",  "SLAUNCH_MAIL",  "CLAUNCH_MAIL",  "ALAUNCH_MAIL",
+              "MEDIA_SELECT", "SMEDIA_SELECT", "CMEDIA_SELECT", "AMEDIA_SELECT",
+              "LAUNCH_APP1",  "SLAUNCH_APP1",  "CLAUNCH_APP1",  "ALAUNCH_APP1",
+              "LAUNCH_APP2",  "SLAUNCH_APP2",  "CLAUNCH_APP2",  "ALAUNCH_APP2" };
 
     PDC_LOG(("keyname() - called: key %d\n", key));
 
-    if ((key >= 0) && (key < 0x80))
-        return unctrl((chtype)key);
+    strcpy(_keyname, ((key >= 0) && (key < 0x80)) ? unctrl((chtype)key) :
+           has_key(key) ? key_names[key - KEY_MIN] : "UNKNOWN KEY");
 
-    return has_key(key) ? key_name[key - KEY_MIN] : "UNKNOWN KEY";
+    return _keyname;
 }
 
 bool has_key(int key)

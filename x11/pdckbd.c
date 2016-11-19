@@ -2,21 +2,23 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: pdckbd.c,v 1.62 2008/07/14 04:24:52 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         pdckbd
+pdckbd
+------
 
-  Synopsis:
-        unsigned long PDC_get_input_fd(void);
+### Synopsis
 
-  Description:
-        PDC_get_input_fd() returns the file descriptor that PDCurses 
-        reads its input from. It can be used for select().
+    unsigned long PDC_get_input_fd(void);
 
-  Portability                                X/Open    BSD    SYS V
-        PDC_get_input_fd                        -       -       -
+### Description
+
+   PDC_get_input_fd() returns the file descriptor that PDCurses
+   reads its input from. It can be used for select().
+
+### Portability
+                             X/Open    BSD    SYS V
+    PDC_get_input_fd            -       -       -
 
 **man-end****************************************************************/
 

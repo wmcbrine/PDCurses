@@ -12,10 +12,21 @@ osdir		= $(PDCURSES_SRCDIR)/sdl1
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
+SLIBS		= -lSDL
+
 ifeq ($(DEBUG),Y)
         CFLAGS  = -g -Wall -DPDCDEBUG
 else
         CFLAGS  = -O2 -Wall
+endif
+
+ifeq ($(WIDE),Y)
+        CFLAGS  += -DPDC_WIDE
+        SLIBS   += -lSDL_ttf
+endif
+
+ifeq ($(UTF8),Y)
+        CFLAGS  += -DPDC_FORCE_UTF8
 endif
 
 CC		= gcc
@@ -34,13 +45,13 @@ ifeq ($(DLL),Y)
 	LIBFLAGS = -Wl,--out-implib,libpdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
 	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
-	POST = -lSDL
+	POST = $(SLIBS)
 else
 	LIBEXE = ar
 	LIBFLAGS = rcv
 	LIBCURSES = libpdcurses.a
 	CLEAN = *.a
-	LDFLAGS += -lSDL
+	LDFLAGS += $(SLIBS)
 endif
 
 DEMOS += sdltest.exe
@@ -60,9 +71,9 @@ demos:	$(DEMOS)
 pdcurses.dll: $(DEFFILE)
 
 $(DEFFILE): $(DEFDEPS)
-	echo LIBRARY pdcurses > $@        
-	echo EXPORTS >> $@        
-	type $(BASEDEF) >> $@ 
+	echo LIBRARY pdcurses > $@
+	echo EXPORTS >> $@
+	type $(BASEDEF) >> $@
 	echo pdc_screen >> $@
 	echo pdc_font >> $@
 	echo pdc_icon >> $@
@@ -88,7 +99,7 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) -c $<
 
-firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
+firework.exe newdemo.exe newtest.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: $(demodir)/%.c
 	$(BUILD) -o $@ $< $(LDFLAGS)
 

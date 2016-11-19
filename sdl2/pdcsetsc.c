@@ -4,28 +4,32 @@
 
 /*man-start**************************************************************
 
-  Name:                                                         pdcsetsc
+pdcsetsc
+--------
 
-  Synopsis:
-        int PDC_set_blink(bool blinkon);
-        void PDC_set_title(const char *title);
+### Synopsis
 
-  Description:
-        PDC_set_blink() toggles whether the A_BLINK attribute sets an
-        actual blink mode (TRUE), or sets the background color to high
-        intensity (FALSE). The default is platform-dependent (FALSE in
-        most cases). It returns OK if it could set the state to match
-        the given parameter, ERR otherwise. Current platforms also
-        adjust the value of COLORS according to this function -- 16 for
-        FALSE, and 8 for TRUE.
+    int PDC_set_blink(bool blinkon);
+    void PDC_set_title(const char *title);
 
-        PDC_set_title() sets the title of the window in which the curses
-        program is running. This function may not do anything on some
-        platforms. (Currently it only works in Win32 and X11.)
+### Description
 
-  Portability                                X/Open    BSD    SYS V
-        PDC_set_blink                           -       -       -
-        PDC_set_title                           -       -       -
+   PDC_set_blink() toggles whether the A_BLINK attribute sets an
+   actual blink mode (TRUE), or sets the background color to high
+   intensity (FALSE). The default is platform-dependent (FALSE in
+   most cases). It returns OK if it could set the state to match
+   the given parameter, ERR otherwise. Current platforms also
+   adjust the value of COLORS according to this function -- 16 for
+   FALSE, and 8 for TRUE.
+
+   PDC_set_title() sets the title of the window in which the curses
+   program is running. This function may not do anything on some
+   platforms. (Currently it only works in Win32 and X11.)
+
+### Portability
+                             X/Open    BSD    SYS V
+    PDC_set_blink               -       -       -
+    PDC_set_title               -       -       -
 
 **man-end****************************************************************/
 

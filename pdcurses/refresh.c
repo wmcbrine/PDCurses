@@ -2,55 +2,58 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: refresh.c,v 1.56 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         refresh
+refresh
+-------
 
-  Synopsis:
-        int refresh(void);
-        int wrefresh(WINDOW *win);
-        int wnoutrefresh(WINDOW *win);
-        int doupdate(void);
-        int redrawwin(WINDOW *win);
-        int wredrawln(WINDOW *win, int beg_line, int num_lines);
+### Synopsis
 
-  Description:
-        wrefresh() copies the named window to the physical terminal 
-        screen, taking into account what is already there in order to 
-        optimize cursor movement. refresh() does the same, using stdscr. 
-        These routines must be called to get any output on the terminal, 
-        as other routines only manipulate data structures. Unless 
-        leaveok() has been enabled, the physical cursor of the terminal 
-        is left at the location of the window's cursor.
+    int refresh(void);
+    int wrefresh(WINDOW *win);
+    int wnoutrefresh(WINDOW *win);
+    int doupdate(void);
+    int redrawwin(WINDOW *win);
+    int wredrawln(WINDOW *win, int beg_line, int num_lines);
 
-        wnoutrefresh() and doupdate() allow multiple updates with more 
-        efficiency than wrefresh() alone. wrefresh() works by first 
-        calling wnoutrefresh(), which copies the named window to the 
-        virtual screen.  It then calls doupdate(), which compares the 
-        virtual screen to the physical screen and does the actual 
-        update. A series of calls to wrefresh() will result in 
-        alternating calls to wnoutrefresh() and doupdate(), causing 
-        several bursts of output to the screen.  By first calling 
-        wnoutrefresh() for each window, it is then possible to call 
-        doupdate() only once.
+### Description
 
-        In PDCurses, redrawwin() is equivalent to touchwin(), and 
-        wredrawln() is the same as touchline(). In some other curses 
-        implementations, there's a subtle distinction, but it has no 
-        meaning in PDCurses.
+   wrefresh() copies the named window to the physical terminal
+   screen, taking into account what is already there in order to
+   optimize cursor movement. refresh() does the same, using stdscr.
+   These routines must be called to get any output on the terminal,
+   as other routines only manipulate data structures. Unless
+   leaveok() has been enabled, the physical cursor of the terminal
+   is left at the location of the window's cursor.
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+   wnoutrefresh() and doupdate() allow multiple updates with more
+   efficiency than wrefresh() alone. wrefresh() works by first
+   calling wnoutrefresh(), which copies the named window to the
+   virtual screen.  It then calls doupdate(), which compares the
+   virtual screen to the physical screen and does the actual
+   update. A series of calls to wrefresh() will result in
+   alternating calls to wnoutrefresh() and doupdate(), causing
+   several bursts of output to the screen.  By first calling
+   wnoutrefresh() for each window, it is then possible to call
+   doupdate() only once.
 
-  Portability                                X/Open    BSD    SYS V
-        refresh                                 Y       Y       Y
-        wrefresh                                Y       Y       Y
-        wnoutrefresh                            Y       Y       Y
-        doupdate                                Y       Y       Y
-        redrawwin                               Y       -      4.0
-        wredrawln                               Y       -      4.0
+   In PDCurses, redrawwin() is equivalent to touchwin(), and
+   wredrawln() is the same as touchline(). In some other curses
+   implementations, there's a subtle distinction, but it has no
+   meaning in PDCurses.
+
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    refresh                     Y       Y       Y
+    wrefresh                    Y       Y       Y
+    wnoutrefresh                Y       Y       Y
+    doupdate                    Y       Y       Y
+    redrawwin                   Y       -      4.0
+    wredrawln                   Y       -      4.0
 
 **man-end****************************************************************/
 

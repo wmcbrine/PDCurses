@@ -2,36 +2,39 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scanw.c,v 1.42 2008/07/14 12:22:13 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         scanw
+scanw
+-----
 
-  Synopsis:
-        int scanw(const char *fmt, ...);
-        int wscanw(WINDOW *win, const char *fmt, ...);
-        int mvscanw(int y, int x, const char *fmt, ...);
-        int mvwscanw(WINDOW *win, int y, int x, const char *fmt, ...);
-        int vwscanw(WINDOW *win, const char *fmt, va_list varglist);
-        int vw_scanw(WINDOW *win, const char *fmt, va_list varglist);
+### Synopsis
 
-  Description:
-        These routines correspond to the standard C library's scanf()
-        family. Each gets a string from the window via wgetnstr(), and
-        uses the resulting line as input for the scan.
+    int scanw(const char *fmt, ...);
+    int wscanw(WINDOW *win, const char *fmt, ...);
+    int mvscanw(int y, int x, const char *fmt, ...);
+    int mvwscanw(WINDOW *win, int y, int x, const char *fmt, ...);
+    int vwscanw(WINDOW *win, const char *fmt, va_list varglist);
+    int vw_scanw(WINDOW *win, const char *fmt, va_list varglist);
 
-  Return Value:
-        On successful completion, these functions return the number of
-        items successfully matched.  Otherwise they return ERR.
+### Description
 
-  Portability                                X/Open    BSD    SYS V
-        scanw                                   Y       Y       Y
-        wscanw                                  Y       Y       Y
-        mvscanw                                 Y       Y       Y
-        mvwscanw                                Y       Y       Y
-        vwscanw                                 Y       -      4.0
-        vw_scanw                                Y
+   These routines correspond to the standard C library's scanf()
+   family. Each gets a string from the window via wgetnstr(), and
+   uses the resulting line as input for the scan.
+
+### Return Value
+
+   On successful completion, these functions return the number of
+   items successfully matched.  Otherwise they return ERR.
+
+### Portability
+                             X/Open    BSD    SYS V
+    scanw                       Y       Y       Y
+    wscanw                      Y       Y       Y
+    mvscanw                     Y       Y       Y
+    mvwscanw                    Y       Y       Y
+    vwscanw                     Y       -      4.0
+    vw_scanw                    Y
 
 **man-end****************************************************************/
 

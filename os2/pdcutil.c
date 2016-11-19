@@ -2,8 +2,6 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcutil.c,v 1.14 2008/07/14 04:24:51 wmcbrine Exp $")
-
 #if defined(OS2) && !defined(__EMX__)
 APIRET APIENTRY DosSleep(ULONG ulTime);
 #endif

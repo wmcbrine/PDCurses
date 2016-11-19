@@ -2,36 +2,39 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: scroll.c,v 1.36 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         scroll
+scroll
+------
 
-  Synopsis:
-        int scroll(WINDOW *win);
-        int scrl(int n);
-        int wscrl(WINDOW *win, int n);
+### Synopsis
 
-  Description:
-        scroll() causes the window to scroll up one line.  This involves 
-        moving the lines in the window data strcture.
+    int scroll(WINDOW *win);
+    int scrl(int n);
+    int wscrl(WINDOW *win, int n);
+
+### Description
+
+   scroll() causes the window to scroll up one line.  This involves
+   moving the lines in the window data strcture.
  
-        With a positive n, scrl() and wscrl() scroll the window up n 
-        lines (line i + n becomes i); otherwise they scroll the window 
-        down n lines.
+   With a positive n, scrl() and wscrl() scroll the window up n
+   lines (line i + n becomes i); otherwise they scroll the window
+   down n lines.
  
-        For these functions to work, scrolling must be enabled via 
-        scrollok(). Note also that scrolling is not allowed if the 
-        supplied window is a pad.
+   For these functions to work, scrolling must be enabled via
+   scrollok(). Note also that scrolling is not allowed if the
+   supplied window is a pad.
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+### Return Value
 
-  Portability                                X/Open    BSD    SYS V
-        scroll                                  Y       Y       Y
-        scrl                                    Y       -      4.0
-        wscrl                                   Y       -      4.0
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    scroll                      Y       Y       Y
+    scrl                        Y       -      4.0
+    wscrl                       Y       -      4.0
 
 **man-end****************************************************************/
 

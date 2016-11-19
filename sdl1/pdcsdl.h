@@ -1,11 +1,16 @@
 /* Public Domain Curses */
 
-/* $Id: pdcsdl.h,v 1.17 2008/07/14 04:24:52 wmcbrine Exp $ */
-
 #include <curspriv.h>
 
-#include <SDL/SDL.h>
+#include <SDL.h>
+#ifdef PDC_WIDE
+#include <SDL_ttf.h>
+#endif
 
+#ifdef PDC_WIDE
+PDCEX TTF_Font *pdc_ttffont;
+PDCEX int pdc_font_size;
+#endif
 PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
 PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 

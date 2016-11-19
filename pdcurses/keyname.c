@@ -2,41 +2,47 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: keyname.c,v 1.8 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         keyname
+keyname
+-------
 
-  Synopsis:
-        char *keyname(int key);
+### Synopsis
 
-        char *key_name(wchar_t c);
+    char *keyname(int key);
 
-        bool has_key(int key);
+    char *key_name(wchar_t c);
 
-  Description:
-        keyname() returns a string corresponding to the argument key. 
-        key may be any key returned by wgetch().
+    bool has_key(int key);
 
-        key_name() is the wide-character version. It takes a wchar_t 
-        parameter, but still returns a char *.
+### Description
 
-        has_key() returns TRUE for recognized keys, FALSE otherwise. 
-        This function is an ncurses extension.
+   keyname() returns a string corresponding to the argument key.
+   key may be any key returned by wgetch().
 
-  Portability                                X/Open    BSD    SYS V
-        keyname                                 Y       -      3.0
-        key_name                                Y
-        has_key                                 -       -       -
+   key_name() is the wide-character version. It takes a wchar_t
+   parameter, but still returns a char *.
+
+   has_key() returns TRUE for recognized keys, FALSE otherwise.
+   This function is an ncurses extension.
+
+### Portability
+                             X/Open    BSD    SYS V
+    keyname                     Y       -      3.0
+    key_name                    Y
+    has_key                     -       -       -
 
 **man-end****************************************************************/
 
+#include <string.h>
+
 char *keyname(int key)
 {
+    static char _keyname[14];
+
     /* Key names must be in exactly the same order as in curses.h */
 
-    static char *key_name[] =
+    static char *key_names[] =
     {
         "KEY_BREAK", "KEY_DOWN", "KEY_UP", "KEY_LEFT", "KEY_RIGHT",
         "KEY_HOME", "KEY_BACKSPACE", "KEY_F0", "KEY_F(1)", "KEY_F(2)",
@@ -102,10 +108,10 @@ char *keyname(int key)
 
     PDC_LOG(("keyname() - called: key %d\n", key));
 
-    if ((key >= 0) && (key < 0x80))
-        return unctrl((chtype)key);
+    strcpy(_keyname, ((key >= 0) && (key < 0x80)) ? unctrl((chtype)key) :
+           has_key(key) ? key_names[key - KEY_MIN] : "UNKNOWN KEY");
 
-    return has_key(key) ? key_name[key - KEY_MIN] : "UNKNOWN KEY";
+    return _keyname;
 }
 
 bool has_key(int key)

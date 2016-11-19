@@ -1,9 +1,13 @@
 /* Public Domain Curses */
 
-/* $Id: pdcdos.h,v 1.30 2008/07/13 16:08:17 wmcbrine Exp $ */
-
 #include <curspriv.h>
 #include <string.h>
+
+#ifdef CHTYPE_LONG
+# define PDC_ATTR_SHIFT 19
+#else
+# define PDC_ATTR_SHIFT 8
+#endif
 
 #if defined(_MSC_VER) || defined(_QC)
 # define MSC 1

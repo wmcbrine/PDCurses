@@ -1,6 +1,4 @@
 /*
- * $Id: tuidemo.c,v 1.22 2008/07/14 12:35:23 wmcbrine Exp $
- *
  * Author : P.J. Kunst <kunst@prl.philips.nl>
  * Date   : 25-02-93
  *
@@ -76,7 +74,7 @@ void showfile(char *fname)
 {
     int i, bh = bodylen();
     FILE *fp;
-    char buf[MAXSTRLEN];
+    char buf[MAXSTRLEN], *result;
     bool ateof = FALSE;
 
     statusmsg("FileBrowser: Hit key to continue, Q to quit");
@@ -90,9 +88,9 @@ void showfile(char *fname)
             for (i = 0; i < bh - 1 && !ateof; i++)
             {
                 buf[0] = '\0';
-                fgets(buf, MAXSTRLEN, fp);
+                result = fgets(buf, MAXSTRLEN, fp);
 
-                if (strlen(buf))
+                if (result && strlen(buf))
                     bodymsg(buf);
                 else
                     ateof = TRUE;

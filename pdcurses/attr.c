@@ -2,98 +2,101 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: attr.c,v 1.41 2008/07/13 16:08:17 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         attr
+attr
+----
 
-  Synopsis:
-        int attroff(chtype attrs);
-        int wattroff(WINDOW *win, chtype attrs);
-        int attron(chtype attrs);
-        int wattron(WINDOW *win, chtype attrs);
-        int attrset(chtype attrs);
-        int wattrset(WINDOW *win, chtype attrs);
-        int standend(void);
-        int wstandend(WINDOW *win);
-        int standout(void);
-        int wstandout(WINDOW *win);
+### Synopsis
 
-        int color_set(short color_pair, void *opts);
-        int wcolor_set(WINDOW *win, short color_pair, void *opts);
+    int attroff(chtype attrs);
+    int wattroff(WINDOW *win, chtype attrs);
+    int attron(chtype attrs);
+    int wattron(WINDOW *win, chtype attrs);
+    int attrset(chtype attrs);
+    int wattrset(WINDOW *win, chtype attrs);
+    int standend(void);
+    int wstandend(WINDOW *win);
+    int standout(void);
+    int wstandout(WINDOW *win);
 
-        int attr_get(attr_t *attrs, short *color_pair, void *opts);
-        int attr_off(attr_t attrs, void *opts);
-        int attr_on(attr_t attrs, void *opts);
-        int attr_set(attr_t attrs, short color_pair, void *opts);
-        int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair,
-                void *opts);
-        int wattr_off(WINDOW *win, attr_t attrs, void *opts);
-        int wattr_on(WINDOW *win, attr_t attrs, void *opts);
-        int wattr_set(WINDOW *win, attr_t attrs, short color_pair,
-                void *opts);
+    int color_set(short color_pair, void *opts);
+    int wcolor_set(WINDOW *win, short color_pair, void *opts);
 
-        int chgat(int n, attr_t attr, short color, const void *opts);
-        int mvchgat(int y, int x, int n, attr_t attr, short color,
+    int attr_get(attr_t *attrs, short *color_pair, void *opts);
+    int attr_off(attr_t attrs, void *opts);
+    int attr_on(attr_t attrs, void *opts);
+    int attr_set(attr_t attrs, short color_pair, void *opts);
+    int wattr_get(WINDOW *win, attr_t *attrs, short *color_pair,
+                  void *opts);
+    int wattr_off(WINDOW *win, attr_t attrs, void *opts);
+    int wattr_on(WINDOW *win, attr_t attrs, void *opts);
+    int wattr_set(WINDOW *win, attr_t attrs, short color_pair,
+                  void *opts);
+
+    int chgat(int n, attr_t attr, short color, const void *opts);
+    int mvchgat(int y, int x, int n, attr_t attr, short color,
                 const void *opts);
-        int mvwchgat(WINDOW *win, int y, int x, int n, attr_t attr,
-                short color, const void *opts);
-        int wchgat(WINDOW *win, int n, attr_t attr, short color,
-                const void *opts);
+    int mvwchgat(WINDOW *win, int y, int x, int n, attr_t attr,
+                 short color, const void *opts);
+    int wchgat(WINDOW *win, int n, attr_t attr, short color,
+               const void *opts);
 
-        chtype getattrs(WINDOW *win);
+    chtype getattrs(WINDOW *win);
 
-  Description:
-        These functions manipulate the current attributes and/or colors 
-        of the named window.  These attributes can be any combination 
-        of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
+### Description
 
-        These constants are defined in <curses.h> and can be combined
-        with the bitwise-OR operator (|).
+   These functions manipulate the current attributes and/or colors
+   of the named window.  These attributes can be any combination
+   of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
 
-        The current attributes of a window are applied to all chtypes 
-        that are written into the window with waddch(). Attributes are 
-        a property of the chtype, and move with the character through 
-        any scrolling or insert/delete operations.
+   These constants are defined in <curses.h> and can be combined
+   with the bitwise-OR operator (|).
 
-        attrset() sets the current attributes of the given window to 
-        attrs. attroff() turns off the named attributes without 
-        affecting any other attributes; attron() turns them on. 
-        color_set() sets the window color to the value of color_pair.
+   The current attributes of a window are applied to all chtypes
+   that are written into the window with waddch(). Attributes are
+   a property of the chtype, and move with the character through
+   any scrolling or insert/delete operations.
 
-        standout() is the same as attron(A_STANDOUT). standend() is the 
-        same as attrset(A_NORMAL); that is, it turns off all attributes.
+   attrset() sets the current attributes of the given window to
+   attrs. attroff() turns off the named attributes without
+   affecting any other attributes; attron() turns them on.
+   color_set() sets the window color to the value of color_pair.
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+   standout() is the same as attron(A_STANDOUT). standend() is the
+   same as attrset(A_NORMAL); that is, it turns off all attributes.
 
-  Portability                                X/Open    BSD    SYS V
-        attroff                                 Y       Y       Y
-        wattroff                                Y       Y       Y
-        attron                                  Y       Y       Y
-        wattron                                 Y       Y       Y
-        attrset                                 Y       Y       Y
-        wattrset                                Y       Y       Y
-        standend                                Y       Y       Y
-        wstandend                               Y       Y       Y
-        standout                                Y       Y       Y
-        wstandout                               Y       Y       Y
-        color_set                               Y
-        wcolor_set                              Y
-        attr_get                                Y
-        wattr_get                               Y
-        attr_on                                 Y
-        wattr_on                                Y
-        attr_off                                Y
-        wattr_off                               Y
-        attr_set                                Y
-        wattr_set                               Y
-        chgat                                   Y
-        wchgat                                  Y
-        mvchgat                                 Y
-        mvwchgat                                Y
-        getattrs                                -
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    attroff                     Y       Y       Y
+    wattroff                    Y       Y       Y
+    attron                      Y       Y       Y
+    wattron                     Y       Y       Y
+    attrset                     Y       Y       Y
+    wattrset                    Y       Y       Y
+    standend                    Y       Y       Y
+    wstandend                   Y       Y       Y
+    standout                    Y       Y       Y
+    wstandout                   Y       Y       Y
+    color_set                   Y
+    wcolor_set                  Y
+    attr_get                    Y
+    wattr_get                   Y
+    attr_on                     Y
+    wattr_on                    Y
+    attr_off                    Y
+    wattr_off                   Y
+    attr_set                    Y
+    wattr_set                   Y
+    chgat                       Y
+    wchgat                      Y
+    mvchgat                     Y
+    mvwchgat                    Y
+    getattrs                    -
 
 **man-end****************************************************************/
 

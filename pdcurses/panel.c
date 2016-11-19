@@ -2,124 +2,127 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: panel.c,v 1.8 2008/07/14 12:35:23 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         panel
+panel
+-----
 
-  Synopsis:
-        int bottom_panel(PANEL *pan);
-        int del_panel(PANEL *pan);
-        int hide_panel(PANEL *pan);
-        int move_panel(PANEL *pan, int starty, int startx);
-        PANEL *new_panel(WINDOW *win);
-        PANEL *panel_above(const PANEL *pan);
-        PANEL *panel_below(const PANEL *pan);
-        int panel_hidden(const PANEL *pan);
-        const void *panel_userptr(const PANEL *pan);
-        WINDOW *panel_window(const PANEL *pan);
-        int replace_panel(PANEL *pan, WINDOW *win);
-        int set_panel_userptr(PANEL *pan, const void *uptr);
-        int show_panel(PANEL *pan);
-        int top_panel(PANEL *pan);
-        void update_panels(void);
+### Synopsis
 
-  Description:
-        The panel library is built using the curses library, and any
-        program using panels routines must call one of the curses
-        initialization routines such as initscr(). A program using these
-        routines must be linked with the panels and curses libraries.
-        The header <panel.h> includes the header <curses.h>.
+    int bottom_panel(PANEL *pan);
+    int del_panel(PANEL *pan);
+    int hide_panel(PANEL *pan);
+    int move_panel(PANEL *pan, int starty, int startx);
+    PANEL *new_panel(WINDOW *win);
+    PANEL *panel_above(const PANEL *pan);
+    PANEL *panel_below(const PANEL *pan);
+    int panel_hidden(const PANEL *pan);
+    const void *panel_userptr(const PANEL *pan);
+    WINDOW *panel_window(const PANEL *pan);
+    int replace_panel(PANEL *pan, WINDOW *win);
+    int set_panel_userptr(PANEL *pan, const void *uptr);
+    int show_panel(PANEL *pan);
+    int top_panel(PANEL *pan);
+    void update_panels(void);
 
-        The panels package gives the applications programmer a way to
-        have depth relationships between curses windows; a curses window
-        is associated with every panel. The panels routines allow curses
-        windows to overlap without making visible the overlapped
-        portions of underlying windows. The initial curses window,
-        stdscr, lies beneath all panels. The set of currently visible
-        panels is the 'deck' of panels.
+### Description
 
-        The panels package allows the applications programmer to create
-        panels, fetch and set their associated windows, shuffle panels
-        in the deck, and manipulate panels in other ways.
+   The panel library is built using the curses library, and any
+   program using panels routines must call one of the curses
+   initialization routines such as initscr(). A program using these
+   routines must be linked with the panels and curses libraries.
+   The header <panel.h> includes the header <curses.h>.
 
-        bottom_panel() places pan at the bottom of the deck. The size, 
-        location and contents of the panel are unchanged.
+   The panels package gives the applications programmer a way to
+   have depth relationships between curses windows; a curses window
+   is associated with every panel. The panels routines allow curses
+   windows to overlap without making visible the overlapped
+   portions of underlying windows. The initial curses window,
+   stdscr, lies beneath all panels. The set of currently visible
+   panels is the 'deck' of panels.
 
-        del_panel() deletes pan, but not its associated winwow.
+   The panels package allows the applications programmer to create
+   panels, fetch and set their associated windows, shuffle panels
+   in the deck, and manipulate panels in other ways.
 
-        hide_panel() removes a panel from the deck and thus hides it 
-        from view.
+   bottom_panel() places pan at the bottom of the deck. The size,
+   location and contents of the panel are unchanged.
 
-        move_panel() moves the curses window associated with pan, so 
-        that its upper lefthand corner is at the supplied coordinates. 
-        (Do not use mvwin() on the window.)
+   del_panel() deletes pan, but not its associated winwow.
 
-        new_panel() creates a new panel associated with win and returns 
-        the panel pointer. The new panel is placed at the top of the 
-        deck.
+   hide_panel() removes a panel from the deck and thus hides it
+   from view.
 
-        panel_above() returns a pointer to the panel in the deck above 
-        pan, or NULL if pan is the top panel. If the value of pan passed 
-        is NULL, this function returns a pointer to the bottom panel in 
-        the deck.
+   move_panel() moves the curses window associated with pan, so
+   that its upper lefthand corner is at the supplied coordinates.
+   (Do not use mvwin() on the window.)
 
-        panel_below() returns a pointer to the panel in the deck below 
-        pan, or NULL if pan is the bottom panel. If the value of pan 
-        passed is NULL, this function returns a pointer to the top panel 
-        in the deck.
+   new_panel() creates a new panel associated with win and returns
+   the panel pointer. The new panel is placed at the top of the
+   deck.
 
-        panel_hidden() returns OK if pan is hidden and ERR if it is not.
+   panel_above() returns a pointer to the panel in the deck above
+   pan, or NULL if pan is the top panel. If the value of pan passed
+   is NULL, this function returns a pointer to the bottom panel in
+   the deck.
 
-        panel_userptr() - Each panel has a user pointer available for 
-        maintaining relevant information. This function returns a 
-        pointer to that information previously set up by 
-        set_panel_userptr().
+   panel_below() returns a pointer to the panel in the deck below
+   pan, or NULL if pan is the bottom panel. If the value of pan
+   passed is NULL, this function returns a pointer to the top panel
+   in the deck.
 
-        panel_window() returns a pointer to the curses window associated 
-        with the panel.
+   panel_hidden() returns OK if pan is hidden and ERR if it is not.
 
-        replace_panel() replaces the current window of pan with win.
+   panel_userptr() - Each panel has a user pointer available for
+   maintaining relevant information. This function returns a
+   pointer to that information previously set up by
+   set_panel_userptr().
 
-        set_panel_userptr() - Each panel has a user pointer available 
-        for maintaining relevant information. This function sets the 
-        value of that information.
+   panel_window() returns a pointer to the curses window associated
+   with the panel.
 
-        show_panel() makes a previously hidden panel visible and places 
-        it back in the deck on top.
+   replace_panel() replaces the current window of pan with win.
 
-        top_panel() places pan on the top of the deck. The size, 
-        location and contents of the panel are unchanged.
+   set_panel_userptr() - Each panel has a user pointer available
+   for maintaining relevant information. This function sets the
+   value of that information.
 
-        update_panels() refreshes the virtual screen to reflect the 
-        depth relationships between the panels in the deck. The user 
-        must use doupdate() to refresh the physical screen.
+   show_panel() makes a previously hidden panel visible and places
+   it back in the deck on top.
 
-  Return Value:
-        Each routine that returns a pointer to an object returns NULL if 
-        an error occurs. Each panel routine that returns an integer, 
-        returns OK if it executes successfully and ERR if it does not.
+   top_panel() places pan on the top of the deck. The size,
+   location and contents of the panel are unchanged.
 
-  Portability                                X/Open    BSD    SYS V
-        bottom_panel                            -       -       Y
-        del_panel                               -       -       Y
-        hide_panel                              -       -       Y
-        move_panel                              -       -       Y
-        new_panel                               -       -       Y
-        panel_above                             -       -       Y
-        panel_below                             -       -       Y
-        panel_hidden                            -       -       Y
-        panel_userptr                           -       -       Y
-        panel_window                            -       -       Y
-        replace_panel                           -       -       Y
-        set_panel_userptr                       -       -       Y
-        show_panel                              -       -       Y
-        top_panel                               -       -       Y
-        update_panels                           -       -       Y
+   update_panels() refreshes the virtual screen to reflect the
+   depth relationships between the panels in the deck. The user
+   must use doupdate() to refresh the physical screen.
+
+### Return Value
+
+   Each routine that returns a pointer to an object returns NULL if
+   an error occurs. Each panel routine that returns an integer,
+   returns OK if it executes successfully and ERR if it does not.
+
+### Portability
+                             X/Open    BSD    SYS V
+    bottom_panel                -       -       Y
+    del_panel                   -       -       Y
+    hide_panel                  -       -       Y
+    move_panel                  -       -       Y
+    new_panel                   -       -       Y
+    panel_above                 -       -       Y
+    panel_below                 -       -       Y
+    panel_hidden                -       -       Y
+    panel_userptr               -       -       Y
+    panel_window                -       -       Y
+    replace_panel               -       -       Y
+    set_panel_userptr           -       -       Y
+    show_panel                  -       -       Y
+    top_panel                   -       -       Y
+    update_panels               -       -       Y
 
   Credits:
-        Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
+    Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
 
 **man-end****************************************************************/
 

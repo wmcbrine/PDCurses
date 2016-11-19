@@ -2,131 +2,135 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: window.c,v 1.62 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         window
+window
+------
 
-  Synopsis:
-        WINDOW *newwin(int nlines, int ncols, int begy, int begx);
-        WINDOW *derwin(WINDOW* orig, int nlines, int ncols,
-                int begy, int begx);
-        WINDOW *subwin(WINDOW* orig, int nlines, int ncols,
-                int begy, int begx);
-        WINDOW *dupwin(WINDOW *win);
-        int delwin(WINDOW *win);
-        int mvwin(WINDOW *win, int y, int x);
-        int mvderwin(WINDOW *win, int pary, int parx);
-        int syncok(WINDOW *win, bool bf);
-        void wsyncup(WINDOW *win);
-        void wcursyncup(WINDOW *win);
-        void wsyncdown(WINDOW *win);
+### Synopsis
 
-        WINDOW *resize_window(WINDOW *win, int nlines, int ncols);
-        int wresize(WINDOW *win, int nlines, int ncols);
-        WINDOW *PDC_makelines(WINDOW *win);
-        WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx);
-        void PDC_sync(WINDOW *win);
+    WINDOW *newwin(int nlines, int ncols, int begy, int begx);
+    WINDOW *derwin(WINDOW* orig, int nlines, int ncols,
+                   int begy, int begx);
+    WINDOW *subwin(WINDOW* orig, int nlines, int ncols,
+                   int begy, int begx);
+    WINDOW *dupwin(WINDOW *win);
+    int delwin(WINDOW *win);
+    int mvwin(WINDOW *win, int y, int x);
+    int mvderwin(WINDOW *win, int pary, int parx);
+    int syncok(WINDOW *win, bool bf);
+    void wsyncup(WINDOW *win);
+    void wcursyncup(WINDOW *win);
+    void wsyncdown(WINDOW *win);
 
-  Description:
-        newwin() creates a new window with the given number of lines,
-        nlines and columns, ncols. The upper left corner of the window
-        is at line begy, column begx. If nlines is zero, it defaults to
-        LINES - begy; ncols to COLS - begx. Create a new full-screen
-        window by calling newwin(0, 0, 0, 0).
+    WINDOW *resize_window(WINDOW *win, int nlines, int ncols);
+    int wresize(WINDOW *win, int nlines, int ncols);
+    WINDOW *PDC_makelines(WINDOW *win);
+    WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx);
+    void PDC_sync(WINDOW *win);
 
-        delwin() deletes the named window, freeing all associated 
-        memory. In the case of overlapping windows, subwindows should be 
-        deleted before the main window.
+### Description
 
-        mvwin() moves the window so that the upper left-hand corner is
-        at position (y,x). If the move would cause the window to be off
-        the screen, it is an error and the window is not moved. Moving
-        subwindows is allowed.
+   newwin() creates a new window with the given number of lines,
+   nlines and columns, ncols. The upper left corner of the window
+   is at line begy, column begx. If nlines is zero, it defaults to
+   LINES - begy; ncols to COLS - begx. Create a new full-screen
+   window by calling newwin(0, 0, 0, 0).
 
-        subwin() creates a new subwindow within a window.  The
-        dimensions of the subwindow are nlines lines and ncols columns.
-        The subwindow is at position (begy, begx) on the screen.  This
-        position is relative to the screen, and not to the window orig.
-        Changes made to either window will affect both.  When using this
-        routine, you will often need to call touchwin() before calling
-        wrefresh().
+   delwin() deletes the named window, freeing all associated
+   memory. In the case of overlapping windows, subwindows should be
+   deleted before the main window.
 
-        derwin() is the same as subwin(), except that begy and begx are
-        relative to the origin of the window orig rather than the
-        screen.  There is no difference between subwindows and derived
-        windows.
+   mvwin() moves the window so that the upper left-hand corner is
+   at position (y,x). If the move would cause the window to be off
+   the screen, it is an error and the window is not moved. Moving
+   subwindows is allowed.
 
-        mvderwin() moves a derived window (or subwindow) inside its
-        parent window.  The screen-relative parameters of the window are
-        not changed.  This routine is used to display different parts of
-        the parent window at the same physical position on the screen.
+   subwin() creates a new subwindow within a window.  The
+   dimensions of the subwindow are nlines lines and ncols columns.
+   The subwindow is at position (begy, begx) on the screen.  This
+   position is relative to the screen, and not to the window orig.
+   Changes made to either window will affect both.  When using this
+   routine, you will often need to call touchwin() before calling
+   wrefresh().
 
-        dupwin() creates an exact duplicate of the window win.
+   derwin() is the same as subwin(), except that begy and begx are
+   relative to the origin of the window orig rather than the
+   screen.  There is no difference between subwindows and derived
+   windows.
 
-        wsyncup() causes a touchwin() of all of the window's parents.
+   mvderwin() moves a derived window (or subwindow) inside its
+   parent window.  The screen-relative parameters of the window are
+   not changed.  This routine is used to display different parts of
+   the parent window at the same physical position on the screen.
 
-        If wsyncok() is called with a second argument of TRUE, this
-        causes a wsyncup() to be called every time the window is
-        changed.
+   dupwin() creates an exact duplicate of the window win.
 
-        wcursyncup() causes the current cursor position of all of a
-        window's ancestors to reflect the current cursor position of the
-        current window.
+   wsyncup() causes a touchwin() of all of the window's parents.
 
-        wsyncdown() causes a touchwin() of the current window if any of
-        its parent's windows have been touched.
+   If wsyncok() is called with a second argument of TRUE, this
+   causes a wsyncup() to be called every time the window is
+   changed.
 
-        resize_window() allows the user to resize an existing window. It 
-        returns the pointer to the new window, or NULL on failure.
+   wcursyncup() causes the current cursor position of all of a
+   window's ancestors to reflect the current cursor position of the
+   current window.
 
-        wresize() is an ncurses-compatible wrapper for resize_window().
-        Note that, unlike ncurses, it will NOT process any subwindows of
-        the window. (However, you still can call it _on_ subwindows.) It 
-        returns OK or ERR.
+   wsyncdown() causes a touchwin() of the current window if any of
+   its parent's windows have been touched.
 
-        PDC_makenew() allocates all data for a new WINDOW * except the
-        actual lines themselves. If it's unable to allocate memory for
-        the window structure, it will free all allocated memory and
-        return a NULL pointer.
+   resize_window() allows the user to resize an existing window. It
+   returns the pointer to the new window, or NULL on failure.
 
-        PDC_makelines() allocates the memory for the lines.
+   wresize() is an ncurses-compatible wrapper for resize_window().
+   Note that, unlike ncurses, it will NOT process any subwindows of
+   the window. (However, you still can call it _on_ subwindows.) It
+   returns OK or ERR.
 
-        PDC_sync() handles wrefresh() and wsyncup() calls when a window
-        is changed.
+   PDC_makenew() allocates all data for a new WINDOW * except the
+   actual lines themselves. If it's unable to allocate memory for
+   the window structure, it will free all allocated memory and
+   return a NULL pointer.
 
-  Return Value:
-        newwin(), subwin(), derwin() and dupwin() return a pointer
-        to the new window, or NULL on failure. delwin(), mvwin(),
-        mvderwin() and syncok() return OK or ERR. wsyncup(),
-        wcursyncup() and wsyncdown() return nothing.
+   PDC_makelines() allocates the memory for the lines.
 
-  Errors:
-        It is an error to call resize_window() before calling initscr().
-        Also, an error will be generated if we fail to create a newly
-        sized replacement window for curscr, or stdscr. This could
-        happen when increasing the window size. NOTE: If this happens,
-        the previously successfully allocated windows are left alone;
-        i.e., the resize is NOT cancelled for those windows.
+   PDC_sync() handles wrefresh() and wsyncup() calls when a window
+   is changed.
 
-  Portability                                X/Open    BSD    SYS V
-        newwin                                  Y       Y       Y
-        delwin                                  Y       Y       Y
-        mvwin                                   Y       Y       Y
-        subwin                                  Y       Y       Y
-        derwin                                  Y       -       Y
-        mvderwin                                Y       -       Y
-        dupwin                                  Y       -      4.0
-        wsyncup                                 Y       -      4.0
-        syncok                                  Y       -      4.0
-        wcursyncup                              Y       -      4.0
-        wsyncdown                               Y       -      4.0
-        resize_window                           -       -       -
-        wresize                                 -       -       -
-        PDC_makelines                           -       -       -
-        PDC_makenew                             -       -       -
-        PDC_sync                                -       -       -
+### Return Value
+
+   newwin(), subwin(), derwin() and dupwin() return a pointer
+   to the new window, or NULL on failure. delwin(), mvwin(),
+   mvderwin() and syncok() return OK or ERR. wsyncup(),
+   wcursyncup() and wsyncdown() return nothing.
+
+### Errors
+
+   It is an error to call resize_window() before calling initscr().
+   Also, an error will be generated if we fail to create a newly
+   sized replacement window for curscr, or stdscr. This could
+   happen when increasing the window size. NOTE: If this happens,
+   the previously successfully allocated windows are left alone;
+   i.e., the resize is NOT cancelled for those windows.
+
+### Portability
+                             X/Open    BSD    SYS V
+    newwin                      Y       Y       Y
+    delwin                      Y       Y       Y
+    mvwin                       Y       Y       Y
+    subwin                      Y       Y       Y
+    derwin                      Y       -       Y
+    mvderwin                    Y       -       Y
+    dupwin                      Y       -      4.0
+    wsyncup                     Y       -      4.0
+    syncok                      Y       -      4.0
+    wcursyncup                  Y       -      4.0
+    wsyncdown                   Y       -      4.0
+    resize_window               -       -       -
+    wresize                     -       -       -
+    PDC_makelines               -       -       -
+    PDC_makenew                 -       -       -
+    PDC_sync                    -       -       -
 
 **man-end****************************************************************/
 
@@ -191,7 +195,7 @@ WINDOW *PDC_makelines(WINDOW *win)
 {
     int i, j, nlines, ncols;
 
-    PDC_LOG(("PDC_makelines() - called: lines %d cols %d\n", nlines, ncols));
+    PDC_LOG(("PDC_makelines() - called\n"));
 
     if (!win)
         return (WINDOW *)NULL;
@@ -323,6 +327,7 @@ WINDOW *subwin(WINDOW *orig, int nlines, int ncols, int begy, int begx)
     win->_leaveit = orig->_leaveit;
     win->_scroll = orig->_scroll;
     win->_nodelay = orig->_nodelay;
+    win->_delayms = orig->_delayms;
     win->_use_keypad = orig->_use_keypad;
     win->_immed = orig->_immed;
     win->_sync = orig->_sync;
@@ -410,6 +415,7 @@ WINDOW *dupwin(WINDOW *win)
     new->_leaveit = win->_leaveit;
     new->_scroll = win->_scroll;
     new->_nodelay = win->_nodelay;
+    new->_delayms = win->_delayms;
     new->_use_keypad = win->_use_keypad;
     new->_tmarg = win->_tmarg;
     new->_bmarg = win->_bmarg;
@@ -462,8 +468,8 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
             return (WINDOW *)NULL;
     }
 
-    save_curx = min(win->_curx, new->_maxx);
-    save_cury = min(win->_cury, new->_maxy);
+    save_curx = min(win->_curx, (new->_maxx - 1));
+    save_cury = min(win->_cury, (new->_maxy - 1));
 
     if (!(win->_flags & (_SUBPAD|_SUBWIN)))
     {
@@ -486,6 +492,7 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
     new->_leaveit = win->_leaveit;
     new->_scroll = win->_scroll;
     new->_nodelay = win->_nodelay;
+    new->_delayms = win->_delayms;
     new->_use_keypad = win->_use_keypad;
     new->_tmarg = (win->_tmarg > new->_maxy - 1) ? 0 : win->_tmarg;
     new->_bmarg = (win->_bmarg == win->_maxy - 1) ?

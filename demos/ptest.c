@@ -1,5 +1,3 @@
-/* $Id: ptest.c,v 1.24 2008/07/13 16:08:17 wmcbrine Exp $ */
-
 #include <curses.h>
 #include <panel.h>
 #include <stdlib.h>

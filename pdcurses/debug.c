@@ -2,30 +2,32 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: debug.c,v 1.7 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         debug
+debug
+-----
 
-  Synopsis:
-        void traceon(void);
-        void traceoff(void);
-        void PDC_debug(const char *, ...);
+### Synopsis
 
-  Description:
-        traceon() and traceoff() toggle the recording of debugging 
-        information to the file "trace". Although not standard, similar 
-        functions are in some other curses implementations.
+    void traceon(void);
+    void traceoff(void);
+    void PDC_debug(const char *, ...);
 
-        PDC_debug() is the function that writes to the file, based on 
-        whether traceon() has been called. It's used from the PDC_LOG() 
-        macro.
+### Description
 
-  Portability                                X/Open    BSD    SYS V
-        traceon                                 -       -       -
-        traceoff                                -       -       -
-        PDC_debug                               -       -       -
+   traceon() and traceoff() toggle the recording of debugging
+   information to the file "trace". Although not standard, similar
+   functions are in some other curses implementations.
+
+   PDC_debug() is the function that writes to the file, based on
+   whether traceon() has been called. It's used from the PDC_LOG()
+   macro.
+
+### Portability
+                             X/Open    BSD    SYS V
+    traceon                     -       -       -
+    traceoff                    -       -       -
+    PDC_debug                   -       -       -
 
 **man-end****************************************************************/
 

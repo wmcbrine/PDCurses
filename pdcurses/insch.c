@@ -2,59 +2,62 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: insch.c,v 1.44 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         insch
+insch
+-----
 
-  Synopsis:
-        int insch(chtype ch);
-        int winsch(WINDOW *win, chtype ch);
-        int mvinsch(int y, int x, chtype ch);
-        int mvwinsch(WINDOW *win, int y, int x, chtype ch);
+### Synopsis
 
-        int insrawch(chtype ch);
-        int winsrawch(WINDOW *win, chtype ch);
-        int mvinsrawch(int y, int x, chtype ch);
-        int mvwinsrawch(WINDOW *win, int y, int x, chtype ch);
+    int insch(chtype ch);
+    int winsch(WINDOW *win, chtype ch);
+    int mvinsch(int y, int x, chtype ch);
+    int mvwinsch(WINDOW *win, int y, int x, chtype ch);
 
-        int ins_wch(const cchar_t *wch);
-        int wins_wch(WINDOW *win, const cchar_t *wch);
-        int mvins_wch(int y, int x, const cchar_t *wch);
-        int mvwins_wch(WINDOW *win, int y, int x, const cchar_t *wch);
+    int insrawch(chtype ch);
+    int winsrawch(WINDOW *win, chtype ch);
+    int mvinsrawch(int y, int x, chtype ch);
+    int mvwinsrawch(WINDOW *win, int y, int x, chtype ch);
 
-  Description:
-        The insch() functions insert a chtype into the window at the 
-        current or specified cursor position. The cursor is NOT 
-        advanced. A newline is equivalent to clrtoeol(); tabs are 
-        expanded; other control characters are converted as with 
-        unctrl().
+    int ins_wch(const cchar_t *wch);
+    int wins_wch(WINDOW *win, const cchar_t *wch);
+    int mvins_wch(int y, int x, const cchar_t *wch);
+    int mvwins_wch(WINDOW *win, int y, int x, const cchar_t *wch);
 
-        The ins_wch() functions are the wide-character
-        equivalents, taking cchar_t pointers rather than chtypes.
+### Description
 
-        Video attributes can be combined with a character by ORing
-        them into the parameter. Text, including attributes, can be 
-        copied from one place to another using inch() and insch().
+   The insch() functions insert a chtype into the window at the
+   current or specified cursor position. The cursor is NOT
+   advanced. A newline is equivalent to clrtoeol(); tabs are
+   expanded; other control characters are converted as with
+   unctrl().
 
-        insrawch() etc. are PDCurses-specific wrappers for insch() etc. 
-        that disable the translation of control characters.
+   The ins_wch() functions are the wide-character
+   equivalents, taking cchar_t pointers rather than chtypes.
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+   Video attributes can be combined with a character by ORing
+   them into the parameter. Text, including attributes, can be
+   copied from one place to another using inch() and insch().
 
-  Portability                                X/Open    BSD    SYS V
-        insch                                   Y       Y       Y
-        winsch                                  Y       Y       Y
-        mvinsch                                 Y       Y       Y
-        mvwinsch                                Y       Y       Y
-        insrawch                                -       -       -
-        winsrawch                               -       -       -
-        ins_wch                                 Y
-        wins_wch                                Y
-        mvins_wch                               Y
-        mvwins_wch                              Y
+   insrawch() etc. are PDCurses-specific wrappers for insch() etc.
+   that disable the translation of control characters.
+
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    insch                       Y       Y       Y
+    winsch                      Y       Y       Y
+    mvinsch                     Y       Y       Y
+    mvwinsch                    Y       Y       Y
+    insrawch                    -       -       -
+    winsrawch                   -       -       -
+    ins_wch                     Y
+    wins_wch                    Y
+    mvins_wch                   Y
+    mvwins_wch                  Y
 
 **man-end****************************************************************/
 

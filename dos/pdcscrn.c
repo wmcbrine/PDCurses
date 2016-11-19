@@ -2,8 +2,6 @@
 
 #include "pdcdos.h"
 
-RCSID("$Id: pdcscrn.c,v 1.89 2008/07/13 16:08:17 wmcbrine Exp $")
-
 #include <stdlib.h>
 
 #ifdef CHTYPE_LONG

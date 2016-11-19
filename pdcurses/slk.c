@@ -2,82 +2,85 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: slk.c,v 1.61 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         slk
+slk
+---
 
-  Synopsis:
-        int slk_init(int fmt);
-        int slk_set(int labnum, const char *label, int justify);
-        int slk_refresh(void);
-        int slk_noutrefresh(void);
-        char *slk_label(int labnum);
-        int slk_clear(void);
-        int slk_restore(void);
-        int slk_touch(void);
-        int slk_attron(const chtype attrs);
-        int slk_attr_on(const attr_t attrs, void *opts);
-        int slk_attrset(const chtype attrs);
-        int slk_attr_set(const attr_t attrs, short color_pair, void *opts);
-        int slk_attroff(const chtype attrs);
-        int slk_attr_off(const attr_t attrs, void *opts);
-        int slk_color(short color_pair);
+### Synopsis
 
-        int slk_wset(int labnum, const wchar_t *label, int justify);
+    int slk_init(int fmt);
+    int slk_set(int labnum, const char *label, int justify);
+    int slk_refresh(void);
+    int slk_noutrefresh(void);
+    char *slk_label(int labnum);
+    int slk_clear(void);
+    int slk_restore(void);
+    int slk_touch(void);
+    int slk_attron(const chtype attrs);
+    int slk_attr_on(const attr_t attrs, void *opts);
+    int slk_attrset(const chtype attrs);
+    int slk_attr_set(const attr_t attrs, short color_pair, void *opts);
+    int slk_attroff(const chtype attrs);
+    int slk_attr_off(const attr_t attrs, void *opts);
+    int slk_color(short color_pair);
 
-        int PDC_mouse_in_slk(int y, int x);
-        void PDC_slk_free(void);
-        void PDC_slk_initialize(void);
+    int slk_wset(int labnum, const wchar_t *label, int justify);
 
-        wchar_t *slk_wlabel(int labnum)
+    int PDC_mouse_in_slk(int y, int x);
+    void PDC_slk_free(void);
+    void PDC_slk_initialize(void);
 
-  Description:
-        These functions manipulate a window that contain Soft Label Keys 
-        (SLK). To use the SLK functions, a call to slk_init() must be 
-        made BEFORE initscr() or newterm(). slk_init() removes 1 or 2 
-        lines from the useable screen, depending on the format selected.
+    wchar_t *slk_wlabel(int labnum)
 
-        The line(s) removed from the screen are used as a separate 
-        window, in which SLKs are displayed.
+### Description
 
-        slk_init() requires a single parameter which describes the 
-        format of the SLKs as follows:
+   These functions manipulate a window that contain Soft Label Keys
+   (SLK). To use the SLK functions, a call to slk_init() must be
+   made BEFORE initscr() or newterm(). slk_init() removes 1 or 2
+   lines from the useable screen, depending on the format selected.
+
+   The line(s) removed from the screen are used as a separate
+   window, in which SLKs are displayed.
+
+   slk_init() requires a single parameter which describes the
+   format of the SLKs as follows:
  
-                0       3-2-3 format
-                1       4-4 format
-                2       4-4-4 format (ncurses extension)
-                3       4-4-4 format with index line (ncurses extension)
-                        2 lines used
-                55      5-5 format (pdcurses format)
+   0       3-2-3 format
+   1       4-4 format
+   2       4-4-4 format (ncurses extension)
+   3       4-4-4 format with index line (ncurses extension)
+   2 lines used
+   55      5-5 format (pdcurses format)
 
-        slk_refresh(), slk_noutrefresh() and slk_touch() are analogous
-        to refresh(), noutrefresh() and touch().
+   slk_refresh(), slk_noutrefresh() and slk_touch() are analogous
+   to refresh(), noutrefresh() and touch().
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+### Return Value
 
-  Portability                                X/Open    BSD    SYS V
-        slk_init                                Y       -       Y
-        slk_set                                 Y       -       Y
-        slk_refresh                             Y       -       Y
-        slk_noutrefresh                         Y       -       Y
-        slk_label                               Y       -       Y
-        slk_clear                               Y       -       Y
-        slk_restore                             Y       -       Y
-        slk_touch                               Y       -       Y
-        slk_attron                              Y       -       Y
-        slk_attrset                             Y       -       Y
-        slk_attroff                             Y       -       Y
-        slk_attr_on                             Y
-        slk_attr_set                            Y
-        slk_attr_off                            Y
-        slk_wset                                Y
-        PDC_mouse_in_slk                        -       -       -
-        PDC_slk_free                            -       -       -
-        PDC_slk_initialize                      -       -       -
-        slk_wlabel                              -       -       -
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    slk_init                    Y       -       Y
+    slk_set                     Y       -       Y
+    slk_refresh                 Y       -       Y
+    slk_noutrefresh             Y       -       Y
+    slk_label                   Y       -       Y
+    slk_clear                   Y       -       Y
+    slk_restore                 Y       -       Y
+    slk_touch                   Y       -       Y
+    slk_attron                  Y       -       Y
+    slk_attrset                 Y       -       Y
+    slk_attroff                 Y       -       Y
+    slk_attr_on                 Y
+    slk_attr_set                Y
+    slk_attr_off                Y
+    slk_wset                    Y
+    PDC_mouse_in_slk            -       -       -
+    PDC_slk_free                -       -       -
+    PDC_slk_initialize          -       -       -
+    slk_wlabel                  -       -       -
 
 **man-end****************************************************************/
 

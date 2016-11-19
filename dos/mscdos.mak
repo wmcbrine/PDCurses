@@ -1,6 +1,6 @@
 # NMAKE Makefile for PDCurses library - Microsoft C for DOS
 #
-# Usage: nmake -f [path\]dosmsc.mak [DEBUG=] [target]
+# Usage: nmake -f [path\]mscdos.mak [DEBUG=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

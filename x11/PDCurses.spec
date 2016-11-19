@@ -1,5 +1,3 @@
-# $Id: PDCurses.spec,v 1.18 2008/07/21 12:25:20 wmcbrine Exp $
-
 %define ver 34
 %define verdot 3.4
 %define base /usr
@@ -11,14 +9,14 @@ Release: 1
 Copyright: Public Domain
 Group: Development/Libraries
 Source: %{name}-%{version}.tar.gz
-URL: http://pdcurses.sourceforge.net
+URL: http://pdcurses.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Prefix: %base
 
 %description
 PDCurses for X11 is an implementation of the curses library that lets 
 you build text-mode curses programs as native X11 applications. For more 
-information, visit http://pdcurses.sourceforge.net/
+information, visit http://pdcurses.org/
 
 %prep
 %setup -q
@@ -40,7 +38,7 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 
 %files
 %defattr(-,root,root)
-%doc README HISTORY
+%doc README.md HISTORY.md
 %{base}/bin/xcurses-config
 %{base}/lib/libXCurses.a
 %{base}/lib/libXpanel.a

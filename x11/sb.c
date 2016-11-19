@@ -2,33 +2,36 @@
 
 #include "pdcx11.h"
 
-RCSID("$Id: sb.c,v 1.27 2008/07/14 04:24:52 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                          sb
+sb
+--
 
-  Synopsis:
-        int sb_init(void)
-        int sb_set_horz(int total, int viewport, int cur)
-        int sb_set_vert(int total, int viewport, int cur)
-        int sb_get_horz(int *total, int *viewport, int *cur)
-        int sb_get_vert(int *total, int *viewport, int *cur)
-        int sb_refresh(void);
+### Synopsis
 
-  Description:
-        These functions manipulate the scrollbar.
+    int sb_init(void)
+    int sb_set_horz(int total, int viewport, int cur)
+    int sb_set_vert(int total, int viewport, int cur)
+    int sb_get_horz(int *total, int *viewport, int *cur)
+    int sb_get_vert(int *total, int *viewport, int *cur)
+    int sb_refresh(void);
 
-  Return Value:
-        All functions return OK on success and ERR on error.
+### Description
 
-  Portability                                X/Open    BSD    SYS V
-        sb_init                                 -       -       -
-        sb_set_horz                             -       -       -
-        sb_set_vert                             -       -       -
-        sb_get_horz                             -       -       -
-        sb_get_vert                             -       -       -
-        sb_refresh                              -       -       -
+   These functions manipulate the scrollbar.
+
+### Return Value
+
+   All functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    sb_init                     -       -       -
+    sb_set_horz                 -       -       -
+    sb_set_vert                 -       -       -
+    sb_get_horz                 -       -       -
+    sb_get_vert                 -       -       -
+    sb_refresh                  -       -       -
 
 **man-end****************************************************************/
 
@@ -150,4 +153,3 @@ int sb_refresh(void)
 
     return OK;
 }
-

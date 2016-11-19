@@ -2,95 +2,98 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: border.c,v 1.53 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         border
+border
+------
 
-  Synopsis:
-        int border(chtype ls, chtype rs, chtype ts, chtype bs, chtype tl, 
-                   chtype tr, chtype bl, chtype br);
-        int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts, 
-                    chtype bs, chtype tl, chtype tr, chtype bl, chtype br);
-        int box(WINDOW *win, chtype verch, chtype horch);
-        int hline(chtype ch, int n);
-        int vline(chtype ch, int n);
-        int whline(WINDOW *win, chtype ch, int n);
-        int wvline(WINDOW *win, chtype ch, int n);
-        int mvhline(int y, int x, chtype ch, int n);
-        int mvvline(int y, int x, chtype ch, int n);
-        int mvwhline(WINDOW *win, int y, int x, chtype ch, int n);
-        int mvwvline(WINDOW *win, int y, int x, chtype ch, int n);
+### Synopsis
 
-        int border_set(const cchar_t *ls, const cchar_t *rs,
-                       const cchar_t *ts, const cchar_t *bs,
-                       const cchar_t *tl, const cchar_t *tr,
-                       const cchar_t *bl, const cchar_t *br);
-        int wborder_set(WINDOW *win, const cchar_t *ls, const cchar_t *rs,
-                        const cchar_t *ts, const cchar_t *bs,
-                        const cchar_t *tl, const cchar_t *tr,
-                        const cchar_t *bl, const cchar_t *br);
-        int box_set(WINDOW *win, const cchar_t *verch, const cchar_t *horch);
-        int hline_set(const cchar_t *wch, int n);
-        int vline_set(const cchar_t *wch, int n);
-        int whline_set(WINDOW *win, const cchar_t *wch, int n);
-        int wvline_set(WINDOW *win, const cchar_t *wch, int n);
-        int mvhline_set(int y, int x, const cchar_t *wch, int n);
-        int mvvline_set(int y, int x, const cchar_t *wch, int n);
-        int mvwhline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
-        int mvwvline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
+    int border(chtype ls, chtype rs, chtype ts, chtype bs, chtype tl,
+               chtype tr, chtype bl, chtype br);
+    int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
+                chtype bs, chtype tl, chtype tr, chtype bl, chtype br);
+    int box(WINDOW *win, chtype verch, chtype horch);
+    int hline(chtype ch, int n);
+    int vline(chtype ch, int n);
+    int whline(WINDOW *win, chtype ch, int n);
+    int wvline(WINDOW *win, chtype ch, int n);
+    int mvhline(int y, int x, chtype ch, int n);
+    int mvvline(int y, int x, chtype ch, int n);
+    int mvwhline(WINDOW *win, int y, int x, chtype ch, int n);
+    int mvwvline(WINDOW *win, int y, int x, chtype ch, int n);
 
-  Description:
-        border(), wborder(), and box() draw a border around the edge of 
-        the window. If any argument is zero, an appropriate default is 
-        used:
+    int border_set(const cchar_t *ls, const cchar_t *rs,
+                   const cchar_t *ts, const cchar_t *bs,
+                   const cchar_t *tl, const cchar_t *tr,
+                const cchar_t *bl, const cchar_t *br);
+    int wborder_set(WINDOW *win, const cchar_t *ls, const cchar_t *rs,
+                    const cchar_t *ts, const cchar_t *bs,
+                    const cchar_t *tl, const cchar_t *tr,
+                    const cchar_t *bl, const cchar_t *br);
+    int box_set(WINDOW *win, const cchar_t *verch, const cchar_t *horch);
+    int hline_set(const cchar_t *wch, int n);
+    int vline_set(const cchar_t *wch, int n);
+    int whline_set(WINDOW *win, const cchar_t *wch, int n);
+    int wvline_set(WINDOW *win, const cchar_t *wch, int n);
+    int mvhline_set(int y, int x, const cchar_t *wch, int n);
+    int mvvline_set(int y, int x, const cchar_t *wch, int n);
+    int mvwhline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
+    int mvwvline_set(WINDOW *win, int y, int x, const cchar_t *wch, int n);
 
-                ls      left side of border             ACS_VLINE
-                rs      right side of border            ACS_VLINE
-                ts      top side of border              ACS_HLINE
-                bs      bottom side of border           ACS_HLINE
-                tl      top left corner of border       ACS_ULCORNER
-                tr      top right corner of border      ACS_URCORNER
-                bl      bottom left corner of border    ACS_LLCORNER
-                br      bottom right corner of border   ACS_LRCORNER
+### Description
 
-        hline() and whline() draw a horizontal line, using ch, starting 
-        from the current cursor position. The cursor position does not 
-        change. The line is at most n characters long, or as many as 
-        will fit in the window.
+   border(), wborder(), and box() draw a border around the edge of
+   the window. If any argument is zero, an appropriate default is
+   used:
 
-        vline() and wvline() draw a vertical line, using ch, starting 
-        from the current cursor position. The cursor position does not 
-        change. The line is at most n characters long, or as many as 
-        will fit in the window.
+   ls    left side of border             ACS_VLINE
+   rs    right side of border            ACS_VLINE
+   ts    top side of border              ACS_HLINE
+   bs    bottom side of border           ACS_HLINE
+   tl    top left corner of border       ACS_ULCORNER
+   tr    top right corner of border      ACS_URCORNER
+   bl    bottom left corner of border    ACS_LLCORNER
+   br    bottom right corner of border   ACS_LRCORNER
 
-  Return Value:
-        These functions return OK on success and ERR on error.
+   hline() and whline() draw a horizontal line, using ch, starting
+   from the current cursor position. The cursor position does not
+   change. The line is at most n characters long, or as many as
+   will fit in the window.
 
-  Portability                                X/Open    BSD    SYS V
-        border                                  Y       -      4.0
-        wborder                                 Y       -      4.0
-        box                                     Y       Y       Y
-        hline                                   Y       -      4.0
-        vline                                   Y       -      4.0
-        whline                                  Y       -      4.0
-        wvline                                  Y       -      4.0
-        mvhline                                 Y
-        mvvline                                 Y
-        mvwhline                                Y
-        mvwvline                                Y
-        border_set                              Y
-        wborder_set                             Y
-        box_set                                 Y
-        hline_set                               Y
-        vline_set                               Y
-        whline_set                              Y
-        wvline_set                              Y
-        mvhline_set                             Y
-        mvvline_set                             Y
-        mvwhline_set                            Y
-        mvwvline_set                            Y
+   vline() and wvline() draw a vertical line, using ch, starting
+   from the current cursor position. The cursor position does not
+   change. The line is at most n characters long, or as many as
+   will fit in the window.
+
+### Return Value
+
+   These functions return OK on success and ERR on error.
+
+### Portability
+                             X/Open    BSD    SYS V
+    border                      Y       -      4.0
+    wborder                     Y       -      4.0
+    box                         Y       Y       Y
+    hline                       Y       -      4.0
+    vline                       Y       -      4.0
+    whline                      Y       -      4.0
+    wvline                      Y       -      4.0
+    mvhline                     Y
+    mvvline                     Y
+    mvwhline                    Y
+    mvwvline                    Y
+    border_set                  Y
+    wborder_set                 Y
+    box_set                     Y
+    hline_set                   Y
+    vline_set                   Y
+    whline_set                  Y
+    wvline_set                  Y
+    mvhline_set                 Y
+    mvvline_set                 Y
+    mvwhline_set                Y
+    mvwvline_set                Y
 
 **man-end****************************************************************/
 

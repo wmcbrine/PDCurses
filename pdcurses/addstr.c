@@ -2,62 +2,65 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: addstr.c,v 1.44 2008/07/13 16:08:17 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         addstr
+addstr
+------
 
-  Synopsis:
-        int addstr(const char *str);
-        int addnstr(const char *str, int n);
-        int waddstr(WINDOW *win, const char *str);
-        int waddnstr(WINDOW *win, const char *str, int n);
-        int mvaddstr(int y, int x, const char *str);
-        int mvaddnstr(int y, int x, const char *str, int n);
-        int mvwaddstr(WINDOW *win, int y, int x, const char *str);
-        int mvwaddnstr(WINDOW *win, int y, int x, const char *str, int n);
+### Synopsis
 
-        int addwstr(const wchar_t *wstr);
-        int addnwstr(const wchar_t *wstr, int n);
-        int waddwstr(WINDOW *win, const wchar_t *wstr);
-        int waddnwstr(WINDOW *win, const wchar_t *wstr, int n);
-        int mvaddwstr(int y, int x, const wchar_t *wstr);
-        int mvaddnwstr(int y, int x, const wchar_t *wstr, int n);
-        int mvwaddwstr(WINDOW *win, int y, int x, const wchar_t *wstr);
-        int mvwaddnwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
+    int addstr(const char *str);
+    int addnstr(const char *str, int n);
+    int waddstr(WINDOW *win, const char *str);
+    int waddnstr(WINDOW *win, const char *str, int n);
+    int mvaddstr(int y, int x, const char *str);
+    int mvaddnstr(int y, int x, const char *str, int n);
+    int mvwaddstr(WINDOW *win, int y, int x, const char *str);
+    int mvwaddnstr(WINDOW *win, int y, int x, const char *str, int n);
 
-  Description:
-        These routines write all the characters of the null-terminated
-        string str or wide-character string wstr to the given window.
-        The functionality is similar to calling waddch() once for each
-        character in the string; except that, when PDCurses is built
-        with wide-character support enabled, the narrow-character
-        functions treat the string as a multibyte string in the current
-        locale, and convert it. The routines with n as the last
-        argument write at most n characters; if n is negative, then the
-        entire string will be added.
+    int addwstr(const wchar_t *wstr);
+    int addnwstr(const wchar_t *wstr, int n);
+    int waddwstr(WINDOW *win, const wchar_t *wstr);
+    int waddnwstr(WINDOW *win, const wchar_t *wstr, int n);
+    int mvaddwstr(int y, int x, const wchar_t *wstr);
+    int mvaddnwstr(int y, int x, const wchar_t *wstr, int n);
+    int mvwaddwstr(WINDOW *win, int y, int x, const wchar_t *wstr);
+    int mvwaddnwstr(WINDOW *win, int y, int x, const wchar_t *wstr, int n);
 
-  Return Value:
-        All functions return OK or ERR.
+### Description
 
-  Portability                                X/Open    BSD    SYS V
-        addstr                                  Y       Y       Y
-        waddstr                                 Y       Y       Y
-        mvaddstr                                Y       Y       Y
-        mvwaddstr                               Y       Y       Y
-        addnstr                                 Y       -      4.0
-        waddnstr                                Y       -      4.0
-        mvaddnstr                               Y       -      4.0
-        mvwaddnstr                              Y       -      4.0
-        addwstr                                 Y
-        waddwstr                                Y
-        mvaddwstr                               Y
-        mvwaddwstr                              Y
-        addnwstr                                Y
-        waddnwstr                               Y
-        mvaddnwstr                              Y
-        mvwaddnwstr                             Y
+   These routines write all the characters of the null-terminated
+   string str or wide-character string wstr to the given window.
+   The functionality is similar to calling waddch() once for each
+   character in the string; except that, when PDCurses is built
+   with wide-character support enabled, the narrow-character
+   functions treat the string as a multibyte string in the current
+   locale, and convert it. The routines with n as the last
+   argument write at most n characters; if n is negative, then the
+   entire string will be added.
+
+### Return Value
+
+   All functions return OK or ERR.
+
+### Portability
+                             X/Open    BSD    SYS V
+    addstr                      Y       Y       Y
+    waddstr                     Y       Y       Y
+    mvaddstr                    Y       Y       Y
+    mvwaddstr                   Y       Y       Y
+    addnstr                     Y       -      4.0
+    waddnstr                    Y       -      4.0
+    mvaddnstr                   Y       -      4.0
+    mvwaddnstr                  Y       -      4.0
+    addwstr                     Y
+    waddwstr                    Y
+    mvaddwstr                   Y
+    mvwaddwstr                  Y
+    addnwstr                    Y
+    waddnwstr                   Y
+    mvaddnwstr                  Y
+    mvwaddnwstr                 Y
 
 **man-end****************************************************************/
 

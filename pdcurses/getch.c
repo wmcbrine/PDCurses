@@ -2,82 +2,85 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getch.c,v 1.72 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         getch
+getch
+-----
 
-  Synopsis:
-        int getch(void);
-        int wgetch(WINDOW *win);
-        int mvgetch(int y, int x);
-        int mvwgetch(WINDOW *win, int y, int x);
-        int ungetch(int ch);
-        int flushinp(void);
+### Synopsis
 
-        int get_wch(wint_t *wch);
-        int wget_wch(WINDOW *win, wint_t *wch);
-        int mvget_wch(int y, int x, wint_t *wch);
-        int mvwget_wch(WINDOW *win, int y, int x, wint_t *wch);
-        int unget_wch(const wchar_t wch);
+    int getch(void);
+    int wgetch(WINDOW *win);
+    int mvgetch(int y, int x);
+    int mvwgetch(WINDOW *win, int y, int x);
+    int ungetch(int ch);
+    int flushinp(void);
 
-        unsigned long PDC_get_key_modifiers(void);
-        int PDC_save_key_modifiers(bool flag);
-        int PDC_return_key_modifiers(bool flag);
+    int get_wch(wint_t *wch);
+    int wget_wch(WINDOW *win, wint_t *wch);
+    int mvget_wch(int y, int x, wint_t *wch);
+    int mvwget_wch(WINDOW *win, int y, int x, wint_t *wch);
+    int unget_wch(const wchar_t wch);
 
-  Description:
-        With the getch(), wgetch(), mvgetch(), and mvwgetch() functions, 
-        a character is read from the terminal associated with the window. 
-        In nodelay mode, if there is no input waiting, the value ERR is 
-        returned. In delay mode, the program will hang until the system 
-        passes text through to the program. Depending on the setting of 
-        cbreak(), this will be after one character or after the first 
-        newline.  Unless noecho() has been set, the character will also 
-        be echoed into the designated window.
+    unsigned long PDC_get_key_modifiers(void);
+    int PDC_save_key_modifiers(bool flag);
+    int PDC_return_key_modifiers(bool flag);
 
-        If keypad() is TRUE, and a function key is pressed, the token for
-        that function key will be returned instead of the raw characters.
-        Possible function keys are defined in <curses.h> with integers
-        beginning with 0401, whose names begin with KEY_.
+### Description
 
-        If nodelay(win, TRUE) has been called on the window and no input
-        is waiting, the value ERR is returned.
+   With the getch(), wgetch(), mvgetch(), and mvwgetch() functions,
+   a character is read from the terminal associated with the window.
+   In nodelay mode, if there is no input waiting, the value ERR is
+   returned. In delay mode, the program will hang until the system
+   passes text through to the program. Depending on the setting of
+   cbreak(), this will be after one character or after the first
+   newline.  Unless noecho() has been set, the character will also
+   be echoed into the designated window.
 
-        ungetch() places ch back onto the input queue to be returned by 
-        the next call to wgetch().
+   If keypad() is TRUE, and a function key is pressed, the token for
+   that function key will be returned instead of the raw characters.
+   Possible function keys are defined in <curses.h> with integers
+   beginning with 0401, whose names begin with KEY_.
 
-        flushinp() throws away any type-ahead that has been typed by the 
-        user and has not yet been read by the program.
+   If nodelay(win, TRUE) has been called on the window and no input
+   is waiting, the value ERR is returned.
 
-        PDC_get_key_modifiers() returns the keyboard modifiers (shift, 
-        control, alt, numlock) effective at the time of the last getch() 
-        call, if PDC_save_key_modifiers(TRUE) has been called before the 
-        getch(). Use the macros PDC_KEY_MODIFIER_* to determine which 
-        modifier(s) were set. PDC_return_key_modifiers() tells getch() 
-        to return modifier keys pressed alone as keystrokes (KEY_ALT_L, 
-        etc.). These may not work on all platforms.
+   ungetch() places ch back onto the input queue to be returned by
+   the next call to wgetch().
 
-        NOTE: getch() and ungetch() are implemented as macros, to avoid 
-        conflict with many DOS compiler's runtime libraries.
+   flushinp() throws away any type-ahead that has been typed by the
+   user and has not yet been read by the program.
 
-  Return Value:
-        These functions return ERR or the value of the character, meta 
-        character or function key token.
+   PDC_get_key_modifiers() returns the keyboard modifiers (shift,
+   control, alt, numlock) effective at the time of the last getch()
+   call, if PDC_save_key_modifiers(TRUE) has been called before the
+   getch(). Use the macros PDC_KEY_MODIFIER_* to determine which
+   modifier(s) were set. PDC_return_key_modifiers() tells getch()
+   to return modifier keys pressed alone as keystrokes (KEY_ALT_L,
+   etc.). These may not work on all platforms.
 
-  Portability                                X/Open    BSD    SYS V
-        getch                                   Y       Y       Y
-        wgetch                                  Y       Y       Y
-        mvgetch                                 Y       Y       Y
-        mvwgetch                                Y       Y       Y
-        ungetch                                 Y       Y       Y
-        flushinp                                Y       Y       Y
-        get_wch                                 Y
-        wget_wch                                Y
-        mvget_wch                               Y
-        mvwget_wch                              Y
-        unget_wch                               Y
-        PDC_get_key_modifiers                   -       -       -
+   NOTE: getch() and ungetch() are implemented as macros, to avoid
+   conflict with many DOS compiler's runtime libraries.
+
+### Return Value
+
+   These functions return ERR or the value of the character, meta
+   character or function key token.
+
+### Portability
+                             X/Open    BSD    SYS V
+    getch                       Y       Y       Y
+    wgetch                      Y       Y       Y
+    mvgetch                     Y       Y       Y
+    mvwgetch                    Y       Y       Y
+    ungetch                     Y       Y       Y
+    flushinp                    Y       Y       Y
+    get_wch                     Y
+    wget_wch                    Y
+    mvget_wch                   Y
+    mvwget_wch                  Y
+    unget_wch                   Y
+    PDC_get_key_modifiers       -       -       -
 
 **man-end****************************************************************/
 

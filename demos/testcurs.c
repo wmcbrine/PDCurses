@@ -4,8 +4,6 @@
  *
  *  wrs(5/28/93) -- modified to be consistent (perform identically)
  *                  with either PDCurses or under Unix System V, R4
- *
- *  $Id: testcurs.c,v 1.85 2008/07/14 12:35:23 wmcbrine Exp $
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -449,6 +447,10 @@ void inputTest(WINDOW *win)
                 waddstr(win, "wheel up: ");
             else if (MOUSE_WHEEL_DOWN)
                 waddstr(win, "wheel dn: ");
+            else if (MOUSE_WHEEL_LEFT)
+                waddstr(win, "wheel lt: ");
+            else if (MOUSE_WHEEL_RIGHT)
+                waddstr(win, "wheel rt: ");
             else if ((BUTTON_STATUS(button) &
                 BUTTON_ACTION_MASK) == BUTTON_PRESSED)
                 waddstr(win, "pressed: ");

@@ -2,69 +2,71 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: termattr.c,v 1.54 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         termattr
+termattr
+--------
 
-  Synopsis:
-        int baudrate(void);
-        char erasechar(void);
-        bool has_ic(void);
-        bool has_il(void);
-        char killchar(void);
-        char *longname(void);
-        chtype termattrs(void);
-        attr_t term_attrs(void);
-        char *termname(void);
+### Synopsis
 
-        int erasewchar(wchar_t *ch);
-        int killwchar(wchar_t *ch);
+    int baudrate(void);
+    char erasechar(void);
+    bool has_ic(void);
+    bool has_il(void);
+    char killchar(void);
+    char *longname(void);
+    chtype termattrs(void);
+    attr_t term_attrs(void);
+    char *termname(void);
 
-        char wordchar(void);
+    int erasewchar(wchar_t *ch);
+    int killwchar(wchar_t *ch);
 
-  Description:
-        baudrate() is supposed to return the output speed of the 
-        terminal. In PDCurses, it simply returns INT_MAX.
+    char wordchar(void);
 
-        has_ic and has_il() return TRUE. These functions have meaning in 
-        some other implementations of curses.
+### Description
 
-        erasechar() and killchar() return ^H and ^U, respectively -- the 
-        ERASE and KILL characters. In other curses implementations, 
-        these may vary by terminal type. erasewchar() and killwchar() 
-        are the wide-character versions; they take a pointer to a 
-        location in which to store the character, and return OK or ERR.
+   baudrate() is supposed to return the output speed of the
+   terminal. In PDCurses, it simply returns INT_MAX.
 
-        longname() returns a pointer to a static area containing a
-        verbose description of the current terminal. The maximum length
-        of the string is 128 characters.  It is defined only after the
-        call to initscr() or newterm().
+   has_ic and has_il() return TRUE. These functions have meaning in
+   some other implementations of curses.
 
-        termname() returns a pointer to a static area containing a
-        short description of the current terminal (14 characters).
+   erasechar() and killchar() return ^H and ^U, respectively -- the
+   ERASE and KILL characters. In other curses implementations,
+   these may vary by terminal type. erasewchar() and killwchar()
+   are the wide-character versions; they take a pointer to a
+   location in which to store the character, and return OK or ERR.
 
-        termattrs() returns a logical OR of all video attributes
-        supported by the terminal.
+   longname() returns a pointer to a static area containing a
+   verbose description of the current terminal. The maximum length
+   of the string is 128 characters.  It is defined only after the
+   call to initscr() or newterm().
 
-        wordchar() is a PDCurses extension of the concept behind the 
-        functions erasechar() and killchar(), returning the "delete 
-        word" character, ^W.
+   termname() returns a pointer to a static area containing a
+   short description of the current terminal (14 characters).
 
-  Portability                                X/Open    BSD    SYS V
-        baudrate                                Y       Y       Y
-        erasechar                               Y       Y       Y
-        has_ic                                  Y       Y       Y
-        has_il                                  Y       Y       Y
-        killchar                                Y       Y       Y
-        longname                                Y       Y       Y
-        termattrs                               Y       Y       Y
-        termname                                Y       Y       Y
-        erasewchar                              Y
-        killwchar                               Y
-        term_attrs                              Y
-        wordchar                                -       -       -
+   termattrs() returns a logical OR of all video attributes
+   supported by the terminal.
+
+   wordchar() is a PDCurses extension of the concept behind the
+   functions erasechar() and killchar(), returning the "delete
+   word" character, ^W.
+
+### Portability
+                             X/Open    BSD    SYS V
+    baudrate                    Y       Y       Y
+    erasechar                   Y       Y       Y
+    has_ic                      Y       Y       Y
+    has_il                      Y       Y       Y
+    killchar                    Y       Y       Y
+    longname                    Y       Y       Y
+    termattrs                   Y       Y       Y
+    termname                    Y       Y       Y
+    erasewchar                  Y
+    killwchar                   Y
+    term_attrs                  Y
+    wordchar                    -       -       -
 
 **man-end****************************************************************/
 
@@ -137,9 +139,11 @@ attr_t term_attrs(void)
 
 char *termname(void)
 {
+    static char _termname[14] = "pdcurses";
+
     PDC_LOG(("termname() - called\n"));
 
-    return "pdcurses";
+    return _termname;
 }
 
 char wordchar(void)

@@ -2,8 +2,6 @@
 
 #include "pdcos2.h"
 
-RCSID("$Id: pdcscrn.c,v 1.76 2008/07/14 04:24:51 wmcbrine Exp $")
-
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
 #else

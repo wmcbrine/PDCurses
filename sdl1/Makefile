@@ -19,9 +19,18 @@ SLIBS		= $(shell sdl-config --libs)
 SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
 ifeq ($(DEBUG),Y)
-	CFLAGS  = -g -Wall -DPDCDEBUG
+	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
 else
-	CFLAGS  = -O2 -Wall
+	CFLAGS  = -O2 -Wall -fPIC
+endif
+
+ifeq ($(WIDE),Y)
+	CFLAGS	+= -DPDC_WIDE
+	SLIBS	+= -lSDL_ttf
+endif
+
+ifeq ($(UTF8),Y)
+	CFLAGS	+= -DPDC_FORCE_UTF8
 endif
 
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
@@ -92,7 +101,7 @@ xmas: $(demodir)/xmas.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 sdltest: $(osdir)/sdltest.c
-	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(DEMOFLAGS) $(SFLAGS) -o $@ $< $(LDFLAGS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tui.c

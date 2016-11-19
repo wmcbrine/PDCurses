@@ -26,8 +26,6 @@
  * authorization.                                                           *
  ****************************************************************************/
 
-/* $Id: rain.c,v 1.11 2008/07/13 16:08:17 wmcbrine Exp $ */
-
 #include <curses.h>
 #include <stdlib.h>
 #include <time.h>

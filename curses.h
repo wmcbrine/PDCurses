@@ -1,7 +1,5 @@
 /* Public Domain Curses */
 
-/* $Id: curses.h,v 1.295 2008/07/15 17:13:25 wmcbrine Exp $ */
-
 /*----------------------------------------------------------------------*
  *                              PDCurses                                *
  *----------------------------------------------------------------------*/
@@ -142,12 +140,16 @@ typedef struct
  *                             10000 <- mouse position report
  *                            100000 <- mouse wheel up
  *                           1000000 <- mouse wheel down
+ *                          10000000 <- mouse wheel left
+ *                         100000000 <- mouse wheel right
  */
 
 #define PDC_MOUSE_MOVED         0x0008
 #define PDC_MOUSE_POSITION      0x0010
 #define PDC_MOUSE_WHEEL_UP      0x0020
 #define PDC_MOUSE_WHEEL_DOWN    0x0040
+#define PDC_MOUSE_WHEEL_LEFT    0x0080
+#define PDC_MOUSE_WHEEL_RIGHT   0x0100
 
 #define A_BUTTON_CHANGED        (Mouse_status.changes & 7)
 #define MOUSE_MOVED             (Mouse_status.changes & PDC_MOUSE_MOVED)
@@ -156,6 +158,8 @@ typedef struct
 #define BUTTON_STATUS(x)        (Mouse_status.button[(x) - 1])
 #define MOUSE_WHEEL_UP          (Mouse_status.changes & PDC_MOUSE_WHEEL_UP)
 #define MOUSE_WHEEL_DOWN        (Mouse_status.changes & PDC_MOUSE_WHEEL_DOWN)
+#define MOUSE_WHEEL_LEFT        (Mouse_status.changes & PDC_MOUSE_WHEEL_LEFT)
+#define MOUSE_WHEEL_RIGHT       (Mouse_status.changes & PDC_MOUSE_WHEEL_RIGHT)
 
 /* mouse bit-masks */
 
@@ -365,10 +369,10 @@ The following is the structure of a win->_attrs chtype:
 
 short form:
 
--------------------------------------------------
-|15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
--------------------------------------------------
-  color number |  attrs |   character eg 'a'
+    +-----------------------------------------------+
+    |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
+    +-----------------------------------------------+
+      color number |  attrs |   character eg 'a'
 
 The available non-color attributes are bold, reverse and blink. Others 
 have no effect. The high order char is an index into an array of 
@@ -377,10 +381,10 @@ pairs (5 bits) plus 3 bits for other attributes.
 
 long form:
 
-----------------------------------------------------------------------------
-|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|12|..| 3| 2| 1| 0|
-----------------------------------------------------------------------------
-      color number      |     modifiers         |      character eg 'a'
+    +--------------------------------------------------------------------+
+    |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|..| 2| 1| 0|
+    +--------------------------------------------------------------------+
+          color number      |     modifiers         |   character eg 'a'
 
 The available non-color attributes are bold, underline, invisible, 
 right-line, left-line, protect, reverse and blink. 256 color pairs (8 
@@ -409,7 +413,6 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_ITALIC     A_INVIS
 # define A_PROTECT    (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
 
-# define PDC_ATTR_SHIFT  19
 # define PDC_COLOR_SHIFT 24
 #else
 # define A_BOLD       (chtype)0x0100  /* X/Open */
@@ -429,7 +432,6 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_ITALIC     A_NORMAL
 # define A_INVIS      A_NORMAL
 
-# define PDC_ATTR_SHIFT   8
 # define PDC_COLOR_SHIFT 11
 #endif
 
@@ -442,6 +444,8 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 
 /* For use with attr_t -- X/Open says, "these shall be distinct", so 
    this is a non-conforming implementation. */
+
+#define WA_NORMAL     A_NORMAL
 
 #define WA_ALTCHARSET A_ALTCHARSET
 #define WA_BLINK      A_BLINK
@@ -459,6 +463,8 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 #define WA_LOW        A_NORMAL
 #define WA_TOP        A_NORMAL
 #define WA_VERTICAL   A_NORMAL
+
+#define WA_ATTRIBUTES A_ATTRIBUTES
 
 /*** Alternate character set macros ***/
 

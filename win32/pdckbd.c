@@ -2,21 +2,23 @@
 
 #include "pdcwin.h"
 
-RCSID("$Id: pdckbd.c,v 1.115 2008/07/20 20:12:04 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         pdckbd
+pdckbd
+------
 
-  Synopsis:
-        unsigned long PDC_get_input_fd(void);
+### Synopsis
 
-  Description:
-        PDC_get_input_fd() returns the file descriptor that PDCurses 
-        reads its input from. It can be used for select().
+    unsigned long PDC_get_input_fd(void);
 
-  Portability                                X/Open    BSD    SYS V
-        PDC_get_input_fd                        -       -       -
+### Description
+
+   PDC_get_input_fd() returns the file descriptor that PDCurses
+   reads its input from. It can be used for select().
+
+### Portability
+                             X/Open    BSD    SYS V
+    PDC_get_input_fd            -       -       -
 
 **man-end****************************************************************/
 
@@ -417,12 +419,9 @@ static int _process_key_event(void)
     {
         /* This code should catch all keys returning a printable
            character. Characters above 0x7F should be returned as
-           positive codes. But if'ndef NUMKEYPAD we have to return
-           extended keycodes for keypad codes. */
+           positive codes. */
 
-#ifndef NUMKEYPAD
         if (kptab[vk].extended == 0)
-#endif
         {
             SP->key_code = FALSE;
             return key;
@@ -477,6 +476,19 @@ static int _process_mouse_event(void)
     {
         pdc_mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
             PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+
+        pdc_mouse_status.x = -1;
+        pdc_mouse_status.y = -1;
+
+        memset(&old_mouse_status, 0, sizeof(old_mouse_status));
+
+        return KEY_MOUSE;
+    }
+
+    if (MEV.dwEventFlags == 8)
+    {
+        pdc_mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
+            PDC_MOUSE_WHEEL_RIGHT : PDC_MOUSE_WHEEL_LEFT;
 
         pdc_mouse_status.x = -1;
         pdc_mouse_status.y = -1;

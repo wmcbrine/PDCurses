@@ -11,8 +11,6 @@
      copies from any such party to do so.  This license includes without
      limitation a license to do the foregoing actions under any patents of
      the party supplying this software to the X Consortium.
-
-     $Id: ScrollBox.c,v 1.15 2008/07/14 04:24:52 wmcbrine Exp $
  */
 
 /* ScrollBox.c - scrollBox composite widget */

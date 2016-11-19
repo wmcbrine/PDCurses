@@ -1,6 +1,8 @@
 /* Public Domain Curses */
 
-/* $Id: pdcx11.h,v 1.64 2008/07/14 04:24:52 wmcbrine Exp $ */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <curspriv.h>
 

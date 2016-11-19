@@ -2,75 +2,78 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: util.c,v 1.71 2008/07/13 16:08:18 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         util
+util
+----
 
-  Synopsis:
-        char *unctrl(chtype c);
-        void filter(void);
-        void use_env(bool x);
-        int delay_output(int ms);
+### Synopsis
 
-        int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
-                     short *color_pair, void *opts);
-        int setcchar(cchar_t *wcval, const wchar_t *wch, const attr_t attrs,
-                     short color_pair, const void *opts);
-        wchar_t *wunctrl(cchar_t *wc);
+    char *unctrl(chtype c);
+    void filter(void);
+    void use_env(bool x);
+    int delay_output(int ms);
 
-        int PDC_mbtowc(wchar_t *pwc, const char *s, size_t n);
-        size_t PDC_mbstowcs(wchar_t *dest, const char *src, size_t n);
-        size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n);
+    int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
+                 short *color_pair, void *opts);
+    int setcchar(cchar_t *wcval, const wchar_t *wch, const attr_t attrs,
+                 short color_pair, const void *opts);
+    wchar_t *wunctrl(cchar_t *wc);
 
-  Description:
-        unctrl() expands the text portion of the chtype c into a 
-        printable string. Control characters are changed to the "^X" 
-        notation; others are passed through. wunctrl() is the wide- 
-        character version of the function.
+    int PDC_mbtowc(wchar_t *pwc, const char *s, size_t n);
+    size_t PDC_mbstowcs(wchar_t *dest, const char *src, size_t n);
+    size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n);
 
-        filter() and use_env() are no-ops in PDCurses.
+### Description
 
-        delay_output() inserts an ms millisecond pause in output.
+   unctrl() expands the text portion of the chtype c into a
+   printable string. Control characters are changed to the "^X"
+   notation; others are passed through. wunctrl() is the wide-
+   character version of the function.
 
-        getcchar() works in two modes: When wch is not NULL, it reads 
-        the cchar_t pointed to by wcval and stores the attributes in 
-        attrs, the color pair in color_pair, and the text in the
-        wide-character string wch. When wch is NULL, getcchar() merely 
-        returns the number of wide characters in wcval. In either mode, 
-        the opts argument is unused.
+   filter() and use_env() are no-ops in PDCurses.
 
-        setcchar constructs a cchar_t at wcval from the wide-character 
-        text at wch, the attributes in attr and the color pair in 
-        color_pair. The opts argument is unused.
+   delay_output() inserts an ms millisecond pause in output.
 
-        Currently, the length returned by getcchar() is always 1 or 0.
-        Similarly, setcchar() will only take the first wide character
-        from wch, and ignore any others that it "should" take (i.e.,
-        combining characters). Nor will it correctly handle any 
-        character outside the basic multilingual plane (UCS-2).
+   getcchar() works in two modes: When wch is not NULL, it reads
+   the cchar_t pointed to by wcval and stores the attributes in
+   attrs, the color pair in color_pair, and the text in the
+   wide-character string wch. When wch is NULL, getcchar() merely
+   returns the number of wide characters in wcval. In either mode,
+   the opts argument is unused.
 
-  Return Value:
-        unctrl() and wunctrl() return NULL on failure. delay_output() 
-        always returns OK.
+   setcchar constructs a cchar_t at wcval from the wide-character
+   text at wch, the attributes in attr and the color pair in
+   color_pair. The opts argument is unused.
 
-        getcchar() returns the number of wide characters wcval points to 
-        when wch is NULL; when it's not, getcchar() returns OK or ERR. 
+   Currently, the length returned by getcchar() is always 1 or 0.
+   Similarly, setcchar() will only take the first wide character
+   from wch, and ignore any others that it "should" take (i.e.,
+   combining characters). Nor will it correctly handle any
+   character outside the basic multilingual plane (UCS-2).
 
-        setcchar() returns OK or ERR.
+### Return Value
 
-  Portability                                X/Open    BSD    SYS V
-        unctrl                                  Y       Y       Y
-        filter                                  Y       -      3.0
-        use_env                                 Y       -      4.0
-        delay_output                            Y       Y       Y
-        getcchar                                Y
-        setcchar                                Y
-        wunctrl                                 Y
-        PDC_mbtowc                              -       -       -
-        PDC_mbstowcs                            -       -       -
-        PDC_wcstombs                            -       -       -
+   unctrl() and wunctrl() return NULL on failure. delay_output()
+   always returns OK.
+
+   getcchar() returns the number of wide characters wcval points to
+   when wch is NULL; when it's not, getcchar() returns OK or ERR.
+
+   setcchar() returns OK or ERR.
+
+### Portability
+                             X/Open    BSD    SYS V
+    unctrl                      Y       Y       Y
+    filter                      Y       -      3.0
+    use_env                     Y       -      4.0
+    delay_output                Y       Y       Y
+    getcchar                    Y
+    setcchar                    Y
+    wunctrl                     Y
+    PDC_mbtowc                  -       -       -
+    PDC_mbstowcs                -       -       -
+    PDC_wcstombs                -       -       -
 
 **man-end****************************************************************/
 

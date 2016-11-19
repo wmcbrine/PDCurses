@@ -2,65 +2,68 @@
 
 #include <curspriv.h>
 
-RCSID("$Id: getstr.c,v 1.51 2008/07/14 04:24:51 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
-  Name:                                                         getstr
+getstr
+------
 
-  Synopsis:
-        int getstr(char *str);
-        int wgetstr(WINDOW *win, char *str);
-        int mvgetstr(int y, int x, char *str);
-        int mvwgetstr(WINDOW *win, int y, int x, char *str);
-        int getnstr(char *str, int n);
-        int wgetnstr(WINDOW *win, char *str, int n);
-        int mvgetnstr(int y, int x, char *str, int n);
-        int mvwgetnstr(WINDOW *win, int y, int x, char *str, int n);
+### Synopsis
 
-        int get_wstr(wint_t *wstr);
-        int wget_wstr(WINDOW *win, wint_t *wstr);
-        int mvget_wstr(int y, int x, wint_t *wstr);
-        int mvwget_wstr(WINDOW *win, int, int, wint_t *wstr);
-        int getn_wstr(wint_t *wstr, int n);
-        int wgetn_wstr(WINDOW *win, wint_t *wstr, int n);
-        int mvgetn_wstr(int y, int x, wint_t *wstr, int n);
-        int mvwgetn_wstr(WINDOW *win, int y, int x, wint_t *wstr, int n);
+    int getstr(char *str);
+    int wgetstr(WINDOW *win, char *str);
+    int mvgetstr(int y, int x, char *str);
+    int mvwgetstr(WINDOW *win, int y, int x, char *str);
+    int getnstr(char *str, int n);
+    int wgetnstr(WINDOW *win, char *str, int n);
+    int mvgetnstr(int y, int x, char *str, int n);
+    int mvwgetnstr(WINDOW *win, int y, int x, char *str, int n);
 
-  Description:
-        These routines call wgetch() repeatedly to build a string, 
-        interpreting erase and kill characters along the way, until a 
-        newline or carriage return is received. When PDCurses is built 
-        with wide-character support enabled, the narrow-character 
-        functions convert the wgetch()'d values into a multibyte string 
-        in the current locale before returning it. The resulting string 
-        is placed in the area pointed to by *str. The routines with n as 
-        the last argument read at most n characters.
+    int get_wstr(wint_t *wstr);
+    int wget_wstr(WINDOW *win, wint_t *wstr);
+    int mvget_wstr(int y, int x, wint_t *wstr);
+    int mvwget_wstr(WINDOW *win, int, int, wint_t *wstr);
+    int getn_wstr(wint_t *wstr, int n);
+    int wgetn_wstr(WINDOW *win, wint_t *wstr, int n);
+    int mvgetn_wstr(int y, int x, wint_t *wstr, int n);
+    int mvwgetn_wstr(WINDOW *win, int y, int x, wint_t *wstr, int n);
 
-        Note that there's no way to know how long the buffer passed to 
-        wgetstr() is, so use wgetnstr() to avoid buffer overflows.
+### Description
 
-  Return Value:
-        This functions return ERR on failure or any other value on 
-        success.
+   These routines call wgetch() repeatedly to build a string,
+   interpreting erase and kill characters along the way, until a
+   newline or carriage return is received. When PDCurses is built
+   with wide-character support enabled, the narrow-character
+   functions convert the wgetch()'d values into a multibyte string
+   in the current locale before returning it. The resulting string
+   is placed in the area pointed to by *str. The routines with n as
+   the last argument read at most n characters.
 
-  Portability                                X/Open    BSD    SYS V
-        getstr                                  Y       Y       Y
-        wgetstr                                 Y       Y       Y
-        mvgetstr                                Y       Y       Y
-        mvwgetstr                               Y       Y       Y
-        getnstr                                 Y       -      4.0
-        wgetnstr                                Y       -      4.0
-        mvgetnstr                               Y       -       -
-        mvwgetnstr                              Y       -       -
-        get_wstr                                Y
-        wget_wstr                               Y
-        mvget_wstr                              Y
-        mvwget_wstr                             Y
-        getn_wstr                               Y
-        wgetn_wstr                              Y
-        mvgetn_wstr                             Y
-        mvwgetn_wstr                            Y
+   Note that there's no way to know how long the buffer passed to
+   wgetstr() is, so use wgetnstr() to avoid buffer overflows.
+
+### Return Value
+
+   These functions return ERR on failure or any other value on
+   success.
+
+### Portability
+                             X/Open    BSD    SYS V
+    getstr                      Y       Y       Y
+    wgetstr                     Y       Y       Y
+    mvgetstr                    Y       Y       Y
+    mvwgetstr                   Y       Y       Y
+    getnstr                     Y       -      4.0
+    wgetnstr                    Y       -      4.0
+    mvgetnstr                   Y       -       -
+    mvwgetnstr                  Y       -       -
+    get_wstr                    Y
+    wget_wstr                   Y
+    mvget_wstr                  Y
+    mvwget_wstr                 Y
+    getn_wstr                   Y
+    wgetn_wstr                  Y
+    mvgetn_wstr                 Y
+    mvwgetn_wstr                Y
 
 **man-end****************************************************************/
 

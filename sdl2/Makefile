@@ -19,7 +19,7 @@ osdir		= $(PDCURSES_SRCDIR)/sdl2
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
-SFLAGS		= $(shell pkg-config --cflags sdl2_ttf sdl2) 
+SFLAGS		= $(shell pkg-config --cflags sdl2_ttf sdl2)
 SLIBS		= $(shell pkg-config --libs sdl2_ttf sdl2)
 
 # If your system doesn't have these, remove the defines here
@@ -29,7 +29,7 @@ ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
 else
 	CFLAGS:= $(CFLAGS)
-	CFLAGS  += -O2 -Wall 
+	CFLAGS  += -O2 -Wall
 	LDFLAGS:= $(LDFLAGS)
 endif
 

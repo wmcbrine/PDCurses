@@ -11,19 +11,20 @@ RCSID("$Id: pdcscrn.c,v 1.34 2008/07/14 04:24:52 wmcbrine Exp $")
 SDL_Window *pdc_window = NULL;
 SDL_Renderer *pdc_render = NULL;
 SDL_Texture *pdc_texture = NULL;
+SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
+            *pdc_back = NULL, *pdc_tileback = NULL;
+int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
+
 #ifdef PDC_WIDE
-#ifndef PDC_FONT_PATH
-#define PDC_FONT_PATH "/usr/local/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
-#endif
+# ifndef PDC_FONT_PATH
+#  define PDC_FONT_PATH "/usr/local/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+# endif
 TTF_Font *pdc_ttffont = NULL;
 SDL_Color *pdc_ttffont_foregroundcolor = NULL;
 SDL_Color *pdc_ttffont_backgroundcolor = NULL;
 int pdc_ttffont_spointsz = 12;
 int pdc_ttffont_hint = TTF_HINTING_MONO;
 #endif
-SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
-            *pdc_back = NULL, *pdc_tileback = NULL;
-int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
 SDL_Color pdc_color[16];
 Uint32 pdc_mapped[16];
@@ -35,13 +36,13 @@ bool pdc_own_screen;
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 #ifdef PDC_WIDE
-void PDC_clean (void)
+void PDC_clean(void)
 {
     if (pdc_ttffont)
     {
-        TTF_CloseFont (pdc_ttffont);
+        TTF_CloseFont(pdc_ttffont);
         pdc_ttffont = NULL;
-        TTF_Quit ();
+        TTF_Quit();
     }
     if (pdc_tileback != NULL)
     {
@@ -61,7 +62,7 @@ void PDC_clean (void)
     if (pdc_font != NULL)
     {
         SDL_FreeSurface(pdc_font);
-        pdc_font = NULL;        
+        pdc_font = NULL;
     }
     if (pdc_texture != NULL)
     {
@@ -75,25 +76,25 @@ void PDC_clean (void)
     }
     if (pdc_window != NULL)
     {
-       SDL_DestroyWindow (pdc_window);
-       pdc_window = NULL;
+        SDL_DestroyWindow(pdc_window);
+        pdc_window = NULL;
     }
-    SDL_Quit ();
+    SDL_Quit();
 }
 #endif
 
 void PDC_retile(void)
-{ 
-   Uint32 pixel_format;
+{
+    Uint32 pixel_format;
     if (pdc_tileback)
         SDL_FreeSurface(pdc_tileback);
 
     pixel_format = SDL_GetWindowPixelFormat(pdc_window);
     if (pixel_format == SDL_PIXELFORMAT_UNKNOWN)
-       return;
+        return;
     pdc_tileback = SDL_ConvertSurfaceFormat(pdc_screen, pixel_format, 0);
     if (pdc_tileback == NULL)
-       return;
+        return;
 
     if (pdc_back)
     {
@@ -146,7 +147,7 @@ int PDC_scr_open(int argc, char **argv)
 
     if (pdc_own_screen)
     {
-        if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) < 0)       
+        if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) < 0)
         {
             fprintf(stderr, "Could not start SDL: %s\n", SDL_GetError());
             return ERR;
@@ -154,24 +155,24 @@ int PDC_scr_open(int argc, char **argv)
 
 #ifdef PDC_WIDE
         atexit(PDC_clean);
-#else        
+#else
         atexit(SDL_Quit);
-#endif        
+#endif
     }
 
 #ifdef PDC_WIDE
     if (!pdc_ttffont)
     {
-        if (TTF_Init () == -1)
+        if (TTF_Init() == -1)
         {
             fprintf(stderr, "Could not start SDL_TTF: %s\n", SDL_GetError());
             return ERR;
         }
-        const char *ptsz = getenv ("PDC_FONT_POINT_SIZE");
+        const char *ptsz = getenv("PDC_FONT_POINT_SIZE");
         if (ptsz != NULL)
-           pdc_ttffont_spointsz = atoi (ptsz);
+            pdc_ttffont_spointsz = atoi(ptsz);
         if (pdc_ttffont_spointsz <= 0)
-           pdc_ttffont_spointsz = 12;
+            pdc_ttffont_spointsz = 12;
         const char *fname = getenv("PDC_FONT");
         pdc_ttffont = TTF_OpenFont(fname ? fname : PDC_FONT_PATH, pdc_ttffont_spointsz);
         TTF_SetFontKerning (pdc_ttffont, 0);
@@ -184,8 +185,8 @@ int PDC_scr_open(int argc, char **argv)
         return ERR;
     }
 
-    SP->mono = FALSE;    
-#else    
+    SP->mono = FALSE;
+#else
     if (!pdc_font)
     {
         const char *fname = getenv("PDC_FONT");
@@ -202,7 +203,7 @@ int PDC_scr_open(int argc, char **argv)
     }
 
     SP->mono = !pdc_font->format->palette;
-#endif    
+#endif
 
     if (!SP->mono && !pdc_back)
     {
@@ -221,13 +222,13 @@ int PDC_scr_open(int argc, char **argv)
 
 #ifdef PDC_WIDE
     TTF_SizeText(pdc_ttffont, "W", &pdc_fwidth, &pdc_fheight);
-#else        
+#else
     pdc_fheight = pdc_font->h / 8;
     pdc_fwidth = pdc_font->w / 32;
 
     if (!SP->mono)
         pdc_flastc = pdc_font->format->palette->ncolors - 1;
-#endif    
+#endif
 
     if (pdc_own_screen && !pdc_icon)
     {
@@ -249,29 +250,29 @@ int PDC_scr_open(int argc, char **argv)
 
         pdc_window = SDL_CreateWindow((argc ? argv[0] : "PDCurses"), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, pdc_swidth, pdc_sheight, SDL_WINDOW_RESIZABLE);
         if (pdc_window == NULL)
-        {   
-           fprintf(stderr, "Could not open SDL window: %s\n", SDL_GetError());
-           return ERR;
-        }   
+        {
+            fprintf(stderr, "Could not open SDL window: %s\n", SDL_GetError());
+            return ERR;
+        }
         SDL_SetWindowIcon(pdc_window, pdc_icon);
-        pdc_screen = SDL_GetWindowSurface(pdc_window); 
+        pdc_screen = SDL_GetWindowSurface(pdc_window);
         if (pdc_screen == NULL)
-        {   
-           fprintf(stderr, "Could not open SDL window surface: %s\n", SDL_GetError());
-           return ERR;
-        }   
+        {
+            fprintf(stderr, "Could not open SDL window surface: %s\n", SDL_GetError());
+            return ERR;
+        }
         pdc_render = SDL_CreateRenderer(pdc_window, -1, 0);
         if (pdc_render == NULL)
-        {   
+        {
            fprintf(stderr, "Could not open SDL window renderer: %s\n", SDL_GetError());
            return ERR;
-        }   
+        }
         pdc_texture = SDL_CreateTexture(pdc_render, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, pdc_swidth, pdc_sheight);
         if (pdc_texture == NULL)
-        {   
+        {
            fprintf(stderr, "Could not open SDL texture: %s\n", SDL_GetError());
            return ERR;
-        }   
+        }
     }
     else
     {

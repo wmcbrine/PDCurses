@@ -12,7 +12,7 @@ RCSID("$Id: pdckbd.c,v 1.20 2008/07/14 04:24:52 wmcbrine Exp $")
         unsigned long PDC_get_input_fd(void);
 
   Description:
-        PDC_get_input_fd() returns the file descriptor that PDCurses 
+        PDC_get_input_fd() returns the file descriptor that PDCurses
         reads its input from. It can be used for select().
 
   Portability                                X/Open    BSD    SYS V
@@ -38,58 +38,58 @@ static struct
     unsigned short alt;
 } key_table[] =
 {
-/* keycode	keypad	normal	     shifted	   control	alt*/
- {SDLK_LEFT,	FALSE,	KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,	ALT_LEFT},
- {SDLK_RIGHT,	FALSE,	KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,	ALT_RIGHT},
- {SDLK_UP,	FALSE,	KEY_UP,      KEY_SUP,	   CTL_UP,	ALT_UP},
- {SDLK_DOWN,	FALSE,	KEY_DOWN,    KEY_SDOWN,    CTL_DOWN,	ALT_DOWN},
- {SDLK_HOME,	FALSE,	KEY_HOME,    KEY_SHOME,    CTL_HOME,	ALT_HOME},
- {SDLK_END,	FALSE,	KEY_END,     KEY_SEND,	   CTL_END,	ALT_END},
- {SDLK_PAGEUP,	FALSE,	KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,	ALT_PGUP},
- {SDLK_PAGEDOWN,FALSE,	KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,	ALT_PGDN},
- {SDLK_INSERT,	FALSE,	KEY_IC,      KEY_SIC,	   CTL_INS,	ALT_INS},
- {SDLK_DELETE,	FALSE,	KEY_DC,      KEY_SDC,	   CTL_DEL,	ALT_DEL},
- {SDLK_F1,	FALSE,	KEY_F(1),    KEY_F(13),    KEY_F(25),	KEY_F(37)},
- {SDLK_F2,	FALSE,	KEY_F(2),    KEY_F(14),    KEY_F(26),	KEY_F(38)},
- {SDLK_F3,	FALSE,	KEY_F(3),    KEY_F(15),    KEY_F(27),	KEY_F(39)},
- {SDLK_F4,	FALSE,	KEY_F(4),    KEY_F(16),    KEY_F(28),	KEY_F(40)},
- {SDLK_F5,	FALSE,	KEY_F(5),    KEY_F(17),    KEY_F(29),	KEY_F(41)},
- {SDLK_F6,	FALSE,	KEY_F(6),    KEY_F(18),    KEY_F(30),	KEY_F(42)},
- {SDLK_F7,	FALSE,	KEY_F(7),    KEY_F(19),    KEY_F(31),	KEY_F(43)},
- {SDLK_F8,	FALSE,	KEY_F(8),    KEY_F(20),    KEY_F(32),	KEY_F(44)},
- {SDLK_F9,	FALSE,	KEY_F(9),    KEY_F(21),    KEY_F(33),	KEY_F(45)},
- {SDLK_F10,	FALSE,	KEY_F(10),   KEY_F(22),    KEY_F(34),	KEY_F(46)},
- {SDLK_F11,	FALSE,	KEY_F(11),   KEY_F(23),    KEY_F(35),	KEY_F(47)},
- {SDLK_F12,	FALSE,	KEY_F(12),   KEY_F(24),    KEY_F(36),	KEY_F(48)},
- {SDLK_F13,	FALSE,	KEY_F(13),   KEY_F(25),    KEY_F(37),	KEY_F(49)},
- {SDLK_F14,	FALSE,	KEY_F(14),   KEY_F(26),    KEY_F(38),	KEY_F(50)},
- {SDLK_F15,	FALSE,	KEY_F(15),   KEY_F(27),    KEY_F(39),	KEY_F(51)},
- {SDLK_BACKSPACE,FALSE,	0x08,        0x08,	   CTL_BKSP,	ALT_BKSP},
- {SDLK_TAB,	FALSE,	0x09,        KEY_BTAB,	   CTL_TAB,	ALT_TAB},
- {SDLK_PRINTSCREEN,	FALSE,	KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,	KEY_PRINT},
- {SDLK_PAUSE,	FALSE,	KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
- {SDLK_CLEAR,	FALSE,	KEY_CLEAR,   KEY_CLEAR,    KEY_CLEAR,	KEY_CLEAR},
- {SDLK_PAUSE,	FALSE,	KEY_BREAK,   KEY_BREAK,    KEY_BREAK,	KEY_BREAK},
- {SDLK_HELP,	FALSE,	KEY_HELP,    KEY_SHELP,    KEY_LHELP,	KEY_HELP},
- {SDLK_MENU,	FALSE,	KEY_OPTIONS, KEY_SOPTIONS, KEY_OPTIONS, KEY_OPTIONS},
- {SDLK_ESCAPE,	FALSE,	0x1B,        0x1B,	   0x1B,	ALT_ESC},
- {SDLK_KP_ENTER,TRUE,	PADENTER,    PADENTER,	   CTL_PADENTER,ALT_PADENTER},
- {SDLK_KP_PLUS,	TRUE,	PADPLUS,     '+',	   CTL_PADPLUS, ALT_PADPLUS},
- {SDLK_KP_MINUS,TRUE,	PADMINUS,    '-',	   CTL_PADMINUS,ALT_PADMINUS},
- {SDLK_KP_MULTIPLY,TRUE,PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
- {SDLK_KP_DIVIDE,TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
- {SDLK_KP_PERIOD,TRUE,	PADSTOP,     '.',	   CTL_PADSTOP, ALT_PADSTOP},
- {SDLK_KP_0,	TRUE,	PAD0,	     '0',	   CTL_PAD0,	ALT_PAD0},
- {SDLK_KP_1,	TRUE,	KEY_C1,      '1',	   CTL_PAD1,	ALT_PAD1},
- {SDLK_KP_2,	TRUE,	KEY_C2,      '2',	   CTL_PAD2,	ALT_PAD2},
- {SDLK_KP_3,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
- {SDLK_KP_4,	TRUE,	KEY_B1,      '4',	   CTL_PAD4,	ALT_PAD4},
- {SDLK_KP_5,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
- {SDLK_KP_6,	TRUE,	KEY_B3,      '6',	   CTL_PAD6,	ALT_PAD6},
- {SDLK_KP_7,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
- {SDLK_KP_8,	TRUE,	KEY_A2,      '8',	   CTL_PAD8,	ALT_PAD8},
- {SDLK_KP_9,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
- {0,		0,	0,	     0,		   0,		0}
+/*   keycode            keypad  normal        shifted         control        alt*/
+    {SDLK_LEFT,         FALSE,  KEY_LEFT,     KEY_SLEFT,      CTL_LEFT,      ALT_LEFT},
+    {SDLK_RIGHT,        FALSE,  KEY_RIGHT,    KEY_SRIGHT,     CTL_RIGHT,     ALT_RIGHT},
+    {SDLK_UP,           FALSE,  KEY_UP,       KEY_SUP,        CTL_UP,        ALT_UP},
+    {SDLK_DOWN,         FALSE,  KEY_DOWN,     KEY_SDOWN,      CTL_DOWN,      ALT_DOWN},
+    {SDLK_HOME,         FALSE,  KEY_HOME,     KEY_SHOME,      CTL_HOME,      ALT_HOME},
+    {SDLK_END,          FALSE,  KEY_END,      KEY_SEND,       CTL_END,       ALT_END},
+    {SDLK_PAGEUP,       FALSE,  KEY_PPAGE,    KEY_SPREVIOUS,  CTL_PGUP,      ALT_PGUP},
+    {SDLK_PAGEDOWN,     FALSE,  KEY_NPAGE,    KEY_SNEXT,      CTL_PGDN,      ALT_PGDN},
+    {SDLK_INSERT,       FALSE,  KEY_IC,       KEY_SIC,        CTL_INS,       ALT_INS},
+    {SDLK_DELETE,       FALSE,  KEY_DC,       KEY_SDC,        CTL_DEL,       ALT_DEL},
+    {SDLK_F1,           FALSE,  KEY_F(1),     KEY_F(13),      KEY_F(25),     KEY_F(37)},
+    {SDLK_F2,           FALSE,  KEY_F(2),     KEY_F(14),      KEY_F(26),     KEY_F(38)},
+    {SDLK_F3,           FALSE,  KEY_F(3),     KEY_F(15),      KEY_F(27),     KEY_F(39)},
+    {SDLK_F4,           FALSE,  KEY_F(4),     KEY_F(16),      KEY_F(28),     KEY_F(40)},
+    {SDLK_F5,           FALSE,  KEY_F(5),     KEY_F(17),      KEY_F(29),     KEY_F(41)},
+    {SDLK_F6,           FALSE,  KEY_F(6),     KEY_F(18),      KEY_F(30),     KEY_F(42)},
+    {SDLK_F7,           FALSE,  KEY_F(7),     KEY_F(19),      KEY_F(31),     KEY_F(43)},
+    {SDLK_F8,           FALSE,  KEY_F(8),     KEY_F(20),      KEY_F(32),     KEY_F(44)},
+    {SDLK_F9,           FALSE,  KEY_F(9),     KEY_F(21),      KEY_F(33),     KEY_F(45)},
+    {SDLK_F10,          FALSE,  KEY_F(10),    KEY_F(22),      KEY_F(34),     KEY_F(46)},
+    {SDLK_F11,          FALSE,  KEY_F(11),    KEY_F(23),      KEY_F(35),     KEY_F(47)},
+    {SDLK_F12,          FALSE,  KEY_F(12),    KEY_F(24),      KEY_F(36),     KEY_F(48)},
+    {SDLK_F13,          FALSE,  KEY_F(13),    KEY_F(25),      KEY_F(37),     KEY_F(49)},
+    {SDLK_F14,          FALSE,  KEY_F(14),    KEY_F(26),      KEY_F(38),     KEY_F(50)},
+    {SDLK_F15,          FALSE,  KEY_F(15),    KEY_F(27),      KEY_F(39),     KEY_F(51)},
+    {SDLK_BACKSPACE,    FALSE,  0x08,         0x08,           CTL_BKSP,      ALT_BKSP},
+    {SDLK_TAB,          FALSE,  0x09,         KEY_BTAB,       CTL_TAB,       ALT_TAB},
+    {SDLK_PRINTSCREEN,  FALSE,  KEY_PRINT,    KEY_SPRINT,     KEY_PRINT,     KEY_PRINT},
+    {SDLK_PAUSE,        FALSE,  KEY_SUSPEND,  KEY_SSUSPEND,   KEY_SUSPEND,   KEY_SUSPEND},
+    {SDLK_CLEAR,        FALSE,  KEY_CLEAR,    KEY_CLEAR,      KEY_CLEAR,     KEY_CLEAR},
+    {SDLK_PAUSE,        FALSE,  KEY_BREAK,    KEY_BREAK,      KEY_BREAK,     KEY_BREAK},
+    {SDLK_HELP,         FALSE,  KEY_HELP,     KEY_SHELP,      KEY_LHELP,     KEY_HELP},
+    {SDLK_MENU,         FALSE,  KEY_OPTIONS,  KEY_SOPTIONS,   KEY_OPTIONS,   KEY_OPTIONS},
+    {SDLK_ESCAPE,       FALSE,  0x1B,         0x1B,           0x1B,          ALT_ESC},
+    {SDLK_KP_ENTER,     TRUE,   PADENTER,     PADENTER,       CTL_PADENTER,  ALT_PADENTER},
+    {SDLK_KP_PLUS,      TRUE,   PADPLUS,      '+',            CTL_PADPLUS,   ALT_PADPLUS},
+    {SDLK_KP_MINUS,     TRUE,   PADMINUS,     '-',            CTL_PADMINUS,  ALT_PADMINUS},
+    {SDLK_KP_MULTIPLY,  TRUE,   PADSTAR,      '*',            CTL_PADSTAR,   ALT_PADSTAR},
+    {SDLK_KP_DIVIDE,    TRUE,   PADSLASH,     '/',            CTL_PADSLASH,  ALT_PADSLASH},
+    {SDLK_KP_PERIOD,    TRUE,   PADSTOP,      '.',            CTL_PADSTOP,   ALT_PADSTOP},
+    {SDLK_KP_0,         TRUE,   PAD0,         '0',            CTL_PAD0,      ALT_PAD0},
+    {SDLK_KP_1,         TRUE,   KEY_C1,       '1',            CTL_PAD1,      ALT_PAD1},
+    {SDLK_KP_2,         TRUE,   KEY_C2,       '2',            CTL_PAD2,      ALT_PAD2},
+    {SDLK_KP_3,         TRUE,   KEY_C3,       '3',            CTL_PAD3,      ALT_PAD3},
+    {SDLK_KP_4,         TRUE,   KEY_B1,       '4',            CTL_PAD4,      ALT_PAD4},
+    {SDLK_KP_5,         TRUE,   KEY_B2,       '5',            CTL_PAD5,      ALT_PAD5},
+    {SDLK_KP_6,         TRUE,   KEY_B3,       '6',            CTL_PAD6,      ALT_PAD6},
+    {SDLK_KP_7,         TRUE,   KEY_A1,       '7',            CTL_PAD7,      ALT_PAD7},
+    {SDLK_KP_8,         TRUE,   KEY_A2,       '8',            CTL_PAD8,      ALT_PAD8},
+    {SDLK_KP_9,         TRUE,   KEY_A3,       '9',            CTL_PAD9,      ALT_PAD9},
+    {0,                 0,      0,            0,              0,             0}
 };
 
 unsigned long PDC_get_input_fd(void)
@@ -111,7 +111,7 @@ bool PDC_check_key(void)
     Uint32 current = SDL_GetTicks();
     int haveevent = SDL_PollEvent(&event);
 
-    /* if we have an event, or 30 ms have passed without a screen 
+    /* if we have an event, or 30 ms have passed without a screen
        update, or the timer has wrapped, update now */
 
     if (haveevent ||
@@ -121,26 +121,26 @@ bool PDC_check_key(void)
     return haveevent;
 }
 
-long PDC_atol (char *buffer, int radix)
+long PDC_atol(char *buffer, int radix)
 {
-   unsigned long val = 0;
-   unsigned long tmp;
-   char *ptr;
-   
-   for (ptr = buffer; *ptr != '\0'; ptr++)
-   {
-      tmp = *ptr - '0';
-      if (radix > 10)
-         if (tmp > 9)
-            tmp = *ptr - 'a' + 10;
-      if (tmp <= radix)
-      {   
-         val += tmp;
-         if (ptr[1] != '\0')
-            val *= radix;
-      }
-   }      
-   return (val);
+    unsigned long val = 0;
+    unsigned long tmp;
+    char *ptr;
+
+    for (ptr = buffer; *ptr != '\0'; ptr++)
+    {
+        tmp = *ptr - '0';
+        if (radix > 10)
+            if (tmp > 9)
+                tmp = *ptr - 'a' + 10;
+        if (tmp <= radix)
+        {
+            val += tmp;
+            if (ptr[1] != '\0')
+                val *= radix;
+        }
+    }
+    return val;
 }
 
 
@@ -160,22 +160,22 @@ static int _process_key_event(void)
     {
 #ifdef PDC_WIDE
         if (unikey >= 0)
-           if ((event.key.keysym.sym == SDLK_LALT) || (event.key.keysym.sym == SDLK_RALT))
-           {
-               if ((unikeyhex != 0) && (unikey != 0))
-               {
+            if ((event.key.keysym.sym == SDLK_LALT) || (event.key.keysym.sym == SDLK_RALT))
+            {
+                if ((unikeyhex != 0) && (unikey != 0))
+                {
                   unikeyval[unikey] = '\0';
-                  key = (int) PDC_atol (unikeyval, unikeyhex);
-                  memset (unikeyval, '\0', 7);
+                  key = (int) PDC_atol(unikeyval, unikeyhex);
+                  memset(unikeyval, '\0', 7);
                   unikeyhex = 0;
                   unikey = -1;
                   if (key != 0)
-                     return (key);
-               }
-               else
+                      return key;
+                }
+                else
                   unikey = -1;
-           }
-#endif       
+            }
+#endif
         if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
         {
             switch (oldkey)
@@ -202,14 +202,14 @@ static int _process_key_event(void)
 #ifdef PDC_WIDE
     else
     {
-       if (event.type == SDL_KEYDOWN)
-       {
-          if ((event.key.keysym.sym == SDLK_LALT) || (event.key.keysym.sym == SDLK_RALT))
-          {
-             if (unikey < 0)
-                unikey = 0;
-          }
-       }
+        if (event.type == SDL_KEYDOWN)
+        {
+            if ((event.key.keysym.sym == SDLK_LALT) || (event.key.keysym.sym == SDLK_RALT))
+            {
+                if (unikey < 0)
+                  unikey = 0;
+            }
+        }
     }
 #endif
 
@@ -247,11 +247,11 @@ static int _process_key_event(void)
             {
                 key = key_table[i].alt;
             }
-
-            /* To get here, we ignore all other modifiers */
-
             else
+            {
+                /* To get here, we ignore all other modifiers */
                 key = key_table[i].normal;
+            }
 
             SP->key_code = (key > 0x100);
             break;
@@ -260,59 +260,59 @@ static int _process_key_event(void)
 
 #ifdef PDC_WIDE
     if (unikey >= 0)
-    {   
-      if (event.key.keysym.mod & KMOD_ALT)
-      {
-         if (unikeyhex != 0) 
-         {
-            if (unikey < 6)
-            { 
-               if (key >= ALT_PAD0 && key <= ALT_PAD9)
-               {   
-                  unikeyval[unikey] = key - ALT_PAD0 + '0';
-                  unikey++;
-                  return -1;
-               }
-               else if ((event.key.keysym.sym >= 'a' && event.key.keysym.sym <= 'f') || (event.key.keysym.sym >= '0' && event.key.keysym.sym <= '9'))
-               {
-                   unikeyval[unikey] = key;
-                   unikey++;
-                   return -1;
-               }
-               else if ((event.key.keysym.sym != SDLK_LALT) || (event.key.keysym.sym != SDLK_RALT))
-               {
-                  unikeyhex = 0;
-                  unikey = -1;
-               }
-            }
-         }   
-         else if (unikey == 0)
-         {
-            if (event.key.keysym.sym == SDLK_KP_PLUS)
+    {
+        if (event.key.keysym.mod & KMOD_ALT)
+        {
+            if (unikeyhex != 0)
             {
-               unikeyhex = 16;
-               return -1;
-            } 
-            else if (event.key.keysym.sym == SDLK_KP_0)
-            {
-               unikeyhex = 10;
-               return -1;
+                if (unikey < 6)
+                {
+                    if (key >= ALT_PAD0 && key <= ALT_PAD9)
+                    {
+                        unikeyval[unikey] = key - ALT_PAD0 + '0';
+                        unikey++;
+                        return -1;
+                    }
+                    else if ((event.key.keysym.sym >= 'a' && event.key.keysym.sym <= 'f') || (event.key.keysym.sym >= '0' && event.key.keysym.sym <= '9'))
+                    {
+                        unikeyval[unikey] = key;
+                        unikey++;
+                        return -1;
+                    }
+                    else if ((event.key.keysym.sym != SDLK_LALT) || (event.key.keysym.sym != SDLK_RALT))
+                    {
+                        unikeyhex = 0;
+                        unikey = -1;
+                    }
+                }
             }
-            else if ((event.key.keysym.sym != SDLK_LALT) || (event.key.keysym.sym != SDLK_RALT))
+            else if (unikey == 0)
             {
-               unikeyhex = 0;
-               unikey = -1;
+                if (event.key.keysym.sym == SDLK_KP_PLUS)
+                {
+                    unikeyhex = 16;
+                    return -1;
+                }
+                else if (event.key.keysym.sym == SDLK_KP_0)
+                {
+                    unikeyhex = 10;
+                    return -1;
+                }
+                else if ((event.key.keysym.sym != SDLK_LALT) || (event.key.keysym.sym != SDLK_RALT))
+                {
+                    unikeyhex = 0;
+                    unikey = -1;
+                }
             }
-         }
-      }
-   }      
+        }
+    }
 #endif
     if (!key)
     {
         key = (int) event.key.keysym.sym;
         if (key >= 'a' && key <= 'z')
-           if (event.key.keysym.mod & KMOD_SHIFT)
-              key = toupper (key);
+            if (event.key.keysym.mod & KMOD_SHIFT)
+                key = toupper(key);
 
         if (key > 0x7f)
             key = 0;
@@ -446,31 +446,31 @@ int PDC_get_key(void)
     case SDL_QUIT:
         exit(1);
     case SDL_WINDOWEVENT:
-       switch (event.window.event)
-       {
-          case SDL_WINDOWEVENT_SIZE_CHANGED:
-          case SDL_WINDOWEVENT_RESIZED:
-              if (pdc_own_screen &&
-                 (event.window.data2 / pdc_fheight != LINES ||
-                  event.window.data1 / pdc_fwidth != COLS))
-              {
-                  pdc_sheight = event.window.data2;
-                  pdc_swidth = event.window.data1;
+        switch (event.window.event)
+        {
+        case SDL_WINDOWEVENT_SIZE_CHANGED:
+        case SDL_WINDOWEVENT_RESIZED:
+            if (pdc_own_screen &&
+               (event.window.data2 / pdc_fheight != LINES ||
+                event.window.data1 / pdc_fwidth != COLS))
+            {
+                pdc_sheight = event.window.data2;
+                pdc_swidth = event.window.data1;
 
-                  if (!SP->resized)
-                  {
-                      SP->resized = TRUE;
-                      return KEY_RESIZE;
-                  }
-              }
-              break;
-          case SDL_WINDOWEVENT_RESTORED:
-          case SDL_WINDOWEVENT_EXPOSED:
+                if (!SP->resized)
+                {
+                    SP->resized = TRUE;
+                    return KEY_RESIZE;
+                }
+            }
+            break;
+        case SDL_WINDOWEVENT_RESTORED:
+        case SDL_WINDOWEVENT_EXPOSED:
              SDL_RenderPresent(pdc_render);
 /*             SDL_UpdateWindowSurface(pdc_window);  */
-             break;
-       }
-       break;
+            break;
+        }
+        break;
     case SDL_MOUSEMOTION:
         SDL_ShowCursor(SDL_ENABLE);
     case SDL_MOUSEBUTTONUP:

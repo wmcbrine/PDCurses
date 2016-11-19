@@ -15,8 +15,8 @@ chtype acs_map[128] =
 {
     A(0), A(1), A(2), A(3), A(4), A(5), A(6), A(7), A(8), A(9), A(10),
     A(11), A(12), A(13), A(14), A(15), A(16), A(17), A(18), A(19),
-    A(20), A(21), A(22), A(23), A(24), A(25), A(26), A(27), A(28), 
-    A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&', '\'', '(', 
+    A(20), A(21), A(22), A(23), A(24), A(25), A(26), A(27), A(28),
+    A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&', '\'', '(',
     ')', '*',
 
 # ifdef PDC_WIDE
@@ -81,7 +81,7 @@ void PDC_update_rects(void)
 {
     if (rectcount)
     {
-        /* if the maximum number of rects has been reached, we're 
+        /* if the maximum number of rects has been reached, we're
            probably better off doing a full screen update */
 
         if (rectcount == MAXRECT)
@@ -97,7 +97,7 @@ void PDC_update_rects(void)
            SDL_RenderClear(pdc_render);
            SDL_RenderCopy(pdc_render, pdc_texture, NULL, NULL);
            SDL_RenderPresent(pdc_render);
-        }    
+        }
 
         pdc_lastupdate = SDL_GetTicks();
         rectcount = 0;
@@ -150,7 +150,7 @@ static void _set_attr(chtype ch)
 
         oldch = ch;
     }
-#else   
+#else
     ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE);
 
     if (oldch != ch)
@@ -174,7 +174,7 @@ static void _set_attr(chtype ch)
 
         if (newfg != foregr)
         {
-            SDL_SetPalette(pdc_font, SDL_LOGPAL, 
+            SDL_SetPalette(pdc_font, SDL_LOGPAL,
                            pdc_color + newfg, pdc_flastc, 1);
             foregr = newfg;
         }
@@ -197,7 +197,7 @@ static void _set_attr(chtype ch)
 
         oldch = ch;
     }
-#endif    
+#endif
 }
 
 /* draw a cursor at (y, x) */
@@ -211,7 +211,7 @@ void PDC_gotoyx(int row, int col)
     Uint16 chstr[2] = {0, 0};
     Uint32 colorkey;
 #endif
-    
+
 
     PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
              row, col, SP->cursrow, SP->curscol));
@@ -229,8 +229,8 @@ void PDC_gotoyx(int row, int col)
     if (!SP->visibility)
         return;
 
-    /* draw a new cursor by overprinting the existing character in 
-       reverse, either the full cell (when visibility == 2) or the 
+    /* draw a new cursor by overprinting the existing character in
+       reverse, either the full cell (when visibility == 2) or the
        lowest quarter of it (when visibility == 1) */
 
     ch = curscr->_y[row][col] ^ A_REVERSE;
@@ -243,31 +243,31 @@ void PDC_gotoyx(int row, int col)
 #endif
 #ifdef PDC_WIDE
     chstr[0] = ch & A_CHARTEXT;
-    
-    pdc_font = TTF_RenderUNICODE_Solid (pdc_ttffont,chstr,*pdc_ttffont_foregroundcolor);
+
+    pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont,chstr,*pdc_ttffont_foregroundcolor);
     if (pdc_font)
-    {   
+    {
         colorkey = SDL_MapRGB(pdc_screen->format, pdc_ttffont_backgroundcolor->r,pdc_ttffont_backgroundcolor->g, pdc_ttffont_backgroundcolor->b);
         src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
         if (src.h > pdc_font->h)
-           src.h = pdc_font->h;
+            src.h = pdc_font->h;
         src.w = pdc_fwidth;
         if (src.w > pdc_font->w)
-           src.w = pdc_font->w;
+            src.w = pdc_font->w;
         dest.y = (row + 1) * pdc_fheight - src.h + pdc_yoffset;
         dest.x = col * pdc_fwidth + pdc_xoffset;
         dest.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
         dest.w = pdc_fwidth;
-        SDL_FillRect (pdc_screen, &dest, colorkey);
+        SDL_FillRect(pdc_screen, &dest, colorkey);
         dest.h = pdc_fheight;
         src.x = 0;
         src.y = 0;
         colorkey = SDL_MapRGB(pdc_screen->format, 0,0,0);
-        SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);       
+        SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
         SDL_FreeSurface(pdc_font);
         pdc_font = NULL;
-    }   
-#else    
+    }
+#else
     src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
     src.w = pdc_fwidth;
 
@@ -278,7 +278,7 @@ void PDC_gotoyx(int row, int col)
     src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
 
     SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
-#endif    
+#endif
 
     if (oldrow != row || oldcol != col)
     {
@@ -304,23 +304,23 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
     if (ch & A_UNDERLINE)
     {
 #ifdef PDC_WIDE
-        pdc_font = TTF_RenderText_Solid (pdc_ttffont,chstr,*pdc_ttffont_foregroundcolor);
+        pdc_font = TTF_RenderText_Solid(pdc_ttffont,chstr,*pdc_ttffont_foregroundcolor);
         if (pdc_font)
-        {   
-           src->x = 0;
-           src->y = 0;
-          
-           if (backgr != -1)
-               SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
-          
-           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-           
+        {
+            src->x = 0;
+            src->y = 0;
+
+            if (backgr != -1)
+                SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
+
+            SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
+
            if (backgr != -1)
                SDL_SetColorKey(pdc_font, 0, 0);
            SDL_FreeSurface(pdc_font);
            pdc_font = NULL;
-        }   
-#else       
+        }
+#else
         if (col != -1)
             SDL_SetPalette(pdc_font, SDL_LOGPAL,
                            pdc_color + col, pdc_flastc, 1);
@@ -339,7 +339,7 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
         if (col != -1)
             SDL_SetPalette(pdc_font, SDL_LOGPAL,
                            pdc_color + foregr, pdc_flastc, 1);
-#endif        
+#endif
     }
 
     if (ch & (A_LEFTLINE|A_RIGHTLINE))
@@ -402,7 +402,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         else
             if (lastrect.y != dest.y)
                 uprect[rectcount++] = dest;
-    } 
+    }
     else
         uprect[rectcount++] = dest;
 
@@ -422,28 +422,28 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 #ifdef PDC_WIDE
         chstr[0] = ch & A_CHARTEXT;
-        pdc_font = TTF_RenderUNICODE_Solid (pdc_ttffont,chstr,*pdc_ttffont_foregroundcolor);
+        pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont,chstr,*pdc_ttffont_foregroundcolor);
         if (pdc_font)
-        {   
-           colorkey = SDL_MapRGB(pdc_screen->format, pdc_ttffont_backgroundcolor->r,pdc_ttffont_backgroundcolor->g, pdc_ttffont_backgroundcolor->b);
-           dest.w = pdc_fwidth;
-           dest.h = pdc_fheight;
-           SDL_FillRect (pdc_screen, &dest, colorkey);
-           src.x = 0;
-           src.y = 0;
-           src.h = pdc_font->h;
-           src.w = pdc_font->w;
-           colorkey = SDL_MapRGB(pdc_screen->format, 0,0,0);
-           SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);       
-           SDL_FreeSurface(pdc_font);
-           pdc_font = NULL;
-        }   
-#else    
+        {
+            colorkey = SDL_MapRGB(pdc_screen->format, pdc_ttffont_backgroundcolor->r,pdc_ttffont_backgroundcolor->g, pdc_ttffont_backgroundcolor->b);
+            dest.w = pdc_fwidth;
+            dest.h = pdc_fheight;
+            SDL_FillRect(pdc_screen, &dest, colorkey);
+            src.x = 0;
+            src.y = 0;
+            src.h = pdc_font->h;
+            src.w = pdc_font->w;
+            colorkey = SDL_MapRGB(pdc_screen->format, 0,0,0);
+            SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+            SDL_FreeSurface(pdc_font);
+            pdc_font = NULL;
+        }
+#else
         src.x = (ch & 0xff) % 32 * pdc_fwidth;
         src.y = (ch & 0xff) / 32 * pdc_fheight;
 
         SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
-#endif    
+#endif
 
         if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
             _highlight(&src, &dest, ch);

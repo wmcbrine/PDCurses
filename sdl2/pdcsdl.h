@@ -10,6 +10,9 @@
 PDCEX SDL_Window *pdc_window;
 PDCEX SDL_Renderer *pdc_render;
 PDCEX SDL_Texture *pdc_texture;
+PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
+PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
+
 #ifdef PDC_WIDE
 PDCEX TTF_Font *pdc_ttffont;
 PDCEX SDL_Color *pdc_ttffont_foregroundcolor;
@@ -17,8 +20,6 @@ PDCEX SDL_Color *pdc_ttffont_backgroundcolor;
 PDCEX int pdc_ttffont_spointsz;
 PDCEX int pdc_ttffont_hint;
 #endif
-PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
-PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
 extern SDL_Surface *pdc_tileback;    /* used to regenerate the background
                                         of "transparent" cells */

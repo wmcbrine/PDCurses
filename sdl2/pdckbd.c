@@ -2,8 +2,6 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdckbd.c,v 1.20 2008/07/14 04:24:52 wmcbrine Exp $")
-
 /*man-start**************************************************************
 
   Name:                                                         pdckbd
@@ -121,61 +119,15 @@ bool PDC_check_key(void)
     return haveevent;
 }
 
-long PDC_atol(char *buffer, int radix)
-{
-    unsigned long val = 0;
-    unsigned long tmp;
-    char *ptr;
-
-    for (ptr = buffer; *ptr != '\0'; ptr++)
-    {
-        tmp = *ptr - '0';
-        if (radix > 10)
-            if (tmp > 9)
-                tmp = *ptr - 'a' + 10;
-        if (tmp <= radix)
-        {
-            val += tmp;
-            if (ptr[1] != '\0')
-                val *= radix;
-        }
-    }
-    return val;
-}
-
-
 static int _process_key_event(void)
 {
     int i, key = 0;
-#ifdef PDC_WIDE
-    static int unikey = -1;
-    static int unikeyhex = 0;
-    static char unikeyval[7] = {'\0','\0','\0','\0','\0','\0','\0'};
-#endif
 
     pdc_key_modifiers = 0L;
     SP->key_code = FALSE;
 
     if (event.type == SDL_KEYUP)
     {
-#ifdef PDC_WIDE
-        if (unikey >= 0)
-            if ((event.key.keysym.sym == SDLK_LALT) || (event.key.keysym.sym == SDLK_RALT))
-            {
-                if ((unikeyhex != 0) && (unikey != 0))
-                {
-                  unikeyval[unikey] = '\0';
-                  key = (int) PDC_atol(unikeyval, unikeyhex);
-                  memset(unikeyval, '\0', 7);
-                  unikeyhex = 0;
-                  unikey = -1;
-                  if (key != 0)
-                      return key;
-                }
-                else
-                  unikey = -1;
-            }
-#endif
         if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
         {
             switch (oldkey)
@@ -199,19 +151,6 @@ static int _process_key_event(void)
 
         return -1;
     }
-#ifdef PDC_WIDE
-    else
-    {
-        if (event.type == SDL_KEYDOWN)
-        {
-            if ((event.key.keysym.sym == SDLK_LALT) || (event.key.keysym.sym == SDLK_RALT))
-            {
-                if (unikey < 0)
-                  unikey = 0;
-            }
-        }
-    }
-#endif
 
     oldkey = event.key.keysym.sym;
 
@@ -258,55 +197,6 @@ static int _process_key_event(void)
         }
     }
 
-#ifdef PDC_WIDE
-    if (unikey >= 0)
-    {
-        if (event.key.keysym.mod & KMOD_ALT)
-        {
-            if (unikeyhex != 0)
-            {
-                if (unikey < 6)
-                {
-                    if (key >= ALT_PAD0 && key <= ALT_PAD9)
-                    {
-                        unikeyval[unikey] = key - ALT_PAD0 + '0';
-                        unikey++;
-                        return -1;
-                    }
-                    else if ((event.key.keysym.sym >= 'a' && event.key.keysym.sym <= 'f') || (event.key.keysym.sym >= '0' && event.key.keysym.sym <= '9'))
-                    {
-                        unikeyval[unikey] = key;
-                        unikey++;
-                        return -1;
-                    }
-                    else if ((event.key.keysym.sym != SDLK_LALT) || (event.key.keysym.sym != SDLK_RALT))
-                    {
-                        unikeyhex = 0;
-                        unikey = -1;
-                    }
-                }
-            }
-            else if (unikey == 0)
-            {
-                if (event.key.keysym.sym == SDLK_KP_PLUS)
-                {
-                    unikeyhex = 16;
-                    return -1;
-                }
-                else if (event.key.keysym.sym == SDLK_KP_0)
-                {
-                    unikeyhex = 10;
-                    return -1;
-                }
-                else if ((event.key.keysym.sym != SDLK_LALT) || (event.key.keysym.sym != SDLK_RALT))
-                {
-                    unikeyhex = 0;
-                    unikey = -1;
-                }
-            }
-        }
-    }
-#endif
     if (!key)
     {
         key = (int) event.key.keysym.sym;
@@ -393,12 +283,24 @@ static int _process_mouse_event(void)
 
         /* handle scroll wheel */
 
-        if ((btn == 4 || btn == 5) && action == BUTTON_RELEASED)
+        if ((btn >= 4 && btn <= 7) && action == BUTTON_RELEASED)
         {
             pdc_mouse_status.x = pdc_mouse_status.y = -1;
 
-            pdc_mouse_status.changes = (btn == 5) ?
-                PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
+            switch (btn)
+            {
+            case 4:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+                break;
+            case 5:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+                break;
+            case 6:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
+                break;
+            case 7:
+                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
+            }
 
             return KEY_MOUSE;
         }

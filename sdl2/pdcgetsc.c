@@ -2,8 +2,6 @@
 
 #include "pdcsdl.h"
 
-RCSID("$Id: pdcgetsc.c,v 1.8 2008/07/14 04:24:52 wmcbrine Exp $")
-
 /* get the cursor size/shape */
 
 int PDC_get_cursor_mode(void)

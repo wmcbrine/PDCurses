@@ -975,8 +975,10 @@ static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 
     XSetFont(XCURSESDISPLAY, *gc, font_info->fid);
 
+#ifdef WHY_IS_THIS_HERE
     XSetForeground(XCURSESDISPLAY, *gc, colors[fore]);
     XSetBackground(XCURSESDISPLAY, *gc, colors[back]);
+#endif
 }
 
 #define RGB( R, G, B)  (((unsigned long)(R)) << 16         \

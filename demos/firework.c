@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-#define DELAYSIZE 200
+#define DELAYSIZE 100
 
 void myrefresh(void);
 void get_color(void);
@@ -39,14 +39,12 @@ int main(int argc, char **argv)
     seed = time((time_t *)0);
     srand(seed);
     flag = 0;
-       
+
     while (getch() == ERR)      /* loop until a key is hit */
     {
         do {
-            start = rand() % (COLS - 3);
-            end = rand() % (COLS - 3);
-            start = (start < 2) ? 2 : start;
-            end = (end < 2) ? 2 : end;
+            start = rand() % (COLS - 5) + 2;
+            end = rand() % (COLS - 5) + 2;
             direction = (start > end) ? -1 : 1;
             diff = abs(start - end);
 

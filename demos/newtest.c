@@ -13,6 +13,10 @@
 #include <stdio.h>
 #include <locale.h>
 
+#ifdef PDC_WIDE
+# include <wchar.h>
+#endif
+
 int PDC_write_screen_to_file( const char *filename, WINDOW *win);
 
 static const char *labels[] = {

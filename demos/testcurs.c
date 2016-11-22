@@ -18,8 +18,14 @@
 
 #ifdef WACS_S1
 # define HAVE_WIDE 1
+# define HAVE_WACS 1
 #else
-# define HAVE_WIDE 0
+# define HAVE_WACS 0
+    #ifndef __PDCURSES__
+        # define HAVE_WIDE 1
+    #else
+        # define HAVE_WIDE 0
+    #endif
 #endif
 
 #include <locale.h>
@@ -1061,7 +1067,7 @@ void acsTest(WINDOW *win)
 #endif
     };
 
-#if HAVE_WIDE
+#if HAVE_WACS
     const cchar_t *wacs_values[] =
     {
         WACS_ULCORNER, WACS_URCORNER, WACS_LLCORNER, WACS_LRCORNER,
@@ -1113,9 +1119,11 @@ void acsTest(WINDOW *win)
         WACS_INV_BANG, WACS_INV_QUERY,
         WACS_LEFT_ANG_QU, WACS_RIGHT_ANG_QU,
         WACS_CENTER_SQU, WACS_F_WITH_HOOK,
-#endif
+#endif               /* #if WACS_CENT */
     };
+#endif               /* #if HAVE_WACS */
 
+#if HAVE_WIDE
     static const wchar_t russian[] = {0x0420, 0x0443, 0x0441, 0x0441,
         0x043a, 0x0438, 0x0439, L' ', 0x044f, 0x0437, 0x044b, 0x043a, 0};
 
@@ -1169,6 +1177,7 @@ void acsTest(WINDOW *win)
         mvaddstr( 1, (COLS - 28) / 2, "Wide Alternate Character Set");
         attrset(A_NORMAL);
         tmarg = 4;
+#if HAVE_WACS
         for( j = 0; i + j < n_items && j < n_rows * ncols; j++)
         {
             move((j % n_rows) * 2 + tmarg,
@@ -1176,6 +1185,7 @@ void acsTest(WINDOW *win)
             add_wch(wacs_values[i + j]);
             printw(" W%s", acs_names[i + j]);
         }
+#endif
     /* Spanish, Russian, Greek, Georgian, fullwidth */
 
         tmarg += n_rows * 2;

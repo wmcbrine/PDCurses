@@ -164,7 +164,7 @@ Only 32 are used in ncurses.  So caution is advised. */
 #define THETA                             CHOOSE( 0xe9,  0x0398,  TBD)
 #define OMEGA                             CHOOSE( 0xea,  0x03a9,  TBD)
 #define DELTA                             CHOOSE( 0xeb,  0x03b4,  TBD)
-#define INFINITY                          CHOOSE( 0xec,  0x221e,  TBD)
+#define INFINITY_SIGN                     CHOOSE( 0xec,  0x221e,  TBD)
 #define LOWERCASE_PHI                     CHOOSE( 0xed,  0x03c6,  TBD)
 #define EPSILON                           CHOOSE( 0xee,  0x03b5,  TBD)
 #define INTERSECTION                      CHOOSE( 0xef,  0x2229,  TBD)
@@ -225,7 +225,7 @@ chtype acs_map[128] =
    PI, NOT_EQUALS_SIGN,  VULGAR_HALF, VULGAR_QUARTER,         /* $%&' */
    '(',
    LEFT_ANGLE_QUOTE_MARK, RIGHT_ANGLE_QUOTE_MARK,             /* )* */
-   DARK_SHADE, SUPERSCRIPT_2, INFINITY,                       /* +,- */
+   DARK_SHADE, SUPERSCRIPT_2, INFINITY_SIGN,                  /* +,- */
    ALPHA, BETA, GAMMA, UPPERCASE_SIGMA, LOWERCASE_SIGMA,      /* ./012  */
    '3',
    MU, TAU, UPPERCASE_PHI, THETA, OMEGA, DELTA, EPSILON,      /* 456789: */

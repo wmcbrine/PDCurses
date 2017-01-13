@@ -95,7 +95,14 @@ initscr
 
 char ttytype[128];
 
-const char *_curses_notice = "PDCurses 3.4 - Public Domain 2008";
+#define PDC_STR( x) #x
+#define PDC_str( x) PDC_STR( x)
+
+static const char *_curses_notice =
+      "PDCurses " PDC_str(PDC_VER_MAJOR) "." \
+                  PDC_str(PDC_VER_MINOR) "." \
+                  PDC_str(PDC_VER_CHANGE) " - Public Domain " \
+                  PDC_str(PDC_VER_YEAR);
 
 SCREEN *SP = (SCREEN*)NULL;           /* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;      /* the current screen image */
@@ -221,7 +228,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
 
     def_shell_mode();
 
-    sprintf(ttytype, "pdcurses|PDCurses for %s", PDC_sysname());
+    longname( );   /* to ensure that ttytype is initialized */
 
     return stdscr;
 }

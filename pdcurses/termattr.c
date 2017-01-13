@@ -112,6 +112,7 @@ char *longname(void)
 {
     PDC_LOG(("longname() - called\n"));
 
+    sprintf(ttytype, "pdcurses|PDCurses for %s", PDC_sysname());
     return ttytype + 9; /* skip "pdcurses|" */
 }
 

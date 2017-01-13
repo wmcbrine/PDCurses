@@ -29,7 +29,6 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3401
 #define PDCURSES        1      /* PDCurses-only routines */
 #define XOPEN           1      /* X/Open Curses routines */
 #define SYSVcurses      1      /* System V Curses routines */
@@ -78,6 +77,15 @@ extern "C"
 #ifndef OK
 # define OK 0
 #endif
+
+/* Version constants,  available as of version 4.0 : */
+
+#define PDC_VER_MAJOR    4
+#define PDC_VER_MINOR    0
+#define PDC_VER_CHANGE   0
+#define PDC_VER_YEAR   2017
+
+#define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
 
 /*----------------------------------------------------------------------
  *

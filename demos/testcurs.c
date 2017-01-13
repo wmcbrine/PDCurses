@@ -14,7 +14,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <curses.h>
+#ifdef HAVE_NCURSESW
+   #include <wchar.h>
+   #include <ncursesw/curses.h>
+#else
+   #include <curses.h>
+#endif
 
 #ifdef WACS_S1
 # define HAVE_WIDE 1
@@ -171,7 +176,7 @@ int main(int argc, char *argv[])
 
 #ifdef PDCURSES
     /* for x11, sdl1, and win32a, treat the close of the windows as KEY_EXIT */
-    PDC_set_function_key( FUNCTION_KEY_SHUT_DOWN,        KEY_EXIT );
+//  PDC_set_function_key( FUNCTION_KEY_SHUT_DOWN,        KEY_EXIT );
 #endif
 
     erase();
@@ -967,6 +972,8 @@ void acsTest(WINDOW *win)
         "ACS_D_ULCORNER", "ACS_D_URCORNER", "ACS_D_LLCORNER", "ACS_D_LRCORNER",
         "ACS_D_LTEE", "ACS_D_RTEE", "ACS_D_TTEE", "ACS_D_BTEE", "ACS_D_HLINE",
         "ACS_D_VLINE", "ACS_D_PLUS",
+#endif
+#ifdef ACS_SD_ULCORNER
         "ACS_SD_ULCORNER", "ACS_SD_URCORNER", "ACS_SD_LLCORNER",
         "ACS_SD_LRCORNER", "ACS_SD_LTEE",
         "ACS_SD_RTEE", "ACS_SD_TTEE", "ACS_SD_BTEE", "ACS_SD_PLUS",
@@ -1023,6 +1030,8 @@ void acsTest(WINDOW *win)
         ACS_D_ULCORNER, ACS_D_URCORNER, ACS_D_LLCORNER, ACS_D_LRCORNER,
         ACS_D_LTEE, ACS_D_RTEE, ACS_D_TTEE, ACS_D_BTEE, ACS_D_HLINE,
         ACS_D_VLINE, ACS_D_PLUS,
+#endif
+#ifdef ACS_SD_ULCORNER
         ACS_SD_ULCORNER, ACS_SD_URCORNER, ACS_SD_LLCORNER,
         ACS_SD_LRCORNER, ACS_SD_LTEE,
         ACS_SD_RTEE, ACS_SD_TTEE, ACS_SD_BTEE, ACS_SD_PLUS,
@@ -1078,6 +1087,8 @@ void acsTest(WINDOW *win)
         WACS_D_ULCORNER, WACS_D_URCORNER, WACS_D_LLCORNER, WACS_D_LRCORNER,
         WACS_D_LTEE, WACS_D_RTEE, WACS_D_TTEE, WACS_D_BTEE, WACS_D_HLINE,
         WACS_D_VLINE, WACS_D_PLUS,
+#endif
+#ifdef WACS_SD_ULCORNER
         WACS_SD_ULCORNER, WACS_SD_URCORNER, WACS_SD_LLCORNER,
         WACS_SD_LRCORNER, WACS_SD_LTEE,
         WACS_SD_RTEE, WACS_SD_TTEE, WACS_SD_BTEE, WACS_SD_PLUS,

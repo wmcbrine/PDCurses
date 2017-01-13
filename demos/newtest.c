@@ -8,10 +8,27 @@
  *
  */
 
-#include <curses.h>
+#ifdef HAVE_NCURSESW
+   #include <wchar.h>
+   #include <ncursesw/curses.h>
+#else
+   #include <curses.h>
+#endif
 #include <string.h>
 #include <stdio.h>
 #include <locale.h>
+
+#ifdef WACS_S1
+# define HAVE_WIDE 1
+# define HAVE_WACS 1
+#else
+# define HAVE_WACS 0
+    #ifndef __PDCURSES__
+        # define HAVE_WIDE 1
+    #else
+        # define HAVE_WIDE 0
+    #endif
+#endif
 
 #ifdef PDC_WIDE
 # include <wchar.h>
@@ -140,12 +157,14 @@ int main( int argc, char **argv)
 {
     int quit = 0, i,  use_slk = 1;
     int fmt = 0xa;
+#ifdef PDCURSES
     bool blink_state = FALSE;
+#endif
     int cursor_state_1 = 0, cursor_state_2 = 1;
     int show_slk_index_line = 0;
     int redraw = 1;
     unsigned extra_character_to_show = 0;
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
     unsigned unicode_offset = 0x80;
 #endif
 
@@ -196,7 +215,7 @@ int main( int argc, char **argv)
                             resize_term( n_lines, n_cols);
                     }
                     break;
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
                 case 'u':
                     sscanf( argv[i] + 2, "%x", &unicode_offset);
                     break;
@@ -263,7 +282,7 @@ int main( int argc, char **argv)
             mvaddstr( 15, 41, "Dimmed text");
             attroff( A_DIM);
 #endif
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
             mvaddwstr( 3, COL1, L"'Normal' text,  but wide");
 #endif
             attron( A_BLINK);
@@ -274,7 +293,7 @@ int main( int argc, char **argv)
             mvaddstr( 0, COL2, "BlinkBoldItalic");
             attrset( COLOR_PAIR( 3));
             attron( A_UNDERLINE);
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
             mvaddstr( 1, COL2, "Underlined");
             addwstr( L"WideUnder");
 #endif
@@ -296,7 +315,7 @@ int main( int argc, char **argv)
             attrset( COLOR_PAIR( 1));
 #endif
 
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
             move( 11, 40);
             text_in_a_box( "Next Ucode pg");
             if( unicode_offset)
@@ -310,7 +329,7 @@ int main( int argc, char **argv)
 
             for( i = 0; i < 128; i++)
             {                 /* Show extended characters: */
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
                 wchar_t buff[20];
 
                 swprintf( buff, 20, L"%02x ",
@@ -366,7 +385,7 @@ int main( int argc, char **argv)
             if( extra_character_to_show && ymax > 23)
                 mvaddch( 23, 63, (chtype)extra_character_to_show);
 
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
             for( i = 0; i < 6; i++)
             {
                 static const wchar_t spanish[] = L"Espa\xf1ol";
@@ -398,6 +417,7 @@ int main( int argc, char **argv)
                    mvaddnwstr( line, 5 + 25 * (i % 3), texts[i], xmax - col);
             }
 #endif
+        mvaddstr( 26, 1, curses_version( ));
 
 #ifdef MAYBE_TRY_THIS_SOMEWHERE_ELSE
         mvaddstr(  1, COL3, "Click on cursor descriptions to");
@@ -502,7 +522,7 @@ int main( int argc, char **argv)
                     cursor_state_2 = (cursor_state_2 + shift) % N_CURSORS;
             }
 #endif
-#ifdef PDC_WIDE
+#ifdef HAVE_WIDE
             else if( mouse_event.x >= 40 && mouse_event.x < 40 + 10)
                {
                if( mouse_event.y == 11)

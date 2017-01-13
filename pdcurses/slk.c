@@ -53,13 +53,12 @@ slk
    2 lines used
    55      5-5 format (pdcurses format)
 
-   In addition,  however,  one can set fmt as a series of hex
-   digits specifying the format.  For example,  0x414 would
-   result in 4-1-4 format; 0x21b3 would result in 2-1-11-3 format;
-   and so on.  Also,  negating fmt results in the index line being
-   added.  (These are PDCurses extensions,  added December 2010.)
+   In PDCurses,  one can alternatively set fmt as a series of hex
+   digits specifying the format.  For example,  0x414 would result
+   in 4-1-4 format; 0x21b3 would result in 2-1-11-3 format;  and
+   so on.  Also,  negating fmt results in the index line being added.
 
-   Also,  as of December 2010,  one can call slk_init() at any time
+   Also,  in PDCurses,  one can call slk_init() at any time
    _after_ initscr(),  to reset the label format.  If you do this,
    you'll need to reset the label text and call slk_refresh().  And
    you can't toggle the index line.  (Doing so would add/remove a line
@@ -113,26 +112,7 @@ static struct SLK {
     int start_col;
 } *slk = (struct SLK *)NULL;
 
-/* slk_init() is the slk initialization routine.
-   This must be called before initscr().
-
-   fmt = 0, 1, 2, and 3 are fixed values resulting in these formats:
-       0 = 3-2-3 format
-       1 = 4 - 4 format
-       2 = 4-4-4 format (ncurses extension for PC 12 function keys)
-       3 = 4-4-4 format (ncurses extension for PC 12 function keys -
-    with index line)
-      55 = 5 - 5 format (extended for PC, 10 function keys)
-
-   In addition,  however,  one can set fmt as a series of hex
-   digits specifying the format.  For example,  0x414 would
-   result in 4-1-4 format; 0x21b3 would result in 2-1-11-3 format;
-   and so on.  Also,  negating fmt results in the index line being
-   added.  (These are PDCurses extensions,  added December 2010.)
-
-   Also,  as of December 2010,  one can call slk_init() at any time
-   _after_ initscr(),  to reset the label format.  If you do this,
-   you'll need to reset the label text and call slk_refresh().  */
+/* See comments above on this function.   */
 
 int slk_init(int fmt)
 {

@@ -10,34 +10,27 @@
 # define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
+#ifdef PDC_WIDE
+   #define HAVE_WIDE 1
+   #include <wchar.h>
+   #include <curses.h>
+#endif
+#ifdef HAVE_NCURSESW
+   #define HAVE_WIDE 1
+   #include <wchar.h>
+   #include <ncursesw/curses.h>
+#endif
+
+#ifndef HAVE_WIDE
+   #include <curses.h>
+   #define HAVE_WIDE 0
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#ifdef HAVE_NCURSESW
-   #include <wchar.h>
-   #include <ncursesw/curses.h>
-#else
-   #include <curses.h>
-#endif
-
-#ifdef WACS_S1
-# define HAVE_WIDE 1
-# define HAVE_WACS 1
-#else
-# define HAVE_WACS 0
-    #ifndef __PDCURSES__
-        # define HAVE_WIDE 1
-    #else
-        # define HAVE_WIDE 0
-    #endif
-#endif
-
 #include <locale.h>
-
-#if HAVE_WIDE
-# include <wchar.h>
-#endif
 
 #if defined(PDCURSES) && !defined(XCURSES)
 # define HAVE_RESIZE 1
@@ -1076,7 +1069,7 @@ void acsTest(WINDOW *win)
 #endif
     };
 
-#if HAVE_WACS
+#ifdef WACS_S1
     const cchar_t *wacs_values[] =
     {
         WACS_ULCORNER, WACS_URCORNER, WACS_LLCORNER, WACS_LRCORNER,
@@ -1132,9 +1125,9 @@ void acsTest(WINDOW *win)
         WACS_CENTER_SQU, WACS_F_WITH_HOOK,
 #endif               /* #if WACS_CENT */
     };
-#endif               /* #if HAVE_WACS */
+#endif               /* #ifdef WACS_S1   */
 
-#if HAVE_WIDE
+#ifdef WACS_S1
     static const wchar_t russian[] = {0x0420, 0x0443, 0x0441, 0x0441,
         0x043a, 0x0438, 0x0439, L' ', 0x044f, 0x0437, 0x044b, 0x043a, 0};
 
@@ -1188,7 +1181,7 @@ void acsTest(WINDOW *win)
         mvaddstr( 1, (COLS - 28) / 2, "Wide Alternate Character Set");
         attrset(A_NORMAL);
         tmarg = 4;
-#if HAVE_WACS
+#ifdef WACS_S1
         for( j = 0; i + j < n_items && j < n_rows * ncols; j++)
         {
             move((j % n_rows) * 2 + tmarg,

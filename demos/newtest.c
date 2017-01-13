@@ -7,32 +7,28 @@
  *    displayed properly.  Also tests "extended" SLK functions.
  *
  */
-
-#ifdef HAVE_NCURSESW
-   #include <wchar.h>
-   #include <ncursesw/curses.h>
-#else
-   #include <curses.h>
-#endif
-#include <string.h>
-#include <stdio.h>
-#include <locale.h>
-
-#ifdef WACS_S1
-# define HAVE_WIDE 1
-# define HAVE_WACS 1
-#else
-# define HAVE_WACS 0
-    #ifndef __PDCURSES__
-        # define HAVE_WIDE 1
-    #else
-        # define HAVE_WIDE 0
-    #endif
+#ifndef _XOPEN_SOURCE_EXTENDED
+# define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
 #ifdef PDC_WIDE
-# include <wchar.h>
+   #define HAVE_WIDE
+   #include <wchar.h>
+   #include <curses.h>
 #endif
+#ifdef HAVE_NCURSESW
+   #define HAVE_WIDE
+   #include <wchar.h>
+   #include <ncursesw/curses.h>
+#endif
+
+#ifndef HAVE_WIDE
+   #include <curses.h>
+#endif
+
+#include <string.h>
+#include <stdio.h>
+#include <locale.h>
 
 int PDC_write_screen_to_file( const char *filename, WINDOW *win);
 
@@ -51,11 +47,13 @@ static const char *labels[] = {
 static void slk_setup( const int slk_format)
 {
     int i;
+#ifdef PDCURSES
     static int old_format = 0xa;
 
     if( slk_format != old_format)
        slk_init( slk_format);
     old_format = slk_format;
+#endif
     for( i = 0; labels[i]; i++)
        slk_set( i + 1, labels[i], 1);
     slk_refresh( );
@@ -225,7 +223,7 @@ int main( int argc, char **argv)
                     break;
             }
     if( use_slk)
-       slk_init( show_slk_index_line ? 3 : 0);
+       slk_init( show_slk_index_line ? -fmt : fmt);
 #ifdef XCURSES
     Xinitscr(argc, argv);
 #else

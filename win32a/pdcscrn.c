@@ -257,7 +257,7 @@ static const KPTAB kptab[] =
     {0,          0,         0,           0,          0   }, /* 0  */
     {0,          0,         0,           0,          0   }, /* 1   VK_LBUTTON */
     {0,          0,         0,           0,          0   }, /* 2   VK_RBUTTON */
-    {0,          0,         0,           0,          0   }, /* 3   VK_CANCEL  */
+    {CTL_PAUSE,  'a',       'b',         'c',        0   }, /* 3   VK_CANCEL  */
     {0,          0,         0,           0,          0   }, /* 4   VK_MBUTTON */
     {0,          0,         0,           0,          0   }, /* 5   */
     {0,          0,         0,           0,          0   }, /* 6   */
@@ -1521,6 +1521,8 @@ static void HandlePaint( HWND hwnd )
     EndPaint( hwnd, &ps );
 }
 
+static bool key_already_handled = FALSE;
+
 static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
                int *ptr_modified_key_to_return )
 {
@@ -1581,7 +1583,12 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
     /* layout;  it's fine with PDC_show_ctrl_alts = 1.)               */
     if( key >= KEY_MIN && key <= KEY_MAX)
         if( !ctrl_pressed || !alt_pressed || PDC_show_ctrl_alts)
+            {
             add_key_to_queue( key);
+            if( wParam == VK_MULTIPLY || wParam == VK_DIVIDE
+                   || wParam == VK_ADD || wParam == VK_SUBTRACT)
+               key_already_handled = TRUE;
+            }
     pdc_key_modifiers = 0;
     /* Save the key modifiers if required. Do this first to allow to
        detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
@@ -1918,7 +1925,9 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
 
     case WM_CHAR:       /* _Don't_ add Shift-Tab;  it's handled elsewhere */
         if( wParam != 9 || !(GetKeyState( VK_SHIFT) & 0x8000))
-            add_key_to_queue( (int)wParam );
+            if( !key_already_handled)
+               add_key_to_queue( (int)wParam );
+        key_already_handled = FALSE;
         break;
 
     case WM_KEYDOWN:
@@ -2096,7 +2105,7 @@ int PDC_set_function_key( const unsigned function, const int new_key)
     }
 
     if( function == FUNCTION_KEY_SHUT_DOWN)
-        if( (!new_key && !old_key) || (old_key && new_key))
+        if( (new_key && !old_key) || (old_key && !new_key))
         {
             HMENU hMenu = GetSystemMenu( PDC_hWnd, FALSE);
 

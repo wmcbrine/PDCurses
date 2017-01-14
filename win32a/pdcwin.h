@@ -90,12 +90,10 @@ number of low bits devoted to storing characters. */
 #endif
 #endif
 
-int PDC_set_function_key( const unsigned function, const int new_key);
-
-/* The above function allows one to set a 'shut down' key,  and reassign
-hotkeys used for pasting from the clipboard and enlarging and decreasing
-the font size,  and for using the font selection dialog.  For example,
-calling
+ /* The PDC_set_function_key() function allows one to set a 'shut down'
+key,  and reassign hotkeys used for pasting from the clipboard and
+enlarging and decreasing the font size,  and for using the font selection
+dialog.  For example, calling
 
 PDC_set_function_key( FUNCTION_KEY_SHUT_DOWN, ALT_Q);
 
@@ -122,10 +120,3 @@ in my opinion should,  be made available in the SDL and XCurses flavors too.
 
    The return value is the key previously used for that function.
 */
-
-#define N_FUNCTION_KEYS          5
-#define FUNCTION_KEY_SHUT_DOWN        0
-#define FUNCTION_KEY_PASTE            1
-#define FUNCTION_KEY_ENLARGE_FONT     2
-#define FUNCTION_KEY_SHRINK_FONT      3
-#define FUNCTION_KEY_CHOOSE_FONT      4

@@ -34,31 +34,22 @@ void PDC_napms(int ms)     /* 'ms' = milli,  _not_ microseconds! */
     /* Sleep(ms); */
 }
 
-/* The library can be compiled with six different configurations.
-It can be a DLL;  and it can be either 'wide',  'UTF-8',  or just
-a plain eight-bit character version.         */
-
 const char *PDC_sysname(void)
 {
-#ifdef DLL
-    #ifdef WIDE
-        #ifdef UTF8
-             return "Win32a UTF8 DLL";
-        #else
-             return "Win32a Wide DLL";
-        #endif
-    #else
-        return "Win32a DLL";
-    #endif
-#else
-    #ifdef WIDE
-        #ifdef UTF8
-             return "Win32a UTF8";
-        #else
-             return "Win32a Wide";
-        #endif
-    #else
-        return "Win32a";
-    #endif
-#endif
+   return "Win32a";
 }
+
+const PDC_version_info PDC_version = { PDC_PORT_WIN32A,
+          PDC_VER_MAJOR, PDC_VER_MINOR, PDC_VER_CHANGE,
+          sizeof( chtype),
+#ifdef PDC_WIDE
+          TRUE,
+#else
+          FALSE,
+#endif
+#ifdef PDC_FORCE_UTF8
+          TRUE,
+#else
+          FALSE,
+#endif
+          };

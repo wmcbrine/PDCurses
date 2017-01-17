@@ -168,8 +168,7 @@ int main(int argc, char *argv[])
         wbkgd(win, A_REVERSE);
 
 #ifdef PDCURSES
-    /* for x11, sdl1, and win32a, treat the close of the windows as KEY_EXIT */
-//  PDC_set_function_key( FUNCTION_KEY_SHUT_DOWN,        KEY_EXIT );
+    PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
 #endif
 
     erase();
@@ -574,6 +573,9 @@ void inputTest(WINDOW *win)
 //  PDC_return_key_modifiers(FALSE);
 #endif
     wclear(win);
+#ifdef PDCURSES
+    PDC_set_function_key( FUNCTION_KEY_ABORT, 0 );  /* un-abortable */
+#endif
     mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
     mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");
     wrefresh(win);
@@ -588,6 +590,10 @@ void inputTest(WINDOW *win)
         napms(1000);
         flushinp();
     }
+
+#ifdef PDCURSES
+    PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
+#endif
 
     delwin(subWin);
     werase(win);

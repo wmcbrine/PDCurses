@@ -170,7 +170,7 @@ void PDC_add_clipboard_to_key_queue( void);           /* pdckbd.c */
        /* Ctl-= (enlarge font) and Ctl-Minus (decrease font);  then  */
        /* Ctl-, (select font from dialog).                           */
 
-static int PDC_shutdown_key[N_FUNCTION_KEYS] = { 0, 22, CTL_EQUAL, CTL_MINUS,
+static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 22, CTL_EQUAL, CTL_MINUS,
                                  CTL_COMMA };
 int PDC_n_rows, PDC_n_cols;
 int PDC_cxChar, PDC_cyChar, PDC_key_queue_low = 0, PDC_key_queue_high = 0;
@@ -221,6 +221,8 @@ static void add_key_to_queue( const int new_key)
     unicode_radix = 10;
     if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_PASTE])
         PDC_add_clipboard_to_key_queue( );
+    else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_ABORT])
+        exit( -1);
     else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_ENLARGE_FONT])
         adjust_font_size( 1);
     else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_SHRINK_FONT])
@@ -2098,7 +2100,7 @@ int PDC_set_function_key( const unsigned function, const int new_key)
 {
     int old_key = -1;
 
-    if( function < N_FUNCTION_KEYS)
+    if( function < PDC_MAX_FUNCTION_KEYS)
     {
          old_key = PDC_shutdown_key[function];
          PDC_shutdown_key[function] = new_key;

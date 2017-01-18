@@ -1588,7 +1588,8 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
             {
             add_key_to_queue( key);
             if( wParam == VK_MULTIPLY || wParam == VK_DIVIDE
-                   || wParam == VK_ADD || wParam == VK_SUBTRACT)
+                   || wParam == VK_ADD || wParam == VK_SUBTRACT
+                   || wParam == VK_RETURN)
                key_already_handled = TRUE;
             }
     pdc_key_modifiers = 0;

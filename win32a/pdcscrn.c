@@ -1214,6 +1214,33 @@ INLINE void HandleBlockCopy( void)
 
 static int add_resize_key = 1;
 
+/*man-start**************************************************************
+
+Resize limits
+-------------
+
+### Synopsis
+
+    void PDC_set_resize_limits( const int new_min_lines,
+                                const int new_max_lines,
+                                const int new_min_cols,
+                                const int new_max_cols);
+
+### Description
+
+   For platforms supporting resizable windows (SDLx, Win32a, X11).  Some
+   programs may be unprepared for a resize event;  for these,  calling
+   this function with the max and min limits equal ensures that no
+   user resizing can be done.  Other programs may require at least a
+   certain number,  and/or no more than a certain number,  of columns
+   and/or lines.
+
+### Portability
+
+   PDCurses-only function.
+
+**man-end****************************************************************/
+
 void PDC_set_resize_limits( const int new_min_lines, const int new_max_lines,
                   const int new_min_cols, const int new_max_cols)
 {
@@ -1364,7 +1391,9 @@ initialized,  we set the following 'wine_version' pointer.  One could
 actually call wine_version(),  if not NULL,  to get the current Wine
 version.      */
 
-static const char * (CDECL *wine_version)(void);
+typedef const char *(CDECL *wine_version_func)(void);
+
+static wine_version_func wine_version;
 
 static void HandleSize( const WPARAM wParam, const LPARAM lParam)
 {
@@ -2325,7 +2354,7 @@ int PDC_scr_open( int argc, char **argv)
     HMODULE hntdll = GetModuleHandle( _T("ntdll.dll"));
 
     if( hntdll)
-        wine_version = (void *)GetProcAddress(hntdll, "wine_get_version");
+        wine_version = (wine_version_func)GetProcAddress(hntdll, "wine_get_version");
 
     PDC_LOG(("PDC_scr_open() - called\n"));
     SP = calloc(1, sizeof(SCREEN));

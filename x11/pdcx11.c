@@ -58,7 +58,7 @@ int XC_write_socket(int sock_num, const void *buf, int len)
 #endif
     while (1)
     {
-        rc = write(sock_num, buf + start, len);
+        rc = write(sock_num, (const char *)buf + start, len);
 
         if (rc < 0 || rc == len)
             return rc;
@@ -77,7 +77,7 @@ int XC_read_socket(int sock_num, void *buf, int len)
 
     while (1)
     {
-        rc = read(sock_num, buf + start, length);
+        rc = read(sock_num, (char *)buf + start, length);
 
 #ifdef MOUSE_DEBUG
         if (sock_num == xc_key_sock)
@@ -97,7 +97,7 @@ int XC_read_socket(int sock_num, void *buf, int len)
                 SP->resized = FALSE;
 
             memcpy(buf, &rc, sizeof(int));
-         
+
             return 0;
         }
 
@@ -176,7 +176,7 @@ static int _setup_curses(void)
     if (wait_value != CURSES_CHILD)
         return ERR;
 
-    /* Set LINES and COLS now so that the size of the shared memory 
+    /* Set LINES and COLS now so that the size of the shared memory
        segment can be allocated */
 
     if ((shmidSP = shmget(shmkeySP, sizeof(SCREEN) + XCURSESSHMMIN, 0700)) < 0)
@@ -224,13 +224,13 @@ int XCursesInitscr(int argc, char *argv[])
     XC_LOG(("XCursesInitscr() - called\n"));
 
     shmkeySP = getpid();
-            
+
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, xc_display_sockets) < 0)
     {
         fprintf(stderr, "ERROR: cannot create display socketpair\n");
         return ERR;
     }
-            
+
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, xc_key_sockets) < 0)
     {
         fprintf(stderr, "ERROR: cannot create key socketpair\n");

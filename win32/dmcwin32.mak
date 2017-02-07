@@ -24,7 +24,7 @@ CC		= dmc
 
 CFLAGS		= -c -o+space -Nc
 
-CPPFLAGS	= -I$(PDCURSES_SRCDIR) #-DPDC_WIDE -DPDC_FORCE_UTF8
+CPPFLAGS	= -I$(PDCURSES_SRCDIR) -DPDC_WIDE -DPDC_FORCE_UTF8
 
 LINK		= dmc
 LIBEXE		= lib
@@ -33,7 +33,7 @@ LIBCURSES	= pdcurses.lib
 
 BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
 
-DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+DEMOS		= testcurs.exe newdemo.exe newtest.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
 all:    $(LIBCURSES) $(DEMOS)
@@ -56,7 +56,7 @@ touch.obj util.obj window.obj debug.obj
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
 
-DEMOOBJS = testcurs.obj newdemo.obj xmas.obj tuidemo.obj tui.obj \
+DEMOOBJS = testcurs.obj newdemo.obj newtest.obj xmas.obj tuidemo.obj tui.obj \
 firework.obj ptest.obj rain.obj worm.obj
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
@@ -226,6 +226,9 @@ firework.exe:   $(demodir)\firework.c
 	$(DEMOBUILD)
 
 newdemo.exe:    $(demodir)\newdemo.c
+	$(DEMOBUILD)
+
+newtest.exe:    $(demodir)\newtest.c
 	$(DEMOBUILD)
 
 ptest.exe:      $(demodir)\ptest.c

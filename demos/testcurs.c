@@ -108,6 +108,9 @@ COMMAND command[MAX_OPTIONS] =
 
 int width, height;
 static short background_index = COLOR_BLACK;
+#ifdef PDCURSES
+static bool report_mouse_movement = FALSE;
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -152,6 +155,9 @@ int main(int argc, char *argv[])
                         }
                     }
                     break;
+                case 'z':
+                    report_mouse_movement = TRUE;
+                    break;
 #endif
                 default:
                     break;
@@ -180,7 +186,7 @@ int main(int argc, char *argv[])
         keypad(stdscr, TRUE);
         raw();
 #ifdef PDCURSES
-        mouse_set(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION);
+        mouse_set(ALL_MOUSE_EVENTS);
 #endif
 
         key = getch();
@@ -443,7 +449,8 @@ void inputTest(WINDOW *win)
     wtimeout(win, 200);
 
 #ifdef PDCURSES
-    mouse_set(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION);
+    mouse_set(ALL_MOUSE_EVENTS |
+            (report_mouse_movement ? REPORT_MOUSE_POSITION : 0));
     PDC_save_key_modifiers(TRUE);
 //  PDC_return_key_modifiers(TRUE);
 #endif
@@ -522,7 +529,7 @@ void inputTest(WINDOW *win)
                 waddstr(win, "double: ");
             else if ((status & BUTTON_ACTION_MASK) == BUTTON_TRIPLE_CLICKED)
                 waddstr(win, "triple: ");
-            else
+            else if( button)
                 waddstr(win, "released: ");
 
             wprintw(win, "Posn: Y: %d X: %d", MOUSE_Y_POS, MOUSE_X_POS);

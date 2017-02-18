@@ -590,7 +590,9 @@ static int set_mouse( const int button_index, const int button_state,
 
     pt.x = LOWORD( lParam);
     pt.y = HIWORD( lParam);
-    if( button_index != -1)         /* for anything but a mouse move: */
+    if( button_index == -1)         /* mouse moved,  no button */
+        n_key_mouse_to_add = 1;
+    else
     {
         memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
         if( button_index < PDC_MAX_MOUSE_BUTTONS)
@@ -1503,9 +1505,10 @@ static void HandleMouseMove( WPARAM wParam, LPARAM lParam,
                     report_event |= PDC_MOUSE_MOVED | 16;
 #endif
 
-        if( wParam & REPORT_MOUSE_POSITION)
-            report_event |= PDC_MOUSE_POSITION;
-        if( report_event)    /* -1 signals mouse move; 0 is ignored */
+        if( !report_event)
+            if( SP->_trap_mbe & REPORT_MOUSE_POSITION)
+               report_event = PDC_MOUSE_POSITION;
+        if( report_event)
         {
             int i;
 
@@ -1517,7 +1520,7 @@ static void HandleMouseMove( WPARAM wParam, LPARAM lParam,
             }
             *ptr_modified_key_to_return = 0;
             set_mouse( -1, 0, lParam );
-        }
+        }             /* -1 to 'set_mouse' signals mouse move; 0 is ignored */
     }
 }
 

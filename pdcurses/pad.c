@@ -82,7 +82,7 @@ WINDOW *newpad(int nlines, int ncols)
 
     PDC_LOG(("newpad() - called: lines=%d cols=%d\n", nlines, ncols));
 
-    if ( !(win = PDC_makenew(nlines, ncols, -1, -1))
+    if ( !(win = PDC_makenew(nlines, ncols, 0, 0))
         || !(win = PDC_makelines(win)) )
         return (WINDOW *)NULL;
 

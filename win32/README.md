@@ -10,13 +10,14 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        bccwin32.mak  - Borland C++ 4.0.2+
-        dmcwin32.mak  - Digital Mars
-        gccwin32.mak  - Cygnus GNU Compiler
-        lccwin32.mak  - LCC-Win32
-        mingwin32.mak - MinGW
-        vcwin32.mak   - Microsoft Visual C++ 2.0+
-        wccwin32.mak  - Open Watcom 1.8+
+        bccwin32.mak         - Borland C++ 4.0.2+
+        dmcwin32.mak         - Digital Mars
+        gccwin32.mak         - Cygnus GNU Compiler
+        lccwin32.mak         - LCC-Win32
+        mingwin32.mak        - MinGW with MSYS or cross compilation.
+        mingwin32-nomsys.mak - MinGW without MSYS
+        vcwin32.mak          - Microsoft Visual C++ 2.0+
+        wccwin32.mak         - Open Watcom 1.8+
 
 - Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where
@@ -63,6 +64,21 @@ Building
   PDC_DLL_BUILD when linking against it. (Or, if you only want to use
   the DLL, you could add this definition to your curses.h.)
 
+
+Cross compilation
+------------------
+
+  The makefile mingwin32.mak can be used for cross compilation on
+  Cygwin or Linux. For cross compilation you need to specify the 32
+  or 64 bit target with TARGET=i686 or TARGET=x86_64.
+
+  Cross compile for 32 bit:
+
+        make -f mingwin32.mak TARGET=i686
+
+  Cross compile for 64 bit:
+
+        make -f mingwin32.mak TARGET=x86_64
 
 Distribution Status
 -------------------

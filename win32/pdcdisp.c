@@ -40,11 +40,13 @@ void PDC_gotoyx(int row, int col)
    not the case for 64-bit chtypes (CHTYPE_LONG == 2),  so we have to do
    additional bit-fiddling for that situation.  Code is similar in Win32
    and DOS flavors.  (BJG) */
+#define MAX_UNICODE                  0x10ffff
+#define DUMMY_CHAR_NEXT_TO_FULLWIDTH (MAX_UNICODE + 1)
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
     CHAR_INFO ci[512];
-    int j;
+    int src, dst;
     COORD bufSize, bufPos;
     SMALL_RECT sr;
 
@@ -52,31 +54,35 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
     bufPos.X = bufPos.Y = 0;
 
-    bufSize.X = len;
-    bufSize.Y = 1;
-
     sr.Top = lineno;
     sr.Bottom = lineno;
     sr.Left = x;
     sr.Right = x + len - 1;
 
-    for (j = 0; j < len; j++)
+    for (src = dst = 0; src < len; src++)
     {
-        chtype ch = srcp[j];
+        chtype ch = srcp[src];
+        if (ch == DUMMY_CHAR_NEXT_TO_FULLWIDTH)
+            continue;
 
 #if defined( CHTYPE_LONG) && (CHTYPE_LONG >= 2)
-        ci[j].Attributes = pdc_atrtab[((ch >> PDC_ATTR_SHIFT) & 0x1f)
+        ci[dst].Attributes = pdc_atrtab[((ch >> PDC_ATTR_SHIFT) & 0x1f)
                      | (((ch >> PDC_COLOR_SHIFT) & 0xff) << 5)];
 #else
-        ci[j].Attributes = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
+        ci[dst].Attributes = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
 #endif
 
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = acs_map[ch & 0x7f];
 #endif
-        ci[j].Char.UnicodeChar = ch & A_CHARTEXT;
+        ci[dst].Char.UnicodeChar = ch & A_CHARTEXT;
+
+        dst++;
     }
+
+    bufSize.X = dst;
+    bufSize.Y = 1;
 
     WriteConsoleOutput(pdc_con_out, ci, bufSize, bufPos, &sr);
 }

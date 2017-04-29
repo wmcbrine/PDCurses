@@ -17,9 +17,11 @@
     # define PDC_ATTR_SHIFT  8
 #endif
 #endif
-#if (defined(__CYGWIN32__) || defined(__MINGW32__) || defined(__WATCOMC__) || defined(_MSC_VER)) && \
-    !defined(HAVE_INFOEX)
-# define HAVE_INFOEX
+#if (defined(__CYGWIN32__) || defined(__MINGW32__) || defined(__WATCOMC__) \
+     || (defined(_MSC_VER) && _MSC_VER >= 1900))
+   #if !defined(HAVE_INFOEX)
+       # define HAVE_INFOEX
+   #endif
 #endif
 
 extern unsigned char *pdc_atrtab;

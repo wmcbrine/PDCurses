@@ -263,6 +263,11 @@ static struct
                         KEY_CNEXT_TRACK, KEY_ANEXT_TRACK },
 #endif
 
+#ifdef XF86XK_Tools
+ {XF86XK_Tools,     FALSE,  KEY_MEDIA_SELECT, KEY_SMEDIA_SELECT,
+                        KEY_CMEDIA_SELECT, KEY_AMEDIA_SELECT },
+#endif
+
  {0,            0,      0,           0,            0,           0}
 };
 
@@ -986,7 +991,7 @@ static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 
 static void _initialize_colors(void)
 {
-    int i;
+    int i, r, g, b;
 
     colors[COLOR_BLACK]   = xc_app_data.colorBlack;
     colors[COLOR_RED]     = xc_app_data.colorRed;
@@ -1005,10 +1010,17 @@ static void _initialize_colors(void)
     colors[COLOR_MAGENTA + 8] = xc_app_data.colorBoldMagenta;
     colors[COLOR_CYAN + 8]    = xc_app_data.colorBoldCyan;
     colors[COLOR_WHITE + 8]   = xc_app_data.colorBoldWhite;
-    for( i = 16; i < MAX_COLORS; i++)          /* semi-random palette,  just   */
-        colors[i] = RGB( (i * 71) & 0xff,   /* to fill colors 16-255 with   */
-                           (i * 171) & 0xff,  /* visible (non-black) defaults */
-                           (i * 47) & 0xff);
+    i = 16;
+           /* "standard" ncurses extended palette:  216 colors in a
+            6x6x6 color cube,  plus 24 (not 50) shades of gray */
+    for( r = 0; r < 6; r++)
+        for( g = 0; g < 6; g++)
+            for( b = 0; b < 6; b++)
+                colors[i++] = RGB( r ? r * 40 + 55 : 0,
+                                   g ? g * 40 + 55 : 0,
+                                   b ? b * 40 + 55 : 0);
+    for( i = 0; i < 24; i++)
+        colors[i + 232] = RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
 
     colors[COLOR_CURSOR] = xc_app_data.cursorColor;
     colors[COLOR_BORDER] = xc_app_data.borderColor;

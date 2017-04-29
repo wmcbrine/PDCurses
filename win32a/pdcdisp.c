@@ -410,10 +410,8 @@ static bool character_is_in_font( chtype ichar)
     if( (ichar & A_ALTCHARSET) && (ichar & A_CHARTEXT) < 0x80)
        ichar = acs_map[ichar & 0x7f];
     ichar &= A_CHARTEXT;
-#ifdef PDC_WIDE
     if( ichar > MAX_UNICODE)  /* assume combining chars won't be */
        return( FALSE);        /* supported;  they rarely are     */
-#endif
     if( ichar > 0xffff)     /* see above comments */
        return( TRUE);
     for( i = PDC_unicode_range_data->cRanges; i; i--, wptr++)
@@ -423,11 +421,6 @@ static bool character_is_in_font( chtype ichar)
          return( TRUE);
                /* Didn't find it in any range;  it must not be in the font */
     return( FALSE);
-}
-#else
-static bool character_is_in_font( chtype ichar)
-{
-   return( TRUE);
 }
 #endif         /* #ifdef USE_FALLBACK_FONT */
 
@@ -524,14 +517,14 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
         wchar_t buff[BUFFSIZE];
         int lpDx[BUFFSIZE + 1];
         int olen = 0;
+#ifdef USE_FALLBACK_FONT
         const bool in_font = character_is_in_font( *srcp);
+#endif
 
         for( i = 0; i < len && olen < BUFFSIZE - 1
-#ifdef PDC_WIDE
+#ifdef USE_FALLBACK_FONT
                   && (in_font == character_is_in_font( srcp[i])
                               || (srcp[i] & A_CHARTEXT) == MAX_UNICODE)
-#else
-                  && (in_font == character_is_in_font( srcp[i]))
 #endif
                   && attrib == (attr_t)( srcp[i] >> PDC_REAL_ATTR_SHIFT); i++)
         {
@@ -609,8 +602,10 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
         }
         if( !PDC_really_blinking && (*srcp & A_BLINK))
             new_font_attrib &= ~A_BLINK;
+#ifdef USE_FALLBACK_FONT
         if( !in_font)                  /* flag to indicate use of */
             new_font_attrib |= 1;      /* fallback font           */
+#endif
         if( new_font_attrib != font_attrib)
         {
             HFONT hFont;

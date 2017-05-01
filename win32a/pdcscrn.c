@@ -2362,7 +2362,7 @@ INLINE int set_up_window( void)
     }
 
     hMenu = GetSystemMenu( PDC_hWnd, FALSE);
-    AppendMenu( hMenu, MF_STRING | MF_CHECKED, WM_TOGGLE_MENU, _T( "Menu"));
+    AppendMenu( hMenu, MF_STRING | (menu_shown ? MF_CHECKED : MF_UNCHECKED), WM_TOGGLE_MENU, _T( "Menu"));
     AppendMenu( hMenu, MF_STRING, WM_CHOOSE_FONT, _T( "Choose Font"));
 
     debug_printf( "menu set\n");

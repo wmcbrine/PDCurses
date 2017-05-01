@@ -106,7 +106,7 @@ typedef chtype attr_t;
 
 #define PDC_VER_MAJOR    4
 #define PDC_VER_MINOR    0
-#define PDC_VER_CHANGE   0
+#define PDC_VER_CHANGE   1
 #define PDC_VER_YEAR   2017
 
 #define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
@@ -276,10 +276,10 @@ typedef unsigned long mmask_t;
 
 typedef struct
 {
-        short id;       /* unused, always 0 */
-        int x, y, z;    /* x, y same as MOUSE_STATUS; z unused */
-        mmask_t bstate; /* equivalent to changes + button[], but
-                           in the same format as used for mousemask() */
+    short id;       /* unused, always 0 */
+    int x, y, z;    /* x, y same as MOUSE_STATUS; z unused */
+    mmask_t bstate; /* equivalent to changes + button[], but
+                       in the same format as used for mousemask() */
 } MEVENT;
 
 #ifdef NCURSES_MOUSE_VERSION

@@ -963,6 +963,101 @@ INLINE void show_mouse_rect( const HWND hwnd, RECT before, RECT after)
         }
 }
 
+/* Cygwin lacks _splitpath, _wsplitpath.  THE FOLLOWING ARE NOT FULLY
+TESTED IMPLEMENTATIONS OF THOSE TWO FUNCTIONS,  because the only use we
+make of them is to get fname.  (Though I did write a little test program,
+and they seem to work.) */
+
+#ifdef __CYGWIN__
+#ifdef PDC_WIDE
+static void my_wsplitpath( const wchar_t *path, wchar_t *drive,
+           wchar_t *dir, wchar_t *fname, wchar_t *ext)
+{
+    size_t i, loc = 0;
+
+    assert( path);
+    assert( fname);
+    if( path[0] && path[1] == ':')
+    {
+        if( drive)
+        {
+            drive[0] = path[0];
+            drive[1] = ':';
+            drive[2] = '\0';
+         }
+         path += 2;
+    }
+    else if( drive)
+        *drive = '\0';
+    for( i = 0; path[i]; i++)
+        if( path[i] == '/' || path[i] == '\\')
+            loc = i + 1;
+    if( dir)
+    {
+        memcpy( dir, path, loc * sizeof( wchar_t));
+        dir[loc] = '\0';
+    }
+    if( loc)
+        path += loc;
+    loc = 0;
+    while( path[loc] && path[loc] != '.')
+        loc++;
+    if( fname)
+    {
+        memcpy( fname, path, loc * sizeof( wchar_t));
+        fname[loc] = '\0';
+    }
+    if( ext)
+        wcscpy( ext, path + loc);
+}
+#endif            /* #ifdef PDC_WIDE */
+
+static void my_splitpath( const char *path, char *drive,
+           char *dir, char *fname, char *ext)
+{
+    size_t i, loc = 0;
+
+    assert( path);
+    assert( fname);
+    if( path[0] && path[1] == ':')
+    {
+        if( drive)
+        {
+            drive[0] = path[0];
+            drive[1] = ':';
+            drive[2] = '\0';
+        }
+        path += 2;
+    }
+    else if( drive)
+        *drive = '\0';
+    for( i = 0; path[i]; i++)
+        if( path[i] == '/' || path[i] == '\\')
+            loc = i + 1;
+    if( dir)
+    {
+        memcpy( dir, path, loc * sizeof( char));
+        dir[loc] = '\0';
+    }
+    if( loc)
+        path += loc;
+    loc = 0;
+    while( path[loc] && path[loc] != '.')
+        loc++;
+    if( fname)
+    {
+        memcpy( fname, path, loc * sizeof( char));
+        fname[loc] = '\0';
+    }
+    if( ext)
+        strcpy( ext, path + loc);
+}
+#else          /* non-Cygwin case : */
+   #define my_splitpath  _splitpath
+   #define my_wsplitpath _wsplitpath
+   #define GOT_ARGV_ARGC
+#endif            /* #ifdef __CYGWIN__ */
+
 /* This function looks at the full command line,  which includes a fully
 specified path to the executable and arguments;  and strips out just the
 name of the app,  with the arguments optionally appended.  Hence,
@@ -997,16 +1092,38 @@ starting this library,  those arguments will be stored in PDC_argc and
 PDC_argv,  and will be used instead of GetCommandLine.
 */
 
+#ifdef UNICODE
+   #define my_stprintf wsprintf
+   #define my_tcslen   wcslen
+   #define my_tcslwr   wcslwr
+   #define my_tcscat   wcscat
+   #define my_tcscpy   wcscpy
+   #define my_stscanf  swscanf
+#else
+   #define my_stprintf sprintf
+   #define my_tcslen   strlen
+   #define my_tcslwr   strlwr
+   #define my_tcscat   strcat
+   #define my_tcscpy   strcpy
+   #define my_stscanf  sscanf
+#endif
+
 static void get_app_name( TCHAR *buff, const bool include_args)
 {
     int i;
+#ifdef GOT_ARGV_ARGC
     int argc = (PDC_argc ? PDC_argc : __argc);
     char **argv = (PDC_argc ? PDC_argv : __argv);
+#else
+    int argc = PDC_argc;
+    char **argv = PDC_argv;
+#endif
 
 #ifdef PDC_WIDE
+#ifdef GOT_ARGV_ARGC
     if( __wargv)
     {
-        _wsplitpath( __wargv[0], NULL, NULL, buff, NULL);
+        my_wsplitpath( __wargv[0], NULL, NULL, buff, NULL);
         if( include_args)
             for( i = 1; i < __argc; i++)
             {
@@ -1014,11 +1131,13 @@ static void get_app_name( TCHAR *buff, const bool include_args)
                 wcscat( buff, __wargv[i]);
             }
     }
-    else if( argv)
+    else
+#endif      /* #ifdef GOT_ARGV_ARGC */
+       if( argv)
     {
-        char tbuff[_MAX_PATH];
+        char tbuff[MAX_PATH];
 
-        _splitpath( argv[0], NULL, NULL, tbuff, NULL);
+        my_splitpath( argv[0], NULL, NULL, tbuff, NULL);
         if( include_args)
             for( i = 1; i < argc; i++)
             {
@@ -1031,7 +1150,7 @@ static void get_app_name( TCHAR *buff, const bool include_args)
     {
         wchar_t *tptr;
 
-        _wsplitpath( GetCommandLine( ), NULL, NULL, buff, NULL);
+        my_wsplitpath( GetCommandLine( ), NULL, NULL, buff, NULL);
         _wcslwr( buff + 1);
         tptr = wcsstr( buff, L".exe\"");
         if( tptr)
@@ -1042,12 +1161,10 @@ static void get_app_name( TCHAR *buff, const bool include_args)
                 *tptr = '\0';
         }
     }
-    debug_printf( "(W) __argv: %p __wargv: %p Name out: '%ls'\n", __argv, __wargv, buff);
 #else       /* non-Unicode case */
-    debug_printf( "__argv: %p\n", __argv);
     if( argv)
     {
-        _splitpath( argv[0], NULL, NULL, buff, NULL);
+        my_splitpath( argv[0], NULL, NULL, buff, NULL);
         debug_printf( "Path: %s;  exe: %s\n", argv[0], buff);
         if( include_args)
             for( i = 1; i < argc; i++)
@@ -1060,8 +1177,8 @@ static void get_app_name( TCHAR *buff, const bool include_args)
     {
         char *tptr;
 
-        _splitpath( GetCommandLine( ), NULL, NULL, buff, NULL);
-        _strlwr( buff + 1);
+        my_splitpath( GetCommandLine( ), NULL, NULL, buff, NULL);
+        strlwr( buff + 1);
         tptr = strstr( buff, ".exe\"");
         if( tptr)
         {
@@ -1071,9 +1188,8 @@ static void get_app_name( TCHAR *buff, const bool include_args)
                 *tptr = '\0';
         }
     }
-    debug_printf( "__argv: %p __wargv: %p Name out: '%s'\n", __argv, __wargv, buff);
 #endif
-    _tcslwr( buff + 1);
+    my_tcslwr( buff + 1);
 }
 
 /* This function extracts the first icon from the executable that is
@@ -1082,9 +1198,9 @@ executing this DLL */
 INLINE HICON get_app_icon( )
 {
 #ifdef PDC_WIDE
-    wchar_t filename[_MAX_PATH];
+    wchar_t filename[MAX_PATH];
 #else
-    char filename[_MAX_PATH];
+    char filename[MAX_PATH];
 #endif
 
     HICON icon = NULL;
@@ -1114,25 +1230,25 @@ INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
     if( rval == ERROR_SUCCESS)
     {
         TCHAR buff[180];
-        TCHAR key_name[_MAX_PATH];
+        TCHAR key_name[MAX_PATH];
         extern int PDC_font_size;
 
         if( IsZoomed( PDC_hWnd))    /* -1x-1 indicates a maximized window */
-            _sntprintf( buff, sizeof( buff),
+            my_stprintf( buff,
                       _T( "-1x-1,%d,0,0,%d"), PDC_font_size, menu_shown);
         else
-            _sntprintf( buff, sizeof( buff),
+            my_stprintf( buff,
                       _T( "%dx%d,%d,%d,%d,%d"), n_cols, n_rows, PDC_font_size,
                        xloc, yloc, menu_shown);
-        _sntprintf( buff + _tcslen( buff), sizeof( buff) - _tcslen( buff),
+        my_stprintf( buff + my_tcslen( buff),
                   _T(";%d,%d,%d,%d:"),
                   min_lines, max_lines,
                   min_cols, max_cols);
-        _tcscat( buff, PDC_font_name);
+        my_tcscat( buff, PDC_font_name);
 
         get_app_name( key_name, FALSE);
         rval = RegSetValueEx( hNewKey, key_name, 0, REG_SZ,
-                       (BYTE *)buff, (DWORD)( _tcslen( buff) * sizeof( TCHAR)));
+                       (BYTE *)buff, (DWORD)( my_tcslen( buff) * sizeof( TCHAR)));
         RegCloseKey( hNewKey);
     }
     debug_printf( "Size: %d %d; %d\n", n_cols, n_rows, rval);
@@ -1357,7 +1473,7 @@ INLINE int get_default_sizes_from_registry( int *n_cols, int *n_rows,
         return( 1);
     if( rval == ERROR_SUCCESS)
     {
-        TCHAR key_name[_MAX_PATH];
+        TCHAR key_name[MAX_PATH];
 
         get_app_name( key_name, FALSE);
         rval = RegQueryValueEx( hKey, key_name,
@@ -1367,14 +1483,14 @@ INLINE int get_default_sizes_from_registry( int *n_cols, int *n_rows,
             extern int PDC_font_size;
             int x = -1, y = -1, bytes_read = 0;
 
-            _stscanf( data, _T( "%dx%d,%d,%d,%d,%d;%d,%d,%d,%d:%n"),
+            my_stscanf( data, _T( "%dx%d,%d,%d,%d,%d;%d,%d,%d,%d:%n"),
                              &x, &y, &PDC_font_size,
                              xloc, yloc, menu_shown,
                              &min_lines, &max_lines,
                              &min_cols, &max_cols,
                              &bytes_read);
             if( bytes_read > 0 && data[bytes_read - 1] == ':')
-               _tcscpy( PDC_font_name, data + bytes_read);
+               my_tcscpy( PDC_font_name, data + bytes_read);
             if( n_cols)
                 *n_cols = x;
             if( n_rows)
@@ -2271,7 +2387,7 @@ INLINE int set_up_window( void)
     int xsize, ysize, window_style;
     int xloc = CW_USEDEFAULT;
     int yloc = CW_USEDEFAULT;
-    TCHAR WindowTitle[_MAX_PATH];
+    TCHAR WindowTitle[MAX_PATH];
     const TCHAR *AppName = _T( "Curses_App");
     HICON icon;
     static bool wndclass_has_been_registered = FALSE;

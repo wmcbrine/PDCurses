@@ -147,12 +147,8 @@ int main(int argc, char *argv[])
                         if( sscanf( argv[i] + 2, "%d,%d,%d,%d",
                                        &min_lines, &max_lines,
                                        &min_cols, &max_cols) == 4)
-                        {
-                            ttytype[0] = min_lines;
-                            ttytype[1] = max_lines;
-                            ttytype[2] = min_cols;
-                            ttytype[3] = max_cols;
-                        }
+                            PDC_set_resize_limits( min_lines, max_lines,
+                                                   min_cols, max_cols);
                     }
                     break;
                 case 'z':

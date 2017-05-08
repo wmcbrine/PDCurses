@@ -166,7 +166,7 @@ int main( int argc, char **argv)
     unsigned unicode_offset = 0x80;
 #endif
 
-/*  setlocale(LC_ALL, ".utf8");     */
+    setlocale(LC_ALL, "");
     ttytype[0] = 25;   ttytype[1] = 90;         /* Allow 25 to 90 lines... */
     ttytype[2] = 80;   ttytype[3] = (char)200;  /* ...and 80 to 200 columns */
          /* (This program gets weird artifacts when smaller than 25x80.) */
@@ -245,7 +245,7 @@ int main( int argc, char **argv)
     PDC_set_title( "NewTest: tests various PDCurses features");
 #endif
     keypad( stdscr, TRUE);
-    init_pair( 1, 15, COLOR_BLACK);
+    init_pair( 1, COLOR_WHITE, COLOR_BLACK);
     init_pair( 2, COLOR_BLACK, COLOR_YELLOW);
 
     mousemask( ALL_MOUSE_EVENTS, NULL);
@@ -273,6 +273,8 @@ int main( int argc, char **argv)
             color_block_cols = 0;
         if( redraw)
         {
+            int line = 21;
+
             mvaddstr( 1, COL1, "'Normal' white-on-black");
             mvaddstr( 2, COL1, longname( ));
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
@@ -330,14 +332,10 @@ int main( int argc, char **argv)
 #ifdef HAVE_WIDE
                 wchar_t buff[20];
 
-                swprintf( buff, 20, L"%02x ",
-                           (unsigned)( i + unicode_offset) & 0xff);
+                swprintf( buff, 20, L"%02x %lc ",
+                           (unsigned)( i + unicode_offset) & 0xff,
+                           (wchar_t)( i + unicode_offset));
                 mvaddwstr( 5 + i % 16, (i / 16) * 5, buff);
-                if( i + unicode_offset > ' ')
-                   addch( (chtype)( i + unicode_offset));
-                else
-                   addch( ' ');
-                addch( ' ');
 #else
                 char buff[6];
 
@@ -347,7 +345,7 @@ int main( int argc, char **argv)
             }
 
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
-            for( i = 0; i < 3 && i + 21 < ymax; i++)
+            for( i = 0; i < 3 && line < ymax; i++, line++)
             {                 /* Demonstrate full RGB color control: */
                 int j;
                 const char *output_text[3] = {
@@ -356,7 +354,7 @@ int main( int argc, char **argv)
                     "White on red to green on blue,  underlined and italic" };
                 const int len = (int)strlen( output_text[i]);
 
-                move( 21 + i, 1);
+                move( line, 1);
                 for( j = 0; j < len && j + 1 < xmax; j++)
                 {
                     attr_t output_color;
@@ -387,7 +385,7 @@ int main( int argc, char **argv)
             for( i = 0; i < 6; i++)
             {
                 static const wchar_t spanish[] = L"Espa\xf1ol";
-                const int line = 24 + i / 3;
+                const int line0 = line + i / 3;
                 const int col = 5 + 25 * (i % 3);
 
                 static const wchar_t russian[] = {0x0420, 0x0443, 0x0441, 0x0441,
@@ -411,11 +409,12 @@ int main( int argc, char **argv)
                 static const wchar_t *texts[6] = { spanish, russian, greek,
                                 georgian, fullwidth, combining_marks};
 
-                if( line < ymax && col < xmax)
-                   mvaddnwstr( line, 5 + 25 * (i % 3), texts[i], xmax - col);
+                if( line0 < ymax && col < xmax)
+                   mvaddnwstr( line0, 5 + 25 * (i % 3), texts[i], xmax - col);
             }
+            line += 2;
 #endif
-        mvaddstr( 26, 1, curses_version( ));
+        mvaddstr( line, 1, curses_version( ));
 
 #ifdef MAYBE_TRY_THIS_SOMEWHERE_ELSE
         mvaddstr(  1, COL3, "Click on cursor descriptions to");

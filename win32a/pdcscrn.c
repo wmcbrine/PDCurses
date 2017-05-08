@@ -1095,7 +1095,12 @@ PDC_argv,  and will be used instead of GetCommandLine.
 #ifdef UNICODE
    #define my_stprintf wsprintf
    #define my_tcslen   wcslen
+#ifdef __CYGWIN__
+                     /* Can't lowercase Unicode text in Cygwin */
+   #define my_tcslwr
+#else
    #define my_tcslwr   wcslwr
+#endif      /* __CYGWIN__ */
    #define my_tcscat   wcscat
    #define my_tcscpy   wcscpy
    #define my_stscanf  swscanf
@@ -1151,7 +1156,7 @@ static void get_app_name( TCHAR *buff, const bool include_args)
         wchar_t *tptr;
 
         my_wsplitpath( GetCommandLine( ), NULL, NULL, buff, NULL);
-        _wcslwr( buff + 1);
+        my_tcslwr( buff + 1);
         tptr = wcsstr( buff, L".exe\"");
         if( tptr)
         {

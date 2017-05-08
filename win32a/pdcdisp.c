@@ -200,11 +200,11 @@ static LOGFONT PDC_get_logical_font( const int font_idx)
     lf.lfHeight = -PDC_font_size;
 #ifdef PDC_WIDE
     if( !*PDC_font_name)
-        _tcscpy( PDC_font_name, _T("Courier New"));
+        wcscpy( PDC_font_name, _T("Courier New"));
     if( font_idx & 4)
-        _tcscpy( lf.lfFaceName, _T("Unifont"));
+        wcscpy( lf.lfFaceName, _T("Unifont"));
     else
-        _tcscpy( lf.lfFaceName, PDC_font_name );
+        wcscpy( lf.lfFaceName, PDC_font_name );
 /*  wprintf( L"New font: %s\n", PDC_font_name); */
 #else
     if( !*PDC_font_name)

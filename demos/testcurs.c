@@ -307,7 +307,7 @@ int initTest(WINDOW **win, int argc, char *argv[])
     /* Create a drawing window */
 
     width  = 60;
-    height = 13;
+    height = 19;
 
     *win = newwin(height, width, (LINES - height) / 2, (COLS - width) / 2);
 
@@ -452,7 +452,7 @@ void inputTest(WINDOW *win)
     mouse_set(ALL_MOUSE_EVENTS |
             (report_mouse_movement ? REPORT_MOUSE_POSITION : 0));
     PDC_save_key_modifiers(TRUE);
-//  PDC_return_key_modifiers(TRUE);
+/*  PDC_return_key_modifiers(TRUE); */
 #endif
     curs_set(0);        /* turn cursor off */
 
@@ -474,8 +474,8 @@ void inputTest(WINDOW *win)
                 break;
         }
 #ifdef PDCURSES
-//      wmove(win, line_to_use + 1, 18);
-//      wclrtoeol(win);
+/*      wmove(win, line_to_use + 1, 18);
+        wclrtoeol(win);  */
 #endif
         mvwaddstr(win, line_to_use, 5, "Key Pressed: ");
         wclrtoeol(win);
@@ -567,7 +567,7 @@ void inputTest(WINDOW *win)
         if (c == ' ')
             break;
         line_to_use++;
-        if( line_to_use == 10)
+        if( line_to_use == 17)
            line_to_use = 3;
     }
 
@@ -577,7 +577,7 @@ void inputTest(WINDOW *win)
 #ifdef PDCURSES
     mouse_set(0L);
     PDC_save_key_modifiers(FALSE);
-//  PDC_return_key_modifiers(FALSE);
+/*  PDC_return_key_modifiers(FALSE);   */
 #endif
     wclear(win);
 #ifdef PDCURSES
@@ -1154,33 +1154,33 @@ void acsTest(WINDOW *win)
         0xff57, 0xff49, 0xff44, 0xff54, 0xff48, 0 };  /* "Fullwidth" */
 #endif
 
-    int i, tmarg = 1, ncols = COLS / 19;
+    int i, tmarg = 1, ncols = (COLS - 4) / 19;
+    int col_size = (COLS - 4) / ncols;
     int n_items = sizeof( acs_names) / sizeof( acs_names[0]);
-    int n_rows = (n_items + ncols - 1) / ncols;
-    int col_size = COLS / ncols;
+    int n_rows = LINES / 2 - 4;
 
     i = 0;
-    if( n_rows > LINES / 2 - 4)
-        n_rows = LINES / 2 - 4;
     while( i < n_items)
     {
-        int j;
+        int j, xloc = 3;
 
         attrset(A_BOLD);
         mvaddstr( 1, (COLS - 23) / 2, "Alternate Character Set");
         attrset(A_NORMAL);
         tmarg = 4;
-        for( j = 0; i + j < n_items && j < n_rows * ncols; j++)
+        while( i < n_items && xloc < COLS - col_size)
         {
-            move((j % n_rows) * 2 + tmarg,
-                  (j / n_rows) * col_size + col_size / 2 - 7);
-            addch(acs_values[i + j]);
-            printw(" %s", acs_names[i + j]);
+            for( j = 0; i < n_items && j < n_rows; j++, i++)
+            {
+                move( j * 2 + tmarg, xloc);
+                addch(acs_values[i]);
+                printw(" %s", acs_names[i]);
+            }
+            xloc += col_size;
         }
 
         mvaddstr(tmarg + n_rows * 2 + 2, 3, "Press any key to continue");
         getch();
-        i += j;
         clear( );
     }
 
@@ -1188,19 +1188,22 @@ void acsTest(WINDOW *win)
     i = 0;
     while( i < n_items)
     {
-        int j;
+        int j, xloc = 3;
 
         attrset(A_BOLD);
         mvaddstr( 1, (COLS - 28) / 2, "Wide Alternate Character Set");
         attrset(A_NORMAL);
         tmarg = 4;
 #ifdef WACS_S1
-        for( j = 0; i + j < n_items && j < n_rows * ncols; j++)
+        while( i < n_items && xloc < COLS - col_size)
         {
-            move((j % n_rows) * 2 + tmarg,
-                  (j / n_rows) * col_size + col_size / 2 - 7);
-            add_wch(wacs_values[i + j]);
-            printw(" W%s", acs_names[i + j]);
+            for( j = 0; i < n_items && j < n_rows; j++, i++)
+            {
+                move( j * 2 + tmarg, xloc);
+                add_wch( wacs_values[i]);
+                printw(" W%s", acs_names[i]);
+            }
+            xloc += col_size;
         }
 #endif
     /* Spanish, Russian, Greek, Georgian, fullwidth */
@@ -1218,7 +1221,6 @@ void acsTest(WINDOW *win)
 
         mvaddstr(tmarg + 2, 3, "Press any key to continue");
         getch();
-        i += j;
         clear( );
     }
 #endif

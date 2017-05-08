@@ -2,21 +2,21 @@
 
 /* $Id: pdcwin.h,v 1.6 2008/07/13 06:36:32 wmcbrine Exp $ */
 
-
 #ifdef PDC_WIDE
 # define UNICODE
 # define _UNICODE
-     /* We only need the 'fallback font' for the wide-char version, */
-     /* and it'll only work in Win2000 or later (earlier versions   */
-     /* lack the necessary functions from the Win32 API).  Comment  */
-     /* out the following line if you're dealing with a really old  */
-     /* system,  or just don't want to use a fallback font.         */
-   #if defined( _WIN32_WINNT) && (_WIN32_WINNT >= 0x0500)
-   #define USE_FALLBACK_FONT
-   #endif
 #endif
 
 #include <windows.h>
+
+#if defined( GS_8BIT_INDICES) && defined( PDC_WIDE)
+     /* We only need the 'fallback font' for the wide-char version, */
+     /* and it'll only work in Win2000 or later (earlier versions   */
+     /* lack the necessary GetFontUnicodeRanges() function.)  Comment */
+     /* out the following line if you're dealing with a really old  */
+     /* system,  or just don't want to use a fallback font.         */
+   #define USE_FALLBACK_FONT
+#endif
 
 /* Windows.h will #define MOUSE_MOVED to 0x1,  which is what the
 Windows API expects.  In Curses,  MOUSE_MOVED is a macro indicating

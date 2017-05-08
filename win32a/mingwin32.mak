@@ -20,7 +20,7 @@ CAT = cat
 PREFIX =
 PATH_SEP = /
 CP = cp
-DELETE = -rm
+DELETE = rm -f
 
 # It appears we have three cases:  we're running in Cygwin/MSYS;  or we're
 # running in command.com on Windows with MinGW;  or we're on Linux or BSD
@@ -28,6 +28,14 @@ DELETE = -rm
 
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	#  Insert Cygwin-specific changes here
+	ON_WINDOWS = 1
+endif
+ifneq (,$(findstring MINGW32_NT,$(uname_S)))
+	#  Insert MINGW32-specific changes here
+	ON_WINDOWS = 1
+endif
+ifneq (,$(findstring MINGW64_NT,$(uname_S)))
+	#  Insert MINGW64-specific changes here
 	ON_WINDOWS = 1
 endif
 

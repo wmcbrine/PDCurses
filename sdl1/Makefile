@@ -1,4 +1,9 @@
 # Makefile for PDCurses library for SDL
+#
+# Usage: [g]make [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
+#
+# where target can be any of:
+# [all|demos|libpdcurses.a|testcurs]...
 
 O = o
 
@@ -66,7 +71,9 @@ clean:
 	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	strip $(DEMOS)
+endif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	ar rv $@ $?

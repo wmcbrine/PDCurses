@@ -984,8 +984,8 @@ static void my_wsplitpath( const wchar_t *path, wchar_t *drive,
             drive[0] = path[0];
             drive[1] = ':';
             drive[2] = '\0';
-         }
-         path += 2;
+        }
+        path += 2;
     }
     else if( drive)
         *drive = '\0';
@@ -1568,8 +1568,8 @@ static void HandleSize( const WPARAM wParam, const LPARAM lParam)
 
     debug_printf( "WM_SIZE: wParam %x %d %d %d\n", (unsigned)wParam,
                   n_xpixels, n_ypixels, SP->resized);
-//  if( wine_version)
-//      printf( "Wine version: %s\n", wine_version( ));
+/*  if( wine_version)
+        printf( "Wine version: %s\n", wine_version( ));  */
 
 
     if( wParam == SIZE_MINIMIZED )

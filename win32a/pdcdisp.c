@@ -7,8 +7,6 @@
 #include <string.h>
 #include <tchar.h>
 
-// #ifdef CHTYPE_LONG
-
 /* For this 'real Windows' version,  we use all Unicode all the time,
 including for ACS characters,  and even when PDC_WIDE isn't #defined
 (i.e., when running in 'legacy' 8-bit character mode) See 'acs_defs.h'
@@ -17,8 +15,6 @@ for details. */
 #define USE_UNICODE_ACS_CHARS 1
 
 #include "acs_defs.h"
-
-// #endif
 
 static const unsigned short starting_ascii_to_unicode[32] = {
    0,
@@ -88,7 +84,6 @@ static void redraw_cursor_from_index( const HDC hdc, const int idx)
         "0488",                       /* 5: bottom half block */
         "2266",                      /* 6: central block     */
         "0385;3053;3558",           /* 7: cross */
-//      "0385;3058",                /* 7: cross */
         "0088;0+10+48-18-4"  };    /* 8: outlined block: heavy top/bottom*/
     const char *sptr = shapes[idx];
     LONG left, top;
@@ -201,7 +196,7 @@ static LOGFONT PDC_get_logical_font( const int font_idx)
 {
     LOGFONT lf;
 
-    memset(&lf, 0, sizeof(LOGFONT));        // Clear out structure.
+    memset(&lf, 0, sizeof(LOGFONT));        /* Clear out structure. */
     lf.lfHeight = -PDC_font_size;
 #ifdef PDC_WIDE
     if( !*PDC_font_name)
@@ -210,7 +205,7 @@ static LOGFONT PDC_get_logical_font( const int font_idx)
         _tcscpy( lf.lfFaceName, _T("Unifont"));
     else
         _tcscpy( lf.lfFaceName, PDC_font_name );
-//  wprintf( L"New font: %s\n", PDC_font_name);
+/*  wprintf( L"New font: %s\n", PDC_font_name); */
 #else
     if( !*PDC_font_name)
         strcpy( PDC_font_name, "Courier New");
@@ -219,7 +214,7 @@ static LOGFONT PDC_get_logical_font( const int font_idx)
     else
         strcpy( lf.lfFaceName, PDC_font_name);
 #endif
-//  lf.lfPitchAndFamily = FIXED_PITCH | FF_MODERN;
+/*  lf.lfPitchAndFamily = FIXED_PITCH | FF_MODERN; */
     lf.lfPitchAndFamily = FF_MODERN;
     lf.lfWeight = ((font_idx & 1) ? FW_EXTRABOLD : FW_NORMAL);
     lf.lfItalic = ((font_idx & 2) ? TRUE : FALSE);
@@ -256,7 +251,6 @@ int PDC_choose_a_new_font( void)
     rval = ChooseFont( &cf);
     if( rval)
 #ifdef PDC_WIDE
-// should this be _tcscpy() ???
         wcscpy( PDC_font_name, lf.lfFaceName);
 #else
         strcpy( PDC_font_name, lf.lfFaceName);
@@ -629,8 +623,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
         clip_rect.top = lineno * PDC_cyChar;
         clip_rect.right = clip_rect.left + i * PDC_cxChar;
         clip_rect.bottom = clip_rect.top + PDC_cyChar;
-//      TextOutW( hdc, clip_rect.left, clip_rect.top,
-//                         buff, olen);
         ExtTextOutW( hdc, clip_rect.left, clip_rect.top,
                            ETO_CLIPPED | ETO_OPAQUE, &clip_rect,
                            buff, olen, (olen > 1 ? lpDx : NULL));

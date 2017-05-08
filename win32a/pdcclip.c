@@ -120,11 +120,6 @@ int PDC_setclipboard_raw( const char *contents, long length,
        PDC_mbstowcs((wchar_t *)ptr2, contents, length);
     else
        memcpy((char *)ptr2, contents, (length + 1) * sizeof( wchar_t));
-//  printf( "%ld bytes: %x %x %x %x\n", length,
-//          ((uint16_t *)ptr2)[0],
-//          ((uint16_t *)ptr2)[1],
-//          ((uint16_t *)ptr2)[2],
-//          ((uint16_t *)ptr2)[3]);
 #else
     memcpy((char *)ptr2, contents, length);
     ptr2[length] = 0;      /* ensure null termination */

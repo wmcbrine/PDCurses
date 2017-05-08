@@ -120,6 +120,10 @@ int main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
+#ifdef PDCURSES
+    PDC_set_resize_limits( 20, 50, 70, 200);
+#endif
+
     if (initTest(&win, argc, argv))
         return 1;
 

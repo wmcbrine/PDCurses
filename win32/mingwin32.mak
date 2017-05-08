@@ -14,46 +14,64 @@ endif
 include $(PDCURSES_SRCDIR)/version.mif
 include $(PDCURSES_SRCDIR)/libobjs.mif
 
-# For cross-compiling from Linux,  use _linux_w64 to compile 64-bit Windows
-# code,  or _linux_w32 to compile 32-bit Windows code.
+uname_S := $(shell uname -s 2>/dev/null)
 
-ifdef _linux_w64
-	PREFIX  = x86_64-w64-mingw32-
-	CAT = cat
+CAT = cat
+PREFIX =
+PATH_SEP = /
+CP = cp
+DELETE = rm -f
+
+# It appears we have three cases:  we're running in Cygwin/MSYS;  or we're
+# running in command.com on Windows with MinGW;  or we're on Linux or BSD
+# or similar system,  cross-compiling with MinGW.
+
+ifneq (,$(findstring CYGWIN,$(uname_S)))
+	#  Insert Cygwin-specific changes here
+	ON_WINDOWS = 1
+endif
+ifneq (,$(findstring MINGW32_NT,$(uname_S)))
+	#  Insert MINGW32-specific changes here
+	ON_WINDOWS = 1
+endif
+ifneq (,$(findstring MINGW64_NT,$(uname_S)))
+	#  Insert MINGW64-specific changes here
+	ON_WINDOWS = 1
 endif
 
-ifdef _linux_w32
-	PREFIX  = i686-w64-mingw32-
-	CAT = cat
-endif
-
-# For either of the above cross-compiles,  we use 'cat' and 'cp;  in Windows,
-# the commands should be 'type' and 'copy',  and the slash goes backwards.
-
-ifeq ($(CAT),cat)
-	CP =  cp
-	BASEDEF      = $(PDCURSES_SRCDIR)/exp-base.def
-	WIDEDEF      = $(PDCURSES_SRCDIR)/exp-wide.def
-	DELETE   = -rm
-else
+ifeq ($(uname_S),)
 	CAT = type
-	CP  = copy
-	BASEDEF      = $(PDCURSES_SRCDIR)\exp-base.def
-	WIDEDEF      = $(PDCURSES_SRCDIR)\exp-wide.def
+	PATH_SEP = \\
+	CP = -copy
 	DELETE = -del
+	ON_WINDOWS = 1
 endif
 
-osdir      = $(PDCURSES_SRCDIR)/win32
+# If we aren't on Windows,  assume MinGW on a Linux-like host
+# Only decision is:  are we doing a 64-bit compile (_w64 defined)?
 
-PDCURSES_WIN_H   = $(osdir)/pdcwin.h
+ifndef ON_WINDOWS
+	ifdef _w64
+	   PREFIX  = x86_64-w64-mingw32-
+	else
+	   PREFIX  = i686-w64-mingw32-
+	endif
+endif
 
-CC      = $(PREFIX)gcc
+BASEDEF	   = $(PDCURSES_SRCDIR)$(PATH_SEP)exp-base.def
+WIDEDEF	   = $(PDCURSES_SRCDIR)$(PATH_SEP)exp-wide.def
+
+osdir	   = $(PDCURSES_SRCDIR)/win32
+
+PDCURSES_WIN_H	= $(osdir)/pdcwin.h
+
+CC	   = $(PREFIX)gcc
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
 	LDFLAGS = -g
 else
-	CFLAGS  = -O4 -Wall
+	CFLAGS  = -O4 -Wall -pedantic
 	LDFLAGS =
 endif
 
@@ -67,21 +85,21 @@ ifdef CHTYPE_16
 	CFLAGS += -DCHTYPE_16
 endif
 
-DEFDEPS      = $(BASEDEF)
+DEFDEPS	   = $(BASEDEF)
 
 ifeq ($(WIDE),Y)
 	CFLAGS += -DPDC_WIDE
 	DEFDEPS += $(WIDEDEF)
-	DEFFILE      = pdcursew.def
+	DEFFILE	   = pdcursew.def
 else
-	DEFFILE      = pdcurses.def
+	DEFFILE	   = pdcurses.def
 endif
 
 ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
-LINK      = $(PREFIX)gcc
+LINK	   = $(PREFIX)gcc
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
@@ -89,24 +107,28 @@ ifeq ($(DLL),Y)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
+	LIBSADDED =
+	EXELIBS =
 	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
 else
 	LIBEXE = $(PREFIX)ar
 ifeq ($(PREFIX),)
 	LIBFLAGS = rcv
 else
-	LIBFLAGS   = rv
+	LIBFLAGS	= rv
 endif
 	LIBCURSES = pdcurses.a
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
+	LIBSADDED =
+	EXELIBS =
 	CLEAN = *.a
 endif
 
 .PHONY: all libs clean demos dist
 
-all:   libs demos
+all:	libs demos
 
-libs:   $(LIBCURSES)
+libs:	$(LIBCURSES)
 
 clean:
 	$(DELETE) *.o
@@ -115,7 +137,7 @@ clean:
 	$(DELETE) *.def
 	$(DELETE) $(CLEAN)
 
-demos:   $(DEMOS)
+demos:	$(DEMOS)
 	strip *.exe
 
 $(DEFFILE): $(DEFDEPS)
@@ -127,7 +149,7 @@ ifeq ($(WIDE),Y)
 endif
 
 $(LIBCURSES) : $(LIBDEPS)
-	$(LIBEXE) $(LIBFLAGS) $@ $?
+	$(LIBEXE) $(LIBFLAGS) $@ $? $(LIBSADDED)
 	$(CP) pdcurses.a panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
@@ -143,11 +165,11 @@ $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
 firework.exe newdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
-worm.exe xmas.exe: %.exe: $(demodir)/%.c
-	$(CC) $(CFLAGS) -mwindows -o$@ $< $(LIBCURSES)
+version.exe worm.exe xmas.exe: %.exe: $(demodir)/%.c
+	$(CC) $(CFLAGS) -mwindows -o$@ $< $(LIBCURSES) $(EXELIBS)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
+	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES) $(EXELIBS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<

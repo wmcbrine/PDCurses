@@ -1175,6 +1175,8 @@ void acsTest(WINDOW *win)
             xloc += col_size;
         }
 
+        mvaddstr( tmarg + n_rows * 2, 3, curses_version( ));
+
         mvaddstr(tmarg + n_rows * 2 + 2, 3, "Press any key to continue");
         getch();
         clear( );

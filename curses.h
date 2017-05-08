@@ -106,8 +106,10 @@ typedef chtype attr_t;
 
 #define PDC_VER_MAJOR    4
 #define PDC_VER_MINOR    0
-#define PDC_VER_CHANGE   1
+#define PDC_VER_CHANGE   2
 #define PDC_VER_YEAR   2017
+#define PDC_VER_MONTH   05
+#define PDC_VER_DAY     07
 
 #define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
 

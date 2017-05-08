@@ -397,6 +397,15 @@ int PDC_init_color(short color, short red, short green, short blue)
     return OK;
 }
 
+/* Does nothing in the SDL flavors of PDCurses.  That may change,  eventually,
+allowing one to limit the range of user-resizable windows.  See X11 or Win32a
+versions of this function for details. */
+
+void PDC_set_resize_limits( const int new_min_lines, const int new_max_lines,
+                  const int new_min_cols, const int new_max_cols)
+{
+}
+
 /* PDC_set_function_key() does nothing on this platform */
 int PDC_set_function_key( const unsigned function, const int new_key)
 {

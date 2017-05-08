@@ -213,3 +213,46 @@ int PDC_set_function_key( const unsigned function, const int new_key)
     }
     return(old_key);
 }
+
+
+/*man-start**************************************************************
+
+Resize limits
+-------------
+
+### Synopsis
+
+    void PDC_set_resize_limits( const int new_min_lines,
+                                const int new_max_lines,
+                                const int new_min_cols,
+                                const int new_max_cols);
+
+### Description
+
+   For platforms supporting resizable windows (SDLx, Win32a, X11).  Some
+   programs may be unprepared for a resize event;  for these,  calling
+   this function with the max and min limits equal ensures that no
+   user resizing can be done.  Other programs may require at least a
+   certain number,  and/or no more than a certain number,  of columns
+   and/or lines.
+
+### Portability
+
+   PDCurses-only function.
+
+**man-end****************************************************************/
+
+/* Note that at least at present,  only Win32a pays any attention to
+resize limits. */
+
+int PDC_min_lines = 25, PDC_min_cols = 80;
+int PDC_max_lines = 25, PDC_max_cols = 80;
+
+void PDC_set_resize_limits( const int new_min_lines, const int new_max_lines,
+                  const int new_min_cols, const int new_max_cols)
+{
+    PDC_min_lines = max( new_min_lines, 2);
+    PDC_max_lines = max( new_max_lines, PDC_min_lines);
+    PDC_min_cols = max( new_min_cols, 2);
+    PDC_max_cols = max( new_max_cols, PDC_min_cols);
+}

@@ -103,6 +103,7 @@ typedef chtype cchar_t;
 typedef chtype attr_t;
 
 /* Version constants,  available as of version 4.0 : */
+/* Don't forget to update 'version.mif' if MAJOR/MINOR changes! */
 
 #define PDC_VER_MAJOR    4
 #define PDC_VER_MINOR    0

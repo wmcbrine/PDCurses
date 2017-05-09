@@ -75,7 +75,9 @@ clean:
 	-rm -f $(CLEAN)
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	strip *.exe
+endif
 
 $(DEFFILE): $(DEFDEPS)
 	echo LIBRARY pdcurses > $@

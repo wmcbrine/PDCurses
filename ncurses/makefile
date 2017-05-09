@@ -3,7 +3,7 @@
 # Usage: make [tgt] [WIDE=Y]
 #
 # where tgt can be any of:
-# [all|demos|pdcurses.a|testcurs...]
+# [all|demos|testcurs]...
 
 ifeq ($(WIDE),Y)
  CFLAGS = -Wall -O3 -D_XOPEN_SOURCE_EXTENDED -DHAVE_NCURSESW
@@ -22,4 +22,4 @@ $(DEMOS) :  %: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
 
 clean:
-	rm $(DEMOS)
+	rm -f $(DEMOS)

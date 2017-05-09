@@ -1,8 +1,8 @@
 # GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
-# Usage: make -f [path\]mingwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
+# Usage: make -f [path\]mingwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [target]
 #
-# where tgt can be any of:
+# where target can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
 
 O = o
@@ -138,7 +138,9 @@ clean:
 	$(DELETE) $(CLEAN)
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	strip *.exe
+endif
 
 $(DEFFILE): $(DEFDEPS)
 	echo LIBRARY pdcurses > $@

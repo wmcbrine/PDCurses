@@ -2497,7 +2497,7 @@ int PDC_scr_open( int argc, char **argv)
                            ((i & COLOR_GREEN) ? intensity : 0),
                            ((i & COLOR_BLUE) ? intensity : 0));
     }
-           /* "standard" ncurses extended palette:  216 colors in a
+           /* 256-color xterm extended palette:  216 colors in a
             6x6x6 color cube,  plus 24 (not 50) shades of gray */
     for( r = 0; r < 6; r++)
         for( g = 0; g < 6; g++)

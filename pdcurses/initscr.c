@@ -220,7 +220,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->alive = TRUE;
 
     def_shell_mode();
-
     sprintf(ttytype, "pdcurses|PDCurses for %s", PDC_sysname());
 
     return stdscr;
@@ -297,6 +296,9 @@ int resize_term(int nlines, int ncols)
 {
     PDC_LOG(("resize_term() - called: nlines %d\n", nlines));
 
+	if (nlines == 0) nlines = SP->resizeY;
+	if (ncols == 0) ncols = SP->resizeX;
+
     if (!stdscr || PDC_resize_screen(nlines, ncols) == ERR)
         return ERR;
 
@@ -325,7 +327,7 @@ int resize_term(int nlines, int ncols)
 
     touchwin(stdscr);
     wnoutrefresh(stdscr);
-
+	SP->resized = FALSE;
     return OK;
 }
 

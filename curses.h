@@ -310,6 +310,9 @@ typedef struct
                                       returned as "real" keys */
     bool  key_code;                /* TRUE if last key is a special key;
                                       used internally by get_wch() */
+
+	int resizeX;                   /* After a resize events, this is the new available size*/
+	int resizeY;   
 #ifdef XCURSES
     int   XcurscrSize;    /* size of Xcurscr shared memory block */
     bool  sb_on;

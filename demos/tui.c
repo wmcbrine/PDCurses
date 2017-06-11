@@ -752,7 +752,7 @@ int weditstr(WINDOW *win, char *buf, int field)
 
                 memmove((void *)bp, (const void *)tp, strlen(tp) + 1);
             }
-            else if (isprint(c))
+            else if( c >=0 && c < 256 && isprint(c))
             {
                 if (defdisp)
                 {

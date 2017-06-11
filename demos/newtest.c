@@ -154,9 +154,11 @@ int main( int argc, char **argv)
 #endif
 {
     int quit = 0, i,  use_slk = 1;
-    int fmt = 0xa;
 #ifdef PDCURSES
     bool blink_state = FALSE;
+    int fmt = 0xa;
+#else
+    int fmt = 3;   /* for ncurses,  this is the 4-4-4 SLK format */
 #endif
     int cursor_state_1 = 0, cursor_state_2 = 1;
     int show_slk_index_line = 0;

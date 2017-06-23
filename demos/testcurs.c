@@ -32,6 +32,13 @@
 #include <string.h>
 #include <locale.h>
 
+#if defined( PDCURSES)
+   #define getmouse nc_getmouse
+#else
+   #define NCURSES_MOUSE_INTERFACE
+#endif
+
+
 #if defined(PDCURSES) && !defined(XCURSES)
 # define HAVE_RESIZE 1
 #else
@@ -108,9 +115,7 @@ COMMAND command[MAX_OPTIONS] =
 
 int width, height;
 static short background_index = COLOR_BLACK;
-#ifdef PDCURSES
 static bool report_mouse_movement = FALSE;
-#endif
 
 int main(int argc, char *argv[])
 {
@@ -155,10 +160,10 @@ int main(int argc, char *argv[])
                                                    min_cols, max_cols);
                     }
                     break;
+#endif
                 case 'z':
                     report_mouse_movement = TRUE;
                     break;
-#endif
                 default:
                     break;
             }
@@ -185,34 +190,32 @@ int main(int argc, char *argv[])
         noecho();
         keypad(stdscr, TRUE);
         raw();
-#ifdef PDCURSES
-        mouse_set(ALL_MOUSE_EVENTS);
-#endif
+        mousemask( ALL_MOUSE_EVENTS, NULL);
 
         key = getch();
 
         switch(key)
         {
-#ifdef PDCURSES
         case KEY_MOUSE:
             {
                const int tmarg = (LINES - (MAX_OPTIONS + 2)) / 2;
                int selected_opt;
+               MEVENT mouse_event;
 
-               request_mouse_pos();
-               selected_opt = MOUSE_Y_POS - tmarg;
+               getmouse( &mouse_event);
+
+               selected_opt = mouse_event.y - tmarg;
                if( selected_opt >= 0 && selected_opt < MAX_OPTIONS)
                {
                   old_option = new_option;
                   new_option = selected_opt;
                   display_menu( old_option, new_option);
                }
+               if( mouse_event.bstate & BUTTON1_DOUBLE_CLICKED)
+                  key = 10;
             }
-            if( (Mouse_status.button[0] & BUTTON_ACTION_MASK) == BUTTON_DOUBLE_CLICKED)
-               key = 10;
-            else
+            if( key != 10)
                break;
-#endif
         case 10:
         case 13:
         case KEY_ENTER:
@@ -448,12 +451,15 @@ void inputTest(WINDOW *win)
 
     wtimeout(win, 200);
 
+
+    mousemask( ALL_MOUSE_EVENTS |
+            (report_mouse_movement ? REPORT_MOUSE_POSITION : 0), NULL);
 #ifdef PDCURSES
-    mouse_set(ALL_MOUSE_EVENTS |
-            (report_mouse_movement ? REPORT_MOUSE_POSITION : 0));
     PDC_save_key_modifiers(TRUE);
-/*  PDC_return_key_modifiers(TRUE); */
-#endif
+#else
+    if( report_mouse_movement)
+       printf("\033[?1003h\n");   /* used in ncurses with some X-based */
+#endif                         /* terms to enable mouse move events */
     curs_set(0);        /* turn cursor off */
 
     while (1)
@@ -487,9 +493,57 @@ void inputTest(WINDOW *win)
             waddch( win, c);
         else
             wprintw(win, "%s", unctrl(c));
-#ifdef PDCURSES
         if (c == KEY_MOUSE)
         {
+#ifdef NCURSES_MOUSE_INTERFACE
+            const mmask_t masks[ ] = {
+                  BUTTON1_RELEASED, BUTTON1_PRESSED, BUTTON1_CLICKED,
+                  BUTTON1_DOUBLE_CLICKED, BUTTON1_TRIPLE_CLICKED,
+                  BUTTON2_RELEASED, BUTTON2_PRESSED, BUTTON2_CLICKED,
+                  BUTTON2_DOUBLE_CLICKED, BUTTON2_TRIPLE_CLICKED,
+                  BUTTON3_RELEASED, BUTTON3_PRESSED, BUTTON3_CLICKED,
+                  BUTTON3_DOUBLE_CLICKED, BUTTON3_TRIPLE_CLICKED,
+                  BUTTON4_RELEASED, BUTTON4_PRESSED, BUTTON4_CLICKED,
+                  BUTTON4_DOUBLE_CLICKED, BUTTON4_TRIPLE_CLICKED,
+#ifdef BUTTON5_RELEASED
+                  BUTTON5_RELEASED, BUTTON5_PRESSED, BUTTON5_CLICKED,
+                  BUTTON5_DOUBLE_CLICKED, BUTTON5_TRIPLE_CLICKED,
+#endif
+                  };
+#ifdef BUTTON4_RESERVED_EVENT
+            const mmask_t reserved_masks[] = {
+                  BUTTON1_RESERVED_EVENT, BUTTON2_RESERVED_EVENT,
+                  BUTTON3_RESERVED_EVENT, BUTTON4_RESERVED_EVENT };
+#endif
+            MEVENT mouse_event;
+
+            getmouse( &mouse_event);
+            wmove(win, line_to_use, 5);
+            wclrtoeol(win);
+            wprintw(win, "Posn: Y: %d X: %d", mouse_event.y, mouse_event.x);
+            for( i = 0; i < sizeof( masks) / sizeof( masks[0]); i++)
+                if( mouse_event.bstate & masks[i])
+                {
+                    const char *event_names[] = { "released", "pressed", "clicked",
+                            "double-clicked", "triple-clicked" };
+
+                     wprintw( win, " Button %d %s", i / 5 + 1, event_names[i % 5]);
+                }
+#ifdef BUTTON_CTRL
+            if( mouse_event.bstate & BUTTON_CTRL)
+                  wprintw( win, " Ctrl");
+#endif
+            if( mouse_event.bstate & BUTTON_ALT)
+                  wprintw( win, " Alt");
+            if( mouse_event.bstate & BUTTON_SHIFT)
+                  wprintw( win, " Shift");
+#ifdef BUTTON4_RESERVED_EVENT
+            for( i = 0; i < sizeof( reserved_masks) / sizeof( reserved_masks[0]); i++)
+                if( mouse_event.bstate & reserved_masks[i])
+                    wprintw( win, " Reserved %d", i + 1);
+#endif
+
+#else          /* using the 'classic' (undocumented) Sys V mouse functions */
             int button = 0, status = 0;
             request_mouse_pos();
 
@@ -544,7 +598,6 @@ void inputTest(WINDOW *win)
                 if (status & BUTTON_ALT)
                     waddstr(win, " ALT");
             }
-
         }
         else if (PDC_get_key_modifiers())
         {
@@ -560,8 +613,8 @@ void inputTest(WINDOW *win)
 
             if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_NUMLOCK)
                 waddstr(win, " NUMLOCK");
+#endif            /* end of mouse display */
         }
-#endif
         wrefresh(win);
 
         if (c == ' ')
@@ -1180,7 +1233,9 @@ void acsTest(WINDOW *win)
         }
 
         mvaddstr( tmarg + n_rows * 2, 3, curses_version( ));
-
+        move( tmarg + n_rows * 2 + 1, 3);
+        printw( "sizeof( chtype) = %d; sizeof( mmask_t) = %d",
+                           (int)sizeof( chtype), (int)sizeof( mmask_t));
         mvaddstr(tmarg + n_rows * 2 + 2, 3, "Press any key to continue");
         getch();
         clear( );

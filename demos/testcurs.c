@@ -52,8 +52,13 @@
 #endif
 
 /* Set to non-zero if you want to test the PDCurses clipboard */
+/* (obviously,  can't do that with ncurses) */
 
-#define HAVE_CLIPBOARD 0
+#if defined( PDCURSES)
+   #define HAVE_CLIPBOARD 1
+#else
+   #define HAVE_CLIPBOARD 0
+#endif
 
 void inputTest(WINDOW *);
 void scrollTest(WINDOW *);

@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
     if (has_colors())
     {
-        int bg = COLOR_BLACK;
+        short bg = COLOR_BLACK;
 
         start_color();
 

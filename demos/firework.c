@@ -34,7 +34,7 @@ int main(int argc, char **argv)
         start_color();
 
     for (i = 0; i < 8; i++)
-        init_pair(i, color_table[i], COLOR_BLACK);
+        init_pair( (short)i, color_table[i], COLOR_BLACK);
 
     seed = time((time_t *)0);
     srand(seed);

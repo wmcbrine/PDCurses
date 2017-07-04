@@ -652,7 +652,8 @@ int weditstr(WINDOW *win, char *buf, int field)
 {
     char org[MAXSTRLEN], *tp, *bp = buf;
     bool defdisp = TRUE, stop = FALSE, insert = FALSE;
-    int cury, curx, begy, begx, oldattr;
+    int cury, curx, begy, begx;
+    chtype oldattr;
     WINDOW *wedit;
     int c = 0;
 

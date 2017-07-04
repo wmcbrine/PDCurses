@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
 #ifdef A_COLOR
     if (has_colors())
     {
-        int bg = COLOR_BLACK;
+        short bg = COLOR_BLACK;
         start_color();
 
 # if defined(NCURSES_VERSION) || (defined(PDC_BUILD) && PDC_BUILD > 3000)

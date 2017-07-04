@@ -142,7 +142,6 @@ int PDC_setclipboard_raw( const char *contents, long length,
     }
 
     CloseClipboard();
-    GlobalFree(ptr1);
 
     return PDC_CLIP_SUCCESS;
 }

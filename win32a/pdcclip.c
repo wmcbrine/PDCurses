@@ -112,37 +112,37 @@ int PDC_getclipboard(char **contents, long *length)
 int PDC_setclipboard_raw( const char *contents, long length,
             const bool translate_multibyte_to_wide_char)
 {
-    HGLOBAL ptr1;
-    LPTSTR ptr2;
+    HGLOBAL handle;
+    LPTSTR buff;
 
     PDC_LOG(("PDC_setclipboard() - called\n"));
 
     if (!OpenClipboard(NULL))
         return PDC_CLIP_ACCESS_ERROR;
 
-    ptr1 = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
+    handle = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
         (length + 1) * sizeof(TCHAR));
 
-    if (!ptr1)
+    if (!handle)
         return PDC_CLIP_MEMORY_ERROR;
 
-    ptr2 = GlobalLock(ptr1);
+    buff = GlobalLock(handle);
 
 #ifdef PDC_WIDE
     if( translate_multibyte_to_wide_char)
-       PDC_mbstowcs((wchar_t *)ptr2, contents, length);
+       PDC_mbstowcs((wchar_t *)buff, contents, length);
     else
-       memcpy((char *)ptr2, contents, (length + 1) * sizeof( wchar_t));
+       memcpy((char *)buff, contents, (length + 1) * sizeof( wchar_t));
 #else
-    memcpy((char *)ptr2, contents, length);
-    ptr2[length] = 0;      /* ensure null termination */
+    memcpy((char *)buff, contents, length);
+    buff[length] = 0;      /* ensure null termination */
 #endif
-    GlobalUnlock(ptr1);
+    GlobalUnlock(handle);
     EmptyClipboard();
 
-    if( !SetClipboardData(PDC_TEXT, ptr1))
+    if( !SetClipboardData(PDC_TEXT, handle))
     {
-        GlobalFree(ptr1);
+        GlobalFree(handle);
         return PDC_CLIP_ACCESS_ERROR;
     }
 

@@ -2107,7 +2107,7 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
 
             modified_key_to_return = 0;
             if( SP && (SP->_trap_mbe & remap_table[wParam]))
-                set_mouse( wParam, BUTTON_PRESSED, mouse_lParam);
+                set_mouse( (const int) wParam, BUTTON_PRESSED, mouse_lParam);
             KillTimer( PDC_hWnd, (int)wParam);
             mouse_buttons_pressed ^= (1 << wParam);
         }

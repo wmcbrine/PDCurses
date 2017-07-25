@@ -14,9 +14,8 @@ Building
 
         bccwin32.mak  - Borland C++ 4.0.2+
         dmcwin32.mak  - Digital Mars
-        gccwin32.mak  - Cygnus GNU Compiler
         lccwin32.mak  - LCC-Win32
-        mingwin32.mak - MinGW
+        mingwin32.mak - MinGW, Cygnus GNU Compiler
         vcwin32.mak   - Microsoft Visual C++ 2.0+ or later & Intel(R) compiler
         wccwin32.mak  - Open Watcom 1.8+
 
@@ -70,9 +69,10 @@ Building
   PDC_DLL_BUILD when linking against it. (Or, if you only want to use
   the DLL, you could add this definition to your curses.h.)
 
-   If cross-compiling from Linux with MinGW,  ensure that _linux is defined:
+  If cross-compiling from Linux,  add the parameter `_w64=1` to get
+  64-bit code (default will be 32-bit).
 
-        make -f mingwin32.mak _linux=1 [WIDE=Y UTF8=Y DLL=Y]
+        make -f mingwin32.mak _w64=1 [WIDE=Y UTF8=Y DLL=Y]
 
 Distribution Status
 -------------------

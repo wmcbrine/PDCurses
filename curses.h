@@ -132,7 +132,7 @@ enum PDC_port
 };
 
 /* Detailed PDC version information */
-
+#define PDC_HAS_VERSION_INFO 1
 typedef struct
 {
    const enum PDC_port port;
@@ -416,7 +416,7 @@ PDCEX  int          COLOR_PAIRS;
 PDCEX  int          TABSIZE;
 PDCEX  chtype       acs_map[];    /* alternate character set map */
 PDCEX  char         ttytype[];    /* terminal name/description */
-PDCEX const PDC_version_info PDC_version;
+PDCEX  PDC_version_info PDC_version;
 
 /*man-start**************************************************************
 

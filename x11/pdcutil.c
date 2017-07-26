@@ -36,7 +36,7 @@ const char *PDC_sysname(void)
     return "X11";
 }
 
-const PDC_version_info PDC_version = { PDC_PORT_WIN32A,
+PDC_version_info PDC_version = { PDC_PORT_WIN32A,
           PDC_VER_MAJOR, PDC_VER_MINOR, PDC_VER_CHANGE,
           sizeof( chtype),
 #ifdef PDC_WIDE

@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 #else
     initscr();
 #endif
-    seed = time((time_t *)0);
+    seed = (int)time((time_t *)0);
     srand(seed);
 
     noecho();

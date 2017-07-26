@@ -63,8 +63,8 @@ int main(int argc, char *argv[])
 #else
     initscr();
 #endif
-    seed = time((time_t *)0);
-        srand(seed);
+    seed = (int)time((time_t *)0);
+    srand(seed);
 
     if (has_colors())
     {

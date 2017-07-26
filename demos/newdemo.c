@@ -219,8 +219,8 @@ int main(int argc, char **argv)
 #else
     initscr();
 #endif
-    seed = time((time_t *)0);
-        srand(seed);
+    seed = (int)time((time_t *)0);
+    srand(seed);
 
     start_color();
 # if defined(NCURSES_VERSION) || (defined(PDC_BUILD) && PDC_BUILD > 3000)
@@ -342,7 +342,7 @@ int main(int argc, char **argv)
         for (j = 0; messages[j] != NULL; j++)
         {
             char *message = messages[j];
-            int msg_len = strlen(message);
+            int msg_len = (int)strlen(message);
             int scroll_len = w + 2 * msg_len;
             char *scrollbuf = malloc(scroll_len);
             char *visbuf = scrollbuf + msg_len;

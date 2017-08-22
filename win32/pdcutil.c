@@ -22,7 +22,7 @@ const char *PDC_sysname(void)
     return "Win32";
 }
 
-const PDC_version_info PDC_version = { PDC_PORT_WIN32,
+PDC_version_info PDC_version = { PDC_PORT_WIN32,
           PDC_VER_MAJOR, PDC_VER_MINOR, PDC_VER_CHANGE,
           sizeof( chtype),
                /* note that thus far,  'wide' and 'UTF8' versions exist */

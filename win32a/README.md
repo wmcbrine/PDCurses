@@ -55,10 +55,16 @@ Building
 
   Another option, "UTF8=Y", makes PDCurses ignore the system locale, and
   treat all narrow-character strings as UTF-8. This option has no effect
-  unless WIDE=Y is also set. Use it to get around the poor support for
-  UTF-8 in the Win32 console:
+  unless WIDE=Y is also set. This was originally provided to get around
+  poor support for UTF-8 in the Win32 console:
 
         make -f mingwin32.mak WIDE=Y UTF8=Y
+
+  Win32a doesn't have the same limitations as the Win32 console flavor,
+  but UTF-8 and non-UTF-8 versions are still available.  If nothing else,
+  this means that if you've built a Win32 console PDCurses DLL with any
+  configuration,  you can build a matching Win32a DLL and swap between
+  console or GUI PDCurses just by swapping DLLs.
 
   You can also use the optional parameter "DLL=Y" with Visual C++,
   MinGW or Cygwin, to build the library as a DLL:

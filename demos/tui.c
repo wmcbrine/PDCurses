@@ -178,7 +178,7 @@ static void idle(void)
             tp->tm_mday, tp->tm_mon + 1, tp->tm_year + 1900,
             tp->tm_hour, tp->tm_min, tp->tm_sec);
 
-    mvwaddstr(wtitl, 0, bw - strlen(buf) - 2, buf);
+    mvwaddstr(wtitl, (int)0, (int)(bw - strlen(buf) - 2), buf);
     wrefresh(wtitl);
 }
 
@@ -187,7 +187,7 @@ static void menudim(menu *mp, int *lines, int *columns)
     int n, l, mmax = 0;
 
     for (n=0; mp->func; n++, mp++)
-        if ((l = strlen(mp->name)) > mmax) mmax = l;
+        if ((l = (int)strlen(mp->name)) > mmax) mmax = l;
 
     *lines = n;
     *columns = mmax + 2;
@@ -677,7 +677,7 @@ int weditstr(WINDOW *win, char *buf, int field)
     while (!stop)
     {
         idle();
-        repainteditbox(wedit, bp - buf, buf);
+        repainteditbox(wedit, (int)(bp - buf), buf);
 
         switch (c = wgetch(wedit))
         {
@@ -788,7 +788,7 @@ int weditstr(WINDOW *win, char *buf, int field)
     curs_set(0);
 
     wattrset(wedit, oldattr);
-    repainteditbox(wedit, bp - buf, buf);
+    repainteditbox(wedit, (int)(bp - buf), buf);
     delwin(wedit);
 
     return c;
@@ -816,7 +816,7 @@ int getstrings(char *desc[], char *buf[], int field)
     bool stop = FALSE;
 
     for (n = 0; desc[n]; n++)
-        if ((l = strlen(desc[n])) > mmax)
+        if ((l = (int)strlen(desc[n])) > mmax)
             mmax = l;
 
     nlines = n + 2; ncols = mmax + field + 4;

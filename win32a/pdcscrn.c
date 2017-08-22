@@ -1052,20 +1052,28 @@ PDC_argv,  and will be used instead of GetCommandLine.
 #ifdef __CYGWIN__
                      /* Can't lowercase Unicode text in Cygwin */
    #define my_tcslwr
+#elif defined _MSC_VER
+   #define my_tcslwr   _wcslwr
 #else
    #define my_tcslwr   wcslwr
 #endif      /* __CYGWIN__ */
    #define my_tcscat   wcscat
    #define my_tcscpy   wcscpy
    #define my_stscanf  swscanf
-#else
+
+#else /* UNICODE */
+
    #define my_stprintf sprintf
    #define my_tcslen   strlen
    #define my_tcslwr   strlwr
+#ifdef _MSC_VER
+   #define strlwr     _strlwr
+#endif
    #define my_tcscat   strcat
    #define my_tcscpy   strcpy
    #define my_stscanf  sscanf
-#endif
+#endif /* UNICODE */
+
 
 static void get_app_name( TCHAR *buff, const bool include_args)
 {
@@ -2107,7 +2115,7 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
 
             modified_key_to_return = 0;
             if( SP && (SP->_trap_mbe & remap_table[wParam]))
-                set_mouse( wParam, BUTTON_PRESSED, mouse_lParam);
+                set_mouse( (const int) wParam, BUTTON_PRESSED, mouse_lParam);
             KillTimer( PDC_hWnd, (int)wParam);
             mouse_buttons_pressed ^= (1 << wParam);
         }
@@ -2512,6 +2520,9 @@ int PDC_scr_open( int argc, char **argv)
     SP->curscol = SP->cursrow = 0;
     SP->audible = TRUE;
     SP->mono = FALSE;
+
+    /* note: we parse the non-wide argc (see comment in header),
+       therefore using non-wide char handling here */
     if( argc && argv)         /* store a copy of the input arguments */
     {
         PDC_argc = argc;

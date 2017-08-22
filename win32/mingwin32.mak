@@ -58,9 +58,6 @@ ifndef ON_WINDOWS
 	endif
 endif
 
-BASEDEF	   = $(PDCURSES_SRCDIR)$(PATH_SEP)exp-base.def
-WIDEDEF	   = $(PDCURSES_SRCDIR)$(PATH_SEP)exp-wide.def
-
 osdir	   = $(PDCURSES_SRCDIR)/win32
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
@@ -85,14 +82,8 @@ ifdef CHTYPE_16
 	CFLAGS += -DCHTYPE_16
 endif
 
-DEFDEPS	   = $(BASEDEF)
-
 ifeq ($(WIDE),Y)
 	CFLAGS += -DPDC_WIDE
-	DEFDEPS += $(WIDEDEF)
-	DEFFILE	   = pdcursew.def
-else
-	DEFFILE	   = pdcurses.def
 endif
 
 ifeq ($(UTF8),Y)
@@ -103,13 +94,13 @@ LINK	   = $(PREFIX)gcc
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = $(PREFIX)gcc $(DEFFILE)
+	LIBEXE = $(PREFIX)gcc
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
+	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	LIBSADDED =
 	EXELIBS =
-	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
+	CLEAN = $(LIBCURSES) *.a
 else
 	LIBEXE = $(PREFIX)ar
 ifeq ($(PREFIX),)
@@ -134,20 +125,11 @@ clean:
 	$(DELETE) *.o
 	$(DELETE) *.exe
 	$(DELETE) *.dll
-	$(DELETE) *.def
 	$(DELETE) $(CLEAN)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
 	strip *.exe
-endif
-
-$(DEFFILE): $(DEFDEPS)
-	echo LIBRARY pdcurses > $@
-	echo EXPORTS >> $@
-	$(CAT) $(BASEDEF) >> $@
-ifeq ($(WIDE),Y)
-	$(CAT) $(WIDEDEF) >> $@
 endif
 
 $(LIBCURSES) : $(LIBDEPS)

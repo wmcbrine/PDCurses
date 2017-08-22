@@ -58,7 +58,7 @@ void PDC_add_clipboard_to_key_queue( void)
 #ifdef PDC_WIDE
             const long len = (long)wcslen((wchar_t *)handle);
 #else
-            const long len = strlen((char *)handle);
+            const long len = (long)strlen((char *)handle);
 #endif
 
             clipboard_contents = (TCHAR *)calloc( len + 1, sizeof( TCHAR));

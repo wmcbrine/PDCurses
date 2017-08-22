@@ -1004,7 +1004,7 @@ void clipboardTest(WINDOW *win)
         "This test will place the following string in the system clipboard:");
     mvaddstr(2, 1, text);
 
-    i = PDC_setclipboard(text, strlen(text));
+    i = PDC_setclipboard(text, (long)strlen(text));
 
     switch(i)
     {

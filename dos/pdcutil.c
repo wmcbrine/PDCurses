@@ -44,7 +44,7 @@ const char *PDC_sysname(void)
     return "DOS";
 }
 
-const PDC_version_info PDC_version = { PDC_PORT_DOS,
+PDCEX PDC_version_info PDC_version = { PDC_PORT_DOS,
           PDC_VER_MAJOR, PDC_VER_MINOR, PDC_VER_CHANGE,
           sizeof( chtype),
                /* note that thus far,  'wide' and 'UTF8' versions exist */

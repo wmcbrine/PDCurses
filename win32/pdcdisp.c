@@ -76,7 +76,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = acs_map[ch & 0x7f];
 #endif
-        ci[dst].Char.UnicodeChar = ch & A_CHARTEXT;
+        ci[dst].Char.UnicodeChar = (WCHAR)( ch & A_CHARTEXT);
 
         dst++;
     }

@@ -37,6 +37,19 @@ Building
   libXpanel is just a symlink to libXCurses. Both curses and panel
   functions are in the main library.
 
+### CMake
+
+Clone the repository and create a build directory
+```bash
+mkdir build
+cd build
+```
+Run cmake, eventually pass some options, and build it:
+```bash
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=/opt/PDCurses -DENABLE_WIDEC=ON -DENABLE_XIM=ON ..
+make
+make install
+```
 
 Distribution Status
 -------------------

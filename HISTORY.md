@@ -1,3 +1,57 @@
+PDCurses 4.0.2 - 2017/09/12
+=========================
+Major new features:
+
+- New Win32a (Windows GUI) and SDL2 backends.  SDL1 is still supported,  but
+  may eventually go away
+
+- Bold, italic, underlined, overlined, dimmed, 'strikeout', blinking text,
+  256 colors and color pairs,  and full RGB colors.  These are all supported
+  in Win32a and mostly supported in X11,  SDL1 and SDL2
+
+- In Win32a,  one can choose a font,  and both programmatic and user resizing
+  are supported.  (Recompiling is necessary to change the font in X11.)
+
+- (Win32a only) Support of SMP Unicode (points beyond 64K) and combining
+  characters.  This may be extended to X11 and SDL2 eventually
+
+- Demos corrected to be buildable and testable with `ncurses`
+
+- Moved to GitHub
+
+Minor new features (note that not all of these are available on all backends)
+
+- Support for up to nine mouse buttons and wheel and tilt-wheel mice,  and
+  double and triple mouse clicks
+
+- (X11, Win32a, Win32) Extended range of keys that are recognized.  This
+  now includes most of the "oddball" keys such as 'browser back' and
+  'favorites' found on some keyboards
+
+- Blinking cursors in Win32a and X11 of various shapes (this could be
+  extended to SDLx eventually)
+
+- In X11 and Win32a,  one can call resize_term( ) before initscr( ) to set
+  the initial window size
+
+- Soft Label Keys (SLKs) are considerably more flexible,  with the ability
+  to set arbitrary numbers of keys and groupings.  See slk.c for details.
+  This applies to all backends
+
+- Many changes to `testcurs` to test all these new features,  and `newtest`
+  added to test still more features
+
+- ACS_x and WACS_x #defines extended to include a lot of "alternative
+  characters" that overlap in Unicode and CP-437:  double-line box chars,
+  card suits,  vulgar fractions,  etc.  This applies to all backends.
+  See `acs_defs.h` for the full list
+
+- Cleaned up some makefiles for Win32 and Win32a.  On both platforms,
+  `vcwin32.mak` can now be used with the Intel(R) compiler,  and
+  `mingwin32.mak` can be used to cross-compile from Linux,  or in
+  `command.com` under Windows,  or with Cygwin/MSYS.  Also added a
+  makefile for Digital Mars for the DOS version
+
 PDCurses 3.4 - 2008/09/08
 =========================
 

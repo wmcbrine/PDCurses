@@ -7,6 +7,12 @@
 
 O = o
 
+ifeq ($(NOPIC),Y)
+	PIC = 
+else
+	PIC = -fPIC
+endif
+
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
 endif
@@ -24,9 +30,9 @@ SLIBS		= $(shell pkg-config --libs sdl2)
 SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
 ifeq ($(DEBUG),Y)
-	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
+	CFLAGS  = -g -Wall -DPDCDEBUG $(PIC)
 else
-	CFLAGS  += -O2 -Wall -fPIC
+	CFLAGS  += -O2 -Wall $(PIC)
 endif
 
 ifeq ($(WIDE),Y)

@@ -20,8 +20,9 @@ Major new features:
 
 - Demos corrected to be buildable and testable with `ncurses`.
 
-Minor new features (note that not all of these are available on all backends)
+Minor new features 
 -------------------
+(note that not all of these are available on all backends)
 
 - Support for up to nine mouse buttons and wheel and tilt-wheel mice, and
   double and triple mouse clicks

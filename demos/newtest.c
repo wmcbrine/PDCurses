@@ -331,15 +331,18 @@ int main( int argc, char **argv)
 
             for( i = 0; i < 128; i++)
             {                 /* Show extended characters: */
-#ifdef HAVE_WIDE
-                wchar_t buff[20];
-
-                swprintf( buff, 20, L"%02x %lc ",
-                           (unsigned)( i + unicode_offset) & 0xff,
-                           (wchar_t)( i + unicode_offset));
-                mvaddwstr( 5 + i % 16, (i / 16) * 5, buff);
-#else
                 char buff[6];
+#ifdef HAVE_WIDE
+                wchar_t wbuff[3];
+
+                sprintf( buff, "%02x ",
+                           (unsigned)( i + unicode_offset) & 0xff);
+                mvaddstr( 5 + i % 16, (i / 16) * 5, buff);
+                wbuff[0] = (wchar_t)( i + unicode_offset);
+                wbuff[1] = (wchar_t)' ';
+                wbuff[2] = (wchar_t)0;
+                addwstr( wbuff);
+#else
 
                 sprintf( buff, "%02x %c", i + 128, (char)(i + 128));
                 mvaddstr( 5 + i % 16, (i / 16) * 5, buff);

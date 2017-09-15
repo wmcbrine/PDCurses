@@ -40,17 +40,8 @@ CFLAGS      = -Ox -MT -W3 -D_CRT_SECURE_NO_WARNINGS
 LDFLAGS      =
 !endif
 
-BASEDEF      = $(PDCURSES_SRCDIR)\exp-base.def
-WIDEDEF      = $(PDCURSES_SRCDIR)\exp-wide.def
-
-DEFDEPS      = $(BASEDEF)
-
 !ifdef WIDE
 WIDEOPT      = -DPDC_WIDE
-DEFDEPS      = $(DEFDEPS) $(WIDEDEF)
-DEFFILE      = pdcursew.def
-!else
-DEFFILE      = pdcurses.def
 !endif
 
 !ifdef UTF8
@@ -65,7 +56,7 @@ CHTYPE_FLAGS= -DCHTYPE_32
 CHTYPE_FLAGS= -DCHTYPE_16
 !endif
 
-SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll /DEF:$(DEFFILE)
+SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll
 
 CCLIBS      = user32.lib gdi32.lib advapi32.lib shell32.lib comdlg32.lib
 # may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
@@ -95,7 +86,6 @@ clean:
    -del *.dll
    -del *.exp
    -del *.res
-   -del *.def
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
@@ -112,15 +102,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
    -copy $(LIBCURSES) panel.lib
 !endif
 
-$(DEFFILE) : $(DEFDEPS)
-   echo LIBRARY pdcurses > $(DEFFILE)
-   echo EXPORTS >> $(DEFFILE)
-   type $(BASEDEF) >> $(DEFFILE)
-!ifdef WIDE
-   type $(WIDEDEF) >> $(DEFFILE)
-!endif
-
-$(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE) pdcurses.obj
+$(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
    $(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
    -copy $(LIBCURSES) panel.lib
 

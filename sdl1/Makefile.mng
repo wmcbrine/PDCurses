@@ -33,18 +33,11 @@ CC		= gcc
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 LDFLAGS		= -mwindows $(LIBCURSES)
 
-BASEDEF		= $(PDCURSES_SRCDIR)\exp-base.def
-
-DEFDEPS		= $(BASEDEF)
-
-DEFFILE		= pdcurses.def
-
 ifeq ($(DLL),Y)
 	BUILD += -DPDC_DLL_BUILD
-	LIBEXE = gcc $(DEFFILE)
 	LIBFLAGS = -Wl,--out-implib,libpdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
+	CLEAN = $(LIBCURSES) *.a
 	POST = $(SLIBS)
 else
 	LIBEXE = ar
@@ -67,21 +60,6 @@ clean:
 
 demos:	$(DEMOS)
 	strip *.exe
-
-pdcurses.dll: $(DEFFILE)
-
-$(DEFFILE): $(DEFDEPS)
-	echo LIBRARY pdcurses > $@
-	echo EXPORTS >> $@
-	type $(BASEDEF) >> $@
-	echo pdc_screen >> $@
-	echo pdc_font >> $@
-	echo pdc_icon >> $@
-	echo pdc_back >> $@
-	echo pdc_sheight >> $@
-	echo pdc_swidth >> $@
-	echo pdc_yoffset >> $@
-	echo pdc_xoffset >> $@
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $? $(POST)

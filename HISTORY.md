@@ -1,56 +1,65 @@
 PDCurses 4.0.2 - 2017/09/12
 =========================
 Major new features:
+-------------------
 
-- New Win32a (Windows GUI) and SDL2 backends.  SDL1 is still supported,  but
-  may eventually go away
+- New Win32a (Windows GUI) and SDL2 backends.
+  SDL1 is still supported, but may eventually go away.
 
 - Bold, italic, underlined, overlined, dimmed, 'strikeout', blinking text,
-  256 colors and color pairs,  and full RGB colors.  These are all supported
-  in Win32a and mostly supported in X11,  SDL1 and SDL2
+  256 colors and color pairs,  and full RGB colors.
+  These are all supported in Win32a and mostly supported in X11, SDL1 and SDL2.
 
-- In Win32a,  one can choose a font,  and both programmatic and user resizing
-  are supported.  (Recompiling is necessary to change the font in X11.)
+- In Win32a, one can choose a font, and both programmatic and user resizing
+  are supported.
+  (Recompiling is necessary to change the font in X11.)
 
 - (Win32a only) Support of SMP Unicode (points beyond 64K) and combining
-  characters.  This may be extended to X11 and SDL2 eventually
+  characters.
+  This may be extended to X11 and SDL2 eventually.
 
-- Demos corrected to be buildable and testable with `ncurses`
+- Demos corrected to be buildable and testable with `ncurses`.
 
-- Moved to GitHub
+Minor new features 
+-------------------
+(note that not all of these are available on all backends)
 
-Minor new features (note that not all of these are available on all backends)
-
-- Support for up to nine mouse buttons and wheel and tilt-wheel mice,  and
+- Support for up to nine mouse buttons and wheel and tilt-wheel mice, and
   double and triple mouse clicks
 
-- (X11, Win32a, Win32) Extended range of keys that are recognized.  This
+- (X11, Win32a, Win32) Extended range of keys that are recognized. This
   now includes most of the "oddball" keys such as 'browser back' and
-  'favorites' found on some keyboards
+  'favorites' found on some keyboards.
 
 - Blinking cursors in Win32a and X11 of various shapes (this could be
-  extended to SDLx eventually)
+  extended to SDLx eventually).
 
-- In X11 and Win32a,  one can call resize_term( ) before initscr( ) to set
-  the initial window size
+- In X11 and Win32a, one can call resize_term( ) before initscr( ) to set
+  the initial window size.
 
 - Soft Label Keys (SLKs) are considerably more flexible,  with the ability
-  to set arbitrary numbers of keys and groupings.  See slk.c for details.
-  This applies to all backends
+  to set arbitrary numbers of keys and groupings.
+  See slk.c for details. This applies to all backends.
 
-- Many changes to `testcurs` to test all these new features,  and `newtest`
-  added to test still more features
+- Many changes to `testcurs` to test all these new features, and `newtest`
+  added to test still more features.
+  
+- Option to get detailed version information of the used PDCurses library
+  at run time with new exported `PDC_version` as `PDC_version_info` structure.
 
 - ACS_x and WACS_x #defines extended to include a lot of "alternative
   characters" that overlap in Unicode and CP-437:  double-line box chars,
-  card suits,  vulgar fractions,  etc.  This applies to all backends.
-  See `acs_defs.h` for the full list
+  card suits,  vulgar fractions,  etc.
+  This applies to all backends.  See `acs_defs.h` for the full list.
 
-- Cleaned up some makefiles for Win32 and Win32a.  On both platforms,
-  `vcwin32.mak` can now be used with the Intel(R) compiler,  and
-  `mingwin32.mak` can be used to cross-compile from Linux,  or in
-  `command.com` under Windows,  or with Cygwin/MSYS.  Also added a
-  makefile for Digital Mars for the DOS version
+- Cleaned up some makefiles for Win32 and Win32a.
+  On both platforms, `vcwin32.mak` can now be used with the Intel(R) compiler,
+  and `mingwin32.mak` can be used to cross-compile from Linux, or in
+  `command.com` under Windows, or with Cygwin/MSYS.
+  Also added a makefile for Digital Mars for the DOS version.
+
+- The "def" files that were needed before to create PDCurses on Windows
+  are removed as they are no longer necessary.
 
 PDCurses 3.4 - 2008/09/08
 =========================
@@ -60,10 +69,12 @@ almost a year, so it's overdue. Apart from bugs, the main changes are in
 the documentation.
 
 New features:
+-------------------
 
 - setsyx() is now a function rather than a macro.
 
 Bug fixes and such:
+-------------------
 
 - In x11, the xc_atrtab table size was under-calculated by half, 
   resulting in crashes at (oddly) certain line counts. (It should've 
@@ -122,6 +133,7 @@ This release adds an SDL backend, refines the demos, and is faster in
 some cases.
 
 New features:
+-------------------
 
 - SDL port. See INSTALL, doc/sdl.txt and sdl1/* for details.
 
@@ -154,6 +166,7 @@ New features:
   pdcurses directory that was based on platform details).
 
 Bug fixes and such:
+-------------------
 
 - Implicit wrefresh() needs to be called from wgetch() when the window's 
   cursor position is changed, even if there are no other changes.
@@ -208,6 +221,7 @@ This release mainly covers changes to the build process, along with a
 few structural changes.
 
 New features:
+-------------------
 
 - The panel library has been folded into the main library. What this
   means is that you no longer need to specify "-lpanel" or equivalent
@@ -229,6 +243,7 @@ New features:
 - Watcom makefiles now use the "loaddll" feature.
 
 Bug fixes and such:
+-------------------
 
 - Eliminated the platform defines (DOS, WIN32, OS2, XCURSES) from
   curses.h, except for X11-specific SCREEN elements and functions.
@@ -271,6 +286,7 @@ PDCurses 3.1 - 2007/05/03
 Primarily clipboard-related fixes, and special UTF-8 support.
 
 New features:
+-------------------
 
 - "Force UTF-8" mode, a compile-time option to force the use of UTF-8
   for multibyte strings, instead of the system locale. (Mainly for
@@ -287,6 +303,7 @@ New features:
   (Corresponding macros removed.)
 
 Bug fixes and such:
+-------------------
 
 - In Win32, under NT-family OSes, the scrollback buffer would be
   restored by endwin(), but would not be turned off again when resuming
@@ -346,6 +363,7 @@ This is only a brief summary of the changes. For more details, consult
 the CVS log.
 
 New features:
+-------------------
 
 - An almost complete implementation of X/Open curses, including the
   wide-character and attr_t functions (but excluding terminfo). The
@@ -434,6 +452,7 @@ New features:
   license.)
 
 Bug fixes and such:
+-------------------
 
 - Most of the macros have been removed (along with the NOMACROS ifdef).
   The only remaining ones are those which have to be macros to work, and

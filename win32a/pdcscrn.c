@@ -711,8 +711,10 @@ static int set_mouse( const int button_index, const int button_state,
 #ifndef WM_XBUTTONDOWN
     #define WM_XBUTTONDOWN                  0x020B
     #define WM_XBUTTONUP                    0x020C
-    #define MK_XBUTTON1 0x0020
-    #define MK_XBUTTON2 0x0040
+#endif
+#ifndef MK_XBUTTON1
+    #define MK_XBUTTON1                     0x0020
+    #define MK_XBUTTON2                     0x0040
 #endif
 
 #ifdef USE_FALLBACK_FONT

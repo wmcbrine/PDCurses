@@ -99,6 +99,19 @@ void PDC_scr_free(void)
         free(SP);
 }
 
+/* This is called twice a second,  in a separate thread,  and 'pushes' an
+event to the main thread.  See https://wiki.libsdl.org/SDL_AddTimer for
+more info.  The result redraws cursor and blinking text every 500 ms. */
+
+Uint32 timer_callback( Uint32 interval, void *param)
+{
+    SDL_Event event;
+
+    event.type = SDL_USEREVENT;
+    SDL_PushEvent( &event);
+    return( interval);
+}
+
 static int default_pdc_swidth = 80, default_pdc_sheight = 25;
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */
@@ -123,6 +136,7 @@ int PDC_scr_open(int argc, char **argv)
             fprintf(stderr, "Could not start SDL: %s\n", SDL_GetError());
             return ERR;
         }
+        SDL_AddTimer( 500, timer_callback, NULL);  /* 500 millisec blink */
 
         atexit(_clean);
     }

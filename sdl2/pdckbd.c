@@ -393,6 +393,8 @@ static int _process_mouse_event(void)
     return KEY_MOUSE;
 }
 
+void PDC_twice_a_second( void);           /* pdcdisp.c */
+
 /* return the next available key or mouse event */
 
 int PDC_get_key(void)
@@ -439,6 +441,9 @@ int PDC_get_key(void)
     case SDL_TEXTINPUT:
         PDC_mouse_set();
         return _process_key_event();
+    case SDL_USEREVENT:             /* timer event,  every 500 millisec */
+        PDC_twice_a_second( );
+        break;
     }
 
     return -1;

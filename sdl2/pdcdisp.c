@@ -3,6 +3,7 @@
 #include "pdcsdl.h"
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #ifdef CHTYPE_LONG
@@ -15,6 +16,7 @@
 #endif
 
 Uint32 pdc_lastupdate = 0;
+static int PDC_really_blinking = FALSE;
 
 #define MAXRECT 200     /* maximum number of rects to queue up before
                            an update is forced; the number was chosen
@@ -23,7 +25,7 @@ Uint32 pdc_lastupdate = 0;
 static SDL_Rect uprect[MAXRECT];       /* table of rects to update */
 static chtype oldch = (chtype)(-1);    /* current attribute */
 static int rectcount = 0;              /* index into uprect */
-static short foregr = -2, backgr = -2; /* current foreground, background */
+static SDL_Color foreground_rgb, background_rgb;  /* current foreground, background */
 
 /* do the real updates on a delay */
 
@@ -44,55 +46,153 @@ void PDC_update_rects(void)
     }
 }
 
+   /* PDC_get_rgb_values(), extract_packed_rgb(), intensified_component(), */
+   /* intensified_color(),  and dimmed_color() each exist in x11/x11.c,    */
+   /* win32a/pdcdisp.c,  and sdl2/pdcdisp.c in forms slightly modified for */
+   /* each platform.  But they all look pretty much alike.  */
+
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
+            /* PDCurses stores RGBs in fifteen bits,  five bits each */
+            /* for red, green, blue.  A Pixel uses eight bits per    */
+            /* channel.  Hence the following.                        */
+static SDL_Color extract_packed_rgb( const chtype color)
+{
+    SDL_Color rval;
+
+    rval.r = (Uint8)( (color << 3) & 0xf8);
+    rval.g = (Uint8)( (color >> 2) & 0xf8);
+    rval.b = (Uint8)( (color >> 7) & 0xf8);
+    rval.a = (Uint8)255;
+    return rval;
+}
+#endif
+
+    /* This function 'intensifies' a color by shifting it toward white. */
+    /* It used to average the input color with white.  Then it did a    */
+    /* weighted average:  2/3 of the input color,  1/3 white,   for a   */
+    /* lower "intensification" level.                                   */
+    /*    Then Mark Hessling suggested that the output level should     */
+    /* remap zero to 85 (= 255 / 3, so one-third intensity),  and input */
+    /* of 192 or greater should be remapped to 255 (full intensity).    */
+    /* Assuming we want a linear response between zero and 192,  that   */
+    /* leads to output = 85 + input * (255-85)/192.                     */
+    /*    This should lead to proper handling of bold text in legacy    */
+    /* apps,  where "bold" means "high intensity".                      */
+
+static Uint8 intensified_component( Uint8 component)
+{
+   if( component >= 192)
+      component = 255;
+   else
+      component = 85 + component * (255 - 85) / 192;
+   return( component);
+}
+
+static SDL_Color intensified_color( SDL_Color ival)
+{
+    SDL_Color oval;
+
+    oval.r = intensified_component( ival.r);
+    oval.g = intensified_component( ival.g);
+    oval.b = intensified_component( ival.b);
+    return( oval);
+}
+
+   /* For use in adjusting colors for A_DIMmed characters.  Just */
+   /* knocks down the intensity of R, G, and B by 1/3.           */
+
+static SDL_Color dimmed_color( SDL_Color ival)
+{
+    ival.r -= ival.r / 3;
+    ival.g -= ival.g / 3;
+    ival.b -= ival.b / 3;
+    return( ival);
+}
+
+void PDC_get_rgb_values( const chtype srcp,
+            SDL_Color *fore_rgb, SDL_Color *back_rgb)
+{
+    bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
+    bool intensify_backgnd = FALSE;
+
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
+    if( srcp & A_RGB_COLOR)
+    {
+        /* Extract RGB from 30 bits of the color field */
+        *back_rgb = extract_packed_rgb( srcp >> PDC_COLOR_SHIFT);
+        *fore_rgb = extract_packed_rgb( srcp >> (PDC_COLOR_SHIFT + 15));
+    }
+    else
+#endif
+    {
+        short foreground_index, background_index;
+
+        PDC_pair_content( PAIR_NUMBER( srcp), &foreground_index, &background_index);
+        *fore_rgb = pdc_color[foreground_index];
+        if( background_index >= 0)
+           *back_rgb = pdc_color[background_index];
+    }
+
+    if( srcp & A_BLINK)
+    {
+        if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
+            intensify_backgnd = TRUE;
+#ifdef COME_BACK_TO_THIS
+        else if( PDC_blink_state)
+            reverse_colors = !reverse_colors;
+#endif
+    }
+    if( reverse_colors)
+    {
+        const SDL_Color temp = *fore_rgb;
+
+        *fore_rgb = *back_rgb;
+        *back_rgb = temp;
+    }
+
+    if( srcp & A_BOLD)
+        *fore_rgb = intensified_color( *fore_rgb);
+    if( intensify_backgnd)
+        *back_rgb = intensified_color( *back_rgb);
+    if( srcp & A_DIM)
+    {
+        *fore_rgb = dimmed_color( *fore_rgb);
+        *back_rgb = dimmed_color( *back_rgb);
+    }
+}
+
+#define same_colors( A, B) ((A).r==(B).r && (A).g==(B).g && (A).b==(B).b)
+
 /* set the font colors to match the chtype's attribute */
 
 static void _set_attr(chtype ch)
 {
-    ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE);
+    ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE | A_DIM | A_RGB_COLOR);
 
     if (oldch != ch)
     {
-        short newfg, newbg;
+        SDL_Color fore_rgb, back_rgb;
 
         if (SP->mono)
             return;
+        PDC_get_rgb_values( ch, &fore_rgb, &back_rgb);
 
-        PDC_pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
-
-        newfg |= (ch & A_BOLD) ? 8 : 0;
-        newbg |= (ch & A_BLINK) ? 8 : 0;
-
-        if (ch & A_REVERSE)
-        {
-            short tmp = newfg;
-            newfg = newbg;
-            newbg = tmp;
-        }
-
-        if (newfg != foregr)
+        if( !same_colors( fore_rgb, foreground_rgb))
         {
 #ifndef PDC_WIDE
             SDL_SetPaletteColors(pdc_font->format->palette,
-                                 pdc_color + newfg, pdc_flastc, 1);
+                                 &fore_rgb, pdc_flastc, 1);
 #endif
-            foregr = newfg;
+            foreground_rgb = fore_rgb;
         }
 
-        if (newbg != backgr)
+        if( !same_colors( back_rgb, background_rgb))
         {
 #ifndef PDC_WIDE
-            if (newbg == -1)
-                SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
-            else
-            {
-                if (backgr == -1)
-                    SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
-
-                SDL_SetPaletteColors(pdc_font->format->palette,
-                                     pdc_color + newbg, 0, 1);
-            }
+            SDL_SetPaletteColors(pdc_font->format->palette,
+                                     &back_rgb, 0, 1);
 #endif
-            backgr = newbg;
+            background_rgb = back_rgb;
         }
 
         oldch = ch;
@@ -148,15 +248,15 @@ void PDC_gotoyx(int row, int col)
 #ifdef PDC_WIDE
     chstr[0] = ch & A_CHARTEXT;
 
-    pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr, pdc_color[foregr]);
+    pdc_font = TTF_RenderUNICODE_Solid( pdc_ttffont, chstr, foreground_rgb);
     if (pdc_font)
     {
         dest.h = src.h;
         dest.w = src.w;
         src.x = 0;
         src.y = 0;
-        SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
-        SDL_SetPaletteColors(pdc_font->format->palette, pdc_color + backgr, 0, 1);
+        SDL_SetColorKey( pdc_font, SDL_FALSE, 0);
+        SDL_SetPaletteColors(pdc_font->format->palette, &background_rgb, 0, 1);
         SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
         SDL_FreeSurface(pdc_font);
         pdc_font = NULL;
@@ -180,97 +280,55 @@ void PDC_gotoyx(int row, int col)
 
 /* handle the A_*LINE attributes */
 
-static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
+static void _highlight( SDL_Rect *dest, chtype ch)
 {
-    short col = SP->line_color;
-#ifdef PDC_WIDE
-    char chstr[2] = {'_', '\0'};
-#endif
+    SDL_Color col;
+    Uint32 pixel_value;
 
     if (SP->mono)
         return;
 
+    if (SP->line_color == -1)
+        col = foreground_rgb;
+    else
+        col = pdc_color[SP->line_color];
+    pixel_value = SDL_MapRGB( pdc_screen->format, col.r, col.g, col.b);
     if (ch & (A_UNDERLINE | A_OVERLINE | A_STRIKEOUT))
     {
-#ifdef PDC_WIDE
-        if (col == -1)
-            col = foregr;
+        dest->h = 1;
 
-        pdc_font = TTF_RenderText_Solid(pdc_ttffont, chstr, pdc_color[col]);
-        if (pdc_font)
-        {
-            src->x = 0;
-            src->y = 0;
-
-            if (backgr != -1)
-                SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
-
-            if (ch & A_UNDERLINE)
-                 SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-            if (ch & A_OVERLINE)
-            {
-                 dest->y -= pdc_fheight - 1;
-                 SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-                 dest->y += pdc_fheight - 1;
-            }
-            if (ch & A_STRIKEOUT)
-            {
-                 dest->y -= pdc_fheight / 2;
-                 SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-                 dest->y += pdc_fheight / 2;
-            }
-            SDL_FreeSurface(pdc_font);
-            pdc_font = NULL;
-        }
-#else
-        if (col != -1)
-            SDL_SetPaletteColors(pdc_font->format->palette,
-                                 pdc_color + col, pdc_flastc, 1);
-
-        src->x = '_' % 32 * pdc_fwidth;
-        src->y = '_' / 32 * pdc_fheight;
-
-        if (backgr != -1)
-            SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
+        if (ch & A_OVERLINE)
+            SDL_FillRect(pdc_screen, dest, pixel_value);
 
         if (ch & A_UNDERLINE)
-            SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-        if (ch & A_OVERLINE)
         {
-           dest->y -= pdc_fheight - 1;
-           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-           dest->y += pdc_fheight - 1;
+            dest->y += pdc_fheight - 1;
+            SDL_FillRect(pdc_screen, dest, pixel_value);
+            dest->y -= pdc_fheight - 1;
         }
+
         if (ch & A_STRIKEOUT)
         {
-           dest->y -= pdc_fheight / 2;
-           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-           dest->y += pdc_fheight / 2;
+            dest->y += pdc_fheight / 2;
+            SDL_FillRect(pdc_screen, dest, pixel_value);
+            dest->y -= pdc_fheight / 2;
         }
 
-        if (backgr != -1)
-            SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
-
-        if (col != -1)
-            SDL_SetPaletteColors(pdc_font->format->palette,
-                                 pdc_color + foregr, pdc_flastc, 1);
-#endif
+        dest->h = pdc_fheight;
     }
 
     if (ch & (A_LEFTLINE|A_RIGHTLINE))
     {
-        if (col == -1)
-            col = foregr;
 
         dest->w = 1;
 
         if (ch & A_LEFTLINE)
-            SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
+            SDL_FillRect(pdc_screen, dest, pixel_value);
 
         if (ch & A_RIGHTLINE)
         {
             dest->x += pdc_fwidth - 1;
-            SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
+            SDL_FillRect(pdc_screen, dest, pixel_value);
             dest->x -= pdc_fwidth - 1;
         }
 
@@ -332,26 +390,22 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         chtype ch = srcp[j];
 
         _set_attr(ch);
+
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) | acs_map[ch & 0x7f];
 #endif
-        if (backgr == -1)
-            SDL_LowerBlit(pdc_tileback, &dest, pdc_screen, &dest);
 
 #ifdef PDC_WIDE
         chstr[0] = ch & A_CHARTEXT;
         pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
-                                           pdc_color[foregr]);
+                                           foreground_rgb);
 
         if (pdc_font)
         {
-            if (backgr != -1)
-            {
-                SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
-                SDL_SetPaletteColors(pdc_font->format->palette,
-                                     pdc_color + backgr, 0, 1);
-            }
+            SDL_SetColorKey( pdc_font, SDL_FALSE, 0);
+            SDL_SetPaletteColors(pdc_font->format->palette,
+                                     &background_rgb, 0, 1);
             SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
             SDL_FreeSurface(pdc_font);
             pdc_font = NULL;
@@ -364,7 +418,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 #endif
 
         if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE|A_OVERLINE|A_STRIKEOUT))
-            _highlight(&src, &dest, ch);
+            _highlight( &dest, ch);
 
         dest.x += pdc_fwidth;
     }

@@ -16,7 +16,8 @@
 #endif
 
 Uint32 pdc_lastupdate = 0;
-static int PDC_really_blinking = FALSE;
+int PDC_really_blinking = FALSE;
+static bool PDC_blink_state = FALSE;
 
 #define MAXRECT 200     /* maximum number of rects to queue up before
                            an update is forced; the number was chosen
@@ -137,10 +138,8 @@ void PDC_get_rgb_values( const chtype srcp,
     {
         if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
             intensify_backgnd = TRUE;
-#ifdef COME_BACK_TO_THIS
         else if( PDC_blink_state)
             reverse_colors = !reverse_colors;
-#endif
     }
     if( reverse_colors)
     {
@@ -206,6 +205,8 @@ void PDC_gotoyx(int row, int col)
     SDL_Rect src, dest;
     chtype ch;
     int oldrow, oldcol;
+    const int cursor_style =
+             (SP->visibility >> (PDC_blink_state ? 8 : 0)) & 0xff;
 #ifdef PDC_WIDE
     Uint16 chstr[2] = {0, 0};
 #endif
@@ -224,12 +225,12 @@ void PDC_gotoyx(int row, int col)
 
     PDC_transform_line(oldrow, oldcol, 1, curscr->_y[oldrow] + oldcol);
 
-    if (!SP->visibility)
+    if (!cursor_style)
         return;
 
     /* draw a new cursor by overprinting the existing character in
-       reverse, either the full cell (when visibility == 2) or the
-       lowest quarter of it (when visibility == 1) */
+       reverse, either the full cell (when cursor_style == 2) or the
+       lowest quarter of it (when cursor_style == 1) */
 
     ch = curscr->_y[row][col] ^ A_REVERSE;
 
@@ -239,7 +240,7 @@ void PDC_gotoyx(int row, int col)
     if (ch & A_ALTCHARSET && !(ch & 0xff80))
         ch = acs_map[ch & 0x7f];
 #endif
-    src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
+    src.h = (cursor_style == 1) ? pdc_fheight >> 2 : pdc_fheight;
     src.w = pdc_fwidth;
 
     dest.y = (row + 1) * pdc_fheight - src.h + pdc_yoffset;
@@ -421,5 +422,54 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
             _highlight( &dest, ch);
 
         dest.x += pdc_fwidth;
+    }
+}
+
+
+/* If PDC_really_blinking is 'true',  we need to redraw all text with
+the A_BLINK attribute set every 500 milliseconds.  (We also need to redraw
+it when blinking is turned off.)  If the line-drawing color changes,  we
+need to redraw all under/over/left/right-lined text,  and strikeout text.
+This function,  therefore,  redraws all text of a specified attribute. */
+
+static void redraw_text_with_attribute( const chtype attribute)
+{
+    int i, j, k;
+
+    for( i = 0; i < SP->lines; i++)
+    {
+        const chtype *srcp = curscr->_y[i];
+
+        for( j = 0; j < SP->cols; j++)
+            if( srcp[j] & attribute)
+            {
+                k = j + 1;
+                while( k < SP->cols && (srcp[k] & attribute))
+                    k++;
+                PDC_transform_line( i, j, k - j, srcp + j);
+                j = k;
+            }
+    }
+}
+
+/* Twice a second,  we blink the cursor,  blink text if it's "really"
+blinking (or draw it as 'standout' if it was previously blinking),  and
+if the line color has changed,  we redraw all the lined text. */
+
+void PDC_twice_a_second( void)
+{
+    static int previously_really_blinking;
+    static int prev_line_color = -1;
+
+    PDC_blink_state = !PDC_blink_state;
+    PDC_gotoyx(SP->cursrow, SP->curscol);
+    if( PDC_really_blinking || previously_really_blinking)
+        redraw_text_with_attribute( A_BLINK);
+    previously_really_blinking = PDC_really_blinking;
+    if( prev_line_color != SP->line_color)
+    {
+        redraw_text_with_attribute( A_UNDERLINE | A_OVERLINE | A_STRIKEOUT
+                     | A_LEFTLINE | A_RIGHTLINE);
+        prev_line_color = SP->line_color;
     }
 }

@@ -55,10 +55,13 @@ void PDC_set_title(const char *title)
     SDL_SetWindowTitle(pdc_window, title);
 }
 
+/* See comments in win32a/pdcsetsc.c or x11/pdcsetsc.c.  This does
+essentially the same thing. */
+
 int PDC_set_blink(bool blinkon)
 {
-//  if (pdc_color_started)       /* We've got 256 colors in this version */
-//      COLORS = 16;
+    extern int PDC_really_blinking;
 
-    return blinkon ? ERR : OK;
+    PDC_really_blinking = blinkon;
+    return OK;
 }

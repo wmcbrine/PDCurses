@@ -693,6 +693,11 @@ static Pixel dimmed_color( Pixel ival)
       int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
    #endif
 
+   /* PDC_get_rgb_values(), extract_packed_rgb(), intensified_component(), */
+   /* intensified_color(),  and dimmed_color() each exist in x11/x11.c,    */
+   /* win32a/pdcdisp.c,  and sdl2/pdcdisp.c in forms slightly modified for */
+   /* each platform.  But they all look pretty much alike.  */
+
             /* PDCurses stores RGBs in fifteen bits,  five bits each */
             /* for red, green, blue.  A Pixel uses eight bits per    */
             /* channel.  Hence the following.                        */

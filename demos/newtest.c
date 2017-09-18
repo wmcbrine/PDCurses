@@ -161,6 +161,7 @@ int main( int argc, char **argv)
     int fmt = 3;   /* for ncurses,  this is the 4-4-4 SLK format */
 #endif
     int cursor_state_1 = 0, cursor_state_2 = 1;
+    int cursor_y = 19, cursor_x = 51;
     int show_slk_index_line = 0;
     int redraw = 1;
     unsigned extra_character_to_show = 0;
@@ -257,8 +258,8 @@ int main( int argc, char **argv)
         char buff[80];
         const int xmax = getmaxx( stdscr);
         const int ymax = getmaxy( stdscr);
-        int color_block_start = 54, c;
-        int color_block_cols = (xmax - color_block_start) / 2;
+        const int color_block_start = 54;
+        int c, color_block_cols = (xmax - color_block_start) / 2;
         const int color_block_lines = 19;
         const char *cursor_state_text[N_CURSORS] = {
                   "Invisible (click to change) ",
@@ -448,7 +449,7 @@ int main( int argc, char **argv)
             attron( A_REVERSE);
             addstr( "  ");
         }
-        move( 19, color_block_start - 3);
+        move( cursor_y, cursor_x);
         refresh();
         c = getch( );
         attrset( COLOR_PAIR( 1));
@@ -499,6 +500,8 @@ int main( int argc, char **argv)
 #endif
             sprintf( buff, "Mouse at %d x %d: %x     ", mouse_event.x,
                               mouse_event.y, (unsigned)mouse_event.bstate);
+            cursor_x = mouse_event.x;
+            cursor_y = mouse_event.y;
             mvaddstr( 0, COL1, buff);
             if( mouse_event.x >= color_block_start
                             && mouse_event.y < color_block_lines)

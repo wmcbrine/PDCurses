@@ -1,8 +1,8 @@
 #include "winver.h"
 
 1 VERSIONINFO
- FILEVERSION 3,4,0,0
- PRODUCTVERSION 3,4,0,0
+ FILEVERSION 4,0,2,0
+ PRODUCTVERSION 4,0,2,0
  FILEFLAGSMASK 0x3fL
  FILEFLAGS 0x0L
  FILEOS VOS_UNKNOWN
@@ -15,12 +15,12 @@ BEGIN
         BEGIN
             VALUE "Maintainer", "William McBrine\0"
             VALUE "FileDescription", "Public Domain Curses\0"
-            VALUE "FileVersion", "3.4.0\0"
+            VALUE "FileVersion", "4.0.2\0"
             VALUE "InternalName", "PDCurses\0"
             VALUE "LegalCopyright", "Public Domain\0"
             VALUE "OriginalFilename", "PDCURSES.DLL\0"
             VALUE "ProductName", "Public Domain Curses Library\0"
-            VALUE "ProductVersion", "3.4.0\0"
+            VALUE "ProductVersion", "4.0.2\0"
         END
     END
 END

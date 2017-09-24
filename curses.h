@@ -132,7 +132,7 @@ enum PDC_port
 };
 
 /* Detailed PDC version information */
-
+#define PDC_HAS_VERSION_INFO 1
 typedef struct
 {
    const enum PDC_port port;

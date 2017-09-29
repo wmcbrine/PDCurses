@@ -393,7 +393,7 @@ int PDC_scr_open(int argc, char **argv)
     }
 
 #if defined(_MSC_VER) && _MSC_VER >= 1800   /* VS2013 and above can't build */
-    is_nt = true;    /* non-NT (Win9x/3.1/ME) targets anyway,  so always true */
+    is_nt = TRUE;    /* non-NT (Win9x/3.1/ME) targets anyway,  so always true */
 #else
     is_nt = !(GetVersion() & 0x80000000);
 #endif

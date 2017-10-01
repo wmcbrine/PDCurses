@@ -150,7 +150,7 @@ $(PDCOBJS) : %.o: $(osdir)/%.c
 
 firework.exe newdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
 version.exe worm.exe xmas.exe: %.exe: $(demodir)/%.c
-	$(CC) $(CFLAGS) -mwindows -o$@ $< $(LIBCURSES) $(EXELIBS)
+	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES) $(EXELIBS)
 
 tuidemo.exe: tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES) $(EXELIBS)

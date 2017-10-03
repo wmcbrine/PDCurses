@@ -509,12 +509,20 @@ static int _to_utf8(char *outcode, chtype code)
             outcode[1] = (code & 0x003f) | 0x80;
             return 2;
         }
-        else
+        else if( code < 0x10000)
         {
             outcode[0] = ((code & 0xf000) >> 12) | 0xe0;
             outcode[1] = ((code & 0x0fc0) >> 6) | 0x80;
             outcode[2] = (code & 0x003f) | 0x80;
             return 3;
+        }
+        else      /* SMP: Unicode past 64K */
+        {
+            outcode[0] = (code >> 18) | 0xf0;
+            outcode[1] = ((code >> 12) & 0x3f) | 0x80;
+            outcode[2] = ((code >>  6) & 0x3f) | 0x80;
+            outcode[3] = ( code        & 0x3f) | 0x80;
+            return 4;
         }
 }
 
@@ -534,7 +542,7 @@ static int _from_utf8(wchar_t *pwc, const char *s, size_t n)
 
     key = string[0];
 
-    /* Simplistic UTF-8 decoder -- only does the BMP, minimal validation */
+    /* Simplistic UTF-8 decoder -- minimal validation */
 
     if (key & 0x80)
     {
@@ -546,7 +554,7 @@ static int _from_utf8(wchar_t *pwc, const char *s, size_t n)
                 i = 2;
             }
         }
-        else if ((key & 0xe0) == 0xe0)
+        else if ((key & 0xf0) == 0xe0)   /* Unicode from 0x800 to 0xffff */
         {
             if (2 < n)
             {
@@ -555,6 +563,17 @@ static int _from_utf8(wchar_t *pwc, const char *s, size_t n)
                 i = 3;
             }
         }
+        else if ((key & 0xf8) == 0xf0)   /* SMP: Unicode past 64K */
+        {
+            if (3 < n)
+            {
+                key = ((key & 0x07) << 18) | ((string[1] & 0x3f) << 12) |
+                      ((string[2] & 0x3f) << 6) | (string[3] & 0x3f);
+                i = 4;
+            }
+        }
+        else
+            fprintf(stderr, "Invalid UTF8\n");
     }
     else
         i = 1;

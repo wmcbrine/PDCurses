@@ -22,6 +22,12 @@ void rmerror(void);
 #include <unistd.h>
 #endif
 
+#if defined( PDCURSES)
+   #define HAVE_CLIPBOARD 1
+#else
+   #define HAVE_CLIPBOARD 0
+#endif
+
 #ifdef A_COLOR
 # define TITLECOLOR       1       /* color pair indices */
 # define MAINMENUCOLOR    (2 | A_BOLD)
@@ -255,7 +261,10 @@ static void mainmenu(menu *mp)
 
     menudim(mp, &nitems, &barlen);
     repaintmainmenu(barlen, mp);
-
+#if HAVE_CLIPBOARD
+    MEVENT event;
+    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
+#endif
     while (!quit)
     {
         if (cur != old)
@@ -313,7 +322,24 @@ static void mainmenu(menu *mp)
                 cur = (cur + 1) % nitems;
                 key = '\n';
                 break;
-
+#if HAVE_CLIPBOARD
+            case KEY_MOUSE:
+                if(nc_getmouse(&event) == OK)
+                {
+                    if((event.bstate & BUTTON1_PRESSED) || (event.bstate & BUTTON1_DOUBLE_CLICKED) || (event.bstate & BUTTON1_CLICKED))
+                    {
+                        for(int x = 1; x <= nitems ; ++x){
+                            if((event.x > (barlen * (x-1)) && event.x < (barlen * x) ) &&
+                                (event.y == th )){
+                                cur = x-1;
+                                break;
+                            }
+                        }
+                    }
+                        break;
+                }
+               break;
+#endif
             default:
                 key = ERR;
             }
@@ -339,7 +365,25 @@ static void mainmenu(menu *mp)
         case KEY_ESC:
             mainhelp();
             break;
-
+#if HAVE_CLIPBOARD
+        case KEY_MOUSE:
+            if(nc_getmouse(&event) == OK)
+            {
+                if((event.bstate & BUTTON1_PRESSED) || (event.bstate & BUTTON1_DOUBLE_CLICKED) || (event.bstate & BUTTON1_CLICKED))
+                {
+                    for(int x = 1; x <= nitems ; ++x){
+                        if((event.x > (barlen * (x-1)) && event.x < (barlen * x) ) &&
+                                (event.y == th)){
+                            cur = x-1;
+                            key = '\n';
+                            break;
+                        }
+                    }
+                }
+                    break;
+            }
+           break;
+#endif
         default:
             cur0 = cur;
 
@@ -480,7 +524,10 @@ void domenu(menu *mp)
     repaintmenu(wmenu, mp);
 
     key = ERR;
-
+#if HAVE_CLIPBOARD
+    MEVENT event;
+    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
+#endif
     while (!stop && !quit)
     {
         if (cur != old)
@@ -548,7 +595,38 @@ void domenu(menu *mp)
 
             stop = TRUE;
             break;
-
+#if HAVE_CLIPBOARD
+        case KEY_MOUSE:
+            if(nc_getmouse(&event) == OK)
+            {
+                if((event.bstate & BUTTON1_PRESSED) || (event.bstate & BUTTON1_CLICKED))
+                {
+                    if((event.y - (y-1) > 0) &&  event.y > th && event.y <= y+mheight && event.x > x && event.x < mw +x){
+                        cur = (event.y - y-1) % nitems;
+                        key = ERR;
+                    }else{
+                        key = KEY_ESC;
+                    }
+                    break;
+                }
+                if(event.bstate & BUTTON1_DOUBLE_CLICKED)
+                {
+                    if((event.y - (y-1) > 0) &&  event.y > th && event.y <= y+mheight){
+                         cur = (event.y - y-1) % nitems;
+                         key = '\n';
+                    }else{
+                        key = KEY_ESC;
+                    }
+                    break;
+                }
+                if( (event.bstate & BUTTON3_PRESSED) || (event.bstate & BUTTON3_CLICKED))
+                {
+                    key = KEY_ESC;
+                    break;
+                }
+            }
+            break;
+#endif
         default:
             cur0 = cur;
 
@@ -656,7 +734,10 @@ int weditstr(WINDOW *win, char *buf, int field)
     chtype oldattr;
     WINDOW *wedit;
     int c = 0;
-
+#if HAVE_CLIPBOARD
+    char *ptr = NULL;
+    long j, length = 0;
+#endif
     if ((field >= MAXSTRLEN) || (buf == NULL) ||
         ((int)strlen(buf) > field - 1))
         return ERR;
@@ -673,7 +754,10 @@ int weditstr(WINDOW *win, char *buf, int field)
 
     keypad(wedit, TRUE);
     curs_set(1);
-
+#if HAVE_CLIPBOARD
+    MEVENT event;
+    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
+#endif
     while (!stop)
     {
         idle();
@@ -716,6 +800,80 @@ int weditstr(WINDOW *win, char *buf, int field)
             defdisp = FALSE;
             if (bp - buf < (int)strlen(buf))
                 bp++;
+            break;
+#if HAVE_CLIPBOARD
+        case KEY_MOUSE:
+            if(nc_getmouse(&event) == OK)
+            {
+                 if(event.bstate & BUTTON1_DOUBLE_CLICKED){
+                     if(event.y >= begy + cury &&  event.y <= begy + cury + 1 &&
+                             event.x >= begx + curx &&  event.x <= begx + curx +  field){
+                            c = KEY_DOWN;
+                            stop = TRUE;
+                            break;
+                     }else{
+                            c = KEY_ESC;
+                            strcpy(buf, org);   /* restore original */
+                            stop = TRUE;
+                            break;
+                     }
+                 }
+                 else if(event.bstate & BUTTON3_DOUBLE_CLICKED){
+                            c = KEY_UP;
+                            strcpy(buf, org);   /* restore original */
+                            stop = TRUE;
+                            break;
+                 }
+                 else if( (event.bstate & BUTTON3_PRESSED) || (event.bstate & BUTTON3_CLICKED))
+                 {
+                    j = PDC_getclipboard(&ptr, &length);
+                    switch(j)
+                    {
+                        case PDC_CLIP_ACCESS_ERROR:
+                             strcpy(buf, org);   /* restore original as default */
+                             stop = TRUE;
+                             c = KEY_ESC;
+                            break;
+                        case PDC_CLIP_MEMORY_ERROR:
+                             strcpy(buf, org);   /* restore original as default */
+                             stop = TRUE;
+                             c = KEY_ESC;
+                            break;
+                        case PDC_CLIP_EMPTY:
+                             strcpy(buf, org);  /* restore original as default */
+                             stop = TRUE;
+                             c = KEY_ESC;
+                            break;
+                        case PDC_CLIP_SUCCESS:
+                            if ((int)strlen(ptr)){
+                                if (insert)  /* copy clip-board will work only in insert mode */
+                                {
+                                    if ((int)strlen(ptr) < field - 1)
+                                    {
+                                        memmove((void *)(ptr+(int)strlen(ptr)), (const void *)bp, (int)strlen(buf)+1); /* Experimental insert/add to existing text*/
+                                        strncpy(bp, ptr, (int)strlen(ptr));   /* copy clip-board to already existing field */
+                                        insert = !insert;
+                                        curs_set(insert ? 2 : 1);
+                                    }
+                                }
+                                else if (bp - ptr < field - 1)
+                                {
+                                    strncpy(bp, ptr, (int)(field - 1));   /* copy clip-board to already existing field */
+                                }
+                            while (bp - buf < (int)strlen(buf)){
+                                    bp++;
+                                }
+                            }
+                            break;
+#endif
+                        default:
+                             strcpy(buf, org);   /* restore original */
+                             stop = TRUE;
+                             c = KEY_ESC;
+                            break;
+                    }
+                }
+              }
             break;
 
         case '\t':            /* TAB -- because insert

@@ -865,7 +865,6 @@ int weditstr(WINDOW *win, char *buf, int field)
                                 }
                             }
                             break;
-#endif
                         default:
                              strcpy(buf, org);   /* restore original */
                              stop = TRUE;
@@ -875,7 +874,7 @@ int weditstr(WINDOW *win, char *buf, int field)
                 }
               }
             break;
-
+#endif
         case '\t':            /* TAB -- because insert
                                   is broken on HPUX */
         case KEY_IC:          /* enter insert mode */

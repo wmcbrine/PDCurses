@@ -1,9 +1,11 @@
 # GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
 #
-# Usage: make -f [path\]gccdos.mak [DEBUG=Y] [target]
+# Usage: make -f [path\]gccdos.mak [DEBUG=Y] [CROSS] [target]
 #
 # where target can be any of:
 # [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
+#
+# Note: when cross-compiling from GNU/Linux set [CROSS]
 
 O = o
 
@@ -19,6 +21,14 @@ osdir		= $(PDCURSES_SRCDIR)/dos
 PDCURSES_DOS_H	= $(osdir)/pdcdos.h
 
 CC		= gcc
+
+ifeq ($(CROSS),Y)
+	COPY	= cp
+	DEL 	= rm -rf
+else
+	COPY	= copy
+	DEL 	= del
+endif
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -44,16 +54,16 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-del *.o
-	-del *.a
-	-del *.exe
+	-$(DEL) *.o
+	-$(DEL) *.a
+	-$(DEL) *.exe
 
 demos:	$(DEMOS)
 	strip *.exe
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-copy $(LIBCURSES) panel.a
+	-$(COPY) $(LIBCURSES) panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)

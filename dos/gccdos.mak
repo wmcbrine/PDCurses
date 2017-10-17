@@ -1,9 +1,13 @@
 # GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
 #
-# Usage: make -f [path\]gccdos.mak [DEBUG=Y] [target]
+# Usage: make -f [path\]gccdos.mak [DEBUG=Y] [CROSS=[build]] [target]
 #
-# where target can be any of:
+# where "target" can be any of:
 # [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
+#
+# and "build" any installed cross-compiler (gcc + binutils),
+#  CROSS=Y defaults to i586-pc-msdosdjgpp build
+# Note: when cross-compiling from GNU/Linux set CROSS=Y even for make clean
 
 O = o
 
@@ -18,7 +22,21 @@ osdir		= $(PDCURSES_SRCDIR)/dos
 
 PDCURSES_DOS_H	= $(osdir)/pdcdos.h
 
-CC		= gcc
+ifndef CROSS
+	COPY	= copy
+	DEL		= del
+else
+	COPY	= cp
+	DEL		= rm -rf
+endif
+
+ifeq ($(CROSS),Y)
+	PREFIX	= i586-pc-msdosdjgpp-
+else
+	ifdef CROSS
+		PREFIX	= $(CROSS)-
+	endif
+endif
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -30,9 +48,11 @@ endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
-LINK		= gcc
 
-LIBEXE		= ar
+CC		= $(PREFIX)gcc
+LINK		= $(PREFIX)gcc
+
+LIBEXE		= $(PREFIX)ar
 LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
@@ -44,16 +64,18 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-del *.o
-	-del *.a
-	-del *.exe
+	-$(DEL) *.o
+	-$(DEL) *.a
+	-$(DEL) *.exe
 
 demos:	$(DEMOS)
-	strip *.exe
+	$(PREFIX)strip *.exe
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+# note: we always want the system specific objects to be first
+#       as these are most likely to raise compiler issues 
+$(LIBCURSES) : $(PDCOBJS) $(LIBOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-copy $(LIBCURSES) panel.a
+	-$(COPY) $(LIBCURSES) panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)

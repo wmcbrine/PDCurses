@@ -71,7 +71,9 @@ clean:
 demos:	$(DEMOS)
 	$(PREFIX)strip *.exe
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+# note: we always want the system specific objects to be first
+#       as these are most likely to raise compiler issues 
+$(LIBCURSES) : $(PDCOBJS) $(LIBOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 	-$(COPY) $(LIBCURSES) panel.a
 

@@ -1,3 +1,22 @@
+PDCurses 4.x.x - work in progress
+=========================
+Major new features:
+-------------------
+
+- SDL2 (and SLD1?) backends...
+
+Minor new features 
+-------------------
+- dos variant: cross-compilation from GNU/Linux
+
+Bugfixes
+-------------------
+- compilation warnings/errors with some compilers in some variants #53, #57, #58, #65, ...
+
+- newtest sample was broken in all widw variants #60
+
+- the paste button printed debug output #62
+
 PDCurses 4.0.2 - 2017/09/12
 =========================
 Major new features:

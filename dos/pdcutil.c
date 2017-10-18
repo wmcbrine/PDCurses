@@ -1,5 +1,6 @@
 /* Public Domain Curses */
 
+#include <limits.h>
 #include "pdcdos.h"
 
 void PDC_beep(void)
@@ -13,29 +14,98 @@ void PDC_beep(void)
     PDCINT(0x10, regs);
 }
 
-void PDC_napms(int ms)
+#if UINT_MAX >= 0xffffffffful
+# define irq0_ticks()	(getdosmemdword(0x46c))
+/* For 16-bit platforms, we expect that the program will need _two_ memory
+   read instructions to read the tick count.  Between the two instructions,
+   if we do not turn off interrupts, an IRQ 0 might intervene and update the
+   tick count with a carry over from the lower half to the upper half ---
+   and our read count will be bogus.  */
+#elif defined __TURBOC__
+unsigned long irq0_ticks(void)
+{
+    unsigned long t;
+    disable();
+    t = getdosmemdword(0x46c);
+    enable();
+    return t;
+}
+#elif defined __WATCOMC__
+unsigned long irq0_ticks(void)
+{
+    unsigned long t;
+    _disable();
+    t = getdosmemdword(0x46c);
+    _enable();
+    return t;
+}
+#else
+# define irq0_ticks()	(getdosmemdword(0x46c))  /* FIXME */
+#endif
+
+static void do_idle(void)
 {
     PDCREGS regs;
-    long goal, start, current;
+
+    regs.W.ax = 0x1680;
+    PDCINT(0x2f, regs);
+    PDCINT(0x28, regs);
+}
+
+void PDC_napms(int ms)
+{
+    unsigned long goal, start, current;
 
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-    goal = DIVROUND((long)ms, 50);
+#if INT_MAX > 43200000ul
+    /* If `int' is 32-bit, we might be asked to "nap" for more than one day,
+       in which case the system timer might wrap around at least once.
+       Slice the "nap" intp half-day portions.  */
+    while (ms > 43200000)
+    {
+        PDC_napms (43200000);
+        ms -= 43200000;
+    }
+#endif
+
+    if (ms < 0)
+        return;
+
+    /* Scale the millisecond count by 0x18'00b0 / 86'400'000.  The scaling
+       done here is not very precise, but what is more important is preventing
+       integer overflow.  */
+#if INT_MAX <= ULONG_MAX / 0x9526ul
+    goal = ((unsigned long)(unsigned)ms * 0x9526) >> 21;
+#else
+    goal = ms * (0x1800b0 / 86400000.);
+#endif
+
     if (!goal)
         goal++;
 
-    start = getdosmemdword(0x46c);
-
+    start = irq0_ticks();
     goal += start;
 
-    while (goal > (current = getdosmemdword(0x46c)))
+    if (goal >= 0x1800b0ul)
     {
-        if (current < start)    /* in case of midnight reset */
+        /* We expect to cross over midnight!  Wait for the clock tick count
+           to wrap around, then wait out the remaining ticks.  */
+        goal -= 0x1800b0ul;
+
+        while (irq0_ticks() == start)
+            do_idle();
+
+        while (irq0_ticks() > start)
+            do_idle();
+    }
+
+    while (goal > (current = irq0_ticks()))
+    {
+        if (current < start)    /* this should really not happen */
             return;
 
-        regs.W.ax = 0x1680;
-        PDCINT(0x2f, regs);
-        PDCINT(0x28, regs);
+        do_idle();
     }
 }
 

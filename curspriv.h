@@ -126,7 +126,7 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 # define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
-#define DIVROUND(num, divisor) ((num) + ((divisor) >> 1)) / (divisor)
+#define DIVROUND(num, divisor) (((num) + ((divisor) >> 1)) / (divisor))
 
 #define PDC_CLICK_PERIOD 150  /* time to wait for a click, if
                                  not set by mouseinterval() */

@@ -22,7 +22,7 @@ void PDC_beep(void)
    tick count with a carry over from the lower half to the upper half ---
    and our read count will be bogus.  */
 #elif defined __TURBOC__
-unsigned long irq0_ticks(void)
+static unsigned long irq0_ticks(void)
 {
     unsigned long t;
     disable();
@@ -31,7 +31,7 @@ unsigned long irq0_ticks(void)
     return t;
 }
 #elif defined __WATCOMC__
-unsigned long irq0_ticks(void)
+static unsigned long irq0_ticks(void)
 {
     unsigned long t;
     _disable();
@@ -98,6 +98,8 @@ void PDC_napms(int ms)
 
         while (irq0_ticks() > start)
             do_idle();
+
+        start = 0;
     }
 
     while (goal > (current = irq0_ticks()))

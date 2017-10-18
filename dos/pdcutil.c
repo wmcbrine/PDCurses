@@ -104,8 +104,15 @@ void PDC_napms(int ms)
 
     while (goal > (current = irq0_ticks()))
     {
-        if (current < start)    /* this should really not happen */
-            return;
+        if (current < start)
+        {
+            /* If the BIOS time somehow gets reset under us (ugh!), then
+               restart (what is left of) the nap with `current' as the new
+               starting time.  Remember to adjust the goal time
+               accordingly!  */
+            goal -= start - current;
+            start = current;
+        }
 
         do_idle();
     }

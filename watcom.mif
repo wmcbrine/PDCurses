@@ -36,10 +36,14 @@ LINK = wlink
 all:	$(LIBCURSES) $(DEMOS)
 
 clean
+!ifeq CROSS_COMPILE Y
+	rm -f *.obj *.lib *.exe *.err
+!else
 	-del *.obj
 	-del *.lib
 	-del *.exe
 	-del *.err
+!endif
 
 demos:	$(DEMOS)
 

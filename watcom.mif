@@ -1,12 +1,7 @@
 # Common elements for the Watcom makefiles
 
-!ifeq CROSS_COMPILE Y
 srcdir = $(PDCURSES_SRCDIR)/pdcurses
 demodir = $(PDCURSES_SRCDIR)/demos
-!else
-srcdir = $(PDCURSES_SRCDIR)\pdcurses
-demodir = $(PDCURSES_SRCDIR)\demos
-!endif
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj &
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj &
@@ -49,11 +44,7 @@ demos:	$(DEMOS)
 
 .c: $(srcdir);$(osdir);$(demodir)
 .c.obj: .autodepend
-!ifeq CROSS_COMPILE Y
 	$(CC) $(CFLAGS) -fo=$@ $<
-!else
-	$(CC) $(CFLAGS) $<
-!endif
 
 .obj.exe:
 	$(LINK) $(LDFLAGS) n $@ f $*.obj l $(LIBCURSES)

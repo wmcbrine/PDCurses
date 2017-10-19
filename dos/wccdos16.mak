@@ -32,51 +32,37 @@ CROSS_COMPILE	= Y
 !endif
 !endif
 
-!ifeq CROSS_COMPILE Y
 osdir		= $(PDCURSES_SRCDIR)/dos
-# OpenWatcom README strongly recommends setting WATCOM environment variable...
+# Open Watcom README strongly recommends setting WATCOM environment variable...
+!ifeq CROSS_COMPILE Y
 !ifdef %WATCOM
 watcomdir	= $(%WATCOM)
 !else
 watcomdir	= "`which wcc | xargs realpath | xargs dirname`"/..
 !endif
-!else
-osdir		= $(PDCURSES_SRCDIR)\dos
 !endif
 
 CC		= wcc
 TARGET		= dos
 
-!ifeq CROSS_COMPILE Y
 CFLAGS		= -bt=$(TARGET) -zq -wx -m$(MODEL) -i=$(PDCURSES_SRCDIR)
+# the README also recommends setting INCLUDE; if absent, we need an extra -i=
+!ifndef %INCLUDE
 CFLAGS		+= -i=$(watcomdir)/h
-!else
-CFLAGS		= /bt=$(TARGET) /zq /wx /m$(MODEL) /i=$(PDCURSES_SRCDIR)
 !endif
 
 !ifeq DEBUG Y
-!ifeq CROSS_COMPILE Y
 CFLAGS  	+= -d2 -DPDCDEBUG
-!else
-CFLAGS  	+= /d2 /DPDCDEBUG
-!endif
 LDFLAGS 	= D W A op q sys $(TARGET)
 !else
-!ifeq CROSS_COMPILE Y
 CFLAGS  	+= -oneatx
 LDFLAGS		= op q sys $(TARGET)
+!ifeq CROSS_COMPILE Y
 LDFLAGS 	+= libp $(watcomdir)/lib286/dos\;$(watcomdir)/lib286
-!else
-CFLAGS  	+= /oneatx
-LDFLAGS 	= op q sys $(TARGET)
 !endif
 !endif
 
-!ifeq CROSS_COMPILE Y
 LIBEXE		= wlib -q -n -t
-!else
-LIBEXE		= wlib /q /n /t
-!endif
 
 !include $(PDCURSES_SRCDIR)/watcom.mif
 

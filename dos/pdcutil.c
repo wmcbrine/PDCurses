@@ -52,34 +52,46 @@ static void do_idle(void)
     PDCINT(0x28, regs);
 }
 
+#define MAX_TICK	0x1800b0ul	/* no. of IRQ 0 clock ticks per day;
+					   BIOS counter (0:0x46c) will go up
+					   to MAX_TICK - 1 before wrapping to
+					   0 at midnight */
+#define MS_PER_DAY	86400000ul	/* no. of milliseconds in a day */
+
 void PDC_napms(int ms)
 {
     unsigned long goal, start, current;
 
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-#if INT_MAX > 43200000ul
+#if INT_MAX > MS_PER_DAY / 2
     /* If `int' is 32-bit, we might be asked to "nap" for more than one day,
-       in which case the system timer might wrap around at least once.
-       Slice the "nap" intp half-day portions.  */
-    while (ms > 43200000)
+       in which case the system timer might wrap around at least once, and
+       that will be tricky to handle as is.  Slice the "nap" into half-day
+       portions.  */
+    while (ms > MS_PER_DAY / 2)
     {
-        PDC_napms (43200000);
-        ms -= 43200000;
+        PDC_napms (MS_PER_DAY / 2);
+        ms -= MS_PER_DAY / 2;
     }
 #endif
 
     if (ms < 0)
         return;
 
-    /* Scale the millisecond count by 0x18'00b0 / 86'400'000.  The scaling
-       done here is not very precise, but what is more important is preventing
-       integer overflow.  */
-#if INT_MAX <= ULONG_MAX / 0x9526ul
-    goal = ((unsigned long)(unsigned)ms * 0x9526) >> 21;
+    /* Scale the millisecond count by MAX_TICK / MS_PER_DAY.  The scaling
+       done here is not very precise, but what is more important is
+       preventing integer overflow.
+
+       The approximation 67 / 3680 can be obtained by considering the
+       convergents (mathworld.wolfram.com/Convergent.html) of MAX_TICK /
+       MS_PER_DAY 's continued fraction representation.  */
+#if MS_PER_DAY / 2 <= ULONG_MAX / 67ul
+# define MS_TO_TICKS(x)	((x) * 67ul / 3680ul)
 #else
-    goal = ms * (0x1800b0 / 86400000.);
+# error "unpossible!"
 #endif
+    goal = MS_TO_TICKS(ms);
 
     if (!goal)
         goal++;
@@ -87,11 +99,11 @@ void PDC_napms(int ms)
     start = irq0_ticks();
     goal += start;
 
-    if (goal >= 0x1800b0ul)
+    if (goal >= MAX_TICK)
     {
         /* We expect to cross over midnight!  Wait for the clock tick count
            to wrap around, then wait out the remaining ticks.  */
-        goal -= 0x1800b0ul;
+        goal -= MAX_TICK;
 
         while (irq0_ticks() == start)
             do_idle();

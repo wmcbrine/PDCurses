@@ -66,7 +66,7 @@ void PDC_napms(int ms)
 
 #if INT_MAX > MS_PER_DAY / 2
     /* If `int' is 32-bit, we might be asked to "nap" for more than one day,
-       in which case the system timer might wrap around at least once, and
+       in which case the system timer might wrap around at least twice, and
        that will be tricky to handle as is.  Slice the "nap" into half-day
        portions.  */
     while (ms > MS_PER_DAY / 2)

@@ -1,5 +1,13 @@
 # Common elements for the Watcom makefiles
 
+!ifeq CROSS Y
+DEL		= rm -f
+COPY		= cp
+!else
+DEL		= del
+COPY		= copy
+!endif
+
 srcdir = $(PDCURSES_SRCDIR)/pdcurses
 demodir = $(PDCURSES_SRCDIR)/demos
 
@@ -31,14 +39,10 @@ LINK = wlink
 all:	$(LIBCURSES) $(DEMOS)
 
 clean
-!ifeq CROSS_COMPILE Y
-	rm -f *.obj *.lib *.exe *.err
-!else
-	-del *.obj
-	-del *.lib
-	-del *.exe
-	-del *.err
-!endif
+	-$(DEL) *.obj
+	-$(DEL) *.lib
+	-$(DEL) *.exe
+	-$(DEL) *.err
 
 demos:	$(DEMOS)
 

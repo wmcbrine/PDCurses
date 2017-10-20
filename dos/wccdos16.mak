@@ -1,12 +1,20 @@
 # Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Watcom C/C++ 10.6+
 #
-# Usage: wmake -f [path\]wccdos16.mak [DEBUG=Y] [target]
+# Usage: wmake -f [path/]wccdos16.mak [DEBUG=Y] [CROSS=Y|N]
+#        [MODEL=c|h|l|m|s] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
+#
+# and MODEL specifies the memory model (compact/huge/large/medium/small)
+#
+# and CROSS=Y (CROSS=N) means to assume we are (are not) cross-compiling
+# (default is to auto-detect)
 
 # Change the memory MODEL here, if desired
+!ifndef MODEL
 MODEL		= l
+!endif
 
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
@@ -16,25 +24,25 @@ PDCURSES_SRCDIR	= ..
 
 !include $(PDCURSES_SRCDIR)/version.mif
 
-!ifndef CROSS_COMPILE
+!ifndef CROSS
 !ifeq %SHELL /bin/bash
 # assume we are cross-compiling
-CROSS_COMPILE	= Y
+CROSS		= Y
 !endif
 !ifeq %SHELL /bin/sh
-CROSS_COMPILE	= Y
+CROSS		= Y
 !endif
 !ifeq %SHELL /bin/csh
-CROSS_COMPILE	= Y
+CROSS		= Y
 !endif
 !ifeq %SHELL /bin/dash
-CROSS_COMPILE	= Y
+CROSS		= Y
 !endif
 !endif
 
 osdir		= $(PDCURSES_SRCDIR)/dos
 # Open Watcom README strongly recommends setting WATCOM environment variable...
-!ifeq CROSS_COMPILE Y
+!ifeq CROSS Y
 !ifdef %WATCOM
 watcomdir	= $(%WATCOM)
 !else
@@ -57,7 +65,7 @@ LDFLAGS 	= D W A op q sys $(TARGET)
 !else
 CFLAGS  	+= -oneatx
 LDFLAGS		= op q sys $(TARGET)
-!ifeq CROSS_COMPILE Y
+!ifeq CROSS Y
 LDFLAGS 	+= libp $(watcomdir)/lib286/dos\;$(watcomdir)/lib286
 !endif
 !endif
@@ -69,13 +77,8 @@ LIBEXE		= wlib -q -n -t
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	%write wccdos.lrf $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @wccdos.lrf
-!ifeq CROSS_COMPILE Y
-	rm wccdos.lrf
-	cp $(LIBCURSES) panel.lib
-!else
-	-del wccdos.lrf
-	-copy $(LIBCURSES) panel.lib
-!endif
+	-$(DEL) wccdos.lrf
+	-$(COPY) $(LIBCURSES) panel.lib
 
 PLATFORM1	= Watcom C++ 16-bit DOS
 PLATFORM2	= Open Watcom 1.6 for 16-bit DOS

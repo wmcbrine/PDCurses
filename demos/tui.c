@@ -845,22 +845,15 @@ int weditstr(WINDOW *win, char *buf, int field)
                              c = KEY_ESC;
                             break;
                         case PDC_CLIP_SUCCESS:
-                            if ((int)strlen(ptr)){
-                                if (insert)  /* copy clip-board will work only in insert mode */
+                            if ((int)strlen(ptr) && insert){
+
+                                if ((int)strlen(buf) < field + 1  )
                                 {
-                                    if ((int)strlen(ptr) < field - 1)
-                                    {
-                                        memmove((void *)(ptr+(int)strlen(ptr)), (const void *)bp, (int)strlen(buf)+1); /* Experimental insert/add to existing text*/
-                                        strncpy(bp, ptr, (int)strlen(ptr));   /* copy clip-board to already existing field */
-                                        insert = !insert;
-                                        curs_set(insert ? 2 : 1);
-                                    }
-                                }
-                                else if (bp - ptr < field - 1)
-                                {
-                                    strncpy(bp, ptr, (int)(field - 1));   /* copy clip-board to already existing field */
-                                }
-                            while (bp - buf < (int)strlen(buf)){
+                                    memmove((void *)(ptr+(int)strlen(ptr)), (const void *)bp, (int)strlen(buf)+1); /* Experimental insert/add to existing text*/
+                                    strncpy(bp, ptr, field - (int)strlen(buf));   /* copy clip-board to already existing field */
+                                    insert = !insert;
+                                    curs_set(insert ? 2 : 1);
+                                while (bp - buf < (int)strlen(buf))
                                     bp++;
                                 }
                             }

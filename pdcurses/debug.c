@@ -70,9 +70,9 @@ void PDC_debug(const char *fmt, ...)
 
 void traceon(void)
 {
-    PDC_LOG(("traceon() - called\n"));
-
     pdc_trace_on = TRUE;
+
+    PDC_LOG(("traceon() - called\n"));
 }
 
 void traceoff(void)

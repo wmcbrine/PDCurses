@@ -35,49 +35,50 @@ debug
 #include <sys/types.h>
 #include <time.h>
 
-bool pdc_trace_on = FALSE;
+FILE *pdc_dbfp = NULL;
 
 void PDC_debug(const char *fmt, ...)
 {
     va_list args;
-    FILE *dbfp;
     char hms[9];
     time_t now;
 
-    if (!pdc_trace_on)
+    if (!pdc_dbfp)
         return; 
 
-    /* open debug log file append */
+    time(&now);
+    strftime(hms, 9, "%H:%M:%S", localtime(&now));
+    fprintf(pdc_dbfp, "At: %8.8ld - %s ", (long) clock(), hms);
 
-    dbfp = fopen("trace", "a");
-    if (!dbfp)
+    va_start(args, fmt);
+    vfprintf(pdc_dbfp, fmt, args);
+    va_end(args);
+}
+
+void traceon(void)
+{
+    if (pdc_dbfp)
+        fclose(pdc_dbfp);
+
+    /* open debug log file append */
+    pdc_dbfp = fopen("trace", "a");
+    if (!pdc_dbfp)
     {
         fprintf(stderr,
             "PDC_debug(): Unable to open debug log file\n");
         return;
     }
 
-    time(&now);
-    strftime(hms, 9, "%H:%M:%S", localtime(&now));
-    fprintf(dbfp, "At: %8.8ld - %s ", (long) clock(), hms);
-
-    va_start(args, fmt);
-    vfprintf(dbfp, fmt, args);
-    va_end(args);
-
-    fclose(dbfp);
-}
-
-void traceon(void)
-{
-    pdc_trace_on = TRUE;
-
     PDC_LOG(("traceon() - called\n"));
 }
 
 void traceoff(void)
 {
+    if (!pdc_dbfp)
+        return;
+
     PDC_LOG(("traceoff() - called\n"));
 
-    pdc_trace_on = FALSE;
+    fclose(pdc_dbfp);
+    pdc_dbfp = NULL;
 }

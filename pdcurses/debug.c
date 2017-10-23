@@ -23,6 +23,10 @@ debug
    whether traceon() has been called. It's used from the PDC_LOG()
    macro.
 
+   The environment variable PDC_TRACE_FLUSH controls whether the
+   trace file contents are fflushed after each write.  The default
+   is not. Set it to 1 to enable this (may affect performance).
+
 ### Portability
                              X/Open    BSD    SYS V
     traceon                     -       -       -

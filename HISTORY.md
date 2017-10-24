@@ -8,7 +8,7 @@ Major new features:
 Minor new features 
 -------------------
 - dos variant: cross-compilation from GNU/Linux works with both DJGPP and
-  16-bit Watcom C/C++
+  Watcom C/C++; and, 16-bit and 32-bit Watcom makefiles have been combined into one
 
 Bugfixes
 -------------------

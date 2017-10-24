@@ -1,15 +1,19 @@
-# Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Watcom C/C++ 10.6+
+# Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) or DOS/4GW Watcom C/C++ 10.6+
 #
-# Usage: wmake -f [path/]wccdos16.mak [DEBUG=Y] [CROSS=Y|N]
-#        [MODEL=c|h|l|m|s] [target]
+# Usage: wmake -f [path/]wccdos16.mak [DEBUG=Y] [MODEL=c|h|l|m|s|f]
+#        [CROSS=Y|N] [CHTYPE=[-DCHTYPE_16|-DCHTYPE_32]] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 #
-# and MODEL specifies the memory model (compact/huge/large/medium/small)
+# and MODEL specifies the memory model (16-bit compact/huge/large/medium/
+# small, or 32-bit flat)
 #
 # and CROSS=Y (CROSS=N) means to assume we are (are not) cross-compiling
 # (default is to auto-detect)
+#
+# and CHTYPE is an optional compiler flag to set the size of chtype (default
+# is 64 bits)
 
 # Change the memory MODEL here, if desired
 !ifndef MODEL
@@ -50,10 +54,17 @@ watcomdir	= "`which wcc | xargs realpath | xargs dirname`"/..
 !endif
 !endif
 
+!ifneq MODEL f
 CC		= wcc
 TARGET		= dos
+!else
+# experimental!
+CC		= wcc386
+TARGET		= dos4g
+!endif
 
 CFLAGS		= -bt=$(TARGET) -zq -wx -m$(MODEL) -i=$(PDCURSES_SRCDIR)
+CFLAGS		+= $(CHTYPE)
 # the README also recommends setting INCLUDE; if absent, we need an extra -i=
 !ifndef %INCLUDE
 CFLAGS		+= -i=$(watcomdir)/h
@@ -66,7 +77,11 @@ LDFLAGS 	= D W A op q sys $(TARGET)
 CFLAGS  	+= -oneatx
 LDFLAGS		= op q sys $(TARGET)
 !ifeq CROSS Y
-LDFLAGS 	+= libp $(watcomdir)/lib286/dos\;$(watcomdir)/lib286
+!ifneq MODEL f
+LDFLAGS		+= libp $(watcomdir)/lib286/dos\;$(watcomdir)/lib286
+!else
+LDFLAGS		+= libp $(watcomdir)/lib386/dos\;$(watcomdir)/lib386
+!endif
 !endif
 !endif
 
@@ -80,8 +95,14 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-$(DEL) wccdos.lrf
 	-$(COPY) $(LIBCURSES) panel.lib
 
+!ifneq MODEL f
 PLATFORM1	= Watcom C++ 16-bit DOS
 PLATFORM2	= Open Watcom 1.6 for 16-bit DOS
 ARCNAME		= pdc$(VER)16w
+!else
+PLATFORM1	= Watcom C++ 32-bit DOS
+PLATFORM2	= Open Watcom 1.6 for 32-bit DOS
+ARCNAME		= pdc$(VER)32w
+!endif
 
 !include $(PDCURSES_SRCDIR)/makedist.mif

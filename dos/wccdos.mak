@@ -1,6 +1,6 @@
 # Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) or DOS/4GW Watcom C/C++ 10.6+
 #
-# Usage: wmake -f [path/]wccdos16.mak [DEBUG=Y] [MODEL=c|h|l|m|s|f]
+# Usage: wmake -f [path/]wccdos.mak [DEBUG=Y] [MODEL=c|h|l|m|s|f]
 #        [CROSS=Y|N] [CHTYPE=[-DCHTYPE_16|-DCHTYPE_32]] [target]
 #
 # where target can be any of:
@@ -58,7 +58,6 @@ watcomdir	= "`which wcc | xargs realpath | xargs dirname`"/..
 CC		= wcc
 TARGET		= dos
 !else
-# experimental!
 CC		= wcc386
 TARGET		= dos4g
 !endif

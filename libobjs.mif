@@ -17,7 +17,7 @@ initscr.$(O) inopts.$(O) insch.$(O) insstr.$(O) instr.$(O) kernel.$(O) \
 keyname.$(O) mouse.$(O) move.$(O) outopts.$(O) overlay.$(O) pad.$(O) \
 panel.$(O) printw.$(O) refresh.$(O) scanw.$(O) scr_dump.$(O) scroll.$(O) \
 slk.$(O) termattr.$(O) terminfo.$(O) touch.$(O) util.$(O) window.$(O) \
-debug.$(O)
+debug.$(O) delphicompat.$(O)
 
 PDCOBJS = pdcclip.$(O) pdcdisp.$(O) pdcgetsc.$(O) pdckbd.$(O) pdcscrn.$(O) \
 pdcsetsc.$(O) pdcutil.$(O)

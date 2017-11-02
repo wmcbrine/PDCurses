@@ -350,6 +350,23 @@ PDCEX  int          COLOR_PAIRS;
 PDCEX  int          TABSIZE;
 PDCEX  chtype       acs_map[];    /* alternate character set map */
 PDCEX  char         ttytype[];    /* terminal name/description */
+ 
+/* Delphi Compat */
+int          DC_GetLines(void);
+int          DC_GetCols(void);
+WINDOW       *DC_GetStdscr(void);
+WINDOW       *DC_GetCurscr(void);
+void         DC_SetCurscr(WINDOW *);
+SCREEN       *DC_GetSP(void);
+void         DC_SetSP(SCREEN *);
+MOUSE_STATUS DC_GetMouse_status(void);
+void         DC_SetMouse_status(MOUSE_STATUS);
+int          DC_GetColors(void);
+int          DC_GetColor_Pairs(void);
+int          DC_GetTabsize(void);
+void         DC_SetTabsize(int);
+chtype       *DC_GetAcs_map(void);
+char         *DC_GetTtytype(void);
 
 /*man-start**************************************************************
 

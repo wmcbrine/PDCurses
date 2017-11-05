@@ -7,7 +7,8 @@ Major new features:
 
 Minor new features 
 -------------------
-- dos variant: cross-compilation from GNU/Linux
+- dos variant: cross-compilation from GNU/Linux works with both DJGPP and
+  16-bit Watcom C/C++
 
 Bugfixes
 -------------------
@@ -16,6 +17,9 @@ Bugfixes
 - newtest sample was broken in all widw variants #60
 
 - the paste button printed debug output #62
+
+- some corner cases (midnight crossing, atomicity of tick count reads) in
+  DOS version of napms() were not handled well
 
 PDCurses 4.0.2 - 2017/09/12
 =========================

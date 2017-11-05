@@ -1,7 +1,15 @@
 # Common elements for the Watcom makefiles
 
-srcdir = $(PDCURSES_SRCDIR)\pdcurses
-demodir = $(PDCURSES_SRCDIR)\demos
+!ifeq CROSS Y
+DEL		= rm -f
+COPY		= cp
+!else
+DEL		= del
+COPY		= copy
+!endif
+
+srcdir = $(PDCURSES_SRCDIR)/pdcurses
+demodir = $(PDCURSES_SRCDIR)/demos
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj &
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj &
@@ -31,16 +39,16 @@ LINK = wlink
 all:	$(LIBCURSES) $(DEMOS)
 
 clean
-	-del *.obj
-	-del *.lib
-	-del *.exe
-	-del *.err
+	-$(DEL) *.obj
+	-$(DEL) *.lib
+	-$(DEL) *.exe
+	-$(DEL) *.err
 
 demos:	$(DEMOS)
 
 .c: $(srcdir);$(osdir);$(demodir)
 .c.obj: .autodepend
-	$(CC) $(CFLAGS) $<
+	$(CC) $(CFLAGS) -fo=$@ $<
 
 .obj.exe:
 	$(LINK) $(LDFLAGS) n $@ f $*.obj l $(LIBCURSES)

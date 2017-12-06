@@ -80,6 +80,13 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
     }
     else
     {
+        if ((oldrow == newrow) && (oldcol == newcol))
+        {
+            /* Do not send a message because it will cause the blink state
+               to reset. */
+            return OK;
+        }
+
         idx = CURSES_CURSOR;
         memcpy(buf, &idx, sizeof(int));
 

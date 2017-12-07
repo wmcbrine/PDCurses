@@ -36,9 +36,10 @@ static int save_press = 0;
 
 #define KEV save_ip.Event.KeyEvent
 #define MEV save_ip.Event.MouseEvent
+#define REV save_ip.Event.WindowBufferSizeEvent
 
 /************************************************************************
- *    Table for key code translation of function keys in keypad mode    *  
+ *    Table for key code translation of function keys in keypad mode    *
  *    These values are for strict IBM keyboard compatibles only         *
  ************************************************************************/
 
@@ -614,7 +615,8 @@ int PDC_get_key(void)
         ReadConsoleInput(pdc_con_in, &save_ip, 1, &count);
         event_count--;
 
-        if (save_ip.EventType == MOUSE_EVENT)
+        if (save_ip.EventType == MOUSE_EVENT ||
+            save_ip.EventType == WINDOW_BUFFER_SIZE_EVENT)
             key_count = 1;
         else if (save_ip.EventType == KEY_EVENT)
             key_count = _get_key_count();
@@ -631,6 +633,16 @@ int PDC_get_key(void)
 
         case MOUSE_EVENT:
             return _process_mouse_event();
+
+        case WINDOW_BUFFER_SIZE_EVENT:
+            if (REV.dwSize.Y != LINES || REV.dwSize.X != COLS)
+            {
+                if (!SP->resized)
+                {
+                    SP->resized = TRUE;
+                    return KEY_RESIZE;
+                }
+            }
         }
     }
 
@@ -655,7 +667,7 @@ int PDC_mouse_set(void)
        had on startup, and clear all other flags */
 
     SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
-                   (ENABLE_MOUSE_INPUT|0x0080) : (pdc_quick_edit|0x0080));
+                   (ENABLE_MOUSE_INPUT|0x0088) : (pdc_quick_edit|0x0088));
 
     memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 

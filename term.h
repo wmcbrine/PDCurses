@@ -20,15 +20,7 @@ typedef struct
     const char *_termname;
 } TERMINAL;
 
-#ifdef PDC_DLL_BUILD
-# ifndef CURSES_LIBRARY
-__declspec(dllimport)  TERMINAL *cur_term;
-# else
-__declspec(dllexport) extern TERMINAL *cur_term;
-# endif
-#else
-extern TERMINAL *cur_term;
-#endif
+PDCEX  TERMINAL *cur_term;
 
 int     del_curterm(TERMINAL *);
 int     putp(const char *);

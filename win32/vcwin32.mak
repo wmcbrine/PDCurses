@@ -106,7 +106,7 @@ $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE) pdcurses.obj
 
 pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
 	rc /r /fopdcurses.res $(osdir)\pdcurses.rc
-	cvtres /MACHINE:IX86 /NOLOGO /OUT:pdcurses.obj pdcurses.res
+	cvtres /NOLOGO /OUT:pdcurses.obj pdcurses.res
 
 {$(srcdir)\}.c{}.obj::
 	$(BUILD) $<

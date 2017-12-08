@@ -1,14 +1,3 @@
-LINES
-COLS
-stdscr
-curscr
-SP
-Mouse_status
-COLORS
-COLOR_PAIRS
-TABSIZE
-acs_map
-ttytype
 addch
 addchnstr
 addchstr
@@ -355,7 +344,6 @@ PDC_get_input_fd
 PDC_get_key_modifiers
 PDC_save_key_modifiers
 PDC_return_key_modifiers
-cur_term
 del_curterm
 putp
 restartterm

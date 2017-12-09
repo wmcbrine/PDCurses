@@ -13,7 +13,6 @@ Building
         bccwin32.mak  - Borland C++ 4.0.2+
         dmcwin32.mak  - Digital Mars
         gccwin32.mak  - Cygnus GNU Compiler
-        lccwin32.mak  - LCC-Win32
         mingwin32.mak - MinGW
         vcwin32.mak   - Microsoft Visual C++ 2.0+
         wccwin32.mak  - Open Watcom 1.8+
@@ -24,8 +23,8 @@ Building
 
         set PDCURSES_SRCDIR=c:\pdcurses
 
-  This won't work with the LCC or Digital Mars makefiles, nor will the
-  options described below.
+  This won't work with the Digital Mars makefiles, nor will the options
+  described below.
 
 - Build it:
 

@@ -14,8 +14,7 @@
 # define PDC_ATTR_SHIFT 8
 #endif
 
-#if (defined(__CYGWIN32__) || defined(__MINGW32__) || defined(__WATCOMC__) || defined(_MSC_VER)) && \
-    !defined(HAVE_INFOEX)
+#if !defined(HAVE_INFOEX) && !defined(__DMC__)
 # define HAVE_INFOEX
 #endif
 

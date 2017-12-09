@@ -17,8 +17,7 @@
 # endif
 #endif
 
-#if defined(__CYGWIN32__) || defined(__MINGW32__) || \
-    defined(__LCC__) || defined(__WATCOMC__)
+#if defined(__CYGWIN32__) || defined(__MINGW32__) || defined(__WATCOMC__)
 # ifndef HAVE_VSNPRINTF
 #  define HAVE_VSNPRINTF     /* have vsnprintf() */
 # endif

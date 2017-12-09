@@ -1,4 +1,4 @@
-# Borland MAKE Makefile for PDCurses library - Win32 BC++ 4.0+
+# Borland MAKE Makefile for PDCurses library - Win32 BC++ 7.0+
 #
 # Usage: make -f [path\]bccwin32.mak [DEBUG=] [WIDE=] [UTF8=] [target]
 #
@@ -16,7 +16,7 @@ PDCURSES_SRCDIR = ..
 
 osdir		= $(PDCURSES_SRCDIR)\win32
 
-CC		= bcc32 -q
+CC		= bcc32c -q
 
 !ifdef DEBUG
 CFLAGS		= -N -v -y -DPDCDEBUG
@@ -32,7 +32,7 @@ WIDEOPT		= -DPDC_WIDE
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
-BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe -w32 $(CFLAGS) -w-par \
+BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe $(CFLAGS) \
 $(WIDEOPT) $(UTF8OPT)
 
 LIBEXE		= tlib /C /E /0 /a
@@ -79,7 +79,7 @@ tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 
 PLATFORM1 = Borland C++ Win32
-PLATFORM2 = Borland C/C++ 5.5 for Win32
+PLATFORM2 = Borland C/C++ 7.2 for Win32
 ARCNAME = pdc$(VER)_bcc_w32
 
 !include $(PDCURSES_SRCDIR)\makedist.mif

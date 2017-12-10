@@ -22,7 +22,7 @@ PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 
 CC		= dmc
 
-CFLAGS		= -c -o+space -Nc
+CFLAGS		= -c -o+space -Nc -w2
 
 CPPFLAGS	= -I$(PDCURSES_SRCDIR) #-DPDC_WIDE -DPDC_FORCE_UTF8
 

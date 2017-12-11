@@ -20,7 +20,9 @@ short color_table[] =
 
 int main(int argc, char **argv)
 {
-    int i, start, end, row, diff, flag, direction, seed;
+    time_t seed;
+    int start, end, row, diff, flag, direction;
+    short i;
 
 #ifdef XCURSES
     Xinitscr(argc, argv);
@@ -39,7 +41,7 @@ int main(int argc, char **argv)
     seed = time((time_t *)0);
     srand(seed);
     flag = 0;
-       
+
     while (getch() == ERR)      /* loop until a key is hit */
     {
         do {

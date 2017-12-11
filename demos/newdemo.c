@@ -212,7 +212,8 @@ int main(int argc, char **argv)
 {
     WINDOW *win;
     chtype save[80], ch;
-    int width, height, w, x, y, i, j, seed;
+    time_t seed;
+    int width, height, w, x, y, i, j;
 
 #ifdef XCURSES
     Xinitscr(argc, argv);
@@ -220,7 +221,7 @@ int main(int argc, char **argv)
     initscr();
 #endif
     seed = time((time_t *)0);
-        srand(seed);
+    srand(seed);
 
     start_color();
 # if defined(NCURSES_VERSION) || (defined(PDC_BUILD) && PDC_BUILD > 3000)
@@ -236,7 +237,7 @@ int main(int argc, char **argv)
 #endif
     noecho();
 
-    /* refresh stdscr so that reading from it will not cause it to 
+    /* refresh stdscr so that reading from it will not cause it to
        overwrite the other windows that are being created */
 
     refresh();
@@ -265,7 +266,7 @@ int main(int argc, char **argv)
         wattrset(win, COLOR_PAIR(2));
         box(win, ' ', ' ');
         wrefresh(win);
-      
+
         wattrset(win, 0);
 
         /* Do random output of a character */

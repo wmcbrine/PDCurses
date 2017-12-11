@@ -128,7 +128,7 @@ int wattron(WINDOW *win, chtype attrs)
     if (!win)
         return ERR;
 
-    if ((win->_attrs & A_COLOR) && (attrs & A_COLOR)) 
+    if ((win->_attrs & A_COLOR) && (attrs & A_COLOR))
     {
         oldcolr = win->_attrs & A_COLOR;
         oldattr = win->_attrs ^ oldcolr;

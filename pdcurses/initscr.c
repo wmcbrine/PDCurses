@@ -172,7 +172,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     PDC_slk_initialize();
     LINES -= SP->slklines;
 
-    /* We have to sort out ripped off lines here, and reduce the height 
+    /* We have to sort out ripped off lines here, and reduce the height
        of stdscr by the number of lines ripped off */
 
     for (i = 0; i < linesrippedoff; i++)
@@ -250,7 +250,7 @@ int endwin(void)
 bool isendwin(void)
 {
     PDC_LOG(("isendwin() - called\n"));
-    
+
     return SP ? !(SP->alive) : FALSE;
 }
 

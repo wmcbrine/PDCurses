@@ -37,7 +37,7 @@ Building
   for convenience; both panel and curses functions are in the main
   library.
 
-  You can also give the optional parameter "WIDE=Y", to build the 
+  You can also give the optional parameter "WIDE=Y", to build the
   library with wide-character (Unicode) support:
 
         make -f mingwin32.mak WIDE=Y

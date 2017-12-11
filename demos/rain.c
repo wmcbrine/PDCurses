@@ -55,7 +55,8 @@ static int next_j(int j)
 
 int main(int argc, char *argv[])
 {
-    int x, y, j, r, c, seed;
+    time_t seed;
+    int x, y, j, r, c;
     static int xpos[5], ypos[5];
 
 #ifdef XCURSES
@@ -64,11 +65,11 @@ int main(int argc, char *argv[])
     initscr();
 #endif
     seed = time((time_t *)0);
-        srand(seed);
+    srand(seed);
 
     if (has_colors())
     {
-        int bg = COLOR_BLACK;
+        short bg = COLOR_BLACK;
 
         start_color();
 

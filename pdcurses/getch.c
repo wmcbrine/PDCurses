@@ -176,7 +176,7 @@ int wgetch(WINDOW *win)
     else
         if (win->_delayms)
         {
-            /* Can't really do millisecond intervals, so delay in 
+            /* Can't really do millisecond intervals, so delay in
                1/20ths of a second (50ms) */
 
             waitcount = win->_delayms / 50;
@@ -184,7 +184,7 @@ int wgetch(WINDOW *win)
                 waitcount = 1;
         }
 
-    /* refresh window when wgetch is called if there have been changes 
+    /* refresh window when wgetch is called if there have been changes
        to it and it is not a pad */
 
     if (!(win->_flags & _PAD) && ((!win->_leaveit &&
@@ -243,7 +243,7 @@ int wgetch(WINDOW *win)
             if (!win->_use_keypad)
                 key = -1;
 
-            /* filter mouse events; translate mouse clicks in the slk 
+            /* filter mouse events; translate mouse clicks in the slk
                area to function keys */
 
             else if (key == KEY_MOUSE)

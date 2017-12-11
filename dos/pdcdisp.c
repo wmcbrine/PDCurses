@@ -70,7 +70,7 @@ void PDC_gotoyx(int row, int col)
     PDCINT(0x10, regs);
 }
 
-/* update the given physical line to look like the corresponding line in 
+/* update the given physical line to look like the corresponding line in
    curscr */
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)

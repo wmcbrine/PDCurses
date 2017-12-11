@@ -18,7 +18,7 @@ clipboard
 
    PDC_getclipboard() gets the textual contents of the system's
    clipboard. This function returns the contents of the clipboard
-   in the contents argument. It is the responsibilitiy of the
+   in the contents argument. It is the responsibility of the
    caller to free the memory returned, via PDC_freeclipboard().
    The length of the clipboard contents is returned in the length
    argument.

@@ -196,7 +196,7 @@ int curs_set(int visibility)
 
     ret_vis = PDC_curs_set(visibility);
 
-    /* If the cursor is changing from invisible to visible, update 
+    /* If the cursor is changing from invisible to visible, update
        its position */
 
     if (visibility && !ret_vis)

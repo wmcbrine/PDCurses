@@ -14,11 +14,15 @@ Building
 
 - With MinGW, run "make -f Makefile.mng". This assumes SDL is installed
   in the standard directories. The MinGW makefile accepts the optional
-  parameters "DLL=Y" and "DEBUG=Y", as with the console version. (Wide-
-  character support is not yet implemented for SDL.) Both makefiles
-  recognize the optional PDCURSES_SRCDIR environment variable, as with
-  the console ports. Makefile.mng builds libpdcurses.a, along with 
-  pdcurses.dll, if specified.
+  parameters "DLL=Y" and "DEBUG=Y", as with the console version. It
+  builds libpdcurses.a, along with pdcurses.dll, if specified.
+
+- Both makefiles recognize the optional PDCURSES_SRCDIR environment
+  variable, as with the console ports. "WIDE=Y" builds a version that
+  not only uses 16-bit Unicode characters, but depends on the SDL_ttf
+  library, instead of using simple bitmap fonts. "UTF8=Y" makes PDCurses
+  ignore the system locale, and treat all narrow-character strings as
+  UTF-8; this option has no effect unless WIDE=Y is also set.
 
 
 Distribution Status
@@ -30,4 +34,5 @@ The files in this directory are released to the Public Domain.
 Acknowledgements
 ----------------
 
-SDL port was provided by William McBrine <wmcbrine@gmail.com>
+Original SDL port was provided by William McBrine <wmcbrine@gmail.com>
+TTF support is based on contributions by Laura Michaels.

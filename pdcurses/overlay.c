@@ -12,8 +12,8 @@ overlay
     int overlay(const WINDOW *src_w, WINDOW *dst_w)
     int overwrite(const WINDOW *src_w, WINDOW *dst_w)
     int copywin(const WINDOW *src_w, WINDOW *dst_w, int src_tr,
-    int src_tc, int dst_tr, int dst_tc, int dst_br,
-    int dst_bc, bool overlay)
+                int src_tc, int dst_tr, int dst_tc, int dst_br,
+                int dst_bc, int overlay)
 
 ### Description
 

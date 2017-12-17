@@ -11,11 +11,11 @@ pad
 
     WINDOW *newpad(int nlines, int ncols);
     WINDOW *subpad(WINDOW *orig, int nlines, int ncols,
-    int begy, int begx);
+                   int begy, int begx);
     int prefresh(WINDOW *win, int py, int px, int sy1, int sx1,
-    int sy2, int sx2);
+                 int sy2, int sx2);
     int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1,
-    int sy2, int sx2);
+                     int sy2, int sx2);
     int pechochar(WINDOW *pad, chtype ch);
     int pecho_wchar(WINDOW *pad, const cchar_t *wch);
 

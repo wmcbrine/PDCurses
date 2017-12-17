@@ -252,6 +252,14 @@ static bool visible_cursor = FALSE;
 static bool window_entered = TRUE;
 static char *program_name;
 
+/* Blank text when drawing blinked-off text */
+#ifdef PDC_WIDE
+static XChar2b blank_text[513];
+#else
+static char blank_text[513];
+#endif
+static bool blinked_off = FALSE;
+
 /* Macros just for app_resources */
 
 #ifdef PDC_WIDE
@@ -294,6 +302,12 @@ static char *program_name;
                 #name1, #name2, XtRCursor, \
                 sizeof(Cursor), APPDATAOFF(name1), XtRString, \
                 (XtPointer)#value \
+        }
+
+#define RBOOL(name1, name2, value) {     \
+                #name1, #name2, XtRBoolean, \
+                sizeof(Boolean), APPDATAOFF(name1), XtRImmediate, \
+                (XtPointer)value \
         }
 
 static XtResource app_resources[] =
@@ -345,9 +359,13 @@ static XtResource app_resources[] =
     RINT(scrollbarWidth, ScrollbarWidth, 15),
     RINT(cursorBlinkRate, CursorBlinkRate, 0),
 
-    RSTRING(textCursor, TextCursor)
+    RSTRING(textCursor, TextCursor),
+
+    RBOOL(showBlinkAsBold, ShowBlinkAsBold, False),
+    RINT(textBlinkRate, TextBlinkRate, 500)
 };
 
+#undef RBOOL
 #undef RCURSOR
 #undef RFONT
 #undef RSTRING
@@ -373,6 +391,7 @@ static XrmOptionDescRec options[] =
     COPT(doubleClickPeriod), COPT(scrollbarWidth),
     COPT(pointerForeColor), COPT(pointerBackColor),
     COPT(cursorBlinkRate), COPT(cursorColor), COPT(textCursor),
+    COPT(showBlinkAsBold), COPT(textBlinkRate),
 
     CCOLOR(Black), CCOLOR(Red), CCOLOR(Green), CCOLOR(Yellow),
     CCOLOR(Blue), CCOLOR(Magenta), CCOLOR(Cyan), CCOLOR(White),
@@ -579,7 +598,8 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
     /* Specify the color table offsets */
 
     fore |= (attr & A_BOLD) ? 8 : 0;
-    back |= (attr & A_BLINK) ? 8 : 0;
+    if (xc_app_data.showBlinkAsBold == True)
+        back |= (attr & A_BLINK) ? 8 : 0;
 
     /* Reverse flag = highlighted selection XOR A_REVERSE set */
 
@@ -596,16 +616,33 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     _make_xy(col, row, &xpos, &ypos);
 
+    if ((xc_app_data.showBlinkAsBold == True) || ((attr & A_BLINK) == 0) ||
+        ((blinked_off == FALSE) && ((attr & A_BLINK) != 0))) {
+
 #ifdef PDC_WIDE
-    XDrawImageString16(
+        XDrawImageString16(
 #else
-    XDrawImageString(
+        XDrawImageString(
 #endif
-                     XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
+                         XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
+
+    } else {
+#ifdef PDC_WIDE
+        XDrawImageString16(
+#else
+        XDrawImageString(
+#endif
+                         XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos,
+                         blank_text, len);
+    }
 
     /* Underline, etc. */
 
-    if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
+    if (((xc_app_data.showBlinkAsBold == False) && (blinked_off == TRUE) &&
+            ((attr & A_BLINK) == 0) &&
+            (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))) ||
+        ((blinked_off == FALSE) &&
+            (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))))
     {
         int k;
 
@@ -1930,6 +1967,60 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
                     _blink_cursor, NULL);
 }
 
+static void _blink_text(XtPointer unused, XtIntervalId *id)
+{
+    int row;
+    int j;
+    chtype * ch;
+    chtype curr;
+    attr_t attr;
+    bool draw_row;
+
+    XC_LOG(("_blink_text() - called:\n"));
+
+    if (window_entered)
+    {
+        if (blinked_off)
+        {
+            /* Blinking text currently OFF, turn it on */
+            blinked_off = FALSE;
+        }
+        else
+        {
+            /* Blinking text currently ON, turn it off */
+            blinked_off = TRUE;
+        }
+
+        /* Redraw changed lines on the screen to match the blink state */
+        for (row = 0; row < XCursesLINES; row++)
+        {
+            XC_get_line_lock(row);
+            ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row));
+            draw_row = FALSE;
+            for (j = 0; j < COLS; j++) {
+                curr = ch[j];
+                attr = curr & A_ATTRIBUTES;
+                if ((attr & A_BLINK) != 0)
+                {
+                    draw_row = TRUE;
+                    break;
+                }
+            }
+            if (draw_row == TRUE)
+            {
+                _display_text(ch, row, 0, COLS, FALSE);
+            }
+            XC_release_line_lock(row);
+        }
+        _redraw_cursor();
+        _draw_border();
+
+    }
+
+    XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
+                    _blink_text, NULL);
+}
+
 static void XCursesButton(Widget w, XEvent *event, String *params,
                           Cardinal *nparams)
 {
@@ -2702,10 +2793,10 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
             /* If the window is not active, ignore this command. The
                cursor will stay solid. */
 
-            if (window_entered)
+            if (window_entered) 
             { 
                 if (visible_cursor) 
-                { 
+                {
                     /* Cursor currently ON, turn it off */
 
                     int save_visibility = SP->visibility;
@@ -2781,7 +2872,7 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
     } 
 } 
 
-static void _handle_structure_notify(Widget w, XtPointer client_data, 
+static void _handle_structure_notify(Widget w, XtPointer client_data,
                                      XEvent *event, Boolean *unused)
 {
     XC_LOG(("_handle_structure_notify() - called\n"));
@@ -3105,6 +3196,27 @@ int XCursesSetupX(int argc, char *argv[])
     if (xc_app_data.cursorBlinkRate)
         XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
                         _blink_cursor, NULL);
+
+    /* If the showBlinkAsBold resource is false and textBlinkRate is
+       non-zero, start its Timeout event */
+
+    if ((xc_app_data.showBlinkAsBold == False) &&
+        (xc_app_data.textBlinkRate > 0))
+    {
+        /* Initialize blank text */
+#ifdef PDC_WIDE
+        for (i = 0; i < sizeof(blank_text) / sizeof(XChar2b); i++)
+        {
+            blank_text[i].byte1 = 0;
+            blank_text[i].byte2 = ' ';
+        }
+#else
+        memset(blank_text, ' ', sizeof(blank_text));
+#endif
+
+        XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
+                        _blink_text, NULL);
+    }
 
     /* Leave telling the curses process that it can start to here so 
        that when the curses process makes a request, the Xcurses 

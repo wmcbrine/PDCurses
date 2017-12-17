@@ -35,10 +35,6 @@ endif
 
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
-ifeq ($(shell uname),Darwin)
-	DEMOFLAGS = -Dmain=SDL_main
-endif
-
 LINK		= $(CC)
 LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib

@@ -134,6 +134,8 @@ static int _process_key_event(void)
     {
         if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
         {
+            SP->key_code = TRUE;
+
             switch (oldkey)
             {
             case SDLK_RSHIFT:
@@ -151,6 +153,8 @@ static int _process_key_event(void)
             default:
                 break;
             }
+
+            SP->key_code = FALSE;
         }
 
         return -1;

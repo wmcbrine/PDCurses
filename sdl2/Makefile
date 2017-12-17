@@ -12,8 +12,8 @@ osdir		= $(PDCURSES_SRCDIR)/sdl2
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
-SFLAGS		= $(shell pkg-config --cflags sdl2)
-SLIBS		= $(shell pkg-config --libs sdl2)
+SFLAGS		= $(shell sdl2-config --cflags)
+SLIBS		= $(shell sdl2-config --libs)
 
 # If your system doesn't have these, remove the defines here
 SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
@@ -25,8 +25,8 @@ else
 endif
 
 ifeq ($(WIDE),Y)
-	CFLAGS += -DPDC_WIDE $(shell pkg-config --cflags SDL2_ttf)
-	SLIBS  += $(shell pkg-config --libs SDL2_ttf)
+	CFLAGS += -DPDC_WIDE
+	SLIBS  += -lSDL2_ttf
 endif
 
 ifeq ($(UTF8),Y)

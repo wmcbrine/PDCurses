@@ -31,6 +31,8 @@ Uint32 pdc_mapped[16];
 int pdc_fheight, pdc_fwidth, pdc_flastc;
 bool pdc_own_screen;
 
+static int max_height, max_width;
+
 /* COLOR_PAIR to attribute encoding table. */
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
@@ -212,6 +214,10 @@ int PDC_scr_open(int argc, char **argv)
 
     if (pdc_own_screen)
     {
+        const SDL_VideoInfo *info = SDL_GetVideoInfo();
+        max_height = info->current_h;
+        max_width = info->current_w;
+
         const char *env = getenv("PDC_LINES");
         pdc_sheight = (env ? atoi(env) : 25) * pdc_fheight;
 
@@ -281,7 +287,11 @@ int PDC_resize_screen(int nlines, int ncols)
 
     if (nlines && ncols)
     {
+        while (nlines * pdc_fheight > max_height)
+            nlines--;
         pdc_sheight = nlines * pdc_fheight;
+        while (ncols * pdc_fwidth > max_width)
+            ncols--;
         pdc_swidth = ncols * pdc_fwidth;
     }
 

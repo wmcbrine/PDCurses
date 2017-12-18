@@ -30,7 +30,8 @@ int main(int argc, char **argv)
 
     atexit(SDL_Quit);
 
-    pdc_window = SDL_CreateWindow("PDCurses for SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+    pdc_window = SDL_CreateWindow("PDCurses for SDL", SDL_WINDOWPOS_UNDEFINED,
+                                  SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
     pdc_screen = SDL_GetWindowSurface(pdc_window);
 
     /* Initialize PDCurses */

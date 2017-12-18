@@ -204,7 +204,8 @@ void PDC_gotoyx(int row, int col)
         src.x = 0;
         src.y = 0;
         SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
-        SDL_SetPaletteColors(pdc_font->format->palette, pdc_color + backgr, 0, 1);
+        SDL_SetPaletteColors(pdc_font->format->palette,
+                             pdc_color + backgr, 0, 1);
         SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
         SDL_FreeSurface(pdc_font);
         pdc_font = NULL;

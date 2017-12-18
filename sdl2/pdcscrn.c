@@ -216,7 +216,9 @@ int PDC_scr_open(int argc, char **argv)
         env = getenv("PDC_COLS");
         pdc_swidth = (env ? atoi(env) : 80) * pdc_fwidth;
 
-        pdc_window = SDL_CreateWindow((argc ? argv[0] : "PDCurses"), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, pdc_swidth, pdc_sheight, SDL_WINDOW_RESIZABLE);
+        pdc_window = SDL_CreateWindow((argc ? argv[0] : "PDCurses"),
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, pdc_swidth,
+            pdc_sheight, SDL_WINDOW_RESIZABLE);
         if (pdc_window == NULL)
         {
             fprintf(stderr, "Could not open SDL window: %s\n", SDL_GetError());
@@ -231,7 +233,8 @@ int PDC_scr_open(int argc, char **argv)
         pdc_screen = SDL_GetWindowSurface(pdc_window);
         if (pdc_screen == NULL)
         {
-            fprintf(stderr, "Could not open SDL window surface: %s\n", SDL_GetError());
+            fprintf(stderr, "Could not open SDL window surface: %s\n",
+                    SDL_GetError());
             return ERR;
         }
     }

@@ -294,11 +294,15 @@ int PDC_scr_open(int argc, char **argv)
 int PDC_resize_screen(int nlines, int ncols)
 {
     SDL_Rect max;
+    int top, left, bottom, right;
 
     if (!pdc_own_window)
         return ERR;
 
-    SDL_GetDisplayBounds(0, &max);
+    SDL_GetDisplayUsableBounds(0, &max);
+    SDL_GetWindowBordersSize(pdc_window, &top, &left, &bottom, &right);
+    max.h -= top + bottom;
+    max.w -= left + right;
 
     if (nlines && ncols)
     {

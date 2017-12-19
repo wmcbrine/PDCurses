@@ -1,6 +1,6 @@
 # GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c+
 #
-# Usage: make -f [path\]gccos2.mak [DEBUG=Y] [EMXVIDEO=Y] [DLL=Y] [target]
+# Usage: make -f [path\]gccos2.mak [DEBUG=Y] [EMXVIDEO=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
@@ -42,9 +42,6 @@ else
 	LDFLAGS =
 endif
 
-DLLTARGET	= pdcurses.dll
-DLLFLAGS 	= -Zdll -Zcrtdll -Zomf
-
 LINK		= gcc
 EMXBIND		= emxbind 
 EMXOMF		= emxomf
@@ -52,23 +49,12 @@ EMXOMF		= emxomf
 LIBEXE		= ar
 LIBFLAGS	= rcv
 
-ifeq ($(DLL),Y)
-	CFLAGS += -Zdll -Zcrtdll -Zomf
-	LDFLAGS += -Zlinker /PM:VIO -Zomf -Zcrtdll
-	LIBCURSES = pdcurses.lib
-	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
-	PDCLIBS = $(DLLTARGET)
-	EXEPOST =
-	TUIPOST =
-	CLEAN = *.dll *.lib
-else
-	LIBCURSES = pdcurses.a
-	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
-	PDCLIBS = $(LIBCURSES)
-	EXEPOST = $(EMXBIND) $* $(BINDFLAGS)
-	TUIPOST = $(EMXBIND) tuidemo $(BINDFLAGS)
-	CLEAN = *.a testcurs newdemo xmas tuidemo firework ptest rain worm
-endif
+LIBCURSES = pdcurses.a
+LIBDEPS = $(LIBOBJS) $(PDCOBJS)
+PDCLIBS = $(LIBCURSES)
+EXEPOST = $(EMXBIND) $* $(BINDFLAGS)
+TUIPOST = $(EMXBIND) tuidemo $(BINDFLAGS)
+CLEAN = *.a testcurs newdemo xmas tuidemo firework ptest rain worm
 
 .PHONY: all libs clean demos dist
 
@@ -89,11 +75,6 @@ ptest.o rain.o worm.o
 $(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 	-copy $(LIBCURSES) panel.a
-
-$(DLLTARGET) : $(LIBDEPS)
-	$(LINK) $(DLLFLAGS) -o $(DLLTARGET) $?
-#	lxlite $(DLLTARGET)
-	emximp -o $(LIBCURSES)
 
 $(LIBOBJS) $(PDCOBJS) $(DEMOOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_OS2_H)

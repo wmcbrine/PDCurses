@@ -49,7 +49,9 @@ clean:
 	-del *.exe
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	strip *.exe
+endif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?

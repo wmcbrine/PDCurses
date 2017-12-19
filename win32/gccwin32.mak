@@ -67,7 +67,9 @@ clean:
 	-rm -f $(CLEAN)
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	strip *.exe
+endif
 
 $(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?

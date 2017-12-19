@@ -53,7 +53,9 @@ clean:
 	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	strip $(DEMOS)
+endif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	ar rv $@ $?

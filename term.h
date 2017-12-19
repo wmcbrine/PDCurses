@@ -22,23 +22,23 @@ typedef struct
 
 PDCEX  TERMINAL *cur_term;
 
-int     del_curterm(TERMINAL *);
-int     putp(const char *);
-int     restartterm(const char *, int, int *);
-TERMINAL *set_curterm(TERMINAL *);
-int     setterm(const char *);
-int     setupterm(const char *, int, int *);
-int     tgetent(char *, const char *);
-int     tgetflag(const char *);
-int     tgetnum(const char *);
-char   *tgetstr(const char *, char **);
-char   *tgoto(const char *, int, int);
-int     tigetflag(const char *);
-int     tigetnum(const char *);
-char   *tigetstr(const char *);
-char   *tparm(const char *, long, long, long, long, long, 
-              long, long, long, long);
-int     tputs(const char *, int, int (*)(int));
+PDCEX  int     del_curterm(TERMINAL *);
+PDCEX  int     putp(const char *);
+PDCEX  int     restartterm(const char *, int, int *);
+PDCEX  TERMINAL *set_curterm(TERMINAL *);
+PDCEX  int     setterm(const char *);
+PDCEX  int     setupterm(const char *, int, int *);
+PDCEX  int     tgetent(char *, const char *);
+PDCEX  int     tgetflag(const char *);
+PDCEX  int     tgetnum(const char *);
+PDCEX  char   *tgetstr(const char *, char **);
+PDCEX  char   *tgoto(const char *, int, int);
+PDCEX  int     tigetflag(const char *);
+PDCEX  int     tigetnum(const char *);
+PDCEX  char   *tigetstr(const char *);
+PDCEX  char   *tparm(const char *, long, long, long, long, long,
+                     long, long, long, long);
+PDCEX  int     tputs(const char *, int, int (*)(int));
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 }

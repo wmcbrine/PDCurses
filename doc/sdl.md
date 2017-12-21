@@ -3,7 +3,7 @@ SDL Considerations
 
 There are no special requirements to use PDCurses for SDL -- all
 PDCurses-compatible code should work fine. (In fact, you can even build
-against the Win32 console pdcurses.dll, and then swap in the SDL
+against the Windows console pdcurses.dll, and then swap in the SDL
 pdcurses.dll.) Nothing extra is needed beyond the base SDL library.
 However, there are some optional special features, described here.
 

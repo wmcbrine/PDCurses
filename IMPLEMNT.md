@@ -203,13 +203,14 @@ except checking for values out of range and null pointers.
 
 The non-portable functionality of reset_prog_mode() is handled here --
 whatever's not done in _restore_mode(). In current ports: In OS/2, this
-sets the keyboard to binary mode; in Win32, it enables or disables the
-mouse pointer to match the saved mode; in others it does nothing.
+sets the keyboard to binary mode; in Windows conosle, it enables or
+disables the mouse pointer to match the saved mode; in others it does
+nothing.
 
 ### void PDC_reset_shell_mode(void);
 
-The same thing, for reset_shell_mode(). In OS/2 and Win32, it restores
-the default console mode; in others it does nothing.
+The same thing, for reset_shell_mode(). In OS/2 and Windows console, it
+restores the default console mode; in others it does nothing.
 
 ### int PDC_resize_screen(int nlines, int ncols);
 

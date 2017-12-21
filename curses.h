@@ -15,7 +15,7 @@ PDCurses definitions list:  (Only define those needed)
     PDC_RGB         True if you want to use RGB color definitions
                     (Red = 1, Green = 2, Blue = 4) instead of BGR.
     PDC_WIDE        True if building wide-character support.
-    PDC_DLL_BUILD   True if building a Win32 DLL.
+    PDC_DLL_BUILD   True if building a Windows DLL.
     NCURSES_MOUSE_VERSION   Use the ncurses mouse API instead
                             of PDCurses' traditional mouse API.
 

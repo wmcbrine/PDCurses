@@ -19,5 +19,5 @@ void PDC_napms(int ms)
 
 const char *PDC_sysname(void)
 {
-    return "Win32";
+    return "Windows";
 }

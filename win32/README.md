@@ -1,8 +1,8 @@
-PDCurses for Win32
-==================
+PDCurses for Windows console
+============================
 
-This directory contains PDCurses source code files specific to Win32 
-console mode (Win9x/Me/NT/2k/XP/Vista).
+This directory contains PDCurses source code files specific to the
+Microsoft Windows console.
 
 
 Building
@@ -72,4 +72,5 @@ The files in this directory are released to the Public Domain.
 Acknowledgements
 ----------------
 
-Generic Win32 port was provided by Chris Szurgot <szurgot@itribe.net>
+Windows console port was originally provided by Chris Szurgot
+<szurgot@itribe.net>

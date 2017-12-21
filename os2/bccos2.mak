@@ -1,4 +1,4 @@
-# Borland MAKE Makefile for PDCurses library - OS/2 BC++ 1.0+
+# Borland MAKE Makefile for PDCurses library - OS/2 BC++ 2.0+
 #
 # Usage: make -f [path\]bccos2.mak [DEBUG=] [target]
 #

@@ -9,7 +9,7 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        bccos2.mak - Borland C++ 2.0
+        bccos2.mak - Borland C++ 2.0+
         gccos2.mak - EMX 0.9b+
         iccos2.mak - C Set/2
         wccos2.mak - Open Watcom 1.8+

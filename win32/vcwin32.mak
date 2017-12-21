@@ -84,7 +84,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.lib
 !endif
 
-$(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) $(DEFFILE) pdcurses.obj
+$(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
 	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
 	-copy $(LIBCURSES) panel.lib
 

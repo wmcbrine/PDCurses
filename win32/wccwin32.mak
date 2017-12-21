@@ -1,4 +1,4 @@
-# Watcom WMAKE Makefile for PDCurses library - Win32 Watcom C/C++ 10.6+
+# Watcom WMAKE Makefile for PDCurses library - Win32 Open Watcom 1.8+
 #
 # Usage: wmake -f [win32\]wccwin32.mak [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
 #

@@ -1,4 +1,4 @@
-# Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Watcom C/C++ 10.6+
+# Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Open Watcom 1.8+
 #
 # Usage: wmake -f [path\]wccdos16.mak [DEBUG=Y] [target]
 #

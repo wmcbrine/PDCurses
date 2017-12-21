@@ -1,4 +1,4 @@
-# Watcom WMAKE Makefile for PDCurses library - DOS/4GW Watcom C/C++ 10.6+
+# Watcom WMAKE Makefile for PDCurses library - DOS/4GW Open Watcom 1.8+
 #
 # Usage: wmake -f [path\]wccdos4g.mak [DEBUG=Y] [target]
 #

@@ -1,4 +1,4 @@
-# Watcom WMAKE Makefile for PDCurses library - OS/2 Open Watcom 1.1+
+# Watcom WMAKE Makefile for PDCurses library - OS/2 Open Watcom 1.8+
 #
 # Usage: wmake -f [path\]wccos2.mak [DEBUG=Y] [target]
 #

@@ -394,8 +394,8 @@ int main(int argc, char **argv)
 
         i = height - 2;
         wattrset(win, COLOR_PAIR(5));
-        mvwaddstr(win, i, 3,
-            "   Type a key to continue or ESC to quit  ");
+        mvwaddstr(win, i, 2,
+            "    Type a key to continue or ESC to quit   ");
         wrefresh(win);
 
         if (WaitForUser() == '\033')

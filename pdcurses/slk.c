@@ -450,10 +450,10 @@ static void _slk_calc(void)
             col += label_length;
         }
 
-        center = COLS/2;
+        center = COLS / 2;
 
         slk[4].start_col = center - (label_length * 2) + 1;
-        slk[5].start_col = center - label_length - 1;
+        slk[5].start_col = center - label_length + 1;
         slk[6].start_col = center + 1;
         slk[7].start_col = center + label_length + 1;
 

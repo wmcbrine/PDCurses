@@ -211,7 +211,7 @@ static struct
 
 unsigned long pdc_key_modifiers = 0L;
 
-static GC normal_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
+static GC normal_gc, rect_cursor_gc, italic_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
@@ -1804,42 +1804,15 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
     }
     else
     {
-        if (SP->visibility == 1)
-        {
-            /* cursor visibility normal */
+        /* For block cursors, paint the block with invert. */
 
-            XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
+        int yp = ypos - font_height + xc_app_data.normalFont->descent;
+        int yh = font_height;
 
-            for (i = 0; i < xc_app_data.normalFont->descent + 2; i++)
-                XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-                          xpos, ypos - 2 + i, xpos + font_width, ypos - 2 + i);
-        }
-        else
-        {
-            /* cursor visibility high */
-#ifdef PDC_WIDE
-            XChar2b buf[2];
-
-            buf[0].byte1 = (*ch & 0xff00) >> 8;
-            buf[0].byte2 = *ch & 0x00ff;
-
-            buf[1].byte1 = buf[1].byte2 = 0;
-#else
-            char buf[2];
-
-            buf[0] = *ch & 0xff;
-            buf[1] = '\0';
-#endif
-            XSetForeground(XCURSESDISPLAY, block_cursor_gc, colors[fore]);
-            XSetBackground(XCURSESDISPLAY, block_cursor_gc, colors[back]);
-#ifdef PDC_WIDE
-            XDrawImageString16(
-#else
-            XDrawImageString(
-#endif
-                             XCURSESDISPLAY, XCURSESWIN, block_cursor_gc,
-                             xpos, ypos, buf, 1);
-        }
+        if (SP->visibility == 1) yh /= 2, yp += yh;
+        XSetFunction(XCURSESDISPLAY, rect_cursor_gc, GXinvert);
+        XFillRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
+            xpos, yp, font_width, yh);
     }
 
     PDC_LOG(("%s:_display_cursor() - draw cursor at row %d col %d\n",
@@ -2329,7 +2302,6 @@ static void _exit_process(int rc, int sig, char *msg)
 #endif
     XFreeGC(XCURSESDISPLAY, normal_gc);
     XFreeGC(XCURSESDISPLAY, italic_gc);
-    XFreeGC(XCURSESDISPLAY, block_cursor_gc);
     XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
     XFreeGC(XCURSESDISPLAY, border_gc);
 #ifdef PDC_XIM
@@ -3129,9 +3101,6 @@ int XCursesSetupX(int argc, char *argv[])
 
     _get_gc(&italic_gc, italic_font_valid ? xc_app_data.italicFont : 
             xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
-
-    _get_gc(&block_cursor_gc, xc_app_data.normalFont,
-            COLOR_BLACK, COLOR_CURSOR);
 
     _get_gc(&rect_cursor_gc, xc_app_data.normalFont,
             COLOR_CURSOR, COLOR_BLACK);

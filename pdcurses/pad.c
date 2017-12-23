@@ -107,8 +107,6 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begy, int begx)
 {
     WINDOW *win;
     int i;
-    int j = begy;
-    int k = begx;
 
     PDC_LOG(("subpad() - called: lines=%d cols=%d begy=%d begx=%d\n",
              nlines, ncols, begy, begx));
@@ -118,16 +116,16 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begy, int begx)
 
     /* make sure window fits inside the original one */
 
-    if ((begy < orig->_begy) || (begx < orig->_begx) ||
-        (begy + nlines) > (orig->_begy + orig->_maxy) ||
-        (begx + ncols)  > (orig->_begx + orig->_maxx))
+    if (begy < 0 || begx < 0 ||
+        (begy + nlines) > orig->_maxy ||
+        (begx + ncols)  > orig->_maxx)
         return (WINDOW *)NULL;
 
     if (!nlines) 
-        nlines = orig->_maxy - 1 - j;
+        nlines = orig->_maxy - begy;
 
     if (!ncols) 
-        ncols = orig->_maxx - 1 - k;
+        ncols = orig->_maxx - begx;
 
     if ( !(win = PDC_makenew(nlines, ncols, begy, begx)) )
         return (WINDOW *)NULL;
@@ -142,7 +140,7 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begy, int begx)
     win->_parent = orig;
 
     for (i = 0; i < nlines; i++)
-        win->_y[i] = (orig->_y[j++]) + k;
+        win->_y[i] = orig->_y[begy + i] + begx;
 
     win->_flags = _SUBPAD;
 

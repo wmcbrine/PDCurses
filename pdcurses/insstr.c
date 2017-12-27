@@ -1,6 +1,7 @@
 /* Public Domain Curses */
 
 #include <curspriv.h>
+#include <string.h>
 
 /*man-start**************************************************************
 

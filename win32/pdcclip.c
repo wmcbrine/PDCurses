@@ -2,6 +2,8 @@
 
 #include "pdcwin.h"
 
+#include <string.h>
+
 /*man-start**************************************************************
 
 clipboard

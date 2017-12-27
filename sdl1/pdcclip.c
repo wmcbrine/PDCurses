@@ -3,6 +3,7 @@
 #include "pdcsdl.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 /*man-start**************************************************************
 

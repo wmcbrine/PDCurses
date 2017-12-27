@@ -82,8 +82,8 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
-PLATFORM1 = DJGPP 2.03
-PLATFORM2 = DJGPP 2.03 for DOS
+PLATFORM1 = DJGPP 2.05
+PLATFORM2 = DJGPP 2.05 for DOS
 ARCNAME = pdc$(VER)djg
 
 include $(PDCURSES_SRCDIR)/makedist.mif

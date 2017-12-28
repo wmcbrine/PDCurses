@@ -2,7 +2,9 @@ PDCurses for Windows console
 ============================
 
 This directory contains PDCurses source code files specific to the
-Microsoft Windows console.
+Microsoft Windows console. Although called "Win32" for historic reasons,
+this port can just as easily be built for 64-bit systems. Windows 95
+through Windows 10 are covered. (Some features require later versions.)
 
 
 Building
@@ -10,7 +12,7 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        bccwin32.mak  - Borland C++ 4.0.2+
+        bccwin32.mak  - Borland C++ 7.0+
         dmcwin32.mak  - Digital Mars
         gccwin32.mak  - Cygnus GNU Compiler
         mingwin32.mak - MinGW
@@ -49,7 +51,7 @@ Building
   Another option, "UTF8=Y", makes PDCurses ignore the system locale, and 
   treat all narrow-character strings as UTF-8. This option has no effect 
   unless WIDE=Y is also set. Use it to get around the poor support for 
-  UTF-8 in the Win32 console:
+  UTF-8 in the Windows console:
 
         make -f mingwin32.mak WIDE=Y UTF8=Y
 

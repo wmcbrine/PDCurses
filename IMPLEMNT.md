@@ -203,7 +203,7 @@ except checking for values out of range and null pointers.
 
 The non-portable functionality of reset_prog_mode() is handled here --
 whatever's not done in _restore_mode(). In current ports: In OS/2, this
-sets the keyboard to binary mode; in Windows conosle, it enables or
+sets the keyboard to binary mode; in Windows console, it enables or
 disables the mouse pointer to match the saved mode; in others it does
 nothing.
 

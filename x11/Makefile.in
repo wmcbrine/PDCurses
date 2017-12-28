@@ -548,7 +548,7 @@ ncurses_tests: $(NCURSES_TESTS)
 ncurses_clean:
 	-rm -f *.o trace $(NCURSES_TESTS)
 
-NCFLAGS		= -I. -I$(ncurses_testdir)
+NCFLAGS		= -I$(demodir) -I$(ncurses_testdir)
 
 bs: bs.o $(LIBCURSES)
 	$(LINK) bs.o -o $@ $(LDFLAGS)

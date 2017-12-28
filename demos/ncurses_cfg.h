@@ -2,8 +2,7 @@
  *
  * Have ncurses-5.9 unpacked in your $(HOME) (you don't need to build
  * it), or edit ncurses_testdir appropriately in the Makefile. Configure
- * and build PDCurses for X11. (Sorry, other ports won't work yet.)
- * Change to this directory, and:
+ * and build PDCurses, and:
  *
  * "make ncurses_tests" to start.
  * "make ncurses_clean" when you're done.
@@ -15,15 +14,12 @@
 #define NCURSES_CONST
 #define NCURSES_EXPORT(foo) foo
 
-#ifndef RETSIGTYPE
-# define RETSIGTYPE void
-#endif
-#ifndef TIME_WITH_SYS_TIME
-# define TIME_WITH_SYS_TIME 1
-#endif
-#ifndef HAVE_UNISTD_H
-# define HAVE_UNISTD_H 1
-#endif
+#define RETSIGTYPE void
+#define TIME_WITH_SYS_TIME 1
+#define HAVE_SYS_TIME_H 1
+#define HAVE_SYS_TIME_SELECT 1
+#define HAVE_UNISTD_H 1
+#define HAVE_TERMATTRS 1
 
 #include <curses.h>
 

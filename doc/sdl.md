@@ -7,8 +7,8 @@ against the Windows console pdcurses.dll, and then swap in the SDL
 pdcurses.dll.) Nothing extra is needed beyond the base SDL library.
 However, there are some optional special features, described here.
 
-The SDL port operates in one of two ways, depending on whether or not it
-was built with WIDE=Y:
+The SDL ports operate in one of two ways, depending on whether or not
+they were built with WIDE=Y:
 
 
 8-bit mode
@@ -104,22 +104,29 @@ Integration with SDL
 
 If you want to go further, you can mix PDCurses and SDL functions. (Of
 course this is extremely non-portable!) To aid you, there are several
-external variables and functions specific to the SDL port; you could
+external variables and functions specific to the SDL ports; you could
 include pdcsdl.h, or just add the declarations you need in your code:
 
     PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
     PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
-    void PDC_update_rects(void);
-    void PDC_retile(void);
+    PDCEX void PDC_update_rects(void);
+    PDCEX void PDC_retile(void);
 
-pdc_screen is the main surface, created by SDL_SetVideoMode(), unless
-it's preset before initscr(). You can perform normal SDL operations on
-this surface, but PDCurses won't respect them when it updates. (For
-that, see PDC_retile().) As an alternative, you can preinitialize this
-surface before calling initscr(). In that case, you can use pdc_sheight,
-pdc_swidth, pdc_yoffset and/or pdc_xoffset (q.v.) to confine PDCurses to
-only a specific area of the surface, reserving the rest for other SDL
+The SDL2 port adds:
+
+    PDCEX SDL_Window *pdc_window;
+
+pdc_screen is the main surface, unless it's preset before initscr(). In
+SDL1, pdc_screen is created by SDL_SetVideoMode(); in SDL2, pdc_window
+is the main window, created by SDL_CreateWindow(), and pdc_screen is set
+by SDL_GetWindowSurface(pdc_window). (See sdltest.c for examples.) You
+can perform normal SDL operations on this surface, but PDCurses won't
+respect them when it updates. (For that, see PDC_retile().) As an
+alternative, you can preinitialize this surface before calling
+initscr(). In that case, you can use pdc_sheight, pdc_swidth,
+pdc_yoffset and/or pdc_xoffset (q.v.) to confine PDCurses to only a
+specific area of the surface, reserving the rest for other SDL
 operations. If you preinitialize pdc_screen, you'll have to close it
 yourself; PDCurses will ignore resize events, and won't try to set the
 icon. Also note that if you preinitialize pdc_screen, it need not be the

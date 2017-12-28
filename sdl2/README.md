@@ -1,7 +1,7 @@
-PDCurses for SDL2
-=================
+PDCurses for SDL 2.x
+====================
 
-This is a port of PDCurses for SDL2.
+This is a port of PDCurses for version 2.x of SDL (aka SDL2).
 
 
 Building

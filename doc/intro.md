@@ -350,7 +350,7 @@ particular terminal:
 The virtual keypad is arranged like this:
 
     A1     up     A3
-    left          B2   right
+    left   B2  right
     C1    down    C3
 
 This list is incomplete -- see curses.h for the full list, and use the

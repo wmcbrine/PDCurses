@@ -36,10 +36,11 @@ Build instructions are in the README file for each platform:
 
 -  [DOS](dos/README.md)
 -  [OS/2](os2/README.md)
--  [SDL](sdl1/README.md)
--  [SDL2](sdl2/README.md)
+-  [SDL 1.x](sdl1/README.md)
+-  [SDL 2.x](sdl2/README.md)
 -  [Windows](win32/README.md)
 -  [X11](x11/README.md)
+
 
 Distribution Status
 -------------------

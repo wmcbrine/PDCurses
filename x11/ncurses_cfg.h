@@ -15,7 +15,16 @@
 #define NCURSES_CONST
 #define NCURSES_EXPORT(foo) foo
 
-#include "config.h"
+#ifndef RETSIGTYPE
+# define RETSIGTYPE void
+#endif
+#ifndef TIME_WITH_SYS_TIME
+# define TIME_WITH_SYS_TIME 1
+#endif
+#ifndef HAVE_UNISTD_H
+# define HAVE_UNISTD_H 1
+#endif
+
 #include <curses.h>
 
 #define ExitProgram exit

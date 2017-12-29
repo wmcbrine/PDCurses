@@ -1,6 +1,6 @@
 # This provides for compiling and linking the ncurses test programs.
 
-NCURSES_TESTS   = bs gdc hanoi knight tclock ncurses
+NCURSES_TESTS   = bs$(E) gdc$(E) hanoi$(E) knight$(E) tclock$(E) ncurses$(E)
 
 ncurses_tests: $(NCURSES_TESTS)
 

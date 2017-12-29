@@ -7,27 +7,27 @@ NCURSES_TESTS   = bs gdc hanoi knight tclock ncurses
 ncurses_tests: $(NCURSES_TESTS)
 
 ncurses_clean:
-	-rm -f *.o trace $(NCURSES_TESTS)
+	-rm -f *.$(O) trace $(NCURSES_TESTS)
 
 NCFLAGS         = $(DEMOFLAGS) -I$(demodir) -I$(ncurses_testdir)
 
-bs: $(ncurses_testdir)/bs.c
+bs$(E): $(ncurses_testdir)/bs.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
-gdc: $(ncurses_testdir)/gdc.c
+gdc$(E): $(ncurses_testdir)/gdc.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
-hanoi: $(ncurses_testdir)/hanoi.c
+hanoi$(E): $(ncurses_testdir)/hanoi.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
-knight: $(ncurses_testdir)/knight.c
+knight$(E): $(ncurses_testdir)/knight.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
-tclock: $(ncurses_testdir)/tclock.c
+tclock$(E): $(ncurses_testdir)/tclock.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
-view: $(ncurses_testdir)/view.c
+view$(E): $(ncurses_testdir)/view.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
-ncurses: $(ncurses_testdir)/ncurses.c
+ncurses$(E): $(ncurses_testdir)/ncurses.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)

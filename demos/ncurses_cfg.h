@@ -1,8 +1,8 @@
 /* This file is only used with the ncurses test programs.
  *
  * Have ncurses-5.9 unpacked in your $(HOME) (you don't need to build
- * it), or edit ncurses_testdir appropriately in the Makefile. Configure
- * and build PDCurses, and:
+ * it), or edit ncurses_testdir appropriately in the Makefile or
+ * nctests.mif. Configure and build PDCurses, and:
  *
  * "make ncurses_tests" to start.
  * "make ncurses_clean" when you're done.

@@ -1,0 +1,91 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define if you have the <DECkeySym.h> header file */
+#cmakedefine HAVE_DECKEYSYM_H 1
+
+/* Define to 1 if you have the `poll' function. */
+#cmakedefine HAVE_POLL 1
+
+/* Define if you have the <Sunkeysym.h> header file */
+#cmakedefine HAVE_SUNKEYSYM_H 1
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H 1
+
+/* Define to 1 if you have the `usleep' function. */
+#cmakedefine HAVE_USLEEP 1
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#cmakedefine HAVE_VSNPRINTF 1
+
+/* Define to 1 if you have the `vsscanf' function. */
+#cmakedefine HAVE_VSSCANF 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_BEGIN 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_DELETE 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_DOWN 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_END 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_HOME 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_INSERT 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_LEFT 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_NEXT 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_PRIOR 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_RIGHT 1
+
+/* Define if you have this defined in <keysym.h> */
+#cmakedefine HAVE_XK_KP_UP 1
+
+/* Define if you have the <xpm.h> header file */
+#cmakedefine HAVE_XPM_H 1
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine PACKAGE_BUGREPORT @PACKAGE_BUGREPORT@
+
+/* Define to the full name of this package. */
+#cmakedefine PACKAGE_NAME @PACKAGE_NAME@
+
+/* Define to the full name and version of this package. */
+#cmakedefine PACKAGE_STRING @PACKAGE_STRING@
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine PACKAGE_TARNAME @PACKAGE_TARNAME@
+
+/* Define to the version of this package. */
+#cmakedefine PACKAGE_VERSION @PACKAGE_VERSION@
+
+/* Define as the system defined limit for number of signals */
+#cmakedefine PDC_MAX_SIGNALS @PDC_MAX_SIGNALS@
+
+/* Define as the return type of signal handlers (`int' or `void'). */
+#cmakedefine RETSIGTYPE @RETSIGTYPE@
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#cmakedefine TIME_WITH_SYS_TIME 1
+
+/* Define if you want to use neXtaw library */
+#cmakedefine USE_NEXTAW @USE_NEXTAW@
+
+/* Define if you want to use Xaw3d library */
+#cmakedefine USE_XAW3D @USE_XAW3D@
+
+/* Define XPointer is typedefed in X11/Xlib.h */
+#cmakedefine XPOINTER_TYPEDEFED 1

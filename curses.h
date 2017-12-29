@@ -1149,6 +1149,8 @@ PDCEX  int     addwstr(const wchar_t *);
 PDCEX  int     add_wch(const cchar_t *);
 PDCEX  int     add_wchnstr(const cchar_t *, int);
 PDCEX  int     add_wchstr(const cchar_t *);
+PDCEX  int     bkgrnd(const cchar_t *);
+PDCEX  void    bkgrndset(const cchar_t *);
 PDCEX  int     border_set(const cchar_t *, const cchar_t *, const cchar_t *,
                           const cchar_t *, const cchar_t *, const cchar_t *,
                           const cchar_t *, const cchar_t *);

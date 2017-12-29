@@ -1,7 +1,5 @@
 # This provides for compiling and linking the ncurses test programs.
 
-ncurses_testdir = $(HOME)/ncurses-5.9/test
-
 NCURSES_TESTS   = bs gdc hanoi knight tclock ncurses
 
 ncurses_tests: $(NCURSES_TESTS)

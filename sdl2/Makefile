@@ -106,4 +106,5 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h
 tuidemo.o: $(demodir)/tuidemo.c
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tuidemo.c
 
+ncurses_testdir = $(HOME)/ncurses-5.9/test
 include $(demodir)/nctests.mif

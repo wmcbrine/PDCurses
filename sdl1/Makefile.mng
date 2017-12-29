@@ -96,3 +96,6 @@ tuidemo.o: $(demodir)/tuidemo.c $(demodir)/tui.h
 
 sdltest.exe: $(osdir)/sdltest.c
 	$(BUILD) -o $@ $< -mwindows $(LIBCURSES) -lmingw32 -lSDLmain -lSDL
+
+ncurses_testdir = $(HOME)/ncurses-5.9/test
+include $(demodir)/nctests.mif

@@ -136,7 +136,7 @@ int XC_read_socket(int, void *, int);
 int XC_write_display_socket_int(int);
 
 int XCursesSetupX(int argc, char *argv[]);
-RETSIGTYPE XCursesSigwinchHandler(int signo);
+void XCursesSigwinchHandler(int signo);
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *
@@ -161,7 +161,7 @@ extern int xc_display_sockets[2];
 extern int xc_key_sockets[2];
 extern int xc_exit_sock;
 
-typedef RETSIGTYPE (*signal_handler)();
+typedef void (*signal_handler)();
 
 signal_handler XCursesSetSignal(int, signal_handler);
 

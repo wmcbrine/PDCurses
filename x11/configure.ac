@@ -59,7 +59,6 @@ AC_SUBST(MH_EXTRA_LIBS)
 MH_CHECK_CC_O
 
 dnl Checks for library functions.
-AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(vsscanf usleep poll vsnprintf)
 
 dnl Check for X includes and X libraries

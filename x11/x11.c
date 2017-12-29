@@ -531,7 +531,7 @@ signal_handler XCursesSetSignal(int signo, signal_handler action)
 #endif
 }
 
-RETSIGTYPE XCursesSigwinchHandler(int signo)
+void XCursesSigwinchHandler(int signo)
 {
     PDC_LOG(("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",
              XCLOGMSG, signo));
@@ -2797,7 +2797,7 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
     }
 }
 
-static RETSIGTYPE _handle_signals(int signo)
+static void _handle_signals(int signo)
 {
     int flag = CURSES_EXIT;
 

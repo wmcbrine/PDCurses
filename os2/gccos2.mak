@@ -9,6 +9,7 @@
 # enables a PDCurses program to run under OS/2 and DOS.
 
 O = o
+E = .exe
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..

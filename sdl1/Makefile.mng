@@ -1,6 +1,7 @@
 # Makefile for PDCurses library for SDL
 
 O = o
+E = .exe
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..

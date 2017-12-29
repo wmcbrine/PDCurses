@@ -10,6 +10,7 @@ MODEL	= L       # one of L, S, M, T, H, C
 SIZE	= LARGE   # one of LARGE, SMALL, MEDIUM, TINY, HUGE, COMPACT
 
 O = obj
+E = .exe
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..

@@ -9,6 +9,7 @@
 MODEL = l
 
 O = obj
+E = .exe
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..

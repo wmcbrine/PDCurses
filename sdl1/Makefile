@@ -44,8 +44,7 @@ LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework newdemo ptest rain testcurs tuidemo worm xmas \
-sdltest
+DEMOS		+= sdltest
 
 .PHONY: all libs clean demos
 

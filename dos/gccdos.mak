@@ -6,6 +6,7 @@
 # [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
 
 O = o
+E = .exe
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..

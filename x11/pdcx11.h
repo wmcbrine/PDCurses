@@ -99,6 +99,7 @@ typedef struct
     Pixel pointerBackColor;
     XFontStruct *normalFont;
     XFontStruct *italicFont;
+    XFontStruct *boldFont;
     char *bitmap;
 #ifdef HAVE_XPM_H
     char *pixmap;

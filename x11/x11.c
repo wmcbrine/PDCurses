@@ -214,7 +214,7 @@ static struct
 
 unsigned long pdc_key_modifiers = 0L;
 
-static GC normal_gc, rect_cursor_gc, italic_gc, border_gc;
+static GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
@@ -260,9 +260,11 @@ static char *program_name;
 #ifdef PDC_WIDE
 # define DEFNFONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
 # define DEFIFONT "-misc-fixed-medium-o-normal--20-200-75-75-c-100-iso10646-1"
+# define DEFBFONT "-misc-fixed-bold-r-normal--20-200-75-75-c-100-iso10646-1"
 #else
 # define DEFNFONT "-misc-fixed-medium-r-normal--13-120-75-75-c-70-iso8859-1"
 # define DEFIFONT "-misc-fixed-medium-o-normal--13-120-75-75-c-70-iso8859-1"
+# define DEFBFONT "-misc-fixed-bold-r-normal--13-120-75-75-c-70-iso8859-1"
 #endif
 
 #define APPDATAOFF(n) XtOffsetOf(XCursesAppData, n)
@@ -328,6 +330,7 @@ static XtResource app_resources[] =
 
     RFONT(normalFont, NormalFont, DEFNFONT),
     RFONT(italicFont, ItalicFont, DEFIFONT),
+    RFONT(boldFont, BoldFont, DEFBFONT),
 
     RSTRING(bitmap, Bitmap),
 #ifdef HAVE_XPM_H
@@ -360,6 +363,7 @@ static XtResource app_resources[] =
 #undef RPIXEL
 #undef RINT
 #undef APPDATAOFF
+#undef DEFBFONT
 #undef DEFIFONT
 #undef DEFNFONT
 
@@ -371,7 +375,7 @@ static XtResource app_resources[] =
 static XrmOptionDescRec options[] =
 {
     COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
-    COPT(bitmap),
+    COPT(boldFont), COPT(bitmap),
 #ifdef HAVE_XPM_H
     COPT(pixmap),
 #endif
@@ -591,9 +595,9 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     rev ^= !!(attr & A_REVERSE);
 
-    /* Determine which GC to use - normal or italic */
+    /* Determine which GC to use - normal, italic or bold */
 
-    gc = (attr & A_ITALIC) ? italic_gc : normal_gc;
+    gc = (attr & A_ITALIC) ? italic_gc : (attr & A_BOLD) ? bold_gc : normal_gc;
 
     /* Draw it */
 
@@ -2308,6 +2312,7 @@ static void _exit_process(int rc, int sig, char *msg)
 #endif
     XFreeGC(XCURSESDISPLAY, normal_gc);
     XFreeGC(XCURSESDISPLAY, italic_gc);
+    XFreeGC(XCURSESDISPLAY, bold_gc);
     XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
     XFreeGC(XCURSESDISPLAY, border_gc);
 #ifdef PDC_XIM
@@ -2856,7 +2861,7 @@ int XCursesSetupX(int argc, char *argv[])
     char *myargv[] = {"PDCurses", NULL};
     extern bool sb_started;
 
-    int italic_font_valid;
+    int italic_font_valid, bold_font_valid;
     XColor pointerforecolor, pointerbackcolor;
     XrmValue rmfrom, rmto;
     int i = 0;
@@ -2931,6 +2936,13 @@ int XCursesSetupX(int argc, char *argv[])
         font_height !=
         xc_app_data.italicFont->max_bounds.ascent + 
         xc_app_data.italicFont->max_bounds.descent;
+
+    bold_font_valid = font_width !=
+        xc_app_data.boldFont->max_bounds.rbearing -
+        xc_app_data.boldFont->min_bounds.lbearing ||
+        font_height !=
+        xc_app_data.boldFont->max_bounds.ascent +
+        xc_app_data.boldFont->max_bounds.descent;
 
     /* Calculate size of display window */
 
@@ -3106,6 +3118,9 @@ int XCursesSetupX(int argc, char *argv[])
     _get_gc(&normal_gc, xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
     _get_gc(&italic_gc, italic_font_valid ? xc_app_data.italicFont : 
+            xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
+
+    _get_gc(&bold_gc, bold_font_valid ? xc_app_data.boldFont :
             xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
     _get_gc(&rect_cursor_gc, xc_app_data.normalFont,

@@ -258,9 +258,11 @@ static char *program_name;
 /* Macros just for app_resources */
 
 #ifdef PDC_WIDE
-# define DEFFONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
+# define DEFNFONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
+# define DEFIFONT "-misc-fixed-medium-o-normal--20-200-75-75-c-100-iso10646-1"
 #else
-# define DEFFONT "7x13"
+# define DEFNFONT "-misc-fixed-medium-r-normal--13-120-75-75-c-70-iso8859-1"
+# define DEFIFONT "-misc-fixed-medium-o-normal--13-120-75-75-c-70-iso8859-1"
 #endif
 
 #define APPDATAOFF(n) XtOffsetOf(XCursesAppData, n)
@@ -324,8 +326,8 @@ static XtResource app_resources[] =
     RCOLOR(BoldCyan, cyan1),
     RCOLOR(BoldWhite, White),
 
-    RFONT(normalFont, NormalFont, DEFFONT),
-    RFONT(italicFont, ItalicFont, DEFFONT),
+    RFONT(normalFont, NormalFont, DEFNFONT),
+    RFONT(italicFont, ItalicFont, DEFIFONT),
 
     RSTRING(bitmap, Bitmap),
 #ifdef HAVE_XPM_H

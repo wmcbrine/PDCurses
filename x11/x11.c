@@ -360,7 +360,8 @@ static XtResource app_resources[] =
 #undef RPIXEL
 #undef RINT
 #undef APPDATAOFF
-#undef DEFFONT
+#undef DEFIFONT
+#undef DEFNFONT
 
 /* Macros for options */
 

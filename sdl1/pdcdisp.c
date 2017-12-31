@@ -363,6 +363,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 #ifdef PDC_WIDE
         chstr[0] = ch & A_CHARTEXT;
+
+        TTF_SetFontStyle(pdc_ttffont, (ch & A_BOLD ? TTF_STYLE_BOLD : 0) |
+                                      (ch & A_ITALIC ? TTF_STYLE_ITALIC : 0));
         pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
                                            pdc_color[foregr]);
 

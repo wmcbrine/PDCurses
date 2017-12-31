@@ -2861,7 +2861,7 @@ int XCursesSetupX(int argc, char *argv[])
     char *myargv[] = {"PDCurses", NULL};
     extern bool sb_started;
 
-    int italic_font_valid, bold_font_valid;
+    bool italic_font_valid, bold_font_valid;
     XColor pointerforecolor, pointerbackcolor;
     XrmValue rmfrom, rmto;
     int i = 0;
@@ -2926,7 +2926,6 @@ int XCursesSetupX(int argc, char *argv[])
     font_height = font_ascent + font_descent;
 
     /* Check that the italic font and normal fonts are the same size */
-    /* This appears backwards */
 
     italic_font_valid = font_width !=
         xc_app_data.italicFont->max_bounds.rbearing -

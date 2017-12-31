@@ -2927,17 +2927,17 @@ int XCursesSetupX(int argc, char *argv[])
 
     /* Check that the italic font and normal fonts are the same size */
 
-    italic_font_valid = font_width !=
+    italic_font_valid = font_width ==
         xc_app_data.italicFont->max_bounds.rbearing -
-        xc_app_data.italicFont->min_bounds.lbearing ||
-        font_height !=
+        xc_app_data.italicFont->min_bounds.lbearing &&
+        font_height ==
         xc_app_data.italicFont->max_bounds.ascent + 
         xc_app_data.italicFont->max_bounds.descent;
 
-    bold_font_valid = font_width !=
+    bold_font_valid = font_width ==
         xc_app_data.boldFont->max_bounds.rbearing -
-        xc_app_data.boldFont->min_bounds.lbearing ||
-        font_height !=
+        xc_app_data.boldFont->min_bounds.lbearing &&
+        font_height ==
         xc_app_data.boldFont->max_bounds.ascent +
         xc_app_data.boldFont->max_bounds.descent;
 

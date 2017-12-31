@@ -1006,6 +1006,8 @@ void colorTest(WINDOW *win)
     };
 
     chtype fill = ACS_BLOCK;
+    int maxcol = (COLORS >= 16) ? 16 : 8;
+    bool widecol = (maxcol == 16);
 
     int i, j, tmarg, col1, col2, col3;
 
@@ -1021,19 +1023,30 @@ void colorTest(WINDOW *win)
     mvaddstr(tmarg, (COLS - 22) / 2, "Color Attribute Macros");
     attrset(A_NORMAL);
 
-    mvaddstr(tmarg + 3, col2 + 4, "A_NORMAL");
-    mvaddstr(tmarg + 3, col3 + 5, "A_BOLD");
+    if (widecol)
+    {
+        mvaddstr(tmarg + 3, col2 + 3, "Colors 0-7");
+        mvaddstr(tmarg + 3, col3 + 2, "Colors 8-15");
+    }
+    else
+    {
+        mvaddstr(tmarg + 3, col2 + 4, "A_NORMAL");
+        mvaddstr(tmarg + 3, col3 + 5, "A_BOLD");
+    }
 
     for (i = 0; i < 8; i++)
     {
         init_pair(i + 4, colors[i], COLOR_BLACK);
+        if (widecol)
+            init_pair(i + 12, colors[i] + 8, COLOR_BLACK);
 
         mvaddstr(tmarg + i + 5, col1, colornames[i]);
 
         for (j = 0; j < 16; j++)
         {
             mvaddch(tmarg + i + 5, col2 + j, fill | COLOR_PAIR(i + 4));
-            mvaddch(tmarg + i + 5, col3 + j, fill | COLOR_PAIR(i + 4) | A_BOLD);
+            mvaddch(tmarg + i + 5, col3 + j, fill | (widecol ?
+                    COLOR_PAIR(i + 12) : (COLOR_PAIR(i + 4) | A_BOLD) ));
         }
     }
 
@@ -1050,12 +1063,7 @@ void colorTest(WINDOW *win)
             short red, green, blue;
         } orgcolors[16];
 
-        int MAXCOL = (COLORS >= 16) ? 16 : 8;
-
-        if (MAXCOL < 8)
-            return;
-
-        for (i = 0; i < MAXCOL; i++)
+        for (i = 0; i < maxcol; i++)
             color_content(i, &(orgcolors[i].red),
                              &(orgcolors[i].green),
                              &(orgcolors[i].blue));
@@ -1070,14 +1078,14 @@ void colorTest(WINDOW *win)
         {
             init_color(colors[i], i * 125, 0, i * 125);
 
-            if (MAXCOL == 16)
+            if (widecol)
                 init_color(colors[i] + 8, 0, i * 125, 0);
         }
 
         mvaddstr(tmarg + 19, 3, "Press any key to continue");
         getch();
 
-        for (i = 0; i < MAXCOL; i++)
+        for (i = 0; i < maxcol; i++)
             init_color(i, orgcolors[i].red,
                           orgcolors[i].green,
                           orgcolors[i].blue);

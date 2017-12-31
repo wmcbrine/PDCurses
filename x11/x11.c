@@ -2921,11 +2921,9 @@ int XCursesSetupX(int argc, char *argv[])
     font_width = xc_app_data.normalFont->max_bounds.rbearing - 
                  xc_app_data.normalFont->min_bounds.lbearing;
 
-    font_height = xc_app_data.normalFont->max_bounds.ascent + 
-                  xc_app_data.normalFont->max_bounds.descent;
-
     font_ascent = xc_app_data.normalFont->max_bounds.ascent;
     font_descent = xc_app_data.normalFont->max_bounds.descent;
+    font_height = font_ascent + font_descent;
 
     /* Check that the italic font and normal fonts are the same size */
     /* This appears backwards */

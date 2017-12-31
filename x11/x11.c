@@ -260,7 +260,7 @@ static char *program_name;
 #ifdef PDC_WIDE
 # define DEFNFONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
 # define DEFIFONT "-misc-fixed-medium-o-normal--20-200-75-75-c-100-iso10646-1"
-# define DEFBFONT "-misc-fixed-bold-r-normal--20-200-75-75-c-100-iso10646-1"
+# define DEFBFONT "-misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1"
 #else
 # define DEFNFONT "-misc-fixed-medium-r-normal--13-120-75-75-c-70-iso8859-1"
 # define DEFIFONT "-misc-fixed-medium-o-normal--13-120-75-75-c-70-iso8859-1"

@@ -563,6 +563,9 @@ void outputTest(WINDOW *win)
     chtype ch;
     int by, bx;
 
+#ifdef PDCURSES
+    PDC_set_blink(TRUE);
+#endif
     nl();
     wclear(win);
     mvwaddstr(win, 1, 1, "You should now have a screen in the upper "
@@ -719,6 +722,9 @@ void outputTest(WINDOW *win)
     mvaddstr(LINES - 2, 10, Buffer);
     refresh();
     Continue(win);
+#ifdef PDCURSES
+    PDC_set_blink(FALSE);
+#endif
 }
 
 #if HAVE_RESIZE

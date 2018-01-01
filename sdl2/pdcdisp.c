@@ -314,8 +314,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     int j;
 #ifdef PDC_WIDE
     Uint16 chstr[2] = {0, 0};
-#endif
     attr_t sysattrs = SP->termattrs;
+#endif
 
     PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 

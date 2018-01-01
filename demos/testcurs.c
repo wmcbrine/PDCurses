@@ -1000,7 +1000,7 @@ void acsTest(WINDOW *win)
 
 void attrTest(WINDOW *win)
 {
-    int tmarg = (LINES - 19) / 2;
+    int tmarg = (LINES - 16) / 2;
     int col1 = (COLS - 36) / 2, col2 = col1 + 20;
 
     attrset(A_BOLD);
@@ -1060,7 +1060,7 @@ void attrTest(WINDOW *win)
     mvaddstr(tmarg + 11, col2, "A_PROTECT");
     attrset(A_NORMAL);
 
-    mvaddstr(tmarg + 19, 3, "Press any key to continue");
+    mvaddstr(tmarg + 16, 3, "Press any key to continue");
     getch();
 
 #ifdef PDCURSES

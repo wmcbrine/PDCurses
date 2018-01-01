@@ -1834,10 +1834,19 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
     {
         /* For block cursors, paint the block with invert. */
 
-        int yp = ypos - font_height + xc_app_data.normalFont->descent;
-        int yh = font_height;
+        int yp, yh;
 
-        if (SP->visibility == 1) yh /= 2, yp += yh;
+        if (SP->visibility == 2)
+        {
+            yp = ypos - font_height + font_descent;
+            yh = font_height;
+        }
+        else
+        {
+            yp = ypos - font_height / 4 + font_descent;
+            yh = font_height / 4;
+        }
+
         XSetFunction(XCURSESDISPLAY, rect_cursor_gc, GXinvert);
         XFillRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
             xpos, yp, font_width, yh);

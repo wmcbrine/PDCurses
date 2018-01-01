@@ -1048,13 +1048,17 @@ void attrTest(WINDOW *win)
     mvaddstr(tmarg + 5, col2, "Underlined Bold");
     attrset(A_NORMAL);
 
+#ifdef A_LEFTLINE
     attrset(A_LEFTLINE);
     mvaddstr(tmarg + 7, col2, "A_LEFTLINE");
     attrset(A_NORMAL);
+#endif
 
+#ifdef A_RIGHTLINE
     attrset(A_RIGHTLINE);
     mvaddstr(tmarg + 9, col2, "A_RIGHTLINE");
     attrset(A_NORMAL);
+#endif
 
     attrset(A_PROTECT);
     mvaddstr(tmarg + 11, col2, "A_PROTECT");

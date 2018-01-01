@@ -574,6 +574,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
                        char *text)
 #endif
 {
+    XRectangle bounds;
     GC gc;
     int xpos, ypos;
     short fore, back;
@@ -616,6 +617,13 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     _make_xy(col, row, &xpos, &ypos);
 
+    bounds.x = xpos;
+    bounds.y = ypos - font_ascent;
+    bounds.width = font_width * len;
+    bounds.height = font_height;
+
+    XSetClipRectangles(XCURSESDISPLAY, gc, 0, 0, &bounds, 1, Unsorted);
+
 #ifdef PDC_WIDE
     XDrawImageString16(
 #else
@@ -639,7 +647,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
         if (attr & A_LEFTLINE)      /* LEFT */
             for (k = 0; k < len; k++)
             {
-                int x = xpos + font_width * k - 1;
+                int x = xpos + font_width * k;
                 XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
                           x, ypos - font_ascent, x, ypos + font_descent);
             }

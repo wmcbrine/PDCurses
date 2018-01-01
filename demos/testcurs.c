@@ -50,6 +50,7 @@ int initTest(WINDOW **, int, char **);
 void outputTest(WINDOW *);
 void padTest(WINDOW *);
 void acsTest(WINDOW *);
+void attrTest(WINDOW *);
 
 #if HAVE_COLOR
 void colorTest(WINDOW *);
@@ -77,7 +78,7 @@ struct commands
 
 typedef struct commands COMMAND;
 
-#define MAX_OPTIONS (6 + HAVE_COLOR + HAVE_RESIZE + HAVE_CLIPBOARD + HAVE_WIDE)
+#define MAX_OPTIONS (7 + HAVE_COLOR + HAVE_RESIZE + HAVE_CLIPBOARD + HAVE_WIDE)
 
 COMMAND command[MAX_OPTIONS] =
 {
@@ -90,6 +91,7 @@ COMMAND command[MAX_OPTIONS] =
     {"Input Test", inputTest},
     {"Output Test", outputTest},
     {"ACS Test", acsTest},
+    {"Attrib Test", attrTest},
 #if HAVE_COLOR
     {"Color Test", colorTest},
 #endif
@@ -993,6 +995,77 @@ void acsTest(WINDOW *win)
 
     mvaddstr(tmarg + 18, 3, "Press any key to continue");
     getch();
+#endif
+}
+
+void attrTest(WINDOW *win)
+{
+    int tmarg = (LINES - 19) / 2;
+    int col1 = (COLS - 36) / 2, col2 = col1 + 20;
+
+    attrset(A_BOLD);
+    mvaddstr(tmarg, (COLS - 20) / 2, "Character Attributes");
+    attrset(A_NORMAL);
+
+#ifdef PDCURSES
+    PDC_set_blink(TRUE);
+    PDC_set_bold(TRUE);
+#endif
+
+#ifdef A_ITALIC
+    attrset(A_ITALIC);
+    mvaddstr(tmarg + 3, col1, "A_ITALIC");
+    attrset(A_NORMAL);
+#endif
+
+    attrset(A_BOLD);
+    mvaddstr(tmarg + 5, col1, "A_BOLD");
+    attrset(A_NORMAL);
+
+    attrset(A_BLINK);
+    mvaddstr(tmarg + 7, col1, "A_BLINK");
+    attrset(A_NORMAL);
+
+    attrset(A_REVERSE);
+    mvaddstr(tmarg + 9, col1, "A_REVERSE");
+    attrset(A_NORMAL);
+
+    attrset(A_STANDOUT);
+    mvaddstr(tmarg + 11, col1, "A_STANDOUT");
+    attrset(A_NORMAL);
+
+    attrset(A_UNDERLINE);
+    mvaddstr(tmarg + 13, col1, "A_UNDERLINE");
+    attrset(A_NORMAL);
+
+#ifdef A_ITALIC
+    attrset(A_ITALIC|A_UNDERLINE);
+    mvaddstr(tmarg + 3, col2, "Underlined Italic");
+    attrset(A_NORMAL);
+#endif
+
+    attrset(A_BOLD|A_UNDERLINE);
+    mvaddstr(tmarg + 5, col2, "Underlined Bold");
+    attrset(A_NORMAL);
+
+    attrset(A_LEFTLINE);
+    mvaddstr(tmarg + 7, col2, "A_LEFTLINE");
+    attrset(A_NORMAL);
+
+    attrset(A_RIGHTLINE);
+    mvaddstr(tmarg + 9, col2, "A_RIGHTLINE");
+    attrset(A_NORMAL);
+
+    attrset(A_PROTECT);
+    mvaddstr(tmarg + 11, col2, "A_PROTECT");
+    attrset(A_NORMAL);
+
+    mvaddstr(tmarg + 19, 3, "Press any key to continue");
+    getch();
+
+#ifdef PDCURSES
+    PDC_set_bold(FALSE);
+    PDC_set_blink(FALSE);
 #endif
 }
 

@@ -407,6 +407,8 @@ int PDC_scr_open(int argc, char **argv)
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
+    SP->termattrs = A_COLOR | A_REVERSE;
+
     if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
     {
         fprintf(stderr, "LINES value must be >= 2 and <= %d: got %d\n",

@@ -541,6 +541,8 @@ int PDC_scr_open(int argc, char **argv)
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
+    SP->termattrs = (SP->mono ? A_UNDERLINE : A_COLOR) | A_REVERSE | A_BLINK;
+
     /* If the environment variable PDCURSES_BIOS is set, the DOS int10()
        BIOS calls are used in place of direct video memory access. */
 

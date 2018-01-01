@@ -321,6 +321,7 @@ typedef struct
     int   sb_cur_x;
 #endif
     short line_color;     /* color of line attributes - default -1 */
+    attr_t termattrs;     /* attribute capabilities */
 } SCREEN;
 
 /*----------------------------------------------------------------------
@@ -1318,6 +1319,7 @@ PDCEX  wchar_t *slk_wlabel(int);
 PDCEX  void    PDC_debug(const char *, ...);
 PDCEX  int     PDC_ungetch(int);
 PDCEX  int     PDC_set_blink(bool);
+PDCEX  int     PDC_set_bold(bool);
 PDCEX  int     PDC_set_line_color(short);
 PDCEX  void    PDC_set_title(const char *);
 

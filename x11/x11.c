@@ -577,6 +577,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
     GC gc;
     int xpos, ypos;
     short fore, back;
+    attr_t sysattrs;
 
     PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
 
@@ -588,8 +589,12 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     /* Specify the color table offsets */
 
-    fore |= (attr & A_BOLD) ? 8 : 0;
-    back |= (attr & A_BLINK) ? 8 : 0;
+    sysattrs = SP->termattrs;
+
+    if ((attr & A_BOLD) && !(sysattrs & A_BOLD))
+        fore |= 8;
+    if ((attr & A_BLINK) && !(sysattrs & A_BLINK))
+        back |= 8;
 
     /* Reverse flag = highlighted selection XOR A_REVERSE set */
 
@@ -597,7 +602,12 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     /* Determine which GC to use - normal, italic or bold */
 
-    gc = (attr & A_ITALIC) ? italic_gc : (attr & A_BOLD) ? bold_gc : normal_gc;
+    if ((attr & A_ITALIC) && (sysattrs & A_ITALIC))
+        gc = italic_gc;
+    else if ((attr & A_BOLD) && (sysattrs & A_BOLD))
+        gc = bold_gc;
+    else
+        gc = normal_gc;
 
     /* Draw it */
 
@@ -3046,6 +3056,8 @@ int XCursesSetupX(int argc, char *argv[])
 
     SP->mouse_wait = xc_app_data.clickPeriod;
     SP->audible = TRUE;
+
+    SP->termattrs = A_COLOR | A_ITALIC | A_PROTECT | A_REVERSE;
 
     PDC_LOG(("%s:SHM size for curscr %d\n", XCLOGMSG, SP->XcurscrSize));
 

@@ -117,24 +117,16 @@ char *longname(void)
 
 chtype termattrs(void)
 {
-    chtype temp = A_BLINK | A_BOLD | A_INVIS | A_REVERSE | A_UNDERLINE;
-
-    /* note: blink is bold background on some platforms */
-
     PDC_LOG(("termattrs() - called\n"));
 
-    if (!SP->mono)
-        temp |= A_COLOR;
-
-    return temp;
+    return SP->termattrs;
 }
 
 attr_t term_attrs(void)
 {
     PDC_LOG(("term_attrs() - called\n"));
 
-    return WA_BLINK | WA_BOLD | WA_INVIS | WA_LEFT | WA_REVERSE | 
-           WA_RIGHT | WA_UNDERLINE;
+    return SP->termattrs;
 }
 
 char *termname(void)

@@ -10,6 +10,7 @@ pdcsetsc
 ### Synopsis
 
     int PDC_set_blink(bool blinkon);
+    int PDC_set_bold(bool boldon);
     void PDC_set_title(const char *title);
 
 ### Description
@@ -18,9 +19,13 @@ pdcsetsc
    actual blink mode (TRUE), or sets the background color to high
    intensity (FALSE). The default is platform-dependent (FALSE in
    most cases). It returns OK if it could set the state to match
-   the given parameter, ERR otherwise. Current platforms also
-   adjust the value of COLORS according to this function -- 16 for
-   FALSE, and 8 for TRUE.
+   the given parameter, ERR otherwise. On DOS, this function also
+   adjusts the value of COLORS -- 16 for FALSE, and 8 for TRUE.
+
+   PDC_set_bold() toggles whether the A_BOLD attribute selects an actual
+   bold font (TRUE), or sets the foreground color to high intensity
+   (FALSE). It returns OK if it could set the state to match the given
+   parameter, ERR otherwise.
 
    PDC_set_title() sets the title of the window in which the curses
    program is running. This function may not do anything on some
@@ -97,5 +102,15 @@ int PDC_set_blink(bool blinkon)
         COLORS = 8;
     }
 
+    if (blinkon && (COLORS == 8))
+        SP->termattrs |= A_BLINK;
+    else if (!blinkon && (COLORS == 16))
+        SP->termattrs &= ~A_BLINK;
+
     return (COLORS - (blinkon * 8) != 8) ? OK : ERR;
+}
+
+int PDC_set_bold(bool boldon)
+{
+    return boldon ? ERR : OK;
 }

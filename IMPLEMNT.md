@@ -325,4 +325,5 @@ pdcsetsc.c:
 -----------
 
 ### int PDC_set_blink(bool blinkon);
+### int PDC_set_bold(bool boldon);
 ### void PDC_set_title(const char *title);

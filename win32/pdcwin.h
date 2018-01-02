@@ -9,7 +9,7 @@
 #include <curspriv.h>
 
 #ifdef CHTYPE_LONG
-# define PDC_ATTR_SHIFT 19
+# define PDC_ATTR_SHIFT 17
 #else
 # define PDC_ATTR_SHIFT 8
 #endif
@@ -18,7 +18,7 @@
 # define HAVE_INFOEX
 #endif
 
-extern unsigned char *pdc_atrtab;
+extern WORD *pdc_atrtab;
 extern HANDLE pdc_con_out, pdc_con_in;
 extern DWORD pdc_quick_edit;
 

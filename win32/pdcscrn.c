@@ -3,14 +3,14 @@
 #include "pdcwin.h"
 
 #ifdef CHTYPE_LONG
-# define PDC_OFFSET 32
+# define PDC_OFFSET 128
 #else
 # define PDC_OFFSET  8
 #endif
 
 /* COLOR_PAIR to attribute encoding table. */
 
-unsigned char *pdc_atrtab = (unsigned char *)NULL;
+WORD *pdc_atrtab = (WORD *)NULL;
 
 HANDLE std_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
@@ -346,7 +346,7 @@ void PDC_scr_free(void)
     if (pdc_atrtab)
         free(pdc_atrtab);
 
-    pdc_atrtab = (unsigned char *)NULL;
+    pdc_atrtab = (WORD *)NULL;
 
     if (pdc_con_out != std_con_out)
     {
@@ -371,7 +371,7 @@ int PDC_scr_open(int argc, char **argv)
     PDC_LOG(("PDC_scr_open() - called\n"));
 
     SP = calloc(1, sizeof(SCREEN));
-    pdc_atrtab = calloc(PDC_COLOR_PAIRS * PDC_OFFSET, 1);
+    pdc_atrtab = calloc(PDC_COLOR_PAIRS * PDC_OFFSET, sizeof(WORD));
 
     if (!SP || !pdc_atrtab)
         return ERR;
@@ -407,7 +407,7 @@ int PDC_scr_open(int argc, char **argv)
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
-    SP->termattrs = A_COLOR | A_REVERSE;
+    SP->termattrs = A_COLOR;
 
     if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
     {
@@ -448,7 +448,12 @@ int PDC_scr_open(int argc, char **argv)
             pdc_con_out = std_con_out;
         }
         else
+        {
+            BOOL result = SetConsoleMode(pdc_con_out, 0x0010);
+            if (result)
+                SP->termattrs |= A_PROTECT|A_REVERSE;
             SP->_restore = PDC_RESTORE_BUFFER;
+        }
     }
 
     xcpt_filter = SetUnhandledExceptionFilter(_restore_console);
@@ -605,8 +610,9 @@ void PDC_save_screen_mode(int i)
 
 void PDC_init_pair(short pair, short fg, short bg)
 {
-    unsigned char att, temp_bg;
+    WORD att, temp_bg;
     chtype i;
+    bool rev = !!(SP->termattrs & A_REVERSE);
 
     fg = curstoreal[fg];
     bg = curstoreal[bg];
@@ -616,9 +622,16 @@ void PDC_init_pair(short pair, short fg, short bg)
         att = fg | (bg << 4);
 
         if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
-            att = bg | (fg << 4);
+            if (rev)
+                att |= COMMON_LVB_REVERSE_VIDEO;
+            else
+                att = bg | (fg << 4);
         if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
-            att = 1;
+            att |= COMMON_LVB_UNDERSCORE;
+        if (i & (A_LEFTLINE >> PDC_ATTR_SHIFT))
+            att |= COMMON_LVB_GRID_LVERTICAL;
+        if (i & (A_RIGHTLINE >> PDC_ATTR_SHIFT))
+            att |= COMMON_LVB_GRID_RVERTICAL;
         if (i & (A_INVIS >> PDC_ATTR_SHIFT))
         {
             temp_bg = att >> 4;

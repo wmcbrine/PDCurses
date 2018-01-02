@@ -37,7 +37,7 @@ XCursesAppData xc_app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-#define MAX_COLORS   16             /* maximum of "normal" colors */
+#define MAX_COLORS   256            /* maximum of "normal" colors */
 #define COLOR_CURSOR MAX_COLORS     /* color of cursor */
 #define COLOR_BORDER MAX_COLORS + 1 /* color of border */
 
@@ -768,6 +768,24 @@ static void _initialize_colors(void)
     colors[COLOR_MAGENTA + 8] = xc_app_data.colorBoldMagenta;
     colors[COLOR_CYAN + 8]    = xc_app_data.colorBoldCyan;
     colors[COLOR_WHITE + 8]   = xc_app_data.colorBoldWhite;
+
+#define RGB(R, G, B) ( ((unsigned long)(R) << 16) | \
+                       ((unsigned long)(G) << 8) | \
+                       ((unsigned long)(B)) )
+
+    /* 256-color xterm extended palette: 216 colors in a 6x6x6 color
+       cube, plus 24 shades of gray */
+
+    for (i = 16, r = 0; r < 6; r++)
+        for (g = 0; g < 6; g++)
+            for (b = 0; b < 6; b++)
+                colors[i++] = RGB(r ? r * 40 + 55 : 0,
+                                  g ? g * 40 + 55 : 0,
+                                  b ? b * 40 + 55 : 0);
+    for (i = 0; i < 24; i++)
+        colors[i + 232] = RGB(i * 10 + 8, i * 10 + 8, i * 10 + 8);
+
+#undef RGB
 
     colors[COLOR_CURSOR] = xc_app_data.cursorColor;
     colors[COLOR_BORDER] = xc_app_data.borderColor;

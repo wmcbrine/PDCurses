@@ -63,7 +63,7 @@ int PDC_set_blink(bool blinkon)
 {
     SP->termattrs &= ~A_BLINK;
     if (pdc_color_started)
-        COLORS = 16;
+        COLORS = 256;
 
     return blinkon ? ERR : OK;
 }

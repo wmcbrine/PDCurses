@@ -26,8 +26,8 @@ SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
-SDL_Color pdc_color[16];
-Uint32 pdc_mapped[16];
+SDL_Color pdc_color[256];
+Uint32 pdc_mapped[256];
 int pdc_fheight, pdc_fwidth, pdc_flastc;
 bool pdc_own_screen;
 
@@ -101,7 +101,7 @@ void PDC_scr_free(void)
 
 int PDC_scr_open(int argc, char **argv)
 {
-    int i;
+    int i, r, g, b;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
 
@@ -256,7 +256,22 @@ int PDC_scr_open(int argc, char **argv)
         pdc_color[i + 8].b = (i & COLOR_BLUE) ? 0xff : 0x40;
     }
 
-    for (i = 0; i < 16; i++)
+    /* 256-color xterm extended palette: 216 colors in a 6x6x6 color
+       cube, plus 24 shades of gray */
+
+    for (i = 16, r = 0; r < 6; r++)
+        for (g = 0; g < 6; g++)
+            for (b = 0; b < 6; b++, i++)
+            {
+                pdc_color[i].r = (r ? r * 40 + 55 : 0);
+                pdc_color[i].g = (g ? g * 40 + 55 : 0);
+                pdc_color[i].b = (b ? b * 40 + 55 : 0);
+            }
+
+    for (i = 232; i < 256; i++)
+        pdc_color[i].r = pdc_color[i].g = pdc_color[i].b = (i - 232) * 10 + 8;
+
+    for (i = 0; i < 256; i++)
         pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
                                    pdc_color[i].g, pdc_color[i].b);
 

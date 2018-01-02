@@ -1173,6 +1173,45 @@ void colorTest(WINDOW *win)
                           orgcolors[i].green,
                           orgcolors[i].blue);
     }
+
+    if (COLORS >= 256)
+    {
+        int x, y, z, lmarg = (COLS - 77) / 2;
+
+        erase();
+
+        attrset(A_BOLD);
+        mvaddstr(tmarg, (COLS - 15) / 2, "Extended Colors");
+        attrset(A_NORMAL);
+
+        mvaddstr(tmarg + 3, lmarg, "6x6x6 Color Cube (16-231):");
+
+        for (i = 16; i < 256; i++)
+            init_pair(i, COLOR_BLACK, i);
+
+        for (i = 16, z = 0; z < 6; z++)
+            for (y = 0; y < 6; y++)
+                for (x = 0; x < 6; x++)
+                {
+                    chtype ch = ' ' | COLOR_PAIR(i++);
+
+                    mvaddch(tmarg + 5 + y, z * 13 + x * 2 + lmarg, ch);
+                    addch(ch);
+                }
+
+        mvaddstr(tmarg + 13, lmarg, "Greyscale (232-255):");
+
+        for (x = 0; x < 24; x++)
+        {
+            chtype ch = ' ' | COLOR_PAIR(232 + x);
+
+            mvaddch(tmarg + 15, x * 2 + lmarg, ch);
+            addch(ch);
+        }
+
+        mvaddstr(tmarg + 19, 3, "Press any key to continue");
+        getch();
+    }
 }
 #endif
 

@@ -640,7 +640,7 @@ int weditstr(WINDOW *win, char *buf, int field)
     getbegyx(win, begy, begx);
 
     wedit = subwin(win, 1, field, begy + cury, begx + curx);
-    oldattr = wedit->_attrs;
+    oldattr = getattrs(wedit);
     colorbox(wedit, EDITBOXCOLOR, 0);
 
     keypad(wedit, TRUE);

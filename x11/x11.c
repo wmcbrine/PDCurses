@@ -751,6 +751,8 @@ static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 
 static void _initialize_colors(void)
 {
+    int i, r, g, b;
+
     colors[COLOR_BLACK]   = xc_app_data.colorBlack;
     colors[COLOR_RED]     = xc_app_data.colorRed;
     colors[COLOR_GREEN]   = xc_app_data.colorGreen;

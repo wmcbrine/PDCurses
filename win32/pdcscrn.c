@@ -366,6 +366,7 @@ int PDC_scr_open(int argc, char **argv)
     const char *str;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     HMODULE h_kernel;
+    BOOL result;
     int i;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
@@ -448,18 +449,18 @@ int PDC_scr_open(int argc, char **argv)
             pdc_con_out = std_con_out;
         }
         else
-        {
-            BOOL result = SetConsoleMode(pdc_con_out, 0x0010);
-            if (result)
-                SP->termattrs |= A_PROTECT|A_REVERSE;
             SP->_restore = PDC_RESTORE_BUFFER;
-        }
     }
 
     xcpt_filter = SetUnhandledExceptionFilter(_restore_console);
     SetConsoleCtrlHandler(_ctrl_break, TRUE);
 
     SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
+
+    /* ENABLE_LVB_GRID_WORLDWIDE */
+    result = SetConsoleMode(pdc_con_out, 0x0010);
+    if (result)
+        SP->termattrs |= A_PROTECT|A_REVERSE;
 
     PDC_reset_prog_mode();
 

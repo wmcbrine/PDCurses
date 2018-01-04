@@ -623,10 +623,12 @@ void PDC_init_pair(short pair, short fg, short bg)
         att = fg | (bg << 4);
 
         if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
+        {
             if (rev)
                 att |= COMMON_LVB_REVERSE_VIDEO;
             else
                 att = bg | (fg << 4);
+        }
         if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_UNDERSCORE;
         if (i & (A_LEFTLINE >> PDC_ATTR_SHIFT))

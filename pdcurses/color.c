@@ -117,7 +117,7 @@ int start_color(void)
 
     pdc_color_started = TRUE;
 
-    PDC_set_blink(FALSE);   /* Also sets COLORS, to 8 or 16 */
+    PDC_set_blink(FALSE);   /* Also sets COLORS */
 
     if (!default_colors && SP->orig_attr && getenv("PDC_ORIGINAL_COLORS"))
         default_colors = TRUE;

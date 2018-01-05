@@ -96,12 +96,45 @@ void PDC_scr_free(void)
         free(SP);
 }
 
+static void _initialize_colors(void)
+{
+    int i, r, g, b;
+
+    for (i = 0; i < 8; i++)
+    {
+        pdc_color[i].r = (i & COLOR_RED) ? 0xc0 : 0;
+        pdc_color[i].g = (i & COLOR_GREEN) ? 0xc0 : 0;
+        pdc_color[i].b = (i & COLOR_BLUE) ? 0xc0 : 0;
+
+        pdc_color[i + 8].r = (i & COLOR_RED) ? 0xff : 0x40;
+        pdc_color[i + 8].g = (i & COLOR_GREEN) ? 0xff : 0x40;
+        pdc_color[i + 8].b = (i & COLOR_BLUE) ? 0xff : 0x40;
+    }
+
+    /* 256-color xterm extended palette: 216 colors in a 6x6x6 color
+       cube, plus 24 shades of gray */
+
+    for (i = 16, r = 0; r < 6; r++)
+        for (g = 0; g < 6; g++)
+            for (b = 0; b < 6; b++, i++)
+            {
+                pdc_color[i].r = (r ? r * 40 + 55 : 0);
+                pdc_color[i].g = (g ? g * 40 + 55 : 0);
+                pdc_color[i].b = (b ? b * 40 + 55 : 0);
+            }
+
+    for (i = 232; i < 256; i++)
+        pdc_color[i].r = pdc_color[i].g = pdc_color[i].b = (i - 232) * 10 + 8;
+
+    for (i = 0; i < 256; i++)
+        pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
+                                   pdc_color[i].g, pdc_color[i].b);
+}
+
 /* open the physical screen -- allocate SP, miscellaneous intialization */
 
 int PDC_scr_open(int argc, char **argv)
 {
-    int i, r, g, b;
-
     PDC_LOG(("PDC_scr_open() - called\n"));
 
     SP = calloc(1, sizeof(SCREEN));
@@ -259,35 +292,7 @@ int PDC_scr_open(int argc, char **argv)
     if (SP->orig_attr)
         PDC_retile();
 
-    for (i = 0; i < 8; i++)
-    {
-        pdc_color[i].r = (i & COLOR_RED) ? 0xc0 : 0;
-        pdc_color[i].g = (i & COLOR_GREEN) ? 0xc0 : 0;
-        pdc_color[i].b = (i & COLOR_BLUE) ? 0xc0 : 0;
-
-        pdc_color[i + 8].r = (i & COLOR_RED) ? 0xff : 0x40;
-        pdc_color[i + 8].g = (i & COLOR_GREEN) ? 0xff : 0x40;
-        pdc_color[i + 8].b = (i & COLOR_BLUE) ? 0xff : 0x40;
-    }
-
-    /* 256-color xterm extended palette: 216 colors in a 6x6x6 color
-       cube, plus 24 shades of gray */
-
-    for (i = 16, r = 0; r < 6; r++)
-        for (g = 0; g < 6; g++)
-            for (b = 0; b < 6; b++, i++)
-            {
-                pdc_color[i].r = (r ? r * 40 + 55 : 0);
-                pdc_color[i].g = (g ? g * 40 + 55 : 0);
-                pdc_color[i].b = (b ? b * 40 + 55 : 0);
-            }
-
-    for (i = 232; i < 256; i++)
-        pdc_color[i].r = pdc_color[i].g = pdc_color[i].b = (i - 232) * 10 + 8;
-
-    for (i = 0; i < 256; i++)
-        pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
-                                   pdc_color[i].g, pdc_color[i].b);
+    _initialize_colors();
 
     SDL_StartTextInput();
 

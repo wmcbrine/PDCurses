@@ -1,12 +1,18 @@
-# GNU MAKE Makefile for PDCurses library - WIN32 Cygnus GCC
+# GNU MAKE Makefile for PDCurses library - WIN32 GCC
 #
-# Usage: make -f [path\]gccwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
+# Usage: make -f [path/]gccwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
 #
 # where tgt can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
 
 O = o
 E = .exe
+
+ifeq ($(OS),Windows_NT)
+	RM = cmd /c del
+else
+	RM = rm -f
+endif
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
@@ -63,9 +69,9 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-rm -f *.o
-	-rm -f *.exe
-	-rm -f $(CLEAN)
+	-$(RM) *.o
+	-$(RM) *.exe
+	-$(RM) $(CLEAN)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
@@ -101,14 +107,14 @@ tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
 dist: $(PDCLIBS)
-	echo PDCurses $(VERDOT) for Cygnus Win32 > file_id.diz
+	echo PDCurses $(VERDOT) for GCC Win32 > file_id.diz
 	echo ------------------------------------------ >> file_id.diz
 	echo Public Domain Curses library for >> file_id.diz
-	echo Cygnus GCC for Win32. >> file_id.diz
+	echo GCC for Win32. >> file_id.diz
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
-	zip -9jX pdc$(VER)_cyg_w32 \
+	zip -9jX pdc$(VER)_gcc_w32 \
 	$(PDCURSES_SRCDIR)/README.md $(PDCURSES_SRCDIR)/HISTORY.md \
 	$(PDCURSES_SRCDIR)/curses.h $(PDCURSES_SRCDIR)/panel.h \
-	$(LIBCURSES) $(LIBPANEL) file_id.diz
-	rm file_id.diz
+	$(LIBCURSES) file_id.diz
+	$(RM) file_id.diz

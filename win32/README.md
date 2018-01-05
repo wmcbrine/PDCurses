@@ -14,8 +14,7 @@ Building
 
         bccwin32.mak  - Borland C++ 7.0+
         dmcwin32.mak  - Digital Mars
-        gccwin32.mak  - Cygnus GNU Compiler
-        mingwin32.mak - MinGW
+        gccwin32.mak  - GNU Compiler (MinGW or Cygnus)
         vcwin32.mak   - Microsoft Visual C++ 2.0+
         wccwin32.mak  - Open Watcom 1.8+
 
@@ -39,7 +38,7 @@ Building
   You can also give the optional parameter "WIDE=Y", to build the
   library with wide-character (Unicode) support:
 
-        make -f mingwin32.mak WIDE=Y
+        make -f gccwin32.mak WIDE=Y
 
   When built this way, the library is not compatible with Windows 9x,
   unless you also link with the Microsoft Layer for Unicode (not
@@ -50,7 +49,7 @@ Building
   unless WIDE=Y is also set. Use it to get around the poor support for 
   UTF-8 in the Windows console:
 
-        make -f mingwin32.mak WIDE=Y UTF8=Y
+        make -f gccwin32.mak WIDE=Y UTF8=Y
 
   You can also use the optional parameter "DLL=Y" with Visual C++,
   MinGW or Cygwin, to build the library as a DLL:

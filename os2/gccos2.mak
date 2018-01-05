@@ -75,7 +75,6 @@ ptest.o rain.o worm.o
 
 $(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-copy $(LIBCURSES) panel.a
 
 $(LIBOBJS) $(PDCOBJS) $(DEMOOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_OS2_H)

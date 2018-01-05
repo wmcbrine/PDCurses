@@ -51,7 +51,6 @@ clean:
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-del $@
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
-	-copy $(LIBCURSES) panel.lib
 
 .autodepend
 

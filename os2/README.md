@@ -26,10 +26,7 @@ Building
 
   (For Watcom, use "wmake" instead of "make"; for MSVC or C Set/2,
   "nmake".) You'll get the libraries (pdcurses.lib or .a, depending on
-  your compiler; and panel.lib or .a), the demos (*.exe), and a lot of
-  object files. Note that the panel library is just a copy of the main
-  library, provided for convenience; both panel and curses functions are
-  in the main library.
+  your compiler), the demos (*.exe), and a lot of object files.
 
 
 Distribution Status

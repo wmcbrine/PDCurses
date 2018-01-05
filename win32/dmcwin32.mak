@@ -69,7 +69,6 @@ $(DEMOS) : $(LIBCURSES)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) -c $@ $(LIBOBJS) $(PDCOBJS)
-	-copy $(LIBCURSES) panel.lib
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c
 OSBUILD = $(BUILD) $(osdir)\$*.c

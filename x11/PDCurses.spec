@@ -41,7 +41,6 @@ rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 %doc README.md HISTORY.md
 %{base}/bin/xcurses-config
 %{base}/lib/libXCurses.a
-%{base}/lib/libXpanel.a
 %{base}/lib/libXCurses.so
 %{base}/include/xcurses.h
 %{base}/include/xpanel.h

@@ -50,7 +50,6 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\iccos2.lrf
-	-copy $(LIBCURSES) panel.lib
 
 addch.obj: $(srcdir)\addch.c $(PDCURSES_HEADERS)
 	$(BUILD) $(srcdir)\addch.c

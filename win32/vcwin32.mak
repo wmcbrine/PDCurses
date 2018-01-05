@@ -82,12 +82,10 @@ terminfo.obj: $(TERM_HEADER)
 !ifndef DLL
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) -out:$@ $(LIBOBJS) $(PDCOBJS)
-	-copy $(LIBCURSES) panel.lib
 !endif
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
 	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
-	-copy $(LIBCURSES) panel.lib
 
 pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
 	rc /r /fopdcurses.res $(osdir)\pdcurses.rc

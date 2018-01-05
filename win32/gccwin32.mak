@@ -74,7 +74,6 @@ endif
 
 $(LIBCURSES) : $(LIBDEPS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-cp pdcurses.a panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

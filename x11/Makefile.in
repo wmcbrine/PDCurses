@@ -67,10 +67,6 @@ install:
 	-$(RANLIB) $(libdir)/libXCurses.a
 	-$(INSTALL) -c -m 755 $(osdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) \
 		$(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST)
-	ln -f -s $(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) \
-		$(libdir)/$(SHLPRE)Xpanel$(SHLPST)
-	ln -f -s $(libdir)/libXCurses.a $(libdir)/libXpanel.a
-	-$(RANLIB) $(libdir)/libXpanel.a
 	$(INSTALL) -c -m 755 $(osdir)/xcurses-config $(bindir)/xcurses-config
 
 clean:

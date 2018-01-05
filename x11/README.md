@@ -34,9 +34,6 @@ Building
   any existing curses installations. Unrenamed copies of curses.h and
   panel.h are installed in (by default) /usr/local/include/xcurses.
 
-  libXpanel is just a symlink to libXCurses. Both curses and panel
-  functions are in the main library.
-
 
 Distribution Status
 -------------------

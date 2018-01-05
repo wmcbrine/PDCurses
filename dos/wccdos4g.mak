@@ -1,6 +1,6 @@
 # Watcom WMAKE Makefile for PDCurses library - DOS/4GW Open Watcom 1.8+
 #
-# Usage: wmake -f [path\]wccdos4g.mak [DEBUG=Y] [target]
+# Usage: wmake -f [path/]wccdos4g.mak [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -11,26 +11,26 @@ PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 PDCURSES_SRCDIR	= ..
 !endif
 
-!include $(PDCURSES_SRCDIR)\version.mif
+!include $(PDCURSES_SRCDIR)/version.mif
 
-osdir		= $(PDCURSES_SRCDIR)\dos
+osdir		= $(PDCURSES_SRCDIR)/dos
 
 CC		= wcc386
 TARGET		= dos4g
 
-CFLAGS		= /bt=$(TARGET) /zq /wx /mf /i=$(PDCURSES_SRCDIR)
+CFLAGS		= -bt=$(TARGET) -zq -wx -mf -i=$(PDCURSES_SRCDIR)
 
 !ifeq DEBUG Y
-CFLAGS  	+= /d2 /DPDCDEBUG
+CFLAGS  	+= -d2 -DPDCDEBUG
 LDFLAGS 	= D W A op q sys $(TARGET)
 !else
-CFLAGS  	+= /oneatx
+CFLAGS  	+= -oneatx
 LDFLAGS 	= op q sys $(TARGET)
 !endif
 
-LIBEXE		= wlib /q /n /t
+LIBEXE		= wlib -q -n -t
 
-!include $(PDCURSES_SRCDIR)\watcom.mif
+!include $(PDCURSES_SRCDIR)/watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	%write wccdos.lrf $(LIBOBJS) $(PDCOBJS)
@@ -42,4 +42,4 @@ PLATFORM1	= Watcom C++ 32-bit DOS
 PLATFORM2	= Open Watcom 2.0 for 32-bit DOS
 ARCNAME		= pdc$(VER)32w
 
-!include $(PDCURSES_SRCDIR)\makedist.mif
+!include $(PDCURSES_SRCDIR)/makedist.mif

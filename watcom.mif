@@ -1,7 +1,7 @@
 # Common elements for the Watcom makefiles
 
-srcdir = $(PDCURSES_SRCDIR)\pdcurses
-demodir = $(PDCURSES_SRCDIR)\demos
+srcdir = $(PDCURSES_SRCDIR)/pdcurses
+demodir = $(PDCURSES_SRCDIR)/demos
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj &
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj &

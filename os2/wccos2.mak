@@ -18,7 +18,7 @@ osdir		= $(PDCURSES_SRCDIR)/os2
 CC		= wcc386
 TARGET		= os2v2
 
-CFLAGS		= -bt=$(TARGET) -wx -s -zq -i=$(PDCURSES_SRCDIR)
+CFLAGS		= -bt=$(TARGET) -wx -s -zq -i=$(PDCURSES_SRCDIR) -i=c:\watcom\h\os2
 
 !ifeq DEBUG Y
 CFLAGS  	+= -d2 -DPDCDEBUG

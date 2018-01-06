@@ -8,6 +8,8 @@
 # Change the memory MODEL here, if desired
 MODEL		= l
 
+RM		= del
+
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 !else
@@ -38,7 +40,7 @@ LIBEXE		= wlib -q -n -t
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	%write wccdos.lrf $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @wccdos.lrf
-	-del wccdos.lrf
+	-$(RM) wccdos.lrf
 
 PLATFORM1	= Watcom C++ 16-bit DOS
 PLATFORM2	= Open Watcom 2.0 for 16-bit DOS

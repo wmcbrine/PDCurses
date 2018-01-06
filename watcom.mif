@@ -31,10 +31,10 @@ LINK = wlink
 all:	$(LIBCURSES) $(DEMOS)
 
 clean
-	-del *.obj
-	-del *.lib
-	-del *.exe
-	-del *.err
+	-$(RM) *.obj
+	-$(RM) *.lib
+	-$(RM) *.exe
+	-$(RM) *.err
 
 demos:	$(DEMOS)
 

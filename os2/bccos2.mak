@@ -7,6 +7,7 @@
 
 O = obj
 E = .exe
+RM = del
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..
@@ -38,14 +39,14 @@ LIBCURSES	= pdcurses.lib
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:
-	-del *.obj
-	-del *.lib
-	-del *.exe
+	-$(RM) *.obj
+	-$(RM) *.lib
+	-$(RM) *.exe
 
 demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	-del $@
+	-$(RM) $@
 	$(LIBEXE) $@ \
 +addch.obj +addchstr.obj +addstr.obj +attr.obj +beep.obj +bkgd.obj \
 +border.obj +clear.obj +color.obj +delch.obj +deleteln.obj +deprec.obj \

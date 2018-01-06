@@ -7,6 +7,7 @@
 
 O = obj
 E = .exe
+RM = del
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..
@@ -42,9 +43,9 @@ LIBCURSES	= pdcurses.lib
 all:	$(LIBCURSES) $(DEMOS)
 
 clean:
-	-del *.obj
-	-del *.lib
-	-del *.exe
+	-$(RM) *.obj
+	-$(RM) *.lib
+	-$(RM) *.exe
 
 demos:	$(DEMOS)
 

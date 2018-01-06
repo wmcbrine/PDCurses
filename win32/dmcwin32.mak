@@ -5,6 +5,8 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 
+RM = del
+
 PDCURSES_SRCDIR	= ..
 
 PDCURSES_CURSES_H	= $(PDCURSES_SRCDIR)\curses.h
@@ -39,11 +41,11 @@ firework.exe ptest.exe rain.exe worm.exe
 all:    $(LIBCURSES) $(DEMOS)
 
 clean:
-	-del *.obj
-	-del *.lib
-	-del *.exe
-	-del *.map
-	-del advapi32.def
+	-$(RM) *.obj
+	-$(RM) *.lib
+	-$(RM) *.exe
+	-$(RM) *.map
+	-$(RM) advapi32.def
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj getch.obj \

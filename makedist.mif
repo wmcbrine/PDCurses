@@ -1,5 +1,4 @@
 # Makefile include: build a binary archive with Info-ZIP
-# under DOS, OS/2 or Windows
 
 dist: $(PDCLIBS)
 	echo PDCurses $(VERDOT) for $(PLATFORM1) > file_id.diz
@@ -8,13 +7,13 @@ dist: $(PDCLIBS)
 	echo $(PLATFORM2). >> file_id.diz
 	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
 	echo Public Domain. >> file_id.diz
-	echo $(PDCURSES_SRCDIR)\README.md > flist
-	echo $(PDCURSES_SRCDIR)\HISTORY.md >> flist
-	echo $(PDCURSES_SRCDIR)\curses.h >> flist
-	echo $(PDCURSES_SRCDIR)\panel.h >> flist
-	echo $(PDCURSES_SRCDIR)\term.h >> flist
+	echo $(PDCURSES_SRCDIR)/README.md > flist
+	echo $(PDCURSES_SRCDIR)/HISTORY.md >> flist
+	echo $(PDCURSES_SRCDIR)/curses.h >> flist
+	echo $(PDCURSES_SRCDIR)/panel.h >> flist
+	echo $(PDCURSES_SRCDIR)/term.h >> flist
 	echo $(LIBCURSES) >> flist
 	echo file_id.diz >> flist
 	zip -9jX $(ARCNAME) -@ <flist
-	del flist
-	del file_id.diz
+	$(RM) flist
+	$(RM) file_id.diz

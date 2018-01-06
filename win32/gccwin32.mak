@@ -106,15 +106,8 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
-dist: $(PDCLIBS)
-	echo PDCurses $(VERDOT) for GCC Win32 > file_id.diz
-	echo ------------------------------------------ >> file_id.diz
-	echo Public Domain Curses library for >> file_id.diz
-	echo GCC for Win32. >> file_id.diz
-	echo Source available in PDCURS$(VER).ZIP >> file_id.diz
-	echo Public Domain. >> file_id.diz
-	zip -9jX pdc$(VER)_gcc_w32 \
-	$(PDCURSES_SRCDIR)/README.md $(PDCURSES_SRCDIR)/HISTORY.md \
-	$(PDCURSES_SRCDIR)/curses.h $(PDCURSES_SRCDIR)/panel.h \
-	$(LIBCURSES) file_id.diz
-	$(RM) file_id.diz
+PLATFORM1 = GCC Win32
+PLATFORM2 = GCC for Win32
+ARCNAME = pdc$(VER)_gcc_w32
+
+include $(PDCURSES_SRCDIR)/makedist.mif

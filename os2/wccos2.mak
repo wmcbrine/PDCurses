@@ -5,6 +5,8 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 
+RM = del
+
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 !else

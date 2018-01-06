@@ -7,6 +7,7 @@
 
 O = obj
 E = .exe
+RM = del
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..
@@ -63,12 +64,12 @@ $(WIDEOPT) $(UTF8OPT)
 all:	$(PDCLIBS) $(DEMOS)
 
 clean:
-	-del *.obj
-	-del *.lib
-	-del *.exe
-	-del *.dll
-	-del *.exp
-	-del *.res
+	-$(RM) *.obj
+	-$(RM) *.lib
+	-$(RM) *.exe
+	-$(RM) *.dll
+	-$(RM) *.exp
+	-$(RM) *.res
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 

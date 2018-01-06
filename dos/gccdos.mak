@@ -7,6 +7,7 @@
 
 O = o
 E = .exe
+RM = del
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
@@ -45,9 +46,9 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-del *.o
-	-del *.a
-	-del *.exe
+	-$(RM) *.o
+	-$(RM) *.a
+	-$(RM) *.exe
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)

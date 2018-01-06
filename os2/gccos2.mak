@@ -10,6 +10,7 @@
 
 O = o
 E = .exe
+RM = del
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
@@ -64,9 +65,9 @@ all:	libs demos
 libs:	$(PDCLIBS)
 
 clean:
-	-del *.o
-	-del *.exe
-	-del $(CLEAN)
+	-$(RM) *.o
+	-$(RM) *.exe
+	-$(RM) $(CLEAN)
 
 demos:	$(DEMOS)
 

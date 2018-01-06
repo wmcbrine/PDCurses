@@ -13,7 +13,6 @@ Building
 - Choose the appropriate makefile for your compiler:
 
         bccwin32.mak  - Borland C++ 7.0+
-        dmcwin32.mak  - Digital Mars
         gccwin32.mak  - GNU Compiler (MinGW or Cygnus)
         vcwin32.mak   - Microsoft Visual C++ 2.0+
         wccwin32.mak  - Open Watcom 1.8+
@@ -23,9 +22,6 @@ Building
   you unpacked PDCurses, and changing to your target directory:
 
         set PDCURSES_SRCDIR=c:\pdcurses
-
-  This won't work with the Digital Mars makefiles, nor will the options
-  described below.
 
 - Build it:
 

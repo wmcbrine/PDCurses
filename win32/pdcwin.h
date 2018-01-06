@@ -14,10 +14,6 @@
 # define PDC_ATTR_SHIFT 8
 #endif
 
-#if !defined(HAVE_INFOEX) && !defined(__DMC__)
-# define HAVE_INFOEX
-#endif
-
 extern WORD *pdc_atrtab;
 extern HANDLE pdc_con_out, pdc_con_in;
 extern DWORD pdc_quick_edit;

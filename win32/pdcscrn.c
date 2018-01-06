@@ -65,22 +65,6 @@ static struct
     WCHAR    ConsoleTitle[0x100];
 } console_info;
 
-#ifndef HAVE_INFOEX
-/* Console screen buffer information (extended version) */
-typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX {
-    ULONG       cbSize;
-    COORD       dwSize;
-    COORD       dwCursorPosition;
-    WORD        wAttributes;
-    SMALL_RECT  srWindow;
-    COORD       dwMaximumWindowSize;
-    WORD        wPopupAttributes;
-    BOOL        bFullscreenSupported;
-    COLORREF    ColorTable[16];
-} CONSOLE_SCREEN_BUFFER_INFOEX;
-typedef CONSOLE_SCREEN_BUFFER_INFOEX    *PCONSOLE_SCREEN_BUFFER_INFOEX;
-#endif
-
 typedef BOOL (WINAPI *SetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
     PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
 typedef BOOL (WINAPI *GetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,

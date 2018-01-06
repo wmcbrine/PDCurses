@@ -66,8 +66,6 @@ AC_PATH_X
 MH_CHECK_X_INC
 MH_CHECK_X_LIB
 MH_CHECK_X_HEADERS(DECkeysym.h Sunkeysym.h xpm.h)
-MH_CHECK_X_KEYDEFS(XK_KP_Delete XK_KP_Insert XK_KP_End XK_KP_Down XK_KP_Next \
-	XK_KP_Left XK_KP_Right XK_KP_Home XK_KP_Up XK_KP_Prior XK_KP_Begin)
 MH_CHECK_X_TYPEDEF(XPointer)
 dnl
 dnl extra for xpm library
@@ -208,50 +206,6 @@ AC_DEFINE([HAVE_SUNKEYSYM_H], [],
 
 AC_DEFINE([HAVE_XPM_H], [],
 	[Define if you have the <xpm.h> header file]
-)
-
-AC_DEFINE([HAVE_XK_KP_DELETE], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_INSERT], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_END], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_DOWN], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_NEXT], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_LEFT], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_RIGHT], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_HOME], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_UP], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_PRIOR], [],
-	[Define if you have this defined in <keysym.h>]
-)
-
-AC_DEFINE([HAVE_XK_KP_BEGIN], [],
-	[Define if you have this defined in <keysym.h>]
 )
 
 AC_DEFINE([USE_XAW3D], [],

@@ -5,7 +5,6 @@ dnl MH_IPC
 dnl MH_CHECK_X_INC
 dnl MH_CHECK_X_LIB
 dnl MH_CHECK_X_HEADERS
-dnl MH_CHECK_X_KEYDEFS
 dnl MH_CHECK_X_TYPEDEF
 dnl MH_CHECK_LIB
 dnl MH_SHARED_LIBRARY
@@ -240,24 +239,6 @@ save_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $MH_XINC_DIR"
 for mh_header in $1; do
 	AC_CHECK_HEADERS($mh_header)
-done
-CPPFLAGS="$save_CPPFLAGS"
-])dnl
-
-dnl ---------------------------------------------------------------------------
-dnl Determine if various key definitions exist in keysym.h
-dnl ---------------------------------------------------------------------------
-AC_DEFUN([MH_CHECK_X_KEYDEFS],
-[
-save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $MH_XINC_DIR"
-for mh_keydef in $1; do
-	AC_MSG_CHECKING(for $mh_keydef in keysym.h)
-	mh_upper_name="HAVE_`echo $mh_keydef | tr '[a-z]' '[A-Z]'`"
-	AC_TRY_COMPILE([#include <keysym.h>],
-[int i = $mh_keydef;],
-  mh_have_key=yes; AC_DEFINE_UNQUOTED($mh_upper_name,1), mh_have_key=no )
-	AC_MSG_RESULT($mh_have_key)
 done
 CPPFLAGS="$save_CPPFLAGS"
 ])dnl

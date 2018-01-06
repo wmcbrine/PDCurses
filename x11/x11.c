@@ -170,37 +170,37 @@ static struct
  {XK_F29,       TRUE,   KEY_A3,      '9',          CTL_PAD9,    ALT_PAD9},
  {XK_F31,       TRUE,   KEY_B2,      '5',          CTL_PAD5,    ALT_PAD5},
  {XK_F35,       TRUE,   KEY_C3,      '3',          CTL_PAD3,    ALT_PAD3},
-#ifdef HAVE_XK_KP_DELETE
+#ifdef XK_KP_Delete
  {XK_KP_Delete, TRUE,   PADSTOP,     '.',          CTL_PADSTOP, ALT_PADSTOP},
 #endif
-#ifdef HAVE_XK_KP_INSERT
+#ifdef XK_KP_Insert
  {XK_KP_Insert, TRUE,   PAD0,        '0',          CTL_PAD0,    ALT_PAD0},
 #endif
-#ifdef HAVE_XK_KP_END
+#ifdef XK_KP_End
  {XK_KP_End,    TRUE,   KEY_C1,      '1',          CTL_PAD1,    ALT_PAD1},
 #endif
-#ifdef HAVE_XK_KP_DOWN
+#ifdef XK_KP_Down
  {XK_KP_Down,   TRUE,   KEY_C2,      '2',          CTL_PAD2,    ALT_PAD2},
 #endif
-#ifdef HAVE_XK_KP_NEXT
+#ifdef XK_KP_Next
  {XK_KP_Next,   TRUE,   KEY_C3,      '3',          CTL_PAD3,    ALT_PAD3},
 #endif
-#ifdef HAVE_XK_KP_LEFT
+#ifdef XK_KP_Left
  {XK_KP_Left,   TRUE,   KEY_B1,      '4',          CTL_PAD4,    ALT_PAD4},
 #endif
-#ifdef HAVE_XK_KP_BEGIN
+#ifdef XK_KP_Begin
  {XK_KP_Begin,  TRUE,   KEY_B2,      '5',          CTL_PAD5,    ALT_PAD5},
 #endif
-#ifdef HAVE_XK_KP_RIGHT
+#ifdef XK_KP_Right
  {XK_KP_Right,  TRUE,   KEY_B3,      '6',          CTL_PAD6,    ALT_PAD6},
 #endif
-#ifdef HAVE_XK_KP_HOME
+#ifdef XK_KP_Home
  {XK_KP_Home,   TRUE,   KEY_A1,      '7',          CTL_PAD7,    ALT_PAD7},
 #endif
-#ifdef HAVE_XK_KP_UP
+#ifdef XK_KP_Up
  {XK_KP_Up,     TRUE,   KEY_A2,      '8',          CTL_PAD8,    ALT_PAD8},
 #endif
-#ifdef HAVE_XK_KP_PRIOR
+#ifdef XK_KP_Prior
  {XK_KP_Prior,  TRUE,   KEY_A3,      '9',          CTL_PAD9,    ALT_PAD9},
 #endif
  {0,            0,      0,           0,            0,           0}

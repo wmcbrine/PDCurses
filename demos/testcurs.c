@@ -1048,20 +1048,24 @@ void attrTest(WINDOW *win)
     mvaddstr(tmarg + 5, col2, "Underlined Bold");
     attrset(A_NORMAL);
 
+    attrset(A_BLINK|A_UNDERLINE);
+    mvaddstr(tmarg + 7, col2, "Underlined Blink");
+    attrset(A_NORMAL);
+
 #ifdef A_LEFTLINE
     attrset(A_LEFTLINE);
-    mvaddstr(tmarg + 7, col2, "A_LEFTLINE");
+    mvaddstr(tmarg + 9, col2, "A_LEFTLINE");
     attrset(A_NORMAL);
 #endif
 
 #ifdef A_RIGHTLINE
     attrset(A_RIGHTLINE);
-    mvaddstr(tmarg + 9, col2, "A_RIGHTLINE");
+    mvaddstr(tmarg + 11, col2, "A_RIGHTLINE");
     attrset(A_NORMAL);
 #endif
 
     attrset(A_PROTECT);
-    mvaddstr(tmarg + 11, col2, "A_PROTECT");
+    mvaddstr(tmarg + 13, col2, "A_PROTECT");
     attrset(A_NORMAL);
 
     mvaddstr(tmarg + 16, 3, "Press any key to continue");

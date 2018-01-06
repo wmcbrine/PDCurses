@@ -22,6 +22,3 @@ zip: $(ZIPFILE)
 	(cd ..; tar cvf - $(PDC_DIR)/* | gzip -9 > $(TARBALL))
 
 dist: ../$(TARBALL)
-
-rpm: ../$(TARBALL)
-	rpmbuild -ba x11/PDCurses.spec

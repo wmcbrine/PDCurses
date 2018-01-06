@@ -12,12 +12,10 @@ Building
 - Run "./configure". To build the wide-character version of the library,
   specify "--enable-widec" as a parameter. To use X Input Methods, add
   "--enable-xim". I recommend these options, but I haven't yet made
-  them the defaults, for the sake of backwards compatibility and due to
-  their new and relatively untested status.
+  them the defaults, for the sake of backwards compatibility.
 
   If your system is lacking in UTF-8 support, you can force the use of
-  UTF-8 instead of the system locale via "--enable-force-utf8". This is
-  generally more useful in Windows.
+  UTF-8 instead of the system locale via "--enable-force-utf8".
 
   If configure can't find your X include files or X libraries, you can
   specify the paths with the arguments "--x-includes=inc_path" and/or
@@ -41,16 +39,6 @@ Distribution Status
 As of April 13, 2006, the files in this directory are released to the 
 Public Domain, except for ScrollBox*, which are under essentially the 
 MIT X License.
-
-
-To be Done
-----------
-
-- have newterm() create a new X window
-
-- provide a command line parsing function to enable X command line
-  arguments to be parsed and stripped from the arguments passed back
-  to the calling procedure.
 
 
 Acknowledgements

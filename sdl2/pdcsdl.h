@@ -30,3 +30,5 @@ extern Uint32 pdc_lastupdate;        /* time of last update, in ticks */
 
 PDCEX  void PDC_update_rects(void);
 PDCEX  void PDC_retile(void);
+
+extern void PDC_blink_text(void);

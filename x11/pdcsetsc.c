@@ -73,11 +73,12 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
-    SP->termattrs &= ~A_BLINK;
     if (pdc_color_started)
         COLORS = 256;
 
-    return blinkon ? ERR : OK;
+    XCursesInstruct(blinkon ? CURSES_BLINK_ON : CURSES_BLINK_OFF);
+
+    return OK;
 }
 
 int PDC_set_bold(bool boldon)

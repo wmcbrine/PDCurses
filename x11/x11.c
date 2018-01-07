@@ -255,6 +255,14 @@ static bool visible_cursor = FALSE;
 static bool window_entered = TRUE;
 static char *program_name;
 
+/* Blank text when drawing blinked-off text */
+#ifdef PDC_WIDE
+static XChar2b blank_text[513];
+#else
+static char blank_text[513];
+#endif
+static bool blinked_off;
+
 /* Macros just for app_resources */
 
 #ifdef PDC_WIDE
@@ -353,7 +361,8 @@ static XtResource app_resources[] =
     RINT(scrollbarWidth, ScrollbarWidth, 15),
     RINT(cursorBlinkRate, CursorBlinkRate, 0),
 
-    RSTRING(textCursor, TextCursor)
+    RSTRING(textCursor, TextCursor),
+    RINT(textBlinkRate, TextBlinkRate, 500)
 };
 
 #undef RCURSOR
@@ -383,6 +392,7 @@ static XrmOptionDescRec options[] =
     COPT(doubleClickPeriod), COPT(scrollbarWidth),
     COPT(pointerForeColor), COPT(pointerBackColor),
     COPT(cursorBlinkRate), COPT(cursorColor), COPT(textCursor),
+    COPT(textBlinkRate),
 
     CCOLOR(Black), CCOLOR(Red), CCOLOR(Green), CCOLOR(Yellow),
     CCOLOR(Blue), CCOLOR(Magenta), CCOLOR(Cyan), CCOLOR(White),
@@ -582,12 +592,6 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
 
-#ifdef PDC_WIDE
-    text[len].byte1 = text[len].byte2 = 0;
-#else
-    text[len] = '\0';
-#endif
-
     /* Specify the color table offsets */
 
     sysattrs = SP->termattrs;
@@ -624,41 +628,53 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     XSetClipRectangles(XCURSESDISPLAY, gc, 0, 0, &bounds, 1, Unsorted);
 
-#ifdef PDC_WIDE
-    XDrawImageString16(
-#else
-    XDrawImageString(
-#endif
-                     XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
-
-    /* Underline, etc. */
-
-    if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
+    if (blinked_off && (sysattrs & A_BLINK) && (attr & A_BLINK))
     {
-        int k;
+#ifdef PDC_WIDE
+        XDrawImageString16(
+#else
+        XDrawImageString(
+#endif
+            XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, blank_text, len);
+    }
+    else
+    {
+#ifdef PDC_WIDE
+        XDrawImageString16(
+#else
+        XDrawImageString(
+#endif
+            XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
 
-        if (SP->line_color != -1)
-            XSetForeground(XCURSESDISPLAY, gc, colors[SP->line_color]);
+        /* Underline, etc. */
 
-        if (attr & A_UNDERLINE)     /* UNDER */
-            XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-                      xpos, ypos + 1, xpos + font_width * len, ypos + 1);
+        if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
+        {
+            int k;
 
-        if (attr & A_LEFTLINE)      /* LEFT */
-            for (k = 0; k < len; k++)
-            {
-                int x = xpos + font_width * k;
+            if (SP->line_color != -1)
+                XSetForeground(XCURSESDISPLAY, gc, colors[SP->line_color]);
+
+            if (attr & A_UNDERLINE)     /* UNDER */
                 XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-                          x, ypos - font_ascent, x, ypos + font_descent);
-            }
+                          xpos, ypos + 1, xpos + font_width * len, ypos + 1);
 
-        if (attr & A_RIGHTLINE)     /* RIGHT */
-            for (k = 0; k < len; k++)
-            {
-                int x = xpos + font_width * (k + 1) - 1;
-                XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-                          x, ypos - font_ascent, x, ypos + font_descent);
-            }
+            if (attr & A_LEFTLINE)      /* LEFT */
+                for (k = 0; k < len; k++)
+                {
+                    int x = xpos + font_width * k;
+                    XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
+                              x, ypos - font_ascent, x, ypos + font_descent);
+                }
+
+            if (attr & A_RIGHTLINE)     /* RIGHT */
+                for (k = 0; k < len; k++)
+                {
+                    int x = xpos + font_width * (k + 1) - 1;
+                    XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
+                              x, ypos - font_ascent, x, ypos + font_descent);
+                }
+        }
     }
 
     PDC_LOG(("%s:_new_packet() - row: %d col: %d "
@@ -1960,6 +1976,45 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
                     _blink_cursor, NULL);
 }
 
+static void _blink_text(XtPointer unused, XtIntervalId *id)
+{
+    int row;
+    int j, k;
+    chtype *ch;
+
+    XC_LOG(("_blink_text() - called:\n"));
+
+    blinked_off = !blinked_off;
+
+    /* Redraw changed lines on the screen to match the blink state */
+
+    for (row = 0; row < XCursesLINES; row++)
+    {
+        ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row));
+
+        for (j = 0; j < COLS; j++)
+            if (ch[j] & A_BLINK)
+            {
+                k = j;
+                while (ch[k] & A_BLINK && k < COLS)
+                    k++;
+
+                XC_get_line_lock(row);
+                _display_text(ch + j, row, j, k - j, FALSE);
+                XC_release_line_lock(row);
+
+                j = k;
+            }
+    }
+
+    _redraw_cursor();
+    _draw_border();
+
+    if ((SP->termattrs & A_BLINK) || !blinked_off)
+        XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
+                        _blink_text, NULL);
+}
+
 static void XCursesButton(Widget w, XEvent *event, String *params,
                           Cardinal *nparams)
 {
@@ -2706,6 +2761,20 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
             _refresh_scrollbar();
             break;
 
+        case CURSES_BLINK_ON:
+            if (!(SP->termattrs & A_BLINK))
+            {
+                SP->termattrs |= A_BLINK;
+                blinked_off = FALSE;
+                XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
+                                _blink_text, NULL);
+            }
+            break;
+
+        case CURSES_BLINK_OFF:
+            SP->termattrs &= ~A_BLINK;
+            break;
+
         case CURSES_CURSOR:
             XC_LOG(("CURSES_CURSOR received from child\n"));
 
@@ -3135,6 +3204,18 @@ int XCursesSetupX(int argc, char *argv[])
     if (xc_app_data.cursorBlinkRate)
         XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
                         _blink_cursor, NULL);
+
+    /* Initialize blank_text for _blink_text() */
+
+#ifdef PDC_WIDE
+    for (i = 0; i < sizeof(blank_text) / sizeof(XChar2b); i++)
+    {
+        blank_text[i].byte1 = 0;
+        blank_text[i].byte2 = ' ';
+    }
+#else
+    memset(blank_text, ' ', sizeof(blank_text));
+#endif
 
     /* Leave telling the curses process that it can start to here so 
        that when the curses process makes a request, the Xcurses 

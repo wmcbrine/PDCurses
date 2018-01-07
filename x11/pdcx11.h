@@ -114,6 +114,7 @@ typedef struct
     int scrollbarWidth;
     int cursorBlinkRate;
     char *textCursor;
+    int textBlinkRate;
 } XCursesAppData;
 
 extern XCursesAppData xc_app_data;
@@ -185,7 +186,7 @@ enum
     CURSES_GET_SELECTION, CURSES_TITLE, CURSES_REFRESH_SCROLLBAR, 
     CURSES_RESIZE, CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR, 
     CURSES_CHILD, CURSES_REFRESH, CURSES_GET_COLOR, CURSES_SET_COLOR, 
-    CURSES_EXIT
+    CURSES_BLINK_ON, CURSES_BLINK_OFF, CURSES_EXIT
 };
 
 extern short *xc_atrtab;

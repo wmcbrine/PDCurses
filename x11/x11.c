@@ -254,13 +254,6 @@ static Pixmap icon_pixmap_mask;
 static bool visible_cursor = FALSE;
 static bool window_entered = TRUE;
 static char *program_name;
-
-/* Blank text when drawing blinked-off text */
-#ifdef PDC_WIDE
-static XChar2b blank_text[513];
-#else
-static char blank_text[513];
-#endif
 static bool blinked_off;
 
 /* Macros just for app_resources */
@@ -614,11 +607,6 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
     else
         gc = normal_gc;
 
-    /* Draw it */
-
-    XSetForeground(XCURSESDISPLAY, gc, colors[rev ? back : fore]);
-    XSetBackground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
-
     _make_xy(col, row, &xpos, &ypos);
 
     bounds.x = xpos;
@@ -630,15 +618,17 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
     if (blinked_off && (sysattrs & A_BLINK) && (attr & A_BLINK))
     {
-#ifdef PDC_WIDE
-        XDrawImageString16(
-#else
-        XDrawImageString(
-#endif
-            XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, blank_text, len);
+        XSetForeground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
+        XFillRectangle(XCURSESDISPLAY, XCURSESWIN, gc, xpos, bounds.y,
+                       bounds.width, font_height);
     }
     else
     {
+        /* Draw it */
+
+        XSetForeground(XCURSESDISPLAY, gc, colors[rev ? back : fore]);
+        XSetBackground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
+
 #ifdef PDC_WIDE
         XDrawImageString16(
 #else
@@ -3204,18 +3194,6 @@ int XCursesSetupX(int argc, char *argv[])
     if (xc_app_data.cursorBlinkRate)
         XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
                         _blink_cursor, NULL);
-
-    /* Initialize blank_text for _blink_text() */
-
-#ifdef PDC_WIDE
-    for (i = 0; i < sizeof(blank_text) / sizeof(XChar2b); i++)
-    {
-        blank_text[i].byte1 = 0;
-        blank_text[i].byte2 = ' ';
-    }
-#else
-    memset(blank_text, ' ', sizeof(blank_text));
-#endif
 
     /* Leave telling the curses process that it can start to here so 
        that when the curses process makes a request, the Xcurses 

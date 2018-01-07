@@ -382,6 +382,8 @@ int PDC_get_key(void)
     case SDL_KEYDOWN:
         PDC_mouse_set();
         return _process_key_event();
+    case SDL_USEREVENT:
+        PDC_blink_text();
     }
 
     return -1;

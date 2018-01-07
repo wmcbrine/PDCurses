@@ -72,6 +72,7 @@ static SDL_Rect uprect[MAXRECT];       /* table of rects to update */
 static chtype oldch = (chtype)(-1);    /* current attribute */
 static int rectcount = 0;              /* index into uprect */
 static short foregr = -2, backgr = -2; /* current foreground, background */
+static bool blinked_off = FALSE;
 
 /* do the real updates on a delay */
 
@@ -359,6 +360,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
         _set_attr(ch);
 
+        if (blinked_off && (ch & A_BLINK))
+            ch = (ch & A_ATTRIBUTES) | ' ';
+
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) | acs_map[ch & 0x7f];
@@ -397,9 +401,33 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 #endif
 
-        if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE))
+        if (!(blinked_off && (ch & A_BLINK)) &&
+            (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE)))
             _highlight(&src, &dest, ch);
 
         dest.x += pdc_fwidth;
     }
+}
+
+void PDC_blink_text(void)
+{
+    int i, j, k;
+
+    blinked_off = !blinked_off;
+
+    for (i = 0; i < SP->lines; i++)
+    {
+        const chtype *srcp = curscr->_y[i];
+
+        for (j = 0; j < SP->cols; j++)
+            if (srcp[j] & A_BLINK)
+            {
+                k = j;
+                while (k < SP->cols && (srcp[k] & A_BLINK))
+                    k++;
+                PDC_transform_line(i, j, k - j, srcp + j);
+                j = k;
+            }
+    }
+
 }

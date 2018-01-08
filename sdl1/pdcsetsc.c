@@ -59,19 +59,8 @@ void PDC_set_title(const char *title)
     SDL_WM_SetCaption(title, title);
 }
 
-static Uint32 _blink_timer(Uint32 interval, void *param)
-{
-    SDL_Event event;
-
-    event.type = SDL_USEREVENT;
-    SDL_PushEvent(&event);
-    return(interval);
-}
-
 int PDC_set_blink(bool blinkon)
 {
-    static SDL_TimerID id;
-
     if (pdc_color_started)
         COLORS = 256;
 
@@ -79,16 +68,16 @@ int PDC_set_blink(bool blinkon)
     {
         if (!(SP->termattrs & A_BLINK))
         {
-            id = SDL_AddTimer(500, _blink_timer, NULL);
             SP->termattrs |= A_BLINK;
+            PDC_blink_text();
         }
     }
     else
     {
         if (SP->termattrs & A_BLINK)
         {
-            SDL_RemoveTimer(id);
             SP->termattrs &= ~A_BLINK;
+            PDC_blink_text();
         }
     }
 

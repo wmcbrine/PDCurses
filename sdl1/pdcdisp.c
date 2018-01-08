@@ -313,8 +313,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     int j;
 #ifdef PDC_WIDE
     Uint16 chstr[2] = {0, 0};
-    attr_t sysattrs = SP->termattrs;
 #endif
+    attr_t sysattrs = SP->termattrs;
 
     PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
@@ -360,7 +360,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
         _set_attr(ch);
 
-        if (blinked_off && (ch & A_BLINK))
+        if (blinked_off && (ch & A_BLINK) && (sysattrs & A_BLINK))
             ch = (ch & A_ATTRIBUTES) | ' ';
 
 #ifdef CHTYPE_LONG
@@ -401,7 +401,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 #endif
 
-        if (!(blinked_off && (ch & A_BLINK)) &&
+        if (!(blinked_off && (ch & A_BLINK) && (sysattrs & A_BLINK)) &&
             (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE)))
             _highlight(&src, &dest, ch);
 
@@ -409,9 +409,32 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     }
 }
 
+static Uint32 _blink_timer(Uint32 interval, void *param)
+{
+    SDL_Event event;
+
+    event.type = SDL_USEREVENT;
+    SDL_PushEvent(&event);
+    return(interval);
+}
+
 void PDC_blink_text(void)
 {
+    static SDL_TimerID blinker_id = 0;
     int i, j, k;
+
+    oldch = (chtype)(-1);
+
+    if (!(SP->termattrs & A_BLINK))
+    {
+        SDL_RemoveTimer(blinker_id);
+        blinker_id = 0;
+    }
+    else if (!blinker_id)
+    {
+        blinker_id = SDL_AddTimer(500, _blink_timer, NULL);
+        blinked_off = TRUE;
+    }
 
     blinked_off = !blinked_off;
 
@@ -430,4 +453,5 @@ void PDC_blink_text(void)
             }
     }
 
+    oldch = (chtype)(-1);
 }

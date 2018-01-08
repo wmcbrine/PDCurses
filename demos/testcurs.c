@@ -1007,6 +1007,8 @@ void attrTest(WINDOW *win)
     mvaddstr(tmarg, (COLS - 20) / 2, "Character Attributes");
     attrset(A_NORMAL);
 
+    refresh();
+
 #ifdef PDCURSES
     PDC_set_blink(TRUE);
     PDC_set_bold(TRUE);

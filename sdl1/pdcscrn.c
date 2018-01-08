@@ -136,8 +136,6 @@ static void _initialize_colors(void)
 
 int PDC_scr_open(int argc, char **argv)
 {
-    int i, r, g, b;
-
     PDC_LOG(("PDC_scr_open() - called\n"));
 
     SP = calloc(1, sizeof(SCREEN));

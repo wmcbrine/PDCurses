@@ -56,7 +56,7 @@ LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 PDCLIBS = $(LIBCURSES)
 EXEPOST = $(EMXBIND) $* $(BINDFLAGS)
 TUIPOST = $(EMXBIND) tuidemo $(BINDFLAGS)
-CLEAN = *.a testcurs newdemo xmas tuidemo firework ptest rain worm
+CLEAN = *.a testcurs ozdemo xmas tuidemo firework ptest rain worm
 
 .PHONY: all libs clean demos dist
 
@@ -71,7 +71,7 @@ clean:
 
 demos:	$(DEMOS)
 
-DEMOOBJS = testcurs.o newdemo.o xmas.o tui.o tuidemo.o firework.o \
+DEMOOBJS = testcurs.o ozdemo.o xmas.o tui.o tuidemo.o firework.o \
 ptest.o rain.o worm.o
 
 $(LIBCURSES) : $(LIBDEPS)
@@ -89,7 +89,7 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) -o$@ $<
 
-firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
+firework.exe ozdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: %.o
 	$(LINK) $(LDFLAGS) -o $* $< $(LIBCURSES) $(CCLIBS)
 	$(EXEPOST)
@@ -98,7 +98,7 @@ tuidemo.exe:	tuidemo.o tui.o
 	$(LINK) $(LDFLAGS) -o tuidemo tuidemo.o tui.o $(LIBCURSES) $(CCLIBS)
 	$(TUIPOST)
 
-firework.o newdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \
+firework.o ozdemo.o ptest.o rain.o testcurs.o worm.o xmas.o: %.o: \
 $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $<
 

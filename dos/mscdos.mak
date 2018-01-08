@@ -78,7 +78,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 firework.exe: firework.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
-newdemo.exe: newdemo.obj
+ozdemo.exe: ozdemo.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
 ptest.exe: ptest.obj

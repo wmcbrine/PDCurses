@@ -76,7 +76,7 @@ $(PDCOBJS) : %.o: $(osdir)/%.c
 firework$(E): $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-newdemo$(E): $(demodir)/newdemo.c
+ozdemo$(E): $(demodir)/ozdemo.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 ptest$(E): $(demodir)/ptest.c

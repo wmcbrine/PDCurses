@@ -65,7 +65,7 @@ PDCurses for SDL supports an optional background image BMP. This is used
 whenever start_color() has not been called (see the ptest demo for an
 example), or when use_default_colors() has been called after
 start_color(), and the background color of a pair has been set to -1
-(see newdemo, worm, and rain for examples). The usage parallels that of
+(see ozdemo, worm, and rain for examples). The usage parallels that of
 ncurses in an appropriate terminal (e.g., Gnome Terminal). The image is
 tiled to cover the PDCurses window, and can be any size or depth.
 

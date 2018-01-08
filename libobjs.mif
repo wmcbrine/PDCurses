@@ -22,5 +22,5 @@ debug.$(O)
 PDCOBJS = pdcclip.$(O) pdcdisp.$(O) pdcgetsc.$(O) pdckbd.$(O) pdcscrn.$(O) \
 pdcsetsc.$(O) pdcutil.$(O)
 
-DEMOS = testcurs$(E) newdemo$(E) xmas$(E) tuidemo$(E) firework$(E) \
+DEMOS = testcurs$(E) ozdemo$(E) xmas$(E) tuidemo$(E) firework$(E) \
 ptest$(E) rain$(E) worm$(E)

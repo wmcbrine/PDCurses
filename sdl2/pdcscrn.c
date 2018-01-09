@@ -11,7 +11,7 @@
 #ifdef PDC_WIDE
 # ifndef PDC_FONT_PATH
 #  ifdef _WIN32
-#   define PDC_FONT_PATH "C:/Windows/Fonts/lucon.ttf"
+#   define PDC_FONT_PATH "C:/Windows/Fonts/consola.ttf"
 #  elif defined(__APPLE__)
 #   define PDC_FONT_PATH "/Library/Fonts/Courier New.ttf"
 #  else

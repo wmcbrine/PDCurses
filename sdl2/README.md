@@ -7,10 +7,21 @@ This is a port of PDCurses for version 2.x of SDL (aka SDL2).
 Building
 --------
 
-- On *nix (including Linux and Mac OS X), run `make` in the sdl2
-  directory. It builds the library libpdcurses.a (dynamic lib not implemented).
-  The makefile accepts the optional parameters `DEBUG=Y`, `WIDE=Y` and `UTF8=Y`.
-  It also recognizes the optional `PDCURSES_SRCDIR` environment variable.
+- On *nix (including Linux and Mac OS X), run "make" in the sdl2
+  directory. There is no configure script (yet?) for this port. This
+  assumes a working sdl-config, and GNU make. It builds the library
+  libpdcurses.a (dynamic lib not implemented).
+
+- With MinGW, edit the Makefile to point to the appropriate include and
+  library paths, and then run "make".
+
+- The makefile recognizes the optional PDCURSES_SRCDIR environment
+  variable, and the option "DEBUG=Y", as with the console ports.
+  "WIDE=Y" builds a version that not only uses 16-bit Unicode
+  characters, but depends on the SDL_ttf library, instead of using
+  simple bitmap fonts. "UTF8=Y" makes PDCurses ignore the system locale,
+  and treat all narrow-character strings as UTF-8; this option has no
+  effect unless WIDE=Y is also set.
 
 
 Distribution Status

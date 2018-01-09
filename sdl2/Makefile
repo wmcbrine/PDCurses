@@ -2,6 +2,27 @@
 
 O = o
 
+ifeq ($(OS),Windows_NT)
+	E = .exe
+	CC = gcc
+	RM = cmd /c del
+
+	SFLAGS = -Ic:/sdl2-2.0.7/include
+	SLIBS = -Lc:/sdl2-2.0.7/lib/x64 -lSDL2main -lSDL2
+
+	TFLAGS = -Ic:/sdl2_ttf-2.0.14/include
+	TLIBS =-Lc:/sdl2_ttf-2.0.14/lib/x64 -lSDL2_ttf
+
+	DEMOFLAGS = -mwindows
+else
+	RM = rm -f
+
+	SFLAGS = $(shell sdl2-config --cflags)
+	SLIBS = $(shell sdl2-config --libs)
+
+	TLIBS = -lSDL2_ttf
+endif
+
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
 endif
@@ -11,9 +32,6 @@ include $(PDCURSES_SRCDIR)/libobjs.mif
 osdir		= $(PDCURSES_SRCDIR)/sdl2
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
-
-SFLAGS		= $(shell sdl2-config --cflags)
-SLIBS		= $(shell sdl2-config --libs)
 
 # If your system doesn't have these, remove the defines here
 SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
@@ -25,8 +43,8 @@ else
 endif
 
 ifeq ($(WIDE),Y)
-	CFLAGS += -DPDC_WIDE
-	SLIBS  += -lSDL2_ttf
+	CFLAGS += -DPDC_WIDE $(TFLAGS)
+	SLIBS  += $(TLIBS)
 endif
 
 ifeq ($(UTF8),Y)
@@ -49,7 +67,7 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
+	-$(RM) *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)

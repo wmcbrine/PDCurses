@@ -22,6 +22,7 @@ pdckbd
 
 **man-end****************************************************************/
 
+#include <ctype.h>
 #include <string.h>
 
 unsigned long pdc_key_modifiers = 0L;

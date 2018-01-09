@@ -119,9 +119,12 @@ AC_ARG_ENABLE(widec,
 	[with_widec=$enableval],
 	[with_widec=no],
 )
+PDC_WIDE=""
 if test "$with_widec" = yes; then
-	SYS_DEFS="$SYS_DEFS -DPDC_WIDE"
+	PDC_WIDE="-DPDC_WIDE"
+	SYS_DEFS="$SYS_DEFS $PDC_WIDE"
 fi
+AC_SUBST(PDC_WIDE)
 
 dnl -------------------- check for XIM support -----------------------
 dnl allow --enable-xim to include XIM support

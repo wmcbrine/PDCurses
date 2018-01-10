@@ -24,7 +24,6 @@ static bool PDC_blink_state = FALSE;
                            arbitrarily */
 
 static SDL_Rect uprect[MAXRECT];       /* table of rects to update */
-static chtype oldch = (chtype)(-1);    /* current attribute */
 static int rectcount = 0;              /* index into uprect */
 static SDL_Color foreground_rgb, background_rgb;  /* current foreground, background */
 
@@ -166,6 +165,7 @@ void PDC_get_rgb_values( const chtype srcp,
 
 static void _set_attr(chtype ch)
 {
+    static chtype oldch = (chtype)(-1);    /* current attribute */
     ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE | A_DIM | A_RGB_COLOR);
 
     if (oldch != ch)
@@ -197,6 +197,22 @@ static void _set_attr(chtype ch)
         oldch = ch;
     }
 }
+
+#ifdef PDC_WIDE
+static void set_font_style( const chtype ch)
+{
+    static int old_font_style = -1;
+    int font_style = ((ch & A_BOLD) ? TTF_STYLE_BOLD : 0);
+
+    if( ch & A_ITALIC)
+        font_style |= TTF_STYLE_ITALIC;
+    if( font_style != old_font_style)
+    {
+        TTF_SetFontStyle( pdc_ttffont, font_style);
+        old_font_style = font_style;
+    }
+}
+#endif
 
 /* draw a cursor at (y, x) */
 
@@ -248,6 +264,7 @@ void PDC_gotoyx(int row, int col)
 
 #ifdef PDC_WIDE
     chstr[0] = ch & A_CHARTEXT;
+    set_font_style( ch);
 
     pdc_font = TTF_RenderUNICODE_Solid( pdc_ttffont, chstr, foreground_rgb);
     if (pdc_font)
@@ -399,6 +416,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 #ifdef PDC_WIDE
         chstr[0] = ch & A_CHARTEXT;
+        set_font_style( ch);
         pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
                                            foreground_rgb);
 

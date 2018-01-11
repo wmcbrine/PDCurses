@@ -18,7 +18,7 @@ Building
 - The makefile recognizes the optional PDCURSES_SRCDIR environment
   variable, and the option "DEBUG=Y", as with the console ports.
   "WIDE=Y" builds a version that not only uses 16-bit Unicode
-  characters, but depends on the SDL_ttf library, instead of using
+  characters, but depends on the SDL2_ttf library, instead of using
   simple bitmap fonts. "UTF8=Y" makes PDCurses ignore the system locale,
   and treat all narrow-character strings as UTF-8; this option has no
   effect unless WIDE=Y is also set.

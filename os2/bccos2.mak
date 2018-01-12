@@ -41,6 +41,7 @@ all:	$(LIBCURSES) $(DEMOS)
 clean:
 	-$(RM) *.obj
 	-$(RM) *.lib
+        -$(RM) *.map
 	-$(RM) *.exe
 
 demos:	$(DEMOS)

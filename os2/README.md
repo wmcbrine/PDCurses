@@ -11,7 +11,6 @@ Building
 
         bccos2.mak - Borland C++ 2.0+
         gccos2.mak - EMX 0.9b+
-        iccos2.mak - C Set/2
         wccos2.mak - Open Watcom 1.8+
 
 - Optionally, you can build in a different directory than the platform
@@ -24,9 +23,9 @@ Building
 
         make -f makefilename
 
-  (For Watcom, use "wmake" instead of "make"; for MSVC or C Set/2,
-  "nmake".) You'll get the libraries (pdcurses.lib or .a, depending on
-  your compiler), the demos (*.exe), and a lot of object files.
+  (For Watcom, use "wmake" instead of "make".) You'll get the libraries
+  (pdcurses.lib or .a, depending on your compiler), the demos (*.exe),
+  and a lot of object files.
 
 
 Distribution Status

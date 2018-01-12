@@ -1,7 +1,7 @@
 PDCurses Implementor's Guide
 ============================
 
-- Version 1.3 - 20??/??/?? - notes about official ports, new indentation
+- Version 1.3 - 2018/01/12 - notes about official ports, new indentation
                              style; markdown
 - Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(),
                              version history; removed pdc_atrtab

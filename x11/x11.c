@@ -1327,7 +1327,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
     /* Handle ALT letters and numbers */
 
-    if (event->xkey.state == Mod1Mask)
+    if (event->xkey.state & Mod1Mask)
     {
         if (key >= 'A' && key <= 'Z')
         {

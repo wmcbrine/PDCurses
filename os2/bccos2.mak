@@ -75,8 +75,8 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 
-PLATFORM1 = Borland C++ OS/2 1.0
-PLATFORM2 = Borland C/C++ OS/2 1.0
+PLATFORM1 = Borland C++ OS/2 2.0
+PLATFORM2 = Borland C/C++ OS/2 2.0
 ARCNAME = pdc$(VER)bcos2
 
 !include $(PDCURSES_SRCDIR)\makedist.mif

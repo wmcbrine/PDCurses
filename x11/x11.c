@@ -1871,7 +1871,8 @@ static void _selection_off(void)
 {
     XC_LOG(("_selection_off() - called\n"));
 
-    _display_screen();
+    if( mouse_selection)
+        _display_screen();
 
     selection_start_x = selection_start_y = selection_end_x =
         selection_end_y = 0;

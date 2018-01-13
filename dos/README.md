@@ -11,7 +11,6 @@ Building
 
         bccdos.mak   - Borland C++ 3.0+
         gccdos.mak   - DJGPP V2
-        mscdos.mak   - Microsoft C
         wccdos16.mak - Open Watcom 1.8+ (16-bit)
         wccdos4g.mak - Open Watcom 1.8+ (32-bit)
 
@@ -28,9 +27,9 @@ Building
 
         make -f makefile
 
-  (For Watcom, use "wmake" instead of "make"; for MSVC, "nmake".) You'll
-  get the libraries (pdcurses.lib or .a, depending on your compiler),
-  the demos (*.exe), and a lot of object files.
+  (For Watcom, use "wmake" instead of "make".) You'll get the libraries
+  (pdcurses.lib or .a, depending on your compiler), the demos (*.exe),
+  and a lot of object files.
 
 
 Distribution Status

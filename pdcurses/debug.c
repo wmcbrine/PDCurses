@@ -41,6 +41,7 @@ debug
 #include <time.h>
 
 FILE *pdc_dbfp = NULL;
+static bool trace_on = FALSE;
 static bool want_fflush = FALSE;
 
 void PDC_debug(const char *fmt, ...)
@@ -49,8 +50,18 @@ void PDC_debug(const char *fmt, ...)
     char hms[9];
     time_t now;
 
+    if( !trace_on)
+        return;
     if (!pdc_dbfp)
-        return; 
+    {
+        pdc_dbfp = fopen("trace", "a");
+        if (!pdc_dbfp)
+        {
+            fprintf(stderr,
+                "PDC_debug(): Unable to open debug log file\n");
+            return;
+        }
+    }
 
     time(&now);
     strftime(hms, 9, "%H:%M:%S", localtime(&now));
@@ -78,18 +89,7 @@ void traceon(void)
 {
     char *env;
 
-    if (pdc_dbfp)
-        fclose(pdc_dbfp);
-
-    /* open debug log file append */
-    pdc_dbfp = fopen("trace", "a");
-    if (!pdc_dbfp)
-    {
-        fprintf(stderr,
-            "PDC_debug(): Unable to open debug log file\n");
-        return;
-    }
-
+    trace_on = TRUE;
     if ((env = getenv("PDC_TRACE_FLUSH")))
         want_fflush = atoi(env);
 
@@ -105,5 +105,5 @@ void traceoff(void)
 
     fclose(pdc_dbfp);
     pdc_dbfp = NULL;
-    want_fflush = FALSE;
+    want_fflush = trace_on = FALSE;
 }

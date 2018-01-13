@@ -15,6 +15,15 @@
 # include "acs_defs.h"
 #endif
 
+/* see 'addch.c' for an explanation of how combining chars are handled. */
+
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2 && defined( PDC_WIDE)
+   #define USING_COMBINING_CHARACTER_SCHEME
+   #define MAX_UNICODE                  0x10ffff
+   #define DUMMY_CHAR_NEXT_TO_FULLWIDTH (MAX_UNICODE + 1)
+   int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
+#endif
+
 Uint32 pdc_lastupdate = 0;
 int PDC_really_blinking = FALSE;
 static bool PDC_blink_state = FALSE;
@@ -406,6 +415,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     for (j = 0; j < len; j++)
     {
         chtype ch = srcp[j];
+#ifdef PDC_WIDE
+        chtype ch1;
+#endif
 
         _set_attr(ch);
 
@@ -415,7 +427,25 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 #endif
 
 #ifdef PDC_WIDE
-        chstr[0] = ch & A_CHARTEXT;
+        ch1 = ch & A_CHARTEXT;
+#ifdef USING_COMBINING_CHARACTER_SCHEME
+         /* We can't actually display combining characters in cmd.exe.  So
+         show the 'base' character and throw away the modifying marks. */
+        if( ch1 == DUMMY_CHAR_NEXT_TO_FULLWIDTH)
+            ch1 = ' ';
+        else if( ch1 > MAX_UNICODE)
+        {
+            cchar_t added;
+            int n_combined = 0;
+
+            while( (ch1 = PDC_expand_combined_characters( ch1,
+                               &added)) > MAX_UNICODE)
+            {
+                n_combined++;
+            }
+        }
+#endif
+        chstr[0] = (Uint16)ch1;
         set_font_style( ch);
         pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
                                            foreground_rgb);

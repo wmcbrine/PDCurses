@@ -1433,22 +1433,42 @@ void colorTest(WINDOW *win)
                                  orgcolors[i].green,
                                  orgcolors[i].blue);
     }
-/* BJG additions: */
-    if( LINES >= 18) do  /* show off all 256 colors */
-    {
-       tmarg = LINES / 2 - 8;
-       erase( );
-       for( i = 0; i < COLOR_PAIRS; i++)
-           {
-           char tbuff[4];
-           const int col = COLS / 2 - 24;
 
-           if( i >= 16)
-              init_pair((short)i, (short)i, COLOR_BLACK);
-           attrset( COLOR_PAIR( i) | A_REVERSE);
-           sprintf( tbuff, "%02x ", i);
-           mvaddstr( tmarg + i / 16, col + (i % 16) * 3, tbuff);
-           }
+    if (COLORS >= 256) do
+        {
+        int x, y, z, lmarg = (COLS - 77) / 2;
+
+        erase();
+
+        attrset(A_BOLD);
+        mvaddstr(tmarg, (COLS - 15) / 2, "Extended Colors");
+        attrset(A_NORMAL);
+
+        mvaddstr(tmarg + 3, lmarg, "6x6x6 Color Cube (16-231):");
+
+        for (i = 16; i < 256; i++)
+            init_pair(i, COLOR_BLACK, i);
+
+        for (i = 16, z = 0; z < 6; z++)
+            for (y = 0; y < 6; y++)
+                for (x = 0; x < 6; x++)
+                {
+                    chtype ch = ' ' | COLOR_PAIR(i++);
+
+                    mvaddch(tmarg + 5 + y, z * 13 + x * 2 + lmarg, ch);
+                    addch(ch);
+                }
+
+        mvaddstr(tmarg + 13, lmarg, "Greyscale (232-255):");
+
+        for (x = 0; x < 24; x++)
+        {
+            chtype ch = ' ' | COLOR_PAIR(232 + x);
+
+            mvaddch(tmarg + 15, x * 2 + lmarg, ch);
+            addch(ch);
+        }
+
 #ifdef CHTYPE_LONG
        attrset( A_LEFTLINE);
        mvaddstr( tmarg + 17, col1, "A_LEFTLINE");

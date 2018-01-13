@@ -1210,6 +1210,13 @@ void acsTest(WINDOW *win)
 
     static const wchar_t fullwidth[] = { 0xff26, 0xff55, 0xff4c, 0xff4c,
         0xff57, 0xff49, 0xff44, 0xff54, 0xff48, 0 };  /* "Fullwidth" */
+
+    static const wchar_t combining_marks[] = { L'C', L'o', 0x35c, L'm',
+                   L'b', 0x30a, L'i', L'n', L'i', 0x304, L'n', 0x30b, 0x329,
+                   L'g', 0x310,
+                   L' ', L'C', 0x338, L'h', 0x306,  L'a', 0x361, L'r', L's',
+                   0x30e, 0x348, 0 };
+
 #endif
 
     int i, tmarg = 1, ncols = (COLS - 4) / 19;
@@ -1268,7 +1275,7 @@ void acsTest(WINDOW *win)
             xloc += col_size;
         }
 #endif
-    /* Spanish, Russian, Greek, Georgian, fullwidth */
+    /* Spanish, Russian, Greek, Georgian, fullwidth, combining */
 
         tmarg += n_rows * 2;
         mvaddwstr(tmarg, COLS / 8 - 5, L"Espa\xf1ol");
@@ -1278,6 +1285,7 @@ void acsTest(WINDOW *win)
         mvaddwstr(tmarg + 1, COLS / 8 - 5, fullwidth);
 
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
+        mvaddwstr(tmarg + 1, 3 * (COLS / 8) - 5, combining_marks);
         mvaddch( tmarg + 1, 7 * (COLS / 8) - 5, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
 

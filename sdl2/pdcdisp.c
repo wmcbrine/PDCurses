@@ -444,6 +444,17 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
                 n_combined++;
             }
         }
+#ifdef USE_FOR_SUPPLEMENTAL_MULTILINGUAL_PLANE
+            /* At present,  SDL does not (I think) support SMP Unicode */
+            /* (Unicode past 64K).  If it ever does,  we'll need the   */
+            /* following breakup of SMP into Unicode surrogates (q.v.) */
+        if( ch1 > 0xffff)
+        {
+            ch1 -= 0x10000;
+            chstr[0] = (Uint16)( 0xdc00 | (ch1 & 0x3ff));  /* lower 10 bits */
+            ch1 = (0xd800 | (ch1 >> 10));                  /* upper 10 bits */
+        }
+#endif
 #endif
         chstr[0] = (Uint16)ch1;
         set_font_style( ch);

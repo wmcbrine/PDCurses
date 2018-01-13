@@ -48,7 +48,7 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-$(RM) $@
-	$(LIBEXE) $@ @$(osdir)\bccos2.lrf
+	$(LIBEXE) $@ @$(PDCURSES_SRCDIR)\borland.lrf
 
 .autodepend
 

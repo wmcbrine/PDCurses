@@ -92,7 +92,7 @@ static int c_gindex = 1;    /* getter index */
 static int c_ungind = 0;    /* ungetch() push index */
 static int c_ungch[NUNGETCH];   /* array of ungotten chars */
 
-static int _mouse_key(WINDOW *win)
+static int _mouse_key(void)
 {
     int i, key = KEY_MOUSE;
     unsigned long mbe = SP->_trap_mbe;
@@ -247,7 +247,7 @@ int wgetch(WINDOW *win)
                area to function keys */
 
             else if (key == KEY_MOUSE)
-                key = _mouse_key(win);
+                key = _mouse_key();
         }
 
         /* unwanted key? loop back */

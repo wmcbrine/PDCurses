@@ -47,7 +47,7 @@ Windows do not have to correspond to the entire screen.  It is
 possible to create smaller windows, and also to indicate that the
 window is only partially visible on the screen.  Furthermore, large
 windows or pads, which are bigger than the actual screen size, may be
-created. 
+created.
 
 Interfaces are also defined to allow input character manipulation and
 to disable and enable many input attributes: character echo, single
@@ -93,15 +93,15 @@ The following variables are defined:
 
     LINES         number of lines on terminal screen
     COLS          number of columns on terminal screen
-    stdscr        pointer to the default screen window    
+    stdscr        pointer to the default screen window
     curscr        pointer to the current screen image
     SP            pointer to the current SCREEN struct
     Mouse_status  status of the mouse
     COLORS        number of colors available
     COLOR_PAIRS   number of color pairs available
     TABSIZE       size of one TAB block
-    acs_map[]     alternate character set map  
-    ttytype[]     terminal name/description    
+    acs_map[]     alternate character set map
+    ttytype[]     terminal name/description
 
 
 ### Constants
@@ -118,7 +118,7 @@ The following constants are defined:
 
 #### Video Attributes
 
-Normally, attributes are a property of the character. 
+Normally, attributes are a property of the character.
 
 For chtype:
 
@@ -129,7 +129,7 @@ For chtype:
     A_INVIS       invisible
     A_ITALIC      italic
     A_LEFTLINE    line along the left edge
-    A_PROTECT     protected (?) -- PDCurses renders this as a 
+    A_PROTECT     protected (?) -- PDCurses renders this as a
                   combination of the *LINE attributes
     A_REVERSE     reverse video
     A_RIGHTLINE   line along the right edge
@@ -200,7 +200,7 @@ portability:
     ACS_RARROW    right arrow
     ACS_DARROW    down arrow
     ACS_UARROW    up arrow
-    ACS_BOARD     checkerboard -- lighter (less dense) than 
+    ACS_BOARD     checkerboard -- lighter (less dense) than
                   ACS_CKBOARD
     ACS_LANTERN   lantern symbol
     ACS_BLOCK     solid block
@@ -229,7 +229,7 @@ Box character aliases:
     ACS_SBSB      same as ACS_VLINE
     ACS_SSSS      same as ACS_PLUS
 
-For cchar_t and wide-character functions, WACS_ equivalents are also 
+For cchar_t and wide-character functions, WACS_ equivalents are also
 defined.
 
 ### Colors
@@ -245,7 +245,7 @@ For use with init_pair(), color_set(), etc.:
     COLOR_YELLOW
     COLOR_WHITE
 
-Use these instead of numeric values. The definition of the colors 
+Use these instead of numeric values. The definition of the colors
 depends on the implementation of curses.
 
 

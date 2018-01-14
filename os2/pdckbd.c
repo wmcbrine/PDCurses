@@ -149,12 +149,12 @@ bool PDC_check_key(void)
 
 #ifdef EMXVIDEO
     if (tahead == -1)       /* Nothing typed yet */
-    {                    
+    {
         tahead = _read_kbd(0, 0, 0);
 
         /* Read additional */
 
-        if (tahead == 0)    
+        if (tahead == 0)
             tahead = _read_kbd(0, 1, 0) << 8;
     }
 
@@ -191,7 +191,7 @@ bool PDC_check_key(void)
     return kbhit();
 # endif
 #endif
-}         
+}
 
 #ifndef EMXVIDEO
 
@@ -214,8 +214,8 @@ static int _process_mouse_events(void)
             ((event.fs & move_mask[i]) ? BUTTON_MOVED : 0) |
             ((event.fs & press_mask[i]) ? BUTTON_PRESSED : 0);
 
-        /* PRESS events are sometimes mistakenly reported as MOVE 
-           events. A MOVE should always follow a PRESS, so treat a MOVE 
+        /* PRESS events are sometimes mistakenly reported as MOVE
+           events. A MOVE should always follow a PRESS, so treat a MOVE
            immediately after a RELEASE as a PRESS. */
 
         if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
@@ -226,7 +226,7 @@ static int _process_mouse_events(void)
 
         if (pdc_mouse_status.button[i] == BUTTON_PRESSED && SP->mouse_wait)
         {
-            /* Check for a click -- a PRESS followed immediately by a 
+            /* Check for a click -- a PRESS followed immediately by a
                release */
 
             if (!mouse_events)
@@ -501,10 +501,10 @@ int PDC_mouse_set(void)
         USHORT mask = ((mbe & (BUTTON1_PRESSED | BUTTON1_CLICKED |
                                BUTTON1_MOVED)) ? 6 : 0) |
 
-                      ((mbe & (BUTTON3_PRESSED | BUTTON3_CLICKED | 
+                      ((mbe & (BUTTON3_PRESSED | BUTTON3_CLICKED |
                                BUTTON3_MOVED)) ? 24 : 0) |
 
-                      ((mbe & (BUTTON2_PRESSED | BUTTON2_CLICKED | 
+                      ((mbe & (BUTTON2_PRESSED | BUTTON2_CLICKED |
                                BUTTON2_MOVED)) ? 96 : 0);
 
         MouSetEventMask(&mask, mouse_handle);

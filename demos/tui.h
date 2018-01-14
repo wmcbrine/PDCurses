@@ -21,7 +21,7 @@
 
 typedef void (*FUNC)(void);
 
-typedef struct 
+typedef struct
 {
     char *name; /* item label */
     FUNC  func; /* (pointer to) function */

@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-/* Tables and variables for the built-in compose key system. This file 
+/* Tables and variables for the built-in compose key system. This file
    is not included when PDCurses is built with XIM support. */
 
 #define MAX_COMPOSE_CHARS 14

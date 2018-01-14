@@ -104,7 +104,7 @@ int PDC_setclipboard(const char *contents, long length)
     if (!OpenClipboard(NULL))
         return PDC_CLIP_ACCESS_ERROR;
 
-    ptr1 = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, 
+    ptr1 = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
         (length + 1) * sizeof(TCHAR));
 
     if (!ptr1)

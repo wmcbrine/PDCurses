@@ -121,7 +121,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
             {
                 if (chars < n)
                 {
-                    if (oldecho) 
+                    if (oldecho)
                         waddch(win, ch);
                     *p++ = ch;
                     ++chars;
@@ -199,7 +199,7 @@ int wgetnstr(WINDOW *win, char *str, int n)
                 beep();
 
             break;
-      
+
         }
 
         wrefresh(win);
@@ -377,7 +377,7 @@ int wgetn_wstr(WINDOW *win, wint_t *wstr, int n)
         case '\n':
         case '\r':
             stop = TRUE;
-            if (oldecho) 
+            if (oldecho)
                 waddch(win, '\n');
             break;
 

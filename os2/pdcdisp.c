@@ -2,7 +2,7 @@
 
 #include "pdcos2.h"
 
-/* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these 
+/* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
    match code page 437 and compatible pages (CP850, CP852, etc.) */
 
 #ifdef CHTYPE_LONG
@@ -68,7 +68,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
     PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
-    /* replace the attribute part of the chtype with the 
+    /* replace the attribute part of the chtype with the
        actual color value for each chtype in the line */
 
     for (j = 0; j < len; j++)

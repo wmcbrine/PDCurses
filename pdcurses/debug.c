@@ -50,7 +50,7 @@ void PDC_debug(const char *fmt, ...)
     time_t now;
 
     if (!pdc_dbfp)
-        return; 
+        return;
 
     time(&now);
     strftime(hms, 9, "%H:%M:%S", localtime(&now));

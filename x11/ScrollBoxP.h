@@ -13,9 +13,9 @@
      the party supplying this software to the X Consortium.
  */
 
-/* 
+/*
  * scrollBoxP.h - Private definitions for scrollBox widget
- * 
+ *
  */
 
 #ifndef _XORAscrollBoxP_h

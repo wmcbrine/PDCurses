@@ -101,10 +101,10 @@ int PDC_freeclipboard(char *contents)
     if (contents)
     {
 
-        /* NOTE: We free the memory, but we can not set caller's pointer 
-           to NULL, so if caller calls again then will try to access 
-           free'd memory.  We 1st overwrite memory with a string so if 
-           caller tries to use free memory they won't get what they 
+        /* NOTE: We free the memory, but we can not set caller's pointer
+           to NULL, so if caller calls again then will try to access
+           free'd memory.  We 1st overwrite memory with a string so if
+           caller tries to use free memory they won't get what they
            expect & hopefully notice. */
 
         /* memset(contents, 0xFD, strlen(contents)); */
@@ -122,7 +122,7 @@ int PDC_clearclipboard(void)
 {
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-    if (pdc_DOS_clipboard) 
+    if (pdc_DOS_clipboard)
     {
         free(pdc_DOS_clipboard);
         pdc_DOS_clipboard = NULL;

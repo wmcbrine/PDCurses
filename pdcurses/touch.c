@@ -128,7 +128,7 @@ int wtouchln(WINDOW *win, int y, int n, int changed)
             win->_firstch[i] = 0;
             win->_lastch[i] = win->_maxx - 1;
         }
-        else 
+        else
         {
             win->_firstch[i] = _NO_CHANGE;
             win->_lastch[i] = _NO_CHANGE;

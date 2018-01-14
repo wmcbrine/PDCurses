@@ -208,9 +208,9 @@ int waddch(WINDOW *win, const chtype ch)
         if (!(attr & A_COLOR))
             attr |= win->_attrs;
 
-        /* wrs (4/10/93): Apply the same sort of logic for the window 
-           background, in that it only takes precedence if other color 
-           attributes are not there and that the background character 
+        /* wrs (4/10/93): Apply the same sort of logic for the window
+           background, in that it only takes precedence if other color
+           attributes are not there and that the background character
            will only print if the printing character is blank. */
 
         if (!(attr & A_COLOR))

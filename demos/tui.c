@@ -611,7 +611,7 @@ static void repainteditbox(WINDOW *win, int x, char *buf)
     NOTE: editstr(), mveditstr(), and mvweditstr() are macros.
 
   Return Value:
-    Returns the input terminating character on success (Escape, 
+    Returns the input terminating character on success (Escape,
     Enter, Up or Down Arrow) and ERR on error.
 
   Errors:

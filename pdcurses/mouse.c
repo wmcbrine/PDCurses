@@ -399,7 +399,7 @@ int ungetmouse(MEVENT *event)
         int shf = i * 5;
         short button = 0;
 
-        if (bstate & ((BUTTON1_RELEASED | BUTTON1_PRESSED | 
+        if (bstate & ((BUTTON1_RELEASED | BUTTON1_PRESSED |
             BUTTON1_CLICKED | BUTTON1_DOUBLE_CLICKED) << shf))
         {
             pdc_mouse_status.changes |= 1 << i;

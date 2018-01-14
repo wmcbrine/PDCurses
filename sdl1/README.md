@@ -9,7 +9,7 @@ Building
 
 - On *nix (including Linux and Mac OS X), run "make" in the sdl1
   directory. There is no configure script (yet?) for this port. This
-  assumes a working sdl-config, and GNU make. It builds the library 
+  assumes a working sdl-config, and GNU make. It builds the library
   libpdcurses.a (dynamic lib not implemented).
 
 - The makefile accepts the optional parameter "DEBUG=Y", and recognizes

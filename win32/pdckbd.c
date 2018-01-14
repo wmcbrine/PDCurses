@@ -184,8 +184,8 @@ static KPTAB kptab[] =
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
-   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, 
-   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, 
+   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
+   {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0},
@@ -314,11 +314,11 @@ static int _get_key_count(void)
         }
         else
         {
-            /* Check for diacritics. These are dead keys. Some locales 
-               have modified characters like umlaut-a, which is an "a" 
-               with two dots on it. In some locales you have to press a 
-               special key (the dead key) immediately followed by the 
-               "a" to get a composed umlaut-a. The special key may have 
+            /* Check for diacritics. These are dead keys. Some locales
+               have modified characters like umlaut-a, which is an "a"
+               with two dots on it. In some locales you have to press a
+               special key (the dead key) immediately followed by the
+               "a" to get a composed umlaut-a. The special key may have
                a normal meaning with different modifiers. */
 
             if (KEV.uChar.UnicodeChar || !(MapVirtualKey(vk, 2) & 0x80000000))
@@ -661,9 +661,9 @@ void PDC_flushinp(void)
 
 int PDC_mouse_set(void)
 {
-    /* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear 
+    /* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear
        all other flags, including the extended flags;
-       If turning off the mouse: Set QuickEdit Mode to the status it 
+       If turning off the mouse: Set QuickEdit Mode to the status it
        had on startup, and clear all other flags */
 
     SetConsoleMode(pdc_con_in, SP->_trap_mbe ?

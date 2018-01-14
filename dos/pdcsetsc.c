@@ -66,7 +66,7 @@ int PDC_curs_set(int visibility)
     /* if scrnmode is not set, some BIOSes hang */
 
     regs.h.ah = 0x01;
-    regs.h.al = (unsigned char)pdc_scrnmode; 
+    regs.h.al = (unsigned char)pdc_scrnmode;
     regs.h.ch = (unsigned char)start;
     regs.h.cl = (unsigned char)end;
     PDCINT(0x10, regs);

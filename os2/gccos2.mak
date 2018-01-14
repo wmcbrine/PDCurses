@@ -33,7 +33,7 @@ ifeq ($(EMXVIDEO),Y)
 	BINDFLAGS = -acm
 else
 	CCLIBS =
-	BINDFLAGS = 
+	BINDFLAGS =
 endif
 
 ifeq ($(DEBUG),Y)
@@ -45,7 +45,7 @@ else
 endif
 
 LINK		= gcc
-EMXBIND		= emxbind 
+EMXBIND		= emxbind
 EMXOMF		= emxomf
 
 LIBEXE		= ar

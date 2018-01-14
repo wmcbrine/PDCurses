@@ -13,7 +13,7 @@ AC_CANONICAL_SYSTEM([])
 
 on_qnx=no
 case "$target" in
-	*hp-hpux*) 
+	*hp-hpux*)
 		SYS_DEFS="-D_HPUX_SOURCE"
 		;;
 	*dec-osf*)

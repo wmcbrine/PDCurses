@@ -40,9 +40,9 @@ Building
   unless you also link with the Microsoft Layer for Unicode (not
   tested).
 
-  Another option, "UTF8=Y", makes PDCurses ignore the system locale, and 
-  treat all narrow-character strings as UTF-8. This option has no effect 
-  unless WIDE=Y is also set. Use it to get around the poor support for 
+  Another option, "UTF8=Y", makes PDCurses ignore the system locale, and
+  treat all narrow-character strings as UTF-8. This option has no effect
+  unless WIDE=Y is also set. Use it to get around the poor support for
   UTF-8 in the Windows console:
 
         make -f gccwin32.mak WIDE=Y UTF8=Y

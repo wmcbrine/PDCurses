@@ -1,8 +1,8 @@
 /* Public Domain Curses */
 
-/* PDCurses doesn't operate with terminfo, but we need these functions for 
-   compatibility, to allow some things (notably, interface libraries for 
-   other languages) to be compiled. Anyone who tries to actually _use_ 
+/* PDCurses doesn't operate with terminfo, but we need these functions for
+   compatibility, to allow some things (notably, interface libraries for
+   other languages) to be compiled. Anyone who tries to actually _use_
    them will be disappointed, since they only return ERR. */
 
 #ifndef __PDCURSES_TERM_H__

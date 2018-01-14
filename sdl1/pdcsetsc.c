@@ -91,7 +91,7 @@ int PDC_set_bold(bool boldon)
         SP->termattrs |= A_BOLD;
     else
         SP->termattrs &= ~A_BOLD;
- 
+
     return OK;
 #else
     return boldon ? ERR : OK;

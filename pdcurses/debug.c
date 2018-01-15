@@ -25,7 +25,7 @@ debug
 
    The environment variable PDC_TRACE_FLUSH controls whether the
    trace file contents are fflushed after each write.  The default
-   is not. Set it to 1 to enable this (may affect performance).
+   is not. Set it to enable this (may affect performance).
 
 ### Portability
                              X/Open    BSD    SYS V
@@ -61,17 +61,16 @@ void PDC_debug(const char *fmt, ...)
     va_end(args);
 
     /* If you are crashing and losing debugging information, enable this
-     * by setting the environment variable PDC_TRACE_FLUSH to 1. This may
-     * impact performance.
-     */
+       by setting the environment variable PDC_TRACE_FLUSH. This may
+       impact performance. */
+
     if (want_fflush)
         fflush(pdc_dbfp);
 
     /* If with PDC_TRACE_FLUSH enabled you are still losing logging in
-     * crashes, you may need to add a platform-dependent mechanism to flush
-     * the OS buffers as well (such as fsync() on POSIX) -- but expect
-     * terrible performance.
-     */
+       crashes, you may need to add a platform-dependent mechanism to
+       flush the OS buffers as well (such as fsync() on POSIX) -- but
+       expect terrible performance. */
 }
 
 void traceon(void)

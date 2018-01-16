@@ -1,3 +1,192 @@
+PDCurses 3.5 - 2018/01/15
+=========================
+
+So, it's been a while, eh?
+
+This release is an attempt to bring PDCurses mostly up to date, without
+breaking too many things in the process.
+
+
+New features
+------------
+
+- SDL2 port, and TTF and Unicode support for both SDL1 and SDL2. Credit
+  for these goes mostly to Laura Michaels and Robin Gustafsson.
+
+- 256 colors for SDL and X11, by Bill Gray. Colors 16-255 are set up to
+  match xterm colors, but can be redefined, as with 0-15.
+
+- Bold and italic font options for SDL and X11. A_BOLD's behavior is
+  controlled by the new function PDC_set_bold() -- TRUE to select bold
+  font, FALSE to choose high foregound intensity (as before). Italic
+  fonts are selected by A_ITALIC (always on). X11 originally from Mark
+  Hessling.
+
+- Real blinking in SDL and X11, controlled by PDC_set_blink(). Largely
+  due to Kevin Lamonte and Bill Gray.
+
+- Support for A_UNDERLINE, A_LEFTLINE and A_RIGHTLINE in the Windows
+  console. This requires a recent version of Windows (10, maybe 8?) to
+  work with the standard console, but underlining also works with
+  ConEmu, at least as far back as XP.
+
+- User resizing (i.e. grab window edges or maximize button) for Windows
+  console -- needs recent Windows or ConEmu.
+
+- New-style color-changing code for the Windows console (using the new
+  offical API instead of undocumented functions), supporting
+  redefinition of colors 0-15 via init_color(). Works at least as far
+  back as Windows XP SP3. Patch by "Didrole".
+
+- The Windows console port now creates a separate console buffer by
+  default, making for a cleaner and more complete restoration of the
+  original buffer. The old behavior can be used by setting
+  "PDC_RESTORE_SCREEN=0". Patch by Jason Hood.
+
+- Left/right scroll wheel support for Windows console, SDL and X11. X11
+  by Mark Hessling.
+
+- testcurs now includes an additional test to show various attributes,
+  and a display of the extended colors, where applicable.
+
+
+Bug fixes and such
+------------------
+
+- termattrs() now returns something vaguely resembling the actual
+  capabilities of the specific "terminal". Specifically, A_BOLD and
+  A_BLINK reflect the availability of true bold fonts, and real
+  blinking; when not set in termattrs(), the attributes still work, but
+  control foreground and background intensity, as before. *LINE are also
+  meaningful, and even A_COLOR is set (or not).
+
+- pad size check in pnoutrefresh() was broken since 3.0. Reported by
+  Peter Hull.
+
+- In newpad(), begx and begy should be set to zero, otherwise creating a
+  subpad of the same width or height fails due to the check in subpad().
+  Patch by Raphael Assenat.
+
+- More straightforward math for subpad(), plus another off-by-one error.
+  Reported by Werner Wenzel, John Hartmann et al.
+
+- New subwindows/subpads/resized windows should copy _delayms. Patch by
+  "xaizek".
+
+- Potentially invalid saved cursor position in resize_window() --
+  another off-by-one _maxx/_maxy error. Patch after "Luke-Jr".
+
+- copywin() needs to disallow corner values equal to _maxx or _maxy, not
+  just less than. Reported by "Aleksandr".
+
+- Misaligned soft-label keys in 4-4-4 mode. Reported by Werner Wenzel.
+
+- Missing prototypes for bkgrnd() and bkgrndset().
+
+- Missing WA_NORMAL and WA_ATTRIBUTES from the X/Open spec.
+
+- keyname() and termname() now return static buffers, as documented.
+
+- In the X11 port, due to (post-PDCurses-3.4) changes in Xt,
+  XtAppMainLoop() always hung. Fixed by re-implementing it within
+  PDCurses, basically.
+
+- Fix blinking X11 cursor for clients that call move() more frequently
+  than cursorBlinkRate -- patch by Kevin Lamonte.
+
+- Improved cursor rendering for X11, by John P. Hartmann.
+
+- ALT key combos sometimes not reported in X11, per Mark Hessling et al.
+
+- Support for XK_ISO_Left_Tab in X11, by John P. Hartmann.
+
+- Support for "Super" keys in X11, by Bill Gray.
+
+- Make xcurses-config inclue -DPDC_WIDE when appropriate, per M.H.
+
+- The configure script and accompanying files, which were always
+  specific only to the X11 port (causing considerable confusion), have
+  been moved to the x11 directory.
+
+- In SDL, SP->key_code wasn't being set for KEY_MOUSE events. Reported
+  by Bill Gray.
+
+- SDL events need to keep pumping through non-input delays. (Really
+  messed up on current macOS before this change.)
+
+- SDL2 is outperforming SDL1 by about 10x on the platforms I've tried
+  that support both, so I've removed Makefile.mng from the SDL1 port.
+
+- Updated for the most current compilers, wherever possible; various
+  warning suppressions. All included makefiles were tested with their
+  respective compilers, shortly before release (including the POSIX
+  stuff on macOS with clang, and on Ubuntu Linux with gcc). The oldest
+  compiler I tested with was Turbo C++ 3.0, from 1992; the latest,
+  several compilers from 2017.
+
+- Dropped support for LCC-Win32 -- the official site is shut down.
+
+- Dropped support for Digital Mars -- not updated since 2014, limited
+  makefile, library missing some needed Windows APIs.
+
+- Dropped MS C for DOS, and Cset/2 for OS/2.
+
+- Dropped support for building DLLs with EMX.
+
+- Minor code and makefile reorganization; mingwin32.mak merged into
+  gccwin32.mak (i.e. you can use it with both compilers). Some
+  contributions by Bill Gray and Simon Sobisch.
+
+- Watcom makefile paths and option markers changed to Unix-friendly
+  style, after Tee-Kiah Chia.
+
+- The *.def files are no longer needed, replaced by more PDCEX
+  declarations in the include files. After Bill Gray and Simon Sobisch.
+
+- When building with DEBUG=Y, no longer strip the executables. After
+  Simon Sobisch.
+
+- Hold debug file ("trace") open after traceon(), for greater
+  performance. Set PDC_TRACE_FLUSH to make it fflush() after each write
+  (slower but safer in case of a crash). Patch by Ellie Timoney.
+
+- Since 3.2, the panel library was simply a copy of the main library.
+  This kludge is now dropped. (panel.h remains separate from curses.h.)
+
+- Removed PDCurses.spec, and the RPM-building makefile option. I think
+  this is better left to the various package/distro maintainers.
+
+- Various formatting corrections (e.g., trailing spaces stripped), and
+  variables renamed to avoid clashes. Some contributed by Stefan
+  Reinauer and Bill Gray.
+
+- Various documentation corrections and updates. All documentation
+  "converted" to Markdown format (involving few actual changes -- mainly
+  the file extension), for better rendering on GitHub, SourceForge, etc.
+  Some contributed by Anatoly Techtonik.
+
+- The "Win32" label is deprecated by Microsoft, and accordingly I've
+  replaced references in the documentation, although not yet changed the
+  filenames. The Windows console code can just as well be built for
+  64-bit (and always could be, AFAIK, although there are minor tweaks
+  to support it in this version).
+
+- The ncurses_tests can now be built under SDL as well as X11. Also, all
+  our tests (still/again) build under recent ncurses.
+
+- Put testcurs' "Output test" into real blink mode, if possible; and if
+  COLORS >= 16, use colors 0-15 directly in the color test, instead of
+  or'ing with A_BOLD to get the high-intensity colors.
+
+- Renamed the (by now rather old) "newdemo" to "ozdemo".
+
+- Moved from CVS to git; source is now on GitHub as well as SourceForge;
+  central site is now pdcurses.org.
+
+See the git log for more details.
+
+------------------------------------------------------------------------
+
 PDCurses 3.4 - 2008/09/08
 =========================
 

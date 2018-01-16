@@ -1278,8 +1278,7 @@ static void _refresh_screen(void)
         }
     }
 
-    if (mouse_selection)
-        _selection_off();
+    _selection_off();
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
@@ -1880,12 +1879,14 @@ static void _selection_off(void)
     XC_LOG(("_selection_off() - called\n"));
 
     if( mouse_selection)
+    {
         _display_screen();
 
-    selection_start_x = selection_start_y = selection_end_x =
-        selection_end_y = 0;
+        selection_start_x = selection_start_y = selection_end_x =
+            selection_end_y = 0;
 
-    mouse_selection = FALSE;
+        mouse_selection = FALSE;
+    }
 }
 
 static void _selection_on(int x, int y)

@@ -47,9 +47,12 @@ fi
 
 dnl Checks for libraries.
 
+dnl we check for dlfcn.h or dl.h so we know if we can build shared objects
 AC_CHECK_HEADERS(fcntl.h \
 	sys/time.h \
-	sys/select.h
+	sys/select.h \
+	dlfcn.h \
+	dl.h
 )
 
 dnl Checks for typedefs, structures, and compiler characteristics.

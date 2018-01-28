@@ -126,7 +126,7 @@ For chtype:
     A_BLINK       bright background or blinking
     A_BOLD        bright foreground or bold
     A_DIM         half bright -- no effect in PDCurses
-    A_INVIS       invisible
+    A_INVIS       invisible -- no effect in PDCurses
     A_ITALIC      italic
     A_LEFTLINE    line along the left edge
     A_PROTECT     protected (?) -- PDCurses renders this as a
@@ -140,9 +140,9 @@ For chtype:
     A_CHARTEXT    bit-mask to extract a character
     A_COLOR       bit-mask to extract a color-pair
 
-Not all attributes will work on all terminals. A_RIGHTLINE, A_LEFTLINE
-and A_ITALIC are specific to PDCurses. A_INVIS and A_ITALIC are given
-the same value in PDCurses.
+Not all attributes will work on all terminals. A_RIGHTLINE and
+A_LEFTLINE are specific to PDCurses; A_ITALIC is not standard, but is
+shared with ncurses.
 
 For attr_t:
 
@@ -151,6 +151,7 @@ For attr_t:
     WA_BOLD       same as A_BOLD
     WA_DIM        same as A_DIM
     WA_INVIS      same as A_INVIS
+    WA_ITALIC     same as A_ITALIC
     WA_LEFT       same as A_LEFTLINE
     WA_PROTECT    same as A_PROTECT
     WA_REVERSE    same as A_REVERSE

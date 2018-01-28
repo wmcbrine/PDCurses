@@ -621,11 +621,6 @@ void PDC_init_pair(short pair, short fg, short bg)
             att |= COMMON_LVB_GRID_LVERTICAL;
         if (i & (A_RIGHTLINE >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_GRID_RVERTICAL;
-        if (i & (A_INVIS >> PDC_ATTR_SHIFT))
-        {
-            temp_bg = att >> 4;
-            att = temp_bg << 4 | temp_bg;
-        }
         if (i & (A_BOLD >> PDC_ATTR_SHIFT))
             att |= 8;
         if (i & (A_BLINK >> PDC_ATTR_SHIFT))

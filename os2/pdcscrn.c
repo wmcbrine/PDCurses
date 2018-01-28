@@ -316,11 +316,6 @@ void PDC_init_pair(short pair, short fg, short bg)
             att = bg | (fg << 4);
         if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
             att = 1;
-        if (i & (A_INVIS >> PDC_ATTR_SHIFT))
-        {
-            temp_bg = att >> 4;
-            att = temp_bg << 4 | temp_bg;
-        }
         if (i & (A_BOLD >> PDC_ATTR_SHIFT))
             att |= 8;
         if (i & (A_BLINK >> PDC_ATTR_SHIFT))

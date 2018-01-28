@@ -401,7 +401,7 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_ALTCHARSET (chtype)0x00010000
 # define A_RIGHTLINE  (chtype)0x00020000
 # define A_LEFTLINE   (chtype)0x00040000
-# define A_INVIS      (chtype)0x00080000
+# define A_ITALIC     (chtype)0x00080000
 # define A_UNDERLINE  (chtype)0x00100000
 # define A_REVERSE    (chtype)0x00200000
 # define A_BLINK      (chtype)0x00400000
@@ -411,7 +411,7 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_CHARTEXT   (chtype)0x0000ffff
 # define A_COLOR      (chtype)0xff000000
 
-# define A_ITALIC     A_INVIS
+# define A_INVIS      A_NORMAL
 # define A_PROTECT    (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
 
 # define PDC_COLOR_SHIFT 24
@@ -453,6 +453,7 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 #define WA_BOLD       A_BOLD
 #define WA_DIM        A_DIM
 #define WA_INVIS      A_INVIS
+#define WA_ITALIC     A_ITALIC
 #define WA_LEFT       A_LEFTLINE
 #define WA_PROTECT    A_PROTECT
 #define WA_REVERSE    A_REVERSE

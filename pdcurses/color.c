@@ -66,11 +66,10 @@ color
    is set at the time start_color() is called, that's equivalent to
    calling use_default_colors().
 
-   PDC_set_line_color() is used to set the color, globally, for
-   the color of the lines drawn for the attributes: A_UNDERLINE,
-   A_OVERLINE, A_LEFTLINE and A_RIGHTLINE. A value of -1 (the
-   default) indicates that the current foreground color should be
-   used.
+   PDC_set_line_color() is used to set the color, globally, for the
+   color of the lines drawn for the attributes: A_UNDERLINE, A_LEFT
+   and A_RIGHT. A value of -1 (the default) indicates that the
+   current foreground color should be used.
 
    NOTE: COLOR_PAIR() and PAIR_NUMBER() are implemented as macros.
 

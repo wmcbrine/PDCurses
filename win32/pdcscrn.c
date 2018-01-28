@@ -617,9 +617,9 @@ void PDC_init_pair(short pair, short fg, short bg)
         }
         if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_UNDERSCORE;
-        if (i & (A_LEFTLINE >> PDC_ATTR_SHIFT))
+        if (i & (A_LEFT >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_GRID_LVERTICAL;
-        if (i & (A_RIGHTLINE >> PDC_ATTR_SHIFT))
+        if (i & (A_RIGHT >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_GRID_RVERTICAL;
         if (i & (A_BOLD >> PDC_ATTR_SHIFT))
             att |= 8;

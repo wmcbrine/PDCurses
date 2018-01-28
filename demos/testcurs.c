@@ -1054,15 +1054,15 @@ void attrTest(WINDOW *win)
     mvaddstr(tmarg + 7, col2, "Underlined Blink");
     attrset(A_NORMAL);
 
-#ifdef A_LEFTLINE
-    attrset(A_LEFTLINE);
-    mvaddstr(tmarg + 9, col2, "A_LEFTLINE");
+#ifdef A_LEFT
+    attrset(A_LEFT);
+    mvaddstr(tmarg + 9, col2, "A_LEFT");
     attrset(A_NORMAL);
 #endif
 
-#ifdef A_RIGHTLINE
-    attrset(A_RIGHTLINE);
-    mvaddstr(tmarg + 11, col2, "A_RIGHTLINE");
+#ifdef A_RIGHT
+    attrset(A_RIGHT);
+    mvaddstr(tmarg + 11, col2, "A_RIGHT");
     attrset(A_NORMAL);
 #endif
 

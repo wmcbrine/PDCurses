@@ -128,11 +128,11 @@ For chtype:
     A_DIM         half bright -- no effect in PDCurses
     A_INVIS       invisible -- no effect in PDCurses
     A_ITALIC      italic
-    A_LEFTLINE    line along the left edge
+    A_LEFT        line along the left edge
     A_PROTECT     protected (?) -- PDCurses renders this as a
                   combination of the *LINE attributes
     A_REVERSE     reverse video
-    A_RIGHTLINE   line along the right edge
+    A_RIGHT       line along the right edge
     A_STANDOUT    terminal's best highlighting mode
     A_UNDERLINE   underline
 
@@ -140,9 +140,8 @@ For chtype:
     A_CHARTEXT    bit-mask to extract a character
     A_COLOR       bit-mask to extract a color-pair
 
-Not all attributes will work on all terminals. A_RIGHTLINE and
-A_LEFTLINE are specific to PDCurses; A_ITALIC is not standard, but is
-shared with ncurses.
+Not all attributes will work on all terminals. A_ITALIC is not standard,
+but is shared with ncurses.
 
 For attr_t:
 
@@ -152,17 +151,15 @@ For attr_t:
     WA_DIM        same as A_DIM
     WA_INVIS      same as A_INVIS
     WA_ITALIC     same as A_ITALIC
-    WA_LEFT       same as A_LEFTLINE
+    WA_LEFT       same as A_LEFT
     WA_PROTECT    same as A_PROTECT
     WA_REVERSE    same as A_REVERSE
-    WA_RIGHT      same as A_RIGHTLINE
+    WA_RIGHT      same as A_RIGHT
     WA_STANDOUT   same as A_STANDOUT
     WA_UNDERLINE  same as A_UNDERLINE
 
-Note that while A_LEFTLINE and A_RIGHTLINE are PDCurses-specific,
-WA_LEFT and WA_RIGHT are standard. The following are also defined, for
-compatibility, but currently have no effect in PDCurses: WA_HORIZONTAL,
-WA_LOW, WA_TOP, WA_VERTICAL.
+The following are also defined, for compatibility, but currently have no
+effect in PDCurses: WA_HORIZONTAL, WA_LOW, WA_TOP, WA_VERTICAL.
 
 ### The Alternate Character Set
 

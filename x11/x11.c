@@ -638,18 +638,18 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
         /* Underline, etc. */
 
-        if (attr & (A_LEFTLINE|A_RIGHTLINE|A_UNDERLINE))
+        if (attr & (A_LEFT | A_RIGHT | A_UNDERLINE))
         {
             int k;
 
             if (SP->line_color != -1)
                 XSetForeground(XCURSESDISPLAY, gc, colors[SP->line_color]);
 
-            if (attr & A_UNDERLINE)     /* UNDER */
+            if (attr & A_UNDERLINE)
                 XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
                           xpos, ypos + 1, xpos + font_width * len, ypos + 1);
 
-            if (attr & A_LEFTLINE)      /* LEFT */
+            if (attr & A_LEFT)
                 for (k = 0; k < len; k++)
                 {
                     int x = xpos + font_width * k;
@@ -657,7 +657,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
                               x, ypos - font_ascent, x, ypos + font_descent);
                 }
 
-            if (attr & A_RIGHTLINE)     /* RIGHT */
+            if (attr & A_RIGHT)
                 for (k = 0; k < len; k++)
                 {
                     int x = xpos + font_width * (k + 1) - 1;

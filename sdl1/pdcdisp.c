@@ -283,17 +283,17 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
 #endif
     }
 
-    if (ch & (A_LEFTLINE|A_RIGHTLINE))
+    if (ch & (A_LEFT | A_RIGHT))
     {
         if (col == -1)
             col = foregr;
 
         dest->w = 1;
 
-        if (ch & A_LEFTLINE)
+        if (ch & A_LEFT)
             SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
 
-        if (ch & A_RIGHTLINE)
+        if (ch & A_RIGHT)
         {
             dest->x += pdc_fwidth - 1;
             SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
@@ -402,7 +402,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 #endif
 
         if (!(blinked_off && (ch & A_BLINK) && (sysattrs & A_BLINK)) &&
-            (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE)))
+            (ch & (A_UNDERLINE | A_LEFT | A_RIGHT)))
             _highlight(&src, &dest, ch);
 
         dest.x += pdc_fwidth;

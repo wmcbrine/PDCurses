@@ -2,6 +2,8 @@
 
 #include "pdcwin.h"
 
+#include <stdlib.h>
+
 #ifdef CHTYPE_LONG
 # define PDC_OFFSET 128
 #else

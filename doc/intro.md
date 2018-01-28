@@ -158,7 +158,8 @@ For attr_t:
     WA_UNDERLINE  same as A_UNDERLINE
 
 The following are also defined, for compatibility, but currently have no
-effect in PDCurses: WA_HORIZONTAL, WA_LOW, WA_TOP, WA_VERTICAL.
+effect in PDCurses: A_HORIZONTAL, A_LOW, A_TOP, A_VERTICAL and their
+WA_* equivalents.
 
 ### The Alternate Character Set
 

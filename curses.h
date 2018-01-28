@@ -29,7 +29,7 @@ PDCurses portable platform definitions list:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3501
+#define PDC_BUILD 3502
 #define PDCURSES        1      /* PDCurses-only routines */
 #define XOPEN           1      /* X/Open Curses routines */
 #define SYSVcurses      1      /* System V Curses routines */
@@ -439,6 +439,11 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 #define A_INVIS       A_NORMAL
 #define A_PROTECT     A_NORMAL
 
+#define A_HORIZONTAL  A_NORMAL
+#define A_LOW         A_NORMAL
+#define A_TOP         A_NORMAL
+#define A_VERTICAL    A_NORMAL
+
 #define CHR_MSK       A_CHARTEXT           /* Obsolete */
 #define ATR_MSK       A_ATTRIBUTES         /* Obsolete */
 #define ATR_NRM       A_NORMAL             /* Obsolete */
@@ -461,10 +466,10 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 #define WA_STANDOUT   A_STANDOUT
 #define WA_UNDERLINE  A_UNDERLINE
 
-#define WA_HORIZONTAL A_NORMAL
-#define WA_LOW        A_NORMAL
-#define WA_TOP        A_NORMAL
-#define WA_VERTICAL   A_NORMAL
+#define WA_HORIZONTAL A_HORIZONTAL
+#define WA_LOW        A_LOW
+#define WA_TOP        A_TOP
+#define WA_VERTICAL   A_VERTICAL
 
 #define WA_ATTRIBUTES A_ATTRIBUTES
 

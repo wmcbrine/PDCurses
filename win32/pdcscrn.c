@@ -597,7 +597,7 @@ void PDC_save_screen_mode(int i)
 
 void PDC_init_pair(short pair, short fg, short bg)
 {
-    WORD att, temp_bg;
+    WORD att;
     chtype i;
     bool rev = !!(SP->termattrs & A_REVERSE);
 

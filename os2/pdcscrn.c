@@ -302,7 +302,7 @@ void PDC_save_screen_mode(int i)
 
 void PDC_init_pair(short pair, short fg, short bg)
 {
-    unsigned char att, temp_bg;
+    unsigned char att;
     chtype i;
 
     fg = curstoreal[fg];

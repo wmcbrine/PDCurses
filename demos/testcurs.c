@@ -1195,9 +1195,9 @@ void colorTest(WINDOW *win)
         for (i = 16; i < 256; i++)
             init_pair(i, COLOR_BLACK, i);
 
-        for (i = 16, z = 0; z < 6; z++)
-            for (y = 0; y < 6; y++)
-                for (x = 0; x < 6; x++)
+        for (i = 16, x = 0; x < 6; x++)
+            for (z = 0; z < 6; z++)
+                for (y = 0; y < 6; y++)
                 {
                     chtype ch = ' ' | COLOR_PAIR(i++);
 

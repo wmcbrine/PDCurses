@@ -1,7 +1,6 @@
 /* Public Domain Curses */
 
 #include <curspriv.h>
-#include <string.h>
 
 /*man-start**************************************************************
 
@@ -78,13 +77,8 @@ util
 
 **man-end****************************************************************/
 
-#ifdef PDC_WIDE
-# ifdef PDC_FORCE_UTF8
-#  include <string.h>
-# else
-#  include <stdlib.h>
-# endif
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 char *unctrl(chtype c)
 {

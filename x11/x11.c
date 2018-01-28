@@ -3155,7 +3155,8 @@ int XCursesSetupX(int argc, char *argv[])
     SP->mouse_wait = xc_app_data.clickPeriod;
     SP->audible = TRUE;
 
-    SP->termattrs = A_COLOR | A_ITALIC | A_PROTECT | A_REVERSE;
+    SP->termattrs = A_COLOR | A_ITALIC | A_UNDERLINE | A_LEFT | A_RIGHT |
+                    A_REVERSE;
 
     PDC_LOG(("%s:SHM size for curscr %d\n", XCLOGMSG, SP->XcurscrSize));
 

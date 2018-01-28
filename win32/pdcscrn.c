@@ -446,7 +446,7 @@ int PDC_scr_open(int argc, char **argv)
     /* ENABLE_LVB_GRID_WORLDWIDE */
     result = SetConsoleMode(pdc_con_out, 0x0010);
     if (result)
-        SP->termattrs |= A_PROTECT|A_REVERSE;
+        SP->termattrs |= A_UNDERLINE | A_LEFT | A_RIGHT | A_REVERSE;
 
     PDC_reset_prog_mode();
 

@@ -1066,10 +1066,6 @@ void attrTest(WINDOW *win)
     attrset(A_NORMAL);
 #endif
 
-    attrset(A_PROTECT);
-    mvaddstr(tmarg + 13, col2, "A_PROTECT");
-    attrset(A_NORMAL);
-
     mvaddstr(tmarg + 16, 3, "Press any key to continue");
     getch();
 

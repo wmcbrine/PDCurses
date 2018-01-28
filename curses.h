@@ -411,8 +411,6 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_CHARTEXT   (chtype)0x0000ffff
 # define A_COLOR      (chtype)0xff000000
 
-# define A_PROTECT    (A_UNDERLINE | A_LEFT | A_RIGHT)
-
 # define PDC_COLOR_SHIFT 24
 #else
 # define A_BOLD       (chtype)0x0100  /* X/Open */
@@ -424,7 +422,6 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 # define A_COLOR      (chtype)0xf800  /* System V */
 
 # define A_ALTCHARSET A_NORMAL        /* X/Open */
-# define A_PROTECT    A_NORMAL        /* X/Open */
 # define A_UNDERLINE  A_NORMAL        /* X/Open */
 
 # define A_LEFT       A_NORMAL
@@ -440,6 +437,7 @@ bits), 8 bits for other attributes, and 16 bits for character data.
 
 #define A_DIM         A_NORMAL
 #define A_INVIS       A_NORMAL
+#define A_PROTECT     A_NORMAL
 
 #define CHR_MSK       A_CHARTEXT           /* Obsolete */
 #define ATR_MSK       A_ATTRIBUTES         /* Obsolete */

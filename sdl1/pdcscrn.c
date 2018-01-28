@@ -293,10 +293,9 @@ int PDC_scr_open(int argc, char **argv)
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = FALSE;
 
+    SP->termattrs = A_COLOR | A_UNDERLINE | A_LEFT | A_RIGHT | A_REVERSE;
 #ifdef PDC_WIDE
-    SP->termattrs = A_COLOR | A_ITALIC | A_PROTECT | A_REVERSE;
-#else
-    SP->termattrs = A_COLOR | A_PROTECT | A_REVERSE;
+    SP->termattrs |= A_ITALIC;
 #endif
 
     PDC_reset_prog_mode();

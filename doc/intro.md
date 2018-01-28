@@ -129,8 +129,7 @@ For chtype:
     A_INVIS       invisible -- no effect in PDCurses
     A_ITALIC      italic
     A_LEFT        line along the left edge
-    A_PROTECT     protected (?) -- PDCurses renders this as a
-                  combination of the *LINE attributes
+    A_PROTECT     protected -- no effect in PDCurses
     A_REVERSE     reverse video
     A_RIGHT       line along the right edge
     A_STANDOUT    terminal's best highlighting mode

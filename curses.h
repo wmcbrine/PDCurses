@@ -387,9 +387,10 @@ long form:
     +--------------------------------------------------------------------+
           color number      |     modifiers         |   character eg 'a'
 
-The available non-color attributes are bold, underline, invisible,
-right-line, left-line, protect, reverse and blink. 256 color pairs (8
-bits), 8 bits for other attributes, and 16 bits for character data.
+The available non-color attributes are bold, underline, right-line,
+left-line, italic, reverse and blink, plus the alternate character set
+indicator. 256 color pairs (8 bits), 8 bits for other attributes, and 16
+bits for character data.
 
 **man-end****************************************************************/
 

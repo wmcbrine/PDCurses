@@ -23,10 +23,6 @@
 # endif
 #endif
 
-#if defined(_MSC_VER) && defined(_WIN32) && !defined(_CRT_SECURE_NO_DEPRECATE)
-# define _CRT_SECURE_NO_DEPRECATE 1   /* kill nonsense warnings */
-#endif
-
 /*----------------------------------------------------------------------*/
 
 typedef struct           /* structure for ripped off lines */

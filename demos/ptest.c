@@ -103,6 +103,16 @@ int main(int argc, char **argv)
 #else
     initscr();
 #endif
+
+    if (COLS < 70 || LINES < 23)
+    {
+        printw("A window at least 70x23 is required for this demo");
+        refresh();
+        napms(5000);
+        endwin();
+        exit(-1);
+    }
+
     backfill();
 
     for (y = 0; y < 5; y++)

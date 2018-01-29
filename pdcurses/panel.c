@@ -486,7 +486,12 @@ int move_panel(PANEL *pan, int starty, int startx)
 
 PANEL *new_panel(WINDOW *win)
 {
-    PANEL *pan = malloc(sizeof(PANEL));
+    PANEL *pan;
+
+    if (!win)
+        return (PANEL *)NULL;
+
+    pan  = malloc(sizeof(PANEL));
 
     if (!_stdscr_pseudo_panel.win)
     {
@@ -548,6 +553,9 @@ const void *panel_userptr(const PANEL *pan)
 WINDOW *panel_window(const PANEL *pan)
 {
     PDC_LOG(("panel_window() - called\n"));
+
+    if (!pan)
+        return (WINDOW *)NULL;
 
     return pan->win;
 }

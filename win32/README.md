@@ -12,10 +12,10 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        bccwin32.mak  - Borland C++ 7.0+
-        gccwin32.mak  - GNU Compiler (MinGW or Cygnus)
-        vcwin32.mak   - Microsoft Visual C++ 2.0+
-        wccwin32.mak  - Open Watcom 1.8+
+        Makefile      - GNU Compiler (MinGW or Cygnus)
+        Makefile.bcc  - Borland C++ 7.0+
+        Makefile.vc   - Microsoft Visual C++ 2.0+
+        Makefile.wcc  - Open Watcom 1.8+
 
 - Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where
@@ -34,7 +34,7 @@ Building
   You can also give the optional parameter "WIDE=Y", to build the
   library with wide-character (Unicode) support:
 
-        make -f gccwin32.mak WIDE=Y
+        wmake -f Makefile.wcc WIDE=Y
 
   When built this way, the library is not compatible with Windows 9x,
   unless you also link with the Microsoft Layer for Unicode (not
@@ -45,12 +45,12 @@ Building
   unless WIDE=Y is also set. Use it to get around the poor support for
   UTF-8 in the Windows console:
 
-        make -f gccwin32.mak WIDE=Y UTF8=Y
+        make -f Makefile.bcc WIDE=Y UTF8=Y
 
   You can also use the optional parameter "DLL=Y" with Visual C++,
   MinGW or Cygwin, to build the library as a DLL:
 
-        nmake -f vcwin32.mak WIDE=Y DLL=Y
+        nmake -f Makefile.vc WIDE=Y DLL=Y
 
   When you build the library as a Windows DLL, you must always define
   PDC_DLL_BUILD when linking against it. (Or, if you only want to use

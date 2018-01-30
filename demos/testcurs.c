@@ -1066,6 +1066,10 @@ void attrTest(WINDOW *win)
     attrset(A_NORMAL);
 #endif
 
+    attrset(A_BLINK|A_REVERSE);
+    mvaddstr(tmarg + 13, col2, "Reverse Blink");
+    attrset(A_NORMAL);
+
     mvaddstr(tmarg + 16, 3, "Press any key to continue");
     getch();
 

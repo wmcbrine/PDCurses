@@ -1,4 +1,4 @@
-# Watcom WMAKE Makefile for PDCurses library - Win32 Open Watcom 1.8+
+# Watcom WMAKE Makefile for PDCurses library - Windows console Open Watcom 1.8+
 #
 # Usage: wmake -f [path\]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
 #
@@ -15,7 +15,7 @@ PDCURSES_SRCDIR	= ..
 
 !include $(PDCURSES_SRCDIR)/version.mif
 
-osdir		= $(PDCURSES_SRCDIR)/win32
+osdir		= $(PDCURSES_SRCDIR)/wincon
 
 CC		= wcc386
 TARGET		= nt
@@ -45,8 +45,8 @@ LIBEXE		= wlib -q -n -t
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
 
-PLATFORM1	= Watcom C++ Win32
-PLATFORM2	= Open Watcom 2.0 for Win32
-ARCNAME		= pdc$(VER)_wcc_w32
+PLATFORM1	= Watcom C++ Wincon
+PLATFORM2	= Open Watcom 2.0 for Windows console
+ARCNAME		= pdc$(VER)_wcc_wincon
 
 !include $(PDCURSES_SRCDIR)/makedist.mif

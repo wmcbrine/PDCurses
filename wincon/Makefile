@@ -1,4 +1,4 @@
-# GNU MAKE Makefile for PDCurses library - WIN32 GCC
+# GNU MAKE Makefile for PDCurses library - Windows console GCC
 #
 # Usage: make [-f path\Makefile] [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
 #
@@ -21,7 +21,7 @@ endif
 include $(PDCURSES_SRCDIR)/version.mif
 include $(PDCURSES_SRCDIR)/libobjs.mif
 
-osdir		= $(PDCURSES_SRCDIR)/win32
+osdir		= $(PDCURSES_SRCDIR)/wincon
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
@@ -106,8 +106,8 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
-PLATFORM1 = GCC Win32
-PLATFORM2 = GCC for Win32
-ARCNAME = pdc$(VER)_gcc_w32
+PLATFORM1 = GCC Wincon
+PLATFORM2 = GCC for Windows console
+ARCNAME = pdc$(VER)_gcc_wincon
 
 include $(PDCURSES_SRCDIR)/makedist.mif

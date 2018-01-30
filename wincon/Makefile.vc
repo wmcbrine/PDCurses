@@ -1,4 +1,4 @@
-# Visual C++ NMakefile for PDCurses library - Win32 VC++ 2.0+
+# Visual C++ NMakefile for PDCurses library - Windows console VC++ 2.0+
 #
 # Usage: nmake -f [path\]Makefile.vc [DEBUG=] [DLL=] [WIDE=] [UTF8=] [target]
 #
@@ -16,7 +16,7 @@ PDCURSES_SRCDIR = ..
 !include $(PDCURSES_SRCDIR)\version.mif
 !include $(PDCURSES_SRCDIR)\libobjs.mif
 
-osdir		= $(PDCURSES_SRCDIR)\win32
+osdir		= $(PDCURSES_SRCDIR)\wincon
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 
@@ -114,7 +114,7 @@ tuidemo.obj: $(demodir)\tuidemo.c
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
 
 PLATFORM1 = Visual C++
-PLATFORM2 = Microsoft Visual C/C++ for Win32
-ARCNAME = pdc$(VER)_vc_w32
+PLATFORM2 = Microsoft Visual C/C++ for Windows console
+ARCNAME = pdc$(VER)_vc_wincon
 
 !include $(PDCURSES_SRCDIR)\makedist.mif

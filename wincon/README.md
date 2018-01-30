@@ -2,9 +2,9 @@ PDCurses for Windows console
 ============================
 
 This directory contains PDCurses source code files specific to the
-Microsoft Windows console. Although called "Win32" for historic reasons,
-this port can just as easily be built for 64-bit systems. Windows 95
-through Windows 10 are covered. (Some features require later versions.)
+Microsoft Windows console. Although historically called "Win32", this
+port can just as easily be built for 64-bit systems. Windows 95 through
+Windows 10 are covered. (Some features require later versions.)
 
 
 Building

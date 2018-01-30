@@ -4631,13 +4631,6 @@ case "$target" in
 		DYN_COMP="-Q"   # force no check for dynamic loading
 		SHLFILE=""
 		;;
-	*cygwin)
-		SHLPRE=""
-		DYN_COMP="-DDYNAMIC"
-		LD_RXLIB1="dllwrap --def \$(srcdir)/../win32/pdcurses.def --target i386-cygwin32 --dllname \$(@)"
-# cygwininstall target MUST install the shared library itself because
-# it puts it into $(bindir) not $(libdir) as all other platforms
-		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
 		LD_RXLIB1="${CC} -flat_namespace -undefined suppress -dynamiclib -install_name=\$(@)"

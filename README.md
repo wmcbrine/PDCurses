@@ -14,7 +14,7 @@ Legal Stuff
 
 The core package is in the public domain, but small portions of PDCurses
 are subject to copyright under various licenses.  Each directory
-contains a README file, with a section titled "Distribution Status"
+contains a README.md file, with a section titled "Distribution Status"
 which describes the status of the files in that directory.
 
 If you use PDCurses in an application, an acknowledgement would be
@@ -32,7 +32,7 @@ PDCurses has been ported to DOS, OS/2, Windows, X11 and SDL. A directory
 containing the port-specific source files exists for each of these
 platforms.
 
-Build instructions are in the README file for each platform:
+Build instructions are in the README.md file for each platform:
 
 -  [DOS](dos/README.md)
 -  [OS/2](os2/README.md)
@@ -45,10 +45,8 @@ Build instructions are in the README file for each platform:
 Distribution Status
 -------------------
 
-All files in this directory except configure, config.guess and
-config.sub are released to the Public Domain. config.guess and
-config.sub are under the GPL; configure is under a free license
-described within it.
+All files in this directory (not including subdirectories) are released
+to the Public Domain.
 
 
 Maintainer

@@ -1,6 +1,6 @@
 # Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Open Watcom 1.8+
 #
-# Usage: wmake -f [path/]wccdos16.mak [DEBUG=Y] [target]
+# Usage: wmake -f [path\]Makefile.w16 [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

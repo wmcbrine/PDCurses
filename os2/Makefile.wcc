@@ -1,6 +1,6 @@
 # Watcom WMAKE Makefile for PDCurses library - OS/2 Open Watcom 1.8+
 #
-# Usage: wmake -f [path/]wccos2.mak [DEBUG=Y] [target]
+# Usage: wmake -f [path\]Makefile.wcc [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

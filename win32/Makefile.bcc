@@ -1,6 +1,6 @@
 # Borland MAKE Makefile for PDCurses library - Win32 BC++ 7.0+
 #
-# Usage: make -f [path\]bccwin32.mak [DEBUG=] [WIDE=] [UTF8=] [target]
+# Usage: make -f [path\]Makefile.bcc [DEBUG=] [WIDE=] [UTF8=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

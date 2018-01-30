@@ -1,6 +1,6 @@
 # GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
 #
-# Usage: make -f [path\]gccdos.mak [DEBUG=Y] [target]
+# Usage: make [-f path\Makefile] [DEBUG=Y] [target]
 #
 # where target can be any of:
 # [all|libs|demos|dist|pdcurses.a|testcurs.exe...]

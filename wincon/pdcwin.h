@@ -22,5 +22,7 @@
 extern WORD *pdc_atrtab;
 extern HANDLE pdc_con_out, pdc_con_in;
 extern DWORD pdc_quick_edit;
+extern DWORD pdc_last_blink;
 
 extern int PDC_get_buffer_rows(void);
+extern void PDC_blink_text(void);

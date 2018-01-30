@@ -14,6 +14,9 @@ void PDC_napms(int ms)
 {
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
+    if ((SP->termattrs & A_BLINK) && (GetTickCount() >= pdc_last_blink + 500))
+        PDC_blink_text();
+
     Sleep(ms);
 }
 

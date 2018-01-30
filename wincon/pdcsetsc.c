@@ -88,11 +88,27 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
-    SP->termattrs &= ~A_BLINK;
     if (pdc_color_started)
         COLORS = 16;
 
-    return blinkon ? ERR : OK;
+    if (blinkon)
+    {
+        if (!(SP->termattrs & A_BLINK))
+        {
+            SP->termattrs |= A_BLINK;
+            pdc_last_blink = GetTickCount();
+        }
+    }
+    else
+    {
+        if (SP->termattrs & A_BLINK)
+        {
+            SP->termattrs &= ~A_BLINK;
+            PDC_blink_text();
+        }
+    }
+
+    return OK;
 }
 
 int PDC_set_bold(bool boldon)

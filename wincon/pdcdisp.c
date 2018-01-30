@@ -62,6 +62,9 @@ chtype acs_map[128] =
 
 #endif
 
+DWORD pdc_last_blink;
+static bool blinked_off = FALSE;
+
 /* position hardware cursor at (y, x) */
 
 void PDC_gotoyx(int row, int col)
@@ -86,6 +89,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     int j;
     COORD bufSize, bufPos;
     SMALL_RECT sr;
+    bool sysblink;
 
     PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
@@ -99,17 +103,58 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     sr.Left = x;
     sr.Right = x + len - 1;
 
+    sysblink = !!(SP->termattrs & A_BLINK);
+
     for (j = 0; j < len; j++)
     {
-        chtype ch = srcp[j];
+        chtype att, ch = srcp[j];
+        att = ch;
 
-        ci[j].Attributes = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
+        if (sysblink && (att & A_BLINK))
+        {
+            att &= ~A_BLINK;
+            if (blinked_off)
+                att &= ~(A_UNDERLINE | A_RIGHT | A_LEFT);
+        }
+
+        ci[j].Attributes = pdc_atrtab[att >> PDC_ATTR_SHIFT];
+
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = acs_map[ch & 0x7f];
 #endif
+        if (sysblink && blinked_off && (ch & A_BLINK))
+            ch = ' ';
+
         ci[j].Char.UnicodeChar = ch & A_CHARTEXT;
     }
 
     WriteConsoleOutput(pdc_con_out, ci, bufSize, bufPos, &sr);
+}
+
+void PDC_blink_text(void)
+{
+    int i, j, k;
+
+    if (!(SP->termattrs & A_BLINK))
+        blinked_off = FALSE;
+    else
+        blinked_off = !blinked_off;
+
+    for (i = 0; i < SP->lines; i++)
+    {
+        const chtype *srcp = curscr->_y[i];
+
+        for (j = 0; j < SP->cols; j++)
+            if (srcp[j] & A_BLINK)
+            {
+                k = j;
+                while (k < SP->cols && (srcp[k] & A_BLINK))
+                    k++;
+                PDC_transform_line(i, j, k - j, srcp + j);
+                j = k;
+            }
+    }
+
+    pdc_last_blink = GetTickCount();
 }

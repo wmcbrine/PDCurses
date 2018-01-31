@@ -599,32 +599,30 @@ void PDC_init_pair(short pair, short fg, short bg)
 {
     WORD att;
     chtype i;
-    bool rev = !!(SP->termattrs & A_REVERSE);
 
     fg = curstoreal[fg];
     bg = curstoreal[bg];
 
     for (i = 0; i < PDC_OFFSET; i++)
     {
-        att = fg | (bg << 4);
+        short f = fg, b = bg;
+
+        if (i & (A_BOLD >> PDC_ATTR_SHIFT))
+            f |= 8;
+        if (i & (A_BLINK >> PDC_ATTR_SHIFT))
+            b |= 8;
 
         if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
-        {
-            if (rev)
-                att |= COMMON_LVB_REVERSE_VIDEO;
-            else
-                att = bg | (fg << 4);
-        }
+            att = b | (f << 4);
+        else
+            att = f | (b << 4);
+
         if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_UNDERSCORE;
         if (i & (A_LEFT >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_GRID_LVERTICAL;
         if (i & (A_RIGHT >> PDC_ATTR_SHIFT))
             att |= COMMON_LVB_GRID_RVERTICAL;
-        if (i & (A_BOLD >> PDC_ATTR_SHIFT))
-            att |= 8;
-        if (i & (A_BLINK >> PDC_ATTR_SHIFT))
-            att |= 128;
 
         pdc_atrtab[pair * PDC_OFFSET + i] = att;
     }

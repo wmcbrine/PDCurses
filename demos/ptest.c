@@ -18,6 +18,18 @@ void pflush(void)
     doupdate();
 }
 
+void sizecheck(void)
+{
+    if (COLS < 70 || LINES < 23)
+    {
+        printw("A window at least 70x23 is required for this demo");
+        refresh();
+        napms(5000);
+        endwin();
+        exit(-1);
+    }
+}
+
 void backfill(void)
 {
     int y, x;
@@ -38,6 +50,17 @@ void wait_a_while(long msec)
 
     c = getch();
 
+#ifdef KEY_RESIZE
+    if (c == KEY_RESIZE)
+    {
+# ifdef PDCURSES
+        resize_term(0, 0);
+# endif
+        sizecheck();
+        backfill();
+    }
+    else
+#endif
     if (c == 'q')
     {
         endwin();
@@ -104,15 +127,8 @@ int main(int argc, char **argv)
     initscr();
 #endif
 
-    if (COLS < 70 || LINES < 23)
-    {
-        printw("A window at least 70x23 is required for this demo");
-        refresh();
-        napms(5000);
-        endwin();
-        exit(-1);
-    }
-
+    keypad(stdscr, TRUE);
+    sizecheck();
     backfill();
 
     for (y = 0; y < 5; y++)

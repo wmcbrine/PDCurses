@@ -410,6 +410,10 @@ int PDC_get_key(void)
                 pdc_sheight = event.window.data2;
                 pdc_swidth = event.window.data1;
 
+                pdc_screen = SDL_GetWindowSurface(pdc_window);
+                touchwin(curscr);
+                wrefresh(curscr);
+
                 if (!SP->resized)
                 {
                     SP->resized = TRUE;

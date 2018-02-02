@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <signal.h>
 #include <curses.h>
-#include <ctype.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <time.h>
 
 #define DELAYSIZE 200

@@ -5,7 +5,6 @@
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  */
 
-#include <stdio.h>
 #include <signal.h>
 #include <string.h>
 #include <curses.h>

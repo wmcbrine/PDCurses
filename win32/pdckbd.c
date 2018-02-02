@@ -365,9 +365,12 @@ bool PDC_check_key(void)
    description.
 */
 
+static int repeat_count = 0;
+
 static int _get_key_count(void)
 {
     int num_keys = 0, vk;
+    static int prev_vk = 0;
 
     PDC_LOG(("_get_key_count() - called\n"));
 
@@ -412,6 +415,11 @@ static int _get_key_count(void)
             if (KEV.uChar.UnicodeChar || !(MapVirtualKey(vk, 2) & 0x80000000))
                 num_keys = KEV.wRepeatCount;
         }
+        if( vk == prev_vk)
+            repeat_count++;
+        else
+            repeat_count = 0;
+        prev_vk = vk;
     }
     else
     {
@@ -427,6 +435,7 @@ static int _get_key_count(void)
             save_press = 0;
             num_keys = 1;
         }
+        repeat_count = prev_vk = 0;
     }
 
     PDC_LOG(("_get_key_count() - returning: num_keys %d\n", num_keys));
@@ -467,6 +476,9 @@ static int _process_key_event(void)
 
         if (state & NUMLOCK_ON)
             pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+
+        if( repeat_count)
+            pdc_key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
     }
 
     /* Handle modifier keys hit by themselves */

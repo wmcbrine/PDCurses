@@ -1346,10 +1346,21 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
     int i, count;
     unsigned long modifier = 0;
     bool key_code = FALSE;
+    static XEvent prev_event;
+    static int repeat_count = 0;
 
     XC_LOG(("XCursesKeyPress() - called\n"));
 
     /* Handle modifier keys first; ignore other KeyReleases */
+    if( event->type == KeyPress && prev_event.type == KeyRelease
+            && event->xkey.time == prev_event.xkey.time
+            && event->xkey.keycode == prev_event.xkey.keycode)
+    {
+        repeat_count++;
+    }
+    else if( event->type == KeyPress)
+        repeat_count = 0;
+    prev_event = *event;
 
     if (event->type == KeyRelease)
     {
@@ -1527,6 +1538,9 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
     if (event->xkey.state & Mod1Mask)
         modifier |= PDC_KEY_MODIFIER_ALT;
+
+    if( repeat_count)
+        modifier |= PDC_KEY_MODIFIER_REPEAT;
 
     for (i = 0; key_table[i].keycode; i++)
     {

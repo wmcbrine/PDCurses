@@ -1698,10 +1698,15 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
     const int repeated = (int)( lParam >> 30) & 1;
     const KPTAB *kptr = kptab + wParam;
     int key = 0;
+    static int repeat_count;
 
     if( !repeated)
         *ptr_modified_key_to_return = 0;
 
+    if( repeated)
+        repeat_count++;
+    else
+        repeat_count = 0;
     if( SP->return_key_modifiers && !repeated)
     {                     /* See notes above this function */
         if( wParam == VK_SHIFT)
@@ -1772,6 +1777,9 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
 
         if( GetKeyState( VK_NUMLOCK) & 1)
             pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+
+        if( repeat_count)
+            pdc_key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
     }
 }
 

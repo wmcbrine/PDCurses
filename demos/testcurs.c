@@ -618,6 +618,9 @@ void inputTest(WINDOW *win)
 
             if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_NUMLOCK)
                 waddstr(win, " NUMLOCK");
+
+            if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_REPEAT)
+                waddstr(win, " REPEAT");
 #endif            /* end of mouse display */
         }
         wrefresh(win);

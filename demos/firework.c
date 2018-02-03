@@ -25,6 +25,7 @@ int main(int argc, char **argv)
 #else
     initscr();
 #endif
+    keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
     noecho();
 

@@ -179,6 +179,7 @@ static int _set_console_infoex(void)
 
 static int _set_colors(void)
 {
+    SetConsoleTextAttribute(pdc_con_out, 7);
     if (pSetConsoleScreenBufferInfoEx)
         return _set_console_infoex();
     else

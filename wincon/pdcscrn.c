@@ -31,6 +31,7 @@ static short ansitocurs[16] =
 };
 
 short pdc_curstoreal[16], pdc_curstoansi[16];
+short pdc_oldf, pdc_oldb, pdc_oldu;
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER };
 
@@ -87,6 +88,13 @@ static LPTOP_LEVEL_EXCEPTION_FILTER xcpt_filter;
 static DWORD old_console_mode = 0;
 
 static bool is_nt;
+
+static void _reset_old_colors(void)
+{
+    pdc_oldf = -1;
+    pdc_oldb = -1;
+    pdc_oldu = 0;
+}
 
 static HWND _find_console_handle(void)
 {
@@ -184,6 +192,8 @@ static int _set_console_infoex(void)
 static int _set_colors(void)
 {
     SetConsoleTextAttribute(pdc_con_out, 7);
+    _reset_old_colors();
+
     if (pSetConsoleScreenBufferInfoEx)
         return _set_console_infoex();
     else
@@ -368,6 +378,7 @@ int PDC_scr_open(int argc, char **argv)
         pdc_curstoreal[realtocurs[i]] = i;
         pdc_curstoansi[ansitocurs[i]] = i;
     }
+    _reset_old_colors();
 
     std_con_out =
     pdc_con_out = GetStdHandle(STD_OUTPUT_HANDLE);

@@ -83,9 +83,6 @@ void PDC_gotoyx(int row, int col)
 void _set_ansi_color(short f, short b, attr_t attr)
 {
     char esc[64], *p;
-    static short oldf = -1;
-    static short oldb = -1;
-    static short oldu = 0;
     short tmp, underline;
 
     if (f < 16)
@@ -104,7 +101,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
 
     p = esc + sprintf(esc, "\x1b[");
 
-    if (f != oldf)
+    if (f != pdc_oldf)
     {
         if (f < 8)
             p += sprintf(p, "%d", f + 30);
@@ -113,10 +110,10 @@ void _set_ansi_color(short f, short b, attr_t attr)
         else
             p += sprintf(p, "38;5;%d", f);
 
-        oldf = f;
+        pdc_oldf = f;
     }
 
-    if (b != oldb)
+    if (b != pdc_oldb)
     {
         if (strlen(esc) > 2)
             p += sprintf(p, ";");
@@ -128,10 +125,10 @@ void _set_ansi_color(short f, short b, attr_t attr)
         else
             p += sprintf(p, "48;5;%d", b);
 
-        oldb = b;
+        pdc_oldb = b;
     }
 
-    if (underline != oldu)
+    if (underline != pdc_oldu)
     {
         if (strlen(esc) > 2)
             p += sprintf(p, ";");
@@ -141,7 +138,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
         else
             p += sprintf(p, "24");
 
-        oldu = underline;
+        pdc_oldu = underline;
     }
 
     if (strlen(esc) > 2)

@@ -17,6 +17,7 @@ extern HANDLE pdc_con_out, pdc_con_in;
 extern DWORD pdc_quick_edit;
 extern DWORD pdc_last_blink;
 extern short pdc_curstoreal[16], pdc_curstoansi[16];
+extern short pdc_oldf, pdc_oldb, pdc_oldu;
 
 extern int PDC_get_buffer_rows(void);
 extern void PDC_blink_text(void);

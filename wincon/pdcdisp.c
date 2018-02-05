@@ -80,56 +80,201 @@ void PDC_gotoyx(int row, int col)
     SetConsoleCursorPosition(pdc_con_out, coord);
 }
 
+void _set_ansi_color(short f, short b, attr_t attr)
+{
+    char esc[64], *p;
+    static short oldf = -1;
+    static short oldb = -1;
+    static short oldu = 0;
+    short tmp, underline;
+
+    if (f < 16)
+        f = pdc_curstoansi[f];
+
+    if (b < 16)
+        b = pdc_curstoansi[b];
+
+    if (attr & A_REVERSE)
+    {
+        tmp = f;
+        f = b;
+        b = tmp;
+    }
+    underline = !!(attr & A_UNDERLINE);
+
+    p = esc + sprintf(esc, "\x1b[");
+
+    if (f != oldf)
+    {
+        if (f < 8)
+            p += sprintf(p, "%d", f + 30);
+        else if (f < 16)
+            p += sprintf(p, "%d", f + 82);
+        else
+            p += sprintf(p, "38;5;%d", f);
+
+        oldf = f;
+    }
+
+    if (b != oldb)
+    {
+        if (strlen(esc) > 2)
+            p += sprintf(p, ";");
+
+        if (b < 8)
+            p += sprintf(p, "%d", b + 40);
+        else if (b < 16)
+            p += sprintf(p, "%d", b + 92);
+        else
+            p += sprintf(p, "48;5;%d", b);
+
+        oldb = b;
+    }
+
+    if (underline != oldu)
+    {
+        if (strlen(esc) > 2)
+            p += sprintf(p, ";");
+
+        if (underline)
+            p += sprintf(p, "4");
+        else
+            p += sprintf(p, "24");
+
+        oldu = underline;
+    }
+
+    if (strlen(esc) > 2)
+    {
+        sprintf(p, "m");
+        SetConsoleMode(pdc_con_out, 0x0015);
+        WriteConsoleA(pdc_con_out, esc, strlen(esc), NULL, NULL);
+        SetConsoleMode(pdc_con_out, 0x0010);
+    }
+}
+
+void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
+{
+    union {
+        CHAR_INFO ci[512];
+#ifdef PDC_WIDE
+        WCHAR text[512];
+#else
+        char text[512];
+#endif
+    } buffer;
+    WORD mapped_attr;
+    int j;
+    short fore, back;
+    bool blink, ansi;
+
+    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
+    ansi = (fore >= 16 || back >= 16);
+    blink = (SP->termattrs & A_BLINK) && (attr & A_BLINK);
+
+    if (blink)
+    {
+        attr &= ~A_BLINK;
+        if (blinked_off)
+            attr &= ~(A_UNDERLINE | A_RIGHT | A_LEFT);
+    }
+
+    if (attr & A_BOLD)
+        fore |= 8;
+    if (attr & A_BLINK)
+        back |= 8;
+
+    if (!ansi)
+    {
+        fore = pdc_curstoreal[fore];
+        back = pdc_curstoreal[back];
+
+        if (attr & A_REVERSE)
+            mapped_attr = back | (fore << 4);
+        else
+            mapped_attr = fore | (back << 4);
+
+        if (attr & A_UNDERLINE)
+            mapped_attr |= COMMON_LVB_UNDERSCORE;
+        if (attr & A_LEFT)
+            mapped_attr |= COMMON_LVB_GRID_LVERTICAL;
+        if (attr & A_RIGHT)
+            mapped_attr |= COMMON_LVB_GRID_RVERTICAL;
+    }
+
+    for (j = 0; j < len; j++)
+    {
+        chtype ch = srcp[j];
+#ifdef CHTYPE_LONG
+        if (ch & A_ALTCHARSET && !(ch & 0xff80))
+            ch = acs_map[ch & 0x7f];
+#endif
+        if (blink && blinked_off)
+            ch = ' ';
+
+        if (ansi)
+            buffer.text[j] = ch & A_CHARTEXT;
+        else
+        {
+            buffer.ci[j].Attributes = mapped_attr;
+            buffer.ci[j].Char.UnicodeChar = ch & A_CHARTEXT;
+        }
+    }
+
+    if (ansi)
+    {
+        PDC_gotoyx(lineno, x);
+        _set_ansi_color(fore, back, attr);
+#ifdef PDC_WIDE
+        WriteConsoleW(pdc_con_out, buffer.text, len, NULL, NULL);
+#else
+        WriteConsoleA(pdc_con_out, buffer.text, len, NULL, NULL);
+#endif
+    }
+    else
+    {
+        COORD bufSize, bufPos;
+        SMALL_RECT sr;
+
+        bufPos.X = bufPos.Y = 0;
+        bufSize.X = len;
+        bufSize.Y = 1;
+
+        sr.Top = sr.Bottom = lineno;
+        sr.Left = x;
+        sr.Right = x + len - 1;
+
+        WriteConsoleOutput(pdc_con_out, buffer.ci, bufSize, bufPos, &sr);
+    }
+}
+
 /* update the given physical line to look like the corresponding line in
    curscr */
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
-    CHAR_INFO ci[512];
-    int j;
-    COORD bufSize, bufPos;
-    SMALL_RECT sr;
-    bool sysblink;
+    attr_t old_attr, attr;
+    int i, j;
 
     PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
-    bufPos.X = bufPos.Y = 0;
+    old_attr = *srcp & (A_ATTRIBUTES ^ A_ALTCHARSET);
 
-    bufSize.X = len;
-    bufSize.Y = 1;
-
-    sr.Top = lineno;
-    sr.Bottom = lineno;
-    sr.Left = x;
-    sr.Right = x + len - 1;
-
-    sysblink = !!(SP->termattrs & A_BLINK);
-
-    for (j = 0; j < len; j++)
+    for (i = 1, j = 1; j < len; i++, j++)
     {
-        chtype att, ch = srcp[j];
-        att = ch;
+        attr = srcp[i] & (A_ATTRIBUTES ^ A_ALTCHARSET);
 
-        if (sysblink && (att & A_BLINK))
+        if (attr != old_attr)
         {
-            att &= ~A_BLINK;
-            if (blinked_off)
-                att &= ~(A_UNDERLINE | A_RIGHT | A_LEFT);
+            _new_packet(old_attr, lineno, x, i, srcp);
+            old_attr = attr;
+            srcp += i;
+            x += i;
+            i = 0;
         }
-
-        ci[j].Attributes = pdc_atrtab[att >> PDC_ATTR_SHIFT];
-
-#ifdef CHTYPE_LONG
-        if (ch & A_ALTCHARSET && !(ch & 0xff80))
-            ch = acs_map[ch & 0x7f];
-#endif
-        if (sysblink && blinked_off && (ch & A_BLINK))
-            ch = ' ';
-
-        ci[j].Char.UnicodeChar = ch & A_CHARTEXT;
     }
 
-    WriteConsoleOutput(pdc_con_out, ci, bufSize, bufPos, &sr);
+    _new_packet(old_attr, lineno, x, i, srcp);
 }
 
 void PDC_blink_text(void)
@@ -156,5 +301,6 @@ void PDC_blink_text(void)
             }
     }
 
+    PDC_gotoyx(SP->cursrow, SP->curscol);
     pdc_last_blink = GetTickCount();
 }

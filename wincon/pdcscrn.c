@@ -4,15 +4,9 @@
 
 #include <stdlib.h>
 
-#ifdef CHTYPE_LONG
-# define PDC_OFFSET 128
-#else
-# define PDC_OFFSET  8
-#endif
-
 /* COLOR_PAIR to attribute encoding table. */
 
-WORD *pdc_atrtab = (WORD *)NULL;
+static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 HANDLE std_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
@@ -20,13 +14,23 @@ HANDLE pdc_con_in = INVALID_HANDLE_VALUE;
 
 DWORD pdc_quick_edit;
 
-static short curstoreal[16], realtocurs[16] =
+static short realtocurs[16] =
 {
     COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
     COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK + 8,
     COLOR_BLUE + 8, COLOR_GREEN + 8, COLOR_CYAN + 8, COLOR_RED + 8,
     COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
 };
+
+static short ansitocurs[16] =
+{
+    COLOR_BLACK, COLOR_RED, COLOR_GREEN, COLOR_YELLOW, COLOR_BLUE,
+    COLOR_MAGENTA, COLOR_CYAN, COLOR_WHITE, COLOR_BLACK + 8,
+    COLOR_RED + 8, COLOR_GREEN + 8, COLOR_YELLOW + 8, COLOR_BLUE + 8,
+    COLOR_MAGENTA + 8, COLOR_CYAN + 8, COLOR_WHITE + 8
+};
+
+short pdc_curstoreal[16], pdc_curstoansi[16];
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER };
 
@@ -330,10 +334,6 @@ void PDC_scr_free(void)
 {
     if (SP)
         free(SP);
-    if (pdc_atrtab)
-        free(pdc_atrtab);
-
-    pdc_atrtab = (WORD *)NULL;
 
     if (pdc_con_out != std_con_out)
     {
@@ -359,13 +359,15 @@ int PDC_scr_open(int argc, char **argv)
     PDC_LOG(("PDC_scr_open() - called\n"));
 
     SP = calloc(1, sizeof(SCREEN));
-    pdc_atrtab = calloc(PDC_COLOR_PAIRS * PDC_OFFSET, sizeof(WORD));
 
-    if (!SP || !pdc_atrtab)
+    if (!SP)
         return ERR;
 
     for (i = 0; i < 16; i++)
-        curstoreal[realtocurs[i]] = i;
+    {
+        pdc_curstoreal[realtocurs[i]] = i;
+        pdc_curstoansi[ansitocurs[i]] = i;
+    }
 
     std_con_out =
     pdc_con_out = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -598,41 +600,14 @@ void PDC_save_screen_mode(int i)
 
 void PDC_init_pair(short pair, short fg, short bg)
 {
-    WORD att;
-    chtype i;
-
-    fg = curstoreal[fg];
-    bg = curstoreal[bg];
-
-    for (i = 0; i < PDC_OFFSET; i++)
-    {
-        short f = fg, b = bg;
-
-        if (i & (A_BOLD >> PDC_ATTR_SHIFT))
-            f |= 8;
-        if (i & (A_BLINK >> PDC_ATTR_SHIFT))
-            b |= 8;
-
-        if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
-            att = b | (f << 4);
-        else
-            att = f | (b << 4);
-
-        if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
-            att |= COMMON_LVB_UNDERSCORE;
-        if (i & (A_LEFT >> PDC_ATTR_SHIFT))
-            att |= COMMON_LVB_GRID_LVERTICAL;
-        if (i & (A_RIGHT >> PDC_ATTR_SHIFT))
-            att |= COMMON_LVB_GRID_RVERTICAL;
-
-        pdc_atrtab[pair * PDC_OFFSET + i] = att;
-    }
+    atrtab[pair].f = fg;
+    atrtab[pair].b = bg;
 }
 
 int PDC_pair_content(short pair, short *fg, short *bg)
 {
-    *fg = realtocurs[pdc_atrtab[pair * PDC_OFFSET] & 0x0F];
-    *bg = realtocurs[(pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4];
+    *fg = atrtab[pair].f;
+    *bg = atrtab[pair].b;
 
     return OK;
 }
@@ -644,17 +619,20 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-    COLORREF *color_table = _get_colors();
-
-    if (color_table)
+    if (color < 16)
     {
-        DWORD col = color_table[curstoreal[color]];
+        COLORREF *color_table = _get_colors();
 
-        *red = DIVROUND(GetRValue(col) * 1000, 255);
-        *green = DIVROUND(GetGValue(col) * 1000, 255);
-        *blue = DIVROUND(GetBValue(col) * 1000, 255);
+        if (color_table)
+        {
+            DWORD col = color_table[pdc_curstoreal[color]];
 
-        return OK;
+            *red = DIVROUND(GetRValue(col) * 1000, 255);
+            *green = DIVROUND(GetGValue(col) * 1000, 255);
+            *blue = DIVROUND(GetBValue(col) * 1000, 255);
+
+            return OK;
+        }
     }
 
     return ERR;
@@ -662,16 +640,19 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-    COLORREF *color_table = _get_colors();
-
-    if (color_table)
+    if (color < 16)
     {
-        color_table[curstoreal[color]] =
-            RGB(DIVROUND(red * 255, 1000),
-                DIVROUND(green * 255, 1000),
-                DIVROUND(blue * 255, 1000));
+        COLORREF *color_table = _get_colors();
 
-        return _set_colors();
+        if (color_table)
+        {
+            color_table[pdc_curstoreal[color]] =
+                RGB(DIVROUND(red * 255, 1000),
+                    DIVROUND(green * 255, 1000),
+                    DIVROUND(blue * 255, 1000));
+
+            return _set_colors();
+        }
     }
 
     return ERR;

@@ -89,7 +89,7 @@ void PDC_set_title(const char *title)
 int PDC_set_blink(bool blinkon)
 {
     if (pdc_color_started)
-        COLORS = 16;
+        COLORS = 256;
 
     if (blinkon)
     {

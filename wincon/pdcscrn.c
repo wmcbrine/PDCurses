@@ -408,7 +408,7 @@ int PDC_scr_open(int argc, char **argv)
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
-    SP->termattrs = A_COLOR;
+    SP->termattrs = A_COLOR | A_REVERSE;
 
     if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
     {
@@ -460,7 +460,7 @@ int PDC_scr_open(int argc, char **argv)
     /* ENABLE_LVB_GRID_WORLDWIDE */
     result = SetConsoleMode(pdc_con_out, 0x0010);
     if (result)
-        SP->termattrs |= A_UNDERLINE | A_LEFT | A_RIGHT | A_REVERSE;
+        SP->termattrs |= A_UNDERLINE | A_LEFT | A_RIGHT;
 
     PDC_reset_prog_mode();
 

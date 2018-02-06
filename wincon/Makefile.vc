@@ -38,7 +38,7 @@ WIDEOPT		= -DPDC_WIDE
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
-SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll
+SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /MACHINE:$(PLATFORM) /OUT:pdcurses.dll
 
 LINK		= link.exe -nologo
 
@@ -90,7 +90,7 @@ $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
 
 pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
 	rc /r /fopdcurses.res $(osdir)\pdcurses.rc
-	cvtres /NOLOGO /OUT:pdcurses.obj pdcurses.res
+	cvtres /MACHINE:$(PLATFORM) /NOLOGO /OUT:pdcurses.obj pdcurses.res
 
 {$(srcdir)\}.c{}.obj::
 	$(BUILD) $<

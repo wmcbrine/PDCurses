@@ -32,6 +32,7 @@ static short ansitocurs[16] =
 
 short pdc_curstoreal[16], pdc_curstoansi[16];
 short pdc_oldf, pdc_oldb, pdc_oldu;
+bool pdc_conemu, pdc_ansi;
 
 enum { PDC_RESTORE_NONE, PDC_RESTORE_BUFFER };
 
@@ -392,6 +393,10 @@ int PDC_scr_open(int argc, char **argv)
 
     is_nt = !(GetVersion() & 0x80000000);
 
+    str = getenv("ConEmuANSI");
+    pdc_conemu = !!str;
+    pdc_ansi = pdc_conemu ? !strcmp(str, "ON") : FALSE;
+
     GetConsoleScreenBufferInfo(pdc_con_out, &csbi);
     GetConsoleScreenBufferInfo(pdc_con_out, &orig_scr);
     GetConsoleMode(pdc_con_in, &old_console_mode);
@@ -625,7 +630,7 @@ int PDC_pair_content(short pair, short *fg, short *bg)
 
 bool PDC_can_change_color(void)
 {
-    return is_nt;
+    return is_nt && !pdc_conemu;
 }
 
 int PDC_color_content(short color, short *red, short *green, short *blue)

@@ -144,9 +144,13 @@ void _set_ansi_color(short f, short b, attr_t attr)
     if (strlen(esc) > 2)
     {
         sprintf(p, "m");
-        SetConsoleMode(pdc_con_out, 0x0015);
+        if (!pdc_conemu)
+            SetConsoleMode(pdc_con_out, 0x0015);
+
         WriteConsoleA(pdc_con_out, esc, strlen(esc), NULL, NULL);
-        SetConsoleMode(pdc_con_out, 0x0010);
+
+        if (!pdc_conemu)
+            SetConsoleMode(pdc_con_out, 0x0010);
     }
 }
 
@@ -165,8 +169,20 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     short fore, back;
     bool blink, ansi;
 
+    if (pdc_conemu && pdc_ansi &&
+        (lineno == (SP->lines - 1)) && ((x + len) == SP->cols))
+    {
+        len--;
+        if (len)
+            _new_packet(attr, lineno, x, len, srcp);
+        pdc_ansi = FALSE;
+        _new_packet(attr, lineno, x + len, 1, srcp + len);
+        pdc_ansi = TRUE;
+        return;
+    }
+
     PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
-    ansi = (fore >= 16 || back >= 16);
+    ansi = pdc_ansi || (fore >= 16 || back >= 16);
     blink = (SP->termattrs & A_BLINK) && (attr & A_BLINK);
 
     if (blink)

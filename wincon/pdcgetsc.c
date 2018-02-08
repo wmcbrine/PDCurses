@@ -28,19 +28,6 @@ int PDC_get_rows(void)
     return scr.srWindow.Bottom - scr.srWindow.Top + 1;
 }
 
-/* return number of buffer rows */
-
-int PDC_get_buffer_rows(void)
-{
-    CONSOLE_SCREEN_BUFFER_INFO scr;
-
-    PDC_LOG(("PDC_get_buffer_rows() - called\n"));
-
-    GetConsoleScreenBufferInfo(pdc_con_out, &scr);
-
-    return scr.dwSize.Y;
-}
-
 /* return width of screen/viewport */
 
 int PDC_get_columns(void)

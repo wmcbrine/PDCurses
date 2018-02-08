@@ -102,7 +102,7 @@ Bug fixes and such
 
 - Support for "Super" keys in X11, by Bill Gray.
 
-- Make xcurses-config inclue -DPDC_WIDE when appropriate, per M.H.
+- Make xcurses-config include -DPDC_WIDE when appropriate, per M.H.
 
 - The configure script and accompanying files, which were always
   specific only to the X11 port (causing considerable confusion), have

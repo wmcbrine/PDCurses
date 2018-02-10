@@ -22,29 +22,12 @@ static short curstoreal[16], realtocurs[16] =
     COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
 };
 
-#ifdef PDCTHUNK
-# ifdef __EMX__
-#  define THUNKEDVIO VIOCOLORREG
-# else
-
-typedef struct {
-    USHORT cb;
-    USHORT type;
-    USHORT firstcolorreg;
-    USHORT numcolorregs;
-    ptr_16 colorregaddr;
-} THUNKEDVIO;
-
-# endif
-#endif
-
 static PCH saved_screen = NULL;
 static USHORT saved_lines = 0;
 static USHORT saved_cols = 0;
 static VIOMODEINFO scrnmode;    /* default screen mode  */
 static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
-static bool can_change = FALSE;
 
 static int _get_font(void)
 {
@@ -168,8 +151,6 @@ int PDC_scr_open(int argc, char **argv)
 
     SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
 
-    can_change = (PDC_color_content(0, &r, &g, &b) == OK);
-
     return OK;
 }
 
@@ -290,83 +271,15 @@ int PDC_pair_content(short pair, short *fg, short *bg)
 
 bool PDC_can_change_color(void)
 {
-    return can_change;
+    return FALSE;
 }
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-#ifdef PDCTHUNK
-    THUNKEDVIO vcr;
-    USHORT palbuf[4];
-    unsigned char pal[3];
-    int rc;
-
-    /* Read single DAC register */
-
-    palbuf[0] = 8;
-    palbuf[1] = 0;
-    palbuf[2] = curstoreal[color];
-
-    rc = VioGetState(&palbuf, 0);
-    if (rc)
-        return ERR;
-
-    vcr.cb = sizeof(vcr);
-    vcr.type = 3;
-    vcr.firstcolorreg = palbuf[3];
-    vcr.numcolorregs = 1;
-    vcr.colorregaddr = PDCTHUNK(pal);
-
-    rc = VioGetState(&vcr, 0);
-    if (rc)
-        return ERR;
-
-    /* Scale and store */
-
-    *red = DIVROUND((unsigned)(pal[0]) * 1000, 63);
-    *green = DIVROUND((unsigned)(pal[1]) * 1000, 63);
-    *blue = DIVROUND((unsigned)(pal[2]) * 1000, 63);
-
-    return OK;
-#else
     return ERR;
-#endif
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-#ifdef PDCTHUNK
-    THUNKEDVIO vcr;
-    USHORT palbuf[4];
-    unsigned char pal[3];
-    int rc;
-
-    /* Scale */
-
-    pal[0] = DIVROUND((unsigned)red * 63, 1000);
-    pal[1] = DIVROUND((unsigned)green * 63, 1000);
-    pal[2] = DIVROUND((unsigned)blue * 63, 1000);
-
-    /* Set single DAC register */
-
-    palbuf[0] = 8;
-    palbuf[1] = 0;
-    palbuf[2] = curstoreal[color];
-
-    rc = VioGetState(&palbuf, 0);
-    if (rc)
-        return ERR;
-
-    vcr.cb = sizeof(vcr);
-    vcr.type = 3;
-    vcr.firstcolorreg = palbuf[3];
-    vcr.numcolorregs = 1;
-    vcr.colorregaddr = PDCTHUNK(pal);
-
-    rc = VioSetState(&vcr, 0);
-
-    return rc ? ERR : OK;
-#else
     return ERR;
-#endif
 }

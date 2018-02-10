@@ -19,26 +19,6 @@
 # define PDC_ATTR_SHIFT 8
 #endif
 
-#ifdef __WATCOMC__
-# define PDCTHUNK(x) ((ptr_16)(x))
-# ifdef __386__
-#  define SEG16 _Seg16
-# else
-#  define SEG16
-# endif
-
-typedef void * SEG16 ptr_16;
-
-#else
-# ifdef __EMX__
-#  ifdef __INNOTEK_LIBC__
-#   define PDCTHUNK(x) ((PCH)_libc_32to16(x))
-#  else
-#   define PDCTHUNK(x) ((PCH)_emx_32to16(x))
-#  endif
-# endif
-#endif
-
 extern unsigned char *pdc_atrtab;
 extern int pdc_font;
 

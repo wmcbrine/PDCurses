@@ -1,24 +1,15 @@
 /* Public Domain Curses */
 
-#ifdef _MSC_VER
-# define USE_OS2_H 1         /* Use the os2.h for the compiler       */
-# define APIRET USHORT
-#endif
-
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef EMXVIDEO
-# include <sys/video.h>
-#else
-# define INCL_DOS
-# define INCL_DOSMISC
-# define INCL_WIN
-# define INCL_VIO
-# define INCL_KBD
-# define INCL_MOU
-# include <os2.h>
-#endif
+#define INCL_DOS
+#define INCL_DOSMISC
+#define INCL_WIN
+#define INCL_VIO
+#define INCL_KBD
+#define INCL_MOU
+#include <os2.h>
 
 #include <curspriv.h>
 

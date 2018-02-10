@@ -49,11 +49,7 @@ void PDC_gotoyx(int row, int col)
 {
     PDC_LOG(("PDC_gotoyx() - called: row %d col %d\n", row, col));
 
-#ifdef EMXVIDEO
-    v_gotoxy(col, row);
-#else
     VioSetCurPos(row, col, 0);
-#endif
 }
 
 /* update the given physical line to look like the corresponding line in
@@ -84,10 +80,6 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         temp_line[j].text = ch & 0xff;
     }
 
-#ifdef EMXVIDEO
-    v_putline((char *)temp_line, x, lineno, len);
-#else
     VioWrtCellStr((PCH)temp_line, (USHORT)(len * sizeof(unsigned short)),
                   (USHORT)lineno, (USHORT)x, 0);
-#endif
 }

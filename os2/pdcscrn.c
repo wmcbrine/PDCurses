@@ -22,15 +22,10 @@ static short curstoreal[16], realtocurs[16] =
     COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
 };
 
-#ifdef EMXVIDEO
-static unsigned char *saved_screen = NULL;
-static int saved_lines = 0;
-static int saved_cols = 0;
-#else
-# ifdef PDCTHUNK
-#  ifdef __EMX__
-#   define THUNKEDVIO VIOCOLORREG
-#  else
+#ifdef PDCTHUNK
+# ifdef __EMX__
+#  define THUNKEDVIO VIOCOLORREG
+# else
 
 typedef struct {
     USHORT cb;
@@ -40,8 +35,8 @@ typedef struct {
     ptr_16 colorregaddr;
 } THUNKEDVIO;
 
-#  endif
 # endif
+#endif
 
 static PCH saved_screen = NULL;
 static USHORT saved_lines = 0;
@@ -93,12 +88,9 @@ void PDC_scr_close(void)
 
     if (saved_screen && getenv("PDC_RESTORE_SCREEN"))
     {
-#ifdef EMXVIDEO
-        v_putline(saved_screen, 0, 0, saved_lines * saved_cols);
-#else
         VioWrtCellStr(saved_screen, saved_lines * saved_cols * 2,
             0, 0, (HVIO)NULL);
-#endif
+
         free(saved_screen);
         saved_screen = NULL;
     }
@@ -128,11 +120,7 @@ void PDC_scr_free(void)
 
 int PDC_scr_open(int argc, char **argv)
 {
-#ifdef EMXVIDEO
-    int adapter;
-#else
     USHORT totchars;
-#endif
     int i;
     short r, g, b;
 
@@ -147,22 +135,12 @@ int PDC_scr_open(int argc, char **argv)
     for (i = 0; i < 16; i++)
         curstoreal[realtocurs[i]] = i;
 
-#ifdef EMXVIDEO
-    v_init();
-#endif
     SP->orig_attr = FALSE;
 
-#ifdef EMXVIDEO
-    adapter = v_hardware();
-    SP->mono = (adapter == V_MONOCHROME);
-
-    pdc_font = SP->mono ? 14 : (adapter == V_COLOR_8) ? 8 : 12;
-#else
     VioGetMode(&scrnmode, 0);
     PDC_get_keyboard_info();
-
     pdc_font = _get_font();
-#endif
+
     SP->lines = PDC_get_rows();
     SP->cols = PDC_get_columns();
 
@@ -185,12 +163,9 @@ int PDC_scr_open(int argc, char **argv)
             SP->_preserve = FALSE;
             return OK;
         }
-#ifdef EMXVIDEO
-        v_getline(saved_screen, 0, 0, saved_lines * saved_cols);
-#else
+
         totchars = saved_lines * saved_cols * 2;
         VioReadCellStr((PCH)saved_screen, &totchars, 0, 0, (HVIO)NULL);
-#endif
     }
 
     SP->_preserve = (getenv("PDC_PRESERVE_SCREEN") != NULL);
@@ -204,17 +179,12 @@ int PDC_scr_open(int argc, char **argv)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
-#ifndef EMXVIDEO
     VIOMODEINFO modeInfo = {0};
     USHORT result;
-#endif
 
     PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
               nlines, ncols));
 
-#ifdef EMXVIDEO
-    return ERR;
-#else
     modeInfo.cb = sizeof(modeInfo);
 
     /* set most parameters of modeInfo */
@@ -229,28 +199,21 @@ int PDC_resize_screen(int nlines, int ncols)
     COLS = PDC_get_columns();
 
     return (result == 0) ? OK : ERR;
-#endif
 }
 
 void PDC_reset_prog_mode(void)
 {
     PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
 
-#ifndef EMXVIDEO
     PDC_set_keyboard_binary(TRUE);
-#endif
 }
 
 void PDC_reset_shell_mode(void)
 {
     PDC_LOG(("PDC_reset_shell_mode() - called.\n"));
 
-#ifndef EMXVIDEO
     PDC_set_keyboard_default();
-#endif
 }
-
-#ifndef EMXVIDEO
 
 static bool _screen_mode_equals(VIOMODEINFO *oldmode)
 {
@@ -267,11 +230,8 @@ static bool _screen_mode_equals(VIOMODEINFO *oldmode)
             (current.vres == oldmode->vres));
 }
 
-#endif
-
 void PDC_restore_screen_mode(int i)
 {
-#ifndef EMXVIDEO
     if (i >= 0 && i <= 2)
     {
         pdc_font = _get_font();
@@ -286,18 +246,15 @@ void PDC_restore_screen_mode(int i)
                 COLS = PDC_get_columns();
             }
     }
-#endif
 }
 
 void PDC_save_screen_mode(int i)
 {
-#ifndef EMXVIDEO
     if (i >= 0 && i <= 2)
     {
         saved_font[i] = pdc_font;
         saved_scrnmode[i] = scrnmode;
     }
-#endif
 }
 
 void PDC_init_pair(short pair, short fg, short bg)

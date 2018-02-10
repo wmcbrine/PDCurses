@@ -40,9 +40,7 @@ pdcsetsc
 
 int PDC_curs_set(int visibility)
 {
-#ifndef EMXVIDEO
     VIOCURSORINFO pvioCursorInfo;
-#endif
     int ret_vis, hidden = 0, start = 0, end = 0;
 
     PDC_LOG(("PDC_curs_set() - called: visibility=%d\n", visibility));
@@ -53,13 +51,9 @@ int PDC_curs_set(int visibility)
     switch(visibility)
     {
     case 0:     /* invisible */
-#ifdef EMXVIDEO
-        start = end = 0;
-#else
         start = pdc_font / 4;
         end = pdc_font;
         hidden = -1;
-#endif
         break;
 
     case 2:     /* highly visible */
@@ -72,18 +66,12 @@ int PDC_curs_set(int visibility)
         end = SP->orig_cursor & 0xff;
     }
 
-#ifdef EMXVIDEO
-    if (!visibility)
-        v_hidecursor();
-    else
-        v_ctype(start, end);
-#else
     pvioCursorInfo.yStart = (USHORT)start;
     pvioCursorInfo.cEnd = (USHORT)end;
     pvioCursorInfo.cx = (USHORT)1;
     pvioCursorInfo.attr = hidden;
     VioSetCurType((PVIOCURSORINFO)&pvioCursorInfo, 0);
-#endif
+
     return ret_vis;
 }
 
@@ -94,7 +82,6 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
-#ifndef EMXVIDEO
     USHORT statebuf[3], result;
 
     statebuf[0] = 6;    /* length */
@@ -113,13 +100,6 @@ int PDC_set_blink(bool blinkon)
         COLORS = statebuf[2] ? 16 : 8;
 
     return (result == 0) ? OK : ERR;
-#else
-    SP->termattrs &= ~A_BLINK;
-    if (pdc_color_started)
-        COLORS = 16;
-
-    return blinkon ? ERR : OK;
-#endif
 }
 
 int PDC_set_bold(bool boldon)

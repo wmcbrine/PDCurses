@@ -70,14 +70,40 @@ void PDC_gotoyx(int row, int col)
     PDCINT(0x10, regs);
 }
 
-/* update the given physical line to look like the corresponding line in
-   curscr */
-
-void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
+    attr_t sysattrs;
     int j;
+    short fore, back;
+    unsigned char mapped_attr;
 
     PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
+
+    sysattrs = SP->termattrs;
+    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
+
+    if (attr & A_BOLD)
+        fore |= 8;
+    if (attr & A_BLINK)
+        back |= 8;
+
+    fore = pdc_curstoreal[fore];
+    back = pdc_curstoreal[back];
+
+    if (attr & A_REVERSE)
+    {
+        if (sysattrs & A_BLINK)
+            mapped_attr = (back & 7) | (((fore & 7) | (back & 8)) << 4);
+        else
+            mapped_attr = back | (fore << 4);
+    }
+    else
+    {
+        if ((attr & A_UNDERLINE) && (sysattrs & A_UNDERLINE))
+            fore = (fore & 8) | 1;
+
+        mapped_attr = fore | (back << 4);
+    }
 
     if (pdc_direct_video)
     {
@@ -98,7 +124,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         {
             chtype ch = srcp[j];
 
-            temp_line[j].attr = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
+            temp_line[j].attr = mapped_attr;
 #ifdef CHTYPE_LONG
             if (ch & A_ALTCHARSET && !(ch & 0xff80))
                 ch = acs_map[ch & 0x7f];
@@ -141,7 +167,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
             PDC_gotoyx(lineno, j + x);
 
             regs.h.ah = 0x09;
-            regs.W.bx = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
+            regs.W.bx = mapped_attr;
             regs.W.cx = count;
 #ifdef CHTYPE_LONG
             if (ch & A_ALTCHARSET && !(ch & 0xff80))
@@ -153,4 +179,33 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
             j += count;
         }
+}
+
+/* update the given physical line to look like the corresponding line in
+   curscr */
+
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+{
+    attr_t old_attr, attr;
+    int i, j;
+
+    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
+
+    old_attr = *srcp & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+    for (i = 1, j = 1; j < len; i++, j++)
+    {
+        attr = srcp[i] & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+        if (attr != old_attr)
+        {
+            _new_packet(old_attr, lineno, x, i, srcp);
+            old_attr = attr;
+            srcp += i;
+            x += i;
+            i = 0;
+        }
+    }
+
+    _new_packet(old_attr, lineno, x, i, srcp);
 }

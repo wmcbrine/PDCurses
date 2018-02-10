@@ -4,15 +4,9 @@
 
 #include <stdlib.h>
 
-#ifdef CHTYPE_LONG
-# define PDC_OFFSET 32
-#else
-# define PDC_OFFSET  8
-#endif
-
 /* COLOR_PAIR to attribute encoding table. */
 
-unsigned char *pdc_atrtab = (unsigned char *)NULL;
+static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 int pdc_adapter;         /* screen type */
 int pdc_scrnmode;        /* default screen mode */
@@ -22,13 +16,15 @@ bool pdc_bogus_adapter;  /* TRUE if adapter has insane values */
 unsigned pdc_video_seg;  /* video base segment */
 unsigned pdc_video_ofs;  /* video base offset */
 
-static short curstoreal[16], realtocurs[16] =
+static short realtocurs[16] =
 {
     COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
     COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK + 8,
     COLOR_BLUE + 8, COLOR_GREEN + 8, COLOR_CYAN + 8, COLOR_RED + 8,
     COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
 };
+
+short pdc_curstoreal[16];
 
 static bool sizeable = FALSE;   /* TRUE if adapter is resizeable    */
 
@@ -495,10 +491,6 @@ void PDC_scr_free(void)
 {
     if (SP)
         free(SP);
-    if (pdc_atrtab)
-        free(pdc_atrtab);
-
-    pdc_atrtab = (unsigned char *)NULL;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization,
@@ -517,13 +509,12 @@ int PDC_scr_open(int argc, char **argv)
     PDC_LOG(("PDC_scr_open() - called\n"));
 
     SP = calloc(1, sizeof(SCREEN));
-    pdc_atrtab = calloc(PDC_COLOR_PAIRS * PDC_OFFSET, 1);
 
-    if (!SP || !pdc_atrtab)
+    if (!SP)
         return ERR;
 
     for (i = 0; i < 16; i++)
-        curstoreal[realtocurs[i]] = i;
+        pdc_curstoreal[realtocurs[i]] = i;
 
     SP->orig_attr = FALSE;
 
@@ -658,33 +649,14 @@ void PDC_save_screen_mode(int i)
 
 void PDC_init_pair(short pair, short fg, short bg)
 {
-    unsigned char att;
-    chtype i;
-
-    fg = curstoreal[fg];
-    bg = curstoreal[bg];
-
-    for (i = 0; i < PDC_OFFSET; i++)
-    {
-        att = fg | (bg << 4);
-
-        if (i & (A_REVERSE >> PDC_ATTR_SHIFT))
-            att = bg | (fg << 4);
-        if (i & (A_UNDERLINE >> PDC_ATTR_SHIFT))
-            att = 1;
-        if (i & (A_BOLD >> PDC_ATTR_SHIFT))
-            att |= 8;
-        if (i & (A_BLINK >> PDC_ATTR_SHIFT))
-            att |= 128;
-
-        pdc_atrtab[pair * PDC_OFFSET + i] = att;
-    }
+    atrtab[pair].f = fg;
+    atrtab[pair].b = bg;
 }
 
 int PDC_pair_content(short pair, short *fg, short *bg)
 {
-    *fg = realtocurs[pdc_atrtab[pair * PDC_OFFSET] & 0x0F];
-    *bg = realtocurs[(pdc_atrtab[pair * PDC_OFFSET] & 0xF0) >> 4];
+    *fg = atrtab[pair].f;
+    *bg = atrtab[pair].b;
 
     return OK;
 }
@@ -697,7 +669,7 @@ static short _egapal(short color)
     PDCREGS regs;
 
     regs.W.ax = 0x1007;
-    regs.h.bl = curstoreal[color];
+    regs.h.bl = pdc_curstoreal[color];
 
     PDCINT(0x10, regs);
 

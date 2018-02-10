@@ -77,8 +77,6 @@ static void _set_font(int size)
     pdc_font = _get_font();
 }
 
-#endif
-
 /* close the physical screen -- may restore the screen to its state
    before PDC_scr_open(); miscellaneous cleanup */
 

@@ -288,7 +288,7 @@ void delscreen(SCREEN *sp)
 
     SP->alive = FALSE;
 
-    PDC_scr_free();     /* free SP and pdc_atrtab */
+    PDC_scr_free();     /* free SP */
 
     SP = (SCREEN *)NULL;
 }

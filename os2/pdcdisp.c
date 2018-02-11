@@ -59,7 +59,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
     /* this should be enough for the maximum width of a screen. */
 
-    struct {unsigned char text, attr;} temp_line[256];
+    char temp_line[256];
     int j;
     short fore, back;
     unsigned char mapped_attr;
@@ -93,8 +93,6 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     {
         chtype ch = srcp[j];
 
-        temp_line[j].attr = mapped_attr;
-
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = acs_map[ch & 0x7f];
@@ -102,11 +100,11 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         if (blink && blinked_off)
             ch = ' ';
 
-        temp_line[j].text = ch & 0xff;
+        temp_line[j] = ch & 0xff;
     }
 
-    VioWrtCellStr((PCH)temp_line, (USHORT)(len * sizeof(unsigned short)),
-                  (USHORT)lineno, (USHORT)x, 0);
+    VioWrtCharStrAtt((PCH)temp_line, (USHORT)len, (USHORT)lineno,
+                     (USHORT)x, (PBYTE)&mapped_attr, 0);
 }
 
 /* update the given physical line to look like the corresponding line in

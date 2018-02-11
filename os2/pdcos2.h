@@ -19,8 +19,11 @@
 # define PDC_ATTR_SHIFT 8
 #endif
 
+extern ULONG pdc_last_blink;
 extern unsigned char *pdc_atrtab;
 extern int pdc_font;
 
+extern ULONG PDC_ms_count(void);
 extern void PDC_get_keyboard_info(void);
 extern void PDC_set_keyboard_default(void);
+extern void PDC_blink_text(void);

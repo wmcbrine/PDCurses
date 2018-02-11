@@ -82,24 +82,27 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
-    USHORT statebuf[3], result;
-
-    statebuf[0] = 6;    /* length */
-    statebuf[1] = 2;    /* blink/intensity */
-    statebuf[2] = !blinkon;
-
-    result = VioSetState(&statebuf, 0);
-    VioGetState(&statebuf, 0);  /* needed? */
-
-    if (statebuf[2])
-        SP->termattrs &= ~A_BLINK;
-    else
-        SP->termattrs |= A_BLINK;
-
     if (pdc_color_started)
-        COLORS = statebuf[2] ? 16 : 8;
+        COLORS = 16;
 
-    return (result == 0) ? OK : ERR;
+    if (blinkon)
+    {
+        if (!(SP->termattrs & A_BLINK))
+        {
+            SP->termattrs |= A_BLINK;
+            pdc_last_blink = PDC_ms_count();
+        }
+    }
+    else
+    {
+        if (SP->termattrs & A_BLINK)
+        {
+            SP->termattrs &= ~A_BLINK;
+            PDC_blink_text();
+        }
+    }
+
+    return OK;
 }
 
 int PDC_set_bold(bool boldon)

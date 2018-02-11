@@ -55,43 +55,51 @@ void PDC_gotoyx(int row, int col)
     VioSetCurPos(row, col, 0);
 }
 
-/* update the given physical line to look like the corresponding line in
-   curscr */
-
-void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
     /* this should be enough for the maximum width of a screen. */
 
     struct {unsigned char text, attr;} temp_line[256];
     int j;
-    bool sysblink;
+    short fore, back;
+    unsigned char mapped_attr;
+    bool blink;
 
     PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
-    sysblink = !!(SP->termattrs & A_BLINK);
+    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
+    blink = (SP->termattrs & A_BLINK) && (attr & A_BLINK);
+
+    if (blink)
+        attr &= ~A_BLINK;
+
+    if (attr & A_BOLD)
+        fore |= 8;
+    if (attr & A_BLINK)
+        back |= 8;
+
+    fore = pdc_curstoreal[fore];
+    back = pdc_curstoreal[back];
+
+    if (attr & A_REVERSE)
+        mapped_attr = back | (fore << 4);
+    else
+        mapped_attr = fore | (back << 4);
 
     /* replace the attribute part of the chtype with the
        actual color value for each chtype in the line */
 
     for (j = 0; j < len; j++)
     {
-        chtype att, ch = srcp[j];
-        att = ch;
+        chtype ch = srcp[j];
 
-        if (sysblink && (att & A_BLINK))
-        {
-            att &= ~A_BLINK;
-            if (blinked_off)
-                att &= ~A_UNDERLINE;
-        }
-
-        temp_line[j].attr = pdc_atrtab[att >> PDC_ATTR_SHIFT];
+        temp_line[j].attr = mapped_attr;
 
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = acs_map[ch & 0x7f];
 #endif
-        if (sysblink && blinked_off && (ch & A_BLINK))
+        if (blink && blinked_off)
             ch = ' ';
 
         temp_line[j].text = ch & 0xff;
@@ -99,6 +107,35 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
     VioWrtCellStr((PCH)temp_line, (USHORT)(len * sizeof(unsigned short)),
                   (USHORT)lineno, (USHORT)x, 0);
+}
+
+/* update the given physical line to look like the corresponding line in
+   curscr */
+
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+{
+    attr_t old_attr, attr;
+    int i, j;
+
+    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
+
+    old_attr = *srcp & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+    for (i = 1, j = 1; j < len; i++, j++)
+    {
+        attr = srcp[i] & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+        if (attr != old_attr)
+        {
+            _new_packet(old_attr, lineno, x, i, srcp);
+            old_attr = attr;
+            srcp += i;
+            x += i;
+            i = 0;
+        }
+    }
+
+    _new_packet(old_attr, lineno, x, i, srcp);
 }
 
 void PDC_blink_text(void)

@@ -13,14 +13,8 @@
 
 #include <curspriv.h>
 
-#ifdef CHTYPE_LONG
-# define PDC_ATTR_SHIFT 19
-#else
-# define PDC_ATTR_SHIFT 8
-#endif
-
 extern ULONG pdc_last_blink;
-extern unsigned char *pdc_atrtab;
+extern short pdc_curstoreal[16];
 extern int pdc_font;
 
 extern ULONG PDC_ms_count(void);

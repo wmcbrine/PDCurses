@@ -486,7 +486,8 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 
     if (!(win->_flags & (_SUBPAD|_SUBWIN)))
     {
-        if ( !(new = PDC_makelines(new)) )
+        new = PDC_makelines(new);
+        if (!new)
             return (WINDOW *)NULL;
 
         werase(new);

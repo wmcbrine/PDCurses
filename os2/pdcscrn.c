@@ -100,7 +100,6 @@ int PDC_scr_open(int argc, char **argv)
 {
     USHORT totchars;
     int i;
-    short r, g, b;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
 

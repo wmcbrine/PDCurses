@@ -154,13 +154,15 @@ WINDOW *Xinitscr(int argc, char *argv[])
         exit(4);
     }
 
-    if ((curscr = newwin(LINES, COLS, 0, 0)) == (WINDOW *)NULL)
+    curscr = newwin(LINES, COLS, 0, 0);
+    if (!curscr)
     {
         fprintf(stderr, "initscr(): Unable to create curscr.\n");
         exit(2);
     }
 
-    if ((pdc_lastscr = newwin(LINES, COLS, 0, 0)) == (WINDOW *)NULL)
+    pdc_lastscr = newwin(LINES, COLS, 0, 0);
+    if (!pdc_lastscr)
     {
         fprintf(stderr, "initscr(): Unable to create pdc_lastscr.\n");
         exit(2);
@@ -189,7 +191,8 @@ WINDOW *Xinitscr(int argc, char *argv[])
 
     linesrippedoff = 0;
 
-    if (!(stdscr = newwin(LINES, COLS, SP->linesrippedoffontop, 0)))
+    stdscr = newwin(LINES, COLS, SP->linesrippedoffontop, 0);
+    if (!stdscr)
     {
         fprintf(stderr, "initscr(): Unable to create stdscr.\n");
         exit(1);

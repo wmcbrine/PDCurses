@@ -75,8 +75,6 @@ void PDC_debug(const char *fmt, ...)
 
 void traceon(void)
 {
-    char *env;
-
     if (pdc_dbfp)
         fclose(pdc_dbfp);
 
@@ -84,13 +82,12 @@ void traceon(void)
     pdc_dbfp = fopen("trace", "a");
     if (!pdc_dbfp)
     {
-        fprintf(stderr,
-            "PDC_debug(): Unable to open debug log file\n");
+        fprintf(stderr, "PDC_debug(): Unable to open debug log file\n");
         return;
     }
 
-    if ((env = getenv("PDC_TRACE_FLUSH")))
-        want_fflush = atoi(env);
+    if (getenv("PDC_TRACE_FLUSH"))
+        want_fflush = TRUE;
 
     PDC_LOG(("traceon() - called\n"));
 }

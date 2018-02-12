@@ -132,7 +132,7 @@ int setsyx(int y, int x)
 {
     PDC_LOG(("setsyx() - called\n"));
 
-    if(y == -1 && x == -1)
+    if (y == -1 && x == -1)
     {
         curscr->_leaveit = TRUE;
         return OK;

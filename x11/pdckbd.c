@@ -34,8 +34,9 @@ bool PDC_check_key(void)
     FD_ZERO(&xc_readfds);
     FD_SET(xc_key_sock, &xc_readfds);
 
-    if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL,
-        NULL, &socket_timeout)) < 0)
+    s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, NULL,
+               &socket_timeout);
+    if (s < 0)
         XCursesExitCursesProcess(3, "child - exiting from "
                                     "PDC_check_key select failed");
 

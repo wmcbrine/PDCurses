@@ -1,14 +1,5 @@
 /* Public Domain Curses */
 
-/* MS C doesn't return flags from int86() */
-#ifdef MSC
-# define USE_KBHIT
-#endif
-
-#ifdef USE_KBHIT
-# include <conio.h>
-#endif
-
 #include "pdcdos.h"
 
 /*man-start**************************************************************
@@ -215,14 +206,10 @@ bool PDC_check_key(void)
 
     old_shift = shift_status;
 
-#ifndef USE_KBHIT
     regs.h.ah = check_function;
     PDCINT(0x16, regs);
 
     return !(regs.W.flags & 64);
-#else
-    return kbhit();
-#endif
 }
 
 static int _process_mouse_events(void)

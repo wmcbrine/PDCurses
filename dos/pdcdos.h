@@ -3,15 +3,11 @@
 #include <curspriv.h>
 #include <string.h>
 
-#if defined(_MSC_VER) || defined(_QC)
-# define MSC 1
-#endif
-
 #if defined(__PACIFIC__) && !defined(__SMALL__)
 # define __SMALL__
 #endif
 
-#if defined(__HIGHC__) || MSC
+#if defined(__HIGHC__)
 # include <bios.h>
 #endif
 
@@ -86,7 +82,7 @@ unsigned long getdosmemdword(int offs);
 void setdosmembyte(int offs, unsigned char b);
 void setdosmemword(int offs, unsigned short w);
 #else
-# if SMALL || MEDIUM || MSC
+# if SMALL || MEDIUM
 #  define PDC_FAR far
 # else
 #  define PDC_FAR

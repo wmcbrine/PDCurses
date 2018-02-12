@@ -500,8 +500,9 @@ void PDC_slk_initialize(void)
 
         if (!SP->slk_winptr)
         {
-            if ( !(SP->slk_winptr = newwin(SP->slklines, COLS,
-                                           LINES - SP->slklines, 0)) )
+            SP->slk_winptr = newwin(SP->slklines, COLS,
+                                    LINES - SP->slklines, 0);
+            if (!SP->slk_winptr)
                 return;
 
             wattrset(SP->slk_winptr, A_REVERSE);

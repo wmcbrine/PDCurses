@@ -99,7 +99,8 @@ WINDOW *getwin(FILE *filep)
 
     PDC_LOG(("getwin() - called\n"));
 
-    if ( !(win = malloc(sizeof(WINDOW))) )
+    win = malloc(sizeof(WINDOW));
+    if (!win)
         return (WINDOW *)NULL;
 
     /* check for the marker, and load the WINDOW struct */
@@ -116,7 +117,8 @@ WINDOW *getwin(FILE *filep)
 
     /* allocate the line pointer array */
 
-    if ( !(win->_y = malloc(nlines * sizeof(chtype *))) )
+    win->_y = malloc(nlines * sizeof(chtype *));
+    if (!win->_y)
     {
         free(win);
         return (WINDOW *)NULL;
@@ -124,14 +126,16 @@ WINDOW *getwin(FILE *filep)
 
     /* allocate the minchng and maxchng arrays */
 
-    if ( !(win->_firstch = malloc(nlines * sizeof(int))) )
+    win->_firstch = malloc(nlines * sizeof(int));
+    if (!win->_firstch)
     {
         free(win->_y);
         free(win);
         return (WINDOW *)NULL;
     }
 
-    if ( !(win->_lastch = malloc(nlines * sizeof(int))) )
+    win->_lastch = malloc(nlines * sizeof(int));
+    if (!win->_lastch)
     {
         free(win->_firstch);
         free(win->_y);
@@ -141,7 +145,8 @@ WINDOW *getwin(FILE *filep)
 
     /* allocate the lines */
 
-    if ( !(win = PDC_makelines(win)) )
+    win = PDC_makelines(win);
+    if (!win)
         return (WINDOW *)NULL;
 
     /* read them */

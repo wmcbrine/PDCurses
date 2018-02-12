@@ -82,8 +82,11 @@ WINDOW *newpad(int nlines, int ncols)
 
     PDC_LOG(("newpad() - called: lines=%d cols=%d\n", nlines, ncols));
 
-    if ( !(win = PDC_makenew(nlines, ncols, 0, 0))
-        || !(win = PDC_makelines(win)) )
+    win = PDC_makenew(nlines, ncols, 0, 0);
+    if (win)
+        win = PDC_makelines(win);
+
+    if (!win)
         return (WINDOW *)NULL;
 
     werase(win);
@@ -127,7 +130,8 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begy, int begx)
     if (!ncols)
         ncols = orig->_maxx - begx;
 
-    if ( !(win = PDC_makenew(nlines, ncols, begy, begx)) )
+    win = PDC_makenew(nlines, ncols, begy, begx);
+    if (!win)
         return (WINDOW *)NULL;
 
     /* initialize window variables */

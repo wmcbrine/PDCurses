@@ -10,8 +10,7 @@
 #include <curses.h>
 
 #if defined(__TURBOC__) || defined(__EMX__) || defined(__DJGPP__) || \
-    defined(__CYGWIN__) || defined(__MINGW32__) || \
-    defined(__WATCOMC__) || defined(__PACIFIC__)
+    defined(__CYGWIN__) || defined(__MINGW32__) || defined(__WATCOMC__)
 # ifndef HAVE_VSSCANF
 #  define HAVE_VSSCANF       /* have vsscanf() */
 # endif

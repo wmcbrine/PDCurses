@@ -43,18 +43,6 @@ chtype acs_map[128] =
 
 #endif
 
-#ifdef __PACIFIC__
-void movedata(unsigned sseg, unsigned soff, unsigned dseg,
-              unsigned doff, unsigned n)
-{
-    far char *src = MK_FP(sseg, soff);
-    far char *dst = MK_FP(dseg, doff);
-
-    while (n--)
-        *dst++ = *src++;
-}
-#endif
-
 /* position hardware cursor at (y, x) */
 
 void PDC_gotoyx(int row, int col)
@@ -108,9 +96,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     if (pdc_direct_video)
     {
 #if SMALL || MEDIUM
-# ifndef __PACIFIC__
         struct SREGS segregs;
-# endif
         int ds;
 #endif
         /* this should be enough for the maximum width of a screen */
@@ -138,12 +124,8 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
                   pdc_video_ofs + (lineno * curscr->_maxx + x) * 2));
 #else
 # if SMALL || MEDIUM
-#  ifdef __PACIFIC__
-        ds = FP_SEG((void far *) temp_line);
-#  else
         segread(&segregs);
         ds = segregs.ds;
-#  endif
         movedata(ds, (int)temp_line, pdc_video_seg,
                  pdc_video_ofs + (lineno * curscr->_maxx + x) * 2, len * 2);
 # else

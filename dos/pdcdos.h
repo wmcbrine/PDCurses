@@ -3,14 +3,6 @@
 #include <curspriv.h>
 #include <string.h>
 
-#if defined(__PACIFIC__) && !defined(__SMALL__)
-# define __SMALL__
-#endif
-
-#if defined(__HIGHC__)
-# include <bios.h>
-#endif
-
 /*----------------------------------------------------------------------
  *  MEMORY MODEL SUPPORT:
  *
@@ -174,7 +166,3 @@ enum
     _FONT15,    /* GENIUS */
     _FONT16
 };
-
-#ifdef __PACIFIC__
-void movedata(unsigned, unsigned, unsigned, unsigned, unsigned);
-#endif

@@ -445,9 +445,7 @@ static int _query_adapter_type(void)
 void PDC_scr_close(void)
 {
 #if SMALL || MEDIUM
-# ifndef __PACIFIC__
     struct SREGS segregs;
-# endif
     int ds;
 #endif
     PDC_LOG(("PDC_scr_close() - called\n"));
@@ -460,12 +458,8 @@ void PDC_scr_close(void)
             pdc_video_ofs));
 #else
 # if (SMALL || MEDIUM)
-#  ifdef __PACIFIC__
-        ds = FP_SEG((void far *)saved_screen);
-#  else
         segread(&segregs);
         ds = segregs.ds;
-#  endif
         movedata(ds, (int)saved_screen, pdc_video_seg, pdc_video_ofs,
         (saved_lines * saved_cols * 2));
 # else
@@ -499,9 +493,7 @@ void PDC_scr_free(void)
 int PDC_scr_open(int argc, char **argv)
 {
 #if SMALL || MEDIUM
-# ifndef __PACIFIC__
     struct SREGS segregs;
-# endif
     int ds;
 #endif
     int i;
@@ -559,12 +551,8 @@ int PDC_scr_open(int argc, char **argv)
                   saved_lines * saved_cols * 2, saved_screen);
 #else
 # if SMALL || MEDIUM
-#  ifdef __PACIFIC__
-        ds = FP_SEG((void far *) saved_screen);
-#  else
         segread(&segregs);
         ds = segregs.ds;
-#  endif
         movedata(pdc_video_seg, pdc_video_ofs, ds, (int)saved_screen,
                  (saved_lines * saved_cols * 2));
 # else

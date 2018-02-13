@@ -18,7 +18,7 @@ PDCURSES_SRCDIR = ..
 
 osdir		= $(PDCURSES_SRCDIR)\wincon
 
-CC		= bcc32c -q
+CC		= bcc32c -q -Xdriver -Wno-deprecated-declarations
 
 !ifdef DEBUG
 CFLAGS		= -N -v -y -DPDCDEBUG

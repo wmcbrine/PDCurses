@@ -1,3 +1,78 @@
+PDCurses 3.6 - 2018/02/14
+=========================
+
+Tidying up some loose ends from 3.5, and trying to bring all platforms
+up to the same level, as much as possible.
+
+
+New features
+------------
+
+- 256 colors for the Windows console -- under Windows 10 or ConEmu,
+  only. This version doesn't allow init_color() or color_content() for
+  colors 16-255, just uses Windows' predefined palette (which matches
+  xterm-256color, like the default colors in X11 and SDL).
+
+- Real blinking for the Windows console (all), and for OS/2 -- done in
+  software, like the Windows version -- replacing the erraticly working
+  Vio-based version (which didn't work at all in my OS/2 4.5 VM). OS/2
+  now always has 16 colors, and bright backgrounds can combine with
+  blinking.
+
+- In DOS, OS/2 and Windows, attribute behavior now more closely matches
+  that of the more "advanced" ports (X11 and SDL) -- see the Attribute
+  test in testcurs.
+
+- All of the A_* and WA_* attributes from X/Open are now defined in
+  curses.h, although some are no-ops, pending the availablity of more
+  attribute bits. A_INVIS is now a no-op on all platforms, instead of
+  overloading A_ITALIC, and so is A_PROTECT. A_LEFT and A_RIGHT are now
+  synonyms for PDCurses' old *LINE attributes.
+
+
+Bug fixes and such
+------------------
+
+- For the X11 port, "make install" and the dynamic library build were
+  broken, since the configure move. Fixes partly after Mark Hessling.
+
+- Renamed "win32" to the more accurate/descriptive "wincon" (i.e.
+  WINdows CONsole). Makefiles for all platforms renamed to remove the
+  redundant platform names, and to allow better sorting.
+
+- In SDL2, apps that didn't explicitly handle resizing locked up. Now,
+  they can continue running, at their old size. (To Do: xmas is still a
+  basket case.)
+
+- Added "/MACHINE:$(PLATFORM)" to wincon/Makefile.vc -- Thomas Dickey
+  says this is needed to build 64-bit with Visual Studio Express 2012.
+  With 2017, it suppresses a warning.
+
+- Suppressed "Possibly incorrect assignment" warnings with BCC, which
+  also results in more readable code.
+
+- Cleaned up obsolete comments, dead code, unneeded includes, typos, and
+  outdated documentation.
+
+- Dropped support for EMXVIDEO.
+
+- Dropped color remapping for OS/2 (broken).
+
+- Dropped X11 DLL support for Cygwin (broken).
+
+- Rearranged extended color display in testcurs.
+
+- In ptest, handle resizing, and check for screens too small to run in.
+
+- Allow KEY_* codes (including KEY_RESIZE) to exit firework, as other
+  keys do.
+
+- Slightly faster Windows compilation (most noticeable in Watcom).
+
+See the git log for more details.
+
+------------------------------------------------------------------------
+
 PDCurses 3.5 - 2018/01/15
 =========================
 

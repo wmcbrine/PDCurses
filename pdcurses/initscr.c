@@ -95,7 +95,7 @@ initscr
 
 char ttytype[128];
 
-const char *_curses_notice = "PDCurses 3.5 - Public Domain 2018";
+const char *_curses_notice = "PDCurses 3.6 - Public Domain 2018";
 
 SCREEN *SP = (SCREEN*)NULL;           /* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;      /* the current screen image */

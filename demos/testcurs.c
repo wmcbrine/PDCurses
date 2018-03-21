@@ -130,8 +130,10 @@ int main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-#ifdef PDCURSES
+#ifdef PDCURSES 
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_resize_limits( 20, 50, 70, 200);
+#endif
 #endif
 
     if (initTest(&win, argc, argv))
@@ -154,6 +156,7 @@ int main(int argc, char *argv[])
                 case 'm': case 'M':
                     PDC_return_key_modifiers( TRUE);
                     break;
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
                 case 'r':     /* allow user-resizable windows */
                     {
                         int min_lines, max_lines, min_cols, max_cols;
@@ -165,6 +168,7 @@ int main(int argc, char *argv[])
                                                    min_cols, max_cols);
                     }
                     break;
+#endif
 #endif
                 case 'z':
                     report_mouse_movement = TRUE;
@@ -184,7 +188,9 @@ int main(int argc, char *argv[])
         wbkgd(win, A_REVERSE);
 
 #ifdef PDCURSES
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
+#endif
 #endif
 
     erase();
@@ -563,8 +569,13 @@ void inputTest(WINDOW *win)
             else if (BUTTON_CHANGED(5))
                 button = 5;
             if( button)
+#ifdef PDC_N_EXTENDED_MOUSE_BUTTONS
                 status = (button > 3 ? Mouse_status.xbutton[(button) - 4] :
                                        Mouse_status.button[(button) - 1]);
+#else
+                status = (button > 3 ? 0 :
+                                       Mouse_status.button[(button) - 1]);
+#endif
 
             wmove(win, line_to_use, 5);
             wclrtoeol(win);
@@ -576,10 +587,14 @@ void inputTest(WINDOW *win)
                 waddstr(win, "wheel up: ");
             else if (MOUSE_WHEEL_DOWN)
                 waddstr(win, "wheel dn: ");
+#ifdef MOUSE_WHEEL_LEFT
             else if (MOUSE_WHEEL_LEFT)
                 waddstr(win, "wheel lt: ");
+#endif
+#ifdef MOUSE_WHEEL_RIGHT
             else if (MOUSE_WHEEL_RIGHT)
                 waddstr(win, "wheel rt: ");
+#endif
             else if ((status & BUTTON_ACTION_MASK) == BUTTON_PRESSED)
                 waddstr(win, "pressed: ");
             else if ((status & BUTTON_ACTION_MASK) == BUTTON_CLICKED)
@@ -619,8 +634,10 @@ void inputTest(WINDOW *win)
             if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_NUMLOCK)
                 waddstr(win, " NUMLOCK");
 
+#ifdef PDC_KEY_MODIFIER_REPEAT
             if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_REPEAT)
                 waddstr(win, " REPEAT");
+#endif
 #endif            /* end of mouse display */
         }
         wrefresh(win);
@@ -642,7 +659,9 @@ void inputTest(WINDOW *win)
 #endif
     wclear(win);
 #ifdef PDCURSES
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 0 );  /* un-abortable */
+#endif
 #endif
     mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
     mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");
@@ -660,7 +679,9 @@ void inputTest(WINDOW *win)
     }
 
 #ifdef PDCURSES
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
+#endif
 #endif
 
     delwin(subWin);
@@ -1303,8 +1324,12 @@ void acsTest(WINDOW *win)
 
 #if CHTYPE_LONG >= 2 || (CHTYPE_LONG == 1 && !defined( PDC_WIDE))
    #define GOT_DIM
+#ifdef A_OVERLINE
    #define GOT_OVERLINE
+#endif
+#ifdef A_STIKEOUT
    #define GOT_STRIKEOUT
+#endif
 #endif
 
 void colorTest(WINDOW *win)
@@ -1483,8 +1508,10 @@ void colorTest(WINDOW *win)
 #ifdef GOT_OVERLINE
        attrset( A_OVERLINE);
        mvaddstr( tmarg + 17, col2, "A_OVERLINE");
+#ifdef GOT_STRIKEOUT
        attrset( A_STRIKEOUT);
        mvaddstr( tmarg + 18, col2, "A_STRIKEOUT");
+#endif
        attrset( A_OVERLINE | A_UNDERLINE);
        mvaddstr( tmarg + 19, col2, "Over/underlined");
 #endif

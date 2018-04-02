@@ -65,8 +65,6 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     short fore, back;
     unsigned char mapped_attr;
 
-    PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
-
     sysattrs = SP->termattrs;
     PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
 

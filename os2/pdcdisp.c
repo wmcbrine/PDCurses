@@ -65,8 +65,6 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     unsigned char mapped_attr;
     bool blink;
 
-    PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
-
     PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
     blink = (SP->termattrs & A_BLINK) && (attr & A_BLINK);
 

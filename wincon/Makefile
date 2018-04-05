@@ -26,6 +26,9 @@ osdir		= $(PDCURSES_SRCDIR)/wincon
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
 CC		= gcc
+AR		= ar
+STRIP		= strip
+LINK		= gcc
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -45,17 +48,15 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
-LINK		= gcc
-
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = gcc
+	LIBEXE = $(CC)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	CLEAN = $(LIBCURSES) *.a
 else
-	LIBEXE = ar
+	LIBEXE = $(AR)
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
@@ -75,7 +76,7 @@ clean:
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
-	strip *.exe
+	$(STRIP) *.exe
 endif
 
 $(LIBCURSES) : $(LIBDEPS)

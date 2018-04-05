@@ -65,7 +65,7 @@ endif
 
 .PHONY: all libs clean demos dist
 
-all:	libs demos
+all:	libs
 
 libs:	$(LIBCURSES)
 

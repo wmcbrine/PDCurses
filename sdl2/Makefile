@@ -62,7 +62,7 @@ DEMOS		+= sdltest$(E)
 
 .PHONY: all libs clean demos install
 
-all:	libs demos
+all:	libs
 
 libs:	$(LIBCURSES)
 

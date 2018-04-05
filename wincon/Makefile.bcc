@@ -41,13 +41,15 @@ LIBEXE		= tlib /C /E /0 /a
 
 LIBCURSES	= pdcurses.lib
 
-all:	$(LIBCURSES) $(DEMOS)
+all:	$(LIBCURSES)
 
 clean:
 	-$(RM) *.obj
 	-$(RM) *.lib
 	-$(RM) *.tds
 	-$(RM) *.exe
+
+demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-$(RM) $@

@@ -28,7 +28,7 @@ LINK = wlink
 ! loaddll wlib   wlibd
 !endif
 
-all:	$(LIBCURSES) $(DEMOS)
+all:	$(LIBCURSES)
 
 clean
 	-$(RM) *.obj

@@ -54,7 +54,7 @@ tuidemo.o worm.o xmas.o
 
 SHLFILE		= XCurses
 
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(PDCLIBS)
 
 install:
 	$(INSTALL) -d -m 755 $(libdir)

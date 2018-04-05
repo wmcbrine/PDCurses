@@ -61,7 +61,7 @@ PDCLIBS		= $(LIBCURSES)
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c $(CFLAGS) $(DLLOPT) \
 $(WIDEOPT) $(UTF8OPT)
 
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(PDCLIBS)
 
 clean:
 	-$(RM) *.obj
@@ -70,6 +70,8 @@ clean:
 	-$(RM) *.dll
 	-$(RM) *.exp
 	-$(RM) *.res
+
+demos:	$(DEMOS)
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 

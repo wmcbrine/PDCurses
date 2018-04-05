@@ -48,7 +48,7 @@ CLEAN = *.a testcurs ozdemo xmas tuidemo firework ptest rain worm
 
 .PHONY: all libs clean demos dist
 
-all:	libs demos
+all:	libs
 
 libs:	$(PDCLIBS)
 

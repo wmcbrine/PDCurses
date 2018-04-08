@@ -156,15 +156,6 @@ void _set_ansi_color(short f, short b, attr_t attr)
 
 void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
-    union {
-        CHAR_INFO ci[512];
-#ifdef PDC_WIDE
-        WCHAR text[512];
-#else
-        char text[512];
-#endif
-    } buffer;
-    WORD mapped_attr;
     int j;
     short fore, back;
     bool blink, ansi;
@@ -197,8 +188,41 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     if (attr & A_BLINK)
         back |= 8;
 
-    if (!ansi)
+    if (ansi)
     {
+#ifdef PDC_WIDE
+        WCHAR buffer[512];
+#else
+        char buffer[512];
+#endif
+        for (j = 0; j < len; j++)
+        {
+            chtype ch = srcp[j];
+#ifdef CHTYPE_LONG
+            if (ch & A_ALTCHARSET && !(ch & 0xff80))
+                ch = acs_map[ch & 0x7f];
+#endif
+            if (blink && blinked_off)
+                ch = ' ';
+
+            buffer[j] = ch & A_CHARTEXT;
+        }
+
+        PDC_gotoyx(lineno, x);
+        _set_ansi_color(fore, back, attr);
+#ifdef PDC_WIDE
+        WriteConsoleW(pdc_con_out, buffer, len, NULL, NULL);
+#else
+        WriteConsoleA(pdc_con_out, buffer, len, NULL, NULL);
+#endif
+    }
+    else
+    {
+        CHAR_INFO buffer[512];
+        COORD bufSize, bufPos;
+        SMALL_RECT sr;
+        WORD mapped_attr;
+
         fore = pdc_curstoreal[fore];
         back = pdc_curstoreal[back];
 
@@ -208,46 +232,25 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             mapped_attr = fore | (back << 4);
 
         if (attr & A_UNDERLINE)
-            mapped_attr |= COMMON_LVB_UNDERSCORE;
+            mapped_attr |= 0x8000; /* COMMON_LVB_UNDERSCORE */
         if (attr & A_LEFT)
-            mapped_attr |= COMMON_LVB_GRID_LVERTICAL;
+            mapped_attr |= 0x0800; /* COMMON_LVB_GRID_LVERTICAL */
         if (attr & A_RIGHT)
-            mapped_attr |= COMMON_LVB_GRID_RVERTICAL;
-    }
+            mapped_attr |= 0x1000; /* COMMON_LVB_GRID_RVERTICAL */
 
-    for (j = 0; j < len; j++)
-    {
-        chtype ch = srcp[j];
-#ifdef CHTYPE_LONG
-        if (ch & A_ALTCHARSET && !(ch & 0xff80))
-            ch = acs_map[ch & 0x7f];
-#endif
-        if (blink && blinked_off)
-            ch = ' ';
-
-        if (ansi)
-            buffer.text[j] = ch & A_CHARTEXT;
-        else
+        for (j = 0; j < len; j++)
         {
-            buffer.ci[j].Attributes = mapped_attr;
-            buffer.ci[j].Char.UnicodeChar = ch & A_CHARTEXT;
-        }
-    }
-
-    if (ansi)
-    {
-        PDC_gotoyx(lineno, x);
-        _set_ansi_color(fore, back, attr);
-#ifdef PDC_WIDE
-        WriteConsoleW(pdc_con_out, buffer.text, len, NULL, NULL);
-#else
-        WriteConsoleA(pdc_con_out, buffer.text, len, NULL, NULL);
+            chtype ch = srcp[j];
+#ifdef CHTYPE_LONG
+            if (ch & A_ALTCHARSET && !(ch & 0xff80))
+                ch = acs_map[ch & 0x7f];
 #endif
-    }
-    else
-    {
-        COORD bufSize, bufPos;
-        SMALL_RECT sr;
+            if (blink && blinked_off)
+                ch = ' ';
+
+            buffer[j].Attributes = mapped_attr;
+            buffer[j].Char.UnicodeChar = ch & A_CHARTEXT;
+        }
 
         bufPos.X = bufPos.Y = 0;
         bufSize.X = len;
@@ -257,7 +260,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         sr.Left = x;
         sr.Right = x + len - 1;
 
-        WriteConsoleOutput(pdc_con_out, buffer.ci, bufSize, bufPos, &sr);
+        WriteConsoleOutput(pdc_con_out, buffer, bufSize, bufPos, &sr);
     }
 }
 

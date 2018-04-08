@@ -213,6 +213,8 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             mapped_attr |= COMMON_LVB_GRID_LVERTICAL;
         if (attr & A_RIGHT)
             mapped_attr |= COMMON_LVB_GRID_RVERTICAL;
+    } else {
+        mapped_attr = 0;
     }
 
     for (j = 0; j < len; j++)

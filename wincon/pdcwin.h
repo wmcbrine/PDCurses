@@ -6,6 +6,23 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+/* missing definitions in old wincon.h */
+#ifndef COMMON_LVB_GRID_HORIZONTAL
+#define COMMON_LVB_GRID_HORIZONTAL	0x0400  /* Top horizontal */
+#endif
+#ifndef COMMON_LVB_GRID_LVERTICAL
+#define COMMON_LVB_GRID_LVERTICAL	0x0800	/* Left vertical */
+#endif
+#ifndef COMMON_LVB_GRID_RVERTICAL
+#define COMMON_LVB_GRID_RVERTICAL	0x1000	/* Right vertical */
+#endif
+#ifndef COMMON_LVB_REVERSE_VIDEO
+#define COMMON_LVB_REVERSE_VIDEO	0x4000	/* Reverse foreground and background attribute */
+#endif
+#ifndef COMMON_LVB_UNDERSCORE
+#define COMMON_LVB_UNDERSCORE	0x8000	/* Underscore */
+#endif
+/* missing definitions in old wincon.h end */
 #undef MOUSE_MOVED
 #include <curspriv.h>
 

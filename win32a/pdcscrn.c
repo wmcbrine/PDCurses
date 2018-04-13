@@ -1096,7 +1096,7 @@ static void get_app_name( TCHAR *buff, const size_t buff_size, const bool includ
         my_wsplitpath( __wargv[0], NULL, NULL, buff, NULL);
         if ( include_args)
         {
-            buff_space = buff_size - my_tcslen( buff);
+            buff_space = buff_size - my_tcslen( buff) - 1;
             for ( i = 1; i < __argc; i++)
             {
                 size_t arg_len = my_tcslen( __wargv[i]) + 1;
@@ -1117,7 +1117,7 @@ static void get_app_name( TCHAR *buff, const size_t buff_size, const bool includ
         my_splitpath( argv[0], NULL, NULL, tbuff, NULL);
         if ( include_args)
         {
-            buff_space = buff_size - strlen( tbuff);
+            buff_space = buff_size - strlen( tbuff) - 1;
             for ( i = 1; i < argc; i++)
             {
                 size_t arg_len = strlen( argv[i]) + 1;
@@ -1153,7 +1153,7 @@ static void get_app_name( TCHAR *buff, const size_t buff_size, const bool includ
         debug_printf( "Path: %s;  exe: %s\n", argv[0], buff);
         if ( include_args)
         {
-            buff_space = buff_size - my_tcslen( buff);
+            buff_space = buff_size - my_tcslen( buff) - 1;
             for ( i = 1; i < argc; i++)
             {
                 size_t arg_len = my_tcslen( argv[i]) + 1;

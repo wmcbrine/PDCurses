@@ -1157,7 +1157,7 @@ static void get_app_name( TCHAR *buff, const size_t buff_size, const bool includ
             for ( i = 1; i < argc; i++)
             {
                 size_t arg_len = my_tcslen( argv[i]) + 1;
-                if (buff_space < arg_len) {
+                if ( buff_space < arg_len) {
                     break;
                 }
                 buff_space -= arg_len;

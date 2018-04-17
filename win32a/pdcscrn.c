@@ -1090,22 +1090,30 @@ static void get_app_name( TCHAR *buff, const size_t buff_size, const bool includ
 #endif
 
 #ifdef PDC_WIDE
+    wchar_t **wargv = __wargv;
 #ifdef GOT_ARGV_ARGC
-    if( __wargv)
+    /* in case we can not access the array directly try to get it otherwise */
+    if( !wargv) {
+        wchar_t *cmd_linew = GetCommandLine( );
+        if (cmd_linew) {
+            wargv = CommandLineToArgvW (cmd_linew, &argc);
+        }
+    }
+    if( wargv)
     {
-        my_wsplitpath( __wargv[0], NULL, NULL, buff, NULL);
+        my_wsplitpath( wargv[0], NULL, NULL, buff, NULL);
         if ( include_args)
         {
             buff_space = buff_size - my_tcslen( buff) - 1;
-            for ( i = 1; i < __argc; i++)
+            for ( i = 1; i < argc; i++)
             {
-                size_t arg_len = my_tcslen( __wargv[i]) + 1;
+                size_t arg_len = my_tcslen( wargv[i]) + 1;
                 if ( buff_space < arg_len) {
                     break;
                 }
                 buff_space -= arg_len;
                 wcscat( buff, L" ");
-                wcscat( buff, __wargv[i]);
+                wcscat( buff, wargv[i]);
             }
         }
     }

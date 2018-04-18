@@ -200,7 +200,8 @@ void PDC_gotoyx(int row, int col)
 #ifdef PDC_WIDE
     chstr[0] = ch & A_CHARTEXT;
 
-    pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr, pdc_color[foregr]);
+    pdc_font = TTF_RenderUNICODE_Shaded(pdc_ttffont, chstr, pdc_color[foregr],
+                                        pdc_color[backgr]);
     if (pdc_font)
     {
         dest.h = src.h;
@@ -248,7 +249,8 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
         if (col == -1)
             col = foregr;
 
-        pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr, pdc_color[col]);
+        pdc_font = TTF_RenderUNICODE_Shaded(pdc_ttffont, chstr,
+                                            pdc_color[col], pdc_color[backgr]);
         if (pdc_font)
         {
            src->x = 0;
@@ -379,8 +381,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
             ( ((ch & A_ITALIC) && (sysattrs & A_ITALIC)) ?
               TTF_STYLE_ITALIC : 0) );
 
-        pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
-                                           pdc_color[foregr]);
+        pdc_font = TTF_RenderUNICODE_Shaded(pdc_ttffont, chstr,
+                                           pdc_color[foregr],
+                                           pdc_color[backgr]);
 
         if (pdc_font)
         {

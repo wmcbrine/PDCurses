@@ -640,6 +640,7 @@ int PDC_get_key(void)
                 if (!SP->resized)
                 {
                     SP->resized = TRUE;
+                    SP->key_code = TRUE;
                     return KEY_RESIZE;
                 }
             }

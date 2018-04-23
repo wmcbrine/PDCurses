@@ -97,13 +97,13 @@ LINK	   = $(CC)
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = $(CC) $(DEFFILE)
+	LIBEXE = $(CC)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
+	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	LIBSADDED = -lgdi32 -lcomdlg32
 	EXELIBS =
-	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
+	CLEAN = $(LIBCURSES) *.a
 else
 	LIBEXE = $(AR)
 ifeq ($(PREFIX),)

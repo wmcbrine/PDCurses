@@ -331,8 +331,14 @@ static void mainmenu(menu *mp)
                         for(int x = 1; x <= nitems ; ++x){
                             if((event.x > (barlen * (x-1)) && event.x < (barlen * x) ) &&
                                 (event.y == th )){
-                                cur = x-1;
-                                break;
+                                    if(x>=1){
+                                        cur = x-1;
+                                        break;
+                                    }
+                                    else{
+                                        key = KEY_ESC;
+                                        break;
+                                    }
                             }
                         }
                     }
@@ -601,25 +607,39 @@ void domenu(menu *mp)
             {
                 if((event.bstate & BUTTON1_PRESSED) || (event.bstate & BUTTON1_CLICKED))
                 {
-                    if((event.y - (y-1) > 0) &&  event.y > th && event.y <= y+mheight && event.x > x && event.x < mw +x){
+                    if( event.y <= th-1 )
+                    {
+                        key = KEY_ESC; //exit menu
+                        break;                      
+                    }
+                    else if((event.y - (y-1) > 0) &&  event.y > th && event.y <= y+mheight && event.x > x && event.x < mw +x)
+                    {
                         cur = (event.y - y-1) % nitems;
                         key = ERR;
-                    }else{
-                        key = KEY_ESC;
+                        break;
+                                      
                     }
-                    break;
+                    else if((event.y > 0) &&  (event.y < y-1 || event.y > y-1) && (event.x > 0) && (event.x < x-1 || event.x > x-1))
+                    {
+                        key = KEY_ESC; //exit menu
+                        break;
+                    }
+                        stop = TRUE;
+                        break;
                 }
-                if(event.bstate & BUTTON1_DOUBLE_CLICKED)
+                else if(event.bstate & BUTTON1_DOUBLE_CLICKED)
                 {
                     if((event.y - (y-1) > 0) &&  event.y > th && event.y <= y+mheight){
                          cur = (event.y - y-1) % nitems;
                          key = '\n';
+                         break;
                     }else{
                         key = KEY_ESC;
+                        break;
                     }
-                    break;
+                          
                 }
-                if( (event.bstate & BUTTON3_PRESSED) || (event.bstate & BUTTON3_CLICKED))
+                else if( (event.bstate & BUTTON3_PRESSED) || (event.bstate & BUTTON3_CLICKED))
                 {
                     key = KEY_ESC;
                     break;

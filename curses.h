@@ -14,10 +14,12 @@ PDCurses definitions list:  (Only define those needed)
     XCURSES         True if compiling for X11.
     PDC_RGB         True if you want to use RGB color definitions
                     (Red = 1, Green = 2, Blue = 4) instead of BGR.
-    PDC_WIDE        True if building wide-character support.
-    PDC_DLL_BUILD   True if building a Windows DLL.
+    PDC_WIDE        True if building with wide-character support.
+    PDC_DLL_BUILD   True if building to use a Windows DLL.
     NCURSES_MOUSE_VERSION   Use the ncurses mouse API instead
                             of PDCurses' traditional mouse API.
+    PDC_USE_NCURSES_MOUSE_VERSION   Let PDCurses define
+                            NCURSES_MOUSE_VERSION.
 
 PDCurses portable platform definitions list:
 
@@ -219,6 +221,12 @@ typedef struct
     mmask_t bstate; /* equivalent to changes + button[], but
                        in the same format as used for mousemask() */
 } MEVENT;
+
+#ifdef PDC_USE_NCURSES_MOUSE_VERSION
+#ifndef NCURSES_MOUSE_VERSION
+#define NCURSES_MOUSE_VERSION 2
+#endif
+#endif
 
 #ifdef NCURSES_MOUSE_VERSION
 # define BUTTON_SHIFT   BUTTON_MODIFIER_SHIFT

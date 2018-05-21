@@ -200,15 +200,14 @@ void PDC_gotoyx(int row, int col)
 #ifdef PDC_WIDE
     chstr[0] = ch & A_CHARTEXT;
 
-    pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr, pdc_color[foregr]);
+    pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr, pdc_color[foregr]);
     if (pdc_font)
     {
         dest.h = src.h;
         dest.w = src.w;
         src.x = 0;
         src.y = 0;
-        SDL_SetColorKey(pdc_font, 0, 0);
-        SDL_SetPalette(pdc_font, SDL_LOGPAL, pdc_color + backgr, 0, 1);
+        SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
         SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
         SDL_FreeSurface(pdc_font);
         pdc_font = NULL;
@@ -248,15 +247,12 @@ static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
         if (col == -1)
             col = foregr;
 
-        pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr, pdc_color[col]);
+        pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr,
+                                             pdc_color[col]);
         if (pdc_font)
         {
            src->x = 0;
            src->y = 0;
-
-           if (backgr != -1)
-               SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
-
            SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
            SDL_FreeSurface(pdc_font);
            pdc_font = NULL;
@@ -379,17 +375,14 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
             ( ((ch & A_ITALIC) && (sysattrs & A_ITALIC)) ?
               TTF_STYLE_ITALIC : 0) );
 
-        pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
-                                           pdc_color[foregr]);
+        pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr,
+                                             pdc_color[foregr]);
 
         if (pdc_font)
         {
             if (backgr != -1)
-            {
-                SDL_SetColorKey(pdc_font, 0, 0);
-                SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                               pdc_color + backgr, 0, 1);
-            }
+                SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
+
             SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
             SDL_FreeSurface(pdc_font);
             pdc_font = NULL;

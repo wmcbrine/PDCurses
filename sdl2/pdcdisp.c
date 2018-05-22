@@ -309,8 +309,6 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     attr_t sysattrs = SP->termattrs;
     bool blink = blinked_off && (attr & A_BLINK) && (sysattrs & A_BLINK);
 
-    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
-
     if (rectcount == MAXRECT)
         PDC_update_rects();
 

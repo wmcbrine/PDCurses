@@ -27,7 +27,7 @@
  *                                                                      *
  ************************************************************************/
 
-#include "x11/ScrollBox.h"
+#include "ScrollBox.h"
 
 #include <X11/CompositeP.h>
 

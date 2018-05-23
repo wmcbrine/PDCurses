@@ -19,7 +19,7 @@
 #include <X11/StringDefs.h>
 #include <X11/Shell.h>
 
-#include "x11/ScrollBoxP.h"
+#include "ScrollBoxP.h"
 
 #include <stdio.h>
 

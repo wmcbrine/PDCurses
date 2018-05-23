@@ -50,7 +50,7 @@
 # include <Xaw/Box.h>
 # include <Xaw/Scrollbar.h>
 #endif
-#include "x11/ScrollBox.h"
+#include "ScrollBox.h"
 
 #include "Xmu/StdSel.h"
 #include "Xmu/Atoms.h"

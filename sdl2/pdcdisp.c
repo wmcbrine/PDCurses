@@ -363,7 +363,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
             ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) | acs_map[ch & 0x7f];
 #endif
         if (backgr == -1)
-            SDL_LowerBlit(pdc_tileback, &dest, pdc_screen, &dest);
+            SDL_BlitSurface(pdc_tileback, &dest, pdc_screen, &dest);
 
 #ifdef PDC_WIDE
         chstr[0] = ch & A_CHARTEXT;
@@ -390,7 +390,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         src.x = (ch & 0xff) % 32 * pdc_fwidth;
         src.y = (ch & 0xff) / 32 * pdc_fheight;
 
-        SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
+        SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
 #endif
 
         if (!(blinked_off && (ch & A_BLINK) && (sysattrs & A_BLINK)) &&

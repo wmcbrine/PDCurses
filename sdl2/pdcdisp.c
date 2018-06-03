@@ -78,6 +78,8 @@ static bool blinked_off = FALSE;
 
 void PDC_update_rects(void)
 {
+    int i;
+
     if (rectcount)
     {
         /* if the maximum number of rects has been reached, we're
@@ -86,7 +88,37 @@ void PDC_update_rects(void)
         if (rectcount == MAXRECT)
             SDL_UpdateWindowSurface(pdc_window);
         else
-            SDL_UpdateWindowSurfaceRects(pdc_window, uprect, rectcount);
+        {
+            for (i=0;i<rectcount;i++)
+            {
+                if (uprect[i].x > pdc_swidth  ||
+                    uprect[i].y > pdc_sheight ||
+                    !uprect[i].w || !uprect[i].h)
+                {
+                    if (i + 1 < rectcount)
+                    {
+                        memmove(uprect+i, uprect+i+1,
+                                (rectcount - i + 1) * sizeof(*uprect));
+                        --i;
+                    }
+                    rectcount--;
+                    continue;
+                }
+
+                if (uprect[i].x + uprect[i].w > pdc_swidth)
+                {
+                    uprect[i].w = min(pdc_swidth, pdc_swidth - uprect[i].x);
+                }
+
+                if (uprect[i].y + uprect[i].h > pdc_sheight)
+                {
+                    uprect[i].h = min(pdc_sheight, pdc_sheight - uprect[i].y);
+                }
+            }
+
+            if (rectcount > 0)
+                SDL_UpdateWindowSurfaceRects(pdc_window, uprect, rectcount);
+        }
 
         pdc_lastupdate = SDL_GetTicks();
         rectcount = 0;

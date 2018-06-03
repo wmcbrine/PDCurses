@@ -191,8 +191,8 @@ void PDC_gotoyx(int row, int col)
     if (ch & A_ALTCHARSET && !(ch & 0xff80))
         ch = acs_map[ch & 0x7f];
 #endif
-    src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
-    src.w = pdc_fwidth;
+    dest.h = src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
+    dest.w = src.w = pdc_fwidth;
 
     dest.y = (row + 1) * pdc_fheight - src.h + pdc_yoffset;
     dest.x = col * pdc_fwidth + pdc_xoffset;
@@ -203,8 +203,6 @@ void PDC_gotoyx(int row, int col)
     pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr, pdc_color[foregr]);
     if (pdc_font)
     {
-        dest.h = src.h;
-        dest.w = src.w;
         src.x = 0;
         src.y = 0;
         SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);

@@ -277,6 +277,9 @@ int PDC_scr_open(int argc, char **argv)
                     SDL_GetError());
             return ERR;
         }
+
+        pdc_sheight = pdc_screen->h;
+        pdc_swidth  = pdc_screen->w;
     }
     else
     {

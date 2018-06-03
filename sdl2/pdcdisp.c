@@ -345,7 +345,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     _set_attr(attr);
 
     if (backgr == -1)
-        SDL_LowerBlit(pdc_tileback, &dest, pdc_screen, &dest);
+        SDL_BlitSurface(pdc_tileback, &dest, pdc_screen, &dest);
 #ifdef PDC_WIDE
     else
         SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
@@ -394,7 +394,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         src.x = (ch & 0xff) % 32 * pdc_fwidth;
         src.y = (ch & 0xff) / 32 * pdc_fheight;
 
-        SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
+        SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
 #endif
 
         if (!blink && (attr & (A_UNDERLINE | A_LEFT | A_RIGHT)))

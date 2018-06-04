@@ -111,7 +111,16 @@ void PDC_set_keyboard_binary(bool on)
 bool PDC_check_key(void)
 {
     Uint32 current = SDL_GetTicks();
-    int haveevent = SDL_PollEvent(&event);
+    int haveevent;
+
+    /**
+     * SDL_TEXTINPUT can return multiple chars from the IME
+     * which we should handle before polling for additional
+     * events.
+     */
+    if (event.type == SDL_TEXTINPUT && event.text.text[0])
+        haveevent = 1;
+    else haveevent = SDL_PollEvent(&event);
 
     /* if we have an event, or 30 ms have passed without a screen
        update, or the timer has wrapped, update now */
@@ -124,7 +133,7 @@ bool PDC_check_key(void)
 }
 
 #ifdef PDC_WIDE
-static int _utf8_to_unicode(char *chstr)
+static int _utf8_to_unicode(char *chstr, size_t *b)
 {
     int i, bytes, unicode;
     unsigned char byte = chstr[0];
@@ -157,6 +166,7 @@ static int _utf8_to_unicode(char *chstr)
     for (i = 1; i < bytes; i++)
         unicode = (unicode << 6) + (chstr[i] & 0x3f);
 
+    *b = bytes;
     return unicode;
 }
 #endif
@@ -165,6 +175,10 @@ static int _process_key_event(void)
 {
     int i, key = 0;
     unsigned long old_modifiers = pdc_key_modifiers;
+
+#ifdef PDC_WIDE
+    size_t bytes;
+#endif
 
     pdc_key_modifiers = 0L;
     SP->key_code = FALSE;
@@ -198,9 +212,20 @@ static int _process_key_event(void)
     {
         pdc_key_modifiers = old_modifiers;
 #ifdef PDC_WIDE
-        return _utf8_to_unicode(event.text.text);
+        if ((key = _utf8_to_unicode(event.text.text, &bytes)) == -1)
+        {
+            event.text.text[0] = '\0';
+        }
+        else
+        {
+            memmove(event.text.text, event.text.text+bytes,
+                    strlen(event.text.text)-bytes+1);
+        }
+        return key;
 #else
         key = (unsigned char)event.text.text[0];
+        memmove(event.text.text, event.text.text+1,
+                strlen(event.text.text));
         return key > 0x7f ? -1 : key;
 #endif
     }

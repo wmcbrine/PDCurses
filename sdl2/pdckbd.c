@@ -233,7 +233,7 @@ static int _process_key_event(void)
         if (!(SDL_GetModState() & KMOD_NUM))
             pdc_key_modifiers &= ~PDC_KEY_MODIFIER_NUMLOCK;
 
-        if (SP->return_key_modifiers)
+        if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
         {
             SP->key_code = TRUE;
             switch (event.key.keysym.sym)
@@ -279,6 +279,7 @@ static int _process_key_event(void)
 #endif
     }
 
+    oldkey = event.key.keysym.sym;
     if (SDL_GetModState() & KMOD_NUM)
         pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 

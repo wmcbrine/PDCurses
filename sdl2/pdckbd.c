@@ -111,7 +111,16 @@ void PDC_set_keyboard_binary(bool on)
 bool PDC_check_key(void)
 {
     Uint32 current = SDL_GetTicks();
-    int haveevent = SDL_PollEvent(&event);
+    int haveevent;
+
+    /**
+     * SDL_TEXTINPUT can return multiple chars from the IME
+     * which we should handle before polling for additional
+     * events.
+     */
+    if (event.type == SDL_TEXTINPUT && event.text.text[0])
+        haveevent = 1;
+    else haveevent = SDL_PollEvent(&event);
 
     /* if we have an event, or 30 ms have passed without a screen
        update, or the timer has wrapped, update now */
@@ -124,7 +133,7 @@ bool PDC_check_key(void)
 }
 
 #ifdef PDC_WIDE
-static int _utf8_to_unicode(char *chstr)
+static int _utf8_to_unicode(char *chstr, size_t *b)
 {
     int i, bytes, unicode;
     unsigned char byte = chstr[0];
@@ -157,23 +166,77 @@ static int _utf8_to_unicode(char *chstr)
     for (i = 1; i < bytes; i++)
         unicode = (unicode << 6) + (chstr[i] & 0x3f);
 
+    *b = bytes;
     return unicode;
 }
 #endif
 
+/* Handle ALT and CTRL sequences */
+static int _handle_alt_keys(int key)
+{
+    if (key > 0x7f)
+        return key;
+
+    if (pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL)
+    {
+        if (key >= 'A' && key <= 'Z') key -= 64;
+        if (key >= 'a' && key <= 'z') key -= 96;
+    }
+    else if (pdc_key_modifiers & PDC_KEY_MODIFIER_ALT)
+    {
+        if (key >= 'A' && key <= 'Z')
+        {
+            key += ALT_A - 'A';
+            SP->key_code = TRUE;
+        } else if (key >= 'a' && key <= 'z')
+        {
+            key += ALT_A - 'a';
+            SP->key_code = TRUE;
+        } else if (key >= '0' && key <= '9')
+        {
+            key += ALT_0 - '0';
+            SP->key_code = TRUE;
+        }
+    }
+
+    return key;
+}
+
 static int _process_key_event(void)
 {
     int i, key = 0;
-    unsigned long old_modifiers = pdc_key_modifiers;
 
-    pdc_key_modifiers = 0L;
+#ifdef PDC_WIDE
+    size_t bytes;
+#endif
+
     SP->key_code = FALSE;
 
     if (event.type == SDL_KEYUP)
     {
-        if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
+        switch (event.key.keysym.sym)
         {
-            switch (oldkey)
+            case SDLK_LCTRL:
+            case SDLK_RCTRL:
+                pdc_key_modifiers &= ~PDC_KEY_MODIFIER_CONTROL;
+                break;
+            case SDLK_LALT:
+            case SDLK_RALT:
+                pdc_key_modifiers &= ~PDC_KEY_MODIFIER_ALT;
+                break;
+            case SDLK_LSHIFT:
+            case SDLK_RSHIFT:
+                pdc_key_modifiers &= ~PDC_KEY_MODIFIER_SHIFT;
+                break;
+        }
+
+        if (!(SDL_GetModState() & KMOD_NUM))
+            pdc_key_modifiers &= ~PDC_KEY_MODIFIER_NUMLOCK;
+
+        if (SP->return_key_modifiers)
+        {
+            SP->key_code = TRUE;
+            switch (event.key.keysym.sym)
             {
             case SDLK_RSHIFT:
                 return KEY_SHIFT_R;
@@ -192,34 +255,51 @@ static int _process_key_event(void)
             }
         }
 
+        SP->key_code = FALSE;
         return -1;
     }
     else if (event.type == SDL_TEXTINPUT)
     {
-        pdc_key_modifiers = old_modifiers;
 #ifdef PDC_WIDE
-        return _utf8_to_unicode(event.text.text);
+        if ((key = _utf8_to_unicode(event.text.text, &bytes)) == -1)
+        {
+            event.text.text[0] = '\0';
+        }
+        else
+        {
+            memmove(event.text.text, event.text.text+bytes,
+                    strlen(event.text.text)-bytes+1);
+        }
+        return _handle_alt_keys(key);
 #else
         key = (unsigned char)event.text.text[0];
-        return key > 0x7f ? -1 : key;
+        memmove(event.text.text, event.text.text+1,
+                strlen(event.text.text));
+        return key > 0x7f ? -1 : _handle_alt_keys(key);
 #endif
     }
 
-    oldkey = event.key.keysym.sym;
+    if (SDL_GetModState() & KMOD_NUM)
+        pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
-    if (SP->save_key_modifiers)
+    switch (event.key.keysym.sym)
     {
-        if (event.key.keysym.mod & KMOD_NUM)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-
-        if (event.key.keysym.mod & KMOD_SHIFT)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
-
-        if (event.key.keysym.mod & KMOD_CTRL)
+        case SDLK_LCTRL:
+        case SDLK_RCTRL:
             pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
-
-        if (event.key.keysym.mod & KMOD_ALT)
+            break;
+        case SDLK_LALT:
+        case SDLK_RALT:
             pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            break;
+        case SDLK_LSHIFT:
+        case SDLK_RSHIFT:
+            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            break;
+        case SDLK_RETURN:
+            return 0x0d;
+        default:
+            key = event.key.keysym.sym;
     }
 
     for (i = 0; key_table[i].keycode; i++)
@@ -246,50 +326,14 @@ static int _process_key_event(void)
             }
 
             SP->key_code = (key > 0x100);
-            break;
+            return key;
         }
     }
 
-    if (!key)
-    {
-        key = (int) event.key.keysym.sym;
-        if (key >= 'a' && key <= 'z')
-            if (event.key.keysym.mod & KMOD_SHIFT)
-                key = toupper(key);
-
-        if (key > 0x7f)
-            key = 0;
-    }
-
-    /* Handle ALT letters and numbers */
-
-    if (event.key.keysym.mod & KMOD_ALT)
-    {
-        if (key >= 'A' && key <= 'Z')
-        {
-            key += ALT_A - 'A';
-            SP->key_code = TRUE;
-        }
-
-        if (key >= 'a' && key <= 'z')
-        {
-            key += ALT_A - 'a';
-            SP->key_code = TRUE;
-        }
-
-        if (key >= '0' && key <= '9')
-        {
-            key += ALT_0 - '0';
-            SP->key_code = TRUE;
-        }
-    }
-
-    /* Textual input is handled by the SDL_TEXTINPUT event */
-    if (' ' <= key && key <= '~') {
-        return -1;
-    }
-
-    return key ? key : -1;
+    /* SDL with TextInput ignores keys with CTRL */
+    if (key && pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL)
+        return _handle_alt_keys(key);
+    return -1;
 }
 
 static int _process_mouse_event(void)

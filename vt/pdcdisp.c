@@ -19,11 +19,21 @@ void PDC_gotoyx(int y, int x)
 #define UNDERLINE_OFF "\033[24m"
 #define BLINK_ON      "\033[5m"
 #define BLINK_OFF     "\033[25m"
-#define BOLD_ON       "\033[1"
+#define BOLD_ON       "\033[1m"
 #define BOLD_OFF      "\033[22m"
+#define DIM_ON        "\033[2m"
+#define DIM_OFF       "\033[22m"
 #define STDOUT          0
 
 const chtype MAX_UNICODE = 0x110000;
+
+/* see 'addch.c' for an explanation of how combining chars are handled. */
+
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2 && defined( PDC_WIDE)
+   #define USING_COMBINING_CHARACTER_SCHEME
+   int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
+#endif
+
 
 extern int PDC_really_blinking;
 extern chtype PDC_capabilities;
@@ -156,7 +166,12 @@ static char *color_string( char *otext, const COLORREF rgb)
       const int red = GetRValue( rgb);
       const int green = GetGValue( rgb);
       const int blue = GetBValue( rgb);
-      const int idx = ((blue - 35) / 40) + ((green - 35) / 40) * 6
+      int idx;
+
+      if( red == green && red == blue)   /* gray scale: indices from */
+         idx = (red - 3) / 10 + 232;     /* 232 to 255 */
+      else
+         idx = ((blue - 35) / 40) + ((green - 35) / 40) * 6
                   + ((red - 35) / 40) * 36 + 16;
 
       sprintf( otext, "5;%dm", idx);
@@ -207,7 +222,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
        if( (*srcp & A_ALTCHARSET) && ch < 0x80)
           ch = acs_map[ch & 0x7f];
-       if( ch < (int)' ')
+       if( ch < (int)' ' || (ch >= 0x80 && ch <= 0x9f))
           ch = ' ';
        if( changes & A_BOLD)
           printf( (*srcp & A_BOLD) ? BOLD_ON : BOLD_OFF);
@@ -221,6 +236,23 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
           reset_color( *srcp);
        if( ch < MAX_UNICODE)
           printf( "%lc", (wchar_t)ch);
+#ifdef USING_COMBINING_CHARACTER_SCHEME
+       else if( ch > MAX_UNICODE)      /* chars & fullwidth supported */
+       {
+           cchar_t root, newchar;
+
+           root = ch;
+           while( (root = PDC_expand_combined_characters( root,
+                              &newchar)) > MAX_UNICODE)
+               ;
+           printf( "%lc", (wchar_t)root);
+           root = ch;
+           while( (root = PDC_expand_combined_characters( root,
+                              &newchar)) > MAX_UNICODE)
+               printf( "%lc", (wchar_t)newchar);
+           printf( "%lc", (wchar_t)newchar);
+       }
+#endif
        prev_ch = *srcp++;
        }
 }

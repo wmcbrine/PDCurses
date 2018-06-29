@@ -92,7 +92,7 @@ int PDC_scr_open(int argc, char **argv)
     int i, r, g, b;
     char *capabilities = getenv( "PDC_VT");
 
-    if( capabilities)
+    if( capabilities)      /* these should really come from terminfo! */
        {
        if( strstr( capabilities, "RGB"))
           PDC_capabilities |= A_RGB_COLOR;
@@ -100,6 +100,8 @@ int PDC_scr_open(int argc, char **argv)
           PDC_capabilities |= A_UNDERLINE;
        if( strstr( capabilities, "BLI"))
           PDC_capabilities |= A_BLINK;
+       if( strstr( capabilities, "DIM"))
+          PDC_capabilities |= A_DIM;
        if( strstr( capabilities, "STA"))
           PDC_capabilities |= A_STANDOUT;
        }

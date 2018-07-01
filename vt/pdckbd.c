@@ -129,6 +129,7 @@ int PDC_get_key( void)
       {
       int c[13], count = 0;
 
+      SP->key_code = (rval == 27);
       if( rval == 27)
          {
          usleep( 100000);

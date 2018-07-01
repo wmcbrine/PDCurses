@@ -160,12 +160,12 @@ int PDC_get_key( void)
 
 int PDC_modifiers_set( void)
 {
-   return( 0);
+   return( OK);
 }
 
 int PDC_mouse_set( void)
 {
-   return( 0);
+   return(  OK);
 }
 
 void PDC_set_keyboard_binary( bool on)

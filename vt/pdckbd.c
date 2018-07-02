@@ -67,6 +67,13 @@ static int xlate_vt_codes( const int *c, const int count)
                KEY_DOWN, 2, '[', 'B',
                KEY_LEFT, 2, '[', 'D',
                KEY_RIGHT,2, '[', 'C',
+               KEY_HOME, 2, '[', 'H',
+               KEY_END,  2, '[', 'F',
+               KEY_IC,   3, '[', '2', '~',
+               KEY_DC,   3, '[', '3', '~',
+               KEY_PPAGE, 3, '[', '5', '~',
+               KEY_NPAGE, 3, '[', '6', '~',
+
                KEY_F(1), 2, 'O', 80,
                KEY_F(1), 4, '[', '1', '1', '~',
                KEY_F(2), 2, 'O', 81,

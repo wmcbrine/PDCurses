@@ -74,8 +74,8 @@ initscr
 
 ### Return Value
 
-   All functions return NULL on error, except endwin(), which
-   returns ERR on error.
+   All functions return NULL on error, except endwin(), which always
+   returns OK, and resize_term(), which returns either OK or ERR.
 
 ### Portability
                              X/Open    BSD    SYS V

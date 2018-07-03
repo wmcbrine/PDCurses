@@ -47,7 +47,7 @@ LDFLAGS		= $(LIBCURSES)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework newdemo newtest ptest rain speed testcurs tuidemo worm xmas
+DEMOS		= firework newdemo newtest ptest rain testcurs tuidemo worm xmas
 
 .PHONY: all libs clean demos
 
@@ -92,9 +92,6 @@ ptest: $(demodir)/ptest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 rain: $(demodir)/rain.c
-	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
-
-speed: $(demodir)/speed.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 testcurs: $(demodir)/testcurs.c

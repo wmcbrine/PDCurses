@@ -14,7 +14,7 @@ void PDC_beep(void)
     PDCINT(0x10, regs);
 }
 
-#if UINT_MAX >= 0xffffffffful
+#if UINT_MAX >= 0xfffffffful
 # define irq0_ticks()	(getdosmemdword(0x46c))
 /* For 16-bit platforms, we expect that the program will need _two_ memory
    read instructions to read the tick count.  Between the two instructions,

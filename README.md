@@ -2,13 +2,18 @@ Welcome to PDCurses!
 ====================
 
 Public Domain Curses, aka PDCurses, is an implementation of X/Open
-curses for multiple platforms. Relative to the 'official',  but
-mostly inactive,  PDCurses project,  this has a variety of
-improvements,  adding a Windows GUI "flavor" of Curses and
-expanding the capabilities of the other flavors (SDL,  X11,
-Win32 console,  OS/2,  and DOS).  Some details and screen shots at
+curses for multiple platforms. Relative to the 'official' PDCurses
+project,  this has a variety of improvements,  adding a Windows GUI
+and a VT-like console "flavor" of Curses and expanding the
+capabilities of the other flavors (SDL1,  SDL2,  X11, Win32 console,
+OS/2, and DOS).  Some details and screen shots at
 
 http://www.projectpluto.com/win32a.htm
+
+Much of this was done during a long period in which 'official'
+PDCurses was inactive.  It is hoped that the changes in this fork
+can be merged into the 'official' PDCurses,  and a pull request has
+been made.  But the split is looking increasingly permanent.
 
 Legal Stuff
 -----------
@@ -29,10 +34,10 @@ This software is provided AS IS with NO WARRANTY whatsoever.
 Ports
 -----
 
-PDCurses has been ported to DOS, OS/2, Win32, X11 and SDL,  and
-this version adds a Windows graphical flavor. A directory
-containing the port-specific source files exists for each of
-these platforms.
+PDCurses has been ported to DOS, OS/2, Win32, X11 and SDL1 and SDL2,
+ and this version adds a Windows graphical and VT-like console
+flavor. A directory containing the port-specific source files exists
+for each of these platforms.
 
 Build instructions are in the README file for each platform:
 
@@ -43,6 +48,7 @@ Build instructions are in the README file for each platform:
 -  [Win32](win32/README.md)
 -  [Win32a](win32a/README.md)
 -  [X11](x11/README.md)
+-  [VT](vt/README.md)
 
 Distribution Status
 -------------------

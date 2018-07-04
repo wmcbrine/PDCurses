@@ -67,12 +67,20 @@ static int xlate_vt_codes( const int *c, const int count)
                KEY_DOWN, 2, '[', 'B',
                KEY_LEFT, 2, '[', 'D',
                KEY_RIGHT,2, '[', 'C',
-               KEY_HOME, 2, '[', 'H',
-               KEY_END,  2, '[', 'F',
+               KEY_HOME, 2, 'O', 'H',
+               KEY_END,  2, 'O', 'F',
                KEY_IC,   3, '[', '2', '~',
                KEY_DC,   3, '[', '3', '~',
                KEY_PPAGE, 3, '[', '5', '~',
                KEY_NPAGE, 3, '[', '6', '~',
+
+               CTL_LEFT,  5, '[', '1', ';', '5', 'D',
+               CTL_RIGHT, 5, '[', '1', ';', '5', 'C',
+               CTL_UP,    5, '[', '1', ';', '5', 'A',
+               CTL_DOWN,  5, '[', '1', ';', '5', 'B',
+
+               ALT_PGUP, 5, '[', '5', ';', '3', '~',
+               ALT_PGDN, 5, '[', '6', ';', '3', '~',
 
                KEY_F(1), 2, 'O', 80,
                KEY_F(1), 4, '[', '1', '1', '~',
@@ -94,6 +102,13 @@ static int xlate_vt_codes( const int *c, const int count)
    int i, rval = -1;
    const int *tptr;
 
+   if( count == 1)
+      {
+      if( c[0] >= 'a' && c[0] <= 'z')
+         return( ALT_A + c[0] - 'a');
+      if( c[0] >= '0' && c[0] <= '9')
+         return( ALT_0 + c[0] - '0');
+      }
    if( count > 4 && c[0] == '[' && c[1] == 'M')
       {
       memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));

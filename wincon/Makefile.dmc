@@ -1,6 +1,6 @@
 # Makefile for PDCurses library - WIN32 Digital Mars
 #
-# Usage: make -f dmcwin32.mak [target]
+# Usage: make -f Makefile.dmc [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -15,7 +15,7 @@ PANEL_HEADER	= $(PDCURSES_SRCDIR)\panel.h
 TERM_HEADER	= $(PDCURSES_SRCDIR)\term.h
 
 srcdir		= $(PDCURSES_SRCDIR)\pdcurses
-osdir		= $(PDCURSES_SRCDIR)\win32
+osdir		= $(PDCURSES_SRCDIR)\wincon
 demodir		= $(PDCURSES_SRCDIR)\demos
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h

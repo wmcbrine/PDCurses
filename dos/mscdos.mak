@@ -26,7 +26,7 @@ CC		= cl
 
 !ifdef DEBUG
 CFLAGS		= /Od /Zi /DPDCDEBUG
-LDFLAGS		= /CO /NOE /SE:160 
+LDFLAGS		= /CO /NOE /SE:160
 !else
 CFLAGS		= /Ox
 LDFLAGS		= /NOE /SE:160
@@ -77,7 +77,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 firework.exe: firework.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
-newdemo.exe: newdemo.obj
+ozdemo.exe: ozdemo.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
 ptest.exe: ptest.obj

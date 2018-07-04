@@ -201,7 +201,7 @@ pdcutil.obj: $(osdir)\pdcutil.c $(PDCURSES_HEADERS) $(PDCURSES_OS2_H)
 firework.exe: firework.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
-newdemo.exe: newdemo.obj $(LIBCURSES)
+ozdemo.exe: ozdemo.obj $(LIBCURSES)
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
 ptest.exe: ptest.obj $(LIBCURSES)
@@ -225,8 +225,8 @@ xmas.exe: xmas.obj $(LIBCURSES)
 firework.obj: $(demodir)\firework.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(demodir)\firework.c
 
-newdemo.obj: $(demodir)\newdemo.c $(PDCURSES_CURSES_H)
-	$(BUILD) $(demodir)\newdemo.c
+ozdemo.obj: $(demodir)\ozdemo.c $(PDCURSES_CURSES_H)
+	$(BUILD) $(demodir)\ozdemo.c
 
 ptest.obj: $(demodir)\ptest.c $(PANEL_HEADER) $(PDCURSES_CURSES_H)
 	$(BUILD) $(demodir)\ptest.c

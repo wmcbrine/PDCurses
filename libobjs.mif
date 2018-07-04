@@ -22,5 +22,5 @@ debug.$(O)
 PDCOBJS = pdcclip.$(O) pdcdisp.$(O) pdcgetsc.$(O) pdckbd.$(O) pdcscrn.$(O) \
 pdcsetsc.$(O) pdcutil.$(O)
 
-DEMOS = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe \
+DEMOS = testcurs.exe ozdemo.exe xmas.exe tuidemo.exe firework.exe \
 newtest.exe ptest.exe rain.exe worm.exe

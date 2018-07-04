@@ -8,7 +8,7 @@
 O = o
 
 ifeq ($(NOPIC),Y)
-	PIC = 
+	PIC =
 else
 	PIC = -fPIC
 endif
@@ -64,7 +64,7 @@ LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework$(EXE_EXTENSION) newdemo$(EXE_EXTENSION) newtest$(EXE_EXTENSION) ptest$(EXE_EXTENSION) rain$(EXE_EXTENSION) testcurs$(EXE_EXTENSION) tuidemo$(EXE_EXTENSION) worm$(EXE_EXTENSION) xmas$(EXE_EXTENSION) \
+DEMOS		= firework$(EXE_EXTENSION) ozdemo$(EXE_EXTENSION) newtest$(EXE_EXTENSION) ptest$(EXE_EXTENSION) rain$(EXE_EXTENSION) testcurs$(EXE_EXTENSION) tuidemo$(EXE_EXTENSION) worm$(EXE_EXTENSION) xmas$(EXE_EXTENSION) \
 sdltest$(EXE_EXTENSION)
 
 .PHONY: all libs clean demos install
@@ -101,7 +101,7 @@ $(PDCOBJS) : %.o: $(osdir)/%.c
 firework$(EXE_EXTENSION): $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-newdemo$(EXE_EXTENSION): $(demodir)/newdemo.c
+ozdemo$(EXE_EXTENSION): $(demodir)/ozdemo.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 newtest$(EXE_EXTENSION): $(demodir)/newtest.c

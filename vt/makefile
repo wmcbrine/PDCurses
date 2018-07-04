@@ -47,7 +47,7 @@ LDFLAGS		= $(LIBCURSES)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework newdemo newtest ptest rain testcurs tuidemo worm xmas
+DEMOS		= firework ozdemo newtest ptest rain testcurs tuidemo worm xmas
 
 .PHONY: all libs clean demos
 
@@ -82,7 +82,7 @@ $(PDCOBJS) : %.o: $(osdir)/%.c
 firework: $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-newdemo: $(demodir)/newdemo.c
+ozdemo: $(demodir)/ozdemo.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 newtest: $(demodir)/newtest.c

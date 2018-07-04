@@ -72,7 +72,7 @@ demos:	$(DEMOS)
 	$(PREFIX)strip *.exe
 
 # note: we always want the system specific objects to be first
-#       as these are most likely to raise compiler issues 
+#       as these are most likely to raise compiler issues
 $(LIBCURSES) : $(PDCOBJS) $(LIBOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 	-$(COPY) $(LIBCURSES) panel.a
@@ -89,7 +89,7 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
-firework.exe newdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
+firework.exe ozdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
 

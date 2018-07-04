@@ -14,7 +14,7 @@ endif
 LIBCURSES = -lncursesw
 demodir = ../demos
 
-DEMOS    = firework newdemo newtest rain testcurs worm xmas
+DEMOS    = firework ozdemo newtest rain testcurs worm xmas
 
 all: $(DEMOS)
 

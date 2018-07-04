@@ -67,8 +67,8 @@ LIB_DEPS        = -L. -lXCurses
 
 PDCLIBS     = $(LIBCURSES) @SHL_TARGETS@
 
-DEMOS    = firework newdemo newtest ptest rain testcurs tuidemo worm xmas
-DEMOOBJS = firework.o newdemo.o newtest.o ptest.o rain.o testcurs.o tui.o \
+DEMOS    = firework ozdemo newtest ptest rain testcurs tuidemo worm xmas
+DEMOOBJS = firework.o ozdemo.o newtest.o ptest.o rain.o testcurs.o tui.o \
 tuidemo.o worm.o xmas.o
 
 SHLFILE     = XCurses
@@ -566,8 +566,8 @@ x11.sho: $(x11dir)/x11.c
 firework: firework.o
 	$(LINK) firework.o -o $@ $(LDFLAGS)
 
-newdemo: newdemo.o
-	$(LINK) newdemo.o -o $@ $(LDFLAGS)
+ozdemo: ozdemo.o
+	$(LINK) ozdemo.o -o $@ $(LDFLAGS)
 
 newtest: newtest.o
 	$(LINK) newtest.o -o $@ $(LDFLAGS)
@@ -593,8 +593,8 @@ xmas: xmas.o
 firework.o: $(demodir)/firework.c
 	$(BUILD) $(demodir)/firework.c
 
-newdemo.o: $(demodir)/newdemo.c
-	$(BUILD) $(demodir)/newdemo.c
+ozdemo.o: $(demodir)/ozdemo.c
+	$(BUILD) $(demodir)/ozdemo.c
 
 newtest.o: $(demodir)/newtest.c
 	$(BUILD) $(demodir)/newtest.c

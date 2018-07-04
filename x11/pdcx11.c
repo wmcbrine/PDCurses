@@ -27,6 +27,7 @@ fd_set xc_readfds;
 
 static void _dummy_function(void)
 {
+    PDC_napms( 1);
 }
 
 void XC_get_line_lock(int row)

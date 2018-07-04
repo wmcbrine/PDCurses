@@ -7,7 +7,8 @@ that the name is misleading;  it uses an olio of control sequences from
 https://www.gnu.org/software/screen/manual/html_node/Control-Sequences.html
 
 some of which are VT100 or VT200 or ANSI or xterm sequences.  It assumes
-that 256 colors are available.
+that 256 colors are available,  though it can use full RGB on terminals
+that support it.
 
 This is a first pass.  Much work remains to be done (see 'Caveats' below).
 
@@ -23,9 +24,9 @@ Caveats
 -------
 
 As currently set up,  this is a bare-bones implementation.  It relies on a
-terminal that supports 256 colors.  RGB colors get remapped to the 6x6x6
-color cube.  If your terminal supports full RGB coloring (QTerminal and
-modern xterm, for example),  you can set
+terminal that supports at least 256 colors.  RGB colors get remapped to the
+6x6x6 color cube.  If your terminal supports full RGB coloring (QTerminal
+and modern xterm, for example),  you can set
 
 PDC_VT=RGB
 export PDC_VT
@@ -40,7 +41,9 @@ blinking text.  (And/or the code may dig around in the terminfo database,
 which would be the Right Way.)
 
 Arrow keys and some function keys are recognized (see the `tbl` array
-in `pdckey.c`).  Some mouse input is recognized.
+in `pdckey.c`).  Some mouse input is recognized.  Shift,  Ctrl,  and Alt
+function keys and arrows are (mostly) not correctly identified;  I've
+not figured out how those keys are supposed to be detected yet.
 
 Test routines have been run on rxvt,  xterm,  and QTerminal only,  on
 one Xubuntu box,  plus some testing on TrueOS.

@@ -6,6 +6,7 @@
 # [all|demos|libpdcurses.a|testcurs]...
 
 O = o
+RM = rm
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
@@ -46,7 +47,6 @@ ifdef CHTYPE_16
 	CFLAGS += -DCHTYPE_16
 endif
 
-
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 ifeq ($(shell uname),Darwin)
@@ -63,12 +63,12 @@ sdltest
 
 .PHONY: all libs clean demos
 
-all:	libs demos
+all:	libs
 
 libs:	$(LIBCURSES)
 
 clean:
-	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
+	-$(RM) -rf *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)

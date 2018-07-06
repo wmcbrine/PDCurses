@@ -1,6 +1,6 @@
-# Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Watcom C/C++ 10.6+
+# Watcom WMAKE Makefile for PDCurses library - DOS (16 bit) Open Watcom 1.8+
 #
-# Usage: wmake -f [path/]wccdos16.mak [DEBUG=Y] [CROSS=Y|N]
+# Usage: wmake -f [path/]Makefile.w16 [DEBUG=Y] [CROSS=Y|N]
 #        [MODEL=c|h|l|m|s] [target]
 #
 # where target can be any of:
@@ -15,6 +15,8 @@
 !ifndef MODEL
 MODEL		= l
 !endif
+
+RM		= del
 
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
@@ -77,11 +79,10 @@ LIBEXE		= wlib -q -n -t
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	%write wccdos.lrf $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @wccdos.lrf
-	-$(DEL) wccdos.lrf
-	-$(COPY) $(LIBCURSES) panel.lib
+	-$(RM) wccdos.lrf
 
 PLATFORM1	= Watcom C++ 16-bit DOS
-PLATFORM2	= Open Watcom 1.6 for 16-bit DOS
+PLATFORM2	= Open Watcom 2.0 for 16-bit DOS
 ARCNAME		= pdc$(VER)16w
 
 !include $(PDCURSES_SRCDIR)/makedist.mif

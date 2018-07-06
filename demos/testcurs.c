@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-#ifdef PDCURSES 
+#ifdef PDCURSES
 #ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_resize_limits( 20, 50, 70, 200);
 #endif
@@ -1308,8 +1308,8 @@ void acsTest(WINDOW *win)
         mvaddwstr(tmarg, 7 * (COLS / 8) - 5, georgian);
         mvaddwstr(tmarg + 1, COLS / 8 - 5, fullwidth);
 
-#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
         mvaddwstr(tmarg + 1, 3 * (COLS / 8) - 5, combining_marks);
+#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
         mvaddch( tmarg + 1, 7 * (COLS / 8) - 5, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
 

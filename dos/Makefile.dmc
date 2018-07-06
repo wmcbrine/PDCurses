@@ -1,6 +1,6 @@
 # Makefile for PDCurses library - DOS Digital Mars
 #
-# Usage: make -f dmcdos.mak [target]
+# Usage: make -f Makefile.dmc [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -71,7 +71,6 @@ $(DEMOS) : $(LIBCURSES)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
    $(LIBEXE) -c $@ $(LIBOBJS) $(PDCOBJS)
-   -copy $(LIBCURSES) panel.lib
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c
 OSBUILD = $(BUILD) $(osdir)\$*.c

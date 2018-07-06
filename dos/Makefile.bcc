@@ -1,6 +1,6 @@
 # Borland MAKE Makefile for PDCurses library - DOS BC++ 3.0+
 #
-# Usage: make -f [path\]bccdos.mak [DEBUG=] [target]
+# Usage: make -f [path\]Makefile.bcc [DEBUG=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -9,6 +9,8 @@
 MODEL = l
 
 O = obj
+E = .exe
+RM = del
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..
@@ -20,9 +22,9 @@ PDCURSES_SRCDIR = ..
 osdir		= $(PDCURSES_SRCDIR)\dos
 
 !ifdef DEBUG
-CFLAGS		= -N -v -y -DPDCDEBUG 
+CFLAGS		= -N -v -y -DPDCDEBUG
 !else
-CFLAGS		= -O 
+CFLAGS		= -O
 !endif
 
 CPPFLAGS	= -I$(PDCURSES_SRCDIR)
@@ -34,20 +36,19 @@ LIBEXE		= tlib /C /E
 
 LIBCURSES	= pdcurses.lib
 
-all:	$(LIBCURSES) $(DEMOS)
+all:	$(LIBCURSES)
 
 clean:
-	-del *.obj
-	-del *.lib
-	-del *.map
-	-del *.exe
+	-$(RM) *.obj
+	-$(RM) *.lib
+	-$(RM) *.map
+	-$(RM) *.exe
 
 demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	-del $@
-	$(LIBEXE) $@ @$(osdir)\bccdos.lrf
-	-copy $(LIBCURSES) panel.lib
+	-$(RM) $@
+	$(LIBEXE) $@ @$(PDCURSES_SRCDIR)\borland.lrf
 
 .autodepend
 

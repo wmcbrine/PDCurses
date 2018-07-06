@@ -1,8 +1,8 @@
 # GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
 #
-# Usage: make -f [path\]gccdos.mak [DEBUG=Y] [CROSS=[build]] [target]
+# Usage: make -f [path\]Makefile] [DEBUG=Y] [CROSS=[build]] [target]
 #
-# where "target" can be any of:
+# where target can be any of:
 # [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
 #
 # and "build" any installed cross-compiler (gcc + binutils),
@@ -23,11 +23,9 @@ osdir		= $(PDCURSES_SRCDIR)/dos
 PDCURSES_DOS_H	= $(osdir)/pdcdos.h
 
 ifndef CROSS
-	COPY	= copy
-	DEL		= del
+	RM		= del
 else
-	COPY	= cp
-	DEL		= rm -rf
+	RM	= rm -rf
 endif
 
 ifeq ($(CROSS),Y)
@@ -48,7 +46,6 @@ endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
-
 CC		= $(PREFIX)gcc
 LINK		= $(PREFIX)gcc
 
@@ -64,18 +61,17 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-$(DEL) *.o
-	-$(DEL) *.a
-	-$(DEL) *.exe
+	-$(RM) *.o
+	-$(RM) *.a
+	-$(RM) *.exe
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	$(PREFIX)strip *.exe
+endif
 
-# note: we always want the system specific objects to be first
-#       as these are most likely to raise compiler issues
-$(LIBCURSES) : $(PDCOBJS) $(LIBOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
-	-$(COPY) $(LIBCURSES) panel.a
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)
@@ -102,8 +98,8 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
-PLATFORM1 = DJGPP 2.03
-PLATFORM2 = DJGPP 2.03 for DOS
+PLATFORM1 = DJGPP 2.05
+PLATFORM2 = DJGPP 2.05 for DOS
 ARCNAME = pdc$(VER)djg
 
 include $(PDCURSES_SRCDIR)/makedist.mif

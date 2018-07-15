@@ -1,18 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <unistd.h>
 #include <string.h>
+#ifndef _WIN32
+#include <unistd.h>
 #include <termios.h>
+#include <sys/ioctl.h>
+static struct termios orig_term;
+#endif
 #include <stdint.h>
 #include <assert.h>
-#include <sys/ioctl.h>
 #include "curspriv.h"
 #include "pdcvt.h"
 
 int PDC_rows = -1, PDC_cols = -1;
 bool PDC_resize_occurred = FALSE;
-static struct termios orig_term;
 const int STDIN = 0;
 chtype PDC_capabilities = 0;
 
@@ -49,7 +51,9 @@ void PDC_scr_close( void)
    printf( "\0338");         /* restore cursor & attribs (VT100) */
    printf( "\033[?1000l");        /* turn off mouse events */
    PDC_gotoyx( PDC_cols - 1, 1);
+#ifndef _WIN32
    tcsetattr( STDIN, TCSANOW, &orig_term);
+#endif
    return;
 }
 
@@ -69,6 +73,7 @@ void PDC_scr_free( void)
     pdc_rgbs = (COLORREF *)NULL;
 }
 
+#ifndef _WIN32
 static void sigwinchHandler( int sig)
 {
    struct winsize ws;
@@ -80,6 +85,7 @@ static void sigwinchHandler( int sig)
       PDC_resize_occurred = TRUE;
       }
 }
+#endif
 
 #define MAX_LINES 1000
 #define MAX_COLUMNS 1000
@@ -87,8 +93,10 @@ static void sigwinchHandler( int sig)
 
 int PDC_scr_open(int argc, char **argv)
 {
+#ifndef _WIN32
     struct sigaction sa;
     struct termios term;
+#endif
     int i, r, g, b;
     char *capabilities = getenv( "PDC_VT");
 
@@ -132,6 +140,7 @@ int PDC_scr_open(int argc, char **argv)
         pdc_rgbs[i + 232] = RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
     setbuf( stdin, NULL);
     setbuf( stdout, NULL);
+#ifndef _WIN32
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     sa.sa_handler = sigwinchHandler;
@@ -141,14 +150,20 @@ int PDC_scr_open(int argc, char **argv)
         return( -1);
     }
     sigwinchHandler( 0);
+#endif
 //  SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->visibility = 0;                /* no cursor,  by default */
     SP->curscol = SP->cursrow = 0;
     SP->audible = TRUE;
     SP->mono = FALSE;
 
+#ifdef _WIN32
+    PDC_rows = 25;
+    PDC_cols = 80;
+#else
     while( !PDC_get_rows( ))     /* wait for screen to be drawn and */
       ;                          /* actual size to be determined    */
+#endif
 
     SP->lines = PDC_get_rows();
     SP->cols = PDC_get_columns();
@@ -165,11 +180,14 @@ int PDC_scr_open(int argc, char **argv)
         return ERR;
     }
 
+#ifndef _WIN32
     tcgetattr( STDIN, &orig_term);
     memcpy( &term, &orig_term, sizeof( term));
     term.c_lflag &= ~(ICANON | ECHO);
     tcsetattr( STDIN, TCSANOW, &term);
+#endif
     printf( "\033[?1000h");    /* enable mouse events,  at least on xterm */
+               /* NOTE: could send 1003h to get mouse motion events as well */
     printf( "\0337");         /* save cursor & attribs (VT100) */
 /*  PDC_reset_prog_mode();   doesn't do anything anyway */
     return( 0);

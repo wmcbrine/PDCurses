@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <sys/select.h>
-#include <unistd.h>
+#ifdef _WIN32
+   #include <conio.h>
+#else
+   #include <sys/select.h>
+   #include <unistd.h>
+#endif
 #include "curspriv.h"
 
 /* Modified from the accepted answer at
@@ -25,6 +29,7 @@ extern bool PDC_resize_occurred;
 static bool check_key( int *c)
 {
     bool rval;
+#ifndef _WIN32
     const int STDIN = 0;
     struct timeval timeout;
     fd_set rdset;
@@ -36,6 +41,9 @@ static bool check_key( int *c)
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
     if( select( STDIN + 1, &rdset, NULL, NULL, &timeout) > 0)
+#else
+    if( kbhit( ))
+#endif
        {
        rval = TRUE;
        if( c)
@@ -59,10 +67,32 @@ void PDC_flushinp( void)
       ;
 }
 
+/* Mouse events include six bytes.  First three are
+
+ESC [ M
+
+   Next byte is 96 for mouse wheel up,  97 for down,  or (for more
+"traditional" mouse events) 32 plus :
+
+   0 for button 1
+   1 for button 2
+   2 for button 3
+   3 for release
+   4 if Shift is pressed
+   8 if Alt (Meta) is pressed
+   16 if Ctrl is pressed
+
+   My tilt mouse reports 'tilt left' as a left button (1) and 'tilt right'
+as a middle button press.  Wheel events get shift,  alt,  ctrl added in;
+button events only get Ctrl (though I think you might get the other events
+on some terminals).
+
+   "Correct" mouse handling will require that we detect a button-down,
+then hold off for SP->mouse_wait to see if we get a release event.  */
+
 static int xlate_vt_codes( const int *c, const int count)
 {
    static const int tbl[] =  {
-               27, 0,
                KEY_UP,   2, '[', 'A',
                KEY_DOWN, 2, '[', 'B',
                KEY_LEFT, 2, '[', 'D',
@@ -98,6 +128,7 @@ static int xlate_vt_codes( const int *c, const int count)
                KEY_F(10), 4, '[', '2', '1', '~',
 /* doesn't go  KEY_F(11), 4, '[', '2', '3', '~', */
                KEY_F(12), 4, '[', '2', '4', '~',
+               27, 0,
                0 };
    int i, rval = -1;
    const int *tptr;
@@ -111,11 +142,11 @@ static int xlate_vt_codes( const int *c, const int count)
       }
    if( count > 4 && c[0] == '[' && c[1] == 'M')
       {
-      memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
       if( c[2] >= 32 && c[2] <= 37)
          {
          const int idx = c[2] - 32;
 
+         memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
          if( count > 5)
             pdc_mouse_status.button[idx % 3] = BUTTON_CLICKED;
          else     /* pressed or released */
@@ -154,7 +185,7 @@ int PDC_get_key( void)
       SP->key_code = (rval == 27);
       if( rval == 27)
          {
-         usleep( 100000);
+         PDC_napms( 100);
          while( count < 13 && check_key( &c[count]))
             count++;
          rval = xlate_vt_codes( c, count);

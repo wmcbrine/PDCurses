@@ -152,7 +152,7 @@ int PDC_scr_open(int argc, char **argv)
     }
     sigwinchHandler( 0);
 #endif
-//  SP->mouse_wait = PDC_CLICK_PERIOD;
+    SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->visibility = 0;                /* no cursor,  by default */
     SP->curscol = SP->cursrow = 0;
     SP->audible = TRUE;

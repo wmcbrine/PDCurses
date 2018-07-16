@@ -205,8 +205,8 @@ int PDC_get_key( void)
                         (idx ? PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP);
                else     /* "normal" mouse button */
                   pdc_mouse_status.changes = (1 << idx);
-               pdc_mouse_status.x = c[3] - ' ' - 1;
-               pdc_mouse_status.y = c[4] - ' ' - 1;
+               pdc_mouse_status.x = (unsigned char)( c[3] - ' ' - 1);
+               pdc_mouse_status.y = (unsigned char)( c[4] - ' ' - 1);
                if( c[2] & 4)
                   flags |= PDC_BUTTON_SHIFT;
                if( c[2] & 8)

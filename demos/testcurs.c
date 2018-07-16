@@ -453,7 +453,7 @@ void inputTest(WINDOW *win)
     wclear (win);
     mvwaddstr(win, 1, 1,
         "Press keys (or mouse buttons) to show their names");
-    mvwaddstr(win, 2, 1, "Press spacebar to finish");
+    mvwaddstr(win, 2, 1, "Press spacebar to finish, Ctrl-A to return to main menu");
     wrefresh(win);
 
     keypad(win, TRUE);
@@ -642,7 +642,7 @@ void inputTest(WINDOW *win)
         }
         wrefresh(win);
 
-        if (c == ' ')
+        if (c == ' ' || c == 1)
             break;
         line_to_use++;
         if( line_to_use == 17)
@@ -658,6 +658,8 @@ void inputTest(WINDOW *win)
 /*  PDC_return_key_modifiers(FALSE);   */
 #endif
     wclear(win);
+    if( c == 1)
+       return;
 #ifdef PDCURSES
 #ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 0 );  /* un-abortable */

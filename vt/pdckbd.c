@@ -82,9 +82,16 @@ ESC [ M
    8 if Alt (Meta) is pressed
    16 if Ctrl is pressed
 
+   Note that 'release' doesn't tell you _which_ is released.  If only
+one has been pressed (the usual case),  it's presumably the one you
+released.  If two or more buttons are pressed simultaneously,  the
+"releases" are reported in the numerical order of the buttons,  not
+the order in which they're actually released (which we don't know).
+
    My tilt mouse reports 'tilt left' as a left button (1) and 'tilt right'
-as a middle button press.  Wheel events get shift,  alt,  ctrl added in;
-button events only get Ctrl (though I think you might get the other events
+as a middle button press.  Wheel events get shift,  alt,  ctrl added in
+(but that doesn't seem to be getting through in PDCurses... to be fixed).
+Button events only get Ctrl (though I think you might get the other events
 on some terminals).
 
    "Correct" mouse handling will require that we detect a button-down,
@@ -136,32 +143,17 @@ static int xlate_vt_codes( const int *c, const int count)
    if( count == 1)
       {
       if( c[0] >= 'a' && c[0] <= 'z')
-         return( ALT_A + c[0] - 'a');
+         rval = ALT_A + c[0] - 'a';
       if( c[0] >= '0' && c[0] <= '9')
-         return( ALT_0 + c[0] - '0');
+         rval = ALT_0 + c[0] - '0';
       }
-   if( count > 4 && c[0] == '[' && c[1] == 'M')
-      {
-      if( c[2] >= 32 && c[2] <= 37)
-         {
-         const int idx = c[2] - 32;
-
-         memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
-         if( count > 5)
-            pdc_mouse_status.button[idx % 3] = BUTTON_CLICKED;
-         else     /* pressed or released */
-            pdc_mouse_status.button[idx % 3] = 1 - idx / 3;
-         pdc_mouse_status.changes = (1 << (idx % 3));
-         pdc_mouse_status.x = c[3] - ' ' - 1;
-         pdc_mouse_status.y = c[4] - ' ' - 1;
-         }
-      return( KEY_MOUSE);
-      }
+   else if( count == 5 && c[0] == '[' && c[1] == 'M')
+      rval = KEY_MOUSE;
    for( tptr = tbl; rval == -1 && *tptr; tptr += 2 + tptr[1])
       if( count == tptr[1])
          {
          i = 0;
-         while( tptr[i + 2] == c[i])
+         while( tptr[i + 2] == c[i] && i < count)
             i++;
          if( i == count)
             rval = tptr[0];
@@ -185,10 +177,60 @@ int PDC_get_key( void)
       SP->key_code = (rval == 27);
       if( rval == 27)
          {
-         PDC_napms( 100);
-         while( count < 13 && check_key( &c[count]))
+         while( count < 5 && check_key( &c[count])
+                  && (rval = xlate_vt_codes( c, count + 1)) == -1)
             count++;
-         rval = xlate_vt_codes( c, count);
+         if( rval == KEY_MOUSE)
+            {
+            int idx = (c[2] & 3);
+            const bool release = (idx == 3);
+            static int held = 0;
+
+            if( release)        /* it's a release */
+               {
+               idx = 0;
+               while( idx < 3 && !((held >> idx) & 1))
+                  idx++;
+               held ^= (1 << idx);
+               }
+            if( idx < 3)
+               {
+               int flags = 0, i;
+
+               memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
+               pdc_mouse_status.button[idx] =
+                              (release ? BUTTON_RELEASED : BUTTON_PRESSED);
+               if( c[2] & 64)    /* actually mouse wheel event */
+                  pdc_mouse_status.changes =
+                        (idx ? PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP);
+               else     /* "normal" mouse button */
+                  pdc_mouse_status.changes = (1 << idx);
+               pdc_mouse_status.x = c[3] - ' ' - 1;
+               pdc_mouse_status.y = c[4] - ' ' - 1;
+               if( c[2] & 4)
+                  flags |= PDC_BUTTON_SHIFT;
+               if( c[2] & 8)
+                  flags |= PDC_BUTTON_ALT;
+               if( c[2] & 16)
+                  flags |= PDC_BUTTON_CONTROL;
+               for( i = 0; i < 3; i++)
+                  pdc_mouse_status.button[i] |= flags;
+               if( !release)     /* wait for a possible release */
+                  {
+                  PDC_napms( SP->mouse_wait);
+
+                  if( check_key( c))      /* assume it's a release */
+                     {
+                     count = 0;
+                     while( count < 5 && check_key( &c[count]))
+                        count++;
+                     pdc_mouse_status.button[idx] = BUTTON_CLICKED | flags;
+                     }
+                  else
+                     held ^= (1 << idx);
+                  }
+               }
+            }
          }
       else if( (rval & 0xc0) == 0xc0)      /* start of UTF-8 */
          {
@@ -206,9 +248,9 @@ int PDC_get_key( void)
             }
             /* Else... four-byte SMP char */
          }
+      else if( rval == 127)
+         rval = 8;
       }
-   else
-      PDC_napms( 100);
    return( rval);
 }
 

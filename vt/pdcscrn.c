@@ -35,6 +35,12 @@ void PDC_reset_shell_mode( void)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
+   if( nlines > 1 && ncols > 1)
+      {
+      printf( "\033[8;%d;%dt", nlines, ncols);
+      PDC_rows = nlines;
+      PDC_cols = ncols;
+      }
    return( 0);
 }
 
@@ -80,11 +86,12 @@ static void sigwinchHandler( int sig)
    struct winsize ws;
 
    if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) != -1)
-      {
-      PDC_rows = ws.ws_row;
-      PDC_cols = ws.ws_col;
-      PDC_resize_occurred = TRUE;
-      }
+      if( PDC_rows != ws.ws_row || PDC_cols != ws.ws_col)
+         {
+         PDC_rows = ws.ws_row;
+         PDC_cols = ws.ws_col;
+         PDC_resize_occurred = TRUE;
+         }
 }
 #endif
 

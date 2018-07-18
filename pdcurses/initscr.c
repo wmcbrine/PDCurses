@@ -52,16 +52,30 @@ initscr
 
    resize_term() is effectively two functions: When called with
    nonzero values for nlines and ncols, it attempts to resize the
-   screen to the given size. When called with (0, 0), it merely
-   adjusts the internal structures to match the current size after
-   the screen is resized by the user. On the currently supported
-   platforms, SDL, Win32, VT, and X11 allow user resizing, while DOS,
-   OS/2, SDL and Win32 allow programmatic resizing. If you want to
-   support user resizing, you should check for getch() returning
-   KEY_RESIZE, and/or call is_termresized() at appropriate times;
-   if either condition occurs, call resize_term(0, 0). Then, with
-   either user or programmatic resizing, you'll have to resize any
-   windows you've created, as appropriate; resize_term() only
+   screen to the given size. On some platforms,  you can do this
+   before calling initscr(), thereby setting the starting screen
+   size.  When called with (0, 0), it merely adjusts the internal
+   structures to match the current size after the screen is
+   resized by the user.  User,  pre-initscr(),  and programmatic
+   resizing is platform-dependent,  as follows (with ncurses added
+   as a "platform" for comparison;  it supports only user resizing.)
+
+   Platform  User Init Programmatic
+   DOS        -     -      x
+   ncurses    x     -      -
+   OS/2       -     -      x
+   SDL1       x     x      x
+   SDL2       x     x      x
+   VT         x     -      x
+   Wincon     x     -      x
+   WinGUI     x     x      x
+   X11        x     x      -
+
+   If you want to support user resizing, you should check for getch()
+   returning KEY_RESIZE, and/or call is_termresized() at appropriate
+   times; if either condition occurs, call resize_term(0, 0). Then,
+   with either user or programmatic resizing, you'll have to resize
+   any windows you've created, as appropriate; resize_term() only
    handles stdscr and curscr.
 
    is_termresized() returns TRUE if the curses screen has been
@@ -337,7 +351,6 @@ int resize_term(int nlines, int ncols)
 
     touchwin(stdscr);
     wnoutrefresh(stdscr);
-
     return OK;
 }
 

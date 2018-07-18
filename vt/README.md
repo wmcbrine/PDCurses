@@ -8,7 +8,7 @@ control sequences from
 
 https://www.gnu.org/software/screen/manual/html_node/Control-Sequences.html
 
-which may,  or may not,  work on your terminal (I've testes urxvt,  xterm,
+which may,  or may not,  work on your terminal (I've tested urxvt,  xterm,
 and QTerminal).
 
 It assumes that 256 colors are available,  but it can use full RGB on
@@ -45,7 +45,8 @@ capabilities of the terminal,  e.g.,
 
 to say that the underlying terminal supports built-in bold,  italic,  and
 blinking text.  (And/or the code may dig around in the terminfo database,
-as ncurses does.  That would be the Right Way of doing it.)
+as ncurses does.  That would be the Right Way of doing it.  Or at the
+very least,  look at the TERM and COLORTERM environment variables.)
 
 Arrow keys and some function keys are recognized (see the `tbl` array
 in `pdckey.c`).  Some mouse input is recognized.  Shift,  Ctrl,  and Alt

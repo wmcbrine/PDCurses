@@ -33,9 +33,16 @@ void PDC_reset_shell_mode( void)
 {
 }
 
+static int initial_PDC_rows, initial_PDC_cols;
+
 int PDC_resize_screen(int nlines, int ncols)
 {
-   if( nlines > 1 && ncols > 1)
+   if( PDC_rows == -1)     /* initscr( ) hasn't been called;  we're just */
+      {                    /* setting desired size at startup */
+      initial_PDC_rows = nlines;
+      initial_PDC_cols = ncols;
+      }
+   else if( nlines > 1 && ncols > 1)
       {
       printf( "\033[8;%d;%dt", nlines, ncols);
       PDC_rows = nlines;
@@ -165,17 +172,24 @@ int PDC_scr_open(int argc, char **argv)
     SP->audible = TRUE;
     SP->mono = FALSE;
 
+
 #ifdef _WIN32
     PDC_rows = 25;
     PDC_cols = 80;
 #else
-    while( !PDC_get_rows( ))     /* wait for screen to be drawn and */
-      ;                          /* actual size to be determined    */
+    while( PDC_get_rows( ) < 1 && PDC_get_columns( ) < 1)
+      ;     /* wait for screen to be drawn and size determined */
 #endif
+    if( initial_PDC_rows > 1 && initial_PDC_cols > 1)
+        {
+        PDC_resize_screen( initial_PDC_rows, initial_PDC_cols);
+        while( PDC_get_rows( ) != initial_PDC_rows
+            && PDC_get_columns( ) != initial_PDC_rows)
+           ;
+        }
 
     SP->lines = PDC_get_rows();
     SP->cols = PDC_get_columns();
-    PDC_resize_occurred = FALSE;
 
     if (SP->lines < 2 || SP->lines > MAX_LINES
        || SP->cols < 2 || SP->cols > MAX_COLUMNS)
@@ -197,6 +211,7 @@ int PDC_scr_open(int argc, char **argv)
     printf( "\033[?1000h");    /* enable mouse events,  at least on xterm */
                /* NOTE: could send 1003h to get mouse motion events as well */
     printf( "\0337");         /* save cursor & attribs (VT100) */
+    PDC_resize_occurred = FALSE;
 /*  PDC_reset_prog_mode();   doesn't do anything anyway */
     return( 0);
 }

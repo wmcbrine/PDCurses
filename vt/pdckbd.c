@@ -119,13 +119,13 @@ static int xlate_vt_codes( const int *c, const int count)
                ALT_PGUP, 5, '[', '5', ';', '3', '~',
                ALT_PGDN, 5, '[', '6', ';', '3', '~',
 
-               KEY_F(1), 2, 'O', 80,
+               KEY_F(1), 2, 'O', 'P',
                KEY_F(1), 4, '[', '1', '1', '~',
-               KEY_F(2), 2, 'O', 81,
+               KEY_F(2), 2, 'O', 'Q',
                KEY_F(2), 4, '[', '1', '2', '~',
-               KEY_F(3), 2, 'O', 82,
+               KEY_F(3), 2, 'O', 'R',
                KEY_F(3), 4, '[', '1', '3', '~',
-               KEY_F(4), 2, 'O', 83,
+               KEY_F(4), 2, 'O', 'S',
                KEY_F(4), 4, '[', '1', '4', '~',
                KEY_F(5), 4, '[', '1', '5', '~',
                KEY_F(6), 4, '[', '1', '7', '~',
@@ -135,6 +135,18 @@ static int xlate_vt_codes( const int *c, const int count)
                KEY_F(10), 4, '[', '2', '1', '~',
 /* doesn't go  KEY_F(11), 4, '[', '2', '3', '~', */
                KEY_F(12), 4, '[', '2', '4', '~',
+               KEY_F(13), 5, 'O', '1', ';', '2', 'P',      /* shift-f1 */
+               KEY_F(14), 5, 'O', '1', ';', '2', 'Q',
+               KEY_F(15), 5, 'O', '1', ';', '2', 'R',
+               KEY_F(16), 5, 'O', '1', ';', '2', 'S',
+               KEY_F(17), 6, '[', '1', '5', ';', '2', '~',  /* shift-f5 */
+               KEY_F(18), 6, '[', '1', '7', ';', '2', '~',
+               KEY_F(19), 6, '[', '1', '8', ';', '2', '~',
+               KEY_F(20), 6, '[', '1', '9', ';', '2', '~',
+               KEY_F(21), 6, '[', '2', '0', ';', '2', '~',
+               KEY_F(22), 6, '[', '2', '1', ';', '2', '~',
+               KEY_F(23), 6, '[', '2', '3', ';', '2', '~',  /* shift-f11 */
+               KEY_F(24), 6, '[', '2', '4', ';', '2', '~',
                27, 0,
                0 };
    int i, rval = -1;
@@ -177,7 +189,7 @@ int PDC_get_key( void)
       SP->key_code = (rval == 27);
       if( rval == 27)
          {
-         while( count < 5 && check_key( &c[count])
+         while( count < 6 && check_key( &c[count])
                   && (rval = xlate_vt_codes( c, count + 1)) == -1)
             count++;
          if( rval == KEY_MOUSE)

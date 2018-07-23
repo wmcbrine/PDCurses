@@ -169,7 +169,14 @@ static char *color_string( char *otext, const COLORREF rgb)
       int idx;
 
       if( red == green && red == blue)   /* gray scale: indices from */
-         idx = (red - 3) / 10 + 232;     /* 232 to 255 */
+         {
+         if( red < 27)     /* this would underflow; remap to black */
+            idx = COLOR_BLACK;
+         else if( red >= 243)    /* this would overflow */
+            idx = COLOR_WHITE;
+         else
+            idx = (red - 3) / 10 + 232;     /* 232 to 255 */
+         }
       else
          idx = ((blue - 35) / 40) + ((green - 35) / 40) * 6
                   + ((red - 35) / 40) * 36 + 16;

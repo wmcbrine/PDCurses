@@ -119,6 +119,11 @@ static int xlate_vt_codes( const int *c, const int count)
                ALT_PGUP, 5, '[', '5', ';', '3', '~',
                ALT_PGDN, 5, '[', '6', ';', '3', '~',
 
+               KEY_F(1), 3, '[', '[', 'A',      /* Linux console */
+               KEY_F(2), 3, '[', '[', 'B',
+               KEY_F(3), 3, '[', '[', 'C',
+               KEY_F(4), 3, '[', '[', 'D',
+
                KEY_F(1), 2, 'O', 'P',
                KEY_F(1), 4, '[', '1', '1', '~',
                KEY_F(2), 2, 'O', 'Q',

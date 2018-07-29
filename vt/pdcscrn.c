@@ -63,8 +63,8 @@ void PDC_scr_close( void)
 {
    printf( "\0338");         /* restore cursor & attribs (VT100) */
    printf( "\033[m");         /* set default screen attributes */
-   printf( "\033[?1000l");        /* turn off mouse events */
-   PDC_gotoyx( PDC_cols - 1, 1);
+   PDC_gotoyx( PDC_cols - 1, 0);
+   printf( "\033[?1000l\n");        /* turn off mouse events */
 #ifndef _WIN32
    tcsetattr( STDIN, TCSANOW, &orig_term);
 #endif

@@ -8,7 +8,7 @@ and a VT-like console "flavor" of Curses and expanding the
 capabilities of the other flavors (SDL1,  SDL2,  X11, Win32 console,
 OS/2, and DOS).  Some details and screen shots at
 
-http://www.projectpluto.com/win32a.htm
+https://www.projectpluto.com/win32a.htm
 
 Much of this was done during a long period in which 'official'
 PDCurses was inactive.  It is hoped that the changes in this fork
@@ -35,20 +35,20 @@ Ports
 -----
 
 PDCurses has been ported to DOS, OS/2, Win32, X11 and SDL1 and SDL2,
- and this version adds a Windows graphical and VT-like console
+and this version adds a Windows graphical and VT-like console
 flavor. A directory containing the port-specific source files exists
 for each of these platforms.
 
 Build instructions are in the README file for each platform:
 
--  [DOS](dos/README.md)
--  [OS/2](os2/README.md)
--  [SDL](sdl1/README.md)
--  [SDL2](sdl2/README.md)
--  [Win32](win32/README.md)
--  [Win32a](win32a/README.md)
--  [X11](x11/README.md)
--  [VT](vt/README.md)
+-  [DOS](dos/README.md) for use on DOS
+-  [OS/2](os2/README.md) for use on OS/2
+-  [SDL](sdl1/README.md) for use as separate SDL version 1 window
+-  [SDL2](sdl2/README.md) for use as separate SDL version 2 window
+-  [wincon](wincon/README.md) (formerly win32) for use on Windows Console
+-  [Win32a](win32a/README.md) for use on Windows Graphics Mode
+-  [X11](x11/README.md) (also called XCurses) for use as separate X11 window
+-  [VT](vt/README.md) for use on terminal
 
 Distribution Status
 -------------------

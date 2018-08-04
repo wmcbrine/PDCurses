@@ -19,7 +19,7 @@
 #endif
 #if (defined(__CYGWIN__) || defined(__MINGW32__) || defined(__WATCOMC__) \
      || (defined(_MSC_VER) && _WIN32_WINNT >= _WIN32_WINNT_VISTA))
-   #if !defined(HAVE_INFOEX)
+   #if !defined(HAVE_INFOEX) && !defined(HAVE_NO_INFOEX)
        # define HAVE_INFOEX
    #endif
 #endif

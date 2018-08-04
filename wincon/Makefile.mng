@@ -1,6 +1,6 @@
-# GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
+# GNU MAKE Makefile for PDCurses library - Windows console MinGW GCC
 #
-# Usage: make -f [path\]mingwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: make -f [path\]Makefile.mng [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
@@ -58,7 +58,7 @@ ifndef ON_WINDOWS
 	endif
 endif
 
-osdir	   = $(PDCURSES_SRCDIR)/win32
+osdir	   = $(PDCURSES_SRCDIR)/wincon
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
@@ -161,8 +161,8 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
 
-PLATFORM1 = MinGW Win32
-PLATFORM2 = MinGW for Win32
-ARCNAME = pdc$(VER)_ming_w32
+PLATFORM1 = MinGW WinCon
+PLATFORM2 = MinGW for WinCon
+ARCNAME = pdc$(VER)_ming_wcon
 
 include $(PDCURSES_SRCDIR)/makedist.mif

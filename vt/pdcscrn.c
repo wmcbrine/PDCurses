@@ -114,7 +114,10 @@ int PDC_scr_open(int argc, char **argv)
 #endif
     int i, r, g, b;
     char *capabilities = getenv( "PDC_VT");
+    const char *colorterm = getenv( "COLORTERM");
 
+    if( colorterm && !strcmp( colorterm, "truecolor"))
+       PDC_capabilities |= A_RGB_COLOR;
     if( capabilities)      /* these should really come from terminfo! */
        {
        if( strstr( capabilities, "RGB"))

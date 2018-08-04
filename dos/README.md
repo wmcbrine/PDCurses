@@ -11,13 +11,16 @@ Building
 
         Makefile     - DJGPP V2
         Makefile.bcc - Borland C++ 3.0+
-        Makefile.w16 - Open Watcom 1.8+ (16-bit)
-        Makefile.w4g - Open Watcom 1.8+ (32-bit)
+        Makefile.wat - Open Watcom 1.8+ (16-bit or 32-bit)
         Makefile.dmc - Digital Mars
         Makefile.msc - Microsoft C
 
 - For 16-bit compilers, you can change the memory MODEL in the makefile.
   (Large model is the default, and recommended.)
+
+  (For Open Watcom, pass MODEL=f (flat model) to "wmake" in order to use
+  the 32-bit compiler. Selcting a 16-bit MODEL (e.g. MODEL=l) will
+  invoke the 16-bit compiler.)
 
 - Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where

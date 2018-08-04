@@ -1818,6 +1818,7 @@ int     sb_refresh(void);
 #define PDC_KEY_MODIFIER_CONTROL 2
 #define PDC_KEY_MODIFIER_ALT     4
 #define PDC_KEY_MODIFIER_NUMLOCK 8
+#define PDC_KEY_MODIFIER_REPEAT  16
 
 #if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
 # undef bool

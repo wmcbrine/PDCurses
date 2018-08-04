@@ -1,6 +1,6 @@
 # Makefile for PDCurses library - DOS Digital Mars
 #
-# Usage: make -f dmcdos.mak [target]
+# Usage: make -f Makefile.dmc [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -35,7 +35,7 @@ LIBCURSES   = pdcurses.lib
 
 BUILD      = $(CC) $(CFLAGS) $(CPPFLAGS)
 
-DEMOS      = testcurs.exe newdemo.exe newtest.exe xmas.exe  \
+DEMOS      = testcurs.exe ozdemo.exe newtest.exe xmas.exe  \
 tuidemo.exe firework.exe ptest.exe rain.exe worm.exe
 
 all:    $(LIBCURSES) $(DEMOS)
@@ -58,7 +58,7 @@ touch.obj util.obj window.obj debug.obj
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
 
-DEMOOBJS = testcurs.obj newdemo.obj newtest.obj xmas.obj tuidemo.obj  \
+DEMOOBJS = testcurs.obj ozdemo.obj newtest.obj xmas.obj tuidemo.obj  \
 tui.obj firework.obj ptest.obj rain.obj worm.obj
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
@@ -71,7 +71,6 @@ $(DEMOS) : $(LIBCURSES)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
    $(LIBEXE) -c $@ $(LIBOBJS) $(PDCOBJS)
-   -copy $(LIBCURSES) panel.lib
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c
 OSBUILD = $(BUILD) $(osdir)\$*.c
@@ -227,7 +226,7 @@ pdcutil.obj: $(osdir)\pdcutil.c
 firework.exe:   $(demodir)\firework.c
    $(DEMOBUILD)
 
-newdemo.exe:    $(demodir)\newdemo.c
+ozdemo.exe:    $(demodir)\ozdemo.c
    $(DEMOBUILD)
 
 newtest.exe:    $(demodir)\newtest.c

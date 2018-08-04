@@ -6,6 +6,7 @@
 # [all|demos|libpdcurses.a|testcurs]...
 
 O = o
+RM = rm
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
@@ -46,7 +47,6 @@ ifdef CHTYPE_16
 	CFLAGS += -DCHTYPE_16
 endif
 
-
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 ifeq ($(shell uname),Darwin)
@@ -58,17 +58,17 @@ LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework newdemo newtest ptest rain testcurs tuidemo worm xmas \
+DEMOS		= firework ozdemo newtest ptest rain testcurs tuidemo worm xmas \
 sdltest
 
 .PHONY: all libs clean demos
 
-all:	libs demos
+all:	libs
 
 libs:	$(LIBCURSES)
 
 clean:
-	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
+	-$(RM) -rf *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
@@ -95,7 +95,7 @@ $(PDCOBJS) : %.o: $(osdir)/%.c
 firework: $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-newdemo: $(demodir)/newdemo.c
+ozdemo: $(demodir)/ozdemo.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 newtest: $(demodir)/newtest.c

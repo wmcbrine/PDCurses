@@ -35,7 +35,7 @@ LIBCURSES	= pdcurses.lib
 BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
 PDCLIBS		= $(LIBCURSES)
 
-DEMOS		= testcurs.exe newdemo.exe xmas.exe tuidemo.exe \
+DEMOS		= testcurs.exe ozdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
 all:    $(PDCLIBS) $(DEMOS)
@@ -56,7 +56,7 @@ touch.obj util.obj window.obj debug.obj
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
 
-DEMOOBJS = testcurs.obj newdemo.obj xmas.obj tuidemo.obj tui.obj \
+DEMOOBJS = testcurs.obj ozdemo.obj xmas.obj tuidemo.obj tui.obj \
 firework.obj ptest.obj rain.obj worm.obj
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
@@ -224,8 +224,8 @@ pdcutil.obj: $(osdir)\pdcutil.c
 firework.exe:   firework.obj
 	$(LINK) -o $@ firework.obj $(LIBCURSES)
 
-newdemo.exe:    newdemo.obj
-	$(LINK) -o $@ newdemo.obj $(LIBCURSES)
+ozdemo.exe:    ozdemo.obj
+	$(LINK) -o $@ ozdemo.obj $(LIBCURSES)
 
 ptest.exe:      ptest.obj
 	$(LINK) -o $@ ptest.obj $(LIBCURSES)
@@ -248,7 +248,7 @@ xmas.exe:       xmas.obj
 firework.obj: $(demodir)\firework.c
 	$(BUILD) $(demodir)\$*.c
 
-newdemo.obj: $(demodir)\newdemo.c
+ozdemo.obj: $(demodir)\ozdemo.c
 	$(BUILD) $(demodir)\$*.c
 
 ptest.obj: $(demodir)\ptest.c

@@ -1077,9 +1077,10 @@ PDC_argv,  and will be used instead of GetCommandLine.
 #endif /* UNICODE */
 
 
-static void get_app_name( TCHAR *buff, const bool include_args)
+static void get_app_name( TCHAR *buff, const size_t buff_size, const bool include_args)
 {
     int i;
+    size_t buff_space;
 #ifdef GOT_ARGV_ARGC
     int argc = (PDC_argc ? PDC_argc : __argc);
     char **argv = (PDC_argc ? PDC_argv : __argv);
@@ -1089,30 +1090,53 @@ static void get_app_name( TCHAR *buff, const bool include_args)
 #endif
 
 #ifdef PDC_WIDE
+    wchar_t **wargv = __wargv;
 #ifdef GOT_ARGV_ARGC
-    if( __wargv)
+    /* in case we can not access the array directly try to get it otherwise */
+    if( !wargv) {
+        wchar_t *cmd_linew = GetCommandLine( );
+        if (cmd_linew) {
+            wargv = CommandLineToArgvW (cmd_linew, &argc);
+        }
+    }
+    if( wargv)
     {
-        my_wsplitpath( __wargv[0], NULL, NULL, buff, NULL);
-        if( include_args)
-            for( i = 1; i < __argc; i++)
+        my_wsplitpath( wargv[0], NULL, NULL, buff, NULL);
+        if ( include_args)
+        {
+            buff_space = buff_size - my_tcslen( buff) - 1;
+            for ( i = 1; i < argc; i++)
             {
+                size_t arg_len = my_tcslen( wargv[i]) + 1;
+                if ( buff_space < arg_len) {
+                    break;
+                }
+                buff_space -= arg_len;
                 wcscat( buff, L" ");
-                wcscat( buff, __wargv[i]);
+                wcscat( buff, wargv[i]);
             }
+        }
     }
     else
 #endif      /* #ifdef GOT_ARGV_ARGC */
        if( argv)
     {
         char tbuff[MAX_PATH];
-
         my_splitpath( argv[0], NULL, NULL, tbuff, NULL);
-        if( include_args)
-            for( i = 1; i < argc; i++)
+        if ( include_args)
+        {
+            buff_space = buff_size - strlen( tbuff) - 1;
+            for ( i = 1; i < argc; i++)
             {
+                size_t arg_len = strlen( argv[i]) + 1;
+                if ( buff_space < arg_len) {
+                    break;
+                }
+                buff_space -= arg_len;
                 strcat( tbuff, " ");
                 strcat( tbuff, argv[i]);
             }
+        }
         mbstowcs( buff, tbuff, strlen( tbuff) + 1);
     }
     else         /* no __argv or PDC_argv pointer available */
@@ -1135,12 +1159,20 @@ static void get_app_name( TCHAR *buff, const bool include_args)
     {
         my_splitpath( argv[0], NULL, NULL, buff, NULL);
         debug_printf( "Path: %s;  exe: %s\n", argv[0], buff);
-        if( include_args)
-            for( i = 1; i < argc; i++)
+        if ( include_args)
+        {
+            buff_space = buff_size - my_tcslen( buff) - 1;
+            for ( i = 1; i < argc; i++)
             {
+                size_t arg_len = my_tcslen( argv[i]) + 1;
+                if ( buff_space < arg_len) {
+                    break;
+                }
+                buff_space -= arg_len;
                 strcat( buff, " ");
                 strcat( buff, argv[i]);
             }
+        }
     }
     else         /* no __argv pointer available */
     {
@@ -1215,7 +1247,7 @@ INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
                   min_cols, max_cols);
         my_tcscat( buff, PDC_font_name);
 
-        get_app_name( key_name, FALSE);
+        get_app_name( key_name, MAX_PATH, FALSE);
         rval = RegSetValueEx( hNewKey, key_name, 0, REG_SZ,
                        (BYTE *)buff, (DWORD)( my_tcslen( buff) * sizeof( TCHAR)));
         RegCloseKey( hNewKey);
@@ -1444,7 +1476,7 @@ INLINE int get_default_sizes_from_registry( int *n_cols, int *n_rows,
     {
         TCHAR key_name[MAX_PATH];
 
-        get_app_name( key_name, FALSE);
+        get_app_name( key_name, MAX_PATH, FALSE);
         rval = RegQueryValueEx( hKey, key_name,
                         NULL, NULL, (BYTE *)data, &size_out);
         if( rval == ERROR_SUCCESS)
@@ -1698,10 +1730,15 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
     const int repeated = (int)( lParam >> 30) & 1;
     const KPTAB *kptr = kptab + wParam;
     int key = 0;
+    static int repeat_count;
 
     if( !repeated)
         *ptr_modified_key_to_return = 0;
 
+    if( repeated)
+        repeat_count++;
+    else
+        repeat_count = 0;
     if( SP->return_key_modifiers && !repeated)
     {                     /* See notes above this function */
         if( wParam == VK_SHIFT)
@@ -1772,6 +1809,9 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
 
         if( GetKeyState( VK_NUMLOCK) & 1)
             pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+
+        if( repeat_count)
+            pdc_key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
     }
 }
 
@@ -2395,7 +2435,7 @@ INLINE int set_up_window( void)
         wndclass_has_been_registered = TRUE;
     }
 
-    get_app_name( WindowTitle, TRUE);
+    get_app_name( WindowTitle, MAX_PATH, TRUE);
 #ifdef PDC_WIDE
     debug_printf( "WindowTitle = '%ls'\n", WindowTitle);
 #endif

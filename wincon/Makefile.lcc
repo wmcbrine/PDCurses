@@ -1,6 +1,6 @@
-# Makefile for PDCurses library - WIN32 Digital Mars
+# Makefile for PDCurses library - WIN32 LCC-Win32
 #
-# Usage: make -f dmcwin32.mak [target]
+# Usage: make -f lccwin32.mak [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -20,30 +20,30 @@ demodir		= $(PDCURSES_SRCDIR)\demos
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 
-CC		= dmc
+CC		= lcc
 
-CFLAGS		= -c -o+space -Nc
+#CFLAGS		= -c -g3 -A -ansic
+CFLAGS		= -c -O -A -ansic
 
-CPPFLAGS	= -I$(PDCURSES_SRCDIR) -DPDC_WIDE -DPDC_FORCE_UTF8
+CPPFLAGS	= -I$(PDCURSES_SRCDIR) #-DPDC_WIDE -DPDC_FORCE_UTF8
 
-LINK		= dmc
-LIBEXE		= lib
+LINK		= lcclnk
+LIBEXE		= lcclib
 
 LIBCURSES	= pdcurses.lib
 
 BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
+PDCLIBS		= $(LIBCURSES)
 
-DEMOS		= testcurs.exe newdemo.exe newtest.exe xmas.exe tuidemo.exe \
+DEMOS		= testcurs.exe ozdemo.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
-all:    $(LIBCURSES) $(DEMOS)
+all:    $(PDCLIBS) $(DEMOS)
 
 clean:
 	-del *.obj
 	-del *.lib
 	-del *.exe
-	-del *.map
-	-del advapi32.def
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj \
 border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj getch.obj \
@@ -56,7 +56,7 @@ touch.obj util.obj window.obj debug.obj
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
 
-DEMOOBJS = testcurs.obj newdemo.obj newtest.obj xmas.obj tuidemo.obj tui.obj \
+DEMOOBJS = testcurs.obj ozdemo.obj xmas.obj tuidemo.obj tui.obj \
 firework.obj ptest.obj rain.obj worm.obj
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
@@ -68,12 +68,11 @@ $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	$(LIBEXE) -c $@ $(LIBOBJS) $(PDCOBJS)
+	$(LIBEXE) /out:$@ $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.lib
 
 SRCBUILD = $(BUILD) $(srcdir)\$*.c
 OSBUILD = $(BUILD) $(osdir)\$*.c
-DEMOBUILD = $(LINK) $(CPPFLAGS) -o+space $@ $**
 
 addch.obj: $(srcdir)\addch.c
 	$(SRCBUILD)
@@ -222,35 +221,53 @@ pdcsetsc.obj: $(osdir)\pdcsetsc.c
 pdcutil.obj: $(osdir)\pdcutil.c
 	$(OSBUILD)
 
-firework.exe:   $(demodir)\firework.c
-	$(DEMOBUILD)
+firework.exe:   firework.obj
+	$(LINK) -o $@ firework.obj $(LIBCURSES)
 
-newdemo.exe:    $(demodir)\newdemo.c
-	$(DEMOBUILD)
+ozdemo.exe:    ozdemo.obj
+	$(LINK) -o $@ ozdemo.obj $(LIBCURSES)
 
-newtest.exe:    $(demodir)\newtest.c
-	$(DEMOBUILD)
+ptest.exe:      ptest.obj
+	$(LINK) -o $@ ptest.obj $(LIBCURSES)
 
-ptest.exe:      $(demodir)\ptest.c
-	$(DEMOBUILD)
+rain.exe:       rain.obj
+	$(LINK) -o $@ rain.obj $(LIBCURSES)
 
-rain.exe:       $(demodir)\rain.c
-	$(DEMOBUILD)
-
-testcurs.exe:   $(demodir)\testcurs.c
-	$(DEMOBUILD) advapi32.lib
+testcurs.exe:   testcurs.obj
+	$(LINK) -o $@ testcurs.obj $(LIBCURSES)
 
 tuidemo.exe:    tuidemo.obj tui.obj
-	$(DEMOBUILD)
+	$(LINK) -o $@ tuidemo.obj tui.obj $(LIBCURSES)
 
-worm.exe:       $(demodir)\worm.c
-	$(DEMOBUILD)
+worm.exe:       worm.obj
+	$(LINK) -o $@ worm.obj $(LIBCURSES)
 
-xmas.exe:       $(demodir)\xmas.c
-	$(DEMOBUILD)
+xmas.exe:       xmas.obj
+	$(LINK) -o $@ xmas.obj $(LIBCURSES)
+
+firework.obj: $(demodir)\firework.c
+	$(BUILD) $(demodir)\$*.c
+
+ozdemo.obj: $(demodir)\ozdemo.c
+	$(BUILD) $(demodir)\$*.c
+
+ptest.obj: $(demodir)\ptest.c
+	$(BUILD) $(demodir)\$*.c
+
+rain.obj: $(demodir)\rain.c
+	$(BUILD) $(demodir)\$*.c
+
+testcurs.obj: $(demodir)\testcurs.c
+	$(BUILD) $(demodir)\$*.c
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 	$(BUILD) -I$(demodir) $(demodir)\$*.c
 
 tuidemo.obj: $(demodir)\tuidemo.c
 	$(BUILD) -I$(demodir) $(demodir)\$*.c
+
+worm.obj: $(demodir)\worm.c
+	$(BUILD) $(demodir)\$*.c
+
+xmas.obj: $(demodir)\xmas.c
+	$(BUILD) $(demodir)\$*.c

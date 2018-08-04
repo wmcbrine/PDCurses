@@ -167,10 +167,15 @@ static int _process_key_event(void)
 {
     int i, key = 0;
     unsigned long old_modifiers = pdc_key_modifiers;
+    static int repeat_count;
 
     pdc_key_modifiers = 0L;
     SP->key_code = FALSE;
 
+    if( event.key.repeat && event.type == SDL_KEYDOWN)
+        repeat_count++;
+    else
+        repeat_count = 0;
     if (event.type == SDL_KEYUP)
     {
         if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
@@ -222,6 +227,9 @@ static int _process_key_event(void)
 
         if (event.key.keysym.mod & KMOD_ALT)
             pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+
+        if( repeat_count)
+            pdc_key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
     }
 
     for (i = 0; key_table[i].keycode; i++)

@@ -131,7 +131,9 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
 
 #ifdef PDCURSES
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_resize_limits( 20, 50, 70, 200);
+#endif
 #endif
 
     if (initTest(&win, argc, argv))
@@ -154,6 +156,7 @@ int main(int argc, char *argv[])
                 case 'm': case 'M':
                     PDC_return_key_modifiers( TRUE);
                     break;
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
                 case 'r':     /* allow user-resizable windows */
                     {
                         int min_lines, max_lines, min_cols, max_cols;
@@ -165,6 +168,7 @@ int main(int argc, char *argv[])
                                                    min_cols, max_cols);
                     }
                     break;
+#endif
 #endif
                 case 'z':
                     report_mouse_movement = TRUE;
@@ -184,7 +188,9 @@ int main(int argc, char *argv[])
         wbkgd(win, A_REVERSE);
 
 #ifdef PDCURSES
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
+#endif
 #endif
 
     erase();
@@ -447,7 +453,7 @@ void inputTest(WINDOW *win)
     wclear (win);
     mvwaddstr(win, 1, 1,
         "Press keys (or mouse buttons) to show their names");
-    mvwaddstr(win, 2, 1, "Press spacebar to finish");
+    mvwaddstr(win, 2, 1, "Press spacebar to finish, Ctrl-A to return to main menu");
     wrefresh(win);
 
     keypad(win, TRUE);
@@ -563,8 +569,13 @@ void inputTest(WINDOW *win)
             else if (BUTTON_CHANGED(5))
                 button = 5;
             if( button)
+#ifdef PDC_N_EXTENDED_MOUSE_BUTTONS
                 status = (button > 3 ? Mouse_status.xbutton[(button) - 4] :
                                        Mouse_status.button[(button) - 1]);
+#else
+                status = (button > 3 ? 0 :
+                                       Mouse_status.button[(button) - 1]);
+#endif
 
             wmove(win, line_to_use, 5);
             wclrtoeol(win);
@@ -576,10 +587,14 @@ void inputTest(WINDOW *win)
                 waddstr(win, "wheel up: ");
             else if (MOUSE_WHEEL_DOWN)
                 waddstr(win, "wheel dn: ");
+#ifdef MOUSE_WHEEL_LEFT
             else if (MOUSE_WHEEL_LEFT)
                 waddstr(win, "wheel lt: ");
+#endif
+#ifdef MOUSE_WHEEL_RIGHT
             else if (MOUSE_WHEEL_RIGHT)
                 waddstr(win, "wheel rt: ");
+#endif
             else if ((status & BUTTON_ACTION_MASK) == BUTTON_PRESSED)
                 waddstr(win, "pressed: ");
             else if ((status & BUTTON_ACTION_MASK) == BUTTON_CLICKED)
@@ -618,11 +633,16 @@ void inputTest(WINDOW *win)
 
             if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_NUMLOCK)
                 waddstr(win, " NUMLOCK");
+
+#ifdef PDC_KEY_MODIFIER_REPEAT
+            if (PDC_get_key_modifiers() & PDC_KEY_MODIFIER_REPEAT)
+                waddstr(win, " REPEAT");
+#endif
 #endif            /* end of mouse display */
         }
         wrefresh(win);
 
-        if (c == ' ')
+        if (c == ' ' || c == 1)
             break;
         line_to_use++;
         if( line_to_use == 17)
@@ -638,8 +658,12 @@ void inputTest(WINDOW *win)
 /*  PDC_return_key_modifiers(FALSE);   */
 #endif
     wclear(win);
+    if( c == 1)
+       return;
 #ifdef PDCURSES
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 0 );  /* un-abortable */
+#endif
 #endif
     mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
     mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");
@@ -657,7 +681,9 @@ void inputTest(WINDOW *win)
     }
 
 #ifdef PDCURSES
+#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
+#endif
 #endif
 
     delwin(subWin);
@@ -1210,6 +1236,13 @@ void acsTest(WINDOW *win)
 
     static const wchar_t fullwidth[] = { 0xff26, 0xff55, 0xff4c, 0xff4c,
         0xff57, 0xff49, 0xff44, 0xff54, 0xff48, 0 };  /* "Fullwidth" */
+
+    static const wchar_t combining_marks[] = { L'C', L'o', 0x35c, L'm',
+                   L'b', 0x30a, L'i', L'n', L'i', 0x304, L'n', 0x30b, 0x329,
+                   L'g', 0x310,
+                   L' ', L'C', 0x338, L'h', 0x306,  L'a', 0x361, L'r', L's',
+                   0x30e, 0x348, 0 };
+
 #endif
 
     int i, tmarg = 1, ncols = (COLS - 4) / 19;
@@ -1268,7 +1301,7 @@ void acsTest(WINDOW *win)
             xloc += col_size;
         }
 #endif
-    /* Spanish, Russian, Greek, Georgian, fullwidth */
+    /* Spanish, Russian, Greek, Georgian, fullwidth, combining */
 
         tmarg += n_rows * 2;
         mvaddwstr(tmarg, COLS / 8 - 5, L"Espa\xf1ol");
@@ -1277,6 +1310,7 @@ void acsTest(WINDOW *win)
         mvaddwstr(tmarg, 7 * (COLS / 8) - 5, georgian);
         mvaddwstr(tmarg + 1, COLS / 8 - 5, fullwidth);
 
+        mvaddwstr(tmarg + 1, 3 * (COLS / 8) - 5, combining_marks);
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
         mvaddch( tmarg + 1, 7 * (COLS / 8) - 5, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
@@ -1292,8 +1326,12 @@ void acsTest(WINDOW *win)
 
 #if CHTYPE_LONG >= 2 || (CHTYPE_LONG == 1 && !defined( PDC_WIDE))
    #define GOT_DIM
+#ifdef A_OVERLINE
    #define GOT_OVERLINE
+#endif
+#ifdef A_STIKEOUT
    #define GOT_STRIKEOUT
+#endif
 #endif
 
 void colorTest(WINDOW *win)
@@ -1425,22 +1463,42 @@ void colorTest(WINDOW *win)
                                  orgcolors[i].green,
                                  orgcolors[i].blue);
     }
-/* BJG additions: */
-    if( LINES >= 18) do  /* show off all 256 colors */
-    {
-       tmarg = LINES / 2 - 8;
-       erase( );
-       for( i = 0; i < COLOR_PAIRS; i++)
-           {
-           char tbuff[4];
-           const int col = COLS / 2 - 24;
 
-           if( i >= 16)
-              init_pair((short)i, (short)i, COLOR_BLACK);
-           attrset( COLOR_PAIR( i) | A_REVERSE);
-           sprintf( tbuff, "%02x ", i);
-           mvaddstr( tmarg + i / 16, col + (i % 16) * 3, tbuff);
-           }
+    if (COLORS >= 256) do
+        {
+        int x, y, z, lmarg = (COLS - 77) / 2;
+
+        erase();
+
+        attrset(A_BOLD);
+        mvaddstr(tmarg, (COLS - 15) / 2, "Extended Colors");
+        attrset(A_NORMAL);
+
+        mvaddstr(tmarg + 3, lmarg, "6x6x6 Color Cube (16-231):");
+
+        for (i = 16; i < 256; i++)
+            init_pair(i, COLOR_BLACK, i);
+
+        for (i = 16, z = 0; z < 6; z++)
+            for (y = 0; y < 6; y++)
+                for (x = 0; x < 6; x++)
+                {
+                    chtype ch = ' ' | COLOR_PAIR(i++);
+
+                    mvaddch(tmarg + 5 + y, z * 13 + x * 2 + lmarg, ch);
+                    addch(ch);
+                }
+
+        mvaddstr(tmarg + 13, lmarg, "Greyscale (232-255):");
+
+        for (x = 0; x < 24; x++)
+        {
+            chtype ch = ' ' | COLOR_PAIR(232 + x);
+
+            mvaddch(tmarg + 15, x * 2 + lmarg, ch);
+            addch(ch);
+        }
+
 #ifdef CHTYPE_LONG
        attrset( A_LEFTLINE);
        mvaddstr( tmarg + 17, col1, "A_LEFTLINE");
@@ -1452,8 +1510,10 @@ void colorTest(WINDOW *win)
 #ifdef GOT_OVERLINE
        attrset( A_OVERLINE);
        mvaddstr( tmarg + 17, col2, "A_OVERLINE");
+#ifdef GOT_STRIKEOUT
        attrset( A_STRIKEOUT);
        mvaddstr( tmarg + 18, col2, "A_STRIKEOUT");
+#endif
        attrset( A_OVERLINE | A_UNDERLINE);
        mvaddstr( tmarg + 19, col2, "Over/underlined");
 #endif

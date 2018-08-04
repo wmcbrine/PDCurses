@@ -36,6 +36,7 @@ static int save_press = 0;
 
 #define KEV save_ip.Event.KeyEvent
 #define MEV save_ip.Event.MouseEvent
+#define REV save_ip.Event.WindowBufferSizeEvent
 
 /************************************************************************
  *    Table for key code translation of function keys in keypad mode    *
@@ -364,9 +365,12 @@ bool PDC_check_key(void)
    description.
 */
 
+static int repeat_count = 0;
+
 static int _get_key_count(void)
 {
     int num_keys = 0, vk;
+    static int prev_vk = 0;
 
     PDC_LOG(("_get_key_count() - called\n"));
 
@@ -411,6 +415,11 @@ static int _get_key_count(void)
             if (KEV.uChar.UnicodeChar || !(MapVirtualKey(vk, 2) & 0x80000000))
                 num_keys = KEV.wRepeatCount;
         }
+        if( vk == prev_vk)
+            repeat_count++;
+        else
+            repeat_count = 0;
+        prev_vk = vk;
     }
     else
     {
@@ -426,6 +435,7 @@ static int _get_key_count(void)
             save_press = 0;
             num_keys = 1;
         }
+        repeat_count = prev_vk = 0;
     }
 
     PDC_LOG(("_get_key_count() - returning: num_keys %d\n", num_keys));
@@ -466,6 +476,9 @@ static int _process_key_event(void)
 
         if (state & NUMLOCK_ON)
             pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+
+        if( repeat_count)
+            pdc_key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
     }
 
     /* Handle modifier keys hit by themselves */
@@ -689,6 +702,8 @@ static int _process_mouse_event(void)
     return KEY_MOUSE;
 }
 
+int pdc_resizeX, pdc_resizeY;
+
 /* return the next available key or mouse event */
 
 int PDC_get_key(void)
@@ -702,10 +717,13 @@ int PDC_get_key(void)
         ReadConsoleInput(pdc_con_in, &save_ip, 1, &count);
         event_count--;
 
-        if (save_ip.EventType == MOUSE_EVENT)
+        if (save_ip.EventType == MOUSE_EVENT ||
+            save_ip.EventType == WINDOW_BUFFER_SIZE_EVENT)
             key_count = 1;
         else if (save_ip.EventType == KEY_EVENT)
             key_count = _get_key_count();
+        else if (save_ip.EventType == WINDOW_BUFFER_SIZE_EVENT)
+            key_count = 1;
     }
 
     if (key_count)
@@ -719,6 +737,16 @@ int PDC_get_key(void)
 
         case MOUSE_EVENT:
             return _process_mouse_event();
+
+        case WINDOW_BUFFER_SIZE_EVENT:
+            if (REV.dwSize.Y != LINES || REV.dwSize.X != COLS)
+            {
+                if (!SP->resized)
+                {
+                    SP->resized = TRUE;
+                    return KEY_RESIZE;
+                }
+            }
         }
     }
 
@@ -743,7 +771,7 @@ int PDC_mouse_set(void)
        had on startup, and clear all other flags */
 
     SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
-                   (ENABLE_MOUSE_INPUT|0x0080) : (pdc_quick_edit|0x0080));
+                   (ENABLE_MOUSE_INPUT|0x0088) : (pdc_quick_edit|0x0088));
 
     memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 

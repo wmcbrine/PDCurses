@@ -22,7 +22,7 @@ touch.obj util.obj window.obj debug.obj
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj &
 pdcsetsc.obj pdcutil.obj
 
-DEMOS = testcurs.exe newdemo.exe xmas.exe tuidemo.exe firework.exe &
+DEMOS = testcurs.exe ozdemo.exe xmas.exe tuidemo.exe firework.exe &
 newtest.exe ptest.exe rain.exe worm.exe
 
 LIBCURSES = pdcurses.lib
@@ -54,7 +54,7 @@ demos:	$(DEMOS)
 	$(LINK) $(LDFLAGS) n $@ f $*.obj l $(LIBCURSES)
 
 testcurs.exe:	testcurs.obj $(LIBCURSES)
-newdemo.exe:	newdemo.obj $(LIBCURSES)
+ozdemo.exe:	ozdemo.obj $(LIBCURSES)
 newtest.exe:	newtest.obj $(LIBCURSES)
 xmas.exe:	xmas.obj $(LIBCURSES)
 firework.exe:	firework.obj $(LIBCURSES)

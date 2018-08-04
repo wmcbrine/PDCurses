@@ -1,6 +1,6 @@
 # NMAKE Makefile for PDCurses library - Microsoft C for DOS
 #
-# Usage: nmake -f [path\]mscdos.mak [DEBUG=] [target]
+# Usage: nmake -f [path\]Makefile.msc [DEBUG=] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -26,7 +26,7 @@ CC		= cl
 
 !ifdef DEBUG
 CFLAGS		= /Od /Zi /DPDCDEBUG
-LDFLAGS		= /CO /NOE /SE:160 
+LDFLAGS		= /CO /NOE /SE:160
 !else
 CFLAGS		= /Ox
 LDFLAGS		= /NOE /SE:160
@@ -63,7 +63,6 @@ terminfo.obj: $(TERM_HEADER)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @$(osdir)\mscdos.lrf
-	-copy $(LIBCURSES) panel.lib
 
 {$(srcdir)\}.c{}.obj:
 	$(BUILD) $<
@@ -77,7 +76,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 firework.exe: firework.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
-newdemo.exe: newdemo.obj
+ozdemo.exe: ozdemo.obj
 	$(LINK) $(LDFLAGS) $*.obj,$*,,$(LIBCURSES);
 
 ptest.exe: ptest.obj

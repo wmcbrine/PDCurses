@@ -148,7 +148,7 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
-firework.exe newdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
+firework.exe ozdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
 version.exe worm.exe xmas.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES) $(EXELIBS)
 

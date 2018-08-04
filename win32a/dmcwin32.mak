@@ -34,7 +34,7 @@ LIBCURSES   = pdcurses.lib
 
 BUILD      = $(CC) $(CFLAGS) $(CPPFLAGS)
 
-DEMOS      = testcurs.exe newdemo.exe newtest.exe xmas.exe tuidemo.exe \
+DEMOS      = testcurs.exe ozdemo.exe newtest.exe xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
 all:    $(LIBCURSES) $(DEMOS)
@@ -57,7 +57,7 @@ touch.obj util.obj window.obj debug.obj
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
 
-DEMOOBJS = testcurs.obj newdemo.obj newtest.obj xmas.obj tuidemo.obj tui.obj \
+DEMOOBJS = testcurs.obj ozdemo.obj newtest.obj xmas.obj tuidemo.obj tui.obj \
 firework.obj ptest.obj rain.obj worm.obj
 
 LIBS = advapi32.lib gdi32.lib user32.lib shell32.lib comdlg32.lib
@@ -228,7 +228,7 @@ pdcutil.obj: $(osdir)\pdcutil.c
 firework.exe:   $(demodir)\firework.c
    $(DEMOBUILD) $(LIBS)
 
-newdemo.exe:    $(demodir)\newdemo.c
+ozdemo.exe:    $(demodir)\ozdemo.c
    $(DEMOBUILD) $(LIBS)
 
 newtest.exe:    $(demodir)\newtest.c

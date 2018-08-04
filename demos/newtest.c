@@ -285,6 +285,11 @@ int main( int argc, char **argv)
             mvaddstr( 15, 41, "Dimmed text");
             attroff( A_DIM);
 #endif
+#ifdef A_STANDOUT
+            attron( A_STANDOUT);
+            mvaddstr( 16, 41, "Standout text");
+            attroff( A_STANDOUT);
+#endif
 #ifdef HAVE_WIDE
             mvaddwstr( 3, COL1, L"'Normal' text,  but wide");
 #endif
@@ -418,6 +423,9 @@ int main( int argc, char **argv)
                 if( line0 < ymax && col < xmax)
                    mvaddnwstr( line0, 5 + 25 * (i % 3), texts[i], xmax - col);
             }
+#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
+             mvaddch( line - 1, 58, (chtype)0x1d11e);
+#endif            /* U+1D11E = musical symbol G clef */
             line += 2;
 #endif
         mvaddstr( line, 1, curses_version( ));

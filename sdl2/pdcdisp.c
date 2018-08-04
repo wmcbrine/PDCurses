@@ -15,6 +15,15 @@
 # include "acs_defs.h"
 #endif
 
+/* see 'addch.c' for an explanation of how combining chars are handled. */
+
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2 && defined( PDC_WIDE)
+   #define USING_COMBINING_CHARACTER_SCHEME
+   #define MAX_UNICODE                  0x10ffff
+   #define DUMMY_CHAR_NEXT_TO_FULLWIDTH (MAX_UNICODE + 1)
+   int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
+#endif
+
 Uint32 pdc_lastupdate = 0;
 int PDC_really_blinking = FALSE;
 static bool PDC_blink_state = FALSE;
@@ -24,7 +33,6 @@ static bool PDC_blink_state = FALSE;
                            arbitrarily */
 
 static SDL_Rect uprect[MAXRECT];       /* table of rects to update */
-static chtype oldch = (chtype)(-1);    /* current attribute */
 static int rectcount = 0;              /* index into uprect */
 static SDL_Color foreground_rgb, background_rgb;  /* current foreground, background */
 
@@ -166,6 +174,7 @@ void PDC_get_rgb_values( const chtype srcp,
 
 static void _set_attr(chtype ch)
 {
+    static chtype oldch = (chtype)(-1);    /* current attribute */
     ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE | A_DIM | A_RGB_COLOR);
 
     if (oldch != ch)
@@ -197,6 +206,22 @@ static void _set_attr(chtype ch)
         oldch = ch;
     }
 }
+
+#ifdef PDC_WIDE
+static void set_font_style( const chtype ch)
+{
+    static int old_font_style = -1;
+    int font_style = ((ch & A_BOLD) ? TTF_STYLE_BOLD : 0);
+
+    if( ch & A_ITALIC)
+        font_style |= TTF_STYLE_ITALIC;
+    if( font_style != old_font_style)
+    {
+        TTF_SetFontStyle( pdc_ttffont, font_style);
+        old_font_style = font_style;
+    }
+}
+#endif
 
 /* draw a cursor at (y, x) */
 
@@ -248,6 +273,7 @@ void PDC_gotoyx(int row, int col)
 
 #ifdef PDC_WIDE
     chstr[0] = ch & A_CHARTEXT;
+    set_font_style( ch);
 
     pdc_font = TTF_RenderUNICODE_Solid( pdc_ttffont, chstr, foreground_rgb);
     if (pdc_font)
@@ -389,6 +415,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     for (j = 0; j < len; j++)
     {
         chtype ch = srcp[j];
+#ifdef PDC_WIDE
+        chtype ch1;
+#endif
 
         _set_attr(ch);
 
@@ -398,7 +427,37 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 #endif
 
 #ifdef PDC_WIDE
-        chstr[0] = ch & A_CHARTEXT;
+        ch1 = ch & A_CHARTEXT;
+#ifdef USING_COMBINING_CHARACTER_SCHEME
+         /* We can't actually display combining characters in cmd.exe.  So
+         show the 'base' character and throw away the modifying marks. */
+        if( ch1 == DUMMY_CHAR_NEXT_TO_FULLWIDTH)
+            ch1 = ' ';
+        else if( ch1 > MAX_UNICODE)
+        {
+            cchar_t added;
+            int n_combined = 0;
+
+            while( (ch1 = PDC_expand_combined_characters( ch1,
+                               &added)) > MAX_UNICODE)
+            {
+                n_combined++;
+            }
+        }
+#ifdef USE_FOR_SUPPLEMENTAL_MULTILINGUAL_PLANE
+            /* At present,  SDL does not (I think) support SMP Unicode */
+            /* (Unicode past 64K).  If it ever does,  we'll need the   */
+            /* following breakup of SMP into Unicode surrogates (q.v.) */
+        if( ch1 > 0xffff)
+        {
+            ch1 -= 0x10000;
+            chstr[0] = (Uint16)( 0xdc00 | (ch1 & 0x3ff));  /* lower 10 bits */
+            ch1 = (0xd800 | (ch1 >> 10));                  /* upper 10 bits */
+        }
+#endif
+#endif
+        chstr[0] = (Uint16)ch1;
+        set_font_style( ch);
         pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
                                            foreground_rgb);
 

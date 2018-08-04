@@ -62,7 +62,10 @@ osdir	   = $(PDCURSES_SRCDIR)/win32a
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
-CC	   = $(PREFIX)gcc
+CC	= $(PREFIX)gcc
+
+AR	= $(PREFIX)ar
+STRIP	= $(PREFIX)strip
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -90,23 +93,23 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
-LINK	   = $(PREFIX)gcc
+LINK	   = $(CC)
 
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = $(PREFIX)gcc $(DEFFILE)
+	LIBEXE = $(CC)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	LIBDEPS = $(LIBOBJS) $(PDCOBJS) $(DEFFILE)
+	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	LIBSADDED = -lgdi32 -lcomdlg32
 	EXELIBS =
-	CLEAN = $(LIBCURSES) *.a $(DEFFILE)
+	CLEAN = $(LIBCURSES) *.a
 else
-	LIBEXE = $(PREFIX)ar
+	LIBEXE = $(AR)
 ifeq ($(PREFIX),)
 	LIBFLAGS = rcv
 else
-	LIBFLAGS	= rv
+	LIBFLAGS = rv
 endif
 	LIBCURSES = pdcurses.a
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
@@ -129,7 +132,7 @@ clean:
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
-	strip *.exe
+	$(STRIP) *.exe
 endif
 
 $(LIBCURSES) : $(LIBDEPS)
@@ -148,12 +151,12 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
-firework.exe newdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
+firework.exe ozdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
 version.exe worm.exe xmas.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -mwindows -o$@ $< $(LIBCURSES) $(EXELIBS)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES) $(EXELIBS)
+	$(LINK) $(LDFLAGS) -mwindows -o$@ tuidemo.o tui.o $(LIBCURSES) $(EXELIBS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<

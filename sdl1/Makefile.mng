@@ -1,6 +1,12 @@
-# Makefile for PDCurses library for SDL
+# Makefile for PDCurses library for SDL for MinGW
+#
+# Usage: [g]make -f Makefile.mng [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
+#
+# where target can be any of:
+# [all|demos|libpdcurses.a|testcurs]...
 
 O = o
+RM = rm
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
@@ -27,6 +33,14 @@ endif
 
 ifeq ($(UTF8),Y)
         CFLAGS  += -DPDC_FORCE_UTF8
+endif
+
+ifdef CHTYPE_32
+	CFLAGS += -DCHTYPE_32
+endif
+
+ifdef CHTYPE_16
+	CFLAGS += -DCHTYPE_16
 endif
 
 CC		= gcc
@@ -56,10 +70,12 @@ all:	libs demos
 libs:	$(LIBCURSES)
 
 clean:
-	-del *.o $(CLEAN) *.exe
+	-$(RM) *.o $(CLEAN) *.exe
 
 demos:	$(DEMOS)
+ifneq ($(DEBUG),Y)
 	strip *.exe
+endif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $? $(POST)
@@ -77,9 +93,12 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) -c $<
 
-firework.exe newdemo.exe newtest.exe rain.exe testcurs.exe worm.exe xmas.exe \
+firework.exe ozdemo.exe newtest.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: $(demodir)/%.c
 	$(BUILD) -o $@ $< $(LDFLAGS)
+
+sdltest.exe: $(osdir)/sdltest.c
+	$(BUILD) -o $@ $< -mwindows $(LIBCURSES) -lmingw32 -lSDLmain -lSDL
 
 tuidemo.exe: tuidemo.o tui.o
 	$(CC) -o $@ tuidemo.o tui.o $(LDFLAGS)
@@ -89,6 +108,3 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h
 
 tuidemo.o: $(demodir)/tuidemo.c $(demodir)/tui.h
 	$(BUILD) -c $<
-
-sdltest.exe: $(osdir)/sdltest.c
-	$(BUILD) -o $@ $< -mwindows $(LIBCURSES) -lmingw32 -lSDLmain -lSDL

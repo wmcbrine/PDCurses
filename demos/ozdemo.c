@@ -1,5 +1,5 @@
 /*
- *  newdemo.c   -   A demo program using PDCurses. The program
+ *  ozdemo.c   -   A demo program using PDCurses. The program
  *          illustrates the use of colors for text output.
  *
  *  Hacks by jbuhler@cs.washington.edu on 12/29/96
@@ -213,6 +213,12 @@ int main(int argc, char **argv)
     WINDOW *win;
     chtype save[80], ch;
     int width, height, w, x, y, i, j, seed;
+
+#ifdef PDCURSES
+#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
+    PDC_set_resize_limits( 20, 50, 70, 200);
+#endif
+#endif
 
 #ifdef XCURSES
     Xinitscr(argc, argv);

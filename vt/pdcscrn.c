@@ -229,9 +229,68 @@ void PDC_set_resize_limits( const int new_min_lines,
    return;
 }
 
+/* PDC_init_color(), PDC_init_pair(),  and PDC_set_blink() all share a common
+issue : after adjusting the display characteristic in question,  all relevant
+text should be redrawn.  Call PDC_init_pair( 3, ...),  and all text using
+color pair 3 should be redrawn;  call PDC_init_color( 5, ...) and all text
+using color index 5 for either foreground or background should be redrawn;
+turn "real blinking" on/off,  and all blinking text should be redrawn.
+(On platforms where blinking text is controlled by a timer and redrawn every
+half second or so,  such as X11,  SDLx,  and Win32a,  this function can be
+used for that purpose as well.)
+
+   PDC_show_changes( ) will look for relevant chains of text and redraw them.
+For speed/simplicity,  the code looks for the first and last character in
+each line that would be affected, then draws those in between.  Often --
+perhaps usually -- this will be zero characters, i.e., no text on that
+particular line happens to have an attribute requiring redrawing. */
+
 static short get_pair( const chtype ch)
+
 {
-   return( (short)( (ch & A_COLOR) >> PDC_COLOR_SHIFT));
+   return( (short)( (ch & A_COLOR) >> PDC_COLOR_SHIFT) & (COLOR_PAIRS - 1));
+}
+
+static int color_used_for_this_char( const chtype c, const int idx)
+{
+    const int color = get_pair( c);
+    const int rval = (color_pair_indices[color] == idx ||
+                     color_pair_indices[color + PDC_COLOR_PAIRS] == idx);
+
+    return( rval);
+}
+
+void PDC_show_changes( const short pair, const short idx, const chtype attr)
+{
+    if( curscr && curscr->_y)
+    {
+        int i;
+
+        for( i = 0; i < SP->lines - 1; i++)
+            if( curscr->_y[i])
+            {
+                int j = 0, n_chars;
+                chtype *line = curscr->_y[i];
+
+         /* skip over starting text that isn't changed : */
+                while( j < SP->cols && get_pair( *line) != pair
+                       && !color_used_for_this_char( *line, idx)
+                       && !(attr & *line))
+                {
+                    j++;
+                    line++;
+                }
+                n_chars = SP->cols - j;
+        /* then skip over text at the end that's not the right color: */
+                while( n_chars && get_pair( line[n_chars - 1]) != pair
+                       && !color_used_for_this_char( line[n_chars - 1], idx)
+                       && !(attr & line[n_chars - 1]))
+                    n_chars--;
+                assert( n_chars >= 0);
+                if( n_chars)
+                    PDC_transform_line( i, j, n_chars, line);
+            }
+    }
 }
 
 void PDC_init_pair( short pair, short fg, short bg)
@@ -241,31 +300,7 @@ void PDC_init_pair( short pair, short fg, short bg)
     {
         color_pair_indices[pair] = fg;
         color_pair_indices[pair + PDC_COLOR_PAIRS] = bg;
-        /* Possibly go through curscr and redraw everything with that color! */
-        if( curscr && curscr->_y)
-        {
-            int i;
-
-            for( i = 0; i < SP->lines; i++)
-                if( curscr->_y[i])
-                {
-                    int j = 0, n_chars;
-                    chtype *line = curscr->_y[i];
-
-             /* skip over starting text that isn't of the desired color: */
-                    while( j < SP->cols && get_pair( *line) != pair)
-                    {
-                        j++;
-                        line++;
-                    }
-                    n_chars = SP->cols - j;
-            /* then skip over text at the end that's not the right color: */
-                    while( n_chars && get_pair( line[n_chars - 1]) != pair)
-                        n_chars--;
-                    if( n_chars)
-                        PDC_transform_line( i, j, n_chars, line);
-                }
-        }
+        PDC_show_changes( pair, -1, 0);
     }
 }
 
@@ -292,26 +327,6 @@ int PDC_color_content( short color, short *red, short *green, short *blue)
     return OK;
 }
 
-/* We have an odd problem when changing colors with PDC_init_color().  On
-palette-based systems,  you just change the palette and the hardware takes
-care of the rest.  Here,  though,  we actually need to redraw any text that's
-drawn in the specified color.  So we gotta look at each character and see if
-either the foreground or background matches the index that we're changing.
-Then, that text gets redrawn.  For speed/simplicity,  the code looks for the
-first and last character in each line that would be affected, then draws those
-in between (frequently,  this will be zero characters, i.e., no text on that
-particular line happens to use the color index in question.)  See similar code
-above for PDC_init_pair(),  to handle basically the same problem. */
-
-static int color_used_for_this_char( const chtype c, const int idx)
-{
-    const int color = get_pair( c);
-    const int rval = (color_pair_indices[color] == idx ||
-                     color_pair_indices[color + PDC_COLOR_PAIRS] == idx);
-
-    return( rval);
-}
-
 int PDC_init_color( short color, short red, short green, short blue)
 {
     const COLORREF new_rgb = RGB(DIVROUND(red * 255, 1000),
@@ -321,33 +336,7 @@ int PDC_init_color( short color, short red, short green, short blue)
     if( pdc_rgbs[color] != new_rgb)
     {
         pdc_rgbs[color] = new_rgb;
-        /* Possibly go through curscr and redraw everything with that color! */
-        if( curscr && curscr->_y)
-        {
-            int i;
-
-            for( i = 0; i < SP->lines; i++)
-                if( curscr->_y[i])
-                {
-                    int j = 0, n_chars;
-                    chtype *line = curscr->_y[i];
-
-             /* skip over starting text that isn't of the desired color: */
-                    while( j < SP->cols
-                                 && !color_used_for_this_char( *line, color))
-                    {
-                        j++;
-                        line++;
-                    }
-                    n_chars = SP->cols - j;
-            /* then skip over text at the end that's not the right color: */
-                    while( n_chars &&
-                         !color_used_for_this_char( line[n_chars - 1], color))
-                        n_chars--;
-                    if( n_chars)
-                        PDC_transform_line( i, j, n_chars, line);
-                }
-        }
+        PDC_show_changes( -1, color, 0);
     }
     return OK;
 }

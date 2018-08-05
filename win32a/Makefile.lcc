@@ -1,6 +1,6 @@
 # Makefile for PDCurses library - WIN32 LCC-Win32
 #
-# Usage: make -f lccwin32.mak [target]
+# Usage: make -f Makefile.lcc [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

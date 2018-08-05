@@ -1,6 +1,6 @@
 # GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
-# Usage: make -f [path\]mingwin32.mak [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: make -f [path\]Makefile.mng [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]

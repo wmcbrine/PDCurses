@@ -201,7 +201,11 @@ int main(int argc, char *argv[])
         noecho();
         keypad(stdscr, TRUE);
         raw();
+#ifdef PDCURSES
+        mouse_set( ALL_MOUSE_EVENTS);
+#else
         mousemask( ALL_MOUSE_EVENTS, NULL);
+#endif
 
         key = getch();
 
@@ -463,11 +467,13 @@ void inputTest(WINDOW *win)
     wtimeout(win, 200);
 
 
-    mousemask( ALL_MOUSE_EVENTS |
-            (report_mouse_movement ? REPORT_MOUSE_POSITION : 0), NULL);
 #ifdef PDCURSES
+    mouse_set( ALL_MOUSE_EVENTS |
+            (report_mouse_movement ? REPORT_MOUSE_POSITION : 0));
     PDC_save_key_modifiers(TRUE);
 #else
+    mousemask( ALL_MOUSE_EVENTS |
+            (report_mouse_movement ? REPORT_MOUSE_POSITION : 0), NULL);
     if( report_mouse_movement)
        printf("\033[?1003h\n");   /* used in ncurses with some X-based */
 #endif                         /* terms to enable mouse move events */

@@ -237,17 +237,29 @@ int PDC_get_key( void)
                   pdc_mouse_status.button[i] |= flags;
                if( !release)     /* wait for a possible release */
                   {
-                  PDC_napms( SP->mouse_wait);
+                  int n_events = 0;
 
-                  if( check_key( c))      /* assume it's a release */
+                  while( n_events < 5)
                      {
-                     count = 0;
-                     while( count < 5 && check_key( &c[count]))
-                        count++;
-                     pdc_mouse_status.button[idx] = BUTTON_CLICKED | flags;
+                     PDC_napms( SP->mouse_wait);
+                     if( check_key( c))
+                        {
+                        count = 0;
+                        while( count < 5 && check_key( &c[count]))
+                           count++;
+                        n_events++;
+                        }
+                     else
+                        break;
                      }
-                  else
+                  if( !n_events)   /* just a click,  no release(s) */
                      held ^= (1 << idx);
+                  else if( n_events == 1)
+                      pdc_mouse_status.button[idx] = BUTTON_CLICKED | flags;
+                  else if( n_events <= 3)
+                      pdc_mouse_status.button[idx] = BUTTON_DOUBLE_CLICKED | flags;
+                  else if( n_events <= 5)
+                      pdc_mouse_status.button[idx] = BUTTON_TRIPLE_CLICKED | flags;
                   }
                }
             }

@@ -141,7 +141,7 @@ void PDC_scr_close(void)
 /* rely on the memory getting freed when the program terminates.  */
 /* It seems conceivable to me that we could get into some trouble */
 /* here,  if SP is freed and NULLed,  but then accessed again,    */
-/* possibly within the Win32a window thread.                      */
+/* possibly within the WinGUI window thread.                      */
 
 void PDC_scr_free(void)
 {
@@ -1018,7 +1018,7 @@ static void my_splitpath( const char *path, char *drive,
 specified path to the executable and arguments;  and strips out just the
 name of the app,  with the arguments optionally appended.  Hence,
 
-C:\PDCURSES\WIN32A\TESTCURS.EXE arg1 arg2
+C:\PDCURSES\WINGUI\TESTCURS.EXE arg1 arg2
 
     would be reduced to 'Testcurs' (if include_args == 0) or
 'Testcurs arg1 arg2' (if include_args == 1).  The former case is used to
@@ -1034,7 +1034,7 @@ then used in an app compiled with MS Visual C, __argv isn't set either,
 and we drop back to looking at GetCommandLine( ).  Which leads to a real
 oddity:  GetCommandLine( ) may return something such as,  say,
 
-"C:\PDCurses\Win32a\testcurs.exe" -lRussian
+"C:\PDCurses\WinGUI\testcurs.exe" -lRussian
 
    ...which,  after being run through _splitpath or _wsplitpath,  becomes
 
@@ -1393,7 +1393,7 @@ Resize limits
 
 ### Description
 
-   For platforms supporting resizable windows (SDLx, Win32a, X11).  Some
+   For platforms supporting resizable windows (SDLx, WinGUI, X11).  Some
    programs may be unprepared for a resize event;  for these,  calling
    this function with the max and min limits equal ensures that no
    user resizing can be done.  Other programs may require at least a
@@ -1551,7 +1551,7 @@ though I've not tried it yet;  I'm still on Wine 1.6,  the stable branch.)
 You can therefore end up in a loop where the code keeps trying to resize a
 window that isn't actually resizing.  So,  _when running in Wine only_,
 we want that code not to be executed... which means having to figure out:
-are we running under Wine?  Which means that when PDCurses/Win32a is
+are we running under Wine?  Which means that when PDCurses/WinGUI is
 initialized,  we set the following 'wine_version' pointer.  One could
 actually call wine_version(),  if not NULL,  to get the current Wine
 version.      */
@@ -2075,7 +2075,7 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         break;
 
 #if( PDC_MAX_MOUSE_BUTTONS >= 5)
-             /* Win32a can support five mouse buttons.  But some may wish */
+             /* WinGUI can support five mouse buttons.  But some may wish */
              /* to leave PDC_MAX_MOUSE_BUTTONS=3,  for compatibility      */
              /* with older PDCurses libraries.  Hence the above #if.      */
     case WM_XBUTTONDOWN:
@@ -2368,7 +2368,7 @@ static void clip_or_center_window_to_monitor( HWND hwnd)
 /* By default,  the user cannot resize the window.  This is because
 many apps don't handle KEY_RESIZE,  and one can get odd behavior
 in such cases.  There are two ways around this.  If you call
-PDC_set_resize_limits( ) before initwin( ),  telling Win32a exactly how
+PDC_set_resize_limits( ) before initwin( ),  telling WinGUI exactly how
 large/small the window can be,  the window will be user-resizable.  Or
 you can set ttytype[0...3] to contain the resize limits.   A call such as
 

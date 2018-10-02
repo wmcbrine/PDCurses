@@ -46,7 +46,7 @@ Build instructions are in the README file for each platform:
 -  [SDL 1.x](sdl1/README.md) for use as separate SDL version 1 window
 -  [SDL 2.x](sdl2/README.md) for use as separate SDL version 2 window
 -  [wincon](wincon/README.md) (formerly win32) for use on Windows Console
--  [Win32a](win32a/README.md) for use on Windows Graphics Mode
+-  [WinGUI](wingui/README.md) for use on Windows Graphics Mode
 -  [X11](x11/README.md) (also called XCurses) for use as separate X11 window
 -  [VT](vt/README.md) for use on terminal
 

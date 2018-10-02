@@ -318,7 +318,7 @@ static COLORREF dimmed_color( COLORREF ival)
 
    /* PDC_get_rgb_values(), extract_packed_rgb(), intensified_component(), */
    /* intensified_color(),  and dimmed_color() each exist in x11/x11.c,    */
-   /* win32a/pdcdisp.c,  and sdl2/pdcdisp.c in forms slightly modified for */
+   /* wingui/pdcdisp.c,  and sdl2/pdcdisp.c in forms slightly modified for */
    /* each platform.  But they all look pretty much alike.  */
 
             /* PDCurses stores RGBs in fifteen bits,  five bits each */

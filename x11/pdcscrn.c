@@ -229,7 +229,7 @@ Resize limits
 
 ### Description
 
-   For platforms supporting resizable windows (SDLx, Win32a, X11).  Some
+   For platforms supporting resizable windows (SDLx, WinGUI, X11).  Some
    programs may be unprepared for a resize event;  for these,  calling
    this function with the max and min limits equal ensures that no
    user resizing can be done.  Other programs may require at least a
@@ -242,7 +242,7 @@ Resize limits
 
 **man-end****************************************************************/
 
-/* Note that at least at present,  only Win32a pays any attention to
+/* Note that at least at present,  only WinGUI pays any attention to
 resize limits. */
 
 int PDC_min_lines = 25, PDC_min_cols = 80;

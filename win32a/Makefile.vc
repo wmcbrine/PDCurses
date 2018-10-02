@@ -20,7 +20,7 @@ PDCURSES_SRCDIR = ..
 !include $(PDCURSES_SRCDIR)\version.mif
 !include $(PDCURSES_SRCDIR)\libobjs.mif
 
-osdir      = $(PDCURSES_SRCDIR)\win32a
+osdir      = $(PDCURSES_SRCDIR)\wingui
 
 PDCURSES_WIN_H   = $(osdir)\pdcwin.h
 

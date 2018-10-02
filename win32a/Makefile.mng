@@ -58,7 +58,7 @@ ifndef ON_WINDOWS
 	endif
 endif
 
-osdir	   = $(PDCURSES_SRCDIR)/win32a
+osdir	   = $(PDCURSES_SRCDIR)/wingui
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 

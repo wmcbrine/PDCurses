@@ -15,7 +15,7 @@ PANEL_HEADER	= $(PDCURSES_SRCDIR)\panel.h
 TERM_HEADER	= $(PDCURSES_SRCDIR)\term.h
 
 srcdir		= $(PDCURSES_SRCDIR)\pdcurses
-osdir		= $(PDCURSES_SRCDIR)\win32a
+osdir		= $(PDCURSES_SRCDIR)\wingui
 demodir		= $(PDCURSES_SRCDIR)\demos
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h

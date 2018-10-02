@@ -1,4 +1,4 @@
-PDCurses for Win32a
+PDCurses for WinGUI
 ==================
 
 This directory contains PDCurses source code files specific to Win32
@@ -61,10 +61,10 @@ Building
 
         make -f Makefile.mng WIDE=Y UTF8=Y
 
-  Win32a doesn't have the same limitations as the Win32 console flavor,
+  WinGUI doesn't have the same limitations as the Win32 console flavor,
   but UTF-8 and non-UTF-8 versions are still available.  If nothing else,
   this means that if you've built a Win32 console PDCurses DLL with any
-  configuration,  you can build a matching Win32a DLL and swap between
+  configuration,  you can build a matching WinGUI DLL and swap between
   console or GUI PDCurses just by swapping DLLs.
 
   You can also use the optional parameter "DLL=Y" with Visual C++,

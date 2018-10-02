@@ -124,7 +124,7 @@ enum PDC_port
 {
     PDC_PORT_X11 = 0,
     PDC_PORT_WIN32 = 1,
-    PDC_PORT_WIN32A = 2,
+    PDC_PORT_WINGUI = 2,
     PDC_PORT_DOS = 3,
     PDC_PORT_OS2 = 4,
     PDC_PORT_SDL1 = 5,
@@ -150,7 +150,7 @@ typedef struct
  *
  */
 
-/* Most flavors of PDCurses support three buttons.  Win32a supports    */
+/* Most flavors of PDCurses support three buttons.  WinGUI supports    */
 /* these plus two "extended" buttons.  But we'll set this macro to     */
 /* six,  allowing future versions to support up to nine total buttons. */
 /* (The button states are broken up into two arrays to allow for the   */
@@ -250,7 +250,7 @@ typedef struct
 /* For the ncurses-compatible functions only, BUTTON4_PRESSED and
    BUTTON5_PRESSED are returned for mouse scroll wheel up and down;
    otherwise PDCurses doesn't support buttons 4 and 5... except
-   as described above for Win32a,  and perhaps to be extended to
+   as described above for WinGUI,  and perhaps to be extended to
    other PDCurses flavors  */
 
 #define BUTTON4_RELEASED        0x00008000L

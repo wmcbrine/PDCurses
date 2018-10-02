@@ -689,7 +689,7 @@ $(ZIPFILE):
 	os2/README.md os2/*.c os2/*.h os2/*.mak os2/*.lrf \
 	sdl1/README.md sdl1/*.c sdl1/*.h sdl1/Make* \
 	win32/README.md win32/*.c win32/*.h win32/*.mak win32/*.ico win32/*.rc \
-	win32a/README.md win32a/*.c win32a/*.h win32a/*.mak win32a/*.ico win32a/*.rc \
+	wingui/README.md wingui/*.c wingui/*.h wingui/*.mak wingui/*.ico wingui/*.rc \
 	x11/README.md x11/*.c x11/*.h x11/Makefile.* x11/*.xbm \
 	x11/Makefile.in x11/config.h.in x11/configure x11/configure.ac x11/config.guess \
 	x11/config.sub x11/xcurses-config.in x11/install-sh x11/aclocal.m4 \
@@ -717,7 +717,7 @@ tar:
 	$(PDC_DIR)/os2/README.md $(PDC_DIR)/os2/*.c $(PDC_DIR)/os2/*.h $(PDC_DIR)/os2/*.mak $(PDC_DIR)/os2/*.lrf \
 	$(PDC_DIR)/sdl1/README.md $(PDC_DIR)/sdl1/*.c $(PDC_DIR)/sdl1/*.h $(PDC_DIR)/sdl1/Make* \
 	$(PDC_DIR)/win32/README.md $(PDC_DIR)/win32/*.c $(PDC_DIR)/win32/*.h $(PDC_DIR)/win32/*.mak $(PDC_DIR)/win32/*.ico $(PDC_DIR)/win32/*.rc \
-	$(PDC_DIR)/win32a/README.md $(PDC_DIR)/win32a/*.c $(PDC_DIR)/win32a/*.h $(PDC_DIR)/win32a/*.mak $(PDC_DIR)/win32a/*.ico $(PDC_DIR)/win32a/*.rc \
+	$(PDC_DIR)/wingui/README.md $(PDC_DIR)/wingui/*.c $(PDC_DIR)/wingui/*.h $(PDC_DIR)/wingui/*.mak $(PDC_DIR)/wingui/*.ico $(PDC_DIR)/wingui/*.rc \
 	$(PDC_DIR)/x11/README.md $(PDC_DIR)/x11/*.c $(PDC_DIR)/x11/*.xbm $(PDC_DIR)/x11/*.h $(PDC_DIR)/x11/Makefile.* \
 	$(PDC_DIR)/x11/debian/rules $(PDC_DIR)/x11/debian/changelog $(PDC_DIR)/x11/debian/compat $(PDC_DIR)/x11/debian/control $(PDC_DIR)/x11/debian/copyright $(PDC_DIR)/x11/debian/rules \
 	| gzip -9 > $(TARBALL))

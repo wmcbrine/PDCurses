@@ -26,18 +26,18 @@ PDCurses 4.0.2 - 2017/09/12
 Major new features:
 -------------------
 
-- New Win32a (Windows GUI) and SDL2 backends.
+- New WinGUI (Windows GUI) and SDL2 backends.
   SDL1 is still supported, but may eventually go away.
 
 - Bold, italic, underlined, overlined, dimmed, 'strikeout', blinking text,
   256 colors and color pairs,  and full RGB colors.
-  These are all supported in Win32a and mostly supported in X11, SDL1 and SDL2.
+  These are all supported in WinGUI and mostly supported in X11, SDL1 and SDL2.
 
-- In Win32a, one can choose a font, and both programmatic and user resizing
+- In WinGUI, one can choose a font, and both programmatic and user resizing
   are supported.
   (Recompiling is necessary to change the font in X11.)
 
-- (Win32a only) Support of SMP Unicode (points beyond 64K) and combining
+- (WinGUI only) Support of SMP Unicode (points beyond 64K) and combining
   characters.
   This may be extended to X11 and SDL2 eventually.
 
@@ -50,14 +50,14 @@ Minor new features
 - Support for up to nine mouse buttons and wheel and tilt-wheel mice, and
   double and triple mouse clicks
 
-- (X11, Win32a, Win32) Extended range of keys that are recognized. This
+- (X11, WinGUI, Win32) Extended range of keys that are recognized. This
   now includes most of the "oddball" keys such as 'browser back' and
   'favorites' found on some keyboards.
 
-- Blinking cursors in Win32a and X11 of various shapes (this could be
+- Blinking cursors in WinGUI and X11 of various shapes (this could be
   extended to SDLx eventually).
 
-- In X11 and Win32a, one can call resize_term( ) before initscr( ) to set
+- In X11 and WinGUI, one can call resize_term( ) before initscr( ) to set
   the initial window size.
 
 - Soft Label Keys (SLKs) are considerably more flexible,  with the ability
@@ -75,7 +75,7 @@ Minor new features
   card suits,  vulgar fractions,  etc.
   This applies to all backends.  See `acs_defs.h` for the full list.
 
-- Cleaned up some makefiles for Win32 and Win32a.
+- Cleaned up some makefiles for Win32 and WinGUI.
   On both platforms, `vcwin32.mak` can now be used with the Intel(R) compiler,
   and `mingwin32.mak` can be used to cross-compile from Linux, or in
   `command.com` under Windows, or with Cygwin/MSYS.

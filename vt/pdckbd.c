@@ -126,6 +126,9 @@ static int xlate_vt_codes( const int *c, const int count)
                KEY_F(2), 3, '[', '[', 'B',
                KEY_F(3), 3, '[', '[', 'C',
                KEY_F(4), 3, '[', '[', 'D',
+               KEY_F(5), 3, '[', '[', 'E',
+               KEY_END,  3, '[', '4', '~',
+               KEY_HOME, 3, '[', '1', '~',
 
                KEY_F(1), 2, 'O', 'P',
                KEY_F(1), 4, '[', '1', '1', '~',
@@ -141,7 +144,7 @@ static int xlate_vt_codes( const int *c, const int count)
                KEY_F(8), 4, '[', '1', '9', '~',
                KEY_F(9), 4, '[', '2', '0', '~',
                KEY_F(10), 4, '[', '2', '1', '~',
-/* doesn't go  KEY_F(11), 4, '[', '2', '3', '~', */
+               KEY_F(11), 4, '[', '2', '3', '~',
                KEY_F(12), 4, '[', '2', '4', '~',
                KEY_F(13), 5, 'O', '1', ';', '2', 'P',      /* shift-f1 */
                KEY_F(14), 5, 'O', '1', ';', '2', 'Q',

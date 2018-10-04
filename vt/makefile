@@ -40,6 +40,20 @@ ifdef CHTYPE_16
 	CFLAGS += -DCHTYPE_16
 endif
 
+ifdef _w64
+	PREFIX  = x86_64-w64-mingw32-
+	EXE = .exe
+endif
+
+ifdef _w32
+	PREFIX  = i686-w64-mingw32-
+	EXE = .exe
+endif
+
+CC	= $(PREFIX)gcc
+AR	= $(PREFIX)ar
+STRIP	= $(PREFIX)strip
+
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 LINK		= $(CC)
@@ -47,7 +61,8 @@ LDFLAGS		= $(LIBCURSES)
 RANLIB		= ranlib
 LIBCURSES	= libpdcurses.a
 
-DEMOS		= firework ozdemo newtest ptest rain testcurs tuidemo worm xmas
+DEMOS		= firework$(EXE) ozdemo$(EXE)  newtest$(EXE) ptest$(EXE) rain$(EXE) \
+    testcurs$(EXE) tuidemo$(EXE) worm$(EXE) xmas$(EXE)
 
 .PHONY: all libs clean demos
 
@@ -79,31 +94,31 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) $(SFLAGS) -c $<
 
-firework: $(demodir)/firework.c
+firework$(EXE) : $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-ozdemo: $(demodir)/ozdemo.c
+ozdemo$(EXE) : $(demodir)/ozdemo.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-newtest: $(demodir)/newtest.c
+newtest$(EXE) : $(demodir)/newtest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-ptest: $(demodir)/ptest.c
+ptest$(EXE) : $(demodir)/ptest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-rain: $(demodir)/rain.c
+rain$(EXE) : $(demodir)/rain.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-testcurs: $(demodir)/testcurs.c
+testcurs$(EXE) : $(demodir)/testcurs.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-tuidemo: tuidemo.o tui.o
+tuidemo$(EXE) : tuidemo.o tui.o
 	$(LINK) tui.o tuidemo.o -o $@ $(LDFLAGS)
 
-worm: $(demodir)/worm.c
+worm$(EXE) : $(demodir)/worm.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
-xmas: $(demodir)/xmas.c
+xmas$(EXE) : $(demodir)/xmas.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h

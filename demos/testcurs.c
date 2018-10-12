@@ -367,9 +367,6 @@ void introTest(WINDOW *win)
 void scrollTest(WINDOW *win)
 {
     int i, OldY;
-#ifndef PDCURSES
-    int OldX;
-#endif
     werase(win);
     mvwaddstr(win, height - 2, 1, "The window will now scroll slowly");
     box(win, ACS_VLINE, ACS_HLINE);
@@ -384,11 +381,7 @@ void scrollTest(WINDOW *win)
         wrefresh(win);
     };
 
-#ifdef PDCURSES
     OldY = getmaxy(win);
-#else
-    getmaxyx(win, OldY, OldX);
-#endif
     mvwaddstr(win, 6, 1, "The top of the window will scroll");
     wmove(win, 1, 1);
     wsetscrreg(win, 0, 4);

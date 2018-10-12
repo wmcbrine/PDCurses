@@ -7,11 +7,12 @@
 
 ifeq ($(WIDE),Y)
  CFLAGS = -Wall -O3 -D_XOPEN_SOURCE_EXTENDED -DHAVE_NCURSESW
+ LIBCURSES = -lncursesw
 else
  CFLAGS = -Wall -O3 -D_XOPEN_SOURCE_EXTENDED
+ LIBCURSES = -lncurses
 endif
 
-LIBCURSES = -lncursesw
 demodir = ../demos
 
 DEMOS    = firework ozdemo newtest rain testcurs worm xmas

@@ -10,15 +10,15 @@
 # define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
-#ifdef PDC_WIDE
-   #define HAVE_WIDE 1
-   #include <wchar.h>
-   #include <curses.h>
-#endif
 #ifdef HAVE_NCURSESW
    #define HAVE_WIDE 1
    #include <wchar.h>
    #include <ncursesw/curses.h>
+#endif
+#ifdef PDC_WIDE
+   #define HAVE_WIDE 1
+   #include <wchar.h>
+   #include <curses.h>
 #endif
 
 #ifndef HAVE_WIDE

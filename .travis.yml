@@ -1,0 +1,49 @@
+language: c
+
+os: 
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang
+
+env:
+  - BUILD_TYPE=Debug CMAKE_ARGS="-DPDC_WIDE=OFF -DPDC_UTF8=OFF -DPDCDEBUG=ON"
+  - BUILD_TYPE=Debug CMAKE_ARGS="-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDCDEBUG=ON"
+  - BUILD_TYPE=Debug CMAKE_ARGS="-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDCDEBUG=ON"
+  
+  - BUILD_TYPE=Release CMAKE_ARGS="-DPDC_WIDE=OFF -DPDC_UTF8=OFF"
+  - BUILD_TYPE=Release CMAKE_ARGS="-DPDC_WIDE=OFF -DPDC_UTF8=ON"
+  - BUILD_TYPE=Release CMAKE_ARGS="-DPDC_WIDE=ON -DPDC_UTF8=OFF"
+
+  - BUILD_TYPE=MinSizeRel CMAKE_ARGS="-DPDC_WIDE=OFF -DPDC_UTF8=OFF"
+  - BUILD_TYPE=MinSizeRel CMAKE_ARGS="-DPDC_WIDE=OFF -DPDC_UTF8=ON"
+  - BUILD_TYPE=MinSizeRel CMAKE_ARGS="-DPDC_WIDE=ON -DPDC_UTF8=OFF"
+
+addons:
+  apt:
+    packages:
+      - libncurses5-dev
+      - libncursesw5-dev
+      - libxaw7-dev
+
+install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mkdir ${DEPS_DIR} && cd ${DEPS_DIR} && pwd; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry wget --no-check-certificate https://cmake.org/files/v3.11/cmake-3.11.0-Linux-x86_64.tar.gz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "96d67e21f0983ebf0fffc5b106ec338c *cmake-3.11.0-Linux-x86_64.tar.gz" > cmake_md5.txt; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then md5sum -c cmake_md5.txt; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar -xvf cmake-3.11.0-Linux-x86_64.tar.gz > /dev/null; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mv cmake-3.11.0-Linux-x86_64 cmake-install; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ncurses; fi
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build && cd build
+  - cmake -DCMAKE_VERBOSE_MAKEFILE=FALSE -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+          -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/build/dist ${CMAKE_ARGS}
+          ..
+script:
+  - cmake --build . --config ${BUILD_TYPE} --target install

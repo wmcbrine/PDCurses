@@ -1,0 +1,218 @@
+version: 4.0.2.{build}
+
+shallow_clone: true
+clone_depth: 1
+
+configuration:
+#- MinSizeRel  // https://bugzilla.libsdl.org/show_bug.cgi?id=4233
+- Release
+- Debug
+
+environment:
+  DIST_DIR: '%APPVEYOR_BUILD_FOLDER%\dist'
+  WATCOM: C:\Tools\watcom
+
+  matrix:
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      TOOLCHAIN: Watcom20
+      TARGET: os2
+      ARCHIVE: WATCOM20_%CONFIGURATION%_OS2V2_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'Watcom WMake'
+      CMAKE_TOOLCHAIN_ARGS: '-DCMAKE_TOOLCHAIN_FILE=..\cmake\watcom_open_os2v2_toolchain.cmake'
+      CMAKE_ARGS: '-DPDC_OS2_BUILD=ON -DPDC_BUILD_SHARED=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      TOOLCHAIN: Watcom19
+      TARGET: dos
+      ARCHIVE: WATCOM19_%CONFIGURATION%_DOS16_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'Watcom WMake'
+      CMAKE_TOOLCHAIN_ARGS: '-DCMAKE_TOOLCHAIN_FILE=..\cmake\watcom_open_dos16_toolchain.cmake'
+      CMAKE_ARGS: '-DPDC_DOS_BUILD=ON -DPDC_BUILD_SHARED=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      TOOLCHAIN: Watcom19
+      TARGET: dos
+      ARCHIVE: WATCOM19_%CONFIGURATION%_DOS32_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'Watcom WMake'
+      CMAKE_TOOLCHAIN_ARGS: '-DCMAKE_TOOLCHAIN_FILE=..\cmake\watcom_open_dos32_toolchain.cmake'
+      CMAKE_ARGS: '-DPDC_DOS_BUILD=ON -DPDC_BUILD_SHARED=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      TOOLCHAIN: Watcom20
+      TARGET: dos
+      ARCHIVE: WATCOM20_%CONFIGURATION%_DOS16_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'Watcom WMake'
+      CMAKE_TOOLCHAIN_ARGS: '-DCMAKE_TOOLCHAIN_FILE=..\cmake\watcom_open_dos16_toolchain.cmake'
+      CMAKE_ARGS: '-DPDC_DOS_BUILD=ON -DPDC_BUILD_SHARED=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      TOOLCHAIN: Watcom20
+      TARGET: dos
+      ARCHIVE: WATCOM20_%CONFIGURATION%_DOS32_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'Watcom WMake'
+      CMAKE_TOOLCHAIN_ARGS: '-DCMAKE_TOOLCHAIN_FILE=..\cmake\watcom_open_dos32_toolchain.cmake'
+      CMAKE_ARGS: '-DPDC_DOS_BUILD=ON -DPDC_BUILD_SHARED=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2015'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'
+      ARCHITECTURE: amd64_x86
+      ARCHIVE: VS2015_%CONFIGURATION%_WIDE_x86_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2015'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'
+      ARCHITECTURE: amd64_x86
+      ARCHIVE: VS2015_%CONFIGURATION%_UTF8_x86_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2015'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'
+      ARCHITECTURE: amd64
+      ARCHIVE: VS2015_%CONFIGURATION%_WIDE_x64_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2015'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'
+      ARCHITECTURE: amd64
+      ARCHIVE: VS2015_%CONFIGURATION%_UTF8_x64_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2015'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'
+      ARCHITECTURE: amd64_arm
+      ARCHIVE: VS2015_%CONFIGURATION%_WIDE_ARM_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2015'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'
+      ARCHITECTURE: amd64_arm
+      ARCHIVE: VS2015_%CONFIGURATION%_UTF8_ARM_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsamd64_arm.bat'
+      ARCHITECTURE: amd64_arm
+      ARCHIVE: VS2017_%CONFIGURATION%_WIDE_ARM_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsamd64_arm.bat'
+      ARCHITECTURE: amd64_arm
+      ARCHIVE: VS2017_%CONFIGURATION%_UTF8_ARM_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsamd64_arm64.bat'
+      ARCHITECTURE: amd64_arm64
+      ARCHIVE: VS2017_%CONFIGURATION%_WIDE_ARM64_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsamd64_arm64.bat'
+      ARCHITECTURE: amd64_arm64
+      ARCHIVE: VS2017_%CONFIGURATION%_UTF8_ARM64_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDC_SDL2_BUILD=OFF -DPDC_SDL2_DEPS_BUILD=OFF'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat'
+      ARCHITECTURE: amd64_x86
+      ARCHIVE: VS2017_%CONFIGURATION%_WIDE_x86_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat'
+      ARCHITECTURE: amd64_x86
+      ARCHIVE: VS2017_%CONFIGURATION%_UTF8_x86_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat'
+      ARCHITECTURE: amd64
+      ARCHIVE: VS2017_%CONFIGURATION%_WIDE_x64_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=ON -DPDC_UTF8=OFF -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: 'Visual Studio 2017'
+      VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat'
+      ARCHITECTURE: amd64
+      ARCHIVE: VS2017_%CONFIGURATION%_UTF8_x64_%APPVEYOR_BUILD_NUMBER%
+      GENERATOR: 'NMake Makefiles'
+      CMAKE_ARGS: '-DPDC_WIDE=OFF -DPDC_UTF8=ON -DPDC_SDL2_BUILD=ON -DPDC_SDL2_DEPS_BUILD=ON'
+
+init:
+  - echo BUILD_NUMBER=%APPVEYOR_BUILD_NUMBER%
+
+install:
+
+  # Open Watcom
+  - if "%TOOLCHAIN%"=="Watcom19" ( echo Installing Open Watcom 1.9 )
+  - if "%TOOLCHAIN%"=="Watcom19" ( cd %APPVEYOR_BUILD_FOLDER% )
+  - if "%TOOLCHAIN%"=="Watcom19" ( set "OPEN_WATCOM_URL=https://sourceforge.net/projects/openwatcom/files/open-watcom-1.9/open-watcom-c-win32-1.9.exe" )
+  - if "%TOOLCHAIN%"=="Watcom19" ( appveyor DownloadFile "%OPEN_WATCOM_URL%" -FileName open-watcom-c-win32-1.9.exe )
+    # todo - check the md5 here...
+  - if "%TOOLCHAIN%"=="Watcom19" ( 7z x -y open-watcom-c-win32-1.9.exe -o"%WATCOM%" > nul )
+  - if "%TOOLCHAIN%"=="Watcom19" ( set "PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%" )
+
+  - if "%TOOLCHAIN%"=="Watcom20" ( echo Installing Open Watcom 2.0 )
+  - if "%TOOLCHAIN%"=="Watcom20" ( cd %APPVEYOR_BUILD_FOLDER% )
+  - if "%TOOLCHAIN%"=="Watcom20" ( set "OPEN_WATCOM_URL=https://github.com/open-watcom/travis-ci-ow-builds/archive/master.zip" )
+  - if "%TOOLCHAIN%"=="Watcom20" ( appveyor DownloadFile "%OPEN_WATCOM_URL%" -FileName master.zip )
+  - if "%TOOLCHAIN%"=="Watcom20" ( 7z x -y master.zip -o"%WATCOM%" > nul )
+    # todo - check the md5 here...
+  - if "%TOOLCHAIN%"=="Watcom20" ( set "WATCOM=%WATCOM%\travis-ci-ow-builds-master" )
+  - if "%TOOLCHAIN%"=="Watcom20" ( set "PATH=%WATCOM%\BINNT64;%WATCOM%\BINNT;%PATH%" )
+
+    # DOS BAT file
+  - if "%TARGET%"=="dos" ( set "EDPATH=%WATCOM%\EDDAT" )
+  - if "%TARGET%"=="dos" ( set "INCLUDE=%WATCOM%\H;%WATCOM%\H\NT" )
+
+    # OS/2 CMD file
+  - if "%TARGET%"=="os2" ( set "BEGINLIBPATH=%WATCOM%\BINP\DLL" )
+  - if "%TARGET%"=="os2" ( set "EDPATH=%WATCOM%\EDDAT" )
+  - if "%TARGET%"=="os2" ( set "INCLUDE=%WATCOM%\H;%WATCOM%\H\OS2" )
+
+  - cmake --version
+
+build:
+  parallel: true
+
+build_script:
+
+  - if exist "%VCVARSALL%" ( call "%VCVARSALL%" %ARCHITECTURE% )
+
+  - if "%CONFIGURATION%"=="Debug" ( set PDCDEBUG=ON ) else ( set PDCDEBUG=OFF )
+  - if "%CONFIGURATION%"=="Debug" ( set PDCDEBUG=ON ) else ( set PDCDEBUG=OFF )
+
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - mkdir build
+  - cd build
+
+  - cmake %CMAKE_TOOLCHAIN_ARGS% -G"%GENERATOR%" -DCMAKE_VERBOSE_MAKEFILE=TRUE
+          -DCMAKE_BUILD_TYPE=%CONFIGURATION% 
+          "-DCMAKE_INSTALL_PREFIX=%DIST_DIR%\%APPVEYOR_BUILD_WORKER_IMAGE%"
+          -DBUILD_NUMBER=%APPVEYOR_BUILD_NUMBER% -DPDCDEBUG=%PDCDEBUG% %CMAKE_ARGS%
+          ..
+
+    cmake --build . --config %CONFIGURATION% --target install
+
+after_build:
+  - cd %DIST_DIR%
+  - 7z a -tzip %ARCHIVE%.zip "%APPVEYOR_BUILD_WORKER_IMAGE%"
+  - certutil -hashfile %ARCHIVE%.zip MD5 > %ARCHIVE%.md5
+
+artifacts:
+  - path: dist\$(ARCHIVE).zip
+  - path: dist\$(ARCHIVE).md5

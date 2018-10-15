@@ -3119,8 +3119,14 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
             break;
 
         case CURSES_DISPLAY_CURSOR:
-            XC_LOG(("CURSES_DISPLAY_CURSOR received from child.  Vis. now: %d\n",
-                     PDC_blink_state));
+            if(PDC_blink_state)
+            {
+                XC_LOG(("CURSES_DISPLAY_CURSOR received from child.  Vis. now: 1\n"));
+            }
+            else
+            {
+                XC_LOG(("CURSES_DISPLAY_CURSOR received from child.  Vis. now: 0\n"));
+            }
             break;
 
         case CURSES_TITLE:

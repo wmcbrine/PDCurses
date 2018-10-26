@@ -10,15 +10,15 @@
 # define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
-#ifdef PDC_WIDE
-   #define HAVE_WIDE 1
-   #include <wchar.h>
-   #include <curses.h>
-#endif
 #ifdef HAVE_NCURSESW
    #define HAVE_WIDE 1
    #include <wchar.h>
    #include <ncursesw/curses.h>
+#endif
+#ifdef PDC_WIDE
+   #define HAVE_WIDE 1
+   #include <wchar.h>
+   #include <curses.h>
 #endif
 
 #ifndef HAVE_WIDE
@@ -367,7 +367,7 @@ void introTest(WINDOW *win)
 void scrollTest(WINDOW *win)
 {
     int i, OldY;
-#ifndef PDCURSES
+#if !defined (PDCURSES) && !defined (NCURSES_VERSION)
     int OldX;
 #endif
     werase(win);
@@ -384,7 +384,7 @@ void scrollTest(WINDOW *win)
         wrefresh(win);
     };
 
-#ifdef PDCURSES
+#if defined (PDCURSES) || defined (NCURSES_VERSION)
     OldY = getmaxy(win);
 #else
     getmaxyx(win, OldY, OldX);

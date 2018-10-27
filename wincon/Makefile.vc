@@ -12,8 +12,6 @@
 #    MS tools cl.exe and link.exe
 
 O = obj
-E = .exe
-RM = del
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..
@@ -41,10 +39,10 @@ LINK    = link.exe -nologo
 !endif
 
 !ifdef DEBUG
-CFLAGS      = -Z7 -DPDCDEBUG
+CFLAGS       = -Z7 -DPDCDEBUG
 LDFLAGS      = -debug -pdb:none
 !else
-CFLAGS      = -O1
+CFLAGS       = -O1
 LDFLAGS      =
 !endif
 
@@ -88,12 +86,12 @@ $(WIDEOPT) $(UTF8OPT)
 all:   $(PDCLIBS)
 
 clean:
-   -$(RM) *.obj
-   -$(RM) *.lib
-   -$(RM) *.exe
-   -$(RM) *.dll
-   -$(RM) *.exp
-   -$(RM) *.res
+   -del *.obj
+   -del *.lib
+   -del *.exe
+   -del *.dll
+   -del *.exp
+   -del *.res
 
 demos:   $(DEMOS)
 

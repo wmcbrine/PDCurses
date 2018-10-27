@@ -11,7 +11,7 @@ Building
 
         Makefile     - DJGPP V2
         Makefile.bcc - Borland C++ 3.0+
-        Makefile.wat - Open Watcom 1.8+ (16-bit or 32-bit)
+        Makefile.wcc - Open Watcom 1.8+ (16-bit or 32-bit)
         Makefile.dmc - Digital Mars
         Makefile.msc - Microsoft C
 

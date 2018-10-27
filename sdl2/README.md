@@ -7,6 +7,11 @@ This is a port of PDCurses for SDL2.
 Building
 --------
 
+- Choose the appropriate makefile for your compiler:
+
+        Makefile      - General Makefile, tested with GCC
+        Makefile.vc   - Microsoft Visual C++ 2.0+ or later & Intel(R) compiler
+
 - On *nix (including Linux and Mac OS X), run `make` in the sdl2
   directory. It builds the library libpdcurses.a (dynamic lib not implemented).
   The makefile accepts the optional parameters `DEBUG=Y`, `WIDE=Y` and `UTF8=Y`.

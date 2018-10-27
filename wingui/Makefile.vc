@@ -17,6 +17,12 @@ O = obj
 PDCURSES_SRCDIR = ..
 !endif
 
+!ifdef IX86
+PLATFORM=IX86
+!else
+PLATFORM=X64
+!endif
+
 !include $(PDCURSES_SRCDIR)\version.mif
 !include $(PDCURSES_SRCDIR)\libobjs.mif
 
@@ -33,10 +39,10 @@ LINK    = link.exe -nologo
 !endif
 
 !ifdef DEBUG
-CFLAGS      = -Z7 -DPDCDEBUG -MT -D_CRT_SECURE_NO_WARNINGS
+CFLAGS       = -Z7 -DPDCDEBUG -MT -D_CRT_SECURE_NO_WARNINGS
 LDFLAGS      = -debug -pdb:none
 !else
-CFLAGS      = -Ox -MT -W3 -D_CRT_SECURE_NO_WARNINGS
+CFLAGS       = -Ox -MT -W3 -D_CRT_SECURE_NO_WARNINGS
 LDFLAGS      =
 !endif
 
@@ -56,7 +62,7 @@ CHTYPE_FLAGS= -DCHTYPE_32
 CHTYPE_FLAGS= -DCHTYPE_16
 !endif
 
-SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /OUT:pdcurses.dll
+SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /MACHINE:$(PLATFORM) /OUT:pdcurses.dll
 
 CCLIBS      = user32.lib gdi32.lib advapi32.lib shell32.lib comdlg32.lib
 # may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
@@ -77,7 +83,7 @@ PDCLIBS      = $(LIBCURSES)
 BUILD      = $(CC) -I$(PDCURSES_SRCDIR) -c $(CFLAGS) $(CHTYPE_FLAGS) $(DLLOPT) \
 $(WIDEOPT) $(UTF8OPT)
 
-all:   $(PDCLIBS) $(DEMOS)
+all:   $(PDCLIBS)
 
 clean:
    -del *.obj
@@ -86,6 +92,8 @@ clean:
    -del *.dll
    -del *.exp
    -del *.res
+
+demos:   $(DEMOS)
 
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
@@ -99,20 +107,14 @@ terminfo.obj: $(TERM_HEADER)
 !ifndef DLL
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
    $(LIBEXE) -out:$@ $(LIBOBJS) $(PDCOBJS)
-   -copy $(LIBCURSES) panel.lib
 !endif
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
    $(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
-   -copy $(LIBCURSES) panel.lib
 
 pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
    rc /r /fopdcurses.res $(osdir)\pdcurses.rc
-!ifdef IX86
-   cvtres /MACHINE:IX86 /NOLOGO /OUT:pdcurses.obj pdcurses.res
-!else
-   cvtres /MACHINE:X64 /NOLOGO /OUT:pdcurses.obj pdcurses.res
-!endif
+   cvtres /MACHINE:$(PLATFORM) /NOLOGO /OUT:pdcurses.obj pdcurses.res
 
 {$(srcdir)\}.c{}.obj::
    $(BUILD) $<

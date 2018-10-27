@@ -58,6 +58,14 @@ config.sub are released to the Public Domain. config.guess and
 config.sub are under the GPL; configure is under a free license
 described within it.
 
+Build Status
+-------------------
+
+PDCurses is automatically build in multiple environments:
+
+[![Build status Travis-CI](https://api.travis-ci.com/Bill-Gray/PDCurses.svg?branch=master)](https://travis-ci.com/Bill-Gray/PDCurses)
+, also providing artifacts: [![Build status Appveyor](https://ci.appveyor.com/api/projects/status/github/Bill-Gray/PDCurses?branch=master&svg=true)](https://ci.appveyor.com/project/Bill-Gray/PDCurses)
+
 
 Maintainer
 ----------

@@ -9,10 +9,10 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        bccos2.mak - Borland C++ 2.0
-        gccos2.mak - EMX 0.9b+
-        iccos2.mak - C Set/2
-        wccos2.mak - Open Watcom 1.8+
+        Makefile.bcc - Borland C++ 2.0
+        Makefile     - EMX 0.9b+
+        iccos2.mak   - C Set/2
+        Makefile.wcc - Open Watcom 1.8+
 
 - Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where
@@ -31,10 +31,10 @@ Building
   library, provided for convenience; both panel and curses functions are
   in the main library.
 
-  You can also use the optional parameter "DLL=Y" with EMX, to build the 
+  You can also use the optional parameter "DLL=Y" with EMX, to build the
   library as a DLL:
 
-        make -f gccos2.mak DLL=Y
+        make -f Makefile DLL=Y
 
 
 Distribution Status

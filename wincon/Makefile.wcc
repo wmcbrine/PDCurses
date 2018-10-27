@@ -1,6 +1,6 @@
-# Watcom WMAKE Makefile for PDCurses library - Win32 Watcom C/C++ 10.6+
+# Watcom WMAKE Makefile for PDCurses library - Windows console Watcom C/C++ 10.6+
 #
-# Usage: wmake -f [win32\]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: wmake -f [wincon\]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -13,7 +13,7 @@ PDCURSES_SRCDIR	= ..
 
 !include $(PDCURSES_SRCDIR)\version.mif
 
-osdir		= $(PDCURSES_SRCDIR)\win32
+osdir		= $(PDCURSES_SRCDIR)\wincon
 
 CC		= wcc386
 TARGET		= nt
@@ -44,8 +44,8 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
 	-copy $(LIBCURSES) panel.lib
 
-PLATFORM1	= Watcom C++ Win32
-PLATFORM2	= Open Watcom 1.6 for Win32
+PLATFORM1	= Watcom C++ WinCon
+PLATFORM2	= Open Watcom 1.6 for Windows console
 ARCNAME		= pdc$(VER)_wcc_w32
 
 !include $(PDCURSES_SRCDIR)\makedist.mif

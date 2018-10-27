@@ -17,8 +17,7 @@ Building
         Makefile.lcc  - LCC-Win32
         Makefile.mng  - MinGW, Cygnus GNU Compiler
         Makefile.vc   - Microsoft Visual C++ 2.0+ or later & Intel(R) compiler
-        Makefile.w16  - Watcom 10.6+ or OpenWATCOM (16-bit target)
-        Makefile.w32  - Watcom 10.6+ or OpenWATCOM (32-bit target)
+        Makefile.wcc  - Watcom 10.6+ or OpenWATCOM
 
 - Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where

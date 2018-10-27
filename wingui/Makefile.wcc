@@ -1,6 +1,6 @@
 # Watcom WMAKE Makefile for PDCurses library - Win32 Watcom C/C++ 10.6+
 #
-# Usage: wmake -f [wingui/]Makefile.w32 [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: wmake -f [wingui/]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]

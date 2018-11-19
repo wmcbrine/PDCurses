@@ -209,28 +209,31 @@ int main(int argc, char *argv[])
 
         key = getch();
 
+        if (key == KEY_MOUSE) {
+            const int tmarg = (LINES - (MAX_OPTIONS + 2)) / 2;
+            int selected_opt;
+            MEVENT mouse_event;
+
+            getmouse( &mouse_event);
+
+            selected_opt = mouse_event.y - tmarg;
+            if( selected_opt >= 0 && selected_opt < MAX_OPTIONS)
+            {
+                old_option = new_option;
+                new_option = selected_opt;
+                display_menu( old_option, new_option);
+            }
+            if( mouse_event.bstate & BUTTON1_DOUBLE_CLICKED)
+                key = 10;
+            else if (mouse_event.bstate & BUTTON4_PRESSED)
+                key = KEY_UP;
+            else if (mouse_event.bstate & BUTTON5_PRESSED)
+                key = KEY_DOWN;
+            else key = 0;
+        }
+
         switch(key)
         {
-        case KEY_MOUSE:
-            {
-               const int tmarg = (LINES - (MAX_OPTIONS + 2)) / 2;
-               int selected_opt;
-               MEVENT mouse_event;
-
-               getmouse( &mouse_event);
-
-               selected_opt = mouse_event.y - tmarg;
-               if( selected_opt >= 0 && selected_opt < MAX_OPTIONS)
-               {
-                  old_option = new_option;
-                  new_option = selected_opt;
-                  display_menu( old_option, new_option);
-               }
-               if( mouse_event.bstate & BUTTON1_DOUBLE_CLICKED)
-                  key = 10;
-            }
-            if( key != 10)
-               break;
         case 10:
         case 13:
         case KEY_ENTER:

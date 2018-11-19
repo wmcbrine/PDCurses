@@ -15,11 +15,16 @@
 #  elif defined(__APPLE__)
 #   define PDC_FONT_PATH "/System/Library/Fonts/Menlo.ttc"
 #  else
-#   define PDC_FONT_PATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
+#   define PDC_FONT_PATH "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 #  endif
 # endif
 TTF_Font *pdc_ttffont = NULL;
-int pdc_font_size = 18;
+int pdc_font_size =
+# ifdef _WIN32
+ 16;
+# else
+ 17;
+# endif
 #endif
 
 SDL_Window *pdc_window = NULL;

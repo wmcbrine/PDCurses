@@ -229,76 +229,6 @@ void PDC_gotoyx(int row, int col)
     }
 }
 
-/* handle the A_*LINE attributes */
-
-static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
-{
-    short col = SP->line_color;
-#ifdef PDC_WIDE
-    char chstr[2] = {'_', '\0'};
-#endif
-
-    if (SP->mono)
-        return;
-
-    if (ch & A_UNDERLINE)
-    {
-#ifdef PDC_WIDE
-        if (col == -1)
-            col = foregr;
-
-        pdc_font = TTF_RenderText_Blended(pdc_ttffont, chstr, pdc_color[col]);
-        if (pdc_font)
-        {
-            src->x = 0;
-            src->y = 0;
-            SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-            SDL_FreeSurface(pdc_font);
-            pdc_font = NULL;
-        }
-#else
-        if (col != -1)
-            SDL_SetPaletteColors(pdc_font->format->palette,
-                                 pdc_color + col, pdc_flastc, 1);
-
-        src->x = '_' % 32 * pdc_fwidth;
-        src->y = '_' / 32 * pdc_fheight;
-
-        if (backgr != -1)
-            SDL_SetColorKey(pdc_font, SDL_TRUE, 0);
-
-        SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-
-        if (backgr != -1)
-            SDL_SetColorKey(pdc_font, SDL_FALSE, 0);
-
-        if (col != -1)
-            SDL_SetPaletteColors(pdc_font->format->palette,
-                                 pdc_color + foregr, pdc_flastc, 1);
-#endif
-    }
-
-    if (ch & (A_LEFT | A_RIGHT))
-    {
-        if (col == -1)
-            col = foregr;
-
-        dest->w = 1;
-
-        if (ch & A_LEFT)
-            SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
-
-        if (ch & A_RIGHT)
-        {
-            dest->x += pdc_fwidth - 1;
-            SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
-            dest->x -= pdc_fwidth - 1;
-        }
-
-        dest->w = pdc_fwidth;
-    }
-}
-
 void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
     SDL_Rect src, dest, lastrect;
@@ -307,6 +237,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     Uint16 chstr[2] = {0, 0};
 #endif
     attr_t sysattrs = SP->termattrs;
+    short hcol = SP->line_color;
     bool blink = blinked_off && (attr & A_BLINK) && (sysattrs & A_BLINK);
 
     if (rectcount == MAXRECT)
@@ -358,6 +289,8 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 #endif
 
     dest.w = pdc_fwidth;
+    if (hcol == -1)
+        hcol = foregr;
 
     for (j = 0; j < len; j++)
     {
@@ -397,8 +330,22 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 #endif
 
-        if (!blink && (attr & (A_UNDERLINE | A_LEFT | A_RIGHT)))
-            _highlight(&src, &dest, attr);
+        if (!blink && (attr & (A_LEFT | A_RIGHT)))
+        {
+            dest.w = 1;
+
+            if (attr & A_LEFT)
+                SDL_FillRect(pdc_screen, &dest, pdc_mapped[hcol]);
+
+            if (attr & A_RIGHT)
+            {
+                dest.x += pdc_fwidth - 1;
+                SDL_FillRect(pdc_screen, &dest, pdc_mapped[hcol]);
+                dest.x -= pdc_fwidth - 1;
+            }
+
+            dest.w = pdc_fwidth;
+        }
 
         dest.x += pdc_fwidth;
     }
@@ -410,6 +357,16 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         pdc_font = NULL;
     }
 #endif
+
+    if (!blink && (attr & A_UNDERLINE))
+    {
+        dest.y += pdc_fheight - 1;
+        dest.x = pdc_fwidth * x + pdc_xoffset;
+        dest.h = 1;
+        dest.w = pdc_fwidth * len;
+
+        SDL_FillRect(pdc_screen, &dest, pdc_mapped[hcol]);
+    }
 }
 
 /* update the given physical line to look like the corresponding line in

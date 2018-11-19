@@ -13,7 +13,7 @@
 #  ifdef _WIN32
 #   define PDC_FONT_PATH "C:/Windows/Fonts/consola.ttf"
 #  elif defined(__APPLE__)
-#   define PDC_FONT_PATH "/Library/Fonts/Courier New.ttf"
+#   define PDC_FONT_PATH "/System/Library/Fonts/Menlo.ttc"
 #  else
 #   define PDC_FONT_PATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
 #  endif

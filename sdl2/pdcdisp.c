@@ -58,8 +58,6 @@ chtype acs_map[128] =
     A(127)
 };
 
-# undef A
-
 #endif
 
 Uint32 pdc_lastupdate = 0;
@@ -229,6 +227,116 @@ void PDC_gotoyx(int row, int col)
     }
 }
 
+#if defined(CHTYPE_LONG) && defined(PDC_WIDE)
+
+/* Draw some of the ACS_* "graphics" */
+
+bool _grprint(chtype ch, SDL_Rect dest)
+{
+    Uint32 col = pdc_mapped[foregr];
+    int hmid = pdc_fheight >> 1;
+    int wmid = pdc_fwidth >> 1;
+
+    switch (ch)
+    {
+    case ACS_ULCORNER:
+        dest.h = pdc_fheight - hmid;
+        dest.y += hmid;
+        dest.w = 1;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = wmid;
+        goto S1;
+    case ACS_LLCORNER:
+        dest.h = hmid;
+        dest.w = 1;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = wmid;
+        dest.y += hmid;
+        goto S1;
+    case ACS_URCORNER:
+        dest.h = pdc_fheight - hmid;
+        dest.w = 1;
+        dest.y += hmid;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = wmid;
+        dest.x -= wmid;
+        goto S1;
+    case ACS_LRCORNER:
+        dest.h = hmid;
+        dest.w = 1;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = wmid;
+        dest.x -= wmid;
+        dest.y += hmid;
+        goto S1;
+    case ACS_LTEE:
+        dest.h = 1;
+        dest.w = pdc_fwidth - wmid;
+        dest.x += wmid;
+        dest.y += hmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = 1;
+        dest.x -= wmid;
+        goto VLINE;
+    case ACS_RTEE:
+        dest.w = wmid;
+    case ACS_PLUS:
+        dest.h = 1;
+        dest.y += hmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+    VLINE:
+        dest.h = pdc_fheight;
+        dest.y -= hmid;
+    case ACS_VLINE:
+        dest.w = 1;
+        dest.x += wmid;
+        goto DRAW;
+    case ACS_TTEE:
+        dest.h = pdc_fheight - hmid;
+        dest.w = 1;
+        dest.x += wmid;
+        dest.y += hmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = pdc_fwidth;
+        dest.x -= wmid;
+        goto S1;
+    case ACS_BTEE:
+        dest.h = hmid;
+        dest.w = 1;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = pdc_fwidth;
+        dest.x -= wmid;
+    case ACS_HLINE:
+        dest.y += hmid;
+        goto S1;
+    case ACS_S3:
+        dest.y += hmid >> 1;
+        goto S1;
+    case ACS_S7:
+        dest.y += hmid + (hmid >> 1);
+        goto S1;
+    case ACS_S9:
+        dest.y += pdc_fheight - 1;
+    case ACS_S1:
+    S1:
+        dest.h = 1;
+    case ACS_BLOCK:
+    DRAW:
+        SDL_FillRect(pdc_screen, &dest, col);
+        return TRUE;
+    default: ;
+    }
+
+    return FALSE;  /* didn't draw it -- fall back to acs_map */
+}
+
+#endif
+
 void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
     SDL_Rect src, dest, lastrect;
@@ -301,7 +409,16 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
+        {
+# ifdef PDC_WIDE
+            if (_grprint(A(ch & 0x7f), dest))
+            {
+                dest.x += pdc_fwidth;
+                continue;
+            }
+# endif
             ch = acs_map[ch & 0x7f];
+        }
 #endif
 
 #ifdef PDC_WIDE

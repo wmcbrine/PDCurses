@@ -58,6 +58,8 @@ chtype acs_map[128] =
     A(127)
 };
 
+# undef A
+
 #endif
 
 Uint32 pdc_lastupdate = 0;
@@ -411,7 +413,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
         {
 # ifdef PDC_WIDE
-            if (_grprint(A(ch & 0x7f), dest))
+            if (_grprint(ch & (0x7f | A_ALTCHARSET), dest))
             {
                 dest.x += pdc_fwidth;
                 continue;

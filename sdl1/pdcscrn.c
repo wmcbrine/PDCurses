@@ -10,16 +10,10 @@
 
 #ifdef PDC_WIDE
 # ifndef PDC_FONT_PATH
-#  ifdef _WIN32
-#define PDC_FONT_PATH "C:/Windows/Fonts/lucon.ttf"
-#  elif defined(__APPLE__)
-#define PDC_FONT_PATH "/Library/Fonts/Courier New.ttf"
-#  else
-#define PDC_FONT_PATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
-#  endif
+#  define PDC_FONT_PATH "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 # endif
 TTF_Font *pdc_ttffont = NULL;
-int pdc_font_size = 18;
+int pdc_font_size = 17;
 #endif
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,

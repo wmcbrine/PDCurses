@@ -247,14 +247,14 @@ bool _grprint(chtype ch, SDL_Rect dest)
         dest.w = 1;
         dest.x += wmid;
         SDL_FillRect(pdc_screen, &dest, col);
-        dest.w = wmid;
+        dest.w = pdc_fwidth - wmid;
         goto S1;
     case ACS_LLCORNER:
         dest.h = hmid;
         dest.w = 1;
         dest.x += wmid;
         SDL_FillRect(pdc_screen, &dest, col);
-        dest.w = wmid;
+        dest.w = pdc_fwidth - wmid;
         dest.y += hmid;
         goto S1;
     case ACS_URCORNER:
@@ -267,7 +267,7 @@ bool _grprint(chtype ch, SDL_Rect dest)
         dest.x -= wmid;
         goto S1;
     case ACS_LRCORNER:
-        dest.h = hmid;
+        dest.h = hmid + 1;
         dest.w = 1;
         dest.x += wmid;
         SDL_FillRect(pdc_screen, &dest, col);

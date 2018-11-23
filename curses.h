@@ -42,7 +42,13 @@ PDCurses portable platform definitions list:
 /*----------------------------------------------------------------------*/
 
 #include <stdarg.h>
-#include <stdint.h>
+#ifdef NO_STDINT_H
+   #define uint64_t unsigned long long
+   #define uint32_t unsigned long
+   #define uint16_t unsigned short
+#else
+   #include <stdint.h>
+#endif
 #include <stddef.h>
 #include <stdio.h>             /* Required by X/Open usage below */
 
@@ -107,10 +113,10 @@ typedef chtype attr_t;
 
 #define PDC_VER_MAJOR    4
 #define PDC_VER_MINOR    0
-#define PDC_VER_CHANGE   2
-#define PDC_VER_YEAR   2017
-#define PDC_VER_MONTH   07
-#define PDC_VER_DAY     26
+#define PDC_VER_CHANGE   3
+#define PDC_VER_YEAR   2018
+#define PDC_VER_MONTH   11
+#define PDC_VER_DAY     22
 
 #define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
 
@@ -128,7 +134,8 @@ enum PDC_port
     PDC_PORT_DOS = 3,
     PDC_PORT_OS2 = 4,
     PDC_PORT_SDL1 = 5,
-    PDC_PORT_SDL2 = 6
+    PDC_PORT_SDL2 = 6,
+    PDC_PORT_VT = 7
 };
 
 /* Detailed PDC version information */

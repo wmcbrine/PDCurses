@@ -63,14 +63,14 @@ void PDC_scr_close( void)
 {
    printf( "\0338");         /* restore cursor & attribs (VT100) */
    printf( "\033[m");         /* set default screen attributes */
+   printf( "\033[?47l");      /* restore screen */
    PDC_gotoyx( PDC_cols - 1, 0);
-   printf( "\033[?1000l\n");        /* turn off mouse events */
+   printf( "\033[?1000l");        /* turn off mouse events */
 #ifndef _WIN32
    tcsetattr( STDIN, TCSANOW, &orig_term);
 #endif
    return;
 }
-
 
 void PDC_scr_free( void)
 {
@@ -211,6 +211,7 @@ int PDC_scr_open(int argc, char **argv)
     term.c_lflag &= ~(ICANON | ECHO);
     tcsetattr( STDIN, TCSANOW, &term);
 #endif
+    printf( "\033[?47h");      /* Save screen */
     printf( "\033[?1000h");    /* enable mouse events,  at least on xterm */
                /* NOTE: could send 1003h to get mouse motion events as well */
     printf( "\0337");         /* save cursor & attribs (VT100) */

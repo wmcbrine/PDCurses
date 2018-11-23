@@ -1,6 +1,7 @@
 #define USE_UNICODE_ACS_CHARS 1
 
 #include <wchar.h>
+#include <assert.h>
 
 #define USE_UNICODE_ACS_CHARS 1
 
@@ -210,17 +211,11 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
     static chtype prev_ch = 0;
 
-                     /* Seems to me as if the input text to this function */
-    if( x < 0)       /* should _never_ be off-screen.  But it sometimes is. */
-    {                /* Clipping is therefore necessary. */
-        len += x;
-        srcp -= x;
-        x = 0;
-    }
-    if( len > SP->cols - x)
-       len = SP->cols - x;
-    if( lineno >= SP->lines || len <= 0 || lineno < 0)
-       return;
+    assert( x >= 0);
+    assert( len <= SP->cols - x);
+    assert( lineno >= 0);
+    assert( lineno < SP->lines);
+    assert( len > 0);
     PDC_gotoyx( lineno, x);
     while( len--)
        {

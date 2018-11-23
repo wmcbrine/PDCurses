@@ -66,7 +66,7 @@ initscr
    OS/2       -     -      x
    SDL1       x     x      x
    SDL2       x     x      x
-   VT         x     -      x
+   VT         x     x      x
    Wincon     x     -      x
    WinGUI     x     x      x
    X11        x     x      -

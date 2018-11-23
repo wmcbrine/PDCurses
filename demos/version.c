@@ -22,7 +22,7 @@ didn't match,  or the size of chtypes differed.  */
 int main( const int argc, const char **argv)
 {
    static const char *port_text[] = { "X11", "Win32 console", "Win32a",
-         "DOS", "OS/2", "SDL1", "SDL2" };
+         "DOS", "OS/2", "SDL1", "SDL2", "VT" };
 
    printf( "Compiled as version %d.%d.%d, chtype size %d\n",
             PDC_VER_MAJOR, PDC_VER_MINOR, PDC_VER_CHANGE,

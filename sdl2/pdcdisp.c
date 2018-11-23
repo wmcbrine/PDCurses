@@ -398,7 +398,6 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             TTF_STYLE_ITALIC : 0) );
 #endif
 
-    dest.w = pdc_fwidth;
     if (hcol == -1)
         hcol = foregr;
 
@@ -408,6 +407,8 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 
         if (blink)
             ch = ' ';
+
+        dest.w = pdc_fwidth;
 
 #ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
@@ -462,8 +463,6 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
                 SDL_FillRect(pdc_screen, &dest, pdc_mapped[hcol]);
                 dest.x -= pdc_fwidth - 1;
             }
-
-            dest.w = pdc_fwidth;
         }
 
         dest.x += pdc_fwidth;

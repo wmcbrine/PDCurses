@@ -20,10 +20,8 @@ extern SDL_Color pdc_color[256];     /* colors for font palette */
 extern Uint32 pdc_mapped[256];       /* colors for FillRect(), as
                                         used in _highlight() */
 extern int pdc_fheight, pdc_fwidth;  /* font height and width */
-#ifdef PDC_WIDE
 extern int pdc_fthick;               /* thickness for highlights and
                                         rendered ACS glyphs */
-#endif
 extern int pdc_flastc;               /* font palette's last color
                                         (treated as the foreground) */
 extern bool pdc_own_screen;          /* if pdc_screen was not set

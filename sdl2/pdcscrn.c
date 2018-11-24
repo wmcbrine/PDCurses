@@ -25,7 +25,6 @@ int pdc_font_size =
 # else
  17;
 # endif
-int pdc_fthick;
 #endif
 
 SDL_Window *pdc_window = NULL;
@@ -35,7 +34,7 @@ int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
 SDL_Color pdc_color[256];
 Uint32 pdc_mapped[256];
-int pdc_fheight, pdc_fwidth, pdc_flastc;
+int pdc_fheight, pdc_fwidth, pdc_fthick, pdc_flastc;
 bool pdc_own_window;
 
 /* COLOR_PAIR to attribute encoding table. */
@@ -233,6 +232,7 @@ int PDC_scr_open(int argc, char **argv)
 #else
     pdc_fheight = pdc_font->h / 8;
     pdc_fwidth = pdc_font->w / 32;
+    pdc_fthick = 1;
 
     if (!SP->mono)
         pdc_flastc = pdc_font->format->palette->ncolors - 1;

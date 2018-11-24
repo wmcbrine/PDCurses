@@ -883,6 +883,23 @@ void clipboardTest(WINDOW *win)
 }
 #endif /* HAVE_CLIPBOARD */
 
+void curTest(void)
+{
+    do {
+        int c = getch();
+        if (c == KEY_UP)
+            move(getcury(stdscr) - 1, getcurx(stdscr));
+        else if (c == KEY_DOWN)
+            move(getcury(stdscr) + 1, getcurx(stdscr));
+        else if (c == KEY_LEFT)
+            move(getcury(stdscr), getcurx(stdscr) - 1);
+        else if (c == KEY_RIGHT)
+            move(getcury(stdscr), getcurx(stdscr) + 1);
+        else
+            break;
+    } while (TRUE);
+}
+
 void acsTest(WINDOW *win)
 {
 #ifdef ACS_S3
@@ -970,7 +987,7 @@ void acsTest(WINDOW *win)
     }
 
     mvaddstr(tmarg + 18, 3, "Press any key to continue");
-    getch();
+    curTest();
 
 #if HAVE_WIDE
     clear();
@@ -994,7 +1011,9 @@ void acsTest(WINDOW *win)
     mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, georgian);
 
     mvaddstr(tmarg + 18, 3, "Press any key to continue");
-    getch();
+    curs_set(2);
+    curTest();
+    curs_set(1);
 #endif
 }
 

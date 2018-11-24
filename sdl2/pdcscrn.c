@@ -25,6 +25,7 @@ int pdc_font_size =
 # else
  17;
 # endif
+int pdc_fthick;
 #endif
 
 SDL_Window *pdc_window = NULL;
@@ -228,6 +229,7 @@ int PDC_scr_open(int argc, char **argv)
 
 #ifdef PDC_WIDE
     TTF_SizeText(pdc_ttffont, "W", &pdc_fwidth, &pdc_fheight);
+    pdc_fthick = pdc_font_size / 20 + 1;
 #else
     pdc_fheight = pdc_font->h / 8;
     pdc_fwidth = pdc_font->w / 32;

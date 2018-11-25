@@ -17,10 +17,13 @@ demodir = ../demos
 
 DEMOS    = firework ozdemo newtest rain testcurs worm xmas
 
-all: $(DEMOS)
+all: $(DEMOS) tuidemo
 
 $(DEMOS) :  %: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES)
 
+tuidemo : $(demodir)/tuidemo.c $(demodir)/tui.c
+	$(CC) $(CFLAGS) -o$@ $(demodir)/tui.c $< $(LIBCURSES)
+
 clean:
-	rm -f $(DEMOS)
+	rm -f $(DEMOS) tuidemo

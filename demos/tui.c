@@ -612,7 +612,7 @@ void domenu(menu *mp)
                         key = KEY_ESC; //exit menu
                         break;                      
                     }
-                    else if((event.y - (y-1) > 0) &&  event.y > th && event.y <= y+mheight && event.x > x && event.x < mw +x)
+                    else if((event.y - (y-1) > 0) &&  event.y > th && event.y < y+mheight && event.y > y && event.x > x && event.x < mw +x)
                     {
                         cur = (event.y - y-1) % nitems;
                         key = ERR;
@@ -629,7 +629,7 @@ void domenu(menu *mp)
                 }
                 else if(event.bstate & BUTTON1_DOUBLE_CLICKED)
                 {
-                    if((event.y - (y-1) > 0) &&  event.y > th && event.y <= y+mheight){
+                    if((event.y - (y-1) > 0) &&  event.y > th && event.y < y+mheight && event.y > y){
                          cur = (event.y - y-1) % nitems;
                          key = '\n';
                          break;

@@ -203,12 +203,16 @@ void PDC_gotoyx(int row, int col)
     pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr, pdc_color[foregr]);
     if (pdc_font)
     {
+        int center = pdc_fwidth > pdc_font->w ?
+                    (pdc_fwidth - pdc_font->w) >> 1 : 0;
         dest.h = src.h;
         dest.w = src.w;
         src.x = 0;
         src.y = pdc_fheight - src.h;
         SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
+        dest.x += center;
         SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+        dest.x -= center;
         SDL_FreeSurface(pdc_font);
         pdc_font = NULL;
     }
@@ -441,7 +445,13 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             }
 
             if (pdc_font)
+            {
+                int center = pdc_fwidth > pdc_font->w ?
+                    (pdc_fwidth - pdc_font->w) >> 1 : 0;
+                dest.x += center;
                 SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+                dest.x -= center;
+            }
         }
 #else
         src.x = (ch & 0xff) % 32 * pdc_fwidth;

@@ -206,7 +206,7 @@ void PDC_gotoyx(int row, int col)
         dest.h = src.h;
         dest.w = src.w;
         src.x = 0;
-        src.y = 0;
+        src.y = pdc_fheight - src.h;
         SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
         SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
         SDL_FreeSurface(pdc_font);

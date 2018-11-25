@@ -194,15 +194,15 @@ static void reset_color( const chtype ch)
     COLORREF bg, fg;
     char txt[20];
 
-    PDC_get_rgb_values( ch, &bg, &fg);
+    PDC_get_rgb_values( ch, &fg, &bg);
     if( bg != prev_bg)
         {
-        printf( "\033[38;%s", color_string( txt, bg));
+        printf( "\033[48;%s", color_string( txt, bg));
         prev_bg = bg;
         }
     if( fg != prev_fg)
         {
-        printf( "\033[48;%s", color_string( txt, fg));
+        printf( "\033[38;%s", color_string( txt, fg));
         prev_fg = fg;
         }
 }

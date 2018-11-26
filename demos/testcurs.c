@@ -887,6 +887,7 @@ void curTest(void)
 {
     do {
         int c = getch();
+#ifdef PDCURSES
         if (c == KEY_UP)
             move(getcury(stdscr) - 1, getcurx(stdscr));
         else if (c == KEY_DOWN)
@@ -895,7 +896,10 @@ void curTest(void)
             move(getcury(stdscr), getcurx(stdscr) - 1);
         else if (c == KEY_RIGHT)
             move(getcury(stdscr), getcurx(stdscr) + 1);
+        else if (c == 'i')
+            curs_set(SP->visibility == 1 ? 2 : 1);
         else
+#endif
             break;
     } while (TRUE);
 }
@@ -1011,9 +1015,7 @@ void acsTest(WINDOW *win)
     mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, georgian);
 
     mvaddstr(tmarg + 18, 3, "Press any key to continue");
-    curs_set(2);
     curTest();
-    curs_set(1);
 #endif
 }
 
@@ -1090,7 +1092,7 @@ void attrTest(WINDOW *win)
     attrset(A_NORMAL);
 
     mvaddstr(tmarg + 16, 3, "Press any key to continue");
-    getch();
+    curTest();
 
 #ifdef PDCURSES
     PDC_set_bold(FALSE);
@@ -1162,7 +1164,7 @@ void colorTest(WINDOW *win)
     mvprintw(tmarg + 16, col1, "COLOR_PAIRS = %d", COLOR_PAIRS);
 
     mvaddstr(tmarg + 19, 3, "Press any key to continue");
-    getch();
+    curTest();
 
     if (can_change_color())
     {
@@ -1191,7 +1193,7 @@ void colorTest(WINDOW *win)
         }
 
         mvaddstr(tmarg + 19, 3, "Press any key to continue");
-        getch();
+        curTest();
 
         for (i = 0; i < maxcol; i++)
             init_color(i, orgcolors[i].red,
@@ -1235,7 +1237,7 @@ void colorTest(WINDOW *win)
         }
 
         mvaddstr(tmarg + 19, 3, "Press any key to continue");
-        getch();
+        curTest();
     }
 }
 #endif

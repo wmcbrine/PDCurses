@@ -22,12 +22,6 @@ void rmerror(void);
 #include <unistd.h>
 #endif
 
-#if defined( PDCURSES)
-   #define HAVE_CLIPBOARD 1
-#else
-   #define HAVE_CLIPBOARD 0
-#endif
-
 #ifdef A_COLOR
 # define TITLECOLOR       1       /* color pair indices */
 # define MAINMENUCOLOR    (2 | A_BOLD)
@@ -257,14 +251,18 @@ static void mainhelp(void)
 
 static void mainmenu(menu *mp)
 {
-    int nitems, barlen, old = -1, cur = 0, c, cur0;
+    int nitems, barlen, old = -1, cur = 0, c, cur0, x;
 
     menudim(mp, &nitems, &barlen);
     repaintmainmenu(barlen, mp);
-#if HAVE_CLIPBOARD
-    MEVENT event;
-    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
+    MEVENT mouse_event;
+#ifdef __PDCURSES__
+            nc_getmouse( &mouse_event);
+#else
+            getmouse( &mouse_event);
 #endif
+    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
+
     while (!quit)
     {
         if (cur != old)
@@ -322,15 +320,15 @@ static void mainmenu(menu *mp)
                 cur = (cur + 1) % nitems;
                 key = '\n';
                 break;
-#if HAVE_CLIPBOARD
+
             case KEY_MOUSE:
-                if(nc_getmouse(&event) == OK)
+                if(nc_getmouse(&mouse_event) == OK)
                 {
-                    if((event.bstate & BUTTON1_PRESSED) || (event.bstate & BUTTON1_DOUBLE_CLICKED) || (event.bstate & BUTTON1_CLICKED))
+                    if((mouse_event.bstate & BUTTON1_PRESSED) || (mouse_event.bstate & BUTTON1_DOUBLE_CLICKED) || (mouse_event.bstate & BUTTON1_CLICKED))
                     {
-                        for(int x = 1; x <= nitems ; ++x){
-                            if((event.x > (barlen * (x-1)) && event.x < (barlen * x) ) &&
-                                (event.y == th )){
+                        for( x = 1; x <= nitems ; ++x){
+                            if((mouse_event.x > (barlen * (x-1)) && mouse_event.x < (barlen * x) ) &&
+                                (mouse_event.y == th )){
                                     if(x>=1){
                                         cur = x-1;
                                         break;
@@ -345,7 +343,7 @@ static void mainmenu(menu *mp)
                         break;
                 }
                break;
-#endif
+
             default:
                 key = ERR;
             }
@@ -371,15 +369,15 @@ static void mainmenu(menu *mp)
         case KEY_ESC:
             mainhelp();
             break;
-#if HAVE_CLIPBOARD
+
         case KEY_MOUSE:
-            if(nc_getmouse(&event) == OK)
+            if(nc_getmouse(&mouse_event) == OK)
             {
-                if((event.bstate & BUTTON1_PRESSED) || (event.bstate & BUTTON1_DOUBLE_CLICKED) || (event.bstate & BUTTON1_CLICKED))
+                if((mouse_event.bstate & BUTTON1_PRESSED) || (mouse_event.bstate & BUTTON1_DOUBLE_CLICKED) || (mouse_event.bstate & BUTTON1_CLICKED))
                 {
-                    for(int x = 1; x <= nitems ; ++x){
-                        if((event.x > (barlen * (x-1)) && event.x < (barlen * x) ) &&
-                                (event.y == th)){
+                    for( x = 1; x <= nitems ; ++x){
+                        if((mouse_event.x > (barlen * (x-1)) && mouse_event.x < (barlen * x) ) &&
+                                (mouse_event.y == th)){
                             cur = x-1;
                             key = '\n';
                             break;
@@ -389,7 +387,7 @@ static void mainmenu(menu *mp)
                     break;
             }
            break;
-#endif
+
         default:
             cur0 = cur;
 
@@ -530,10 +528,14 @@ void domenu(menu *mp)
     repaintmenu(wmenu, mp);
 
     key = ERR;
-#if HAVE_CLIPBOARD
-    MEVENT event;
-    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
+    MEVENT mouse_event;	
+#ifdef __PDCURSES__
+            nc_getmouse( &mouse_event);
+#else
+            getmouse( &mouse_event);
 #endif
+    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
+
     while (!stop && !quit)
     {
         if (cur != old)
@@ -601,25 +603,25 @@ void domenu(menu *mp)
 
             stop = TRUE;
             break;
-#if HAVE_CLIPBOARD
+
         case KEY_MOUSE:
-            if(nc_getmouse(&event) == OK)
+            if(nc_getmouse(&mouse_event) == OK)
             {
-                if((event.bstate & BUTTON1_PRESSED) || (event.bstate & BUTTON1_CLICKED))
+                if((mouse_event.bstate & BUTTON1_PRESSED) || (mouse_event.bstate & BUTTON1_CLICKED))
                 {
-                    if( event.y <= th-1 )
+                    if( mouse_event.y <= th-1 )
                     {
                         key = KEY_ESC; //exit menu
                         break;                      
                     }
-                    else if((event.y - (y-1) > 0) &&  event.y > th && event.y < y+mheight && event.y > y && event.x > x && event.x < mw +x)
+                    else if((mouse_event.y - (y-1) > 0) &&  mouse_event.y > th && mouse_event.y < y+mheight && mouse_event.y > y && mouse_event.x > x && mouse_event.x < mw +x)
                     {
-                        cur = (event.y - y-1) % nitems;
+                        cur = (mouse_event.y - y-1) % nitems;
                         key = ERR;
                         break;
                                       
                     }
-                    else if((event.y > 0) &&  (event.y < y-1 || event.y > y-1) && (event.x > 0) && (event.x < x-1 || event.x > x-1))
+                    else if((mouse_event.y > 0) &&  (mouse_event.y < y-1 || mouse_event.y > y-1) && (mouse_event.x > 0) && (mouse_event.x < x-1 || mouse_event.x > x-1))
                     {
                         key = KEY_ESC; //exit menu
                         break;
@@ -627,10 +629,10 @@ void domenu(menu *mp)
                         stop = TRUE;
                         break;
                 }
-                else if(event.bstate & BUTTON1_DOUBLE_CLICKED)
+                else if(mouse_event.bstate & BUTTON1_DOUBLE_CLICKED)
                 {
-                    if((event.y - (y-1) > 0) &&  event.y > th && event.y < y+mheight && event.y > y){
-                         cur = (event.y - y-1) % nitems;
+                    if((mouse_event.y - (y-1) > 0) &&  mouse_event.y > th && mouse_event.y < y+mheight && mouse_event.y > y){
+                         cur = (mouse_event.y - y-1) % nitems;
                          key = '\n';
                          break;
                     }else{
@@ -639,14 +641,14 @@ void domenu(menu *mp)
                     }
                           
                 }
-                else if( (event.bstate & BUTTON3_PRESSED) || (event.bstate & BUTTON3_CLICKED))
+                else if( (mouse_event.bstate & BUTTON3_PRESSED) || (mouse_event.bstate & BUTTON3_CLICKED))
                 {
                     key = KEY_ESC;
                     break;
                 }
             }
             break;
-#endif
+
         default:
             cur0 = cur;
 
@@ -754,9 +756,16 @@ int weditstr(WINDOW *win, char *buf, int field)
     chtype oldattr;
     WINDOW *wedit;
     int c = 0;
-#if HAVE_CLIPBOARD
+#ifdef HAVE_CLIPBOARD
     char *ptr = NULL;
     long j, length = 0;
+    MEVENT mouse_event;
+#ifdef __PDCURSES__
+            nc_getmouse( &mouse_event);
+#else
+            getmouse( &mouse_event);
+#endif
+    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
 #endif
     if ((field >= MAXSTRLEN) || (buf == NULL) ||
         ((int)strlen(buf) > field - 1))
@@ -774,10 +783,7 @@ int weditstr(WINDOW *win, char *buf, int field)
 
     keypad(wedit, TRUE);
     curs_set(1);
-#if HAVE_CLIPBOARD
-    MEVENT event;
-    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
-#endif
+
     while (!stop)
     {
         idle();
@@ -821,13 +827,13 @@ int weditstr(WINDOW *win, char *buf, int field)
             if (bp - buf < (int)strlen(buf))
                 bp++;
             break;
-#if HAVE_CLIPBOARD
+#ifdef HAVE_CLIPBOARD
         case KEY_MOUSE:
-            if(nc_getmouse(&event) == OK)
+            if(nc_getmouse(&mouse_event) == OK)
             {
-                 if(event.bstate & BUTTON1_DOUBLE_CLICKED){
-                     if(event.y >= begy + cury &&  event.y <= begy + cury + 1 &&
-                             event.x >= begx + curx &&  event.x <= begx + curx +  field){
+                 if(mouse_event.bstate & BUTTON1_DOUBLE_CLICKED){
+                     if(mouse_event.y >= begy + cury &&  mouse_event.y <= begy + cury + 1 &&
+                             mouse_event.x >= begx + curx &&  mouse_event.x <= begx + curx +  field){
                             c = KEY_DOWN;
                             stop = TRUE;
                             break;
@@ -838,13 +844,13 @@ int weditstr(WINDOW *win, char *buf, int field)
                             break;
                      }
                  }
-                 else if(event.bstate & BUTTON3_DOUBLE_CLICKED){
+                 else if(mouse_event.bstate & BUTTON3_DOUBLE_CLICKED){
                             c = KEY_UP;
                             strcpy(buf, org);   /* restore original */
                             stop = TRUE;
                             break;
                  }
-                 else if( (event.bstate & BUTTON3_PRESSED) || (event.bstate & BUTTON3_CLICKED))
+                 else if( (mouse_event.bstate & BUTTON3_PRESSED) || (mouse_event.bstate & BUTTON3_CLICKED))
                  {
                     j = PDC_getclipboard(&ptr, &length);
                     switch(j)

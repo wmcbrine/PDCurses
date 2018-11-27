@@ -501,7 +501,8 @@ void PDC_flushinp(void)
 {
     PDC_LOG(("PDC_flushinp() - called\n"));
 
-    while (PDC_check_key());
+    while (PDC_check_key())
+        PDC_get_key();
 }
 
 int PDC_mouse_set(void)

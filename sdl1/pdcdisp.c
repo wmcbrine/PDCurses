@@ -99,6 +99,14 @@ static void _set_attr(chtype ch)
 {
     attr_t sysattrs = SP->termattrs;
 
+#ifdef PDC_WIDE
+    TTF_SetFontStyle(pdc_ttffont,
+        ( ((ch & A_BOLD) && (sysattrs & A_BOLD)) ?
+            TTF_STYLE_BOLD : 0) |
+        ( ((ch & A_ITALIC) && (sysattrs & A_ITALIC)) ?
+            TTF_STYLE_ITALIC : 0) );
+#endif
+
     ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE);
 
     if (oldch != ch)
@@ -394,12 +402,6 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 #ifdef PDC_WIDE
     else
         SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
-
-    TTF_SetFontStyle(pdc_ttffont,
-        ( ((attr & A_BOLD) && (sysattrs & A_BOLD)) ?
-          TTF_STYLE_BOLD : 0) |
-        ( ((attr & A_ITALIC) && (sysattrs & A_ITALIC)) ?
-          TTF_STYLE_ITALIC : 0) );
 #endif
 
     if (hcol == -1)

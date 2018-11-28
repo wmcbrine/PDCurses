@@ -22,6 +22,12 @@ void rmerror(void);
 #include <unistd.h>
 #endif
 
+#ifdef PDCURSES
+#define HAVE_CLIPBOARD
+#else
+#define nc_getmouse getmouse
+#endif
+
 #ifdef A_COLOR
 # define TITLECOLOR       1       /* color pair indices */
 # define MAINMENUCOLOR    (2 | A_BOLD)
@@ -609,7 +615,7 @@ void domenu(menu *mp)
             {
                 if((mouse_event.bstate & BUTTON1_PRESSED) || (mouse_event.bstate & BUTTON1_CLICKED))
                 {
-                    if( mouse_event.y <= th-1 )
+                    if( mouse_event.y <= th+1)
                     {
                         key = KEY_ESC; //exit menu
                         break;                      
@@ -621,7 +627,7 @@ void domenu(menu *mp)
                         break;
                                       
                     }
-                    else if((mouse_event.y > 0) &&  (mouse_event.y < y-1 || mouse_event.y > y-1) && (mouse_event.x > 0) && (mouse_event.x < x-1 || mouse_event.x > x-1))
+                    else if(mouse_event.y > 0 && mouse_event.y != y-1 && mouse_event.x > 0 && mouse_event.x != x-1)
                     {
                         key = KEY_ESC; //exit menu
                         break;

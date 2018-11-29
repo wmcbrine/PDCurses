@@ -160,87 +160,6 @@ static void _set_attr(chtype ch)
     }
 }
 
-/* draw a cursor at (y, x) */
-
-void PDC_gotoyx(int row, int col)
-{
-    SDL_Rect src, dest;
-    chtype ch;
-    int oldrow, oldcol;
-#ifdef PDC_WIDE
-    Uint16 chstr[2] = {0, 0};
-#endif
-
-    PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
-             row, col, SP->cursrow, SP->curscol));
-
-    if (SP->mono)
-        return;
-
-    oldrow = SP->cursrow;
-    oldcol = SP->curscol;
-
-    /* clear the old cursor */
-
-    PDC_transform_line(oldrow, oldcol, 1, curscr->_y[oldrow] + oldcol);
-
-    if (!SP->visibility)
-        return;
-
-    /* draw a new cursor by overprinting the existing character in
-       reverse, either the full cell (when visibility == 2) or the
-       lowest quarter of it (when visibility == 1) */
-
-    ch = curscr->_y[row][col] ^ A_REVERSE;
-
-    _set_attr(ch);
-
-#ifdef CHTYPE_LONG
-    if (ch & A_ALTCHARSET && !(ch & 0xff80))
-        ch = acs_map[ch & 0x7f];
-#endif
-    src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
-    src.w = pdc_fwidth;
-
-    dest.y = (row + 1) * pdc_fheight - src.h + pdc_yoffset;
-    dest.x = col * pdc_fwidth + pdc_xoffset;
-
-#ifdef PDC_WIDE
-    chstr[0] = ch & A_CHARTEXT;
-
-    pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr, pdc_color[foregr]);
-    if (pdc_font)
-    {
-        int center = pdc_fwidth > pdc_font->w ?
-                    (pdc_fwidth - pdc_font->w) >> 1 : 0;
-        dest.h = src.h;
-        dest.w = src.w;
-        src.x = 0;
-        src.y = pdc_fheight - src.h;
-        SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
-        dest.x += center;
-        SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
-        dest.x -= center;
-        SDL_FreeSurface(pdc_font);
-        pdc_font = NULL;
-    }
-#else
-
-    src.x = (ch & 0xff) % 32 * pdc_fwidth;
-    src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
-
-    SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
-#endif
-
-    if (oldrow != row || oldcol != col)
-    {
-        if (rectcount == MAXRECT)
-            PDC_update_rects();
-
-        uprect[rectcount++] = dest;
-    }
-}
-
 #if defined(CHTYPE_LONG) && defined(PDC_WIDE)
 
 /* Draw some of the ACS_* "graphics" */
@@ -350,6 +269,94 @@ bool _grprint(chtype ch, SDL_Rect dest)
 }
 
 #endif
+
+/* draw a cursor at (y, x) */
+
+void PDC_gotoyx(int row, int col)
+{
+    SDL_Rect src, dest;
+    chtype ch;
+    int oldrow, oldcol;
+#ifdef PDC_WIDE
+    Uint16 chstr[2] = {0, 0};
+#endif
+
+    PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
+             row, col, SP->cursrow, SP->curscol));
+
+    oldrow = SP->cursrow;
+    oldcol = SP->curscol;
+
+    /* clear the old cursor */
+
+    PDC_transform_line(oldrow, oldcol, 1, curscr->_y[oldrow] + oldcol);
+
+    if (!SP->visibility)
+        return;
+
+    /* draw a new cursor by overprinting the existing character in
+       reverse, either the full cell (when visibility == 2) or the
+       lowest quarter of it (when visibility == 1) */
+
+    ch = curscr->_y[row][col] ^ A_REVERSE;
+
+    _set_attr(ch);
+
+    src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
+    src.w = pdc_fwidth;
+
+    dest.y = (row + 1) * pdc_fheight - src.h + pdc_yoffset;
+    dest.x = col * pdc_fwidth + pdc_xoffset;
+    dest.h = src.h;
+    dest.w = src.w;
+
+#ifdef PDC_WIDE
+    SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
+# ifdef CHTYPE_LONG
+    if (!(SP->visibility == 2 && (ch & A_ALTCHARSET && !(ch & 0xff80)) &&
+        _grprint(ch & (0x7f | A_ALTCHARSET), dest)))
+    {
+        if (ch & A_ALTCHARSET && !(ch & 0xff80))
+            ch = acs_map[ch & 0x7f];
+# endif
+        chstr[0] = ch & A_CHARTEXT;
+
+        pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr,
+                                             pdc_color[foregr]);
+        if (pdc_font)
+        {
+            int center = pdc_fwidth > pdc_font->w ?
+                        (pdc_fwidth - pdc_font->w) >> 1 : 0;
+            src.x = 0;
+            src.y = pdc_fheight - src.h;
+            dest.x += center;
+            SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+            dest.x -= center;
+            SDL_FreeSurface(pdc_font);
+            pdc_font = NULL;
+        }
+# ifdef CHTYPE_LONG
+    }
+# endif
+#else
+# ifdef CHTYPE_LONG
+    if (ch & A_ALTCHARSET && !(ch & 0xff80))
+        ch = acs_map[ch & 0x7f];
+# endif
+    src.x = (ch & 0xff) % 32 * pdc_fwidth;
+    src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
+
+    SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+#endif
+
+    if (oldrow != row || oldcol != col)
+    {
+        if (rectcount == MAXRECT)
+            PDC_update_rects();
+
+        uprect[rectcount++] = dest;
+    }
+}
 
 void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {

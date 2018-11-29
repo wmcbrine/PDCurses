@@ -157,6 +157,7 @@ int main( int argc, char **argv)
 #ifdef PDCURSES
     bool blink_state = FALSE;
     int fmt = 0xa;
+    const char *title_text = "NewTest: tests various PDCurses features";
 #else
     int fmt = 3;   /* for ncurses,  this is the 4-4-4 SLK format */
 #endif
@@ -216,6 +217,11 @@ int main( int argc, char **argv)
                             resize_term( n_lines, n_cols);
                     }
                     break;
+#ifdef PDCURSES
+                case 't':
+                    title_text = argv[i] + 2;
+                    break;
+#endif
 #ifdef HAVE_WIDE
                 case 'u':
                     sscanf( argv[i] + 2, "%x", &unicode_offset);
@@ -245,7 +251,7 @@ int main( int argc, char **argv)
     clear();
     refresh();
 #ifdef __PDCURSES__
-    PDC_set_title( "NewTest: tests various PDCurses features");
+    PDC_set_title( title_text);
 #endif
     keypad( stdscr, TRUE);
     init_pair( 1, COLOR_WHITE, COLOR_BLACK);

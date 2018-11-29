@@ -107,11 +107,7 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 
 /* Internal macros for attributes */
 
-#ifdef CHTYPE_LONG
-# define PDC_COLOR_PAIRS 256
-#else
-# define PDC_COLOR_PAIRS  32
-#endif
+#define PDC_COLOR_PAIRS 256
 
 #ifndef max
 # define max(a,b) (((a) > (b)) ? (a) : (b))

@@ -82,14 +82,10 @@ extern "C"
 
 typedef unsigned char bool;    /* PDCurses Boolean type */
 
-#ifdef CHTYPE_LONG
-# if _LP64
+#if _LP64
 typedef unsigned int chtype;
-# else
-typedef unsigned long chtype;  /* 16-bit attr + 16-bit char */
-# endif
 #else
-typedef unsigned short chtype; /* 8-bit attr + 8-bit char */
+typedef unsigned long chtype;  /* 16-bit attr + 16-bit char */
 #endif
 
 #ifdef PDC_WIDE
@@ -357,35 +353,14 @@ PDCEX  char         ttytype[];    /* terminal name/description */
 PDCurses Text Attributes
 ========================
 
-Originally, PDCurses used a short (16 bits) for its chtype. To include
-color, a number of things had to be sacrificed from the strict Unix and
-System V support. The main problem was fitting all character attributes
-and color into an unsigned char (all 8 bits!).
-
-Today, PDCurses by default uses a long (32 bits) for its chtype, as in
-System V. The short chtype is still available, by undefining CHTYPE_LONG
-and rebuilding the library.
+PDCurses uses a long (32 bits) for its chtype, as in System V.
 
 The following is the structure of a win->_attrs chtype:
-
-short form:
-
-    +-----------------------------------------------+
-    |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
-    +-----------------------------------------------+
-      color number |  attrs |   character eg 'a'
-
-The available non-color attributes are bold, reverse and blink. Others
-have no effect. The high order char is an index into an array of
-physical colors (defined in color.c) -- 32 foreground/background color
-pairs (5 bits) plus 3 bits for other attributes.
-
-long form:
 
     +--------------------------------------------------------------------+
     |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|..| 2| 1| 0|
     +--------------------------------------------------------------------+
-          color number      |     modifiers         |   character eg 'a'
+          color pair        |     modifiers         |   character eg 'a'
 
 The available non-color attributes are bold, underline, right-line,
 left-line, italic, reverse and blink, plus the alternate character set
@@ -398,39 +373,20 @@ bits for character data.
 
 #define A_NORMAL      (chtype)0
 
-#ifdef CHTYPE_LONG
-# define A_ALTCHARSET (chtype)0x00010000
-# define A_RIGHT      (chtype)0x00020000
-# define A_LEFT       (chtype)0x00040000
-# define A_ITALIC     (chtype)0x00080000
-# define A_UNDERLINE  (chtype)0x00100000
-# define A_REVERSE    (chtype)0x00200000
-# define A_BLINK      (chtype)0x00400000
-# define A_BOLD       (chtype)0x00800000
+#define A_ALTCHARSET  (chtype)0x00010000
+#define A_RIGHT       (chtype)0x00020000
+#define A_LEFT        (chtype)0x00040000
+#define A_ITALIC      (chtype)0x00080000
+#define A_UNDERLINE   (chtype)0x00100000
+#define A_REVERSE     (chtype)0x00200000
+#define A_BLINK       (chtype)0x00400000
+#define A_BOLD        (chtype)0x00800000
 
-# define A_ATTRIBUTES (chtype)0xffff0000
-# define A_CHARTEXT   (chtype)0x0000ffff
-# define A_COLOR      (chtype)0xff000000
+#define A_ATTRIBUTES  (chtype)0xffff0000
+#define A_CHARTEXT    (chtype)0x0000ffff
+#define A_COLOR       (chtype)0xff000000
 
-# define PDC_COLOR_SHIFT 24
-#else
-# define A_BOLD       (chtype)0x0100  /* X/Open */
-# define A_REVERSE    (chtype)0x0200  /* X/Open */
-# define A_BLINK      (chtype)0x0400  /* X/Open */
-
-# define A_ATTRIBUTES (chtype)0xff00  /* X/Open */
-# define A_CHARTEXT   (chtype)0x00ff  /* X/Open */
-# define A_COLOR      (chtype)0xf800  /* System V */
-
-# define A_ALTCHARSET A_NORMAL        /* X/Open */
-# define A_UNDERLINE  A_NORMAL        /* X/Open */
-
-# define A_LEFT       A_NORMAL
-# define A_RIGHT      A_NORMAL
-# define A_ITALIC     A_NORMAL
-
-# define PDC_COLOR_SHIFT 11
-#endif
+#define PDC_COLOR_SHIFT 24
 
 #define A_LEFTLINE    A_LEFT
 #define A_RIGHTLINE   A_RIGHT
@@ -476,62 +432,54 @@ bits for character data.
 
 /*** Alternate character set macros ***/
 
-/* 'w' = 32-bit chtype; acs_map[] index | A_ALTCHARSET
-   'n' = 16-bit chtype; it gets the fallback set because no bit is
-         available for A_ALTCHARSET */
-
-#ifdef CHTYPE_LONG
-# define ACS_PICK(w, n) ((chtype)w | A_ALTCHARSET)
-#else
-# define ACS_PICK(w, n) ((chtype)n)
-#endif
+#define ACS_PICK(w) ((chtype)w | A_ALTCHARSET)
 
 /* VT100-compatible symbols -- box chars */
 
-#define ACS_ULCORNER  ACS_PICK('l', '+')
-#define ACS_LLCORNER  ACS_PICK('m', '+')
-#define ACS_URCORNER  ACS_PICK('k', '+')
-#define ACS_LRCORNER  ACS_PICK('j', '+')
-#define ACS_RTEE      ACS_PICK('u', '+')
-#define ACS_LTEE      ACS_PICK('t', '+')
-#define ACS_BTEE      ACS_PICK('v', '+')
-#define ACS_TTEE      ACS_PICK('w', '+')
-#define ACS_HLINE     ACS_PICK('q', '-')
-#define ACS_VLINE     ACS_PICK('x', '|')
-#define ACS_PLUS      ACS_PICK('n', '+')
+#define ACS_ULCORNER  ACS_PICK('l')
+#define ACS_LLCORNER  ACS_PICK('m')
+#define ACS_URCORNER  ACS_PICK('k')
+#define ACS_LRCORNER  ACS_PICK('j')
+#define ACS_RTEE      ACS_PICK('u')
+#define ACS_LTEE      ACS_PICK('t')
+#define ACS_BTEE      ACS_PICK('v')
+#define ACS_TTEE      ACS_PICK('w')
+#define ACS_HLINE     ACS_PICK('q')
+#define ACS_VLINE     ACS_PICK('x')
+#define ACS_PLUS      ACS_PICK('n')
 
 /* VT100-compatible symbols -- other */
 
-#define ACS_S1        ACS_PICK('o', '-')
-#define ACS_S9        ACS_PICK('s', '_')
-#define ACS_DIAMOND   ACS_PICK('`', '+')
-#define ACS_CKBOARD   ACS_PICK('a', ':')
-#define ACS_DEGREE    ACS_PICK('f', '\'')
-#define ACS_PLMINUS   ACS_PICK('g', '#')
-#define ACS_BULLET    ACS_PICK('~', 'o')
+#define ACS_S1        ACS_PICK('o')
+#define ACS_S9        ACS_PICK('s')
+#define ACS_DIAMOND   ACS_PICK('`')
+#define ACS_CKBOARD   ACS_PICK('a')
+#define ACS_DEGREE    ACS_PICK('f')
+#define ACS_PLMINUS   ACS_PICK('g')
+#define ACS_BULLET    ACS_PICK('~')
 
 /* Teletype 5410v1 symbols -- these are defined in SysV curses, but
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#define ACS_LARROW    ACS_PICK(',', '<')
-#define ACS_RARROW    ACS_PICK('+', '>')
-#define ACS_DARROW    ACS_PICK('.', 'v')
-#define ACS_UARROW    ACS_PICK('-', '^')
-#define ACS_BOARD     ACS_PICK('h', '#')
-#define ACS_LANTERN   ACS_PICK('i', '*')
-#define ACS_BLOCK     ACS_PICK('0', '#')
+#define ACS_LARROW    ACS_PICK(',')
+#define ACS_RARROW    ACS_PICK('+')
+#define ACS_DARROW    ACS_PICK('.')
+#define ACS_UARROW    ACS_PICK('-')
+#define ACS_BOARD     ACS_PICK('h')
+#define ACS_LANTERN   ACS_PICK('i')
+#define ACS_BLOCK     ACS_PICK('0')
 
 /* That goes double for these -- undocumented SysV symbols. Don't use
    them. */
 
-#define ACS_S3        ACS_PICK('p', '-')
-#define ACS_S7        ACS_PICK('r', '-')
-#define ACS_LEQUAL    ACS_PICK('y', '<')
-#define ACS_GEQUAL    ACS_PICK('z', '>')
-#define ACS_PI        ACS_PICK('{', 'n')
-#define ACS_NEQUAL    ACS_PICK('|', '+')
-#define ACS_STERLING  ACS_PICK('}', 'L')
+#define ACS_S3        ACS_PICK('p')
+#define ACS_S7        ACS_PICK('r')
+#define ACS_LEQUAL    ACS_PICK('y')
+#define ACS_GEQUAL    ACS_PICK('z')
+#define ACS_PI        ACS_PICK('{')
+#define ACS_NEQUAL    ACS_PICK('|')
+#define ACS_STERLING  ACS_PICK('}')
 
 /* Box char aliases */
 

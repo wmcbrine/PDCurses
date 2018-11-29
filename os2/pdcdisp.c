@@ -5,9 +5,7 @@
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
    match code page 437 and compatible pages (CP850, CP852, etc.) */
 
-#ifdef CHTYPE_LONG
-
-# define A(x) ((chtype)x | A_ALTCHARSET)
+#define A(x) ((chtype)x | A_ALTCHARSET)
 
 chtype acs_map[128] =
 {
@@ -39,9 +37,7 @@ chtype acs_map[128] =
     A(127)
 };
 
-# undef A
-
-#endif
+#undef A
 
 ULONG pdc_last_blink;
 static bool blinked_off = FALSE;
@@ -91,10 +87,9 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     {
         chtype ch = srcp[j];
 
-#ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = acs_map[ch & 0x7f];
-#endif
+
         if (blink && blinked_off)
             ch = ' ';
 

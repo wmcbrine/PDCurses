@@ -5,9 +5,7 @@
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
    match code page 437 and compatible pages (CP850, CP852, etc.) */
 
-#ifdef CHTYPE_LONG
-
-# define A(x) ((chtype)x | A_ALTCHARSET)
+#define A(x) ((chtype)x | A_ALTCHARSET)
 
 chtype acs_map[128] =
 {
@@ -39,9 +37,7 @@ chtype acs_map[128] =
     A(127)
 };
 
-# undef A
-
-#endif
+#undef A
 
 /* position hardware cursor at (y, x) */
 
@@ -109,10 +105,10 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             chtype ch = srcp[j];
 
             temp_line[j].attr = mapped_attr;
-#ifdef CHTYPE_LONG
+
             if (ch & A_ALTCHARSET && !(ch & 0xff80))
                 ch = acs_map[ch & 0x7f];
-#endif
+
             temp_line[j].text = ch & 0xff;
         }
 
@@ -149,10 +145,10 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             regs.h.ah = 0x09;
             regs.W.bx = mapped_attr;
             regs.W.cx = count;
-#ifdef CHTYPE_LONG
+
             if (ch & A_ALTCHARSET && !(ch & 0xff80))
                 ch = acs_map[ch & 0x7f];
-#endif
+
             regs.h.al = (unsigned char) (ch & 0xff);
 
             PDCINT(0x10, regs);

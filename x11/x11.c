@@ -701,13 +701,11 @@ static int _display_text(const chtype *ch, int row, int col,
 
         attr = curr & A_ATTRIBUTES;
 
-#ifdef CHTYPE_LONG
         if (attr & A_ALTCHARSET && !(curr & 0xff80))
         {
             attr ^= A_ALTCHARSET;
             curr = acs_map[curr & 0x7f];
         }
-#endif
 
 #ifndef PDC_WIDE
         /* Special handling for ACS_BLOCK */

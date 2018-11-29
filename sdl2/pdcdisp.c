@@ -5,9 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef CHTYPE_LONG
-
-# define A(x) ((chtype)x | A_ALTCHARSET)
+#define A(x) ((chtype)x | A_ALTCHARSET)
 
 chtype acs_map[128] =
 {
@@ -17,50 +15,48 @@ chtype acs_map[128] =
     A(28), A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&',
     '\'', '(', ')', '*',
 
-# ifdef PDC_WIDE
+#ifdef PDC_WIDE
     0x2192, 0x2190, 0x2191, 0x2193,
-# else
+#else
     A(0x1a), A(0x1b), A(0x18), A(0x19),
-# endif
+#endif
 
     '/',
 
-# ifdef PDC_WIDE
+#ifdef PDC_WIDE
     ACS_BLOCK,
-# else
+#else
     0xdb,
-# endif
+#endif
 
     '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=',
     '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
     'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
     'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
 
-# ifdef PDC_WIDE
+#ifdef PDC_WIDE
     0x2666, 0x2592,
-# else
+#else
     A(0x04), 0xb1,
-# endif
+#endif
 
     'b', 'c', 'd', 'e',
 
-# ifdef PDC_WIDE
+#ifdef PDC_WIDE
     0x00b0, 0x00b1, 0x2591, 0x00a4, ACS_LRCORNER, ACS_URCORNER,
     ACS_ULCORNER, ACS_LLCORNER, ACS_PLUS, ACS_S1, ACS_S3, ACS_HLINE,
     ACS_S7, ACS_S9, ACS_LTEE, ACS_RTEE, ACS_BTEE, ACS_TTEE, ACS_VLINE,
     0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3, 0x00b7,
-# else
+#else
     0xf8, 0xf1, 0xb0, A(0x0f), 0xd9, 0xbf, 0xda, 0xc0, 0xc5, 0x2d,
     0x2d, 0xc4, 0x2d, 0x5f, 0xc3, 0xb4, 0xc1, 0xc2, 0xb3, 0xf3,
     0xf2, 0xe3, 0xd8, 0x9c, 0xf9,
-# endif
+#endif
 
     A(127)
 };
 
-# undef A
-
-#endif
+#undef A
 
 Uint32 pdc_lastupdate = 0;
 
@@ -160,7 +156,7 @@ static void _set_attr(chtype ch)
     }
 }
 
-#if defined(CHTYPE_LONG) && defined(PDC_WIDE)
+#ifdef PDC_WIDE
 
 /* Draw some of the ACS_* "graphics" */
 
@@ -312,13 +308,13 @@ void PDC_gotoyx(int row, int col)
 
 #ifdef PDC_WIDE
     SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
-# ifdef CHTYPE_LONG
+
     if (!(SP->visibility == 2 && (ch & A_ALTCHARSET && !(ch & 0xff80)) &&
         _grprint(ch & (0x7f | A_ALTCHARSET), dest)))
     {
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
             ch = acs_map[ch & 0x7f];
-# endif
+
         chstr[0] = ch & A_CHARTEXT;
 
         pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr,
@@ -335,14 +331,11 @@ void PDC_gotoyx(int row, int col)
             SDL_FreeSurface(pdc_font);
             pdc_font = NULL;
         }
-# ifdef CHTYPE_LONG
     }
-# endif
 #else
-# ifdef CHTYPE_LONG
     if (ch & A_ALTCHARSET && !(ch & 0xff80))
         ch = acs_map[ch & 0x7f];
-# endif
+
     src.x = (ch & 0xff) % 32 * pdc_fwidth;
     src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
 
@@ -423,19 +416,17 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 
         dest.w = pdc_fwidth;
 
-#ifdef CHTYPE_LONG
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
         {
-# ifdef PDC_WIDE
+#ifdef PDC_WIDE
             if (_grprint(ch & (0x7f | A_ALTCHARSET), dest))
             {
                 dest.x += pdc_fwidth;
                 continue;
             }
-# endif
+#endif
             ch = acs_map[ch & 0x7f];
         }
-#endif
 
 #ifdef PDC_WIDE
         ch &= A_CHARTEXT;

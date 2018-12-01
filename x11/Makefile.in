@@ -87,7 +87,7 @@ mostlyclean: clean
 realclean: distclean
 
 LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
-clear.o color.o delch.o deleteln.o deprec.o getch.o getstr.o getyx.o \
+clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o \
 inch.o inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o \
 keyname.o mouse.o move.o outopts.o overlay.o pad.o panel.o printw.o \
 refresh.o scanw.o scr_dump.o scroll.o slk.o termattr.o terminfo.o \
@@ -146,9 +146,6 @@ delch.o: $(srcdir)/delch.c
 
 deleteln.o: $(srcdir)/deleteln.c
 	$(BUILD) $(srcdir)/deleteln.c
-
-deprec.o: $(srcdir)/deprec.c
-	$(BUILD) $(srcdir)/deprec.c
 
 getch.o: $(srcdir)/getch.c
 	$(BUILD) $(srcdir)/getch.c
@@ -315,10 +312,6 @@ delch.sho: $(srcdir)/delch.c
 
 deleteln.sho: $(srcdir)/deleteln.c
 	$(DYN_BUILD) $(srcdir)/deleteln.c
-	@SAVE2O@
-
-deprec.sho: $(srcdir)/deprec.c
-	$(DYN_BUILD) $(srcdir)/deprec.c
 	@SAVE2O@
 
 getch.sho: $(srcdir)/getch.c

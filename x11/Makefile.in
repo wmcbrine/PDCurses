@@ -65,8 +65,6 @@ install:
 		$(includedir)/xcurses/curses.h
 	$(INSTALL) -c -m 644 $(PDCURSES_SRCDIR)/panel.h \
 		$(includedir)/xcurses/panel.h
-	$(INSTALL) -c -m 644 $(PDCURSES_SRCDIR)/term.h \
-		$(includedir)/xcurses/term.h
 	$(INSTALL) -c -m 644 $(osdir)/libXCurses.a $(libdir)/libXCurses.a
 	-$(RANLIB) $(libdir)/libXCurses.a
 	-$(INSTALL) -c -m 755 $(osdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) \
@@ -90,7 +88,7 @@ LIBOBJS = addch.o addchstr.o addstr.o attr.o beep.o bkgd.o border.o \
 clear.o color.o delch.o deleteln.o getch.o getstr.o getyx.o \
 inch.o inchstr.o initscr.o inopts.o insch.o insstr.o instr.o kernel.o \
 keyname.o mouse.o move.o outopts.o overlay.o pad.o panel.o printw.o \
-refresh.o scanw.o scr_dump.o scroll.o slk.o termattr.o terminfo.o \
+refresh.o scanw.o scr_dump.o scroll.o slk.o termattr.o \
 touch.o util.o window.o debug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
@@ -112,7 +110,6 @@ $(LIBOBJS) $(PDCOBJS) $(SHOFILES) : $(PDCURSES_HEADERS)
 $(PDCOBJS) $(PDCSHOBJS) : $(PDCURSES_X11_H)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
-terminfo.o terminfo.sho: $(TERM_HEADER)
 
 addch.o: $(srcdir)/addch.c
 	$(BUILD) $(srcdir)/addch.c
@@ -221,9 +218,6 @@ slk.o: $(srcdir)/slk.c
 
 termattr.o: $(srcdir)/termattr.c
 	$(BUILD) $(srcdir)/termattr.c
-
-terminfo.o: $(srcdir)/terminfo.c
-	$(BUILD) $(srcdir)/terminfo.c
 
 touch.o: $(srcdir)/touch.c
 	$(BUILD) $(srcdir)/touch.c
@@ -412,10 +406,6 @@ slk.sho: $(srcdir)/slk.c
 
 termattr.sho: $(srcdir)/termattr.c
 	$(DYN_BUILD) $(srcdir)/termattr.c
-	@SAVE2O@
-
-terminfo.sho: $(srcdir)/terminfo.c
-	$(DYN_BUILD) $(srcdir)/terminfo.c
 	@SAVE2O@
 
 touch.sho: $(srcdir)/touch.c

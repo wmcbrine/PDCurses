@@ -80,7 +80,6 @@ $(PDCOBJS) : $(PDCURSES_WIN_H)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 panel.obj : $(PANEL_HEADER)
-terminfo.obj: $(TERM_HEADER)
 
 !ifndef DLL
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)

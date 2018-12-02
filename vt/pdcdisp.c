@@ -51,10 +51,10 @@ extern chtype PDC_capabilities;
     /*    This should lead to proper handling of bold text in legacy    */
     /* apps,  where "bold" means "high intensity".                      */
 
-static COLORREF intensified_color( COLORREF ival)
+static PACKED_RGB intensified_color( PACKED_RGB ival)
 {
     int rgb, i;
-    COLORREF oval = 0;
+    PACKED_RGB oval = 0;
 
     for( i = 0; i < 3; i++, ival >>= 8)
     {
@@ -63,7 +63,7 @@ static COLORREF intensified_color( COLORREF ival)
             rgb = 255;
         else
             rgb = 85 + rgb * (255 - 85) / 192;
-        oval |= ((COLORREF)rgb << (i * 8));
+        oval |= ((PACKED_RGB)rgb << (i * 8));
     }
     return( oval);
 }
@@ -71,17 +71,17 @@ static COLORREF intensified_color( COLORREF ival)
    /* For use in adjusting colors for A_DIMmed characters.  Just */
    /* knocks down the intensity of R, G, and B by 1/3.           */
 
-static COLORREF dimmed_color( COLORREF ival)
+static PACKED_RGB dimmed_color( PACKED_RGB ival)
 {
     unsigned i;
-    COLORREF oval = 0;
+    PACKED_RGB oval = 0;
 
     for( i = 0; i < 3; i++, ival >>= 8)
     {
         unsigned rgb = (unsigned)( ival & 0xff);
 
         rgb -= (rgb / 3);
-        oval |= ((COLORREF)rgb << (i * 8));
+        oval |= ((PACKED_RGB)rgb << (i * 8));
     }
     return( oval);
 }
@@ -93,9 +93,9 @@ static COLORREF dimmed_color( COLORREF ival)
    /* each platform.  But they all look pretty much alike.  */
 
             /* PDCurses stores RGBs in fifteen bits,  five bits each */
-            /* for red, green, blue.  A COLORREF uses eight bits per */
+            /* for red, green, blue.  A PACKED_RGB uses eight bits per */
             /* channel.  Hence the following.                        */
-static COLORREF extract_packed_rgb( const chtype color)
+static PACKED_RGB extract_packed_rgb( const chtype color)
 {
     const int red   = (int)( (color << 3) & 0xf8);
     const int green = (int)( (color >> 2) & 0xf8);
@@ -105,7 +105,7 @@ static COLORREF extract_packed_rgb( const chtype color)
 }
 
 void PDC_get_rgb_values( const chtype srcp,
-            COLORREF *foreground_rgb, COLORREF *background_rgb)
+            PACKED_RGB *foreground_rgb, PACKED_RGB *background_rgb)
 {
     const int color = (int)(( srcp & A_COLOR) >> PDC_COLOR_SHIFT);
     bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
@@ -121,7 +121,7 @@ void PDC_get_rgb_values( const chtype srcp,
     else
 #endif
     {
-        extern COLORREF *pdc_rgbs;
+        extern PACKED_RGB *pdc_rgbs;
         short foreground_index, background_index;
 
         PDC_pair_content( (short)color, &foreground_index, &background_index);
@@ -141,7 +141,7 @@ void PDC_get_rgb_values( const chtype srcp,
     }
     if( reverse_colors)
     {
-        const COLORREF temp = *foreground_rgb;
+        const PACKED_RGB temp = *foreground_rgb;
 
         *foreground_rgb = *background_rgb;
         *background_rgb = temp;
@@ -157,7 +157,7 @@ void PDC_get_rgb_values( const chtype srcp,
         *background_rgb = dimmed_color( *background_rgb);
 }
 
-static char *color_string( char *otext, const COLORREF rgb)
+static char *color_string( char *otext, const PACKED_RGB rgb)
 {
    if( PDC_capabilities & A_RGB_COLOR)
       sprintf( otext, "2;%d;%d;%dm", GetRValue( rgb),
@@ -189,9 +189,9 @@ static char *color_string( char *otext, const COLORREF rgb)
 
 static void reset_color( const chtype ch)
 {
-    static COLORREF prev_bg = (COLORREF)-1;
-    static COLORREF prev_fg = (COLORREF)-1;
-    COLORREF bg, fg;
+    static PACKED_RGB prev_bg = (PACKED_RGB)-1;
+    static PACKED_RGB prev_fg = (PACKED_RGB)-1;
+    PACKED_RGB bg, fg;
     char txt[20];
 
     PDC_get_rgb_values( ch, &fg, &bg);
@@ -236,10 +236,10 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
           printf( (*srcp & A_BLINK) ? BLINK_ON : BLINK_OFF);
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
           reset_color( *srcp);
-       if( ch < MAX_UNICODE)
+       if( ch < (int)MAX_UNICODE)
           printf( "%lc", (wchar_t)ch);
 #ifdef USING_COMBINING_CHARACTER_SCHEME
-       else if( ch > MAX_UNICODE)      /* chars & fullwidth supported */
+       else if( ch > (int)MAX_UNICODE)      /* chars & fullwidth supported */
        {
            cchar_t root, newchar;
 

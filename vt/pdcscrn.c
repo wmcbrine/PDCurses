@@ -21,7 +21,7 @@ chtype PDC_capabilities = 0;
 /* COLOR_PAIR to attribute encoding table. */
 
 static short *color_pair_indices = (short *)NULL;
-COLORREF *pdc_rgbs = (COLORREF *)NULL;
+PACKED_RGB *pdc_rgbs = (PACKED_RGB *)NULL;
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -84,7 +84,7 @@ void PDC_scr_free( void)
 
     if (pdc_rgbs)
         free(pdc_rgbs);
-    pdc_rgbs = (COLORREF *)NULL;
+    pdc_rgbs = (PACKED_RGB *)NULL;
 }
 
 #ifndef _WIN32
@@ -133,7 +133,7 @@ int PDC_scr_open(int argc, char **argv)
        }
     SP = calloc(1, sizeof(SCREEN));
     color_pair_indices = (short *)calloc(PDC_COLOR_PAIRS * 2, sizeof( short));
-    pdc_rgbs = (COLORREF *)calloc(N_COLORS, sizeof( COLORREF));
+    pdc_rgbs = (PACKED_RGB *)calloc(N_COLORS, sizeof( PACKED_RGB));
     if (!SP || !color_pair_indices || !pdc_rgbs)
         return ERR;
 
@@ -322,7 +322,7 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content( short color, short *red, short *green, short *blue)
 {
-    COLORREF col = pdc_rgbs[color];
+    PACKED_RGB col = pdc_rgbs[color];
 
     *red = DIVROUND(GetRValue(col) * 1000, 255);
     *green = DIVROUND(GetGValue(col) * 1000, 255);
@@ -333,7 +333,7 @@ int PDC_color_content( short color, short *red, short *green, short *blue)
 
 int PDC_init_color( short color, short red, short green, short blue)
 {
-    const COLORREF new_rgb = RGB(DIVROUND(red * 255, 1000),
+    const PACKED_RGB new_rgb = RGB(DIVROUND(red * 255, 1000),
                                  DIVROUND(green * 255, 1000),
                                  DIVROUND(blue * 255, 1000));
 

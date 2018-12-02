@@ -1,4 +1,4 @@
-#define COLORREF int32_t
+#define PACKED_RGB int32_t
 #ifndef DIVROUND
 #define DIVROUND( A, B) ((A + B / 2) / B)
 #endif

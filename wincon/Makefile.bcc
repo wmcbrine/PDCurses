@@ -1,6 +1,7 @@
 # Borland MAKE Makefile for PDCurses library - Windows console BC++ 7.0+
 #
-# Usage: make -f [path\]Makefile.bcc [DEBUG=] [WIDE=] [UTF8=] [target]
+# Usage: make -f [path\]Makefile.bcc [DEBUG=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -34,8 +35,12 @@ WIDEOPT		= -DPDC_WIDE
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
+!ifdef INFOEX
+INFOPT          = -DHAVE_NO_INFOEX
+!endif
+
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe $(CFLAGS) \
-$(WIDEOPT) $(UTF8OPT)
+$(WIDEOPT) $(UTF8OPT) $(INFOPT)
 
 LIBEXE		= tlib /C /E /0 /a
 

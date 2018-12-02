@@ -1,6 +1,7 @@
 # Visual C++ NMakefile for PDCurses library - Windows console VC++ 2.0+
 #
-# Usage: nmake -f [path\]Makefile.vc [DEBUG=] [DLL=] [WIDE=] [UTF8=] [target]
+# Usage: nmake -f [path\]Makefile.vc [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -38,6 +39,10 @@ WIDEOPT		= -DPDC_WIDE
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
+!ifdef INFOEX
+INFOPT		= -DHAVE_NO_INFOEX
+!endif
+
 SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /MACHINE:$(PLATFORM) /OUT:pdcurses.dll
 
 LINK		= link.exe -nologo
@@ -59,7 +64,7 @@ PDCLIBS		= $(LIBCURSES)
 !endif
 
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c $(CFLAGS) $(DLLOPT) \
-$(WIDEOPT) $(UTF8OPT)
+$(WIDEOPT) $(UTF8OPT) $(INFOPT)
 
 all:	$(PDCLIBS)
 

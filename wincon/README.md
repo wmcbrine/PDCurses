@@ -56,6 +56,10 @@ Building
   PDC_DLL_BUILD when linking against it. (Or, if you only want to use
   the DLL, you could add this definition to your curses.h.)
 
+- If your build stops with errors about PCONSOLE_SCREEN_BUFFER_INFOEX,
+  add the parameter "INFOEX=N" to your make command line and try again.
+  (This will happen with older compile environments.)
+
 
 Distribution Status
 -------------------

@@ -1,6 +1,7 @@
 # GNU MAKE Makefile for PDCurses library - Windows console GCC
 #
-# Usage: make [-f path\Makefile] [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [tgt]
+# Usage: make [-f path\Makefile] [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [tgt]
 #
 # where tgt can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
@@ -61,6 +62,10 @@ else
 	LIBCURSES = pdcurses.a
 	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	CLEAN = *.a
+endif
+
+ifeq ($(INFOEX),N)
+	CFLAGS += -DHAVE_NO_INFOEX
 endif
 
 .PHONY: all libs clean demos dist

@@ -6,12 +6,60 @@
 #include <unistd.h>
 #include <termios.h>
 #include <sys/ioctl.h>
+
 static struct termios orig_term;
 #endif
 #include <stdint.h>
 #include <assert.h>
 #include "curspriv.h"
 #include "pdcvt.h"
+
+#ifdef _WIN32
+#include <windows.h>
+
+#ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#endif
+#ifndef ENABLE_VIRTUAL_TERMINAL_INPUT
+#define ENABLE_VIRTUAL_TERMINAL_INPUT      0x0200
+#endif
+#ifndef DISABLE_NEWLINE_AUTO_RETURN
+#define DISABLE_NEWLINE_AUTO_RETURN        0x0008
+#endif
+
+static int set_win10_for_vt_codes( const bool setting_mode)
+{
+    // Set output mode to handle virtual terminal sequences
+    const HANDLE hOut = GetStdHandle( STD_OUTPUT_HANDLE);
+    const HANDLE hIn = GetStdHandle( STD_INPUT_HANDLE);
+    DWORD dwMode = 0;
+    const DWORD out_mask = ENABLE_VIRTUAL_TERMINAL_PROCESSING
+                           | DISABLE_NEWLINE_AUTO_RETURN;
+    const DWORD in_mask = ENABLE_VIRTUAL_TERMINAL_INPUT;
+
+    if( hOut == INVALID_HANDLE_VALUE || hIn == INVALID_HANDLE_VALUE)
+        return GetLastError( );
+
+    if( !GetConsoleMode( hIn, &dwMode))
+        return GetLastError( );
+    if( setting_mode)
+        dwMode |= in_mask;
+    else                    /* clearing VT mode,  not setting it */
+        dwMode &= ~in_mask;
+    if( !SetConsoleMode( hIn, dwMode))
+        return GetLastError( );
+
+    if( !GetConsoleMode( hOut, &dwMode))
+        return GetLastError( );
+    if( setting_mode)
+        dwMode |= out_mask;
+    else                    /* clearing VT mode,  not setting it */
+        dwMode &= ~out_mask;
+    if( !SetConsoleMode( hOut, dwMode))
+        return GetLastError( );
+    return( 0);
+}
+#endif
 
 int PDC_rows = -1, PDC_cols = -1;
 bool PDC_resize_occurred = FALSE;
@@ -66,7 +114,9 @@ void PDC_scr_close( void)
    printf( "\033[?47l");      /* restore screen */
    PDC_gotoyx( PDC_cols - 1, 0);
    printf( "\033[?1000l");        /* turn off mouse events */
-#ifndef _WIN32
+#ifdef _WIN32
+   set_win10_for_vt_codes( FALSE);
+#else
    tcsetattr( STDIN, TCSANOW, &orig_term);
 #endif
    return;
@@ -108,13 +158,15 @@ static void sigwinchHandler( int sig)
 
 int PDC_scr_open(int argc, char **argv)
 {
-#ifndef _WIN32
-    struct sigaction sa;
-    struct termios term;
-#endif
     int i, r, g, b;
     char *capabilities = getenv( "PDC_VT");
     const char *colorterm = getenv( "COLORTERM");
+#ifndef _WIN32
+    struct sigaction sa;
+    struct termios term;
+#else
+    set_win10_for_vt_codes( TRUE);
+#endif
 
     if( colorterm && !strcmp( colorterm, "truecolor"))
        PDC_capabilities |= A_RGB_COLOR;

@@ -41,9 +41,6 @@ static bool check_key( int *c)
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
     if( select( STDIN + 1, &rdset, NULL, NULL, &timeout) > 0)
-#else
-    if( kbhit( ))
-#endif
        {
        rval = TRUE;
        if( c)
@@ -51,6 +48,16 @@ static bool check_key( int *c)
        }
     else
        rval = FALSE;
+#else
+    if( _kbhit( ))
+       {
+       rval = TRUE;
+       if( c)
+          *c = _getch( );
+       }
+    else
+       rval = FALSE;
+#endif
     return( rval);
 }
 

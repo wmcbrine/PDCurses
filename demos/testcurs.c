@@ -332,7 +332,7 @@ void inputTest(WINDOW *win)
     int w, h, bx, by, sw, sh, i, c, num = 0;
     char buffer[80];
     WINDOW *subWin;
-    static const char spinner[4] = "/-\\|";
+    static const char spinner[5] = "/-\\|";
     int spinner_count = 0;
 
     wclear(win);

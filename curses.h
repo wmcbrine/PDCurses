@@ -432,54 +432,54 @@ bits for character data.
 
 /*** Alternate character set macros ***/
 
-#define ACS_PICK(w) ((chtype)w | A_ALTCHARSET)
+#define PDC_ACS(w) ((chtype)w | A_ALTCHARSET)
 
 /* VT100-compatible symbols -- box chars */
 
-#define ACS_ULCORNER  ACS_PICK('l')
-#define ACS_LLCORNER  ACS_PICK('m')
-#define ACS_URCORNER  ACS_PICK('k')
-#define ACS_LRCORNER  ACS_PICK('j')
-#define ACS_RTEE      ACS_PICK('u')
-#define ACS_LTEE      ACS_PICK('t')
-#define ACS_BTEE      ACS_PICK('v')
-#define ACS_TTEE      ACS_PICK('w')
-#define ACS_HLINE     ACS_PICK('q')
-#define ACS_VLINE     ACS_PICK('x')
-#define ACS_PLUS      ACS_PICK('n')
+#define ACS_ULCORNER  PDC_ACS('l')
+#define ACS_LLCORNER  PDC_ACS('m')
+#define ACS_URCORNER  PDC_ACS('k')
+#define ACS_LRCORNER  PDC_ACS('j')
+#define ACS_RTEE      PDC_ACS('u')
+#define ACS_LTEE      PDC_ACS('t')
+#define ACS_BTEE      PDC_ACS('v')
+#define ACS_TTEE      PDC_ACS('w')
+#define ACS_HLINE     PDC_ACS('q')
+#define ACS_VLINE     PDC_ACS('x')
+#define ACS_PLUS      PDC_ACS('n')
 
 /* VT100-compatible symbols -- other */
 
-#define ACS_S1        ACS_PICK('o')
-#define ACS_S9        ACS_PICK('s')
-#define ACS_DIAMOND   ACS_PICK('`')
-#define ACS_CKBOARD   ACS_PICK('a')
-#define ACS_DEGREE    ACS_PICK('f')
-#define ACS_PLMINUS   ACS_PICK('g')
-#define ACS_BULLET    ACS_PICK('~')
+#define ACS_S1        PDC_ACS('o')
+#define ACS_S9        PDC_ACS('s')
+#define ACS_DIAMOND   PDC_ACS('`')
+#define ACS_CKBOARD   PDC_ACS('a')
+#define ACS_DEGREE    PDC_ACS('f')
+#define ACS_PLMINUS   PDC_ACS('g')
+#define ACS_BULLET    PDC_ACS('~')
 
 /* Teletype 5410v1 symbols -- these are defined in SysV curses, but
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#define ACS_LARROW    ACS_PICK(',')
-#define ACS_RARROW    ACS_PICK('+')
-#define ACS_DARROW    ACS_PICK('.')
-#define ACS_UARROW    ACS_PICK('-')
-#define ACS_BOARD     ACS_PICK('h')
-#define ACS_LANTERN   ACS_PICK('i')
-#define ACS_BLOCK     ACS_PICK('0')
+#define ACS_LARROW    PDC_ACS(',')
+#define ACS_RARROW    PDC_ACS('+')
+#define ACS_DARROW    PDC_ACS('.')
+#define ACS_UARROW    PDC_ACS('-')
+#define ACS_BOARD     PDC_ACS('h')
+#define ACS_LANTERN   PDC_ACS('i')
+#define ACS_BLOCK     PDC_ACS('0')
 
 /* That goes double for these -- undocumented SysV symbols. Don't use
    them. */
 
-#define ACS_S3        ACS_PICK('p')
-#define ACS_S7        ACS_PICK('r')
-#define ACS_LEQUAL    ACS_PICK('y')
-#define ACS_GEQUAL    ACS_PICK('z')
-#define ACS_PI        ACS_PICK('{')
-#define ACS_NEQUAL    ACS_PICK('|')
-#define ACS_STERLING  ACS_PICK('}')
+#define ACS_S3        PDC_ACS('p')
+#define ACS_S7        PDC_ACS('r')
+#define ACS_LEQUAL    PDC_ACS('y')
+#define ACS_GEQUAL    PDC_ACS('z')
+#define ACS_PI        PDC_ACS('{')
+#define ACS_NEQUAL    PDC_ACS('|')
+#define ACS_STERLING  PDC_ACS('}')
 
 /* Box char aliases */
 

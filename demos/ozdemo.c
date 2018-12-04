@@ -337,23 +337,34 @@ int main(int argc, char **argv)
         w = width - 2;
         nodelay(win, TRUE);
 
-        /* jbuhler's re-hacked scrolling messages */
+        mvwhline(win, height / 2, 1, ' ', w);
 
         for (j = 0; messages[j] != NULL; j++)
         {
             char *message = messages[j];
             int msg_len = strlen(message);
-            int scroll_len = w + 2 * msg_len;
-            char *scrollbuf = malloc(scroll_len);
-            char *visbuf = scrollbuf + msg_len;
             int stop = 0;
-            int i;
+            int xpos, start, count, n;
 
-            for (i = w + msg_len; i > 0; i--)
+            for (n = 0; n <= w + msg_len; n++)
             {
-                memset(visbuf, ' ', w);
-                strncpy(scrollbuf + i, message, msg_len);
-                mvwaddnstr(win, height / 2, 1, visbuf, w);
+                if (n < w)
+                {
+                    xpos = w - n;
+                    start = 0;
+                    count = (n > msg_len) ? msg_len : n;
+                }
+                else
+                {
+                    xpos = 0;
+                    start = n - w;
+                    count = (w > msg_len - start) ? msg_len - start : w;
+                }
+
+                mvwaddnstr(win, height / 2, xpos + 1, message + start, count);
+                if (xpos + count < w)
+                    waddstr(win, " ");
+
                 wrefresh(win);
 
                 if (wgetch(win) != ERR)
@@ -365,8 +376,6 @@ int main(int argc, char **argv)
 
                 napms(100);
             }
-
-            free(scrollbuf);
 
             if (stop)
                 break;

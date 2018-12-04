@@ -27,7 +27,7 @@ ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
 endif
 
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/sdl2
 

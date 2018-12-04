@@ -15,7 +15,7 @@ PDCURSES_SRCDIR = ..
 !endif
 
 !include $(PDCURSES_SRCDIR)\version.mif
-!include $(PDCURSES_SRCDIR)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\common\libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)\wincon
 
@@ -90,4 +90,4 @@ PLATFORM1 = Borland C++ Wincon
 PLATFORM2 = Borland C/C++ 7.2 for Windows console
 ARCNAME = pdc$(VER)_bcc_wincon
 
-!include $(PDCURSES_SRCDIR)\makedist.mif
+!include $(PDCURSES_SRCDIR)\common\makedist.mif

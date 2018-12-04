@@ -14,7 +14,7 @@ ifndef PDCURSES_SRCDIR
 endif
 
 include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/os2
 
@@ -99,4 +99,4 @@ PLATFORM1 = EMX OS/2
 PLATFORM2 = EMX 0.9d for OS/2
 ARCNAME = pdc$(VER)_emx_os2
 
-include $(PDCURSES_SRCDIR)/makedist.mif
+include $(PDCURSES_SRCDIR)/common/makedist.mif

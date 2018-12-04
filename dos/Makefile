@@ -14,7 +14,7 @@ ifndef PDCURSES_SRCDIR
 endif
 
 include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/dos
 
@@ -86,4 +86,4 @@ PLATFORM1 = DJGPP 2.05
 PLATFORM2 = DJGPP 2.05 for DOS
 ARCNAME = pdc$(VER)djg
 
-include $(PDCURSES_SRCDIR)/makedist.mif
+include $(PDCURSES_SRCDIR)/common/makedist.mif

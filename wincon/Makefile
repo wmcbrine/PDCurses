@@ -20,7 +20,7 @@ ifndef PDCURSES_SRCDIR
 endif
 
 include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/wincon
 
@@ -115,4 +115,4 @@ PLATFORM1 = GCC Wincon
 PLATFORM2 = GCC for Windows console
 ARCNAME = pdc$(VER)_gcc_wincon
 
-include $(PDCURSES_SRCDIR)/makedist.mif
+include $(PDCURSES_SRCDIR)/common/makedist.mif

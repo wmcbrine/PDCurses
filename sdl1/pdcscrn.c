@@ -4,9 +4,9 @@
 
 #include <stdlib.h>
 #ifndef PDC_WIDE
-#include "deffont.h"
+#include "../common/deffont.h"
 #endif
-#include "deficon.h"
+#include "../common/deficon.h"
 
 #ifdef PDC_WIDE
 # ifndef PDC_FONT_PATH

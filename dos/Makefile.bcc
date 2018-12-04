@@ -17,7 +17,7 @@ PDCURSES_SRCDIR = ..
 !endif
 
 !include $(PDCURSES_SRCDIR)\version.mif
-!include $(PDCURSES_SRCDIR)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\common\libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)\dos
 
@@ -48,7 +48,7 @@ demos:	$(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-$(RM) $@
-	$(LIBEXE) $@ @$(PDCURSES_SRCDIR)\borland.lrf
+	$(LIBEXE) $@ @$(PDCURSES_SRCDIR)\common\borland.lrf
 
 .autodepend
 
@@ -80,4 +80,4 @@ PLATFORM1 = Borland C++ 3.1
 PLATFORM2 = Borland C/C++ 3.1 for DOS
 ARCNAME = pdc$(VER)bcc
 
-!include $(PDCURSES_SRCDIR)\makedist.mif
+!include $(PDCURSES_SRCDIR)\common\makedist.mif

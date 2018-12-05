@@ -267,13 +267,13 @@ static int _process_key_event(void)
         }
         else
         {
-            memmove(event.text.text, event.text.text+bytes,
-                    strlen(event.text.text)-bytes+1);
+            memmove(event.text.text, event.text.text + bytes,
+                    strlen(event.text.text) - bytes + 1);
         }
         return _handle_alt_keys(key);
 #else
         key = (unsigned char)event.text.text[0];
-        memmove(event.text.text, event.text.text+1,
+        memmove(event.text.text, event.text.text + 1,
                 strlen(event.text.text));
         return key > 0x7f ? -1 : _handle_alt_keys(key);
 #endif

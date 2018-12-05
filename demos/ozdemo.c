@@ -344,20 +344,20 @@ int main(int argc, char **argv)
             char *message = messages[j];
             int msg_len = strlen(message);
             int stop = 0;
-            int xpos, start, count, n;
+            int xpos, start, count;
 
-            for (n = 0; n <= w + msg_len; n++)
+            for (i = 0; i <= w + msg_len; i++)
             {
-                if (n < w)
+                if (i < w)
                 {
-                    xpos = w - n;
+                    xpos = w - i;
                     start = 0;
-                    count = (n > msg_len) ? msg_len : n;
+                    count = (i > msg_len) ? msg_len : i;
                 }
                 else
                 {
                     xpos = 0;
-                    start = n - w;
+                    start = i - w;
                     count = (w > msg_len - start) ? msg_len - start : w;
                 }
 

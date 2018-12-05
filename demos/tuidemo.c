@@ -19,11 +19,7 @@
 
 /* change this if source at other location */
 
-#ifdef XCURSES
 # define FNAME  "../demos/tui.c"
-#else
-# define FNAME  "..\\demos\\tui.c"
-#endif
 
 /**************************** strings entry box ***************************/
 

@@ -332,8 +332,8 @@ int main(int argc, char **argv)
 
         init_pair(5, COLOR_BLUE, COLOR_WHITE);
         wattrset(win, COLOR_PAIR(5) | A_BLINK);
-        mvwaddstr(win, height - 2, 3,
-            " PDCurses 3.4 - DOS, OS/2, Win32, X11, SDL");
+        mvwaddstr(win, height - 2, 2,
+            " PDCurses 3.4 - DOS, OS/2, Windows, X11, SDL");
         wrefresh(win);
 
         /* Draw running messages */
@@ -343,23 +343,34 @@ int main(int argc, char **argv)
         w = width - 2;
         nodelay(win, TRUE);
 
-        /* jbuhler's re-hacked scrolling messages */
+        mvwhline(win, height / 2, 1, ' ', w);
 
         for (j = 0; messages[j] != NULL; j++)
         {
             char *message = messages[j];
-            int msg_len = (int)strlen(message);
-            int scroll_len = w + 2 * msg_len;
-            char *scrollbuf = malloc(scroll_len);
-            char *visbuf = scrollbuf + msg_len;
+            int msg_len = strlen(message);
             int stop = 0;
-            int i;
+            int xpos, start, count, n;
 
-            for (i = w + msg_len; i > 0; i--)
+            for (n = 0; n <= w + msg_len; n++)
             {
-                memset(visbuf, ' ', w);
-                strncpy(scrollbuf + i, message, msg_len);
-                mvwaddnstr(win, height / 2, 1, visbuf, w);
+                if (n < w)
+                {
+                    xpos = w - n;
+                    start = 0;
+                    count = (n > msg_len) ? msg_len : n;
+                }
+                else
+                {
+                    xpos = 0;
+                    start = n - w;
+                    count = (w > msg_len - start) ? msg_len - start : w;
+                }
+
+                mvwaddnstr(win, height / 2, xpos + 1, message + start, count);
+                if (xpos + count < w)
+                    waddstr(win, " ");
+
                 wrefresh(win);
 
                 if (wgetch(win) != ERR)
@@ -371,8 +382,6 @@ int main(int argc, char **argv)
 
                 napms(100);
             }
-
-            free(scrollbuf);
 
             if (stop)
                 break;
@@ -399,8 +408,8 @@ int main(int argc, char **argv)
 
         i = height - 2;
         wattrset(win, COLOR_PAIR(5));
-        mvwaddstr(win, i, 3,
-            "   Type a key to continue or ESC to quit  ");
+        mvwaddstr(win, i, 2,
+            "    Type a key to continue or ESC to quit   ");
         wrefresh(win);
 
         if (WaitForUser() == '\033')

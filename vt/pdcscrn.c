@@ -194,7 +194,7 @@ int PDC_scr_open(int argc, char **argv)
     {
         const int intensity = ((i & 8) ? 0xff : 0xc0);
 
-        pdc_rgbs[i] = RGB( ((i & COLOR_RED) ? intensity : 0),
+        pdc_rgbs[i] = PACK_RGB( ((i & COLOR_RED) ? intensity : 0),
                            ((i & COLOR_GREEN) ? intensity : 0),
                            ((i & COLOR_BLUE) ? intensity : 0));
     }
@@ -203,11 +203,11 @@ int PDC_scr_open(int argc, char **argv)
     for( r = 0; r < 6; r++)
         for( g = 0; g < 6; g++)
             for( b = 0; b < 6; b++)
-                pdc_rgbs[i++] = RGB( r ? r * 40 + 55 : 0,
+                pdc_rgbs[i++] = PACK_RGB( r ? r * 40 + 55 : 0,
                                    g ? g * 40 + 55 : 0,
                                    b ? b * 40 + 55 : 0);
     for( i = 0; i < 24; i++)
-        pdc_rgbs[i + 232] = RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
+        pdc_rgbs[i + 232] = PACK_RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
     setbuf( stdin, NULL);
     setbuf( stdout, NULL);
 #ifndef _WIN32
@@ -376,16 +376,16 @@ int PDC_color_content( short color, short *red, short *green, short *blue)
 {
     PACKED_RGB col = pdc_rgbs[color];
 
-    *red = DIVROUND(GetRValue(col) * 1000, 255);
-    *green = DIVROUND(GetGValue(col) * 1000, 255);
-    *blue = DIVROUND(GetBValue(col) * 1000, 255);
+    *red = DIVROUND( Get_RValue(col) * 1000, 255);
+    *green = DIVROUND( Get_GValue(col) * 1000, 255);
+    *blue = DIVROUND( Get_BValue(col) * 1000, 255);
 
     return OK;
 }
 
 int PDC_init_color( short color, short red, short green, short blue)
 {
-    const PACKED_RGB new_rgb = RGB(DIVROUND(red * 255, 1000),
+    const PACKED_RGB new_rgb = PACK_RGB(DIVROUND(red * 255, 1000),
                                  DIVROUND(green * 255, 1000),
                                  DIVROUND(blue * 255, 1000));
 

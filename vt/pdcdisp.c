@@ -101,7 +101,7 @@ static PACKED_RGB extract_packed_rgb( const chtype color)
     const int green = (int)( (color >> 2) & 0xf8);
     const int blue  = (int)( (color >> 7) & 0xf8);
 
-    return( RGB( red, green, blue));
+    return( PACK_RGB( red, green, blue));
 }
 
 void PDC_get_rgb_values( const chtype srcp,
@@ -160,13 +160,13 @@ void PDC_get_rgb_values( const chtype srcp,
 static char *color_string( char *otext, const PACKED_RGB rgb)
 {
    if( PDC_capabilities & A_RGB_COLOR)
-      sprintf( otext, "2;%d;%d;%dm", GetRValue( rgb),
-                             GetGValue( rgb), GetBValue( rgb));
+      sprintf( otext, "2;%d;%d;%dm", Get_RValue( rgb),
+                             Get_GValue( rgb), Get_BValue( rgb));
    else
       {
-      const int red = GetRValue( rgb);
-      const int green = GetGValue( rgb);
-      const int blue = GetBValue( rgb);
+      const int red = Get_RValue( rgb);
+      const int green = Get_GValue( rgb);
+      const int blue = Get_BValue( rgb);
       int idx;
 
       if( red == green && red == blue)   /* gray scale: indices from */

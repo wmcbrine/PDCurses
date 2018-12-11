@@ -218,6 +218,10 @@ int main( int argc, char **argv)
                     }
                     break;
 #ifdef PDCURSES
+                case 'z':
+                    traceon( );
+                    PDC_debug( "Debugging is on\n");
+                    break;
                 case 't':
                     title_text = argv[i] + 2;
                     break;

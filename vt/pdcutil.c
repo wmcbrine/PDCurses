@@ -1,4 +1,9 @@
-#include <unistd.h>
+#ifdef _WIN32
+   #include <windows.h>
+   #undef MOUSE_MOVED
+#else
+   #include <unistd.h>
+#endif
 #include "curses.h"
 
 void PDC_beep(void)
@@ -7,7 +12,13 @@ void PDC_beep(void)
 
 void PDC_napms(int ms)
 {
+#ifdef _WIN32
+    Sleep(ms);
+#else
+#ifndef DOS
     usleep(1000 * ms);
+#endif
+#endif
 }
 
 

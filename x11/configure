@@ -6074,4 +6074,3 @@ $as_echo "#define USE_NEXTAW /**/" >>confdefs.h
 
 
 $as_echo "#define XPOINTER_TYPEDEFED /**/" >>confdefs.h
-

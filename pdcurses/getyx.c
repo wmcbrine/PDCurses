@@ -145,6 +145,6 @@ int setsyx(int y, int x)
     {
         curscr->_leaveit = FALSE;
         wmove(curscr, y, x);
-	return OK;
+        return OK;
     }
 }

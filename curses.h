@@ -1220,7 +1220,7 @@ PDCEX  int     draino(int);
 PDCEX  int     resetterm(void);
 PDCEX  int     fixterm(void);
 PDCEX  int     saveterm(void);
-PDCEX  int     setsyx(int, int);
+PDCEX  void    setsyx(int, int);
 
 PDCEX  int     mouse_set(unsigned long);
 PDCEX  int     mouse_on(unsigned long);

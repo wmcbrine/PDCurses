@@ -11,8 +11,7 @@ Building
 --------
 
 - Type "make". ("make clean" to remove the built files.) A Unix-like
-  environment is required for the Makefile. This is called automatically
-  when doing a top-level make of the X11 port.
+  environment is required for the Makefile.
 
 
 Distribution Status

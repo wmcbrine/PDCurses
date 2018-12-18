@@ -4,7 +4,7 @@ Welcome to PDCurses!
 Public Domain Curses, aka PDCurses, is an implementation of X/Open
 curses for multiple platforms. The latest version can be found at:
 
-   http://pdcurses.org/
+   https://pdcurses.org/
 
 For changes, see the [HISTORY] file.
 

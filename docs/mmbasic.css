@@ -1,0 +1,6 @@
+/* Squash the list for NN4 (and cover an IE6 bug with "outside") */
+
+#navbar ul { display: inline }
+#navbar li { list-style: none outside; display: inline }
+
+a { text-decoration: underline }

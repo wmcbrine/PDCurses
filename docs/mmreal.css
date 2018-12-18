@@ -1,0 +1,80 @@
+body { color: black; background: white; font-family: Helvetica, sans-serif }
+html, body, div#navbar { height: 100%; margin: 0; padding: 0 }
+
+div#navbar { color: black; background: #ccf }
+
+a { text-decoration: none }
+
+a:link { color: blue; background: white }
+a:visited { color: navy; background: white }
+a:hover { color: red; background: #ffc; text-decoration: underline }
+a[name]:hover { color: black; background: #ccf }
+
+img { border: 0 }
+
+div#navbar {
+	width: 8em;
+	position: fixed;
+	overflow: auto;
+	top: 0;
+	left: 0
+}
+
+div#navbar ul { margin: 0; padding: 0 }
+
+div#navbar li {
+	display: block;
+	margin: .3em;
+	padding: 0
+}
+
+div#navbar li a {
+	display: block;
+	font-size: small;
+	margin: 0;
+	padding: .15em
+}
+
+div#maincontent { margin-left: 8em; padding: .5em }
+
+h2 {
+	border-bottom: 2px solid #ccf;
+	font-size: large;
+}
+
+div#maincontent ul {
+	list-style: none;
+}
+
+div#maincontent ul li {
+	margin: .3em;
+	padding: .15em
+}
+
+div#maincontent ul li a { font-weight: bold }
+
+div#toplogo {
+	text-align: center;
+	margin-top: 1em;
+	margin-bottom: 1em
+}
+
+address {
+	border-top: 1px dotted;
+	padding-top: 3px
+}
+
+hr { display: none }
+
+table, th, td { border: 1px dotted }
+td, th { text-align: left; padding-left: .15em }
+th { font-weight: bold; padding-right: .15em }
+td { padding-left: .5em }
+
+/* IE6 junk: */
+
+@media screen {
+* html { overflow: hidden }
+* html body { overflow: auto }
+* html div#navbar { position: absolute }
+}

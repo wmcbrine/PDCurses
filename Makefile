@@ -11,7 +11,7 @@ all:
 	@echo Look in folders for platform-specific build instructions.
 
 manual:
-	cd doc; $(MAKE) $(MFLAGS) $@
+	cd man; $(MAKE) $(MFLAGS) $@
 
 $(ZIPFILE):
 	zip -9ory $(ZIPFILE) *

@@ -1,6 +1,7 @@
 PDCurses Implementor's Guide
 ============================
 
+- Version 1.4 - 2018/12/?? - new PDCurses.md location
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
                              style; markdown
 - Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(),
@@ -11,8 +12,7 @@ PDCurses Implementor's Guide
 This document is for those wishing to port PDCurses to a new platform,
 or just wanting to better understand how it works. Nothing here should
 be needed for application programming; for that, refer to PDCurses.md,
-as built in doc/, or distributed as a file separate from this source
-package. This document assumes that you've read the user-level
+as built in man/ . This document assumes that you've read the user-level
 documentation and are very familiar with application-level curses
 programming.
 

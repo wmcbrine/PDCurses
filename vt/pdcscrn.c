@@ -2,17 +2,23 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
-#ifndef _WIN32
+#if !defined( _WIN32) && !defined( DOS)
+#define USE_TERMIOS
 #include <unistd.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 
 static struct termios orig_term;
 #endif
-#include <stdint.h>
 #include <assert.h>
 #include "curspriv.h"
 #include "pdcvt.h"
+
+#ifdef DOS
+bool PDC_is_ansi = TRUE;
+#else
+bool PDC_is_ansi = FALSE;
+#endif
 
 #ifdef _WIN32
 #include <windows.h>
@@ -27,26 +33,42 @@ static struct termios orig_term;
 #define DISABLE_NEWLINE_AUTO_RETURN        0x0008
 #endif
 
+/* In DOS/Windows,  we have two possible modes of operation.  If we can
+successfully use SetConsoleMode to ENABLE_VIRTUAL_TERMINAL_INPUT,
+we have access to most of what we'd use on xterm.  If not,  we can only
+use what ANSI.SYS or ANSI.COM (or their NANSI or NNANSI variants) support.
+We'll get sixteen colors,  no mouse events,  no resizable windows,  etc.
+
+   So we check the return value from SetConsoleMode and set PDC_is_ansi
+accordingly.  (In DOS,  PDC_is_ansi is always true -- there's no xterm-like
+support there.  On non-MS platforms,  PDC_is_ansi is always false...
+though that should be revisited for the Linux console,  and probably
+elsewhere.)  */
+
 static int set_win10_for_vt_codes( const bool setting_mode)
 {
-    // Set output mode to handle virtual terminal sequences
-    const HANDLE hOut = GetStdHandle( STD_OUTPUT_HANDLE);
     const HANDLE hIn = GetStdHandle( STD_INPUT_HANDLE);
+    HANDLE hOut;
     DWORD dwMode = 0;
+    static DWORD old_input_mode;
     const DWORD out_mask = ENABLE_VIRTUAL_TERMINAL_PROCESSING
-                           | DISABLE_NEWLINE_AUTO_RETURN;
-    const DWORD in_mask = ENABLE_VIRTUAL_TERMINAL_INPUT;
+                               | DISABLE_NEWLINE_AUTO_RETURN;
 
-    if( hOut == INVALID_HANDLE_VALUE || hIn == INVALID_HANDLE_VALUE)
+    if( hIn == INVALID_HANDLE_VALUE)
         return GetLastError( );
-
-    if( !GetConsoleMode( hIn, &dwMode))
-        return GetLastError( );
+    PDC_is_ansi = TRUE;
     if( setting_mode)
-        dwMode |= in_mask;
-    else                    /* clearing VT mode,  not setting it */
-        dwMode &= ~in_mask;
+        {
+        GetConsoleMode( hIn, &old_input_mode);
+        dwMode = ENABLE_VIRTUAL_TERMINAL_INPUT;
+        }
+    else       /* restoring initial mode */
+        dwMode = old_input_mode;
     if( !SetConsoleMode( hIn, dwMode))
+        return GetLastError( );
+        // Set output mode to handle virtual terminal sequences
+    hOut = GetStdHandle( STD_OUTPUT_HANDLE);
+    if( hOut == INVALID_HANDLE_VALUE)
         return GetLastError( );
 
     if( !GetConsoleMode( hOut, &dwMode))
@@ -57,6 +79,9 @@ static int set_win10_for_vt_codes( const bool setting_mode)
         dwMode &= ~out_mask;
     if( !SetConsoleMode( hOut, dwMode))
         return GetLastError( );
+              /* If we've gotten this far,  the terminal has been  */
+              /* set up to process xterm-like sequences : */
+    PDC_is_ansi = FALSE;
     return( 0);
 }
 #endif
@@ -90,7 +115,7 @@ int PDC_resize_screen(int nlines, int ncols)
       initial_PDC_rows = nlines;
       initial_PDC_cols = ncols;
       }
-   else if( nlines > 1 && ncols > 1)
+   else if( nlines > 1 && ncols > 1 && !PDC_is_ansi)
       {
       printf( "\033[8;%d;%dt", nlines, ncols);
       PDC_rows = nlines;
@@ -117,7 +142,9 @@ void PDC_scr_close( void)
 #ifdef _WIN32
    set_win10_for_vt_codes( FALSE);
 #else
-   tcsetattr( STDIN, TCSANOW, &orig_term);
+   #if !defined( DOS)
+      tcsetattr( STDIN, TCSANOW, &orig_term);
+   #endif
 #endif
    return;
 }
@@ -137,7 +164,7 @@ void PDC_scr_free( void)
     pdc_rgbs = (PACKED_RGB *)NULL;
 }
 
-#ifndef _WIN32
+#ifdef USE_TERMIOS
 static void sigwinchHandler( int sig)
 {
    struct winsize ws;
@@ -154,20 +181,21 @@ static void sigwinchHandler( int sig)
 
 #define MAX_LINES 1000
 #define MAX_COLUMNS 1000
-#define N_COLORS 256
 
 int PDC_scr_open(int argc, char **argv)
 {
-    int i, r, g, b;
+    int i, r, g, b, n_colors;
     char *capabilities = getenv( "PDC_VT");
     const char *colorterm = getenv( "COLORTERM");
-#ifndef _WIN32
+#ifdef USE_TERMIOS
     struct sigaction sa;
     struct termios term;
-#else
+#endif
+#ifdef _WIN32
     set_win10_for_vt_codes( TRUE);
 #endif
 
+    PDC_LOG(("PDC_scr_open called\n"));
     if( colorterm && !strcmp( colorterm, "truecolor"))
        PDC_capabilities |= A_RGB_COLOR;
     if( capabilities)      /* these should really come from terminfo! */
@@ -184,13 +212,15 @@ int PDC_scr_open(int argc, char **argv)
           PDC_capabilities |= A_STANDOUT;
        }
     SP = calloc(1, sizeof(SCREEN));
-    color_pair_indices = (short *)calloc(PDC_COLOR_PAIRS * 2, sizeof( short));
-    pdc_rgbs = (PACKED_RGB *)calloc(N_COLORS, sizeof( PACKED_RGB));
+    color_pair_indices = (short *)calloc( PDC_COLOR_PAIRS * 2, sizeof( short));
+    n_colors = (PDC_is_ansi ? 16 : 256);
+    pdc_rgbs = (PACKED_RGB *)calloc( n_colors, sizeof( PACKED_RGB));
+    assert( SP && color_pair_indices && pdc_rgbs);
     if (!SP || !color_pair_indices || !pdc_rgbs)
         return ERR;
 
-    COLORS = N_COLORS;  /* should give this a try and see if it works! */
-    for( i = 0; i < 16; i++)
+    COLORS = n_colors;  /* should give this a try and see if it works! */
+    for( i = 0; i < 16 && i < n_colors; i++)
     {
         const int intensity = ((i & 8) ? 0xff : 0xc0);
 
@@ -203,14 +233,16 @@ int PDC_scr_open(int argc, char **argv)
     for( r = 0; r < 6; r++)
         for( g = 0; g < 6; g++)
             for( b = 0; b < 6; b++)
-                pdc_rgbs[i++] = PACK_RGB( r ? r * 40 + 55 : 0,
+                if( i < n_colors)
+                    pdc_rgbs[i++] = PACK_RGB( r ? r * 40 + 55 : 0,
                                    g ? g * 40 + 55 : 0,
                                    b ? b * 40 + 55 : 0);
     for( i = 0; i < 24; i++)
-        pdc_rgbs[i + 232] = PACK_RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
+        if( i + 232 < n_colors)
+            pdc_rgbs[i + 232] = PACK_RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
     setbuf( stdin, NULL);
     setbuf( stdout, NULL);
-#ifndef _WIN32
+#ifdef USE_TERMIOS
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     sa.sa_handler = sigwinchHandler;
@@ -220,6 +252,14 @@ int PDC_scr_open(int argc, char **argv)
         return( -1);
     }
     sigwinchHandler( 0);
+#else
+    {
+        const char *env = getenv("PDC_LINES");
+
+        PDC_rows = (env ? atoi( env) : 25);
+        env = getenv( "PDC_COLS");
+        PDC_cols = (env ? atoi( env) : 80);
+    }
 #endif
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->visibility = 0;                /* no cursor,  by default */
@@ -227,21 +267,15 @@ int PDC_scr_open(int argc, char **argv)
     SP->audible = TRUE;
     SP->mono = FALSE;
 
-
-#ifdef _WIN32
-    PDC_rows = 25;
-    PDC_cols = 80;
-#else
     while( PDC_get_rows( ) < 1 && PDC_get_columns( ) < 1)
       ;     /* wait for screen to be drawn and size determined */
-#endif
     if( initial_PDC_rows > 1 && initial_PDC_cols > 1)
-        {
+    {
         PDC_resize_screen( initial_PDC_rows, initial_PDC_cols);
         while( PDC_get_rows( ) != initial_PDC_rows
             && PDC_get_columns( ) != initial_PDC_rows)
            ;
-        }
+    }
 
     SP->lines = PDC_get_rows();
     SP->cols = PDC_get_columns();
@@ -257,17 +291,19 @@ int PDC_scr_open(int argc, char **argv)
         return ERR;
     }
 
-#ifndef _WIN32
+#ifdef USE_TERMIOS
     tcgetattr( STDIN, &orig_term);
     memcpy( &term, &orig_term, sizeof( term));
     term.c_lflag &= ~(ICANON | ECHO);
     tcsetattr( STDIN, TCSANOW, &term);
 #endif
     printf( "\033[?47h");      /* Save screen */
-    printf( "\033[?1000h");    /* enable mouse events,  at least on xterm */
+    if( !PDC_is_ansi)
+        printf( "\033[?1000h");  /* enable mouse events,  at least on xterm */
                /* NOTE: could send 1003h to get mouse motion events as well */
     printf( "\0337");         /* save cursor & attribs (VT100) */
     PDC_resize_occurred = FALSE;
+    PDC_LOG(("PDC_scr_open exit\n"));
 /*  PDC_reset_prog_mode();   doesn't do anything anyway */
     return( 0);
 }

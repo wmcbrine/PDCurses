@@ -19,9 +19,16 @@ osdir		= $(PDCURSES_SRCDIR)/vt
 SFLAGS		= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
 ifeq ($(DEBUG),Y)
-	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
+	CFLAGS  = -g -Wall -DPDCDEBUG
 else
-	CFLAGS  = -O2 -Wall -fPIC
+	CFLAGS  = -O2 -Wall
+endif
+
+ifeq ($(DOS),Y)
+	CFLAGS	+= -DDOS
+	EXE = .exe
+else
+	CFLAGS	+= -fPIC
 endif
 
 ifeq ($(WIDE),Y)

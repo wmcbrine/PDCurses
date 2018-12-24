@@ -5,8 +5,8 @@
 
 #define USE_UNICODE_ACS_CHARS 1
 
-#include "pdcvt.h"
 #include "curses.h"
+#include "pdcvt.h"
 #include "acs_defs.h"
 
 void PDC_gotoyx(int y, int x)
@@ -95,6 +95,7 @@ static PACKED_RGB dimmed_color( PACKED_RGB ival)
             /* PDCurses stores RGBs in fifteen bits,  five bits each */
             /* for red, green, blue.  A PACKED_RGB uses eight bits per */
             /* channel.  Hence the following.                        */
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
 static PACKED_RGB extract_packed_rgb( const chtype color)
 {
     const int red   = (int)( (color << 3) & 0xf8);
@@ -103,6 +104,7 @@ static PACKED_RGB extract_packed_rgb( const chtype color)
 
     return( PACK_RGB( red, green, blue));
 }
+#endif
 
 void PDC_get_rgb_values( const chtype srcp,
             PACKED_RGB *foreground_rgb, PACKED_RGB *background_rgb)
@@ -187,6 +189,19 @@ static char *color_string( char *otext, const PACKED_RGB rgb)
    return( otext);
 }
 
+static int get_sixteen_color_idx( const PACKED_RGB rgb)
+{
+    int rval = 0;
+
+    if( rgb & 0x800000)    /* red value >= 128 */
+        rval = 1;
+    if( rgb & 0x8000)      /* green value >= 128 */
+        rval |= 2;
+    if( rgb & 0x80)        /* blue value >= 128 */
+        rval |= 4;
+    return( rval);
+}
+
 static void reset_color( const chtype ch)
 {
     static PACKED_RGB prev_bg = (PACKED_RGB)-1;
@@ -197,12 +212,18 @@ static void reset_color( const chtype ch)
     PDC_get_rgb_values( ch, &fg, &bg);
     if( bg != prev_bg)
         {
-        printf( "\033[48;%s", color_string( txt, bg));
+        if( COLORS == 16)
+            printf( "\033[4%dm", get_sixteen_color_idx( bg));
+        else
+            printf( "\033[48;%s", color_string( txt, bg));
         prev_bg = bg;
         }
     if( fg != prev_fg)
         {
-        printf( "\033[38;%s", color_string( txt, fg));
+        if( COLORS == 16)
+            printf( "\033[3%dm", get_sixteen_color_idx( fg));
+        else
+            printf( "\033[38;%s", color_string( txt, fg));
         prev_fg = fg;
         }
 }
@@ -236,8 +257,14 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
           printf( (*srcp & A_BLINK) ? BLINK_ON : BLINK_OFF);
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
           reset_color( *srcp);
-       if( ch < (int)MAX_UNICODE)
+#ifdef PDC_WIDE
+       if( ch < 256)
+          printf( "%c", (char)ch);
+       else if( ch < (int)MAX_UNICODE)
           printf( "%lc", (wchar_t)ch);
+#else
+       printf( "%c", (char)ch);
+#endif
 #ifdef USING_COMBINING_CHARACTER_SCHEME
        else if( ch > (int)MAX_UNICODE)      /* chars & fullwidth supported */
        {

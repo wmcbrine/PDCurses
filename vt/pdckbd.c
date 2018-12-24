@@ -1,13 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#ifdef _WIN32
+#if defined( _WIN32) || defined( DOS)
    #include <conio.h>
+   #define USE_CONIO
 #else
    #include <sys/select.h>
    #include <unistd.h>
 #endif
 #include "curspriv.h"
+
+#if defined( __BORLANDC__) || defined( DOS)
+   #define WINDOWS_VERSION_OF_KBHIT kbhit
+#else
+   #define WINDOWS_VERSION_OF_KBHIT _kbhit
+#endif
 
 /* Modified from the accepted answer at
 
@@ -29,7 +36,7 @@ extern bool PDC_resize_occurred;
 static bool check_key( int *c)
 {
     bool rval;
-#ifndef _WIN32
+#ifndef USE_CONIO
     const int STDIN = 0;
     struct timeval timeout;
     fd_set rdset;
@@ -49,7 +56,7 @@ static bool check_key( int *c)
     else
        rval = FALSE;
 #else
-    if( _kbhit( ))
+    if( WINDOWS_VERSION_OF_KBHIT( ))
        {
        rval = TRUE;
        if( c)
@@ -74,6 +81,43 @@ void PDC_flushinp( void)
       ;
 }
 
+#ifdef USE_CONIO
+static int xlate_vt_codes_for_dos( const int key1, const int key2)
+{
+   static const int tbl[] =   {
+      KEY_UP,      72,
+      KEY_DOWN,    80,
+      KEY_LEFT,    75,
+      KEY_RIGHT,   77,
+      KEY_F(11),  133,
+      KEY_F(12),  134,
+      KEY_IC,      82,
+      KEY_DC,      83,
+      KEY_PPAGE,   73,
+      KEY_NPAGE,   81,
+      KEY_HOME, 2, '[', 'H',
+      KEY_END,  2, 'O', 'F',
+
+      KEY_F(1),   59,
+      KEY_F(2),   60,
+      KEY_F(3),   61,
+      KEY_F(4),   62,
+      KEY_F(5),   63,
+      KEY_F(6),   64,
+      KEY_F(7),   65,
+      KEY_F(8),   66,
+      KEY_F(9),   67,
+      KEY_F(10),   68,
+      0, 0 };
+   int i, rval = 0;
+
+   for( i = 0; tbl[i] && !rval; i += 2)
+      if( key2 == tbl[i + 1])
+         rval = tbl[i];
+   return( rval);
+}
+
+#endif
 /* Mouse events include six bytes.  First three are
 
 ESC [ M
@@ -202,11 +246,26 @@ int PDC_get_key( void)
       }
    if( check_key( &rval))
       {
-      int c[13], count = 0;
+      int c[13];
 
+#ifdef USE_CONIO
+      SP->key_code = (rval == 0 || rval == 224);
+      if( SP->key_code)
+         {
+         int key2;
+
+         while( !check_key( &key2))
+            ;
+         rval = xlate_vt_codes_for_dos( rval, key2);
+         return( rval);
+         }
+
+#endif
       SP->key_code = (rval == 27);
       if( rval == 27)
          {
+         int count = 0;
+
          while( count < 6 && check_key( &c[count])
                   && (rval = xlate_vt_codes( c, count + 1)) == -1)
             count++;

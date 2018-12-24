@@ -99,7 +99,7 @@ void text_in_a_box( const char *istr)
       /* Default is between "underline" and "invisible".  Set both states */
       /* to the same value to get an unblinking cursor.                   */
 
-#ifdef _WIN32
+#if defined( _WIN32) && !defined( __BORLANDC__)
 #define PURE_WINDOWS_VERSION  1
 #endif
 

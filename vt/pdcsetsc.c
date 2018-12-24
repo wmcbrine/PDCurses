@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "curses.h"
+#include "pdcvt.h"
 
 #define CURSOR_ON  "\033[?25h"
 #define CURSOR_OFF "\033[?25l"
@@ -27,5 +28,8 @@ int PDC_set_blink(bool blinkon)
 
 void PDC_set_title( const char *title)
 {
-    printf( "\033]2;%s\a", title);
+#ifndef DOS
+    if( !PDC_is_ansi)
+        printf( "\033]2;%s\a", title);
+#endif
 }

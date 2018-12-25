@@ -258,7 +258,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
           reset_color( *srcp);
 #ifdef PDC_WIDE
-       if( ch < 256)
+       if( ch < 128)
           printf( "%c", (char)ch);
        else if( ch < (int)MAX_UNICODE)
           printf( "%lc", (wchar_t)ch);

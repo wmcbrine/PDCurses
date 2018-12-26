@@ -10,9 +10,9 @@ O = obj
 E = .exe
 RM = del
 
-SDL2_INCLUDE = C:\SDL2-2.0.9\include
-SDL2_LIB = C:\SDL2-2.0.9\lib\x64\SDL2.lib
-SDL2_LIBMAIN = C:\SDL2-2.0.9\lib\x64\SDL2main.lib
+SDL2_INCLUDE = -IC:\SDL2-2.0.9\include
+SDL2_LIB = C:\SDL2-2.0.9\lib\$(PLATFORM)\SDL2.lib
+SDL2_LIBMAIN = C:\SDL2-2.0.9\lib\$(PLATFORM)\SDL2main.lib
 
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..
@@ -37,6 +37,8 @@ LDFLAGS		=
 
 !ifdef WIDE
 WIDEOPT		= -DPDC_WIDE
+TTF_INCLUDE	= -IC:\SDL2_ttf-2.0.14\include
+TTF_LIB		= C:\SDL2_ttf-2.0.14\lib\$(PLATFORM)\SDL2_ttf.lib
 !endif
 
 !ifdef UTF8
@@ -51,7 +53,7 @@ SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /MACHINE:$(PLATFORM) /OUT:pdcurses.dll
 
 LINK		= link.exe -nologo
 
-CCLIBS		= user32.lib advapi32.lib $(SDL2_LIB) $(SDL2_LIBMAIN)
+CCLIBS		= user32.lib advapi32.lib $(SDL2_LIB) $(SDL2_LIBMAIN) $(TTF_LIB)
 # may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
 #CCLIBS		= msvcrt.lib user32.lib advapi32.lib
 
@@ -67,7 +69,7 @@ PDCLIBS		= $(CURSESDLL)
 PDCLIBS		= $(LIBCURSES)
 !endif
 
-BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -I$(SDL2_INCLUDE) -c $(CFLAGS) $(DLLOPT) \
+BUILD		= $(CC) -I$(PDCURSES_SRCDIR) $(SDL2_INCLUDE) $(TTF_INCLUDE) -c $(CFLAGS) $(DLLOPT) \
 $(WIDEOPT) $(UTF8OPT) $(INFOPT)
 
 all:	$(PDCLIBS)

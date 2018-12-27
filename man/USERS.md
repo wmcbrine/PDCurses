@@ -12,7 +12,7 @@ The curses library permits manipulation of data structures called
 windows which may be thought of as two-dimensional arrays of
 characters representing all or part of a terminal's screen.  The
 windows are manipulated using a procedural interface described
-elsewhere.  The curses package maintains a record of what characters
+[elsewhere].  The curses package maintains a record of what characters
 are on the screen.  At the most basic level, manipulation is done with
 the routines move() and addch() which are used to "move" the curses
 around and add characters to the default window, stdscr, which
@@ -355,3 +355,5 @@ This list is incomplete -- see curses.h for the full list, and use the
 testcurs demo to see what values are actually returned. The above are
 just the keys required by X/Open. In particular, PDCurses defines many
 CTL_ and ALT_ combinations; these are not portable.
+
+[elsewhere]: MANUAL.md

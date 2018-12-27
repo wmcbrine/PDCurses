@@ -1,20 +1,18 @@
 PDCurses Documentation
 ======================
 
-Some plain text documents to provide a basic overview of PDCurses and
-details for specific platforms, along with a program to combine them
-with the "man page" sections from the source code files, into
-"PDCurses.md".
+A plain text document to provide a basic overview of PDCurses, along
+with a program to combine it with the "man page" sections from the
+source code files, into "PDCurses.md".
 
 
 Building
 --------
 
-- Type "make". ("make clean" to remove the built files.) A Unix-like
-  environment is required for the Makefile.
+- Type "./mkman.sh". Needs a Unix-like shell and a Python interpreter.
 
 
 Distribution Status
 -------------------
 
-Public Domain, except for manext.c, which is GPL 2+.
+The files in this directory are released to the Public Domain.

@@ -134,12 +134,9 @@ void PDC_get_rgb_values( const chtype srcp,
     if( srcp & A_BLINK)
     {
         extern int PDC_really_blinking;          /* see 'pdcsetsc.c' */
-//      extern int PDC_blink_state;
 
         if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
             intensify_backgnd = TRUE;
-//      else if( PDC_blink_state)
-//          reverse_colors = !reverse_colors;
     }
     if( reverse_colors)
     {

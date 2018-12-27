@@ -66,7 +66,7 @@ static int set_win10_for_vt_codes( const bool setting_mode)
         dwMode = old_input_mode;
     if( !SetConsoleMode( hIn, dwMode))
         return GetLastError( );
-        // Set output mode to handle virtual terminal sequences
+        /* Set output mode to handle virtual terminal sequences */
     hOut = GetStdHandle( STD_OUTPUT_HANDLE);
     if( hOut == INVALID_HANDLE_VALUE)
         return GetLastError( );

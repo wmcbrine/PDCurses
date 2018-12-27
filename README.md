@@ -6,7 +6,8 @@ curses for multiple platforms. The latest version can be found at:
 
    https://pdcurses.org/
 
-For changes, see the [HISTORY] file.
+For changes, see the [History] file. The main documentation is now in
+the [man] directory.
 
 
 Legal Stuff
@@ -54,7 +55,8 @@ Maintainer
 
 William McBrine <wmcbrine@gmail.com>
 
-[HISTORY]: HISTORY.md
+[History]: man/HISTORY.md
+[man]: man/README.md
 [DOS]: dos/README.md
 [OS/2]: os2/README.md
 [SDL 1.x]: sdl1/README.md

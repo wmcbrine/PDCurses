@@ -1,8 +1,7 @@
-cat intro.md > PDCurses.md
-echo PDCurses Definitions and Variables >> PDCurses.md
-echo ================================== >> PDCurses.md
-./manext.py ../curses.h >> PDCurses.md
-echo PDCurses Functions >> PDCurses.md
-echo ================== >> PDCurses.md
-./manext.py ../pdcurses/*.c >> PDCurses.md
-./manext.py ../x11/*.c >> PDCurses.md
+echo PDCurses Definitions and Variables > MANUAL.md
+echo ================================== >> MANUAL.md
+./manext.py ../curses.h >> MANUAL.md
+echo PDCurses Functions >> MANUAL.md
+echo ================== >> MANUAL.md
+./manext.py ../pdcurses/*.c >> MANUAL.md
+./manext.py ../x11/*.c >> MANUAL.md

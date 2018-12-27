@@ -10,9 +10,6 @@ TARBALL = $(PDC_DIR).tar.gz
 all:
 	@echo Look in folders for platform-specific build instructions.
 
-manual:
-	cd man; $(MAKE) $(MFLAGS) $@
-
 $(ZIPFILE):
 	zip -9ory $(ZIPFILE) *
 

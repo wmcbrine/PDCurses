@@ -355,5 +355,3 @@ This list is incomplete -- see curses.h for the full list, and use the
 testcurs demo to see what values are actually returned. The above are
 just the keys required by X/Open. In particular, PDCurses defines many
 CTL_ and ALT_ combinations; these are not portable.
-
---------------------------------------------------------------------------

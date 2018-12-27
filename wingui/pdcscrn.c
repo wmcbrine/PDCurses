@@ -1790,7 +1790,8 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
             if( wParam == VK_MULTIPLY || wParam == VK_DIVIDE
                    || wParam == VK_ADD || wParam == VK_SUBTRACT
                    || wParam == VK_RETURN)
-               key_already_handled = TRUE;
+               if( !alt_pressed)
+                  key_already_handled = TRUE;
             }
     pdc_key_modifiers = 0;
     /* Save the key modifiers if required. Do this first to allow to

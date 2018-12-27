@@ -258,10 +258,10 @@ static void mainhelp(void)
 static void mainmenu(menu *mp)
 {
     int nitems, barlen, old = -1, cur = 0, c, cur0, x;
+    MEVENT mouse_event;
 
     menudim(mp, &nitems, &barlen);
     repaintmainmenu(barlen, mp);
-    MEVENT mouse_event;
 #ifdef __PDCURSES__
             nc_getmouse( &mouse_event);
 #else
@@ -523,6 +523,7 @@ void domenu(menu *mp)
     int y, x, nitems, barlen, mheight, mw, old = -1, cur = 0, cur0;
     bool stop = FALSE;
     WINDOW *wmenu;
+    MEVENT mouse_event;
 
     curs_set(0);
     getmenupos(&y, &x);
@@ -534,7 +535,6 @@ void domenu(menu *mp)
     repaintmenu(wmenu, mp);
 
     key = ERR;
-    MEVENT mouse_event;	
 #ifdef __PDCURSES__
             nc_getmouse( &mouse_event);
 #else
@@ -617,19 +617,19 @@ void domenu(menu *mp)
                 {
                     if( mouse_event.y <= th+1)
                     {
-                        key = KEY_ESC; //exit menu
-                        break;                      
+                        key = KEY_ESC; /* exit menu */
+                        break;
                     }
                     else if((mouse_event.y - (y-1) > 0) &&  mouse_event.y > th && mouse_event.y < y+mheight && mouse_event.y > y && mouse_event.x > x && mouse_event.x < mw +x)
                     {
                         cur = (mouse_event.y - y-1) % nitems;
                         key = ERR;
                         break;
-                                      
+
                     }
                     else if(mouse_event.y > 0 && mouse_event.y != y-1 && mouse_event.x > 0 && mouse_event.x != x-1)
                     {
-                        key = KEY_ESC; //exit menu
+                        key = KEY_ESC; /* exit menu */
                         break;
                     }
                         stop = TRUE;
@@ -645,7 +645,7 @@ void domenu(menu *mp)
                         key = KEY_ESC;
                         break;
                     }
-                          
+
                 }
                 else if( (mouse_event.bstate & BUTTON3_PRESSED) || (mouse_event.bstate & BUTTON3_CLICKED))
                 {

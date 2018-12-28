@@ -25,7 +25,7 @@ Building
 
   By default, the library and demo programs are built with the optimizer
   switch -O2. You can turn this off, and turn on debugging (-g), by
-  adding "--with-debug" to the configure command.
+  adding "--enable-debug" to the configure command.
 
 - Run "make". This should build libXCurses and all the demo programs.
 

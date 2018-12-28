@@ -8,8 +8,8 @@ PDCurses definitions list:  (Only define those needed)
                     (Red = 1, Green = 2, Blue = 4) instead of BGR.
     PDC_WIDE        True if building wide-character support.
     PDC_DLL_BUILD   True if building a Windows DLL.
-    NCURSES_MOUSE_VERSION   Use the ncurses mouse API instead
-                            of PDCurses' traditional mouse API.
+    PDC_NCMOUSE     Use the ncurses mouse API instead
+                    of PDCurses' traditional mouse API.
 
 PDCurses portable platform definitions list:
 
@@ -1782,11 +1782,11 @@ mouse
    nc_getmouse() returns the current mouse status in an MEVENT
    struct. This is equivalent to ncurses' getmouse(), renamed to
    avoid conflict with PDCurses' getmouse(). But if you define
-   NCURSES_MOUSE_VERSION (preferably as 2) before including
-   curses.h, it defines getmouse() to nc_getmouse(), along with a
-   few other redefintions needed for compatibility with ncurses
-   code. nc_getmouse() calls request_mouse_pos(), which (not
-   getmouse()) is the classic equivalent.
+   PDC_NCMOUSE before including curses.h, it defines getmouse() to
+   nc_getmouse(), along with a few other redefintions needed for
+   compatibility with ncurses code. nc_getmouse() calls
+   request_mouse_pos(), which (not getmouse()) is the classic
+   equivalent.
 
    ungetmouse() is the mouse equivalent of ungetch(). However,
    PDCurses doesn't maintain a queue of mouse events; only one can

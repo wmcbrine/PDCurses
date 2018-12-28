@@ -2853,7 +2853,6 @@ static void _set_color(void)
 
     if (XAllocColor(XCURSESDISPLAY, cmap, tmp))
     {
-        XFreeColors(XCURSESDISPLAY, cmap, colors + index, 1, 0);
         colors[index] = tmp->pixel;
 
         _display_screen();

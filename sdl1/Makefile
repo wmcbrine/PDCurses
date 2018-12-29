@@ -15,9 +15,6 @@ PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 SFLAGS		= $(shell sdl-config --cflags)
 SLIBS		= $(shell sdl-config --libs)
 
-# If your system doesn't have these, remove the defines here
-SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
-
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
 else

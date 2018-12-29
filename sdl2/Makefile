@@ -33,9 +33,6 @@ osdir		= $(PDCURSES_SRCDIR)/sdl2
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
-# If your system doesn't have these, remove the defines here
-SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
-
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
 else

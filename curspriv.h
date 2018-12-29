@@ -22,6 +22,15 @@
 # endif
 #endif
 
+#if defined(__STDC_VERSION__) && __STDC_VERSION >= 199901L
+# ifndef HAVE_VSSCANF
+#  define HAVE_VSSCANF
+# endif
+# ifndef HAVE_VSNPRINTF
+#  define HAVE_VSNPRINTF
+# endif
+#endif
+
 /*----------------------------------------------------------------------*/
 
 typedef struct           /* structure for ripped off lines */

@@ -56,7 +56,12 @@ PDCurses portable platform definitions list:
 # include <wchar.h>
 #endif
 
-#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+#if defined(__STDC_VERSION__) && __STDC_VERSION >= 199901L && \
+    !defined(__bool_true_false_are_defined)
+# include <stdbool.h>
+#endif
+
+#ifdef __cplusplus
 extern "C"
 {
 # define bool _bool
@@ -64,33 +69,35 @@ extern "C"
 
 /*----------------------------------------------------------------------
  *
- *  PDCurses Manifest Constants
+ *  Constants and Types
  *
  */
 
-#ifndef FALSE
+#undef FALSE
+#undef TRUE
+
+#ifdef __bool_true_false_are_defined
+
+# define FALSE false
+# define TRUE true
+
+#else
+
+typedef unsigned char bool;
+
 # define FALSE 0
-#endif
-#ifndef TRUE
 # define TRUE 1
-#endif
-#ifndef NULL
-# define NULL (void *)0
-#endif
-#ifndef ERR
-# define ERR (-1)
-#endif
-#ifndef OK
-# define OK 0
+
 #endif
 
-/*----------------------------------------------------------------------
- *
- *  PDCurses Type Declarations
- *
- */
+#undef NULL
+#define NULL (void *)0
 
-typedef unsigned char bool;    /* PDCurses Boolean type */
+#undef ERR
+#define ERR (-1)
+
+#undef OK
+#define OK 0
 
 #ifdef CHTYPE_LONG
     #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
@@ -153,7 +160,7 @@ typedef struct
 
 /*----------------------------------------------------------------------
  *
- *  PDCurses Mouse Interface -- SYSVR4, with extensions
+ *  Mouse Interface -- SYSVR4, with extensions
  *
  */
 

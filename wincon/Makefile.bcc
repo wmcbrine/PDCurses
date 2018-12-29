@@ -54,7 +54,7 @@ clean:
 	-$(RM) *.tds
 	-$(RM) *.exe
 
-demos:	$(DEMOS)
+demos:	$(LIBCURSES) $(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-$(RM) $@

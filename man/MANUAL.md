@@ -24,8 +24,8 @@ PDCurses portable platform definitions list:
 --------------------------------------------------------------------------
 
 
-PDCurses Text Attributes
-========================
+Text Attributes
+===============
 
 PDCurses uses a long (32 bits) for its chtype, as in System V.
 

@@ -46,6 +46,11 @@ PDCurses portable platform definitions list:
 # include <wchar.h>
 #endif
 
+#if defined(__STDC_VERSION__) && __STDC_VERSION >= 199901L && \
+    !defined(__bool_true_false_are_defined)
+# include <stdbool.h>
+#endif
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -54,33 +59,35 @@ extern "C"
 
 /*----------------------------------------------------------------------
  *
- *  PDCurses Manifest Constants
+ *  Constants and Types
  *
  */
 
-#ifndef FALSE
+#undef FALSE
+#undef TRUE
+
+#ifdef __bool_true_false_are_defined
+
+# define FALSE false
+# define TRUE true
+
+#else
+
+typedef unsigned char bool;
+
 # define FALSE 0
-#endif
-#ifndef TRUE
 # define TRUE 1
-#endif
-#ifndef NULL
-# define NULL (void *)0
-#endif
-#ifndef ERR
-# define ERR (-1)
-#endif
-#ifndef OK
-# define OK 0
+
 #endif
 
-/*----------------------------------------------------------------------
- *
- *  PDCurses Type Declarations
- *
- */
+#undef NULL
+#define NULL (void *)0
 
-typedef unsigned char bool;    /* PDCurses Boolean type */
+#undef ERR
+#define ERR (-1)
+
+#undef OK
+#define OK 0
 
 #if _LP64
 typedef unsigned int chtype;
@@ -96,7 +103,7 @@ typedef chtype attr_t;
 
 /*----------------------------------------------------------------------
  *
- *  PDCurses Mouse Interface -- SYSVR4, with extensions
+ *  Mouse Interface -- SYSVR4, with extensions
  *
  */
 
@@ -233,7 +240,7 @@ typedef struct
 
 /*----------------------------------------------------------------------
  *
- *  PDCurses Structure Definitions
+ *  Window and Screen Structures
  *
  */
 
@@ -326,7 +333,7 @@ typedef struct
 
 /*----------------------------------------------------------------------
  *
- *  PDCurses External Variables
+ *  External Variables
  *
  */
 
@@ -354,8 +361,8 @@ PDCEX  char         ttytype[];    /* terminal name/description */
 
 /*man-start**************************************************************
 
-PDCurses Text Attributes
-========================
+Text Attributes
+===============
 
 PDCurses uses a long (32 bits) for its chtype, as in System V.
 
@@ -573,8 +580,8 @@ bits for character data.
 
 /*----------------------------------------------------------------------
  *
- *  Function and Keypad Key Definitions.
- *  Many are just for compatibility.
+ *  Function and Keypad Key Definitions
+ *  Many are just for compatibility
  *
  */
 
@@ -829,7 +836,7 @@ bits for character data.
 
 /*----------------------------------------------------------------------
  *
- *  PDCurses Function Declarations
+ *  Functions
  *
  */
 

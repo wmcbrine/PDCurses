@@ -65,23 +65,14 @@ extern "C"
 
 #undef FALSE
 #undef TRUE
-
 #ifdef __bool_true_false_are_defined
-
 # define FALSE false
 # define TRUE true
-
 #else
-
 typedef unsigned char bool;
-
 # define FALSE 0
 # define TRUE 1
-
 #endif
-
-#undef NULL
-#define NULL (void *)0
 
 #undef ERR
 #define ERR (-1)

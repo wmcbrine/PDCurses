@@ -1,17 +1,27 @@
+/* Public Domain Curses */
 
-extern int PDC_rows, PDC_cols;
-
-int PDC_get_columns(void)
-{
-   return( PDC_cols);
-}
+#include <curspriv.h>
 
 int PDC_get_cursor_mode(void)
 {
-   return( 0);    /* no cursor mode setting yet */
+    PDC_LOG(("PDC_get_cursor_mode() - called\n"));
+
+    return SP->visibility;
+}
+
+
+int PDC_get_columns(void)
+{
+    extern int PDC_cols;
+
+    PDC_LOG(("PDC_get_columns() - called\n"));
+    return( PDC_cols);
 }
 
 int PDC_get_rows(void)
 {
-   return( PDC_rows);
+    extern int PDC_rows;
+
+    PDC_LOG(("PDC_get_rows() - called\n"));
+    return( PDC_rows);
 }

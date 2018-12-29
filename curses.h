@@ -46,7 +46,7 @@ PDCurses portable platform definitions list:
 # include <wchar.h>
 #endif
 
-#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+#ifdef __cplusplus
 extern "C"
 {
 # define bool _bool
@@ -1341,7 +1341,7 @@ PDCEX  int     sb_refresh(void);
 #define PDC_KEY_MODIFIER_ALT     4
 #define PDC_KEY_MODIFIER_NUMLOCK 8
 
-#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+#ifdef __cplusplus
 # undef bool
 }
 #endif

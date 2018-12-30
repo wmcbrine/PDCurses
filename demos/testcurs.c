@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
 
 #ifdef PDCURSES
-#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
+#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
     PDC_set_resize_limits( 20, 50, 70, 200);
 #endif
 #endif
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
                 case 'm': case 'M':
                     PDC_return_key_modifiers( TRUE);
                     break;
-#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
+#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
                 case 'r':     /* allow user-resizable windows */
                     {
                         int min_lines, max_lines, min_cols, max_cols;
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
         wbkgd(win, A_REVERSE);
 
 #ifdef PDCURSES
-#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
+#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
 #endif
 #endif
@@ -673,7 +673,7 @@ void inputTest(WINDOW *win)
     if( c == 1)
        return;
 #ifdef PDCURSES
-#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
+#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 0 );  /* un-abortable */
 #endif
 #endif
@@ -693,7 +693,7 @@ void inputTest(WINDOW *win)
     }
 
 #ifdef PDCURSES
-#ifdef PDC_VER_MAJOR	/* so far only seen in 4.0+ */
+#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
     PDC_set_function_key( FUNCTION_KEY_ABORT, 3 );  /* ctrl-C aborts */
 #endif
 #endif

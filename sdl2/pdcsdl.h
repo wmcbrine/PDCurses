@@ -1,11 +1,11 @@
 /* Public Domain Curses */
 
-#include <curspriv.h>
-
 #include <SDL.h>
 #ifdef PDC_WIDE
 # include <SDL_ttf.h>
 #endif
+
+#include <curspriv.h>
 
 #ifdef PDC_WIDE
 PDCEX  TTF_Font *pdc_ttffont;

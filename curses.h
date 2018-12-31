@@ -278,7 +278,7 @@ typedef struct
     bool  raw_out;        /* raw output mode (7 v. 8 bits) */
     bool  audible;        /* FALSE if the bell is visual */
     bool  mono;           /* TRUE if current screen is mono */
-    bool  resized;        /* TRUE if TERM has been resized */
+    short resized;        /* TRUE if TERM has been resized */
     bool  orig_attr;      /* TRUE if we have the original colors */
     short orig_fore;      /* original screen foreground color */
     short orig_back;      /* original screen foreground color */

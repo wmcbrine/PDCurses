@@ -23,17 +23,11 @@ Defined by this header:
 
     PDC_BUILD       Defines API build version.
     PDCURSES        Enables access to PDCurses-only routines.
-    XOPEN           Always true.
-    SYSVcurses      True if you are compiling for SYSV portability.
-    BSDcurses       True if you are compiling for BSD portability.
 
 **man-end****************************************************************/
 
 #define PDC_BUILD 3601
 #define PDCURSES        1      /* PDCurses-only routines */
-#define XOPEN           1      /* X/Open Curses routines */
-#define SYSVcurses      1      /* System V Curses routines */
-#define BSDcurses       1      /* BSD Curses routines */
 #define CHTYPE_LONG     1      /* size of chtype; long */
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L

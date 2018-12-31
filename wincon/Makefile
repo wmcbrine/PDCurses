@@ -54,13 +54,11 @@ ifeq ($(DLL),Y)
 	LIBEXE = $(CC)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
-	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	CLEAN = $(LIBCURSES) *.a
 else
 	LIBEXE = $(AR)
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
-	LIBDEPS = $(LIBOBJS) $(PDCOBJS)
 	CLEAN = *.a
 endif
 
@@ -84,7 +82,7 @@ ifneq ($(DEBUG),Y)
 	$(STRIP) *.exe
 endif
 
-$(LIBCURSES) : $(LIBDEPS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)

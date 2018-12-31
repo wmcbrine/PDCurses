@@ -26,7 +26,7 @@ Defined by this header:
 
 **man-end****************************************************************/
 
-#define PDC_BUILD 3601
+#define PDC_BUILD    3701
 #define PDCURSES        1      /* PDCurses-only routines */
 #define CHTYPE_LONG     1      /* size of chtype; long */
 

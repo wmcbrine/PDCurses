@@ -4,7 +4,7 @@
 # other packages, such as neon, libxml and gnome.
 #
 
-verdot=3.6
+verdot=3.7
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@

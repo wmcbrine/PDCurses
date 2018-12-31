@@ -1,7 +1,7 @@
 PDCurses Implementor's Guide
 ============================
 
-- Version 1.4 - 2018/12/?? - new PDCurses.md location
+- Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
                              style; markdown
 - Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(),
@@ -11,9 +11,9 @@ PDCurses Implementor's Guide
 
 This document is for those wishing to port PDCurses to a new platform,
 or just wanting to better understand how it works. Nothing here should
-be needed for application programming; for that, refer to PDCurses.md,
-as built in man/ . This document assumes that you've read the user-level
-documentation and are very familiar with application-level curses
+be needed for application programming; for that, refer to [USERS.md] and
+[MANUAL.md], in man/ . This document assumes that you've read the user-
+level documentation and are very familiar with application-level curses
 programming.
 
 If you want to submit your port for possible inclusion into the main
@@ -327,3 +327,6 @@ pdcsetsc.c:
 ### int PDC_set_blink(bool blinkon);
 ### int PDC_set_bold(bool boldon);
 ### void PDC_set_title(const char *title);
+
+[USERS.md]: USERS.md
+[MANUAL.md]: MANUAL.md

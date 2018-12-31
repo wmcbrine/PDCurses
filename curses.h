@@ -46,7 +46,7 @@ Defined by this header:
 # include <wchar.h>
 #endif
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION >= 199901L
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 # define PDC_99  1
 #endif
 

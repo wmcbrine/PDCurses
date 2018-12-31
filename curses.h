@@ -9,7 +9,7 @@
 
 /*man-start**************************************************************
 
-PDCurses definitions list:  (Only define those needed)
+Define before inclusion (only those needed):
 
     XCURSES         True if compiling for X11.
     PDC_RGB         True if you want to use RGB color definitions
@@ -19,7 +19,7 @@ PDCurses definitions list:  (Only define those needed)
     PDC_NCMOUSE     Use the ncurses mouse API instead
                     of PDCurses' traditional mouse API.
 
-PDCurses portable platform definitions list:
+Defined by this header:
 
     PDC_BUILD       Defines API build version.
     PDCURSES        Enables access to PDCurses-only routines.

@@ -1,3 +1,114 @@
+PDCurses 3.7 - 2018/12/31
+=========================
+
+New features
+------------
+
+- Avoid conflict with ncurses by having apps define PDC_NCMOUSE before
+  including curses.h to invoke the ncurses-style mouse interface,
+  instead of NCURSES_MOUSE_VERSION. (The old way will also still work.)
+  After Simon Sobisch (see PR #33).
+
+- In SDL, the box-drawing and block ACS characters are now rendered in a
+  font-independent way, to ensure their correct alignment across cells.
+  Underlining is now handled in a similar way.
+
+- TTF fonts in SDL are now rendered in Blended mode instead of Solid. 
+  Partly after Joachim de Groot.
+
+- New default fonts and font sizes for SDL/TTF.
+
+- SDL2 now builds under MSVC. Partly due to Alexandru Afrasinei.
+
+- Documentation re-org -- more Markdown internal links; moved to man/
+  dir (the doc/ dir name was too similar to docs/, which is needed for
+  GitHub Pages hosting); concatenated man page document now made
+  permanent, under the name MANUAL.md; new man build utils; merged
+  sdl.md and x11.md into their respective READMEs; changed some
+  redundant and unclear comments.
+
+- Directory re-org -- in addition to the above, created common/, to
+  unclutter the root, and eliminate a few more redundant files from 
+  platform directories. (We already had "pdcurses", but that's for the 
+  portable core; "common" is for files that are more platform-specific, 
+  though shared by more than one platform.)
+
+- Broke out the redundant ACS tables and moved them to common/.
+
+- PDcurses' "bool" type is now based on stdbool.h, when available. There
+  should be no conflicts when including stdbool.h either before or after
+  curses.h.
+
+- The demos are no longer built by default, since they add a lot of time
+  to the build, and often aren't wanted. But you can still build them via
+  "make demos" (tweak as needed).
+
+- Makefile tweaks for cross-compiling by Simon Sobisch.
+
+
+Bug fixes and such
+------------------
+
+- Improved Windows console resizing, when reducing the vertical size.
+  After Ulf Magnusson. (See GitHub issue #26.)
+
+- Bring back ifdef'd CONSOLE_SCREEN_BUFFER_INFOEX, for the benefit of
+  older compile environments. (Not automatic -- must specify INFOEX=N on
+  the command line.) After Simon Sobisch.
+
+- Replaced COMMON_LVB_* with numbers to appease some old compilers.
+  After Simon Sobisch.
+
+- KEY_RESIZE should be key_code = TRUE. Reported by Ulf Magnusson.
+
+- SDL2 resize fixes to prevent crashes, by Tim Hentenarr.
+
+- SDL2 fixes for handling of SDL_TEXTINPUT, keys with modifiers, and
+  modifier keystrokes, by Tim Hentenarr.
+
+- Fixed cursor rendering in SDL/TTF.
+
+- SDL1 support is now dropped for Windows and macOS, and deprecated for
+  Linux. Use SDL2. The SDL1 port is likely to be dropped in the future.
+
+- The setsyx() function is now void, after ncurses, and simplified.
+
+- Warning fixes by Patrick Georgi and Stefan Reinauer.
+
+- X11 used SP->resized in a non-boolean way, so it's now a short.
+
+- Under some conditions (see issue #47), the X11 port could "free" colors
+  that it hadn't allocated. Reported by rin-kinokocan.
+
+- New scroller for ozdemo -- no memory allocation, less copying -- to
+  resolve issue #46.
+
+- Various minor Makefile tweaks.
+
+- Eliminated term.h and terminfo.c, and moved mvcur() to move.c. These
+  stub functions, done on request (with others then requesting that I
+  take them away -- can't win), were a misguided attempt to facilitate
+  using PDCurses with certain non-C languages -- which, apparently, they
+  didn't end up actually doing. They're also, regrettably, specified as
+  part of the X/Open curses standard, even though they in effect
+  describe an entirely different interface layer (one on which
+  traditional curses, but not PDCurses, is built).
+
+- Dropped support for short (16-bit) chtypes.
+
+- Finally removed deprec.c, as it promised.
+
+- Dropped the XOPEN, SYSVcurses and BSDcurses defines from curses.h, as
+  well as NULL (which is defined in stdio.h, included). TRUE, FALSE, ERR
+  and OK are now defined unconditionally.
+
+- Moved pdcurses.org hosting to GitHub -- as a result, the site is now
+  part of the repo, in the docs/ directory. (Also, it has SSL again.)
+
+See the git log for more details.
+
+------------------------------------------------------------------------
+
 PDCurses 3.6 - 2018/02/14
 =========================
 

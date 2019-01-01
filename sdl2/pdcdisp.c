@@ -38,10 +38,13 @@ void PDC_update_rects(void)
             SDL_UpdateWindowSurface(pdc_window);
         else
         {
+            int w = pdc_screen->w;
+            int h = pdc_screen->h;
+
             for (i = 0; i < rectcount; i++)
             {
-                if (uprect[i].x > pdc_swidth  ||
-                    uprect[i].y > pdc_sheight ||
+                if (uprect[i].x > w ||
+                    uprect[i].y > h ||
                     !uprect[i].w || !uprect[i].h)
                 {
                     if (i + 1 < rectcount)
@@ -54,11 +57,11 @@ void PDC_update_rects(void)
                     continue;
                 }
 
-                if (uprect[i].x + uprect[i].w > pdc_swidth)
-                    uprect[i].w = min(pdc_swidth, pdc_swidth - uprect[i].x);
+                if (uprect[i].x + uprect[i].w > w)
+                    uprect[i].w = min(w, w - uprect[i].x);
 
-                if (uprect[i].y + uprect[i].h > pdc_sheight)
-                    uprect[i].h = min(pdc_sheight, pdc_sheight - uprect[i].y);
+                if (uprect[i].y + uprect[i].h > h)
+                    uprect[i].h = min(h, h - uprect[i].y);
             }
 
             if (rectcount > 0)

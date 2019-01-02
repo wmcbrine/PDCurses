@@ -6,7 +6,7 @@ BAR = '\n\n' + ('-' * 74) + '\n\n'
 
 for f in sys.argv:
     inman = False
-    for line in file(f):
+    for line in open(f):
         if inman:
             if line.startswith('**man-end'):
                 inman = False

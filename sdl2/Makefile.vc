@@ -54,9 +54,7 @@ SHL_LD = link $(LDFLAGS) -nologo -dll -machine:$(PLATFORM) -out:pdcurses.dll
 
 LINK		= link.exe -nologo
 
-CCLIBS		= user32.lib advapi32.lib $(SDL2_LIB) $(SDL2_LIBMAIN) $(TTF_LIB)
-# may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
-#CCLIBS		= msvcrt.lib user32.lib advapi32.lib
+CCLIBS		= user32.lib advapi32.lib $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
 
 LIBEXE		= lib -nologo
 
@@ -70,8 +68,8 @@ PDCLIBS		= $(CURSESDLL)
 PDCLIBS		= $(LIBCURSES)
 !endif
 
-BUILD		= $(CC) -I$(PDCURSES_SRCDIR) $(SDL2_INCLUDE) $(TTF_INCLUDE) -c $(CFLAGS) $(DLLOPT) \
-$(WIDEOPT) $(UTF8OPT) $(INFOPT)
+BUILD		= $(CC) -I$(PDCURSES_SRCDIR) $(SDL2_INCLUDE) $(TTF_INCLUDE) \
+-c $(CFLAGS) $(DLLOPT) $(WIDEOPT) $(UTF8OPT) $(INFOPT) -DSDL_MAIN_HANDLED
 
 all:	$(PDCLIBS)
 
@@ -83,9 +81,9 @@ clean:
 	-$(RM) *.exp
 	-$(RM) *.res
 
-demos:	$(PDCLIBS) $(DEMOS)
+demos:	$(PDCLIBS) $(DEMOS) sdltest.exe
 
-DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
+DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj sdltest.obj
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

@@ -49,7 +49,7 @@ SHL_LD = link $(LDFLAGS) -nologo -dll -machine:$(PLATFORM) -out:pdcurses.dll
 LINK		= link.exe -nologo
 
 CCLIBS		= user32.lib advapi32.lib
-# may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
+# may need to add msvcrt for older compilers
 #CCLIBS		= msvcrt.lib user32.lib advapi32.lib
 
 LIBEXE		= lib -nologo

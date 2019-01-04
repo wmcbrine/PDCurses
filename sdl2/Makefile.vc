@@ -54,7 +54,7 @@ SHL_LD = link $(LDFLAGS) -nologo -dll -machine:$(PLATFORM) -out:pdcurses.dll
 
 LINK		= link.exe -nologo
 
-CCLIBS		= user32.lib advapi32.lib $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
+CCLIBS		= $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
 
 LIBEXE		= lib -nologo
 
@@ -69,7 +69,7 @@ PDCLIBS		= $(LIBCURSES)
 !endif
 
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) $(SDL2_INCLUDE) $(TTF_INCLUDE) \
--c $(CFLAGS) $(DLLOPT) $(WIDEOPT) $(UTF8OPT) $(INFOPT) -DSDL_MAIN_HANDLED
+-c $(CFLAGS) $(DLLOPT) $(WIDEOPT) $(UTF8OPT) $(INFOPT)
 
 all:	$(PDCLIBS)
 

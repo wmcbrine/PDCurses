@@ -19,10 +19,11 @@ ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/common/libobjs.mif
-
 osdir		= $(PDCURSES_SRCDIR)/wincon
+common		= $(PDCURSES_SRCDIR)/common
+
+include $(PDCURSES_SRCDIR)/version.mif
+include $(common)/libobjs.mif
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
 
@@ -55,6 +56,7 @@ ifeq ($(DLL),Y)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 	LIBCURSES = pdcurses.dll
 	CLEAN = $(LIBCURSES) *.a
+	RESOURCE = pdcurses.o
 else
 	LIBEXE = $(AR)
 	LIBFLAGS = rcv
@@ -82,8 +84,11 @@ ifneq ($(DEBUG),Y)
 	$(STRIP) *.exe
 endif
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) $(RESOURCE)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
+
+pdcurses.o: $(common)/pdcurses.rc $(common)/pdcurses.ico
+	windres -i $(common)/pdcurses.rc pdcurses.o
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

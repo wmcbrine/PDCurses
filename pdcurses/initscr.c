@@ -95,7 +95,7 @@ initscr
 
 char ttytype[128];
 
-const char *_curses_notice = "PDCurses " PDC_VERDOT " - Public Domain 2019";
+const char *_curses_notice = "PDCurses " PDC_VERDOT " - " __DATE__;
 
 SCREEN *SP = (SCREEN*)NULL;           /* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;      /* the current screen image */

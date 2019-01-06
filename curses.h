@@ -25,6 +25,7 @@ Defined by this header:
     PDC_BUILD       Defines API build version.
     PDC_VER_MAJOR   Major version number
     PDC_VER_MINOR   Minor version number
+    PDC_VERDOT      Version string
 
 **man-end****************************************************************/
 

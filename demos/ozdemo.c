@@ -326,8 +326,13 @@ int main(int argc, char **argv)
 
         init_pair(5, COLOR_BLUE, COLOR_WHITE);
         wattrset(win, COLOR_PAIR(5) | A_BLINK);
-        mvwaddstr(win, height - 2, 2,
-            " PDCurses 3.7 - DOS, OS/2, Windows, X11, SDL");
+        mvwaddstr(win, height - 2,
+#ifdef PDC_VERDOT
+            2, " PDCurses " PDC_VERDOT
+#else
+            3, " PDCurses"
+#endif
+            " - DOS, OS/2, Windows, X11, SDL");
         wrefresh(win);
 
         /* Draw running messages */

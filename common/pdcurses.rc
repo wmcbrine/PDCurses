@@ -1,8 +1,9 @@
 #include <windows.h>
+#include "../curses.h"
 
 VS_VERSION_INFO    VERSIONINFO
-FILEVERSION        3,7,0,0
-PRODUCTVERSION     3,7,0,0
+FILEVERSION        PDC_VER_MAJOR,PDC_VER_MINOR,0,0
+PRODUCTVERSION     PDC_VER_MAJOR,PDC_VER_MINOR,0,0
 FILEFLAGSMASK      VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
   FILEFLAGS        VS_FF_DEBUG | VS_FF_PRERELEASE
@@ -19,12 +20,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "PDCurses.org"
       VALUE "FileDescription", "PDCurses Library"
-      VALUE "FileVersion", "3.7.0.0"
+      VALUE "FileVersion", PDC_VERDOT ".0.0"
       VALUE "InternalName", "PDCurses"
       VALUE "LegalCopyright", "Public Domain"
       VALUE "OriginalFilename", "pdcurses.dll"
       VALUE "ProductName", "PDCurses"
-      VALUE "ProductVersion", "3.7.0.0"
+      VALUE "ProductVersion", PDC_VERDOT ".0.0"
     END
   END
   BLOCK "VarFileInfo"

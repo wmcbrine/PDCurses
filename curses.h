@@ -21,13 +21,18 @@ Define before inclusion (only those needed):
 
 Defined by this header:
 
-    PDC_BUILD       Defines API build version.
     PDCURSES        Enables access to PDCurses-only routines.
+    PDC_BUILD       Defines API build version.
+    PDC_VER_MAJOR   Major version number
+    PDC_VER_MINOR   Minor version number
 
 **man-end****************************************************************/
 
-#define PDC_BUILD    3701
 #define PDCURSES        1      /* PDCurses-only routines */
+#define PDC_BUILD    3702
+#define PDC_VER_MAJOR   3
+#define PDC_VER_MINOR   7
+#define PDC_VERDOT   "3.7"
 #define CHTYPE_LONG     1      /* size of chtype; long */
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L

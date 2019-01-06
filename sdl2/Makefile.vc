@@ -99,7 +99,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
 	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
 
-pdcurses.res pdcurses.obj: $(common)\pdcurses.rc $(common)\pdcurses.ico
+pdcurses.res pdcurses.obj: $(common)\pdcurses.rc
 	rc -r -fopdcurses.res $(common)\pdcurses.rc
 	cvtres -machine:$(PLATFORM) -nologo -out:pdcurses.obj pdcurses.res
 

@@ -87,7 +87,7 @@ endif
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) $(RESOURCE)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 
-pdcurses.o: $(common)/pdcurses.rc $(common)/pdcurses.ico
+pdcurses.o: $(common)/pdcurses.rc
 	windres -i $(common)/pdcurses.rc pdcurses.o
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)

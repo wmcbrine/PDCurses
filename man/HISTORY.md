@@ -13,7 +13,7 @@ New features
   font-independent way, to ensure their correct alignment across cells.
   Underlining is now handled in a similar way.
 
-- TTF fonts in SDL are now rendered in Blended mode instead of Solid. 
+- TTF fonts in SDL are now rendered in Blended mode instead of Solid.
   Partly after Joachim de Groot.
 
 - New default fonts and font sizes for SDL/TTF.
@@ -28,9 +28,9 @@ New features
   redundant and unclear comments.
 
 - Directory re-org -- in addition to the above, created common/, to
-  unclutter the root, and eliminate a few more redundant files from 
-  platform directories. (We already had "pdcurses", but that's for the 
-  portable core; "common" is for files that are more platform-specific, 
+  unclutter the root, and eliminate a few more redundant files from
+  platform directories. (We already had "pdcurses", but that's for the
+  portable core; "common" is for files that are more platform-specific,
   though shared by more than one platform.)
 
 - Broke out the redundant ACS tables and moved them to common/.

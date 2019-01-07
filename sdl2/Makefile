@@ -27,9 +27,10 @@ ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
 endif
 
-include $(PDCURSES_SRCDIR)/common/libobjs.mif
-
 osdir		= $(PDCURSES_SRCDIR)/sdl2
+common		= $(PDCURSES_SRCDIR)/common
+
+include $(common)/libobjs.mif
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
@@ -48,12 +49,25 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
+ifeq ($(DLL),Y)
+	CFLAGS += -DPDC_DLL_BUILD
+	LIBEXE = $(CC)
+	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
+	LIBCURSES = pdcurses.dll
+	CLEAN = $(LIBCURSES) *.a
+	RESOURCE = pdcurses.o
+        LIBLIBS = $(SLIBS)
+else
+	LIBEXE = $(AR)
+	LIBFLAGS = rcv
+	LIBCURSES = pdcurses.a
+	CLEAN = *.a
+endif
+
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 LINK		= $(CC)
 LDFLAGS		= $(LIBCURSES) $(SLIBS)
-RANLIB		= ranlib
-LIBCURSES	= libpdcurses.a
 
 DEMOS		+= sdltest$(E)
 
@@ -64,16 +78,18 @@ all:	libs
 libs:	$(LIBCURSES)
 
 clean:
-	-$(RM) *.o trace $(LIBCURSES) $(DEMOS)
+	-$(RM) *.o trace $(CLEAN) $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
 	strip $(DEMOS)
 endif
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	ar rv $@ $?
-	-$(RANLIB) $@
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) $(RESOURCE)
+	$(LIBEXE) $(LIBFLAGS) $@ $? $(LIBLIBS)
+
+pdcurses.o: $(common)/pdcurses.rc
+	windres -i $(common)/pdcurses.rc pdcurses.o
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_SDL_H)

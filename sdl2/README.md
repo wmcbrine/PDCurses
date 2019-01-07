@@ -10,10 +10,12 @@ Building
 - On *nix (including Linux and Mac OS X), run "make" in the sdl2
   directory. There is no configure script (yet?) for this port. This
   assumes a working sdl-config, and GNU make. It builds the library
-  libpdcurses.a (dynamic lib not implemented).
+  pdcurses.a (dynamic lib not implemented).
 
 - With MinGW, edit the Makefile to point to the appropriate include and
   library paths, and then run "make".
+
+- With MSVC, edit Makefile.vc if needed, and do "nmake -f Makefile.vc".
 
 - The makefile recognizes the optional PDCURSES_SRCDIR environment
   variable, and the option "DEBUG=Y", as with the console ports.
@@ -21,7 +23,9 @@ Building
   characters, but depends on the SDL2_ttf library, instead of using
   simple bitmap fonts. "UTF8=Y" makes PDCurses ignore the system locale,
   and treat all narrow-character strings as UTF-8; this option has no
-  effect unless WIDE=Y is also set.
+  effect unless WIDE=Y is also set. Under Windows, you can specify
+  "DLL=Y" to build pdcurses.dll instead a static library. And on all
+  platforms, add the target "demos" to build the sample programs.
 
 
 Usage
@@ -75,11 +79,11 @@ Plane).
 
 The default font (if not redefined) is based on the OS:
 
-- Windows: C:/Windows/Fonts/lucon.ttf
+- Windows: C:/Windows/Fonts/consola.ttf
 
-- Mac: /Library/Fonts/Courier New.ttf
+- Mac: /Library/Fonts/Menlo.ttc
 
-- Other: /usr/share/fonts/truetype/freefont/FreeMono.ttf
+- Other: /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
 
 
 Backgrounds
@@ -101,12 +105,10 @@ environment variable PDC_BACKGROUND; "pdcback.bmp" is the fallback.
 Icons
 -----
 
-The icon (used with SDL_WM_SetIcon() -- not used for the executable
+The icon (used with SDL_SetWindowIcon() -- not used for the executable
 file) can be set via the environment variable PDC_ICON, and falls back
 to "pdcicon.bmp", and then to the built-in icon from deficon.h. The
 built-in icon is the PDCurses logo, as seen in ../x11/little_icon.xbm.
-The SDL docs say that the icon must be 32x32, at least for use with MS
-Windows.
 
 If pdc_screen is preinitialized (see below), PDCurses does not attempt
 to set the icon.
@@ -131,27 +133,23 @@ course this is extremely non-portable!) To aid you, there are several
 external variables and functions specific to the SDL ports; you could
 include pdcsdl.h, or just add the declarations you need in your code:
 
+    PDCEX SDL_Window *pdc_window;
     PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
     PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
     PDCEX void PDC_update_rects(void);
     PDCEX void PDC_retile(void);
 
-The SDL2 port adds:
-
-    PDCEX SDL_Window *pdc_window;
-
-pdc_screen is the main surface, unless it's preset before initscr(). In
-SDL1, pdc_screen is created by SDL_SetVideoMode(); in SDL2, pdc_window
-is the main window, created by SDL_CreateWindow(), and pdc_screen is set
-by SDL_GetWindowSurface(pdc_window). (See sdltest.c for examples.) You
-can perform normal SDL operations on this surface, but PDCurses won't
+pdc_window is the main window, created by SDL_CreateWindow(), unless
+it's preset before initscr(); and pdc_screen is the main surface, set by
+SDL_GetWindowSurface(pdc_window). (See sdltest.c for examples.) You can
+perform normal SDL operations on this surface, but PDCurses won't
 respect them when it updates. (For that, see PDC_retile().) As an
 alternative, you can preinitialize this surface before calling
 initscr(). In that case, you can use pdc_sheight, pdc_swidth,
 pdc_yoffset and/or pdc_xoffset (q.v.) to confine PDCurses to only a
 specific area of the surface, reserving the rest for other SDL
-operations. If you preinitialize pdc_screen, you'll have to close it
+operations. If you preinitialize pdc_window, you'll have to close it
 yourself; PDCurses will ignore resize events, and won't try to set the
 icon. Also note that if you preinitialize pdc_screen, it need not be the
 display surface.

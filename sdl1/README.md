@@ -9,7 +9,7 @@ Building
 
 - On *nix (including Linux), run "make" in the sdl1 directory. There is
   no configure script (yet?) for this port. This assumes a working
-  sdl-config, and GNU make. It builds the library libpdcurses.a (dynamic
+  sdl-config, and GNU make. It builds the library pdcurses.a (dynamic
   lib not implemented).
 
 - The makefile accepts the optional parameter "DEBUG=Y", and recognizes
@@ -18,17 +18,17 @@ Building
   characters, but depends on the SDL_ttf library, instead of using
   simple bitmap fonts. "UTF8=Y" makes PDCurses ignore the system locale,
   and treat all narrow-character strings as UTF-8; this option has no
-  effect unless WIDE=Y is also set.
+  effect unless WIDE=Y is also set. Add the target "demos" to build the
+  sample programs.
 
 
 Usage
 -----
 
 There are no special requirements to use PDCurses for SDL -- all
-PDCurses-compatible code should work fine. (In fact, you can even build
-against the Windows console pdcurses.dll, and then swap in the SDL
-pdcurses.dll.) Nothing extra is needed beyond the base SDL library.
-However, there are some optional special features, described here.
+PDCurses-compatible code should work fine. Nothing extra is needed
+beyond the base SDL library. However, there are some optional special
+features, described here.
 
 The SDL ports operate in one of two ways, depending on whether or not
 they were built with WIDE=Y:
@@ -70,13 +70,7 @@ as a compile-time define, and at runtime as pdc_font_size.) The
 character mapping for chtypes is 16-bit Unicode (the Basic Multilingual
 Plane).
 
-The default font (if not redefined) is based on the OS:
-
-- Windows: C:/Windows/Fonts/lucon.ttf
-
-- Mac: /Library/Fonts/Courier New.ttf
-
-- Other: /usr/share/fonts/truetype/freefont/FreeMono.ttf
+The default font is: /usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
 
 
 Backgrounds
@@ -102,8 +96,6 @@ The icon (used with SDL_WM_SetIcon() -- not used for the executable
 file) can be set via the environment variable PDC_ICON, and falls back
 to "pdcicon.bmp", and then to the built-in icon from deficon.h. The
 built-in icon is the PDCurses logo, as seen in ../x11/little_icon.xbm.
-The SDL docs say that the icon must be 32x32, at least for use with MS
-Windows.
 
 If pdc_screen is preinitialized (see below), PDCurses does not attempt
 to set the icon.
@@ -134,15 +126,9 @@ include pdcsdl.h, or just add the declarations you need in your code:
     PDCEX void PDC_update_rects(void);
     PDCEX void PDC_retile(void);
 
-The SDL2 port adds:
-
-    PDCEX SDL_Window *pdc_window;
-
-pdc_screen is the main surface, unless it's preset before initscr(). In
-SDL1, pdc_screen is created by SDL_SetVideoMode(); in SDL2, pdc_window
-is the main window, created by SDL_CreateWindow(), and pdc_screen is set
-by SDL_GetWindowSurface(pdc_window). (See sdltest.c for examples.) You
-can perform normal SDL operations on this surface, but PDCurses won't
+pdc_screen is the main surface, created by SDL_SetVideoMode(), unless
+it's preset before initscr(). (See sdltest.c for examples.) You can
+perform normal SDL operations on this surface, but PDCurses won't
 respect them when it updates. (For that, see PDC_retile().) As an
 alternative, you can preinitialize this surface before calling
 initscr(). In that case, you can use pdc_sheight, pdc_swidth,

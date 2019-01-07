@@ -23,9 +23,9 @@ Building
 
         make -f makefilename
 
-  (For Watcom, use "wmake" instead of "make".) You'll get the libraries
-  (pdcurses.lib or .a, depending on your compiler), the demos (*.exe),
-  and a lot of object files.
+  (For Watcom, use "wmake" instead of "make".) You'll get the library
+  (pdcurses.lib or .a, depending on your compiler) and a lot of object
+  files. Add the target "demos" to build the sample programs.
 
 
 Distribution Status

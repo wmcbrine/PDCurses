@@ -13,7 +13,7 @@ Building
   pdcurses.a (dynamic lib not implemented).
 
 - With MinGW, edit the Makefile to point to the appropriate include and
-  library paths, and then run "make".
+  library paths, and then run "mingw32-make".
 
 - With MSVC, edit Makefile.vc if needed, and do "nmake -f Makefile.vc".
 

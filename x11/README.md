@@ -25,7 +25,8 @@ Building
   switch -O2. You can turn this off, and turn on debugging (-g), by
   adding "--enable-debug" to the configure command.
 
-- Run "make". This should build libXCurses and all the demo programs.
+- Run "make". This should build libXCurses. Add the target "demos" to
+  build the sample programs.
 
 - Optionally, run "make install". curses.h and panel.h will be renamed
   when installed (to xcurses.h and xpanel.h), to avoid conflicts with

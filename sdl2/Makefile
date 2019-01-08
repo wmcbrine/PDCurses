@@ -41,7 +41,8 @@ else
 endif
 
 ifeq ($(WIDE),Y)
-	CFLAGS += -DPDC_WIDE $(TFLAGS)
+	CFLAGS += -DPDC_WIDE
+	SFLAGS += $(TFLAGS)
 	SLIBS  += $(TLIBS)
 endif
 
@@ -56,18 +57,19 @@ ifeq ($(DLL),Y)
 	LIBCURSES = pdcurses.dll
 	CLEAN = $(LIBCURSES) *.a
 	RESOURCE = pdcurses.o
-        LIBLIBS = $(SLIBS)
+	LIBLIBS = $(SLIBS)
+	LDFLAGS = $(LIBCURSES)
 else
 	LIBEXE = $(AR)
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
+	LDFLAGS = $(LIBCURSES) $(SLIBS)
 	CLEAN = *.a
 endif
 
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 LINK		= $(CC)
-LDFLAGS		= $(LIBCURSES) $(SLIBS)
 
 DEMOS		+= sdltest$(E)
 
@@ -98,7 +100,7 @@ tui.o tuidemo.o : $(PDCURSES_CURSES_H)
 panel.o ptest$(E): $(PANEL_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(BUILD) $(SFLAGS) -c $<
+	$(BUILD) -c $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) $(SFLAGS) -c $<
@@ -128,7 +130,7 @@ xmas$(E): $(demodir)/xmas.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 sdltest$(E): $(osdir)/sdltest.c
-	$(BUILD) $(SFLAGS) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(SFLAGS) $(DEMOFLAGS) -o $@ $< $(LIBCURSES) $(SLIBS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tui.c

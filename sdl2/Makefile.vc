@@ -54,8 +54,6 @@ SHL_LD = link $(LDFLAGS) -nologo -dll -machine:$(PLATFORM) -out:pdcurses.dll
 
 LINK		= link.exe -nologo
 
-CCLIBS		= $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
-
 LIBEXE		= lib -nologo
 
 LIBCURSES	= pdcurses.lib
@@ -64,11 +62,13 @@ CURSESDLL	= pdcurses.dll
 !ifdef DLL
 DLLOPT		= -DPDC_DLL_BUILD
 PDCLIBS		= $(CURSESDLL)
+LIBLIBS		= $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
 !else
 PDCLIBS		= $(LIBCURSES)
+CCLIBS		= $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
 !endif
 
-BUILD		= $(CC) -I$(PDCURSES_SRCDIR) $(SDL2_INCLUDE) $(TTF_INCLUDE) \
+BUILD		= $(CC) -I$(PDCURSES_SRCDIR) \
 -c $(CFLAGS) $(DLLOPT) $(WIDEOPT) $(UTF8OPT) $(INFOPT)
 
 all:	$(PDCLIBS)
@@ -97,7 +97,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 !endif
 
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
-	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
+	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(LIBLIBS)
 
 pdcurses.res pdcurses.obj: $(common)\pdcurses.rc
 	rc -r -fopdcurses.res $(common)\pdcurses.rc
@@ -107,7 +107,7 @@ pdcurses.res pdcurses.obj: $(common)\pdcurses.rc
 	$(BUILD) $<
 
 {$(osdir)\}.c{}.obj::
-	$(BUILD) $<
+	$(BUILD) $(SDL2_INCLUDE) $(TTF_INCLUDE) $<
 
 {$(demodir)\}.c{}.obj::
 	$(BUILD) $<
@@ -123,6 +123,9 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.obj: $(demodir)\tuidemo.c
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
+
+sdltest.exe: sdltest.obj
+	$(LINK) $(LDFLAGS) $*.obj $(LIBCURSES) $(LIBLIBS) $(CCLIBS)
 
 PLATFORM1 = Visual C++
 PLATFORM2 = Microsoft Visual C/C++ for Windows sdl2

@@ -64,7 +64,7 @@ tui.o tuidemo.o : $(PDCURSES_CURSES_H)
 panel.o ptest: $(PANEL_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(BUILD) $(SFLAGS) -c $<
+	$(BUILD) -c $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) $(SFLAGS) -c $<

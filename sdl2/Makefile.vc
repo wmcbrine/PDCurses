@@ -52,7 +52,7 @@ INFOPT		= -DHAVE_NO_INFOEX
 
 SHL_LD = link $(LDFLAGS) -nologo -dll -machine:$(PLATFORM) -out:pdcurses.dll
 
-LINK		= link.exe -nologo
+LINK		= link.exe -nologo -subsystem:windows
 
 LIBEXE		= lib -nologo
 
@@ -62,7 +62,8 @@ CURSESDLL	= pdcurses.dll
 !ifdef DLL
 DLLOPT		= -DPDC_DLL_BUILD
 PDCLIBS		= $(CURSESDLL)
-LIBLIBS		= $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
+LIBLIBS		= $(SDL2_LIB) $(TTF_LIB)
+CCLIBS		= $(SDL2_LIBMAIN) $(SDL2_LIB)
 !else
 PDCLIBS		= $(LIBCURSES)
 CCLIBS		= $(SDL2_LIBMAIN) $(SDL2_LIB) $(TTF_LIB)
@@ -107,10 +108,10 @@ pdcurses.res pdcurses.obj: $(common)\pdcurses.rc
 	$(BUILD) $<
 
 {$(osdir)\}.c{}.obj::
-	$(BUILD) $(SDL2_INCLUDE) $(TTF_INCLUDE) $<
+	$(BUILD) -Dmain=SDL_main $(SDL2_INCLUDE) $(TTF_INCLUDE) $<
 
 {$(demodir)\}.c{}.obj::
-	$(BUILD) $<
+	$(BUILD) -Dmain=SDL_main $<
 
 .obj.exe:
 	$(LINK) $(LDFLAGS) $< $(LIBCURSES) $(CCLIBS)
@@ -122,7 +123,7 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 	$(BUILD) -I$(demodir) $(demodir)\tui.c
 
 tuidemo.obj: $(demodir)\tuidemo.c
-	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
+	$(BUILD) -Dmain=SDL_main -I$(demodir) $(demodir)\tuidemo.c
 
 sdltest.exe: sdltest.obj
 	$(LINK) $(LDFLAGS) $*.obj $(LIBCURSES) $(LIBLIBS) $(CCLIBS)

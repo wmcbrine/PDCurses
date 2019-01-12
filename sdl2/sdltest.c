@@ -3,6 +3,8 @@
    (assuming the default 8x16 font) stdscr at the bottom.
 */
 
+#define SDL_MAIN_HANDLED
+
 #include <SDL.h>
 #include <curses.h>
 #include <stdlib.h>

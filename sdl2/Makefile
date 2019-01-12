@@ -7,11 +7,13 @@ ifeq ($(OS),Windows_NT)
 	CC = gcc
 	RM = cmd /c del
 
-	SFLAGS = -Ic:/sdl2-2.0.9/include
-	SLIBS = -Lc:/sdl2-2.0.9/lib/x64 -lSDL2main -lSDL2
+	PLATFORM = $(shell $(CC) -dumpmachine)
 
-	TFLAGS = -Ic:/sdl2_ttf-2.0.14/include
-	TLIBS =-Lc:/sdl2_ttf-2.0.14/lib/x64 -lSDL2_ttf
+	SFLAGS = -Ic:/sdl2-2.0.9/$(PLATFORM)/include/SDL2
+	SLIBS = -Lc:/sdl2-2.0.9/$(PLATFORM)/lib -lSDL2main -lSDL2
+
+	TFLAGS = -Ic:/sdl2_ttf-2.0.14/$(PLATFORM)/include/SDL2
+	TLIBS =-Lc:/sdl2_ttf-2.0.14/$(PLATFORM)/lib -lSDL2_ttf
 
 	DEMOFLAGS = -mwindows
 else

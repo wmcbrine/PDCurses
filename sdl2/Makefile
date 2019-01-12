@@ -50,7 +50,7 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
-ifeq ($(DLL),Y)
+ifeq ($(OS)_$(DLL),Windows_NT_Y)
 	CFLAGS += -DPDC_DLL_BUILD
 	LIBEXE = $(CC)
 	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o

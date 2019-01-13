@@ -1,4 +1,4 @@
-# GNU MAKE Makefile for PDCurses library - Windows console GCC
+# GNU Makefile for PDCurses - Windows console
 #
 # Usage: make [-f path\Makefile] [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
 #        [INFOEX=N] [tgt]

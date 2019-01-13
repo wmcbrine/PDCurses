@@ -1,4 +1,4 @@
-# GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
+# GNU Makefile for PDCurses - DOS
 #
 # Usage: make [-f path\Makefile] [DEBUG=Y] [target]
 #

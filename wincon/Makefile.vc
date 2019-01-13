@@ -1,4 +1,4 @@
-# Visual C++ NMakefile for PDCurses library - Windows console VC++ 2.0+
+# Visual C++ Makefile for PDCurses - Windows console
 #
 # Usage: nmake -f [path\]Makefile.vc [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
 #        [INFOEX=N] [target]

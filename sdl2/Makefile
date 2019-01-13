@@ -1,4 +1,4 @@
-# Makefile for PDCurses library for SDL
+# Makefile for PDCurses for SDL2
 
 O = o
 

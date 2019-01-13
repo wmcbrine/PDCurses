@@ -9,10 +9,10 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        Makefile     - DJGPP V2
-        Makefile.bcc - Borland C++ 3.0+
-        Makefile.w16 - Open Watcom 1.8+ (16-bit)
-        Makefile.w4g - Open Watcom 1.8+ (32-bit)
+        Makefile     - DJGPP
+        Makefile.bcc - Borland C++
+        Makefile.w16 - Watcom (16-bit)
+        Makefile.w4g - Watcom (32-bit)
 
 - For 16-bit compilers, you can change the memory MODEL in the makefile.
   (Large model is the default, and recommended.)
@@ -43,4 +43,4 @@ Acknowledgements
 
 Watcom C port was provided by Pieter Kunst <kunst@prl.philips.nl>
 
-DJGPP 1.x port was provided by David Nugent <davidn@csource.oz.au>
+DJGPP port was provided by David Nugent <davidn@csource.oz.au>

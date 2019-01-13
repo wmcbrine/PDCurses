@@ -9,9 +9,9 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        Makefile     - EMX 0.9b+
-        Makefile.bcc - Borland C++ 2.0+
-        Makefile.wcc - Open Watcom 1.8+
+        Makefile     - GCC/EMX
+        Makefile.bcc - Borland C++
+        Makefile.wcc - Watcom
 
 - Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where

@@ -1,4 +1,4 @@
-# Watcom WMAKE Makefile for PDCurses library - DOS/4GW Open Watcom 1.8+
+# Watcom Makefile for PDCurses - DOS/4GW
 #
 # Usage: wmake -f [path\]Makefile.w4g [DEBUG=Y] [target]
 #

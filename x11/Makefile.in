@@ -1,4 +1,4 @@
-# Makefile for PDCurses library for X11
+# Makefile for PDCurses for X11
 
 SHELL		= @SHELL@
 THIS		= Makefile

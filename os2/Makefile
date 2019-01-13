@@ -1,4 +1,4 @@
-# GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c+
+# GNU Makefile for PDCurses - OS/2
 #
 # Usage: make [-f path\Makefile] [DEBUG=Y] [target]
 #

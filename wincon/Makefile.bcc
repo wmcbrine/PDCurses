@@ -1,4 +1,4 @@
-# Borland MAKE Makefile for PDCurses library - Windows console BC++ 7.0+
+# Borland Makefile for PDCurses - Windows console
 #
 # Usage: make -f [path\]Makefile.bcc [DEBUG=Y] [WIDE=Y] [UTF8=Y]
 #        [INFOEX=N] [target]

@@ -13,7 +13,6 @@ ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_SRCDIR)/version.mif
 include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/os2
@@ -94,9 +93,3 @@ tui.o: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.o: $(demodir)\tuidemo.c
 	$(CC) $(CFLAGS) -I$(demodir) -o $@ $<
-
-PLATFORM1 = EMX OS/2
-PLATFORM2 = EMX 0.9d for OS/2
-ARCNAME = pdc$(VER)_emx_os2
-
-include $(PDCURSES_SRCDIR)/common/makedist.mif

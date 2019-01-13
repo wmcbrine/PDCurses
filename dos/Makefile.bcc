@@ -16,7 +16,6 @@ RM = del
 PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_SRCDIR)\version.mif
 !include $(PDCURSES_SRCDIR)\common\libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)\dos
@@ -75,9 +74,3 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
-
-PLATFORM1 = Borland C++ 3.1
-PLATFORM2 = Borland C/C++ 3.1 for DOS
-ARCNAME = pdc$(VER)bcc
-
-!include $(PDCURSES_SRCDIR)\common\makedist.mif

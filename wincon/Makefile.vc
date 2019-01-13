@@ -14,7 +14,6 @@ RM = del
 PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_SRCDIR)\version.mif
 !include $(PDCURSES_SRCDIR)\common\libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)\wincon
@@ -119,9 +118,3 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.obj: $(demodir)\tuidemo.c
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
-
-PLATFORM1 = Visual C++
-PLATFORM2 = Microsoft Visual C/C++ for Windows console
-ARCNAME = pdc$(VER)_vc_wincon
-
-!include $(PDCURSES_SRCDIR)\common\makedist.mif

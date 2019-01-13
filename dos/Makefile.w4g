@@ -13,8 +13,6 @@ PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 PDCURSES_SRCDIR	= ..
 !endif
 
-!include $(PDCURSES_SRCDIR)/version.mif
-
 osdir		= $(PDCURSES_SRCDIR)/dos
 
 CC		= wcc386
@@ -38,9 +36,3 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	%write wccdos.lrf $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ @wccdos.lrf
 	-$(RM) wccdos.lrf
-
-PLATFORM1	= Watcom C++ 32-bit DOS
-PLATFORM2	= Open Watcom 2.0 for 32-bit DOS
-ARCNAME		= pdc$(VER)32w
-
-!include $(PDCURSES_SRCDIR)/common/makedist.mif

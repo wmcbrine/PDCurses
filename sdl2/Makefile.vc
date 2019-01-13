@@ -18,7 +18,6 @@ SDL2_LIBMAIN = C:\SDL2-2.0.9\lib\$(PLATFORM)\SDL2main.lib
 PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_SRCDIR)\version.mif
 !include $(PDCURSES_SRCDIR)\common\libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)\sdl2
@@ -127,9 +126,3 @@ tuidemo.obj: $(demodir)\tuidemo.c
 
 sdltest.exe: sdltest.obj
 	$(LINK) $(LDFLAGS) $*.obj $(LIBCURSES) $(LIBLIBS) $(CCLIBS)
-
-PLATFORM1 = Visual C++
-PLATFORM2 = Microsoft Visual C/C++ for Windows sdl2
-ARCNAME = pdc$(VER)_vc_sdl2
-
-!include $(PDCURSES_SRCDIR)\common\makedist.mif

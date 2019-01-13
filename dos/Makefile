@@ -3,7 +3,7 @@
 # Usage: make [-f path\Makefile] [DEBUG=Y] [target]
 #
 # where target can be any of:
-# [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
+# [all|libs|demos|pdcurses.a|testcurs.exe...]
 
 O = o
 E = .exe
@@ -13,7 +13,6 @@ ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_SRCDIR)/version.mif
 include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/dos
@@ -81,9 +80,3 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
-
-PLATFORM1 = DJGPP 2.05
-PLATFORM2 = DJGPP 2.05 for DOS
-ARCNAME = pdc$(VER)djg
-
-include $(PDCURSES_SRCDIR)/common/makedist.mif

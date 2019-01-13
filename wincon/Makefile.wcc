@@ -14,8 +14,6 @@ PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 PDCURSES_SRCDIR	= ..
 !endif
 
-!include $(PDCURSES_SRCDIR)/version.mif
-
 osdir		= $(PDCURSES_SRCDIR)/wincon
 
 CC		= wcc386
@@ -49,9 +47,3 @@ LIBEXE		= wlib -q -n -t
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
-
-PLATFORM1	= Watcom C++ Wincon
-PLATFORM2	= Open Watcom 2.0 for Windows console
-ARCNAME		= pdc$(VER)_wcc_wincon
-
-!include $(PDCURSES_SRCDIR)/common/makedist.mif

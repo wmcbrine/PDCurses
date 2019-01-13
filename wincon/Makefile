@@ -22,7 +22,6 @@ endif
 osdir		= $(PDCURSES_SRCDIR)/wincon
 common		= $(PDCURSES_SRCDIR)/common
 
-include $(PDCURSES_SRCDIR)/version.mif
 include $(common)/libobjs.mif
 
 PDCURSES_WIN_H	= $(osdir)/pdcwin.h
@@ -113,9 +112,3 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
-
-PLATFORM1 = GCC Wincon
-PLATFORM2 = GCC for Windows console
-ARCNAME = pdc$(VER)_gcc_wincon
-
-include $(PDCURSES_SRCDIR)/common/makedist.mif

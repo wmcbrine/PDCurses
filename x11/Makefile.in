@@ -522,9 +522,9 @@ xmas.o: $(demodir)/xmas.c
 # This section provides for compiling and linking the
 # ncurses test programs.
 
-ncurses_testdir	= $(HOME)/ncurses-5.9/test
+ncurses_testdir	= $(HOME)/ncurses-6.1/test
 
-NCURSES_TESTS	= bs gdc hanoi knight tclock ncurses
+NCURSES_TESTS	= bs gdc hanoi knight tclock dots_xcurses lrtest padview ncurses
 
 ncurses_tests: $(NCURSES_TESTS)
 
@@ -548,8 +548,14 @@ knight: knight.o $(LIBCURSES)
 tclock: tclock.o $(LIBCURSES)
 	$(LINK) tclock.o -o $@ $(LDFLAGS) -lm
 
-view: view.o $(LIBCURSES)
-	$(LINK) view.o -o $@ $(LDFLAGS)
+dots_xcurses: dots_xcurses.o $(LIBCURSES)
+	$(LINK) dots_xcurses.o -o $@ $(LDFLAGS)
+
+lrtest: lrtest.o $(LIBCURSES)
+	$(LINK) lrtest.o -o $@ $(LDFLAGS)
+
+padview: padview.o $(LIBCURSES)
+	$(LINK) padview.o -o $@ $(LDFLAGS)
 
 ncurses: ncurses.o $(LIBCURSES)
 	$(LINK) ncurses.o -o $@ $(LDFLAGS)
@@ -569,8 +575,14 @@ knight.o: $(ncurses_testdir)/knight.c $(PDCURSES_CURSES_H)
 tclock.o: $(ncurses_testdir)/tclock.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/tclock.c
 
-view.o: $(ncurses_testdir)/view.c $(PDCURSES_CURSES_H)
-	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/view.c
+dots_xcurses.o: $(ncurses_testdir)/dots_xcurses.c $(PDCURSES_CURSES_H)
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/dots_xcurses.c
+
+lrtest.o: $(ncurses_testdir)/lrtest.c $(PDCURSES_CURSES_H)
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/lrtest.c
+
+padview.o: $(ncurses_testdir)/padview.c $(PDCURSES_CURSES_H)
+	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/padview.c
 
 ncurses.o: $(ncurses_testdir)/ncurses.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/ncurses.c

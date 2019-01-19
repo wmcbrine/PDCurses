@@ -19,13 +19,13 @@ gdc$(E): $(ncurses_testdir)/gdc.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
 hanoi$(E): $(ncurses_testdir)/hanoi.c
-	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS) -lm
 
 knight$(E): $(ncurses_testdir)/knight.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
 tclock$(E): $(ncurses_testdir)/tclock.c
-	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS) -lm
 
 dots_xcurses$(E): $(ncurses_testdir)/dots_xcurses.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)

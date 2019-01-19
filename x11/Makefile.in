@@ -540,7 +540,7 @@ gdc: gdc.o $(LIBCURSES)
 	$(LINK) gdc.o -o $@ $(LDFLAGS)
 
 hanoi: hanoi.o $(LIBCURSES)
-	$(LINK) hanoi.o -o $@ $(LDFLAGS)
+	$(LINK) hanoi.o -o $@ $(LDFLAGS) -lm
 
 knight: knight.o $(LIBCURSES)
 	$(LINK) knight.o -o $@ $(LDFLAGS)

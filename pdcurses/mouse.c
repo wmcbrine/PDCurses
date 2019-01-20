@@ -9,12 +9,12 @@ mouse
 
 ### Synopsis
 
-    int mouse_set(unsigned long mbe);
-    int mouse_on(unsigned long mbe);
-    int mouse_off(unsigned long mbe);
+    int mouse_set(mmask_t mbe);
+    int mouse_on(mmask_t mbe);
+    int mouse_off(mmask_t mbe);
     int request_mouse_pos(void);
     void wmouse_position(WINDOW *win, int *y, int *x);
-    unsigned long getmouse(void);
+    mmask_t getmouse(void);
 
     int mouseinterval(int wait);
     bool wenclose(const WINDOW *win, int y, int x);
@@ -141,7 +141,7 @@ mouse
 
 static bool ungot = FALSE;
 
-int mouse_set(unsigned long mbe)
+int mouse_set(mmask_t mbe)
 {
     PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
@@ -149,7 +149,7 @@ int mouse_set(unsigned long mbe)
     return PDC_mouse_set();
 }
 
-int mouse_on(unsigned long mbe)
+int mouse_on(mmask_t mbe)
 {
     PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
@@ -157,7 +157,7 @@ int mouse_on(unsigned long mbe)
     return PDC_mouse_set();
 }
 
-int mouse_off(unsigned long mbe)
+int mouse_off(mmask_t mbe)
 {
     PDC_LOG(("mouse_off() - called: event %x\n", mbe));
 
@@ -194,7 +194,7 @@ void wmouse_position(WINDOW *win, int *y, int *x)
     }
 }
 
-unsigned long getmouse(void)
+mmask_t getmouse(void)
 {
     PDC_LOG(("getmouse() - called\n"));
 
@@ -348,7 +348,7 @@ int nc_getmouse(MEVENT *event)
 int ungetmouse(MEVENT *event)
 {
     int i;
-    unsigned long bstate;
+    mmask_t bstate;
 
     PDC_LOG(("ungetmouse() - called\n"));
 

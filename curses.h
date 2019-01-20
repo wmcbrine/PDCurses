@@ -289,7 +289,6 @@ typedef struct
     int   lines;          /* new value for LINES */
     int   cols;           /* new value for COLS */
     unsigned long _trap_mbe;       /* trap these mouse button events */
-    unsigned long _map_mbe_to_key; /* map mouse buttons to slk */
     int   mouse_wait;              /* time to wait (in ms) for a
                                       button release after a press, in
                                       order to count it as a click */
@@ -1230,10 +1229,8 @@ PDCEX  int     mouse_set(unsigned long);
 PDCEX  int     mouse_on(unsigned long);
 PDCEX  int     mouse_off(unsigned long);
 PDCEX  int     request_mouse_pos(void);
-PDCEX  int     map_button(unsigned long);
 PDCEX  void    wmouse_position(WINDOW *, int *, int *);
 PDCEX  unsigned long getmouse(void);
-PDCEX  unsigned long getbmap(void);
 
 /* ncurses */
 

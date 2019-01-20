@@ -13,10 +13,8 @@ mouse
     int mouse_on(unsigned long mbe);
     int mouse_off(unsigned long mbe);
     int request_mouse_pos(void);
-    int map_button(unsigned long button);
     void wmouse_position(WINDOW *win, int *y, int *x);
     unsigned long getmouse(void);
-    unsigned long getbmap(void);
 
     int mouseinterval(int wait);
     bool wenclose(const WINDOW *win, int y, int x);
@@ -37,12 +35,11 @@ mouse
    interface; it's here to allow easier porting of ncurses apps.
 
    The classic interface: mouse_set(), mouse_on(), mouse_off(),
-   request_mouse_pos(), map_button(), wmouse_position(),
-   getmouse(), and getbmap(). An application using this interface
-   would start by calling mouse_set() or mouse_on() with a non-zero
-   value, often ALL_MOUSE_EVENTS. Then it would check for a
-   KEY_MOUSE return from getch(). If found, it would call
-   request_mouse_pos() to get the current mouse status.
+   request_mouse_pos(), wmouse_position(), and getmouse(). An
+   application using this interface would start by calling mouse_set()
+   or mouse_on() with a non-zero value, often ALL_MOUSE_EVENTS. Then it
+   would check for a KEY_MOUSE return from getch(). If found, it would
+   call request_mouse_pos() to get the current mouse status.
 
    mouse_set(), mouse_on() and mouse_off() are analagous to
    attrset(), attron() and attroff().  These functions set the
@@ -53,11 +50,6 @@ mouse
    request_mouse_pos() requests curses to fill in the Mouse_status
    structure with the current state of the mouse.
 
-   map_button() enables the specified mouse action to activate the
-   Soft Label Keys if the action occurs over the area of the screen
-   where the Soft Label Keys are displayed.  The mouse actions are
-   defined in curses.h in the group that starts with BUTTON_RELEASED.
-
    wmouse_position() determines if the current mouse position is
    within the window passed as an argument.  If the mouse is
    outside the current window, -1 is returned in the y and x
@@ -67,10 +59,6 @@ mouse
 
    getmouse() returns the current status of the trapped mouse
    buttons as set by mouse_set() or mouse_on().
-
-   getbmap() returns the current status of the button action used
-   to map a mouse action to the Soft Label Keys as set by the
-   map_button() function.
 
    The ncurses interface: mouseinterval(), wenclose(),
    wmouse_trafo(), mouse_trafo(), mousemask(), nc_getmouse(), and
@@ -137,10 +125,8 @@ mouse
     mouse_on                    -       -      4.0
     mouse_off                   -       -      4.0
     request_mouse_pos           -       -      4.0
-    map_button                  -       -      4.0
     wmouse_position             -       -      4.0
     getmouse                    -       -      4.0
-    getbmap                     -       -      4.0
     mouseinterval               -       -       -
     wenclose                    -       -       -
     wmouse_trafo                -       -       -
@@ -179,16 +165,6 @@ int mouse_off(unsigned long mbe)
     return PDC_mouse_set();
 }
 
-int map_button(unsigned long button)
-{
-    PDC_LOG(("map_button() - called: button %x\n", button));
-
-/****************** this does nothing at the moment ***************/
-    SP->_map_mbe_to_key = button;
-
-    return OK;
-}
-
 int request_mouse_pos(void)
 {
     PDC_LOG(("request_mouse_pos() - called\n"));
@@ -223,13 +199,6 @@ unsigned long getmouse(void)
     PDC_LOG(("getmouse() - called\n"));
 
     return SP->_trap_mbe;
-}
-
-unsigned long getbmap(void)
-{
-    PDC_LOG(("getbmap() - called\n"));
-
-    return SP->_map_mbe_to_key;
 }
 
 /* ncurses mouse interface */

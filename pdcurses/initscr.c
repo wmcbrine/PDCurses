@@ -139,7 +139,6 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->visibility = 1;
     SP->resized = FALSE;
     SP->_trap_mbe = 0L;
-    SP->_map_mbe_to_key = 0L;
     SP->linesrippedoff = 0;
     SP->linesrippedoffontop = 0;
     SP->delaytenths = 0;

@@ -100,6 +100,12 @@ typedef chtype attr_t;
  *
  */
 
+#if _LP64
+typedef unsigned int mmask_t;
+#else
+typedef unsigned long mmask_t;
+#endif
+
 typedef struct
 {
     int x;           /* absolute column, 0 based, measured in characters */
@@ -205,8 +211,6 @@ typedef struct
 #define REPORT_MOUSE_POSITION   0x20000000L
 
 /* ncurses mouse interface */
-
-typedef unsigned long mmask_t;
 
 typedef struct
 {

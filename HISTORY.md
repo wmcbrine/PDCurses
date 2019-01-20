@@ -1,16 +1,31 @@
-PDCurses 4.x.x - work in progress
+PDCurses 4.0.4 - 2019 Jan 20
 =========================
-Major new features:
+Major new feature:
 -------------------
 
-- SDL2 (and SLD1?) backends...
+- New VT backend.  Works within an xterm or xterm-based terminal and some
+  other terminals.  Mostly works in the Linux console,  and on Win10
+  directly and on Win9x/DOS if ANSI.SYS (or NANSI or NNANSI .SYS or .COM)
+  are installed.
 
-Minor new features
+Minor new features:
 -------------------
-- dos variant: cross-compilation from GNU/Linux works with both DJGPP and
-  Watcom C/C++; and, 16-bit and 32-bit Watcom makefiles have been combined into one
 
-Bugfixes
+- SDL2 variant: dimmed,  bold,  blinking,  and RGB text are handled,  as is
+  window resizing.
+
+- DOS variant: cross-compilation from GNU/Linux works with both DJGPP and
+  Watcom C/C++; and, 16-bit and 32-bit Watcom makefiles have been combined
+  into one
+
+- Many modifications (and some bug fixes) taken from William McBrine's
+  branch.  An effort has been made to narrow the gap between the forks
+  where possible.  But both forks are moving targets with different
+  design choices and priorities.
+
+- Demos improved to show version info
+
+Bug fixes
 -------------------
 - compilation warnings/errors with some compilers in some variants #53, #57, #58, #65, ...
 
@@ -21,7 +36,7 @@ Bugfixes
 - some corner cases (midnight crossing, atomicity of tick count reads) in
   DOS version of napms() were not handled well
 
-PDCurses 4.0.2 - 2017/09/12
+PDCurses 4.0.2 - 2017 Sep 12
 =========================
 Major new features:
 -------------------

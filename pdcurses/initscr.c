@@ -20,6 +20,7 @@ initscr
     int resize_term(int nlines, int ncols);
     bool is_termresized(void);
     const char *curses_version(void);
+    void PDC_get_version(PDC_VERSION *ver);
 
 ### Description
 
@@ -71,6 +72,9 @@ initscr
 
    curses_version() returns a string describing the version of
    PDCurses.
+
+   PDC_get_version() fills a PDC_VERSION structure provided by the user
+   with more detailed version info (see curses.h).
 
 ### Return Value
 
@@ -344,4 +348,31 @@ bool is_termresized(void)
 const char *curses_version(void)
 {
     return _curses_notice;
+}
+
+void PDC_get_version(PDC_VERSION *ver)
+{
+    if (!ver)
+        return;
+
+    ver->flags = 0
+#ifdef PDCDEBUG
+        | PDC_VFLAG_DEBUG
+#endif
+#ifdef PDC_WIDE
+        | PDC_VFLAG_WIDE
+#endif
+#ifdef PDC_FORCE_UTF8
+        | PDC_VFLAG_UTF8
+#endif
+#ifdef PDC_DLL_BUILD
+        | PDC_VFLAG_DLL
+#endif
+        ;
+
+    ver->build = PDC_BUILD;
+    ver->major = PDC_VER_MAJOR;
+    ver->minor = PDC_VER_MINOR;
+    ver->csize = sizeof(chtype);
+    ver->bsize = sizeof(bool);
 }

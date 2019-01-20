@@ -30,7 +30,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3702
+#define PDC_BUILD    3703
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   7
 #define PDC_VERDOT   "3.7"
@@ -93,6 +93,33 @@ typedef chtype cchar_t;
 #endif
 
 typedef chtype attr_t;
+
+/*----------------------------------------------------------------------
+ *
+ *  Version Info
+ *
+ */
+
+/* Use this structure with PDC_get_version() for run-time info about the
+   way the library was built, in case it doesn't match the header. */
+
+typedef struct
+{
+    short flags;          /* flags OR'd together (see below) */
+    short build;          /* PDC_BUILD at compile time */
+    unsigned char major;  /* PDC_VER_MAJOR */
+    unsigned char minor;  /* PDC_VER_MINOR */
+    unsigned char csize;  /* sizeof chtype */
+    unsigned char bsize;  /* sizeof bool */
+} PDC_VERSION;
+
+enum
+{
+    PDC_VFLAG_DEBUG = 1,  /* set if built with -DPDCDEBUG */
+    PDC_VFLAG_WIDE  = 2,  /* -DPDC_WIDE */
+    PDC_VFLAG_UTF8  = 4,  /* -DPDC_FORCE_UTF8 */
+    PDC_VFLAG_DLL   = 8   /* -DPDC_DLL_BUILD */
+};
 
 /*----------------------------------------------------------------------
  *
@@ -1277,6 +1304,7 @@ PDCEX  wchar_t *slk_wlabel(int);
 #endif
 
 PDCEX  void    PDC_debug(const char *, ...);
+PDCEX  void    PDC_get_version(PDC_VERSION *);
 PDCEX  int     PDC_ungetch(int);
 PDCEX  int     PDC_set_blink(bool);
 PDCEX  int     PDC_set_bold(bool);

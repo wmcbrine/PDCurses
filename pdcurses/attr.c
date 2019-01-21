@@ -46,25 +46,42 @@ attr
 
 ### Description
 
-   These functions manipulate the current attributes and/or colors
-   of the named window.  These attributes can be any combination
-   of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
+   These functions manipulate the current attributes and/or colors of
+   the named window. These attributes can be any combination of
+   A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE. These
+   constants are defined in <curses.h> and can be combined with the
+   bitwise-OR operator (|).
 
-   These constants are defined in <curses.h> and can be combined
-   with the bitwise-OR operator (|).
+   The current attributes of a window are applied to all chtypes that
+   are written into the window with waddch(). Attributes are a property
+   of the chtype, and move with the character through any scrolling or
+   insert/delete operations.
 
-   The current attributes of a window are applied to all chtypes
-   that are written into the window with waddch(). Attributes are
-   a property of the chtype, and move with the character through
-   any scrolling or insert/delete operations.
+   wattrset() sets the current attributes of the given window to attrs.
+   attrset() is the stdscr version.
 
-   attrset() sets the current attributes of the given window to
-   attrs. attroff() turns off the named attributes without
-   affecting any other attributes; attron() turns them on.
-   color_set() sets the window color to the value of color_pair.
+   wattroff() turns off the named attributes without affecting any other
+   attributes; wattron() turns them on.
 
-   standout() is the same as attron(A_STANDOUT). standend() is the
-   same as attrset(A_NORMAL); that is, it turns off all attributes.
+   wcolor_set() sets the window color to the value of color_pair. opts
+   is unused.
+
+   standout() is the same as attron(A_STANDOUT). standend() is the same
+   as attrset(A_NORMAL); that is, it turns off all attributes.
+
+   The attr_* and wattr_* functions are intended for use with the WA_*
+   attributes. In PDCurses, these are the same as A_*, and there is no
+   difference in bevahior from the chtype-based functions. In all cases,
+   opts is unused.
+
+   wattr_get() retrieves the attributes and color pair for the specified
+   window.
+
+   wchgat() sets the color pair and attributes for the next n cells on
+   the current line of a given window, without changing the existing
+   text, or alterting the window's attributes. An n of -1 extends the
+   change to the edge of the window. The changes take effect
+   immediately. opts is unused.
 
 ### Return Value
 

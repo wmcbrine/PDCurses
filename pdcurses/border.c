@@ -47,14 +47,14 @@ border
    the window. If any argument is zero, an appropriate default is
    used:
 
-   ls    left side of border             ACS_VLINE
-   rs    right side of border            ACS_VLINE
-   ts    top side of border              ACS_HLINE
-   bs    bottom side of border           ACS_HLINE
-   tl    top left corner of border       ACS_ULCORNER
-   tr    top right corner of border      ACS_URCORNER
-   bl    bottom left corner of border    ACS_LLCORNER
-   br    bottom right corner of border   ACS_LRCORNER
+    ls    left side of border             ACS_VLINE
+    rs    right side of border            ACS_VLINE
+    ts    top side of border              ACS_HLINE
+    bs    bottom side of border           ACS_HLINE
+    tl    top left corner of border       ACS_ULCORNER
+    tr    top right corner of border      ACS_URCORNER
+    bl    bottom left corner of border    ACS_LLCORNER
+    br    bottom right corner of border   ACS_LRCORNER
 
    hline() and whline() draw a horizontal line, using ch, starting
    from the current cursor position. The cursor position does not

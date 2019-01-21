@@ -51,6 +51,15 @@ getch
    flushinp() throws away any type-ahead that has been typed by the
    user and has not yet been read by the program.
 
+   wget_wch() is the wide-character version of wgetch(), available when
+   PDCurses is built with the PDC_WIDE option. It takes a pointer to a
+   wint_t rather than returning the key as an int, and instead returns
+   KEY_CODE_YES if the key is a function key. Otherwise, it returns OK
+   or ERR. It's important to check for KEY_CODE_YES, since regular wide
+   characters can have the same values as function key codes.
+
+   unget_wch() puts a wide character on the input queue.
+
    PDC_get_key_modifiers() returns the keyboard modifiers (shift,
    control, alt, numlock) effective at the time of the last getch()
    call, if PDC_save_key_modifiers(TRUE) has been called before the

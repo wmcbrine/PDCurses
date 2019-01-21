@@ -328,25 +328,42 @@ attr
 
 ### Description
 
-   These functions manipulate the current attributes and/or colors
-   of the named window.  These attributes can be any combination
-   of A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE.
+   These functions manipulate the current attributes and/or colors of
+   the named window. These attributes can be any combination of
+   A_STANDOUT, A_REVERSE, A_BOLD, A_DIM, A_BLINK, A_UNDERLINE. These
+   constants are defined in <curses.h> and can be combined with the
+   bitwise-OR operator (|).
 
-   These constants are defined in <curses.h> and can be combined
-   with the bitwise-OR operator (|).
+   The current attributes of a window are applied to all chtypes that
+   are written into the window with waddch(). Attributes are a property
+   of the chtype, and move with the character through any scrolling or
+   insert/delete operations.
 
-   The current attributes of a window are applied to all chtypes
-   that are written into the window with waddch(). Attributes are
-   a property of the chtype, and move with the character through
-   any scrolling or insert/delete operations.
+   wattrset() sets the current attributes of the given window to attrs.
+   attrset() is the stdscr version.
 
-   attrset() sets the current attributes of the given window to
-   attrs. attroff() turns off the named attributes without
-   affecting any other attributes; attron() turns them on.
-   color_set() sets the window color to the value of color_pair.
+   wattroff() turns off the named attributes without affecting any other
+   attributes; wattron() turns them on.
 
-   standout() is the same as attron(A_STANDOUT). standend() is the
-   same as attrset(A_NORMAL); that is, it turns off all attributes.
+   wcolor_set() sets the window color to the value of color_pair. opts
+   is unused.
+
+   standout() is the same as attron(A_STANDOUT). standend() is the same
+   as attrset(A_NORMAL); that is, it turns off all attributes.
+
+   The attr_* and wattr_* functions are intended for use with the WA_*
+   attributes. In PDCurses, these are the same as A_*, and there is no
+   difference in bevahior from the chtype-based functions. In all cases,
+   opts is unused.
+
+   wattr_get() retrieves the attributes and color pair for the specified
+   window.
+
+   wchgat() sets the color pair and attributes for the next n cells on
+   the current line of a given window, without changing the existing
+   text, or alterting the window's attributes. An n of -1 extends the
+   change to the edge of the window. The changes take effect
+   immediately. opts is unused.
 
 ### Return Value
 
@@ -436,25 +453,28 @@ bkgd
 
 ### Description
 
-   bkgdset() and wbkgdset() manipulate the background of a window.
-   The background is a chtype consisting of any combination of
-   attributes and a character; it is combined with each chtype
-   added or inserted to the window by waddch() or winsch(). Only
-   the attribute part is used to set the background of non-blank
-   characters, while both character and attributes are used for
-   blank positions.
+   bkgdset() and wbkgdset() manipulate the background of a window. The
+   background is a chtype consisting of any combination of attributes
+   and a character; it is combined with each chtype added or inserted to
+   the window by waddch() or winsch(). Only the attribute part is used
+   to set the background of non-blank characters, while both character
+   and attributes are used for blank positions.
 
    bkgd() and wbkgd() not only change the background, but apply it
    immediately to every cell in the window.
 
-   The attributes that are defined with the attrset()/attron() set
-   of functions take precedence over the background attributes if
-   there is a conflict (e.g., different color pairs).
+   wbkgrnd(), wbkgrndset() and wgetbkgrnd() are the "wide-character"
+   versions of these functions, taking a pointer to a cchar_t instead of
+   a chtype. However, in PDCurses, cchar_t and chtype are the same.
+
+   The attributes that are defined with the attrset()/attron() set of
+   functions take precedence over the background attributes if there is
+   a conflict (e.g., different color pairs).
 
 ### Return Value
 
-   bkgd() and wbkgd() return OK, unless the window is NULL, in
-   which case they return ERR.
+   bkgd() and wbkgd() return OK, unless the window is NULL, in which
+   case they return ERR.
 
 ### Portability
                              X/Open    BSD    SYS V
@@ -514,9 +534,8 @@ border
 
 ### Description
 
-   border(), wborder(), and box() draw a border around the edge of
-   the window. If any argument is zero, an appropriate default is
-   used:
+   border(), wborder(), and box() draw a border around the edge of the
+   window. If any argument is zero, an appropriate default is used:
 
     ls    left side of border             ACS_VLINE
     rs    right side of border            ACS_VLINE
@@ -527,15 +546,19 @@ border
     bl    bottom left corner of border    ACS_LLCORNER
     br    bottom right corner of border   ACS_LRCORNER
 
-   hline() and whline() draw a horizontal line, using ch, starting
-   from the current cursor position. The cursor position does not
-   change. The line is at most n characters long, or as many as
-   will fit in the window.
+   hline() and whline() draw a horizontal line, using ch, starting from
+   the current cursor position. The cursor position does not change. The
+   line is at most n characters long, or as many as will fit in the
+   window.
 
-   vline() and wvline() draw a vertical line, using ch, starting
-   from the current cursor position. The cursor position does not
-   change. The line is at most n characters long, or as many as
-   will fit in the window.
+   vline() and wvline() draw a vertical line, using ch, starting from
+   the current cursor position. The cursor position does not change. The
+   line is at most n characters long, or as many as will fit in the
+   window.
+
+   The *_set functions are the "wide-character" versions, taking
+   pointers to cchar_t instead of chtype. Note that in PDCurses, chtype
+   and cchar_t are the same.
 
 ### Return Value
 
@@ -883,6 +906,15 @@ getch
 
    flushinp() throws away any type-ahead that has been typed by the
    user and has not yet been read by the program.
+
+   wget_wch() is the wide-character version of wgetch(), available when
+   PDCurses is built with the PDC_WIDE option. It takes a pointer to a
+   wint_t rather than returning the key as an int, and instead returns
+   KEY_CODE_YES if the key is a function key. Otherwise, it returns OK
+   or ERR. It's important to check for KEY_CODE_YES, since regular wide
+   characters can have the same values as function key codes.
+
+   unget_wch() puts a wide character on the input queue.
 
    PDC_get_key_modifiers() returns the keyboard modifiers (shift,
    control, alt, numlock) effective at the time of the last getch()
@@ -2046,81 +2078,73 @@ panel
 
 ### Description
 
-   The panel library is built using the curses library, and any
-   program using panels routines must call one of the curses
-   initialization routines such as initscr(). A program using these
-   routines must be linked with the panels and curses libraries.
-   The header <panel.h> includes the header <curses.h>.
+   For historic reasons, and for compatibility with other versions of
+   curses, the panel functions are prototyped in a separate header,
+   panel.h. In many implementations, they're also in a separate library,
+   but PDCurses incorporates them.
 
-   The panels package gives the applications programmer a way to
-   have depth relationships between curses windows; a curses window
-   is associated with every panel. The panels routines allow curses
-   windows to overlap without making visible the overlapped
-   portions of underlying windows. The initial curses window,
-   stdscr, lies beneath all panels. The set of currently visible
-   panels is the 'deck' of panels.
+   The panel functions provide a way to have depth relationships between
+   curses windows. Panels can overlap without making visible the
+   overlapped portions of underlying windows. The initial curses window,
+   stdscr, lies beneath all panels. The set of currently visible panels
+   is the 'deck' of panels.
 
-   The panels package allows the applications programmer to create
-   panels, fetch and set their associated windows, shuffle panels
-   in the deck, and manipulate panels in other ways.
+   You can create panels, fetch and set their associated windows,
+   shuffle panels in the deck, and manipulate them in other ways.
 
    bottom_panel() places pan at the bottom of the deck. The size,
    location and contents of the panel are unchanged.
 
    del_panel() deletes pan, but not its associated winwow.
 
-   hide_panel() removes a panel from the deck and thus hides it
-   from view.
+   hide_panel() removes a panel from the deck and thus hides it from
+   view.
 
-   move_panel() moves the curses window associated with pan, so
-   that its upper lefthand corner is at the supplied coordinates.
-   (Do not use mvwin() on the window.)
+   move_panel() moves the curses window associated with pan, so that its
+   upper lefthand corner is at the supplied coordinates. (Don't use
+   mvwin() on the window.)
 
-   new_panel() creates a new panel associated with win and returns
-   the panel pointer. The new panel is placed at the top of the
-   deck.
+   new_panel() creates a new panel associated with win and returns the
+   panel pointer. The new panel is placed at the top of the deck.
 
-   panel_above() returns a pointer to the panel in the deck above
-   pan, or NULL if pan is the top panel. If the value of pan passed
-   is NULL, this function returns a pointer to the bottom panel in
-   the deck.
+   panel_above() returns a pointer to the panel in the deck above pan,
+   or NULL if pan is the top panel. If the value of pan passed is NULL,
+   this function returns a pointer to the bottom panel in the deck.
 
-   panel_below() returns a pointer to the panel in the deck below
-   pan, or NULL if pan is the bottom panel. If the value of pan
-   passed is NULL, this function returns a pointer to the top panel
-   in the deck.
+   panel_below() returns a pointer to the panel in the deck below pan,
+   or NULL if pan is the bottom panel. If the value of pan passed is
+   NULL, this function returns a pointer to the top panel in the deck.
 
    panel_hidden() returns OK if pan is hidden and ERR if it is not.
 
    panel_userptr() - Each panel has a user pointer available for
-   maintaining relevant information. This function returns a
-   pointer to that information previously set up by
-   set_panel_userptr().
+   maintaining relevant information. This function returns a pointer to
+   that information previously set up by set_panel_userptr().
 
-   panel_window() returns a pointer to the curses window associated
-   with the panel.
+   panel_window() returns a pointer to the curses window associated with
+   the panel.
 
    replace_panel() replaces the current window of pan with win.
 
-   set_panel_userptr() - Each panel has a user pointer available
-   for maintaining relevant information. This function sets the
-   value of that information.
+   set_panel_userptr() - Each panel has a user pointer available for
+   maintaining relevant information. This function sets the value of
+   that information.
 
-   show_panel() makes a previously hidden panel visible and places
-   it back in the deck on top.
+   show_panel() makes a previously hidden panel visible and places it
+   back in the deck on top.
 
-   top_panel() places pan on the top of the deck. The size,
-   location and contents of the panel are unchanged.
+   top_panel() places pan on the top of the deck. The size, location and
+   contents of the panel are unchanged.
 
-   update_panels() refreshes the virtual screen to reflect the
-   depth relationships between the panels in the deck. The user
-   must use doupdate() to refresh the physical screen.
+   update_panels() refreshes the virtual screen to reflect the depth
+   relationships between the panels in the deck. The user must use
+   doupdate() to refresh the physical screen.
 
 ### Return Value
 
-   Each routine that returns a pointer to an object returns NULL if
-   an error occurs. Each panel routine that returns an integer,
-   returns OK if it executes successfully and ERR if it does not.
+   Each routine that returns a pointer to an object returns NULL if an
+   error occurs. Each panel routine that returns an integer, returns OK
+   if it executes successfully and ERR if it does not.
 
 ### Portability
                              X/Open    BSD    SYS V
@@ -2166,6 +2190,9 @@ printw
    the current or specified cursor position. The format strings are
    the same as used in the standard C library's printf(). (printw()
    can be used as a drop-in replacement for printf().)
+
+   The duplication between vwprintw() and vw_printw() is for historic
+   reasons. In PDCurses, they're the same.
 
 ### Return Value
 
@@ -2259,6 +2286,9 @@ scanw
    These routines correspond to the standard C library's scanf()
    family. Each gets a string from the window via wgetnstr(), and
    uses the resulting line as input for the scan.
+
+   The duplication between vwscanw() and vw_scanw() is for historic
+   reasons. In PDCurses, they're the same.
 
 ### Return Value
 

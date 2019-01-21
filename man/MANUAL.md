@@ -13,8 +13,11 @@ Define before inclusion (only those needed):
 
 Defined by this header:
 
-    PDC_BUILD       Defines API build version.
     PDCURSES        Enables access to PDCurses-only routines.
+    PDC_BUILD       Defines API build version.
+    PDC_VER_MAJOR   Major version number
+    PDC_VER_MINOR   Minor version number
+    PDC_VERDOT      Version string
 
 
 
@@ -24,19 +27,17 @@ Defined by this header:
 Text Attributes
 ===============
 
-PDCurses uses a long (32 bits) for its chtype, as in System V.
-
-The following is the structure of a win->_attrs chtype:
+PDCurses uses a 32-bit integer for its chtype:
 
     +--------------------------------------------------------------------+
     |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|..| 2| 1| 0|
     +--------------------------------------------------------------------+
           color pair        |     modifiers         |   character eg 'a'
 
-The available non-color attributes are bold, underline, right-line,
+There are 256 color pairs (8 bits), 8 bits for modifiers, and 16 bits
+for character data. The modifiers are bold, underline, right-line,
 left-line, italic, reverse and blink, plus the alternate character set
-indicator. 256 color pairs (8 bits), 8 bits for other attributes, and 16
-bits for character data.
+indicator.
 
 
 
@@ -517,14 +518,14 @@ border
    the window. If any argument is zero, an appropriate default is
    used:
 
-   ls    left side of border             ACS_VLINE
-   rs    right side of border            ACS_VLINE
-   ts    top side of border              ACS_HLINE
-   bs    bottom side of border           ACS_HLINE
-   tl    top left corner of border       ACS_ULCORNER
-   tr    top right corner of border      ACS_URCORNER
-   bl    bottom left corner of border    ACS_LLCORNER
-   br    bottom right corner of border   ACS_LRCORNER
+    ls    left side of border             ACS_VLINE
+    rs    right side of border            ACS_VLINE
+    ts    top side of border              ACS_HLINE
+    bs    bottom side of border           ACS_HLINE
+    tl    top left corner of border       ACS_ULCORNER
+    tr    top right corner of border      ACS_URCORNER
+    bl    bottom left corner of border    ACS_LLCORNER
+    br    bottom right corner of border   ACS_LRCORNER
 
    hline() and whline() draw a horizontal line, using ch, starting
    from the current cursor position. The cursor position does not
@@ -624,13 +625,13 @@ color
 
 ### Synopsis
 
+    bool has_colors(void);
     int start_color(void);
     int init_pair(short pair, short fg, short bg);
-    int init_color(short color, short red, short green, short blue);
-    bool has_colors(void);
-    bool can_change_color(void);
-    int color_content(short color, short *red, short *green, short *blue);
     int pair_content(short pair, short *fg, short *bg);
+    bool can_change_color(void);
+    int init_color(short color, short red, short green, short blue);
+    int color_content(short color, short *red, short *green, short *blue);
 
     int assume_default_colors(int f, int b);
     int use_default_colors(void);
@@ -639,16 +640,17 @@ color
 
 ### Description
 
-   To use these routines, start_color() must be called, usually
-   immediately after initscr(). Colors are always used in pairs,
-   referred to as color-pairs. A color-pair consists of a
-   foreground color and a background color. A color-pair is
-   initialized via init_pair(). After initialization, COLOR_PAIR(n)
-   can be used like any other video attribute.
+   To use these routines, first, call start_color(). Colors are always
+   used in pairs, referred to as color-pairs. A color-pair is created by
+   init_pair(), and consists of a foreground color and a background
+   color. After initialization, COLOR_PAIR(n) can be used like any other
+   video attribute.
+
+   has_colors() reports whether the terminal supports color.
 
    start_color() initializes eight basic colors (black, red, green,
    yellow, blue, magenta, cyan, and white), and two global
-   variables; COLORS and COLOR_PAIRS (respectively defining the
+   variables: COLORS and COLOR_PAIRS (respectively defining the
    maximum number of colors and color-pairs the terminal is capable
    of displaying).
 
@@ -661,14 +663,18 @@ color
    screen is refreshed, and all occurrences of that color-pair are
    changed to the new definition.
 
-   has_colors() indicates if the terminal supports, and can
-   maniplulate color. It returns TRUE or FALSE.
+   pair_content() is used to determine what the colors of a given
+   color-pair consist of.
 
    can_change_color() indicates if the terminal has the capability
    to change the definition of its colors.
 
-   pair_content() is used to determine what the colors of a given
-   color-pair consist of.
+   init_color() is used to redefine a color, if possible. Each of the
+   components -- red, green, and blue -- is specified in a range from 0
+   to 1000, inclusive.
+
+   color_content() reports the current definition of a color in the same
+   format as used by init_color().
 
    assume_default_colors() and use_default_colors() emulate the
    ncurses extensions of the same names. assume_default_colors(f,
@@ -695,13 +701,13 @@ color
 
 ### Portability
                              X/Open    BSD    SYS V
+    has_colors                  Y       -      3.2
     start_color                 Y       -      3.2
     init_pair                   Y       -      3.2
-    init_color                  Y       -      3.2
-    has_colors                  Y       -      3.2
-    can_change_color            Y       -      3.2
-    color_content               Y       -      3.2
     pair_content                Y       -      3.2
+    can_change_color            Y       -      3.2
+    init_color                  Y       -      3.2
+    color_content               Y       -      3.2
     assume_default_colors       -       -       -
     use_default_colors          -       -       -
     PDC_set_line_color          -       -       -
@@ -1168,6 +1174,7 @@ initscr
     int resize_term(int nlines, int ncols);
     bool is_termresized(void);
     const char *curses_version(void);
+    void PDC_get_version(PDC_VERSION *ver);
 
 ### Description
 
@@ -1219,6 +1226,9 @@ initscr
 
    curses_version() returns a string describing the version of
    PDCurses.
+
+   PDC_get_version() fills a PDC_VERSION structure provided by the user
+   with more detailed version info (see curses.h).
 
 ### Return Value
 
@@ -1668,14 +1678,12 @@ mouse
 
 ### Synopsis
 
-    int mouse_set(unsigned long mbe);
-    int mouse_on(unsigned long mbe);
-    int mouse_off(unsigned long mbe);
+    int mouse_set(mmask_t mbe);
+    int mouse_on(mmask_t mbe);
+    int mouse_off(mmask_t mbe);
     int request_mouse_pos(void);
-    int map_button(unsigned long button);
     void wmouse_position(WINDOW *win, int *y, int *x);
-    unsigned long getmouse(void);
-    unsigned long getbmap(void);
+    mmask_t getmouse(void);
 
     int mouseinterval(int wait);
     bool wenclose(const WINDOW *win, int y, int x);
@@ -1696,12 +1704,11 @@ mouse
    interface; it's here to allow easier porting of ncurses apps.
 
    The classic interface: mouse_set(), mouse_on(), mouse_off(),
-   request_mouse_pos(), map_button(), wmouse_position(),
-   getmouse(), and getbmap(). An application using this interface
-   would start by calling mouse_set() or mouse_on() with a non-zero
-   value, often ALL_MOUSE_EVENTS. Then it would check for a
-   KEY_MOUSE return from getch(). If found, it would call
-   request_mouse_pos() to get the current mouse status.
+   request_mouse_pos(), wmouse_position(), and getmouse(). An
+   application using this interface would start by calling mouse_set()
+   or mouse_on() with a non-zero value, often ALL_MOUSE_EVENTS. Then it
+   would check for a KEY_MOUSE return from getch(). If found, it would
+   call request_mouse_pos() to get the current mouse status.
 
    mouse_set(), mouse_on() and mouse_off() are analagous to
    attrset(), attron() and attroff().  These functions set the
@@ -1712,11 +1719,6 @@ mouse
    request_mouse_pos() requests curses to fill in the Mouse_status
    structure with the current state of the mouse.
 
-   map_button() enables the specified mouse action to activate the
-   Soft Label Keys if the action occurs over the area of the screen
-   where the Soft Label Keys are displayed.  The mouse actions are
-   defined in curses.h in the group that starts with BUTTON_RELEASED.
-
    wmouse_position() determines if the current mouse position is
    within the window passed as an argument.  If the mouse is
    outside the current window, -1 is returned in the y and x
@@ -1726,10 +1728,6 @@ mouse
 
    getmouse() returns the current status of the trapped mouse
    buttons as set by mouse_set() or mouse_on().
-
-   getbmap() returns the current status of the button action used
-   to map a mouse action to the Soft Label Keys as set by the
-   map_button() function.
 
    The ncurses interface: mouseinterval(), wenclose(),
    wmouse_trafo(), mouse_trafo(), mousemask(), nc_getmouse(), and
@@ -1796,10 +1794,8 @@ mouse
     mouse_on                    -       -      4.0
     mouse_off                   -       -      4.0
     request_mouse_pos           -       -      4.0
-    map_button                  -       -      4.0
     wmouse_position             -       -      4.0
     getmouse                    -       -      4.0
-    getbmap                     -       -      4.0
     mouseinterval               -       -       -
     wenclose                    -       -       -
     wmouse_trafo                -       -       -

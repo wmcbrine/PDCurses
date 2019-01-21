@@ -43,9 +43,8 @@ border
 
 ### Description
 
-   border(), wborder(), and box() draw a border around the edge of
-   the window. If any argument is zero, an appropriate default is
-   used:
+   border(), wborder(), and box() draw a border around the edge of the
+   window. If any argument is zero, an appropriate default is used:
 
     ls    left side of border             ACS_VLINE
     rs    right side of border            ACS_VLINE
@@ -56,15 +55,19 @@ border
     bl    bottom left corner of border    ACS_LLCORNER
     br    bottom right corner of border   ACS_LRCORNER
 
-   hline() and whline() draw a horizontal line, using ch, starting
-   from the current cursor position. The cursor position does not
-   change. The line is at most n characters long, or as many as
-   will fit in the window.
+   hline() and whline() draw a horizontal line, using ch, starting from
+   the current cursor position. The cursor position does not change. The
+   line is at most n characters long, or as many as will fit in the
+   window.
 
-   vline() and wvline() draw a vertical line, using ch, starting
-   from the current cursor position. The cursor position does not
-   change. The line is at most n characters long, or as many as
-   will fit in the window.
+   vline() and wvline() draw a vertical line, using ch, starting from
+   the current cursor position. The cursor position does not change. The
+   line is at most n characters long, or as many as will fit in the
+   window.
+
+   The *_set functions are the "wide-character" versions, taking
+   pointers to cchar_t instead of chtype. Note that in PDCurses, chtype
+   and cchar_t are the same.
 
 ### Return Value
 

@@ -24,25 +24,28 @@ bkgd
 
 ### Description
 
-   bkgdset() and wbkgdset() manipulate the background of a window.
-   The background is a chtype consisting of any combination of
-   attributes and a character; it is combined with each chtype
-   added or inserted to the window by waddch() or winsch(). Only
-   the attribute part is used to set the background of non-blank
-   characters, while both character and attributes are used for
-   blank positions.
+   bkgdset() and wbkgdset() manipulate the background of a window. The
+   background is a chtype consisting of any combination of attributes
+   and a character; it is combined with each chtype added or inserted to
+   the window by waddch() or winsch(). Only the attribute part is used
+   to set the background of non-blank characters, while both character
+   and attributes are used for blank positions.
 
    bkgd() and wbkgd() not only change the background, but apply it
    immediately to every cell in the window.
 
-   The attributes that are defined with the attrset()/attron() set
-   of functions take precedence over the background attributes if
-   there is a conflict (e.g., different color pairs).
+   wbkgrnd(), wbkgrndset() and wgetbkgrnd() are the "wide-character"
+   versions of these functions, taking a pointer to a cchar_t instead of
+   a chtype. However, in PDCurses, cchar_t and chtype are the same.
+
+   The attributes that are defined with the attrset()/attron() set of
+   functions take precedence over the background attributes if there is
+   a conflict (e.g., different color pairs).
 
 ### Return Value
 
-   bkgd() and wbkgd() return OK, unless the window is NULL, in
-   which case they return ERR.
+   bkgd() and wbkgd() return OK, unless the window is NULL, in which
+   case they return ERR.
 
 ### Portability
                              X/Open    BSD    SYS V

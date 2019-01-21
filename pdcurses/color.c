@@ -9,13 +9,13 @@ color
 
 ### Synopsis
 
+    bool has_colors(void);
     int start_color(void);
     int init_pair(short pair, short fg, short bg);
-    int init_color(short color, short red, short green, short blue);
-    bool has_colors(void);
-    bool can_change_color(void);
-    int color_content(short color, short *red, short *green, short *blue);
     int pair_content(short pair, short *fg, short *bg);
+    bool can_change_color(void);
+    int init_color(short color, short red, short green, short blue);
+    int color_content(short color, short *red, short *green, short *blue);
 
     int assume_default_colors(int f, int b);
     int use_default_colors(void);
@@ -24,16 +24,17 @@ color
 
 ### Description
 
-   To use these routines, start_color() must be called, usually
-   immediately after initscr(). Colors are always used in pairs,
-   referred to as color-pairs. A color-pair consists of a
-   foreground color and a background color. A color-pair is
-   initialized via init_pair(). After initialization, COLOR_PAIR(n)
-   can be used like any other video attribute.
+   To use these routines, first, call start_color(). Colors are always
+   used in pairs, referred to as color-pairs. A color-pair is created by
+   init_pair(), and consists of a foreground color and a background
+   color. After initialization, COLOR_PAIR(n) can be used like any other
+   video attribute.
+
+   has_colors() reports whether the terminal supports color.
 
    start_color() initializes eight basic colors (black, red, green,
    yellow, blue, magenta, cyan, and white), and two global
-   variables; COLORS and COLOR_PAIRS (respectively defining the
+   variables: COLORS and COLOR_PAIRS (respectively defining the
    maximum number of colors and color-pairs the terminal is capable
    of displaying).
 
@@ -46,14 +47,18 @@ color
    screen is refreshed, and all occurrences of that color-pair are
    changed to the new definition.
 
-   has_colors() indicates if the terminal supports, and can
-   maniplulate color. It returns TRUE or FALSE.
+   pair_content() is used to determine what the colors of a given
+   color-pair consist of.
 
    can_change_color() indicates if the terminal has the capability
    to change the definition of its colors.
 
-   pair_content() is used to determine what the colors of a given
-   color-pair consist of.
+   init_color() is used to redefine a color, if possible. Each of the
+   components -- red, green, and blue -- is specified in a range from 0
+   to 1000, inclusive.
+
+   color_content() reports the current definition of a color in the same
+   format as used by init_color().
 
    assume_default_colors() and use_default_colors() emulate the
    ncurses extensions of the same names. assume_default_colors(f,
@@ -80,13 +85,13 @@ color
 
 ### Portability
                              X/Open    BSD    SYS V
+    has_colors                  Y       -      3.2
     start_color                 Y       -      3.2
     init_pair                   Y       -      3.2
-    init_color                  Y       -      3.2
-    has_colors                  Y       -      3.2
-    can_change_color            Y       -      3.2
-    color_content               Y       -      3.2
     pair_content                Y       -      3.2
+    can_change_color            Y       -      3.2
+    init_color                  Y       -      3.2
+    color_content               Y       -      3.2
     assume_default_colors       -       -       -
     use_default_colors          -       -       -
     PDC_set_line_color          -       -       -

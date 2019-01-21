@@ -23,6 +23,9 @@ printw
    the same as used in the standard C library's printf(). (printw()
    can be used as a drop-in replacement for printf().)
 
+   The duplication between vwprintw() and vw_printw() is for historic
+   reasons. In PDCurses, they're the same.
+
 ### Return Value
 
    All functions return the number of characters printed, or

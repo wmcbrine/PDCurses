@@ -34,7 +34,7 @@ Defined by this header:
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   7
 #define PDC_VERDOT   "3.7"
-#define CHTYPE_LONG     1      /* size of chtype; long */
+#define CHTYPE_LONG     1      /* chtype >= 32 bits */
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 # define PDC_99         1
@@ -387,19 +387,17 @@ PDCEX  char         ttytype[];    /* terminal name/description */
 Text Attributes
 ===============
 
-PDCurses uses a long (32 bits) for its chtype, as in System V.
-
-The following is the structure of a win->_attrs chtype:
+PDCurses uses a 32-bit integer for its chtype:
 
     +--------------------------------------------------------------------+
     |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|..| 2| 1| 0|
     +--------------------------------------------------------------------+
           color pair        |     modifiers         |   character eg 'a'
 
-The available non-color attributes are bold, underline, right-line,
+There are 256 color pairs (8 bits), 8 bits for modifiers, and 16 bits
+for character data. The modifiers are bold, underline, right-line,
 left-line, italic, reverse and blink, plus the alternate character set
-indicator. 256 color pairs (8 bits), 8 bits for other attributes, and 16
-bits for character data.
+indicator.
 
 **man-end****************************************************************/
 

@@ -118,7 +118,8 @@ enum
     PDC_VFLAG_DEBUG = 1,  /* set if built with -DPDCDEBUG */
     PDC_VFLAG_WIDE  = 2,  /* -DPDC_WIDE */
     PDC_VFLAG_UTF8  = 4,  /* -DPDC_FORCE_UTF8 */
-    PDC_VFLAG_DLL   = 8   /* -DPDC_DLL_BUILD */
+    PDC_VFLAG_DLL   = 8,  /* -DPDC_DLL_BUILD */
+    PDC_VFLAG_RGB   = 16  /* -DPDC_RGB */
 };
 
 /*----------------------------------------------------------------------

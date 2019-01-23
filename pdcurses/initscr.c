@@ -368,6 +368,9 @@ void PDC_get_version(PDC_VERSION *ver)
 #ifdef PDC_DLL_BUILD
         | PDC_VFLAG_DLL
 #endif
+#ifdef PDC_RGB
+        | PDC_VFLAG_RGB
+#endif
         ;
 
     ver->build = PDC_BUILD;

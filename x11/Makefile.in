@@ -524,7 +524,7 @@ xmas.o: $(demodir)/xmas.c
 
 ncurses_testdir	= $(HOME)/ncurses-6.1/test
 
-NCURSES_TESTS	= bs gdc hanoi knight tclock dots_xcurses lrtest padview ncurses
+NCURSES_TESTS	= bs gdc hanoi knight tclock lrtest ncurses
 
 ncurses_tests: $(NCURSES_TESTS)
 
@@ -548,14 +548,8 @@ knight: knight.o $(LIBCURSES)
 tclock: tclock.o $(LIBCURSES)
 	$(LINK) tclock.o -o $@ $(LDFLAGS) -lm
 
-dots_xcurses: dots_xcurses.o $(LIBCURSES)
-	$(LINK) dots_xcurses.o -o $@ $(LDFLAGS)
-
 lrtest: lrtest.o $(LIBCURSES)
 	$(LINK) lrtest.o -o $@ $(LDFLAGS)
-
-padview: padview.o $(LIBCURSES)
-	$(LINK) padview.o -o $@ $(LDFLAGS)
 
 ncurses: ncurses.o $(LIBCURSES)
 	$(LINK) ncurses.o -o $@ $(LDFLAGS)
@@ -575,14 +569,8 @@ knight.o: $(ncurses_testdir)/knight.c $(PDCURSES_CURSES_H)
 tclock.o: $(ncurses_testdir)/tclock.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/tclock.c
 
-dots_xcurses.o: $(ncurses_testdir)/dots_xcurses.c $(PDCURSES_CURSES_H)
-	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/dots_xcurses.c
-
 lrtest.o: $(ncurses_testdir)/lrtest.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/lrtest.c
-
-padview.o: $(ncurses_testdir)/padview.c $(PDCURSES_CURSES_H)
-	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/padview.c
 
 ncurses.o: $(ncurses_testdir)/ncurses.c $(PDCURSES_CURSES_H)
 	$(BUILD) $(NCFLAGS) $(ncurses_testdir)/ncurses.c

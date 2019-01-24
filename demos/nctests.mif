@@ -3,7 +3,7 @@
 ncurses_testdir = $(HOME)/ncurses-6.1/test
 
 NCURSES_TESTS   = bs$(E) gdc$(E) hanoi$(E) knight$(E) tclock$(E) \
-dots_xcurses$(E) lrtest$(E) padview$(E) ncurses$(E)
+lrtest$(E) ncurses$(E)
 
 ncurses_tests: $(NCURSES_TESTS)
 
@@ -27,13 +27,7 @@ knight$(E): $(ncurses_testdir)/knight.c
 tclock$(E): $(ncurses_testdir)/tclock.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS) -lm
 
-dots_xcurses$(E): $(ncurses_testdir)/dots_xcurses.c
-	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
-
 lrtest$(E): $(ncurses_testdir)/lrtest.c
-	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
-
-padview$(E): $(ncurses_testdir)/padview.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
 ncurses$(E): $(ncurses_testdir)/ncurses.c

@@ -19,7 +19,7 @@
 
 /* change this if source at other location */
 
-# define FNAME  "../demos/tui.c"
+#define FNAME "../demos/tui.c"
 
 /**************************** strings entry box ***************************/
 

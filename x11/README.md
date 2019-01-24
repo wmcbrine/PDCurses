@@ -28,10 +28,9 @@ Building
 - Run "make". This should build libXCurses. Add the target "demos" to
   build the sample programs.
 
-- Optionally, run "make install". curses.h and panel.h will be renamed
-  when installed (to xcurses.h and xpanel.h), to avoid conflicts with
-  any existing curses installations. Unrenamed copies of curses.h and
-  panel.h are installed in (by default) /usr/local/include/xcurses.
+- Optionally, run "make install". To avoid conflicts with any existing
+  curses installations, copies of curses.h and panel.h are installed in
+  (by default) /usr/local/include/xcurses.
 
 
 Usage
@@ -41,9 +40,9 @@ PDCurses for X11 uses the System V IPC shared memory facility, along
 with sockets, to share data between the curses program and the child
 process created to manage the X stuff.
 
-When compiling your application, you need to include the \<curses.h\> or
-\<xcurses.h\> that comes with PDCurses. You also need to link your code
-with libXCurses. You may need to link with the following libraries under
+When compiling your application, you need to include the \<curses.h\>
+that comes with PDCurses. You also need to link your code with
+libXCurses. You may need to link with the following libraries under
 X11R5:
 
     Xaw Xmu Xt X11

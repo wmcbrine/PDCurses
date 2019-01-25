@@ -1,11 +1,15 @@
-# Watcom Makefile for PDCurses - DOS/4GW
+# Watcom Makefile for PDCurses - DOS
 #
-# Usage: wmake -f [path\]Makefile.w4g [DEBUG=Y] [target]
+# Usage: wmake -f [path\]Makefile.wcc [DEBUG=Y] [MODEL=c|h|l|m|s|f] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 
-RM = del
+!ifndef MODEL
+MODEL		= l
+!endif
+
+RM		= del
 
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
@@ -15,10 +19,15 @@ PDCURSES_SRCDIR	= ..
 
 osdir		= $(PDCURSES_SRCDIR)/dos
 
+!ifeq MODEL f
 CC		= wcc386
 TARGET		= dos4g
+!else
+CC		= wcc
+TARGET		= dos
+!endif
 
-CFLAGS		= -bt=$(TARGET) -zq -wx -mf -i=$(PDCURSES_SRCDIR)
+CFLAGS		= -bt=$(TARGET) -zq -wx -m$(MODEL) -i=$(PDCURSES_SRCDIR)
 
 !ifeq DEBUG Y
 CFLAGS  	+= -d2 -DPDCDEBUG

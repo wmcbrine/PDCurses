@@ -1,12 +1,13 @@
 # Borland Makefile for PDCurses - DOS
 #
-# Usage: make -f [path\]Makefile.bcc [DEBUG=] [target]
+# Usage: make -f [path\]Makefile.bcc [DEBUG=] [MODEL=c|h|l|m|s] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 
-# Change the memory MODEL here, if desired
+!ifndef MODEL
 MODEL = l
+!endif
 
 O = obj
 E = .exe

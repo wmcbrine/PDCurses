@@ -6,8 +6,6 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 
-RM = del
-
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 !else
@@ -19,15 +17,7 @@ osdir		= $(PDCURSES_SRCDIR)/wincon
 CC		= wcc386
 TARGET		= nt
 
-CFLAGS		= -ei -zq -wx -i=$(PDCURSES_SRCDIR)
-
-!ifeq DEBUG Y
-CFLAGS		+= -d2 -DPDCDEBUG
-LDFLAGS		= D W A op q sys $(TARGET)
-!else
-CFLAGS		+= -oneatx
-LDFLAGS		= op q sys $(TARGET)
-!endif
+CFLAGS		= -bt=$(TARGET) -wx -zq -i=$(PDCURSES_SRCDIR)
 
 !ifeq WIDE Y
 CFLAGS		+= -DPDC_WIDE
@@ -40,8 +30,6 @@ CFLAGS		+= -DPDC_FORCE_UTF8
 !ifeq INFOEX N
 CFLAGS		+= -DHAVE_NO_INFOEX
 !endif
-
-LIBEXE		= wlib -q -n -t
 
 !include $(PDCURSES_SRCDIR)/common/watcom.mif
 

@@ -9,8 +9,6 @@
 MODEL		= l
 !endif
 
-RM		= del
-
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 !else
@@ -27,17 +25,7 @@ CC		= wcc
 TARGET		= dos
 !endif
 
-CFLAGS		= -bt=$(TARGET) -zq -wx -m$(MODEL) -i=$(PDCURSES_SRCDIR)
-
-!ifeq DEBUG Y
-CFLAGS  	+= -d2 -DPDCDEBUG
-LDFLAGS 	= D W A op q sys $(TARGET)
-!else
-CFLAGS  	+= -oneatx
-LDFLAGS 	= op q sys $(TARGET)
-!endif
-
-LIBEXE		= wlib -q -n -t
+CFLAGS		= -bt=$(TARGET) -wx -zq -m$(MODEL) -i=$(PDCURSES_SRCDIR)
 
 !include $(PDCURSES_SRCDIR)/common/watcom.mif
 

@@ -5,8 +5,6 @@
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 
-RM = del
-
 !ifdef %PDCURSES_SRCDIR
 PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 !else
@@ -18,17 +16,7 @@ osdir		= $(PDCURSES_SRCDIR)/os2
 CC		= wcc386
 TARGET		= os2v2
 
-CFLAGS		= -bt=$(TARGET) -wx -s -zq -i=$(PDCURSES_SRCDIR) -i=c:\watcom\h\os2
-
-!ifeq DEBUG Y
-CFLAGS  	+= -d2 -DPDCDEBUG
-LDFLAGS 	= D A op q sys $(TARGET)
-!else
-CFLAGS  	+= -oneatx
-LDFLAGS 	= op q sys $(TARGET)
-!endif
-
-LIBEXE		= wlib -q -n -b -c -t
+CFLAGS		= -bt=$(TARGET) -wx -zq -i=$(PDCURSES_SRCDIR) -i=c:\watcom\h\os2
 
 !include $(PDCURSES_SRCDIR)/common/watcom.mif
 

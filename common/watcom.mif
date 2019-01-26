@@ -1,5 +1,7 @@
 # Common elements for the Watcom makefiles
 
+CFLAGS += -wx -zq -i=$(PDCURSES_SRCDIR)
+
 !ifeq DEBUG Y
 CFLAGS		+= -d2 -DPDCDEBUG
 LDFLAGS		= D W A op q sys $(TARGET)

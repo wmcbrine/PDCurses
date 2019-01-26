@@ -16,7 +16,7 @@ osdir		= $(PDCURSES_SRCDIR)/os2
 CC		= wcc386
 TARGET		= os2v2
 
-CFLAGS		= -bt=$(TARGET) -wx -zq -i=$(PDCURSES_SRCDIR) -i=c:\watcom\h\os2
+CFLAGS		= -bt=$(TARGET) -i=c:\watcom\h\os2
 
 !include $(PDCURSES_SRCDIR)/common/watcom.mif
 

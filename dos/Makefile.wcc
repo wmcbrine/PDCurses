@@ -25,7 +25,7 @@ CC		= wcc
 TARGET		= dos
 !endif
 
-CFLAGS		= -bt=$(TARGET) -wx -zq -m$(MODEL) -i=$(PDCURSES_SRCDIR)
+CFLAGS		= -bt=$(TARGET) -m$(MODEL)
 
 !include $(PDCURSES_SRCDIR)/common/watcom.mif
 

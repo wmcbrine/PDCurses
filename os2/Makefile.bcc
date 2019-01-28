@@ -27,7 +27,7 @@ CFLAGS		= -O
 
 CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 
-BUILD		= $(CC) -c $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) -w-par -c $(CFLAGS) $(CPPFLAGS)
 
 LINK		= tlink
 

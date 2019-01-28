@@ -29,8 +29,7 @@ CFLAGS		= -O
 
 CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 
-BUILD		= $(CC) -1- -K -G -rd -d -w-eff -w-par -c \
--m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) -1- -G -d -w-par -c -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
 
 LIBEXE		= tlib /C /E
 

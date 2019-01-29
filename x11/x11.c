@@ -46,8 +46,8 @@ XCursesAppData xc_app_data;
 
 /* Default icons for XCurses applications.  */
 
-#include "big_icon.xbm"
-#include "little_icon.xbm"
+#include "../common/big_icon.xbm"
+#include "../common/little_icon.xbm"
 
 static void _selection_off(void);
 static void _display_cursor(int, int, int, int);

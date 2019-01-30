@@ -1,5 +1,3 @@
-/* Public Domain Curses */
-
 /* Private definitions and declarations for use within PDCurses.
    These should generally not be referenced by applications. */
 
@@ -121,4 +119,4 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 #define PDC_CLICK_PERIOD 150  /* time to wait for a click, if
                                  not set by mouseinterval() */
 
-#endif /* __CURSES_INTERNALS__*/
+#endif /* __CURSES_INTERNALS__ */

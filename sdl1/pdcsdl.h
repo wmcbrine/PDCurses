@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include <SDL.h>
 #ifdef PDC_WIDE

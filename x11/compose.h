@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 /* Tables and variables for the built-in compose key system. This file
    is not included when PDCurses is built with XIM support. */

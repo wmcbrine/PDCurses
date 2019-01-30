@@ -21,5 +21,5 @@ no configuration is needed.
 Distribution Status
 -------------------
 
-Public Domain, except for rain.c and worm.c, which are under the ncurses
+Public domain, except for rain.c and worm.c, which are under the ncurses
 license (MIT-like).

@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
 defined(__TURBOC__)

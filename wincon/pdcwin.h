@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #if defined(PDC_WIDE) && !defined(UNICODE)
 # define UNICODE

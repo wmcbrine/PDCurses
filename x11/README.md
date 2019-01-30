@@ -456,7 +456,7 @@ Distribution Status
 -------------------
 
 As of April 13, 2006, the files in this directory are released to the
-Public Domain, except for ScrollBox*, which are under essentially the
+public domain, except for ScrollBox*, which are under essentially the
 MIT X License; config.guess and config.sub, which are under the GPL; and
 configure, which is under a free license described within it.
 

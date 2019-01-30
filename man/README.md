@@ -28,7 +28,7 @@ Building
 Distribution Status
 -------------------
 
-The files in this directory are released to the Public Domain.
+The files in this directory are released to the public domain.
 
 [User's Guide]: USERS.md
 [Implementor's Guide]: IMPLEMNT.md

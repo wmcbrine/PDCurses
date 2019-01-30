@@ -46,8 +46,8 @@ XCursesAppData xc_app_data;
 
 /* Default icons for XCurses applications.  */
 
-#include "../common/big_icon.xbm"
-#include "../common/little_icon.xbm"
+#include "../common/icon64.xbm"
+#include "../common/icon32.xbm"
 
 static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
@@ -888,25 +888,25 @@ static void _get_icon(void)
                      icon_size[i].width_inc, icon_size[i].height_inc));
         }
 
-        if (max_width >= big_icon_width && max_height >= big_icon_height)
+        if (max_width >= icon64_width && max_height >= icon64_height)
         {
-            icon_bitmap_width = big_icon_width;
-            icon_bitmap_height = big_icon_height;
-            bitmap_bits = (unsigned char *)big_icon_bits;
+            icon_bitmap_width = icon64_width;
+            icon_bitmap_height = icon64_height;
+            bitmap_bits = (unsigned char *)icon64_bits;
         }
         else
         {
-            icon_bitmap_width = little_icon_width;
-            icon_bitmap_height = little_icon_height;
-            bitmap_bits = (unsigned char *)little_icon_bits;
+            icon_bitmap_width = icon32_width;
+            icon_bitmap_height = icon32_height;
+            bitmap_bits = (unsigned char *)icon32_bits;
         }
 
     }
     else  /* use small icon */
     {
-        icon_bitmap_width = little_icon_width;
-        icon_bitmap_height = little_icon_height;
-        bitmap_bits = (unsigned char *)little_icon_bits;
+        icon_bitmap_width = icon32_width;
+        icon_bitmap_height = icon32_height;
+        bitmap_bits = (unsigned char *)icon32_bits;
     }
 
     XFree(icon_size);

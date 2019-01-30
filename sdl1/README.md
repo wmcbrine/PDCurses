@@ -57,7 +57,7 @@ not relying on correct values for the ACS_* macros.
 The font can be set via the environment variable PDC_FONT. If it's not
 set, PDCurses looks for a file named "pdcfont.bmp" in the current
 directory at the time of initscr(). If neither is found, it uses the
-built-in default font encoded in deffont.h.
+built-in default font encoded in font437.h.
 
 
 ### 16-bit mode
@@ -94,8 +94,8 @@ Icons
 
 The icon (used with SDL_WM_SetIcon() -- not used for the executable
 file) can be set via the environment variable PDC_ICON, and falls back
-to "pdcicon.bmp", and then to the built-in icon from deficon.h. The
-built-in icon is the PDCurses logo, as seen in ../x11/little_icon.xbm.
+to "pdcicon.bmp", and then to the built-in icon from iconbmp.h. The
+built-in icon is the PDCurses logo, as seen in ../common/icon32.xbm.
 
 If pdc_screen is preinitialized (see below), PDCurses does not attempt
 to set the icon.

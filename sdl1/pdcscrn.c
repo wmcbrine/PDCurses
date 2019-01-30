@@ -4,9 +4,9 @@
 
 #include <stdlib.h>
 #ifndef PDC_WIDE
-#include "../common/deffont.h"
+#include "../common/font437.h"
 #endif
-#include "../common/deficon.h"
+#include "../common/iconbmp.h"
 
 #ifdef PDC_WIDE
 # ifndef PDC_FONT_PATH
@@ -190,7 +190,7 @@ int PDC_scr_open(int argc, char **argv)
     }
 
     if (!pdc_font)
-        pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(deffont, sizeof(deffont)), 0);
+        pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(font437, sizeof(font437)), 0);
 
     if (!pdc_font)
     {
@@ -234,8 +234,8 @@ int PDC_scr_open(int argc, char **argv)
         pdc_icon = SDL_LoadBMP(iname ? iname : "pdcicon.bmp");
 
         if (!pdc_icon)
-            pdc_icon = SDL_LoadBMP_RW(SDL_RWFromMem(deficon,
-                                                    sizeof(deficon)), 0);
+            pdc_icon = SDL_LoadBMP_RW(SDL_RWFromMem(iconbmp,
+                                                    sizeof(iconbmp)), 0);
 
         if (pdc_icon)
             SDL_WM_SetIcon(pdc_icon, NULL);

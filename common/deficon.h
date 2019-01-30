@@ -1,4 +1,4 @@
-/* The PDCurses logo as #include'able BMP (from ../x11/little_icon.xbm),
+/* The PDCurses logo as #include'able BMP (from little_icon.xbm),
    for use by SDL. */
 
 unsigned char deficon[] =

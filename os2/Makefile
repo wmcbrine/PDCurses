@@ -21,7 +21,7 @@ PDCURSES_OS2_H	= $(osdir)/pdcos2.h
 
 CC		= gcc
 
-CFLAGS = -I$(PDCURSES_SRCDIR) -Ic:/emx/include -Wall
+CFLAGS = -c -I$(PDCURSES_SRCDIR) -Ic:/emx/include -Wall
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  += -g -DPDCDEBUG
@@ -70,10 +70,10 @@ $(DEMOS) : $(LIBCURSES)
 panel.o ptest.o: $(PANEL_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(CC) -c $(CFLAGS) -o$@ $<
+	$(CC) $(CFLAGS) -o$@ $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(CC) -c $(CFLAGS) -o$@ $<
+	$(CC) $(CFLAGS) -o$@ $<
 
 firework.exe ozdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: %.o

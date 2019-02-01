@@ -21,7 +21,7 @@ PDCURSES_OS2_H	= $(osdir)/pdcos2.h
 
 CC		= gcc
 
-CFLAGS = -I$(PDCURSES_SRCDIR) -c -Wall
+CFLAGS = -I$(PDCURSES_SRCDIR) -Ic:/emx/include -Wall
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  += -g -DPDCDEBUG

@@ -1,3 +1,70 @@
+PDCurses 3.8 - 2019/02/02
+=========================
+
+It's that time again.
+
+
+New features
+------------
+
+- PDC_VERSION structure and PDC_get_version() function, to provide run-
+  time information on version and compile options, in case they don't
+  match the header; along with new compile-time defines PDC_VER_MAJOR,
+  PDC_VER_MINOR and PDC_VERDOT. Suggested by Simon Sobisch, designed
+  partly after Bill Gray and partly after SDL_VERSION.
+
+- Extensive documentation revisions, now covering many previously
+  undocumented functions.
+
+- Allow building the DLL with MinGW for SDL. (This also changes the
+  non-DLL library name from libpdcurses.a to pdcurses.a.)
+
+- Consolidated Watcom makefiles for DOS, after Tee-Kiah Chia; added
+  MODEL option to Makefile.bcc for consistency.
+
+- Added another ncurses_test, "lrtest"; updated for ncurses 6.1.
+
+
+Bug fixes and such
+------------------
+
+- T.H.'s update rect clipper (a resize fix for SDL2) broke sdltest,
+  because it didn't take the offsets into account for a non-owned
+  window.
+
+- The version number is now hardwired only in curses.h and configure.ac.
+
+- Revised pdcurses.rc to correctly show all fields when checking the
+  properties on a DLL; use it with MinGW as well as MSVC.
+
+- Allow building both 32- and 64-bit SDL2 versions in MinGW without
+  editing the Makefile, by using the proper dev package.
+
+- Build SDL2 demos in "Windows" mode (i.e. no controlling terminal) with
+  MSVC, as with MinGW.
+
+- Build sdltest.exe with MSVC.
+
+- Changed sample pathname in tuidemo to always use slashes -- the
+  backslashes failed in, e.g., SDL under Linux or macOS. Patch by B.G.
+
+- Warning fix for Borland OS/2.
+
+- Minor file reorganization / renaming.
+
+- mmask_t is now used in both the classic and ncurses mouse interfaces, 
+  and is defined in such a way as to keep it at 32 bits.
+
+- Dropped map_button() and getbmap().
+
+- Dropped the ability to build BBS-ready archives from the Makefiles.
+
+- Made manext.py compatible with Python 3.x.
+
+See the git log for more details.
+
+------------------------------------------------------------------------
+
 PDCurses 3.7 - 2018/12/31
 =========================
 

@@ -28,10 +28,10 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3703
+#define PDC_BUILD    3801
 #define PDC_VER_MAJOR   3
-#define PDC_VER_MINOR   7
-#define PDC_VERDOT   "3.7"
+#define PDC_VER_MINOR   8
+#define PDC_VERDOT   "3.8"
 #define CHTYPE_LONG     1      /* chtype >= 32 bits */
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L

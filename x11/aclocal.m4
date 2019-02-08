@@ -146,7 +146,14 @@ fi
 MH_X11R6_LIBS="SM ICE Xext"
 mh_x11r6=no
 
-mh_lib_dirs="$x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
+which dpkg-architecture > /dev/null
+if test $? -eq 0; then
+    multiarch_libdir="/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`"
+else
+    multiarch_libdir=""
+fi
+
+mh_lib_dirs="$multiarch_libdir /usr/lib64 /usr/lib/x86_64-linux-gnu /usr/lib/i386-linux-gnu $x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
 
 dnl try to find libSM.[a,sl,so,dylib]. If we find it we are using X11R6
 for ac_dir in $mh_lib_dirs ; do

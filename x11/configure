@@ -4278,7 +4278,14 @@ fi
 MH_X11R6_LIBS="SM ICE Xext"
 mh_x11r6=no
 
-mh_lib_dirs="$x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
+which dpkg-architecture > /dev/null
+if test $? -eq 0; then
+    multiarch_libdir="/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`"
+else
+    multiarch_libdir=""
+fi
+
+mh_lib_dirs="$multiarch_libdir /usr/lib64 /usr/lib/x86_64-linux-gnu /usr/lib/i386-linux-gnu $x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
 
 for ac_dir in $mh_lib_dirs ; do
 	for mh_xsm in libSM.a libSM.so libSM.sl libSM.dylib; do
@@ -4645,7 +4652,7 @@ if test "$DYN_COMP" = ""; then
 $as_echo_n "checking compiler flags for a dynamic object... " >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 4648 "configure"
+#line 4655 "configure"
 int a=0
 EOF
 
@@ -4684,7 +4691,7 @@ $as_echo "none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4687 "configure"
+#line 4694 "configure"
 int foo()
 {
 return(0);

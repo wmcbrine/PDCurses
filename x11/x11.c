@@ -10,9 +10,7 @@
 # include <Sunkeysym.h>
 #endif
 
-#ifdef HAVE_XPM_H
-# include <xpm.h>
-#endif
+#include <xpm.h>
 
 #if defined PDC_XIM
 # include <Xlocale.h>
@@ -46,8 +44,8 @@ XCursesAppData xc_app_data;
 
 /* Default icons for XCurses applications.  */
 
-#include "../common/icon64.xbm"
-#include "../common/icon32.xbm"
+#include "../common/icon64.xpm"
+#include "../common/icon32.xpm"
 
 static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
@@ -219,9 +217,7 @@ static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
 static char *bitmap_file = NULL;
-#ifdef HAVE_XPM_H
 static char *pixmap_file = NULL;
-#endif
 static KeySym keysym = 0;
 
 static int state_mask[8] =
@@ -247,10 +243,8 @@ static unsigned long tmpsel_length = 0;
 static int selection_start_x = 0, selection_start_y = 0,
            selection_end_x = 0, selection_end_y = 0;
 static Pixmap icon_bitmap;
-#ifdef HAVE_XPM_H
 static Pixmap icon_pixmap;
 static Pixmap icon_pixmap_mask;
-#endif
 static bool visible_cursor = FALSE;
 static bool window_entered = TRUE;
 static char *program_name;
@@ -334,9 +328,7 @@ static XtResource app_resources[] =
     RFONT(boldFont, BoldFont, DEFBFONT),
 
     RSTRING(bitmap, Bitmap),
-#ifdef HAVE_XPM_H
     RSTRING(pixmap, Pixmap),
-#endif
     RSTRINGP(composeKey, ComposeKey, "Multi_key"),
 
     RCURSOR(pointer, Pointer, xterm),
@@ -378,9 +370,7 @@ static XrmOptionDescRec options[] =
 {
     COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
     COPT(boldFont), COPT(bitmap),
-#ifdef HAVE_XPM_H
     COPT(pixmap),
-#endif
     COPT(pointer), COPT(shmmin), COPT(composeKey), COPT(clickPeriod),
     COPT(doubleClickPeriod), COPT(scrollbarWidth),
     COPT(pointerForeColor), COPT(pointerBackColor),
@@ -888,30 +878,29 @@ static void _get_icon(void)
                      icon_size[i].width_inc, icon_size[i].height_inc));
         }
 
-        if (max_width >= icon64_width && max_height >= icon64_height)
+        if (max_width >= 64 && max_height >= 64)
         {
-            icon_bitmap_width = icon64_width;
-            icon_bitmap_height = icon64_height;
-            bitmap_bits = (unsigned char *)icon64_bits;
+            XpmCreatePixmapFromData(XtDisplay(topLevel),
+                  RootWindowOfScreen(XtScreen(topLevel)),
+                  icon64, &icon_pixmap, &icon_pixmap_mask, NULL);
         }
         else
         {
-            icon_bitmap_width = icon32_width;
-            icon_bitmap_height = icon32_height;
-            bitmap_bits = (unsigned char *)icon32_bits;
+            XpmCreatePixmapFromData(XtDisplay(topLevel),
+                  RootWindowOfScreen(XtScreen(topLevel)),
+                  icon32, &icon_pixmap, &icon_pixmap_mask, NULL);
         }
 
     }
     else  /* use small icon */
     {
-        icon_bitmap_width = icon32_width;
-        icon_bitmap_height = icon32_height;
-        bitmap_bits = (unsigned char *)icon32_bits;
+        XpmCreatePixmapFromData(XtDisplay(topLevel),
+              RootWindowOfScreen(XtScreen(topLevel)),
+              icon32, &icon_pixmap, &icon_pixmap_mask, NULL);
     }
 
     XFree(icon_size);
 
-#ifdef HAVE_XPM_H
     if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
     {
         XpmReadFileToPixmap(XtDisplay(topLevel),
@@ -920,7 +909,6 @@ static void _get_icon(void)
                             &icon_pixmap, &icon_pixmap_mask, NULL);
         return;
     }
-#endif
 
     if (xc_app_data.bitmap && xc_app_data.bitmap[0]) /* supplied bitmap */
     {
@@ -946,10 +934,6 @@ static void _get_icon(void)
             return;
         }
     }
-
-    icon_bitmap = XCreateBitmapFromData(XtDisplay(topLevel),
-        RootWindowOfScreen(XtScreen(topLevel)),
-        (char *)bitmap_bits, icon_bitmap_width, icon_bitmap_height);
 }
 
 static void _draw_border(void)
@@ -2394,14 +2378,12 @@ static void _exit_process(int rc, int sig, char *msg)
         free(bitmap_file);
     }
 
-#ifdef HAVE_XPM_H
     if (pixmap_file)
     {
         XFreePixmap(XCURSESDISPLAY, icon_pixmap);
         XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
         free(pixmap_file);
     }
-#endif
     XFreeGC(XCURSESDISPLAY, normal_gc);
     XFreeGC(XCURSESDISPLAY, italic_gc);
     XFreeGC(XCURSESDISPLAY, bold_gc);
@@ -3059,19 +3041,11 @@ int XCursesSetupX(int argc, char *argv[])
 
     _get_icon();
 
-#ifdef HAVE_XPM_H
-    if (xc_app_data.pixmap && xc_app_data.pixmap[0])
-        XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
-                      minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
-                      XtNbaseHeight, xc_app_data.borderWidth * 2,
-                      XtNiconPixmap, icon_pixmap,
-                      XtNiconMask, icon_pixmap_mask, NULL);
-    else
-#endif
-        XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
-                      minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
-                      XtNbaseHeight, xc_app_data.borderWidth * 2,
-                      XtNiconPixmap, icon_bitmap, NULL);
+    XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
+                  minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
+                  XtNbaseHeight, xc_app_data.borderWidth * 2,
+                  XtNiconPixmap, icon_pixmap,
+                  XtNiconMask, icon_pixmap_mask, NULL);
 
     /* Create a BOX widget in which to draw */
 

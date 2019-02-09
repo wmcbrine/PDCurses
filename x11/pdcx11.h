@@ -101,9 +101,7 @@ typedef struct
     XFontStruct *italicFont;
     XFontStruct *boldFont;
     char *bitmap;
-#ifdef HAVE_XPM_H
     char *pixmap;
-#endif
     char *composeKey;
     Cursor pointer;
     int shmmin;

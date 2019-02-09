@@ -1,4 +1,4 @@
-/* The PDCurses logo as #include'able BMP (from icon32.xbm),
+/* The PDCurses logo as #include'able BMP (from icon32.xpm),
    for use by SDL. */
 
 unsigned char iconbmp[] =

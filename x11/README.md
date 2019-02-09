@@ -42,14 +42,9 @@ process created to manage the X stuff.
 
 When compiling your application, you need to include the \<curses.h\>
 that comes with PDCurses. You also need to link your code with
-libXCurses. You may need to link with the following libraries under
-X11R5:
+libXCurses. You may need to link with the following libraries:
 
-    Xaw Xmu Xt X11
-
-or, under X11R6:
-
-    Xaw Xmu Xt X11 SM ICE Xext
+    Xaw Xmu Xt X11 SM ICE Xext Xpm
 
 You can run "xcurses-config --libs" to show the link parameters for your
 system. If using dynamic linking, on some systems, "-lXCurses" suffices.
@@ -193,16 +188,14 @@ COLOR_WHITE combined with A_BOLD. Default: White
 ### bitmap
 
 The name of a valid bitmap file of depth 1 (black and white) used for
-the application's icon. The file is an X bitmap. Default: a 32x32 or
-64x64 pixmap depending on the window manager
+the application's icon. The file is an X bitmap. Default: none
 
 ### pixmap
 
 The name of a valid pixmap file of any depth supported by the window
 manager (color) for the application's icon, The file is an X11 pixmap.
-This resource is only available if the libXpm package has been installed
-(most systems have this by default). This resource overrides the
-"bitmap" resource. Default: none, uses default bitmap above
+This resource overrides the "bitmap" resource. Default: a 32x32 or 64x64
+pixmap depending on the window manager
 
 ### translations
 

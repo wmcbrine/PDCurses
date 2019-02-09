@@ -216,8 +216,6 @@ static GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
-static char *bitmap_file = NULL;
-static char *pixmap_file = NULL;
 static KeySym keysym = 0;
 
 static int state_mask[8] =
@@ -242,7 +240,6 @@ static chtype *tmpsel = NULL;
 static unsigned long tmpsel_length = 0;
 static int selection_start_x = 0, selection_start_y = 0,
            selection_end_x = 0, selection_end_y = 0;
-static Pixmap icon_bitmap;
 static Pixmap icon_pixmap;
 static Pixmap icon_pixmap_mask;
 static bool visible_cursor = FALSE;
@@ -838,68 +835,9 @@ static void _set_cursor_color(chtype *ch, short *fore, short *back)
 
 static void _get_icon(void)
 {
-    XIconSize *icon_size;
-    int size_count = 0;
     Status rc;
-    unsigned char *bitmap_bits = NULL;
-    unsigned icon_bitmap_width = 0, icon_bitmap_height = 0,
-             file_bitmap_width = 0, file_bitmap_height = 0;
 
     XC_LOG(("_get_icon() - called\n"));
-
-    icon_size = XAllocIconSize();
-
-    rc = XGetIconSizes(XtDisplay(topLevel),
-                       RootWindowOfScreen(XtScreen(topLevel)),
-                       &icon_size, &size_count);
-
-    /* if the WM can advise on icon sizes... */
-
-    if (rc && size_count)
-    {
-        int i, max_height = 0, max_width = 0;
-
-        PDC_LOG(("%s:size_count: %d rc: %d\n", XCLOGMSG, size_count, rc));
-
-        for (i = 0; i < size_count; i++)
-        {
-            if (icon_size[i].max_width > max_width)
-                max_width = icon_size[i].max_width;
-            if (icon_size[i].max_height > max_height)
-                max_height = icon_size[i].max_height;
-
-            PDC_LOG(("%s:min: %d %d\n", XCLOGMSG,
-                     icon_size[i].min_width, icon_size[i].min_height));
-
-            PDC_LOG(("%s:max: %d %d\n", XCLOGMSG,
-                     icon_size[i].max_width, icon_size[i].max_height));
-
-            PDC_LOG(("%s:inc: %d %d\n", XCLOGMSG,
-                     icon_size[i].width_inc, icon_size[i].height_inc));
-        }
-
-        if (max_width >= 64 && max_height >= 64)
-        {
-            XpmCreatePixmapFromData(XtDisplay(topLevel),
-                  RootWindowOfScreen(XtScreen(topLevel)),
-                  icon64, &icon_pixmap, &icon_pixmap_mask, NULL);
-        }
-        else
-        {
-            XpmCreatePixmapFromData(XtDisplay(topLevel),
-                  RootWindowOfScreen(XtScreen(topLevel)),
-                  icon32, &icon_pixmap, &icon_pixmap_mask, NULL);
-        }
-
-    }
-    else  /* use small icon */
-    {
-        XpmCreatePixmapFromData(XtDisplay(topLevel),
-              RootWindowOfScreen(XtScreen(topLevel)),
-              icon32, &icon_pixmap, &icon_pixmap_mask, NULL);
-    }
-
-    XFree(icon_size);
 
     if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
     {
@@ -907,32 +845,68 @@ static void _get_icon(void)
                             RootWindowOfScreen(XtScreen(topLevel)),
                             (char *)xc_app_data.pixmap,
                             &icon_pixmap, &icon_pixmap_mask, NULL);
-        return;
     }
-
-    if (xc_app_data.bitmap && xc_app_data.bitmap[0]) /* supplied bitmap */
+    else if (xc_app_data.bitmap && xc_app_data.bitmap[0]) /* supplied bitmap */
     {
+        unsigned file_bitmap_width = 0, file_bitmap_height = 0;
         int x_hot = 0, y_hot = 0;
 
         rc = XReadBitmapFile(XtDisplay(topLevel),
                              RootWindowOfScreen(XtScreen(topLevel)),
                              (char *)xc_app_data.bitmap,
                              &file_bitmap_width, &file_bitmap_height,
-                             &icon_bitmap, &x_hot, &y_hot);
+                             &icon_pixmap, &x_hot, &y_hot);
 
-        switch(rc)
-        {
-        case BitmapOpenFailed:
+        if (BitmapOpenFailed == rc)
             fprintf(stderr, "bitmap file %s: not found\n",
                     xc_app_data.bitmap);
-            break;
-        case BitmapFileInvalid:
+        else if (BitmapFileInvalid == rc)
             fprintf(stderr, "bitmap file %s: contents invalid\n",
                     xc_app_data.bitmap);
-            break;
-        default:
-            return;
+    }
+    else
+    {
+        XIconSize *icon_size;
+        int size_count = 0, max_height = 0, max_width = 0;
+
+        icon_size = XAllocIconSize();
+
+        rc = XGetIconSizes(XtDisplay(topLevel),
+                           RootWindowOfScreen(XtScreen(topLevel)),
+                           &icon_size, &size_count);
+
+        /* if the WM can advise on icon sizes... */
+
+        if (rc && size_count)
+        {
+            int i;
+
+            PDC_LOG(("%s:size_count: %d rc: %d\n", XCLOGMSG, size_count, rc));
+
+            for (i = 0; i < size_count; i++)
+            {
+                if (icon_size[i].max_width > max_width)
+                    max_width = icon_size[i].max_width;
+                if (icon_size[i].max_height > max_height)
+                    max_height = icon_size[i].max_height;
+
+                PDC_LOG(("%s:min: %d %d\n", XCLOGMSG,
+                         icon_size[i].min_width, icon_size[i].min_height));
+
+                PDC_LOG(("%s:max: %d %d\n", XCLOGMSG,
+                         icon_size[i].max_width, icon_size[i].max_height));
+
+                PDC_LOG(("%s:inc: %d %d\n", XCLOGMSG,
+                         icon_size[i].width_inc, icon_size[i].height_inc));
+            }
         }
+
+        XFree(icon_size);
+
+        XpmCreatePixmapFromData(XtDisplay(topLevel),
+              RootWindowOfScreen(XtScreen(topLevel)),
+              (max_width >= 64 && max_height >= 64) ? icon64 : icon32,
+              &icon_pixmap, &icon_pixmap_mask, NULL);
     }
 }
 
@@ -2372,18 +2346,11 @@ static void _exit_process(int rc, int sig, char *msg)
     shmctl(shmidSP, IPC_RMID, 0);
     shmctl(shmid_Xcurscr, IPC_RMID, 0);
 
-    if (bitmap_file)
-    {
-        XFreePixmap(XCURSESDISPLAY, icon_bitmap);
-        free(bitmap_file);
-    }
-
-    if (pixmap_file)
-    {
+    if (icon_pixmap)
         XFreePixmap(XCURSESDISPLAY, icon_pixmap);
+    if (icon_pixmap_mask)
         XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
-        free(pixmap_file);
-    }
+
     XFreeGC(XCURSESDISPLAY, normal_gc);
     XFreeGC(XCURSESDISPLAY, italic_gc);
     XFreeGC(XCURSESDISPLAY, bold_gc);

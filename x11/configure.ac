@@ -70,11 +70,7 @@ MH_CHECK_X_INC
 MH_CHECK_X_LIB
 MH_CHECK_X_HEADERS(DECkeysym.h Sunkeysym.h xpm.h)
 MH_CHECK_X_TYPEDEF(XPointer)
-dnl
-dnl extra for xpm library
-if test $ac_cv_header_xpm_h = yes; then
-	MH_XLIBS="$MH_XLIBS -lXpm"
-fi
+
 dnl ---------- allow --enable-debug to compile in debug mode ---------
 AC_ARG_ENABLE(debug,
 	[  --enable-debug          turn on debugging],

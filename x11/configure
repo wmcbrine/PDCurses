@@ -4267,12 +4267,12 @@ case "$target" in
 esac
 
 if test "$with_xaw3d" = yes; then
-	MH_X11_LIBS="Xaw3d Xmu Xt X11"
+	MH_X11_LIBS="Xaw3d Xmu Xt X11 Xpm"
 else
 	if test "$with_nextaw" = yes; then
-		MH_X11_LIBS="neXtaw Xmu Xt X11"
+		MH_X11_LIBS="neXtaw Xmu Xt X11 Xpm"
 	else
-		MH_X11_LIBS="Xaw Xmu Xt X11"
+		MH_X11_LIBS="Xaw Xmu Xt X11 Xpm"
 	fi
 fi
 MH_X11R6_LIBS="SM ICE Xext"
@@ -4426,9 +4426,7 @@ $as_echo "$mh_td" >&6; }
 done
 CPPFLAGS="$save_CPPFLAGS"
 
-if test $ac_cv_header_xpm_h = yes; then
-	MH_XLIBS="$MH_XLIBS -lXpm"
-fi
+
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
   enableval=$enable_debug; with_debug=$enableval
@@ -4652,7 +4650,7 @@ if test "$DYN_COMP" = ""; then
 $as_echo_n "checking compiler flags for a dynamic object... " >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 4655 "configure"
+#line 4653 "configure"
 int a=0
 EOF
 
@@ -4691,7 +4689,7 @@ $as_echo "none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4694 "configure"
+#line 4692 "configure"
 int foo()
 {
 return(0);

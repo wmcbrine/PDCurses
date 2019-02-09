@@ -135,12 +135,12 @@ case "$target" in
 esac
 
 if test "$with_xaw3d" = yes; then
-	MH_X11_LIBS="Xaw3d Xmu Xt X11"
+	MH_X11_LIBS="Xaw3d Xmu Xt X11 Xpm"
 else
 	if test "$with_nextaw" = yes; then
-		MH_X11_LIBS="neXtaw Xmu Xt X11"
+		MH_X11_LIBS="neXtaw Xmu Xt X11 Xpm"
 	else
-		MH_X11_LIBS="Xaw Xmu Xt X11"
+		MH_X11_LIBS="Xaw Xmu Xt X11 Xpm"
 	fi
 fi
 MH_X11R6_LIBS="SM ICE Xext"

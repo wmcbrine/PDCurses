@@ -12,9 +12,7 @@
 
 #include <xpm.h>
 
-#if defined PDC_XIM
-# include <Xlocale.h>
-#endif
+#include <Xlocale.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -204,10 +202,6 @@ static struct
  {0,            0,      0,           0,            0,           0}
 };
 
-#ifndef PDC_XIM
-# include "compose.h"
-#endif
-
 #define BITMAPDEPTH 1
 
 unsigned long pdc_key_modifiers = 0L;
@@ -326,7 +320,6 @@ static XtResource app_resources[] =
 
     RSTRING(bitmap, Bitmap),
     RSTRING(pixmap, Pixmap),
-    RSTRINGP(composeKey, ComposeKey, "Multi_key"),
 
     RCURSOR(pointer, Pointer, xterm),
 
@@ -368,7 +361,7 @@ static XrmOptionDescRec options[] =
     COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
     COPT(boldFont), COPT(bitmap),
     COPT(pixmap),
-    COPT(pointer), COPT(shmmin), COPT(composeKey), COPT(clickPeriod),
+    COPT(pointer), COPT(shmmin), COPT(clickPeriod),
     COPT(doubleClickPeriod), COPT(scrollbarWidth),
     COPT(pointerForeColor), COPT(pointerBackColor),
     COPT(cursorBlinkRate), COPT(cursorColor), COPT(textCursor),
@@ -397,10 +390,8 @@ static bool after_first_curses_request = FALSE;
 static Pixel colors[MAX_COLORS + 2];
 static bool vertical_cursor = FALSE;
 
-#ifdef PDC_XIM
 static XIM Xim = NULL;
 static XIC Xic = NULL;
-#endif
 
 static const char *default_translations =
 {
@@ -1013,18 +1004,8 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
 static void XCursesKeyPress(Widget w, XEvent *event, String *params,
                             Cardinal *nparams)
 {
-    enum { STATE_NORMAL, STATE_COMPOSE, STATE_CHAR };
-
-#ifdef PDC_XIM
     Status status;
     wchar_t buffer[120];
-#else
-    unsigned char buffer[120];
-    XComposeStatus compose;
-    static int compose_state = STATE_NORMAL;
-    static int compose_index = 0;
-    int char_idx = 0;
-#endif
     unsigned long key = 0;
     int buflen = 40;
     int i, count;
@@ -1041,9 +1022,6 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
            with a KeyPress event (or reset by the mouse event handler) */
 
         if (SP->return_key_modifiers &&
-#ifndef PDC_XIM
-            keysym != compose_key &&
-#endif
             IsModifierKey(keysym))
         {
             switch (keysym) {
@@ -1075,13 +1053,8 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
 
     buffer[0] = '\0';
 
-#ifdef PDC_XIM
     count = XwcLookupString(Xic, &(event->xkey), buffer, buflen,
                             &keysym, &status);
-#else
-    count = XLookupString(&(event->xkey), (char *)buffer, buflen,
-                          &keysym, &compose);
-#endif
 
     /* translate keysym into curses key code */
 
@@ -1092,123 +1065,6 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
         PDC_debug("%s:Keysym %x %d\n", XCLOGMSG,
                   XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, i), i);
 #endif
-
-#ifndef PDC_XIM
-
-    /* Check if the key just pressed is the user-specified compose
-       key; if it is, set the compose state and exit. */
-
-    if (keysym == compose_key)
-    {
-        chtype *ch;
-        int xpos, ypos, save_visibility = SP->visibility;
-        short fore = 0, back = 0;
-
-        /* Change the shape of the cursor to an outline rectangle to
-           indicate we are in "compose" status */
-
-        SP->visibility = 0;
-
-        _redraw_cursor();
-
-        SP->visibility = save_visibility;
-        _make_xy(SP->curscol, SP->cursrow, &xpos, &ypos);
-
-        ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(SP->cursrow) +
-             (SP->curscol * sizeof(chtype)));
-
-        _set_cursor_color(ch, &fore, &back);
-
-        XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
-
-        XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-                       xpos + 1, ypos - font_height +
-                       xc_app_data.normalFont->descent + 1,
-                       font_width - 2, font_height - 2);
-
-        compose_state = STATE_COMPOSE;
-        return;
-    }
-
-    switch (compose_state)
-    {
-    case STATE_COMPOSE:
-        if (IsModifierKey(keysym))
-            return;
-
-        if (event->xkey.state & compose_mask)
-        {
-            compose_state = STATE_NORMAL;
-            _redraw_cursor();
-            break;
-        }
-
-        if (buffer[0] && count == 1)
-            key = buffer[0];
-
-        compose_index = -1;
-
-        for (i = 0; i < (int)strlen(compose_chars); i++)
-            if (compose_chars[i] == key)
-            {
-                compose_index = i;
-                break;
-            }
-
-        if (compose_index == -1)
-        {
-            compose_state = STATE_NORMAL;
-            compose_index = 0;
-            _redraw_cursor();
-            break;
-        }
-
-        compose_state = STATE_CHAR;
-        return;
-
-    case STATE_CHAR:
-        if (IsModifierKey(keysym))
-            return;
-
-        if (event->xkey.state & compose_mask)
-        {
-            compose_state = STATE_NORMAL;
-            _redraw_cursor();
-            break;
-        }
-
-        if (buffer[0] && count == 1)
-            key = buffer[0];
-
-        char_idx = -1;
-
-        for (i = 0; i < MAX_COMPOSE_CHARS; i++)
-            if (compose_lookups[compose_index][i] == key)
-            {
-                char_idx = i;
-                break;
-            }
-
-        if (char_idx == -1)
-        {
-            compose_state = STATE_NORMAL;
-            compose_index = 0;
-            _redraw_cursor();
-            break;
-        }
-
-        _send_key_to_curses(compose_keys[compose_index][char_idx],
-            NULL, FALSE);
-
-        compose_state = STATE_NORMAL;
-        compose_index = 0;
-
-        _redraw_cursor();
-
-        return;
-    }
-
-#endif /* PDC_XIM */
 
     /* To get here we are procesing "normal" keys */
 
@@ -2356,9 +2212,7 @@ static void _exit_process(int rc, int sig, char *msg)
     XFreeGC(XCURSESDISPLAY, bold_gc);
     XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
     XFreeGC(XCURSESDISPLAY, border_gc);
-#ifdef PDC_XIM
     XDestroyIC(Xic);
-#endif
 
     shutdown(xc_display_sock, 2);
     close(xc_display_sock);
@@ -2903,12 +2757,10 @@ static void _handle_signals(int signo)
         _exit_process(7, signo, "exiting from _handle_signals");
 }
 
-#ifdef PDC_XIM
 static void _dummy_handler(Widget w, XtPointer client_data,
                            XEvent *event, Boolean *unused)
 {
 }
-#endif
 
 int XCursesSetupX(int argc, char *argv[])
 {
@@ -3194,44 +3046,6 @@ int XCursesSetupX(int argc, char *argv[])
     XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
                    &pointerforecolor, &pointerbackcolor);
 
-#ifndef PDC_XIM
-
-    /* Convert the supplied compose key to a Keysym */
-
-    compose_key = XStringToKeysym(xc_app_data.composeKey);
-
-    if (compose_key && IsModifierKey(compose_key))
-    {
-        int i, j;
-        KeyCode *kcp;
-        XModifierKeymap *map;
-        KeyCode compose_keycode = XKeysymToKeycode(XCURSESDISPLAY, compose_key);
-
-        map = XGetModifierMapping(XCURSESDISPLAY);
-        kcp = map->modifiermap;
-
-        for (i = 0; i < 8; i++)
-        {
-            for (j = 0; j < map->max_keypermod; j++, kcp++)
-            {
-                if (!*kcp)
-                    continue;
-
-                if (compose_keycode == *kcp)
-                {
-                    compose_mask = state_mask[i];
-                    break;
-                }
-            }
-
-            if (compose_mask)
-                break;
-        }
-
-        XFreeModifiermap(map);
-    }
-
-#else
     Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
 
     if (Xim)
@@ -3262,8 +3076,6 @@ int XCursesSetupX(int argc, char *argv[])
         shmctl(shmid_Xcurscr, IPC_RMID, 0);
         return ERR;
     }
-
-#endif
 
     /* Wait for events */
     {

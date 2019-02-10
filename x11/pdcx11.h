@@ -102,7 +102,6 @@ typedef struct
     XFontStruct *boldFont;
     char *bitmap;
     char *pixmap;
-    char *composeKey;
     Cursor pointer;
     int shmmin;
     int borderWidth;

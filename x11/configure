@@ -1359,7 +1359,6 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-debug          turn on debugging
   --enable-widec          include support for wide characters
-  --enable-xim            include support for XIM
   --enable-force-utf8     override locale settings; use UTF-8
   --enable-purify         link with Purify (TM)
 
@@ -4481,17 +4480,6 @@ if test "$with_widec" = yes; then
 	SYS_DEFS="$SYS_DEFS $PDC_WIDE"
 fi
 
-
-# Check whether --enable-xim was given.
-if test "${enable_xim+set}" = set; then :
-  enableval=$enable_xim; with_xim=$enableval
-else
-  with_xim=no
-fi
-
-if test "$with_xim" = yes; then
-	SYS_DEFS="$SYS_DEFS -DPDC_XIM"
-fi
 
 # Check whether --enable-force-utf8 was given.
 if test "${enable_force_utf8+set}" = set; then :

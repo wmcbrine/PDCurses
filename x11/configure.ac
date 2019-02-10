@@ -125,17 +125,6 @@ if test "$with_widec" = yes; then
 fi
 AC_SUBST(PDC_WIDE)
 
-dnl -------------------- check for XIM support -----------------------
-dnl allow --enable-xim to include XIM support
-AC_ARG_ENABLE(xim,
-	[  --enable-xim            include support for XIM],
-	[with_xim=$enableval],
-	[with_xim=no],
-)
-if test "$with_xim" = yes; then
-	SYS_DEFS="$SYS_DEFS -DPDC_XIM"
-fi
-
 dnl ------------------------ force UTF-8? ----------------------------
 dnl allow --enable-force-utf8 to override locale settings
 AC_ARG_ENABLE(force-utf8,

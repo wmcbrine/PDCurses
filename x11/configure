@@ -712,7 +712,6 @@ enable_option_checking
 with_x
 enable_debug
 enable_widec
-enable_xim
 enable_force_utf8
 enable_purify
 with_xaw3d
@@ -4638,7 +4637,7 @@ if test "$DYN_COMP" = ""; then
 $as_echo_n "checking compiler flags for a dynamic object... " >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 4653 "configure"
+#line 4640 "configure"
 int a=0
 EOF
 
@@ -4677,7 +4676,7 @@ $as_echo "none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4692 "configure"
+#line 4679 "configure"
 int foo()
 {
 return(0);

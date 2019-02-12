@@ -90,9 +90,6 @@ typedef unsigned char bool;
 
 #endif
 
-#undef NULL
-#define NULL (void *)0
-
 #undef ERR
 #define ERR (-1)
 

@@ -560,6 +560,8 @@ void inputTest(WINDOW *win)
                   wprintw( win, " Alt");
             if( mouse_event.bstate & BUTTON_SHIFT)
                   wprintw( win, " Shift");
+            if( mouse_event.bstate & REPORT_MOUSE_POSITION)
+                  wprintw( win, " Moved");
 #ifdef BUTTON4_RESERVED_EVENT
             for( i = 0; i < sizeof( reserved_masks) / sizeof( reserved_masks[0]); i++)
                 if( mouse_event.bstate & reserved_masks[i])
@@ -619,17 +621,16 @@ void inputTest(WINDOW *win)
                 waddstr(win, "released: ");
 
             wprintw(win, "Posn: Y: %d X: %d", MOUSE_Y_POS, MOUSE_X_POS);
-            if (button && (status & BUTTON_MODIFIER_MASK))
-            {
-                if (status & BUTTON_SHIFT)
-                    waddstr(win, " SHIFT");
+            if( !button)                 /* just to get shift/alt/ctrl status */
+                status = Mouse_status.button[0];
+            if (status & BUTTON_SHIFT)
+                waddstr(win, " SHIFT");
 
-                if (status & BUTTON_CONTROL)
-                    waddstr(win, " CONTROL");
+            if (status & BUTTON_CONTROL)
+                waddstr(win, " CONTROL");
 
-                if (status & BUTTON_ALT)
-                    waddstr(win, " ALT");
-            }
+            if (status & BUTTON_ALT)
+                waddstr(win, " ALT");
         }
         else if (PDC_get_key_modifiers())
         {

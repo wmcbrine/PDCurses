@@ -271,11 +271,36 @@ int PDC_get_key( void)
             count++;
          if( rval == KEY_MOUSE)
             {
-            int idx = (c[2] & 3);
+            int idx = (c[2] & 3), flags = 0, i;
             const bool release = (idx == 3);
             static int held = 0;
 
-            if( release)        /* it's a release */
+            if( c[2] & 4)
+               flags |= PDC_BUTTON_SHIFT;
+            if( c[2] & 8)
+               flags |= PDC_BUTTON_ALT;
+            if( c[2] & 16)
+               flags |= PDC_BUTTON_CONTROL;
+            if( (c[2] & 0x60) == 0x40)    /* mouse move */
+               {
+               int report_event = 0;
+
+               if( idx == 0 && (SP->_trap_mbe & BUTTON1_MOVED))
+                  report_event |= 1;
+               if( idx == 1 && (SP->_trap_mbe & BUTTON2_MOVED))
+                  report_event |= 2;
+               if( idx == 2 && (SP->_trap_mbe & BUTTON3_MOVED))
+                  report_event |= 4;
+               if( report_event)
+                  report_event |= PDC_MOUSE_MOVED;
+               else if( SP->_trap_mbe & REPORT_MOUSE_POSITION)
+                  report_event = PDC_MOUSE_POSITION;
+               pdc_mouse_status.changes = report_event;
+               for( i = 0; i < 3; i++)
+                  pdc_mouse_status.button[i] = (i == idx ? BUTTON_MOVED : 0);
+               idx = 3;
+               }
+            else if( idx == 3)         /* it's a release */
                {
                idx = 0;
                while( idx < 3 && !((held >> idx) & 1))
@@ -284,26 +309,14 @@ int PDC_get_key( void)
                }
             if( idx < 3)
                {
-               int flags = 0, i;
-
                memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
                pdc_mouse_status.button[idx] =
                               (release ? BUTTON_RELEASED : BUTTON_PRESSED);
-               if( c[2] & 64)    /* actually mouse wheel event */
+               if( (c[2] & 0x60) == 0x60)    /* actually mouse wheel event */
                   pdc_mouse_status.changes =
                         (idx ? PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP);
                else     /* "normal" mouse button */
                   pdc_mouse_status.changes = (1 << idx);
-               pdc_mouse_status.x = (unsigned char)( c[3] - ' ' - 1);
-               pdc_mouse_status.y = (unsigned char)( c[4] - ' ' - 1);
-               if( c[2] & 4)
-                  flags |= PDC_BUTTON_SHIFT;
-               if( c[2] & 8)
-                  flags |= PDC_BUTTON_ALT;
-               if( c[2] & 16)
-                  flags |= PDC_BUTTON_CONTROL;
-               for( i = 0; i < 3; i++)
-                  pdc_mouse_status.button[i] |= flags;
                if( !release && !(c[2] & 64))   /* wait for a possible release */
                   {
                   int n_events = 0;
@@ -324,13 +337,17 @@ int PDC_get_key( void)
                   if( !n_events)   /* just a click,  no release(s) */
                      held ^= (1 << idx);
                   else if( n_events == 1)
-                      pdc_mouse_status.button[idx] = BUTTON_CLICKED | flags;
+                      pdc_mouse_status.button[idx] = BUTTON_CLICKED;
                   else if( n_events <= 3)
-                      pdc_mouse_status.button[idx] = BUTTON_DOUBLE_CLICKED | flags;
+                      pdc_mouse_status.button[idx] = BUTTON_DOUBLE_CLICKED;
                   else if( n_events <= 5)
-                      pdc_mouse_status.button[idx] = BUTTON_TRIPLE_CLICKED | flags;
+                      pdc_mouse_status.button[idx] = BUTTON_TRIPLE_CLICKED;
                   }
                }
+            for( i = 0; i < 3; i++)
+               pdc_mouse_status.button[i] |= flags;
+            pdc_mouse_status.x = (unsigned char)( c[3] - ' ' - 1);
+            pdc_mouse_status.y = (unsigned char)( c[4] - ' ' - 1);
             }
          }
       else if( (rval & 0xc0) == 0xc0)      /* start of UTF-8 */

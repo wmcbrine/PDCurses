@@ -197,10 +197,10 @@ static int xlate_vt_codes( const int *c, const int count)
                KEY_F(10), 4, '[', '2', '1', '~',
                KEY_F(11), 4, '[', '2', '3', '~',
                KEY_F(12), 4, '[', '2', '4', '~',
-               KEY_F(13), 5, 'O', '1', ';', '2', 'P',      /* shift-f1 */
-               KEY_F(14), 5, 'O', '1', ';', '2', 'Q',
-               KEY_F(15), 5, 'O', '1', ';', '2', 'R',
-               KEY_F(16), 5, 'O', '1', ';', '2', 'S',
+               KEY_F(13), 5, '[', '1', ';', '2', 'P',      /* shift-f1 */
+               KEY_F(14), 5, '[', '1', ';', '2', 'Q',
+               KEY_F(15), 5, '[', '1', ';', '2', 'R',
+               KEY_F(16), 5, '[', '1', ';', '2', 'S',
                KEY_F(17), 6, '[', '1', '5', ';', '2', '~',  /* shift-f5 */
                KEY_F(18), 6, '[', '1', '7', ';', '2', '~',
                KEY_F(19), 6, '[', '1', '8', ';', '2', '~',
@@ -304,7 +304,7 @@ int PDC_get_key( void)
                   flags |= PDC_BUTTON_CONTROL;
                for( i = 0; i < 3; i++)
                   pdc_mouse_status.button[i] |= flags;
-               if( !release)     /* wait for a possible release */
+               if( !release && !(c[2] & 64))   /* wait for a possible release */
                   {
                   int n_events = 0;
 

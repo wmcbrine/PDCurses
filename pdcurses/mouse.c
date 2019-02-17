@@ -370,6 +370,8 @@ int nc_getmouse(MEVENT *event)
         bstate |= BUTTON4_PRESSED;
     else if (MOUSE_WHEEL_DOWN)
         bstate |= BUTTON5_PRESSED;
+    if( MOUSE_MOVED)
+        bstate |= REPORT_MOUSE_POSITION;
 
     /* extra filter pass -- mainly for button modifiers */
 

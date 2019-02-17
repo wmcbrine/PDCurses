@@ -198,6 +198,8 @@ int main(int argc, char *argv[])
 
     while (1)
     {
+        bool run_option = FALSE;
+
         noecho();
         keypad(stdscr, TRUE);
         raw();
@@ -233,19 +235,13 @@ int main(int argc, char *argv[])
                     display_menu( old_option, new_option);
                 }
                 if( mouse_event.bstate & BUTTON1_DOUBLE_CLICKED)
-                    key = 10;
+                    run_option = TRUE;
             }
-            if( key != 10)
-                break;
+            break;
         case 10:
         case 13:
         case KEY_ENTER:
-            old_option = -1;
-            erase();
-            refresh();
-            (*command[new_option].function)(win);
-            erase();
-            display_menu(old_option, new_option);
+            run_option = TRUE;
             break;
 
         case KEY_PPAGE:
@@ -286,6 +282,15 @@ int main(int argc, char *argv[])
         case 'Q':
         case 'q':
             quit = TRUE;
+        }
+        if( run_option)
+        {
+            old_option = -1;
+            erase();
+            refresh();
+            (*command[new_option].function)(win);
+            erase();
+            display_menu(old_option, new_option);
         }
 
         if (quit == TRUE)

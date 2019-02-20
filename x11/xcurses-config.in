@@ -21,7 +21,7 @@ usage()
     echo "  --cflags       pre-processor and compiler flags"
     echo "                 [-I$includedir @PDC_WIDE@]"
     echo "  --libs         library linking information"
-    echo "                 [-L$libdir -lXCurses @LDFLAGS@ @MH_XLIBS@ @MH_EXTRA_LIBS@"
+    echo "                 [-L$libdir -lXCurses @LDFLAGS@ @MH_EXTRA_LIBS@"
     echo "  --libs-static  static library linking information (libXCurses only)"
     echo "                 [$libdir/libXCurses.a @LDFLAGS@ @MH_XLIBS@ @MH_EXTRA_LIBS@"
     echo "  --prefix       PDCurses install prefix"
@@ -63,7 +63,7 @@ while test $# -gt 0; do
        ;;
 
     --libs)
-       echo -L$libdir -lXCurses @LDFLAGS@ @MH_XLIBS@ @MH_EXTRA_LIBS@
+       echo -L$libdir -lXCurses @LDFLAGS@ @MH_EXTRA_LIBS@
        ;;
 
     --libs-static)

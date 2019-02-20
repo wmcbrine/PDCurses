@@ -8,6 +8,10 @@
 # define PDC_OFFSET  8
 #endif
 
+#ifndef ENABLE_EXTENDED_FLAGS
+# define ENABLE_EXTENDED_FLAGS 0x80
+#endif
+
 /* special purpose function keys */
 static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
 
@@ -602,7 +606,7 @@ void PDC_reset_shell_mode(void)
         SetConsoleActiveScreenBuffer(pdc_con_out);
     }
 
-    SetConsoleMode(pdc_con_in, old_console_mode);
+    SetConsoleMode(pdc_con_in, old_console_mode | ENABLE_EXTENDED_FLAGS);
 }
 
 void PDC_restore_screen_mode(int i)

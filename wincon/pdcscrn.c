@@ -628,7 +628,7 @@ void PDC_reset_shell_mode(void)
         SetConsoleActiveScreenBuffer(pdc_con_out);
     }
 
-    SetConsoleMode(pdc_con_in, old_console_mode);
+    SetConsoleMode(pdc_con_in, old_console_mode | 0x0080);
 }
 
 void PDC_restore_screen_mode(int i)

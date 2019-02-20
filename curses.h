@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3801
+#define PDC_BUILD    3802
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -36,6 +36,10 @@ Defined by this header:
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 # define PDC_99         1
+#endif
+
+#if defined(__cplusplus) && __cplusplus >= 199711L
+# define PDC_PP98       1
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -55,7 +59,9 @@ Defined by this header:
 #ifdef __cplusplus
 extern "C"
 {
-# define bool _bool
+# ifndef PDC_PP98
+#  define bool _bool
+# endif
 #endif
 
 /*----------------------------------------------------------------------
@@ -76,7 +82,7 @@ extern "C"
 #undef OK
 #define OK 0
 
-#ifndef __bool_true_false_are_defined
+#if !defined(PDC_PP98) && !defined(__bool_true_false_are_defined)
 typedef unsigned char bool;
 #endif
 
@@ -1368,7 +1374,9 @@ PDCEX  int     sb_refresh(void);
 #define PDC_KEY_MODIFIER_NUMLOCK 8
 
 #ifdef __cplusplus
-# undef bool
+# ifndef PDC_PP98
+#  undef bool
+# endif
 }
 #endif
 

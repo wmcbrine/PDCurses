@@ -18,7 +18,7 @@ PDCURSES_SRCDIR = ..
 
 osdir		= $(PDCURSES_SRCDIR)\wincon
 
-CC		= bcc32c -q -Xdriver -Wno-deprecated-declarations
+CC		= bcc32c -q
 
 !ifdef DEBUG
 CFLAGS		= -N -v -y -DPDCDEBUG
@@ -40,6 +40,7 @@ INFOPT          = -DHAVE_NO_INFOEX
 
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe $(CFLAGS) \
 $(WIDEOPT) $(UTF8OPT) $(INFOPT)
+BUILD_OS	= $(BUILD) -Xdriver -Wno-deprecated-declarations
 
 LIBEXE		= tlib /C /E /0 /a
 
@@ -65,13 +66,13 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(BUILD) $<
 
 {$(osdir)\}.c.obj:
-	$(BUILD) $<
+	$(BUILD_OS) $<
 
 {$(demodir)\}.c.obj:
 	$(BUILD) $<
 
 .c.obj:
-	$(BUILD) $<
+	$(BUILD_OS) $<
 
 .obj.exe:
 	$(CC) -e$@ $** $(LIBCURSES)

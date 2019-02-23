@@ -1356,7 +1356,6 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-debug          turn on debugging
   --disable-widec         omit support for wide characters
-
   --enable-force-utf8     override locale settings; use UTF-8
 
 Optional Packages:
@@ -4425,15 +4424,13 @@ CPPFLAGS="$save_CPPFLAGS"
 
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
-  enableval=$enable_debug; with_debug=$enableval
-else
-  with_debug=no
+  enableval=$enable_debug;
 fi
 
 cflags_g="`echo $CFLAGS | grep -c '\-g'`"
 cflags_O="`echo $CFLAGS | grep -c '\-O'`"
 
-if test "$with_debug" = yes; then
+if test "$enable_debug" = "yes"; then
 	if test "$cflags_g" = "0"; then
 		CFLAGS="${CFLAGS} -g"
 	fi
@@ -4450,14 +4447,14 @@ else
 	fi
 fi
 if test "$ac_cv_prog_CC" = "gcc"; then
-	if test "$with_debug" = yes; then
+	if test "$enable_debug" = "yes"; then
 		CFLAGS="${CFLAGS} -Wall"
 	else
 		CFLAGS="-O2 -Wall -fomit-frame-pointer"
 	fi
 fi
 if test "$on_qnx" = yes; then
-	if test "$with_debug" = yes; then
+	if test "$enable_debug" = "yes"; then
 		CFLAGS="-g"
 	else
 		CFLAGS="-Otax"
@@ -4478,24 +4475,20 @@ fi
 
 # Check whether --enable-force-utf8 was given.
 if test "${enable_force_utf8+set}" = set; then :
-  enableval=$enable_force_utf8; force_utf8=$enableval
-else
-  force_utf8=no
+  enableval=$enable_force_utf8;
 fi
 
-if test "$force_utf8" = yes; then
+if test "$enable_force_utf8" = "yes"; then
 	SYS_DEFS="$SYS_DEFS -DPDC_FORCE_UTF8"
 fi
 
 
 # Check whether --with-xaw3d was given.
 if test "${with_xaw3d+set}" = set; then :
-  withval=$with_xaw3d; with_xaw3d=$withval
-else
-  with_xaw3d=no
+  withval=$with_xaw3d;
 fi
 
-if test "$with_xaw3d" = yes; then
+if test "$with_xaw3d" = "yes"; then
 
 $as_echo "#define USE_XAW3D 1" >>confdefs.h
 
@@ -4504,12 +4497,10 @@ fi
 
 # Check whether --with-nextaw was given.
 if test "${with_nextaw+set}" = set; then :
-  withval=$with_nextaw; with_nextaw=$withval
-else
-  with_nextaw=no
+  withval=$with_nextaw;
 fi
 
-if test "$with_nextaw" = yes; then
+if test "$with_nextaw" = "yes"; then
 
 $as_echo "#define USE_NEXTAW 1" >>confdefs.h
 
@@ -4619,7 +4610,7 @@ if test "$DYN_COMP" = ""; then
 $as_echo_n "checking compiler flags for a dynamic object... " >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 4622 "configure"
+#line 4613 "configure"
 int a=0
 EOF
 
@@ -4658,7 +4649,7 @@ $as_echo "none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4661 "configure"
+#line 4652 "configure"
 int foo()
 {
 return(0);

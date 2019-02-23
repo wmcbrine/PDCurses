@@ -74,13 +74,11 @@ MH_CHECK_X_TYPEDEF(XPointer)
 dnl ---------- allow --enable-debug to compile in debug mode ---------
 AC_ARG_ENABLE(debug,
 	[  --enable-debug          turn on debugging],
-	[with_debug=$enableval],
-	[with_debug=no],
 )
 cflags_g="`echo $CFLAGS | grep -c '\-g'`"
 cflags_O="`echo $CFLAGS | grep -c '\-O'`"
 
-if test "$with_debug" = yes; then
+if test "$enable_debug" = "yes"; then
 	if test "$cflags_g" = "0"; then
 		CFLAGS="${CFLAGS} -g"
 	fi
@@ -97,14 +95,14 @@ else
 	fi
 fi
 if test "$ac_cv_prog_CC" = "gcc"; then
-	if test "$with_debug" = yes; then
+	if test "$enable_debug" = "yes"; then
 		CFLAGS="${CFLAGS} -Wall"
 	else
 		CFLAGS="-O2 -Wall -fomit-frame-pointer"
 	fi
 fi
 if test "$on_qnx" = yes; then
-	if test "$with_debug" = yes; then
+	if test "$enable_debug" = "yes"; then
 		CFLAGS="-g"
 	else
 		CFLAGS="-Otax"
@@ -114,7 +112,7 @@ fi
 dnl --------------- check for wide character support -----------------
 dnl allow --enable-widec to include wide character support
 AC_ARG_ENABLE(widec,
-	[  --disable-widec         omit support for wide characters]
+	[  --disable-widec         omit support for wide characters],
 )
 PDC_WIDE=""
 if test "$enable_widec" != "no"; then
@@ -127,10 +125,8 @@ dnl ------------------------ force UTF-8? ----------------------------
 dnl allow --enable-force-utf8 to override locale settings
 AC_ARG_ENABLE(force-utf8,
 	[  --enable-force-utf8     override locale settings; use UTF-8],
-	[force_utf8=$enableval],
-	[force_utf8=no],
 )
-if test "$force_utf8" = yes; then
+if test "$enable_force_utf8" = "yes"; then
 	SYS_DEFS="$SYS_DEFS -DPDC_FORCE_UTF8"
 fi
 
@@ -138,10 +134,8 @@ dnl --------------------- check for Xaw3d library --------------------
 dnl allow --with-xaw3d to link with PDCurses
 AC_ARG_WITH(xaw3d,
 	[  --with-xaw3d            link with Xaw3d],
-	[with_xaw3d=$withval],
-	[with_xaw3d=no],
 )
-if test "$with_xaw3d" = yes; then
+if test "$with_xaw3d" = "yes"; then
 	AC_DEFINE([USE_XAW3D], [1],
 		[Define if you want to use Xaw3d library]
 	)
@@ -151,10 +145,8 @@ dnl --------------------- check for neXtaw library -------------------
 dnl allow --with-nextaw to link with PDCurses
 AC_ARG_WITH(nextaw,
 	[  --with-nextaw           link with neXtaw],
-	[with_nextaw=$withval],
-	[with_nextaw=no],
 )
-if test "$with_nextaw" = yes; then
+if test "$with_nextaw" = "yes"; then
 	AC_DEFINE([USE_NEXTAW], [1],
 		[Define if you want to use neXtaw library]
 	)

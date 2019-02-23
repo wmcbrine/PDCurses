@@ -134,20 +134,6 @@ if test "$force_utf8" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_FORCE_UTF8"
 fi
 
-dnl ----------------- check for Purify support -----------------------
-dnl allow --enable-purify to enable linking with Purify
-AC_ARG_ENABLE(purify,
-	[  --enable-purify         link with Purify (TM)],
-	[with_purify=$enableval],
-	[with_purify=no],
-)
-if test "$with_purify" = yes; then
-	PURIFY="purify"
-else
-	PURIFY=""
-fi
-AC_SUBST(PURIFY)
-
 dnl --------------------- check for Xaw3d library --------------------
 dnl allow --with-xaw3d to link with PDCurses
 AC_ARG_WITH(xaw3d,

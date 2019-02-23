@@ -633,7 +633,6 @@ SHLPRE
 LD_RXLIB1
 DYN_COMP
 SHLPST
-PURIFY
 PDC_WIDE
 MH_XLIBS
 MH_XINC_DIR
@@ -713,7 +712,6 @@ with_x
 enable_debug
 enable_widec
 enable_force_utf8
-enable_purify
 with_xaw3d
 with_nextaw
 '
@@ -1360,7 +1358,6 @@ Optional Features:
   --disable-widec         omit support for wide characters
 
   --enable-force-utf8     override locale settings; use UTF-8
-  --enable-purify         link with Purify (TM)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -4490,20 +4487,6 @@ if test "$force_utf8" = yes; then
 	SYS_DEFS="$SYS_DEFS -DPDC_FORCE_UTF8"
 fi
 
-# Check whether --enable-purify was given.
-if test "${enable_purify+set}" = set; then :
-  enableval=$enable_purify; with_purify=$enableval
-else
-  with_purify=no
-fi
-
-if test "$with_purify" = yes; then
-	PURIFY="purify"
-else
-	PURIFY=""
-fi
-
-
 
 # Check whether --with-xaw3d was given.
 if test "${with_xaw3d+set}" = set; then :
@@ -4636,7 +4619,7 @@ if test "$DYN_COMP" = ""; then
 $as_echo_n "checking compiler flags for a dynamic object... " >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 4639 "configure"
+#line 4622 "configure"
 int a=0
 EOF
 
@@ -4675,7 +4658,7 @@ $as_echo "none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4678 "configure"
+#line 4661 "configure"
 int foo()
 {
 return(0);

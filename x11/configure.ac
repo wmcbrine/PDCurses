@@ -114,12 +114,10 @@ fi
 dnl --------------- check for wide character support -----------------
 dnl allow --enable-widec to include wide character support
 AC_ARG_ENABLE(widec,
-	[  --enable-widec          include support for wide characters],
-	[with_widec=$enableval],
-	[with_widec=no],
+	[  --disable-widec         omit support for wide characters]
 )
 PDC_WIDE=""
-if test "$with_widec" = yes; then
+if test "$enable_widec" != "no"; then
 	PDC_WIDE="-DPDC_WIDE"
 	SYS_DEFS="$SYS_DEFS $PDC_WIDE"
 fi

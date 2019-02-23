@@ -1357,7 +1357,8 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-debug          turn on debugging
-  --enable-widec          include support for wide characters
+  --disable-widec         omit support for wide characters
+
   --enable-force-utf8     override locale settings; use UTF-8
   --enable-purify         link with Purify (TM)
 
@@ -4468,13 +4469,11 @@ fi
 
 # Check whether --enable-widec was given.
 if test "${enable_widec+set}" = set; then :
-  enableval=$enable_widec; with_widec=$enableval
-else
-  with_widec=no
+  enableval=$enable_widec;
 fi
 
 PDC_WIDE=""
-if test "$with_widec" = yes; then
+if test "$enable_widec" != "no"; then
 	PDC_WIDE="-DPDC_WIDE"
 	SYS_DEFS="$SYS_DEFS $PDC_WIDE"
 fi
@@ -4637,7 +4636,7 @@ if test "$DYN_COMP" = ""; then
 $as_echo_n "checking compiler flags for a dynamic object... " >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 4640 "configure"
+#line 4639 "configure"
 int a=0
 EOF
 
@@ -4676,7 +4675,7 @@ $as_echo "none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4679 "configure"
+#line 4678 "configure"
 int foo()
 {
 return(0);

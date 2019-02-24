@@ -58,7 +58,7 @@ int XC_write_socket(int sock_num, const void *buf, int len)
 #endif
     while (1)
     {
-        rc = write(sock_num, buf + start, len);
+        rc = write(sock_num, (const char *)buf + start, len);
 
         if (rc < 0 || rc == len)
             return rc;
@@ -77,7 +77,7 @@ int XC_read_socket(int sock_num, void *buf, int len)
 
     while (1)
     {
-        rc = read(sock_num, buf + start, length);
+        rc = read(sock_num, (char *)buf + start, length);
 
 #ifdef MOUSE_DEBUG
         if (sock_num == xc_key_sock)

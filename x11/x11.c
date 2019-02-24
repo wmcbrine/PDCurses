@@ -211,19 +211,6 @@ static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
 static KeySym keysym = 0;
-
-static int state_mask[8] =
-{
-    ShiftMask,
-    LockMask,
-    ControlMask,
-    Mod1Mask,
-    Mod2Mask,
-    Mod3Mask,
-    Mod4Mask,
-    Mod5Mask
-};
-
 static Atom wm_atom[2];
 static String class_name = "XCurses";
 static XtAppContext app_context;

@@ -76,9 +76,9 @@ New features
   instead of NCURSES_MOUSE_VERSION. (The old way will also still work.)
   After Simon Sobisch (see PR #33).
 
-- In SDL, the box-drawing and block ACS characters are now rendered in a
-  font-independent way, to ensure their correct alignment across cells.
-  Underlining is now handled in a similar way.
+- In SDL (TTF mode), the box-drawing and block ACS characters are now
+  rendered in a font-independent way, to ensure their correct alignment
+  across cells. Underlining is now handled in a similar way.
 
 - TTF fonts in SDL are now rendered in Blended mode instead of Solid.
   Partly after Joachim de Groot.

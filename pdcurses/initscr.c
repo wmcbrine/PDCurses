@@ -21,6 +21,8 @@ initscr
     bool is_termresized(void);
     const char *curses_version(void);
     void PDC_get_version(PDC_VERSION *ver);
+    int set_tabsize(int tabsize);
+    int set_escdelay(int escdelay);
 
 ### Description
 
@@ -76,6 +78,9 @@ initscr
    PDC_get_version() fills a PDC_VERSION structure provided by the user
    with more detailed version info (see curses.h).
 
+   set_tabsize() allows us to set the value of TABSIZE. set_escdelay()
+   lets us set the screen specific escape delay variable.
+
 ### Return Value
 
    All functions return NULL on error, except endwin(), which always
@@ -92,6 +97,8 @@ initscr
     resize_term                 -       -       -
     is_termresized              -       -       -
     curses_version              -       -       -
+    set_tabsize                 -       Y       -
+    set_escdelay                -       Y       -
 
 **man-end****************************************************************/
 
@@ -108,7 +115,8 @@ WINDOW *pdc_lastscr = (WINDOW *)NULL; /* the last screen image */
 
 int LINES = 0;                        /* current terminal height */
 int COLS = 0;                         /* current terminal width */
-int TABSIZE = 8;
+int TABSIZE = 8;                      /* override with set_tabsize() */
+int ESCDELAY = 0;                     /* in ms. BSD sets to 300. */
 
 MOUSE_STATUS Mouse_status, pdc_mouse_status;
 
@@ -145,7 +153,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->_trap_mbe = 0L;
     SP->linesrippedoff = 0;
     SP->linesrippedoffontop = 0;
-    SP->delaytenths = 0;
+    SP->delaytenths = ESCDELAY / 100;
     SP->line_color = -1;
 
     SP->orig_cursor = PDC_get_cursor_mode();
@@ -378,4 +386,28 @@ void PDC_get_version(PDC_VERSION *ver)
     ver->minor = PDC_VER_MINOR;
     ver->csize = sizeof(chtype);
     ver->bsize = sizeof(bool);
+}
+
+int set_escdelay(int escdelay)
+{
+    PDC_LOG(("set_escdelay() - called: escdelay %d\n", escdelay));
+
+    if (!SP || escdelay < 100)
+        return ERR;
+
+    SP->delaytenths = escdelay / 100;
+
+    return OK;
+}
+
+int set_tabsize(int tabsize)
+{
+    PDC_LOG(("set_tabsize() - called: tabsize %d\n", tabsize));
+
+    if (tabsize < 1)
+        return ERR;
+
+    TABSIZE = tabsize;
+
+    return OK;
 }

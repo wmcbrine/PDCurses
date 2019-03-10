@@ -16,6 +16,7 @@ inopts
     int halfdelay(int tenths);
     int intrflush(WINDOW *win, bool bf);
     int keypad(WINDOW *win, bool bf);
+    bool is_keypad(WINDOW *win);
     int meta(WINDOW *win, bool bf);
     int nl(void);
     int nonl(void);
@@ -54,7 +55,8 @@ inopts
    as single key codes (e.g., the left arrow key as KEY_LEFT). Per
    X/Open, the default for keypad mode is OFF. You'll probably want
    it on. With keypad mode off, if a special key is pressed,
-   getch() does nothing or returns ERR.
+   getch() does nothing or returns ERR. is_keypad() returns TRUE if
+   this functionality was set for the window.
 
    nodelay() controls whether wgetch() is a non-blocking call. If
    the option is enabled, and no input is ready, wgetch() will
@@ -100,6 +102,7 @@ inopts
     halfdelay                   Y       -       Y
     intrflush                   Y       -       Y
     keypad                      Y       -       Y
+    is_keypad                   -       Y       -
     meta                        Y       -       Y
     nl                          Y       Y       Y
     nonl                        Y       Y       Y
@@ -131,7 +134,7 @@ int nocbreak(void)
     PDC_LOG(("nocbreak() - called\n"));
 
     SP->cbreak = FALSE;
-    SP->delaytenths = 0;
+    SP->delaytenths = ESCDELAY / 100;
 
     return OK;
 }
@@ -171,6 +174,16 @@ int intrflush(WINDOW *win, bool bf)
     PDC_LOG(("intrflush() - called\n"));
 
     return OK;
+}
+
+bool is_keypad(WINDOW *win)
+{
+    PDC_LOG(("is_keypad() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_use_keypad;
 }
 
 int keypad(WINDOW *win, bool bf)

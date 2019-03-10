@@ -19,6 +19,10 @@ attr
     int wstandend(WINDOW *win);
     int standout(void);
     int wstandout(WINDOW *win);
+    int underscore(void);
+    int wunderscore(WINDOW *win);
+    int wunderend(void);
+    int wunderend(WINDOW *win);
 
     int color_set(short color_pair, void *opts);
     int wcolor_set(WINDOW *win, short color_pair, void *opts);
@@ -67,7 +71,10 @@ attr
    is unused.
 
    standout() is the same as attron(A_STANDOUT). standend() is the same
-   as attrset(A_NORMAL); that is, it turns off all attributes.
+   as attroff(A_STANDOUT); that is, it turns off A_STANDOUT.
+
+   underscore() is the same as attron(A_UNDERLINE). underend() is the same
+   as attroff(A_UNDERLINE); that is, it turns off A_UNDERLINE.
 
    The attr_* and wattr_* functions are intended for use with the WA_*
    attributes. In PDCurses, these are the same as A_*, and there is no
@@ -99,6 +106,10 @@ attr
     wstandend                   Y       Y       Y
     standout                    Y       Y       Y
     wstandout                   Y       Y       Y
+    wunderscore                 Y       Y       Y
+    wunderend                   Y       Y       Y
+    underscore                  Y       Y       Y
+    underend                    Y       Y       Y
     color_set                   Y
     wcolor_set                  Y
     attr_get                    Y
@@ -186,6 +197,20 @@ int attrset(chtype attrs)
     return wattrset(stdscr, attrs);
 }
 
+int underend(void)
+{
+    PDC_LOG(("underend() - called\n"));
+
+    return wattroff(stdscr, A_UNDERLINE);
+}
+
+int underscore(void)
+{
+    PDC_LOG(("underscore() - called\n"));
+
+    return wattrset(stdscr, A_UNDERLINE);
+}
+
 int standend(void)
 {
     PDC_LOG(("standend() - called\n"));
@@ -200,11 +225,25 @@ int standout(void)
     return wattrset(stdscr, A_STANDOUT);
 }
 
+int wunderend(WINDOW *win)
+{
+    PDC_LOG(("wunderend() - called\n"));
+
+    return wattroff(win, A_UNDERLINE);
+}
+
+int wunderscore(WINDOW *win)
+{
+    PDC_LOG(("wunderscore() - called\n"));
+
+    return wattrset(win, A_UNDERLINE);
+}
+
 int wstandend(WINDOW *win)
 {
     PDC_LOG(("wstandend() - called\n"));
 
-    return wattrset(win, A_NORMAL);
+    return wattroff(win, A_STANDOUT);
 }
 
 int wstandout(WINDOW *win)

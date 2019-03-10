@@ -14,6 +14,7 @@ outopts
     void idcok(WINDOW *win, bool bf);
     void immedok(WINDOW *win, bool bf);
     int leaveok(WINDOW *win, bool bf);
+    bool is_leaveok(WINDOW *win);
     int setscrreg(int top, int bot);
     int wsetscrreg(WINDOW *win, int top, int bot);
     int scrollok(WINDOW *win, bool bf);
@@ -35,7 +36,8 @@ outopts
    left wherever the update happens to leave it.  It's useful
    for applications where the cursor is not used, since it reduces
    the need for cursor motions.  If possible, the cursor is made
-   invisible when this option is enabled.
+   invisible when this option is enabled. is_leaveok() function
+   returns this setting.
 
    wsetscrreg() sets a scrolling region in a window; "top" and
    "bot" are the line numbers for the top and bottom margins. If
@@ -61,6 +63,7 @@ outopts
     idcok                       Y       -      4.0
     immedok                     Y       -      4.0
     leaveok                     Y       Y       Y
+    is_leaveok                  -       Y       -
     setscrreg                   Y       Y       Y
     wsetscrreg                  Y       Y       Y
     scrollok                    Y       Y       Y
@@ -112,6 +115,16 @@ int leaveok(WINDOW *win, bool bf)
     curs_set(!bf);
 
     return OK;
+}
+
+bool is_leaveok(WINDOW *win)
+{
+    PDC_LOG(("is_leaveok() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_leaveit;
 }
 
 int setscrreg(int top, int bottom)

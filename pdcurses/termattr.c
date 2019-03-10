@@ -18,6 +18,7 @@ termattr
     chtype termattrs(void);
     attr_t term_attrs(void);
     char *termname(void);
+    char *fullname(char *termbuff, char *name);
 
     int erasewchar(wchar_t *ch);
     int killwchar(wchar_t *ch);
@@ -45,6 +46,9 @@ termattr
 
    termname() returns a pointer to a static area containing a
    short description of the current terminal (14 characters).
+
+   fullname() takes a termcap entry and copies the full name of
+   the terminal from the entry into the target variable name.
 
    termattrs() returns a logical OR of all video attributes
    supported by the terminal.
@@ -134,6 +138,15 @@ char *termname(void)
     static char _termname[14] = "pdcurses";
 
     PDC_LOG(("termname() - called\n"));
+
+    return _termname;
+}
+
+char *fullname(char *termbuf, char *name)
+{
+    static char _termname[14] = "pdcurses";
+
+    PDC_LOG(("fullname() - called\n"));
 
     return _termname;
 }

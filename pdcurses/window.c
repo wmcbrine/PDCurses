@@ -19,6 +19,7 @@ window
     int mvwin(WINDOW *win, int y, int x);
     int mvderwin(WINDOW *win, int pary, int parx);
     int syncok(WINDOW *win, bool bf);
+    int flushok(WINDOW *win, bool bf);
     void wsyncup(WINDOW *win);
     void wcursyncup(WINDOW *win);
     void wsyncdown(WINDOW *win);
@@ -70,7 +71,8 @@ window
 
    If wsyncok() is called with a second argument of TRUE, this
    causes a wsyncup() to be called every time the window is
-   changed.
+   changed. If flush() is called, it causes a wrefresh() to be
+   called every time the window is changed.
 
    wcursyncup() causes the current cursor position of all of a
    window's ancestors to reflect the current cursor position of the
@@ -124,6 +126,7 @@ window
     dupwin                      Y       -      4.0
     wsyncup                     Y       -      4.0
     syncok                      Y       -      4.0
+    flushok                     _       Y       -
     wcursyncup                  Y       -      4.0
     wsyncdown                   Y       -      4.0
     resize_window               -       -       -
@@ -553,6 +556,18 @@ int syncok(WINDOW *win, bool bf)
         return ERR;
 
     win->_sync = bf;
+
+    return OK;
+}
+
+int flushok(WINDOW *win, bool bf)
+{
+    PDC_LOG(("flushok() - called\n"));
+
+    if (!win)
+        return ERR;
+
+    win->_immed = bf;
 
     return OK;
 }

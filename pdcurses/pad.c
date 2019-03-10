@@ -18,6 +18,7 @@ pad
                      int sy2, int sx2);
     int pechochar(WINDOW *pad, chtype ch);
     int pecho_wchar(WINDOW *pad, const cchar_t *wch);
+    int is_pad(WINDOW *pad);
 
 ### Description
 
@@ -32,7 +33,8 @@ pad
    to specify the part of the pad to be displayed, and the location
    to use on the screen.
 
-   newpad() creates a new pad data structure.
+   newpad() creates a new pad data structure. is_pad() returns TRUE
+   if a pad structure was created with a newpad() call.
 
    subpad() creates a new sub-pad within a pad, at position (begy,
    begx), with dimensions of nlines lines and ncols columns. This
@@ -61,6 +63,7 @@ pad
 ### Portability
                              X/Open    BSD    SYS V
     newpad                      Y       -       Y
+    is_pad                      -       Y       -
     subpad                      Y       -       Y
     prefresh                    Y       -       Y
     pnoutrefresh                Y       -       Y
@@ -104,6 +107,16 @@ WINDOW *newpad(int nlines, int ncols)
     save_smaxcol = min(COLS, ncols) - 1;
 
     return win;
+}
+
+bool is_pad(WINDOW *pad)
+{
+    PDC_LOG(("is_pad() - called\n"));
+
+    if (!pad)
+        return FALSE;
+
+    return (pad->_flags & _PAD)? TRUE: FALSE;
 }
 
 WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begy, int begx)

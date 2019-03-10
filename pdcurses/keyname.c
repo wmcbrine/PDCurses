@@ -121,6 +121,20 @@ bool has_key(int key)
     return (key >= KEY_MIN && key <= KEY_MAX);
 }
 
+int define_key(char *key_name, int key)
+{
+    PDC_LOG(("define_key() - called: key_name=%s key=%d\n", key_name, key));
+
+    return ERR;
+}
+
+int keyok(int key, bool flag)
+{
+    PDC_LOG(("keyok() - called: key=%d flag=%d\n", key, flag));
+
+    return ERR;
+}
+
 #ifdef PDC_WIDE
 char *key_name(wchar_t c)
 {

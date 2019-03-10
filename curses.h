@@ -384,6 +384,7 @@ PDCEX  MOUSE_STATUS Mouse_status;
 PDCEX  int          COLORS;
 PDCEX  int          COLOR_PAIRS;
 PDCEX  int          TABSIZE;
+PDCEX  int          ESCDELAY;
 PDCEX  chtype       acs_map[];    /* alternate character set map */
 PDCEX  char         ttytype[];    /* terminal name/description */
 
@@ -944,8 +945,12 @@ PDCEX  int     insstr(const char *);
 PDCEX  int     instr(char *);
 PDCEX  int     intrflush(WINDOW *, bool);
 PDCEX  bool    isendwin(void);
+PDCEX  int     touchoverlap(WINDOW *, WINDOW *);
 PDCEX  bool    is_linetouched(WINDOW *, int);
 PDCEX  bool    is_wintouched(WINDOW *);
+PDCEX  bool    is_keypad(WINDOW *);
+PDCEX  bool    is_leaveok(WINDOW *);
+PDCEX  bool    is_pad(WINDOW *);
 PDCEX  char   *keyname(int);
 PDCEX  int     keypad(WINDOW *, bool);
 PDCEX  char    killchar(void);
@@ -1038,6 +1043,7 @@ PDCEX  int     scrl(int);
 PDCEX  int     scroll(WINDOW *);
 PDCEX  int     scrollok(WINDOW *, bool);
 PDCEX  SCREEN *set_term(SCREEN *);
+PDCEX  int     set_escdelay(int);
 PDCEX  int     setscrreg(int, int);
 PDCEX  int     slk_attroff(const chtype);
 PDCEX  int     slk_attr_off(const attr_t, void *);
@@ -1060,6 +1066,7 @@ PDCEX  int     start_color(void);
 PDCEX  WINDOW *subpad(WINDOW *, int, int, int, int);
 PDCEX  WINDOW *subwin(WINDOW *, int, int, int, int);
 PDCEX  int     syncok(WINDOW *, bool);
+PDCEX  int     flushok(WINDOW *, bool);
 PDCEX  chtype  termattrs(void);
 PDCEX  attr_t  term_attrs(void);
 PDCEX  char   *termname(void);
@@ -1069,6 +1076,8 @@ PDCEX  int     touchwin(WINDOW *);
 PDCEX  int     typeahead(int);
 PDCEX  int     untouchwin(WINDOW *);
 PDCEX  void    use_env(bool);
+PDCEX  int     underscore(void);
+PDCEX  int     underend(void);
 PDCEX  int     vidattr(chtype);
 PDCEX  int     vid_attr(attr_t, short, void *);
 PDCEX  int     vidputs(chtype, int (*)(int));
@@ -1132,6 +1141,8 @@ PDCEX  void    wsyncdown(WINDOW *);
 PDCEX  void    wsyncup(WINDOW *);
 PDCEX  void    wtimeout(WINDOW *, int);
 PDCEX  int     wtouchln(WINDOW *, int, int, int);
+PDCEX  int     wunderend(WINDOW *);
+PDCEX  int     wunderscore(WINDOW *);
 PDCEX  int     wvline(WINDOW *, chtype, int);
 
 /* Wide-character functions */
@@ -1266,6 +1277,12 @@ PDCEX  int     request_mouse_pos(void);
 PDCEX  void    wmouse_position(WINDOW *, int *, int *);
 PDCEX  mmask_t getmouse(void);
 
+/* BSD */
+
+PDCEX  char    *fullname(char *, char *);
+PDCEX  int     keyok(int, bool);
+PDCEX  int     define_key(char *, int);
+
 /* ncurses */
 
 PDCEX  int     assume_default_colors(int, int);
@@ -1344,6 +1361,12 @@ PDCEX  int     sb_refresh(void);
 
 #define COLOR_PAIR(n)      (((chtype)(n) << PDC_COLOR_SHIFT) & A_COLOR)
 #define PAIR_NUMBER(n)     (((n) & A_COLOR) >> PDC_COLOR_SHIFT)
+
+/* BSD */
+
+#define resizeterm(r, c)   resize_term(r, c)
+#define is_term_resized()  is_termresized()
+#define gettmode()         resettty()
 
 /* These will _only_ work as macros */
 

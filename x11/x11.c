@@ -482,6 +482,12 @@ static XIM Xim = NULL;
 static XIC Xic = NULL;
 #endif
 
+/* TODO : For mouse motion reporting (with no buttons down),
+we'll need to add
+    "<MotionNotify>: XCursesButton() \n"
+to the following.  Plus quite a bit of code to evade the fact that
+all motion events in Linux are given with button 0. */
+
 static const char *default_translations =
 {
     "<Key>: XCursesKeyPress() \n" \

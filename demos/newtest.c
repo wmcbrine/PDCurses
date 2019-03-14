@@ -29,7 +29,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <locale.h>
-#include <stdbool.h>
 
 int PDC_write_screen_to_file( const char *filename, WINDOW *win);
 
@@ -155,7 +154,7 @@ int main( int argc, char **argv)
 #endif
 {
     int quit = 0, i,  use_slk = 1;
-    bool show_mouse_moves = false;
+    bool show_mouse_moves = FALSE;
 #ifdef PDCURSES
     bool blink_state = FALSE;
     int fmt = 0xa;
@@ -234,7 +233,7 @@ int main( int argc, char **argv)
                     break;
 #endif
                 case 'm':
-                    show_mouse_moves = true;
+                    show_mouse_moves = TRUE;
                     break;
                 default:
                     printf( "Option '%s' unrecognized\n", argv[i]);

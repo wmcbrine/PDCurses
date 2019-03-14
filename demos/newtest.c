@@ -166,7 +166,7 @@ int main( int argc, char **argv)
     int cursor_y = 19, cursor_x = 51;
     int show_slk_index_line = 0;
     int redraw = 1;
-    unsigned extra_character_to_show = 0;
+    const char *extra_characters_to_show = "";
 #ifdef HAVE_WIDE
     unsigned unicode_offset = 0x80;
 #endif
@@ -186,7 +186,7 @@ int main( int argc, char **argv)
                     setlocale( LC_ALL, argv[i] + 2);
                     break;
                 case 'e':
-                    sscanf( argv[i] + 2, "%x", &extra_character_to_show);
+                    extra_characters_to_show = argv[i] + 2;
                     break;
                 case 'f':
                     sscanf( argv[i] + 2, "%x", (unsigned *)&fmt);
@@ -412,9 +412,21 @@ int main( int argc, char **argv)
 #endif         /* #if(CHTYPE_LONG >= 2) */
             redraw = 0;
             attrset( COLOR_PAIR( 1));
-            if( extra_character_to_show && ymax > 23)
-                mvaddch( 23, 63, (chtype)extra_character_to_show);
+            if( *extra_characters_to_show && ymax > 23)
+            {
+                unsigned long ival;
+                int bytes_read;
+                const char *tptr = extra_characters_to_show;
 
+                move( 23, 63);
+                while( sscanf( tptr, "%lx%n", &ival, &bytes_read) > 0)
+                {
+                    addch( (chtype)ival);
+                    tptr += bytes_read;
+                    if( *tptr)
+                        tptr++;
+                }
+            }
 #ifdef HAVE_WIDE
             for( i = 0; i < 6; i++)
             {

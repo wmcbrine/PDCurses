@@ -1,6 +1,6 @@
 /* Public Domain Curses */
 
-#ifdef PDC_WIDE
+#if defined( PDC_WIDE) && !defined( UNICODE)
 # define UNICODE
 #endif
 

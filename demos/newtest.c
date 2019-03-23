@@ -311,8 +311,10 @@ int main( int argc, char **argv)
             mvaddstr( 6, 40, "Blinking");
             attron( A_BOLD);
             mvaddstr( 8, 40, "BlinkBold");
+#ifdef A_ITALIC
             attron( A_ITALIC);
             mvaddstr( 0, COL2, "BlinkBoldItalic");
+#endif
             attrset( COLOR_PAIR( 3));
             attron( A_UNDERLINE);
 #ifdef HAVE_WIDE
@@ -320,8 +322,10 @@ int main( int argc, char **argv)
             addwstr( L"WideUnder");
 #endif
             attrset( COLOR_PAIR( 1));
+#ifdef A_ITALIC
             attron( A_UNDERLINE | A_ITALIC);
             mvaddstr( 2, COL2, "UnderlinedItalic");
+#endif
             attrset( COLOR_PAIR( 2));
             attron( A_BLINK);
             mvaddstr( 4, COL1, "Black-on-yellow blinking");
@@ -385,7 +389,7 @@ int main( int argc, char **argv)
                 const char *output_text[3] = {
                     "Red on green to white on black   | (you can get full RGB colors when desired,",
                     "Blue on yellow to black on red | with palette coloring still being available)",
-                    "White on red to green on blue,  underlined and italic" };
+                    "White on red to green on blue,  underlined (if available)" };
                 const int len = (int)strlen( output_text[i]);
 
                 move( line, 1);
@@ -403,7 +407,7 @@ int main( int argc, char **argv)
                     {
                         output_color = A_RGB( reverse, 31, reverse,
                                reverse, 0, oval);
-                        output_color |= A_UNDERLINE | A_ITALIC;
+                        output_color |= A_UNDERLINE;
                     }
                     attrset( output_color);
                     addch( output_text[i][j]);
@@ -456,7 +460,7 @@ int main( int argc, char **argv)
                 mvaddwstr( 15 + i / 2, 2 + 20 * (i % 2), texts[i]);
             }
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
-             mvaddch( line - 1, 58, (chtype)0x1d11e);
+             mvaddch( line - 1, 60, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
             line += 2;
 #endif

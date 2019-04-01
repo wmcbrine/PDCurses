@@ -5,11 +5,11 @@ BEGIN {
 }
 {
   if (inman) {
-    if ($0 ~ /\*\*man-end/) {
+    if ($0 ~ /^\*\*man-end/) {
       inman=0;
       print bar;
     } else
       print;
-  } else if ($0 ~ /\/\*man-start\*/)
+  } else if ($0 ~ /^\/\*man-start\*/)
     inman=1;
 }

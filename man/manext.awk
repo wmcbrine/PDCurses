@@ -5,13 +5,11 @@ BEGIN {
 }
 {
   if (inman) {
-     if ($0 ~ /\*\*man-end/) {
-       inman=0;
-       print bar;
-     } else
-       print;
-  } else {
-    if ($0 ~ /\/\*man-start\*/)
-      inman=1;
-  }
+    if ($0 ~ /\*\*man-end/) {
+      inman=0;
+      print bar;
+    } else
+      print;
+  } else if ($0 ~ /\/\*man-start\*/)
+    inman=1;
 }

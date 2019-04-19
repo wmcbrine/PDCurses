@@ -447,24 +447,18 @@ int PDC_get_key(void)
         switch (event.window.event)
         {
         case SDL_WINDOWEVENT_SIZE_CHANGED:
-        case SDL_WINDOWEVENT_RESIZED:
-            if (pdc_own_window &&
-               (event.window.data2 / pdc_fheight != LINES ||
-                event.window.data1 / pdc_fwidth != COLS))
+            pdc_sheight = event.window.data2;
+            pdc_swidth = event.window.data1;
+
+            pdc_screen = SDL_GetWindowSurface(pdc_window);
+            touchwin(curscr);
+            wrefresh(curscr);
+
+            if (!SP->resized)
             {
-                pdc_sheight = event.window.data2;
-                pdc_swidth = event.window.data1;
-
-                pdc_screen = SDL_GetWindowSurface(pdc_window);
-                touchwin(curscr);
-                wrefresh(curscr);
-
-                if (!SP->resized)
-                {
-                    SP->resized = TRUE;
-                    SP->key_code = TRUE;
-                    return KEY_RESIZE;
-                }
+                SP->resized = TRUE;
+                SP->key_code = TRUE;
+                return KEY_RESIZE;
             }
             break;
         case SDL_WINDOWEVENT_RESTORED:

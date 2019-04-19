@@ -331,24 +331,20 @@ int PDC_scr_open(int argc, char **argv)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
-#if SDL_VERSION_ATLEAST(2, 0, 5)
-    SDL_Rect max;
-    int top, left, bottom, right;
-#endif
-
     if (!pdc_own_window)
         return ERR;
-
-#if SDL_VERSION_ATLEAST(2, 0, 5)
-    SDL_GetDisplayUsableBounds(0, &max);
-    SDL_GetWindowBordersSize(pdc_window, &top, &left, &bottom, &right);
-    max.h -= top + bottom;
-    max.w -= left + right;
-#endif
 
     if (nlines && ncols)
     {
 #if SDL_VERSION_ATLEAST(2, 0, 5)
+        SDL_Rect max;
+        int top, left, bottom, right;
+
+        SDL_GetDisplayUsableBounds(0, &max);
+        SDL_GetWindowBordersSize(pdc_window, &top, &left, &bottom, &right);
+        max.h -= top + bottom;
+        max.w -= left + right;
+
         while (nlines * pdc_fheight > max.h)
             nlines--;
         while (ncols * pdc_fwidth > max.w)
@@ -356,10 +352,10 @@ int PDC_resize_screen(int nlines, int ncols)
 #endif
         pdc_sheight = nlines * pdc_fheight;
         pdc_swidth = ncols * pdc_fwidth;
-    }
 
-    SDL_SetWindowSize(pdc_window, pdc_swidth, pdc_sheight);
-    pdc_screen = SDL_GetWindowSurface(pdc_window);
+        SDL_SetWindowSize(pdc_window, pdc_swidth, pdc_sheight);
+        pdc_screen = SDL_GetWindowSurface(pdc_window);
+    }
 
     if (pdc_tileback)
         PDC_retile();

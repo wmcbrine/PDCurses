@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3802
+#define PDC_BUILD    3803
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -1274,6 +1274,7 @@ PDCEX  bool    has_key(int);
 PDCEX  int     use_default_colors(void);
 PDCEX  int     wresize(WINDOW *, int, int);
 
+PDCEX  bool    has_mouse(void);
 PDCEX  int     mouseinterval(int);
 PDCEX  mmask_t mousemask(mmask_t, mmask_t *);
 PDCEX  bool    mouse_trafo(int *, int *, bool);

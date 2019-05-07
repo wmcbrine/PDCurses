@@ -453,18 +453,28 @@ void PDC_flushinp(void)
     setdosmemword(0x41a, getdosmemword(0x41c));
 }
 
-int PDC_mouse_set(void)
+bool PDC_has_mouse(void)
 {
     PDCREGS regs;
-    unsigned long mbe = SP->_trap_mbe;
 
-    if (mbe && !mouse_avail)
+    if (!mouse_avail)
     {
         regs.W.ax = 0;
         PDCINT(0x33, regs);
 
         mouse_avail = !!(regs.W.ax);
     }
+
+    return mouse_avail;
+}
+
+int PDC_mouse_set(void)
+{
+    PDCREGS regs;
+    unsigned long mbe = SP->_trap_mbe;
+
+    if (mbe && !mouse_avail)
+        mouse_avail = PDC_has_mouse();
 
     if (mbe)
     {

@@ -1,6 +1,7 @@
 PDCurses Implementor's Guide
 ============================
 
+- Version 1.5 - 2019/05/?? - PDC_has_mouse()
 - Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
                              style; markdown
@@ -145,6 +146,13 @@ if no other keys were pressed in the meantime; i.e., the return should
 happen on key up. But if this is not possible, it may return the
 modifier keys on key down (if and only if SP->return_key_modifiers is
 TRUE).
+
+### bool PDC_has_mouse(void);
+
+Called from has_mouse(). Reports whether mouse support is available. Can
+be a static TRUE or FALSE, or dependent on conditions. Note: Activating
+mouse support should depend only on PDC_mouse_set(); don't expect the
+user to call has_mouse() first.
 
 ### int PDC_modifiers_set(void);
 

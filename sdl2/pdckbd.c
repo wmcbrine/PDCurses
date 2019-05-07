@@ -498,6 +498,11 @@ void PDC_flushinp(void)
         PDC_get_key();
 }
 
+bool PDC_has_mouse(void)
+{
+    return TRUE;
+}
+
 int PDC_mouse_set(void)
 {
     SDL_ShowCursor(SP->_trap_mbe ? SDL_ENABLE : SDL_DISABLE);

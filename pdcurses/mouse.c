@@ -23,6 +23,7 @@ mouse
     mmask_t mousemask(mmask_t mask, mmask_t *oldmask);
     int nc_getmouse(MEVENT *event);
     int ungetmouse(MEVENT *event);
+    bool has_mouse(void);
 
 ### Description
 
@@ -60,13 +61,12 @@ mouse
    getmouse() returns the current status of the trapped mouse
    buttons as set by mouse_set() or mouse_on().
 
-   The ncurses interface: mouseinterval(), wenclose(),
-   wmouse_trafo(), mouse_trafo(), mousemask(), nc_getmouse(), and
-   ungetmouse(). A typical application using this interface would
-   start by calling mousemask() with a non-zero value, often
-   ALL_MOUSE_EVENTS. Then it would check for a KEY_MOUSE return
-   from getch(). If found, it would call nc_getmouse() to get the
-   current mouse status.
+   The ncurses interface: mouseinterval(), wenclose(), wmouse_trafo(),
+   mouse_trafo(), mousemask(), nc_getmouse(), ungetmouse() and
+   has_mouse(). A typical application using this interface would start
+   by calling mousemask() with a non-zero value, often ALL_MOUSE_EVENTS.
+   Then it would check for a KEY_MOUSE return from getch(). If found, it
+   would call nc_getmouse() to get the current mouse status.
 
    mouseinterval() sets the timeout for a mouse click. On all
    current platforms, PDCurses receives mouse button press and
@@ -119,6 +119,9 @@ mouse
    be pushed back, and it can overwrite or be overwritten by real
    mouse events.
 
+   has_mouse() reports whether the mouse is available at all on the
+   current platform.
+
 ### Portability
                              X/Open    BSD    SYS V
     mouse_set                   -       -      4.0
@@ -134,6 +137,7 @@ mouse
     mousemask                   -       -       -
     nc_getmouse                 -       -       -
     ungetmouse                  -       -       -
+    has_mouse                   -       -       -
 
 **man-end****************************************************************/
 
@@ -397,4 +401,9 @@ int ungetmouse(MEVENT *event)
         pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_DOWN;
 
     return ungetch(KEY_MOUSE);
+}
+
+bool has_mouse(void)
+{
+    return PDC_has_mouse();
 }

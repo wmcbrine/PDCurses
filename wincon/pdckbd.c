@@ -764,6 +764,11 @@ void PDC_flushinp(void)
     FlushConsoleInputBuffer(pdc_con_in);
 }
 
+bool PDC_has_mouse( void)
+{
+    return TRUE;
+}
+
 int PDC_mouse_set(void)
 {
     /* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear

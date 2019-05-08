@@ -377,6 +377,11 @@ int PDC_modifiers_set( void)
    return( OK);
 }
 
+bool PDC_has_mouse( void)
+{
+    return TRUE;
+}
+
 /* Xterm defaults to reporting no mouse events.  If you request mouse movement
 events even with no button pressed,  state 1003 is set ("report everything").
 If you don't request such movements,  but _do_ want to know about movements

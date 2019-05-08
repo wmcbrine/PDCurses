@@ -146,6 +146,13 @@ happen on key up. But if this is not possible, it may return the
 modifier keys on key down (if and only if SP->return_key_modifiers is
 TRUE).
 
+### bool PDC_has_mouse(void);
+
+Called from has_mouse(). Reports whether mouse support is available. Can
+be a static TRUE or FALSE, or dependent on conditions. Note: Activating
+mouse support should depend only on PDC_mouse_set(); don't expect the
+user to call has_mouse() first.
+
 ### int PDC_modifiers_set(void);
 
 Called from PDC_return_key_modifiers(). If your platform needs to do

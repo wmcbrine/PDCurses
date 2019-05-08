@@ -477,6 +477,17 @@ void PDC_flushinp(void)
 #endif
 }
 
+bool PDC_has_mouse(void)
+{
+    if (!mouse_handle)
+    {
+        memset(&old_mouse_status, 0, sizeof(MOUSE_STATUS));
+        MouOpen(NULL, &mouse_handle);
+    }
+
+    return !!mouse_handle;
+}
+
 int PDC_mouse_set(void)
 {
 #ifndef EMXVIDEO
@@ -485,9 +496,7 @@ int PDC_mouse_set(void)
 
     if (mbe && !mouse_handle)
     {
-        memset(&old_mouse_status, 0, sizeof(MOUSE_STATUS));
-        MouOpen(NULL, &mouse_handle);
-        if (mouse_handle)
+        if (PDC_has_mouse())
             MouDrawPtr(mouse_handle);
     }
     else if (!mbe && mouse_handle)

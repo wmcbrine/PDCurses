@@ -42,7 +42,7 @@ PDCurses portable platform definitions list:
 /*----------------------------------------------------------------------*/
 
 #ifdef NO_STDINT_H
-   #define uint64_t unsigned long long
+   #define uint64_t unsigned __int64
    #define uint32_t unsigned long
    #define uint16_t unsigned short
 #else
@@ -116,11 +116,11 @@ typedef chtype attr_t;
 /* Don't forget to update 'version.mif' if MAJOR/MINOR changes! */
 
 #define PDC_VER_MAJOR    4
-#define PDC_VER_MINOR    0
-#define PDC_VER_CHANGE   4
+#define PDC_VER_MINOR    1
+#define PDC_VER_CHANGE   0
 #define PDC_VER_YEAR   2019
-#define PDC_VER_MONTH    1
-#define PDC_VER_DAY     20
+#define PDC_VER_MONTH    5
+#define PDC_VER_DAY      8
 
 #define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
 
@@ -1725,6 +1725,7 @@ PDCEX  bool    has_key(int);
 PDCEX  int     use_default_colors(void);
 PDCEX  int     wresize(WINDOW *, int, int);
 
+PDCEX  bool    has_mouse(void);
 PDCEX  int     mouseinterval(int);
 PDCEX  mmask_t mousemask(mmask_t, mmask_t *);
 PDCEX  bool    mouse_trafo(int *, int *, bool);

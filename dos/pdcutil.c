@@ -85,11 +85,15 @@ void PDC_napms(int ms)
 
        The approximation 67 / 3680 can be obtained by considering the
        convergents (mathworld.wolfram.com/Convergent.html) of MAX_TICK /
-       MS_PER_DAY 's continued fraction representation.  */
+       MS_PER_DAY 's continued fraction representation.  In theory,  this
+       should be used in every case;  but in the (I think) impossible
+       case where x * 67 could overflow,  we could use the fact that
+       MAX_TICK / MS_PER_DAY = 1/64 + 1/432 + 1/3750, exactly.  */
+
 #if MS_PER_DAY / 2 <= ULONG_MAX / 67ul
 # define MS_TO_TICKS(x)	((x) * 67ul / 3680ul)
 #else
-# error "unpossible!"
+# define MS_TO_TICKS(x) ((x) / 64 + (x) / 432 + (x) / 3750)
 #endif
     goal = MS_TO_TICKS(ms);
 

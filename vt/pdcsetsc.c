@@ -63,9 +63,10 @@ int PDC_curs_set( int visibility)
 
 void PDC_show_changes( const short pair, const short idx, const chtype attr);
 
+int PDC_really_blinking;
+
 int PDC_set_blink(bool blinkon)
 {
-    extern int PDC_really_blinking;
 
     if( PDC_really_blinking != blinkon)
     {

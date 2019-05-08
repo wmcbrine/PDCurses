@@ -67,7 +67,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     sr.Right = x + len - 1;
 
     for (src = dst = 0; src < len; src++)
-        if( (srcp[src] & A_CHARTEXT) != DUMMY_CHAR_NEXT_TO_FULLWIDTH)
+//      if( (srcp[src] & A_CHARTEXT) != DUMMY_CHAR_NEXT_TO_FULLWIDTH)
         {
             const chtype ch = srcp[src];
             chtype char_out = ch & A_CHARTEXT;
@@ -80,7 +80,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 #endif
 
 #ifdef CHTYPE_LONG
-            if (ch & A_ALTCHARSET && !(ch & 0xff80))
+            if( char_out == DUMMY_CHAR_NEXT_TO_FULLWIDTH)
+                char_out = ' ';
+            else if (ch & A_ALTCHARSET && !(ch & 0xff80))
                 char_out = acs_map[ch & 0x7f];
 
 #ifdef USING_COMBINING_CHARACTER_SCHEME

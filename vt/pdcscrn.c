@@ -137,8 +137,10 @@ void PDC_scr_close( void)
    printf( "\0338");         /* restore cursor & attribs (VT100) */
    printf( "\033[m");         /* set default screen attributes */
    printf( "\033[?47l");      /* restore screen */
+   PDC_curs_set( 2);          /* blinking block cursor */
    PDC_gotoyx( PDC_cols - 1, 0);
-   printf( "\033[?1000l");        /* turn off mouse events */
+   SP->_trap_mbe = 0;
+   PDC_mouse_set( );          /* clear any mouse event captures */
 #ifdef _WIN32
    set_win10_for_vt_codes( FALSE);
 #else
@@ -298,9 +300,6 @@ int PDC_scr_open(int argc, char **argv)
     tcsetattr( STDIN, TCSANOW, &term);
 #endif
     printf( "\033[?47h");      /* Save screen */
-    if( !PDC_is_ansi)
-        printf( "\033[?1000h");  /* enable mouse events,  at least on xterm */
-               /* NOTE: could send 1003h to get mouse motion events as well */
     printf( "\0337");         /* save cursor & attribs (VT100) */
     PDC_resize_occurred = FALSE;
     PDC_LOG(("PDC_scr_open exit\n"));

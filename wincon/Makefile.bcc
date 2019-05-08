@@ -1,6 +1,7 @@
 # Borland MAKE Makefile for PDCurses library - Windows console BC++ 7.0+
 #
-# Usage: make -f [path\]Makefile.bcc [DEBUG=] [WIDE=] [UTF8=] [target]
+# Usage: make -f [path\]Makefile.bcc [DEBUG=] [WIDE=] [UTF8=]
+#        [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -18,12 +19,24 @@ PDCURSES_SRCDIR = ..
 
 osdir		= $(PDCURSES_SRCDIR)\wincon
 
+!ifdef OLD_BCC
+CC		= bcc32 -q -DNO_STDINT_H
+!else
 CC		= bcc32c -q -Xdriver -Wno-deprecated-declarations
+!endif
 
 !ifdef DEBUG
 CFLAGS		= -N -v -y -DPDCDEBUG
 !else
-CFLAGS		= -O
+CFLAGS		= -O -DCHTYPE_32
+!endif
+
+!ifdef CHTYPE_32
+CFLAGS = $(CFLAGS) -DCHTYPE_32
+!endif
+
+!ifdef CHTYPE_16
+CFLAGS = $(CFLAGS) -DCHTYPE_16
 !endif
 
 !ifdef WIDE
@@ -34,8 +47,18 @@ WIDEOPT		= -DPDC_WIDE
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
+!ifdef INFOEX
+INFOPT          = -DHAVE_NO_INFOEX
+!endif
+
+!ifdef OLD_BCC
+BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe $(CFLAGS) \
+-w32 -w-par \
+$(WIDEOPT) $(UTF8OPT) $(INFOPT)
+!else
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe $(CFLAGS) \
 $(WIDEOPT) $(UTF8OPT)
+!endif
 
 LIBEXE		= tlib /C /E /0 /a
 

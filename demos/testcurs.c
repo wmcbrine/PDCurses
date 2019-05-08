@@ -544,6 +544,7 @@ void inputTest(WINDOW *win)
                   BUTTON3_RESERVED_EVENT, BUTTON4_RESERVED_EVENT };
 #endif
             MEVENT mouse_event;
+            bool mouse_msg_shown = FALSE;
 
             getmouse( &mouse_event);
             wmove(win, line_to_use, 5);
@@ -556,7 +557,10 @@ void inputTest(WINDOW *win)
                             "double-clicked", "triple-clicked" };
 
                      wprintw( win, " Button %d %s", i / 5 + 1, event_names[i % 5]);
+                     mouse_msg_shown = TRUE;
                 }
+            if( !mouse_msg_shown)
+               wprintw( win, " (%lx)", mouse_event.bstate);
 #ifdef BUTTON_CTRL
             if( mouse_event.bstate & BUTTON_CTRL)
                   wprintw( win, " Ctrl");
@@ -602,6 +606,8 @@ void inputTest(WINDOW *win)
 
             if (MOUSE_MOVED)
                 waddstr(win, "moved: ");
+            else if (MOUSE_POS_REPORT)
+                waddstr(win, "Posn report: ");
             else if (MOUSE_WHEEL_UP)
                 waddstr(win, "wheel up: ");
             else if (MOUSE_WHEEL_DOWN)

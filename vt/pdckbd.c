@@ -377,8 +377,43 @@ int PDC_modifiers_set( void)
    return( OK);
 }
 
+/* Xterm defaults to reporting no mouse events.  If you request mouse movement
+events even with no button pressed,  state 1003 is set ("report everything").
+If you don't request such movements,  but _do_ want to know about movements
+with one of the first three buttons down,  state 1002 is set.  If you just
+want certain mouse events (clicks and doubleclicks,  say),  state 1000 is
+set.  And if the mouse mask is zero ("don't tell me anything about the
+mouse"),  mouse events are shut off.
+
+At first,  this code just set state 1003.  Xterm reported bazillions of
+events (which were filtered out according to SP->_trap_mbe).  I don't think
+this really mattered much on my machine,  but I assume Xterm supports this
+sort of filtering at a higher level for a reason.  */
+
 int PDC_mouse_set( void)
 {
+   extern bool PDC_is_ansi;
+
+   if( !PDC_is_ansi)
+      {
+      static int curr_tracking_state = 0;
+      int tracking_state;
+
+      if( SP->_trap_mbe & REPORT_MOUSE_POSITION)
+         tracking_state = 1003;
+      else if( SP->_trap_mbe & (BUTTON1_MOVED | BUTTON2_MOVED | BUTTON3_MOVED))
+         tracking_state = 1002;
+      else
+         tracking_state = (SP->_trap_mbe ? 1000 : 0);
+      if( curr_tracking_state != tracking_state)
+         {
+         if( curr_tracking_state)
+            printf( "\033[?%dl", curr_tracking_state);
+         if( tracking_state)
+            printf( "\033[?%dh", tracking_state);
+         curr_tracking_state = tracking_state;
+         }
+      }
    return(  OK);
 }
 

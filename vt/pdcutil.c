@@ -4,7 +4,7 @@
 #else
    #include <unistd.h>
 #endif
-#include "curses.h"
+#include "curspriv.h"
 
 void PDC_beep(void)
 {

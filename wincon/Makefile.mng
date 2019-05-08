@@ -1,8 +1,9 @@
 # GNU MAKE Makefile for PDCurses library - Windows console MinGW GCC
 #
-# Usage: make -f [path\]Makefile.mng [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: make -f [path\]Makefile.mng [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [tgt]
 #
-# where target can be any of:
+# where tgt can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
 
 O = o
@@ -92,10 +93,6 @@ endif
 
 ifeq ($(INFOEX),N)
 	PDCCFLAGS += -DHAVE_NO_INFOEX
-else
-	ifeq ($(INFOEX),Y)
-		PDCCFLAGS += -DHAVE_INFOEX
-	endif
 endif
 
 LINK	   = $(PREFIX)gcc

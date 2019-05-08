@@ -1,6 +1,7 @@
 # Watcom WMAKE Makefile for PDCurses library - Windows console Watcom C/C++ 10.6+
 #
-# Usage: wmake -f [wincon\]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: wmake -f [wincon\]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -34,6 +35,10 @@ CFLAGS		+= /DPDC_WIDE
 
 !ifeq UTF8 Y
 CFLAGS		+= /DPDC_FORCE_UTF8
+!endif
+
+!ifeq INFOEX N
+CFLAGS		+= -DHAVE_NO_INFOEX
 !endif
 
 LIBEXE		= wlib /q /n /t

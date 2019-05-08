@@ -1,7 +1,7 @@
 # Visual C++ & Intel(R) NMakefile for PDCurses library - Windows console VC++ 2.0+
 #
-# Usage: nmake -f [path\]Makefile.vc [DEBUG=] [DLL=] [WIDE=] [UTF8=]
-#           [ICC=] [CHTYPE_32=] [IX86=] [CHTYPE_16=] [target]
+# Usage: nmake -f [path\]Makefile.vc [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
+#           [ICC=] [CHTYPE_32=] [IX86=] [CHTYPE_16=] [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -52,6 +52,10 @@ WIDEOPT      = -DPDC_WIDE
 
 !ifdef UTF8
 UTF8OPT      = -DPDC_FORCE_UTF8
+!endif
+
+!ifdef INFOEX
+INFOPT		= -DHAVE_NO_INFOEX
 !endif
 
 !ifdef CHTYPE_32

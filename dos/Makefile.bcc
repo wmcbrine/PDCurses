@@ -27,10 +27,23 @@ CFLAGS		= -N -v -y -DPDCDEBUG
 CFLAGS		= -O
 !endif
 
+!ifdef CHTYPE_32
+CFLAGS = $(CFLAGS) -DCHTYPE_32
+!endif
+
+!ifdef CHTYPE_16
+CFLAGS = $(CFLAGS) -DCHTYPE_16
+!endif
+
 CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 
-BUILD		= $(CC) -1- -K -G -rd -d -w-eff -w-par -c \
+!ifdef OLD_BCC
+BUILD		= $(CC) -DNO_STDINT_H -K -G -rd -d -w-eff -w-par -c \
+           $(CFLAGS) $(CPPFLAGS)
+!else
+BUILD		= $(CC)  -K -G -rd -d -w-eff -w-par -c \
 -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+!endif
 
 LIBEXE		= tlib /C /E
 

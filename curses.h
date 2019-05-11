@@ -1343,6 +1343,10 @@ PDCEX  int     sb_refresh(void);
 /* NetBSD */
 
 PDCEX  int     touchoverlap(const WINDOW *, WINDOW *);
+PDCEX  int     underend(void);
+PDCEX  int     underscore(void);
+PDCEX  int     wunderend(WINDOW *);
+PDCEX  int     wunderscore(WINDOW *);
 
 /*** Functions defined as macros ***/
 

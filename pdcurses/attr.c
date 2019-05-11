@@ -44,6 +44,11 @@ attr
 
     chtype getattrs(WINDOW *win);
 
+    int underend(void);
+    int wunderend(WINDOW *win);
+    int underscore(void);
+    int wunderscore(WINDOW *win);
+
 ### Description
 
    These functions manipulate the current attributes and/or colors of
@@ -83,6 +88,9 @@ attr
    change to the edge of the window. The changes take effect
    immediately. opts is unused.
 
+   wunderscore() turns on the A_UNDERLINE attribute; wunderend() turns
+   it off. underscore() and underend() are the stdscr versions.
+
 ### Return Value
 
    All functions return OK on success and ERR on error.
@@ -114,6 +122,10 @@ attr
     mvchgat                     Y
     mvwchgat                    Y
     getattrs                    -
+    underend                    -       Y       -
+    wunderend                   -       Y       -
+    underscore                  -       Y       -
+    wunderscore                 -       Y       -
 
 **man-end****************************************************************/
 
@@ -366,4 +378,32 @@ int mvwchgat(WINDOW *win, int y, int x, int n, attr_t attr, short color,
         return ERR;
 
     return wchgat(win, n, attr, color, opts);
+}
+
+int underend(void)
+{
+    PDC_LOG(("underend() - called\n"));
+
+    return wattroff(stdscr, A_UNDERLINE);
+}
+
+int wunderend(WINDOW *win)
+{
+    PDC_LOG(("wunderend() - called\n"));
+
+    return wattroff(win, A_UNDERLINE);
+}
+
+int underscore(void)
+{
+    PDC_LOG(("underscore() - called\n"));
+
+    return wattron(stdscr, A_UNDERLINE);
+}
+
+int wunderscore(WINDOW *win)
+{
+    PDC_LOG(("wunderscore() - called\n"));
+
+    return wattron(win, A_UNDERLINE);
 }

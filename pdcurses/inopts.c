@@ -32,6 +32,8 @@ inopts
     int crmode(void);
     int nocrmode(void);
 
+    bool is_keypad(const WINDOW *win);
+
 ### Description
 
    cbreak() and nocbreak() toggle cbreak mode. In cbreak mode,
@@ -87,9 +89,12 @@ inopts
    crmode() and nocrmode() are archaic equivalents to cbreak() and
    nocbreak(), respectively.
 
+   is_keypad() reports whether the specified window is in keypad mode.
+
 ### Return Value
 
-   All functions return OK on success and ERR on error.
+   All functions except is_keypad() and the void functions return OK on
+   success and ERR on error.
 
 ### Portability
                              X/Open    BSD    SYS V
@@ -114,6 +119,7 @@ inopts
     typeahead                   Y       -       Y
     crmode                      -
     nocrmode                    -
+    is_keypad                   -       Y       -
 
 **man-end****************************************************************/
 
@@ -321,4 +327,14 @@ int nocrmode(void)
     PDC_LOG(("nocrmode() - called\n"));
 
     return nocbreak();
+}
+
+bool is_keypad(const WINDOW *win)
+{
+    PDC_LOG(("is_keypad() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_use_keypad;
 }

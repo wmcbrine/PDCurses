@@ -20,6 +20,8 @@ outopts
 
     int raw_output(bool bf);
 
+    bool is_leaveok(const WINDOW *win);
+
 ### Description
 
    With clearok(), if bf is TRUE, the next call to wrefresh() with
@@ -50,9 +52,12 @@ outopts
    standard *add* and *ins* curses functions (that is, it disables
    translation of control characters).
 
+   is_leaveok() reports whether the specified window is in leaveok mode.
+
 ### Return Value
 
-   All functions return OK on success and ERR on error.
+   All functions except is_leaveok() return OK on success and ERR on
+   error.
 
 ### Portability
                              X/Open    BSD    SYS V
@@ -65,6 +70,7 @@ outopts
     wsetscrreg                  Y       Y       Y
     scrollok                    Y       Y       Y
     raw_output                  -       -       -
+    is_leaveok                  -       Y       -
 
 **man-end****************************************************************/
 
@@ -156,4 +162,14 @@ int raw_output(bool bf)
     SP->raw_out = bf;
 
     return OK;
+}
+
+bool is_leaveok(const WINDOW *win)
+{
+    PDC_LOG(("is_leaveok() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_leaveit;
 }

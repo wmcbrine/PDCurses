@@ -19,6 +19,8 @@ pad
     int pechochar(WINDOW *pad, chtype ch);
     int pecho_wchar(WINDOW *pad, const cchar_t *wch);
 
+    bool is_pad(const WINDOW *pad);
+
 ### Description
 
    A pad is a special kind of window, which is not restricted by
@@ -54,9 +56,11 @@ pad
    a call to prefresh(), with the last-used coordinates and
    dimensions. pecho_wchar() is the wide-character version.
 
+   is_pad() reports whether the specified window is a pad.
+
 ### Return Value
 
-   All functions return OK on success and ERR on error.
+   All functions except is_pad() return OK on success and ERR on error.
 
 ### Portability
                              X/Open    BSD    SYS V
@@ -66,6 +70,7 @@ pad
     pnoutrefresh                Y       -       Y
     pechochar                   Y       -      3.0
     pecho_wchar                 Y
+    is_pad                      -       Y       -
 
 **man-end****************************************************************/
 
@@ -262,3 +267,13 @@ int pecho_wchar(WINDOW *pad, const cchar_t *wch)
                     save_smincol, save_smaxrow, save_smaxcol);
 }
 #endif
+
+bool is_pad(const WINDOW *pad)
+{
+    PDC_LOG(("is_pad() - called\n"));
+
+    if (!pad)
+        return FALSE;
+
+    return (pad->_flags & _PAD) ? TRUE : FALSE;
+}

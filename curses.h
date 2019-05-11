@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3803
+#define PDC_BUILD    3804
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -1271,6 +1271,10 @@ PDCEX  mmask_t getmouse(void);
 PDCEX  int     assume_default_colors(int, int);
 PDCEX  const char *curses_version(void);
 PDCEX  bool    has_key(int);
+PDCEX  bool    is_keypad(const WINDOW *);
+PDCEX  bool    is_leaveok(const WINDOW *);
+PDCEX  bool    is_pad(const WINDOW *);
+PDCEX  int     set_tabsize(int);
 PDCEX  int     use_default_colors(void);
 PDCEX  int     wresize(WINDOW *, int, int);
 

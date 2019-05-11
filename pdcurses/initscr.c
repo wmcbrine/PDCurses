@@ -22,6 +22,8 @@ initscr
     const char *curses_version(void);
     void PDC_get_version(PDC_VERSION *ver);
 
+    int set_tabsize(int tabsize);
+
 ### Description
 
    initscr() should be the first curses routine called.  It will
@@ -76,6 +78,8 @@ initscr
    PDC_get_version() fills a PDC_VERSION structure provided by the user
    with more detailed version info (see curses.h).
 
+   set_tabsize() sets the tab interval, stored in TABSIZE.
+
 ### Return Value
 
    All functions return NULL on error, except endwin(), which always
@@ -92,6 +96,7 @@ initscr
     resize_term                 -       -       -
     is_termresized              -       -       -
     curses_version              -       -       -
+    set_tabsize                 -       Y       -
 
 **man-end****************************************************************/
 
@@ -378,4 +383,16 @@ void PDC_get_version(PDC_VERSION *ver)
     ver->minor = PDC_VER_MINOR;
     ver->csize = sizeof(chtype);
     ver->bsize = sizeof(bool);
+}
+
+int set_tabsize(int tabsize)
+{
+    PDC_LOG(("set_tabsize() - called: tabsize %d\n", tabsize));
+
+    if (tabsize < 1)
+        return ERR;
+
+    TABSIZE = tabsize;
+
+    return OK;
 }

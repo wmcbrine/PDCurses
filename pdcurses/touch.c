@@ -16,6 +16,8 @@ touch
     bool is_linetouched(WINDOW *win, int line);
     bool is_wintouched(WINDOW *win);
 
+    int touchoverlap(const WINDOW *win1, WINDOW *win2);
+
 ### Description
 
    touchwin() and touchline() throw away all information about
@@ -40,6 +42,9 @@ touch
    is_wintouched() returns TRUE if the specified window
    has been changed since the last call to wrefresh().
 
+   touchoverlap(win1, win2) marks the portion of win2 which overlaps
+   with win1 as modified.
+
 ### Return Value
 
    All functions return OK on success and ERR on error except
@@ -53,6 +58,7 @@ touch
     wtouchln                    Y       Y       Y
     is_linetouched              Y       -      4.0
     is_wintouched               Y       -      4.0
+    touchoverlap                -       Y       -
 
 **man-end****************************************************************/
 
@@ -160,4 +166,36 @@ bool is_wintouched(WINDOW *win)
                 return TRUE;
 
     return FALSE;
+}
+
+int touchoverlap(const WINDOW *win1, WINDOW *win2)
+{
+    int y, endy, endx, starty, startx;
+
+    PDC_LOG(("touchoverlap() - called: win1=%p win2=%p\n", win1, win2));
+
+    if (!win1 || !win2)
+        return ERR;
+
+    starty = max(win1->_begy, win2->_begy);
+    startx = max(win1->_begx, win2->_begx);
+    endy = min(win1->_maxy + win1->_begy, win2->_maxy + win2->_begy);
+    endx = min(win1->_maxx + win1->_begx, win2->_maxx + win2->_begx);
+
+    if (starty >= endy || startx >= endx)
+        return OK;
+
+    starty -= win2->_begy;
+    startx -= win2->_begx;
+    endy -= win2->_begy;
+    endx -= win2->_begx;
+    endx -= 1;
+
+    for (y = starty; y < endy; y++)
+    {
+        win2->_firstch[y] = startx;
+        win2->_lastch[y] = endx;
+    }
+
+    return OK;
 }

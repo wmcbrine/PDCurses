@@ -1340,6 +1340,10 @@ PDCEX  int     sb_get_vert(int *, int *, int *);
 PDCEX  int     sb_refresh(void);
 #endif
 
+/* NetBSD */
+
+PDCEX  int     touchoverlap(const WINDOW *, WINDOW *);
+
 /*** Functions defined as macros ***/
 
 /* getch() and ungetch() conflict with some DOS libraries */

@@ -19,13 +19,12 @@ debug
    information to the file "trace". Although not standard, similar
    functions are in some other curses implementations.
 
-   PDC_debug() is the function that writes to the file, based on
-   whether traceon() has been called. It's used from the PDC_LOG()
-   macro.
+   PDC_debug() is the function that writes to the file, based on whether
+   traceon() has been called. It's used from the PDC_LOG() macro.
 
-   The environment variable PDC_TRACE_FLUSH controls whether the
-   trace file contents are fflushed after each write.  The default
-   is not. Set it to enable this (may affect performance).
+   The environment variable PDC_TRACE_FLUSH controls whether the trace
+   file contents are fflushed after each write. The default is not. Set
+   it to enable this (may affect performance).
 
 ### Portability
                              X/Open    BSD    SYS V

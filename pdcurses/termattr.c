@@ -26,32 +26,32 @@ termattr
 
 ### Description
 
-   baudrate() is supposed to return the output speed of the
-   terminal. In PDCurses, it simply returns INT_MAX.
+   baudrate() is supposed to return the output speed of the terminal. In
+   PDCurses, it simply returns INT_MAX.
 
-   has_ic and has_il() return TRUE. These functions have meaning in
-   some other implementations of curses.
+   has_ic and has_il() return TRUE. These functions have meaning in some
+   other implementations of curses.
 
    erasechar() and killchar() return ^H and ^U, respectively -- the
-   ERASE and KILL characters. In other curses implementations,
-   these may vary by terminal type. erasewchar() and killwchar()
-   are the wide-character versions; they take a pointer to a
-   location in which to store the character, and return OK or ERR.
+   ERASE and KILL characters. In other curses implementations, these may
+   vary by terminal type. erasewchar() and killwchar() are the wide-
+   character versions; they take a pointer to a location in which to
+   store the character, and return OK or ERR.
 
-   longname() returns a pointer to a static area containing a
-   verbose description of the current terminal. The maximum length
-   of the string is 128 characters.  It is defined only after the
-   call to initscr() or newterm().
+   longname() returns a pointer to a static area containing a verbose
+   description of the current terminal. The maximum length of the string
+   is 128 characters. It is defined only after the call to initscr() or
+   newterm().
 
-   termname() returns a pointer to a static area containing a
-   short description of the current terminal (14 characters).
+   termname() returns a pointer to a static area containing a short
+   description of the current terminal (14 characters).
 
-   termattrs() returns a logical OR of all video attributes
-   supported by the terminal.
+   termattrs() returns a logical OR of all video attributes supported by
+   the terminal.
 
    wordchar() is a PDCurses extension of the concept behind the
-   functions erasechar() and killchar(), returning the "delete
-   word" character, ^W.
+   functions erasechar() and killchar(), returning the "delete word"
+   character, ^W.
 
 ### Portability
                              X/Open    BSD    SYS V

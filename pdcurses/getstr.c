@@ -30,21 +30,20 @@ getstr
 ### Description
 
    These routines call wgetch() repeatedly to build a string,
-   interpreting erase and kill characters along the way, until a
-   newline or carriage return is received. When PDCurses is built
-   with wide-character support enabled, the narrow-character
-   functions convert the wgetch()'d values into a multibyte string
-   in the current locale before returning it. The resulting string
-   is placed in the area pointed to by *str. The routines with n as
-   the last argument read at most n characters.
+   interpreting erase and kill characters along the way, until a newline
+   or carriage return is received. When PDCurses is built with wide-
+   character support enabled, the narrow-character functions convert the
+   wgetch()'d values into a multibyte string in the current locale
+   before returning it. The resulting string is placed in the area
+   pointed to by *str. The routines with n as the last argument read at
+   most n characters.
 
    Note that there's no way to know how long the buffer passed to
    wgetstr() is, so use wgetnstr() to avoid buffer overflows.
 
 ### Return Value
 
-   These functions return ERR on failure or any other value on
-   success.
+   These functions return ERR on failure or any other value on success.
 
 ### Portability
                              X/Open    BSD    SYS V

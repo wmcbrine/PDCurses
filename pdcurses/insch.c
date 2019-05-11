@@ -26,21 +26,20 @@ insch
 
 ### Description
 
-   The insch() functions insert a chtype into the window at the
-   current or specified cursor position. The cursor is NOT
-   advanced. A newline is equivalent to clrtoeol(); tabs are
-   expanded; other control characters are converted as with
-   unctrl().
+   The insch() functions insert a chtype into the window at the current
+   or specified cursor position. The cursor is NOT advanced. A newline
+   is equivalent to clrtoeol(); tabs are expanded; other control
+   characters are converted as with unctrl().
 
-   The ins_wch() functions are the wide-character
-   equivalents, taking cchar_t pointers rather than chtypes.
+   The ins_wch() functions are the wide-character equivalents, taking
+   cchar_t pointers rather than chtypes.
 
-   Video attributes can be combined with a character by ORing
-   them into the parameter. Text, including attributes, can be
-   copied from one place to another using inch() and insch().
+   Video attributes can be combined with a character by ORing them into
+   the parameter. Text, including attributes, can be copied from one
+   place to another using inch() and insch().
 
-   insrawch() etc. are PDCurses-specific wrappers for insch() etc.
-   that disable the translation of control characters.
+   insrawch() etc. are PDCurses-specific wrappers for insch() etc. that
+   disable the translation of control characters.
 
 ### Return Value
 

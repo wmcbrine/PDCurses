@@ -17,22 +17,22 @@ overlay
 
 ### Description
 
-   overlay() and overwrite() copy all the text from src_w into
-   dst_w. The windows need not be the same size. Those characters
-   in the source window that intersect with the destination window
-   are copied, so that the characters appear in the same physical
-   position on the screen. The difference between the two functions
-   is that overlay() is non-destructive (blanks are not copied)
-   while overwrite() is destructive (blanks are copied).
+   overlay() and overwrite() copy all the text from src_w into dst_w.
+   The windows need not be the same size. Those characters in the source
+   window that intersect with the destination window are copied, so that
+   the characters appear in the same physical position on the screen.
+   The difference between the two functions is that overlay() is non-
+   destructive (blanks are not copied) while overwrite() is destructive
+   (blanks are copied).
 
    copywin() is similar, but doesn't require that the two windows
-   overlap. The arguments src_tc and src_tr specify the top left
-   corner of the region to be copied. dst_tc, dst_tr, dst_br, and
-   dst_bc specify the region within the destination window to copy
-   to. The argument "overlay", if TRUE, indicates that the copy is
-   done non-destructively (as in overlay()); blanks in the source
-   window are not copied to the destination window. When overlay is
-   FALSE, blanks are copied.
+   overlap. The arguments src_tc and src_tr specify the top left corner
+   of the region to be copied. dst_tc, dst_tr, dst_br, and dst_bc
+   specify the region within the destination window to copy to. The
+   argument "overlay", if TRUE, indicates that the copy is done non-
+   destructively (as in overlay()); blanks in the source window are not
+   copied to the destination window. When overlay is FALSE, blanks are
+   copied.
 
 ### Return Value
 

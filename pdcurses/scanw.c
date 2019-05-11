@@ -18,17 +18,17 @@ scanw
 
 ### Description
 
-   These routines correspond to the standard C library's scanf()
-   family. Each gets a string from the window via wgetnstr(), and
-   uses the resulting line as input for the scan.
+   These routines correspond to the standard C library's scanf() family.
+   Each gets a string from the window via wgetnstr(), and uses the
+   resulting line as input for the scan.
 
    The duplication between vwscanw() and vw_scanw() is for historic
    reasons. In PDCurses, they're the same.
 
 ### Return Value
 
-   On successful completion, these functions return the number of
-   items successfully matched.  Otherwise they return ERR.
+   On successful completion, these functions return the number of items
+   successfully matched. Otherwise they return ERR.
 
 ### Portability
                              X/Open    BSD    SYS V

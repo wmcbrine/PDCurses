@@ -30,16 +30,15 @@ addchstr
 
 ### Description
 
-   These routines write a chtype or cchar_t string directly into
-   the window structure, starting at the current or specified
-   position. The four routines with n as the last argument copy at
-   most n elements, but no more than will fit on the line. If n =
-   -1 then the whole string is copied, up to the maximum number
-   that will fit on the line.
+   These routines write a chtype or cchar_t string directly into the
+   window structure, starting at the current or specified position. The
+   four routines with n as the last argument copy at most n elements,
+   but no more than will fit on the line. If n == -1 then the whole
+   string is copied, up to the maximum number that will fit on the line.
 
-   The cursor position is not advanced. These routines do not check
-   for newline or other special characters, nor does any line
-   wrapping occur.
+   The cursor position is not advanced. These routines do not check for
+   newline or other special characters, nor does any line wrapping
+   occur.
 
 ### Return Value
 

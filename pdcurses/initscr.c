@@ -26,17 +26,16 @@ initscr
 
 ### Description
 
-   initscr() should be the first curses routine called.  It will
-   initialize all curses data structures, and arrange that the
-   first call to refresh() will clear the screen.  In case of
-   error, initscr() will write a message to standard error and end
-   the program.
+   initscr() should be the first curses routine called. It will
+   initialize all curses data structures, and arrange that the first
+   call to refresh() will clear the screen. In case of error, initscr()
+   will write a message to standard error and end the program.
 
-   endwin() should be called before exiting or escaping from curses
-   mode temporarily.  It will restore tty modes, move the cursor to
-   the lower left corner of the screen and reset the terminal into
-   the proper non-visual mode.  To resume curses after a temporary
-   escape, call refresh() or doupdate().
+   endwin() should be called before exiting or escaping from curses mode
+   temporarily. It will restore tty modes, move the cursor to the lower
+   left corner of the screen and reset the terminal into the proper
+   non-visual mode. To resume curses after a temporary escape, call
+   refresh() or doupdate().
 
    isendwin() returns TRUE if endwin() has been called without a
    subsequent refresh, unless SP is NULL.
@@ -45,35 +44,33 @@ initscr
    multiple terminals. Here, it's just an alternative interface for
    initscr(). It always returns SP, or NULL.
 
-   delscreen() frees the memory allocated by newterm() or
-   initscr(), since it's not freed by endwin(). This function is
-   usually not needed. In PDCurses, the parameter must be the
-   value of SP, and delscreen() sets SP to NULL.
+   delscreen() frees the memory allocated by newterm() or initscr(),
+   since it's not freed by endwin(). This function is usually not
+   needed. In PDCurses, the parameter must be the value of SP, and
+   delscreen() sets SP to NULL.
 
-   set_term() does nothing meaningful in PDCurses, but is included
-   for compatibility with other curses implementations.
+   set_term() does nothing meaningful in PDCurses, but is included for
+   compatibility with other curses implementations.
 
-   resize_term() is effectively two functions: When called with
-   nonzero values for nlines and ncols, it attempts to resize the
-   screen to the given size. When called with (0, 0), it merely
-   adjusts the internal structures to match the current size after
-   the screen is resized by the user. On the currently supported
-   platforms, SDL, Windows console, and X11 allow user resizing, while
-   DOS, OS/2, SDL and Windows console allow programmatic resizing. If
-   you want to support user resizing, you should check for getch()
-   returning KEY_RESIZE, and/or call is_termresized() at appropriate
-   times; if either condition occurs, call resize_term(0, 0). Then, with
-   either user or programmatic resizing, you'll have to resize any
-   windows you've created, as appropriate; resize_term() only
-   handles stdscr and curscr.
+   resize_term() is effectively two functions: When called with nonzero
+   values for nlines and ncols, it attempts to resize the screen to the
+   given size. When called with (0, 0), it merely adjusts the internal
+   structures to match the current size after the screen is resized by
+   the user. On the currently supported platforms, SDL, Windows console,
+   and X11 allow user resizing, while DOS, OS/2, SDL and Windows console
+   allow programmatic resizing. If you want to support user resizing,
+   you should check for getch() returning KEY_RESIZE, and/or call
+   is_termresized() at appropriate times; if either condition occurs,
+   call resize_term(0, 0). Then, with either user or programmatic
+   resizing, you'll have to resize any windows you've created, as
+   appropriate; resize_term() only handles stdscr and curscr.
 
-   is_termresized() returns TRUE if the curses screen has been
-   resized by the user, and a call to resize_term() is needed.
-   Checking for KEY_RESIZE is generally preferable, unless you're
-   not handling the keyboard.
+   is_termresized() returns TRUE if the curses screen has been resized
+   by the user, and a call to resize_term() is needed. Checking for
+   KEY_RESIZE is generally preferable, unless you're not handling the
+   keyboard.
 
-   curses_version() returns a string describing the version of
-   PDCurses.
+   curses_version() returns a string describing the version of PDCurses.
 
    PDC_get_version() fills a PDC_VERSION structure provided by the user
    with more detailed version info (see curses.h).

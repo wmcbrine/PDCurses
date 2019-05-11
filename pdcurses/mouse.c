@@ -28,12 +28,12 @@ mouse
 ### Description
 
    As of PDCurses 3.0, there are two separate mouse interfaces: the
-   classic interface, which is based on the undocumented Sys V
-   mouse functions; and an ncurses-compatible interface. Both are
-   active at all times, and you can mix and match functions from
-   each, though it's not recommended. The ncurses interface is
-   essentially an emulation layer built on top of the classic
-   interface; it's here to allow easier porting of ncurses apps.
+   classic interface, which is based on the undocumented Sys V mouse
+   functions; and an ncurses-compatible interface. Both are active at
+   all times, and you can mix and match functions from each, though it's
+   not recommended. The ncurses interface is essentially an emulation
+   layer built on top of the classic interface; it's here to allow
+   easier porting of ncurses apps.
 
    The classic interface: mouse_set(), mouse_on(), mouse_off(),
    request_mouse_pos(), wmouse_position(), and getmouse(). An
@@ -42,24 +42,23 @@ mouse
    would check for a KEY_MOUSE return from getch(). If found, it would
    call request_mouse_pos() to get the current mouse status.
 
-   mouse_set(), mouse_on() and mouse_off() are analagous to
-   attrset(), attron() and attroff().  These functions set the
-   mouse button events to trap.  The button masks used in these
-   functions are defined in curses.h and can be or'ed together.
-   They are the group of masks starting with BUTTON1_RELEASED.
+   mouse_set(), mouse_on() and mouse_off() are analagous to attrset(),
+   attron() and attroff(). These functions set the mouse button events
+   to trap. The button masks used in these functions are defined in
+   curses.h and can be or'ed together. They are the group of masks
+   starting with BUTTON1_RELEASED.
 
    request_mouse_pos() requests curses to fill in the Mouse_status
    structure with the current state of the mouse.
 
-   wmouse_position() determines if the current mouse position is
-   within the window passed as an argument.  If the mouse is
-   outside the current window, -1 is returned in the y and x
-   arguments; otherwise the y and x coordinates of the mouse
-   (relative to the top left corner of the window) are returned in
-   y and x.
+   wmouse_position() determines if the current mouse position is within
+   the window passed as an argument. If the mouse is outside the current
+   window, -1 is returned in the y and x arguments; otherwise the y and
+   x coordinates of the mouse (relative to the top left corner of the
+   window) are returned in y and x.
 
-   getmouse() returns the current status of the trapped mouse
-   buttons as set by mouse_set() or mouse_on().
+   getmouse() returns the current status of the trapped mouse buttons as
+   set by mouse_set() or mouse_on().
 
    The ncurses interface: mouseinterval(), wenclose(), wmouse_trafo(),
    mouse_trafo(), mousemask(), nc_getmouse(), ungetmouse() and
@@ -68,56 +67,52 @@ mouse
    Then it would check for a KEY_MOUSE return from getch(). If found, it
    would call nc_getmouse() to get the current mouse status.
 
-   mouseinterval() sets the timeout for a mouse click. On all
-   current platforms, PDCurses receives mouse button press and
-   release events, but must synthesize click events. It does this
-   by checking whether a release event is queued up after a press
-   event. If it gets a press event, and there are no more events
-   waiting, it will wait for the timeout interval, then check again
-   for a release. A press followed by a release is reported as
-   BUTTON_CLICKED; otherwise it's passed through as BUTTON_PRESSED.
-   The default timeout is 150ms; valid values are 0 (no clicks
-   reported) through 1000ms. In x11, the timeout can also be set
-   via the clickPeriod resource. The return value from
-   mouseinterval() is the old timeout. To check the old value
-   without setting a new one, call it with a parameter of -1. Note
-   that although there's no classic equivalent for this function
-   (apart from the clickPeriod resource), the value set applies in
-   both interfaces.
+   mouseinterval() sets the timeout for a mouse click. On all current
+   platforms, PDCurses receives mouse button press and release events,
+   but must synthesize click events. It does this by checking whether a
+   release event is queued up after a press event. If it gets a press
+   event, and there are no more events waiting, it will wait for the
+   timeout interval, then check again for a release. A press followed by
+   a release is reported as BUTTON_CLICKED; otherwise it's passed
+   through as BUTTON_PRESSED. The default timeout is 150ms; valid values
+   are 0 (no clicks reported) through 1000ms. In x11, the timeout can
+   also be set via the clickPeriod resource. The return value from
+   mouseinterval() is the old timeout. To check the old value without
+   setting a new one, call it with a parameter of -1. Note that although
+   there's no classic equivalent for this function (apart from the
+   clickPeriod resource), the value set applies in both interfaces.
 
-   wenclose() reports whether the given screen-relative y, x
-   coordinates fall within the given window.
+   wenclose() reports whether the given screen-relative y, x coordinates
+   fall within the given window.
 
-   wmouse_trafo() converts between screen-relative and window-
-   relative coordinates. A to_screen parameter of TRUE means to
-   convert from window to screen; otherwise the reverse. The
-   function returns FALSE if the coordinates aren't within the
-   window, or if any of the parameters are NULL. The coordinates
-   have been converted when the function returns TRUE.
+   wmouse_trafo() converts between screen-relative and window-relative
+   coordinates. A to_screen parameter of TRUE means to convert from
+   window to screen; otherwise the reverse. The function returns FALSE
+   if the coordinates aren't within the window, or if any of the
+   parameters are NULL. The coordinates have been converted when the
+   function returns TRUE.
 
    mouse_trafo() is the stdscr version of wmouse_trafo().
 
    mousemask() is nearly equivalent to mouse_set(), but instead of
    OK/ERR, it returns the value of the mask after setting it. (This
-   isn't necessarily the same value passed in, since the mask could
-   be altered on some platforms.) And if the second parameter is a
-   non-null pointer, mousemask() stores the previous mask value
-   there. Also, since the ncurses interface doesn't work with
-   PDCurses' BUTTON_MOVED events, mousemask() filters them out.
+   isn't necessarily the same value passed in, since the mask could be
+   altered on some platforms.) And if the second parameter is a non-null
+   pointer, mousemask() stores the previous mask value there. Also,
+   since the ncurses interface doesn't work with PDCurses' BUTTON_MOVED
+   events, mousemask() filters them out.
 
-   nc_getmouse() returns the current mouse status in an MEVENT
-   struct. This is equivalent to ncurses' getmouse(), renamed to
-   avoid conflict with PDCurses' getmouse(). But if you define
-   PDC_NCMOUSE before including curses.h, it defines getmouse() to
-   nc_getmouse(), along with a few other redefintions needed for
-   compatibility with ncurses code. nc_getmouse() calls
-   request_mouse_pos(), which (not getmouse()) is the classic
-   equivalent.
+   nc_getmouse() returns the current mouse status in an MEVENT struct.
+   This is equivalent to ncurses' getmouse(), renamed to avoid conflict
+   with PDCurses' getmouse(). But if you define PDC_NCMOUSE before
+   including curses.h, it defines getmouse() to nc_getmouse(), along
+   with a few other redefintions needed for compatibility with ncurses
+   code. nc_getmouse() calls request_mouse_pos(), which (not getmouse())
+   is the classic equivalent.
 
-   ungetmouse() is the mouse equivalent of ungetch(). However,
-   PDCurses doesn't maintain a queue of mouse events; only one can
-   be pushed back, and it can overwrite or be overwritten by real
-   mouse events.
+   ungetmouse() is the mouse equivalent of ungetch(). However, PDCurses
+   doesn't maintain a queue of mouse events; only one can be pushed
+   back, and it can overwrite or be overwritten by real mouse events.
 
    has_mouse() reports whether the mouse is available at all on the
    current platform.

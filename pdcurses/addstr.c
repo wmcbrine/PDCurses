@@ -29,15 +29,14 @@ addstr
 
 ### Description
 
-   These routines write all the characters of the null-terminated
-   string str or wide-character string wstr to the given window.
-   The functionality is similar to calling waddch() once for each
-   character in the string; except that, when PDCurses is built
-   with wide-character support enabled, the narrow-character
-   functions treat the string as a multibyte string in the current
-   locale, and convert it. The routines with n as the last
-   argument write at most n characters; if n is negative, then the
-   entire string will be added.
+   These routines write all the characters of the null-terminated string
+   str or wide-character string wstr to the given window. The
+   functionality is similar to calling waddch() once for each character
+   in the string; except that, when PDCurses is built with wide-
+   character support enabled, the narrow-character functions treat the
+   string as a multibyte string in the current locale, and convert it.
+   The routines with n as the last argument write at most n characters;
+   if n is negative, then the entire string will be added.
 
 ### Return Value
 

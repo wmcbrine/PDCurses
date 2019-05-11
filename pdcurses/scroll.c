@@ -15,16 +15,16 @@ scroll
 
 ### Description
 
-   scroll() causes the window to scroll up one line.  This involves
+   scroll() causes the window to scroll up one line. This involves
    moving the lines in the window data strcture.
 
-   With a positive n, scrl() and wscrl() scroll the window up n
-   lines (line i + n becomes i); otherwise they scroll the window
-   down n lines.
+   With a positive n, scrl() and wscrl() scroll the window up n lines
+   (line i + n becomes i); otherwise they scroll the window down n
+   lines.
 
    For these functions to work, scrolling must be enabled via
-   scrollok(). Note also that scrolling is not allowed if the
-   supplied window is a pad.
+   scrollok(). Note also that scrolling is not allowed if the supplied
+   window is a pad.
 
 ### Return Value
 

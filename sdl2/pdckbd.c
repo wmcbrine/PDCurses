@@ -13,8 +13,8 @@ pdckbd
 
 ### Description
 
-   PDC_get_input_fd() returns the file descriptor that PDCurses
-   reads its input from. It can be used for select().
+   PDC_get_input_fd() returns the file descriptor that PDCurses reads
+   its input from. It can be used for select().
 
 ### Portability
                              X/Open    BSD    SYS V

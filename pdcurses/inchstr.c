@@ -35,8 +35,7 @@ inchstr
 
 ### Return Value
 
-   All functions return the number of elements read, or ERR on
-   error.
+   All functions return the number of elements read, or ERR on error.
 
 ### Portability
                              X/Open    BSD    SYS V

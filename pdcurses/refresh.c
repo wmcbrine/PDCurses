@@ -18,29 +18,27 @@ refresh
 
 ### Description
 
-   wrefresh() copies the named window to the physical terminal
-   screen, taking into account what is already there in order to
-   optimize cursor movement. refresh() does the same, using stdscr.
-   These routines must be called to get any output on the terminal,
-   as other routines only manipulate data structures. Unless
-   leaveok() has been enabled, the physical cursor of the terminal
-   is left at the location of the window's cursor.
+   wrefresh() copies the named window to the physical terminal screen,
+   taking into account what is already there in order to optimize cursor
+   movement. refresh() does the same, using stdscr. These routines must
+   be called to get any output on the terminal, as other routines only
+   manipulate data structures. Unless leaveok() has been enabled, the
+   physical cursor of the terminal is left at the location of the
+   window's cursor.
 
    wnoutrefresh() and doupdate() allow multiple updates with more
-   efficiency than wrefresh() alone. wrefresh() works by first
-   calling wnoutrefresh(), which copies the named window to the
-   virtual screen.  It then calls doupdate(), which compares the
-   virtual screen to the physical screen and does the actual
-   update. A series of calls to wrefresh() will result in
-   alternating calls to wnoutrefresh() and doupdate(), causing
-   several bursts of output to the screen.  By first calling
-   wnoutrefresh() for each window, it is then possible to call
+   efficiency than wrefresh() alone. wrefresh() works by first calling
+   wnoutrefresh(), which copies the named window to the virtual screen.
+   It then calls doupdate(), which compares the virtual screen to the
+   physical screen and does the actual update. A series of calls to
+   wrefresh() will result in alternating calls to wnoutrefresh() and
+   doupdate(), causing several bursts of output to the screen. By first
+   calling wnoutrefresh() for each window, it is then possible to call
    doupdate() only once.
 
-   In PDCurses, redrawwin() is equivalent to touchwin(), and
-   wredrawln() is the same as touchline(). In some other curses
-   implementations, there's a subtle distinction, but it has no
-   meaning in PDCurses.
+   In PDCurses, redrawwin() is equivalent to touchwin(), and wredrawln()
+   is the same as touchline(). In some other curses implementations,
+   there's a subtle distinction, but it has no meaning in PDCurses.
 
 ### Return Value
 

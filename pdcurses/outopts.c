@@ -24,33 +24,30 @@ outopts
 
 ### Description
 
-   With clearok(), if bf is TRUE, the next call to wrefresh() with
-   this window will clear the screen completely and redraw the
-   entire screen.
+   With clearok(), if bf is TRUE, the next call to wrefresh() with this
+   window will clear the screen completely and redraw the entire screen.
 
-   immedok(), called with a second argument of TRUE, causes an
-   automatic wrefresh() every time a change is made to the
-   specified window.
+   immedok(), called with a second argument of TRUE, causes an automatic
+   wrefresh() every time a change is made to the specified window.
 
-   Normally, the hardware cursor is left at the location of the
-   window being refreshed.  leaveok() allows the cursor to be
-   left wherever the update happens to leave it.  It's useful
-   for applications where the cursor is not used, since it reduces
-   the need for cursor motions.  If possible, the cursor is made
-   invisible when this option is enabled.
+   Normally, the hardware cursor is left at the location of the window
+   being refreshed. leaveok() allows the cursor to be left wherever the
+   update happens to leave it. It's useful for applications where the
+   cursor is not used, since it reduces the need for cursor motions. If
+   possible, the cursor is made invisible when this option is enabled.
 
-   wsetscrreg() sets a scrolling region in a window; "top" and
-   "bot" are the line numbers for the top and bottom margins. If
-   this option and scrollok() are enabled, any attempt to move off
-   the bottom margin will cause all lines in the scrolling region
-   to scroll up one line. setscrreg() is the stdscr version.
+   wsetscrreg() sets a scrolling region in a window; "top" and "bot" are
+   the line numbers for the top and bottom margins. If this option and
+   scrollok() are enabled, any attempt to move off the bottom margin
+   will cause all lines in the scrolling region to scroll up one line.
+   setscrreg() is the stdscr version.
 
    idlok() and idcok() do nothing in PDCurses, but are provided for
    compatibility with other curses implementations.
 
-   raw_output() enables the output of raw characters using the
-   standard *add* and *ins* curses functions (that is, it disables
-   translation of control characters).
+   raw_output() enables the output of raw characters using the standard
+   *add* and *ins* curses functions (that is, it disables translation of
+   control characters).
 
    is_leaveok() reports whether the specified window is in leaveok mode.
 

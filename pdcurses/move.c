@@ -15,13 +15,13 @@ move
 
 ### Description
 
-   move() and wmove() move the cursor associated with the window to
-   the given location.  This does not move the physical cursor of the
-   terminal until refresh() is called.  The position specified is
+   move() and wmove() move the cursor associated with the window to the
+   given location. This does not move the physical cursor of the
+   terminal until refresh() is called. The position specified is
    relative to the upper left corner of the window, which is (0,0).
 
-   mvcur() moves the physical cursor without updating any window
-   cursor positions.
+   mvcur() moves the physical cursor without updating any window cursor
+   positions.
 
 ### Return Value
 

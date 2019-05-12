@@ -54,21 +54,21 @@ getyx
    values, or ERR in the case of a NULL window.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     getyx                       Y       Y       Y
-    getparyx                    -       -      4.0
-    getbegyx                    -       -      3.0
-    getmaxyx                    -       -      3.0
-    getsyx                      -       -      3.0
-    setsyx                      -       -      3.0
-    getbegy                     -       -       -
-    getbegx                     -       -       -
-    getcury                     -       -       -
-    getcurx                     -       -       -
-    getpary                     -       -       -
-    getparx                     -       -       -
-    getmaxy                     -       -       -
-    getmaxx                     -       -       -
+    getparyx                    Y       Y       Y
+    getbegyx                    Y       Y       Y
+    getmaxyx                    Y       Y       Y
+    getsyx                      -       Y       Y
+    setsyx                      -       Y       Y
+    getbegy                     -       Y       Y
+    getbegx                     -       Y       Y
+    getcury                     -       Y       Y
+    getcurx                     -       Y       Y
+    getpary                     -       Y       Y
+    getparx                     -       Y       Y
+    getmaxy                     -       Y       Y
+    getmaxx                     -       Y       Y
 
 **man-end****************************************************************/
 

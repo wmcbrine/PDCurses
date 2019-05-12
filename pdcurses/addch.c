@@ -90,23 +90,23 @@ addch
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     addch                       Y       Y       Y
     waddch                      Y       Y       Y
     mvaddch                     Y       Y       Y
     mvwaddch                    Y       Y       Y
-    echochar                    Y       -      3.0
-    wechochar                   Y       -      3.0
+    echochar                    Y       Y       Y
+    wechochar                   Y       Y       Y
+    add_wch                     Y       Y       Y
+    wadd_wch                    Y       Y       Y
+    mvadd_wch                   Y       Y       Y
+    mvwadd_wch                  Y       Y       Y
+    echo_wchar                  Y       Y       Y
+    wecho_wchar                 Y       Y       Y
     addrawch                    -       -       -
     waddrawch                   -       -       -
     mvaddrawch                  -       -       -
     mvwaddrawch                 -       -       -
-    add_wch                     Y
-    wadd_wch                    Y
-    mvadd_wch                   Y
-    mvwadd_wch                  Y
-    echo_wchar                  Y
-    wecho_wchar                 Y
 
 **man-end****************************************************************/
 

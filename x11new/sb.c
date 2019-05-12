@@ -25,7 +25,7 @@ sb
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     sb_init                     -       -       -
     sb_set_horz                 -       -       -
     sb_set_vert                 -       -       -

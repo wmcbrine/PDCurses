@@ -40,7 +40,7 @@ clipboard
    PDC_CLIP_ACCESS_ERROR   no clipboard support
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     PDC_getclipboard            -       -       -
     PDC_setclipboard            -       -       -
     PDC_freeclipboard           -       -       -

@@ -23,7 +23,7 @@ pdckbd
    its input from. It can be used for select().
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     PDC_get_input_fd            -       -       -
 
 **man-end****************************************************************/

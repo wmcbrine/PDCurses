@@ -27,7 +27,7 @@ debug
    it to enable this (may affect performance).
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     traceon                     -       -       -
     traceoff                    -       -       -
     PDC_debug                   -       -       -

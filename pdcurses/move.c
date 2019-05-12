@@ -28,7 +28,7 @@ move
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     move                        Y       Y       Y
     mvcur                       Y       Y       Y
     wmove                       Y       Y       Y

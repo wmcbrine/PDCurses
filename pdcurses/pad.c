@@ -62,14 +62,14 @@ pad
    All functions except is_pad() return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    newpad                      Y       -       Y
-    subpad                      Y       -       Y
-    prefresh                    Y       -       Y
-    pnoutrefresh                Y       -       Y
-    pechochar                   Y       -      3.0
-    pecho_wchar                 Y
-    is_pad                      -       Y       -
+                             X/Open  ncurses  NetBSD
+    newpad                      Y       Y       Y
+    subpad                      Y       Y       Y
+    prefresh                    Y       Y       Y
+    pnoutrefresh                Y       Y       Y
+    pechochar                   Y       Y       Y
+    pecho_wchar                 Y       Y       Y
+    is_pad                      -       Y       Y
 
 **man-end****************************************************************/
 

@@ -48,18 +48,18 @@ bkgd
    case they return ERR.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    bkgd                        Y       -      4.0
-    bkgdset                     Y       -      4.0
-    getbkgd                     Y
-    wbkgd                       Y       -      4.0
-    wbkgdset                    Y       -      4.0
-    bkgrnd                      Y
-    bkgrndset                   Y
-    getbkgrnd                   Y
-    wbkgrnd                     Y
-    wbkgrndset                  Y
-    wgetbkgrnd                  Y
+                             X/Open  ncurses  NetBSD
+    bkgd                        Y       Y       Y
+    bkgdset                     Y       Y       Y
+    getbkgd                     Y       Y       Y
+    wbkgd                       Y       Y       Y
+    wbkgdset                    Y       Y       Y
+    bkgrnd                      Y       Y       Y
+    bkgrndset                   Y       Y       Y
+    getbkgrnd                   Y       Y       Y
+    wbkgrnd                     Y       Y       Y
+    wbkgrndset                  Y       Y       Y
+    wgetbkgrnd                  Y       Y       Y
 
 **man-end****************************************************************/
 

@@ -39,13 +39,13 @@ deleteln
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     deleteln                    Y       Y       Y
     wdeleteln                   Y       Y       Y
     mvdeleteln                  -       -       -
     mvwdeleteln                 -       -       -
-    insdelln                    Y       -      4.0
-    winsdelln                   Y       -      4.0
+    insdelln                    Y       Y       Y
+    winsdelln                   Y       Y       Y
     insertln                    Y       Y       Y
     winsertln                   Y       Y       Y
     mvinsertln                  -       -       -

@@ -61,22 +61,22 @@ slk
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    slk_init                    Y       -       Y
-    slk_set                     Y       -       Y
-    slk_refresh                 Y       -       Y
-    slk_noutrefresh             Y       -       Y
-    slk_label                   Y       -       Y
-    slk_clear                   Y       -       Y
-    slk_restore                 Y       -       Y
-    slk_touch                   Y       -       Y
-    slk_attron                  Y       -       Y
-    slk_attrset                 Y       -       Y
-    slk_attroff                 Y       -       Y
-    slk_attr_on                 Y
-    slk_attr_set                Y
-    slk_attr_off                Y
-    slk_wset                    Y
+                             X/Open  ncurses  NetBSD
+    slk_init                    Y       Y       Y
+    slk_set                     Y       Y       Y
+    slk_refresh                 Y       Y       Y
+    slk_noutrefresh             Y       Y       Y
+    slk_label                   Y       Y       Y
+    slk_clear                   Y       Y       Y
+    slk_restore                 Y       Y       Y
+    slk_touch                   Y       Y       Y
+    slk_attron                  Y       Y       Y
+    slk_attrset                 Y       Y       Y
+    slk_attroff                 Y       Y       Y
+    slk_attr_on                 Y       Y       Y
+    slk_attr_set                Y       Y       Y
+    slk_attr_off                Y       Y       Y
+    slk_wset                    Y       Y       Y
     PDC_mouse_in_slk            -       -       -
     PDC_slk_free                -       -       -
     PDC_slk_initialize          -       -       -

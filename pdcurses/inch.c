@@ -31,15 +31,15 @@ inch
    returned.) Note that in PDCurses, chtype and cchar_t are the same.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     inch                        Y       Y       Y
     winch                       Y       Y       Y
     mvinch                      Y       Y       Y
     mvwinch                     Y       Y       Y
-    in_wch                      Y
-    win_wch                     Y
-    mvin_wch                    Y
-    mvwin_wch                   Y
+    in_wch                      Y       Y       Y
+    win_wch                     Y       Y       Y
+    mvin_wch                    Y       Y       Y
+    mvwin_wch                   Y       Y       Y
 
 **man-end****************************************************************/
 

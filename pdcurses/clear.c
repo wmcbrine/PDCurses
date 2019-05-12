@@ -38,7 +38,7 @@ clear
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     clear                       Y       Y       Y
     wclear                      Y       Y       Y
     erase                       Y       Y       Y

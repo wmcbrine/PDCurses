@@ -26,7 +26,7 @@ beep
    These functions return OK.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     beep                        Y       Y       Y
     flash                       Y       Y       Y
 

@@ -95,29 +95,29 @@ inopts
    success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     cbreak                      Y       Y       Y
     nocbreak                    Y       Y       Y
     echo                        Y       Y       Y
     noecho                      Y       Y       Y
-    halfdelay                   Y       -       Y
-    intrflush                   Y       -       Y
-    keypad                      Y       -       Y
-    meta                        Y       -       Y
+    halfdelay                   Y       Y       Y
+    intrflush                   Y       Y       Y
+    keypad                      Y       Y       Y
+    meta                        Y       Y       Y
     nl                          Y       Y       Y
     nonl                        Y       Y       Y
-    nodelay                     Y       -       Y
-    notimeout                   Y       -       Y
+    nodelay                     Y       Y       Y
+    notimeout                   Y       Y       Y
     raw                         Y       Y       Y
     noraw                       Y       Y       Y
-    noqiflush                   Y       -       Y
-    qiflush                     Y       -       Y
-    timeout                     Y       -       Y
-    wtimeout                    Y       -       Y
-    typeahead                   Y       -       Y
-    crmode                      -
-    nocrmode                    -
-    is_keypad                   -       Y       -
+    noqiflush                   Y       Y       Y
+    qiflush                     Y       Y       Y
+    timeout                     Y       Y       Y
+    wtimeout                    Y       Y       Y
+    typeahead                   Y       Y       Y
+    crmode                      Y       Y       Y
+    nocrmode                    Y       Y       Y
+    is_keypad                   -       Y       Y
 
 **man-end****************************************************************/
 

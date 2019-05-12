@@ -81,16 +81,16 @@ color
    has_colors() and can_change_colors(), which return TRUE or FALSE.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    has_colors                  Y       -      3.2
-    start_color                 Y       -      3.2
-    init_pair                   Y       -      3.2
-    pair_content                Y       -      3.2
-    can_change_color            Y       -      3.2
-    init_color                  Y       -      3.2
-    color_content               Y       -      3.2
-    assume_default_colors       -       -       -
-    use_default_colors          -       -       -
+                             X/Open  ncurses  NetBSD
+    has_colors                  Y       Y       Y
+    start_color                 Y       Y       Y
+    init_pair                   Y       Y       Y
+    pair_content                Y       Y       Y
+    can_change_color            Y       Y       Y
+    init_color                  Y       Y       Y
+    color_content               Y       Y       Y
+    assume_default_colors       -       Y       Y
+    use_default_colors          -       Y       Y
     PDC_set_line_color          -       -       -
 
 **man-end****************************************************************/

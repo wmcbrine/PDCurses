@@ -57,17 +57,17 @@ outopts
    error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     clearok                     Y       Y       Y
     idlok                       Y       Y       Y
-    idcok                       Y       -      4.0
-    immedok                     Y       -      4.0
+    idcok                       Y       Y       Y
+    immedok                     Y       Y       Y
     leaveok                     Y       Y       Y
     setscrreg                   Y       Y       Y
     wsetscrreg                  Y       Y       Y
     scrollok                    Y       Y       Y
+    is_leaveok                  -       Y       Y
     raw_output                  -       -       -
-    is_leaveok                  -       Y       -
 
 **man-end****************************************************************/
 

@@ -31,13 +31,13 @@ scanw
    successfully matched. Otherwise they return ERR.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     scanw                       Y       Y       Y
     wscanw                      Y       Y       Y
     mvscanw                     Y       Y       Y
     mvwscanw                    Y       Y       Y
-    vwscanw                     Y       -      4.0
-    vw_scanw                    Y
+    vwscanw                     Y       Y       Y
+    vw_scanw                    Y       Y       Y
 
 **man-end****************************************************************/
 

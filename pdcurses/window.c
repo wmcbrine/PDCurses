@@ -111,20 +111,20 @@ window
    NOT cancelled for those windows.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     newwin                      Y       Y       Y
     delwin                      Y       Y       Y
     mvwin                       Y       Y       Y
     subwin                      Y       Y       Y
-    derwin                      Y       -       Y
-    mvderwin                    Y       -       Y
-    dupwin                      Y       -      4.0
-    wsyncup                     Y       -      4.0
-    syncok                      Y       -      4.0
-    wcursyncup                  Y       -      4.0
-    wsyncdown                   Y       -      4.0
+    derwin                      Y       Y       Y
+    mvderwin                    Y       Y       Y
+    dupwin                      Y       Y       Y
+    wsyncup                     Y       Y       Y
+    syncok                      Y       Y       Y
+    wcursyncup                  Y       Y       Y
+    wsyncdown                   Y       Y       Y
+    wresize                     -       Y       Y
     resize_window               -       -       -
-    wresize                     -       -       -
     PDC_makelines               -       -       -
     PDC_makenew                 -       -       -
     PDC_sync                    -       -       -

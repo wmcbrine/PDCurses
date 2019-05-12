@@ -27,7 +27,7 @@ delch
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     delch                       Y       Y       Y
     wdelch                      Y       Y       Y
     mvdelch                     Y       Y       Y

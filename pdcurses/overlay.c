@@ -39,10 +39,10 @@ overlay
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     overlay                     Y       Y       Y
     overwrite                   Y       Y       Y
-    copywin                     Y       -      3.0
+    copywin                     Y       Y       Y
 
 **man-end****************************************************************/
 

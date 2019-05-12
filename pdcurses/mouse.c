@@ -118,21 +118,23 @@ mouse
    current platform.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    mouse_set                   -       -      4.0
-    mouse_on                    -       -      4.0
-    mouse_off                   -       -      4.0
-    request_mouse_pos           -       -      4.0
-    wmouse_position             -       -      4.0
-    getmouse                    -       -      4.0
-    mouseinterval               -       -       -
-    wenclose                    -       -       -
-    wmouse_trafo                -       -       -
-    mouse_trafo                 -       -       -
-    mousemask                   -       -       -
-    nc_getmouse                 -       -       -
-    ungetmouse                  -       -       -
-    has_mouse                   -       -       -
+                             X/Open  ncurses  NetBSD
+    mouse_set                   -       -       -
+    mouse_on                    -       -       -
+    mouse_off                   -       -       -
+    request_mouse_pos           -       -       -
+    wmouse_position             -       -       -
+    getmouse                    -       *       -
+    mouseinterval               -       Y       -
+    wenclose                    -       Y       -
+    wmouse_trafo                -       Y       -
+    mouse_trafo                 -       Y       -
+    mousemask                   -       Y       -
+    nc_getmouse                 -       *       -
+    ungetmouse                  -       Y       -
+    has_mouse                   -       Y       -
+
+    * See above, under Description
 
 **man-end****************************************************************/
 

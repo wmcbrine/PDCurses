@@ -83,17 +83,17 @@ initscr
    returns OK, and resize_term(), which returns either OK or ERR.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     initscr                     Y       Y       Y
     endwin                      Y       Y       Y
-    isendwin                    Y       -      3.0
-    newterm                     Y       -       Y
-    set_term                    Y       -       Y
-    delscreen                   Y       -      4.0
-    resize_term                 -       -       -
+    isendwin                    Y       Y       Y
+    newterm                     Y       Y       Y
+    set_term                    Y       Y       Y
+    delscreen                   Y       Y       Y
+    resize_term                 -       Y       Y
+    set_tabsize                 -       Y       Y
+    curses_version              -       Y       -
     is_termresized              -       -       -
-    curses_version              -       -       -
-    set_tabsize                 -       Y       -
 
 **man-end****************************************************************/
 

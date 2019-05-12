@@ -96,7 +96,7 @@ attr
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     attroff                     Y       Y       Y
     wattroff                    Y       Y       Y
     attron                      Y       Y       Y
@@ -107,25 +107,25 @@ attr
     wstandend                   Y       Y       Y
     standout                    Y       Y       Y
     wstandout                   Y       Y       Y
-    color_set                   Y
-    wcolor_set                  Y
-    attr_get                    Y
-    wattr_get                   Y
-    attr_on                     Y
-    wattr_on                    Y
-    attr_off                    Y
-    wattr_off                   Y
-    attr_set                    Y
-    wattr_set                   Y
-    chgat                       Y
-    wchgat                      Y
-    mvchgat                     Y
-    mvwchgat                    Y
-    getattrs                    -
-    underend                    -       Y       -
-    wunderend                   -       Y       -
-    underscore                  -       Y       -
-    wunderscore                 -       Y       -
+    color_set                   Y       Y       Y
+    wcolor_set                  Y       Y       Y
+    attr_get                    Y       Y       Y
+    wattr_get                   Y       Y       Y
+    attr_on                     Y       Y       Y
+    wattr_on                    Y       Y       Y
+    attr_off                    Y       Y       Y
+    wattr_off                   Y       Y       Y
+    attr_set                    Y       Y       Y
+    wattr_set                   Y       Y       Y
+    chgat                       Y       Y       Y
+    wchgat                      Y       Y       Y
+    mvchgat                     Y       Y       Y
+    mvwchgat                    Y       Y       Y
+    getattrs                    -       Y       Y
+    underend                    -       -       Y
+    wunderend                   -       -       Y
+    underscore                  -       -       Y
+    wunderscore                 -       -       Y
 
 **man-end****************************************************************/
 

@@ -77,18 +77,18 @@ getch
    character or function key token.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     getch                       Y       Y       Y
     wgetch                      Y       Y       Y
     mvgetch                     Y       Y       Y
     mvwgetch                    Y       Y       Y
     ungetch                     Y       Y       Y
     flushinp                    Y       Y       Y
-    get_wch                     Y
-    wget_wch                    Y
-    mvget_wch                   Y
-    mvwget_wch                  Y
-    unget_wch                   Y
+    get_wch                     Y       Y       Y
+    wget_wch                    Y       Y       Y
+    mvget_wch                   Y       Y       Y
+    mvwget_wch                  Y       Y       Y
+    unget_wch                   Y       Y       Y
     PDC_get_key_modifiers       -       -       -
 
 **man-end****************************************************************/

@@ -96,22 +96,22 @@ panel
    if it executes successfully and ERR if it does not.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    bottom_panel                -       -       Y
-    del_panel                   -       -       Y
-    hide_panel                  -       -       Y
-    move_panel                  -       -       Y
-    new_panel                   -       -       Y
-    panel_above                 -       -       Y
-    panel_below                 -       -       Y
-    panel_hidden                -       -       Y
-    panel_userptr               -       -       Y
-    panel_window                -       -       Y
-    replace_panel               -       -       Y
-    set_panel_userptr           -       -       Y
-    show_panel                  -       -       Y
-    top_panel                   -       -       Y
-    update_panels               -       -       Y
+                             X/Open  ncurses  NetBSD
+    bottom_panel                -       Y       Y
+    del_panel                   -       Y       Y
+    hide_panel                  -       Y       Y
+    move_panel                  -       Y       Y
+    new_panel                   -       Y       Y
+    panel_above                 -       Y       Y
+    panel_below                 -       Y       Y
+    panel_hidden                -       Y       Y
+    panel_userptr               -       Y       Y
+    panel_window                -       Y       Y
+    replace_panel               -       Y       Y
+    set_panel_userptr           -       Y       Y
+    show_panel                  -       Y       Y
+    top_panel                   -       Y       Y
+    update_panels               -       Y       Y
 
   Credits:
     Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>

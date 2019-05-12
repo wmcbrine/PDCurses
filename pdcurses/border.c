@@ -74,29 +74,29 @@ border
    These functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    border                      Y       -      4.0
-    wborder                     Y       -      4.0
+                             X/Open  ncurses  NetBSD
+    border                      Y       Y       Y
+    wborder                     Y       Y       Y
     box                         Y       Y       Y
-    hline                       Y       -      4.0
-    vline                       Y       -      4.0
-    whline                      Y       -      4.0
-    wvline                      Y       -      4.0
-    mvhline                     Y
-    mvvline                     Y
-    mvwhline                    Y
-    mvwvline                    Y
-    border_set                  Y
-    wborder_set                 Y
-    box_set                     Y
-    hline_set                   Y
-    vline_set                   Y
-    whline_set                  Y
-    wvline_set                  Y
-    mvhline_set                 Y
-    mvvline_set                 Y
-    mvwhline_set                Y
-    mvwvline_set                Y
+    hline                       Y       Y       Y
+    vline                       Y       Y       Y
+    whline                      Y       Y       Y
+    wvline                      Y       Y       Y
+    mvhline                     Y       Y       Y
+    mvvline                     Y       Y       Y
+    mvwhline                    Y       Y       Y
+    mvwvline                    Y       Y       Y
+    border_set                  Y       Y       Y
+    wborder_set                 Y       Y       Y
+    box_set                     Y       Y       Y
+    hline_set                   Y       Y       Y
+    vline_set                   Y       Y       Y
+    whline_set                  Y       Y       Y
+    wvline_set                  Y       Y       Y
+    mvhline_set                 Y       Y       Y
+    mvvline_set                 Y       Y       Y
+    mvwhline_set                Y       Y       Y
+    mvwvline_set                Y       Y       Y
 
 **man-end****************************************************************/
 

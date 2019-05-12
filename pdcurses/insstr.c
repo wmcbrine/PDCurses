@@ -45,23 +45,23 @@ insstr
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    insstr                      Y       -      4.0
-    winsstr                     Y       -      4.0
-    mvinsstr                    Y       -      4.0
-    mvwinsstr                   Y       -      4.0
-    insnstr                     Y       -      4.0
-    winsnstr                    Y       -      4.0
-    mvinsnstr                   Y       -      4.0
-    mvwinsnstr                  Y       -      4.0
-    ins_wstr                    Y
-    wins_wstr                   Y
-    mvins_wstr                  Y
-    mvwins_wstr                 Y
-    ins_nwstr                   Y
-    wins_nwstr                  Y
-    mvins_nwstr                 Y
-    mvwins_nwstr                Y
+                             X/Open  ncurses  NetBSD
+    insstr                      Y       Y       Y
+    winsstr                     Y       Y       Y
+    mvinsstr                    Y       Y       Y
+    mvwinsstr                   Y       Y       Y
+    insnstr                     Y       Y       Y
+    winsnstr                    Y       Y       Y
+    mvinsnstr                   Y       Y       Y
+    mvwinsnstr                  Y       Y       Y
+    ins_wstr                    Y       Y       Y
+    wins_wstr                   Y       Y       Y
+    mvins_wstr                  Y       Y       Y
+    mvwins_wstr                 Y       Y       Y
+    ins_nwstr                   Y       Y       Y
+    wins_nwstr                  Y       Y       Y
+    mvins_nwstr                 Y       Y       Y
+    mvwins_nwstr                Y       Y       Y
 
 **man-end****************************************************************/
 

@@ -32,13 +32,13 @@ printw
    error.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     printw                      Y       Y       Y
     wprintw                     Y       Y       Y
     mvprintw                    Y       Y       Y
     mvwprintw                   Y       Y       Y
-    vwprintw                    Y       -      4.0
-    vw_printw                   Y
+    vwprintw                    Y       Y       Y
+    vw_printw                   Y       Y       Y
 
 **man-end****************************************************************/
 

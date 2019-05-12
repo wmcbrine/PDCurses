@@ -49,14 +49,14 @@ touch
    is_wintouched() and is_linetouched().
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     touchwin                    Y       Y       Y
-    touchline                   Y       -      3.0
-    untouchwin                  Y       -      4.0
+    touchline                   Y       Y       Y
+    untouchwin                  Y       Y       Y
     wtouchln                    Y       Y       Y
-    is_linetouched              Y       -      4.0
-    is_wintouched               Y       -      4.0
-    touchoverlap                -       Y       -
+    is_linetouched              Y       Y       Y
+    is_wintouched               Y       Y       Y
+    touchoverlap                -       -       Y
 
 **man-end****************************************************************/
 

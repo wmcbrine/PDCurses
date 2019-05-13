@@ -33,7 +33,6 @@ XCursesAppData xc_app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-#define MAX_COLORS   256            /* maximum of "normal" colors */
 #define COLOR_CURSOR MAX_COLORS     /* color of cursor */
 #define COLOR_BORDER MAX_COLORS + 1 /* color of border */
 

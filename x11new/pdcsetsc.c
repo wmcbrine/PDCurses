@@ -64,7 +64,7 @@ void PDC_set_title(const char *title)
 int PDC_set_blink(bool blinkon)
 {
     if (pdc_color_started)
-        COLORS = 256;
+        COLORS = MAX_COLORS;
 
     XCursesInstruct(blinkon ? CURSES_BLINK_ON : CURSES_BLINK_OFF);
 

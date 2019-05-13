@@ -20,8 +20,8 @@ SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
-SDL_Color pdc_color[256];
-Uint32 pdc_mapped[256];
+SDL_Color pdc_color[MAX_COLORS];
+Uint32 pdc_mapped[MAX_COLORS];
 int pdc_fheight, pdc_fwidth, pdc_fthick, pdc_flastc;
 bool pdc_own_screen;
 

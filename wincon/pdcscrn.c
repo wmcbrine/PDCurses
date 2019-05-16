@@ -681,6 +681,9 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
     }
     else
     {
+        if (!pdc_color[color].mapped)
+            return ERR;
+
         *red = pdc_color[color].r;
         *green = pdc_color[color].g;
         *blue = pdc_color[color].b;

@@ -8,6 +8,10 @@
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
+/* Color component table */
+
+PDCCOLOR pdc_color[MAX_COLORS];
+
 HANDLE std_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_in = INVALID_HANDLE_VALUE;
@@ -671,12 +675,18 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
             *red = DIVROUND(GetRValue(col) * 1000, 255);
             *green = DIVROUND(GetGValue(col) * 1000, 255);
             *blue = DIVROUND(GetBValue(col) * 1000, 255);
-
-            return OK;
         }
+        else
+            return ERR;
+    }
+    else
+    {
+        *red = pdc_color[color].r;
+        *green = pdc_color[color].g;
+        *blue = pdc_color[color].b;
     }
 
-    return ERR;
+    return OK;
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
@@ -694,7 +704,16 @@ int PDC_init_color(short color, short red, short green, short blue)
 
             return _set_colors();
         }
+
+        return ERR;
+    }
+    else
+    {
+        pdc_color[color].r = red;
+        pdc_color[color].g = green;
+        pdc_color[color].b = blue;
+        pdc_color[color].mapped = TRUE;
     }
 
-    return ERR;
+    return OK;
 }

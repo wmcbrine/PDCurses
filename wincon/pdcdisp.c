@@ -56,8 +56,16 @@ void _set_ansi_color(short f, short b, attr_t attr)
             p += sprintf(p, "%d", f + 30);
         else if (f < 16)
             p += sprintf(p, "%d", f + 82);
-        else
+        else if (f < 256 && !pdc_color[f].mapped)
             p += sprintf(p, "38;5;%d", f);
+        else
+        {
+            short red = pdc_color[f].r * 255 / 1000;
+            short green = pdc_color[f].g * 255 / 1000;
+            short blue = pdc_color[f].b * 255 / 1000;
+
+            p += sprintf(p, "38;2;%d;%d;%d", red, green, blue);
+        }
 
         pdc_oldf = f;
     }
@@ -71,8 +79,16 @@ void _set_ansi_color(short f, short b, attr_t attr)
             p += sprintf(p, "%d", b + 40);
         else if (b < 16)
             p += sprintf(p, "%d", b + 92);
-        else
+        else if (b < 256 && !pdc_color[b].mapped)
             p += sprintf(p, "48;5;%d", b);
+        else
+        {
+            short red = pdc_color[b].r * 255 / 1000;
+            short green = pdc_color[b].g * 255 / 1000;
+            short blue = pdc_color[b].b * 255 / 1000;
+
+            p += sprintf(p, "48;2;%d;%d;%d", red, green, blue);
+        }
 
         pdc_oldb = b;
     }

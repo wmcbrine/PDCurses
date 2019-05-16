@@ -60,9 +60,9 @@ void _set_ansi_color(short f, short b, attr_t attr)
             p += sprintf(p, "38;5;%d", f);
         else
         {
-            short red = pdc_color[f].r * 255 / 1000;
-            short green = pdc_color[f].g * 255 / 1000;
-            short blue = pdc_color[f].b * 255 / 1000;
+            short red = DIVROUND(pdc_color[f].r * 255, 1000);
+            short green = DIVROUND(pdc_color[f].g * 255, 1000);
+            short blue = DIVROUND(pdc_color[f].b * 255, 1000);
 
             p += sprintf(p, "38;2;%d;%d;%d", red, green, blue);
         }
@@ -83,9 +83,9 @@ void _set_ansi_color(short f, short b, attr_t attr)
             p += sprintf(p, "48;5;%d", b);
         else
         {
-            short red = pdc_color[b].r * 255 / 1000;
-            short green = pdc_color[b].g * 255 / 1000;
-            short blue = pdc_color[b].b * 255 / 1000;
+            short red = DIVROUND(pdc_color[b].r * 255, 1000);
+            short green = DIVROUND(pdc_color[b].g * 255,1000);
+            short blue = DIVROUND(pdc_color[b].b * 255, 1000);
 
             p += sprintf(p, "48;2;%d;%d;%d", red, green, blue);
         }

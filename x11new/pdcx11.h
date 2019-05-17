@@ -176,5 +176,3 @@ enum
 extern short *xc_atrtab;
 
 extern bool xc_resize_now;
-
-#define MAX_COLORS 768

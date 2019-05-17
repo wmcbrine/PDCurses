@@ -187,5 +187,3 @@ enum
 };
 
 extern short *xc_atrtab;
-
-#define MAX_COLORS 768

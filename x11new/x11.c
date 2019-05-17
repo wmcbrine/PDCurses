@@ -33,8 +33,8 @@ XCursesAppData xc_app_data;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-#define COLOR_CURSOR MAX_COLORS     /* color of cursor */
-#define COLOR_BORDER MAX_COLORS + 1 /* color of border */
+#define COLOR_CURSOR PDC_MAXCOL     /* color of cursor */
+#define COLOR_BORDER PDC_MAXCOL + 1 /* color of border */
 
 #define XCURSESDISPLAY (XtDisplay(drawing))
 #define XCURSESWIN     (XtWindow(drawing))
@@ -373,7 +373,7 @@ static XtActionsRec action_table[] =
     {"string",                (XtActionProc)XCursesHandleString}
 };
 
-static Pixel colors[MAX_COLORS + 2];
+static Pixel colors[PDC_MAXCOL + 2];
 static bool vertical_cursor = FALSE;
 
 static XIM Xim = NULL;
@@ -2067,7 +2067,7 @@ static void _get_color(void)
     Colormap cmap = DefaultColormap(XCURSESDISPLAY,
                                     DefaultScreen(XCURSESDISPLAY));
 
-    if (index < 0 || index >= MAX_COLORS)
+    if (index < 0 || index >= PDC_MAXCOL)
         _exit_process(4, SIGKILL, "exiting from _get_color");
 
     tmp->pixel = colors[index];
@@ -2083,7 +2083,7 @@ static void _set_color(void)
     Colormap cmap = DefaultColormap(XCURSESDISPLAY,
                                     DefaultScreen(XCURSESDISPLAY));
 
-    if (index < 0 || index >= MAX_COLORS)
+    if (index < 0 || index >= PDC_MAXCOL)
         _exit_process(4, SIGKILL, "exiting from _set_color");
 
     if (XAllocColor(XCURSESDISPLAY, cmap, tmp))

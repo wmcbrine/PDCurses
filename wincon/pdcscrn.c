@@ -10,7 +10,7 @@ static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 /* Color component table */
 
-PDCCOLOR pdc_color[MAX_COLORS];
+PDCCOLOR pdc_color[PDC_MAXCOL];
 
 HANDLE std_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;

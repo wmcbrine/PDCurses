@@ -96,7 +96,7 @@ int PDC_set_blink(bool blinkon)
         else if (PDC_can_change_color()) /* is_nt */
         {
             if (SetConsoleMode(pdc_con_out, 0x0004)) /* VT */
-                COLORS = MAX_COLORS;
+                COLORS = PDC_MAXCOL;
 
             SetConsoleMode(pdc_con_out, 0x0010); /* LVB */
         }

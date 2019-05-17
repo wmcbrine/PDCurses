@@ -1199,7 +1199,7 @@ void gradient(int tmarg)
             "White on red to green on blue,  underlined (if available)" };
         const int len = (int)strlen(output_text[i]);
 
-        move(tmarg + 3 + i, 1);
+        move(tmarg + 3 + i, (COLS - 69) / 2);
         for (j = 0; j < len; j++)
         {
             const int oval = j * 1000 / len;

@@ -2303,11 +2303,7 @@ static void _set_color(void)
         _exit_process(4, SIGKILL, "exiting from _set_color");
 
     if (XAllocColor(XCURSESDISPLAY, cmap, tmp))
-    {
         colors[index] = tmp->pixel;
-
-        _display_screen();
-    }
 }
 
 /* For PDC_getclipboard() */
@@ -2650,6 +2646,11 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
             XC_LOG(("CURSES_SET_COLOR recieved from child\n"));
             _set_color();
             _resume_curses();
+            break;
+
+        case CURSES_DISPLAY_ALL:
+            XC_LOG(("CURSES_DISPLAY_ALL recieved from child\n"));
+            _display_screen();
             break;
 
         default:

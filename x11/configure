@@ -4598,7 +4598,7 @@ case "$target" in
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
-		LD_RXLIB1="${CC} -flat_namespace -undefined suppress -dynamiclib -install_name=\$(@)"
+		LD_RXLIB1="${CC} -flat_namespace -undefined suppress -dynamiclib"
 		;;
 	*)
 		;;

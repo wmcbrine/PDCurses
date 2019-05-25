@@ -32,6 +32,10 @@
 
 int PDC_write_screen_to_file( const char *filename, WINDOW *win);
 
+#ifndef A_OVERLINE
+   #define A_OVERLINE   0
+#endif
+
 static const char *labels[] = {
                "Quit", "Blink", "No labels", "431", "2134", "55",
                "62-really-longer-than-it-should-be-just-for-testing",
@@ -334,7 +338,7 @@ int main( int argc, char **argv)
             move( 4, COL2);
             text_in_a_box( "Text in a box");
 
-#ifdef CHTYPE_LONG
+#if defined( CHTYPE_LONG) && defined( A_STRIKEOUT)
             attrset( COLOR_PAIR( 6));
             attron( A_STRIKEOUT);
             mvaddstr( 10, 40, "Strikeout");

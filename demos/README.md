@@ -22,4 +22,7 @@ Distribution Status
 -------------------
 
 Public domain, except for rain.c and worm.c, which are under the ncurses
-license (MIT-like).
+license (MIT-like), and UTF-8-demo.txt, which is under Creative Commons
+Attribution ([CC BY]).
+
+[CC BY]: https://creativecommons.org/licenses/by/4.0/legalcode

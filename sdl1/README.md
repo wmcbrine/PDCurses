@@ -95,7 +95,7 @@ Icons
 The icon (used with SDL_WM_SetIcon() -- not used for the executable
 file) can be set via the environment variable PDC_ICON, and falls back
 to "pdcicon.bmp", and then to the built-in icon from iconbmp.h. The
-built-in icon is the PDCurses logo, as seen in ../common/icon32.xbm.
+built-in icon is the PDCurses logo, as seen in ../common/icon32.xpm.
 
 If pdc_screen is preinitialized (see below), PDCurses does not attempt
 to set the icon.

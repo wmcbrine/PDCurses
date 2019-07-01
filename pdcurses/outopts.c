@@ -156,6 +156,9 @@ int raw_output(bool bf)
 {
     PDC_LOG(("raw_output() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     SP->raw_out = bf;
 
     return OK;

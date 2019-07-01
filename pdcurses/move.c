@@ -53,7 +53,7 @@ int mvcur(int oldrow, int oldcol, int newrow, int newcol)
     PDC_LOG(("mvcur() - called: oldrow %d oldcol %d newrow %d newcol %d\n",
              oldrow, oldcol, newrow, newcol));
 
-    if ((newrow >= LINES) || (newcol >= COLS) || (newrow < 0) || (newcol < 0))
+    if (!SP || newrow < 0 || newrow >= LINES || newcol < 0 || newcol >= COLS)
         return ERR;
 
     PDC_gotoyx(newrow, newcol);

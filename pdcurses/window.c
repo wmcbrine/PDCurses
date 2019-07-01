@@ -248,7 +248,7 @@ WINDOW *newwin(int nlines, int ncols, int begy, int begx)
     if (!ncols)
         ncols  = COLS  - begx;
 
-    if (begy + nlines > SP->lines || begx + ncols > SP->cols)
+    if (!SP || begy + nlines > SP->lines || begx + ncols > SP->cols)
         return (WINDOW *)NULL;
 
     win = PDC_makenew(nlines, ncols, begy, begx);
@@ -446,7 +446,7 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
     PDC_LOG(("resize_window() - called: nlines %d ncols %d\n",
              nlines, ncols));
 
-    if (!win)
+    if (!win || !SP)
         return (WINDOW *)NULL;
 
     if (win->_flags & _SUBPAD)

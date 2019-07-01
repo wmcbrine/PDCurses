@@ -119,7 +119,7 @@ int waddch(WINDOW *win, const chtype ch)
     PDC_LOG(("waddch() - called: win=%p ch=%x (text=%c attr=0x%x)\n",
              win, ch, ch & A_CHARTEXT, ch & A_ATTRIBUTES));
 
-    if (!win)
+    if (!win || !SP)
         return ERR;
 
     x = win->_curx;

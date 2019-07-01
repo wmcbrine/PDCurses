@@ -132,8 +132,11 @@ void setsyx(int y, int x)
 {
     PDC_LOG(("setsyx() - called\n"));
 
-    curscr->_leaveit = y == -1 || x == -1;
+    if (curscr)
+    {
+        curscr->_leaveit = y == -1 || x == -1;
 
-    if (!curscr->_leaveit)
-        wmove(curscr, y, x);
+        if (!curscr->_leaveit)
+            wmove(curscr, y, x);
+    }
 }

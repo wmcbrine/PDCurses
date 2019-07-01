@@ -119,14 +119,14 @@ chtype termattrs(void)
 {
     PDC_LOG(("termattrs() - called\n"));
 
-    return SP->termattrs;
+    return SP ? SP->termattrs : (chtype)0;
 }
 
 attr_t term_attrs(void)
 {
     PDC_LOG(("term_attrs() - called\n"));
 
-    return SP->termattrs;
+    return SP ? SP->termattrs : (attr_t)0;
 }
 
 char *termname(void)

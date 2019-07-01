@@ -173,7 +173,7 @@ int wgetch(WINDOW *win)
 
     PDC_LOG(("wgetch() - called\n"));
 
-    if (!win)
+    if (!win || !SP)
         return ERR;
 
     waitcount = 0;
@@ -356,6 +356,9 @@ int PDC_save_key_modifiers(bool flag)
 {
     PDC_LOG(("PDC_save_key_modifiers() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     SP->save_key_modifiers = flag;
     return OK;
 }
@@ -363,6 +366,9 @@ int PDC_save_key_modifiers(bool flag)
 int PDC_return_key_modifiers(bool flag)
 {
     PDC_LOG(("PDC_return_key_modifiers() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     SP->return_key_modifiers = flag;
     return PDC_modifiers_set();

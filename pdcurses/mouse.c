@@ -146,6 +146,9 @@ int mouse_set(mmask_t mbe)
 {
     PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
+    if (!SP)
+        return ERR;
+
     SP->_trap_mbe = mbe;
     return PDC_mouse_set();
 }
@@ -154,6 +157,9 @@ int mouse_on(mmask_t mbe)
 {
     PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
+    if (!SP)
+        return ERR;
+
     SP->_trap_mbe |= mbe;
     return PDC_mouse_set();
 }
@@ -161,6 +167,9 @@ int mouse_on(mmask_t mbe)
 int mouse_off(mmask_t mbe)
 {
     PDC_LOG(("mouse_off() - called: event %x\n", mbe));
+
+    if (!SP)
+        return ERR;
 
     SP->_trap_mbe &= ~mbe;
     return PDC_mouse_set();
@@ -199,7 +208,7 @@ mmask_t getmouse(void)
 {
     PDC_LOG(("getmouse() - called\n"));
 
-    return SP->_trap_mbe;
+    return SP ? SP->_trap_mbe : (mmask_t)0;
 }
 
 /* ncurses mouse interface */
@@ -274,6 +283,9 @@ mmask_t mousemask(mmask_t mask, mmask_t *oldmask)
 {
     PDC_LOG(("mousemask() - called\n"));
 
+    if (!SP)
+        return (mmask_t)0;
+
     if (oldmask)
         *oldmask = SP->_trap_mbe;
 
@@ -294,7 +306,7 @@ int nc_getmouse(MEVENT *event)
 
     PDC_LOG(("nc_getmouse() - called\n"));
 
-    if (!event)
+    if (!event || !SP)
         return ERR;
 
     ungot = FALSE;

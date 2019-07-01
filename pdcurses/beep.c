@@ -23,7 +23,7 @@ beep
 
 ### Return Value
 
-   These functions return OK.
+   These functions return ERR if called before initscr(), otherwise OK.
 
 ### Portability
                              X/Open  ncurses  NetBSD
@@ -35,6 +35,9 @@ beep
 int beep(void)
 {
     PDC_LOG(("beep() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     if (SP->audible)
         PDC_beep();
@@ -49,6 +52,9 @@ int flash(void)
     int z, y, x;
 
     PDC_LOG(("flash() - called\n"));
+
+    if (!curscr)
+        return ERR;
 
     /* Reverse each cell; wait; restore the screen */
 

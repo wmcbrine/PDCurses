@@ -113,7 +113,7 @@ int start_color(void)
 {
     PDC_LOG(("start_color() - called\n"));
 
-    if (SP->mono)
+    if (!SP || SP->mono)
         return ERR;
 
     pdc_color_started = TRUE;
@@ -143,7 +143,7 @@ int init_pair(short pair, short fg, short bg)
 {
     PDC_LOG(("init_pair() - called: pair %d fg %d bg %d\n", pair, fg, bg));
 
-    if (!pdc_color_started || pair < 1 || pair >= COLOR_PAIRS ||
+    if (!SP || !pdc_color_started || pair < 1 || pair >= COLOR_PAIRS ||
         fg < first_col || fg >= COLORS || bg < first_col || bg >= COLORS)
         return ERR;
 
@@ -174,7 +174,7 @@ bool has_colors(void)
 {
     PDC_LOG(("has_colors() - called\n"));
 
-    return !(SP->mono);
+    return SP ? !(SP->mono) : FALSE;
 }
 
 int init_color(short color, short red, short green, short blue)
@@ -271,7 +271,7 @@ int PDC_set_line_color(short color)
 {
     PDC_LOG(("PDC_set_line_color() - called: %d\n", color));
 
-    if (color < -1 || color >= COLORS)
+    if (!SP || color < -1 || color >= COLORS)
         return ERR;
 
     SP->line_color = color;

@@ -125,6 +125,9 @@ int cbreak(void)
 {
     PDC_LOG(("cbreak() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     SP->cbreak = TRUE;
 
     return OK;
@@ -133,6 +136,9 @@ int cbreak(void)
 int nocbreak(void)
 {
     PDC_LOG(("nocbreak() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     SP->cbreak = FALSE;
     SP->delaytenths = 0;
@@ -144,6 +150,9 @@ int echo(void)
 {
     PDC_LOG(("echo() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     SP->echo = TRUE;
 
     return OK;
@@ -152,6 +161,9 @@ int echo(void)
 int noecho(void)
 {
     PDC_LOG(("noecho() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     SP->echo = FALSE;
 
@@ -162,7 +174,7 @@ int halfdelay(int tenths)
 {
     PDC_LOG(("halfdelay() - called\n"));
 
-    if (tenths < 1 || tenths > 255)
+    if (!SP || tenths < 1 || tenths > 255)
         return ERR;
 
     SP->delaytenths = tenths;
@@ -193,6 +205,9 @@ int meta(WINDOW *win, bool bf)
 {
     PDC_LOG(("meta() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     SP->raw_inp = bf;
 
     return OK;
@@ -202,6 +217,9 @@ int nl(void)
 {
     PDC_LOG(("nl() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     SP->autocr = TRUE;
 
     return OK;
@@ -210,6 +228,9 @@ int nl(void)
 int nonl(void)
 {
     PDC_LOG(("nonl() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     SP->autocr = FALSE;
 
@@ -239,6 +260,9 @@ int raw(void)
 {
     PDC_LOG(("raw() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     PDC_set_keyboard_binary(TRUE);
     SP->raw_inp = TRUE;
 
@@ -248,6 +272,9 @@ int raw(void)
 int noraw(void)
 {
     PDC_LOG(("noraw() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     PDC_set_keyboard_binary(FALSE);
     SP->raw_inp = FALSE;

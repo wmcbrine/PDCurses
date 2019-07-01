@@ -28,7 +28,7 @@ util
 
    unctrl() expands the text portion of the chtype c into a printable
    string. Control characters are changed to the "^X" notation; others
-   are passed through. wunctrl() is the wide- character version of the
+   are passed through. wunctrl() is the wide-character version of the
    function.
 
    filter() and use_env() are no-ops in PDCurses.
@@ -53,8 +53,7 @@ util
 
 ### Return Value
 
-   unctrl() and wunctrl() return NULL on failure. delay_output() always
-   returns OK.
+   wunctrl() returns NULL on failure. delay_output() always returns OK.
 
    getcchar() returns the number of wide characters wcval points to when
    wch is NULL; when it's not, getcchar() returns OK or ERR.
@@ -166,6 +165,9 @@ wchar_t *wunctrl(cchar_t *wc)
     cchar_t ic;
 
     PDC_LOG(("wunctrl() - called\n"));
+
+    if (!wc)
+        return NULL;
 
     ic = *wc & A_CHARTEXT;
 

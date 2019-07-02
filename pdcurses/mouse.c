@@ -219,6 +219,9 @@ int mouseinterval(int wait)
 
     PDC_LOG(("mouseinterval() - called: %d\n", wait));
 
+    if (!SP)
+        return ERR;
+
     old_wait = SP->mouse_wait;
 
     if (wait >= 0 && wait <= 1000)

@@ -277,6 +277,9 @@ int slk_noutrefresh(void)
 {
     PDC_LOG(("slk_noutrefresh() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     return wnoutrefresh(SP->slk_winptr);
 }
 
@@ -308,6 +311,9 @@ int slk_clear(void)
 {
     PDC_LOG(("slk_clear() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     hidden = TRUE;
     werase(SP->slk_winptr);
     return wrefresh(SP->slk_winptr);
@@ -316,6 +322,9 @@ int slk_clear(void)
 int slk_restore(void)
 {
     PDC_LOG(("slk_restore() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     hidden = FALSE;
     _redraw();
@@ -326,6 +335,9 @@ int slk_touch(void)
 {
     PDC_LOG(("slk_touch() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     return touchwin(SP->slk_winptr);
 }
 
@@ -334,6 +346,9 @@ int slk_attron(const chtype attrs)
     int rc;
 
     PDC_LOG(("slk_attron() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     rc = wattron(SP->slk_winptr, attrs);
     _redraw();
@@ -354,6 +369,9 @@ int slk_attroff(const chtype attrs)
 
     PDC_LOG(("slk_attroff() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     rc = wattroff(SP->slk_winptr, attrs);
     _redraw();
 
@@ -373,6 +391,9 @@ int slk_attrset(const chtype attrs)
 
     PDC_LOG(("slk_attrset() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     rc = wattrset(SP->slk_winptr, attrs);
     _redraw();
 
@@ -384,6 +405,9 @@ int slk_color(short color_pair)
     int rc;
 
     PDC_LOG(("slk_color() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     rc = wcolor_set(SP->slk_winptr, color_pair, NULL);
     _redraw();

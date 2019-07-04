@@ -84,7 +84,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
         else
         {
             short red = DIVROUND(pdc_color[b].r * 255, 1000);
-            short green = DIVROUND(pdc_color[b].g * 255,1000);
+            short green = DIVROUND(pdc_color[b].g * 255, 1000);
             short blue = DIVROUND(pdc_color[b].b * 255, 1000);
 
             p += sprintf(p, "48;2;%d;%d;%d", red, green, blue);

@@ -28,36 +28,45 @@ getch
 
 ### Description
 
-   With the getch(), wgetch(), mvgetch(), and mvwgetch() functions,
-   a character is read from the terminal associated with the window.
-   In nodelay mode, if there is no input waiting, the value ERR is
+   With the getch(), wgetch(), mvgetch(), and mvwgetch() functions, a
+   character is read from the terminal associated with the window. In
+   nodelay mode, if there is no input waiting, the value ERR is
    returned. In delay mode, the program will hang until the system
    passes text through to the program. Depending on the setting of
    cbreak(), this will be after one character or after the first
-   newline.  Unless noecho() has been set, the character will also
-   be echoed into the designated window.
+   newline. Unless noecho() has been set, the character will also be
+   echoed into the designated window.
 
    If keypad() is TRUE, and a function key is pressed, the token for
    that function key will be returned instead of the raw characters.
    Possible function keys are defined in <curses.h> with integers
    beginning with 0401, whose names begin with KEY_.
 
-   If nodelay(win, TRUE) has been called on the window and no input
-   is waiting, the value ERR is returned.
+   If nodelay(win, TRUE) has been called on the window and no input is
+   waiting, the value ERR is returned.
 
-   ungetch() places ch back onto the input queue to be returned by
-   the next call to wgetch().
+   ungetch() places ch back onto the input queue to be returned by the
+   next call to wgetch().
 
-   flushinp() throws away any type-ahead that has been typed by the
-   user and has not yet been read by the program.
+   flushinp() throws away any type-ahead that has been typed by the user
+   and has not yet been read by the program.
+
+   wget_wch() is the wide-character version of wgetch(), available when
+   PDCurses is built with the PDC_WIDE option. It takes a pointer to a
+   wint_t rather than returning the key as an int, and instead returns
+   KEY_CODE_YES if the key is a function key. Otherwise, it returns OK
+   or ERR. It's important to check for KEY_CODE_YES, since regular wide
+   characters can have the same values as function key codes.
+
+   unget_wch() puts a wide character on the input queue.
 
    PDC_get_key_modifiers() returns the keyboard modifiers (shift,
    control, alt, numlock) effective at the time of the last getch()
    call, if PDC_save_key_modifiers(TRUE) has been called before the
    getch(). Use the macros PDC_KEY_MODIFIER_* to determine which
-   modifier(s) were set. PDC_return_key_modifiers() tells getch()
-   to return modifier keys pressed alone as keystrokes (KEY_ALT_L,
-   etc.). These may not work on all platforms.
+   modifier(s) were set. PDC_return_key_modifiers() tells getch() to
+   return modifier keys pressed alone as keystrokes (KEY_ALT_L, etc.).
+   These may not work on all platforms.
 
    NOTE: getch() and ungetch() are implemented as macros, to avoid
    conflict with many DOS compiler's runtime libraries.
@@ -68,18 +77,18 @@ getch
    character or function key token.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     getch                       Y       Y       Y
     wgetch                      Y       Y       Y
     mvgetch                     Y       Y       Y
     mvwgetch                    Y       Y       Y
     ungetch                     Y       Y       Y
     flushinp                    Y       Y       Y
-    get_wch                     Y
-    wget_wch                    Y
-    mvget_wch                   Y
-    mvwget_wch                  Y
-    unget_wch                   Y
+    get_wch                     Y       Y       Y
+    wget_wch                    Y       Y       Y
+    mvget_wch                   Y       Y       Y
+    mvwget_wch                  Y       Y       Y
+    unget_wch                   Y       Y       Y
     PDC_get_key_modifiers       -       -       -
 
 **man-end****************************************************************/
@@ -92,7 +101,7 @@ static int c_gindex = 1;    /* getter index */
 static int c_ungind = 0;    /* ungetch() push index */
 static int c_ungch[NUNGETCH];   /* array of ungotten chars */
 
-static int _mouse_key(WINDOW *win)
+static int _mouse_key(void)
 {
     int i, key = KEY_MOUSE;
     unsigned long mbe = SP->_trap_mbe;
@@ -251,7 +260,7 @@ int wgetch(WINDOW *win)
                area to function keys */
 
             else if (key == KEY_MOUSE)
-                key = _mouse_key(win);
+                key = _mouse_key();
         }
 
         /* unwanted key? loop back */

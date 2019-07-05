@@ -170,32 +170,24 @@ static int _mouse_key(void)
     return key;
 }
 
+#define WAIT_FOREVER    -1
+
 int wgetch(WINDOW *win)
 {
     static int buffer[_INBUFSIZ];   /* character buffer */
-    int key, waitcount;
+    int key, remaining_millisecs;
 
     PDC_LOG(("wgetch() - called\n"));
 
     if (!win)
         return ERR;
 
-    waitcount = 0;
-
-     /* set the number of 1/20th second napms() calls */
-
     if (SP->delaytenths)
-        waitcount = 2 * SP->delaytenths;
+        remaining_millisecs = 100 * SP->delaytenths;
     else
-        if (win->_delayms)
-        {
-            /* Can't really do millisecond intervals, so delay in
-               1/20ths of a second (50ms) */
-
-            waitcount = win->_delayms / 50;
-            if (!waitcount)
-                waitcount = 1;
-        }
+        remaining_millisecs = win->_delayms;
+    if( !remaining_millisecs && !win->_nodelay)
+        remaining_millisecs = WAIT_FOREVER;
 
     /* refresh window when wgetch is called if there have been changes
        to it and it is not a pad */
@@ -224,24 +216,23 @@ int wgetch(WINDOW *win)
 
     for (;;)            /* loop for any buffering */
     {
+
         /* is there a keystroke ready? */
 
         if (!PDC_check_key())
         {
             /* if not, handle timeout() and halfdelay() */
+            int nap_time = 50;
 
-            if (SP->delaytenths || win->_delayms)
+            if (remaining_millisecs != WAIT_FOREVER)
             {
-                if (!waitcount)
+                if (!remaining_millisecs)
                     return ERR;
-
-                waitcount--;
+                if( nap_time > remaining_millisecs)
+                    nap_time = remaining_millisecs;
+                remaining_millisecs -= nap_time;
             }
-            else
-                if (win->_nodelay)
-                    return ERR;
-
-            napms(50);  /* sleep for 1/20th second */
+            napms( nap_time);
             continue;   /* then check again */
         }
 

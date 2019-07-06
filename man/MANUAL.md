@@ -428,7 +428,7 @@ beep
 
 ### Return Value
 
-   These functions return OK.
+   These functions return ERR if called before initscr(), otherwise OK.
 
 ### Portability
                              X/Open  ncurses  NetBSD
@@ -2643,7 +2643,7 @@ util
 
    unctrl() expands the text portion of the chtype c into a printable
    string. Control characters are changed to the "^X" notation; others
-   are passed through. wunctrl() is the wide- character version of the
+   are passed through. wunctrl() is the wide-character version of the
    function.
 
    filter() and use_env() are no-ops in PDCurses.
@@ -2668,8 +2668,7 @@ util
 
 ### Return Value
 
-   unctrl() and wunctrl() return NULL on failure. delay_output() always
-   returns OK.
+   wunctrl() returns NULL on failure. delay_output() always returns OK.
 
    getcchar() returns the number of wide characters wcval points to when
    wch is NULL; when it's not, getcchar() returns OK or ERR.

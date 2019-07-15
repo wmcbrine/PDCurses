@@ -12,8 +12,8 @@ ifeq ($(OS),Windows_NT)
 	SFLAGS = -Ic:/sdl2-2.0.9/$(PLATFORM)/include/SDL2
 	SLIBS = -Lc:/sdl2-2.0.9/$(PLATFORM)/lib -lSDL2main -lSDL2
 
-	TFLAGS = -Ic:/sdl2_ttf-2.0.14/$(PLATFORM)/include/SDL2
-	TLIBS =-Lc:/sdl2_ttf-2.0.14/$(PLATFORM)/lib -lSDL2_ttf
+	TFLAGS = -Ic:/sdl2_ttf-2.0.15/$(PLATFORM)/include/SDL2
+	TLIBS =-Lc:/sdl2_ttf-2.0.15/$(PLATFORM)/lib -lSDL2_ttf
 
 	DEMOFLAGS = -mwindows
 else

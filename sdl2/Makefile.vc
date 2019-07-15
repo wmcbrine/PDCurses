@@ -37,8 +37,8 @@ LDFLAGS		=
 
 !ifdef WIDE
 WIDEOPT		= -DPDC_WIDE
-TTF_INCLUDE	= -IC:\SDL2_ttf-2.0.14\include
-TTF_LIB		= C:\SDL2_ttf-2.0.14\lib\$(PLATFORM)\SDL2_ttf.lib
+TTF_INCLUDE	= -IC:\SDL2_ttf-2.0.15\include
+TTF_LIB		= C:\SDL2_ttf-2.0.15\lib\$(PLATFORM)\SDL2_ttf.lib
 !endif
 
 !ifdef UTF8

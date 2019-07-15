@@ -2,18 +2,29 @@
 
 O = o
 
+ifndef PDCURSES_SRCDIR
+	PDCURSES_SRCDIR	= ..
+endif
+
+osdir		= $(PDCURSES_SRCDIR)/sdl2
+common		= $(PDCURSES_SRCDIR)/common
+
+include $(common)/libobjs.mif
+
 ifeq ($(OS),Windows_NT)
 	E = .exe
 	CC = gcc
 	RM = cmd /c del
 
+	include $(osdir)/versions.mif
+
 	PLATFORM = $(shell $(CC) -dumpmachine)
 
-	SFLAGS = -Ic:/sdl2-2.0.9/$(PLATFORM)/include/SDL2
-	SLIBS = -Lc:/sdl2-2.0.9/$(PLATFORM)/lib -lSDL2main -lSDL2
+	SFLAGS = -I$(SDLBASE)/$(PLATFORM)/include/SDL2
+	SLIBS = -L$(SDLBASE)/$(PLATFORM)/lib -lSDL2main -lSDL2
 
-	TFLAGS = -Ic:/sdl2_ttf-2.0.15/$(PLATFORM)/include/SDL2
-	TLIBS =-Lc:/sdl2_ttf-2.0.15/$(PLATFORM)/lib -lSDL2_ttf
+	TFLAGS = -I$(TTFBASE)/$(PLATFORM)/include/SDL2
+	TLIBS =-L$(TTFBASE)/$(PLATFORM)/lib -lSDL2_ttf
 
 	DEMOFLAGS = -mwindows
 else
@@ -24,15 +35,6 @@ else
 
 	TLIBS = -lSDL2_ttf
 endif
-
-ifndef PDCURSES_SRCDIR
-	PDCURSES_SRCDIR	= ..
-endif
-
-osdir		= $(PDCURSES_SRCDIR)/sdl2
-common		= $(PDCURSES_SRCDIR)/common
-
-include $(common)/libobjs.mif
 
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 

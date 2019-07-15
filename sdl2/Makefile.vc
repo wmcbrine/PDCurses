@@ -10,18 +10,19 @@ O = obj
 E = .exe
 RM = del
 
-SDL2_INCLUDE = -IC:\SDL2-2.0.9\include
-SDL2_LIB = C:\SDL2-2.0.9\lib\$(PLATFORM)\SDL2.lib
-SDL2_LIBMAIN = C:\SDL2-2.0.9\lib\$(PLATFORM)\SDL2main.lib
-
 !ifndef PDCURSES_SRCDIR
 PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_SRCDIR)\common\libobjs.mif
-
 osdir		= $(PDCURSES_SRCDIR)\sdl2
 common		= $(PDCURSES_SRCDIR)\common
+
+!include $(common)\libobjs.mif
+!include $(osdir)\versions.mif
+
+SDL2_INCLUDE = -I$(SDLBASE)\include
+SDL2_LIB = $(SDLBASE)\lib\$(PLATFORM)\SDL2.lib
+SDL2_LIBMAIN = $(SDLBASE)\lib\$(PLATFORM)\SDL2main.lib
 
 PDCURSES_WIN_H	= $(osdir)\pdcsdl.h
 
@@ -37,8 +38,8 @@ LDFLAGS		=
 
 !ifdef WIDE
 WIDEOPT		= -DPDC_WIDE
-TTF_INCLUDE	= -IC:\SDL2_ttf-2.0.15\include
-TTF_LIB		= C:\SDL2_ttf-2.0.15\lib\$(PLATFORM)\SDL2_ttf.lib
+TTF_INCLUDE	= -I$(TTFBASE)\include
+TTF_LIB		= $(TTFBASE)\lib\$(PLATFORM)\SDL2_ttf.lib
 !endif
 
 !ifdef UTF8

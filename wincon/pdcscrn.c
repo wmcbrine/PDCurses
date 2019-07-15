@@ -694,6 +694,8 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
+    pdc_dirty = TRUE;
+
     if (color < 16)
     {
         COLORREF *color_table = _get_colors();

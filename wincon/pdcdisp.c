@@ -34,10 +34,10 @@ void _set_ansi_color(short f, short b, attr_t attr)
     char esc[64], *p;
     short tmp, underline;
 
-    if (f < 16)
+    if (f < 16 && !pdc_color[f].mapped)
         f = pdc_curstoansi[f];
 
-    if (b < 16)
+    if (b < 16 && !pdc_color[b].mapped)
         b = pdc_curstoansi[b];
 
     if (attr & A_REVERSE)
@@ -52,9 +52,9 @@ void _set_ansi_color(short f, short b, attr_t attr)
 
     if (f != pdc_oldf)
     {
-        if (f < 8)
+        if (f < 8 && !pdc_color[f].mapped)
             p += sprintf(p, "%d", f + 30);
-        else if (f < 16)
+        else if (f < 16 && !pdc_color[f].mapped)
             p += sprintf(p, "%d", f + 82);
         else if (f < 256 && !pdc_color[f].mapped)
             p += sprintf(p, "38;5;%d", f);
@@ -75,9 +75,9 @@ void _set_ansi_color(short f, short b, attr_t attr)
         if (strlen(esc) > 2)
             p += sprintf(p, ";");
 
-        if (b < 8)
+        if (b < 8 && !pdc_color[b].mapped)
             p += sprintf(p, "%d", b + 40);
-        else if (b < 16)
+        else if (b < 16 && !pdc_color[b].mapped)
             p += sprintf(p, "%d", b + 92);
         else if (b < 256 && !pdc_color[b].mapped)
             p += sprintf(p, "48;5;%d", b);

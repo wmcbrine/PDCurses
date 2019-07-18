@@ -91,14 +91,13 @@ int PDC_set_blink(bool blinkon)
     if (pdc_color_started)
     {
         COLORS = 16;
-        if (pdc_conemu && pdc_ansi)
-            COLORS = 256;
-        else if (PDC_can_change_color()) /* is_nt */
+        if (PDC_can_change_color()) /* is_nt */
         {
-            if (SetConsoleMode(pdc_con_out, 0x0004)) /* VT */
+            if (pdc_conemu || SetConsoleMode(pdc_con_out, 0x0004)) /* VT */
                 COLORS = PDC_MAXCOL;
 
-            SetConsoleMode(pdc_con_out, 0x0010); /* LVB */
+            if (!pdc_conemu)
+                SetConsoleMode(pdc_con_out, 0x0010); /* LVB */
         }
     }
 

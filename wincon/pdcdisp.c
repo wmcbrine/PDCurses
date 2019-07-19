@@ -48,6 +48,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
         f = b;
         b = tmp;
     }
+    attr &= SP->termattrs;
     italic = !!(attr & A_ITALIC);
     underline = !!(attr & A_UNDERLINE);
 

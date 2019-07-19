@@ -13,6 +13,7 @@
 
 DWORD pdc_last_blink;
 static bool blinked_off = FALSE;
+static bool in_italic = FALSE;
 
 /* position hardware cursor at (y, x) */
 
@@ -33,6 +34,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
 {
     char esc[64], *p;
     short tmp, underline;
+    bool italic;
 
     if (f < 16 && !pdc_color[f].mapped)
         f = pdc_curstoansi[f];
@@ -46,6 +48,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
         f = b;
         b = tmp;
     }
+    italic = !!(attr & A_ITALIC);
     underline = !!(attr & A_UNDERLINE);
 
     p = esc + sprintf(esc, "\x1b[");
@@ -93,6 +96,19 @@ void _set_ansi_color(short f, short b, attr_t attr)
         pdc_oldb = b;
     }
 
+    if (italic != in_italic)
+    {
+        if (strlen(esc) > 2)
+            p += sprintf(p, ";");
+
+        if (italic)
+            p += sprintf(p, "3");
+        else
+            p += sprintf(p, "23");
+
+        in_italic = italic;
+    }
+
     if (underline != pdc_oldu)
     {
         if (strlen(esc) > 2)
@@ -125,8 +141,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     short fore, back;
     bool blink, ansi;
 
-    if (pdc_conemu && pdc_ansi &&
-        (lineno == (SP->lines - 1)) && ((x + len) == SP->cols))
+    if (pdc_ansi && (lineno == (SP->lines - 1)) && ((x + len) == SP->cols))
     {
         len--;
         if (len)

@@ -434,6 +434,8 @@ int PDC_scr_open(int argc, char **argv)
     SP->audible = TRUE;
 
     SP->termattrs = A_COLOR | A_REVERSE;
+    if (pdc_ansi)
+        SP->termattrs |= A_UNDERLINE | A_ITALIC;
 
     if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
     {

@@ -991,6 +991,11 @@ unsigned long XCursesKeyPress(XEvent *event)
 
     XC_LOG(("XCursesKeyPress() - called\n"));
 
+    /* In compose -- ignore elements */
+
+    if (XFilterEvent(event, XCURSESWIN))
+        return -1;
+
     /* Handle modifier keys first; ignore other KeyReleases */
 
     if (event->type == KeyRelease)

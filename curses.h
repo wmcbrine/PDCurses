@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3804
+#define PDC_BUILD    3805
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -314,7 +314,7 @@ typedef struct
     bool  raw_out;        /* raw output mode (7 v. 8 bits) */
     bool  audible;        /* FALSE if the bell is visual */
     bool  mono;           /* TRUE if current screen is mono */
-    short resized;        /* TRUE if TERM has been resized */
+    bool  resized;        /* TRUE if TERM has been resized */
     bool  orig_attr;      /* TRUE if we have the original colors */
     short orig_fore;      /* original screen foreground color */
     short orig_back;      /* original screen foreground color */

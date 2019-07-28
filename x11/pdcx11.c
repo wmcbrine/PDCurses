@@ -85,16 +85,13 @@ int XC_read_socket(int sock_num, void *buf, int len)
                    "resized: %d\n", XCLOGMSG, rc, errno, SP->resized);
 #endif
         if (rc < 0 && sock_num == xc_key_sock && errno == EINTR
-            && SP->resized != FALSE)
+            && SP->resized)
         {
             MOUSE_LOG(("%s:continuing\n", XCLOGMSG));
 
             rc = 0;
 
-            if (SP->resized > 1)
-                SP->resized = TRUE;
-            else
-                SP->resized = FALSE;
+            SP->resized = FALSE;
 
             memcpy(buf, &rc, sizeof(int));
 

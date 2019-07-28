@@ -2342,7 +2342,7 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
         resize_window_width = event->xconfigure.width;
         resize_window_height = event->xconfigure.height;
 
-        SP->resized = 1;
+        SP->resized = TRUE;
         xc_resize_now = TRUE;
         break;
 

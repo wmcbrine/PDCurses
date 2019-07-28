@@ -2660,7 +2660,7 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
 
         after_first_curses_request = FALSE;
 
-        SP->resized = 1;
+        SP->resized = TRUE;
 
         _send_key_to_curses(KEY_RESIZE, NULL, TRUE);
         break;

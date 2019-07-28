@@ -131,7 +131,6 @@ unsigned long XCursesMouse(XEvent *);
 int XCursesInitscr(int, char **);
 
 int XCursesSetupX(int argc, char *argv[]);
-void XCursesSigwinchHandler(int signo);
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *

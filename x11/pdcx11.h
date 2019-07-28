@@ -135,7 +135,6 @@ int XC_read_socket(int, void *, int);
 int XC_write_display_socket_int(int);
 
 int XCursesSetupX(int argc, char *argv[]);
-void XCursesSigwinchHandler(int signo);
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *

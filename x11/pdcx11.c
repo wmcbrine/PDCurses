@@ -208,10 +208,6 @@ static int _setup_curses(void)
 
     XC_LOG(("cursesprocess exiting from Xinitscr\n"));
 
-    /* Always trap SIGWINCH if the C library supports SIGWINCH */
-
-    XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);
-
     atexit(XCursesExit);
 
     return OK;

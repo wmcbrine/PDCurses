@@ -60,10 +60,6 @@ static int _setup_curses(void)
     LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
     XCursesCOLS = COLS = SP->cols;
 
-    /* Always trap SIGWINCH if the C library supports SIGWINCH */
-
-    XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);
-
     atexit(XCursesExit);
 
     return OK;

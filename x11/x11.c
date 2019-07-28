@@ -505,23 +505,6 @@ signal_handler XCursesSetSignal(int signo, signal_handler action)
 #endif
 }
 
-void XCursesSigwinchHandler(int signo)
-{
-    PDC_LOG(("%s:XCursesSigwinchHandler() - called: SIGNO: %d\n",
-             XCLOGMSG, signo));
-
-    /* Patch by: Georg Fuchs, georg.fuchs@rz.uni-regensburg.de
-       02-Feb-1999 */
-
-    SP->resized += 1;
-
-    /* Always trap SIGWINCH if the C library supports SIGWINCH */
-
-#ifdef SIGWINCH
-    XCursesSetSignal(SIGWINCH, XCursesSigwinchHandler);
-#endif
-}
-
 /* Convert character positions x and y to pixel positions, stored in
    xpos and ypos */
 
@@ -2670,19 +2653,15 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
         XC_LOG(("ConfigureNotify received\n"));
 
         /* Window has been resized, change width and height to send to
-           place_text and place_graphics in next Expose. Also will need
-           to kill (SIGWINCH) curses process if screen size changes. */
+           place_text and place_graphics in next Expose. */
 
         resize_window_width = event->xconfigure.width;
         resize_window_height = event->xconfigure.height;
 
         after_first_curses_request = FALSE;
 
-#ifdef SIGWINCH
         SP->resized = 1;
 
-        kill(xc_otherpid, SIGWINCH);
-#endif
         _send_key_to_curses(KEY_RESIZE, NULL, TRUE);
         break;
 

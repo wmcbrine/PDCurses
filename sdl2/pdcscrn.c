@@ -418,14 +418,14 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
+    pdc_dirty = TRUE;
+
     pdc_color[color].r = DIVROUND(red * 255, 1000);
     pdc_color[color].g = DIVROUND(green * 255, 1000);
     pdc_color[color].b = DIVROUND(blue * 255, 1000);
 
     pdc_mapped[color] = SDL_MapRGB(pdc_screen->format, pdc_color[color].r,
                                    pdc_color[color].g, pdc_color[color].b);
-
-    wrefresh(curscr);
 
     return OK;
 }

@@ -2278,11 +2278,6 @@ void XCursesProcessRequest(int req)
         _set_color();
         break;
 
-    case CURSES_DISPLAY_ALL:
-        XC_LOG(("CURSES_DISPLAY_ALL recieved from child\n"));
-        _display_screen();
-        break;
-
     default:
         PDC_LOG(("%s:Unknown request %d\n", XCLOGMSG, num_cols));
     }

@@ -186,6 +186,8 @@ int init_color(short color, short red, short green, short blue)
         blue < -1 || blue > 1000)
         return ERR;
 
+    pdc_dirty = TRUE;
+
     return PDC_init_color(color, red, green, blue);
 }
 

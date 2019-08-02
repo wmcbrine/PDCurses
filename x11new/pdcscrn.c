@@ -130,7 +130,5 @@ int PDC_init_color(short color, short red, short green, short blue)
 
     XCursesInstructAndWait(CURSES_SET_COLOR);
 
-    pdc_dirty = TRUE;
-
     return OK;
 }

@@ -2631,11 +2631,6 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
             _resume_curses();
             break;
 
-        case CURSES_DISPLAY_ALL:
-            XC_LOG(("CURSES_DISPLAY_ALL recieved from child\n"));
-            _display_screen();
-            break;
-
         default:
             PDC_LOG(("%s:Unknown request %d\n", XCLOGMSG, num_cols));
         }

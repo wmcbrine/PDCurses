@@ -87,6 +87,7 @@ kernel
 
 RIPPEDOFFLINE linesripped[5];
 char linesrippedoff = 0;
+bool pdc_dirty = FALSE;
 
 static struct cttyset
 {
@@ -226,6 +227,12 @@ int napms(int ms)
 
     if (!SP)
         return ERR;
+
+    if (pdc_dirty)
+    {
+        pdc_dirty = FALSE;
+        wrefresh(curscr);
+    }
 
     if (ms)
         PDC_napms(ms);

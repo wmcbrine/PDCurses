@@ -29,7 +29,6 @@ extern bool pdc_own_window;          /* if pdc_window was not set
                                         before initscr(), PDCurses is
                                         responsible for (owns) it */
 extern Uint32 pdc_lastupdate;        /* time of last update, in ticks */
-extern bool pdc_dirty;               /* redraw on napms() after init_color() */
 
 PDCEX  void PDC_update_rects(void);
 PDCEX  void PDC_retile(void);

@@ -349,7 +349,10 @@ unsigned long PDC_get_key_modifiers(void)
 {
     PDC_LOG(("PDC_get_key_modifiers() - called\n"));
 
-    return pdc_key_modifiers;
+    if (!SP)
+        return ERR;
+
+    return SP->key_modifiers;
 }
 
 int PDC_save_key_modifiers(bool flag)

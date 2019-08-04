@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3808
+#define PDC_BUILD    3809
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -339,6 +339,8 @@ typedef struct
                                       to be preserved */
     int   _restore;                /* specifies if screen background
                                       to be restored, and how */
+    unsigned long key_modifiers;   /* key modifiers (SHIFT, CONTROL, etc.)
+                                      on last key press */
     bool  save_key_modifiers;      /* TRUE if each key modifiers saved
                                       with each key press */
     bool  return_key_modifiers;    /* TRUE if modifier keys are

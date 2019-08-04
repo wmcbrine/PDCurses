@@ -24,8 +24,6 @@ pdckbd
 
 #include <string.h>
 
-unsigned long pdc_key_modifiers = 0L;
-
 static SDL_Event event;
 static SDLKey oldkey;
 static MOUSE_STATUS old_mouse_status;
@@ -127,7 +125,7 @@ static int _process_key_event(void)
 {
     int i, key = 0;
 
-    pdc_key_modifiers = 0L;
+    SP->key_modifiers = 0L;
     SP->key_code = FALSE;
 
     if (event.type == SDL_KEYUP)
@@ -165,16 +163,16 @@ static int _process_key_event(void)
     if (SP->save_key_modifiers)
     {
         if (event.key.keysym.mod & KMOD_NUM)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
         if (event.key.keysym.mod & KMOD_SHIFT)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
         if (event.key.keysym.mod & KMOD_CTRL)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
         if (event.key.keysym.mod & KMOD_ALT)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
     }
 
     for (i = 0; key_table[i].keycode; i++)

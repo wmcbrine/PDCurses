@@ -22,8 +22,6 @@ pdckbd
 
 **man-end****************************************************************/
 
-unsigned long pdc_key_modifiers = 0L;
-
 /* These variables are used to store information about the next
    Input Event. */
 
@@ -369,16 +367,16 @@ static int _process_key_event(void)
     if (SP->save_key_modifiers)
     {
         if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
         if (state & SHIFT_PRESSED)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
         if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
         if (state & NUMLOCK_ON)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
     }
 
     /* Handle modifier keys hit by themselves */
@@ -606,7 +604,7 @@ static int _process_mouse_event(void)
 
 int PDC_get_key(void)
 {
-    pdc_key_modifiers = 0L;
+    SP->key_modifiers = 0L;
 
     if (!key_count)
     {

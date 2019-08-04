@@ -25,8 +25,6 @@ pdckbd
 #include <ctype.h>
 #include <string.h>
 
-unsigned long pdc_key_modifiers = 0L;
-
 static SDL_Event event;
 static SDL_Keycode oldkey;
 static MOUSE_STATUS old_mouse_status;
@@ -177,12 +175,12 @@ static int _handle_alt_keys(int key)
     if (key > 0x7f)
         return key;
 
-    if (pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL)
+    if (SP->key_modifiers & PDC_KEY_MODIFIER_CONTROL)
     {
         if (key >= 'A' && key <= 'Z') key -= 64;
         if (key >= 'a' && key <= 'z') key -= 96;
     }
-    else if (pdc_key_modifiers & PDC_KEY_MODIFIER_ALT)
+    else if (SP->key_modifiers & PDC_KEY_MODIFIER_ALT)
     {
         if (key >= 'A' && key <= 'Z')
         {
@@ -218,20 +216,20 @@ static int _process_key_event(void)
         {
             case SDLK_LCTRL:
             case SDLK_RCTRL:
-                pdc_key_modifiers &= ~PDC_KEY_MODIFIER_CONTROL;
+                SP->key_modifiers &= ~PDC_KEY_MODIFIER_CONTROL;
                 break;
             case SDLK_LALT:
             case SDLK_RALT:
-                pdc_key_modifiers &= ~PDC_KEY_MODIFIER_ALT;
+                SP->key_modifiers &= ~PDC_KEY_MODIFIER_ALT;
                 break;
             case SDLK_LSHIFT:
             case SDLK_RSHIFT:
-                pdc_key_modifiers &= ~PDC_KEY_MODIFIER_SHIFT;
+                SP->key_modifiers &= ~PDC_KEY_MODIFIER_SHIFT;
                 break;
         }
 
         if (!(SDL_GetModState() & KMOD_NUM))
-            pdc_key_modifiers &= ~PDC_KEY_MODIFIER_NUMLOCK;
+            SP->key_modifiers &= ~PDC_KEY_MODIFIER_NUMLOCK;
 
         if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
         {
@@ -281,21 +279,21 @@ static int _process_key_event(void)
 
     oldkey = event.key.keysym.sym;
     if (SDL_GetModState() & KMOD_NUM)
-        pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
     switch (event.key.keysym.sym)
     {
         case SDLK_LCTRL:
         case SDLK_RCTRL:
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
             break;
         case SDLK_LALT:
         case SDLK_RALT:
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
             break;
         case SDLK_LSHIFT:
         case SDLK_RSHIFT:
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
             break;
         case SDLK_RETURN:
             return 0x0d;
@@ -332,7 +330,7 @@ static int _process_key_event(void)
     }
 
     /* SDL with TextInput ignores keys with CTRL */
-    if (key && pdc_key_modifiers & PDC_KEY_MODIFIER_CONTROL)
+    if (key && SP->key_modifiers & PDC_KEY_MODIFIER_CONTROL)
         return _handle_alt_keys(key);
     return -1;
 }

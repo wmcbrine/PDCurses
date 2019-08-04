@@ -79,8 +79,6 @@ static short key_table[] =
     ALT_PADSLASH,   ALT_TAB,        ALT_PADENTER,   -1
 };
 
-unsigned long pdc_key_modifiers = 0L;
-
 static struct {unsigned short pressed, released;} button[3];
 
 static bool mouse_avail = FALSE, mouse_vis = FALSE, mouse_moved = FALSE,
@@ -314,7 +312,7 @@ int PDC_get_key(void)
     PDCREGS regs;
     int key, scan;
 
-    pdc_key_modifiers = 0;
+    SP->key_modifiers = 0;
 
     if (mouse_vis && (mouse_scroll || mouse_button || mouse_moved))
         return _process_mouse_events();
@@ -369,16 +367,16 @@ int PDC_get_key(void)
     if (SP->save_key_modifiers)
     {
         if (shift_status & 3)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
         if (shift_status & 4)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
         if (shift_status & 8)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
         if (shift_status & 0x20)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
     }
 
     if (scan == 0x1c && key == 0x0a)    /* ^Enter */

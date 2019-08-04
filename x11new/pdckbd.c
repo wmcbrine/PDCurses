@@ -50,8 +50,7 @@ int PDC_get_key(void)
     if ((unsigned long)(-1) == newkey)
         return -1;
 
-    pdc_key_modifiers = (newkey >> 24) & 0xFF;
-    key = (int)(newkey & 0x00FFFFFF);
+    key = (int)newkey;
 
     PDC_LOG(("%s:PDC_get_key() - key %d returned\n", XCLOGMSG, key));
 

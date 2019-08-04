@@ -56,8 +56,7 @@ int PDC_get_key(void)
     if (XC_read_socket(xc_key_sock, &newkey, sizeof(unsigned long)) < 0)
         XCursesExitCursesProcess(2, "exiting from PDC_get_key");
 
-    pdc_key_modifiers = (newkey >> 24) & 0xFF;
-    key = (int)(newkey & 0x00FFFFFF);
+    key = (int)newkey;
 
     if (key == KEY_MOUSE && SP->key_code)
     {

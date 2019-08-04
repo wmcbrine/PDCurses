@@ -86,8 +86,6 @@ static short key_table[] =
     ALT_PADSLASH,   ALT_TAB,        ALT_PADENTER,   -1
 };
 
-unsigned long pdc_key_modifiers = 0L;
-
 unsigned long PDC_get_input_fd(void)
 {
     PDC_LOG(("PDC_get_input_fd() - called\n"));
@@ -285,7 +283,7 @@ int PDC_get_key(void)
     int key, scan;
     KBDKEYINFO keyInfo = {0};
 
-    pdc_key_modifiers = 0L;
+    SP->key_modifiers = 0L;
 
     if (mouse_handle && mouse_events)
         return _process_mouse_events();
@@ -334,16 +332,16 @@ int PDC_get_key(void)
     if (SP->save_key_modifiers)
     {
         if (keyInfo.fsState & KBDSTF_ALT)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
         if (keyInfo.fsState & KBDSTF_CONTROL)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
         if (keyInfo.fsState & KBDSTF_NUMLOCK_ON)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
         if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
     }
 
     if (scan == 0x1c && key == 0x0a)    /* ^Enter */

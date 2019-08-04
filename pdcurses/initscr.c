@@ -149,6 +149,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->linesrippedoffontop = 0;
     SP->delaytenths = 0;
     SP->line_color = -1;
+    SP->dirty = FALSE;
 
     SP->orig_cursor = PDC_get_cursor_mode();
 

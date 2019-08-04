@@ -181,12 +181,12 @@ int init_color(short color, short red, short green, short blue)
 {
     PDC_LOG(("init_color() - called\n"));
 
-    if (color < 0 || color >= COLORS || !PDC_can_change_color() ||
+    if (!SP || color < 0 || color >= COLORS || !PDC_can_change_color() ||
         red < -1 || red > 1000 || green < -1 || green > 1000 ||
         blue < -1 || blue > 1000)
         return ERR;
 
-    pdc_dirty = TRUE;
+    SP->dirty = TRUE;
 
     return PDC_init_color(color, red, green, blue);
 }

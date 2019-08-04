@@ -1784,11 +1784,11 @@ unsigned long XCursesMouse(XEvent *event)
 
     last_button_no = button_no;
 
-    pdc_mouse_status.changes = 0;
+    SP->mouse_status.changes = 0;
 
-    pdc_mouse_status.x = (event->xbutton.x - xc_app_data.borderWidth) /
+    SP->mouse_status.x = (event->xbutton.x - xc_app_data.borderWidth) /
                          font_width;
-    pdc_mouse_status.y = (event->xbutton.y - xc_app_data.borderWidth) /
+    SP->mouse_status.y = (event->xbutton.y - xc_app_data.borderWidth) /
                          font_height;
 
     switch(event->type)
@@ -1802,24 +1802,24 @@ unsigned long XCursesMouse(XEvent *event)
         {
             /* Send the KEY_MOUSE to curses program */
 
-            memset(&pdc_mouse_status, 0, sizeof(pdc_mouse_status));
+            memset(&SP->mouse_status, 0, sizeof(SP->mouse_status));
 
             switch(button_no)
             {
                case 4:
-                  pdc_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+                  SP->mouse_status.changes = PDC_MOUSE_WHEEL_UP;
                   break;
                case 5:
-                  pdc_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+                  SP->mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
                   break;
                case 6:
-                  pdc_mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
+                  SP->mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
                   break;
                case 7:
-                  pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
+                  SP->mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
             }
 
-            pdc_mouse_status.x = pdc_mouse_status.y = -1;
+            SP->mouse_status.x = SP->mouse_status.y = -1;
 
             SP->key_code = TRUE;
             return KEY_MOUSE;
@@ -1827,7 +1827,7 @@ unsigned long XCursesMouse(XEvent *event)
 
         MOUSE_LOG(("\nButtonPress\n"));
 
-        pdc_mouse_status.button[button_no - 1] = BUTTON_PRESSED;
+        SP->mouse_status.button[button_no - 1] = BUTTON_PRESSED;
 
         napms(SP->mouse_wait);
         while (XtAppPending(app_context))
@@ -1836,7 +1836,7 @@ unsigned long XCursesMouse(XEvent *event)
             XtAppNextEvent(app_context, &rel);
 
             if (rel.type == ButtonRelease && rel.xbutton.button == button_no)
-                pdc_mouse_status.button[button_no - 1] = BUTTON_CLICKED;
+                SP->mouse_status.button[button_no - 1] = BUTTON_CLICKED;
             else
                 XSendEvent(XtDisplay(topLevel),
                            RootWindowOfScreen(XtScreen(topLevel)),
@@ -1850,7 +1850,7 @@ unsigned long XCursesMouse(XEvent *event)
                    "Height: %d\n", event->xbutton.y, event->xbutton.x,
                    font_width, font_height));
 
-        pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+        SP->mouse_status.changes |= PDC_MOUSE_MOVED;
         break;
 
     case ButtonRelease:
@@ -1861,29 +1861,29 @@ unsigned long XCursesMouse(XEvent *event)
         if (button_no >= 4 && button_no <= 7)
             return -1;
 
-        pdc_mouse_status.button[button_no - 1] = BUTTON_RELEASED;
+        SP->mouse_status.button[button_no - 1] = BUTTON_RELEASED;
     }
 
     /* Set up the mouse status fields in preparation for sending */
 
-    pdc_mouse_status.changes |= 1 << (button_no - 1);
+    SP->mouse_status.changes |= 1 << (button_no - 1);
 
-    if (pdc_mouse_status.changes & PDC_MOUSE_MOVED &&
-        pdc_mouse_status.button[button_no - 1] == BUTTON_PRESSED)
-        pdc_mouse_status.button[button_no - 1] = BUTTON_MOVED;
+    if (SP->mouse_status.changes & PDC_MOUSE_MOVED &&
+        SP->mouse_status.button[button_no - 1] == BUTTON_PRESSED)
+        SP->mouse_status.button[button_no - 1] = BUTTON_MOVED;
 
     if (event->xbutton.state & ShiftMask)
-        pdc_mouse_status.button[button_no - 1] |= BUTTON_SHIFT;
+        SP->mouse_status.button[button_no - 1] |= BUTTON_SHIFT;
     if (event->xbutton.state & ControlMask)
-        pdc_mouse_status.button[button_no - 1] |= BUTTON_CONTROL;
+        SP->mouse_status.button[button_no - 1] |= BUTTON_CONTROL;
     if (event->xbutton.state & Mod1Mask)
-        pdc_mouse_status.button[button_no - 1] |= BUTTON_ALT;
+        SP->mouse_status.button[button_no - 1] |= BUTTON_ALT;
 
     /* If we are ignoring the event, or the mouse position is outside
        the bounds of the screen (because of the border), return here */
 
-    if (pdc_mouse_status.x < 0 || pdc_mouse_status.x >= XCursesCOLS ||
-        pdc_mouse_status.y < 0 || pdc_mouse_status.y >= XCursesLINES)
+    if (SP->mouse_status.x < 0 || SP->mouse_status.x >= XCursesCOLS ||
+        SP->mouse_status.y < 0 || SP->mouse_status.y >= XCursesLINES)
         return -1;
 
     /* Send the KEY_MOUSE to curses program */

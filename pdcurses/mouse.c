@@ -179,7 +179,7 @@ int request_mouse_pos(void)
 {
     PDC_LOG(("request_mouse_pos() - called\n"));
 
-    Mouse_status = pdc_mouse_status;
+    Mouse_status = SP->mouse_status;
 
     return OK;
 }
@@ -373,10 +373,10 @@ int ungetmouse(MEVENT *event)
 
     ungot = TRUE;
 
-    pdc_mouse_status.x = event->x;
-    pdc_mouse_status.y = event->y;
+    SP->mouse_status.x = event->x;
+    SP->mouse_status.y = event->y;
 
-    pdc_mouse_status.changes = 0;
+    SP->mouse_status.changes = 0;
     bstate = event->bstate;
 
     for (i = 0; i < 3; i++)
@@ -387,7 +387,7 @@ int ungetmouse(MEVENT *event)
         if (bstate & ((BUTTON1_RELEASED | BUTTON1_PRESSED |
             BUTTON1_CLICKED | BUTTON1_DOUBLE_CLICKED) << shf))
         {
-            pdc_mouse_status.changes |= 1 << i;
+            SP->mouse_status.changes |= 1 << i;
 
             if (bstate & (BUTTON1_PRESSED << shf))
                 button = BUTTON_PRESSED;
@@ -404,13 +404,13 @@ int ungetmouse(MEVENT *event)
                 button |= PDC_BUTTON_ALT;
         }
 
-        pdc_mouse_status.button[i] = button;
+        SP->mouse_status.button[i] = button;
     }
 
     if (bstate & BUTTON4_PRESSED)
-        pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_UP;
+        SP->mouse_status.changes |= PDC_MOUSE_WHEEL_UP;
     else if (bstate & BUTTON5_PRESSED)
-        pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_DOWN;
+        SP->mouse_status.changes |= PDC_MOUSE_WHEEL_DOWN;
 
     return ungetch(KEY_MOUSE);
 }

@@ -111,7 +111,7 @@ int LINES = 0;                        /* current terminal height */
 int COLS = 0;                         /* current terminal width */
 int TABSIZE = 8;
 
-MOUSE_STATUS Mouse_status, pdc_mouse_status;
+MOUSE_STATUS Mouse_status;
 
 extern RIPPEDOFFLINE linesripped[5];
 extern char linesrippedoff;

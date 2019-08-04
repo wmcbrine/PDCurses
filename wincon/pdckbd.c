@@ -467,17 +467,17 @@ static int _process_mouse_event(void)
     save_press = 0;
     SP->key_code = TRUE;
 
-    memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
+    memset(&SP->mouse_status, 0, sizeof(MOUSE_STATUS));
 
     /* Handle scroll wheel */
 
     if (MEV.dwEventFlags == 4)
     {
-        pdc_mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
+        SP->mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
             PDC_MOUSE_WHEEL_DOWN : PDC_MOUSE_WHEEL_UP;
 
-        pdc_mouse_status.x = -1;
-        pdc_mouse_status.y = -1;
+        SP->mouse_status.x = -1;
+        SP->mouse_status.y = -1;
 
         memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 
@@ -486,11 +486,11 @@ static int _process_mouse_event(void)
 
     if (MEV.dwEventFlags == 8)
     {
-        pdc_mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
+        SP->mouse_status.changes = (MEV.dwButtonState & 0xFF000000) ?
             PDC_MOUSE_WHEEL_RIGHT : PDC_MOUSE_WHEEL_LEFT;
 
-        pdc_mouse_status.x = -1;
-        pdc_mouse_status.y = -1;
+        SP->mouse_status.x = -1;
+        SP->mouse_status.y = -1;
 
         memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 
@@ -501,7 +501,7 @@ static int _process_mouse_event(void)
             ((MEV.dwEventFlags == 1) ? BUTTON_MOVED : BUTTON_PRESSED);
 
     for (i = 0; i < 3; i++)
-        pdc_mouse_status.button[i] =
+        SP->mouse_status.button[i] =
             (MEV.dwButtonState & button_mask[i]) ? action : 0;
 
     if (action == BUTTON_PRESSED && MEV.dwButtonState & 7 && SP->mouse_wait)
@@ -525,10 +525,10 @@ static int _process_mouse_event(void)
 
             for (i = 0; i < 3; i++)
             {
-                if (pdc_mouse_status.button[i] == BUTTON_PRESSED &&
+                if (SP->mouse_status.button[i] == BUTTON_PRESSED &&
                     !(ip.Event.MouseEvent.dwButtonState & button_mask[i]))
                 {
-                    pdc_mouse_status.button[i] = BUTTON_CLICKED;
+                    SP->mouse_status.button[i] = BUTTON_CLICKED;
                     have_click = TRUE;
                 }
             }
@@ -540,33 +540,33 @@ static int _process_mouse_event(void)
         }
     }
 
-    pdc_mouse_status.x = MEV.dwMousePosition.X;
-    pdc_mouse_status.y = MEV.dwMousePosition.Y;
+    SP->mouse_status.x = MEV.dwMousePosition.X;
+    SP->mouse_status.y = MEV.dwMousePosition.Y;
 
-    pdc_mouse_status.changes = 0;
+    SP->mouse_status.changes = 0;
 
     for (i = 0; i < 3; i++)
     {
-        if (old_mouse_status.button[i] != pdc_mouse_status.button[i])
-            pdc_mouse_status.changes |= (1 << i);
+        if (old_mouse_status.button[i] != SP->mouse_status.button[i])
+            SP->mouse_status.changes |= (1 << i);
 
-        if (pdc_mouse_status.button[i] == BUTTON_MOVED)
+        if (SP->mouse_status.button[i] == BUTTON_MOVED)
         {
             /* Discard non-moved "moves" */
 
-            if (pdc_mouse_status.x == old_mouse_status.x &&
-                pdc_mouse_status.y == old_mouse_status.y)
+            if (SP->mouse_status.x == old_mouse_status.x &&
+                SP->mouse_status.y == old_mouse_status.y)
                 return -1;
 
             /* Motion events always flag the button as changed */
 
-            pdc_mouse_status.changes |= (1 << i);
-            pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+            SP->mouse_status.changes |= (1 << i);
+            SP->mouse_status.changes |= PDC_MOUSE_MOVED;
             break;
         }
     }
 
-    old_mouse_status = pdc_mouse_status;
+    old_mouse_status = SP->mouse_status;
 
     /* Treat click events as release events for comparison purposes */
 
@@ -592,8 +592,8 @@ static int _process_mouse_event(void)
     {
         for (i = 0; i < 3; i++)
         {
-            if (pdc_mouse_status.changes & (1 << i))
-                pdc_mouse_status.button[i] |= shift_flags;
+            if (SP->mouse_status.changes & (1 << i))
+                SP->mouse_status.button[i] |= shift_flags;
         }
     }
 

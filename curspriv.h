@@ -42,8 +42,6 @@ typedef struct           /* structure for ripped off lines */
 #define _DWCHAR    0x17  /* Delete Word char (^W) */
 #define _DLCHAR    0x15  /* Delete Line char (^U) */
 
-extern MOUSE_STATUS pdc_mouse_status;
-
 /*----------------------------------------------------------------------*/
 
 /* Platform implementation functions */

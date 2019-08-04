@@ -48,7 +48,7 @@ static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
 static void _redraw_cursor(void);
 static void _exit_process(int, int, char *);
-static void _send_key_to_curses(unsigned long, MOUSE_STATUS *, bool);
+static void _send_key_to_curses(unsigned long, bool);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
@@ -1012,7 +1012,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
             }
 
             if (key)
-                _send_key_to_curses(key, NULL, TRUE);
+                _send_key_to_curses(key, TRUE);
         }
 
         return;
@@ -1133,7 +1133,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
     {
         SP->key_modifiers = modifier;
 
-        _send_key_to_curses(key, NULL, key_code);
+        _send_key_to_curses(key, key_code);
     }
 }
 
@@ -1166,11 +1166,11 @@ static void XCursesHandleString(Widget w, XEvent *event, String *params,
         }
 
         if (c == '\0')
-            _send_key_to_curses(total, NULL, FALSE);
+            _send_key_to_curses(total, FALSE);
     }
     else
         for (; *ptr; ptr++)
-            _send_key_to_curses((unsigned long)*ptr, NULL, FALSE);
+            _send_key_to_curses((unsigned long)*ptr, FALSE);
 }
 
 static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,
@@ -1191,7 +1191,7 @@ static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,
         if (key == 10)      /* new line - convert to ^M */
             key = 13;
 
-        _send_key_to_curses(key, NULL, FALSE);
+        _send_key_to_curses(key, FALSE);
     }
 
     XtFree(value);
@@ -1228,7 +1228,7 @@ static void _paste_utf8(Widget w, XtPointer event, Atom *selection, Atom *type,
         if (key == 10)      /* new line - convert to ^M */
             key = 13;
 
-        _send_key_to_curses(key, NULL, FALSE);
+        _send_key_to_curses(key, FALSE);
 
         i += retval;
     }
@@ -1698,8 +1698,7 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
     }
 }
 
-static void _send_key_to_curses(unsigned long key, MOUSE_STATUS *ms,
-                                bool key_code)
+static void _send_key_to_curses(unsigned long key, bool key_code)
 {
     PDC_LOG(("%s:_send_key_to_curses() - called: sending %d\n",
              XCLOGMSG, key));
@@ -1708,14 +1707,6 @@ static void _send_key_to_curses(unsigned long key, MOUSE_STATUS *ms,
 
     if (XC_write_socket(xc_key_sock, &key, sizeof(unsigned long)) < 0)
         _exit_process(1, SIGKILL, "exiting from _send_key_to_curses");
-
-    if (ms)
-    {
-        MOUSE_LOG(("%s:writing mouse stuff\n", XCLOGMSG));
-
-        if (XC_write_socket(xc_key_sock, ms, sizeof(MOUSE_STATUS)) < 0)
-            _exit_process(1, SIGKILL, "exiting from _send_key_to_curses");
-    }
 }
 
 static void _blink_cursor(XtPointer unused, XtIntervalId *id)
@@ -1845,7 +1836,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
             }
 
             MOUSE_X_POS = MOUSE_Y_POS = -1;
-            _send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
+            SP->mouse_status = Mouse_status;
+            _send_key_to_curses(KEY_MOUSE, TRUE);
             remove_release = TRUE;
 
             return;
@@ -2052,7 +2044,8 @@ static void XCursesButton(Widget w, XEvent *event, String *params,
 
     /* Send the KEY_MOUSE to curses program */
 
-    _send_key_to_curses(KEY_MOUSE, &Mouse_status, TRUE);
+    SP->mouse_status = Mouse_status;
+    _send_key_to_curses(KEY_MOUSE, TRUE);
 }
 
 static void _scroll_up_down(Widget w, XtPointer client_data,
@@ -2084,7 +2077,7 @@ static void _scroll_up_down(Widget w, XtPointer client_data,
 
     /* Send a key: if pixels negative, send KEY_SCROLL_DOWN */
 
-    _send_key_to_curses(KEY_SF, NULL, TRUE);
+    _send_key_to_curses(KEY_SF, TRUE);
 }
 
 static void _scroll_left_right(Widget w, XtPointer client_data,
@@ -2110,7 +2103,7 @@ static void _scroll_left_right(Widget w, XtPointer client_data,
     XawScrollbarSetThumb(w, (double)((double)cur_x / (double)total_x),
                          (double)((double)viewport_x / (double)total_x));
 
-    _send_key_to_curses(KEY_SR, NULL, TRUE);
+    _send_key_to_curses(KEY_SR, TRUE);
 }
 
 static void _thumb_up_down(Widget w, XtPointer client_data,
@@ -2134,7 +2127,7 @@ static void _thumb_up_down(Widget w, XtPointer client_data,
     XawScrollbarSetThumb(w, (double)(cur_y / total_y),
                          (double)(viewport_y / total_y));
 
-    _send_key_to_curses(KEY_SF, NULL, TRUE);
+    _send_key_to_curses(KEY_SF, TRUE);
 }
 
 static void _thumb_left_right(Widget w, XtPointer client_data,
@@ -2155,7 +2148,7 @@ static void _thumb_left_right(Widget w, XtPointer client_data,
     XawScrollbarSetThumb(w, (double)(cur_x / total_x),
                          (double)(viewport_x / total_x));
 
-    _send_key_to_curses(KEY_SR, NULL, TRUE);
+    _send_key_to_curses(KEY_SR, TRUE);
 }
 
 static void _exit_process(int rc, int sig, char *msg)
@@ -2655,7 +2648,7 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
 
         SP->resized = TRUE;
 
-        _send_key_to_curses(KEY_RESIZE, NULL, TRUE);
+        _send_key_to_curses(KEY_RESIZE, TRUE);
         break;
 
     case MapNotify:

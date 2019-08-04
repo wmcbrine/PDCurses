@@ -58,13 +58,6 @@ int PDC_get_key(void)
 
     key = (int)newkey;
 
-    if (key == KEY_MOUSE && SP->key_code)
-    {
-        if (XC_read_socket(xc_key_sock, &pdc_mouse_status,
-            sizeof(MOUSE_STATUS)) < 0)
-            XCursesExitCursesProcess(2, "exiting from PDC_get_key");
-    }
-
     PDC_LOG(("%s:PDC_get_key() - key %d returned\n", XCLOGMSG, key));
 
     return key;

@@ -106,7 +106,6 @@ const char *_curses_notice = "PDCurses " PDC_VERDOT " - " __DATE__;
 SCREEN *SP = (SCREEN*)NULL;           /* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;      /* the current screen image */
 WINDOW *stdscr = (WINDOW *)NULL;      /* the default screen window */
-WINDOW *pdc_lastscr = (WINDOW *)NULL; /* the last screen image */
 
 int LINES = 0;                        /* current terminal height */
 int COLS = 0;                         /* current terminal width */
@@ -149,6 +148,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->linesrippedoffontop = 0;
     SP->delaytenths = 0;
     SP->line_color = -1;
+    SP->lastscr = (WINDOW *)NULL;
     SP->color_started = FALSE;
     SP->dirty = FALSE;
 
@@ -171,15 +171,15 @@ WINDOW *Xinitscr(int argc, char *argv[])
         exit(2);
     }
 
-    pdc_lastscr = newwin(LINES, COLS, 0, 0);
-    if (!pdc_lastscr)
+    SP->lastscr = newwin(LINES, COLS, 0, 0);
+    if (!SP->lastscr)
     {
-        fprintf(stderr, "initscr(): Unable to create pdc_lastscr.\n");
+        fprintf(stderr, "initscr(): Unable to create SP->lastscr.\n");
         exit(2);
     }
 
-    wattrset(pdc_lastscr, (chtype)(-1));
-    werase(pdc_lastscr);
+    wattrset(SP->lastscr, (chtype)(-1));
+    werase(SP->lastscr);
 
     PDC_slk_initialize();
     LINES -= SP->slklines;
@@ -294,10 +294,10 @@ void delscreen(SCREEN *sp)
 
     delwin(stdscr);
     delwin(curscr);
-    delwin(pdc_lastscr);
+    delwin(SP->lastscr);
     stdscr = (WINDOW *)NULL;
     curscr = (WINDOW *)NULL;
-    pdc_lastscr = (WINDOW *)NULL;
+    SP->lastscr = (WINDOW *)NULL;
 
     SP->alive = FALSE;
 
@@ -319,10 +319,10 @@ int resize_term(int nlines, int ncols)
 
     if (wresize(curscr, SP->lines, SP->cols) == ERR ||
         wresize(stdscr, LINES, COLS) == ERR ||
-        wresize(pdc_lastscr, SP->lines, SP->cols) == ERR)
+        wresize(SP->lastscr, SP->lines, SP->cols) == ERR)
         return ERR;
 
-    werase(pdc_lastscr);
+    werase(SP->lastscr);
     curscr->_clear = TRUE;
 
     if (SP->slk_winptr)

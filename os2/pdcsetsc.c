@@ -81,7 +81,10 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
-    if (pdc_color_started)
+    if (!SP)
+        return ERR;
+
+    if (SP->color_started)
         COLORS = 16;
 
     if (blinkon)

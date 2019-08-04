@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3806
+#define PDC_BUILD    3807
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -357,6 +357,7 @@ typedef struct
 #endif
     short line_color;     /* color of line attributes - default -1 */
     attr_t termattrs;     /* attribute capabilities */
+    bool  color_started;  /* TRUE after start_color() */
     bool  dirty;          /* redraw on napms() after init_color() */
 } SCREEN;
 

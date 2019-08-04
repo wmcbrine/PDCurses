@@ -44,7 +44,6 @@ typedef struct           /* structure for ripped off lines */
 
 extern WINDOW *pdc_lastscr;
 extern FILE *pdc_dbfp;   /* tracing file pointer (NULL = off) */
-extern bool pdc_color_started;
 extern unsigned long pdc_key_modifiers;
 extern MOUSE_STATUS pdc_mouse_status;
 

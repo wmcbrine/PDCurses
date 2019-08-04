@@ -73,7 +73,10 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
-    if (pdc_color_started)
+    if (!SP)
+        return ERR;
+
+    if (SP->color_started)
         COLORS = PDC_MAXCOL;
 
     XCursesInstruct(blinkon ? CURSES_BLINK_ON : CURSES_BLINK_OFF);
@@ -83,6 +86,9 @@ int PDC_set_blink(bool blinkon)
 
 int PDC_set_bold(bool boldon)
 {
+    if (!SP)
+        return ERR;
+
     if (boldon)
         SP->termattrs |= A_BOLD;
     else

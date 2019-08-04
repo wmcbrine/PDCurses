@@ -83,6 +83,9 @@ int PDC_set_blink(bool blinkon)
 {
     PDCREGS regs;
 
+    if (!SP)
+        return ERR;
+
     switch (pdc_adapter)
     {
     case _EGACOLOR:
@@ -94,7 +97,7 @@ int PDC_set_blink(bool blinkon)
 
         PDCINT(0x10, regs);
 
-        if (pdc_color_started)
+        if (SP->color_started)
             COLORS = blinkon ? 8 : 16;
 
         break;

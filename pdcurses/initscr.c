@@ -150,6 +150,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->delaytenths = 0;
     SP->line_color = -1;
     SP->lastscr = (WINDOW *)NULL;
+    SP->dbfp = NULL;
     SP->color_started = FALSE;
     SP->dirty = FALSE;
 

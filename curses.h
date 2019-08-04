@@ -27,11 +27,12 @@ Defined by this header:
 
 **man-end****************************************************************/
 
-#define PDCURSES        1      /* PDCurses-only routines */
-#define PDC_BUILD    3809
+#define PDCURSES        1
+#define PDC_BUILD    3810
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
+
 #define CHTYPE_LONG     1      /* chtype >= 32 bits */
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
@@ -46,7 +47,7 @@ Defined by this header:
 
 #include <stdarg.h>
 #include <stddef.h>
-#include <stdio.h>             /* Required by X/Open usage below */
+#include <stdio.h>
 
 #ifdef PDC_WIDE
 # include <wchar.h>
@@ -128,7 +129,7 @@ enum
 
 /*----------------------------------------------------------------------
  *
- *  Mouse Interface -- SYSVR4, with extensions
+ *  Mouse Interface
  *
  */
 
@@ -360,6 +361,7 @@ typedef struct
     short line_color;     /* color of line attributes - default -1 */
     attr_t termattrs;     /* attribute capabilities */
     WINDOW *lastscr;      /* the last screen image */
+    FILE *dbfp;           /* debug trace file pointer */
     bool  color_started;  /* TRUE after start_color() */
     bool  dirty;          /* redraw on napms() after init_color() */
 } SCREEN;

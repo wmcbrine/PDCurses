@@ -376,7 +376,6 @@ void inputTest(WINDOW *win)
 
 #ifdef PDCURSES
     mouse_set(ALL_MOUSE_EVENTS);
-    PDC_save_key_modifiers(TRUE);
     PDC_return_key_modifiers(TRUE);
 #endif
     curs_set(0);        /* turn cursor off */
@@ -494,7 +493,6 @@ void inputTest(WINDOW *win)
 
 #ifdef PDCURSES
     mouse_set(0L);
-    PDC_save_key_modifiers(FALSE);
     PDC_return_key_modifiers(FALSE);
 #endif
     wclear(win);

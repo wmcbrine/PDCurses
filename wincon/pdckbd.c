@@ -361,23 +361,20 @@ static int _process_key_event(void)
 
     SP->key_code = TRUE;
 
-    /* Save the key modifiers if required. Do this first to allow to
-       detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
+    /* Save the key modifiers. Do this first to allow to detect e.g. a
+       pressed CTRL key after a hit of NUMLOCK. */
 
-    if (SP->save_key_modifiers)
-    {
-        if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
-            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
+    if (state & (LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED))
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-        if (state & SHIFT_PRESSED)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+    if (state & SHIFT_PRESSED)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-        if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
-            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if (state & (LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED))
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if (state & NUMLOCK_ON)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-    }
+    if (state & NUMLOCK_ON)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
     /* Handle modifier keys hit by themselves */
 

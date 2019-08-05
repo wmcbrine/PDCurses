@@ -23,7 +23,6 @@ getch
     int unget_wch(const wchar_t wch);
 
     unsigned long PDC_get_key_modifiers(void);
-    int PDC_save_key_modifiers(bool flag);
     int PDC_return_key_modifiers(bool flag);
 
 ### Description
@@ -62,8 +61,7 @@ getch
 
    PDC_get_key_modifiers() returns the keyboard modifiers (shift,
    control, alt, numlock) effective at the time of the last getch()
-   call, if PDC_save_key_modifiers(TRUE) has been called before the
-   getch(). Use the macros PDC_KEY_MODIFIER_* to determine which
+   call. Use the macros PDC_KEY_MODIFIER_* to determine which
    modifier(s) were set. PDC_return_key_modifiers() tells getch() to
    return modifier keys pressed alone as keystrokes (KEY_ALT_L, etc.).
    These may not work on all platforms.
@@ -353,17 +351,6 @@ unsigned long PDC_get_key_modifiers(void)
         return ERR;
 
     return SP->key_modifiers;
-}
-
-int PDC_save_key_modifiers(bool flag)
-{
-    PDC_LOG(("PDC_save_key_modifiers() - called\n"));
-
-    if (!SP)
-        return ERR;
-
-    SP->save_key_modifiers = flag;
-    return OK;
 }
 
 int PDC_return_key_modifiers(bool flag)

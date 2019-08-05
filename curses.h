@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3811
+#define PDC_BUILD    3812
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -342,8 +342,6 @@ typedef struct
                                       to be restored, and how */
     unsigned long key_modifiers;   /* key modifiers (SHIFT, CONTROL, etc.)
                                       on last key press */
-    bool  save_key_modifiers;      /* TRUE if each key modifiers saved
-                                      with each key press */
     bool  return_key_modifiers;    /* TRUE if modifier keys are
                                       returned as "real" keys */
     bool  key_code;                /* TRUE if last key is a special key;
@@ -1335,7 +1333,6 @@ PDCEX  int     PDC_setclipboard(const char *, long);
 PDCEX  unsigned long PDC_get_input_fd(void);
 PDCEX  unsigned long PDC_get_key_modifiers(void);
 PDCEX  int     PDC_return_key_modifiers(bool);
-PDCEX  int     PDC_save_key_modifiers(bool);
 
 #ifdef XCURSES
 PDCEX  WINDOW *Xinitscr(int, char **);
@@ -1379,6 +1376,10 @@ PDCEX  int     wunderscore(WINDOW *);
 #ifdef NCURSES_MOUSE_VERSION
 # define getmouse(x) nc_getmouse(x)
 #endif
+
+/* Deprecated */
+
+#define PDC_save_key_modifiers(x)  (OK)
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

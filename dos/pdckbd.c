@@ -364,20 +364,17 @@ int PDC_get_key(void)
     key = regs.h.al;
     scan = regs.h.ah;
 
-    if (SP->save_key_modifiers)
-    {
-        if (shift_status & 3)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+    if (shift_status & 3)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-        if (shift_status & 4)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if (shift_status & 4)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if (shift_status & 8)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
+    if (shift_status & 8)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-        if (shift_status & 0x20)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-    }
+    if (shift_status & 0x20)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
     if (scan == 0x1c && key == 0x0a)    /* ^Enter */
         key = CTL_ENTER;

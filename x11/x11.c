@@ -1038,28 +1038,25 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
     PDC_LOG(("%s:Keysym %x %d\n", XCLOGMSG,
              XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, key), key));
 
-    if (SP->save_key_modifiers)
-    {
-        /* 0x10: usually, numlock modifier */
+    /* 0x10: usually, numlock modifier */
 
-        if (event->xkey.state & Mod2Mask)
-            modifier |= PDC_KEY_MODIFIER_NUMLOCK;
+    if (event->xkey.state & Mod2Mask)
+        modifier |= PDC_KEY_MODIFIER_NUMLOCK;
 
-        /* 0x01: shift modifier */
+    /* 0x01: shift modifier */
 
-        if (event->xkey.state & ShiftMask)
-            modifier |= PDC_KEY_MODIFIER_SHIFT;
+    if (event->xkey.state & ShiftMask)
+        modifier |= PDC_KEY_MODIFIER_SHIFT;
 
-        /* 0x04: control modifier */
+    /* 0x04: control modifier */
 
-        if (event->xkey.state & ControlMask)
-            modifier |= PDC_KEY_MODIFIER_CONTROL;
+    if (event->xkey.state & ControlMask)
+        modifier |= PDC_KEY_MODIFIER_CONTROL;
 
-        /* 0x08: usually, alt modifier */
+    /* 0x08: usually, alt modifier */
 
-        if (event->xkey.state & Mod1Mask)
-            modifier |= PDC_KEY_MODIFIER_ALT;
-    }
+    if (event->xkey.state & Mod1Mask)
+        modifier |= PDC_KEY_MODIFIER_ALT;
 
     for (i = 0; key_table[i].keycode; i++)
     {

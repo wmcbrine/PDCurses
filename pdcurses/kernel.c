@@ -229,8 +229,17 @@ int napms(int ms)
 
     if (SP->dirty)
     {
+        int curs_state = SP->visibility;
+        bool leave_state = is_leaveok(curscr);
+
         SP->dirty = FALSE;
+
+        leaveok(curscr, TRUE);
+
         wrefresh(curscr);
+
+        leaveok(curscr, leave_state);
+        curs_set(curs_state);
     }
 
     if (ms)

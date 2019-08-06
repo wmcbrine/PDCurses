@@ -1141,6 +1141,8 @@ void extended(int tmarg)
 
     erase();
 
+    curs_set(0);
+
     attrset(A_BOLD);
     mvaddstr(tmarg, (COLS - 15) / 2, "Extended Colors");
     attrset(A_NORMAL);
@@ -1170,6 +1172,9 @@ void extended(int tmarg)
         addch(ch);
     }
 
+    refresh();
+    curs_set(1);
+
     mvaddstr(tmarg + 19, 3, "Press any key to continue");
     curTest();
 }
@@ -1181,6 +1186,8 @@ void gradient(int tmarg)
 
     erase();
     refresh();
+
+    curs_set(0);
 
     attrset(A_BOLD);
     mvaddstr(tmarg, (COLS - 17) / 2, "Colors Beyond 256");
@@ -1228,6 +1235,9 @@ void gradient(int tmarg)
             pnum++;
         }
     }
+
+    refresh();
+    curs_set(1);
 
     attrset(A_NORMAL);
     mvaddstr(tmarg + 19, 3, "Press any key to continue");

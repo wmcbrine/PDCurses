@@ -1,8 +1,6 @@
 /*
  *  ozdemo.c           - A demo program using PDCurses. The program
  *  (formerly newdemo)   illustrates the use of colors for text output.
- *
- *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  */
 
 #include <signal.h>

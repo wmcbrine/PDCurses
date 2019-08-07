@@ -1,6 +1,6 @@
 /*
  * Author : P.J. Kunst <kunst@prl.philips.nl>
- * Date   : 25-02-93
+ * Date   : 1993-02-25
  *
  * Purpose: This program demonstrates the use of the 'curses' library
  *          for the creation of (simple) menu-operated programs.

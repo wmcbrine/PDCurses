@@ -1,4 +1,4 @@
-PDCurses 3.8 - 2019/02/02
+PDCurses 3.8 - 2019-02-02
 =========================
 
 It's that time again.
@@ -65,7 +65,7 @@ See the git log for more details.
 
 ------------------------------------------------------------------------
 
-PDCurses 3.7 - 2018/12/31
+PDCurses 3.7 - 2018-12-31
 =========================
 
 New features
@@ -176,7 +176,7 @@ See the git log for more details.
 
 ------------------------------------------------------------------------
 
-PDCurses 3.6 - 2018/02/14
+PDCurses 3.6 - 2018-02-14
 =========================
 
 Tidying up some loose ends from 3.5, and trying to bring all platforms
@@ -251,7 +251,7 @@ See the git log for more details.
 
 ------------------------------------------------------------------------
 
-PDCurses 3.5 - 2018/01/15
+PDCurses 3.5 - 2018-01-15
 =========================
 
 So, it's been a while, eh?
@@ -440,7 +440,7 @@ See the git log for more details.
 
 ------------------------------------------------------------------------
 
-PDCurses 3.4 - 2008/09/08
+PDCurses 3.4 - 2008-09-08
 =========================
 
 Nothing much new this time, but I've been sitting on some bug fixes for
@@ -503,7 +503,7 @@ Bug fixes and such:
 
 ------------------------------------------------------------------------
 
-PDCurses 3.3 - 2007/07/11
+PDCurses 3.3 - 2007-07-11
 =========================
 
 This release adds an SDL backend, refines the demos, and is faster in
@@ -589,7 +589,7 @@ Bug fixes and such:
 
 ------------------------------------------------------------------------
 
-PDCurses 3.2 - 2007/06/06
+PDCurses 3.2 - 2007-06-06
 =========================
 
 This release mainly covers changes to the build process, along with a
@@ -653,7 +653,7 @@ Bug fixes and such:
 
 ------------------------------------------------------------------------
 
-PDCurses 3.1 - 2007/05/03
+PDCurses 3.1 - 2007-05-03
 =========================
 
 Primarily clipboard-related fixes, and special UTF-8 support.
@@ -724,7 +724,7 @@ Bug fixes and such:
 
 ------------------------------------------------------------------------
 
-PDCurses 3.0 - 2007/04/01
+PDCurses 3.0 - 2007-04-01
 =========================
 
 The focuses for this release are X/Open conformance, i18n, better color
@@ -1066,7 +1066,7 @@ Bug fixes and such:
 
 ------------------------------------------------------------------------
 
-PDCurses 2.8 - 2006/04/01
+PDCurses 2.8 - 2006-04-01
 =========================
 
 As with the previous version, you should assume that apps linked against
@@ -1231,7 +1231,7 @@ Bug fixes and such:
 
 ------------------------------------------------------------------------
 
-PDCurses 2.7 - 2005/12/30
+PDCurses 2.7 - 2005-12-30
 =========================
 
 INTRODUCTION:
@@ -1370,7 +1370,7 @@ and gcc under several flavors of Linux, Mac OS X, *BSD and Solaris.
 
 ------------------------------------------------------------------------
 
-PDCurses 2.6 - 2003/01/08
+PDCurses 2.6 - 2003-01-08
 =========================
 
 INTRODUCTION:
@@ -1436,7 +1436,7 @@ NEW COMPILER SUPPORT:
 
 ------------------------------------------------------------------------
 
-PDCurses 2.5 - 2001/11/26
+PDCurses 2.5 - 2001-11-26
 =========================
 
 INTRODUCTION:
@@ -1504,7 +1504,7 @@ NEW COMPILER SUPPORT:
 
 ------------------------------------------------------------------------
 
-PDCurses 2.4 - 2000/01/17
+PDCurses 2.4 - 2000-01-17
 =========================
 
 INTRODUCTION:
@@ -1582,7 +1582,7 @@ ACKNOWLEDGEMENTS: (for this release)
 
 ------------------------------------------------------------------------
 
-PDCurses 2.3 - 1998/07/09
+PDCurses 2.3 - 1998-07-09
 =========================
 
 INTRODUCTION:
@@ -1656,7 +1656,7 @@ ACKNOWLEDGEMENTS: (for this release)
 
 ------------------------------------------------------------------------
 
-PDCurses 2.2 - 1995/02/12
+PDCurses 2.2 - 1995-02-12
 =========================
 
 INTRODUCTION:
@@ -1733,7 +1733,7 @@ ACKNOWLEDGEMENTS: (for this release)
 
 ------------------------------------------------------------------------
 
-PDCurses 2.1 - 1993/06/20
+PDCurses 2.1 - 1993-06-20
 =========================
 
 INTRODUCTION:
@@ -1835,7 +1835,7 @@ ACKNOWLEDGEMENTS: (in no particular order)
 
 ------------------------------------------------------------------------
 
-PDCurses 2.0 - 1992/11/23
+PDCurses 2.0 - 1992-11-23
 =========================
 
 INTRODUCTION:
@@ -1980,7 +1980,7 @@ ACKNOWLEDGEMENTS:
 
 ------------------------------------------------------------------------
 
-PDCurses 2.0Beta - 1991/12/21
+PDCurses 2.0Beta - 1991-12-21
 =============================
 
 Changed back from short to int. (int is the correct size for the default
@@ -2002,7 +2002,7 @@ Added a CONTRIB file to the environment.
 
 ------------------------------------------------------------------------
 
-PDCurses 1.5Beta - 1990/07/14
+PDCurses 1.5Beta - 1990-07-14
 =============================
 
 Added many levels of compiler support. Added mixed prototypes for all
@@ -2018,7 +2018,7 @@ specification.
 
 ------------------------------------------------------------------------
 
-PCcurses 1.4 - 1990/01/14
+PCcurses 1.4 - 1990-01-14
 =========================
 
   In PCcurses v.1.4, both portability improvements and bugfixes have
@@ -2117,7 +2117,7 @@ harmless) parameter in a function call at one place.
 
 ------------------------------------------------------------------------
 
-PCcurses 1.3 - 1988/10/05
+PCcurses 1.3 - 1988-10-05
 =========================
 
   The file 'border.c' is now included. It allows you to explicitly
@@ -2144,7 +2144,7 @@ warning messages as part of normal compilation.
 
 ------------------------------------------------------------------------
 
-PCcurses 1.2 - 1988/10/02
+PCcurses 1.2 - 1988-10-02
 =========================
 
   The changes from v.1.1 to v.1.2 are minor. The biggest change is that
@@ -2231,7 +2231,7 @@ cursesio).
 
 ------------------------------------------------------------------------
 
-PCcurses 1.1 - 1988/03/06
+PCcurses 1.1 - 1988-03-06
 =========================
 
   The changes from v.1.0 to v.1.1 are minor. There are a few bug fixes,
@@ -2268,7 +2268,7 @@ read what is said about installation below!
 
 ------------------------------------------------------------------------
 
-PCcurses 1.0 - 1987/08/24
+PCcurses 1.0 - 1987-08-24
 =========================
 
   This is the release notes for the PCcurses v.1.0 cursor/window control

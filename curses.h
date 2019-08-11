@@ -56,7 +56,7 @@ PDCurses portable platform definitions list:
 # include <wchar.h>
 #endif
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION >= 199901L && \
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L && \
     !defined(__bool_true_false_are_defined)
 # include <stdbool.h>
 #endif

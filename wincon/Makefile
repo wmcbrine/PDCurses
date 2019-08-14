@@ -30,6 +30,7 @@ CC		= gcc
 AR		= ar
 STRIP		= strip
 LINK		= gcc
+WINDRES		= windres
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -87,7 +88,7 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) $(RESOURCE)
 	$(LIBEXE) $(LIBFLAGS) $@ $?
 
 pdcurses.o: $(common)/pdcurses.rc
-	windres -i $(common)/pdcurses.rc pdcurses.o
+	$(WINDRES) -i $(common)/pdcurses.rc pdcurses.o
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_WIN_H)

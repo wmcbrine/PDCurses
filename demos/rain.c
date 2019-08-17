@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-/* rain 1980-11-3 EPS/CITHEP */
+/* rain 1980-11-03 EPS/CITHEP */
 
 static int next_j(int j)
 {

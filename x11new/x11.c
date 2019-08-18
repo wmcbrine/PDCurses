@@ -956,7 +956,7 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
            Removed on 3-3-2001. Now only exits on WM_DELETE_WINDOW. */
 
         if ((Atom)client_event->data.s[0] == wm_atom[0])
-            XC_exit_process(0, SIGKILL, "");
+            XCursesExit();
     }
 }
 
@@ -1982,12 +1982,8 @@ static void _thumb_left_right(Widget w, XtPointer client_data,
                          (double)(viewport_x / total_x));
 }
 
-void XC_exit_process(int rc, int sig, const char *msg)
+void XCursesExit(void)
 {
-    if (rc || sig)
-        fprintf(stderr, "%s:XC_exit_process() - called: rc:%d sig:%d <%s>\n",
-                XCLOGMSG, rc, sig, msg);
-
     if (icon_pixmap)
         XFreePixmap(XCURSESDISPLAY, icon_pixmap);
     if (icon_pixmap_mask)
@@ -2000,7 +1996,7 @@ void XC_exit_process(int rc, int sig, const char *msg)
     XFreeGC(XCURSESDISPLAY, border_gc);
     XDestroyIC(Xic);
 
-    _exit(rc);
+    _exit(0);
 }
 
 void XC_resize(void)
@@ -2049,9 +2045,6 @@ XColor XC_get_color(short index)
     Colormap cmap = DefaultColormap(XCURSESDISPLAY,
                                     DefaultScreen(XCURSESDISPLAY));
 
-    if (index < 0 || index >= PDC_MAXCOL)
-        XC_exit_process(4, SIGKILL, "exiting from XC_get_color");
-
     tmp.pixel = colors[index];
     XQueryColor(XCURSESDISPLAY, cmap, &tmp);
     return tmp;
@@ -2063,9 +2056,6 @@ void XC_set_color(short index, XColor tmp)
 {
     Colormap cmap = DefaultColormap(XCURSESDISPLAY,
                                     DefaultScreen(XCURSESDISPLAY));
-
-    if (index < 0 || index >= PDC_MAXCOL)
-        XC_exit_process(4, SIGKILL, "exiting from XC_set_color");
 
     if (XAllocColor(XCURSESDISPLAY, cmap, &tmp))
         colors[index] = tmp.pixel;

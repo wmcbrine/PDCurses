@@ -125,6 +125,7 @@ unsigned long XCursesMouse(XEvent *);
 
 int XCursesInitscr(int, char **);
 int XCursesSetupX(int, char **);
+void XCursesExit(void);
 
 void XC_resize(void);
 void XC_refresh_screen(void);
@@ -135,7 +136,6 @@ void XC_set_color(short, XColor);
 void XC_get_selection(void);
 int XC_set_selection(const char *, long);
 void XC_selection_off(void);
-void XC_exit_process(int, int, const char *);
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *

@@ -85,5 +85,5 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     *(Xcurscr + XCURSCR_START_OFF + lineno) = x;
     *(Xcurscr + XCURSCR_LENGTH_OFF + lineno) = len;
 
-    XCursesInstructAndWait(CURSES_REFRESH);
+    XCursesProcessRequest(CURSES_REFRESH);
 }

@@ -69,7 +69,7 @@ int PDC_set_blink(bool blinkon)
     if (SP->color_started)
         COLORS = PDC_MAXCOL;
 
-    XCursesInstruct(blinkon ? CURSES_BLINK_ON : CURSES_BLINK_OFF);
+    XCursesProcessRequest(blinkon ? CURSES_BLINK_ON : CURSES_BLINK_OFF);
 
     return OK;
 }

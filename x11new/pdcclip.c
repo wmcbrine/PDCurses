@@ -49,57 +49,36 @@ clipboard
 
 int PDC_getclipboard(char **contents, long *length)
 {
-#ifdef PDC_WIDE
-    wchar_t *wcontents;
-#endif
-    int result = 0;
-    int len;
+    XEvent event;
 
     PDC_LOG(("PDC_getclipboard() - called\n"));
 
-    XCursesInstructAndWait(CURSES_GET_SELECTION);
+    xc_selection = NULL;
+    xc_selection_len = -1;
 
-    //if (XC_read_socket(xc_display_sock, &result, sizeof(int)) < 0)
-    //    XCursesExitCursesProcess(5, "exiting from PDC_getclipboard");
-
-    if (result == PDC_CLIP_SUCCESS)
+    XCursesProcessRequest(CURSES_GET_SELECTION);
+    while (-1 == xc_selection_len)
     {
-        //if (XC_read_socket(xc_display_sock, &len, sizeof(int)) < 0)
-        //    XCursesExitCursesProcess(5, "exiting from PDC_getclipboard");
-#ifdef PDC_WIDE
-        wcontents = malloc((len + 1) * sizeof(wchar_t));
-        *contents = malloc(len * 3 + 1);
-
-        if (!wcontents || !*contents)
-#else
-            *contents = malloc(len + 1);
-
-        if (!*contents)
-#endif
-        //XCursesExitCursesProcess(6, "exiting from PDC_getclipboard - "
-        //                            "synchronization error");
-
-        if (len)
-        {
-            //if (XC_read_socket(xc_display_sock,
-#ifdef PDC_WIDE
-            //    wcontents, len * sizeof(wchar_t)) < 0)
-#else
-            //    *contents, len) < 0)
-#endif
-            //    XCursesExitCursesProcess(5, "exiting from PDC_getclipboard");
-        }
-
-#ifdef PDC_WIDE
-        wcontents[len] = 0;
-        len = PDC_wcstombs(*contents, wcontents, len * 3);
-        free(wcontents);
-#endif
-        (*contents)[len] = '\0';
-        *length = len;
+        XtAppNextEvent(app_context, &event);
+        XtDispatchEvent(&event);
     }
 
-    return result;
+    if (xc_selection && xc_selection_len)
+    {
+        *contents = malloc(xc_selection_len + 1);
+
+        if (!*contents)
+            return PDC_CLIP_MEMORY_ERROR;
+
+        memcpy(*contents, xc_selection, xc_selection_len);
+
+        (*contents)[xc_selection_len] = '\0';
+        *length = xc_selection_len;
+
+        return PDC_CLIP_SUCCESS;
+    }
+
+    return PDC_CLIP_EMPTY;
 }
 
 int PDC_setclipboard(const char *contents, long length)
@@ -118,7 +97,7 @@ int PDC_setclipboard(const char *contents, long length)
 
     length = PDC_mbstowcs(wcontents, contents, length);
 #endif
-    XCursesInstruct(CURSES_SET_SELECTION);
+    XCursesProcessRequest(CURSES_SET_SELECTION);
 
     /* Write, then wait for X to do its stuff; expect return code. */
 
@@ -158,7 +137,7 @@ int PDC_clearclipboard(void)
 
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-    XCursesInstruct(CURSES_CLEAR_SELECTION);
+    XCursesProcessRequest(CURSES_CLEAR_SELECTION);
 
     /* Write, then wait for X to do its stuff; expect return code. */
 

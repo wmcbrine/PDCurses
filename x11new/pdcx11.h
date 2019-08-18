@@ -117,8 +117,6 @@ extern XCursesAppData xc_app_data;
 int PDC_display_cursor(int, int, int, int, int);
 
 void XCursesExitCursesProcess(int, char *);
-int XCursesInstruct(int);
-int XCursesInstructAndWait(int);
 
 void XCursesProcessRequest(int);
 void XCursesCursor(int, int, int, int);
@@ -175,3 +173,5 @@ enum
 extern short *xc_atrtab;
 
 extern bool xc_resize_now;
+extern char *xc_selection;
+extern long xc_selection_len;

@@ -149,7 +149,7 @@ int sb_refresh(void)
     if (!SP)
         return ERR;
 
-    XCursesInstruct(CURSES_REFRESH_SCROLLBAR);
+    XCursesProcessRequest(CURSES_REFRESH_SCROLLBAR);
 
     return OK;
 }

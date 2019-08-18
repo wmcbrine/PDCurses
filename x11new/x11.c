@@ -228,6 +228,8 @@ static char *program_name;
 static bool blinked_off;
 
 bool xc_resize_now = FALSE;
+char *xc_selection = NULL;
+long xc_selection_len = 0;
 
 /* Macros just for app_resources */
 
@@ -2079,30 +2081,15 @@ static void _get_selection(Widget w, XtPointer data, Atom *selection,
                            Atom *type, XtPointer value,
                            unsigned long *length, int *format)
 {
-    unsigned char *src = value;
-    int pos, len = *length;
-
     XC_LOG(("_get_selection() - called\n"));
 
-    if (!value && !len)
+    if (value)
     {
+        xc_selection = value;
+        xc_selection_len = (long)(*length);
     }
     else
-    {
-        /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then
-           contents */
-
-        for (pos = 0; pos < len; pos++)
-        {
-#ifdef PDC_WIDE
-            wchar_t c;
-#else
-            unsigned char c;
-#endif
-            c = *src++;
-
-        }
-    }
+        xc_selection_len = 0;
 }
 
 #ifdef PDC_WIDE
@@ -2110,43 +2097,16 @@ static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
                                 Atom *type, XtPointer value,
                                 unsigned long *length, int *format)
 {
-    int len = *length;
-
     XC_LOG(("_get_selection_utf8() - called\n"));
 
-    if (!*type || !*length)
-    {
-        XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, _get_selection,
-                            (XtPointer)NULL, 0);
-        return;
-    }
+    //if (!*type || !*length)
+    //{
+    //    XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, _get_selection,
+    //                        (XtPointer)NULL, 0);
+    //    return;
+    //}
 
-    if (!value && !len)
-    {
-    }
-    else
-    {
-        wchar_t *wcontents = malloc((len + 1) * sizeof(wchar_t));
-        char *src = value;
-        int i = 0;
-
-        while (*src && i < (*length))
-        {
-            int retval = _from_utf8(wcontents + i, src, len);
-
-            src += retval;
-            len -= retval;
-            i++;
-        }
-
-        wcontents[i] = 0;
-        len = i;
-
-        /* Here all is OK, send PDC_CLIP_SUCCESS, then length, then
-           contents */
-
-    }
-
+    _get_selection(w, data, selection, type, value, length, format);
 }
 #endif
 
@@ -2250,7 +2210,6 @@ void XCursesProcessRequest(int req)
                             XA_STRING, _get_selection,
 #endif
                             (XtPointer)NULL, 0);
-
         break;
 
     case CURSES_SET_SELECTION:

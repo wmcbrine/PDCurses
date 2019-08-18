@@ -10,7 +10,7 @@ void PDC_beep(void)
 {
     PDC_LOG(("PDC_beep() - called\n"));
 
-    XCursesInstruct(CURSES_BELL);
+    XCursesProcessRequest(CURSES_BELL);
 }
 
 void PDC_napms(int ms)

@@ -25,28 +25,6 @@ void XC_say(const char *msg)
 
 /*** Functions that are called by the "curses" process ***/
 
-int XCursesInstruct(int flag)
-{
-    PDC_LOG(("%s:XCursesInstruct() - called flag %d\n", XCLOGMSG, flag));
-
-    /* Send a request to X */
-
-    XCursesProcessRequest(flag);
-
-    return OK;
-}
-
-int XCursesInstructAndWait(int flag)
-{
-    XC_LOG(("XCursesInstructAndWait() - called\n"));
-
-    /* tell X we want to do something */
-
-    XCursesInstruct(flag);
-
-    return OK;
-}
-
 static int _setup_curses(void)
 {
     int wait_value;
@@ -102,7 +80,7 @@ void XCursesExit(void)
 
     if (FALSE == called)
     {
-        XCursesInstruct(CURSES_EXIT);
+        XCursesProcessRequest(CURSES_EXIT);
         _cleanup_curses_process(0);
 
         called = TRUE;

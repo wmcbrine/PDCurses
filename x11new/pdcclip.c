@@ -100,6 +100,5 @@ int PDC_clearclipboard(void)
 {
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-    XC_selection_off();
     return PDC_CLIP_SUCCESS;
 }

@@ -135,7 +135,6 @@ XColor XC_get_color(short);
 void XC_set_color(short, XColor);
 void XC_get_selection(void);
 int XC_set_selection(const char *, long);
-void XC_selection_off(void);
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *

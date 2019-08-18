@@ -48,8 +48,6 @@ static void _display_cursor(int, int, int, int);
 static void _redraw_cursor(void);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
-static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
-static void XCursesPasteSelection(Widget, XButtonEvent *);
 
 static struct
 {
@@ -210,11 +208,8 @@ static Atom wm_atom[2];
 static String class_name = "XCurses";
 static Widget drawing, scrollBox, scrollVert, scrollHoriz;
 static int received_map_notify = 0;
-static bool mouse_selection = FALSE;
 static chtype *tmpsel = NULL;
 static unsigned long tmpsel_length = 0;
-static int selection_start_x = 0, selection_start_y = 0,
-           selection_end_x = 0, selection_end_y = 0;
 static Pixmap icon_pixmap;
 static Pixmap icon_pixmap_mask;
 static bool visible_cursor = FALSE;
@@ -369,9 +364,7 @@ static XrmOptionDescRec options[] =
 
 static XtActionsRec action_table[] =
 {
-    {"XCursesButton",         (XtActionProc)XCursesButton},
-    {"XCursesPasteSelection", (XtActionProc)XCursesPasteSelection},
-    {"string",                (XtActionProc)XCursesHandleString}
+    {"XCursesButton",         (XtActionProc)XCursesButton}
 };
 
 static Pixel colors[PDC_MAXCOL + 2];
@@ -929,8 +922,6 @@ void XC_refresh_screen(void)
             *(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
         }
     }
-
-    XC_selection_off();
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
@@ -1146,114 +1137,6 @@ unsigned long XCursesKeyPress(XEvent *event)
     return -1;
 }
 
-static void XCursesHandleString(Widget w, XEvent *event, String *params,
-                                Cardinal *nparams)
-{
-    unsigned char *ptr;
-
-    if (*nparams != 1)
-        return;
-
-    ptr = (unsigned char *)*params;
-
-    if (ptr[0] == '0' && ptr[1] == 'x' && ptr[2] != '\0')
-    {
-        unsigned char c;
-        unsigned long total = 0;
-
-        for (ptr += 2; (c = tolower(*ptr)); ptr++)
-        {
-            total <<= 4;
-
-            if (c >= '0' && c <= '9')
-                total += c - '0';
-            else
-                if (c >= 'a' && c <= 'f')
-                    total += c - ('a' - 10);
-                else
-                    break;
-        }
-
-        //if (c == '\0')
-            //_send_key_to_curses(total, NULL, FALSE);
-    }
-    //else
-        //for (; *ptr; ptr++)
-            //_send_key_to_curses((unsigned long)*ptr, NULL, FALSE);
-}
-
-static void _paste_string(Widget w, XtPointer data, Atom *selection, Atom *type,
-                          XtPointer value, unsigned long *length, int *format)
-{
-    unsigned long i, key;
-    unsigned char *string = value;
-
-    XC_LOG(("_paste_string() - called\n"));
-
-    if (!*type || !*length || !string)
-        return;
-
-    for (i = 0; string[i] && (i < (*length)); i++)
-    {
-        key = string[i];
-
-        if (key == 10)      /* new line - convert to ^M */
-            key = 13;
-
-        //_send_key_to_curses(key, NULL, FALSE);
-    }
-
-    XtFree(value);
-}
-
-static void _paste_utf8(Widget w, XtPointer event, Atom *selection, Atom *type,
-                        XtPointer value, unsigned long *length, int *format)
-{
-    wchar_t key;
-    size_t i = 0, len;
-    char *string = value;
-
-    XC_LOG(("_paste_utf8() - called\n"));
-
-    if (!*type || !*length)
-    {
-        XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, _paste_string,
-                            event, ((XButtonEvent *)event)->time);
-        return;
-    }
-
-    len = *length;
-
-    if (!string)
-        return;
-
-    while (string[i] && (i < len))
-    {
-        int retval = _from_utf8(&key, string + i, len - i);
-
-        if (retval < 1)
-            return;
-
-        if (key == 10)      /* new line - convert to ^M */
-            key = 13;
-
-        //_send_key_to_curses(key, NULL, FALSE);
-
-        i += retval;
-    }
-
-    XtFree(value);
-}
-
-static void XCursesPasteSelection(Widget w, XButtonEvent *button_event)
-{
-    XC_LOG(("XCursesPasteSelection() - called\n"));
-
-    XtGetSelectionValue(w, XA_PRIMARY, XA_UTF8_STRING(XtDisplay(w)),
-                        _paste_utf8, (XtPointer)button_event,
-                        button_event->time);
-}
-
 static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
                              Atom *type_return, XtPointer *value_return,
                              unsigned long *length_return, int *format_return)
@@ -1330,267 +1213,6 @@ static void _lose_ownership(Widget w, Atom *type)
 
     tmpsel = NULL;
     tmpsel_length = 0;
-    XC_selection_off();
-}
-
-static void _show_selection(int start_x, int start_y, int end_x, int end_y,
-                            bool highlight)
-{
-    int i, num_cols, start_col, row;
-
-    PDC_LOG(("%s:_show_selection() - called StartX: %d StartY: %d "
-             "EndX: %d EndY: %d Highlight: %d\n", XCLOGMSG,
-             start_x, start_y, end_x, end_y, highlight));
-
-    for (i = 0; i < end_y - start_y + 1; i++)
-    {
-        if (start_y == end_y)       /* only one line */
-        {
-            start_col = start_x;
-            num_cols = end_x - start_x + 1;
-            row = start_y;
-        }
-        else if (!i)            /* first line */
-        {
-            start_col = start_x;
-            num_cols = COLS - start_x;
-            row = start_y;
-        }
-        else if (start_y + i == end_y)  /* last line */
-        {
-            start_col = 0;
-            num_cols = end_x + 1;
-            row = end_y;
-        }
-        else                /* full line */
-        {
-            start_col = 0;
-            num_cols = COLS;
-            row = start_y + i;
-        }
-
-        _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
-                      (start_col * sizeof(chtype))), row, start_col,
-                      num_cols, highlight);
-    }
-}
-
-void XC_selection_off(void)
-{
-    XC_LOG(("XC_selection_off() - called\n"));
-
-    if (mouse_selection)
-    {
-        _display_screen();
-
-        selection_start_x = selection_start_y = selection_end_x =
-            selection_end_y = 0;
-
-        mouse_selection = FALSE;
-    }
-}
-
-static void _selection_on(int x, int y)
-{
-    XC_LOG(("_selection_on() - called\n"));
-
-    selection_start_x = selection_end_x = x;
-    selection_start_y = selection_end_y = y;
-}
-
-static void _selection_extend(int x, int y)
-{
-    int temp, current_start, current_end, current_start_x,
-        current_end_x, current_start_y, current_end_y, new_start,
-        new_end, new_start_x, new_end_x, new_start_y, new_end_y;
-
-    XC_LOG(("_selection_extend() - called\n"));
-
-    mouse_selection = TRUE;
-
-    /* convert x/y coordinates into start/stop */
-
-    current_start = (selection_start_y * COLS) + selection_start_x;
-    current_end = (selection_end_y * COLS) + selection_end_x;
-
-    if (current_start > current_end)
-    {
-        current_start_x = selection_end_x;
-        current_start_y = selection_end_y;
-        current_end_x = selection_start_x;
-        current_end_y = selection_start_y;
-        temp = current_start;
-        current_start = current_end;
-        current_end = temp;
-    }
-    else
-    {
-        current_end_x = selection_end_x;
-        current_end_y = selection_end_y;
-        current_start_x = selection_start_x;
-        current_start_y = selection_start_y;
-    }
-
-    /* Now we have the current selection as a linear expression.
-       Convert the new position to a linear expression. */
-
-    selection_end_x = x;
-    selection_end_y = y;
-
-    /* convert x/y coordinates into start/stop */
-
-    new_start = (selection_start_y * COLS) + selection_start_x;
-    new_end = (selection_end_y * COLS) + selection_end_x;
-
-    if (new_start > new_end)
-    {
-        new_start_x = selection_end_x;
-        new_start_y = selection_end_y;
-        new_end_x = selection_start_x;
-        new_end_y = selection_start_y;
-        temp = new_start;
-        new_start = new_end;
-        new_end = temp;
-    }
-    else
-    {
-        new_end_x = selection_end_x;
-        new_end_y = selection_end_y;
-        new_start_x = selection_start_x;
-        new_start_y = selection_start_y;
-    }
-
-    if (new_end > current_end)
-        _show_selection(current_end_x, current_end_y, new_end_x,
-                        new_end_y, TRUE);
-    else if (new_end < current_end)
-        _show_selection(new_end_x, new_end_y, current_end_x,
-                        current_end_y, FALSE);
-    else if (new_start < current_start)
-        _show_selection(new_start_x, new_start_y, current_start_x,
-                        current_start_y, TRUE);
-    else if (new_start > current_start)
-        _show_selection(current_start_x, current_start_y,
-                        new_start_x, new_start_y, FALSE);
-    else
-        _show_selection(current_start_x, current_start_y,
-                        new_start_x, new_start_y, TRUE);
-}
-
-static void _selection_set(void)
-{
-    int i, j, start, end, start_x, end_x, start_y, end_y, num_cols,
-        start_col, row, num_chars, ch, last_nonblank, length, newlen;
-    chtype *ptr = NULL;
-
-    XC_LOG(("_selection_set() - called\n"));
-
-    /* convert x/y coordinates into start/stop */
-
-    start = (selection_start_y * COLS) + selection_start_x;
-    end = (selection_end_y * COLS) + selection_end_x;
-
-    if (start == end)
-    {
-        if (tmpsel)
-            free(tmpsel);
-
-        tmpsel = NULL;
-        tmpsel_length = 0;
-
-        return;
-    }
-
-    if (start > end)
-    {
-        start_x = selection_end_x;
-        start_y = selection_end_y;
-        end_x = selection_start_x;
-        end_y = selection_start_y;
-        length = start - end + 1;
-    }
-    else
-    {
-        end_x = selection_end_x;
-        end_y = selection_end_y;
-        start_x = selection_start_x;
-        start_y = selection_start_y;
-        length = end - start + 1;
-    }
-
-    newlen = length + end_y - start_y + 2;
-
-    if (length > (int)tmpsel_length)
-    {
-        if (!tmpsel_length)
-            tmpsel = malloc(newlen * sizeof(chtype));
-        else
-            tmpsel = realloc(tmpsel, newlen * sizeof(chtype));
-    }
-
-    if (!tmpsel)
-    {
-        tmpsel_length = 0;
-        return;
-    }
-
-    tmpsel_length = length;
-    num_chars = 0;
-
-    for (i = 0; i < end_y - start_y + 1; i++)
-    {
-
-        if (start_y == end_y)       /* only one line */
-        {
-            start_col = start_x;
-            num_cols = end_x - start_x + 1;
-            row = start_y;
-        }
-        else if (!i)            /* first line */
-        {
-            start_col = start_x;
-            num_cols = COLS - start_x;
-            row = start_y;
-        }
-        else if (start_y + i == end_y)  /* last line */
-        {
-            start_col = 0;
-            num_cols = end_x + 1;
-            row = end_y;
-        }
-        else                /* full line */
-        {
-            start_col = 0;
-            num_cols = COLS;
-            row = start_y + i;
-        }
-
-        ptr = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
-              start_col * sizeof(chtype));
-
-        if (i < end_y - start_y)
-        {
-            last_nonblank = 0;
-
-            for (j = 0; j < num_cols; j++)
-            {
-                ch = (int)(ptr[j] & A_CHARTEXT);
-                if (ch != (int)' ')
-                    last_nonblank = j;
-            }
-        }
-        else
-            last_nonblank = num_cols - 1;
-
-        for (j = 0; j <= last_nonblank; j++)
-            tmpsel[num_chars++] = ptr[j];
-
-        if (i < end_y - start_y)
-            tmpsel[num_chars++] = '\n';
-    }
-
-    tmpsel[num_chars] = '\0';
-    tmpsel_length = num_chars;
 }
 
 static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
@@ -1775,7 +1397,7 @@ unsigned long XCursesMouse(XEvent *event)
     int button_no;
     static int last_button_no = 0;
 
-    XC_LOG(("XCursesButton() - called\n"));
+    XC_LOG(("XCursesMouse() - called\n"));
 
     keysym = 0; /* suppress any modifier key return */
 
@@ -2153,8 +1775,6 @@ int XC_set_selection(const char *contents, long length)
     }
     else
         status = PDC_CLIP_SUCCESS;
-
-    XC_selection_off();
 
     return status;
 }

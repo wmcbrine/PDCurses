@@ -92,7 +92,7 @@ refresh.o scanw.o scr_dump.o scroll.o slk.o termattr.o \
 touch.o util.o window.o debug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
-pdcutil.o pdcx11.o x11.o sb.o ScrollBox.o
+pdcutil.o x11.o sb.o ScrollBox.o
 
 LIBSHOBJS = $(LIBOBJS:.o=.sho)
 PDCSHOBJS = $(PDCOBJS:.o=.sho)
@@ -251,9 +251,6 @@ pdcsetsc.o: $(osdir)/pdcsetsc.c
 
 pdcutil.o: $(osdir)/pdcutil.c
 	$(BUILD) $(osdir)/pdcutil.c
-
-pdcx11.o: $(osdir)/pdcx11.c
-	$(BUILD) $(osdir)/pdcx11.c
 
 ScrollBox.o: $(osdir)/ScrollBox.c
 	$(BUILD) $(osdir)/ScrollBox.c
@@ -450,10 +447,6 @@ pdcsetsc.sho: $(osdir)/pdcsetsc.c
 
 pdcutil.sho: $(osdir)/pdcutil.c
 	$(DYN_BUILD) $(osdir)/pdcutil.c
-	@SAVE2O@
-
-pdcx11.sho: $(osdir)/pdcx11.c
-	$(DYN_BUILD) $(osdir)/pdcx11.c
 	@SAVE2O@
 
 ScrollBox.sho: $(osdir)/ScrollBox.c

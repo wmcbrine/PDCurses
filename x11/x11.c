@@ -201,8 +201,6 @@ static struct
  {0,            0,      0,           0,            0,           0}
 };
 
-#define BITMAPDEPTH 1
-
 static GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;

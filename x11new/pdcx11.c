@@ -12,10 +12,6 @@ unsigned char *Xcurscr;
 int XCursesLINES = 24;
 int XCursesCOLS = 80;
 
-static void _dummy_function(void)
-{
-}
-
 #ifdef PDCDEBUG
 void XC_say(const char *msg)
 {
@@ -55,34 +51,9 @@ int XCursesInitscr(int argc, char *argv[])
     return rc;
 }
 
-static void _cleanup_curses_process(int rc)
-{
-    PDC_LOG(("%s:_cleanup_curses_process() - called: %d\n", XCLOGMSG, rc));
-
-    if (rc)
-        _exit(rc);
-}
-
-void XCursesExitCursesProcess(int rc, char *msg)
-{
-    PDC_LOG(("%s:XCursesExitCursesProcess() - called: %d %s\n",
-             XCLOGMSG, rc, msg));
-
-    endwin();
-    _cleanup_curses_process(rc);
-}
-
 void XCursesExit(void)
 {
-    static bool called = FALSE;
-
     XC_LOG(("XCursesExit() - called\n"));
 
-    if (FALSE == called)
-    {
-        XC_exit_process(0, 0, "XCursesProcess requested to exit");
-        _cleanup_curses_process(0);
-
-        called = TRUE;
-    }
+    XC_exit_process(0, 0, "XCursesProcess requested to exit");
 }

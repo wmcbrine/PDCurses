@@ -116,8 +116,6 @@ extern XCursesAppData xc_app_data;
 
 int PDC_display_cursor(int, int, int, int, int);
 
-void XCursesExitCursesProcess(int, char *);
-
 void XCursesCursor(int, int, int, int);
 void XCursesDisplayCursor(void);
 void XCursesTitle(const char *);

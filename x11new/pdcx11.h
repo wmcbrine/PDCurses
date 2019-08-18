@@ -118,7 +118,6 @@ int PDC_display_cursor(int, int, int, int, int);
 
 void XCursesExitCursesProcess(int, char *);
 
-void XCursesProcessRequest(int);
 void XCursesCursor(int, int, int, int);
 void XCursesDisplayCursor(void);
 void XCursesTitle(const char *);
@@ -129,7 +128,16 @@ unsigned long XCursesMouse(XEvent *);
 int XCursesInitscr(int, char **);
 int XCursesSetupX(int, char **);
 
+void XC_resize(void);
+void XC_refresh_screen(void);
+void XC_refresh_scrollbar(void);
+void XC_set_blink(bool);
+XColor XC_get_color(short);
+void XC_set_color(short, XColor);
+void XC_get_selection(void);
 int XC_set_selection(const char *, long);
+void XC_selection_off(void);
+void XC_exit_process(int, int, const char *);
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *
@@ -161,15 +169,6 @@ void XC_say(const char *msg);
 #else
 # define MOUSE_LOG(x)
 #endif
-
-enum
-{
-    CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR,
-    CURSES_GET_SELECTION, CURSES_TITLE, CURSES_REFRESH_SCROLLBAR,
-    CURSES_RESIZE, CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR,
-    CURSES_CHILD, CURSES_REFRESH, CURSES_GET_COLOR, CURSES_SET_COLOR,
-    CURSES_BLINK_ON, CURSES_BLINK_OFF, CURSES_EXIT
-};
 
 extern short *xc_atrtab;
 

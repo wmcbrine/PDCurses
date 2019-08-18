@@ -44,10 +44,8 @@ XCursesAppData xc_app_data;
 #include "../common/icon64.xpm"
 #include "../common/icon32.xpm"
 
-static void _selection_off(void);
 static void _display_cursor(int, int, int, int);
 static void _redraw_cursor(void);
-static void _exit_process(int, int, char *);
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 static void XCursesHandleString(Widget, XEvent *, String *, Cardinal *);
@@ -742,9 +740,9 @@ static void _initialize_colors(void)
     colors[COLOR_BORDER] = xc_app_data.borderColor;
 }
 
-static void _refresh_scrollbar(void)
+void XC_refresh_scrollbar(void)
 {
-    XC_LOG(("_refresh_scrollbar() - called\n"));
+    XC_LOG(("XC_refresh_scrollbar() - called\n"));
 
     if (SP->sb_on)
     {
@@ -900,11 +898,11 @@ static void _display_screen(void)
 
 /* Draw changed portions of the screen */
 
-static void _refresh_screen(void)
+void XC_refresh_screen(void)
 {
     int row, start_col, num_cols;
 
-    XC_LOG(("_refresh_screen() - called\n"));
+    XC_LOG(("XC_refresh_screen() - called\n"));
 
     for (row = 0; row < XCursesLINES; row++)
     {
@@ -922,7 +920,7 @@ static void _refresh_screen(void)
         }
     }
 
-    _selection_off();
+    XC_selection_off();
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
@@ -958,7 +956,7 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
            Removed on 3-3-2001. Now only exits on WM_DELETE_WINDOW. */
 
         if ((Atom)client_event->data.s[0] == wm_atom[0])
-            _exit_process(0, SIGKILL, "");
+            XC_exit_process(0, SIGKILL, "");
     }
 }
 
@@ -1322,7 +1320,7 @@ static void _lose_ownership(Widget w, Atom *type)
 
     tmpsel = NULL;
     tmpsel_length = 0;
-    _selection_off();
+    XC_selection_off();
 }
 
 static void _show_selection(int start_x, int start_y, int end_x, int end_y,
@@ -1367,9 +1365,9 @@ static void _show_selection(int start_x, int start_y, int end_x, int end_y,
     }
 }
 
-static void _selection_off(void)
+void XC_selection_off(void)
 {
-    XC_LOG(("_selection_off() - called\n"));
+    XC_LOG(("XC_selection_off() - called\n"));
 
     if (mouse_selection)
     {
@@ -1984,10 +1982,10 @@ static void _thumb_left_right(Widget w, XtPointer client_data,
                          (double)(viewport_x / total_x));
 }
 
-static void _exit_process(int rc, int sig, char *msg)
+void XC_exit_process(int rc, int sig, const char *msg)
 {
     if (rc || sig)
-        fprintf(stderr, "%s:_exit_process() - called: rc:%d sig:%d <%s>\n",
+        fprintf(stderr, "%s:XC_exit_process() - called: rc:%d sig:%d <%s>\n",
                 XCLOGMSG, rc, sig, msg);
 
     if (icon_pixmap)
@@ -2005,7 +2003,7 @@ static void _exit_process(int rc, int sig, char *msg)
     _exit(rc);
 }
 
-static void _resize(void)
+void XC_resize(void)
 {
     short save_atrtab[PDC_COLOR_PAIRS * 2];
 
@@ -2045,34 +2043,32 @@ void XCursesTitle(const char *title)
 
 /* For color_content() */
 
-static void _get_color(void)
+XColor XC_get_color(short index)
 {
-    XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
-    int index = tmp->pixel;
+    XColor tmp;
     Colormap cmap = DefaultColormap(XCURSESDISPLAY,
                                     DefaultScreen(XCURSESDISPLAY));
 
     if (index < 0 || index >= PDC_MAXCOL)
-        _exit_process(4, SIGKILL, "exiting from _get_color");
+        XC_exit_process(4, SIGKILL, "exiting from XC_get_color");
 
-    tmp->pixel = colors[index];
-    XQueryColor(XCURSESDISPLAY, cmap, tmp);
+    tmp.pixel = colors[index];
+    XQueryColor(XCURSESDISPLAY, cmap, &tmp);
+    return tmp;
 }
 
 /* For init_color() */
 
-static void _set_color(void)
+void XC_set_color(short index, XColor tmp)
 {
-    XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
-    int index = tmp->pixel;
     Colormap cmap = DefaultColormap(XCURSESDISPLAY,
                                     DefaultScreen(XCURSESDISPLAY));
 
     if (index < 0 || index >= PDC_MAXCOL)
-        _exit_process(4, SIGKILL, "exiting from _set_color");
+        XC_exit_process(4, SIGKILL, "exiting from XC_set_color");
 
-    if (XAllocColor(XCURSESDISPLAY, cmap, tmp))
-        colors[index] = tmp->pixel;
+    if (XAllocColor(XCURSESDISPLAY, cmap, &tmp))
+        colors[index] = tmp.pixel;
 }
 
 /* For PDC_getclipboard() */
@@ -2110,12 +2106,28 @@ static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
 }
 #endif
 
+void XC_get_selection(void)
+{
+    XC_LOG(("XC_get_selection() - called\n"));
+
+    XtGetSelectionValue(topLevel, XA_PRIMARY,
+#ifdef PDC_WIDE
+                        XA_UTF8_STRING(XtDisplay(topLevel)),
+                        _get_selection_utf8,
+#else
+                        XA_STRING, _get_selection,
+#endif
+                        (XtPointer)NULL, 0);
+}
+
 /* For PDC_setclipboard() */
 
 int XC_set_selection(const char *contents, long length)
 {
     long pos;
     int status;
+
+    XC_LOG(("XC_set_selection() - called\n"));
 
     if (length > (long)tmpsel_length)
     {
@@ -2142,39 +2154,15 @@ int XC_set_selection(const char *contents, long length)
     else
         status = PDC_CLIP_SUCCESS;
 
-    _selection_off();
+    XC_selection_off();
 
     return status;
 }
 
-/* The curses process sent us a message */
-
-void XCursesProcessRequest(int req)
+void XC_set_blink(bool blinkon)
 {
-    switch(req)
+    if (blinkon)
     {
-    case CURSES_EXIT:   /* request from curses to stop */
-        XC_LOG(("CURSES_EXIT received from child\n"));
-        _exit_process(0, 0, "XCursesProcess requested to exit by child");
-        break;
-
-    case CURSES_BELL:
-        XC_LOG(("CURSES_BELL received from child\n"));
-        XBell(XCURSESDISPLAY, 50);
-        break;
-
-    /* request from curses to confirm completion of display */
-
-    case CURSES_REFRESH:
-        XC_LOG(("CURSES_REFRESH received from child\n"));
-        _refresh_screen();
-        break;
-
-    case CURSES_REFRESH_SCROLLBAR:
-        _refresh_scrollbar();
-        break;
-
-    case CURSES_BLINK_ON:
         if (!(SP->termattrs & A_BLINK))
         {
             SP->termattrs |= A_BLINK;
@@ -2182,53 +2170,14 @@ void XCursesProcessRequest(int req)
             XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
                             _blink_text, NULL);
         }
-        break;
-
-    case CURSES_BLINK_OFF:
-        SP->termattrs &= ~A_BLINK;
-        break;
-
-    case CURSES_RESIZE:
-        XC_LOG(("CURSES_RESIZE received from child\n"));
-        _resize();
-        break;
-
-    case CURSES_GET_SELECTION:
-        XC_LOG(("CURSES_GET_SELECTION received from child\n"));
-
-        XtGetSelectionValue(topLevel, XA_PRIMARY,
-#ifdef PDC_WIDE
-                            XA_UTF8_STRING(XtDisplay(topLevel)),
-                            _get_selection_utf8,
-#else
-                            XA_STRING, _get_selection,
-#endif
-                            (XtPointer)NULL, 0);
-        break;
-
-    case CURSES_CLEAR_SELECTION:
-        XC_LOG(("CURSES_CLEAR_SELECTION received from child\n"));
-        _selection_off();
-        break;
-
-    case CURSES_GET_COLOR:
-        XC_LOG(("CURSES_GET_COLOR recieved from child\n"));
-        _get_color();
-        break;
-
-    case CURSES_SET_COLOR:
-        XC_LOG(("CURSES_SET_COLOR recieved from child\n"));
-        _set_color();
-        break;
-
-    default:
-        PDC_LOG(("%s:Unknown request %d\n", XCLOGMSG, num_cols));
     }
+    else
+        SP->termattrs &= ~A_BLINK;
 }
 
 void XCursesCursor(int old_row, int old_x, int new_row, int new_x)
 {
-    XC_LOG(("CURSES_CURSOR received from child\n"));
+    XC_LOG(("XCursesCursor - called\n"));
 
     visible_cursor = TRUE;
     _display_cursor(old_row, old_x, new_row, new_x);
@@ -2236,7 +2185,7 @@ void XCursesCursor(int old_row, int old_x, int new_row, int new_x)
 
 void XCursesDisplayCursor(void)
 {
-    XC_LOG(("CURSES_DISPLAY_CURSOR received from child. Vis now: "));
+    XC_LOG(("XCursesDisplayCursor - called. Vis now: "));
     XC_LOG((visible_cursor ? "1\n" : "0\n"));
 
     /* If the window is not active, ignore this command. The
@@ -2300,8 +2249,6 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
 
 static void _handle_signals(int signo)
 {
-    int flag = CURSES_EXIT;
-
     PDC_LOG(("%s:_handle_signals() - called: %d\n", XCLOGMSG, signo));
 
     /* Patch by: Georg Fuchs */
@@ -2363,8 +2310,8 @@ int XCursesSetupX(int argc, char *argv[])
 
     program_name = argv[0];
 
-    /* Trap all signals when XCurses is the child process, but only if
-       they haven't already been ignored by the application. */
+    /* Trap all signals, but only if they haven't already been ignored
+       by the application. */
 
     for (i = 0; i < PDC_MAX_SIGNALS; i++)
         if (XCursesSetSignal(i, _handle_signals) == SIG_IGN)

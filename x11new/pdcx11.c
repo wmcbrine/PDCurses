@@ -80,7 +80,7 @@ void XCursesExit(void)
 
     if (FALSE == called)
     {
-        XCursesProcessRequest(CURSES_EXIT);
+        XC_exit_process(0, 0, "XCursesProcess requested to exit");
         _cleanup_curses_process(0);
 
         called = TRUE;

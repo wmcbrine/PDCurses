@@ -56,7 +56,7 @@ int PDC_getclipboard(char **contents, long *length)
     xc_selection = NULL;
     xc_selection_len = -1;
 
-    XCursesProcessRequest(CURSES_GET_SELECTION);
+    XC_get_selection();
     while (-1 == xc_selection_len)
     {
         XtAppNextEvent(app_context, &event);
@@ -98,20 +98,8 @@ int PDC_freeclipboard(char *contents)
 
 int PDC_clearclipboard(void)
 {
-    int rc;
-    long len = 0;
-
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-    XCursesProcessRequest(CURSES_CLEAR_SELECTION);
-
-    /* Write, then wait for X to do its stuff; expect return code. */
-
-    //if (XC_write_socket(xc_display_sock, &len, sizeof(long)) >= 0)
-    //    if (XC_read_socket(xc_display_sock, &rc, sizeof(int)) >= 0)
-    //        return rc;
-
-    //XCursesExitCursesProcess(5, "exiting from PDC_clearclipboard");
-
-    return PDC_CLIP_ACCESS_ERROR;   /* not reached */
+    XC_selection_off();
+    return PDC_CLIP_SUCCESS;
 }

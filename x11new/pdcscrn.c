@@ -54,7 +54,7 @@ int PDC_resize_screen(int nlines, int ncols)
     if (nlines || ncols || !SP->resized)
         return ERR;
 
-    XCursesProcessRequest(CURSES_RESIZE);
+    XC_resize();
 
     XCursesLINES = SP->lines;
     XCursesCOLS = SP->cols;
@@ -105,30 +105,24 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-    XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+    XColor tmp = XC_get_color(color);
 
-    tmp->pixel = color;
-
-    XCursesProcessRequest(CURSES_GET_COLOR);
-
-    *red = ((double)(tmp->red) * 1000 / 65535) + 0.5;
-    *green = ((double)(tmp->green) * 1000 / 65535) + 0.5;
-    *blue = ((double)(tmp->blue) * 1000 / 65535) + 0.5;
+    *red = ((double)(tmp.red) * 1000 / 65535) + 0.5;
+    *green = ((double)(tmp.green) * 1000 / 65535) + 0.5;
+    *blue = ((double)(tmp.blue) * 1000 / 65535) + 0.5;
 
     return OK;
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-    XColor *tmp = (XColor *)(Xcurscr + XCURSCR_XCOLOR_OFF);
+    XColor tmp;
 
-    tmp->pixel = color;
+    tmp.red = ((double)red * 65535 / 1000) + 0.5;
+    tmp.green = ((double)green * 65535 / 1000) + 0.5;
+    tmp.blue = ((double)blue * 65535 / 1000) + 0.5;
 
-    tmp->red = ((double)red * 65535 / 1000) + 0.5;
-    tmp->green = ((double)green * 65535 / 1000) + 0.5;
-    tmp->blue = ((double)blue * 65535 / 1000) + 0.5;
-
-    XCursesProcessRequest(CURSES_SET_COLOR);
+    XC_set_color(color, tmp);
 
     return OK;
 }

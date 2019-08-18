@@ -52,11 +52,7 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
              XCLOGMSG, newrow, newcol, visibility));
 
     if (visibility == -1)
-    {
-        /* Only send the CURSES_DISPLAY_CURSOR message, no data */
-
         XCursesDisplayCursor();
-    }
     else
         XCursesCursor(oldrow, oldcol, newrow, newcol);
 
@@ -85,5 +81,5 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     *(Xcurscr + XCURSCR_START_OFF + lineno) = x;
     *(Xcurscr + XCURSCR_LENGTH_OFF + lineno) = len;
 
-    XCursesProcessRequest(CURSES_REFRESH);
+    XC_refresh_screen();
 }

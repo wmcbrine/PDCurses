@@ -197,8 +197,6 @@ static struct
  {0,            0,      0,           0,            0,           0}
 };
 
-#define BITMAPDEPTH 1
-
 static GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;
@@ -224,6 +222,11 @@ static bool window_entered = TRUE;
 static bool exposed = FALSE;
 static char *program_name;
 static bool blinked_off;
+
+unsigned char *Xcurscr;
+
+int XCursesLINES = 24;
+int XCursesCOLS = 80;
 
 bool xc_resize_now = FALSE;
 char *xc_selection = NULL;
@@ -383,6 +386,13 @@ static const char *default_translations =
     "<BtnUp>: XCursesButton() \n" \
     "<BtnMotion>: XCursesButton()"
 };
+
+#ifdef PDCDEBUG
+void XC_say(const char *msg)
+{
+    PDC_LOG(("%s:%s", XCLOGMSG, msg));
+}
+#endif
 
 static int _to_utf8(char *outcode, chtype code)
 {
@@ -2553,4 +2563,20 @@ int XCursesSetupX(int argc, char *argv[])
     }
 
     return OK;          /* will get here */
+}
+
+int XCursesInitscr(int argc, char *argv[])
+{
+    XC_LOG(("XCursesInitscr() - called\n"));
+
+    if (ERR == XCursesSetupX(argc, argv))
+        return ERR;
+
+    XCursesLINES = SP->lines;
+    LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
+    XCursesCOLS = COLS = SP->cols;
+
+    atexit(XCursesExit);
+
+    return OK;
 }

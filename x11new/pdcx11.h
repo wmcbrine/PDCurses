@@ -127,8 +127,9 @@ unsigned long XCursesKeyPress(XEvent *);
 unsigned long XCursesMouse(XEvent *);
 
 int XCursesInitscr(int, char **);
+int XCursesSetupX(int, char **);
 
-int XCursesSetupX(int argc, char *argv[]);
+int XC_set_selection(const char *, long);
 
 #ifdef _HPUX_SOURCE
 # define FD_SET_CAST int *
@@ -163,7 +164,7 @@ void XC_say(const char *msg);
 
 enum
 {
-    CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR, CURSES_SET_SELECTION,
+    CURSES_CLEAR_SELECTION, CURSES_DISPLAY_CURSOR,
     CURSES_GET_SELECTION, CURSES_TITLE, CURSES_REFRESH_SCROLLBAR,
     CURSES_RESIZE, CURSES_BELL, CURSES_CONTINUE, CURSES_CURSOR,
     CURSES_CHILD, CURSES_REFRESH, CURSES_GET_COLOR, CURSES_SET_COLOR,

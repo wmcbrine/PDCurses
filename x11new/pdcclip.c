@@ -83,43 +83,9 @@ int PDC_getclipboard(char **contents, long *length)
 
 int PDC_setclipboard(const char *contents, long length)
 {
-#ifdef PDC_WIDE
-    wchar_t *wcontents;
-#endif
-    int rc;
-
     PDC_LOG(("PDC_setclipboard() - called\n"));
 
-#ifdef PDC_WIDE
-    wcontents = malloc((length + 1) * sizeof(wchar_t));
-    if (!wcontents)
-        return PDC_CLIP_MEMORY_ERROR;
-
-    length = PDC_mbstowcs(wcontents, contents, length);
-#endif
-    XCursesProcessRequest(CURSES_SET_SELECTION);
-
-    /* Write, then wait for X to do its stuff; expect return code. */
-
-    //if (XC_write_socket(xc_display_sock, &length, sizeof(long)) >= 0)
-    //{
-    //    if (XC_write_socket(xc_display_sock,
-#ifdef PDC_WIDE
-    //        wcontents, length * sizeof(wchar_t)) >= 0)
-    //    {
-    //        free(wcontents);
-#else
-    //        contents, length) >= 0)
-    //    {
-#endif
-    //        if (XC_read_socket(xc_display_sock, &rc, sizeof(int)) >= 0)
-    //            return rc;
-    //    }
-    //}
-
-    //XCursesExitCursesProcess(5, "exiting from PDC_setclipboard");
-
-    return PDC_CLIP_ACCESS_ERROR;   /* not reached */
+    return XC_set_selection(contents, length);
 }
 
 int PDC_freeclipboard(char *contents)

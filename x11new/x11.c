@@ -2112,9 +2112,9 @@ static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
 
 /* For PDC_setclipboard() */
 
-static void _set_selection(void)
+int XC_set_selection(const char *contents, long length)
 {
-    long length, pos;
+    long pos;
     int status;
 
     if (length > (long)tmpsel_length)
@@ -2126,15 +2126,7 @@ static void _set_selection(void)
     }
 
     for (pos = 0; pos < length; pos++)
-    {
-#ifdef PDC_WIDE
-        wchar_t c;
-#else
-        unsigned char c;
-#endif
-
-        tmpsel[pos] = c;
-    }
+        tmpsel[pos] = contents[pos];
 
     tmpsel_length = length;
     tmpsel[length] = 0;
@@ -2151,6 +2143,8 @@ static void _set_selection(void)
         status = PDC_CLIP_SUCCESS;
 
     _selection_off();
+
+    return status;
 }
 
 /* The curses process sent us a message */
@@ -2210,11 +2204,6 @@ void XCursesProcessRequest(int req)
                             XA_STRING, _get_selection,
 #endif
                             (XtPointer)NULL, 0);
-        break;
-
-    case CURSES_SET_SELECTION:
-        XC_LOG(("CURSES_SET_SELECTION received from child\n"));
-        _set_selection();
         break;
 
     case CURSES_CLEAR_SELECTION:

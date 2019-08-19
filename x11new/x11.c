@@ -1168,7 +1168,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
 
         XtFree((char *)std_targets);
         *type_return = XA_ATOM;
-        *format_return = sizeof(Atom) * 8;
+        *format_return = 8;
 
         return True;
     }
@@ -1189,7 +1189,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
             while (*tmp)
                 data[ret_length++] = *tmp++ & 0xff;
 
-        data[ret_length++] = '\0';
+        data[ret_length] = '\0';
 
         *value_return = data;
         *length_return = ret_length;
@@ -1730,9 +1730,11 @@ static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
 
 void XC_get_selection(void)
 {
+    Atom XA_CLIPBOARD = XInternAtom(XtDisplay(topLevel), "CLIPBOARD", 0);
+
     XC_LOG(("XC_get_selection() - called\n"));
 
-    XtGetSelectionValue(topLevel, XA_PRIMARY,
+    XtGetSelectionValue(topLevel, XA_CLIPBOARD,
 #ifdef PDC_WIDE
                         XA_UTF8_STRING(XtDisplay(topLevel)),
                         _get_selection_utf8,
@@ -1748,6 +1750,7 @@ int XC_set_selection(const char *contents, long length)
 {
     long pos;
     int status;
+    Atom XA_CLIPBOARD = XInternAtom(XtDisplay(topLevel), "CLIPBOARD", 0);
 
     XC_LOG(("XC_set_selection() - called\n"));
 
@@ -1765,7 +1768,9 @@ int XC_set_selection(const char *contents, long length)
     tmpsel_length = length;
     tmpsel[length] = 0;
 
-    if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
+    if (XtOwnSelection(topLevel, XA_CLIPBOARD, CurrentTime,
+                       _convert_proc, _lose_ownership, NULL) == False ||
+        XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
                        _convert_proc, _lose_ownership, NULL) == False)
     {
         status = PDC_CLIP_ACCESS_ERROR;

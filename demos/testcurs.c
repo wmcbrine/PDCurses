@@ -39,9 +39,11 @@
 # define HAVE_COLOR 0
 #endif
 
-/* Set to non-zero if you want to test the PDCurses clipboard */
-
-#define HAVE_CLIPBOARD 0
+#ifdef PDCURSES
+# define HAVE_CLIPBOARD 1
+#else
+# define HAVE_CLIPBOARD 0
+#endif
 
 void inputTest(WINDOW *);
 void scrollTest(WINDOW *);

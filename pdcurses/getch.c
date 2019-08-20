@@ -91,6 +91,8 @@ getch
 
 **man-end****************************************************************/
 
+#include <stdlib.h>
+
 #define _INBUFSIZ   512 /* size of terminal input buffer */
 #define NUNGETCH    256 /* max # chars to ungetch() */
 
@@ -160,6 +162,34 @@ static int _mouse_key(void)
         else
             key = -1;
     }
+
+    return key;
+}
+
+static int _paste(void)
+{
+#ifdef PDC_WIDE
+    wchar_t *wpaste;
+#endif
+    char *paste;
+    long len;
+    int key;
+
+    PDC_getclipboard(&paste, &len);
+#ifdef PDC_WIDE
+    wpaste = malloc(len * sizeof(wchar_t));
+    len = PDC_mbstowcs(wpaste, paste, len);
+    while (len > 1)
+        PDC_ungetch(wpaste[--len]);
+    key = *wpaste;
+    free(wpaste);
+#else
+    while (len > 1)
+        PDC_ungetch(paste[--len]);
+    key = *paste;
+#endif
+    PDC_freeclipboard(paste);
+    SP->key_modifiers = 0;
 
     return key;
 }
@@ -242,6 +272,11 @@ int wgetch(WINDOW *win)
         /* if there is, fetch it */
 
         key = PDC_get_key();
+
+        /* paste? */
+
+        if (0x16 == key && SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+            key = _paste();
 
         if (SP->key_code)
         {

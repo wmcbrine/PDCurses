@@ -1710,24 +1710,6 @@ static void _get_selection(Widget w, XtPointer data, Atom *selection,
         xc_selection_len = 0;
 }
 
-#ifdef PDC_WIDE
-static void _get_selection_utf8(Widget w, XtPointer data, Atom *selection,
-                                Atom *type, XtPointer value,
-                                unsigned long *length, int *format)
-{
-    XC_LOG(("_get_selection_utf8() - called\n"));
-
-    //if (!*type || !*length)
-    //{
-    //    XtGetSelectionValue(w, XA_PRIMARY, XA_STRING, _get_selection,
-    //                        (XtPointer)NULL, 0);
-    //    return;
-    //}
-
-    _get_selection(w, data, selection, type, value, length, format);
-}
-#endif
-
 void XC_get_selection(void)
 {
     Atom XA_CLIPBOARD = XInternAtom(XtDisplay(topLevel), "CLIPBOARD", 0);
@@ -1737,11 +1719,10 @@ void XC_get_selection(void)
     XtGetSelectionValue(topLevel, XA_CLIPBOARD,
 #ifdef PDC_WIDE
                         XA_UTF8_STRING(XtDisplay(topLevel)),
-                        _get_selection_utf8,
 #else
-                        XA_STRING, _get_selection,
+                        XA_STRING,
 #endif
-                        (XtPointer)NULL, 0);
+                        _get_selection, (XtPointer)NULL, 0);
 }
 
 /* For PDC_setclipboard() */

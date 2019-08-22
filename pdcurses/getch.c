@@ -131,17 +131,15 @@ static int _mouse_key(void)
 
     if ((!mbe || SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT) && changes & 1)
     {
-        short button = SP->mouse_status.button[0] & BUTTON_ACTION_MASK;
-        switch (button)
+        i = SP->mouse_status.y * COLS + SP->mouse_status.x;
+        switch (SP->mouse_status.button[0] & BUTTON_ACTION_MASK)
         {
         case BUTTON_PRESSED:
             _highlight();
-            SP->sel_start = SP->mouse_status.y * COLS + SP->mouse_status.x;
-            SP->sel_end = SP->sel_start;
+            SP->sel_start = SP->sel_end = i;
             return -1;
         case BUTTON_MOVED:
             _highlight();
-            i = SP->mouse_status.y * COLS + SP->mouse_status.x;
             if (i > SP->sel_start)
                 SP->sel_end = i;
             else
@@ -239,6 +237,7 @@ static void _copy(void)
 
 #ifdef PDC_WIDE
     wtmp = malloc((len + 1) * sizeof(wchar_t));
+    len *= 3;
 #endif
     tmp = malloc(len + 1);
 
@@ -376,18 +375,18 @@ int wgetch(WINDOW *win)
 
         key = PDC_get_key();
 
-        /* copy? */
+        /* copy or paste? */
 
-        if (0x03 == key && SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+        if (SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT)
         {
-            _copy();
-            continue;
+            if (0x03 == key)
+            {
+                _copy();
+                continue;
+            }
+            else if (0x16 == key)
+                key = _paste();
         }
-
-        /* paste? */
-
-        if (0x16 == key && SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT)
-            key = _paste();
 
         if (SP->key_code)
         {

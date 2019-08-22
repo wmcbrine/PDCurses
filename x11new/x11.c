@@ -943,8 +943,8 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
 {
     XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
-    PDC_LOG(("%s:_handle_nonmaskable called: xc_otherpid %d event %d\n",
-             XCLOGMSG, xc_otherpid, event->type));
+    PDC_LOG(("%s:_handle_nonmaskable called: event %d\n",
+             XCLOGMSG, event->type));
 
     if (event->type == ClientMessage)
     {
@@ -1024,17 +1024,6 @@ unsigned long XCursesKeyPress(XEvent *event)
     /* translate keysym into curses key code */
 
     PDC_LOG(("%s:Key mask: %x\n", XCLOGMSG, event->xkey.state));
-
-#ifdef PDCDEBUG
-    for (i = 0; i < 4; i++)
-        PDC_debug("%s:Keysym %x %d\n", XCLOGMSG,
-                  XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, i), i);
-#endif
-
-    /* To get here we are procesing "normal" keys */
-
-    PDC_LOG(("%s:Keysym %x %d\n", XCLOGMSG,
-             XKeycodeToKeysym(XCURSESDISPLAY, event->xkey.keycode, key), key));
 
     /* 0x10: usually, numlock modifier */
 
@@ -1406,11 +1395,6 @@ unsigned long XCursesMouse(XEvent *event)
        the event. The following code is designed to cater for this
        situation. */
 
-    if (!button_no)
-        button_no = last_button_no;
-
-    last_button_no = button_no;
-
     SP->mouse_status.changes = 0;
 
     SP->mouse_status.x = (event->xbutton.x - xc_app_data.borderWidth) /
@@ -1424,6 +1408,8 @@ unsigned long XCursesMouse(XEvent *event)
         /* Handle button 4 and 5, which are normally mapped to the wheel
            mouse scroll up and down, and button 6 and 7, which are
            normally mapped to the wheel mouse scroll left and right */
+
+        last_button_no = button_no;
 
         if (button_no >= 4 && button_no <= 7)
         {
@@ -1476,6 +1462,8 @@ unsigned long XCursesMouse(XEvent *event)
         MOUSE_LOG(("\nMotionNotify: y: %d x: %d Width: %d "
                    "Height: %d\n", event->xbutton.y, event->xbutton.x,
                    font_width, font_height));
+
+        button_no = last_button_no;
 
         SP->mouse_status.changes |= PDC_MOUSE_MOVED;
         break;

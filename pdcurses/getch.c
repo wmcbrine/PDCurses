@@ -103,16 +103,27 @@ static int c_ungch[NUNGETCH];   /* array of ungotten chars */
 
 static void _highlight(void)
 {
-    int i, j, y_start, y_end, x_start, x_end;
+    int i, j, start, end, y_start, y_end, x_start, x_end;
 
     if (-1 == SP->sel_start)
         return;
 
-    y_start = SP->sel_start / COLS;
-    x_start = SP->sel_start % COLS;
+    if (SP->sel_start < SP->sel_end)
+    {
+        start = SP->sel_start;
+        end = SP->sel_end;
+    }
+    else
+    {
+        start = SP->sel_end;
+        end = SP->sel_start;
+    }
 
-    y_end = SP->sel_end / COLS;
-    x_end = SP->sel_end % COLS;
+    y_start = start / COLS;
+    x_start = start % COLS;
+
+    y_end = end / COLS;
+    x_end = end % COLS;
 
     for (j = y_start; j <= y_end; j++)
         for (i = (j == y_start ? x_start : 0);
@@ -140,14 +151,7 @@ static int _mouse_key(void)
             return -1;
         case BUTTON_MOVED:
             _highlight();
-            if (i > SP->sel_start)
-                SP->sel_end = i;
-            else
-            {
-                if (SP->sel_start > SP->sel_end)
-                    SP->sel_end = SP->sel_start;
-                SP->sel_start = i;
-            }
+            SP->sel_end = i;
             _highlight();
         case BUTTON_RELEASED:
             return -1;
@@ -220,20 +224,29 @@ static void _copy(void)
 #endif
     char *tmp;
     long pos;
-    int i, j, y_start, y_end, x_start, x_end, len;
+    int i, j, start, end, y_start, y_end, x_start, x_end, len;
 
     if (-1 == SP->sel_start)
         return;
 
-    len = SP->sel_end - SP->sel_start;
+    if (SP->sel_start < SP->sel_end)
+    {
+        start = SP->sel_start;
+        end = SP->sel_end;
+    }
+    else
+    {
+        start = SP->sel_end;
+        end = SP->sel_start;
+    }
 
-    y_start = SP->sel_start / COLS;
-    x_start = SP->sel_start % COLS;
+    y_start = start / COLS;
+    x_start = start % COLS;
 
-    y_end = SP->sel_end / COLS;
-    x_end = SP->sel_end % COLS;
+    y_end = end / COLS;
+    x_end = end % COLS;
 
-    len += y_end - y_start;
+    len = (end - start) + (y_end - y_start);
 
 #ifdef PDC_WIDE
     wtmp = malloc((len + 1) * sizeof(wchar_t));

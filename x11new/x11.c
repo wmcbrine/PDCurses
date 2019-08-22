@@ -516,7 +516,7 @@ static void _make_xy(int x, int y, int *xpos, int *ypos)
 
 /* Output a block of characters with common attributes */
 
-static int _new_packet(chtype attr, bool rev, int len, int col, int row,
+static int _new_packet(chtype attr, int len, int col, int row,
 #ifdef PDC_WIDE
                        XChar2b *text)
 #else
@@ -528,6 +528,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
     int xpos, ypos;
     short fore, back;
     attr_t sysattrs;
+    bool rev;
 
     PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
 
@@ -540,9 +541,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
     if ((attr & A_BLINK) && !(sysattrs & A_BLINK))
         back |= 8;
 
-    /* Reverse flag = highlighted selection XOR A_REVERSE set */
-
-    rev ^= !!(attr & A_REVERSE);
+    rev = !!(attr & A_REVERSE);
 
     /* Determine which GC to use - normal, italic or bold */
 
@@ -622,8 +621,7 @@ static int _new_packet(chtype attr, bool rev, int len, int col, int row,
 
 /* The core display routine -- update one line of text */
 
-static int _display_text(const chtype *ch, int row, int col,
-                         int num_cols, bool highlight)
+static int _display_text(const chtype *ch, int row, int col, int num_cols)
 {
 #ifdef PDC_WIDE
     XChar2b text[513];
@@ -664,7 +662,7 @@ static int _display_text(const chtype *ch, int row, int col,
 #endif
         if (attr != old_attr)
         {
-            if (_new_packet(old_attr, highlight, i, col, row, text) == ERR)
+            if (_new_packet(old_attr, i, col, row, text) == ERR)
                 return ERR;
 
             old_attr = attr;
@@ -680,7 +678,7 @@ static int _display_text(const chtype *ch, int row, int col,
 #endif
     }
 
-    return _new_packet(old_attr, highlight, i, col, row, text);
+    return _new_packet(old_attr, i, col, row, text);
 }
 
 static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
@@ -892,7 +890,7 @@ static void _display_screen(void)
     for (row = 0; row < XCursesLINES; row++)
     {
         _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
-                      row, 0, COLS, FALSE);
+                      row, 0, COLS);
     }
 
     _redraw_cursor();
@@ -917,7 +915,7 @@ void XC_refresh_screen(void)
 
             _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
                           (start_col * sizeof(chtype))), row, start_col,
-                          num_cols, FALSE);
+                          num_cols);
 
             *(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
         }
@@ -1237,7 +1235,7 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
              XCLOGMSG, old_row, old_x));
 
     _display_text((const chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) +
-                  (old_x * sizeof(chtype)))), old_row, old_x, 1, FALSE);
+                  (old_x * sizeof(chtype)))), old_row, old_x, 1);
 
     /* display the cursor at the new cursor position */
 
@@ -1373,7 +1371,7 @@ static void _blink_text(XtPointer unused, XtIntervalId *id)
                 while (ch[k] & A_BLINK && k < COLS)
                     k++;
 
-                _display_text(ch + j, row, j, k - j, FALSE);
+                _display_text(ch + j, row, j, k - j);
 
                 j = k;
             }

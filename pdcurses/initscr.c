@@ -152,6 +152,8 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->dbfp = NULL;
     SP->color_started = FALSE;
     SP->dirty = FALSE;
+    SP->sel_start = -1;
+    SP->sel_end = -1;
 
     SP->orig_cursor = PDC_get_cursor_mode();
 

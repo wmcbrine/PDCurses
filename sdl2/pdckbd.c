@@ -391,6 +391,7 @@ static int _process_mouse_event(void)
         else
             return -1;
 
+        SP->key_code = TRUE;
         return KEY_MOUSE;
     }
     else
@@ -430,6 +431,7 @@ static int _process_mouse_event(void)
 
     old_mouse_status = SP->mouse_status;
 
+    SP->key_code = TRUE;
     return KEY_MOUSE;
 }
 
@@ -461,7 +463,6 @@ int PDC_get_key(void)
         case SDL_WINDOWEVENT_RESTORED:
         case SDL_WINDOWEVENT_EXPOSED:
             SDL_UpdateWindowSurface(pdc_window);
-            break;
         }
         break;
     case SDL_MOUSEMOTION:
@@ -470,9 +471,7 @@ int PDC_get_key(void)
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEWHEEL:
         oldkey = SDLK_SPACE;
-        if (SP->_trap_mbe)
-            return _process_mouse_event();
-        break;
+        return _process_mouse_event();
     case SDL_KEYUP:
     case SDL_KEYDOWN:
     case SDL_TEXTINPUT:

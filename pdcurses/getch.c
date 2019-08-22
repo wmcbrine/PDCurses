@@ -101,16 +101,66 @@ static int c_gindex = 1;    /* getter index */
 static int c_ungind = 0;    /* ungetch() push index */
 static int c_ungch[NUNGETCH];   /* array of ungotten chars */
 
+static void _highlight(void)
+{
+    int i, j, y_start, y_end, x_start, x_end;
+
+    if (-1 == SP->sel_start)
+        return;
+
+    y_start = SP->sel_start / COLS;
+    x_start = SP->sel_start % COLS;
+
+    y_end = SP->sel_end / COLS;
+    x_end = SP->sel_end % COLS;
+
+    for (j = y_start; j <= y_end; j++)
+        for (i = (j == y_start ? x_start : 0);
+             i < (j == y_end ? x_end : COLS); i++)
+            curscr->_y[j][i] ^= A_REVERSE;
+
+    wrefresh(curscr);
+}
+
 static int _mouse_key(void)
 {
-    int i, key = KEY_MOUSE;
+    int i, key = KEY_MOUSE, changes = SP->mouse_status.changes;
     unsigned long mbe = SP->_trap_mbe;
+
+    /* Selection highlighting? */
+
+    if ((!mbe || SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT) && changes & 1)
+    {
+        short button = SP->mouse_status.button[0] & BUTTON_ACTION_MASK;
+        switch (button)
+        {
+        case BUTTON_PRESSED:
+            _highlight();
+            SP->sel_start = SP->mouse_status.y * COLS + SP->mouse_status.x;
+            SP->sel_end = SP->sel_start;
+            return -1;
+        case BUTTON_MOVED:
+            _highlight();
+            i = SP->mouse_status.y * COLS + SP->mouse_status.x;
+            if (i > SP->sel_start)
+                SP->sel_end = i;
+            else
+            {
+                if (SP->sel_start > SP->sel_end)
+                    SP->sel_end = SP->sel_start;
+                SP->sel_start = i;
+            }
+            _highlight();
+        case BUTTON_RELEASED:
+            return -1;
+        }
+    }
 
     /* Filter unwanted mouse events */
 
     for (i = 0; i < 3; i++)
     {
-        if (SP->mouse_status.changes & (1 << i))
+        if (changes & (1 << i))
         {
             int shf = i * 5;
             short button = SP->mouse_status.button[i] & BUTTON_ACTION_MASK;
@@ -134,21 +184,20 @@ static int _mouse_key(void)
         }
     }
 
-    if (SP->mouse_status.changes & PDC_MOUSE_MOVED)
+    if (changes & PDC_MOUSE_MOVED)
     {
         if (!(mbe & (BUTTON1_MOVED|BUTTON2_MOVED|BUTTON3_MOVED)))
             SP->mouse_status.changes ^= PDC_MOUSE_MOVED;
     }
 
-    if (SP->mouse_status.changes &
-        (PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN))
+    if (changes & (PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN))
     {
         if (!(mbe & MOUSE_WHEEL_SCROLL))
             SP->mouse_status.changes &=
                 ~(PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN);
     }
 
-    if (!SP->mouse_status.changes)
+    if (!changes)
         return -1;
 
     /* Check for click in slk area */
@@ -164,6 +213,60 @@ static int _mouse_key(void)
     }
 
     return key;
+}
+
+static void _copy(void)
+{
+#ifdef PDC_WIDE
+    wchar_t *wtmp;
+#endif
+    char *tmp;
+    long pos;
+    int i, j, y_start, y_end, x_start, x_end, len;
+
+    if (-1 == SP->sel_start)
+        return;
+
+    len = SP->sel_end - SP->sel_start;
+
+    y_start = SP->sel_start / COLS;
+    x_start = SP->sel_start % COLS;
+
+    y_end = SP->sel_end / COLS;
+    x_end = SP->sel_end % COLS;
+
+    len += y_end - y_start;
+
+#ifdef PDC_WIDE
+    wtmp = malloc((len + 1) * sizeof(wchar_t));
+#endif
+    tmp = malloc(len + 1);
+
+    for (j = y_start, pos = 0; j <= y_end; j++)
+        for (i = (j == y_start ? x_start : 0);
+             i < (j == y_end ? x_end : COLS); i++)
+        {
+            if (j > y_start && !i)
+#ifdef PDC_WIDE
+                wtmp[pos++] = 10;
+            wtmp[pos++] = curscr->_y[j][i] & A_CHARTEXT;
+        }
+
+    wtmp[pos] = 0;
+    pos = PDC_wcstombs(tmp, wtmp, len);
+#else
+                tmp[pos++] = '\n';
+            tmp[pos++] = curscr->_y[j][i] & 0xff;
+        }
+#endif
+
+    PDC_setclipboard(tmp, pos);
+    free(tmp);
+#ifdef PDC_WIDE
+    free(wtmp);
+#endif
+    _highlight();
+    SP->sel_start = SP->sel_end = -1;
 }
 
 static int _paste(void)
@@ -206,7 +309,7 @@ int wgetch(WINDOW *win)
 
     waitcount = 0;
 
-     /* set the number of 1/20th second napms() calls */
+    /* set the number of 1/20th second napms() calls */
 
     if (SP->delaytenths)
         waitcount = 2 * SP->delaytenths;
@@ -273,6 +376,14 @@ int wgetch(WINDOW *win)
 
         key = PDC_get_key();
 
+        /* copy? */
+
+        if (0x03 == key && SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT)
+        {
+            _copy();
+            continue;
+        }
+
         /* paste? */
 
         if (0x16 == key && SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT)
@@ -280,16 +391,16 @@ int wgetch(WINDOW *win)
 
         if (SP->key_code)
         {
+            /* filter mouse events; translate mouse clicks in the slk
+               area to function keys */
+
+            if (key == KEY_MOUSE)
+                key = _mouse_key();
+
             /* filter special keys if not in keypad mode */
 
             if (!win->_use_keypad)
                 key = -1;
-
-            /* filter mouse events; translate mouse clicks in the slk
-               area to function keys */
-
-            else if (key == KEY_MOUSE)
-                key = _mouse_key();
         }
 
         /* unwanted key? loop back */

@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3812
+#define PDC_BUILD    3813
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   8
 #define PDC_VERDOT   "3.8"
@@ -363,6 +363,8 @@ typedef struct
     FILE *dbfp;           /* debug trace file pointer */
     bool  color_started;  /* TRUE after start_color() */
     bool  dirty;          /* redraw on napms() after init_color() */
+    int   sel_start;      /* start of selection (y * COLS + x) */
+    int   sel_end;        /* end of selection */
 } SCREEN;
 
 /*----------------------------------------------------------------------

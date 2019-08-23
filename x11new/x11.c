@@ -208,7 +208,7 @@ static Atom wm_atom[2];
 static String class_name = "XCurses";
 static Widget drawing, scrollBox, scrollVert, scrollHoriz;
 static int received_map_notify = 0;
-static chtype *tmpsel = NULL;
+static char *tmpsel = NULL;
 static unsigned long tmpsel_length = 0;
 static Pixmap icon_pixmap;
 static Pixmap icon_pixmap_mask;
@@ -386,82 +386,6 @@ void XC_say(const char *msg)
     PDC_LOG(("%s:%s", XCLOGMSG, msg));
 }
 #endif
-
-static int _to_utf8(char *outcode, chtype code)
-{
-#ifdef PDC_WIDE
-    if (code & A_ALTCHARSET && !(code & 0xff80))
-        code = acs_map[code & 0x7f];
-#endif
-    code &= A_CHARTEXT;
-
-    if (code < 0x80)
-    {
-        outcode[0] = code;
-        return 1;
-    }
-    else
-        if (code < 0x800)
-        {
-            outcode[0] = ((code & 0x07c0) >> 6) | 0xc0;
-            outcode[1] = (code & 0x003f) | 0x80;
-            return 2;
-        }
-        else
-        {
-            outcode[0] = ((code & 0xf000) >> 12) | 0xe0;
-            outcode[1] = ((code & 0x0fc0) >> 6) | 0x80;
-            outcode[2] = (code & 0x003f) | 0x80;
-            return 3;
-        }
-}
-
-static int _from_utf8(wchar_t *pwc, const char *s, size_t n)
-{
-    wchar_t key;
-    int i = -1;
-    const unsigned char *string;
-
-    if (!s || (n < 1))
-        return -1;
-
-    if (!*s)
-        return 0;
-
-    string = (const unsigned char *)s;
-
-    key = string[0];
-
-    /* Simplistic UTF-8 decoder -- only does the BMP, minimal validation */
-
-    if (key & 0x80)
-    {
-        if ((key & 0xe0) == 0xc0)
-        {
-            if (1 < n)
-            {
-                key = ((key & 0x1f) << 6) | (string[1] & 0x3f);
-                i = 2;
-            }
-        }
-        else if ((key & 0xe0) == 0xe0)
-        {
-            if (2 < n)
-            {
-                key = ((key & 0x0f) << 12) |
-                      ((string[1] & 0x3f) << 6) | (string[2] & 0x3f);
-                i = 3;
-            }
-        }
-    }
-    else
-        i = 1;
-
-    if (i)
-        *pwc = key;
-
-    return i;
-}
 
 #ifndef X_HAVE_UTF8_STRING
 static Atom XA_UTF8_STRING(Display *dpy)
@@ -1162,19 +1086,12 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
     else if (*target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
              *target == XA_STRING)
     {
-        bool utf8 = !(*target == XA_STRING);
-        char *data = XtMalloc(tmpsel_length * 3 + 1);
-        chtype *tmp = tmpsel;
+        char *data = XtMalloc(tmpsel_length + 1);
+        char *tmp = tmpsel;
         int ret_length = 0;
 
-        if (utf8)
-        {
-            while (*tmp)
-                ret_length += _to_utf8(data + ret_length, *tmp++);
-        }
-        else
-            while (*tmp)
-                data[ret_length++] = *tmp++ & 0xff;
+        while (*tmp)
+            data[ret_length++] = *tmp++;
 
         data[ret_length] = '\0';
 
@@ -1724,9 +1641,9 @@ int XC_set_selection(const char *contents, long length)
     if (length > (long)tmpsel_length)
     {
         if (!tmpsel_length)
-            tmpsel = malloc((length + 1) * sizeof(chtype));
+            tmpsel = malloc(length + 1);
         else
-            tmpsel = realloc(tmpsel, (length + 1) * sizeof(chtype));
+            tmpsel = realloc(tmpsel, length + 1);
     }
 
     for (pos = 0; pos < length; pos++)

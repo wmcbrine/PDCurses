@@ -133,6 +133,102 @@ static void _highlight(void)
     wrefresh(curscr);
 }
 
+static void _copy(void)
+{
+#ifdef PDC_WIDE
+    wchar_t *wtmp;
+#endif
+    char *tmp;
+    long pos;
+    int i, j, start, end, y_start, y_end, x_start, x_end, len;
+
+    if (-1 == SP->sel_start)
+        return;
+
+    if (SP->sel_start < SP->sel_end)
+    {
+        start = SP->sel_start;
+        end = SP->sel_end;
+    }
+    else
+    {
+        start = SP->sel_end;
+        end = SP->sel_start;
+    }
+
+    y_start = start / COLS;
+    x_start = start % COLS;
+
+    y_end = end / COLS;
+    x_end = end % COLS;
+
+    len = (end - start) + (y_end - y_start);
+
+    if (!len)
+        return;
+
+#ifdef PDC_WIDE
+    wtmp = malloc((len + 1) * sizeof(wchar_t));
+    len *= 3;
+#endif
+    tmp = malloc(len + 1);
+
+    for (j = y_start, pos = 0; j <= y_end; j++)
+        for (i = (j == y_start ? x_start : 0);
+             i < (j == y_end ? x_end : COLS); i++)
+        {
+            if (j > y_start && !i)
+#ifdef PDC_WIDE
+                wtmp[pos++] = 10;
+            wtmp[pos++] = curscr->_y[j][i] & A_CHARTEXT;
+        }
+
+    wtmp[pos] = 0;
+    pos = PDC_wcstombs(tmp, wtmp, len);
+#else
+                tmp[pos++] = '\n';
+            tmp[pos++] = curscr->_y[j][i] & 0xff;
+        }
+#endif
+
+    PDC_setclipboard(tmp, pos);
+    free(tmp);
+#ifdef PDC_WIDE
+    free(wtmp);
+#endif
+}
+
+static int _paste(void)
+{
+#ifdef PDC_WIDE
+    wchar_t *wpaste;
+#endif
+    char *paste;
+    long len;
+    int key;
+
+    key = PDC_getclipboard(&paste, &len);
+    if (PDC_CLIP_SUCCESS != key || !len)
+        return -1;
+
+#ifdef PDC_WIDE
+    wpaste = malloc(len * sizeof(wchar_t));
+    len = PDC_mbstowcs(wpaste, paste, len);
+    while (len > 1)
+        PDC_ungetch(wpaste[--len]);
+    key = *wpaste;
+    free(wpaste);
+#else
+    while (len > 1)
+        PDC_ungetch(paste[--len]);
+    key = *paste;
+#endif
+    PDC_freeclipboard(paste);
+    SP->key_modifiers = 0;
+
+    return key;
+}
+
 static int _mouse_key(void)
 {
     int i, key = KEY_MOUSE, changes = SP->mouse_status.changes;
@@ -140,7 +236,7 @@ static int _mouse_key(void)
 
     /* Selection highlighting? */
 
-    if ((!mbe || SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT) && changes & 1)
+    if ((!mbe || SP->mouse_status.button[0] & BUTTON_SHIFT) && changes & 1)
     {
         i = SP->mouse_status.y * COLS + SP->mouse_status.x;
         switch (SP->mouse_status.button[0] & BUTTON_ACTION_MASK)
@@ -153,9 +249,18 @@ static int _mouse_key(void)
             _highlight();
             SP->sel_end = i;
             _highlight();
+            return -1;
         case BUTTON_RELEASED:
+            _copy();
             return -1;
         }
+    }
+    else if ((!mbe || SP->mouse_status.button[1] & BUTTON_SHIFT) &&
+             changes & 2 && (SP->mouse_status.button[1] &
+             BUTTON_ACTION_MASK) == BUTTON_CLICKED)
+    {
+        SP->key_code = FALSE;
+        return _paste();
     }
 
     /* Filter unwanted mouse events */
@@ -213,98 +318,6 @@ static int _mouse_key(void)
         else
             key = -1;
     }
-
-    return key;
-}
-
-static void _copy(void)
-{
-#ifdef PDC_WIDE
-    wchar_t *wtmp;
-#endif
-    char *tmp;
-    long pos;
-    int i, j, start, end, y_start, y_end, x_start, x_end, len;
-
-    if (-1 == SP->sel_start)
-        return;
-
-    if (SP->sel_start < SP->sel_end)
-    {
-        start = SP->sel_start;
-        end = SP->sel_end;
-    }
-    else
-    {
-        start = SP->sel_end;
-        end = SP->sel_start;
-    }
-
-    y_start = start / COLS;
-    x_start = start % COLS;
-
-    y_end = end / COLS;
-    x_end = end % COLS;
-
-    len = (end - start) + (y_end - y_start);
-
-#ifdef PDC_WIDE
-    wtmp = malloc((len + 1) * sizeof(wchar_t));
-    len *= 3;
-#endif
-    tmp = malloc(len + 1);
-
-    for (j = y_start, pos = 0; j <= y_end; j++)
-        for (i = (j == y_start ? x_start : 0);
-             i < (j == y_end ? x_end : COLS); i++)
-        {
-            if (j > y_start && !i)
-#ifdef PDC_WIDE
-                wtmp[pos++] = 10;
-            wtmp[pos++] = curscr->_y[j][i] & A_CHARTEXT;
-        }
-
-    wtmp[pos] = 0;
-    pos = PDC_wcstombs(tmp, wtmp, len);
-#else
-                tmp[pos++] = '\n';
-            tmp[pos++] = curscr->_y[j][i] & 0xff;
-        }
-#endif
-
-    PDC_setclipboard(tmp, pos);
-    free(tmp);
-#ifdef PDC_WIDE
-    free(wtmp);
-#endif
-    _highlight();
-    SP->sel_start = SP->sel_end = -1;
-}
-
-static int _paste(void)
-{
-#ifdef PDC_WIDE
-    wchar_t *wpaste;
-#endif
-    char *paste;
-    long len;
-    int key;
-
-    PDC_getclipboard(&paste, &len);
-#ifdef PDC_WIDE
-    wpaste = malloc(len * sizeof(wchar_t));
-    len = PDC_mbstowcs(wpaste, paste, len);
-    while (len > 1)
-        PDC_ungetch(wpaste[--len]);
-    key = *wpaste;
-    free(wpaste);
-#else
-    while (len > 1)
-        PDC_ungetch(paste[--len]);
-    key = *paste;
-#endif
-    PDC_freeclipboard(paste);
-    SP->key_modifiers = 0;
 
     return key;
 }
@@ -401,24 +414,24 @@ int wgetch(WINDOW *win)
                 key = _paste();
         }
 
-        if (SP->key_code)
-        {
-            /* filter mouse events; translate mouse clicks in the slk
-               area to function keys */
+        /* filter mouse events; translate mouse clicks in the slk
+           area to function keys */
 
-            if (key == KEY_MOUSE)
-                key = _mouse_key();
+        if (SP->key_code && key == KEY_MOUSE)
+            key = _mouse_key();
 
-            /* filter special keys if not in keypad mode */
+        /* filter special keys if not in keypad mode */
 
-            if (!win->_use_keypad)
-                key = -1;
-        }
+        if (SP->key_code && !win->_use_keypad)
+            key = -1;
 
         /* unwanted key? loop back */
 
         if (key == -1)
             continue;
+
+        _highlight();
+        SP->sel_start = SP->sel_end = -1;
 
         /* translate CR */
 

@@ -1401,7 +1401,8 @@ unsigned long XCursesMouse(XEvent *event)
     SP->mouse_status.changes |= 1 << (button_no - 1);
 
     if (SP->mouse_status.changes & PDC_MOUSE_MOVED &&
-        SP->mouse_status.button[button_no - 1] == BUTTON_PRESSED)
+        (SP->mouse_status.button[button_no - 1] &
+         BUTTON_ACTION_MASK) == BUTTON_PRESSED)
         SP->mouse_status.button[button_no - 1] = BUTTON_MOVED;
 
     if (event->xbutton.state & ShiftMask)

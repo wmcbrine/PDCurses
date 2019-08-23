@@ -370,9 +370,7 @@ int PDC_get_key(void)
     case SDL_MOUSEBUTTONUP:
     case SDL_MOUSEBUTTONDOWN:
         oldkey = SDLK_SPACE;
-        if (SP->_trap_mbe)
-            return _process_mouse_event();
-        break;
+        return _process_mouse_event();
     case SDL_KEYUP:
     case SDL_KEYDOWN:
         PDC_mouse_set();

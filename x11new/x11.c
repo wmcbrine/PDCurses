@@ -1615,11 +1615,9 @@ static void _get_selection(Widget w, XtPointer data, Atom *selection,
 
 void XC_get_selection(void)
 {
-    Atom XA_CLIPBOARD = XInternAtom(XtDisplay(topLevel), "CLIPBOARD", 0);
-
     XC_LOG(("XC_get_selection() - called\n"));
 
-    XtGetSelectionValue(topLevel, XA_CLIPBOARD,
+    XtGetSelectionValue(topLevel, XA_PRIMARY,
 #ifdef PDC_WIDE
                         XA_UTF8_STRING(XtDisplay(topLevel)),
 #else
@@ -1634,7 +1632,6 @@ int XC_set_selection(const char *contents, long length)
 {
     long pos;
     int status;
-    Atom XA_CLIPBOARD = XInternAtom(XtDisplay(topLevel), "CLIPBOARD", 0);
 
     XC_LOG(("XC_set_selection() - called\n"));
 
@@ -1652,9 +1649,7 @@ int XC_set_selection(const char *contents, long length)
     tmpsel_length = length;
     tmpsel[length] = 0;
 
-    if (XtOwnSelection(topLevel, XA_CLIPBOARD, CurrentTime,
-                       _convert_proc, _lose_ownership, NULL) == False ||
-        XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
+    if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
                        _convert_proc, _lose_ownership, NULL) == False)
     {
         status = PDC_CLIP_ACCESS_ERROR;

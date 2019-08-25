@@ -7,7 +7,7 @@ The latest version can be found at:
    https://pdcurses.org/
 
 For changes, see the [History] file. The main documentation is now in
-the [man] directory.
+the [docs] directory.
 
 
 Legal Stuff
@@ -55,8 +55,8 @@ Maintainer
 
 William McBrine <wmcbrine@gmail.com>
 
-[History]: man/HISTORY.md
-[man]: man/README.md
+[History]: docs/HISTORY.md
+[docs]: docs/README.md
 [DOS]: dos/README.md
 [OS/2]: os2/README.md
 [SDL 1.x]: sdl1/README.md

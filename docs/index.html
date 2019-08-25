@@ -7,8 +7,45 @@
 <meta name="keys" content="curses, text, user, interface, public,
 domain, free">
 <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon">
-<link rel="stylesheet" href="mmbasic.css">
-<link rel="stylesheet" href="mmmain.css">
+<style>
+
+body { color: black; background: white; font-family: Helvetica, sans-serif }
+html, body, div#navbar { height: 100%; margin: 0; padding: 0 }
+
+a { text-decoration: none }
+
+a:link { color: blue; background: white }
+a:visited { color: navy; background: white }
+a:hover { color: red; background: #ffc; text-decoration: underline }
+a[name]:hover { color: black; background: #ccf }
+
+img { border: 0 }
+
+div#navbar { color: black; background: #ccf }
+div#navbar { width: 8em; position: fixed; overflow: auto; top: 0; left: 0 }
+div#navbar ul { margin: 0; padding: 0 }
+div#navbar li { display: block; margin: .3em; padding: 0 }
+div#navbar li a { display: block; font-size: small; margin: 0; padding: .15em }
+
+div#maincontent { margin-left: 8em; padding: .5em }
+div#maincontent ul { list-style: none }
+div#maincontent ul li { margin: .3em; padding: .15em }
+div#maincontent ul li a { font-weight: bold }
+
+h2 { border-bottom: 2px solid #ccf; font-size: large }
+
+div#toplogo { text-align: center; margin-top: 1em; margin-bottom: 1em }
+
+address { border-top: 1px dotted; padding-top: 3px }
+
+hr { display: none }
+
+table, th, td { border: 1px dotted }
+td, th { text-align: left; padding-left: .15em }
+th { font-weight: bold; padding-right: .15em }
+td { padding-left: .5em }
+
+</style>
 <title>PDCurses</title>
 </head>
 

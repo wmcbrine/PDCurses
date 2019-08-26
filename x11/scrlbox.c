@@ -21,7 +21,7 @@
 #include <X11/CompositeP.h>
 #include <stdio.h>
 
-#include "ScrollBox.h"
+#include "scrlbox.h"
 
 #define INITIAL_WIDTH 300
 #define INITIAL_HEIGHT 300

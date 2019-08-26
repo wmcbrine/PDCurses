@@ -45,7 +45,8 @@
 # include <Xaw/Box.h>
 # include <Xaw/Scrollbar.h>
 #endif
-#include "ScrollBox.h"
+
+#include "scrlbox.h"
 
 #include "Xmu/StdSel.h"
 #include "Xmu/Atoms.h"

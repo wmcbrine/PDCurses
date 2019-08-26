@@ -12,7 +12,6 @@
 
 #include <signal.h>
 #include <ctype.h>
-#include <pwd.h>
 
 #include <sys/types.h>
 #ifdef HAVE_FCNTL_H

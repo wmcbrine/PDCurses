@@ -16,11 +16,7 @@
 #ifndef _XORAscrollBox_h
 #define _XORAscrollBox_h
 
-/************************************************************************
- *                                                                      *
- * scrollBox Widget (subclass of CompositeClass)                        *
- *                                                                      *
- ************************************************************************/
+/* scrollBox Widget (subclass of CompositeClass) */
 
 /* Parameters:
 

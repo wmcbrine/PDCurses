@@ -49,11 +49,7 @@ typedef struct {
     XtGeometryMask last_query_mode;
 } ScrollBoxPart;
 
-/************************************************************************
- *                                                                      *
- * Full instance record declaration                                     *
- *                                                                      *
- ************************************************************************/
+/* Full instance record declaration */
 
 typedef struct _ScrollBoxRec {
     CorePart core;
@@ -61,11 +57,7 @@ typedef struct _ScrollBoxRec {
     ScrollBoxPart scrollBox;
 } ScrollBoxRec;
 
-/************************************************************************
- *                                                                      *
- * scrollBox Resources                                                  *
- *                                                                      *
- ************************************************************************/
+/* scrollBox Resources */
 
 static XtResource resources[] =
 {
@@ -83,11 +75,7 @@ static XtResource resources[] =
         XtRImmediate, (XtPointer)7 },
 };
 
-/************************************************************************
- *                                                                      *
- * Full class record constant                                           *
- *                                                                      *
- ************************************************************************/
+/* Full class record constant */
 
 static void Initialize(Widget, Widget, ArgList, Cardinal *);
 static void Resize(Widget);
@@ -149,11 +137,7 @@ ScrollBoxClassRec scrollBoxClassRec = {
 
 WidgetClass scrollBoxWidgetClass = (WidgetClass)&scrollBoxClassRec;
 
-/************************************************************************
- *                                                                      *
- * Private Routines                                                     *
- *                                                                      *
- ************************************************************************/
+/* Private Routines */
 
 /* Do a layout, either actually assigning positions, or just
    calculating size. */

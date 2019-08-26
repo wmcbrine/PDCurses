@@ -1229,27 +1229,7 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
 {
     XC_LOG(("_blink_cursor() - called:\n"));
 
-    if (window_entered)
-    {
-        if (visible_cursor)
-        {
-            /* Cursor currently ON, turn it off */
-
-            int save_visibility = SP->visibility;
-            SP->visibility = 0;
-            _redraw_cursor();
-            SP->visibility = save_visibility;
-            visible_cursor = FALSE;
-        }
-        else
-        {
-            /* Cursor currently OFF, turn it on */
-
-            _redraw_cursor();
-            visible_cursor = TRUE;
-        }
-    }
-
+    XCursesDisplayCursor();
     XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
                     _blink_cursor, NULL);
 }

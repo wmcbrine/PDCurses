@@ -152,10 +152,6 @@ MH_SHARED_LIBRARY(XCurses)
 AC_CONFIG_FILES([Makefile xcurses-config])
 AC_OUTPUT
 
-AC_DEFINE([PDC_MAX_SIGNALS], [],
-	[Define as the system defined limit for number of signals]
-)
-
 AC_DEFINE([HAVE_DECKEYSYM_H], [],
 	[Define if you have the <DECkeySym.h> header file]
 )

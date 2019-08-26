@@ -399,35 +399,6 @@ static Atom XA_UTF8_STRING(Display *dpy)
 }
 #endif
 
-signal_handler XCursesSetSignal(int signo, signal_handler action)
-{
-#if defined(SA_INTERRUPT) || defined(SA_RESTART)
-    struct sigaction sigact, osigact;
-
-    sigact.sa_handler = action;
-
-    sigact.sa_flags =
-# ifdef SA_INTERRUPT
-#  ifdef SA_RESTART
-        SA_INTERRUPT | SA_RESTART;
-#  else
-        SA_INTERRUPT;
-#  endif
-# else  /* must be SA_RESTART */
-        SA_RESTART;
-# endif
-    sigemptyset(&sigact.sa_mask);
-
-    if (sigaction(signo, &sigact, &osigact))
-        return SIG_ERR;
-
-    return osigact.sa_handler;
-
-#else   /* not SA_INTERRUPT or SA_RESTART, use plain signal */
-    return signal(signo, action);
-#endif
-}
-
 /* Convert character positions x and y to pixel positions, stored in
    xpos and ypos */
 
@@ -1732,43 +1703,6 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
     }
 }
 
-static void _handle_signals(int signo)
-{
-    PDC_LOG(("%s:_handle_signals() - called: %d\n", XCLOGMSG, signo));
-
-    /* Patch by: Georg Fuchs */
-
-    XCursesSetSignal(signo, _handle_signals);
-
-#ifdef SIGTSTP
-    if (signo == SIGTSTP)
-    {
-        pause();
-        return;
-    }
-#endif
-#ifdef SIGCONT
-    if (signo == SIGCONT)
-        return;
-#endif
-#ifdef SIGCLD
-    if (signo == SIGCLD)
-        return;
-#endif
-#ifdef SIGTTIN
-    if (signo == SIGTTIN)
-        return;
-#endif
-#ifdef SIGWINCH
-    if (signo == SIGWINCH)
-        return;
-#endif
-
-    /* End of patch by: Georg Fuchs */
-
-    XCursesSetSignal(signo, SIG_IGN);
-}
-
 static void _dummy_handler(Widget w, XtPointer client_data,
                            XEvent *event, Boolean *unused)
 {
@@ -1794,13 +1728,6 @@ int XCursesSetupX(int argc, char *argv[])
     }
 
     program_name = argv[0];
-
-    /* Trap all signals, but only if they haven't already been ignored
-       by the application. */
-
-    for (i = 0; i < PDC_MAX_SIGNALS; i++)
-        if (XCursesSetSignal(i, _handle_signals) == SIG_IGN)
-            XCursesSetSignal(i, SIG_IGN);
 
     /* Start defining X Toolkit things */
 

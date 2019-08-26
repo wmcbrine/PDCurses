@@ -10,7 +10,6 @@
 # include <unistd.h>
 #endif
 
-#include <signal.h>
 #include <ctype.h>
 
 #include <sys/types.h>

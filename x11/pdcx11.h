@@ -107,18 +107,12 @@ void XC_refresh_scrollbar(void);
 void XC_set_blink(bool);
 XColor XC_get_color(short);
 void XC_set_color(short, XColor);
-void XC_get_selection(void);
-int XC_set_selection(const char *, long);
 
 extern XtAppContext app_context;
 extern Widget topLevel;
 
 extern int XCursesLINES;
 extern int XCursesCOLS;
-
-typedef void (*signal_handler)();
-
-signal_handler XCursesSetSignal(int, signal_handler);
 
 #ifdef PDCDEBUG
 void XC_say(const char *msg);
@@ -134,5 +128,3 @@ void XC_say(const char *msg);
 #endif
 
 extern bool xc_resize_now;
-extern char *xc_selection;
-extern long xc_selection_len;

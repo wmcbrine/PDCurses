@@ -114,13 +114,6 @@ extern Widget topLevel;
 extern int XCursesLINES;
 extern int XCursesCOLS;
 
-#ifdef PDCDEBUG
-void XC_say(const char *msg);
-# define XC_LOG(x) XC_say x
-#else
-# define XC_LOG(x)
-#endif
-
 #ifdef MOUSE_DEBUG
 # define MOUSE_LOG(x) printf x
 #else

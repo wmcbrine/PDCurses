@@ -374,13 +374,6 @@ static const char *default_translations =
     "<BtnMotion>: XCursesButton()"
 };
 
-#ifdef PDCDEBUG
-void XC_say(const char *msg)
-{
-    PDC_LOG(("%s", msg));
-}
-#endif
-
 /* Convert character positions x and y to pixel positions, stored in
    xpos and ypos */
 
@@ -620,7 +613,7 @@ static void _initialize_colors(void)
 
 void XC_refresh_scrollbar(void)
 {
-    XC_LOG(("XC_refresh_scrollbar() - called\n"));
+    PDC_LOG(("XC_refresh_scrollbar() - called\n"));
 
     if (SP->sb_on)
     {
@@ -671,7 +664,7 @@ static void _get_icon(void)
 {
     Status rc;
 
-    XC_LOG(("_get_icon() - called\n"));
+    PDC_LOG(("_get_icon() - called\n"));
 
     if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
     {
@@ -762,7 +755,7 @@ static void _display_screen(void)
 {
     int row;
 
-    XC_LOG(("_display_screen() - called\n"));
+    PDC_LOG(("_display_screen() - called\n"));
 
     if (!curscr)
         return;
@@ -777,7 +770,7 @@ static void _display_screen(void)
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
                            Boolean *unused)
 {
-    XC_LOG(("_handle_expose() - called\n"));
+    PDC_LOG(("_handle_expose() - called\n"));
 
     /* ignore all Exposes except last */
 
@@ -799,7 +792,7 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
 
     if (event->type == ClientMessage)
     {
-        XC_LOG(("ClientMessage received\n"));
+        PDC_LOG(("ClientMessage received\n"));
 
         /* This code used to include handling of WM_SAVE_YOURSELF, but
            it resulted in continual failure of THE on my Toshiba laptop.
@@ -820,7 +813,7 @@ unsigned long XCursesKeyPress(XEvent *event)
     unsigned long modifier = 0;
     bool key_code = FALSE;
 
-    XC_LOG(("XCursesKeyPress() - called\n"));
+    PDC_LOG(("XCursesKeyPress() - called\n"));
 
     /* In compose -- ignore elements */
 
@@ -1052,18 +1045,18 @@ static void _redraw_cursor(void)
 static void _handle_enter_leave(Widget w, XtPointer client_data,
                                 XEvent *event, Boolean *unused)
 {
-    XC_LOG(("_handle_enter_leave called\n"));
+    PDC_LOG(("_handle_enter_leave called\n"));
 
     switch(event->type)
     {
     case EnterNotify:
-        XC_LOG(("EnterNotify received\n"));
+        PDC_LOG(("EnterNotify received\n"));
 
         window_entered = TRUE;
         break;
 
     case LeaveNotify:
-        XC_LOG(("LeaveNotify received\n"));
+        PDC_LOG(("LeaveNotify received\n"));
 
         window_entered = FALSE;
 
@@ -1080,7 +1073,7 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
 
 static void _blink_cursor(XtPointer unused, XtIntervalId *id)
 {
-    XC_LOG(("_blink_cursor() - called:\n"));
+    PDC_LOG(("_blink_cursor() - called:\n"));
 
     XCursesDisplayCursor();
     XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
@@ -1093,7 +1086,7 @@ static void _blink_text(XtPointer unused, XtIntervalId *id)
     int j, k;
     chtype *ch;
 
-    XC_LOG(("_blink_text() - called:\n"));
+    PDC_LOG(("_blink_text() - called:\n"));
 
     blinked_off = !blinked_off;
 
@@ -1134,7 +1127,7 @@ unsigned long XCursesMouse(XEvent *event)
     int button_no;
     static int last_button_no = 0;
 
-    XC_LOG(("XCursesMouse() - called\n"));
+    PDC_LOG(("XCursesMouse() - called\n"));
 
     keysym = 0; /* suppress any modifier key return */
 
@@ -1427,7 +1420,7 @@ void XC_set_blink(bool blinkon)
 
 void XCursesCursor(int old_row, int old_x, int new_row, int new_x)
 {
-    XC_LOG(("XCursesCursor - called\n"));
+    PDC_LOG(("XCursesCursor - called\n"));
 
     visible_cursor = TRUE;
     _display_cursor(old_row, old_x, new_row, new_x);
@@ -1435,8 +1428,8 @@ void XCursesCursor(int old_row, int old_x, int new_row, int new_x)
 
 void XCursesDisplayCursor(void)
 {
-    XC_LOG(("XCursesDisplayCursor - called. Vis now: "));
-    XC_LOG((visible_cursor ? "1\n" : "0\n"));
+    PDC_LOG(("XCursesDisplayCursor - called. Vis now: "));
+    PDC_LOG((visible_cursor ? "1\n" : "0\n"));
 
     /* If the window is not active, ignore this command. The
        cursor will stay solid. */
@@ -1466,12 +1459,12 @@ void XCursesDisplayCursor(void)
 static void _handle_structure_notify(Widget w, XtPointer client_data,
                                      XEvent *event, Boolean *unused)
 {
-    XC_LOG(("_handle_structure_notify() - called\n"));
+    PDC_LOG(("_handle_structure_notify() - called\n"));
 
     switch(event->type)
     {
     case ConfigureNotify:
-        XC_LOG(("ConfigureNotify received\n"));
+        PDC_LOG(("ConfigureNotify received\n"));
 
         /* Window has been resized, change width and height to send to
            place_text and place_graphics in next Expose. */
@@ -1484,7 +1477,7 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
         break;
 
     case MapNotify:
-        XC_LOG(("MapNotify received\n"));
+        PDC_LOG(("MapNotify received\n"));
 
         received_map_notify = 1;
 
@@ -1513,7 +1506,7 @@ int XCursesSetupX(int argc, char *argv[])
     int i = 0;
     int minwidth, minheight;
 
-    XC_LOG(("XCursesSetupX called\n"));
+    PDC_LOG(("XCursesSetupX called\n"));
 
     if (!argv)
     {
@@ -1687,7 +1680,7 @@ int XCursesSetupX(int argc, char *argv[])
     /* Create the Graphics Context for drawing. This MUST be done AFTER
        the associated widget has been realized. */
 
-    XC_LOG(("before _get_gc\n"));
+    PDC_LOG(("before _get_gc\n"));
 
     _get_gc(&normal_gc, xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
@@ -1767,7 +1760,7 @@ int XCursesSetupX(int argc, char *argv[])
 
 int XCursesInitscr(int argc, char *argv[])
 {
-    XC_LOG(("XCursesInitscr() - called\n"));
+    PDC_LOG(("XCursesInitscr() - called\n"));
 
     if (ERR == XCursesSetupX(argc, argv))
         return ERR;

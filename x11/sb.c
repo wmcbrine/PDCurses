@@ -37,6 +37,122 @@ sb
 
 bool sb_started = FALSE;
 
+#if NeedWidePrototypes
+# define PDC_SCROLLBAR_TYPE double
+#else
+# define PDC_SCROLLBAR_TYPE float
+#endif
+
+void XC_refresh_scrollbar(void)
+{
+    PDC_LOG(("XC_refresh_scrollbar() - called\n"));
+
+    if (SP->sb_on)
+    {
+        PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
+        PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
+
+        if (total_y)
+            XawScrollbarSetThumb(scrollVert,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
+
+        if (total_x)
+            XawScrollbarSetThumb(scrollHoriz,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
+    }
+}
+
+void XC_scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+{
+    int pixels = (long) call_data;
+    int total_y = SP->sb_total_y * font_height;
+    int viewport_y = SP->sb_viewport_y * font_height;
+    int cur_y = SP->sb_cur_y * font_height;
+
+    /* When pixels is negative, right button pressed, move data down,
+       thumb moves up.  Otherwise, left button pressed, pixels positive,
+       move data up, thumb down. */
+
+    cur_y += pixels;
+
+    /* limit panning to size of overall */
+
+    if (cur_y < 0)
+        cur_y = 0;
+    else
+        if (cur_y > (total_y - viewport_y))
+            cur_y = total_y - viewport_y;
+
+    SP->sb_cur_y = cur_y / font_height;
+
+    XawScrollbarSetThumb(w, (double)((double)cur_y / (double)total_y),
+                         (double)((double)viewport_y / (double)total_y));
+}
+
+void XC_scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+{
+    int pixels = (long) call_data;
+    int total_x = SP->sb_total_x * font_width;
+    int viewport_x = SP->sb_viewport_x * font_width;
+    int cur_x = SP->sb_cur_x * font_width;
+
+    cur_x += pixels;
+
+    /* limit panning to size of overall */
+
+    if (cur_x < 0)
+        cur_x = 0;
+    else
+        if (cur_x > (total_x - viewport_x))
+            cur_x = total_x - viewport_x;
+
+    SP->sb_cur_x = cur_x / font_width;
+
+    XawScrollbarSetThumb(w, (double)((double)cur_x / (double)total_x),
+                         (double)((double)viewport_x / (double)total_x));
+}
+
+void XC_thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+{
+    double percent = *(double *) call_data;
+    double total_y = (double)SP->sb_total_y;
+    double viewport_y = (double)SP->sb_viewport_y;
+    int cur_y = SP->sb_cur_y;
+
+    /* If the size of the viewport is > overall area simply return,
+       as no scrolling is permitted. */
+
+    if (SP->sb_viewport_y >= SP->sb_total_y)
+        return;
+
+    if ((SP->sb_cur_y = (int)((double)total_y * percent)) >=
+        (total_y - viewport_y))
+        SP->sb_cur_y = total_y - viewport_y;
+
+    XawScrollbarSetThumb(w, (double)(cur_y / total_y),
+                         (double)(viewport_y / total_y));
+}
+
+void XC_thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+{
+    double percent = *(double *) call_data;
+    double total_x = (double)SP->sb_total_x;
+    double viewport_x = (double)SP->sb_viewport_x;
+    int cur_x = SP->sb_cur_x;
+
+    if (SP->sb_viewport_x >= SP->sb_total_x)
+        return;
+
+    if ((SP->sb_cur_x = (int)((float)total_x * percent)) >=
+        (total_x - viewport_x))
+        SP->sb_cur_x = total_x - viewport_x;
+
+    XawScrollbarSetThumb(w, (double)(cur_x / total_x),
+                         (double)(viewport_x / total_x));
+}
+
 /* sb_init() is the sb initialization routine.
    This must be called before initscr(). */
 

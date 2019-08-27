@@ -93,10 +93,6 @@ int PDC_display_cursor(int, int, int, int, int);
 
 void XCursesCursor(int, int, int, int);
 void XCursesDisplayCursor(void);
-
-unsigned long XCursesKeyPress(XEvent *);
-unsigned long XCursesMouse(XEvent *);
-
 int XCursesInitscr(int, char **);
 int XCursesSetupX(int, char **);
 void XCursesExit(void);
@@ -109,10 +105,14 @@ XColor XC_get_color(short);
 void XC_set_color(short, XColor);
 
 extern XtAppContext app_context;
-extern Widget topLevel;
+extern Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
+
+#define XCURSESDISPLAY (XtDisplay(drawing))
+#define XCURSESWIN     (XtWindow(drawing))
 
 extern int XCursesLINES;
 extern int XCursesCOLS;
+extern int font_height, font_width;
 
 #ifdef MOUSE_DEBUG
 # define MOUSE_LOG(x) printf x
@@ -121,3 +121,5 @@ extern int XCursesCOLS;
 #endif
 
 extern bool xc_resize_now;
+extern XIM Xim;
+extern XIC Xic;

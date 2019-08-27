@@ -1504,9 +1504,6 @@ void XC_resize(void)
 
     _draw_border();
 
-    /* Detach and drop the current shared memory segment and create and
-       attach to a new segment */
-
     memcpy(save_atrtab, xc_atrtab, sizeof(save_atrtab));
 
     SP->XcurscrSize = XCURSCR_SIZE;
@@ -1844,8 +1841,7 @@ int XCursesSetupX(int argc, char *argv[])
     if (!strcmp(xc_app_data.textCursor, "vertical"))
         vertical_cursor = TRUE;
 
-    /* Now have LINES and COLS. Set these in the shared SP so the curses
-       program can find them. */
+    /* Now have LINES and COLS. */
 
     LINES = XCursesLINES;
     COLS = XCursesCOLS;

@@ -516,7 +516,7 @@ static int _new_packet(chtype attr, int len, int col, int row,
 
 /* The core display routine -- update one line of text */
 
-static int _display_text(const chtype *ch, int row, int col, int num_cols)
+static void _display_text(const chtype *ch, int row, int col, int num_cols)
 {
 #ifdef PDC_WIDE
     XChar2b text[513];
@@ -530,7 +530,7 @@ static int _display_text(const chtype *ch, int row, int col, int num_cols)
              "num_cols: %d\n", XCLOGMSG, row, col, num_cols));
 
     if (!num_cols)
-        return OK;
+        return;
 
     old_attr = *ch & A_ATTRIBUTES;
 
@@ -558,7 +558,7 @@ static int _display_text(const chtype *ch, int row, int col, int num_cols)
         if (attr != old_attr)
         {
             if (_new_packet(old_attr, i, col, row, text) == ERR)
-                return ERR;
+                return;
 
             old_attr = attr;
             col += i;
@@ -573,7 +573,7 @@ static int _display_text(const chtype *ch, int row, int col, int num_cols)
 #endif
     }
 
-    return _new_packet(old_attr, i, col, row, text);
+    _new_packet(old_attr, i, col, row, text);
 }
 
 static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)

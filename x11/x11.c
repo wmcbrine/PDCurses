@@ -1488,8 +1488,6 @@ void XCursesExit(void)
 
 void XC_resize(void)
 {
-    short save_atrtab[PDC_COLOR_PAIRS * 2];
-
     SP->lines = XCursesLINES = ((resize_window_height -
         (2 * xc_app_data.borderWidth)) / font_height);
 
@@ -1504,14 +1502,10 @@ void XC_resize(void)
 
     _draw_border();
 
-    memcpy(save_atrtab, xc_atrtab, sizeof(save_atrtab));
-
     SP->XcurscrSize = XCURSCR_SIZE;
 
     Xcurscr = (unsigned char*)malloc(XCURSCR_SIZE);
     memset(Xcurscr, 0, SP->XcurscrSize);
-    xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-    memcpy(xc_atrtab, save_atrtab, sizeof(save_atrtab));
 }
 
 /* For color_content() */
@@ -1860,7 +1854,6 @@ int XCursesSetupX(int argc, char *argv[])
 
     Xcurscr = (unsigned char *)malloc(SP->XcurscrSize);
     memset(Xcurscr, 0, SP->XcurscrSize);
-    xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
 
     /* Add Event handlers to the drawing widget */
 

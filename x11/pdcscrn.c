@@ -4,7 +4,7 @@
 
 /* COLOR_PAIR to attribute encoding table. */
 
-short *xc_atrtab = (short *)NULL;
+static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 /* close the physical screen */
 
@@ -16,8 +16,6 @@ void PDC_scr_close(void)
 void PDC_scr_free(void)
 {
     XCursesExit();
-
-    xc_atrtab = (short *)NULL;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */
@@ -59,8 +57,6 @@ int PDC_resize_screen(int nlines, int ncols)
     XCursesLINES = SP->lines;
     XCursesCOLS = SP->cols;
 
-    xc_atrtab = (short *)(Xcurscr + XCURSCR_ATRTAB_OFF);
-
     SP->resized = FALSE;
 
     return OK;
@@ -86,14 +82,14 @@ void PDC_save_screen_mode(int i)
 
 void PDC_init_pair(short pair, short fg, short bg)
 {
-    xc_atrtab[pair * 2] = fg;
-    xc_atrtab[pair * 2 + 1] = bg;
+    atrtab[pair].f = fg;
+    atrtab[pair].b = bg;
 }
 
 int PDC_pair_content(short pair, short *fg, short *bg)
 {
-    *fg = xc_atrtab[pair * 2];
-    *bg = xc_atrtab[pair * 2 + 1];
+    *fg = atrtab[pair].f;
+    *bg = atrtab[pair].b;
 
     return OK;
 }

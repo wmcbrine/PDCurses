@@ -58,15 +58,13 @@
 #define XCURSCR_FLAG_SIZE   (XCursesLINES * sizeof(int))
 #define XCURSCR_START_SIZE  (XCursesLINES * sizeof(int))
 #define XCURSCR_LENGTH_SIZE (XCursesLINES * sizeof(int))
-#define XCURSCR_ATRTAB_SIZE (PDC_COLOR_PAIRS * 2 * sizeof(short))
 #define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE + XCURSCR_START_SIZE + \
-        XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE + XCURSCR_ATRTAB_SIZE)
+        XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE)
 
 #define XCURSCR_Y_OFF(y)    ((y) * XCursesCOLS * sizeof(chtype))
 #define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0) + XCURSCR_Y_SIZE)
 #define XCURSCR_START_OFF   (XCURSCR_FLAG_OFF + XCURSCR_FLAG_SIZE)
 #define XCURSCR_LENGTH_OFF  (XCURSCR_START_OFF + XCURSCR_START_SIZE)
-#define XCURSCR_ATRTAB_OFF  (XCURSCR_LENGTH_OFF + XCURSCR_LENGTH_SIZE)
 
 typedef struct
 {
@@ -162,8 +160,6 @@ void XC_say(const char *msg);
 #else
 # define MOUSE_LOG(x)
 #endif
-
-extern short *xc_atrtab;
 
 extern bool xc_resize_now;
 extern char *xc_selection;

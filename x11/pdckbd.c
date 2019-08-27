@@ -158,7 +158,7 @@ static struct
 
 static KeySym keysym = 0;
 
-static unsigned long XCursesKeyPress(XEvent *event)
+static unsigned long _process_key_event(XEvent *event)
 {
     Status status;
     wchar_t buffer[120];
@@ -168,7 +168,7 @@ static unsigned long XCursesKeyPress(XEvent *event)
     unsigned long modifier = 0;
     bool key_code = FALSE;
 
-    PDC_LOG(("XCursesKeyPress() - called\n"));
+    PDC_LOG(("_process_key_event() - called\n"));
 
     /* In compose -- ignore elements */
 
@@ -323,12 +323,12 @@ static unsigned long XCursesKeyPress(XEvent *event)
     return -1;
 }
 
-static unsigned long XCursesMouse(XEvent *event)
+static unsigned long _process_mouse_event(XEvent *event)
 {
     int button_no;
     static int last_button_no = 0;
 
-    PDC_LOG(("XCursesMouse() - called\n"));
+    PDC_LOG(("_process_mouse_event() - called\n"));
 
     keysym = 0; /* suppress any modifier key return */
 
@@ -484,12 +484,12 @@ int PDC_get_key(void)
     {
     case KeyPress:
     case KeyRelease:
-        newkey = XCursesKeyPress(&event);
+        newkey = _process_key_event(&event);
         break;
     case ButtonPress:
     case ButtonRelease:
     case MotionNotify:
-        newkey = XCursesMouse(&event);
+        newkey = _process_mouse_event(&event);
         break;
     default:
         XtDispatchEvent(&event);

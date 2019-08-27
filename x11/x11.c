@@ -4,14 +4,8 @@
 
 #include <xpm.h>
 
-#include <Xlocale.h>
-
 #include <stdlib.h>
 #include <string.h>
-
-#ifndef XPOINTER_TYPEDEFED
-typedef char * XPointer;
-#endif
 
 #ifndef MAX_PATH
 # define MAX_PATH 256

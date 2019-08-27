@@ -193,26 +193,6 @@ manager (color) for the application's icon, The file is an X11 pixmap.
 This resource overrides the "bitmap" resource. Default: a 32x32 or 64x64
 pixmap depending on the window manager
 
-### translations
-
-Translations enable the user to customize the action that occurs when a
-key, combination of keys, or a button is pressed.  The translations are
-similar to those used by xterm.
-
-Defaults:
-
-    <Key>:        XCursesKeyPress()
-    <KeyUp>:      XCursesKeyPress()
-    <BtnDown>:    XCursesButton()
-    <BtnUp>:      XCursesButton()
-    <BtnMotion>:  XCursesButton()
-
-The most useful action for KeyPress translations is string(). The
-argument to the string() action can be either a string or a hex
-representation of a character; e.g., string(0x1b) will send the ASCII
-escape character to the application; string("[11~") will send [ 1 1 ~ ,
-as separate keystrokes.
-
 ### borderColor
 
 The color of the border around the screen. Default: black
@@ -310,3 +290,4 @@ Acknowledgements
 ----------------
 
 X11 port was provided by Mark Hessling <mark@rexx.org>
+Single-process modifications by William McBrine

@@ -1517,13 +1517,6 @@ void XC_resize(void)
     memcpy(xc_atrtab, save_atrtab, sizeof(save_atrtab));
 }
 
-/* For PDC_set_title() */
-
-void XCursesTitle(const char *title)
-{
-    XtVaSetValues(topLevel, XtNtitle, title, NULL);
-}
-
 /* For color_content() */
 
 XColor XC_get_color(short index)

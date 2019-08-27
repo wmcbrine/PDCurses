@@ -117,7 +117,6 @@ int PDC_display_cursor(int, int, int, int, int);
 
 void XCursesCursor(int, int, int, int);
 void XCursesDisplayCursor(void);
-void XCursesTitle(const char *);
 
 unsigned long XCursesKeyPress(XEvent *);
 unsigned long XCursesMouse(XEvent *);

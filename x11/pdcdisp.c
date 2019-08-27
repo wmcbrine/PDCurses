@@ -75,11 +75,5 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
     PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
 
-    memcpy(Xcurscr + XCURSCR_Y_OFF(lineno) + (x * sizeof(chtype)), srcp,
-           len * sizeof(chtype));
-
-    *(Xcurscr + XCURSCR_START_OFF + lineno) = x;
-    *(Xcurscr + XCURSCR_LENGTH_OFF + lineno) = len;
-
-    XC_refresh_screen();
+    XC_display_text(srcp, lineno, x, len);
 }

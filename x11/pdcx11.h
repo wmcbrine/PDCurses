@@ -54,18 +54,6 @@
 #include <keysym.h>
 #include <Xatom.h>
 
-#define XCURSCR_Y_SIZE      (XCursesLINES * XCursesCOLS * sizeof(chtype))
-#define XCURSCR_FLAG_SIZE   (XCursesLINES * sizeof(int))
-#define XCURSCR_START_SIZE  (XCursesLINES * sizeof(int))
-#define XCURSCR_LENGTH_SIZE (XCursesLINES * sizeof(int))
-#define XCURSCR_SIZE        (XCURSCR_FLAG_SIZE + XCURSCR_START_SIZE + \
-        XCURSCR_LENGTH_SIZE + XCURSCR_Y_SIZE)
-
-#define XCURSCR_Y_OFF(y)    ((y) * XCursesCOLS * sizeof(chtype))
-#define XCURSCR_FLAG_OFF    (XCURSCR_Y_OFF(0) + XCURSCR_Y_SIZE)
-#define XCURSCR_START_OFF   (XCURSCR_FLAG_OFF + XCURSCR_FLAG_SIZE)
-#define XCURSCR_LENGTH_OFF  (XCURSCR_START_OFF + XCURSCR_START_SIZE)
-
 typedef struct
 {
     int lines;
@@ -121,8 +109,8 @@ int XCursesInitscr(int, char **);
 int XCursesSetupX(int, char **);
 void XCursesExit(void);
 
+void XC_display_text(const chtype *, int, int, int);
 void XC_resize(void);
-void XC_refresh_screen(void);
 void XC_refresh_scrollbar(void);
 void XC_set_blink(bool);
 XColor XC_get_color(short);
@@ -138,9 +126,7 @@ int XC_set_selection(const char *, long);
 
 extern XtAppContext app_context;
 extern Widget topLevel;
-extern fd_set xc_readfds;
 
-extern unsigned char *Xcurscr;
 extern int XCursesLINES;
 extern int XCursesCOLS;
 

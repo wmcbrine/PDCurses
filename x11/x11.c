@@ -218,8 +218,6 @@ static bool exposed = FALSE;
 static char *program_name;
 static bool blinked_off;
 
-unsigned char *Xcurscr;
-
 int XCursesLINES = 24;
 int XCursesCOLS = 80;
 
@@ -516,7 +514,7 @@ static int _new_packet(chtype attr, int len, int col, int row,
 
 /* The core display routine -- update one line of text */
 
-static void _display_text(const chtype *ch, int row, int col, int num_cols)
+void XC_display_text(const chtype *ch, int row, int col, int num_cols)
 {
 #ifdef PDC_WIDE
     XChar2b text[513];
@@ -526,7 +524,7 @@ static void _display_text(const chtype *ch, int row, int col, int num_cols)
     chtype old_attr, attr;
     int i, j;
 
-    PDC_LOG(("%s:_display_text() - called: row: %d col: %d "
+    PDC_LOG(("%s:XC_display_text() - called: row: %d col: %d "
              "num_cols: %d\n", XCLOGMSG, row, col, num_cols));
 
     if (!num_cols)
@@ -782,39 +780,14 @@ static void _display_screen(void)
 
     XC_LOG(("_display_screen() - called\n"));
 
+    if (!curscr)
+        return;
+
     for (row = 0; row < XCursesLINES; row++)
-    {
-        _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row)),
-                      row, 0, COLS);
-    }
+        XC_display_text(curscr->_y[row], row, 0, COLS);
 
     _redraw_cursor();
     _draw_border();
-}
-
-/* Draw changed portions of the screen */
-
-void XC_refresh_screen(void)
-{
-    int row, start_col, num_cols;
-
-    XC_LOG(("XC_refresh_screen() - called\n"));
-
-    for (row = 0; row < XCursesLINES; row++)
-    {
-        num_cols = (int)*(Xcurscr + XCURSCR_LENGTH_OFF + row);
-
-        if (num_cols)
-        {
-            start_col = (int)*(Xcurscr + XCURSCR_START_OFF + row);
-
-            _display_text((const chtype *)(Xcurscr + XCURSCR_Y_OFF(row) +
-                          (start_col * sizeof(chtype))), row, start_col,
-                          num_cols);
-
-            *(Xcurscr + XCURSCR_LENGTH_OFF + row) = 0;
-        }
-    }
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
@@ -1111,8 +1084,7 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
     PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
              XCLOGMSG, old_row, old_x));
 
-    _display_text((const chtype *)(Xcurscr + (XCURSCR_Y_OFF(old_row) +
-                  (old_x * sizeof(chtype)))), old_row, old_x, 1);
+    XC_display_text(curscr->_y[old_row] + old_x, old_row, old_x, 1);
 
     /* display the cursor at the new cursor position */
 
@@ -1121,8 +1093,7 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 
     _make_xy(new_x, new_row, &xpos, &ypos);
 
-    ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(new_row) + new_x * sizeof(chtype));
-
+    ch = curscr->_y[new_row] + new_x;
     _set_cursor_color(ch, &fore, &back);
 
     if (vertical_cursor)
@@ -1219,7 +1190,7 @@ static void _blink_text(XtPointer unused, XtIntervalId *id)
 
     for (row = 0; row < XCursesLINES; row++)
     {
-        ch = (chtype *)(Xcurscr + XCURSCR_Y_OFF(row));
+        ch = curscr->_y[row];
 
         for (j = 0; j < COLS; j++)
             if (ch[j] & A_BLINK)
@@ -1228,7 +1199,7 @@ static void _blink_text(XtPointer unused, XtIntervalId *id)
                 while (ch[k] & A_BLINK && k < COLS)
                     k++;
 
-                _display_text(ch + j, row, j, k - j);
+                XC_display_text(ch + j, row, j, k - j);
 
                 j = k;
             }
@@ -1501,11 +1472,6 @@ void XC_resize(void)
     visible_cursor = TRUE;
 
     _draw_border();
-
-    SP->XcurscrSize = XCURSCR_SIZE;
-
-    Xcurscr = (unsigned char*)malloc(XCURSCR_SIZE);
-    memset(Xcurscr, 0, SP->XcurscrSize);
 }
 
 /* For color_content() */
@@ -1842,7 +1808,6 @@ int XCursesSetupX(int argc, char *argv[])
 
     SP = (SCREEN*)malloc(sizeof(SCREEN));
     memset(SP, 0, sizeof(SCREEN));
-    SP->XcurscrSize = XCURSCR_SIZE;
     SP->lines = XCursesLINES;
     SP->cols = XCursesCOLS;
 
@@ -1851,9 +1816,6 @@ int XCursesSetupX(int argc, char *argv[])
 
     SP->termattrs = A_COLOR | A_ITALIC | A_UNDERLINE | A_LEFT | A_RIGHT |
                     A_REVERSE;
-
-    Xcurscr = (unsigned char *)malloc(SP->XcurscrSize);
-    memset(Xcurscr, 0, SP->XcurscrSize);
 
     /* Add Event handlers to the drawing widget */
 

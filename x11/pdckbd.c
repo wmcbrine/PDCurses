@@ -8,8 +8,7 @@ bool PDC_check_key(void)
 {
     XtInputMask s = XtAppPending(app_context);
 
-    PDC_LOG(("%s:PDC_check_key() - returning %s\n", XCLOGMSG,
-             s ? "TRUE" : "FALSE"));
+    PDC_LOG(("PDC_check_key() - returning %s\n", s ? "TRUE" : "FALSE"));
 
     return xc_resize_now || !!s;
 }
@@ -52,7 +51,7 @@ int PDC_get_key(void)
 
     key = (int)newkey;
 
-    PDC_LOG(("%s:PDC_get_key() - key %d returned\n", XCLOGMSG, key));
+    PDC_LOG(("PDC_get_key() - key %d returned\n", key));
 
     return key;
 }

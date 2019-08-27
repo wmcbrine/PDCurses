@@ -381,7 +381,7 @@ static const char *default_translations =
 #ifdef PDCDEBUG
 void XC_say(const char *msg)
 {
-    PDC_LOG(("%s:%s", XCLOGMSG, msg));
+    PDC_LOG(("%s", msg));
 }
 #endif
 
@@ -505,9 +505,9 @@ static int _new_packet(chtype attr, int len, int col, int row,
         }
     }
 
-    PDC_LOG(("%s:_new_packet() - row: %d col: %d "
+    PDC_LOG(("_new_packet() - row: %d col: %d "
              "num_cols: %d fore: %d back: %d text:<%s>\n",
-             XCLOGMSG, row, col, len, fore, back, text));
+             row, col, len, fore, back, text));
 
     return OK;
 }
@@ -524,8 +524,8 @@ void XC_display_text(const chtype *ch, int row, int col, int num_cols)
     chtype old_attr, attr;
     int i, j;
 
-    PDC_LOG(("%s:XC_display_text() - called: row: %d col: %d "
-             "num_cols: %d\n", XCLOGMSG, row, col, num_cols));
+    PDC_LOG(("XC_display_text() - called: row: %d col: %d "
+             "num_cols: %d\n", row, col, num_cols));
 
     if (!num_cols)
         return;
@@ -731,7 +731,7 @@ static void _get_icon(void)
         {
             int i;
 
-            PDC_LOG(("%s:size_count: %d rc: %d\n", XCLOGMSG, size_count, rc));
+            PDC_LOG(("size_count: %d rc: %d\n", size_count, rc));
 
             for (i = 0; i < size_count; i++)
             {
@@ -740,13 +740,13 @@ static void _get_icon(void)
                 if (icon_size[i].max_height > max_height)
                     max_height = icon_size[i].max_height;
 
-                PDC_LOG(("%s:min: %d %d\n", XCLOGMSG,
+                PDC_LOG(("min: %d %d\n",
                          icon_size[i].min_width, icon_size[i].min_height));
 
-                PDC_LOG(("%s:max: %d %d\n", XCLOGMSG,
+                PDC_LOG(("max: %d %d\n",
                          icon_size[i].max_width, icon_size[i].max_height));
 
-                PDC_LOG(("%s:inc: %d %d\n", XCLOGMSG,
+                PDC_LOG(("inc: %d %d\n",
                          icon_size[i].width_inc, icon_size[i].height_inc));
             }
         }
@@ -811,8 +811,7 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
 {
     XClientMessageEvent *client_event = (XClientMessageEvent *)event;
 
-    PDC_LOG(("%s:_handle_nonmaskable called: event %d\n",
-             XCLOGMSG, event->type));
+    PDC_LOG(("_handle_nonmaskable called: event %d\n", event->type));
 
     if (event->type == ClientMessage)
     {
@@ -891,7 +890,7 @@ unsigned long XCursesKeyPress(XEvent *event)
 
     /* translate keysym into curses key code */
 
-    PDC_LOG(("%s:Key mask: %x\n", XCLOGMSG, event->xkey.state));
+    PDC_LOG(("Key mask: %x\n", event->xkey.state));
 
     /* 0x10: usually, numlock modifier */
 
@@ -917,7 +916,7 @@ unsigned long XCursesKeyPress(XEvent *event)
     {
         if (key_table[i].keycode == keysym)
         {
-            PDC_LOG(("%s:State %x\n", XCLOGMSG, event->xkey.state));
+            PDC_LOG(("State %x\n", event->xkey.state));
 
             /* ControlMask: 0x04: control modifier
                Mod1Mask: 0x08: usually, alt modifier
@@ -952,7 +951,7 @@ unsigned long XCursesKeyPress(XEvent *event)
     if (!key && buffer[0] && count == 1)
         key = buffer[0];
 
-    PDC_LOG(("%s:Key: %s pressed - %x Mod: %x\n", XCLOGMSG,
+    PDC_LOG(("Key: %s pressed - %x Mod: %x\n",
              XKeysymToString(keysym), key, event->xkey.state));
 
     /* Handle ALT letters and numbers */
@@ -1069,8 +1068,8 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
     chtype *ch;
     short fore = 0, back = 0;
 
-    PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
-             XCLOGMSG, old_row, old_x));
+    PDC_LOG(("_display_cursor() - draw char at row: %d col %d\n",
+             old_row, old_x));
 
     /* if the cursor position is outside the boundary of the screen,
        ignore the request */
@@ -1081,8 +1080,8 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 
     /* display the character at the current cursor position */
 
-    PDC_LOG(("%s:_display_cursor() - draw char at row: %d col %d\n",
-             XCLOGMSG, old_row, old_x));
+    PDC_LOG(("_display_cursor() - draw char at row: %d col %d\n",
+             old_row, old_x));
 
     XC_display_text(curscr->_y[old_row] + old_x, old_row, old_x, 1);
 
@@ -1128,8 +1127,8 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
             xpos, yp, font_width, yh);
     }
 
-    PDC_LOG(("%s:_display_cursor() - draw cursor at row %d col %d\n",
-             XCLOGMSG, new_row, new_x));
+    PDC_LOG(("_display_cursor() - draw cursor at row %d col %d\n",
+             new_row, new_x));
 }
 
 static void _redraw_cursor(void)
@@ -1162,8 +1161,7 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
         break;
 
     default:
-        PDC_LOG(("%s:_handle_enter_leave - unknown event %d\n",
-                 XCLOGMSG, event->type));
+        PDC_LOG(("_handle_enter_leave - unknown event %d\n", event->type));
     }
 }
 
@@ -1648,8 +1646,8 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
         break;
 
     default:
-        PDC_LOG(("%s:_handle_structure_notify - unknown event %d\n",
-                 XCLOGMSG, event->type));
+        PDC_LOG(("_handle_structure_notify - unknown event %d\n",
+                 event->type));
     }
 }
 

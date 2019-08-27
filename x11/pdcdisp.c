@@ -48,8 +48,8 @@ chtype acs_map[128] =
 int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
                        int visibility)
 {
-    PDC_LOG(("%s:PDC_display_cursor() - called: NEW row %d col %d, vis %d\n",
-             XCLOGMSG, newrow, newcol, visibility));
+    PDC_LOG(("PDC_display_cursor() - called: NEW row %d col %d, vis %d\n",
+             newrow, newcol, visibility));
 
     if (visibility == -1)
         XCursesDisplayCursor();

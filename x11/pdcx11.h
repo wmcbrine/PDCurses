@@ -13,12 +13,6 @@
 #include <ctype.h>
 
 #include <sys/types.h>
-#ifdef HAVE_FCNTL_H
-# include <fcntl.h>
-#endif
-#ifdef HAVE_SYS_SELECT_H
-# include <sys/select.h>   /* AIX needs this for FD_ZERO etc macros */
-#endif
 
 #ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -95,8 +89,6 @@ typedef struct
 
 extern XCursesAppData xc_app_data;
 
-#define XCLOGMSG ("")
-
 int PDC_display_cursor(int, int, int, int, int);
 
 void XCursesCursor(int, int, int, int);
@@ -117,12 +109,6 @@ XColor XC_get_color(short);
 void XC_set_color(short, XColor);
 void XC_get_selection(void);
 int XC_set_selection(const char *, long);
-
-#ifdef _HPUX_SOURCE
-# define FD_SET_CAST int *
-#else
-# define FD_SET_CAST fd_set *
-#endif
 
 extern XtAppContext app_context;
 extern Widget topLevel;

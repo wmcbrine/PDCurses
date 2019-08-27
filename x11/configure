@@ -3776,9 +3776,7 @@ fi
 done
 
 
-for ac_header in fcntl.h \
-	sys/time.h \
-	sys/select.h \
+for ac_header in sys/time.h \
 	dlfcn.h \
 	dl.h
 
@@ -3832,7 +3830,7 @@ fi
 
 
 MH_EXTRA_LIBS=''
-for mh_lib in socket nls; do
+for mh_lib in nls; do
 	if test "$on_qnx" = yes; then
 		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library -l${mh_lib}" >&5
 $as_echo_n "checking for library -l${mh_lib}... " >&6; }
@@ -4594,7 +4592,7 @@ if test "$DYN_COMP" = ""; then
 $as_echo_n "checking compiler flags for a dynamic object... " >&6; }
 
 cat > conftest.$ac_ext <<EOF
-#line 4597 "configure"
+#line 4595 "configure"
 int a=0
 EOF
 
@@ -4633,7 +4631,7 @@ $as_echo "none of $mh_cv_flags supported" >&6; }
 
 mh_compile='${CC-cc} -c $DYN_COMP conftest.$ac_ext 1>&5'
 cat > conftest.$ac_ext <<EOF
-#line 4636 "configure"
+#line 4634 "configure"
 int foo()
 {
 return(0);
@@ -5995,10 +5993,6 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-
-
-
-$as_echo "#define PDC_MAX_SIGNALS /**/" >>confdefs.h
 
 
 

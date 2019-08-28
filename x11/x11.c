@@ -1065,8 +1065,8 @@ int XCursesSetupX(int argc, char *argv[])
     LINES = XCursesLINES;
     COLS = XCursesCOLS;
 
-    SP = (SCREEN*)malloc(sizeof(SCREEN));
-    memset(SP, 0, sizeof(SCREEN));
+    SP = calloc(1, sizeof(SCREEN));
+
     SP->lines = XCursesLINES;
     SP->cols = XCursesCOLS;
 

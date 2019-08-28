@@ -21,13 +21,10 @@ XCursesAppData xc_app_data;
 #include "../common/icon64.xpm"
 #include "../common/icon32.xpm"
 
-static void _display_cursor(int, int, int, int);
-static void _redraw_cursor(void);
-
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 
-static GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
-static int font_ascent, font_descent, window_width, window_height;
+GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
+static int window_width, window_height;
 static int resize_window_width = 0, resize_window_height = 0;
 
 XtAppContext app_context;
@@ -38,15 +35,17 @@ static String class_name = "XCurses";
 static int received_map_notify = 0;
 static Pixmap icon_pixmap;
 static Pixmap icon_pixmap_mask;
-static bool visible_cursor = FALSE;
-static bool window_entered = TRUE;
+
+bool window_entered = TRUE;
+
 static bool exposed = FALSE;
 static char *program_name;
-static bool blinked_off;
+
+bool blinked_off;
 
 int XCursesLINES = 24;
 int XCursesCOLS = 80;
-int font_height, font_width;
+int font_height, font_width, font_ascent, font_descent;
 
 bool xc_resize_now = FALSE;
 
@@ -190,8 +189,7 @@ static XtActionsRec action_table[] =
     {"XCursesButton",         (XtActionProc)XCursesButton}
 };
 
-static Pixel colors[PDC_MAXCOL + 2];
-static bool vertical_cursor = FALSE;
+Pixel colors[PDC_MAXCOL + 2];
 
 XIM Xim = NULL;
 XIC Xic = NULL;
@@ -202,183 +200,6 @@ static const char *default_translations =
     "<BtnUp>: XCursesButton() \n" \
     "<BtnMotion>: XCursesButton()"
 };
-
-/* Convert character positions x and y to pixel positions, stored in
-   xpos and ypos */
-
-static void _make_xy(int x, int y, int *xpos, int *ypos)
-{
-    *xpos = (x * font_width) + xc_app_data.borderWidth;
-    *ypos = xc_app_data.normalFont->ascent + (y * font_height) +
-            xc_app_data.borderWidth;
-}
-
-/* Output a block of characters with common attributes */
-
-static int _new_packet(chtype attr, int len, int col, int row,
-#ifdef PDC_WIDE
-                       XChar2b *text)
-#else
-                       char *text)
-#endif
-{
-    XRectangle bounds;
-    GC gc;
-    int xpos, ypos;
-    short fore, back;
-    attr_t sysattrs;
-    bool rev;
-
-    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
-
-    /* Specify the color table offsets */
-
-    sysattrs = SP->termattrs;
-
-    if ((attr & A_BOLD) && !(sysattrs & A_BOLD))
-        fore |= 8;
-    if ((attr & A_BLINK) && !(sysattrs & A_BLINK))
-        back |= 8;
-
-    rev = !!(attr & A_REVERSE);
-
-    /* Determine which GC to use - normal, italic or bold */
-
-    if ((attr & A_ITALIC) && (sysattrs & A_ITALIC))
-        gc = italic_gc;
-    else if ((attr & A_BOLD) && (sysattrs & A_BOLD))
-        gc = bold_gc;
-    else
-        gc = normal_gc;
-
-    _make_xy(col, row, &xpos, &ypos);
-
-    bounds.x = xpos;
-    bounds.y = ypos - font_ascent;
-    bounds.width = font_width * len;
-    bounds.height = font_height;
-
-    XSetClipRectangles(XCURSESDISPLAY, gc, 0, 0, &bounds, 1, Unsorted);
-
-    if (blinked_off && (sysattrs & A_BLINK) && (attr & A_BLINK))
-    {
-        XSetForeground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
-        XFillRectangle(XCURSESDISPLAY, XCURSESWIN, gc, xpos, bounds.y,
-                       bounds.width, font_height);
-    }
-    else
-    {
-        /* Draw it */
-
-        XSetForeground(XCURSESDISPLAY, gc, colors[rev ? back : fore]);
-        XSetBackground(XCURSESDISPLAY, gc, colors[rev ? fore : back]);
-
-#ifdef PDC_WIDE
-        XDrawImageString16(
-#else
-        XDrawImageString(
-#endif
-            XCURSESDISPLAY, XCURSESWIN, gc, xpos, ypos, text, len);
-
-        /* Underline, etc. */
-
-        if (attr & (A_LEFT | A_RIGHT | A_UNDERLINE))
-        {
-            int k;
-
-            if (SP->line_color != -1)
-                XSetForeground(XCURSESDISPLAY, gc, colors[SP->line_color]);
-
-            if (attr & A_UNDERLINE)
-                XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-                          xpos, ypos + 1, xpos + font_width * len, ypos + 1);
-
-            if (attr & A_LEFT)
-                for (k = 0; k < len; k++)
-                {
-                    int x = xpos + font_width * k;
-                    XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-                              x, ypos - font_ascent, x, ypos + font_descent);
-                }
-
-            if (attr & A_RIGHT)
-                for (k = 0; k < len; k++)
-                {
-                    int x = xpos + font_width * (k + 1) - 1;
-                    XDrawLine(XCURSESDISPLAY, XCURSESWIN, gc,
-                              x, ypos - font_ascent, x, ypos + font_descent);
-                }
-        }
-    }
-
-    PDC_LOG(("_new_packet() - row: %d col: %d "
-             "num_cols: %d fore: %d back: %d text:<%s>\n",
-             row, col, len, fore, back, text));
-
-    return OK;
-}
-
-/* The core display routine -- update one line of text */
-
-void XC_display_text(const chtype *ch, int row, int col, int num_cols)
-{
-#ifdef PDC_WIDE
-    XChar2b text[513];
-#else
-    char text[513];
-#endif
-    chtype old_attr, attr;
-    int i, j;
-
-    PDC_LOG(("XC_display_text() - called: row: %d col: %d "
-             "num_cols: %d\n", row, col, num_cols));
-
-    if (!num_cols)
-        return;
-
-    old_attr = *ch & A_ATTRIBUTES;
-
-    for (i = 0, j = 0; j < num_cols; j++)
-    {
-        chtype curr = ch[j];
-
-        attr = curr & A_ATTRIBUTES;
-
-        if (attr & A_ALTCHARSET && !(curr & 0xff80))
-        {
-            attr ^= A_ALTCHARSET;
-            curr = acs_map[curr & 0x7f];
-        }
-
-#ifndef PDC_WIDE
-        /* Special handling for ACS_BLOCK */
-
-        if (!(curr & A_CHARTEXT))
-        {
-            curr |= ' ';
-            attr ^= A_REVERSE;
-        }
-#endif
-        if (attr != old_attr)
-        {
-            if (_new_packet(old_attr, i, col, row, text) == ERR)
-                return;
-
-            old_attr = attr;
-            col += i;
-            i = 0;
-        }
-
-#ifdef PDC_WIDE
-        text[i].byte1 = (curr & 0xff00) >> 8;
-        text[i++].byte2 = curr & 0x00ff;
-#else
-        text[i++] = curr & 0xff;
-#endif
-    }
-
-    _new_packet(old_attr, i, col, row, text);
-}
 
 static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 {
@@ -438,34 +259,6 @@ static void _initialize_colors(void)
 
     colors[COLOR_CURSOR] = xc_app_data.cursorColor;
     colors[COLOR_BORDER] = xc_app_data.borderColor;
-}
-
-static void _set_cursor_color(chtype *ch, short *fore, short *back)
-{
-    int attr;
-    short f, b;
-
-    attr = PAIR_NUMBER(*ch);
-
-    if (attr)
-    {
-        PDC_pair_content(attr, &f, &b);
-        *fore = 7 - (f % 8);
-        *back = 7 - (b % 8);
-    }
-    else
-    {
-        if (*ch & A_REVERSE)
-        {
-            *back = COLOR_BLACK;
-            *fore = COLOR_WHITE;
-        }
-        else
-        {
-            *back = COLOR_WHITE;
-            *fore = COLOR_BLACK;
-        }
-    }
 }
 
 static void _get_icon(void)
@@ -545,7 +338,7 @@ static void _get_icon(void)
     }
 }
 
-static void _draw_border(void)
+void XC_draw_border(void)
 {
     /* Draw the border if required */
 
@@ -569,10 +362,10 @@ static void _display_screen(void)
         return;
 
     for (row = 0; row < XCursesLINES; row++)
-        XC_display_text(curscr->_y[row], row, 0, COLS);
+        PDC_transform_line(row, 0, COLS, curscr->_y[row]);
 
-    _redraw_cursor();
-    _draw_border();
+    XC_redraw_cursor();
+    XC_draw_border();
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
@@ -611,80 +404,6 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
     }
 }
 
-static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
-{
-    int xpos, ypos, i;
-    chtype *ch;
-    short fore = 0, back = 0;
-
-    PDC_LOG(("_display_cursor() - draw char at row: %d col %d\n",
-             old_row, old_x));
-
-    /* if the cursor position is outside the boundary of the screen,
-       ignore the request */
-
-    if (old_row >= XCursesLINES || old_x >= COLS ||
-        new_row >= XCursesLINES || new_x >= COLS)
-        return;
-
-    /* display the character at the current cursor position */
-
-    PDC_LOG(("_display_cursor() - draw char at row: %d col %d\n",
-             old_row, old_x));
-
-    XC_display_text(curscr->_y[old_row] + old_x, old_row, old_x, 1);
-
-    /* display the cursor at the new cursor position */
-
-    if (!SP->visibility)
-        return;     /* cursor not displayed, no more to do */
-
-    _make_xy(new_x, new_row, &xpos, &ypos);
-
-    ch = curscr->_y[new_row] + new_x;
-    _set_cursor_color(ch, &fore, &back);
-
-    if (vertical_cursor)
-    {
-        XSetForeground(XCURSESDISPLAY, rect_cursor_gc, colors[back]);
-
-        for (i = 1; i <= SP->visibility; i++)
-            XDrawLine(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-                      xpos + i, ypos - xc_app_data.normalFont->ascent,
-                      xpos + i, ypos - xc_app_data.normalFont->ascent +
-                      font_height - 1);
-    }
-    else
-    {
-        /* For block cursors, paint the block with invert. */
-
-        int yp, yh;
-
-        if (SP->visibility == 2)
-        {
-            yp = ypos - font_height + font_descent;
-            yh = font_height;
-        }
-        else
-        {
-            yp = ypos - font_height / 4 + font_descent;
-            yh = font_height / 4;
-        }
-
-        XSetFunction(XCURSESDISPLAY, rect_cursor_gc, GXinvert);
-        XFillRectangle(XCURSESDISPLAY, XCURSESWIN, rect_cursor_gc,
-            xpos, yp, font_width, yh);
-    }
-
-    PDC_LOG(("_display_cursor() - draw cursor at row %d col %d\n",
-             new_row, new_x));
-}
-
-static void _redraw_cursor(void)
-{
-    _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
-}
-
 static void _handle_enter_leave(Widget w, XtPointer client_data,
                                 XEvent *event, Boolean *unused)
 {
@@ -706,58 +425,12 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
         /* Display the cursor so it stays on while the window is
            not current */
 
-        _redraw_cursor();
+        XC_redraw_cursor();
         break;
 
     default:
         PDC_LOG(("_handle_enter_leave - unknown event %d\n", event->type));
     }
-}
-
-static void _blink_cursor(XtPointer unused, XtIntervalId *id)
-{
-    PDC_LOG(("_blink_cursor() - called:\n"));
-
-    XCursesDisplayCursor();
-    XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
-                    _blink_cursor, NULL);
-}
-
-static void _blink_text(XtPointer unused, XtIntervalId *id)
-{
-    int row;
-    int j, k;
-    chtype *ch;
-
-    PDC_LOG(("_blink_text() - called:\n"));
-
-    blinked_off = !blinked_off;
-
-    /* Redraw changed lines on the screen to match the blink state */
-
-    for (row = 0; row < XCursesLINES; row++)
-    {
-        ch = curscr->_y[row];
-
-        for (j = 0; j < COLS; j++)
-            if (ch[j] & A_BLINK)
-            {
-                k = j;
-                while (ch[k] & A_BLINK && k < COLS)
-                    k++;
-
-                XC_display_text(ch + j, row, j, k - j);
-
-                j = k;
-            }
-    }
-
-    _redraw_cursor();
-    _draw_border();
-
-    if ((SP->termattrs & A_BLINK) || !blinked_off)
-        XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
-                        _blink_text, NULL);
 }
 
 static void XCursesButton(Widget w, XEvent *event, String *params,
@@ -796,7 +469,7 @@ void XC_resize(void)
     window_height = resize_window_height;
     visible_cursor = TRUE;
 
-    _draw_border();
+    XC_draw_border();
 }
 
 /* For color_content() */
@@ -832,49 +505,11 @@ void XC_set_blink(bool blinkon)
             SP->termattrs |= A_BLINK;
             blinked_off = FALSE;
             XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
-                            _blink_text, NULL);
+                            XC_blink_text, NULL);
         }
     }
     else
         SP->termattrs &= ~A_BLINK;
-}
-
-void XCursesCursor(int old_row, int old_x, int new_row, int new_x)
-{
-    PDC_LOG(("XCursesCursor - called\n"));
-
-    visible_cursor = TRUE;
-    _display_cursor(old_row, old_x, new_row, new_x);
-}
-
-void XCursesDisplayCursor(void)
-{
-    PDC_LOG(("XCursesDisplayCursor - called. Vis now: "));
-    PDC_LOG((visible_cursor ? "1\n" : "0\n"));
-
-    /* If the window is not active, ignore this command. The
-       cursor will stay solid. */
-
-    if (window_entered)
-    {
-        if (visible_cursor)
-        {
-            /* Cursor currently ON, turn it off */
-
-            int save_visibility = SP->visibility;
-            SP->visibility = 0;
-            _redraw_cursor();
-            SP->visibility = save_visibility;
-            visible_cursor = FALSE;
-        }
-        else
-        {
-            /* Cursor currently OFF, turn it on */
-
-            _redraw_cursor();
-            visible_cursor = TRUE;
-        }
-    }
 }
 
 static void _handle_structure_notify(Widget w, XtPointer client_data,
@@ -902,7 +537,7 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
 
         received_map_notify = 1;
 
-        _draw_border();
+        XC_draw_border();
         break;
 
     default:
@@ -1089,7 +724,7 @@ int XCursesSetupX(int argc, char *argv[])
 
     if (xc_app_data.cursorBlinkRate)
         XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
-                        _blink_cursor, NULL);
+                        XC_blink_cursor, NULL);
 
     XtRealizeWidget(topLevel);
 

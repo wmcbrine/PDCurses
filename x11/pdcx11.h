@@ -97,7 +97,10 @@ int XCursesInitscr(int, char **);
 int XCursesSetupX(int, char **);
 void XCursesExit(void);
 
-void XC_display_text(const chtype *, int, int, int);
+void XC_blink_cursor(XtPointer, XtIntervalId *);
+void XC_blink_text(XtPointer, XtIntervalId *);
+void XC_draw_border(void);
+void XC_redraw_cursor(void);
 void XC_resize(void);
 void XC_refresh_scrollbar(void);
 void XC_scroll_up_down(Widget, XtPointer, XtPointer);
@@ -114,9 +117,11 @@ extern Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
 #define XCURSESDISPLAY (XtDisplay(drawing))
 #define XCURSESWIN     (XtWindow(drawing))
 
+extern Pixel colors[PDC_MAXCOL + 2];
+extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
 extern int XCursesLINES;
 extern int XCursesCOLS;
-extern int font_height, font_width;
+extern int font_height, font_width, font_ascent, font_descent;
 
 #ifdef MOUSE_DEBUG
 # define MOUSE_LOG(x) printf x
@@ -127,3 +132,7 @@ extern int font_height, font_width;
 extern bool xc_resize_now;
 extern XIM Xim;
 extern XIC Xic;
+extern bool blinked_off;
+extern bool vertical_cursor;
+extern bool visible_cursor;
+extern bool window_entered;

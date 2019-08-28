@@ -189,8 +189,6 @@ static XtActionsRec action_table[] =
     {"XCursesButton",         (XtActionProc)XCursesButton}
 };
 
-Pixel colors[PDC_MAXCOL + 2];
-
 XIM Xim = NULL;
 XIC Xic = NULL;
 
@@ -470,30 +468,6 @@ void XC_resize(void)
     visible_cursor = TRUE;
 
     XC_draw_border();
-}
-
-/* For color_content() */
-
-XColor XC_get_color(short index)
-{
-    XColor tmp;
-    Colormap cmap = DefaultColormap(XCURSESDISPLAY,
-                                    DefaultScreen(XCURSESDISPLAY));
-
-    tmp.pixel = colors[index];
-    XQueryColor(XCURSESDISPLAY, cmap, &tmp);
-    return tmp;
-}
-
-/* For init_color() */
-
-void XC_set_color(short index, XColor tmp)
-{
-    Colormap cmap = DefaultColormap(XCURSESDISPLAY,
-                                    DefaultScreen(XCURSESDISPLAY));
-
-    if (XAllocColor(XCURSESDISPLAY, cmap, &tmp))
-        colors[index] = tmp.pixel;
 }
 
 void XC_set_blink(bool blinkon)

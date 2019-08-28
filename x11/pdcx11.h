@@ -108,8 +108,6 @@ void XC_scroll_left_right(Widget, XtPointer, XtPointer);
 void XC_thumb_up_down(Widget, XtPointer, XtPointer);
 void XC_thumb_left_right(Widget, XtPointer, XtPointer);
 void XC_set_blink(bool);
-XColor XC_get_color(short);
-void XC_set_color(short, XColor);
 
 extern XtAppContext app_context;
 extern Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;

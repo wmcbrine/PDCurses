@@ -2,6 +2,8 @@
 
 #include "pdcx11.h"
 
+Pixel colors[PDC_MAXCOL + 2];
+
 /* COLOR_PAIR to attribute encoding table. */
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
@@ -101,7 +103,12 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-    XColor tmp = XC_get_color(color);
+    XColor tmp;
+    Colormap cmap = DefaultColormap(XCURSESDISPLAY,
+                                    DefaultScreen(XCURSESDISPLAY));
+
+    tmp.pixel = colors[color];
+    XQueryColor(XCURSESDISPLAY, cmap, &tmp);
 
     *red = ((double)(tmp.red) * 1000 / 65535) + 0.5;
     *green = ((double)(tmp.green) * 1000 / 65535) + 0.5;
@@ -118,7 +125,11 @@ int PDC_init_color(short color, short red, short green, short blue)
     tmp.green = ((double)green * 65535 / 1000) + 0.5;
     tmp.blue = ((double)blue * 65535 / 1000) + 0.5;
 
-    XC_set_color(color, tmp);
+    Colormap cmap = DefaultColormap(XCURSESDISPLAY,
+                                    DefaultScreen(XCURSESDISPLAY));
+
+    if (XAllocColor(XCURSESDISPLAY, cmap, &tmp))
+        colors[color] = tmp.pixel;
 
     return OK;
 }

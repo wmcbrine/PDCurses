@@ -35,6 +35,8 @@ sb
 
 **man-end****************************************************************/
 
+#include "scrlbox.h"
+
 bool sb_started = FALSE;
 
 #if NeedWidePrototypes
@@ -43,28 +45,10 @@ bool sb_started = FALSE;
 # define PDC_SCROLLBAR_TYPE float
 #endif
 
-void XC_refresh_scrollbar(void)
-{
-    PDC_LOG(("XC_refresh_scrollbar() - called\n"));
+static Widget scrollBox, scrollVert, scrollHoriz;
 
-    if (SP->sb_on)
-    {
-        PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
-        PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
-
-        if (total_y)
-            XawScrollbarSetThumb(scrollVert,
-                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
-                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
-
-        if (total_x)
-            XawScrollbarSetThumb(scrollHoriz,
-                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
-                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
-    }
-}
-
-void XC_scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+static void _scroll_up_down(Widget w, XtPointer client_data,
+    XtPointer call_data)
 {
     int pixels = (long) call_data;
     int total_y = SP->sb_total_y * font_height;
@@ -91,7 +75,8 @@ void XC_scroll_up_down(Widget w, XtPointer client_data, XtPointer call_data)
                          (double)((double)viewport_y / (double)total_y));
 }
 
-void XC_scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+static void _scroll_left_right(Widget w, XtPointer client_data,
+    XtPointer call_data)
 {
     int pixels = (long) call_data;
     int total_x = SP->sb_total_x * font_width;
@@ -114,7 +99,8 @@ void XC_scroll_left_right(Widget w, XtPointer client_data, XtPointer call_data)
                          (double)((double)viewport_x / (double)total_x));
 }
 
-void XC_thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
+static void _thumb_up_down(Widget w, XtPointer client_data,
+    XtPointer call_data)
 {
     double percent = *(double *) call_data;
     double total_y = (double)SP->sb_total_y;
@@ -135,7 +121,8 @@ void XC_thumb_up_down(Widget w, XtPointer client_data, XtPointer call_data)
                          (double)(viewport_y / total_y));
 }
 
-void XC_thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
+static void _thumb_left_right(Widget w, XtPointer client_data,
+    XtPointer call_data)
 {
     double percent = *(double *) call_data;
     double total_x = (double)SP->sb_total_x;
@@ -151,6 +138,44 @@ void XC_thumb_left_right(Widget w, XtPointer client_data, XtPointer call_data)
 
     XawScrollbarSetThumb(w, (double)(cur_x / total_x),
                          (double)(viewport_x / total_x));
+}
+
+bool XC_scrollbar_init(void)
+{
+    if (xc_app_data.scrollbarWidth && sb_started)
+    {
+        scrollBox = XtVaCreateManagedWidget(program_name,
+            scrollBoxWidgetClass, topLevel, XtNwidth,
+            window_width + xc_app_data.scrollbarWidth,
+            XtNheight, window_height + xc_app_data.scrollbarWidth,
+            XtNwidthInc, font_width, XtNheightInc, font_height, NULL);
+
+        drawing = XtVaCreateManagedWidget(program_name,
+            boxWidgetClass, scrollBox, XtNwidth,
+            window_width, XtNheight, window_height, XtNwidthInc,
+            font_width, XtNheightInc, font_height, NULL);
+
+        scrollVert = XtVaCreateManagedWidget("scrollVert",
+            scrollbarWidgetClass, scrollBox, XtNorientation,
+            XtorientVertical, XtNheight, window_height, XtNwidth,
+            xc_app_data.scrollbarWidth, NULL);
+
+        XtAddCallback(scrollVert, XtNscrollProc, _scroll_up_down, drawing);
+        XtAddCallback(scrollVert, XtNjumpProc, _thumb_up_down, drawing);
+
+        scrollHoriz = XtVaCreateManagedWidget("scrollHoriz",
+            scrollbarWidgetClass, scrollBox, XtNorientation,
+            XtorientHorizontal, XtNwidth, window_width, XtNheight,
+            xc_app_data.scrollbarWidth, NULL);
+
+        XtAddCallback(scrollHoriz, XtNscrollProc, _scroll_left_right,
+            drawing);
+        XtAddCallback(scrollHoriz, XtNjumpProc, _thumb_left_right, drawing);
+
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 /* sb_init() is the sb initialization routine.
@@ -265,7 +290,21 @@ int sb_refresh(void)
     if (!SP)
         return ERR;
 
-    XC_refresh_scrollbar();
+    if (SP->sb_on)
+    {
+        PDC_SCROLLBAR_TYPE total_y = SP->sb_total_y;
+        PDC_SCROLLBAR_TYPE total_x = SP->sb_total_x;
+
+        if (total_y)
+            XawScrollbarSetThumb(scrollVert,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_y) / total_y,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_y) / total_y);
+
+        if (total_x)
+            XawScrollbarSetThumb(scrollHoriz,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_cur_x) / total_x,
+                (PDC_SCROLLBAR_TYPE)(SP->sb_viewport_x) / total_x);
+    }
 
     return OK;
 }

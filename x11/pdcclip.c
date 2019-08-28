@@ -47,6 +47,9 @@ clipboard
 
 **man-end****************************************************************/
 
+#include "Xmu/StdSel.h"
+#include "Xmu/Atoms.h"
+
 static char *tmpsel = NULL;
 static unsigned long tmpsel_length = 0;
 

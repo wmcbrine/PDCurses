@@ -2,6 +2,8 @@
 
 #include "pdcx11.h"
 
+#include <keysym.h>
+
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
 #endif
@@ -157,6 +159,15 @@ static struct
 };
 
 static KeySym keysym = 0;
+
+XIM Xim = NULL;
+XIC Xic = NULL;
+
+#ifdef MOUSE_DEBUG
+# define MOUSE_LOG(x) printf x
+#else
+# define MOUSE_LOG(x)
+#endif
 
 static unsigned long _process_key_event(XEvent *event)
 {

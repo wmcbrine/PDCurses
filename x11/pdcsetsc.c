@@ -69,7 +69,18 @@ int PDC_set_blink(bool blinkon)
     if (SP->color_started)
         COLORS = PDC_MAXCOL;
 
-    XC_set_blink(blinkon);
+    if (blinkon)
+    {
+        if (!(SP->termattrs & A_BLINK))
+        {
+            SP->termattrs |= A_BLINK;
+            blinked_off = FALSE;
+            XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
+                            XC_blink_text, NULL);
+        }
+    }
+    else
+        SP->termattrs &= ~A_BLINK;
 
     return OK;
 }

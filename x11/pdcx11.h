@@ -40,12 +40,6 @@
 # include <Xaw/Scrollbar.h>
 #endif
 
-#include "scrlbox.h"
-
-#include "Xmu/StdSel.h"
-#include "Xmu/Atoms.h"
-
-#include <keysym.h>
 #include <Xatom.h>
 
 typedef struct
@@ -94,38 +88,28 @@ int PDC_display_cursor(int, int, int, int, int);
 void XCursesCursor(int, int, int, int);
 void XCursesDisplayCursor(void);
 int XCursesInitscr(int, char **);
-int XCursesSetupX(int, char **);
 void XCursesExit(void);
 
 void XC_blink_cursor(XtPointer, XtIntervalId *);
 void XC_blink_text(XtPointer, XtIntervalId *);
 void XC_draw_border(void);
 void XC_redraw_cursor(void);
-void XC_resize(void);
-void XC_refresh_scrollbar(void);
-void XC_scroll_up_down(Widget, XtPointer, XtPointer);
-void XC_scroll_left_right(Widget, XtPointer, XtPointer);
-void XC_thumb_up_down(Widget, XtPointer, XtPointer);
-void XC_thumb_left_right(Widget, XtPointer, XtPointer);
-void XC_set_blink(bool);
+bool XC_scrollbar_init(void);
 
 extern XtAppContext app_context;
-extern Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
+extern Widget topLevel, drawing;
 
 #define XCURSESDISPLAY (XtDisplay(drawing))
 #define XCURSESWIN     (XtWindow(drawing))
 
 extern Pixel colors[PDC_MAXCOL + 2];
 extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
+extern char *program_name;
 extern int XCursesLINES;
 extern int XCursesCOLS;
 extern int font_height, font_width, font_ascent, font_descent;
-
-#ifdef MOUSE_DEBUG
-# define MOUSE_LOG(x) printf x
-#else
-# define MOUSE_LOG(x)
-#endif
+extern int window_width, window_height;
+extern int resize_window_width, resize_window_height;
 
 extern bool xc_resize_now;
 extern XIM Xim;

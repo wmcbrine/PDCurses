@@ -24,11 +24,11 @@ XCursesAppData xc_app_data;
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 
 GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
-static int window_width, window_height;
-static int resize_window_width = 0, resize_window_height = 0;
+int window_width, window_height;
+int resize_window_width = 0, resize_window_height = 0;
 
 XtAppContext app_context;
-Widget topLevel, drawing, scrollBox, scrollVert, scrollHoriz;
+Widget topLevel, drawing;
 
 static Atom wm_atom[2];
 static String class_name = "XCurses";
@@ -39,7 +39,7 @@ static Pixmap icon_pixmap_mask;
 bool window_entered = TRUE;
 
 static bool exposed = FALSE;
-static char *program_name;
+char *program_name;
 
 bool blinked_off;
 
@@ -188,9 +188,6 @@ static XtActionsRec action_table[] =
 {
     {"XCursesButton",         (XtActionProc)XCursesButton}
 };
-
-XIM Xim = NULL;
-XIC Xic = NULL;
 
 static const char *default_translations =
 {
@@ -453,39 +450,6 @@ void XCursesExit(void)
     _exit(0);
 }
 
-void XC_resize(void)
-{
-    SP->lines = XCursesLINES = ((resize_window_height -
-        (2 * xc_app_data.borderWidth)) / font_height);
-
-    LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
-
-    SP->cols = COLS = XCursesCOLS = ((resize_window_width -
-        (2 * xc_app_data.borderWidth)) / font_width);
-
-    window_width = resize_window_width;
-    window_height = resize_window_height;
-    visible_cursor = TRUE;
-
-    XC_draw_border();
-}
-
-void XC_set_blink(bool blinkon)
-{
-    if (blinkon)
-    {
-        if (!(SP->termattrs & A_BLINK))
-        {
-            SP->termattrs |= A_BLINK;
-            blinked_off = FALSE;
-            XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
-                            XC_blink_text, NULL);
-        }
-    }
-    else
-        SP->termattrs &= ~A_BLINK;
-}
-
 static void _handle_structure_notify(Widget w, XtPointer client_data,
                                      XEvent *event, Boolean *unused)
 {
@@ -525,7 +489,7 @@ static void _dummy_handler(Widget w, XtPointer client_data,
 {
 }
 
-int XCursesSetupX(int argc, char *argv[])
+int XCursesInitscr(int argc, char *argv[])
 {
     char *myargv[] = {"PDCurses", NULL};
     extern bool sb_started;
@@ -536,7 +500,7 @@ int XCursesSetupX(int argc, char *argv[])
     int i = 0;
     int minwidth, minheight;
 
-    PDC_LOG(("XCursesSetupX called\n"));
+    PDC_LOG(("XCursesInitscr() - called\n"));
 
     if (!argv)
     {
@@ -614,37 +578,7 @@ int XCursesSetupX(int argc, char *argv[])
 
     /* Create a BOX widget in which to draw */
 
-    if (xc_app_data.scrollbarWidth && sb_started)
-    {
-        scrollBox = XtVaCreateManagedWidget(program_name,
-            scrollBoxWidgetClass, topLevel, XtNwidth,
-            window_width + xc_app_data.scrollbarWidth,
-            XtNheight, window_height + xc_app_data.scrollbarWidth,
-            XtNwidthInc, font_width, XtNheightInc, font_height, NULL);
-
-        drawing = XtVaCreateManagedWidget(program_name,
-            boxWidgetClass, scrollBox, XtNwidth,
-            window_width, XtNheight, window_height, XtNwidthInc,
-            font_width, XtNheightInc, font_height, NULL);
-
-        scrollVert = XtVaCreateManagedWidget("scrollVert",
-            scrollbarWidgetClass, scrollBox, XtNorientation,
-            XtorientVertical, XtNheight, window_height, XtNwidth,
-            xc_app_data.scrollbarWidth, NULL);
-
-        XtAddCallback(scrollVert, XtNscrollProc, XC_scroll_up_down, drawing);
-        XtAddCallback(scrollVert, XtNjumpProc, XC_thumb_up_down, drawing);
-
-        scrollHoriz = XtVaCreateManagedWidget("scrollHoriz",
-            scrollbarWidgetClass, scrollBox, XtNorientation,
-            XtorientHorizontal, XtNwidth, window_width, XtNheight,
-            xc_app_data.scrollbarWidth, NULL);
-
-        XtAddCallback(scrollHoriz, XtNscrollProc, XC_scroll_left_right,
-            drawing);
-        XtAddCallback(scrollHoriz, XtNjumpProc, XC_thumb_left_right, drawing);
-    }
-    else
+    if (!XC_scrollbar_init())
     {
         drawing = XtVaCreateManagedWidget(program_name, boxWidgetClass,
             topLevel, XtNwidth, window_width, XtNheight, window_height,
@@ -785,16 +719,6 @@ int XCursesSetupX(int argc, char *argv[])
         XtAppNextEvent(app_context, &event);
         XtDispatchEvent(&event);
     }
-
-    return OK;          /* will get here */
-}
-
-int XCursesInitscr(int argc, char *argv[])
-{
-    PDC_LOG(("XCursesInitscr() - called\n"));
-
-    if (ERR == XCursesSetupX(argc, argv))
-        return ERR;
 
     XCursesLINES = SP->lines;
     LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;

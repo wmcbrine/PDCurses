@@ -526,19 +526,26 @@ int XCursesInitscr(int argc, char *argv[])
     XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
                   minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
                   XtNbaseHeight, xc_app_data.borderWidth * 2,
-                  XtNiconPixmap, icon_pixmap,
+                  XtNbackground, 0, XtNiconPixmap, icon_pixmap,
                   XtNiconMask, icon_pixmap_mask, NULL);
 
-    /* Create a BOX widget in which to draw */
+    /* Create a widget in which to draw */
 
     if (!XC_scrollbar_init())
     {
-        drawing = XtVaCreateManagedWidget(program_name, boxWidgetClass,
-            topLevel, XtNwidth, window_width, XtNheight, window_height,
-            XtNwidthInc, font_width, XtNheightInc, font_height, NULL);
+        //drawing = XtVaCreateManagedWidget(program_name, boxWidgetClass,
+        //    topLevel, XtNwidth, window_width, XtNheight, window_height,
+        //    XtNbackground, 0, XtNwidthInc, font_width,
+        //    XtNheightInc, font_height, NULL);
 
-        XtVaSetValues(topLevel, XtNwidthInc, font_width, XtNheightInc,
-                      font_height, NULL);
+        //XtVaSetValues(topLevel, XtNwidthInc, font_width, XtNheightInc,
+        //              font_height, NULL);
+
+        drawing = topLevel;
+
+        XtVaSetValues(topLevel, XtNwidth, window_width, XtNheight,
+            window_height, XtNwidthInc, font_width, XtNheightInc,
+            font_height, NULL);
     }
 
     /* Process any default translations */

@@ -20,6 +20,50 @@ void PDC_scr_free(void)
     XCursesExit();
 }
 
+static void _initialize_colors(void)
+{
+    int i, r, g, b;
+
+    colors[COLOR_BLACK]   = xc_app_data.colorBlack;
+    colors[COLOR_RED]     = xc_app_data.colorRed;
+    colors[COLOR_GREEN]   = xc_app_data.colorGreen;
+    colors[COLOR_YELLOW]  = xc_app_data.colorYellow;
+    colors[COLOR_BLUE]    = xc_app_data.colorBlue;
+    colors[COLOR_MAGENTA] = xc_app_data.colorMagenta;
+    colors[COLOR_CYAN]    = xc_app_data.colorCyan;
+    colors[COLOR_WHITE]   = xc_app_data.colorWhite;
+
+    colors[COLOR_BLACK + 8]   = xc_app_data.colorBoldBlack;
+    colors[COLOR_RED + 8]     = xc_app_data.colorBoldRed;
+    colors[COLOR_GREEN + 8]   = xc_app_data.colorBoldGreen;
+    colors[COLOR_YELLOW + 8]  = xc_app_data.colorBoldYellow;
+    colors[COLOR_BLUE + 8]    = xc_app_data.colorBoldBlue;
+    colors[COLOR_MAGENTA + 8] = xc_app_data.colorBoldMagenta;
+    colors[COLOR_CYAN + 8]    = xc_app_data.colorBoldCyan;
+    colors[COLOR_WHITE + 8]   = xc_app_data.colorBoldWhite;
+
+#define RGB(R, G, B) ( ((unsigned long)(R) << 16) | \
+                       ((unsigned long)(G) << 8) | \
+                       ((unsigned long)(B)) )
+
+    /* 256-color xterm extended palette: 216 colors in a 6x6x6 color
+       cube, plus 24 shades of gray */
+
+    for (i = 16, r = 0; r < 6; r++)
+        for (g = 0; g < 6; g++)
+            for (b = 0; b < 6; b++)
+                colors[i++] = RGB(r ? r * 40 + 55 : 0,
+                                  g ? g * 40 + 55 : 0,
+                                  b ? b * 40 + 55 : 0);
+    for (i = 0; i < 24; i++)
+        colors[i + 232] = RGB(i * 10 + 8, i * 10 + 8, i * 10 + 8);
+
+#undef RGB
+
+    colors[COLOR_CURSOR] = xc_app_data.cursorColor;
+    colors[COLOR_BORDER] = xc_app_data.borderColor;
+}
+
 /* open the physical screen -- allocate SP, miscellaneous intialization */
 
 int PDC_scr_open(int argc, char **argv)
@@ -30,6 +74,8 @@ int PDC_scr_open(int argc, char **argv)
 
     if ((XCursesInitscr(argc, argv) == ERR) || !SP)
         return ERR;
+
+    _initialize_colors();
 
     SP->cursrow = SP->curscol = 0;
     SP->orig_attr = FALSE;

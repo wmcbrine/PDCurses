@@ -103,6 +103,10 @@ extern Widget topLevel, drawing;
 #define XCURSESWIN     (XtWindow(drawing))
 
 extern Pixel colors[PDC_MAXCOL + 2];
+
+#define COLOR_CURSOR PDC_MAXCOL     /* color of cursor */
+#define COLOR_BORDER PDC_MAXCOL + 1 /* color of border */
+
 extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
 extern char *program_name;
 extern int XCursesLINES;

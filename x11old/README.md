@@ -235,14 +235,6 @@ the kernel value for SHMMIN. This ensures that a shared memory segment
 will always be bigger than the kernel value for SHMMIN (and hopefully
 less than SHMMAX!) Default: 0
 
-### borderColor
-
-The color of the border around the screen. Default: black
-
-### borderWidth
-
-The width in pixels of the border around the screen. Default: 0
-
 ### clickPeriod
 
 The period (in milliseconds) between a button press and a button release

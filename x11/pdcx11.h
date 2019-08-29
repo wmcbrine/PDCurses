@@ -71,8 +71,6 @@ typedef struct
     char *bitmap;
     char *pixmap;
     Cursor pointer;
-    int borderWidth;
-    int borderColor;
     int clickPeriod;
     int doubleClickPeriod;
     int scrollbarWidth;
@@ -92,7 +90,6 @@ void XCursesExit(void);
 
 void XC_blink_cursor(XtPointer, XtIntervalId *);
 void XC_blink_text(XtPointer, XtIntervalId *);
-void XC_draw_border(void);
 void XC_redraw_cursor(void);
 bool XC_scrollbar_init(void);
 
@@ -102,12 +99,11 @@ extern Widget topLevel, drawing;
 #define XCURSESDISPLAY (XtDisplay(drawing))
 #define XCURSESWIN     (XtWindow(drawing))
 
-extern Pixel colors[PDC_MAXCOL + 2];
+extern Pixel colors[PDC_MAXCOL + 1];
 
 #define COLOR_CURSOR PDC_MAXCOL     /* color of cursor */
-#define COLOR_BORDER PDC_MAXCOL + 1 /* color of border */
 
-extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
+extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
 extern char *program_name;
 extern int XCursesLINES;
 extern int XCursesCOLS;

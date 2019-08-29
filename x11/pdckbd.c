@@ -352,10 +352,8 @@ static unsigned long _process_mouse_event(XEvent *event)
 
     SP->mouse_status.changes = 0;
 
-    SP->mouse_status.x = (event->xbutton.x - xc_app_data.borderWidth) /
-                         font_width;
-    SP->mouse_status.y = (event->xbutton.y - xc_app_data.borderWidth) /
-                         font_height;
+    SP->mouse_status.x = event->xbutton.x / font_width;
+    SP->mouse_status.y = event->xbutton.y / font_height;
 
     switch(event->type)
     {
@@ -451,7 +449,7 @@ static unsigned long _process_mouse_event(XEvent *event)
         SP->mouse_status.button[button_no - 1] |= BUTTON_ALT;
 
     /* If we are ignoring the event, or the mouse position is outside
-       the bounds of the screen (because of the border), return here */
+       the bounds of the screen, return here */
 
     if (SP->mouse_status.x < 0 || SP->mouse_status.x >= XCursesCOLS ||
         SP->mouse_status.y < 0 || SP->mouse_status.y >= XCursesLINES)

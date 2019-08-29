@@ -53,9 +53,8 @@ bool vertical_cursor = FALSE;
 
 static void _make_xy(int x, int y, int *xpos, int *ypos)
 {
-    *xpos = (x * font_width) + xc_app_data.borderWidth;
-    *ypos = xc_app_data.normalFont->ascent + (y * font_height) +
-            xc_app_data.borderWidth;
+    *xpos = x * font_width;
+    *ypos = xc_app_data.normalFont->ascent + (y * font_height);
 }
 
 static void _set_cursor_color(chtype *ch, short *fore, short *back)
@@ -199,7 +198,6 @@ void XC_blink_text(XtPointer unused, XtIntervalId *id)
     }
 
     XC_redraw_cursor();
-    XC_draw_border();
 
     if ((SP->termattrs & A_BLINK) || !blinked_off)
         XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,

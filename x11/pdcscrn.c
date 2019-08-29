@@ -2,7 +2,7 @@
 
 #include "pdcx11.h"
 
-Pixel colors[PDC_MAXCOL + 2];
+Pixel colors[PDC_MAXCOL + 1];
 
 /* COLOR_PAIR to attribute encoding table. */
 
@@ -61,7 +61,6 @@ static void _initialize_colors(void)
 #undef RGB
 
     colors[COLOR_CURSOR] = xc_app_data.cursorColor;
-    colors[COLOR_BORDER] = xc_app_data.borderColor;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */
@@ -100,19 +99,15 @@ int PDC_resize_screen(int nlines, int ncols)
     if (nlines || ncols || !SP->resized)
         return ERR;
 
-    SP->lines = XCursesLINES = ((resize_window_height -
-        (2 * xc_app_data.borderWidth)) / font_height);
+    SP->lines = XCursesLINES = resize_window_height / font_height;
 
     LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
 
-    SP->cols = COLS = XCursesCOLS = ((resize_window_width -
-        (2 * xc_app_data.borderWidth)) / font_width);
+    SP->cols = COLS = XCursesCOLS = resize_window_width / font_width;
 
     window_width = resize_window_width;
     window_height = resize_window_height;
     visible_cursor = TRUE;
-
-    XC_draw_border();
 
     XCursesLINES = SP->lines;
     XCursesCOLS = SP->cols;

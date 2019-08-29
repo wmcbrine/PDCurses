@@ -20,7 +20,7 @@ XCursesAppData xc_app_data;
 
 static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
 
-GC normal_gc, rect_cursor_gc, italic_gc, bold_gc, border_gc;
+GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
 int window_width, window_height;
 int resize_window_width = 0, resize_window_height = 0;
 
@@ -129,10 +129,6 @@ static XtResource app_resources[] =
 
     RPIXEL(pointerForeColor, PointerForeColor, Black),
     RPIXEL(pointerBackColor, PointerBackColor, White),
-
-    RINT(borderWidth, BorderWidth, 0),
-
-    RPIXEL(borderColor, BorderColor, Black),
 
     RINT(doubleClickPeriod, DoubleClickPeriod, (PDC_CLICK_PERIOD * 2)),
     RINT(clickPeriod, ClickPeriod, PDC_CLICK_PERIOD),
@@ -286,18 +282,6 @@ static void _get_icon(void)
     }
 }
 
-void XC_draw_border(void)
-{
-    /* Draw the border if required */
-
-    if (xc_app_data.borderWidth)
-        XDrawRectangle(XCURSESDISPLAY, XCURSESWIN, border_gc,
-                       xc_app_data.borderWidth / 2,
-                       xc_app_data.borderWidth / 2,
-                       window_width - xc_app_data.borderWidth,
-                       window_height - xc_app_data.borderWidth);
-}
-
 /* Redraw the entire screen */
 
 static void _display_screen(void)
@@ -313,7 +297,6 @@ static void _display_screen(void)
         PDC_transform_line(row, 0, COLS, curscr->_y[row]);
 
     XC_redraw_cursor();
-    XC_draw_border();
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
@@ -397,7 +380,6 @@ void XCursesExit(void)
     XFreeGC(XCURSESDISPLAY, italic_gc);
     XFreeGC(XCURSESDISPLAY, bold_gc);
     XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
-    XFreeGC(XCURSESDISPLAY, border_gc);
     XDestroyIC(Xic);
 
     _exit(0);
@@ -428,7 +410,6 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
 
         received_map_notify = 1;
 
-        XC_draw_border();
         break;
 
     default:
@@ -509,14 +490,11 @@ int XCursesInitscr(int argc, char *argv[])
     XCursesCOLS = xc_app_data.cols;
     XCursesLINES = xc_app_data.lines;
 
-    window_width = font_width * XCursesCOLS +
-                   2 * xc_app_data.borderWidth;
+    window_width = font_width * XCursesCOLS;
+    window_height = font_height * XCursesLINES;
 
-    window_height = font_height * XCursesLINES +
-                    2 * xc_app_data.borderWidth;
-
-    minwidth = font_width * 2 + xc_app_data.borderWidth * 2;
-    minheight = font_height * 2 + xc_app_data.borderWidth * 2;
+    minwidth = font_width * 2;
+    minheight = font_height * 2;
 
     /* Set up the icon for the application; the default is an internal
        one for PDCurses. Then set various application level resources. */
@@ -524,8 +502,7 @@ int XCursesInitscr(int argc, char *argv[])
     _get_icon();
 
     XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
-                  minheight, XtNbaseWidth, xc_app_data.borderWidth * 2,
-                  XtNbaseHeight, xc_app_data.borderWidth * 2,
+                  minheight, XtNbaseWidth, 0, XtNbaseHeight, 0,
                   XtNbackground, 0, XtNiconPixmap, icon_pixmap,
                   XtNiconMask, icon_pixmap_mask, NULL);
 
@@ -614,12 +591,7 @@ int XCursesInitscr(int argc, char *argv[])
     _get_gc(&rect_cursor_gc, xc_app_data.normalFont,
             COLOR_CURSOR, COLOR_BLACK);
 
-    _get_gc(&border_gc, xc_app_data.normalFont, COLOR_BORDER, COLOR_BLACK);
-
     XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2,
-                       LineSolid, CapButt, JoinMiter);
-
-    XSetLineAttributes(XCURSESDISPLAY, border_gc, xc_app_data.borderWidth,
                        LineSolid, CapButt, JoinMiter);
 
     /* Set the cursor for the application */

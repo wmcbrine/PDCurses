@@ -193,14 +193,6 @@ manager (color) for the application's icon, The file is an X11 pixmap.
 This resource overrides the "bitmap" resource. Default: a 32x32 or 64x64
 pixmap depending on the window manager
 
-### borderColor
-
-The color of the border around the screen. Default: black
-
-### borderWidth
-
-The width in pixels of the border around the screen. Default: 0
-
 ### clickPeriod
 
 The period (in milliseconds) between a button press and a button release

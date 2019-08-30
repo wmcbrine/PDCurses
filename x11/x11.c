@@ -510,14 +510,6 @@ int XCursesInitscr(int argc, char *argv[])
 
     if (!XC_scrollbar_init())
     {
-        //drawing = XtVaCreateManagedWidget(program_name, boxWidgetClass,
-        //    topLevel, XtNwidth, window_width, XtNheight, window_height,
-        //    XtNbackground, 0, XtNwidthInc, font_width,
-        //    XtNheightInc, font_height, NULL);
-
-        //XtVaSetValues(topLevel, XtNwidthInc, font_width, XtNheightInc,
-        //              font_height, NULL);
-
         drawing = topLevel;
 
         XtVaSetValues(topLevel, XtNwidth, window_width, XtNheight,

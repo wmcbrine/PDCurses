@@ -29,17 +29,6 @@
 #include <StringDefs.h>
 #include <Shell.h>
 
-#ifdef USE_XAW3D
-# include <Xaw3d/Box.h>
-# include <Xaw3d/Scrollbar.h>
-#elif defined(USE_NEXTAW)
-# include <neXtaw/Box.h>
-# include <neXtaw/Scrollbar.h>
-#else
-# include <Xaw/Box.h>
-# include <Xaw/Scrollbar.h>
-#endif
-
 #include <Xatom.h>
 
 typedef struct

@@ -567,6 +567,12 @@ int XC_kb_setup(void)
         long im_event_mask;
 
         XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
+
+        /* Add in the mouse events */
+
+        im_event_mask |= ButtonPressMask | ButtonReleaseMask |
+                         ButtonMotionMask;
+
         if (im_event_mask)
             XtAddEventHandler(drawing, im_event_mask, False,
                               _dummy_handler, NULL);

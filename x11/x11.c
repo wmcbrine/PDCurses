@@ -18,8 +18,6 @@ XCursesAppData xc_app_data;
 #include "../common/icon64.xpm"
 #include "../common/icon32.xpm"
 
-static void XCursesButton(Widget, XEvent *, String *, Cardinal *);
-
 GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
 int window_width, window_height;
 int resize_window_width = 0, resize_window_height = 0;
@@ -175,18 +173,6 @@ static XrmOptionDescRec options[] =
 
 #undef CCOLOR
 #undef COPT
-
-static XtActionsRec action_table[] =
-{
-    {"XCursesButton",         (XtActionProc)XCursesButton}
-};
-
-static const char *default_translations =
-{
-    "<BtnDown>: XCursesButton() \n" \
-    "<BtnUp>: XCursesButton() \n" \
-    "<BtnMotion>: XCursesButton()"
-};
 
 static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 {
@@ -363,11 +349,6 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
     }
 }
 
-static void XCursesButton(Widget w, XEvent *event, String *params,
-                          Cardinal *nparams)
-{
-}
-
 void XCursesExit(void)
 {
     if (icon_pixmap)
@@ -530,12 +511,6 @@ int XCursesInitscr(int argc, char *argv[])
             window_height, XtNwidthInc, font_width, XtNheightInc,
             font_height, NULL);
     }
-
-    /* Process any default translations */
-
-    XtAugmentTranslations(drawing,
-                          XtParseTranslationTable(default_translations));
-    XtAppAddActions(app_context, action_table, XtNumber(action_table));
 
     /* Determine text cursor alignment from resources */
 

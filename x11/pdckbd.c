@@ -573,10 +573,7 @@ int XC_kb_setup(void)
         im_event_mask |= ButtonPressMask | ButtonReleaseMask |
                          ButtonMotionMask;
 
-        if (im_event_mask)
-            XtAddEventHandler(drawing, im_event_mask, False,
-                              _dummy_handler, NULL);
-
+        XtAddEventHandler(drawing, im_event_mask, False, _dummy_handler, NULL);
         XSetICFocus(Xic);
     }
     else

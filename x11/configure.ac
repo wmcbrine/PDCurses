@@ -41,13 +41,11 @@ AC_PROG_MAKE_SET
 dnl Checks for libraries.
 
 dnl we check for dlfcn.h or dl.h so we know if we can build shared objects
-AC_CHECK_HEADERS(sys/time.h \
-	dlfcn.h \
+AC_CHECK_HEADERS(dlfcn.h \
 	dl.h
 )
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_TIME
 MH_CHECK_LIB(nls)
 AC_SUBST(MH_EXTRA_LIBS)
 MH_CHECK_CC_O

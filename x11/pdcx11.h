@@ -80,7 +80,7 @@ void XCursesExit(void);
 void XC_blink_cursor(XtPointer, XtIntervalId *);
 void XC_blink_text(XtPointer, XtIntervalId *);
 void XC_redraw_cursor(void);
-bool XC_scrollbar_init(void);
+bool XC_scrollbar_init(const char *);
 
 extern XtAppContext app_context;
 extern Widget topLevel, drawing;
@@ -93,7 +93,6 @@ extern Pixel colors[PDC_MAXCOL + 1];
 #define COLOR_CURSOR PDC_MAXCOL     /* color of cursor */
 
 extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
-extern char *program_name;
 extern int XCursesLINES;
 extern int XCursesCOLS;
 extern int font_height, font_width, font_ascent, font_descent;

@@ -36,7 +36,6 @@ static Pixmap icon_pixmap_mask;
 bool window_entered = TRUE;
 
 static bool exposed = FALSE;
-char *program_name;
 
 bool blinked_off;
 
@@ -423,14 +422,67 @@ static void _dummy_handler(Widget w, XtPointer client_data,
 {
 }
 
+static void _pointer_setup(void)
+{
+    XColor pointerforecolor, pointerbackcolor;
+    XrmValue rmfrom, rmto;
+
+    XDefineCursor(XCURSESDISPLAY, XCURSESWIN, xc_app_data.pointer);
+    rmfrom.size = sizeof(Pixel);
+    rmto.size = sizeof(XColor);
+
+    rmto.addr = (XPointer)&pointerforecolor;
+    rmfrom.addr = (XPointer)&(xc_app_data.pointerForeColor);
+    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
+
+    rmfrom.size = sizeof(Pixel);
+    rmto.size = sizeof(XColor);
+
+    rmfrom.addr = (XPointer)&(xc_app_data.pointerBackColor);
+    rmto.addr = (XPointer)&pointerbackcolor;
+    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
+
+    XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
+                   &pointerforecolor, &pointerbackcolor);
+}
+
+static int _kb_setup(void)
+{
+    Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
+
+    if (Xim)
+    {
+        Xic = XCreateIC(Xim, XNInputStyle,
+                        XIMPreeditNothing | XIMStatusNothing,
+                        XNClientWindow, XCURSESWIN, NULL);
+    }
+
+    if (Xic)
+    {
+        long im_event_mask;
+
+        XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
+        if (im_event_mask)
+            XtAddEventHandler(drawing, im_event_mask, False,
+                              _dummy_handler, NULL);
+
+        XSetICFocus(Xic);
+    }
+    else
+    {
+        perror("ERROR: Cannot create input context");
+        return ERR;
+    }
+
+    return OK;
+}
+
 int XCursesInitscr(int argc, char *argv[])
 {
     char *myargv[] = {"PDCurses", NULL};
     extern bool sb_started;
 
     bool italic_font_valid, bold_font_valid;
-    XColor pointerforecolor, pointerbackcolor;
-    XrmValue rmfrom, rmto;
     int i = 0;
     int minwidth, minheight;
 
@@ -441,8 +493,6 @@ int XCursesInitscr(int argc, char *argv[])
         argv = myargv;
         argc = 1;
     }
-
-    program_name = argv[0];
 
     /* Start defining X Toolkit things */
 
@@ -508,7 +558,7 @@ int XCursesInitscr(int argc, char *argv[])
 
     /* Create a widget in which to draw */
 
-    if (!XC_scrollbar_init())
+    if (!XC_scrollbar_init(argv[0]))
     {
         drawing = topLevel;
 
@@ -586,51 +636,12 @@ int XCursesInitscr(int argc, char *argv[])
     XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2,
                        LineSolid, CapButt, JoinMiter);
 
-    /* Set the cursor for the application */
+    /* Set the pointer for the application */
 
-    XDefineCursor(XCURSESDISPLAY, XCURSESWIN, xc_app_data.pointer);
-    rmfrom.size = sizeof(Pixel);
-    rmto.size = sizeof(XColor);
+    _pointer_setup();
 
-    rmto.addr = (XPointer)&pointerforecolor;
-    rmfrom.addr = (XPointer)&(xc_app_data.pointerForeColor);
-    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-
-    rmfrom.size = sizeof(Pixel);
-    rmto.size = sizeof(XColor);
-
-    rmfrom.addr = (XPointer)&(xc_app_data.pointerBackColor);
-    rmto.addr = (XPointer)&pointerbackcolor;
-    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
-
-    XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
-                   &pointerforecolor, &pointerbackcolor);
-
-    Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
-
-    if (Xim)
-    {
-        Xic = XCreateIC(Xim, XNInputStyle,
-                        XIMPreeditNothing | XIMStatusNothing,
-                        XNClientWindow, XCURSESWIN, NULL);
-    }
-
-    if (Xic)
-    {
-        long im_event_mask;
-
-        XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
-        if (im_event_mask)
-            XtAddEventHandler(drawing, im_event_mask, False,
-                              _dummy_handler, NULL);
-
-        XSetICFocus(Xic);
-    }
-    else
-    {
-        perror("ERROR: Cannot create input context");
+    if (ERR == _kb_setup())
         return ERR;
-    }
 
     while (!exposed)
     {

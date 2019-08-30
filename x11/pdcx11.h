@@ -79,6 +79,7 @@ void XCursesExit(void);
 
 void XC_blink_cursor(XtPointer, XtIntervalId *);
 void XC_blink_text(XtPointer, XtIntervalId *);
+int XC_kb_setup(void);
 void XC_redraw_cursor(void);
 bool XC_scrollbar_init(const char *);
 
@@ -100,7 +101,6 @@ extern int window_width, window_height;
 extern int resize_window_width, resize_window_height;
 
 extern bool xc_resize_now;
-extern XIM Xim;
 extern XIC Xic;
 extern bool blinked_off;
 extern bool vertical_cursor;

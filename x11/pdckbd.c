@@ -159,8 +159,8 @@ static struct
 };
 
 static KeySym keysym = 0;
+static XIM Xim = NULL;
 
-XIM Xim = NULL;
 XIC Xic = NULL;
 
 #ifdef MOUSE_DEBUG
@@ -543,5 +543,41 @@ int PDC_mouse_set(void)
 
 int PDC_modifiers_set(void)
 {
+    return OK;
+}
+
+static void _dummy_handler(Widget w, XtPointer client_data,
+                           XEvent *event, Boolean *unused)
+{
+}
+
+int XC_kb_setup(void)
+{
+    Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
+
+    if (Xim)
+    {
+        Xic = XCreateIC(Xim, XNInputStyle,
+                        XIMPreeditNothing | XIMStatusNothing,
+                        XNClientWindow, XCURSESWIN, NULL);
+    }
+
+    if (Xic)
+    {
+        long im_event_mask;
+
+        XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
+        if (im_event_mask)
+            XtAddEventHandler(drawing, im_event_mask, False,
+                              _dummy_handler, NULL);
+
+        XSetICFocus(Xic);
+    }
+    else
+    {
+        perror("ERROR: Cannot create input context");
+        return ERR;
+    }
+
     return OK;
 }

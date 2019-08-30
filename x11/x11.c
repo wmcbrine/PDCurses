@@ -417,11 +417,6 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
     }
 }
 
-static void _dummy_handler(Widget w, XtPointer client_data,
-                           XEvent *event, Boolean *unused)
-{
-}
-
 static void _pointer_setup(void)
 {
     XColor pointerforecolor, pointerbackcolor;
@@ -444,37 +439,6 @@ static void _pointer_setup(void)
 
     XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
                    &pointerforecolor, &pointerbackcolor);
-}
-
-static int _kb_setup(void)
-{
-    Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
-
-    if (Xim)
-    {
-        Xic = XCreateIC(Xim, XNInputStyle,
-                        XIMPreeditNothing | XIMStatusNothing,
-                        XNClientWindow, XCURSESWIN, NULL);
-    }
-
-    if (Xic)
-    {
-        long im_event_mask;
-
-        XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
-        if (im_event_mask)
-            XtAddEventHandler(drawing, im_event_mask, False,
-                              _dummy_handler, NULL);
-
-        XSetICFocus(Xic);
-    }
-    else
-    {
-        perror("ERROR: Cannot create input context");
-        return ERR;
-    }
-
-    return OK;
 }
 
 int XCursesInitscr(int argc, char *argv[])
@@ -640,7 +604,7 @@ int XCursesInitscr(int argc, char *argv[])
 
     _pointer_setup();
 
-    if (ERR == _kb_setup())
+    if (ERR == XC_kb_setup())
         return ERR;
 
     while (!exposed)

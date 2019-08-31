@@ -159,15 +159,6 @@ void XC_redraw_cursor(void)
     _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
 }
 
-void XC_blink_cursor(XtPointer unused, XtIntervalId *id)
-{
-    PDC_LOG(("XC_blink_cursor() - called:\n"));
-
-    XCursesDisplayCursor();
-    XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
-                    XC_blink_cursor, NULL);
-}
-
 void XC_blink_text(XtPointer unused, XtIntervalId *id)
 {
     int row;
@@ -204,17 +195,9 @@ void XC_blink_text(XtPointer unused, XtIntervalId *id)
                         XC_blink_text, NULL);
 }
 
-void XCursesCursor(int old_row, int old_x, int new_row, int new_x)
+static void _toggle_cursor(void)
 {
-    PDC_LOG(("XCursesCursor - called\n"));
-
-    visible_cursor = TRUE;
-    _display_cursor(old_row, old_x, new_row, new_x);
-}
-
-void XCursesDisplayCursor(void)
-{
-    PDC_LOG(("XCursesDisplayCursor - called. Vis now: "));
+    PDC_LOG(("_toggle_cursor - called. Vis now: "));
     PDC_LOG((visible_cursor ? "1\n" : "0\n"));
 
     /* If the window is not active, ignore this command. The
@@ -249,11 +232,23 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
              newrow, newcol, visibility));
 
     if (visibility == -1)
-        XCursesDisplayCursor();
+        _toggle_cursor();
     else
-        XCursesCursor(oldrow, oldcol, newrow, newcol);
+    {
+        visible_cursor = TRUE;
+        _display_cursor(oldrow, oldcol, newrow, newcol);
+    }
 
     return OK;
+}
+
+void XC_blink_cursor(XtPointer unused, XtIntervalId *id)
+{
+    PDC_LOG(("XC_blink_cursor() - called:\n"));
+
+    _toggle_cursor();
+    XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
+                    XC_blink_cursor, NULL);
 }
 
 /* position hardware cursor at (y, x) */

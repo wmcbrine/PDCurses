@@ -60,8 +60,6 @@ extern XCursesAppData xc_app_data;
 
 int PDC_display_cursor(int, int, int, int, int);
 
-void XCursesCursor(int, int, int, int);
-void XCursesDisplayCursor(void);
 int XCursesInitscr(int, char **);
 void XCursesExit(void);
 

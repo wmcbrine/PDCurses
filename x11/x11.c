@@ -37,8 +37,6 @@ static bool exposed = FALSE;
 
 bool blinked_off;
 
-int XCursesLINES = 24;
-int XCursesCOLS = 80;
 int font_height, font_width, font_ascent, font_descent;
 
 bool xc_resize_now = FALSE;
@@ -273,7 +271,7 @@ static void _display_screen(void)
     if (!curscr)
         return;
 
-    for (row = 0; row < XCursesLINES; row++)
+    for (row = 0; row < SP->lines; row++)
         PDC_transform_line(row, 0, COLS, curscr->_y[row]);
 
     XC_redraw_cursor();
@@ -476,11 +474,11 @@ int XCursesInitscr(int argc, char *argv[])
 
     /* Calculate size of display window */
 
-    XCursesCOLS = xc_app_data.cols;
-    XCursesLINES = xc_app_data.lines;
+    COLS = xc_app_data.cols;
+    LINES = xc_app_data.lines;
 
-    window_width = font_width * XCursesCOLS;
-    window_height = font_height * XCursesLINES;
+    window_width = font_width * COLS;
+    window_height = font_height * LINES;
 
     minwidth = font_width * 2;
     minheight = font_height * 2;
@@ -511,15 +509,10 @@ int XCursesInitscr(int argc, char *argv[])
     if (!strcmp(xc_app_data.textCursor, "vertical"))
         vertical_cursor = TRUE;
 
-    /* Now have LINES and COLS. */
-
-    LINES = XCursesLINES;
-    COLS = XCursesCOLS;
-
     SP = calloc(1, sizeof(SCREEN));
 
-    SP->lines = XCursesLINES;
-    SP->cols = XCursesCOLS;
+    SP->lines = LINES;
+    SP->cols = COLS;
 
     SP->mouse_wait = xc_app_data.clickPeriod;
     SP->audible = TRUE;
@@ -584,9 +577,7 @@ int XCursesInitscr(int argc, char *argv[])
         XtDispatchEvent(&event);
     }
 
-    XCursesLINES = SP->lines;
-    LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
-    XCursesCOLS = COLS = SP->cols;
+    LINES = LINES - SP->linesrippedoff - SP->slklines;
 
     atexit(XCursesExit);
 

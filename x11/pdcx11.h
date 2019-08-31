@@ -80,8 +80,6 @@ extern Widget topLevel, drawing;
 extern Pixel colors[PDC_MAXCOL];
 
 extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
-extern int XCursesLINES;
-extern int XCursesCOLS;
 extern int font_height, font_width, font_ascent, font_descent;
 extern int window_width, window_height;
 extern int resize_window_width, resize_window_height;

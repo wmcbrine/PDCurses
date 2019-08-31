@@ -97,18 +97,15 @@ int PDC_resize_screen(int nlines, int ncols)
     if (nlines || ncols || !SP->resized)
         return ERR;
 
-    SP->lines = XCursesLINES = resize_window_height / font_height;
+    SP->lines = resize_window_height / font_height;
 
-    LINES = XCursesLINES - SP->linesrippedoff - SP->slklines;
+    LINES = SP->lines - SP->linesrippedoff - SP->slklines;
 
-    SP->cols = COLS = XCursesCOLS = resize_window_width / font_width;
+    SP->cols = COLS = resize_window_width / font_width;
 
     window_width = resize_window_width;
     window_height = resize_window_height;
     visible_cursor = TRUE;
-
-    XCursesLINES = SP->lines;
-    XCursesCOLS = SP->cols;
 
     SP->resized = FALSE;
 

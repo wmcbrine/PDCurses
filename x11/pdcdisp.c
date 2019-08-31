@@ -97,8 +97,8 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
     /* if the cursor position is outside the boundary of the screen,
        ignore the request */
 
-    if (old_row >= XCursesLINES || old_x >= COLS ||
-        new_row >= XCursesLINES || new_x >= COLS)
+    if (old_row >= SP->lines || old_x >= COLS ||
+        new_row >= SP->lines || new_x >= COLS)
         return;
 
     /* display the character at the current cursor position */
@@ -180,7 +180,7 @@ void XC_blink_text(XtPointer unused, XtIntervalId *id)
 
     /* Redraw changed lines on the screen to match the blink state */
 
-    for (row = 0; row < XCursesLINES; row++)
+    for (row = 0; row < SP->lines; row++)
     {
         ch = curscr->_y[row];
 

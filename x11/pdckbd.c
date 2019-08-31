@@ -451,8 +451,8 @@ static unsigned long _process_mouse_event(XEvent *event)
     /* If we are ignoring the event, or the mouse position is outside
        the bounds of the screen, return here */
 
-    if (SP->mouse_status.x < 0 || SP->mouse_status.x >= XCursesCOLS ||
-        SP->mouse_status.y < 0 || SP->mouse_status.y >= XCursesLINES)
+    if (SP->mouse_status.x < 0 || SP->mouse_status.x >= SP->cols ||
+        SP->mouse_status.y < 0 || SP->mouse_status.y >= SP->lines)
         return -1;
 
     /* Send the KEY_MOUSE to curses program */

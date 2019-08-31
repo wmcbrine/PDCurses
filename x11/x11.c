@@ -423,7 +423,6 @@ int XCursesInitscr(int argc, char *argv[])
     extern bool sb_started;
 
     bool italic_font_valid, bold_font_valid;
-    int i = 0;
     int minwidth, minheight;
 
     PDC_LOG(("XCursesInitscr() - called\n"));

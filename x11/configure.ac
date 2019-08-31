@@ -31,8 +31,6 @@ case "$target" in
 esac
 AC_SUBST(SYS_DEFS)
 
-MH_CHECK_MAX_SIGNALS(NSIG __sys_nsig)
-
 dnl Check for other programs.
 AC_PROG_RANLIB
 AC_PROG_INSTALL

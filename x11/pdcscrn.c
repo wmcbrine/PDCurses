@@ -2,7 +2,7 @@
 
 #include "pdcx11.h"
 
-Pixel colors[PDC_MAXCOL + 1];
+Pixel colors[PDC_MAXCOL];
 
 /* COLOR_PAIR to attribute encoding table. */
 
@@ -59,8 +59,6 @@ static void _initialize_colors(void)
         colors[i + 232] = RGB(i * 10 + 8, i * 10 + 8, i * 10 + 8);
 
 #undef RGB
-
-    colors[COLOR_CURSOR] = xc_app_data.cursorColor;
 }
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */

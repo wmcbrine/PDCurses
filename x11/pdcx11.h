@@ -24,7 +24,6 @@ typedef struct
 {
     int lines;
     int cols;
-    Pixel cursorColor;
     Pixel colorBlack;
     Pixel colorRed;
     Pixel colorGreen;
@@ -78,9 +77,7 @@ extern Widget topLevel, drawing;
 #define XCURSESDISPLAY (XtDisplay(drawing))
 #define XCURSESWIN     (XtWindow(drawing))
 
-extern Pixel colors[PDC_MAXCOL + 1];
-
-#define COLOR_CURSOR PDC_MAXCOL     /* color of cursor */
+extern Pixel colors[PDC_MAXCOL];
 
 extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
 extern int XCursesLINES;

@@ -96,8 +96,6 @@ static XtResource app_resources[] =
     RINT(lines, Lines, 24),
     RINT(cols, Cols, 80),
 
-    RPIXEL(cursorColor, CursorColor, Red),
-
     RCOLOR(Black, Black),
     RCOLOR(Red, red3),
     RCOLOR(Green, green3),
@@ -155,13 +153,10 @@ static XtResource app_resources[] =
 static XrmOptionDescRec options[] =
 {
     COPT(lines), COPT(cols), COPT(normalFont), COPT(italicFont),
-    COPT(boldFont), COPT(bitmap),
-    COPT(pixmap),
-    COPT(pointer), COPT(clickPeriod),
-    COPT(doubleClickPeriod), COPT(scrollbarWidth),
+    COPT(boldFont), COPT(bitmap), COPT(pixmap), COPT(pointer),
+    COPT(clickPeriod), COPT(doubleClickPeriod), COPT(scrollbarWidth),
     COPT(pointerForeColor), COPT(pointerBackColor),
-    COPT(cursorBlinkRate), COPT(cursorColor), COPT(textCursor),
-    COPT(textBlinkRate),
+    COPT(cursorBlinkRate), COPT(textCursor), COPT(textBlinkRate),
 
     CCOLOR(Black), CCOLOR(Red), CCOLOR(Green), CCOLOR(Yellow),
     CCOLOR(Blue), CCOLOR(Magenta), CCOLOR(Cyan), CCOLOR(White),
@@ -570,7 +565,7 @@ int XCursesInitscr(int argc, char *argv[])
             xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
     _get_gc(&rect_cursor_gc, xc_app_data.normalFont,
-            COLOR_CURSOR, COLOR_BLACK);
+            COLOR_WHITE, COLOR_BLACK);
 
     XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2,
                        LineSolid, CapButt, JoinMiter);

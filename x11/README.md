@@ -110,8 +110,6 @@ The foreground color of the pointer. Default: black
 
 The background color of the pointer. Default: white
 
-### cursorColor
-
 ### textCursor
 
 The alignment of the text cursor; horizontal or vertical. Default:

@@ -5,14 +5,16 @@ This is a port of PDCurses for X11, aka XCurses.  It is designed to
 allow existing curses programs to be re-compiled with PDCurses,
 resulting in native X11 programs.
 
+This dual-process version of the X11 port is deprecated and will no
+longer be updated, but is temporarily included here for reference and
+comparison with the new single-process version.
+
 
 Building
 --------
 
-- Run "./configure". To build the wide-character version of the library,
-  specify "--enable-widec" as a parameter. I recommend this option, but
-  I haven't yet made it the default, for the sake of backwards
-  compatibility.
+- Run "./configure". To build the narrow-character version of the
+  library, specify "--disable-widec" as a parameter.
 
   If your system is lacking in UTF-8 support, you can force the use of
   UTF-8 instead of the system locale via "--enable-force-utf8".
@@ -70,49 +72,36 @@ X Resources
 
 PDCurses for X11 recognizes the following resources:
 
-### lines
+### lines, cols
 
-Specifies the number of lines the "screen" will have. Directly equates
-to LINES. There is no theoretical maximum. The minimum value must be 2.
-Default: 24
+Specify the number of lines and columns the "screen" will have. Directly
+equate to LINES and COLS. There is no theoretical maximum. The minimum
+values must each be 2. Defaults: 24, 80
 
-### cols
+### normalFont, italicFont, boldFont
 
-Specifies the number of columns the "screen" will have. Directly equates
-to COLS. There is no theoretical maximum. The minimum value must be 2.
-Default: 80
+Names of fonts to use. These should be fixed-width. italicFont and
+boldFont are used for characters with the A_ITALIC and A_BOLD
+atttributes, respectively (if PDC_set_bold(), in the case of boldFont),
+and must have the same cell size as normalFont.
 
-### normalFont
+Defaults -- wide:
+- -misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1
+- -misc-fixed-medium-o-normal--20-200-75-75-c-100-iso10646-1
+- -misc-fixed-bold-r-normal--20-200-75-75-c-100-iso10646-1
 
-The name of a fixed width font. Defaults:
-- narrow: -misc-fixed-medium-r-normal--13-120-75-75-c-70-iso8859-1
-- wide: -misc-fixed-medium-r-normal--20-200-75-75-c-100-iso10646-1
-
-### italicFont
-
-The name of a fixed width font to be used for characters with A_ITALIC
-attributes. Must have the same cell size as normalFont. Defaults:
-- narrow: -misc-fixed-medium-o-normal--13-120-75-75-c-70-iso8859-1
-- wide: -misc-fixed-medium-o-normal--20-200-75-75-c-100-iso10646-1
-
-### boldFont
-
-The name of a fixed width font to be used for characters with A_BOLD
-attributes. Must have the same cell size as normalFont. Defaults:
-- narrow: -misc-fixed-bold-r-normal--13-120-75-75-c-70-iso8859-1
-- wide: -misc-fixed-bold-r-normal--20-200-75-75-c-100-iso10646-1
+Narrow:
+- -misc-fixed-medium-r-normal--13-120-75-75-c-70-iso8859-1
+- -misc-fixed-medium-o-normal--13-120-75-75-c-70-iso8859-1
+- -misc-fixed-bold-r-normal--13-120-75-75-c-70-iso8859-1
 
 ### pointer
 
 The name of a valid pointer cursor. Default: xterm
 
-### pointerForeColor
+### pointerForeColor, pointerBackColor
 
-The foreground color of the pointer. Default: black
-
-### pointerBackColor
-
-The background color of the pointer. Default: white
+Foreground and background colors for the pointer. Defaults: black, white
 
 ### cursorColor
 
@@ -121,69 +110,26 @@ The background color of the pointer. Default: white
 The alignment of the text cursor; horizontal or vertical. Default:
 horizontal
 
-### colorBlack
+### colorBlack through colorWhite
 
-The color of the COLOR_BLACK attribute. Default: Black
+The initial values for the first eight colors, as represented by the
+curses macros COLOR_BLACK through COLOR_WHITE. Note that these can all
+be changed via init_color().
 
-### colorRed
+The defaults are Black, red3, green3, yellow3, blue3, magenta3, cyan3
+and Grey.
 
-The color of the COLOR_RED attribute. Default: red3
+### colorBoldBlack through colorBoldWhite
 
-### colorGreen
+The initial values for the next eight colors (8 through 15). When COLORS
+was limited to 8, these colors could only be accessed by combining the
+appropriate COLOR_# with the A_BOLD attribute, in the case of foreground
+colors, or A_BLINK for background colors. They can now be used directly
+by their numbers (or COLOR_# + 8). (Note that some terminals still use
+COLORS = 8.) See also PDC_set_bold() and PDC_set_blink().
 
-The color of the COLOR_GREEN attribute. Default: green3
-
-### colorYellow
-
-The color of the COLOR_YELLOW attribute. Default: yellow3
-
-### colorBlue
-
-The color of the COLOR_BLUE attribute. Default: blue3
-
-### colorMagenta
-
-The color of the COLOR_MAGENTA attribute. Default: magenta3
-
-### colorCyan
-
-The color of the COLOR_CYAN attribute. Default: cyan3
-
-### colorWhite
-
-The color of the COLOR_WHITE attribute. Default: Grey
-
-### colorBoldBlack
-
-COLOR_BLACK combined with A_BOLD. Default: grey40
-
-### colorBoldRed
-
-COLOR_RED combined with A_BOLD. Default: red1
-
-### colorBoldGreen
-
-COLOR_GREEN combined with A_BOLD. Default: green1
-
-### colorBoldYellow
-
-COLOR_YELLOW combined with A_BOLD. Default: yellow1
-
-### colorBoldBlue
-
-COLOR_BLUE combined with A_BOLD. Default: blue1
-
-### colorBoldMagenta
-
-COLOR_MAGENTA combined with A_BOLD. Default: magenta1
-
-### colorBoldCyan
-
-COLOR_CYAN combined with A_BOLD. Default: cyan1
-
-### colorBoldWhite
-
-COLOR_WHITE combined with A_BOLD. Default: White
+The defaults are grey40, red1, green1, yellow1, blue1, magenta1, cyan1
+and White.
 
 ### bitmap
 

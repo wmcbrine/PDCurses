@@ -192,5 +192,5 @@ The files in this directory are released to the public domain.
 Acknowledgements
 ----------------
 
-Original SDL port was provided by William McBrine <wmcbrine@gmail.com>
-TTF support is based on contributions by Laura Michaels.
+Original SDL port was provided by William McBrine
+TTF support based on contributions by Laura Michaels

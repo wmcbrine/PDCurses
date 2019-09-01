@@ -32,10 +32,9 @@ Usage
 -----
 
 There are no special requirements to use PDCurses for SDL -- all
-PDCurses-compatible code should work fine. (In fact, you can even build
-against the Windows console pdcurses.dll, and then swap in the SDL
-pdcurses.dll.) Nothing extra is needed beyond the base SDL library.
-However, there are some optional special features, described here.
+PDCurses-compatible code should work fine. Nothing extra is needed
+beyond the base SDL library. However, there are some optional special
+features, described here.
 
 The SDL ports operate in one of two ways, depending on whether or not
 they were built with WIDE=Y:
@@ -207,8 +206,5 @@ The files in this directory are released to the public domain.
 Acknowledgements
 ----------------
 
-The original SDL port was provided by William McBrine.
-
-The initial SDL2 support patch was created by Laura Michaels.
-
-The SDL2 port was put together and further developed by Robin Gustafsson.
+Original SDL port was provided by William McBrine
+SDL2 modifications by Laura Michaels and Robin Gustafsson

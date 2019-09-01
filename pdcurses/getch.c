@@ -101,12 +101,9 @@ static int c_gindex = 1;    /* getter index */
 static int c_ungind = 0;    /* ungetch() push index */
 static int c_ungch[NUNGETCH];   /* array of ungotten chars */
 
-static void _highlight(void)
+static int _get_box(int *y_start, int *y_end, int *x_start, int *x_end)
 {
-    int i, j, start, end, y_start, y_end, x_start, x_end;
-
-    if (-1 == SP->sel_start)
-        return;
+    int start, end;
 
     if (SP->sel_start < SP->sel_end)
     {
@@ -119,11 +116,23 @@ static void _highlight(void)
         end = SP->sel_start;
     }
 
-    y_start = start / COLS;
-    x_start = start % COLS;
+    *y_start = start / COLS;
+    *x_start = start % COLS;
 
-    y_end = end / COLS;
-    x_end = end % COLS;
+    *y_end = end / COLS;
+    *x_end = end % COLS;
+
+    return (end - start) + (*y_end - *y_start);
+}
+
+static void _highlight(void)
+{
+    int i, j, y_start, y_end, x_start, x_end;
+
+    if (-1 == SP->sel_start)
+        return;
+
+    _get_box(&y_start, &y_end, &x_start, &x_end);
 
     for (j = y_start; j <= y_end; j++)
         for (i = (j == y_start ? x_start : 0);
@@ -137,32 +146,20 @@ static void _copy(void)
 {
 #ifdef PDC_WIDE
     wchar_t *wtmp;
+# define TMP wtmp
+# define MASK A_CHARTEXT
+#else
+# define TMP tmp
+# define MASK 0xff
 #endif
     char *tmp;
     long pos;
-    int i, j, start, end, y_start, y_end, x_start, x_end, len;
+    int i, j, y_start, y_end, x_start, x_end, len;
 
     if (-1 == SP->sel_start)
         return;
 
-    if (SP->sel_start < SP->sel_end)
-    {
-        start = SP->sel_start;
-        end = SP->sel_end;
-    }
-    else
-    {
-        start = SP->sel_end;
-        end = SP->sel_start;
-    }
-
-    y_start = start / COLS;
-    x_start = start % COLS;
-
-    y_end = end / COLS;
-    x_end = end % COLS;
-
-    len = (end - start) + (y_end - y_start);
+    len = _get_box(&y_start, &y_end, &x_start, &x_end);
 
     if (!len)
         return;
@@ -174,21 +171,21 @@ static void _copy(void)
     tmp = malloc(len + 1);
 
     for (j = y_start, pos = 0; j <= y_end; j++)
+    {
         for (i = (j == y_start ? x_start : 0);
              i < (j == y_end ? x_end : COLS); i++)
-        {
-            if (j > y_start && !i)
-#ifdef PDC_WIDE
-                wtmp[pos++] = 10;
-            wtmp[pos++] = curscr->_y[j][i] & A_CHARTEXT;
-        }
+            TMP[pos++] = curscr->_y[j][i] & MASK;
 
-    wtmp[pos] = 0;
+        while (y_start != y_end && pos > 0 && TMP[pos - 1] == 32)
+            pos--;
+
+        if (j < y_end)
+            TMP[pos++] = 10;
+    }
+    TMP[pos] = 0;
+
+#ifdef PDC_WIDE
     pos = PDC_wcstombs(tmp, wtmp, len);
-#else
-                tmp[pos++] = '\n';
-            tmp[pos++] = curscr->_y[j][i] & 0xff;
-        }
 #endif
 
     PDC_setclipboard(tmp, pos);
@@ -202,6 +199,9 @@ static int _paste(void)
 {
 #ifdef PDC_WIDE
     wchar_t *wpaste;
+# define PASTE wpaste
+#else
+# define PASTE paste
 #endif
     char *paste;
     long len;
@@ -214,14 +214,12 @@ static int _paste(void)
 #ifdef PDC_WIDE
     wpaste = malloc(len * sizeof(wchar_t));
     len = PDC_mbstowcs(wpaste, paste, len);
+#endif
     while (len > 1)
-        PDC_ungetch(wpaste[--len]);
-    key = *wpaste;
+        PDC_ungetch(PASTE[--len]);
+    key = *PASTE;
+#ifdef PDC_WIDE
     free(wpaste);
-#else
-    while (len > 1)
-        PDC_ungetch(paste[--len]);
-    key = *paste;
 #endif
     PDC_freeclipboard(paste);
     SP->key_modifiers = 0;

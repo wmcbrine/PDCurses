@@ -178,6 +178,12 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
+    if (!SP)
+        return;
+
+    free(SP);
+    SP = NULL;
+
     if (icon_pixmap)
         XFreePixmap(XCURSESDISPLAY, icon_pixmap);
     if (icon_pixmap_mask)
@@ -188,8 +194,6 @@ void PDC_scr_free(void)
     XFreeGC(XCURSESDISPLAY, bold_gc);
     XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
     XDestroyIC(Xic);
-
-    _exit(0);
 }
 
 void XCursesExit(void)

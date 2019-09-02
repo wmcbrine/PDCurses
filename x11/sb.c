@@ -62,9 +62,9 @@ static void _scroll_up_down(Widget w, XtPointer client_data,
     XtPointer call_data)
 {
     int pixels = (long) call_data;
-    int total_y = SP->sb_total_y * font_height;
-    int viewport_y = SP->sb_viewport_y * font_height;
-    int cur_y = SP->sb_cur_y * font_height;
+    int total_y = SP->sb_total_y * pdc_fheight;
+    int viewport_y = SP->sb_viewport_y * pdc_fheight;
+    int cur_y = SP->sb_cur_y * pdc_fheight;
 
     /* When pixels is negative, right button pressed, move data down,
        thumb moves up.  Otherwise, left button pressed, pixels positive,
@@ -80,7 +80,7 @@ static void _scroll_up_down(Widget w, XtPointer client_data,
         if (cur_y > (total_y - viewport_y))
             cur_y = total_y - viewport_y;
 
-    SP->sb_cur_y = cur_y / font_height;
+    SP->sb_cur_y = cur_y / pdc_fheight;
 
     XawScrollbarSetThumb(w, (double)((double)cur_y / (double)total_y),
                          (double)((double)viewport_y / (double)total_y));
@@ -90,9 +90,9 @@ static void _scroll_left_right(Widget w, XtPointer client_data,
     XtPointer call_data)
 {
     int pixels = (long) call_data;
-    int total_x = SP->sb_total_x * font_width;
-    int viewport_x = SP->sb_viewport_x * font_width;
-    int cur_x = SP->sb_cur_x * font_width;
+    int total_x = SP->sb_total_x * pdc_fwidth;
+    int viewport_x = SP->sb_viewport_x * pdc_fwidth;
+    int cur_x = SP->sb_cur_x * pdc_fwidth;
 
     cur_x += pixels;
 
@@ -104,7 +104,7 @@ static void _scroll_left_right(Widget w, XtPointer client_data,
         if (cur_x > (total_x - viewport_x))
             cur_x = total_x - viewport_x;
 
-    SP->sb_cur_x = cur_x / font_width;
+    SP->sb_cur_x = cur_x / pdc_fwidth;
 
     XawScrollbarSetThumb(w, (double)((double)cur_x / (double)total_x),
                          (double)((double)viewport_x / (double)total_x));
@@ -153,35 +153,36 @@ static void _thumb_left_right(Widget w, XtPointer client_data,
 
 bool XC_scrollbar_init(const char *program_name)
 {
-    if (xc_app_data.scrollbarWidth && sb_started)
+    if (pdc_app_data.scrollbarWidth && sb_started)
     {
         scrollBox = XtVaCreateManagedWidget(program_name,
-            scrollBoxWidgetClass, topLevel, XtNwidth,
-            window_width + xc_app_data.scrollbarWidth,
-            XtNheight, window_height + xc_app_data.scrollbarWidth,
-            XtNwidthInc, font_width, XtNheightInc, font_height, NULL);
+            scrollBoxWidgetClass, pdc_toplevel, XtNwidth,
+            pdc_wwidth + pdc_app_data.scrollbarWidth,
+            XtNheight, pdc_wheight + pdc_app_data.scrollbarWidth,
+            XtNwidthInc, pdc_fwidth, XtNheightInc, pdc_fheight, NULL);
 
-        drawing = XtVaCreateManagedWidget(program_name,
+        pdc_drawing = XtVaCreateManagedWidget(program_name,
             boxWidgetClass, scrollBox, XtNwidth,
-            window_width, XtNheight, window_height, XtNwidthInc,
-            font_width, XtNheightInc, font_height, NULL);
+            pdc_wwidth, XtNheight, pdc_wheight, XtNwidthInc,
+            pdc_fwidth, XtNheightInc, pdc_fheight, NULL);
 
         scrollVert = XtVaCreateManagedWidget("scrollVert",
             scrollbarWidgetClass, scrollBox, XtNorientation,
-            XtorientVertical, XtNheight, window_height, XtNwidth,
-            xc_app_data.scrollbarWidth, NULL);
+            XtorientVertical, XtNheight, pdc_wheight, XtNwidth,
+            pdc_app_data.scrollbarWidth, NULL);
 
-        XtAddCallback(scrollVert, XtNscrollProc, _scroll_up_down, drawing);
-        XtAddCallback(scrollVert, XtNjumpProc, _thumb_up_down, drawing);
+        XtAddCallback(scrollVert, XtNscrollProc, _scroll_up_down, pdc_drawing);
+        XtAddCallback(scrollVert, XtNjumpProc, _thumb_up_down, pdc_drawing);
 
         scrollHoriz = XtVaCreateManagedWidget("scrollHoriz",
             scrollbarWidgetClass, scrollBox, XtNorientation,
-            XtorientHorizontal, XtNwidth, window_width, XtNheight,
-            xc_app_data.scrollbarWidth, NULL);
+            XtorientHorizontal, XtNwidth, pdc_wwidth, XtNheight,
+            pdc_app_data.scrollbarWidth, NULL);
 
         XtAddCallback(scrollHoriz, XtNscrollProc, _scroll_left_right,
-            drawing);
-        XtAddCallback(scrollHoriz, XtNjumpProc, _thumb_left_right, drawing);
+                      pdc_drawing);
+        XtAddCallback(scrollHoriz, XtNjumpProc, _thumb_left_right,
+                      pdc_drawing);
 
         return TRUE;
     }

@@ -58,7 +58,7 @@ void PDC_set_title(const char *title)
 {
     PDC_LOG(("PDC_set_title() - called:<%s>\n", title));
 
-    XtVaSetValues(topLevel, XtNtitle, title, NULL);
+    XtVaSetValues(pdc_toplevel, XtNtitle, title, NULL);
 }
 
 int PDC_set_blink(bool blinkon)
@@ -74,8 +74,8 @@ int PDC_set_blink(bool blinkon)
         if (!(SP->termattrs & A_BLINK))
         {
             SP->termattrs |= A_BLINK;
-            blinked_off = FALSE;
-            XtAppAddTimeOut(app_context, xc_app_data.textBlinkRate,
+            pdc_blinked_off = FALSE;
+            XtAppAddTimeOut(pdc_app_context, pdc_app_data.textBlinkRate,
                             XC_blink_text, NULL);
         }
     }

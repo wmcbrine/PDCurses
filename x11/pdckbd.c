@@ -161,7 +161,7 @@ static struct
 static KeySym keysym = 0;
 static XIM Xim = NULL;
 
-XIC Xic = NULL;
+XIC pdc_xic = NULL;
 
 #ifdef MOUSE_DEBUG
 # define MOUSE_LOG(x) printf x
@@ -228,7 +228,7 @@ static unsigned long _process_key_event(XEvent *event)
 
     buffer[0] = '\0';
 
-    count = XwcLookupString(Xic, &(event->xkey), buffer, buflen,
+    count = XwcLookupString(pdc_xic, &(event->xkey), buffer, buflen,
                             &keysym, &status);
 
     /* translate keysym into curses key code */
@@ -352,8 +352,8 @@ static unsigned long _process_mouse_event(XEvent *event)
 
     SP->mouse_status.changes = 0;
 
-    SP->mouse_status.x = event->xbutton.x / font_width;
-    SP->mouse_status.y = event->xbutton.y / font_height;
+    SP->mouse_status.x = event->xbutton.x / pdc_fwidth;
+    SP->mouse_status.y = event->xbutton.y / pdc_fheight;
 
     switch(event->type)
     {
@@ -396,16 +396,16 @@ static unsigned long _process_mouse_event(XEvent *event)
         SP->mouse_status.button[button_no - 1] = BUTTON_PRESSED;
 
         napms(SP->mouse_wait);
-        while (XtAppPending(app_context))
+        while (XtAppPending(pdc_app_context))
         {
             XEvent rel;
-            XtAppNextEvent(app_context, &rel);
+            XtAppNextEvent(pdc_app_context, &rel);
 
             if (rel.type == ButtonRelease && rel.xbutton.button == button_no)
                 SP->mouse_status.button[button_no - 1] = BUTTON_CLICKED;
             else
-                XSendEvent(XtDisplay(topLevel),
-                           RootWindowOfScreen(XtScreen(topLevel)),
+                XSendEvent(XtDisplay(pdc_toplevel),
+                           RootWindowOfScreen(XtScreen(pdc_toplevel)),
                            True, 0, &rel);
         }
 
@@ -414,7 +414,7 @@ static unsigned long _process_mouse_event(XEvent *event)
     case MotionNotify:
         MOUSE_LOG(("\nMotionNotify: y: %d x: %d Width: %d "
                    "Height: %d\n", event->xbutton.y, event->xbutton.x,
-                   font_width, font_height));
+                   pdc_fwidth, pdc_fheight));
 
         button_no = last_button_no;
 
@@ -465,11 +465,11 @@ static unsigned long _process_mouse_event(XEvent *event)
 
 bool PDC_check_key(void)
 {
-    XtInputMask s = XtAppPending(app_context);
+    XtInputMask s = XtAppPending(pdc_app_context);
 
     PDC_LOG(("PDC_check_key() - returning %s\n", s ? "TRUE" : "FALSE"));
 
-    return xc_resize_now || !!s;
+    return pdc_resize_now || !!s;
 }
 
 /* return the next available key or mouse event */
@@ -480,14 +480,14 @@ int PDC_get_key(void)
     unsigned long newkey = 0;
     int key = 0;
 
-    if (xc_resize_now)
+    if (pdc_resize_now)
     {
-        xc_resize_now = FALSE;
+        pdc_resize_now = FALSE;
         SP->key_code = TRUE;
         return KEY_RESIZE;
     }
 
-    XtAppNextEvent(app_context, &event);
+    XtAppNextEvent(pdc_app_context, &event);
 
     switch (event.type)
     {
@@ -557,24 +557,25 @@ int XC_kb_setup(void)
 
     if (Xim)
     {
-        Xic = XCreateIC(Xim, XNInputStyle,
-                        XIMPreeditNothing | XIMStatusNothing,
-                        XNClientWindow, XCURSESWIN, NULL);
+        pdc_xic = XCreateIC(Xim, XNInputStyle,
+                            XIMPreeditNothing | XIMStatusNothing,
+                            XNClientWindow, XCURSESWIN, NULL);
     }
 
-    if (Xic)
+    if (pdc_xic)
     {
         long im_event_mask;
 
-        XGetICValues(Xic, XNFilterEvents, &im_event_mask, NULL);
+        XGetICValues(pdc_xic, XNFilterEvents, &im_event_mask, NULL);
 
         /* Add in the mouse events */
 
         im_event_mask |= ButtonPressMask | ButtonReleaseMask |
                          ButtonMotionMask;
 
-        XtAddEventHandler(drawing, im_event_mask, False, _dummy_handler, NULL);
-        XSetICFocus(Xic);
+        XtAddEventHandler(pdc_drawing, im_event_mask, False,
+                          _dummy_handler, NULL);
+        XSetICFocus(pdc_xic);
     }
     else
     {

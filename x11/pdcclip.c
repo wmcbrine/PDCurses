@@ -74,7 +74,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
 {
     PDC_LOG(("_convert_proc() - called\n"));
 
-    if (*target == XA_TARGETS(XtDisplay(topLevel)))
+    if (*target == XA_TARGETS(XtDisplay(pdc_toplevel)))
     {
         XSelectionRequestEvent *req = XtGetSelectionRequest(w,
             *selection, (XtRequestId)NULL);
@@ -83,7 +83,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
         XPointer std_targets;
         unsigned long std_length;
 
-        XmuConvertStandardSelection(topLevel, req->time, selection,
+        XmuConvertStandardSelection(pdc_toplevel, req->time, selection,
                                     target, type_return, &std_targets,
                                     &std_length, format_return);
 
@@ -92,7 +92,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
 
         targetP = *(Atom**)value_return;
         *targetP++ = XA_STRING;
-        *targetP++ = XA_UTF8_STRING(XtDisplay(topLevel));
+        *targetP++ = XA_UTF8_STRING(XtDisplay(pdc_toplevel));
 
         memmove((void *)targetP, (const void *)std_targets,
                 sizeof(Atom) * std_length);
@@ -103,7 +103,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
 
         return True;
     }
-    else if (*target == XA_UTF8_STRING(XtDisplay(topLevel)) ||
+    else if (*target == XA_UTF8_STRING(XtDisplay(pdc_toplevel)) ||
              *target == XA_STRING)
     {
         char *data = XtMalloc(tmpsel_length + 1);
@@ -123,7 +123,7 @@ static Boolean _convert_proc(Widget w, Atom *selection, Atom *target,
         return True;
     }
     else
-        return XmuConvertStandardSelection(topLevel, CurrentTime,
+        return XmuConvertStandardSelection(pdc_toplevel, CurrentTime,
             selection, target, type_return, (XPointer*)value_return,
             length_return, format_return);
 }
@@ -163,9 +163,9 @@ int PDC_getclipboard(char **contents, long *length)
     xc_selection = NULL;
     xc_selection_len = -1;
 
-    XtGetSelectionValue(topLevel, XA_PRIMARY,
+    XtGetSelectionValue(pdc_toplevel, XA_PRIMARY,
 #ifdef PDC_WIDE
-                        XA_UTF8_STRING(XtDisplay(topLevel)),
+                        XA_UTF8_STRING(XtDisplay(pdc_toplevel)),
 #else
                         XA_STRING,
 #endif
@@ -173,7 +173,7 @@ int PDC_getclipboard(char **contents, long *length)
 
     while (-1 == xc_selection_len)
     {
-        XtAppNextEvent(app_context, &event);
+        XtAppNextEvent(pdc_app_context, &event);
         XtDispatchEvent(&event);
     }
 
@@ -216,7 +216,7 @@ int PDC_setclipboard(const char *contents, long length)
     tmpsel_length = length;
     tmpsel[length] = 0;
 
-    if (XtOwnSelection(topLevel, XA_PRIMARY, CurrentTime,
+    if (XtOwnSelection(pdc_toplevel, XA_PRIMARY, CurrentTime,
                        _convert_proc, _lose_ownership, NULL) == False)
     {
         status = PDC_CLIP_ACCESS_ERROR;

@@ -20,8 +20,8 @@
 
 #include <Xatom.h>
 
-#define XCURSESDISPLAY (XtDisplay(drawing))
-#define XCURSESWIN     (XtWindow(drawing))
+#define XCURSESDISPLAY (XtDisplay(pdc_drawing))
+#define XCURSESWIN     (XtWindow(pdc_drawing))
 
 typedef struct
 {
@@ -59,24 +59,19 @@ typedef struct
     int textBlinkRate;
 } XCursesAppData;
 
-extern Pixel colors[PDC_MAXCOL];
+extern Pixel pdc_color[PDC_MAXCOL];
+extern XIC pdc_xic;
 
-extern XCursesAppData xc_app_data;
-extern XtAppContext app_context;
-extern Widget topLevel, drawing;
+extern XCursesAppData pdc_app_data;
+extern XtAppContext pdc_app_context;
+extern Widget pdc_toplevel, pdc_drawing;
 
-extern GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
-extern int font_height, font_width, font_ascent, font_descent;
-extern int window_width, window_height;
-extern bool blinked_off;
+extern GC pdc_normal_gc, pdc_cursor_gc, pdc_italic_gc, pdc_bold_gc;
+extern int pdc_fheight, pdc_fwidth, pdc_fascent, pdc_fdescent;
+extern int pdc_wwidth, pdc_wheight;
 
-extern int resize_window_width, resize_window_height;
-extern bool window_entered;
-extern bool xc_resize_now;
-
-extern XIC Xic;
-extern bool vertical_cursor;
-extern bool visible_cursor;
+extern bool pdc_blinked_off, pdc_window_entered, pdc_resize_now;
+extern bool pdc_vertical_cursor, pdc_visible_cursor;
 
 int PDC_display_cursor(int, int, int, int, int);
 

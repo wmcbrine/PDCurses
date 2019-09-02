@@ -142,23 +142,20 @@ static XrmOptionDescRec options[] =
 #undef CCOLOR
 #undef COPT
 
-Pixel colors[PDC_MAXCOL];
+Pixel pdc_color[PDC_MAXCOL];
 
-XCursesAppData xc_app_data;
-XtAppContext app_context;
-Widget topLevel, drawing;
+XCursesAppData pdc_app_data;
+XtAppContext pdc_app_context;
+Widget pdc_toplevel, pdc_drawing;
 
-GC normal_gc, rect_cursor_gc, italic_gc, bold_gc;
-int font_height, font_width, font_ascent, font_descent;
-int window_width, window_height;
-bool blinked_off;
-
-int resize_window_width = 0, resize_window_height = 0;
-bool window_entered = TRUE;
-bool xc_resize_now = FALSE;
+GC pdc_normal_gc, pdc_cursor_gc, pdc_italic_gc, pdc_bold_gc;
+int pdc_fheight, pdc_fwidth, pdc_fascent, pdc_fdescent;
+int pdc_wwidth, pdc_wheight;
+bool pdc_window_entered = TRUE, pdc_resize_now = FALSE;
 
 static Atom wm_atom[2];
 static String class_name = "XCurses";
+static int resize_window_width = 0, resize_window_height = 0;
 static int received_map_notify = 0;
 static bool exposed = FALSE;
 
@@ -166,8 +163,7 @@ static bool exposed = FALSE;
 
 static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
-static Pixmap icon_pixmap;
-static Pixmap icon_pixmap_mask;
+static Pixmap icon_pixmap, icon_pixmap_mask;
 
 /* close the physical screen */
 
@@ -189,11 +185,11 @@ void PDC_scr_free(void)
     if (icon_pixmap_mask)
         XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
 
-    XFreeGC(XCURSESDISPLAY, normal_gc);
-    XFreeGC(XCURSESDISPLAY, italic_gc);
-    XFreeGC(XCURSESDISPLAY, bold_gc);
-    XFreeGC(XCURSESDISPLAY, rect_cursor_gc);
-    XDestroyIC(Xic);
+    XFreeGC(XCURSESDISPLAY, pdc_normal_gc);
+    XFreeGC(XCURSESDISPLAY, pdc_italic_gc);
+    XFreeGC(XCURSESDISPLAY, pdc_bold_gc);
+    XFreeGC(XCURSESDISPLAY, pdc_cursor_gc);
+    XDestroyIC(pdc_xic);
 }
 
 void XCursesExit(void)
@@ -205,23 +201,23 @@ static void _initialize_colors(void)
 {
     int i, r, g, b;
 
-    colors[COLOR_BLACK]   = xc_app_data.colorBlack;
-    colors[COLOR_RED]     = xc_app_data.colorRed;
-    colors[COLOR_GREEN]   = xc_app_data.colorGreen;
-    colors[COLOR_YELLOW]  = xc_app_data.colorYellow;
-    colors[COLOR_BLUE]    = xc_app_data.colorBlue;
-    colors[COLOR_MAGENTA] = xc_app_data.colorMagenta;
-    colors[COLOR_CYAN]    = xc_app_data.colorCyan;
-    colors[COLOR_WHITE]   = xc_app_data.colorWhite;
+    pdc_color[COLOR_BLACK]   = pdc_app_data.colorBlack;
+    pdc_color[COLOR_RED]     = pdc_app_data.colorRed;
+    pdc_color[COLOR_GREEN]   = pdc_app_data.colorGreen;
+    pdc_color[COLOR_YELLOW]  = pdc_app_data.colorYellow;
+    pdc_color[COLOR_BLUE]    = pdc_app_data.colorBlue;
+    pdc_color[COLOR_MAGENTA] = pdc_app_data.colorMagenta;
+    pdc_color[COLOR_CYAN]    = pdc_app_data.colorCyan;
+    pdc_color[COLOR_WHITE]   = pdc_app_data.colorWhite;
 
-    colors[COLOR_BLACK + 8]   = xc_app_data.colorBoldBlack;
-    colors[COLOR_RED + 8]     = xc_app_data.colorBoldRed;
-    colors[COLOR_GREEN + 8]   = xc_app_data.colorBoldGreen;
-    colors[COLOR_YELLOW + 8]  = xc_app_data.colorBoldYellow;
-    colors[COLOR_BLUE + 8]    = xc_app_data.colorBoldBlue;
-    colors[COLOR_MAGENTA + 8] = xc_app_data.colorBoldMagenta;
-    colors[COLOR_CYAN + 8]    = xc_app_data.colorBoldCyan;
-    colors[COLOR_WHITE + 8]   = xc_app_data.colorBoldWhite;
+    pdc_color[COLOR_BLACK + 8]   = pdc_app_data.colorBoldBlack;
+    pdc_color[COLOR_RED + 8]     = pdc_app_data.colorBoldRed;
+    pdc_color[COLOR_GREEN + 8]   = pdc_app_data.colorBoldGreen;
+    pdc_color[COLOR_YELLOW + 8]  = pdc_app_data.colorBoldYellow;
+    pdc_color[COLOR_BLUE + 8]    = pdc_app_data.colorBoldBlue;
+    pdc_color[COLOR_MAGENTA + 8] = pdc_app_data.colorBoldMagenta;
+    pdc_color[COLOR_CYAN + 8]    = pdc_app_data.colorBoldCyan;
+    pdc_color[COLOR_WHITE + 8]   = pdc_app_data.colorBoldWhite;
 
 #define RGB(R, G, B) ( ((unsigned long)(R) << 16) | \
                        ((unsigned long)(G) << 8) | \
@@ -233,11 +229,11 @@ static void _initialize_colors(void)
     for (i = 16, r = 0; r < 6; r++)
         for (g = 0; g < 6; g++)
             for (b = 0; b < 6; b++)
-                colors[i++] = RGB(r ? r * 40 + 55 : 0,
-                                  g ? g * 40 + 55 : 0,
-                                  b ? b * 40 + 55 : 0);
+                pdc_color[i++] = RGB(r ? r * 40 + 55 : 0,
+                                     g ? g * 40 + 55 : 0,
+                                     b ? b * 40 + 55 : 0);
     for (i = 0; i < 24; i++)
-        colors[i + 232] = RGB(i * 10 + 8, i * 10 + 8, i * 10 + 8);
+        pdc_color[i + 232] = RGB(i * 10 + 8, i * 10 + 8, i * 10 + 8);
 
 #undef RGB
 }
@@ -248,30 +244,30 @@ static void _get_icon(void)
 
     PDC_LOG(("_get_icon() - called\n"));
 
-    if (xc_app_data.pixmap && xc_app_data.pixmap[0]) /* supplied pixmap */
+    if (pdc_app_data.pixmap && pdc_app_data.pixmap[0]) /* supplied pixmap */
     {
-        XpmReadFileToPixmap(XtDisplay(topLevel),
-                            RootWindowOfScreen(XtScreen(topLevel)),
-                            (char *)xc_app_data.pixmap,
+        XpmReadFileToPixmap(XtDisplay(pdc_toplevel),
+                            RootWindowOfScreen(XtScreen(pdc_toplevel)),
+                            (char *)pdc_app_data.pixmap,
                             &icon_pixmap, &icon_pixmap_mask, NULL);
     }
-    else if (xc_app_data.bitmap && xc_app_data.bitmap[0]) /* supplied bitmap */
+    else if (pdc_app_data.bitmap && pdc_app_data.bitmap[0]) /* bitmap */
     {
         unsigned file_bitmap_width = 0, file_bitmap_height = 0;
         int x_hot = 0, y_hot = 0;
 
-        rc = XReadBitmapFile(XtDisplay(topLevel),
-                             RootWindowOfScreen(XtScreen(topLevel)),
-                             (char *)xc_app_data.bitmap,
+        rc = XReadBitmapFile(XtDisplay(pdc_toplevel),
+                             RootWindowOfScreen(XtScreen(pdc_toplevel)),
+                             (char *)pdc_app_data.bitmap,
                              &file_bitmap_width, &file_bitmap_height,
                              &icon_pixmap, &x_hot, &y_hot);
 
         if (BitmapOpenFailed == rc)
             fprintf(stderr, "bitmap file %s: not found\n",
-                    xc_app_data.bitmap);
+                    pdc_app_data.bitmap);
         else if (BitmapFileInvalid == rc)
             fprintf(stderr, "bitmap file %s: contents invalid\n",
-                    xc_app_data.bitmap);
+                    pdc_app_data.bitmap);
     }
     else
     {
@@ -280,8 +276,8 @@ static void _get_icon(void)
 
         icon_size = XAllocIconSize();
 
-        rc = XGetIconSizes(XtDisplay(topLevel),
-                           RootWindowOfScreen(XtScreen(topLevel)),
+        rc = XGetIconSizes(XtDisplay(pdc_toplevel),
+                           RootWindowOfScreen(XtScreen(pdc_toplevel)),
                            &icon_size, &size_count);
 
         /* if the WM can advise on icon sizes... */
@@ -312,8 +308,8 @@ static void _get_icon(void)
 
         XFree(icon_size);
 
-        XpmCreatePixmapFromData(XtDisplay(topLevel),
-              RootWindowOfScreen(XtScreen(topLevel)),
+        XpmCreatePixmapFromData(XtDisplay(pdc_toplevel),
+              RootWindowOfScreen(XtScreen(pdc_toplevel)),
               (max_width >= 64 && max_height >= 64) ? icon64 : icon32,
               &icon_pixmap, &icon_pixmap_mask, NULL);
     }
@@ -382,13 +378,13 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
     case EnterNotify:
         PDC_LOG(("EnterNotify received\n"));
 
-        window_entered = TRUE;
+        pdc_window_entered = TRUE;
         break;
 
     case LeaveNotify:
         PDC_LOG(("LeaveNotify received\n"));
 
-        window_entered = FALSE;
+        pdc_window_entered = FALSE;
 
         /* Display the cursor so it stays on while the window is
            not current */
@@ -418,7 +414,7 @@ static void _handle_structure_notify(Widget w, XtPointer client_data,
         resize_window_height = event->xconfigure.height;
 
         SP->resized = TRUE;
-        xc_resize_now = TRUE;
+        pdc_resize_now = TRUE;
         break;
 
     case MapNotify:
@@ -446,8 +442,8 @@ static void _get_gc(GC *gc, XFontStruct *font_info, int fore, int back)
 
     XSetFont(XCURSESDISPLAY, *gc, font_info->fid);
 
-    XSetForeground(XCURSESDISPLAY, *gc, colors[fore]);
-    XSetBackground(XCURSESDISPLAY, *gc, colors[back]);
+    XSetForeground(XCURSESDISPLAY, *gc, pdc_color[fore]);
+    XSetBackground(XCURSESDISPLAY, *gc, pdc_color[back]);
 }
 
 static void _pointer_setup(void)
@@ -455,22 +451,22 @@ static void _pointer_setup(void)
     XColor pointerforecolor, pointerbackcolor;
     XrmValue rmfrom, rmto;
 
-    XDefineCursor(XCURSESDISPLAY, XCURSESWIN, xc_app_data.pointer);
+    XDefineCursor(XCURSESDISPLAY, XCURSESWIN, pdc_app_data.pointer);
     rmfrom.size = sizeof(Pixel);
     rmto.size = sizeof(XColor);
 
     rmto.addr = (XPointer)&pointerforecolor;
-    rmfrom.addr = (XPointer)&(xc_app_data.pointerForeColor);
-    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
+    rmfrom.addr = (XPointer)&(pdc_app_data.pointerForeColor);
+    XtConvertAndStore(pdc_drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
 
     rmfrom.size = sizeof(Pixel);
     rmto.size = sizeof(XColor);
 
-    rmfrom.addr = (XPointer)&(xc_app_data.pointerBackColor);
+    rmfrom.addr = (XPointer)&(pdc_app_data.pointerBackColor);
     rmto.addr = (XPointer)&pointerbackcolor;
-    XtConvertAndStore(drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
+    XtConvertAndStore(pdc_drawing, XtRPixel, &rmfrom, XtRColor, &rmto);
 
-    XRecolorCursor(XCURSESDISPLAY, xc_app_data.pointer,
+    XRecolorCursor(XCURSESDISPLAY, pdc_app_data.pointer,
                    &pointerforecolor, &pointerbackcolor);
 }
 
@@ -508,48 +504,48 @@ int PDC_scr_open(int argc, char **argv)
 
     /* Initialise the top level widget */
 
-    topLevel = XtVaAppInitialize(&app_context, class_name, options,
+    pdc_toplevel = XtVaAppInitialize(&pdc_app_context, class_name, options,
                                  XtNumber(options), &argc, argv, NULL, NULL);
 
-    XtVaGetApplicationResources(topLevel, &xc_app_data, app_resources,
+    XtVaGetApplicationResources(pdc_toplevel, &pdc_app_data, app_resources,
                                 XtNumber(app_resources), NULL);
 
     /* Check application resource values here */
 
-    font_width = xc_app_data.normalFont->max_bounds.rbearing -
-                 xc_app_data.normalFont->min_bounds.lbearing;
+    pdc_fwidth = pdc_app_data.normalFont->max_bounds.rbearing -
+                 pdc_app_data.normalFont->min_bounds.lbearing;
 
-    font_ascent = xc_app_data.normalFont->max_bounds.ascent;
-    font_descent = xc_app_data.normalFont->max_bounds.descent;
-    font_height = font_ascent + font_descent;
+    pdc_fascent = pdc_app_data.normalFont->max_bounds.ascent;
+    pdc_fdescent = pdc_app_data.normalFont->max_bounds.descent;
+    pdc_fheight = pdc_fascent + pdc_fdescent;
 
     /* Check that the italic font and normal fonts are the same size */
 
-    italic_font_valid = font_width ==
-        xc_app_data.italicFont->max_bounds.rbearing -
-        xc_app_data.italicFont->min_bounds.lbearing;
+    italic_font_valid = pdc_fwidth ==
+        pdc_app_data.italicFont->max_bounds.rbearing -
+        pdc_app_data.italicFont->min_bounds.lbearing;
 
-    bold_font_valid = font_width ==
-        xc_app_data.boldFont->max_bounds.rbearing -
-        xc_app_data.boldFont->min_bounds.lbearing;
+    bold_font_valid = pdc_fwidth ==
+        pdc_app_data.boldFont->max_bounds.rbearing -
+        pdc_app_data.boldFont->min_bounds.lbearing;
 
     /* Calculate size of display window */
 
-    COLS = xc_app_data.cols;
-    LINES = xc_app_data.lines;
+    COLS = pdc_app_data.cols;
+    LINES = pdc_app_data.lines;
 
-    window_width = font_width * COLS;
-    window_height = font_height * LINES;
+    pdc_wwidth = pdc_fwidth * COLS;
+    pdc_wheight = pdc_fheight * LINES;
 
-    minwidth = font_width * 2;
-    minheight = font_height * 2;
+    minwidth = pdc_fwidth * 2;
+    minheight = pdc_fheight * 2;
 
     /* Set up the icon for the application; the default is an internal
        one for PDCurses. Then set various application level resources. */
 
     _get_icon();
 
-    XtVaSetValues(topLevel, XtNminWidth, minwidth, XtNminHeight,
+    XtVaSetValues(pdc_toplevel, XtNminWidth, minwidth, XtNminHeight,
                   minheight, XtNbaseWidth, 0, XtNbaseHeight, 0,
                   XtNbackground, 0, XtNiconPixmap, icon_pixmap,
                   XtNiconMask, icon_pixmap_mask, NULL);
@@ -558,24 +554,24 @@ int PDC_scr_open(int argc, char **argv)
 
     if (!XC_scrollbar_init(argv[0]))
     {
-        drawing = topLevel;
+        pdc_drawing = pdc_toplevel;
 
-        XtVaSetValues(topLevel, XtNwidth, window_width, XtNheight,
-            window_height, XtNwidthInc, font_width, XtNheightInc,
-            font_height, NULL);
+        XtVaSetValues(pdc_toplevel, XtNwidth, pdc_wwidth, XtNheight,
+            pdc_wheight, XtNwidthInc, pdc_fwidth, XtNheightInc,
+            pdc_fheight, NULL);
     }
 
     /* Determine text cursor alignment from resources */
 
-    if (!strcmp(xc_app_data.textCursor, "vertical"))
-        vertical_cursor = TRUE;
+    if (!strcmp(pdc_app_data.textCursor, "vertical"))
+        pdc_vertical_cursor = TRUE;
 
     SP = calloc(1, sizeof(SCREEN));
 
     SP->lines = LINES;
     SP->cols = COLS;
 
-    SP->mouse_wait = xc_app_data.clickPeriod;
+    SP->mouse_wait = pdc_app_data.clickPeriod;
     SP->audible = TRUE;
 
     SP->termattrs = A_COLOR | A_ITALIC | A_UNDERLINE | A_LEFT | A_RIGHT |
@@ -583,44 +579,46 @@ int PDC_scr_open(int argc, char **argv)
 
     /* Add Event handlers to the drawing widget */
 
-    XtAddEventHandler(drawing, ExposureMask, False, _handle_expose, NULL);
-    XtAddEventHandler(drawing, StructureNotifyMask, False,
+    XtAddEventHandler(pdc_drawing, ExposureMask, False, _handle_expose, NULL);
+    XtAddEventHandler(pdc_drawing, StructureNotifyMask, False,
                       _handle_structure_notify, NULL);
-    XtAddEventHandler(drawing, EnterWindowMask | LeaveWindowMask, False,
+    XtAddEventHandler(pdc_drawing, EnterWindowMask | LeaveWindowMask, False,
                       _handle_enter_leave, NULL);
-    XtAddEventHandler(topLevel, 0, True, _handle_nonmaskable, NULL);
+    XtAddEventHandler(pdc_toplevel, 0, True, _handle_nonmaskable, NULL);
 
     /* If there is a cursorBlink resource, start the Timeout event */
 
-    if (xc_app_data.cursorBlinkRate)
-        XtAppAddTimeOut(app_context, xc_app_data.cursorBlinkRate,
+    if (pdc_app_data.cursorBlinkRate)
+        XtAppAddTimeOut(pdc_app_context, pdc_app_data.cursorBlinkRate,
                         XC_blink_cursor, NULL);
 
-    XtRealizeWidget(topLevel);
+    XtRealizeWidget(pdc_toplevel);
 
     /* Handle trapping of the WM_DELETE_WINDOW property */
 
-    wm_atom[0] = XInternAtom(XtDisplay(topLevel), "WM_DELETE_WINDOW", False);
+    wm_atom[0] = XInternAtom(XtDisplay(pdc_toplevel), "WM_DELETE_WINDOW",
+                             False);
 
-    XSetWMProtocols(XtDisplay(topLevel), XtWindow(topLevel), wm_atom, 1);
+    XSetWMProtocols(XtDisplay(pdc_toplevel), XtWindow(pdc_toplevel),
+                    wm_atom, 1);
 
     /* Create the Graphics Context for drawing. This MUST be done AFTER
        the associated widget has been realized. */
 
     PDC_LOG(("before _get_gc\n"));
 
-    _get_gc(&normal_gc, xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
+    _get_gc(&pdc_normal_gc, pdc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
-    _get_gc(&italic_gc, italic_font_valid ? xc_app_data.italicFont :
-            xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
+    _get_gc(&pdc_italic_gc, italic_font_valid ? pdc_app_data.italicFont :
+            pdc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
-    _get_gc(&bold_gc, bold_font_valid ? xc_app_data.boldFont :
-            xc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
+    _get_gc(&pdc_bold_gc, bold_font_valid ? pdc_app_data.boldFont :
+            pdc_app_data.normalFont, COLOR_WHITE, COLOR_BLACK);
 
-    _get_gc(&rect_cursor_gc, xc_app_data.normalFont,
+    _get_gc(&pdc_cursor_gc, pdc_app_data.normalFont,
             COLOR_WHITE, COLOR_BLACK);
 
-    XSetLineAttributes(XCURSESDISPLAY, rect_cursor_gc, 2,
+    XSetLineAttributes(XCURSESDISPLAY, pdc_cursor_gc, 2,
                        LineSolid, CapButt, JoinMiter);
 
     /* Set the pointer for the application */
@@ -634,7 +632,7 @@ int PDC_scr_open(int argc, char **argv)
     {
         XEvent event;
 
-        XtAppNextEvent(app_context, &event);
+        XtAppNextEvent(pdc_app_context, &event);
         XtDispatchEvent(&event);
     }
 
@@ -667,15 +665,15 @@ int PDC_resize_screen(int nlines, int ncols)
     if (nlines || ncols || !SP->resized)
         return ERR;
 
-    SP->lines = resize_window_height / font_height;
+    SP->lines = resize_window_height / pdc_fheight;
 
     LINES = SP->lines - SP->linesrippedoff - SP->slklines;
 
-    SP->cols = COLS = resize_window_width / font_width;
+    SP->cols = COLS = resize_window_width / pdc_fwidth;
 
-    window_width = resize_window_width;
-    window_height = resize_window_height;
-    visible_cursor = TRUE;
+    pdc_wwidth = resize_window_width;
+    pdc_wheight = resize_window_height;
+    pdc_visible_cursor = TRUE;
 
     SP->resized = FALSE;
 
@@ -725,7 +723,7 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
     Colormap cmap = DefaultColormap(XCURSESDISPLAY,
                                     DefaultScreen(XCURSESDISPLAY));
 
-    tmp.pixel = colors[color];
+    tmp.pixel = pdc_color[color];
     XQueryColor(XCURSESDISPLAY, cmap, &tmp);
 
     *red = ((double)(tmp.red) * 1000 / 65535) + 0.5;
@@ -747,7 +745,7 @@ int PDC_init_color(short color, short red, short green, short blue)
                                     DefaultScreen(XCURSESDISPLAY));
 
     if (XAllocColor(XCURSESDISPLAY, cmap, &tmp))
-        colors[color] = tmp.pixel;
+        pdc_color[color] = tmp.pixel;
 
     return OK;
 }

@@ -60,9 +60,6 @@ extern XCursesAppData xc_app_data;
 
 int PDC_display_cursor(int, int, int, int, int);
 
-int XCursesInitscr(int, char **);
-void XCursesExit(void);
-
 void XC_blink_cursor(XtPointer, XtIntervalId *);
 void XC_blink_text(XtPointer, XtIntervalId *);
 int XC_kb_setup(void);

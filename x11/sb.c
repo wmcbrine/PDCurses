@@ -151,7 +151,7 @@ static void _thumb_left_right(Widget w, XtPointer client_data,
                          (double)(viewport_x / total_x));
 }
 
-bool XC_scrollbar_init(const char *program_name)
+bool PDC_scrollbar_init(const char *program_name)
 {
     if (pdc_app_data.scrollbarWidth && sb_started)
     {

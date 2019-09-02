@@ -329,7 +329,7 @@ static void _display_screen(void)
     for (row = 0; row < SP->lines; row++)
         PDC_transform_line(row, 0, COLS, curscr->_y[row]);
 
-    XC_redraw_cursor();
+    PDC_redraw_cursor();
 }
 
 static void _handle_expose(Widget w, XtPointer client_data, XEvent *event,
@@ -389,7 +389,7 @@ static void _handle_enter_leave(Widget w, XtPointer client_data,
         /* Display the cursor so it stays on while the window is
            not current */
 
-        XC_redraw_cursor();
+        PDC_redraw_cursor();
         break;
 
     default:
@@ -552,7 +552,7 @@ int PDC_scr_open(int argc, char **argv)
 
     /* Create a widget in which to draw */
 
-    if (!XC_scrollbar_init(argv[0]))
+    if (!PDC_scrollbar_init(argv[0]))
     {
         pdc_drawing = pdc_toplevel;
 
@@ -590,7 +590,7 @@ int PDC_scr_open(int argc, char **argv)
 
     if (pdc_app_data.cursorBlinkRate)
         XtAppAddTimeOut(pdc_app_context, pdc_app_data.cursorBlinkRate,
-                        XC_blink_cursor, NULL);
+                        PDC_blink_cursor, NULL);
 
     XtRealizeWidget(pdc_toplevel);
 
@@ -625,7 +625,7 @@ int PDC_scr_open(int argc, char **argv)
 
     _pointer_setup();
 
-    if (ERR == XC_kb_setup())
+    if (ERR == PDC_kb_setup())
         return ERR;
 
     while (!exposed)

@@ -75,8 +75,8 @@ extern bool pdc_vertical_cursor, pdc_visible_cursor;
 
 int PDC_display_cursor(int, int, int, int, int);
 
-void XC_blink_cursor(XtPointer, XtIntervalId *);
-void XC_blink_text(XtPointer, XtIntervalId *);
-int XC_kb_setup(void);
-void XC_redraw_cursor(void);
-bool XC_scrollbar_init(const char *);
+void PDC_blink_cursor(XtPointer, XtIntervalId *);
+void PDC_blink_text(XtPointer, XtIntervalId *);
+int PDC_kb_setup(void);
+void PDC_redraw_cursor(void);
+bool PDC_scrollbar_init(const char *);

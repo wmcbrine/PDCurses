@@ -551,7 +551,7 @@ static void _dummy_handler(Widget w, XtPointer client_data,
 {
 }
 
-int XC_kb_setup(void)
+int PDC_kb_setup(void)
 {
     Xim = XOpenIM(XCURSESDISPLAY, NULL, NULL, NULL);
 

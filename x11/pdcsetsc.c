@@ -76,7 +76,7 @@ int PDC_set_blink(bool blinkon)
             SP->termattrs |= A_BLINK;
             pdc_blinked_off = FALSE;
             XtAppAddTimeOut(pdc_app_context, pdc_app_data.textBlinkRate,
-                            XC_blink_text, NULL);
+                            PDC_blink_text, NULL);
         }
     }
     else

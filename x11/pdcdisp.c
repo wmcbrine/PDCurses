@@ -155,18 +155,18 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
              new_row, new_x));
 }
 
-void XC_redraw_cursor(void)
+void PDC_redraw_cursor(void)
 {
     _display_cursor(SP->cursrow, SP->curscol, SP->cursrow, SP->curscol);
 }
 
-void XC_blink_text(XtPointer unused, XtIntervalId *id)
+void PDC_blink_text(XtPointer unused, XtIntervalId *id)
 {
     int row;
     int j, k;
     chtype *ch;
 
-    PDC_LOG(("XC_blink_text() - called:\n"));
+    PDC_LOG(("PDC_blink_text() - called:\n"));
 
     pdc_blinked_off = !pdc_blinked_off;
 
@@ -189,11 +189,11 @@ void XC_blink_text(XtPointer unused, XtIntervalId *id)
             }
     }
 
-    XC_redraw_cursor();
+    PDC_redraw_cursor();
 
     if ((SP->termattrs & A_BLINK) || !pdc_blinked_off)
         XtAppAddTimeOut(pdc_app_context, pdc_app_data.textBlinkRate,
-                        XC_blink_text, NULL);
+                        PDC_blink_text, NULL);
 }
 
 static void _toggle_cursor(void)
@@ -212,7 +212,7 @@ static void _toggle_cursor(void)
 
             int save_visibility = SP->visibility;
             SP->visibility = 0;
-            XC_redraw_cursor();
+            PDC_redraw_cursor();
             SP->visibility = save_visibility;
             pdc_visible_cursor = FALSE;
         }
@@ -220,7 +220,7 @@ static void _toggle_cursor(void)
         {
             /* Cursor currently OFF, turn it on */
 
-            XC_redraw_cursor();
+            PDC_redraw_cursor();
             pdc_visible_cursor = TRUE;
         }
     }
@@ -243,13 +243,13 @@ int PDC_display_cursor(int oldrow, int oldcol, int newrow, int newcol,
     return OK;
 }
 
-void XC_blink_cursor(XtPointer unused, XtIntervalId *id)
+void PDC_blink_cursor(XtPointer unused, XtIntervalId *id)
 {
-    PDC_LOG(("XC_blink_cursor() - called:\n"));
+    PDC_LOG(("PDC_blink_cursor() - called:\n"));
 
     _toggle_cursor();
     XtAppAddTimeOut(pdc_app_context, pdc_app_data.cursorBlinkRate,
-                    XC_blink_cursor, NULL);
+                    PDC_blink_cursor, NULL);
 }
 
 /* position hardware cursor at (y, x) */

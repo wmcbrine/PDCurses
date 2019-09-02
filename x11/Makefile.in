@@ -92,7 +92,7 @@ refresh.o scanw.o scr_dump.o scroll.o slk.o termattr.o \
 touch.o util.o window.o debug.o
 
 PDCOBJS = pdcclip.o pdcdisp.o pdcgetsc.o pdckbd.o pdcscrn.o pdcsetsc.o \
-pdcutil.o x11.o sb.o scrlbox.o
+pdcutil.o sb.o scrlbox.o
 
 LIBSHOBJS = $(LIBOBJS:.o=.sho)
 PDCSHOBJS = $(PDCOBJS:.o=.sho)
@@ -257,9 +257,6 @@ scrlbox.o: $(osdir)/scrlbox.c
 
 sb.o: $(osdir)/sb.c
 	$(BUILD) $(osdir)/sb.c
-
-x11.o: $(osdir)/x11.c
-	$(BUILD) $(osdir)/x11.c
 
 addch.sho: $(srcdir)/addch.c
 	$(DYN_BUILD) $(srcdir)/addch.c
@@ -455,10 +452,6 @@ scrlbox.sho: $(osdir)/scrlbox.c
 
 sb.sho: $(osdir)/sb.c
 	$(DYN_BUILD) $(osdir)/sb.c
-	@SAVE2O@
-
-x11.sho: $(osdir)/x11.c
-	$(DYN_BUILD) $(osdir)/x11.c
 	@SAVE2O@
 
 firework: firework.o

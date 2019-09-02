@@ -368,7 +368,7 @@ static void _handle_nonmaskable(Widget w, XtPointer client_data, XEvent *event,
            Removed on 3-3-2001. Now only exits on WM_DELETE_WINDOW. */
 
         if ((Atom)client_event->data.s[0] == wm_atom[0])
-            XCursesExit();
+            exit(0);
     }
 }
 

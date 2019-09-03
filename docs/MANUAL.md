@@ -1638,7 +1638,12 @@ kernel
    Calling ripoffline() with a NULL init function pointer is an error.
 
    napms() suspends the program for the specified number of
-   milliseconds. draino() is an archaic equivalent.
+   milliseconds. draino() is an archaic equivalent. Note that the delay
+   is actually rounded down to 50ms (1/20th sec) intervals, with a
+   minimum of one interval; i.e., 1-99 will wait 50ms, 100-149 will wait
+   100ms, etc. 0 returns immediately. Since napms() attempts to give up
+   a time slice and yield control back to the OS, all times are
+   approximate.
 
    resetterm(), fixterm() and saveterm() are archaic equivalents for
    reset_shell_mode(), reset_prog_mode() and def_prog_mode(),
@@ -2835,9 +2840,9 @@ clipboard
 
    PDC_getclipboard() gets the textual contents of the system's
    clipboard. This function returns the contents of the clipboard in the
-   contents argument. It is the responsibilitiy of the caller to free
-   the memory returned, via PDC_freeclipboard(). The length of the
-   clipboard contents is returned in the length argument.
+   contents argument. It is the responsibility of the caller to free the
+   memory returned, via PDC_freeclipboard(). The length of the clipboard
+   contents is returned in the length argument.
 
    PDC_setclipboard copies the supplied text into the system's
    clipboard, emptying the clipboard prior to the copy.
@@ -2859,27 +2864,6 @@ clipboard
     PDC_setclipboard            -       -       -
     PDC_freeclipboard           -       -       -
     PDC_clearclipboard          -       -       -
-
-
-
---------------------------------------------------------------------------
-
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses reads
-   its input from. It can be used for select().
-
-### Portability
-                             X/Open  ncurses  NetBSD
-    PDC_get_input_fd            -       -       -
 
 
 

@@ -15,7 +15,7 @@ void PDC_beep(void)
 }
 
 #if UINT_MAX >= 0xfffffffful
-# define irq0_ticks()	(getdosmemdword(0x46c))
+# define irq0_ticks()  (getdosmemdword(0x46c))
 /* For 16-bit platforms, we expect that the program will need _two_ memory
    read instructions to read the tick count.  Between the two instructions,
    if we do not turn off interrupts, an IRQ 0 might intervene and update the
@@ -40,7 +40,7 @@ static unsigned long irq0_ticks(void)
     return t;
 }
 #else
-# define irq0_ticks()	(getdosmemdword(0x46c))  /* FIXME */
+# define irq0_ticks()  (getdosmemdword(0x46c))  /* FIXME */
 #endif
 
 static void do_idle(void)
@@ -52,11 +52,11 @@ static void do_idle(void)
     PDCINT(0x28, regs);
 }
 
-#define MAX_TICK	0x1800b0ul	/* no. of IRQ 0 clock ticks per day;
-					   BIOS counter (0:0x46c) will go up
-					   to MAX_TICK - 1 before wrapping to
-					   0 at midnight */
-#define MS_PER_DAY	86400000ul	/* no. of milliseconds in a day */
+#define MAX_TICK       0x1800b0ul      /* no. of IRQ 0 clock ticks per day;
+                                          BIOS counter (0:0x46c) will go up
+                                          to MAX_TICK - 1 before wrapping to
+                                          0 at midnight */
+#define MS_PER_DAY     86400000ul      /* no. of milliseconds in a day */
 
 void PDC_napms(int ms)
 {
@@ -91,7 +91,7 @@ void PDC_napms(int ms)
        MAX_TICK / MS_PER_DAY = 1/64 + 1/432 + 1/3750, exactly.  */
 
 #if MS_PER_DAY / 2 <= ULONG_MAX / 67ul
-# define MS_TO_TICKS(x)	((x) * 67ul / 3680ul)
+# define MS_TO_TICKS(x)        ((x) * 67ul / 3680ul)
 #else
 # define MS_TO_TICKS(x) ((x) / 64 + (x) / 432 + (x) / 3750)
 #endif

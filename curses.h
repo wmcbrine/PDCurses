@@ -348,7 +348,6 @@ typedef struct
                                       used internally by get_wch() */
     MOUSE_STATUS mouse_status;     /* last returned mouse status */
 #ifdef XCURSES
-    int   XcurscrSize;    /* size of Xcurscr shared memory block */
     bool  sb_on;
     int   sb_viewport_y;
     int   sb_viewport_x;

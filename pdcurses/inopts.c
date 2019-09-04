@@ -74,11 +74,14 @@ inopts
    In PDCurses, the meta() function sets raw mode on or off.
 
    timeout() and wtimeout() set blocking or non-blocking reads for the
-   specified window. The delay is measured in milliseconds. If it's
-   negative, a blocking read is used; if zero, then non-blocking reads
-   are done -- if no input is waiting, ERR is returned immediately. If
-   the delay is positive, the read blocks for the delay period; if the
-   period expires, ERR is returned.
+   specified window. If the delay is negative, a blocking read is used;
+   if zero, then non-blocking reads are done -- if no input is waiting,
+   ERR is returned immediately. If the delay is positive, the read
+   blocks for the delay period; if the period expires, ERR is returned.
+   The delay is given in milliseconds, but this is rounded down to 50ms
+   (1/20th sec) intervals, with a minimum of one interval if a postive
+   delay is given; i.e., 1-99 will wait 50ms, 100-149 will wait 100ms,
+   etc.
 
    intrflush(), notimeout(), noqiflush(), qiflush() and typeahead() do
    nothing in PDCurses, but are included for compatibility with other

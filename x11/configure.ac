@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(PDCurses, 3.8, wmcbrine@gmail.com, PDCurses)
+AC_INIT(PDCurses, 3.9, wmcbrine@gmail.com, PDCurses)
 AC_CONFIG_SRCDIR(pdcx11.h)
 
 AC_SUBST(prefix)

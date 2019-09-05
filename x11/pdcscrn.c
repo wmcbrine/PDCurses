@@ -475,7 +475,6 @@ static void _pointer_setup(void)
 int PDC_scr_open(int argc, char **argv)
 {
     char *myargv[] = {"PDCurses", NULL};
-    extern bool sb_started;
 
     bool italic_font_valid, bold_font_valid;
     int minwidth, minheight;
@@ -642,13 +641,6 @@ int PDC_scr_open(int argc, char **argv)
 
     SP->cursrow = SP->curscol = 0;
     SP->orig_attr = FALSE;
-    SP->sb_on = sb_started;
-    SP->sb_total_y = 0;
-    SP->sb_viewport_y = 0;
-    SP->sb_cur_y = 0;
-    SP->sb_total_x = 0;
-    SP->sb_viewport_x = 0;
-    SP->sb_cur_x = 0;
 
     atexit(PDC_scr_free);
 

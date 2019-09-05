@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3900
+#define PDC_BUILD    3901
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   9
 #define PDC_VERDOT   "3.9"
@@ -347,15 +347,6 @@ typedef struct
     bool  key_code;                /* TRUE if last key is a special key;
                                       used internally by get_wch() */
     MOUSE_STATUS mouse_status;     /* last returned mouse status */
-#ifdef XCURSES
-    bool  sb_on;
-    int   sb_viewport_y;
-    int   sb_viewport_x;
-    int   sb_total_y;
-    int   sb_total_x;
-    int   sb_cur_y;
-    int   sb_cur_x;
-#endif
     short line_color;     /* color of line attributes - default -1 */
     attr_t termattrs;     /* attribute capabilities */
     WINDOW *lastscr;      /* the last screen image */

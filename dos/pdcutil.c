@@ -58,7 +58,7 @@ static void do_idle(void)
                                           0 at midnight */
 #define MS_PER_DAY     86400000ul      /* no. of milliseconds in a day */
 
-void PDC_napms(int ms)
+void PDC_napmsl( long ms)
 {
     unsigned long goal, start, current;
 
@@ -132,6 +132,11 @@ void PDC_napms(int ms)
 
         do_idle();
     }
+}
+
+void PDC_napms(int ms)
+{
+   PDC_napmsl( (long)ms);
 }
 
 const char *PDC_sysname(void)

@@ -1,7 +1,7 @@
 PDCurses Implementor's Guide
 ============================
 
-- Version 1.5 - 2019/05/?? - PDC_has_mouse()
+- Version 1.5 - 2019/09/06 - PDC_has_mouse(), removed PDC_get_input_fd()
 - Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
                              style; markdown
@@ -321,12 +321,6 @@ pdcclip.c:
 ### int PDC_freeclipboard(char *contents);
 ### int PDC_getclipboard(char **contents, long *length);
 ### int PDC_setclipboard(const char *contents, long length);
-
-
-pdckbd.c:
----------
-
-### unsigned long PDC_get_input_fd(void);
 
 
 pdcsetsc.c:

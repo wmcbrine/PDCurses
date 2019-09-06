@@ -2,26 +2,6 @@
 
 #include "pdcwin.h"
 
-/*man-start**************************************************************
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses reads
-   its input from. It can be used for select().
-
-### Portability
-                             X/Open  ncurses  NetBSD
-    PDC_get_input_fd            -       -       -
-
-**man-end****************************************************************/
-
 /* These variables are used to store information about the next
    Input Event. */
 
@@ -232,13 +212,6 @@ static KPTAB ext_kptab[] =
 };
 
 /* End of kptab[] */
-
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return 0L;
-}
 
 void PDC_set_keyboard_binary(bool on)
 {

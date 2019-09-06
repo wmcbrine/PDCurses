@@ -2,26 +2,6 @@
 
 #include "pdcdos.h"
 
-/*man-start**************************************************************
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses reads
-   its input from. It can be used for select().
-
-### Portability
-                             X/Open  ncurses  NetBSD
-    PDC_get_input_fd            -       -       -
-
-**man-end****************************************************************/
-
 #ifdef __DJGPP__
 # include <fcntl.h>
 # include <io.h>
@@ -91,13 +71,6 @@ static unsigned char keyboard_function = 0xff, shift_function = 0xff,
                      check_function = 0xff;
 
 static const unsigned short button_map[3] = {0, 2, 1};
-
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return (unsigned long)fileno(stdin);
-}
 
 void PDC_set_keyboard_binary(bool on)
 {

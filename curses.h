@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3901
+#define PDC_BUILD    3902
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   9
 #define PDC_VERDOT   "3.9"
@@ -1322,7 +1322,6 @@ PDCEX  int     PDC_freeclipboard(char *);
 PDCEX  int     PDC_getclipboard(char **, long *);
 PDCEX  int     PDC_setclipboard(const char *, long);
 
-PDCEX  unsigned long PDC_get_input_fd(void);
 PDCEX  unsigned long PDC_get_key_modifiers(void);
 PDCEX  int     PDC_return_key_modifiers(bool);
 
@@ -1372,6 +1371,7 @@ PDCEX  int     wunderscore(WINDOW *);
 /* Deprecated */
 
 #define PDC_save_key_modifiers(x)  (OK)
+#define PDC_get_input_fd()         0
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

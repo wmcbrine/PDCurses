@@ -51,7 +51,10 @@ int main( const int argc, const char **argv)
    PDC_napmsl( nap_time);
    ticks1 = curr_ticks( );
    printf( "%s Ticks : %ld\n", format_ticks( tbuff, ticks1), ticks1);
-   printf( "%s Elapsed time\n", format_ticks( tbuff, ticks1 - ticks0));
+   ticks1 -= ticks0;
+   if( ticks1 < 0)             /* crossed midnight */
+      ticks1 += MAX_TICK;
+   printf( "%s Elapsed time\n", format_ticks( tbuff, ticks1));
    printf( "Hit enter:");
    getchar( );
    return( 0);

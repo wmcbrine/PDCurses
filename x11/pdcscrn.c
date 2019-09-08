@@ -644,6 +644,8 @@ int PDC_scr_open(int argc, char **argv)
 
     atexit(PDC_scr_free);
 
+    PDC_flushinp();
+
     return OK;
 }
 

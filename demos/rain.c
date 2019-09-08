@@ -147,7 +147,6 @@ int main(int argc, char *argv[])
         case KEY_RESIZE:
 # ifdef PDCURSES
             resize_term(0, 0);
-            erase();
 # endif
             r = LINES - 4;
             c = COLS - 4;

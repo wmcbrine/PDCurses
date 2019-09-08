@@ -317,7 +317,6 @@ int main(int argc, char *argv[])
             {
 # ifdef PDCURSES
                 resize_term(0, 0);
-                erase();
 # endif
                 if (last != COLS - 1)
                 {

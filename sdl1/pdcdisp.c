@@ -65,7 +65,7 @@ static void _set_attr(chtype ch)
         if (SP->mono)
             return;
 
-        PDC_pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
+        pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
 
         if ((ch & A_BOLD) && !(sysattrs & A_BOLD))
             newfg |= 8;

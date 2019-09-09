@@ -4,10 +4,6 @@
 
 #include <stdlib.h>
 
-/* COLOR_PAIR to attribute encoding table. */
-
-static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
-
 int pdc_adapter;         /* screen type */
 int pdc_scrnmode;        /* default screen mode */
 int pdc_font;            /* default font size */
@@ -633,20 +629,6 @@ void PDC_save_screen_mode(int i)
         saved_font[i] = pdc_font;
         saved_scrnmode[i] = pdc_scrnmode;
     }
-}
-
-void PDC_init_pair(short pair, short fg, short bg)
-{
-    atrtab[pair].f = fg;
-    atrtab[pair].b = bg;
-}
-
-int PDC_pair_content(short pair, short *fg, short *bg)
-{
-    *fg = atrtab[pair].f;
-    *bg = atrtab[pair].b;
-
-    return OK;
 }
 
 /* _egapal() - Find the EGA palette value (0-63) for the color (0-15).

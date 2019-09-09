@@ -1,6 +1,7 @@
 PDCurses Implementor's Guide
 ============================
 
+- Version 1.6 - 2019/09/?? - removed PDC_init_pair(), PDC_pair_content()
 - Version 1.5 - 2019/09/06 - PDC_has_mouse(), removed PDC_get_input_fd()
 - Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
@@ -193,19 +194,6 @@ except checking for values out of range and null pointers.
 
 The core of init_color(). This does all the work of that function,
 except checking for values out of range.
-
-### void PDC_init_pair(short pair, short fg, short bg);
-
-The core of init_pair(). This does all the work of that function, except
-checking for values out of range. The values passed to this function
-should be returned by a call to PDC_pair_content() with the same pair
-number. PDC_transform_line() should use the specified colors when
-rendering a chtype with the given pair number.
-
-### int PDC_pair_content(short pair, short *fg, short *bg);
-
-The core of pair_content(). This does all the work of that function,
-except checking for values out of range and null pointers.
 
 ### void PDC_reset_prog_mode(void);
 

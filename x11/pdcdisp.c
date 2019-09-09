@@ -67,7 +67,7 @@ static void _set_cursor_color(chtype *ch, short *fore, short *back)
 
     if (attr)
     {
-        PDC_pair_content(attr, &f, &b);
+        pair_content(attr, &f, &b);
         *fore = 7 - (f % 8);
         *back = 7 - (b % 8);
     }
@@ -280,7 +280,7 @@ static int _new_packet(chtype attr, int len, int col, int row,
     attr_t sysattrs;
     bool rev;
 
-    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
+    pair_content(PAIR_NUMBER(attr), &fore, &back);
 
     /* Specify the color table offsets */
 

@@ -101,6 +101,10 @@ color
 int COLORS = 0;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
+/* COLOR_PAIR to attribute encoding table. */
+
+static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
+
 /* pair_set[] tracks whether a pair has been set via init_pair() */
 
 static bool pair_set[PDC_COLOR_PAIRS];
@@ -153,16 +157,12 @@ int init_pair(short pair, short fg, short bg)
 
     if (pair_set[pair])
     {
-        short oldfg, oldbg;
-
-        PDC_pair_content(pair, &oldfg, &oldbg);
-
-        if (oldfg != fg || oldbg != bg)
+        if (atrtab[pair].f != fg || atrtab[pair].b != bg)
             curscr->_clear = TRUE;
     }
 
-    PDC_init_pair(pair, fg, bg);
-
+    atrtab[pair].f = fg;
+    atrtab[pair].b = bg;
     pair_set[pair] = TRUE;
 
     return OK;
@@ -227,7 +227,10 @@ int pair_content(short pair, short *fg, short *bg)
     if (pair < 0 || pair >= COLOR_PAIRS || !fg || !bg)
         return ERR;
 
-    return PDC_pair_content(pair, fg, bg);
+    *fg = atrtab[pair].f;
+    *bg = atrtab[pair].b;
+
+    return OK;
 }
 
 int assume_default_colors(int f, int b)
@@ -239,19 +242,18 @@ int assume_default_colors(int f, int b)
 
     if (SP->color_started)
     {
-        short fg, bg, oldfg, oldbg;
+        short fg, bg;
 
         fg = f;
         bg = b;
 
         _normalize(&fg, &bg);
 
-        PDC_pair_content(0, &oldfg, &oldbg);
-
-        if (oldfg != fg || oldbg != bg)
+        if (atrtab[0].f != fg || atrtab[0].b != bg)
             curscr->_clear = TRUE;
 
-        PDC_init_pair(0, fg, bg);
+        atrtab[0].f = fg;
+        atrtab[0].b = bg;
     }
 
     return OK;
@@ -294,5 +296,8 @@ void PDC_init_atrtab(void)
     _normalize(&fg, &bg);
 
     for (i = 0; i < PDC_COLOR_PAIRS; i++)
-        PDC_init_pair(i, fg, bg);
+    {
+        atrtab[i].f = fg;
+        atrtab[i].b = bg;
+    }
 }

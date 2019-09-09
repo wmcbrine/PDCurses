@@ -159,10 +159,6 @@ static int resize_window_width = 0, resize_window_height = 0;
 static int received_map_notify = 0;
 static bool exposed = FALSE;
 
-/* COLOR_PAIR to attribute encoding table. */
-
-static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
-
 static Pixmap icon_pixmap, icon_pixmap_mask;
 
 /* close the physical screen */
@@ -690,20 +686,6 @@ void PDC_restore_screen_mode(int i)
 
 void PDC_save_screen_mode(int i)
 {
-}
-
-void PDC_init_pair(short pair, short fg, short bg)
-{
-    atrtab[pair].f = fg;
-    atrtab[pair].b = bg;
-}
-
-int PDC_pair_content(short pair, short *fg, short *bg)
-{
-    *fg = atrtab[pair].f;
-    *bg = atrtab[pair].b;
-
-    return OK;
 }
 
 bool PDC_can_change_color(void)

@@ -26,7 +26,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     unsigned char mapped_attr;
 
     sysattrs = SP->termattrs;
-    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
+    pair_content(PAIR_NUMBER(attr), &fore, &back);
 
     if (attr & A_BOLD)
         fore |= 8;

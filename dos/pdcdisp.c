@@ -149,3 +149,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
     _new_packet(old_attr, lineno, x, i, srcp);
 }
+
+void PDC_doupdate(void)
+{
+}

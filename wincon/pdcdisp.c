@@ -301,3 +301,7 @@ void PDC_blink_text(void)
     PDC_gotoyx(SP->cursrow, SP->curscol);
     pdc_last_blink = GetTickCount();
 }
+
+void PDC_doupdate(void)
+{
+}

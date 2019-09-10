@@ -525,3 +525,7 @@ void PDC_blink_text(void)
 
     oldch = (chtype)(-1);
 }
+
+void PDC_doupdate(void)
+{
+}

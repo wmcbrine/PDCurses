@@ -430,3 +430,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
     _new_packet(old_attr, i, x, lineno, text);
 }
+
+void PDC_doupdate(void)
+{
+    XFlush(XtDisplay(pdc_toplevel));
+}

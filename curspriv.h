@@ -51,6 +51,7 @@ bool    PDC_can_change_color(void);
 int     PDC_color_content(short, short *, short *, short *);
 bool    PDC_check_key(void);
 int     PDC_curs_set(int);
+void    PDC_doupdate(void);
 void    PDC_flushinp(void);
 int     PDC_get_columns(void);
 int     PDC_get_cursor_mode(void);

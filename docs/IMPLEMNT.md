@@ -1,7 +1,8 @@
 PDCurses Implementor's Guide
 ============================
 
-- Version 1.6 - 2019/09/?? - removed PDC_init_pair(), PDC_pair_content()
+- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed
+                             PDC_init_pair(), PDC_pair_content()
 - Version 1.5 - 2019/09/06 - PDC_has_mouse(), removed PDC_get_input_fd()
 - Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
@@ -75,6 +76,12 @@ adjustments to keep every line under 80 columns.
 pdcdisp.c:
 ----------
 
+### void PDC_doupdate(void);
+
+Called at the end of doupdate(), this function finalizes the update of
+the physical screen to match the virtual screen, if necessary, i.e. if
+updates were deferred in PDC_transform_line().
+
 ### void PDC_gotoyx(int y, int x);
 
 Move the physical cursor (as opposed to the logical cursor affected by
@@ -88,7 +95,8 @@ The core output routine. It takes len chtype entities from srcp (a
 pointer into curscr) and renders them to the physical screen at line
 lineno, column x. It must also translate characters 0-127 via acs_map[],
 if they're flagged with A_ALTCHARSET in the attribute portion of the
-chtype.
+chtype. Actual screen updates may be deferred until PDC_doupdate() if
+desired (currently done with SDL and X11).
 
 
 pdcgetsc.c:

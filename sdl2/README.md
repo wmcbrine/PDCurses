@@ -178,15 +178,6 @@ new background. (If you don't erase the curses screen, it will be
 incorporated into the background when you call PDC_retile().) But this
 only works if no background image is set.
 
-PDC_update_rects() is how the screen actually gets updated. For
-performance reasons, when drawing, PDCurses for SDL maintains a table of
-rectangles that need updating, and only updates (by calling this
-function) during getch(), napms(), or when the table gets full.
-Normally, this is sufficient; but if you're pausing in some way other
-than by using napms(), and you're not doing keyboard checks, you may get
-an incomplete update. If that happens, you can call PDC_update_rects()
-manually.
-
 
 Interaction with stdio
 ----------------------

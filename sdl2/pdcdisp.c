@@ -11,8 +11,6 @@
 # include "../common/acs437.h"
 #endif
 
-Uint32 pdc_lastupdate = 0;
-
 #define MAXRECT 200     /* maximum number of rects to queue up before
                            an update is forced; the number was chosen
                            arbitrarily */
@@ -68,7 +66,6 @@ void PDC_update_rects(void)
                 SDL_UpdateWindowSurfaceRects(pdc_window, uprect, rectcount);
         }
 
-        pdc_lastupdate = SDL_GetTicks();
         rectcount = 0;
     }
 }

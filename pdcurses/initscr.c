@@ -128,6 +128,10 @@ WINDOW *Xinitscr(int argc, char *argv[])
     if (SP && SP->alive)
         return NULL;
 
+    SP = calloc(1, sizeof(SCREEN));
+    if (!SP)
+        return NULL;
+
     if (PDC_scr_open(argc, argv) == ERR)
     {
         fprintf(stderr, "initscr(): Unable to create SP\n");

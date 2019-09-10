@@ -128,11 +128,6 @@ int PDC_scr_open(int argc, char **argv)
 {
     PDC_LOG(("PDC_scr_open() - called\n"));
 
-    SP = calloc(1, sizeof(SCREEN));
-
-    if (!SP)
-        return ERR;
-
     pdc_own_screen = !pdc_screen;
 
     if (pdc_own_screen)

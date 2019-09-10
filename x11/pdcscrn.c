@@ -561,8 +561,6 @@ int PDC_scr_open(int argc, char **argv)
     if (!strcmp(pdc_app_data.textCursor, "vertical"))
         pdc_vertical_cursor = TRUE;
 
-    SP = calloc(1, sizeof(SCREEN));
-
     SP->lines = LINES;
     SP->cols = COLS;
 

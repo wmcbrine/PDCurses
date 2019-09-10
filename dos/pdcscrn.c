@@ -496,11 +496,6 @@ int PDC_scr_open(int argc, char **argv)
 
     PDC_LOG(("PDC_scr_open() - called\n"));
 
-    SP = calloc(1, sizeof(SCREEN));
-
-    if (!SP)
-        return ERR;
-
     for (i = 0; i < 16; i++)
         pdc_curstoreal[realtocurs[i]] = i;
 

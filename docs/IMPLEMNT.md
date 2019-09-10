@@ -1,7 +1,8 @@
 PDCurses Implementor's Guide
 ============================
 
-- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed
+- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed SP allocation
+                             from PDC_scr_open(); removed
                              PDC_init_pair(), PDC_pair_content()
 - Version 1.5 - 2019/09/06 - PDC_has_mouse(), removed PDC_get_input_fd()
 - Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
@@ -254,15 +255,13 @@ The platform-specific part of initscr(). It's actually called from
 Xinitscr(); the arguments, if present, correspond to those used with
 main(), and may be used to set the title of the terminal window, or for
 other, platform-specific purposes. (The arguments are currently used
-only in X11.) PDC_scr_open() must allocate memory for SP, and must
-initialize acs_map[] (unless it's preset) and several members of SP,
-including lines, cols, mouse_wait, orig_attr (and if orig_attr is TRUE,
-orig_fore and orig_back), mono, _restore and _preserve. (Although SP is
-used the same way in all ports, it's allocated here in order to allow
-the X11 port to map it to a block of shared memory.) If using an
-existing terminal, and the environment variable PDC_RESTORE_SCREEN is
-set, this function may also store the existing screen image for later
-restoration by PDC_scr_close().
+only in X11.) PDC_scr_open() must initialize acs_map[] (unless it's
+preset) and several members of SP, including lines, cols, mouse_wait,
+orig_attr (and if orig_attr is TRUE, orig_fore and orig_back), mono,
+_restore and _preserve. If using an existing terminal, and the
+environment variable PDC_RESTORE_SCREEN is set, this function may also
+store the existing screen image for later restoration by
+PDC_scr_close().
 
 
 pdcsetsc.c:

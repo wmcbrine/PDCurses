@@ -433,5 +433,5 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 void PDC_doupdate(void)
 {
-    XFlush(XtDisplay(pdc_toplevel));
+    XSync(XtDisplay(pdc_toplevel), False);
 }

@@ -559,4 +559,6 @@ void PDC_blink_text(void)
 
 void PDC_doupdate(void)
 {
+    PDC_update_rects();
+    SDL_Delay(1);
 }

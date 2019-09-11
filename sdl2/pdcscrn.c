@@ -132,7 +132,7 @@ static void _initialize_colors(void)
                                    pdc_color[i].g, pdc_color[i].b);
 }
 
-/* open the physical screen -- allocate SP, miscellaneous intialization */
+/* open the physical screen -- miscellaneous initialization */
 
 int PDC_scr_open(int argc, char **argv)
 {

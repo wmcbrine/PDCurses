@@ -466,7 +466,7 @@ static void _pointer_setup(void)
                    &pointerforecolor, &pointerbackcolor);
 }
 
-/* open the physical screen -- allocate SP, miscellaneous intialization */
+/* open the physical screen -- miscellaneous initialization */
 
 int PDC_scr_open(int argc, char **argv)
 {

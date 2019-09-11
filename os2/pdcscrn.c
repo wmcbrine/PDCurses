@@ -83,8 +83,8 @@ void PDC_scr_free(void)
         free(SP);
 }
 
-/* open the physical screen -- allocate SP, miscellaneous intialization,
-   and may save the existing screen for later restoration */
+/* open the physical screen -- miscellaneous initialization, may save
+   the existing screen for later restoration */
 
 int PDC_scr_open(int argc, char **argv)
 {

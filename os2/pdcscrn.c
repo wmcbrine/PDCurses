@@ -79,8 +79,6 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    if (SP)
-        free(SP);
 }
 
 /* open the physical screen -- miscellaneous initialization, may save

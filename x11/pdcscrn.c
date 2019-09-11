@@ -170,12 +170,6 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    if (!SP)
-        return;
-
-    free(SP);
-    SP = NULL;
-
     if (icon_pixmap)
         XFreePixmap(XCURSESDISPLAY, icon_pixmap);
     if (icon_pixmap_mask)

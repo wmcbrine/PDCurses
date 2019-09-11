@@ -246,8 +246,7 @@ the cursor to the lower left corner. (The X11 port does nothing.)
 
 ### void PDC_scr_free(void);
 
-Frees the memory for SP allocated by PDC_scr_open(). Called by
-delscreen().
+Free any memory allocated by PDC_scr_open(). Called by delscreen().
 
 ### int PDC_scr_open(int argc, char **argv);
 

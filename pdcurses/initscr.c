@@ -294,7 +294,7 @@ void delscreen(SCREEN *sp)
 {
     PDC_LOG(("delscreen() - called\n"));
 
-    if (sp != SP)
+    if (!SP || sp != SP)
         return;
 
     PDC_slk_free();     /* free the soft label keys, if needed */
@@ -308,8 +308,9 @@ void delscreen(SCREEN *sp)
 
     SP->alive = FALSE;
 
-    PDC_scr_free();     /* free SP */
+    PDC_scr_free();
 
+    free(SP);
     SP = (SCREEN *)NULL;
 }
 

@@ -359,9 +359,6 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    if (SP)
-        free(SP);
-
     if (pdc_con_out != std_con_out)
     {
         CloseHandle(pdc_con_out);

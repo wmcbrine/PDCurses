@@ -83,8 +83,6 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    if (SP)
-        free(SP);
 }
 
 static void _initialize_colors(void)

@@ -632,7 +632,8 @@ int PDC_scr_open(int argc, char **argv)
 
     atexit(PDC_scr_free);
 
-    PDC_flushinp();
+    XSync(XtDisplay(pdc_toplevel), True);
+    SP->resized = pdc_resize_now = FALSE;
 
     return OK;
 }

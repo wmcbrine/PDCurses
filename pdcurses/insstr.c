@@ -82,7 +82,7 @@ int winsnstr(WINDOW *win, const char *str, int n)
 
     len = strlen(str);
 
-    if (n < 0 || n < len)
+    if (n < 0 || n > len)
         n = len;
 
 #ifdef PDC_WIDE
@@ -190,7 +190,7 @@ int wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
     for (len = 0, p = wstr; *p; p++)
         len++;
 
-    if (n < 0 || n < len)
+    if (n < 0 || n > len)
         n = len;
 
     while (n)

@@ -270,7 +270,7 @@ int PDC_scr_open(int argc, char **argv)
     PDC_mouse_set();
 
     if (pdc_own_screen)
-        PDC_set_title(argc ? argv[0] : "PDCurses");
+        PDC_set_title("PDCurses");
 
     SP->lines = PDC_get_rows();
     SP->cols = PDC_get_columns();

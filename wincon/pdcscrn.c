@@ -415,31 +415,12 @@ int PDC_scr_open(void)
 
     pdc_quick_edit = old_console_mode & 0x0040;
 
-    SP->lines = (str = getenv("LINES")) ? atoi(str) : PDC_get_rows();
-    SP->cols = (str = getenv("COLS")) ? atoi(str) : PDC_get_columns();
-
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
     SP->termattrs = A_COLOR | A_REVERSE;
     if (pdc_ansi)
         SP->termattrs |= A_UNDERLINE | A_ITALIC;
-
-    if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
-    {
-        fprintf(stderr, "LINES value must be >= 2 and <= %d: got %d\n",
-                csbi.dwMaximumWindowSize.Y, SP->lines);
-
-        return ERR;
-    }
-
-    if (SP->cols < 2 || SP->cols > csbi.dwMaximumWindowSize.X)
-    {
-        fprintf(stderr, "COLS value must be >= 2 and <= %d: got %d\n",
-                csbi.dwMaximumWindowSize.X, SP->cols);
-
-        return ERR;
-    }
 
     SP->orig_fore = csbi.wAttributes & 0x0f;
     SP->orig_back = (csbi.wAttributes & 0xf0) >> 4;

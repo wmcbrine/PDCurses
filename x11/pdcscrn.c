@@ -161,6 +161,10 @@ static bool exposed = FALSE;
 
 static Pixmap icon_pixmap, icon_pixmap_mask;
 
+static char *prog_name[] = {"PDCurses", NULL};
+static char **argv = prog_name;
+static int argc = 1;
+
 /* close the physical screen */
 
 void PDC_scr_close(void)
@@ -460,22 +464,20 @@ static void _pointer_setup(void)
                    &pointerforecolor, &pointerbackcolor);
 }
 
+void PDC_set_args(int c, char **v)
+{
+    argc = c;
+    argv = v;
+}
+
 /* open the physical screen -- miscellaneous initialization */
 
-int PDC_scr_open(int argc, char **argv)
+int PDC_scr_open(void)
 {
-    char *myargv[] = {"PDCurses", NULL};
-
     bool italic_font_valid, bold_font_valid;
     int minwidth, minheight;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
-
-    if (!argv)
-    {
-        argv = myargv;
-        argc = 1;
-    }
 
     /* Start defining X Toolkit things */
 

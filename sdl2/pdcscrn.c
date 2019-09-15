@@ -132,7 +132,7 @@ static void _initialize_colors(void)
 
 /* open the physical screen -- miscellaneous initialization */
 
-int PDC_scr_open(int argc, char **argv)
+int PDC_scr_open(void)
 {
     PDC_LOG(("PDC_scr_open() - called\n"));
 

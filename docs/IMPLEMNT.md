@@ -1,9 +1,9 @@
 PDCurses Implementor's Guide
 ============================
 
-- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed SP allocation
-                             from PDC_scr_open(); removed
-                             PDC_init_pair(), PDC_pair_content()
+- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed argc, argv
+                             and SP allocation from PDC_scr_open();
+                             removed PDC_init_pair(), PDC_pair_content()
 - Version 1.5 - 2019/09/06 - PDC_has_mouse(), removed PDC_get_input_fd()
 - Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
@@ -248,18 +248,14 @@ the cursor to the lower left corner. (The X11 port does nothing.)
 
 Free any memory allocated by PDC_scr_open(). Called by delscreen().
 
-### int PDC_scr_open(int argc, char **argv);
+### int PDC_scr_open(void);
 
-The platform-specific part of initscr(). It's actually called from
-Xinitscr(); the arguments, if present, correspond to those used with
-main(), and may be used to set the title of the terminal window, or for
-other, platform-specific purposes. (The arguments are currently used
-only in X11.) PDC_scr_open() must initialize acs_map[] (unless it's
-preset) and several members of SP, including lines, cols, mouse_wait,
-orig_attr (and if orig_attr is TRUE, orig_fore and orig_back), mono,
-_restore and _preserve. If using an existing terminal, and the
-environment variable PDC_RESTORE_SCREEN is set, this function may also
-store the existing screen image for later restoration by
+The platform-specific part of initscr(). It must initialize acs_map[]
+(unless it's preset) and several members of SP, including lines, cols,
+mouse_wait, orig_attr (and if orig_attr is TRUE, orig_fore and
+orig_back), mono, _restore and _preserve. If using an existing terminal,
+and the environment variable PDC_RESTORE_SCREEN is set, this function
+may also store the existing screen image for later restoration by
 PDC_scr_close().
 
 

@@ -10,7 +10,7 @@ initscr
 ### Synopsis
 
     WINDOW *initscr(void);
-    WINDOW *Xinitscr(int argc, char *argv[]);
+    WINDOW *Xinitscr(int argc, char **argv);
     int endwin(void);
     bool isendwin(void);
     SCREEN *newterm(const char *type, FILE *outfd, FILE *infd);
@@ -116,14 +116,11 @@ MOUSE_STATUS Mouse_status;
 extern RIPPEDOFFLINE linesripped[5];
 extern char linesrippedoff;
 
-#ifndef XCURSES
-static
-#endif
-WINDOW *Xinitscr(int argc, char *argv[])
+WINDOW *initscr(void)
 {
     int i;
 
-    PDC_LOG(("Xinitscr() - called\n"));
+    PDC_LOG(("initscr() - called\n"));
 
     if (SP && SP->alive)
         return NULL;
@@ -132,7 +129,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     if (!SP)
         return NULL;
 
-    if (PDC_scr_open(argc, argv) == ERR)
+    if (PDC_scr_open() == ERR)
     {
         fprintf(stderr, "initscr(): Unable to create SP\n");
         exit(8);
@@ -246,12 +243,15 @@ WINDOW *Xinitscr(int argc, char *argv[])
     return stdscr;
 }
 
-WINDOW *initscr(void)
+#ifdef XCURSES
+WINDOW *Xinitscr(int argc, char **argv)
 {
-    PDC_LOG(("initscr() - called\n"));
+    PDC_LOG(("Xinitscr() - called\n"));
 
-    return Xinitscr(0, NULL);
+    PDC_set_args(argc, argv);
+    return initscr();
 }
+#endif
 
 int endwin(void)
 {
@@ -278,7 +278,7 @@ SCREEN *newterm(const char *type, FILE *outfd, FILE *infd)
 {
     PDC_LOG(("newterm() - called\n"));
 
-    return Xinitscr(0, NULL) ? SP : NULL;
+    return initscr() ? SP : NULL;
 }
 
 SCREEN *set_term(SCREEN *new)

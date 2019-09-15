@@ -68,9 +68,12 @@ void    PDC_reset_shell_mode(void);
 int     PDC_resize_screen(int, int);
 void    PDC_restore_screen_mode(int);
 void    PDC_save_screen_mode(int);
+#ifdef XCURSES
+void    PDC_set_args(int, char **);
+#endif
 void    PDC_scr_close(void);
 void    PDC_scr_free(void);
-int     PDC_scr_open(int, char **);
+int     PDC_scr_open(void);
 void    PDC_set_keyboard_binary(bool);
 void    PDC_transform_line(int, int, int, const chtype *);
 const char *PDC_sysname(void);

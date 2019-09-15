@@ -10,21 +10,12 @@ int PDC_get_columns(void)
 {
     PDCREGS regs;
     int cols;
-    const char *env_cols;
 
     PDC_LOG(("PDC_get_columns() - called\n"));
-
-    /* use the value from COLS environment variable, if set. MH 10-Jun-92 */
-    /* and use the minimum of COLS and return from int10h    MH 18-Jun-92 */
 
     regs.h.ah = 0x0f;
     PDCINT(0x10, regs);
     cols = (int)regs.h.ah;
-
-    env_cols = getenv("COLS");
-
-    if (env_cols)
-        cols = min(atoi(env_cols), cols);
 
     PDC_LOG(("PDC_get_columns() - returned: cols %d\n", cols));
 
@@ -44,19 +35,11 @@ int PDC_get_cursor_mode(void)
 
 int PDC_get_rows(void)
 {
-    const char *env_rows;
     int rows;
 
     PDC_LOG(("PDC_get_rows() - called\n"));
 
-    /* use the value from LINES environment variable, if set. MH 10-Jun-92 */
-    /* and use the minimum of LINES and *ROWS.                MH 18-Jun-92 */
-
     rows = getdosmembyte(0x484) + 1;
-    env_rows = getenv("LINES");
-
-    if (env_rows)
-        rows = min(atoi(env_rows), rows);
 
     if (rows == 1 && pdc_adapter == _MDS_GENIUS)
         rows = 66;

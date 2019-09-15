@@ -106,10 +106,8 @@ Screen size
 
 The default screen size is 80x25 characters (whatever size they may be),
 but you can override this via the environment variables PDC_COLS and/or
-PDC_LINES. (Some other ports use COLS and LINES; this is not done here
-because those values are, or should be, those of the controlling
-terminal, and PDCurses for SDL is independent of the terminal.) If
-pdc_screen is preinitialized (see below), these are ignored.
+PDC_LINES. If pdc_screen is preinitialized (see below), these are
+ignored.
 
 
 Integration with SDL

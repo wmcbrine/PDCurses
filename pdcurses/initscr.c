@@ -158,8 +158,8 @@ WINDOW *initscr(void)
 
     SP->orig_cursor = PDC_get_cursor_mode();
 
-    LINES = SP->lines;
-    COLS = SP->cols;
+    LINES = SP->lines = PDC_get_rows();
+    COLS = SP->cols = PDC_get_columns();
 
     if (LINES < 2 || COLS < 2)
     {
@@ -321,9 +321,16 @@ int resize_term(int nlines, int ncols)
     if (!stdscr || PDC_resize_screen(nlines, ncols) == ERR)
         return ERR;
 
+    SP->resized = FALSE;
+
     SP->lines = PDC_get_rows();
     LINES = SP->lines - SP->linesrippedoff - SP->slklines;
     SP->cols = COLS = PDC_get_columns();
+
+    if (SP->cursrow >= SP->lines)
+        SP->cursrow = SP->lines - 1;
+    if (SP->curscol >= SP->cols)
+        SP->curscol = SP->cols - 1;
 
     if (wresize(curscr, SP->lines, SP->cols) == ERR ||
         wresize(stdscr, LINES, COLS) == ERR ||

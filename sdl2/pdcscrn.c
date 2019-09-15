@@ -301,9 +301,6 @@ int PDC_scr_open(void)
 
     PDC_mouse_set();
 
-    SP->lines = PDC_get_rows();
-    SP->cols = PDC_get_columns();
-
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = FALSE;
 
@@ -349,9 +346,6 @@ int PDC_resize_screen(int nlines, int ncols)
 
     if (pdc_tileback)
         PDC_retile();
-
-    SP->resized = FALSE;
-    SP->cursrow = SP->curscol = 0;
 
     return OK;
 }

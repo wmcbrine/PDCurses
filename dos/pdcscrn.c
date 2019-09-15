@@ -507,9 +507,6 @@ int PDC_scr_open(void)
     pdc_scrnmode = _get_scrn_mode();
     pdc_font = _get_font();
 
-    SP->lines = PDC_get_rows();
-    SP->cols = PDC_get_columns();
-
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
@@ -525,8 +522,8 @@ int PDC_scr_open(void)
 
     if (getenv("PDC_RESTORE_SCREEN"))
     {
-        saved_lines = SP->lines;
-        saved_cols = SP->cols;
+        saved_lines = PDC_get_rows();
+        saved_cols = PDC_get_columns();
 
         saved_screen = malloc(saved_lines * saved_cols * 2);
 

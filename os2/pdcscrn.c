@@ -100,9 +100,6 @@ int PDC_scr_open(void)
     PDC_get_keyboard_info();
     pdc_font = _get_font();
 
-    SP->lines = PDC_get_rows();
-    SP->cols = PDC_get_columns();
-
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
@@ -112,8 +109,8 @@ int PDC_scr_open(void)
 
     if (getenv("PDC_RESTORE_SCREEN"))
     {
-        saved_lines = SP->lines;
-        saved_cols = SP->cols;
+        saved_lines = PDC_get_rows();
+        saved_cols = PDC_get_columns();
 
         saved_screen = malloc(2 * saved_lines * saved_cols);
 
@@ -151,9 +148,6 @@ int PDC_resize_screen(int nlines, int ncols)
     modeInfo.row = nlines;
     modeInfo.col = ncols;
     result = VioSetMode(&modeInfo, 0);
-
-    LINES = PDC_get_rows();
-    COLS = PDC_get_columns();
 
     return (result == 0) ? OK : ERR;
 }

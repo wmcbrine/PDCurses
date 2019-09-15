@@ -1,9 +1,10 @@
 PDCurses Implementor's Guide
 ============================
 
-- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed argc, argv
-                             and SP allocation from PDC_scr_open();
-                             removed PDC_init_pair(), PDC_pair_content()
+- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed argc, argv,
+                             lines, cols and SP allocation from
+                             PDC_scr_open(); removed PDC_init_pair(),
+                             PDC_pair_content()
 - Version 1.5 - 2019/09/06 - PDC_has_mouse(), removed PDC_get_input_fd()
 - Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
@@ -105,9 +106,8 @@ pdcgetsc.c:
 
 ### int PDC_get_columns(void);
 
-Returns the size of the screen in columns. It's used in resize_term() to
-set the new value of COLS. (Some existing implementations also call it
-internally from PDC_scr_open(), but this is not required.)
+Returns the size of the screen in columns. It's used in initscr() and
+resize_term() to set the value of COLS.
 
 ### int PDC_get_cursor_mode(void);
 
@@ -119,9 +119,8 @@ cursor in normal visibility mode (curs_set(1)).
 
 ### int PDC_get_rows(void);
 
-Returns the size of the screen in rows. It's used in resize_term() to
-set the new value of LINES. (Some existing implementations also call it
-internally from PDC_scr_open(), but this is not required.)
+Returns the size of the screen in rows. It's used in initscr() and
+resize_term() to set the value of LINES.
 
 
 pdckbd.c:
@@ -251,11 +250,11 @@ Free any memory allocated by PDC_scr_open(). Called by delscreen().
 ### int PDC_scr_open(void);
 
 The platform-specific part of initscr(). It must initialize acs_map[]
-(unless it's preset) and several members of SP, including lines, cols,
-mouse_wait, orig_attr (and if orig_attr is TRUE, orig_fore and
-orig_back), mono, _restore and _preserve. If using an existing terminal,
-and the environment variable PDC_RESTORE_SCREEN is set, this function
-may also store the existing screen image for later restoration by
+(unless it's preset) and several members of SP, including mouse_wait,
+orig_attr (and if orig_attr is TRUE, orig_fore and orig_back), mono,
+_restore and _preserve. If using an existing terminal, and the
+environment variable PDC_RESTORE_SCREEN is set, this function may also
+store the existing screen image for later restoration by
 PDC_scr_close().
 
 

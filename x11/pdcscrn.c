@@ -625,11 +625,8 @@ int PDC_scr_open(void)
         XtDispatchEvent(&event);
     }
 
-    LINES = LINES - SP->linesrippedoff - SP->slklines;
-
     _initialize_colors();
 
-    SP->cursrow = SP->curscol = 0;
     SP->orig_attr = FALSE;
 
     atexit(PDC_scr_free);
@@ -650,17 +647,9 @@ int PDC_resize_screen(int nlines, int ncols)
     if (nlines || ncols || !SP->resized)
         return ERR;
 
-    SP->lines = resize_window_height / pdc_fheight;
-
-    LINES = SP->lines - SP->linesrippedoff - SP->slklines;
-
-    SP->cols = COLS = resize_window_width / pdc_fwidth;
-
     pdc_wwidth = resize_window_width;
     pdc_wheight = resize_window_height;
     pdc_visible_cursor = TRUE;
-
-    SP->resized = FALSE;
 
     return OK;
 }

@@ -574,9 +574,6 @@ int PDC_resize_screen(int nlines, int ncols)
 
     PDC_flushinp();
 
-    SP->resized = FALSE;
-    SP->cursrow = SP->curscol = 0;
-
     return OK;
 }
 

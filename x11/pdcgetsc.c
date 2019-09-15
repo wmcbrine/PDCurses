@@ -8,7 +8,7 @@ int PDC_get_columns(void)
 {
     PDC_LOG(("PDC_get_columns() - called\n"));
 
-    return SP->cols;
+    return pdc_wwidth / pdc_fwidth;
 }
 
 /* get the cursor size/shape */
@@ -24,5 +24,5 @@ int PDC_get_rows(void)
 {
     PDC_LOG(("PDC_get_rows() - called\n"));
 
-    return SP->lines;
+    return pdc_wheight / pdc_fheight;
 }

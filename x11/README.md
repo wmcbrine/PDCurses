@@ -46,7 +46,9 @@ system. If using dynamic linking, on some systems, "-lXCurses" suffices.
 By calling Xinitscr() rather than initscr(), you can pass your program
 name and resource overrides to PDCurses. The program name is used as the
 title of the X window, and for defining X resources specific to your
-program.
+program. You can also set the width and height via PDC_COLS and
+PDC_LINES (command-line options and resources will take precedence), and
+as always, you can set the title via PDC_set_title().
 
 
 Interaction with stdio

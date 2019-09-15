@@ -66,8 +66,8 @@
 
 static XtResource app_resources[] =
 {
-    RINT(lines, Lines, 24),
-    RINT(cols, Cols, 80),
+    RINT(lines, Lines, -1),
+    RINT(cols, Cols, -1),
 
     RCOLOR(Black, Black),
     RCOLOR(Red, red3),
@@ -524,6 +524,26 @@ int PDC_scr_open(void)
 
     COLS = pdc_app_data.cols;
     LINES = pdc_app_data.lines;
+
+    if (-1 == COLS)
+    {
+        const char *env = getenv("PDC_COLS");
+        if (env)
+            COLS = atoi(env);
+
+        if (COLS <= 0)
+            COLS = 80;
+    }
+
+    if (-1 == LINES)
+    {
+        const char *env = getenv("PDC_LINES");
+        if (env)
+            LINES = atoi(env);
+
+        if (LINES <= 0)
+            LINES = 24;
+    }
 
     pdc_wwidth = pdc_fwidth * COLS;
     pdc_wheight = pdc_fheight * LINES;

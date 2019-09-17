@@ -102,8 +102,6 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 
 /* Internal macros for attributes */
 
-#define PDC_COLOR_PAIRS 256
-
 #ifndef max
 # define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
@@ -115,7 +113,10 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 
 #define PDC_CLICK_PERIOD 150  /* time to wait for a click, if
                                  not set by mouseinterval() */
+#define PDC_COLOR_PAIRS  256
+#define PDC_MAXCOL       768  /* maximum possible COLORS; may be less */
 
-#define PDC_MAXCOL 768        /* maximum possible COLORS; may be less */
+#define _INBUFSIZ        512  /* size of terminal input buffer */
+#define NUNGETCH         256  /* max # chars to ungetch() */
 
 #endif /* __CURSES_INTERNALS__ */

@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3903
+#define PDC_BUILD    3904
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   9
 #define PDC_VERDOT   "3.9"
@@ -355,6 +355,9 @@ typedef struct
     bool  dirty;          /* redraw on napms() after init_color() */
     int   sel_start;      /* start of selection (y * COLS + x) */
     int   sel_end;        /* end of selection */
+    int  *c_buffer;       /* character buffer */
+    int   c_pindex;       /* putter index */
+    int   c_gindex;       /* getter index */
     int  *c_ungch;        /* array of ungotten chars */
     int   c_ungind;       /* ungetch() push index */
     int   c_ungmax;       /* allocated size of ungetch() buffer */

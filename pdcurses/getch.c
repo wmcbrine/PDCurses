@@ -94,12 +94,9 @@ getch
 #include <stdlib.h>
 
 #define _INBUFSIZ   512 /* size of terminal input buffer */
-#define NUNGETCH    256 /* max # chars to ungetch() */
 
 static int c_pindex = 0;    /* putter index */
 static int c_gindex = 1;    /* getter index */
-static int c_ungind = 0;    /* ungetch() push index */
-static int c_ungch[NUNGETCH];   /* array of ungotten chars */
 
 static int _get_box(int *y_start, int *y_end, int *x_start, int *x_end)
 {
@@ -204,7 +201,7 @@ static int _paste(void)
 # define PASTE paste
 #endif
     char *paste;
-    long len;
+    long len, newmax;
     int key;
 
     key = PDC_getclipboard(&paste, &len);
@@ -215,6 +212,14 @@ static int _paste(void)
     wpaste = malloc(len * sizeof(wchar_t));
     len = PDC_mbstowcs(wpaste, paste, len);
 #endif
+    newmax = len + SP->c_ungind;
+    if (newmax > SP->c_ungmax)
+    {
+        SP->c_ungch = realloc(SP->c_ungch, newmax * sizeof(int));
+        if (!SP->c_ungch)
+            return -1;
+        SP->c_ungmax = newmax;
+    }
     while (len > 1)
         PDC_ungetch(PASTE[--len]);
     key = *PASTE;
@@ -357,8 +362,8 @@ int wgetch(WINDOW *win)
 
     /* if ungotten char exists, remove and return it */
 
-    if (c_ungind)
-        return c_ungch[--c_ungind];
+    if (SP->c_ungind)
+        return SP->c_ungch[--(SP->c_ungind)];
 
     /* if normal and data in buffer */
 
@@ -491,10 +496,10 @@ int PDC_ungetch(int ch)
 {
     PDC_LOG(("ungetch() - called\n"));
 
-    if (c_ungind >= NUNGETCH)   /* pushback stack full */
+    if (SP->c_ungind >= SP->c_ungmax)   /* pushback stack full */
         return ERR;
 
-    c_ungch[c_ungind++] = ch;
+    SP->c_ungch[SP->c_ungind++] = ch;
 
     return OK;
 }
@@ -507,7 +512,7 @@ int flushinp(void)
 
     c_gindex = 1;           /* set indices to kill buffer */
     c_pindex = 0;
-    c_ungind = 0;           /* clear c_ungch array */
+    SP->c_ungind = 0;       /* clear SP->c_ungch array */
 
     return OK;
 }

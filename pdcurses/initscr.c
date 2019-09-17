@@ -103,6 +103,8 @@ char ttytype[128];
 
 const char *_curses_notice = "PDCurses " PDC_VERDOT " - " __DATE__;
 
+#define NUNGETCH    256 /* max # chars to ungetch() */
+
 SCREEN *SP = (SCREEN*)NULL;           /* curses variables */
 WINDOW *curscr = (WINDOW *)NULL;      /* the current screen image */
 WINDOW *stdscr = (WINDOW *)NULL;      /* the default screen window */
@@ -240,6 +242,10 @@ WINDOW *initscr(void)
 
     sprintf(ttytype, "pdcurses|PDCurses for %s", PDC_sysname());
 
+    SP->c_ungch = malloc(NUNGETCH * sizeof(int));
+    SP->c_ungind = 0;
+    SP->c_ungmax = NUNGETCH;
+
     return stdscr;
 }
 
@@ -296,6 +302,8 @@ void delscreen(SCREEN *sp)
 
     if (!SP || sp != SP)
         return;
+
+    free(SP->c_ungch);
 
     PDC_slk_free();     /* free the soft label keys, if needed */
 

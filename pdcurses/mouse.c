@@ -412,7 +412,7 @@ int ungetmouse(MEVENT *event)
     else if (bstate & BUTTON5_PRESSED)
         SP->mouse_status.changes |= PDC_MOUSE_WHEEL_DOWN;
 
-    return ungetch(KEY_MOUSE);
+    return PDC_ungetch(KEY_MOUSE);
 }
 
 bool has_mouse(void)

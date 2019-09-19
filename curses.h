@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3904
+#define PDC_BUILD    3905
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   9
 #define PDC_VERDOT   "3.9"
@@ -302,6 +302,15 @@ typedef struct _win       /* definition of a window */
     struct _win *_parent; /* subwin's pointer to parent win */
 } WINDOW;
 
+/* Color pair structure */
+
+typedef struct
+{
+    short f;              /* foreground color */
+    short b;              /* background color */
+    bool  set;            /* pair has been set */
+} PDC_PAIR;
+
 /* Avoid using the SCREEN struct directly -- use the corresponding
    functions if possible. This struct may eventually be made private. */
 
@@ -361,6 +370,7 @@ typedef struct
     int  *c_ungch;        /* array of ungotten chars */
     int   c_ungind;       /* ungetch() push index */
     int   c_ungmax;       /* allocated size of ungetch() buffer */
+    PDC_PAIR *atrtab;     /* table of color pairs */
 } SCREEN;
 
 /*----------------------------------------------------------------------

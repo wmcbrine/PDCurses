@@ -101,10 +101,6 @@ color
 int COLORS = 0;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
-/* COLOR_PAIR to attribute encoding table. */
-
-static struct {short f, b; bool set;} atrtab[PDC_COLOR_PAIRS];
-
 static bool default_colors = FALSE;
 static short first_col = 0;
 
@@ -138,21 +134,23 @@ static void _normalize(short *fg, short *bg)
 
 static void _init_pair_core(short pair, short fg, short bg)
 {
+    PDC_PAIR *p = SP->atrtab + pair;
+
     _normalize(&fg, &bg);
 
     /* To allow the PDC_PRESERVE_SCREEN option to work, we only reset
        curscr if this call to init_pair() alters a color pair created by
        the user. */
 
-    if (atrtab[pair].set)
+    if (p->set)
     {
-        if (atrtab[pair].f != fg || atrtab[pair].b != bg)
+        if (p->f != fg || p->b != bg)
             curscr->_clear = TRUE;
     }
 
-    atrtab[pair].f = fg;
-    atrtab[pair].b = bg;
-    atrtab[pair].set = TRUE;
+    p->f = fg;
+    p->b = bg;
+    p->set = TRUE;
 }
 
 int init_pair(short pair, short fg, short bg)
@@ -227,8 +225,8 @@ int pair_content(short pair, short *fg, short *bg)
     if (pair < 0 || pair >= COLOR_PAIRS || !fg || !bg)
         return ERR;
 
-    *fg = atrtab[pair].f;
-    *bg = atrtab[pair].b;
+    *fg = SP->atrtab[pair].f;
+    *bg = SP->atrtab[pair].b;
 
     return OK;
 }
@@ -270,6 +268,7 @@ int PDC_set_line_color(short color)
 
 void PDC_init_atrtab(void)
 {
+    PDC_PAIR *p = SP->atrtab;
     short i, fg, bg;
 
     if (SP->color_started && !default_colors)
@@ -284,8 +283,8 @@ void PDC_init_atrtab(void)
 
     for (i = 0; i < PDC_COLOR_PAIRS; i++)
     {
-        atrtab[i].f = fg;
-        atrtab[i].b = bg;
-        atrtab[i].set = FALSE;
+        p[i].f = fg;
+        p[i].b = bg;
+        p[i].set = FALSE;
     }
 }

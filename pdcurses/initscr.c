@@ -226,6 +226,9 @@ WINDOW *initscr(void)
     else
         curscr->_clear = TRUE;
 
+    SP->atrtab = calloc(PDC_COLOR_PAIRS, sizeof(PDC_PAIR));
+    if (!SP->atrtab)
+        return NULL;
     PDC_init_atrtab();  /* set up default colors */
 
     MOUSE_X_POS = MOUSE_Y_POS = -1;
@@ -311,6 +314,7 @@ void delscreen(SCREEN *sp)
 
     free(SP->c_ungch);
     free(SP->c_buffer);
+    free(SP->atrtab);
 
     PDC_slk_free();     /* free the soft label keys, if needed */
 

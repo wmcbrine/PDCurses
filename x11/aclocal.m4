@@ -378,7 +378,7 @@ case "$target" in
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
 		LD_RXLIB1="ld"
 		;;
-	*linux*|*atheos*|*nto-qnx*)
+	*linux*|*atheos*|*nto-qnx*|*openbsd*)
 		LD_RXLIB1="${CC} -shared"
 		;;
 	*freebsd*)

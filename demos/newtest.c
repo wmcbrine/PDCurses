@@ -294,7 +294,9 @@ int main( int argc, char **argv)
             color_block_cols = 0;
         if( redraw)
         {
+#if (CHTYPE_LONG >= 2) || defined( HAVE_WIDE)
             int line = 21;
+#endif
 
             mvaddstr( 1, COL1, "'Normal' white-on-black");
             mvaddstr( 2, COL1, longname( ));

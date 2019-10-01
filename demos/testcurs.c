@@ -1190,7 +1190,7 @@ void acsTest(WINDOW *win)
 #endif
     };
 
-#ifdef WACS_S1
+#if HAVE_WIDE && defined( WACS_S1)
     const cchar_t *wacs_values[] =
     {
         WACS_ULCORNER, WACS_URCORNER, WACS_LLCORNER, WACS_LRCORNER,
@@ -1248,7 +1248,7 @@ void acsTest(WINDOW *win)
     };
 #endif               /* #ifdef WACS_S1   */
 
-#ifdef WACS_S1
+#if HAVE_WIDE
     static const wchar_t russian[] = {0x0420, 0x0443, 0x0441, 0x0441,
         0x043a, 0x0438, 0x0439, L' ', 0x044f, 0x0437, 0x044b, 0x043a, 0};
 

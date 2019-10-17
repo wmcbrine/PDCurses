@@ -77,7 +77,7 @@ LINK		= $(CC)
 
 DEMOS		+= sdltest$(E)
 
-.PHONY: all libs clean demos install
+.PHONY: all libs clean demos
 
 all:	libs
 

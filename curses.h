@@ -9,21 +9,21 @@
 
 Define before inclusion (only those needed):
 
-    XCURSES         True if compiling for X11.
-    PDC_RGB         True if you want to use RGB color definitions
-                    (Red = 1, Green = 2, Blue = 4) instead of BGR.
-    PDC_WIDE        True if building wide-character support.
-    PDC_DLL_BUILD   True if building a Windows DLL.
-    PDC_NCMOUSE     Use the ncurses mouse API instead
-                    of PDCurses' traditional mouse API.
+    XCURSES         if building / built for X11
+    PDC_RGB         if you want to use RGB color definitions
+                    (Red = 1, Green = 2, Blue = 4) instead of BGR
+    PDC_WIDE        if building / built with wide-character support
+    PDC_DLL_BUILD   if building / built as a Windows DLL
+    PDC_NCMOUSE     to use the ncurses mouse API instead
+                    of PDCurses' traditional mouse API
 
 Defined by this header:
 
-    PDCURSES        Enables access to PDCurses-only routines.
-    PDC_BUILD       Defines API build version.
-    PDC_VER_MAJOR   Major version number
-    PDC_VER_MINOR   Minor version number
-    PDC_VERDOT      Version string
+    PDCURSES        PDCurses-only features are available
+    PDC_BUILD       API build version
+    PDC_VER_MAJOR   major version number
+    PDC_VER_MINOR   minor version number
+    PDC_VERDOT      version string
 
 **man-end****************************************************************/
 

@@ -400,6 +400,19 @@ static int _process_mouse_event(void)
     return KEY_MOUSE;
 }
 
+int PDC_event_filter(void *userdata, SDL_Event *event)
+{
+    if (SDL_WINDOWEVENT == event->type &&
+        (SDL_WINDOWEVENT_RESTORED == event->window.event ||
+         SDL_WINDOWEVENT_EXPOSED == event->window.event))
+    {
+        SDL_UpdateWindowSurface(pdc_window);
+        return 0;
+    }
+
+    return 1;
+}
+
 /* return the next available key or mouse event */
 
 int PDC_get_key(void)
@@ -409,9 +422,8 @@ int PDC_get_key(void)
     case SDL_QUIT:
         exit(1);
     case SDL_WINDOWEVENT:
-        switch (event.window.event)
+        if (SDL_WINDOWEVENT_SIZE_CHANGED == event.window.event)
         {
-        case SDL_WINDOWEVENT_SIZE_CHANGED:
             pdc_screen = SDL_GetWindowSurface(pdc_window);
             pdc_sheight = pdc_screen->h - pdc_xoffset;
             pdc_swidth = pdc_screen->w - pdc_yoffset;
@@ -424,10 +436,6 @@ int PDC_get_key(void)
                 SP->key_code = TRUE;
                 return KEY_RESIZE;
             }
-            break;
-        case SDL_WINDOWEVENT_RESTORED:
-        case SDL_WINDOWEVENT_EXPOSED:
-            SDL_UpdateWindowSurface(pdc_window);
         }
         break;
     case SDL_MOUSEMOTION:

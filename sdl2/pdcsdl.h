@@ -32,4 +32,5 @@ extern bool pdc_own_window;          /* if pdc_window was not set
 PDCEX  void PDC_update_rects(void);
 PDCEX  void PDC_retile(void);
 
+extern int PDC_event_filter(void *, SDL_Event *);
 extern void PDC_blink_text(void);

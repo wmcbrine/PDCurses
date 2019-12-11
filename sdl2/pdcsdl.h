@@ -12,6 +12,8 @@ PDCEX  TTF_Font *pdc_ttffont;
 PDCEX  int pdc_font_size;
 #endif
 PDCEX  SDL_Window *pdc_window;
+PDCEX  SDL_Renderer *pdc_renderer;
+PDCEX  SDL_Texture *pdc_texture;
 PDCEX  SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
 PDCEX  int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
@@ -29,8 +31,9 @@ extern bool pdc_own_window;          /* if pdc_window was not set
                                         before initscr(), PDCurses is
                                         responsible for (owns) it */
 
-PDCEX  void PDC_update_rects(void);
 PDCEX  void PDC_retile(void);
 
+extern void PDC_oldscreen(void);
+extern void PDC_newscreen(void);
 extern int PDC_event_filter(void *, SDL_Event *);
 extern void PDC_blink_text(void);

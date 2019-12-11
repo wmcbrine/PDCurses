@@ -83,14 +83,15 @@ bool PDC_check_key(void)
 {
     int haveevent;
 
-    /**
-     * SDL_TEXTINPUT can return multiple chars from the IME
-     * which we should handle before polling for additional
-     * events.
-     */
+    SDL_PumpEvents();
+
+    /* SDL_TEXTINPUT can return multiple chars from the IME which we
+       should handle before polling for additional events. */
+
     if (event.type == SDL_TEXTINPUT && event.text.text[0])
         haveevent = 1;
-    else haveevent = SDL_PollEvent(&event);
+    else
+        haveevent = SDL_PollEvent(&event);
 
     return haveevent;
 }
@@ -406,7 +407,7 @@ int PDC_event_filter(void *userdata, SDL_Event *event)
         (SDL_WINDOWEVENT_RESTORED == event->window.event ||
          SDL_WINDOWEVENT_EXPOSED == event->window.event))
     {
-        SDL_UpdateWindowSurface(pdc_window);
+        PDC_doupdate();
         return 0;
     }
 
@@ -424,7 +425,8 @@ int PDC_get_key(void)
     case SDL_WINDOWEVENT:
         if (SDL_WINDOWEVENT_SIZE_CHANGED == event.window.event)
         {
-            pdc_screen = SDL_GetWindowSurface(pdc_window);
+            PDC_oldscreen();
+            PDC_newscreen();
             pdc_sheight = pdc_screen->h - pdc_xoffset;
             pdc_swidth = pdc_screen->w - pdc_yoffset;
             touchwin(curscr);

@@ -134,7 +134,6 @@ include pdcsdl.h, or just add the declarations you need in your code:
     PDCEX SDL_Surface *pdc_screen, *pdc_font, *pdc_icon, *pdc_back;
     PDCEX int pdc_sheight, pdc_swidth, pdc_yoffset, pdc_xoffset;
 
-    PDCEX void PDC_update_rects(void);
     PDCEX void PDC_retile(void);
 
 pdc_window is the main window, created by SDL_CreateWindow(), unless

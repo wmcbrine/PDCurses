@@ -11,7 +11,6 @@ void PDC_napms(int ms)
 {
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-    PDC_update_rects();
     while (ms > 50)
     {
         SDL_PumpEvents();

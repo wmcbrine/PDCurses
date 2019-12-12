@@ -35,5 +35,5 @@ PDCEX  void PDC_retile(void);
 
 extern void PDC_oldscreen(void);
 extern void PDC_newscreen(void);
-extern int PDC_event_filter(void *, SDL_Event *);
+extern void PDC_pump_and_peep(void);
 extern void PDC_blink_text(void);

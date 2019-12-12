@@ -83,7 +83,7 @@ bool PDC_check_key(void)
 {
     int haveevent;
 
-    SDL_PumpEvents();
+    PDC_pump_and_peep();
 
     /* SDL_TEXTINPUT can return multiple chars from the IME which we
        should handle before polling for additional events. */
@@ -399,19 +399,6 @@ static int _process_mouse_event(void)
 
     SP->key_code = TRUE;
     return KEY_MOUSE;
-}
-
-int PDC_event_filter(void *userdata, SDL_Event *event)
-{
-    if (SDL_WINDOWEVENT == event->type &&
-        (SDL_WINDOWEVENT_RESTORED == event->window.event ||
-         SDL_WINDOWEVENT_EXPOSED == event->window.event))
-    {
-        PDC_doupdate();
-        return 0;
-    }
-
-    return 1;
 }
 
 /* return the next available key or mouse event */

@@ -479,3 +479,18 @@ void PDC_doupdate(void)
     SDL_RenderCopy(pdc_renderer, pdc_texture, NULL, NULL);
     SDL_RenderPresent(pdc_renderer);
 }
+
+void PDC_pump_and_peep(void)
+{
+    SDL_Event event;
+
+    if (SDL_PollEvent(&event))
+    {
+        if (SDL_WINDOWEVENT == event.type &&
+            (SDL_WINDOWEVENT_RESTORED == event.window.event ||
+             SDL_WINDOWEVENT_EXPOSED == event.window.event))
+            PDC_doupdate();
+        else
+            SDL_PushEvent(&event);
+    }
+}

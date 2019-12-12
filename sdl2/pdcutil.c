@@ -13,11 +13,11 @@ void PDC_napms(int ms)
 
     while (ms > 50)
     {
-        SDL_PumpEvents();
+        PDC_pump_and_peep();
         SDL_Delay(50);
         ms -= 50;
     }
-    SDL_PumpEvents();
+    PDC_pump_and_peep();
     SDL_Delay(ms);
 }
 

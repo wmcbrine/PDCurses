@@ -310,8 +310,6 @@ int PDC_scr_open(void)
 
     PDC_reset_prog_mode();
 
-    SDL_SetEventFilter(PDC_event_filter, NULL);
-
     return OK;
 }
 

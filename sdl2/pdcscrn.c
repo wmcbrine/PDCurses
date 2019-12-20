@@ -150,10 +150,37 @@ void PDC_newscreen(void)
                                       0, 0, 0, 0);
 }
 
+/* find the display where the mouse pointer is */
+
+int _get_displaynum(void)
+{
+    SDL_Rect size;
+    int i, xpos, ypos, displays;
+
+    displays = SDL_GetNumVideoDisplays();
+
+    if (displays > 1)
+    {
+        SDL_GetGlobalMouseState(&xpos, &ypos);
+
+        for (i = 0; i < displays; i++)
+        {
+            SDL_GetDisplayBounds(i, &size);
+            if (size.x <= xpos && xpos < size.x + size.w &&
+                size.y <= ypos && ypos < size.y + size.h)
+                return i;
+        }
+    }
+
+    return 0;
+}
+
 /* open the physical screen -- miscellaneous initialization */
 
 int PDC_scr_open(void)
 {
+    int displaynum = 0;
+
     PDC_LOG(("PDC_scr_open() - called\n"));
 
     pdc_own_window = !pdc_window;
@@ -167,6 +194,8 @@ int PDC_scr_open(void)
         }
 
         atexit(_clean);
+
+        displaynum = _get_displaynum();
     }
 
 #ifdef PDC_WIDE
@@ -266,8 +295,9 @@ int PDC_scr_open(void)
         pdc_swidth = (env ? atoi(env) : 80) * pdc_fwidth;
 
         pdc_window = SDL_CreateWindow("PDCurses",
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, pdc_swidth,
-            pdc_sheight, SDL_WINDOW_RESIZABLE);
+            SDL_WINDOWPOS_CENTERED_DISPLAY(displaynum),
+            SDL_WINDOWPOS_CENTERED_DISPLAY(displaynum),
+            pdc_swidth, pdc_sheight, SDL_WINDOW_RESIZABLE);
 
         if (pdc_window == NULL)
         {

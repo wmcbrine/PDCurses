@@ -412,8 +412,7 @@ int PDC_get_key(void)
     case SDL_WINDOWEVENT:
         if (SDL_WINDOWEVENT_SIZE_CHANGED == event.window.event)
         {
-            PDC_oldscreen();
-            PDC_newscreen();
+            pdc_screen = SDL_GetWindowSurface(pdc_window);
             pdc_sheight = pdc_screen->h - pdc_xoffset;
             pdc_swidth = pdc_screen->w - pdc_yoffset;
             touchwin(curscr);

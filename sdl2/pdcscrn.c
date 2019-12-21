@@ -28,8 +28,6 @@ int pdc_font_size =
 #endif
 
 SDL_Window *pdc_window = NULL;
-SDL_Renderer *pdc_renderer = NULL;
-SDL_Texture *pdc_texture = NULL;
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
@@ -130,24 +128,6 @@ static void _initialize_colors(void)
     for (i = 0; i < 256; i++)
         pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
                                    pdc_color[i].g, pdc_color[i].b);
-}
-
-void PDC_oldscreen(void)
-{
-    SDL_FreeSurface(pdc_screen);
-    SDL_DestroyTexture(pdc_texture);
-    SDL_DestroyRenderer(pdc_renderer);
-}
-
-void PDC_newscreen(void)
-{
-    SDL_GetWindowSize(pdc_window, &pdc_swidth, &pdc_sheight);
-    pdc_renderer = SDL_CreateRenderer(pdc_window, -1, 0);
-    pdc_texture = SDL_CreateTexture(pdc_renderer, SDL_PIXELFORMAT_ARGB8888,
-                                    SDL_TEXTUREACCESS_STREAMING,
-                                    pdc_swidth, pdc_sheight);
-    pdc_screen = SDL_CreateRGBSurface(0, pdc_swidth, pdc_sheight, 32,
-                                      0, 0, 0, 0);
 }
 
 /* find the display where the mouse pointer is */
@@ -306,14 +286,35 @@ int PDC_scr_open(void)
         }
 
         SDL_SetWindowIcon(pdc_window, pdc_icon);
+
+        /* Events must be pumped before calling SDL_GetWindowSurface, or
+           initial modifiers (e.g. numlock) will be ignored and out-of-sync. */
+
+        SDL_PumpEvents();
+
+        pdc_screen = SDL_GetWindowSurface(pdc_window);
+
+        if (pdc_screen == NULL)
+        {
+            fprintf(stderr, "Could not open SDL window surface: %s\n",
+                    SDL_GetError());
+            return ERR;
+        }
+
+        pdc_sheight = pdc_screen->h;
+        pdc_swidth  = pdc_screen->w;
     }
+    else
+    {
+        if (!pdc_screen)
+            pdc_screen = SDL_GetWindowSurface(pdc_window);
 
-    SDL_PumpEvents();
+        if (!pdc_sheight)
+            pdc_sheight = pdc_screen->h - pdc_yoffset;
 
-    PDC_newscreen();
-
-    pdc_sheight -= pdc_yoffset;
-    pdc_swidth -= pdc_xoffset;
+        if (!pdc_swidth)
+            pdc_swidth = pdc_screen->w - pdc_xoffset;
+    }
 
     if (!pdc_screen)
     {
@@ -370,8 +371,7 @@ int PDC_resize_screen(int nlines, int ncols)
         pdc_swidth = ncols * pdc_fwidth;
 
         SDL_SetWindowSize(pdc_window, pdc_swidth, pdc_sheight);
-        PDC_oldscreen();
-        PDC_newscreen();
+        pdc_screen = SDL_GetWindowSurface(pdc_window);
     }
 
     if (pdc_tileback)

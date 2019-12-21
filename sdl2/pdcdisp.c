@@ -11,9 +11,64 @@
 # include "../common/acs437.h"
 #endif
 
+#define MAXRECT 200     /* maximum number of rects to queue up before
+                           an update is forced; the number was chosen
+                           arbitrarily */
+
+static SDL_Rect uprect[MAXRECT];       /* table of rects to update */
 static chtype oldch = (chtype)(-1);    /* current attribute */
+static int rectcount = 0;              /* index into uprect */
 static short foregr = -2, backgr = -2; /* current foreground, background */
 static bool blinked_off = FALSE;
+
+/* do the real updates on a delay */
+
+void PDC_update_rects(void)
+{
+    int i;
+
+    if (rectcount)
+    {
+        /* if the maximum number of rects has been reached, we're
+           probably better off doing a full screen update */
+
+        if (rectcount == MAXRECT)
+            SDL_UpdateWindowSurface(pdc_window);
+        else
+        {
+            int w = pdc_screen->w;
+            int h = pdc_screen->h;
+
+            for (i = 0; i < rectcount; i++)
+            {
+                if (uprect[i].x > w ||
+                    uprect[i].y > h ||
+                    !uprect[i].w || !uprect[i].h)
+                {
+                    if (i + 1 < rectcount)
+                    {
+                        memmove(uprect + i, uprect + i + 1,
+                                (rectcount - i + 1) * sizeof(*uprect));
+                        --i;
+                    }
+                    rectcount--;
+                    continue;
+                }
+
+                if (uprect[i].x + uprect[i].w > w)
+                    uprect[i].w = min(w, w - uprect[i].x);
+
+                if (uprect[i].y + uprect[i].h > h)
+                    uprect[i].h = min(h, h - uprect[i].y);
+            }
+
+            if (rectcount > 0)
+                SDL_UpdateWindowSurfaceRects(pdc_window, uprect, rectcount);
+        }
+
+        rectcount = 0;
+    }
+}
 
 /* set the font colors to match the chtype's attribute */
 
@@ -267,11 +322,19 @@ void PDC_gotoyx(int row, int col)
 
     SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
 #endif
+
+    if (oldrow != row || oldcol != col)
+    {
+        if (rectcount == MAXRECT)
+            PDC_update_rects();
+
+        uprect[rectcount++] = dest;
+    }
 }
 
 void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
-    SDL_Rect src, dest;
+    SDL_Rect src, dest, lastrect;
     int j;
 #ifdef PDC_WIDE
     Uint16 chstr[2] = {0, 0};
@@ -279,6 +342,9 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     attr_t sysattrs = SP->termattrs;
     short hcol = SP->line_color;
     bool blink = blinked_off && (attr & A_BLINK) && (sysattrs & A_BLINK);
+
+    if (rectcount == MAXRECT)
+        PDC_update_rects();
 
 #ifdef PDC_WIDE
     src.x = 0;
@@ -291,6 +357,24 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     dest.x = pdc_fwidth * x + pdc_xoffset;
     dest.h = pdc_fheight;
     dest.w = pdc_fwidth * len;
+
+    /* if the previous rect was just above this one, with the same width
+       and horizontal position, then merge the new one with it instead
+       of adding a new entry */
+
+    if (rectcount)
+        lastrect = uprect[rectcount - 1];
+
+    if (rectcount && lastrect.x == dest.x && lastrect.w == dest.w)
+    {
+        if (lastrect.y + lastrect.h == dest.y)
+            uprect[rectcount - 1].h = lastrect.h + pdc_fheight;
+        else
+            if (lastrect.y != dest.y)
+                uprect[rectcount++] = dest;
+    }
+    else
+        uprect[rectcount++] = dest;
 
     _set_attr(attr);
 
@@ -474,10 +558,7 @@ void PDC_blink_text(void)
 
 void PDC_doupdate(void)
 {
-    SDL_UpdateTexture(pdc_texture, NULL, pdc_screen->pixels, pdc_screen->pitch);
-    SDL_RenderClear(pdc_renderer);
-    SDL_RenderCopy(pdc_renderer, pdc_texture, NULL, NULL);
-    SDL_RenderPresent(pdc_renderer);
+    PDC_update_rects();
 }
 
 void PDC_pump_and_peep(void)
@@ -489,7 +570,10 @@ void PDC_pump_and_peep(void)
         if (SDL_WINDOWEVENT == event.type &&
             (SDL_WINDOWEVENT_RESTORED == event.window.event ||
              SDL_WINDOWEVENT_EXPOSED == event.window.event))
-            PDC_doupdate();
+        {
+            SDL_UpdateWindowSurface(pdc_window);
+            rectcount = 0;
+        }
         else
             SDL_PushEvent(&event);
     }

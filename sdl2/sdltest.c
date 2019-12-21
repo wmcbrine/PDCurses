@@ -34,12 +34,13 @@ int main(int argc, char **argv)
 
     pdc_window = SDL_CreateWindow("PDCurses for SDL", SDL_WINDOWPOS_UNDEFINED,
                                   SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+    pdc_screen = SDL_GetWindowSurface(pdc_window);
 
     /* Initialize PDCurses */
 
     pdc_yoffset = 416;  /* 480 - 4 * 16 */
 
-    initscr();     /* creates pdc_screen */
+    initscr();
     start_color();
     scrollok(stdscr, TRUE);
 
@@ -61,7 +62,7 @@ int main(int argc, char **argv)
                                 rand() % 256, rand() % 256));
     }
 
-    doupdate();    /* updates pdc_screen */
+    SDL_UpdateWindowSurface(pdc_window);
 
     /* Do some curses stuff */
 

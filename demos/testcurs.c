@@ -1480,7 +1480,7 @@ void colorTest(WINDOW *win)
                 init_color((short)(colors[i] + 8), 0, (short)(i * 125), 0);
         }
 
-        mvaddstr(tmarg + 19, 3, "Press any key to continue");
+        mvaddstr(tmarg + 19, 3, "Colors changed; press any key to continue");
         getch();
         for (i = 0; i < MAXCOL; i++)
             init_color((short)i, orgcolors[i].red,

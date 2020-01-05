@@ -78,10 +78,10 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(BUILD) $<
 
 .obj.exe:
-	$(CC) -m$(MODEL) -e$@ $** $(LIBCURSES)
+	$(CC)            -e$@ $** $(LIBCURSES)
 
 tuidemo.exe:	tuidemo.obj tui.obj $(LIBCURSES)
-	$(CC) -m$(MODEL) -e$@ $**
+	$(CC)            -e$@ $**
 
 tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 	$(BUILD) -I$(demodir) $(demodir)\tui.c

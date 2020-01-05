@@ -255,3 +255,6 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.obj: $(demodir)\tuidemo.c
    $(BUILD) -I$(demodir) $(demodir)\$*.c
+
+naptest.exe:    naptest.c
+   $(DEMOBUILD)

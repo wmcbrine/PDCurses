@@ -702,8 +702,6 @@ static int _process_mouse_event(void)
     return KEY_MOUSE;
 }
 
-int pdc_resizeX, pdc_resizeY;
-
 /* return the next available key or mouse event */
 
 int PDC_get_key(void)

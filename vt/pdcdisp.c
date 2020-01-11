@@ -73,11 +73,11 @@ static int get_sixteen_color_idx( const PACKED_RGB rgb)
 {
     int rval = 0;
 
-    if( rgb & 0x800000)    /* red value >= 128 */
+    if( rgb & 0x80)    /* red value >= 128 */
         rval = 1;
     if( rgb & 0x8000)      /* green value >= 128 */
         rval |= 2;
-    if( rgb & 0x80)        /* blue value >= 128 */
+    if( rgb & 0x800000)        /* blue value >= 128 */
         rval |= 4;
     return( rval);
 }

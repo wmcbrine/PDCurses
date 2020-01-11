@@ -1761,6 +1761,7 @@ PDCEX  wchar_t *slk_wlabel(int);
 PDCEX  void    PDC_debug(const char *, ...);
 PDCEX  int     PDC_ungetch(int);
 PDCEX  int     PDC_set_blink(bool);
+PDCEX  int     PDC_set_bold(bool);
 PDCEX  int     PDC_set_line_color(short);
 PDCEX  void    PDC_set_title(const char *);
 

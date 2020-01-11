@@ -402,6 +402,7 @@ typedef struct
     int   exit_key;
 #endif
     short line_color;     /* color of line attributes - default -1 */
+    attr_t termattrs;     /* attribute capabilities */
 } SCREEN;
 
 /*----------------------------------------------------------------------

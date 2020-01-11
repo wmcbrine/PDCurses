@@ -84,6 +84,9 @@ int PDC_set_blink(bool blinkon)
 {
     PDCREGS regs;
 
+    if (!SP)
+        return ERR;
+
     switch (pdc_adapter)
     {
     case _EGACOLOR:
@@ -102,6 +105,11 @@ int PDC_set_blink(bool blinkon)
     default:
         COLORS = 8;
     }
+
+    if (blinkon && (COLORS == 8))
+        SP->termattrs |= A_BLINK;
+    else if (!blinkon && (COLORS == 16))
+        SP->termattrs &= ~A_BLINK;
 
     return (COLORS - (blinkon * 8) != 8) ? OK : ERR;
 }

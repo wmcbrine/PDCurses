@@ -37,11 +37,9 @@ const chtype MAX_UNICODE = 0x110000;
    int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
 #endif
 
-extern chtype PDC_capabilities;
-
 static char *color_string( char *otext, const PACKED_RGB rgb)
 {
-   if( PDC_capabilities & A_RGB_COLOR)
+   if( SP->termattrs & A_RGB_COLOR)
       sprintf( otext, "2;%d;%d;%dm", Get_RValue( rgb),
                              Get_GValue( rgb), Get_BValue( rgb));
    else

@@ -2539,6 +2539,9 @@ int PDC_scr_open( int argc, char **argv)
     SP->curscol = SP->cursrow = 0;
     SP->audible = TRUE;
     SP->mono = FALSE;
+    SP->termattrs = A_BOLD | A_COLOR | A_LEFTLINE | A_RIGHTLINE
+               | A_OVERLINE | A_UNDERLINE | A_STRIKEOUT | A_ITALIC
+               | A_DIM | A_REVERSE;
 
     /* note: we parse the non-wide argc (see comment in header),
        therefore using non-wide char handling here */

@@ -243,6 +243,7 @@ int PDC_scr_open(int argc, char **argv)
     SP->curscol = SP->cursrow = 0;
     SP->audible = TRUE;
     SP->mono = FALSE;
+    SP->termattrs = PDC_capabilities & ~A_BLINK;
 
     while( PDC_get_rows( ) < 1 && PDC_get_columns( ) < 1)
       ;     /* wait for screen to be drawn and size determined */

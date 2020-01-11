@@ -68,6 +68,13 @@ int PDC_set_blink(bool blinkon)
     extern int PDC_really_blinking;
 
     PDC_really_blinking = blinkon;
+    if( SP)
+    {
+        if( blinkon)
+            SP->termattrs |= A_BLINK;
+        else
+            SP->termattrs &= ~A_BLINK;
+    }
     return OK;
 }
 
@@ -77,6 +84,11 @@ int PDC_set_bold(bool boldon)
         return ERR;
 
 #ifdef PDC_WIDE
+    if (boldon)
+        SP->termattrs |= A_BOLD;
+    else
+        SP->termattrs &= ~A_BOLD;
+
     return OK;
 #else
     return boldon ? ERR : OK;

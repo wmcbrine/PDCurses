@@ -62,15 +62,28 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
-//  if (pdc_color_started)       /* We've got 256 colors in this version */
-//      COLORS = 16;
-
-    return blinkon ? ERR : OK;
+    if (!SP)
+        return ERR;
+    if (blinkon)
+        SP->termattrs |= A_BLINK;
+    else
+        SP->termattrs &= ~A_BLINK;
+    return OK;
 }
 
 int PDC_set_bold(bool boldon)
 {
     if (!SP)
         return ERR;
+
+#ifdef PDC_WIDE
+    if (boldon)
+        SP->termattrs |= A_BOLD;
+    else
+        SP->termattrs &= ~A_BOLD;
+
+    return OK;
+#else
     return boldon ? ERR : OK;
+#endif
 }

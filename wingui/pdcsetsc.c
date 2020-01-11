@@ -92,11 +92,21 @@ void PDC_set_title(const char *title)
 
 int PDC_set_blink(bool blinkon)
 {
+    if (!SP)
+        return ERR;
+    if (blinkon)
+        SP->termattrs |= A_BLINK;
+    else
+        SP->termattrs &= ~A_BLINK;
     PDC_really_blinking = blinkon;
     return OK;
 }
 
 int PDC_set_bold(bool boldon)
 {
-    return boldon ? ERR : OK;
+    if (boldon)
+        SP->termattrs |= A_BOLD;
+    else
+        SP->termattrs &= ~A_BOLD;
+    return OK;
 }

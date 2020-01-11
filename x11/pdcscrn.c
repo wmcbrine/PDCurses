@@ -44,6 +44,8 @@ int PDC_scr_open(int argc, char **argv)
     SP->sb_total_x = 0;
     SP->sb_viewport_x = 0;
     SP->sb_cur_x = 0;
+    SP->termattrs = A_COLOR | A_ITALIC | A_UNDERLINE | A_LEFT | A_RIGHT |
+                    A_REVERSE | A_RGB_COLOR | A_OVERLINE | A_STRIKEOUT | A_DIM;
 
     return OK;
 }

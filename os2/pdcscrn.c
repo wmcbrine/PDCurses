@@ -172,6 +172,8 @@ int PDC_scr_open(int argc, char **argv)
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
+    SP->termattrs = (SP->mono ? 0 : A_COLOR) | A_REVERSE | A_BLINK;
+
     /* This code for preserving the current screen */
 
     if (getenv("PDC_RESTORE_SCREEN"))

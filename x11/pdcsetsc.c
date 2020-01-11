@@ -95,6 +95,11 @@ int PDC_set_blink(bool blinkon)
     if (pdc_color_started)       /* We've got 256 colors in this version */
         COLORS = 256;
 
+    if (blinkon)
+        SP->termattrs |= A_BLINK;
+    else
+        SP->termattrs &= ~A_BLINK;
+
     XCursesInstruct( blinkon ? CURSES_BLINK_ON : CURSES_BLINK_OFF);
     return OK;
 }
@@ -103,5 +108,11 @@ int PDC_set_bold(bool boldon)
 {
     if (!SP)
         return ERR;
+
+    if (boldon)
+        SP->termattrs |= A_BOLD;
+    else
+        SP->termattrs &= ~A_BOLD;
+
     return OK;
 }

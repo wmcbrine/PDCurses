@@ -1,6 +1,7 @@
 /* Public Domain Curses */
 
 #include "pdcwin.h"
+#include "../common/pdccolor.h"
 
 /*man-start**************************************************************
 
@@ -79,8 +80,6 @@ void PDC_set_title(const char *title)
         /* the user _must_ pay attention;  say,  "the nuclear reactor    */
         /* is about to melt down".  Otherwise,  the bolder,  brighter    */
         /* text should be attention-getting enough.                      */
-
-int PDC_really_blinking = FALSE;
 
 int PDC_set_blink(bool blinkon)
 {

@@ -13,6 +13,8 @@ static struct termios orig_term;
 #include <assert.h>
 #include "curspriv.h"
 #include "pdcvt.h"
+#include "../common/pdccolor.h"
+#include "../common/pdccolor.c"
 
 #ifdef DOS
 bool PDC_is_ansi = TRUE;
@@ -94,7 +96,6 @@ chtype PDC_capabilities = 0;
 /* COLOR_PAIR to attribute encoding table. */
 
 static short *color_pair_indices = (short *)NULL;
-PACKED_RGB *pdc_rgbs = (PACKED_RGB *)NULL;
 
 unsigned long pdc_key_modifiers = 0L;
 
@@ -160,10 +161,7 @@ void PDC_scr_free( void)
     if (color_pair_indices)
         free(color_pair_indices);
     color_pair_indices = (short *)NULL;
-
-    if (pdc_rgbs)
-        free(pdc_rgbs);
-    pdc_rgbs = (PACKED_RGB *)NULL;
+    PDC_free_palette( );
 }
 
 #ifdef USE_TERMIOS
@@ -186,7 +184,6 @@ static void sigwinchHandler( int sig)
 
 int PDC_scr_open(int argc, char **argv)
 {
-    int i, r, g, b, n_colors;
     char *capabilities = getenv( "PDC_VT");
     const char *colorterm = getenv( "COLORTERM");
 #ifdef USE_TERMIOS
@@ -215,33 +212,11 @@ int PDC_scr_open(int argc, char **argv)
        }
     SP = calloc(1, sizeof(SCREEN));
     color_pair_indices = (short *)calloc( PDC_COLOR_PAIRS * 2, sizeof( short));
-    n_colors = (PDC_is_ansi ? 16 : 256);
-    pdc_rgbs = (PACKED_RGB *)calloc( n_colors, sizeof( PACKED_RGB));
-    assert( SP && color_pair_indices && pdc_rgbs);
-    if (!SP || !color_pair_indices || !pdc_rgbs)
+    COLORS = (PDC_is_ansi ? 16 : 256);
+    assert( SP && color_pair_indices);
+    if (!SP || !color_pair_indices || PDC_init_palette( ))
         return ERR;
 
-    COLORS = n_colors;  /* should give this a try and see if it works! */
-    for( i = 0; i < 16 && i < n_colors; i++)
-    {
-        const int intensity = ((i & 8) ? 0xff : 0xc0);
-
-        pdc_rgbs[i] = PACK_RGB( ((i & COLOR_RED) ? intensity : 0),
-                           ((i & COLOR_GREEN) ? intensity : 0),
-                           ((i & COLOR_BLUE) ? intensity : 0));
-    }
-           /* 256-color xterm extended palette:  216 colors in a
-            6x6x6 color cube,  plus 24 (not 50) shades of gray */
-    for( r = 0; r < 6; r++)
-        for( g = 0; g < 6; g++)
-            for( b = 0; b < 6; b++)
-                if( i < n_colors)
-                    pdc_rgbs[i++] = PACK_RGB( r ? r * 40 + 55 : 0,
-                                   g ? g * 40 + 55 : 0,
-                                   b ? b * 40 + 55 : 0);
-    for( i = 0; i < 24; i++)
-        if( i + 232 < n_colors)
-            pdc_rgbs[i + 232] = PACK_RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
     setbuf( stdin, NULL);
     setbuf( stdout, NULL);
 #ifdef USE_TERMIOS
@@ -409,7 +384,7 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content( short color, short *red, short *green, short *blue)
 {
-    PACKED_RGB col = pdc_rgbs[color];
+    const PACKED_RGB col = PDC_get_palette_entry( color);
 
     *red = DIVROUND( Get_RValue(col) * 1000, 255);
     *green = DIVROUND( Get_GValue(col) * 1000, 255);
@@ -424,10 +399,7 @@ int PDC_init_color( short color, short red, short green, short blue)
                                  DIVROUND(green * 255, 1000),
                                  DIVROUND(blue * 255, 1000));
 
-    if( pdc_rgbs[color] != new_rgb)
-    {
-        pdc_rgbs[color] = new_rgb;
+    if( PDC_set_palette_entry( color, new_rgb) == 1)
         PDC_show_changes( -1, color, 0);
-    }
     return OK;
 }

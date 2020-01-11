@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
+#include "../common/pdccolor.h"
+#include "../common/pdccolor.c"
 
 /* For this 'real Windows' version,  we use all Unicode all the time,
 including for ACS characters,  and even when PDC_WIDE isn't #defined
@@ -129,7 +131,6 @@ box) in place of any visible cursor.  */
 
 static int PDC_current_cursor_state( void)
 {
-    extern int PDC_blink_state;
     extern HWND PDC_hWnd;
     const int shift_amount = (PDC_blink_state ? 0 : 8);
     const int cursor_style_for_unfocussed_window =
@@ -261,132 +262,12 @@ int PDC_choose_a_new_font( void)
     return( rval);
 }
 
-    /* This function 'intensifies' a color by shifting it toward white. */
-    /* It used to average the input color with white.  Then it did a    */
-    /* weighted average:  2/3 of the input color,  1/3 white,   for a   */
-    /* lower "intensification" level.                                   */
-    /*    Then Mark Hessling suggested that the output level should     */
-    /* remap zero to 85 (= 255 / 3, so one-third intensity),  and input */
-    /* of 192 or greater should be remapped to 255 (full intensity).    */
-    /* Assuming we want a linear response between zero and 192,  that   */
-    /* leads to output = 85 + input * (255-85)/192.                     */
-    /*    This should lead to proper handling of bold text in legacy    */
-    /* apps,  where "bold" means "high intensity".                      */
-
-static COLORREF intensified_color( COLORREF ival)
-{
-    int rgb, i;
-    COLORREF oval = 0;
-
-    for( i = 0; i < 3; i++, ival >>= 8)
-    {
-        rgb = (int)( ival & 0xff);
-        if( rgb >= 192)
-            rgb = 255;
-        else
-            rgb = 85 + rgb * (255 - 85) / 192;
-        oval |= ((COLORREF)rgb << (i * 8));
-    }
-    return( oval);
-}
-
-   /* For use in adjusting colors for A_DIMmed characters.  Just */
-   /* knocks down the intensity of R, G, and B by 1/3.           */
-
-static COLORREF dimmed_color( COLORREF ival)
-{
-    unsigned i;
-    COLORREF oval = 0;
-
-    for( i = 0; i < 3; i++, ival >>= 8)
-    {
-        unsigned rgb = (unsigned)( ival & 0xff);
-
-        rgb -= (rgb / 3);
-        oval |= ((COLORREF)rgb << (i * 8));
-    }
-    return( oval);
-}
-
 /* see 'addch.c' for an explanation of how combining chars are handled. */
 
-#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
-   #ifdef PDC_WIDE
-      #define USING_COMBINING_CHARACTER_SCHEME
-      int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
-   #endif
-
-   /* PDC_get_rgb_values(), extract_packed_rgb(), intensified_component(), */
-   /* intensified_color(),  and dimmed_color() each exist in x11/x11.c,    */
-   /* wingui/pdcdisp.c,  and sdl2/pdcdisp.c in forms slightly modified for */
-   /* each platform.  But they all look pretty much alike.  */
-
-            /* PDCurses stores RGBs in fifteen bits,  five bits each */
-            /* for red, green, blue.  A COLORREF uses eight bits per */
-            /* channel.  Hence the following.                        */
-static COLORREF extract_packed_rgb( const chtype color)
-{
-    const int red   = (int)( (color << 3) & 0xf8);
-    const int green = (int)( (color >> 2) & 0xf8);
-    const int blue  = (int)( (color >> 7) & 0xf8);
-
-    return( RGB( red, green, blue));
-}
+#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2 && PDC_WIDE
+   #define USING_COMBINING_CHARACTER_SCHEME
+   int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
 #endif
-
-
-void PDC_get_rgb_values( const chtype srcp,
-            COLORREF *foreground_rgb, COLORREF *background_rgb)
-{
-    const int color = (int)(( srcp & A_COLOR) >> PDC_COLOR_SHIFT);
-    bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
-    bool intensify_backgnd = FALSE;
-
-#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
-    if( srcp & A_RGB_COLOR)
-    {
-        /* Extract RGB from 30 bits of the color field */
-        *background_rgb = extract_packed_rgb( srcp >> PDC_COLOR_SHIFT);
-        *foreground_rgb = extract_packed_rgb( srcp >> (PDC_COLOR_SHIFT + 15));
-    }
-    else
-#endif
-    {
-        extern COLORREF *pdc_rgbs;
-        short foreground_index, background_index;
-
-        PDC_pair_content( (short)color, &foreground_index, &background_index);
-        *foreground_rgb = pdc_rgbs[foreground_index];
-        *background_rgb = pdc_rgbs[background_index];
-    }
-
-    if( srcp & A_BLINK)
-    {
-        extern int PDC_really_blinking;          /* see 'pdcsetsc.c' */
-        extern int PDC_blink_state;
-
-        if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
-            intensify_backgnd = TRUE;
-        else if( PDC_blink_state)
-            reverse_colors = !reverse_colors;
-    }
-    if( reverse_colors)
-    {
-        const COLORREF temp = *foreground_rgb;
-
-        *foreground_rgb = *background_rgb;
-        *background_rgb = temp;
-    }
-
-    if( srcp & A_BOLD)
-        *foreground_rgb = intensified_color( *foreground_rgb);
-    if( intensify_backgnd)
-        *background_rgb = intensified_color( *background_rgb);
-    if( srcp & A_DIM)
-        *foreground_rgb = dimmed_color( *foreground_rgb);
-    if( srcp & A_DIM)
-        *background_rgb = dimmed_color( *background_rgb);
-}
 
 #ifdef PDC_WIDE
 const chtype MAX_UNICODE = 0x110000;
@@ -461,7 +342,7 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
     int i, curr_color = -1;
     attr_t font_attrib = (attr_t)-1;
     int cursor_overwritten = FALSE;
-    COLORREF foreground_rgb = 0;
+    PACKED_RGB foreground_rgb = 0;
     chtype prev_ch = 0;
     extern RECT PDC_mouse_rect;              /* see 'pdcscrn.c' */
     int selection[2];
@@ -508,7 +389,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
 
     while( len)
     {
-        extern int PDC_really_blinking;          /* see 'pdcsetsc.c' */
         const attr_t attrib = (attr_t)( *srcp >> PDC_REAL_ATTR_SHIFT);
         const int color = (int)(( *srcp & A_COLOR) >> PDC_COLOR_SHIFT);
         attr_t new_font_attrib = (*srcp & (A_BOLD | A_ITALIC));
@@ -592,12 +472,12 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
         lpDx[olen] = PDC_cxChar;
         if( color != curr_color || ((prev_ch ^ *srcp) & (A_REVERSE | A_BLINK | A_BOLD | A_DIM)))
         {
-            COLORREF background_rgb;
+            PACKED_RGB background_rgb;
 
             PDC_get_rgb_values( *srcp, &foreground_rgb, &background_rgb);
             curr_color = color;
-            SetTextColor( hdc, foreground_rgb);
-            SetBkColor( hdc, background_rgb);
+            SetTextColor( hdc, (COLORREF)foreground_rgb);
+            SetBkColor( hdc, (COLORREF)background_rgb);
         }
         if( !PDC_really_blinking && (*srcp & A_BLINK))
             new_font_attrib &= ~A_BLINK;
@@ -642,9 +522,9 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
             const int x1 = clip_rect.left;
             const int x2 = clip_rect.right;
             int j;
-            extern COLORREF *pdc_rgbs;
-            const HPEN pen = CreatePen( PS_SOLID, 1, (SP->line_color == -1 ?
-                             foreground_rgb : pdc_rgbs[SP->line_color]));
+            const PACKED_RGB rgb = (SP->line_color == -1 ?
+                             foreground_rgb : PDC_get_palette_entry( SP->line_color));
+            const HPEN pen = CreatePen( PS_SOLID, 1, (COLORREF)rgb);
             const HPEN old_pen = SelectObject( hdc, pen);
 
             if( *srcp & A_UNDERLINE)

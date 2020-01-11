@@ -4,11 +4,11 @@
 #include <tchar.h>
 #include <stdint.h>
 #include <assert.h>
+#include "../common/pdccolor.h"
 
 /* COLOR_PAIR to attribute encoding table. */
 
 static short *color_pair_indices = (short *)NULL;
-COLORREF *pdc_rgbs = (COLORREF *)NULL;
 static int menu_shown = 1;
 static int min_lines = 25, max_lines = 25;
 static int min_cols = 80, max_cols = 80;
@@ -152,10 +152,7 @@ void PDC_scr_free(void)
     if (color_pair_indices)
         free(color_pair_indices);
     color_pair_indices = (short *)NULL;
-
-    if (pdc_rgbs)
-        free(pdc_rgbs);
-    pdc_rgbs = (COLORREF *)NULL;
+    PDC_free_palette( );
 }
 
 int PDC_choose_a_new_font( void);                     /* pdcdisp.c */
@@ -721,7 +718,6 @@ static int set_mouse( const int button_index, const int button_state,
 extern GLYPHSET *PDC_unicode_range_data;
 #endif         /* #ifdef USE_FALLBACK_FONT */
 
-int PDC_blink_state = 0;
 #define TIMER_ID_FOR_BLINKING 0x2000
 
 /* When first loading a font,  we use 'get_character_sizes' to briefly
@@ -1844,7 +1840,6 @@ will be zero and the only thing we'll do here is to blink the cursor. */
 static void HandleTimer( const WPARAM wParam )
 {
     int i;           /* see WndProc() notes */
-    extern int PDC_really_blinking;          /* see 'pdcsetsc.c' */
     static int previously_really_blinking = 0;
     static int prev_line_color = -1;
     chtype attr_to_seek = 0;
@@ -2525,7 +2520,7 @@ INLINE int set_up_window( void)
 
 int PDC_scr_open( int argc, char **argv)
 {
-    int i, r, g, b;
+    int i;
     HMODULE hntdll = GetModuleHandle( _T("ntdll.dll"));
 
     if( hntdll)
@@ -2534,30 +2529,11 @@ int PDC_scr_open( int argc, char **argv)
     PDC_LOG(("PDC_scr_open() - called\n"));
     SP = calloc(1, sizeof(SCREEN));
     color_pair_indices = (short *)calloc(PDC_COLOR_PAIRS * 2, sizeof( short));
-    pdc_rgbs = (COLORREF *)calloc(N_COLORS, sizeof( COLORREF));
-    if (!SP || !color_pair_indices || !pdc_rgbs)
+    COLORS = N_COLORS;  /* should give this a try and see if it works! */
+    if (!SP || !color_pair_indices || PDC_init_palette( ))
         return ERR;
 
     debug_printf( "colors alloc\n");
-    COLORS = N_COLORS;  /* should give this a try and see if it works! */
-    for( i = 0; i < 16; i++)
-    {
-        const int intensity = ((i & 8) ? 0xff : 0xc0);
-
-        pdc_rgbs[i] = RGB( ((i & COLOR_RED) ? intensity : 0),
-                           ((i & COLOR_GREEN) ? intensity : 0),
-                           ((i & COLOR_BLUE) ? intensity : 0));
-    }
-           /* 256-color xterm extended palette:  216 colors in a
-            6x6x6 color cube,  plus 24 (not 50) shades of gray */
-    for( r = 0; r < 6; r++)
-        for( g = 0; g < 6; g++)
-            for( b = 0; b < 6; b++)
-                pdc_rgbs[i++] = RGB( r ? r * 40 + 55 : 0,
-                                   g ? g * 40 + 55 : 0,
-                                   b ? b * 40 + 55 : 0);
-    for( i = 0; i < 24; i++)
-        pdc_rgbs[i + 232] = RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->visibility = 0;                /* no cursor,  by default */
     SP->curscol = SP->cursrow = 0;
@@ -2727,7 +2703,7 @@ bool PDC_can_change_color(void)
 
 int PDC_color_content( short color, short *red, short *green, short *blue)
 {
-    COLORREF col = pdc_rgbs[color];
+    COLORREF col = PDC_get_palette_entry( color);
 
     *red = DIVROUND(GetRValue(col) * 1000, 255);
     *green = DIVROUND(GetGValue(col) * 1000, 255);
@@ -2762,9 +2738,8 @@ int PDC_init_color( short color, short red, short green, short blue)
                                  DIVROUND(green * 255, 1000),
                                  DIVROUND(blue * 255, 1000));
 
-    if( pdc_rgbs[color] != new_rgb)
+    if( PDC_set_palette_entry( color, new_rgb) == 1)
     {
-        pdc_rgbs[color] = new_rgb;
         /* Possibly go through curscr and redraw everything with that color! */
         if( curscr && curscr->_y)
         {

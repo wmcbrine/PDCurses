@@ -503,8 +503,8 @@ fifteen bits,  five bits for each of the three channels) and background RGB
     # define PDC_CHARTEXT_BITS   21
     # define A_CHARTEXT   (chtype)( ((chtype)0x1 << PDC_CHARTEXT_BITS) - 1)
     # define A_ALTCHARSET ((chtype)0x001 << PDC_CHARTEXT_BITS)
-    # define A_RIGHTLINE  ((chtype)0x002 << PDC_CHARTEXT_BITS)
-    # define A_LEFTLINE   ((chtype)0x004 << PDC_CHARTEXT_BITS)
+    # define A_RIGHT      ((chtype)0x002 << PDC_CHARTEXT_BITS)
+    # define A_LEFT       ((chtype)0x004 << PDC_CHARTEXT_BITS)
     # define A_INVIS      ((chtype)0x008 << PDC_CHARTEXT_BITS)
     # define A_UNDERLINE  ((chtype)0x010 << PDC_CHARTEXT_BITS)
     # define A_REVERSE    ((chtype)0x020 << PDC_CHARTEXT_BITS)
@@ -531,8 +531,8 @@ fifteen bits,  five bits for each of the three channels) and background RGB
          | ((chtype)(rback)      )) << PDC_COLOR_SHIFT) | A_RGB_COLOR)
 # else         /* plain ol' 32-bit chtypes */
     # define A_ALTCHARSET (chtype)0x00010000
-    # define A_RIGHTLINE  (chtype)0x00020000
-    # define A_LEFTLINE   (chtype)0x00040000
+    # define A_RIGHT      (chtype)0x00020000
+    # define A_LEFT       (chtype)0x00040000
     # define A_INVIS      (chtype)0x00080000
     # define A_UNDERLINE  (chtype)0x00100000
     # define A_REVERSE    (chtype)0x00200000
@@ -558,7 +558,7 @@ fifteen bits,  five bits for each of the three channels) and background RGB
 
 
 # define A_ITALIC     A_INVIS
-# define A_PROTECT    (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE)
+# define A_PROTECT    (A_UNDERLINE | A_LEFT | A_RIGHT)
 
 #else                   /* 16-bit chtypes */
 # define A_BOLD       (chtype)0x0100  /* X/Open */
@@ -575,8 +575,8 @@ fifteen bits,  five bits for each of the three channels) and background RGB
 # define A_OVERLINE   A_NORMAL        /* X/Open */
 # define A_STRIKEOUT  A_NORMAL        /* X/Open */
 
-# define A_LEFTLINE   A_NORMAL
-# define A_RIGHTLINE  A_NORMAL
+# define A_LEFT       A_NORMAL
+# define A_RIGHT      A_NORMAL
 # define A_ITALIC     A_NORMAL
 # define A_INVIS      A_NORMAL
 # define A_RGB_COLOR  A_NORMAL
@@ -591,6 +591,9 @@ fifteen bits,  five bits for each of the three channels) and background RGB
 #define ATR_MSK       A_ATTRIBUTES         /* Obsolete */
 #define ATR_NRM       A_NORMAL             /* Obsolete */
 
+#define A_LEFTLINE    A_LEFT
+#define A_RIGHTLINE   A_RIGHT
+
 /* For use with attr_t -- X/Open says, "these shall be distinct", so
    this is a non-conforming implementation. */
 
@@ -601,10 +604,10 @@ fifteen bits,  five bits for each of the three channels) and background RGB
 #define WA_BOLD       A_BOLD
 #define WA_DIM        A_DIM
 #define WA_INVIS      A_INVIS
-#define WA_LEFT       A_LEFTLINE
+#define WA_LEFT       A_LEFT
 #define WA_PROTECT    A_PROTECT
 #define WA_REVERSE    A_REVERSE
-#define WA_RIGHT      A_RIGHTLINE
+#define WA_RIGHT      A_RIGHT
 #define WA_STANDOUT   A_STANDOUT
 #define WA_UNDERLINE  A_UNDERLINE
 

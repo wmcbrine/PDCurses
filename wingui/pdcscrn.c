@@ -2740,7 +2740,7 @@ int PDC_init_color( short color, short red, short green, short blue)
                                  DIVROUND(green * 255, 1000),
                                  DIVROUND(blue * 255, 1000));
 
-    if( PDC_set_palette_entry( color, new_rgb) == 1)
+    if( !PDC_set_palette_entry( color, new_rgb))
     {
         /* Possibly go through curscr and redraw everything with that color! */
         if( curscr && curscr->_y)

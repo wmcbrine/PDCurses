@@ -400,7 +400,7 @@ int PDC_init_color( short color, short red, short green, short blue)
                                  DIVROUND(green * 255, 1000),
                                  DIVROUND(blue * 255, 1000));
 
-    if( PDC_set_palette_entry( color, new_rgb) == 1)
+    if( !PDC_set_palette_entry( color, new_rgb))
         PDC_show_changes( -1, color, 0);
     return OK;
 }

@@ -311,14 +311,13 @@ int main( int argc, char **argv)
             mvaddwstr( 3, COL1, L"'Normal' text,  but wide");
 #endif
             attron( A_BLINK);
-            snprintf( buff, sizeof( buff), "Blink %s",
-                                  on_off_text( termattrs( ) & A_BLINK));
+            sprintf( buff, "Blink %s", on_off_text( termattrs( ) & A_BLINK));
+
             mvaddstr( 6, 40, buff);
             attron( A_BOLD);
             mvaddstr( 8, 40, "BlinkBold");
             attrset( A_BOLD);
-            snprintf( buff, sizeof( buff), "Bold %s",
-                                  on_off_text( termattrs( ) & A_BOLD));
+            sprintf( buff, "Bold %s", on_off_text( termattrs( ) & A_BOLD));
             mvaddstr( 7, 40, buff);
             attron( A_BLINK);
 #ifdef A_ITALIC

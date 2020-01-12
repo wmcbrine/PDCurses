@@ -17,7 +17,6 @@
 #include "pdccolor.h"
 
 int PDC_blink_state = 0;
-int PDC_really_blinking = FALSE;
 
 static PACKED_RGB *PDC_rgbs;
 
@@ -174,7 +173,7 @@ void PDC_get_rgb_values( const chtype srcp,
 
     if( srcp & A_BLINK)
     {
-        if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
+        if( !(SP->termattrs & A_BLINK))   /* convert 'blinking' to 'bold' */
             intensify_backgnd = TRUE;
         else if( PDC_blink_state)
             reverse_colors ^= 1;
@@ -187,7 +186,7 @@ void PDC_get_rgb_values( const chtype srcp,
         *background_rgb = temp;
     }
 
-    if( srcp & A_BOLD)
+    if( srcp & A_BOLD & ~SP->termattrs)
         *foreground_rgb = intensified_color( *foreground_rgb);
     if( intensify_backgnd)
         *background_rgb = intensified_color( *background_rgb);

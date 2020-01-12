@@ -110,6 +110,12 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
     static chtype prev_ch = 0;
 
+    if( !srcp)
+    {
+        prev_ch = 0;
+        printf( BLINK_OFF BOLD_OFF UNDERLINE_OFF STANDOUT_OFF);
+        return;
+    }
     assert( x >= 0);
     assert( len <= SP->cols - x);
     assert( lineno >= 0);
@@ -125,13 +131,13 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
           ch = acs_map[ch & 0x7f];
        if( ch < (int)' ' || (ch >= 0x80 && ch <= 0x9f))
           ch = ' ';
-       if( changes & A_BOLD)
+       if( SP->termattrs & changes & A_BOLD)
           printf( (*srcp & A_BOLD) ? BOLD_ON : BOLD_OFF);
        if( changes & A_UNDERLINE)
           printf( (*srcp & A_UNDERLINE) ? UNDERLINE_ON : UNDERLINE_OFF);
        if( changes & A_STANDOUT)
           printf( (*srcp & A_STANDOUT) ? STANDOUT_ON : STANDOUT_OFF);
-       if( PDC_really_blinking && ( changes & A_BLINK))
+       if( SP->termattrs & changes & A_BLINK)
           printf( (*srcp & A_BLINK) ? BLINK_ON : BLINK_OFF);
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
           reset_color( *srcp);

@@ -72,7 +72,7 @@ void PDC_set_title(const char *title)
 #endif
 }
 
-        /* If PDC_really_blinking is TRUE,  then text with the A_BLINK   */
+        /* If SP->termattrs & A_BLINK is on, then text with the A_BLINK  */
         /* attribute will actually blink.  Otherwise,  such text will    */
         /* be shown with higher color intensity (the R, G, and B values  */
         /* are averaged with pure white).  See pdcdisp.c for details of  */
@@ -83,30 +83,30 @@ void PDC_set_title(const char *title)
         /* always returned (most platforms don't actually support        */
         /* blinking).                                                    */
         /*      The default behavior is to not show A_BLINK text as      */
-        /* blinking,  i.e.,  PDC_really_blinking = FALSE.  Blinking text */
+        /* blinking,  i.e., SP->termattrs & A_BLINK = 0.  Blinking text  */
         /* can be pretty annoying to some people.  You should probably   */
         /* call PDC_set_blink( TRUE) only if there is something to which */
         /* the user _must_ pay attention;  say,  "the nuclear reactor    */
         /* is about to melt down".  Otherwise,  the bolder,  brighter    */
         /* text should be attention-getting enough.                      */
 
-int PDC_set_blink(bool blinkon)
+static int reset_attr( const attr_t attr, const bool attron)
 {
     if (!SP)
         return ERR;
-    if (blinkon)
-        SP->termattrs |= A_BLINK;
+    if( attron)
+        SP->termattrs |= attr;
     else
-        SP->termattrs &= ~A_BLINK;
-    PDC_really_blinking = blinkon;
+        SP->termattrs &= ~attr;
     return OK;
+}
+
+int PDC_set_blink(bool blinkon)
+{
+   return( reset_attr( A_BLINK, blinkon));
 }
 
 int PDC_set_bold(bool boldon)
 {
-    if (boldon)
-        SP->termattrs |= A_BOLD;
-    else
-        SP->termattrs &= ~A_BOLD;
-    return OK;
+   return( reset_attr( A_BOLD, boldon));
 }

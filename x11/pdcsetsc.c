@@ -72,7 +72,7 @@ void PDC_set_title(const char *title)
     XCursesExitCursesProcess(1, "exiting from PDC_set_title");
 }
 
-        /* If PDC_really_blinking is TRUE,  then text with the A_BLINK   */
+        /* If SP->termattrs & A_BLINK != 0, then text with the A_BLINK   */
         /* attribute will actually blink.  Otherwise,  such text will    */
         /* be shown with higher color intensity (the R, G, and B values  */
         /* are averaged with pure white).  See pdcdisp.c for details of  */
@@ -83,7 +83,7 @@ void PDC_set_title(const char *title)
         /* always returned (most platforms don't actually support        */
         /* blinking).                                                    */
         /*      The default behavior is to not show A_BLINK text as      */
-        /* blinking,  i.e.,  PDC_really_blinking = FALSE.  Blinking text */
+        /* blinking,  i.e.,  SP->termattrs & A_BLINK = 0.  Blinking text */
         /* can be pretty annoying to some people.  You should probably   */
         /* call PDC_set_blink( TRUE) only if there is something to which */
         /* the user _must_ pay attention;  say,  "the nuclear reactor    */
@@ -113,6 +113,5 @@ int PDC_set_bold(bool boldon)
         SP->termattrs |= A_BOLD;
     else
         SP->termattrs &= ~A_BOLD;
-
     return OK;
 }

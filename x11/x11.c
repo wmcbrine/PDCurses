@@ -291,7 +291,6 @@ static char *pixmap_file = NULL;
 #endif
 static KeySym keysym = 0;
 static int PDC_blink_state = 1;
-static int PDC_really_blinking = FALSE;     /* see 'pdcsetsc.c' */
 
 #ifndef PDC_XIM
 static int state_mask[8] =
@@ -764,7 +763,7 @@ void PDC_get_rgb_values( const chtype srcp,
 
     if( srcp & A_BLINK)
     {
-        if( !PDC_really_blinking)   /* convert 'blinking' to 'bold' */
+        if( !(SP->termattrs & A_BLINK))   /* convert 'blinking' to 'bold' */
             intensify_backgnd = TRUE;
         else if( PDC_blink_state)
             reverse_colors = !reverse_colors;
@@ -2302,16 +2301,18 @@ static void _blink_cursor(XtPointer unused, XtIntervalId *id)
     XC_LOG(("_blink_cursor() - called:\n"));
 
     int i;
-    static int previously_really_blinking = 0;
+    static attr_t prev_termattrs;
     static int prev_line_color = -1;
     chtype attr_to_seek = 0;
 
     if( prev_line_color != SP->line_color)
         attr_to_seek = A_ALL_LINES;
-    if( PDC_really_blinking || previously_really_blinking)
+    if( (SP->termattrs | prev_termattrs) & A_BLINK)
         attr_to_seek |= A_BLINK;
+    if( (SP->termattrs ^ prev_termattrs) & A_BOLD)
+        attr_to_seek |= A_BOLD;
     prev_line_color = SP->line_color;
-    previously_really_blinking = PDC_really_blinking;
+    prev_termattrs = SP->termattrs;
     PDC_blink_state ^= 1;
     if( attr_to_seek)
         for( i = 0; i < SP->lines; i++)
@@ -3095,11 +3096,11 @@ static void _process_curses_requests(XtPointer client_data, int *fid,
             break;
 
         case CURSES_BLINK_ON:
-            PDC_really_blinking = TRUE;
+            SP->termattrs |= A_BLINK;
             break;
 
         case CURSES_BLINK_OFF:
-            PDC_really_blinking = FALSE;
+            SP->termattrs &= ~A_BLINK;
             break;
 
         case CURSES_CURSOR:

@@ -98,23 +98,33 @@ int PDC_curs_set( int visibility)
 
 void PDC_show_changes( const short pair, const short idx, const chtype attr);
 
-int PDC_really_blinking;
-
-int PDC_set_blink(bool blinkon)
+static int reset_attr( const attr_t attr, const bool attron)
 {
+    attr_t prev_termattrs;
 
     if (!SP)
         return ERR;
-    if (blinkon)
-        SP->termattrs |= A_BLINK;
+    prev_termattrs = SP->termattrs;
+    if( attron)
+        SP->termattrs |= attr;
     else
-        SP->termattrs &= ~A_BLINK;
-    if( PDC_really_blinking != blinkon)
+        SP->termattrs &= ~attr;
+    if( prev_termattrs != SP->termattrs)
     {
-       PDC_really_blinking = blinkon;
-       PDC_show_changes( -1, -1, A_BLINK);
+       PDC_transform_line( 0, 0, 0, NULL);
+       PDC_show_changes( -1, -1, attr);
     }
     return OK;
+}
+
+int PDC_set_blink(bool blinkon)
+{
+   return( reset_attr( A_BLINK, blinkon));
+}
+
+int PDC_set_bold(bool boldon)
+{
+   return( reset_attr( A_BOLD, boldon));
 }
 
 void PDC_set_title( const char *title)
@@ -125,14 +135,4 @@ void PDC_set_title( const char *title)
     if( !PDC_is_ansi)
         printf( "\033]2;%s\a", title);
 #endif
-}
-
-int PDC_set_bold(bool boldon)
-{
-    if (boldon)
-        SP->termattrs |= A_BOLD;
-    else
-        SP->termattrs &= ~A_BOLD;
-    PDC_show_changes( -1, -1, A_BOLD);
-    return OK;
 }

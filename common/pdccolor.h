@@ -2,7 +2,6 @@
 
 #define PDCCOLOR_H
 extern int PDC_blink_state;
-extern int PDC_really_blinking;
 
 typedef uint32_t PACKED_RGB;
 

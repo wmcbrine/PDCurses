@@ -1823,6 +1823,10 @@ redrawn in 'standout' mode.  Also,  if PDC_set_line_color() has been
 called,  all text with left/right/under/over/strikeout lines needs to
 be redrawn.
 
+   Also,  if we've switched from rendering bold text using a bold
+font to showing it in intensified color,  or vice versa,  then all
+bold text needs to be redrawn.
+
    So.  After determining which attributes require redrawing (if any),
 we run through all of 'curscr' and look for text with those attributes
 set.  If we find such text,  we run it through PDC_transform_line.
@@ -1840,16 +1844,18 @@ will be zero and the only thing we'll do here is to blink the cursor. */
 static void HandleTimer( const WPARAM wParam )
 {
     int i;           /* see WndProc() notes */
-    static int previously_really_blinking = 0;
+    static attr_t prev_termattrs;
     static int prev_line_color = -1;
     chtype attr_to_seek = 0;
 
     if( prev_line_color != SP->line_color)
         attr_to_seek = A_ALL_LINES;
-    if( PDC_really_blinking || previously_really_blinking)
+    if( (SP->termattrs | prev_termattrs) & A_BLINK)
         attr_to_seek |= A_BLINK;
+    if( (SP->termattrs ^ prev_termattrs) & A_BOLD)
+        attr_to_seek |= A_BOLD;
     prev_line_color = SP->line_color;
-    previously_really_blinking = PDC_really_blinking;
+    prev_termattrs = SP->termattrs;
     PDC_blink_state ^= 1;
     if( attr_to_seek)
     {

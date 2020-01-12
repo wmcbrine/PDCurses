@@ -479,7 +479,7 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
             SetTextColor( hdc, (COLORREF)foreground_rgb);
             SetBkColor( hdc, (COLORREF)background_rgb);
         }
-        if( !PDC_really_blinking && (*srcp & A_BLINK))
+        if( !(SP->termattrs & A_BLINK) && (*srcp & A_BLINK))
             new_font_attrib &= ~A_BLINK;
 #ifdef USE_FALLBACK_FONT
         if( !in_font)                  /* flag to indicate use of */
@@ -491,7 +491,7 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
             int idx = 0;
 
             font_attrib = new_font_attrib;
-            if( font_attrib & A_BOLD)
+            if( font_attrib & A_BOLD & SP->termattrs)
                 idx |= 1;
             if( font_attrib & A_ITALIC)
                 idx |= 2;

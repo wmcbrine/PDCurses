@@ -668,6 +668,8 @@ void inputTest(WINDOW *win)
 
         if (c == ' ' || c == 1)
             break;
+        if( line_to_use == 3)
+           wclrtobot( win);
         line_to_use++;
         if( line_to_use == 17)
            line_to_use = 3;

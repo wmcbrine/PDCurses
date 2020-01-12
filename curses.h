@@ -1,5 +1,3 @@
-/* Public Domain Curses */
-
 /*----------------------------------------------------------------------*
  *                              PDCurses                                *
  *----------------------------------------------------------------------*/
@@ -9,30 +7,27 @@
 
 /*man-start**************************************************************
 
-PDCurses definitions list:  (Only define those needed)
+Define before inclusion (only those needed):
 
-    XCURSES         True if compiling for X11.
-    PDC_RGB         True if you want to use RGB color definitions
-                    (Red = 1, Green = 2, Blue = 4) instead of BGR.
-    PDC_WIDE        True if building wide-character support.
-    PDC_DLL_BUILD   True if building a Windows DLL.
-    PDC_NCMOUSE     Use the ncurses mouse API instead
-                    of PDCurses' traditional mouse API.
+    XCURSES         if building / built for X11
+    PDC_RGB         if you want to use RGB color definitions
+                    (Red = 1, Green = 2, Blue = 4) instead of BGR
+    PDC_WIDE        if building / built with wide-character support
+    PDC_DLL_BUILD   if building / built as a Windows DLL
+    PDC_NCMOUSE     to use the ncurses mouse API instead
+                    of PDCurses' traditional mouse API
 
-PDCurses portable platform definitions list:
+Defined by this header:
 
-    PDC_BUILD       Defines API build version.
-    PDCURSES        Enables access to PDCurses-only routines.
-    XOPEN           Always true.
-    SYSVcurses      True if you are compiling for SYSV portability.
-    BSDcurses       True if you are compiling for BSD portability.
+    PDCURSES        PDCurses-only features are available
+    PDC_BUILD       API build version
+    PDC_VER_MAJOR   major version number
+    PDC_VER_MINOR   minor version number
+    PDC_VERDOT      version string
 
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#define XOPEN           1      /* X/Open Curses routines */
-#define SYSVcurses      1      /* System V Curses routines */
-#define BSDcurses       1      /* BSD Curses routines */
 #if defined( CHTYPE_32)
    #define CHTYPE_LONG     1      /* chtypes will be 32 bits */
 #elif !defined( CHTYPE_16)

@@ -36,30 +36,42 @@ Defined by this header:
 
 /*----------------------------------------------------------------------*/
 
-#ifdef NO_STDINT_H
-   #define uint64_t unsigned __int64
-   #define uint32_t unsigned long
-   #define uint16_t unsigned short
-#else
-   #include <stdint.h>
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+# define PDC_99         1
 #endif
+
+#if defined(__cplusplus) && __cplusplus >= 199711L
+# define PDC_PP98       1
+#endif
+
+/*----------------------------------------------------------------------*/
+
 #include <stdarg.h>
 #include <stddef.h>
-#include <stdio.h>             /* Required by X/Open usage below */
+#include <stdio.h>
 
 #ifdef PDC_WIDE
 # include <wchar.h>
 #endif
 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L && \
-    !defined(__bool_true_false_are_defined)
+#if defined(PDC_99) && !defined(__bool_true_false_are_defined)
 # include <stdbool.h>
 #endif
 
 #ifdef __cplusplus
 extern "C"
 {
-# define bool _bool
+# ifndef PDC_PP98
+#  define bool _bool
+# endif
+#endif
+
+#ifdef NO_STDINT_H
+   #define uint64_t unsigned __int64
+   #define uint32_t unsigned long
+   #define uint16_t unsigned short
+#else
+   #include <stdint.h>
 #endif
 
 /*----------------------------------------------------------------------
@@ -69,27 +81,20 @@ extern "C"
  */
 
 #undef FALSE
+#define FALSE 0
+
 #undef TRUE
-
-#ifdef __bool_true_false_are_defined
-
-# define FALSE false
-# define TRUE true
-
-#else
-
-typedef unsigned char bool;
-
-# define FALSE 0
-# define TRUE 1
-
-#endif
+#define TRUE 1
 
 #undef ERR
 #define ERR (-1)
 
 #undef OK
 #define OK 0
+
+#if !defined(PDC_PP98) && !defined(__bool_true_false_are_defined)
+typedef unsigned char bool;
+#endif
 
 #ifdef CHTYPE_LONG
     #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */

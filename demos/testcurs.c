@@ -592,13 +592,7 @@ void inputTest(WINDOW *win)
             else if (BUTTON_CHANGED(5))
                 button = 5;
             if( button)
-#ifdef PDC_N_EXTENDED_MOUSE_BUTTONS
-                status = (button > 3 ? Mouse_status.xbutton[(button) - 4] :
-                                       Mouse_status.button[(button) - 1]);
-#else
-                status = (button > 3 ? 0 :
-                                       Mouse_status.button[(button) - 1]);
-#endif
+                status = Mouse_status.button[(button) - 1];
 
             wmove(win, line_to_use, 5);
             wclrtoeol(win);

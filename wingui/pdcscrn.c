@@ -594,16 +594,11 @@ static int set_mouse( const int button_index, const int button_state,
         memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
         if( button_index < PDC_MAX_MOUSE_BUTTONS)
         {
+            pdc_mouse_status.button[button_index] = (short)button_state;
             if( button_index < 3)
-               {
-               pdc_mouse_status.button[button_index] = (short)button_state;
                pdc_mouse_status.changes = (1 << button_index);
-               }
             else
-               {
-               pdc_mouse_status.xbutton[button_index - 3] = (short)button_state;
                pdc_mouse_status.changes = (0x40 << button_index);
-               }
         }
         else                      /* actually a wheel mouse movement */
         {                         /* button_state = number of units moved */
@@ -668,10 +663,8 @@ static int set_mouse( const int button_index, const int button_state,
         if( GetKeyState( VK_CONTROL) & 0x8000)
             button_flags |= PDC_BUTTON_CONTROL;
 
-        for (i = 0; i < 3; i++)
+        for (i = 0; i < PDC_MAX_MOUSE_BUTTONS; i++)
             pdc_mouse_status.button[i] |= button_flags;
-        for (i = 0; i < PDC_N_EXTENDED_MOUSE_BUTTONS; i++)
-            pdc_mouse_status.xbutton[i] |= button_flags;
     }
                   /* If there is already a KEY_MOUSE in the queue,  we   */
                   /* don't really want to add another one.  See above.   */
@@ -2095,7 +2088,7 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         button_up = ((wParam & MK_XBUTTON1) ? 3 : 4);
 #endif
         button_up = (((mouse_buttons_pressed & 8) ||
-                 pdc_mouse_status.xbutton[0] & BUTTON_PRESSED) ? 3 : 4);
+                 pdc_mouse_status.button[3] & BUTTON_PRESSED) ? 3 : 4);
         ReleaseCapture( );
         break;
 #endif         /* #if( PDC_MAX_MOUSE_BUTTONS >= 5) */

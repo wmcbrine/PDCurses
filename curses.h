@@ -171,20 +171,15 @@ typedef struct
 /* Most flavors of PDCurses support three buttons.  WinGUI supports    */
 /* these plus two "extended" buttons.  But we'll set this macro to     */
 /* six,  allowing future versions to support up to nine total buttons. */
-/* (The button states are broken up into two arrays to allow for the   */
-/* possibility of backward compatibility to DLLs compiled with only    */
-/* three mouse buttons.)                                               */
 
 #define PDC_MAX_MOUSE_BUTTONS          9
-#define PDC_N_EXTENDED_MOUSE_BUTTONS   6
 
 typedef struct
 {
     int x;           /* absolute column, 0 based, measured in characters */
     int y;           /* absolute row, 0 based, measured in characters    */
-    short button[3]; /* state of three "normal" buttons                  */
+    short button[PDC_MAX_MOUSE_BUTTONS];         /* state of all buttons */
     int changes;     /* flags indicating what has changed with the mouse */
-    short xbutton[PDC_N_EXTENDED_MOUSE_BUTTONS]; /* state of ext buttons */
 } MOUSE_STATUS;
 
 #define BUTTON_RELEASED         0x0000

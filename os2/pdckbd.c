@@ -492,7 +492,7 @@ int PDC_mouse_set(void)
 {
 #ifndef EMXVIDEO
 
-    unsigned long mbe = SP->_trap_mbe;
+    mmask_t mbe = SP->_trap_mbe;
 
     if (mbe && !mouse_handle)
     {

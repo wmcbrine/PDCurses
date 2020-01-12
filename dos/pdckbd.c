@@ -484,7 +484,7 @@ bool PDC_has_mouse(void)
 int PDC_mouse_set(void)
 {
     PDCREGS regs;
-    unsigned long mbe = SP->_trap_mbe;
+    mmask_t mbe = SP->_trap_mbe;
 
     if (mbe && !mouse_avail)
         mouse_avail = PDC_has_mouse();

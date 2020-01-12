@@ -288,7 +288,11 @@ typedef struct
 
 /* ncurses mouse interface */
 
+#if _LP64
+typedef unsigned int mmask_t;
+#else
 typedef unsigned long mmask_t;
+#endif
 
 typedef struct
 {
@@ -370,8 +374,8 @@ typedef struct
     int   orig_cursor;    /* original cursor size */
     int   lines;          /* new value for LINES */
     int   cols;           /* new value for COLS */
-    unsigned long _trap_mbe;       /* trap these mouse button events */
-    unsigned long _map_mbe_to_key; /* map mouse buttons to slk */
+    mmask_t _trap_mbe;             /* trap these mouse button events */
+    mmask_t _map_mbe_to_key;       /* map mouse buttons to slk */
     int   mouse_wait;              /* time to wait (in ms) for a
                                       button release after a press, in
                                       order to count it as a click */
@@ -1714,14 +1718,14 @@ PDCEX  int     fixterm(void);
 PDCEX  int     saveterm(void);
 PDCEX  void    setsyx(int, int);
 
-PDCEX  int     mouse_set(unsigned long);
-PDCEX  int     mouse_on(unsigned long);
-PDCEX  int     mouse_off(unsigned long);
+PDCEX  int     mouse_set(mmask_t);
+PDCEX  int     mouse_on(mmask_t);
+PDCEX  int     mouse_off(mmask_t);
 PDCEX  int     request_mouse_pos(void);
-PDCEX  int     map_button(unsigned long);
+PDCEX  int     map_button(mmask_t);
 PDCEX  void    wmouse_position(WINDOW *, int *, int *);
-PDCEX  unsigned long getmouse(void);
-PDCEX  unsigned long getbmap(void);
+PDCEX  mmask_t getmouse(void);
+PDCEX  mmask_t getbmap(void);
 
 /* ncurses */
 

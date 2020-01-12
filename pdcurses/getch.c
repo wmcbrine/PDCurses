@@ -104,7 +104,7 @@ static int c_ungch[NUNGETCH];   /* array of ungotten chars */
 static int _mouse_key(void)
 {
     int i, key = KEY_MOUSE;
-    unsigned long mbe = SP->_trap_mbe;
+    const mmask_t mbe = SP->_trap_mbe;
 
     /* Filter unwanted mouse events */
 

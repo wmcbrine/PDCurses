@@ -117,12 +117,19 @@ typedef chtype attr_t;
 
 #define PDC_VER_MAJOR    4
 #define PDC_VER_MINOR    1
-#define PDC_VER_CHANGE   0
-#define PDC_VER_YEAR   2019
-#define PDC_VER_MONTH    5
-#define PDC_VER_DAY      8
+#define PDC_VER_CHANGE   1
+#define PDC_VER_YEAR   2020
+#define PDC_VER_MONTH    01
+#define PDC_VER_DAY      12
 
 #define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
+
+#define PDC_STRINGIZE( x) #x
+#define PDC_stringize( x) PDC_STRINGIZE( x)
+
+#define PDC_VERDOT PDC_stringize( PDC_VER_MAJOR) "." \
+                   PDC_stringize( PDC_VER_MINOR) "." \
+                   PDC_stringize( PDC_VER_CHANGE)
 
 /* When using PDCurses as a DLL (Windows) or shared library (BSD or *nix),
 it's possible to switch the DLL or shared library.  One may therefore want

@@ -37,16 +37,9 @@ int PDC_write_screen_to_file( const char *filename, WINDOW *win);
 #endif
 
 static const char *labels[] = {
-               "Quit", "Blink", "No labels", "431", "2134", "55",
+               "Quit", "No labels", "431", "2134", "55",
                "62-really-longer-than-it-should-be-just-for-testing",
-               "83", "7", "b", "25",
-               "Able", "Baker", "Charlie", "Dog",
-               "Easy", "Fox", "Golf", "How", "Item",
-               "Jig", "King", "Love", "Mike", "Nan",
-               "Oboe", "Peter", "Queen", "Roger", "Sugar",
-               "Tear", "Uncle", "Victor", "Whiskey",
-               "X-Ray", "Yoke", "Zebra", NULL };
-
+               "83", "7", "b", "25 (seven total)", "32", NULL };
 
 static void slk_setup( const int slk_format)
 {
@@ -61,6 +54,11 @@ static void slk_setup( const int slk_format)
     for( i = 0; labels[i]; i++)
        slk_set( i + 1, labels[i], 1);
     slk_refresh( );
+}
+
+static const char *on_off_text( const chtype attrib)
+{
+   return( attrib ? "On " : "Off");
 }
 
    /* Uses the left/right/under/overline capabilities of Win32a */
@@ -160,7 +158,6 @@ int main( int argc, char **argv)
     int quit = 0, i,  use_slk = 1;
     bool show_mouse_moves = FALSE;
 #ifdef PDCURSES
-    bool blink_state = FALSE;
     int fmt = 0xa;
     const char *title_text = "NewTest: tests various PDCurses features";
 #else
@@ -314,9 +311,16 @@ int main( int argc, char **argv)
             mvaddwstr( 3, COL1, L"'Normal' text,  but wide");
 #endif
             attron( A_BLINK);
-            mvaddstr( 6, 40, "Blinking");
+            snprintf( buff, sizeof( buff), "Blink %s",
+                                  on_off_text( termattrs( ) & A_BLINK));
+            mvaddstr( 6, 40, buff);
             attron( A_BOLD);
             mvaddstr( 8, 40, "BlinkBold");
+            attrset( A_BOLD);
+            snprintf( buff, sizeof( buff), "Bold %s",
+                                  on_off_text( termattrs( ) & A_BOLD));
+            mvaddstr( 7, 40, buff);
+            attron( A_BLINK);
 #ifdef A_ITALIC
             attron( A_ITALIC);
             mvaddstr( 0, COL2, "BlinkBoldItalic");
@@ -387,6 +391,13 @@ int main( int argc, char **argv)
 #endif
                 addch( ' ');
             }
+#ifdef HAVE_WIDE
+            if( unicode_offset == 0x80)
+            {
+                mvaddstr( 6, 1, "   Click on 'bold on/off or 'blink ->");
+                mvaddstr( 7, 1, "   on/off' to toggle those attribs   ");
+            }
+#endif
 
 #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
             for( i = 0; i < 3 && line < ymax; i++, line++)
@@ -510,14 +521,7 @@ int main( int argc, char **argv)
         }
         else if( c == KEY_F(1) || c == 27)
             quit = 1;
-#ifdef PDCURSES
-        else if( c == KEY_F(2))
-        {
-            blink_state ^= 1;
-            PDC_set_blink( blink_state);
-        }
-#endif
-        else if( c == KEY_F(3))   /* toggle SLKs */
+        else if( c == KEY_F(2))   /* toggle SLKs */
         {
             use_slk ^= 1;
             if( use_slk)
@@ -525,7 +529,7 @@ int main( int argc, char **argv)
             else
                 slk_clear( );
         }
-        else if( c >= KEY_F(4) && c < KEY_F(12))
+        else if( c >= KEY_F(3) && c < KEY_F(12))
         {
             sscanf( labels[c - KEY_F(1)], "%x", (unsigned *)&fmt);
             if( use_slk)
@@ -578,18 +582,32 @@ int main( int argc, char **argv)
             }
 #endif
 #ifdef HAVE_WIDE
-            else if( mouse_event.x >= 40 && mouse_event.x < 40 + 10)
+            else if( mouse_event.x >= 40 && mouse_event.x <= 52)
+               switch( mouse_event.y)
                {
-               if( mouse_event.y == 11)
-                  {
-                  redraw = 1;
-                  unicode_offset += 0x80;
-                  }
-               else if( mouse_event.y == 12 && unicode_offset)
-                  {
-                  redraw = 1;
-                  unicode_offset -= 0x80;
-                  }
+                  case 11:
+                     redraw = 1;
+                     unicode_offset += 0x80;
+                     break;
+                  case 12:
+                     if( unicode_offset)
+                     {
+                        redraw = 1;
+                        unicode_offset -= 0x80;
+                     }
+                     break;
+#ifdef PDCURSES
+                  case 6:
+                     PDC_set_blink( termattrs( ) & A_BLINK ? FALSE : TRUE);
+                     redraw = 1;
+                     break;
+                  case 7:
+                     PDC_set_bold( termattrs( ) & A_BOLD ? FALSE : TRUE);
+                     redraw = 1;
+                     break;
+#endif
+                  default:
+                     break;
                }
 #endif
         }

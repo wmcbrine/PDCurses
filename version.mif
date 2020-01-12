@@ -1,7 +1,7 @@
 # Version number macros for inclusion from makefiles
 
-VER = 40
-VERDOT = 4.0
+VER = 41
+VERDOT = 4.1
 ABI_MAJOR = 4
-ABI_MINOR = 0
+ABI_MINOR = 1
 ABI = $(ABI_MAJOR).$(ABI_MINOR)

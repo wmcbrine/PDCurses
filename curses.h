@@ -357,6 +357,15 @@ typedef struct _win       /* definition of a window */
     struct _win *_parent; /* subwin's pointer to parent win */
 } WINDOW;
 
+/* Color pair structure */
+
+typedef struct
+{
+    short f;              /* foreground color */
+    short b;              /* background color */
+    bool  set;            /* pair has been set */
+} PDC_PAIR;
+
 /* Avoid using the SCREEN struct directly -- use the corresponding
    functions if possible. This struct may eventually be made private. */
 
@@ -402,17 +411,6 @@ typedef struct
     bool  key_code;                /* TRUE if last key is a special key;
                                       used internally by get_wch() */
     MOUSE_STATUS mouse_status;     /* last returned mouse status */
-#ifdef XCURSES
-    int   XcurscrSize;    /* size of Xcurscr shared memory block */
-    bool  sb_on;
-    int   sb_viewport_y;
-    int   sb_viewport_x;
-    int   sb_total_y;
-    int   sb_total_x;
-    int   sb_cur_y;
-    int   sb_cur_x;
-    int   exit_key;
-#endif
     short line_color;     /* color of line attributes - default -1 */
     attr_t termattrs;     /* attribute capabilities */
     WINDOW *lastscr;      /* the last screen image */
@@ -427,6 +425,7 @@ typedef struct
     int  *c_ungch;        /* array of ungotten chars */
     int   c_ungind;       /* ungetch() push index */
     int   c_ungmax;       /* allocated size of ungetch() buffer */
+    PDC_PAIR *atrtab;     /* table of color pairs */
 } SCREEN;
 
 /*----------------------------------------------------------------------

@@ -178,11 +178,13 @@ enum
  *
  */
 
-/* Most flavors of PDCurses support three buttons.  WinGUI supports    */
-/* these plus two "extended" buttons.  But we'll set this macro to     */
-/* six,  allowing future versions to support up to nine total buttons. */
-
 #define PDC_MAX_MOUSE_BUTTONS          9
+
+#if _LP64
+typedef unsigned int mmask_t;
+#else
+typedef unsigned long mmask_t;
+#endif
 
 typedef struct
 {
@@ -298,12 +300,6 @@ typedef struct
 
 /* ncurses mouse interface */
 
-#if _LP64
-typedef unsigned int mmask_t;
-#else
-typedef unsigned long mmask_t;
-#endif
-
 typedef struct
 {
     short id;       /* unused, always 0 */
@@ -385,7 +381,6 @@ typedef struct
     int   lines;          /* new value for LINES */
     int   cols;           /* new value for COLS */
     mmask_t _trap_mbe;             /* trap these mouse button events */
-    mmask_t _map_mbe_to_key;       /* map mouse buttons to slk */
     int   mouse_wait;              /* time to wait (in ms) for a
                                       button release after a press, in
                                       order to count it as a click */
@@ -1731,10 +1726,8 @@ PDCEX  int     mouse_set(mmask_t);
 PDCEX  int     mouse_on(mmask_t);
 PDCEX  int     mouse_off(mmask_t);
 PDCEX  int     request_mouse_pos(void);
-PDCEX  int     map_button(mmask_t);
 PDCEX  void    wmouse_position(WINDOW *, int *, int *);
 PDCEX  mmask_t getmouse(void);
-PDCEX  mmask_t getbmap(void);
 
 /* ncurses */
 

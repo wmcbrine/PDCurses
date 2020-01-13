@@ -34,7 +34,7 @@ bool PDC_check_key(void)
     FD_ZERO(&xc_readfds);
     FD_SET(xc_key_sock, &xc_readfds);
 
-    if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL, 
+    if ((s = select(FD_SETSIZE, (FD_SET_CAST)&xc_readfds, NULL,
         NULL, &socket_timeout)) < 0)
         XCursesExitCursesProcess(3, "child - exiting from "
                                     "PDC_check_key select failed");
@@ -55,7 +55,7 @@ int PDC_get_key(void)
     if (XC_read_socket(xc_key_sock, &newkey, sizeof(unsigned long)) < 0)
         XCursesExitCursesProcess(2, "exiting from PDC_get_key");
 
-    pdc_key_modifiers = (newkey >> 24) & 0xFF;
+    SP->key_modifiers = (newkey >> 24) & 0xFF;
     key = (int)(newkey & 0x00FFFFFF);
 
     if (key == KEY_MOUSE && SP->key_code)

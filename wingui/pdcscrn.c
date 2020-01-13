@@ -54,7 +54,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
 #define VERTICAL_WHEEL_EVENT      PDC_MAX_MOUSE_BUTTONS
 #define HORIZONTAL_WHEEL_EVENT   (PDC_MAX_MOUSE_BUTTONS + 1)
 
-unsigned long pdc_key_modifiers = 0L;
 int PDC_show_ctrl_alts = 0;
 
 /* RR: Removed statis on next line */
@@ -1782,26 +1781,26 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
                if( !alt_pressed)
                   key_already_handled = TRUE;
             }
-    pdc_key_modifiers = 0;
+    SP->key_modifiers = 0;
     /* Save the key modifiers if required. Do this first to allow to
        detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
 
     if (SP->save_key_modifiers)
     {
         if( alt_pressed)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
         if( shift_pressed)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
         if( ctrl_pressed)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
         if( GetKeyState( VK_NUMLOCK) & 1)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
         if( repeat_count)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
+            SP->key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
     }
 }
 
@@ -2115,7 +2114,7 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         {
             modified_key_to_return = numpad_unicode_value;
             numpad_unicode_value = 0;
-            pdc_key_modifiers = 0;
+            SP->key_modifiers = 0;
         }
         if( modified_key_to_return )
         {

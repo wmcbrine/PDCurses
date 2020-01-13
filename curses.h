@@ -395,6 +395,8 @@ typedef struct
                                       to be preserved */
     int   _restore;                /* specifies if screen background
                                       to be restored, and how */
+    unsigned long key_modifiers;   /* key modifiers (SHIFT, CONTROL, etc.)
+                                      on last key press */
     bool  save_key_modifiers;      /* TRUE if each key modifiers saved
                                       with each key press */
     bool  return_key_modifiers;    /* TRUE if modifier keys are

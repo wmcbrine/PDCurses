@@ -97,8 +97,6 @@ chtype PDC_capabilities = 0;
 
 static short *color_pair_indices = (short *)NULL;
 
-unsigned long pdc_key_modifiers = 0L;
-
 void PDC_reset_prog_mode( void)
 {
 }

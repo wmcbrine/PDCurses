@@ -158,6 +158,7 @@ WINDOW *Xinitscr(int argc, char *argv[])
     SP->raw_out = FALSE;     /* tty I/O modes */
     SP->raw_inp = FALSE;     /* tty I/O modes */
     SP->cbreak = TRUE;
+    SP->key_modifiers = 0L;
     SP->save_key_modifiers = FALSE;
     SP->return_key_modifiers = FALSE;
     SP->echo = TRUE;

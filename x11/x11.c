@@ -279,8 +279,6 @@ static struct
 
 #define BITMAPDEPTH 1
 
-unsigned long pdc_key_modifiers = 0L;
-
 static GC normal_gc, bold_gc, block_cursor_gc, rect_cursor_gc, italic_gc, border_gc;
 static int font_height, font_width, font_ascent, font_descent,
            window_width, window_height;

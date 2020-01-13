@@ -104,12 +104,12 @@ int PDC_set_blink(bool blinkon)
     result = VioSetState(&statebuf, 0);
     VioGetState(&statebuf, 0);  /* needed? */
 
-    if (pdc_color_started)
+    if (SP->color_started)
         COLORS = statebuf[2] ? 16 : 8;
 
     return (result == 0) ? OK : ERR;
 #else
-    if (pdc_color_started)
+    if (SP->color_started)
         COLORS = 16;
 
     return blinkon ? ERR : OK;

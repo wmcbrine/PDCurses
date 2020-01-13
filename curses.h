@@ -417,6 +417,7 @@ typedef struct
     attr_t termattrs;     /* attribute capabilities */
     WINDOW *lastscr;      /* the last screen image */
     FILE *dbfp;           /* debug trace file pointer */
+    bool  color_started;  /* TRUE after start_color() */
 } SCREEN;
 
 /*----------------------------------------------------------------------

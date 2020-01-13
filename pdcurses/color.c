@@ -100,8 +100,6 @@ color
 int COLORS = 0;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
-bool pdc_color_started = FALSE;
-
 /* pair_set[] tracks whether a pair has been set via init_pair() */
 
 static bool pair_set[PDC_COLOR_PAIRS];
@@ -115,9 +113,9 @@ int start_color(void)
     if (SP->mono)
         return ERR;
 
-    pdc_color_started = TRUE;
+    SP->color_started = TRUE;
 
-    PDC_set_blink(FALSE);   /* Also sets COLORS, to 8 or 16 */
+    PDC_set_blink(FALSE);   /* Also sets COLORS */
 
     if (!default_colors && SP->orig_attr && getenv("PDC_ORIGINAL_COLORS"))
         default_colors = TRUE;
@@ -142,7 +140,7 @@ int init_pair(short pair, short fg, short bg)
 {
     PDC_LOG(("init_pair() - called: pair %d fg %d bg %d\n", pair, fg, bg));
 
-    if (!pdc_color_started || pair < 1 || pair >= COLOR_PAIRS ||
+    if (!SP || !SP->color_started || pair < 1 || pair >= COLOR_PAIRS ||
         fg < first_col || fg >= COLORS || bg < first_col || bg >= COLORS)
         return ERR;
 
@@ -236,7 +234,7 @@ int assume_default_colors(int f, int b)
     if (f < -1 || f >= COLORS || b < -1 || b >= COLORS)
         return ERR;
 
-    if (pdc_color_started)
+    if (SP->color_started)
     {
         short fg, bg, oldfg, oldbg;
 
@@ -283,7 +281,7 @@ void PDC_init_atrtab(void)
     int i;
     short fg, bg;
 
-    if (pdc_color_started && !default_colors)
+    if (SP->color_started && !default_colors)
     {
         fg = COLOR_WHITE;
         bg = COLOR_BLACK;

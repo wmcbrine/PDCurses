@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcdos.h"
 
@@ -29,12 +29,11 @@ pdcsetsc
 
    PDC_set_title() sets the title of the window in which the curses
    program is running. This function may not do anything on some
-   platforms. (Currently it only works in Win32 and X11.)
+   platforms.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     PDC_set_blink               -       -       -
-    PDC_set_bold                -       -       -
     PDC_set_title               -       -       -
 
 **man-end****************************************************************/
@@ -98,7 +97,7 @@ int PDC_set_blink(bool blinkon)
 
         PDCINT(0x10, regs);
 
-        if (pdc_color_started)
+        if (SP->color_started)
             COLORS = blinkon ? 8 : 16;
 
         break;

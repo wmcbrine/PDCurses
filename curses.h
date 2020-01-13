@@ -397,8 +397,6 @@ typedef struct
                                       to be restored, and how */
     unsigned long key_modifiers;   /* key modifiers (SHIFT, CONTROL, etc.)
                                       on last key press */
-    bool  save_key_modifiers;      /* TRUE if each key modifiers saved
-                                      with each key press */
     bool  return_key_modifiers;    /* TRUE if modifier keys are
                                       returned as "real" keys */
     bool  key_code;                /* TRUE if last key is a special key;
@@ -1789,7 +1787,6 @@ PDCEX  int     PDC_setclipboard(const char *, long);
 PDCEX  unsigned long PDC_get_input_fd(void);
 PDCEX  unsigned long PDC_get_key_modifiers(void);
 PDCEX  int     PDC_return_key_modifiers(bool);
-PDCEX  int     PDC_save_key_modifiers(bool);
 PDCEX  void    PDC_set_resize_limits( const int new_min_lines,
                                const int new_max_lines,
                                const int new_min_cols,
@@ -1840,6 +1837,10 @@ PDCEX  int     sb_refresh(void);
 #ifdef NCURSES_MOUSE_VERSION
 # define getmouse(x) nc_getmouse(x)
 #endif
+
+/* Deprecated */
+
+#define PDC_save_key_modifiers(x)  (OK)
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

@@ -384,20 +384,17 @@ int PDC_get_key(void)
     key = keyInfo.chChar;
     scan = keyInfo.chScan;
 
-    if (SP->save_key_modifiers)
-    {
-        if (keyInfo.fsState & KBDSTF_ALT)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
+    if (keyInfo.fsState & KBDSTF_ALT)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-        if (keyInfo.fsState & KBDSTF_CONTROL)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if (keyInfo.fsState & KBDSTF_CONTROL)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if (keyInfo.fsState & KBDSTF_NUMLOCK_ON)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+    if (keyInfo.fsState & KBDSTF_NUMLOCK_ON)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
-        if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
-            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
-    }
+    if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 #endif
     if (scan == 0x1c && key == 0x0a)    /* ^Enter */
         key = CTL_ENTER;

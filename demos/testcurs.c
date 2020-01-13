@@ -481,7 +481,6 @@ void inputTest(WINDOW *win)
 #ifdef PDCURSES
     mouse_set( ALL_MOUSE_EVENTS |
             (report_mouse_movement ? REPORT_MOUSE_POSITION : 0));
-    PDC_save_key_modifiers(TRUE);
 #else
     mousemask( ALL_MOUSE_EVENTS |
             (report_mouse_movement ? REPORT_MOUSE_POSITION : 0), NULL);
@@ -674,7 +673,6 @@ void inputTest(WINDOW *win)
 
 #ifdef PDCURSES
     mouse_set(0L);
-    PDC_save_key_modifiers(FALSE);
 /*  PDC_return_key_modifiers(FALSE);   */
 #endif
     wclear(win);

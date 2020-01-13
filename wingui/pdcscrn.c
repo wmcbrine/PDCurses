@@ -649,7 +649,6 @@ static int set_mouse( const int button_index, const int button_state,
     }
     pdc_mouse_status.x = pt.x / PDC_cxChar;
     pdc_mouse_status.y = pt.y / PDC_cyChar;
-/*  if( SP->save_key_modifiers)  */
     {
         int i, button_flags = 0;
 
@@ -1785,23 +1784,20 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
     /* Save the key modifiers if required. Do this first to allow to
        detect e.g. a pressed CTRL key after a hit of NUMLOCK. */
 
-    if (SP->save_key_modifiers)
-    {
-        if( alt_pressed)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
+    if( alt_pressed)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-        if( shift_pressed)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+    if( shift_pressed)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-        if( ctrl_pressed)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if( ctrl_pressed)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if( GetKeyState( VK_NUMLOCK) & 1)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+    if( GetKeyState( VK_NUMLOCK) & 1)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
-        if( repeat_count)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
-    }
+    if( repeat_count)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
 }
 
 /* Blinking text is supposed to blink twice a second.  Therefore,

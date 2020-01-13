@@ -212,23 +212,20 @@ static int _process_key_event(void)
 
     oldkey = event.key.keysym.sym;
 
-    if (SP->save_key_modifiers)
-    {
-        if (event.key.keysym.mod & KMOD_NUM)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+    if (event.key.keysym.mod & KMOD_NUM)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
-        if (event.key.keysym.mod & KMOD_SHIFT)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+    if (event.key.keysym.mod & KMOD_SHIFT)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-        if (event.key.keysym.mod & KMOD_CTRL)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if (event.key.keysym.mod & KMOD_CTRL)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if (event.key.keysym.mod & KMOD_ALT)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
+    if (event.key.keysym.mod & KMOD_ALT)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-        if( repeat_count)
-            SP->key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
-    }
+    if( repeat_count)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
 
     for (i = 0; key_table[i].keycode; i++)
     {

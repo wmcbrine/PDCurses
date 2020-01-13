@@ -1651,8 +1651,7 @@ static void XCursesKeyPress(Widget w, XEvent *event, String *params,
                 return;
         }
 
-        if (SP->save_key_modifiers)
-            key |= (modifier << 24);
+        key |= (modifier << 24);
 
         _send_key_to_curses(key, NULL, key_code);
     }

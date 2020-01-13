@@ -50,7 +50,6 @@ typedef struct           /* structure for ripped off lines */
 #define _DWCHAR    0x17  /* Delete Word char (^W) */
 #define _DLCHAR    0x15  /* Delete Line char (^U) */
 
-extern FILE *pdc_dbfp;   /* tracing file pointer (NULL = off) */
 extern bool pdc_color_started;
 
 /*----------------------------------------------------------------------*/
@@ -104,7 +103,7 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 #endif
 
 #ifdef PDCDEBUG
-# define PDC_LOG(x) if (pdc_dbfp) PDC_debug x
+# define PDC_LOG(x) if (SP && SP->dbfp) PDC_debug x
 #else
 # define PDC_LOG(x)
 #endif

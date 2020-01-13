@@ -416,6 +416,7 @@ typedef struct
     short line_color;     /* color of line attributes - default -1 */
     attr_t termattrs;     /* attribute capabilities */
     WINDOW *lastscr;      /* the last screen image */
+    FILE *dbfp;           /* debug trace file pointer */
 } SCREEN;
 
 /*----------------------------------------------------------------------

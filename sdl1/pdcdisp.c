@@ -13,7 +13,7 @@
    #define USE_UNICODE_ACS_CHARS 0
 #endif
 
-#include "acs_defs.h"
+#include "../common/acs_defs.h"
 
 #endif
 

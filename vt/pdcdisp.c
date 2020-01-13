@@ -8,7 +8,7 @@
 
 #include "curses.h"
 #include "pdcvt.h"
-#include "acs_defs.h"
+#include "../common/acs_defs.h"
 #include "../common/pdccolor.h"
 
 void PDC_gotoyx(int y, int x)

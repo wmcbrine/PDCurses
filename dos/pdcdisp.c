@@ -7,7 +7,7 @@
 
 #ifdef CHTYPE_LONG
    #define USE_UNICODE_ACS_CHARS 0
-   #include "acs_defs.h"
+   #include "../common/acs_defs.h"
 #endif
 
 #ifdef __PACIFIC__

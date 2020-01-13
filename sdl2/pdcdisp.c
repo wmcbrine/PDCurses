@@ -12,7 +12,7 @@
 # else
 #  define USE_UNICODE_ACS_CHARS 0
 # endif
-# include "acs_defs.h"
+# include "../common/acs_defs.h"
 #endif
 
 /* see 'addch.c' for an explanation of how combining chars are handled. */

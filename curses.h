@@ -415,6 +415,7 @@ typedef struct
 #endif
     short line_color;     /* color of line attributes - default -1 */
     attr_t termattrs;     /* attribute capabilities */
+    WINDOW *lastscr;      /* the last screen image */
 } SCREEN;
 
 /*----------------------------------------------------------------------

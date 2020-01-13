@@ -50,7 +50,6 @@ typedef struct           /* structure for ripped off lines */
 #define _DWCHAR    0x17  /* Delete Word char (^W) */
 #define _DLCHAR    0x15  /* Delete Line char (^U) */
 
-extern WINDOW *pdc_lastscr;
 extern FILE *pdc_dbfp;   /* tracing file pointer (NULL = off) */
 extern bool pdc_color_started;
 

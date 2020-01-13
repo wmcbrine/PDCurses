@@ -157,7 +157,7 @@ int doupdate(void)
             int first, last;
 
             chtype *src = curscr->_y[y];
-            chtype *dest = pdc_lastscr->_y[y];
+            chtype *dest = SP->lastscr->_y[y];
 
             if (clearall)
             {
@@ -189,7 +189,7 @@ int doupdate(void)
                           )
                         len++;
 
-                /* update the screen, and pdc_lastscr */
+                /* update the screen, and SP->lastscr */
 
                 if (len)
                 {

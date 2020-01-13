@@ -171,17 +171,19 @@ bool has_colors(void)
 {
     PDC_LOG(("has_colors() - called\n"));
 
-    return !(SP->mono);
+    return SP ? !(SP->mono) : FALSE;
 }
 
 int init_color(short color, short red, short green, short blue)
 {
     PDC_LOG(("init_color() - called\n"));
 
-    if (color < 0 || color >= COLORS || !PDC_can_change_color() ||
-        red < 0 || red > 1000 || green < 0 || green > 1000 ||
-        blue < 0 || blue > 1000)
+    if (!SP || color < 0 || color >= COLORS || !PDC_can_change_color() ||
+        red < -1 || red > 1000 || green < -1 || green > 1000 ||
+        blue < -1 || blue > 1000)
         return ERR;
+
+    SP->dirty = TRUE;
 
     return PDC_init_color(color, red, green, blue);
 }

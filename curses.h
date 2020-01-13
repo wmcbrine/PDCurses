@@ -419,6 +419,14 @@ typedef struct
     FILE *dbfp;           /* debug trace file pointer */
     bool  color_started;  /* TRUE after start_color() */
     bool  dirty;          /* redraw on napms() after init_color() */
+    int   sel_start;      /* start of selection (y * COLS + x) */
+    int   sel_end;        /* end of selection */
+    int  *c_buffer;       /* character buffer */
+    int   c_pindex;       /* putter index */
+    int   c_gindex;       /* getter index */
+    int  *c_ungch;        /* array of ungotten chars */
+    int   c_ungind;       /* ungetch() push index */
+    int   c_ungmax;       /* allocated size of ungetch() buffer */
 } SCREEN;
 
 /*----------------------------------------------------------------------

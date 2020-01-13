@@ -91,14 +91,6 @@ getch
 
 **man-end****************************************************************/
 
-#define _INBUFSIZ   512 /* size of terminal input buffer */
-#define NUNGETCH    256 /* max # chars to ungetch() */
-
-static int c_pindex = 0;    /* putter index */
-static int c_gindex = 1;    /* getter index */
-static int c_ungind = 0;    /* ungetch() push index */
-static int c_ungch[NUNGETCH];   /* array of ungotten chars */
-
 static int _mouse_key(void)
 {
     int i, key = KEY_MOUSE;
@@ -172,12 +164,11 @@ static int _mouse_key(void)
 
 int wgetch(WINDOW *win)
 {
-    static int buffer[_INBUFSIZ];   /* character buffer */
     int key, remaining_millisecs;
 
     PDC_LOG(("wgetch() - called\n"));
 
-    if (!win)
+    if (!win || !SP)
         return ERR;
 
     if (SP->delaytenths)
@@ -197,24 +188,23 @@ int wgetch(WINDOW *win)
 
     /* if ungotten char exists, remove and return it */
 
-    if (c_ungind)
-        return c_ungch[--c_ungind];
+    if (SP->c_ungind)
+        return SP->c_ungch[--(SP->c_ungind)];
 
     /* if normal and data in buffer */
 
-    if ((!SP->raw_inp && !SP->cbreak) && (c_gindex < c_pindex))
-        return buffer[c_gindex++];
+    if ((!SP->raw_inp && !SP->cbreak) && (SP->c_gindex < SP->c_pindex))
+        return SP->c_buffer[SP->c_gindex++];
 
     /* prepare to buffer data */
 
-    c_pindex = 0;
-    c_gindex = 0;
+    SP->c_pindex = 0;
+    SP->c_gindex = 0;
 
     /* to get here, no keys are buffered. go and get one. */
 
     for (;;)            /* loop for any buffering */
     {
-
         /* is there a keystroke ready? */
 
         if (!PDC_check_key())
@@ -279,17 +269,17 @@ int wgetch(WINDOW *win)
 
         if (key == '\b')
         {
-            if (c_pindex > c_gindex)
-                c_pindex--;
+            if (SP->c_pindex > SP->c_gindex)
+                SP->c_pindex--;
         }
         else
-            if (c_pindex < _INBUFSIZ - 2)
-                buffer[c_pindex++] = key;
+            if (SP->c_pindex < _INBUFSIZ - 2)
+                SP->c_buffer[SP->c_pindex++] = key;
 
         /* if we got a line */
 
         if (key == '\n' || key == '\r')
-            return buffer[c_gindex++];
+            return SP->c_buffer[SP->c_gindex++];
     }
 }
 
@@ -317,10 +307,10 @@ int PDC_ungetch(int ch)
 {
     PDC_LOG(("ungetch() - called\n"));
 
-    if (c_ungind >= NUNGETCH)   /* pushback stack full */
+    if (SP->c_ungind >= SP->c_ungmax)   /* pushback stack full */
         return ERR;
 
-    c_ungch[c_ungind++] = ch;
+    SP->c_ungch[SP->c_ungind++] = ch;
 
     return OK;
 }
@@ -329,11 +319,14 @@ int flushinp(void)
 {
     PDC_LOG(("flushinp() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     PDC_flushinp();
 
-    c_gindex = 1;           /* set indices to kill buffer */
-    c_pindex = 0;
-    c_ungind = 0;           /* clear c_ungch array */
+    SP->c_gindex = 1;       /* set indices to kill buffer */
+    SP->c_pindex = 0;
+    SP->c_ungind = 0;       /* clear SP->c_ungch array */
 
     return OK;
 }

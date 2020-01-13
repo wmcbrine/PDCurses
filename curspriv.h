@@ -126,4 +126,7 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 #define PDC_CLICK_PERIOD 150  /* time to wait for a click, if
                                  not set by mouseinterval() */
 
+#define _INBUFSIZ        512  /* size of terminal input buffer */
+#define NUNGETCH         256  /* max # chars to ungetch() */
+
 #endif /* __CURSES_INTERNALS__*/

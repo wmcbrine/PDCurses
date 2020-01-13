@@ -255,6 +255,18 @@ WINDOW *Xinitscr(int argc, char *argv[])
 
     longname( );   /* to ensure that ttytype is initialized */
 
+    SP->c_buffer = malloc(_INBUFSIZ * sizeof(int));
+    if (!SP->c_buffer)
+        return NULL;
+    SP->c_pindex = 0;
+    SP->c_gindex = 1;
+
+    SP->c_ungch = malloc(NUNGETCH * sizeof(int));
+    if (!SP->c_ungch)
+        return NULL;
+    SP->c_ungind = 0;
+    SP->c_ungmax = NUNGETCH;
+
     return stdscr;
 }
 
@@ -306,8 +318,11 @@ void delscreen(SCREEN *sp)
 {
     PDC_LOG(("delscreen() - called\n"));
 
-    if (sp != SP)
+    if (!SP || sp != SP)
         return;
+
+    free(SP->c_ungch);
+    free(SP->c_buffer);
 
     PDC_slk_free();     /* free the soft label keys, if needed */
 

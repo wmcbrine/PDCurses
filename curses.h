@@ -401,6 +401,7 @@ typedef struct
                                       returned as "real" keys */
     bool  key_code;                /* TRUE if last key is a special key;
                                       used internally by get_wch() */
+    MOUSE_STATUS mouse_status;     /* last returned mouse status */
 #ifdef XCURSES
     int   XcurscrSize;    /* size of Xcurscr shared memory block */
     bool  sb_on;

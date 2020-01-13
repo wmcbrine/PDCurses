@@ -228,7 +228,7 @@ static int _process_mouse_events(void)
     int i;
     short shift_flags = 0;
 
-    memset(&pdc_mouse_status, 0, sizeof(pdc_mouse_status));
+    memset(&SP->mouse_status, 0, sizeof(SP->mouse_status));
 
     key_pressed = TRUE;
     old_shift = shift_status;
@@ -249,25 +249,25 @@ static int _process_mouse_events(void)
 
     if (mouse_scroll)
     {
-        pdc_mouse_status.changes = mouse_scroll & 0x80 ?
+        SP->mouse_status.changes = mouse_scroll & 0x80 ?
             PDC_MOUSE_WHEEL_UP : PDC_MOUSE_WHEEL_DOWN;
 
-        pdc_mouse_status.x = -1;
-        pdc_mouse_status.y = -1;
+        SP->mouse_status.x = -1;
+        SP->mouse_status.y = -1;
 
         return KEY_MOUSE;
     }
 
     if (mouse_moved)
     {
-        pdc_mouse_status.changes = PDC_MOUSE_MOVED;
+        SP->mouse_status.changes = PDC_MOUSE_MOVED;
 
         for (i = 0; i < 3; i++)
         {
             if (ms_regs.h.bl & (1 << button_map[i]))
             {
-                pdc_mouse_status.button[i] = BUTTON_MOVED | shift_flags;
-                pdc_mouse_status.changes |= (1 << i);
+                SP->mouse_status.button[i] = BUTTON_MOVED | shift_flags;
+                SP->mouse_status.changes |= (1 << i);
             }
         }
     }
@@ -292,26 +292,26 @@ static int _process_mouse_events(void)
                         regs.W.bx = button_map[i];
                         PDCINT(0x33, regs);
 
-                        pdc_mouse_status.button[i] = regs.W.bx ?
+                        SP->mouse_status.button[i] = regs.W.bx ?
                             BUTTON_CLICKED : BUTTON_PRESSED;
                     }
                     else
-                        pdc_mouse_status.button[i] = BUTTON_PRESSED;
+                        SP->mouse_status.button[i] = BUTTON_PRESSED;
                 }
                 else
-                    pdc_mouse_status.button[i] = BUTTON_CLICKED;
+                    SP->mouse_status.button[i] = BUTTON_CLICKED;
             }
 
             if (button[i].pressed || button[i].released)
             {
-                pdc_mouse_status.button[i] |= shift_flags;
-                pdc_mouse_status.changes |= (1 << i);
+                SP->mouse_status.button[i] |= shift_flags;
+                SP->mouse_status.changes |= (1 << i);
             }
         }
     }
 
-    pdc_mouse_status.x = ms_regs.W.cx >> 3;
-    pdc_mouse_status.y = ms_regs.W.dx >> 3;
+    SP->mouse_status.x = ms_regs.W.cx >> 3;
+    SP->mouse_status.y = ms_regs.W.dx >> 3;
 
     old_ms = ms_regs;
 

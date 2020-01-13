@@ -108,10 +108,10 @@ static int _mouse_key(void)
 
     for (i = 0; i < 3; i++)
     {
-        if (pdc_mouse_status.changes & (1 << i))
+        if (SP->mouse_status.changes & (1 << i))
         {
             int shf = i * 5;
-            short button = pdc_mouse_status.button[i] & BUTTON_ACTION_MASK;
+            short button = SP->mouse_status.button[i] & BUTTON_ACTION_MASK;
 
             if (   (!(mbe & (BUTTON1_PRESSED << shf)) &&
                     (button == BUTTON_PRESSED))
@@ -132,34 +132,34 @@ static int _mouse_key(void)
                 || (!(mbe & (BUTTON1_RELEASED << shf)) &&
                     (button == BUTTON_RELEASED))
             )
-                pdc_mouse_status.changes ^= (1 << i);
+                SP->mouse_status.changes ^= (1 << i);
         }
     }
 
-    if (pdc_mouse_status.changes & PDC_MOUSE_MOVED)
+    if (SP->mouse_status.changes & PDC_MOUSE_MOVED)
     {
         if (!(mbe & (BUTTON1_MOVED|BUTTON2_MOVED|BUTTON3_MOVED | REPORT_MOUSE_POSITION)))
-            pdc_mouse_status.changes ^= PDC_MOUSE_MOVED;
+            SP->mouse_status.changes ^= PDC_MOUSE_MOVED;
     }
 
-    if (pdc_mouse_status.changes &
+    if (SP->mouse_status.changes &
         (PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN))
     {
         if (!(mbe & MOUSE_WHEEL_SCROLL))
-            pdc_mouse_status.changes &=
+            SP->mouse_status.changes &=
                 ~(PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN);
     }
 
-    if (!pdc_mouse_status.changes)
+    if (!SP->mouse_status.changes)
         return -1;
 
     /* Check for click in slk area */
 
-    i = PDC_mouse_in_slk(pdc_mouse_status.y, pdc_mouse_status.x);
+    i = PDC_mouse_in_slk(SP->mouse_status.y, SP->mouse_status.x);
 
     if (i)
     {
-        if (pdc_mouse_status.button[0] & (BUTTON_PRESSED|BUTTON_CLICKED))
+        if (SP->mouse_status.button[0] & (BUTTON_PRESSED|BUTTON_CLICKED))
             key = KEY_F(i);
         else
             key = -1;

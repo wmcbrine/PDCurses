@@ -590,14 +590,14 @@ static int set_mouse( const int button_index, const int button_state,
         n_key_mouse_to_add = 1;
     else
     {
-        memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
+        memset(&SP->mouse_status, 0, sizeof(MOUSE_STATUS));
         if( button_index < PDC_MAX_MOUSE_BUTTONS)
         {
-            pdc_mouse_status.button[button_index] = (short)button_state;
+            SP->mouse_status.button[button_index] = (short)button_state;
             if( button_index < 3)
-               pdc_mouse_status.changes = (1 << button_index);
+               SP->mouse_status.changes = (1 << button_index);
             else
-               pdc_mouse_status.changes = (0x40 << button_index);
+               SP->mouse_status.changes = (0x40 << button_index);
         }
         else                      /* actually a wheel mouse movement */
         {                         /* button_state = number of units moved */
@@ -613,13 +613,13 @@ static int set_mouse( const int button_index, const int button_state,
                 {
                     n_key_mouse_to_add++;
                     mouse_wheel_vertical_loc -= mouse_wheel_sensitivity;
-                    pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_UP;
+                    SP->mouse_status.changes |= PDC_MOUSE_WHEEL_UP;
                 }
                 while( mouse_wheel_vertical_loc < -mouse_wheel_sensitivity / 2)
                 {
                     n_key_mouse_to_add++;
                     mouse_wheel_vertical_loc += mouse_wheel_sensitivity;
-                    pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_DOWN;
+                    SP->mouse_status.changes |= PDC_MOUSE_WHEEL_DOWN;
                 }
              }
              else       /* must be a horizontal event: */
@@ -629,13 +629,13 @@ static int set_mouse( const int button_index, const int button_state,
                 {
                     n_key_mouse_to_add++;
                     mouse_wheel_horizontal_loc -= mouse_wheel_sensitivity;
-                    pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_RIGHT;
+                    SP->mouse_status.changes |= PDC_MOUSE_WHEEL_RIGHT;
                 }
                 while( mouse_wheel_horizontal_loc < -mouse_wheel_sensitivity / 2)
                 {
                     n_key_mouse_to_add++;
                     mouse_wheel_horizontal_loc += mouse_wheel_sensitivity;
-                    pdc_mouse_status.changes |= PDC_MOUSE_WHEEL_LEFT;
+                    SP->mouse_status.changes |= PDC_MOUSE_WHEEL_LEFT;
                 }
              }
                         /* I think it may be that for wheel events,  we   */
@@ -647,8 +647,8 @@ static int set_mouse( const int button_index, const int button_state,
 /*          ScreenToClient( PDC_hWnd, &pt);      Wheel posns are in screen, */
         }                         /* not client,  coords;  gotta xform them */
     }
-    pdc_mouse_status.x = pt.x / PDC_cxChar;
-    pdc_mouse_status.y = pt.y / PDC_cyChar;
+    SP->mouse_status.x = pt.x / PDC_cxChar;
+    SP->mouse_status.y = pt.y / PDC_cyChar;
     {
         int i, button_flags = 0;
 
@@ -662,7 +662,7 @@ static int set_mouse( const int button_index, const int button_state,
             button_flags |= PDC_BUTTON_CONTROL;
 
         for (i = 0; i < PDC_MAX_MOUSE_BUTTONS; i++)
-            pdc_mouse_status.button[i] |= button_flags;
+            SP->mouse_status.button[i] |= button_flags;
     }
                   /* If there is already a KEY_MOUSE in the queue,  we   */
                   /* don't really want to add another one.  See above.   */
@@ -679,7 +679,7 @@ static int set_mouse( const int button_index, const int button_state,
                   /* If the window is maximized,  the click may occur just */
                   /* outside the "real" screen area.  If so,  we again     */
                   /* don't want to add a key to the queue:                 */
-    if( pdc_mouse_status.x >= PDC_n_cols || pdc_mouse_status.y >= PDC_n_rows)
+    if( SP->mouse_status.x >= PDC_n_cols || SP->mouse_status.y >= PDC_n_rows)
         n_key_mouse_to_add = 0;
                   /* OK,  there isn't a KEY_MOUSE already in the queue.   */
                   /* So we'll add one (or zero or more,  for wheel mice): */
@@ -1662,10 +1662,10 @@ static void HandleMouseMove( WPARAM wParam, LPARAM lParam,
         {
             int i;
 
-            pdc_mouse_status.changes = report_event;
+            SP->mouse_status.changes = report_event;
             for( i = 0; i < 3; i++)
             {
-                pdc_mouse_status.button[i] = (((report_event >> i) & 1) ?
+                SP->mouse_status.button[i] = (((report_event >> i) & 1) ?
                     BUTTON_MOVED : 0);
             }
             *ptr_modified_key_to_return = 0;
@@ -2083,7 +2083,7 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         button_up = ((wParam & MK_XBUTTON1) ? 3 : 4);
 #endif
         button_up = (((mouse_buttons_pressed & 8) ||
-                 pdc_mouse_status.button[3] & BUTTON_PRESSED) ? 3 : 4);
+                 SP->mouse_status.button[3] & BUTTON_PRESSED) ? 3 : 4);
         ReleaseCapture( );
         break;
 #endif         /* #if( PDC_MAX_MOUSE_BUTTONS >= 5) */

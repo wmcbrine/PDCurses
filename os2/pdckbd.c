@@ -208,7 +208,7 @@ static int _process_mouse_events(void)
 
     for (i = 0; i < 3; i++)
     {
-        pdc_mouse_status.button[i] =
+        SP->mouse_status.button[i] =
             ((event.fs & move_mask[i]) ? BUTTON_MOVED : 0) |
             ((event.fs & press_mask[i]) ? BUTTON_PRESSED : 0);
 
@@ -216,13 +216,13 @@ static int _process_mouse_events(void)
            events. A MOVE should always follow a PRESS, so treat a MOVE
            immediately after a RELEASE as a PRESS. */
 
-        if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
+        if ((SP->mouse_status.button[i] == BUTTON_MOVED) &&
             (old_mouse_status.button[i] == BUTTON_RELEASED))
         {
-            pdc_mouse_status.button[i] = BUTTON_PRESSED;
+            SP->mouse_status.button[i] = BUTTON_PRESSED;
         }
 
-        if (pdc_mouse_status.button[i] == BUTTON_PRESSED && SP->mouse_wait)
+        if (SP->mouse_status.button[i] == BUTTON_PRESSED && SP->mouse_wait)
         {
             /* Check for a click -- a PRESS followed immediately by a
                release */
@@ -242,38 +242,38 @@ static int _process_mouse_events(void)
                 MouReadEventQue(&event, &count, mouse_handle);
 
                 if (!(event.fs & button_mask[i]))
-                    pdc_mouse_status.button[i] = BUTTON_CLICKED;
+                    SP->mouse_status.button[i] = BUTTON_CLICKED;
             }
         }
     }
 
-    pdc_mouse_status.x = event.col;
-    pdc_mouse_status.y = event.row;
+    SP->mouse_status.x = event.col;
+    SP->mouse_status.y = event.row;
 
-    pdc_mouse_status.changes = 0;
+    SP->mouse_status.changes = 0;
 
     for (i = 0; i < 3; i++)
     {
-        if (old_mouse_status.button[i] != pdc_mouse_status.button[i])
-            pdc_mouse_status.changes |= (1 << i);
+        if (old_mouse_status.button[i] != SP->mouse_status.button[i])
+            SP->mouse_status.changes |= (1 << i);
 
-        if (pdc_mouse_status.button[i] == BUTTON_MOVED)
+        if (SP->mouse_status.button[i] == BUTTON_MOVED)
         {
             /* Discard non-moved "moves" */
 
-            if (pdc_mouse_status.x == old_mouse_status.x &&
-                pdc_mouse_status.y == old_mouse_status.y)
+            if (SP->mouse_status.x == old_mouse_status.x &&
+                SP->mouse_status.y == old_mouse_status.y)
                 return -1;
 
             /* Motion events always flag the button as changed */
 
-            pdc_mouse_status.changes |= (1 << i);
-            pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+            SP->mouse_status.changes |= (1 << i);
+            SP->mouse_status.changes |= PDC_MOUSE_MOVED;
             break;
         }
     }
 
-    old_mouse_status = pdc_mouse_status;
+    old_mouse_status = SP->mouse_status;
 
     /* Treat click events as release events for comparison purposes */
 
@@ -298,8 +298,8 @@ static int _process_mouse_events(void)
     {
         for (i = 0; i < 3; i++)
         {
-            if (pdc_mouse_status.changes & (1 << i))
-                pdc_mouse_status.button[i] |= shift_flags;
+            if (SP->mouse_status.changes & (1 << i))
+                SP->mouse_status.button[i] |= shift_flags;
         }
     }
 

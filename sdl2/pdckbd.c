@@ -302,7 +302,7 @@ static int _process_mouse_event(void)
     SDL_Keymod keymods;
     short shift_flags = 0;
 
-    memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
+    memset(&SP->mouse_status, 0, sizeof(MOUSE_STATUS));
 
     keymods = SDL_GetModState();
 
@@ -319,37 +319,37 @@ static int _process_mouse_event(void)
     {
         int i;
 
-        pdc_mouse_status.x = event.motion.x / pdc_fwidth;
-        pdc_mouse_status.y = event.motion.y / pdc_fheight;
+        SP->mouse_status.x = event.motion.x / pdc_fwidth;
+        SP->mouse_status.y = event.motion.y / pdc_fheight;
 
         if (!event.motion.state ||
-           (pdc_mouse_status.x == old_mouse_status.x &&
-            pdc_mouse_status.y == old_mouse_status.y))
+           (SP->mouse_status.x == old_mouse_status.x &&
+            SP->mouse_status.y == old_mouse_status.y))
             return -1;
 
-        pdc_mouse_status.changes = PDC_MOUSE_MOVED;
+        SP->mouse_status.changes = PDC_MOUSE_MOVED;
 
         for (i = 0; i < 3; i++)
         {
             if (event.motion.state & SDL_BUTTON(i + 1))
             {
-                pdc_mouse_status.button[i] = BUTTON_MOVED | shift_flags;
-                pdc_mouse_status.changes |= (1 << i);
+                SP->mouse_status.button[i] = BUTTON_MOVED | shift_flags;
+                SP->mouse_status.changes |= (1 << i);
             }
         }
     }
     else if (event.type == SDL_MOUSEWHEEL)
     {
-        pdc_mouse_status.x = pdc_mouse_status.y = -1;
+        SP->mouse_status.x = SP->mouse_status.y = -1;
 
         if (event.wheel.y > 0)
-            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+            SP->mouse_status.changes = PDC_MOUSE_WHEEL_UP;
         else if (event.wheel.y < 0)
-            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+            SP->mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
         else if (event.wheel.x > 0)
-            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
+            SP->mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
         else if (event.wheel.x < 0)
-            pdc_mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
+            SP->mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
         else
             return -1;
 
@@ -381,16 +381,16 @@ static int _process_mouse_event(void)
             }
         }
 
-        pdc_mouse_status.x = event.button.x / pdc_fwidth;
-        pdc_mouse_status.y = event.button.y / pdc_fheight;
+        SP->mouse_status.x = event.button.x / pdc_fwidth;
+        SP->mouse_status.y = event.button.y / pdc_fheight;
 
         btn--;
 
-        pdc_mouse_status.button[btn] = action | shift_flags;
-        pdc_mouse_status.changes = (1 << btn);
+        SP->mouse_status.button[btn] = action | shift_flags;
+        SP->mouse_status.changes = (1 << btn);
     }
 
-    old_mouse_status = pdc_mouse_status;
+    old_mouse_status = SP->mouse_status;
 
     SP->key_code = TRUE;
     return KEY_MOUSE;

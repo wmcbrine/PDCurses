@@ -33,20 +33,4 @@ const char *PDC_sysname(void)
     return "OS/2";
 }
 
-PDCEX PDC_version_info PDC_version = { PDC_PORT_OS2,
-          PDC_VER_MAJOR, PDC_VER_MINOR, PDC_VER_CHANGE,
-          sizeof( chtype),
-               /* note that thus far,  'wide' and 'UTF8' versions exist */
-               /* only for SDL2, X11,  Win32,  and Win32a;  elsewhere, */
-               /* these will be FALSE */
-#ifdef PDC_WIDE
-          TRUE,
-#else
-          FALSE,
-#endif
-#ifdef PDC_FORCE_UTF8
-          TRUE,
-#else
-          FALSE,
-#endif
-          };
+enum PDC_port PDC_port_val = PDC_PORT_OS2;

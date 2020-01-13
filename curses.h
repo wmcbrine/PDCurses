@@ -112,6 +112,47 @@ typedef chtype cchar_t;
 
 typedef chtype attr_t;
 
+/*----------------------------------------------------------------------
+ *
+ *  Version Info
+ *
+ */
+
+enum PDC_port
+{
+    PDC_PORT_X11 = 0,
+    PDC_PORT_WINCON = 1,
+    PDC_PORT_WINGUI = 2,
+    PDC_PORT_DOS = 3,
+    PDC_PORT_OS2 = 4,
+    PDC_PORT_SDL1 = 5,
+    PDC_PORT_SDL2 = 6,
+    PDC_PORT_VT = 7
+};
+
+/* Use this structure with PDC_get_version() for run-time info about the
+   way the library was built, in case it doesn't match the header. */
+
+typedef struct
+{
+    short flags;          /* flags OR'd together (see below) */
+    short build;          /* PDC_BUILD at compile time */
+    unsigned char major;  /* PDC_VER_MAJOR */
+    unsigned char minor;  /* PDC_VER_MINOR */
+    unsigned char change; /* PDC_VER_CHANGE */
+    unsigned char csize;  /* sizeof chtype */
+    unsigned char bsize;  /* sizeof bool */
+    enum PDC_port port;
+} PDC_VERSION;
+
+enum
+{
+    PDC_VFLAG_DEBUG = 1,  /* set if built with -DPDCDEBUG */
+    PDC_VFLAG_WIDE  = 2,  /* -DPDC_WIDE */
+    PDC_VFLAG_UTF8  = 4,  /* -DPDC_FORCE_UTF8 */
+    PDC_VFLAG_DLL   = 8,  /* -DPDC_DLL_BUILD */
+    PDC_VFLAG_RGB   = 16  /* -DPDC_RGB */
+};
 /* Version constants,  available as of version 4.0 : */
 /* Don't forget to update 'version.mif' if MAJOR/MINOR changes! */
 
@@ -130,37 +171,6 @@ typedef chtype attr_t;
 #define PDC_VERDOT PDC_stringize( PDC_VER_MAJOR) "." \
                    PDC_stringize( PDC_VER_MINOR) "." \
                    PDC_stringize( PDC_VER_CHANGE)
-
-/* When using PDCurses as a DLL (Windows) or shared library (BSD or *nix),
-it's possible to switch the DLL or shared library.  One may therefore want
-to inquire of the DLL/shared library the port,  version numbers,  and
-chtype_size used, and make sure they're what one was expecting.  The
-'PDC_version' structure lets you do just that. */
-
-enum PDC_port
-{
-    PDC_PORT_X11 = 0,
-    PDC_PORT_WIN32 = 1,
-    PDC_PORT_WINGUI = 2,
-    PDC_PORT_DOS = 3,
-    PDC_PORT_OS2 = 4,
-    PDC_PORT_SDL1 = 5,
-    PDC_PORT_SDL2 = 6,
-    PDC_PORT_VT = 7
-};
-
-/* Detailed PDC version information */
-#define PDC_HAS_VERSION_INFO 1
-typedef struct
-{
-   const enum PDC_port port;
-   const int ver_major;
-   const int ver_minor;
-   const int ver_change;
-   const size_t chtype_size;
-   const bool is_wide;
-   const bool is_forced_utf8;
-} PDC_version_info;
 
 /*----------------------------------------------------------------------
  *
@@ -438,7 +448,6 @@ PDCEX  int          COLOR_PAIRS;
 PDCEX  int          TABSIZE;
 PDCEX  chtype       acs_map[];    /* alternate character set map */
 PDCEX  char         ttytype[];    /* terminal name/description */
-PDCEX PDC_version_info PDC_version;
 
 /*man-start**************************************************************
 
@@ -1732,6 +1741,7 @@ PDCEX  mmask_t getbmap(void);
 PDCEX  int     assume_default_colors(int, int);
 PDCEX  const char *curses_version(void);
 PDCEX  bool    has_key(int);
+PDCEX  int     set_tabsize(int);
 PDCEX  int     use_default_colors(void);
 PDCEX  int     wresize(WINDOW *, int, int);
 
@@ -1769,6 +1779,7 @@ PDCEX  wchar_t *slk_wlabel(int);
 #endif
 
 PDCEX  void    PDC_debug(const char *, ...);
+PDCEX  void    PDC_get_version(PDC_VERSION *);
 PDCEX  int     PDC_ungetch(int);
 PDCEX  int     PDC_set_blink(bool);
 PDCEX  int     PDC_set_bold(bool);

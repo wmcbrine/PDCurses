@@ -308,7 +308,7 @@ int main( int argc, char **argv)
             attroff( A_STANDOUT);
 #endif
 #ifdef HAVE_WIDE
-            mvaddwstr( 3, COL1, L"'Normal' text,  but wide");
+            mvaddwstr( 3, COL1, L"'N\xf3rm\xe4\x142' text,  bu\x163 w\xee\x1e0b\xea");
 #endif
             attron( A_BLINK);
             sprintf( buff, "Blink %s", on_off_text( termattrs( ) & A_BLINK));

@@ -16,7 +16,7 @@ for details. */
 
 #define USE_UNICODE_ACS_CHARS 1
 
-#include "acs_defs.h"
+#include "../common/acs_defs.h"
 
 static const unsigned short starting_ascii_to_unicode[32] = {
    0,

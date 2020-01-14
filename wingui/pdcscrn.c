@@ -8,7 +8,6 @@
 
 /* COLOR_PAIR to attribute encoding table. */
 
-static short *color_pair_indices = (short *)NULL;
 static int menu_shown = 1;
 static int min_lines = 25, max_lines = 25;
 static int min_cols = 80, max_cols = 80;
@@ -148,9 +147,6 @@ void PDC_scr_free(void)
         free(SP);
     SP = (SCREEN *)NULL;
 
-    if (color_pair_indices)
-        free(color_pair_indices);
-    color_pair_indices = (short *)NULL;
     PDC_free_palette( );
 }
 
@@ -2512,19 +2508,16 @@ INLINE int set_up_window( void)
 #define MAX_LINES   50000
 #define MAX_COLUMNS 50000
 
-int PDC_scr_open( int argc, char **argv)
+int PDC_scr_open(void)
 {
-    int i;
     HMODULE hntdll = GetModuleHandle( _T("ntdll.dll"));
 
     if( hntdll)
         wine_version = (wine_version_func)GetProcAddress(hntdll, "wine_get_version");
 
     PDC_LOG(("PDC_scr_open() - called\n"));
-    SP = calloc(1, sizeof(SCREEN));
-    color_pair_indices = (short *)calloc(PDC_COLOR_PAIRS * 2, sizeof( short));
     COLORS = N_COLORS;  /* should give this a try and see if it works! */
-    if (!SP || !color_pair_indices || PDC_init_palette( ))
+    if (!SP || PDC_init_palette( ))
         return ERR;
 
     debug_printf( "colors alloc\n");
@@ -2537,6 +2530,8 @@ int PDC_scr_open( int argc, char **argv)
                | A_OVERLINE | A_UNDERLINE | A_STRIKEOUT | A_ITALIC
                | A_DIM | A_REVERSE;
 
+#ifdef NO_LONGER_AVAILABLE
+            /* (Jan 2020 : the wmcbrine flavor lacks Xinitscr) */
     /* note: we parse the non-wide argc (see comment in header),
        therefore using non-wide char handling here */
     if( argc && argv)         /* store a copy of the input arguments */
@@ -2549,6 +2544,7 @@ int PDC_scr_open( int argc, char **argv)
             strcpy( PDC_argv[i], argv[i]);
         }
     }
+#endif
 
     if( set_up_window( ))
     {
@@ -2651,48 +2647,6 @@ static short get_pair( const chtype ch)
    return( (short)( (ch & A_COLOR) >> PDC_COLOR_SHIFT));
 }
 
-void PDC_init_pair( short pair, short fg, short bg)
-{
-    if( color_pair_indices[pair] != fg ||
-        color_pair_indices[pair + PDC_COLOR_PAIRS] != bg)
-    {
-        color_pair_indices[pair] = fg;
-        color_pair_indices[pair + PDC_COLOR_PAIRS] = bg;
-        /* Possibly go through curscr and redraw everything with that color! */
-        if( curscr && curscr->_y)
-        {
-            int i;
-
-            for( i = 0; i < SP->lines; i++)
-                if( curscr->_y[i])
-                {
-                    int j = 0, n_chars;
-                    chtype *line = curscr->_y[i];
-
-             /* skip over starting text that isn't of the desired color: */
-                    while( j < SP->cols && get_pair( *line) != pair)
-                    {
-                        j++;
-                        line++;
-                    }
-                    n_chars = SP->cols - j;
-            /* then skip over text at the end that's not the right color: */
-                    while( n_chars && get_pair( line[n_chars - 1]) != pair)
-                        n_chars--;
-                    if( n_chars)
-                        PDC_transform_line( i, j, n_chars, line);
-                }
-        }
-    }
-}
-
-int PDC_pair_content( short pair, short *fg, short *bg)
-{
-    *fg = color_pair_indices[pair];
-    *bg = color_pair_indices[pair + PDC_COLOR_PAIRS];
-    return OK;
-}
-
 bool PDC_can_change_color(void)
 {
     return TRUE;
@@ -2723,9 +2677,11 @@ above for PDC_init_pair(),  to handle basically the same problem. */
 static int color_used_for_this_char( const chtype c, const int idx)
 {
     const int color = get_pair( c);
-    const int rval = (color_pair_indices[color] == idx ||
-                     color_pair_indices[color + PDC_COLOR_PAIRS] == idx);
+    short fg, bg;
+    int rval;
 
+    pair_content( color, &fg, &bg);
+    rval = (fg == idx || bg == idx);
     return( rval);
 }
 

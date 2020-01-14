@@ -1,9 +1,8 @@
-# GNU MAKE Makefile for PDCurses library - Windows console MinGW GCC
+# GNU MAKE Makefile for PDCurses library - WIN32 MinGW GCC
 #
-# Usage: make -f [path\]Makefile.mng [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
-#        [INFOEX=N] [tgt]
+# Usage: make -f [path\]Makefile.mng [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y] [target]
 #
-# where tgt can be any of:
+# where target can be any of:
 # [all|demos|pdcurses.a|testcurs.exe...]
 
 O = o
@@ -13,7 +12,7 @@ ifndef PDCURSES_SRCDIR
 endif
 
 include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 uname_S := $(shell uname -s 2>/dev/null)
 
@@ -91,10 +90,6 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
-ifeq ($(INFOEX),N)
-	PDCCFLAGS += -DHAVE_NO_INFOEX
-endif
-
 LINK	   = $(PREFIX)gcc
 
 ifeq ($(DLL),Y)
@@ -151,14 +146,14 @@ $(LIBOBJS) : %.o: $(srcdir)/%.c
 	$(CC) -c $(CFLAGS) $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(CC) -c $(CFLAGS) $(PDCCFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
-firework.exe ozdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
+firework.exe newdemo.exe newtest.exe ptest.exe rain.exe testcurs.exe  \
 version.exe worm.exe xmas.exe: %.exe: $(demodir)/%.c
 	$(CC) $(CFLAGS) -o$@ $< $(LIBCURSES) $(EXELIBS)
 
 tuidemo.exe: tuidemo.o tui.o
-	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES) $(EXELIBS)
+	$(LINK) $(LDFLAGS) -o$@ tuidemo.o tui.o $(LIBCURSES)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
@@ -170,4 +165,3 @@ PLATFORM1 = MinGW WinCon
 PLATFORM2 = MinGW for WinCon
 ARCNAME = pdc$(VER)_ming_wcon
 
-include $(PDCURSES_SRCDIR)/makedist.mif

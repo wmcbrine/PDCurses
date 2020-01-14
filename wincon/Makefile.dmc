@@ -24,7 +24,7 @@ CC		= dmc
 
 CFLAGS		= -c -o+space -Nc
 
-CPPFLAGS	= -I$(PDCURSES_SRCDIR) -DPDC_WIDE -DPDC_FORCE_UTF8 -DHAVE_NO_INFOEX
+CPPFLAGS	= -I$(PDCURSES_SRCDIR) -DPDC_WIDE -DPDC_FORCE_UTF8
 
 LINK		= dmc
 LIBEXE		= lib
@@ -33,7 +33,7 @@ LIBCURSES	= pdcurses.lib
 
 BUILD		= $(CC) $(CFLAGS) $(CPPFLAGS)
 
-DEMOS		= testcurs.exe ozdemo.exe newtest.exe xmas.exe tuidemo.exe \
+DEMOS		= testcurs.exe ozdemo.exe             xmas.exe tuidemo.exe \
 firework.exe ptest.exe rain.exe worm.exe
 
 all:    $(LIBCURSES) $(DEMOS)

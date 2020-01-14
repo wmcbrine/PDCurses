@@ -166,7 +166,7 @@ void PDC_get_rgb_values( const chtype srcp,
     {
         short foreground_index, background_index;
 
-        PDC_pair_content( (short)color, &foreground_index, &background_index);
+        pair_content( (short)color, &foreground_index, &background_index);
         *foreground_rgb = PDC_rgbs[foreground_index];
         *background_rgb = PDC_rgbs[background_index];
     }

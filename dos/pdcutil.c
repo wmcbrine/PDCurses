@@ -102,4 +102,4 @@ void PDC_dpmi_int(int vector, pdc_dpmi_regs *rmregs)
 
 #endif
 
-enum PDC_port PDC_port_val = PDC_PORT_VT;
+enum PDC_port PDC_port_val = PDC_PORT_DOS;

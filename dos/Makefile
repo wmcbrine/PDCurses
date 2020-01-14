@@ -1,40 +1,25 @@
-# GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
+# GNU Makefile for PDCurses - DOS
 #
-# Usage: make -f [path\]Makefile] [DEBUG=Y] [CROSS=[build]] [target]
+# Usage: make [-f path\Makefile] [DEBUG=Y] [target]
 #
 # where target can be any of:
-# [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
-#
-# and "build" any installed cross-compiler (gcc + binutils),
-#  CROSS=Y defaults to i586-pc-msdosdjgpp build
-# Note: when cross-compiling from GNU/Linux set CROSS=Y even for make clean
+# [all|libs|demos|pdcurses.a|testcurs.exe...]
 
 O = o
+E = .exe
+RM = del
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/dos
 
 PDCURSES_DOS_H	= $(osdir)/pdcdos.h
 
-ifndef CROSS
-	RM		= del
-else
-	RM	= rm -rf
-endif
-
-ifeq ($(CROSS),Y)
-	PREFIX	= i586-pc-msdosdjgpp-
-else
-	ifdef CROSS
-		PREFIX	= $(CROSS)-
-	endif
-endif
+CC		= gcc
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
@@ -46,17 +31,16 @@ endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
 
-CC		= $(PREFIX)gcc
-LINK		= $(PREFIX)gcc
+LINK		= gcc
 
-LIBEXE		= $(PREFIX)ar
+LIBEXE		= ar
 LIBFLAGS	= rcv
 
 LIBCURSES	= pdcurses.a
 
 .PHONY: all libs clean demos dist
 
-all:	libs demos
+all:	libs
 
 libs:	$(LIBCURSES)
 
@@ -67,7 +51,7 @@ clean:
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
-	$(PREFIX)strip *.exe
+	strip *.exe
 endif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
@@ -77,7 +61,6 @@ $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)
 $(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
 panel.o : $(PANEL_HEADER)
-terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
 	$(CC) -c $(CFLAGS) $<
@@ -97,9 +80,3 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
-
-PLATFORM1 = DJGPP 2.05
-PLATFORM2 = DJGPP 2.05 for DOS
-ARCNAME = pdc$(VER)djg
-
-include $(PDCURSES_SRCDIR)/makedist.mif

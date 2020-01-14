@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcdos.h"
 
@@ -19,11 +19,10 @@ clipboard
 ### Description
 
    PDC_getclipboard() gets the textual contents of the system's
-   clipboard. This function returns the contents of the clipboard
-   in the contents argument. It is the responsibilitiy of the
-   caller to free the memory returned, via PDC_freeclipboard().
-   The length of the clipboard contents is returned in the length
-   argument.
+   clipboard. This function returns the contents of the clipboard in the
+   contents argument. It is the responsibility of the caller to free the
+   memory returned, via PDC_freeclipboard(). The length of the clipboard
+   contents is returned in the length argument.
 
    PDC_setclipboard copies the supplied text into the system's
    clipboard, emptying the clipboard prior to the copy.
@@ -40,7 +39,7 @@ clipboard
     PDC_CLIP_ACCESS_ERROR   no clipboard support
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     PDC_getclipboard            -       -       -
     PDC_setclipboard            -       -       -
     PDC_freeclipboard           -       -       -
@@ -62,7 +61,8 @@ int PDC_getclipboard(char **contents, long *length)
         return PDC_CLIP_EMPTY;
 
     len = strlen(pdc_DOS_clipboard);
-    if ((*contents = malloc(len + 1)) == NULL)
+    *contents = malloc(len + 1);
+    if (!*contents)
         return PDC_CLIP_MEMORY_ERROR;
 
     strcpy(*contents, pdc_DOS_clipboard);
@@ -83,7 +83,8 @@ int PDC_setclipboard(const char *contents, long length)
 
     if (contents)
     {
-        if ((pdc_DOS_clipboard = malloc(length + 1)) == NULL)
+        pdc_DOS_clipboard = malloc(length + 1);
+        if (!pdc_DOS_clipboard)
             return PDC_CLIP_MEMORY_ERROR;
 
         strcpy(pdc_DOS_clipboard, contents);
@@ -100,11 +101,10 @@ int PDC_freeclipboard(char *contents)
 
     if (contents)
     {
-
-        /* NOTE: We free the memory, but we can not set caller's pointer 
-           to NULL, so if caller calls again then will try to access 
-           free'd memory.  We 1st overwrite memory with a string so if 
-           caller tries to use free memory they won't get what they 
+        /* NOTE: We free the memory, but we can not set caller's pointer
+           to NULL, so if caller calls again then will try to access
+           free'd memory.  We 1st overwrite memory with a string so if
+           caller tries to use free memory they won't get what they
            expect & hopefully notice. */
 
         /* memset(contents, 0xFD, strlen(contents)); */
@@ -122,7 +122,7 @@ int PDC_clearclipboard(void)
 {
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-    if (pdc_DOS_clipboard) 
+    if (pdc_DOS_clipboard)
     {
         free(pdc_DOS_clipboard);
         pdc_DOS_clipboard = NULL;

@@ -1,35 +1,6 @@
-/* Public Domain Curses */
-
-/* MS C doesn't return flags from int86() */
-#ifdef MSC
-# define USE_KBHIT
-#endif
-
-#ifdef USE_KBHIT
-# include <conio.h>
-#endif
+/* PDCurses */
 
 #include "pdcdos.h"
-
-/*man-start**************************************************************
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses
-   reads its input from. It can be used for select().
-
-### Portability
-                             X/Open    BSD    SYS V
-    PDC_get_input_fd            -       -       -
-
-**man-end****************************************************************/
 
 #ifdef __DJGPP__
 # include <fcntl.h>
@@ -100,13 +71,6 @@ static unsigned char keyboard_function = 0xff, shift_function = 0xff,
                      check_function = 0xff;
 
 static const unsigned short button_map[3] = {0, 2, 1};
-
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return (unsigned long)fileno(stdin);
-}
 
 void PDC_set_keyboard_binary(bool on)
 {
@@ -213,14 +177,10 @@ bool PDC_check_key(void)
 
     old_shift = shift_status;
 
-#ifndef USE_KBHIT
     regs.h.ah = check_function;
     PDCINT(0x16, regs);
 
     return !(regs.W.flags & 64);
-#else
-    return kbhit();
-#endif
 }
 
 static int _process_mouse_events(void)
@@ -479,7 +439,7 @@ bool PDC_has_mouse(void)
 int PDC_mouse_set(void)
 {
     PDCREGS regs;
-    mmask_t mbe = SP->_trap_mbe;
+    unsigned long mbe = SP->_trap_mbe;
 
     if (mbe && !mouse_avail)
         mouse_avail = PDC_has_mouse();

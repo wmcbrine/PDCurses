@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcdos.h"
 
@@ -8,18 +8,6 @@
 #ifdef CHTYPE_LONG
    #define USE_UNICODE_ACS_CHARS 0
    #include "../common/acs_defs.h"
-#endif
-
-#ifdef __PACIFIC__
-void movedata(unsigned sseg, unsigned soff, unsigned dseg,
-              unsigned doff, unsigned n)
-{
-    far char *src = MK_FP(sseg, soff);
-    far char *dst = MK_FP(dseg, doff);
-
-    while (n--)
-        *dst++ = *src++;
-}
 #endif
 
 /* position hardware cursor at (y, x) */
@@ -37,27 +25,43 @@ void PDC_gotoyx(int row, int col)
     PDCINT(0x10, regs);
 }
 
-/* update the given physical line to look like the corresponding line in
-   curscr */
-
-/* NOTE:  the original indexing into pdc_atrtab[] relied on three or five
-   attribute bits in 'chtype' being adjacent to the color bits.  Such is
-   not the case for 64-bit chtypes (CHTYPE_LONG == 2),  so we have to do
-   additional bit-fiddling for that situation.  Code is similar in Win32
-   and DOS flavors.  (BJG) */
-
-void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
+    attr_t sysattrs;
     int j;
+    short fore, back;
+    unsigned char mapped_attr;
 
-    PDC_LOG(("PDC_transform_line() - called: line %d\n", lineno));
+    sysattrs = SP->termattrs;
+    pair_content(PAIR_NUMBER(attr), &fore, &back);
+
+    if (attr & A_BOLD)
+        fore |= 8;
+    if (attr & A_BLINK)
+        back |= 8;
+
+    fore = pdc_curstoreal[fore];
+    back = pdc_curstoreal[back];
+
+    if (attr & A_REVERSE)
+    {
+        if (sysattrs & A_BLINK)
+            mapped_attr = (back & 7) | (((fore & 7) | (back & 8)) << 4);
+        else
+            mapped_attr = back | (fore << 4);
+    }
+    else
+    {
+        if ((attr & A_UNDERLINE) && (sysattrs & A_UNDERLINE))
+            fore = (fore & 8) | 1;
+
+        mapped_attr = fore | (back << 4);
+    }
 
     if (pdc_direct_video)
     {
 #if SMALL || MEDIUM
-# ifndef __PACIFIC__
         struct SREGS segregs;
-# endif
         int ds;
 #endif
         /* this should be enough for the maximum width of a screen */
@@ -71,17 +75,11 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         {
             chtype ch = srcp[j];
 
-#if defined( CHTYPE_LONG) && (CHTYPE_LONG >= 2)
-            temp_line[j].attr = pdc_atrtab[((ch >> PDC_ATTR_SHIFT) & 0x1f)
-                     | (((ch >> PDC_COLOR_SHIFT) & 0xff) << 5)];
-#else
-            temp_line[j].attr = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
-#endif
+            temp_line[j].attr = mapped_attr;
 
-#ifdef CHTYPE_LONG
             if (ch & A_ALTCHARSET && !(ch & 0xff80))
                 ch = acs_map[ch & 0x7f];
-#endif
+
             temp_line[j].text = ch & 0xff;
         }
 
@@ -91,12 +89,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
                   pdc_video_ofs + (lineno * curscr->_maxx + x) * 2));
 #else
 # if SMALL || MEDIUM
-#  ifdef __PACIFIC__
-        ds = FP_SEG((void far *) temp_line);
-#  else
         segread(&segregs);
         ds = segregs.ds;
-#  endif
         movedata(ds, (int)temp_line, pdc_video_seg,
                  pdc_video_ofs + (lineno * curscr->_maxx + x) * 2, len * 2);
 # else
@@ -120,16 +114,49 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
             PDC_gotoyx(lineno, j + x);
 
             regs.h.ah = 0x09;
-            regs.W.bx = pdc_atrtab[ch >> PDC_ATTR_SHIFT];
+            regs.W.bx = mapped_attr;
             regs.W.cx = count;
-#ifdef CHTYPE_LONG
+
             if (ch & A_ALTCHARSET && !(ch & 0xff80))
                 ch = acs_map[ch & 0x7f];
-#endif
+
             regs.h.al = (unsigned char) (ch & 0xff);
 
             PDCINT(0x10, regs);
 
             j += count;
         }
+}
+
+/* update the given physical line to look like the corresponding line in
+   curscr */
+
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+{
+    attr_t old_attr, attr;
+    int i, j;
+
+    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
+
+    old_attr = *srcp & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+    for (i = 1, j = 1; j < len; i++, j++)
+    {
+        attr = srcp[i] & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+        if (attr != old_attr)
+        {
+            _new_packet(old_attr, lineno, x, i, srcp);
+            old_attr = attr;
+            srcp += i;
+            x += i;
+            i = 0;
+        }
+    }
+
+    _new_packet(old_attr, lineno, x, i, srcp);
+}
+
+void PDC_doupdate(void)
+{
 }

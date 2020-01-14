@@ -1,6 +1,5 @@
-/* Public Domain Curses */
+/* PDCurses */
 
-#include <limits.h>
 #include "pdcdos.h"
 
 void PDC_beep(void)
@@ -14,109 +13,36 @@ void PDC_beep(void)
     PDCINT(0x10, regs);
 }
 
-#if UINT_MAX >= 0xfffffffful
-# define irq0_ticks()  (getdosmemdword(0x46c))
-/* For 16-bit platforms, we expect that the program will need _two_ memory
-   read instructions to read the tick count.  Between the two instructions,
-   if we do not turn off interrupts, an IRQ 0 might intervene and update the
-   tick count with a carry over from the lower half to the upper half ---
-   and our read count will be bogus.  */
-#elif defined __TURBOC__
-static unsigned long irq0_ticks(void)
-{
-    unsigned long t;
-    disable();
-    t = getdosmemdword(0x46c);
-    enable();
-    return t;
-}
-#elif defined __WATCOMC__
-static unsigned long irq0_ticks(void)
-{
-    unsigned long t;
-    _disable();
-    t = getdosmemdword(0x46c);
-    _enable();
-    return t;
-}
-#else
-# define irq0_ticks()  (getdosmemdword(0x46c))  /* FIXME */
-#endif
-
-static void do_idle(void)
+void PDC_napms(int ms)
 {
     PDCREGS regs;
-
-    regs.W.ax = 0x1680;
-    PDCINT(0x2f, regs);
-    PDCINT(0x28, regs);
-}
-
-#define MAX_TICK       0x1800b0L       /* no. of IRQ 0 clock ticks per day;
-                                          BIOS counter (0:0x46c) will go up
-                                          to MAX_TICK - 1 before wrapping to
-                                          0 at midnight */
-#define MS_PER_DAY     86400000L       /* no. of milliseconds in a day */
-
-/* 1080 seconds = 18 minutes = 1/80 day is exactly 19663 ticks.
-If asked to nap for longer than 1080000 milliseconds,  we take
-one or more 18-minute naps.  This avoids wraparound issues and
-the integer overflows that would result for ms > MAX_INT / 859
-(about 42 minutes).  */
-
-#define MAX_NAP_SPAN      (MS_PER_DAY / 80ul)
-
-void PDC_napmsl( long ms)
-{
-    long ticks_to_wait, tick0;
+    long goal, start, current;
 
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-    while (ms > MAX_NAP_SPAN)
+    goal = DIVROUND((long)ms, 50);
+    if (!goal)
+        goal++;
+
+    start = getdosmemdword(0x46c);
+
+    goal += start;
+
+    while (goal > (current = getdosmemdword(0x46c)))
     {
-        PDC_napmsl( MAX_NAP_SPAN);
-        ms -= MAX_NAP_SPAN;
+        if (current < start)    /* in case of midnight reset */
+            return;
+
+        regs.W.ax = 0x1680;
+        PDCINT(0x2f, regs);
+        PDCINT(0x28, regs);
     }
-
-    if (ms < 0)
-        return;
-
-    /* Scale the millisecond count by MAX_TICK / MS_PER_DAY.  We actually
-       scale by 859/47181,  which is correct to within four parts per
-       billion and avoids the need for floating-point math.   We have to
-       round to the nearest integer tick anyway and don't know where we
-       started within a tick,  so this error can be accepted.
-
-       Here,  we assume that we start (on average) halfway through a tick,
-       but will end almost exactly when the 'goal' tick begins.  So the
-       rounding (on average) will work out correctly.       */
-
-    ticks_to_wait = (ms * 859L) / 47181L + 1L;
-    tick0 = irq0_ticks();
-
-    for( ;;)
-    {
-        long t = irq0_ticks() - tick0;
-
-        if( t < 0)           /* midnight rollover */
-            t += MAX_TICK;
-        if( t >= ticks_to_wait)
-            break;
-        do_idle();
-    }
-}
-
-void PDC_napms(int ms)
-{
-   PDC_napmsl( (long)ms);
 }
 
 const char *PDC_sysname(void)
 {
     return "DOS";
 }
-
-enum PDC_port PDC_port_val = PDC_PORT_DOS;
 
 #ifdef __DJGPP__
 
@@ -175,3 +101,5 @@ void PDC_dpmi_int(int vector, pdc_dpmi_regs *rmregs)
 }
 
 #endif
+
+enum PDC_port PDC_port_val = PDC_PORT_VT;

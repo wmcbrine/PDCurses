@@ -95,8 +95,6 @@ chtype PDC_capabilities = 0;
 
 /* COLOR_PAIR to attribute encoding table. */
 
-static short *color_pair_indices = (short *)NULL;
-
 void PDC_reset_prog_mode( void)
 {
 }
@@ -156,9 +154,6 @@ void PDC_scr_free( void)
         free(SP);
     SP = (SCREEN *)NULL;
 
-    if (color_pair_indices)
-        free(color_pair_indices);
-    color_pair_indices = (short *)NULL;
     PDC_free_palette( );
 }
 
@@ -180,7 +175,7 @@ static void sigwinchHandler( int sig)
 #define MAX_LINES 1000
 #define MAX_COLUMNS 1000
 
-int PDC_scr_open(int argc, char **argv)
+int PDC_scr_open(void)
 {
     char *capabilities = getenv( "PDC_VT");
     const char *colorterm = getenv( "COLORTERM");
@@ -209,10 +204,9 @@ int PDC_scr_open(int argc, char **argv)
           PDC_capabilities |= A_STANDOUT;
        }
     SP = calloc(1, sizeof(SCREEN));
-    color_pair_indices = (short *)calloc( PDC_COLOR_PAIRS * 2, sizeof( short));
     COLORS = (PDC_is_ansi ? 16 : 256);
-    assert( SP && color_pair_indices);
-    if (!SP || !color_pair_indices || PDC_init_palette( ))
+    assert( SP);
+    if (!SP || PDC_init_palette( ))
         return ERR;
 
     setbuf( stdin, NULL);
@@ -319,9 +313,11 @@ static short get_pair( const chtype ch)
 static int color_used_for_this_char( const chtype c, const int idx)
 {
     const int color = get_pair( c);
-    const int rval = (color_pair_indices[color] == idx ||
-                     color_pair_indices[color + PDC_COLOR_PAIRS] == idx);
+    short fg, bg;
+    int rval;
 
+    pair_content( color, &fg, &bg);
+    rval = (fg == idx || bg == idx);
     return( rval);
 }
 
@@ -356,24 +352,6 @@ void PDC_show_changes( const short pair, const short idx, const chtype attr)
                     PDC_transform_line( i, j, n_chars, line);
             }
     }
-}
-
-void PDC_init_pair( short pair, short fg, short bg)
-{
-    if( color_pair_indices[pair] != fg ||
-        color_pair_indices[pair + PDC_COLOR_PAIRS] != bg)
-    {
-        color_pair_indices[pair] = fg;
-        color_pair_indices[pair + PDC_COLOR_PAIRS] = bg;
-        PDC_show_changes( pair, -1, 0);
-    }
-}
-
-int PDC_pair_content( short pair, short *fg, short *bg)
-{
-    *fg = color_pair_indices[pair];
-    *bg = color_pair_indices[pair + PDC_COLOR_PAIRS];
-    return OK;
 }
 
 bool PDC_can_change_color(void)

@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcsdl.h"
 
@@ -11,7 +11,13 @@ void PDC_napms(int ms)
 {
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-    PDC_update_rects();
+    while (ms > 50)
+    {
+        PDC_pump_and_peep();
+        SDL_Delay(50);
+        ms -= 50;
+    }
+    PDC_pump_and_peep();
     SDL_Delay(ms);
 }
 

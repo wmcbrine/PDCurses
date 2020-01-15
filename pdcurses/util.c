@@ -173,6 +173,9 @@ wchar_t *wunctrl(cchar_t *wc)
 
     PDC_LOG(("wunctrl() - called\n"));
 
+    if (!wc)
+        return NULL;
+
     ic = *wc & A_CHARTEXT;
 
     if (ic >= 0x20 && ic != 0x7f)       /* normal characters */

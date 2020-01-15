@@ -2681,7 +2681,7 @@ static int color_used_for_this_char( const chtype c, const int idx)
     int rval;
 
     pair_content( color, &fg, &bg);
-    rval = (fg == idx || bg == idx);
+    rval = ((int)fg == idx || (int)bg == idx);
     return( rval);
 }
 

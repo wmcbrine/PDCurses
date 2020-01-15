@@ -137,6 +137,9 @@ int def_prog_mode(void)
 {
     PDC_LOG(("def_prog_mode() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     _save_mode(PDC_PR_TTY);
 
     return OK;
@@ -146,6 +149,9 @@ int def_shell_mode(void)
 {
     PDC_LOG(("def_shell_mode() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     _save_mode(PDC_SH_TTY);
 
     return OK;
@@ -154,6 +160,9 @@ int def_shell_mode(void)
 int reset_prog_mode(void)
 {
     PDC_LOG(("reset_prog_mode() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     _restore_mode(PDC_PR_TTY);
     PDC_reset_prog_mode();
@@ -165,6 +174,9 @@ int reset_shell_mode(void)
 {
     PDC_LOG(("reset_shell_mode() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     _restore_mode(PDC_SH_TTY);
     PDC_reset_shell_mode();
 
@@ -175,12 +187,18 @@ int resetty(void)
 {
     PDC_LOG(("resetty() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     return _restore_mode(PDC_SAVE_TTY);
 }
 
 int savetty(void)
 {
     PDC_LOG(("savetty() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     _save_mode(PDC_SAVE_TTY);
 

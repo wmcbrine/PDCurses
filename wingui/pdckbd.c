@@ -3,31 +3,6 @@
 #include "pdcwin.h"
 #include <tchar.h>
 
-/*man-start**************************************************************
-
-  Name:                                                         pdckbd
-
-  Synopsis:
-        unsigned long PDC_get_input_fd(void);
-
-  Description:
-        PDC_get_input_fd() returns the file descriptor that PDCurses
-        reads its input from. It can be used for select().  (For the
-        WinGUI version,  it's meaningless and returns zero.)
-
-  Portability                                X/Open    BSD    SYS V
-        PDC_get_input_fd                        -       -       -
-
-**man-end****************************************************************/
-
-
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return 0L;
-}
-
 void PDC_set_keyboard_binary(bool on)
 {
     PDC_LOG(("PDC_set_keyboard_binary() - called\n"));

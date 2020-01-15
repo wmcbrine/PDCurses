@@ -1801,7 +1801,6 @@ PDCEX  int     PDC_freeclipboard(char *);
 PDCEX  int     PDC_getclipboard(char **, long *);
 PDCEX  int     PDC_setclipboard(const char *, long);
 
-PDCEX  unsigned long PDC_get_input_fd(void);
 PDCEX  unsigned long PDC_get_key_modifiers(void);
 PDCEX  int     PDC_return_key_modifiers(bool);
 PDCEX  void    PDC_set_resize_limits( const int new_min_lines,
@@ -1858,6 +1857,7 @@ PDCEX  int     sb_refresh(void);
 /* Deprecated */
 
 #define PDC_save_key_modifiers(x)  (OK)
+#define PDC_get_input_fd()         0
 
 /* return codes from PDC_getclipboard() and PDC_setclipboard() calls */
 

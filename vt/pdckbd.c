@@ -426,9 +426,3 @@ void PDC_set_keyboard_binary( bool on)
 {
    return;
 }
-
-unsigned long PDC_get_input_fd( void)
-{
-   return( 0);
-}
-

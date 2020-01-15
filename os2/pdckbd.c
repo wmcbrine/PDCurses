@@ -8,26 +8,6 @@ defined(__TURBOC__)
 
 #include "pdcos2.h"
 
-/*man-start**************************************************************
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses
-   reads its input from. It can be used for select().
-
-### Portability
-                             X/Open    BSD    SYS V
-    PDC_get_input_fd            -       -       -
-
-**man-end****************************************************************/
-
 #ifdef EMXVIDEO
 # include <termios.h>
 static int tahead = -1;
@@ -90,13 +70,6 @@ static short key_table[] =
     ALT_DOWN,       ALT_PGDN,       ALT_INS,        ALT_DEL,
     ALT_PADSLASH,   ALT_TAB,        ALT_PADENTER,   -1
 };
-
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return (unsigned long)fileno(stdin);
-}
 
 #ifndef EMXVIDEO
 

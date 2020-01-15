@@ -102,7 +102,7 @@ static int default_pdc_swidth = 80, default_pdc_sheight = 25;
 
 /* open the physical screen -- allocate SP, miscellaneous intialization */
 
-int PDC_scr_open(int argc, char **argv)
+int PDC_scr_open(void)
 {
     int i, r, g, b;
 
@@ -277,9 +277,9 @@ int PDC_scr_open(int argc, char **argv)
 
     PDC_mouse_set();
 
-    if (pdc_own_screen)
+/*  if (pdc_own_screen)
         PDC_set_title(argc ? argv[0] : "PDCurses");
-
+*/
     SP->lines = PDC_get_rows();
     SP->cols = PDC_get_columns();
 
@@ -352,20 +352,6 @@ void PDC_restore_screen_mode(int i)
 
 void PDC_save_screen_mode(int i)
 {
-}
-
-void PDC_init_pair(short pair, short fg, short bg)
-{
-    atrtab[pair].f = fg;
-    atrtab[pair].b = bg;
-}
-
-int PDC_pair_content(short pair, short *fg, short *bg)
-{
-    *fg = atrtab[pair].f;
-    *bg = atrtab[pair].b;
-
-    return OK;
 }
 
 bool PDC_can_change_color(void)

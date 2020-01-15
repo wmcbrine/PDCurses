@@ -60,7 +60,7 @@ static void _set_attr(chtype ch)
         if (SP->mono)
             return;
 
-        PDC_pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
+        pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
 
         newfg |= (ch & A_BOLD) ? 8 : 0;
         newbg |= (ch & A_BLINK) ? 8 : 0;

@@ -112,8 +112,8 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
    $(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
 
-pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
-   rc /r /fopdcurses.res $(osdir)\pdcurses.rc
+pdcurses.res pdcurses.obj: $(common)\pdcurses.rc $(osdir)\pdcurses.ico
+   rc /r /fopdcurses.res $(common)\pdcurses.rc
    cvtres /MACHINE:$(PLATFORM) /NOLOGO /OUT:pdcurses.obj pdcurses.res
 
 {$(srcdir)\}.c{}.obj::

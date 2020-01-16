@@ -278,7 +278,7 @@ void introTest(WINDOW *win)
 void scrollTest(WINDOW *win)
 {
     int i, OldY;
-#ifndef PDCURSES
+#if !defined (PDCURSES) && !defined (NCURSES_VERSION)
     int OldX;
 #endif
     werase(win);
@@ -295,7 +295,7 @@ void scrollTest(WINDOW *win)
         wrefresh(win);
     };
 
-#ifdef PDCURSES
+#if defined (PDCURSES) || defined (NCURSES_VERSION)
     OldY = getmaxy(win);
 #else
     getmaxyx(win, OldY, OldX);
@@ -887,7 +887,8 @@ void curTest(void)
 {
     do {
         int c = getch();
-#ifdef PDCURSES
+
+#if defined (PDCURSES) || defined (NCURSES_VERSION)
         if (c == KEY_UP)
             move(getcury(stdscr) - 1, getcurx(stdscr));
         else if (c == KEY_DOWN)
@@ -896,8 +897,10 @@ void curTest(void)
             move(getcury(stdscr), getcurx(stdscr) - 1);
         else if (c == KEY_RIGHT)
             move(getcury(stdscr), getcurx(stdscr) + 1);
+#ifdef PDCURSES
         else if (c == 'i')
             curs_set(SP->visibility == 1 ? 2 : 1);
+#endif
         else
 #endif
             break;

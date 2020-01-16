@@ -371,3 +371,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         dest.x += pdc_fwidth;
     }
 }
+
+void PDC_doupdate(void)
+{
+}

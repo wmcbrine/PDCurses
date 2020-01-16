@@ -169,3 +169,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
        prev_ch = *srcp++;
        }
 }
+
+void PDC_doupdate(void)
+{
+}

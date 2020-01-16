@@ -39,7 +39,9 @@ const chtype MAX_UNICODE = 0x110000;
 
 static char *color_string( char *otext, const PACKED_RGB rgb)
 {
-   if( SP->termattrs & A_RGB_COLOR)
+   extern bool PDC_has_rgb_color;      /* pdcscrn.c */
+
+   if( PDC_has_rgb_color)
       sprintf( otext, "2;%d;%d;%dm", Get_RValue( rgb),
                              Get_GValue( rgb), Get_BValue( rgb));
    else

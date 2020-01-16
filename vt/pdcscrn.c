@@ -175,6 +175,8 @@ static void sigwinchHandler( int sig)
 #define MAX_LINES 1000
 #define MAX_COLUMNS 1000
 
+bool PDC_has_rgb_color = false;
+
 int PDC_scr_open(void)
 {
     char *capabilities = getenv( "PDC_VT");
@@ -189,11 +191,11 @@ int PDC_scr_open(void)
 
     PDC_LOG(("PDC_scr_open called\n"));
     if( colorterm && !strcmp( colorterm, "truecolor"))
-       PDC_capabilities |= A_RGB_COLOR;
+       PDC_has_rgb_color = true;
     if( capabilities)      /* these should really come from terminfo! */
        {
        if( strstr( capabilities, "RGB"))
-          PDC_capabilities |= A_RGB_COLOR;
+          PDC_has_rgb_color = true;
        if( strstr( capabilities, "UND"))
           PDC_capabilities |= A_UNDERLINE;
        if( strstr( capabilities, "BLI"))

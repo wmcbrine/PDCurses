@@ -357,14 +357,21 @@ int PDC_get_key( void)
          c[0] &= 0x3f;
          if( !(rval & 0x20))      /* two-byte : U+0080 to U+07ff */
             rval = c[0] | ((rval & 0x1f) << 6);
-         else if( !(rval & 0x10))   /* three-byte : U+0800 - U+ffff */
+         else
             {
             check_key( &c[1]);
             assert( (c[1] & 0xc0) == 0x80);
             c[1] &= 0x3f;
-            rval = (c[1] | (c[0] << 6) | ((rval & 0xf) << 12));
+            if( !(rval & 0x10))   /* three-byte : U+0800 - U+ffff */
+               rval = (c[1] | (c[0] << 6) | ((rval & 0xf) << 12));
+            else              /* four-byte : U+FFFF - U+10FFFF : SMP */
+               {              /* (Supplemental Multilingual Plane) */
+               check_key( &c[2]);
+               assert( (c[2] & 0xc0) == 0x80);
+               c[2] &= 0x3f;
+               rval = (c[2] | (c[1] << 6) | (c[0] << 12) | ((rval & 0xf) << 18));
+               }
             }
-            /* Else... four-byte SMP char */
          }
       else if( rval == 127)
          rval = 8;

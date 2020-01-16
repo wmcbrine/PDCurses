@@ -12,7 +12,6 @@ PDCURSES_CURSPRIV_H   = $(PDCURSES_SRCDIR)\curspriv.h
 PDCURSES_HEADERS   = $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 
 PANEL_HEADER   = $(PDCURSES_SRCDIR)\panel.h
-TERM_HEADER   = $(PDCURSES_SRCDIR)\term.h
 
 srcdir      = $(PDCURSES_SRCDIR)\pdcurses
 osdir      = $(PDCURSES_SRCDIR)\vt
@@ -53,7 +52,7 @@ border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj \
 getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
 insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj \
 outopts.obj overlay.obj pad.obj panel.obj printw.obj refresh.obj \
-scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj \
+scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj \
 touch.obj util.obj window.obj debug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
@@ -65,7 +64,6 @@ tui.obj firework.obj ptest.obj rain.obj worm.obj
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_VT_H)
 panel.obj ptest.obj: $(PANEL_HEADER)
-terminfo.obj: $(TERM_HEADER)
 
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
@@ -183,9 +181,6 @@ slk.obj: $(srcdir)\slk.c
    $(SRCBUILD)
 
 termattr.obj: $(srcdir)\termattr.c
-   $(SRCBUILD)
-
-terminfo.obj: $(srcdir)\terminfo.c
    $(SRCBUILD)
 
 touch.obj: $(srcdir)\touch.c

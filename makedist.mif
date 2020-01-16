@@ -12,7 +12,6 @@ dist: $(PDCLIBS)
 	echo $(PDCURSES_SRCDIR)\HISTORY.md >> flist
 	echo $(PDCURSES_SRCDIR)\curses.h >> flist
 	echo $(PDCURSES_SRCDIR)\panel.h >> flist
-	echo $(PDCURSES_SRCDIR)\term.h >> flist
 	echo $(LIBCURSES) >> flist
 	echo file_id.diz >> flist
 	zip -9jX $(ARCNAME) -@ <flist

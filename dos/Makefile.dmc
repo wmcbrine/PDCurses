@@ -12,7 +12,6 @@ PDCURSES_CURSPRIV_H   = $(PDCURSES_SRCDIR)\curspriv.h
 PDCURSES_HEADERS   = $(PDCURSES_CURSES_H) $(PDCURSES_CURSPRIV_H)
 
 PANEL_HEADER   = $(PDCURSES_SRCDIR)\panel.h
-TERM_HEADER   = $(PDCURSES_SRCDIR)\term.h
 
 srcdir      = $(PDCURSES_SRCDIR)\pdcurses
 osdir      = $(PDCURSES_SRCDIR)\dos
@@ -35,7 +34,7 @@ LIBCURSES   = pdcurses.lib
 
 BUILD      = $(CC) $(CFLAGS) $(CPPFLAGS)
 
-DEMOS      = testcurs.exe ozdemo.exe newtest.exe xmas.exe  \
+DEMOS      = testcurs.exe newdemo.exe newtest.exe xmas.exe  \
 tuidemo.exe firework.exe ptest.exe rain.exe worm.exe
 
 all:    $(LIBCURSES) $(DEMOS)
@@ -52,19 +51,18 @@ border.obj clear.obj color.obj delch.obj deleteln.obj getch.obj \
 getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj \
 insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj \
 outopts.obj overlay.obj pad.obj panel.obj printw.obj refresh.obj \
-scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj \
+scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj \
 touch.obj util.obj window.obj debug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj \
 pdcsetsc.obj pdcutil.obj
 
-DEMOOBJS = testcurs.obj ozdemo.obj newtest.obj xmas.obj tuidemo.obj  \
+DEMOOBJS = testcurs.obj newdemo.obj newtest.obj xmas.obj tuidemo.obj  \
 tui.obj firework.obj ptest.obj rain.obj worm.obj
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)
 panel.obj ptest.obj: $(PANEL_HEADER)
-terminfo.obj: $(TERM_HEADER)
 
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
@@ -184,9 +182,6 @@ slk.obj: $(srcdir)\slk.c
 termattr.obj: $(srcdir)\termattr.c
    $(SRCBUILD)
 
-terminfo.obj: $(srcdir)\terminfo.c
-   $(SRCBUILD)
-
 touch.obj: $(srcdir)\touch.c
    $(SRCBUILD)
 
@@ -223,7 +218,7 @@ pdcutil.obj: $(osdir)\pdcutil.c
 firework.exe:   $(demodir)\firework.c
    $(DEMOBUILD)
 
-ozdemo.exe:    $(demodir)\ozdemo.c
+newdemo.exe:    $(demodir)\newdemo.c
    $(DEMOBUILD)
 
 newtest.exe:    $(demodir)\newtest.c

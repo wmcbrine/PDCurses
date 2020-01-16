@@ -98,7 +98,6 @@ $(LIBOBJS) $(PDCOBJS) $(DEMOOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_OS2_H)
 $(DEMOS) : $(LIBCURSES)
 panel.o ptest.o: $(PANEL_HEADER)
-terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
 	$(CC) -c $(CFLAGS) -o$@ $<

@@ -1828,7 +1828,15 @@ PDCEX  int     sb_set_vert(int, int, int);
 PDCEX  int     sb_get_horz(int *, int *, int *);
 PDCEX  int     sb_get_vert(int *, int *, int *);
 PDCEX  int     sb_refresh(void);
- #endif
+#endif
+
+/* NetBSD */
+
+PDCEX  int     touchoverlap(const WINDOW *, WINDOW *);
+PDCEX  int     underend(void);
+PDCEX  int     underscore(void);
+PDCEX  int     wunderend(WINDOW *);
+PDCEX  int     wunderscore(WINDOW *);
 
 /*** Functions defined as macros ***/
 

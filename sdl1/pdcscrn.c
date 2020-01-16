@@ -36,8 +36,6 @@ static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
 
 /* COLOR_PAIR to attribute encoding table. */
 
-static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
-
 static void _clean(void)
 {
 #ifdef PDC_WIDE

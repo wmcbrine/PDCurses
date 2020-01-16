@@ -3,7 +3,7 @@
  * 'textual user interface'
  *
  * Author : P.J. Kunst <kunst@prl.philips.nl>
- * Date   : 25-02-93
+ * Date   : 1993-02-25
  */
 
 #include <ctype.h>
@@ -20,12 +20,6 @@ void rmerror(void);
 
 #if defined(__unix) && !defined(__DJGPP__)
 #include <unistd.h>
-#endif
-
-#ifdef PDCURSES
-#define HAVE_CLIPBOARD
-#else
-#define nc_getmouse getmouse
 #endif
 
 #ifdef A_COLOR
@@ -180,11 +174,11 @@ static void idle(void)
         return;  /* time not available */
 
     tp = localtime(&t);
-    sprintf(buf, " %.2d-%.2d-%.4d  %.2d:%.2d:%.2d",
-            tp->tm_mday, tp->tm_mon + 1, tp->tm_year + 1900,
+    sprintf(buf, " %.4d-%.2d-%.2d  %.2d:%.2d:%.2d",
+            tp->tm_year + 1900, tp->tm_mon + 1, tp->tm_mday,
             tp->tm_hour, tp->tm_min, tp->tm_sec);
 
-    mvwaddstr(wtitl, (int)0, (int)(bw - strlen(buf) - 2), buf);
+    mvwaddstr(wtitl, 0, bw - strlen(buf) - 2, buf);
     wrefresh(wtitl);
 }
 
@@ -192,8 +186,8 @@ static void menudim(menu *mp, int *lines, int *columns)
 {
     int n, l, mmax = 0;
 
-    for (n=0; mp->func; n++, mp++)
-        if ((l = (int)strlen(mp->name)) > mmax) mmax = l;
+    for (n = 0; mp->func; n++, mp++)
+        if ((l = strlen(mp->name)) > mmax) mmax = l;
 
     *lines = n;
     *columns = mmax + 2;
@@ -257,17 +251,10 @@ static void mainhelp(void)
 
 static void mainmenu(menu *mp)
 {
-    int nitems, barlen, old = -1, cur = 0, c, cur0, x;
-    MEVENT mouse_event;
+    int nitems, barlen, old = -1, cur = 0, c, cur0;
 
     menudim(mp, &nitems, &barlen);
     repaintmainmenu(barlen, mp);
-#ifdef __PDCURSES__
-            nc_getmouse( &mouse_event);
-#else
-            getmouse( &mouse_event);
-#endif
-    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
 
     while (!quit)
     {
@@ -295,11 +282,7 @@ static void mainmenu(menu *mp)
 
         switch (c = (key != ERR ? key : waitforkey()))
         {
-#ifdef KEY_C2
-        case KEY_C2:
-#endif
         case KEY_DOWN:
-
         case '\n':              /* menu item selected */
             touchwin(wbody);
             wrefresh(wbody);
@@ -311,44 +294,15 @@ static void mainmenu(menu *mp)
 
             switch (key)
             {
-#ifdef KEY_B1
-            case KEY_B1:
-#endif
             case KEY_LEFT:
                 cur = (cur + nitems - 1) % nitems;
                 key = '\n';
                 break;
 
-#ifdef KEY_B3
-            case KEY_B3:
-#endif
             case KEY_RIGHT:
                 cur = (cur + 1) % nitems;
                 key = '\n';
                 break;
-
-            case KEY_MOUSE:
-                if(nc_getmouse(&mouse_event) == OK)
-                {
-                    if((mouse_event.bstate & BUTTON1_PRESSED) || (mouse_event.bstate & BUTTON1_DOUBLE_CLICKED) || (mouse_event.bstate & BUTTON1_CLICKED))
-                    {
-                        for( x = 1; x <= nitems ; ++x){
-                            if((mouse_event.x > (barlen * (x-1)) && mouse_event.x < (barlen * x) ) &&
-                                (mouse_event.y == th )){
-                                    if(x>=1){
-                                        cur = x-1;
-                                        break;
-                                    }
-                                    else{
-                                        key = KEY_ESC;
-                                        break;
-                                    }
-                            }
-                        }
-                    }
-                        break;
-                }
-               break;
 
             default:
                 key = ERR;
@@ -358,16 +312,10 @@ static void mainmenu(menu *mp)
             old = -1;
             break;
 
-#ifdef KEY_B1
-        case KEY_B1:
-#endif
         case KEY_LEFT:
             cur = (cur + nitems - 1) % nitems;
             break;
 
-#ifdef KEY_B3
-        case KEY_B3:
-#endif
         case KEY_RIGHT:
             cur = (cur + 1) % nitems;
             break;
@@ -375,24 +323,6 @@ static void mainmenu(menu *mp)
         case KEY_ESC:
             mainhelp();
             break;
-
-        case KEY_MOUSE:
-            if(nc_getmouse(&mouse_event) == OK)
-            {
-                if((mouse_event.bstate & BUTTON1_PRESSED) || (mouse_event.bstate & BUTTON1_DOUBLE_CLICKED) || (mouse_event.bstate & BUTTON1_CLICKED))
-                {
-                    for( x = 1; x <= nitems ; ++x){
-                        if((mouse_event.x > (barlen * (x-1)) && mouse_event.x < (barlen * x) ) &&
-                                (mouse_event.y == th)){
-                            cur = x-1;
-                            key = '\n';
-                            break;
-                        }
-                    }
-                }
-                    break;
-            }
-           break;
 
         default:
             cur0 = cur;
@@ -523,7 +453,6 @@ void domenu(menu *mp)
     int y, x, nitems, barlen, mheight, mw, old = -1, cur = 0, cur0;
     bool stop = FALSE;
     WINDOW *wmenu;
-    MEVENT mouse_event;
 
     curs_set(0);
     getmenupos(&y, &x);
@@ -535,12 +464,6 @@ void domenu(menu *mp)
     repaintmenu(wmenu, mp);
 
     key = ERR;
-#ifdef __PDCURSES__
-            nc_getmouse( &mouse_event);
-#else
-            getmouse( &mouse_event);
-#endif
-    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
 
     while (!stop && !quit)
     {
@@ -579,80 +502,23 @@ void domenu(menu *mp)
             old = -1;
             break;
 
-#ifdef KEY_A2
-        case KEY_A2:
-#endif
         case KEY_UP:
             cur = (cur + nitems - 1) % nitems;
             key = ERR;
             break;
 
-#ifdef KEY_C2
-        case KEY_C2:
-#endif
         case KEY_DOWN:
             cur = (cur + 1) % nitems;
             key = ERR;
             break;
 
         case KEY_ESC:
-#ifdef KEY_B1
-        case KEY_B1:
-#endif
         case KEY_LEFT:
-#ifdef KEY_B3
-        case KEY_B3:
-#endif
         case KEY_RIGHT:
             if (key == KEY_ESC)
                 key = ERR;  /* return to prev submenu */
 
             stop = TRUE;
-            break;
-
-        case KEY_MOUSE:
-            if(nc_getmouse(&mouse_event) == OK)
-            {
-                if((mouse_event.bstate & BUTTON1_PRESSED) || (mouse_event.bstate & BUTTON1_CLICKED))
-                {
-                    if( mouse_event.y <= th+1)
-                    {
-                        key = KEY_ESC; /* exit menu */
-                        break;
-                    }
-                    else if((mouse_event.y - (y-1) > 0) &&  mouse_event.y > th && mouse_event.y < y+mheight && mouse_event.y > y && mouse_event.x > x && mouse_event.x < mw +x)
-                    {
-                        cur = (mouse_event.y - y-1) % nitems;
-                        key = ERR;
-                        break;
-
-                    }
-                    else if(mouse_event.y > 0 && mouse_event.y != y-1 && mouse_event.x > 0 && mouse_event.x != x-1)
-                    {
-                        key = KEY_ESC; /* exit menu */
-                        break;
-                    }
-                        stop = TRUE;
-                        break;
-                }
-                else if(mouse_event.bstate & BUTTON1_DOUBLE_CLICKED)
-                {
-                    if((mouse_event.y - (y-1) > 0) &&  mouse_event.y > th && mouse_event.y < y+mheight && mouse_event.y > y){
-                         cur = (mouse_event.y - y-1) % nitems;
-                         key = '\n';
-                         break;
-                    }else{
-                        key = KEY_ESC;
-                        break;
-                    }
-
-                }
-                else if( (mouse_event.bstate & BUTTON3_PRESSED) || (mouse_event.bstate & BUTTON3_CLICKED))
-                {
-                    key = KEY_ESC;
-                    break;
-                }
-            }
             break;
 
         default:
@@ -762,17 +628,7 @@ int weditstr(WINDOW *win, char *buf, int field)
     chtype oldattr;
     WINDOW *wedit;
     int c = 0;
-#ifdef HAVE_CLIPBOARD
-    char *ptr = NULL;
-    long j, length = 0;
-    MEVENT mouse_event;
-#ifdef __PDCURSES__
-            nc_getmouse( &mouse_event);
-#else
-            getmouse( &mouse_event);
-#endif
-    mousemask( BUTTON1_DOUBLE_CLICKED | BUTTON1_PRESSED | BUTTON1_CLICKED |BUTTON3_DOUBLE_CLICKED |BUTTON3_PRESSED |BUTTON3_CLICKED , NULL);
-#endif
+
     if ((field >= MAXSTRLEN) || (buf == NULL) ||
         ((int)strlen(buf) > field - 1))
         return ERR;
@@ -784,7 +640,7 @@ int weditstr(WINDOW *win, char *buf, int field)
     getbegyx(win, begy, begx);
 
     wedit = subwin(win, 1, field, begy + cury, begx + curx);
-    oldattr = wedit->_attrs;
+    oldattr = getattrs(wedit);
     colorbox(wedit, EDITBOXCOLOR, 0);
 
     keypad(wedit, TRUE);
@@ -793,7 +649,7 @@ int weditstr(WINDOW *win, char *buf, int field)
     while (!stop)
     {
         idle();
-        repainteditbox(wedit, (int)(bp - buf), buf);
+        repainteditbox(wedit, bp - buf, buf);
 
         switch (c = wgetch(wedit))
         {
@@ -806,100 +662,22 @@ int weditstr(WINDOW *win, char *buf, int field)
             break;
 
         case '\n':
-#ifdef KEY_A2
-        case KEY_A2:
-#endif
         case KEY_UP:
-#ifdef KEY_C2
-        case KEY_C2:
-#endif
         case KEY_DOWN:
             stop = TRUE;
             break;
 
-#ifdef KEY_B1
-        case KEY_B1:
-#endif
         case KEY_LEFT:
             if (bp > buf)
                 bp--;
             break;
 
-#ifdef KEY_B3
-        case KEY_B3:
-#endif
         case KEY_RIGHT:
             defdisp = FALSE;
             if (bp - buf < (int)strlen(buf))
                 bp++;
             break;
-#ifdef HAVE_CLIPBOARD
-        case KEY_MOUSE:
-            if(nc_getmouse(&mouse_event) == OK)
-            {
-                 if(mouse_event.bstate & BUTTON1_DOUBLE_CLICKED){
-                     if(mouse_event.y >= begy + cury &&  mouse_event.y <= begy + cury + 1 &&
-                             mouse_event.x >= begx + curx &&  mouse_event.x <= begx + curx +  field){
-                            c = KEY_DOWN;
-                            stop = TRUE;
-                            break;
-                     }else{
-                            c = KEY_ESC;
-                            strcpy(buf, org);   /* restore original */
-                            stop = TRUE;
-                            break;
-                     }
-                 }
-                 else if(mouse_event.bstate & BUTTON3_DOUBLE_CLICKED){
-                            c = KEY_UP;
-                            strcpy(buf, org);   /* restore original */
-                            stop = TRUE;
-                            break;
-                 }
-                 else if( (mouse_event.bstate & BUTTON3_PRESSED) || (mouse_event.bstate & BUTTON3_CLICKED))
-                 {
-                    j = PDC_getclipboard(&ptr, &length);
-                    switch(j)
-                    {
-                        case PDC_CLIP_ACCESS_ERROR:
-                             strcpy(buf, org);   /* restore original as default */
-                             stop = TRUE;
-                             c = KEY_ESC;
-                            break;
-                        case PDC_CLIP_MEMORY_ERROR:
-                             strcpy(buf, org);   /* restore original as default */
-                             stop = TRUE;
-                             c = KEY_ESC;
-                            break;
-                        case PDC_CLIP_EMPTY:
-                             strcpy(buf, org);  /* restore original as default */
-                             stop = TRUE;
-                             c = KEY_ESC;
-                            break;
-                        case PDC_CLIP_SUCCESS:
-                            if ((int)strlen(ptr) && insert){
 
-                                if ((int)strlen(buf) < field + 1  )
-                                {
-                                    memmove((void *)(ptr+(int)strlen(ptr)), (const void *)bp, (int)strlen(buf)+1); /* Experimental insert/add to existing text*/
-                                    strncpy(bp, ptr, field - (int)strlen(buf));   /* copy clip-board to already existing field */
-                                    insert = !insert;
-                                    curs_set(insert ? 2 : 1);
-                                while (bp - buf < (int)strlen(buf))
-                                    bp++;
-                                }
-                            }
-                            break;
-                        default:
-                             strcpy(buf, org);   /* restore original */
-                             stop = TRUE;
-                             c = KEY_ESC;
-                            break;
-                    }
-                }
-              }
-            break;
-#endif
         case '\t':            /* TAB -- because insert
                                   is broken on HPUX */
         case KEY_IC:          /* enter insert mode */
@@ -935,7 +713,7 @@ int weditstr(WINDOW *win, char *buf, int field)
 
                 memmove((void *)bp, (const void *)tp, strlen(tp) + 1);
             }
-            else if( c >=0 && c < 256 && isprint(c))
+            else if (isprint(c))
             {
                 if (defdisp)
                 {
@@ -970,7 +748,7 @@ int weditstr(WINDOW *win, char *buf, int field)
     curs_set(0);
 
     wattrset(wedit, oldattr);
-    repainteditbox(wedit, (int)(bp - buf), buf);
+    repainteditbox(wedit, bp - buf, buf);
     delwin(wedit);
 
     return c;
@@ -998,7 +776,7 @@ int getstrings(char *desc[], char *buf[], int field)
     bool stop = FALSE;
 
     for (n = 0; desc[n]; n++)
-        if ((l = (int)strlen(desc[n])) > mmax)
+        if ((l = strlen(desc[n])) > mmax)
             mmax = l;
 
     nlines = n + 2; ncols = mmax + field + 4;
@@ -1021,18 +799,12 @@ int getstrings(char *desc[], char *buf[], int field)
             stop = TRUE;
             break;
 
-#ifdef KEY_A2
-        case KEY_A2:
-#endif
         case KEY_UP:
             i = (i + n - 1) % n;
             break;
 
         case '\n':
         case '\t':
-#ifdef KEY_C2
-        case KEY_C2:
-#endif
         case KEY_DOWN:
             if (++i == n)
                 stop = TRUE;    /* all passed? */

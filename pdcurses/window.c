@@ -248,12 +248,15 @@ WINDOW *newwin(int nlines, int ncols, int begy, int begx)
     if (!ncols)
         ncols  = COLS  - begx;
 
-    if ( (begy + nlines > SP->lines || begx + ncols > SP->cols)
-        || !(win = PDC_makenew(nlines, ncols, begy, begx))
-        || !(win = PDC_makelines(win)) )
+    if (!SP || begy + nlines > SP->lines || begx + ncols > SP->cols)
         return (WINDOW *)NULL;
 
-    werase(win);
+    win = PDC_makenew(nlines, ncols, begy, begx);
+    if (win)
+        win = PDC_makelines(win);
+
+    if (win)
+        werase(win);
 
     return win;
 }
@@ -300,9 +303,7 @@ int mvwin(WINDOW *win, int y, int x)
 WINDOW *subwin(WINDOW *orig, int nlines, int ncols, int begy, int begx)
 {
     WINDOW *win;
-    int i;
-    int j = begy - orig->_begy;
-    int k = begx - orig->_begx;
+    int i, j, k;
 
     PDC_LOG(("subwin() - called: lines %d cols %d begy %d begx %d\n",
              nlines, ncols, begy, begx));
@@ -313,6 +314,9 @@ WINDOW *subwin(WINDOW *orig, int nlines, int ncols, int begy, int begx)
         (begy + nlines) > (orig->_begy + orig->_maxy) ||
         (begx + ncols) > (orig->_begx + orig->_maxx))
         return (WINDOW *)NULL;
+
+    j = begy - orig->_begy;
+    k = begx - orig->_begx;
 
     if (!nlines)
         nlines = orig->_maxy - 1 - j;
@@ -442,7 +446,7 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
     PDC_LOG(("resize_window() - called: nlines %d ncols %d\n",
              nlines, ncols));
 
-    if (!win)
+    if (!win || !SP)
         return (WINDOW *)NULL;
 
     if (win->_flags & _SUBPAD)

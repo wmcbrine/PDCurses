@@ -397,39 +397,6 @@ int main( int argc, char **argv)
                 mvaddstr( 7, 1, "   on/off' to toggle those attribs   ");
             }
 #endif
-
-#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
-            for( i = 0; i < 3 && line < ymax; i++, line++)
-            {                 /* Demonstrate full RGB color control: */
-                int j;
-                const char *output_text[3] = {
-                    "Red on green to white on black   | (you can get full RGB colors when desired,",
-                    "Blue on yellow to black on red | with palette coloring still being available)",
-                    "White on red to green on blue,  underlined (if available)" };
-                const int len = (int)strlen( output_text[i]);
-
-                move( line, 1);
-                for( j = 0; j < len && j + 1 < xmax; j++)
-                {
-                    attr_t output_color;
-                    const int oval = j * 31 / len;
-                    const int reverse = 31 - oval;
-
-                    if( !i)
-                        output_color = A_RGB( 31, oval, oval, 0, reverse, 0);
-                    else if( i == 1)
-                        output_color = A_RGB( 0, 0, reverse, 31, reverse, 0);
-                    else
-                    {
-                        output_color = A_RGB( reverse, 31, reverse,
-                               reverse, 0, oval);
-                        output_color |= A_UNDERLINE;
-                    }
-                    attrset( output_color);
-                    addch( output_text[i][j]);
-                }
-            }
-#endif         /* #if(CHTYPE_LONG >= 2) */
             redraw = 0;
             attrset( COLOR_PAIR( 1));
             if( *extra_characters_to_show && ymax > 23)

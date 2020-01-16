@@ -543,15 +543,7 @@ fifteen bits,  five bits for each of the three channels) and background RGB
 #endif
     # define PDC_COLOR_SHIFT (PDC_CHARTEXT_BITS + 12)
     # define A_COLOR      ((chtype)0x7fffffff << PDC_COLOR_SHIFT)
-    # define A_RGB_COLOR  ((chtype)0x40000000 << PDC_COLOR_SHIFT)
     # define A_ATTRIBUTES (((chtype)0xfff << PDC_CHARTEXT_BITS) | A_COLOR)
-    # define A_RGB( rfore, gfore, bfore, rback, gback, bback)       \
-        (( (((chtype)(bfore) << 25) \
-         | ((chtype)(gfore) << 20) \
-         | ((chtype)(rfore) << 15) \
-         | ((chtype)(bback) << 10) \
-         | ((chtype)(gback) <<  5) \
-         | ((chtype)(rback)      )) << PDC_COLOR_SHIFT) | A_RGB_COLOR)
 # else         /* plain ol' 32-bit chtypes */
     # define A_ALTCHARSET (chtype)0x00010000
     # define A_RIGHT      (chtype)0x00020000
@@ -562,7 +554,6 @@ fifteen bits,  five bits for each of the three channels) and background RGB
     # define A_BLINK      (chtype)0x00400000
     # define A_BOLD       (chtype)0x00800000
     # define A_COLOR      (chtype)0xff000000
-    # define A_RGB_COLOR  A_NORMAL
 #ifdef PDC_WIDE
     # define A_CHARTEXT   (chtype)0x0000ffff
     # define A_ATTRIBUTES (chtype)0xffff0000
@@ -602,7 +593,6 @@ fifteen bits,  five bits for each of the three channels) and background RGB
 # define A_RIGHT      A_NORMAL
 # define A_ITALIC     A_NORMAL
 # define A_INVIS      A_NORMAL
-# define A_RGB_COLOR  A_NORMAL
 # define A_DIM        A_NORMAL
 
 # define PDC_COLOR_SHIFT 11

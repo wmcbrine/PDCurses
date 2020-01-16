@@ -133,20 +133,6 @@ static PACKED_RGB dimmed_color( PACKED_RGB ival)
 }
 
 
-            /* PDCurses stores RGBs in fifteen bits,  five bits each */
-            /* for red, green, blue.  A PACKED_RGB uses eight bits per */
-            /* channel.  Hence the following.                        */
-#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
-static PACKED_RGB extract_packed_rgb( const chtype color)
-{
-    const int red   = (int)( (color << 3) & 0xf8);
-    const int green = (int)( (color >> 2) & 0xf8);
-    const int blue  = (int)( (color >> 7) & 0xf8);
-
-    return( PACK_RGB( red, green, blue));
-}
-#endif
-
 void PDC_get_rgb_values( const chtype srcp,
             PACKED_RGB *foreground_rgb, PACKED_RGB *background_rgb)
 {
@@ -154,15 +140,6 @@ void PDC_get_rgb_values( const chtype srcp,
     bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
     bool intensify_backgnd = FALSE;
 
-#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
-    if( srcp & A_RGB_COLOR)
-    {
-        /* Extract RGB from 30 bits of the color field */
-        *background_rgb = extract_packed_rgb( srcp >> PDC_COLOR_SHIFT);
-        *foreground_rgb = extract_packed_rgb( srcp >> (PDC_COLOR_SHIFT + 15));
-    }
-    else
-#endif
     {
         short foreground_index, background_index;
 

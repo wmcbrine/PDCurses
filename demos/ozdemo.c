@@ -1,16 +1,12 @@
 /*
- *  ozdemo.c   -   A demo program using PDCurses. The program
- *          illustrates the use of colors for text output.
- *
- *  Hacks by jbuhler@cs.washington.edu on 12/29/96
+ *  ozdemo.c           - A demo program using PDCurses. The program
+ *  (formerly newdemo)   illustrates the use of colors for text output.
  */
 
-#include <stdio.h>
 #include <signal.h>
 #include <string.h>
 #include <curses.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <time.h>
 
 int WaitForUser(void);
@@ -63,7 +59,7 @@ int WaitForUser(void)
     nocbreak();     /* Reset the halfdelay() value */
     cbreak();
 
-    return (ch == '\033') ? '\033' : 0;
+    return (ch == '\033') ? ch : 0;
 }
 
 int SubWinTest(WINDOW *win)
@@ -213,25 +209,15 @@ int main(int argc, char **argv)
 {
     WINDOW *win;
     chtype save[80], ch;
-    int width, height, w, x, y, i, j, seed;
-    const char *versions =
-            " DOS, OS/2, Windows console & GUI, X11, SDL 1/2, VT";
-    const char *hit_any_key =
-            "       Type a key to continue or ESC to quit       ";
-
-    assert( strlen( versions) == strlen( hit_any_key));
-#ifdef PDCURSES
-#ifdef PDC_VER_MAJOR   /* so far only seen in 4.0+ */
-    PDC_set_resize_limits( 20, 50, 70, 200);
-#endif
-#endif
+    time_t seed;
+    int width, height, w, x, y, i, j;
 
 #ifdef XCURSES
     Xinitscr(argc, argv);
 #else
     initscr();
 #endif
-    seed = (int)time((time_t *)0);
+    seed = time((time_t *)0);
     srand(seed);
 
     start_color();
@@ -255,8 +241,8 @@ int main(int argc, char **argv)
 
     /* Create a drawing window */
 
-    width  = strlen( versions) + 4;
-    height = 18;
+    width  = 48;
+    height = 15;
 
     win = newwin(height, width, (LINES - height) / 2, (COLS - width) / 2);
 
@@ -269,8 +255,6 @@ int main(int argc, char **argv)
 
     for (;;)
     {
-
-
         init_pair(1, COLOR_WHITE, COLOR_BLUE);
         wbkgd(win, COLOR_PAIR(1));
         werase(win);
@@ -298,7 +282,6 @@ int main(int argc, char **argv)
 
             if (getch() != ERR)
                 break;
-            napms( 1);
 
             if (i == 2000)
             {
@@ -341,9 +324,13 @@ int main(int argc, char **argv)
 
         init_pair(5, COLOR_BLUE, COLOR_WHITE);
         wattrset(win, COLOR_PAIR(5) | A_BLINK);
-        mvwaddstr( win, height - 4, 2, longname( ));
-        mvwaddstr( win, height - 3, 2, curses_version( ));
-        mvwaddstr( win, height - 2, 2, versions);
+        mvwaddstr(win, height - 2,
+#ifdef PDC_VERDOT
+            2, " PDCurses " PDC_VERDOT
+#else
+            3, " PDCurses"
+#endif
+            " - DOS, OS/2, Windows, X11, SDL");
         wrefresh(win);
 
         /* Draw running messages */
@@ -360,20 +347,20 @@ int main(int argc, char **argv)
             char *message = messages[j];
             int msg_len = strlen(message);
             int stop = 0;
-            int xpos, start, count, n;
+            int xpos, start, count;
 
-            for (n = 0; n <= w + msg_len; n++)
+            for (i = 0; i <= w + msg_len; i++)
             {
-                if (n < w)
+                if (i < w)
                 {
-                    xpos = w - n;
+                    xpos = w - i;
                     start = 0;
-                    count = (n > msg_len) ? msg_len : n;
+                    count = (i > msg_len) ? msg_len : i;
                 }
                 else
                 {
                     xpos = 0;
-                    start = n - w;
+                    start = i - w;
                     count = (w > msg_len - start) ? msg_len - start : w;
                 }
 
@@ -418,7 +405,8 @@ int main(int argc, char **argv)
 
         i = height - 2;
         wattrset(win, COLOR_PAIR(5));
-        mvwaddstr(win, i, 2, hit_any_key);
+        mvwaddstr(win, i, 2,
+            "    Type a key to continue or ESC to quit   ");
         wrefresh(win);
 
         if (WaitForUser() == '\033')

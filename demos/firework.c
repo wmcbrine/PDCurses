@@ -1,12 +1,8 @@
-#include <stdio.h>
-#include <signal.h>
 #include <curses.h>
-#include <ctype.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <time.h>
 
-#define DELAYSIZE 100
+#define DELAYSIZE 200
 
 void myrefresh(void);
 void get_color(void);
@@ -20,13 +16,16 @@ short color_table[] =
 
 int main(int argc, char **argv)
 {
-    int i, start, end, row, diff, flag, direction, seed;
+    time_t seed;
+    int start, end, row, diff, flag, direction;
+    short i;
 
 #ifdef XCURSES
     Xinitscr(argc, argv);
 #else
     initscr();
 #endif
+    keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
     noecho();
 
@@ -34,17 +33,19 @@ int main(int argc, char **argv)
         start_color();
 
     for (i = 0; i < 8; i++)
-        init_pair( (short)i, color_table[i], COLOR_BLACK);
+        init_pair(i, color_table[i], COLOR_BLACK);
 
-    seed = (int)time((time_t *)0);
+    seed = time((time_t *)0);
     srand(seed);
     flag = 0;
 
     while (getch() == ERR)      /* loop until a key is hit */
     {
         do {
-            start = rand() % (COLS - 5) + 2;
-            end = rand() % (COLS - 5) + 2;
+            start = rand() % (COLS - 3);
+            end = rand() % (COLS - 3);
+            start = (start < 2) ? 2 : start;
+            end = (end < 2) ? 2 : end;
             direction = (start > end) ? -1 : 1;
             diff = abs(start - end);
 

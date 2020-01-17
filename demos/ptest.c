@@ -7,7 +7,7 @@ WINDOW *w4, *w5;
 
 long nap_msec = 1;
 
-char *mod[] = 
+char *mod[] =
 {
     "test ", "TEST ", "(**) ", "*()* ", "<--> ", "LAST "
 };
@@ -16,6 +16,18 @@ void pflush(void)
 {
     update_panels();
     doupdate();
+}
+
+void sizecheck(void)
+{
+    if (COLS < 70 || LINES < 23)
+    {
+        printw("A window at least 70x23 is required for this demo");
+        refresh();
+        napms(5000);
+        endwin();
+        exit(-1);
+    }
 }
 
 void backfill(void)
@@ -38,6 +50,17 @@ void wait_a_while(long msec)
 
     c = getch();
 
+#ifdef KEY_RESIZE
+    if (c == KEY_RESIZE)
+    {
+# ifdef PDCURSES
+        resize_term(0, 0);
+# endif
+        sizecheck();
+        backfill();
+    }
+    else
+#endif
     if (c == 'q')
     {
         endwin();
@@ -82,7 +105,7 @@ void fill_panel(PANEL *pan)
     char num = *((char *)pan->user + 1);
     int y, x, maxy, maxx;
 
-    box(win, 0, 0);  
+    box(win, 0, 0);
     mvwprintw(win, 1, 1, "-pan%c-", num);
     getmaxyx(win, maxy, maxx);
 
@@ -103,6 +126,9 @@ int main(int argc, char **argv)
 #else
     initscr();
 #endif
+
+    keypad(stdscr, TRUE);
+    sizecheck();
     backfill();
 
     for (y = 0; y < 5; y++)

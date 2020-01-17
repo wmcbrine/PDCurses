@@ -34,7 +34,10 @@ INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
 void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                              int x, int len, const chtype *srcp);
 
-#define N_COLORS 256
+/* We have a 'base' standard palette of 256 colors,  plus a true-color
+cube of 16 million colors. */
+
+#define N_COLORS 256 + 256 * 256 * 256;
 
 #ifdef A_OVERLINE
 #define A_ALL_LINES (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE | A_OVERLINE | A_STRIKEOUT)

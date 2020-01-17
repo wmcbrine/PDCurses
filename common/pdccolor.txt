@@ -1,0 +1,80 @@
+   The VT,  WinGUI,  and (eventually) SDL2,  SDL1,  and X11 models all
+have the ability to support 'full' RGB,  16 million colors.  ncurses
+currently supports this with the xterm-direct model,  in which you
+get 2^24 colors and can't change them.
+
+   The slight problem with this is that it breaks existing palette-based
+code.  I've found a few people complaining about this.  It's true
+that one should not blindly assume you'll have a color palette and
+can change it.  There's no promise of that sort in Curses.  The
+can_change_color() function exists for good reason.  (The Linux
+console is a good example of a place where you can't change colors.)
+
+   However... I've written code that assumes you can change the color.
+I think a lot of people do.  If somebody complains that it doesn't
+work in the Linux console,  we say : "Don't do that."
+
+   I have a workaround that should allow existing code to work "as
+usual",  adds the 16-million colors,  and doesn't require much code
+or memory.
+
+   'pdccolor.c' continues to have the traditional basic 256 colors :
+8 primary colors,  8 "intensified" primary colors,  a 6x6x6=216
+color cube,  and 24 shades of gray.  This is followed by 2^24
+colors,  so COLORS = 2^24 + 2^8.  By default,  palette indices past
+256 have color components
+
+r =  (index - 256) & 0xff
+g = ((index - 256) >> 8) & 0xff
+b = ((index - 256) >> 16) & 0xff
+
+   The first 256 colors are handled as they were before : at
+initialization, a PDC_rgbs[] array is allocated and the palette
+filled in.   RGB values for "upper" (palette index >= 256) values are
+stored in a PDC_rgb_cube triple-pointer array,  with a given RGB
+value stored at PDC_rgb_cube[b][g][r], with r, g, b computed as above
+from the index.
+
+   However,  no memory is ever computed for PDC_rgb_cube until it's
+actually needed.  If a color is requested from the "upper" values and
+PDC_rgb_cube,  or PDC_rgb_cube[b], or PDC_rgb_cube[b][g],  have not
+been allocated,  we just return the default color. Conveniently, that
+returned color works out to be idx-256 when expressed as a 24-bit
+packed RGB value.
+
+   If set_palette_entry() is called for an "upper" value,  we allocate
+PDC_rgb_cube if necessary;  PDC_rgb_cube[b] if necessary;  and
+PDC_rgb_cube[b][g] if necessary,  filling it with the default values.
+
+   The vast majority of programs which either never use color
+indices past 256,  or which decide to use them at the default values,
+will never cause PDC_rgb_cube to be allocated.  If you decide to
+use a palette of,  say,  1024 colors,  then PDC_rgb_cube,
+PDC_rgb_cube[0],  and PDC_rgb_cube[0][0...3] will be allocated.
+That comes to four arrays of 256 colors plus two arrays of 256
+pointers.  So I don't think this will be a memory hog.
+
+   NOTE,  though,  that some steps remain for 'proper' use of
+full-color RGB :
+
+   -- With 32-bit chtypes,  you only can have 256 color pairs.  So
+you can have full RGB for up to 256 characters.  After that,  you'd
+better need a color pair you've already used.  Solution is to use
+64-bit chtypes (which are needed for full Unicode support and other
+desirable functions anyway).
+
+   -- It'd be a fine thing to have,  say,  64K color pairs.  But we'd
+probably want to make it as memory-frugal as the above scheme for the
+color palette,  and probably would do it in the same way : 256 color
+pairs would be allocated by default,  with more only allocated if we
+actually need them.  (64K color pairs ought to be enough for anybody,
+it seems to me... I'm open to counter-arguments.)
+
+   -- We'll need to add init_extended_pair,  init_extended_color,
+extended_color_content,  and extended_pair_content,  a la ncurses...
+
+http://man7.org/linux/man-pages/man3/init_extended_color.3x.html
+
+   ...for exactly the same reason ncurses needed them : without them,
+we can't access palette entries or color pairs beyond the range of a
+signed short integer.

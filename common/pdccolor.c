@@ -6,6 +6,7 @@
    #include <stdint.h>
 #endif
    #include <stdlib.h>
+   #include <assert.h>
 
 #define PACKED_RGB uint32_t
 
@@ -18,13 +19,16 @@
 
 int PDC_blink_state = 0;
 
-static PACKED_RGB *PDC_rgbs;
+static PACKED_RGB *PDC_rgbs;        /* the 'standard' 256-color palette */
+static PACKED_RGB ***PDC_rgb_cube;   /* the 'extended' 16M-color palette,
+                                    stored as a 256x256x256 array */
 
 int PDC_init_palette( void)
 {
     int i, r, g, b;
+    const int palette_size = (COLORS > 256 ? 256 : COLORS);
 
-    PDC_rgbs = (PACKED_RGB *)calloc( COLORS, sizeof( PACKED_RGB));
+    PDC_rgbs = (PACKED_RGB *)calloc( palette_size, sizeof( PACKED_RGB));
     if( !PDC_rgbs)
         return( -1);
     for( i = 0; i < 16 && i < COLORS; i++)
@@ -55,6 +59,21 @@ void PDC_free_palette( void)
    if( PDC_rgbs)
       free( PDC_rgbs);
    PDC_rgbs = NULL;
+   if( PDC_rgb_cube)
+      {
+      int i, j;
+
+      for( i = 0; i < 256; i++)
+         if( PDC_rgb_cube[i])
+            {
+            for( j = 0; j < 256; j++)
+               if( PDC_rgb_cube[i][j])
+                  free( PDC_rgb_cube[i][j]);
+            free( PDC_rgb_cube[i]);
+            }
+      free( PDC_rgb_cube);
+      PDC_rgb_cube = NULL;
+      }
 }
 
 PACKED_RGB PDC_get_palette_entry( const int idx)
@@ -63,8 +82,24 @@ PACKED_RGB PDC_get_palette_entry( const int idx)
 
    if( !PDC_rgbs && PDC_init_palette( ))
       rval = ( idx ? 0xffffff : 0);
-   else
+   else if( idx < 256)
       rval = PDC_rgbs[idx];
+   else
+      {
+      rval = idx - 256;    /* by default,  rval is a direct 16M color, */
+      if( PDC_rgb_cube)    /* but we check to see if it's been reset */
+         {                 /* with PDC_set_palette_entry */
+         PACKED_RGB **square = PDC_rgb_cube[(rval >> 16) & 0xff];
+
+         if( square)
+            {
+            PACKED_RGB *array = square[(rval >> 8) & 0xff];
+
+            if( array)
+               rval = array[rval & 0xff];
+            }
+         }
+      }
    return( rval);
 }
 
@@ -77,10 +112,37 @@ int PDC_set_palette_entry( const int idx, const PACKED_RGB rgb)
 
    if( !PDC_rgbs && PDC_init_palette( ))
       rval = -1;
-   else
+   else if( idx < 256)
       {
       rval = (PDC_rgbs[idx] == rgb ? 1 : 0);
       PDC_rgbs[idx] = rgb;
+      }
+   else
+      {
+      const int red = idx & 0xff;
+      const int grn = ((idx - 256) >> 8) & 0xff;
+      const int blu = ((idx - 256) >> 16) & 0xff;
+
+      if( !PDC_rgb_cube)
+         PDC_rgb_cube = (PACKED_RGB ***)calloc( 256, sizeof( PACKED_RGB **));
+      assert( PDC_rgb_cube);
+
+      if( !PDC_rgb_cube[blu])
+         PDC_rgb_cube[blu] = (PACKED_RGB **)calloc( 256, sizeof( PACKED_RGB *));
+      assert( PDC_rgb_cube[blu]);
+
+      if( !PDC_rgb_cube[blu][grn])
+         {
+         int i;
+
+         PDC_rgb_cube[blu][grn] = (PACKED_RGB *)calloc( 256, sizeof( PACKED_RGB));
+         assert( PDC_rgb_cube[blu][grn]);
+         for( i = 0; i < 256; i++)
+            PDC_rgb_cube[blu][grn][i] = PACK_RGB( i, grn, blu);
+         }
+      assert( PDC_rgb_cube[blu][grn]);
+      rval = (PDC_rgb_cube[blu][grn][red] == rgb ? 1 : 0);
+      PDC_rgb_cube[blu][grn][red] = rgb;
       }
    return( rval);
 }
@@ -144,8 +206,8 @@ void PDC_get_rgb_values( const chtype srcp,
         short foreground_index, background_index;
 
         pair_content( (short)color, &foreground_index, &background_index);
-        *foreground_rgb = PDC_rgbs[foreground_index];
-        *background_rgb = PDC_rgbs[background_index];
+        *foreground_rgb = PDC_get_palette_entry( foreground_index);
+        *background_rgb = PDC_get_palette_entry( background_index);
     }
 
     if( srcp & A_BLINK)

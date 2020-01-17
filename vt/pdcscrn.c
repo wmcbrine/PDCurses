@@ -207,6 +207,8 @@ int PDC_scr_open(void)
        }
     SP = calloc(1, sizeof(SCREEN));
     COLORS = (PDC_is_ansi ? 16 : 256);
+    if( PDC_has_rgb_color)
+       COLORS = 256 + (256 * 256 * 256);
     assert( SP);
     if (!SP || PDC_init_palette( ))
         return ERR;

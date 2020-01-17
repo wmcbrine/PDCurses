@@ -367,6 +367,7 @@ void inputTest(WINDOW *win)
     wclear (win);
     mvwaddstr(win, 1, 1,
         "Press keys (or mouse buttons) to show their names");
+    mvwaddstr(win, 2, 1, "Press spacebar to finish, Ctrl-A to return to main menu");
     mvwaddstr(win, 2, 1, "Press spacebar to finish");
     wrefresh(win);
 
@@ -406,7 +407,8 @@ void inputTest(WINDOW *win)
         mvwaddstr(win, 3, 5, "Key Pressed: ");
         wclrtoeol(win);
 
-        if (c >= KEY_MIN)
+        wprintw( win, "(%x) ", c);
+        if( has_key( c))
             wprintw(win, "%s", keyname(c));
         else if (isprint(c))
             wprintw(win, "%c", c);
@@ -486,7 +488,7 @@ void inputTest(WINDOW *win)
 #endif
         wrefresh(win);
 
-        if (c == ' ')
+        if (c == ' ' || c == 1)
             break;
     }
 
@@ -498,6 +500,8 @@ void inputTest(WINDOW *win)
     PDC_return_key_modifiers(FALSE);
 #endif
     wclear(win);
+    if( c == 1)
+       return;
     mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
     mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");
     wrefresh(win);

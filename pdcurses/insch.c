@@ -88,7 +88,7 @@ int winsch(WINDOW *win, chtype ch)
     {
         int x2;
 
-        switch (ch)
+        switch ((int)ch)
         {
         case '\t':
             for (x2 = ((x / TABSIZE) + 1) * TABSIZE; x < x2; x++)

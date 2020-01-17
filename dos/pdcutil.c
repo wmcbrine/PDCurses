@@ -13,30 +13,58 @@ void PDC_beep(void)
     PDCINT(0x10, regs);
 }
 
-void PDC_napms(int ms)
+#define MAX_TICK       0x1800b0L
+        /* no. of IRQ 0 clock ticks per day;  BIOS counter (0:0x46c) will go
+           to MAX_TICK - 1 before wrapping to 0 at midnight */
+
+#define MS_PER_DAY     86400000L
+
+/* 1080 seconds = 18 minutes = 1/80 day is exactly 19663 ticks.
+If asked to nap for longer than 1080000 milliseconds,  we take
+one or more 18-minute naps.  This avoids wraparound issues and
+the integer overflows that would result for ms > MAX_INT / 859
+(about 42 minutes).  */
+
+#define MAX_NAP_SPAN      (MS_PER_DAY / 80ul)
+
+void PDC_napmsl( long ms)
 {
-    PDCREGS regs;
-    long goal, start, current;
+    const long tick0 = getdosmemdword(0x46c);
+    long ticks_to_wait;
 
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 
-    goal = DIVROUND((long)ms, 50);
-    if (!goal)
-        goal++;
-
-    start = getdosmemdword(0x46c);
-
-    goal += start;
-
-    while (goal > (current = getdosmemdword(0x46c)))
+    while( ms > MAX_NAP_SPAN)
     {
-        if (current < start)    /* in case of midnight reset */
+         PDC_napms( MAX_NAP_SPAN);
+         ms -= MAX_NAP_SPAN;
+    }
+        /* We should convert from milliseconds to BIOS ticks by
+           multiplying by MAX_TICK and dividing by MS_PER_DAY.  But
+           that would overflow,  and we'd need floating point math.
+           The following is good to four parts per billion and
+           doesn't overflow (because 0 <= ms <= MAX_NAP_SPAN). */
+    ticks_to_wait = (ms * 859L) / 47181L + 1L;
+
+    for( ;;)
+    {
+        long ticks_elapsed = getdosmemdword(0x46c) - tick0;
+        PDCREGS regs;
+
+        if( ticks_elapsed < 0L)     /*  midnight rollover */
+            ticks_elapsed += MAX_TICK;
+        if (ticks_elapsed > ticks_to_wait)
             return;
 
         regs.W.ax = 0x1680;
         PDCINT(0x2f, regs);
         PDCINT(0x28, regs);
     }
+}
+
+void PDC_napms( int ms)
+{
+    PDC_napmsl( (long)ms);
 }
 
 const char *PDC_sysname(void)

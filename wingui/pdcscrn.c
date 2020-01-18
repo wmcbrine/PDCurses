@@ -154,7 +154,6 @@ void PDC_scr_free(void)
 }
 
 int PDC_choose_a_new_font( void);                     /* pdcdisp.c */
-void PDC_add_clipboard_to_key_queue( void);           /* pdckbd.c */
 
 #define KEY_QUEUE_SIZE    30
 
@@ -214,9 +213,7 @@ static void add_key_to_queue( const int new_key)
         }
     }
     unicode_radix = 10;
-    if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_PASTE])
-        PDC_add_clipboard_to_key_queue( );
-    else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_ABORT])
+    if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_ABORT])
         exit( -1);
     else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_ENLARGE_FONT])
         adjust_font_size( 1);
@@ -1677,10 +1674,8 @@ static HMENU set_menu( void)
     const HMENU hMenu = CreateMenu( );
 #ifdef PDC_WIDE
     AppendMenu( hMenu, MF_STRING, WM_CHOOSE_FONT, L"Font");
-    AppendMenu( hMenu, MF_STRING, WM_PASTE, L"Paste");
 #else
     AppendMenu( hMenu, MF_STRING, WM_CHOOSE_FONT, "Font");
-    AppendMenu( hMenu, MF_STRING, WM_PASTE, "Paste");
 #endif
     return( hMenu);
 }
@@ -1955,10 +1950,6 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
             if( PDC_choose_a_new_font( ))
                 adjust_font_size( 0);
             return( 0);
-        }
-        else if( wParam == WM_PASTE)
-        {
-            PDC_add_clipboard_to_key_queue( );
         }
         else if( wParam == WM_TOGGLE_MENU)
         {

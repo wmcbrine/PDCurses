@@ -121,7 +121,11 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 
 #define PDC_CLICK_PERIOD 150  /* time to wait for a click, if
                                  not set by mouseinterval() */
-#define PDC_COLOR_PAIRS  256
+#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
+   #define PDC_COLOR_PAIRS  1024
+#else
+   #define PDC_COLOR_PAIRS  256
+#endif
 #define PDC_MAXCOL       768  /* maximum possible COLORS; may be less */
 
 #define _INBUFSIZ        512  /* size of terminal input buffer */

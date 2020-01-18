@@ -11,6 +11,7 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include <curses.h>
@@ -1359,19 +1360,26 @@ void gradient(int tmarg)
     mvaddstr(tmarg, (COLS - 17) / 2, "Colors Beyond 256");
     attrset(A_NORMAL);
 
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 6; i++)
     {
         int j;
-        const char *output_text[3] = {
+        const char *output_text[6] = {
             "Red on green to white on black | "
             "   (gradients work just as well with",
             "Blue on yellow to black on red | "
             "palettes, if you have enough colors)",
-            "White on red to green on blue,  underlined (if available)" };
+            "White on red to green on blue,  underlined (if available)",
+            "We can keep going on and on until we "
+            "run out of color pairs or colors.",
+            "Some platforms will have plenty of both "
+            "and this won't be a real problem. ",
+            "Others can be made to work that way "
+            "without too much trouble." };
+
         const int len = (int)strlen(output_text[i]);
 
         move(tmarg + 3 + i, (COLS - 69) / 2);
-        for (j = 0; j < len; j++)
+        for (j = 0; j < len && cnum < COLORS && pnum < COLOR_PAIRS; j++)
         {
             const int oval = j * 1000 / len;
             const int reverse = 1000 - oval;
@@ -1386,15 +1394,24 @@ void gradient(int tmarg)
                 init_color(cnum, 0, 0, reverse);
                 init_color(cnum + 1, 1000, reverse, 0);
             }
-            else
+            else if( i == 2)
             {
                 init_color(cnum, reverse, 1000, reverse);
                 init_color(cnum + 1, reverse, 0, oval);
+            }
+            else
+            {
+                const int r = rand( ) % 400, g = rand( ) % 400, b = rand( ) % 400;
+
+                init_color(cnum, r, g, b);
+                init_color(cnum + 1, 1000 - r, 1000 - g, 1000 - b);
             }
             init_pair(pnum, cnum, cnum + 1);
             attrset(COLOR_PAIR(pnum));
             if (i == 2)
                 attron(A_UNDERLINE);
+            else
+                attroff(A_UNDERLINE);
             addch(output_text[i][j]);
 
             cnum += 2;

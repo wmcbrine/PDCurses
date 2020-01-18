@@ -331,9 +331,6 @@ static HFONT hFonts[N_CACHED_FONTS];
 
 #define BUFFSIZE 50
 
-int PDC_find_ends_of_selected_text( const int line,
-          const RECT *rect, int *x);            /* pdcscrn.c */
-
 void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                              int x, int len, const chtype *srcp)
 {
@@ -344,8 +341,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
     int cursor_overwritten = FALSE;
     PACKED_RGB foreground_rgb = 0;
     chtype prev_ch = 0;
-    extern RECT PDC_mouse_rect;              /* see 'pdcscrn.c' */
-    int selection[2];
 
     if( !srcp)             /* just freeing up fonts */
     {
@@ -559,19 +554,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
             SelectObject( hdc, old_pen);
             DeleteObject( pen);
         }
-        if( PDC_find_ends_of_selected_text( lineno, &PDC_mouse_rect, selection))
-            if( x <= selection[1] + 1 && x + i >= selection[0])
-            {
-                RECT rect;
-
-                rect.top = lineno * PDC_cyChar;
-                rect.bottom = rect.top + PDC_cyChar;
-                rect.right = max( x, selection[0]);
-                rect.left = min( x + i, selection[1] + 1);
-                rect.right *= PDC_cxChar;
-                rect.left *= PDC_cxChar;
-                InvertRect( hdc, &rect);
-            }
         len -= i;
         x += i;
         srcp += i;

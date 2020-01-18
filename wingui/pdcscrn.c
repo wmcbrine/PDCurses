@@ -744,167 +744,6 @@ static void get_character_sizes( const HWND hwnd,
     *ychar_size = tm.tmHeight;
 }
 
-INLINE void sort_out_rect( RECT *rect)
-{
-    int temp;
-
-    if( rect->left > rect->right)
-    {
-        temp = rect->right;
-        rect->right = rect->left;
-        rect->left = temp;
-    }
-    if( rect->top > rect->bottom)
-    {
-        temp = rect->bottom;
-        rect->bottom = rect->top;
-        rect->top = temp;
-    }
-}
-
-static int rectangle_from_chars_to_pixels( RECT *rect)
-{
-    int rval = 1;
-
-    if( rect->right == rect->left && rect->top == rect->bottom)
-        rval = 0;
-    sort_out_rect( rect);
-    if( rect->top < 0)
-        rval = 0;
-    rect->right++;
-    rect->bottom++;
-    rect->left *= PDC_cxChar;
-    rect->right *= PDC_cxChar;
-    rect->top *= PDC_cyChar;
-    rect->bottom *= PDC_cyChar;
-    return( rval);
-}
-
-/* When updating the mouse rectangle,  you _could_ just remove the old one
-and draw the new one.  But that sometimes caused flickering if the mouse
-area was large.  In such cases,  it's better to determine what areas
-actually changed,  and invert just those.  So the following checks to
-see if two overlapping rectangles are being drawn (this is the norm)
-and figures out the area that actually needs to be flipped.  It does
-seem to decrease flickering to near-zero.                      */
-
-static int PDC_selecting_rectangle = 1;
-
-int PDC_find_ends_of_selected_text( const int line,
-          const RECT *rect, int *x)
-{
-    int rval = 0, i;
-
-    if( (rect->top - line) * (rect->bottom - line) <= 0
-            && (rect->top != rect->bottom || rect->left != rect->right))
-    {
-        if( PDC_selecting_rectangle || rect->top == rect->bottom)
-        {
-            x[0] = min( rect->right, rect->left);
-            x[1] = max( rect->right, rect->left);
-            rval = 1;
-        }
-        else if( rect->top <= line && line <= rect->bottom)
-        {
-            x[0] = (line == rect->top ? rect->left : 0);
-            x[1] = (line == rect->bottom ? rect->right : SP->cols - 1);
-            rval = 1;
-        }
-        else if( rect->top >= line && line >= rect->bottom)
-        {
-            x[0] = (line == rect->bottom ? rect->right : 0);
-            x[1] = (line == rect->top ? rect->left : SP->cols - 1);
-            rval = 1;
-        }
-    }
-    if( rval)
-        for( i = 0; i < 2; i++)
-           if( x[i] > SP->cols - 1)
-               x[i] = SP->cols - 1;
-    return( rval);
-}
-
-/* Called in only one place,  so let's inline it */
-
-INLINE void show_mouse_rect( const HWND hwnd, RECT before, RECT after)
-{
-    if( before.top > -1 || after.top > -1)
-        if( memcmp( &after, &before, sizeof( RECT)))
-        {
-            const HDC hdc = GetDC( hwnd) ;
-
-            if( PDC_selecting_rectangle)
-            {
-                const int show_before = rectangle_from_chars_to_pixels( &before);
-                const int show_after  = rectangle_from_chars_to_pixels( &after);
-
-                if( show_before && show_after)
-                {
-                    RECT temp;
-
-                    if( before.top < after.top)
-                    {
-                        temp = before;   before = after;  after = temp;
-                    }
-                    if( before.top < after.bottom && after.right > before.left
-                                  && before.right > after.left)
-                    {
-                        const int tval = min( after.bottom, before.bottom);
-
-                        temp = after;
-                        temp.bottom = before.top;
-                        InvertRect( hdc, &temp);
-
-                        temp.top = temp.bottom;
-                        temp.bottom = tval;
-                        temp.right = max( after.right, before.right);
-                        temp.left = min( after.right, before.right);
-                        InvertRect( hdc, &temp);
-
-                        temp.right = max( after.left, before.left);
-                        temp.left = min( after.left, before.left);
-                        InvertRect( hdc, &temp);
-
-                        temp = (after.bottom > before.bottom ? after : before);
-                        temp.top = tval;
-                        InvertRect( hdc, &temp);
-                    }
-                }
-                else if( show_before)
-                    InvertRect( hdc, &before);
-                else if( show_after)
-                    InvertRect( hdc, &after);
-            }
-            else     /* _not_ selecting rectangle; selecting lines */
-            {
-                int line;
-
-                for( line = 0; line < SP->lines; line++)
-                {
-                    int x[4], n_rects = 0, i;
-
-                    n_rects = PDC_find_ends_of_selected_text( line, &before, x);
-                    n_rects += PDC_find_ends_of_selected_text( line, &after, x + n_rects * 2);
-                    if( n_rects == 2)
-                        if( x[0] == x[2] && x[1] == x[3])
-                            n_rects = 0;   /* Rects are same & will cancel */
-                    for( i = 0; i < n_rects; i++)
-                        {
-                        RECT trect;
-
-                        trect.left = x[i + i];
-                        trect.right = x[i + i + 1];
-                        trect.top = line;
-                        trect.bottom = line;
-                        rectangle_from_chars_to_pixels( &trect);
-                        InvertRect( hdc, &trect);
-                        }
-                }
-            }
-            ReleaseDC( hwnd, hdc) ;
-        }
-}
-
 /* Cygwin lacks _splitpath, _wsplitpath.  THE FOLLOWING ARE NOT FULLY
 TESTED IMPLEMENTATIONS OF THOSE TWO FUNCTIONS,  because the only use we
 make of them is to get fname.  (Though I did write a little test program,
@@ -1312,50 +1151,6 @@ static void adjust_font_size( const int font_size_change)
     }
 }
 
-         /* PDC_mouse_rect is the area currently highlit by dragging the */
-         /* mouse.  It's global,  sadly,  because we need to ensure that */
-         /* the highlighting is respected when the text within that      */
-         /* rectangle is redrawn by PDC_transform_line(). */
-RECT PDC_mouse_rect = { -1, -1, -1, -1 };
-
-int PDC_setclipboard_raw( const char *contents, long length,
-            const bool translate_multibyte_to_wide_char);
-
-/* Called in only one place (when the left mouse button goes up), */
-/* so we should inline it :   */
-
-INLINE void HandleBlockCopy( void)
-{
-    int i, j, len, x[2];
-    TCHAR *buff, *tptr;
-
-            /* Make a first pass to determine how much text is blocked: */
-    for( i = len = 0; i < SP->lines; i++)
-        if( PDC_find_ends_of_selected_text( i, &PDC_mouse_rect, x))
-            len += x[1] - x[0] + 3;
-    buff = tptr = (TCHAR *)malloc( (len + 1) * sizeof( TCHAR));
-            /* Make second pass to copy that text to a buffer: */
-    for( i = len = 0; i < SP->lines; i++)
-        if( PDC_find_ends_of_selected_text( i, &PDC_mouse_rect, x))
-        {
-            const chtype *cptr = curscr->_y[i];
-
-            for( j = 0; j < x[1] - x[0] + 1; j++)
-                tptr[j] = (TCHAR)cptr[j + x[0]];
-            while( j > 0 && tptr[j - 1] == ' ')
-                j--;          /* remove trailing spaces */
-            tptr += j;
-            *tptr++ = (TCHAR)13;
-            *tptr++ = (TCHAR)10;
-        }
-    if( tptr != buff)   /* at least one line read in */
-    {
-       tptr[-2] = '\0';       /* cut off the last CR/LF */
-       PDC_setclipboard_raw( (char *)buff, (long)( tptr - buff), FALSE);
-    }
-    free( buff);
-}
-
 #define WM_ENLARGE_FONT       (WM_USER + 1)
 #define WM_SHRINK_FONT        (WM_USER + 2)
 #define WM_MARK_AND_COPY      (WM_USER + 3)
@@ -1628,18 +1423,11 @@ static void HandleMouseMove( WPARAM wParam, LPARAM lParam,
         prev_mouse_x = mouse_x;
         prev_mouse_y = mouse_y;
         if( wParam & MK_LBUTTON)
-        {
-            PDC_mouse_rect.left = mouse_x;
-            PDC_mouse_rect.top = mouse_y;
-            if( SP->_trap_mbe & BUTTON1_MOVED)
-                report_event |= PDC_MOUSE_MOVED | 1;
-        }
+            report_event |= PDC_MOUSE_MOVED | 1;
         if( wParam & MK_MBUTTON)
-            if( SP->_trap_mbe & BUTTON2_MOVED)
-                report_event |= PDC_MOUSE_MOVED | 2;
+            report_event |= PDC_MOUSE_MOVED | 2;
         if( wParam & MK_RBUTTON)
-            if( SP->_trap_mbe & BUTTON3_MOVED)
-                report_event |= PDC_MOUSE_MOVED | 4;
+            report_event |= PDC_MOUSE_MOVED | 4;
 
 #ifdef CANT_DO_THINGS_THIS_WAY
          /* Logic would dictate the following lines.  But with PDCurses */
@@ -1981,7 +1769,6 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
     static uint64_t last_click_time[PDC_MAX_MOUSE_BUTTONS];
                                /* in millisec since 1970 */
     static int modified_key_to_return = 0;
-    const RECT before_rect = PDC_mouse_rect;
     static bool ignore_resize = FALSE;
 
     PDC_hWnd = hwnd;
@@ -2019,28 +1806,13 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         break;
 
     case WM_LBUTTONDOWN:
-        PDC_mouse_rect.left = PDC_mouse_rect.right =
-                                  LOWORD( lParam) / PDC_cxChar;
-        PDC_mouse_rect.top = PDC_mouse_rect.bottom =
-                                  HIWORD( lParam) / PDC_cyChar;
-        PDC_selecting_rectangle = (wParam & MK_SHIFT);
-        SetCapture( hwnd);
         button_down = 0;
+        SetCapture( hwnd);
         break;
 
     case WM_LBUTTONUP:
         button_up = 0;
         ReleaseCapture( );
-        if( (PDC_mouse_rect.left != PDC_mouse_rect.right ||
-             PDC_mouse_rect.top != PDC_mouse_rect.bottom) &&
-             (PDC_mouse_rect.right >= 0 && PDC_mouse_rect.left >= 0
-                        && curscr && curscr->_y) )
-        {
-            /* RR: will crash sometimes */
-            /* As an example on double-click of the title bar */
-            HandleBlockCopy();
-        }
-        PDC_mouse_rect.top = PDC_mouse_rect.bottom = -1;  /* now hide rect */
         break;
 
     case WM_RBUTTONDOWN:
@@ -2140,13 +1912,8 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         /* see notes above this function */
         if( wParam != TIMER_ID_FOR_BLINKING )
         {
-            static const int remap_table[PDC_MAX_MOUSE_BUTTONS] =
-                    { BUTTON1_PRESSED, BUTTON2_PRESSED, BUTTON3_PRESSED,
-                      BUTTON4_PRESSED, BUTTON5_PRESSED };
-
             modified_key_to_return = 0;
-            if( SP && (SP->_trap_mbe & remap_table[wParam]))
-                set_mouse( (const int) wParam, BUTTON_PRESSED, mouse_lParam);
+            set_mouse( (const int) wParam, BUTTON_PRESSED, mouse_lParam);
             KillTimer( PDC_hWnd, (int)wParam);
             mouse_buttons_pressed ^= (1 << wParam);
         }
@@ -2206,9 +1973,6 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         return 0 ;
     }
 
-    if( hwnd)
-       show_mouse_rect( hwnd, before_rect, PDC_mouse_rect);
-
     if( button_down >= 0)
     {
         modified_key_to_return = 0;
@@ -2261,15 +2025,8 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
             last_click_time[button_up] = curr_click_time;
         }
         if( message_to_send == -1)   /* might just send as a 'released' msg */
-        {
-            static const int remap_table[PDC_MAX_MOUSE_BUTTONS] =
-                     { BUTTON1_RELEASED, BUTTON2_RELEASED, BUTTON3_RELEASED,
-                       BUTTON4_RELEASED, BUTTON5_RELEASED };
-
-            if( SP->_trap_mbe & remap_table[button_up])
-                message_to_send = BUTTON_RELEASED;
-        }
-        if( message_to_send != -1)
+            message_to_send = BUTTON_RELEASED;
+        if( message_to_send !=- 1)
             set_mouse( button_up, message_to_send, lParam);
     }
 

@@ -110,12 +110,6 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 
 /* Internal macros for attributes */
 
-#ifdef CHTYPE_LONG
-# define PDC_COLOR_PAIRS 256
-#else
-# define PDC_COLOR_PAIRS  32
-#endif
-
 #ifndef max
 # define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
@@ -133,4 +127,4 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 #define _INBUFSIZ        512  /* size of terminal input buffer */
 #define NUNGETCH         256  /* max # chars to ungetch() */
 
-#endif /* __CURSES_INTERNALS__*/
+#endif /* __CURSES_INTERNALS__ */

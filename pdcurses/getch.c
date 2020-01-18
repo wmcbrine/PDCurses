@@ -91,16 +91,181 @@ getch
 
 **man-end****************************************************************/
 
+#include <stdlib.h>
+
+static int _get_box(int *y_start, int *y_end, int *x_start, int *x_end)
+{
+    int start, end;
+
+    if (SP->sel_start < SP->sel_end)
+    {
+        start = SP->sel_start;
+        end = SP->sel_end;
+    }
+    else
+    {
+        start = SP->sel_end;
+        end = SP->sel_start;
+    }
+
+    *y_start = start / COLS;
+    *x_start = start % COLS;
+
+    *y_end = end / COLS;
+    *x_end = end % COLS;
+
+    return (end - start) + (*y_end - *y_start);
+}
+
+static void _highlight(void)
+{
+    int i, j, y_start, y_end, x_start, x_end;
+
+    if (-1 == SP->sel_start)
+        return;
+
+    _get_box(&y_start, &y_end, &x_start, &x_end);
+
+    for (j = y_start; j <= y_end; j++)
+        for (i = (j == y_start ? x_start : 0);
+             i < (j == y_end ? x_end : COLS); i++)
+            curscr->_y[j][i] ^= A_REVERSE;
+
+    wrefresh(curscr);
+}
+
+static void _copy(void)
+{
+#ifdef PDC_WIDE
+    wchar_t *wtmp;
+# define TMP wtmp
+# define MASK A_CHARTEXT
+#else
+# define TMP tmp
+# define MASK 0xff
+#endif
+    char *tmp;
+    long pos;
+    int i, j, y_start, y_end, x_start, x_end, len;
+
+    if (-1 == SP->sel_start)
+        return;
+
+    len = _get_box(&y_start, &y_end, &x_start, &x_end);
+
+    if (!len)
+        return;
+
+#ifdef PDC_WIDE
+    wtmp = malloc((len + 1) * sizeof(wchar_t));
+    len *= 3;
+#endif
+    tmp = malloc(len + 1);
+
+    for (j = y_start, pos = 0; j <= y_end; j++)
+    {
+        for (i = (j == y_start ? x_start : 0);
+             i < (j == y_end ? x_end : COLS); i++)
+            TMP[pos++] = curscr->_y[j][i] & MASK;
+
+        while (y_start != y_end && pos > 0 && TMP[pos - 1] == 32)
+            pos--;
+
+        if (j < y_end)
+            TMP[pos++] = 10;
+    }
+    TMP[pos] = 0;
+
+#ifdef PDC_WIDE
+    pos = PDC_wcstombs(tmp, wtmp, len);
+#endif
+
+    PDC_setclipboard(tmp, pos);
+    free(tmp);
+#ifdef PDC_WIDE
+    free(wtmp);
+#endif
+}
+
+static int _paste(void)
+{
+#ifdef PDC_WIDE
+    wchar_t *wpaste;
+# define PASTE wpaste
+#else
+# define PASTE paste
+#endif
+    char *paste;
+    long len, newmax;
+    int key;
+
+    key = PDC_getclipboard(&paste, &len);
+    if (PDC_CLIP_SUCCESS != key || !len)
+        return -1;
+
+#ifdef PDC_WIDE
+    wpaste = malloc(len * sizeof(wchar_t));
+    len = PDC_mbstowcs(wpaste, paste, len);
+#endif
+    newmax = len + SP->c_ungind;
+    if (newmax > SP->c_ungmax)
+    {
+        SP->c_ungch = realloc(SP->c_ungch, newmax * sizeof(int));
+        if (!SP->c_ungch)
+            return -1;
+        SP->c_ungmax = newmax;
+    }
+    while (len > 1)
+        PDC_ungetch(PASTE[--len]);
+    key = *PASTE;
+#ifdef PDC_WIDE
+    free(wpaste);
+#endif
+    PDC_freeclipboard(paste);
+    SP->key_modifiers = 0;
+
+    return key;
+}
+
 static int _mouse_key(void)
 {
-    int i, key = KEY_MOUSE;
-    const mmask_t mbe = SP->_trap_mbe;
+    int i, key = KEY_MOUSE, changes = SP->mouse_status.changes;
+    unsigned long mbe = SP->_trap_mbe;
+
+    /* Selection highlighting? */
+
+    if ((!mbe || SP->mouse_status.button[0] & BUTTON_SHIFT) && changes & 1)
+    {
+        i = SP->mouse_status.y * COLS + SP->mouse_status.x;
+        switch (SP->mouse_status.button[0] & BUTTON_ACTION_MASK)
+        {
+        case BUTTON_PRESSED:
+            _highlight();
+            SP->sel_start = SP->sel_end = i;
+            return -1;
+        case BUTTON_MOVED:
+            _highlight();
+            SP->sel_end = i;
+            _highlight();
+            return -1;
+        case BUTTON_RELEASED:
+            _copy();
+            return -1;
+        }
+    }
+    else if ((!mbe || SP->mouse_status.button[1] & BUTTON_SHIFT) &&
+             changes & 2 && (SP->mouse_status.button[1] &
+             BUTTON_ACTION_MASK) == BUTTON_CLICKED)
+    {
+        SP->key_code = FALSE;
+        return _paste();
+    }
 
     /* Filter unwanted mouse events */
 
     for (i = 0; i < 3; i++)
     {
-        if (SP->mouse_status.changes & (1 << i))
+        if (changes & (1 << i))
         {
             int shf = i * 5;
             short button = SP->mouse_status.button[i] & BUTTON_ACTION_MASK;
@@ -114,7 +279,6 @@ static int _mouse_key(void)
                 || (!(mbe & (BUTTON1_DOUBLE_CLICKED << shf)) &&
                     (button == BUTTON_DOUBLE_CLICKED))
 
-                        /* added triple clicks 2011 jun 4: BJG */
                 || (!(mbe & (BUTTON1_TRIPLE_CLICKED << shf)) &&
                     (button == BUTTON_TRIPLE_CLICKED))
 
@@ -128,21 +292,20 @@ static int _mouse_key(void)
         }
     }
 
-    if (SP->mouse_status.changes & PDC_MOUSE_MOVED)
+    if (changes & PDC_MOUSE_MOVED)
     {
         if (!(mbe & (BUTTON1_MOVED|BUTTON2_MOVED|BUTTON3_MOVED | REPORT_MOUSE_POSITION)))
             SP->mouse_status.changes ^= PDC_MOUSE_MOVED;
     }
 
-    if (SP->mouse_status.changes &
-        (PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN))
+    if (changes & (PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN))
     {
         if (!(mbe & MOUSE_WHEEL_SCROLL))
             SP->mouse_status.changes &=
                 ~(PDC_MOUSE_WHEEL_UP|PDC_MOUSE_WHEEL_DOWN);
     }
 
-    if (!SP->mouse_status.changes)
+    if (!changes)
         return -1;
 
     /* Check for click in slk area */
@@ -228,24 +391,37 @@ int wgetch(WINDOW *win)
 
         key = PDC_get_key();
 
-        if (SP->key_code)
+        /* copy or paste? */
+
+        if (SP->key_modifiers & PDC_KEY_MODIFIER_SHIFT)
         {
-            /* filter special keys if not in keypad mode */
-
-            if (!win->_use_keypad)
-                key = -1;
-
-            /* filter mouse events; translate mouse clicks in the slk
-               area to function keys */
-
-            else if (key == KEY_MOUSE)
-                key = _mouse_key();
+            if (0x03 == key)
+            {
+                _copy();
+                continue;
+            }
+            else if (0x16 == key)
+                key = _paste();
         }
+
+        /* filter mouse events; translate mouse clicks in the slk
+           area to function keys */
+
+        if (SP->key_code && key == KEY_MOUSE)
+            key = _mouse_key();
+
+        /* filter special keys if not in keypad mode */
+
+        if (SP->key_code && !win->_use_keypad)
+            key = -1;
 
         /* unwanted key? loop back */
 
         if (key == -1)
             continue;
+
+        _highlight();
+        SP->sel_start = SP->sel_end = -1;
 
         /* translate CR */
 

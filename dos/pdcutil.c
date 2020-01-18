@@ -36,7 +36,7 @@ void PDC_napmsl( long ms)
 
     while( ms > MAX_NAP_SPAN)
     {
-         PDC_napms( MAX_NAP_SPAN);
+         PDC_napmsl( MAX_NAP_SPAN);
          ms -= MAX_NAP_SPAN;
     }
         /* We should convert from milliseconds to BIOS ticks by

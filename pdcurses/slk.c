@@ -60,9 +60,10 @@ slk
 
    Also,  in PDCurses,  one can call slk_init() at any time
    _after_ initscr(),  to reset the label format.  If you do this,
-   you'll need to reset the label text and call slk_refresh().  And
-   you can't toggle the index line.  (Doing so would add/remove a line
-   from the useable screen,  which would be hard to handle correctly.)
+   you'll need to reset the label text and call slk_refresh().  However,
+   you can't toggle the index line or turn SLK on or off after initscr()
+   has been called.  Doing so would add/remove a line or two from the
+   useable screen,  which would be difficult to handle correctly.
 
    slk_refresh(), slk_noutrefresh() and slk_touch() are analogous to
    refresh(), noutrefresh() and touch().

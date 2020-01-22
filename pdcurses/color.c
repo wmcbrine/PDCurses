@@ -239,7 +239,10 @@ int assume_default_colors(int f, int b)
         return ERR;
 
     if (SP->color_started)
+    {
         _init_pair_core(0, f, b);
+        curscr->_clear = TRUE;
+    }
 
     return OK;
 }

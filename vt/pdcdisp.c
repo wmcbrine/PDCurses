@@ -92,7 +92,9 @@ static void reset_color( const chtype ch)
     PDC_get_rgb_values( ch, &fg, &bg);
     if( bg != prev_bg)
         {
-        if( COLORS == 16)
+        if( bg == (PACKED_RGB)-1)   /* default background */
+            printf( "\033[49m");
+        else if( COLORS == 16)
             printf( "\033[4%dm", get_sixteen_color_idx( bg));
         else
             printf( "\033[48;%s", color_string( txt, bg));
@@ -100,7 +102,9 @@ static void reset_color( const chtype ch)
         }
     if( fg != prev_fg)
         {
-        if( COLORS == 16)
+        if( fg == (PACKED_RGB)-1)   /* default foreground */
+            printf( "\033[39m");
+        else if( COLORS == 16)
             printf( "\033[3%dm", get_sixteen_color_idx( fg));
         else
             printf( "\033[38;%s", color_string( txt, fg));
@@ -124,6 +128,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     assert( lineno < SP->lines);
     assert( len > 0);
     PDC_gotoyx( lineno, x);
+    prev_ch = *srcp ^ A_COLOR;
     while( len--)
        {
        int ch = (int)( *srcp & A_CHARTEXT);

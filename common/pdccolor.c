@@ -201,13 +201,20 @@ void PDC_get_rgb_values( const chtype srcp,
     const int color = (int)(( srcp & A_COLOR) >> PDC_COLOR_SHIFT);
     bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
     bool intensify_backgnd = FALSE;
+    bool default_foreground = FALSE, default_background = FALSE;
 
     {
         short foreground_index, background_index;
 
         pair_content( (short)color, &foreground_index, &background_index);
-        *foreground_rgb = PDC_get_palette_entry( foreground_index);
-        *background_rgb = PDC_get_palette_entry( background_index);
+        if( foreground_index < 0 && SP->orig_attr)
+            default_foreground = TRUE;
+        else
+            *foreground_rgb = PDC_get_palette_entry( foreground_index);
+        if( background_index < 0 && SP->orig_attr)
+            default_background = TRUE;
+        else
+            *background_rgb = PDC_get_palette_entry( background_index);
     }
 
     if( srcp & A_BLINK)
@@ -234,4 +241,8 @@ void PDC_get_rgb_values( const chtype srcp,
         *foreground_rgb = dimmed_color( *foreground_rgb);
         *background_rgb = dimmed_color( *background_rgb);
     }
+    if( default_foreground)
+        *foreground_rgb = (PACKED_RGB)-1;
+    if( default_background)
+        *background_rgb = (PACKED_RGB)-1;
 }

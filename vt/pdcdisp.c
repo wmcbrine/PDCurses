@@ -6,7 +6,7 @@
 
 #define USE_UNICODE_ACS_CHARS 1
 
-#include "curses.h"
+#include "curspriv.h"
 #include "pdcvt.h"
 #include "../common/acs_defs.h"
 #include "../common/pdccolor.h"
@@ -135,7 +135,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
        chtype changes = *srcp ^ prev_ch;
 
        if( (*srcp & A_ALTCHARSET) && ch < 0x80)
-          ch = acs_map[ch & 0x7f];
+          ch = (int)acs_map[ch & 0x7f];
        if( ch < (int)' ' || (ch >= 0x80 && ch <= 0x9f))
           ch = ' ';
        if( SP->termattrs & changes & A_BOLD)

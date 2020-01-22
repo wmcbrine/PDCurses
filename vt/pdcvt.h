@@ -6,4 +6,13 @@
 
    /* If the following is TRUE,  only a limited subset of control
    codes will actually work.  Happens in older Windows and DOS.  */
-extern bool PDC_is_ansi;
+extern int PDC_is_ansi;
+
+#ifdef PDC_WIDE
+   #if !defined( UNICODE)
+      # define UNICODE
+   #endif
+   #if !defined( _UNICODE)
+      # define _UNICODE
+   #endif
+#endif

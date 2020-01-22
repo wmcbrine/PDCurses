@@ -10,6 +10,13 @@
 
 static struct termios orig_term;
 #endif
+
+
+#ifdef _WIN32
+#include <windows.h>
+#undef MOUSE_MOVED
+#endif
+
 #include <assert.h>
 #include "curspriv.h"
 #include "pdcvt.h"
@@ -17,13 +24,12 @@ static struct termios orig_term;
 #include "../common/pdccolor.c"
 
 #ifdef DOS
-bool PDC_is_ansi = TRUE;
+int PDC_is_ansi = TRUE;
 #else
-bool PDC_is_ansi = FALSE;
+int PDC_is_ansi = FALSE;
 #endif
 
 #ifdef _WIN32
-#include <windows.h>
 
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
@@ -175,7 +181,7 @@ static void sigwinchHandler( int sig)
 #define MAX_LINES 1000
 #define MAX_COLUMNS 1000
 
-bool PDC_has_rgb_color = false;
+bool PDC_has_rgb_color = FALSE;
 
 int PDC_scr_open(void)
 {
@@ -191,11 +197,11 @@ int PDC_scr_open(void)
 
     PDC_LOG(("PDC_scr_open called\n"));
     if( colorterm && !strcmp( colorterm, "truecolor"))
-       PDC_has_rgb_color = true;
+       PDC_has_rgb_color = TRUE;
     if( capabilities)      /* these should really come from terminfo! */
        {
        if( strstr( capabilities, "RGB"))
-          PDC_has_rgb_color = true;
+          PDC_has_rgb_color = TRUE;
        if( strstr( capabilities, "UND"))
           PDC_capabilities |= A_UNDERLINE;
        if( strstr( capabilities, "BLI"))

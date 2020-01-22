@@ -135,7 +135,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
         if (!pdc_conemu)
             SetConsoleMode(pdc_con_out, 0x0015);
 
-        WriteConsoleA(pdc_con_out, esc, strlen(esc), NULL, NULL);
+        WriteConsoleA(pdc_con_out, esc, (DWORD)strlen(esc), NULL, NULL);
 
         if (!pdc_conemu)
             SetConsoleMode(pdc_con_out, 0x0010);
@@ -192,7 +192,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             if (blink && blinked_off)
                 ch = ' ';
 
-            buffer[j] = ch & A_CHARTEXT;
+            buffer[j] = (WCHAR)( ch & A_CHARTEXT);
         }
 
         PDC_gotoyx(lineno, x);
@@ -236,7 +236,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
                 ch = ' ';
 
             buffer[j].Attributes = mapped_attr;
-            buffer[j].Char.UnicodeChar = ch & A_CHARTEXT;
+            buffer[j].Char.UnicodeChar = (WCHAR)( ch & A_CHARTEXT);
         }
 
         bufPos.X = bufPos.Y = 0;

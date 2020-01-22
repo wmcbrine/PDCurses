@@ -166,7 +166,11 @@ static void _copy(void)
     {
         for (i = (j == y_start ? x_start : 0);
              i < (j == y_end ? x_end : COLS); i++)
-            TMP[pos++] = curscr->_y[j][i] & MASK;
+#ifdef PDC_WIDE
+            wtmp[pos++] = (wchar_t)( curscr->_y[j][i] & MASK);
+#else
+            tmp[pos++] = (char)( curscr->_y[j][i] & MASK);
+#endif
 
         while (y_start != y_end && pos > 0 && TMP[pos - 1] == 32)
             pos--;
@@ -177,7 +181,7 @@ static void _copy(void)
     TMP[pos] = 0;
 
 #ifdef PDC_WIDE
-    pos = PDC_wcstombs(tmp, wtmp, len);
+    pos = (long)PDC_wcstombs(tmp, wtmp, len);
 #endif
 
     PDC_setclipboard(tmp, pos);
@@ -205,7 +209,7 @@ static int _paste(void)
 
 #ifdef PDC_WIDE
     wpaste = malloc(len * sizeof(wchar_t));
-    len = PDC_mbstowcs(wpaste, paste, len);
+    len = (long)PDC_mbstowcs(wpaste, paste, len);
 #endif
     newmax = len + SP->c_ungind;
     if (newmax > SP->c_ungmax)

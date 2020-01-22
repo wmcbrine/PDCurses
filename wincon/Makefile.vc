@@ -24,10 +24,10 @@ PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 CC		= cl.exe -nologo
 
 !ifdef DEBUG
-CFLAGS		= -Z7 -DPDCDEBUG
+CFLAGS		= -Z7 -DPDCDEBUG -W3 -D_CRT_SECURE_NO_WARNINGS
 LDFLAGS		= -debug -pdb:none
 !else
-CFLAGS		= -O1
+CFLAGS		= -O1 -W3 -D_CRT_SECURE_NO_WARNINGS
 LDFLAGS		=
 !endif
 

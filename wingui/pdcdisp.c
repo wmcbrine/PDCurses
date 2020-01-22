@@ -1,6 +1,9 @@
 /* Public Domain Curses */
 
 #include "pdcwin.h"
+#define USE_UNICODE_ACS_CHARS 1
+
+#include "../common/acs_defs.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -14,9 +17,6 @@ including for ACS characters,  and even when PDC_WIDE isn't #defined
 (i.e., when running in 'legacy' 8-bit character mode) See 'acs_defs.h'
 for details. */
 
-#define USE_UNICODE_ACS_CHARS 1
-
-#include "../common/acs_defs.h"
 
 static const unsigned short starting_ascii_to_unicode[32] = {
    0,

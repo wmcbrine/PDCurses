@@ -59,7 +59,7 @@ int WaitForUser(void)
     nocbreak();     /* Reset the halfdelay() value */
     cbreak();
 
-    return (ch == '\033') ? ch : 0;
+    return (ch == '\033') ? (int)ch : 0;
 }
 
 int SubWinTest(WINDOW *win)
@@ -218,7 +218,7 @@ int main(int argc, char **argv)
     initscr();
 #endif
     seed = time((time_t *)0);
-    srand(seed);
+    srand( (unsigned)seed);
 
     start_color();
 # if defined(NCURSES_VERSION) || (defined(PDC_BUILD) && PDC_BUILD > 3000)
@@ -345,7 +345,7 @@ int main(int argc, char **argv)
         for (j = 0; messages[j] != NULL; j++)
         {
             char *message = messages[j];
-            int msg_len = strlen(message);
+            int msg_len = (int)strlen(message);
             int stop = 0;
             int xpos, start, count;
 

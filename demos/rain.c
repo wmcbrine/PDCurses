@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     initscr();
 #endif
     seed = time((time_t *)0);
-    srand(seed);
+    srand( (unsigned)seed);
 
     if (has_colors())
     {

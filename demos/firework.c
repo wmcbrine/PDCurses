@@ -36,7 +36,7 @@ int main(int argc, char **argv)
         init_pair(i, color_table[i], COLOR_BLACK);
 
     seed = time((time_t *)0);
-    srand(seed);
+    srand( (unsigned)seed);
     flag = 0;
 
     while (getch() == ERR)      /* loop until a key is hit */

@@ -27,6 +27,7 @@ PLATFORM=X64
 !include $(PDCURSES_SRCDIR)\libobjs.mif
 
 osdir      = $(PDCURSES_SRCDIR)\vt
+common      = $(PDCURSES_SRCDIR)\common
 
 PDCURSES_WIN_H   = $(osdir)\pdcvt.h
 

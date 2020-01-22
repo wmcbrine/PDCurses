@@ -239,6 +239,8 @@ int PDC_scr_open(void)
     SP->curscol = SP->cursrow = 0;
     SP->audible = TRUE;
     SP->mono = FALSE;
+    SP->orig_attr = TRUE;
+    SP->orig_fore = SP->orig_back = -1;
     SP->termattrs = PDC_capabilities & ~A_BLINK;
 
     while( PDC_get_rows( ) < 1 && PDC_get_columns( ) < 1)

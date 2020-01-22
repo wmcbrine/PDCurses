@@ -1,18 +1,12 @@
-# Makefile for PDCurses library for SDL
-#
-# Usage: [g]make [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
-#
-# where target can be any of:
-# [all|demos|libpdcurses.a|testcurs]...
+# Makefile for PDCurses for SDL
 
 O = o
-RM = rm
 
 ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR	= ..
 endif
 
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/sdl1
 
@@ -20,9 +14,6 @@ PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
 
 SFLAGS		= $(shell sdl-config --cflags)
 SLIBS		= $(shell sdl-config --libs)
-
-# If your system doesn't have these, remove the defines here
-SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
@@ -39,27 +30,14 @@ ifeq ($(UTF8),Y)
 	CFLAGS	+= -DPDC_FORCE_UTF8
 endif
 
-ifdef CHTYPE_32
-	CFLAGS += -DCHTYPE_32
-endif
-
-ifdef CHTYPE_16
-	CFLAGS += -DCHTYPE_16
-endif
-
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
-
-ifeq ($(shell uname),Darwin)
-	DEMOFLAGS = -Dmain=SDL_main
-endif
 
 LINK		= $(CC)
 LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
-LIBCURSES	= libpdcurses.a
+LIBCURSES	= pdcurses.a
 
-DEMOS		= firework ozdemo newtest ptest rain testcurs tuidemo worm xmas \
-sdltest
+DEMOS		+= sdltest
 
 .PHONY: all libs clean demos
 
@@ -68,7 +46,7 @@ all:	libs
 libs:	$(LIBCURSES)
 
 clean:
-	-$(RM) -rf *.o trace $(LIBCURSES) $(DEMOS)
+	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
@@ -86,7 +64,7 @@ tui.o tuidemo.o : $(PDCURSES_CURSES_H)
 panel.o ptest: $(PANEL_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(BUILD) $(SFLAGS) -c $<
+	$(BUILD) -c $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) $(SFLAGS) -c $<
@@ -95,9 +73,6 @@ firework: $(demodir)/firework.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 ozdemo: $(demodir)/ozdemo.c
-	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
-
-newtest: $(demodir)/newtest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 ptest: $(demodir)/ptest.c
@@ -126,3 +101,5 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h
 
 tuidemo.o: $(demodir)/tuidemo.c
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tuidemo.c
+
+include $(demodir)/nctests.mif

@@ -1,8 +1,9 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcsdl.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 /*man-start**************************************************************
 
@@ -19,11 +20,10 @@ clipboard
 ### Description
 
    PDC_getclipboard() gets the textual contents of the system's
-   clipboard. This function returns the contents of the clipboard
-   in the contents argument. It is the responsibilitiy of the
-   caller to free the memory returned, via PDC_freeclipboard().
-   The length of the clipboard contents is returned in the length
-   argument.
+   clipboard. This function returns the contents of the clipboard in the
+   contents argument. It is the responsibility of the caller to free the
+   memory returned, via PDC_freeclipboard(). The length of the clipboard
+   contents is returned in the length argument.
 
    PDC_setclipboard copies the supplied text into the system's
    clipboard, emptying the clipboard prior to the copy.
@@ -40,7 +40,7 @@ clipboard
    PDC_CLIP_ACCESS_ERROR   no clipboard support
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     PDC_getclipboard            -       -       -
     PDC_setclipboard            -       -       -
     PDC_freeclipboard           -       -       -
@@ -121,7 +121,7 @@ int PDC_clearclipboard(void)
 {
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-    if (pdc_SDL_clipboard) 
+    if (pdc_SDL_clipboard)
     {
         free(pdc_SDL_clipboard);
         pdc_SDL_clipboard = NULL;

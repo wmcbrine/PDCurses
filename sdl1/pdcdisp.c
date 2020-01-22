@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcsdl.h"
 
@@ -17,8 +17,6 @@
 
 #endif
 
-Uint32 pdc_lastupdate = 0;
-
 #define MAXRECT 200     /* maximum number of rects to queue up before
                            an update is forced; the number was chosen
                            arbitrarily */
@@ -27,6 +25,7 @@ static SDL_Rect uprect[MAXRECT];       /* table of rects to update */
 static chtype oldch = (chtype)(-1);    /* current attribute */
 static int rectcount = 0;              /* index into uprect */
 static short foregr = -2, backgr = -2; /* current foreground, background */
+static bool blinked_off = FALSE;
 
 /* do the real updates on a delay */
 
@@ -42,7 +41,6 @@ void PDC_update_rects(void)
         else
             SDL_UpdateRects(pdc_screen, rectcount, uprect);
 
-        pdc_lastupdate = SDL_GetTicks();
         rectcount = 0;
     }
 }
@@ -51,6 +49,16 @@ void PDC_update_rects(void)
 
 static void _set_attr(chtype ch)
 {
+    attr_t sysattrs = SP->termattrs;
+
+#ifdef PDC_WIDE
+    TTF_SetFontStyle(pdc_ttffont,
+        ( ((ch & A_BOLD) && (sysattrs & A_BOLD)) ?
+            TTF_STYLE_BOLD : 0) |
+        ( ((ch & A_ITALIC) && (sysattrs & A_ITALIC)) ?
+            TTF_STYLE_ITALIC : 0) );
+#endif
+
     ch &= (A_COLOR|A_BOLD|A_BLINK|A_REVERSE);
 
     if (oldch != ch)
@@ -62,8 +70,10 @@ static void _set_attr(chtype ch)
 
         pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
 
-        newfg |= (ch & A_BOLD) ? 8 : 0;
-        newbg |= (ch & A_BLINK) ? 8 : 0;
+        if ((ch & A_BOLD) && !(sysattrs & A_BOLD))
+            newfg |= 8;
+        if ((ch & A_BLINK) && !(sysattrs & A_BLINK))
+            newbg |= 8;
 
         if (ch & A_REVERSE)
         {
@@ -102,6 +112,116 @@ static void _set_attr(chtype ch)
     }
 }
 
+#ifdef PDC_WIDE
+
+/* Draw some of the ACS_* "graphics" */
+
+bool _grprint(chtype ch, SDL_Rect dest)
+{
+    Uint32 col = pdc_mapped[foregr];
+    int hmid = (pdc_fheight - pdc_fthick) >> 1;
+    int wmid = (pdc_fwidth - pdc_fthick) >> 1;
+
+    switch (ch)
+    {
+    case ACS_ULCORNER:
+        dest.h = pdc_fheight - hmid;
+        dest.y += hmid;
+        dest.w = pdc_fthick;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = pdc_fwidth - wmid;
+        goto S1;
+    case ACS_LLCORNER:
+        dest.h = hmid;
+        dest.w = pdc_fthick;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = pdc_fwidth - wmid;
+        dest.y += hmid;
+        goto S1;
+    case ACS_URCORNER:
+        dest.h = pdc_fheight - hmid;
+        dest.w = pdc_fthick;
+        dest.y += hmid;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = wmid;
+        dest.x -= wmid;
+        goto S1;
+    case ACS_LRCORNER:
+        dest.h = hmid + pdc_fthick;
+        dest.w = pdc_fthick;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = wmid;
+        dest.x -= wmid;
+        dest.y += hmid;
+        goto S1;
+    case ACS_LTEE:
+        dest.h = pdc_fthick;
+        dest.w = pdc_fwidth - wmid;
+        dest.x += wmid;
+        dest.y += hmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = pdc_fthick;
+        dest.x -= wmid;
+        goto VLINE;
+    case ACS_RTEE:
+        dest.w = wmid;
+    case ACS_PLUS:
+        dest.h = pdc_fthick;
+        dest.y += hmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+    VLINE:
+        dest.h = pdc_fheight;
+        dest.y -= hmid;
+    case ACS_VLINE:
+        dest.w = pdc_fthick;
+        dest.x += wmid;
+        goto DRAW;
+    case ACS_TTEE:
+        dest.h = pdc_fheight - hmid;
+        dest.w = pdc_fthick;
+        dest.x += wmid;
+        dest.y += hmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = pdc_fwidth;
+        dest.x -= wmid;
+        goto S1;
+    case ACS_BTEE:
+        dest.h = hmid;
+        dest.w = pdc_fthick;
+        dest.x += wmid;
+        SDL_FillRect(pdc_screen, &dest, col);
+        dest.w = pdc_fwidth;
+        dest.x -= wmid;
+    case ACS_HLINE:
+        dest.y += hmid;
+        goto S1;
+    case ACS_S3:
+        dest.y += hmid >> 1;
+        goto S1;
+    case ACS_S7:
+        dest.y += hmid + (hmid >> 1);
+        goto S1;
+    case ACS_S9:
+        dest.y += pdc_fheight - pdc_fthick;
+    case ACS_S1:
+    S1:
+        dest.h = pdc_fthick;
+    case ACS_BLOCK:
+    DRAW:
+        SDL_FillRect(pdc_screen, &dest, col);
+        return TRUE;
+    default: ;
+    }
+
+    return FALSE;  /* didn't draw it -- fall back to acs_map */
+}
+
+#endif
+
 /* draw a cursor at (y, x) */
 
 void PDC_gotoyx(int row, int col)
@@ -115,9 +235,6 @@ void PDC_gotoyx(int row, int col)
 
     PDC_LOG(("PDC_gotoyx() - called: row %d col %d from row %d col %d\n",
              row, col, SP->cursrow, SP->curscol));
-
-    if (SP->mono)
-        return;
 
     oldrow = SP->cursrow;
     oldcol = SP->curscol;
@@ -137,33 +254,43 @@ void PDC_gotoyx(int row, int col)
 
     _set_attr(ch);
 
-#ifdef CHTYPE_LONG
-    if (ch & A_ALTCHARSET && !(ch & 0xff80))
-        ch = acs_map[ch & 0x7f];
-#endif
     src.h = (SP->visibility == 1) ? pdc_fheight >> 2 : pdc_fheight;
     src.w = pdc_fwidth;
 
     dest.y = (row + 1) * pdc_fheight - src.h + pdc_yoffset;
     dest.x = col * pdc_fwidth + pdc_xoffset;
+    dest.h = src.h;
+    dest.w = src.w;
 
 #ifdef PDC_WIDE
-    chstr[0] = ch & A_CHARTEXT;
+    SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
 
-    pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr, pdc_color[foregr]);
-    if (pdc_font)
+    if (!(SP->visibility == 2 && (ch & A_ALTCHARSET && !(ch & 0xff80)) &&
+        _grprint(ch & (0x7f | A_ALTCHARSET), dest)))
     {
-        dest.h = src.h;
-        dest.w = src.w;
-        src.x = 0;
-        src.y = 0;
-        SDL_SetColorKey(pdc_font, 0, 0);
-        SDL_SetPalette(pdc_font, SDL_LOGPAL, pdc_color + backgr, 0, 1);
-        SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
-        SDL_FreeSurface(pdc_font);
-        pdc_font = NULL;
+        if (ch & A_ALTCHARSET && !(ch & 0xff80))
+            ch = acs_map[ch & 0x7f];
+
+        chstr[0] = ch & A_CHARTEXT;
+
+        pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr,
+                                             pdc_color[foregr]);
+        if (pdc_font)
+        {
+            int center = pdc_fwidth > pdc_font->w ?
+                        (pdc_fwidth - pdc_font->w) >> 1 : 0;
+            src.x = 0;
+            src.y = pdc_fheight - src.h;
+            dest.x += center;
+            SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+            dest.x -= center;
+            SDL_FreeSurface(pdc_font);
+            pdc_font = NULL;
+        }
     }
 #else
+    if (ch & A_ALTCHARSET && !(ch & 0xff80))
+        ch = acs_map[ch & 0x7f];
 
     src.x = (ch & 0xff) % 32 * pdc_fwidth;
     src.y = (ch & 0xff) / 32 * pdc_fheight + (pdc_fheight - src.h);
@@ -180,122 +307,24 @@ void PDC_gotoyx(int row, int col)
     }
 }
 
-/* handle the A_*LINE attributes */
-
-static void _highlight(SDL_Rect *src, SDL_Rect *dest, chtype ch)
-{
-    short col = SP->line_color;
-#ifdef PDC_WIDE
-    Uint16 chstr[2] = {'_', 0};
-#endif
-
-    if (SP->mono)
-        return;
-
-    if (ch & (A_UNDERLINE | A_OVERLINE | A_STRIKEOUT))
-    {
-#ifdef PDC_WIDE
-        if (col == -1)
-            col = foregr;
-
-        pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr, pdc_color[col]);
-        if (pdc_font)
-        {
-           src->x = 0;
-           src->y = 0;
-
-           if (backgr != -1)
-               SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
-
-           if( ch & A_UNDERLINE)
-                SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-           if( ch & A_OVERLINE)
-           {
-                dest->y -= pdc_fheight - 1;
-                SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-                dest->y += pdc_fheight - 1;
-           }
-           if( ch & A_STRIKEOUT)
-           {
-                dest->y -= pdc_fheight / 2;
-                SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-                dest->y += pdc_fheight / 2;
-           }
-           SDL_FreeSurface(pdc_font);
-           pdc_font = NULL;
-        }
-#else
-        if (col != -1)
-            SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                           pdc_color + col, pdc_flastc, 1);
-
-        src->x = '_' % 32 * pdc_fwidth;
-        src->y = '_' / 32 * pdc_fheight;
-
-        if (backgr != -1)
-            SDL_SetColorKey(pdc_font, SDL_SRCCOLORKEY, 0);
-
-        if( ch & A_UNDERLINE)
-            SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-        if( ch & A_OVERLINE)
-        {
-           dest->y -= pdc_fheight - 1;
-           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-           dest->y += pdc_fheight - 1;
-        }
-        if( ch & A_STRIKEOUT)
-        {
-           dest->y -= pdc_fheight / 2;
-           SDL_BlitSurface(pdc_font, src, pdc_screen, dest);
-           dest->y += pdc_fheight / 2;
-        }
-
-        if (backgr != -1)
-            SDL_SetColorKey(pdc_font, 0, 0);
-
-        if (col != -1)
-            SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                           pdc_color + foregr, pdc_flastc, 1);
-#endif
-    }
-
-    if (ch & (A_LEFTLINE|A_RIGHTLINE))
-    {
-        if (col == -1)
-            col = foregr;
-
-        dest->w = 1;
-
-        if (ch & A_LEFTLINE)
-            SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
-
-        if (ch & A_RIGHTLINE)
-        {
-            dest->x += pdc_fwidth - 1;
-            SDL_FillRect(pdc_screen, dest, pdc_mapped[col]);
-            dest->x -= pdc_fwidth - 1;
-        }
-
-        dest->w = pdc_fwidth;
-    }
-}
-
-/* update the given physical line to look like the corresponding line in
-   curscr */
-
-void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
     SDL_Rect src, dest, lastrect;
     int j;
 #ifdef PDC_WIDE
     Uint16 chstr[2] = {0, 0};
 #endif
-
-    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
+    attr_t sysattrs = SP->termattrs;
+    short hcol = SP->line_color;
+    bool blink = blinked_off && (attr & A_BLINK) && (sysattrs & A_BLINK);
 
     if (rectcount == MAXRECT)
         PDC_update_rects();
 
+#ifdef PDC_WIDE
+    src.x = 0;
+    src.y = 0;
+#endif
     src.h = pdc_fheight;
     src.w = pdc_fwidth;
 
@@ -322,41 +351,63 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     else
         uprect[rectcount++] = dest;
 
-    dest.w = pdc_fwidth;
+    _set_attr(attr);
 
+    if (backgr == -1)
+        SDL_LowerBlit(pdc_tileback, &dest, pdc_screen, &dest);
 #ifdef PDC_WIDE
-    src.x = 0;
-    src.y = 0;
+    else
+        SDL_FillRect(pdc_screen, &dest, pdc_mapped[backgr]);
 #endif
+
+    if (hcol == -1)
+        hcol = foregr;
 
     for (j = 0; j < len; j++)
     {
         chtype ch = srcp[j];
 
-        _set_attr(ch);
-#ifdef CHTYPE_LONG
+        if (blink)
+            ch = ' ';
+
+        dest.w = pdc_fwidth;
+
         if (ch & A_ALTCHARSET && !(ch & 0xff80))
-            ch = (ch & (A_ATTRIBUTES ^ A_ALTCHARSET)) | acs_map[ch & 0x7f];
+        {
+#ifdef PDC_WIDE
+            if (_grprint(ch & (0x7f | A_ALTCHARSET), dest))
+            {
+                dest.x += pdc_fwidth;
+                continue;
+            }
 #endif
-        if (backgr == -1)
-            SDL_LowerBlit(pdc_tileback, &dest, pdc_screen, &dest);
+            ch = acs_map[ch & 0x7f];
+        }
 
 #ifdef PDC_WIDE
-        chstr[0] = ch & A_CHARTEXT;
-        pdc_font = TTF_RenderUNICODE_Solid(pdc_ttffont, chstr,
-                                           pdc_color[foregr]);
+        ch &= A_CHARTEXT;
 
-        if (pdc_font)
+        if (ch != ' ')
         {
-            if (backgr != -1)
+            if (chstr[0] != ch)
             {
-                SDL_SetColorKey(pdc_font, 0, 0);
-                SDL_SetPalette(pdc_font, SDL_LOGPAL,
-                               pdc_color + backgr, 0, 1);
+                chstr[0] = ch;
+
+                if (pdc_font)
+                    SDL_FreeSurface(pdc_font);
+
+                pdc_font = TTF_RenderUNICODE_Blended(pdc_ttffont, chstr,
+                                                     pdc_color[foregr]);
             }
-            SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
-            SDL_FreeSurface(pdc_font);
-            pdc_font = NULL;
+
+            if (pdc_font)
+            {
+                int center = pdc_fwidth > pdc_font->w ?
+                    (pdc_fwidth - pdc_font->w) >> 1 : 0;
+                dest.x += center;
+                SDL_BlitSurface(pdc_font, &src, pdc_screen, &dest);
+                dest.x -= center;
+            }
         }
 #else
         src.x = (ch & 0xff) % 32 * pdc_fwidth;
@@ -365,13 +416,120 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         SDL_LowerBlit(pdc_font, &src, pdc_screen, &dest);
 #endif
 
-        if (ch & (A_UNDERLINE|A_LEFTLINE|A_RIGHTLINE|A_OVERLINE|A_STRIKEOUT))
-            _highlight(&src, &dest, ch);
+        if (!blink && (attr & (A_LEFT | A_RIGHT)))
+        {
+            dest.w = pdc_fthick;
+
+            if (attr & A_LEFT)
+                SDL_FillRect(pdc_screen, &dest, pdc_mapped[hcol]);
+
+            if (attr & A_RIGHT)
+            {
+                dest.x += pdc_fwidth - pdc_fthick;
+                SDL_FillRect(pdc_screen, &dest, pdc_mapped[hcol]);
+                dest.x -= pdc_fwidth - pdc_fthick;
+            }
+        }
 
         dest.x += pdc_fwidth;
     }
+
+#ifdef PDC_WIDE
+    if (pdc_font)
+    {
+        SDL_FreeSurface(pdc_font);
+        pdc_font = NULL;
+    }
+#endif
+
+    if (!blink && (attr & A_UNDERLINE))
+    {
+        dest.y += pdc_fheight - pdc_fthick;
+        dest.x = pdc_fwidth * x + pdc_xoffset;
+        dest.h = pdc_fthick;
+        dest.w = pdc_fwidth * len;
+
+        SDL_FillRect(pdc_screen, &dest, pdc_mapped[hcol]);
+    }
+}
+
+/* update the given physical line to look like the corresponding line in
+   curscr */
+
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+{
+    attr_t old_attr, attr;
+    int i, j;
+
+    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
+
+    old_attr = *srcp & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+    for (i = 1, j = 1; j < len; i++, j++)
+    {
+        attr = srcp[i] & (A_ATTRIBUTES ^ A_ALTCHARSET);
+
+        if (attr != old_attr)
+        {
+            _new_packet(old_attr, lineno, x, i, srcp);
+            old_attr = attr;
+            srcp += i;
+            x += i;
+            i = 0;
+        }
+    }
+
+    _new_packet(old_attr, lineno, x, i, srcp);
+}
+
+static Uint32 _blink_timer(Uint32 interval, void *param)
+{
+    SDL_Event event;
+
+    event.type = SDL_USEREVENT;
+    SDL_PushEvent(&event);
+    return(interval);
+}
+
+void PDC_blink_text(void)
+{
+    static SDL_TimerID blinker_id = 0;
+    int i, j, k;
+
+    oldch = (chtype)(-1);
+
+    if (!(SP->termattrs & A_BLINK))
+    {
+        SDL_RemoveTimer(blinker_id);
+        blinker_id = 0;
+    }
+    else if (!blinker_id)
+    {
+        blinker_id = SDL_AddTimer(500, _blink_timer, NULL);
+        blinked_off = TRUE;
+    }
+
+    blinked_off = !blinked_off;
+
+    for (i = 0; i < SP->lines; i++)
+    {
+        const chtype *srcp = curscr->_y[i];
+
+        for (j = 0; j < SP->cols; j++)
+            if (srcp[j] & A_BLINK)
+            {
+                k = j;
+                while (k < SP->cols && (srcp[k] & A_BLINK))
+                    k++;
+                PDC_transform_line(i, j, k - j, srcp + j);
+                j = k;
+            }
+    }
+
+    oldch = (chtype)(-1);
 }
 
 void PDC_doupdate(void)
 {
+    PDC_napms(1);
 }

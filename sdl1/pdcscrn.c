@@ -1,40 +1,31 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcsdl.h"
 
 #include <stdlib.h>
 #ifndef PDC_WIDE
-#include "deffont.h"
+#include "../common/font437.h"
 #endif
-#include "deficon.h"
+#include "../common/iconbmp.h"
 
 #ifdef PDC_WIDE
 # ifndef PDC_FONT_PATH
-#  ifdef _WIN32
-#define PDC_FONT_PATH "C:/Windows/Fonts/lucon.ttf"
-#  elif defined(__APPLE__)
-#define PDC_FONT_PATH "/Library/Fonts/Courier New.ttf"
-#  else
-#define PDC_FONT_PATH "/usr/share/fonts/truetype/freefont/FreeMono.ttf"
-#  endif
+#  define PDC_FONT_PATH "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 # endif
 TTF_Font *pdc_ttffont = NULL;
-int pdc_font_size = 18;
+int pdc_font_size = 17;
 #endif
 
 SDL_Surface *pdc_screen = NULL, *pdc_font = NULL, *pdc_icon = NULL,
             *pdc_back = NULL, *pdc_tileback = NULL;
 int pdc_sheight = 0, pdc_swidth = 0, pdc_yoffset = 0, pdc_xoffset = 0;
 
-SDL_Color pdc_color[256];
-Uint32 pdc_mapped[256];
-int pdc_fheight, pdc_fwidth, pdc_flastc;
+SDL_Color pdc_color[PDC_MAXCOL];
+Uint32 pdc_mapped[PDC_MAXCOL];
+int pdc_fheight, pdc_fwidth, pdc_fthick, pdc_flastc;
 bool pdc_own_screen;
 
-/* special purpose function keys */
-static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 0, 0, 0, 0 };
-
-/* COLOR_PAIR to attribute encoding table. */
+static int max_height, max_width;
 
 static void _clean(void)
 {
@@ -92,24 +83,48 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    if (SP)
-        free(SP);
 }
 
-static int default_pdc_swidth = 80, default_pdc_sheight = 25;
-
-/* open the physical screen -- allocate SP, miscellaneous intialization */
-
-int PDC_scr_open(void)
+static void _initialize_colors(void)
 {
     int i, r, g, b;
 
+    for (i = 0; i < 8; i++)
+    {
+        pdc_color[i].r = (i & COLOR_RED) ? 0xc0 : 0;
+        pdc_color[i].g = (i & COLOR_GREEN) ? 0xc0 : 0;
+        pdc_color[i].b = (i & COLOR_BLUE) ? 0xc0 : 0;
+
+        pdc_color[i + 8].r = (i & COLOR_RED) ? 0xff : 0x40;
+        pdc_color[i + 8].g = (i & COLOR_GREEN) ? 0xff : 0x40;
+        pdc_color[i + 8].b = (i & COLOR_BLUE) ? 0xff : 0x40;
+    }
+
+    /* 256-color xterm extended palette: 216 colors in a 6x6x6 color
+       cube, plus 24 shades of gray */
+
+    for (i = 16, r = 0; r < 6; r++)
+        for (g = 0; g < 6; g++)
+            for (b = 0; b < 6; b++, i++)
+            {
+                pdc_color[i].r = (r ? r * 40 + 55 : 0);
+                pdc_color[i].g = (g ? g * 40 + 55 : 0);
+                pdc_color[i].b = (b ? b * 40 + 55 : 0);
+            }
+
+    for (i = 232; i < 256; i++)
+        pdc_color[i].r = pdc_color[i].g = pdc_color[i].b = (i - 232) * 10 + 8;
+
+    for (i = 0; i < 256; i++)
+        pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
+                                   pdc_color[i].g, pdc_color[i].b);
+}
+
+/* open the physical screen -- miscellaneous initialization */
+
+int PDC_scr_open(void)
+{
     PDC_LOG(("PDC_scr_open() - called\n"));
-
-    SP = calloc(1, sizeof(SCREEN));
-
-    if (!SP)
-        return ERR;
 
     pdc_own_screen = !pdc_screen;
 
@@ -164,7 +179,7 @@ int PDC_scr_open(void)
     }
 
     if (!pdc_font)
-        pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(deffont, sizeof(deffont)), 0);
+        pdc_font = SDL_LoadBMP_RW(SDL_RWFromMem(font437, sizeof(font437)), 0);
 
     if (!pdc_font)
     {
@@ -192,9 +207,11 @@ int PDC_scr_open(void)
 
 #ifdef PDC_WIDE
     TTF_SizeText(pdc_ttffont, "W", &pdc_fwidth, &pdc_fheight);
+    pdc_fthick = pdc_font_size / 20 + 1;
 #else
     pdc_fheight = pdc_font->h / 8;
     pdc_fwidth = pdc_font->w / 32;
+    pdc_fthick = 1;
 
     if (!SP->mono)
         pdc_flastc = pdc_font->format->palette->ncolors - 1;
@@ -206,8 +223,8 @@ int PDC_scr_open(void)
         pdc_icon = SDL_LoadBMP(iname ? iname : "pdcicon.bmp");
 
         if (!pdc_icon)
-            pdc_icon = SDL_LoadBMP_RW(SDL_RWFromMem(deficon,
-                                                    sizeof(deficon)), 0);
+            pdc_icon = SDL_LoadBMP_RW(SDL_RWFromMem(iconbmp,
+                                                    sizeof(iconbmp)), 0);
 
         if (pdc_icon)
             SDL_WM_SetIcon(pdc_icon, NULL);
@@ -215,11 +232,15 @@ int PDC_scr_open(void)
 
     if (pdc_own_screen)
     {
+        const SDL_VideoInfo *info = SDL_GetVideoInfo();
+        max_height = info->current_h;
+        max_width = info->current_w;
+
         const char *env = getenv("PDC_LINES");
-        pdc_sheight = (env ? atoi(env) : default_pdc_sheight) * pdc_fheight;
+        pdc_sheight = (env ? atoi(env) : 25) * pdc_fheight;
 
         env = getenv("PDC_COLS");
-        pdc_swidth = (env ? atoi(env) : default_pdc_swidth) * pdc_fwidth;
+        pdc_swidth = (env ? atoi(env) : 80) * pdc_fwidth;
 
         pdc_screen = SDL_SetVideoMode(pdc_swidth, pdc_sheight, 0,
             SDL_SWSURFACE|SDL_ANYFORMAT|SDL_RESIZABLE);
@@ -242,44 +263,14 @@ int PDC_scr_open(void)
     if (SP->orig_attr)
         PDC_retile();
 
-    COLORS = 256;       /* we have 256 colors in this flavor of PDCurses */
-    for (i = 0; i < 8; i++)
-    {
-        pdc_color[i].r = (i & COLOR_RED) ? 0xc0 : 0;
-        pdc_color[i].g = (i & COLOR_GREEN) ? 0xc0 : 0;
-        pdc_color[i].b = (i & COLOR_BLUE) ? 0xc0 : 0;
-
-        pdc_color[i + 8].r = (i & COLOR_RED) ? 0xff : 0x40;
-        pdc_color[i + 8].g = (i & COLOR_GREEN) ? 0xff : 0x40;
-        pdc_color[i + 8].b = (i & COLOR_BLUE) ? 0xff : 0x40;
-    }
-
-           /* 256-color xterm extended palette:  216 colors in a
-            6x6x6 color cube,  plus 24 (not 50) shades of gray */
-    i = 16;
-    for( r = 0; r < 6; r++)
-        for( g = 0; g < 6; g++)
-            for( b = 0; b < 6; b++, i++)
-            {
-                pdc_color[i].r = ( r ? r * 40 + 55 : 0);
-                pdc_color[i].g = ( g ? g * 40 + 55 : 0);
-                pdc_color[i].b = ( b ? b * 40 + 55 : 0);
-            }
-    for( i = 232; i < 256; i++)
-        pdc_color[i].r = pdc_color[i].g = pdc_color[i].b = (i - 232) * 10 + 8;
-    for (i = 0; i < 256; i++)
-        pdc_mapped[i] = SDL_MapRGB(pdc_screen->format, pdc_color[i].r,
-                                   pdc_color[i].g, pdc_color[i].b);
+    _initialize_colors();
 
     SDL_EnableUNICODE(1);
 
     PDC_mouse_set();
 
-/*  if (pdc_own_screen)
-        PDC_set_title(argc ? argv[0] : "PDCurses");
-*/
-    SP->lines = PDC_get_rows();
-    SP->cols = PDC_get_columns();
+    if (pdc_own_screen)
+        PDC_set_title("PDCurses");
 
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = FALSE;
@@ -298,19 +289,16 @@ int PDC_scr_open(void)
 
 int PDC_resize_screen(int nlines, int ncols)
 {
-    if( !stdscr)      /* window hasn't been created yet;  we're */
-    {                 /* specifying its size before doing so    */
-        default_pdc_swidth = ncols;
-        default_pdc_sheight = nlines;
-        return OK;
-    }
-
     if (!pdc_own_screen)
         return ERR;
 
     if (nlines && ncols)
     {
+        while (nlines * pdc_fheight > max_height)
+            nlines--;
         pdc_sheight = nlines * pdc_fheight;
+        while (ncols * pdc_fwidth > max_width)
+            ncols--;
         pdc_swidth = ncols * pdc_fwidth;
     }
 
@@ -321,9 +309,6 @@ int PDC_resize_screen(int nlines, int ncols)
 
     if (pdc_tileback)
         PDC_retile();
-
-    SP->resized = FALSE;
-    SP->cursrow = SP->curscol = 0;
 
     return OK;
 }
@@ -375,29 +360,5 @@ int PDC_init_color(short color, short red, short green, short blue)
     pdc_mapped[color] = SDL_MapRGB(pdc_screen->format, pdc_color[color].r,
                                    pdc_color[color].g, pdc_color[color].b);
 
-    wrefresh(curscr);
-
     return OK;
-}
-
-/* Does nothing in the SDL flavors of PDCurses.  That may change,  eventually,
-allowing one to limit the range of user-resizable windows.  See X11 or Win32a
-versions of this function for details. */
-
-void PDC_set_resize_limits( const int new_min_lines, const int new_max_lines,
-                  const int new_min_cols, const int new_max_cols)
-{
-}
-
-/* PDC_set_function_key() does nothing on this platform */
-int PDC_set_function_key( const unsigned function, const int new_key)
-{
-    int old_key = -1;
-
-    if( function < PDC_MAX_FUNCTION_KEYS)
-    {
-         old_key = PDC_shutdown_key[function];
-         PDC_shutdown_key[function] = new_key;
-    }
-    return( old_key);
 }

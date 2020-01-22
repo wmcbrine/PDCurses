@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcsdl.h"
 
@@ -18,58 +18,58 @@ static struct
     unsigned short alt;
 } key_table[] =
 {
-/* keycode   keypad   normal        shifted      control   alt*/
- {SDLK_LEFT,   FALSE,   KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,   ALT_LEFT},
- {SDLK_RIGHT,   FALSE,   KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,   ALT_RIGHT},
- {SDLK_UP,   FALSE,   KEY_UP,      KEY_SUP,      CTL_UP,   ALT_UP},
- {SDLK_DOWN,   FALSE,   KEY_DOWN,    KEY_SDOWN,    CTL_DOWN,   ALT_DOWN},
- {SDLK_HOME,   FALSE,   KEY_HOME,    KEY_SHOME,    CTL_HOME,   ALT_HOME},
- {SDLK_END,   FALSE,   KEY_END,     KEY_SEND,      CTL_END,   ALT_END},
- {SDLK_PAGEUP,   FALSE,   KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,   ALT_PGUP},
- {SDLK_PAGEDOWN,FALSE,   KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,   ALT_PGDN},
- {SDLK_INSERT,   FALSE,   KEY_IC,      KEY_SIC,      CTL_INS,   ALT_INS},
- {SDLK_DELETE,   FALSE,   KEY_DC,      KEY_SDC,      CTL_DEL,   ALT_DEL},
- {SDLK_F1,   FALSE,   KEY_F(1),    KEY_F(13),    KEY_F(25),   KEY_F(37)},
- {SDLK_F2,   FALSE,   KEY_F(2),    KEY_F(14),    KEY_F(26),   KEY_F(38)},
- {SDLK_F3,   FALSE,   KEY_F(3),    KEY_F(15),    KEY_F(27),   KEY_F(39)},
- {SDLK_F4,   FALSE,   KEY_F(4),    KEY_F(16),    KEY_F(28),   KEY_F(40)},
- {SDLK_F5,   FALSE,   KEY_F(5),    KEY_F(17),    KEY_F(29),   KEY_F(41)},
- {SDLK_F6,   FALSE,   KEY_F(6),    KEY_F(18),    KEY_F(30),   KEY_F(42)},
- {SDLK_F7,   FALSE,   KEY_F(7),    KEY_F(19),    KEY_F(31),   KEY_F(43)},
- {SDLK_F8,   FALSE,   KEY_F(8),    KEY_F(20),    KEY_F(32),   KEY_F(44)},
- {SDLK_F9,   FALSE,   KEY_F(9),    KEY_F(21),    KEY_F(33),   KEY_F(45)},
- {SDLK_F10,   FALSE,   KEY_F(10),   KEY_F(22),    KEY_F(34),   KEY_F(46)},
- {SDLK_F11,   FALSE,   KEY_F(11),   KEY_F(23),    KEY_F(35),   KEY_F(47)},
- {SDLK_F12,   FALSE,   KEY_F(12),   KEY_F(24),    KEY_F(36),   KEY_F(48)},
- {SDLK_F13,   FALSE,   KEY_F(13),   KEY_F(25),    KEY_F(37),   KEY_F(49)},
- {SDLK_F14,   FALSE,   KEY_F(14),   KEY_F(26),    KEY_F(38),   KEY_F(50)},
- {SDLK_F15,   FALSE,   KEY_F(15),   KEY_F(27),    KEY_F(39),   KEY_F(51)},
- {SDLK_BACKSPACE,FALSE,   0x08,        0x08,      CTL_BKSP,   ALT_BKSP},
- {SDLK_TAB,   FALSE,   0x09,        KEY_BTAB,      CTL_TAB,   ALT_TAB},
- {SDLK_PRINT,   FALSE,   KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,   KEY_PRINT},
- {SDLK_PAUSE,   FALSE,   KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
- {SDLK_CLEAR,   FALSE,   KEY_CLEAR,   KEY_CLEAR,    KEY_CLEAR,   KEY_CLEAR},
- {SDLK_BREAK,   FALSE,   KEY_BREAK,   KEY_BREAK,    KEY_BREAK,   KEY_BREAK},
- {SDLK_HELP,   FALSE,   KEY_HELP,    KEY_SHELP,    KEY_LHELP,   KEY_HELP},
- {SDLK_MENU,   FALSE,   KEY_OPTIONS, KEY_SOPTIONS, KEY_OPTIONS, KEY_OPTIONS},
- {SDLK_ESCAPE,   FALSE,   0x1B,        0x1B,      0x1B,   ALT_ESC},
- {SDLK_KP_ENTER,TRUE,   PADENTER,    PADENTER,      CTL_PADENTER,ALT_PADENTER},
- {SDLK_KP_PLUS,   TRUE,   PADPLUS,     '+',      CTL_PADPLUS, ALT_PADPLUS},
- {SDLK_KP_MINUS,TRUE,   PADMINUS,    '-',      CTL_PADMINUS,ALT_PADMINUS},
- {SDLK_KP_MULTIPLY,TRUE,PADSTAR,     '*',      CTL_PADSTAR, ALT_PADSTAR},
- {SDLK_KP_DIVIDE,TRUE,   PADSLASH,    '/',      CTL_PADSLASH,ALT_PADSLASH},
- {SDLK_KP_PERIOD,TRUE,   PADSTOP,     '.',      CTL_PADSTOP, ALT_PADSTOP},
- {SDLK_KP0,   TRUE,   PAD0,        '0',      CTL_PAD0,   ALT_PAD0},
- {SDLK_KP1,   TRUE,   KEY_C1,      '1',      CTL_PAD1,   ALT_PAD1},
- {SDLK_KP2,   TRUE,   KEY_C2,      '2',      CTL_PAD2,   ALT_PAD2},
- {SDLK_KP3,   TRUE,   KEY_C3,      '3',      CTL_PAD3,   ALT_PAD3},
- {SDLK_KP4,   TRUE,   KEY_B1,      '4',      CTL_PAD4,   ALT_PAD4},
- {SDLK_KP5,   TRUE,   KEY_B2,      '5',      CTL_PAD5,   ALT_PAD5},
- {SDLK_KP6,   TRUE,   KEY_B3,      '6',      CTL_PAD6,   ALT_PAD6},
- {SDLK_KP7,   TRUE,   KEY_A1,      '7',      CTL_PAD7,   ALT_PAD7},
- {SDLK_KP8,   TRUE,   KEY_A2,      '8',      CTL_PAD8,   ALT_PAD8},
- {SDLK_KP9,   TRUE,   KEY_A3,      '9',      CTL_PAD9,   ALT_PAD9},
- {0,      0,   0,        0,         0,      0}
+/* keycode	keypad	normal	     shifted	   control	alt*/
+ {SDLK_LEFT,	FALSE,	KEY_LEFT,    KEY_SLEFT,    CTL_LEFT,	ALT_LEFT},
+ {SDLK_RIGHT,	FALSE,	KEY_RIGHT,   KEY_SRIGHT,   CTL_RIGHT,	ALT_RIGHT},
+ {SDLK_UP,	FALSE,	KEY_UP,      KEY_SUP,	   CTL_UP,	ALT_UP},
+ {SDLK_DOWN,	FALSE,	KEY_DOWN,    KEY_SDOWN,    CTL_DOWN,	ALT_DOWN},
+ {SDLK_HOME,	FALSE,	KEY_HOME,    KEY_SHOME,    CTL_HOME,	ALT_HOME},
+ {SDLK_END,	FALSE,	KEY_END,     KEY_SEND,	   CTL_END,	ALT_END},
+ {SDLK_PAGEUP,	FALSE,	KEY_PPAGE,   KEY_SPREVIOUS,CTL_PGUP,	ALT_PGUP},
+ {SDLK_PAGEDOWN,FALSE,	KEY_NPAGE,   KEY_SNEXT,    CTL_PGDN,	ALT_PGDN},
+ {SDLK_INSERT,	FALSE,	KEY_IC,      KEY_SIC,	   CTL_INS,	ALT_INS},
+ {SDLK_DELETE,	FALSE,	KEY_DC,      KEY_SDC,	   CTL_DEL,	ALT_DEL},
+ {SDLK_F1,	FALSE,	KEY_F(1),    KEY_F(13),    KEY_F(25),	KEY_F(37)},
+ {SDLK_F2,	FALSE,	KEY_F(2),    KEY_F(14),    KEY_F(26),	KEY_F(38)},
+ {SDLK_F3,	FALSE,	KEY_F(3),    KEY_F(15),    KEY_F(27),	KEY_F(39)},
+ {SDLK_F4,	FALSE,	KEY_F(4),    KEY_F(16),    KEY_F(28),	KEY_F(40)},
+ {SDLK_F5,	FALSE,	KEY_F(5),    KEY_F(17),    KEY_F(29),	KEY_F(41)},
+ {SDLK_F6,	FALSE,	KEY_F(6),    KEY_F(18),    KEY_F(30),	KEY_F(42)},
+ {SDLK_F7,	FALSE,	KEY_F(7),    KEY_F(19),    KEY_F(31),	KEY_F(43)},
+ {SDLK_F8,	FALSE,	KEY_F(8),    KEY_F(20),    KEY_F(32),	KEY_F(44)},
+ {SDLK_F9,	FALSE,	KEY_F(9),    KEY_F(21),    KEY_F(33),	KEY_F(45)},
+ {SDLK_F10,	FALSE,	KEY_F(10),   KEY_F(22),    KEY_F(34),	KEY_F(46)},
+ {SDLK_F11,	FALSE,	KEY_F(11),   KEY_F(23),    KEY_F(35),	KEY_F(47)},
+ {SDLK_F12,	FALSE,	KEY_F(12),   KEY_F(24),    KEY_F(36),	KEY_F(48)},
+ {SDLK_F13,	FALSE,	KEY_F(13),   KEY_F(25),    KEY_F(37),	KEY_F(49)},
+ {SDLK_F14,	FALSE,	KEY_F(14),   KEY_F(26),    KEY_F(38),	KEY_F(50)},
+ {SDLK_F15,	FALSE,	KEY_F(15),   KEY_F(27),    KEY_F(39),	KEY_F(51)},
+ {SDLK_BACKSPACE,FALSE,	0x08,        0x08,	   CTL_BKSP,	ALT_BKSP},
+ {SDLK_TAB,	FALSE,	0x09,        KEY_BTAB,	   CTL_TAB,	ALT_TAB},
+ {SDLK_PRINT,	FALSE,	KEY_PRINT,   KEY_SPRINT,   KEY_PRINT,	KEY_PRINT},
+ {SDLK_PAUSE,	FALSE,	KEY_SUSPEND, KEY_SSUSPEND, KEY_SUSPEND, KEY_SUSPEND},
+ {SDLK_CLEAR,	FALSE,	KEY_CLEAR,   KEY_CLEAR,    KEY_CLEAR,	KEY_CLEAR},
+ {SDLK_BREAK,	FALSE,	KEY_BREAK,   KEY_BREAK,    KEY_BREAK,	KEY_BREAK},
+ {SDLK_HELP,	FALSE,	KEY_HELP,    KEY_SHELP,    KEY_LHELP,	KEY_HELP},
+ {SDLK_MENU,	FALSE,	KEY_OPTIONS, KEY_SOPTIONS, KEY_OPTIONS, KEY_OPTIONS},
+ {SDLK_ESCAPE,	FALSE,	0x1B,        0x1B,	   0x1B,	ALT_ESC},
+ {SDLK_KP_ENTER,TRUE,	PADENTER,    PADENTER,	   CTL_PADENTER,ALT_PADENTER},
+ {SDLK_KP_PLUS,	TRUE,	PADPLUS,     '+',	   CTL_PADPLUS, ALT_PADPLUS},
+ {SDLK_KP_MINUS,TRUE,	PADMINUS,    '-',	   CTL_PADMINUS,ALT_PADMINUS},
+ {SDLK_KP_MULTIPLY,TRUE,PADSTAR,     '*',	   CTL_PADSTAR, ALT_PADSTAR},
+ {SDLK_KP_DIVIDE,TRUE,	PADSLASH,    '/',	   CTL_PADSLASH,ALT_PADSLASH},
+ {SDLK_KP_PERIOD,TRUE,	PADSTOP,     '.',	   CTL_PADSTOP, ALT_PADSTOP},
+ {SDLK_KP0,	TRUE,	PAD0,	     '0',	   CTL_PAD0,	ALT_PAD0},
+ {SDLK_KP1,	TRUE,	KEY_C1,      '1',	   CTL_PAD1,	ALT_PAD1},
+ {SDLK_KP2,	TRUE,	KEY_C2,      '2',	   CTL_PAD2,	ALT_PAD2},
+ {SDLK_KP3,	TRUE,	KEY_C3,      '3',	   CTL_PAD3,	ALT_PAD3},
+ {SDLK_KP4,	TRUE,	KEY_B1,      '4',	   CTL_PAD4,	ALT_PAD4},
+ {SDLK_KP5,	TRUE,	KEY_B2,      '5',	   CTL_PAD5,	ALT_PAD5},
+ {SDLK_KP6,	TRUE,	KEY_B3,      '6',	   CTL_PAD6,	ALT_PAD6},
+ {SDLK_KP7,	TRUE,	KEY_A1,      '7',	   CTL_PAD7,	ALT_PAD7},
+ {SDLK_KP8,	TRUE,	KEY_A2,      '8',	   CTL_PAD8,	ALT_PAD8},
+ {SDLK_KP9,	TRUE,	KEY_A3,      '9',	   CTL_PAD9,	ALT_PAD9},
+ {0,		0,	0,	     0,		   0,		0}
 };
 
 void PDC_set_keyboard_binary(bool on)
@@ -81,15 +81,7 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_key(void)
 {
-    Uint32 current = SDL_GetTicks();
     int haveevent = SDL_PollEvent(&event);
-
-    /* if we have an event, or 30 ms have passed without a screen
-       update, or the timer has wrapped, update now */
-
-    if (haveevent ||
-        current < pdc_lastupdate || ((current - pdc_lastupdate) > 30))
-        PDC_update_rects();
 
     return haveevent;
 }
@@ -105,6 +97,8 @@ static int _process_key_event(void)
     {
         if (SP->return_key_modifiers && event.key.keysym.sym == oldkey)
         {
+            SP->key_code = TRUE;
+
             switch (oldkey)
             {
             case SDLK_RSHIFT:
@@ -122,6 +116,8 @@ static int _process_key_event(void)
             default:
                 break;
             }
+
+            SP->key_code = FALSE;
         }
 
         return -1;
@@ -225,8 +221,8 @@ static int _process_mouse_event(void)
     {
         int i;
 
-        SP->mouse_status.x = event.motion.x / pdc_fwidth;
-        SP->mouse_status.y = event.motion.y / pdc_fheight;
+        SP->mouse_status.x = (event.motion.x - pdc_xoffset) / pdc_fwidth;
+        SP->mouse_status.y = (event.motion.y - pdc_yoffset) / pdc_fheight;
 
         if (!event.motion.state ||
            (SP->mouse_status.x == old_mouse_status.x &&
@@ -295,8 +291,8 @@ static int _process_mouse_event(void)
             }
         }
 
-        SP->mouse_status.x = event.button.x / pdc_fwidth;
-        SP->mouse_status.y = event.button.y / pdc_fheight;
+        SP->mouse_status.x = (event.button.x - pdc_xoffset) / pdc_fwidth;
+        SP->mouse_status.y = (event.button.y - pdc_yoffset) / pdc_fheight;
 
         btn--;
 
@@ -329,6 +325,7 @@ int PDC_get_key(void)
             if (!SP->resized)
             {
                 SP->resized = TRUE;
+                SP->key_code = TRUE;
                 return KEY_RESIZE;
             }
         }
@@ -338,13 +335,13 @@ int PDC_get_key(void)
     case SDL_MOUSEBUTTONUP:
     case SDL_MOUSEBUTTONDOWN:
         oldkey = SDLK_SPACE;
-        if (SP->_trap_mbe)
-            return _process_mouse_event();
-        break;
+        return _process_mouse_event();
     case SDL_KEYUP:
     case SDL_KEYDOWN:
         PDC_mouse_set();
         return _process_key_event();
+    case SDL_USEREVENT:
+        PDC_blink_text();
     }
 
     return -1;

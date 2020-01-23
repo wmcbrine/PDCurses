@@ -115,11 +115,7 @@ addch
    That can only happen with 64-bit chtype / cchar_t,  and it's only
    worth doing if we're going past 8-byte characters in the first place.
    So if PDC_WIDE is defined _and_ we're using 64-bit chtypes,  we're
-   using the combining character scheme : */
-
-#if defined( PDC_WIDE) && defined( CHTYPE_LONG) && CHTYPE_LONG >= 2
-   #define USING_COMBINING_CHARACTER_SCHEME
-#endif
+   using the combining character scheme.  See curses.h. */
 
 #ifdef USING_COMBINING_CHARACTER_SCHEME
 #include <stdlib.h>

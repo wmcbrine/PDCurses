@@ -22,11 +22,7 @@
 
 #include <curspriv.h>
 
-#ifdef CHTYPE_LONG
 # define PDC_ATTR_SHIFT 19
-#else
-# define PDC_ATTR_SHIFT 8
-#endif
 
 #ifdef __WATCOMC__
 # define PDCTHUNK(x) ((ptr_16)(x))

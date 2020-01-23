@@ -1173,7 +1173,7 @@ void acsTest(WINDOW *win)
         mvaddwstr(tmarg + 1, COLS / 8 - 5, fullwidth);
 
         mvaddwstr(tmarg + 1, 3 * (COLS / 8) - 5, combining_marks);
-#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
+#ifdef CHTYPE_64
         mvaddch( tmarg + 1, 7 * (COLS / 8) - 5, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
 

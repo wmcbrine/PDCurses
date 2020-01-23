@@ -32,8 +32,7 @@ const chtype MAX_UNICODE = 0x110000;
 
 /* see 'addch.c' for an explanation of how combining chars are handled. */
 
-#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2 && defined( PDC_WIDE)
-   #define USING_COMBINING_CHARACTER_SCHEME
+#ifdef USING_COMBINING_CHARACTER_SCHEME
    int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
 #endif
 

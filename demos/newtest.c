@@ -68,7 +68,7 @@ void text_in_a_box( const char *istr)
 {
    const int len = (int)strlen( istr);
 
-#ifdef CHTYPE_LONG
+#if defined( A_OVERLINE) && defined( A_UNDERLINE) && defined( A_LEFTLINE) && defined( A_RIGHTLINE)
    attron( A_OVERLINE | A_UNDERLINE | A_LEFTLINE);
    if( len == 1)
       attron( A_RIGHTLINE);
@@ -76,17 +76,17 @@ void text_in_a_box( const char *istr)
    addnstr( istr, 1);
    if( len > 1)
       {
-#ifdef CHTYPE_LONG
+#ifdef A_LEFTLINE
       attroff( A_LEFTLINE);
 #endif
       if( len > 2)
          addnstr( istr + 1, len - 2);
-#ifdef CHTYPE_LONG
+#ifdef A_RIGHTLINE
       attron( A_RIGHTLINE);
 #endif
       addnstr( istr + len - 1, 1);
       }
-#ifdef CHTYPE_LONG
+#if defined( A_OVERLINE) && defined( A_UNDERLINE) && defined( A_LEFTLINE) && defined( A_RIGHTLINE)
    attroff( A_OVERLINE | A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE);
 #endif
 }
@@ -291,13 +291,13 @@ int main( int argc, char **argv)
             color_block_cols = 0;
         if( redraw)
         {
-#if (CHTYPE_LONG >= 2) || defined( HAVE_WIDE)
+#if defined( CHTYPE_64) || defined( HAVE_WIDE)
             int line = 21;
 #endif
 
             mvaddstr( 1, COL1, "'Normal' white-on-black");
             mvaddstr( 2, COL1, longname( ));
-#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
+#ifdef A_DIM
             attron( A_DIM);
             mvaddstr( 15, 41, "Dimmed text");
             attroff( A_DIM);
@@ -343,7 +343,7 @@ int main( int argc, char **argv)
             move( 4, COL2);
             text_in_a_box( "Text in a box");
 
-#if defined( CHTYPE_LONG) && defined( A_STRIKEOUT)
+#if defined( CHTYPE_64) && defined( A_STRIKEOUT)
             attrset( COLOR_PAIR( 6));
             attron( A_STRIKEOUT);
             mvaddstr( 10, 40, "Strikeout");
@@ -442,7 +442,7 @@ int main( int argc, char **argv)
 
                 mvaddwstr( 15 + i / 2, 2 + 20 * (i % 2), texts[i]);
             }
-#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
+#ifdef CHTYPE_64
              mvaddch( line - 1, 60, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
             line += 2;

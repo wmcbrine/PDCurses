@@ -121,7 +121,7 @@ size_t  PDC_wcstombs(char *, const wchar_t *, size_t);
 
 #define PDC_CLICK_PERIOD 150  /* time to wait for a click, if
                                  not set by mouseinterval() */
-#if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
+#ifdef CHTYPE_64
    #define PDC_COLOR_PAIRS  1024
 #else
    #define PDC_COLOR_PAIRS  256

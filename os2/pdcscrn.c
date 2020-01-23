@@ -2,11 +2,7 @@
 
 #include "pdcos2.h"
 
-#ifdef CHTYPE_LONG
 # define PDC_OFFSET 32
-#else
-# define PDC_OFFSET  8
-#endif
 
 /* COLOR_PAIR to attribute encoding table. */
 

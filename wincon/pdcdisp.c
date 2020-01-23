@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef CHTYPE_LONG
-
 #ifdef PDC_WIDE
    #define USE_UNICODE_ACS_CHARS 1
 #else
@@ -14,8 +12,6 @@
 #endif
 
 #include "../common/acs_defs.h"
-
-#endif
 
 DWORD pdc_last_blink;
 static bool blinked_off = FALSE;

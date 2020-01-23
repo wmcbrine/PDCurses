@@ -84,14 +84,10 @@ for alternate chars.  With 16-bit chtypes,  there are only eight
 bits available to the character.  PDC_REAL_ATTR_SHIFT gives the
 number of low bits devoted to storing characters. */
 
-# if(CHTYPE_LONG >= 2)     /* 64-bit chtypes */
-    # define PDC_REAL_ATTR_SHIFT  21
-# else
-#ifdef CHTYPE_LONG         /* 32-bit chtypes */
+# ifdef CHTYPE_32
     # define PDC_REAL_ATTR_SHIFT  17
-#else                      /* 16-bit chtypes */
-    # define PDC_REAL_ATTR_SHIFT  8
-#endif
+#else          /* 64-bit chtypes */
+    # define PDC_REAL_ATTR_SHIFT  21
 #endif
 
  /* The PDC_set_function_key() function allows one to set a 'shut down'

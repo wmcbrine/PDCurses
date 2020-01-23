@@ -4,8 +4,6 @@
 
 #include <string.h>
 
-#ifdef CHTYPE_LONG
-
 #ifdef PDC_WIDE
    #define USE_UNICODE_ACS_CHARS 1
 #else
@@ -13,8 +11,6 @@
 #endif
 
 #include "../common/acs_defs.h"
-
-#endif
 
 bool pdc_blinked_off;
 bool pdc_visible_cursor = FALSE;

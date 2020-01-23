@@ -28,11 +28,6 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1      /* PDCurses-only routines */
-#if defined( CHTYPE_32)
-   #define CHTYPE_LONG     1      /* chtypes will be 32 bits */
-#elif !defined( CHTYPE_16)
-   #define CHTYPE_LONG     2      /* chtypes will be (default) 64 bits */
-#endif
 
 /*----------------------------------------------------------------------*/
 
@@ -96,14 +91,14 @@ extern "C"
 typedef unsigned char bool;
 #endif
 
-#ifdef CHTYPE_LONG
-    #if(CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes     */
-        typedef uint64_t chtype;
-    #else                        /* "Standard" CHTYPE_LONG case,  32-bit: */
-        typedef uint32_t chtype;
-    # endif
+#if defined( CHTYPE_32)
+   typedef uint32_t chtype;       /* chtypes will be 32 bits */
 #else
-typedef uint16_t chtype; /* 8-bit attr + 8-bit char */
+   #define CHTYPE_64
+   typedef uint64_t chtype;       /* chtypes will be 64 bits */
+   #ifdef PDC_WIDE
+      #define USING_COMBINING_CHARACTER_SCHEME
+   #endif
 #endif
 
 #ifdef PDC_WIDE
@@ -461,42 +456,19 @@ PDCEX  char         ttytype[];    /* terminal name/description */
 Text Attributes
 ===============
 
-Originally, PDCurses used a short (16 bits) for its chtype. To include
-color, a number of things had to be sacrificed from the strict Unix and
-System V support. The main problem was fitting all character attributes
-and color into an unsigned char (all 8 bits!).
-
-Today, PDCurses by default uses a long (32 bits) for its chtype, as in
-System V. The short chtype is still available, by undefining CHTYPE_LONG
-and rebuilding the library.
-
-The following is the structure of a win->_attrs chtype:
-
-short form:
-
-    +-----------------------------------------------+
-    |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
-    +-----------------------------------------------+
-      color number |  attrs |   character eg 'a'
-
-The available non-color attributes are bold, reverse and blink. Others
-have no effect. The high order char is an index into an array of
-physical colors (defined in color.c) -- 32 foreground/background color
-pairs (5 bits) plus 3 bits for other attributes.
-
-long form:
+If CHTYPE_32 is #defined,  PDCurses uses a 32-bit integer for its chtype:
 
     +--------------------------------------------------------------------+
     |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|..| 2| 1| 0|
     +--------------------------------------------------------------------+
-          color number      |     modifiers         |   character eg 'a'
+          color pair        |     modifiers         |   character eg 'a'
 
-The available non-color attributes are bold, underline, invisible,
-right-line, left-line, protect, reverse and blink. 256 color pairs (8
-bits), 8 bits for other attributes, and 16 bits for character data.
+There are 256 color pairs (8 bits), 8 bits for modifiers, and 16 bits
+for character data. The modifiers are bold, underline, right-line,
+left-line, italic, reverse and blink, plus the alternate character set
+indicator.
 
-   Note that there is now a "super-long" 64-bit form,  available by
-defining CHTYPE_LONG to be 2:
+   By default,  a 64-bit chtype is used :
 
 -------------------------------------------------------------------------------
 |63|62|61|60|59|..|34|33|32|31|30|29|28|..|22|21|20|19|18|17|16|..| 3| 2| 1| 0|
@@ -507,22 +479,17 @@ defining CHTYPE_LONG to be 2:
    We take five more bits for the character (thus allowing Unicode values
 past 64K;  UTF-16 can go up to 0x10ffff,  requiring 21 bits total),  and
 four more bits for attributes.  Three are currently used as A_OVERLINE, A_DIM,
-and A_STRIKEOUT;  one more is reserved for future use.  31 bits are then used
-for color.  These are usually just treated as the usual palette
-indices,  and range from 0 to 255.   However,  if bit 63 is
-set,  the remaining 30 bits are interpreted as foreground RGB (first
-fifteen bits,  five bits for each of the three channels) and background RGB
-(same scheme using the remaining 15 bits.)
-
+and A_STRIKEOUT;  one more is reserved for future use.  On most platforms,
+bits 31-38 are used to select a color pair (can run from 0 to 255).
+Bits 39 and 40 have been added to this to get 1024 color pairs,  and
+more eventually will probably be used.
 **man-end****************************************************************/
 
 /*** Video attribute macros ***/
 
 #define A_NORMAL      (chtype)0
 
-#ifdef CHTYPE_LONG
-
-# if(CHTYPE_LONG >= 2)     /* 64-bit chtypes */
+#ifdef CHTYPE_64
     # define PDC_CHARTEXT_BITS   21
     # define A_CHARTEXT   (chtype)( ((chtype)0x1 << PDC_CHARTEXT_BITS) - 1)
     # define A_ALTCHARSET ((chtype)0x001 << PDC_CHARTEXT_BITS)
@@ -545,6 +512,7 @@ fifteen bits,  five bits for each of the three channels) and background RGB
     # define A_COLOR      ((chtype)0x7fffffff << PDC_COLOR_SHIFT)
     # define A_ATTRIBUTES (((chtype)0xfff << PDC_CHARTEXT_BITS) | A_COLOR)
 # else         /* plain ol' 32-bit chtypes */
+    # define PDC_CHARTEXT_BITS      16
     # define A_ALTCHARSET (chtype)0x00010000
     # define A_RIGHT      (chtype)0x00020000
     # define A_LEFT       (chtype)0x00040000
@@ -554,6 +522,7 @@ fifteen bits,  five bits for each of the three channels) and background RGB
     # define A_BLINK      (chtype)0x00400000
     # define A_BOLD       (chtype)0x00800000
     # define A_COLOR      (chtype)0xff000000
+    # define PDC_COLOR_SHIFT 24
 #ifdef PDC_WIDE
     # define A_CHARTEXT   (chtype)0x0000ffff
     # define A_ATTRIBUTES (chtype)0xffff0000
@@ -567,37 +536,10 @@ fifteen bits,  five bits for each of the three channels) and background RGB
     # define A_OVERLINE   (chtype)0x00004000
     # define A_STRIKEOUT  (chtype)0x00002000
 #endif
-    # define PDC_COLOR_SHIFT 24
 #endif
 
-
-# define A_ITALIC     A_INVIS
-# define A_PROTECT    (A_UNDERLINE | A_LEFT | A_RIGHT)
-
-#else                   /* 16-bit chtypes */
-# define A_BOLD       (chtype)0x0100  /* X/Open */
-# define A_REVERSE    (chtype)0x0200  /* X/Open */
-# define A_BLINK      (chtype)0x0400  /* X/Open */
-
-# define A_ATTRIBUTES (chtype)0xff00  /* X/Open */
-# define A_CHARTEXT   (chtype)0x00ff  /* X/Open */
-# define A_COLOR      (chtype)0xf800  /* System V */
-
-# define A_ALTCHARSET A_NORMAL        /* X/Open */
-# define A_PROTECT    A_NORMAL        /* X/Open */
-# define A_UNDERLINE  A_NORMAL        /* X/Open */
-# define A_OVERLINE   A_NORMAL        /* X/Open */
-# define A_STRIKEOUT  A_NORMAL        /* X/Open */
-
-# define A_LEFT       A_NORMAL
-# define A_RIGHT      A_NORMAL
-# define A_ITALIC     A_NORMAL
-# define A_INVIS      A_NORMAL
-# define A_DIM        A_NORMAL
-
-# define PDC_COLOR_SHIFT 11
-#endif
-
+#define A_ITALIC      A_INVIS
+#define A_PROTECT    (A_UNDERLINE | A_LEFT | A_RIGHT)
 #define A_STANDOUT    (A_REVERSE | A_BOLD) /* X/Open */
 
 #define CHR_MSK       A_CHARTEXT           /* Obsolete */
@@ -633,153 +575,145 @@ fifteen bits,  five bits for each of the three channels) and background RGB
 
 /*** Alternate character set macros ***/
 
-/* 'w' = 32-bit chtype; acs_map[] index | A_ALTCHARSET
-   'n' = 16-bit chtype; it gets the fallback set because no bit is
-         available for A_ALTCHARSET */
-
-#ifdef CHTYPE_LONG
-# define PDC_ACS(w, n) ((chtype)w | A_ALTCHARSET)
-#else
-# define PDC_ACS(w, n) ((chtype)n)
-#endif
+#define PDC_ACS(w) ((chtype)w | A_ALTCHARSET)
 
 /* VT100-compatible symbols -- box chars */
 
-#define ACS_LRCORNER      PDC_ACS('V', '+')
-#define ACS_URCORNER      PDC_ACS('W', '+')
-#define ACS_ULCORNER      PDC_ACS('X', '+')
-#define ACS_LLCORNER      PDC_ACS('Y', '+')
-#define ACS_PLUS          PDC_ACS('Z', '+')
-#define ACS_LTEE          PDC_ACS('[', '+')
-#define ACS_RTEE          PDC_ACS('\\', '+')
-#define ACS_BTEE          PDC_ACS(']', '+')
-#define ACS_TTEE          PDC_ACS('^', '+')
-#define ACS_HLINE         PDC_ACS('_', '-')
-#define ACS_VLINE         PDC_ACS('`', '|')
+#define ACS_LRCORNER      PDC_ACS('V')
+#define ACS_URCORNER      PDC_ACS('W')
+#define ACS_ULCORNER      PDC_ACS('X')
+#define ACS_LLCORNER      PDC_ACS('Y')
+#define ACS_PLUS          PDC_ACS('Z')
+#define ACS_LTEE          PDC_ACS('[')
+#define ACS_RTEE          PDC_ACS('\\')
+#define ACS_BTEE          PDC_ACS(']')
+#define ACS_TTEE          PDC_ACS('^')
+#define ACS_HLINE         PDC_ACS('_')
+#define ACS_VLINE         PDC_ACS('`')
 
 /* PDCurses-only ACS chars.  Don't use if ncurses compatibility matters.
 Some won't work in non-wide X11 builds (see 'acs_defs.h' for details). */
 
-#define ACS_CENT          PDC_ACS('{', 'c')
-#define ACS_YEN           PDC_ACS('|', 'y')
-#define ACS_PESETA        PDC_ACS('}', 'p')
-#define ACS_HALF          PDC_ACS('&', '/')
-#define ACS_QUARTER       PDC_ACS('\'', '/')
-#define ACS_LEFT_ANG_QU   PDC_ACS(')',  '<')
-#define ACS_RIGHT_ANG_QU  PDC_ACS('*',  '>')
-#define ACS_D_HLINE       PDC_ACS('a', '-')
-#define ACS_D_VLINE       PDC_ACS('b', '|')
-#define ACS_CLUB          PDC_ACS( 11, 'C')
-#define ACS_HEART         PDC_ACS( 12, 'H')
-#define ACS_SPADE         PDC_ACS( 13, 'S')
-#define ACS_SMILE         PDC_ACS( 14, 'O')
-#define ACS_REV_SMILE     PDC_ACS( 15, 'O')
-#define ACS_MED_BULLET    PDC_ACS( 16, '.')
-#define ACS_WHITE_BULLET  PDC_ACS( 17, 'O')
-#define ACS_PILCROW       PDC_ACS( 18, 'O')
-#define ACS_SECTION       PDC_ACS( 19, 'O')
+#define ACS_CENT          PDC_ACS('{')
+#define ACS_YEN           PDC_ACS('|')
+#define ACS_PESETA        PDC_ACS('}')
+#define ACS_HALF          PDC_ACS('&')
+#define ACS_QUARTER       PDC_ACS('\'')
+#define ACS_LEFT_ANG_QU   PDC_ACS(')')
+#define ACS_RIGHT_ANG_QU  PDC_ACS('*')
+#define ACS_D_HLINE       PDC_ACS('a')
+#define ACS_D_VLINE       PDC_ACS('b')
+#define ACS_CLUB          PDC_ACS( 11)
+#define ACS_HEART         PDC_ACS( 12)
+#define ACS_SPADE         PDC_ACS( 13)
+#define ACS_SMILE         PDC_ACS( 14)
+#define ACS_REV_SMILE     PDC_ACS( 15)
+#define ACS_MED_BULLET    PDC_ACS( 16)
+#define ACS_WHITE_BULLET  PDC_ACS( 17)
+#define ACS_PILCROW       PDC_ACS( 18)
+#define ACS_SECTION       PDC_ACS( 19)
 
-#define ACS_SUP2          PDC_ACS(',', '2')
-#define ACS_ALPHA         PDC_ACS('.', 'a')
-#define ACS_BETA          PDC_ACS('/', 'b')
-#define ACS_GAMMA         PDC_ACS('0', 'y')
-#define ACS_UP_SIGMA      PDC_ACS('1', 'S')
-#define ACS_LO_SIGMA      PDC_ACS('2', 's')
-#define ACS_MU            PDC_ACS('4', 'u')
-#define ACS_TAU           PDC_ACS('5', 't')
-#define ACS_UP_PHI        PDC_ACS('6', 'F')
-#define ACS_THETA         PDC_ACS('7', 't')
-#define ACS_OMEGA         PDC_ACS('8', 'w')
-#define ACS_DELTA         PDC_ACS('9', 'd')
-#define ACS_INFINITY      PDC_ACS('-', 'i')
-#define ACS_LO_PHI        PDC_ACS( 22, 'f')
-#define ACS_EPSILON       PDC_ACS(':', 'e')
-#define ACS_INTERSECT     PDC_ACS('e', 'u')
-#define ACS_TRIPLE_BAR    PDC_ACS('f', '=')
-#define ACS_DIVISION      PDC_ACS('c', '/')
-#define ACS_APPROX_EQ     PDC_ACS('d', '~')
-#define ACS_SM_BULLET     PDC_ACS('g', '.')
-#define ACS_SQUARE_ROOT   PDC_ACS('i', '!')
-#define ACS_UBLOCK        PDC_ACS('p', '^')
-#define ACS_BBLOCK        PDC_ACS('q', '_')
-#define ACS_LBLOCK        PDC_ACS('r', '<')
-#define ACS_RBLOCK        PDC_ACS('s', '>')
+#define ACS_SUP2          PDC_ACS(',')
+#define ACS_ALPHA         PDC_ACS('.')
+#define ACS_BETA          PDC_ACS('/')
+#define ACS_GAMMA         PDC_ACS('0')
+#define ACS_UP_SIGMA      PDC_ACS('1')
+#define ACS_LO_SIGMA      PDC_ACS('2')
+#define ACS_MU            PDC_ACS('4')
+#define ACS_TAU           PDC_ACS('5')
+#define ACS_UP_PHI        PDC_ACS('6')
+#define ACS_THETA         PDC_ACS('7')
+#define ACS_OMEGA         PDC_ACS('8')
+#define ACS_DELTA         PDC_ACS('9')
+#define ACS_INFINITY      PDC_ACS('-')
+#define ACS_LO_PHI        PDC_ACS( 22)
+#define ACS_EPSILON       PDC_ACS(':')
+#define ACS_INTERSECT     PDC_ACS('e')
+#define ACS_TRIPLE_BAR    PDC_ACS('f')
+#define ACS_DIVISION      PDC_ACS('c')
+#define ACS_APPROX_EQ     PDC_ACS('d')
+#define ACS_SM_BULLET     PDC_ACS('g')
+#define ACS_SQUARE_ROOT   PDC_ACS('i')
+#define ACS_UBLOCK        PDC_ACS('p')
+#define ACS_BBLOCK        PDC_ACS('q')
+#define ACS_LBLOCK        PDC_ACS('r')
+#define ACS_RBLOCK        PDC_ACS('s')
 
-#define ACS_A_ORDINAL     PDC_ACS(20,  'a')
-#define ACS_O_ORDINAL     PDC_ACS(21,  'o')
-#define ACS_INV_QUERY     PDC_ACS(24,  '?')
-#define ACS_REV_NOT       PDC_ACS(25,  '!')
-#define ACS_NOT           PDC_ACS(26,  '!')
-#define ACS_INV_BANG      PDC_ACS(23,  '!')
-#define ACS_UP_INTEGRAL   PDC_ACS(27,  '|')
-#define ACS_LO_INTEGRAL   PDC_ACS(28,  '|')
-#define ACS_SUP_N         PDC_ACS(29,  'n')
-#define ACS_CENTER_SQU    PDC_ACS(30,  'x')
-#define ACS_F_WITH_HOOK   PDC_ACS(31,  'f')
+#define ACS_A_ORDINAL     PDC_ACS(20)
+#define ACS_O_ORDINAL     PDC_ACS(21)
+#define ACS_INV_QUERY     PDC_ACS(24)
+#define ACS_REV_NOT       PDC_ACS(25)
+#define ACS_NOT           PDC_ACS(26)
+#define ACS_INV_BANG      PDC_ACS(23)
+#define ACS_UP_INTEGRAL   PDC_ACS(27)
+#define ACS_LO_INTEGRAL   PDC_ACS(28)
+#define ACS_SUP_N         PDC_ACS(29)
+#define ACS_CENTER_SQU    PDC_ACS(30)
+#define ACS_F_WITH_HOOK   PDC_ACS(31)
 
-#define ACS_SD_LRCORNER   PDC_ACS(';', '+')
-#define ACS_SD_URCORNER   PDC_ACS('<', '+')
-#define ACS_SD_ULCORNER   PDC_ACS('=', '+')
-#define ACS_SD_LLCORNER   PDC_ACS('>', '+')
-#define ACS_SD_PLUS       PDC_ACS('?', '+')
-#define ACS_SD_LTEE       PDC_ACS('@', '+')
-#define ACS_SD_RTEE       PDC_ACS('A', '+')
-#define ACS_SD_BTEE       PDC_ACS('B', '+')
-#define ACS_SD_TTEE       PDC_ACS('C', '+')
+#define ACS_SD_LRCORNER   PDC_ACS(';')
+#define ACS_SD_URCORNER   PDC_ACS('<')
+#define ACS_SD_ULCORNER   PDC_ACS('=')
+#define ACS_SD_LLCORNER   PDC_ACS('>')
+#define ACS_SD_PLUS       PDC_ACS('?')
+#define ACS_SD_LTEE       PDC_ACS('@')
+#define ACS_SD_RTEE       PDC_ACS('A')
+#define ACS_SD_BTEE       PDC_ACS('B')
+#define ACS_SD_TTEE       PDC_ACS('C')
 
-#define ACS_D_LRCORNER    PDC_ACS('D', '+')
-#define ACS_D_URCORNER    PDC_ACS('E', '+')
-#define ACS_D_ULCORNER    PDC_ACS('F', '+')
-#define ACS_D_LLCORNER    PDC_ACS('G', '+')
-#define ACS_D_PLUS        PDC_ACS('H', '+')
-#define ACS_D_LTEE        PDC_ACS('I', '+')
-#define ACS_D_RTEE        PDC_ACS('J', '+')
-#define ACS_D_BTEE        PDC_ACS('K', '+')
-#define ACS_D_TTEE        PDC_ACS('L', '+')
+#define ACS_D_LRCORNER    PDC_ACS('D')
+#define ACS_D_URCORNER    PDC_ACS('E')
+#define ACS_D_ULCORNER    PDC_ACS('F')
+#define ACS_D_LLCORNER    PDC_ACS('G')
+#define ACS_D_PLUS        PDC_ACS('H')
+#define ACS_D_LTEE        PDC_ACS('I')
+#define ACS_D_RTEE        PDC_ACS('J')
+#define ACS_D_BTEE        PDC_ACS('K')
+#define ACS_D_TTEE        PDC_ACS('L')
 
-#define ACS_DS_LRCORNER   PDC_ACS('M', '+')
-#define ACS_DS_URCORNER   PDC_ACS('N', '+')
-#define ACS_DS_ULCORNER   PDC_ACS('O', '+')
-#define ACS_DS_LLCORNER   PDC_ACS('P', '+')
-#define ACS_DS_PLUS       PDC_ACS('Q', '+')
-#define ACS_DS_LTEE       PDC_ACS('R', '+')
-#define ACS_DS_RTEE       PDC_ACS('S', '+')
-#define ACS_DS_BTEE       PDC_ACS('T', '+')
-#define ACS_DS_TTEE       PDC_ACS('U', '+')
+#define ACS_DS_LRCORNER   PDC_ACS('M')
+#define ACS_DS_URCORNER   PDC_ACS('N')
+#define ACS_DS_ULCORNER   PDC_ACS('O')
+#define ACS_DS_LLCORNER   PDC_ACS('P')
+#define ACS_DS_PLUS       PDC_ACS('Q')
+#define ACS_DS_LTEE       PDC_ACS('R')
+#define ACS_DS_RTEE       PDC_ACS('S')
+#define ACS_DS_BTEE       PDC_ACS('T')
+#define ACS_DS_TTEE       PDC_ACS('U')
 
 /* VT100-compatible symbols -- other */
 
-#define ACS_S1            PDC_ACS('l', '-')
-#define ACS_S9            PDC_ACS('o', '_')
-#define ACS_DIAMOND       PDC_ACS('j', '+')
-#define ACS_CKBOARD       PDC_ACS('k', ':')
-#define ACS_DEGREE        PDC_ACS('w', '\'')
-#define ACS_PLMINUS       PDC_ACS('x', '#')
-#define ACS_BULLET        PDC_ACS('h', 'o')
+#define ACS_S1            PDC_ACS('l')
+#define ACS_S9            PDC_ACS('o')
+#define ACS_DIAMOND       PDC_ACS('j')
+#define ACS_CKBOARD       PDC_ACS('k')
+#define ACS_DEGREE        PDC_ACS('w')
+#define ACS_PLMINUS       PDC_ACS('x')
+#define ACS_BULLET        PDC_ACS('h')
 
 /* Teletype 5410v1 symbols -- these are defined in SysV curses, but
    are not well-supported by most terminals. Stick to VT100 characters
    for optimum portability. */
 
-#define ACS_LARROW        PDC_ACS('!', '<')
-#define ACS_RARROW        PDC_ACS(' ', '>')
-#define ACS_DARROW        PDC_ACS('#', 'v')
-#define ACS_UARROW        PDC_ACS('"', '^')
-#define ACS_BOARD         PDC_ACS('+', '#')
-#define ACS_LTBOARD       PDC_ACS('y', '#')
-#define ACS_LANTERN       PDC_ACS('z', '*')
-#define ACS_BLOCK         PDC_ACS('t', '#')
+#define ACS_LARROW        PDC_ACS('!')
+#define ACS_RARROW        PDC_ACS(' ')
+#define ACS_DARROW        PDC_ACS('#')
+#define ACS_UARROW        PDC_ACS('"')
+#define ACS_BOARD         PDC_ACS('+')
+#define ACS_LTBOARD       PDC_ACS('y')
+#define ACS_LANTERN       PDC_ACS('z')
+#define ACS_BLOCK         PDC_ACS('t')
 
 /* That goes double for these -- undocumented SysV symbols. Don't use
    them. */
 
-#define ACS_S3            PDC_ACS('m', '-')
-#define ACS_S7            PDC_ACS('n', '-')
-#define ACS_LEQUAL        PDC_ACS('u', '<')
-#define ACS_GEQUAL        PDC_ACS('v', '>')
-#define ACS_PI            PDC_ACS('$', 'n')
-#define ACS_NEQUAL        PDC_ACS('%', '+')
-#define ACS_STERLING      PDC_ACS('~', 'L')
+#define ACS_S3            PDC_ACS('m')
+#define ACS_S7            PDC_ACS('n')
+#define ACS_LEQUAL        PDC_ACS('u')
+#define ACS_GEQUAL        PDC_ACS('v')
+#define ACS_PI            PDC_ACS('$')
+#define ACS_NEQUAL        PDC_ACS('%')
+#define ACS_STERLING      PDC_ACS('~')
 
 /* Box char aliases */
 

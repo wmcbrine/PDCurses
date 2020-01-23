@@ -12,7 +12,7 @@ static int menu_shown = 1;
 static int min_lines = 25, max_lines = 25;
 static int min_cols = 80, max_cols = 80;
 
-#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2 && defined( PDC_WIDE)
+#if defined( CHTYPE_64) && defined( PDC_WIDE)
     #define USING_COMBINING_CHARACTER_SCHEME
     int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
 #endif

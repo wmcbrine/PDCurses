@@ -5,10 +5,8 @@
 /* ACS definitions originally by jshumate@wrdis01.robins.af.mil -- these
    match code page 437 and compatible pages (CP850, CP852, etc.) */
 
-#ifdef CHTYPE_LONG
-   #define USE_UNICODE_ACS_CHARS 0
-   #include "../common/acs_defs.h"
-#endif
+#define USE_UNICODE_ACS_CHARS 0
+#include "../common/acs_defs.h"
 
 /* position hardware cursor at (y, x) */
 

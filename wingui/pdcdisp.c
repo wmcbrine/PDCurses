@@ -264,8 +264,7 @@ int PDC_choose_a_new_font( void)
 
 /* see 'addch.c' for an explanation of how combining chars are handled. */
 
-#if defined( CHTYPE_LONG) && CHTYPE_LONG >= 2 && PDC_WIDE
-   #define USING_COMBINING_CHARACTER_SCHEME
+#ifdef USING_COMBINING_CHARACTER_SCHEME
    int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
 #endif
 
@@ -404,7 +403,7 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
         {
             chtype ch = srcp[i] & A_CHARTEXT;
 
-#if( defined( PDC_WIDE) && defined( CHTYPE_LONG))
+#ifdef USING_COMBINING_CHARACTER_SCHEME
             if( ch > 0xffff && ch < MAX_UNICODE)  /* use Unicode surrogates to fit */
             {               /* >64K values into 16-bit wchar_t: */
                 ch -= 0x10000;
@@ -413,7 +412,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                 olen++;
                 ch = (wchar_t)( 0xdc00 | (ch & 0x3ff));  /* lower 10 bits */
             }
-#if( CHTYPE_LONG >= 2)       /* "non-standard" 64-bit chtypes;  combining */
             if( ch > MAX_UNICODE)      /* chars & fullwidth supported */
             {
                 cchar_t added[10], root = ch;
@@ -436,7 +434,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                     olen++;
                 }
             }
-#endif
 #endif
             if( (srcp[i] & A_ALTCHARSET) && ch < 0x80)
                 ch = acs_map[ch & 0x7f];

@@ -5,14 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef CHTYPE_LONG
 # ifdef PDC_WIDE
 #  define USE_UNICODE_ACS_CHARS 1
 # else
 #  define USE_UNICODE_ACS_CHARS 0
 # endif
+
 # include "../common/acs_defs.h"
-#endif
 
 #define MAXRECT 200     /* maximum number of rects to queue up before
                            an update is forced; the number was chosen

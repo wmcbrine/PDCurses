@@ -16,8 +16,8 @@ void PDC_gotoyx(int y, int x)
    printf( "\033[%d;%dH", y + 1, x + 1);
 }
 
-#define STANDOUT_ON   "\033[3m"
-#define STANDOUT_OFF  "\033[23m"
+#define ITALIC_ON     "\033[3m"
+#define ITALIC_OFF    "\033[23m"
 #define UNDERLINE_ON  "\033[4m"
 #define UNDERLINE_OFF "\033[24m"
 #define BLINK_ON      "\033[5m"
@@ -26,6 +26,8 @@ void PDC_gotoyx(int y, int x)
 #define BOLD_OFF      "\033[22m"
 #define DIM_ON        "\033[2m"
 #define DIM_OFF       "\033[22m"
+#define REVERSE_ON    "\033[7m"
+#define REVERSE_OFF   "\033[27m"
 #define STDOUT          0
 
 const chtype MAX_UNICODE = 0x110000;
@@ -118,7 +120,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     if( !srcp)
     {
         prev_ch = 0;
-        printf( BLINK_OFF BOLD_OFF UNDERLINE_OFF STANDOUT_OFF);
+        printf( BLINK_OFF BOLD_OFF UNDERLINE_OFF ITALIC_OFF REVERSE_OFF);
         return;
     }
     assert( x >= 0);
@@ -127,7 +129,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     assert( lineno < SP->lines);
     assert( len > 0);
     PDC_gotoyx( lineno, x);
-    prev_ch = *srcp ^ A_COLOR;
+    prev_ch &= ~A_COLOR;
+    prev_ch |= (~*srcp & A_COLOR);
     while( len--)
        {
        int ch = (int)( *srcp & A_CHARTEXT);
@@ -141,20 +144,18 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
           printf( (*srcp & A_BOLD) ? BOLD_ON : BOLD_OFF);
        if( changes & A_UNDERLINE)
           printf( (*srcp & A_UNDERLINE) ? UNDERLINE_ON : UNDERLINE_OFF);
-       if( changes & A_STANDOUT)
-          printf( (*srcp & A_STANDOUT) ? STANDOUT_ON : STANDOUT_OFF);
+       if( changes & A_ITALIC)
+          printf( (*srcp & A_ITALIC) ? ITALIC_ON : ITALIC_OFF);
+       if( changes & A_REVERSE)
+          printf( (*srcp & A_REVERSE) ? REVERSE_ON : REVERSE_OFF);
        if( SP->termattrs & changes & A_BLINK)
           printf( (*srcp & A_BLINK) ? BLINK_ON : BLINK_OFF);
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
-          reset_color( *srcp);
-#ifdef PDC_WIDE
+          reset_color( *srcp & ~A_REVERSE);
        if( ch < 128)
           printf( "%c", (char)ch);
        else if( ch < (int)MAX_UNICODE)
           printf( "%lc", (wchar_t)ch);
-#else
-       printf( "%c", (char)ch);
-#endif
 #ifdef USING_COMBINING_CHARACTER_SCHEME
        else if( ch > (int)MAX_UNICODE)      /* chars & fullwidth supported */
        {

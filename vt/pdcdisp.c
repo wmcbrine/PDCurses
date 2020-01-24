@@ -116,10 +116,12 @@ static void reset_color( const chtype ch)
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
     static chtype prev_ch = 0;
+    static bool force_reset_all_attribs = TRUE;
 
     if( !srcp)
     {
         prev_ch = 0;
+        force_reset_all_attribs = TRUE;
         printf( BLINK_OFF BOLD_OFF UNDERLINE_OFF ITALIC_OFF REVERSE_OFF);
         return;
     }
@@ -129,8 +131,11 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     assert( lineno < SP->lines);
     assert( len > 0);
     PDC_gotoyx( lineno, x);
-    prev_ch &= ~A_COLOR;
-    prev_ch |= (~*srcp & A_COLOR);
+    if( force_reset_all_attribs || (!x && !lineno))
+    {
+        force_reset_all_attribs = FALSE;
+        prev_ch = ~*srcp;
+    }
     while( len--)
        {
        int ch = (int)( *srcp & A_CHARTEXT);

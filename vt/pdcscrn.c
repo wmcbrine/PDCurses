@@ -220,7 +220,6 @@ int PDC_scr_open(void)
         return ERR;
 
     setbuf( stdin, NULL);
-    setbuf( stdout, NULL);
 #ifdef USE_TERMIOS
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;

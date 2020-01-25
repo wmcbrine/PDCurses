@@ -27,9 +27,23 @@ Defined by this header:
 
 **man-end****************************************************************/
 
-#define PDCURSES        1      /* PDCurses-only routines */
+#define PDCURSES        1
+#define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
+#define PDC_VER_MAJOR   4
+#define PDC_VER_MINOR   1
+#define PDC_VER_CHANGE  1
+#define PDC_VER_YEAR   2020
+#define PDC_VER_MONTH    01
+#define PDC_VER_DAY      12
 
-/*----------------------------------------------------------------------*/
+#define PDC_STRINGIZE( x) #x
+#define PDC_stringize( x) PDC_STRINGIZE( x)
+
+#define PDC_VERDOT PDC_stringize( PDC_VER_MAJOR) "." \
+                   PDC_stringize( PDC_VER_MINOR) "." \
+                   PDC_stringize( PDC_VER_CHANGE)
+
+#define CHTYPE_LONG     1      /* chtype >= 32 bits */
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 # define PDC_99         1
@@ -148,24 +162,6 @@ enum
     PDC_VFLAG_DLL   = 8,  /* -DPDC_DLL_BUILD */
     PDC_VFLAG_RGB   = 16  /* -DPDC_RGB */
 };
-/* Version constants,  available as of version 4.0 : */
-/* Don't forget to update 'version.mif' if MAJOR/MINOR changes! */
-
-#define PDC_VER_MAJOR    4
-#define PDC_VER_MINOR    1
-#define PDC_VER_CHANGE   1
-#define PDC_VER_YEAR   2020
-#define PDC_VER_MONTH    01
-#define PDC_VER_DAY      12
-
-#define PDC_BUILD (PDC_VER_MAJOR*1000 + PDC_VER_MINOR *100 + PDC_VER_CHANGE)
-
-#define PDC_STRINGIZE( x) #x
-#define PDC_stringize( x) PDC_STRINGIZE( x)
-
-#define PDC_VERDOT PDC_stringize( PDC_VER_MAJOR) "." \
-                   PDC_stringize( PDC_VER_MINOR) "." \
-                   PDC_stringize( PDC_VER_CHANGE)
 
 /*----------------------------------------------------------------------
  *
@@ -184,8 +180,8 @@ typedef unsigned long mmask_t;
 typedef struct
 {
     int x;           /* absolute column, 0 based, measured in characters */
-    int y;           /* absolute row, 0 based, measured in characters    */
-    short button[PDC_MAX_MOUSE_BUTTONS];         /* state of all buttons */
+    int y;           /* absolute row, 0 based, measured in characters */
+    short button[PDC_MAX_MOUSE_BUTTONS];         /* state of each button */
     int changes;     /* flags indicating what has changed with the mouse */
 } MOUSE_STATUS;
 
@@ -559,6 +555,7 @@ more eventually will probably be used.
 #define WA_BOLD       A_BOLD
 #define WA_DIM        A_DIM
 #define WA_INVIS      A_INVIS
+#define WA_ITALIC     A_ITALIC
 #define WA_LEFT       A_LEFT
 #define WA_PROTECT    A_PROTECT
 #define WA_REVERSE    A_REVERSE
@@ -566,10 +563,10 @@ more eventually will probably be used.
 #define WA_STANDOUT   A_STANDOUT
 #define WA_UNDERLINE  A_UNDERLINE
 
-#define WA_HORIZONTAL A_NORMAL
-#define WA_LOW        A_NORMAL
-#define WA_TOP        A_NORMAL
-#define WA_VERTICAL   A_NORMAL
+#define WA_HORIZONTAL A_HORIZONTAL
+#define WA_LOW        A_LOW
+#define WA_TOP        A_TOP
+#define WA_VERTICAL   A_VERTICAL
 
 #define WA_ATTRIBUTES A_ATTRIBUTES
 
@@ -1770,7 +1767,7 @@ PDCEX  int     wunderscore(WINDOW *);
 #define ungetch(ch)        PDC_ungetch(ch)
 
 #define COLOR_PAIR(n)      (((chtype)(n) << PDC_COLOR_SHIFT) & A_COLOR)
-#define PAIR_NUMBER(n)     ((((n) & A_COLOR) >> PDC_COLOR_SHIFT) & 0xff)
+#define PAIR_NUMBER(n)     (((n) & A_COLOR) >> PDC_COLOR_SHIFT)
 
 /* These will _only_ work as macros */
 
@@ -1807,7 +1804,9 @@ PDCEX  int     wunderscore(WINDOW *);
 #define PDC_KEY_MODIFIER_REPEAT  16
 
 #ifdef __cplusplus
-# undef bool
+# ifndef PDC_PP98
+#  undef bool
+# endif
 }
 #endif
 

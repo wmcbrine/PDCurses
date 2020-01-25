@@ -3,6 +3,8 @@
 #include <wchar.h>
 #include <assert.h>
 #include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define USE_UNICODE_ACS_CHARS 1
 
@@ -88,30 +90,46 @@ static void reset_color( const chtype ch)
     static PACKED_RGB prev_bg = (PACKED_RGB)-1;
     static PACKED_RGB prev_fg = (PACKED_RGB)-1;
     PACKED_RGB bg, fg;
-    char txt[20];
+    char txt[45];
 
     PDC_get_rgb_values( ch, &fg, &bg);
+    *txt = '\0';
     if( bg != prev_bg)
         {
         if( bg == (PACKED_RGB)-1)   /* default background */
-            printf( "\033[49m");
+            strcpy( txt, "\033[49m");
+        else if( !bg)
+            strcpy( txt, "\033[40m");
         else if( COLORS == 16)
-            printf( "\033[4%dm", get_sixteen_color_idx( bg));
+            sprintf( txt, "\033[4%dm", get_sixteen_color_idx( bg));
         else
-            printf( "\033[48;%s", color_string( txt, bg));
+            {
+            strcpy( txt, "\033[48;");
+            color_string( txt + 5, bg);
+            }
         prev_bg = bg;
         }
     if( fg != prev_fg)
         {
         if( fg == (PACKED_RGB)-1)   /* default foreground */
-            printf( "\033[39m");
+            strcat( txt, "\033[39m");
         else if( COLORS == 16)
-            printf( "\033[3%dm", get_sixteen_color_idx( fg));
+            sprintf( txt + strlen( txt), "\033[3%dm", get_sixteen_color_idx( fg));
         else
-            printf( "\033[38;%s", color_string( txt, fg));
+            {
+            strcat( txt, "\033[38;");
+            color_string( txt + strlen( txt), fg);
+            }
         prev_fg = fg;
         }
+    if( *txt)
+        fwrite( txt, strlen( txt), 1, stdout);
 }
+
+      /* We can output runs up to RUN_LEN wide chars.  Each may become
+         four bytes in UTF8,  so we set OBUFF_SIZE = 4 * RUN_LEN.   */
+#define RUN_LEN      20
+#define OBUFF_SIZE   80
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
@@ -125,6 +143,13 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         printf( BLINK_OFF BOLD_OFF UNDERLINE_OFF ITALIC_OFF REVERSE_OFF);
         return;
     }
+    while( len > RUN_LEN)     /* break input into RUN_LEN character blocks */
+    {
+        PDC_transform_line( lineno, x, RUN_LEN, srcp);
+        len -= RUN_LEN;
+        x += RUN_LEN;
+        srcp += RUN_LEN;
+    }
     assert( x >= 0);
     assert( len <= SP->cols - x);
     assert( lineno >= 0);
@@ -136,9 +161,9 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         force_reset_all_attribs = FALSE;
         prev_ch = ~*srcp;
     }
-    while( len--)
+    while( len)
        {
-       int ch = (int)( *srcp & A_CHARTEXT);
+       int ch = (int)( *srcp & A_CHARTEXT), count = 1;
        chtype changes = *srcp ^ prev_ch;
 
        if( (*srcp & A_ALTCHARSET) && ch < 0x80)
@@ -157,12 +182,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
           printf( (*srcp & A_BLINK) ? BLINK_ON : BLINK_OFF);
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
           reset_color( *srcp & ~A_REVERSE);
-       if( ch < 128)
-          printf( "%c", (char)ch);
-       else if( ch < (int)MAX_UNICODE)
-          printf( "%lc", (wchar_t)ch);
 #ifdef USING_COMBINING_CHARACTER_SCHEME
-       else if( ch > (int)MAX_UNICODE)      /* chars & fullwidth supported */
+       if( ch > (int)MAX_UNICODE)      /* chars & fullwidth supported */
        {
            cchar_t root, newchar;
 
@@ -177,8 +198,29 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
                printf( "%lc", (wchar_t)newchar);
            printf( "%lc", (wchar_t)newchar);
        }
+       else if( ch < (int)MAX_UNICODE)
 #endif
-       prev_ch = *srcp++;
+       {
+           size_t bytes_out, bytes_written;
+           char obuff[OBUFF_SIZE];
+
+           bytes_out = wctomb( obuff, (wchar_t)ch);
+           while( count < len && !((srcp[0] ^ srcp[count]) & ~A_CHARTEXT)
+                        && (ch = (srcp[count] & A_CHARTEXT)) < MAX_UNICODE)
+           {
+               if( (srcp[count] & A_ALTCHARSET) && ch < 0x80)
+                  ch = (int)acs_map[ch & 0x7f];
+               if( ch < (int)' ' || (ch >= 0x80 && ch <= 0x9f))
+                  ch = ' ';
+               bytes_out += wctomb( obuff + bytes_out, (wchar_t)ch);
+               count++;
+           }
+           bytes_written = fwrite( obuff, 1, bytes_out, stdout);
+           assert( bytes_written == (size_t)bytes_out);
+       }
+       prev_ch = *srcp;
+       srcp += count;
+       len -= count;
        }
 }
 

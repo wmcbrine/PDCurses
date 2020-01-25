@@ -40,18 +40,17 @@ const chtype MAX_UNICODE = 0x110000;
    int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
 #endif
 
-static char *color_string( char *otext, const PACKED_RGB rgb)
+static void color_string( char *otext, const PACKED_RGB rgb)
 {
    extern bool PDC_has_rgb_color;      /* pdcscrn.c */
+   const int red = Get_RValue( rgb);
+   const int green = Get_GValue( rgb);
+   const int blue = Get_BValue( rgb);
 
    if( PDC_has_rgb_color)
-      sprintf( otext, "2;%d;%d;%dm", Get_RValue( rgb),
-                             Get_GValue( rgb), Get_BValue( rgb));
+      sprintf( otext, "2;%d;%d;%dm", red, green, blue);
    else
       {
-      const int red = Get_RValue( rgb);
-      const int green = Get_GValue( rgb);
-      const int blue = Get_BValue( rgb);
       int idx;
 
       if( red == green && red == blue)   /* gray scale: indices from */
@@ -69,7 +68,6 @@ static char *color_string( char *otext, const PACKED_RGB rgb)
 
       sprintf( otext, "5;%dm", idx);
       }
-   return( otext);
 }
 
 static int get_sixteen_color_idx( const PACKED_RGB rgb)
@@ -85,46 +83,47 @@ static int get_sixteen_color_idx( const PACKED_RGB rgb)
     return( rval);
 }
 
-static void reset_color( const chtype ch)
+static void reset_color( char *obuff, const chtype ch)
 {
     static PACKED_RGB prev_bg = (PACKED_RGB)-1;
     static PACKED_RGB prev_fg = (PACKED_RGB)-1;
     PACKED_RGB bg, fg;
-    char txt[45];
 
     PDC_get_rgb_values( ch, &fg, &bg);
-    *txt = '\0';
+    *obuff = '\0';
     if( bg != prev_bg)
         {
         if( bg == (PACKED_RGB)-1)   /* default background */
-            strcpy( txt, "\033[49m");
+            strcpy( obuff, "\033[49m");
         else if( !bg)
-            strcpy( txt, "\033[40m");
+            strcpy( obuff, "\033[40m");
         else if( COLORS == 16)
-            sprintf( txt, "\033[4%dm", get_sixteen_color_idx( bg));
+            sprintf( obuff, "\033[4%dm", get_sixteen_color_idx( bg));
         else
             {
-            strcpy( txt, "\033[48;");
-            color_string( txt + 5, bg);
+            strcpy( obuff, "\033[48;");
+            color_string( obuff + 5, bg);
             }
         prev_bg = bg;
         }
+
     if( fg != prev_fg)
         {
+        obuff += strlen( obuff);
         if( fg == (PACKED_RGB)-1)   /* default foreground */
-            strcat( txt, "\033[39m");
+            strcpy( obuff, "\033[39m");
         else if( COLORS == 16)
-            sprintf( txt + strlen( txt), "\033[3%dm", get_sixteen_color_idx( fg));
+            sprintf( obuff, "\033[3%dm", get_sixteen_color_idx( fg));
         else
             {
-            strcat( txt, "\033[38;");
-            color_string( txt + strlen( txt), fg);
+            strcpy( obuff, "\033[38;");
+            color_string( obuff + 5, fg);
             }
         prev_fg = fg;
         }
-    if( *txt)
-        fwrite( txt, strlen( txt), 1, stdout);
 }
+
+int PDC_wc_to_utf8( char *dest, const wchar_t code);
 
       /* We can output runs up to RUN_LEN wide chars.  Each may become
          four bytes in UTF8,  so we set OBUFF_SIZE = 4 * RUN_LEN.   */
@@ -165,23 +164,27 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
        {
        int ch = (int)( *srcp & A_CHARTEXT), count = 1;
        chtype changes = *srcp ^ prev_ch;
+       char attrib_text[180];
 
        if( (*srcp & A_ALTCHARSET) && ch < 0x80)
           ch = (int)acs_map[ch & 0x7f];
        if( ch < (int)' ' || (ch >= 0x80 && ch <= 0x9f))
           ch = ' ';
+       *attrib_text = '\0';
        if( SP->termattrs & changes & A_BOLD)
-          printf( (*srcp & A_BOLD) ? BOLD_ON : BOLD_OFF);
+          strcpy( attrib_text, (*srcp & A_BOLD) ? BOLD_ON : BOLD_OFF);
        if( changes & A_UNDERLINE)
-          printf( (*srcp & A_UNDERLINE) ? UNDERLINE_ON : UNDERLINE_OFF);
+          strcat( attrib_text, (*srcp & A_UNDERLINE) ? UNDERLINE_ON : UNDERLINE_OFF);
        if( changes & A_ITALIC)
-          printf( (*srcp & A_ITALIC) ? ITALIC_ON : ITALIC_OFF);
+          strcat( attrib_text, (*srcp & A_ITALIC) ? ITALIC_ON : ITALIC_OFF);
        if( changes & A_REVERSE)
-          printf( (*srcp & A_REVERSE) ? REVERSE_ON : REVERSE_OFF);
+          strcat( attrib_text, (*srcp & A_REVERSE) ? REVERSE_ON : REVERSE_OFF);
        if( SP->termattrs & changes & A_BLINK)
-          printf( (*srcp & A_BLINK) ? BLINK_ON : BLINK_OFF);
+          strcat( attrib_text, (*srcp & A_BLINK) ? BLINK_ON : BLINK_OFF);
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
-          reset_color( *srcp & ~A_REVERSE);
+          reset_color( attrib_text + strlen( attrib_text), *srcp & ~A_REVERSE);
+       if( *attrib_text)
+          fwrite( attrib_text, 1, strlen( attrib_text), stdout);
 #ifdef USING_COMBINING_CHARACTER_SCHEME
        if( ch > (int)MAX_UNICODE)      /* chars & fullwidth supported */
        {
@@ -204,7 +207,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
            size_t bytes_out, bytes_written;
            char obuff[OBUFF_SIZE];
 
-           bytes_out = wctomb( obuff, (wchar_t)ch);
+           bytes_out = PDC_wc_to_utf8( obuff, (wchar_t)ch);
            while( count < len && !((srcp[0] ^ srcp[count]) & ~A_CHARTEXT)
                         && (ch = (srcp[count] & A_CHARTEXT)) < MAX_UNICODE)
            {
@@ -212,7 +215,8 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
                   ch = (int)acs_map[ch & 0x7f];
                if( ch < (int)' ' || (ch >= 0x80 && ch <= 0x9f))
                   ch = ' ';
-               bytes_out += wctomb( obuff + bytes_out, (wchar_t)ch);
+               bytes_out += PDC_wc_to_utf8( obuff + bytes_out, (wchar_t)ch);
+               assert( bytes_out <= OBUFF_SIZE);
                count++;
            }
            bytes_written = fwrite( obuff, 1, bytes_out, stdout);

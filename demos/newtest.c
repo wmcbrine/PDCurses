@@ -291,10 +291,6 @@ int main( int argc, char **argv)
             color_block_cols = 0;
         if( redraw)
         {
-#if defined( CHTYPE_64) || defined( HAVE_WIDE)
-            int line = 21;
-#endif
-
             mvaddstr( 1, COL1, "'Normal' white-on-black");
             mvaddstr( 2, COL1, longname( ));
 #ifdef A_DIM
@@ -443,9 +439,8 @@ int main( int argc, char **argv)
                 mvaddwstr( 15 + i / 2, 2 + 20 * (i % 2), texts[i]);
             }
 #ifdef CHTYPE_64
-             mvaddch( line - 1, 60, (chtype)0x1d11e);
+             mvaddch( 17, 41, (chtype)0x1d11e);
 #endif            /* U+1D11E = musical symbol G clef */
-            line += 2;
 #endif
         mvaddstr( 19, 1, curses_version( ));
 

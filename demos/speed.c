@@ -8,14 +8,15 @@ semi-random numbers on the screen for 3000 milliseconds = 3 seconds,
 and then tells you how many frames per second you got (i.e.,  how
 many complete screen refreshes).
 
-   Results on my somewhat elderly machine,  all in Xubuntu 16.04 :
+   Results on my somewhat elderly machine,  all in Xubuntu 18.04 :
 
-SDL2: 470 fps in non-wide mode,  87 fps in wide mode
-X11 wide mode: 120 fps first time,  180 fps subsequently
-X11 non-wide: 120 fps every time
-Win32a (run under Wine): 140 fps,  wide and non-wide
-Win32 console (run in Wineconsole): 350 fps wide,  40 non-wide
-ncurses: 245 fps
+SDL1 : 140 fps in wide mode,  340 in non-wide
+SDL2: 233 fps in wide mode, 624 fps in non-wide mode
+X11 wide mode: 180 fps first time,  800 fps subsequently
+ncurses : 3700 fps in wide mode
+VT : 3600 fps in wide mode,  4500 fps in non-wide mode
+WinGUI : 280 fps,  both modes (through Wine)
+WinCon : 840 fps,  wide mode;  75 fps in non-wide
 
    SDL2 uses TrueType (R) fonts in wide mode,  as opposed to simple
 bitmapped fonts in 8-bit mode.  So its ability to be blazingly fast
@@ -35,6 +36,7 @@ int main( const int argc, const char **argv)
     struct timeb t1, t2;
     int millisec_elapsed = 0;
 
+//  setvbuf( stdout, NULL, _IONBF, 0);
     initscr();
     cbreak( );
     noecho();
@@ -64,7 +66,7 @@ int main( const int argc, const char **argv)
       for( i = 0; i < lines; i++)
          {
          move( i, 0);
-         if( i == n_frames % lines)
+         if( i == (int)n_frames % lines)
             attrset( A_NORMAL);
          for( j = 0; j + 10 < cols; j += 10)
             addstr( buff);

@@ -542,10 +542,10 @@ int main( int argc, char **argv)
                     cursor_state_2 = (cursor_state_2 + shift) % N_CURSORS;
             }
 #endif
-#ifdef HAVE_WIDE
             else if( mouse_event.x >= 40 && mouse_event.x <= 52)
                switch( mouse_event.y)
                {
+#ifdef HAVE_WIDE
                   case 11:
                      redraw = 1;
                      unicode_offset += 0x80;
@@ -557,6 +557,7 @@ int main( int argc, char **argv)
                         unicode_offset -= 0x80;
                      }
                      break;
+#endif
 #ifdef PDCURSES
                   case 6:
                      PDC_set_blink( termattrs( ) & A_BLINK ? FALSE : TRUE);
@@ -570,7 +571,6 @@ int main( int argc, char **argv)
                   default:
                      break;
                }
-#endif
         }
     }
 

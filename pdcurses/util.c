@@ -127,6 +127,40 @@ int delay_output(int ms)
     return napms(ms);
 }
 
+int PDC_wc_to_utf8( char *dest, const wchar_t code)
+{
+   int n_bytes_out;
+
+   if (code < 0x80)
+   {
+       dest[0] = (char)code;
+       n_bytes_out = 1;
+   }
+   else
+       if (code < 0x800)
+       {
+           dest[0] = (char) (((code >> 6) & 0x1f) | 0xc0);
+           dest[1] = (char) ((code & 0x3f) | 0x80);
+           n_bytes_out = 2;
+       }
+       else if( code < 0x10000)
+       {
+           dest[0] = (char) (((code >> 12) & 0x0f) | 0xe0);
+           dest[1] = (char) (((code >> 6) & 0x3f) | 0x80);
+           dest[2] = (char) ((code & 0x3f) | 0x80);
+           n_bytes_out = 3;
+       }
+       else       /* Unicode past 64K,  i.e.,  SMP */
+       {
+           dest[0] = (char) (((code >> 18) & 0x0f) | 0xf0);
+           dest[1] = (char) (((code >> 12) & 0x3f) | 0x80);
+           dest[2] = (char) (((code >> 6) & 0x3f) | 0x80);
+           dest[3] = (char) ((code & 0x3f) | 0x80);
+           n_bytes_out = 4;
+       }
+   return( n_bytes_out);
+}
+
 #ifdef PDC_WIDE
 int getcchar(const cchar_t *wcval, wchar_t *wch, attr_t *attrs,
              short *color_pair, void *opts)
@@ -281,29 +315,7 @@ size_t PDC_wcstombs(char *dest, const wchar_t *src, size_t n)
         return 0;
 
     while (*src && i < n)
-    {
-        chtype code = *src++;
-
-        if (code < 0x80)
-        {
-            dest[i] = (char)code;
-            i++;
-        }
-        else
-            if (code < 0x800)
-            {
-                dest[i] = (char)((code & 0x07c0) >> 6) | 0xc0;
-                dest[i + 1] = (char)( (code & 0x003f) | 0x80);
-                i += 2;
-            }
-            else
-            {
-                dest[i] = (char)( ((code & 0xf000) >> 12) | 0xe0);
-                dest[i + 1] = (char)((code & 0x0fc0) >> 6) | 0x80;
-                dest[i + 2] = (char)( (code & 0x003f) | 0x80);
-                i += 3;
-            }
-    }
+       i += PDC_wc_to_utf8( dest + i, *src++);
 # else
     size_t i = wcstombs(dest, src, n);
 # endif

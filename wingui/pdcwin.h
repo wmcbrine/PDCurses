@@ -13,6 +13,10 @@
 
 #include <windows.h>
 
+#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_DEPRECATE)
+# define _CRT_SECURE_NO_DEPRECATE 1   /* kill nonsense warnings */
+#endif
+
 #if defined( GS_8BIT_INDICES) && defined( PDC_WIDE)
      /* We only need the 'fallback font' for the wide-char version, */
      /* and it'll only work in Win2000 or later (earlier versions   */

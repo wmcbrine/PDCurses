@@ -186,6 +186,7 @@ bool PDC_has_rgb_color = FALSE;
 int PDC_scr_open(void)
 {
     char *capabilities = getenv( "PDC_VT");
+    char *term_env = getenv( "TERM");
     const char *colorterm = getenv( "COLORTERM");
 #ifdef USE_TERMIOS
     struct sigaction sa;
@@ -196,7 +197,9 @@ int PDC_scr_open(void)
 #endif
 
     PDC_LOG(("PDC_scr_open called\n"));
-    if( colorterm && !strcmp( colorterm, "truecolor"))
+    if( !strcmp( term_env, "linux"))
+       PDC_is_ansi = TRUE;
+    else if( colorterm && !strcmp( colorterm, "truecolor"))
        PDC_has_rgb_color = TRUE;
     if( capabilities)      /* these should really come from terminfo! */
        {

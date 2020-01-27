@@ -11,6 +11,9 @@
 #include <tchar.h>
 #include "../common/pdccolor.h"
 #include "../common/pdccolor.c"
+#ifdef WIN32_LEAN_AND_MEAN
+   #include <commdlg.h>
+#endif
 
 /* For this 'real Windows' version,  we use all Unicode all the time,
 including for ACS characters,  and even when PDC_WIDE isn't #defined

@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include <assert.h>
 #include "../common/pdccolor.h"
+#ifdef WIN32_LEAN_AND_MEAN
+   #include <shellapi.h>
+#endif
 
 /* COLOR_PAIR to attribute encoding table. */
 

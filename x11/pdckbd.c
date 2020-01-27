@@ -3,6 +3,7 @@
 #include "pdcx11.h"
 
 #include <keysym.h>
+#include <assert.h>
 
 #ifdef HAVE_DECKEYSYM_H
 # include <DECkeysym.h>
@@ -334,16 +335,15 @@ static unsigned long _process_key_event(XEvent *event)
     return -1;
 }
 
-static unsigned long _process_mouse_event(XEvent *event)
+static unsigned long _process_mouse_event( const XEvent *event)
 {
-    int button_no;
+    int button_no = event->xbutton.button;
     static int last_button_no = 0;
 
     PDC_LOG(("_process_mouse_event() - called\n"));
 
+    assert( button_no >= 1 && button_no <= PDC_MAX_MOUSE_BUTTONS);
     keysym = 0; /* suppress any modifier key return */
-
-    button_no = event->xbutton.button;
 
     /* It appears that under X11R6 (at least on Linux), that an
        event_type of ButtonMotion does not include the mouse button in

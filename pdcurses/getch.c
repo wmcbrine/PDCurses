@@ -117,12 +117,12 @@ static int _get_box(int *y_start, int *y_end, int *x_start, int *x_end)
     return (end - start) + (*y_end - *y_start);
 }
 
-static void _highlight(void)
+static bool _highlight(void)
 {
     int i, j, y_start, y_end, x_start, x_end;
 
-    if (-1 == SP->sel_start)
-        return;
+    if (-1 == SP->sel_start || SP->sel_start == SP->sel_end)
+        return( FALSE);
 
     _get_box(&y_start, &y_end, &x_start, &x_end);
 
@@ -130,8 +130,7 @@ static void _highlight(void)
         for (i = (j == y_start ? x_start : 0);
              i < (j == y_end ? x_end : COLS); i++)
             curscr->_y[j][i] ^= A_REVERSE;
-
-    wrefresh(curscr);
+    return( TRUE);
 }
 
 static void _copy(void)
@@ -244,14 +243,19 @@ static int _mouse_key(void)
         switch (SP->mouse_status.button[0] & BUTTON_ACTION_MASK)
         {
         case BUTTON_PRESSED:
-            _highlight();
+            if( _highlight())
+                wrefresh(curscr);
             SP->sel_start = SP->sel_end = i;
             return -1;
         case BUTTON_MOVED:
-            _highlight();
+            {
+            const bool refresh_needed = _highlight();
+
             SP->sel_end = i;
-            _highlight();
+            if( _highlight() || refresh_needed)
+                wrefresh(curscr);
             return -1;
+            }
         case BUTTON_RELEASED:
             _copy();
             return -1;
@@ -424,7 +428,8 @@ int wgetch(WINDOW *win)
         if (key == -1)
             continue;
 
-        _highlight();
+        if( _highlight())
+            wrefresh(curscr);
         SP->sel_start = SP->sel_end = -1;
 
         /* translate CR */

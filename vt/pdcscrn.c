@@ -13,6 +13,7 @@ static struct termios orig_term;
 
 
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #undef MOUSE_MOVED
 #endif

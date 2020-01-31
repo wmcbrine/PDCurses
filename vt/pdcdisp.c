@@ -123,7 +123,7 @@ static void reset_color( char *obuff, const chtype ch)
         }
 }
 
-int PDC_wc_to_utf8( char *dest, const wchar_t code);
+int PDC_wc_to_utf8( char *dest, const int32_t code);
 
       /* We can output runs up to RUN_LEN wide chars.  Each may become
          four bytes in UTF8,  so we set OBUFF_SIZE = 4 * RUN_LEN.   */

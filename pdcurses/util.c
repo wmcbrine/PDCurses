@@ -127,7 +127,7 @@ int delay_output(int ms)
     return napms(ms);
 }
 
-int PDC_wc_to_utf8( char *dest, const wchar_t code)
+int PDC_wc_to_utf8( char *dest, const int32_t code)
 {
    int n_bytes_out;
 

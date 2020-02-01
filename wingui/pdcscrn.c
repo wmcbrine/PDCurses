@@ -7,6 +7,7 @@
 #include "../common/pdccolor.h"
 #ifdef WIN32_LEAN_AND_MEAN
    #include <shellapi.h>
+   #include <stdlib.h>
 #endif
 
 /* COLOR_PAIR to attribute encoding table. */
@@ -31,6 +32,7 @@ functions.        */
 #define INLINE static inline
 #endif
 
+static int add_mouse( int button, const int action, const int x, const int y);
 static int keep_size_within_bounds( int *lines, int *cols);
 INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
                const int xloc, const int yloc, const int menu_shown);
@@ -577,14 +579,34 @@ than 2 * SP->mouse_wait milliseconds,  then the messages sent will be
 BUTTON_CLICKED,  BUTTON_DOUBLE_CLICKED,  BUTTON_TRIPLE_CLICKED,  and
 then another BUTTON_TRIPLE_CLICKED.                                     */
 
-static int set_mouse( const int button_index, const int button_state,
-                           const LPARAM lParam)
+static bool mouse_key_already_in_queue( void)
 {
-    int i, n_key_mouse_to_add = 1;
+    int i = PDC_key_queue_low;
+
+    while( i != PDC_key_queue_high)
+    {
+        if( PDC_key_queue[i] == KEY_MOUSE)
+        {
+            debug_printf( "Mouse key already in queue\n");
+            return( TRUE);
+        }
+        i = (i + 1) % KEY_QUEUE_SIZE;
+    }
+    return( FALSE);
+}
+
+static int set_mouse( const int button_index, const int button_state,
+                           const int x, const int y)
+{
+    int n_key_mouse_to_add = 1;
     POINT pt;
 
-    pt.x = LOWORD( lParam);
-    pt.y = HIWORD( lParam);
+                  /* If there is already a KEY_MOUSE in the queue,  we   */
+                  /* don't really want to add another one.  See above.   */
+    if( mouse_key_already_in_queue( ))
+        return( -1);
+    pt.x = x;
+    pt.y = y;
     if( button_index == -1)         /* mouse moved,  no button */
         n_key_mouse_to_add = 1;
     else
@@ -641,13 +663,13 @@ static int set_mouse( const int button_index, const int button_state,
                         /* return x = y = -1,  rather than getting the    */
                         /* actual mouse position.  I don't like this, but */
                         /* I like messing up existing apps even less.     */
-            pt.x = -PDC_cxChar;
-            pt.y = -PDC_cyChar;
-/*          ScreenToClient( PDC_hWnd, &pt);      Wheel posns are in screen, */
-        }                         /* not client,  coords;  gotta xform them */
+            pt.x = pt.y = -1;
+        }
     }
-    SP->mouse_status.x = pt.x / PDC_cxChar;
-    SP->mouse_status.y = pt.y / PDC_cyChar;
+    if( button_state == BUTTON_MOVED)
+        SP->mouse_status.changes |= (button_index >= 0 ? PDC_MOUSE_MOVED : PDC_MOUSE_POSITION);
+    SP->mouse_status.x = pt.x;
+    SP->mouse_status.y = pt.y;
     {
         int i, button_flags = 0;
 
@@ -662,18 +684,6 @@ static int set_mouse( const int button_index, const int button_state,
 
         for (i = 0; i < PDC_MAX_MOUSE_BUTTONS; i++)
             SP->mouse_status.button[i] |= button_flags;
-    }
-                  /* If there is already a KEY_MOUSE in the queue,  we   */
-                  /* don't really want to add another one.  See above.   */
-    i = PDC_key_queue_low;
-    while( i != PDC_key_queue_high)
-    {
-        if( PDC_key_queue[i] == KEY_MOUSE)
-        {
-            debug_printf( "Mouse key already in queue\n");
-            return( 0);
-        }
-        i = (i + 1) % KEY_QUEUE_SIZE;
     }
                   /* If the window is maximized,  the click may occur just */
                   /* outside the "real" screen area.  If so,  we again     */
@@ -1409,56 +1419,12 @@ static void HandleSize( const WPARAM wParam, const LPARAM lParam)
     prev_wParam = wParam;
 }
 
-static void HandleMouseMove( WPARAM wParam, LPARAM lParam,
-                      int* ptr_modified_key_to_return )
+static int HandleMouseMove( WPARAM wParam, LPARAM lParam)
 {
     const int mouse_x = LOWORD( lParam) / PDC_cxChar;
     const int mouse_y = HIWORD( lParam) / PDC_cyChar;
-    static int prev_mouse_x, prev_mouse_y;
 
-    if( mouse_x != prev_mouse_x || mouse_y != prev_mouse_y)
-    {
-        int report_event = 0;
-
-        prev_mouse_x = mouse_x;
-        prev_mouse_y = mouse_y;
-        if( wParam & MK_LBUTTON)
-            report_event |= PDC_MOUSE_MOVED | 1;
-        if( wParam & MK_MBUTTON)
-            report_event |= PDC_MOUSE_MOVED | 2;
-        if( wParam & MK_RBUTTON)
-            report_event |= PDC_MOUSE_MOVED | 4;
-
-#ifdef CANT_DO_THINGS_THIS_WAY
-         /* Logic would dictate the following lines.  But with PDCurses */
-         /* as it's currently set up,  we've run out of bits and there  */
-         /* is no BUTTON4_MOVED or BUTTON5_MOVED.  Perhaps we need to   */
-         /* redefine _trap_mbe to be a 64-bit quantity?                 */
-            if( wParam & MK_XBUTTON1)
-                if( SP->_trap_mbe & BUTTON4_MOVED)
-                    report_event |= PDC_MOUSE_MOVED | 8;
-            if( wParam & MK_XBUTTON2)
-                if( SP->_trap_mbe & BUTTON5_MOVED)
-                    report_event |= PDC_MOUSE_MOVED | 16;
-#endif
-
-        if( !report_event)
-            if( SP->_trap_mbe & REPORT_MOUSE_POSITION)
-               report_event = PDC_MOUSE_POSITION;
-        if( report_event)
-        {
-            int i;
-
-            SP->mouse_status.changes = report_event;
-            for( i = 0; i < 3; i++)
-            {
-                SP->mouse_status.button[i] = (((report_event >> i) & 1) ?
-                    BUTTON_MOVED : 0);
-            }
-            *ptr_modified_key_to_return = 0;
-            set_mouse( -1, 0, lParam );
-        }             /* -1 to 'set_mouse' signals mouse move; 0 is ignored */
-    }
+    return( add_mouse( 0, BUTTON_MOVED, mouse_x, mouse_y) != -1);
 }
 
 static void HandlePaint( HWND hwnd )
@@ -1731,6 +1697,106 @@ INLINE uint64_t milliseconds_since_1970( void)
    return( decimicroseconds_since_1970 / 10000);
 }
 
+typedef struct
+{
+   int x, y;
+   int button, action;
+} PDC_mouse_event;
+
+static int add_mouse( int button, const int action, const int x, const int y)
+{
+   static int n = 0;
+   static PDC_mouse_event e[10];
+   static uint64_t prev_t = 0;
+   const uint64_t curr_t = milliseconds_since_1970( );
+   const int timing_slop = 20;
+   bool within_timeout = (curr_t < prev_t + SP->mouse_wait + timing_slop);
+   static int mouse_state = 0;
+   static int prev_x, prev_y = -1;
+   const bool actually_moved = (x != prev_x || y != prev_y);
+
+   if( action == BUTTON_MOVED && mouse_key_already_in_queue( ))
+       return( 0);
+   if( action == BUTTON_PRESSED)
+       mouse_state |= (1 << button);
+   else if( action == BUTTON_RELEASED)
+       mouse_state &= ~(1 << button);
+   if( button >= 0)
+   {
+      prev_x = x;
+      prev_y = y;
+   }
+   if( action == BUTTON_MOVED)
+   {
+       int i;
+#ifdef TEMP_REMOVE
+       bool report_this_move = FALSE;
+#endif
+
+       if( !actually_moved)     /* have to move to a new character cell, */
+           return( -1);         /* not just a new pixel */
+       button = -1;        /* assume no buttons down */
+       for( i = 0; i < 9; i++)
+           if( (mouse_state >> i) & 1)
+               button = i;
+       if( button == -1 && !(SP->_trap_mbe & REPORT_MOUSE_POSITION))
+           return( -1);
+#ifdef TEMP_REMOVE
+       if( (SP->_trap_mbe & REPORT_MOUSE_POSITION)
+               || (button == 1 && (SP->_trap_mbe & BUTTON1_MOVED))
+               || (button == 2 && (SP->_trap_mbe & BUTTON2_MOVED))
+               || (button == 3 && (SP->_trap_mbe & BUTTON3_MOVED)))
+           report_this_move = TRUE;
+       debug_printf( "Move button %d, (%d %d) : %d\n", button, x, y, report_this_move);
+       if( !report_this_move)
+           return( -1);
+#endif
+   }
+
+   if( !within_timeout || action == BUTTON_MOVED)
+       while( n && !set_mouse( e->button - 1, e->action, e->x, e->y))
+       {
+           n--;
+           memmove( e, e + 1, n * sizeof( PDC_mouse_event));
+       }
+   if( action == BUTTON_MOVED)
+       if( !set_mouse( button - 1, action, x, y))
+           return( n);
+   if( button < 0 && action != BUTTON_MOVED)
+       return( n);         /* we're just checking for timed-out events */
+   debug_printf( "Button %d, act %d, dt %ld : n %d\n", button, action,
+                  (long)( curr_t - prev_t), n);
+   e[n].button = button;
+   e[n].action = action;
+   e[n].x = x;
+   e[n].y = y;
+   if( n)
+   {
+       int merged_act = 0;
+
+       do
+       {
+           if( e[n - 1].button == e[n].button)
+           {
+               if( e[n - 1].action == BUTTON_PRESSED && e[n].action == BUTTON_RELEASED)
+                   merged_act = BUTTON_CLICKED;
+               else if( e[n - 1].action == BUTTON_CLICKED && e[n].action == BUTTON_CLICKED)
+                   merged_act = BUTTON_DOUBLE_CLICKED;
+               else if( e[n - 1].action == BUTTON_DOUBLE_CLICKED && e[n].action == BUTTON_CLICKED)
+                   merged_act = BUTTON_TRIPLE_CLICKED;
+               if( merged_act)
+               {
+                   n--;
+                   e[n].action = merged_act;
+               }
+           }
+       }  while( n && merged_act);
+   }
+   prev_t = curr_t;
+   n++;
+   return( n);
+}
+
 /* Note that there are two types of WM_TIMER timer messages.  One type
 indicates that SP->mouse_wait milliseconds have elapsed since a mouse
 button was pressed;  that's handled as described in the above notes.
@@ -1761,13 +1827,10 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
                           const WPARAM wParam,
                           const LPARAM lParam)
 {
-    int button_down = -1, button_up = -1;
-    static int mouse_buttons_pressed = 0;
-    static LPARAM mouse_lParam;
-    static uint64_t last_click_time[PDC_MAX_MOUSE_BUTTONS];
-                               /* in millisec since 1970 */
+    static int xbutton_pressed = 0;
     static int modified_key_to_return = 0;
     static bool ignore_resize = FALSE;
+    int button = -1, action = -1;
 
     PDC_hWnd = hwnd;
     if( !hwnd)
@@ -1790,56 +1853,54 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
     case WM_MOUSEWHEEL:
         debug_printf( "Mouse wheel: %x %lx\n", wParam, lParam);
         modified_key_to_return = 0;
-        set_mouse( VERTICAL_WHEEL_EVENT, (short)( HIWORD(wParam)), lParam);
+        set_mouse( VERTICAL_WHEEL_EVENT, (short)( HIWORD(wParam)), 0, 0);
         break;
 
     case WM_MOUSEHWHEEL:
         debug_printf( "Mouse horiz wheel: %x %lx\n", wParam, lParam);
         modified_key_to_return = 0;
-        set_mouse( HORIZONTAL_WHEEL_EVENT, (short)( HIWORD(wParam)), lParam);
+        set_mouse( HORIZONTAL_WHEEL_EVENT, (short)( HIWORD(wParam)), 0, 0);
         break;
 
     case WM_MOUSEMOVE:
-        HandleMouseMove( wParam, lParam, &modified_key_to_return );
+        if( HandleMouseMove( wParam, lParam))
+            modified_key_to_return = 0;
         break;
 
     case WM_LBUTTONDOWN:
-        button_down = 0;
-        SetCapture( hwnd);
+        button = 1;
+        action = BUTTON_PRESSED;
         break;
 
     case WM_LBUTTONUP:
-        button_up = 0;
-        ReleaseCapture( );
+        button = 1;
+        action = BUTTON_RELEASED;
         break;
 
     case WM_RBUTTONDOWN:
-        button_down = 2;
-        SetCapture( hwnd);
+        button = 3;
+        action = BUTTON_PRESSED;
         break;
 
     case WM_RBUTTONUP:
-        button_up = 2;
-        ReleaseCapture( );
+        button = 3;
+        action = BUTTON_RELEASED;
         break;
 
     case WM_MBUTTONDOWN:
-        button_down = 1;
-        SetCapture( hwnd);
+        button = 2;
+        action = BUTTON_PRESSED;
         break;
 
     case WM_MBUTTONUP:
-        button_up = 1;
-        ReleaseCapture( );
+        button = 2;
+        action = BUTTON_RELEASED;
         break;
 
-#if( PDC_MAX_MOUSE_BUTTONS >= 5)
-             /* WinGUI can support five mouse buttons.  But some may wish */
-             /* to leave PDC_MAX_MOUSE_BUTTONS=3,  for compatibility      */
-             /* with older PDCurses libraries.  Hence the above #if.      */
     case WM_XBUTTONDOWN:
-        button_down = ((wParam & MK_XBUTTON1) ? 3 : 4);
-        SetCapture( hwnd);
+        button = ((wParam & MK_XBUTTON1) ? 3 : 4);
+        action = BUTTON_PRESSED;
+        xbutton_pressed = button;
         break;
 
     case WM_XBUTTONUP:
@@ -1849,13 +1910,11 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
           /* tell you which button was released!  So we'll assume that    */
           /* the released xbutton matches a pressed one;  and we've kept  */
           /* track of which buttons are currently pressed.                */
-        button_up = ((wParam & MK_XBUTTON1) ? 3 : 4);
+        button = ((wParam & MK_XBUTTON1) ? 3 : 4);
 #endif
-        button_up = (((mouse_buttons_pressed & 8) ||
-                 SP->mouse_status.button[3] & BUTTON_PRESSED) ? 3 : 4);
-        ReleaseCapture( );
+        button = xbutton_pressed;
+        action = BUTTON_RELEASED;
         break;
-#endif         /* #if( PDC_MAX_MOUSE_BUTTONS >= 5) */
 
     case WM_MOVE:
         return 0 ;
@@ -1907,13 +1966,10 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         return 0 ;
 
     case WM_TIMER:
-        /* see notes above this function */
-        if( wParam != TIMER_ID_FOR_BLINKING )
+        if( wParam != TIMER_ID_FOR_BLINKING)
         {
-            modified_key_to_return = 0;
-            set_mouse( (const int) wParam, BUTTON_PRESSED, mouse_lParam);
             KillTimer( PDC_hWnd, (int)wParam);
-            mouse_buttons_pressed ^= (1 << wParam);
+//          within_timeout = FALSE;
         }
         else if( SP && curscr && curscr->_y)
         {
@@ -1966,64 +2022,17 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
         PDC_bDone = TRUE;
         return 0 ;
     }
-
-    if( button_down >= 0)
+    if( button != -1)
     {
-        modified_key_to_return = 0;
-        SetTimer( hwnd, button_down, SP->mouse_wait, NULL);
-        mouse_buttons_pressed |= (1 << button_down);
-        mouse_lParam = lParam;
+        add_mouse( button, action, LOWORD( lParam) / PDC_cxChar, HIWORD( lParam) / PDC_cyChar);
+        if( action == BUTTON_PRESSED)
+           SetCapture( hwnd);
+        else
+           ReleaseCapture( );
+//      SetTimer( hwnd, 0, SP->mouse_wait, NULL);
     }
-    if( button_up >= 0)
-    {
-        int message_to_send = -1;
-
-        modified_key_to_return = 0;
-        if( (mouse_buttons_pressed >> button_up) & 1)
-        {
-            const uint64_t curr_click_time =
-                             milliseconds_since_1970( );
-            static const int double_remap_table[PDC_MAX_MOUSE_BUTTONS] =
-                      { BUTTON1_DOUBLE_CLICKED, BUTTON2_DOUBLE_CLICKED,
-                        BUTTON3_DOUBLE_CLICKED, BUTTON4_DOUBLE_CLICKED,
-                        BUTTON5_DOUBLE_CLICKED };
-            static const int triple_remap_table[PDC_MAX_MOUSE_BUTTONS] =
-                      { BUTTON1_TRIPLE_CLICKED, BUTTON2_TRIPLE_CLICKED,
-                        BUTTON3_TRIPLE_CLICKED, BUTTON4_TRIPLE_CLICKED,
-                        BUTTON5_TRIPLE_CLICKED };
-            static int n_previous_clicks;
-
-            if( curr_click_time <
-                             last_click_time[button_up] + 2 * SP->mouse_wait)
-               n_previous_clicks++;       /* 'n_previous_clicks' will be  */
-            else                         /* zero for a "normal" click, 1  */
-               n_previous_clicks = 0;   /* for a dblclick, 2 for a triple */
-
-            if( n_previous_clicks >= 2 &&
-                            (SP->_trap_mbe & triple_remap_table[button_up]))
-                message_to_send = BUTTON_TRIPLE_CLICKED;
-            else if( n_previous_clicks >= 1 &&
-                            (SP->_trap_mbe & double_remap_table[button_up]))
-                message_to_send = BUTTON_DOUBLE_CLICKED;
-            else         /* either it's not a doubleclick, or we aren't */
-            {            /* checking for double clicks */
-                static const int remap_table[PDC_MAX_MOUSE_BUTTONS] =
-                          { BUTTON1_CLICKED, BUTTON2_CLICKED, BUTTON3_CLICKED,
-                            BUTTON4_CLICKED, BUTTON5_CLICKED };
-
-                if( SP->_trap_mbe & remap_table[button_up])
-                    message_to_send = BUTTON_CLICKED;
-            }
-            KillTimer( hwnd, button_up);
-            mouse_buttons_pressed ^= (1 << button_up);
-            last_click_time[button_up] = curr_click_time;
-        }
-        if( message_to_send == -1)   /* might just send as a 'released' msg */
-            message_to_send = BUTTON_RELEASED;
-        if( message_to_send !=- 1)
-            set_mouse( button_up, message_to_send, lParam);
-    }
-
+    else
+       add_mouse( -1, -1, -1, -1);
     return DefWindowProc( hwnd, message, wParam, lParam) ;
 }
 

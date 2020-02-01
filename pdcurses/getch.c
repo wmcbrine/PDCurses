@@ -233,11 +233,14 @@ static int _paste(void)
 static int _mouse_key(void)
 {
     int i, key = KEY_MOUSE, changes = SP->mouse_status.changes;
-    unsigned long mbe = SP->_trap_mbe;
+    const unsigned long mbe = SP->_trap_mbe;
+    bool can_select = !(mbe & (BUTTON1_MOVED || BUTTON1_PRESSED || BUTTON1_RELEASED));
+    bool can_paste = !(mbe & BUTTON2_CLICKED);
+            /* really means 'can do these things without shift' */
 
     /* Selection highlighting? */
 
-    if ((!mbe || SP->mouse_status.button[0] & BUTTON_SHIFT) && changes & 1)
+    if ((can_select || SP->mouse_status.button[0] & BUTTON_SHIFT) && changes & 1)
     {
         i = SP->mouse_status.y * COLS + SP->mouse_status.x;
         switch (SP->mouse_status.button[0] & BUTTON_ACTION_MASK)
@@ -261,7 +264,7 @@ static int _mouse_key(void)
             return -1;
         }
     }
-    else if ((!mbe || SP->mouse_status.button[1] & BUTTON_SHIFT) &&
+    else if ((can_paste || SP->mouse_status.button[1] & BUTTON_SHIFT) &&
              changes & 2 && (SP->mouse_status.button[1] &
              BUTTON_ACTION_MASK) == BUTTON_CLICKED)
     {

@@ -67,8 +67,20 @@ desirable functions anyway).
 probably want to make it as memory-frugal as the above scheme for the
 color palette,  and probably would do it in the same way : 256 color
 pairs would be allocated by default,  with more only allocated if we
-actually need them.  (64K color pairs ought to be enough for anybody,
-it seems to me... I'm open to counter-arguments.)
+actually need them.
+
+   I originally wrote that 64K color pairs should be enough for
+anybody.  ncurses has such a limit.  However,  it does mean that
+the 'picsmap' demo to show an image using ncurses can't handle an
+image with more than 64K pixels.  It really would not be all that
+difficult,  using the same 'color cube' technique as above,  to
+support COLOR_PAIRS = 256 + 16M,  with the sixteen million
+corresponding, by default,  to the RGB color in question.
+
+   Two downsides to that : (a) we'd be devoting 25 bits to color,
+which does seem like a lot,  and (b) the "usual" model is that
+using an uninitialized color pair results in undefined behavior.
+(To which we can reply that "well,  we're defining it.")
 
    -- We'll need to add init_extended_pair,  init_extended_color,
 extended_color_content,  and extended_pair_content,  a la ncurses...

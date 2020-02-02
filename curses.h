@@ -352,8 +352,8 @@ typedef struct _win       /* definition of a window */
 
 typedef struct
 {
-    short f;              /* foreground color */
-    short b;              /* background color */
+    int f;                /* foreground color */
+    int b;                /* background color */
     bool  set;            /* pair has been set */
 } PDC_PAIR;
 
@@ -1312,6 +1312,8 @@ PDCEX  int     echo(void);
 PDCEX  int     endwin(void);
 PDCEX  char    erasechar(void);
 PDCEX  int     erase(void);
+PDCEX  int     extended_color_content(int, int *, int *, int *);
+PDCEX  int     extended_pair_content(int, int *, int *);
 PDCEX  void    filter(void);
 PDCEX  int     flash(void);
 PDCEX  int     flushinp(void);
@@ -1331,6 +1333,8 @@ PDCEX  int     inchnstr(chtype *, int);
 PDCEX  int     inchstr(chtype *);
 PDCEX  chtype  inch(void);
 PDCEX  int     init_color(short, short, short, short);
+PDCEX  int     init_extended_color(int, int, int, int);
+PDCEX  int     init_extended_pair(int, int, int);
 PDCEX  int     init_pair(short, short, short);
 PDCEX  WINDOW *initscr(void);
 PDCEX  int     innstr(char *, int);

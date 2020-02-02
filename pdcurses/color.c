@@ -13,9 +13,13 @@ color
     int start_color(void);
     int init_pair(short pair, short fg, short bg);
     int pair_content(short pair, short *fg, short *bg);
+    int init_extended_pair(int pair, int fg, int bg);
+    int extended_pair_content(int pair, int *fg, int *bg);
     bool can_change_color(void);
     int init_color(short color, short red, short green, short blue);
     int color_content(short color, short *red, short *green, short *blue);
+    int init_extended_color(int color, int red, int green, int blue);
+    int extended_color_content(int color, int *red, int *green, int *blue);
 
     int assume_default_colors(int f, int b);
     int use_default_colors(void);
@@ -102,7 +106,7 @@ int COLORS = 0;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
 static bool default_colors = FALSE;
-static short first_col = 0;
+static int first_col = 0;
 
 int start_color(void)
 {
@@ -123,7 +127,7 @@ int start_color(void)
     return OK;
 }
 
-static void _normalize(short *fg, short *bg)
+static void _normalize(int *fg, int *bg)
 {
     if (*fg == -1)
         *fg = SP->orig_attr ? SP->orig_fore : COLOR_WHITE;
@@ -132,7 +136,7 @@ static void _normalize(short *fg, short *bg)
         *bg = SP->orig_attr ? SP->orig_back : COLOR_BLACK;
 }
 
-static void _init_pair_core(short pair, short fg, short bg)
+static void _init_pair_core(int pair, int fg, int bg)
 {
     PDC_PAIR *p = SP->atrtab + pair;
 
@@ -153,7 +157,7 @@ static void _init_pair_core(short pair, short fg, short bg)
     p->set = TRUE;
 }
 
-int init_pair(short pair, short fg, short bg)
+int init_extended_pair(int pair, int fg, int bg)
 {
     PDC_LOG(("init_pair() - called: pair %d fg %d bg %d\n", pair, fg, bg));
 
@@ -173,7 +177,7 @@ bool has_colors(void)
     return SP ? !(SP->mono) : FALSE;
 }
 
-int init_color(short color, short red, short green, short blue)
+int init_extended_color(int color, int red, int green, int blue)
 {
     PDC_LOG(("init_color() - called\n"));
 
@@ -187,7 +191,7 @@ int init_color(short color, short red, short green, short blue)
     return PDC_init_color(color, red, green, blue);
 }
 
-int color_content(short color, short *red, short *green, short *blue)
+int extended_color_content(int color, int *red, int *green, int *blue)
 {
     PDC_LOG(("color_content() - called\n"));
 
@@ -201,7 +205,7 @@ int color_content(short color, short *red, short *green, short *blue)
         /* Simulated values for platforms that don't support palette
            changing */
 
-        short maxval = (color & 8) ? 1000 : 680;
+        int maxval = (color & 8) ? 1000 : 680;
 
         *red = (color & COLOR_RED) ? maxval : 0;
         *green = (color & COLOR_GREEN) ? maxval : 0;
@@ -218,7 +222,7 @@ bool can_change_color(void)
     return PDC_can_change_color();
 }
 
-int pair_content(short pair, short *fg, short *bg)
+int extended_pair_content(int pair, int *fg, int *bg)
 {
     PDC_LOG(("pair_content() - called\n"));
 
@@ -272,7 +276,7 @@ int PDC_set_line_color(short color)
 void PDC_init_atrtab(void)
 {
     PDC_PAIR *p = SP->atrtab;
-    short i, fg, bg;
+    int i, fg, bg;
 
     if (SP->color_started && !default_colors)
     {
@@ -290,4 +294,41 @@ void PDC_init_atrtab(void)
         p[i].b = bg;
         p[i].set = FALSE;
     }
+}
+
+int init_pair( short pair, short fg, short bg)
+{
+    return( init_extended_pair( (int)pair, (int)fg, (int)bg));
+}
+
+int pair_content( short pair, short *fg, short *bg)
+{
+    int i_fg, i_bg;
+    const int rval = extended_pair_content( (int)pair, &i_fg, &i_bg);
+
+    if( rval != ERR)
+    {
+        *fg = (short)i_fg;
+        *bg = (short)i_bg;
+    }
+    return( rval);
+}
+
+int init_color( short color, short red, short green, short blue)
+{
+    return( init_extended_color( (int)color, (int)red, (int)green, (int)blue));
+}
+
+int color_content( short color, short *red, short *green, short *blue)
+{
+    int i_red, i_green, i_blue;
+    const int rval = extended_color_content( (int)color, &i_red, &i_green, &i_blue);
+
+    if( rval != ERR)
+    {
+        *red   = (short)i_red;
+        *green = (short)i_green;
+        *blue  = (short)i_blue;
+    }
+    return( rval);
 }

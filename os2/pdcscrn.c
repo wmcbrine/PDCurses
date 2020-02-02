@@ -132,8 +132,7 @@ int PDC_scr_open(int argc, char **argv)
 #else
     USHORT totchars;
 #endif
-    int i;
-    short r, g, b;
+    int i, r, g, b;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
 
@@ -346,7 +345,7 @@ bool PDC_can_change_color(void)
     return can_change;
 }
 
-int PDC_color_content(short color, short *red, short *green, short *blue)
+int PDC_color_content(int color, int *red, int *green, int *blue)
 {
 #ifdef PDCTHUNK
     THUNKEDVIO vcr;

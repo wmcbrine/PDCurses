@@ -649,7 +649,7 @@ bool PDC_can_change_color(void)
 
 /* These are only valid when pdc_adapter == _VGACOLOR */
 
-int PDC_color_content(short color, short *red, short *green, short *blue)
+int PDC_color_content(int color, int *red, int *green, int *blue)
 {
     PDCREGS regs;
 

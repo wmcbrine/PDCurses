@@ -619,7 +619,7 @@ bool PDC_can_change_color(void)
     return is_nt;
 }
 
-int PDC_color_content(short color, short *red, short *green, short *blue)
+int PDC_color_content(int color, int *red, int *green, int *blue)
 {
     if (color < 16 && !pdc_conemu)
     {

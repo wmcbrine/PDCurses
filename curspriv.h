@@ -48,7 +48,7 @@ typedef struct           /* structure for ripped off lines */
 
 void    PDC_beep(void);
 bool    PDC_can_change_color(void);
-int     PDC_color_content(short, short *, short *, short *);
+int     PDC_color_content(int, int *, int *, int *);
 bool    PDC_check_key(void);
 int     PDC_curs_set(int);
 void    PDC_doupdate(void);

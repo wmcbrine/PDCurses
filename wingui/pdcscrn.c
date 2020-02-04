@@ -2405,9 +2405,9 @@ foreground and background colors.  The loops to go through every character
 in curscr,  looking for those that need to be redrawn and ignoring
 those at the front and start of each line,  are very similar. */
 
-static short get_pair( const chtype ch)
+static int get_pair( const chtype ch)
 {
-   return( (short)( (ch & A_COLOR) >> PDC_COLOR_SHIFT));
+   return( (int)( (ch & A_COLOR) >> PDC_COLOR_SHIFT));
 }
 
 bool PDC_can_change_color(void)
@@ -2440,15 +2440,15 @@ above for PDC_init_pair(),  to handle basically the same problem. */
 static int color_used_for_this_char( const chtype c, const int idx)
 {
     const int color = get_pair( c);
-    short fg, bg;
+    int fg, bg;
     int rval;
 
-    pair_content( color, &fg, &bg);
-    rval = ((int)fg == idx || (int)bg == idx);
+    extended_pair_content( color, &fg, &bg);
+    rval = (fg == idx || bg == idx);
     return( rval);
 }
 
-int PDC_init_color( short color, short red, short green, short blue)
+int PDC_init_color( int color, int red, int green, int blue)
 {
     const COLORREF new_rgb = RGB(DIVROUND(red * 255, 1000),
                                  DIVROUND(green * 255, 1000),

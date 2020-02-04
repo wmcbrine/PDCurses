@@ -96,7 +96,7 @@ int PDC_curs_set( int visibility)
 }
 
 
-void PDC_show_changes( const short pair, const short idx, const chtype attr);
+void PDC_show_changes( const int pair, const int idx, const chtype attr);
 
 static int reset_attr( const attr_t attr, const bool attron)
 {

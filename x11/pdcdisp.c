@@ -25,16 +25,17 @@ static void _make_xy(int x, int y, int *xpos, int *ypos)
     *ypos = pdc_app_data.normalFont->ascent + (y * pdc_fheight);
 }
 
-static void _set_cursor_color(chtype *ch, short *fore, short *back)
+static void _set_cursor_color(chtype *ch, int *fore, int *back)
 {
     int attr;
-    short f, b;
 
     attr = PAIR_NUMBER(*ch);
 
     if (attr)
     {
-        pair_content(attr, &f, &b);
+        int f, b;
+
+        extended_pair_content(attr, &f, &b);
         *fore = 7 - (f % 8);
         *back = 7 - (b % 8);
     }
@@ -57,7 +58,7 @@ static void _display_cursor(int old_row, int old_x, int new_row, int new_x)
 {
     int xpos, ypos, i;
     chtype *ch;
-    short fore = 0, back = 0;
+    int fore = 0, back = 0;
 
     PDC_LOG(("_display_cursor() - draw char at row: %d col %d\n",
              old_row, old_x));
@@ -243,11 +244,11 @@ static int _new_packet(chtype attr, int len, int col, int row,
     XRectangle bounds;
     GC gc;
     int xpos, ypos;
-    short fore, back;
+    int fore, back;
     attr_t sysattrs;
     bool rev;
 
-    pair_content(PAIR_NUMBER(attr), &fore, &back);
+    extended_pair_content(PAIR_NUMBER(attr), &fore, &back);
 
     /* Specify the color table offsets */
 

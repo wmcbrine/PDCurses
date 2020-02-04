@@ -206,7 +206,7 @@ void PDC_get_rgb_values( const chtype srcp,
     {
         int foreground_index, background_index;
 
-        extended_pair_content( (short)color, &foreground_index, &background_index);
+        extended_pair_content( color, &foreground_index, &background_index);
         if( foreground_index < 0 && SP->orig_attr)
             default_foreground = TRUE;
         else

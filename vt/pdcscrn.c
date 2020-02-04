@@ -319,24 +319,24 @@ each line that would be affected, then draws those in between.  Often --
 perhaps usually -- this will be zero characters, i.e., no text on that
 particular line happens to have an attribute requiring redrawing. */
 
-static short get_pair( const chtype ch)
+static int get_pair( const chtype ch)
 
 {
-   return( (short)( (ch & A_COLOR) >> PDC_COLOR_SHIFT) & (COLOR_PAIRS - 1));
+   return( (int)( (ch & A_COLOR) >> PDC_COLOR_SHIFT) & (COLOR_PAIRS - 1));
 }
 
 static int color_used_for_this_char( const chtype c, const int idx)
 {
     const int color = get_pair( c);
-    short fg, bg;
+    int fg, bg;
     int rval;
 
-    pair_content( color, &fg, &bg);
+    extended_pair_content( color, &fg, &bg);
     rval = (fg == idx || bg == idx);
     return( rval);
 }
 
-void PDC_show_changes( const short pair, const short idx, const chtype attr)
+void PDC_show_changes( const int pair, const int idx, const chtype attr)
 {
     if( curscr && curscr->_y)
     {
@@ -385,7 +385,7 @@ int PDC_color_content( int color, int *red, int *green, int *blue)
     return OK;
 }
 
-int PDC_init_color( short color, short red, short green, short blue)
+int PDC_init_color( int color, int red, int green, int blue)
 {
     const PACKED_RGB new_rgb = PACK_RGB(DIVROUND(red * 255, 1000),
                                  DIVROUND(green * 255, 1000),

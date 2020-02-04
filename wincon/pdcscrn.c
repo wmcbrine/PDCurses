@@ -652,7 +652,7 @@ int PDC_color_content(int color, int *red, int *green, int *blue)
     return OK;
 }
 
-int PDC_init_color(short color, short red, short green, short blue)
+int PDC_init_color(int color, int red, int green, int blue)
 {
     if (red == -1 && green == -1 && blue == -1)
     {

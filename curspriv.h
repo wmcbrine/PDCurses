@@ -59,7 +59,7 @@ int     PDC_get_key(void);
 int     PDC_get_rows(void);
 void    PDC_gotoyx(int, int);
 bool    PDC_has_mouse(void);
-int     PDC_init_color(short, short, short, short);
+int     PDC_init_color(int, int, int, int);
 int     PDC_modifiers_set(void);
 int     PDC_mouse_set(void);
 void    PDC_napms(int);

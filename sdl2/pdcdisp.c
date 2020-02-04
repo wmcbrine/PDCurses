@@ -20,7 +20,7 @@
 static SDL_Rect uprect[MAXRECT];       /* table of rects to update */
 static chtype oldch = (chtype)(-1);    /* current attribute */
 static int rectcount = 0;              /* index into uprect */
-static short foregr = -2, backgr = -2; /* current foreground, background */
+static int foregr = -2, backgr = -2; /* current foreground, background */
 static bool blinked_off = FALSE;
 
 /* do the real updates on a delay */
@@ -90,12 +90,12 @@ static void _set_attr(chtype ch)
 
     if (oldch != ch)
     {
-        short newfg, newbg;
+        int newfg, newbg;
 
         if (SP->mono)
             return;
 
-        pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
+        extended_pair_content(PAIR_NUMBER(ch), &newfg, &newbg);
 
         if ((ch & A_BOLD) && !(sysattrs & A_BOLD))
             newfg |= 8;
@@ -104,7 +104,7 @@ static void _set_attr(chtype ch)
 
         if (ch & A_REVERSE)
         {
-            short tmp = newfg;
+            int tmp = newfg;
             newfg = newbg;
             newbg = tmp;
         }

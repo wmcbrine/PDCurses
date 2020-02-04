@@ -108,6 +108,8 @@ int COLOR_PAIRS = PDC_COLOR_PAIRS;
 static bool default_colors = FALSE;
 static int first_col = 0;
 
+#define UNSET_COLOR_PAIR      -2
+
 int start_color(void)
 {
     PDC_LOG(("start_color() - called\n"));
@@ -129,32 +131,32 @@ int start_color(void)
 
 static void _normalize(int *fg, int *bg)
 {
-    if (*fg == -1)
-        *fg = SP->orig_attr ? SP->orig_fore : COLOR_WHITE;
+    const bool using_defaults = (SP->orig_attr && (default_colors || !SP->color_started));
 
-    if (*bg == -1)
-        *bg = SP->orig_attr ? SP->orig_back : COLOR_BLACK;
+    if (*fg == -1 || *fg == UNSET_COLOR_PAIR)
+        *fg = using_defaults ? SP->orig_fore : COLOR_WHITE;
+
+    if (*bg == -1 || *bg == UNSET_COLOR_PAIR)
+        *bg = using_defaults ? SP->orig_back : COLOR_BLACK;
 }
 
 static void _init_pair_core(int pair, int fg, int bg)
 {
     PDC_PAIR *p = SP->atrtab + pair;
 
-    _normalize(&fg, &bg);
-
     /* To allow the PDC_PRESERVE_SCREEN option to work, we only reset
        curscr if this call to init_pair() alters a color pair created by
        the user. */
 
-    if (p->set)
+    _normalize(&fg, &bg);
+
+    if (p->f != UNSET_COLOR_PAIR)
     {
         if (p->f != fg || p->b != bg)
             curscr->_clear = TRUE;
     }
-
     p->f = fg;
     p->b = bg;
-    p->set = TRUE;
 }
 
 int init_extended_pair(int pair, int fg, int bg)
@@ -231,7 +233,6 @@ int extended_pair_content(int pair, int *fg, int *bg)
 
     *fg = SP->atrtab[pair].f;
     *bg = SP->atrtab[pair].b;
-
     return OK;
 }
 
@@ -275,25 +276,10 @@ int PDC_set_line_color(short color)
 
 void PDC_init_atrtab(void)
 {
-    PDC_PAIR *p = SP->atrtab;
-    int i, fg, bg;
-
-    if (SP->color_started && !default_colors)
-    {
-        fg = COLOR_WHITE;
-        bg = COLOR_BLACK;
-    }
-    else
-        fg = bg = -1;
-
-    _normalize(&fg, &bg);
+    int i;
 
     for (i = 0; i < PDC_COLOR_PAIRS; i++)
-    {
-        p[i].f = fg;
-        p[i].b = bg;
-        p[i].set = FALSE;
-    }
+       _init_pair_core( i, UNSET_COLOR_PAIR, UNSET_COLOR_PAIR);
 }
 
 int init_pair( short pair, short fg, short bg)

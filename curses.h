@@ -354,7 +354,6 @@ typedef struct
 {
     int f;                /* foreground color */
     int b;                /* background color */
-    bool  set;            /* pair has been set */
 } PDC_PAIR;
 
 /* Avoid using the SCREEN struct directly -- use the corresponding

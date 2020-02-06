@@ -11,7 +11,6 @@
 static struct termios orig_term;
 #endif
 
-
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -23,6 +22,10 @@ static struct termios orig_term;
 #include "pdcvt.h"
 #include "../common/pdccolor.h"
 #include "../common/pdccolor.c"
+
+#ifdef USING_COMBINING_CHARACTER_SCHEME
+int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);
+#endif
 
 #ifdef DOS
 int PDC_is_ansi = TRUE;
@@ -157,11 +160,10 @@ void PDC_scr_close( void)
 
 void PDC_scr_free( void)
 {
-    if (SP)
-        free(SP);
-    SP = (SCREEN *)NULL;
-
     PDC_free_palette( );
+#ifdef USING_COMBINING_CHARACTER_SCHEME
+    PDC_expand_combined_characters( 0, NULL);
+#endif
 }
 
 #ifdef USE_TERMIOS
@@ -215,7 +217,6 @@ int PDC_scr_open(void)
        if( strstr( capabilities, "STA"))
           PDC_capabilities |= A_STANDOUT;
        }
-    SP = calloc(1, sizeof(SCREEN));
     COLORS = (PDC_is_ansi ? 16 : 256);
     if( PDC_has_rgb_color)
        COLORS = 256 + (256 * 256 * 256);

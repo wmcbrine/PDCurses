@@ -201,6 +201,7 @@ int main(int argc, char *argv[])
 
     delwin(win);
     endwin();
+    delscreen( SP);
 
     return 0;
 }
@@ -502,7 +503,10 @@ void inputTest(WINDOW *win)
 #endif
     wclear(win);
     if( c == 1)
+    {
+       delwin( subWin);
        return;
+    }
     mvwaddstr(win, 2, 1, "Press some keys for 5 seconds");
     mvwaddstr(win, 1, 1, "Pressing ^C should do nothing");
     wrefresh(win);
@@ -807,6 +811,7 @@ void padTest(WINDOW *dummy)
     spad = subpad(pad, 12, 25, 7, 52);
     mvwaddstr(spad, 2, 2, "This is a new subpad");
     box(spad, 0, 0);
+    delwin(spad);
     prefresh(pad, 0, 0, 0, 0, 15, 75);
     keypad(pad, TRUE);
     raw();

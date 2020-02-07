@@ -19,87 +19,81 @@
 
 int PDC_blink_state = 0;
 
-static PACKED_RGB *PDC_rgbs;        /* the 'standard' 256-color palette */
-static PACKED_RGB ***PDC_rgb_cube;   /* the 'extended' 16M-color palette,
-                                    stored as a 256x256x256 array */
+static PACKED_RGB *rgbs;   /* the 'standard' 256-color palette,  plus any allocated */
+static int palette_size;
+
+PACKED_RGB PDC_default_color( int idx)
+{
+    PACKED_RGB rval;
+
+    assert( idx >= 0);
+    if( idx < 16)
+    {
+        const int intensity = ((idx & 8) ? 0xff : 0xc0);
+
+        rval = PACK_RGB( ((idx & COLOR_RED) ? intensity : 0),
+                          ((idx & COLOR_GREEN) ? intensity : 0),
+                          ((idx & COLOR_BLUE) ? intensity : 0));
+    }
+    else if( idx < 216 + 16)
+    {                    /* colors 16-231 are a 6x6x6 color cube */
+        int r, g, b;
+
+        idx -= 16;
+        r = idx / 36;
+        g = (idx / 6) % 6;
+        b = idx % 6;
+        rval = PACK_RGB( r ? r * 40 + 55 : 0,
+                         g ? g * 40 + 55 : 0,
+                         b ? b * 40 + 55 : 0);
+    }
+    else if( idx < 256)    /* colors 232-255 are 24 shades of gray */
+    {
+        const int intensity = (idx - 232) * 10 + 8;
+
+        rval = PACK_RGB( intensity, intensity, intensity);
+    }
+    else             /* colors 256 to 256+2^24 are RGB values */
+        rval = idx - 256;
+    return( rval);
+}
+
+/* We initialize the palette to be an array of,  at most,  256 values.
+Few programs will go beyond that.  Of those that do,  most will use
+default values.  For those that actually do set palette entries beyond
+256 (currently,  only testcurs),  the array is reallocated.  */
 
 int PDC_init_palette( void)
 {
-    int i, r, g, b;
-    const int palette_size = (COLORS > 256 ? 256 : COLORS);
+    int i;
 
-    PDC_rgbs = (PACKED_RGB *)calloc( palette_size, sizeof( PACKED_RGB));
-    if( !PDC_rgbs)
+    palette_size = (COLORS > 256 ? 256 : COLORS);
+    rgbs = (PACKED_RGB *)calloc( palette_size, sizeof( PACKED_RGB));
+    assert( rgbs);
+    if( !rgbs)
         return( -1);
-    for( i = 0; i < 16 && i < COLORS; i++)
-    {
-        const int intensity = ((i & 8) ? 0xff : 0xc0);
-
-        PDC_rgbs[i] = PACK_RGB( ((i & COLOR_RED) ? intensity : 0),
-                           ((i & COLOR_GREEN) ? intensity : 0),
-                           ((i & COLOR_BLUE) ? intensity : 0));
-    }
-           /* 256-color xterm extended palette:  216 colors in a
-            6x6x6 color cube,  plus 24 (not 50) shades of gray */
-    for( r = 0; r < 6; r++)
-        for( g = 0; g < 6; g++)
-            for( b = 0; b < 6; b++)
-                if( i < COLORS)
-                    PDC_rgbs[i++] = PACK_RGB( r ? r * 40 + 55 : 0,
-                                   g ? g * 40 + 55 : 0,
-                                   b ? b * 40 + 55 : 0);
-    for( i = 0; i < 24; i++)
-        if( i + 232 < COLORS)
-            PDC_rgbs[i + 232] = PACK_RGB( i * 10 + 8, i * 10 + 8, i * 10 + 8);
+    for( i = 0; i < palette_size; i++)
+        rgbs[i] = PDC_default_color( i);
     return( 0);
 }
 
 void PDC_free_palette( void)
 {
-   if( PDC_rgbs)
-      free( PDC_rgbs);
-   PDC_rgbs = NULL;
-   if( PDC_rgb_cube)
-      {
-      int i, j;
-
-      for( i = 0; i < 256; i++)
-         if( PDC_rgb_cube[i])
-            {
-            for( j = 0; j < 256; j++)
-               if( PDC_rgb_cube[i][j])
-                  free( PDC_rgb_cube[i][j]);
-            free( PDC_rgb_cube[i]);
-            }
-      free( PDC_rgb_cube);
-      PDC_rgb_cube = NULL;
-      }
+   if( rgbs)
+      free( rgbs);
+   rgbs = NULL;
 }
 
 PACKED_RGB PDC_get_palette_entry( const int idx)
 {
    PACKED_RGB rval;
 
-   if( !PDC_rgbs && PDC_init_palette( ))
+   if( !rgbs && PDC_init_palette( ))
       rval = ( idx ? 0xffffff : 0);
-   else if( idx < 256)
-      rval = PDC_rgbs[idx];
+   else if( idx < palette_size)
+      rval = rgbs[idx];
    else
-      {
-      rval = idx - 256;    /* by default,  rval is a direct 16M color, */
-      if( PDC_rgb_cube)    /* but we check to see if it's been reset */
-         {                 /* with PDC_set_palette_entry */
-         PACKED_RGB **square = PDC_rgb_cube[(rval >> 16) & 0xff];
-
-         if( square)
-            {
-            PACKED_RGB *array = square[(rval >> 8) & 0xff];
-
-            if( array)
-               rval = array[rval & 0xff];
-            }
-         }
-      }
+      rval = PDC_default_color( idx);
    return( rval);
 }
 
@@ -108,42 +102,26 @@ didn't change (new RGB matched the old one),  and 1 if the color changed. */
 
 int PDC_set_palette_entry( const int idx, const PACKED_RGB rgb)
 {
-   int rval;
+   int rval, i;
 
-   if( !PDC_rgbs && PDC_init_palette( ))
-      rval = -1;
-   else if( idx < 256)
+   if( !rgbs && PDC_init_palette( ))
+      return( -1);
+   if( idx >= palette_size)
       {
-      rval = (PDC_rgbs[idx] == rgb ? 1 : 0);
-      PDC_rgbs[idx] = rgb;
+      int new_size = palette_size;
+
+      while( new_size <= idx)
+         new_size *= 2;
+      rgbs = realloc( rgbs, new_size * sizeof( PACKED_RGB));
+      assert( rgbs);
+      if( !rgbs)
+         return( -1);
+      for( i = palette_size; i < new_size; i++)
+         rgbs[i] = PDC_default_color( i);
+      palette_size = new_size;
       }
-   else
-      {
-      const int red = idx & 0xff;
-      const int grn = ((idx - 256) >> 8) & 0xff;
-      const int blu = ((idx - 256) >> 16) & 0xff;
-
-      if( !PDC_rgb_cube)
-         PDC_rgb_cube = (PACKED_RGB ***)calloc( 256, sizeof( PACKED_RGB **));
-      assert( PDC_rgb_cube);
-
-      if( !PDC_rgb_cube[blu])
-         PDC_rgb_cube[blu] = (PACKED_RGB **)calloc( 256, sizeof( PACKED_RGB *));
-      assert( PDC_rgb_cube[blu]);
-
-      if( !PDC_rgb_cube[blu][grn])
-         {
-         int i;
-
-         PDC_rgb_cube[blu][grn] = (PACKED_RGB *)calloc( 256, sizeof( PACKED_RGB));
-         assert( PDC_rgb_cube[blu][grn]);
-         for( i = 0; i < 256; i++)
-            PDC_rgb_cube[blu][grn][i] = PACK_RGB( i, grn, blu);
-         }
-      assert( PDC_rgb_cube[blu][grn]);
-      rval = (PDC_rgb_cube[blu][grn][red] == rgb ? 1 : 0);
-      PDC_rgb_cube[blu][grn][red] = rgb;
-      }
+   rval = (rgbs[idx] == rgb ? 1 : 0);
+   rgbs[idx] = rgb;
    return( rval);
 }
 

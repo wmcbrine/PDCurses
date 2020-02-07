@@ -6,9 +6,10 @@ get 2^24 colors and can't change them.
    The slight problem with this is that it breaks existing palette-based
 code.  I've found a few people complaining about this.  It's true
 that one should not blindly assume you'll have a color palette and
-can change it.  There's no promise of that sort in Curses.  The
-can_change_color() function exists for good reason.  (The Linux
-console is a good example of a place where you can't change colors.)
+can change it,  nor should you assume a particular color palette.
+There's no promise of that sort in Curses.  The can_change_color()
+function exists for good reason.  (The Linux console is a good
+example of a place where you can't change colors.)
 
    However... I've written code that assumes you can change the color.
 I think a lot of people do.  If somebody complains that it doesn't
@@ -28,65 +29,22 @@ r =  (index - 256) & 0xff
 g = ((index - 256) >> 8) & 0xff
 b = ((index - 256) >> 16) & 0xff
 
-   The first 256 colors are handled as they were before : at
-initialization, a PDC_rgbs[] array is allocated and the palette
-filled in.   RGB values for "upper" (palette index >= 256) values are
-stored in a PDC_rgb_cube triple-pointer array,  with a given RGB
-value stored at PDC_rgb_cube[b][g][r], with r, g, b computed as above
-from the index.
+   The first 256 colors are handled "normally" : at initialization,
+the (static to that file) rgbs[] array is allocated and the palette
+filled in.  _If_ a palette entry is _set_ with an index beyond 256,
+the rgbs[] array is reallocated to a larger size.  This will probably
+not happen very often (testcurs has a 'gradients' section which does
+so),  but we can handle it when it does.
 
-   However,  no memory is ever computed for PDC_rgb_cube until it's
-actually needed.  If a color is requested from the "upper" values and
-PDC_rgb_cube,  or PDC_rgb_cube[b], or PDC_rgb_cube[b][g],  have not
-been allocated,  we just return the default color. Conveniently, that
-returned color works out to be idx-256 when expressed as a 24-bit
-packed RGB value.
-
-   If set_palette_entry() is called for an "upper" value,  we allocate
-PDC_rgb_cube if necessary;  PDC_rgb_cube[b] if necessary;  and
-PDC_rgb_cube[b][g] if necessary,  filling it with the default values.
+   _Access_ to default palette entries beyond 256 requires no
+extra memory to be allocated.  The 'picsview' demo illustrates how this
+can be done;  color 0xdeadbe,  for example,  is at palette index
+0xdeadbe + 256 = 0xdeaebe.
 
    The vast majority of programs which either never use color
 indices past 256,  or which decide to use them at the default values,
-will never cause PDC_rgb_cube to be allocated.  If you decide to
-use a palette of,  say,  1024 colors,  then PDC_rgb_cube,
-PDC_rgb_cube[0],  and PDC_rgb_cube[0][0...3] will be allocated.
-That comes to four arrays of 256 colors plus two arrays of 256
-pointers.  So I don't think this will be a memory hog.
-
-   NOTE,  though,  that some steps remain for 'proper' use of
-full-color RGB :
-
-   -- With 32-bit chtypes,  you only can have 256 color pairs.  So
-you can have full RGB for up to 256 characters.  After that,  you'd
-better need a color pair you've already used.  Solution is to use
-64-bit chtypes (which are needed for full Unicode support and other
-desirable functions anyway).
-
-   -- It'd be a fine thing to have,  say,  64K color pairs.  But we'd
-probably want to make it as memory-frugal as the above scheme for the
-color palette,  and probably would do it in the same way : 256 color
-pairs would be allocated by default,  with more only allocated if we
-actually need them.
-
-   I originally wrote that 64K color pairs should be enough for
-anybody.  ncurses has such a limit.  However,  it does mean that
-the 'picsmap' demo to show an image using ncurses can't handle an
-image with more than 64K pixels.  It really would not be all that
-difficult,  using the same 'color cube' technique as above,  to
-support COLOR_PAIRS = 256 + 16M,  with the sixteen million
-corresponding, by default,  to the RGB color in question.
-
-   Two downsides to that : (a) we'd be devoting 25 bits to color,
-which does seem like a lot,  and (b) the "usual" model is that
-using an uninitialized color pair results in undefined behavior.
-(To which we can reply that "well,  we're defining it.")
-
-   -- We'll need to add init_extended_pair,  init_extended_color,
-extended_color_content,  and extended_pair_content,  a la ncurses...
-
-http://man7.org/linux/man-pages/man3/init_extended_color.3x.html
-
-   ...for exactly the same reason ncurses needed them : without them,
-we can't access palette entries or color pairs beyond the range of a
-signed short integer.
+will never cause rgbs[] to be reallocated.  If you decide to
+use a palette of,  say,  1024 colors,  then fine;  rgbs[] will
+be extended to consume 1024 COLOR_PAIR structures (2048 integers,
+so 8K of memory with 32-bit integers).  So this doesn't devour a
+lot of memory.

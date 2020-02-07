@@ -101,9 +101,11 @@ color
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 int COLORS = 0;
 int COLOR_PAIRS = PDC_COLOR_PAIRS;
+static int atrtab_size_alloced;
 
 static bool default_colors = FALSE;
 static int first_col = 0;
@@ -142,7 +144,30 @@ static void _normalize(int *fg, int *bg)
 
 static void _init_pair_core(int pair, int fg, int bg)
 {
-    PDC_PAIR *p = SP->atrtab + pair;
+    PDC_PAIR *p;
+
+    assert( SP->atrtab);
+    assert( atrtab_size_alloced);
+    if( pair >= atrtab_size_alloced)
+    {
+        int i, new_size = atrtab_size_alloced * 2;
+
+        while( pair >= new_size)
+            new_size += new_size;
+        SP->atrtab = (PDC_PAIR *)realloc( SP->atrtab, new_size * sizeof( PDC_PAIR));
+        assert( SP->atrtab);
+        p = SP->atrtab + atrtab_size_alloced;
+        for( i = new_size - atrtab_size_alloced; i; i--, p++)
+        {
+            p->f = COLOR_GREEN;    /* signal uninitialized pairs by */
+            p->b = COLOR_YELLOW;   /* using unusual colors          */
+        }
+        atrtab_size_alloced = new_size;
+    }
+
+    assert( pair >= 0);
+    assert( pair < atrtab_size_alloced);
+    p = SP->atrtab + pair;
 
     /* To allow the PDC_PRESERVE_SCREEN option to work, we only reset
        curscr if this call to init_pair() alters a color pair created by
@@ -231,8 +256,16 @@ int extended_pair_content(int pair, int *fg, int *bg)
     if (pair < 0 || pair >= COLOR_PAIRS || !fg || !bg)
         return ERR;
 
-    *fg = SP->atrtab[pair].f;
-    *bg = SP->atrtab[pair].b;
+    if( pair >= atrtab_size_alloced)
+    {
+        *fg = COLOR_RED;      /* signal use of uninitialized pair */
+        *bg = COLOR_BLUE;     /* with visible,  but odd,  colors  */
+    }
+    else
+    {
+        *fg = SP->atrtab[pair].f;
+        *bg = SP->atrtab[pair].b;
+    }
     return OK;
 }
 
@@ -274,12 +307,20 @@ int PDC_set_line_color(short color)
     return OK;
 }
 
-void PDC_init_atrtab(void)
+int PDC_init_atrtab(void)
 {
     int i;
 
-    for (i = 0; i < PDC_COLOR_PAIRS; i++)
+    if( !SP->atrtab)
+    {
+       atrtab_size_alloced = (PDC_COLOR_PAIRS > 256 ? 256 : PDC_COLOR_PAIRS);
+       SP->atrtab = calloc( atrtab_size_alloced, sizeof(PDC_PAIR));
+       if( !SP->atrtab)
+           return -1;
+    }
+    for (i = 0; i < atrtab_size_alloced; i++)
        _init_pair_core( i, UNSET_COLOR_PAIR, UNSET_COLOR_PAIR);
+    return( 0);
 }
 
 int init_pair( short pair, short fg, short bg)

@@ -124,7 +124,6 @@ WINDOW *initscr(void)
 
     if (SP && SP->alive)
         return NULL;
-
     SP = calloc(1, sizeof(SCREEN));
     if (!SP)
         return NULL;
@@ -226,10 +225,8 @@ WINDOW *initscr(void)
     else
         curscr->_clear = TRUE;
 
-    SP->atrtab = calloc(PDC_COLOR_PAIRS, sizeof(PDC_PAIR));
-    if (!SP->atrtab)
+    if( PDC_init_atrtab())   /* set up default colors */
         return NULL;
-    PDC_init_atrtab();  /* set up default colors */
 
     MOUSE_X_POS = MOUSE_Y_POS = -1;
     BUTTON_STATUS(1) = BUTTON_RELEASED;

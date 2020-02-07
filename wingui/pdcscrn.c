@@ -145,16 +145,9 @@ void PDC_scr_close(void)
 /* NOTE that PDC_scr_free( ) is called only from delscreen( ),    */
 /* which is rarely called.  It appears that most programs simply  */
 /* rely on the memory getting freed when the program terminates.  */
-/* It seems conceivable to me that we could get into some trouble */
-/* here,  if SP is freed and NULLed,  but then accessed again,    */
-/* possibly within the WinGUI window thread.                      */
 
 void PDC_scr_free(void)
 {
-    if (SP)
-        free(SP);
-    SP = (SCREEN *)NULL;
-
     PDC_free_palette( );
 }
 

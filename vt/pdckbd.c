@@ -227,7 +227,7 @@ static int xlate_vt_codes( const int *c, const int count)
       if( count == tptr[1])
          {
          i = 0;
-         while( tptr[i + 2] == c[i] && i < count)
+         while( i < count && tptr[i + 2] == c[i])
             i++;
          if( i == count)
             rval = tptr[0];

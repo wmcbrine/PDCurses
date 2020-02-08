@@ -101,6 +101,7 @@ color
 
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include <assert.h>
 
 int COLORS = 0;
@@ -127,7 +128,17 @@ int start_color(void)
         default_colors = TRUE;
 
     PDC_init_atrtab();
-
+#if defined( CHTYPE_64) && !defined(OS2) && !defined(DOS)
+    if( COLORS >= 1024 && (long)INT_MAX > 1024L * 1024L)
+        COLOR_PAIRS = 1024 * 1024;
+    else if( COLORS >= 16)
+    {
+        if( (long)COLORS * (long)COLORS < (long)INT_MAX)
+            COLOR_PAIRS = COLORS * COLORS;
+        else
+            COLOR_PAIRS = INT_MAX;
+    }
+#endif
     return OK;
 }
 
@@ -313,7 +324,7 @@ int PDC_init_atrtab(void)
 
     if( !SP->atrtab)
     {
-       atrtab_size_alloced = (PDC_COLOR_PAIRS > 256 ? 256 : PDC_COLOR_PAIRS);
+       atrtab_size_alloced = PDC_COLOR_PAIRS;
        SP->atrtab = calloc( atrtab_size_alloced, sizeof(PDC_PAIR));
        if( !SP->atrtab)
            return -1;

@@ -1,3 +1,52 @@
+PDCurses ?.? - 2020 Feb ?? - Bill Gray fork
+=========================
+
+   Version number/date pending until we figure out why automated
+   builds fail (will presumably be 4.1.0).  I suspect the fails
+   have something to do with the auto build system rather than
+   with the code,  but don't know enough about CMake to really
+   be sure;  perhaps there's a Real Bug in the code.
+
+New features
+------------
+
+-  Pulled in almost all of William McBrine's changes.  So we now
+   have the single-process X11 port,  common copy/paste,  partly
+   extended colors,  and others from the last few years.
+
+-  Added ncurses-style init_extended_color(), init_extended_pair(),
+   extended_color_content(),  extended_pair_content() functions.
+   VT and WinGUI versions can now access 2^20 = over a million color
+   pairs and 2^24+256 = 16777472 colors.  This should be extended
+   to SDLx and X11,  and possibly WinCon.
+
+-- As a result of all this,  A_RGB is now completely gone (and not
+   really needed anyway).
+
+-- Added 'picsview' demo,  something of a ripoff/homage to Thomas
+   E. Dickey's 'picsmap' demo for ncurses.  It has a similar purpose:
+   demonstrating the functions in the above paragraph and the new
+   ability to access lots and lots of colors.
+
+-- VT port is much faster,  mostly thanks to not writing data to
+   stdout with no buffering and with printf().
+
+Bug fixes and such
+------------------
+
+-- Valgrind found three small memory leaks in the VT port (which
+   would apply to all other ports as well).  There are still more
+   leaks in other ports,  which should be addressed.
+
+-- Double-clicking in WinGUI got you a click message followed by
+   a double-click.  This does conform to 'standard' Windows practice,
+   but was both stupid and did _not_ conform with the way VT did
+   it,  nor the way I'd want it to be on any port.  To do : enable
+   double and triple clicks on all ports,  not just VT and WinGUI.
+
+-- Handling of default background/foreground in VT was just plain
+   wrong.  Now fixed.
+
 PDCurses 3.9 - 2019-09-04
 =========================
 
@@ -172,6 +221,47 @@ Bug fixes and such
 - Made manext.py compatible with Python 3.x.
 
 See the git log for more details.
+
+------------------------------------------------------------------------
+
+PDCurses 4.0.4 - 2019 Jan 20 - Bill Gray fork
+
+=========================
+Major new feature:
+-------------------
+
+- New VT backend.  Works within an xterm or xterm-based terminal and some
+  other terminals.  Mostly works in the Linux console,  and on Win10
+  directly and on Win9x/DOS if ANSI.SYS (or NANSI or NNANSI .SYS or .COM)
+  are installed.
+
+Minor new features:
+-------------------
+
+- SDL2 variant: dimmed,  bold,  blinking,  and RGB text are handled,  as is
+  window resizing.
+
+- DOS variant: cross-compilation from GNU/Linux works with both DJGPP and
+  Watcom C/C++; and, 16-bit and 32-bit Watcom makefiles have been combined
+  into one
+
+- Many modifications (and some bug fixes) taken from William McBrine's
+  branch.  An effort has been made to narrow the gap between the forks
+  where possible.  But both forks are moving targets with different
+  design choices and priorities.
+
+- Demos improved to show version info
+
+Bug fixes
+-------------------
+- compilation warnings/errors with some compilers in some variants #53, #57, #58, #65, ...
+
+- newtest sample was broken in all widw variants #60
+
+- the paste button printed debug output #62
+
+- some corner cases (midnight crossing, atomicity of tick count reads) in
+  DOS version of napms() were not handled well
 
 ------------------------------------------------------------------------
 
@@ -547,6 +637,71 @@ Bug fixes and such
   central site is now pdcurses.org.
 
 See the git log for more details.
+
+------------------------------------------------------------------------
+
+PDCurses 4.0.2 - 2017 Sep 12   (Bill Gray fork)
+=========================
+   (Note that history gets confused here;  we have things happening
+in two forks.)
+
+Major new features:
+-------------------
+
+- New WinGUI (Windows GUI) and SDL2 backends.
+  SDL1 is still supported, but may eventually go away.
+
+- Bold, italic, underlined, overlined, dimmed, 'strikeout', blinking text,
+  256 colors and color pairs,  and full RGB colors.
+  These are all supported in WinGUI and mostly supported in X11, SDL1 and SDL2.
+
+- In WinGUI, one can choose a font, and both programmatic and user resizing
+  are supported.
+  (Recompiling is necessary to change the font in X11.)
+
+- (WinGUI only) Support of SMP Unicode (points beyond 64K) and combining
+  characters.
+  This may be extended to X11 and SDL2 eventually.
+
+- Demos corrected to be buildable and testable with `ncurses`.
+
+Minor new features
+-------------------
+(note that not all of these are available on all backends)
+
+- Support for up to nine mouse buttons and wheel and tilt-wheel mice, and
+  double and triple mouse clicks
+
+- (X11, WinGUI, Win32) Extended range of keys that are recognized. This
+  now includes most of the "oddball" keys such as 'browser back' and
+  'favorites' found on some keyboards.
+
+- Blinking cursors in WinGUI and X11 of various shapes (this could be
+  extended to SDLx eventually).
+
+- In X11 and WinGUI, one can call resize_term( ) before initscr( ) to set
+  the initial window size.
+
+- Soft Label Keys (SLKs) are considerably more flexible,  with the ability
+  to set arbitrary numbers of keys and groupings.
+  See slk.c for details. This applies to all backends.
+
+- Many changes to `testcurs` to test all these new features, and `newtest`
+  added to test still more features.
+
+- Option to get detailed version information of the used PDCurses library
+  at run time with new exported `PDC_version` as `PDC_version_info` structure.
+
+- ACS_x and WACS_x #defines extended to include a lot of "alternative
+  characters" that overlap in Unicode and CP-437:  double-line box chars,
+  card suits,  vulgar fractions,  etc.
+  This applies to all backends.  See `acs_defs.h` for the full list.
+
+- Cleaned up some makefiles for Win32 and WinGUI.
+  On both platforms, `vcwin32.mak` can now be used with the Intel(R) compiler,
+  and `mingwin32.mak` can be used to cross-compile from Linux, or in
+  `command.com` under Windows, or with Cygwin/MSYS.
+  Also added a makefile for Digital Mars for the DOS version.
 
 ------------------------------------------------------------------------
 

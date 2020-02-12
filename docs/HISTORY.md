@@ -78,10 +78,10 @@ Bug fixes and such
 
 - Smoother resizing in X11, when not in scrollbar mode.
 
-- Dropped X11 options "borderWidth" (broken since at least 2.7) and 
+- Dropped X11 options "borderWidth" (broken since at least 2.7) and
   "cursorColor" (now set automatically for contrast).
 
-- Correctly restore Insert mode and QuickEdit mode in Wincon's 
+- Correctly restore Insert mode and QuickEdit mode in Wincon's
   PDC_reset_shell_mode(). Patch by "vyv03354".
 
 - Add a WINDRES variable to wincon/Makefile for the sake of cross-
@@ -95,7 +95,7 @@ Bug fixes and such
 - Moved the doc files from "man" to "docs" -- the docs/man thing was too
   confusing. Streamlined the web page into two files.
 
-- Rewrote the "Portability" sections of the man pages to reflect current 
+- Rewrote the "Portability" sections of the man pages to reflect current
   ncurses and NetBSD. The old charts weren't very accurate.
 
 - Document resolution of timeout() and napms(). Suggested by S.S.
@@ -162,7 +162,7 @@ Bug fixes and such
 
 - Minor file reorganization / renaming.
 
-- mmask_t is now used in both the classic and ncurses mouse interfaces, 
+- mmask_t is now used in both the classic and ncurses mouse interfaces,
   and is defined in such a way as to keep it at 32 bits.
 
 - Dropped map_button() and getbmap().
@@ -1921,19 +1921,19 @@ OTHER NOTES:
 
  In place of...
 
-	while(!typeahead(stdin))
-	 {
-		/* do something until any key is pressed... */
-	 }
+       while(!typeahead(stdin))
+        {
+          /* do something until any key is pressed... */
+        }
 
  use...
 
-	/* getch() to return ERR if no key pending */
-	nodelay(stdscr,TRUE);
-	while(getch() == (ERR))
-	 {
-		/* do something until any key is pressed... */
-	 }
+       /* getch() to return ERR if no key pending */
+       nodelay(stdscr,TRUE);
+       while(getch() == (ERR))
+        {
+          /* do something until any key is pressed... */
+        }
 
 
 ACKNOWLEDGEMENTS: (in no particular order)
@@ -2300,44 +2300,44 @@ cursesio).
 
   I would like to thank the following persons for their help:
 
-  	Brandon S. Allbery (alberry@ncoast.UUCP)
-		for running comp.binaries.ibm.pc (at that time)
-		and comp.source.misc.
+       Brandon S. Allbery (alberry@ncoast.UUCP)
+               for running comp.binaries.ibm.pc (at that time)
+               and comp.source.misc.
 
-	Steve Balogh (Steve@cit5.cit.oz.AU)
-  		for writing a set of manual pages and posting
-		them to the net.
+       Steve Balogh (Steve@cit5.cit.oz.AU)
+               for writing a set of manual pages and posting
+               them to the net.
 
-	Torbjorn Lindh
-		for finding bugs and suggesting raw
-		character output routines.
+       Torbjorn Lindh
+               for finding bugs and suggesting raw
+               character output routines.
 
-	Nathan Glasser (nathan@eddie.mit.edu)
-  		for finding and reporting bugs.
+       Nathan Glasser (nathan@eddie.mit.edu)
+               for finding and reporting bugs.
 
-	Ingvar Olafsson (...enea!hafro!ingvar)
-  		for finding and reporting bugs.
+       Ingvar Olafsson (...enea!hafro!ingvar)
+               for finding and reporting bugs.
 
-	Eric Rosco (...enea!ipmoea!ericr)
-  		for finding and reporting bugs.
+       Eric Rosco (...enea!ipmoea!ericr)
+               for finding and reporting bugs.
 
-	Steve Creps (creps@silver.bacs.indiana.edu)
-  		for doing a lot of work - among others
-		posting bug fixes to the net, and writing
-		the new cursesio.c module.
+       Steve Creps (creps@silver.bacs.indiana.edu)
+               for doing a lot of work - among others
+               posting bug fixes to the net, and writing
+               the new cursesio.c module.
 
-	N. Dean Pentcheff (dean@violet.berkeley.edu)
-  		for finding bugs and rewriting cursesio.asm
-		for Turbo 'C' 1.5.
+       N. Dean Pentcheff (dean@violet.berkeley.edu)
+               for finding bugs and rewriting cursesio.asm
+               for Turbo 'C' 1.5.
 
   Finally, Jeff Dean (parcvax,hplabs}!cdp!jeff)
-  		     (jeff@ads.arpa)
-	has had a shareware version of curses deliverable since
-	about half a year before I released PCcurses 1.0 on Use-
-	Net. He is very concerned about confusion between the two
-	packages, and therefore any references on the network
-	should make clear whether they reference Dean's PCcurses
-	or Larsson's PCcurses.
+                    (jeff@ads.arpa)
+       has had a shareware version of curses deliverable since
+       about half a year before I released PCcurses 1.0 on Use-
+       Net. He is very concerned about confusion between the two
+       packages, and therefore any references on the network
+       should make clear whether they reference Dean's PCcurses
+       or Larsson's PCcurses.
 
 ------------------------------------------------------------------------
 
@@ -2362,15 +2362,15 @@ makefiles.
 
   There are three makefiles:
 
-	makefile		generic MSC 3.0 makefile
-	makefile.ms		MSC 4.0 makefile
-	makefile.tc		Turbo C 1.0 makefile
+       makefile      generic MSC 3.0 makefile
+       makefile.ms      MSC 4.0 makefile
+       makefile.tc      Turbo C 1.0 makefile
 
   To make a library with for example Turbo C, make directories to hold
 .H and .LIB files (these directories are the 'standard places'), edit
 makefile.tc for this, and type
 
-	make -f makefile.tc all
+       make -f makefile.tc all
 
 and libraries for all memory models will be created in the .LIB
 directory, while the include files will end up in the .H directory. Also

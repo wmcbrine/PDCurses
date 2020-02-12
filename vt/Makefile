@@ -109,6 +109,9 @@ ozdemo$(EXE) : $(demodir)/ozdemo.c
 newtest$(EXE) : $(demodir)/newtest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
+picsview$(EXE) : $(demodir)/picsview.c
+	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+
 ptest$(EXE) : $(demodir)/ptest.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 

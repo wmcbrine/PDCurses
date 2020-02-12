@@ -201,7 +201,9 @@ int main(int argc, char *argv[])
 
     delwin(win);
     endwin();
+#ifdef PDCURSES
     delscreen( SP);
+#endif
 
     return 0;
 }

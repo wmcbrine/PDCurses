@@ -118,6 +118,9 @@ ptest$(EXE) : $(demodir)/ptest.c
 rain$(EXE) : $(demodir)/rain.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
+speed$(EXE) : $(demodir)/speed.c
+	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+
 testcurs$(EXE) : $(demodir)/testcurs.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 

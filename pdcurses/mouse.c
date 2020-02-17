@@ -213,6 +213,8 @@ mmask_t getmouse(void)
 
 /* ncurses mouse interface */
 
+const int max_mouse_interval = 32767;        /* 32.767 seconds */
+
 int mouseinterval(int wait)
 {
     int old_wait;
@@ -220,11 +222,11 @@ int mouseinterval(int wait)
     PDC_LOG(("mouseinterval() - called: %d\n", wait));
 
     if (!SP)
-        return ERR;
+        return max_mouse_interval;
 
     old_wait = SP->mouse_wait;
 
-    if (wait >= 0 && wait <= 1000)
+    if (wait >= 0 && wait <= max_mouse_interval)
         SP->mouse_wait = wait;
 
     return old_wait;

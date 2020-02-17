@@ -1,6 +1,7 @@
 /* PDCurses */
 
 #include <curspriv.h>
+#include <assert.h>
 
 /*man-start**************************************************************
 
@@ -146,6 +147,7 @@ int mouse_set(mmask_t mbe)
 {
     PDC_LOG(("mouse_set() - called: event %x\n", mbe));
 
+    assert( SP);
     if (!SP)
         return ERR;
 
@@ -157,6 +159,7 @@ int mouse_on(mmask_t mbe)
 {
     PDC_LOG(("mouse_on() - called: event %x\n", mbe));
 
+    assert( SP);
     if (!SP)
         return ERR;
 
@@ -168,6 +171,7 @@ int mouse_off(mmask_t mbe)
 {
     PDC_LOG(("mouse_off() - called: event %x\n", mbe));
 
+    assert( SP);
     if (!SP)
         return ERR;
 
@@ -208,6 +212,7 @@ mmask_t getmouse(void)
 {
     PDC_LOG(("getmouse() - called\n"));
 
+    assert( SP);
     return SP ? SP->_trap_mbe : (mmask_t)0;
 }
 
@@ -288,6 +293,7 @@ mmask_t mousemask(mmask_t mask, mmask_t *oldmask)
 {
     PDC_LOG(("mousemask() - called\n"));
 
+    assert( SP);
     if (!SP)
         return (mmask_t)0;
 
@@ -311,6 +317,8 @@ int nc_getmouse(MEVENT *event)
 
     PDC_LOG(("nc_getmouse() - called\n"));
 
+    assert( SP);
+    assert( event);
     if (!event || !SP)
         return ERR;
 

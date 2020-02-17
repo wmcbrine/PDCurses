@@ -179,15 +179,41 @@ void PDC_scr_close(void)
 void PDC_scr_free(void)
 {
     if (icon_pixmap)
+    {
         XFreePixmap(XCURSESDISPLAY, icon_pixmap);
+        icon_pixmap = 0;
+    }
     if (icon_pixmap_mask)
+    {
         XFreePixmap(XCURSESDISPLAY, icon_pixmap_mask);
+        icon_pixmap_mask = 0;
+    }
 
-    XFreeGC(XCURSESDISPLAY, pdc_normal_gc);
-    XFreeGC(XCURSESDISPLAY, pdc_italic_gc);
-    XFreeGC(XCURSESDISPLAY, pdc_bold_gc);
-    XFreeGC(XCURSESDISPLAY, pdc_cursor_gc);
-    XDestroyIC(pdc_xic);
+    if( pdc_normal_gc)
+    {
+        XFreeGC(XCURSESDISPLAY, pdc_normal_gc);
+        pdc_normal_gc = NULL;
+    }
+    if( pdc_italic_gc)
+    {
+        XFreeGC(XCURSESDISPLAY, pdc_italic_gc);
+        pdc_italic_gc = NULL;
+    }
+    if( pdc_bold_gc)
+    {
+        XFreeGC(XCURSESDISPLAY, pdc_bold_gc);
+        pdc_bold_gc = 0;
+    }
+    if( pdc_cursor_gc)
+    {
+        XFreeGC(XCURSESDISPLAY, pdc_cursor_gc);
+        pdc_cursor_gc = 0;
+    }
+    if( pdc_xic)
+    {
+        XDestroyIC(pdc_xic);
+        pdc_xic = 0;
+    }
 }
 
 void XCursesExit(void)

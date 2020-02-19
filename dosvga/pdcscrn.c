@@ -201,7 +201,6 @@ void PDC_save_screen_mode(int i)
 
 static short _egapal(short color)
 {
-    /* TODO: is this why I don't see output? */
     PDCREGS regs;
 
     regs.W.ax = 0x1007;
@@ -225,7 +224,6 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
     /* Read single DAC register */
     /* TODO: support VESA modes */
-    /* TODO: is this why I don't see output? */
 
     regs.W.ax = 0x1015;
     regs.h.bl = _egapal(color);
@@ -253,7 +251,6 @@ int PDC_init_color(short color, short red, short green, short blue)
 
     /* Set single DAC register */
     /* TODO: support VESA modes */
-    /* TODO: is this why I don't see output? */
 
     regs.W.ax = 0x1010;
     regs.W.bx = _egapal(color);

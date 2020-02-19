@@ -6,7 +6,7 @@
 /* Support cursor on graphics mode */
 static unsigned char bytes_behind[4][16];
 static unsigned char cursor_color = 15;
-static void draw_glyph(int row, int col, chtype glyph);
+static unsigned _get_colors(chtype glyph);
 static unsigned long address(int row, int col);
 static void video_write_byte(unsigned long addr, unsigned char byte);
 static unsigned char video_read_byte(unsigned long addr);
@@ -20,21 +20,112 @@ void PDC_gotoyx(int row, int col)
     PDC_private_cursor_on(row, col);
 }
 
+static void _new_packet(unsigned colors, int lineno, int x, int len, const chtype *srcp)
+{
+    unsigned fore, back;
+    int underline;
+    unsigned long addr = address(lineno, x);
+    unsigned pass;
+
+    fore = colors & 0xF;
+    back = colors >> 4;
+
+    /* Underline will go here if requested */
+    underline = 13 /*_FONT16*/;
+
+    /* Draw the text in four passes, to optimize for the memory architecture
+       of the VGA in four bit pixel modes */
+    for (pass = 0; pass < 4; pass++)
+    {
+        unsigned char vplane;
+        unsigned long cp;
+        int line;
+        int col;
+
+        /* Set memory planes to write */
+        if (pass & 2)
+            vplane = fore;
+        else
+            vplane = ~fore;
+        if (pass & 1)
+            vplane &= back;
+        else
+            vplane &= ~back;
+        vplane &= 0xF;
+        if (vplane == 0)
+            continue;
+        outportb(0x3c4, 2);
+        outportb(0x3c5, vplane);
+
+        /* Loop by raster line */
+        cp = addr;
+        for (line = 0; line < _FONT16; line++)
+        {
+            /* Loop by column */
+            for (col = 0; col < len; col++)
+            {
+                chtype glyph = srcp[col];
+                int ch;
+                unsigned char byte;
+
+                /* Get the index into the font */
+                ch = glyph & 0xFF;
+                if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
+                    ch = acs_map[ch & 0x7f] & 0xff;
+
+                /* Get one byte of the glyph to be drawn */
+                if (pass == 0 || pass == 3)
+                    byte = 0x00;
+                else if (line == underline && (glyph & A_UNDERLINE) != 0)
+                    byte = 0xFF;
+                else
+                    byte = getdosmembyte(PDC_state.font_addr + ch*_FONT16 + line);
+                if (pass & 1)
+                    byte = ~byte;
+
+                /* Place the byte in the frame buffer */
+                video_write_byte(cp + col, byte);
+            }
+            cp += PDC_state.bytes_per_line;
+        }
+    }
+}
+
 /* update the given physical line to look like the corresponding line in
    curscr */
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
-    int i;
+    unsigned old_colors, colors;
+    int i, j;
 
     PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
 
-    for (i = 0; i < len; i++)
+    /* Draw runs of characters that have the same colors */
+    old_colors = _get_colors(srcp[0]);
+
+    for (i = 1, j = 1; j < len; i++, j++)
     {
-        draw_glyph(lineno, x + i, srcp[i]);
-        if (lineno == PDC_state.cursor_row && x + i == PDC_state.cursor_col)
-            PDC_private_cursor_on(PDC_state.cursor_row, PDC_state.cursor_col);
+        colors = _get_colors(srcp[i]);
+
+        if (colors != old_colors)
+        {
+            _new_packet(old_colors, lineno, x, i, srcp);
+            old_colors = colors;
+            srcp += i;
+            x += i;
+            i = 0;
+        }
     }
+
+    _new_packet(old_colors, lineno, x, i, srcp);
+
+    /* Redraw the cursor if it has been erased */
+    if (lineno == PDC_state.cursor_row
+    &&  x <= PDC_state.cursor_col && PDC_state.cursor_col < x + len)
+        PDC_private_cursor_on(PDC_state.cursor_row, PDC_state.cursor_col);
+
+    /* Reset the VGA plane register to its normal state */
     outportb(0x3c4, 2);
     outportb(0x3c5, 0xF);
 }
@@ -43,18 +134,10 @@ void PDC_doupdate(void)
 {
 }
 
-static void draw_glyph(int row, int col, chtype glyph)
+static unsigned _get_colors(chtype glyph)
 {
-    unsigned long addr = address(row, col);
-    unsigned long font_addr;
     attr_t attr;
-    unsigned long cp;
-    unsigned char ch;
     short fore, back;
-    unsigned char vplane;
-    int line;
-    int underline;
-    unsigned char fnt;
 
     /* Get the foreground and background colors */
     attr = glyph & (A_ATTRIBUTES ^ A_ALTCHARSET);
@@ -75,71 +158,8 @@ static void draw_glyph(int row, int col, chtype glyph)
         back = swap;
     }
 
-    /* Set underline if requested */
-    underline = (attr & A_UNDERLINE) ? 13 /*_FONT16*/ : -1;
-
-    /* Get the index into the font */
-    ch = glyph & 0xFF;
-    if (glyph & A_ALTCHARSET && !(glyph & 0xff80))
-        ch = acs_map[ch & 0x7f] & 0xff;
-
-    /* Get the address of the glyph in memory */
-    font_addr = PDC_state.font_addr + ch * _FONT16;
-
-    /* Planes where fore has 0 and back has 0 */
-    vplane = ~fore & ~back & 0xF;
-    if (vplane != 0) {
-        outportb(0x3c4, 2);
-        outportb(0x3c5, vplane);
-        cp = addr;
-        for (line = 0; line < _FONT16; ++line) {
-            fnt = 0x00;
-            video_write_byte(cp, fnt);
-            cp += PDC_state.bytes_per_line;
-        }
-    }
-    /* Planes where fore has 1 and back has 0 */
-    vplane =  fore & ~back & 0xF;
-    if (vplane != 0) {
-        outportb(0x3c4, 2);
-        outportb(0x3c5, vplane);
-        cp = addr;
-        for (line = 0; line < _FONT16; ++line) {
-            if (line == underline)
-                fnt = 0xFF;
-            else
-                fnt = getdosmembyte(font_addr + line);
-            video_write_byte(cp, fnt);
-            cp += PDC_state.bytes_per_line;
-        }
-    }
-    /* Planes where fore has 0 and back has 1 */
-    vplane = ~fore &  back & 0xF;
-    if (vplane != 0) {
-        outportb(0x3c4, 2);
-        outportb(0x3c5, vplane);
-        cp = addr;
-        for (line = 0; line < _FONT16; ++line) {
-            if (line == underline)
-                fnt = 0x00;
-            else
-                fnt = ~getdosmembyte(font_addr + line);
-            video_write_byte(cp, fnt);
-            cp += PDC_state.bytes_per_line;
-        }
-    }
-    /* Planes where fore has 1 and back has 1 */
-    vplane =  fore &  back & 0xF;
-    if (vplane != 0) {
-        outportb(0x3c4, 2);
-        outportb(0x3c5, vplane);
-        cp = addr;
-        for (line = 0; line < _FONT16; ++line) {
-            fnt = 0xFF;
-            video_write_byte(cp, fnt);
-            cp += PDC_state.bytes_per_line;
-        }
-    }
+    /* Return them as a pair */
+    return (back << 4) | fore;
 }
 
 void PDC_private_cursor_off(void)

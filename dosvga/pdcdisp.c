@@ -7,9 +7,10 @@
 static unsigned char bytes_behind[4][16];
 static unsigned char cursor_color = 15;
 static unsigned _get_colors(chtype glyph);
-static unsigned long address(int row, int col);
-static void video_write_byte(unsigned long addr, unsigned char byte);
-static unsigned char video_read_byte(unsigned long addr);
+static unsigned long _address(int row, int col);
+static void _video_write_byte(unsigned long addr, unsigned char byte);
+static unsigned char _video_read_byte(unsigned long addr);
+static unsigned _set_window(unsigned window, unsigned long addr);
 
 /* position hardware cursor at (y, x) */
 
@@ -24,7 +25,7 @@ static void _new_packet(unsigned colors, int lineno, int x, int len, const chtyp
 {
     unsigned fore, back;
     int underline;
-    unsigned long addr = address(lineno, x);
+    unsigned long addr = _address(lineno, x);
     unsigned pass;
 
     fore = colors & 0xF;
@@ -84,7 +85,7 @@ static void _new_packet(unsigned colors, int lineno, int x, int len, const chtyp
                     byte = ~byte;
 
                 /* Place the byte in the frame buffer */
-                video_write_byte(cp + col, byte);
+                _video_write_byte(cp + col, byte);
             }
             cp += PDC_state.bytes_per_line;
         }
@@ -166,7 +167,7 @@ void PDC_private_cursor_off(void)
 {
     if (PDC_state.cursor_visible && PDC_state.cursor_row < (unsigned)LINES
     &&  PDC_state.cursor_col < (unsigned)COLS) {
-        unsigned long addr = address(PDC_state.cursor_row, PDC_state.cursor_col);
+        unsigned long addr = _address(PDC_state.cursor_row, PDC_state.cursor_col);
         unsigned plane;
         unsigned line;
 
@@ -177,7 +178,7 @@ void PDC_private_cursor_off(void)
             outportb(0x03C5, 1 << plane);
             for (line = 0; line < _FONT16; ++line)
             {
-                video_write_byte(p, bytes_behind[plane][line]);
+                _video_write_byte(p, bytes_behind[plane][line]);
                 p += PDC_state.bytes_per_line;
             }
         }
@@ -187,7 +188,7 @@ void PDC_private_cursor_off(void)
 
 void PDC_private_cursor_on(int row, int col)
 {
-    unsigned long addr = address(row, col);
+    unsigned long addr = _address(row, col);
     unsigned long p;
     unsigned plane;
     unsigned line;
@@ -199,26 +200,26 @@ void PDC_private_cursor_on(int row, int col)
         outportb(0x03CF, plane);
         for (line = 0; line < _FONT16; ++line)
         {
-            bytes_behind[plane][line] = video_read_byte(p);
+            bytes_behind[plane][line] = _video_read_byte(p);
             p += PDC_state.bytes_per_line;
         }
     }
     outportb(0x03C5, 2);
     outportb(0x03C5,  cursor_color);
-    p = address(row, col);
+    p = _address(row, col);
     p += PDC_state.cursor_start * PDC_state.bytes_per_line;
     for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
     {
-        video_write_byte(p, 0xFF);
+        _video_write_byte(p, 0xFF);
         p += PDC_state.bytes_per_line;
     }
     outportb(0x03C5, 2);
     outportb(0x03C5, ~cursor_color);
-    p = address(row, col);
+    p = _address(row, col);
     p += PDC_state.cursor_start * PDC_state.bytes_per_line;
     for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
     {
-        video_write_byte(p, 0x00);
+        _video_write_byte(p, 0x00);
         p += PDC_state.bytes_per_line;
     }
     outportb(0x03C5, 2);
@@ -228,25 +229,43 @@ void PDC_private_cursor_on(int row, int col)
     PDC_state.cursor_col = col;
 }
 
-static unsigned long address(int row, int col)
+static unsigned long _address(int row, int col)
 {
     return row * PDC_state.bytes_per_line * _FONT16 + col;
 }
 
-static void video_write_byte(unsigned long addr, unsigned char byte)
+static void _video_write_byte(unsigned long addr, unsigned char byte)
 {
-    /* TODO: support VESA modes */
-    if (addr < 0x10000)
-        setdosmembyte(0xA0000 + addr, byte);
+    unsigned offset = _set_window(PDC_state.write_win, addr);
+    unsigned long addr2 = PDC_state.window[PDC_state.write_win]*16L + offset;
+    setdosmembyte(addr2, byte);
 }
 
-static unsigned char video_read_byte(unsigned long addr)
+static unsigned char _video_read_byte(unsigned long addr)
 {
-    /* TODO: support VESA modes */
-    unsigned char byte;
-    if (addr < 0x10000)
-        byte = getdosmembyte(0xA0000 + addr);
-    else
-        byte = 0;
+    unsigned offset = _set_window(PDC_state.read_win, addr);
+    unsigned long addr2 = PDC_state.window[PDC_state.read_win]*16L + offset;
+    unsigned char byte = getdosmembyte(addr2);
     return byte;
+}
+
+static unsigned _set_window(unsigned window, unsigned long addr)
+{
+    unsigned long offset = PDC_state.offset[window];
+    if (addr < offset || offset + PDC_state.window_size <= addr)
+    {
+        /* Need to move the window */
+        __dpmi_regs regs;
+        unsigned long gran = PDC_state.window_gran * 1024L;
+
+        memset(&regs, 0, sizeof(regs));
+        regs.x.ax = 0x4F05;
+        regs.x.bx = window;
+        regs.x.dx = addr / gran;
+        offset = regs.x.dx * gran;
+        __dpmi_int(0x10, &regs);
+        PDC_state.offset[window] = offset;
+    }
+
+    return addr - offset;
 }

@@ -46,9 +46,10 @@ struct PDC_video_state
     unsigned short video_height; /* Height of graphics mode in pixels */
     unsigned short bytes_per_line; /* Bytes per raster line */
     /* Location of the frame buffer in memory */
-    unsigned window[2];
-    unsigned offset[2];
+    unsigned short window[2];
+    unsigned long offset[2];
     unsigned long window_size;
+    unsigned window_gran;
     /* Window used to read and write */
     unsigned char read_win;
     unsigned char write_win;
@@ -63,20 +64,6 @@ struct PDC_video_state
     unsigned char cursor_end;
 
     short pdc_curstoreal[16];
-
-#if 0
-    int pdc_adapter;         /* screen type */
-    int pdc_scrnmode;        /* default screen mode */
-    int pdc_font;            /* default font size */
-    bool pdc_direct_video;   /* allow direct screen memory writes */
-    bool pdc_bogus_adapter;  /* TRUE if adapter has insane values */
-    unsigned pdc_video_seg;  /* video base segment */
-    unsigned pdc_video_ofs;  /* video base offset */
-
-    bool graphics_mode;      /* TRUE if operating in a graphics mode */
-    unsigned video_width;    /* Width of graphics mode in pixels */
-    unsigned video_height;   /* Height of graphics mode in pixels */
-#endif
 };
 extern struct PDC_video_state PDC_state;
 

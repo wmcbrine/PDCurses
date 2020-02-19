@@ -58,14 +58,15 @@ int PDC_curs_set(int visibility)
             end = _FONT16 - 1;
             break;
         default:  /* normal visibility */
-            start = SP->orig_cursor >> 4;
-            end =   SP->orig_cursor & 0xF;
+            start = SP->orig_cursor >> 8;
+            end =   SP->orig_cursor & 0xFF;
     }
 
     PDC_private_cursor_off();
     PDC_state.cursor_start = start;
     PDC_state.cursor_end = end;
-    PDC_private_cursor_on(PDC_state.cursor_row, PDC_state.cursor_col);
+    if (visibility != 0)
+        PDC_private_cursor_on(PDC_state.cursor_row, PDC_state.cursor_col);
 
     return ret_vis;
 }

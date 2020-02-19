@@ -28,7 +28,7 @@ int PDC_get_cursor_mode(void)
     int start = _FONT16*3/4;
     int end   = _FONT16-1;
 
-    return (start << 4) | end;
+    return (start << 8) | end;
 }
 
 /* return number of screen rows */

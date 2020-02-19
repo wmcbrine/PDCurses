@@ -76,7 +76,6 @@ static void _set_scrn_mode(int new_mode)
     PDC_state.font_addr = _get_font_address();
     LINES = PDC_get_rows();
     COLS = PDC_get_columns();
-    PDC_curs_set(1);
 }
 
 /* close the physical screen -- may restore the screen to its state
@@ -139,12 +138,9 @@ int PDC_resize_screen(int nlines, int ncols)
     PDC_LOG(("PDC_resize_screen() - called. Lines: %d Cols: %d\n",
              nlines, ncols));
 
-    /* Trash the stored value of orig_cursor -- it's only good if the
-       video mode doesn't change */
-
-    SP->orig_cursor = 0x0607;
-
     _set_scrn_mode(_find_video_mode(nlines, ncols));
+    SP->orig_cursor = PDC_get_cursor_mode();
+    PDC_curs_set(SP->visibility);
 
     return OK;
 }

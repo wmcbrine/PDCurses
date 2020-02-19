@@ -97,10 +97,18 @@ static void _new_packet(unsigned colors, int lineno, int x, int len, const chtyp
 
 void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 {
+    bool redraw_cursor;
     unsigned old_colors, colors;
     int i, j;
 
     PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
+
+    redraw_cursor = PDC_state.cursor_visible
+                 && lineno == PDC_state.cursor_row
+                 && x <= PDC_state.cursor_col
+                 && PDC_state.cursor_col < x + len;
+    if (redraw_cursor)
+        PDC_private_cursor_off();
 
     /* Draw runs of characters that have the same colors */
     old_colors = _get_colors(srcp[0]);
@@ -122,8 +130,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     _new_packet(old_colors, lineno, x, i, srcp);
 
     /* Redraw the cursor if it has been erased */
-    if (lineno == PDC_state.cursor_row
-    &&  x <= PDC_state.cursor_col && PDC_state.cursor_col < x + len)
+    if (redraw_cursor)
         PDC_private_cursor_on(PDC_state.cursor_row, PDC_state.cursor_col);
 
     /* Reset the VGA plane register to its normal state */

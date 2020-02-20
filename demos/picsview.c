@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <curses.h>
+#include "curses.h"
 #include <math.h>
 #include <assert.h>
 #if defined( __linux)
@@ -50,6 +50,10 @@ double aspect = 1.1;       /* The 'bottom block' (half-height cell character) */
 
 /* PNM files give each pixel as an RGB triplet of bytes.  A width by height
 image consumes exactly width * height * 3 bytes. */
+
+#ifndef ACS_BBLOCK
+   #define ACS_BBLOCK 0x2584
+#endif
 
 static int get_rgb_value( char *iptr)
 {
@@ -210,7 +214,9 @@ int main( const int argc, const char *argv[])
    cbreak( );
    noecho();
    keypad( stdscr, 1);
+#ifdef PDCURSES
    mouse_set( ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION);
+#endif
    while( c != 27 && c != 'q')
       {
       int *xloc = (int *)calloc( 2 * COLS, sizeof( int));
@@ -293,20 +299,27 @@ int main( const int argc, const char *argv[])
          c = getch( );
          if( c == KEY_MOUSE)
             {
+#ifdef PDCURSES
             nc_getmouse( &mouse_event);
+#else
+            getmouse( &mouse_event);
+#endif
             xpix1 = xpix + (double)(mouse_event.x - COLS / 2) * scale;
             ypix1 = ypix + (double)(mouse_event.y - LINES / 2) * scale * 2. * aspect;
+#ifdef PDCURSES
             if( MOUSE_POS_REPORT)
                {
                c = -1;
                snprintf( buff, sizeof( buff), "x=%5d y=%5d", (int)xpix1, (int)ypix1);
                mvaddstr( LINES - 2, 0, buff);
                }
+#endif
             }
          }
          while( c == -1);
       switch( c)
          {
+#ifdef PDCURSES
          case KEY_MOUSE:
             {
             double rescale = 1.;
@@ -325,6 +338,7 @@ int main( const int argc, const char *argv[])
             ypix += (ypix1 - ypix) * (1. - rescale);
             }
             break;
+#endif
          case '*':
             scale /= 1.2;
             break;
@@ -376,8 +390,10 @@ int main( const int argc, const char *argv[])
             ysize = tval;
             scale = 0.;
             }
+            break;
          case 'i':
             invert_pixels( xsize, ysize, pixels);
+            break;
          default:
             show_help = TRUE;
             break;
@@ -385,6 +401,8 @@ int main( const int argc, const char *argv[])
       }
    free( pixels);
    endwin();
+#ifdef PDCURSES
    delscreen( SP);
+#endif
    return( 0);
 }

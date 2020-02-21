@@ -271,9 +271,9 @@ int PDC_init_color(short color, short red, short green, short blue)
             seg = __dpmi_allocate_dos_memory(1, &sel);
             if (seg < 0)
                 return ERR;
-            table[0] = DIVROUND((unsigned)red * 63, 1000);
+            table[0] = DIVROUND((unsigned)blue * 63, 1000);
             table[1] = DIVROUND((unsigned)green * 63, 1000);
-            table[2] = DIVROUND((unsigned)blue * 63, 1000);
+            table[2] = DIVROUND((unsigned)red * 63, 1000);
             table[3] = 0;
             dosmemput(table, sizeof(table), seg * 16L);
             memset(&d_regs, 0, sizeof(d_regs));

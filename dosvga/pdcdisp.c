@@ -4,10 +4,11 @@
 #include "../common/acs437.h"
 
 /* Support cursor on graphics mode */
-static unsigned char bytes_behind[4][16];
+static unsigned long bytes_behind[8][16];
 static unsigned char cursor_color = 15;
-static unsigned _get_colors(chtype glyph);
-static unsigned long _address(int row, int col);
+static unsigned long _get_colors(chtype glyph);
+static unsigned long _address_4(int row, int col);
+static unsigned long _address_8(int row, int col);
 static void _video_write_byte(unsigned long addr, unsigned char byte);
 static unsigned char _video_read_byte(unsigned long addr);
 static unsigned _set_window(unsigned window, unsigned long addr);
@@ -21,15 +22,18 @@ void PDC_gotoyx(int row, int col)
     PDC_private_cursor_on(row, col);
 }
 
-static void _new_packet(unsigned colors, int lineno, int x, int len, const chtype *srcp)
+/* Draw a run of characters with the same colors */
+/* Used with 4 bit pixels only */
+
+static void _new_packet(unsigned long colors, int lineno, int x, int len, const chtype *srcp)
 {
     unsigned fore, back;
     int underline;
-    unsigned long addr = _address(lineno, x);
+    unsigned long addr = _address_4(lineno, x);
     unsigned pass;
 
     fore = colors & 0xF;
-    back = colors >> 4;
+    back = (colors >> 16) & 0xF;
 
     /* Underline will go here if requested */
     underline = 13 /*_FONT16*/;
@@ -92,23 +96,12 @@ static void _new_packet(unsigned colors, int lineno, int x, int len, const chtyp
     }
 }
 
-/* update the given physical line to look like the corresponding line in
-   curscr */
-
-void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+/* PDC_transform_line for 4 bit pixels */
+ 
+static void _transform_line_4(int lineno, int x, int len, const chtype *srcp)
 {
-    bool redraw_cursor;
-    unsigned old_colors, colors;
+    unsigned long old_colors, colors;
     int i, j;
-
-    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
-
-    redraw_cursor = PDC_state.cursor_visible
-                 && lineno == PDC_state.cursor_row
-                 && x <= PDC_state.cursor_col
-                 && PDC_state.cursor_col < x + len;
-    if (redraw_cursor)
-        PDC_private_cursor_off();
 
     /* Draw runs of characters that have the same colors */
     old_colors = _get_colors(srcp[0]);
@@ -129,20 +122,104 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
     _new_packet(old_colors, lineno, x, i, srcp);
 
+    /* Reset the VGA plane register to its normal state */
+    outportb(0x3c4, 2);
+    outportb(0x3c5, 0xF);
+}
+
+/* PDC_transform_line for 8 bit pixels */
+ 
+static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
+{
+    unsigned long addr = _address_8(lineno, x);
+    unsigned underline;
+    unsigned line;
+
+    /* Underline will go here if requested */
+    underline = 13 /*_FONT16*/;
+
+    /* Draw the entire line in pixel order, to minimize the use of the VESA
+       window function */
+
+    /* Loop by raster line */
+    for (line = 0; line < _FONT16; line++)
+    {
+        int col;
+        unsigned addr2 = addr;
+
+        /* Loop by column */
+        for (col = 0; col < len; col++)
+        {
+            chtype glyph = srcp[col];
+            int ch;
+            unsigned char byte, bit;
+            unsigned long colors;
+            unsigned fore, back;
+
+            /* Get the index into the font */
+            ch = glyph & 0xFF;
+            if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
+                ch = acs_map[ch & 0x7f] & 0xff;
+
+            /* Get one byte from the font */
+            if ((glyph & A_UNDERLINE) != 0 && line == underline)
+                byte = 0xFF;
+            else
+                byte = getdosmembyte(PDC_state.font_addr + ch*_FONT16 + line);
+
+            /* Get the colors */
+            colors = _get_colors(glyph);
+            fore = colors & 0xFF;
+            back = (colors >> 16) & 0xFF;
+
+            /* Loop by pixel */
+            for (bit = 0x80; bit != 0; bit >>= 1)
+            {
+                _video_write_byte(addr2++, (byte & bit) ? fore : back);
+            }
+        }
+        addr += PDC_state.bytes_per_line;
+    }
+}
+
+/* update the given physical line to look like the corresponding line in
+   curscr */
+
+void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
+{
+    bool redraw_cursor;
+
+    PDC_LOG(("PDC_transform_line() - called: lineno=%d\n", lineno));
+
+    redraw_cursor = PDC_state.cursor_visible
+                 && lineno == PDC_state.cursor_row
+                 && x <= PDC_state.cursor_col
+                 && PDC_state.cursor_col < x + len;
+    if (redraw_cursor)
+        PDC_private_cursor_off();
+
+    switch (PDC_state.bits_per_pixel)
+    {
+    case 4:
+        _transform_line_4(lineno, x, len, srcp);
+        break;
+
+    case 8:
+        _transform_line_8(lineno, x, len, srcp);
+        break;
+    }
+
     /* Redraw the cursor if it has been erased */
     if (redraw_cursor)
         PDC_private_cursor_on(PDC_state.cursor_row, PDC_state.cursor_col);
 
-    /* Reset the VGA plane register to its normal state */
-    outportb(0x3c4, 2);
-    outportb(0x3c5, 0xF);
 }
 
 void PDC_doupdate(void)
 {
 }
 
-static unsigned _get_colors(chtype glyph)
+static unsigned long _get_colors(chtype glyph)
 {
     attr_t attr;
     short fore, back;
@@ -151,13 +228,10 @@ static unsigned _get_colors(chtype glyph)
     attr = glyph & (A_ATTRIBUTES ^ A_ALTCHARSET);
     pair_content(PAIR_NUMBER(attr), &fore, &back);
 
-    if (attr & A_BOLD)
+    if ((attr & A_BOLD) != 0 && fore < 16)
         fore |= 8;
-    if (attr & A_BLINK)
+    if ((attr & A_BLINK) != 0 && back < 16)
         back |= 8;
-
-    fore = PDC_state.pdc_curstoreal[fore];
-    back = PDC_state.pdc_curstoreal[back];
 
     if (attr & A_REVERSE)
     {
@@ -167,35 +241,66 @@ static unsigned _get_colors(chtype glyph)
     }
 
     /* Return them as a pair */
-    return (back << 4) | fore;
+    return (back << 16) | fore;
+}
+
+static void _cursor_off_4(void)
+{
+    unsigned long addr = _address_4(PDC_state.cursor_row, PDC_state.cursor_col);
+    unsigned plane;
+    unsigned line;
+
+    for (plane = 0; plane < 4; plane++)
+    {
+        unsigned long p = addr;
+        outportb(0x03C4, 2);
+        outportb(0x03C5, 1 << plane);
+        for (line = 0; line < _FONT16; line++)
+        {
+            _video_write_byte(p, bytes_behind[plane][line]);
+            p += PDC_state.bytes_per_line;
+        }
+    }
+}
+
+static void _cursor_off_8(void)
+{
+    unsigned long addr = _address_8(PDC_state.cursor_row, PDC_state.cursor_col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_byte(p + i, bytes_behind[i][line]);
+        p += PDC_state.bytes_per_line;
+    }
 }
 
 void PDC_private_cursor_off(void)
 {
     if (PDC_state.cursor_visible && PDC_state.cursor_row < (unsigned)LINES
-    &&  PDC_state.cursor_col < (unsigned)COLS) {
-        unsigned long addr = _address(PDC_state.cursor_row, PDC_state.cursor_col);
-        unsigned plane;
-        unsigned line;
-
-        for (plane = 0; plane < 4; ++plane)
+    &&  PDC_state.cursor_col < (unsigned)COLS)
+    {
+        switch (PDC_state.bits_per_pixel)
         {
-            unsigned long p = addr;
-            outportb(0x03C4, 2);
-            outportb(0x03C5, 1 << plane);
-            for (line = 0; line < _FONT16; ++line)
-            {
-                _video_write_byte(p, bytes_behind[plane][line]);
-                p += PDC_state.bytes_per_line;
-            }
+        case 4:
+            _cursor_off_4();
+            break;
+
+        case 8:
+            _cursor_off_8();
+            break;
         }
     }
     PDC_state.cursor_visible = FALSE;
 }
 
-void PDC_private_cursor_on(int row, int col)
+void _cursor_on_4(int row, int col)
 {
-    unsigned long addr = _address(row, col);
+    unsigned long addr = _address_4(row, col);
     unsigned long p;
     unsigned plane;
     unsigned line;
@@ -213,8 +318,7 @@ void PDC_private_cursor_on(int row, int col)
     }
     outportb(0x03C5, 2);
     outportb(0x03C5,  cursor_color);
-    p = _address(row, col);
-    p += PDC_state.cursor_start * PDC_state.bytes_per_line;
+    p = addr + PDC_state.cursor_start * PDC_state.bytes_per_line;
     for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
     {
         _video_write_byte(p, 0xFF);
@@ -222,8 +326,7 @@ void PDC_private_cursor_on(int row, int col)
     }
     outportb(0x03C5, 2);
     outportb(0x03C5, ~cursor_color);
-    p = _address(row, col);
-    p += PDC_state.cursor_start * PDC_state.bytes_per_line;
+    p = addr + PDC_state.cursor_start * PDC_state.bytes_per_line;
     for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
     {
         _video_write_byte(p, 0x00);
@@ -231,14 +334,60 @@ void PDC_private_cursor_on(int row, int col)
     }
     outportb(0x03C5, 2);
     outportb(0x03C5, 0xF);
+}
+
+void _cursor_on_8(int row, int col)
+{
+    unsigned long addr = _address_8(row, col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+
+    /* Save the bytes currently in the character cell */
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            bytes_behind[i][line] = _video_read_byte(p + i);
+        p += PDC_state.bytes_per_line;
+    }
+
+    /* Write the cursor */
+    p = addr + PDC_state.cursor_start * PDC_state.bytes_per_line;
+    for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_byte(p + i, cursor_color);
+        p += PDC_state.bytes_per_line;
+    }
+}
+
+void PDC_private_cursor_on(int row, int col)
+{
+    switch (PDC_state.bits_per_pixel)
+    {
+    case 4:
+        _cursor_on_4(row, col);
+        break;
+
+    case 8:
+        _cursor_on_8(row, col);
+        break;
+    }
     PDC_state.cursor_visible = TRUE;
     PDC_state.cursor_row = row;
     PDC_state.cursor_col = col;
 }
 
-static unsigned long _address(int row, int col)
+static unsigned long _address_4(int row, int col)
 {
     return row * PDC_state.bytes_per_line * _FONT16 + col;
+}
+
+static unsigned long _address_8(int row, int col)
+{
+    return row * PDC_state.bytes_per_line * _FONT16
+            + col * 8 * ((PDC_state.bits_per_pixel + 7)/8);
 }
 
 static void _video_write_byte(unsigned long addr, unsigned char byte)

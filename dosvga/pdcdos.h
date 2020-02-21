@@ -37,11 +37,17 @@
 #include <dos.h>
 
 /* Information about the current video state */
+struct PDC_color
+{
+    short r, g, b;
+};
+
 struct PDC_video_state
 {
     /* Information about the current video mode: */
     unsigned short scrn_mode;
     bool linear_buffer;
+    unsigned char bits_per_pixel;
     unsigned short video_width;  /* Width of graphics mode in pixels */
     unsigned short video_height; /* Height of graphics mode in pixels */
     unsigned short bytes_per_line; /* Bytes per raster line */
@@ -63,7 +69,7 @@ struct PDC_video_state
     unsigned char cursor_start;
     unsigned char cursor_end;
 
-    short pdc_curstoreal[16];
+    struct PDC_color colors[PDC_MAXCOL];
 };
 extern struct PDC_video_state PDC_state;
 

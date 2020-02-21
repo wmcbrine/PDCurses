@@ -11,16 +11,10 @@
 
 struct PDC_video_state PDC_state;
 
-static short realtocurs[16] =
-{
-    COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
-    COLOR_MAGENTA, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK + 8,
-    COLOR_BLUE + 8, COLOR_GREEN + 8, COLOR_CYAN + 8, COLOR_RED + 8,
-    COLOR_MAGENTA + 8, COLOR_YELLOW + 8, COLOR_WHITE + 8
-};
-
 static int saved_scrnmode[3];
 
+static void _init_palette(void);
+static void _load_palette(void);
 static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info);
 static unsigned _find_video_mode(int rows, int cols);
 static unsigned _find_mode(
@@ -105,7 +99,6 @@ int PDC_scr_open(void)
     struct SREGS segregs;
     int ds;
 #endif
-    int i;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
 
@@ -114,9 +107,8 @@ int PDC_scr_open(void)
     if (!SP)
         return ERR;
 
+    _init_palette();
     PDC_resize_screen(25, 80);
-    for (i = 0; i < 16; i++)
-        PDC_state.pdc_curstoreal[realtocurs[i]] = i;
 
     SP->orig_attr = FALSE;
 
@@ -139,15 +131,21 @@ int PDC_resize_screen(int nlines, int ncols)
              nlines, ncols));
 
     _set_scrn_mode(_find_video_mode(nlines, ncols));
+    _load_palette();
     SP->orig_cursor = PDC_get_cursor_mode();
     PDC_curs_set(SP->visibility);
+    if (PDC_state.bits_per_pixel <= 8)
+        COLORS = 1 << PDC_state.bits_per_pixel;
+    else
+        COLORS = PDC_MAXCOL;
 
     return OK;
 }
 
 void PDC_reset_prog_mode(void)
 {
-        PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+    PDC_LOG(("PDC_reset_prog_mode() - called.\n"));
+    _load_palette();
 }
 
 void PDC_reset_shell_mode(void)
@@ -171,19 +169,72 @@ void PDC_save_screen_mode(int i)
     }
 }
 
-/* _egapal() - Find the EGA palette value (0-63) for the color (0-15).
-   On VGA, this is an index into the DAC. */
+/* _init_palette -- set up the initial palette */
 
-static short _egapal(short color)
+static void _init_palette(void)
 {
-    PDCREGS regs;
+    unsigned i, r, g, b;
 
-    regs.W.ax = 0x1007;
-    regs.h.bl = PDC_state.pdc_curstoreal[color];
+    /* The basic eight colors and their bold forms */
+    for (i = 0; i < 8; i++)
+    {
+        PDC_state.colors[i+0].r = (i & COLOR_RED)   ?  750 :   0;
+        PDC_state.colors[i+0].g = (i & COLOR_GREEN) ?  750 :   0;
+        PDC_state.colors[i+0].b = (i & COLOR_BLUE)  ?  750 :   0;
+        PDC_state.colors[i+8].r = (i & COLOR_RED)   ? 1000 : 250;
+        PDC_state.colors[i+8].g = (i & COLOR_GREEN) ? 1000 : 250;
+        PDC_state.colors[i+8].b = (i & COLOR_BLUE)  ? 1000 : 250;
+    }
 
-    PDCINT(0x10, regs);
+    /* 6x6x6 color cube */
+    i = 16;
+    for (r = 0; r < 6; r++)
+    {
+        for (g = 0; g < 6; g++)
+        {
+            for (b = 0; b < 6; b++)
+            {
+                PDC_state.colors[i].r = (r ? r * 157 + 215 : 0);
+                PDC_state.colors[i].g = (g ? g * 157 + 215 : 0);
+                PDC_state.colors[i].b = (b ? b * 157 + 215 : 0);
+                i++;
+            }
+        }
+    }
 
-    return regs.h.bh;
+    /* 24 shades of gray */
+    for (i = 232; i < 256; i++)
+    {
+        r = (i - 232) * 40 + 30;
+        PDC_state.colors[i].r = r;
+        PDC_state.colors[i].g = r;
+        PDC_state.colors[i].b = r;
+    }
+}
+
+/* _load_palette -- load the current palette into the DAC */
+
+static void _load_palette(void)
+{
+    if (PDC_state.bits_per_pixel <= 8)
+    {
+        PDCREGS regs;
+        unsigned i;
+
+        /* Load EGA palette registers as an identity map */
+        for (i = 0; i < 16; i++)
+        {
+            memset(&regs, 0, sizeof(regs));
+            regs.W.ax = 0x1000;
+            regs.W.bx = i * 0x0101;
+            PDCINT(0x10, regs);
+        }
+
+        /* Load the DAC registers from the current palette */
+        for (i = 0; i < 1 << PDC_state.bits_per_pixel; i++)
+            PDC_init_color(i, PDC_state.colors[i].r, PDC_state.colors[i].g,
+                    PDC_state.colors[i].b);
+    }
 }
 
 bool PDC_can_change_color(void)
@@ -191,46 +242,67 @@ bool PDC_can_change_color(void)
     return TRUE;
 }
 
-/* These are only valid when PDC_state.pdc_adapter == _VGACOLOR */
-
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-    PDCREGS regs;
-
-    /* Read single DAC register */
-    /* TODO: support VESA modes */
-
-    regs.W.ax = 0x1015;
-    regs.h.bl = _egapal(color);
-
-    PDCINT(0x10, regs);
-
-    /* Scale and store */
-
-    *red = DIVROUND((unsigned)(regs.h.dh) * 1000, 63);
-    *green = DIVROUND((unsigned)(regs.h.ch) * 1000, 63);
-    *blue = DIVROUND((unsigned)(regs.h.cl) * 1000, 63);
+    *red   = PDC_state.colors[color].r;
+    *green = PDC_state.colors[color].g;
+    *blue  = PDC_state.colors[color].b;
 
     return OK;
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-    PDCREGS regs;
+    PDC_state.colors[color].r = red;
+    PDC_state.colors[color].g = green;
+    PDC_state.colors[color].b = blue;
 
-    /* Scale */
+    if (PDC_state.bits_per_pixel <= 8)
+    {
+        PDCREGS regs;
 
-    regs.h.dh = DIVROUND((unsigned)red * 63, 1000);
-    regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
-    regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
+        if (PDC_state.scrn_mode >= 0x100)
+        {
+            /* VESA mode in use; first try the VESA function */
+            int seg, sel;
+            unsigned char table[4];
+            __dpmi_regs d_regs;
 
-    /* Set single DAC register */
-    /* TODO: support VESA modes */
+            seg = __dpmi_allocate_dos_memory(1, &sel);
+            if (seg < 0)
+                return ERR;
+            table[0] = DIVROUND((unsigned)red * 63, 1000);
+            table[1] = DIVROUND((unsigned)green * 63, 1000);
+            table[2] = DIVROUND((unsigned)blue * 63, 1000);
+            table[3] = 0;
+            dosmemput(table, sizeof(table), seg * 16L);
+            memset(&d_regs, 0, sizeof(d_regs));
+            d_regs.x.ax = 0x4F09;
+            d_regs.h.bl = 0;
+            d_regs.x.cx = 1;
+            d_regs.x.dx = color;
+            d_regs.x.di = 0;
+            d_regs.x.es = seg;
+            __dpmi_int(0x10, &d_regs);
+            __dpmi_free_dos_memory(sel);
+            if (d_regs.x.ax == 0x004F)
+                return OK;
+        }
 
-    regs.W.ax = 0x1010;
-    regs.W.bx = _egapal(color);
+        /* Scale */
 
-    PDCINT(0x10, regs);
+        regs.h.dh = DIVROUND((unsigned)red * 63, 1000);
+        regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
+        regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
+
+        /* Set single DAC register */
+        /* TODO: support VESA modes */
+
+        regs.W.ax = 0x1010;
+        regs.W.bx = color;
+
+        PDCINT(0x10, regs);
+    }
 
     return OK;
 }
@@ -313,6 +385,8 @@ static unsigned _find_video_mode(int rows, int cols)
     PDC_state.bytes_per_line = mode_info.BytesPerScanLine;
     PDC_state.video_width = mode_info.XResolution;
     PDC_state.video_height = mode_info.YResolution;
+    PDC_state.linear_buffer = FALSE;
+    PDC_state.bits_per_pixel = mode_info.BitsPerPixel;
 
     __dpmi_free_dos_memory(vbe_info_sel);
     return vesa_mode;
@@ -324,6 +398,7 @@ error:
         __dpmi_free_dos_memory(vbe_info_sel);
 
     PDC_state.linear_buffer = FALSE;
+    PDC_state.bits_per_pixel = 4;
     PDC_state.video_width = 640;
     PDC_state.video_height = 480;
     PDC_state.bytes_per_line = 80;
@@ -346,15 +421,18 @@ static unsigned _find_mode(
 {
     unsigned selected_mode;
     unsigned long selected_size;
+    unsigned selected_bits;
 
     selected_mode = 0xFFFF;
     selected_size = (rows == 0 && cols == 0) ? 0 : 0xFFFFFFFF;
+    selected_bits = 0;
 
     if (rows <= 30 && cols <= 80)
     {
         /* Set up a ModeInfoBlock for mode 0x0012 */
         selected_mode = 0x0012;
         selected_size = 80 * 30;
+        selected_bits = 4;
         memset(mode_info, 0, sizeof(*mode_info));
         mode_info->ModeAttributes = 0x1F;
         mode_info->WinAAttributes = 0x07;
@@ -402,7 +480,15 @@ static unsigned _find_mode(
             if (mode_info0.NumberOfPlanes != 4)
                 continue;
             break;
-        /* TODO: 8, 15, 16, 24 and 32 bits */
+
+        case 8:
+            if (mode_info0.MemoryModel != 4) /* Packed pixel */
+                continue;
+            if (mode_info0.NumberOfPlanes != 1)
+                continue;
+            break;
+
+        /* TODO: 15, 16, 24 and 32 bits */
 
         default:
             continue;
@@ -414,24 +500,32 @@ static unsigned _find_mode(
         if (new_cols < cols || new_rows < rows)
             continue;
 
-        /* If rows == 0 and cols == 0, select the largest available size;
+        /* Among modes that are large enough for rows and cols, choose one
+           with the most bits per pixel. Among modes with the same pixel depth,
+           if rows == 0 and cols == 0, select the largest available size;
            otherwise, select the smallest that can hold that many rows and
-           columns */
-        new_size = (unsigned long)new_rows * new_cols;
-        if (rows == 0 && cols == 0)
+           columns. */
+        if (mode_info0.BitsPerPixel < selected_bits)
+            continue;
+        if (mode_info0.BitsPerPixel == selected_bits)
         {
-            if (new_size <= selected_size)
-                continue;
-        }
-        else
-        {
-            if (new_size >= selected_size)
-                continue;
+            new_size = (unsigned long)new_rows * new_cols;
+            if (rows == 0 && cols == 0)
+            {
+                if (new_size <= selected_size)
+                    continue;
+            }
+            else
+            {
+                if (new_size >= selected_size)
+                    continue;
+            }
         }
 
         /* Select this mode, pending discovery of a better one */
         selected_mode = mode;
         selected_size = new_size;
+        selected_bits = mode_info0.BitsPerPixel;
         *mode_info = mode_info0;
     }
 

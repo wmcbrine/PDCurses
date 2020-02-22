@@ -1209,7 +1209,7 @@ void gradient(int tmarg)
         move(tmarg + 3 + i, (COLS - 69) / 2);
         for (j = 0; j < len; j++)
         {
-            const int oval = j * 1000 / len;
+            const int oval = (int)(j * 1000L / len);
             const int reverse = 1000 - oval;
 
             if (!i)

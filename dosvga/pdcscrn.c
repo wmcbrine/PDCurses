@@ -30,9 +30,13 @@ static void dosmemput(const void *buf, size_t size, unsigned long addr);
 /* _get_font_address() -- return the address of the font in ROM */
 static unsigned long _get_font_address(void)
 {
+#ifdef PDC_FLAT
     unsigned ofs = getdosmemword(0x43 * 4 + 0);
     unsigned seg = getdosmemword(0x43 * 4 + 2);
     return _FAR_POINTER(seg, ofs);
+#else
+    return getdosmemdword(0x43 * 4);
+#endif
 }
 
 /* _get_scrn_mode() - Return the current BIOS video mode */
@@ -99,11 +103,6 @@ void PDC_scr_free(void)
 
 int PDC_scr_open(void)
 {
-#if SMALL || MEDIUM
-    struct SREGS segregs;
-    int ds;
-#endif
-
     PDC_LOG(("PDC_scr_open() - called\n"));
 
     SP = calloc(1, sizeof(SCREEN));
@@ -278,6 +277,9 @@ int PDC_init_color(short color, short red, short green, short blue)
     if (PDC_state.bits_per_pixel <= 8)
     {
         PDCREGS regs;
+#if !defined(PDC_FLAT) && !defined(__WATCOMC__)
+        struct SREGS sregs;
+#endif
 
         if (PDC_state.scrn_mode >= 0x100)
         {
@@ -304,11 +306,17 @@ int PDC_init_color(short color, short red, short green, short blue)
 #ifdef PDC_FLAT
             regs.W.di = 0;
             regs.W.es = seg;
-#else
+            PDCINT(0x10, regs);
+#elif defined(__WATCOMC__)
             regs.W.di = FP_OFF(&table);
             regs.W.es = FP_SEG(&table);
-#endif
             PDCINT(0x10, regs);
+#else
+            regs.W.di = FP_OFF(&table);
+            segread(&sregs);
+            sregs.es = FP_SEG(&table);
+            int86x(0x10, &regs, &regs, &sregs);
+#endif
 #ifdef PDC_FLAT
             __dpmi_free_dos_memory(sel);
 #endif
@@ -346,6 +354,9 @@ static unsigned _find_video_mode(int rows, int cols)
 #endif
     struct VbeInfoBlock vbe_info;
     PDCREGS regs;
+#if !defined(PDC_FLAT) && !defined(__WATCOMC__)
+    struct SREGS sregs;
+#endif
     unsigned long mode_addr;
     struct ModeInfoBlock mode_info;
     unsigned vesa_mode;
@@ -368,11 +379,17 @@ static unsigned _find_video_mode(int rows, int cols)
 #ifdef PDC_FLAT
     regs.W.di = 0;
     regs.W.es = vbe_info_seg;
-#else
+    PDCINT(0x10, regs);
+#elif defined(__WATCOMC__)
     regs.W.di = FP_OFF(&vbe_info);
     regs.W.es = FP_SEG(&vbe_info);
-#endif
     PDCINT(0x10, regs);
+#else
+    regs.W.di = FP_OFF(&vbe_info);
+    segread(&sregs);
+    sregs.es = FP_SEG(&vbe_info);
+    int86x(0x10, &regs, &regs, &sregs);
+#endif
 
     /* Check for successful completion of function: is VESA BIOS present? */
     if (regs.W.ax != 0x004F)
@@ -387,8 +404,12 @@ static unsigned _find_video_mode(int rows, int cols)
     /* The mode list may be within the DOS memory area allocated above.
        That area must remain allocated and must not be rewritten until
        we're done here. */
+#ifdef PDC_FLAT
     mode_addr = _FAR_POINTER(vbe_info.VideoModePtr >> 16,
                              vbe_info.VideoModePtr & 0xFFFF);
+#else
+    mode_addr = vbe_info.VideoModePtr;
+#endif
 
     /* Look for the best-fitting mode available */
     vesa_mode = _find_mode(&mode_info, mode_addr, rows, cols);
@@ -682,6 +703,9 @@ static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info)
     int mode_info_seg;
 #endif
     PDCREGS regs;
+#if !defined(PDC_FLAT) && !defined(__WATCOMC__)
+    struct SREGS sregs;
+#endif
 
     memset(mode_info, 0, sizeof(*mode_info));
 #ifdef PDC_FLAT
@@ -699,11 +723,17 @@ static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info)
 #ifdef PDC_FLAT
     regs.W.di = 0;
     regs.W.es = mode_info_seg;
-#else
+    PDCINT(0x10, regs);
+#elif defined(__WATCOMC__)
     regs.W.di = FP_OFF(mode_info);
     regs.W.es = FP_SEG(mode_info);
-#endif
     PDCINT(0x10, regs);
+#else
+    regs.W.di = FP_OFF(mode_info);
+    segread(&sregs);
+    sregs.es = FP_SEG(mode_info);
+    int86x(0x10, &regs, &regs, &sregs);
+#endif
 
     if (regs.W.ax != 0x004F)
         goto error;

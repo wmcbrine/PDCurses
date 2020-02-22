@@ -592,14 +592,14 @@ static unsigned long _address_8(int row, int col)
 static void _video_write_byte(unsigned long addr, unsigned char byte)
 {
     unsigned offset = _set_window(PDC_state.write_win, addr);
-    unsigned long addr2 = _FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
+    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
     setdosmembyte(addr2, byte);
 }
 
 static void _video_write_word(unsigned long addr, unsigned short word)
 {
     unsigned offset = _set_window(PDC_state.write_win, addr);
-    unsigned long addr2 = _FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
+    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
     setdosmemword(addr2, word);
 }
 
@@ -622,14 +622,14 @@ static void _video_write_3byte(unsigned long addr, unsigned long byte3)
 static void _video_write_dword(unsigned long addr, unsigned long dword)
 {
     unsigned offset = _set_window(PDC_state.write_win, addr);
-    unsigned long addr2 = _FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
+    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
     setdosmemdword(addr2, dword);
 }
 
 static unsigned char _video_read_byte(unsigned long addr)
 {
     unsigned offset = _set_window(PDC_state.read_win, addr);
-    unsigned long addr2 = _FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
+    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
     unsigned char byte = getdosmembyte(addr2);
     return byte;
 }
@@ -637,7 +637,7 @@ static unsigned char _video_read_byte(unsigned long addr)
 static unsigned short _video_read_word(unsigned long addr)
 {
     unsigned offset = _set_window(PDC_state.read_win, addr);
-    unsigned long addr2 = _FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
+    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
     unsigned short word = getdosmembyte(addr2);
     return word;
 }
@@ -663,7 +663,7 @@ static unsigned long _video_read_3byte(unsigned long addr)
 static unsigned long _video_read_dword(unsigned long addr)
 {
     unsigned offset = _set_window(PDC_state.read_win, addr);
-    unsigned long addr2 = _FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
+    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
     unsigned long dword = getdosmemdword(addr2);
     return dword;
 }

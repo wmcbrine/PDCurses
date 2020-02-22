@@ -122,17 +122,17 @@ void setdosmemdword(int offs, unsigned long d);
 #  define PDC_FAR
 # endif
 # define getdosmembyte(offs) \
-    (*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)))
+    (*((unsigned char PDC_FAR *) (offs)))
 # define getdosmemword(offs) \
-    (*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)))
+    (*((unsigned short PDC_FAR *) (offs)))
 # define getdosmemdword(offs) \
-    (*((unsigned long PDC_FAR *) _FAR_POINTER(0,offs)))
+    (*((unsigned long PDC_FAR *) (offs)))
 # define setdosmembyte(offs,x) \
-    (*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+    (*((unsigned char PDC_FAR *) (offs)) = (x))
 # define setdosmemword(offs,x) \
-    (*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+    (*((unsigned short PDC_FAR *) (offs)) = (x))
 # define setdosmemdword(offs,x) \
-    (*((unsigned long PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+    (*((unsigned long PDC_FAR *) (offs)) = (x))
 #endif
 
 #if defined(__WATCOMC__) && defined(__386__)

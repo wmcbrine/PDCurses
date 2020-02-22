@@ -47,7 +47,8 @@ struct PDC_video_state
 {
     /* Information about the current video mode: */
     unsigned short scrn_mode;
-    bool linear_buffer;
+    int linear_sel;
+    unsigned long linear_addr;
     unsigned char bits_per_pixel;
     unsigned short video_width;  /* Width of graphics mode in pixels */
     unsigned short video_height; /* Height of graphics mode in pixels */

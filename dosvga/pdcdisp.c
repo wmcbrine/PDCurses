@@ -3,6 +3,10 @@
 #include "pdcdos.h"
 #include "../common/acs437.h"
 
+#ifdef __DJGPP__
+#include <sys/farptr.h>
+#endif
+
 #ifdef __WATCOMC__
 /* For Watcom, we need conio.h, but the Curses macro for getch fouls it up */
 #undef getch
@@ -25,6 +29,14 @@ static unsigned short _video_read_word(unsigned long addr);
 static unsigned long _video_read_3byte(unsigned long addr);
 static unsigned long _video_read_dword(unsigned long addr);
 static unsigned _set_window(unsigned window, unsigned long addr);
+#if defined(__WATCOMC__) && defined(__386__)
+static unsigned char _farpeekb(unsigned seg, unsigned long off);
+static unsigned short _farpeekw(unsigned seg, unsigned long off);
+static unsigned long _farpeekl(unsigned seg, unsigned long off);
+static void _farpokeb(unsigned seg, unsigned long off, unsigned char byte);
+static void _farpokew(unsigned seg, unsigned long off, unsigned short word);
+static void _farpokel(unsigned seg, unsigned long off, unsigned long dword);
+#endif
 
 /* position hardware cursor at (y, x) */
 
@@ -602,16 +614,34 @@ static unsigned long _address_8(int row, int col)
 
 static void _video_write_byte(unsigned long addr, unsigned char byte)
 {
-    unsigned offset = _set_window(PDC_state.write_win, addr);
-    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
-    setdosmembyte(addr2, byte);
+#ifdef PDC_FLAT
+    if (PDC_state.linear_sel)
+    {
+        _farpokeb(PDC_state.linear_sel, addr, byte);
+    }
+    else
+#endif
+    {
+        unsigned offset = _set_window(PDC_state.write_win, addr);
+        unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
+        setdosmembyte(addr2, byte);
+    }
 }
 
 static void _video_write_word(unsigned long addr, unsigned short word)
 {
-    unsigned offset = _set_window(PDC_state.write_win, addr);
-    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
-    setdosmemword(addr2, word);
+#ifdef PDC_FLAT
+    if (PDC_state.linear_sel)
+    {
+        _farpokew(PDC_state.linear_sel, addr, word);
+    }
+    else
+#endif
+    {
+        unsigned offset = _set_window(PDC_state.write_win, addr);
+        unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
+        setdosmemword(addr2, word);
+    }
 }
 
 static void _video_write_3byte(unsigned long addr, unsigned long byte3)
@@ -632,24 +662,55 @@ static void _video_write_3byte(unsigned long addr, unsigned long byte3)
 
 static void _video_write_dword(unsigned long addr, unsigned long dword)
 {
-    unsigned offset = _set_window(PDC_state.write_win, addr);
-    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
-    setdosmemdword(addr2, dword);
+#ifdef PDC_FLAT
+    if (PDC_state.linear_sel)
+    {
+        _farpokel(PDC_state.linear_sel, addr, dword);
+    }
+    else
+#endif
+    {
+        unsigned offset = _set_window(PDC_state.write_win, addr);
+        unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
+        setdosmemdword(addr2, dword);
+    }
 }
 
 static unsigned char _video_read_byte(unsigned long addr)
 {
-    unsigned offset = _set_window(PDC_state.read_win, addr);
-    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
-    unsigned char byte = getdosmembyte(addr2);
+    unsigned char byte;
+
+#ifdef PDC_FLAT
+    if (PDC_state.linear_sel)
+    {
+        byte = _farpeekb(PDC_state.linear_sel, addr);
+    }
+    else
+#endif
+    {
+        unsigned offset = _set_window(PDC_state.read_win, addr);
+        unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
+        byte = getdosmembyte(addr2);
+    }
     return byte;
 }
 
 static unsigned short _video_read_word(unsigned long addr)
 {
-    unsigned offset = _set_window(PDC_state.read_win, addr);
-    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
-    unsigned short word = getdosmemword(addr2);
+    unsigned short word;
+
+#ifdef PDC_FLAT
+    if (PDC_state.linear_sel)
+    {
+        word = _farpeekw(PDC_state.linear_sel, addr);
+    }
+    else
+#endif
+    {
+        unsigned offset = _set_window(PDC_state.read_win, addr);
+        unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
+        word = getdosmemword(addr2);
+    }
     return word;
 }
 
@@ -673,9 +734,20 @@ static unsigned long _video_read_3byte(unsigned long addr)
 
 static unsigned long _video_read_dword(unsigned long addr)
 {
-    unsigned offset = _set_window(PDC_state.read_win, addr);
-    unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
-    unsigned long dword = getdosmemdword(addr2);
+    unsigned long dword;
+
+#ifdef PDC_FLAT
+    if (PDC_state.linear_sel)
+    {
+        dword = _farpeekl(PDC_state.linear_sel, addr);
+    }
+    else
+#endif
+    {
+        unsigned offset = _set_window(PDC_state.read_win, addr);
+        unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
+        dword = getdosmemdword(addr2);
+    }
     return dword;
 }
 
@@ -699,3 +771,36 @@ static unsigned _set_window(unsigned window, unsigned long addr)
 
     return addr - offset;
 }
+
+#if defined(__WATCOMC__) && defined(__386__)
+/* Far peek and poke, as defined for DJGPP, made available for Watcom */
+static unsigned char _farpeekb(unsigned seg, unsigned long off)
+{
+    return *(unsigned char __far *)MK_FP(seg, off);
+}
+
+static unsigned short _farpeekw(unsigned seg, unsigned long off)
+{
+    return *(unsigned short __far *)MK_FP(seg, off);
+}
+
+static unsigned long _farpeekl(unsigned seg, unsigned long off)
+{
+    return *(unsigned long __far *)MK_FP(seg, off);
+}
+
+static void _farpokeb(unsigned seg, unsigned long off, unsigned char byte)
+{
+    *(unsigned char __far *)MK_FP(seg, off) = byte;
+}
+
+static void _farpokew(unsigned seg, unsigned long off, unsigned short word)
+{
+    *(unsigned short __far *)MK_FP(seg, off) = word;
+}
+
+static void _farpokel(unsigned seg, unsigned long off, unsigned long dword)
+{
+    *(unsigned long __far *)MK_FP(seg, off) = dword;
+}
+#endif

@@ -18,9 +18,18 @@ static unsigned _find_mode(
         struct ModeInfoBlock *mode_info,
         unsigned long mode_addr,
         int rows, int cols);
+#ifdef PDC_FLAT
+static unsigned long _map_frame_buffer(unsigned long phys_addr,
+        unsigned long size);
+static void _unmap_frame_buffer(unsigned long phys_addr);
+#endif
 #if defined(__WATCOMC__) && defined(__386__)
 static int __dpmi_allocate_dos_memory(int paras, int *sel_or_max);
 static int __dpmi_free_dos_memory(int sel);
+static int __dpmi_allocate_ldt_descriptors(int count);
+static int __dpmi_free_ldt_descriptor(int sel);
+static int __dpmi_set_segment_base_address(int sel, unsigned long addr);
+static int __dpmi_set_segment_limit(int sel, unsigned long limit);
 static void dosmemget(unsigned long addr, size_t size, void *buf);
 static void dosmemput(const void *buf, size_t size, unsigned long addr);
 #endif
@@ -71,7 +80,7 @@ static void _set_scrn_mode(int new_mode)
         regs.h.al = (unsigned char) new_mode;
     }
     PDCINT(0x10, regs);
-    PDC_state.scrn_mode = new_mode & 0x3FFF;
+    PDC_state.scrn_mode = new_mode;
 
     PDC_state.font_addr = _get_font_address();
     LINES = PDC_get_rows();
@@ -84,6 +93,11 @@ static void _set_scrn_mode(int new_mode)
 void PDC_scr_close(void)
 {
     PDCREGS regs;
+
+#ifdef PDC_FLAT
+    _unmap_frame_buffer(PDC_state.linear_addr);
+    __dpmi_free_ldt_descriptor(PDC_state.linear_sel);
+#endif
 
     _set_scrn_mode(0x03);
     memset(&regs, 0, sizeof(regs));
@@ -462,8 +476,34 @@ static unsigned _find_video_mode(int rows, int cols)
     PDC_state.bytes_per_line = mode_info.BytesPerScanLine;
     PDC_state.video_width = mode_info.XResolution;
     PDC_state.video_height = mode_info.YResolution;
-    PDC_state.linear_buffer = FALSE;
     PDC_state.bits_per_pixel = mode_info.BitsPerPixel;
+
+#ifdef PDC_FLAT
+    /* Enable the linear frame buffer if available */
+    if ((mode_info.ModeAttributes & 0x80) != 0)
+    {
+        do { /* while (FALSE) */
+            unsigned win_size;
+
+            PDC_state.linear_sel = __dpmi_allocate_ldt_descriptors(1);
+            if (PDC_state.linear_sel < 0)
+                break;
+            win_size = mode_info.BytesPerScanLine * mode_info.YResolution;
+            PDC_state.linear_addr = _map_frame_buffer(mode_info.PhysBasePtr, win_size);
+            if (PDC_state.linear_addr == 0)
+            {
+                __dpmi_free_ldt_descriptor(PDC_state.linear_sel);
+                PDC_state.linear_sel = 0;
+                break;
+            }
+            __dpmi_set_segment_base_address(PDC_state.linear_sel, PDC_state.linear_addr);
+            __dpmi_set_segment_limit(PDC_state.linear_sel, (win_size - 1) | 0xFFF);
+            vesa_mode |= 0x4000;
+        } while (FALSE);
+    }
+#else
+    PDC_state.linear_sel = 0;
+#endif
 
     if (PDC_state.bits_per_pixel <= 8)
     {
@@ -473,6 +513,18 @@ static unsigned _find_video_mode(int rows, int cols)
     }
     else
     {
+#ifdef PDC_FLAT
+        if (PDC_state.linear_sel && vbe_info.VbeVersion >= 0x300)
+        {
+            PDC_state.red_max = (1 << mode_info.LinRedMaskSize) - 1;
+            PDC_state.red_pos = mode_info.LinRedFieldPosition;
+            PDC_state.green_max = (1 << mode_info.LinGreenMaskSize) - 1;
+            PDC_state.green_pos = mode_info.LinGreenFieldPosition;
+            PDC_state.blue_max = (1 << mode_info.LinBlueMaskSize) - 1;
+            PDC_state.blue_pos = mode_info.LinBlueFieldPosition;
+        }
+        else
+#endif
         if (mode_info.ModeAttributes & 0x2)
         {
             PDC_state.red_max = (1 << mode_info.RedMaskSize) - 1;
@@ -530,7 +582,6 @@ error:
         __dpmi_free_dos_memory(vbe_info_sel);
 #endif
 
-    PDC_state.linear_buffer = FALSE;
     PDC_state.bits_per_pixel = 4;
     PDC_state.video_width = 640;
     PDC_state.video_height = 480;
@@ -809,6 +860,71 @@ error:
     return FALSE;
 }
 
+/* Make a physical address mapping, to support the linear frame buffer */
+#ifdef __DJGPP__
+static unsigned long
+_map_frame_buffer(unsigned long phys_addr, unsigned long size)
+{
+    __dpmi_meminfo info;
+    int rc;
+
+    info.handle = 0;
+    info.address = phys_addr;
+    info.size = size;
+    rc = __dpmi_physical_address_mapping(&info);
+
+    return rc == 0 ? info.address : 0;
+}
+
+static void
+_unmap_frame_buffer(unsigned long phys_addr)
+{
+    __dpmi_meminfo info;
+
+    info.handle = 0;
+    info.address = phys_addr;
+    info.size = 0;
+    __dpmi_free_physical_address_mapping(&info);
+}
+#elif defined(__WATCOMC__) && defined(__386__)
+static unsigned long
+_map_frame_buffer(unsigned long phys_addr, unsigned long size)
+{
+    unsigned flags = 0;
+    unsigned long r_bxcx = 0;
+
+    _asm {
+        mov ecx, phys_addr;
+        mov ebx, ecx;
+        shr ebx, 16;
+        mov edi, size;
+        mov esi, edi;
+        shr esi, 16;
+        mov eax, 0x0800;
+        int 0x31;
+        pushfd;
+        pop flags;
+        shl ebx, 16;
+        mov bx, cx;
+        mov r_bxcx, ebx;
+    }
+
+    return (flags & 1) ? 0 : r_bxcx;
+}
+
+static void
+_unmap_frame_buffer(unsigned long phys_addr)
+{
+    _asm {
+        mov ecx, phys_addr;
+        mov ebx, ecx;
+        shr ebx, 16;
+        mov eax, 0x0801;
+        int 0x31;
+    }
+}
+#endif
+
 /* DOS memory allocation routines as defined by DJGPP, for use by Watcom */
 #if defined(__WATCOMC__) && defined(__386__)
 static int __dpmi_allocate_dos_memory(int paras, int *sel_or_max)
@@ -850,6 +966,73 @@ static int __dpmi_free_dos_memory(int sel)
         pushfd;
         pop flags;
     }
+    return (flags & 0x01) ? -1 : 0;
+}
+
+static int __dpmi_allocate_ldt_descriptors(int count)
+{
+    int flags = 0;
+    int r_eax = 0;
+
+    _asm {
+        mov ecx, count;
+        mov eax, 0x0000;
+        int 0x31;
+        pushfd;
+        pop flags;
+        mov r_eax, eax;
+    }
+
+    return (flags & 0x01) ? -1 : r_eax;
+}
+
+static int __dpmi_free_ldt_descriptor(int sel)
+{
+    int flags = 0;
+
+    _asm {
+        mov ebx, sel;
+        mov eax, 0x0001;
+        int 0x31;
+        pushfd;
+        pop flags;
+    }
+    return (flags & 0x01) ? -1 : 0;
+}
+
+static int __dpmi_set_segment_base_address(int sel, unsigned long addr)
+{
+    int flags = 0;
+
+    _asm {
+        mov ebx, sel;
+        mov edx, addr;
+        mov ecx, edx;
+        shr ecx, 16;
+        mov eax, 0x0007;
+        int 0x31;
+        pushfd;
+        pop flags;
+    }
+
+    return (flags & 0x01) ? -1 : 0;
+}
+
+static int __dpmi_set_segment_limit(int sel, unsigned long limit)
+{
+    int flags = 0;
+
+    _asm {
+        mov ebx, sel;
+        mov edx, limit;
+        mov ecx, edx;
+        shr ecx, 16;
+        mov eax, 0x0008;
+        int 0x31;
+        pushfd;
+        pop flags;
+    }
+
     return (flags & 0x01) ? -1 : 0;
 }
 

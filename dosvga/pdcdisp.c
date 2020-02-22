@@ -10,7 +10,13 @@ static unsigned long _get_colors(chtype glyph);
 static unsigned long _address_4(int row, int col);
 static unsigned long _address_8(int row, int col);
 static void _video_write_byte(unsigned long addr, unsigned char byte);
+static void _video_write_word(unsigned long addr, unsigned short word);
+static void _video_write_3byte(unsigned long addr, unsigned long byte3);
+static void _video_write_dword(unsigned long addr, unsigned long dword);
 static unsigned char _video_read_byte(unsigned long addr);
+static unsigned short _video_read_word(unsigned long addr);
+static unsigned long _video_read_3byte(unsigned long addr);
+static unsigned long _video_read_dword(unsigned long addr);
 static unsigned _set_window(unsigned window, unsigned long addr);
 
 /* position hardware cursor at (y, x) */
@@ -127,7 +133,7 @@ static void _transform_line_4(int lineno, int x, int len, const chtype *srcp)
     outportb(0x3c5, 0xF);
 }
 
-/* PDC_transform_line for 8 bit pixels */
+/* PDC_transform_line for 8, 15, 16, 24 and 32 bit pixels */
  
 static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
 {
@@ -154,7 +160,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
             int ch;
             unsigned char byte, bit;
             unsigned long colors;
-            unsigned fore, back;
+            unsigned long fore, back;
 
             /* Get the index into the font */
             ch = glyph & 0xFF;
@@ -169,13 +175,46 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
 
             /* Get the colors */
             colors = _get_colors(glyph);
-            fore = colors & 0xFF;
-            back = (colors >> 16) & 0xFF;
+            fore = colors & 0xFFFF;
+            back = (colors >> 16) & 0xFFFF;
+            if (PDC_state.bits_per_pixel > 8)
+            {
+                fore = PDC_state.colors[fore].mapped;
+                back = PDC_state.colors[back].mapped;
+            }
 
             /* Loop by pixel */
-            for (bit = 0x80; bit != 0; bit >>= 1)
+            switch (PDC_state.bits_per_pixel)
             {
-                _video_write_byte(addr2++, (byte & bit) ? fore : back);
+            case 8:
+                for (bit = 0x80; bit != 0; bit >>= 1)
+                    _video_write_byte(addr2++, (byte & bit) ? fore : back);
+                break;
+
+            case 15:
+            case 16:
+                for (bit = 0x80; bit != 0; bit >>= 1)
+                {
+                    _video_write_word(addr2, (byte & bit) ? fore : back);
+                    addr2 += 2;
+                }
+                break;
+
+            case 24:
+                for (bit = 0x80; bit != 0; bit >>= 1)
+                {
+                    _video_write_3byte(addr2, (byte & bit) ? fore : back);
+                    addr2 += 3;
+                }
+                break;
+
+            case 32:
+                for (bit = 0x80; bit != 0; bit >>= 1)
+                {
+                    _video_write_dword(addr2, (byte & bit) ? fore : back);
+                    addr2 += 4;
+                }
+                break;
             }
         }
         addr += PDC_state.bytes_per_line;
@@ -198,15 +237,13 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     if (redraw_cursor)
         PDC_private_cursor_off();
 
-    switch (PDC_state.bits_per_pixel)
+    if (PDC_state.bits_per_pixel == 4)
     {
-    case 4:
         _transform_line_4(lineno, x, len, srcp);
-        break;
-
-    case 8:
+    }
+    else
+    {
         _transform_line_8(lineno, x, len, srcp);
-        break;
     }
 
     /* Redraw the cursor if it has been erased */
@@ -279,6 +316,54 @@ static void _cursor_off_8(void)
     }
 }
 
+static void _cursor_off_16(void)
+{
+    unsigned long addr = _address_8(PDC_state.cursor_row, PDC_state.cursor_col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_word(p + i*2, bytes_behind[i][line]);
+        p += PDC_state.bytes_per_line;
+    }
+}
+
+static void _cursor_off_24(void)
+{
+    unsigned long addr = _address_8(PDC_state.cursor_row, PDC_state.cursor_col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_3byte(p + i*3, bytes_behind[i][line]);
+        p += PDC_state.bytes_per_line;
+    }
+}
+
+static void _cursor_off_32(void)
+{
+    unsigned long addr = _address_8(PDC_state.cursor_row, PDC_state.cursor_col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_dword(p + i*4, bytes_behind[i][line]);
+        p += PDC_state.bytes_per_line;
+    }
+}
+
 void PDC_private_cursor_off(void)
 {
     if (PDC_state.cursor_visible && PDC_state.cursor_row < (unsigned)LINES
@@ -292,6 +377,19 @@ void PDC_private_cursor_off(void)
 
         case 8:
             _cursor_off_8();
+            break;
+
+        case 15:
+        case 16:
+            _cursor_off_16();
+            break;
+
+        case 24:
+            _cursor_off_24();
+            break;
+
+        case 32:
+            _cursor_off_32();
             break;
         }
     }
@@ -362,6 +460,87 @@ void _cursor_on_8(int row, int col)
     }
 }
 
+void _cursor_on_16(int row, int col)
+{
+    unsigned long addr = _address_8(row, col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+    unsigned short color = PDC_state.colors[cursor_color].mapped;
+
+    /* Save the bytes currently in the character cell */
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            bytes_behind[i][line] = _video_read_word(p + i*2);
+        p += PDC_state.bytes_per_line;
+    }
+
+    /* Write the cursor */
+    p = addr + PDC_state.cursor_start * PDC_state.bytes_per_line;
+    for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_word(p + i*2, color);
+        p += PDC_state.bytes_per_line;
+    }
+}
+
+void _cursor_on_24(int row, int col)
+{
+    unsigned long addr = _address_8(row, col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+    unsigned long color = PDC_state.colors[cursor_color].mapped;
+
+    /* Save the bytes currently in the character cell */
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            bytes_behind[i][line] = _video_read_3byte(p + i*3);
+        p += PDC_state.bytes_per_line;
+    }
+
+    /* Write the cursor */
+    p = addr + PDC_state.cursor_start * PDC_state.bytes_per_line;
+    for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_3byte(p + i*3, color);
+        p += PDC_state.bytes_per_line;
+    }
+}
+
+void _cursor_on_32(int row, int col)
+{
+    unsigned long addr = _address_8(row, col);
+    unsigned long p;
+    unsigned line;
+    unsigned i;
+    unsigned long color = PDC_state.colors[cursor_color].mapped;
+
+    /* Save the bytes currently in the character cell */
+    p = addr;
+    for (line = 0; line < _FONT16; line++)
+    {
+        for (i = 0; i < 8; i++)
+            bytes_behind[i][line] = _video_read_dword(p + i*4);
+        p += PDC_state.bytes_per_line;
+    }
+
+    /* Write the cursor */
+    p = addr + PDC_state.cursor_start * PDC_state.bytes_per_line;
+    for (line = PDC_state.cursor_start; line <= PDC_state.cursor_end; ++line)
+    {
+        for (i = 0; i < 8; i++)
+            _video_write_dword(p + i*4, color);
+        p += PDC_state.bytes_per_line;
+    }
+}
+
 void PDC_private_cursor_on(int row, int col)
 {
     switch (PDC_state.bits_per_pixel)
@@ -372,6 +551,19 @@ void PDC_private_cursor_on(int row, int col)
 
     case 8:
         _cursor_on_8(row, col);
+        break;
+
+    case 15:
+    case 16:
+        _cursor_on_16(row, col);
+        break;
+
+    case 24:
+        _cursor_on_24(row, col);
+        break;
+
+    case 32:
+        _cursor_on_32(row, col);
         break;
     }
     PDC_state.cursor_visible = TRUE;
@@ -397,12 +589,76 @@ static void _video_write_byte(unsigned long addr, unsigned char byte)
     setdosmembyte(addr2, byte);
 }
 
+static void _video_write_word(unsigned long addr, unsigned short word)
+{
+    unsigned offset = _set_window(PDC_state.write_win, addr);
+    unsigned long addr2 = PDC_state.window[PDC_state.write_win]*16L + offset;
+    setdosmemword(addr2, word);
+}
+
+static void _video_write_3byte(unsigned long addr, unsigned long byte3)
+{
+    /* Write a byte and a word. Split the write so that the word lies at an
+     * even address, so it does not cross a window boundary */
+    if (addr & 1)
+    {
+        _video_write_byte(addr + 0, byte3 & 0xFF);
+        _video_write_word(addr + 1, byte3 >> 8);
+    }
+    else
+    {
+        _video_write_word(addr + 0, byte3 & 0xFFFF);
+        _video_write_byte(addr + 2, byte3 >> 8);
+    }
+}
+
+static void _video_write_dword(unsigned long addr, unsigned long dword)
+{
+    unsigned offset = _set_window(PDC_state.write_win, addr);
+    unsigned long addr2 = PDC_state.window[PDC_state.write_win]*16L + offset;
+    setdosmemdword(addr2, dword);
+}
+
 static unsigned char _video_read_byte(unsigned long addr)
 {
     unsigned offset = _set_window(PDC_state.read_win, addr);
     unsigned long addr2 = PDC_state.window[PDC_state.read_win]*16L + offset;
     unsigned char byte = getdosmembyte(addr2);
     return byte;
+}
+
+static unsigned short _video_read_word(unsigned long addr)
+{
+    unsigned offset = _set_window(PDC_state.read_win, addr);
+    unsigned long addr2 = PDC_state.window[PDC_state.read_win]*16L + offset;
+    unsigned short word = getdosmembyte(addr2);
+    return word;
+}
+
+static unsigned long _video_read_3byte(unsigned long addr)
+{
+    /* Read a byte and a word. Split the read so that the word lies at an
+     * even address, so it does not cross a window boundary */
+    unsigned long byte3;
+    if (addr & 1)
+    {
+        byte3 = _video_read_byte(addr + 0);
+        byte3 += (unsigned long)_video_read_word(addr + 1) << 8;
+    }
+    else
+    {
+        byte3 = _video_read_word(addr + 0);
+        byte3 += (unsigned long)_video_read_byte(addr + 2) << 16;
+    }
+    return byte3;
+}
+
+static unsigned long _video_read_dword(unsigned long addr)
+{
+    unsigned offset = _set_window(PDC_state.read_win, addr);
+    unsigned long addr2 = PDC_state.window[PDC_state.read_win]*16L + offset;
+    unsigned long dword = getdosmemdword(addr2);
+    return dword;
 }
 
 static unsigned _set_window(unsigned window, unsigned long addr)

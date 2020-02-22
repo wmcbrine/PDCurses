@@ -80,6 +80,11 @@ void setdosmemword(int offset, unsigned short w)
     dosmemput(&w, sizeof(unsigned short), offset);
 }
 
+void setdosmemdword(int offset, unsigned long d)
+{
+    dosmemput(&d, sizeof(unsigned long), offset);
+}
+
 #endif
 
 #if defined(__WATCOMC__) && defined(__386__)

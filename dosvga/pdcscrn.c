@@ -7,7 +7,6 @@
 #include <string.h>
 
 /* TODO: support 8 bit palette registers if available */
-/* TODO: support modes with more than 4 bits per pixel */
 
 struct PDC_video_state PDC_state;
 
@@ -235,6 +234,15 @@ static void _load_palette(void)
             PDC_init_color(i, PDC_state.colors[i].r, PDC_state.colors[i].g,
                     PDC_state.colors[i].b);
     }
+    else
+    {
+        unsigned i;
+
+        /* Set up mappings from color index to RGB */
+        for (i = 0; i < PDC_MAXCOL; i++)
+            PDC_init_color(i, PDC_state.colors[i].r, PDC_state.colors[i].g,
+                    PDC_state.colors[i].b);
+    }
 }
 
 bool PDC_can_change_color(void)
@@ -271,9 +279,9 @@ int PDC_init_color(short color, short red, short green, short blue)
             seg = __dpmi_allocate_dos_memory(1, &sel);
             if (seg < 0)
                 return ERR;
-            table[0] = DIVROUND((unsigned)blue * 63, 1000);
-            table[1] = DIVROUND((unsigned)green * 63, 1000);
-            table[2] = DIVROUND((unsigned)red * 63, 1000);
+            table[0] = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
+            table[1] = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
+            table[2] = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
             table[3] = 0;
             dosmemput(table, sizeof(table), seg * 16L);
             memset(&d_regs, 0, sizeof(d_regs));
@@ -291,17 +299,27 @@ int PDC_init_color(short color, short red, short green, short blue)
 
         /* Scale */
 
-        regs.h.dh = DIVROUND((unsigned)red * 63, 1000);
-        regs.h.ch = DIVROUND((unsigned)green * 63, 1000);
-        regs.h.cl = DIVROUND((unsigned)blue * 63, 1000);
+        regs.h.dh = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
+        regs.h.ch = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
+        regs.h.cl = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
 
         /* Set single DAC register */
-        /* TODO: support VESA modes */
 
         regs.W.ax = 0x1010;
         regs.W.bx = color;
 
         PDCINT(0x10, regs);
+    }
+    else
+    {
+        unsigned r = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
+        unsigned g = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
+        unsigned b = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
+
+        PDC_state.colors[color].mapped =
+                  ((unsigned long)r << PDC_state.red_pos)
+                | ((unsigned long)g << PDC_state.green_pos)
+                | ((unsigned long)b << PDC_state.blue_pos);
     }
 
     return OK;
@@ -387,6 +405,58 @@ static unsigned _find_video_mode(int rows, int cols)
     PDC_state.video_height = mode_info.YResolution;
     PDC_state.linear_buffer = FALSE;
     PDC_state.bits_per_pixel = mode_info.BitsPerPixel;
+
+    if (PDC_state.bits_per_pixel <= 8)
+    {
+        PDC_state.red_max = 63;
+        PDC_state.green_max = 63;
+        PDC_state.blue_max = 63;
+    }
+    else
+    {
+        if (mode_info.ModeAttributes & 0x2)
+        {
+            PDC_state.red_max = (1 << mode_info.RedMaskSize) - 1;
+            PDC_state.red_pos = mode_info.RedFieldPosition;
+            PDC_state.green_max = (1 << mode_info.GreenMaskSize) - 1;
+            PDC_state.green_pos = mode_info.GreenFieldPosition;
+            PDC_state.blue_max = (1 << mode_info.BlueMaskSize) - 1;
+            PDC_state.blue_pos = mode_info.BlueFieldPosition;
+        }
+        else
+        {
+            switch (PDC_state.bits_per_pixel)
+            {
+            case 15:
+                PDC_state.red_max = 31;
+                PDC_state.red_pos = 10;
+                PDC_state.green_max = 31;
+                PDC_state.green_pos = 5;
+                PDC_state.blue_max = 31;
+                PDC_state.blue_pos = 0;
+                break;
+
+            case 16:
+                PDC_state.red_max = 31;
+                PDC_state.red_pos = 11;
+                PDC_state.green_max = 63;
+                PDC_state.green_pos = 5;
+                PDC_state.blue_max = 31;
+                PDC_state.blue_pos = 0;
+                break;
+
+            case 24:
+            case 32:
+                PDC_state.red_max = 255;
+                PDC_state.red_pos = 16;
+                PDC_state.green_max = 255;
+                PDC_state.green_pos = 8;
+                PDC_state.blue_max = 255;
+                PDC_state.blue_pos = 0;
+                break;
+            }
+        }
+    }
 
     __dpmi_free_dos_memory(vbe_info_sel);
     return vesa_mode;
@@ -488,7 +558,15 @@ static unsigned _find_mode(
                 continue;
             break;
 
-        /* TODO: 15, 16, 24 and 32 bits */
+        case 15:
+        case 16:
+        case 24:
+        case 32:
+            if (mode_info0.MemoryModel != 6) /* Direct color */
+                continue;
+            if (mode_info0.NumberOfPlanes != 1)
+                continue;
+            break;
 
         default:
             continue;

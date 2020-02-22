@@ -40,6 +40,7 @@
 struct PDC_color
 {
     short r, g, b;
+    unsigned long mapped;
 };
 
 struct PDC_video_state
@@ -59,6 +60,13 @@ struct PDC_video_state
     /* Window used to read and write */
     unsigned char read_win;
     unsigned char write_win;
+    /* Color mappings */
+    unsigned char red_max;
+    unsigned char red_pos;
+    unsigned char green_max;
+    unsigned char green_pos;
+    unsigned char blue_max;
+    unsigned char blue_pos;
 
     unsigned long font_addr; /* Address of font in ROM */
 
@@ -104,6 +112,7 @@ unsigned short getdosmemword(int offs);
 unsigned long getdosmemdword(int offs);
 void setdosmembyte(int offs, unsigned char b);
 void setdosmemword(int offs, unsigned short w);
+void setdosmemdword(int offs, unsigned long d);
 #else
 # if SMALL || MEDIUM
 #  define PDC_FAR far
@@ -120,6 +129,8 @@ void setdosmemword(int offs, unsigned short w);
     (*((unsigned char PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
 # define setdosmemword(offs,x) \
     (*((unsigned short PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
+# define setdosmemdword(offs,x) \
+    (*((unsigned long PDC_FAR *) _FAR_POINTER(0,offs)) = (x))
 #endif
 
 #if defined(__WATCOMC__) && defined(__386__)

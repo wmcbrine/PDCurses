@@ -97,7 +97,13 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
                 else if (line == underline && (glyph & A_UNDERLINE) != 0)
                     byte = 0xFF;
                 else
+                {
                     byte = getdosmembyte(PDC_state.font_addr + ch*_FONT16 + line);
+                    if (glyph & A_LEFT)
+                        byte |= 0x80;
+                    if (glyph & A_RIGHT)
+                        byte |= 0x01;
+                }
                 if (pass & 1)
                     byte = ~byte;
 
@@ -179,6 +185,11 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
                 byte = 0xFF;
             else
                 byte = getdosmembyte(PDC_state.font_addr + ch*_FONT16 + line);
+            /* Bit mask for A_LEFT and A_RIGHT */
+            if (glyph & A_LEFT)
+                byte |= 0x80;
+            if (glyph & A_RIGHT)
+                byte |= 0x01;
 
             /* Get the colors */
             colors = _get_colors(glyph);
@@ -638,7 +649,7 @@ static unsigned short _video_read_word(unsigned long addr)
 {
     unsigned offset = _set_window(PDC_state.read_win, addr);
     unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.read_win], offset);
-    unsigned short word = getdosmembyte(addr2);
+    unsigned short word = getdosmemword(addr2);
     return word;
 }
 

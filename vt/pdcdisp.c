@@ -2,6 +2,7 @@
 
 #include <wchar.h>
 #include <assert.h>
+#include <errno.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
@@ -12,6 +13,22 @@
 #include "pdcvt.h"
 #include "../common/acs_defs.h"
 #include "../common/pdccolor.h"
+
+                   /* Rarely,  writes to stdout fail if a signal handler is
+                      called.  In which case we just try to write out the
+                      remainder of the buffer until success happens.     */
+static void put_to_stdout( const char *buff, size_t bytes_out)
+{
+    while( bytes_out)
+    {
+        const size_t bytes_written = fwrite( buff, 1, bytes_out, stdout);
+
+        buff += bytes_written;
+        bytes_out -= bytes_written;
+        if( bytes_out)
+            assert( errno == EINTR);
+    }
+}
 
 void PDC_gotoyx(int y, int x)
 {
@@ -30,7 +47,6 @@ void PDC_gotoyx(int y, int x)
 #define DIM_OFF       "\033[22m"
 #define REVERSE_ON    "\033[7m"
 #define REVERSE_OFF   "\033[27m"
-#define STDOUT          0
 
 const chtype MAX_UNICODE = 0x110000;
 
@@ -137,9 +153,10 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
     if( !srcp)
     {
+        const char *reset_all = BLINK_OFF BOLD_OFF UNDERLINE_OFF ITALIC_OFF REVERSE_OFF;
         prev_ch = 0;
         force_reset_all_attribs = TRUE;
-        printf( BLINK_OFF BOLD_OFF UNDERLINE_OFF ITALIC_OFF REVERSE_OFF);
+        put_to_stdout( reset_all, strlen( reset_all));
         return;
     }
     while( len > RUN_LEN)     /* break input into RUN_LEN character blocks */
@@ -184,7 +201,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
        if( changes & (A_COLOR | A_STANDOUT | A_BLINK))
           reset_color( attrib_text + strlen( attrib_text), *srcp & ~A_REVERSE);
        if( *attrib_text)
-          fwrite( attrib_text, 1, strlen( attrib_text), stdout);
+          put_to_stdout( attrib_text, strlen( attrib_text));
 #ifdef USING_COMBINING_CHARACTER_SCHEME
        if( ch > (int)MAX_UNICODE)      /* chars & fullwidth supported */
        {
@@ -204,7 +221,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
        else if( ch < (int)MAX_UNICODE)
 #endif
        {
-           size_t bytes_out, bytes_written;
+           size_t bytes_out;
            char obuff[OBUFF_SIZE];
 
            bytes_out = PDC_wc_to_utf8( obuff, (wchar_t)ch);
@@ -219,8 +236,7 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
                assert( bytes_out <= OBUFF_SIZE);
                count++;
            }
-           bytes_written = fwrite( obuff, 1, bytes_out, stdout);
-           assert( bytes_written == (size_t)bytes_out);
+           put_to_stdout( obuff, bytes_out);
        }
        prev_ch = *srcp;
        srcp += count;

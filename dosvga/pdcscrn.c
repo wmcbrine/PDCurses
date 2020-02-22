@@ -30,10 +30,9 @@ static void dosmemput(const void *buf, size_t size, unsigned long addr);
 /* _get_font_address() -- return the address of the font in ROM */
 static unsigned long _get_font_address(void)
 {
-    /* TODO: support compilers other than DJGPP */
     unsigned ofs = getdosmemword(0x43 * 4 + 0);
     unsigned seg = getdosmemword(0x43 * 4 + 2);
-    return ((unsigned long)seg << 4) + ofs;
+    return _FAR_POINTER(seg, ofs);
 }
 
 /* _get_scrn_mode() - Return the current BIOS video mode */
@@ -268,9 +267,9 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 int PDC_init_color(short color, short red, short green, short blue)
 {
     /* Scale */
-    unsigned r = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
-    unsigned g = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
-    unsigned b = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
+    unsigned r = DIVROUND((unsigned long)red * PDC_state.red_max, 1000);
+    unsigned g = DIVROUND((unsigned long)green * PDC_state.green_max, 1000);
+    unsigned b = DIVROUND((unsigned long)blue * PDC_state.blue_max, 1000);
 
     PDC_state.colors[color].r = red;
     PDC_state.colors[color].g = green;
@@ -283,25 +282,36 @@ int PDC_init_color(short color, short red, short green, short blue)
         if (PDC_state.scrn_mode >= 0x100)
         {
             /* VESA mode in use; first try the VESA function */
+#ifdef PDC_FLAT
             int seg, sel;
+#endif
             unsigned long table;
 
-            seg = __dpmi_allocate_dos_memory(1, &sel);
-            if (seg < 0)
-                return ERR;
             table = ((unsigned long)b <<  0)
                   | ((unsigned long)g <<  8)
                   | ((unsigned long)r << 16);
+#ifdef PDC_FLAT
+            seg = __dpmi_allocate_dos_memory(1, &sel);
+            if (seg < 0)
+                return ERR;
             setdosmemdword(seg * 16L, table);
+#endif
             memset(&regs, 0, sizeof(regs));
             regs.W.ax = 0x4F09;
             regs.h.bl = 0;
             regs.W.cx = 1;
             regs.W.dx = color;
+#ifdef PDC_FLAT
             regs.W.di = 0;
             regs.W.es = seg;
+#else
+            regs.W.di = FP_OFF(&table);
+            regs.W.es = FP_SEG(&table);
+#endif
             PDCINT(0x10, regs);
+#ifdef PDC_FLAT
             __dpmi_free_dos_memory(sel);
+#endif
             if (regs.W.ax == 0x004F)
                 return OK;
         }
@@ -330,8 +340,10 @@ int PDC_init_color(short color, short red, short green, short blue)
 
 static unsigned _find_video_mode(int rows, int cols)
 {
+#ifdef PDC_FLAT
     int vbe_info_sel = -1; /* custodial */
     int vbe_info_seg;
+#endif
     struct VbeInfoBlock vbe_info;
     PDCREGS regs;
     unsigned long mode_addr;
@@ -339,26 +351,35 @@ static unsigned _find_video_mode(int rows, int cols)
     unsigned vesa_mode;
 
     /* Request VESA BIOS information */
+    memset(&vbe_info, 0, sizeof(vbe_info));
+    memcpy(vbe_info.VbeSignature, "VBE2", 4);
+
+#ifdef PDC_FLAT
     vbe_info_seg = __dpmi_allocate_dos_memory(
             (sizeof(vbe_info) + 15) / 16,
             &vbe_info_sel);
     if (vbe_info_seg < 0)
         goto error;
-
-    memset(&vbe_info, 0, sizeof(vbe_info));
-    memcpy(vbe_info.VbeSignature, "VBE2", 4);
     dosmemput(&vbe_info, sizeof(vbe_info), vbe_info_seg * 16L);
+#endif
 
     memset(&regs, 0, sizeof(regs));
     regs.W.ax = 0x4F00;
+#ifdef PDC_FLAT
     regs.W.di = 0;
     regs.W.es = vbe_info_seg;
+#else
+    regs.W.di = FP_OFF(&vbe_info);
+    regs.W.es = FP_SEG(&vbe_info);
+#endif
     PDCINT(0x10, regs);
 
     /* Check for successful completion of function: is VESA BIOS present? */
     if (regs.W.ax != 0x004F)
         goto error;
+#ifdef PDC_FLAT
     dosmemget(vbe_info_seg * 16L, sizeof(vbe_info), &vbe_info);
+#endif
     if (memcmp(vbe_info.VbeSignature, "VESA", 4) != 0)
         goto error;
 
@@ -366,8 +387,8 @@ static unsigned _find_video_mode(int rows, int cols)
     /* The mode list may be within the DOS memory area allocated above.
        That area must remain allocated and must not be rewritten until
        we're done here. */
-    mode_addr = (vbe_info.VideoModePtr >> 16) * 16L
-              + (vbe_info.VideoModePtr & 0xFFFF);
+    mode_addr = _FAR_POINTER(vbe_info.VideoModePtr >> 16,
+                             vbe_info.VideoModePtr & 0xFFFF);
 
     /* Look for the best-fitting mode available */
     vesa_mode = _find_mode(&mode_info, mode_addr, rows, cols);
@@ -461,14 +482,18 @@ static unsigned _find_video_mode(int rows, int cols)
         }
     }
 
+#ifdef PDC_FLAT
     __dpmi_free_dos_memory(vbe_info_sel);
+#endif
     return vesa_mode;
 
 error:
     /* If we can't access the VESA BIOS Extensions for any reason, return the
        640x480 VGA mode */
+#ifdef PDC_FLAT
     if (vbe_info_sel != -1)
         __dpmi_free_dos_memory(vbe_info_sel);
+#endif
 
     PDC_state.linear_buffer = FALSE;
     PDC_state.bits_per_pixel = 4;
@@ -652,29 +677,39 @@ static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info)
         { 0, 0, 0, 0 }
     };
 
+#ifdef PDC_FLAT
     int mode_info_sel = -1; /* custodial */
     int mode_info_seg;
+#endif
     PDCREGS regs;
 
+    memset(mode_info, 0, sizeof(*mode_info));
+#ifdef PDC_FLAT
     mode_info_seg = __dpmi_allocate_dos_memory(
             (sizeof(*mode_info) + 15) / 16,
             &mode_info_sel);
     if (mode_info_seg < 0)
         goto error;
-
-    memset(mode_info, 0, sizeof(*mode_info));
     dosmemput(mode_info, sizeof(*mode_info), mode_info_seg * 16L);
+#endif
 
     memset(&regs, 0, sizeof(regs));
     regs.W.ax = 0x4F01;
     regs.W.cx = mode;
+#ifdef PDC_FLAT
     regs.W.di = 0;
     regs.W.es = mode_info_seg;
+#else
+    regs.W.di = FP_OFF(mode_info);
+    regs.W.es = FP_SEG(mode_info);
+#endif
     PDCINT(0x10, regs);
 
     if (regs.W.ax != 0x004F)
         goto error;
+#ifdef PDC_FLAT
     dosmemget(mode_info_seg * 16L, sizeof(*mode_info), mode_info);
+#endif
     if (!(mode_info->ModeAttributes & 0x0001))
         goto error;
 
@@ -717,12 +752,16 @@ static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info)
         }
     }
 
+#ifdef PDC_FLAT
     __dpmi_free_dos_memory(mode_info_sel);
+#endif
     return TRUE;
 
 error:
+#ifdef PDC_FLAT
     if (mode_info_sel != -1)
         __dpmi_free_dos_memory(mode_info_sel);
+#endif
     return FALSE;
 }
 

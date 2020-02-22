@@ -85,6 +85,7 @@ extern void PDC_private_cursor_off(void);
 extern void PDC_private_cursor_on(int row, int col);
 
 #ifdef __DJGPP__        /* Note: works only in plain DOS... */
+# define PDC_FLAT 1
 # if DJGPP == 2
 #  define _FAR_POINTER(s,o) ((((int)(s)) << 4) + ((int)(o)))
 # else
@@ -96,6 +97,7 @@ extern void PDC_private_cursor_on(int row, int col);
 #  define _FAR_POINTER(s,o) MK_FP(s,o)
 # else
 #  if defined(__WATCOMC__) && defined(__FLAT__)
+#   define PDC_FLAT 1
 #   define _FAR_POINTER(s,o) ((((int)(s)) << 4) + ((int)(o)))
 #  else
 #   define _FAR_POINTER(s,o) (((long)s << 16) | (long)o)

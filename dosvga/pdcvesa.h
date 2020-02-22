@@ -76,7 +76,7 @@ struct ModeInfoBlock {
     unsigned char  LinRsvdMaskSize;       /* size of direct color reserved mask (linear modes) */
     unsigned char  LinRsvdFieldPosition;  /* bit position of lsb of reserved mask (linear modes) */
     unsigned long  MaxPixelClock;         /* maximum pixel clock (in Hz) for graphics mode */
-    unsigned char  Reserved4[189];        /* remainder of ModeInfoBlock */
+    unsigned char  Reserved4[190];        /* remainder of ModeInfoBlock */
 };
 #ifdef __GNUC__
 #pragma pack(pop)

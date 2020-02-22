@@ -1,7 +1,8 @@
 PDCurses for DOS
 ================
 
-This directory contains PDCurses source code files specific to DOS.
+This directory contains PDCurses source code files specific to the
+VGA-capable DOS port.
 
 
 Building

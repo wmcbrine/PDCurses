@@ -115,7 +115,16 @@ void PDC_scr_free(void)
 
 int PDC_scr_open(void)
 {
+    PDCREGS regs;
+
     PDC_LOG(("PDC_scr_open() - called\n"));
+
+    /* Check for VGA and bail out if we don't find one */
+    memset(&regs, 0, sizeof(regs));
+    regs.W.ax = 0x1A00;
+    PDCINT(0x10, regs);
+    if (regs.h.bl != 8)
+        return ERR;
 
     SP = calloc(1, sizeof(SCREEN));
 

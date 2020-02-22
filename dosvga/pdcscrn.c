@@ -427,7 +427,7 @@ static unsigned _find_mode(
     selected_size = (rows == 0 && cols == 0) ? 0 : 0xFFFFFFFF;
     selected_bits = 0;
 
-    if (rows <= 30 && cols <= 80)
+    if ((rows <= 30 && cols <= 80) && !(rows == 0 && cols == 0))
     {
         /* Set up a ModeInfoBlock for mode 0x0012 */
         selected_mode = 0x0012;
@@ -507,9 +507,9 @@ static unsigned _find_mode(
            columns. */
         if (mode_info0.BitsPerPixel < selected_bits)
             continue;
+        new_size = (unsigned long)new_rows * new_cols;
         if (mode_info0.BitsPerPixel == selected_bits)
         {
-            new_size = (unsigned long)new_rows * new_cols;
             if (rows == 0 && cols == 0)
             {
                 if (new_size <= selected_size)

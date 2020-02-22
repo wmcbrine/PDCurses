@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* TODO: support 8 bit palette registers if available */
-
 struct PDC_video_state PDC_state;
 
 static int saved_scrnmode[3];
@@ -231,6 +229,22 @@ static void _load_palette(void)
             regs.W.ax = 0x1000;
             regs.W.bx = i * 0x0101;
             PDCINT(0x10, regs);
+        }
+
+        /* Set 8 bit DACs if available */
+        /* This doesn't seem to work with 4 bit color */
+        if (PDC_state.bits_per_pixel == 8)
+        {
+            unsigned dacmax;
+
+            memset(&regs, 0, sizeof(regs));
+            regs.W.ax = 0x4F08;
+            regs.W.bx = 0x0800;
+            PDCINT(0x10, regs);
+            dacmax = (regs.W.ax == 0x004F) ? (1 << regs.h.bh) - 1 : 63;
+            PDC_state.red_max = dacmax;
+            PDC_state.green_max = dacmax;
+            PDC_state.blue_max = dacmax;
         }
 
         /* Load the DAC registers from the current palette */

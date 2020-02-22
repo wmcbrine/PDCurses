@@ -23,10 +23,10 @@ int PDC_get_columns(void)
 
 int PDC_get_cursor_mode(void)
 {
-    PDC_LOG(("PDC_get_cursor_mode() - called\n"));
-
     int start = _FONT16*3/4;
     int end   = _FONT16-1;
+
+    PDC_LOG(("PDC_get_cursor_mode() - called\n"));
 
     return (start << 8) | end;
 }

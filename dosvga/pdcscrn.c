@@ -20,6 +20,12 @@ static unsigned _find_mode(
         struct ModeInfoBlock *mode_info,
         unsigned long mode_addr,
         int rows, int cols);
+#if defined(__WATCOMC__) && defined(__386__)
+static int __dpmi_allocate_dos_memory(int paras, int *sel_or_max);
+static int __dpmi_free_dos_memory(int sel);
+static void dosmemget(unsigned long addr, size_t size, void *buf);
+static void dosmemput(const void *buf, size_t size, unsigned long addr);
+#endif
 
 /* _get_font_address() -- return the address of the font in ROM */
 static unsigned long _get_font_address(void)
@@ -261,6 +267,11 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
+    /* Scale */
+    unsigned r = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
+    unsigned g = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
+    unsigned b = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
+
     PDC_state.colors[color].r = red;
     PDC_state.colors[color].g = green;
     PDC_state.colors[color].b = blue;
@@ -273,35 +284,31 @@ int PDC_init_color(short color, short red, short green, short blue)
         {
             /* VESA mode in use; first try the VESA function */
             int seg, sel;
-            unsigned char table[4];
-            __dpmi_regs d_regs;
+            unsigned long table;
 
             seg = __dpmi_allocate_dos_memory(1, &sel);
             if (seg < 0)
                 return ERR;
-            table[0] = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
-            table[1] = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
-            table[2] = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
-            table[3] = 0;
-            dosmemput(table, sizeof(table), seg * 16L);
-            memset(&d_regs, 0, sizeof(d_regs));
-            d_regs.x.ax = 0x4F09;
-            d_regs.h.bl = 0;
-            d_regs.x.cx = 1;
-            d_regs.x.dx = color;
-            d_regs.x.di = 0;
-            d_regs.x.es = seg;
-            __dpmi_int(0x10, &d_regs);
+            table = ((unsigned long)b <<  0)
+                  | ((unsigned long)g <<  8)
+                  | ((unsigned long)r << 16);
+            setdosmemdword(seg * 16L, table);
+            memset(&regs, 0, sizeof(regs));
+            regs.W.ax = 0x4F09;
+            regs.h.bl = 0;
+            regs.W.cx = 1;
+            regs.W.dx = color;
+            regs.W.di = 0;
+            regs.W.es = seg;
+            PDCINT(0x10, regs);
             __dpmi_free_dos_memory(sel);
-            if (d_regs.x.ax == 0x004F)
+            if (regs.W.ax == 0x004F)
                 return OK;
         }
 
-        /* Scale */
-
-        regs.h.dh = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
-        regs.h.ch = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
-        regs.h.cl = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
+        regs.h.dh = r;
+        regs.h.ch = g;
+        regs.h.cl = b;
 
         /* Set single DAC register */
 
@@ -312,10 +319,6 @@ int PDC_init_color(short color, short red, short green, short blue)
     }
     else
     {
-        unsigned r = DIVROUND((unsigned)red * PDC_state.red_max, 1000);
-        unsigned g = DIVROUND((unsigned)green * PDC_state.green_max, 1000);
-        unsigned b = DIVROUND((unsigned)blue * PDC_state.blue_max, 1000);
-
         PDC_state.colors[color].mapped =
                   ((unsigned long)r << PDC_state.red_pos)
                 | ((unsigned long)g << PDC_state.green_pos)
@@ -330,7 +333,7 @@ static unsigned _find_video_mode(int rows, int cols)
     int vbe_info_sel = -1; /* custodial */
     int vbe_info_seg;
     struct VbeInfoBlock vbe_info;
-    __dpmi_regs regs;
+    PDCREGS regs;
     unsigned long mode_addr;
     struct ModeInfoBlock mode_info;
     unsigned vesa_mode;
@@ -346,14 +349,14 @@ static unsigned _find_video_mode(int rows, int cols)
     memcpy(vbe_info.VbeSignature, "VBE2", 4);
     dosmemput(&vbe_info, sizeof(vbe_info), vbe_info_seg * 16L);
 
-	memset(&regs, 0, sizeof(regs));
-    regs.x.ax = 0x4F00;
-    regs.x.di = 0;
-    regs.x.es = vbe_info_seg;
-    __dpmi_int(0x10, &regs);
+    memset(&regs, 0, sizeof(regs));
+    regs.W.ax = 0x4F00;
+    regs.W.di = 0;
+    regs.W.es = vbe_info_seg;
+    PDCINT(0x10, regs);
 
     /* Check for successful completion of function: is VESA BIOS present? */
-    if (regs.x.ax != 0x004F)
+    if (regs.W.ax != 0x004F)
         goto error;
     dosmemget(vbe_info_seg * 16L, sizeof(vbe_info), &vbe_info);
     if (memcmp(vbe_info.VbeSignature, "VESA", 4) != 0)
@@ -651,7 +654,7 @@ static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info)
 
     int mode_info_sel = -1; /* custodial */
     int mode_info_seg;
-    __dpmi_regs regs;
+    PDCREGS regs;
 
     mode_info_seg = __dpmi_allocate_dos_memory(
             (sizeof(*mode_info) + 15) / 16,
@@ -663,13 +666,13 @@ static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info)
     dosmemput(mode_info, sizeof(*mode_info), mode_info_seg * 16L);
 
     memset(&regs, 0, sizeof(regs));
-    regs.x.ax = 0x4F01;
-    regs.x.cx = mode;
-    regs.x.di = 0;
-    regs.x.es = mode_info_seg;
-    (void) __dpmi_int(0x10, &regs);
+    regs.W.ax = 0x4F01;
+    regs.W.cx = mode;
+    regs.W.di = 0;
+    regs.W.es = mode_info_seg;
+    PDCINT(0x10, regs);
 
-    if (regs.x.ax != 0x004F)
+    if (regs.W.ax != 0x004F)
         goto error;
     dosmemget(mode_info_seg * 16L, sizeof(*mode_info), mode_info);
     if (!(mode_info->ModeAttributes & 0x0001))
@@ -718,6 +721,62 @@ static int _get_mode_info(unsigned mode, struct ModeInfoBlock *mode_info)
     return TRUE;
 
 error:
-    if (mode_info_sel != -1) __dpmi_free_dos_memory(mode_info_sel);
+    if (mode_info_sel != -1)
+        __dpmi_free_dos_memory(mode_info_sel);
     return FALSE;
 }
+
+/* DOS memory allocation routines as defined by DJGPP, for use by Watcom */
+#if defined(__WATCOMC__) && defined(__386__)
+static int __dpmi_allocate_dos_memory(int paras, int *sel_or_max)
+{
+    int flags = 0, r_ax = 0, r_bx = 0, r_dx = 0;
+
+    _asm {
+        mov ebx, paras;
+        mov eax, 0x0100;
+        int 0x31;
+        pushfd;
+        pop flags;
+        mov r_ax, eax;
+        mov r_bx, ebx;
+        mov r_dx, edx;
+    }
+    if (flags & 0x01)
+    {
+        /* carry set */
+        *sel_or_max = r_bx;
+        return -1;
+    }
+    else
+    {
+        /* carry clear */
+        *sel_or_max = r_dx;
+        return r_ax;
+    }
+}
+
+static int __dpmi_free_dos_memory(int sel)
+{
+    int flags = 0;
+
+    _asm {
+        mov edx, sel;
+        mov eax, 0x0101;
+        int 0x31;
+        pushfd;
+        pop flags;
+    }
+    return (flags & 0x01) ? -1 : 0;
+}
+
+static void dosmemget(unsigned long addr, size_t size, void *buf)
+{
+    memcpy(buf, (const void *)addr, size);
+}
+
+static void dosmemput(const void *buf, size_t size, unsigned long addr)
+{
+    memcpy((void *)addr, buf, size);
+}
+#endif

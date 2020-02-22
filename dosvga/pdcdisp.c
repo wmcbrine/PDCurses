@@ -3,6 +3,13 @@
 #include "pdcdos.h"
 #include "../common/acs437.h"
 
+#ifdef __WATCOMC__
+/* For Watcom, we need conio.h, but the Curses macro for getch fouls it up */
+#undef getch
+#include <conio.h>
+#define outportb(a, b) outp((a), (b))
+#endif
+
 /* Support cursor on graphics mode */
 static unsigned long bytes_behind[8][16];
 static unsigned char cursor_color = 15;
@@ -667,15 +674,15 @@ static unsigned _set_window(unsigned window, unsigned long addr)
     if (addr < offset || offset + PDC_state.window_size <= addr)
     {
         /* Need to move the window */
-        __dpmi_regs regs;
+        PDCREGS regs;
         unsigned long gran = PDC_state.window_gran * 1024L;
 
         memset(&regs, 0, sizeof(regs));
-        regs.x.ax = 0x4F05;
-        regs.x.bx = window;
-        regs.x.dx = addr / gran;
-        offset = regs.x.dx * gran;
-        __dpmi_int(0x10, &regs);
+        regs.W.ax = 0x4F05;
+        regs.W.bx = window;
+        regs.W.dx = addr / gran;
+        offset = regs.W.dx * gran;
+        PDCINT(0x10, regs);
         PDC_state.offset[window] = offset;
     }
 

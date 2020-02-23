@@ -656,7 +656,7 @@ static void _video_write_3byte(unsigned long addr, unsigned long byte3)
     else
     {
         _video_write_word(addr + 0, byte3 & 0xFFFF);
-        _video_write_byte(addr + 2, byte3 >> 8);
+        _video_write_byte(addr + 2, byte3 >> 16);
     }
 }
 

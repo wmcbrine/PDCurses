@@ -4,6 +4,7 @@
 #include "../common/acs437.h"
 
 #ifdef __DJGPP__
+#include <go32.h>
 #include <sys/farptr.h>
 #endif
 
@@ -14,9 +15,17 @@
 #define outportb(a, b) outp((a), (b))
 #endif
 
+/* Maximum run of characters per call to _transform_line_[48] */
+#ifdef PDC_FLAT
+#   define MAX_PACKET 512 /* optimize for speed */
+#else
+#   define MAX_PACKET 32  /* keep stack usage reasonable */
+#endif
+
 /* Support cursor on graphics mode */
 static unsigned long bytes_behind[8][16];
 static unsigned char cursor_color = 15;
+
 static unsigned long _get_colors(chtype glyph);
 static unsigned long _address_4(int row, int col);
 static unsigned long _address_8(int row, int col);
@@ -24,6 +33,7 @@ static void _video_write_byte(unsigned long addr, unsigned char byte);
 static void _video_write_word(unsigned long addr, unsigned short word);
 static void _video_write_3byte(unsigned long addr, unsigned long byte3);
 static void _video_write_dword(unsigned long addr, unsigned long dword);
+static void _video_write(unsigned long addr, const void *data, size_t size);
 static unsigned char _video_read_byte(unsigned long addr);
 static unsigned short _video_read_word(unsigned long addr);
 static unsigned long _video_read_3byte(unsigned long addr);
@@ -52,10 +62,14 @@ void PDC_gotoyx(int row, int col)
 
 static void _new_packet(unsigned long colors, int lineno, int x, int len, const chtype *srcp)
 {
+    unsigned char bytes[16][MAX_PACKET];
     unsigned fore, back;
     int underline;
     unsigned long addr = _address_4(lineno, x);
-    unsigned pass;
+    unsigned long cp;
+    int col;
+    unsigned line;
+    unsigned vplane;
 
     fore = colors & 0xF;
     back = (colors >> 16) & 0xF;
@@ -63,72 +77,116 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
     /* Underline will go here if requested */
     underline = 13 /*_FONT16*/;
 
+    /* Render to the bytes array and then copy to the frame buffer */
+    /* Loop by column */
+    for (col = 0; col < len; col++)
+    {
+        chtype glyph = srcp[col];
+        int ch;
+        unsigned long font_addr;
+#ifdef __DJGPP__
+        unsigned char font_data[16];
+#else
+        unsigned char PDC_FAR *font_data;
+#endif
+        unsigned char lr_mask;
+
+        /* Get the index into the font */
+        ch = glyph & 0xFF;
+        if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
+            ch = acs_map[ch & 0x7f] & 0xff;
+        font_addr = PDC_state.font_addr + ch*_FONT16;
+
+        /* Get the font data */
+#ifdef __DJGPP__
+        dosmemget(font_addr, _FONT16, font_data);
+#else
+        font_data = (unsigned char PDC_FAR *)font_addr;
+#endif
+
+        /* Set pixels for A_LEFT and A_RIGHT */
+        lr_mask = 0x00;
+        if (glyph & A_LEFT)
+            lr_mask |= 0x80;
+        if (glyph & A_RIGHT)
+            lr_mask |= 0x01;
+
+        /* Copy font data into the bytes array */
+        for (line = 0; line < _FONT16; line++)
+        {
+            unsigned char byte = font_data[line];
+            bytes[line][col] = byte | lr_mask;
+        }
+        if (glyph & A_UNDERLINE)
+            bytes[underline][col] = 0xFF;
+    }
+
     /* Draw the text in four passes, to optimize for the memory architecture
        of the VGA in four bit pixel modes */
-    for (pass = 0; pass < 4; pass++)
-    {
-        unsigned char vplane;
-        unsigned long cp;
-        int line;
-        int col;
 
-        /* Set memory planes to write */
-        if (pass & 2)
-            vplane = fore;
-        else
-            vplane = ~fore;
-        if (pass & 1)
-            vplane &= back;
-        else
-            vplane &= ~back;
-        vplane &= 0xF;
-        if (vplane == 0)
-            continue;
+    vplane =  fore & ~back;
+    if (vplane != 0)
+    {
+        /* fore has 1, back has 0: copy bytes as rendered */
         outportb(0x3c4, 2);
         outportb(0x3c5, vplane);
-
-        /* Loop by raster line */
         cp = addr;
         for (line = 0; line < _FONT16; line++)
         {
-            /* Loop by column */
+            _video_write(cp, bytes[line], len);
+            cp += PDC_state.bytes_per_line;
+        }
+    }
+
+    vplane = ~fore &  back;
+    if (vplane != 0)
+    {
+        /* fore has 0, back has 1: copy bytes inverted */
+        outportb(0x3c4, 2);
+        outportb(0x3c5, vplane);
+        cp = addr;
+        for (line = 0; line < _FONT16; line++)
+        {
             for (col = 0; col < len; col++)
-            {
-                chtype glyph = srcp[col];
-                int ch;
-                unsigned char byte;
+                bytes[line][col] ^= 0xFF;
+            _video_write(cp, bytes[line], len);
+            cp += PDC_state.bytes_per_line;
+        }
+    }
 
-                /* Get the index into the font */
-                ch = glyph & 0xFF;
-                if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
-                    ch = acs_map[ch & 0x7f] & 0xff;
+    vplane = ~fore & ~back;
+    if (vplane != 0)
+    {
+        /* fore has 0, back has 0: write 0x00 */
+        outportb(0x3c4, 2);
+        outportb(0x3c5, vplane);
+        cp = addr;
+        memset(bytes[0], 0x00, len);
+        for (line = 0; line < _FONT16; line++)
+        {
+            _video_write(cp, bytes[0], len);
+            cp += PDC_state.bytes_per_line;
+        }
+    }
 
-                /* Get one byte of the glyph to be drawn */
-                if (pass == 0 || pass == 3)
-                    byte = 0x00;
-                else if (line == underline && (glyph & A_UNDERLINE) != 0)
-                    byte = 0xFF;
-                else
-                {
-                    byte = getdosmembyte(PDC_state.font_addr + ch*_FONT16 + line);
-                    if (glyph & A_LEFT)
-                        byte |= 0x80;
-                    if (glyph & A_RIGHT)
-                        byte |= 0x01;
-                }
-                if (pass & 1)
-                    byte = ~byte;
-
-                /* Place the byte in the frame buffer */
-                _video_write_byte(cp + col, byte);
-            }
+    vplane =  fore &  back;
+    if (vplane != 0)
+    {
+        /* fore has 1, back has 1: write 0xFF */
+        outportb(0x3c4, 2);
+        outportb(0x3c5, vplane);
+        cp = addr;
+        memset(bytes[0], 0xFF, len);
+        for (line = 0; line < _FONT16; line++)
+        {
+            _video_write(cp, bytes[0], len);
             cp += PDC_state.bytes_per_line;
         }
     }
 }
 
 /* PDC_transform_line for 4 bit pixels */
- 
+
 static void _transform_line_4(int lineno, int x, int len, const chtype *srcp)
 {
     unsigned long old_colors, colors;
@@ -141,7 +199,7 @@ static void _transform_line_4(int lineno, int x, int len, const chtype *srcp)
     {
         colors = _get_colors(srcp[i]);
 
-        if (colors != old_colors)
+        if (colors != old_colors || i >= MAX_PACKET)
         {
             _new_packet(old_colors, lineno, x, i, srcp);
             old_colors = colors;
@@ -159,95 +217,125 @@ static void _transform_line_4(int lineno, int x, int len, const chtype *srcp)
 }
 
 /* PDC_transform_line for 8, 15, 16, 24 and 32 bit pixels */
- 
+
 static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
 {
+    unsigned char bytes[MAX_PACKET*4*8];
     unsigned long addr = _address_8(lineno, x);
-    unsigned underline;
+    unsigned bytes_per_pixel = (PDC_state.bits_per_pixel + 7) / 8;
+    unsigned long cp;
+
+    struct
+    {
+        unsigned long font_addr;
+        unsigned char lr_mask;
+        unsigned char ul_mask;
+        unsigned long fore;
+        unsigned long back;
+    } glyphs[MAX_PACKET];
+
+    int col;
     unsigned line;
+    unsigned underline;
 
     /* Underline will go here if requested */
     underline = 13 /*_FONT16*/;
 
-    /* Draw the entire line in pixel order, to minimize the use of the VESA
-       window function */
+    /* Compute basic glyph data only once per character */
+    for (col = 0; col < len; col++)
+    {
+        chtype glyph = srcp[col];
+        unsigned ch;
+        unsigned long colors, fore, back;
+
+        /* Get the index into the font */
+        ch = glyph & 0xFF;
+        if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
+            ch = acs_map[ch & 0x7f] & 0xff;
+
+        /* Get the address of the font data */
+        glyphs[col].font_addr = PDC_state.font_addr + ch*_FONT16;
+
+        /* Bit mask for underline */
+        glyphs[col].ul_mask = (glyph & A_UNDERLINE) ? 0xFF : 0x00;
+
+        /* Bit mask for A_LEFT and A_RIGHT */
+        glyphs[col].lr_mask = 0x00;
+        if (glyph & A_LEFT)
+            glyphs[col].lr_mask |= 0x80;
+        if (glyph & A_RIGHT)
+            glyphs[col].lr_mask |= 0x01;
+
+        /* Get the colors */
+        colors = _get_colors(glyph);
+        fore = colors & 0xFFFF;
+        back = (colors >> 16) & 0xFFFF;
+        if (PDC_state.bits_per_pixel > 8)
+        {
+            fore = PDC_state.colors[fore].mapped;
+            back = PDC_state.colors[back].mapped;
+        }
+        glyphs[col].fore = fore;
+        glyphs[col].back = back;
+    }
 
     /* Loop by raster line */
+    cp = addr;
     for (line = 0; line < _FONT16; line++)
     {
-        int col;
-        unsigned long addr2 = addr;
+        unsigned bindex;
 
         /* Loop by column */
+        bindex = 0;
         for (col = 0; col < len; col++)
         {
-            chtype glyph = srcp[col];
-            int ch;
-            unsigned char byte, bit;
-            unsigned long colors;
-            unsigned long fore, back;
+            /* Get glyph data */
+            unsigned long font_addr = glyphs[col].font_addr;
+            unsigned long fore = glyphs[col].fore;
+            unsigned long back = glyphs[col].back;
+            unsigned byte, bit;
 
-            /* Get the index into the font */
-            ch = glyph & 0xFF;
-            if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
-                ch = acs_map[ch & 0x7f] & 0xff;
+            /* Get one byte of the font data */
+            byte = getdosmembyte(font_addr + line) | glyphs[col].lr_mask;
+            if (line == underline)
+                byte |= glyphs[col].ul_mask;
 
-            /* Get one byte from the font */
-            if ((glyph & A_UNDERLINE) != 0 && line == underline)
-                byte = 0xFF;
-            else
-                byte = getdosmembyte(PDC_state.font_addr + ch*_FONT16 + line);
-            /* Bit mask for A_LEFT and A_RIGHT */
-            if (glyph & A_LEFT)
-                byte |= 0x80;
-            if (glyph & A_RIGHT)
-                byte |= 0x01;
-
-            /* Get the colors */
-            colors = _get_colors(glyph);
-            fore = colors & 0xFFFF;
-            back = (colors >> 16) & 0xFFFF;
-            if (PDC_state.bits_per_pixel > 8)
+            /* Render one raster line of the glyph */
+            switch (bytes_per_pixel)
             {
-                fore = PDC_state.colors[fore].mapped;
-                back = PDC_state.colors[back].mapped;
-            }
-
-            /* Loop by pixel */
-            switch (PDC_state.bits_per_pixel)
-            {
-            case 8:
-                for (bit = 0x80; bit != 0; bit >>= 1)
-                    _video_write_byte(addr2++, (byte & bit) ? fore : back);
-                break;
-
-            case 15:
-            case 16:
+            case 1:
                 for (bit = 0x80; bit != 0; bit >>= 1)
                 {
-                    _video_write_word(addr2, (byte & bit) ? fore : back);
-                    addr2 += 2;
+                    unsigned long color = (byte & bit) ? fore : back;
+                    bytes[bindex++] = (unsigned char)color;
                 }
                 break;
 
-            case 24:
+            case 2:
                 for (bit = 0x80; bit != 0; bit >>= 1)
                 {
-                    _video_write_3byte(addr2, (byte & bit) ? fore : back);
-                    addr2 += 3;
+                    unsigned long color = (byte & bit) ? fore : back;
+                    *(unsigned short *)(bytes+bindex) = (unsigned short)color;
+                    bindex += 2;
                 }
                 break;
 
-            case 32:
+            default:
+                /* In 24 bit color mode, each pass writes one extra byte at
+                   the end, which is overwritten by the next pixel and leaves
+                   an extra unused byte. This will need to change if this
+                   code is ever used on a big endian machine. */
                 for (bit = 0x80; bit != 0; bit >>= 1)
                 {
-                    _video_write_dword(addr2, (byte & bit) ? fore : back);
-                    addr2 += 4;
+                    unsigned long color = (byte & bit) ? fore : back;
+                    *(unsigned long *)(bytes+bindex) = color;
+                    bindex += bytes_per_pixel;
                 }
                 break;
             }
         }
-        addr += PDC_state.bytes_per_line;
+        _video_write(cp, bytes, bindex);
+        cp += PDC_state.bytes_per_line;
     }
 }
 
@@ -273,6 +361,13 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
     }
     else
     {
+        while (len > MAX_PACKET)
+        {
+            _transform_line_8(lineno, x, MAX_PACKET, srcp);
+            x += MAX_PACKET;
+            len -= MAX_PACKET;
+            srcp += MAX_PACKET;
+        }
         _transform_line_8(lineno, x, len, srcp);
     }
 
@@ -673,6 +768,46 @@ static void _video_write_dword(unsigned long addr, unsigned long dword)
         unsigned offset = _set_window(PDC_state.write_win, addr);
         unsigned long addr2 = (unsigned long)_FAR_POINTER(PDC_state.window[PDC_state.write_win], offset);
         setdosmemdword(addr2, dword);
+    }
+}
+
+static void _video_write(unsigned long addr, const void *data, size_t size)
+{
+#ifdef PDC_FLAT
+    if (PDC_state.linear_sel)
+    {
+#ifdef __DJGPP__
+        movedata(_go32_my_ds(), (unsigned)data,
+                 PDC_state.linear_sel, addr, size);
+#else /* Watcom */
+        _fmemcpy(MK_FP(PDC_state.linear_sel, addr), data, size);
+#endif
+    }
+    else
+#endif
+    {
+        unsigned window = PDC_state.window[PDC_state.write_win];
+
+        while (size != 0)
+        {
+            unsigned offset = _set_window(PDC_state.write_win, addr);
+            unsigned long size2 = PDC_state.window_size - offset;
+            if (size2 > size)
+                size2 = size;
+#ifdef __DJGPP__
+            dosmemput(data, size2, window * 16L + offset);
+#elif defined(__WATCOMC__) && defined(__386__)
+            _fmemcpy((void PDC_FAR *)(window * 16L + offset), data, size2);
+#else
+            if (size2 >= 65532)
+                size2 = 65532;
+
+            _fmemcpy(MK_FP(window, offset), data, size2);
+#endif
+            addr += size2;
+            data = (const char *)data + size2;
+            size -= size2;
+        }
     }
 }
 

@@ -77,7 +77,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
     back = (colors >> 16) & 0xF;
 
     /* Underline will go here if requested */
-    underline = 13 /*_FONT16*/;
+    underline = 13 /* PDC_font_height */;
 
     /* Render to the bytes array and then copy to the frame buffer */
     /* Loop by column */
@@ -102,10 +102,10 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         if (glyph & A_RIGHT)
             lr_mask |= 0x01;
 
-        font_data = font_bytes + ch * _FONT16;
+        font_data = font_bytes + ch * PDC_font_height;
 
         /* Copy font data into the bytes array */
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_font_height; line++)
         {
             unsigned char byte = font_data[line];
             bytes[line][col] = byte | lr_mask;
@@ -124,7 +124,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c4, 2);
         outportb(0x3c5, vplane);
         cp = addr;
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_font_height; line++)
         {
             _video_write(cp, bytes[line], len);
             cp += PDC_state.bytes_per_line;
@@ -138,7 +138,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c4, 2);
         outportb(0x3c5, vplane);
         cp = addr;
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_font_height; line++)
         {
             for (col = 0; col < len; col++)
                 bytes[line][col] ^= 0xFF;
@@ -155,7 +155,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c5, vplane);
         cp = addr;
         memset(bytes[0], 0x00, len);
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_font_height; line++)
         {
             _video_write(cp, bytes[0], len);
             cp += PDC_state.bytes_per_line;
@@ -170,7 +170,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c5, vplane);
         cp = addr;
         memset(bytes[0], 0xFF, len);
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_font_height; line++)
         {
             _video_write(cp, bytes[0], len);
             cp += PDC_state.bytes_per_line;
@@ -232,7 +232,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
     unsigned underline;
 
     /* Underline will go here if requested */
-    underline = 13 /*_FONT16*/;
+    underline = 13 /*PDC_font_height*/;
 
     /* Compute basic glyph data only once per character */
     for (col = 0; col < len; col++)
@@ -247,7 +247,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
             ch = acs_map[ch & 0x7f] & 0xff;
 
         /* Get the address of the font data */
-        glyphs[col].font_ptr = font_bytes + ch*_FONT16;
+        glyphs[col].font_ptr = font_bytes + ch*PDC_font_height;
 
         /* Bit mask for underline */
         glyphs[col].ul_mask = (glyph & A_UNDERLINE) ? 0xFF : 0x00;
@@ -274,7 +274,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
 
     /* Loop by raster line */
     cp = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         unsigned bindex;
 
@@ -410,7 +410,7 @@ static void _cursor_off_4(void)
         unsigned long p = addr;
         outportb(0x03C4, 2);
         outportb(0x03C5, 1 << plane);
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_font_height; line++)
         {
             _video_write_byte(p, bytes_behind[plane][line]);
             p += PDC_state.bytes_per_line;
@@ -426,7 +426,7 @@ static void _cursor_off_8(void)
     unsigned i;
 
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             _video_write_byte(p + i, bytes_behind[i][line]);
@@ -442,7 +442,7 @@ static void _cursor_off_16(void)
     unsigned i;
 
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             _video_write_word(p + i*2, bytes_behind[i][line]);
@@ -458,7 +458,7 @@ static void _cursor_off_24(void)
     unsigned i;
 
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             _video_write_3byte(p + i*3, bytes_behind[i][line]);
@@ -474,7 +474,7 @@ static void _cursor_off_32(void)
     unsigned i;
 
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             _video_write_dword(p + i*4, bytes_behind[i][line]);
@@ -526,7 +526,7 @@ void _cursor_on_4(int row, int col)
         p = addr;
         outportb(0x03CE, 4);
         outportb(0x03CF, plane);
-        for (line = 0; line < _FONT16; ++line)
+        for (line = 0; line < PDC_font_height; ++line)
         {
             bytes_behind[plane][line] = _video_read_byte(p);
             p += PDC_state.bytes_per_line;
@@ -561,7 +561,7 @@ void _cursor_on_8(int row, int col)
 
     /* Save the bytes currently in the character cell */
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             bytes_behind[i][line] = _video_read_byte(p + i);
@@ -588,7 +588,7 @@ void _cursor_on_16(int row, int col)
 
     /* Save the bytes currently in the character cell */
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             bytes_behind[i][line] = _video_read_word(p + i*2);
@@ -615,7 +615,7 @@ void _cursor_on_24(int row, int col)
 
     /* Save the bytes currently in the character cell */
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             bytes_behind[i][line] = _video_read_3byte(p + i*3);
@@ -642,7 +642,7 @@ void _cursor_on_32(int row, int col)
 
     /* Save the bytes currently in the character cell */
     p = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_font_height; line++)
     {
         for (i = 0; i < 8; i++)
             bytes_behind[i][line] = _video_read_dword(p + i*4);
@@ -691,12 +691,12 @@ void PDC_private_cursor_on(int row, int col)
 
 static unsigned long _address_4(int row, int col)
 {
-    return (unsigned long)row * PDC_state.bytes_per_line * _FONT16 + col;
+    return (unsigned long)row * PDC_state.bytes_per_line * PDC_font_height + col;
 }
 
 static unsigned long _address_8(int row, int col)
 {
-    return (unsigned long)row * PDC_state.bytes_per_line * _FONT16
+    return (unsigned long)row * PDC_state.bytes_per_line * PDC_font_height
             + col * 8 * ((PDC_state.bits_per_pixel + 7)/8);
 }
 

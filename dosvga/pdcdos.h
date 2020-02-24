@@ -199,13 +199,3 @@ enum
     _MCGACOLOR = 0x0a, _MCGAMONO,
     _MDS_GENIUS = 0x30
 };
-
-/* Text-mode font size information */
-
-enum
-{
-    _FONT8 = 8,
-    _FONT14 = 14,
-    _FONT15,    /* GENIUS */
-    _FONT16
-};

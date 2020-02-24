@@ -644,6 +644,7 @@ static unsigned _find_mode(
         struct ModeInfoBlock mode_info0;
         unsigned new_rows, new_cols;
         unsigned long new_size;
+        extern int PDC_font_height;
 
         mode = getdosmemword(mode_addr);
         if (mode == 0xFFFF)
@@ -691,7 +692,7 @@ static unsigned _find_mode(
 
         /* At least as many rows and columns as requested */
         new_cols = mode_info0.XResolution / 8;
-        new_rows = mode_info0.YResolution / _FONT16;
+        new_rows = mode_info0.YResolution / PDC_font_height;
         if (new_cols < cols || new_rows < rows)
             continue;
 

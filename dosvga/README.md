@@ -33,6 +33,15 @@ Building
   (pdcurses.lib or .a, depending on your compiler) and a lot of object
   files. Add the target "demos" to build the sample programs.
 
+- By default,  a built-in 8x14 font from `font.h` is used.  But one can
+  [download VGA fonts](https://hack.org/mc/fonts/vgafonts.tar.gz) and set the `PDC_FONT` environment variable
+  to refer to a desired .vga file,  for example,
+
+        set PDC_FONT=c:\vgafonts\ser8x16.vga
+
+  The font *must* be in the .vga format,  256*font_height bytes long,  and
+  the font height *must* be less than or equal to 16.  (The font width,
+  at least as of now,  must be 8.)
 
 Distribution Status
 -------------------

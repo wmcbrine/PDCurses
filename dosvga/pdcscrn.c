@@ -2,7 +2,9 @@
 
 #include "pdcdos.h"
 #include "pdcvesa.h"
+#include "font.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -98,6 +100,7 @@ void PDC_scr_free(void)
 }
 
 static int default_lines = 25, default_cols = 80;
+unsigned char *PDC_font_bytes;
 
 /* open the physical screen -- miscellaneous initialization, may save
    the existing screen for later restoration */
@@ -105,6 +108,7 @@ static int default_lines = 25, default_cols = 80;
 int PDC_scr_open(void)
 {
     PDCREGS regs;
+    const char *font_name = getenv( "PDC_FONT");
 
     PDC_LOG(("PDC_scr_open() - called\n"));
 
@@ -120,6 +124,31 @@ int PDC_scr_open(void)
     if (!SP)
         return ERR;
 
+    if( font_name && *font_name)
+    {
+        FILE *ifile = fopen( font_name, "rb");
+
+        if( ifile)
+        {
+            long filelen;
+
+            fseek( ifile, 0L, SEEK_END);
+            filelen = ftell( ifile);
+            fseek( ifile, 0L, SEEK_SET);
+            assert( filelen % 256L == 0L);
+            assert( filelen > 0 && filelen <= 256L * 16L);
+            PDC_font_bytes = (unsigned char *)malloc( (int)filelen);
+            if( PDC_font_bytes)
+            {
+                PDC_font_height = (int)( filelen / 256L);
+                fread( PDC_font_bytes, filelen, 1, ifile);
+            }
+            fclose( ifile);
+        }
+    }
+
+    if( !PDC_font_bytes)
+        PDC_font_bytes = font_bytes;
     _init_palette();
     PDC_resize_screen( default_cols, default_lines);
 
@@ -644,7 +673,6 @@ static unsigned _find_mode(
         struct ModeInfoBlock mode_info0;
         unsigned new_rows, new_cols;
         unsigned long new_size;
-        extern int PDC_font_height;
 
         mode = getdosmemword(mode_addr);
         if (mode == 0xFFFF)

@@ -3,7 +3,6 @@
 #include "pdcdos.h"
 #define USE_UNICODE_ACS_CHARS 0
 #include "../common/acs_defs.h"
-#include "font.h"
 
 #ifdef __DJGPP__
 #include <go32.h>
@@ -27,6 +26,8 @@
 /* Support cursor on graphics mode */
 static unsigned long bytes_behind[8][16];
 static unsigned char cursor_color = 15;
+extern unsigned char *PDC_font_bytes;
+extern int PDC_font_height, PDC_font_width;
 
 static unsigned long _get_colors(chtype glyph);
 static unsigned long _address_4(int row, int col);
@@ -93,7 +94,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
             ch = acs_map[ch & 0x7f] & 0xff;
 
-        font_data = (unsigned char *)font_bytes;
+        font_data = (unsigned char *)PDC_font_bytes;
 
         /* Set pixels for A_LEFT and A_RIGHT */
         lr_mask = 0x00;
@@ -102,7 +103,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         if (glyph & A_RIGHT)
             lr_mask |= 0x01;
 
-        font_data = font_bytes + ch * PDC_font_height;
+        font_data = PDC_font_bytes + ch * PDC_font_height;
 
         /* Copy font data into the bytes array */
         for (line = 0; line < PDC_font_height; line++)
@@ -247,7 +248,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
             ch = acs_map[ch & 0x7f] & 0xff;
 
         /* Get the address of the font data */
-        glyphs[col].font_ptr = font_bytes + ch*PDC_font_height;
+        glyphs[col].font_ptr = PDC_font_bytes + ch*PDC_font_height;
 
         /* Bit mask for underline */
         glyphs[col].ul_mask = (glyph & A_UNDERLINE) ? 0xFF : 0x00;

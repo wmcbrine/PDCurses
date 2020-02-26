@@ -16,11 +16,6 @@ static int menu_shown = 1;
 static int min_lines = 25, max_lines = 25;
 static int min_cols = 80, max_cols = 80;
 
-#if defined( CHTYPE_64) && defined( PDC_WIDE)
-    #define USING_COMBINING_CHARACTER_SCHEME
-    int PDC_expand_combined_characters( const cchar_t c, cchar_t *added);  /* addch.c */
-#endif
-
 /* Some older versions of Microsoft C/C++ don't understand about
 inlined functions.  Until we puzzle out which ones do and which
 don't,  we'll just leave "inlined" functions as plain old static
@@ -144,15 +139,6 @@ void PDC_scr_free(void)
 {
 }
 
-       /* By default,  the PDC_shutdown_key[] array contains 0       */
-       /* (i.e., there's no key that's supposed to be returned for   */
-       /* exit handling), and 22 = Ctrl-V (i.e.,  hit Ctrl-V to      */
-       /* paste text from the clipboard into the key queue);  then   */
-       /* Ctl-= (enlarge font) and Ctl-Minus (decrease font);  then  */
-       /* Ctl-, (select font from dialog).                           */
-
-static int PDC_shutdown_key[PDC_MAX_FUNCTION_KEYS] = { 0, 22, CTL_EQUAL, CTL_MINUS,
-                                 CTL_COMMA };
 int PDC_n_rows, PDC_n_cols;
 int PDC_cxChar, PDC_cyChar, PDC_key_queue_low = 0, PDC_key_queue_high = 0;
 int PDC_key_queue[KEY_QUEUE_SIZE];
@@ -200,18 +186,7 @@ static void add_key_to_queue( const int new_key)
         }
     }
     unicode_radix = 10;
-    if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_ABORT])
-        exit( -1);
-    else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_ENLARGE_FONT])
-        adjust_font_size( 1);
-    else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_SHRINK_FONT])
-        adjust_font_size( -1);
-    else if( new_key && new_key == PDC_shutdown_key[FUNCTION_KEY_CHOOSE_FONT])
-    {
-        if( PDC_choose_a_new_font( ))
-            adjust_font_size( 0);
-    }
-    else if( new_idx != PDC_key_queue_low)
+    if( new_idx != PDC_key_queue_low)
     {
         PDC_key_queue[PDC_key_queue_high] = new_key;
         PDC_key_queue_high = new_idx;
@@ -238,7 +213,7 @@ static const KPTAB kptab[] =
     {0,          0,         0,           0,          0   }, /* 0  */
     {0,          0,         0,           0,          0   }, /* 1   VK_LBUTTON */
     {0,          0,         0,           0,          0   }, /* 2   VK_RBUTTON */
-    {CTL_PAUSE,  'a',       'b',         'c',        0   }, /* 3   VK_CANCEL  */
+    {0,          'a',       'b',         'c',        0   }, /* 3   VK_CANCEL  */
     {0,          0,         0,           0,          0   }, /* 4   VK_MBUTTON */
     {0,          0,         0,           0,          0   }, /* 5   */
     {0,          0,         0,           0,          0   }, /* 6   */
@@ -254,7 +229,7 @@ static const KPTAB kptab[] =
     {0,          0,         0,           0,          0   }, /* 16  VK_SHIFT   HANDLED SEPARATELY */
     {0,          0,         0,           0,          0   }, /* 17  VK_CONTROL HANDLED SEPARATELY */
     {0,          0,         0,           0,          0   }, /* 18  VK_MENU    HANDLED SEPARATELY */
-    {KEY_PAUSE,  KEY_SPAUSE,CTL_PAUSE,   0,          0   }, /* 19  VK_PAUSE   */
+    {0,          0,         0,           0,          0   }, /* 19  VK_PAUSE   */
     {0,          0,         0,           0,          0   }, /* 20  VK_CAPITAL HANDLED SEPARATELY */
     {0,          0,         0,           0,          0   }, /* 21  VK_HANGUL  */
     {0,          0,         0,           0,          0   }, /* 22  */
@@ -279,20 +254,20 @@ static const KPTAB kptab[] =
     {0,          0,         0,           0,          0   }, /* 41  VK_SELECT  */
     {0,          0,         0,           0,          0   }, /* 42  VK_PRINT   */
     {0,          0,         0,           0,          0   }, /* 43  VK_EXECUTE */
-    {KEY_PRINTSCREEN, 0,    0,       ALT_PRINTSCREEN, 0  }, /* 44  VK_SNAPSHOT*/
+    {0,          0,         0,           0,          0   }, /* 44  VK_SNAPSHOT*/
     {PAD0,       0x30,      CTL_PAD0,    ALT_PAD0,   11  }, /* 45  VK_INSERT  */
     {PADSTOP,    0x2E,      CTL_PADSTOP, ALT_PADSTOP,12  }, /* 46  VK_DELETE  */
     {0,          0,         0,           0,          0   }, /* 47  VK_HELP    */
-    {0x30,       0x29,      CTL_0,       ALT_0,      0   }, /* 48  */
-    {0x31,       0x21,      CTL_1,       ALT_1,      0   }, /* 49  */
-    {0x32,       0x40,      CTL_2,       ALT_2,      0   }, /* 50  */
-    {0x33,       0x23,      CTL_3,       ALT_3,      0   }, /* 51  */
-    {0x34,       0x24,      CTL_4,       ALT_4,      0   }, /* 52  */
-    {0x35,       0x25,      CTL_5,       ALT_5,      0   }, /* 53  */
-    {0x36,       0x5E,      CTL_6,       ALT_6,      0   }, /* 54  */
-    {0x37,       0x26,      CTL_7,       ALT_7,      0   }, /* 55  */
-    {0x38,       0x2A,      CTL_8,       ALT_8,      0   }, /* 56  */
-    {0x39,       0x28,      CTL_9,       ALT_9,      0   }, /* 57  */
+    {0x30,       0x29,      0,           ALT_0,      0   }, /* 48  */
+    {0x31,       0x21,      0,           ALT_1,      0   }, /* 49  */
+    {0x32,       0x40,      0,           ALT_2,      0   }, /* 50  */
+    {0x33,       0x23,      0,           ALT_3,      0   }, /* 51  */
+    {0x34,       0x24,      0,           ALT_4,      0   }, /* 52  */
+    {0x35,       0x25,      0,           ALT_5,      0   }, /* 53  */
+    {0x36,       0x5E,      0,           ALT_6,      0   }, /* 54  */
+    {0x37,       0x26,      0,           ALT_7,      0   }, /* 55  */
+    {0x38,       0x2A,      0,           ALT_8,      0   }, /* 56  */
+    {0x39,       0x28,      0,           ALT_9,      0   }, /* 57  */
     {0,          0,         0,           0,          0   }, /* 58  */
     {0,          0,         0,           0,          0   }, /* 59  */
     {0,          0,         0,           0,          0   }, /* 60  */
@@ -328,7 +303,7 @@ static const KPTAB kptab[] =
     {0x7A,       0x5A,      0x1A,        ALT_Z,      0   }, /* 90  */
     {0,          0,         0,           0,          0   }, /* 91  VK_LWIN    */
     {0,          0,         0,           0,          0   }, /* 92  VK_RWIN    */
-    {KEY_APPS,   KEY_SAPPS, CTL_APPS,    ALT_APPS,   13  }, /* 93  VK_APPS    */
+    {0,          0,         0,           0,          13  }, /* 93  VK_APPS    */
     {0,          0,         0,           0,          0   }, /* 94  */
     {0,          0,         0,           0,          0   }, /* 95  */
     {0x30,       0,         CTL_PAD0,    ALT_PAD0,   0   }, /* 96  VK_NUMPAD0 */
@@ -383,7 +358,7 @@ static const KPTAB kptab[] =
     {0, 0, 0, 0, 0},  /* 142 unassigned */
     {0, 0, 0, 0, 0},  /* 143 unassigned */
     {0, 0, 0, 0, 0},  /* 144 VK_NUMLOCK */
-    {KEY_SCROLLLOCK, 0, 0, ALT_SCROLLLOCK, 0},    /* 145 VKSCROLL */
+    {0, 0, 0, 0, 0},  /* 145 VKSCROLL */
     {0, 0, 0, 0, 0},  /* 146 OEM specific */
     {0, 0, 0, 0, 0},  /* 147 OEM specific */
     {0, 0, 0, 0, 0},  /* 148 OEM specific */
@@ -424,13 +399,13 @@ static const KPTAB kptab[] =
     {0, 0, 0, 0, 31},  /* 183 VK_LAUNCH_APP2         */
     {0, 0, 0, 0, 0},  /* 184 Reserved */
     {0, 0, 0, 0, 0},  /* 185 Reserved */
-    {';', ':', CTL_SEMICOLON, ALT_SEMICOLON, 0},  /* 186 VK_OEM_1      */
-    {'=', '+', CTL_EQUAL,     ALT_EQUAL,     0},  /* 187 VK_OEM_PLUS   */
-    {',', '<', CTL_COMMA,     ALT_COMMA,     0},  /* 188 VK_OEM_COMMA  */
-    {'-', '_', CTL_MINUS,     ALT_MINUS,     0},  /* 189 VK_OEM_MINUS  */
-    {'.', '>', CTL_STOP,      ALT_STOP,      0},  /* 190 VK_OEM_PERIOD */
-    {'/', '?', CTL_FSLASH,    ALT_FSLASH,    0},  /* 191 VK_OEM_2      */
-    {'`', '~', CTL_BQUOTE,    ALT_BQUOTE,    0},  /* 192 VK_OEM_3      */
+    {';', ':', 0, ALT_SEMICOLON, 0},  /* 186 VK_OEM_1      */
+    {'=', '+', 0, ALT_EQUAL,     0},  /* 187 VK_OEM_PLUS   */
+    {',', '<', 0, ALT_COMMA,     0},  /* 188 VK_OEM_COMMA  */
+    {'-', '_', 0, ALT_MINUS,     0},  /* 189 VK_OEM_MINUS  */
+    {'.', '>', 0, ALT_STOP,      0},  /* 190 VK_OEM_PERIOD */
+    {'/', '?', 0, ALT_FSLASH,    0},  /* 191 VK_OEM_2      */
+    {'`', '~', 0, ALT_BQUOTE,    0},  /* 192 VK_OEM_3      */
     {0, 0, 0, 0, 0},  /* 193 */
     {0, 0, 0, 0, 0},  /* 194 */
     {0, 0, 0, 0, 0},  /* 195 */
@@ -482,25 +457,25 @@ static const KPTAB ext_kptab[] =
    {KEY_DOWN,   KEY_SDOWN,      CTL_DOWN,       ALT_DOWN    }, /* 10  40 */
    {KEY_IC,     KEY_SIC,        CTL_INS,        ALT_INS     }, /* 11  45 */
    {KEY_DC,     KEY_SDC,        CTL_DEL,        ALT_DEL     }, /* 12  46 */
-   {KEY_APPS,   KEY_SAPPS     , CTL_APPS,       ALT_APPS    }, /* 13  93  VK_APPS    */
-   {KEY_BROWSER_BACK, KEY_SBROWSER_BACK, KEY_CBROWSER_BACK, KEY_ABROWSER_BACK, }, /* 14 166 VK_BROWSER_BACK        */
-   {KEY_BROWSER_FWD,  KEY_SBROWSER_FWD,  KEY_CBROWSER_FWD,  KEY_ABROWSER_FWD,  }, /* 15 167 VK_BROWSER_FORWARD     */
-   {KEY_BROWSER_REF,  KEY_SBROWSER_REF,  KEY_CBROWSER_REF,  KEY_ABROWSER_REF,  }, /* 16 168 VK_BROWSER_REFRESH     */
-   {KEY_BROWSER_STOP, KEY_SBROWSER_STOP, KEY_CBROWSER_STOP, KEY_ABROWSER_STOP, }, /* 17 169 VK_BROWSER_STOP        */
-   {KEY_SEARCH,       KEY_SSEARCH,       KEY_CSEARCH,       KEY_ASEARCH,       }, /* 18 170 VK_BROWSER_SEARCH      */
-   {KEY_FAVORITES,    KEY_SFAVORITES,    KEY_CFAVORITES,    KEY_AFAVORITES,    }, /* 19 171 VK_BROWSER_FAVORITES   */
-   {KEY_BROWSER_HOME, KEY_SBROWSER_HOME, KEY_CBROWSER_HOME, KEY_ABROWSER_HOME, }, /* 20 172 VK_BROWSER_HOME        */
-   {KEY_VOLUME_MUTE,  KEY_SVOLUME_MUTE,  KEY_CVOLUME_MUTE,  KEY_AVOLUME_MUTE,  }, /* 21 173 VK_VOLUME_MUTE         */
-   {KEY_VOLUME_DOWN,  KEY_SVOLUME_DOWN,  KEY_CVOLUME_DOWN,  KEY_AVOLUME_DOWN,  }, /* 22 174 VK_VOLUME_DOWN         */
-   {KEY_VOLUME_UP,    KEY_SVOLUME_UP,    KEY_CVOLUME_UP,    KEY_AVOLUME_UP,    }, /* 23 175 VK_VOLUME_UP           */
-   {KEY_NEXT_TRACK,   KEY_SNEXT_TRACK,   KEY_CNEXT_TRACK,   KEY_ANEXT_TRACK,   }, /* 24 176 VK_MEDIA_NEXT_TRACK    */
-   {KEY_PREV_TRACK,   KEY_SPREV_TRACK,   KEY_CPREV_TRACK,   KEY_APREV_TRACK,   }, /* 25 177 VK_MEDIA_PREV_TRACK    */
-   {KEY_MEDIA_STOP,   KEY_SMEDIA_STOP,   KEY_CMEDIA_STOP,   KEY_AMEDIA_STOP,   }, /* 26 178 VK_MEDIA_STOP          */
-   {KEY_PLAY_PAUSE,   KEY_SPLAY_PAUSE,   KEY_CPLAY_PAUSE,   KEY_APLAY_PAUSE,   }, /* 27 179 VK_MEDIA_PLAY_PAUSE    */
-   {KEY_LAUNCH_MAIL,  KEY_SLAUNCH_MAIL,  KEY_CLAUNCH_MAIL,  KEY_ALAUNCH_MAIL,  }, /* 28 180 VK_LAUNCH_MAIL         */
-   {KEY_MEDIA_SELECT, KEY_SMEDIA_SELECT, KEY_CMEDIA_SELECT, KEY_AMEDIA_SELECT, }, /* 29 181 VK_LAUNCH_MEDIA_SELECT */
-   {KEY_LAUNCH_APP1,  KEY_SLAUNCH_APP1,  KEY_CLAUNCH_APP1,  KEY_ALAUNCH_APP1,  }, /* 30 182 VK_LAUNCH_APP1         */
-   {KEY_LAUNCH_APP2,  KEY_SLAUNCH_APP2,  KEY_CLAUNCH_APP2,  KEY_ALAUNCH_APP2,  }, /* 31 183 VK_LAUNCH_APP2         */
+   {0,          0,              0,              0           }, /* 13  93  VK_APPS    */
+   {0,          0,              0,              0,          }, /* 14 166 VK_BROWSER_BACK        */
+   {0,          0,              0,              0,          }, /* 15 167 VK_BROWSER_FORWARD     */
+   {0,          0,              0,              0,          }, /* 16 168 VK_BROWSER_REFRESH     */
+   {0,          0,              0,              0,          }, /* 17 169 VK_BROWSER_STOP        */
+   {0,          0,              0,              0,          }, /* 18 170 VK_BROWSER_SEARCH      */
+   {0,          0,              0,              0,          }, /* 19 171 VK_BROWSER_FAVORITES   */
+   {0,          0,              0,              0,          }, /* 20 172 VK_BROWSER_HOME        */
+   {0,          0,              0,              0,          }, /* 21 173 VK_VOLUME_MUTE         */
+   {0,          0,              0,              0,          }, /* 22 174 VK_VOLUME_DOWN         */
+   {0,          0,              0,              0,          }, /* 23 175 VK_VOLUME_UP           */
+   {0,          0,              0,              0,          }, /* 24 176 VK_MEDIA_NEXT_TRACK    */
+   {0,          0,              0,              0,          }, /* 25 177 VK_MEDIA_PREV_TRACK    */
+   {0,          0,              0,              0,          }, /* 26 178 VK_MEDIA_STOP          */
+   {0,          0,              0,              0,          }, /* 27 179 VK_MEDIA_PLAY_PAUSE    */
+   {0,          0,              0,              0,          }, /* 28 180 VK_LAUNCH_MAIL         */
+   {0,          0,              0,              0,          }, /* 29 181 VK_LAUNCH_MEDIA_SELECT */
+   {0,          0,              0,              0,          }, /* 30 182 VK_LAUNCH_APP1         */
+   {0,          0,              0,              0,          }, /* 31 183 VK_LAUNCH_APP2         */
 };
 
 
@@ -1518,9 +1493,6 @@ static void HandleSyskeyDown( const WPARAM wParam, const LPARAM lParam,
 
     if( GetKeyState( VK_NUMLOCK) & 1)
         SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-
-    if( repeat_count)
-        SP->key_modifiers |= PDC_KEY_MODIFIER_REPEAT;
 }
 
 /* Blinking text is supposed to blink twice a second.  Therefore,
@@ -1950,14 +1922,9 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
 
     case WM_CLOSE:
         {
-            if( !PDC_shutdown_key[FUNCTION_KEY_SHUT_DOWN])
-            {
-                final_cleanup( );
-                PDC_bDone = TRUE;
-                exit( 0);
-            }
-            else
-                add_key_to_queue( PDC_shutdown_key[FUNCTION_KEY_SHUT_DOWN]);
+            final_cleanup( );
+            PDC_bDone = TRUE;
+            exit( 0);
         }
         return( 0);
 
@@ -2004,42 +1971,6 @@ static LRESULT ALIGN_STACK CALLBACK WndProc (const HWND hwnd,
     else
        add_mouse( -1, -1, -1, -1);
     return DefWindowProc( hwnd, message, wParam, lParam) ;
-}
-
-      /* Default behaviour is that,  when one clicks on the 'close' button, */
-      /* exit( 0) is called,  just as in the SDL and X11 versions.  But if  */
-      /* one wishes,  one can call PDC_set_shutdown_key to cause those      */
-      /* buttons to put a specified character into the input queue.  It's   */
-      /* then the application's problem to exit gracefully,  perhaps with   */
-      /* messages such as 'are you sure' and so forth.                      */
-      /*   If you've set a shutdown key,  there's always a risk that the    */
-      /* program will get stuck in a loop and never process said key.  So   */
-      /* when the key is set,  a 'Kill' item is appended to the system menu */
-      /* so that the user still has some way to terminate the app,  albeit  */
-      /* with extreme prejudice (i.e.,  click on 'Kill' and exit is called  */
-      /* and the app exits gracelessly.)                                    */
-
-int PDC_set_function_key( const unsigned function, const int new_key)
-{
-    int old_key = -1;
-
-    if( function < PDC_MAX_FUNCTION_KEYS)
-    {
-         old_key = PDC_shutdown_key[function];
-         PDC_shutdown_key[function] = new_key;
-    }
-
-    if( function == FUNCTION_KEY_SHUT_DOWN)
-        if( (new_key && !old_key) || (old_key && !new_key))
-        {
-            HMENU hMenu = GetSystemMenu( PDC_hWnd, FALSE);
-
-            if( new_key)
-                AppendMenu( hMenu, MF_STRING, WM_EXIT_GRACELESSLY, _T( "Kill"));
-            else
-                RemoveMenu( hMenu, WM_EXIT_GRACELESSLY, MF_BYCOMMAND);
-        }
-    return( old_key);
 }
 
 /* https://msdn.microsoft.com/en-us/library/windows/desktop/dd162826(v=vs.85).aspx
@@ -2260,7 +2191,7 @@ int PDC_scr_open(void)
     SP->audible = TRUE;
     SP->mono = FALSE;
     SP->termattrs = A_BOLD | A_COLOR | A_LEFTLINE | A_RIGHTLINE
-               | A_OVERLINE | A_UNDERLINE | A_STRIKEOUT | A_ITALIC
+               | A_UNDERLINE | A_ITALIC
                | A_DIM | A_REVERSE;
 
 #ifdef NO_LONGER_AVAILABLE

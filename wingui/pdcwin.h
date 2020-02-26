@@ -106,6 +106,8 @@ extern int PDC_n_rows, PDC_n_cols;
 
 extern bool PDC_bDone;
 
+extern COLORREF PDC_palette[PDC_MAXCOL];
+
 int debug_printf( const char *format, ...);        /* pdcscrn.c */
 
 /* With 64-bit chtypes,  we're allowing 20 bits for the character

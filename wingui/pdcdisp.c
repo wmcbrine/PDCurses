@@ -9,11 +9,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
-#include "../common/pdccolor.h"
-#include "../common/pdccolor.c"
 #ifdef WIN32_LEAN_AND_MEAN
    #include <commdlg.h>
 #endif
+
+static void PDC_get_rgb_values( const chtype srcp,
+            COLORREF *foreground_rgb, COLORREF *background_rgb);
 
 /* For this 'real Windows' version,  we use all Unicode all the time,
 including for ACS characters,  and even when PDC_WIDE isn't #defined
@@ -334,7 +335,7 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
     int i, curr_color = -1;
     attr_t font_attrib = (attr_t)-1;
     int cursor_overwritten = FALSE;
-    PACKED_RGB foreground_rgb = 0;
+    COLORREF foreground_rgb = 0;
     chtype prev_ch = 0;
 
     if( !srcp)             /* just freeing up fonts */
@@ -460,7 +461,7 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
         lpDx[olen] = PDC_cxChar;
         if( color != curr_color || ((prev_ch ^ *srcp) & (A_REVERSE | A_BLINK | A_BOLD | A_DIM)))
         {
-            PACKED_RGB background_rgb;
+            COLORREF background_rgb;
 
             PDC_get_rgb_values( *srcp, &foreground_rgb, &background_rgb);
             curr_color = color;
@@ -510,8 +511,8 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
             const int x1 = clip_rect.left;
             const int x2 = clip_rect.right;
             int j;
-            const PACKED_RGB rgb = (SP->line_color == -1 ?
-                             foreground_rgb : PDC_get_palette_entry( SP->line_color));
+            const COLORREF rgb = (SP->line_color == -1 ?
+                             foreground_rgb : PDC_palette[SP->line_color]);
             const HPEN pen = CreatePen( PS_SOLID, 1, (COLORREF)rgb);
             const HPEN old_pen = SelectObject( hdc, pen);
 
@@ -572,4 +573,103 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
 
 void PDC_doupdate(void)
 {
+}
+
+    /* This function 'intensifies' a color by shifting it toward white. */
+    /* It used to average the input color with white.  Then it did a    */
+    /* weighted average:  2/3 of the input color,  1/3 white,   for a   */
+    /* lower "intensification" level.                                   */
+    /*    Then Mark Hessling suggested that the output level should     */
+    /* remap zero to 85 (= 255 / 3, so one-third intensity),  and input */
+    /* of 192 or greater should be remapped to 255 (full intensity).    */
+    /* Assuming we want a linear response between zero and 192,  that   */
+    /* leads to output = 85 + input * (255-85)/192.                     */
+    /*    This should lead to proper handling of bold text in legacy    */
+    /* apps,  where "bold" means "high intensity".                      */
+
+static COLORREF intensified_color( COLORREF ival)
+{
+    int rgb, i;
+    COLORREF oval = 0;
+
+    for( i = 0; i < 3; i++, ival >>= 8)
+    {
+        rgb = (int)( ival & 0xff);
+        if( rgb >= 192)
+            rgb = 255;
+        else
+            rgb = 85 + rgb * (255 - 85) / 192;
+        oval |= ((COLORREF)rgb << (i * 8));
+    }
+    return( oval);
+}
+
+   /* For use in adjusting colors for A_DIMmed characters.  Just */
+   /* knocks down the intensity of R, G, and B by 1/3.           */
+
+static COLORREF dimmed_color( COLORREF ival)
+{
+    unsigned i;
+    COLORREF oval = 0;
+
+    for( i = 0; i < 3; i++, ival >>= 8)
+    {
+        unsigned rgb = (unsigned)( ival & 0xff);
+
+        rgb -= (rgb / 3);
+        oval |= ((COLORREF)rgb << (i * 8));
+    }
+    return( oval);
+}
+
+static void PDC_get_rgb_values( const chtype srcp,
+            COLORREF *foreground_rgb, COLORREF *background_rgb)
+{
+    const int color = (int)(( srcp & A_COLOR) >> PDC_COLOR_SHIFT);
+    bool reverse_colors = ((srcp & A_REVERSE) ? TRUE : FALSE);
+    bool intensify_backgnd = FALSE;
+    bool default_foreground = FALSE, default_background = FALSE;
+
+    {
+        short foreground_index, background_index;
+
+        pair_content( color, &foreground_index, &background_index);
+        if( foreground_index < 0 && SP->orig_attr)
+            default_foreground = TRUE;
+        else
+            *foreground_rgb = PDC_palette[foreground_index];
+        if( background_index < 0 && SP->orig_attr)
+            default_background = TRUE;
+        else
+            *background_rgb = PDC_palette[background_index];
+    }
+
+    if( srcp & A_BLINK)
+    {
+        if( !(SP->termattrs & A_BLINK))   /* convert 'blinking' to 'bold' */
+            intensify_backgnd = TRUE;
+        else if( PDC_blink_state)
+            reverse_colors ^= 1;
+    }
+    if( reverse_colors)
+    {
+        const COLORREF temp = *foreground_rgb;
+
+        *foreground_rgb = *background_rgb;
+        *background_rgb = temp;
+    }
+
+    if( srcp & A_BOLD & ~SP->termattrs)
+        *foreground_rgb = intensified_color( *foreground_rgb);
+    if( intensify_backgnd)
+        *background_rgb = intensified_color( *background_rgb);
+    if( srcp & A_DIM)
+    {
+        *foreground_rgb = dimmed_color( *foreground_rgb);
+        *background_rgb = dimmed_color( *background_rgb);
+    }
+    if( default_foreground)
+        *foreground_rgb = (COLORREF)-1;
+    if( default_background)
+        *background_rgb = (COLORREF)-1;
 }

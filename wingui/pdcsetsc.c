@@ -1,7 +1,6 @@
 /* Public Domain Curses */
 
 #include "pdcwin.h"
-#include "../common/pdccolor.h"
 
 /*man-start**************************************************************
 

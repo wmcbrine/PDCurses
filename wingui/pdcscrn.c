@@ -4,13 +4,12 @@
 #include <tchar.h>
 #include <stdint.h>
 #include <assert.h>
-#include "../common/pdccolor.h"
 #ifdef WIN32_LEAN_AND_MEAN
    #include <shellapi.h>
    #include <stdlib.h>
 #endif
 
-/* COLOR_PAIR to attribute encoding table. */
+COLORREF PDC_palette[PDC_MAXCOL];
 
 static int menu_shown = 1;
 static int min_lines = 25, max_lines = 25;
@@ -36,11 +35,7 @@ static int add_mouse( int button, const int action, const int x, const int y);
 static int keep_size_within_bounds( int *lines, int *cols);
 INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
                const int xloc, const int yloc, const int menu_shown);
-
-/* We have a 'base' standard palette of 256 colors,  plus a true-color
-cube of 16 million colors. */
-
-#define N_COLORS 256 + 256 * 256 * 256;
+static int PDC_init_palette(void);
 
 #ifdef A_OVERLINE
 #define A_ALL_LINES (A_UNDERLINE | A_LEFTLINE | A_RIGHTLINE | A_OVERLINE | A_STRIKEOUT)
@@ -146,7 +141,6 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    PDC_free_palette( );
 }
 
        /* By default,  the PDC_shutdown_key[] array contains 0       */
@@ -2254,7 +2248,7 @@ int PDC_scr_open(void)
         wine_version = (wine_version_func)GetProcAddress(hntdll, "wine_get_version");
 
     PDC_LOG(("PDC_scr_open() - called\n"));
-    COLORS = N_COLORS;  /* should give this a try and see if it works! */
+    COLORS = PDC_MAXCOL;
     if (!SP || PDC_init_palette( ))
         return ERR;
 
@@ -2390,9 +2384,9 @@ bool PDC_can_change_color(void)
     return TRUE;
 }
 
-int PDC_color_content( int color, int *red, int *green, int *blue)
+int PDC_color_content( short color, short *red, short *green, short *blue)
 {
-    COLORREF col = PDC_get_palette_entry( color);
+    COLORREF col = PDC_palette[color];
 
     *red = DIVROUND(GetRValue(col) * 1000, 255);
     *green = DIVROUND(GetGValue(col) * 1000, 255);
@@ -2415,49 +2409,87 @@ above for PDC_init_pair(),  to handle basically the same problem. */
 static int color_used_for_this_char( const chtype c, const int idx)
 {
     const int color = get_pair( c);
-    int fg, bg;
+    short fg, bg;
     int rval;
 
-    extended_pair_content( color, &fg, &bg);
+    pair_content( color, &fg, &bg);
     rval = (fg == idx || bg == idx);
     return( rval);
 }
 
-int PDC_init_color( int color, int red, int green, int blue)
+int PDC_init_color( short color, short red, short green, short blue)
 {
     const COLORREF new_rgb = RGB(DIVROUND(red * 255, 1000),
                                  DIVROUND(green * 255, 1000),
                                  DIVROUND(blue * 255, 1000));
 
-    if( !PDC_set_palette_entry( color, new_rgb))
+    PDC_palette[color] = new_rgb;
+
+    /* Possibly go through curscr and redraw everything with that color! */
+    if( curscr && curscr->_y)
     {
-        /* Possibly go through curscr and redraw everything with that color! */
-        if( curscr && curscr->_y)
-        {
-            int i;
+        int i;
 
-            for( i = 0; i < SP->lines; i++)
-                if( curscr->_y[i])
+        for( i = 0; i < SP->lines; i++)
+            if( curscr->_y[i])
+            {
+                int j = 0, n_chars;
+                chtype *line = curscr->_y[i];
+
+         /* skip over starting text that isn't of the desired color: */
+                while( j < SP->cols
+                             && !color_used_for_this_char( *line, color))
                 {
-                    int j = 0, n_chars;
-                    chtype *line = curscr->_y[i];
-
-             /* skip over starting text that isn't of the desired color: */
-                    while( j < SP->cols
-                                 && !color_used_for_this_char( *line, color))
-                    {
-                        j++;
-                        line++;
-                    }
-                    n_chars = SP->cols - j;
-            /* then skip over text at the end that's not the right color: */
-                    while( n_chars &&
-                         !color_used_for_this_char( line[n_chars - 1], color))
-                        n_chars--;
-                    if( n_chars)
-                        PDC_transform_line( i, j, n_chars, line);
+                    j++;
+                    line++;
                 }
-        }
+                n_chars = SP->cols - j;
+        /* then skip over text at the end that's not the right color: */
+                while( n_chars &&
+                     !color_used_for_this_char( line[n_chars - 1], color))
+                    n_chars--;
+                if( n_chars)
+                    PDC_transform_line( i, j, n_chars, line);
+            }
     }
     return OK;
+}
+
+/* We initialize the first 256 values of the palette.  Few programs will go
+   beyond that. */
+
+static int PDC_init_palette( void)
+{
+    unsigned i;
+
+    /* Initial 16 colors */
+    for (i = 0; i < 16; ++i)
+    {
+        const int intensity = ((i & 8) ? 0xff : 0xc0);
+
+        PDC_palette[i] = RGB( ((i & COLOR_RED) ? intensity : 0),
+                              ((i & COLOR_GREEN) ? intensity : 0),
+                              ((i & COLOR_BLUE) ? intensity : 0));
+    }
+
+    /* 6x6x6 cube */
+    for (i = 0; i < 216; ++i)
+    {
+        unsigned r = i / 36;
+        unsigned g = (i / 6) % 6;
+        unsigned b = i % 6;
+        PDC_palette[i+16] = RGB( r ? r * 40 + 55 : 0,
+                                 g ? g * 40 + 55 : 0,
+                                 b ? b * 40 + 55 : 0);
+    }
+
+    /* Gray scale */
+    for (i = 232; i < 256; ++i)
+    {
+        const int intensity = (i - 232) * 10 + 8;
+
+        PDC_palette[i] = RGB( intensity, intensity, intensity);
+    }
+
+    return( 0);
 }

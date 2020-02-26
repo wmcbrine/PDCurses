@@ -16,7 +16,6 @@ void PDC_napms(int ms)     /* 'ms' = milli,  _not_ microseconds! */
     MSG msg;
     DWORD curr_ms = GetTickCount( );
     const DWORD milliseconds_sleep_limit = ms + curr_ms;
-    extern bool PDC_bDone;
 
     PDC_LOG(("PDC_napms() - called: ms=%d\n", ms));
 

@@ -15,16 +15,12 @@ int PDC_get_cursor_mode(void)
 
 int PDC_get_rows(void)
 {
-    extern int PDC_n_rows;
-
     PDC_LOG(("PDC_get_rows() - called\n"));
     return( PDC_n_rows);
 }
 
 int PDC_get_columns(void)
 {
-    extern int PDC_n_cols;
-
     PDC_LOG(("PDC_get_columns() - called\n"));
     return( PDC_n_cols);
 }

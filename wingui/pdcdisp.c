@@ -92,7 +92,6 @@ static void redraw_cursor_from_index( const HDC hdc, const int idx)
         "0088;0+10+48-18-4"  };    /* 8: outlined block: heavy top/bottom*/
     const char *sptr = shapes[idx];
     LONG left, top;
-    extern int PDC_cxChar, PDC_cyChar;
 
     left = SP->curscol * PDC_cxChar;
     top = SP->cursrow * PDC_cyChar;
@@ -134,7 +133,6 @@ box) in place of any visible cursor.  */
 
 static int PDC_current_cursor_state( void)
 {
-    extern HWND PDC_hWnd;
     const int shift_amount = (PDC_blink_state ? 0 : 8);
     const int cursor_style_for_unfocussed_window =
                PDC_CURSOR( PDC_CURSOR_OUTLINE, PDC_CURSOR_OUTLINE);
@@ -183,7 +181,6 @@ void PDC_gotoyx(int row, int col)
                /* function figures out what cursor should be drawn, if any. */
     if( SP->visibility)
     {
-        extern HWND PDC_hWnd;
         HDC hdc = GetDC( PDC_hWnd) ;
 
         SP->curscol = col;
@@ -235,14 +232,11 @@ HFONT PDC_get_font_handle( const int font_idx)
     return( CreateFontIndirect( &lf));
 }
 
-int debug_printf( const char *format, ...);        /* pdcscrn.c */
-
 int PDC_choose_a_new_font( void)
 {
     LOGFONT lf = PDC_get_logical_font( 0);
     CHOOSEFONT cf;
     int rval;
-    extern HWND PDC_hWnd;
 
     lf.lfHeight = -PDC_font_size;
     debug_printf( "In PDC_choose_a_new_font: %d\n", lf.lfHeight);
@@ -337,7 +331,6 @@ void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
                              int x, int len, const chtype *srcp)
 {
     HFONT hOldFont = (HFONT)0;
-    extern int PDC_cxChar, PDC_cyChar;
     int i, curr_color = -1;
     attr_t font_attrib = (attr_t)-1;
     int cursor_overwritten = FALSE;
@@ -570,7 +563,6 @@ void PDC_transform_line(int lineno, int x, int len, const chtype *srcp)
         PDC_transform_line_given_hdc( 0, 0, 0, 0, NULL);
     else
     {
-        extern HWND PDC_hWnd;
         const HDC hdc = GetDC( PDC_hWnd) ;
 
         PDC_transform_line_given_hdc( hdc, lineno, x, len, srcp);

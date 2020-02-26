@@ -58,7 +58,6 @@ int PDC_curs_set(int visibility)
 
 void PDC_set_title(const char *title)
 {
-    extern HWND PDC_hWnd;
 #ifdef PDC_WIDE
     wchar_t wtitle[512];
 #endif

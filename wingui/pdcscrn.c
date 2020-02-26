@@ -36,8 +36,6 @@ static int add_mouse( int button, const int action, const int x, const int y);
 static int keep_size_within_bounds( int *lines, int *cols);
 INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
                const int xloc, const int yloc, const int menu_shown);
-void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
-                             int x, int len, const chtype *srcp);
 
 /* We have a 'base' standard palette of 256 colors,  plus a true-color
 cube of 16 million colors. */
@@ -150,10 +148,6 @@ void PDC_scr_free(void)
 {
     PDC_free_palette( );
 }
-
-int PDC_choose_a_new_font( void);                     /* pdcdisp.c */
-
-#define KEY_QUEUE_SIZE    30
 
        /* By default,  the PDC_shutdown_key[] array contains 0       */
        /* (i.e., there's no key that's supposed to be returned for   */
@@ -515,8 +509,6 @@ static const KPTAB ext_kptab[] =
 };
 
 
-HFONT PDC_get_font_handle( const int is_bold);            /* pdcdisp.c */
-
 /* Mouse handling is done as follows:
 
    What we want is a setup wherein,  if the user presses and releases a
@@ -706,10 +698,6 @@ static int set_mouse( const int button_index, const int button_state,
     #define MK_XBUTTON1                     0x0020
     #define MK_XBUTTON2                     0x0040
 #endif
-
-#ifdef USE_FALLBACK_FONT
-extern GLYPHSET *PDC_unicode_range_data;
-#endif         /* #ifdef USE_FALLBACK_FONT */
 
 #define TIMER_ID_FOR_BLINKING 0x2000
 
@@ -1038,8 +1026,6 @@ INLINE HICON get_app_icon( )
     return icon;
 }
 
-extern TCHAR PDC_font_name[];
-
 /* This flavor of Curses tries to store the window and font sizes on
 an app-by-app basis.  To do this,  it uses the above get_app_name( )
 function,  then sets or gets a corresponding value from the Windoze
@@ -1060,7 +1046,6 @@ INLINE int set_default_sizes_from_registry( const int n_cols, const int n_rows,
     {
         TCHAR buff[180];
         TCHAR key_name[MAX_PATH];
-        extern int PDC_font_size;
 
         if( IsZoomed( PDC_hWnd))    /* -1x-1 indicates a maximized window */
             my_stprintf( buff,
@@ -1115,8 +1100,6 @@ static void fix_up_edges( const HDC hdc, const RECT *rect)
 
 static void adjust_font_size( const int font_size_change)
 {
-    extern int PDC_font_size;
-
     PDC_font_size += font_size_change;
     if( PDC_font_size < 2)
         PDC_font_size = 2;
@@ -1265,7 +1248,6 @@ INLINE int get_default_sizes_from_registry( int *n_cols, int *n_rows,
                         NULL, NULL, (BYTE *)data, &size_out);
         if( rval == ERROR_SUCCESS)
         {
-            extern int PDC_font_size;
             int x = -1, y = -1, bytes_read = 0;
 
             my_stscanf( data, _T( "%dx%d,%d,%d,%d,%d;%d,%d,%d,%d:%n"),

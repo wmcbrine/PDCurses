@@ -80,6 +80,34 @@ the PDC_CURSOR macro for this,  as in...
 #define PDC_CURSOR_IS_BLINKING    \
           ((SP->visibility >> 8) != (SP->visibility & 0xff))
 
+#define PDC_REAL_ATTR_SHIFT  17
+
+#define KEY_QUEUE_SIZE    30
+
+extern int PDC_key_queue_low, PDC_key_queue_high;
+extern int PDC_key_queue[KEY_QUEUE_SIZE];
+
+extern HWND PDC_hWnd;
+void PDC_transform_line_given_hdc( const HDC hdc, const int lineno,
+                             int x, int len, const chtype *srcp);
+int PDC_choose_a_new_font( void);                     /* pdcdisp.c */
+HFONT PDC_get_font_handle( const int is_bold);            /* pdcdisp.c */
+
+#ifdef USE_FALLBACK_FONT
+extern GLYPHSET *PDC_unicode_range_data;
+#endif         /* #ifdef USE_FALLBACK_FONT */
+
+extern TCHAR PDC_font_name[];
+extern int PDC_font_size;
+
+extern int PDC_cxChar, PDC_cyChar;
+
+extern int PDC_n_rows, PDC_n_cols;
+
+extern bool PDC_bDone;
+
+int debug_printf( const char *format, ...);        /* pdcscrn.c */
+
 /* With 64-bit chtypes,  we're allowing 20 bits for the character
 (thus Unicode values up to 0xffffff) plus one bit to indicate the
 alternate character set.  With 32-bit chtypes,  we don't have so

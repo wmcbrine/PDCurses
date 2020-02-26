@@ -10,11 +10,6 @@ void PDC_set_keyboard_binary(bool on)
 
 /* check if a key or mouse event is waiting */
 
-#define KEY_QUEUE_SIZE    30
-
-extern int PDC_key_queue_low, PDC_key_queue_high;
-extern int PDC_key_queue[KEY_QUEUE_SIZE];
-
 /* PDCurses message/event callback */
 /* Calling PDC_napms for one millisecond ensures that the message loop */
 /* is called and messages in general,  and keyboard events in particular, */

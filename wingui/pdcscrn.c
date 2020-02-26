@@ -876,7 +876,11 @@ static void get_app_name( TCHAR *buff, const size_t buff_size, const bool includ
 #endif
 
 #ifdef PDC_WIDE
+#ifdef _MSC_VER
     wchar_t **wargv = __wargv;
+#else
+    wchar_t **wargv = NULL;
+#endif
 #ifdef GOT_ARGV_ARGC
     /* in case we can not access the array directly try to get it otherwise */
     if( !wargv) {

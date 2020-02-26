@@ -10,6 +10,7 @@
 #endif
 
 COLORREF PDC_palette[PDC_MAXCOL];
+int PDC_blink_state = 0;
 
 static int menu_shown = 1;
 static int min_lines = 25, max_lines = 25;

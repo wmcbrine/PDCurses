@@ -106,6 +106,8 @@ extern int PDC_n_rows, PDC_n_cols;
 
 extern bool PDC_bDone;
 
+extern int PDC_blink_state;
+
 extern COLORREF PDC_palette[PDC_MAXCOL];
 
 int debug_printf( const char *format, ...);        /* pdcscrn.c */

@@ -1,9 +1,8 @@
 /* Public Domain Curses */
 
 #include "pdcwin.h"
-#define USE_UNICODE_ACS_CHARS 1
 
-#include "../common/acs_defs.h"
+#include "../common/acsuni.h"
 
 #include <assert.h>
 #include <stdlib.h>

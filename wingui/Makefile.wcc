@@ -1,51 +1,37 @@
-# Watcom WMAKE Makefile for PDCurses library - Win32 Watcom C/C++ 10.6+
+# Watcom Makefile for PDCurses - Windows GUI
 #
-# Usage: wmake -f [wingui/]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y] [target]
+# Usage: wmake -f [path\]Makefile.wcc [DEBUG=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
 
 !ifdef %PDCURSES_SRCDIR
-PDCURSES_SRCDIR   = $(%PDCURSES_SRCDIR)
+PDCURSES_SRCDIR	= $(%PDCURSES_SRCDIR)
 !else
-PDCURSES_SRCDIR   = ..
+PDCURSES_SRCDIR	= ..
 !endif
 
-!include $(PDCURSES_SRCDIR)/version.mif
+osdir		= $(PDCURSES_SRCDIR)/wingui
 
-osdir      = $(PDCURSES_SRCDIR)/wingui
+CC		= wcc386
+TARGET		= nt_win
 
-CC      = wcc386
-TARGET      = nt_win
-
-CFLAGS      = -ei -zq -wx -i=$(PDCURSES_SRCDIR)
-
-!ifeq DEBUG Y
-CFLAGS      += -hd -od -d2 -dDEBUG -DPDCDEBUG
-LDFLAGS      = DEBUG ALL op q sys $(TARGET)
-!else
-CFLAGS      += -oneatx
-LDFLAGS      = op q sys $(TARGET)
-!endif
+CFLAGS		= -bt=$(TARGET)
 
 !ifeq WIDE Y
-CFLAGS      += -DPDC_WIDE
+CFLAGS		+= -DPDC_WIDE
 !endif
 
 !ifeq UTF8 Y
-CFLAGS      += -DPDC_FORCE_UTF8
+CFLAGS		+= -DPDC_FORCE_UTF8
 !endif
 
-LIBEXE      = wlib -q -n -t
+!ifeq INFOEX N
+CFLAGS		+= -DHAVE_NO_INFOEX
+!endif
 
-!include $(PDCURSES_SRCDIR)/watcom.mif
+!include $(PDCURSES_SRCDIR)/common/watcom.mif
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-   $(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)
-   copy $(LIBCURSES) panel.lib
-
-PLATFORM1   = Watcom C++ WinGUI
-PLATFORM2   = Open Watcom 1.6 for WinGUI
-ARCNAME      = pdc$(VER)_wcc_w32
-
-!include $(PDCURSES_SRCDIR)/makedist.mif
+	$(LIBEXE) $@ $(LIBOBJS) $(PDCOBJS)

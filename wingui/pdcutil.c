@@ -43,5 +43,3 @@ const char *PDC_sysname(void)
 {
    return "WinGUI";
 }
-
-enum PDC_port PDC_port_val = PDC_PORT_WINGUI;

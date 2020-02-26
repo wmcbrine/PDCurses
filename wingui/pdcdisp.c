@@ -629,6 +629,9 @@ static void PDC_get_rgb_values( const chtype srcp,
     bool intensify_backgnd = FALSE;
     bool default_foreground = FALSE, default_background = FALSE;
 
+    *foreground_rgb = (COLORREF)-1;
+    *background_rgb = (COLORREF)-1;
+
     {
         short foreground_index, background_index;
 

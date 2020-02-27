@@ -840,7 +840,7 @@ PDC_argv,  and will be used instead of GetCommandLine.
 #ifdef __CYGWIN__
                      /* Can't lowercase Unicode text in Cygwin */
    #define my_tcslwr
-#elif defined _MSC_VER
+#elif defined(_MSC_VER) || defined(__WATCOMC__)
    #define my_tcslwr   _wcslwr
 #else
    #define my_tcslwr   wcslwr

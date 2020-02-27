@@ -4,6 +4,7 @@
 *.exe
 *.exp
 *.lib
+*.map
 *.o
 *.obj
 *.res

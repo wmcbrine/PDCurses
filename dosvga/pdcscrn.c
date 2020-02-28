@@ -493,11 +493,16 @@ static unsigned _find_video_mode(int rows, int cols)
     {
         do { /* while (FALSE) */
             unsigned win_size;
+            unsigned width;
+
+            width = (vbe_info.VbeVersion >= 0x300)
+                  ? mode_info.LinBytesPerScanLine
+                  : mode_info.BytesPerScanLine;
 
             PDC_state.linear_sel = __dpmi_allocate_ldt_descriptors(1);
             if (PDC_state.linear_sel < 0)
                 break;
-            win_size = mode_info.BytesPerScanLine * mode_info.YResolution;
+            win_size = width * mode_info.YResolution;
             PDC_state.linear_addr = _map_frame_buffer(mode_info.PhysBasePtr, win_size);
             if (PDC_state.linear_addr == 0)
             {
@@ -508,6 +513,7 @@ static unsigned _find_video_mode(int rows, int cols)
             __dpmi_set_segment_base_address(PDC_state.linear_sel, PDC_state.linear_addr);
             __dpmi_set_segment_limit(PDC_state.linear_sel, (win_size - 1) | 0xFFF);
             vesa_mode |= 0x4000;
+            PDC_state.bytes_per_line = width;
         } while (FALSE);
     }
 #else

@@ -160,8 +160,8 @@ bool PDC_check_key(void)
 
         mouse_moved = !mouse_button && ms_regs.h.bl &&
                        ms_regs.h.bl == old_ms.h.bl &&
-                    (((ms_regs.W.cx ^ old_ms.W.cx) >> 3) ||
-                     ((ms_regs.W.dx / _FONT16) ^ (old_ms.W.dx / _FONT16)));
+                    (((ms_regs.W.cx / PDC_state.font_width) ^ (old_ms.W.cx / PDC_state.font_width)) ||
+                     ((ms_regs.W.dx / PDC_state.font_height) ^ (old_ms.W.dx / PDC_state.font_height)));
 
         if (mouse_scroll || mouse_button || mouse_moved)
             return TRUE;
@@ -270,8 +270,8 @@ static int _process_mouse_events(void)
         }
     }
 
-    SP->mouse_status.x = ms_regs.W.cx >> 3;
-    SP->mouse_status.y = ms_regs.W.dx / _FONT16;
+    SP->mouse_status.x = ms_regs.W.cx / PDC_state.font_width;
+    SP->mouse_status.y = ms_regs.W.dx / PDC_state.font_height;
 
     old_ms = ms_regs;
 

@@ -33,18 +33,8 @@ static int __dpmi_set_segment_limit(int sel, unsigned long limit);
 static void dosmemget(unsigned long addr, size_t size, void *buf);
 static void dosmemput(const void *buf, size_t size, unsigned long addr);
 #endif
-
-/* _get_font_address() -- return the address of the font in ROM */
-static unsigned long _get_font_address(void)
-{
-#ifdef PDC_FLAT
-    unsigned ofs = getdosmemword(0x43 * 4 + 0);
-    unsigned seg = getdosmemword(0x43 * 4 + 2);
-    return _FAR_POINTER(seg, ofs);
-#else
-    return getdosmemdword(0x43 * 4);
-#endif
-}
+static int _psf_font_open(const char *name, bool bold);
+static int _vgafont_open(void);
 
 /* _get_scrn_mode() - Return the current BIOS video mode */
 
@@ -82,7 +72,6 @@ static void _set_scrn_mode(int new_mode)
     PDCINT(0x10, regs);
     PDC_state.scrn_mode = new_mode;
 
-    PDC_state.font_addr = _get_font_address();
     LINES = PDC_get_rows();
     COLS = PDC_get_columns();
 }
@@ -92,22 +81,21 @@ static void _set_scrn_mode(int new_mode)
 
 void PDC_scr_close(void)
 {
-    PDCREGS regs;
-
 #ifdef PDC_FLAT
     _unmap_frame_buffer(PDC_state.linear_addr);
     __dpmi_free_ldt_descriptor(PDC_state.linear_sel);
 #endif
 
     _set_scrn_mode(0x03);
-    memset(&regs, 0, sizeof(regs));
-    regs.W.ax = 0x1114;
-    regs.h.bl = 0x00;
-    PDCINT(0x10, regs);
 }
 
 void PDC_scr_free(void)
 {
+    if (PDC_state.font_close != NULL)
+    {
+        PDC_state.font_close(FALSE);
+        PDC_state.font_close(TRUE);
+    }
 }
 
 /* open the physical screen -- miscellaneous initialization, may save
@@ -115,6 +103,7 @@ void PDC_scr_free(void)
 
 int PDC_scr_open(void)
 {
+    const char *normal_font, *bold_font;
     PDCREGS regs;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
@@ -132,6 +121,35 @@ int PDC_scr_open(void)
         return ERR;
 
     _init_palette();
+
+    /* Set up fonts:
+     * * first try PDC_FONT and PDC_FONT_BOLD
+     * * Fall back to the ROM font if PDC_FONT is not specified
+     * * Width must be 8; height must be not greater than 16; the bold font, if
+     *   specified, must have the same size as the normal font
+     */
+    normal_font = getenv("PDC_FONT");
+    bold_font = getenv("PDC_FONT_BOLD");
+    if (normal_font != NULL && normal_font[0] != '\0')
+    {
+        if (_psf_font_open(normal_font, FALSE) == 0)
+        {
+            /* Opened the normal font; try the bold font */
+            if (_psf_font_open(bold_font, TRUE) == 0
+                && PDC_state.font_char_width(FALSE) == PDC_state.font_char_width(TRUE)
+                && PDC_state.font_char_height(FALSE) == PDC_state.font_char_height(TRUE))
+                PDC_state.have_bold_font = TRUE;
+        }
+    }
+    if (PDC_state.font_glyph_data == NULL)
+    {
+        if (_vgafont_open() < 0)
+            return ERR;
+        PDC_state.have_bold_font = FALSE;
+    }
+    PDC_state.font_width = PDC_state.font_char_width(FALSE);
+    PDC_state.font_height = PDC_state.font_char_height(FALSE);
+
     PDC_resize_screen(25, 80);
 
     SP->orig_attr = FALSE;
@@ -702,8 +720,8 @@ static unsigned _find_mode(
         }
 
         /* At least as many rows and columns as requested */
-        new_cols = mode_info0.XResolution / 8;
-        new_rows = mode_info0.YResolution / _FONT16;
+        new_cols = mode_info0.XResolution / PDC_state.font_width;
+        new_rows = mode_info0.YResolution / PDC_state.font_height;
         if (new_cols < cols || new_rows < rows)
             continue;
 
@@ -1061,3 +1079,636 @@ static void dosmemput(const void *buf, size_t size, unsigned long addr)
     memcpy((void *)addr, buf, size);
 }
 #endif
+
+/*****************************************************************************
+*                    Support for a built-in 16 line font                     *
+*****************************************************************************/
+
+static void _vgafont_close(bool bold);
+static unsigned _vgafont_char_width(bool bold);
+static unsigned _vgafont_char_height(bool bold);
+static const unsigned char *_vgafont_glyph_data(bool bold, unsigned long pos);
+#ifdef __DJGPP__
+static unsigned char font437[4096];
+#else
+static unsigned char PDC_FAR *font437;
+#endif
+
+#ifdef PDC_WIDE
+/* This maps Unicode to CP437 */
+
+static const struct
+{
+    unsigned short uni;
+    unsigned char pos;
+} cp437_map[] =
+{
+    /* Regular mappings */
+    { 0x0000, 0x00 },
+    { 0x263A, 0x01 },
+    { 0x263B, 0x02 },
+    { 0x2665, 0x03 },
+    { 0x2666, 0x04 },
+    { 0x2663, 0x05 },
+    { 0x2660, 0x06 },
+    { 0x2022, 0x07 },
+    { 0x25D8, 0x08 },
+    { 0x25CB, 0x09 },
+    { 0x25D9, 0x0A },
+    { 0x2642, 0x0B },
+    { 0x2640, 0x0C },
+    { 0x266A, 0x0D },
+    { 0x266B, 0x0E },
+    { 0x263C, 0x0F },
+    { 0x25BA, 0x10 },
+    { 0x25C4, 0x11 },
+    { 0x2195, 0x12 },
+    { 0x203C, 0x13 },
+    { 0x00B6, 0x14 },
+    { 0x00A7, 0x15 },
+    { 0x25AC, 0x16 },
+    { 0x21A8, 0x17 },
+    { 0x2191, 0x18 },
+    { 0x2193, 0x19 },
+    { 0x2192, 0x1A },
+    { 0x2190, 0x1B },
+    { 0x221F, 0x1C },
+    { 0x2194, 0x1D },
+    { 0x25B2, 0x1E },
+    { 0x25BC, 0x1F },
+    { 0x2302, 0x7F },
+    { 0x00C7, 0x80 },
+    { 0x00FC, 0x81 },
+    { 0x00E9, 0x82 },
+    { 0x00E2, 0x83 },
+    { 0x00E4, 0x84 },
+    { 0x00E0, 0x85 },
+    { 0x00E5, 0x86 },
+    { 0x00E7, 0x87 },
+    { 0x00EA, 0x88 },
+    { 0x00EB, 0x89 },
+    { 0x00E8, 0x8A },
+    { 0x00EF, 0x8B },
+    { 0x00EE, 0x8C },
+    { 0x00EC, 0x8D },
+    { 0x00C4, 0x8E },
+    { 0x00C5, 0x8F },
+    { 0x00C9, 0x90 },
+    { 0x00E6, 0x91 },
+    { 0x00C6, 0x92 },
+    { 0x00F4, 0x93 },
+    { 0x00F6, 0x94 },
+    { 0x00F2, 0x95 },
+    { 0x00FB, 0x96 },
+    { 0x00F9, 0x97 },
+    { 0x00FF, 0x98 },
+    { 0x00D6, 0x99 },
+    { 0x00DC, 0x9A },
+    { 0x00A2, 0x9B },
+    { 0x00A3, 0x9C },
+    { 0x00A5, 0x9D },
+    { 0x20A7, 0x9E },
+    { 0x0192, 0x9F },
+    { 0x00E1, 0xA0 },
+    { 0x00ED, 0xA1 },
+    { 0x00F3, 0xA2 },
+    { 0x00FA, 0xA3 },
+    { 0x00F1, 0xA4 },
+    { 0x00D1, 0xA5 },
+    { 0x00AA, 0xA6 },
+    { 0x00BA, 0xA7 },
+    { 0x00BF, 0xA8 },
+    { 0x2310, 0xA9 },
+    { 0x00AC, 0xAA },
+    { 0x00BD, 0xAB },
+    { 0x00BC, 0xAC },
+    { 0x00A1, 0xAD },
+    { 0x00AB, 0xAE },
+    { 0x00BB, 0xAF },
+    { 0x2591, 0xB0 },
+    { 0x2592, 0xB1 },
+    { 0x2593, 0xB2 },
+    { 0x2502, 0xB3 },
+    { 0x2524, 0xB4 },
+    { 0x2561, 0xB5 },
+    { 0x2562, 0xB6 },
+    { 0x2556, 0xB7 },
+    { 0x2555, 0xB8 },
+    { 0x2563, 0xB9 },
+    { 0x2551, 0xBA },
+    { 0x2557, 0xBB },
+    { 0x255D, 0xBC },
+    { 0x255C, 0xBD },
+    { 0x255B, 0xBE },
+    { 0x2510, 0xBF },
+    { 0x2514, 0xC0 },
+    { 0x2534, 0xC1 },
+    { 0x252C, 0xC2 },
+    { 0x251C, 0xC3 },
+    { 0x2500, 0xC4 },
+    { 0x253C, 0xC5 },
+    { 0x255E, 0xC6 },
+    { 0x255F, 0xC7 },
+    { 0x255A, 0xC8 },
+    { 0x2554, 0xC9 },
+    { 0x2569, 0xCA },
+    { 0x2566, 0xCB },
+    { 0x2560, 0xCC },
+    { 0x2550, 0xCD },
+    { 0x256C, 0xCE },
+    { 0x2567, 0xCF },
+    { 0x2568, 0xD0 },
+    { 0x2564, 0xD1 },
+    { 0x2565, 0xD2 },
+    { 0x2559, 0xD3 },
+    { 0x2558, 0xD4 },
+    { 0x2552, 0xD5 },
+    { 0x2553, 0xD6 },
+    { 0x256B, 0xD7 },
+    { 0x256A, 0xD8 },
+    { 0x2518, 0xD9 },
+    { 0x250C, 0xDA },
+    { 0x2588, 0xDB },
+    { 0x2584, 0xDC },
+    { 0x258C, 0xDD },
+    { 0x2590, 0xDE },
+    { 0x2580, 0xDF },
+    { 0x03B1, 0xE0 },
+    { 0x00DF, 0xE1 },
+    { 0x0393, 0xE2 },
+    { 0x03C0, 0xE3 },
+    { 0x03A3, 0xE4 },
+    { 0x03C3, 0xE5 },
+    { 0x00B5, 0xE6 },
+    { 0x03C4, 0xE7 },
+    { 0x03A6, 0xE8 },
+    { 0x0398, 0xE9 },
+    { 0x03A9, 0xEA },
+    { 0x03B4, 0xEB },
+    { 0x221E, 0xEC },
+    { 0x03C6, 0xED },
+    { 0x03B5, 0xEE },
+    { 0x2229, 0xEF },
+    { 0x2261, 0xF0 },
+    { 0x00B1, 0xF1 },
+    { 0x2265, 0xF2 },
+    { 0x2264, 0xF3 },
+    { 0x2320, 0xF4 },
+    { 0x2321, 0xF5 },
+    { 0x00F7, 0xF6 },
+    { 0x2248, 0xF7 },
+    { 0x00B0, 0xF8 },
+    { 0x2219, 0xF9 },
+    { 0x00B7, 0xFA },
+    { 0x221A, 0xFB },
+    { 0x207F, 0xFC },
+    { 0x00B2, 0xFD },
+    { 0x25A0, 0xFE },
+    { 0x00A0, 0xFF },
+    /* Extra mappings so ACS_* will work */
+    { 0x00A4, 0x0F },
+    { 0x2260, 0xD8 },
+    { 0x23BA, 0x2D },
+    { 0x23BB, 0x2D },
+    { 0x23BC, 0x2D },
+    { 0x23BD, 0x5F }
+};
+
+#define NO_CHAR 0xFE
+static unsigned char pages[10][256];
+static unsigned char *map[256];
+
+static void _build_rom_map(void)
+{
+    unsigned page = 0;
+    unsigned i;
+
+    memset(pages, NO_CHAR, sizeof(pages));
+    for (i = 0; i < 256; ++i)
+        map[i] = NULL;
+    /* Map ASCII as identity */
+    map[0] = pages[page++];
+    for (i = 0x20; i <= 0x7E; ++i)
+        map[0][i] = i;
+    /* Map according to the list */
+    for (i = 0; i < sizeof(cp437_map)/sizeof(cp437_map[0]); ++i)
+    {
+        unsigned cp = cp437_map[i].uni;
+        unsigned t1 = cp >> 8;
+        unsigned t2 = cp & 0xFF;
+        if (map[t1] == NULL)
+        {
+            if (page >= sizeof(pages)/sizeof(pages[0]))
+            {
+                fprintf(stderr, "Need to adjust size of pages array\n)");
+                abort();
+            }
+            map[t1] = pages[page++];
+        }
+        map[t1][t2] = cp437_map[i].pos;
+    }
+}
+
+static unsigned char _unicode_to_cp437(unsigned long cp)
+{
+    unsigned t1, t2;
+
+    if (cp > 0xFFFF)
+        return NO_CHAR;
+    t1 = cp >> 8;
+    t2 = cp & 0xFF;
+    if (map[t1] == NULL)
+        return NO_CHAR;
+    return map[t1][t2];
+}
+#endif
+
+static int _vgafont_open(void)
+{
+#ifdef PDC_FLAT
+    unsigned ofs = getdosmemword(0x43 * 4 + 0);
+    unsigned seg = getdosmemword(0x43 * 4 + 2);
+    unsigned long addr = _FAR_POINTER(seg, ofs);
+#else
+    unsigned long addr = getdosmemdword(0x43 * 4);
+#endif
+#ifdef __DJGPP__
+    dosmemget(addr, sizeof(font437), font437);
+#else
+    font437 = (void PDC_FAR *)addr;
+#endif
+
+#ifdef PDC_WIDE
+    _build_rom_map();
+#endif
+    PDC_state.font_close = _vgafont_close;
+    PDC_state.font_char_width = _vgafont_char_width;
+    PDC_state.font_char_height = _vgafont_char_height;
+    PDC_state.font_glyph_data = _vgafont_glyph_data;
+    return 0;
+}
+
+static void _vgafont_close(bool bold)
+{
+    /* no operation */
+}
+
+static unsigned _vgafont_char_width(bool bold)
+{
+    return 8;
+}
+
+static unsigned _vgafont_char_height(bool bold)
+{
+    return 16;
+}
+
+static const unsigned char PDC_FAR *_vgafont_glyph_data(bool bold, unsigned long pos)
+{
+    unsigned pos437;
+#ifdef PDC_WIDE
+    pos437 = _unicode_to_cp437(pos);
+#else
+    pos437 = pos & 0xFF;
+#endif
+    return font437 + pos437*16;
+}
+
+/*****************************************************************************
+*                           Support for PSF fonts                            *
+*****************************************************************************/
+
+/* PSF specification from:
+   https://www.win.tue.nl/~aeb/linux/kbd/font-formats-1.html
+   Only PSF version 2 is supported. */
+
+#define PSF2_MAGIC "\x72\xb5\x4A\x86"
+
+/* bits used in flags */
+#define PSF2_HAS_UNICODE_TABLE 0x01
+
+/* max version recognized so far */
+#define PSF2_MAXVERSION 0
+
+/* UTF8 separators */
+#define PSF2_SEPARATOR  0xFF
+#define PSF2_STARTSEQ   0xFE
+
+struct psf2_header
+{
+    unsigned char magic[4];
+    unsigned long version;
+    unsigned long headersize;    /* offset of bitmaps in file */
+    unsigned long flags;
+    unsigned long length;        /* number of glyphs */
+    unsigned long charsize;      /* number of bytes for each character */
+    unsigned long height, width; /* max dimensions of glyphs */
+    /* charsize = height * ((width + 7) / 8) */
+};
+
+/* Information about a single font */
+struct font_data
+{
+    struct psf2_header header;
+    unsigned char **glyphs;     /* Bits from the font */
+    size_t **map[17];           /* Map code points to font positions */
+    unsigned char *blank;       /* Default glyph */
+};
+
+static struct font_data psf_fonts[2]; /* normal and bold */
+
+static void _psf_font_close(bool bold);
+static unsigned _psf_font_char_width(bool bold);
+static unsigned _psf_font_char_height(bool bold);
+static const unsigned char PDC_FAR *_psf_font_glyph_data(
+        bool bold, unsigned long codepoint);
+static void _psf_font_do_close(struct font_data *fdata);
+static long _psf_font_read_utf8(FILE *fp);
+static int _psf_font_map_char(struct font_data *fdata, long codepoint,
+        size_t pos);
+static const unsigned char *_psf_font_do_glyph_data(
+        struct font_data *fdata, long codepoint);
+
+/* Open the font with the given file name, as the normal or the bold font.
+ * Return 0 if OK, -1 on any error. */
+static int _psf_font_open(const char *name, bool bold)
+{
+    struct font_data *fdata = &psf_fonts[bold != 0];
+    FILE *fp;
+    size_t size;
+    size_t pos;
+
+    memset(fdata, 0, sizeof(*fdata));
+
+    fp = fopen(name, "rb");
+    if (fp == NULL)
+        goto error;
+
+    /* Read and check the header */
+    size = fread(&fdata->header, sizeof(fdata->header), 1, fp);
+    if (size != 1)
+        goto error;
+    if (memcmp(fdata->header.magic, PSF2_MAGIC, 4) != 0)
+        goto error;
+    if (fdata->header.charsize < fdata->header.height * ((fdata->header.width + 7) / 8))
+        goto error;
+
+    /* Temporary until pdcdisp.c is upgraded:
+     * width must be 8, height cannot exceed 16 */
+    if (fdata->header.width != 8 || fdata->header.height > 16)
+        goto error;
+
+    /* Read the bitmap data */
+    if (fdata->header.length != (size_t)fdata->header.length)
+        goto error; /* only possible if size_t has less than four bytes */
+    fdata->glyphs = calloc(fdata->header.length, sizeof(fdata->glyphs[0]));
+    if (fdata->glyphs == NULL)
+        goto error;
+    for (pos = 0; pos < fdata->header.length; ++pos)
+    {
+        fdata->glyphs[pos] = malloc(fdata->header.charsize);
+        if (fdata->glyphs[pos] == NULL)
+            goto error;
+        size = fread(fdata->glyphs[pos], 1, fdata->header.charsize, fp);
+        if (size != fdata->header.charsize)
+            goto error;
+    }
+
+    /* Read the Unicode mapping if one is indicated */
+    if (fdata->header.flags & PSF2_HAS_UNICODE_TABLE)
+    {
+        pos = 0;
+        while (1)
+        {
+            long codepoint = _psf_font_read_utf8(fp);
+            if (codepoint == -PSF2_STARTSEQ)
+            {
+                /* Introduces a sequence of combining characters; these are
+                 * not supported */
+                do
+                {
+                    codepoint = _psf_font_read_utf8(fp);
+                } while (codepoint != -1 && codepoint != -PSF2_SEPARATOR);
+            }
+            if (codepoint == -PSF2_SEPARATOR)
+            {
+                ++pos; /* next glyph position */
+            }
+            else if (codepoint < 0)
+            {
+                break; /* end of file or error */
+            }
+            else
+            {
+                /* single code point mapped to the current position */
+                if (pos >= fdata->header.length)
+                    goto error;
+                if (_psf_font_map_char(fdata, codepoint, pos) < 0)
+                    goto error;
+            }
+        }
+    }
+
+    /* Provide a blank glyph for nonexistent mappings */
+    if (_psf_font_do_glyph_data(fdata, 0xFFFD) == NULL)
+    {
+        fdata->blank = calloc(1, fdata->header.charsize);
+        if (fdata->blank == NULL)
+            goto error;
+    }
+    else
+    {
+        fdata->blank = NULL;
+    }
+
+    fclose(fp);
+    PDC_state.font_close = _psf_font_close;
+    PDC_state.font_char_width = _psf_font_char_width;
+    PDC_state.font_char_height = _psf_font_char_height;
+    PDC_state.font_glyph_data = _psf_font_glyph_data;
+    return 0;
+
+error:
+    if (fp != NULL)
+        fclose(fp);
+    _psf_font_do_close(fdata);
+    return -1;
+}
+
+/* Close the normal or the bold font */
+static void _psf_font_close(bool bold)
+{
+    _psf_font_do_close(&psf_fonts[bold != 0]);
+}
+
+/* Free memory associated with a font */
+static void _psf_font_do_close(struct font_data *fdata)
+{
+    size_t pos;
+    unsigned i, j;
+
+    /* Free the glyph data */
+    if (fdata->glyphs != NULL)
+    {
+        for (pos = 0; pos < fdata->header.length; ++pos)
+            free(fdata->glyphs[pos]);
+        free(fdata->glyphs);
+        fdata->glyphs = NULL;
+    }
+    free(fdata->blank);
+    fdata->blank = NULL;
+
+    /* Free the Unicode mapping */
+    for (i = 0; i < 17; ++i)
+    {
+        if (fdata->map[i] != NULL)
+        {
+            for (j = 0; j < 256; ++j)
+                free(fdata->map[i][j]);
+            free(fdata->map[i]);
+            fdata->map[i] = NULL;
+        }
+    }
+}
+
+/* Local function to read a UTF-8 sequence or a separator from the font file */
+static long _psf_font_read_utf8(FILE *fp)
+{
+    int byte;
+    long codepoint;
+    long min;
+    unsigned count;
+
+    /* Read first byte */
+    byte = fgetc(fp);
+    if (byte == EOF)
+        return -1;
+    if (byte == PSF2_STARTSEQ || byte == PSF2_SEPARATOR)
+        return -byte; /* markers meaningful to the font format */
+    if (byte < 0x80)
+    {
+        return byte;  /* ASCII */
+    }
+    else if (byte < 0xC2)
+    {
+        return -1;    /* Not valid as first byte */
+    }
+    else if (byte < 0xE0)
+    {
+        /* Two byte character */
+        codepoint = byte & 0x1F;
+        min = 0x80;
+        count = 1;
+    }
+    else if (byte < 0xF0)
+    {
+        /* Three byte character */
+        codepoint = byte & 0x0F;
+        min = 0x800;
+        count = 2;
+    }
+    else if (byte < 0xF5)
+    {
+        /* Four byte character */
+        codepoint = byte & 0x07;
+        min = 0x10000;
+        count = 3;
+    }
+    else
+    {
+        return -1; /* Not valid as first byte */
+    }
+
+    /* Read continuation bytes */
+    while (count != 0)
+    {
+        byte = fgetc(fp);
+        if (byte < 0x80 || 0xBF < byte)
+            return -1;
+        codepoint = (codepoint << 6) | (byte & 0x3F);
+        --count;
+    }
+
+    /* Check for overlong, surrogate, out of range */
+    if (codepoint < min || codepoint > 0x10FFFF
+    ||  (0xD800 <= codepoint && codepoint <= 0xDFFF))
+        return -1;
+
+    return codepoint;
+}
+
+/* Local function to establish a mapping from a codepoint to a font position */
+static int _psf_font_map_char(struct font_data *fdata, long codepoint, size_t pos)
+{
+    unsigned t1 = codepoint >> 16;
+    unsigned t2 = (codepoint >> 8) & 0xFF;
+    unsigned t3 = codepoint & 0xFF;
+    unsigned i;
+
+    if (fdata->map[t1] == NULL)
+    {
+        fdata->map[t1] = calloc(256, sizeof(fdata->map[0][0]));
+        if (fdata->map[t1] == NULL)
+            return -1;
+    }
+    if (fdata->map[t1][t2] == NULL)
+    {
+        fdata->map[t1][t2] = malloc(256 * sizeof(fdata->map[0][0][0]));
+        if (fdata->map[t1][t2] == NULL)
+            return -1;
+        for (i = 0; i < 256; ++i)
+            fdata->map[t1][t2][i] = (size_t)-1;
+    }
+    fdata->map[t1][t2][t3] = pos;
+    return 0;
+}
+
+/* Return the character width in pixels */
+static unsigned _psf_font_char_width(bool bold)
+{
+    return psf_fonts[bold != 0].header.width;
+}
+
+/* Return the character height in pixels */
+static unsigned _psf_font_char_height(bool bold)
+{
+    return psf_fonts[bold != 0].header.height;
+}
+
+/* Return the glyph data as read from the file */
+/* Never returns NULL. If the codepoint is not mapped, returns the mapping
+ * for U+FFFD if that exists, or the blank glyph otherwise */
+static const unsigned char PDC_FAR *_psf_font_glyph_data(
+        bool bold, unsigned long codepoint)
+{
+    struct font_data *fdata = &psf_fonts[bold != 0];
+    const unsigned char *bitmap;
+
+    bitmap = _psf_font_do_glyph_data(fdata, codepoint);
+    if (bitmap == NULL)
+        bitmap = _psf_font_do_glyph_data(fdata, 0xFFFD);
+    if (bitmap == NULL)
+        bitmap = fdata->blank;
+
+    return bitmap;
+}
+
+/* Return the glyph data as read from the file */
+/* Local function used by PDC_psf_glyph_data; can return NULL */
+static const unsigned char *_psf_font_do_glyph_data(
+        struct font_data *fdata, long codepoint)
+{
+    unsigned t1 = codepoint >> 16;
+    unsigned t2 = (codepoint >> 8) & 0xFF;
+    unsigned t3 = codepoint & 0xFF;
+    const unsigned char *bitmap = NULL;
+    size_t pos;
+
+    if (t1 <= 17 && fdata->map[t1] != NULL && fdata->map[t1][t2] != NULL)
+    {
+        pos = fdata->map[t1][t2][t3];
+        if (pos != (size_t)-1)
+            bitmap = fdata->glyphs[pos];
+    }
+    return bitmap;
+}

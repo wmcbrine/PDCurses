@@ -1,6 +1,6 @@
 # GNU Makefile for PDCurses - DOS
 #
-# Usage: make [-f path\Makefile] [DEBUG=Y] [target]
+# Usage: make [-f path\Makefile] [DEBUG=Y] [WIDE=Y] [target]
 #
 # where target can be any of:
 # [all|libs|demos|pdcurses.a|testcurs.exe...]
@@ -30,6 +30,10 @@ else
 endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
+
+ifeq ($(WIDE),Y)
+	CFLAGS += -DPDC_WIDE
+endif
 
 LINK		= gcc
 

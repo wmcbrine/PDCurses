@@ -36,6 +36,12 @@
 
 #include <dos.h>
 
+# if SMALL || MEDIUM
+#  define PDC_FAR far
+# else
+#  define PDC_FAR
+# endif
+
 /* Information about the current video state */
 struct PDC_color
 {
@@ -69,7 +75,15 @@ struct PDC_video_state
     unsigned char blue_max;
     unsigned char blue_pos;
 
-    unsigned long font_addr; /* Address of font in ROM */
+    /* Font support */
+    void (*font_close)(bool bold);
+    unsigned (*font_char_width)(bool bold);
+    unsigned (*font_char_height)(bool bold);
+    const unsigned char PDC_FAR *(*font_glyph_data)(bool bold, unsigned long pos);
+
+    bool have_bold_font;
+    unsigned font_width;     /* Width of font in pixels */
+    unsigned font_height;    /* Height of font in pixels */
 
     /* Cursor state */
     bool cursor_visible;
@@ -117,11 +131,6 @@ void setdosmembyte(int offs, unsigned char b);
 void setdosmemword(int offs, unsigned short w);
 void setdosmemdword(int offs, unsigned long d);
 #else
-# if SMALL || MEDIUM
-#  define PDC_FAR far
-# else
-#  define PDC_FAR
-# endif
 # define getdosmembyte(offs) \
     (*((unsigned char PDC_FAR *) (offs)))
 # define getdosmemword(offs) \
@@ -200,14 +209,4 @@ enum
     _VGACOLOR = 0x07, _VGAMONO,
     _MCGACOLOR = 0x0a, _MCGAMONO,
     _MDS_GENIUS = 0x30
-};
-
-/* Text-mode font size information */
-
-enum
-{
-    _FONT8 = 8,
-    _FONT14 = 14,
-    _FONT15,    /* GENIUS */
-    _FONT16
 };

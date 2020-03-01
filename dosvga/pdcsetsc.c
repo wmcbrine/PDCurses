@@ -55,7 +55,7 @@ int PDC_curs_set(int visibility)
             break;
         case 2:  /* highly visible */
             start = 0;   /* full-height block */
-            end = _FONT16 - 1;
+            end = PDC_state.font_height - 1;
             break;
         default:  /* normal visibility */
             start = SP->orig_cursor >> 8;

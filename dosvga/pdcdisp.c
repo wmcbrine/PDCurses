@@ -1,7 +1,11 @@
 /* PDCurses */
 
 #include "pdcdos.h"
-#include "../common/acs437.h"
+#ifdef PDC_WIDE
+# include "../common/acsuni.h"
+#else
+# include "../common/acs437.h"
+#endif
 
 #ifdef __DJGPP__
 #include <go32.h>
@@ -55,7 +59,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
     back = (colors >> 16) & 0xF;
 
     /* Underline will go here if requested */
-    underline = 13 /*_FONT16*/;
+    underline = 13 /*PDC_state.font_height*/;
 
     /* Render to the bytes array and then copy to the frame buffer */
     /* Loop by column */
@@ -63,26 +67,16 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
     {
         chtype glyph = srcp[col];
         int ch;
-        unsigned long font_addr;
-#ifdef __DJGPP__
-        unsigned char font_data[16];
-#else
-        unsigned char PDC_FAR *font_data;
-#endif
+        const unsigned char PDC_FAR *font_data;
         unsigned char lr_mask;
 
         /* Get the index into the font */
-        ch = glyph & 0xFF;
+        ch = glyph & 0xFFFF;
         if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
-            ch = acs_map[ch & 0x7f] & 0xff;
-        font_addr = PDC_state.font_addr + ch*_FONT16;
+            ch = acs_map[ch & 0x7f];
 
         /* Get the font data */
-#ifdef __DJGPP__
-        dosmemget(font_addr, _FONT16, font_data);
-#else
-        font_data = (unsigned char PDC_FAR *)font_addr;
-#endif
+        font_data = PDC_state.font_glyph_data(FALSE, ch);
 
         /* Set pixels for A_LEFT and A_RIGHT */
         lr_mask = 0x00;
@@ -92,7 +86,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
             lr_mask |= 0x01;
 
         /* Copy font data into the bytes array */
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_state.font_height; line++)
         {
             unsigned char byte = font_data[line];
             bytes[line][col] = byte | lr_mask;
@@ -118,7 +112,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c4, 2);
         outportb(0x3c5, vplane);
         cp = addr;
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_state.font_height; line++)
         {
             _video_write(cp, bytes[line], len);
             cp += PDC_state.bytes_per_line;
@@ -132,7 +126,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c4, 2);
         outportb(0x3c5, vplane);
         cp = addr;
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_state.font_height; line++)
         {
             for (col = 0; col < len; col++)
                 bytes[line][col] ^= 0xFF;
@@ -149,7 +143,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c5, vplane);
         cp = addr;
         memset(bytes[0], 0x00, len);
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_state.font_height; line++)
         {
             _video_write(cp, bytes[0], len);
             cp += PDC_state.bytes_per_line;
@@ -164,7 +158,7 @@ static void _new_packet(unsigned long colors, int lineno, int x, int len, const 
         outportb(0x3c5, vplane);
         cp = addr;
         memset(bytes[0], 0xFF, len);
-        for (line = 0; line < _FONT16; line++)
+        for (line = 0; line < PDC_state.font_height; line++)
         {
             _video_write(cp, bytes[0], len);
             cp += PDC_state.bytes_per_line;
@@ -214,7 +208,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
 
     struct
     {
-        unsigned long font_addr;
+        const unsigned char PDC_FAR *font_addr;
         unsigned char lr_mask;
         unsigned char ul_mask;
         unsigned long fore;
@@ -226,7 +220,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
     unsigned underline;
 
     /* Underline will go here if requested */
-    underline = 13 /*_FONT16*/;
+    underline = 13 /*PDC_state.font_height*/;
 
     /* Compute basic glyph data only once per character */
     for (col = 0; col < len; col++)
@@ -236,12 +230,12 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
         unsigned long colors, fore, back;
 
         /* Get the index into the font */
-        ch = glyph & 0xFF;
+        ch = glyph & 0xFFFF;
         if ((glyph & A_ALTCHARSET) != 0 && (glyph & 0xff80) == 0)
-            ch = acs_map[ch & 0x7f] & 0xff;
+            ch = acs_map[ch & 0x7f];
 
         /* Get the address of the font data */
-        glyphs[col].font_addr = PDC_state.font_addr + ch*_FONT16;
+        glyphs[col].font_addr = PDC_state.font_glyph_data(FALSE, ch);
 
         /* Bit mask for underline */
         glyphs[col].ul_mask = (glyph & A_UNDERLINE) ? 0xFF : 0x00;
@@ -268,7 +262,7 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
 
     /* Loop by raster line */
     cp = addr;
-    for (line = 0; line < _FONT16; line++)
+    for (line = 0; line < PDC_state.font_height; line++)
     {
         unsigned bindex;
 
@@ -277,13 +271,13 @@ static void _transform_line_8(int lineno, int x, int len, const chtype *srcp)
         for (col = 0; col < len; col++)
         {
             /* Get glyph data */
-            unsigned long font_addr = glyphs[col].font_addr;
+            const unsigned char PDC_FAR *font_addr = glyphs[col].font_addr;
             unsigned long fore = glyphs[col].fore;
             unsigned long back = glyphs[col].back;
             unsigned byte, bit;
 
             /* Get one byte of the font data */
-            byte = getdosmembyte(font_addr + line) | glyphs[col].lr_mask;
+            byte = font_addr[line] | glyphs[col].lr_mask;
             if (line == underline)
                 byte |= glyphs[col].ul_mask;
             if (PDC_state.cursor_visible
@@ -421,13 +415,13 @@ void PDC_private_cursor_on(int row, int col)
 
 static unsigned long _address_4(int row, int col)
 {
-    return (unsigned long)row * PDC_state.bytes_per_line * _FONT16 + col;
+    return (unsigned long)row * PDC_state.bytes_per_line * PDC_state.font_height + col;
 }
 
 static unsigned long _address_8(int row, int col)
 {
-    return (unsigned long)row * PDC_state.bytes_per_line * _FONT16
-            + col * 8 * ((PDC_state.bits_per_pixel + 7)/8);
+    return (unsigned long)row * PDC_state.bytes_per_line * PDC_state.font_height
+            + col * PDC_state.font_width * ((PDC_state.bits_per_pixel + 7)/8);
 }
 
 static void _video_write(unsigned long addr, const void *data, size_t size)

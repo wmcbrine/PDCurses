@@ -1,6 +1,6 @@
 # Watcom Makefile for PDCurses - DOS
 #
-# Usage: wmake -f [path\]Makefile.wcc [DEBUG=Y] [MODEL=c|h|l|m|s|f] [target]
+# Usage: wmake -f [path\]Makefile.wcc [DEBUG=Y] [WIDE=Y] [MODEL=c|h|l|m|s|f] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -26,6 +26,10 @@ TARGET		= dos
 !endif
 
 CFLAGS		= -bt=$(TARGET) -m$(MODEL)
+
+!ifeq WIDE Y
+CFLAGS		+= -DPDC_WIDE
+!endif
 
 !include $(PDCURSES_SRCDIR)/common/watcom.mif
 

@@ -1,6 +1,6 @@
 # Borland Makefile for PDCurses - DOS
 #
-# Usage: make -f [path\]Makefile.bcc [DEBUG=] [MODEL=c|h|l|m|s] [target]
+# Usage: make -f [path\]Makefile.bcc [DEBUG=] [WIDE=Y] [MODEL=c|h|l|m|s] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -27,9 +27,15 @@ CFLAGS		= -N -v -y -DPDCDEBUG
 CFLAGS		= -O
 !endif
 
+!ifdef WIDE
+WIDEOPT		= -DPDC_WIDE
+!else
+WIDEOPT		=
+!endif
+
 CPPFLAGS	= -I$(PDCURSES_SRCDIR)
 
-BUILD		= $(CC) -1- -G -d -w-par -c -m$(MODEL) $(CFLAGS) $(CPPFLAGS)
+BUILD		= $(CC) -1- -G -d -w-par -c -m$(MODEL) $(CFLAGS) $(CPPFLAGS) $(WIDEOPT)
 
 LIBEXE		= tlib /C /E
 

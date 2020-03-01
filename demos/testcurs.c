@@ -25,6 +25,9 @@
 
 #if HAVE_WIDE
 # include <wchar.h>
+# ifdef __DJGPP__
+static size_t wcslen(const wchar_t *);
+# endif
 #endif
 
 #if defined(PDCURSES) && !defined(XCURSES)
@@ -1380,3 +1383,13 @@ void display_menu(int old_option, int new_option)
              "Use Up and Down Arrows to select - Enter to run - Q to quit");
     refresh();
 }
+
+#if HAVE_WIDE && defined(__DJGPP__)
+/* wide character function missing in DJGPP */
+static size_t wcslen(const wchar_t *str)
+{
+    size_t i;
+    for (i = 0; str[i] != L'\0'; ++i) {}
+    return i;
+}
+#endif

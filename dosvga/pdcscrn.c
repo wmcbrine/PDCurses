@@ -652,6 +652,9 @@ error:
     PDC_state.offset[1] = 0;
     PDC_state.window_size = (640/8) * 480;
     PDC_state.window_gran = 1;
+    PDC_state.red_max = 63;
+    PDC_state.green_max = 63;
+    PDC_state.blue_max = 63;
 
     return 0x12;
 }

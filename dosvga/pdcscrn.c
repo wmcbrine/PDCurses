@@ -2,6 +2,7 @@
 
 #include "pdcdos.h"
 #include "pdcvesa.h"
+#include "font.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -98,6 +99,29 @@ void PDC_scr_free(void)
     }
 }
 
+/* Set the location of the underline */
+static void _set_underline(void)
+{
+    unsigned width = (PDC_state.font_width + 7) / 8;
+    unsigned height = PDC_state.font_height;
+    unsigned size = width * height;
+    unsigned i;
+    const unsigned char *underscore = PDC_state.font_glyph_data(FALSE, 0x5F);
+
+    /* Set underscore at first line of U+005F that is not blank */
+    for (i = 0; i < size; ++i)
+    {
+        if (underscore[i] != 0)
+        {
+            PDC_state.underline = i / width;
+            return;
+        }
+    }
+
+    /* How peculiar; U+005F is blank. Make a guess. */
+    PDC_state.underline = PDC_state.font_height * 3 / 4;
+}
+
 /* open the physical screen -- miscellaneous initialization, may save
    the existing screen for later restoration */
 
@@ -149,6 +173,7 @@ int PDC_scr_open(void)
     }
     PDC_state.font_width = PDC_state.font_char_width(FALSE);
     PDC_state.font_height = PDC_state.font_char_height(FALSE);
+    _set_underline();
 
     PDC_resize_screen(25, 80);
 
@@ -644,11 +669,13 @@ static unsigned _find_mode(
     selected_size = (rows == 0 && cols == 0) ? 0 : 0xFFFFFFFF;
     selected_bits = 0;
 
-    if ((rows <= 30 && cols <= 80) && !(rows == 0 && cols == 0))
+    if (rows * PDC_state.font_height <= 480 && cols * PDC_state.font_width <= 640)
     {
         /* Set up a ModeInfoBlock for mode 0x0012 */
+        unsigned new_rows = 480 / PDC_state.font_height;
+        unsigned new_cols = 640 / PDC_state.font_width;
         selected_mode = 0x0012;
-        selected_size = 80 * 30;
+        selected_size = new_rows * new_cols;
         selected_bits = 4;
         memset(mode_info, 0, sizeof(*mode_info));
         mode_info->ModeAttributes = 0x1F;
@@ -1088,11 +1115,6 @@ static void _vgafont_close(bool bold);
 static unsigned _vgafont_char_width(bool bold);
 static unsigned _vgafont_char_height(bool bold);
 static const unsigned char *_vgafont_glyph_data(bool bold, unsigned long pos);
-#ifdef __DJGPP__
-static unsigned char font437[4096];
-#else
-static unsigned char PDC_FAR *font437;
-#endif
 
 #ifdef PDC_WIDE
 /* This maps Unicode to CP437 */
@@ -1325,19 +1347,6 @@ static unsigned char _unicode_to_cp437(unsigned long cp)
 
 static int _vgafont_open(void)
 {
-#ifdef PDC_FLAT
-    unsigned ofs = getdosmemword(0x43 * 4 + 0);
-    unsigned seg = getdosmemword(0x43 * 4 + 2);
-    unsigned long addr = _FAR_POINTER(seg, ofs);
-#else
-    unsigned long addr = getdosmemdword(0x43 * 4);
-#endif
-#ifdef __DJGPP__
-    dosmemget(addr, sizeof(font437), font437);
-#else
-    font437 = (void PDC_FAR *)addr;
-#endif
-
 #ifdef PDC_WIDE
     _build_rom_map();
 #endif
@@ -1360,10 +1369,10 @@ static unsigned _vgafont_char_width(bool bold)
 
 static unsigned _vgafont_char_height(bool bold)
 {
-    return 16;
+    return 14;
 }
 
-static const unsigned char PDC_FAR *_vgafont_glyph_data(bool bold, unsigned long pos)
+static const unsigned char *_vgafont_glyph_data(bool bold, unsigned long pos)
 {
     unsigned pos437;
 #ifdef PDC_WIDE
@@ -1371,7 +1380,7 @@ static const unsigned char PDC_FAR *_vgafont_glyph_data(bool bold, unsigned long
 #else
     pos437 = pos & 0xFF;
 #endif
-    return font437 + pos437*16;
+    return font_bytes + pos437*14;
 }
 
 /*****************************************************************************
@@ -1420,7 +1429,7 @@ static struct font_data psf_fonts[2]; /* normal and bold */
 static void _psf_font_close(bool bold);
 static unsigned _psf_font_char_width(bool bold);
 static unsigned _psf_font_char_height(bool bold);
-static const unsigned char PDC_FAR *_psf_font_glyph_data(
+static const unsigned char *_psf_font_glyph_data(
         bool bold, unsigned long codepoint);
 static void _psf_font_do_close(struct font_data *fdata);
 static long _psf_font_read_utf8(FILE *fp);
@@ -1451,11 +1460,6 @@ static int _psf_font_open(const char *name, bool bold)
     if (memcmp(fdata->header.magic, PSF2_MAGIC, 4) != 0)
         goto error;
     if (fdata->header.charsize < fdata->header.height * ((fdata->header.width + 7) / 8))
-        goto error;
-
-    /* Temporary until pdcdisp.c is upgraded:
-     * width must be 8, height cannot exceed 16 */
-    if (fdata->header.width != 8 || fdata->header.height > 16)
         goto error;
 
     /* Read the bitmap data */
@@ -1678,7 +1682,7 @@ static unsigned _psf_font_char_height(bool bold)
 /* Return the glyph data as read from the file */
 /* Never returns NULL. If the codepoint is not mapped, returns the mapping
  * for U+FFFD if that exists, or the blank glyph otherwise */
-static const unsigned char PDC_FAR *_psf_font_glyph_data(
+static const unsigned char *_psf_font_glyph_data(
         bool bold, unsigned long codepoint)
 {
     struct font_data *fdata = &psf_fonts[bold != 0];

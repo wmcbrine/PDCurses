@@ -41,8 +41,7 @@ Building
   (WIDE=Y is untested on the Borland compiler.)
 
 The font can be set via the environment variable PDC_FONT. The font must
-be in the PSF format, version 2. At present, the width must be 8 and the
-height cannot exceed 16; this restriction will eventually be lifted.
+be in the PSF format, version 2.
 
 
 Distribution Status

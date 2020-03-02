@@ -79,11 +79,12 @@ struct PDC_video_state
     void (*font_close)(bool bold);
     unsigned (*font_char_width)(bool bold);
     unsigned (*font_char_height)(bool bold);
-    const unsigned char PDC_FAR *(*font_glyph_data)(bool bold, unsigned long pos);
+    const unsigned char *(*font_glyph_data)(bool bold, unsigned long pos);
 
     bool have_bold_font;
     unsigned font_width;     /* Width of font in pixels */
     unsigned font_height;    /* Height of font in pixels */
+    unsigned underline;      /* Where to draw the underline */
 
     /* Cursor state */
     bool cursor_visible;

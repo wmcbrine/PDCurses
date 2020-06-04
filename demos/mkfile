@@ -3,7 +3,7 @@ APE=/sys/src/ape
 
 TARG=\
 	firework\
-	newdemo\
+	ozdemo\
 	ptest\
 	rain\
 	testcurs\
@@ -28,4 +28,4 @@ CFLAGS= -c -D_POSIX_SOURCE -D_BSD_EXTENSION #-DPDCDEBUG
 $O.tuidemo:V: tui.$O tuidemo.$O
 	$LD -o $target $prereq
 
-$O.out:	/$objtype/lib/ape/libcurses.a /$objtype/lib/ape/libpanel.a
+$O.out:	/$objtype/lib/ape/libcurses.a

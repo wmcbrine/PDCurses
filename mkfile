@@ -16,7 +16,6 @@ OFILES=\
 	debug.$O\
 	delch.$O\
 	deleteln.$O\
-	deprec.$O\
 	getch.$O\
 	getstr.$O\
 	getyx.$O\
@@ -42,7 +41,6 @@ OFILES=\
 	scroll.$O\
 	slk.$O\
 	termattr.$O\
-	terminfo.$O\
 	touch.$O\
 	util.$O\
 	window.$O\
@@ -59,7 +57,6 @@ OFILES=\
 HFILES=\
 	/sys/include/ape/curses.h\
 	/sys/include/ape/panel.h\
-	/sys/include/ape/term.h
 
 UPDATE=\
 	mkfile\
@@ -83,9 +80,8 @@ CFLAGS= -c -I. -D_POSIX_SOURCE -D_BSD_EXTENSION -D_C99_SNPRINTF_EXTENSION \
 
 install:V:
     cp libcurses.a /$objtype/lib/ape/libcurses.a
-	cp plan9/curses.h /sys/include/ape/curses.h
+	cp curses.h /sys/include/ape/curses.h
 	cp panel.h /sys/include/ape/
-	cp term.h /sys/include/ape/
 
 demos:V:
 	@{

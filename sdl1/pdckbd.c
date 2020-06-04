@@ -1,30 +1,8 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcsdl.h"
 
-/*man-start**************************************************************
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses
-   reads its input from. It can be used for select().
-
-### Portability
-                             X/Open    BSD    SYS V
-    PDC_get_input_fd            -       -       -
-
-**man-end****************************************************************/
-
 #include <string.h>
-
-unsigned long pdc_key_modifiers = 0L;
 
 static SDL_Event event;
 static SDLKey oldkey;
@@ -94,13 +72,6 @@ static struct
  {0,		0,	0,	     0,		   0,		0}
 };
 
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return 0L;  /* test this */
-}
-
 void PDC_set_keyboard_binary(bool on)
 {
     PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
@@ -110,15 +81,7 @@ void PDC_set_keyboard_binary(bool on)
 
 bool PDC_check_key(void)
 {
-    Uint32 current = SDL_GetTicks();
     int haveevent = SDL_PollEvent(&event);
-
-    /* if we have an event, or 30 ms have passed without a screen
-       update, or the timer has wrapped, update now */
-
-    if (haveevent ||
-        current < pdc_lastupdate || ((current - pdc_lastupdate) > 30))
-        PDC_update_rects();
 
     return haveevent;
 }
@@ -127,7 +90,7 @@ static int _process_key_event(void)
 {
     int i, key = 0;
 
-    pdc_key_modifiers = 0L;
+    SP->key_modifiers = 0L;
     SP->key_code = FALSE;
 
     if (event.type == SDL_KEYUP)
@@ -162,20 +125,17 @@ static int _process_key_event(void)
 
     oldkey = event.key.keysym.sym;
 
-    if (SP->save_key_modifiers)
-    {
-        if (event.key.keysym.mod & KMOD_NUM)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+    if (event.key.keysym.mod & KMOD_NUM)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
-        if (event.key.keysym.mod & KMOD_SHIFT)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+    if (event.key.keysym.mod & KMOD_SHIFT)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-        if (event.key.keysym.mod & KMOD_CTRL)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if (event.key.keysym.mod & KMOD_CTRL)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if (event.key.keysym.mod & KMOD_ALT)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
-    }
+    if (event.key.keysym.mod & KMOD_ALT)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
     for (i = 0; key_table[i].keycode; i++)
     {
@@ -244,7 +204,7 @@ static int _process_mouse_event(void)
     SDLMod keymods;
     short shift_flags = 0;
 
-    memset(&pdc_mouse_status, 0, sizeof(MOUSE_STATUS));
+    memset(&SP->mouse_status, 0, sizeof(MOUSE_STATUS));
 
     keymods = SDL_GetModState();
 
@@ -261,22 +221,22 @@ static int _process_mouse_event(void)
     {
         int i;
 
-        pdc_mouse_status.x = event.motion.x / pdc_fwidth;
-        pdc_mouse_status.y = event.motion.y / pdc_fheight;
+        SP->mouse_status.x = (event.motion.x - pdc_xoffset) / pdc_fwidth;
+        SP->mouse_status.y = (event.motion.y - pdc_yoffset) / pdc_fheight;
 
         if (!event.motion.state ||
-           (pdc_mouse_status.x == old_mouse_status.x &&
-            pdc_mouse_status.y == old_mouse_status.y))
+           (SP->mouse_status.x == old_mouse_status.x &&
+            SP->mouse_status.y == old_mouse_status.y))
             return -1;
 
-        pdc_mouse_status.changes = PDC_MOUSE_MOVED;
+        SP->mouse_status.changes = PDC_MOUSE_MOVED;
 
         for (i = 0; i < 3; i++)
         {
             if (event.motion.state & SDL_BUTTON(i + 1))
             {
-                pdc_mouse_status.button[i] = BUTTON_MOVED | shift_flags;
-                pdc_mouse_status.changes |= (1 << i);
+                SP->mouse_status.button[i] = BUTTON_MOVED | shift_flags;
+                SP->mouse_status.changes |= (1 << i);
             }
         }
     }
@@ -290,21 +250,21 @@ static int _process_mouse_event(void)
 
         if ((btn >= 4 && btn <= 7) && action == BUTTON_RELEASED)
         {
-            pdc_mouse_status.x = pdc_mouse_status.y = -1;
+            SP->mouse_status.x = SP->mouse_status.y = -1;
 
             switch (btn)
             {
             case 4:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_UP;
+                SP->mouse_status.changes = PDC_MOUSE_WHEEL_UP;
                 break;
             case 5:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
+                SP->mouse_status.changes = PDC_MOUSE_WHEEL_DOWN;
                 break;
             case 6:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
+                SP->mouse_status.changes = PDC_MOUSE_WHEEL_LEFT;
                 break;
             case 7:
-                pdc_mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
+                SP->mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
             }
 
             SP->key_code = TRUE;
@@ -331,16 +291,16 @@ static int _process_mouse_event(void)
             }
         }
 
-        pdc_mouse_status.x = event.button.x / pdc_fwidth;
-        pdc_mouse_status.y = event.button.y / pdc_fheight;
+        SP->mouse_status.x = (event.button.x - pdc_xoffset) / pdc_fwidth;
+        SP->mouse_status.y = (event.button.y - pdc_yoffset) / pdc_fheight;
 
         btn--;
 
-        pdc_mouse_status.button[btn] = action | shift_flags;
-        pdc_mouse_status.changes = (1 << btn);
+        SP->mouse_status.button[btn] = action | shift_flags;
+        SP->mouse_status.changes = (1 << btn);
     }
 
-    old_mouse_status = pdc_mouse_status;
+    old_mouse_status = SP->mouse_status;
 
     SP->key_code = TRUE;
     return KEY_MOUSE;
@@ -375,9 +335,7 @@ int PDC_get_key(void)
     case SDL_MOUSEBUTTONUP:
     case SDL_MOUSEBUTTONDOWN:
         oldkey = SDLK_SPACE;
-        if (SP->_trap_mbe)
-            return _process_mouse_event();
-        break;
+        return _process_mouse_event();
     case SDL_KEYUP:
     case SDL_KEYDOWN:
         PDC_mouse_set();
@@ -397,6 +355,11 @@ void PDC_flushinp(void)
     PDC_LOG(("PDC_flushinp() - called\n"));
 
     while (PDC_check_key());
+}
+
+bool PDC_has_mouse(void)
+{
+    return TRUE;
 }
 
 int PDC_mouse_set(void)

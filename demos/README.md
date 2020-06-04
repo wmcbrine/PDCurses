@@ -13,7 +13,7 @@ Building
 
 The demos are built by the platform-specific makefiles, in the platform
 directories. Alternatively, you can build them manually, individually,
-and link with any curses library; e.g., "cc -lcurses -orain rain.c".
+and link with any curses library; e.g., "cc -orain rain.c -lcurses".
 There are no dependencies besides curses and the standard C library, and
 no configuration is needed.
 
@@ -21,5 +21,8 @@ no configuration is needed.
 Distribution Status
 -------------------
 
-Public Domain, except for rain.c and worm.c, which are under the ncurses
-license (MIT-like).
+Public domain, except for rain.c and worm.c, which are under the ncurses
+license (MIT-like), and UTF-8-demo.txt, which is under Creative Commons
+Attribution ([CC BY]).
+
+[CC BY]: https://creativecommons.org/licenses/by/4.0/

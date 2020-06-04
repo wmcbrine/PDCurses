@@ -3,7 +3,7 @@
  * 'textual user interface'
  *
  * Author : P.J. Kunst <kunst@prl.philips.nl>
- * Date   : 25-02-93
+ * Date   : 1993-02-25
  */
 
 #include <ctype.h>
@@ -174,8 +174,8 @@ static void idle(void)
         return;  /* time not available */
 
     tp = localtime(&t);
-    sprintf(buf, " %.2d-%.2d-%.4d  %.2d:%.2d:%.2d",
-            tp->tm_mday, tp->tm_mon + 1, tp->tm_year + 1900,
+    sprintf(buf, " %.4d-%.2d-%.2d  %.2d:%.2d:%.2d",
+            tp->tm_year + 1900, tp->tm_mon + 1, tp->tm_mday,
             tp->tm_hour, tp->tm_min, tp->tm_sec);
 
     mvwaddstr(wtitl, 0, bw - strlen(buf) - 2, buf);

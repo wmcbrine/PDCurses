@@ -1,6 +1,7 @@
-# Borland MAKE Makefile for PDCurses library - Windows console BC++ 7.0+
+# Borland Makefile for PDCurses - Windows console
 #
-# Usage: make -f [path\]Makefile.bcc [DEBUG=] [WIDE=] [UTF8=] [target]
+# Usage: make -f [path\]Makefile.bcc [DEBUG=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -13,12 +14,11 @@ RM = del
 PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_SRCDIR)\version.mif
-!include $(PDCURSES_SRCDIR)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\common\libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)\wincon
 
-CC		= bcc32c -q -Xdriver -Wno-deprecated-declarations
+CC		= bcc32c -q
 
 !ifdef DEBUG
 CFLAGS		= -N -v -y -DPDCDEBUG
@@ -34,20 +34,27 @@ WIDEOPT		= -DPDC_WIDE
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
+!ifdef INFOEX
+INFOPT          = -DHAVE_NO_INFOEX
+!endif
+
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c -Tpe $(CFLAGS) \
-$(WIDEOPT) $(UTF8OPT)
+$(WIDEOPT) $(UTF8OPT) $(INFOPT)
+BUILD_OS	= $(BUILD) -Xdriver -Wno-deprecated-declarations
 
 LIBEXE		= tlib /C /E /0 /a
 
 LIBCURSES	= pdcurses.lib
 
-all:	$(LIBCURSES) $(DEMOS)
+all:	$(LIBCURSES)
 
 clean:
 	-$(RM) *.obj
 	-$(RM) *.lib
 	-$(RM) *.tds
 	-$(RM) *.exe
+
+demos:	$(LIBCURSES) $(DEMOS)
 
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	-$(RM) $@
@@ -59,13 +66,13 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	$(BUILD) $<
 
 {$(osdir)\}.c.obj:
-	$(BUILD) $<
+	$(BUILD_OS) $<
 
 {$(demodir)\}.c.obj:
 	$(BUILD) $<
 
 .c.obj:
-	$(BUILD) $<
+	$(BUILD_OS) $<
 
 .obj.exe:
 	$(CC) -e$@ $** $(LIBCURSES)
@@ -78,9 +85,3 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.obj: $(demodir)\tuidemo.c $(PDCURSES_CURSES_H)
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
-
-PLATFORM1 = Borland C++ Wincon
-PLATFORM2 = Borland C/C++ 7.2 for Windows console
-ARCNAME = pdc$(VER)_bcc_wincon
-
-!include $(PDCURSES_SRCDIR)\makedist.mif

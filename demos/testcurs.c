@@ -2,8 +2,8 @@
  * This is a test program for PDCurses. Originally by
  * John Burnell <johnb@kea.am.dsir.govt.nz>
  *
- *  wrs(5/28/93) -- modified to be consistent (perform identically)
- *                  with either PDCurses or under Unix System V, R4
+ *  wrs (1993-05-28) -- modified to be consistent (perform identically)
+ *                      with either PDCurses or under Unix System V, R4
  */
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -39,9 +39,11 @@
 # define HAVE_COLOR 0
 #endif
 
-/* Set to non-zero if you want to test the PDCurses clipboard */
-
-#define HAVE_CLIPBOARD 0
+#ifdef PDCURSES
+# define HAVE_CLIPBOARD 1
+#else
+# define HAVE_CLIPBOARD 0
+#endif
 
 void inputTest(WINDOW *);
 void scrollTest(WINDOW *);
@@ -332,7 +334,7 @@ void inputTest(WINDOW *win)
     int w, h, bx, by, sw, sh, i, c, num = 0;
     char buffer[80];
     WINDOW *subWin;
-    static const char spinner[4] = "/-\\|";
+    static const char spinner[5] = "/-\\|";
     int spinner_count = 0;
 
     wclear(win);
@@ -376,7 +378,6 @@ void inputTest(WINDOW *win)
 
 #ifdef PDCURSES
     mouse_set(ALL_MOUSE_EVENTS);
-    PDC_save_key_modifiers(TRUE);
     PDC_return_key_modifiers(TRUE);
 #endif
     curs_set(0);        /* turn cursor off */
@@ -494,7 +495,6 @@ void inputTest(WINDOW *win)
 
 #ifdef PDCURSES
     mouse_set(0L);
-    PDC_save_key_modifiers(FALSE);
     PDC_return_key_modifiers(FALSE);
 #endif
     wclear(win);
@@ -883,6 +883,27 @@ void clipboardTest(WINDOW *win)
 }
 #endif /* HAVE_CLIPBOARD */
 
+void curTest(void)
+{
+    do {
+        int c = getch();
+#ifdef PDCURSES
+        if (c == KEY_UP)
+            move(getcury(stdscr) - 1, getcurx(stdscr));
+        else if (c == KEY_DOWN)
+            move(getcury(stdscr) + 1, getcurx(stdscr));
+        else if (c == KEY_LEFT)
+            move(getcury(stdscr), getcurx(stdscr) - 1);
+        else if (c == KEY_RIGHT)
+            move(getcury(stdscr), getcurx(stdscr) + 1);
+        else if (c == 'i')
+            curs_set(SP->visibility == 1 ? 2 : 1);
+        else
+#endif
+            break;
+    } while (TRUE);
+}
+
 void acsTest(WINDOW *win)
 {
 #ifdef ACS_S3
@@ -970,7 +991,7 @@ void acsTest(WINDOW *win)
     }
 
     mvaddstr(tmarg + 18, 3, "Press any key to continue");
-    getch();
+    curTest();
 
 #if HAVE_WIDE
     clear();
@@ -994,7 +1015,7 @@ void acsTest(WINDOW *win)
     mvaddwstr(tmarg + 16, 7 * (COLS / 8) - 5, georgian);
 
     mvaddstr(tmarg + 18, 3, "Press any key to continue");
-    getch();
+    curTest();
 #endif
 }
 
@@ -1071,7 +1092,7 @@ void attrTest(WINDOW *win)
     attrset(A_NORMAL);
 
     mvaddstr(tmarg + 16, 3, "Press any key to continue");
-    getch();
+    curTest();
 
 #ifdef PDCURSES
     PDC_set_bold(FALSE);
@@ -1080,6 +1101,151 @@ void attrTest(WINDOW *win)
 }
 
 #if HAVE_COLOR
+void remap(int tmarg, const short *colors)
+{
+    struct
+    {
+        short red, green, blue;
+    } orgcolors[16];
+    int i, maxcol = (COLORS >= 16) ? 16 : 8;
+
+    for (i = 0; i < maxcol; i++)
+        color_content(i, &(orgcolors[i].red),
+                         &(orgcolors[i].green),
+                         &(orgcolors[i].blue));
+
+    attrset(A_BOLD);
+    mvaddstr(tmarg, (COLS - 22) / 2, " init_color() Example ");
+    attrset(A_NORMAL);
+
+    refresh();
+
+    for (i = 0; i < 8; i++)
+    {
+        init_color(colors[i], i * 125, 0, i * 125);
+
+        if (COLORS >= 16)
+            init_color(colors[i] + 8, 0, i * 125, 0);
+    }
+
+    mvaddstr(tmarg + 19, 3, "Press any key to continue");
+    curTest();
+
+    for (i = 0; i < maxcol; i++)
+        init_color(i, orgcolors[i].red,
+                      orgcolors[i].green,
+                      orgcolors[i].blue);
+}
+
+void extended(int tmarg)
+{
+    int i, x, y, z, lmarg = (COLS - 77) / 2;
+
+    erase();
+
+    curs_set(0);
+
+    attrset(A_BOLD);
+    mvaddstr(tmarg, (COLS - 15) / 2, "Extended Colors");
+    attrset(A_NORMAL);
+
+    mvaddstr(tmarg + 3, lmarg, "6x6x6 Color Cube (16-231):");
+
+    for (i = 16; i < 256; i++)
+        init_pair(i, COLOR_BLACK, i);
+
+    for (i = 16, x = 0; x < 6; x++)
+        for (z = 0; z < 6; z++)
+            for (y = 0; y < 6; y++)
+            {
+                chtype ch = ' ' | COLOR_PAIR(i++);
+
+                mvaddch(tmarg + 5 + y, z * 13 + x * 2 + lmarg, ch);
+                addch(ch);
+            }
+
+    mvaddstr(tmarg + 13, lmarg, "Greyscale (232-255):");
+
+    for (x = 0; x < 24; x++)
+    {
+        chtype ch = ' ' | COLOR_PAIR(232 + x);
+
+        mvaddch(tmarg + 15, x * 2 + lmarg, ch);
+        addch(ch);
+    }
+
+    refresh();
+    curs_set(1);
+
+    mvaddstr(tmarg + 19, 3, "Press any key to continue");
+    curTest();
+}
+
+void gradient(int tmarg)
+{
+    int i;
+    short cnum = 256, pnum = 16;
+
+    erase();
+    refresh();
+
+    curs_set(0);
+
+    attrset(A_BOLD);
+    mvaddstr(tmarg, (COLS - 17) / 2, "Colors Beyond 256");
+    attrset(A_NORMAL);
+
+    for (i = 0; i < 3; i++)
+    {
+        int j;
+        const char *output_text[3] = {
+            "Red on green to white on black | "
+            "   (gradients work just as well with",
+            "Blue on yellow to black on red | "
+            "palettes, if you have enough colors)",
+            "White on red to green on blue,  underlined (if available)" };
+        const int len = (int)strlen(output_text[i]);
+
+        move(tmarg + 3 + i, (COLS - 69) / 2);
+        for (j = 0; j < len; j++)
+        {
+            const int oval = j * 1000 / len;
+            const int reverse = 1000 - oval;
+
+            if (!i)
+            {
+                init_color(cnum, 1000, oval, oval);
+                init_color(cnum + 1, 0, reverse, 0);
+            }
+            else if (i == 1)
+            {
+                init_color(cnum, 0, 0, reverse);
+                init_color(cnum + 1, 1000, reverse, 0);
+            }
+            else
+            {
+                init_color(cnum, reverse, 1000, reverse);
+                init_color(cnum + 1, reverse, 0, oval);
+            }
+            init_pair(pnum, cnum, cnum + 1);
+            attrset(COLOR_PAIR(pnum));
+            if (i == 2)
+                attron(A_UNDERLINE);
+            addch(output_text[i][j]);
+
+            cnum += 2;
+            pnum++;
+        }
+    }
+
+    refresh();
+    curs_set(1);
+
+    attrset(A_NORMAL);
+    mvaddstr(tmarg + 19, 3, "Press any key to continue");
+    curTest();
+}
+
 void colorTest(WINDOW *win)
 {
     static const short colors[] =
@@ -1095,8 +1261,7 @@ void colorTest(WINDOW *win)
     };
 
     chtype fill = ACS_BLOCK;
-    int maxcol = (COLORS >= 16) ? 16 : 8;
-    bool widecol = (maxcol == 16);
+    bool widecol = (COLORS >= 16);
 
     int i, j, tmarg, col1, col2, col3;
 
@@ -1143,81 +1308,16 @@ void colorTest(WINDOW *win)
     mvprintw(tmarg + 16, col1, "COLOR_PAIRS = %d", COLOR_PAIRS);
 
     mvaddstr(tmarg + 19, 3, "Press any key to continue");
-    getch();
+    curTest();
 
     if (can_change_color())
-    {
-        struct
-        {
-            short red, green, blue;
-        } orgcolors[16];
-
-        for (i = 0; i < maxcol; i++)
-            color_content(i, &(orgcolors[i].red),
-                             &(orgcolors[i].green),
-                             &(orgcolors[i].blue));
-
-        attrset(A_BOLD);
-        mvaddstr(tmarg, (COLS - 22) / 2, " init_color() Example ");
-        attrset(A_NORMAL);
-
-        refresh();
-
-        for (i = 0; i < 8; i++)
-        {
-            init_color(colors[i], i * 125, 0, i * 125);
-
-            if (widecol)
-                init_color(colors[i] + 8, 0, i * 125, 0);
-        }
-
-        mvaddstr(tmarg + 19, 3, "Press any key to continue");
-        getch();
-
-        for (i = 0; i < maxcol; i++)
-            init_color(i, orgcolors[i].red,
-                          orgcolors[i].green,
-                          orgcolors[i].blue);
-    }
+        remap(tmarg, colors);
 
     if (COLORS >= 256)
-    {
-        int x, y, z, lmarg = (COLS - 77) / 2;
+        extended(tmarg);
 
-        erase();
-
-        attrset(A_BOLD);
-        mvaddstr(tmarg, (COLS - 15) / 2, "Extended Colors");
-        attrset(A_NORMAL);
-
-        mvaddstr(tmarg + 3, lmarg, "6x6x6 Color Cube (16-231):");
-
-        for (i = 16; i < 256; i++)
-            init_pair(i, COLOR_BLACK, i);
-
-        for (i = 16, x = 0; x < 6; x++)
-            for (z = 0; z < 6; z++)
-                for (y = 0; y < 6; y++)
-                {
-                    chtype ch = ' ' | COLOR_PAIR(i++);
-
-                    mvaddch(tmarg + 5 + y, z * 13 + x * 2 + lmarg, ch);
-                    addch(ch);
-                }
-
-        mvaddstr(tmarg + 13, lmarg, "Greyscale (232-255):");
-
-        for (x = 0; x < 24; x++)
-        {
-            chtype ch = ' ' | COLOR_PAIR(232 + x);
-
-            mvaddch(tmarg + 15, x * 2 + lmarg, ch);
-            addch(ch);
-        }
-
-        mvaddstr(tmarg + 19, 3, "Press any key to continue");
-        getch();
-    }
+    if (can_change_color() && COLORS >= 768)
+        gradient(tmarg);
 }
 #endif
 

@@ -1,9 +1,9 @@
-# GNU MAKE (3.79.1) Makefile for PDCurses library - DOS DJGPP V2.0+
+# GNU Makefile for PDCurses - DOS
 #
 # Usage: make [-f path\Makefile] [DEBUG=Y] [target]
 #
 # where target can be any of:
-# [all|libs|demos|dist|pdcurses.a|testcurs.exe...]
+# [all|libs|demos|pdcurses.a|testcurs.exe...]
 
 O = o
 E = .exe
@@ -13,8 +13,7 @@ ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/dos
 
@@ -41,7 +40,7 @@ LIBCURSES	= pdcurses.a
 
 .PHONY: all libs clean demos dist
 
-all:	libs demos
+all:	libs
 
 libs:	$(LIBCURSES)
 
@@ -62,7 +61,6 @@ $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_DOS_H)
 $(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
 panel.o : $(PANEL_HEADER)
-terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
 	$(CC) -c $(CFLAGS) $<
@@ -82,9 +80,3 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h $(PDCURSES_CURSES_H)
 
 tuidemo.o: $(demodir)/tuidemo.c $(PDCURSES_CURSES_H)
 	$(CC) -c $(CFLAGS) -I$(demodir) -o$@ $<
-
-PLATFORM1 = DJGPP 2.05
-PLATFORM2 = DJGPP 2.05 for DOS
-ARCNAME = pdc$(VER)djg
-
-include $(PDCURSES_SRCDIR)/makedist.mif

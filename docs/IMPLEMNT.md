@@ -1,6 +1,12 @@
 PDCurses Implementor's Guide
 ============================
 
+- Version 1.6 - 2019/09/?? - added PDC_doupdate(); removed argc, argv,
+                             lines, cols and SP allocation from
+                             PDC_scr_open(); removed PDC_init_pair(),
+                             PDC_pair_content()
+- Version 1.5 - 2019/09/06 - PDC_has_mouse(), removed PDC_get_input_fd()
+- Version 1.4 - 2018/12/31 - PDCurses.md -> USERS.md, MANUAL.md; new dir
 - Version 1.3 - 2018/01/12 - notes about official ports, new indentation
                              style; markdown
 - Version 1.2 - 2007/07/11 - added PDC_init_pair(), PDC_pair_content(),
@@ -10,10 +16,9 @@ PDCurses Implementor's Guide
 
 This document is for those wishing to port PDCurses to a new platform,
 or just wanting to better understand how it works. Nothing here should
-be needed for application programming; for that, refer to PDCurses.md,
-as built in doc/, or distributed as a file separate from this source
-package. This document assumes that you've read the user-level
-documentation and are very familiar with application-level curses
+be needed for application programming; for that, refer to [USERS.md] and
+[MANUAL.md], in man/ . This document assumes that you've read the user-
+level documentation and are very familiar with application-level curses
 programming.
 
 If you want to submit your port for possible inclusion into the main
@@ -73,6 +78,12 @@ adjustments to keep every line under 80 columns.
 pdcdisp.c:
 ----------
 
+### void PDC_doupdate(void);
+
+Called at the end of doupdate(), this function finalizes the update of
+the physical screen to match the virtual screen, if necessary, i.e. if
+updates were deferred in PDC_transform_line().
+
 ### void PDC_gotoyx(int y, int x);
 
 Move the physical cursor (as opposed to the logical cursor affected by
@@ -86,7 +97,8 @@ The core output routine. It takes len chtype entities from srcp (a
 pointer into curscr) and renders them to the physical screen at line
 lineno, column x. It must also translate characters 0-127 via acs_map[],
 if they're flagged with A_ALTCHARSET in the attribute portion of the
-chtype.
+chtype. Actual screen updates may be deferred until PDC_doupdate() if
+desired (currently done with SDL and X11).
 
 
 pdcgetsc.c:
@@ -94,9 +106,8 @@ pdcgetsc.c:
 
 ### int PDC_get_columns(void);
 
-Returns the size of the screen in columns. It's used in resize_term() to
-set the new value of COLS. (Some existing implementations also call it
-internally from PDC_scr_open(), but this is not required.)
+Returns the size of the screen in columns. It's used in initscr() and
+resize_term() to set the value of COLS.
 
 ### int PDC_get_cursor_mode(void);
 
@@ -108,9 +119,8 @@ cursor in normal visibility mode (curs_set(1)).
 
 ### int PDC_get_rows(void);
 
-Returns the size of the screen in rows. It's used in resize_term() to
-set the new value of LINES. (Some existing implementations also call it
-internally from PDC_scr_open(), but this is not required.)
+Returns the size of the screen in rows. It's used in initscr() and
+resize_term() to set the value of LINES.
 
 
 pdckbd.c:
@@ -145,6 +155,13 @@ if no other keys were pressed in the meantime; i.e., the return should
 happen on key up. But if this is not possible, it may return the
 modifier keys on key down (if and only if SP->return_key_modifiers is
 TRUE).
+
+### bool PDC_has_mouse(void);
+
+Called from has_mouse(). Reports whether mouse support is available. Can
+be a static TRUE or FALSE, or dependent on conditions. Note: Activating
+mouse support should depend only on PDC_mouse_set(); don't expect the
+user to call has_mouse() first.
 
 ### int PDC_modifiers_set(void);
 
@@ -185,19 +202,6 @@ except checking for values out of range and null pointers.
 
 The core of init_color(). This does all the work of that function,
 except checking for values out of range.
-
-### void PDC_init_pair(short pair, short fg, short bg);
-
-The core of init_pair(). This does all the work of that function, except
-checking for values out of range. The values passed to this function
-should be returned by a call to PDC_pair_content() with the same pair
-number. PDC_transform_line() should use the specified colors when
-rendering a chtype with the given pair number.
-
-### int PDC_pair_content(short pair, short *fg, short *bg);
-
-The core of pair_content(). This does all the work of that function,
-except checking for values out of range and null pointers.
 
 ### void PDC_reset_prog_mode(void);
 
@@ -241,24 +245,17 @@ the cursor to the lower left corner. (The X11 port does nothing.)
 
 ### void PDC_scr_free(void);
 
-Frees the memory for SP allocated by PDC_scr_open(). Called by
-delscreen().
+Free any memory allocated by PDC_scr_open(). Called by delscreen().
 
-### int PDC_scr_open(int argc, char **argv);
+### int PDC_scr_open(void);
 
-The platform-specific part of initscr(). It's actually called from
-Xinitscr(); the arguments, if present, correspond to those used with
-main(), and may be used to set the title of the terminal window, or for
-other, platform-specific purposes. (The arguments are currently used
-only in X11.) PDC_scr_open() must allocate memory for SP, and must
-initialize acs_map[] (unless it's preset) and several members of SP,
-including lines, cols, mouse_wait, orig_attr (and if orig_attr is TRUE,
-orig_fore and orig_back), mono, _restore and _preserve. (Although SP is
-used the same way in all ports, it's allocated here in order to allow
-the X11 port to map it to a block of shared memory.) If using an
-existing terminal, and the environment variable PDC_RESTORE_SCREEN is
-set, this function may also store the existing screen image for later
-restoration by PDC_scr_close().
+The platform-specific part of initscr(). It must initialize acs_map[]
+(unless it's preset) and several members of SP, including mouse_wait,
+orig_attr (and if orig_attr is TRUE, orig_fore and orig_back), mono,
+_restore and _preserve. If using an existing terminal, and the
+environment variable PDC_RESTORE_SCREEN is set, this function may also
+store the existing screen image for later restoration by
+PDC_scr_close().
 
 
 pdcsetsc.c:
@@ -315,15 +312,12 @@ pdcclip.c:
 ### int PDC_setclipboard(const char *contents, long length);
 
 
-pdckbd.c:
----------
-
-### unsigned long PDC_get_input_fd(void);
-
-
 pdcsetsc.c:
 -----------
 
 ### int PDC_set_blink(bool blinkon);
 ### int PDC_set_bold(bool boldon);
 ### void PDC_set_title(const char *title);
+
+[USERS.md]: USERS.md
+[MANUAL.md]: MANUAL.md

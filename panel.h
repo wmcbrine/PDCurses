@@ -1,5 +1,3 @@
-/* Public Domain Curses */
-
 /*----------------------------------------------------------------------*
  *                         Panels for PDCurses                          *
  *----------------------------------------------------------------------*/
@@ -9,7 +7,7 @@
 
 #include <curses.h>
 
-#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+#ifdef __cplusplus
 extern "C"
 {
 #endif
@@ -49,7 +47,7 @@ PDCEX  int     show_panel(PANEL *pan);
 PDCEX  int     top_panel(PANEL *pan);
 PDCEX  void    update_panels(void);
 
-#if defined(__cplusplus) || defined(__cplusplus__) || defined(__CPLUSPLUS)
+#ifdef __cplusplus
 }
 #endif
 

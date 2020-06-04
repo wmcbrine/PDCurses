@@ -1,14 +1,27 @@
 # Common elements for the Watcom makefiles
 
+CFLAGS += -wx -zq -i=$(PDCURSES_SRCDIR)
+
+!ifeq DEBUG Y
+CFLAGS		+= -d2 -DPDCDEBUG
+LDFLAGS		= D W A op q sys $(TARGET)
+!else
+CFLAGS		+= -oneatx
+LDFLAGS		= op q sys $(TARGET)
+!endif
+
+RM		= del
+LIBEXE		= wlib -q -n -b -c -t
+
 srcdir = $(PDCURSES_SRCDIR)/pdcurses
 demodir = $(PDCURSES_SRCDIR)/demos
 
 LIBOBJS = addch.obj addchstr.obj addstr.obj attr.obj beep.obj bkgd.obj &
-border.obj clear.obj color.obj delch.obj deleteln.obj deprec.obj &
+border.obj clear.obj color.obj delch.obj deleteln.obj &
 getch.obj getstr.obj getyx.obj inch.obj inchstr.obj initscr.obj inopts.obj &
 insch.obj insstr.obj instr.obj kernel.obj keyname.obj mouse.obj move.obj &
 outopts.obj overlay.obj pad.obj panel.obj printw.obj refresh.obj &
-scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj terminfo.obj &
+scanw.obj scr_dump.obj scroll.obj slk.obj termattr.obj &
 touch.obj util.obj window.obj debug.obj
 
 PDCOBJS = pdcclip.obj pdcdisp.obj pdcgetsc.obj pdckbd.obj pdcscrn.obj &
@@ -28,7 +41,7 @@ LINK = wlink
 ! loaddll wlib   wlibd
 !endif
 
-all:	$(LIBCURSES) $(DEMOS)
+all:	$(LIBCURSES)
 
 clean
 	-$(RM) *.obj

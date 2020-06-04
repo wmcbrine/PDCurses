@@ -12,10 +12,10 @@ Building
 
 - Choose the appropriate makefile for your compiler:
 
-        Makefile      - GNU Compiler (MinGW or Cygnus)
-        Makefile.bcc  - Borland C++ 7.0+
-        Makefile.vc   - Microsoft Visual C++ 2.0+
-        Makefile.wcc  - Open Watcom 1.8+
+        Makefile      - GCC (MinGW or Cygnus)
+        Makefile.bcc  - Borland C++
+        Makefile.vc   - Microsoft Visual C++
+        Makefile.wcc  - Watcom
 
 - Optionally, you can build in a different directory than the platform
   directory by setting PDCURSES_SRCDIR to point to the directory where
@@ -27,9 +27,9 @@ Building
 
         make -f makefilename
 
-  (For Watcom, use "wmake" instead of "make"; for MSVC, "nmake".) You'll
-  get the libraries (pdcurses.lib or .a, depending on your compiler),
-  the demos (*.exe), and a lot of object files.
+  (For Watcom, use "wmake" instead of "make"; for MSVC, "nmake"; for
+  MinGW, "mingw32-make".) You'll get the library (pdcurses.lib or .a,
+  depending on your compiler) and a lot of object files.
 
   You can also give the optional parameter "WIDE=Y", to build the
   library with wide-character (Unicode) support:
@@ -56,11 +56,17 @@ Building
   PDC_DLL_BUILD when linking against it. (Or, if you only want to use
   the DLL, you could add this definition to your curses.h.)
 
+  Add the target "demos" to build the sample programs.
+
+- If your build stops with errors about PCONSOLE_SCREEN_BUFFER_INFOEX,
+  add the parameter "INFOEX=N" to your make command line and try again.
+  (This will happen with older compile environments.)
+
 
 Distribution Status
 -------------------
 
-The files in this directory are released to the Public Domain.
+The files in this directory are released to the public domain.
 
 
 Acknowledgements

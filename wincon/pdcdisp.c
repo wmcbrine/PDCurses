@@ -1,69 +1,19 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcwin.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef CHTYPE_LONG
-
-# define A(x) ((chtype)x | A_ALTCHARSET)
-
-chtype acs_map[128] =
-{
-    A(0), A(1), A(2), A(3), A(4), A(5), A(6), A(7), A(8), A(9), A(10),
-    A(11), A(12), A(13), A(14), A(15), A(16), A(17), A(18), A(19),
-    A(20), A(21), A(22), A(23), A(24), A(25), A(26), A(27), A(28),
-    A(29), A(30), A(31), ' ', '!', '"', '#', '$', '%', '&', '\'', '(',
-    ')', '*',
-
-# ifdef PDC_WIDE
-    0x2192, 0x2190, 0x2191, 0x2193,
-# else
-    A(0x1a), A(0x1b), A(0x18), A(0x19),
-# endif
-
-    '/',
-
-# ifdef PDC_WIDE
-    0x2588,
-# else
-    0xdb,
-# endif
-
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=',
-    '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-    'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
-
-# ifdef PDC_WIDE
-    0x2666, 0x2592,
-# else
-    A(0x04), 0xb1,
-# endif
-
-    'b', 'c', 'd', 'e',
-
-# ifdef PDC_WIDE
-    0x00b0, 0x00b1, 0x2591, 0x00a4, 0x2518, 0x2510, 0x250c, 0x2514,
-    0x253c, 0x23ba, 0x23bb, 0x2500, 0x23bc, 0x23bd, 0x251c, 0x2524,
-    0x2534, 0x252c, 0x2502, 0x2264, 0x2265, 0x03c0, 0x2260, 0x00a3,
-    0x00b7,
-# else
-    0xf8, 0xf1, 0xb0, A(0x0f), 0xd9, 0xbf, 0xda, 0xc0, 0xc5, 0x2d, 0x2d,
-    0xc4, 0x2d, 0x5f, 0xc3, 0xb4, 0xc1, 0xc2, 0xb3, 0xf3, 0xf2, 0xe3,
-    0xd8, 0x9c, 0xf9,
-# endif
-
-    A(127)
-};
-
-# undef A
-
+#ifdef PDC_WIDE
+# include "../common/acsuni.h"
+#else
+# include "../common/acs437.h"
 #endif
 
 DWORD pdc_last_blink;
 static bool blinked_off = FALSE;
+static bool in_italic = FALSE;
 
 /* position hardware cursor at (y, x) */
 
@@ -84,11 +34,12 @@ void _set_ansi_color(short f, short b, attr_t attr)
 {
     char esc[64], *p;
     short tmp, underline;
+    bool italic;
 
-    if (f < 16)
+    if (f < 16 && !pdc_color[f].mapped)
         f = pdc_curstoansi[f];
 
-    if (b < 16)
+    if (b < 16 && !pdc_color[b].mapped)
         b = pdc_curstoansi[b];
 
     if (attr & A_REVERSE)
@@ -97,18 +48,28 @@ void _set_ansi_color(short f, short b, attr_t attr)
         f = b;
         b = tmp;
     }
+    attr &= SP->termattrs;
+    italic = !!(attr & A_ITALIC);
     underline = !!(attr & A_UNDERLINE);
 
     p = esc + sprintf(esc, "\x1b[");
 
     if (f != pdc_oldf)
     {
-        if (f < 8)
+        if (f < 8 && !pdc_color[f].mapped)
             p += sprintf(p, "%d", f + 30);
-        else if (f < 16)
+        else if (f < 16 && !pdc_color[f].mapped)
             p += sprintf(p, "%d", f + 82);
-        else
+        else if (f < 256 && !pdc_color[f].mapped)
             p += sprintf(p, "38;5;%d", f);
+        else
+        {
+            short red = DIVROUND(pdc_color[f].r * 255, 1000);
+            short green = DIVROUND(pdc_color[f].g * 255, 1000);
+            short blue = DIVROUND(pdc_color[f].b * 255, 1000);
+
+            p += sprintf(p, "38;2;%d;%d;%d", red, green, blue);
+        }
 
         pdc_oldf = f;
     }
@@ -118,14 +79,35 @@ void _set_ansi_color(short f, short b, attr_t attr)
         if (strlen(esc) > 2)
             p += sprintf(p, ";");
 
-        if (b < 8)
+        if (b < 8 && !pdc_color[b].mapped)
             p += sprintf(p, "%d", b + 40);
-        else if (b < 16)
+        else if (b < 16 && !pdc_color[b].mapped)
             p += sprintf(p, "%d", b + 92);
-        else
+        else if (b < 256 && !pdc_color[b].mapped)
             p += sprintf(p, "48;5;%d", b);
+        else
+        {
+            short red = DIVROUND(pdc_color[b].r * 255, 1000);
+            short green = DIVROUND(pdc_color[b].g * 255, 1000);
+            short blue = DIVROUND(pdc_color[b].b * 255, 1000);
+
+            p += sprintf(p, "48;2;%d;%d;%d", red, green, blue);
+        }
 
         pdc_oldb = b;
+    }
+
+    if (italic != in_italic)
+    {
+        if (strlen(esc) > 2)
+            p += sprintf(p, ";");
+
+        if (italic)
+            p += sprintf(p, "3");
+        else
+            p += sprintf(p, "23");
+
+        in_italic = italic;
     }
 
     if (underline != pdc_oldu)
@@ -156,21 +138,11 @@ void _set_ansi_color(short f, short b, attr_t attr)
 
 void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
-    union {
-        CHAR_INFO ci[512];
-#ifdef PDC_WIDE
-        WCHAR text[512];
-#else
-        char text[512];
-#endif
-    } buffer;
-    WORD mapped_attr;
     int j;
     short fore, back;
     bool blink, ansi;
 
-    if (pdc_conemu && pdc_ansi &&
-        (lineno == (SP->lines - 1)) && ((x + len) == SP->cols))
+    if (pdc_ansi && (lineno == (SP->lines - 1)) && ((x + len) == SP->cols))
     {
         len--;
         if (len)
@@ -181,7 +153,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         return;
     }
 
-    PDC_pair_content(PAIR_NUMBER(attr), &fore, &back);
+    pair_content(PAIR_NUMBER(attr), &fore, &back);
     ansi = pdc_ansi || (fore >= 16 || back >= 16);
     blink = (SP->termattrs & A_BLINK) && (attr & A_BLINK);
 
@@ -197,8 +169,41 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
     if (attr & A_BLINK)
         back |= 8;
 
-    if (!ansi)
+    if (ansi)
     {
+#ifdef PDC_WIDE
+        WCHAR buffer[512];
+#else
+        char buffer[512];
+#endif
+        for (j = 0; j < len; j++)
+        {
+            chtype ch = srcp[j];
+
+            if (ch & A_ALTCHARSET && !(ch & 0xff80))
+                ch = acs_map[ch & 0x7f];
+
+            if (blink && blinked_off)
+                ch = ' ';
+
+            buffer[j] = ch & A_CHARTEXT;
+        }
+
+        PDC_gotoyx(lineno, x);
+        _set_ansi_color(fore, back, attr);
+#ifdef PDC_WIDE
+        WriteConsoleW(pdc_con_out, buffer, len, NULL, NULL);
+#else
+        WriteConsoleA(pdc_con_out, buffer, len, NULL, NULL);
+#endif
+    }
+    else
+    {
+        CHAR_INFO buffer[512];
+        COORD bufSize, bufPos;
+        SMALL_RECT sr;
+        WORD mapped_attr;
+
         fore = pdc_curstoreal[fore];
         back = pdc_curstoreal[back];
 
@@ -208,46 +213,25 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             mapped_attr = fore | (back << 4);
 
         if (attr & A_UNDERLINE)
-            mapped_attr |= COMMON_LVB_UNDERSCORE;
+            mapped_attr |= 0x8000; /* COMMON_LVB_UNDERSCORE */
         if (attr & A_LEFT)
-            mapped_attr |= COMMON_LVB_GRID_LVERTICAL;
+            mapped_attr |= 0x0800; /* COMMON_LVB_GRID_LVERTICAL */
         if (attr & A_RIGHT)
-            mapped_attr |= COMMON_LVB_GRID_RVERTICAL;
-    }
+            mapped_attr |= 0x1000; /* COMMON_LVB_GRID_RVERTICAL */
 
-    for (j = 0; j < len; j++)
-    {
-        chtype ch = srcp[j];
-#ifdef CHTYPE_LONG
-        if (ch & A_ALTCHARSET && !(ch & 0xff80))
-            ch = acs_map[ch & 0x7f];
-#endif
-        if (blink && blinked_off)
-            ch = ' ';
-
-        if (ansi)
-            buffer.text[j] = ch & A_CHARTEXT;
-        else
+        for (j = 0; j < len; j++)
         {
-            buffer.ci[j].Attributes = mapped_attr;
-            buffer.ci[j].Char.UnicodeChar = ch & A_CHARTEXT;
-        }
-    }
+            chtype ch = srcp[j];
 
-    if (ansi)
-    {
-        PDC_gotoyx(lineno, x);
-        _set_ansi_color(fore, back, attr);
-#ifdef PDC_WIDE
-        WriteConsoleW(pdc_con_out, buffer.text, len, NULL, NULL);
-#else
-        WriteConsoleA(pdc_con_out, buffer.text, len, NULL, NULL);
-#endif
-    }
-    else
-    {
-        COORD bufSize, bufPos;
-        SMALL_RECT sr;
+            if (ch & A_ALTCHARSET && !(ch & 0xff80))
+                ch = acs_map[ch & 0x7f];
+
+            if (blink && blinked_off)
+                ch = ' ';
+
+            buffer[j].Attributes = mapped_attr;
+            buffer[j].Char.UnicodeChar = ch & A_CHARTEXT;
+        }
 
         bufPos.X = bufPos.Y = 0;
         bufSize.X = len;
@@ -257,7 +241,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
         sr.Left = x;
         sr.Right = x + len - 1;
 
-        WriteConsoleOutput(pdc_con_out, buffer.ci, bufSize, bufPos, &sr);
+        WriteConsoleOutput(pdc_con_out, buffer, bufSize, bufPos, &sr);
     }
 }
 
@@ -316,4 +300,8 @@ void PDC_blink_text(void)
 
     PDC_gotoyx(SP->cursrow, SP->curscol);
     pdc_last_blink = GetTickCount();
+}
+
+void PDC_doupdate(void)
+{
 }

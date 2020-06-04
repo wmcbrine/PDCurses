@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcdos.h"
 
@@ -15,12 +15,12 @@ pdcsetsc
 
 ### Description
 
-   PDC_set_blink() toggles whether the A_BLINK attribute sets an
-   actual blink mode (TRUE), or sets the background color to high
-   intensity (FALSE). The default is platform-dependent (FALSE in
-   most cases). It returns OK if it could set the state to match
-   the given parameter, ERR otherwise. On DOS, this function also
-   adjusts the value of COLORS -- 16 for FALSE, and 8 for TRUE.
+   PDC_set_blink() toggles whether the A_BLINK attribute sets an actual
+   blink mode (TRUE), or sets the background color to high intensity
+   (FALSE). The default is platform-dependent (FALSE in most cases). It
+   returns OK if it could set the state to match the given parameter,
+   ERR otherwise. On DOS, this function also adjusts the value of COLORS
+   -- 16 for FALSE, and 8 for TRUE.
 
    PDC_set_bold() toggles whether the A_BOLD attribute selects an actual
    bold font (TRUE), or sets the foreground color to high intensity
@@ -32,7 +32,7 @@ pdcsetsc
    platforms.
 
 ### Portability
-                             X/Open    BSD    SYS V
+                             X/Open  ncurses  NetBSD
     PDC_set_blink               -       -       -
     PDC_set_title               -       -       -
 
@@ -83,6 +83,9 @@ int PDC_set_blink(bool blinkon)
 {
     PDCREGS regs;
 
+    if (!SP)
+        return ERR;
+
     switch (pdc_adapter)
     {
     case _EGACOLOR:
@@ -94,7 +97,7 @@ int PDC_set_blink(bool blinkon)
 
         PDCINT(0x10, regs);
 
-        if (pdc_color_started)
+        if (SP->color_started)
             COLORS = blinkon ? 8 : 16;
 
         break;

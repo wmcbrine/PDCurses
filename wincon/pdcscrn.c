@@ -1,12 +1,12 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcwin.h"
 
 #include <stdlib.h>
 
-/* COLOR_PAIR to attribute encoding table. */
+/* Color component table */
 
-static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
+PDCCOLOR pdc_color[PDC_MAXCOL];
 
 HANDLE std_con_out = INVALID_HANDLE_VALUE;
 HANDLE pdc_con_out = INVALID_HANDLE_VALUE;
@@ -72,6 +72,22 @@ static struct
 
     WCHAR    ConsoleTitle[0x100];
 } console_info;
+
+#ifdef HAVE_NO_INFOEX
+/* Console screen buffer information (extended version) */
+typedef struct _CONSOLE_SCREEN_BUFFER_INFOEX {
+    ULONG       cbSize;
+    COORD       dwSize;
+    COORD       dwCursorPosition;
+    WORD        wAttributes;
+    SMALL_RECT  srWindow;
+    COORD       dwMaximumWindowSize;
+    WORD        wPopupAttributes;
+    BOOL        bFullscreenSupported;
+    COLORREF    ColorTable[16];
+} CONSOLE_SCREEN_BUFFER_INFOEX;
+typedef CONSOLE_SCREEN_BUFFER_INFOEX    *PCONSOLE_SCREEN_BUFFER_INFOEX;
+#endif
 
 typedef BOOL (WINAPI *SetConsoleScreenBufferInfoExFn)(HANDLE hConsoleOutput,
     PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
@@ -343,9 +359,6 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    if (SP)
-        free(SP);
-
     if (pdc_con_out != std_con_out)
     {
         CloseHandle(pdc_con_out);
@@ -356,10 +369,10 @@ void PDC_scr_free(void)
     SetConsoleCtrlHandler(_ctrl_break, FALSE);
 }
 
-/* open the physical screen -- allocate SP, miscellaneous intialization,
-   and may save the existing screen for later restoration */
+/* open the physical screen -- miscellaneous initialization, may save
+   the existing screen for later restoration */
 
-int PDC_scr_open(int argc, char **argv)
+int PDC_scr_open(void)
 {
     const char *str;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -368,11 +381,6 @@ int PDC_scr_open(int argc, char **argv)
     int i;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
-
-    SP = calloc(1, sizeof(SCREEN));
-
-    if (!SP)
-        return ERR;
 
     for (i = 0; i < 16; i++)
     {
@@ -407,29 +415,12 @@ int PDC_scr_open(int argc, char **argv)
 
     pdc_quick_edit = old_console_mode & 0x0040;
 
-    SP->lines = (str = getenv("LINES")) ? atoi(str) : PDC_get_rows();
-    SP->cols = (str = getenv("COLS")) ? atoi(str) : PDC_get_columns();
-
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
     SP->termattrs = A_COLOR | A_REVERSE;
-
-    if (SP->lines < 2 || SP->lines > csbi.dwMaximumWindowSize.Y)
-    {
-        fprintf(stderr, "LINES value must be >= 2 and <= %d: got %d\n",
-                csbi.dwMaximumWindowSize.Y, SP->lines);
-
-        return ERR;
-    }
-
-    if (SP->cols < 2 || SP->cols > csbi.dwMaximumWindowSize.X)
-    {
-        fprintf(stderr, "COLS value must be >= 2 and <= %d: got %d\n",
-                csbi.dwMaximumWindowSize.X, SP->cols);
-
-        return ERR;
-    }
+    if (pdc_ansi)
+        SP->termattrs |= A_UNDERLINE | A_ITALIC;
 
     SP->orig_fore = csbi.wAttributes & 0x0f;
     SP->orig_back = (csbi.wAttributes & 0xf0) >> 4;
@@ -525,38 +516,44 @@ int PDC_resize_screen(int nlines, int ncols)
     SMALL_RECT rect;
     COORD size, max;
 
-    if (nlines || ncols)
+    bool prog_resize = nlines || ncols;
+
+    if (!prog_resize)
     {
-        if (nlines < 2 || ncols < 2)
-            return ERR;
-
-        max = GetLargestConsoleWindowSize(pdc_con_out);
-
-        rect.Left = rect.Top = 0;
-        rect.Right = ncols - 1;
-
-        if (rect.Right > max.X)
-            rect.Right = max.X;
-
-        rect.Bottom = nlines - 1;
-
-        if (rect.Bottom > max.Y)
-            rect.Bottom = max.Y;
-
-        size.X = rect.Right + 1;
-        size.Y = rect.Bottom + 1;
-
-        _fit_console_window(pdc_con_out, &rect);
-        SetConsoleScreenBufferSize(pdc_con_out, size);
-        _fit_console_window(pdc_con_out, &rect);
-        SetConsoleScreenBufferSize(pdc_con_out, size);
-        SetConsoleActiveScreenBuffer(pdc_con_out);
+        nlines = PDC_get_rows();
+        ncols = PDC_get_columns();
     }
 
-    PDC_flushinp();
+    if (nlines < 2 || ncols < 2)
+        return ERR;
 
-    SP->resized = FALSE;
-    SP->cursrow = SP->curscol = 0;
+    max = GetLargestConsoleWindowSize(pdc_con_out);
+
+    rect.Left = rect.Top = 0;
+    rect.Right = ncols - 1;
+
+    if (rect.Right > max.X)
+        rect.Right = max.X;
+
+    rect.Bottom = nlines - 1;
+
+    if (rect.Bottom > max.Y)
+        rect.Bottom = max.Y;
+
+    size.X = rect.Right + 1;
+    size.Y = rect.Bottom + 1;
+
+    _fit_console_window(pdc_con_out, &rect);
+    SetConsoleScreenBufferSize(pdc_con_out, size);
+
+    if (prog_resize)
+    {
+        _fit_console_window(pdc_con_out, &rect);
+        SetConsoleScreenBufferSize(pdc_con_out, size);
+    }
+    SetConsoleActiveScreenBuffer(pdc_con_out);
+
+    PDC_flushinp();
 
     return OK;
 }
@@ -603,7 +600,7 @@ void PDC_reset_shell_mode(void)
         SetConsoleActiveScreenBuffer(pdc_con_out);
     }
 
-    SetConsoleMode(pdc_con_in, old_console_mode);
+    SetConsoleMode(pdc_con_in, old_console_mode | 0x0080);
 }
 
 void PDC_restore_screen_mode(int i)
@@ -614,28 +611,14 @@ void PDC_save_screen_mode(int i)
 {
 }
 
-void PDC_init_pair(short pair, short fg, short bg)
-{
-    atrtab[pair].f = fg;
-    atrtab[pair].b = bg;
-}
-
-int PDC_pair_content(short pair, short *fg, short *bg)
-{
-    *fg = atrtab[pair].f;
-    *bg = atrtab[pair].b;
-
-    return OK;
-}
-
 bool PDC_can_change_color(void)
 {
-    return is_nt && !pdc_conemu;
+    return is_nt;
 }
 
 int PDC_color_content(short color, short *red, short *green, short *blue)
 {
-    if (color < 16)
+    if (color < 16 && !pdc_conemu)
     {
         COLORREF *color_table = _get_colors();
 
@@ -646,17 +629,35 @@ int PDC_color_content(short color, short *red, short *green, short *blue)
             *red = DIVROUND(GetRValue(col) * 1000, 255);
             *green = DIVROUND(GetGValue(col) * 1000, 255);
             *blue = DIVROUND(GetBValue(col) * 1000, 255);
-
-            return OK;
         }
+        else
+            return ERR;
+    }
+    else
+    {
+        if (!pdc_color[color].mapped)
+        {
+            *red = *green = *blue = -1;
+            return ERR;
+        }
+
+        *red = pdc_color[color].r;
+        *green = pdc_color[color].g;
+        *blue = pdc_color[color].b;
     }
 
-    return ERR;
+    return OK;
 }
 
 int PDC_init_color(short color, short red, short green, short blue)
 {
-    if (color < 16)
+    if (red == -1 && green == -1 && blue == -1)
+    {
+        pdc_color[color].mapped = FALSE;
+        return OK;
+    }
+
+    if (color < 16 && !pdc_conemu)
     {
         COLORREF *color_table = _get_colors();
 
@@ -669,7 +670,16 @@ int PDC_init_color(short color, short red, short green, short blue)
 
             return _set_colors();
         }
+
+        return ERR;
+    }
+    else
+    {
+        pdc_color[color].r = red;
+        pdc_color[color].g = green;
+        pdc_color[color].b = blue;
+        pdc_color[color].mapped = TRUE;
     }
 
-    return ERR;
+    return OK;
 }

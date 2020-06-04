@@ -24,12 +24,6 @@
 /* Define if you have the <xpm.h> header file */
 #undef HAVE_XPM_H
 
-/* Define as the system defined limit for number of signals */
-#undef PDC_MAX_SIGNALS
-
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#undef TIME_WITH_SYS_TIME
-
 /* Define if you want to use neXtaw library */
 #undef USE_NEXTAW
 

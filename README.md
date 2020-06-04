@@ -1,12 +1,13 @@
 Welcome to PDCurses!
 ====================
 
-Public Domain Curses, aka PDCurses, is an implementation of X/Open
-curses for multiple platforms. The latest version can be found at:
+PDCurses is an implementation of X/Open curses for multiple platforms.
+The latest version can be found at:
 
-   http://pdcurses.org/
+   https://pdcurses.org/
 
-For changes, see the [HISTORY](HISTORY.md) file.
+For changes, see the [History] file. The main documentation is now in
+the [docs] directory.
 
 
 Legal Stuff
@@ -34,22 +35,31 @@ platforms.
 
 Build instructions are in the README.md file for each platform:
 
--  [DOS](dos/README.md)
--  [OS/2](os2/README.md)
--  [SDL 1.x](sdl1/README.md)
--  [SDL 2.x](sdl2/README.md)
--  [Windows](wincon/README.md)
--  [X11](x11/README.md)
+-  [DOS]
+-  [OS/2]
+-  [SDL 1.x]
+-  [SDL 2.x]
+-  [Windows]
+-  [X11]
 
 
 Distribution Status
 -------------------
 
 All files in this directory (not including subdirectories) are released
-to the Public Domain.
+to the public domain.
 
 
 Maintainer
 ----------
 
 William McBrine <wmcbrine@gmail.com>
+
+[History]: docs/HISTORY.md
+[docs]: docs/README.md
+[DOS]: dos/README.md
+[OS/2]: os2/README.md
+[SDL 1.x]: sdl1/README.md
+[SDL 2.x]: sdl2/README.md
+[Windows]: wincon/README.md
+[X11]: x11/README.md

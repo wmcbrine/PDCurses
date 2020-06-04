@@ -1,7 +1,6 @@
 dnl ---------------------------------------------------------------------------
 dnl This file offers the following macros...
 dnl ---------------------------------------------------------------------------
-dnl MH_IPC
 dnl MH_CHECK_X_INC
 dnl MH_CHECK_X_LIB
 dnl MH_CHECK_X_HEADERS
@@ -11,19 +10,6 @@ dnl MH_SHARED_LIBRARY
 dnl MH_HOWTO_DYN_LINK
 dnl MH_CHECK_CC_O
 dnl MH_SHLPST
-dnl MH_CHECK_MAX_SIGNALS
-
-dnl ---------------------------------------------------------------------------
-dnl Determine if the system has System V IPC. ie sys/ipc.h and sys/shm.h
-dnl headers.
-dnl ---------------------------------------------------------------------------
-AC_DEFUN([MH_IPC],
-[
-AC_CHECK_HEADER(sys/ipc.h)
-if test $ac_cv_header_sys_ipc_h = no; then
-	AC_MSG_ERROR(Cannot find required header file sys/ipc.h; PDCurses cannot be configured)
-fi
-])dnl
 
 dnl ---------------------------------------------------------------------------
 dnl Set up the correct X header file location
@@ -135,18 +121,25 @@ case "$target" in
 esac
 
 if test "$with_xaw3d" = yes; then
-	MH_X11_LIBS="Xaw3d Xmu Xt X11"
+	MH_X11_LIBS="Xaw3d Xmu Xt X11 Xpm"
 else
 	if test "$with_nextaw" = yes; then
-		MH_X11_LIBS="neXtaw Xmu Xt X11"
+		MH_X11_LIBS="neXtaw Xmu Xt X11 Xpm"
 	else
-		MH_X11_LIBS="Xaw Xmu Xt X11"
+		MH_X11_LIBS="Xaw Xmu Xt X11 Xpm"
 	fi
 fi
 MH_X11R6_LIBS="SM ICE Xext"
 mh_x11r6=no
 
-mh_lib_dirs="$x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
+which dpkg-architecture > /dev/null
+if test $? -eq 0; then
+    multiarch_libdir="/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`"
+else
+    multiarch_libdir=""
+fi
+
+mh_lib_dirs="$multiarch_libdir /usr/lib64 /usr/lib/x86_64-linux-gnu /usr/lib/i386-linux-gnu $x_libraries `echo "$ac_x_includes $ac_x_header_dirs" | sed s/include/lib/g`"
 
 dnl try to find libSM.[a,sl,so,dylib]. If we find it we are using X11R6
 for ac_dir in $mh_lib_dirs ; do
@@ -385,7 +378,7 @@ case "$target" in
 		SYS_DEFS="-DSUNOS -DSUNOS_STRTOD_BUG"
 		LD_RXLIB1="ld"
 		;;
-	*linux*|*atheos*|*nto-qnx*)
+	*linux*|*atheos*|*nto-qnx*|*openbsd*)
 		LD_RXLIB1="${CC} -shared"
 		;;
 	*freebsd*)
@@ -405,7 +398,7 @@ case "$target" in
 		;;
 	*darwin*)
 		DYN_COMP="-fno-common"
-		LD_RXLIB1="${CC} -flat_namespace -undefined suppress -dynamiclib -install_name=\$(@)"
+		LD_RXLIB1="${CC} -flat_namespace -undefined suppress -dynamiclib"
 		;;
 	*)
 		;;
@@ -558,30 +551,3 @@ esac
 AC_SUBST(SHLPST)
 AC_MSG_RESULT($SHLPST)
 ])
-
-dnl ---------------------------------------------------------------------------
-dnl Determine the system limit for number of signals
-dnl ---------------------------------------------------------------------------
-AC_DEFUN([MH_CHECK_MAX_SIGNALS],
-[
-save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $SYS_DEFS"
-AC_MSG_CHECKING(for maximum signal specifier:)
-AC_CACHE_VAL(mh_cv_max_signals,
-mh_found="no"
-for mh_sigs in $1; do
-	AC_TRY_COMPILE([#include <signal.h>],
-[return $mh_sigs;],
-  mh_found="yes"; mh_cv_max_signals="$mh_sigs" )
-	if test "$mh_found" = "yes"; then
-		break;
-	fi
-done)
-CPPFLAGS="$save_CPPFLAGS"
-if test "$mh_found" = "no"; then
-	AC_MSG_ERROR(Cannot find a system limit for number of signals. PDCurses cannot be configured on this machine.)
-else
-	AC_DEFINE_UNQUOTED(PDC_MAX_SIGNALS,$mh_cv_max_signals)
-	AC_MSG_RESULT($mh_cv_max_signals)
-fi
-])dnl

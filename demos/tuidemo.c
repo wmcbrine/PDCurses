@@ -1,6 +1,6 @@
 /*
  * Author : P.J. Kunst <kunst@prl.philips.nl>
- * Date   : 25-02-93
+ * Date   : 1993-02-25
  *
  * Purpose: This program demonstrates the use of the 'curses' library
  *          for the creation of (simple) menu-operated programs.
@@ -19,10 +19,10 @@
 
 /* change this if source at other location */
 
-#ifdef XCURSES
-# define FNAME  "../demos/tui.c"
+#ifdef PDC_FORCE_UTF8
+# define FNAME "../demos/UTF-8-demo.txt"
 #else
-# define FNAME  "..\\demos\\tui.c"
+# define FNAME "../demos/tui.c"
 #endif
 
 /**************************** strings entry box ***************************/

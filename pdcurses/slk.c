@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include <curspriv.h>
 
@@ -36,15 +36,15 @@ slk
 ### Description
 
    These functions manipulate a window that contain Soft Label Keys
-   (SLK). To use the SLK functions, a call to slk_init() must be
-   made BEFORE initscr() or newterm(). slk_init() removes 1 or 2
-   lines from the useable screen, depending on the format selected.
+   (SLK). To use the SLK functions, a call to slk_init() must be made
+   BEFORE initscr() or newterm(). slk_init() removes 1 or 2 lines from
+   the useable screen, depending on the format selected.
 
-   The line(s) removed from the screen are used as a separate
-   window, in which SLKs are displayed.
+   The line(s) removed from the screen are used as a separate window, in
+   which SLKs are displayed.
 
-   slk_init() requires a single parameter which describes the
-   format of the SLKs as follows:
+   slk_init() requires a single parameter which describes the format of
+   the SLKs as follows:
 
    0       3-2-3 format
    1       4-4 format
@@ -53,30 +53,30 @@ slk
    2 lines used
    55      5-5 format (pdcurses format)
 
-   slk_refresh(), slk_noutrefresh() and slk_touch() are analogous
-   to refresh(), noutrefresh() and touch().
+   slk_refresh(), slk_noutrefresh() and slk_touch() are analogous to
+   refresh(), noutrefresh() and touch().
 
 ### Return Value
 
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open    BSD    SYS V
-    slk_init                    Y       -       Y
-    slk_set                     Y       -       Y
-    slk_refresh                 Y       -       Y
-    slk_noutrefresh             Y       -       Y
-    slk_label                   Y       -       Y
-    slk_clear                   Y       -       Y
-    slk_restore                 Y       -       Y
-    slk_touch                   Y       -       Y
-    slk_attron                  Y       -       Y
-    slk_attrset                 Y       -       Y
-    slk_attroff                 Y       -       Y
-    slk_attr_on                 Y
-    slk_attr_set                Y
-    slk_attr_off                Y
-    slk_wset                    Y
+                             X/Open  ncurses  NetBSD
+    slk_init                    Y       Y       Y
+    slk_set                     Y       Y       Y
+    slk_refresh                 Y       Y       Y
+    slk_noutrefresh             Y       Y       Y
+    slk_label                   Y       Y       Y
+    slk_clear                   Y       Y       Y
+    slk_restore                 Y       Y       Y
+    slk_touch                   Y       Y       Y
+    slk_attron                  Y       Y       Y
+    slk_attrset                 Y       Y       Y
+    slk_attroff                 Y       Y       Y
+    slk_attr_on                 Y       Y       Y
+    slk_attr_set                Y       Y       Y
+    slk_attr_off                Y       Y       Y
+    slk_wset                    Y       Y       Y
     PDC_mouse_in_slk            -       -       -
     PDC_slk_free                -       -       -
     PDC_slk_initialize          -       -       -
@@ -277,6 +277,9 @@ int slk_noutrefresh(void)
 {
     PDC_LOG(("slk_noutrefresh() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     return wnoutrefresh(SP->slk_winptr);
 }
 
@@ -308,6 +311,9 @@ int slk_clear(void)
 {
     PDC_LOG(("slk_clear() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     hidden = TRUE;
     werase(SP->slk_winptr);
     return wrefresh(SP->slk_winptr);
@@ -316,6 +322,9 @@ int slk_clear(void)
 int slk_restore(void)
 {
     PDC_LOG(("slk_restore() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     hidden = FALSE;
     _redraw();
@@ -326,6 +335,9 @@ int slk_touch(void)
 {
     PDC_LOG(("slk_touch() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     return touchwin(SP->slk_winptr);
 }
 
@@ -334,6 +346,9 @@ int slk_attron(const chtype attrs)
     int rc;
 
     PDC_LOG(("slk_attron() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     rc = wattron(SP->slk_winptr, attrs);
     _redraw();
@@ -354,6 +369,9 @@ int slk_attroff(const chtype attrs)
 
     PDC_LOG(("slk_attroff() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     rc = wattroff(SP->slk_winptr, attrs);
     _redraw();
 
@@ -373,6 +391,9 @@ int slk_attrset(const chtype attrs)
 
     PDC_LOG(("slk_attrset() - called\n"));
 
+    if (!SP)
+        return ERR;
+
     rc = wattrset(SP->slk_winptr, attrs);
     _redraw();
 
@@ -384,6 +405,9 @@ int slk_color(short color_pair)
     int rc;
 
     PDC_LOG(("slk_color() - called\n"));
+
+    if (!SP)
+        return ERR;
 
     rc = wcolor_set(SP->slk_winptr, color_pair, NULL);
     _redraw();

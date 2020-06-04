@@ -1,8 +1,6 @@
 /*
  *  ozdemo.c           - A demo program using PDCurses. The program
  *  (formerly newdemo)   illustrates the use of colors for text output.
- *
- *  Hacks by jbuhler@cs.washington.edu on 12/29/96
  */
 
 #include <signal.h>
@@ -326,8 +324,13 @@ int main(int argc, char **argv)
 
         init_pair(5, COLOR_BLUE, COLOR_WHITE);
         wattrset(win, COLOR_PAIR(5) | A_BLINK);
-        mvwaddstr(win, height - 2, 2,
-            " PDCurses 3.6 - DOS, OS/2, Windows, X11, SDL");
+        mvwaddstr(win, height - 2,
+#ifdef PDC_VERDOT
+            2, " PDCurses " PDC_VERDOT
+#else
+            3, " PDCurses"
+#endif
+            " - DOS, OS/2, Windows, X11, SDL");
         wrefresh(win);
 
         /* Draw running messages */
@@ -337,23 +340,34 @@ int main(int argc, char **argv)
         w = width - 2;
         nodelay(win, TRUE);
 
-        /* jbuhler's re-hacked scrolling messages */
+        mvwhline(win, height / 2, 1, ' ', w);
 
         for (j = 0; messages[j] != NULL; j++)
         {
             char *message = messages[j];
             int msg_len = strlen(message);
-            int scroll_len = w + 2 * msg_len;
-            char *scrollbuf = malloc(scroll_len);
-            char *visbuf = scrollbuf + msg_len;
             int stop = 0;
-            int i;
+            int xpos, start, count;
 
-            for (i = w + msg_len; i > 0; i--)
+            for (i = 0; i <= w + msg_len; i++)
             {
-                memset(visbuf, ' ', w);
-                strncpy(scrollbuf + i, message, msg_len);
-                mvwaddnstr(win, height / 2, 1, visbuf, w);
+                if (i < w)
+                {
+                    xpos = w - i;
+                    start = 0;
+                    count = (i > msg_len) ? msg_len : i;
+                }
+                else
+                {
+                    xpos = 0;
+                    start = i - w;
+                    count = (w > msg_len - start) ? msg_len - start : w;
+                }
+
+                mvwaddnstr(win, height / 2, xpos + 1, message + start, count);
+                if (xpos + count < w)
+                    waddstr(win, " ");
+
                 wrefresh(win);
 
                 if (wgetch(win) != ERR)
@@ -365,8 +379,6 @@ int main(int argc, char **argv)
 
                 napms(100);
             }
-
-            free(scrollbuf);
 
             if (stop)
                 break;

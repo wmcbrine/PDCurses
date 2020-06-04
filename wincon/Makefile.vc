@@ -1,6 +1,7 @@
-# Visual C++ NMakefile for PDCurses library - Windows console VC++ 2.0+
+# Visual C++ Makefile for PDCurses - Windows console
 #
-# Usage: nmake -f [path\]Makefile.vc [DEBUG=] [DLL=] [WIDE=] [UTF8=] [target]
+# Usage: nmake -f [path\]Makefile.vc [DEBUG=Y] [DLL=Y] [WIDE=Y] [UTF8=Y]
+#        [INFOEX=N] [target]
 #
 # where target can be any of:
 # [all|demos|pdcurses.lib|testcurs.exe...]
@@ -13,10 +14,10 @@ RM = del
 PDCURSES_SRCDIR = ..
 !endif
 
-!include $(PDCURSES_SRCDIR)\version.mif
-!include $(PDCURSES_SRCDIR)\libobjs.mif
+!include $(PDCURSES_SRCDIR)\common\libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)\wincon
+common		= $(PDCURSES_SRCDIR)\common
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 
@@ -38,12 +39,16 @@ WIDEOPT		= -DPDC_WIDE
 UTF8OPT		= -DPDC_FORCE_UTF8
 !endif
 
-SHL_LD = link $(LDFLAGS) /NOLOGO /DLL /MACHINE:$(PLATFORM) /OUT:pdcurses.dll
+!ifdef INFOEX
+INFOPT		= -DHAVE_NO_INFOEX
+!endif
+
+SHL_LD = link $(LDFLAGS) -nologo -dll -machine:$(PLATFORM) -out:pdcurses.dll
 
 LINK		= link.exe -nologo
 
 CCLIBS		= user32.lib advapi32.lib
-# may need to add msvcrt.lib for VC 2.x, VC 5.0 doesn't want it
+# may need to add msvcrt for older compilers
 #CCLIBS		= msvcrt.lib user32.lib advapi32.lib
 
 LIBEXE		= lib -nologo
@@ -59,9 +64,9 @@ PDCLIBS		= $(LIBCURSES)
 !endif
 
 BUILD		= $(CC) -I$(PDCURSES_SRCDIR) -c $(CFLAGS) $(DLLOPT) \
-$(WIDEOPT) $(UTF8OPT)
+$(WIDEOPT) $(UTF8OPT) $(INFOPT)
 
-all:	$(PDCLIBS) $(DEMOS)
+all:	$(PDCLIBS)
 
 clean:
 	-$(RM) *.obj
@@ -71,6 +76,8 @@ clean:
 	-$(RM) *.exp
 	-$(RM) *.res
 
+demos:	$(PDCLIBS) $(DEMOS)
+
 DEMOOBJS = $(DEMOS:.exe=.obj) tui.obj
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
@@ -78,7 +85,6 @@ $(PDCOBJS) : $(PDCURSES_WIN_H)
 $(DEMOOBJS) : $(PDCURSES_CURSES_H)
 $(DEMOS) : $(LIBCURSES)
 panel.obj : $(PANEL_HEADER)
-terminfo.obj: $(TERM_HEADER)
 
 !ifndef DLL
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
@@ -88,9 +94,9 @@ $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 $(CURSESDLL) : $(LIBOBJS) $(PDCOBJS) pdcurses.obj
 	$(SHL_LD) $(LIBOBJS) $(PDCOBJS) pdcurses.obj $(CCLIBS)
 
-pdcurses.res pdcurses.obj: $(osdir)\pdcurses.rc $(osdir)\pdcurses.ico
-	rc /r /fopdcurses.res $(osdir)\pdcurses.rc
-	cvtres /MACHINE:$(PLATFORM) /NOLOGO /OUT:pdcurses.obj pdcurses.res
+pdcurses.res pdcurses.obj: $(common)\pdcurses.rc
+	rc -r -fopdcurses.res $(common)\pdcurses.rc
+	cvtres -machine:$(PLATFORM) -nologo -out:pdcurses.obj pdcurses.res
 
 {$(srcdir)\}.c{}.obj::
 	$(BUILD) $<
@@ -112,9 +118,3 @@ tui.obj: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.obj: $(demodir)\tuidemo.c
 	$(BUILD) -I$(demodir) $(demodir)\tuidemo.c
-
-PLATFORM1 = Visual C++
-PLATFORM2 = Microsoft Visual C/C++ for Windows console
-ARCNAME = pdc$(VER)_vc_wincon
-
-!include $(PDCURSES_SRCDIR)\makedist.mif

@@ -1,26 +1,6 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcdos.h"
-
-/*man-start**************************************************************
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses
-   reads its input from. It can be used for select().
-
-### Portability
-                             X/Open    BSD    SYS V
-    PDC_get_input_fd            -       -       -
-
-**man-end****************************************************************/
 
 #ifdef __DJGPP__
 # include <fcntl.h>
@@ -79,8 +59,6 @@ static short key_table[] =
     ALT_PADSLASH,   ALT_TAB,        ALT_PADENTER,   -1
 };
 
-unsigned long pdc_key_modifiers = 0L;
-
 static struct {unsigned short pressed, released;} button[3];
 
 static bool mouse_avail = FALSE, mouse_vis = FALSE, mouse_moved = FALSE,
@@ -93,13 +71,6 @@ static unsigned char keyboard_function = 0xff, shift_function = 0xff,
                      check_function = 0xff;
 
 static const unsigned short button_map[3] = {0, 2, 1};
-
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return (unsigned long)fileno(stdin);
-}
 
 void PDC_set_keyboard_binary(bool on)
 {
@@ -217,7 +188,7 @@ static int _process_mouse_events(void)
     int i;
     short shift_flags = 0;
 
-    memset(&pdc_mouse_status, 0, sizeof(pdc_mouse_status));
+    memset(&SP->mouse_status, 0, sizeof(SP->mouse_status));
 
     key_pressed = TRUE;
     old_shift = shift_status;
@@ -238,25 +209,25 @@ static int _process_mouse_events(void)
 
     if (mouse_scroll)
     {
-        pdc_mouse_status.changes = mouse_scroll & 0x80 ?
+        SP->mouse_status.changes = mouse_scroll & 0x80 ?
             PDC_MOUSE_WHEEL_UP : PDC_MOUSE_WHEEL_DOWN;
 
-        pdc_mouse_status.x = -1;
-        pdc_mouse_status.y = -1;
+        SP->mouse_status.x = -1;
+        SP->mouse_status.y = -1;
 
         return KEY_MOUSE;
     }
 
     if (mouse_moved)
     {
-        pdc_mouse_status.changes = PDC_MOUSE_MOVED;
+        SP->mouse_status.changes = PDC_MOUSE_MOVED;
 
         for (i = 0; i < 3; i++)
         {
             if (ms_regs.h.bl & (1 << button_map[i]))
             {
-                pdc_mouse_status.button[i] = BUTTON_MOVED | shift_flags;
-                pdc_mouse_status.changes |= (1 << i);
+                SP->mouse_status.button[i] = BUTTON_MOVED | shift_flags;
+                SP->mouse_status.changes |= (1 << i);
             }
         }
     }
@@ -281,26 +252,26 @@ static int _process_mouse_events(void)
                         regs.W.bx = button_map[i];
                         PDCINT(0x33, regs);
 
-                        pdc_mouse_status.button[i] = regs.W.bx ?
+                        SP->mouse_status.button[i] = regs.W.bx ?
                             BUTTON_CLICKED : BUTTON_PRESSED;
                     }
                     else
-                        pdc_mouse_status.button[i] = BUTTON_PRESSED;
+                        SP->mouse_status.button[i] = BUTTON_PRESSED;
                 }
                 else
-                    pdc_mouse_status.button[i] = BUTTON_CLICKED;
+                    SP->mouse_status.button[i] = BUTTON_CLICKED;
             }
 
             if (button[i].pressed || button[i].released)
             {
-                pdc_mouse_status.button[i] |= shift_flags;
-                pdc_mouse_status.changes |= (1 << i);
+                SP->mouse_status.button[i] |= shift_flags;
+                SP->mouse_status.changes |= (1 << i);
             }
         }
     }
 
-    pdc_mouse_status.x = ms_regs.W.cx >> 3;
-    pdc_mouse_status.y = ms_regs.W.dx >> 3;
+    SP->mouse_status.x = ms_regs.W.cx >> 3;
+    SP->mouse_status.y = ms_regs.W.dx >> 3;
 
     old_ms = ms_regs;
 
@@ -314,7 +285,7 @@ int PDC_get_key(void)
     PDCREGS regs;
     int key, scan;
 
-    pdc_key_modifiers = 0;
+    SP->key_modifiers = 0;
 
     if (mouse_vis && (mouse_scroll || mouse_button || mouse_moved))
         return _process_mouse_events();
@@ -366,20 +337,17 @@ int PDC_get_key(void)
     key = regs.h.al;
     scan = regs.h.ah;
 
-    if (SP->save_key_modifiers)
-    {
-        if (shift_status & 3)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
+    if (shift_status & 3)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
-        if (shift_status & 4)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if (shift_status & 4)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if (shift_status & 8)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+    if (shift_status & 8)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-        if (shift_status & 0x20)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
-    }
+    if (shift_status & 0x20)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
     if (scan == 0x1c && key == 0x0a)    /* ^Enter */
         key = CTL_ENTER;
@@ -453,18 +421,28 @@ void PDC_flushinp(void)
     setdosmemword(0x41a, getdosmemword(0x41c));
 }
 
-int PDC_mouse_set(void)
+bool PDC_has_mouse(void)
 {
     PDCREGS regs;
-    unsigned long mbe = SP->_trap_mbe;
 
-    if (mbe && !mouse_avail)
+    if (!mouse_avail)
     {
         regs.W.ax = 0;
         PDCINT(0x33, regs);
 
         mouse_avail = !!(regs.W.ax);
     }
+
+    return mouse_avail;
+}
+
+int PDC_mouse_set(void)
+{
+    PDCREGS regs;
+    unsigned long mbe = SP->_trap_mbe;
+
+    if (mbe && !mouse_avail)
+        mouse_avail = PDC_has_mouse();
 
     if (mbe)
     {

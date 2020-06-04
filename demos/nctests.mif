@@ -1,6 +1,9 @@
 # This provides for compiling and linking the ncurses test programs.
 
-NCURSES_TESTS   = bs$(E) gdc$(E) hanoi$(E) knight$(E) tclock$(E) ncurses$(E)
+ncurses_testdir = $(HOME)/ncurses-6.1/test
+
+NCURSES_TESTS   = bs$(E) gdc$(E) hanoi$(E) knight$(E) tclock$(E) \
+lrtest$(E) ncurses$(E)
 
 ncurses_tests: $(NCURSES_TESTS)
 
@@ -16,15 +19,15 @@ gdc$(E): $(ncurses_testdir)/gdc.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
 hanoi$(E): $(ncurses_testdir)/hanoi.c
-	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS) -lm
 
 knight$(E): $(ncurses_testdir)/knight.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
 tclock$(E): $(ncurses_testdir)/tclock.c
-	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS) -lm
 
-view$(E): $(ncurses_testdir)/view.c
+lrtest$(E): $(ncurses_testdir)/lrtest.c
 	$(BUILD) $(NCFLAGS) -o $@ $< $(LDFLAGS)
 
 ncurses$(E): $(ncurses_testdir)/ncurses.c

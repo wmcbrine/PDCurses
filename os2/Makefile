@@ -1,4 +1,4 @@
-# GNU MAKE Makefile for PDCurses library - OS/2 emx 0.9c+
+# GNU Makefile for PDCurses - OS/2
 #
 # Usage: make [-f path\Makefile] [DEBUG=Y] [target]
 #
@@ -13,8 +13,7 @@ ifndef PDCURSES_SRCDIR
 	PDCURSES_SRCDIR = ..
 endif
 
-include $(PDCURSES_SRCDIR)/version.mif
-include $(PDCURSES_SRCDIR)/libobjs.mif
+include $(PDCURSES_SRCDIR)/common/libobjs.mif
 
 osdir		= $(PDCURSES_SRCDIR)/os2
 
@@ -22,7 +21,7 @@ PDCURSES_OS2_H	= $(osdir)/pdcos2.h
 
 CC		= gcc
 
-CFLAGS = -I$(PDCURSES_SRCDIR) -c -Wall
+CFLAGS = -c -I$(PDCURSES_SRCDIR) -Ic:/emx/include -Wall
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  += -g -DPDCDEBUG
@@ -48,7 +47,7 @@ CLEAN = *.a testcurs ozdemo xmas tuidemo firework ptest rain worm
 
 .PHONY: all libs clean demos dist
 
-all:	libs demos
+all:	libs
 
 libs:	$(PDCLIBS)
 
@@ -69,13 +68,12 @@ $(LIBOBJS) $(PDCOBJS) $(DEMOOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_OS2_H)
 $(DEMOS) : $(LIBCURSES)
 panel.o ptest.o: $(PANEL_HEADER)
-terminfo.o: $(TERM_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(CC) -c $(CFLAGS) -o$@ $<
+	$(CC) $(CFLAGS) -o$@ $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
-	$(CC) -c $(CFLAGS) -o$@ $<
+	$(CC) $(CFLAGS) -o$@ $<
 
 firework.exe ozdemo.exe rain.exe testcurs.exe worm.exe xmas.exe \
 ptest.exe: %.exe: %.o
@@ -95,9 +93,3 @@ tui.o: $(demodir)\tui.c $(demodir)\tui.h
 
 tuidemo.o: $(demodir)\tuidemo.c
 	$(CC) $(CFLAGS) -I$(demodir) -o $@ $<
-
-PLATFORM1 = EMX OS/2
-PLATFORM2 = EMX 0.9d for OS/2
-ARCNAME = pdc$(VER)_emx_os2
-
-include $(PDCURSES_SRCDIR)/makedist.mif

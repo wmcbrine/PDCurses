@@ -1,4 +1,4 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #if defined(__EMX__) || defined(__WATCOMC__) || defined(__IBMC__) || \
 defined(__TURBOC__)
@@ -7,26 +7,6 @@ defined(__TURBOC__)
 #endif
 
 #include "pdcos2.h"
-
-/*man-start**************************************************************
-
-pdckbd
-------
-
-### Synopsis
-
-    unsigned long PDC_get_input_fd(void);
-
-### Description
-
-   PDC_get_input_fd() returns the file descriptor that PDCurses
-   reads its input from. It can be used for select().
-
-### Portability
-                             X/Open    BSD    SYS V
-    PDC_get_input_fd            -       -       -
-
-**man-end****************************************************************/
 
 static KBDINFO kbdinfo;     /* default keyboard mode */
 static HMOU mouse_handle = 0;
@@ -85,15 +65,6 @@ static short key_table[] =
     ALT_DOWN,       ALT_PGDN,       ALT_INS,        ALT_DEL,
     ALT_PADSLASH,   ALT_TAB,        ALT_PADENTER,   -1
 };
-
-unsigned long pdc_key_modifiers = 0L;
-
-unsigned long PDC_get_input_fd(void)
-{
-    PDC_LOG(("PDC_get_input_fd() - called\n"));
-
-    return (unsigned long)fileno(stdin);
-}
 
 void PDC_get_keyboard_info(void)
 {
@@ -176,7 +147,7 @@ static int _process_mouse_events(void)
 
     for (i = 0; i < 3; i++)
     {
-        pdc_mouse_status.button[i] =
+        SP->mouse_status.button[i] =
             ((event.fs & move_mask[i]) ? BUTTON_MOVED : 0) |
             ((event.fs & press_mask[i]) ? BUTTON_PRESSED : 0);
 
@@ -184,13 +155,13 @@ static int _process_mouse_events(void)
            events. A MOVE should always follow a PRESS, so treat a MOVE
            immediately after a RELEASE as a PRESS. */
 
-        if ((pdc_mouse_status.button[i] == BUTTON_MOVED) &&
+        if ((SP->mouse_status.button[i] == BUTTON_MOVED) &&
             (old_mouse_status.button[i] == BUTTON_RELEASED))
         {
-            pdc_mouse_status.button[i] = BUTTON_PRESSED;
+            SP->mouse_status.button[i] = BUTTON_PRESSED;
         }
 
-        if (pdc_mouse_status.button[i] == BUTTON_PRESSED && SP->mouse_wait)
+        if (SP->mouse_status.button[i] == BUTTON_PRESSED && SP->mouse_wait)
         {
             /* Check for a click -- a PRESS followed immediately by a
                release */
@@ -210,38 +181,38 @@ static int _process_mouse_events(void)
                 MouReadEventQue(&event, &count, mouse_handle);
 
                 if (!(event.fs & button_mask[i]))
-                    pdc_mouse_status.button[i] = BUTTON_CLICKED;
+                    SP->mouse_status.button[i] = BUTTON_CLICKED;
             }
         }
     }
 
-    pdc_mouse_status.x = event.col;
-    pdc_mouse_status.y = event.row;
+    SP->mouse_status.x = event.col;
+    SP->mouse_status.y = event.row;
 
-    pdc_mouse_status.changes = 0;
+    SP->mouse_status.changes = 0;
 
     for (i = 0; i < 3; i++)
     {
-        if (old_mouse_status.button[i] != pdc_mouse_status.button[i])
-            pdc_mouse_status.changes |= (1 << i);
+        if (old_mouse_status.button[i] != SP->mouse_status.button[i])
+            SP->mouse_status.changes |= (1 << i);
 
-        if (pdc_mouse_status.button[i] == BUTTON_MOVED)
+        if (SP->mouse_status.button[i] == BUTTON_MOVED)
         {
             /* Discard non-moved "moves" */
 
-            if (pdc_mouse_status.x == old_mouse_status.x &&
-                pdc_mouse_status.y == old_mouse_status.y)
+            if (SP->mouse_status.x == old_mouse_status.x &&
+                SP->mouse_status.y == old_mouse_status.y)
                 return -1;
 
             /* Motion events always flag the button as changed */
 
-            pdc_mouse_status.changes |= (1 << i);
-            pdc_mouse_status.changes |= PDC_MOUSE_MOVED;
+            SP->mouse_status.changes |= (1 << i);
+            SP->mouse_status.changes |= PDC_MOUSE_MOVED;
             break;
         }
     }
 
-    old_mouse_status = pdc_mouse_status;
+    old_mouse_status = SP->mouse_status;
 
     /* Treat click events as release events for comparison purposes */
 
@@ -266,8 +237,8 @@ static int _process_mouse_events(void)
     {
         for (i = 0; i < 3; i++)
         {
-            if (pdc_mouse_status.changes & (1 << i))
-                pdc_mouse_status.button[i] |= shift_flags;
+            if (SP->mouse_status.changes & (1 << i))
+                SP->mouse_status.button[i] |= shift_flags;
         }
     }
 
@@ -285,7 +256,7 @@ int PDC_get_key(void)
     int key, scan;
     KBDKEYINFO keyInfo = {0};
 
-    pdc_key_modifiers = 0L;
+    SP->key_modifiers = 0L;
 
     if (mouse_handle && mouse_events)
         return _process_mouse_events();
@@ -331,20 +302,17 @@ int PDC_get_key(void)
     key = keyInfo.chChar;
     scan = keyInfo.chScan;
 
-    if (SP->save_key_modifiers)
-    {
-        if (keyInfo.fsState & KBDSTF_ALT)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_ALT;
+    if (keyInfo.fsState & KBDSTF_ALT)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_ALT;
 
-        if (keyInfo.fsState & KBDSTF_CONTROL)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
+    if (keyInfo.fsState & KBDSTF_CONTROL)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_CONTROL;
 
-        if (keyInfo.fsState & KBDSTF_NUMLOCK_ON)
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
+    if (keyInfo.fsState & KBDSTF_NUMLOCK_ON)
+        SP->key_modifiers |= PDC_KEY_MODIFIER_NUMLOCK;
 
-        if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
-            pdc_key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
-    }
+    if (keyInfo.fsState & (KBDSTF_LEFTSHIFT|KBDSTF_RIGHTSHIFT))
+        SP->key_modifiers |= PDC_KEY_MODIFIER_SHIFT;
 
     if (scan == 0x1c && key == 0x0a)    /* ^Enter */
         key = CTL_ENTER;
@@ -418,15 +386,24 @@ void PDC_flushinp(void)
     KbdFlushBuffer(0);
 }
 
+bool PDC_has_mouse(void)
+{
+    if (!mouse_handle)
+    {
+        memset(&old_mouse_status, 0, sizeof(MOUSE_STATUS));
+        MouOpen(NULL, &mouse_handle);
+    }
+
+    return !!mouse_handle;
+}
+
 int PDC_mouse_set(void)
 {
     unsigned long mbe = SP->_trap_mbe;
 
     if (mbe && !mouse_handle)
     {
-        memset(&old_mouse_status, 0, sizeof(MOUSE_STATUS));
-        MouOpen(NULL, &mouse_handle);
-        if (mouse_handle)
+        if (PDC_has_mouse())
             MouDrawPtr(mouse_handle);
     }
     else if (!mbe && mouse_handle)

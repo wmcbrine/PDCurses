@@ -1,10 +1,6 @@
-/* Public Domain Curses */
+/* PDCurses */
 
 #include "pdcos2.h"
-
-/* COLOR_PAIR to attribute encoding table. */
-
-static struct {short f, b;} atrtab[PDC_COLOR_PAIRS];
 
 static short realtocurs[16] =
 {
@@ -83,24 +79,17 @@ void PDC_scr_close(void)
 
 void PDC_scr_free(void)
 {
-    if (SP)
-        free(SP);
 }
 
-/* open the physical screen -- allocate SP, miscellaneous intialization,
-   and may save the existing screen for later restoration */
+/* open the physical screen -- miscellaneous initialization, may save
+   the existing screen for later restoration */
 
-int PDC_scr_open(int argc, char **argv)
+int PDC_scr_open(void)
 {
     USHORT totchars;
     int i;
 
     PDC_LOG(("PDC_scr_open() - called\n"));
-
-    SP = calloc(1, sizeof(SCREEN));
-
-    if (!SP)
-        return ERR;
 
     for (i = 0; i < 16; i++)
         pdc_curstoreal[realtocurs[i]] = i;
@@ -111,9 +100,6 @@ int PDC_scr_open(int argc, char **argv)
     PDC_get_keyboard_info();
     pdc_font = _get_font();
 
-    SP->lines = PDC_get_rows();
-    SP->cols = PDC_get_columns();
-
     SP->mouse_wait = PDC_CLICK_PERIOD;
     SP->audible = TRUE;
 
@@ -123,8 +109,8 @@ int PDC_scr_open(int argc, char **argv)
 
     if (getenv("PDC_RESTORE_SCREEN"))
     {
-        saved_lines = SP->lines;
-        saved_cols = SP->cols;
+        saved_lines = PDC_get_rows();
+        saved_cols = PDC_get_columns();
 
         saved_screen = malloc(2 * saved_lines * saved_cols);
 
@@ -162,9 +148,6 @@ int PDC_resize_screen(int nlines, int ncols)
     modeInfo.row = nlines;
     modeInfo.col = ncols;
     result = VioSetMode(&modeInfo, 0);
-
-    LINES = PDC_get_rows();
-    COLS = PDC_get_columns();
 
     return (result == 0) ? OK : ERR;
 }
@@ -223,20 +206,6 @@ void PDC_save_screen_mode(int i)
         saved_font[i] = pdc_font;
         saved_scrnmode[i] = scrnmode;
     }
-}
-
-void PDC_init_pair(short pair, short fg, short bg)
-{
-    atrtab[pair].f = fg;
-    atrtab[pair].b = bg;
-}
-
-int PDC_pair_content(short pair, short *fg, short *bg)
-{
-    *fg = atrtab[pair].f;
-    *bg = atrtab[pair].b;
-
-    return OK;
 }
 
 bool PDC_can_change_color(void)

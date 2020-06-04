@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-/* rain 11/3/1980 EPS/CITHEP */
+/* rain 1980-11-03 EPS/CITHEP */
 
 static int next_j(int j)
 {
@@ -147,7 +147,6 @@ int main(int argc, char *argv[])
         case KEY_RESIZE:
 # ifdef PDCURSES
             resize_term(0, 0);
-            erase();
 # endif
             r = LINES - 4;
             c = COLS - 4;

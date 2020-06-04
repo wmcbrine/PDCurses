@@ -2,7 +2,7 @@
  * 'textual user interface'
  *
  * Author : P.J. Kunst <kunst@prl.philips.nl>
- * Date   : 25-02-93
+ * Date   : 1993-02-25
  */
 
 #ifndef _TUI_H_

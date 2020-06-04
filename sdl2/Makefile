@@ -1,17 +1,30 @@
-# Makefile for PDCurses library for SDL
+# Makefile for PDCurses for SDL2
 
 O = o
+
+ifndef PDCURSES_SRCDIR
+	PDCURSES_SRCDIR	= ..
+endif
+
+osdir		= $(PDCURSES_SRCDIR)/sdl2
+common		= $(PDCURSES_SRCDIR)/common
+
+include $(common)/libobjs.mif
 
 ifeq ($(OS),Windows_NT)
 	E = .exe
 	CC = gcc
 	RM = cmd /c del
 
-	SFLAGS = -Ic:/sdl2-2.0.7/include
-	SLIBS = -Lc:/sdl2-2.0.7/lib/x64 -lSDL2main -lSDL2
+	include $(osdir)/versions.mif
 
-	TFLAGS = -Ic:/sdl2_ttf-2.0.14/include
-	TLIBS =-Lc:/sdl2_ttf-2.0.14/lib/x64 -lSDL2_ttf
+	PLATFORM = $(shell $(CC) -dumpmachine)
+
+	SFLAGS = -I$(SDLBASE)/$(PLATFORM)/include/SDL2
+	SLIBS = -L$(SDLBASE)/$(PLATFORM)/lib -lSDL2main -lSDL2
+
+	TFLAGS = -I$(TTFBASE)/$(PLATFORM)/include/SDL2
+	TLIBS =-L$(TTFBASE)/$(PLATFORM)/lib -lSDL2_ttf
 
 	DEMOFLAGS = -mwindows
 else
@@ -23,18 +36,7 @@ else
 	TLIBS = -lSDL2_ttf
 endif
 
-ifndef PDCURSES_SRCDIR
-	PDCURSES_SRCDIR	= ..
-endif
-
-include $(PDCURSES_SRCDIR)/libobjs.mif
-
-osdir		= $(PDCURSES_SRCDIR)/sdl2
-
 PDCURSES_SDL_H	= $(osdir)/pdcsdl.h
-
-# If your system doesn't have these, remove the defines here
-SFLAGS		+= -DHAVE_VSNPRINTF -DHAVE_VSSCANF
 
 ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG -fPIC
@@ -43,7 +45,8 @@ else
 endif
 
 ifeq ($(WIDE),Y)
-	CFLAGS += -DPDC_WIDE $(TFLAGS)
+	CFLAGS += -DPDC_WIDE
+	SFLAGS += $(TFLAGS)
 	SLIBS  += $(TLIBS)
 endif
 
@@ -51,42 +54,57 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
+ifeq ($(OS)_$(DLL),Windows_NT_Y)
+	CFLAGS += -DPDC_DLL_BUILD
+	LIBEXE = $(CC)
+	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
+	LIBCURSES = pdcurses.dll
+	CLEAN = $(LIBCURSES) *.a
+	RESOURCE = pdcurses.o
+	LIBLIBS = $(SLIBS)
+	LDFLAGS = $(LIBCURSES)
+else
+	LIBEXE = $(AR)
+	LIBFLAGS = rcv
+	LIBCURSES = pdcurses.a
+	LDFLAGS = $(LIBCURSES) $(SLIBS)
+	CLEAN = *.a
+endif
+
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
 
 LINK		= $(CC)
-LDFLAGS		= $(LIBCURSES) $(SLIBS)
-RANLIB		= ranlib
-LIBCURSES	= libpdcurses.a
 
 DEMOS		+= sdltest$(E)
 
-.PHONY: all libs clean demos install
+.PHONY: all libs clean demos
 
-all:	libs demos
+all:	libs
 
 libs:	$(LIBCURSES)
 
 clean:
-	-$(RM) *.o trace $(LIBCURSES) $(DEMOS)
+	-$(RM) *.o trace $(CLEAN) $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)
 	strip $(DEMOS)
 endif
 
-$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
-	ar rv $@ $?
-	-$(RANLIB) $@
+$(LIBCURSES) : $(LIBOBJS) $(PDCOBJS) $(RESOURCE)
+	$(LIBEXE) $(LIBFLAGS) $@ $? $(LIBLIBS)
+
+pdcurses.o: $(common)/pdcurses.rc
+	windres -i $(common)/pdcurses.rc pdcurses.o
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_SDL_H)
 $(DEMOS) : $(PDCURSES_CURSES_H) $(LIBCURSES)
 tui.o tuidemo.o : $(PDCURSES_CURSES_H)
-terminfo.o: $(TERM_HEADER)
 panel.o ptest$(E): $(PANEL_HEADER)
 
 $(LIBOBJS) : %.o: $(srcdir)/%.c
-	$(BUILD) $(SFLAGS) -c $<
+	$(BUILD) -c $<
 
 $(PDCOBJS) : %.o: $(osdir)/%.c
 	$(BUILD) $(SFLAGS) -c $<
@@ -116,7 +134,7 @@ xmas$(E): $(demodir)/xmas.c
 	$(BUILD) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
 
 sdltest$(E): $(osdir)/sdltest.c
-	$(BUILD) $(SFLAGS) $(DEMOFLAGS) -o $@ $< $(LDFLAGS)
+	$(BUILD) $(SFLAGS) $(DEMOFLAGS) -o $@ $< $(LIBCURSES) $(SLIBS)
 
 tui.o: $(demodir)/tui.c $(demodir)/tui.h
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tui.c
@@ -124,5 +142,4 @@ tui.o: $(demodir)/tui.c $(demodir)/tui.h
 tuidemo.o: $(demodir)/tuidemo.c
 	$(BUILD) -c $(DEMOFLAGS) $(demodir)/tuidemo.c
 
-ncurses_testdir = $(HOME)/ncurses-5.9/test
 include $(demodir)/nctests.mif

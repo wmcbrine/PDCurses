@@ -37,6 +37,7 @@ Build instructions are in the README.md file for each platform:
 
 -  [DOS]
 -  [OS/2]
+-  [Plan9]
 -  [SDL 1.x]
 -  [SDL 2.x]
 -  [Windows]

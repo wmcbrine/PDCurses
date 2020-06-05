@@ -71,17 +71,17 @@ LD=pcc
 CFLAGS= -c -I. -D_POSIX_SOURCE -D_BSD_EXTENSION -D_C99_SNPRINTF_EXTENSION \
 -DHAVE_VSNPRINTF
 
-%.$O: pdcurses/%.c
-	$CC $CFLAGS pdcurses/$stem.c
+%.$O: ../pdcurses/%.c
+	$CC $CFLAGS ../pdcurses/$stem.c
 
-%.$O: plan9/%.c
-	$CC $CFLAGS plan9/$stem.c
+%.$O: %.c
+	$CC $CFLAGS $stem.c
 
 
 install:V:
     cp libcurses.a /$objtype/lib/ape/libcurses.a
-	cp curses.h /sys/include/ape/curses.h
-	cp panel.h /sys/include/ape/
+	cp ../curses.h /sys/include/ape/curses.h
+	cp ../panel.h /sys/include/ape/
 
 demos:V:
 	@{

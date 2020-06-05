@@ -56,3 +56,10 @@ void PDC_transform_line(int y, int x, int len, const chtype * srcp)
 		p9putc(y, x + i, srcp[i]);
 	}
 }
+
+void PDC_doupdate(void)
+{
+    p9napms(1);
+}
+
+

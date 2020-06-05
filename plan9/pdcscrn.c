@@ -27,7 +27,7 @@ int PDC_init_color(short color, short red, short green, short blue)
 }
 
 
-int PDC_scr_open(int, char **)
+int PDC_scr_open(void)
 {
 	PDC_LOG(("PDC_scr_open() - called\n"));
 

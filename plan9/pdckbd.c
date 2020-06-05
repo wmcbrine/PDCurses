@@ -44,9 +44,10 @@ void PDC_set_keyboard_binary(bool)
 	PDC_LOG(("PDC_mouse_set() - called\n"));
 }
 
-
-unsigned long PDC_get_input_fd(void)
+bool PDC_has_mouse(void)
 {
-	PDC_LOG(("PDC_get_input_fd() - called\n"));
-	return -1;
+    return TRUE;
 }
+
+
+

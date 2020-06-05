@@ -68,8 +68,8 @@ UPDATE=\
 
 CC=pcc
 LD=pcc
-CFLAGS= -c -I. -D_POSIX_SOURCE -D_BSD_EXTENSION -D_C99_SNPRINTF_EXTENSION \
--DHAVE_VSNPRINTF
+CFLAGS= -c -I. -I.. -D_POSIX_SOURCE -D_BSD_EXTENSION -D_C99_SNPRINTF_EXTENSION \
+-DHAVE_VSNPRINTF 
 
 %.$O: ../pdcurses/%.c
 	$CC $CFLAGS ../pdcurses/$stem.c
@@ -81,17 +81,18 @@ CFLAGS= -c -I. -D_POSIX_SOURCE -D_BSD_EXTENSION -D_C99_SNPRINTF_EXTENSION \
 install:V:
     cp libcurses.a /$objtype/lib/ape/libcurses.a
 	cp ../curses.h /sys/include/ape/curses.h
-	cp ../panel.h /sys/include/ape/
+	ape/patch /sys/include/ape/curses.h <header.patch
+	cp ../panel.h /sys/include/ape/panel.h
 
 demos:V:
 	@{
-		cd demos
+		cd ../demos
 		mk all
 	}
 
 clean:V:
 	@{
-		cd demos
+		cd ../demos
 		mk clean
 	}
 	rm -f *.[$OS]

@@ -26,8 +26,26 @@ void PDC_set_title(const char *title)
 int PDC_set_blink(bool blinkon)
 {
 	PDC_LOG(("PDC_set_title() - called:<%d>\n", blinkon));
-	if (pdc_color_started)
+	if (SP->color_started)
 		COLORS = 16;
 
 	return blinkon ? ERR : OK;
 }
+
+int PDC_set_bold(bool boldon)
+{
+    if (!SP)
+        return ERR;
+
+#ifdef PDC_WIDE
+    if (boldon)
+        SP->termattrs |= A_BOLD;
+    else
+        SP->termattrs &= ~A_BOLD;
+
+    return OK;
+#else
+    return boldon ? ERR : OK;
+#endif
+}
+

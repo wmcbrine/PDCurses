@@ -1,0 +1,11 @@
+--- curses.h	2020-06-04 13:06:57.089157964 +0200
++++ curses.ape	2020-06-05 11:17:57.562007451 +0200
+@@ -27,6 +27,8 @@
+ 
+ **man-end****************************************************************/
+ 
++#pragma lib "/$M/lib/ape/libcurses.a"
++
+ #define PDCURSES        1
+ #define PDC_BUILD    3905
+ #define PDC_VER_MAJOR   3

@@ -106,7 +106,7 @@ int p9getcols(void)
 }
 
 
-#define ms pdc_mouse_status	/* I don't like this var name */
+#define ms SP->mouse_status	/* I don't like this var name */
 static void setms(Mouse m)
 {
 	static uint clickmsec;

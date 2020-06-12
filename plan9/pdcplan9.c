@@ -63,7 +63,10 @@ static void fatal(char *s)
 
 void p9napms(int ms)
 {
-	sleep(ms);
+    /* posix sleep is in seconds... nanosleep did not work
+     alternatives? */
+    
+	sleep(ms/1000);
 }
 
 

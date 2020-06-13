@@ -17,7 +17,6 @@
 #include <signal.h>
 #include <select.h>
 #include <sys/time.h>
-#include <time.h>
 
 #define border curborder
 #include <curspriv.h>
@@ -64,12 +63,7 @@ static void fatal(char *s)
 
 void p9napms(int ms)
 {
-    int second = ms/1000;
-    long nano = ms*1000000 - second*1000000000;
-    struct timespec sleepy = {0};
-    sleepy.ts_sec = second;
-    sleepy.ts_nsec = nano;
-    nanosleep(&sleepy, (struct timespec *) NULL);
+    _SLEEP(ms);
 }
 
 

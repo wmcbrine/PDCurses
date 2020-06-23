@@ -60,6 +60,7 @@ William McBrine <wmcbrine@gmail.com>
 [docs]: docs/README.md
 [DOS]: dos/README.md
 [OS/2]: os2/README.md
+[Plan9]: plan9/README.md
 [SDL 1.x]: sdl1/README.md
 [SDL 2.x]: sdl2/README.md
 [Windows]: wincon/README.md

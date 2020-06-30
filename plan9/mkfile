@@ -86,14 +86,12 @@ install:V:
 
 demos:V:
 	@{
-		cd ../demos
-		mk all
+		mk -f mkfile_demo all
 	}
 
 clean:V:
 	@{
-		cd ../demos
-		mk clean
+		mk -f mkfile_demo clean
 	}
 	rm -f *.[$OS]
 

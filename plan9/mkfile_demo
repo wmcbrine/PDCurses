@@ -23,7 +23,10 @@ UPDATE=\
 
 </sys/src/cmd/mkmany
 
-CFLAGS= -c -D_POSIX_SOURCE -D_BSD_EXTENSION #-DPDCDEBUG
+CFLAGS= -c -D_POSIX_SOURCE -D_BSD_EXTENSION -D_SUSV2_SOURCE -DPlan9
+
+%.$O: ../demos/%.c
+	$CC $CFLAGS ../demos/$stem.c
 
 $O.tuidemo:V: tui.$O tuidemo.$O
 	$LD -o $target $prereq

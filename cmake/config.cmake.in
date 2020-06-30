@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
+
+set(PDCurses_X11 @X11_FOUND@)
+
+check_required_components(@PROJECT_NAME@)

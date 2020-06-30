@@ -21,6 +21,26 @@ Also consult the README for each specific platform you'll be using:
 Building
 --------
 
+The PDcurses library can be built for Unix-like systems and Windows via Makefiles
+or CMake.
+To build with CMake:
+
+```sh
+cmake -B build
+cmake --build build
+```
+
+optionally, install the library binary and headers:
+
+```sh
+cmake --install build --prefix /path/to/install
+```
+
+If using X11, install X11 like:
+
+* Linux: `apt install --no-install-recommends libxt-dev libxaw7-dev libx11-dev`
+* macOS: `brew install xorgproto libxt libxaw libx11 pkgconf`
+
 - To rebuild MANUAL.md from the "man page" sections of the source code,
   type "./mkman.sh". Needs a Unix-like shell and an Awk interpreter.
 

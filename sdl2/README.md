@@ -121,6 +121,10 @@ but you can override this via the environment variables PDC_COLS and/or
 PDC_LINES. If pdc_screen is preinitialized (see below), these are
 ignored.
 
+Title
+------------
+The default title of the window is "PDCurses". You can override this via
+the environment variable PDC_TITLE.
 
 Integration with SDL
 --------------------

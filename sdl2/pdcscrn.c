@@ -274,7 +274,9 @@ int PDC_scr_open(void)
         env = getenv("PDC_COLS");
         pdc_swidth = (env ? atoi(env) : 80) * pdc_fwidth;
 
-        pdc_window = SDL_CreateWindow("PDCurses",
+        const char *title = getenv("PDC_TITLE");
+
+        pdc_window = SDL_CreateWindow(title ? title : "PDCurses",
             SDL_WINDOWPOS_CENTERED_DISPLAY(displaynum),
             SDL_WINDOWPOS_CENTERED_DISPLAY(displaynum),
             pdc_swidth, pdc_sheight, SDL_WINDOW_RESIZABLE);

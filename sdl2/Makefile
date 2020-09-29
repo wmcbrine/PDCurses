@@ -64,11 +64,20 @@ ifeq ($(OS)_$(DLL),Windows_NT_Y)
 	LIBLIBS = $(SLIBS)
 	LDFLAGS = $(LIBCURSES)
 else
+ifeq ($(SHARED),Y)
+	LIBEXE = $(CC)
+	LIBFLAGS = -shared -o
+	LIBCURSES = pdcurses.so
+	LIBLIBS = $(SLIBS)
+	LDFLAGS = $(LIBCURSES)
+	CLEAN = *.so
+else
 	LIBEXE = $(AR)
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
 	LDFLAGS = $(LIBCURSES) $(SLIBS)
 	CLEAN = *.a
+endif
 endif
 
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)

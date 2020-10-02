@@ -10,7 +10,7 @@ Building
 - On *nix (including Linux and Mac OS X), run "make" in the sdl2
   directory. There is no configure script (yet?) for this port. This
   assumes a working sdl-config, and GNU make. It builds the library
-  pdcurses.a (or pdcurses.so with SHARED=Y).
+  pdcurses.a (or pdcurses.so/pdcurses.dylib with SHARED=Y).
 
 - With MinGW, edit the Makefile to point to the appropriate include and
   library paths, and then run "mingw32-make".
@@ -25,9 +25,9 @@ Building
   and treat all narrow-character strings as UTF-8; this option has no
   effect unless WIDE=Y is also set. Under Windows, you can specify
   "DLL=Y" to build pdcurses.dll instead of a static library. Under *nix,
-  you can specify "SHARED=Y" to build pdcurses.so rather than the static
-  library. And on all platforms, add the target "demos" to build the
-  sample programs.
+  you can specify "SHARED=Y" to build pdcurses.so or pdcurses.dylib
+  rather than the static library. And on all platforms, add the target
+  "demos" to build the sample programs.
 
 
 Usage

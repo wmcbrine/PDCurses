@@ -36,6 +36,7 @@ LINK		= $(CC)
 LDFLAGS		= $(LIBCURSES) $(SLIBS)
 RANLIB		= ranlib
 LIBCURSES	= pdcurses.a
+LIBCURSES_SO	= pdcurses.so
 
 DEMOS		+= sdltest
 
@@ -43,7 +44,7 @@ DEMOS		+= sdltest
 
 all:	libs
 
-libs:	$(LIBCURSES)
+libs:	$(LIBCURSES) $(LIBCURSES_SO)
 
 clean:
 	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
@@ -56,6 +57,9 @@ endif
 $(LIBCURSES) : $(LIBOBJS) $(PDCOBJS)
 	ar rv $@ $?
 	-$(RANLIB) $@
+
+$(LIBCURSES_SO) : $(LIBOBJS) $(PDCOBJS)
+	$(CC) -shared -o $@ $? $(SLIBS)
 
 $(LIBOBJS) $(PDCOBJS) : $(PDCURSES_HEADERS)
 $(PDCOBJS) : $(PDCURSES_SDL_H)

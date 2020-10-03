@@ -47,7 +47,7 @@ all:	libs
 libs:	$(LIBCURSES) $(LIBCURSES_SO)
 
 clean:
-	-rm -rf *.o trace $(LIBCURSES) $(DEMOS)
+	-rm -rf *.o trace $(LIBCURSES) $(LIBCURSES_SO) $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)

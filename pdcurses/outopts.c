@@ -23,6 +23,7 @@ outopts
     bool is_cleared(const WINDOW *win);
     bool is_immedok(const WINDOW *win);
     bool is_leaveok(const WINDOW *win);
+    bool is_scrollok(const WINDOW *win);
 
 ### Description
 
@@ -58,6 +59,8 @@ outopts
 
    is_leaveok() reports whether the specified window is in leaveok mode.
 
+   is_scrollok() reports whether the specified window allows scrolling.
+
 ### Return Value
 
    All functions except is_leaveok() return OK on success and ERR on
@@ -76,6 +79,7 @@ outopts
     is_cleared                  -       Y       -
     is_immedok                  -       Y       -
     is_leaveok                  -       Y       Y
+    is_scrollok                 -       Y       -
     raw_output                  -       -       -
 
 **man-end****************************************************************/
@@ -201,4 +205,14 @@ bool is_leaveok(const WINDOW *win)
         return FALSE;
 
     return win->_leaveit;
+}
+
+bool is_scrollok(const WINDOW *win)
+{
+    PDC_LOG(("is_scrollok() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_scroll;
 }

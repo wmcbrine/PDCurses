@@ -20,6 +20,7 @@ outopts
 
     int raw_output(bool bf);
 
+    bool is_cleared(const WINDOW *win);
     bool is_leaveok(const WINDOW *win);
 
 ### Description
@@ -49,6 +50,9 @@ outopts
    *add* and *ins* curses functions (that is, it disables translation of
    control characters).
 
+   is_cleared() reports whether the specified window causes clear at next
+   refresh.
+
    is_leaveok() reports whether the specified window is in leaveok mode.
 
 ### Return Value
@@ -66,6 +70,7 @@ outopts
     setscrreg                   Y       Y       Y
     wsetscrreg                  Y       Y       Y
     scrollok                    Y       Y       Y
+    is_cleared                  -       Y       -
     is_leaveok                  -       Y       Y
     raw_output                  -       -       -
 
@@ -162,6 +167,16 @@ int raw_output(bool bf)
     SP->raw_out = bf;
 
     return OK;
+}
+
+bool is_cleared(const WINDOW *win)
+{
+    PDC_LOG(("is_cleared() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_clear;
 }
 
 bool is_leaveok(const WINDOW *win)

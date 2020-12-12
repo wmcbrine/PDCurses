@@ -63,8 +63,10 @@ outopts
 
 ### Return Value
 
-   All functions except is_leaveok() return OK on success and ERR on
-   error.
+   All functions that returns an int returns OK on success and ERR on error.
+
+   is_cleared(), is_immedok(), is_leaveok() and is_scrollok() are booleans
+   and returns TRUE or FALSE.
 
 ### Portability
                              X/Open  ncurses  NetBSD

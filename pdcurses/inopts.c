@@ -33,6 +33,7 @@ inopts
     int nocrmode(void);
 
     bool is_keypad(const WINDOW *win);
+    bool is_nodelay(const WINDOW *win);
 
 ### Description
 
@@ -92,10 +93,13 @@ inopts
 
    is_keypad() reports whether the specified window is in keypad mode.
 
+   is_nodelay() reports whether the specified window is in nodelay mode.
+
 ### Return Value
 
-   All functions except is_keypad() and the void functions return OK on
-   success and ERR on error.
+   All functions that returns an int returns OK on success and ERR on error.
+
+   is_keypad() and is_nodelay() returns TRUE or FALSE.
 
 ### Portability
                              X/Open  ncurses  NetBSD
@@ -121,6 +125,7 @@ inopts
     crmode                      Y       Y       Y
     nocrmode                    Y       Y       Y
     is_keypad                   -       Y       Y
+    is_nodelay                  -       Y       -
 
 **man-end****************************************************************/
 
@@ -365,4 +370,14 @@ bool is_keypad(const WINDOW *win)
         return FALSE;
 
     return win->_use_keypad;
+}
+
+bool is_nodelay(const WINDOW *win)
+{
+    PDC_LOG(("is_nodelay() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_nodelay;
 }

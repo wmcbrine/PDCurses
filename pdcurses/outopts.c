@@ -21,6 +21,7 @@ outopts
     int raw_output(bool bf);
 
     bool is_cleared(const WINDOW *win);
+    bool is_immedok(const WINDOW *win);
     bool is_leaveok(const WINDOW *win);
 
 ### Description
@@ -53,6 +54,8 @@ outopts
    is_cleared() reports whether the specified window causes clear at next
    refresh.
 
+   is_immedok() reports whether the specified window is in immedok mode.
+
    is_leaveok() reports whether the specified window is in leaveok mode.
 
 ### Return Value
@@ -71,6 +74,7 @@ outopts
     wsetscrreg                  Y       Y       Y
     scrollok                    Y       Y       Y
     is_cleared                  -       Y       -
+    is_immedok                  -       Y       -
     is_leaveok                  -       Y       Y
     raw_output                  -       -       -
 
@@ -177,6 +181,16 @@ bool is_cleared(const WINDOW *win)
         return FALSE;
 
     return win->_clear;
+}
+
+bool is_immedok(const WINDOW *win)
+{
+    PDC_LOG(("is_immedok() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_immed;
 }
 
 bool is_leaveok(const WINDOW *win)

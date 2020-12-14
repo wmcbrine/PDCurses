@@ -21,6 +21,8 @@ outopts
     int raw_output(bool bf);
 
     bool is_cleared(const WINDOW *win);
+    bool is_idlok(const WINDOW *win);
+    bool is_idcok(const WINDOW *win);
     bool is_immedok(const WINDOW *win);
     bool is_leaveok(const WINDOW *win);
     bool is_scrollok(const WINDOW *win);
@@ -46,7 +48,8 @@ outopts
    setscrreg() is the stdscr version.
 
    idlok() and idcok() do nothing in PDCurses, but are provided for
-   compatibility with other curses implementations.
+   compatibility with other curses implementations, likewise is_idlok()
+   and is_idcok().
 
    raw_output() enables the output of raw characters using the standard
    *add* and *ins* curses functions (that is, it disables translation of
@@ -68,6 +71,9 @@ outopts
    is_cleared(), is_immedok(), is_leaveok() and is_scrollok() are booleans
    and returns TRUE or FALSE.
 
+   is_idlok() and is_idcok() are provided for compatibility with other curses
+   implementations, i.e. they always returns FALSE.
+
 ### Portability
                              X/Open  ncurses  NetBSD
     clearok                     Y       Y       Y
@@ -79,6 +85,8 @@ outopts
     wsetscrreg                  Y       Y       Y
     scrollok                    Y       Y       Y
     is_cleared                  -       Y       -
+    is_idlok                    -       Y       -
+    is_idcok                    -       Y       -
     is_immedok                  -       Y       -
     is_leaveok                  -       Y       Y
     is_scrollok                 -       Y       -
@@ -187,6 +195,24 @@ bool is_cleared(const WINDOW *win)
         return FALSE;
 
     return win->_clear;
+}
+
+bool is_idlok(const WINDOW *win)
+{
+    (void) win;
+
+    PDC_LOG(("is_idlok() - called\n"));
+
+    return FALSE;
+}
+
+bool is_idcok(const WINDOW *win)
+{
+    (void) win;
+
+    PDC_LOG(("is_idcok() - called\n"));
+
+    return FALSE;
 }
 
 bool is_immedok(const WINDOW *win)

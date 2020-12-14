@@ -1286,6 +1286,8 @@ PDCEX  int     assume_default_colors(int, int);
 PDCEX  const char *curses_version(void);
 PDCEX  bool    has_key(int);
 PDCEX  bool    is_cleared(const WINDOW *);
+PDCEX  bool    is_idcok(const WINDOW *);
+PDCEX  bool    is_idlok(const WINDOW *);
 PDCEX  bool    is_immedok(const WINDOW *);
 PDCEX  bool    is_keypad(const WINDOW *);
 PDCEX  bool    is_leaveok(const WINDOW *);

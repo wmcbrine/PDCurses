@@ -215,7 +215,13 @@ static KPTAB ext_kptab[] =
 
 void PDC_set_keyboard_binary(bool on)
 {
+    DWORD mode;
+
     PDC_LOG(("PDC_set_keyboard_binary() - called\n"));
+
+    GetConsoleMode(pdc_con_in, &mode);
+    SetConsoleMode(pdc_con_in, !on ? (mode | ENABLE_PROCESSED_INPUT) :
+                                    (mode & ~ENABLE_PROCESSED_INPUT));
 }
 
 /* check if a key or mouse event is waiting */
@@ -635,13 +641,17 @@ bool PDC_has_mouse(void)
 
 int PDC_mouse_set(void)
 {
-    /* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear
-       all other flags, including the extended flags;
-       If turning off the mouse: Set QuickEdit Mode to the status it
-       had on startup, and clear all other flags */
+    DWORD mode;
 
-    SetConsoleMode(pdc_con_in, SP->_trap_mbe ?
-                   (ENABLE_MOUSE_INPUT|0x0088) : (pdc_quick_edit|0x0088));
+    /* If turning on mouse input: Set ENABLE_MOUSE_INPUT, and clear
+       all other flags, except processed input mode;
+       If turning off the mouse: Set QuickEdit Mode to the status it
+       had on startup, and clear all other flags, except etc. */
+
+    GetConsoleMode(pdc_con_in, &mode);
+    mode = (mode & 1) | 0x0088;
+    SetConsoleMode(pdc_con_in, mode | (SP->_trap_mbe ?
+                   ENABLE_MOUSE_INPUT : pdc_quick_edit));
 
     memset(&old_mouse_status, 0, sizeof(old_mouse_status));
 

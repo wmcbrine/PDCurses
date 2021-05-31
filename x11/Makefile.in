@@ -57,19 +57,19 @@ SHLFILE		= XCurses
 all:	$(PDCLIBS)
 
 install:
-	$(INSTALL) -d -m 755 $(libdir)
-	$(INSTALL) -d -m 755 $(bindir)
-	$(INSTALL) -d -m 755 $(includedir)
-	$(INSTALL) -d -m 755 $(includedir)/xcurses
+	$(INSTALL) -d -m 755 $(DESTDIR)$(libdir)
+	$(INSTALL) -d -m 755 $(DESTDIR)$(bindir)
+	$(INSTALL) -d -m 755 $(DESTDIR)$(includedir)
+	$(INSTALL) -d -m 755 $(DESTDIR)$(includedir)/xcurses
 	$(INSTALL) -c -m 644 $(PDCURSES_CURSES_H) \
-		$(includedir)/xcurses/curses.h
+		$(DESTDIR)$(includedir)/xcurses/curses.h
 	$(INSTALL) -c -m 644 $(PDCURSES_SRCDIR)/panel.h \
-		$(includedir)/xcurses/panel.h
-	$(INSTALL) -c -m 644 $(osdir)/libXCurses.a $(libdir)/libXCurses.a
-	-$(RANLIB) $(libdir)/libXCurses.a
+		$(DESTDIR)$(includedir)/xcurses/panel.h
+	$(INSTALL) -c -m 644 $(osdir)/libXCurses.a $(DESTDIR)$(libdir)/libXCurses.a
+	-$(RANLIB) $(DESTDIR)$(libdir)/libXCurses.a
 	-$(INSTALL) -c -m 755 $(osdir)/$(SHLPRE)$(SHLFILE)$(SHLPST) \
-		$(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST)
-	$(INSTALL) -c -m 755 $(osdir)/xcurses-config $(bindir)/xcurses-config
+		$(DESTDIR)$(libdir)/$(SHLPRE)$(SHLFILE)$(SHLPST)
+	$(INSTALL) -c -m 755 $(osdir)/xcurses-config $(DESTDIR)$(bindir)/xcurses-config
 
 clean:
 	-rm -rf *.o *.sho trace $(PDCLIBS) $(DEMOS) config.log \

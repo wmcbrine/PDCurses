@@ -503,22 +503,23 @@ int PDC_scr_open(void)
 
     /* Check application resource values here */
 
-    pdc_fwidth = pdc_app_data.normalFont->max_bounds.rbearing -
-                 pdc_app_data.normalFont->min_bounds.lbearing;
+    pdc_fwidth = pdc_app_data.normalFont->max_bounds.width;
 
-    pdc_fascent = pdc_app_data.normalFont->max_bounds.ascent;
-    pdc_fdescent = pdc_app_data.normalFont->max_bounds.descent;
+    pdc_fascent = pdc_app_data.normalFont->ascent;
+    pdc_fdescent = pdc_app_data.normalFont->descent;
     pdc_fheight = pdc_fascent + pdc_fdescent;
 
     /* Check that the italic font and normal fonts are the same size */
 
-    italic_font_valid = pdc_fwidth ==
-        pdc_app_data.italicFont->max_bounds.rbearing -
-        pdc_app_data.italicFont->min_bounds.lbearing;
+    italic_font_valid =
+        pdc_fwidth == pdc_app_data.italicFont->max_bounds.width &&
+        pdc_fheight ==
+            pdc_app_data.italicFont->ascent + pdc_app_data.italicFont->descent;
 
-    bold_font_valid = pdc_fwidth ==
-        pdc_app_data.boldFont->max_bounds.rbearing -
-        pdc_app_data.boldFont->min_bounds.lbearing;
+    bold_font_valid =
+        pdc_fwidth == pdc_app_data.boldFont->max_bounds.width &&
+        pdc_fheight ==
+            pdc_app_data.boldFont->ascent + pdc_app_data.boldFont->descent;
 
     /* Calculate size of display window */
 

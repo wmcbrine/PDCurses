@@ -331,7 +331,12 @@ static int _get_key_count(void)
 
 static int _process_key_event(void)
 {
-    int key = (unsigned short)KEV.uChar.UnicodeChar;
+    int key =
+#ifdef PDC_WIDE
+        KEV.uChar.UnicodeChar;
+#else
+        KEV.uChar.AsciiChar;
+#endif
     WORD vk = KEV.wVirtualKeyCode;
     DWORD state = KEV.dwControlKeyState;
 

@@ -512,14 +512,10 @@ int PDC_scr_open(void)
     /* Check that the italic font and normal fonts are the same size */
 
     italic_font_valid =
-        pdc_fwidth == pdc_app_data.italicFont->max_bounds.width &&
-        pdc_fheight ==
-            pdc_app_data.italicFont->ascent + pdc_app_data.italicFont->descent;
+        pdc_fwidth == pdc_app_data.italicFont->max_bounds.width;
 
     bold_font_valid =
-        pdc_fwidth == pdc_app_data.boldFont->max_bounds.width &&
-        pdc_fheight ==
-            pdc_app_data.boldFont->ascent + pdc_app_data.boldFont->descent;
+        pdc_fwidth == pdc_app_data.boldFont->max_bounds.width;
 
     /* Calculate size of display window */
 

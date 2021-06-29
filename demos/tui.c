@@ -689,7 +689,11 @@ int weditstr(WINDOW *win, char *buf, int field)
             break;
 
         default:
-            if (c == erasechar())       /* backspace, ^H */
+            /* check KEY_BACKSPACE manually, because erasechar() can only
+             * return char, and KEY_BACKSPACE is an int, so on systems
+             * that truly return KEY_BACKSPACE from wgetch(), we'll never
+             * catch it with erasechar() */
+            if (c == erasechar() || c == KEY_BACKSPACE)
             {
                 if (bp > buf)
                 {

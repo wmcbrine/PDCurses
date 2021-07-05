@@ -22,6 +22,6 @@ extern DWORD pdc_quick_edit;
 extern DWORD pdc_last_blink;
 extern short pdc_curstoreal[16], pdc_curstoansi[16];
 extern short pdc_oldf, pdc_oldb, pdc_oldu;
-extern bool pdc_conemu, pdc_ansi;
+extern bool pdc_conemu, pdc_wt, pdc_ansi;
 
 extern void PDC_blink_text(void);

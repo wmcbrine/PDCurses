@@ -17,7 +17,10 @@ color
     int init_color(short color, short red, short green, short blue);
     int color_content(short color, short *red, short *green, short *blue);
 
+    int alloc_pair(int fg, int bg);
     int assume_default_colors(int f, int b);
+    int find_pair(int fg, int bg);
+    int free_pair(int pair);
     int use_default_colors(void);
 
     int PDC_set_line_color(short color);
@@ -68,6 +71,13 @@ color
    variable PDC_ORIGINAL_COLORS is set at the time start_color() is
    called, that's equivalent to calling use_default_colors().
 
+   alloc_pair(), find_pair() and free_pair() are also from ncurses.
+   free_pair() marks a pair as unused; find_pair() returns an existing
+   pair with the specified foreground and background colors, if one
+   exists. And alloc_pair() returns such a pair whether or not it was
+   previously set, overwriting the oldest initialized pair if there are
+   no free pairs.
+
    PDC_set_line_color() is used to set the color, globally, for the
    color of the lines drawn for the attributes: A_UNDERLINE, A_LEFT and
    A_RIGHT. A value of -1 (the default) indicates that the current
@@ -77,8 +87,9 @@ color
 
 ### Return Value
 
-   All functions return OK on success and ERR on error, except for
-   has_colors() and can_change_colors(), which return TRUE or FALSE.
+   Most functions return OK on success and ERR on error. has_colors()
+   and can_change_colors() return TRUE or FALSE. alloc_pair() and
+   find_pair() return a pair number, or -1 on error.
 
 ### Portability
                              X/Open  ncurses  NetBSD
@@ -89,7 +100,10 @@ color
     can_change_color            Y       Y       Y
     init_color                  Y       Y       Y
     color_content               Y       Y       Y
+    alloc_pair                  -       Y       -
     assume_default_colors       -       Y       Y
+    find_pair                   -       Y       -
+    free_pair                   -       Y       -
     use_default_colors          -       Y       Y
     PDC_set_line_color          -       -       -
 
@@ -103,6 +117,7 @@ int COLOR_PAIRS = PDC_COLOR_PAIRS;
 
 static bool default_colors = FALSE;
 static short first_col = 0;
+static int allocnum = 0;
 
 int start_color(void)
 {
@@ -150,6 +165,7 @@ static void _init_pair_core(short pair, short fg, short bg)
 
     p->f = fg;
     p->b = bg;
+    p->count = allocnum++;
     p->set = TRUE;
 }
 
@@ -287,4 +303,60 @@ void PDC_init_atrtab(void)
         p[i].b = bg;
         p[i].set = FALSE;
     }
+}
+
+int free_pair(int pair)
+{
+    if (pair < 1 || pair >= PDC_COLOR_PAIRS || !(SP->atrtab[pair].set))
+        return ERR;
+
+    SP->atrtab[pair].set = FALSE;
+    return OK;
+}
+
+int find_pair(int fg, int bg)
+{
+    int i;
+    PDC_PAIR *p = SP->atrtab;
+
+    for (i = 0; i < PDC_COLOR_PAIRS; i++)
+        if (p[i].set && p[i].f == fg && p[i].b == bg)
+            return i;
+
+    return -1;
+}
+
+static int _find_oldest()
+{
+    int i, lowind = 0, lowval = 0;
+    PDC_PAIR *p = SP->atrtab;
+
+    for (i = 1; i < PDC_COLOR_PAIRS; i++)
+    {
+        if (!p[i].set)
+            return i;
+
+        if (!lowval || (p[i].count < lowval))
+        {
+            lowind = i;
+            lowval = p[i].count;
+        }
+    }
+
+    return lowind;
+}
+
+int alloc_pair(int fg, int bg)
+{
+    int i = find_pair(fg, bg);
+
+    if (-1 == i)
+    {
+        i = _find_oldest();
+
+        if (ERR == init_pair(i, fg, bg))
+            return -1;
+    }
+
+    return i;
 }

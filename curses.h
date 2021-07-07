@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3905
+#define PDC_BUILD    3906
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   9
 #define PDC_VERDOT   "3.9"
@@ -308,6 +308,7 @@ typedef struct
 {
     short f;              /* foreground color */
     short b;              /* background color */
+    int   count;          /* allocation order */
     bool  set;            /* pair has been set */
 } PDC_PAIR;
 
@@ -1282,8 +1283,11 @@ PDCEX  mmask_t getmouse(void);
 
 /* ncurses */
 
+PDCEX  int     alloc_pair(int, int);
 PDCEX  int     assume_default_colors(int, int);
 PDCEX  const char *curses_version(void);
+PDCEX  int     find_pair(int, int);
+PDCEX  int     free_pair(int);
 PDCEX  bool    has_key(int);
 PDCEX  bool    is_keypad(const WINDOW *);
 PDCEX  bool    is_leaveok(const WINDOW *);

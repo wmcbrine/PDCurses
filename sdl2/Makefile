@@ -54,15 +54,29 @@ ifeq ($(UTF8),Y)
 	CFLAGS += -DPDC_FORCE_UTF8
 endif
 
-ifeq ($(OS)_$(DLL),Windows_NT_Y)
-	CFLAGS += -DPDC_DLL_BUILD
-	LIBEXE = $(CC)
-	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
-	LIBCURSES = pdcurses.dll
-	CLEAN = $(LIBCURSES) *.a
-	RESOURCE = pdcurses.o
-	LIBLIBS = $(SLIBS)
-	LDFLAGS = $(LIBCURSES)
+ifeq ($(DLL),Y)
+	ifeq ($(OS),Windows_NT)
+		CFLAGS += -DPDC_DLL_BUILD
+		LIBEXE = $(CC)
+		LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
+		LIBCURSES = pdcurses.dll
+		CLEAN = $(LIBCURSES) *.a
+		RESOURCE = pdcurses.o
+		LIBLIBS = $(SLIBS)
+		LDFLAGS = $(LIBCURSES)
+	else
+		ifeq ($(shell uname -s),Darwin)
+			DLL_SUFFIX = .dylib
+		else
+			DLL_SUFFIX = .so
+		endif
+		LIBEXE = $(CC)
+		LIBFLAGS = -shared -o
+		LIBCURSES = pdcurses$(DLL_SUFFIX)
+		LIBLIBS = $(SLIBS)
+		LDFLAGS = $(LIBCURSES)
+		CLEAN = *$(DLL_SUFFIX)
+	endif
 else
 	LIBEXE = $(AR)
 	LIBFLAGS = rcv

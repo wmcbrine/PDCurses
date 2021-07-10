@@ -9,8 +9,8 @@ Building
 
 - On *nix (including Linux), run "make" in the sdl1 directory. There is
   no configure script (yet?) for this port. This assumes a working
-  sdl-config, and GNU make. It builds the library pdcurses.a (dynamic
-  lib not implemented).
+  sdl-config, and GNU make. It builds the libraries pdcurses.a and
+  pdcurses.so.
 
 - The makefile accepts the optional parameter "DEBUG=Y", and recognizes
   the optional PDCURSES_SRCDIR environment variable, as with the console

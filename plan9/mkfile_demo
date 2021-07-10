@@ -1,0 +1,34 @@
+APE=/sys/src/ape
+<$APE/config
+
+TARG=\
+	firework\
+	ozdemo\
+	ptest\
+	rain\
+	testcurs\
+	tuidemo\
+	worm\
+	xmas\
+
+HFILES=\
+	/sys/include/ape/curses.h\
+	/sys/include/ape/panel.h\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	/$objtype/ape/lib/libcurses.a
+
+</sys/src/cmd/mkmany
+
+CFLAGS= -c -D_POSIX_SOURCE -D_BSD_EXTENSION -D_SUSV2_SOURCE -DPlan9
+
+%.$O: ../demos/%.c
+	$CC $CFLAGS ../demos/$stem.c
+
+$O.tuidemo:V: tui.$O tuidemo.$O
+	$LD -o $target $prereq
+
+$O.out:	/$objtype/lib/ape/libcurses.a

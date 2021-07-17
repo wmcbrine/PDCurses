@@ -157,18 +157,18 @@ static KPTAB kptab[] =
    {KEY_F(11),  KEY_F(23), KEY_F(35),   KEY_F(47),  0   }, /* 122 VK_F11     */
    {KEY_F(12),  KEY_F(24), KEY_F(36),   KEY_F(48),  0   }, /* 123 VK_F12     */
 
-   {KEY_F(13),  KEY_F(25), KEY_F(37),   KEY_F(49),  0   }, /* 112 VK_F13     */
-   {KEY_F(14),  KEY_F(26), KEY_F(38),   KEY_F(50),  0   }, /* 113 VK_F14     */
-   {KEY_F(15),  KEY_F(27), KEY_F(39),   KEY_F(51),  0   }, /* 114 VK_F15     */
-   {KEY_F(16),  KEY_F(28), KEY_F(40),   KEY_F(52),  0   }, /* 115 VK_F16     */
-   {KEY_F(17),  KEY_F(29), KEY_F(41),   KEY_F(53),  0   }, /* 116 VK_F17     */
-   {KEY_F(18),  KEY_F(30), KEY_F(42),   KEY_F(54),  0   }, /* 117 VK_F18     */
-   {KEY_F(19),  KEY_F(31), KEY_F(43),   KEY_F(55),  0   }, /* 118 VK_F19     */
-   {KEY_F(20),  KEY_F(32), KEY_F(44),   KEY_F(56),  0   }, /* 119 VK_F20     */
-   {KEY_F(21),  KEY_F(33), KEY_F(45),   KEY_F(57),  0   }, /* 120 VK_F21     */
-   {KEY_F(22),  KEY_F(34), KEY_F(46),   KEY_F(58),  0   }, /* 121 VK_F22     */
-   {KEY_F(23),  KEY_F(35), KEY_F(47),   KEY_F(59),  0   }, /* 122 VK_F23     */
-   {KEY_F(24),  KEY_F(36), KEY_F(48),   KEY_F(60),  0   }, /* 123 VK_F24     */
+   {KEY_F(13),  KEY_F(25), KEY_F(37),   KEY_F(49),  0   }, /* 124 VK_F13     */
+   {KEY_F(14),  KEY_F(26), KEY_F(38),   KEY_F(50),  0   }, /* 125 VK_F14     */
+   {KEY_F(15),  KEY_F(27), KEY_F(39),   KEY_F(51),  0   }, /* 126 VK_F15     */
+   {KEY_F(16),  KEY_F(28), KEY_F(40),   KEY_F(52),  0   }, /* 127 VK_F16     */
+   {KEY_F(17),  KEY_F(29), KEY_F(41),   KEY_F(53),  0   }, /* 128 VK_F17     */
+   {KEY_F(18),  KEY_F(30), KEY_F(42),   KEY_F(54),  0   }, /* 129 VK_F18     */
+   {KEY_F(19),  KEY_F(31), KEY_F(43),   KEY_F(55),  0   }, /* 130 VK_F19     */
+   {KEY_F(20),  KEY_F(32), KEY_F(44),   KEY_F(56),  0   }, /* 131 VK_F20     */
+   {KEY_F(21),  KEY_F(33), KEY_F(45),   KEY_F(57),  0   }, /* 132 VK_F21     */
+   {KEY_F(22),  KEY_F(34), KEY_F(46),   KEY_F(58),  0   }, /* 133 VK_F22     */
+   {KEY_F(23),  KEY_F(35), KEY_F(47),   KEY_F(59),  0   }, /* 134 VK_F23     */
+   {KEY_F(24),  KEY_F(36), KEY_F(48),   KEY_F(60),  0   }, /* 135 VK_F24     */
 
    /* 136 through 218 */
 

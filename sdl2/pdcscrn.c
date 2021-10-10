@@ -286,41 +286,30 @@ int PDC_scr_open(void)
         }
 
         SDL_SetWindowIcon(pdc_window, pdc_icon);
+    }
 
-        /* Events must be pumped before calling SDL_GetWindowSurface, or
-           initial modifiers (e.g. numlock) will be ignored and out-of-sync. */
+    /* Events must be pumped before calling SDL_GetWindowSurface, or
+       initial modifiers (e.g. numlock) will be ignored and out-of-sync. */
 
-        SDL_PumpEvents();
+    SDL_PumpEvents();
 
+    if (!pdc_screen)
+    {
         pdc_screen = SDL_GetWindowSurface(pdc_window);
 
-        if (pdc_screen == NULL)
+        if (!pdc_screen)
         {
             fprintf(stderr, "Could not open SDL window surface: %s\n",
                     SDL_GetError());
             return ERR;
         }
-
-        pdc_sheight = pdc_screen->h;
-        pdc_swidth  = pdc_screen->w;
-    }
-    else
-    {
-        if (!pdc_screen)
-            pdc_screen = SDL_GetWindowSurface(pdc_window);
-
-        if (!pdc_sheight)
-            pdc_sheight = pdc_screen->h - pdc_yoffset;
-
-        if (!pdc_swidth)
-            pdc_swidth = pdc_screen->w - pdc_xoffset;
     }
 
-    if (!pdc_screen)
-    {
-        fprintf(stderr, "Couldn't create a surface: %s\n", SDL_GetError());
-        return ERR;
-    }
+    if (!pdc_sheight)
+        pdc_sheight = pdc_screen->h - pdc_yoffset;
+
+    if (!pdc_swidth)
+        pdc_swidth = pdc_screen->w - pdc_xoffset;
 
     if (SP->orig_attr)
         PDC_retile();

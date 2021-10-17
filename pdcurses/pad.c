@@ -179,13 +179,10 @@ int prefresh(WINDOW *win, int py, int px, int sy1, int sx1, int sy2, int sx2)
 int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
 {
     int num_cols;
-    int sline = sy1;
-    int pline = py;
-
+    int sline;
+    int pline;
+    
     PDC_LOG(("pnoutrefresh() - called\n"));
-
-    if (!w || !(w->_flags & (_PAD|_SUBPAD)) || (sy2 >= LINES) || (sx2 >= COLS))
-        return ERR;
 
     if (py < 0)
         py = 0;
@@ -196,9 +193,14 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
     if (sx1 < 0)
         sx1 = 0;
 
-    if (sy2 < sy1 || sx2 < sx1)
+    if ((!w || !(w->_flags & (_PAD|_SUBPAD)) || 
+        (sy2 >= LINES) || (sx2 >= COLS)) ||
+        (sy2 < sy1) || (sx2 < sx1))
         return ERR;
 
+    sline = sy1;
+    pline = py;
+    
     num_cols = min((sx2 - sx1 + 1), (w->_maxx - px));
 
     while (sline <= sy2)

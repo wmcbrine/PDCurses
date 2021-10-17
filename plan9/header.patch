@@ -1,0 +1,11 @@
+--- curses.h	2020-06-29 15:03:16.675718137 +0200
++++ curses.h.ape	2020-06-29 19:09:31.624238344 +0200
+@@ -5,6 +5,8 @@
+ #ifndef __PDCURSES__
+ #define __PDCURSES__ 1
+ 
++#pragma lib "/$M/lib/ape/libcurses.a"
++
+ /*man-start**************************************************************
+ 
+ Define before inclusion (only those needed):

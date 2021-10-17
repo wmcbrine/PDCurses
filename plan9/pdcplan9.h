@@ -1,0 +1,10 @@
+void p9init(void);
+int p9ecan(void);
+int p9eget(void);
+int p9getcols(void);
+int p9getrows(void);
+void p9napms(int);
+void p9putc(int, int, chtype);
+void p9resize(int, int);
+void p9setlabel(char *);
+void p9setcur(int, int, int, int, int);

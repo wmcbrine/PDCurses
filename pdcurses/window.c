@@ -488,6 +488,7 @@ WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
         if (!new)
             return (WINDOW *)NULL;
 
+        new->_bkgd = win->_bkgd;
         werase(new);
 
         copywin(win, new, 0, 0, 0, 0, min(win->_maxy, new->_maxy) - 1,

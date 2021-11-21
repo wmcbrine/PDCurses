@@ -75,11 +75,6 @@ pad
 
 #include <string.h>
 
-/* save values for pechochar() */
-
-static int save_pminrow, save_pmincol;
-static int save_sminrow, save_smincol, save_smaxrow, save_smaxcol;
-
 WINDOW *newpad(int nlines, int ncols)
 {
     WINDOW *win;
@@ -96,16 +91,12 @@ WINDOW *newpad(int nlines, int ncols)
     werase(win);
 
     win->_flags = _PAD;
-
-    /* save default values in case pechochar() is the first call to
-       prefresh(). */
-
-    save_pminrow = 0;
-    save_pmincol = 0;
-    save_sminrow = 0;
-    save_smincol = 0;
-    save_smaxrow = min(LINES, nlines) - 1;
-    save_smaxcol = min(COLS, ncols) - 1;
+    win->_pad._pad_y = 0;
+    win->_pad._pad_x = 0;
+    win->_pad._pad_top = 0;
+    win->_pad._pad_left = 0;
+    win->_pad._pad_bottom = min(LINES, nlines) - 1;
+    win->_pad._pad_right = min(COLS, ncols) - 1;
 
     return win;
 }
@@ -151,16 +142,12 @@ WINDOW *subpad(WINDOW *orig, int nlines, int ncols, int begy, int begx)
         win->_y[i] = orig->_y[begy + i] + begx;
 
     win->_flags = _SUBPAD;
-
-    /* save default values in case pechochar() is the first call
-       to prefresh(). */
-
-    save_pminrow = 0;
-    save_pmincol = 0;
-    save_sminrow = 0;
-    save_smincol = 0;
-    save_smaxrow = min(LINES, nlines) - 1;
-    save_smaxcol = min(COLS, ncols) - 1;
+    win->_pad._pad_y = 0;
+    win->_pad._pad_x = 0;
+    win->_pad._pad_top = 0;
+    win->_pad._pad_left = 0;
+    win->_pad._pad_bottom = min(LINES, nlines) - 1;
+    win->_pad._pad_right = min(COLS, ncols) - 1;
 
     return win;
 }
@@ -242,6 +229,13 @@ int pnoutrefresh(WINDOW *w, int py, int px, int sy1, int sx1, int sy2, int sx2)
         curscr->_curx = (w->_curx - px) + sx1;
     }
 
+    w->_pad._pad_y = py;
+    w->_pad._pad_x = px;
+    w->_pad._pad_top = sy1;
+    w->_pad._pad_left = sx1;
+    w->_pad._pad_bottom = sy2;
+    w->_pad._pad_right = sx2;
+
     return OK;
 }
 
@@ -252,8 +246,8 @@ int pechochar(WINDOW *pad, chtype ch)
     if (waddch(pad, ch) == ERR)
         return ERR;
 
-    return prefresh(pad, save_pminrow, save_pmincol, save_sminrow,
-                    save_smincol, save_smaxrow, save_smaxcol);
+    return prefresh(pad, pad->_pad._pad_y, pad->_pad._pad_x, pad->_pad._pad_top,
+                    pad->_pad._pad_left, pad->_pad._pad_bottom, pad->_pad._pad_right);
 }
 
 #ifdef PDC_WIDE
@@ -264,8 +258,8 @@ int pecho_wchar(WINDOW *pad, const cchar_t *wch)
     if (!wch || (waddch(pad, *wch) == ERR))
         return ERR;
 
-    return prefresh(pad, save_pminrow, save_pmincol, save_sminrow,
-                    save_smincol, save_smaxrow, save_smaxcol);
+    return prefresh(pad, pad->_pad._pad_y, pad->_pad._pad_x, pad->_pad._pad_top,
+                    pad->_pad._pad_left, pad->_pad._pad_bottom, pad->_pad._pad_right);
 }
 #endif
 

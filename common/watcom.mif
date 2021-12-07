@@ -6,7 +6,7 @@ CFLAGS += -wx -zq -i=$(PDCURSES_SRCDIR)
 CFLAGS		+= -d2 -DPDCDEBUG
 LDFLAGS		= D W A op q sys $(TARGET)
 !else
-CFLAGS		+= -oneatx
+CFLAGS		+= -oneatx -wcd=303
 LDFLAGS		= op q sys $(TARGET)
 !endif
 

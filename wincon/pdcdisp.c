@@ -181,7 +181,12 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             chtype ch = srcp[j];
 
             if (ch & A_ALTCHARSET && !(ch & 0xff80))
+            {
                 ch = acs_map[ch & 0x7f];
+
+                if (pdc_wt && (ch & A_CHARTEXT) < ' ')
+                    goto NONANSI;
+            }
 
             if (blink && blinked_off)
                 ch = ' ';
@@ -198,6 +203,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 #endif
     }
     else
+NONANSI:
     {
         CHAR_INFO buffer[512];
         COORD bufSize, bufPos;

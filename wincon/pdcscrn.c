@@ -404,11 +404,7 @@ int PDC_scr_open(void)
     pdc_wt = !!getenv("WT_SESSION");
     str = pdc_wt ? NULL : getenv("ConEmuANSI");
     pdc_conemu = !!str;
-    pdc_ansi =
-#ifdef PDC_WIDE
-        pdc_wt ? TRUE :
-#endif
-        pdc_conemu ? !strcmp(str, "ON") : FALSE;
+    pdc_ansi = pdc_wt ? TRUE : pdc_conemu ? !strcmp(str, "ON") : FALSE;
 
     GetConsoleScreenBufferInfo(pdc_con_out, &csbi);
     GetConsoleScreenBufferInfo(pdc_con_out, &orig_scr);

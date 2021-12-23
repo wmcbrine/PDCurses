@@ -36,6 +36,7 @@ platforms.
 Build instructions are in the README.md file for each platform:
 
 -  [DOS]
+-  [DOS with full VGA support]
 -  [OS/2]
 -  [SDL 1.x]
 -  [SDL 2.x]
@@ -58,6 +59,7 @@ William McBrine <wmcbrine@gmail.com>
 [History]: docs/HISTORY.md
 [docs]: docs/README.md
 [DOS]: dos/README.md
+[DOS with full VGA support]: dosvga/README.md
 [OS/2]: os2/README.md
 [SDL 1.x]: sdl1/README.md
 [SDL 2.x]: sdl2/README.md

@@ -1,23 +1,23 @@
 PDCurses
 ========
 
-Stable: [v3.9]
+Stable: [v3.9]  
 Beta: [See git repository][git]
 
-PDCurses is a public domain curses library for DOS, OS/2, Windows 
-console, X11 and SDL, implementing most of the functions available in 
-X/Open and System V R4 curses. It supports many compilers for these 
-platforms. The X11 port lets you recompile existing text-mode curses 
+PDCurses is a public domain curses library for DOS, OS/2, Windows
+console, X11 and SDL, implementing most of the functions available in
+X/Open and System V R4 curses. It supports many compilers for these
+platforms. The X11 port lets you recompile existing text-mode curses
 programs to produce native X11 applications.
 
 PDCurses is distributed mainly as source code, but some pre-compiled
 libraries may be available. See the [downloads page] for a list.
 
-There's a low-traffic mailing list for announcements and discussion. To 
-subscribe, email the [list server], with the first line of the body of 
+There's a low-traffic mailing list for announcements and discussion. To
+subscribe, email the [list server], with the first line of the body of
 the message containing:
 
-    subscribe pdcurses-l
+`subscribe pdcurses-l`
 
 or you can read the mailing list [archive].
 

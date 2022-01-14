@@ -189,5 +189,5 @@ and stderr may be redirected to files.
 Acknowledgements
 ----------------
 
-Original SDL port was provided by William McBrine
+Original SDL port was provided by William McBrine  
 SDL2 modifications by Laura Michaels and Robin Gustafsson

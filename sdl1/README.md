@@ -175,5 +175,5 @@ and stderr may be redirected to files.
 Acknowledgements
 ----------------
 
-Original SDL port was provided by William McBrine
+Original SDL port was provided by William McBrine  
 TTF support based on contributions by Laura Michaels

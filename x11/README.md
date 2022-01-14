@@ -223,5 +223,5 @@ configure, which is under a free license described within it.
 Acknowledgements
 ----------------
 
-X11 port was provided by Mark Hessling <mark@rexx.org>
+X11 port was provided by Mark Hessling <mark@rexx.org>  
 Single-process modifications by William McBrine

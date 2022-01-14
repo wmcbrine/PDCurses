@@ -45,10 +45,9 @@ Other links
 Legal Stuff
 -----------
 
-The core package is in the public domain, but small portions of PDCurses
-are subject to copyright under various licenses.  Each directory
-contains a README.md file, with a section titled "Distribution Status"
-which describes the status of the files in that directory.
+The core package and most ports are in the public domain, but a few
+files in the [demos] and [X11][xstatus] directories are subject to
+copyright under licenses described there.
 
 This software is provided AS IS with NO WARRANTY whatsoever.
 
@@ -77,5 +76,8 @@ Maintainer
 [SDL]: sdl2/README.md
 [Windows]: wincon/README.md
 [X11]: x11/README.md
+
+[demos]: demos/README.md#distribution-status
+[xstatus]: x11/README.md#distribution-status
 
 [William McBrine]: https://wmcbrine.com/

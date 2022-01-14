@@ -63,12 +63,6 @@ Building
   (This will happen with older compile environments.)
 
 
-Distribution Status
--------------------
-
-The files in this directory are released to the public domain.
-
-
 Acknowledgements
 ----------------
 

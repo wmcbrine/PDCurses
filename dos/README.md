@@ -33,12 +33,6 @@ Building
   files. Add the target "demos" to build the sample programs.
 
 
-Distribution Status
--------------------
-
-The files in this directory are released to the public domain.
-
-
 Acknowledgements
 ----------------
 

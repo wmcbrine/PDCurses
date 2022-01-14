@@ -26,9 +26,3 @@ Building
   (For Watcom, use "wmake" instead of "make".) You'll get the library
   (pdcurses.lib or .a, depending on your compiler) and a lot of object
   files. Add the target "demos" to build the sample programs.
-
-
-Distribution Status
--------------------
-
-The files in this directory are released to the public domain.

@@ -12,12 +12,6 @@ These modules are built by the platform-specific makefiles, in the
 platform directories.
 
 
-Distribution Status
--------------------
-
-The files in this directory are released to the public domain.
-
-
 Acknowledgements
 ----------------
 

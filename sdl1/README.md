@@ -172,12 +172,6 @@ which don't run under terminals.) Depending on how SDL is built, stdout
 and stderr may be redirected to files.
 
 
-Distribution Status
--------------------
-
-The files in this directory are released to the public domain.
-
-
 Acknowledgements
 ----------------
 

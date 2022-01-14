@@ -25,11 +25,6 @@ Building
   type "./mkman.sh". Needs a Unix-like shell and a Python interpreter.
 
 
-Distribution Status
--------------------
-
-The files in this directory are released to the public domain.
-
 [User's Guide]: USERS.md
 [Implementor's Guide]: IMPLEMNT.md
 [Manual]: MANUAL.md

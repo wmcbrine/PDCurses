@@ -1,13 +1,45 @@
-Welcome to PDCurses!
-====================
+PDCurses
+========
 
-PDCurses is an implementation of X/Open curses for multiple platforms.
+Stable: [v3.9]  
+Beta: [See git repository][git]
+
+PDCurses is a public domain curses library for [DOS], [OS/2], [Windows]
+console, [X11] and [SDL], implementing most of the functions available
+in [X/Open][xopen] and System V R4 curses. It supports many compilers
+for these platforms. The X11 port lets you recompile existing text-mode
+curses programs to produce native X11 applications.
+
+PDCurses is distributed mainly as source code, but some pre-compiled
+libraries may be available. See the [downloads page] for a list.
+
 The latest version can be found at:
 
-   https://pdcurses.org/
+   <https://pdcurses.org/>
 
 For changes, see the [History] file. The main documentation is now in
 the [docs] directory.
+
+
+Mailing lists
+-------------
+
+There's a low-traffic mailing list for announcements and discussion. To
+subscribe, email the [list server], with the first line of the body of
+the message containing:
+
+`subscribe pdcurses-l`
+
+or you can read the mailing list [archive].
+
+
+Other links
+-----------
+
+* [Docs][docs]
+* [GitHub Page][git]
+* [SourceForge Page]
+* [X/Open curses][xopen]
 
 
 Legal Stuff
@@ -18,48 +50,32 @@ are subject to copyright under various licenses.  Each directory
 contains a README.md file, with a section titled "Distribution Status"
 which describes the status of the files in that directory.
 
-If you use PDCurses in an application, an acknowledgement would be
-appreciated, but is not mandatory. If you make corrections or
-enhancements to PDCurses, please forward them to the current maintainer
-for the benefit of other users.
-
 This software is provided AS IS with NO WARRANTY whatsoever.
-
-
-Ports
------
-
-PDCurses has been ported to DOS, OS/2, Windows, X11 and SDL. A directory
-containing the port-specific source files exists for each of these
-platforms.
-
-Build instructions are in the README.md file for each platform:
-
--  [DOS]
--  [OS/2]
--  [SDL 1.x]
--  [SDL 2.x]
--  [Windows]
--  [X11]
-
-
-Distribution Status
--------------------
-
-All files in this directory (not including subdirectories) are released
-to the public domain.
 
 
 Maintainer
 ----------
 
-William McBrine <wmcbrine@gmail.com>
+[William McBrine]
+
+
+[v3.9]: https://github.com/wmcbrine/PDCurses/releases/tag/3.9
+[git]: https://github.com/wmcbrine/PDCurses
 
 [History]: docs/HISTORY.md
 [docs]: docs/README.md
+[downloads page]: https://sourceforge.net/projects/pdcurses/files/
+
+[list server]: mailto:majordomo@lightlink.com
+[archive]: https://www.mail-archive.com/pdcurses-l@lightlink.com/
+
+[SourceForge Page]: https://sourceforge.net/projects/pdcurses
+[xopen]: https://pubs.opengroup.org/onlinepubs/007908799/cursesix.html
+
 [DOS]: dos/README.md
 [OS/2]: os2/README.md
-[SDL 1.x]: sdl1/README.md
-[SDL 2.x]: sdl2/README.md
+[SDL]: sdl2/README.md
 [Windows]: wincon/README.md
 [X11]: x11/README.md
+
+[William McBrine]: https://wmcbrine.com/

@@ -17,9 +17,6 @@ Also consult the README for each specific platform you'll be using:
 - [Windows]
 - [X11]
 
-This directory also contains the files, CNAME and index.html, that
-create pdcurses.org, via GitHub.
-
 
 Building
 --------

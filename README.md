@@ -11,7 +11,7 @@ for these platforms. The X11 port lets you recompile existing text-mode
 curses programs to produce native X11 applications.
 
 PDCurses is distributed mainly as source code, but some pre-compiled
-libraries may be available. See the [downloads page] for a list.
+libraries may be available.
 
 The latest version can be found at:
 
@@ -63,7 +63,6 @@ Maintainer
 
 [History]: docs/HISTORY.md
 [docs]: docs/README.md
-[downloads page]: https://sourceforge.net/projects/pdcurses/files/
 
 [list server]: mailto:majordomo@lightlink.com
 [archive]: https://www.mail-archive.com/pdcurses-l@lightlink.com/

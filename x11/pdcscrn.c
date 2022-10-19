@@ -605,8 +605,11 @@ int PDC_scr_open(void)
     wm_atom[0] = XInternAtom(XtDisplay(pdc_toplevel), "WM_DELETE_WINDOW",
                              False);
 
+    /* Make sure we tell X that we'd like to take focus */
+    wm_atom[1] = XInternAtom(XtDisplay(pdc_toplevel), "WM_TAKE_FOCUS",
+                             False);
     XSetWMProtocols(XtDisplay(pdc_toplevel), XtWindow(pdc_toplevel),
-                    wm_atom, 1);
+                    wm_atom, 2);
 
     /* Create the Graphics Context for drawing. This MUST be done AFTER
        the associated widget has been realized. */
@@ -650,6 +653,13 @@ int PDC_scr_open(void)
 
     XSync(XtDisplay(pdc_toplevel), True);
     SP->resized = pdc_resize_now = FALSE;
+
+    /* Make sure that we say that we're allowed to have input focus.
+       Otherwise some window managers will refuse to focus the window. */
+    XWMHints* hints = XGetWMHints(XtDisplay(pdc_toplevel), XtWindow(pdc_toplevel));
+    hints->input=true;
+    XSetWMHints(XtDisplay(pdc_toplevel), XtWindow(pdc_toplevel), hints);
+    XFree(hints);
 
     return OK;
 }

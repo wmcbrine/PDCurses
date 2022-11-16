@@ -309,6 +309,13 @@ void qiflush(void)
     PDC_LOG(("qiflush() - called\n"));
 }
 
+void timeout(int delay)
+{
+    PDC_LOG(("timeout() - called\n"));
+
+    wtimeout(stdscr, delay);
+}
+
 void wtimeout(WINDOW *win, int delay)
 {
     PDC_LOG(("wtimeout() - called\n"));
@@ -358,13 +365,6 @@ int typeahead(int fildes)
     PDC_LOG(("typeahead() - called\n"));
 
     return OK;
-}
-
-void timeout(int delay)
-{
-    PDC_LOG(("timeout() - called\n"));
-
-    wtimeout(stdscr, delay);
 }
 
 int crmode(void)

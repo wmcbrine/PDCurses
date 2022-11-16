@@ -16,6 +16,7 @@ outopts
     int leaveok(WINDOW *win, bool bf);
     int setscrreg(int top, int bot);
     int wsetscrreg(WINDOW *win, int top, int bot);
+    int wgetscrreg(const WINDOW *win, int *top, int *bot);
     int scrollok(WINDOW *win, bool bf);
 
     int raw_output(bool bf);
@@ -46,6 +47,8 @@ outopts
    scrollok() are enabled, any attempt to move off the bottom margin
    will cause all lines in the scrolling region to scroll up one line.
    setscrreg() is the stdscr version.
+
+   wgetscrreg() gets the top and bottom margins as set in wsetscrreg().
 
    idlok() and idcok() do nothing in PDCurses, but are provided for
    compatibility with other curses implementations, likewise is_idlok()
@@ -83,6 +86,7 @@ outopts
     leaveok                     Y       Y       Y
     setscrreg                   Y       Y       Y
     wsetscrreg                  Y       Y       Y
+    wgetscrreg                  -       Y       -
     scrollok                    Y       Y       Y
     is_cleared                  -       Y       -
     is_idlok                    -       Y       -
@@ -161,6 +165,19 @@ int wsetscrreg(WINDOW *win, int top, int bottom)
     }
     else
         return ERR;
+}
+
+int wgetscrreg(const WINDOW *win, int *top, int *bot)
+{
+    PDC_LOG(("wgetscrreg() - called\n"));
+
+    if (!win || !top || !bot)
+        return ERR;
+
+    *top = win->_tmarg;
+    *bot = win->_bmarg;
+
+    return OK;
 }
 
 int scrollok(WINDOW *win, bool bf)

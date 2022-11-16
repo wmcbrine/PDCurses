@@ -309,13 +309,6 @@ void qiflush(void)
     PDC_LOG(("qiflush() - called\n"));
 }
 
-int typeahead(int fildes)
-{
-    PDC_LOG(("typeahead() - called\n"));
-
-    return OK;
-}
-
 void wtimeout(WINDOW *win, int delay)
 {
     PDC_LOG(("wtimeout() - called\n"));
@@ -358,6 +351,13 @@ int wgetdelay(const WINDOW *win)
         return 0;
 
     return win->_delayms;
+}
+
+int typeahead(int fildes)
+{
+    PDC_LOG(("typeahead() - called\n"));
+
+    return OK;
 }
 
 void timeout(int delay)

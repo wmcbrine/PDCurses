@@ -27,6 +27,7 @@ inopts
     void qiflush(void);
     void timeout(int delay);
     void wtimeout(WINDOW *win, int delay);
+    int wgetdelay(const WINDOW *win);
     int typeahead(int fildes);
 
     int crmode(void);
@@ -85,6 +86,8 @@ inopts
    delay is given; i.e., 1-99 will wait 50ms, 100-149 will wait 100ms,
    etc.
 
+   wgetdelay() returns the delay timeout as set in wtimeout().
+
    intrflush(), notimeout(), noqiflush(), qiflush() and typeahead() do
    nothing in PDCurses, but are included for compatibility with other
    curses implementations.
@@ -125,6 +128,7 @@ inopts
     qiflush                     Y       Y       Y
     timeout                     Y       Y       Y
     wtimeout                    Y       Y       Y
+    wgetdelay                   -       Y       -
     typeahead                   Y       Y       Y
     crmode                      Y       Y       Y
     nocrmode                    Y       Y       Y
@@ -344,6 +348,16 @@ void wtimeout(WINDOW *win, int delay)
         /*win->_nodelay = TRUE;*/
         win->_delayms = delay;
     }
+}
+
+int wgetdelay(const WINDOW *win)
+{
+    PDC_LOG(("wgetdelay() - called\n"));
+
+    if (!win)
+        return 0;
+
+    return win->_delayms;
 }
 
 void timeout(int delay)

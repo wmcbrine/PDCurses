@@ -1299,6 +1299,7 @@ PDCEX  bool    is_subwin(const WINDOW *);
 PDCEX  bool    is_syncok(const WINDOW *);
 PDCEX  int     set_tabsize(int);
 PDCEX  int     use_default_colors(void);
+PDCEX  int     wgetdelay(const WINDOW *);
 PDCEX  int     wresize(WINDOW *, int, int);
 
 PDCEX  bool    has_mouse(void);

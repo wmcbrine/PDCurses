@@ -19,6 +19,7 @@ window
     int mvwin(WINDOW *win, int y, int x);
     int mvderwin(WINDOW *win, int pary, int parx);
     int syncok(WINDOW *win, bool bf);
+    bool is_subwin(const WINDOW *win);
     bool is_syncok(const WINDOW *win);
     void wsyncup(WINDOW *win);
     void wcursyncup(WINDOW *win);
@@ -70,6 +71,9 @@ window
    If syncok() is called with a second argument of TRUE, this causes a
    wsyncup() to be called every time the window is changed.
 
+   is_subwin() reports whether the specified window is a subwindow,
+   created by subwin() or derwin().
+
    is_syncok() reports whether the specified window is in syncok mode.
 
    wcursyncup() causes the current cursor position of all of a window's
@@ -104,7 +108,7 @@ window
    syncok() return OK or ERR. wsyncup(), wcursyncup() and wsyncdown()
    return nothing.
 
-   is_syncok() returns TRUE or FALSE.
+   is_subwin() and is_syncok() returns TRUE or FALSE.
 
 ### Errors
 
@@ -126,6 +130,7 @@ window
     dupwin                      Y       Y       Y
     wsyncup                     Y       Y       Y
     syncok                      Y       Y       Y
+    is_subwin                   -       Y       -
     is_syncok                   -       Y       -
     wcursyncup                  Y       Y       Y
     wsyncdown                   Y       Y       Y
@@ -558,6 +563,16 @@ int syncok(WINDOW *win, bool bf)
     win->_sync = bf;
 
     return OK;
+}
+
+bool is_subwin(const WINDOW *win)
+{
+    PDC_LOG(("is_subwin() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return ((win->_flags & _SUBWIN) ? TRUE : FALSE);
 }
 
 bool is_syncok(const WINDOW *win)

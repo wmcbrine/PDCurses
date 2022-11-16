@@ -34,6 +34,7 @@ inopts
 
     bool is_keypad(const WINDOW *win);
     bool is_nodelay(const WINDOW *win);
+    bool is_notimeout(const WINDOW *win);
 
 ### Description
 
@@ -101,6 +102,9 @@ inopts
 
    is_keypad() and is_nodelay() returns TRUE or FALSE.
 
+   is_notimeout() is provided for compatibility with other curses
+   implementations, i.e. it always returns FALSE.
+
 ### Portability
                              X/Open  ncurses  NetBSD
     cbreak                      Y       Y       Y
@@ -126,6 +130,7 @@ inopts
     nocrmode                    Y       Y       Y
     is_keypad                   -       Y       Y
     is_nodelay                  -       Y       -
+    is_notimeout                -       Y       -
 
 **man-end****************************************************************/
 
@@ -380,4 +385,13 @@ bool is_nodelay(const WINDOW *win)
         return FALSE;
 
     return win->_nodelay;
+}
+
+bool is_notimeout(const WINDOW *win)
+{
+    (void) win;
+
+    PDC_LOG(("is_notimeout() - called - returning FALSE...\n"));
+
+    return FALSE;
 }

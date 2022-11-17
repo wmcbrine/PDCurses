@@ -1300,6 +1300,7 @@ PDCEX  bool    is_syncok(const WINDOW *);
 PDCEX  int     set_tabsize(int);
 PDCEX  int     use_default_colors(void);
 PDCEX  int     wgetdelay(const WINDOW *);
+PDCEX  WINDOW *wgetparent(const WINDOW *);
 PDCEX  int     wgetscrreg(const WINDOW *, int *, int *);
 PDCEX  int     wresize(WINDOW *, int, int);
 

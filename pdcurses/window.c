@@ -15,6 +15,7 @@ window
     WINDOW *subwin(WINDOW* orig, int nlines, int ncols,
                    int begy, int begx);
     WINDOW *dupwin(WINDOW *win);
+    WINDOW *wgetparent(const WINDOW *win);
     int delwin(WINDOW *win);
     int mvwin(WINDOW *win, int y, int x);
     int mvderwin(WINDOW *win, int pary, int parx);
@@ -65,6 +66,9 @@ window
    at the same physical position on the screen.
 
    dupwin() creates an exact duplicate of the window win.
+
+   wgetparent() returns the parent WINDOW pointer for subwindows, or NULL
+   for windows having no parent.
 
    wsyncup() causes a touchwin() of all of the window's parents.
 
@@ -128,6 +132,7 @@ window
     derwin                      Y       Y       Y
     mvderwin                    Y       Y       Y
     dupwin                      Y       Y       Y
+    wgetparent                  -       Y       -
     wsyncup                     Y       Y       Y
     syncok                      Y       Y       Y
     is_subwin                   -       Y       -
@@ -447,6 +452,16 @@ WINDOW *dupwin(WINDOW *win)
     new->_flags = win->_flags;
 
     return new;
+}
+
+WINDOW *wgetparent(const WINDOW *win)
+{
+    PDC_LOG(("wgetparent() - called\n"));
+
+    if (!win || !win->_parent)
+        return NULL;
+
+    return win->_parent;
 }
 
 WINDOW *resize_window(WINDOW *win, int nlines, int ncols)

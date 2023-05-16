@@ -2,13 +2,13 @@ PDCurses
 ========
 
 Stable: [v3.9]  
-Beta: [See git repository][git]
+Current: [See git repository][git]
 
 PDCurses is a public domain curses library for [DOS], [OS/2], [Windows]
-console, [X11] and [SDL], implementing most of the functions available
-in [X/Open][xopen] and System V R4 curses. It supports many compilers
-for these platforms. The X11 port lets you recompile existing text-mode
-curses programs to produce native X11 applications.
+console, [X11] and [SDL], implementing most of the functions available in
+[X/Open] and System V R4 curses, and supporting a variety of compilers for
+these platforms. The X11 and SDL ports let you recompile existing
+text-mode curses programs to produce GUI applications.
 
 PDCurses is distributed mainly as source code, but some pre-compiled
 libraries may be available.
@@ -17,8 +17,8 @@ The latest version can be found at:
 
    <https://pdcurses.org/>
 
-For changes, see the [History] file. The main documentation is now in
-the [docs] directory.
+For changes, see the [History] file. The main documentation is now in the
+[docs] directory.
 
 
 Mailing lists
@@ -39,15 +39,15 @@ Other links
 * [Docs][docs]
 * [GitHub Page][git]
 * [SourceForge Page]
-* [X/Open curses][xopen]
+* [X/Open] curses
 
 
 Legal Stuff
 -----------
 
-The core package and most ports are in the public domain, but a few
-files in the [demos] and [X11][xstatus] directories are subject to
-copyright under licenses described there.
+The core package and most ports are in the public domain, but a few files
+in the [demos] and [X11][xstatus] directories are subject to copyright
+under licenses described there.
 
 This software is provided AS IS with NO WARRANTY whatsoever.
 
@@ -68,7 +68,7 @@ Maintainer
 [archive]: https://www.mail-archive.com/pdcurses-l@lightlink.com/
 
 [SourceForge Page]: https://sourceforge.net/projects/pdcurses
-[xopen]: https://pubs.opengroup.org/onlinepubs/007908799/cursesix.html
+[X/Open]: https://pubs.opengroup.org/onlinepubs/007908799/cursesix.html
 
 [DOS]: dos/README.md
 [OS/2]: os2/README.md

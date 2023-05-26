@@ -185,6 +185,15 @@ WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx)
     win->_bmarg = nlines - 1;
     win->_parx = win->_pary = -1;
 
+    /* initialize pad variables*/
+
+    win->_pad._pad_y = -1;
+    win->_pad._pad_x = -1;
+    win->_pad._pad_top = -1;
+    win->_pad._pad_left = -1;
+    win->_pad._pad_bottom = -1;
+    win->_pad._pad_right = -1;
+
     /* init to say window all changed */
 
     touchwin(win);

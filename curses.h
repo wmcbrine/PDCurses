@@ -300,6 +300,17 @@ typedef struct _win       /* definition of a window */
     int   _delayms;       /* milliseconds of delay for getch() */
     int   _parx, _pary;   /* coords relative to parent (0,0) */
     struct _win *_parent; /* subwin's pointer to parent win */
+
+    /* these are used only if this is a pad */
+    struct pdat           
+    {
+        int _pad_y;         
+        int _pad_x;
+        int _pad_top;
+        int _pad_left;
+        int _pad_bottom;
+        int _pad_right;
+    } _pad;               /* Pad-properties structure */
 } WINDOW;
 
 /* Color pair structure */

@@ -569,7 +569,8 @@ void PDC_pump_and_peep(void)
     {
         if (SDL_WINDOWEVENT == event.type &&
             (SDL_WINDOWEVENT_RESTORED == event.window.event ||
-             SDL_WINDOWEVENT_EXPOSED == event.window.event))
+             SDL_WINDOWEVENT_EXPOSED == event.window.event ||
+             SDL_WINDOWEVENT_SHOWN == event.window.event))
         {
             SDL_UpdateWindowSurface(pdc_window);
             rectcount = 0;

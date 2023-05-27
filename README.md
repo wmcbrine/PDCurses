@@ -1,7 +1,7 @@
 PDCurses
 ========
 
-Stable: [v3.9]
+Stable: [v3.9]  
 Current: [See git repository][git]
 
 PDCurses is a public domain curses library for [DOS], [OS/2], [Windows]

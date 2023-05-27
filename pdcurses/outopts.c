@@ -69,13 +69,10 @@ outopts
 
 ### Return Value
 
-   All functions that returns an int returns OK on success and ERR on error.
-
-   is_cleared(), is_immedok(), is_leaveok() and is_scrollok() are booleans
-   and returns TRUE or FALSE.
-
-   is_idlok() and is_idcok() are provided for compatibility with other curses
-   implementations, i.e. they always returns FALSE.
+   is_cleared(), is_immedok(), is_leaveok() and is_scrollok() return TRUE
+   or FALSE. is_idlok() and is_idcok() are provided for compatibility with
+   other curses implementations, and always return FALSE. All others
+   return OK on success and ERR on error.
 
 ### Portability
                              X/Open  ncurses  NetBSD

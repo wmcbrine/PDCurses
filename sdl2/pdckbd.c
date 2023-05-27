@@ -319,12 +319,12 @@ static int _process_mouse_event(void)
     if (keymods & KMOD_ALT)
         shift_flags |= BUTTON_ALT;
 
+    SP->mouse_status.x = (event.motion.x - pdc_xoffset) / pdc_fwidth;
+    SP->mouse_status.y = (event.motion.y - pdc_yoffset) / pdc_fheight;
+
     if (event.type == SDL_MOUSEMOTION)
     {
         int i;
-
-        SP->mouse_status.x = (event.motion.x - pdc_xoffset) / pdc_fwidth;
-        SP->mouse_status.y = (event.motion.y - pdc_yoffset) / pdc_fheight;
 
         if (!event.motion.state ||
            (SP->mouse_status.x == old_mouse_status.x &&
@@ -344,8 +344,6 @@ static int _process_mouse_event(void)
     }
     else if (event.type == SDL_MOUSEWHEEL)
     {
-        SP->mouse_status.x = SP->mouse_status.y = -1;
-
         if (event.wheel.y > 0)
             SP->mouse_status.changes = PDC_MOUSE_WHEEL_UP;
         else if (event.wheel.y < 0)
@@ -385,9 +383,6 @@ static int _process_mouse_event(void)
                     SDL_PushEvent(&rel);
             }
         }
-
-        SP->mouse_status.x = (event.button.x - pdc_xoffset) / pdc_fwidth;
-        SP->mouse_status.y = (event.button.y - pdc_yoffset) / pdc_fheight;
 
         btn--;
 

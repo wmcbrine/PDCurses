@@ -211,14 +211,8 @@ static int _process_mouse_events(void)
     {
         SP->mouse_status.changes = mouse_scroll & 0x80 ?
             PDC_MOUSE_WHEEL_UP : PDC_MOUSE_WHEEL_DOWN;
-
-        SP->mouse_status.x = -1;
-        SP->mouse_status.y = -1;
-
-        return KEY_MOUSE;
     }
-
-    if (mouse_moved)
+    else if (mouse_moved)
     {
         SP->mouse_status.changes = PDC_MOUSE_MOVED;
 

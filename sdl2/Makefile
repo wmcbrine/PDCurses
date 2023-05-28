@@ -60,7 +60,6 @@ ifeq ($(DLL),Y)
 		LIBEXE = $(CC)
 		LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
 		LIBCURSES = pdcurses.dll
-		CLEAN = $(LIBCURSES) *.a
 		RESOURCE = pdcurses.o
 		LIBLIBS = $(SLIBS)
 		LDFLAGS = $(LIBCURSES)
@@ -75,14 +74,12 @@ ifeq ($(DLL),Y)
 		LIBCURSES = pdcurses$(DLL_SUFFIX)
 		LIBLIBS = $(SLIBS)
 		LDFLAGS = $(LIBCURSES)
-		CLEAN = *$(DLL_SUFFIX)
 	endif
 else
 	LIBEXE = $(AR)
 	LIBFLAGS = rcv
 	LIBCURSES = pdcurses.a
 	LDFLAGS = $(LIBCURSES) $(SLIBS)
-	CLEAN = *.a
 endif
 
 BUILD		= $(CC) $(CFLAGS) -I$(PDCURSES_SRCDIR)
@@ -98,7 +95,7 @@ all:	libs
 libs:	$(LIBCURSES)
 
 clean:
-	-$(RM) *.o trace $(CLEAN) $(DEMOS)
+	-$(RM) *.o trace *.a *.dll *.so *.dylib $(DEMOS)
 
 demos:	$(DEMOS)
 ifneq ($(DEBUG),Y)

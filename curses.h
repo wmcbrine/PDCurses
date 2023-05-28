@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3906
+#define PDC_BUILD    3907
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   9
 #define PDC_VERDOT   "3.9"
@@ -302,9 +302,9 @@ typedef struct _win       /* definition of a window */
     struct _win *_parent; /* subwin's pointer to parent win */
 
     /* these are used only if this is a pad */
-    struct pdat           
+    struct pdat
     {
-        int _pad_y;         
+        int _pad_y;
         int _pad_x;
         int _pad_top;
         int _pad_left;

@@ -3,21 +3,21 @@ Definitions and Variables (curses.h)
 
 Define before inclusion (only those needed):
 
-    XCURSES         True if compiling for X11.
-    PDC_RGB         True if you want to use RGB color definitions
-                    (Red = 1, Green = 2, Blue = 4) instead of BGR.
-    PDC_WIDE        True if building wide-character support.
-    PDC_DLL_BUILD   True if building a Windows DLL.
-    PDC_NCMOUSE     Use the ncurses mouse API instead
-                    of PDCurses' traditional mouse API.
+    XCURSES         if building / built for X11
+    PDC_RGB         if you want to use RGB color definitions
+                    (Red = 1, Green = 2, Blue = 4) instead of BGR
+    PDC_WIDE        if building / built with wide-character support
+    PDC_DLL_BUILD   if building / built as a Windows DLL
+    PDC_NCMOUSE     to use the ncurses mouse API instead
+                    of PDCurses' traditional mouse API
 
 Defined by this header:
 
-    PDCURSES        Enables access to PDCurses-only routines.
-    PDC_BUILD       Defines API build version.
-    PDC_VER_MAJOR   Major version number
-    PDC_VER_MINOR   Minor version number
-    PDC_VERDOT      Version string
+    PDCURSES        PDCurses-only features are available
+    PDC_BUILD       API build version
+    PDC_VER_MAJOR   major version number
+    PDC_VER_MINOR   minor version number
+    PDC_VERDOT      version string
 
 
 
@@ -663,7 +663,10 @@ color
     int init_color(short color, short red, short green, short blue);
     int color_content(short color, short *red, short *green, short *blue);
 
+    int alloc_pair(int fg, int bg);
     int assume_default_colors(int f, int b);
+    int find_pair(int fg, int bg);
+    int free_pair(int pair);
     int use_default_colors(void);
 
     int PDC_set_line_color(short color);
@@ -714,6 +717,13 @@ color
    variable PDC_ORIGINAL_COLORS is set at the time start_color() is
    called, that's equivalent to calling use_default_colors().
 
+   alloc_pair(), find_pair() and free_pair() are also from ncurses.
+   free_pair() marks a pair as unused; find_pair() returns an existing
+   pair with the specified foreground and background colors, if one
+   exists. And alloc_pair() returns such a pair whether or not it was
+   previously set, overwriting the oldest initialized pair if there are
+   no free pairs.
+
    PDC_set_line_color() is used to set the color, globally, for the
    color of the lines drawn for the attributes: A_UNDERLINE, A_LEFT and
    A_RIGHT. A value of -1 (the default) indicates that the current
@@ -723,8 +733,9 @@ color
 
 ### Return Value
 
-   All functions return OK on success and ERR on error, except for
-   has_colors() and can_change_colors(), which return TRUE or FALSE.
+   Most functions return OK on success and ERR on error. has_colors()
+   and can_change_colors() return TRUE or FALSE. alloc_pair() and
+   find_pair() return a pair number, or -1 on error.
 
 ### Portability
                              X/Open  ncurses  NetBSD
@@ -735,7 +746,10 @@ color
     can_change_color            Y       Y       Y
     init_color                  Y       Y       Y
     color_content               Y       Y       Y
+    alloc_pair                  -       Y       -
     assume_default_colors       -       Y       Y
+    find_pair                   -       Y       -
+    free_pair                   -       Y       -
     use_default_colors          -       Y       Y
     PDC_set_line_color          -       -       -
 
@@ -1194,7 +1208,7 @@ initscr
 ### Synopsis
 
     WINDOW *initscr(void);
-    WINDOW *Xinitscr(int argc, char *argv[]);
+    WINDOW *Xinitscr(int argc, char **argv);
     int endwin(void);
     bool isendwin(void);
     SCREEN *newterm(const char *type, FILE *outfd, FILE *infd);
@@ -1307,12 +1321,15 @@ inopts
     void qiflush(void);
     void timeout(int delay);
     void wtimeout(WINDOW *win, int delay);
+    int wgetdelay(const WINDOW *win);
     int typeahead(int fildes);
 
     int crmode(void);
     int nocrmode(void);
 
     bool is_keypad(const WINDOW *win);
+    bool is_nodelay(const WINDOW *win);
+    bool is_notimeout(const WINDOW *win);
 
 ### Description
 
@@ -1363,6 +1380,8 @@ inopts
    delay is given; i.e., 1-99 will wait 50ms, 100-149 will wait 100ms,
    etc.
 
+   wgetdelay() returns the delay timeout as set in wtimeout().
+
    intrflush(), notimeout(), noqiflush(), qiflush() and typeahead() do
    nothing in PDCurses, but are included for compatibility with other
    curses implementations.
@@ -1372,10 +1391,13 @@ inopts
 
    is_keypad() reports whether the specified window is in keypad mode.
 
+   is_nodelay() reports whether the specified window is in nodelay mode.
+
 ### Return Value
 
-   All functions except is_keypad() and the void functions return OK on
-   success and ERR on error.
+   is_keypad() and is_nodelay() return TRUE or FALSE. is_notimeout() is
+   provided for compatibility with other curses implementations, and
+   always returns FALSE. All others return OK on success and ERR on error.
 
 ### Portability
                              X/Open  ncurses  NetBSD
@@ -1397,10 +1419,13 @@ inopts
     qiflush                     Y       Y       Y
     timeout                     Y       Y       Y
     wtimeout                    Y       Y       Y
+    wgetdelay                   -       Y       -
     typeahead                   Y       Y       Y
     crmode                      Y       Y       Y
     nocrmode                    Y       Y       Y
     is_keypad                   -       Y       Y
+    is_nodelay                  -       Y       -
+    is_notimeout                -       Y       -
 
 
 
@@ -1894,11 +1919,17 @@ outopts
     int leaveok(WINDOW *win, bool bf);
     int setscrreg(int top, int bot);
     int wsetscrreg(WINDOW *win, int top, int bot);
+    int wgetscrreg(const WINDOW *win, int *top, int *bot);
     int scrollok(WINDOW *win, bool bf);
 
     int raw_output(bool bf);
 
+    bool is_cleared(const WINDOW *win);
+    bool is_idlok(const WINDOW *win);
+    bool is_idcok(const WINDOW *win);
+    bool is_immedok(const WINDOW *win);
     bool is_leaveok(const WINDOW *win);
+    bool is_scrollok(const WINDOW *win);
 
 ### Description
 
@@ -1920,19 +1951,31 @@ outopts
    will cause all lines in the scrolling region to scroll up one line.
    setscrreg() is the stdscr version.
 
+   wgetscrreg() gets the top and bottom margins as set in wsetscrreg().
+
    idlok() and idcok() do nothing in PDCurses, but are provided for
-   compatibility with other curses implementations.
+   compatibility with other curses implementations, likewise is_idlok()
+   and is_idcok().
 
    raw_output() enables the output of raw characters using the standard
    *add* and *ins* curses functions (that is, it disables translation of
    control characters).
 
+   is_cleared() reports whether the specified window causes clear at next
+   refresh.
+
+   is_immedok() reports whether the specified window is in immedok mode.
+
    is_leaveok() reports whether the specified window is in leaveok mode.
+
+   is_scrollok() reports whether the specified window allows scrolling.
 
 ### Return Value
 
-   All functions except is_leaveok() return OK on success and ERR on
-   error.
+   is_cleared(), is_immedok(), is_leaveok() and is_scrollok() return TRUE
+   or FALSE. is_idlok() and is_idcok() are provided for compatibility with
+   other curses implementations, and always return FALSE. All others
+   return OK on success and ERR on error.
 
 ### Portability
                              X/Open  ncurses  NetBSD
@@ -1943,8 +1986,14 @@ outopts
     leaveok                     Y       Y       Y
     setscrreg                   Y       Y       Y
     wsetscrreg                  Y       Y       Y
+    wgetscrreg                  -       Y       -
     scrollok                    Y       Y       Y
+    is_cleared                  -       Y       -
+    is_idlok                    -       Y       -
+    is_idcok                    -       Y       -
+    is_immedok                  -       Y       -
     is_leaveok                  -       Y       Y
+    is_scrollok                 -       Y       -
     raw_output                  -       -       -
 
 
@@ -2710,10 +2759,13 @@ window
     WINDOW *subwin(WINDOW* orig, int nlines, int ncols,
                    int begy, int begx);
     WINDOW *dupwin(WINDOW *win);
+    WINDOW *wgetparent(const WINDOW *win);
     int delwin(WINDOW *win);
     int mvwin(WINDOW *win, int y, int x);
     int mvderwin(WINDOW *win, int pary, int parx);
     int syncok(WINDOW *win, bool bf);
+    bool is_subwin(const WINDOW *win);
+    bool is_syncok(const WINDOW *win);
     void wsyncup(WINDOW *win);
     void wcursyncup(WINDOW *win);
     void wsyncdown(WINDOW *win);
@@ -2759,10 +2811,18 @@ window
 
    dupwin() creates an exact duplicate of the window win.
 
+   wgetparent() returns the parent WINDOW pointer for subwindows, or NULL
+   for windows having no parent.
+
    wsyncup() causes a touchwin() of all of the window's parents.
 
-   If wsyncok() is called with a second argument of TRUE, this causes a
+   If syncok() is called with a second argument of TRUE, this causes a
    wsyncup() to be called every time the window is changed.
+
+   is_subwin() reports whether the specified window is a subwindow,
+   created by subwin() or derwin().
+
+   is_syncok() reports whether the specified window is in syncok mode.
 
    wcursyncup() causes the current cursor position of all of a window's
    ancestors to reflect the current cursor position of the current
@@ -2796,6 +2856,8 @@ window
    syncok() return OK or ERR. wsyncup(), wcursyncup() and wsyncdown()
    return nothing.
 
+   is_subwin() and is_syncok() returns TRUE or FALSE.
+
 ### Errors
 
    It is an error to call resize_window() before calling initscr().
@@ -2814,8 +2876,11 @@ window
     derwin                      Y       Y       Y
     mvderwin                    Y       Y       Y
     dupwin                      Y       Y       Y
+    wgetparent                  -       Y       -
     wsyncup                     Y       Y       Y
     syncok                      Y       Y       Y
+    is_subwin                   -       Y       -
+    is_syncok                   -       Y       -
     wcursyncup                  Y       Y       Y
     wsyncdown                   Y       Y       Y
     wresize                     -       Y       Y

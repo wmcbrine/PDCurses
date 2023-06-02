@@ -22,7 +22,7 @@ Building
 --------
 
 - To rebuild MANUAL.md from the "man page" sections of the source code,
-  type "./mkman.sh". Needs a Unix-like shell and a Python interpreter.
+  type "./mkman.sh". Needs a Unix-like shell and an Awk interpreter.
 
 
 [User's Guide]: USERS.md

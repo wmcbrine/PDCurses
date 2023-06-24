@@ -15,10 +15,13 @@ window
     WINDOW *subwin(WINDOW* orig, int nlines, int ncols,
                    int begy, int begx);
     WINDOW *dupwin(WINDOW *win);
+    WINDOW *wgetparent(const WINDOW *win);
     int delwin(WINDOW *win);
     int mvwin(WINDOW *win, int y, int x);
     int mvderwin(WINDOW *win, int pary, int parx);
     int syncok(WINDOW *win, bool bf);
+    bool is_subwin(const WINDOW *win);
+    bool is_syncok(const WINDOW *win);
     void wsyncup(WINDOW *win);
     void wcursyncup(WINDOW *win);
     void wsyncdown(WINDOW *win);
@@ -64,10 +67,18 @@ window
 
    dupwin() creates an exact duplicate of the window win.
 
+   wgetparent() returns the parent WINDOW pointer for subwindows, or NULL
+   for windows having no parent.
+
    wsyncup() causes a touchwin() of all of the window's parents.
 
-   If wsyncok() is called with a second argument of TRUE, this causes a
+   If syncok() is called with a second argument of TRUE, this causes a
    wsyncup() to be called every time the window is changed.
+
+   is_subwin() reports whether the specified window is a subwindow,
+   created by subwin() or derwin().
+
+   is_syncok() reports whether the specified window is in syncok mode.
 
    wcursyncup() causes the current cursor position of all of a window's
    ancestors to reflect the current cursor position of the current
@@ -101,6 +112,8 @@ window
    syncok() return OK or ERR. wsyncup(), wcursyncup() and wsyncdown()
    return nothing.
 
+   is_subwin() and is_syncok() returns TRUE or FALSE.
+
 ### Errors
 
    It is an error to call resize_window() before calling initscr().
@@ -119,8 +132,11 @@ window
     derwin                      Y       Y       Y
     mvderwin                    Y       Y       Y
     dupwin                      Y       Y       Y
+    wgetparent                  -       Y       -
     wsyncup                     Y       Y       Y
     syncok                      Y       Y       Y
+    is_subwin                   -       Y       -
+    is_syncok                   -       Y       -
     wcursyncup                  Y       Y       Y
     wsyncdown                   Y       Y       Y
     wresize                     -       Y       Y
@@ -184,6 +200,15 @@ WINDOW *PDC_makenew(int nlines, int ncols, int begy, int begx)
     win->_clear = (bool) ((nlines == LINES) && (ncols == COLS));
     win->_bmarg = nlines - 1;
     win->_parx = win->_pary = -1;
+
+    /* initialize pad variables*/
+
+    win->_pad._pad_y = -1;
+    win->_pad._pad_x = -1;
+    win->_pad._pad_top = -1;
+    win->_pad._pad_left = -1;
+    win->_pad._pad_bottom = -1;
+    win->_pad._pad_right = -1;
 
     /* init to say window all changed */
 
@@ -438,6 +463,16 @@ WINDOW *dupwin(WINDOW *win)
     return new;
 }
 
+WINDOW *wgetparent(const WINDOW *win)
+{
+    PDC_LOG(("wgetparent() - called\n"));
+
+    if (!win || !win->_parent)
+        return NULL;
+
+    return win->_parent;
+}
+
 WINDOW *resize_window(WINDOW *win, int nlines, int ncols)
 {
     WINDOW *new;
@@ -553,6 +588,26 @@ int syncok(WINDOW *win, bool bf)
     win->_sync = bf;
 
     return OK;
+}
+
+bool is_subwin(const WINDOW *win)
+{
+    PDC_LOG(("is_subwin() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return ((win->_flags & _SUBWIN) ? TRUE : FALSE);
+}
+
+bool is_syncok(const WINDOW *win)
+{
+    PDC_LOG(("is_syncok() - called\n"));
+
+    if (!win)
+        return FALSE;
+
+    return win->_sync;
 }
 
 void wcursyncup(WINDOW *win)

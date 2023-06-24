@@ -28,7 +28,7 @@ Defined by this header:
 **man-end****************************************************************/
 
 #define PDCURSES        1
-#define PDC_BUILD    3906
+#define PDC_BUILD    3907
 #define PDC_VER_MAJOR   3
 #define PDC_VER_MINOR   9
 #define PDC_VERDOT   "3.9"
@@ -300,6 +300,17 @@ typedef struct _win       /* definition of a window */
     int   _delayms;       /* milliseconds of delay for getch() */
     int   _parx, _pary;   /* coords relative to parent (0,0) */
     struct _win *_parent; /* subwin's pointer to parent win */
+
+    /* these are used only if this is a pad */
+    struct pdat
+    {
+        int _pad_y;
+        int _pad_x;
+        int _pad_top;
+        int _pad_left;
+        int _pad_bottom;
+        int _pad_right;
+    } _pad;               /* Pad-properties structure */
 } WINDOW;
 
 /* Color pair structure */
@@ -1289,11 +1300,23 @@ PDCEX  const char *curses_version(void);
 PDCEX  int     find_pair(int, int);
 PDCEX  int     free_pair(int);
 PDCEX  bool    has_key(int);
+PDCEX  bool    is_cleared(const WINDOW *);
+PDCEX  bool    is_idcok(const WINDOW *);
+PDCEX  bool    is_idlok(const WINDOW *);
+PDCEX  bool    is_immedok(const WINDOW *);
 PDCEX  bool    is_keypad(const WINDOW *);
 PDCEX  bool    is_leaveok(const WINDOW *);
+PDCEX  bool    is_nodelay(const WINDOW *);
+PDCEX  bool    is_notimeout(const WINDOW *);
 PDCEX  bool    is_pad(const WINDOW *);
+PDCEX  bool    is_scrollok(const WINDOW *);
+PDCEX  bool    is_subwin(const WINDOW *);
+PDCEX  bool    is_syncok(const WINDOW *);
 PDCEX  int     set_tabsize(int);
 PDCEX  int     use_default_colors(void);
+PDCEX  int     wgetdelay(const WINDOW *);
+PDCEX  WINDOW *wgetparent(const WINDOW *);
+PDCEX  int     wgetscrreg(const WINDOW *, int *, int *);
 PDCEX  int     wresize(WINDOW *, int, int);
 
 PDCEX  bool    has_mouse(void);

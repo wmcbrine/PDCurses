@@ -246,12 +246,13 @@ static int _process_mouse_event(void)
                        BUTTON_PRESSED : BUTTON_RELEASED;
         Uint8 btn = event.button.button;
 
+        SP->mouse_status.x = (event.button.x - pdc_xoffset) / pdc_fwidth;
+        SP->mouse_status.y = (event.button.y - pdc_yoffset) / pdc_fheight;
+
         /* handle scroll wheel */
 
         if ((btn >= 4 && btn <= 7) && action == BUTTON_RELEASED)
         {
-            SP->mouse_status.x = SP->mouse_status.y = -1;
-
             switch (btn)
             {
             case 4:
@@ -290,9 +291,6 @@ static int _process_mouse_event(void)
                     SDL_PushEvent(&rel);
             }
         }
-
-        SP->mouse_status.x = (event.button.x - pdc_xoffset) / pdc_fwidth;
-        SP->mouse_status.y = (event.button.y - pdc_yoffset) / pdc_fheight;
 
         btn--;
 

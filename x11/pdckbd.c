@@ -350,7 +350,7 @@ static unsigned long _process_mouse_event(XEvent *event)
        the event. The following code is designed to cater for this
        situation. */
 
-    SP->mouse_status.changes = 0;
+    memset(&SP->mouse_status, 0, sizeof(SP->mouse_status));
 
     SP->mouse_status.x = event->xbutton.x / pdc_fwidth;
     SP->mouse_status.y = event->xbutton.y / pdc_fheight;
@@ -368,8 +368,6 @@ static unsigned long _process_mouse_event(XEvent *event)
         {
             /* Send the KEY_MOUSE to curses program */
 
-            memset(&SP->mouse_status, 0, sizeof(SP->mouse_status));
-
             switch(button_no)
             {
                case 4:
@@ -384,8 +382,6 @@ static unsigned long _process_mouse_event(XEvent *event)
                case 7:
                   SP->mouse_status.changes = PDC_MOUSE_WHEEL_RIGHT;
             }
-
-            SP->mouse_status.x = SP->mouse_status.y = -1;
 
             SP->key_code = TRUE;
             return KEY_MOUSE;

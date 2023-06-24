@@ -344,7 +344,11 @@ static int _process_mouse_event(void)
     }
     else if (event.type == SDL_MOUSEWHEEL)
     {
-        SP->mouse_status.x = SP->mouse_status.y = -1;
+        int x, y;
+
+        SDL_GetMouseState(&x, &y);
+        SP->mouse_status.x = (x - pdc_xoffset) / pdc_fwidth;
+        SP->mouse_status.y = (y - pdc_yoffset) / pdc_fheight;
 
         if (event.wheel.y > 0)
             SP->mouse_status.changes = PDC_MOUSE_WHEEL_UP;

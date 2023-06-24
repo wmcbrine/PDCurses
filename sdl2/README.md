@@ -10,7 +10,7 @@ Building
 - On *nix (including Linux and Mac OS X), run "make" in the sdl2
   directory. There is no configure script (yet?) for this port. This
   assumes a working sdl-config, and GNU make. It builds the library
-  pdcurses.a (dynamic lib not implemented).
+  pdcurses.a (or pdcurses.so/pdcurses.dylib with DLL=Y).
 
 - With MinGW, edit the Makefile to point to the appropriate include and
   library paths, and then run "mingw32-make".
@@ -23,9 +23,10 @@ Building
   characters, but depends on the SDL2_ttf library, instead of using
   simple bitmap fonts. "UTF8=Y" makes PDCurses ignore the system locale,
   and treat all narrow-character strings as UTF-8; this option has no
-  effect unless WIDE=Y is also set. Under Windows, you can specify
-  "DLL=Y" to build pdcurses.dll instead a static library. And on all
-  platforms, add the target "demos" to build the sample programs.
+  effect unless WIDE=Y is also set. You can specify "DLL=Y" to build a dynamic
+  rather than static library. The dynamic library is called pdcurses.dll,
+  pdcurses.so, or pdcurses.dylib on Windows, Linux, or Mac OS X respectively.
+  And on all platforms, add the target "demos" to build the sample programs.
 
 
 Usage

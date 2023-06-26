@@ -229,7 +229,6 @@ static void _pairwise_override(PANEL *pan, PANEL *pan2)
 
 static void _override(PANEL *pan, int show)
 {
-    int y;
     PANEL *pan2;
     PANELOBS *tobs = pan->obscure;      /* "this" one */
 

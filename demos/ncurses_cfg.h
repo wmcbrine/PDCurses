@@ -1,6 +1,6 @@
 /* This file is only used with the ncurses test programs.
  *
- * Have ncurses-6.1 unpacked in your $(HOME) (you don't need to build
+ * Have ncurses-6.4 unpacked in your $(HOME) (you don't need to build
  * it), or edit ncurses_testdir appropriately in the Makefile or
  * nctests.mif. Configure and build PDCurses, and:
  *
@@ -23,7 +23,7 @@
 #define HAVE_UNISTD_H 1
 #define HAVE_TERMATTRS 1
 
-#include <curses.h>
+#include <curspriv.h>
 
 #define ExitProgram exit
 
@@ -45,8 +45,10 @@
 #define HAVE_PUTWIN 1
 #define HAVE_SLK_COLOR 1
 #define HAVE_SLK_INIT 1
+#define HAVE_STRSTR 1
 #define HAVE_USE_DEFAULT_COLORS 1
 #define HAVE_WRESIZE 1
+#define USE_STRING_HACKS 1
 
 #ifdef PDC_WIDE
 # define USE_WIDEC_SUPPORT 1

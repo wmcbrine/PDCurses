@@ -196,8 +196,12 @@ int touchoverlap(const WINDOW *win1, WINDOW *win2)
 
     for (y = starty; y < endy; y++)
     {
-        win2->_firstch[y] = startx;
-        win2->_lastch[y] = endx;
+        int first = win2->_firstch[y];
+
+        if (first == _NO_CHANGE || win2->_lastch[y] < endx)
+            win2->_lastch[y] = endx;
+        if (first == _NO_CHANGE || first > startx)
+            win2->_firstch[y] = startx;
     }
 
     return OK;

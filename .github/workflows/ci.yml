@@ -1,0 +1,112 @@
+name: CI for CMake
+
+on:
+  push:
+    paths:
+      - "**/CMakeLists.txt"
+      - "**.cmake"
+      - "**.cmake.in"
+      - "**.c"
+      - "**.h"
+      - "**.h.in"
+      - ".github/workflows/ci.yml"
+  pull_request:
+  release:
+    types: [published]
+
+env:
+  CTEST_NO_TESTS_ACTION: "error"
+
+jobs:
+
+  unix:
+
+    strategy:
+      matrix:
+        cc: [gcc-9, gcc-10, gcc-11, gcc-12, clang-14]
+        os: [ubuntu-latest]
+        include:
+        - os: macos-latest
+          cc: clang
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+
+    env:
+      CC: ${{ matrix.cc }}
+
+    steps:
+
+    - name: install prereqs (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install --no-install-recommends libxt-dev libxaw7-dev libx11-dev
+
+    - name: install prereqs (macOS)
+      if: runner.os == 'macOS'
+      run: brew install libxt libxaw libx11
+
+    - uses: actions/checkout@v3
+      name: Checkout source code
+
+    - name: CMake configure
+      run: cmake -B build --install-prefix=${{ runner.temp }} -DCOMPILE_WARNING_AS_ERROR=ON
+
+    - name: CMake build
+      run: cmake --build build --parallel
+
+    - name: CMake install (for examples)
+      run: cmake --install build
+
+    - name: CMake configure examples
+      run: cmake -B demos/build -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+
+    - name: CMake build examples
+      run: cmake --build demos/build --parallel
+
+    - name: Create package
+      if: github.event.action == 'published'
+      run: cpack --config build/CPackConfig.cmake
+
+    - name: Upload package
+      if: github.event.action == 'published'
+      uses: actions/upload-artifact@v3
+      with:
+        name: binary-archive
+        path: build/package
+
+
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v3
+      name: Checkout source code
+
+    - name: CMake configure
+      run: cmake -B build --install-prefix=${{ runner.temp }}
+
+    - name: CMake build
+      run: cmake --build build --parallel --config Release
+
+    - name: CMake install (for examples)
+      run: cmake --install build --config Release
+
+    - name: CMake configure examples
+      run: cmake -B demos/build -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+
+    - name: CMake build examples
+      run: cmake --build demos/build --parallel
+
+    - name: Create package
+      if: github.event.action == 'published'
+      run: cpack --config build/CPackConfig.cmake
+
+    - name: Upload package
+      if: github.event.action == 'published'
+      uses: actions/upload-artifact@v3
+      with:
+        name: binary-archive
+        path: build/package

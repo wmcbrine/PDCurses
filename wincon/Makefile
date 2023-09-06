@@ -53,7 +53,7 @@ endif
 ifeq ($(DLL),Y)
 	CFLAGS += -DPDC_DLL_BUILD
 	LIBEXE = $(CC)
-	LIBFLAGS = -Wl,--out-implib,pdcurses.a -shared -o
+	LIBFLAGS = -Wl,--out-implib,libpdcurses.dll.a -shared -o
 	LIBCURSES = pdcurses.dll
 	CLEAN = $(LIBCURSES) *.a
 	RESOURCE = pdcurses.o

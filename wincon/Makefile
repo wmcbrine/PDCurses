@@ -36,8 +36,8 @@ ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
 	LDFLAGS = -g
 else
-	CFLAGS  = -O2 -Wall
-	LDFLAGS =
+	CFLAGS  = -DNDEBUG -Ofast -Wall -Werror -fdata-sections -ffunction-sections -flto
+	LDFLAGS = -Wl,--gc-sections -s
 endif
 
 CFLAGS += -I$(PDCURSES_SRCDIR)
@@ -60,7 +60,7 @@ ifeq ($(DLL),Y)
 else
 	LIBEXE = $(AR)
 	LIBFLAGS = rcv
-	LIBCURSES = pdcurses.a
+	LIBCURSES = libpdcurses.a
 	CLEAN = *.a
 endif
 

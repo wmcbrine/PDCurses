@@ -374,6 +374,10 @@ void PDC_scr_free(void)
 
 int PDC_scr_open(void)
 {
+    #ifndef PDC_WIDE
+    SetConsoleOutputCP(437);
+    #endif
+    
     const char *str;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     HMODULE h_kernel;

@@ -213,9 +213,22 @@ static void _free_obscure(PANEL *pan)
     pan->obscure = (PANELOBS *)0;
 }
 
+static void _pairwise_override(PANEL *pan, PANEL *pan2)
+{
+    const int sy1 = pan->wstarty, sy2 = pan2->wstarty;
+    const int end_y = min(pan->wendy, pan2->wendy);
+    int y = max(sy1, sy2);
+
+    while (y < end_y)
+    {
+        if (is_linetouched(pan->win, y - sy1))
+            Touchline(pan2, y - sy2, 1);
+        y++;
+    }
+}
+
 static void _override(PANEL *pan, int show)
 {
-    int y;
     PANEL *pan2;
     PANELOBS *tobs = pan->obscure;      /* "this" one */
 
@@ -233,14 +246,11 @@ static void _override(PANEL *pan, int show)
     while (tobs)
     {
         if ((pan2 = tobs->pan) != pan)
-            for (y = pan->wstarty; y < pan->wendy; y++)
-                if ((y >= pan2->wstarty) && (y < pan2->wendy) &&
-                   ((is_linetouched(pan->win, y - pan->wstarty)) ||
-                    (is_linetouched(stdscr, y))))
-                    Touchline(pan2, y - pan2->wstarty, 1);
+            _pairwise_override(pan, pan2);
 
         tobs = tobs->above;
     }
+    _pairwise_override(&_stdscr_pseudo_panel, pan);
 }
 
 static void _calculate_obscure(void)

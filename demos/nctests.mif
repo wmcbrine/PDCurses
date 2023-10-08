@@ -1,6 +1,6 @@
 # This provides for compiling and linking the ncurses test programs.
 
-ncurses_testdir = $(HOME)/ncurses-6.1/test
+ncurses_testdir = $(HOME)/ncurses-6.4/test
 
 NCURSES_TESTS   = bs$(E) gdc$(E) hanoi$(E) knight$(E) tclock$(E) \
 lrtest$(E) ncurses$(E)

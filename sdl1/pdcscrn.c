@@ -10,7 +10,11 @@
 
 #ifdef PDC_WIDE
 # ifndef PDC_FONT_PATH
-#  define PDC_FONT_PATH "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+#  if defined(__APPLE__)
+#   define PDC_FONT_PATH "/System/Library/Fonts/Menlo.ttc"
+#  else
+#   define PDC_FONT_PATH "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+#  endif
 # endif
 TTF_Font *pdc_ttffont = NULL;
 int pdc_font_size = 17;

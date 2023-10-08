@@ -14,13 +14,16 @@ extern "C" {
 #if defined(__TURBOC__) || defined(__EMX__) || defined(__DJGPP__) || \
     defined(PDC_99) || defined(__WATCOMC__)
 # ifndef HAVE_VSSCANF
-#  define HAVE_VSSCANF       /* have vsscanf() */
+#  define HAVE_VSSCANF 1     /* have vsscanf() */
 # endif
 #endif
 
 #if defined(PDC_99) || defined(__WATCOMC__)
+# ifndef HAVE_SNPRINTF
+#  define HAVE_SNPRINTF 1   /* have snprintf() */
+# endif
 # ifndef HAVE_VSNPRINTF
-#  define HAVE_VSNPRINTF     /* have vsnprintf() */
+#  define HAVE_VSNPRINTF 1   /* have vsnprintf() */
 # endif
 #endif
 

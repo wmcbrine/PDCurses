@@ -508,7 +508,7 @@ xmas.o: $(demodir)/xmas.c
 # This section provides for compiling and linking the
 # ncurses test programs.
 
-ncurses_testdir	= $(HOME)/ncurses-6.1/test
+ncurses_testdir	= $(HOME)/ncurses-6.4/test
 
 NCURSES_TESTS	= bs gdc hanoi knight tclock lrtest ncurses
 

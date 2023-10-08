@@ -158,7 +158,7 @@ static void _copy(void)
 
 #ifdef PDC_WIDE
     wtmp = malloc((len + 1) * sizeof(wchar_t));
-    len *= 3;
+    len *= 4;
 #endif
     tmp = malloc(len + 1);
 

@@ -168,31 +168,40 @@ bool is_wintouched(WINDOW *win)
 
 int touchoverlap(const WINDOW *win1, WINDOW *win2)
 {
-    int y, endy, endx, starty, startx;
+    int y, endy, endx, starty, startx, begy1, begx1, begy2, begx2;
 
     PDC_LOG(("touchoverlap() - called: win1=%p win2=%p\n", win1, win2));
 
     if (!win1 || !win2)
         return ERR;
 
-    starty = max(win1->_begy, win2->_begy);
-    startx = max(win1->_begx, win2->_begx);
-    endy = min(win1->_maxy + win1->_begy, win2->_maxy + win2->_begy);
-    endx = min(win1->_maxx + win1->_begx, win2->_maxx + win2->_begx);
+    begy1 = win1->_begy;
+    begx1 = win1->_begx;
+    begy2 = win2->_begy;
+    begx2 = win2->_begy;
+
+    starty = max(begy1, begy2);
+    startx = max(begx1, begx2);
+    endy = min(win1->_maxy + begy1, win2->_maxy + begy2);
+    endx = min(win1->_maxx + begx1, win2->_maxx + begx2);
 
     if (starty >= endy || startx >= endx)
         return OK;
 
-    starty -= win2->_begy;
-    startx -= win2->_begx;
-    endy -= win2->_begy;
-    endx -= win2->_begx;
+    starty -= begy2;
+    startx -= begx2;
+    endy -= begy2;
+    endx -= begx2;
     endx -= 1;
 
     for (y = starty; y < endy; y++)
     {
-        win2->_firstch[y] = startx;
-        win2->_lastch[y] = endx;
+        int first = win2->_firstch[y];
+
+        if (first == _NO_CHANGE || win2->_lastch[y] < endx)
+            win2->_lastch[y] = endx;
+        if (first == _NO_CHANGE || first > startx)
+            win2->_firstch[y] = startx;
     }
 
     return OK;

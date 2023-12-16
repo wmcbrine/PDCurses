@@ -9,7 +9,7 @@ PANEL_HEADER		= $(PDCURSES_SRCDIR)/panel.h
 srcdir	= $(PDCURSES_SRCDIR)/pdcurses
 demodir	= $(PDCURSES_SRCDIR)/demos
 
-LIBOBJS = addch.$(O) addchstr.$(O) addstr.$(O) attr.$(O) beep.$(O) \
+LIBOBJS = wcwidth.$(O) addch.$(O) addchstr.$(O) addstr.$(O) attr.$(O) beep.$(O) \
 bkgd.$(O) border.$(O) clear.$(O) color.$(O) delch.$(O) deleteln.$(O) \
 getch.$(O) getstr.$(O) getyx.$(O) inch.$(O) inchstr.$(O) \
 initscr.$(O) inopts.$(O) insch.$(O) insstr.$(O) instr.$(O) kernel.$(O) \

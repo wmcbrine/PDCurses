@@ -9,10 +9,6 @@ project(PDcursesDemos LANGUAGES C)
 
 find_package(PDCurses CONFIG REQUIRED)
 
-if(PDCurses_X11)
-  include(${PROJECT_SOURCE_DIR}/../cmake/x11.cmake)
-endif()
-
 foreach(f IN ITEMS testcurs ozdemo xmas firework ptest rain worm)
   add_executable(${f} ${f}.c)
   target_link_libraries(${f} PRIVATE CURSES::CURSES)

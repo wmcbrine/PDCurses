@@ -92,7 +92,7 @@ else()
   target_compile_definitions(pdcurses PRIVATE XCURSES)
 
   target_include_directories(pdcurses PRIVATE ${X11_INCLUDE_DIR})
-  target_link_libraries(pdcurses PRIVATE ${X11_LIBRARIES} X11::Xaw X11::Xt X11::Xpm X11::Xmu)
+  target_link_libraries(pdcurses PRIVATE X11::X11 X11::Xaw X11::Xt X11::Xpm X11::Xmu)
 
   target_sources(pdcurses PRIVATE x11/pdcclip.c x11/pdcdisp.c x11/pdcgetsc.c
     x11/pdckbd.c x11/pdcscrn.c x11/pdcsetsc.c x11/pdcutil.c x11/sb.c x11/scrlbox.c

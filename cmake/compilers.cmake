@@ -9,8 +9,4 @@ $<$<BOOL:${HAVE_VSSCANF}>:HAVE_VSSCANF>
 )
 
 # --- compiler options
-if(MSVC)
-  add_compile_options(/W3)
-else()
-  add_compile_options(-Wall)
-endif()
+add_compile_options(-Wall)

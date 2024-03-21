@@ -37,8 +37,10 @@ PUBLIC
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 $<INSTALL_INTERFACE:include>
 )
-target_compile_definitions(pdcurses PRIVATE
+target_compile_definitions(pdcurses
+PUBLIC
 $<$<BOOL:${PDCurses_WIDE}>:PDC_WIDE>
+PRIVATE
 $<$<BOOL:${PDCurses_UTF8}>:PDC_FORCE_UTF8>
 $<$<BOOL:${PDCurses_xaw3d}>:USE_XAW3D>
 $<$<BOOL:${PDCurses_nextaw}>:USE_NEXTAW>

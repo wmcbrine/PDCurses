@@ -55,6 +55,14 @@ add_library(CURSES::CURSES IMPORTED INTERFACE GLOBAL)
 target_link_libraries(CURSES::CURSES INTERFACE pdcurses)
 target_include_directories(CURSES::CURSES INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
+check_symbol_exists("vsnprintf" "stdio.h" HAVE_VSNPRINTF)
+check_symbol_exists("vsscanf" "stdio.h" HAVE_VSSCANF)
+
+target_compile_definitions(pdcurses PRIVATE
+$<$<BOOL:${HAVE_VSNPRINTF}>:HAVE_VSNPRINTF>
+$<$<BOOL:${HAVE_VSSCANF}>:HAVE_VSSCANF>
+)
+
 if(sdl)
   find_package(SDL2 CONFIG REQUIRED)
 

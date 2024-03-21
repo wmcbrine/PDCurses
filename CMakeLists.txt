@@ -11,6 +11,9 @@ VERSION 3.9
 DESCRIPTION "PDCurses - a curses library for environments that don't fit the termcap/terminfo model."
 HOMEPAGE_URL "https://github.com/wmcbrine/PDCurses")
 
+include(CheckIncludeFile)
+include(CheckSymbolExists)
+
 # --- system config
 option(PDCurses_WIDE "Enable wide-character support" ON)
 option(PDCurses_UTF8 "Enable UTF-8 support")
@@ -70,12 +73,26 @@ elseif(WIN32)
     wincon/pdckbd.c wincon/pdcscrn.c wincon/pdcsetsc.c wincon/pdcutil.c wincon/pdcwin.h
   )
 else()
+  check_include_file("DECkeySym.h" HAVE_DECKEYSYM_H)
+  check_include_file("Sunkeysym.h" HAVE_SUNKEYSYM_H)
+  check_include_file("unistd.h" HAVE_UNISTD_H)
+  check_symbol_exists("poll" "poll.h" HAVE_POLL)
+  check_symbol_exists("usleep" "unistd.h" HAVE_USLEEP)
+
+  target_compile_definitions(pdcurses PRIVATE
+  $<$<BOOL:${HAVE_DECKEYSYM_H}>:HAVE_DECKEYSYM_H>
+  $<$<BOOL:${HAVE_SUNKEYSYM_H}>:HAVE_SUNKEYSYM_H>
+  $<$<BOOL:${HAVE_UNISTD_H}>:HAVE_UNISTD_H>
+  $<$<BOOL:${HAVE_POLL}>:HAVE_POLL>
+  $<$<BOOL:${HAVE_USLEEP}>:HAVE_USLEEP>
+  )
+
   include(cmake/x11.cmake)
 
   target_compile_definitions(pdcurses PRIVATE XCURSES)
 
   target_include_directories(pdcurses PRIVATE ${X11_INCLUDE_DIR})
-  target_link_libraries(pdcurses PRIVATE ${X11_LIBRARIES} X11::Xt X11::Xpm X11::Xmu)
+  target_link_libraries(pdcurses PRIVATE ${X11_LIBRARIES} X11::Xaw X11::Xt X11::Xpm X11::Xmu)
 
   target_sources(pdcurses PRIVATE x11/pdcclip.c x11/pdcdisp.c x11/pdcgetsc.c
     x11/pdckbd.c x11/pdcscrn.c x11/pdcsetsc.c x11/pdcutil.c x11/sb.c x11/scrlbox.c
@@ -90,7 +107,3 @@ include(cmake/install.cmake)
 
 # --- auto-ignore build directory
 file(GENERATE OUTPUT .gitignore CONTENT "*")
-
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}" CACHE PATH "..." FORCE)
-endif()

@@ -72,6 +72,9 @@ elseif(WIN32)
   target_sources(pdcurses PRIVATE wincon/pdcclip.c wincon/pdcdisp.c wincon/pdcgetsc.c
     wincon/pdckbd.c wincon/pdcscrn.c wincon/pdcsetsc.c wincon/pdcutil.c wincon/pdcwin.h
   )
+elseif(CMAKE_SYSTEM_NAME STREQUAL "DOS")
+  target_sources(pdcurses PRIVATE dos/pdcclip.c dos/pdcdisp.c dos/pdcgetsc.c
+      dos/pdckbd.c dos/pdcscrn.c dos/pdcsetsc.c dos/pdcutil.c)
 else()
   check_include_file("DECkeySym.h" HAVE_DECKEYSYM_H)
   check_include_file("Sunkeysym.h" HAVE_SUNKEYSYM_H)

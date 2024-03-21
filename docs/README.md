@@ -33,7 +33,9 @@ cmake --build build
 optionally, install the library binary and headers:
 
 ```sh
-cmake --install build --prefix /path/to/install
+cmake -B build --install-prefix /path/to/install
+cmake --build build
+cmake --install build
 ```
 
 If using X11, install X11 like:

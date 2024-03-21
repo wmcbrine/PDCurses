@@ -16,6 +16,8 @@ on:
 
 env:
   CTEST_NO_TESTS_ACTION: "error"
+  CTEST_PARALLEL_LEVEL: 0
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
 
 jobs:
 
@@ -23,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        cc: [gcc-9, gcc-10, gcc-11, gcc-12, clang-14]
+        cc: [gcc-9, gcc-10, gcc-11, gcc-12, gcc-13, clang-15]
         os: [ubuntu-latest]
         include:
         - os: macos-latest
@@ -47,14 +49,14 @@ jobs:
       if: runner.os == 'macOS'
       run: brew install libxt libxaw libx11
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       name: Checkout source code
 
     - name: CMake configure
       run: cmake -B build --install-prefix=${{ runner.temp }} -DCOMPILE_WARNING_AS_ERROR=ON
 
     - name: CMake build
-      run: cmake --build build --parallel
+      run: cmake --build build
 
     - name: CMake install (for examples)
       run: cmake --install build
@@ -63,7 +65,7 @@ jobs:
       run: cmake -B demos/build -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
 
     - name: CMake build examples
-      run: cmake --build demos/build --parallel
+      run: cmake --build demos/build
 
     - name: Create package
       if: github.event.action == 'published'
@@ -71,7 +73,7 @@ jobs:
 
     - name: Upload package
       if: github.event.action == 'published'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: binary-archive
         path: build/package
@@ -82,14 +84,14 @@ jobs:
     timeout-minutes: 10
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       name: Checkout source code
 
     - name: CMake configure
       run: cmake -B build --install-prefix=${{ runner.temp }}
 
     - name: CMake build
-      run: cmake --build build --parallel --config Release
+      run: cmake --build build --config Release
 
     - name: CMake install (for examples)
       run: cmake --install build --config Release
@@ -98,7 +100,7 @@ jobs:
       run: cmake -B demos/build -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
 
     - name: CMake build examples
-      run: cmake --build demos/build --parallel
+      run: cmake --build demos/build
 
     - name: Create package
       if: github.event.action == 'published'
@@ -106,7 +108,7 @@ jobs:
 
     - name: Upload package
       if: github.event.action == 'published'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: binary-archive
         path: build/package

@@ -39,6 +39,7 @@ target_include_directories(pdcurses
 PUBLIC
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 $<INSTALL_INTERFACE:include>
+PRIVATE pdcurses
 )
 target_compile_definitions(pdcurses
 PUBLIC
@@ -67,6 +68,7 @@ if(sdl)
   find_package(SDL2 CONFIG REQUIRED)
 
   target_link_libraries(pdcurses PRIVATE SDL2::SDL2)
+  target_include_directories(pdcurses PRIVATE sdl2)
 
   target_sources(pdcurses PRIVATE sdl2/pdcclip.c sdl2/pdcdisp.c sdl2/pdcgetsc.c
     sdl2/pdckbd.c sdl2/pdcscrn.c sdl2/pdcsetsc.c sdl2/pdcutil.c sdl2/pdcsdl.h
@@ -76,6 +78,7 @@ elseif(WIN32)
   $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>
   $<$<BOOL:${BUILD_SHARED_LIBS}>:PDC_DLL_BUILD>
   )
+  target_include_directories(pdcurses PRIVATE wincon)
 
   target_sources(pdcurses PRIVATE wincon/pdcclip.c wincon/pdcdisp.c wincon/pdcgetsc.c
     wincon/pdckbd.c wincon/pdcscrn.c wincon/pdcsetsc.c wincon/pdcutil.c wincon/pdcwin.h
@@ -83,6 +86,7 @@ elseif(WIN32)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "DOS")
   target_sources(pdcurses PRIVATE dos/pdcclip.c dos/pdcdisp.c dos/pdcgetsc.c
       dos/pdckbd.c dos/pdcscrn.c dos/pdcsetsc.c dos/pdcutil.c)
+  target_include_directories(pdcurses PRIVATE dos)
 else()
   check_include_file("DECkeySym.h" HAVE_DECKEYSYM_H)
   check_include_file("Sunkeysym.h" HAVE_SUNKEYSYM_H)
@@ -102,7 +106,7 @@ else()
 
   target_compile_definitions(pdcurses PRIVATE XCURSES)
 
-  target_include_directories(pdcurses PRIVATE ${X11_INCLUDE_DIR})
+  target_include_directories(pdcurses PRIVATE ${X11_INCLUDE_DIR} x11)
   target_link_libraries(pdcurses PRIVATE X11::X11 X11::Xaw X11::Xt X11::Xpm X11::Xmu)
 
   target_sources(pdcurses PRIVATE x11/pdcclip.c x11/pdcdisp.c x11/pdcgetsc.c

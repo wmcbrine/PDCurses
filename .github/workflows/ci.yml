@@ -15,9 +15,9 @@ on:
     types: [published]
 
 env:
-  CTEST_NO_TESTS_ACTION: "error"
-  CTEST_PARALLEL_LEVEL: 0
   CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CTEST_NO_TESTS_ACTION: error
+  CTEST_PARALLEL_LEVEL: 0
 
 jobs:
 
@@ -62,10 +62,13 @@ jobs:
       run: cmake --install build
 
     - name: CMake configure examples
-      run: cmake -B demos/build -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+      run: cmake -B builddemos -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
 
     - name: CMake build examples
-      run: cmake --build demos/build
+      run: cmake --build builddemos
+
+    - name: CTest
+      run: ctest --test-dir builddemos --output-on-failure
 
     - name: Create package
       if: github.event.action == 'published'
@@ -122,10 +125,15 @@ jobs:
       with:
         version: "2.0"
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Configure
-      run: cmake -Bbuild --toolchain cmake/dos.cmake
+      run: cmake -Bbuild --toolchain cmake/dos.cmake --install-prefix=${{ runner.temp }}
 
     - name: Build
       run: cmake --build build
+
+    - name: CMake install (for examples)
+      run: cmake --install build
+
+    # cannot build examples, even locally

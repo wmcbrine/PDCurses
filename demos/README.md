@@ -17,6 +17,13 @@ and link with any curses library; e.g., "cc -orain rain.c -lcurses".
 There are no dependencies besides curses and the standard C library, and
 no configuration is needed.
 
+To use CMake, assuming the main PDcurses has been built and installed:
+
+```sh
+cmake -S demos -B demos/build -DPDCurses_ROOT=/path/to/pdcurses
+
+cmake --build demos/build
+```
 
 Distribution Status
 -------------------

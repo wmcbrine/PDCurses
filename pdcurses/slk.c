@@ -46,12 +46,12 @@ slk
    slk_init() requires a single parameter which describes the format of
    the SLKs as follows:
 
-   0       3-2-3 format
-   1       4-4 format
-   2       4-4-4 format (ncurses extension)
-   3       4-4-4 format with index line (ncurses extension)
-   2 lines used
-   55      5-5 format (pdcurses format)
+    0       3-2-3 format
+    1       4-4 format
+    2       4-4-4 format (ncurses extension)
+    3       4-4-4 format with index line (ncurses extension)
+    2 lines used
+    55      5-5 format (pdcurses format)
 
    slk_refresh(), slk_noutrefresh() and slk_touch() are analogous to
    refresh(), noutrefresh() and touch().

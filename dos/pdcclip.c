@@ -31,7 +31,6 @@ clipboard
 
 ### Return Values
 
-    indicator of success/failure of call.
     PDC_CLIP_SUCCESS        the call was successful
     PDC_CLIP_MEMORY_ERROR   unable to allocate sufficient memory for
                             the clipboard contents

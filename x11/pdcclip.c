@@ -31,12 +31,11 @@ clipboard
 
 ### Return Values
 
-   indicator of success/failure of call.
-   PDC_CLIP_SUCCESS        the call was successful
-   PDC_CLIP_MEMORY_ERROR   unable to allocate sufficient memory for
-                           the clipboard contents
-   PDC_CLIP_EMPTY          the clipboard contains no text
-   PDC_CLIP_ACCESS_ERROR   no clipboard support
+    PDC_CLIP_SUCCESS        the call was successful
+    PDC_CLIP_MEMORY_ERROR   unable to allocate sufficient memory for
+                            the clipboard contents
+    PDC_CLIP_EMPTY          the clipboard contains no text
+    PDC_CLIP_ACCESS_ERROR   no clipboard support
 
 ### Portability
                              X/Open  ncurses  NetBSD

@@ -46,8 +46,8 @@ border
    border(), wborder(), and box() draw a border around the edge of the
    window. If any argument is zero, an appropriate default is used:
 
-   Name | Description                   | Default
-   -----|-------------------------------|-------------
+   Name | Element                       | Default
+   :----|:------------------------------|:------------
    ls   | left side of border           | ACS_VLINE
    rs   | right side of border          | ACS_VLINE
    ts   | top side of border            | ACS_HLINE

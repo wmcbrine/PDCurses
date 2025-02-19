@@ -54,19 +54,21 @@ termattr
    character, ^W.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    baudrate                    Y       Y       Y
-    erasechar                   Y       Y       Y
-    has_ic                      Y       Y       Y
-    has_il                      Y       Y       Y
-    killchar                    Y       Y       Y
-    longname                    Y       Y       Y
-    termattrs                   Y       Y       Y
-    termname                    Y       Y       Y
-    erasewchar                  Y       Y       Y
-    killwchar                   Y       Y       Y
-    term_attrs                  Y       Y       Y
-    wordchar                    -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   baudrate              |    Y   |    Y    |   Y
+   erasechar             |    Y   |    Y    |   Y
+   has_ic                |    Y   |    Y    |   Y
+   has_il                |    Y   |    Y    |   Y
+   killchar              |    Y   |    Y    |   Y
+   longname              |    Y   |    Y    |   Y
+   termattrs             |    Y   |    Y    |   Y
+   termname              |    Y   |    Y    |   Y
+   erasewchar            |    Y   |    Y    |   Y
+   killwchar             |    Y   |    Y    |   Y
+   term_attrs            |    Y   |    Y    |   Y
+   wordchar              |    -   |    -    |   -
 
 **man-end****************************************************************/
 

@@ -46,17 +46,19 @@ insch
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    insch                       Y       Y       Y
-    winsch                      Y       Y       Y
-    mvinsch                     Y       Y       Y
-    mvwinsch                    Y       Y       Y
-    ins_wch                     Y       Y       Y
-    wins_wch                    Y       Y       Y
-    mvins_wch                   Y       Y       Y
-    mvwins_wch                  Y       Y       Y
-    insrawch                    -       -       -
-    winsrawch                   -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   insch                 |    Y   |    Y    |   Y
+   winsch                |    Y   |    Y    |   Y
+   mvinsch               |    Y   |    Y    |   Y
+   mvwinsch              |    Y   |    Y    |   Y
+   ins_wch               |    Y   |    Y    |   Y
+   wins_wch              |    Y   |    Y    |   Y
+   mvins_wch             |    Y   |    Y    |   Y
+   mvwins_wch            |    Y   |    Y    |   Y
+   insrawch              |    -   |    -    |   -
+   winsrawch             |    -   |    -    |   -
 
 **man-end****************************************************************/
 

@@ -38,23 +38,25 @@ inchstr
    All functions return the number of elements read, or ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    inchstr                     Y       Y       Y
-    winchstr                    Y       Y       Y
-    mvinchstr                   Y       Y       Y
-    mvwinchstr                  Y       Y       Y
-    inchnstr                    Y       Y       Y
-    winchnstr                   Y       Y       Y
-    mvinchnstr                  Y       Y       Y
-    mvwinchnstr                 Y       Y       Y
-    in_wchstr                   Y       Y       Y
-    win_wchstr                  Y       Y       Y
-    mvin_wchstr                 Y       Y       Y
-    mvwin_wchstr                Y       Y       Y
-    in_wchnstr                  Y       Y       Y
-    win_wchnstr                 Y       Y       Y
-    mvin_wchnstr                Y       Y       Y
-    mvwin_wchnstr               Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   inchstr               |    Y   |    Y    |   Y
+   winchstr              |    Y   |    Y    |   Y
+   mvinchstr             |    Y   |    Y    |   Y
+   mvwinchstr            |    Y   |    Y    |   Y
+   inchnstr              |    Y   |    Y    |   Y
+   winchnstr             |    Y   |    Y    |   Y
+   mvinchnstr            |    Y   |    Y    |   Y
+   mvwinchnstr           |    Y   |    Y    |   Y
+   in_wchstr             |    Y   |    Y    |   Y
+   win_wchstr            |    Y   |    Y    |   Y
+   mvin_wchstr           |    Y   |    Y    |   Y
+   mvwin_wchstr          |    Y   |    Y    |   Y
+   in_wchnstr            |    Y   |    Y    |   Y
+   win_wchnstr           |    Y   |    Y    |   Y
+   mvin_wchnstr          |    Y   |    Y    |   Y
+   mvwin_wchnstr         |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

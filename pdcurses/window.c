@@ -124,26 +124,28 @@ window
    NOT cancelled for those windows.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    newwin                      Y       Y       Y
-    delwin                      Y       Y       Y
-    mvwin                       Y       Y       Y
-    subwin                      Y       Y       Y
-    derwin                      Y       Y       Y
-    mvderwin                    Y       Y       Y
-    dupwin                      Y       Y       Y
-    wgetparent                  -       Y       -
-    wsyncup                     Y       Y       Y
-    syncok                      Y       Y       Y
-    is_subwin                   -       Y       -
-    is_syncok                   -       Y       -
-    wcursyncup                  Y       Y       Y
-    wsyncdown                   Y       Y       Y
-    wresize                     -       Y       Y
-    resize_window               -       -       -
-    PDC_makelines               -       -       -
-    PDC_makenew                 -       -       -
-    PDC_sync                    -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   newwin                |    Y   |    Y    |   Y
+   delwin                |    Y   |    Y    |   Y
+   mvwin                 |    Y   |    Y    |   Y
+   subwin                |    Y   |    Y    |   Y
+   derwin                |    Y   |    Y    |   Y
+   mvderwin              |    Y   |    Y    |   Y
+   dupwin                |    Y   |    Y    |   Y
+   wgetparent            |    -   |    Y    |   -
+   wsyncup               |    Y   |    Y    |   Y
+   syncok                |    Y   |    Y    |   Y
+   is_subwin             |    -   |    Y    |   -
+   is_syncok             |    -   |    Y    |   -
+   wcursyncup            |    Y   |    Y    |   Y
+   wsyncdown             |    Y   |    Y    |   Y
+   wresize               |    -   |    Y    |   Y
+   resize_window         |    -   |    -    |   -
+   PDC_makelines         |    -   |    -    |   -
+   PDC_makenew           |    -   |    -    |   -
+   PDC_sync              |    -   |    -    |   -
 
 **man-end****************************************************************/
 

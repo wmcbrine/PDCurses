@@ -38,15 +38,17 @@ clear
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    clear                       Y       Y       Y
-    wclear                      Y       Y       Y
-    erase                       Y       Y       Y
-    werase                      Y       Y       Y
-    clrtobot                    Y       Y       Y
-    wclrtobot                   Y       Y       Y
-    clrtoeol                    Y       Y       Y
-    wclrtoeol                   Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   clear                 |    Y   |    Y    |   Y
+   wclear                |    Y   |    Y    |   Y
+   erase                 |    Y   |    Y    |   Y
+   werase                |    Y   |    Y    |   Y
+   clrtobot              |    Y   |    Y    |   Y
+   wclrtobot             |    Y   |    Y    |   Y
+   clrtoeol              |    Y   |    Y    |   Y
+   wclrtoeol             |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

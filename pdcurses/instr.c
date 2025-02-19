@@ -42,23 +42,25 @@ instr
    Otherwise, all these functions return ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    instr                       Y       Y       Y
-    winstr                      Y       Y       Y
-    mvinstr                     Y       Y       Y
-    mvwinstr                    Y       Y       Y
-    innstr                      Y       Y       Y
-    winnstr                     Y       Y       Y
-    mvinnstr                    Y       Y       Y
-    mvwinnstr                   Y       Y       Y
-    inwstr                      Y       Y       Y
-    winwstr                     Y       Y       Y
-    mvinwstr                    Y       Y       Y
-    mvwinwstr                   Y       Y       Y
-    innwstr                     Y       Y       Y
-    winnwstr                    Y       Y       Y
-    mvinnwstr                   Y       Y       Y
-    mvwinnwstr                  Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   instr                 |    Y   |    Y    |   Y
+   winstr                |    Y   |    Y    |   Y
+   mvinstr               |    Y   |    Y    |   Y
+   mvwinstr              |    Y   |    Y    |   Y
+   innstr                |    Y   |    Y    |   Y
+   winnstr               |    Y   |    Y    |   Y
+   mvinnstr              |    Y   |    Y    |   Y
+   mvwinnstr             |    Y   |    Y    |   Y
+   inwstr                |    Y   |    Y    |   Y
+   winwstr               |    Y   |    Y    |   Y
+   mvinwstr              |    Y   |    Y    |   Y
+   mvwinwstr             |    Y   |    Y    |   Y
+   innwstr               |    Y   |    Y    |   Y
+   winnwstr              |    Y   |    Y    |   Y
+   mvinnwstr             |    Y   |    Y    |   Y
+   mvwinnwstr            |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

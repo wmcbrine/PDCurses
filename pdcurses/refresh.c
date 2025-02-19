@@ -45,13 +45,15 @@ refresh
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    refresh                     Y       Y       Y
-    wrefresh                    Y       Y       Y
-    wnoutrefresh                Y       Y       Y
-    doupdate                    Y       Y       Y
-    redrawwin                   Y       Y       Y
-    wredrawln                   Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   refresh               |    Y   |    Y    |   Y
+   wrefresh              |    Y   |    Y    |   Y
+   wnoutrefresh          |    Y   |    Y    |   Y
+   doupdate              |    Y   |    Y    |   Y
+   redrawwin             |    Y   |    Y    |   Y
+   wredrawln             |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

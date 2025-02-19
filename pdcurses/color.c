@@ -92,20 +92,22 @@ color
    find_pair() return a pair number, or -1 on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    has_colors                  Y       Y       Y
-    start_color                 Y       Y       Y
-    init_pair                   Y       Y       Y
-    pair_content                Y       Y       Y
-    can_change_color            Y       Y       Y
-    init_color                  Y       Y       Y
-    color_content               Y       Y       Y
-    alloc_pair                  -       Y       -
-    assume_default_colors       -       Y       Y
-    find_pair                   -       Y       -
-    free_pair                   -       Y       -
-    use_default_colors          -       Y       Y
-    PDC_set_line_color          -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   has_colors            |    Y   |    Y    |   Y
+   start_color           |    Y   |    Y    |   Y
+   init_pair             |    Y   |    Y    |   Y
+   pair_content          |    Y   |    Y    |   Y
+   can_change_color      |    Y   |    Y    |   Y
+   init_color            |    Y   |    Y    |   Y
+   color_content         |    Y   |    Y    |   Y
+   alloc_pair            |    -   |    Y    |   -
+   assume_default_colors |    -   |    Y    |   Y
+   find_pair             |    -   |    Y    |   -
+   free_pair             |    -   |    Y    |   -
+   use_default_colors    |    -   |    Y    |   Y
+   PDC_set_line_color    |    -   |    -    |   -
 
 **man-end****************************************************************/
 

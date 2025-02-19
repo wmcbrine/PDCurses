@@ -48,18 +48,20 @@ bkgd
    case they return ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    bkgd                        Y       Y       Y
-    bkgdset                     Y       Y       Y
-    getbkgd                     Y       Y       Y
-    wbkgd                       Y       Y       Y
-    wbkgdset                    Y       Y       Y
-    bkgrnd                      Y       Y       Y
-    bkgrndset                   Y       Y       Y
-    getbkgrnd                   Y       Y       Y
-    wbkgrnd                     Y       Y       Y
-    wbkgrndset                  Y       Y       Y
-    wgetbkgrnd                  Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   bkgd                  |    Y   |    Y    |   Y
+   bkgdset               |    Y   |    Y    |   Y
+   getbkgd               |    Y   |    Y    |   Y
+   wbkgd                 |    Y   |    Y    |   Y
+   wbkgdset              |    Y   |    Y    |   Y
+   bkgrnd                |    Y   |    Y    |   Y
+   bkgrndset             |    Y   |    Y    |   Y
+   getbkgrnd             |    Y   |    Y    |   Y
+   wbkgrnd               |    Y   |    Y    |   Y
+   wbkgrndset            |    Y   |    Y    |   Y
+   wgetbkgrnd            |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

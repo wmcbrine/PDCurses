@@ -32,13 +32,15 @@ printw
    error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    printw                      Y       Y       Y
-    wprintw                     Y       Y       Y
-    mvprintw                    Y       Y       Y
-    mvwprintw                   Y       Y       Y
-    vwprintw                    Y       Y       Y
-    vw_printw                   Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   printw                |    Y   |    Y    |   Y
+   wprintw               |    Y   |    Y    |   Y
+   mvprintw              |    Y   |    Y    |   Y
+   mvwprintw             |    Y   |    Y    |   Y
+   vwprintw              |    Y   |    Y    |   Y
+   vw_printw             |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

@@ -27,10 +27,12 @@ keyname
    function is an ncurses extension.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    keyname                     Y       Y       Y
-    key_name                    Y       Y       Y
-    has_key                     -       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   keyname               |    Y   |    Y    |   Y
+   key_name              |    Y   |    Y    |   Y
+   has_key               |    -   |    Y    |   Y
 
 **man-end****************************************************************/
 

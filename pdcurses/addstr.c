@@ -43,23 +43,25 @@ addstr
    All functions return OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    addstr                      Y       Y       Y
-    waddstr                     Y       Y       Y
-    mvaddstr                    Y       Y       Y
-    mvwaddstr                   Y       Y       Y
-    addnstr                     Y       Y       Y
-    waddnstr                    Y       Y       Y
-    mvaddnstr                   Y       Y       Y
-    mvwaddnstr                  Y       Y       Y
-    addwstr                     Y       Y       Y
-    waddwstr                    Y       Y       Y
-    mvaddwstr                   Y       Y       Y
-    mvwaddwstr                  Y       Y       Y
-    addnwstr                    Y       Y       Y
-    waddnwstr                   Y       Y       Y
-    mvaddnwstr                  Y       Y       Y
-    mvwaddnwstr                 Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   addstr                |    Y   |    Y    |   Y
+   waddstr               |    Y   |    Y    |   Y
+   mvaddstr              |    Y   |    Y    |   Y
+   mvwaddstr             |    Y   |    Y    |   Y
+   addnstr               |    Y   |    Y    |   Y
+   waddnstr              |    Y   |    Y    |   Y
+   mvaddnstr             |    Y   |    Y    |   Y
+   mvwaddnstr            |    Y   |    Y    |   Y
+   addwstr               |    Y   |    Y    |   Y
+   waddwstr              |    Y   |    Y    |   Y
+   mvaddwstr             |    Y   |    Y    |   Y
+   mvwaddwstr            |    Y   |    Y    |   Y
+   addnwstr              |    Y   |    Y    |   Y
+   waddnwstr             |    Y   |    Y    |   Y
+   mvaddnwstr            |    Y   |    Y    |   Y
+   mvwaddnwstr           |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

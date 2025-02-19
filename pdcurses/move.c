@@ -28,10 +28,12 @@ move
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    move                        Y       Y       Y
-    mvcur                       Y       Y       Y
-    wmove                       Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   move                  |    Y   |    Y    |   Y
+   mvcur                 |    Y   |    Y    |   Y
+   wmove                 |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

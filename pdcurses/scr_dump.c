@@ -47,13 +47,15 @@ scr_dump
    OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    putwin                      Y       Y       Y
-    getwin                      Y       Y       Y
-    scr_dump                    Y       Y       -
-    scr_init                    Y       Y       -
-    scr_restore                 Y       Y       -
-    scr_set                     Y       Y       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   putwin                |    Y   |    Y    |   Y
+   getwin                |    Y   |    Y    |   Y
+   scr_dump              |    Y   |    Y    |   -
+   scr_init              |    Y   |    Y    |   -
+   scr_restore           |    Y   |    Y    |   -
+   scr_set               |    Y   |    Y    |   -
 
 **man-end****************************************************************/
 

@@ -71,20 +71,22 @@ kernel
    curs_set(), which returns the previous visibility.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    def_prog_mode               Y       Y       Y
-    def_shell_mode              Y       Y       Y
-    reset_prog_mode             Y       Y       Y
-    reset_shell_mode            Y       Y       Y
-    resetty                     Y       Y       Y
-    savetty                     Y       Y       Y
-    ripoffline                  Y       Y       Y
-    curs_set                    Y       Y       Y
-    napms                       Y       Y       Y
-    fixterm                     -       Y       -
-    resetterm                   -       Y       -
-    saveterm                    -       Y       -
-    draino                      -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   def_prog_mode         |    Y   |    Y    |   Y
+   def_shell_mode        |    Y   |    Y    |   Y
+   reset_prog_mode       |    Y   |    Y    |   Y
+   reset_shell_mode      |    Y   |    Y    |   Y
+   resetty               |    Y   |    Y    |   Y
+   savetty               |    Y   |    Y    |   Y
+   ripoffline            |    Y   |    Y    |   Y
+   curs_set              |    Y   |    Y    |   Y
+   napms                 |    Y   |    Y    |   Y
+   fixterm               |    -   |    Y    |   -
+   resetterm             |    -   |    Y    |   -
+   saveterm              |    -   |    Y    |   -
+   draino                |    -   |    -    |   -
 
 **man-end****************************************************************/
 

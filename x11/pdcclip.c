@@ -38,11 +38,13 @@ clipboard
     PDC_CLIP_ACCESS_ERROR   no clipboard support
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    PDC_getclipboard            -       -       -
-    PDC_setclipboard            -       -       -
-    PDC_freeclipboard           -       -       -
-    PDC_clearclipboard          -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   PDC_getclipboard      |    -   |    -    |   -
+   PDC_setclipboard      |    -   |    -    |   -
+   PDC_freeclipboard     |    -   |    -    |   -
+   PDC_clearclipboard    |    -   |    -    |   -
 
 **man-end****************************************************************/
 

@@ -27,10 +27,12 @@ debug
    it to enable this (may affect performance).
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    traceon                     -       -       -
-    traceoff                    -       -       -
-    PDC_debug                   -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   traceon               |    -   |    -    |   -
+   traceoff              |    -   |    -    |   -
+   PDC_debug             |    -   |    -    |   -
 
 **man-end****************************************************************/
 

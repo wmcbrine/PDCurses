@@ -75,23 +75,25 @@ outopts
    return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    clearok                     Y       Y       Y
-    idlok                       Y       Y       Y
-    idcok                       Y       Y       Y
-    immedok                     Y       Y       Y
-    leaveok                     Y       Y       Y
-    setscrreg                   Y       Y       Y
-    wsetscrreg                  Y       Y       Y
-    wgetscrreg                  -       Y       -
-    scrollok                    Y       Y       Y
-    is_cleared                  -       Y       -
-    is_idlok                    -       Y       -
-    is_idcok                    -       Y       -
-    is_immedok                  -       Y       -
-    is_leaveok                  -       Y       Y
-    is_scrollok                 -       Y       -
-    raw_output                  -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   clearok               |    Y   |    Y    |   Y
+   idlok                 |    Y   |    Y    |   Y
+   idcok                 |    Y   |    Y    |   Y
+   immedok               |    Y   |    Y    |   Y
+   leaveok               |    Y   |    Y    |   Y
+   setscrreg             |    Y   |    Y    |   Y
+   wsetscrreg            |    Y   |    Y    |   Y
+   wgetscrreg            |    -   |    Y    |   -
+   scrollok              |    Y   |    Y    |   Y
+   is_cleared            |    -   |    Y    |   -
+   is_idlok              |    -   |    Y    |   -
+   is_idcok              |    -   |    Y    |   -
+   is_immedok            |    -   |    Y    |   -
+   is_leaveok            |    -   |    Y    |   Y
+   is_scrollok           |    -   |    Y    |   -
+   raw_output            |    -   |    -    |   -
 
 **man-end****************************************************************/
 

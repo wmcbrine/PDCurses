@@ -25,13 +25,15 @@ sb
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    sb_init                     -       -       -
-    sb_set_horz                 -       -       -
-    sb_set_vert                 -       -       -
-    sb_get_horz                 -       -       -
-    sb_get_vert                 -       -       -
-    sb_refresh                  -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   sb_init               |    -   |    -    |   -
+   sb_set_horz           |    -   |    -    |   -
+   sb_set_vert           |    -   |    -    |   -
+   sb_get_horz           |    -   |    -    |   -
+   sb_get_vert           |    -   |    -    |   -
+   sb_refresh            |    -   |    -    |   -
 
 **man-end****************************************************************/
 

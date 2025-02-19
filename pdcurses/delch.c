@@ -27,11 +27,13 @@ delch
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    delch                       Y       Y       Y
-    wdelch                      Y       Y       Y
-    mvdelch                     Y       Y       Y
-    mvwdelch                    Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   delch                 |    Y   |    Y    |   Y
+   wdelch                |    Y   |    Y    |   Y
+   mvdelch               |    Y   |    Y    |   Y
+   mvwdelch              |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

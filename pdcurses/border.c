@@ -76,29 +76,31 @@ border
    These functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    border                      Y       Y       Y
-    wborder                     Y       Y       Y
-    box                         Y       Y       Y
-    hline                       Y       Y       Y
-    vline                       Y       Y       Y
-    whline                      Y       Y       Y
-    wvline                      Y       Y       Y
-    mvhline                     Y       Y       Y
-    mvvline                     Y       Y       Y
-    mvwhline                    Y       Y       Y
-    mvwvline                    Y       Y       Y
-    border_set                  Y       Y       Y
-    wborder_set                 Y       Y       Y
-    box_set                     Y       Y       Y
-    hline_set                   Y       Y       Y
-    vline_set                   Y       Y       Y
-    whline_set                  Y       Y       Y
-    wvline_set                  Y       Y       Y
-    mvhline_set                 Y       Y       Y
-    mvvline_set                 Y       Y       Y
-    mvwhline_set                Y       Y       Y
-    mvwvline_set                Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   border                |    Y   |    Y    |   Y
+   wborder               |    Y   |    Y    |   Y
+   box                   |    Y   |    Y    |   Y
+   hline                 |    Y   |    Y    |   Y
+   vline                 |    Y   |    Y    |   Y
+   whline                |    Y   |    Y    |   Y
+   wvline                |    Y   |    Y    |   Y
+   mvhline               |    Y   |    Y    |   Y
+   mvvline               |    Y   |    Y    |   Y
+   mvwhline              |    Y   |    Y    |   Y
+   mvwvline              |    Y   |    Y    |   Y
+   border_set            |    Y   |    Y    |   Y
+   wborder_set           |    Y   |    Y    |   Y
+   box_set               |    Y   |    Y    |   Y
+   hline_set             |    Y   |    Y    |   Y
+   vline_set             |    Y   |    Y    |   Y
+   whline_set            |    Y   |    Y    |   Y
+   wvline_set            |    Y   |    Y    |   Y
+   mvhline_set           |    Y   |    Y    |   Y
+   mvvline_set           |    Y   |    Y    |   Y
+   mvwhline_set          |    Y   |    Y    |   Y
+   mvwvline_set          |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

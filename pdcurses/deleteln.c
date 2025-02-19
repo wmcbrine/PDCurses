@@ -39,17 +39,19 @@ deleteln
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    deleteln                    Y       Y       Y
-    wdeleteln                   Y       Y       Y
-    mvdeleteln                  -       -       -
-    mvwdeleteln                 -       -       -
-    insdelln                    Y       Y       Y
-    winsdelln                   Y       Y       Y
-    insertln                    Y       Y       Y
-    winsertln                   Y       Y       Y
-    mvinsertln                  -       -       -
-    mvwinsertln                 -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   deleteln              |    Y   |    Y    |   Y
+   wdeleteln             |    Y   |    Y    |   Y
+   mvdeleteln            |    -   |    -    |   -
+   mvwdeleteln           |    -   |    -    |   -
+   insdelln              |    Y   |    Y    |   Y
+   winsdelln             |    Y   |    Y    |   Y
+   insertln              |    Y   |    Y    |   Y
+   winsertln             |    Y   |    Y    |   Y
+   mvinsertln            |    -   |    -    |   -
+   mvwinsertln           |    -   |    -    |   -
 
 **man-end****************************************************************/
 

@@ -61,17 +61,19 @@ util
    setcchar() returns OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    unctrl                      Y       Y       Y
-    filter                      Y       Y       Y
-    use_env                     Y       Y       Y
-    delay_output                Y       Y       Y
-    getcchar                    Y       Y       Y
-    setcchar                    Y       Y       Y
-    wunctrl                     Y       Y       Y
-    PDC_mbtowc                  -       -       -
-    PDC_mbstowcs                -       -       -
-    PDC_wcstombs                -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   unctrl                |    Y   |    Y    |   Y
+   filter                |    Y   |    Y    |   Y
+   use_env               |    Y   |    Y    |   Y
+   delay_output          |    Y   |    Y    |   Y
+   getcchar              |    Y   |    Y    |   Y
+   setcchar              |    Y   |    Y    |   Y
+   wunctrl               |    Y   |    Y    |   Y
+   PDC_mbtowc            |    -   |    -    |   -
+   PDC_mbstowcs          |    -   |    -    |   -
+   PDC_wcstombs          |    -   |    -    |   -
 
 **man-end****************************************************************/
 

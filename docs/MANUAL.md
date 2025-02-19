@@ -29,10 +29,9 @@ Text Attributes
 
 PDCurses uses a 32-bit integer for its chtype:
 
-    +--------------------------------------------------------------------+
-    |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|..| 2| 1| 0|
-    +--------------------------------------------------------------------+
-          color pair        |     modifiers         |   character eg 'a'
+   |      color pair       |       modifiers       |  character eg 'a'  |
+   |-----------------------|-----------------------|--------------------|
+   |31 30 29 28 27 26 25 24|23 22 21 20 19 18 17 16|15 14 13 ..  2  1  0|
 
 There are 256 color pairs (8 bits), 8 bits for modifiers, and 16 bits
 for character data. The modifiers are bold, underline, right-line,
@@ -132,23 +131,25 @@ addch
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    addch                       Y       Y       Y
-    waddch                      Y       Y       Y
-    mvaddch                     Y       Y       Y
-    mvwaddch                    Y       Y       Y
-    echochar                    Y       Y       Y
-    wechochar                   Y       Y       Y
-    add_wch                     Y       Y       Y
-    wadd_wch                    Y       Y       Y
-    mvadd_wch                   Y       Y       Y
-    mvwadd_wch                  Y       Y       Y
-    echo_wchar                  Y       Y       Y
-    wecho_wchar                 Y       Y       Y
-    addrawch                    -       -       -
-    waddrawch                   -       -       -
-    mvaddrawch                  -       -       -
-    mvwaddrawch                 -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   addch                 |    Y   |    Y    |   Y
+   waddch                |    Y   |    Y    |   Y
+   mvaddch               |    Y   |    Y    |   Y
+   mvwaddch              |    Y   |    Y    |   Y
+   echochar              |    Y   |    Y    |   Y
+   wechochar             |    Y   |    Y    |   Y
+   add_wch               |    Y   |    Y    |   Y
+   wadd_wch              |    Y   |    Y    |   Y
+   mvadd_wch             |    Y   |    Y    |   Y
+   mvwadd_wch            |    Y   |    Y    |   Y
+   echo_wchar            |    Y   |    Y    |   Y
+   wecho_wchar           |    Y   |    Y    |   Y
+   addrawch              |    -   |    -    |   -
+   waddrawch             |    -   |    -    |   -
+   mvaddrawch            |    -   |    -    |   -
+   mvwaddrawch           |    -   |    -    |   -
 
 
 
@@ -196,23 +197,25 @@ addchstr
    All functions return OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    addchstr                    Y       Y       Y
-    waddchstr                   Y       Y       Y
-    mvaddchstr                  Y       Y       Y
-    mvwaddchstr                 Y       Y       Y
-    addchnstr                   Y       Y       Y
-    waddchnstr                  Y       Y       Y
-    mvaddchnstr                 Y       Y       Y
-    mvwaddchnstr                Y       Y       Y
-    add_wchstr                  Y       Y       Y
-    wadd_wchstr                 Y       Y       Y
-    mvadd_wchstr                Y       Y       Y
-    mvwadd_wchstr               Y       Y       Y
-    add_wchnstr                 Y       Y       Y
-    wadd_wchnstr                Y       Y       Y
-    mvadd_wchnstr               Y       Y       Y
-    mvwadd_wchnstr              Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   addchstr              |    Y   |    Y    |   Y
+   waddchstr             |    Y   |    Y    |   Y
+   mvaddchstr            |    Y   |    Y    |   Y
+   mvwaddchstr           |    Y   |    Y    |   Y
+   addchnstr             |    Y   |    Y    |   Y
+   waddchnstr            |    Y   |    Y    |   Y
+   mvaddchnstr           |    Y   |    Y    |   Y
+   mvwaddchnstr          |    Y   |    Y    |   Y
+   add_wchstr            |    Y   |    Y    |   Y
+   wadd_wchstr           |    Y   |    Y    |   Y
+   mvadd_wchstr          |    Y   |    Y    |   Y
+   mvwadd_wchstr         |    Y   |    Y    |   Y
+   add_wchnstr           |    Y   |    Y    |   Y
+   wadd_wchnstr          |    Y   |    Y    |   Y
+   mvadd_wchnstr         |    Y   |    Y    |   Y
+   mvwadd_wchnstr        |    Y   |    Y    |   Y
 
 
 
@@ -258,23 +261,25 @@ addstr
    All functions return OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    addstr                      Y       Y       Y
-    waddstr                     Y       Y       Y
-    mvaddstr                    Y       Y       Y
-    mvwaddstr                   Y       Y       Y
-    addnstr                     Y       Y       Y
-    waddnstr                    Y       Y       Y
-    mvaddnstr                   Y       Y       Y
-    mvwaddnstr                  Y       Y       Y
-    addwstr                     Y       Y       Y
-    waddwstr                    Y       Y       Y
-    mvaddwstr                   Y       Y       Y
-    mvwaddwstr                  Y       Y       Y
-    addnwstr                    Y       Y       Y
-    waddnwstr                   Y       Y       Y
-    mvaddnwstr                  Y       Y       Y
-    mvwaddnwstr                 Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   addstr                |    Y   |    Y    |   Y
+   waddstr               |    Y   |    Y    |   Y
+   mvaddstr              |    Y   |    Y    |   Y
+   mvwaddstr             |    Y   |    Y    |   Y
+   addnstr               |    Y   |    Y    |   Y
+   waddnstr              |    Y   |    Y    |   Y
+   mvaddnstr             |    Y   |    Y    |   Y
+   mvwaddnstr            |    Y   |    Y    |   Y
+   addwstr               |    Y   |    Y    |   Y
+   waddwstr              |    Y   |    Y    |   Y
+   mvaddwstr             |    Y   |    Y    |   Y
+   mvwaddwstr            |    Y   |    Y    |   Y
+   addnwstr              |    Y   |    Y    |   Y
+   waddnwstr             |    Y   |    Y    |   Y
+   mvaddnwstr            |    Y   |    Y    |   Y
+   mvwaddnwstr           |    Y   |    Y    |   Y
 
 
 
@@ -373,36 +378,38 @@ attr
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    attroff                     Y       Y       Y
-    wattroff                    Y       Y       Y
-    attron                      Y       Y       Y
-    wattron                     Y       Y       Y
-    attrset                     Y       Y       Y
-    wattrset                    Y       Y       Y
-    standend                    Y       Y       Y
-    wstandend                   Y       Y       Y
-    standout                    Y       Y       Y
-    wstandout                   Y       Y       Y
-    color_set                   Y       Y       Y
-    wcolor_set                  Y       Y       Y
-    attr_get                    Y       Y       Y
-    wattr_get                   Y       Y       Y
-    attr_on                     Y       Y       Y
-    wattr_on                    Y       Y       Y
-    attr_off                    Y       Y       Y
-    wattr_off                   Y       Y       Y
-    attr_set                    Y       Y       Y
-    wattr_set                   Y       Y       Y
-    chgat                       Y       Y       Y
-    wchgat                      Y       Y       Y
-    mvchgat                     Y       Y       Y
-    mvwchgat                    Y       Y       Y
-    getattrs                    -       Y       Y
-    underend                    -       -       Y
-    wunderend                   -       -       Y
-    underscore                  -       -       Y
-    wunderscore                 -       -       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   attroff               |    Y   |    Y    |   Y
+   wattroff              |    Y   |    Y    |   Y
+   attron                |    Y   |    Y    |   Y
+   wattron               |    Y   |    Y    |   Y
+   attrset               |    Y   |    Y    |   Y
+   wattrset              |    Y   |    Y    |   Y
+   standend              |    Y   |    Y    |   Y
+   wstandend             |    Y   |    Y    |   Y
+   standout              |    Y   |    Y    |   Y
+   wstandout             |    Y   |    Y    |   Y
+   color_set             |    Y   |    Y    |   Y
+   wcolor_set            |    Y   |    Y    |   Y
+   attr_get              |    Y   |    Y    |   Y
+   wattr_get             |    Y   |    Y    |   Y
+   attr_on               |    Y   |    Y    |   Y
+   wattr_on              |    Y   |    Y    |   Y
+   attr_off              |    Y   |    Y    |   Y
+   wattr_off             |    Y   |    Y    |   Y
+   attr_set              |    Y   |    Y    |   Y
+   wattr_set             |    Y   |    Y    |   Y
+   chgat                 |    Y   |    Y    |   Y
+   wchgat                |    Y   |    Y    |   Y
+   mvchgat               |    Y   |    Y    |   Y
+   mvwchgat              |    Y   |    Y    |   Y
+   getattrs              |    -   |    Y    |   Y
+   underend              |    -   |    -    |   Y
+   wunderend             |    -   |    -    |   Y
+   underscore            |    -   |    -    |   Y
+   wunderscore           |    -   |    -    |   Y
 
 
 
@@ -431,9 +438,11 @@ beep
    These functions return ERR if called before initscr(), otherwise OK.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    beep                        Y       Y       Y
-    flash                       Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   beep                  |    Y   |    Y    |   Y
+   flash                 |    Y   |    Y    |   Y
 
 
 
@@ -484,18 +493,20 @@ bkgd
    case they return ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    bkgd                        Y       Y       Y
-    bkgdset                     Y       Y       Y
-    getbkgd                     Y       Y       Y
-    wbkgd                       Y       Y       Y
-    wbkgdset                    Y       Y       Y
-    bkgrnd                      Y       Y       Y
-    bkgrndset                   Y       Y       Y
-    getbkgrnd                   Y       Y       Y
-    wbkgrnd                     Y       Y       Y
-    wbkgrndset                  Y       Y       Y
-    wgetbkgrnd                  Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   bkgd                  |    Y   |    Y    |   Y
+   bkgdset               |    Y   |    Y    |   Y
+   getbkgd               |    Y   |    Y    |   Y
+   wbkgd                 |    Y   |    Y    |   Y
+   wbkgdset              |    Y   |    Y    |   Y
+   bkgrnd                |    Y   |    Y    |   Y
+   bkgrndset             |    Y   |    Y    |   Y
+   getbkgrnd             |    Y   |    Y    |   Y
+   wbkgrnd               |    Y   |    Y    |   Y
+   wbkgrndset            |    Y   |    Y    |   Y
+   wgetbkgrnd            |    Y   |    Y    |   Y
 
 
 
@@ -544,14 +555,16 @@ border
    border(), wborder(), and box() draw a border around the edge of the
    window. If any argument is zero, an appropriate default is used:
 
-    ls    left side of border             ACS_VLINE
-    rs    right side of border            ACS_VLINE
-    ts    top side of border              ACS_HLINE
-    bs    bottom side of border           ACS_HLINE
-    tl    top left corner of border       ACS_ULCORNER
-    tr    top right corner of border      ACS_URCORNER
-    bl    bottom left corner of border    ACS_LLCORNER
-    br    bottom right corner of border   ACS_LRCORNER
+   Name | Element                       | Default
+   :----|:------------------------------|:------------
+   ls   | left side of border           | ACS_VLINE
+   rs   | right side of border          | ACS_VLINE
+   ts   | top side of border            | ACS_HLINE
+   bs   | bottom side of border         | ACS_HLINE
+   tl   | top left corner of border     | ACS_ULCORNER
+   tr   | top right corner of border    | ACS_URCORNER
+   bl   | bottom left corner of border  | ACS_LLCORNER
+   br   | bottom right corner of border | ACS_LRCORNER
 
    hline() and whline() draw a horizontal line, using ch, starting from
    the current cursor position. The cursor position does not change. The
@@ -572,29 +585,31 @@ border
    These functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    border                      Y       Y       Y
-    wborder                     Y       Y       Y
-    box                         Y       Y       Y
-    hline                       Y       Y       Y
-    vline                       Y       Y       Y
-    whline                      Y       Y       Y
-    wvline                      Y       Y       Y
-    mvhline                     Y       Y       Y
-    mvvline                     Y       Y       Y
-    mvwhline                    Y       Y       Y
-    mvwvline                    Y       Y       Y
-    border_set                  Y       Y       Y
-    wborder_set                 Y       Y       Y
-    box_set                     Y       Y       Y
-    hline_set                   Y       Y       Y
-    vline_set                   Y       Y       Y
-    whline_set                  Y       Y       Y
-    wvline_set                  Y       Y       Y
-    mvhline_set                 Y       Y       Y
-    mvvline_set                 Y       Y       Y
-    mvwhline_set                Y       Y       Y
-    mvwvline_set                Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   border                |    Y   |    Y    |   Y
+   wborder               |    Y   |    Y    |   Y
+   box                   |    Y   |    Y    |   Y
+   hline                 |    Y   |    Y    |   Y
+   vline                 |    Y   |    Y    |   Y
+   whline                |    Y   |    Y    |   Y
+   wvline                |    Y   |    Y    |   Y
+   mvhline               |    Y   |    Y    |   Y
+   mvvline               |    Y   |    Y    |   Y
+   mvwhline              |    Y   |    Y    |   Y
+   mvwvline              |    Y   |    Y    |   Y
+   border_set            |    Y   |    Y    |   Y
+   wborder_set           |    Y   |    Y    |   Y
+   box_set               |    Y   |    Y    |   Y
+   hline_set             |    Y   |    Y    |   Y
+   vline_set             |    Y   |    Y    |   Y
+   whline_set            |    Y   |    Y    |   Y
+   wvline_set            |    Y   |    Y    |   Y
+   mvhline_set           |    Y   |    Y    |   Y
+   mvvline_set           |    Y   |    Y    |   Y
+   mvwhline_set          |    Y   |    Y    |   Y
+   mvwvline_set          |    Y   |    Y    |   Y
 
 
 
@@ -635,15 +650,17 @@ clear
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    clear                       Y       Y       Y
-    wclear                      Y       Y       Y
-    erase                       Y       Y       Y
-    werase                      Y       Y       Y
-    clrtobot                    Y       Y       Y
-    wclrtobot                   Y       Y       Y
-    clrtoeol                    Y       Y       Y
-    wclrtoeol                   Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   clear                 |    Y   |    Y    |   Y
+   wclear                |    Y   |    Y    |   Y
+   erase                 |    Y   |    Y    |   Y
+   werase                |    Y   |    Y    |   Y
+   clrtobot              |    Y   |    Y    |   Y
+   wclrtobot             |    Y   |    Y    |   Y
+   clrtoeol              |    Y   |    Y    |   Y
+   wclrtoeol             |    Y   |    Y    |   Y
 
 
 
@@ -738,20 +755,22 @@ color
    find_pair() return a pair number, or -1 on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    has_colors                  Y       Y       Y
-    start_color                 Y       Y       Y
-    init_pair                   Y       Y       Y
-    pair_content                Y       Y       Y
-    can_change_color            Y       Y       Y
-    init_color                  Y       Y       Y
-    color_content               Y       Y       Y
-    alloc_pair                  -       Y       -
-    assume_default_colors       -       Y       Y
-    find_pair                   -       Y       -
-    free_pair                   -       Y       -
-    use_default_colors          -       Y       Y
-    PDC_set_line_color          -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   has_colors            |    Y   |    Y    |   Y
+   start_color           |    Y   |    Y    |   Y
+   init_pair             |    Y   |    Y    |   Y
+   pair_content          |    Y   |    Y    |   Y
+   can_change_color      |    Y   |    Y    |   Y
+   init_color            |    Y   |    Y    |   Y
+   color_content         |    Y   |    Y    |   Y
+   alloc_pair            |    -   |    Y    |   -
+   assume_default_colors |    -   |    Y    |   Y
+   find_pair             |    -   |    Y    |   -
+   free_pair             |    -   |    Y    |   -
+   use_default_colors    |    -   |    Y    |   Y
+   PDC_set_line_color    |    -   |    -    |   -
 
 
 
@@ -781,10 +800,12 @@ debug
    it to enable this (may affect performance).
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    traceon                     -       -       -
-    traceoff                    -       -       -
-    PDC_debug                   -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   traceon               |    -   |    -    |   -
+   traceoff              |    -   |    -    |   -
+   PDC_debug             |    -   |    -    |   -
 
 
 
@@ -814,11 +835,13 @@ delch
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    delch                       Y       Y       Y
-    wdelch                      Y       Y       Y
-    mvdelch                     Y       Y       Y
-    mvwdelch                    Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   delch                 |    Y   |    Y    |   Y
+   wdelch                |    Y   |    Y    |   Y
+   mvdelch               |    Y   |    Y    |   Y
+   mvwdelch              |    Y   |    Y    |   Y
 
 
 
@@ -860,17 +883,19 @@ deleteln
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    deleteln                    Y       Y       Y
-    wdeleteln                   Y       Y       Y
-    mvdeleteln                  -       -       -
-    mvwdeleteln                 -       -       -
-    insdelln                    Y       Y       Y
-    winsdelln                   Y       Y       Y
-    insertln                    Y       Y       Y
-    winsertln                   Y       Y       Y
-    mvinsertln                  -       -       -
-    mvwinsertln                 -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   deleteln              |    Y   |    Y    |   Y
+   wdeleteln             |    Y   |    Y    |   Y
+   mvdeleteln            |    -   |    -    |   -
+   mvwdeleteln           |    -   |    -    |   -
+   insdelln              |    Y   |    Y    |   Y
+   winsdelln             |    Y   |    Y    |   Y
+   insertln              |    Y   |    Y    |   Y
+   winsertln             |    Y   |    Y    |   Y
+   mvinsertln            |    -   |    -    |   -
+   mvwinsertln           |    -   |    -    |   -
 
 
 
@@ -948,19 +973,21 @@ getch
    character or function key token.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    getch                       Y       Y       Y
-    wgetch                      Y       Y       Y
-    mvgetch                     Y       Y       Y
-    mvwgetch                    Y       Y       Y
-    ungetch                     Y       Y       Y
-    flushinp                    Y       Y       Y
-    get_wch                     Y       Y       Y
-    wget_wch                    Y       Y       Y
-    mvget_wch                   Y       Y       Y
-    mvwget_wch                  Y       Y       Y
-    unget_wch                   Y       Y       Y
-    PDC_get_key_modifiers       -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   getch                 |    Y   |    Y    |   Y
+   wgetch                |    Y   |    Y    |   Y
+   mvgetch               |    Y   |    Y    |   Y
+   mvwgetch              |    Y   |    Y    |   Y
+   ungetch               |    Y   |    Y    |   Y
+   flushinp              |    Y   |    Y    |   Y
+   get_wch               |    Y   |    Y    |   Y
+   wget_wch              |    Y   |    Y    |   Y
+   mvget_wch             |    Y   |    Y    |   Y
+   mvwget_wch            |    Y   |    Y    |   Y
+   unget_wch             |    Y   |    Y    |   Y
+   PDC_get_key_modifiers |    -   |    -    |   -
 
 
 
@@ -1009,23 +1036,25 @@ getstr
    These functions return ERR on failure or any other value on success.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    getstr                      Y       Y       Y
-    wgetstr                     Y       Y       Y
-    mvgetstr                    Y       Y       Y
-    mvwgetstr                   Y       Y       Y
-    getnstr                     Y       Y       Y
-    wgetnstr                    Y       Y       Y
-    mvgetnstr                   Y       Y       Y
-    mvwgetnstr                  Y       Y       Y
-    get_wstr                    Y       Y       Y
-    wget_wstr                   Y       Y       Y
-    mvget_wstr                  Y       Y       Y
-    mvwget_wstr                 Y       Y       Y
-    getn_wstr                   Y       Y       Y
-    wgetn_wstr                  Y       Y       Y
-    mvgetn_wstr                 Y       Y       Y
-    mvwgetn_wstr                Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   getstr                |    Y   |    Y    |   Y
+   wgetstr               |    Y   |    Y    |   Y
+   mvgetstr              |    Y   |    Y    |   Y
+   mvwgetstr             |    Y   |    Y    |   Y
+   getnstr               |    Y   |    Y    |   Y
+   wgetnstr              |    Y   |    Y    |   Y
+   mvgetnstr             |    Y   |    Y    |   Y
+   mvwgetnstr            |    Y   |    Y    |   Y
+   get_wstr              |    Y   |    Y    |   Y
+   wget_wstr             |    Y   |    Y    |   Y
+   mvget_wstr            |    Y   |    Y    |   Y
+   mvwget_wstr           |    Y   |    Y    |   Y
+   getn_wstr             |    Y   |    Y    |   Y
+   wgetn_wstr            |    Y   |    Y    |   Y
+   mvgetn_wstr           |    Y   |    Y    |   Y
+   mvwgetn_wstr          |    Y   |    Y    |   Y
 
 
 
@@ -1082,21 +1111,23 @@ getyx
    values, or ERR in the case of a NULL window.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    getyx                       Y       Y       Y
-    getparyx                    Y       Y       Y
-    getbegyx                    Y       Y       Y
-    getmaxyx                    Y       Y       Y
-    getsyx                      -       Y       Y
-    setsyx                      -       Y       Y
-    getbegy                     -       Y       Y
-    getbegx                     -       Y       Y
-    getcury                     -       Y       Y
-    getcurx                     -       Y       Y
-    getpary                     -       Y       Y
-    getparx                     -       Y       Y
-    getmaxy                     -       Y       Y
-    getmaxx                     -       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   getyx                 |    Y   |    Y    |   Y
+   getparyx              |    Y   |    Y    |   Y
+   getbegyx              |    Y   |    Y    |   Y
+   getmaxyx              |    Y   |    Y    |   Y
+   getsyx                |    -   |    Y    |   Y
+   setsyx                |    -   |    Y    |   Y
+   getbegy               |    -   |    Y    |   Y
+   getbegx               |    -   |    Y    |   Y
+   getcury               |    -   |    Y    |   Y
+   getcurx               |    -   |    Y    |   Y
+   getpary               |    -   |    Y    |   Y
+   getparx               |    -   |    Y    |   Y
+   getmaxy               |    -   |    Y    |   Y
+   getmaxx               |    -   |    Y    |   Y
 
 
 
@@ -1130,15 +1161,17 @@ inch
    returned.) Note that in PDCurses, chtype and cchar_t are the same.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    inch                        Y       Y       Y
-    winch                       Y       Y       Y
-    mvinch                      Y       Y       Y
-    mvwinch                     Y       Y       Y
-    in_wch                      Y       Y       Y
-    win_wch                     Y       Y       Y
-    mvin_wch                    Y       Y       Y
-    mvwin_wch                   Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   inch                  |    Y   |    Y    |   Y
+   winch                 |    Y   |    Y    |   Y
+   mvinch                |    Y   |    Y    |   Y
+   mvwinch               |    Y   |    Y    |   Y
+   in_wch                |    Y   |    Y    |   Y
+   win_wch               |    Y   |    Y    |   Y
+   mvin_wch              |    Y   |    Y    |   Y
+   mvwin_wch             |    Y   |    Y    |   Y
 
 
 
@@ -1179,23 +1212,25 @@ inchstr
    All functions return the number of elements read, or ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    inchstr                     Y       Y       Y
-    winchstr                    Y       Y       Y
-    mvinchstr                   Y       Y       Y
-    mvwinchstr                  Y       Y       Y
-    inchnstr                    Y       Y       Y
-    winchnstr                   Y       Y       Y
-    mvinchnstr                  Y       Y       Y
-    mvwinchnstr                 Y       Y       Y
-    in_wchstr                   Y       Y       Y
-    win_wchstr                  Y       Y       Y
-    mvin_wchstr                 Y       Y       Y
-    mvwin_wchstr                Y       Y       Y
-    in_wchnstr                  Y       Y       Y
-    win_wchnstr                 Y       Y       Y
-    mvin_wchnstr                Y       Y       Y
-    mvwin_wchnstr               Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   inchstr               |    Y   |    Y    |   Y
+   winchstr              |    Y   |    Y    |   Y
+   mvinchstr             |    Y   |    Y    |   Y
+   mvwinchstr            |    Y   |    Y    |   Y
+   inchnstr              |    Y   |    Y    |   Y
+   winchnstr             |    Y   |    Y    |   Y
+   mvinchnstr            |    Y   |    Y    |   Y
+   mvwinchnstr           |    Y   |    Y    |   Y
+   in_wchstr             |    Y   |    Y    |   Y
+   win_wchstr            |    Y   |    Y    |   Y
+   mvin_wchstr           |    Y   |    Y    |   Y
+   mvwin_wchstr          |    Y   |    Y    |   Y
+   in_wchnstr            |    Y   |    Y    |   Y
+   win_wchnstr           |    Y   |    Y    |   Y
+   mvin_wchnstr          |    Y   |    Y    |   Y
+   mvwin_wchnstr         |    Y   |    Y    |   Y
 
 
 
@@ -1281,17 +1316,19 @@ initscr
    returns OK, and resize_term(), which returns either OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    initscr                     Y       Y       Y
-    endwin                      Y       Y       Y
-    isendwin                    Y       Y       Y
-    newterm                     Y       Y       Y
-    set_term                    Y       Y       Y
-    delscreen                   Y       Y       Y
-    resize_term                 -       Y       Y
-    set_tabsize                 -       Y       Y
-    curses_version              -       Y       -
-    is_termresized              -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   initscr               |    Y   |    Y    |   Y
+   endwin                |    Y   |    Y    |   Y
+   isendwin              |    Y   |    Y    |   Y
+   newterm               |    Y   |    Y    |   Y
+   set_term              |    Y   |    Y    |   Y
+   delscreen             |    Y   |    Y    |   Y
+   resize_term           |    -   |    Y    |   Y
+   set_tabsize           |    -   |    Y    |   Y
+   curses_version        |    -   |    Y    |   -
+   is_termresized        |    -   |    -    |   -
 
 
 
@@ -1400,32 +1437,34 @@ inopts
    always returns FALSE. All others return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    cbreak                      Y       Y       Y
-    nocbreak                    Y       Y       Y
-    echo                        Y       Y       Y
-    noecho                      Y       Y       Y
-    halfdelay                   Y       Y       Y
-    intrflush                   Y       Y       Y
-    keypad                      Y       Y       Y
-    meta                        Y       Y       Y
-    nl                          Y       Y       Y
-    nonl                        Y       Y       Y
-    nodelay                     Y       Y       Y
-    notimeout                   Y       Y       Y
-    raw                         Y       Y       Y
-    noraw                       Y       Y       Y
-    noqiflush                   Y       Y       Y
-    qiflush                     Y       Y       Y
-    timeout                     Y       Y       Y
-    wtimeout                    Y       Y       Y
-    wgetdelay                   -       Y       -
-    typeahead                   Y       Y       Y
-    crmode                      Y       Y       Y
-    nocrmode                    Y       Y       Y
-    is_keypad                   -       Y       Y
-    is_nodelay                  -       Y       -
-    is_notimeout                -       Y       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   cbreak                |    Y   |    Y    |   Y
+   nocbreak              |    Y   |    Y    |   Y
+   echo                  |    Y   |    Y    |   Y
+   noecho                |    Y   |    Y    |   Y
+   halfdelay             |    Y   |    Y    |   Y
+   intrflush             |    Y   |    Y    |   Y
+   keypad                |    Y   |    Y    |   Y
+   meta                  |    Y   |    Y    |   Y
+   nl                    |    Y   |    Y    |   Y
+   nonl                  |    Y   |    Y    |   Y
+   nodelay               |    Y   |    Y    |   Y
+   notimeout             |    Y   |    Y    |   Y
+   raw                   |    Y   |    Y    |   Y
+   noraw                 |    Y   |    Y    |   Y
+   noqiflush             |    Y   |    Y    |   Y
+   qiflush               |    Y   |    Y    |   Y
+   timeout               |    Y   |    Y    |   Y
+   wtimeout              |    Y   |    Y    |   Y
+   wgetdelay             |    -   |    Y    |   -
+   typeahead             |    Y   |    Y    |   Y
+   crmode                |    Y   |    Y    |   Y
+   nocrmode              |    Y   |    Y    |   Y
+   is_keypad             |    -   |    Y    |   Y
+   is_nodelay            |    -   |    Y    |   -
+   is_notimeout          |    -   |    Y    |   -
 
 
 
@@ -1474,17 +1513,19 @@ insch
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    insch                       Y       Y       Y
-    winsch                      Y       Y       Y
-    mvinsch                     Y       Y       Y
-    mvwinsch                    Y       Y       Y
-    ins_wch                     Y       Y       Y
-    wins_wch                    Y       Y       Y
-    mvins_wch                   Y       Y       Y
-    mvwins_wch                  Y       Y       Y
-    insrawch                    -       -       -
-    winsrawch                   -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   insch                 |    Y   |    Y    |   Y
+   winsch                |    Y   |    Y    |   Y
+   mvinsch               |    Y   |    Y    |   Y
+   mvwinsch              |    Y   |    Y    |   Y
+   ins_wch               |    Y   |    Y    |   Y
+   wins_wch              |    Y   |    Y    |   Y
+   mvins_wch             |    Y   |    Y    |   Y
+   mvwins_wch            |    Y   |    Y    |   Y
+   insrawch              |    -   |    -    |   -
+   winsrawch             |    -   |    -    |   -
 
 
 
@@ -1532,23 +1573,25 @@ insstr
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    insstr                      Y       Y       Y
-    winsstr                     Y       Y       Y
-    mvinsstr                    Y       Y       Y
-    mvwinsstr                   Y       Y       Y
-    insnstr                     Y       Y       Y
-    winsnstr                    Y       Y       Y
-    mvinsnstr                   Y       Y       Y
-    mvwinsnstr                  Y       Y       Y
-    ins_wstr                    Y       Y       Y
-    wins_wstr                   Y       Y       Y
-    mvins_wstr                  Y       Y       Y
-    mvwins_wstr                 Y       Y       Y
-    ins_nwstr                   Y       Y       Y
-    wins_nwstr                  Y       Y       Y
-    mvins_nwstr                 Y       Y       Y
-    mvwins_nwstr                Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   insstr                |    Y   |    Y    |   Y
+   winsstr               |    Y   |    Y    |   Y
+   mvinsstr              |    Y   |    Y    |   Y
+   mvwinsstr             |    Y   |    Y    |   Y
+   insnstr               |    Y   |    Y    |   Y
+   winsnstr              |    Y   |    Y    |   Y
+   mvinsnstr             |    Y   |    Y    |   Y
+   mvwinsnstr            |    Y   |    Y    |   Y
+   ins_wstr              |    Y   |    Y    |   Y
+   wins_wstr             |    Y   |    Y    |   Y
+   mvins_wstr            |    Y   |    Y    |   Y
+   mvwins_wstr           |    Y   |    Y    |   Y
+   ins_nwstr             |    Y   |    Y    |   Y
+   wins_nwstr            |    Y   |    Y    |   Y
+   mvins_nwstr           |    Y   |    Y    |   Y
+   mvwins_nwstr          |    Y   |    Y    |   Y
 
 
 
@@ -1593,23 +1636,25 @@ instr
    Otherwise, all these functions return ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    instr                       Y       Y       Y
-    winstr                      Y       Y       Y
-    mvinstr                     Y       Y       Y
-    mvwinstr                    Y       Y       Y
-    innstr                      Y       Y       Y
-    winnstr                     Y       Y       Y
-    mvinnstr                    Y       Y       Y
-    mvwinnstr                   Y       Y       Y
-    inwstr                      Y       Y       Y
-    winwstr                     Y       Y       Y
-    mvinwstr                    Y       Y       Y
-    mvwinwstr                   Y       Y       Y
-    innwstr                     Y       Y       Y
-    winnwstr                    Y       Y       Y
-    mvinnwstr                   Y       Y       Y
-    mvwinnwstr                  Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   instr                 |    Y   |    Y    |   Y
+   winstr                |    Y   |    Y    |   Y
+   mvinstr               |    Y   |    Y    |   Y
+   mvwinstr              |    Y   |    Y    |   Y
+   innstr                |    Y   |    Y    |   Y
+   winnstr               |    Y   |    Y    |   Y
+   mvinnstr              |    Y   |    Y    |   Y
+   mvwinnstr             |    Y   |    Y    |   Y
+   inwstr                |    Y   |    Y    |   Y
+   winwstr               |    Y   |    Y    |   Y
+   mvinwstr              |    Y   |    Y    |   Y
+   mvwinwstr             |    Y   |    Y    |   Y
+   innwstr               |    Y   |    Y    |   Y
+   winnwstr              |    Y   |    Y    |   Y
+   mvinnwstr             |    Y   |    Y    |   Y
+   mvwinnwstr            |    Y   |    Y    |   Y
 
 
 
@@ -1683,20 +1728,22 @@ kernel
    curs_set(), which returns the previous visibility.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    def_prog_mode               Y       Y       Y
-    def_shell_mode              Y       Y       Y
-    reset_prog_mode             Y       Y       Y
-    reset_shell_mode            Y       Y       Y
-    resetty                     Y       Y       Y
-    savetty                     Y       Y       Y
-    ripoffline                  Y       Y       Y
-    curs_set                    Y       Y       Y
-    napms                       Y       Y       Y
-    fixterm                     -       Y       -
-    resetterm                   -       Y       -
-    saveterm                    -       Y       -
-    draino                      -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   def_prog_mode         |    Y   |    Y    |   Y
+   def_shell_mode        |    Y   |    Y    |   Y
+   reset_prog_mode       |    Y   |    Y    |   Y
+   reset_shell_mode      |    Y   |    Y    |   Y
+   resetty               |    Y   |    Y    |   Y
+   savetty               |    Y   |    Y    |   Y
+   ripoffline            |    Y   |    Y    |   Y
+   curs_set              |    Y   |    Y    |   Y
+   napms                 |    Y   |    Y    |   Y
+   fixterm               |    -   |    Y    |   -
+   resetterm             |    -   |    Y    |   -
+   saveterm              |    -   |    Y    |   -
+   draino                |    -   |    -    |   -
 
 
 
@@ -1726,10 +1773,12 @@ keyname
    function is an ncurses extension.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    keyname                     Y       Y       Y
-    key_name                    Y       Y       Y
-    has_key                     -       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   keyname               |    Y   |    Y    |   Y
+   key_name              |    Y   |    Y    |   Y
+   has_key               |    -   |    Y    |   Y
 
 
 
@@ -1850,21 +1899,23 @@ mouse
    current platform.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    mouse_set                   -       -       -
-    mouse_on                    -       -       -
-    mouse_off                   -       -       -
-    request_mouse_pos           -       -       -
-    wmouse_position             -       -       -
-    getmouse                    -       *       -
-    mouseinterval               -       Y       -
-    wenclose                    -       Y       -
-    wmouse_trafo                -       Y       -
-    mouse_trafo                 -       Y       -
-    mousemask                   -       Y       -
-    nc_getmouse                 -       *       -
-    ungetmouse                  -       Y       -
-    has_mouse                   -       Y       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   mouse_set             |    -   |    -    |   -
+   mouse_on              |    -   |    -    |   -
+   mouse_off             |    -   |    -    |   -
+   request_mouse_pos     |    -   |    -    |   -
+   wmouse_position       |    -   |    -    |   -
+   getmouse              |    -   |    *    |   -
+   mouseinterval         |    -   |    Y    |   -
+   wenclose              |    -   |    Y    |   -
+   wmouse_trafo          |    -   |    Y    |   -
+   mouse_trafo           |    -   |    Y    |   -
+   mousemask             |    -   |    Y    |   -
+   nc_getmouse           |    -   |    *    |   -
+   ungetmouse            |    -   |    Y    |   -
+   has_mouse             |    -   |    Y    |   -
 
     * See above, under Description
 
@@ -1897,10 +1948,12 @@ move
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    move                        Y       Y       Y
-    mvcur                       Y       Y       Y
-    wmove                       Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   move                  |    Y   |    Y    |   Y
+   mvcur                 |    Y   |    Y    |   Y
+   wmove                 |    Y   |    Y    |   Y
 
 
 
@@ -1978,23 +2031,25 @@ outopts
    return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    clearok                     Y       Y       Y
-    idlok                       Y       Y       Y
-    idcok                       Y       Y       Y
-    immedok                     Y       Y       Y
-    leaveok                     Y       Y       Y
-    setscrreg                   Y       Y       Y
-    wsetscrreg                  Y       Y       Y
-    wgetscrreg                  -       Y       -
-    scrollok                    Y       Y       Y
-    is_cleared                  -       Y       -
-    is_idlok                    -       Y       -
-    is_idcok                    -       Y       -
-    is_immedok                  -       Y       -
-    is_leaveok                  -       Y       Y
-    is_scrollok                 -       Y       -
-    raw_output                  -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   clearok               |    Y   |    Y    |   Y
+   idlok                 |    Y   |    Y    |   Y
+   idcok                 |    Y   |    Y    |   Y
+   immedok               |    Y   |    Y    |   Y
+   leaveok               |    Y   |    Y    |   Y
+   setscrreg             |    Y   |    Y    |   Y
+   wsetscrreg            |    Y   |    Y    |   Y
+   wgetscrreg            |    -   |    Y    |   -
+   scrollok              |    Y   |    Y    |   Y
+   is_cleared            |    -   |    Y    |   -
+   is_idlok              |    -   |    Y    |   -
+   is_idcok              |    -   |    Y    |   -
+   is_immedok            |    -   |    Y    |   -
+   is_leaveok            |    -   |    Y    |   Y
+   is_scrollok           |    -   |    Y    |   -
+   raw_output            |    -   |    -    |   -
 
 
 
@@ -2036,10 +2091,12 @@ overlay
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    overlay                     Y       Y       Y
-    overwrite                   Y       Y       Y
-    copywin                     Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   overlay               |    Y   |    Y    |   Y
+   overwrite             |    Y   |    Y    |   Y
+   copywin               |    Y   |    Y    |   Y
 
 
 
@@ -2104,14 +2161,16 @@ pad
    All functions except is_pad() return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    newpad                      Y       Y       Y
-    subpad                      Y       Y       Y
-    prefresh                    Y       Y       Y
-    pnoutrefresh                Y       Y       Y
-    pechochar                   Y       Y       Y
-    pecho_wchar                 Y       Y       Y
-    is_pad                      -       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   newpad                |    Y   |    Y    |   Y
+   subpad                |    Y   |    Y    |   Y
+   prefresh              |    Y   |    Y    |   Y
+   pnoutrefresh          |    Y   |    Y    |   Y
+   pechochar             |    Y   |    Y    |   Y
+   pecho_wchar           |    Y   |    Y    |   Y
+   is_pad                |    -   |    Y    |   Y
 
 
 
@@ -2210,24 +2269,27 @@ panel
    if it executes successfully and ERR if it does not.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    bottom_panel                -       Y       Y
-    del_panel                   -       Y       Y
-    hide_panel                  -       Y       Y
-    move_panel                  -       Y       Y
-    new_panel                   -       Y       Y
-    panel_above                 -       Y       Y
-    panel_below                 -       Y       Y
-    panel_hidden                -       Y       Y
-    panel_userptr               -       Y       Y
-    panel_window                -       Y       Y
-    replace_panel               -       Y       Y
-    set_panel_userptr           -       Y       Y
-    show_panel                  -       Y       Y
-    top_panel                   -       Y       Y
-    update_panels               -       Y       Y
 
-  Credits:
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   bottom_panel          |    -   |    Y    |   Y
+   del_panel             |    -   |    Y    |   Y
+   hide_panel            |    -   |    Y    |   Y
+   move_panel            |    -   |    Y    |   Y
+   new_panel             |    -   |    Y    |   Y
+   panel_above           |    -   |    Y    |   Y
+   panel_below           |    -   |    Y    |   Y
+   panel_hidden          |    -   |    Y    |   Y
+   panel_userptr         |    -   |    Y    |   Y
+   panel_window          |    -   |    Y    |   Y
+   replace_panel         |    -   |    Y    |   Y
+   set_panel_userptr     |    -   |    Y    |   Y
+   show_panel            |    -   |    Y    |   Y
+   top_panel             |    -   |    Y    |   Y
+   update_panels         |    -   |    Y    |   Y
+
+### Credits
+
     Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
 
 
@@ -2263,13 +2325,15 @@ printw
    error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    printw                      Y       Y       Y
-    wprintw                     Y       Y       Y
-    mvprintw                    Y       Y       Y
-    mvwprintw                   Y       Y       Y
-    vwprintw                    Y       Y       Y
-    vw_printw                   Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   printw                |    Y   |    Y    |   Y
+   wprintw               |    Y   |    Y    |   Y
+   mvprintw              |    Y   |    Y    |   Y
+   mvwprintw             |    Y   |    Y    |   Y
+   vwprintw              |    Y   |    Y    |   Y
+   vw_printw             |    Y   |    Y    |   Y
 
 
 
@@ -2317,13 +2381,15 @@ refresh
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    refresh                     Y       Y       Y
-    wrefresh                    Y       Y       Y
-    wnoutrefresh                Y       Y       Y
-    doupdate                    Y       Y       Y
-    redrawwin                   Y       Y       Y
-    wredrawln                   Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   refresh               |    Y   |    Y    |   Y
+   wrefresh              |    Y   |    Y    |   Y
+   wnoutrefresh          |    Y   |    Y    |   Y
+   doupdate              |    Y   |    Y    |   Y
+   redrawwin             |    Y   |    Y    |   Y
+   wredrawln             |    Y   |    Y    |   Y
 
 
 
@@ -2357,13 +2423,15 @@ scanw
    successfully matched. Otherwise they return ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    scanw                       Y       Y       Y
-    wscanw                      Y       Y       Y
-    mvscanw                     Y       Y       Y
-    mvwscanw                    Y       Y       Y
-    vwscanw                     Y       Y       Y
-    vw_scanw                    Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   scanw                 |    Y   |    Y    |   Y
+   wscanw                |    Y   |    Y    |   Y
+   mvscanw               |    Y   |    Y    |   Y
+   mvwscanw              |    Y   |    Y    |   Y
+   vwscanw               |    Y   |    Y    |   Y
+   vw_scanw              |    Y   |    Y    |   Y
 
 
 
@@ -2413,13 +2481,15 @@ scr_dump
    OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    putwin                      Y       Y       Y
-    getwin                      Y       Y       Y
-    scr_dump                    Y       Y       -
-    scr_init                    Y       Y       -
-    scr_restore                 Y       Y       -
-    scr_set                     Y       Y       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   putwin                |    Y   |    Y    |   Y
+   getwin                |    Y   |    Y    |   Y
+   scr_dump              |    Y   |    Y    |   -
+   scr_init              |    Y   |    Y    |   -
+   scr_restore           |    Y   |    Y    |   -
+   scr_set               |    Y   |    Y    |   -
 
 
 
@@ -2453,10 +2523,12 @@ scroll
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    scroll                      Y       Y       Y
-    scrl                        Y       Y       Y
-    wscrl                       Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   scroll                |    Y   |    Y    |   Y
+   scrl                  |    Y   |    Y    |   Y
+   wscrl                 |    Y   |    Y    |   Y
 
 
 
@@ -2505,12 +2577,12 @@ slk
    slk_init() requires a single parameter which describes the format of
    the SLKs as follows:
 
-   0       3-2-3 format
-   1       4-4 format
-   2       4-4-4 format (ncurses extension)
-   3       4-4-4 format with index line (ncurses extension)
-   2 lines used
-   55      5-5 format (pdcurses format)
+    0       3-2-3 format
+    1       4-4 format
+    2       4-4-4 format (ncurses extension)
+    3       4-4-4 format with index line (ncurses extension)
+    2 lines used
+    55      5-5 format (pdcurses format)
 
    slk_refresh(), slk_noutrefresh() and slk_touch() are analogous to
    refresh(), noutrefresh() and touch().
@@ -2520,26 +2592,28 @@ slk
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    slk_init                    Y       Y       Y
-    slk_set                     Y       Y       Y
-    slk_refresh                 Y       Y       Y
-    slk_noutrefresh             Y       Y       Y
-    slk_label                   Y       Y       Y
-    slk_clear                   Y       Y       Y
-    slk_restore                 Y       Y       Y
-    slk_touch                   Y       Y       Y
-    slk_attron                  Y       Y       Y
-    slk_attrset                 Y       Y       Y
-    slk_attroff                 Y       Y       Y
-    slk_attr_on                 Y       Y       Y
-    slk_attr_set                Y       Y       Y
-    slk_attr_off                Y       Y       Y
-    slk_wset                    Y       Y       Y
-    PDC_mouse_in_slk            -       -       -
-    PDC_slk_free                -       -       -
-    PDC_slk_initialize          -       -       -
-    slk_wlabel                  -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   slk_init              |    Y   |    Y    |   Y
+   slk_set               |    Y   |    Y    |   Y
+   slk_refresh           |    Y   |    Y    |   Y
+   slk_noutrefresh       |    Y   |    Y    |   Y
+   slk_label             |    Y   |    Y    |   Y
+   slk_clear             |    Y   |    Y    |   Y
+   slk_restore           |    Y   |    Y    |   Y
+   slk_touch             |    Y   |    Y    |   Y
+   slk_attron            |    Y   |    Y    |   Y
+   slk_attrset           |    Y   |    Y    |   Y
+   slk_attroff           |    Y   |    Y    |   Y
+   slk_attr_on           |    Y   |    Y    |   Y
+   slk_attr_set          |    Y   |    Y    |   Y
+   slk_attr_off          |    Y   |    Y    |   Y
+   slk_wset              |    Y   |    Y    |   Y
+   PDC_mouse_in_slk      |    -   |    -    |   -
+   PDC_slk_free          |    -   |    -    |   -
+   PDC_slk_initialize    |    -   |    -    |   -
+   slk_wlabel            |    -   |    -    |   -
 
 
 
@@ -2596,19 +2670,21 @@ termattr
    character, ^W.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    baudrate                    Y       Y       Y
-    erasechar                   Y       Y       Y
-    has_ic                      Y       Y       Y
-    has_il                      Y       Y       Y
-    killchar                    Y       Y       Y
-    longname                    Y       Y       Y
-    termattrs                   Y       Y       Y
-    termname                    Y       Y       Y
-    erasewchar                  Y       Y       Y
-    killwchar                   Y       Y       Y
-    term_attrs                  Y       Y       Y
-    wordchar                    -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   baudrate              |    Y   |    Y    |   Y
+   erasechar             |    Y   |    Y    |   Y
+   has_ic                |    Y   |    Y    |   Y
+   has_il                |    Y   |    Y    |   Y
+   killchar              |    Y   |    Y    |   Y
+   longname              |    Y   |    Y    |   Y
+   termattrs             |    Y   |    Y    |   Y
+   termname              |    Y   |    Y    |   Y
+   erasewchar            |    Y   |    Y    |   Y
+   killwchar             |    Y   |    Y    |   Y
+   term_attrs            |    Y   |    Y    |   Y
+   wordchar              |    -   |    -    |   -
 
 
 
@@ -2660,14 +2736,16 @@ touch
    is_wintouched() and is_linetouched().
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    touchwin                    Y       Y       Y
-    touchline                   Y       Y       Y
-    untouchwin                  Y       Y       Y
-    wtouchln                    Y       Y       Y
-    is_linetouched              Y       Y       Y
-    is_wintouched               Y       Y       Y
-    touchoverlap                -       -       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   touchwin              |    Y   |    Y    |   Y
+   touchline             |    Y   |    Y    |   Y
+   untouchwin            |    Y   |    Y    |   Y
+   wtouchln              |    Y   |    Y    |   Y
+   is_linetouched        |    Y   |    Y    |   Y
+   is_wintouched         |    Y   |    Y    |   Y
+   touchoverlap          |    -   |    -    |   Y
 
 
 
@@ -2731,17 +2809,19 @@ util
    setcchar() returns OK or ERR.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    unctrl                      Y       Y       Y
-    filter                      Y       Y       Y
-    use_env                     Y       Y       Y
-    delay_output                Y       Y       Y
-    getcchar                    Y       Y       Y
-    setcchar                    Y       Y       Y
-    wunctrl                     Y       Y       Y
-    PDC_mbtowc                  -       -       -
-    PDC_mbstowcs                -       -       -
-    PDC_wcstombs                -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   unctrl                |    Y   |    Y    |   Y
+   filter                |    Y   |    Y    |   Y
+   use_env               |    Y   |    Y    |   Y
+   delay_output          |    Y   |    Y    |   Y
+   getcchar              |    Y   |    Y    |   Y
+   setcchar              |    Y   |    Y    |   Y
+   wunctrl               |    Y   |    Y    |   Y
+   PDC_mbtowc            |    -   |    -    |   -
+   PDC_mbstowcs          |    -   |    -    |   -
+   PDC_wcstombs          |    -   |    -    |   -
 
 
 
@@ -2868,26 +2948,28 @@ window
    NOT cancelled for those windows.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    newwin                      Y       Y       Y
-    delwin                      Y       Y       Y
-    mvwin                       Y       Y       Y
-    subwin                      Y       Y       Y
-    derwin                      Y       Y       Y
-    mvderwin                    Y       Y       Y
-    dupwin                      Y       Y       Y
-    wgetparent                  -       Y       -
-    wsyncup                     Y       Y       Y
-    syncok                      Y       Y       Y
-    is_subwin                   -       Y       -
-    is_syncok                   -       Y       -
-    wcursyncup                  Y       Y       Y
-    wsyncdown                   Y       Y       Y
-    wresize                     -       Y       Y
-    resize_window               -       -       -
-    PDC_makelines               -       -       -
-    PDC_makenew                 -       -       -
-    PDC_sync                    -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   newwin                |    Y   |    Y    |   Y
+   delwin                |    Y   |    Y    |   Y
+   mvwin                 |    Y   |    Y    |   Y
+   subwin                |    Y   |    Y    |   Y
+   derwin                |    Y   |    Y    |   Y
+   mvderwin              |    Y   |    Y    |   Y
+   dupwin                |    Y   |    Y    |   Y
+   wgetparent            |    -   |    Y    |   -
+   wsyncup               |    Y   |    Y    |   Y
+   syncok                |    Y   |    Y    |   Y
+   is_subwin             |    -   |    Y    |   -
+   is_syncok             |    -   |    Y    |   -
+   wcursyncup            |    Y   |    Y    |   Y
+   wsyncdown             |    Y   |    Y    |   Y
+   wresize               |    -   |    Y    |   Y
+   resize_window         |    -   |    -    |   -
+   PDC_makelines         |    -   |    -    |   -
+   PDC_makenew           |    -   |    -    |   -
+   PDC_sync              |    -   |    -    |   -
 
 
 
@@ -2919,19 +3001,20 @@ clipboard
 
 ### Return Values
 
-   indicator of success/failure of call.
-   PDC_CLIP_SUCCESS        the call was successful
-   PDC_CLIP_MEMORY_ERROR   unable to allocate sufficient memory for
-                           the clipboard contents
-   PDC_CLIP_EMPTY          the clipboard contains no text
-   PDC_CLIP_ACCESS_ERROR   no clipboard support
+    PDC_CLIP_SUCCESS        the call was successful
+    PDC_CLIP_MEMORY_ERROR   unable to allocate sufficient memory for
+                            the clipboard contents
+    PDC_CLIP_EMPTY          the clipboard contains no text
+    PDC_CLIP_ACCESS_ERROR   no clipboard support
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    PDC_getclipboard            -       -       -
-    PDC_setclipboard            -       -       -
-    PDC_freeclipboard           -       -       -
-    PDC_clearclipboard          -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   PDC_getclipboard      |    -   |    -    |   -
+   PDC_setclipboard      |    -   |    -    |   -
+   PDC_freeclipboard     |    -   |    -    |   -
+   PDC_clearclipboard    |    -   |    -    |   -
 
 
 
@@ -2965,9 +3048,12 @@ pdcsetsc
    platforms.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    PDC_set_blink               -       -       -
-    PDC_set_title               -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   PDC_set_blink         |    -   |    -    |   -
+   PDC_set_bold          |    -   |    -    |   -
+   PDC_set_title         |    -   |    -    |   -
 
 
 
@@ -2995,13 +3081,15 @@ sb
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    sb_init                     -       -       -
-    sb_set_horz                 -       -       -
-    sb_set_vert                 -       -       -
-    sb_get_horz                 -       -       -
-    sb_get_vert                 -       -       -
-    sb_refresh                  -       -       -
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   sb_init               |    -   |    -    |   -
+   sb_set_horz           |    -   |    -    |   -
+   sb_set_vert           |    -   |    -    |   -
+   sb_get_horz           |    -   |    -    |   -
+   sb_get_vert           |    -   |    -    |   -
+   sb_refresh            |    -   |    -    |   -
 
 
 

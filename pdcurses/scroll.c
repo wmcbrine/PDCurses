@@ -31,10 +31,12 @@ scroll
    All functions return OK on success and ERR on error.
 
 ### Portability
-                             X/Open  ncurses  NetBSD
-    scroll                      Y       Y       Y
-    scrl                        Y       Y       Y
-    wscrl                       Y       Y       Y
+
+   Function              | X/Open | ncurses | NetBSD
+   :---------------------|:------:|:-------:|:------:
+   scroll                |    Y   |    Y    |   Y
+   scrl                  |    Y   |    Y    |   Y
+   wscrl                 |    Y   |    Y    |   Y
 
 **man-end****************************************************************/
 

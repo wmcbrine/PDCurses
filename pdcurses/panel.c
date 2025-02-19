@@ -117,7 +117,7 @@ panel
 
 ### Credits
 
-    Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
+   Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
 
 **man-end****************************************************************/
 

@@ -3,21 +3,23 @@ Definitions and Variables (curses.h)
 
 Define before inclusion (only those needed):
 
-    XCURSES         if building / built for X11
-    PDC_RGB         if you want to use RGB color definitions
-                    (Red = 1, Green = 2, Blue = 4) instead of BGR
-    PDC_WIDE        if building / built with wide-character support
-    PDC_DLL_BUILD   if building / built as a Windows DLL
-    PDC_NCMOUSE     to use the ncurses mouse API instead
-                    of PDCurses' traditional mouse API
+   Macro         | Meaning / value
+   :-------------|-------------------------------------------------
+   XCURSES       | if building / built for X11
+   PDC_RGB       | RGB color (Red = 1, Green = 2, Blue = 4) vs. BGR
+   PDC_WIDE      | if building / built with wide-character support
+   PDC_DLL_BUILD | if building / built as a Windows DLL
+   PDC_NCMOUSE   | use ncurses mouse API vs. traditional PDCurses
 
 Defined by this header:
 
-    PDCURSES        PDCurses-only features are available
-    PDC_BUILD       API build version
-    PDC_VER_MAJOR   major version number
-    PDC_VER_MINOR   minor version number
-    PDC_VERDOT      version string
+   Macro         | Meaning / value
+   :-------------|-------------------------------------------------
+   PDCURSES      | PDCurses-only features are available
+   PDC_BUILD     | API build version
+   PDC_VER_MAJOR | major version number
+   PDC_VER_MINOR | minor version number
+   PDC_VERDOT    | version string
 
 
 
@@ -1917,7 +1919,7 @@ mouse
    ungetmouse            |    -   |    Y    |   -
    has_mouse             |    -   |    Y    |   -
 
-    * See above, under Description
+   \* See above, under Description
 
 
 
@@ -2290,7 +2292,7 @@ panel
 
 ### Credits
 
-    Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
+   Original Author - Warren Tucker <wht@n4hgf.mt-park.ga.us>
 
 
 
@@ -3074,7 +3076,7 @@ sb
 
 ### Description
 
-   These functions manipulate the scrollbar.
+   These functions manipulate the scrollbar (X11 only).
 
 ### Return Value
 

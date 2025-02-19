@@ -136,7 +136,7 @@ mouse
    ungetmouse            |    -   |    Y    |   -
    has_mouse             |    -   |    Y    |   -
 
-    * See above, under Description
+   \* See above, under Description
 
 **man-end****************************************************************/
 

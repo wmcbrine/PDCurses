@@ -31,9 +31,9 @@ Text Attributes
 
 PDCurses uses a 32-bit integer for its chtype:
 
-   |      color pair       |       modifiers       |  character eg 'a'  |
-   |-----------------------|-----------------------|--------------------|
-   |31 30 29 28 27 26 25 24|23 22 21 20 19 18 17 16|15 14 13 ..  2  1  0|
+   color pair             | modifiers             | character eg 'a'
+   -----------------------|-----------------------|--------------------
+   31 30 29 28 27 26 25 24|23 22 21 20 19 18 17 16|15 14 13 ..  2  1  0
 
 There are 256 color pairs (8 bits), 8 bits for modifiers, and 16 bits
 for character data. The modifiers are bold, underline, right-line,

@@ -18,7 +18,7 @@ sb
 
 ### Description
 
-   These functions manipulate the scrollbar.
+   These functions manipulate the scrollbar (X11 only).
 
 ### Return Value
 

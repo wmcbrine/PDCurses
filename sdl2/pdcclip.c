@@ -25,7 +25,7 @@ clipboard
    memory returned, via PDC_freeclipboard(). The length of the clipboard
    contents is returned in the length argument.
 
-   PDC_setclipboard copies the supplied text into the system's
+   PDC_setclipboard() copies the supplied text into the system's
    clipboard, emptying the clipboard prior to the copy.
 
    PDC_clearclipboard() clears the internal clipboard.

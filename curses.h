@@ -292,7 +292,7 @@ typedef struct _win       /* definition of a window */
     bool  _scroll;        /* allows window scrolling */
     bool  _nodelay;       /* input character wait flag */
     bool  _immed;         /* immediate update flag */
-    bool  _sync;          /* synchronise window ancestors */
+    bool  _sync;          /* synchronize window ancestors */
     bool  _use_keypad;    /* flags keypad key mode active */
     chtype **_y;          /* pointer to line pointer array */
     int   *_firstch;      /* first changed character in line */
@@ -777,13 +777,13 @@ indicator.
 
 #define KEY_A1        0x1c1  /* upper left on Virtual keypad */
 #define KEY_A2        0x1c2  /* upper middle on Virt. keypad */
-#define KEY_A3        0x1c3  /* upper right on Vir. keypad */
+#define KEY_A3        0x1c3  /* upper right on Virt. keypad */
 #define KEY_B1        0x1c4  /* middle left on Virt. keypad */
 #define KEY_B2        0x1c5  /* center on Virt. keypad */
-#define KEY_B3        0x1c6  /* middle right on Vir. keypad */
+#define KEY_B3        0x1c6  /* middle right on Virt. keypad */
 #define KEY_C1        0x1c7  /* lower left on Virt. keypad */
 #define KEY_C2        0x1c8  /* lower middle on Virt. keypad */
-#define KEY_C3        0x1c9  /* lower right on Vir. keypad */
+#define KEY_C3        0x1c9  /* lower right on Virt. keypad */
 
 #define PADSLASH      0x1ca  /* slash on keypad */
 #define PADENTER      0x1cb  /* enter on keypad */
@@ -857,8 +857,8 @@ indicator.
 #define ALT_PAD8      0x20d
 #define ALT_PAD9      0x20e
 
-#define CTL_DEL       0x20f  /* clt-delete */
-#define ALT_BSLASH    0x210  /* alt-back slash */
+#define CTL_DEL       0x20f  /* ctl-delete */
+#define ALT_BSLASH    0x210  /* alt-backslash */
 #define CTL_ENTER     0x211  /* ctl-enter */
 
 #define SHF_PADENTER  0x212  /* shift-enter on keypad */

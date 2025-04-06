@@ -495,7 +495,7 @@ changequote(, )dnl
 		       sed -e 's/[^a-zA-Z0-9_]/_/g' -e 's/^[0-9]/_/'`"
 changequote([, ])dnl
 AC_CACHE_VAL(ac_cv_prog_cc_${ac_cc}_c_o,
-[echo 'foo(){}' > conftest.c
+[echo 'int foo(){}' > conftest.c
 # We do the test twice because some compilers refuse to overwrite an
 # existing .o file with -o, though they will create one.
 eval ac_cv_prog_cc_${ac_cc}_c_o=no

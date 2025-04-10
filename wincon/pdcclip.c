@@ -144,7 +144,12 @@ int PDC_clearclipboard(void)
 {
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
-    EmptyClipboard();
+    if (OpenClipboard(NULL))
+        if (EmptyClipboard())
+        {
+            CloseClipboard();
+            return PDC_CLIP_SUCCESS;
+        }
 
-    return PDC_CLIP_SUCCESS;
+    return PDC_CLIP_ACCESS_ERROR;
 }

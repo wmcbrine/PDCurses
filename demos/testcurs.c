@@ -880,6 +880,24 @@ void clipboardTest(WINDOW *win)
     }
 
     Continue2();
+
+    clear();
+    mvaddstr(1, 1,
+        "The clipboard will now be cleared");
+
+    i = PDC_clearclipboard();
+    switch(i)
+    {
+    case PDC_CLIP_ACCESS_ERROR:
+        mvaddstr(3, 1, "There was an error accessing the clipboard");
+        refresh();
+        break;
+
+    default:
+        mvaddstr(3, 1, "The clipboard was cleared successfully");
+    }
+
+    Continue2();
 }
 #endif /* HAVE_CLIPBOARD */
 

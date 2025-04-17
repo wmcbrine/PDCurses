@@ -142,14 +142,15 @@ int PDC_freeclipboard(char *contents)
 
 int PDC_clearclipboard(void)
 {
+    BOOL result = FALSE;
+
     PDC_LOG(("PDC_clearclipboard() - called\n"));
 
     if (OpenClipboard(NULL))
-        if (EmptyClipboard())
-        {
-            CloseClipboard();
-            return PDC_CLIP_SUCCESS;
-        }
+    {
+        result = EmptyClipboard();
+        CloseClipboard();
+    }
 
-    return PDC_CLIP_ACCESS_ERROR;
+    return result ? PDC_CLIP_SUCCESS : PDC_CLIP_ACCESS_ERROR;
 }

@@ -16,9 +16,11 @@ static USHORT saved_cols = 0;
 static VIOMODEINFO scrnmode;    /* default screen mode  */
 static VIOMODEINFO saved_scrnmode[3];
 static int saved_font[3];
+static VIOCONFIGINFO scrnconfig;
 
 short pdc_curstoreal[16];
 int pdc_font;  /* default font size */
+bool pdc_is_windowed;
 
 static int _get_font(void)
 {
@@ -96,7 +98,12 @@ int PDC_scr_open(void)
 
     SP->orig_attr = FALSE;
 
+    scrnmode.cb = sizeof(scrnmode);
     VioGetMode(&scrnmode, 0);
+    scrnconfig.cb = sizeof(scrnconfig);
+    VioGetConfig(0, &scrnconfig, 0);
+    pdc_is_windowed = scrnconfig.EMAdaptersOFF || scrnconfig.EMDisplaysOFF;
+
     PDC_get_keyboard_info();
     pdc_font = _get_font();
 

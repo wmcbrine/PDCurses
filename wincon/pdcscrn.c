@@ -401,7 +401,7 @@ int PDC_scr_open(void)
 
     is_nt = !(GetVersion() & 0x80000000);
 
-    pdc_wt = !!getenv("WT_SESSION");
+    pdc_wt = !((BOOL) SendMessage(GetConsoleWindow(), WM_GETICON, 0, 0));
     str = pdc_wt ? NULL : getenv("ConEmuANSI");
     pdc_conemu = !!str;
     pdc_ansi = pdc_wt ? TRUE : pdc_conemu ? !strcmp(str, "ON") : FALSE;

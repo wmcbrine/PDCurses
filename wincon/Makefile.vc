@@ -21,13 +21,13 @@ common		= $(PDCURSES_SRCDIR)\common
 
 PDCURSES_WIN_H	= $(osdir)\pdcwin.h
 
-CC		= cl.exe -nologo
+CC		= clang-cl.exe -nologo
 
 !ifdef DEBUG
 CFLAGS		= -Z7 -DPDCDEBUG
 LDFLAGS		= -debug -pdb:none
 !else
-CFLAGS		= -O1
+CFLAGS		= -O2
 LDFLAGS		=
 !endif
 

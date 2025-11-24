@@ -1,5 +1,5 @@
 /* PDCurses */
-
+#include "wcwidth.h"
 #include <curspriv.h>
 
 /*man-start**************************************************************
@@ -177,7 +177,14 @@ int doupdate(void)
                 first = curscr->_firstch[y];
                 last = curscr->_lastch[y];
             }
-
+            if (first > 0 && mk_wcwidth(src[first - 1] & A_CHARTEXT) == 2) first--;
+            if (last < curscr->_maxx && (src[last+1]&A_CHARTEXT)==0x200b) last++;
+            for(int i=first;i<=last;i++){
+                if (mk_wcwidth(src[i] & A_CHARTEXT)==2) 
+                  if((src[i+1] & A_CHARTEXT)!=0x200b) src[i] = src[i] & ~A_CHARTEXT | ' ';
+                  else i++;
+                else if((src[i]&A_CHARTEXT)==0x200b) src[i] = src[i] & ~A_CHARTEXT | ' ';
+            }
             while (first <= last)
             {
                 int len = 0;

@@ -1,0 +1,133 @@
+name: CI for CMake
+
+on:
+  push:
+    paths:
+      - "**/CMakeLists.txt"
+      - "**.cmake"
+      - "**.cmake.in"
+      - "**.c"
+      - "**.h"
+      - "**.h.in"
+      - ".github/workflows/ci.yml"
+  pull_request:
+  release:
+    types: [published]
+
+env:
+  CTEST_NO_TESTS_ACTION: error
+  CTEST_PARALLEL_LEVEL: 0
+
+jobs:
+
+  unix:
+
+    strategy:
+      matrix:
+        cc: [gcc-14, clang-18]
+        os: [ubuntu-latest]
+        include:
+        - os: macos-latest
+          cc: clang
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+
+    env:
+      CC: ${{ matrix.cc }}
+
+    steps:
+
+    - name: install prereqs (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install --no-install-recommends libxt-dev libxaw7-dev libx11-dev
+
+    - name: install prereqs (macOS)
+      if: runner.os == 'macOS'
+      run: brew install libxt libxaw libx11
+
+    - &checkout
+      uses: actions/checkout@v5
+
+    - name: CMake configure
+      run: cmake -B build --install-prefix=${{ runner.temp }} -DCOMPILE_WARNING_AS_ERROR=ON
+
+    - name: CMake build
+      run: cmake --build build
+
+    - name: CMake install (for examples)
+      run: cmake --install build
+
+    - name: CMake configure examples
+      run: cmake -B builddemos -S demos -DPDCurses_ROOT:PATH=${{ runner.temp }}
+
+    - name: CMake build examples
+      run: cmake --build builddemos
+
+    - name: CTest
+      run: ctest --test-dir builddemos --output-on-failure
+
+    - &cpack
+      name: Create package
+      if: github.event.action == 'published'
+      run: cpack --config build/CPackConfig.cmake
+
+    - &upload_pkg
+      name: Upload package
+      if: github.event.action == 'published'
+      uses: actions/upload-artifact@v5
+      with:
+        name: ${{ runner.os }}-pkg
+        path: build/package
+
+
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+    - *checkout
+
+    - name: CMake configure
+      run: cmake -B build --install-prefix=${{ runner.temp }}
+
+    - name: CMake build
+      run: cmake --build build --config Release
+
+    - name: CMake install (for examples)
+      run: cmake --install build --config Release
+
+    - name: CMake configure examples
+      run: cmake -B demos/build -S demos -DPDCurses_ROOT:PATH=${{ runner.temp }}
+
+    - name: CMake build examples
+      run: cmake --build demos/build
+
+    - *cpack
+
+    - *upload_pkg
+
+
+  dos:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: open-watcom/setup-watcom@v0
+      with:
+        version: "2.0"
+
+    - *checkout
+
+    - name: Configure
+      run: cmake -Bbuild --toolchain cmake/dos.cmake --install-prefix=${{ runner.temp }}
+
+    - name: Build
+      run: cmake --build build
+
+    - name: CMake install (for examples)
+      run: cmake --install build
+
+    # cannot build examples, even locally

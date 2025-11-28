@@ -15,7 +15,6 @@ on:
     types: [published]
 
 env:
-  CMAKE_BUILD_PARALLEL_LEVEL: 4
   CTEST_NO_TESTS_ACTION: error
   CTEST_PARALLEL_LEVEL: 0
 
@@ -25,7 +24,7 @@ jobs:
 
     strategy:
       matrix:
-        cc: [gcc-9, gcc-10, gcc-11, gcc-12, gcc-13, clang-15]
+        cc: [gcc-14, clang-18]
         os: [ubuntu-latest]
         include:
         - os: macos-latest
@@ -49,8 +48,8 @@ jobs:
       if: runner.os == 'macOS'
       run: brew install libxt libxaw libx11
 
-    - uses: actions/checkout@v4
-      name: Checkout source code
+    - &checkout
+      uses: actions/checkout@v5
 
     - name: CMake configure
       run: cmake -B build --install-prefix=${{ runner.temp }} -DCOMPILE_WARNING_AS_ERROR=ON
@@ -62,7 +61,7 @@ jobs:
       run: cmake --install build
 
     - name: CMake configure examples
-      run: cmake -B builddemos -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+      run: cmake -B builddemos -S demos -DPDCurses_ROOT:PATH=${{ runner.temp }}
 
     - name: CMake build examples
       run: cmake --build builddemos
@@ -70,15 +69,17 @@ jobs:
     - name: CTest
       run: ctest --test-dir builddemos --output-on-failure
 
-    - name: Create package
+    - &cpack
+      name: Create package
       if: github.event.action == 'published'
       run: cpack --config build/CPackConfig.cmake
 
-    - name: Upload package
+    - &upload_pkg
+      name: Upload package
       if: github.event.action == 'published'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
-        name: binary-archive
+        name: ${{ runner.os }}-pkg
         path: build/package
 
 
@@ -87,8 +88,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-    - uses: actions/checkout@v4
-      name: Checkout source code
+    - *checkout
 
     - name: CMake configure
       run: cmake -B build --install-prefix=${{ runner.temp }}
@@ -100,21 +100,15 @@ jobs:
       run: cmake --install build --config Release
 
     - name: CMake configure examples
-      run: cmake -B demos/build -S demos -DCMAKE_PREFIX_PATH:PATH=${{ runner.temp }}
+      run: cmake -B demos/build -S demos -DPDCurses_ROOT:PATH=${{ runner.temp }}
 
     - name: CMake build examples
       run: cmake --build demos/build
 
-    - name: Create package
-      if: github.event.action == 'published'
-      run: cpack --config build/CPackConfig.cmake
+    - *cpack
 
-    - name: Upload package
-      if: github.event.action == 'published'
-      uses: actions/upload-artifact@v4
-      with:
-        name: binary-archive
-        path: build/package
+    - *upload_pkg
+
 
   dos:
     timeout-minutes: 10
@@ -125,7 +119,7 @@ jobs:
       with:
         version: "2.0"
 
-    - uses: actions/checkout@v4
+    - *checkout
 
     - name: Configure
       run: cmake -Bbuild --toolchain cmake/dos.cmake --install-prefix=${{ runner.temp }}

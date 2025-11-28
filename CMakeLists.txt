@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19...3.29)
+cmake_minimum_required(VERSION 3.19...4.2)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out-of-source build
@@ -34,7 +34,7 @@ pdcurses/refresh.c pdcurses/scanw.c pdcurses/scr_dump.c pdcurses/scroll.c
 pdcurses/slk.c pdcurses/termattr.c pdcurses/touch.c pdcurses/util.c
 pdcurses/window.c pdcurses/debug.c
 )
-set_property(TARGET pdcurses PROPERTY EXPORT_NAME CURSES)
+set_property(TARGET pdcurses PROPERTY EXPORT_NAME Curses)
 target_include_directories(pdcurses
 PUBLIC
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -51,10 +51,10 @@ $<$<BOOL:${PDCurses_nextaw}>:USE_NEXTAW>
 $<$<CONFIG:Debug,RelWithDebugInfo>:PDCDEBUG>
 )
 
-# for FetchContent (need GLOBAL for the other project to see CURSES::CURSES)
-add_library(CURSES::CURSES IMPORTED INTERFACE GLOBAL)
-target_link_libraries(CURSES::CURSES INTERFACE pdcurses)
-target_include_directories(CURSES::CURSES INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+# for FetchContent (need GLOBAL for the other project to see Curses::Curses)
+add_library(Curses::Curses IMPORTED INTERFACE GLOBAL)
+target_link_libraries(Curses::Curses INTERFACE pdcurses)
+target_include_directories(Curses::Curses INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 check_symbol_exists("vsnprintf" "stdio.h" HAVE_VSNPRINTF)
 check_symbol_exists("vsscanf" "stdio.h" HAVE_VSSCANF)

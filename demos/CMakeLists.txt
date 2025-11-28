@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18...3.27)
+cmake_minimum_required(VERSION 3.19)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out-of-source build
@@ -13,11 +13,11 @@ find_package(PDCurses CONFIG REQUIRED)
 
 foreach(f IN ITEMS testcurs ozdemo xmas firework ptest rain worm test_init)
   add_executable(${f} ${f}.c)
-  target_link_libraries(${f} PRIVATE CURSES::CURSES)
+  target_link_libraries(${f} PRIVATE Curses::Curses)
 endforeach()
 
 add_executable(tuidemo tui.c tuidemo.c)
-target_link_libraries(tuidemo PRIVATE CURSES::CURSES)
+target_link_libraries(tuidemo PRIVATE Curses::Curses)
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")
 

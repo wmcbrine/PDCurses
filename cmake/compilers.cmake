@@ -5,6 +5,4 @@ if(CMAKE_C_COMPILER_ID STREQUAL OpenWatcom)
   ")
   # https://wiki.archlinux.org/title/Open_Watcom
   add_compile_options(-bt=dos -bcl=dos)
-elseif(NOT MSVC)
-  add_compile_options(-Wall)
 endif()

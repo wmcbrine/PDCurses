@@ -13,7 +13,7 @@ COMPATIBILITY SameMinorVersion
 )
 
 install(EXPORT ${PROJECT_NAME}-targets
-NAMESPACE CURSES::
+NAMESPACE Curses::
 DESTINATION cmake
 )
 

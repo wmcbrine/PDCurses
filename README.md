@@ -21,24 +21,13 @@ For changes, see the [History] file. The main documentation is now in the
 [docs] directory.
 
 
-Mailing lists
--------------
-
-There's a low-traffic mailing list for announcements and discussion. To
-subscribe, email the [list server], with the first line of the body of
-the message containing:
-
-`subscribe pdcurses-l`
-
-or you can read the mailing list [archive].
-
-
 Other links
 -----------
 
 * [Docs][docs]
 * [GitHub Page][git]
 * [SourceForge Page]
+* Old mailing list [archive]
 * [X/Open] curses
 
 
@@ -64,10 +53,8 @@ Maintainer
 [History]: docs/HISTORY.md
 [docs]: docs/README.md
 
-[list server]: mailto:majordomo@lightlink.com
-[archive]: https://www.mail-archive.com/pdcurses-l@lightlink.com/
-
 [SourceForge Page]: https://sourceforge.net/projects/pdcurses
+[archive]: https://www.mail-archive.com/pdcurses-l@lightlink.com/
 [X/Open]: https://pubs.opengroup.org/onlinepubs/007908799/cursesix.html
 
 [DOS]: dos/README.md

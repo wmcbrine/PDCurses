@@ -275,7 +275,7 @@ WINDOW *newwin(int nlines, int ncols, int begy, int begx)
     if (!ncols)
         ncols  = COLS  - begx;
 
-    if (!SP || begy + nlines > SP->lines || begx + ncols > SP->cols)
+    if (!SP)
         return (WINDOW *)NULL;
 
     win = PDC_makenew(nlines, ncols, begy, begx);
@@ -316,8 +316,7 @@ int mvwin(WINDOW *win, int y, int x)
 {
     PDC_LOG(("mvwin() - called\n"));
 
-    if (!win || (y + win->_maxy > LINES || y < 0)
-             || (x + win->_maxx > COLS || x < 0))
+    if (!win || y < 0 || x < 0)
         return ERR;
 
     win->_begy = y;

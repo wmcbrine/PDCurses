@@ -1,6 +1,8 @@
 /* PDCurses */
-
+#include "curses.h"
+#include "wcwidth.h"
 #include <curspriv.h>
+
 
 /*man-start**************************************************************
 
@@ -45,84 +47,87 @@ inch
 
 **man-end****************************************************************/
 
-chtype winch(WINDOW *win)
-{
-    PDC_LOG(("winch() - called\n"));
-
-    if (!win)
-        return (chtype)ERR;
-
-    return win->_y[win->_cury][win->_curx];
+chtype wch(WINDOW *win) {
+  chtype ret = win->_y[win->_cury][win->_curx];
+  if ((ret & A_CHARTEXT) == 0x200b)
+    if (win->_curx == 0 ||
+        mk_wcwidth(win->_y[win->_cury][win->_curx - 1] & A_CHARTEXT) != 2)
+      ret = ret & ~A_CHARTEXT | ' ';
+    else
+      ret = win->_y[win->_cury][win->_curx - 1];
+  return ret;
 }
 
-chtype inch(void)
-{
-    PDC_LOG(("inch() - called\n"));
+chtype winch(WINDOW *win) {
+  PDC_LOG(("winch() - called\n"));
 
-    return winch(stdscr);
+  if (!win)
+    return (chtype)ERR;
+
+  return wch(win);
 }
 
-chtype mvinch(int y, int x)
-{
-    PDC_LOG(("mvinch() - called\n"));
+chtype inch(void) {
+  PDC_LOG(("inch() - called\n"));
 
-    if (move(y, x) == ERR)
-        return (chtype)ERR;
-
-    return stdscr->_y[stdscr->_cury][stdscr->_curx];
+  return winch(stdscr);
 }
 
-chtype mvwinch(WINDOW *win, int y, int x)
-{
-    PDC_LOG(("mvwinch() - called\n"));
+chtype mvinch(int y, int x) {
+  PDC_LOG(("mvinch() - called\n"));
 
-    if (wmove(win, y, x) == ERR)
-        return (chtype)ERR;
+  if (move(y, x) == ERR)
+    return (chtype)ERR;
 
-    return win->_y[win->_cury][win->_curx];
+  return wch(stdscr);
+}
+
+chtype mvwinch(WINDOW *win, int y, int x) {
+  PDC_LOG(("mvwinch() - called\n"));
+
+  if (wmove(win, y, x) == ERR)
+    return (chtype)ERR;
+
+  return wch(win);
 }
 
 #ifdef PDC_WIDE
-int win_wch(WINDOW *win, cchar_t *wcval)
-{
-    PDC_LOG(("win_wch() - called\n"));
+int win_wch(WINDOW *win, cchar_t *wcval) {
+  PDC_LOG(("win_wch() - called\n"));
 
-    if (!win || !wcval)
-        return ERR;
+  if (!win || !wcval)
+    return ERR;
 
-    *wcval = win->_y[win->_cury][win->_curx];
+  *wcval = wch(win);
 
-    return OK;
+  return OK;
 }
 
-int in_wch(cchar_t *wcval)
-{
-    PDC_LOG(("in_wch() - called\n"));
+int in_wch(cchar_t *wcval) {
+  PDC_LOG(("in_wch() - called\n"));
 
-    return win_wch(stdscr, wcval);
+  return win_wch(stdscr, wcval);
 }
 
-int mvin_wch(int y, int x, cchar_t *wcval)
-{
-    PDC_LOG(("mvin_wch() - called\n"));
+int mvin_wch(int y, int x, cchar_t *wcval) {
+  PDC_LOG(("mvin_wch() - called\n"));
 
-    if (!wcval || (move(y, x) == ERR))
-        return ERR;
+  if (!wcval || (move(y, x) == ERR))
+    return ERR;
 
-    *wcval = stdscr->_y[stdscr->_cury][stdscr->_curx];
+  *wcval = wch(stdscr);
 
-    return OK;
+  return OK;
 }
 
-int mvwin_wch(WINDOW *win, int y, int x, cchar_t *wcval)
-{
-    PDC_LOG(("mvwin_wch() - called\n"));
+int mvwin_wch(WINDOW *win, int y, int x, cchar_t *wcval) {
+  PDC_LOG(("mvwin_wch() - called\n"));
 
-    if (!wcval || (wmove(win, y, x) == ERR))
-        return ERR;
+  if (!wcval || (wmove(win, y, x) == ERR))
+    return ERR;
 
-    *wcval = win->_y[win->_cury][win->_curx];
+  *wcval = wch(win);
 
-    return OK;
+  return OK;
 }
 #endif

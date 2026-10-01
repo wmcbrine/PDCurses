@@ -138,7 +138,7 @@ void _set_ansi_color(short f, short b, attr_t attr)
 
 void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 {
-    int j;
+    int j,k;
     short fore, back;
     bool blink, ansi;
 
@@ -176,7 +176,7 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
 #else
         char buffer[512];
 #endif
-        for (j = 0; j < len; j++)
+        for (j = 0,k=0; j < len; j++)
         {
             chtype ch = srcp[j];
 
@@ -191,13 +191,20 @@ void _new_packet(attr_t attr, int lineno, int x, int len, const chtype *srcp)
             if (blink && blinked_off)
                 ch = ' ';
 
+#ifdef PDC_WIDE
+            if ((ch & A_CHARTEXT)!=0x200b) {
+                buffer[k] = ch & A_CHARTEXT;
+                k++;
+            }
+#else
             buffer[j] = ch & A_CHARTEXT;
+#endif
         }
 
         PDC_gotoyx(lineno, x);
         _set_ansi_color(fore, back, attr);
 #ifdef PDC_WIDE
-        WriteConsoleW(pdc_con_out, buffer, len, NULL, NULL);
+        WriteConsoleW(pdc_con_out, buffer, k, NULL, NULL);
 #else
         WriteConsoleA(pdc_con_out, buffer, len, NULL, NULL);
 #endif
@@ -225,7 +232,7 @@ NONANSI:
         if (attr & A_RIGHT)
             mapped_attr |= 0x1000; /* COMMON_LVB_GRID_RVERTICAL */
 
-        for (j = 0; j < len; j++)
+        for (j = 0,k=0; j < len; j++)
         {
             chtype ch = srcp[j];
 
@@ -235,17 +242,20 @@ NONANSI:
             if (blink && blinked_off)
                 ch = ' ';
 
-            buffer[j].Attributes = mapped_attr;
-            buffer[j].Char.UnicodeChar = ch & A_CHARTEXT;
+            if ((ch & A_CHARTEXT) != 0x200b) {
+                buffer[k].Attributes = mapped_attr;
+                buffer[k].Char.UnicodeChar = ch & A_CHARTEXT;
+                k++;
+            }
         }
 
         bufPos.X = bufPos.Y = 0;
-        bufSize.X = len;
+        bufSize.X = k;
         bufSize.Y = 1;
 
         sr.Top = sr.Bottom = lineno;
         sr.Left = x;
-        sr.Right = x + len - 1;
+        sr.Right = x + k - 1;
 
         WriteConsoleOutput(pdc_con_out, buffer, bufSize, bufPos, &sr);
     }

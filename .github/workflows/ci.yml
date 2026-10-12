@@ -1,0 +1,101 @@
+name: CI for CMake
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [published]
+
+
+jobs:
+
+  unix:
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+# mac, clang etc. work, just saving CI time
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+
+    steps:
+
+    - name: install prereqs (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install --no-install-recommends libxt-dev libxaw7-dev libxpm-dev libxmu-dev libx11-dev
+
+    - name: install prereqs (macOS)
+      if: runner.os == 'macOS'
+      run: brew install libxt libxaw libx11 libxpm libxmu
+
+    - &checkout
+      uses: actions/checkout@v6
+
+    - name: CMake build
+      run: cmake --workflow build
+
+    - name: CMake install (for examples)
+      run: cmake --install build
+
+    - name: CMake example build and test
+      working-directory: demos
+      run: cmake --workflow default
+
+    - &cpack
+      name: Create package
+      if: github.event.action == 'published'
+      run: cpack --config build/CPackConfig.cmake
+
+    - &upload_pkg
+      name: Upload package
+      if: github.event.action == 'published'
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ runner.os }}-pkg
+        path: build/package
+
+
+  windows:
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 10
+
+    steps:
+    - *checkout
+
+    - name: CMake build
+      run: cmake --workflow msvc-build
+
+    - name: CMake install (for examples)
+      run: cmake --install build --config Release
+
+    - name: CMake configure examples
+      working-directory: demos
+      run: cmake --preset msvc
+
+    - *cpack
+
+    - *upload_pkg
+
+
+  dos:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: open-watcom/setup-watcom@v1
+      with:
+        version: "2.0"
+        target: "dos"
+
+    - *checkout
+
+    - name: CMake build
+      run: cmake --workflow dos
+
+    - name: CMake install (for examples)
+      run: cmake --install build
+
+    # cannot build examples, even locally

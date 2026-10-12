@@ -70,9 +70,9 @@ static char wordchar(void)
 static char *padstr(char *s, int length)
 {
     static char buf[MAXSTRLEN];
-    char fmt[10];
+    char fmt[20];
 
-    sprintf(fmt, (int)strlen(s) > length ? "%%.%ds" : "%%-%ds", length);
+    snprintf(fmt, sizeof(fmt), (int)strlen(s) > length ? "%%.%ds" : "%%-%ds", length);
     sprintf(buf, fmt, s);
 
     return buf;

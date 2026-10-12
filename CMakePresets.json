@@ -1,0 +1,90 @@
+{
+  "version": 6,
+
+"configurePresets": [
+{
+  "name": "default",
+  "generator": "Ninja",
+  "binaryDir": "build",
+  "installDir": "${fileDir}/build/local",
+  "cacheVariables": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_COMPILE_WARNING_AS_ERROR": true,
+    "CMAKE_LINK_WARNING_AS_ERROR": true
+  }
+},
+{ "name": "build", "inherits": "default" },
+{ "name": "msvc", "inherits": "default", "generator": "Visual Studio 18 2026" },
+{ "name": "msvc-build", "inherits": "msvc" },
+{ "name": "dos", "generator": "Watcom WMake", "inherits": "default",
+  "toolchainFile": "${sourceDir}/cmake/dos.cmake",
+  "displayName": "OpenWatcom DOS"
+}
+],
+"buildPresets": [
+  { "name": "default", "configurePreset": "default", "configuration": "Release" },
+  { "name": "build", "configurePreset": "build", "inherits": "default" },
+  { "name": "dos", "configurePreset": "dos", "inherits": "default" },
+  { "name": "msvc", "configurePreset": "msvc", "configuration": "Release", "inherits": "default" },
+  { "name": "msvc-build", "inherits": "msvc" }
+],
+"testPresets": [
+{
+  "name": "default",
+  "configurePreset": "default",
+  "configuration": "Release",
+  "output": {
+    "outputOnFailure": true,
+    "verbosity": "verbose"
+  },
+  "execution": {
+    "noTestsAction": "error",
+    "scheduleRandom": true,
+    "stopOnFailure": false,
+    "jobs": 8,
+    "$comment": "don't put 0 or ulimit too many open files failures result"
+  }
+},
+{ "name": "msvc", "configurePreset": "msvc", "inherits": "default" },
+{ "name": "msvc-build", "inherits": "msvc" }
+],
+"workflowPresets": [
+  {
+    "name": "default",
+    "steps": [
+      { "type": "configure", "name": "default" },
+      { "type": "build", "name": "default" },
+      { "type": "test", "name": "default" }
+    ]
+  },
+  {
+    "name": "build",
+    "steps": [
+      { "type": "configure", "name": "default" },
+      { "type": "build", "name": "default" }
+    ]
+  },
+  {
+    "name": "dos",
+    "steps": [
+      { "type": "configure", "name": "dos" },
+      { "type": "build", "name": "dos" }
+    ]
+  },
+  {
+    "name": "msvc-build",
+    "steps": [
+      { "type": "configure", "name": "msvc" },
+      { "type": "build", "name": "msvc" }
+    ]
+  },
+  {
+    "name": "msvc",
+    "steps": [
+      { "type": "configure", "name": "msvc" },
+      { "type": "build", "name": "msvc" },
+      { "type": "test", "name": "msvc" }
+    ]
+  }
+]
+}
